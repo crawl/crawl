@@ -1,0 +1,46 @@
+enum: SP_OCTOPODE
+monster: MONS_OCTOPODE
+name: "Octopode"
+short_name: "Op"
+adjective: "Octopoid"
+genus: "Octopus"
+difficulty: Advanced
+difficulty_priority: 50
+aptitudes:
+  xp: 0
+  hp: -1
+  mp_mod: 0
+  mr: 3
+  armour: False
+  stealth: 4
+  spellcasting: -1
+  poison_magic: 2
+  invocations: 1
+  evocations: 1
+can_swim: true
+str: 7
+int: 10
+dex: 7
+levelup_stat_frequency: 5
+species_flags:
+  - hairless
+mutations:
+  1:
+    MUT_CAMOUFLAGE: 1
+    MUT_GELATINOUS_BODY: 1
+fake_mutations:
+  - long: You cannot wear most types of armour.
+    short: almost no armour
+  - long: You are very stealthy in the water. (Stealth+)
+    short: stealthy swim
+recommended_jobs:
+  - JOB_TRANSMUTER
+  - JOB_WIZARD
+  - JOB_CONJURER
+  - JOB_ASSASSIN
+  - JOB_FIRE_ELEMENTALIST
+  - JOB_EARTH_ELEMENTALIST
+  - JOB_VENOM_MAGE
+create_enum: false
+walking_verb: Wriggl
+altar_action: curl up in front of

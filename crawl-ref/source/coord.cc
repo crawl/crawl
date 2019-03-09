@@ -51,13 +51,18 @@ coord_def random_in_bounds()
     {
         const coord_def &ul = crawl_view.glos1; // Upper left
         const coord_def &lr = crawl_view.glos2; // Lower right
-
-        return coord_def(random_range(ul.x, lr.x - 1),
-                         random_range(ul.y, lr.y - 1));
+        coord_def res;
+        res.x = random_range(ul.x, lr.x - 1);
+        res.y = random_range(ul.y, lr.y - 1);
+        return res;
     }
     else
-        return coord_def(random_range(MAPGEN_BORDER, GXM - MAPGEN_BORDER - 1),
-                         random_range(MAPGEN_BORDER, GYM - MAPGEN_BORDER - 1));
+    {
+        coord_def res;
+        res.x = random_range(MAPGEN_BORDER, GXM - MAPGEN_BORDER - 1);
+        res.y = random_range(MAPGEN_BORDER, GYM - MAPGEN_BORDER - 1);
+        return res;
+    }
 }
 
 // Coordinate system conversions.

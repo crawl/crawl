@@ -824,7 +824,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
             dam = dam * 10 / 15;
     }
     ait_hp_loss hpl(dam, death_type);
-    interrupt_activity(AI_HP_LOSS, &hpl);
+    interrupt_activity(activity_interrupt::hp_loss, &hpl);
 
     // Don't wake the player with fatal or poison damage.
     if (dam > 0 && dam < you.hp && death_type != KILLED_BY_POISON)

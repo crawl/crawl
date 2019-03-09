@@ -52,29 +52,30 @@
 #define MAX_RECURSE 100
 
 MiscastEffect::MiscastEffect(actor* _target, actor* _act_source,
-                             int _source, spell_type _spell,
+                             miscast_source_info _source, spell_type _spell,
                              int _pow, int _fail, string _cause,
-                             nothing_happens_when_type _nothing_happens,
+                             nothing_happens _nothing_happens,
                              int _lethality_margin, string _hand_str,
                              bool _can_plural) :
     target(_target), act_source(_act_source),
     special_source(_source), cause(_cause), spell(_spell),
-    school(SPTYP_NONE), pow(_pow), fail(_fail), level(-1),
+    school(spschool::none), pow(_pow), fail(_fail), level(-1),
     nothing_happens_when(_nothing_happens),
     lethality_margin(_lethality_margin), hand_str(_hand_str),
     can_plural_hand(_can_plural)
 {
     ASSERT(is_valid_spell(_spell));
-    ASSERT(get_spell_disciplines(_spell) != SPTYP_NONE);
+    ASSERT(get_spell_disciplines(_spell) != spschool::none);
 
     init();
     do_miscast();
 }
 
-MiscastEffect::MiscastEffect(actor* _target, actor* _act_source, int _source,
-                             spschool_flag_type _school, int _level,
+MiscastEffect::MiscastEffect(actor* _target, actor* _act_source,
+                             miscast_source_info _source,
+                             spschool _school, int _level,
                              string _cause,
-                             nothing_happens_when_type _nothing_happens,
+                             nothing_happens _nothing_happens,
                              int _lethality_margin, string _hand_str,
                              bool _can_plural) :
     target(_target), act_source(_act_source),
@@ -85,18 +86,19 @@ MiscastEffect::MiscastEffect(actor* _target, actor* _act_source, int _source,
     can_plural_hand(_can_plural)
 {
     ASSERT(!_cause.empty());
-    ASSERT(count_bits(_school) == 1);
-    ASSERT(_school <= SPTYP_LAST_SCHOOL || _school == SPTYP_RANDOM);
+    ASSERT(count_bits(static_cast<uint64_t>(_school)) == 1);
+    ASSERT(_school <= spschool::LAST_SCHOOL || _school == spschool::random);
     ASSERT_RANGE(level, 0, 3 + 1);
 
     init();
     do_miscast();
 }
 
-MiscastEffect::MiscastEffect(actor* _target, actor* _act_source, int _source,
-                             spschool_flag_type _school, int _pow, int _fail,
+MiscastEffect::MiscastEffect(actor* _target, actor* _act_source,
+                             miscast_source_info _source,
+                             spschool _school, int _pow, int _fail,
                              string _cause,
-                             nothing_happens_when_type _nothing_happens,
+                             nothing_happens _nothing_happens,
                              int _lethality_margin, string _hand_str,
                              bool _can_plural) :
     target(_target), act_source(_act_source),
@@ -107,8 +109,8 @@ MiscastEffect::MiscastEffect(actor* _target, actor* _act_source, int _source,
     can_plural_hand(_can_plural)
 {
     ASSERT(!_cause.empty());
-    ASSERT(count_bits(_school) == 1);
-    ASSERT(_school <= SPTYP_LAST_SCHOOL || _school == SPTYP_RANDOM);
+    ASSERT(count_bits(static_cast<uint64_t>(_school)) == 1);
+    ASSERT(_school <= spschool::LAST_SCHOOL || _school == spschool::random);
 
     init();
     do_miscast();
@@ -121,8 +123,8 @@ MiscastEffect::~MiscastEffect()
 
 void MiscastEffect::init()
 {
-    ASSERT(spell != SPELL_NO_SPELL && school == SPTYP_NONE
-           || spell == SPELL_NO_SPELL && school != SPTYP_NONE);
+    ASSERT(spell != SPELL_NO_SPELL && school == spschool::none
+           || spell == SPELL_NO_SPELL && school != spschool::none);
     ASSERT(pow != -1 && fail != -1 && level == -1
            || pow == -1 && fail == -1 && level >= 0 && level <= 3);
 
@@ -157,16 +159,16 @@ void MiscastEffect::init()
 
         source_known = you.can_see(*act_source);
 
-        if (target_known && special_source == MUMMY_MISCAST)
+        if (target_known && special_source.source == miscast_source::mummy)
             source_known = true;
     }
     else
     {
-        ASSERT(special_source != MELEE_MISCAST);
+        ASSERT(special_source.source != miscast_source::melee);
 
         kt = KILL_MISCAST;
 
-        if (special_source == ZOT_TRAP_MISCAST)
+        if (special_source.source == miscast_source::zot_trap)
         {
             source_known = target_known;
 
@@ -182,9 +184,9 @@ void MiscastEffect::init()
 
     ASSERT(kt != KILL_NONE);
 
-    // source_known = false for MELEE_MISCAST so that melee miscasts
+    // source_known = false for miscast_source::melee so that melee miscasts
     // won't give a "nothing happens" message.
-    if (special_source == MELEE_MISCAST)
+    if (special_source.source == miscast_source::melee)
         source_known = false;
 
     if (hand_str.empty())
@@ -209,9 +211,9 @@ string MiscastEffect::get_default_cause(bool attribute_to_user) const
 {
     // This is only for true miscasts, which means both a spell and that
     // the source of the miscast is the same as the target of the miscast.
-    ASSERT(special_source == SPELL_MISCAST);
+    ASSERT(special_source.source == miscast_source::spell);
     ASSERT(spell != SPELL_NO_SPELL);
-    ASSERT(school == SPTYP_NONE);
+    ASSERT(school == spschool::none);
     ASSERT(target->is_player());
 
     return string("miscasting ") + spell_title(spell);
@@ -241,12 +243,12 @@ void MiscastEffect::do_miscast()
         return;
     }
 
-    spschool_flag_type sp_type;
+    spschool sp_type;
     int                severity;
 
     if (spell != SPELL_NO_SPELL)
     {
-        vector<spschool_flag_type> school_list;
+        vector<spschool> school_list;
         for (const auto bit : spschools_type::range())
             if (spell_typematch(spell, bit))
                 school_list.push_back(bit);
@@ -256,8 +258,8 @@ void MiscastEffect::do_miscast()
     else
     {
         sp_type = school;
-        if (sp_type == SPTYP_RANDOM)
-            sp_type = spschools_type::exponent(random2(SPTYP_LAST_EXPONENT + 1));
+        if (sp_type == spschool::random)
+            sp_type = spschools_type::exponent(random2(SPSCHOOL_LAST_EXPONENT + 1));
     }
 
     if (level != -1)
@@ -310,7 +312,7 @@ void MiscastEffect::do_miscast()
     msg_ch         = MSGCH_PLAIN;
     sound_loudness = 0;
 
-    if (special_source == ZOT_TRAP_MISCAST)
+    if (special_source.source == miscast_source::zot_trap)
     {
         _zot();
         if (target->is_player())
@@ -320,18 +322,18 @@ void MiscastEffect::do_miscast()
 
     switch (sp_type)
     {
-    case SPTYP_CONJURATION:    _conjuration(severity);    break;
-    case SPTYP_HEXES:          _hexes(severity);          break;
-    case SPTYP_CHARMS:         _charms(severity);         break;
-    case SPTYP_TRANSLOCATION:  _translocation(severity);  break;
-    case SPTYP_SUMMONING:      _summoning(severity);      break;
-    case SPTYP_NECROMANCY:     _necromancy(severity);     break;
-    case SPTYP_TRANSMUTATION:  _transmutation(severity);  break;
-    case SPTYP_FIRE:           _fire(severity);           break;
-    case SPTYP_ICE:            _ice(severity);            break;
-    case SPTYP_EARTH:          _earth(severity);          break;
-    case SPTYP_AIR:            _air(severity);            break;
-    case SPTYP_POISON:         _poison(severity);         break;
+    case spschool::conjuration:    _conjuration(severity);    break;
+    case spschool::hexes:          _hexes(severity);          break;
+    case spschool::charms:         _charms(severity);         break;
+    case spschool::translocation:  _translocation(severity);  break;
+    case spschool::summoning:      _summoning(severity);      break;
+    case spschool::necromancy:     _necromancy(severity);     break;
+    case spschool::transmutation:  _transmutation(severity);  break;
+    case spschool::fire:           _fire(severity);           break;
+    case spschool::ice:            _ice(severity);            break;
+    case spschool::earth:          _earth(severity);          break;
+    case spschool::air:            _air(severity);            break;
+    case spschool::poison:         _poison(severity);         break;
 
     default:
         die("Invalid miscast spell discipline.");
@@ -377,9 +379,9 @@ void MiscastEffect::do_msg(bool suppress_nothing_happens)
     if (msg.empty())
     {
         if (!suppress_nothing_happens
-            && (nothing_happens_when == NH_ALWAYS
-                || (nothing_happens_when == NH_DEFAULT && source_known
-                    && target_known)))
+            && (nothing_happens_when == nothing_happens::ALWAYS
+                || (nothing_happens_when == nothing_happens::DEFAULT
+                    && source_known && target_known)))
         {
             canned_msg(MSG_NOTHING_HAPPENS);
         }
@@ -456,13 +458,16 @@ bool MiscastEffect::_ouch(int dam, beam_type flavour)
 
         kill_method_type method;
 
-        if (special_source == SPELL_MISCAST && spell != SPELL_NO_SPELL)
-            method = KILLED_BY_WILD_MAGIC;
-        else if (special_source == ZOT_TRAP_MISCAST)
-            method = KILLED_BY_TRAP;
-        else if (special_source >= GOD_MISCAST)
+        if (special_source.source == miscast_source::spell
+            && spell != SPELL_NO_SPELL)
         {
-            god_type god = static_cast<god_type>(special_source - GOD_MISCAST);
+            method = KILLED_BY_WILD_MAGIC;
+        }
+        else if (special_source.source == miscast_source::zot_trap)
+            method = KILLED_BY_TRAP;
+        else if (special_source.source == miscast_source::god)
+        {
+            god_type god = special_source.god;
 
             if (god == GOD_XOM && !player_under_penance(GOD_XOM))
                 method = KILLED_BY_XOM;
@@ -489,7 +494,7 @@ bool MiscastEffect::_explosion()
     ASSERT(beam.flavour != BEAM_NONE);
 
     // wild magic card
-    if (special_source == DECK_MISCAST)
+    if (special_source.source == miscast_source::deck)
         beam.thrower = KILL_MISCAST;
 
     int max_dam = beam.damage.num * beam.damage.size;
@@ -517,7 +522,7 @@ bool MiscastEffect::_big_cloud(cloud_type cl_type, int cloud_pow, int size,
 
 bool MiscastEffect::_paralyse(int dur)
 {
-    if (special_source != HELL_EFFECT_MISCAST)
+    if (special_source.source != miscast_source::hell_effect)
     {
         target->paralyse(act_source, dur, cause);
         return true;
@@ -528,8 +533,11 @@ bool MiscastEffect::_paralyse(int dur)
 
 bool MiscastEffect::_sleep(int dur)
 {
-    if (!target->can_sleep() || special_source == HELL_EFFECT_MISCAST)
+    if (!target->can_sleep()
+        || special_source.source == miscast_source::hell_effect)
+    {
         return false;
+    }
 
     if (target->is_player())
         you.put_to_sleep(act_source, dur);
@@ -545,7 +553,7 @@ bool MiscastEffect::_send_to_abyss()
     // of doing nothing.
     if ((player_in_branch(BRANCH_ABYSS)
          && x_chance_in_y(you.depth, brdepth[BRANCH_ABYSS]))
-        || special_source == HELL_EFFECT_MISCAST)
+        || special_source.source == miscast_source::hell_effect)
     {
         return _malign_gateway();
     }
@@ -627,14 +635,14 @@ bool MiscastEffect::_create_monster(monster_type what, int abj_deg,
     data.set_summoned(nullptr, abj_deg, SPELL_NO_SPELL, god);
     data.set_non_actor_summoner(cause);
 
-    if (special_source != HELL_EFFECT_MISCAST)
+    if (special_source.source != miscast_source::hell_effect)
         data.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
 
     // hostile_at() assumes the monster is hostile to the player,
     // but should be hostile to the target monster unless the miscast
     // is a result of either divine wrath or a Zot trap.
     if (target->is_monster() && !player_under_penance(god)
-        && special_source != ZOT_TRAP_MISCAST)
+        && special_source.source != miscast_source::zot_trap)
     {
         monster* mon_target = target->as_monster();
 
@@ -665,7 +673,7 @@ bool MiscastEffect::_create_monster(monster_type what, int abj_deg,
             data.summon_type = SPELL_SHADOW_CREATURES;
         else if (player_under_penance(god))
             data.summon_type = MON_SUMM_WRATH;
-        else if (special_source == ZOT_TRAP_MISCAST)
+        else if (special_source.source == miscast_source::zot_trap)
             data.summon_type = MON_SUMM_ZOT;
         else
             data.summon_type = MON_SUMM_MISCAST;
@@ -726,7 +734,7 @@ void MiscastEffect::_conjuration(int severity)
         switch (random2(num))
         {
         case 0:
-            if (special_source == HELL_EFFECT_MISCAST)
+            if (special_source.source == miscast_source::hell_effect)
                 all_msg = "Sparks fly from the ground!";
             you_msg      = "Sparks fly from your @hands@!";
             mon_msg_seen = "Sparks fly from @the_monster@'s @hands@!";
@@ -737,7 +745,7 @@ void MiscastEffect::_conjuration(int severity)
                            "with energy!";
             break;
         case 2:
-            if (special_source == HELL_EFFECT_MISCAST)
+            if (special_source.source == miscast_source::hell_effect)
                 all_msg = "Wisps of smoke drift around you.";
             you_msg      = "Wisps of smoke drift from your @hands@.";
             mon_msg_seen = "Wisps of smoke drift from @the_monster@'s "
@@ -791,7 +799,7 @@ void MiscastEffect::_conjuration(int severity)
         switch (random2(2))
         {
         case 0:
-            if (special_source == HELL_EFFECT_MISCAST)
+            if (special_source.source == miscast_source::hell_effect)
                 all_msg = "Smoke billows around you!";
             you_msg        = "Smoke pours from your @hands@!";
             mon_msg_seen   = "Smoke pours from @the_monster@'s @hands@!";
@@ -1149,7 +1157,7 @@ void MiscastEffect::_charms(int severity)
                 reroll = false;
                 break;
             case 2:
-                if (special_source == HELL_EFFECT_MISCAST)
+                if (special_source.source == miscast_source::hell_effect)
                     all_msg = "Magic is drained from your body!";
                 you_msg        = "Magic surges out from your body!";
                 mon_msg_seen   = "Magic surges out from @the_monster@!";
@@ -1569,7 +1577,7 @@ void MiscastEffect::_necromancy(int severity)
                 return;
             }
         }
-        else if (special_source == MUMMY_MISCAST)
+        else if (special_source.source == miscast_source::mummy)
         {
             if (coinflip())
             {
@@ -2020,7 +2028,7 @@ void MiscastEffect::_fire(int severity)
         switch (random2(10))
         {
         case 0:
-            if (special_source == HELL_EFFECT_MISCAST)
+            if (special_source.source == miscast_source::hell_effect)
                 all_msg = "Sparks fly from the ground!";
             you_msg      = "Sparks fly from your @hands@!";
             mon_msg_seen = "Sparks fly from @the_monster@'s @hands@!";
@@ -2030,7 +2038,7 @@ void MiscastEffect::_fire(int severity)
             mon_msg_seen = "The air around @the_monster@ burns with energy!";
             break;
         case 2:
-            if (special_source == HELL_EFFECT_MISCAST)
+            if (special_source.source == miscast_source::hell_effect)
                 all_msg = "Wisps of smoke drift around you.";
             you_msg      = "Wisps of smoke drift from your @hands@.";
             mon_msg_seen = "Wisps of smoke drift from @the_monster@'s @hands@.";
@@ -2085,7 +2093,7 @@ void MiscastEffect::_fire(int severity)
 
             if (success)
             {
-                if (special_source == HELL_EFFECT_MISCAST)
+                if (special_source.source == miscast_source::hell_effect)
                     all_msg = "Fire whirls out of nowhere!";
                 you_msg        = "Fire whirls out from your @hands@!";
                 mon_msg_seen   = "Fire whirls out @the_monster@'s @hands@!";
@@ -2223,7 +2231,7 @@ void MiscastEffect::_ice(int severity)
             // Monster messages needed.
             break;
         case 2:
-            if (special_source == HELL_EFFECT_MISCAST)
+            if (special_source.source == miscast_source::hell_effect)
                 all_msg = "Wisps of condensation drift around you.";
             you_msg        = "Wisps of condensation drift from your @hands@.";
             mon_msg_seen   = "Wisps of condensation drift from @the_monster@'s "
@@ -2350,7 +2358,7 @@ void MiscastEffect::_ice(int severity)
 
             break;
         case 1:
-            if (special_source == HELL_EFFECT_MISCAST)
+            if (special_source.source == miscast_source::hell_effect)
                 all_msg = "Freezing gases billow around you!";
             you_msg        = "Freezing gases pour from your @hands@!";
             mon_msg_seen   = "Freezing gases pour from @the_monster@'s "
@@ -2390,7 +2398,7 @@ void MiscastEffect::_earth(int severity)
                              "moment.";
             break;
         case 2:
-            if (special_source == HELL_EFFECT_MISCAST)
+            if (special_source.source == miscast_source::hell_effect)
                 all_msg = "Sand pours from out of thin air.";
             you_msg        = "Sand pours from your @hands@.";
             mon_msg_seen   = "Sand pours from @the_monster@'s @hands@.";
@@ -2540,7 +2548,7 @@ void MiscastEffect::_air(int severity)
             mon_msg_seen = "@The_monster@ bobs in the air for a moment.";
             break;
         case 1:
-            if (special_source == HELL_EFFECT_MISCAST)
+            if (special_source.source == miscast_source::hell_effect)
                 all_msg = "Wisps of vapour drift around you.";
             you_msg      = "Wisps of vapour drift from your @hands@.";
             mon_msg_seen = "Wisps of vapour drift from @the_monster@'s "
@@ -2548,7 +2556,7 @@ void MiscastEffect::_air(int severity)
             break;
         case 2:
         {
-            if (special_source == HELL_EFFECT_MISCAST)
+            if (special_source.source == miscast_source::hell_effect)
                 all_msg = "Sparks of electricity dance around you.";
 
             bool pluralised = true;
@@ -2658,7 +2666,7 @@ void MiscastEffect::_air(int severity)
             _ouch(4 + random2avg(9, 2), BEAM_ELECTRICITY);
             break;
         case 1:
-            if (special_source == HELL_EFFECT_MISCAST)
+            if (special_source.source == miscast_source::hell_effect)
                 all_msg = "Noxious gases billow around you.";
             you_msg        = "Noxious gases pour from your @hands@!";
             mon_msg_seen   = "Noxious gases pour from @the_monster@'s "
@@ -2698,7 +2706,7 @@ void MiscastEffect::_air(int severity)
             _explosion();
             break;
         case 1:
-            if (special_source == HELL_EFFECT_MISCAST)
+            if (special_source.source == miscast_source::hell_effect)
                 all_msg = "Venomous gases billow around you!";
             you_msg        = "Venomous gases pour from your @hands@!";
             mon_msg_seen   = "Venomous gases pour from @the_monster@'s "
@@ -2752,7 +2760,7 @@ void MiscastEffect::_poison(int severity)
             mon_msg_seen = "@The_monster@ briefly looks sick.";
             break;
         case 2:
-            if (special_source == HELL_EFFECT_MISCAST)
+            if (special_source.source == miscast_source::hell_effect)
                 all_msg = "Wisps of poison gas drift around you.";
             you_msg      = "Wisps of poison gas drift from your @hands@.";
             mon_msg_seen = "Wisps of poison gas drift from @the_monster@'s "
@@ -2808,7 +2816,7 @@ void MiscastEffect::_poison(int severity)
         case 1:
             if (cell_is_solid(target->pos()))
                 break;
-            if (special_source == HELL_EFFECT_MISCAST)
+            if (special_source.source == miscast_source::hell_effect)
                 all_msg = "Noxious gases billow around you!";
             you_msg        = "Noxious gases pour from your @hands@!";
             mon_msg_seen   = "Noxious gases pour from @the_monster@'s "
@@ -2834,7 +2842,7 @@ void MiscastEffect::_poison(int severity)
             break;
 
         case 1:
-            if (special_source == HELL_EFFECT_MISCAST)
+            if (special_source.source == miscast_source::hell_effect)
                 all_msg = "Noxious gases billow around you!";
             you_msg        = "Noxious gases pour from your @hands@!";
             mon_msg_seen   = "Noxious gases pour from @the_monster@'s "
@@ -2883,7 +2891,7 @@ void MiscastEffect::_poison(int severity)
             do_msg();
             break;
         case 1:
-            if (special_source == HELL_EFFECT_MISCAST)
+            if (special_source.source == miscast_source::hell_effect)
                 all_msg = "Venomous gases billow around you!";
             you_msg        = "Venomous gases pour from your @hands@!";
             mon_msg_seen   = "Venomous gases pour from @the_monster@'s "

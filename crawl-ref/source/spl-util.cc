@@ -47,7 +47,7 @@ struct spell_desc
     spell_type id;
     const char  *title;
     spschools_type disciplines;
-    unsigned int flags;       // bitfield
+    spell_flags flags;       // bitfield
     unsigned int level;
 
     // Usually in the range 0..200 (0 means uncapped).
@@ -110,11 +110,11 @@ void init_spell_descs()
         ASSERTM(data.min_range <= data.max_range,
                 "spell '%s' has min_range larger than max_range", data.title);
 
-        ASSERTM(!(data.flags & SPFLAG_TARGETING_MASK)
+        ASSERTM(!(data.flags & spflag::targeting_mask)
                 || (data.min_range >= 0 && data.max_range > 0),
                 "targeted/directed spell '%s' has invalid range", data.title);
 
-        ASSERTM(!(data.flags & SPFLAG_MONSTER && is_player_spell(data.id)),
+        ASSERTM(!(data.flags & spflag::monster && is_player_spell(data.id)),
                 "spell '%s' is declared as a monster spell but is a player spell", data.title);
 
         spell_list[data.id] = i;
@@ -155,17 +155,17 @@ spell_type spell_by_name(string name, bool partial_match)
     return sp == NUM_SPELLS ? SPELL_NO_SPELL : sp;
 }
 
-spschool_flag_type school_by_name(string name)
+spschool school_by_name(string name)
 {
-    spschool_flag_type short_match, long_match;
+    spschool short_match, long_match;
     int                short_matches, long_matches;
 
-    short_match   = long_match   = SPTYP_NONE;
+    short_match   = long_match   = spschool::none;
     short_matches = long_matches = 0;
 
     lowercase(name);
 
-    for (int i = 0; i <= SPTYP_RANDOM; i++)
+    for (int i = 0; i <= (int)spschool::random; i++)
     {
         const auto type = spschools_type::exponent(i);
 
@@ -193,7 +193,7 @@ spschool_flag_type school_by_name(string name)
     }
 
     if (short_matches != 1 && long_matches != 1)
-        return SPTYP_NONE;
+        return spschool::none;
 
     if (short_matches == 1 && long_matches != 1)
         return short_match;
@@ -203,7 +203,7 @@ spschool_flag_type school_by_name(string name)
     if (short_match == long_match)
         return short_match;
 
-    return SPTYP_NONE;
+    return spschool::none;
 }
 
 int get_spell_slot_by_letter(char letter)
@@ -434,12 +434,12 @@ bool spell_is_direct_explosion(spell_type spell)
 
 bool spell_harms_target(spell_type spell)
 {
-    const unsigned int flags = _seekspell(spell)->flags;
+    const spell_flags flags = _seekspell(spell)->flags;
 
-    if (flags & (SPFLAG_HELPFUL | SPFLAG_NEUTRAL))
+    if (flags & (spflag::helpful | spflag::neutral))
         return false;
 
-    if (flags & SPFLAG_TARGETING_MASK)
+    if (flags & spflag::targeting_mask)
         return true;
 
     return false;
@@ -447,12 +447,12 @@ bool spell_harms_target(spell_type spell)
 
 bool spell_harms_area(spell_type spell)
 {
-    const unsigned int flags = _seekspell(spell)->flags;
+    const spell_flags flags = _seekspell(spell)->flags;
 
-    if (flags & (SPFLAG_HELPFUL | SPFLAG_NEUTRAL))
+    if (flags & (spflag::helpful | spflag::neutral))
         return false;
 
-    if (flags & SPFLAG_AREA)
+    if (flags & spflag::area)
         return true;
 
     return false;
@@ -491,7 +491,7 @@ int spell_levels_required(spell_type which_spell)
     return levels;
 }
 
-unsigned int get_spell_flags(spell_type which_spell)
+spell_flags get_spell_flags(spell_type which_spell)
 {
     return _seekspell(which_spell)->flags;
 }
@@ -517,7 +517,7 @@ tileidx_t get_spell_tile(spell_type which_spell)
     return _seekspell(which_spell)->tile;
 }
 
-bool spell_typematch(spell_type which_spell, spschool_flag_type which_disc)
+bool spell_typematch(spell_type which_spell, spschool which_disc)
 {
     return bool(get_spell_disciplines(which_spell) & which_disc);
 }
@@ -774,118 +774,120 @@ bool spell_direction(dist &spelld, bolt &pbolt, direction_chooser_args *args)
     return true;
 }
 
-const char* spelltype_short_name(spschool_flag_type which_spelltype)
+const char* spelltype_short_name(spschool which_spelltype)
 {
     switch (which_spelltype)
     {
-    case SPTYP_CONJURATION:
+    case spschool::conjuration:
         return "Conj";
-    case SPTYP_HEXES:
+    case spschool::hexes:
         return "Hex";
-    case SPTYP_CHARMS:
+    case spschool::charms:
         return "Chrm";
-    case SPTYP_FIRE:
+    case spschool::fire:
         return "Fire";
-    case SPTYP_ICE:
+    case spschool::ice:
         return "Ice";
-    case SPTYP_TRANSMUTATION:
+    case spschool::transmutation:
         return "Tmut";
-    case SPTYP_NECROMANCY:
+    case spschool::necromancy:
         return "Necr";
-    case SPTYP_SUMMONING:
+    case spschool::summoning:
         return "Summ";
-    case SPTYP_TRANSLOCATION:
+    case spschool::translocation:
         return "Tloc";
-    case SPTYP_POISON:
+    case spschool::poison:
         return "Pois";
-    case SPTYP_EARTH:
+    case spschool::earth:
         return "Erth";
-    case SPTYP_AIR:
+    case spschool::air:
         return "Air";
-    case SPTYP_RANDOM:
+    case spschool::random:
         return "Rndm";
     default:
         return "Bug";
     }
 }
 
-const char* spelltype_long_name(spschool_flag_type which_spelltype)
+const char* spelltype_long_name(spschool which_spelltype)
 {
     switch (which_spelltype)
     {
-    case SPTYP_CONJURATION:
+    case spschool::conjuration:
         return "Conjuration";
-    case SPTYP_HEXES:
+    case spschool::hexes:
         return "Hexes";
-    case SPTYP_CHARMS:
+    case spschool::charms:
         return "Charms";
-    case SPTYP_FIRE:
+    case spschool::fire:
         return "Fire";
-    case SPTYP_ICE:
+    case spschool::ice:
         return "Ice";
-    case SPTYP_TRANSMUTATION:
+    case spschool::transmutation:
         return "Transmutation";
-    case SPTYP_NECROMANCY:
+    case spschool::necromancy:
         return "Necromancy";
-    case SPTYP_SUMMONING:
+    case spschool::summoning:
         return "Summoning";
-    case SPTYP_TRANSLOCATION:
+    case spschool::translocation:
         return "Translocation";
-    case SPTYP_POISON:
+    case spschool::poison:
         return "Poison";
-    case SPTYP_EARTH:
+    case spschool::earth:
         return "Earth";
-    case SPTYP_AIR:
+    case spschool::air:
         return "Air";
-    case SPTYP_RANDOM:
+    case spschool::random:
         return "Random";
     default:
         return "Bug";
     }
 }
 
-skill_type spell_type2skill(spschool_flag_type spelltype)
+skill_type spell_type2skill(spschool spelltype)
 {
     switch (spelltype)
     {
-    case SPTYP_CONJURATION:    return SK_CONJURATIONS;
-    case SPTYP_HEXES:          return SK_HEXES;
-    case SPTYP_CHARMS:         return SK_CHARMS;
-    case SPTYP_FIRE:           return SK_FIRE_MAGIC;
-    case SPTYP_ICE:            return SK_ICE_MAGIC;
-    case SPTYP_TRANSMUTATION:  return SK_TRANSMUTATIONS;
-    case SPTYP_NECROMANCY:     return SK_NECROMANCY;
-    case SPTYP_SUMMONING:      return SK_SUMMONINGS;
-    case SPTYP_TRANSLOCATION:  return SK_TRANSLOCATIONS;
-    case SPTYP_POISON:         return SK_POISON_MAGIC;
-    case SPTYP_EARTH:          return SK_EARTH_MAGIC;
-    case SPTYP_AIR:            return SK_AIR_MAGIC;
+    case spschool::conjuration:    return SK_CONJURATIONS;
+    case spschool::hexes:          return SK_HEXES;
+    case spschool::charms:         return SK_CHARMS;
+    case spschool::fire:           return SK_FIRE_MAGIC;
+    case spschool::ice:            return SK_ICE_MAGIC;
+    case spschool::transmutation:  return SK_TRANSMUTATIONS;
+    case spschool::necromancy:     return SK_NECROMANCY;
+    case spschool::summoning:      return SK_SUMMONINGS;
+    case spschool::translocation:  return SK_TRANSLOCATIONS;
+    case spschool::poison:         return SK_POISON_MAGIC;
+    case spschool::earth:          return SK_EARTH_MAGIC;
+    case spschool::air:            return SK_AIR_MAGIC;
 
     default:
-        dprf("spell_type2skill: called with spelltype %u", spelltype);
+        dprf("spell_type2skill: called with unmapped spell school %u"
+             " (name '%s')", static_cast<unsigned int>(spelltype),
+             spelltype_long_name(spelltype));
         return SK_NONE;
     }
 }
 
-spschool_flag_type skill2spell_type(skill_type spell_skill)
+spschool skill2spell_type(skill_type spell_skill)
 {
     switch (spell_skill)
     {
-    case SK_CONJURATIONS:    return SPTYP_CONJURATION;
-    case SK_HEXES:           return SPTYP_HEXES;
-    case SK_CHARMS:          return SPTYP_CHARMS;
-    case SK_FIRE_MAGIC:      return SPTYP_FIRE;
-    case SK_ICE_MAGIC:       return SPTYP_ICE;
-    case SK_TRANSMUTATIONS:  return SPTYP_TRANSMUTATION;
-    case SK_NECROMANCY:      return SPTYP_NECROMANCY;
-    case SK_SUMMONINGS:      return SPTYP_SUMMONING;
-    case SK_TRANSLOCATIONS:  return SPTYP_TRANSLOCATION;
-    case SK_POISON_MAGIC:    return SPTYP_POISON;
-    case SK_EARTH_MAGIC:     return SPTYP_EARTH;
-    case SK_AIR_MAGIC:       return SPTYP_AIR;
+    case SK_CONJURATIONS:    return spschool::conjuration;
+    case SK_HEXES:           return spschool::hexes;
+    case SK_CHARMS:          return spschool::charms;
+    case SK_FIRE_MAGIC:      return spschool::fire;
+    case SK_ICE_MAGIC:       return spschool::ice;
+    case SK_TRANSMUTATIONS:  return spschool::transmutation;
+    case SK_NECROMANCY:      return spschool::necromancy;
+    case SK_SUMMONINGS:      return spschool::summoning;
+    case SK_TRANSLOCATIONS:  return spschool::translocation;
+    case SK_POISON_MAGIC:    return spschool::poison;
+    case SK_EARTH_MAGIC:     return spschool::earth;
+    case SK_AIR_MAGIC:       return spschool::air;
 
     default:
-        return SPTYP_NONE;
+        return spschool::none;
     }
 }
 
@@ -1292,12 +1294,17 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
     case SPELL_GOLUBRIAS_PASSAGE:
         if (orb_limits_translocation(temp))
             return "the Orb prevents this spell from working.";
+        else if (temp && player_in_branch(BRANCH_GAUNTLET))
+        {
+            return "a magic seal in the Gauntlet prevents this spell "
+                "from working.";
+        }
 
     default:
         break;
     }
 
-    if (get_spell_disciplines(spell) & SPTYP_SUMMONING
+    if (get_spell_disciplines(spell) & spschool::summoning
         && spell != SPELL_AURA_OF_ABJURATION
         && you.get_mutation_level(MUT_NO_LOVE))
     {
@@ -1405,13 +1412,13 @@ bool spell_no_hostile_in_range(spell_type spell)
     if (minRange < 0 || range < 0)
         return false;
 
-    const unsigned int flags = get_spell_flags(spell);
+    const spell_flags flags = get_spell_flags(spell);
 
     // The healing spells.
-    if (testbits(flags, SPFLAG_HELPFUL))
+    if (testbits(flags, spflag::helpful))
         return false;
 
-    const bool neutral = testbits(flags, SPFLAG_NEUTRAL);
+    const bool neutral = testbits(flags, spflag::neutral);
 
     bolt beam;
     beam.flavour = BEAM_VISUAL;
@@ -1448,7 +1455,7 @@ bool spell_no_hostile_in_range(spell_type spell)
         beam.quiet_debug = true;
 #endif
 
-        const bool smite = testbits(flags, SPFLAG_TARGET);
+        const bool smite = testbits(flags, spflag::target);
 
         for (radius_iterator ri(you.pos(), range, C_SQUARE, LOS_DEFAULT);
              ri; ++ri)
@@ -1517,15 +1524,15 @@ static const mutation_type arcana_sacrifice_map[] = {
  * Are some subset of the given schools unusable by the player?
  * (Due to Sacrifice Arcana)
  *
- * @param schools   A bitfield containing a union of spschool_flag_types.
+ * @param schools   A bitfield containing a union of spschools.
  * @return          Whether the player is unable use any of the given schools.
  */
 bool cannot_use_schools(spschools_type schools)
 {
-    COMPILE_CHECK(ARRAYSZ(arcana_sacrifice_map) == SPTYP_LAST_EXPONENT + 1);
+    COMPILE_CHECK(ARRAYSZ(arcana_sacrifice_map) == SPSCHOOL_LAST_EXPONENT + 1);
 
     // iter over every school
-    for (int i = 0; i <= SPTYP_LAST_EXPONENT; i++)
+    for (int i = 0; i <= SPSCHOOL_LAST_EXPONENT; i++)
     {
         // skip schools not in the provided set
         const auto school = spschools_type::exponent(i);
@@ -1551,7 +1558,7 @@ bool cannot_use_schools(spschools_type schools)
  */
 skill_type arcane_mutation_to_skill(mutation_type mutation)
 {
-    for (int exp = 0; exp <= SPTYP_LAST_EXPONENT; exp++)
+    for (int exp = 0; exp <= SPSCHOOL_LAST_EXPONENT; exp++)
         if (arcana_sacrifice_map[exp] == mutation)
             return spell_type2skill(spschools_type::exponent(exp));
     return SK_NONE;

@@ -89,7 +89,7 @@ end
 function hell_branches_remaining()
    local hell_branches = { "Geh", "Coc", "Dis", "Tar" }
    local ret = #hell_branches
-   for _, branch in pairs(hell_branches) do
+   for _, branch in ipairs(hell_branches) do
       if travel.find_deepest_explored(branch) == 7 then
          ret = ret - 1
       end

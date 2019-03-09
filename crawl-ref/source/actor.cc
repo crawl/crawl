@@ -124,7 +124,8 @@ int actor::check_res_magic(int power)
     const int adj_pow = ench_power_stepdown(power);
 
     const int mrchance = (100 + mrs) - adj_pow;
-    const int mrch2 = random2(100) + random2(101);
+    int mrch2 = random2(100);
+    mrch2 += random2(101);
 
     dprf("Power: %d (%d pre-stepdown), MR: %d, target: %d, roll: %d",
          adj_pow, power, mrs, mrchance, mrch2);
@@ -346,24 +347,26 @@ int actor::apply_ac(int damage, int max_damage, ac_type ac_rule,
     int saved = 0;
     switch (ac_rule)
     {
-    case AC_NONE:
+    case ac_type::none:
         return damage; // no GDR, too
-    case AC_PROPORTIONAL:
+    case ac_type::proportional:
         ASSERT(stab_bypass == 0);
         saved = damage - apply_chunked_AC(damage, ac);
         saved = max(saved, div_rand_round(max_damage * gdr, 100));
         return max(damage - saved, 0);
 
-    case AC_NORMAL:
+    case ac_type::normal:
         saved = random2(1 + ac);
         break;
-    case AC_HALF:
+    case ac_type::half:
         saved = random2(1 + ac) / 2;
         ac /= 2;
         gdr /= 2;
         break;
-    case AC_TRIPLE:
-        saved = random2(1 + ac) + random2(1 + ac) + random2(1 + ac);
+    case ac_type::triple:
+        saved = random2(1 + ac);
+        saved += random2(1 + ac);
+        saved += random2(1 + ac);
         ac *= 3;
         // apply GDR only twice rather than thrice, that's probably still waaay
         // too good. 50% gives 75% rather than 100%, too.

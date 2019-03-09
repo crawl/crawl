@@ -464,6 +464,36 @@ who carries it into the sunlight; many undead creatures seek it in the hope that
 it will restore them to life. But then, some people will believe anything. Good
 luck!
 
+Seeded play
+========================================
+
+Crawl dungeons are determined by a "seed" number used to initialise the game's
+random number generator. If you initialise the game, keeping the game version
+constant, then the same seed should (within certain parameters) lead to the same
+dungeon. In offline games you can view your game's seed with '?V' as well as in
+a character file; in online games you normally must finish a game in order to
+see the game's seed. There are two seeded modes:
+
+Without dungeon pregeneration ('pregen_dungeon = false')
+  If dungeon pregeneration is turned off (the default), every game with the
+  same seed will have at least the same initial dungeon level and temple
+  layout. However, the order in which you explore levels after the first one
+  can lead to multiple possible dungeon layouts, depending on your choices. This
+  is implicitly how dungeon generation always worked before version 0.23.
+
+With dungeon pregeneration ('pregen_dungeon = true')
+  If dungeon pregeneration is turned on, the entire connected dungeon will be
+  determined by the game seed. Portal vaults and chaotic zones such as the
+  abyss are not guaranteed to be the same, though.
+
+To set a game seed, use the 'game_seed' rc file option, or the '-seed' command
+line option.
+
+If you find that the same seed generates distinct parts of a dungeon on the
+same or different devices, please report it as a bug. However, keep in mind
+that upgrading your save game between multiple versions of crawl, or traversing
+dungeon levels in different orders, will naturally lead to seed divergence.
+
 Further Help
 ========================================
 
@@ -1401,18 +1431,55 @@ Appendices
 1. List of character species
 ****************************************
 
+Species are categorized, roughly, by how difficult and complex they are to
+learn how to play, into three categories: *Simple*, *Intermediate*, and
+*Advanced*. These categories do not necessarily align with difficulty for an
+experienced Crawl player, but rather are intended as an indication of to what
+degree a species has unusual or complex mechanics, or requires deeper/wider
+knowledge of how the game works. (For example, Deep Dwarves have one of the
+higher win rates of all species, but are classified as "Intermediate" because
+their no-healing mechanic takes some adapting to, and has non-trivial
+interactions with background and god choice.) Despite being the outcome of a
+discussion among many players, these categorizations definitely have a
+subjective element to them, and you shouldn't take them to be limiting!
+
+The order within categories is also, roughly, determined by our best judgment
+about the relative ease of learning to play each species.
+
+Next to each species name, in parentheses, is the canonical abbreviation for
+the species.
+
 .. note:: Use 'A' to check for which particular peculiarities a species might
           have. Also, some species have special abilities which can be accessed
           by the 'a' abilities menu. Some also have physical characteristics
           which allow them to make extra attacks.
 
-Humans
-  Humans tend to be hardworking and industrious, and learn new things quickly.
-  The Human species is the most versatile of all the species available to
-  players. Humans advance quickly in levels and have equal abilities in most
-  skills.
+.. note:: Humans are a useful reference point when considering other species:
+          they have 0 for almost all aptitudes; have no special abilities,
+          weakness, or constraints against using certain types of equipment;
+          move normally; and gain experience and magic resistance at a "typical"
+          rate. However, you will see that they are categorized as an
+          *Intermediate* species -- because they are decent, but not excellent,
+          at nearly everything, a Human may need to make use of all sorts of
+          game mechanics depending on what they find in the dungeon, and know
+          how to defend itself against any type of damage or attack it
+          encounters.
 
-Hill Orcs
+Simple species
+==============
+
+Species categorized as *Simple* work straightforwardly for players who have
+less experience with Crawl's game mechanics. While many do have quirks, these
+quirks tend to be passive traits that simplify gameplay, rather than challenges
+that a player has to consciously work around. While all of these species do
+have weaknesses of some kind, these weaknesses are simple to understand, aren't
+fundamentally crippling to all members of the species, and are balanced by
+other strengths. In many cases the special properties of these species allow
+the player to set aside many aspects of the game while still developing a
+strong character.
+
+
+Hill Orcs (HO)
   Hill Orcs are Orcs from the upper world who, jealous of the riches which their
   cousins (the Cave Orcs) possess below the ground, descend in search of plunder
   and adventure.
@@ -1427,7 +1494,17 @@ Hill Orcs
   a religion around that idea. Only Orcs can worship Beogh, the Orc god. They
   can join Beogh even without an altar whenever an orc priest is in sight.
 
-Merfolk
+Minotaurs (Mi)
+  The Minotaurs are yet another species of hybrids - Human bodies with bovine
+  heads. They delve into the Dungeon because of their instinctive love of
+  twisting passageways.
+
+  Minotaurs are extremely good at all forms of physical combat, but are awful at
+  using any type of magic. They can wear all armour except for some headgear.
+  When in close combat, Minotaurs tend to reflexively headbutt those who dare
+  attack them.
+
+Merfolk (Mf)
   The Merfolk are a hybrid species of half-human, half-fish that typically live
   in the oceans and rivers, seldom venturing toward land. However, Merfolk
   aren't as limited on land as some myths suggest; their tails will quickly
@@ -1448,7 +1525,39 @@ Merfolk
   still remains. The instability of their own morphogenic matrix has made them
   very accomplished transmuters, but most other magic seems foreign to them.
 
-Halflings
+Gargoyles (Gr)
+  A cross between ordinary stone gargoyles and living beings, Gargoyles are
+  hideous humanoids with an affinity to rock. They have low health, but large
+  amounts of innate armour which increases further as they gain levels. They
+  eventually gain the ability to fly continuously.
+
+  Gargoyles' partially living form grants them immunity to poison, as well as
+  resistance to electricity, and protection from some effects of necromancy.
+  Their natural armour makes them strong melee fighters, and they are naturally
+  skilled with blunt weapons and in unarmed combat. They can also be exceptional
+  earth-based conjurers.
+
+Draconians (Dr)
+  Draconians are human-dragon hybrids: humanoid in form and approximately
+  human-sized, with wings, tails and scaly skins. Draconians start out in an
+  immature form with brown scales, but as they grow in power they take on a
+  variety of colours. This happens at an early stage in their career, and the
+  colour is determined by chromosomes, not by behaviour.
+
+  Most types of Draconians have breath weapons or special resistances. Draconians
+  cannot wear body armour and advance very slowly in levels, but are reasonably
+  good at all skills other than missile weapons, and they develop natural
+  physical defenses that compensate for the lack of body armour, without
+  needing to train their Armour skill at all. Still, each colour has its own
+  strengths and some have complementary weaknesses, which sometimes requires a
+  bit of flexibility on the part of the player. They are good general-purpose
+  spellcasters, and typically their spellcasting aptitudes will adapt slightly
+  when they gain a colour.
+
+  Draconian colours are detailed below, in the subsection titled
+  `Draconian types`_.
+
+Halflings (Ha)
   Halflings, who are named for being about half the size of Humans, live in
   small villages. They live simple lives and have simple interests. Sometimes a
   particularly restless Halfling will leave his or her village in search of
@@ -1461,7 +1570,46 @@ Halflings
   (except for charms, translocations, and air magic). They advance in levels as
   rapidly as Humans. Halflings cannot wield large weapons.
 
-Kobolds
+Trolls (Tr)
+  Trolls are monstrous creatures with powerful claws. They have thick, knobbly
+  skins of any colour from putrid green to mucky brown, which are covered in
+  patches of thick fur.
+
+  They are incredibly strong, and have a lightning-fast metabolism - requiring
+  a great deal of food to survive, but regenerating rapidly from even the most
+  terrible wounds. However, they are hopeless at spellcasting and learn most
+  skills very slowly.
+
+Ghouls (Gh)
+  Ghouls are horrible undead creatures, slowly rotting away. Although Ghouls can
+  sleep in their graves for years on end, when they rise to walk among the
+  living, they must eat flesh to survive. Raw flesh is preferred, and Ghouls
+  heal and reverse the effects of their eternal rotting by consuming it, but
+  they can never become truly full.
+
+  They aren't very good at doing most things, although they make decent unarmed
+  fighters with their claws and, due to their contact with the grave, can use
+  ice, earth and death magic without too many difficulties.
+
+  Like other undead, ghouls are naturally immune to poisons, negative energy
+  and torment; have little warmth left to be affected by cold; and are not
+  susceptible to mutations.
+
+Intermediate Species
+====================
+
+Species classified as *Intermediate* require a broader understanding of the
+mechanics of Crawl, have some weakness(es) that must be actively compensated
+for, and/or add a relatively complex mechanic (or change in mechanic) to
+gameplay.
+
+Humans (Hu)
+  Humans tend to be hardworking and industrious, and learn new things quickly.
+  The Human species is the most versatile of all the species available to
+  players. Humans advance quickly in levels and have equal abilities in most
+  skills.
+
+Kobolds (Ko)
   Kobolds are small, ugly creatures with few redeeming features. They are not
   the sort of people you would want to spend much time with, unless you happened
   to be a Kobold yourself.
@@ -1474,104 +1622,7 @@ Kobolds
   carnivorous and can only eat meat. Kobolds advance in levels as quickly as
   Humans. Like Halflings, Kobolds cannot wield large weapons.
 
-Spriggans
-  Spriggans are small magical creatures distantly related to Elves. They love to
-  frolic and cast mischievous spells.
-
-  They are poor fighters and have little physical resilience, though they are
-  incredibly skilled at dodging attacks. They are terrible at destructive
-  magic - conjurations, summonings, necromancy and elemental spells. On the
-  other hand, they are excellent at other forms of magic, and are very good at
-  moving silently and quickly. So great is their speed that a Spriggan can
-  overtake a Centaur. Due to their tiny size, they need very little food.
-  However, they are herbivorous and cannot eat meat. Their size also makes them
-  unable to wear most armour. They cannot wield large weapons, and even most
-  smaller weapons require both hands to be wielded by a Spriggan.
-
-Nagas
-  Nagas are a hybrid species: Human from the waist up with a large snake tail
-  instead of legs.
-
-  They are reasonably good at most things and advance in experience levels at
-  the same rate as Merfolk. They are naturally resistant to poisons, can see
-  invisible creatures, and have tough skin, but their tails are relatively slow
-  and cannot move them around as quickly as can other creatures' legs (this only
-  affects their movement rate; all other actions are at normal speed). Their
-  body shape also prevents them from gaining full protection from body armour.
-  A Naga's biggest forte is stealth: Nagas are very good at moving unnoticed.
-  Their tails eventually grow strong enough to constrict their foes in combat.
-
-  Nagas can spit poison; the range, accuracy and damage of this poison increases
-  with the Naga's experience level.
-
-Centaurs
-  The Centaurs are another species of hybrid creatures: horses with Human
-  torsos. They usually live in forests, surviving by hunting.
-
-  Centaurs can move very quickly on their four legs, and are excellent with bows
-  and other missile weapons; they are also reasonable at fighting in general
-  while being slow learners at specific weapon skills. They advance quite slowly
-  in experience levels and are rather sub-par at using magic. Like Nagas, they
-  receive reduced protection from the body armour they wear.
-
-Ogres
-  Ogres are huge, chunky creatures who are very strong and robust, but are not
-  nimble at all. They possess a raw talent for magic, but are poor at making
-  use of magical devices. Ogres mature almost as quickly as Humans.
-
-  Their preferred methods of avoiding beatings are dodging and the use of
-  shields, but they can also use armours made from magical hides, since these
-  accommodate their large frames. Ogres are proficient at using all types of
-  melee weapons, yet all sophisticated forms of missile combat are too awkward
-  for them. They are, however, good at throwing things, in particular boulders.
-
-Trolls
-  Trolls are monstrous creatures with powerful claws. They have thick, knobbly
-  skins of any colour from putrid green to mucky brown, which are covered in
-  patches of thick fur.
-
-  They are incredibly strong, and have a lightning-fast metabolism - requiring
-  a great deal of food to survive, but regenerating rapidly from even the most
-  terrible wounds. However, they are hopeless at spellcasting and learn most
-  skills very slowly.
-
-Minotaurs
-  The Minotaurs are yet another species of hybrids - Human bodies with bovine
-  heads. They delve into the Dungeon because of their instinctive love of
-  twisting passageways.
-
-  Minotaurs are extremely good at all forms of physical combat, but are awful at
-  using any type of magic. They can wear all armour except for some headgear.
-  When in close combat, Minotaurs tend to reflexively headbutt those who dare
-  attack them.
-
-Tengu
-  The Tengu are an ancient and feared species of bird-people with a legendary
-  propensity for violence. Basically humanoid with bird-like heads and clawed
-  feet, the Tengu can wear all types of armour except helmets and boots. Despite
-  their lack of wings, powerful Tengu can fly magically, and very powerful
-  members of this species can stay in the air indefinitely. Their movement speed
-  and evasion are increased slightly while flying.
-
-  They are experts at all forms of fighting, including the magical arts of
-  combat (conjurations, summonings and, to a lesser extent, necromancy). They
-  are good at air and fire elemental magic, but poor at ice and earth magic.
-  Tengu do not appreciate any form of servitude, and so are poor at using
-  invocations. Their light avian bodies cannot sustain a great deal of injury.
-
-Demigods
-  Demigods are mortals with some divine or angelic ancestry, however distant;
-  they can be created by a number of processes, including magical experiments
-  and the time-honoured practice of interplanar miscegenation.
-
-  Demigods look more or less like members of their mortal part's species, but
-  have excellent attributes (Str, Int, Dex) and are extremely robust; they can
-  also draw on great supplies of magical energy. On the downside, they advance
-  more slowly in experience than any other race, gain skills slightly less
-  quickly than Humans and, due to their status, cannot worship the various gods
-  and powers available to other races.
-
-Demonspawn
+Demonspawn (Ds)
   Demonspawn are horrible half-mortal, half-infernal creatures - the flip side
   of the Demigods. Demonspawn can be created in any number of ways: magical
   experiments, breeding, unholy pacts, etc. Although many Demonspawn may
@@ -1585,7 +1636,63 @@ Demonspawn
   and conjurations and much better at necromancy and invocations. Note that
   unlike Demigods, they can take on gods, although not all will accept them.
 
-Deep Dwarves
+Centaurs (Ce)
+  The Centaurs are another species of hybrid creatures: horses with Human
+  torsos. They usually live in forests, surviving by hunting.
+
+  Centaurs can move very quickly on their four legs, and are excellent with bows
+  and other missile weapons; they are also reasonable at fighting in general
+  while being slow learners at specific weapon skills. They advance quite slowly
+  in experience levels and are rather sub-par at using magic. Because of their
+  body shape, they receive reduced protection from the body armour they wear.
+
+Spriggans (Sp)
+  Spriggans are small magical creatures distantly related to Elves. They love to
+  frolic and cast mischievous spells.
+
+  They are poor fighters and have little physical resilience, though they are
+  incredibly skilled at dodging attacks. They are terrible at destructive
+  magic - conjurations, summonings, necromancy and elemental spells. On the
+  other hand, they are excellent at other forms of magic, and are very good at
+  moving silently and quickly. So great is their speed that a Spriggan can
+  overtake a Centaur. Due to their tiny size, they need very little food.
+  However, they are herbivorous and cannot eat meat. Their size also makes them
+  unable to wear most armour. They cannot wield large weapons, and even most
+  smaller weapons require both hands to be wielded by a Spriggan.
+
+Tengu (Te)
+  The Tengu are an ancient and feared species of bird-people with a legendary
+  propensity for violence. Basically humanoid with bird-like heads and clawed
+  feet, the Tengu can wear all types of armour except helmets and boots. Despite
+  their lack of wings, powerful Tengu can fly magically, and very powerful
+  members of this species can stay in the air indefinitely. Their movement speed
+  and evasion are increased slightly while flying.
+
+  They are experts at all forms of fighting, including the magical arts of
+  combat (conjurations, summonings and, to a lesser extent, necromancy). They
+  are good at air and fire elemental magic, but poor at ice and earth magic.
+  Tengu do not appreciate any form of servitude, and so are poor at using
+  invocations. Their light avian bodies cannot sustain a great deal of injury.
+
+Deep Elves (DE)
+   This is an Elven species who long ago fled the overworld to live in darkness
+   underground. There, they developed their mental powers, evolving a natural
+   gift for all forms of magic (including necromancy and earth magic), and
+   adapted physically to their new environment, becoming shorter, weaker, and
+   losing all colouration. They are poor at melee combat and physical defense.
+
+Ogres (Og)
+  Ogres are huge, chunky creatures who are very strong and robust, but are not
+  nimble at all. They possess a raw talent for magic, but are poor at making
+  use of magical devices. Ogres mature almost as quickly as Humans.
+
+  Their preferred methods of avoiding beatings are dodging and the use of
+  shields, but they can also use armours made from magical hides, since these
+  accommodate their large frames. Ogres are proficient at using all types of
+  melee weapons, yet all sophisticated forms of missile combat are too awkward
+  for them. They are, however, good at throwing things, in particular boulders.
+
+Deep Dwarves (DD)
   Deep Dwarves are short, hardy people who, unlike their extinct surface
   relatives, never left the underground homelands. Living there for countless
   generations made them turn pale and lose all ability to regenerate health
@@ -1604,93 +1711,35 @@ Deep Dwarves
   the magic of earth and death, eventually gaining some resistance to the dark
   powers of necromancy.
 
-Deep Elves
-   This is an Elven species who long ago fled the overworld to live in darkness
-   underground. There, they developed their mental powers, evolving a natural
-   gift for all forms of magic (including necromancy and earth magic), and
-   adapted physically to their new environment, becoming shorter, weaker, and
-   losing all colouration. They are poor at melee combat, but excellent
-   at fighting from a distance.
+Gnolls (Gn)
+  Gnolls are a race of caniform humanoids originally hailing from the arid
+  deserts and grasslands of the east. In recent history they have become
+  unusually attracted to the Dungeon, establishing tribes around and even
+  inside of it. Unfortunately their long stay in the Dungeon has exposed their
+  somewhat fragile minds to excessive amounts of its magic.
 
-Felids
-  Felids are a breed of cats that have been granted sentience. Originally they
-  were witches' familiars that were magically augmented to provide help for
-  their masters' rituals, yet many have abandoned, outlived, or, in at least one
-  case, eviscerated their former masters and gone out into the world.
+  On the one hand, their bizarrely altered brains now have incredible
+  proficiency at learning every skill. On the other, these same alterations
+  have rendered Gnolls incapable of selective learning. They learn all skills
+  equally at the same time, so it's hard for them to learn more about any one
+  thing.
 
-  While fully capable of using speech and most forms of magic, Felids are at a
-  serious disadvantage due to their inability to use armour or weapons. Like all
-  cats, Felids are incapable of thriving on vegetable food, and need meat to
-  survive.
+  In order to survive with this limitation, Gnolls use their universal
+  knowledge and excellent physical attributes of strength, intelligence, and
+  dexterity to take advantage of every resource they find in the Dungeon. They
+  also have powerful noses adapted to the Dungeon's scents, allowing them to
+  easily locate where treasures lay hidden.
 
-  Their agility and stealth are legendary, as is their ability to get to hard to
-  reach places. They move faster than most races, but don't run as fast as
-  Centaurs or Spriggans. Felids advance in levels very slowly. They are skilled
-  with many forms of magic, though less so with raw elemental magic.
+Advanced Species
+================
 
-  Felids gain extra lives as they increase in levels. Upon death, they will be
-  resurrected in a safe place, losing an experience level in the process.
+*Advanced* species have some substantial weaknesses, and/or add multiple complex
+new mechanics to gameplay. This category includes several species that
+experienced players may not find difficult per se, but that may require quite
+a bit of experience to adapt to. It also includes species that are just
+plain difficult, such as Mummies.
 
-Barachim
-  Barachim are an amphibious humanoid race, spawned at the dawn of time as
-  servants for the gods. Inevitably, they rebelled and fled into the mortal
-  world; but even uncounted years later, the darkness still flees at their
-  approach, remembering those who they once served.
-
-  Barachim's most remarkable trait is their grossly overmuscled legs, which
-  allow them to leap great distances. When not leaping, they are somewhat
-  slow-moving, and the long sight-lines that their heritage creates can be a
-  major disadvantage, but they can master almost any skill.
-
-Octopodes
-  These land-capable relatives of common octopuses can move about as fast as
-  humans and yet retain the ability to swim underwater, although their dual
-  adaptation is not as good as that of the shapechanging merfolk.
-
-  Octopodes have eight tentacle-shaped legs, and need four of them to move.
-  While a tentacle lacks fingers, two tentacles are a rough equivalent of a
-  human's arm where item manipulation is concerned - including wielding
-  two-handed weapons with four. They can use no armour other than loose hats,
-  but can handle shields just fine. Another peculiarity they have is the ability
-  to wear eight rings, one on each tentacle.
-
-  Their natural camouflage makes them excel at stealth, and they have good
-  knowledge of poisons as well. They are also able to use their tentacles to
-  constrict enemies - potentially several at a time!
-
-Gargoyles
-  A cross between ordinary stone gargoyles and living beings, Gargoyles are
-  hideous humanoids with an affinity to rock. They have low health, but large
-  amounts of innate armour which increases further as they gain levels. They
-  eventually gain the ability to fly continuously.
-
-  Gargoyles' partially living form grants them immunity to poison, as well as
-  resistance to electricity, and protection from some effects of necromancy.
-  Their natural armour makes them strong melee fighters, and they are naturally
-  skilled with blunt weapons and in unarmed combat. They can also be exceptional
-  earth-based conjurers.
-
-Formicids
-  The Formicids are a species of humanoid ants. Just like their tiny insect
-  ancestors, the Formicids are well adept at earth work, both on the physical
-  and magical sides. Their abilities have been used to tunnel immense underground
-  communities and structures, many of which are tens of thousands of years old.
-
-  Perhaps unfortunately, their strong ties to earth have left them completely
-  impervious to being teleported or hasted; Formicids are tied to the earth with
-  a complete sense of stasis. While this is a seemingly bad property for a
-  dungeon adventurer, stasis has the beneficial effect of preventing many types
-  of nasty hexes and maledictions.
-
-  With the ability to lift ten times their own weight, the Formicids have
-  strength rivaling that of ogres. This, along with the fact that they have four
-  arms, allows Formicid warriors to equip both a shield and a two-handed weapon
-  at the same time.
-
-  Formicids make good earth and venom mages, but are quite capable at both melee
-  and ranged combat too. They are naturally bad at air magic and conjurations.
-
-Vine Stalkers
+Vine Stalkers (VS)
   Limber in shape, Vine Stalkers are anthropomorphic masses of thick vines.
   They possess a once-humanoid core, parasitised moments before death by the
   magical vines. Lacking any other discernible features, their faces are
@@ -1711,36 +1760,115 @@ Vine Stalkers
   reserves start to run low, thus replenishing their shroud of magic and their
   spells' fuel with each voracious bite.
 
-Gnolls
-  Gnolls are a race of caniform humanoids originally hailing from the arid
-  deserts and grasslands of the east. In recent history they have become
-  unusually attracted to the Dungeon, establishing tribes around and even
-  inside of it. Unfortunately their long stay in the Dungeon has exposed their
-  somewhat fragile minds to excessive amounts of its magic.
+Vampires (Vp)
+  Vampires are another form of undead, but with a peculiarity: by consuming
+  fresh blood, they may become alive. A bloodless Vampire has the traits of
+  an undead (immunity to poisons, negative energy and torment, resistant to
+  damage from the cold), but cannot regain lost physical attributes or
+  regenerate from wounds over time - in particular, magical items or spells
+  which increase the rate of regeneration will not work (though divine ones
+  will). On the other hand, a Vampire full with blood will regenerate very
+  quickly, but lose all undead powers. Vampires can never starve. They can
+  drink from fresh corpses with the 'e' command, or can bottle blood for later
+  use with 'c'. Upon growing, they learn to transform into quick bats. Unlike
+  other undead species, they may be mutated normally at all times.
 
-  On the one hand, their bizarrely altered brains now have incredible
-  proficiency at learning every skill. On the other, these same alterations
-  have rendered Gnolls incapable of selective learning. They learn all skills
-  equally at the same time, so it's hard for them to learn more about any one
-  thing.
+Demigods (Dg)
+  Demigods are mortals with some divine or angelic ancestry, however distant;
+  they can be created by a number of processes, including magical experiments
+  and the time-honoured practice of interplanar miscegenation.
 
-  In order to survive with this limitation, Gnolls use their universal
-  knowledge and excellent physical attributes of strength, intelligence, and
-  dexterity to take advantage of every resource they find in the Dungeon. They
-  also have powerful noses adapted to the Dungeon's scents, allowing them to
-  easily locate where treasures lay hidden.
+  Demigods look more or less like members of their mortal part's species, but
+  have excellent attributes (Str, Int, Dex) and are extremely robust; they can
+  also draw on great supplies of magical energy. On the downside, they advance
+  more slowly in experience than any other race, gain skills slightly less
+  quickly than Humans and, due to their status, cannot worship the various gods
+  and powers available to other races.
 
-The Undead
-========================================
+Formicids (Fo)
+  The Formicids are a species of humanoid ants. Just like their tiny insect
+  ancestors, the Formicids are well adept at earth work, both on the physical
+  and magical sides. Their abilities have been used to tunnel immense underground
+  communities and structures, many of which are tens of thousands of years old.
 
-As creatures brought back from beyond the grave, the undead are naturally immune
-to poisons, negative energy and torment; have little warmth left to be affected
-by cold; and are not susceptible to mutations.
+  Perhaps unfortunately, their strong ties to earth have left them completely
+  impervious to being teleported or hasted; Formicids are tied to the earth with
+  a complete sense of stasis. While this is a seemingly bad property for a
+  dungeon adventurer, stasis has the beneficial effect of preventing many types
+  of nasty hexes and maledictions.
 
-There are three types of undead available to players: Mummies, Ghouls and
-Vampires.
+  With the ability to lift ten times their own weight, the Formicids have
+  strength rivaling that of ogres. This, along with the fact that they have four
+  arms, allows Formicid warriors to equip both a shield and a two-handed weapon
+  at the same time.
 
-Mummies
+  Formicids make good earth and venom mages, but are quite capable at both melee
+  and ranged combat too. They are naturally bad at air magic and conjurations.
+
+Nagas (Na)
+  Nagas are a hybrid species: Human from the waist up with a large snake tail
+  instead of legs.
+
+  They are reasonably good at most things and advance in experience levels at
+  the same rate as Merfolk. They are naturally resistant to poisons, can see
+  invisible creatures, and have tough skin, but their tails are relatively slow
+  and cannot move them around as quickly as can other creatures' legs (this only
+  affects their movement rate; all other actions are at normal speed). Like
+  Centaurs, their body shape also prevents them from gaining full protection
+  from body armour. A Naga's biggest forte is stealth: Nagas are very good at
+  moving unnoticed. Their tails eventually grow strong enough to constrict
+  their foes in combat.
+
+  Nagas can spit poison; the range, accuracy and damage of this poison increases
+  with the Naga's experience level.
+
+Octopodes (Op)
+  These land-capable relatives of common octopuses can move about as fast as
+  humans and yet retain the ability to swim underwater, although their dual
+  adaptation is not as good as that of the shapechanging merfolk.
+
+  Octopodes have eight tentacle-shaped legs, and need four of them to move.
+  While a tentacle lacks fingers, two tentacles are a rough equivalent of a
+  human's arm where item manipulation is concerned - including wielding
+  two-handed weapons with four. They can use no armour other than loose hats,
+  but can handle shields just fine. Another peculiarity they have is the ability
+  to wear eight rings, one on each tentacle.
+
+  Their natural camouflage makes them excel at stealth, and they have good
+  knowledge of poisons as well. They are also able to use their tentacles to
+  constrict enemies - potentially several at a time!
+
+Felids (Fe)
+  Felids are a breed of cats that have been granted sentience. Originally they
+  were witches' familiars that were magically augmented to provide help for
+  their masters' rituals, yet many have abandoned, outlived, or, in at least one
+  case, eviscerated their former masters and gone out into the world.
+
+  While fully capable of using speech and most forms of magic, Felids are at a
+  serious disadvantage due to their inability to use armour or weapons. Like all
+  cats, Felids are incapable of thriving on vegetable food, and need meat to
+  survive.
+
+  Their agility and stealth are legendary, as is their ability to get to hard to
+  reach places. They move faster than most races, but don't run as fast as
+  Centaurs or Spriggans. Felids advance in levels very slowly. They are skilled
+  with many forms of magic, though less so with raw elemental magic.
+
+  Felids gain extra lives as they increase in levels. Upon death, they will be
+  resurrected in a safe place, losing an experience level in the process.
+
+Barachim (Ba)
+  Barachim are an amphibious humanoid race, spawned at the dawn of time as
+  servants for the gods. Inevitably, they rebelled and fled into the mortal
+  world; but even uncounted years later, the darkness still flees at their
+  approach, remembering those who they once served.
+
+  Barachim's most remarkable trait is their grossly overmuscled legs, which
+  allow them to leap great distances. When not leaping, they are somewhat
+  slow-moving, and the long sight-lines that their heritage creates can be a
+  major disadvantage, but they can master almost any skill.
+
+Mummies (Mu)
   These are undead creatures who travel into the depths in search of revenge,
   redemption, or just because they want to.
 
@@ -1752,43 +1880,12 @@ Mummies
   However, their desiccated bodies are highly flammable. They also do not need
   to eat or drink and, in any case, are incapable of doing so.
 
-Ghouls
-  Ghouls are horrible undead creatures, slowly rotting away. Although Ghouls can
-  sleep in their graves for years on end, when they rise to walk among the
-  living, they must eat flesh to survive. Raw flesh is preferred, and Ghouls
-  heal and reverse the effects of their eternal rotting by consuming it, but
-  they can never become truly full.
+  Like other undead, mummies are naturally immune to poisons, negative energy
+  and torment; have little warmth left to be affected by cold; and are not
+  susceptible to mutations.
 
-  They aren't very good at doing most things, although they make decent unarmed
-  fighters with their claws and, due to their contact with the grave, can use
-  ice, earth and death magic without too many difficulties.
-
-Vampires
-  Vampires are another form of undead, but with a peculiarity: by consuming
-  fresh blood, they may become alive. A bloodless Vampire has all the traits of
-  an undead, but cannot regain lost physical attributes or regenerate from
-  wounds over time - in particular, magical items or spells which increase the
-  rate of regeneration will not work (though divine ones will). On the other
-  hand, a Vampire full with blood will regenerate very quickly, but lose all
-  undead powers. Vampires can never starve. They can drink from fresh corpses
-  with the 'e' command, or can bottle blood for later use with 'c'. Upon
-  growing, they learn to transform into quick bats. Unlike other undead
-  species, they may be mutated normally at all times.
-
-Draconians
+Draconian types
 ========================================
-
-Draconians are human-dragon hybrids: humanoid in form and approximately
-human-sized, with wings, tails and scaly skins. Draconians start out in an
-immature form with brown scales, but as they grow in power they take on a
-variety of colours. This happens at an early stage in their career, and the
-colour is determined by chromosomes, not by behaviour.
-
-Most types of Draconians have breath weapons or special resistances. Draconians
-cannot wear body armour and advance very slowly in levels, but are reasonably
-good at all skills other than missile weapons. Still, each colour has its own
-strengths and some have complementary weaknesses, which sometimes requires a bit
-of flexibility on the part of the player.
 
 Red Draconians
   feel at home in fiery surroundings. They are bad with ice magic but very
@@ -1840,69 +1937,52 @@ characters. Although each has its own strengths and weaknesses, some are
 definitely easier than others, at least to begin with. The best backgrounds for
 a beginner are probably Gladiators and Berserkers; if you really want to play a
 magician, try a Conjurer or a Wizard. However, not all species are equally well
-suited for all backgrounds. The lighter coloured choices on the selection screen
-are generally considered to be the more accessible ones.
+suited for all backgrounds. After you have selected a species, the background
+selection menu while show backgrounds generally considered to be more accessible
+for a species in a brighter colour.
 
 Each background starts out with a different set of skills and items, but from
 there you can shape them as you will. Note that due to peculiarities of size or
-body shape, some characters start with a different inventory.
+body shape, some species-background combinations start with a different
+inventory than described here.
+
+Warrior backgrounds
+===================
+
+Warriors are experienced at using physical weapons and defending themselves.
 
 Fighters
-  Fighters usually start with a good weapon, a suit of heavy armour, a
-  shield, and a potion of might. They have a good general grounding in the
-  arts of fighting.
+  Fighters usually start with a good weapon of their choice, a suit of heavy
+  armour, a shield, and a potion of might. They have a good general grounding
+  in the arts of fighting.
 
 Gladiators
   The Gladiator has been trained to fight in the ring, and so is versed in the
   arts of fighting, but is not so good at anything else. In fact, Gladiators
   have never learned anything except bashing monsters with heavy things. They
-  start with a nasty weapon, light armour, headgear and some nets.
+  start with a weapon of their choice, light armour, headgear and some nets.
 
 Monks
   The Monk is a member of an ascetic order dedicated to the perfection of one's
   body and soul through the discipline of the martial arts. Monks start with
-  only a simple weapon and a robe. When they choose a god for the first time,
-  their spiritual training gives them a piety boost.
-
-Berserkers
-  Berserkers are hardy warriors who worship Trog the Wrathful, from whom they
-  get the power to go berserk (as well as a number of other powers, should they
-  prove worthy), but who forbids the use of spell magic. They enter the dungeon
-  with a weapon of their choice, and dressed in animal skins.
-
-Chaos Knights
-  The Chaos Knight is a plaything of Xom. Xom is a very unpredictable (and
-  possibly psychotic) entity who rewards or punishes according to whim.
-
-Abyssal Knights
-  The Abyssal Knight is a fighter serving Lugonu the Unformed, ruler of the
-  Abyss. They are granted some power over the Abyss, and must spread death and
-  disorder in return.
-
-Skalds
-  Formidable warriors in their own rights, Skalds practice a form of augmenting
-  battle magic that is either chanted or sung. Unique to the highlands in which
-  they originate, these spells and formulae are second nature: they can either
-  inspire greatness in themselves and their allies, or fear in the hearts of
-  their enemies.
-
-Warpers
-  Warpers specialise in translocation magic, and are experts in traveling long
-  distances and positioning themselves precisely and use this to their advantage
-  in melee or missile combat. They start with a scroll of blinking.
-
-Assassins
-  An Assassin is a stealthy character who is especially good at killing, using
-  daggers or blowguns. They start with some deadly curare needles.
+  only a simple weapon of their choice and a robe. When they choose a god for
+  the first time, their spiritual training gives them a piety boost.
 
 Hunters
   The Hunter is a type of fighter who specialises in missile weapons. A Hunter
-  starts with either some throwing weapons or a ranged weapon and some
-  ammunition, as well as a short sword or club and a set of leathers.
+  starts with either some throwing weapons or a ranged weapon of their choice
+  and some ammunition, as well as a short sword, and a set of leathers.
 
-Arcane Marksmen
-  Arcane Marksmen are Hunters who use debilitating spells to assist their ranged
-  attacks. They are particularly good at keeping their enemies at a distance.
+Assassins
+  An Assassin is a stealthy character who is especially good at killing, using
+  daggers or blowguns. They start with a dagger, a robe and cloak, a blowgun,
+  poisoned needles, and a few deadly and rare curare needles.
+
+Adventurer backgrounds
+======================
+
+Adventurers have varied and idiosyncratic skills that they have picked up in
+their travels.
 
 Artificers
   Artificers are attuned to gadgets, mechanics and magic elicited from arcane
@@ -1913,70 +1993,131 @@ Artificers
 Wanderers
   Wanderers are people who have not learned a specific trade. Instead, they've
   travelled around becoming "jacks-of-all-trades, masters of none". They start
-  the game with a large, random assortment of skills and maybe some small
-  items they picked up along the way, but, other than that, they're pretty much
+  the game with a random assortment of skills and maybe some small items and
+  spells they picked up along the way, but, other than that, they're pretty much
   on their own.
 
-Magicians
-========================================
+Zealot backgrounds
+==================
 
-A magician is not an available character background by itself, but a type of
-background, encompassing Wizards, Conjurers, Enchanters, Summoners,
-Necromancers, Transmuters, various Elementalists and Venom Mages. Magicians are
-the best at using magic. Among other things, they start with a robe and a book
-of spells which should see them through the first several levels.
+Zealots start the game already worshipping a god.
 
-Wizards
-  A Wizard is a magician who does not specialise in any area of magic. Wizards
-  start with a variety of magical skills and with Magic Dart memorised. Their
-  book allows them to progress in many different branches of the arcane arts.
+Berserkers
+  Berserkers are hardy warriors who worship Trog the Wrathful, from whom they
+  get the power to go berserk (as well as a number of other powers, should they
+  prove worthy), but who forbids the use of spell magic. They enter the dungeon
+  with a weapon of their choice, and dressed in animal skins.
 
-Conjurers
-  The Conjurer specialises in the violent and destructive magic of conjuration
-  spells. Like Wizards, the Conjurer starts with the Magic Dart spell.
+Abyssal Knights
+  The Abyssal Knight is a fighter serving Lugonu the Unformed, ruler of the
+  Abyss. They are granted some power over the Abyss, and must spread death and
+  disorder in return. They are sent from the Abyss into the Dungeon to spread
+  corruption and chaos, starting with a simple weapon of their choice and
+  leather armour.
 
-Enchanters
-  The Enchanter specialises in the subtle art of hexes. Instead of directly
-  damaging foes, hexes disable and debilitate them, allowing the Enchanter to
-  finish the helpless creatures in combat. The Enchanter begins with lightly
-  enchanted weapons and armour, as well as the Corona spell.
+Chaos Knights
+  The Chaos Knight is a plaything of Xom, subject to the god's constantly
+  changing moods. Xom is a very unpredictable (and possibly psychotic) entity
+  who rewards or punishes according to whim. They begin with a lightly enchanted
+  leather armour, and a simple weapon of their choice.
 
-Summoners
-  The Summoner specialises in calling creatures from this and other worlds to
-  give assistance. Although they can at first summon only very wimpy creatures,
-  the more advanced summoning spells allow summoners to call on such powers as
-  elementals and demons.
+Warrior-mage backgrounds
+========================
 
-Necromancers
-  The Necromancer is a magician who specialises in the less pleasant side of
-  magic. Necromantic spells are a varied bunch, but many involve some degree of
-  risk or harm to the caster.
+Warrior mages begin the game with a mix of physical combat and magic skills,
+though usually excel at neither. They start with a book of spells, and usually
+with some way of defending themselves.
+
+Skalds
+  Formidable warriors in their own rights, Skalds practice a form of augmenting
+  battle magic that is either chanted or sung. Unique to the highlands in which
+  they originate, these spells and formulae are second nature: they can either
+  inspire greatness in themselves and their allies, or fear in the hearts of
+  their enemies. They begin the game with a weapon of their choice, some
+  leather armour, and the Book of Battle.
 
 Transmuters
   Transmuters specialise in transmutation magic, and can cause strange changes
   in themselves and others. They deal damage primarily in unarmed combat, often
   using transformations to enhance their defensive and offensive capabilities.
+  They begin the game with the Book of Changes, some arrows to turn into snakes,
+  and a robe.
 
-Venom Mages
-  Venom Mages specialise in poison magic, which is extremely useful in the
-  shallower levels of the dungeon where few creatures are immune to it.
+Warpers
+  Warpers specialise in translocation magic, and are experts in traveling long
+  distances and positioning themselves precisely and use this to their advantage
+  in melee or missile combat. They start with a scroll of blinking, the Book of
+  Spatial Translocations, some dispersal tomahawks, a simple weapon of thier
+  choice, and leather armour.
+
+Arcane Marksmen
+  Arcane Marksmen are Hunters who use debilitating spells to assist their ranged
+  attacks. They are particularly good at keeping their enemies at a distance.
+  They begin the game with a the Book of Debilitation, a ranged weapon of their
+  choice, and a robe.
+
+Enchanters
+  The Enchanter specialises in the subtle art of hexes. Instead of directly
+  damaging foes, hexes disable and debilitate them, allowing the Enchanter to
+  finish the helpless creatures in combat. The Enchanter begins with lightly
+  enchanted dagger, a robe, and the Book of Maledictions.
+
+Mage backgrounds
+================
+
+A mage is not an available character background by itself, but a type of
+background, encompassing Wizards, Conjurers, Summoners, Necromancers, various
+Elementalists and Venom Mages. Mages are the best at using magic. Among other
+things, they start with a robe and a book of spells which should see them
+through the first several levels.
+
+Wizards
+  A Wizard is a magician who does not specialise in any area of magic. Wizards
+  start with a variety of magical skills and with Magic Dart memorised, from
+  the Book of Minor Magic. Their book allows them to progress in many different
+  branches of the arcane arts. They also get a wizard hat.
+
+Conjurers
+  The Conjurer specialises in the violent and destructive magic of conjuration
+  spells. Like Wizards, the Conjurer starts with the Magic Dart spell, in their
+  case from the Book of Conjurations.
+
+Summoners
+  The Summoner specialises in calling creatures from this and other worlds to
+  give assistance. Although they can at first summon only very wimpy creatures,
+  the more advanced summoning spells allow summoners to call on such powers as
+  elementals and demons. They begin with the Book of Callings.
+
+Necromancers
+  The Necromancer is a magician who specialises in the less pleasant side of
+  magic, drawing initially from the Book of Necromancy. Necromantic spells are
+  a varied bunch, but many involve some degree of risk or harm to the caster.
 
 Elementalists
   Elementalists are magicians who specialise in one of the four types of
   elemental magic: air, fire, earth or ice.
 
   Fire Magic
-    tends towards destructive conjurations.
+    tends towards destructive conjurations. Fire Elementalists begin with the
+    Book of Flames.
 
   Ice Magic
     offers a balance between destructive conjurations and protective charms.
+    Ice Elementalists start with the Book of Frost.
 
   Air Magic
     provides many useful charms in addition to some unique destructive
-    capabilities.
+    capabilities. Air Elementalists begin with the Book of Air.
 
   Earth Magic
-    is a mixed bag, with destructive, debilitating and utility spells available.
+    is a versatile school, with destructive, debilitating and utility spells
+    available. Earth Elementalists start with the Book of Geomancy, and some
+    stones to use for the Sandblast spell.
+
+Venom Mages
+  Venom Mages specialise in poison magic, which is extremely useful in the
+  shallower levels of the dungeon where few creatures are immune to it. Their
+  first book is the Young Poisoner's Handbook.
 
 ****************************************
 3. List of skills

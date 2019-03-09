@@ -358,9 +358,11 @@ static vector<string> _get_god_keys()
     for (int i = GOD_NO_GOD + 1; i < NUM_GODS; i++)
     {
         god_type which_god = static_cast<god_type>(i);
+#if TAG_MAJOR_VERSION == 34
         // XXX: currently disabled.
         if (which_god != GOD_PAKELLAS)
-            names.push_back(god_name(which_god));
+#endif
+        names.push_back(god_name(which_god));
     }
 
     return names;
@@ -427,7 +429,7 @@ static bool _spell_filter(string key, string body)
     if (spell == SPELL_NO_SPELL)
         return true;
 
-    if (get_spell_flags(spell) & SPFLAG_TESTING)
+    if (get_spell_flags(spell) & spflag::testing)
         return !you.wizard;
 
     return false;

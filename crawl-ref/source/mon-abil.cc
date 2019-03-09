@@ -662,7 +662,7 @@ static bool _slime_split_merge(monster* thing)
 }
 
 // Splits and polymorphs merged slime creatures.
-bool slime_creature_polymorph(monster& slime)
+bool slime_creature_polymorph(monster& slime, poly_power_type power)
 {
     ASSERT(slime.type == MONS_SLIME_CREATURE);
 
@@ -672,14 +672,14 @@ bool slime_creature_polymorph(monster& slime)
         while (slime.blob_size > 1 && count <= 10)
         {
             if (monster *splinter = _slime_split(&slime, true))
-                slime_creature_polymorph(*splinter);
+                slime_creature_polymorph(*splinter, power);
             else
                 break;
             count++;
         }
     }
 
-    return monster_polymorph(&slime, RANDOM_MONSTER);
+    return monster_polymorph(&slime, RANDOM_MONSTER, power);
 }
 
 static bool _starcursed_split(monster* mon)
@@ -1156,7 +1156,9 @@ bool mon_special_ability(monster* mons)
              && !mons->has_ench(ENCH_INNER_FLAME))
         {
             simple_monster_message(*mons, " overheats!");
-            mons->add_ench(mon_enchant(ENCH_INNER_FLAME, 0, 0,
+            mid_t act = mons->summoner == MID_PLAYER ? MID_YOU_FAULTLESS :
+                        mons->summoner;
+            mons->add_ench(mon_enchant(ENCH_INNER_FLAME, 0, actor_by_mid(act),
                                        INFINITE_DURATION));
         }
         break;

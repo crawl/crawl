@@ -95,8 +95,9 @@ spret cast_excruciating_wounds(int power, bool fail)
     if (dangerous_disto)
     {
         // Can't get out of it that easily...
-        MiscastEffect(&you, nullptr, WIELD_MISCAST, SPTYP_TRANSLOCATION,
-                      9, 90, "rebranding a weapon of distortion");
+        MiscastEffect(&you, nullptr, {miscast_source::wield},
+                      spschool::translocation, 9, 90,
+                      "rebranding a weapon of distortion");
     }
 
     noisy(spell_effect_noise(SPELL_EXCRUCIATING_WOUNDS), you.pos());

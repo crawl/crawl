@@ -1,0 +1,52 @@
+enum: SP_NAGA
+monster: MONS_NAGA
+name: Naga
+difficulty: Advanced
+difficulty_priority: 60
+species_flags:
+  - small_torso
+aptitudes:
+  xp: 0
+  hp: 2
+  mp_mod: 0
+  mr: 5
+  slings: -1
+  bows: -1
+  crossbows: -1
+  throwing: -1
+  armour: -2
+  dodging: -2
+  stealth: 5
+  shields: -2
+  spellcasting: -1
+  poison_magic: 3
+  invocations: 1
+size: large
+str: 10
+int: 8
+dex: 6
+levelup_stat_frequency: 4
+mutations:
+  1:
+    MUT_ACUTE_VISION: 1
+    MUT_SLOW: 2
+    MUT_DEFORMED: 1
+    MUT_SPIT_POISON: 1
+    MUT_POISON_RESISTANCE: 1
+    MUT_SLOW_METABOLISM: 1
+  13:
+    MUT_CONSTRICTING_TAIL: 1
+fake_mutations:
+  - long: You cannot wear boots.
+recommended_jobs:
+  - JOB_BERSERKER
+  - JOB_TRANSMUTER
+  - JOB_ENCHANTER
+  - JOB_FIRE_ELEMENTALIST
+  - JOB_ICE_ELEMENTALIST
+  - JOB_WARPER
+  - JOB_WIZARD
+  - JOB_VENOM_MAGE
+create_enum: false
+walking_verb: Slid
+altar_action: coil in front of

@@ -10,6 +10,7 @@
 #include "chardump.h"
 #include "cluautil.h"
 #include "coordit.h"
+#include "dbg-util.h"
 #include "dungeon.h"
 #include "files.h"
 #include "god-wrath.h"
@@ -18,6 +19,7 @@
 #include "mon-act.h"
 #include "mon-death.h"
 #include "mon-poly.h"
+#include "ng-setup.h"
 #include "religion.h"
 #include "stairs.h"
 #include "state.h"
@@ -67,6 +69,12 @@ LUAFN(debug_goto_place)
     return 0;
 }
 
+LUAFN(debug_dungeon_setup)
+{
+    initial_dungeon_setup();
+    return 0;
+}
+
 LUAFN(debug_enter_dungeon)
 {
     init_level_connectivity();
@@ -85,7 +93,6 @@ LUAFN(debug_flush_map_memory)
 {
     dgn_flush_map_memory();
     init_level_connectivity();
-    you.unique_creatures.reset();
     return 0;
 }
 
@@ -121,6 +128,15 @@ LUAFN(debug_dump_map)
     if (lua_isstring(ls, pos))
         dump_map(lua_tostring(ls, pos), true);
     return 0;
+}
+
+LUAFN(debug_vault_names)
+{
+    vector<string> vnames = level_vault_names(true);
+    string r;
+    r = comma_separated_line(vnames.begin(), vnames.end());
+    lua_pushstring(ls, r.c_str());
+    return 1;
 }
 
 LUAFN(_debug_test_explore)
@@ -379,9 +395,45 @@ LUAFN(debug_cpp_assert)
     return 0;
 }
 
+LUAFN(debug_reset_rng)
+{
+    // call this with care...
+
+    if (lua_type(ls, 1) == LUA_TSTRING)
+    {
+        const char *seed_string = lua_tostring(ls, 1);
+        uint64_t tmp_seed = 0;
+        if (!sscanf(seed_string, "%" SCNu64, &tmp_seed))
+            tmp_seed = 0;
+        Options.seed = tmp_seed;
+    }
+    else
+    {
+        // quick and dirty - use only 32 bit seeds
+        unsigned int seed = (unsigned int) luaL_checkint(ls, 1);
+        Options.seed = (uint64_t) seed;
+    }
+    reset_rng();
+    const string ret = make_stringf("%" PRIu64, Options.seed);
+    lua_pushstring(ls, ret.c_str());
+    return 1;
+}
+
+LUAFN(debug_get_rng_state)
+{
+    string r = make_stringf("seed: %" PRIu64 ", generator states: ",
+        Options.seed);
+    vector<uint64_t> states = get_rng_states();
+    for (auto i : states)
+        r += make_stringf("%" PRIu64 " ", i);
+    lua_pushstring(ls, r.c_str());
+    return 1;
+}
+
 const struct luaL_reg debug_dlib[] =
 {
 { "goto_place", debug_goto_place },
+{ "dungeon_setup", debug_dungeon_setup },
 { "enter_dungeon", debug_enter_dungeon },
 { "down_stairs", debug_down_stairs },
 { "up_stairs", debug_up_stairs },
@@ -390,6 +442,7 @@ const struct luaL_reg debug_dlib[] =
 { "reveal_mimics", debug_reveal_mimics },
 { "los_changed", debug_los_changed },
 { "dump_map", debug_dump_map },
+{ "vault_names", debug_vault_names },
 { "test_explore", _debug_test_explore },
 { "bouncy_beam", debug_bouncy_beam },
 { "cull_monsters", debug_cull_monsters},
@@ -405,5 +458,7 @@ const struct luaL_reg debug_dlib[] =
 { "seen_monsters_react", debug_seen_monsters_react },
 { "disable", debug_disable },
 { "cpp_assert", debug_cpp_assert },
+{ "reset_rng", debug_reset_rng },
+{ "get_rng_state", debug_get_rng_state },
 { nullptr, nullptr }
 };

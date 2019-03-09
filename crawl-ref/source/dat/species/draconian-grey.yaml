@@ -1,0 +1,42 @@
+enum: SP_GREY_DRACONIAN
+monster: MONS_GREY_DRACONIAN
+name: "Grey Draconian"
+short_name: "Dr"
+adjective: "Draconian"
+genus: "Draconian"
+difficulty: False
+species_flags:
+  - draconian
+aptitudes:
+  xp: -1
+  hp: 1
+  mp_mod: 0
+  mr: 3
+  fighting: 1
+  slings: -1
+  bows: -1
+  crossbows: -1
+  throwing: -1
+  armour: False
+  dodging: -1
+  spellcasting: -1
+  hexes: -1
+  charms: -1
+  invocations: 1
+  # Grey Draconian specific
+  earth_magic: 2
+  air_magic: -2
+can_swim: true
+str: 10
+int: 8
+dex: 6
+levelup_stat_frequency: 4
+mutations:
+  1:
+    MUT_COLD_BLOODED: 1
+  7:
+    MUT_UNBREATHING: 1
+fake_mutations:
+  - long: You can walk through water.
+    short: walk through water
+create_enum: false

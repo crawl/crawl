@@ -726,7 +726,9 @@ void set_random_target(monster* mon)
     mon->target = random_in_bounds(); // If we don't find anything better.
     for (int tries = 0; tries < 150; ++tries)
     {
-        coord_def delta = coord_def(random2(13), random2(13)) - coord_def(6, 6);
+        coord_def delta;
+        delta.x = random2(13) - 6;
+        delta.y = random2(13) - 6;
         if (delta.origin())
             continue;
 

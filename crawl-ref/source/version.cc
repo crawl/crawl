@@ -11,6 +11,7 @@
 #include "compflag.h"
 #include "notes.h"
 #include "player.h"
+#include "state.h"
 #include "stringutil.h"
 
 namespace Version
@@ -81,13 +82,19 @@ void Version::record(string prev)
     }
 }
 
+size_t Version::history_size()
+{
+    if (!crawl_state.need_save || !you.props.exists(VERSION_HISTORY_PROP))
+        return 0;
+    else
+        return you.props[VERSION_HISTORY_PROP].get_vector().size();
+}
+
 string Version::history()
 {
-    if (!you.props.exists(VERSION_HISTORY_PROP)
-        || you.props[VERSION_HISTORY_PROP].get_vector().size() == 0)
-    {
+    if (history_size() == 0)
         return make_stringf("No version history (current version is %s)", Long);
-    }
+
     string result;
     for (auto v : you.props[VERSION_HISTORY_PROP].get_vector())
     {

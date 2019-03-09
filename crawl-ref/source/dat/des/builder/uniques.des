@@ -286,10 +286,8 @@ DEPTH:  Depths:1-3, Elf:$, Swamp:3-, Snake:3-, Shoals:3-, Spider:3-, Vaults:2-
 DEPTH:  Crypt
 : place_unique(_G, "Bai Suzhen")
 
-# Do *not* change the name of this vault (uniq_boris) without changing the
-# relevant section in monstuff.cc:monster_die. If you wish to alter Boris'
-# weights by using multiple uniq_boris TAG'd maps, ensure that you add the
-# relevant line to remove the tag in monstuff.cc:monster_die.
+# Initial placement of Boris: he may regenerate on later levels after
+# being killed.
 NAME:   uniq_boris
 DEPTH:  Depths:3-, Vaults:2-, Crypt, Tomb
 : place_unique(_G, "Boris")

@@ -11,12 +11,14 @@
 #include <iostream>
 #include <iterator>
 #include <sstream>
+#include <unordered_set>
 
 #include "ability.h"
 #include "abyss.h"
 #include "act-iter.h"
 #include "artefact.h"
 #include "attitude-change.h"
+#include "beam.h"
 #include "cloud.h"
 #include "coordit.h"
 #include "dactions.h"
@@ -75,6 +77,7 @@
 #include "uncancel.h"
 #include "unicode.h"
 #include "view.h"
+#include "viewchar.h"
 #include "xom.h"
 
 using namespace ui;
@@ -94,11 +97,11 @@ deck_archetype deck_of_escape =
 deck_archetype deck_of_destruction =
 {
     { CARD_VITRIOL,    5 },
-    { CARD_STORM,      5 },
     { CARD_PAIN,       5 },
     { CARD_ORB,        5 },
     { CARD_DEGEN,      3 },
     { CARD_WILD_MAGIC, 5 },
+    { CARD_STORM,      5 },
 };
 
 deck_archetype deck_of_summoning =
@@ -125,7 +128,7 @@ struct deck_type_data
     string name;
     string flavour;
     /// The list of cards this deck contains.
-    const deck_archetype cards;
+    deck_archetype cards;
     int deck_max;
 };
 
@@ -218,7 +221,7 @@ static const deck_archetype _cards_in_deck(deck_type deck)
     return {};
 }
 
-static const string _stack_contents()
+const string stack_contents()
 {
     const auto& stack = you.props[NEMELEX_STACK_KEY].get_vector();
 
@@ -227,7 +230,8 @@ static const string _stack_contents()
                 reverse_iterator<CrawlVector::const_iterator>(stack.end()),
                 reverse_iterator<CrawlVector::const_iterator>(stack.begin()),
               [](const CrawlStoreValue& card) { return card_name((card_type)card.get_int()); });
-    output += ".";
+    if (!stack.empty())
+        output += ".";
 
     return output;
 }
@@ -244,7 +248,7 @@ const string stack_top()
 const string deck_contents(deck_type deck)
 {
     if (deck == DECK_STACK)
-        return "Remaining cards: " + _stack_contents();
+        return "Remaining cards: " + stack_contents();
 
     string output = "It may contain the following cards: ";
 
@@ -315,7 +319,7 @@ void reset_cards()
     you.props[NEMELEX_STACK_KEY].get_vector().clear();
 }
 
-string deck_status()
+string deck_summary()
 {
     vector<string> stats;
     for (int i = FIRST_PLAYER_DECK; i <= LAST_PLAYER_DECK; i++)
@@ -453,7 +457,7 @@ static void _describe_cards(CrawlVector& cards)
 #endif
 }
 
-static string _describe_deck(deck_type deck)
+string deck_status(deck_type deck)
 {
     const string name = deck_name(deck);
     const int cards   = deck_cards(deck);
@@ -547,9 +551,9 @@ static deck_type _choose_deck(const string title = "Draw")
     for (int i = FIRST_PLAYER_DECK; i <= LAST_PLAYER_DECK; i++)
     {
         ToggleableMenuEntry* me =
-            new ToggleableMenuEntry(_describe_deck((deck_type)i),
-                    _describe_deck((deck_type)i),
-                    MEL_ITEM, 1, _deck_hotkey((deck_type)i));
+            new ToggleableMenuEntry(deck_status(static_cast<deck_type>(i)),
+                    deck_status(static_cast<deck_type>(i)),
+                    MEL_ITEM, 1, _deck_hotkey(static_cast<deck_type>(i)));
         numbers[i] = i;
         me->data = &numbers[i];
         if (!deck_cards((deck_type)i))
@@ -733,8 +737,8 @@ static void _draw_stack(int to_stack)
     for (int i = FIRST_PLAYER_DECK; i <= LAST_PLAYER_DECK; i++)
     {
         ToggleableMenuEntry* me =
-            new ToggleableMenuEntry(_describe_deck((deck_type)i),
-                    _describe_deck((deck_type)i),
+            new ToggleableMenuEntry(deck_status((deck_type)i),
+                    deck_status((deck_type)i),
                     MEL_ITEM, 1, _deck_hotkey((deck_type)i));
         numbers[i] = i;
         me->data = &numbers[i];
@@ -761,12 +765,12 @@ static void _draw_stack(int to_stack)
         else
         {
             you.props[deck_name(selected)]--;
-            me->text = _describe_deck(selected);
-            me->alt_text = _describe_deck(selected);
+            me->text = deck_status(selected);
+            me->alt_text = deck_status(selected);
 
             card_type draw = _random_card(selected);
             stack.push_back(draw);
-            string status = "Drawn so far: " + _stack_contents();
+            string status = "Drawn so far: " + stack_contents();
             deck_menu.set_more(formatted_string::parse_string(
                        status + "\n" +
                        "Press '<w>!</w>' or '<w>?</w>' to toggle "
@@ -1535,29 +1539,69 @@ static void _storm_card(int power)
 {
     const int power_level = _get_power_level(power);
 
-    _friendly(MONS_AIR_ELEMENTAL, 3);
+    wind_blast(&you, (power_level + 1) * 66, coord_def(), true);
+    redraw_screen(); // Update monster positions
 
-    wind_blast(&you, (power_level == 0) ? 100 : 200, coord_def(), true);
-
-    for (radius_iterator ri(you.pos(), 4, C_SQUARE, LOS_SOLID); ri; ++ri)
+    // 1-3, 4-6, 7-9
+    const int max_explosions = random_range((power_level * 3) + 1, (power_level + 1) * 3);
+    // Select targets based on simultaneously running max_explosions resivoir
+    // samples from the radius iterator over valid targets.
+    //
+    // Once the possible targets are drawn, the result is deduplicated into a
+    // set of targets.
+    vector<coord_def> target_draws (max_explosions, you.pos());
+    int valid_targets = 0;
+    for (radius_iterator ri(you.pos(), LOS_NO_TRANS, true); ri; ++ri)
     {
-        monster *mons = monster_at(*ri);
-
-        if (adjacent(*ri, you.pos()))
-            continue;
-
-        if (mons && mons->wont_attack())
-            continue;
-
-        if ((feat_has_solid_floor(grd(*ri))
-             || grd(*ri) == DNGN_DEEP_WATER)
-            && !cloud_at(*ri))
+        if (grid_distance(*ri, you.pos()) > 3 && !cell_is_solid(*ri))
         {
-            place_cloud(CLOUD_STORM, *ri,
-                        5 + (power_level + 1) * random2(10), & you);
+            ++valid_targets;
+            for (int i = 0; i < max_explosions; ++i)
+            {
+                if (one_chance_in(valid_targets))
+                    target_draws[i] = *ri;
+            }
         }
     }
 
+    unordered_set<coord_def> targets (target_draws.begin(), target_draws.end());
+    targets.erase(you.pos());
+
+    bool heard = false;
+    for (auto p : targets)
+    {
+        bolt beam;
+        beam.is_tracer         = false;
+        beam.is_explosion      = true;
+        beam.glyph             = dchar_glyph(DCHAR_FIRED_BURST);
+        beam.name              = "electrical discharge";
+        beam.aux_source        = "the storm";
+        beam.explode_noise_msg = "You hear a clap of thunder!";
+        beam.real_flavour      = beam.flavour;
+        beam.colour            = LIGHTCYAN;
+        beam.source_id         = MID_PLAYER;
+        beam.thrower           = KILL_YOU;
+        beam.is_explosion      = true;
+        beam.ex_size           = 3;
+        beam.damage            = dice_def(3, 9 + 9 * power_level);
+        beam.source = p;
+        beam.target = p;
+        beam.explode();
+        heard = heard || player_can_hear(p);
+    }
+    // Lots of loud bangs, even if everything is silenced get a message.
+    // Thunder comes after the animation runs.
+    if (targets.size() > 0)
+    {
+        vector<string> thunder_adjectives = { "mighty",
+                                              "violent",
+                                              "cataclysmic" };
+        mprf("You %s %s%s peal%s of thunder!",
+              heard ? "hear" : "feel",
+              targets.size() > 1 ? "" : "a ",
+              thunder_adjectives[power_level].c_str(),
+              targets.size() > 1 ? "s" : "");
+    }
 }
 
 static void _illusion_card(int power)
@@ -1596,7 +1640,7 @@ static void _degeneration_card(int power)
 
                if (mons.can_polymorph())
                {
-                   monster_polymorph(&mons, RANDOM_MONSTER, PPT_LESS);
+                   mons.polymorph(PPT_LESS);
                    mons.malmutate("");
                }
                else
@@ -1628,15 +1672,15 @@ static void _wild_magic_card(int power)
         if (x_chance_in_y((power_level + 1) * 5 + random2(5),
                            mons->get_hit_dice()))
         {
-            spschool_flag_type type = random_choose(SPTYP_CONJURATION,
-                                                    SPTYP_FIRE,
-                                                    SPTYP_ICE,
-                                                    SPTYP_EARTH,
-                                                    SPTYP_AIR,
-                                                    SPTYP_POISON);
+            spschool type = random_choose(spschool::conjuration,
+                                          spschool::fire,
+                                          spschool::ice,
+                                          spschool::earth,
+                                          spschool::air,
+                                          spschool::poison);
 
             MiscastEffect(mons, actor_by_mid(MID_YOU_FAULTLESS),
-                          DECK_MISCAST, type,
+                          {miscast_source::deck}, type,
                           random2(power/15) + 5, random2(power),
                           "a card of wild magic");
 
@@ -1672,6 +1716,8 @@ static void _torment_card()
 
 // Punishment cards don't have their power adjusted depending on Nemelex piety,
 // and are based on experience level instead of invocations skill.
+// Max power = 200 * (2700+2500) / 2700 + 243 + 300 = 928
+// Min power = 1 * 2501 / 2700 + 1 + 0 = 2
 static int _card_power(bool punishment)
 {
     if (punishment)

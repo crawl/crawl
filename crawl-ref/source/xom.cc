@@ -1119,8 +1119,7 @@ static void _xom_polymorph_monster(monster &mons, bool helpful)
     }
 
     const bool powerup = !(mons.wont_attack() ^ helpful);
-    monster_polymorph(&mons, RANDOM_MONSTER,
-                      powerup ? PPT_MORE : PPT_LESS);
+    mons.polymorph(powerup ? PPT_MORE : PPT_LESS);
 
     const bool see_new = you.can_see(mons);
 
@@ -2202,7 +2201,7 @@ static void _xom_miscast(const int max_level, const bool nasty)
 
     // Take a note.
     const char* levels[4] = { "harmless", "mild", "medium", "severe" };
-    const auto school = spschools_type::exponent(random2(SPTYP_LAST_EXPONENT + 1));
+    const auto school = spschools_type::exponent(random2(SPSCHOOL_LAST_EXPONENT + 1));
     string desc = make_stringf("%s %s miscast", levels[level],
                                spelltype_short_name(school));
 #ifdef NOTE_DEBUG_XOM
@@ -2222,8 +2221,8 @@ static void _xom_miscast(const int max_level, const bool nasty)
 
     god_speaks(GOD_XOM, _get_xom_speech(speech_str).c_str());
 
-    MiscastEffect(&you, nullptr, GOD_MISCAST + GOD_XOM,
-                  (spschool_flag_type)school, level, cause_str, NH_DEFAULT,
+    MiscastEffect(&you, nullptr, {miscast_source::god, GOD_XOM},
+                  (spschool)school, level, cause_str, nothing_happens::DEFAULT,
                   lethality_margin, hand_str, can_plural);
 }
 
@@ -3600,8 +3599,10 @@ static void _xom_bad_teleport(int sever)
 /// Place a one-tile chaos cloud on the player, with minor spreading.
 static void _xom_chaos_cloud(int /*sever*/)
 {
-    check_place_cloud(CLOUD_CHAOS, you.pos(), 3 + random2(12)*3,
-                      nullptr, random_range(5,15));
+    const int lifetime = 3 + random2(12) * 3;
+    const int spread_rate = random_range(5,15);
+    check_place_cloud(CLOUD_CHAOS, you.pos(), lifetime,
+                      nullptr, spread_rate);
     take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "chaos cloud"),
               true);
     god_speaks(GOD_XOM, _get_xom_speech("cloud").c_str());

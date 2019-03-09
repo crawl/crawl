@@ -25,7 +25,9 @@ enum god_type
     GOD_GOZAG,
     GOD_QAZLAL,
     GOD_RU,
+#if TAG_MAJOR_VERSION == 34
     GOD_PAKELLAS,
+#endif
     GOD_USKAYAW,
     GOD_HEPLIAKLQANA,
     GOD_WU_JIAN,

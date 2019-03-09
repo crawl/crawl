@@ -86,6 +86,10 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
                                    level_id place,
                                    bool force_pos = false,
                                    bool dont_place = false);
+static monster* _place_pghost_aux(const mgen_data &mg, const monster *leader,
+                                   level_id place,
+                                   bool force_pos, bool dont_place);
+
 
 /**
  * Is this feature "close enough" to the one we want for monster generation?
@@ -721,8 +725,12 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
     else if (!_valid_monster_generation_location(mg) && !dont_place)
         return nullptr;
 
-    monster* mon = _place_monster_aux(mg, nullptr, place, force_pos,
-                                      dont_place);
+    monster* mon;
+    if (mg.cls == MONS_PLAYER_GHOST)
+        mon = _place_pghost_aux(mg, nullptr, place, force_pos, dont_place);
+    else
+        mon = _place_monster_aux(mg, nullptr, place, force_pos, dont_place);
+
     if (!mon)
         return nullptr;
 
@@ -896,8 +904,9 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         // We'll try 1000 times for a good spot.
         for (i = 0; i < 1000; ++i)
         {
-            fpos = mg.pos + coord_def(random_range(-3, 3),
-                                      random_range(-3, 3));
+            fpos = mg.pos;
+            fpos.x += random_range(-3, 3);
+            fpos.y += random_range(-3, 3);
 
             // Place members within LOS_SOLID of their leader.
             // TODO nfm - allow placing around corners but not across walls.
@@ -1211,9 +1220,9 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     if (mon->has_spell(SPELL_OZOCUBUS_ARMOUR))
     {
         const int power = (mon->spell_hd(SPELL_OZOCUBUS_ARMOUR) * 15) / 10;
-        mon->add_ench(mon_enchant(ENCH_OZOCUBUS_ARMOUR,
-                                  20 + random2(power) + random2(power),
-                                  mon));
+        int rnd_power = random2(power);
+        rnd_power += random2(power);
+        mon->add_ench(mon_enchant(ENCH_OZOCUBUS_ARMOUR, 20 + rnd_power, mon));
     }
 
     if (mon->has_spell(SPELL_SHROUD_OF_GOLUBRIA))
@@ -1487,6 +1496,18 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     }
 
     return mon;
+}
+
+static monster* _place_pghost_aux(const mgen_data &mg, const monster *leader,
+                                   level_id place,
+                                   bool force_pos, bool dont_place)
+{
+    // we need to isolate the generation of a pghost from the caller's RNG,
+    // since depending on the ghost, the aux call can trigger variation in
+    // things like whether an enchantment (with a random duration) is
+    // triggered.
+    rng_generator rng(RNG_SYSTEM_SPECIFIC);
+    return _place_monster_aux(mg, leader, place, force_pos, dont_place);
 }
 
 // Check base monster class against zombie type and position if set.
@@ -3073,9 +3094,37 @@ monster_type summon_any_demon(monster_type dct, bool use_local_demons)
     }
 }
 
+void replace_boris()
+{
+    // Initial generation is governed by the vault uniq_boris. Once he is killed
+    // a first time, as long as he isn't alive somewhere, he can regenerate when
+    // a new level is entered.
+    if (!you.props["killed_boris_once"]
+        || you.unique_creatures[MONS_BORIS]
+        || !one_chance_in(6))
+    {
+        return;
+    }
+
+    // TODO: kind of ad hoc, maybe read from uniq_boris vault?
+    switch (you.where_are_you)
+    {
+    case BRANCH_DEPTHS:
+    case BRANCH_VAULTS:
+    case BRANCH_TOMB:
+    case BRANCH_CRYPT:
+        break;
+    default:
+        return;
+    }
+
+    mgen_data boris = mgen_data(MONS_BORIS);
+    mons_place(boris);
+}
+
 /////////////////////////////////////////////////////////////////////////////
 //
-// Random monsters for portal vaults.
+// Random monsters for portal vaults. Used for e.g. shadow creatures.
 //
 /////////////////////////////////////////////////////////////////////////////
 

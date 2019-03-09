@@ -1,5 +1,6 @@
 #pragma once
 
+#include "cleansing-flame-source-type.h"
 #include "enchant-type.h"
 #include "holy-word-source-type.h"
 #include "spell-type.h"
@@ -79,9 +80,10 @@ void torment(actor *attacker, torment_source_type taux, const coord_def& where);
 void torment_cell(coord_def where, actor *attacker, torment_source_type taux);
 void torment_player(actor *attacker, torment_source_type taux);
 
-void setup_cleansing_flame_beam(bolt &beam, int pow, int caster,
+void setup_cleansing_flame_beam(bolt &beam, int pow,
+                                cleansing_flame_source caster,
                                 coord_def where, actor *attacker = nullptr);
-void cleansing_flame(int pow, int caster, coord_def where,
+void cleansing_flame(int pow, cleansing_flame_source caster, coord_def where,
                      actor *attacker = nullptr);
 
 spret cast_random_effects(int pow, bolt& beam, bool fail);

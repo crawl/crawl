@@ -1,12 +1,12 @@
 #pragma once
 
-enum menu_type
+enum class menu_type
 {
-    MT_ANY = -1,
+    any = -1,
 
-    MT_INVLIST,                        // List inventory
-    MT_DROP,
-    MT_PICKUP,
-    MT_KNOW,
-    MT_SELONE,                         // Select one
+    invlist,    // List inventory
+    drop,
+    pickup,
+    know,
+    sel_one,    // Select one
 };

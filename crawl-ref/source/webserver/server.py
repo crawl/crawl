@@ -18,7 +18,7 @@ import userdb
 class MainHandler(tornado.web.RequestHandler):
     def get(self):
         host = self.request.host
-        if self.request.protocol == "https":
+        if self.request.protocol == "https" or self.request.headers.get("x-forwarded-proto") == "https":
             protocol = "wss://"
         else:
             protocol = "ws://"
@@ -131,7 +131,7 @@ def bind_server():
             (r"/", MainHandler),
             (r"/socket", CrawlWebSocket),
             (r"/gamedata/(.*)/(.*)", GameDataHandler)
-            ], gzip=True, **settings)
+            ], gzip=getattr(config,"use_gzip",True), **settings)
 
     kwargs = {}
     if http_connection_timeout is not None:

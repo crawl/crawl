@@ -11,6 +11,7 @@
 #include "json.h"
 #include "json-wrapper.h"
 
+#include "filter-enum.h"
 #include "playable.h"
 #include "jobs.h"
 #include "newgame.h"
@@ -22,19 +23,6 @@
 string combo_type::abbr() const
 {
     return string(get_species_abbrev(species)) + get_job_abbrev(job);
-}
-
-template <typename Enum, typename Predicate>
-vector<Enum> filter_enum(Enum max, Predicate filter)
-{
-    vector<Enum> things;
-    for (int i = 0; i < max; ++i)
-    {
-        const Enum thing(static_cast<Enum>(i));
-        if (filter(thing))
-            things.push_back(thing);
-    }
-    return things;
 }
 
 vector<job_type> playable_jobs()
@@ -138,12 +126,16 @@ static JsonNode *_species_metadata_array()
         json_append_element(species, _species_metadata(sp));
         if (sp == SP_BASE_DRACONIAN)
         {
-            for (int drac = SP_FIRST_NONBASE_DRACONIAN;
-                 drac <= SP_LAST_NONBASE_DRACONIAN; ++drac)
+            for (int drac = 0;
+                 drac < static_cast<int>(NUM_SPECIES); ++drac)
             {
-                json_append_element(species,
-                                    _species_metadata(species_type(drac),
-                                                      SP_BASE_DRACONIAN));
+                if (species_is_draconian(static_cast<species_type>(drac))
+                    && drac != SP_BASE_DRACONIAN)
+                {
+                    json_append_element(species,
+                                        _species_metadata(species_type(drac),
+                                                          SP_BASE_DRACONIAN));
+                }
             }
         }
     }

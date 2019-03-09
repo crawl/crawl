@@ -657,17 +657,11 @@ static const mutation_def mut_data[] =
   {"", "", ""},
 },
 
-{ MUT_TENGU_FLIGHT, 0, 2, mutflag::good, false,
+{ MUT_TENGU_FLIGHT, 0, 1, mutflag::good, false,
   "able to fly",
 
-  {"You can fly.",
-   "You can fly continuously.",
-   ""},
-
-  {"You have gained the ability to fly.",
-   "You can now fly continuously.",
-   ""},
-
+  {"You can fly continuously.", "", ""},
+  {"You have gained the ability to fly.", "", ""},
   {"", "", ""},
 },
 
@@ -1909,6 +1903,14 @@ static const mutation_def mut_data[] =
   {"Your uncanny sense of smell can sniff out nearby items.", "", ""},
   {"Your sense of smell grows stronger.", "", ""},
   {"Your sense of smell gets weaker.", "", ""},
+},
+
+{ MUT_ACID_RESISTANCE, 0, 1, mutflag::good, true,
+  "acid resistance",
+
+  {"You are resistant to acid. (rCorr)", "", ""},
+  {"You feel resistant to acid.", "",  ""},
+  {"You feel less resistant to acid.", "", ""},
 },
 };
 

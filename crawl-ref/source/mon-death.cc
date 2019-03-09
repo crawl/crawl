@@ -1001,64 +1001,6 @@ int mummy_curse_power(monster_type type)
     }
 }
 
-static void _mummy_curse(monster* mons, int pow, killer_type killer, int index)
-{
-    if (pow <= 0)
-        return;
-
-    switch (killer)
-    {
-        // Mummy killed by trap or something other than the player or
-        // another monster, so no curse.
-        case KILL_MISC:
-        case KILL_RESET:
-        case KILL_DISMISSED:
-        // Mummy sent to the Abyss wasn't actually killed, so no curse.
-        case KILL_BANISHED:
-            return;
-
-        default:
-            break;
-    }
-
-    actor* target;
-
-    if (YOU_KILL(killer))
-        target = &you;
-    // Killed by a Zot trap, a god, etc, or suicide.
-    else if (invalid_monster_index(index) || index == mons->mindex())
-        return;
-    else
-        target = &menv[index];
-
-    // Mummy was killed by a ballistomycete spore or ball lightning?
-    if (!target->alive())
-        return;
-
-    // Mummies are smart enough not to waste curses on summons or allies.
-    if (target->is_monster() && target->as_monster()->friendly()
-        && !crawl_state.game_is_arena())
-    {
-        target = &you;
-    }
-
-    // Stepped from time?
-    if (!in_bounds(target->pos()))
-        return;
-
-    if (target->is_player())
-        mprf(MSGCH_MONSTER_SPELL, "You feel extremely nervous for a moment...");
-    else if (you.can_see(*target))
-    {
-        mprf(MSGCH_MONSTER_SPELL, "A malignant aura surrounds %s.",
-             target->name(DESC_THE).c_str());
-    }
-    const string cause = make_stringf("%s death curse",
-                            apostrophise(mons->name(DESC_A)).c_str());
-    MiscastEffect(target, mons, MUMMY_MISCAST, SPTYP_NECROMANCY,
-                  pow, random2avg(88, 3), cause.c_str());
-}
-
 template<typename valid_T, typename connect_T>
 static void _search_dungeon(const coord_def & start,
                     valid_T & valid_target,
@@ -2289,8 +2231,12 @@ item_def* monster_die(monster& mons, killer_type killer,
                        && mons.evil())
                 && !mons_is_object(mons.type)
                 && !player_under_penance()
-                && (you_worship(GOD_PAKELLAS)
-                    || random2(you.piety) >= piety_breakpoint(0)))
+                && (random2(you.piety) >= piety_breakpoint(0)
+#if TAG_MAJOR_VERSION == 34
+                    || you_worship(GOD_PAKELLAS)
+#endif
+                   )
+                )
             {
                 int hp_heal = 0, mp_heal = 0;
 
@@ -2307,16 +2253,11 @@ item_def* monster_die(monster& mons, killer_type killer,
 
                 if (have_passive(passive_t::mp_on_kill))
                 {
-                    switch (you.religion)
-                    {
-                    case GOD_PAKELLAS:
+                    mp_heal = 1 + random2(mons.get_experience_level() / 2);
+#if TAG_MAJOR_VERSION == 34
+                    if (you.religion == GOD_PAKELLAS)
                         mp_heal = random2(2 + mons.get_experience_level() / 6);
-                        break;
-                    case GOD_VEHUMET:
-                    default:
-                        mp_heal = 1 + random2(mons.get_experience_level() / 2);
-                        break;
-                    }
+#endif
                 }
 
                 if (hp_heal && you.hp < you.hp_max
@@ -2335,6 +2276,7 @@ item_def* monster_die(monster& mons, killer_type killer,
                     mp_heal -= tmp;
                 }
 
+#if TAG_MAJOR_VERSION == 34
                 // perhaps this should go to its own function
                 if (mp_heal
                     && have_passive(passive_t::bottle_mp)
@@ -2364,6 +2306,7 @@ item_def* monster_die(monster& mons, killer_type killer,
                         }
                     }
                 }
+#endif
             }
 
             if (gives_player_xp && you_worship(GOD_RU) && you.piety < 200
@@ -2580,11 +2523,10 @@ item_def* monster_die(monster& mons, killer_type killer,
         {
             // XXX: Actual blood curse effect for Boris? - bwr
 
-            // Now that Boris is dead, he's a valid target for monster
-            // creation again. - bwr
+            // Now that Boris is dead, he can be replaced when new levels
+            // are generated.
             you.unique_creatures.set(mons.type, false);
-            // And his vault can be placed again.
-            you.uniq_map_names.erase("uniq_boris");
+            you.props["killed_boris_once"] = true;
         }
         if (mons.type == MONS_JORY && !in_transit)
             blood_spray(mons.pos(), MONS_JORY, 50);
@@ -2601,7 +2543,7 @@ item_def* monster_die(monster& mons, killer_type killer,
         {
             drop_items = false;
 
-            // Like Boris, but her vault can't come back
+            // Like Boris, but regenerates immediately
             if (mons_is_mons_class(&mons, MONS_NATASHA))
                 you.unique_creatures.set(MONS_NATASHA, false);
             if (!mons_reset && !wizard)
@@ -2677,7 +2619,13 @@ item_def* monster_die(monster& mons, killer_type killer,
         treant_release_fauna(mons);
     }
     else if (!mons.is_summoned() && mummy_curse_power(mons.type) > 0)
-        _mummy_curse(&mons, mummy_curse_power(mons.type), killer, killer_index);
+    {
+        mummy_death_curse_fineff::schedule(
+                actor_by_mid(killer_index),
+                mons.name(DESC_A),
+                killer,
+                mummy_curse_power(mons.type));
+    }
 
     // Necromancy
     if (!was_banished && !mons_reset)

@@ -278,7 +278,7 @@ void ghost_demon::init_player_ghost(bool actual_ghost)
 
     name   = you.your_name;
     max_hp = min(get_real_hp(false, false), MAX_GHOST_HP);
-    ev     = min(you.evasion(EV_IGNORE_HELPLESS), MAX_GHOST_EVASION);
+    ev     = min(you.evasion(ev_ignore::helpless), MAX_GHOST_EVASION);
     ac     = you.armour_class();
     dprf("ghost ac: %d, ev: %d", ac, ev);
 
@@ -627,7 +627,7 @@ void ghost_demon::add_spells(bool actual_ghost)
         const int chance = max(0, 50 - failure_rate_to_int(raw_spell_fail(you.spells[i])));
         const spell_type spell = translate_spell(you.spells[i]);
         if (spell != SPELL_NO_SPELL
-            && !(get_spell_flags(spell) & SPFLAG_NO_GHOST)
+            && !(get_spell_flags(spell) & spflag::no_ghost)
             && is_valid_mon_spell(spell)
             && x_chance_in_y(chance*chance, 50*50))
         {
@@ -740,7 +740,6 @@ static const set<branch_type> ghosts_nosave =
 bool ghost_demon::ghost_eligible()
 {
     return !crawl_state.game_is_tutorial()
-        && !Options.seed
         && (!player_in_branch(BRANCH_DUNGEON) || you.depth > 2)
         && ghosts_nosave.count(you.where_are_you) == 0;
 }

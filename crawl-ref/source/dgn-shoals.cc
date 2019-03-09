@@ -64,13 +64,13 @@ enum shoals_height_thresholds
     SHT_SHALLOW_WATER = -30,
 };
 
-enum tide_direction
+enum class tide_dir
 {
-    TIDE_RISING,
-    TIDE_FALLING,
+    rising,
+    falling,
 };
 
-static tide_direction _shoals_tide_direction;
+static tide_dir _shoals_tide_direction;
 static monster* tide_caller = nullptr;
 static coord_def tide_caller_pos;
 static int tide_called_turns = 0;
@@ -176,8 +176,10 @@ static void _shoals_build_cliff()
         coord_def place =
             cliffc + coord_def(static_cast<int>(distance * cos(angle)),
                                static_cast<int>(distance * sin(angle)));
-        const coord_def fuzz = coord_def(random_range(-2, 2),
-                                         random_range(-2, 2));
+        coord_def fuzz;
+        fuzz.x = random_range(-2, 2);
+        fuzz.y = random_range(-2, 2);
+
         place += fuzz;
         dgn_island_centred_at(place, resolve_range(n_cliff_points),
                               cliff_point_radius, cliff_height_increment,
@@ -495,9 +497,9 @@ static void _shoals_plant_supercluster(coord_def c,
                                        dungeon_feature_type favoured_feat,
                                        grid_bool *verboten = nullptr)
 {
-    _shoals_plant_cluster(c, random_range(10, 17, 2),
-                          random_range(3, 9), favoured_feat,
-                          verboten);
+    int nplants = random_range(10, 17, 2);
+    int radius = random_range(3, 9);
+    _shoals_plant_cluster(c, nplants, radius, favoured_feat, verboten);
 
     const int nadditional_clusters(max(0, random_range(-1, 4, 2)));
     for (int i = 0; i < nadditional_clusters; ++i)
@@ -506,9 +508,9 @@ static void _shoals_plant_supercluster(coord_def c,
             dgn_random_point_from(c, random_range(2, 12), _shoals_margin));
         if (!satellite.origin())
         {
-            _shoals_plant_cluster(satellite, random_range(5, 12, 2),
-                                  random_range(2, 7),
-                                  favoured_feat,
+            nplants = random_range(5, 12, 2);
+            radius = random_range(2, 7);
+            _shoals_plant_cluster(satellite, nplants, radius, favoured_feat,
                                   verboten);
         }
     }
@@ -856,7 +858,7 @@ static void _shoals_apply_tide_feature_at(
 
 // Determines if the tide is rising or falling based on before and
 // after features at the same square.
-static tide_direction _shoals_feature_tide_height_change(
+static tide_dir _shoals_feature_tide_height_change(
     dungeon_feature_type oldfeat,
     dungeon_feature_type newfeat)
 {
@@ -864,7 +866,7 @@ static tide_direction _shoals_feature_tide_height_change(
         _shoals_feature_height(newfeat) - _shoals_feature_height(oldfeat);
     // If the apparent height of the new feature is greater (floor vs water),
     // the tide is receding.
-    return height_delta < 0 ? TIDE_RISING : TIDE_FALLING;
+    return height_delta < 0 ? tide_dir::rising : tide_dir::falling;
 }
 
 static void _shoals_apply_tide_at(coord_def c, int tide, bool incremental_tide)
@@ -1062,7 +1064,7 @@ void shoals_apply_tides(int turns_elapsed, bool force, bool incremental_tide)
         || old_tide / TIDE_MULTIPLIER != tide / TIDE_MULTIPLIER)
     {
         _shoals_tide_direction =
-            tide > old_tide ? TIDE_RISING : TIDE_FALLING;
+            tide > old_tide ? tide_dir::rising : tide_dir::falling;
         _shoals_apply_tide(tide / TIDE_MULTIPLIER, incremental_tide);
     }
 }
@@ -1101,7 +1103,7 @@ static void _shoals_force_tide(CrawlHashTable &props, int increment)
     tide += increment * TIDE_MULTIPLIER;
     tide = min(HIGH_TIDE, max(LOW_TIDE, tide));
     props[PROPS_SHOALS_TIDE_KEY] = short(tide);
-    _shoals_tide_direction = increment > 0 ? TIDE_RISING : TIDE_FALLING;
+    _shoals_tide_direction = increment > 0 ? tide_dir::rising : tide_dir::falling;
     _shoals_apply_tide(tide / TIDE_MULTIPLIER, false);
 }
 

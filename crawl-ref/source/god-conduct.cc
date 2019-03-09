@@ -449,6 +449,7 @@ static peeve_map divine_peeves[] =
     peeve_map(),
     // GOD_RU,
     peeve_map(),
+#if TAG_MAJOR_VERSION == 34
     // GOD_PAKELLAS
     {
         { DID_CHANNEL, {
@@ -456,6 +457,7 @@ static peeve_map divine_peeves[] =
             1, 1,
         } },
     },
+#endif
     // GOD_USKAYAW,
     peeve_map(),
     // GOD_HEPLIAKLQANA,
@@ -949,6 +951,7 @@ static like_map divine_likes[] =
             }
         } },
     },
+#if TAG_MAJOR_VERSION == 34
     // GOD_PAKELLAS,
     {
         { DID_KILL_LIVING, _on_kill("you kill living beings", MH_NATURAL, false,
@@ -964,6 +967,7 @@ static like_map divine_likes[] =
         { DID_KILL_HOLY, KILL_HOLY_RESPONSE },
         { DID_KILL_NONLIVING, KILL_NONLIVING_RESPONSE },
     },
+#endif
     // GOD_USKAYAW
     {
         { DID_HURT_FOE, {

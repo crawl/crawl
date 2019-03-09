@@ -173,6 +173,8 @@ void learned_something_new(hints_event_type seen_what,
 formatted_string hints_abilities_info();
 string hints_skills_info();
 string hints_skill_training_info();
+string hints_skill_costs_info();
+string hints_skill_targets_info();
 string hints_skills_description_info();
 string hints_memorise_info();
 

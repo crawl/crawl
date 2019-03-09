@@ -136,7 +136,8 @@ bool bless_weapon(god_type god, brand_type brand, colour_t colour)
 {
     ASSERT(can_do_capstone_ability(god));
 
-    int item_slot = prompt_invent_item("Brand which weapon?", MT_INVLIST,
+    int item_slot = prompt_invent_item("Brand which weapon?",
+                                       menu_type::invlist,
                                        OSEL_BLESSABLE_WEAPON, OPER_ANY,
                                        invprompt_flag::escape_only);
 
@@ -1438,7 +1439,7 @@ void elyvilon_remove_divine_vigour()
 
 bool vehumet_supports_spell(spell_type spell)
 {
-    if (spell_typematch(spell, SPTYP_CONJURATION))
+    if (spell_typematch(spell, spschool::conjuration))
         return true;
 
     // Conjurations work by conjuring up a chunk of short-lived matter and
@@ -1486,7 +1487,7 @@ void trog_remove_trogs_hand()
  * @param mon the orc in question.
  * @returns whether you have given the monster a Beogh gift before now.
  */
-static bool _given_gift(const monster* mon)
+bool given_gift(const monster* mon)
 {
     return mon->props.exists(BEOGH_RANGE_WPN_GIFT_KEY)
             || mon->props.exists(BEOGH_MELEE_WPN_GIFT_KEY)
@@ -1524,7 +1525,7 @@ bool beogh_can_gift_items_to(const monster* mons, bool quiet)
         return false;
     }
 
-    if (_given_gift(mons))
+    if (given_gift(mons))
     {
         if (!quiet)
         {
@@ -1569,7 +1570,7 @@ bool beogh_gift_item()
     args.mode = TARG_BEOGH_GIFTABLE;
     args.range = LOS_RADIUS;
     args.needs_path = false;
-    args.self = CONFIRM_CANCEL;
+    args.self = confirm_prompt_type::cancel;
     args.show_floor_desc = true;
     args.top_prompt = "Select a follower to give a gift to.";
 
@@ -1583,7 +1584,7 @@ bool beogh_gift_item()
         return false;
 
     int item_slot = prompt_invent_item("Give which item?",
-                                       MT_INVLIST, OSEL_BEOGH_GIFT);
+                                       menu_type::invlist, OSEL_BEOGH_GIFT);
 
     if (item_slot == PROMPT_ABORT || item_slot == PROMPT_NOTHING)
     {
@@ -1844,7 +1845,7 @@ void yred_make_enslaved_soul(monster* mon, bool force_hostile)
     mon->flags |= orig.flags & MF_MELEE_MASK;
     monster_spells spl = orig.spells;
     for (const mon_spell_slot &slot : spl)
-        if (!(get_spell_flags(slot.spell) & SPFLAG_HOLY))
+        if (!(get_spell_flags(slot.spell) & spflag::holy))
             mon->spells.push_back(slot);
     if (mon->spells.size())
         mon->props[CUSTOM_SPELLS_KEY] = true;
@@ -3300,7 +3301,7 @@ spret fedhas_evolve_flora(bool fail)
     args.mode = TARG_EVOLVABLE_PLANTS;
     args.range = LOS_RADIUS;
     args.needs_path = false;
-    args.self = CONFIRM_CANCEL;
+    args.self = confirm_prompt_type::cancel;
     args.show_floor_desc = true;
     args.top_prompt = "Select plant or fungus to evolve.";
     args.get_desc_func = _evolution_name;
@@ -3489,8 +3490,8 @@ void cheibriados_time_bend(int pow)
         monster* mon = monster_at(*ai);
         if (mon && !mon->is_stationary())
         {
-            int res_margin = roll_dice(mon->get_hit_dice(), 3)
-                             - random2avg(pow, 2);
+            int res_margin = roll_dice(mon->get_hit_dice(), 3);
+            res_margin -= random2avg(pow, 2);
             if (res_margin > 0)
             {
                 mprf("%s%s",
@@ -3739,7 +3740,8 @@ bool ashenzari_curse_item(int num_rc)
             "Curse which item? (%d remove curse scroll%s left)"
             " (Esc to abort)",
             num_rc, num_rc == 1 ? "" : "s");
-    const int item_slot = prompt_invent_item(prompt_msg.c_str(), MT_INVLIST,
+    const int item_slot = prompt_invent_item(prompt_msg.c_str(),
+                                             menu_type::invlist,
                                              OSEL_CURSABLE, OPER_ANY,
                                              invprompt_flag::escape_only);
     if (prompt_failed(item_slot))
@@ -4671,7 +4673,7 @@ spret qazlal_upheaval(coord_def target, bool quiet, bool fail)
         args.mode = TARG_HOSTILE;
         args.needs_path = false;
         args.top_prompt = "Aiming: <white>Upheaval</white>";
-        args.self = CONFIRM_CANCEL;
+        args.self = confirm_prompt_type::cancel;
         args.hitfunc = &tgt;
         if (!spell_direction(spd, beam, &args))
             return spret::abort;
@@ -5226,7 +5228,7 @@ static const char* _arcane_mutation_to_school_name(mutation_type mutation)
     // XXX: this does a really silly dance back and forth between school &
     // spelltype.
     const skill_type sk = arcane_mutation_to_skill(mutation);
-    const spschool_flag_type school = skill2spell_type(sk);
+    const spschool school = skill2spell_type(sk);
     return spelltype_long_name(school);
 }
 
@@ -6130,10 +6132,12 @@ void ru_draw_out_power()
     you.duration[DUR_SLOW] = 0;
     you.duration[DUR_PETRIFYING] = 0;
 
-    inc_hp(div_rand_round(you.piety, 16)
-           + roll_dice(div_rand_round(you.piety, 20), 6));
-    inc_mp(div_rand_round(you.piety, 48)
-           + roll_dice(div_rand_round(you.piety, 40), 4));
+    int hp_inc = div_rand_round(you.piety, 16);
+    hp_inc += roll_dice(div_rand_round(you.piety, 20), 6);
+    inc_hp(hp_inc);
+    int mp_inc = div_rand_round(you.piety, 48);
+    mp_inc += roll_dice(div_rand_round(you.piety, 40), 4);
+    inc_mp(mp_inc);
     drain_player(30, false, true);
 }
 
@@ -6165,7 +6169,7 @@ bool ru_power_leap()
         args.range = 3;
         args.needs_path = false;
         args.top_prompt = "Aiming: <white>Power Leap</white>";
-        args.self = CONFIRM_CANCEL;
+        args.self = confirm_prompt_type::cancel;
         const int explosion_size = 1;
         targeter_smite tgt(&you, args.range, explosion_size, explosion_size);
         tgt.obeys_mesmerise = true;
@@ -6377,6 +6381,7 @@ bool ru_apocalypse()
     return true;
 }
 
+#if TAG_MAJOR_VERSION == 34
 /**
  * Calculate the effective power of a surged hex wand.
  * Works by iterating over the possible rolls from random2avg().
@@ -6461,6 +6466,7 @@ int pakellas_surge_devices()
     }
     return severity;
 }
+#endif
 
 static bool _mons_stompable(const monster &mons)
 {
@@ -6671,8 +6677,8 @@ spret uskayaw_grand_finale(bool fail)
         args.mode = TARG_HOSTILE;
         args.needs_path = false;
         args.top_prompt = "Aiming: <white>Grand Finale</white>";
-        args.self = CONFIRM_CANCEL;
-        targeter_smite tgt(&you, 7, 0, 0);
+        args.self = confirm_prompt_type::cancel;
+        targeter_smite tgt(&you);
         args.hitfunc = &tgt;
         direction(beam, args);
         if (crawl_state.seen_hups)
@@ -6871,7 +6877,7 @@ static coord_def _get_transference_target()
     args.mode = TARG_MOBILE_MONSTER;
     args.range = LOS_RADIUS;
     args.needs_path = false;
-    args.self = CONFIRM_NONE;
+    args.self = confirm_prompt_type::none;
     args.show_floor_desc = true;
     args.top_prompt = "Select a target.";
 
@@ -7288,7 +7294,7 @@ spret wu_jian_wall_jump_ability()
         args.range = 1;
         args.needs_path = false; // TODO: overridden by hitfunc?
         args.top_prompt = "Aiming: <white>Wall Jump</white>";
-        args.self = CONFIRM_CANCEL;
+        args.self = confirm_prompt_type::cancel;
         targeter_walljump tgt;
         tgt.obeys_mesmerise = true;
         args.hitfunc = &tgt;

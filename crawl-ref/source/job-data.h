@@ -11,7 +11,9 @@ struct job_def
     const char* abbrev; ///< Two-letter abbreviation
     const char* name; ///< Long name
     int s, i, d; ///< Starting Str, Dex, and Int
-    vector<species_type> recommended_species; ///< Which species are good at it
+    /// Which species are good at it
+    /// No recommended species = job is disabled
+    vector<species_type> recommended_species;
     /// Guaranteed starting equipment. Uses vault spec syntax, with the plus:,
     /// charges:, q:, and ego: tags supported.
     vector<string> equipment;

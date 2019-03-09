@@ -345,6 +345,7 @@ static void _reset_game()
     clear_message_store();
     macro_clear_buffers();
     the_lost_ones.clear();
+    shopping_list = ShoppingList();
     you = player();
     reset_hud();
     StashTrack = StashTracker();
@@ -497,6 +498,7 @@ static void _show_commandline_options_help()
     puts("  -no-throttle          disable throttling of user Lua scripts");
 #else
     puts("  -throttle             enable throttling of user Lua scripts");
+    puts("  -seed <number>        specify a game seed to use when creating a new game");
 #endif
 
     puts("");
@@ -1280,7 +1282,7 @@ static bool _can_take_stairs(dungeon_feature_type ftype, bool down,
         if (ftype != it->entry_stairs)
             continue;
 
-        if (!is_existing_level(level_id(it->id, 1)))
+        if (!you.level_visited(level_id(it->id, 1)))
         {
             min_runes = runes_for_branch(it->id);
             if (runes_in_pack() < min_runes)
@@ -1336,6 +1338,17 @@ static bool _prompt_stairs(dungeon_feature_type ygrd, bool down, bool shaft)
     // Does the next level have a warning annotation?
     if (!check_annotation_exclusion_warning())
         return false;
+
+    // Prompt for entering excluded transporters.
+    if (ygrd == DNGN_TRANSPORTER && is_exclude_root(you.pos()))
+    {
+        mprf(MSGCH_WARN, "This transporter is marked as excluded!");
+        if (!yesno("Enter transporter anyway?", true, 'n', true, false))
+        {
+            canned_msg(MSG_OK);
+            return false;
+        }
+    }
 
     // Toll portals, eg. troves, ziggurats. (Using vetoes like this is hacky.)
     if (_marker_vetoes_stair())

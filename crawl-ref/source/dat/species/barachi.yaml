@@ -1,0 +1,60 @@
+enum: SP_BARACHI
+monster: MONS_BARACHI
+name: "Barachi"
+adjective: "Barachian"
+genus: "Frog"
+difficulty: Advanced
+difficulty_priority: 30
+species_flags:
+  - hairless
+aptitudes:
+  xp: 0
+  hp: 0
+  mp_mod: 0
+  mr: 3
+  fighting: 2
+  short_blades: 1
+  long_blades: 2
+  axes: 1
+  maces_and_flails: 1
+  staves: 1
+  armour: 2
+  dodging: 1
+  shields: 1
+  unarmed_combat: 1
+  conjurations: 1
+  hexes: 1
+  charms: 1
+  summoning: 2
+  necromancy: -1
+  translocations: 1
+  transmutations: 1
+  fire_magic: 1
+  ice_magic: 2
+  air_magic: 1
+  poison_magic: 1
+  invocations: -1
+  evocations: 1
+can_swim: true
+str: 9
+int: 8
+dex: 7
+levelup_stat_frequency: 4
+mutations:
+  1:
+    MUT_SLOW: 1
+    MUT_HOP: 1
+  13:
+    MUT_HOP: 1
+fake_mutations:
+  - long: Shadows flee at your approach. (+LOS)
+    short: +LOS
+  - long: You can swim through water.
+    short: swims
+recommended_jobs:
+  - JOB_FIGHTER
+  - JOB_BERSERKER
+  - JOB_SKALD
+  - JOB_SUMMONER
+  - JOB_ICE_ELEMENTALIST
+create_enum: false

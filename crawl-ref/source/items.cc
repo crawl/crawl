@@ -996,7 +996,7 @@ void pickup_menu(int item_link)
     if (items.size() == 1 && items[0]->quantity > 1)
         prompt = "Select pick up quantity by entering a number, then select the item";
     vector<SelItem> selected = select_items(items, prompt.c_str(), false,
-                                            MT_PICKUP);
+                                            menu_type::pickup);
     if (selected.empty())
         canned_msg(MSG_OK);
     redraw_screen();
@@ -2127,7 +2127,7 @@ static int _place_item_in_free_slot(item_def &it, int quant_got,
     if (crawl_state.game_is_hints())
     {
         taken_new_item(item.base_type);
-        if (is_artefact(item) || get_equip_desc(item) != ISFLAG_NO_DESC)
+        if (is_artefact(item))
             learned_something_new(HINT_SEEN_RANDART);
     }
 
@@ -3045,6 +3045,8 @@ static bool _similar_wands(const item_def& pickup_item,
 #if TAG_MAJOR_VERSION == 34
     // Not similar if wand in inventory is empty.
     return !is_known_empty_wand(inv_item);
+#else
+    return true;
 #endif
 }
 

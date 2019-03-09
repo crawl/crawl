@@ -155,7 +155,7 @@ Sif Muna
 Sif Muna the Loreminder is a contemplative but powerful deity, served by those
 who seek magical knowledge. The Loreminder appreciates followers who triumph
 over their foes and especially the training of spellcasting skills in order to
-do so. The faithful can expect to recieve a supply of spellbooks taken directly
+do so. The faithful can expect to receive a supply of spellbooks taken directly
 from Sif Muna's legendary library.
 %%%%
 the Shining One
@@ -313,18 +313,6 @@ Disciples of the Council learn to perform three martial techniques, shown
 below. They will also be taught to move at unfathomable speeds for short
 distances, and become able to summon a storm of golden clouds to increase their
 precision and damage for as long as they keep using martial attacks.
-
-  .......       ....... (.) <lightred>Lunge</lightred>: Move directly towards an enemy to deal
-  ..<lightred>@</lightred>.O..  -->  ...<lightred>@</lightred>O.. extra damage.
-  .......       .......
-
-  .......       ...<lightred>@</lightred>... (*) <lightred>Whirlwind</lightred>: Move between two tiles adjacent to
-  ...<lightred>@</lightred>O..  -->  ....O.. an enemy to strike them lightly. The dizzying
-  .......       ....... motion pins monsters in place for one action.
-
-  ..#....       ..#.... (**) <lightred>Wall Jump</lightred>: Vault off a nearby wall and
-  ..#<lightred>@</lightred>O..  -->  ..#.O<lightred>@</lightred>. strike enemies adjacent to the landing spot. Vaulting
-  ..#....       ..#.... takes two turns. Activated via the (a)bility menu.
 
 %%%%
 Kikubaaqudgha powers
@@ -665,4 +653,18 @@ Zin wrath
 Those under Zin's wrath will find their beneficial mutations stripped away,
 their bellies emptied, their enemies alerted, and their senses confounded by the
 axioms of Law; confusion, fainting and complete paralysis will be their lot.
+%%%%
+Wu Jian extra
+
+  .......       ....... (.) <lightred>Lunge</lightred>: Move directly towards an enemy to deal
+  ..<lightred>@</lightred>.O..  -->  ...<lightred>@</lightred>O.. extra damage.
+  .......       .......
+
+  .......       ...<lightred>@</lightred>... (*) <lightred>Whirlwind</lightred>: Move between two tiles adjacent to
+  ...<lightred>@</lightred>O..  -->  ....O.. an enemy to strike them lightly. The dizzying
+  .......       ....... motion pins monsters in place for one action.
+
+  ..#....       ..#.... (**) <lightred>Wall Jump</lightred>: Vault off a nearby wall and
+  ..#<lightred>@</lightred>O..  -->  ..#.O<lightred>@</lightred>. strike enemies adjacent to the landing spot. Vaulting
+  ..#....       ..#.... takes two turns. Activated via the (a)bility menu.
 %%%%

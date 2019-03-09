@@ -1,4 +1,12 @@
-Spell definitions cut from the code:
+Spell definitions cut from the code.
+
+Note: several things in spell definitions have been changed since these spells
+were removed. These things include the spell_desc struct itself and the order
+of parameters, the addition of tile enum values to the struct, the changing of
+the enums containing SPFLAG_s and SPTYP_s to the enum classes spflag:: and
+spschool::, and the removal of some spell schools and flags. These would
+therefore need to be carefully updated to the new struct format if these spells
+were to be restored.
 
 {
     SPELL_CREATE_NOISE, "Create Noise",

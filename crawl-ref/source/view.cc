@@ -102,7 +102,10 @@ bool handle_seen_interrupt(monster* mons, vector<string>* msgs_buf)
         aid.context = SC_NEWLY_SEEN;
 
     if (!mons_is_safe(mons))
-        return interrupt_activity(AI_SEE_MONSTER, aid, msgs_buf);
+    {
+        return interrupt_activity(activity_interrupt::see_monster,
+                                  aid, msgs_buf);
+    }
 
     return false;
 }
@@ -529,9 +532,11 @@ void update_monsters_in_view()
 
 
 // We logically associate a difficulty parameter with each tile on each level,
-// to make deterministic magic mapping work. This function returns the
-// difficulty parameters for each tile on the current level, whose difficulty
-// is less than a certain amount.
+// to make deterministic passive mapping work. It is deterministic so that the
+// reveal order doesn't, for example, change on reload.
+//
+// This function returns the difficulty parameters for each tile on the current
+// level, whose difficulty is less than a certain amount.
 //
 // Random difficulties are used in the few cases where we want repeated maps
 // to give different results; scrolls and cards, since they are a finite
@@ -1151,7 +1156,9 @@ public:
 
     void init_frame(int frame) override
     {
-        offset = coord_def(random2(3) - 1, random2(3) - 1);
+        offset = coord_def();
+        offset.x = random2(3) - 1;
+        offset.y = random2(3) - 1;
     }
 
     coord_def cell_cb(const coord_def &pos, int &colour) override
@@ -1586,10 +1593,6 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
 // Hide view layers. The player can toggle certain layers back on
 // and the resulting configuration will be remembered for the
 // remainder of the game session.
-// Pressing | again will return to normal view. Leaving the prompt
-// by any other means will give back control of the keys, but the
-// view will remain in its altered state until the | key is pressed
-// again or the player performs an action.
 static void _config_layers_menu()
 {
     bool exit = false;
@@ -1629,9 +1632,8 @@ static void _config_layers_menu()
            _layers & LAYER_MONSTER_HEALTH  ? "lightgrey" : "darkgrey"
 #endif
         );
-        mprf(MSGCH_PROMPT, "Press <w>%s</w> to return to normal view. "
-                           "Press any other key to exit.",
-                           command_to_string(CMD_SHOW_TERRAIN).c_str());
+        mprf(MSGCH_PROMPT, "Press escape to toggle all layers. "
+                           "Press any other key to exit.");
 
         switch (get_ch())
         {
@@ -1649,13 +1651,23 @@ static void _config_layers_menu()
                       _layers_saved = _layers |= LAYER_MONSTERS;
                   break;
 #endif
-
-        // Remaining cases fall through to exit.
-        case '|':
+        CASE_ESCAPE if (_layers)
+                      _layers_saved = _layers = LAYERS_NONE;
+                  else
+                  {
+#ifndef USE_TILE_LOCAL
+                      _layers_saved = _layers = LAYERS_ALL
+                                      | LAYER_MONSTER_WEAPONS
+                                      | LAYER_MONSTER_HEALTH;
+#else
+                      _layers_saved = _layers = LAYERS_ALL;
+#endif
+                  }
+                  break;
+        default:
             _layers = LAYERS_ALL;
             crawl_state.viewport_weapons    = !!(_layers & LAYER_MONSTER_WEAPONS);
             crawl_state.viewport_monster_hp = !!(_layers & LAYER_MONSTER_HEALTH);
-        default:
             exit = true;
             break;
         }
@@ -1668,12 +1680,6 @@ static void _config_layers_menu()
     msgwin_set_temporary(false);
 
     canned_msg(MSG_OK);
-    if (_layers != LAYERS_ALL)
-    {
-        mprf(MSGCH_PLAIN, "Press <w>%s</w> or perform an action "
-                          "to restore all view layers.",
-                          command_to_string(CMD_SHOW_TERRAIN).c_str());
-    }
 }
 
 void toggle_show_terrain()

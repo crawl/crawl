@@ -66,6 +66,11 @@ char_choice_restriction species_allowed(job_type job, species_type speci)
     return CC_RESTRICTED;
 }
 
+bool character_is_allowed(species_type species, job_type job)
+{
+    return !_banned_combination(job, species);
+}
+
 char_choice_restriction job_allowed(species_type speci, job_type job)
 {
     if (!is_starting_species(speci) || !is_starting_job(job))

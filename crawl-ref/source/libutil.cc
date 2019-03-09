@@ -192,6 +192,23 @@ string strip_tag_prefix(string &s, const string &tagprefix)
     return argument;
 }
 
+const string tag_without_prefix(const string &s, const string &tagprefix)
+{
+    string::size_type pos = s.find(tagprefix);
+
+    while (pos && pos != string::npos && !isspace(s[pos - 1]))
+        pos = s.find(tagprefix, pos + 1);
+
+    if (pos == string::npos)
+        return "";
+
+    string::size_type ns = s.find(" ", pos);
+    if (ns == string::npos)
+        ns = s.length();
+
+    return s.substr(pos + tagprefix.length(), ns - pos - tagprefix.length());
+}
+
 int strip_number_tag(string &s, const string &tagprefix)
 {
     const string num = strip_tag_prefix(s, tagprefix);
@@ -199,6 +216,13 @@ int strip_number_tag(string &s, const string &tagprefix)
     if (num.empty() || !parse_int(num.c_str(), x))
         return TAG_UNFOUND;
     return x;
+}
+
+set<string> parse_tags(const string &tags)
+{
+    vector<string> split_tags = split_string(" ", tags);
+    set<string> ordered_tags(split_tags.begin(), split_tags.end());
+    return ordered_tags;
 }
 
 bool parse_int(const char *s, int &i)

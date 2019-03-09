@@ -835,7 +835,7 @@ COLOUR:  G = cyan
 KMONS:   8 = iron golem
 KMONS:   9 = war gargoyle
 ITEM:    plate armour good_item / crystal plate armour good_item w:3
-ITEM:    acquire weapon
+ITEM:    any weapon good_item
 KMONS:   K = Hell Sentinel
 KITEM:   K = |
 KMONS:   J = Hell Sentinel

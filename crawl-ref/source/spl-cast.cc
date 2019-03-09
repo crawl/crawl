@@ -85,6 +85,7 @@
 static int _spell_enhancement(spell_type spell);
 static string _spell_failure_rate_description(spell_type spell);
 
+#if TAG_MAJOR_VERSION == 34
 void surge_power(const int enhanced)
 {
     if (enhanced)               // one way or the other {dlb}
@@ -112,6 +113,7 @@ void surge_power_wand(const int mp_cost)
              slight ? "."      : "!");
     }
 }
+#endif
 
 static string _spell_base_description(spell_type spell, bool viewing)
 {
@@ -493,34 +495,34 @@ static int _spell_enhancement(spell_type spell)
     const spschools_type typeflags = get_spell_disciplines(spell);
     int enhanced = 0;
 
-    if (typeflags & SPTYP_CONJURATION)
+    if (typeflags & spschool::conjuration)
         enhanced += player_spec_conj();
 
-    if (typeflags & SPTYP_HEXES)
+    if (typeflags & spschool::hexes)
         enhanced += player_spec_hex();
 
-    if (typeflags & SPTYP_CHARMS)
+    if (typeflags & spschool::charms)
         enhanced += player_spec_charm();
 
-    if (typeflags & SPTYP_SUMMONING)
+    if (typeflags & spschool::summoning)
         enhanced += player_spec_summ();
 
-    if (typeflags & SPTYP_POISON)
+    if (typeflags & spschool::poison)
         enhanced += player_spec_poison();
 
-    if (typeflags & SPTYP_NECROMANCY)
+    if (typeflags & spschool::necromancy)
         enhanced += player_spec_death();
 
-    if (typeflags & SPTYP_FIRE)
+    if (typeflags & spschool::fire)
         enhanced += player_spec_fire();
 
-    if (typeflags & SPTYP_ICE)
+    if (typeflags & spschool::ice)
         enhanced += player_spec_cold();
 
-    if (typeflags & SPTYP_EARTH)
+    if (typeflags & spschool::earth)
         enhanced += player_spec_earth();
 
-    if (typeflags & SPTYP_AIR)
+    if (typeflags & spschool::air)
         enhanced += player_spec_air();
 
     if (you.form == transformation::shadow)
@@ -1267,16 +1269,31 @@ int hex_success_chance(const int mr, int powc, int scale, bool round_up)
 vector<string> desc_success_chance(const monster_info& mi, int pow, bool evoked,
                                    targeter* hitfunc)
 {
+    targeter_beam* beam_hitf = dynamic_cast<targeter_beam*>(hitfunc);
     vector<string> descs;
     const int mr = mi.res_magic();
     if (mr == MAG_IMMUNE)
         descs.push_back("magic immune");
     else if (hitfunc && !hitfunc->affects_monster(mi))
         descs.push_back("not susceptible");
+    // Polymorph has a special effect on ugly things and shapeshifters that
+    // does not require passing an MR check.
+    else if (beam_hitf && beam_hitf->beam.flavour == BEAM_POLYMORPH
+             && (mi.type == MONS_UGLY_THING || mi.type == MONS_VERY_UGLY_THING
+                 || mi.is(MB_SHAPESHIFTER)))
+    {
+        descs.push_back(make_stringf("will change %s",
+                                     mi.is(MB_SHAPESHIFTER) ? "shape"
+                                     /* ugly things */      : "colour"));
+    }
     else
     {
+#if TAG_MAJOR_VERSION == 34
         const int adj_pow = evoked ? pakellas_effective_hex_power(pow)
                                    : pow;
+#else
+        const int adj_pow = pow;
+#endif
         const int success = hex_success_chance(mr, adj_pow, 100);
         descs.push_back(make_stringf("chance to defeat MR: %d%%", success));
     }
@@ -1318,9 +1335,9 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
     if (!wiz_cast && _spellcasting_aborted(spell, !allow_fail))
         return spret::abort;
 
-    const unsigned int flags = get_spell_flags(spell);
+    const spell_flags flags = get_spell_flags(spell);
 
-    ASSERT(wiz_cast || !(flags & SPFLAG_TESTING));
+    ASSERT(wiz_cast || !(flags & spflag::testing));
 
     if (!powc)
         powc = calc_spell_power(spell, true);
@@ -1329,25 +1346,25 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
     // targeting. There are others that do their own that will be
     // missed by this (and thus will not properly ESC without cost
     // because of it). Hopefully, those will eventually be fixed. - bwr
-    if (flags & SPFLAG_TARGETING_MASK)
+    if (flags & spflag::targeting_mask)
     {
         const targ_mode_type targ =
-              testbits(flags, SPFLAG_NEUTRAL)    ? TARG_ANY :
-              testbits(flags, SPFLAG_HELPFUL)    ? TARG_FRIEND :
-              testbits(flags, SPFLAG_OBJ)        ? TARG_MOVABLE_OBJECT :
+              testbits(flags, spflag::neutral)    ? TARG_ANY :
+              testbits(flags, spflag::helpful)    ? TARG_FRIEND :
+              testbits(flags, spflag::obj)        ? TARG_MOVABLE_OBJECT :
                                                    TARG_HOSTILE;
 
         const targeting_type dir =
-             testbits(flags, SPFLAG_TARGET) ? DIR_TARGET :
-             testbits(flags, SPFLAG_DIR)    ? DIR_DIR    :
+             testbits(flags, spflag::target) ? DIR_TARGET :
+             testbits(flags, spflag::dir)    ? DIR_DIR    :
                                               DIR_NONE;
 
         const char *prompt = get_spell_target_prompt(spell);
         if (dir == DIR_DIR)
             mprf(MSGCH_PROMPT, "%s", prompt ? prompt : "Which direction?");
 
-        const bool needs_path = !testbits(flags, SPFLAG_TARGET)
-                                // Apportation must be SPFLAG_TARGET, since a
+        const bool needs_path = !testbits(flags, spflag::target)
+                                // Apportation must be spflag::target, since a
                                 // shift-direction makes no sense for it, but
                                 // it nevertheless requires line-of-fire.
                                 || spell == SPELL_APPORTATION;
@@ -1357,9 +1374,9 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
         unique_ptr<targeter> hitfunc = _spell_targeter(spell, powc, range);
 
         // Add success chance to targeted spells checking monster MR
-        const bool mr_check = testbits(flags, SPFLAG_MR_CHECK)
-                              && testbits(flags, SPFLAG_DIR_OR_TARGET)
-                              && !testbits(flags, SPFLAG_HELPFUL);
+        const bool mr_check = testbits(flags, spflag::MR_check)
+                              && testbits(flags, spflag::dir_or_target)
+                              && !testbits(flags, spflag::helpful);
         desc_filter additional_desc = nullptr;
         if (mr_check)
         {
@@ -1391,17 +1408,17 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
             args.show_floor_desc = true;
             args.show_boring_feats = false; // don't show "The floor."
         }
-        if (testbits(flags, SPFLAG_NOT_SELF))
-            args.self = CONFIRM_CANCEL;
+        if (testbits(flags, spflag::not_self))
+            args.self = confirm_prompt_type::cancel;
         else
-            args.self = CONFIRM_NONE;
+            args.self = confirm_prompt_type::none;
         args.get_desc_func = additional_desc;
         if (!spell_direction(spd, beam, &args))
             return spret::abort;
 
         beam.range = range;
 
-        if (testbits(flags, SPFLAG_NOT_SELF) && spd.isMe())
+        if (testbits(flags, spflag::not_self) && spd.isMe())
         {
             if (spell == SPELL_TELEPORT_OTHER)
                 mpr("Sorry, this spell works on others only.");
@@ -1417,14 +1434,22 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
 
     if (evoked_item)
     {
+#if TAG_MAJOR_VERSION == 34
         const int surge = pakellas_surge_devices();
+#else
+        const int surge = 0;
+#endif
         powc = player_adjust_evoc_power(powc, surge);
+#if TAG_MAJOR_VERSION == 34
         int mp_cost_of_wand = evoked_item->base_type == OBJ_WANDS
                               ? wand_mp_cost() : 0;
         surge_power_wand(mp_cost_of_wand + surge * 3);
+#endif
     }
+#if TAG_MAJOR_VERSION == 34
     else if (allow_fail)
         surge_power(_spell_enhancement(spell));
+#endif
     // Enhancers only matter for calc_spell_power() and raw_spell_fail().
     // Not sure about this: is it flavour or misleading? (jpeg)
 
@@ -1458,7 +1483,7 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
             // This will cause failure and increase the miscast effect.
             spfl = -you.penance[GOD_SIF_MUNA];
         }
-        else if (spell_typematch(spell, SPTYP_NECROMANCY)
+        else if (spell_typematch(spell, spschool::necromancy)
                  && !you_worship(GOD_KIKUBAAQUDGHA)
                  && you.penance[GOD_KIKUBAAQUDGHA]
                  && one_chance_in(20))
@@ -1468,8 +1493,9 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
                                "death!", GOD_KIKUBAAQUDGHA);
 
             // The spell still goes through, but you get a miscast anyway.
-            MiscastEffect(&you, nullptr, GOD_MISCAST + GOD_KIKUBAAQUDGHA,
-                          SPTYP_NECROMANCY,
+            MiscastEffect(&you, nullptr,
+                          {miscast_source::god, GOD_KIKUBAAQUDGHA},
+                          spschool::necromancy,
                           (you.experience_level / 2) + (spell_difficulty(spell) * 2),
                           random2avg(88, 3), "the malice of Kikubaaqudgha");
         }
@@ -1483,8 +1509,8 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
                                "destruction!", GOD_VEHUMET);
 
             // The spell still goes through, but you get a miscast anyway.
-            MiscastEffect(&you, nullptr, GOD_MISCAST + GOD_VEHUMET,
-                          SPTYP_CONJURATION,
+            MiscastEffect(&you, nullptr, {miscast_source::god, GOD_VEHUMET},
+                          spschool::conjuration,
                           (you.experience_level / 2) + (spell_difficulty(spell) * 2),
                           random2avg(88, 3), "the malice of Vehumet");
         }
@@ -1515,8 +1541,8 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
         if (will_have_passive(passive_t::shadow_spells)
             && allow_fail
             && !god_hates_spell(spell, you.religion, !allow_fail)
-            && (flags & SPFLAG_TARGETING_MASK)
-            && !(flags & SPFLAG_NEUTRAL)
+            && (flags & spflag::targeting_mask)
+            && !(flags & spflag::neutral)
             && (beam.is_enchantment()
                 || battlesphere_can_mirror(spell))
             && (!old_target || (victim && !victim->is_player())))
@@ -1556,7 +1582,7 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
         // miscasts are uncontrolled
         contaminate_player(cont_points, true);
 
-        MiscastEffect(&you, nullptr, SPELL_MISCAST, spell,
+        MiscastEffect(&you, nullptr, {miscast_source::spell}, spell,
                       spell_difficulty(spell), fail);
 
         return spret::fail;
@@ -1568,7 +1594,7 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
     case spret::none:
 #ifdef WIZARD
         if (you.wizard && !allow_fail && is_valid_spell(spell)
-            && (flags & SPFLAG_MONSTER))
+            && (flags & spflag::monster))
         {
             _try_monster_cast(spell, powc, spd, beam);
             return spret::success;

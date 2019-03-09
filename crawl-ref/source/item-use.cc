@@ -26,6 +26,7 @@
 #include "env.h"
 #include "evoke.h"
 #include "exercise.h"
+#include "fight.h"
 #include "food.h"
 #include "god-abil.h"
 #include "god-conduct.h"
@@ -476,7 +477,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
         {
             item_slot = prompt_invent_item(
                             "Wield which item (- for none, * to show all)?",
-                            MT_INVLIST, OSEL_WIELD,
+                            menu_type::invlist, OSEL_WIELD,
                             OPER_WIELD, invprompt_flag::no_warning, '-');
         }
         else
@@ -647,7 +648,8 @@ bool armour_prompt(const string & mesg, int *index, operation_types oper)
         int selector = OBJ_ARMOUR;
         if (oper == OPER_TAKEOFF && !Options.equip_unequip)
             selector = OSEL_WORN_ARMOUR;
-        int slot = prompt_invent_item(mesg.c_str(), MT_INVLIST, selector, oper);
+        int slot = prompt_invent_item(mesg.c_str(), menu_type::invlist,
+                                      selector, oper);
 
         if (!prompt_failed(slot))
         {
@@ -1026,8 +1028,9 @@ bool wear_armour(int item)
 
     if (item == -1)
     {
-        item = prompt_invent_item("Wear which item?", MT_INVLIST, OBJ_ARMOUR,
-                                  OPER_WEAR, invprompt_flag::no_warning);
+        item = prompt_invent_item("Wear which item?", menu_type::invlist,
+                                  OBJ_ARMOUR, OPER_WEAR,
+                                  invprompt_flag::no_warning);
         if (prompt_failed(item))
             return false;
     }
@@ -1547,7 +1550,7 @@ static bool _swap_rings(int ring_slot)
             // message is visible.
             unwanted = prompt_invent_item(
                     "You're wearing all the rings you can. Remove which one?",
-                    MT_INVLIST, OSEL_UNCURSED_WORN_RINGS, OPER_REMOVE,
+                    menu_type::invlist, OSEL_UNCURSED_WORN_RINGS, OPER_REMOVE,
                     invprompt_flag::no_warning | invprompt_flag::hide_known);
         }
 
@@ -1856,8 +1859,8 @@ bool puton_ring(int slot, bool allow_prompt, bool check_for_inscriptions)
     else
     {
         item_slot = prompt_invent_item("Put on which piece of jewellery?",
-                                       MT_INVLIST, OBJ_JEWELLERY, OPER_PUTON,
-                                       invprompt_flag::no_warning);
+                                       menu_type::invlist, OBJ_JEWELLERY,
+                                       OPER_PUTON, invprompt_flag::no_warning);
     }
 
     if (prompt_failed(item_slot))
@@ -1918,7 +1921,7 @@ bool remove_ring(int slot, bool announce)
     {
         const int equipn =
             (slot == -1)? prompt_invent_item("Remove which piece of jewellery?",
-                                             MT_INVLIST,
+                                             menu_type::invlist,
                                              OBJ_JEWELLERY,
                                              OPER_REMOVE,
                                              invprompt_flag::no_warning
@@ -2019,7 +2022,7 @@ void prompt_inscribe_item()
     }
 
     int item_slot = prompt_invent_item("Inscribe which item?",
-                                       MT_INVLIST, OSEL_ANY);
+                                       menu_type::invlist, OSEL_ANY);
 
     if (prompt_failed(item_slot))
         return;
@@ -2091,6 +2094,16 @@ void drink(item_def* potion)
     if (alreadyknown && is_bad_item(*potion, true))
     {
         canned_msg(MSG_UNTHINKING_ACT);
+        return;
+    }
+
+    string prompt = make_stringf("Really quaff the %s?",
+                                 potion->name(DESC_DBNAME).c_str());
+    if (alreadyknown && is_dangerous_item(*potion, true)
+        && Options.bad_item_prompt
+        && !yesno(prompt.c_str(), false, 'n'))
+    {
+        canned_msg(MSG_OK);
         return;
     }
 
@@ -2738,6 +2751,34 @@ string cannot_read_item_reason(const item_def &item)
 }
 
 /**
+ * Check if a particular scroll type would hurt a monster.
+ *
+ * @param scr           Scroll type in question
+ * @param m             Actor as a potential victim to the scroll
+ * @return  true if the provided scroll type is harmful to the actor.
+ */
+static bool _scroll_will_harm(const scroll_type scr, const actor &m)
+{
+    if (!m.alive())
+        return false;
+
+    switch (scr)
+    {
+        case SCR_HOLY_WORD:
+            if (m.undead_or_demonic())
+                return true;
+            break;
+        case SCR_TORMENT:
+            if (!m.res_torment())
+                return true;
+            break;
+        default: break;
+    }
+
+    return false;
+}
+
+/**
  * Check to see if the player can read the item in the given slot, and if so,
  * reads it. (Examining books, evoking the tome of destruction, & using
  * scrolls.)
@@ -2770,14 +2811,51 @@ void read(item_def* scroll)
         return;
     }
 
-    // need to handle this before we waste time (with e.g. blurryvis)
-    if (scroll->sub_type == SCR_BLINKING && item_type_known(*scroll)
-        && orb_limits_translocation()
-        && !yesno("Your blink will be uncontrolled - continue anyway?",
-                  false, 'n'))
-    {
-        canned_msg(MSG_OK);
-        return;
+    const scroll_type which_scroll = static_cast<scroll_type>(scroll->sub_type);
+    // Handle player cancels before we waste time (with e.g. blurryvis)
+    if (item_type_known(*scroll)) {
+        bool penance = god_hates_item(*scroll);
+        string verb_object = "read the " + scroll->name(DESC_DBNAME);
+
+        string penance_prompt = make_stringf("Really %s? This action would"
+                                             " place you under penance!",
+                                             verb_object.c_str());
+
+        targeter_los hitfunc(&you, LOS_NO_TRANS);
+
+        if (stop_attack_prompt(hitfunc, verb_object.c_str(),
+                               [which_scroll] (const actor* m)
+                               {
+                                   return _scroll_will_harm(which_scroll, *m);
+                               },
+                               nullptr, nullptr))
+        {
+            return;
+        }
+        else if (penance && !yesno(penance_prompt.c_str(), false, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return;
+        }
+        else if ((is_dangerous_item(*scroll, true)
+                  || is_bad_item(*scroll, true))
+                 && Options.bad_item_prompt
+                 && !yesno(make_stringf("Really %s?",
+                                        verb_object.c_str()).c_str(),
+                           false, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return;
+        }
+
+        if (scroll->sub_type == SCR_BLINKING
+            && orb_limits_translocation()
+            && !yesno("Your blink will be uncontrolled - continue anyway?",
+                      false, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return;
+        }
     }
 
     if (you.get_mutation_level(MUT_BLURRY_VISION)
@@ -2939,6 +3017,7 @@ void read_scroll(item_def& scroll)
         break;
 
     case SCR_FOG:
+    {
         if (alreadyknown && (env.level_state & LSTATE_STILL_WINDS))
         {
             mpr("The air is too still for clouds to form.");
@@ -2946,8 +3025,10 @@ void read_scroll(item_def& scroll)
             break;
         }
         mpr("The scroll dissolves into smoke.");
-        big_cloud(random_smoke_type(), &you, you.pos(), 50, 8 + random2(8));
+        auto smoke = random_smoke_type();
+        big_cloud(smoke, &you, you.pos(), 50, 8 + random2(8));
         break;
+    }
 
     case SCR_MAGIC_MAPPING:
         if (alreadyknown && !is_map_persistent())

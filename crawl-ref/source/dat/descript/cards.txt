@@ -58,7 +58,9 @@ the Storm card
 
 The card depicts a ship at sea sinking in a thunderstorm.
 
-Drawing this card unleashes a storm of wind and thunder clouds.
+Drawing this card unleashes a storm of wind and electrical discharges.
+Increasing card power will result in a stronger wind force and stronger more
+numerous discharges.
 %%%%
 Pain card
 

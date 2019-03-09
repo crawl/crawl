@@ -2164,13 +2164,14 @@ string depth_ranges::describe() const
 
 const int DEFAULT_MAP_WEIGHT = 10;
 map_def::map_def()
-    : name(), description(), order(INT_MAX), tags(), place(), depths(),
+    : name(), description(), order(INT_MAX), place(), depths(),
       orient(), _chance(), _weight(DEFAULT_MAP_WEIGHT),
       map(), mons(), items(), random_mons(),
       prelude("dlprelude"), mapchunk("dlmapchunk"), main("dlmain"),
       validate("dlvalidate"), veto("dlveto"), epilogue("dlepilogue"),
       rock_colour(BLACK), floor_colour(BLACK), rock_tile(""),
       floor_tile(""), border_fill_type(DNGN_ROCK_WALL),
+      tags(),
       index_only(false), cache_offset(0L), validating_map_flag(false)
 {
     init();
@@ -2469,7 +2470,7 @@ void map_def::write_index(writer& outf) const
     _chance.write(outf, _marshall_map_chance);
     _weight.write(outf, marshallInt);
     marshallInt(outf, cache_offset);
-    marshallString4(outf, tags);
+    marshallString4(outf, tags_string());
     place.write(outf);
     depths.write(outf);
     prelude.write(outf);
@@ -2493,7 +2494,9 @@ void map_def::read_index(reader& inf)
     _chance = range_chance_t::read(inf, _unmarshall_map_chance);
     _weight = range_weight_t::read(inf, unmarshallInt);
     cache_offset = unmarshallInt(inf);
-    unmarshallString4(inf, tags);
+    string read_tags;
+    unmarshallString4(inf, read_tags);
+    set_tags(read_tags);
     place.read(inf);
     depths.read(inf);
     prelude.read(inf);
@@ -2574,16 +2577,22 @@ bool map_def::run_hook(const string &hook_name, bool die_on_lua_error)
     const dlua_set_map mset(this);
     if (!dlua.callfn("dgn_map_run_hook", "s", hook_name.c_str()))
     {
-        if (die_on_lua_error)
+        const string error = rewrite_chunk_errors(dlua.error);
+        // only show the error message if this isn't a hook map-placement
+        // failure, which should just lead to a silent veto.
+        if (error.find("Failed to place map") == string::npos)
         {
-            end(1, false, "Lua error running hook '%s' on map '%s': %s",
-                hook_name.c_str(), name.c_str(),
-                rewrite_chunk_errors(dlua.error).c_str());
+            if (die_on_lua_error)
+            {
+                end(1, false, "Lua error running hook '%s' on map '%s': %s",
+                    hook_name.c_str(), name.c_str(), error.c_str());
+            }
+            else
+            {
+                mprf(MSGCH_ERROR, "Lua error running hook '%s' on map '%s': %s",
+                     hook_name.c_str(), name.c_str(), error.c_str());
+            }
         }
-        else
-            mprf(MSGCH_ERROR, "Lua error running hook '%s' on map '%s': %s",
-                 hook_name.c_str(), name.c_str(),
-                 rewrite_chunk_errors(dlua.error).c_str());
         return false;
     }
     return true;
@@ -2672,30 +2681,19 @@ string map_def::validate_temple_map()
 
     if (has_tag_prefix("temple_overflow_"))
     {
-        vector<string> tag_list = get_tags();
-
-        auto tag = find_if(begin(tag_list), end(tag_list),
-                bind(starts_with, placeholders::_1, "temple_overflow_"));
-
-        if (tag == end(tag_list))
-            return make_stringf("Unknown temple tag.");
-
-        string temple_tag = strip_tag_prefix(*tag, "temple_overflow_");
-
-        if (temple_tag.empty())
-            return "Malformed temple_overflow_ tag";
-
-        if (starts_with(temple_tag, "generic_"))
+        if (has_tag_prefix("temple_overflow_generic_"))
         {
-            temple_tag = strip_tag_prefix(temple_tag, "generic_");
-
-            int num = 0;
-            parse_int(temple_tag.c_str(), num);
-
-            if (((unsigned long) num) != altars.size())
+            string matching_tag = make_stringf("temple_overflow_generic_%u",
+                (unsigned int) altars.size());
+            if (!has_tag(matching_tag))
             {
-                return make_stringf("Temple should contain %u altars, but "
-                                    "has %d.", (unsigned int)altars.size(), num);
+                return make_stringf(
+                    "Temple ('%s') has %u altars and a "
+                    "'temple_overflow_generic_' tag, but does not match the "
+                    "number of altars: should have at least '%s'.",
+                                    tags_string().c_str(),
+                                    (unsigned int) altars.size(),
+                                    matching_tag.c_str());
             }
         }
         else
@@ -2734,7 +2732,7 @@ string map_def::validate_map_placeable()
     // Ok, the map wants to be placed by tag. In this case it should have
     // at least one tag that's not a map flag.
     bool has_selectable_tag = false;
-    for (const string &piece : split_string(" ", tags))
+    for (const string &piece : get_tags())
     {
         if (_map_tag_is_selectable(piece))
         {
@@ -2746,7 +2744,7 @@ string map_def::validate_map_placeable()
     return has_selectable_tag? "" :
            make_stringf("Map '%s' has no DEPTH, no PLACE and no "
                         "selectable tag in '%s'",
-                        name.c_str(), tags.c_str());
+                        name.c_str(), tags_string().c_str());
 }
 
 /**
@@ -2842,7 +2840,7 @@ string map_def::validate_map_def(const depth_ranges &default_depths)
              || map.height() > dimension_lower_bound)
             && !has_tag("no_rotate"))
         {
-            tags += " no_rotate ";
+            add_tags("no_rotate");
         }
     }
 
@@ -3039,9 +3037,10 @@ coord_def map_def::float_random_place() const
     if (GYM - 2 * minvborder < map.height())
         minvborder = (GYM - map.height()) / 2 - 1;
 
-    return coord_def(
-        random_range(minhborder, GXM - minhborder - map.width()),
-        random_range(minvborder, GYM - minvborder - map.height()));
+    coord_def result;
+    result.x = random_range(minhborder, GXM - minhborder - map.width());
+    result.y = random_range(minvborder, GYM - minvborder - map.height());
+    return result;
 }
 
 point_vector map_def::anchor_points() const
@@ -3242,39 +3241,81 @@ void map_def::fixup()
     if (orient == MAP_NONE)
     {
         orient = MAP_FLOAT;
-        tags += " minivault ";
+        add_tags("minivault");
     }
 }
 
-bool map_def::has_tag(const string &tagwanted) const
+bool map_def::has_tag(const set<string> &tagswanted) const
 {
-    if (tags.empty() || tagwanted.empty())
+    if (tags.empty() || tagswanted.size() == 0)
         return false;
 
-    vector<string> wanted_tags = split_string(" ", tagwanted);
-
-    for (const string &tag : wanted_tags)
-        if (tags.find(" " + tag + " ") == string::npos)
+    for (const string &tag : tagswanted)
+        if (!tags.count(tag))
             return false;
 
     return true;
 }
 
+bool map_def::has_tag(const string &tagswanted) const
+{
+    return has_tag(parse_tags(tagswanted));
+}
+
 bool map_def::has_tag_prefix(const string &prefix) const
 {
-    return !tags.empty() && !prefix.empty()
-        && tags.find(" " + prefix) != string::npos;
+    if (prefix.empty())
+        return false;
+    for (const auto &tag : tags)
+        if (starts_with(tag, prefix))
+            return true;
+    return false;
 }
 
 bool map_def::has_tag_suffix(const string &suffix) const
 {
-    return !tags.empty() && !suffix.empty()
-        && tags.find(suffix + " ") != string::npos;
+    if (suffix.empty())
+        return false;
+    for (const auto &tag : tags)
+        if (ends_with(tag, suffix))
+            return true;
+    return false;
 }
 
-vector<string> map_def::get_tags() const
+const set<string> map_def::get_tags() const
 {
-    return split_string(" ", tags);
+    return tags;
+}
+
+void map_def::add_tags(const string &tag)
+{
+    auto parsed_tags = parse_tags(tag);
+    tags.insert(parsed_tags.begin(), parsed_tags.end());
+}
+
+bool map_def::remove_tags(const string &tag)
+{
+    bool removed = false;
+    auto parsed_tags = parse_tags(tag);
+    for (auto &t : parsed_tags)
+        removed = tags.erase(t) || removed; // would iterator overload be ok?
+    return removed;
+}
+
+void map_def::clear_tags()
+{
+    tags.clear();
+}
+
+void map_def::set_tags(const string &tag)
+{
+    clear_tags();
+    add_tags(tag);
+}
+
+string map_def::tags_string() const
+{
+    return join_strings(tags.begin(), tags.end());
 }
 
 keyed_mapspec *map_def::mapspec_at(const coord_def &c)
@@ -3328,13 +3369,11 @@ string map_def::subvault_from_tagstring(const string &sub)
 
 static void _register_subvault(const string &name, const string &spaced_tags)
 {
-    if (spaced_tags.find(" allow_dup ") == string::npos
-        || spaced_tags.find(" luniq ") != string::npos)
-    {
+    auto parsed_tags = parse_tags(spaced_tags);
+    if (!parsed_tags.count("allow_dup") || parsed_tags.count("luniq"))
         env.new_used_subvault_names.insert(name);
-    }
 
-    for (const string &tag : split_string(" ", spaced_tags))
+    for (const string &tag : parsed_tags)
         if (starts_with(tag, "uniq_") || starts_with(tag, "luniq_"))
             env.new_used_subvault_tags.insert(tag);
 }
@@ -3407,8 +3446,9 @@ string map_def::apply_subvault(string_spec &spec)
 
         copy_hooks_from(vault, "post_place");
         env.new_subvault_names.push_back(vault.name);
-        env.new_subvault_tags.push_back(vault.tags);
-        _register_subvault(vault.name, vault.tags);
+        const string vault_tags = vault.tags_string();
+        env.new_subvault_tags.push_back(vault_tags);
+        _register_subvault(vault.name, vault_tags);
         subvault_places.emplace_back(subvault_corners.first,
                                      subvault_corners.second, vault);
 
@@ -4887,8 +4927,8 @@ int str_to_ego(object_class_type item_type, string ego_str)
         "returning",
 #endif
         "chaos",
-        "evasion",
 #if TAG_MAJOR_VERSION == 34
+        "evasion",
         "confuse",
 #endif
         "penetration",
@@ -5241,14 +5281,14 @@ bool item_list::parse_single_spec(item_spec& result, string s)
         // spell: <include this spell>, owner:<name of owner>
         // None of these are required, but if you don't intend on using any
         // of them, use "any fixed theme book" instead.
-        spschool_flag_type disc1 = SPTYP_NONE;
-        spschool_flag_type disc2 = SPTYP_NONE;
+        spschool disc1 = spschool::none;
+        spschool disc2 = spschool::none;
 
         string st_disc1 = strip_tag_prefix(s, "disc:");
         if (!st_disc1.empty())
         {
             disc1 = school_by_name(st_disc1);
-            if (disc1 == SPTYP_NONE)
+            if (disc1 == spschool::none)
             {
                 error = make_stringf("Bad spell school: %s", st_disc1.c_str());
                 return false;
@@ -5259,14 +5299,14 @@ bool item_list::parse_single_spec(item_spec& result, string s)
         if (!st_disc2.empty())
         {
             disc2 = school_by_name(st_disc2);
-            if (disc2 == SPTYP_NONE)
+            if (disc2 == spschool::none)
             {
                 error = make_stringf("Bad spell school: %s", st_disc2.c_str());
                 return false;
             }
         }
 
-        if (disc1 == SPTYP_NONE && disc2 != 0)
+        if (disc1 == spschool::none && disc2 != spschool::none)
         {
             // Don't fail, just quietly swap. Any errors in disc1's syntax will
             // have been caught above, anyway.
@@ -5315,9 +5355,8 @@ bool item_list::parse_single_spec(item_spec& result, string s)
         const string owner = replace_all_of(strip_tag_prefix(s, "owner:"),
                                             "_", " ");
 
-        COMPILE_CHECK(SPTYP_LAST_SCHOOL < SHRT_MAX);
-        result.props[RANDBK_DISC1_KEY].get_short() = disc1;
-        result.props[RANDBK_DISC2_KEY].get_short() = disc2;
+        result.props[RANDBK_DISC1_KEY].get_short() = static_cast<short>(disc1);
+        result.props[RANDBK_DISC2_KEY].get_short() = static_cast<short>(disc2);
         result.props[RANDBK_NSPELLS_KEY] = num_spells;
         result.props[RANDBK_SLVLS_KEY] = slevels;
         result.props[RANDBK_TITLE_KEY] = title;

@@ -47,6 +47,8 @@ struct game_state
                              // take action to handle it.
     time_t last_winch;       // Time of last resize, for crash dumps.
 
+    uint64_t seed;
+
     bool io_inited;         // Is curses or the equivalent initialised?
     bool need_save;         // Set to true when game can be saved, false when the game ends.
     bool game_started;      // Set to true when a game has started.
@@ -196,6 +198,7 @@ public:
     bool player_is_dead() const;
 
     bool game_standard_levelgen() const;
+    bool game_is_valid_type() const;
     bool game_is_normal() const;
     bool game_is_tutorial() const;
     bool game_is_arena() const;
@@ -263,5 +266,5 @@ private:
     monster* mon;
 };
 
-bool interrupt_cmd_repeat(activity_interrupt_type ai,
+bool interrupt_cmd_repeat(activity_interrupt ai,
                           const activity_interrupt_data &at);

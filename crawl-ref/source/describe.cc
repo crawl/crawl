@@ -1631,7 +1631,7 @@ static string _describe_armour(const item_def &item, bool verbose)
             {
                 description += make_stringf("\nWearing mundane armour of this type "
                                             "will give the following: %d AC",
-                                             you.base_ac_from(item));
+                                             you.base_ac_from(item, 100) / 100);
             }
         }
     }
@@ -2840,7 +2840,7 @@ static string _player_spell_stats(const spell_type spell)
                      schools.c_str());
 
     if (!crawl_state.need_save
-        || (get_spell_flags(spell) & SPFLAG_MONSTER))
+        || (get_spell_flags(spell) & spflag::monster))
     {
         return description; // all other info is player-dependent
     }
@@ -2938,7 +2938,7 @@ int hex_chance(const spell_type spell, const int hd)
  */
 static string _player_spell_desc(spell_type spell)
 {
-    if (!crawl_state.need_save || (get_spell_flags(spell) & SPFLAG_MONSTER))
+    if (!crawl_state.need_save || (get_spell_flags(spell) & spflag::monster))
         return ""; // all info is player-dependent
 
     ostringstream description;
@@ -3040,7 +3040,7 @@ static bool _get_spell_description(const spell_type spell,
                        + "\n";
 
         // only display this if the player exists (not in the main menu)
-        if (crawl_state.need_save && (get_spell_flags(spell) & SPFLAG_MR_CHECK)
+        if (crawl_state.need_save && (get_spell_flags(spell) & spflag::MR_check)
 #ifndef DEBUG_DIAGNOSTICS
             && mon_owner->attitude != ATT_FRIENDLY
 #endif
@@ -3487,7 +3487,9 @@ static string _flavour_base_desc(attack_flavour flavour)
         { AF_POISON_STRONG,     "cause strong poisoning" },
         { AF_ROT,               "cause rotting" },
         { AF_VAMPIRIC,          "drain health from the living" },
+#if TAG_MAJOR_VERSION == 34
         { AF_KLOWN,             "cause random powerful effects" },
+#endif
         { AF_DISTORT,           "cause wild translocation effects" },
         { AF_RAGE,              "cause berserking" },
         { AF_STICKY_FLAME,      "apply sticky flame" },
@@ -3686,8 +3688,14 @@ static string _monster_spells_description(const monster_info& mi)
 
     formatted_string description;
     describe_spellset(monster_spellset(mi), nullptr, description, &mi);
-    description.cprintf("To read a description, press the key listed above.\n");
-    return description.tostring();
+    description.cprintf("\nTo read a description, press the key listed above. "
+        "(x%%) indicates the chance to beat your MR, "
+        "and (y) indicates the spell range");
+    description.cprintf(crawl_state.need_save
+        ? "; shown in red if you are in range.\n"
+        : ".\n");
+
+    return description.to_colour_string();
 }
 
 static const char *_speed_description(int speed)
@@ -4583,7 +4591,7 @@ int describe_monsters(const monster_info &mi, bool force_seen,
     if (!needle.empty())
     {
         desc_without_spells = replace_all(desc_without_spells,
-                needle, "SPELLSET_PLACEHOLDER");
+                needle.to_colour_string(), "SPELLSET_PLACEHOLDER");
     }
     tiles.json_write_string("body", desc_without_spells);
     tiles.json_write_string("quote", quote);

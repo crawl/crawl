@@ -1,9 +1,10 @@
 #pragma once
 
-enum cleansing_flame_source_type
+// Cleansing flame sources
+enum class cleansing_flame_source
 {
-    CLEANSING_FLAME_GENERIC    = -1,
-    CLEANSING_FLAME_SPELL      = -2, // SPELL_FLAME_OF_CLEANSING
-    CLEANSING_FLAME_INVOCATION = -3, // ABIL_TSO_CLEANSING_FLAME
-    CLEANSING_FLAME_TSO        = -4, // TSO effect
+    generic    = -1,
+    spell      = -2, // SPELL_FLAME_OF_CLEANSING
+    invocation = -3, // ABIL_TSO_CLEANSING_FLAME
+    tso        = -4, // TSO effect
 };

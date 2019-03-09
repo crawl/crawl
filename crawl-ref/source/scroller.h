@@ -18,6 +18,7 @@ class formatted_scroller
 {
 public:
     formatted_scroller(int flags, const string& text = "")
+        : m_lastch(0), m_flags(0x0), m_scroll(0)
     {
         m_flags = flags;
         add_text(text);
@@ -39,6 +40,7 @@ public:
     void set_title() { m_title.clear(); };
     void set_title(formatted_string title) { m_title = move(title); };
 
+    void scroll_to_end();
     void set_scroll(int y);
 
     const formatted_string& get_contents() { return contents; };

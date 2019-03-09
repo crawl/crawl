@@ -7,47 +7,48 @@
 
 #include "enum.h"
 
-enum spflag_type
+enum class spflag
 {
-    SPFLAG_NONE                 = 0x000000,
-    SPFLAG_DIR_OR_TARGET        = 0x000001,      // use DIR_NONE targeting
-    SPFLAG_TARGET               = 0x000002,      // use DIR_TARGET targeting
-                                //0x000004,
-    SPFLAG_DIR                  = 0x000008,      // use DIR_DIR targeting
-    SPFLAG_TARGETING_MASK       = SPFLAG_DIR_OR_TARGET | SPFLAG_TARGET
-                                   | SPFLAG_DIR , // used to test for targeting
+    none               = 0x00000000,
+    dir_or_target      = 0x00000001,      // use DIR_NONE targeting
+    target             = 0x00000002,      // use DIR_TARGET targeting
+                     //  0x00000004,
+    dir                = 0x00000008,      // use DIR_DIR targeting
+    targeting_mask     = spflag::dir_or_target | spflag::target
+                             | spflag::dir, // used to test for targeting
     // TODO: we need a new flag if we want to target corpses too.
-    SPFLAG_OBJ                  = 0x000010,      // TARG_MOVABLE_OBJECT used
-    SPFLAG_HELPFUL              = 0x000020,      // TARG_FRIEND used
-    SPFLAG_NEUTRAL              = 0x000040,      // TARG_ANY used
-    SPFLAG_NOT_SELF             = 0x000080,      // aborts on isMe
-    SPFLAG_UNHOLY               = 0x000100,      // counts as "unholy"
-    SPFLAG_UNCLEAN              = 0x000200,      // counts as "unclean"
-    SPFLAG_CHAOTIC              = 0x000400,      // counts as "chaotic"
-    SPFLAG_HASTY                = 0x000800,      // counts as "hasty"
-    SPFLAG_EMERGENCY            = 0x001000,      // monsters use in emergencies
-    SPFLAG_ESCAPE               = 0x002000,      // useful for running away
-    SPFLAG_RECOVERY             = 0x004000,      // healing or recovery spell
-    SPFLAG_AREA                 = 0x008000,      // area affect
-                            //  = 0x010000,      // was SPFLAG_BATTLE
-    SPFLAG_SELFENCH             = 0x020000,      // monsters use as selfench
-    SPFLAG_MONSTER              = 0x040000,      // monster-only spell
-    SPFLAG_NEEDS_TRACER         = 0x080000,      // monster casting needs tracer
-    SPFLAG_NOISY                = 0x100000,      // makes noise, even if innate
-    SPFLAG_TESTING              = 0x200000,      // a testing/debugging spell
-    SPFLAG_CORPSE_VIOLATING     = 0x400000,      // Conduct violation for Fedhas
-                               // 0x800000,      // was SPFLAG_ALLOW_SELF
-    SPFLAG_UTILITY             = 0x1000000,      // usable no matter what foe is
-    SPFLAG_NO_GHOST            = 0x2000000,      // ghosts can't get this spell
-    SPFLAG_CLOUD               = 0x4000000,      // makes a cloud
-    SPFLAG_MR_CHECK            = 0x8000000,      // spell that checks monster MR
-    SPFLAG_MONS_ABJURE        = 0x10000000,      // monsters can cast abjuration
-                                                 // instead of this spell
-    SPFLAG_NOT_EVIL           = 0x20000000,      // not considered evil by the
-                                                 // good gods
-    SPFLAG_HOLY               = 0x40000000,      // considered holy (can't be
-                                                 // used by Yred enslaved souls)
+    obj                = 0x00000010,      // TARG_MOVABLE_OBJECT used
+    helpful            = 0x00000020,      // TARG_FRIEND used
+    neutral            = 0x00000040,      // TARG_ANY used
+    not_self           = 0x00000080,      // aborts on isMe
+    unholy             = 0x00000100,      // counts as "unholy"
+    unclean            = 0x00000200,      // counts as "unclean"
+    chaotic            = 0x00000400,      // counts as "chaotic"
+    hasty              = 0x00000800,      // counts as "hasty"
+    emergency          = 0x00001000,      // monsters use in emergencies
+    escape             = 0x00002000,      // useful for running away
+    recovery           = 0x00004000,      // healing or recovery spell
+    area               = 0x00008000,      // area affect
+                     //  0x00010000,      // was SPFLAG_BATTLE
+    selfench           = 0x00020000,      // monsters use as selfench
+    monster            = 0x00040000,      // monster-only spell
+    needs_tracer       = 0x00080000,      // monster casting needs tracer
+    noisy              = 0x00100000,      // makes noise, even if innate
+    testing            = 0x00200000,      // a testing/debugging spell
+    corpse_violating   = 0x00400000,      // Conduct violation for Fedhas
+                     //  0x00800000,      // was SPFLAG_ALLOW_SELF
+    utility            = 0x01000000,      // usable no matter what foe is
+    no_ghost           = 0x02000000,      // ghosts can't get this spell
+    cloud              = 0x04000000,      // makes a cloud
+    MR_check           = 0x08000000,      // spell that checks monster MR
+    mons_abjure        = 0x10000000,      // monsters can cast abjuration
+                                          // instead of this spell
+    not_evil           = 0x20000000,      // not considered evil by the
+                                          // good gods
+    holy               = 0x40000000,      // considered holy (can't be
+                                          // used by Yred enslaved souls)
 };
+DEF_BITFIELD(spell_flags, spflag);
 
 enum class spret
 {

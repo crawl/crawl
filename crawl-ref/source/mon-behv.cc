@@ -853,10 +853,12 @@ void handle_behaviour(monster* mon)
                     mon->props["idle_deadline"] = you.elapsed_time + 200;
                 }
 
+                coord_def target_rnd;
+                target_rnd.x = random_range(-2, 2);
+                target_rnd.y = random_range(-2, 2);
                 mon->target = clamp_in_bounds(
                                     mon->props["idle_point"].get_coord()
-                                    + coord_def(random_range(-2, 2),
-                                                random_range(-2, 2)));
+                                    + target_rnd);
 
                 if (you.elapsed_time >= mon->props["idle_deadline"].get_int())
                     stop_retreat = true;

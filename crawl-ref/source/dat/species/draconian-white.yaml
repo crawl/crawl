@@ -1,0 +1,42 @@
+enum: SP_WHITE_DRACONIAN
+monster: MONS_WHITE_DRACONIAN
+name: "White Draconian"
+short_name: "Dr"
+adjective: "Draconian"
+genus: "Draconian"
+difficulty: False
+species_flags:
+  - draconian
+aptitudes:
+  xp: -1
+  hp: 1
+  mp_mod: 0
+  mr: 3
+  fighting: 1
+  slings: -1
+  bows: -1
+  crossbows: -1
+  throwing: -1
+  armour: False
+  dodging: -1
+  spellcasting: -1
+  hexes: -1
+  charms: -1
+  invocations: 1
+  # White Draconian specific
+  fire_magic: -2
+  ice_magic: 2
+str: 10
+int: 8
+dex: 6
+levelup_stat_frequency: 4
+mutations:
+  1:
+    MUT_COLD_BLOODED: 1
+  7:
+    MUT_COLD_RESISTANCE: 1
+fake_mutations:
+  - long: You can breathe waves of freezing cold.
+    short: breathe frost
+  - long: You can buffet flying creatures when you breathe cold.
+create_enum: false

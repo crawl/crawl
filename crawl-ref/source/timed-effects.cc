@@ -77,15 +77,17 @@ static void _hell_effect_noise()
  */
 static void _random_hell_miscast()
 {
-    const spschool_flag_type which_miscast
-        = random_choose_weighted(8, SPTYP_NECROMANCY,
-                                 4, SPTYP_SUMMONING,
-                                 2, SPTYP_CONJURATION,
-                                 1, SPTYP_CHARMS,
-                                 1, SPTYP_HEXES);
+    const spschool which_miscast
+        = random_choose_weighted(8, spschool::necromancy,
+                                 4, spschool::summoning,
+                                 2, spschool::conjuration,
+                                 1, spschool::charms,
+                                 1, spschool::hexes);
 
-    MiscastEffect(&you, nullptr, HELL_EFFECT_MISCAST, which_miscast,
-                  4 + random2(6), random2avg(97, 3),
+    const int pow = 4 + random2(6);
+    const int fail = random2avg(97, 3);
+    MiscastEffect(&you, nullptr, {miscast_source::hell_effect}, which_miscast,
+                  pow, fail,
                   "the effects of Hell");
 }
 
@@ -95,7 +97,7 @@ struct hell_effect_spec
     /// The type of greater demon to spawn from hell effects.
     vector<monster_type> fiend_types;
     /// The appropriate theme of miscast effects to toss at the player.
-    spschool_flag_type miscast_type;
+    spschool miscast_type;
     /// A weighted list of lesser creatures to spawn.
     vector<pair<monster_type, int>> minor_summons;
 };
@@ -103,13 +105,13 @@ struct hell_effect_spec
 /// Hell effects for each branch of hell
 static map<branch_type, hell_effect_spec> hell_effects_by_branch =
 {
-    { BRANCH_DIS, { {RANDOM_DEMON_GREATER}, SPTYP_EARTH, {
+    { BRANCH_DIS, { {RANDOM_DEMON_GREATER}, spschool::earth, {
         { RANDOM_MONSTER, 100 }, // TODO
     }}},
-    { BRANCH_GEHENNA, { {MONS_BRIMSTONE_FIEND}, SPTYP_FIRE, {
+    { BRANCH_GEHENNA, { {MONS_BRIMSTONE_FIEND}, spschool::fire, {
         { RANDOM_MONSTER, 100 }, // TODO
     }}},
-    { BRANCH_COCYTUS, { {MONS_ICE_FIEND, MONS_SHARD_SHRIKE}, SPTYP_ICE, {
+    { BRANCH_COCYTUS, { {MONS_ICE_FIEND, MONS_SHARD_SHRIKE}, spschool::ice, {
         // total weight 100
         { MONS_ZOMBIE, 15 },
         { MONS_SKELETON, 10 },
@@ -123,7 +125,7 @@ static map<branch_type, hell_effect_spec> hell_effects_by_branch =
         { MONS_BLIZZARD_DEMON, 5 },
         { MONS_ICE_DEVIL, 5 },
     }}},
-    { BRANCH_TARTARUS, { {MONS_TZITZIMITL}, SPTYP_NECROMANCY, {
+    { BRANCH_TARTARUS, { {MONS_TZITZIMITL}, spschool::necromancy, {
         { RANDOM_MONSTER, 100 }, // TODO
     }}},
 };
@@ -150,8 +152,10 @@ static void _themed_hell_summon_or_miscast()
     }
     else
     {
-        MiscastEffect(&you, nullptr, HELL_EFFECT_MISCAST, spec->miscast_type,
-                      4 + random2(6), random2avg(97, 3),
+        const int pow = 4 + random2(6);
+        const int fail = random2avg(97, 3);
+        MiscastEffect(&you, nullptr, {miscast_source::hell_effect},
+                      spec->miscast_type, pow, fail,
                       "the effects of Hell");
     }
 }
@@ -372,11 +376,9 @@ static void _jiyva_effects(int /*time_delta*/)
         }
     }
 
-    // Gnolls can't shift stats
     if (have_passive(passive_t::fluid_stats)
         && x_chance_in_y(you.piety / 4, MAX_PIETY)
-        && !player_under_penance() && one_chance_in(4)
-        && you.species != SP_GNOLL)
+        && !player_under_penance() && one_chance_in(4))
     {
         jiyva_stat_action();
     }
@@ -581,7 +583,9 @@ static void _monster_flee(monster *mon)
     }
 
     // Randomise the target so we have a direction to flee.
-    coord_def mshift(random2(3) - 1, random2(3) - 1);
+    coord_def mshift;
+    mshift.x = random2(3) - 1;
+    mshift.y = random2(3) - 1;
 
     // Bounds check: don't let fleeing monsters try to run off the grid.
     const coord_def s = mon->target + mshift;
@@ -659,6 +663,13 @@ static void _catchup_monster_moves(monster* mon, int turns)
     // Summoned monsters might have disappeared.
     if (!mon->alive())
         return;
+
+    // Ball lightning dissapates harmlessly out of LOS
+    if (mon->type == MONS_BALL_LIGHTNING && mon->summoner == MID_PLAYER)
+    {
+        monster_die(*mon, KILL_RESET, NON_MONSTER);
+        return;
+    }
 
     // Expire friendly summons
     if (mon->friendly() && mon->is_summoned() && !mon->is_perm_summoned())
@@ -1059,7 +1070,11 @@ void timeout_malign_gateways(int duration)
             mmark->duration -= duration;
 
         if (mmark->duration > 0)
-            big_cloud(CLOUD_TLOC_ENERGY, 0, mmark->pos, 3+random2(10), 2+random2(5));
+        {
+            const int pow = 3 + random2(10);
+            const int size = 2 + random2(5);
+            big_cloud(CLOUD_TLOC_ENERGY, 0, mmark->pos, pow, size);
+        }
         else
         {
             monster* mons = monster_at(mmark->pos);
@@ -1091,8 +1106,11 @@ void timeout_malign_gateways(int duration)
                 {
                     tentacle->flags |= MF_NO_REWARD;
                     tentacle->add_ench(ENCH_PORTAL_TIMER);
+                    int dur = random2avg(mmark->power, 6);
+                    dur -= random2(4); // sequence point between random calls
+                    dur *= 10;
                     mon_enchant kduration = mon_enchant(ENCH_PORTAL_PACIFIED, 4,
-                        caster, (random2avg(mmark->power, 6)-random2(4))*10);
+                        caster, dur);
                     tentacle->props["base_position"].get_coord()
                                         = tentacle->pos();
                     tentacle->add_ench(kduration);

@@ -22,6 +22,7 @@
 #include "item-name.h"
 #include "item-prop.h"
 #include "items.h"
+#include "libutil.h"
 #include "potion-type.h"
 #include "religion.h"
 #include "skills.h"
@@ -363,9 +364,9 @@ bool is_channeling_item(const item_def& item, bool calc_unid)
 
 bool is_corpse_violating_spell(spell_type spell)
 {
-    unsigned int flags = get_spell_flags(spell);
+    spell_flags flags = get_spell_flags(spell);
 
-    return flags & SPFLAG_CORPSE_VIOLATING;
+    return testbits(flags, spflag::corpse_violating);
 }
 
 /**
@@ -377,33 +378,33 @@ bool is_corpse_violating_spell(spell_type spell)
 bool is_evil_spell(spell_type spell)
 {
     const spschools_type disciplines = get_spell_disciplines(spell);
-    unsigned int flags = get_spell_flags(spell);
+    spell_flags flags = get_spell_flags(spell);
 
-    if (flags & SPFLAG_UNHOLY)
+    if (flags & spflag::unholy)
         return true;
-    return bool(disciplines & SPTYP_NECROMANCY)
-           && !bool(flags & SPFLAG_NOT_EVIL);
+    return bool(disciplines & spschool::necromancy)
+           && !bool(flags & spflag::not_evil);
 }
 
 bool is_unclean_spell(spell_type spell)
 {
-    unsigned int flags = get_spell_flags(spell);
+    spell_flags flags = get_spell_flags(spell);
 
-    return bool(flags & SPFLAG_UNCLEAN);
+    return bool(flags & spflag::unclean);
 }
 
 bool is_chaotic_spell(spell_type spell)
 {
-    unsigned int flags = get_spell_flags(spell);
+    spell_flags flags = get_spell_flags(spell);
 
-    return bool(flags & SPFLAG_CHAOTIC);
+    return bool(flags & spflag::chaotic);
 }
 
 bool is_hasty_spell(spell_type spell)
 {
-    unsigned int flags = get_spell_flags(spell);
+    spell_flags flags = get_spell_flags(spell);
 
-    return bool(flags & SPFLAG_HASTY);
+    return bool(flags & spflag::hasty);
 }
 
 /**

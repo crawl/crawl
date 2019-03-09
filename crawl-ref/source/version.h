@@ -53,6 +53,7 @@ namespace Version
 
     void record(string prev);
     string history();
+    size_t history_size();
 }
 
 extern const char* compilation_info;

@@ -33,6 +33,13 @@
 #include "unwind.h"
 #include "view.h"
 
+static bool _msgs_to_stderr = false;
+
+void set_log_emergency_stderr(bool b)
+{
+    _msgs_to_stderr = b;
+}
+
 static void _mpr(string text, msg_channel_type channel=MSGCH_PLAIN, int param=0,
                  bool nojoin=false, bool cap=true);
 
@@ -1354,7 +1361,7 @@ static void _mpr(string text, msg_channel_type channel, int param, bool nojoin,
     if (crawl_state.game_crashed)
         return;
 
-    if (crawl_state.game_is_arena())
+    if (crawl_state.game_is_valid_type() && crawl_state.game_is_arena())
         _debug_channel_arena(channel);
 
 #ifdef DEBUG_FATAL
@@ -1363,7 +1370,8 @@ static void _mpr(string text, msg_channel_type channel, int param, bool nojoin,
 #endif
 
     if (channel == MSGCH_ERROR &&
-        (!crawl_state.io_inited || msgwin_errors_to_stderr()))
+        (!crawl_state.io_inited || msgwin_errors_to_stderr())
+        || _msgs_to_stderr)
     {
         fprintf(stderr, "%s\n", text.c_str());
     }
@@ -1422,7 +1430,7 @@ static void _mpr(string text, msg_channel_type channel, int param, bool nojoin,
     _last_msg_turn = msg.turn;
 
     if (channel == MSGCH_ERROR)
-        interrupt_activity(AI_FORCE_INTERRUPT);
+        interrupt_activity(activity_interrupt::force);
 
     if (channel == MSGCH_PROMPT || channel == MSGCH_ERROR)
         set_more_autoclear(false);
@@ -1604,7 +1612,10 @@ static void mpr_check_patterns(const string& message,
     }
 
     if (channel != MSGCH_DIAGNOSTICS && channel != MSGCH_EQUIPMENT)
-        interrupt_activity(AI_MESSAGE, channel_to_str(channel) + ":" + message);
+    {
+        interrupt_activity(activity_interrupt::message,
+                           channel_to_str(channel) + ":" + message);
+    }
 }
 
 static bool channel_message_history(msg_channel_type channel)

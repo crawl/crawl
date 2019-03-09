@@ -96,7 +96,7 @@ bool check_annotation_exclusion_warning()
         && !yesno("Enter next level anyway?", true, 'n', true, false))
     {
         canned_msg(MSG_OK);
-        interrupt_activity(AI_FORCE_INTERRUPT);
+        interrupt_activity(activity_interrupt::force);
         crawl_state.level_annotation_shown = false;
         return false;
     }
@@ -543,7 +543,7 @@ static level_id _travel_destination(const dungeon_feature_type how,
         if (how != it->entry_stairs)
             continue;
 
-        if (!is_existing_level(level_id(it->id, 1))
+        if (!you.level_visited(level_id(it->id, 1))
             && runes_for_branch(it->id) > 0)
         {
             _rune_effect(how);

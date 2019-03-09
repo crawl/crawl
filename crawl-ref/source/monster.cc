@@ -13,6 +13,7 @@
 #include "areas.h"
 #include "artefact.h"
 #include "art-enum.h"
+#include "attack.h"
 #include "attitude-change.h"
 #include "bloodspatter.h"
 #include "branch.h"
@@ -705,7 +706,7 @@ bool monster::search_spells(function<bool (spell_type)> func) const
                         { return func(s.spell); });
 }
 
-bool monster::has_spell_of_type(spschool_flag_type discipline) const
+bool monster::has_spell_of_type(spschool discipline) const
 {
     return search_spells(bind(spell_typematch, placeholders::_1, discipline));
 }
@@ -733,11 +734,11 @@ void monster::bind_spell_flags()
 static bool _needs_ranged_attack(const monster* mon)
 {
     // Prevent monsters that have conjurations from grabbing missiles.
-    if (mon->has_spell_of_type(SPTYP_CONJURATION))
+    if (mon->has_spell_of_type(spschool::conjuration))
         return false;
 
     // Same for summonings, but make an exception for friendlies.
-    if (!mon->friendly() && mon->has_spell_of_type(SPTYP_SUMMONING))
+    if (!mon->friendly() && mon->has_spell_of_type(spschool::summoning))
         return false;
 
     // Blademasters don't want to throw stuff.
@@ -3435,7 +3436,7 @@ int monster::base_evasion() const
  **/
 int monster::evasion(ev_ignore_type evit, const actor* /*act*/) const
 {
-    const bool calc_unid = !(evit & EV_IGNORE_UNIDED);
+    const bool calc_unid = !testbits(evit, ev_ignore::unided);
 
     int ev = base_evasion();
 
@@ -3464,7 +3465,7 @@ int monster::evasion(ev_ignore_type evit, const actor* /*act*/) const
     if (has_ench(ENCH_AGILE))
         ev += 5;
 
-    if (evit & EV_IGNORE_HELPLESS)
+    if (evit & ev_ignore::helpless)
         return max(ev, 0);
 
     if (paralysed() || petrified() || petrifying() || asleep())
@@ -4189,7 +4190,7 @@ int monster::skill(skill_type sk, int scale, bool real, bool drained, bool temp)
         return hd;
 
     case SK_NECROMANCY:
-        return (has_spell_of_type(SPTYP_NECROMANCY)) ? hd : hd/2;
+        return (has_spell_of_type(spschool::necromancy)) ? hd : hd/2;
 
     case SK_POISON_MAGIC:
     case SK_FIRE_MAGIC:
@@ -4287,8 +4288,8 @@ bool monster::drain_exp(actor *agent, bool quiet, int pow)
 
     if (alive())
     {
-        int dur = min(200 + random2(100),
-                      300 - get_ench(ENCH_DRAINED).duration - random2(50));
+        int dur = 200 + random2(100);
+        dur = min(dur, 300 - get_ench(ENCH_DRAINED).duration - random2(50));
 
         if (res_negative_energy())
             dur /= (res_negative_energy() * 2);
@@ -4370,7 +4371,10 @@ void monster::splash_with_acid(const actor* evildoer, int /*acid_strength*/,
     const int post_res_dam = resist_adjust_damage(this, BEAM_ACID, dam);
 
     if (this->observable())
-         mprf("%s is splashed with acid.", this->name(DESC_THE).c_str());
+    {
+        mprf("%s is splashed with acid%s", this->name(DESC_THE).c_str(),
+             attack_strength_punctuation(post_res_dam).c_str());
+    }
 
     if (!one_chance_in(3))
         corrode_equipment();
@@ -5317,7 +5321,12 @@ void monster::corrupt()
     malmutate("");
 }
 
-bool monster::polymorph(int pow, bool /*allow_immobile*/)
+bool monster::polymorph(int /* pow */, bool /*allow_immobile*/)
+{
+    return polymorph();
+}
+
+bool monster::polymorph(poly_power_type power)
 {
     if (!can_polymorph())
         return false;
@@ -5333,19 +5342,19 @@ bool monster::polymorph(int pow, bool /*allow_immobile*/)
     // Polymorphing a shapeshifter will make it revert to its original
     // form.
     if (has_ench(ENCH_GLOWING_SHAPESHIFTER))
-        return monster_polymorph(this, MONS_GLOWING_SHAPESHIFTER);
+        return monster_polymorph(this, MONS_GLOWING_SHAPESHIFTER, power);
     if (has_ench(ENCH_SHAPESHIFTER))
-        return monster_polymorph(this, MONS_SHAPESHIFTER);
+        return monster_polymorph(this, MONS_SHAPESHIFTER, power);
 
     // Polymorphing a slime creature will usually split it first
     // and polymorph each part separately.
     if (type == MONS_SLIME_CREATURE)
     {
-        slime_creature_polymorph(*this);
+        slime_creature_polymorph(*this, power);
         return true;
     }
 
-    return monster_polymorph(this, RANDOM_MONSTER);
+    return monster_polymorph(this, RANDOM_MONSTER, power);
 }
 
 static bool _mons_is_icy(int mc)
@@ -5592,12 +5601,9 @@ bool monster::do_shaft()
     if (!is_valid_shaft_level())
         return false;
 
-    // Tentacles & player ghosts are immune to shafting
-    if (mons_is_tentacle_or_tentacle_segment(type)
-        || type == MONS_PLAYER_GHOST)
-    {
+    // Tentacles are immune to shafting
+    if (mons_is_tentacle_or_tentacle_segment(type))
         return false;
-    }
 
     // Handle instances of do_shaft() being invoked magically when
     // the monster isn't standing over a shaft.

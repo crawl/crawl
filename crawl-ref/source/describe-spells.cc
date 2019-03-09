@@ -16,6 +16,7 @@
 #include "macro.h"
 #include "menu.h"
 #include "mon-book.h"
+#include "mon-cast.h"
 #include "monster.h" // SEEN_SPELLS_KEY
 #include "prompt.h"
 #include "religion.h"
@@ -277,7 +278,7 @@ static void _monster_spellbooks(const monster_info &mi,
             if (!spell_is_soh_breath(spell))
             {
                 output_book.spells.emplace_back(spell);
-                if (get_spell_flags(spell) & SPFLAG_MONS_ABJURE)
+                if (get_spell_flags(spell) & spflag::mons_abjure)
                     mons_abjure = true;
                 continue;
             }
@@ -460,6 +461,24 @@ vector<pair<spell_type,char>> map_chars_to_spells(const spellset &spells,
     return ret;
 }
 
+static string _range_string(const spell_type &spell, const monster_info *mon_owner, int hd)
+{
+    auto flags = get_spell_flags(spell);
+    int pow = mons_power_for_hd(spell, hd, false);
+    int range = spell_range(spell, pow, false);
+    const bool has_range = mon_owner
+                        && range > 0
+                        && !testbits(flags, spflag::selfench);
+    if (!has_range)
+        return "";
+    const bool in_range = has_range
+                    && crawl_state.need_save
+                    && in_bounds(mon_owner->pos)
+                    && grid_distance(you.pos(), mon_owner->pos) <= range;
+    const char *range_col = in_range ? "lightred" : "lightgray";
+    return make_stringf("(<%s>%d</%s>)", range_col, range, range_col);
+}
+
 /**
  * Describe a given set of spells.
  *
@@ -484,7 +503,10 @@ static void _describe_book(const spellbook_contents &book,
 
     // only display header for book spells
     if (source_item)
-        description.cprintf("\n Spells                           Type                      Level");
+    {
+        description.cprintf(
+            "\n Spells                           Type                      Level");
+    }
     description.cprintf("\n");
 
     // list spells in two columns, instead of one? (monster books)
@@ -496,39 +518,44 @@ static void _describe_book(const spellbook_contents &book,
     {
         description.cprintf(" ");
 
-        description.textcolour(_spell_colour(spell, source_item));
+        if (!mon_owner)
+            description.textcolour(_spell_colour(spell, source_item));
 
         // don't crash if we have more spells than letters.
         auto entry = find_if(spell_map.begin(), spell_map.end(),
-                [&spell](const pair<spell_type,char>& e) { return e.first == spell; });
-        const char spell_letter = entry != spell_map.end() ? entry->second : ' ';
+                [&spell](const pair<spell_type,char>& e)
+                {
+                    return e.first == spell;
+                });
+        const char spell_letter = entry != spell_map.end()
+                                            ? entry->second : ' ';
+
+        string range_str = _range_string(spell, mon_owner, hd);
+
+        string hex_str = "";
+
         if (hd > 0 && crawl_state.need_save
 #ifndef DEBUG_DIAGNOSTICS
             && mon_owner->attitude != ATT_FRIENDLY
 #endif
-            && (get_spell_flags(spell) & SPFLAG_MR_CHECK))
+            && testbits(get_spell_flags(spell), spflag::MR_check))
         {
             if (you.immune_to_hex(spell))
-            {
-                description.cprintf("%c - (immune) %s",
-                                spell_letter,
-                                chop_string(spell_title(spell), 20).c_str());
-            }
+                hex_str = "(immune)";
             else
-            {
-                int chance = hex_chance(spell, hd);
-                int ch_len = to_string(chance).length();
-                description.cprintf("%c - (%d%%) %s",
-                    spell_letter, chance,
-                    chop_string(spell_title(spell), 25-ch_len).c_str());
-            }
+                hex_str = make_stringf("(%d%%)", hex_chance(spell, hd));
         }
-        else
-        {
-            description.cprintf("%c - %s",
-                            spell_letter,
-                            chop_string(spell_title(spell), 29).c_str());
-        }
+
+        int hex_len = hex_str.length(), range_len = range_str.empty() ? 0 : 3;
+        int hex_range_space = hex_len && range_len ? 1 : 0;
+
+        description += formatted_string::parse_string(
+                make_stringf("%c - %s%s%s%s", spell_letter,
+                chop_string(spell_title(spell),
+                            29 - hex_len - range_len - hex_range_space).c_str(),
+                hex_str.c_str(),
+                hex_range_space ? " " : "",
+                range_str.c_str()));
 
         // only display type & level for book spells
         if (doublecolumn)
@@ -543,8 +570,11 @@ static void _describe_book(const spellbook_contents &book,
         }
 
         string schools =
+#if TAG_MAJOR_VERSION == 34
             source_item->base_type == OBJ_RODS ? "Evocations"
-                                               : _spell_schools(spell);
+                                               :
+#endif
+                         _spell_schools(spell);
         description.cprintf("%s%d\n",
                             chop_string(schools, 30).c_str(),
                             spell_difficulty(spell));
@@ -600,13 +630,21 @@ static void _write_book(const spellbook_contents &book,
         const char spell_letter = entry != spell_map.end() ? entry->second : ' ';
         tiles.json_write_string("letter", string(1, spell_letter));
 
+        string range_str = _range_string(spell, mon_owner, hd);
+        if (range_str.size() > 0)
+            tiles.json_write_string("range_string", range_str);
+
         if (hd > 0 && crawl_state.need_save
 #ifndef DEBUG_DIAGNOSTICS
             && mon_owner->attitude != ATT_FRIENDLY
 #endif
-            && (get_spell_flags(spell) & SPFLAG_MR_CHECK))
+            && (get_spell_flags(spell) & spflag::MR_check))
         {
-            tiles.json_write_int("hex_chance", hex_chance(spell, hd));
+            if (you.immune_to_hex(spell))
+                tiles.json_write_string("hex_chance", "immune");
+            else
+                tiles.json_write_string("hex_chance",
+                        make_stringf("%d%%", hex_chance(spell, hd)));
         }
 
         string schools = (source_item && source_item->base_type == OBJ_RODS) ?

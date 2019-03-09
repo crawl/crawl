@@ -17,7 +17,8 @@ s|:tiles: ``(.+)``|tiles:   $1|g;
 s/\.\. note::/Note: /g;
 
 # Local references.
-s/`(.)\.\s+(.*?)`_/$1. "$2"/sg; # added "" for a nicer look
+s/`([^_])\.\s+(.*?)`_/$1. "$2"/sg; # added "" for a nicer look
+s/`(.+)`_/"$1"/g; # should in principle have s flag, but will be too greedy
 
 # HTML and reST escapes.
 s/&lt;/</g;

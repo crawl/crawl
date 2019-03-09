@@ -43,7 +43,7 @@ Some useful config options:
 Install a pre-commit sanity check
 
 From the root of the git tree type:
-cp crawl-ref/git-hooks/pre-commit .git/hooks
+cp crawl-ref/docs/develop/git/pre-commit .git/hooks
 
 -------------------------
 

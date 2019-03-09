@@ -154,8 +154,10 @@ static void _CURSES_equip(item_def *item, bool *show_msgs, bool unmeld)
     _equip_mpr(show_msgs, "A shiver runs down your spine.");
     if (!unmeld)
     {
-        MiscastEffect(&you, nullptr, WIELD_MISCAST, SPTYP_NECROMANCY, random2(9),
-                      random2(70), "the scythe of Curses", NH_NEVER);
+        const int pow = random2(9);
+        MiscastEffect(&you, nullptr, {miscast_source::wield},
+                      spschool::necromancy, pow, random2(70),
+                      "the scythe of Curses", nothing_happens::NEVER);
     }
 }
 
@@ -173,9 +175,10 @@ static void _CURSES_melee_effects(item_def* weapon, actor* attacker,
         did_god_conduct(DID_EVIL, 3);
     if (!mondied && defender->holiness() == MH_NATURAL)
     {
-        MiscastEffect(defender, attacker, MELEE_MISCAST, SPTYP_NECROMANCY,
-                      random2(9), random2(70), "the scythe of Curses",
-                      NH_NEVER);
+        const int pow = random2(9);
+        MiscastEffect(defender, attacker, {miscast_source::melee},
+                      spschool::necromancy, pow, random2(70),
+                      "the scythe of Curses", nothing_happens::NEVER);
     }
 }
 
@@ -346,14 +349,14 @@ static void _SINGING_SWORD_unequip(item_def *item, bool *show_msgs)
 static void _SINGING_SWORD_world_reacts(item_def *item)
 {
     int tension = get_tension(GOD_NO_GOD);
-    int tier = (tension <= 0) ? 1 : (tension < 40) ? 2 : 3;
+    int tier = max(1, min(4, 1 + tension / 20));
     bool silent = silenced(you.pos());
 
     string old_name = get_artefact_name(*item);
     string new_name;
     if (silent)
         new_name = "Sulking Sword";
-    else if (tier < 2)
+    else if (tier < 4)
         new_name = "Singing Sword";
     else
         new_name = "Screaming Sword";
@@ -369,18 +372,24 @@ static void _SINGING_SWORD_melee_effects(item_def* weapon, actor* attacker,
                                          int dam)
 {
     int tension = get_tension(GOD_NO_GOD);
-    int tier = (tension <= 0) ? 1 : (tension < 40) ? 2 : 3;
-    dprf(DIAG_COMBAT, "Singing sword tension: %d; tier: %d", tension, tier);
+    int tier;
 
-    if (silenced(you.pos()))
+    if (attacker->is_player())
+        tier = max(1, min(4, 1 + tension / 20));
+    // Don't base the sword on player state when the player isn't wielding it.
+    else
+        tier = 1;
+
+    dprf(DIAG_COMBAT, "Singing sword tension: %d, tier: %d", tension, tier);
+
+    if (silenced(attacker->pos()))
         tier = 0;
 
-    // not as spammy at low tension
-    if (!x_chance_in_y(5, (tier == 1) ? 1000 : (tier == 2) ? 100 : 10))
+    // Not as spammy at low tension. Max chance reached at tier 3, allowing
+    // tier 0 to have a high chance so that the sword is likely to express its
+    // unhappiness with being silenced.
+    if (!x_chance_in_y(6, (tier == 1) ? 24: (tier == 2) ? 16: 12))
         return;
-
-    if (tier == 3 && one_chance_in(10))
-        tier++; // Loudest scream -- 50% more spellpower and 40 noise.
 
     const char *tenname[] =  {"silenced", "no_tension", "low_tension",
                               "high_tension", "SCREAM"};
@@ -391,11 +400,11 @@ static void _SINGING_SWORD_melee_effects(item_def* weapon, actor* attacker,
 
     item_noise(*weapon, msg, loudness[tier]);
 
-    if (tier < 3)
-        return; // no damage on low tiers
+    if (tier < 1)
+        return; // Can't cast when silenced.
 
-    fire_los_attack_spell(SPELL_SONIC_WAVE, 120 + (tier == 4) * 60, &you,
-            defender);
+    const int spellpower = 100 + 13 * (tier - 1) + (tier == 4 ? 36 : 0);
+    fire_los_attack_spell(SPELL_SONIC_WAVE, spellpower, attacker, defender);
 }
 ////////////////////////////////////////////////////
 
@@ -495,7 +504,8 @@ static bool _WUCAD_MU_evoke(item_def *item, bool* did_work, bool* unevokable)
 
     mpr("Magical energy flows into your mind!");
 
-    inc_mp(3 + random2(5) + you.skill_rdiv(SK_EVOCATIONS, 1, 3));
+    const int mp_inc_base = 3 + random2(5);
+    inc_mp(mp_inc_base + you.skill_rdiv(SK_EVOCATIONS, 1, 3));
     make_hungry(50, false, true);
 
     *did_work = true;
@@ -844,8 +854,10 @@ static void _PLUTONIUM_SWORD_melee_effects(item_def* weapon, actor* attacker,
              || !mons_immune_magic(*defender->as_monster())))
     {
         mpr("Mutagenic energy flows through the plutonium sword!");
-        MiscastEffect(defender, attacker, MELEE_MISCAST, SPTYP_TRANSMUTATION,
-                      random2(9), random2(70), "the plutonium sword", NH_NEVER);
+        const int pow = random2(9);
+        MiscastEffect(defender, attacker, {miscast_source::melee},
+                      spschool::transmutation, pow, random2(70),
+                      "the plutonium sword", nothing_happens::NEVER);
 
         if (attacker->is_player())
             did_god_conduct(DID_CHAOS, 3);
@@ -1032,9 +1044,10 @@ static void _SPELLBINDER_melee_effects(item_def* weapon, actor* attacker,
     if (defender->antimagic_susceptible()
         && !mondied)
     {
-        MiscastEffect(defender, attacker, MELEE_MISCAST, SPTYP_RANDOM,
-                      random2(9), random2(70),
-                      "the demon whip \"Spellbinder\"", NH_NEVER);
+        const int pow = random2(9);
+        MiscastEffect(defender, attacker, {miscast_source::melee},
+                      spschool::random, pow, random2(70),
+                      "the demon whip \"Spellbinder\"", nothing_happens::NEVER);
     }
 }
 
@@ -1088,6 +1101,7 @@ static void _FIRESTARTER_melee_effects(item_def* weapon, actor* attacker,
 
 ///////////////////////////////////////////////////
 
+#if TAG_MAJOR_VERSION == 34
 static void _CHILLY_DEATH_equip(item_def *item, bool *show_msgs, bool unmeld)
 {
     _equip_mpr(show_msgs, "The dagger glows with an icy blue light!");
@@ -1121,9 +1135,11 @@ static void _CHILLY_DEATH_melee_effects(item_def* weapon, actor* attacker,
         }
     }
 }
+#endif
 
 ///////////////////////////////////////////////////
 
+#if TAG_MAJOR_VERSION == 34
 static void _FLAMING_DEATH_equip(item_def *item, bool *show_msgs, bool unmeld)
 {
     _equip_mpr(show_msgs, "The scimitar bursts into red hot flame!");
@@ -1150,6 +1166,7 @@ static void _FLAMING_DEATH_melee_effects(item_def* weapon, actor* attacker,
         }
     }
 }
+#endif
 
 ///////////////////////////////////////////////////
 
@@ -1268,6 +1285,7 @@ static void _ETHERIC_CAGE_world_reacts(item_def *item)
 
 ///////////////////////////////////////////////////
 
+#if TAG_MAJOR_VERSION == 34
 static void _ETERNAL_TORMENT_equip(item_def *item, bool *show_msgs, bool unmeld)
 {
     calc_hp();
@@ -1284,6 +1302,7 @@ static void _ETERNAL_TORMENT_unequip(item_def *item, bool *show_msgs)
 {
     calc_hp();
 }
+#endif
 
 ///////////////////////////////////////////////////
 

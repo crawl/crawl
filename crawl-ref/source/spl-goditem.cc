@@ -327,7 +327,7 @@ spret cast_healing(int pow, bool fail)
     args.restricts = DIR_TARGET;
     args.mode = TARG_INJURED_FRIEND;
     args.needs_path = false;
-    args.self = CONFIRM_CANCEL;
+    args.self = confirm_prompt_type::cancel;
     args.target_prefix = "Heal";
     args.get_desc_func = bind(_desc_pacify_chance, placeholders::_1, pow);
     direction(spd, args);
@@ -660,7 +660,8 @@ static bool _selectively_remove_curse(const string &pre_msg)
             return used;
         }
 
-        int item_slot = prompt_invent_item("Uncurse which item?", MT_INVLIST,
+        int item_slot = prompt_invent_item("Uncurse which item?",
+                                           menu_type::invlist,
                                            OSEL_CURSED_WORN, OPER_ANY,
                                            invprompt_flag::escape_only);
         if (prompt_failed(item_slot))
@@ -738,7 +739,7 @@ static bool _selectively_curse_item(bool armour, const string &pre_msg)
 {
     while (1)
     {
-        int item_slot = prompt_invent_item("Curse which item?", MT_INVLIST,
+        int item_slot = prompt_invent_item("Curse which item?", menu_type::invlist,
                                            armour ? OSEL_UNCURSED_WORN_ARMOUR
                                                   : OSEL_UNCURSED_WORN_JEWELLERY,
                                            OPER_ANY, invprompt_flag::escape_only);
@@ -1077,6 +1078,7 @@ void holy_word_monsters(coord_def where, int pow, holy_word_source_type source,
     if (!mons || !mons->alive() || !mons->undead_or_demonic())
         return;
 
+    god_conduct_trigger conducts[3];
     int hploss = roll_dice(3, 15) + (random2(pow) / 5);
 
     if (hploss)
@@ -1085,6 +1087,13 @@ void holy_word_monsters(coord_def where, int pow, holy_word_source_type source,
             simple_monster_message(*mons, " is blasted by Zin's holy word!");
         else
             simple_monster_message(*mons, " convulses!");
+
+        if (attacker && attacker->is_player()
+            && source == HOLY_WORD_SCROLL
+            && item_type_known(OBJ_SCROLLS, SCR_HOLY_WORD))
+        {
+            set_attack_conducts(conducts, *mons, you.can_see(*mons));
+        }
     }
     mons->hurt(attacker, hploss, BEAM_MISSILE);
 
@@ -1239,18 +1248,50 @@ void torment_cell(coord_def where, actor *attacker, torment_source_type taux)
         return;
     }
 
+    god_conduct_trigger conducts[3];
     int hploss = max(0, mons->hit_points *
                         (50 - mons->res_negative_energy() * 5) / 100 - 1);
 
     if (hploss)
     {
-        simple_monster_message(*mons, " convulses!");
+        if (mons->observable())
+            simple_monster_message(*mons, " convulses!");
+        else
+            mpr("Something is bathed in an unholy light!");
 
         // Currently, torment doesn't annoy the monsters it affects
         // because it can't kill them, and because hostile monsters use
         // it. It does alert them, though.
         // XXX: attacker isn't passed through "int torment()".
         behaviour_event(mons, ME_ALERT, attacker);
+
+        if (attacker && attacker->is_player())
+        {
+            bool set_conducts = false;
+            switch (taux)
+            {
+                case TORMENT_SCROLL:
+                    set_conducts = item_type_known(OBJ_SCROLLS, SCR_TORMENT);
+                    break;
+                case TORMENT_SCEPTRE:
+                    set_conducts = true;
+                    break;
+                default: break;
+            }
+
+            if (set_conducts)
+                set_attack_conducts(conducts, *mons, you.can_see(*mons));
+        }
+    }
+
+    // Player torment annoys the monsters it affects
+    // Tolerate unknown scroll, to not annoy ally god users too much.
+    if (attacker != nullptr
+        && attacker->is_player()
+        && (taux != TORMENT_SCROLL
+            || item_type_known(OBJ_SCROLLS, SCR_TORMENT)))
+    {
+        behaviour_event(mons, ME_ANNOY, attacker);
     }
 
     mons->hurt(attacker, hploss, BEAM_TORMENT_DAMAGE);
@@ -1262,7 +1303,8 @@ void torment(actor *attacker, torment_source_type taux, const coord_def& where)
         torment_cell(*ri, attacker, taux);
 }
 
-void setup_cleansing_flame_beam(bolt &beam, int pow, int caster,
+void setup_cleansing_flame_beam(bolt &beam, int pow,
+                                cleansing_flame_source caster,
                                 coord_def where, actor *attacker)
 {
     beam.flavour      = BEAM_HOLY;
@@ -1271,13 +1313,14 @@ void setup_cleansing_flame_beam(bolt &beam, int pow, int caster,
     beam.target       = where;
     beam.name         = "golden flame";
     beam.colour       = YELLOW;
-    beam.aux_source   = (caster == CLEANSING_FLAME_TSO)
+    beam.aux_source   = (caster == cleansing_flame_source::tso)
                         ? "the Shining One's cleansing flame"
                         : "cleansing flame";
     beam.ex_size      = 2;
     beam.is_explosion = true;
 
-    if (caster == CLEANSING_FLAME_GENERIC || caster == CLEANSING_FLAME_TSO)
+    if (caster == cleansing_flame_source::generic
+        || caster == cleansing_flame_source::tso)
     {
         beam.thrower   = KILL_MISC;
         beam.source_id = MID_NOBODY;
@@ -1298,7 +1341,7 @@ void setup_cleansing_flame_beam(bolt &beam, int pow, int caster,
     }
 }
 
-void cleansing_flame(int pow, int caster, coord_def where,
+void cleansing_flame(int pow, cleansing_flame_source caster, coord_def where,
                      actor *attacker)
 {
     bolt beam;

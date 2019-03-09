@@ -62,7 +62,7 @@ The contents of this text are:
                 automagic_slot, automagic_fight, automagic_stop,
                 fail_severity_to_confirm, easy_door, warn_hatches,
                 enable_recast_spell, confirm_action, regex_search,
-                autopickup_search
+                autopickup_search, bad_item_prompt
 3-h     Message and Display Improvements.
                 hp_warning, mp_warning, hp_colour, mp_colour, stat_colour,
                 status_caption_colour, enemy_hp_colour, clear_messages,
@@ -312,7 +312,8 @@ have to override the options themselves.
 ====================
 
 The following options are a convenience to help you quickly start your
-game of Crawl.
+game of Crawl, and/or configure the start of the game from a file or the
+command line.
 
 name = Delilah
         If set, that's the name all your Crawl characters will get.
@@ -400,6 +401,23 @@ autopickup_starting_ammo = true
         for Earth Elementalists and arrows for Transmuters). Even when this
         option is set, autopickup of those items can be disabled from the
         \ menu once the game has begun.
+
+game_seed = none
+        A number indicating the seed to initialize the random number generator
+        from. Within certain limits, the same seed will deterministically lead
+        to the same dungeon. If set to "none" or 0, the seed will be chosen
+        randomly. This can also be set directly via the command line with
+        "-seed", which will override any rc file setting. This value is an
+        unsigned 64 bit integer.
+
+pregen_dungeon = false
+        When set to true, the game will pregenerate the entire connected dungeon
+        when starting a new character. This leads to more deterministic dungeon
+        generation relative to a particular game seed. If this is false, levels
+        will be generated as you enter them, and the order in which you traverse
+        the dungeon will lead to different dungeons for the same game seed. With
+        this set to true, you still may encounter variation in portal vaults,
+        the abyss, pandemonium, and ziggurats.
 
 2-  File System.
 ================
@@ -1364,6 +1382,9 @@ autopickup_search = false
         searching for "autopickup" will list all such items. Note that this
         option may slow down your game if you have a complicated custom
         autopickup function.
+
+bad_item_prompt = true
+        Ask for confirmation before using bad or dangerous scrolls and potions.
 
 3-h     Messages and Display Enhancements.
 ------------------------------------------

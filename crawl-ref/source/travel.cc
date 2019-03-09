@@ -1211,8 +1211,8 @@ coord_def travel_pathfind::pathfind(run_mode_type rmode, bool fallback_explore)
     unexplored_place = greedy_place = coord_def(0, 0);
     unexplored_dist  = greedy_dist  = UNFOUND_DIST;
 
-    refdist = (Options.explore_item_greed > 0) ? &unexplored_dist
-                                               : &greedy_dist;
+    refdist = (runmode == RMODE_CONNECTIVITY || Options.explore_item_greed > 0)
+                ? &unexplored_dist : &greedy_dist;
 
     // Zap out previous distances array: this must happen before the
     // early exit checks below, since callers may want to inspect
@@ -1286,8 +1286,11 @@ coord_def travel_pathfind::pathfind(run_mode_type rmode, bool fallback_explore)
             {
                 if (runmode == RMODE_TRAVEL)
                     return travel_move();
-                else if (!Options.explore_wall_bias)
+                else if (runmode == RMODE_CONNECTIVITY
+                         || !Options.explore_wall_bias)
+                {
                     return explore_target();
+                }
                 else
                     found_target = true;
             }
@@ -1540,7 +1543,18 @@ bool travel_pathfind::path_flood(const coord_def &c, const coord_def &dc)
             return true;
     }
 
-    if (dc == dest)
+    // We don't want to follow the transporter at c if it's excluded. We also
+    // don't want to update point_distance for the destination based on
+    // taking this transporter.
+    if (!ignore_danger
+        && is_excluded(c)
+        && env.map_knowledge(c).feat() == DNGN_TRANSPORTER
+        // We have to actually take the transporter to go from c to dc.
+        && !adjacent(c, dc))
+    {
+        return false;
+    }
+    else if (dc == dest)
     {
         // Hallelujah, we're home!
         if (_is_safe_move(c))
@@ -2498,11 +2512,19 @@ static void _start_translevel_travel()
     // Update information for this level.
     travel_cache.get_level_info(level_id::current()).update();
 
-    if (level_id::current() == level_target.id
-        && (level_target.pos.x == -1 || level_target.pos == you.pos()))
+    if (level_id::current() == level_target.id)
     {
-        mpr("You're already here!");
-        return ;
+        if (level_target.pos.x == -1 &&
+            level_target.id.depth == branches[level_target.id.branch].numlevels)
+        {
+            mpr("You're already at the bottom of this branch!");
+            return;
+        }
+        else if (level_target.pos.x == -1 || level_target.pos == you.pos())
+        {
+            mpr("You're already here!");
+            return;
+        }
     }
 
 #ifdef DEBUG_TRAVEL

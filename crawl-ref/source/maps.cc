@@ -544,8 +544,9 @@ static coord_def _find_minivault_place(
     // Find a target area which can be safely overwritten.
     for (int tries = 0; tries < 600; ++tries)
     {
-        coord_def v1(random_range(margin, GXM - margin - place.size.x),
-                     random_range(margin, GYM - margin - place.size.y));
+        coord_def v1;
+        v1.x = random_range(margin, GXM - margin - place.size.x);
+        v1.y = random_range(margin, GYM - margin - place.size.y);
 
         if (check_place && !map_place_valid(place.map, v1, place.size))
         {

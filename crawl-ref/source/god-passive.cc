@@ -397,6 +397,7 @@ static const vector<god_passive> god_passives[] =
         },
     },
 
+#if TAG_MAJOR_VERSION == 34
     // Pakellas
     {
         { -1, passive_t::no_mp_regen,
@@ -407,6 +408,7 @@ static const vector<god_passive> god_passives[] =
               "GOD NOW collects and distills excess magic from your kills"
         },
     },
+#endif
 
     // Uskayaw
     { },
@@ -497,7 +499,7 @@ void jiyva_eat_offlevel_items()
 
         const level_id lid(static_cast<branch_type>(branch), level);
 
-        if (lid == level_id::current() || !is_existing_level(lid))
+        if (lid == level_id::current() || !you.level_visited(lid))
             continue;
 
         dprf("Checking %s", lid.describe().c_str());

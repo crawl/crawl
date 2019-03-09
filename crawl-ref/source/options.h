@@ -4,8 +4,9 @@
 
 #include "activity-interrupt-type.h"
 #include "char-set-type.h"
-#include "confirm-level-type.h"
+#include "confirm-butcher-type.h"
 #include "confirm-prompt-type.h"
+#include "easy-confirm-type.h"
 #include "feature.h"
 #include "flang-t.h"
 #include "flush-reason-type.h"
@@ -170,7 +171,9 @@ public:
                                 // should be accessible by different people.
     vector<string> additional_macro_files;
 
-    uint32_t    seed;   // Non-random games.
+    uint64_t    seed;           // Non-random games.
+    uint64_t    seed_from_rc;
+    bool        pregen_dungeon; // Is the dungeon generated at the beginning?
 
 #ifdef DGL_SIMPLE_MESSAGING
     bool        messaging;      // Check for messages.
@@ -230,7 +233,7 @@ public:
     bool        easy_door;       // 'O', 'C' don't prompt with just one door.
     bool        warn_hatches;    // offer a y/n prompt when the player uses an escape hatch
     bool        enable_recast_spell; // Allow recasting spells with 'z' Enter.
-    int         confirm_butcher; // When to prompt for butchery
+    confirm_butcher_type confirm_butcher; // When to prompt for butchery
     hunger_state_t auto_butcher; // auto-butcher corpses while travelling
     bool        easy_eat_chunks; // make 'e' auto-eat the oldest safe chunk
     bool        auto_eat_chunks; // allow eating chunks while resting or travelling
@@ -244,7 +247,7 @@ public:
     bool        note_xom_effects; // take note of all Xom effects
     bool        note_chat_messages; // log chat in Webtiles
     bool        note_dgl_messages; // log chat in DGL
-    confirm_level_type easy_confirm;    // make yesno() confirming easier
+    easy_confirm_type easy_confirm;    // make yesno() confirming easier
     bool        easy_quit_item_prompts; // make item prompts quitable on space
     confirm_prompt_type allow_self_target;      // yes, no, prompt
     bool        simple_targeting; // disable smart spell targeting
@@ -407,6 +410,7 @@ public:
                                     // pickup
     bool        ability_menu;       // 'a'bility starts with a full-screen menu
     bool        easy_floor_use;     // , selects the floor item if there's 1
+    bool        bad_item_prompt;    // Confirm before using a bad consumable
 
     int         assign_item_slot;   // How free slots are assigned
     maybe_bool  show_god_gift;      // Show {god gift} in item names
@@ -426,7 +430,7 @@ public:
 
     vector<text_pattern> drop_filter;
 
-    map<string, FixedBitVector<NUM_AINTERRUPTS>> activity_interrupts;
+    map<string, FixedBitVector<NUM_ACTIVITY_INTERRUPTS>> activity_interrupts;
 #ifdef DEBUG_DIAGNOSTICS
     FixedBitVector<NUM_DIAGNOSTICS> quiet_debug_messages;
 #endif
@@ -612,7 +616,7 @@ private:
     message_filter parse_message_filter(const string &s);
 
     void set_default_activity_interrupts();
-    void set_activity_interrupt(FixedBitVector<NUM_AINTERRUPTS> &eints,
+    void set_activity_interrupt(FixedBitVector<NUM_ACTIVITY_INTERRUPTS> &eints,
                                 const string &interrupt);
     void set_activity_interrupt(const string &activity_name,
                                 const string &interrupt_names,

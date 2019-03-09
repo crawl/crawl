@@ -711,6 +711,22 @@ unsigned short SDLWrapper::get_mouse_state(int *x, int *y) const
     return ret;
 }
 
+string SDLWrapper::get_clipboard()
+{
+    string result;
+    char *clip = SDL_GetClipboardText();
+    if (!clip)
+        return result;
+    result = string(clip);
+    SDL_free(clip);
+    return result;
+}
+
+bool SDLWrapper::has_clipboard()
+{
+    return SDL_HasClipboardText() == SDL_TRUE;
+}
+
 static char32_t _key_suppresses_textinput(int keycode)
 {
     char result_char = 0;

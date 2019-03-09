@@ -1210,18 +1210,18 @@ NAME:    dpeg_arrival_simpleton_b
 TAGS:    arrival
 ORIENT:  float
 ITEM:    nothing, nothing
-SHUFFLE: =+, TVG
+SHUFFLE: a+, TVG
 SUBST:   c:cxx
-SUBST:   = = x
+SUBST:   a = x
 KMASK:   T = no_monster_gen
 MAP
 xx@...@xxxxxxxx
 xx+xxx+xxxxxxxx
 x.......x......
-x.......=..)..@
+x.......a..)..@
 x.T.G.T.x......
-x.......xxx=xxx
-x.......xcc=ccx
+x.......xxxaxxx
+x.......xccaccx
 xxxxxxxxxc...cx
 xccccccccc.{.cx
 @........+...cx
@@ -1235,15 +1235,15 @@ TAGS:    arrival
 ORIENT:  float
 ITEM:    nothing, nothing
 SUBST:   d : GTVt
-SHUFFLE: =+, cx
-SUBST:   = = x
+SHUFFLE: a+, cx
+SUBST:   a = x
 MAP
 @.........@
 ...xx+xx...
 ...x...x...
 .xxx.d.xxx.
 .x.......x.
-.=.d.{.d.=.
+.a.d.{.d.a.
 .x.......x.
 .xxx.d.xxx.
 ...x...x...
@@ -2410,22 +2410,22 @@ NAME:    shiori_angband_town
 ORIENT:  float
 WEIGHT:  1
 TAGS:    arrival no_rotate
-NSUBST:  { = 1:{ / 1:> / *:.
-NSUBST:  = = 3=+ / *=x
+NSUBST:  { = { / > / .
+NSUBST:  a = 3=+ / x
 SUBST:   x:xc
 MAP
-xxxx=xxxxxxxxxxxxxx=xxxxxxxxxxxxxx=xxxxx
+xxxxaxxxxxxxxxxxxxxaxxxxxxxxxxxxxxaxxxxx
 x......................................x
 x.xxxxx..xxxxx....xxxxx....xxxxx.xxxxx.x
-=.xxxxx..xxxx+..{.xxxxx..{.xxxxx.+xxxx.=
+a.xxxxx..xxxx+..{.xxxxx..{.xxxxx.+xxxx.a
 x.xxxxx...........xxxxx....xxxx+.xxxxx.x
 x.xxxxx..{........xxx+x................x
 x.xx+xx......{.............{.....xxxxx.x
 x.........xxxx+xx..xx+x...xxxxx..+xxxx.x
-=.xxxx+...xxxxxxx..xxxx...xxxxx{.xxxxx.=
+a.xxxx+...xxxxxxx..xxxx...xxxxx{.xxxxx.a
 x.xxxxx.{.xxxxxxx..xxxx.{.+xxxx..xxxxx.x
 x......................................x
-xxxx=xxxxxxxxxxxxxx=xxxxxxxxxxxxxxx=xxxx
+xxxxaxxxxxxxxxxxxxxaxxxxxxxxxxxxxxxaxxxx
 ENDMAP
 
 ##############################################################

@@ -22,9 +22,7 @@
 #include "options.h"
 #include "prompt.h"
 #include "religion.h"
-#if TAG_MAJOR_VERSION == 34
-# include "shopping.h" // REMOVED_DEAD_SHOPS_KEY
-#endif
+#include "shopping.h"
 #include "skills.h"
 #include "spl-book.h"
 #include "spl-util.h"
@@ -253,16 +251,19 @@ static void _give_items_skills(const newgame_def& ng)
         break;
 
     case JOB_CHAOS_KNIGHT:
+    {
         you.religion = GOD_XOM;
         you.piety = 100;
-        you.gift_timeout = max(5, random2(40) + random2(40));
+        int timeout_rnd = random2(40);
+        timeout_rnd += random2(40); // force a sequence point between random2s
+        you.gift_timeout = max(5, timeout_rnd);
 
         if (species_apt(SK_ARMOUR) < species_apt(SK_DODGING))
             you.skills[SK_DODGING]++;
         else
             you.skills[SK_ARMOUR]++;
         break;
-
+    }
     case JOB_ABYSSAL_KNIGHT:
         you.religion = GOD_LUGONU;
         if (!crawl_state.game_is_sprint())
@@ -377,12 +378,21 @@ static void _setup_generic(const newgame_def& ng);
 // Initialise a game based on the choice stored in ng.
 void setup_game(const newgame_def& ng)
 {
-    crawl_state.type = ng.type;
+    if (Options.seed_from_rc && ng.type == GAME_TYPE_NORMAL)
+    {
+        Options.seed = Options.seed_from_rc;
+        crawl_state.type = GAME_TYPE_CUSTOM_SEED;
+    }
+    else if (!Options.seed && ng.type == GAME_TYPE_CUSTOM_SEED)
+        crawl_state.type = GAME_TYPE_NORMAL;
+    else
+        crawl_state.type = ng.type;
     crawl_state.map  = ng.map;
 
     switch (crawl_state.type)
     {
     case GAME_TYPE_NORMAL:
+    case GAME_TYPE_CUSTOM_SEED:
         _setup_normal_game();
         break;
     case GAME_TYPE_TUTORIAL:
@@ -448,9 +458,21 @@ static void _free_up_slot(char letter)
     }
 }
 
+void initial_dungeon_setup()
+{
+    rng_generator levelgen_rng(BRANCH_DUNGEON);
+
+    initialise_branch_depths();
+    initialise_temples();
+    init_level_connectivity();
+    initialise_item_descriptions();
+}
+
 static void _setup_generic(const newgame_def& ng)
 {
+    reset_rng(); // initialize rng from Options.seed
     _init_player();
+    you.game_seed = crawl_state.seed;
 
 #if TAG_MAJOR_VERSION == 34
     // Avoid the remove_dead_shops() Gozag fixup in new games: see
@@ -511,8 +533,6 @@ static void _setup_generic(const newgame_def& ng)
     if (you.char_class == JOB_WANDERER)
         memorise_wanderer_spell();
 
-    initialise_item_descriptions();
-
     // A first pass to link the items properly.
     for (int i = 0; i < ENDOFPACK; ++i)
     {
@@ -556,9 +576,7 @@ static void _setup_generic(const newgame_def& ng)
     set_hp(you.hp_max);
     set_mp(you.max_magic_points);
 
-    initialise_branch_depths();
-    initialise_temples();
-    init_level_connectivity();
+    initial_dungeon_setup();
 
     // Generate the second name of Jiyva
     fix_up_jiyva_name();

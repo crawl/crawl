@@ -9,6 +9,7 @@
 
 #include <string>
 #include <cctype>
+#include <cinttypes>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -210,6 +211,15 @@ static void _sdump_header(dump_params &par)
     par.text += " (console)";
 #endif
     par.text += " character file.\n\n";
+
+    if (you.game_is_seeded
+#ifdef DGAMELAUNCH
+        && par.se // for online games, only show seed for a dead char
+#endif
+        )
+    {
+        par.text += make_stringf("Game seed: %" PRIu64 "\n\n", crawl_state.seed);
+    }
 }
 
 static void _sdump_stats(dump_params &par)
@@ -263,7 +273,7 @@ static void _sdump_visits(dump_params &par)
         seen = "saw";
     }
 
-    vector<PlaceInfo> branches_visited = you.get_all_place_info(true, true);
+    const vector<PlaceInfo> branches_visited = you.get_all_place_info(true, true);
 
     PlaceInfo branches_total;
     for (const PlaceInfo &branch : branches_visited)
@@ -279,62 +289,70 @@ static void _sdump_visits(dump_params &par)
                              seen.c_str(), branches_total.levels_seen);
     }
 
-    PlaceInfo place_info = you.get_place_info(BRANCH_PANDEMONIUM);
-    if (place_info.num_visits > 0)
     {
-        text += make_stringf("You %svisited Pandemonium %d time",
-                             have.c_str(), place_info.num_visits);
-        if (place_info.num_visits > 1)
-            text += "s";
-        text += make_stringf(", and %s %d of its levels.\n",
-                             seen.c_str(), place_info.levels_seen);
+        const PlaceInfo place_info = you.get_place_info(BRANCH_PANDEMONIUM);
+        if (place_info.num_visits > 0)
+        {
+            text += make_stringf("You %svisited Pandemonium %d time",
+                                 have.c_str(), place_info.num_visits);
+            if (place_info.num_visits > 1)
+                text += "s";
+            text += make_stringf(", and %s %d of its levels.\n",
+                                 seen.c_str(), place_info.levels_seen);
+        }
     }
 
-    place_info = you.get_place_info(BRANCH_ABYSS);
-    if (place_info.num_visits > 0)
     {
-        text += make_stringf("You %svisited the Abyss %d time",
-                             have.c_str(), place_info.num_visits);
-        if (place_info.num_visits > 1)
-            text += "s";
-        text += ".\n";
+        const PlaceInfo place_info = you.get_place_info(BRANCH_ABYSS);
+        if (place_info.num_visits > 0)
+        {
+            text += make_stringf("You %svisited the Abyss %d time",
+                                 have.c_str(), place_info.num_visits);
+            if (place_info.num_visits > 1)
+                text += "s";
+            text += ".\n";
+        }
     }
 
-    place_info = you.get_place_info(BRANCH_BAZAAR);
-    if (place_info.num_visits > 0)
     {
-        text += make_stringf("You %svisited %d bazaar",
-                             have.c_str(), place_info.num_visits);
-        if (place_info.num_visits > 1)
-            text += "s";
-        text += ".\n";
+        const PlaceInfo place_info = you.get_place_info(BRANCH_BAZAAR);
+        if (place_info.num_visits > 0)
+        {
+            text += make_stringf("You %svisited %d bazaar",
+                                 have.c_str(), place_info.num_visits);
+            if (place_info.num_visits > 1)
+                text += "s";
+            text += ".\n";
+        }
     }
 
-    place_info = you.get_place_info(BRANCH_ZIGGURAT);
-    if (place_info.num_visits > 0)
     {
-        int num_zigs = place_info.num_visits;
-        text += make_stringf("You %s%s %d ziggurat",
-                             have.c_str(),
-                             (num_zigs == you.zigs_completed) ? "completed"
-                                                              : "visited",
-                             num_zigs);
-        if (num_zigs > 1)
-            text += "s";
-        if (num_zigs != you.zigs_completed && you.zigs_completed)
-            text += make_stringf(" (completing %d)", you.zigs_completed);
-        text += make_stringf(", and %s %d of %s levels",
-                             seen.c_str(), place_info.levels_seen,
-                             num_zigs > 1 ? "their" : "its");
-        if (num_zigs != 1 && !you.zigs_completed)
-            text += make_stringf(" (deepest: %d)", you.zig_max);
-        text += ".\n";
+        const PlaceInfo place_info = you.get_place_info(BRANCH_ZIGGURAT);
+        if (place_info.num_visits > 0)
+        {
+            int num_zigs = place_info.num_visits;
+            text += make_stringf("You %s%s %d ziggurat",
+                                 have.c_str(),
+                                 (num_zigs == you.zigs_completed) ? "completed"
+                                                                  : "visited",
+                                 num_zigs);
+            if (num_zigs > 1)
+                text += "s";
+            if (num_zigs != you.zigs_completed && you.zigs_completed)
+                text += make_stringf(" (completing %d)", you.zigs_completed);
+            text += make_stringf(", and %s %d of %s levels",
+                                 seen.c_str(), place_info.levels_seen,
+                                 num_zigs > 1 ? "their" : "its");
+            if (num_zigs != 1 && !you.zigs_completed)
+                text += make_stringf(" (deepest: %d)", you.zig_max);
+            text += ".\n";
+        }
     }
 
     vector<string> misc_portals;
     for (branch_type br : single_portals)
     {
-        place_info = you.get_place_info(br);
+        const PlaceInfo place_info = you.get_place_info(br);
         if (!place_info.num_visits)
             continue;
         string name = branches[br].shortname;
@@ -424,9 +442,9 @@ static string _denanify(const string &s)
     return out;
 }
 
-static string _sdump_turns_place_info(PlaceInfo place_info, string name = "")
+static string _sdump_turns_place_info(const PlaceInfo place_info, string name = "")
 {
-    PlaceInfo   gi = you.global_info;
+    const PlaceInfo   gi = you.global_info;
     string out;
 
     if (name.empty())
@@ -479,7 +497,7 @@ static void _sdump_turns_by_place(dump_params &par)
 {
     string &text(par.text);
 
-    vector<PlaceInfo> all_visited = you.get_all_place_info(true);
+    const vector<PlaceInfo> all_visited = you.get_all_place_info(true);
 
     text +=
 "Table legend:\n"
@@ -816,7 +834,7 @@ static void _sdump_skills(dump_params &par)
     text += "\n";
 }
 
-static string spell_type_shortname(spschool_flag_type spell_class, bool slash)
+static string spell_type_shortname(spschool spell_class, bool slash)
 {
     string ret;
 
@@ -989,7 +1007,7 @@ static void _sdump_kills(dump_params &par)
     par.text += "\n";
 }
 
-static string _sdump_kills_place_info(PlaceInfo place_info, string name = "")
+static string _sdump_kills_place_info(const PlaceInfo place_info, string name = "")
 {
     string out;
 
@@ -1034,7 +1052,7 @@ static void _sdump_kills_by_place(dump_params &par)
 {
     string &text(par.text);
 
-    vector<PlaceInfo> all_visited = you.get_all_place_info(true);
+    const vector<PlaceInfo> all_visited = you.get_all_place_info(true);
 
     string result = "";
 
@@ -1106,7 +1124,7 @@ static void _sdump_vault_list(dump_params &par)
 #endif
      )
     {
-        par.text += "Vault maps used:\n";
+        par.text += "Levels and vault maps discovered:\n";
         par.text += dump_vault_maps();
         par.text += "\n";
     }

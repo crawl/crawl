@@ -14,6 +14,7 @@
 #include "initfile.h"
 
 #include <algorithm>
+#include <cinttypes>
 #include <cctype>
 #include <cstdio>
 #include <cstdlib>
@@ -203,6 +204,7 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(use_modifier_prefix_keys), true),
         new BoolGameOption(SIMPLE_NAME(ability_menu), true),
         new BoolGameOption(SIMPLE_NAME(easy_floor_use), true),
+        new BoolGameOption(SIMPLE_NAME(bad_item_prompt), true),
         new BoolGameOption(SIMPLE_NAME(dos_use_background_intensity), true),
         new BoolGameOption(SIMPLE_NAME(explore_greedy), true),
         new BoolGameOption(SIMPLE_NAME(explore_auto_rest), false),
@@ -292,6 +294,10 @@ const vector<GameOption*> game_options::build_options_list()
         new ColourThresholdOption(stat_colour, {"stat_colour", "stat_color"},
                                   "3:red", _first_less),
         new StringGameOption(SIMPLE_NAME(sound_file_path), ""),
+#ifndef DGAMELAUNCH
+        new BoolGameOption(SIMPLE_NAME(pregen_dungeon), false),
+#endif
+
 #ifdef DGL_SIMPLE_MESSAGING
         new BoolGameOption(SIMPLE_NAME(messaging), false),
 #endif
@@ -643,6 +649,8 @@ string gametype_to_str(game_type type)
     {
     case GAME_TYPE_NORMAL:
         return "normal";
+    case GAME_TYPE_CUSTOM_SEED:
+        return "seeded";
     case GAME_TYPE_TUTORIAL:
         return "tutorial";
     case GAME_TYPE_ARENA:
@@ -855,7 +863,7 @@ void game_options::set_default_activity_interrupts()
 }
 
 void game_options::set_activity_interrupt(
-        FixedBitVector<NUM_AINTERRUPTS> &eints,
+        FixedBitVector<NUM_ACTIVITY_INTERRUPTS> &eints,
         const string &interrupt)
 {
     if (starts_with(interrupt, interrupt_prefix))
@@ -865,21 +873,21 @@ void game_options::set_activity_interrupt(
         if (!activity_interrupts.count(delay_name))
             return report_error("Unknown delay: %s\n", delay_name.c_str());
 
-        FixedBitVector<NUM_AINTERRUPTS> &refints =
+        FixedBitVector<NUM_ACTIVITY_INTERRUPTS> &refints =
             activity_interrupts[delay_name];
 
         eints |= refints;
         return;
     }
 
-    activity_interrupt_type ai = get_activity_interrupt(interrupt);
-    if (ai == NUM_AINTERRUPTS)
+    activity_interrupt ai = get_activity_interrupt(interrupt);
+    if (ai == activity_interrupt::COUNT)
     {
         return report_error("Delay interrupt name \"%s\" not recognised.\n",
                             interrupt.c_str());
     }
 
-    eints.set(ai);
+    eints.set(static_cast<int>(ai));
 }
 
 void game_options::set_activity_interrupt(const string &activity_name,
@@ -892,11 +900,11 @@ void game_options::set_activity_interrupt(const string &activity_name,
 
     if (remove_interrupts)
     {
-        FixedBitVector<NUM_AINTERRUPTS> refints;
+        FixedBitVector<NUM_ACTIVITY_INTERRUPTS> refints;
         for (const string &interrupt : interrupts)
             set_activity_interrupt(refints, interrupt);
 
-        for (int i = 0; i < NUM_AINTERRUPTS; ++i)
+        for (int i = 0; i < NUM_ACTIVITY_INTERRUPTS; ++i)
             if (refints[i])
                 eints.set(i, false);
     }
@@ -909,7 +917,7 @@ void game_options::set_activity_interrupt(const string &activity_name,
             set_activity_interrupt(eints, interrupt);
     }
 
-    eints.set(AI_FORCE_INTERRUPT);
+    eints.set(static_cast<int>(activity_interrupt::force));
 }
 
 #if defined(DGAMELAUNCH)
@@ -1033,10 +1041,10 @@ void game_options::reset_options()
     autopickups.set(OBJ_WANDS);
     autopickups.set(OBJ_FOOD);
 
-    confirm_butcher        = CONFIRM_AUTO;
+    confirm_butcher        = confirm_butcher_type::normal;
     auto_butcher           = HS_VERY_HUNGRY;
-    easy_confirm           = CONFIRM_SAFE_EASY;
-    allow_self_target      = CONFIRM_PROMPT;
+    easy_confirm           = easy_confirm_type::safe;
+    allow_self_target      = confirm_prompt_type::prompt;
     skill_focus            = SKM_FOCUS_ON;
 
     user_note_prefix       = "";
@@ -1759,7 +1767,8 @@ void read_options(const string &s, bool runscript, bool clear_aliases)
 }
 
 game_options::game_options()
-    : seed(0), no_save(false), language(lang_t::EN), lang_name(nullptr)
+    : seed(0), seed_from_rc(0),
+    no_save(false), language(lang_t::EN), lang_name(nullptr)
 {
     reset_options();
 }
@@ -2296,7 +2305,7 @@ void game_options::set_menu_sort(string field)
     menu_sort_condition cond(field);
 
     // Overrides all previous settings.
-    if (cond.mtype == MT_ANY)
+    if (cond.mtype == menu_type::any)
         sort_menus.clear();
 
     // Override existing values, if necessary.
@@ -2623,29 +2632,29 @@ void game_options::read_option_line(const string &str, bool runscript)
     {
         // decide when to allow both 'Y'/'N' and 'y'/'n' on yesno() prompts
         if (field == "none")
-            easy_confirm = CONFIRM_NONE_EASY;
+            easy_confirm = easy_confirm_type::none;
         else if (field == "safe")
-            easy_confirm = CONFIRM_SAFE_EASY;
+            easy_confirm = easy_confirm_type::safe;
         else if (field == "all")
-            easy_confirm = CONFIRM_ALL_EASY;
+            easy_confirm = easy_confirm_type::all;
     }
     else if (key == "allow_self_target")
     {
         if (field == "yes")
-            allow_self_target = CONFIRM_NONE;
+            allow_self_target = confirm_prompt_type::none;
         else if (field == "no")
-            allow_self_target = CONFIRM_CANCEL;
+            allow_self_target = confirm_prompt_type::cancel;
         else if (field == "prompt")
-            allow_self_target = CONFIRM_PROMPT;
+            allow_self_target = confirm_prompt_type::prompt;
     }
     else if (key == "confirm_butcher")
     {
         if (field == "always")
-            confirm_butcher = CONFIRM_ALWAYS;
+            confirm_butcher = confirm_butcher_type::always;
         else if (field == "never")
-            confirm_butcher = CONFIRM_NEVER;
+            confirm_butcher = confirm_butcher_type::never;
         else if (field == "auto")
-            confirm_butcher = CONFIRM_AUTO;
+            confirm_butcher = confirm_butcher_type::normal;
     }
     else if (key == "auto_butcher")
     {
@@ -3401,6 +3410,31 @@ void game_options::read_option_line(const string &str, bool runscript)
         else
             constants.insert(field);
     }
+    else if (key == "game_seed")
+    {
+#ifdef DGAMELAUNCH
+        // try to avoid confusing online players who put this in their rc
+        // file. N.b. it is still possible to use the -seed CLO.
+        report_error("Your rc file specifies a game seed, but this build of "
+                     "crawl does not support seed selection. I will "
+                     "choose a seed randomly.");
+#else
+        // special handling because of the large type.
+        uint64_t tmp_seed = 0;
+        if (sscanf(field.c_str(), "%" SCNu64, &tmp_seed))
+        {
+            // seed_from_rc is only ever set here, or by the CLO. The CLO gets
+            // first crack, so don't overwrite it here.
+            // Options.seed can be updated in-game from the custom seed menu,
+            // so also don't overwrite it when the CLO has set it, or the
+            // player has set it in-game.
+            if (!Options.seed_from_rc)
+                Options.seed_from_rc = tmp_seed;
+            if (!Options.seed)
+                Options.seed = tmp_seed;
+        }
+#endif
+    }
 
     // Catch-all else, copies option into map
     else if (runscript)
@@ -3785,6 +3819,7 @@ enum commandline_option_type
     CLO_HELP,
     CLO_VERSION,
     CLO_SEED,
+    CLO_PREGEN,
     CLO_SAVE_VERSION,
     CLO_SPRINT,
     CLO_EXTRA_OPT_FIRST,
@@ -3816,7 +3851,7 @@ static const char *cmd_ops[] =
     "scores", "name", "species", "background", "dir", "rc", "rcdir", "tscores",
     "vscores", "scorefile", "morgue", "macro", "mapstat", "dump-disconnect",
     "objstat", "iters", "force-map", "arena", "dump-maps", "test", "script",
-    "builddb", "help", "version", "seed", "save-version", "sprint",
+    "builddb", "help", "version", "seed", "pregen", "save-version", "sprint",
     "extra-opt-first", "extra-opt-last", "sprint-map", "edit-save",
     "print-charset", "tutorial", "wizard", "explore", "no-save", "gdb",
     "no-gdb", "nogdb", "throttle", "no-throttle", "playable-json",
@@ -4876,11 +4911,20 @@ bool parse_args(int argc, char **argv, bool rc_only)
 
         case CLO_SEED:
             if (!next_is_param)
-                return false;
+            {
+                // show seed choice menu
+                Options.game.type = GAME_TYPE_CUSTOM_SEED;
+                break;
+            }
 
-            if (!sscanf(next_arg, "%x", &Options.seed))
+            if (!sscanf(next_arg, "%" SCNu64, &Options.seed_from_rc))
                 return false;
+            Options.seed = Options.seed_from_rc;
             nextUsed = true;
+            break;
+
+        case CLO_PREGEN:
+            Options.pregen_dungeon = true;
             break;
 
         case CLO_SPRINT:
@@ -5022,7 +5066,7 @@ menu_sort_condition::menu_sort_condition(menu_type _mt, int _sort)
 }
 
 menu_sort_condition::menu_sort_condition(const string &s)
-    : mtype(MT_ANY), sort(-1), cmp()
+    : mtype(menu_type::any), sort(-1), cmp()
 {
     string cp = s;
     set_menu_type(cp);
@@ -5032,7 +5076,7 @@ menu_sort_condition::menu_sort_condition(const string &s)
 
 bool menu_sort_condition::matches(menu_type mt) const
 {
-    return mtype == MT_ANY || mtype == mt;
+    return mtype == menu_type::any || mtype == mt;
 }
 
 void menu_sort_condition::set_menu_type(string &s)
@@ -5043,11 +5087,11 @@ void menu_sort_condition::set_menu_type(string &s)
         menu_type mtype;
     } menu_type_map[] =
       {
-          { "any:",    MT_ANY       },
-          { "inv:",    MT_INVLIST   },
-          { "drop:",   MT_DROP      },
-          { "pickup:", MT_PICKUP    },
-          { "know:",   MT_KNOW      }
+          { "any:",    menu_type::any       },
+          { "inv:",    menu_type::invlist   },
+          { "drop:",   menu_type::drop      },
+          { "pickup:", menu_type::pickup    },
+          { "know:",   menu_type::know      }
       };
 
     for (const auto &mi : menu_type_map)

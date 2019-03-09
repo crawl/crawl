@@ -33,7 +33,7 @@ geoelf.glyphs.FUNGUS         = 'F'
 geoelf.glyphs.STATUE         = 'G'
 geoelf.glyphs.FOUNTAIN       = 'T'
 geoelf.glyphs.GLASS          = 'm'
-geoelf.glyphs.GLASS_DOOR     = '-'
+geoelf.glyphs.GLASS_DOOR     = '~'
 geoelf.glyphs.GLASS_TREE     = 'J'
 geoelf.glyphs.GLASS_BUSH     = 'K'
 geoelf.glyphs.GLASS_PLANT    = 'L'
@@ -155,15 +155,15 @@ geoelf.glyphs.OUTLINE_SUBSTITUTIONS =
 
 -- choosing a random feature
 geoelf.glyphs.FEATURE_OPTIONS =
-  { [geoelf.glyphs.STATUE]   = 2,
-    [geoelf.glyphs.FOUNTAIN] = 1 }
+  { {geoelf.glyphs.STATUE,   2},
+    {geoelf.glyphs.FOUNTAIN, 1} }
 
 -- choosing a random plantlike thing
 geoelf.glyphs.PLANTLIKE_OPTIONS =
-  { [geoelf.glyphs.TREE]   = 3,
-    [geoelf.glyphs.BUSH]   = 1,
-    [geoelf.glyphs.PLANT]  = 2,
-    [geoelf.glyphs.FUNGUS] = 4 }
+  { {geoelf.glyphs.TREE,   3},
+    {geoelf.glyphs.BUSH,   1},
+    {geoelf.glyphs.PLANT,  2},
+    {geoelf.glyphs.FUNGUS, 4} }
 
 -- making things into glass if possible
 geoelf.glyphs.TO_GLASS =
@@ -224,12 +224,7 @@ function geoelf.glyphs.assign_glyphs (e, only_trees)
   end
 
   -- Glass doors
-  --  -> We need a special tile and ideally special code
-  --  -> For now, these are just doors with special floor tiles
-  e.kfeat( geoelf.glyphs.GLASS_DOOR .. " = closed_door")
-  --e.tile(geoelf.glyphs.GLASS_DOOR .. " = no_random glass_door")
-  e.ftile( geoelf.glyphs.GLASS_DOOR .. " = floor_pebble")
-  e.colour(geoelf.glyphs.GLASS_DOOR .. " = lightcyan")
+  e.kfeat( geoelf.glyphs.GLASS_DOOR .. " = closed_clear_door")
 
   -- Glass walls with deliberate images
   --  -> Very rare in practice

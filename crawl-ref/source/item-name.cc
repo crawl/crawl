@@ -2566,7 +2566,7 @@ void check_item_knowledge(bool unknown_items)
     menu.set_flags( MF_QUIET_SELECT | MF_ALLOW_FORMATTING | MF_USE_TWO_COLUMNS
                     | ((unknown_items) ? MF_NOSELECT
                                        : MF_MULTISELECT | MF_ALLOW_FILTER));
-    menu.set_type(MT_KNOW);
+    menu.set_type(menu_type::know);
     menu_letter ml;
     ml = menu.load_items(items, unknown_items ? unknown_item_mangle
                                               : known_item_mangle, 'a', false);
@@ -2657,7 +2657,7 @@ void display_runes()
     if (!crawl_state.game_is_sprint())
     {
         // Add the runes in order of challenge (semi-arbitrary).
-        for (branch_iterator it(BRANCH_ITER_DANGER); it; ++it)
+        for (branch_iterator it(branch_iterator_type::danger); it; ++it)
         {
             const branch_type br = it->id;
             if (!connected_branch_can_exist(br))
@@ -2745,8 +2745,9 @@ string make_name(uint32_t seed, makename_type name_type)
 
     bool has_space  = false; // Keep track of whether the name contains a space.
 
-    size_t len = 3 + rng.get_uint32() % 5
-                   + ((rng.get_uint32() % 5 == 0) ? rng.get_uint32() % 6 : 1);
+    size_t len = 3;
+    len += rng.get_uint32() % 5;
+    len += (rng.get_uint32() % 5 == 0) ? rng.get_uint32() % 6 : 1;
 
     if (name_type == MNAME_SCROLL)   // scrolls have longer names
         len += 6;
@@ -3571,8 +3572,10 @@ bool is_useless_item(const item_def &item, bool temp)
                    || (temp && you.species == SP_VAMPIRE
                        && you.hunger_state <= HS_STARVING);
 
+#if TAG_MAJOR_VERSION == 34
         case AMU_MANA_REGENERATION:
             return you_worship(GOD_PAKELLAS);
+#endif
 
         case RING_SEE_INVISIBLE:
             return you.innate_sinv();

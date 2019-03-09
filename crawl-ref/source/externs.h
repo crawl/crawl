@@ -812,6 +812,7 @@ public:
 
     bool need_activate() const { return have_inactive_markers; }
     void clear_need_activate();
+    void init_all();
     void activate_all(bool verbose = true);
     void activate_markers_at(coord_def p);
     void add(map_marker *marker);
@@ -873,7 +874,7 @@ public:
     item_sort_comparators cmp;
 
 public:
-    menu_sort_condition(menu_type mt = MT_INVLIST, int sort = 0);
+    menu_sort_condition(menu_type mt = menu_type::invlist, int sort = 0);
     menu_sort_condition(const string &s);
 
     bool matches(menu_type mt) const;

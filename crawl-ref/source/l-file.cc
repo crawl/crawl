@@ -180,7 +180,7 @@ LUAFN(_file_datadir_files)
         luaL_error(ls, "Cannot find data directory: '%s'", rawdir.c_str());
 
     const vector<string> files = ext_filter.empty()
-                                 ? get_dir_files(datadir)
+                                 ? get_dir_files_sorted(datadir)
                                  : get_dir_files_ext(datadir, ext_filter);
     return clua_stringtable(ls, files);
 }

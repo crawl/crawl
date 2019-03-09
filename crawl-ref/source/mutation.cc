@@ -313,8 +313,11 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
                 return mutation_activity_type::FULL;
             if (mut == MUT_UNBREATHING && drag == MONS_IRON_DRAGON)
                 return mutation_activity_type::FULL;
-            if (mut == MUT_ACIDIC_BITE && drag == MONS_GOLDEN_DRAGON)
+            if ((mut == MUT_ACIDIC_BITE || mut == MUT_ACID_RESISTANCE)
+                && drag == MONS_GOLDEN_DRAGON)
+            {
                 return mutation_activity_type::FULL;
+            }
             if (mut == MUT_STINGER && drag == MONS_SWAMP_DRAGON)
                 return mutation_activity_type::FULL;
         }
@@ -2786,7 +2789,7 @@ void check_monster_detect()
             if (you.see_cell(*ri2))
             {
                 mon->flags |= MF_SENSED;
-                interrupt_activity(AI_SENSE_MONSTER);
+                interrupt_activity(activity_interrupt::sense_monster);
                 break;
             }
         }

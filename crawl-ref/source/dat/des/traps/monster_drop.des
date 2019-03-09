@@ -1,0 +1,71 @@
+##############################################################################
+# Trap: basket of spiders / klown kar
+###############################################################################
+
+{{
+function callback.drop_trap_stepped(data, triggerable, triggerer, marker, ev)
+  if data.triggered == true then
+    return
+  end
+  local x, y = marker:pos()
+  if not you.see_cell(x, y) then
+    -- pretend the monster avoided it
+    return
+  end
+  data.triggered = true
+  -- remove the trap
+  dgn.grid(x, y, "floor")
+  local spawns = 0
+  for p in iter.rect_iterator(dgn.point(x-1, y-1), dgn.point(x+1, y+1)) do
+    if (dgn.mons_at(p.x, p.y) == nil
+        and p ~= dgn.point(you.pos)
+        and dgn.is_passable(p.x, p.y)
+        and spawns < data.max) then
+      if (dgn.create_monster(p.x, p.y, data.mons)) then
+        spawns = spawns + 1
+      end
+    end
+  end
+ if (spawns > 0) then
+   crawl.mpr(data.msg)
+ end
+end
+}}
+
+#############################################
+# a basket of spiders or snakes / a klown kar in Zot
+#
+NAME:   drop_trap
+DEPTH:  D:12-, Depths, Vaults, Elf, Spider, Snake, Zot
+TAGS:   allow_dup extra luniq_monster_drop transparent
+WEIGHT: 100 (D:12-, Depths, Vaults, Elf, Spider, Snake), 20 (Zot)
+KFEAT:  ^ = pressure plate trap
+{{
+ local trigger_data
+ if you.in_branch("Zot") then
+   trigger_data={triggered=false,
+                 mons="generate_awake killer klown",
+                 msg="With a honk a tiny klown kar falls from above, and Killer Klowns tumble out!",
+                 max=crawl.random_range(3, 8)}
+ elseif you.in_branch("Snake") then
+   trigger_data={triggered=false,
+                 mons="generate_awake black mamba / generate_awake mana viper",
+                 msg="A basket of snakes falls from above!",
+                 max=8}
+ else
+   trigger_data={triggered=false,
+                 mons="generate_awake redback",
+                 msg="A basket of spiders falls from above!",
+                 max=8}
+ end
+ local tm = TriggerableFunction:new{func="callback.drop_trap_stepped",
+              repeated=true,
+              data=trigger_data}
+ tm:add_triggerer(DgnTriggerer:new{type="pressure_plate"})
+ lua_marker('^', tm)
+}}
+MAP
+...
+.^.
+...
+ENDMAP

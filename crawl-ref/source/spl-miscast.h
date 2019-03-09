@@ -10,50 +10,57 @@
 #include "mpr.h"
 #include "spl-util.h"
 
-enum nothing_happens_when_type
+enum class nothing_happens
 {
-    NH_DEFAULT,
-    NH_NEVER,
-    NH_ALWAYS,
+    DEFAULT,
+    NEVER,
+    ALWAYS,
 };
 
-enum miscast_source
+enum class miscast_source
 {
-    ZOT_TRAP_MISCAST,
-    HELL_EFFECT_MISCAST,
-    WIELD_MISCAST,
-    MELEE_MISCAST,
-    SPELL_MISCAST,
-    ABIL_MISCAST,
-    WIZARD_MISCAST,
-    MUMMY_MISCAST,
-    DECK_MISCAST,
-    // This should always be last.
-    GOD_MISCAST
+    zot_trap,
+    hell_effect,
+    wield,
+    melee,
+    spell,
+    ability,   // Not currently used
+    wizard,
+    mummy,
+    deck,
+    god
 };
 
 class actor;
 // class monster;
 
+struct miscast_source_info
+{
+    // The source of the miscast
+    miscast_source source;
+    // If source == miscast_source::god, the god the miscast was created by
+    god_type god;
+};
+
 class MiscastEffect
 {
 public:
     MiscastEffect(actor* _target, actor* _act_source,
-                  int _source, spell_type _spell, int _pow,
+                  miscast_source_info _source, spell_type _spell, int _pow,
                   int _fail, string _cause = "",
-                  nothing_happens_when_type _nothing_happens = NH_DEFAULT,
+                  nothing_happens _nothing_happens = nothing_happens::DEFAULT,
                   int _lethality_margin = 0,
                   string _hand_str = "", bool _can_plural_hand = true);
     MiscastEffect(actor* _target, actor* _act_source,
-                  int _source, spschool_flag_type _school,
+                  miscast_source_info _source, spschool _school,
                   int _level, string _cause,
-                  nothing_happens_when_type _nothing_happens = NH_DEFAULT,
+                  nothing_happens _nothing_happens = nothing_happens::DEFAULT,
                   int _lethality_margin = 0,
                   string _hand_str = "", bool _can_plural_hand = true);
     MiscastEffect(actor* _target, actor* _act_source,
-                  int _source, spschool_flag_type _school,
+                  miscast_source_info _source, spschool _school,
                   int _pow, int _fail, string _cause,
-                  nothing_happens_when_type _nothing_happens = NH_DEFAULT,
+                  nothing_happens _nothing_happens = nothing_happens::DEFAULT,
                   int _lethality_margin = 0,
                   string _hand_str = "", bool _can_plural_hand = true);
 
@@ -65,13 +72,13 @@ private:
     actor* target;
     // May be nullptr.
     actor* act_source;
-    // Either a miscast_source, or GOD_MISCAST + god_type enum.
-    int    special_source;
+    // Struct containing the source of the miscast and if applicable, its god
+    miscast_source_info special_source;
 
     string cause;
 
     spell_type         spell;
-    spschool_flag_type school;
+    spschool school;
 
     int pow;
     int fail;
@@ -81,7 +88,7 @@ private:
     // init() sets this to a proper value
     killer_type kt = KILL_NONE;
 
-    nothing_happens_when_type nothing_happens_when;
+    nothing_happens nothing_happens_when;
 
     int lethality_margin;
 

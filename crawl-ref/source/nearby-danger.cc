@@ -106,7 +106,7 @@ bool mons_can_hurt_player(const monster* mon, const bool want_move)
     // Even if the monster can not actually reach the player it might
     // still use some ranged form of attack.
     if (you.see_cell_no_trans(mon->pos())
-        && mons_has_known_ranged_attack(*mon))
+        && mons_has_ranged_attack(*mon))
     {
         return true;
     }
@@ -272,6 +272,14 @@ bool i_feel_safe(bool announce, bool want_move, bool just_monsters,
         {
             if (announce)
                 mprf(MSGCH_WARN, "You're standing next to a slime covered wall!");
+
+            return false;
+        }
+
+        if (you.props[EMERGENCY_FLIGHT_KEY])
+        {
+            if (announce)
+                mprf(MSGCH_WARN, "You are being drained by your emergency flight!");
 
             return false;
         }

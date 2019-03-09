@@ -13,6 +13,7 @@
 #include "end.h"
 #include "english.h"
 #include "files.h"
+#include "filter-enum.h"
 #include "hints.h"
 #include "initfile.h"
 #include "item-name.h" // make_name
@@ -26,6 +27,7 @@
 #include "ng-restr.h"
 #include "options.h"
 #include "prompt.h"
+#include "species-groups.h"
 #include "state.h"
 #include "stringutil.h"
 #ifdef USE_TILE_LOCAL
@@ -48,13 +50,8 @@ static bool _choose_weapon(newgame_def& ng, newgame_def& ng_choice,
 #  define STARTUP_HIGHLIGHT_BAD LIGHTGRAY
 #  define STARTUP_HIGHLIGHT_CONTROL LIGHTGRAY
 #  define STARTUP_HIGHLIGHT_GOOD LIGHTGREEN
-#elif defined(USE_TILE_WEB)
-#  define STARTUP_HIGHLIGHT_NORMAL BLUE
-#  define STARTUP_HIGHLIGHT_BAD LIGHTGRAY
-#  define STARTUP_HIGHLIGHT_CONTROL BLUE
-#  define STARTUP_HIGHLIGHT_GOOD GREEN
 #else
-#  define STARTUP_HIGHLIGHT_NORMAL DARKGRAY
+#  define STARTUP_HIGHLIGHT_NORMAL BLUE
 #  define STARTUP_HIGHLIGHT_BAD LIGHTGRAY
 #  define STARTUP_HIGHLIGHT_CONTROL BLUE
 #  define STARTUP_HIGHLIGHT_GOOD GREEN
@@ -66,6 +63,7 @@ static bool _choose_weapon(newgame_def& ng, newgame_def& ng_choice,
 
 newgame_def::newgame_def()
     : name(), type(GAME_TYPE_NORMAL),
+      seed(0), pregenerate(false),
       species(SP_UNKNOWN), job(JOB_UNKNOWN),
       weapon(WPN_UNKNOWN),
       fully_random(false)
@@ -184,45 +182,6 @@ void choose_tutorial_character(newgame_def& ng_choice)
     ng_choice.weapon = WPN_FLAIL;
 }
 
-// March 2008: change order of species and jobs on character selection
-// screen as suggested by Markus Maier.
-// We have subsequently added a few new categories.
-// Replacing this with named groups, but leaving because a bunch of code
-// still depends on it and I don't want to unwind that now. -2/24/2017 CBH
-static const species_type species_order[] =
-{
-    // comparatively human-like looks
-    SP_HUMAN,          SP_DEEP_ELF,
-    SP_DEEP_DWARF,     SP_HILL_ORC,
-    // small species
-    SP_HALFLING,       SP_KOBOLD,
-    SP_SPRIGGAN,
-    // large species
-    SP_OGRE,           SP_TROLL,
-    // significantly different body type from human ("monstrous")
-    SP_NAGA,           SP_CENTAUR,
-    SP_MERFOLK,        SP_MINOTAUR,
-    SP_TENGU,          SP_BASE_DRACONIAN,
-    SP_GARGOYLE,       SP_FORMICID,
-    SP_BARACHI,        SP_GNOLL,
-    // mostly human shape but made of a strange substance
-    SP_VINE_STALKER,
-    // celestial species
-    SP_DEMIGOD,        SP_DEMONSPAWN,
-    // undead species
-    SP_MUMMY,          SP_GHOUL,
-    SP_VAMPIRE,
-    // not humanoid at all
-    SP_FELID,          SP_OCTOPODE,
-};
-COMPILE_CHECK(ARRAYSZ(species_order) <= NUM_SPECIES);
-
-bool is_starting_species(species_type species)
-{
-    return find(species_order, species_order + ARRAYSZ(species_order),
-                species) != species_order + ARRAYSZ(species_order);
-}
-
 static void _resolve_species(newgame_def& ng, const newgame_def& ng_choice)
 {
     // Don't overwrite existing species.
@@ -236,44 +195,42 @@ static void _resolve_species(newgame_def& ng, const newgame_def& ng_choice)
         return;
 
     case SP_VIABLE:
-    {
-        int good_choices = 0;
-        for (const species_type sp : species_order)
-        {
-            if (is_good_combination(sp, ng.job, false, true)
-                && one_chance_in(++good_choices))
-            {
-                ng.species = sp;
-            }
-        }
-        if (good_choices)
-            return;
-    }
-        // intentional fall-through
     case SP_RANDOM:
-        // any valid species will do
-        if (ng.job == JOB_UNKNOWN)
+    {
+        vector<species_type> candidate_species;
+        if (is_starting_job(ng.job))
         {
-            do {
-                ng.species = RANDOM_ELEMENT(species_order);
-            } while (!is_starting_species(ng.species));
+            switch (ng_choice.species)
+            {
+            case SP_VIABLE:
+                candidate_species =
+                    filter_enum(NUM_SPECIES, [&](species_type species) {
+                        return is_starting_species(species)
+                            && job_recommends_species(ng.job, species);
+                    });
+                // Note: we know the array has at least one element because all
+                // starting jobs must recommend at least one species.
+                ASSERT(candidate_species.size() > 0);
+                break;
+            case SP_RANDOM:
+                candidate_species =
+                    filter_enum(NUM_SPECIES, [&](species_type species) {
+                        return is_starting_species(species)
+                            && character_is_allowed(species, ng.job);
+                    });
+                if (candidate_species.size() == 0)
+                    die("Selected job allows no species?!");
+                break;
+
+            default:
+                die("How did we get here?");
+            }
+            ng.species = candidate_species[random2(candidate_species.size())];
         }
         else
-        {
-            // Pick a random legal character.
-            int good_choices = 0;
-            for (const species_type sp : species_order)
-            {
-                if (is_good_combination(sp, ng.job, false, false)
-                    && one_chance_in(++good_choices))
-                {
-                    ng.species = sp;
-                }
-            }
-            if (!good_choices)
-                end(1, false, "Failed to find legal species.");
-        }
+            ng.species = random_starting_species();
         return;
+    }
 
     default:
         ng.species = ng_choice.species;
@@ -293,49 +250,43 @@ static void _resolve_job(newgame_def& ng, const newgame_def& ng_choice)
         return;
 
     case JOB_VIABLE:
-    {
-        int good_choices = 0;
-        for (int i = 0; i < NUM_JOBS; i++)
-        {
-            job_type job = job_type(i);
-            if (is_good_combination(ng.species, job, true, true)
-                && one_chance_in(++good_choices))
-            {
-                ng.job = job;
-            }
-        }
-        if (good_choices)
-            return;
-    }
-        // intentional fall-through
     case JOB_RANDOM:
-        if (ng.species == SP_UNKNOWN)
+    {
+        vector<job_type> candidate_jobs;
+        if (is_starting_species(ng.species))
         {
-            // any valid job will do
-            do
+            switch (ng_choice.job)
             {
-                ng.job = job_type(random2(NUM_JOBS));
+            case JOB_VIABLE:
+                candidate_jobs =
+                    filter_enum(NUM_JOBS, [&](job_type job) {
+                        return is_starting_job(job)
+                            && species_recommends_job(ng.species, job);
+                    });
+                // Note: we know the array has at least one element because all
+                // starting species must recommend at least one job.
+                ASSERT(candidate_jobs.size() > 0);
+                break;
+            case JOB_RANDOM:
+                candidate_jobs =
+                    filter_enum(NUM_JOBS, [&](job_type job) {
+                        return is_starting_job(job)
+                            && character_is_allowed(ng.species, job);
+                    });
+                if (candidate_jobs.size() == 0)
+                    die("Selected species allows no jobs?!");
+                break;
+
+            default:
+                die("How did we get here?");
             }
-            while (!is_starting_job(ng.job));
+
+            ng.job = candidate_jobs[random2(candidate_jobs.size())];
         }
         else
-        {
-            // Pick a random legal character.
-            int good_choices = 0;
-            for (int i = 0; i < NUM_JOBS; i++)
-            {
-                job_type job = job_type(i);
-                if (is_good_combination(ng.species, job, true, false)
-                    && one_chance_in(++good_choices))
-                {
-                    ASSERT(is_starting_job(job));
-                    ng.job = job;
-                }
-            }
-            if (!good_choices)
-                end(1, false, "Failed to find legal background.");
-        }
+            ng.job = random_starting_job();
         return;
+    }
 
     default:
         ng.job = ng_choice.job;
@@ -374,9 +325,13 @@ static string _highlight_pattern(const newgame_def& ng)
         return "";
 
     string ret;
-    for (const species_type species : species_order)
-        if (is_good_combination(species, ng.job, false, true))
-            ret += species_name(species) + "  |";
+    species_type temp;
+    for (int sp = 0; sp < NUM_SPECIES; ++sp)
+    {
+        temp = static_cast<species_type>(sp);
+        if (is_good_combination(temp, ng.job, false, true))
+            ret += species_name(temp) + "  |";
+    }
 
     if (!ret.empty())
         ret.resize(ret.size() - 1);
@@ -682,7 +637,142 @@ static void _choose_name(newgame_def& ng, newgame_def& choice)
     if (cancel || crawl_state.seen_hups)
         game_ended(game_exit::abort);
 }
+
 #endif
+
+static keyfun_action _keyfun_seed_input(int &ch)
+{
+    if (ch == CONTROL('K') || ch == CONTROL('D') || ch == CONTROL('W') ||
+            ch == CONTROL('U') || ch == CONTROL('A') || ch == CONTROL('E') ||
+            ch == CK_ENTER || ch == CK_BKSP || ch == CK_ESCAPE ||
+            ch < 0 || // this should get all other special keys
+            isadigit(ch))
+    {
+        return KEYFUN_PROCESS;
+    }
+    return KEYFUN_IGNORE;
+}
+
+static void _choose_seed(newgame_def& ng, newgame_def& choice,
+    const newgame_def& defaults)
+{
+    char buf[21]; // max unsigned 64 bit integer is 20 chars in decimal,
+                  // specifically 18446744073709551615
+    buf[0] = '\0';
+    resumable_line_reader reader(buf, sizeof(buf));
+    if (Options.seed)
+        choice.seed = Options.seed;
+    else if (Options.seed_from_rc)
+        choice.seed = Options.seed_from_rc;
+    reader.set_text(make_stringf("%" PRIu64, choice.seed));
+    reader.set_keyproc(_keyfun_seed_input);
+
+    bool done = false;
+    bool cancel = false;
+    choice.pregenerate = true; // default for this menu
+
+    auto prompt_ui = make_shared<Text>();
+    prompt_ui->on(Widget::slots.event, [&](wm_event ev)  {
+        if (ev.type != WME_KEYDOWN)
+            return false;
+        int key = ev.key.keysym.sym;
+
+        if (key == CONTROL('I'))
+        {
+            choice.pregenerate = !choice.pregenerate;
+            return done = false;
+        }
+        else if (key == 'd' || key == 'D')
+        {
+            time_t now;
+            struct tm * timeinfo;
+
+            time(&now);
+            timeinfo = localtime(&now);
+            char timebuf[9];
+            strftime(timebuf, sizeof(timebuf), "%Y%m%d", timeinfo);
+            reader.set_text(timebuf);
+            return done = false;
+        }
+#ifdef USE_TILE_LOCAL
+        else if ((key == 'p' || key == 'P') && wm->has_clipboard())
+        {
+            string clip = wm->get_clipboard();
+            // try to avoid pasting in crazy garbage, by parsing as uint64
+            // this could be done better
+            uint64_t clip_seed;
+            int clip_found = sscanf(clip.c_str(), "%" SCNu64, &clip_seed);
+            if (clip_found)
+                reader.set_text(make_stringf("%" PRIu64, clip_seed));
+            return done = false;
+        }
+#endif
+        // TODO: digits only
+        key = reader.putkey(key);
+
+        if (key != -1)
+        {
+            if (key_is_escape(key))
+                return done = cancel = true;
+            return done = true;
+        }
+        return true;
+    });
+
+    auto box = make_shared<ui::Box>(ui::Widget::VERT);
+    box->add_child(prompt_ui);
+    auto pregen_choice = make_shared<ui::Text>(
+        "Pregenerate the dungeon ([tab] to switch)? Yes | No");
+    box->add_child(pregen_choice);
+
+    auto popup = make_shared<ui::Popup>(box);
+    ui::push_layout(move(popup));
+    while (!done && !crawl_state.seen_hups)
+    {
+        formatted_string prompt;
+        prompt.textcolour(CYAN);
+        prompt.cprintf("Play a game with a custom seed.\n\n");
+        prompt.textcolour(LIGHTGREY);
+        prompt.cprintf(
+            "Choose 0 for a random seed. Press [d] for today's daily seed.\n"
+#ifdef USE_TILE_LOCAL
+            "Press [p] to paste a seed from the clipboard (overwriting the\n"
+            "current value).\n"
+#endif
+            "\n"
+            "The seed will determine the dungeon layout, monsters, and items\n"
+            "that you discover. Pregeneration will ensure that these remain\n"
+            "the same no matter what order you explore the dungeon in. (See\n"
+            "the manual for more details.)\n\n");
+        prompt.cprintf("Seed:");
+        string seed_text = make_stringf("%-20s", buf);
+        prompt.cprintf("\n%s\n\n", seed_text.c_str());
+        prompt_ui->set_text(prompt);
+        // yes this appalling, some day we will have real buttons and text
+        // input. The seed highlight doesn't do much on console, but makes
+        // tiles look a lot better. N.b. the newline before the seed above
+        // is really so that an empty seed string won't get multiple highlights.
+        prompt_ui->set_highlight_pattern(seed_text, false);
+        if (choice.pregenerate)
+            pregen_choice->set_highlight_pattern("Yes", false);
+        else
+            pregen_choice->set_highlight_pattern("No", false);
+        ui::pump_events();
+    }
+    ui::pop_layout();
+
+    string result = reader.get_text();
+    uint64_t tmp_seed = 0;
+    // TODO: if the user types in a number that exceeds the max value, sscanf
+    // will give back the max value. Probably better to print an error?
+    int found = sscanf(result.c_str(), "%" SCNu64, &tmp_seed);
+
+    if (cancel || crawl_state.seen_hups || !found || result.size() == 0)
+        game_ended(game_exit::abort);
+
+    Options.seed = choice.seed = tmp_seed;
+    Options.pregen_dungeon = choice.pregenerate;
+}
 
 // Read a choice of game into ng.
 // Returns false if a game (with name ng.name) should
@@ -708,12 +798,16 @@ bool choose_game(newgame_def& ng, newgame_def& choice,
     {
         _choose_gamemode_map(ng, choice, defaults);
     }
+    else if (ng.type == GAME_TYPE_CUSTOM_SEED)
+        _choose_seed(ng, choice, defaults);
 
     _choose_char(ng, choice, defaults);
 
     // Set these again, since _mark_fully_random may reset ng.
     ng.name = choice.name;
     ng.type = choice.type;
+    ng.seed = choice.seed;
+    ng.pregenerate = choice.pregenerate;
 
 #ifndef DGAMELAUNCH
     // New: pick name _after_ character choices.
@@ -1044,58 +1138,6 @@ void species_group::attach(const newgame_def& ng, const newgame_def& defaults,
     }
 }
 
-static species_group species_groups[] =
-{
-    {
-        "Simple",
-        coord_def(0, 0),
-        20,
-        {
-            SP_HILL_ORC,
-            SP_MINOTAUR,
-            SP_MERFOLK,
-            SP_GARGOYLE,
-            SP_BASE_DRACONIAN,
-            SP_HALFLING,
-            SP_TROLL,
-            SP_GHOUL,
-        }
-    },
-    {
-        "Intermediate",
-        coord_def(25, 0),
-        20,
-        {
-            SP_HUMAN,
-            SP_KOBOLD,
-            SP_DEMONSPAWN,
-            SP_CENTAUR,
-            SP_SPRIGGAN,
-            SP_TENGU,
-            SP_DEEP_ELF,
-            SP_OGRE,
-            SP_DEEP_DWARF,
-            SP_GNOLL,
-        }
-    },
-    {
-        "Advanced",
-        coord_def(50, 0),
-        20,
-        {
-            SP_VINE_STALKER,
-            SP_VAMPIRE,
-            SP_DEMIGOD,
-            SP_FORMICID,
-            SP_NAGA,
-            SP_OCTOPODE,
-            SP_FELID,
-            SP_BARACHI,
-            SP_MUMMY,
-        }
-    },
-};
-
 static void _construct_species_menu(const newgame_def& ng,
                                     const newgame_def& defaults,
                                     MenuFreeform* menu)
@@ -1200,15 +1242,6 @@ static job_group jobs_order[] =
           JOB_AIR_ELEMENTALIST, JOB_EARTH_ELEMENTALIST, JOB_VENOM_MAGE }
     }
 };
-
-bool is_starting_job(job_type job)
-{
-    for (const job_group& group : jobs_order)
-        for (const job_type job_ : group.jobs)
-            if (job == job_)
-                return true;
-    return false;
-}
 
 /**
  * Helper for _choose_job
@@ -1925,7 +1958,7 @@ static bool _prompt_weapon(const newgame_def& ng, newgame_def& ng_choice,
             show_help('%', _highlight_pattern(ng));
             return true;
         case M_HELP:
-            show_help('?');
+            show_help('G', "weapons");
             return true;
         case M_DEFAULT_CHOICE:
             if (defweapon != WPN_UNKNOWN)
@@ -2362,7 +2395,7 @@ static void _prompt_gamemode_map(newgame_def& ng, newgame_def& ng_choice,
             show_help('%', _highlight_pattern(ng));
             return true;
         case M_HELP:
-            show_help('?');
+            show_help('6');
             return true;
         case M_DEFAULT_CHOICE:
             _set_default_choice(ng, ng_choice, defaults);

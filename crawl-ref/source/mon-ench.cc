@@ -632,7 +632,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         if (you.can_see(*this))
         {
             // and fire activity interrupts
-            interrupt_activity(AI_SEE_MONSTER,
+            interrupt_activity(activity_interrupt::see_monster,
                                activity_interrupt_data(this, SC_UNCHARM));
         }
 
@@ -752,7 +752,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         else if (you.see_cell(pos()) && feat_is_watery(grd(pos())))
         {
             mpr("Something invisible bursts forth from the water.");
-            interrupt_activity(AI_FORCE_INTERRUPT);
+            interrupt_activity(activity_interrupt::force);
         }
         break;
 
@@ -1906,6 +1906,20 @@ void monster::mark_summoned(int longevity, bool mark_items, int summon_type, boo
             ii->flags |= ISFLAG_SUMMONED;
 }
 
+/* Is the monster temporarily summoned?
+ *
+ * Monsters must have ENCH_ABJ (giving how long they last) to be considered
+ * summons. If they additionally set ENCH_SUMMON, which gives how they were
+ * derived, this must not be from certain spells or "monster summoning types"
+ * we don't consider actual summons. Temporary monsters with
+ * ENCH_FAKE_ABJURATION also aren't summons, and durably summoned monsters
+ * aren't temporary.
+ *
+ * @param[out] duration    The monster's summon duration in aut.
+ * @param[out] summon_type The monster's means of summoning. If negative, this
+ *                         is a mon_summon_type, otherwise it's a spell_type.
+ * @returns True if the monster is a temporary summon, false otherwise.
+ */
 bool monster::is_summoned(int* duration, int* summon_type) const
 {
     const mon_enchant abj = get_ench(ENCH_ABJ);
@@ -1932,19 +1946,16 @@ bool monster::is_summoned(int* duration, int* summon_type) const
     if (summon_type != nullptr)
         *summon_type = summ.degree;
 
+    // Conjured things (fire vortices, ball lightning, IOOD) are not summoned.
     if (mons_is_conjured(type))
         return false;
 
+    // Certain spells or monster summon types that set abjuration but aren't
+    // considered summons.
     switch (summ.degree)
     {
     // Temporarily dancing weapons are really there.
     case SPELL_TUKIMAS_DANCE:
-
-    // A corpse/skeleton which was temporarily animated.
-    case SPELL_ANIMATE_DEAD:
-    case SPELL_ANIMATE_SKELETON:
-
-    // Conjured stuff (fire vortices, ball lightning, IOOD) is handled above.
 
     // Clones aren't really summoned (though their equipment might be).
     case MON_SUMM_CLONE:
@@ -2058,7 +2069,11 @@ static const char *enchant_names[] =
     "control_winds", "wind_aided",
 #endif
     "summon_capped",
-    "toxic_radiance", "grasping_roots_source", "grasping_roots",
+    "toxic_radiance",
+#if TAG_MAJOR_VERSION == 34
+    "grasping_roots_source",
+#endif
+    "grasping_roots",
     "iood_charged", "fire_vuln", "tornado_cooldown", "merfolk_avatar_song",
     "barbs",
 #if TAG_MAJOR_VERSION == 34

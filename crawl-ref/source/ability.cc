@@ -1420,21 +1420,24 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         return false;
     }
 
-    vector<text_pattern> &actions = Options.confirm_action;
-    if (!actions.empty())
+    if (!quiet)
     {
-        const char* name = ability_name(abil.ability);
-        for (const text_pattern &action : actions)
+        vector<text_pattern> &actions = Options.confirm_action;
+        if (!actions.empty())
         {
-            if (action.matches(name))
+            const char* name = ability_name(abil.ability);
+            for (const text_pattern &action : actions)
             {
-                string prompt = "Really use " + string(name) + "?";
-                if (!yesno(prompt.c_str(), false, 'n'))
+                if (action.matches(name))
                 {
-                    canned_msg(MSG_OK);
-                    return false;
+                    string prompt = "Really use " + string(name) + "?";
+                    if (!yesno(prompt.c_str(), false, 'n'))
+                    {
+                        canned_msg(MSG_OK);
+                        return false;
+                    }
+                    break;
                 }
-                break;
             }
         }
     }
@@ -2072,21 +2075,10 @@ static spret _do_ability(const ability_def& abil, bool fail)
 
     case ABIL_FLY:
         fail_check();
-        // high level Te or Dr/Gr wings
+        // Te or Dr/Gr wings
         if (you.racial_permanent_flight())
         {
             you.attribute[ATTR_PERM_FLIGHT] = 1;
-            float_player();
-        }
-        // low level Te
-        else
-        {
-            int power = you.experience_level * 4;
-            const int dur_change = 25 + random2(power) + random2(power);
-
-            you.increase_duration(DUR_FLIGHT, dur_change, 100);
-            you.attribute[ATTR_FLIGHT_UNCANCELLABLE] = 1;
-
             float_player();
         }
         if (you.species == SP_TENGU)
@@ -2108,7 +2100,9 @@ static spret _do_ability(const ability_def& abil, bool fail)
         if (!invis_allowed())
             return spret::abort;
         fail_check();
+#if TAG_MAJOR_VERSION == 34
         surge_power(you.spec_evoke());
+#endif
         potionlike_effect(POT_INVISIBILITY,
                           player_adjust_evoc_power(
                               you.skill(SK_EVOCATIONS, 2) + 5));
@@ -2138,7 +2132,9 @@ static spret _do_ability(const ability_def& abil, bool fail)
         }
         else
         {
+#if TAG_MAJOR_VERSION == 34
             surge_power(you.spec_evoke());
+#endif
             fly_player(
                 player_adjust_evoc_power(you.skill(SK_EVOCATIONS, 2) + 30));
         }
@@ -2288,7 +2284,7 @@ static spret _do_ability(const ability_def& abil, bool fail)
         }
         fail_check();
         cleansing_flame(10 + you.skill_rdiv(SK_INVOCATIONS, 7, 6),
-                        CLEANSING_FLAME_INVOCATION, you.pos(), &you);
+                        cleansing_flame_source::invocation, you.pos(), &you);
         break;
     }
 
@@ -2370,7 +2366,7 @@ static spret _do_ability(const ability_def& abil, bool fail)
 
     case ABIL_YRED_RECALL_UNDEAD_SLAVES:
         fail_check();
-        start_recall(RECALL_YRED);
+        start_recall(recall_t::yred);
         break;
 
     case ABIL_YRED_DRAIN_LIFE:
@@ -2754,7 +2750,7 @@ static spret _do_ability(const ability_def& abil, bool fail)
 
     case ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS:
         fail_check();
-        start_recall(RECALL_BEOGH);
+        start_recall(recall_t::beogh);
         break;
 
     case ABIL_STOP_RECALL:
@@ -3428,14 +3424,11 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
         _add_talent(talents, ABIL_TRAN_BAT, check_confused);
     }
 
-    if (you.get_mutation_level(MUT_TENGU_FLIGHT) && !you.airborne()
-        || you.racial_permanent_flight() && !you.attribute[ATTR_PERM_FLIGHT])
+    if (you.racial_permanent_flight() && !you.attribute[ATTR_PERM_FLIGHT])
     {
-        // Tengu can fly, but only from the ground
-        // (until level 14, when it becomes permanent until revoked).
+        // Tengu can fly starting at XL 5
         // Black draconians and gargoyles get permaflight at XL 14, but they
-        // don't get the tengu movement/evasion bonuses and they don't get
-        // temporary flight before then.
+        // don't get the tengu movement/evasion bonuses
         // Other dracs can mutate big wings whenever as well.
         _add_talent(talents, ABIL_FLY, check_confused);
     }

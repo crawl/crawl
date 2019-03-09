@@ -49,7 +49,9 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
                 $item.append("<span>" + label + "</span>");
 
                 if (spell.hex_chance !== undefined)
-                    $item.append("<span>("+spell.hex_chance+"%) </span>");
+                    $item.append("<span>("+spell.hex_chance+") </span>");
+                if (spell.range_string !== undefined)
+                    $item.append("<span>" + util.formatted_string_to_html(spell.range_string) +" </span>");
 
                 $list.append($item);
                 if (colour)
@@ -69,6 +71,29 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
         if (next === undefined)
             next = $panes.index($current) + 1;
         $panes.eq(next % $panes.length).addClass("current");
+    }
+
+    function progress_bar(msg)
+    {
+        var $popup = $(".templates > .progress-bar").clone();
+        if (msg.title === "")
+            $popup.children(".header").remove();
+        else
+            $popup.find(".header > span").html(msg.title);
+        $popup.children(".bar-text").html("<span>" +
+            util.formatted_string_to_html(msg.bar_text) + "</span>");
+        $popup.children(".status > span").html(msg.status);
+        return $popup;
+    }
+
+    function progress_bar_update(msg)
+    {
+        var $popup = ui.top_popup();
+        if (!$popup.hasClass("progress-bar"))
+            return;
+        $popup.children(".bar-text").html("<span>" +
+                    util.formatted_string_to_html(msg.bar_text) + "</span>");
+        $popup.children(".status")[0].textContent = msg.status;
     }
 
     function describe_generic(desc)
@@ -263,14 +288,21 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
 
     function describe_god(desc)
     {
-        var $popup = $(".templates > .describe-god").clone();
-        $popup.find(".header > span").addClass("fg"+desc.colour).html(desc.name);
+        var use_extra_pane = (desc.extra.length > 0);
+
+        if (use_extra_pane)
+            var $popup = $(".templates > #describe-god-extra").clone();
+        else
+            var $popup = $(".templates > #describe-god-basic").clone();
+        $popup.find(".header > span").addClass("fg" + desc.colour).html(
+                                                                    desc.name);
 
         var canvas = $popup.find(".header > canvas")[0];
         var renderer = new cr.DungeonCellRenderer();
         util.init_canvas(canvas, renderer.cell_width, renderer.cell_height);
         renderer.init(canvas);
-        renderer.draw_from_texture(desc.tile.t, 0, 0, desc.tile.tex, 0, 0, 0, false);
+        renderer.draw_from_texture(desc.tile.t, 0, 0,
+                                   desc.tile.tex, 0, 0, 0, false);
 
         var $body = $popup.children(".body");
         var $footer = $popup.find(".footer > .paneset");
@@ -280,11 +312,17 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
             $footer.find('.join-keyhelp').remove();
 
         $panes.eq(0).find(".desc").html(desc.description);
-        $panes.eq(0).find(".god-favour td.title").addClass("fg"+desc.colour).html(desc.title);
-        $panes.eq(0).find(".god-favour td.favour").addClass("fg"+desc.colour).html(desc.favour);
+        $panes.eq(0).find(".god-favour td.title")
+                    .addClass("fg"+desc.colour).html(desc.title);
+        $panes.eq(0).find(".god-favour td.favour")
+                    .addClass("fg"+desc.colour).html(desc.favour);
         if (desc.bondage)
+        {
             $panes.eq(0).find(".god-favour")
-                .after("<div class=tbl>" + util.formatted_string_to_html(desc.bondage) + "</div>");
+                .after("<div class=tbl>"
+                        + util.formatted_string_to_html(desc.bondage)
+                        + "</div>");
+        }
         var powers_list = desc.powers_list.split("\n").slice(3, -1);
         var $powers = $panes.eq(0).find(".god-powers");
         var re = /^(<[a-z]*>)?(.*\.) *( \(.*\))?$/;
@@ -300,13 +338,26 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
 
         desc.powers = fmt_body_txt(util.formatted_string_to_html(desc.powers));
         if (desc.info_table.length !== "")
-            desc.powers += "<div class=tbl>" + util.formatted_string_to_html(desc.info_table) + "</div>";
+        {
+            desc.powers += "<div class=tbl>"
+                            + util.formatted_string_to_html(desc.info_table)
+                            + "</div>";
+        }
         $panes.eq(1).html(desc.powers);
 
-        $panes.eq(2).html(fmt_body_txt(util.formatted_string_to_html(desc.wrath)));
+        $panes.eq(2).html(
+                    fmt_body_txt(util.formatted_string_to_html(desc.wrath)));
+        if (use_extra_pane)
+        {
+            $panes.eq(3).html("<div class=tbl>"
+                                + util.formatted_string_to_html(desc.extra)
+                                + "</div>");
+        }
 
-        for (var i = 0; i < 3; i++)
+        var num_panes = (use_extra_pane ? 3 : 2)
+        for (var i = 0; i <= num_panes; i++)
             scroller($panes.eq(i)[0]);
+
 
         $popup.on("keydown keypress", function (event) {
             var s = scroller($panes.filter(".current")[0]);
@@ -490,7 +541,7 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
                     scroller_scroll_page(scroller, 1);
                     break;
                 case 35: // end
-                    scroller_scroll_to_line(scroller, 2147483647);
+                    scroller_scroll_to_line(scroller, 2147483647); //int32_t max
                     break;
                 case 36: // home
                     scroller_scroll_to_line(scroller, 0);
@@ -557,6 +608,8 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
     function scroller_scroll_to_line(scroller, line)
     {
         var $scroller = $(scroller.scrollElement);
+        // TODO: can this work without special-casing int32_t max, where any
+        // pos greater than the max scrolls to end?
         if (line == 2147483647) // FS_START_AT_END
         {
             // special case for webkit: excessively large values don't work
@@ -674,6 +727,7 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
         "describe-monster" : describe_monster,
         "version" : version,
         "formatted-scroller" : formatted_scroller,
+        "progress-bar" : progress_bar,
         "msgwin-get-line" : msgwin_get_line,
     };
 
@@ -710,6 +764,7 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
             "describe-monster" : describe_monster_update,
             "formatted-scroller" : formatted_scroller_update,
             "msgwin-get-line" : msgwin_get_line_update,
+            "progress-bar" : progress_bar_update,
         };
         var handler = ui_handlers[msg.type];
         if (handler)

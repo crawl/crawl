@@ -569,7 +569,7 @@ static bool _teleport_player(bool wizard_tele, bool teleportitis,
     // After this point, we're guaranteed to teleport. Kill the appropriate
     // delays. Teleportitis needs to check the target square first, though.
     if (!teleportitis)
-        interrupt_activity(AI_TELEPORT);
+        interrupt_activity(activity_interrupt::teleport);
 
     // Update what we can see at the current location as well as its stash,
     // in case something happened in the exact turn that we teleported
@@ -670,7 +670,7 @@ static bool _teleport_player(bool wizard_tele, bool teleportitis,
             }
             else
             {
-                interrupt_activity(AI_TELEPORT);
+                interrupt_activity(activity_interrupt::teleport);
                 if (!reason.empty())
                     mpr(reason);
                 mprf("You are suddenly yanked towards %s nearby monster%s!",
@@ -915,6 +915,13 @@ spret cast_golubrias_passage(const coord_def& where, bool fail)
     if (orb_limits_translocation())
     {
         mprf(MSGCH_ORB, "The Orb prevents you from opening a passage!");
+        return spret::abort;
+    }
+
+    if (player_in_branch(BRANCH_GAUNTLET))
+    {
+        mprf(MSGCH_ORB, "A magic seal in the Gauntlet prevents you from "
+                "opening a passage!");
         return spret::abort;
     }
 

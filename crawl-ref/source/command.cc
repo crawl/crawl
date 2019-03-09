@@ -8,6 +8,7 @@
 #include "command.h"
 
 #include <cctype>
+#include <cinttypes>
 #include <cstdio>
 #include <cstring>
 #include <sstream>
@@ -85,13 +86,38 @@ static const char *features[] =
 
 static string _get_version_information()
 {
-    return string("This is <w>" CRAWL " ") + Version::Long + "</w>";
+    string result = string("This is <w>" CRAWL " ") + Version::Long + "</w>";
+    return result;
 }
 
 static string _get_version_features()
 {
-    string result = "<w>Features</w>\n"
-                    "--------\n";
+    string result;
+    if (crawl_state.need_save
+#ifdef DGAMELAUNCH
+        && you.wizard
+#endif
+       )
+    {
+        if (you.game_is_seeded)
+        {
+            result += make_stringf("Game seed: %" PRIu64, crawl_state.seed);
+            if (Version::history_size() > 1)
+                result += " (game has been upgraded, seed may be broken)";
+        }
+        else
+            result += "Game is not seeded.";
+        result += "\n\n";
+    }
+    if (Version::history_size() > 1)
+    {
+        result += "Version history for your current game:\n";
+        result += Version::history();
+        result += "\n\n";
+    }
+
+    result += "<w>Features</w>\n"
+                 "--------\n";
 
     for (const char *feature : features)
     {
@@ -1268,34 +1294,43 @@ private:
     int prev_page{0};
 };
 
-void show_help(int section, string highlight_string)
+static bool _show_help_special(int key)
 {
-    help_popup help(section);
-    help.highlight = highlight_string;
-    int key = toalower(help.show());
-
     switch (key)
     {
         case ':':
             // If the game has begun, show notes.
             if (crawl_state.need_save)
                 display_notes();
-            break;
+            return true;
         case '#':
             // If the game has begun, show dump.
             if (crawl_state.need_save)
                 display_char_dump();
-            break;
+            return true;
         case '/':
             keyhelp_query_descriptions();
-            break;
+            return true;
         case 'q':
             _handle_FAQ();
-            break;
+            return true;
         case 'v':
             _print_version();
-            break;
+            return true;
         default:
-            break;
+            return false;
     }
+}
+
+void show_help(int section, string highlight_string)
+{
+    // if `section` is a special case, don't instantiate a help popup at all.
+    if (_show_help_special(toalower(section)))
+        return;
+    help_popup help(section);
+    help.highlight = highlight_string;
+    int key = toalower(help.show());
+    // handle the case where one of the special case help sections is triggered
+    // from the help main menu.
+    _show_help_special(key);
 }

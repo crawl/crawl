@@ -228,6 +228,8 @@ enum tag_minor_version
     TAG_MINOR_REVEAL_TRAPS,        // All traps generate known
     TAG_MINOR_GAUNTLET_TRAPPED,    // It was briefly possible to get trapped in a specific gauntlet map.
     TAG_MINOR_REMOVE_DECKS,        // Decks are no more
+    TAG_MINOR_GAMESEEDS,           // Game seeds + rng state saved
+    TAG_MINOR_YELLOW_DRACONIAN_RACID, // Change yellow draconians' rAcid fake mutation to a true mutation.
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

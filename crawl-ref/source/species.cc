@@ -88,19 +88,8 @@ string species_name(species_type speci, species_name_type spname_type)
  */
 string species_walking_verb(species_type sp)
 {
-    switch (sp)
-    {
-    case SP_NAGA:
-        return "Slid";
-    case SP_TENGU:
-        return "Glid";
-    case SP_OCTOPODE:
-        return "Wriggl";
-    case SP_VINE_STALKER:
-        return "Stalk";
-    default:
-        return "Walk";
-    }
+    auto verb = get_species_def(sp).walking_verb;
+    return verb ? verb : "Walk";
 }
 
 /**
@@ -213,18 +202,8 @@ const vector<string>& fake_mutations(species_type species, bool terse)
  */
 string species_prayer_action(species_type species)
 {
-    switch (species)
-    {
-        case SP_NAGA:
-            return "coil in front of";
-        case SP_OCTOPODE:
-            return "curl up in front of";
-        case SP_FELID:
-            // < TGWi> you curl up on the altar and go to sleep
-            return "sit before";
-        default:
-            return "kneel at";
-    }
+  auto action = get_species_def(species).altar_action;
+  return action ? action : "kneel at";
 }
 
 const char* scale_type(species_type species)
@@ -371,7 +350,7 @@ void species_stat_init(species_type species)
 void species_stat_gain(species_type species)
 {
     const species_def& sd = get_species_def(species);
-    if (you.experience_level % sd.how_often == 0)
+    if (sd.level_stats.size() > 0 && you.experience_level % sd.how_often == 0)
         modify_stat(*random_iterator(sd.level_stats), 1, false);
 }
 
@@ -513,4 +492,44 @@ void change_species_to(species_type sp)
     init_player_doll();
 #endif
     redraw_screen();
+}
+
+// A random valid (selectable on the new game screen) species.
+species_type random_starting_species()
+{
+  species_type species;
+  do {
+      species = static_cast<species_type>(random_range(0, NUM_SPECIES - 1));
+  } while (!is_starting_species(species));
+  return species;
+}
+
+// Ensure the species isn't SP_RANDOM/SP_VIABLE and it has recommended jobs
+// (old disabled species have none).
+bool is_starting_species(species_type species)
+{
+    return species < NUM_SPECIES
+        && !get_species_def(species).recommended_jobs.empty();
+}
+
+// Check that we can give this draconian species to players as a color.
+static bool _is_viable_draconian(species_type species)
+{
+#if TAG_MAJOR_VERSION == 34
+    if (species == SP_MOTTLED_DRACONIAN)
+        return false;
+#endif
+    return true;
+}
+
+// A random non-base draconian colour appropriate for the player.
+species_type random_draconian_colour()
+{
+  species_type species;
+  do {
+      species =
+          static_cast<species_type>(random_range(SP_FIRST_NONBASE_DRACONIAN,
+                                                 SP_LAST_NONBASE_DRACONIAN));
+  } while (!_is_viable_draconian(species));
+  return species;
 }

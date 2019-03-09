@@ -197,6 +197,11 @@ function callback.boulder_grate_trap_stepped(data, triggerable, triggerer,
   -- do nothing
 end
 
+function callback.grate_trap_stepped(data, triggerable, triggerer,
+                                             marker, ev)
+  -- do nothing
+end
+
 callback.grunt_nemelex_gamble_announce = callback.nemelex_gamble_announce
 
 function callback.grunt_nemelex_gamble_start(data,triggerable,triggerer,marker,ev)
@@ -283,5 +288,12 @@ function teleporter_golubria_switch_fn(data, triggerable, triggerer, marker, ev)
   else
     crawl.mpr("There is a strange hissing noise.")
   end
+end
+
+function callback.spider_trap_stepped(data, triggerable, triggerer, marker, ev)
+  data.mons="generate_awake redback"
+  data.msg="A basket of spiders falls from above!"
+  data.max=8
+  callback.drop_trap_stepped(data, triggerable, triggerer, marker, ev)
 end
 }}

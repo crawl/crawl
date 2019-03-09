@@ -991,32 +991,34 @@ void macro_add_query()
     keyseq key;
     mouse_control mc(MOUSE_MODE_MACRO);
     key = _getch_mul();
+    string key_str = vtostr(key);
+    key_str = replace_all(key_str, "<", "<<");
 
     msgwin_reply(vtostr(key));
 
     if (mapref.count(key) && !mapref[key].empty())
     {
-        string action = vtostr(mapref[key]);
-        action = replace_all(action, "<", "<<");
-        mprf(MSGCH_WARN, "Current Action: %s", action.c_str());
+        string action_str = vtostr(mapref[key]);
+        action_str = replace_all(action_str, "<", "<<");
+        mprf(MSGCH_WARN, "Current Action: %s", action_str.c_str());
         mprf(MSGCH_PROMPT, "Do you wish to (r)edefine, (c)lear, or (a)bort? ");
 
         input = m_getch();
 
         input = toalower(input);
-        if (input == 'a' || key_is_escape(input))
-        {
-            canned_msg(MSG_OK);
-            return;
-        }
-        else if (input == 'c')
+        if (input == 'c')
         {
             mprf("Cleared %s '%s' => '%s'.",
                  macro_type.c_str(),
-                 vtostr(key).c_str(),
-                 vtostr(mapref[key]).c_str());
+                 key_str.c_str(),
+                 action_str.c_str());
             macro_del(mapref, key);
             crawl_state.unsaved_macros = true;
+            return;
+        }
+        else if (input != 'r')
+        {
+            canned_msg(MSG_OK);
             return;
         }
     }
@@ -1034,17 +1036,18 @@ void macro_add_query()
         {
             mprf("Deleted %s for '%s'.",
                  macro_type.c_str(),
-                 vtostr(key).c_str());
+                 key_str.c_str());
         }
         else
             canned_msg(MSG_OK);
     }
     else
     {
+        string action_str = vtostr(action);
+        action_str = replace_all(action_str, "<", "<<");
         macro_add(mapref, key, action);
         mprf("Created %s '%s' => '%s'.",
-             macro_type.c_str(),
-             vtostr(key).c_str(), vtostr(action).c_str());
+             macro_type.c_str(), key_str.c_str(), action_str.c_str());
     }
 
     crawl_state.unsaved_macros = true;

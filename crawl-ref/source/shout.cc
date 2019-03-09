@@ -1227,10 +1227,12 @@ coord_def noise_grid::noise_perceived_position(actor *act,
         : noise.noise_source;
 
     const int fuzz = extra_distance_covered;
+    coord_def fuzz_rnd;
+    fuzz_rnd.x = random_range(-fuzz, fuzz, 2);
+    fuzz_rnd.y = random_range(-fuzz, fuzz, 2);
     const coord_def perceived_point =
         fuzz?
-        noise_centroid + coord_def(random_range(-fuzz, fuzz, 2),
-                                   random_range(-fuzz, fuzz, 2))
+        noise_centroid + fuzz_rnd
         : noise_centroid;
 
     const coord_def final_perceived_point =

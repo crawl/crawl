@@ -160,7 +160,7 @@ function gauntlet_arena_item_setup(e, custom_loot)
     -- easilly apply any custom replacement for those extra items.
     e.nsubst("d = d / X")
 
-    -- Slot 'd'.
+    -- Define item slot 'd' and first subst.
     local first_subst = "e*"
     if custom_loot then
         e.item(custom_loot)
@@ -169,10 +169,9 @@ function gauntlet_arena_item_setup(e, custom_loot)
         e.item("nothing")
     end
 
-    -- Slot 'e'
+    -- Define item slot 'e'
     e.item(dgn.loot_scrolls .. " / " .. dgn.loot_potions)
-
-    -- will only
+    -- Set exactly one loot item.
     e.subst("d = " .. first_subst)
 
     local extra_nsubst
@@ -181,7 +180,7 @@ function gauntlet_arena_item_setup(e, custom_loot)
     end
 
     if gauntlet_arena_tier == 1 then
-       -- Slots 'f' and 'g' for tier 1.
+       -- Item slots 'f' and 'g' for tier 1.
         e.item(dgn.good_aux_armour)
         e.item("any jewellery good_item")
 
@@ -189,20 +188,19 @@ function gauntlet_arena_item_setup(e, custom_loot)
             extra_nsubst = "fg|*|* / ."
         end
     else
-       -- Slots 'f' and 'g' for tier 2.
+       -- Item slots 'f' and 'g' for tier 2.
         if crawl.one_chance_in(3) then
             e.item(dgn.randart_aux_armour)
-            e.item("any jewellery randart")
         else
             e.item(dgn.good_aux_armour)
-            e.item("any jewellery good_item")
         end
+        e.item("any jewellery good_item w:20 / any jewellery randart")
 
         if extra_nsubst == nil then
             extra_nsubst = "fg / |* / ."
         end
     end
-
+    -- Set remaining loot items.
     e.nsubst("X = " .. extra_nsubst)
 end
 
@@ -246,7 +244,7 @@ function gauntlet_arena_terrain_setup(e, rock_unchanged, liquid, plant)
     else
         e.subst("^ : ^...")
     end
-    e.kfeat("^ = dispersal trap")
+    e.kfeat("^ = dispersal trap / net trap")
 
     if not plant then plant = "default" end
     if plant == "demonic" then

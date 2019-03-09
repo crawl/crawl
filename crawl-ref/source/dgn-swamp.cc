@@ -22,11 +22,12 @@ static void _swamp_slushy_patches(int depth_multiplier)
             const coord_def center_delta(grdc - c);
             const int depth = 1600 - center_delta.abs();
             const int depth_offset = depth * 10 / 1600;
-            dgn_island_centred_at(c, random_range(5, 25 - depth_multiplier / 2),
-                                  random_range(2, 6),
+            const int n_points = random_range(5, 25 - depth_multiplier / 2);
+            const int radius = random_range(2, 6);
+            dgn_island_centred_at(c, n_points, radius,
                                   int_range(8 + depth_offset,
                                             17 + depth_offset),
-                                            margin);
+                                  margin);
         }
     }
 }

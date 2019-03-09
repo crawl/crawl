@@ -709,7 +709,7 @@ void wizard_give_monster_item(monster* mon)
     }
 
     int player_slot = prompt_invent_item("Give which item to monster?",
-                                          MT_DROP, -1);
+                                          menu_type::drop, -1);
 
     if (prompt_failed(player_slot))
         return;
@@ -1043,30 +1043,30 @@ void debug_miscast(int target_index)
     }
 
     spell_type         spell  = spell_by_name(specs, true);
-    spschool_flag_type school = school_by_name(specs);
+    spschool school = school_by_name(specs);
 
     // Prefer exact matches for school name over partial matches for
     // spell name.
-    if (school != SPTYP_NONE
+    if (school != spschool::none
         && (strcasecmp(specs, spelltype_short_name(school)) == 0
             || strcasecmp(specs, spelltype_long_name(school)) == 0))
     {
         spell = SPELL_NO_SPELL;
     }
 
-    if (spell == SPELL_NO_SPELL && school == SPTYP_NONE)
+    if (spell == SPELL_NO_SPELL && school == spschool::none)
     {
         mpr("No matching spell or spell school.");
         return;
     }
-    else if (spell != SPELL_NO_SPELL && school != SPTYP_NONE)
+    else if (spell != SPELL_NO_SPELL && school != spschool::none)
     {
         mprf("Ambiguous: can be spell '%s' or school '%s'.",
             spell_title(spell), spelltype_short_name(school));
         return;
     }
 
-    spschools_type disciplines = SPTYP_NONE;
+    spschools_type disciplines = spschool::none;
     if (spell != SPELL_NO_SPELL)
     {
         disciplines = get_spell_disciplines(spell);
@@ -1141,29 +1141,30 @@ void debug_miscast(int target_index)
     // Suppress "nothing happens" message for monster miscasts which are
     // only harmless messages, since a large number of those are missing
     // monster messages.
-    nothing_happens_when_type nothing = NH_DEFAULT;
+    nothing_happens nothing = nothing_happens::DEFAULT;
     if (target_index != NON_MONSTER && level == 0)
-        nothing = NH_NEVER;
+        nothing = nothing_happens::NEVER;
 
     MiscastEffect *miscast;
 
     if (spell != SPELL_NO_SPELL)
     {
-        miscast = new MiscastEffect(target, target, WIZARD_MISCAST, spell, pow,
-                                    fail, "", nothing);
+        miscast = new MiscastEffect(target, target, {miscast_source::wizard},
+                                    spell, pow, fail, "", nothing);
     }
     else
     {
         if (level != -1)
         {
-            miscast = new MiscastEffect(target, target, WIZARD_MISCAST, school,
-                                        level, "wizard testing miscast",
-                                        nothing);
+            miscast = new MiscastEffect(target, target,
+                                        {miscast_source::wizard}, school, level,
+                                        "wizard testing miscast", nothing);
         }
         else
         {
-            miscast = new MiscastEffect(target, target, WIZARD_MISCAST, school,
-                                        pow, fail, "wizard testing miscast",
+            miscast = new MiscastEffect(target, target,
+                                        {miscast_source::wizard}, school, pow,
+                                        fail, "wizard testing miscast",
                                         nothing);
         }
     }

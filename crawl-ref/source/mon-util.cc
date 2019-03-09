@@ -54,6 +54,7 @@
 #include "notes.h"
 #include "options.h"
 #include "random.h"
+#include "reach-type.h"
 #include "religion.h"
 #include "showsymb.h"
 #include "species.h"
@@ -847,7 +848,7 @@ bool mons_is_fiery(const monster& mon)
     return mon.has_attack_flavour(AF_FIRE)
            || mon.has_attack_flavour(AF_PURE_FIRE)
            || mon.has_attack_flavour(AF_STICKY_FLAME)
-           || mon.has_spell_of_type(SPTYP_FIRE);
+           || mon.has_spell_of_type(spschool::fire);
 }
 
 bool mons_is_projectile(monster_type mc)
@@ -1034,6 +1035,29 @@ bool mons_eats_items(const monster& mon)
     return mons_is_slime(mon) && have_passive(passive_t::jelly_eating);
 }
 
+/* Is the actor susceptible to vampirism?
+ *
+ * Undead actors and summoned, temporary, or ghostified monsters are all not
+ * susceptible.
+ * @param act The actor.
+ * @returns True if the actor is susceptible to vampirism, false otherwise.
+ */
+bool actor_is_susceptible_to_vampirism(const actor& act)
+{
+    if (!(act.holiness() & MH_NATURAL) || act.is_summoned())
+        return false;
+
+    if (act.is_player())
+        return true;
+
+    const monster *mon = act.as_monster();
+    // Don't allow HP draining from temporary monsters such as those created by
+    // Sticks to Snakes.
+    return !mon->has_ench(ENCH_FAKE_ABJURATION)
+           // Nor from now-ghostly monsters.
+           && !testbits(mon->flags, MF_SPECTRALISED);
+}
+
 bool invalid_monster(const monster* mon)
 {
     return !mon || invalid_monster_type(mon->type);
@@ -1079,7 +1103,7 @@ static void _mimic_vanish(const coord_def& pos, const string& name)
 
     mprf("The %s mimic %svanishes%s!",
          name.c_str(), cackle.c_str(), smoke_str);
-    interrupt_activity(AI_MIMIC);
+    interrupt_activity(activity_interrupt::mimic);
 }
 
 /**
@@ -1717,7 +1741,8 @@ bool mons_class_can_use_stairs(monster_type mc)
            && !mons_is_tentacle_or_tentacle_segment(mc)
            && mc != MONS_SILENT_SPECTRE
            && mc != MONS_GERYON
-           && mc != MONS_ROYAL_JELLY;
+           && mc != MONS_ROYAL_JELLY
+           && mc != MONS_BALL_LIGHTNING;
 }
 
 bool mons_class_can_use_transporter(monster_type mc)
@@ -3054,7 +3079,11 @@ void ugly_thing_apply_uniform_band_colour(mgen_data &mg,
 
 static const char *drac_colour_names[] =
 {
-    "black", "", "yellow", "green", "purple", "red", "white", "grey", "pale"
+    "black",
+#if TAG_MAJOR_VERSION == 34
+    "",
+#endif
+    "yellow", "green", "purple", "red", "white", "grey", "pale"
 };
 
 string draconian_colour_name(monster_type mon_type)
@@ -3085,7 +3114,11 @@ monster_type draconian_colour_by_name(const string &name)
 // TODO: Remove "putrid" when TAG_MAJOR_VERSION > 34
 static const char *demonspawn_base_names[] =
 {
-    "monstrous", "gelid", "infernal", "putrid", "torturous",
+    "monstrous", "gelid", "infernal",
+#if TAG_MAJOR_VERSION == 34
+    "putrid",
+#endif
+    "torturous",
 };
 
 string demonspawn_base_name(monster_type mon_type)
@@ -3716,29 +3749,29 @@ static bool _ms_ranged_spell(spell_type monspell, bool attack_only = false,
                              bool ench_too = true)
 {
     // summoning spells are usable from ranged, but not direct attacks.
-    if (spell_typematch(monspell, SPTYP_SUMMONING)
+    if (spell_typematch(monspell, spschool::summoning)
         || monspell == SPELL_CONJURE_BALL_LIGHTNING)
     {
         return !attack_only;
     }
 
-    const unsigned int flags = get_spell_flags(monspell);
+    const spell_flags flags = get_spell_flags(monspell);
 
     // buffs & escape spells aren't considered 'ranged'.
-    if (testbits(flags, SPFLAG_SELFENCH)
-        || spell_typematch(monspell, SPTYP_CHARMS)
-        || testbits(flags, SPFLAG_ESCAPE)
+    if (testbits(flags, spflag::selfench)
+        || spell_typematch(monspell, spschool::charms)
+        || testbits(flags, spflag::escape)
         || monspell == SPELL_BLINK_OTHER_CLOSE)
     {
         return false;
     }
 
     // conjurations are attacks.
-    if (spell_typematch(monspell, SPTYP_CONJURATION))
+    if (spell_typematch(monspell, spschool::conjuration))
         return true;
 
     // hexes that aren't conjurations or summons are enchantments.
-    if (spell_typematch(monspell, SPTYP_HEXES))
+    if (spell_typematch(monspell, spschool::hexes))
         return !attack_only && ench_too;
 
     switch (monspell)
@@ -3835,10 +3868,19 @@ static bool _mons_has_usable_ranged_weapon(const monster* mon)
     return is_launched(mon, weapon, *missile) != launch_retval::FUMBLED;
 }
 
+static bool _mons_has_attack_wand(const monster& mon)
+{
+    const item_def *wand = mon.mslot_item(MSLOT_WAND);
+
+    return wand && is_offensive_wand(*wand);
+}
+
 bool mons_has_ranged_attack(const monster& mon)
 {
     return mons_has_ranged_spell(mon, true)
-           || _mons_has_usable_ranged_weapon(&mon);
+           || _mons_has_usable_ranged_weapon(&mon)
+           || mon.reach_range() != REACH_NONE
+           || _mons_has_attack_wand(mon);
 }
 
 bool mons_has_incapacitating_ranged_attack(const monster& mon, const actor& foe)
@@ -3876,42 +3918,6 @@ bool mons_has_incapacitating_ranged_attack(const monster& mon, const actor& foe)
     }
 
     return false;
-}
-
-static bool _mons_starts_with_ranged_weapon(monster_type mc)
-{
-    switch (mc)
-    {
-    case MONS_JOSEPH:
-    case MONS_DEEP_ELF_MASTER_ARCHER:
-    case MONS_CENTAUR:
-    case MONS_CENTAUR_WARRIOR:
-    case MONS_NESSOS:
-    case MONS_YAKTAUR:
-    case MONS_YAKTAUR_CAPTAIN:
-    case MONS_CHERUB:
-    case MONS_SONJA:
-    case MONS_HAROLD:
-    case MONS_POLYPHEMUS:
-    case MONS_CYCLOPS:
-    case MONS_STONE_GIANT:
-    case MONS_CHUCK:
-    case MONS_MERFOLK_JAVELINEER:
-    case MONS_URUG:
-    case MONS_FAUN:
-    case MONS_SATYR:
-    case MONS_NAGA_SHARPSHOOTER:
-        return true;
-    default:
-        return false;
-    }
-}
-
-bool mons_has_known_ranged_attack(const monster& mon)
-{
-    return mon.flags & MF_SEEN_RANGED
-           || _mons_starts_with_ranged_weapon(mon.type)
-              && !(mon.flags & MF_KNOWN_SHIFTER);
 }
 
 bool mons_can_attack(const monster& mon)

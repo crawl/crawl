@@ -30,6 +30,7 @@
 {% if getattr(config, "allow_password_reset", False) %}
           <a id="forgot_link" href="javascript:">Forgot Password</a>
 {% end %}
+          <a id="chem_link" href="javascript:" style="display: none;">Change Email</a>
           <a id="logout_link" href="javascript:" style="display: none;">Logout</a></span>
         </div>
       </div>
@@ -54,6 +55,24 @@
                  value="Cancel">
           <input class="button" type="submit" name="submit" id="reg_submit" value="Submit">
         </form>
+      </div>
+
+      <div id="change_email" class="floating_dialog" style="display: none;">
+        <p>Your current email address is: <span id="chem_current"></span></p>
+        <span id="chem_message"></span>
+        <form action="#" id="chem_form">
+          <label for="chem_email">Email:</label>
+          <input class="text" type="text" name="chem_email" id="chem_email">
+          <br />
+          <p>If you do not enter an email, you can't recover your password.</p>
+          <input class="button" type="button" name="cancel" id="chem_cancel" value="Cancel">
+          <input class="button" type="submit" name="submit" id="chem_submit" value="Submit">
+        </form>
+      </div>
+
+      <div id="change_email_2" class="floating_dialog" style="display: none;">
+        <span id="chem_confirmation_message"></span>
+        <input class="button" type="submit" name="submit" value="OK">
       </div>
 
 {% if getattr(config, "allow_password_reset", False) %}

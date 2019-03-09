@@ -206,8 +206,8 @@ void butchery(item_def* specific_corpse)
     // Butcher pre-chosen corpse, if found, or if there is only one corpse.
     if (specific_corpse
         || corpse_qualities.size() == 1
-                                && Options.confirm_butcher != CONFIRM_ALWAYS
-        || Options.confirm_butcher == CONFIRM_NEVER)
+           && Options.confirm_butcher != confirm_butcher_type::always
+        || Options.confirm_butcher == confirm_butcher_type::never)
     {
         //XXX: this assumes that we're not being called from a delay ourselves.
         if (_start_butchering(*corpse_qualities[0].first))
@@ -226,7 +226,7 @@ void butchery(item_def* specific_corpse)
     vector<SelItem> selected =
         select_items(meat, bottle_blood ? "Choose a corpse to bottle"
                                         : "Choose a corpse to butcher",
-                     false, MT_ANY, _butcher_menu_title);
+                     false, menu_type::any, _butcher_menu_title);
     redraw_screen();
     for (SelItem sel : selected)
         if (_start_butchering(const_cast<item_def &>(*sel.item)))
