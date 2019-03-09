@@ -545,6 +545,9 @@ static void _setup_generic(const newgame_def& ng)
         item_colour(item);  // set correct special and colour
     }
 
+    if (you.equip[EQ_WEAPON] > 0)
+        swap_inv_slots(0, you.equip[EQ_WEAPON], false);
+
     // A second pass to apply the item_slot option.
     for (auto &item : you.inv)
     {
