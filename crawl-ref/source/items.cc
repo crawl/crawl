@@ -2614,7 +2614,7 @@ bool drop_item(int item_dropped, int quant_drop)
 
     // If you drop an item in as a merfolk, it is below the water line and
     // makes no noise falling.
-    if (silenced(you.pos()) || you.swimming())
+    if (!you.swimming())
         feat_splash_noise(grd(you.pos()));
 
     // XP evoker has been handled in copy_item_to_grid
