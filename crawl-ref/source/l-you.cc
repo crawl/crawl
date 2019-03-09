@@ -412,7 +412,7 @@ LUARET1(you_silenced, boolean, silenced(you.pos()))
  */
 LUARET1(you_sick, boolean, you.disease)
 /*** Are you contaminated?
- * @treturn boolean
+ * @treturn number
  * @function contaminated
  */
 LUARET1(you_contaminated, number, get_contamination_level())
