@@ -93,7 +93,7 @@ static const map<job_type, job_def> job_data =
     "CK", "Chaos Knight",
     4, 4, 4,
     { SP_HILL_ORC, SP_TROLL, SP_CENTAUR, SP_MERFOLK, SP_MINOTAUR,
-      SP_BASE_DRACONIAN, SP_DEMONSPAWN, },
+      SP_BASE_DRACONIAN, SP_DEMONSPAWN, SP_GNOLL, },
     { "leather armour plus:2" },
     WCHOICE_PLAIN,
     { { SK_FIGHTING, 3 }, { SK_ARMOUR, 1 }, { SK_DODGING, 1 },

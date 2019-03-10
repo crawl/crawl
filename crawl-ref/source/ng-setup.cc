@@ -194,8 +194,11 @@ static void _give_ranged_weapon(weapon_type weapon, int plus)
     switch (weapon)
     {
     case WPN_SHORTBOW:
+    case WPN_LONGBOW:
     case WPN_HAND_CROSSBOW:
+    case WPN_ARBALEST:
     case WPN_HUNTING_SLING:
+    case WPN_FUSTIBALUS:
         newgame_make_item(OBJ_WEAPONS, weapon, 1, plus);
         break;
     default:
@@ -219,12 +222,15 @@ static void _give_ammo(weapon_type weapon, int plus)
         newgame_make_item(OBJ_MISSILES, MI_THROWING_NET, 2);
         break;
     case WPN_SHORTBOW:
+    case WPN_LONGBOW:
         newgame_make_item(OBJ_MISSILES, MI_ARROW, 20);
         break;
     case WPN_HAND_CROSSBOW:
+    case WPN_ARBALEST:
         newgame_make_item(OBJ_MISSILES, MI_BOLT, 20);
         break;
     case WPN_HUNTING_SLING:
+    case WPN_FUSTIBALUS:
         newgame_make_item(OBJ_MISSILES, MI_SLING_BULLET, 20);
         break;
     default:
@@ -285,19 +291,22 @@ static void _give_items_skills(const newgame_def& ng)
         break;
     }
 
-    if (you.char_class == JOB_ABYSSAL_KNIGHT)
-        newgame_make_item(OBJ_WEAPONS, ng.weapon, 1, +1);
-    else if (you.char_class == JOB_CHAOS_KNIGHT)
-        newgame_make_item(OBJ_WEAPONS, ng.weapon, 1, 0, SPWPN_CHAOS);
-    else if (job_gets_ranged_weapons(you.char_class))
-        _give_ranged_weapon(ng.weapon, you.char_class == JOB_HUNTER ? 1 : 0);
-    else if (job_has_weapon_choice(you.char_class))
-        newgame_make_item(OBJ_WEAPONS, ng.weapon);
+    if (is_wieldable_weapon_type(ng.weapon))
+    {
+        if (you.char_class == JOB_ABYSSAL_KNIGHT)
+            newgame_make_item(OBJ_WEAPONS, ng.weapon, 1, +1);
+        else if (you.char_class == JOB_CHAOS_KNIGHT)
+            newgame_make_item(OBJ_WEAPONS, ng.weapon, 1, 0, SPWPN_CHAOS);
+        else if (is_ranged_weapon_type(ng.weapon))
+            _give_ranged_weapon(ng.weapon, you.char_class == JOB_HUNTER ? 1 : 0);
+        else
+            newgame_make_item(OBJ_WEAPONS, ng.weapon);
+    }
 
     give_job_equipment(you.char_class);
     give_job_skills(you.char_class);
 
-    if (job_gets_ranged_weapons(you.char_class))
+    if (is_ranged_weapon_type(ng.weapon) || ng.weapon == WPN_THROWN)
         _give_ammo(ng.weapon, you.char_class == JOB_HUNTER ? 1 : 0);
 
     if (you.species == SP_FELID)

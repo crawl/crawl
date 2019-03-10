@@ -2013,6 +2013,12 @@ static weapon_type _starting_weapon_upgrade(weapon_type wp, job_type job,
         return fighter && size <= SIZE_SMALL  ? wp : WPN_TRIDENT;
     case WPN_FALCHION:
         return WPN_LONG_SWORD;
+    case WPN_HUNTING_SLING:
+        return WPN_FUSTIBALUS;
+    case WPN_HAND_CROSSBOW:
+        return WPN_ARBALEST;
+    case WPN_SHORTBOW:
+        return WPN_LONGBOW;
     default:
         return wp;
     }
@@ -2020,42 +2026,76 @@ static weapon_type _starting_weapon_upgrade(weapon_type wp, job_type job,
 
 static vector<weapon_choice> _get_weapons(const newgame_def& ng)
 {
-    vector<weapon_choice> weapons;
-    if (job_gets_ranged_weapons(ng.job))
+    // We use multimaps here to allow more control over the ordering
+    // of the wepaon choices. Lower number means higher default priority.
+    // The priorities only become functionally meaningful if the player
+    // has more weapon choices than can vertically fit on the screen.
+    const multimap<int, weapon_type> ranged({
+        { 0, WPN_HUNTING_SLING },
+        { 1, WPN_SHORTBOW      },
+        { 2, WPN_HAND_CROSSBOW },
+        { 3, WPN_THROWN        }
+    });
+    const multimap<int, weapon_type> normal({
+        { 0, WPN_QUARTERSTAFF  },
+        { 1, WPN_MACE          },
+        { 1, WPN_HAND_AXE      },
+        { 1, WPN_FALCHION      },
+        { 2, WPN_SHORT_SWORD   },
+        { 2, WPN_SPEAR         },
+        { 3, WPN_UNARMED       }
+    });
+    multimap<int, weapon_type> startweps;
+    multimap<int, weapon_choice> choices;
+
+    if (ng.species == SP_GNOLL)
     {
-        weapon_type startwep[4] = { WPN_THROWN, WPN_HUNTING_SLING,
-                                    WPN_SHORTBOW, WPN_HAND_CROSSBOW };
-
-        for (int i = 0; i < 4; i++)
-        {
-            weapon_choice wp;
-            wp.first = startwep[i];
-
-            wp.second = weapon_restriction(wp.first, ng);
-            if (wp.second != CC_BANNED)
-                weapons.push_back(wp);
-        }
+        startweps.insert(ranged.begin(), ranged.end());
+        startweps.insert(normal.begin(), normal.end());
+    }
+    else if (job_gets_ranged_weapons(ng.job))
+    {
+        startweps.insert(ranged.begin(), ranged.end());
     }
     else
     {
-        weapon_type startwep[7] = { WPN_SHORT_SWORD, WPN_MACE, WPN_HAND_AXE,
-                                    WPN_SPEAR, WPN_FALCHION, WPN_QUARTERSTAFF,
-                                    WPN_UNARMED };
-        for (int i = 0; i < 7; ++i)
-        {
-            weapon_choice wp;
-            wp.first = startwep[i];
-            if (job_gets_good_weapons(ng.job))
-            {
-                wp.first = _starting_weapon_upgrade(wp.first, ng.job,
-                                                    ng.species);
-            }
+        startweps.insert(normal.begin(), normal.end());
+    }
 
-            wp.second = weapon_restriction(wp.first, ng);
-            if (wp.second != CC_BANNED)
-                weapons.push_back(wp);
+    for (const auto &startwep : startweps)
+    {
+        weapon_choice wp;
+        wp.first = startwep.second;
+        if (job_gets_good_weapons(ng.job))
+        {
+            wp.first = _starting_weapon_upgrade(wp.first, ng.job,
+                                                ng.species);
+        }
+
+        wp.second = weapon_restriction(wp.first, ng);
+        switch (wp.second)
+        {
+            case CC_RESTRICTED:
+                choices.insert( { 2, wp } );
+                break;
+            case CC_UNRESTRICTED:
+                choices.insert( { 1, wp } );
+                break;
+            default:
+                break;
         }
     }
+
+    vector<weapon_choice> weapons;
+
+    for (const auto &choice : choices)
+    {
+        if (weapons.size() >= 7)
+            break;
+
+        weapons.push_back(choice.second);
+    }
+
     return weapons;
 }
 
@@ -2110,7 +2150,7 @@ static bool _choose_weapon(newgame_def& ng, newgame_def& ng_choice,
     if (ng.species == SP_FELID)
         return true;
 
-    if (!job_has_weapon_choice(ng.job))
+    if (!job_has_weapon_choice(ng.job) && ng.species != SP_GNOLL)
         return true;
 
     vector<weapon_choice> weapons = _get_weapons(ng);

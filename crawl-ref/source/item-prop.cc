@@ -1751,14 +1751,26 @@ bool is_giant_club_type(int wpn_type)
 }
 
 /**
- * Is the provided type a kind of ranged weapon?
+ * Is the provided type a kind of wieldable ranged weapon?
  *
  * @param wpn_type  The weapon_type under consideration.
  * @return          Whether it's a kind of launcher.
  */
 bool is_ranged_weapon_type(int wpn_type)
 {
-    return Weapon_prop[Weapon_index[wpn_type]].ammo != MI_NONE;
+    return is_wieldable_weapon_type(wpn_type) // Let's not crash on WPN_THROWN
+        && Weapon_prop[Weapon_index[wpn_type]].ammo != MI_NONE;
+}
+
+/**
+ * Is the provided type a kind of a wieldable weapon?
+ *
+ * @param wpn_type  The weapon_type under consideration.
+ * @return          Whether it's wieldable.
+ */
+bool is_wieldable_weapon_type(int wpn_type)
+{
+    return wpn_type < NUM_WEAPONS;
 }
 
 /**
