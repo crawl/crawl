@@ -1320,7 +1320,7 @@ bool is_valid_shaft_effect_level()
     // Don't shaft the player when we can't, and also when it would be into a
     // dangerous end.
     return is_valid_shaft_level()
-           && !(testbits(branch.branch_flags, brflag::dangerous_end)
+           && !(branch.branch_flags & brflag::dangerous_end
                 && brdepth[place.branch] - place.depth == 1);
 }
 
