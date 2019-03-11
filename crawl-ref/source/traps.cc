@@ -1373,9 +1373,6 @@ void roll_trap_effects()
  */
 void do_trap_effects()
 {
-    const level_id place = level_id::current();
-    const Branch &branch = branches[place.branch];
-
     // Try to shaft, teleport, or alarm the player.
     int roll = random2(3);
     switch (roll)
@@ -1383,9 +1380,7 @@ void do_trap_effects()
         case 0:
             // Don't shaft the player when we can't, and also when it would be into a
             // dangerous end.
-            if (is_valid_shaft_level()
-               && !(branch.branch_flags & brflag::dangerous_end
-                    && brdepth[place.branch] - place.depth == 1))
+            if (is_valid_shaft_effect_level())
             {
                 dprf("Attempting to shaft player.");
                 you.do_shaft();
