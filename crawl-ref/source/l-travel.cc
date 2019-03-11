@@ -22,15 +22,15 @@
 LUAFN(l_set_exclude)
 {
     coord_def s;
-    s.x = luaL_checkint(ls, 1);
-    s.y = luaL_checkint(ls, 2);
+    s.x = luaL_safe_checkint(ls, 1);
+    s.y = luaL_safe_checkint(ls, 2);
     const coord_def p = player2grid(s);
     if (!in_bounds(p))
         return 0;
     // XXX: dedup w/_get_full_exclusion_radius()?
     int r = LOS_RADIUS;
     if (lua_gettop(ls) > 2)
-        r = luaL_checkint(ls, 3);
+        r = luaL_safe_checkint(ls, 3);
     set_exclude(p, r);
     return 0;
 }
@@ -44,8 +44,8 @@ LUAFN(l_set_exclude)
 LUAFN(l_del_exclude)
 {
     coord_def s;
-    s.x = luaL_checkint(ls, 1);
-    s.y = luaL_checkint(ls, 2);
+    s.x = luaL_safe_checkint(ls, 1);
+    s.y = luaL_safe_checkint(ls, 2);
     const coord_def p = player2grid(s);
     if (!in_bounds(p))
         return 0;
@@ -100,7 +100,7 @@ LUAFN(l_find_deepest_explored)
  */
 LUAFN(l_waypoint_delta)
 {
-    int waynum = luaL_checkint(ls, 1);
+    int waynum = luaL_safe_checkint(ls, 1);
     if (waynum < 0 || waynum > 9)
         return 0;
     const level_pos waypoint = travel_cache.get_waypoint(waynum);

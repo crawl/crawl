@@ -123,8 +123,8 @@ LUAFN(l_spells_path)
         return 1;
     }
     coord_def a;
-    a.x = luaL_checkint(ls, 2);
-    a.y = luaL_checkint(ls, 3);
+    a.x = luaL_safe_checkint(ls, 2);
+    a.y = luaL_safe_checkint(ls, 3);
     coord_def aim = player2grid(a);
 
     coord_def s;

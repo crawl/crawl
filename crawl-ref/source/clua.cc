@@ -416,7 +416,7 @@ void CLua::vfnreturns(const char *format, va_list args)
             break;
         case 'd':
             if (lua_isnumber(ls, sp))
-                *(va_arg(args, int*)) = luaL_checkint(ls, sp);
+                *(va_arg(args, int*)) = luaL_safe_checkint(ls, sp);
             break;
         case 'b':
             *(va_arg(args, bool *)) = lua_toboolean(ls, sp);

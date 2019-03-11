@@ -530,7 +530,7 @@ LUARET1(you_los, number, get_los_radius())
  * @function see_cell
  */
 LUARET1(you_see_cell_rel, boolean,
-        you.see_cell(coord_def(luaL_checkint(ls, 1), luaL_checkint(ls, 2)) + you.pos()))
+        you.see_cell(coord_def(luaL_safe_checkint(ls, 1), luaL_safe_checkint(ls, 2)) + you.pos()))
 /*** Can you see this cell without looking through a window?
  * Checks line of sight treating transparent rock and stone as opaque.
  * Uses player-centered coordinates.
@@ -540,7 +540,7 @@ LUARET1(you_see_cell_rel, boolean,
  * @function see_cell_no_trans
  */
 LUARET1(you_see_cell_no_trans_rel, boolean,
-        you.see_cell_no_trans(coord_def(luaL_checkint(ls, 1), luaL_checkint(ls, 2)) + you.pos()))
+        you.see_cell_no_trans(coord_def(luaL_safe_checkint(ls, 1), luaL_safe_checkint(ls, 2)) + you.pos()))
 /*** Can you see this cell without something solid in the way?
  * Checks line of sight treating all solid features as opaque.
  * Uses player-centered coordinates.
@@ -551,8 +551,8 @@ LUARET1(you_see_cell_no_trans_rel, boolean,
  */
 LUARET1(you_see_cell_solid_rel, boolean,
         cell_see_cell(you.pos(),
-                      (coord_def(luaL_checkint(ls, 1),
-                                 luaL_checkint(ls, 2)) + you.pos()),
+                      (coord_def(luaL_safe_checkint(ls, 1),
+                                 luaL_safe_checkint(ls, 2)) + you.pos()),
                       LOS_SOLID))
 /*** Can you see this cell with nothing in the way?
  * Checks line of sight treating all solid features as opaque and properly
@@ -565,8 +565,8 @@ LUARET1(you_see_cell_solid_rel, boolean,
  */
 LUARET1(you_see_cell_solid_see_rel, boolean,
         cell_see_cell(you.pos(),
-                      (coord_def(luaL_checkint(ls, 1),
-                                 luaL_checkint(ls, 2)) + you.pos()),
+                      (coord_def(luaL_safe_checkint(ls, 1),
+                                 luaL_safe_checkint(ls, 2)) + you.pos()),
                       LOS_SOLID_SEE))
 /*** Stars of piety.
  * @treturn int
@@ -797,7 +797,7 @@ static int you_gold(lua_State *ls)
 {
     if (lua_gettop(ls) >= 1 && !CLua::get_vm(ls).managed_vm)
     {
-        const int new_gold = luaL_checkint(ls, 1);
+        const int new_gold = luaL_safe_checkint(ls, 1);
         const int old_gold = you.gold;
         you.set_gold(max(new_gold, 0));
         if (new_gold > old_gold)
@@ -823,7 +823,7 @@ static int _you_have_rune(lua_State *ls)
 {
     int which_rune = NUM_RUNE_TYPES;
     if (lua_gettop(ls) >= 1 && lua_isnumber(ls, 1))
-        which_rune = luaL_checkint(ls, 1);
+        which_rune = luaL_safe_checkint(ls, 1);
     else if (lua_gettop(ls) >= 1 && lua_isstring(ls, 1))
     {
         const char *spec = lua_tostring(ls, 1);
@@ -1023,7 +1023,7 @@ LUAFN(you_train_skill)
     skill_type sk = str_to_skill_safe(luaL_checkstring(ls, 1));
     if (lua_gettop(ls) >= 2 && can_enable_skill(sk))
     {
-        you.train[sk] = min(max((training_status)luaL_checkint(ls, 2),
+        you.train[sk] = min(max((training_status)luaL_safe_checkint(ls, 2),
                                                  TRAINING_DISABLED),
                                              TRAINING_FOCUSED);
         reset_training();
@@ -1275,15 +1275,15 @@ void cluaopen_you(lua_State *ls)
 //
 
 LUARET1(you_can_hear_pos, boolean,
-        player_can_hear(coord_def(luaL_checkint(ls,1), luaL_checkint(ls, 2))))
+        player_can_hear(coord_def(luaL_safe_checkint(ls,1), luaL_safe_checkint(ls, 2))))
 LUARET1(you_x_pos, number, you.pos().x)
 LUARET1(you_y_pos, number, you.pos().y)
 LUARET2(you_pos, number, you.pos().x, you.pos().y)
 
 LUARET1(you_see_cell, boolean,
-        you.see_cell(coord_def(luaL_checkint(ls, 1), luaL_checkint(ls, 2))))
+        you.see_cell(coord_def(luaL_safe_checkint(ls, 1), luaL_safe_checkint(ls, 2))))
 LUARET1(you_see_cell_no_trans, boolean,
-        you.see_cell_no_trans(coord_def(luaL_checkint(ls, 1), luaL_checkint(ls, 2))))
+        you.see_cell_no_trans(coord_def(luaL_safe_checkint(ls, 1), luaL_safe_checkint(ls, 2))))
 
 LUAFN(you_stop_running)
 {
@@ -1294,7 +1294,7 @@ LUAFN(you_stop_running)
 
 LUAFN(you_moveto)
 {
-    const coord_def place(luaL_checkint(ls, 1), luaL_checkint(ls, 2));
+    const coord_def place(luaL_safe_checkint(ls, 1), luaL_safe_checkint(ls, 2));
     ASSERT(map_bounds(place));
     you.moveto(place);
     return 0;
@@ -1302,7 +1302,7 @@ LUAFN(you_moveto)
 
 LUAFN(you_teleport_to)
 {
-    const coord_def place(luaL_checkint(ls, 1), luaL_checkint(ls, 2));
+    const coord_def place(luaL_safe_checkint(ls, 1), luaL_safe_checkint(ls, 2));
     bool move_monsters = false;
     if (lua_gettop(ls) == 3)
         move_monsters = lua_toboolean(ls, 3);
@@ -1355,7 +1355,7 @@ static int _you_piety(lua_State *ls)
 {
     if (lua_gettop(ls) >= 1)
     {
-        const int new_piety = min(max(luaL_checkint(ls, 1), 0), MAX_PIETY);
+        const int new_piety = min(max(luaL_safe_checkint(ls, 1), 0), MAX_PIETY);
         set_piety(new_piety);
     }
     PLUARET(number, you.piety);
@@ -1363,15 +1363,15 @@ static int _you_piety(lua_State *ls)
 
 static int you_dock_piety(lua_State *ls)
 {
-    const int piety_loss = luaL_checkint(ls, 1);
-    const int penance = luaL_checkint(ls, 2);
+    const int piety_loss = luaL_safe_checkint(ls, 1);
+    const int penance = luaL_safe_checkint(ls, 2);
     dock_piety(piety_loss, penance);
     return 0;
 }
 
 static int you_lose_piety(lua_State *ls)
 {
-    const int piety_loss = luaL_checkint(ls, 1);
+    const int piety_loss = luaL_safe_checkint(ls, 1);
     lose_piety(piety_loss);
     return 0;
 }
@@ -1415,7 +1415,7 @@ LUAFN(_you_at_branch_bottom)
     PLUARET(boolean, at_branch_bottom());
 }
 
-LUAWRAP(you_gain_exp, gain_exp(luaL_checkint(ls, 1)))
+LUAWRAP(you_gain_exp, gain_exp(luaL_safe_checkint(ls, 1)))
 
 LUAFN(you_mutate)
 {
@@ -1489,7 +1489,7 @@ LUAFN(you_change_species)
 #ifdef WIZARD
 LUAFN(you_set_xl)
 {
-    const int newxl = luaL_checkint(ls, 1);
+    const int newxl = luaL_safe_checkint(ls, 1);
     bool train = lua_toboolean(ls, 2); // whether to train skills
     if (newxl < 1 || newxl > you.get_max_xl())
     {
@@ -1524,7 +1524,7 @@ LUAFN(you_init)
     PLUARET(string, skill_name(item_attack_skill(OBJ_WEAPONS, ng.weapon)));
 }
 
-LUARET1(you_exp_needed, number, exp_needed(luaL_checkint(ls, 1)))
+LUARET1(you_exp_needed, number, exp_needed(luaL_safe_checkint(ls, 1)))
 LUAWRAP(you_exercise, exercise(str_to_skill(luaL_checkstring(ls, 1)), 1))
 LUARET1(you_skill_cost_level, number, you.skill_cost_level)
 LUARET1(you_skill_points, number,

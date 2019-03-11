@@ -63,7 +63,7 @@ static int crawl_mpr(lua_State *ls)
 
     int ch = MSGCH_PLAIN;
     if (lua_isnumber(ls, 2))
-        ch = luaL_checkint(ls, 2);
+        ch = luaL_safe_checkint(ls, 2);
     else
     {
         const char *channel = lua_tostring(ls, 2);
@@ -94,7 +94,7 @@ static int crawl_formatted_mpr(lua_State *ls)
 
     int ch = MSGCH_PLAIN;
     if (lua_isnumber(ls, 2))
-        ch = luaL_checkint(ls, 2);
+        ch = luaL_safe_checkint(ls, 2);
     else
     {
         const char *channel = lua_tostring(ls, 2);
@@ -139,7 +139,7 @@ LUAFN(crawl_dpr)
  * @tparam int ms delay in milliseconds
  * @function delay
  */
-LUAWRAP(crawl_delay, delay(luaL_checkint(ls, 1)))
+LUAWRAP(crawl_delay, delay(luaL_safe_checkint(ls, 1)))
 /*** Display a `--- more ---` prompt
  * @function more
  */
@@ -319,7 +319,7 @@ static void crawl_sendkeys_proc(lua_State *ls, int argi)
         }
     }
     else if (lua_isnumber(ls, argi))
-        macro_sendkeys_end_add_expanded(luaL_checkint(ls, argi));
+        macro_sendkeys_end_add_expanded(luaL_safe_checkint(ls, argi));
 }
 
 /*** Send keypresses to crawl.
@@ -627,7 +627,7 @@ static int crawl_msgch_num(lua_State *ls)
  */
 static int crawl_msgch_name(lua_State *ls)
 {
-    int num = luaL_checkint(ls, 1);
+    int num = luaL_safe_checkint(ls, 1);
     string name = channel_to_str(num);
     lua_pushstring(ls, name.c_str());
     return 1;
@@ -651,7 +651,7 @@ static int crawl_take_note(lua_State *ls)
  */
 static int crawl_messages(lua_State *ls)
 {
-    const int count = luaL_checkint(ls, 1);
+    const int count = luaL_safe_checkint(ls, 1);
     lua_pushstring(ls, get_last_messages(count).c_str());
     return 1;
 }
@@ -745,7 +745,7 @@ static int crawl_message_filter(lua_State *ls)
     if (!pattern)
         return 0;
 
-    int num = lua_isnumber(ls, 2)? luaL_checkint(ls, 2) : -1;
+    int num = lua_isnumber(ls, 2)? luaL_safe_checkint(ls, 2) : -1;
     message_filter **mf =
             clua_new_userdata< message_filter* >(ls, MESSF_METATABLE);
     if (mf)
@@ -770,7 +770,7 @@ static int crawl_messf_matches(lua_State *ls)
         return 0;
 
     const char *pattern = luaL_checkstring(ls, 2);
-    int ch = luaL_checkint(ls, 3);
+    int ch = luaL_safe_checkint(ls, 3);
     if (pattern)
     {
         bool filt = (*mf)->is_filtered(ch, pattern);
@@ -913,13 +913,13 @@ LUARET1(crawl_stat_gain_prompt, boolean, crawl_state.stat_gain_prompt)
  * @treturn int
  * @function random2
  * */
-LUARET1(crawl_random2, number, random2(luaL_checkint(ls, 1)))
+LUARET1(crawl_random2, number, random2(luaL_safe_checkint(ls, 1)))
 /*** Perform a weighted coinflip.
  * @tparam int in
  * @treturn boolean
  * @function one_chance_in
  */
-LUARET1(crawl_one_chance_in, boolean, one_chance_in(luaL_checkint(ls, 1)))
+LUARET1(crawl_one_chance_in, boolean, one_chance_in(luaL_safe_checkint(ls, 1)))
 /*** Average num random rolls from [0, max).
  * @tparam int max
  * @tparam int num
@@ -927,7 +927,7 @@ LUARET1(crawl_one_chance_in, boolean, one_chance_in(luaL_checkint(ls, 1)))
  * @function random2avg
  */
 LUARET1(crawl_random2avg, number,
-        random2avg(luaL_checkint(ls, 1), luaL_checkint(ls, 2)))
+        random2avg(luaL_safe_checkint(ls, 1), luaL_safe_checkint(ls, 2)))
 /*** Random number in a range.
  * @tparam int min
  * @tparam int max
@@ -935,8 +935,8 @@ LUARET1(crawl_random2avg, number,
  * @function random_range
  */
 LUARET1(crawl_random_range, number,
-        random_range(luaL_checkint(ls, 1), luaL_checkint(ls, 2),
-                      lua_isnumber(ls, 3)? luaL_checkint(ls, 3) : 1))
+        random_range(luaL_safe_checkint(ls, 1), luaL_safe_checkint(ls, 2),
+                      lua_isnumber(ls, 3)? luaL_safe_checkint(ls, 3) : 1))
 /*** Flip a coin.
  * @treturn boolean
  * @function coinflip
@@ -950,24 +950,24 @@ LUARET1(crawl_coinflip, boolean, coinflip())
  */
 LUARET1(crawl_roll_dice, number,
         lua_gettop(ls) == 1
-        ? roll_dice(1, luaL_checkint(ls, 1))
-        : roll_dice(luaL_checkint(ls, 1), luaL_checkint(ls, 2)))
+        ? roll_dice(1, luaL_safe_checkint(ls, 1))
+        : roll_dice(luaL_safe_checkint(ls, 1), luaL_safe_checkint(ls, 2)))
 /*** Do a random draw.
  * @tparam int x
  * @tparam int y
  * @treturn boolean
  * @function x_chance_in_y
  */
-LUARET1(crawl_x_chance_in_y, boolean, x_chance_in_y(luaL_checkint(ls, 1),
-                                                    luaL_checkint(ls, 2)))
+LUARET1(crawl_x_chance_in_y, boolean, x_chance_in_y(luaL_safe_checkint(ls, 1),
+                                                    luaL_safe_checkint(ls, 2)))
 /*** Random-round integer division.
  * @tparam int numerator
  * @tparam int denominator
  * @treturn int
  * @function div_rand_round
  */
-LUARET1(crawl_div_rand_round, number, div_rand_round(luaL_checkint(ls, 1),
-                                                     luaL_checkint(ls, 2)))
+LUARET1(crawl_div_rand_round, number, div_rand_round(luaL_safe_checkint(ls, 1),
+                                                     luaL_safe_checkint(ls, 2)))
 /*** A random floating point number in [0,1.0)
  * @treturn number
  * @function random_real
@@ -1188,8 +1188,8 @@ static int crawl_get_command(lua_State *ls)
 }
 
 LUAWRAP(crawl_endgame, screen_end_game(luaL_checkstring(ls, 1)))
-LUAWRAP(crawl_tutorial_hunger, set_tutorial_hunger(luaL_checkint(ls, 1)))
-LUAWRAP(crawl_tutorial_skill, set_tutorial_skill(luaL_checkstring(ls, 1), luaL_checkint(ls, 2)))
+LUAWRAP(crawl_tutorial_hunger, set_tutorial_hunger(luaL_safe_checkint(ls, 1)))
+LUAWRAP(crawl_tutorial_skill, set_tutorial_skill(luaL_checkstring(ls, 1), luaL_safe_checkint(ls, 2)))
 LUAWRAP(crawl_tutorial_hint, tutorial_init_hint(luaL_checkstring(ls, 1)))
 LUAWRAP(crawl_print_hint, print_hint(luaL_checkstring(ls, 1)))
 
@@ -1600,7 +1600,7 @@ LUAFN(_crawl_god_speaks)
  */
 LUAFN(_crawl_set_max_runes)
 {
-    int max_runes = luaL_checkinteger(ls, 1);
+    int max_runes = luaL_safe_checkint(ls, 1);
     if (max_runes < 0 || max_runes > NUM_RUNE_TYPES)
         luaL_error(ls, make_stringf("Bad number of max runes: %d", max_runes).c_str());
     else
