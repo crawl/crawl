@@ -173,7 +173,7 @@ static int dgn_set_random_mon_list(lua_State *ls)
 
 static int dgn_mons_from_mid(lua_State *ls)
 {
-    const int mid = luaL_checkint(ls, 1);
+    const int mid = luaL_safe_checkint(ls, 1);
 
     monster* mons = monster_by_mid(mid);
 

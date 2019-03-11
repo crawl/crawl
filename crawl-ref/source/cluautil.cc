@@ -106,3 +106,22 @@ int clua_pushpoint(lua_State *ls, const coord_def &pos)
     }
     return 1;
 }
+
+// these next two functions provide safe conversions to integers that will have
+// stable behavior cross-platform. The lua 5.1 built-in conversions may not
+// have stable behavior on all platforms if crawl is linked with a system lua
+// library, because the technique it uses for doing this conversion is different
+// depending on where that library was compiled.
+lua_Integer luaL_safe_checkinteger(lua_State *L, int idx)
+{
+    lua_Number r = luaL_checknumber(L, idx);
+    // intentional use of C cast to mimic luaconf.h behavior
+    return (lua_Integer)(r);
+}
+
+lua_Integer luaL_safe_tointeger(lua_State *L, int idx)
+{
+    lua_Number r = lua_tonumber(L, idx);
+    // intentional use of C cast to mimic luaconf.h behavior
+    return (lua_Integer)(r);
+}

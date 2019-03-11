@@ -31,7 +31,7 @@ static int _table_int(lua_State *ls, int idx, const char *name, int defval)
     bool valid = lua_isnumber(ls, idx);
     if (!nil && !valid)
         luaL_error(ls, "'%s' in table, but not an int.", name);
-    int ret = (!nil && valid ? luaL_checkint(ls, idx) : defval);
+    int ret = (!nil && valid ? luaL_safe_checkint(ls, idx) : defval);
     lua_pop(ls, 1);
     return ret;
 }
@@ -103,7 +103,7 @@ static bool _table_bool(lua_State *ls, int idx, const char *name, bool defval)
 #define TABLE_BOOL(ls, val, def) bool val = _table_bool(ls, -1, #val, def);
 
 #define ARG_INT(ls, num, val, def) int val = lua_isnone(ls, num) ? \
-                                             def : lua_tointeger(ls, num)
+                                             def : luaL_safe_tointeger(ls, num)
 
 // Read a set of box coords (x1, y1, x2, y2) from the table.
 // Return true if coords are valid.
@@ -277,7 +277,7 @@ static vector<char> _pool_fill_glyphs_from_table(lua_State *ls,
                 // we use first character of string as glyph
                 char glyph = (lua_tostring(ls, -2))[0];
 
-                int count = lua_tointeger(ls, -1);
+                int count = luaL_safe_tointeger(ls, -1);
                 // sanity-check
                 if (count > 10000)
                     count = 10000;

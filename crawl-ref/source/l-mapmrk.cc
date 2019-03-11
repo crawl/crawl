@@ -17,7 +17,7 @@ static int mapmarker_pos(lua_State *ls)
 static int mapmarker_move(lua_State *ls)
 {
     MAPMARKER(ls, 1, mark);
-    const coord_def dest(luaL_checkint(ls, 2), luaL_checkint(ls, 3));
+    const coord_def dest(luaL_safe_checkint(ls, 2), luaL_safe_checkint(ls, 3));
     env.markers.move_marker(mark, dest);
     return 0;
 }

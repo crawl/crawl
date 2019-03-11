@@ -21,7 +21,7 @@
         } \
         else if (lua_isnumber(ls, 1)) \
              lua_pushboolean(ls, val(static_cast<dungeon_feature_type>( \
-                                                luaL_checkint(ls, 1)))); \
+                                                luaL_safe_checkint(ls, 1)))); \
         else if (lua_isstring(ls, 1)) \
             lua_pushboolean(ls, val(dungeon_feature_by_name(\
                                                 luaL_checkstring(ls, 1))));\
