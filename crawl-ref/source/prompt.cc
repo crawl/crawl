@@ -4,6 +4,7 @@
  **/
 
 #include "AppHdr.h"
+#include <math.h> // isnan
 
 #include "prompt.h"
 
@@ -345,7 +346,7 @@ double prompt_for_float(const char* prompt)
     char *end;
     double ret = strtod(specs, &end);
 
-    if (ret == 0 && end == specs)
+    if (ret == 0 && end == specs || isnan(ret))
         ret = -1;
 
     return ret;
