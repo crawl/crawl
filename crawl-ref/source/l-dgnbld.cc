@@ -1383,13 +1383,27 @@ LUAFN(dgn_widen_paths)
     if (y2 >= lines.height() - 1)
         y2 = lines.height() - 2;
 
-    float antifraction_each = 1.0 - percent / 100.0f;
-    float antifraction_current = 1.0;
-    int percent_for_neighbours[9];
-    for (int i = 0; i < 9; i++)
+    vector<int> percent_for_neighbours;
+    // these cases are temporary, to keep a particular seed stable for a bit...
+    // They mimic some floating point quirks of the previous version.
+    // there's one more case in gehenna that I didn't bother with.
+    if (percent == 30)
+        percent_for_neighbours = {0, 30, 52, 66, 76, 84, 89, 92, 95};
+    else if (percent == 50)
+        percent_for_neighbours = {0, 50, 75, 88, 94, 97, 99, 100, 100};
+    else
     {
-        percent_for_neighbours[i] = 100 - (int)(antifraction_current * 100);
-        antifraction_current *= antifraction_each;
+        const long antifraction_each = 10 - percent / 10; // truncates...
+        long antifraction_current = 10 * antifraction_each;
+        long divisor = 1;
+        percent_for_neighbours.push_back(0);
+        for (int i = 1; i < 9; i++)
+        {
+            percent_for_neighbours.push_back(
+                100 - antifraction_current / divisor);
+            antifraction_current *= antifraction_each;
+            divisor *= 10;
+        }
     }
 
     // We do not replace this as we go to avoid favouring some directions.
