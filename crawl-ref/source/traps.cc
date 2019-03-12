@@ -1368,7 +1368,7 @@ void roll_trap_effects()
 }
 
 /***
- * Separate from the previous function so the trap triggers when crawl is in an
+ * Separate from roll_trap_effects so the trap triggers when crawl is in an
  * appropriate state
  */
 void do_trap_effects()
