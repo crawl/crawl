@@ -1374,34 +1374,45 @@ void roll_trap_effects()
 void do_trap_effects()
 {
     // Try to shaft, teleport, or alarm the player.
-    int roll = random2(3);
-    switch (roll)
+
+    // We figure out which possibilites are allowed before picking which happens
+    // so that the overall chance of being trapped doesn't depend on which
+    // possibilities are allowed.
+
+    // Teleport effects are allowed everywhere, no need to check
+    vector<trap_type> available_traps = { TRAP_TELEPORT };
+    // Don't shaft the player when shafts aren't allowed in the location or when
+    //  it would be into a dangerous end.
+    if (is_valid_shaft_effect_level())
+        available_traps.push_back(TRAP_SHAFT);
+    // No alarms on the first 3 floors
+    if (env.absdepth0 > 3)
+        available_traps.push_back(TRAP_ALARM);
+
+    switch (*random_iterator(available_traps))
     {
-        case 0:
-            // Don't shaft the player when we can't, and also when it would be into a
-            // dangerous end.
-            if (is_valid_shaft_effect_level())
-            {
-                dprf("Attempting to shaft player.");
-                you.do_shaft();
-            }
+        case TRAP_SHAFT:
+            dprf("Attempting to shaft player.");
+            you.do_shaft();
             break;
-        case 1:
-            // No alarms on the first 3 floors
-            if (env.absdepth0 > 3)
-            {
-                // Alarm effect alarms are always noisy, even if the player is
-                // silenced, to avoid "travel only while silenced" behavior.
-                // XXX: improve messaging to make it clear theres a wail outside of the
-                // player's silence
-                mprf("You set off the alarm!");
-                fake_noisy(40, you.pos());
-                you.sentinel_mark(true);
-            }
+
+        case TRAP_ALARM:
+            // Alarm effect alarms are always noisy, even if the player is
+            // silenced, to avoid "travel only while silenced" behavior.
+            // XXX: improve messaging to make it clear theres a wail outside of the
+            // player's silence
+            mprf("You set off the alarm!");
+            fake_noisy(40, you.pos());
+            you.sentinel_mark(true);
             break;
-        case 2:
-            // Teleportitis
+
+        case TRAP_TELEPORT:
             you_teleport_now(false, true, "You stumble into a teleport trap!");
+            break;
+
+        // Other cases shouldn't be possible, but having a default here quiets
+        // compiler warnings
+        default:
             break;
     }
 }
