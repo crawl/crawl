@@ -82,6 +82,12 @@ uint32_t get_uint32()
     return get_uint32(_generator);
 }
 
+uint32_t peek_uint32()
+{
+    PcgRNG tmp = rngs[_generator];
+    return tmp.get_uint32();
+}
+
 uint64_t get_uint64(rng_type generator)
 {
     return rngs[generator].get_uint64();
