@@ -32,6 +32,7 @@ uint32_t get_uint32(rng_type generator);
 uint64_t get_uint64(rng_type generator);
 uint32_t get_uint32();
 uint64_t get_uint64();
+uint32_t peek_uint32();
 bool coinflip();
 int div_rand_round(int num, int den);
 int rand_round(double x);
