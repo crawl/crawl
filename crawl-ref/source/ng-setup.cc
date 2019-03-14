@@ -383,6 +383,8 @@ void setup_game(const newgame_def& ng)
         Options.seed = Options.seed_from_rc;
         crawl_state.type = GAME_TYPE_CUSTOM_SEED;
     }
+    else if (Options.seed && ng.type == GAME_TYPE_NORMAL)
+        Options.seed = 0;
     else if (!Options.seed && ng.type == GAME_TYPE_CUSTOM_SEED)
         crawl_state.type = GAME_TYPE_NORMAL;
     else
