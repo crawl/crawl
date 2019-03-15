@@ -239,4 +239,6 @@ void swap_inv_slots(int from_slot, int to_slot, bool verbose)
         if (to_count > 0)
             last_pickup[from_slot] = to_count;
     }
+    if (you.last_unequip == from_slot)
+        you.last_unequip = to_slot;
 }

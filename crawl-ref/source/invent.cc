@@ -349,6 +349,14 @@ void InvMenu::set_title(const string &s)
                            title_annotate));
 }
 
+int InvMenu::pre_process(int key)
+{
+    if (type == menu_type::drop || type == menu_type::invlist)
+        if (key == ';' && you.last_unequip != -1)
+            key = index_to_letter(you.last_unequip);
+    return key;
+}
+
 static bool _has_melded_armour()
 {
     for (int e = EQ_CLOAK; e <= EQ_BODY_ARMOUR; e++)
@@ -1357,6 +1365,11 @@ vector<SelItem> prompt_drop_items(const vector<SelItem> &preselected_items)
             else
                 break;
         }
+        else if (keyin == ';')
+        {
+            ret = you.last_unequip;
+            break;
+        }
         else if (!isspace(keyin))
         {
             // We've got a character we don't understand...
@@ -1942,6 +1955,11 @@ int prompt_invent_item(const char *prompt,
             }
             else if (!do_warning || check_warning_inscriptions(you.inv[ret], oper))
                 break;
+        }
+        else if (keyin == ';')
+        {
+            ret = you.last_unequip;
+            break;
         }
         else if (!isspace(keyin))
         {
