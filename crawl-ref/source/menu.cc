@@ -1194,7 +1194,7 @@ bool Menu::process_key(int keyin)
         if (!page_down() && is_set(MF_WRAP))
             m_ui.scroller->set_scroll(0);
         break;
-    case CK_PGUP: case '<': case ';':
+    case CK_PGUP: case '<':
         page_up();
         break;
     case CK_UP:

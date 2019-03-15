@@ -737,6 +737,10 @@ In order to get a description of what an item does, bring up the inventory (with
 of armours and weapons, but don't expect too much information from examining
 unidentified items.
 
+In most equipment-related prompts and menus, the ';' key is a shortcut for
+"last unequipped item," meaning the armour, jewellery or weapon you most
+recently took off or unwielded.
+
 Another useful command is the '{' key, which lets you inscribe items with a
 comment. You can also inscribe items when looking at your inventory with 'i',
 simply by pressing the letter of an item. For more details, and how to automate
@@ -2675,6 +2679,10 @@ will deselect it (except for ',' and '-', obviously).
   Selects next item. (If you have pressed the key of an item in the list, '.'
   will toggle the next item. This can be repeated, quickly selecting several
   subsequent items).
+
+;
+  Select last unequipped. Selects the equipment (armour, jewellery, or weapon)
+  you last took off or unwielded.
 
 Level map ('X')
 ========================================

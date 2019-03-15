@@ -22,8 +22,9 @@ You can quickly select items by type by pressing:
 <w>/</w>   wands        <w>|</w>   magical staves <w>?</w>   scrolls         <w>:</w>   books
 <w>"</w>   amulets      <w>=</w>   rings          <w>}</w>   miscellaneous   <w>%</w>   food
 Global selects:  <w>,</w>   select all     <w>*</w>   invert all      <w>-</w>   deselect all
+                 <w>;</w>   select last unequipped
 Note that for dropping, the <w>,</w> command uses the <w>drop_filter</w> option, which
-narrows the range of items to be (de)selected. The default are useless items.
+narrows the range of items to be (de)selected. The default is to select useless items.
 %%%%
 known-menu
 

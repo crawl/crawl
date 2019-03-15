@@ -2629,6 +2629,8 @@ bool drop_item(int item_dropped, int quant_drop)
     you.turn_is_over = true;
 
     you.last_pickup.erase(item_dropped);
+    if (you.last_unequip == item.link)
+        you.last_unequip = -1;
 
     return true;
 }

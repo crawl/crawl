@@ -83,6 +83,7 @@ bool unequip_item(equipment_type slot, bool msg)
         else
             you.melded.set(slot, false);
         ash_check_bondage();
+        you.last_unequip = item_slot;
         return true;
     }
 }
