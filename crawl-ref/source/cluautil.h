@@ -11,6 +11,12 @@ extern "C" {
 #include <lualib.h>
 }
 
+lua_Integer luaL_safe_checkinteger(lua_State *L, int idx);
+lua_Integer luaL_safe_tointeger(lua_State *L, int idx);
+// override some #defines in the lua libs.
+#define luaL_safe_checkint(L,n)    ((int)luaL_safe_checkinteger(L, (n)))
+#define luaL_safe_checklong(L,n)   ((long)luaL_safe_checkinteger(L, (n)))
+
 /*
  * Function definitions.
  */
@@ -145,8 +151,8 @@ level_id dlua_level_id(lua_State *ls, int ndx);
 
 #define GETCOORD(c, p1, p2, boundfn)                      \
     coord_def c;                                          \
-    c.x = luaL_checkint(ls, p1);                          \
-    c.y = luaL_checkint(ls, p2);                          \
+    c.x = luaL_safe_checkint(ls, p1);                          \
+    c.y = luaL_safe_checkint(ls, p2);                          \
     if (!boundfn(c))                                        \
         luaL_error(                                          \
             ls,                                                 \

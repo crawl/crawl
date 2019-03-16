@@ -21,8 +21,8 @@
 #include "view.h"
 
 #define PLAYERCOORDS(p, p1, p2) \
-    const coord_def p = player2grid(coord_def(luaL_checkint(ls,p1), \
-                                              luaL_checkint(ls,p2)));
+    const coord_def p = player2grid(coord_def(luaL_safe_checkint(ls,p1), \
+                                              luaL_safe_checkint(ls,p2)));
 
 /*** What is the feature here?
  * @tparam int x

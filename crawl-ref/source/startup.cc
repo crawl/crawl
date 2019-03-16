@@ -1385,6 +1385,8 @@ bool startup_step()
         clear_message_store();
         setup_game(ng);
         newchar = true;
+        choice.seed = Options.seed; // kind of ugly, but may be changed during
+                                    // setup_game.
         write_newgame_options_file(choice);
     }
     crawl_state.default_startup_name = you.your_name;

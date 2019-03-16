@@ -36,7 +36,7 @@ static int file_marshall(lua_State *ls)
     writer &th(*static_cast<writer*>(lua_touserdata(ls, 1)));
     ASSERT(!lua_isfunction(ls, 2));
     if (lua_isnumber(ls, 2))
-        marshallInt(th, luaL_checklong(ls, 2));
+        marshallInt(th, luaL_safe_checklong(ls, 2));
     else if (lua_isboolean(ls, 2))
         marshallByte(th, lua_toboolean(ls, 2));
     else if (lua_isstring(ls, 2))

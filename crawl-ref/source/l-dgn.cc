@@ -129,7 +129,7 @@ static int dgn_desc(lua_State *ls)
 static int dgn_order(lua_State *ls)
 {
     MAP(ls, 1, map);
-    map->order = luaL_checkint(ls, 2);
+    map->order = luaL_safe_checkint(ls, 2);
     PLUARET(number, map->order);
 }
 
@@ -183,7 +183,7 @@ static int dgn_chance(lua_State *ls)
     MAP(ls, 1, map);
     if (lua_isnumber(ls, 2))
     {
-        const int chance = luaL_checkint(ls, 2);
+        const int chance = luaL_safe_checkint(ls, 2);
         _chance_magnitude_check(ls, 2, chance);
         map->_chance.set_default(map_chance(chance));
     }
@@ -194,7 +194,7 @@ static int dgn_depth_chance(lua_State *ls)
 {
     MAP(ls, 1, map);
     const string depth(luaL_checkstring(ls, 2));
-    const int chance = luaL_checkint(ls, 3);
+    const int chance = luaL_safe_checkint(ls, 3);
     _chance_magnitude_check(ls, 3, chance);
     try
     {
@@ -208,7 +208,7 @@ static int dgn_depth_chance(lua_State *ls)
 }
 
 #define WEIGHT(ls, n, weight) \
-    const int weight = luaL_checkint(ls, n); \
+    const int weight = luaL_safe_checkint(ls, n); \
     if (weight < 0)                          \
         luaL_error(ls, "Bad weight: %d (must be >= 0)", weight);
 
@@ -330,8 +330,8 @@ static int dgn_map(lua_State *ls)
     // resolved and normalised.
     if (lua_gettop(ls) == 3 && lua_isnumber(ls, 2) && lua_isnumber(ls, 3))
     {
-        const int gly = map->map.glyph(luaL_checkint(ls, 2),
-                                       luaL_checkint(ls, 3));
+        const int gly = map->map.glyph(luaL_safe_checkint(ls, 2),
+                                       luaL_safe_checkint(ls, 3));
         char buf[2] = "";
         buf[0] = gly;
         lua_pushstring(ls, buf);
@@ -345,7 +345,7 @@ static int dgn_map(lua_State *ls)
     }
 
     vector<string> &lines = map->map.get_lines();
-    int which_line = luaL_checkint(ls, 2);
+    int which_line = luaL_safe_checkint(ls, 2);
     if (which_line < 0)
         which_line += (int) lines.size();
     if (lua_gettop(ls) == 2)
@@ -410,7 +410,7 @@ static int dgn_mons(lua_State *ls)
         return 0;
     }
 
-    const int index = luaL_checkint(ls, 2);
+    const int index = luaL_safe_checkint(ls, 2);
     string err = map->mons.set_mons(index, luaL_checkstring(ls, 3));
     if (!err.empty())
         luaL_error(ls, err.c_str());
@@ -437,7 +437,7 @@ static int dgn_item(lua_State *ls)
         return 0;
     }
 
-    const int index = luaL_checkint(ls, 2);
+    const int index = luaL_safe_checkint(ls, 2);
     string err = map->items.set_item(index, luaL_checkstring(ls, 3));
     if (!err.empty())
         luaL_error(ls, err.c_str());
@@ -588,12 +588,12 @@ static int dgn_map_pathfind(lua_State *ls, int minargs,
 
     for (int i = 4; i < nargs; i += 2)
     {
-        const coord_def c(luaL_checkint(ls, i),
-                          luaL_checkint(ls, i + 1));
+        const coord_def c(luaL_safe_checkint(ls, i),
+                          luaL_safe_checkint(ls, i + 1));
         finder.add_point(c);
     }
 
-    const coord_def pos(luaL_checkint(ls, 2), luaL_checkint(ls, 3));
+    const coord_def pos(luaL_safe_checkint(ls, 2), luaL_safe_checkint(ls, 3));
     PLUARET(boolean, (finder.*f)(pos));
 }
 
@@ -735,7 +735,7 @@ static int _lua_colour(lua_State *ls, int ndx,
                        int forbidden_colour = -1)
 {
     if (lua_isnumber(ls, ndx))
-        return lua_tointeger(ls, ndx);
+        return luaL_safe_tointeger(ls, ndx);
     else if (const char *s = luaL_checkstring(ls, ndx))
     {
         const int colour = str_to_colour(s, -1, false, true);
@@ -801,15 +801,15 @@ static int dgn_colour_at(lua_State *ls)
 
 static int dgn_register_listener(lua_State *ls)
 {
-    unsigned mask = luaL_checkint(ls, 1);
+    unsigned mask = luaL_safe_checkint(ls, 1);
     MAPMARKER(ls, 2, mark);
     map_lua_marker *listener = dynamic_cast<map_lua_marker*>(mark);
     coord_def pos;
     // Was a position supplied?
     if (lua_gettop(ls) == 4)
     {
-        pos.x = luaL_checkint(ls, 3);
-        pos.y = luaL_checkint(ls, 4);
+        pos.x = luaL_safe_checkint(ls, 3);
+        pos.y = luaL_safe_checkint(ls, 4);
     }
 
     dungeon_events.register_listener(mask, listener, pos);
@@ -824,8 +824,8 @@ static int dgn_remove_listener(lua_State *ls)
     // Was a position supplied?
     if (lua_gettop(ls) == 3)
     {
-        pos.x = luaL_checkint(ls, 2);
-        pos.y = luaL_checkint(ls, 3);
+        pos.x = luaL_safe_checkint(ls, 2);
+        pos.y = luaL_safe_checkint(ls, 3);
     }
     dungeon_events.remove_listener(listener, pos);
     return 0;
@@ -858,15 +858,15 @@ static int dgn_terrain_changed(lua_State *ls)
 {
     dungeon_feature_type type = DNGN_UNSEEN;
     if (lua_isnumber(ls, 3))
-        type = static_cast<dungeon_feature_type>(luaL_checkint(ls, 3));
+        type = static_cast<dungeon_feature_type>(luaL_safe_checkint(ls, 3));
     else if (lua_isstring(ls, 3))
         type = dungeon_feature_by_name(lua_tostring(ls, 3));
     const bool preserve_features =
         lua_isboolean(ls, 4)? lua_toboolean(ls, 4) : true;
     const bool preserve_items =
         lua_isboolean(ls, 5)? lua_toboolean(ls, 5) : true;
-    dungeon_terrain_changed(coord_def(luaL_checkint(ls, 1),
-                                       luaL_checkint(ls, 2)),
+    dungeon_terrain_changed(coord_def(luaL_safe_checkint(ls, 1),
+                                       luaL_safe_checkint(ls, 2)),
                             type, preserve_features, preserve_items);
     return 0;
 }
@@ -876,11 +876,11 @@ static int dgn_fprop_changed(lua_State *ls)
     feature_property_type prop = FPROP_NONE;
 
     if (lua_isnumber(ls, 3))
-        prop = static_cast<feature_property_type>(luaL_checkint(ls, 3));
+        prop = static_cast<feature_property_type>(luaL_safe_checkint(ls, 3));
     else if (lua_isstring(ls, 3))
         prop = str_to_fprop(lua_tostring(ls, 3));
 
-    coord_def pos = coord_def(luaL_checkint(ls, 1), luaL_checkint(ls, 2));
+    coord_def pos = coord_def(luaL_safe_checkint(ls, 1), luaL_safe_checkint(ls, 2));
 
     if (in_bounds(pos) && prop != FPROP_NONE)
     {
@@ -908,11 +908,11 @@ static int dgn_fprop_at(lua_State *ls)
     feature_property_type prop = FPROP_NONE;
 
     if (lua_isnumber(ls, 3))
-        prop = static_cast<feature_property_type>(luaL_checkint(ls, 3));
+        prop = static_cast<feature_property_type>(luaL_safe_checkint(ls, 3));
     else if (lua_isstring(ls, 3))
         prop = str_to_fprop(lua_tostring(ls, 3));
 
-    coord_def pos = coord_def(luaL_checkint(ls, 1), luaL_checkint(ls, 2));
+    coord_def pos = coord_def(luaL_safe_checkint(ls, 1), luaL_safe_checkint(ls, 2));
 
     if (in_bounds(pos) && prop != FPROP_NONE)
         lua_pushboolean(ls, testbits(env.pgrid(pos), prop));
@@ -1076,9 +1076,9 @@ static int dgn_floor_halo(lua_State *ls)
 
 static int dgn_random_walk(lua_State *ls)
 {
-    const int x     = luaL_checkint(ls, 1);
-    const int y     = luaL_checkint(ls, 2);
-    const int dist = luaL_checkint(ls, 3);
+    const int x     = luaL_safe_checkint(ls, 1);
+    const int y     = luaL_safe_checkint(ls, 2);
+    const int dist = luaL_safe_checkint(ls, 3);
 
     if (!in_bounds(x, y))
     {
@@ -1116,20 +1116,20 @@ static kill_category dgn_kill_name_to_category(string name)
 
 static int dgn_apply_area_cloud(lua_State *ls)
 {
-    const int x         = luaL_checkint(ls, 1);
-    const int y         = luaL_checkint(ls, 2);
-    const int pow_min   = luaL_checkint(ls, 3);
-    const int pow_max   = luaL_checkint(ls, 4);
-    const int pow_rolls = luaL_checkint(ls, 5);
-    const int size      = luaL_checkint(ls, 6);
+    const int x         = luaL_safe_checkint(ls, 1);
+    const int y         = luaL_safe_checkint(ls, 2);
+    const int pow_min   = luaL_safe_checkint(ls, 3);
+    const int pow_max   = luaL_safe_checkint(ls, 4);
+    const int pow_rolls = luaL_safe_checkint(ls, 5);
+    const int size      = luaL_safe_checkint(ls, 6);
 
     const cloud_type ctype = cloud_name_to_type(luaL_checkstring(ls, 7));
     const char*      kname = lua_isstring(ls, 8) ? luaL_checkstring(ls, 8)
     : "";
     const kill_category kc = dgn_kill_name_to_category(kname);
 
-    const int spread_rate = lua_isnumber(ls, 9) ? luaL_checkint(ls, 9) : -1;
-    const int excl_rad = lua_isnumber(ls, 10) ? luaL_checkint(ls, 10) : -1;
+    const int spread_rate = lua_isnumber(ls, 9) ? luaL_safe_checkint(ls, 9) : -1;
+    const int excl_rad = lua_isnumber(ls, 10) ? luaL_safe_checkint(ls, 10) : -1;
 
     if (!in_bounds(x, y))
     {
@@ -1219,17 +1219,17 @@ static int dgn_delete_cloud(lua_State *ls)
 
 static int dgn_place_cloud(lua_State *ls)
 {
-    const int x         = luaL_checkint(ls, 1);
-    const int y         = luaL_checkint(ls, 2);
+    const int x         = luaL_safe_checkint(ls, 1);
+    const int y         = luaL_safe_checkint(ls, 2);
     const cloud_type ctype = cloud_name_to_type(luaL_checkstring(ls, 3));
-    const int cl_range      = luaL_checkint(ls, 4);
+    const int cl_range      = luaL_safe_checkint(ls, 4);
     const char*      kname = lua_isstring(ls, 5) ? luaL_checkstring(ls, 5)
     : "";
     const kill_category kc = dgn_kill_name_to_category(kname);
 
-    const int spread_rate = lua_isnumber(ls, 6) ? luaL_checkint(ls, 6) : -1;
+    const int spread_rate = lua_isnumber(ls, 6) ? luaL_safe_checkint(ls, 6) : -1;
 
-    const int excl_rad = lua_isnumber(ls, 7) ? luaL_checkint(ls, 7) : -1;
+    const int excl_rad = lua_isnumber(ls, 7) ? luaL_safe_checkint(ls, 7) : -1;
 
     if (!in_bounds(x, y))
     {
@@ -1272,7 +1272,7 @@ static int dgn_place_cloud(lua_State *ls)
 // XXX: Doesn't allow for messages or specifying the noise source.
 LUAFN(dgn_noisy)
 {
-    const int loudness = luaL_checkint(ls, 1);
+    const int loudness = luaL_safe_checkint(ls, 1);
     COORDS(pos, 2, 3);
 
     noisy(loudness, pos);
@@ -1282,10 +1282,10 @@ LUAFN(dgn_noisy)
 
 static int _dgn_place_transporter(lua_State *ls)
 {
-    const coord_def trans_pos = coord_def(luaL_checkint(ls, 1),
-                                         luaL_checkint(ls, 2));
-    const coord_def dest_pos = coord_def(luaL_checkint(ls, 3),
-                                        luaL_checkint(ls, 4));
+    const coord_def trans_pos = coord_def(luaL_safe_checkint(ls, 1),
+                                         luaL_safe_checkint(ls, 2));
+    const coord_def dest_pos = coord_def(luaL_safe_checkint(ls, 3),
+                                        luaL_safe_checkint(ls, 4));
 
     dgn_place_transporter(trans_pos, dest_pos);
     return 0;
@@ -1406,8 +1406,8 @@ LUAFN(dgn_with_map_anchors)
         {
             if (lua_isnumber(ls, i) && lua_isnumber(ls, i + 1))
             {
-                map_anchor_points.emplace_back(lua_tointeger(ls, i),
-                                               lua_tointeger(ls, i + 1));
+                map_anchor_points.emplace_back(luaL_safe_tointeger(ls, i),
+                                               luaL_safe_tointeger(ls, i + 1));
             }
         }
 
@@ -1503,7 +1503,7 @@ LUAFN(_dgn_place_map)
 LUAFN(_dgn_in_vault)
 {
     GETCOORD(c, 1, 2, map_bounds);
-    const int mask = lua_isnone(ls, 3) ? MMT_VAULT : lua_tointeger(ls, 3);
+    const int mask = lua_isnone(ls, 3) ? MMT_VAULT : luaL_safe_tointeger(ls, 3);
     lua_pushboolean(ls, env.level_map_mask(c) & mask);
     return 1;
 }
@@ -1511,7 +1511,7 @@ LUAFN(_dgn_in_vault)
 LUAFN(_dgn_set_map_mask)
 {
     GETCOORD(c, 1, 2, map_bounds);
-    const int mask = lua_isnone(ls, 3) ? MMT_VAULT : lua_tointeger(ls, 3);
+    const int mask = lua_isnone(ls, 3) ? MMT_VAULT : luaL_safe_tointeger(ls, 3);
     env.level_map_mask(c) |= mask;
     return 1;
 }
@@ -1519,7 +1519,7 @@ LUAFN(_dgn_set_map_mask)
 LUAFN(_dgn_unset_map_mask)
 {
     GETCOORD(c, 1, 2, map_bounds);
-    const int mask = lua_isnone(ls, 3) ? MMT_VAULT : lua_tointeger(ls, 3);
+    const int mask = lua_isnone(ls, 3) ? MMT_VAULT : luaL_safe_tointeger(ls, 3);
     env.level_map_mask(c) &= ~mask;
     return 1;
 }
@@ -1576,7 +1576,7 @@ LUAFN(_dgn_find_marker_positions_by_prop)
 {
     const char *prop = luaL_checkstring(ls, 1);
     const string value(lua_gettop(ls) >= 2 ? luaL_checkstring(ls, 2) : "");
-    const unsigned limit(lua_gettop(ls) >= 3 ? luaL_checkint(ls, 3) : 0);
+    const unsigned limit(lua_gettop(ls) >= 3 ? luaL_safe_checkint(ls, 3) : 0);
     const vector<coord_def> places = find_marker_positions_by_prop(prop, value,
                                                                    limit);
     clua_gentable(ls, places, clua_pushpoint);
@@ -1593,7 +1593,7 @@ LUAFN(_dgn_find_markers_by_prop)
 {
     const char *prop = luaL_checkstring(ls, 1);
     const string value(lua_gettop(ls) >= 2 ? luaL_checkstring(ls, 2) : "");
-    const unsigned limit(lua_gettop(ls) >= 3 ? luaL_checkint(ls, 3) : 0);
+    const unsigned limit(lua_gettop(ls) >= 3 ? luaL_safe_checkint(ls, 3) : 0);
     const vector<map_marker*> places = find_markers_by_prop(prop, value, limit);
     clua_gentable(ls, places, _push_mapmarker);
     return 1;
@@ -1601,8 +1601,8 @@ LUAFN(_dgn_find_markers_by_prop)
 
 LUAFN(_dgn_marker_at_pos)
 {
-    const int x = luaL_checkint(ls, 1);
-    const int y = luaL_checkint(ls, 2);
+    const int x = luaL_safe_checkint(ls, 1);
+    const int y = luaL_safe_checkint(ls, 2);
 
     coord_def p(x, y);
 
@@ -1665,7 +1665,7 @@ LUAFN(_dgn_reuse_map)
     const bool flip_vert = _lua_boolean(ls, 5, false);
 
     // 1 for clockwise, -1 for anticlockwise, 0 for no rotation.
-    const int rotate_dir = lua_isnone(ls, 6) ? 0 : luaL_checkint(ls, 6);
+    const int rotate_dir = lua_isnone(ls, 6) ? 0 : luaL_safe_checkint(ls, 6);
 
     const bool register_place = _lua_boolean(ls, 7, true);
     const bool register_vault = register_place && _lua_boolean(ls, 8, false);
@@ -1704,8 +1704,8 @@ LUAFN(_dgn_inspect_map)
 
     // Not using the COORDS macro because it checks against in_bounds which will fail 0,0 (!)
     coord_def c;
-    c.x = luaL_checkint(ls, 2);
-    c.y = luaL_checkint(ls, 3);
+    c.x = luaL_safe_checkint(ls, 2);
+    c.y = luaL_safe_checkint(ls, 3);
 
     lua_pushnumber(ls, vp.feature_at(c));
     lua_pushboolean(ls, vp.is_exit(c));
@@ -1717,10 +1717,10 @@ LUAWRAP(_dgn_reset_level, dgn_reset_level())
 
 LUAFN(dgn_fill_grd_area)
 {
-    int x1 = luaL_checkint(ls, 1);
-    int y1 = luaL_checkint(ls, 2);
-    int x2 = luaL_checkint(ls, 3);
-    int y2 = luaL_checkint(ls, 4);
+    int x1 = luaL_safe_checkint(ls, 1);
+    int y1 = luaL_safe_checkint(ls, 2);
+    int x2 = luaL_safe_checkint(ls, 3);
+    int y2 = luaL_safe_checkint(ls, 4);
     dungeon_feature_type feat = check_lua_feature(ls, 5);
 
     x1 = min(max(x1, X_BOUND_1+1), X_BOUND_2-1);

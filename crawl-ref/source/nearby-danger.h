@@ -91,6 +91,8 @@ struct path_less
     bool operator()(const set<position_node>::iterator & left,
                     const set<position_node>::iterator & right)
     {
+        if (left->total_dist() == right->total_dist())
+            return left->pos > right->pos;
         return left->total_dist() > right->total_dist();
     }
 };

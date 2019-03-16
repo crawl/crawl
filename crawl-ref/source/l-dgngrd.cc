@@ -22,7 +22,7 @@ static int dgn_feature_number(lua_State *ls)
 
 static int dgn_feature_name(lua_State *ls)
 {
-    const unsigned feat = luaL_checkint(ls, 1);
+    const unsigned feat = luaL_safe_checkint(ls, 1);
     PLUARET(string,
             dungeon_feature_name(static_cast<dungeon_feature_type>(feat)));
 }
@@ -32,7 +32,7 @@ static dungeon_feature_type _get_lua_feature(lua_State *ls, int idx,
 {
     dungeon_feature_type feat = (dungeon_feature_type)0;
     if (lua_isnumber(ls, idx))
-        feat = (dungeon_feature_type)luaL_checkint(ls, idx);
+        feat = (dungeon_feature_type)luaL_safe_checkint(ls, idx);
     else if (lua_isstring(ls, idx))
         feat = dungeon_feature_by_name(luaL_checkstring(ls, idx));
     else if (!optional)
@@ -55,10 +55,10 @@ dungeon_feature_type f = check_lua_feature(ls, pos)
 static int dgn_feature_desc(lua_State *ls)
 {
     const dungeon_feature_type feat =
-    static_cast<dungeon_feature_type>(luaL_checkint(ls, 1));
+    static_cast<dungeon_feature_type>(luaL_safe_checkint(ls, 1));
     const description_level_type dtype =
     lua_isnumber(ls, 2)?
-    static_cast<description_level_type>(luaL_checkint(ls, 2)) :
+    static_cast<description_level_type>(luaL_safe_checkint(ls, 2)) :
     description_type_by_name(lua_tostring(ls, 2));
     const bool need_stop = lua_isboolean(ls, 3)? lua_toboolean(ls, 3) : false;
     const string s = feature_description(feat, NUM_TRAPS, "", dtype, need_stop);
@@ -70,11 +70,11 @@ static int dgn_feature_desc_at(lua_State *ls)
 {
     const description_level_type dtype =
     lua_isnumber(ls, 3)?
-    static_cast<description_level_type>(luaL_checkint(ls, 3)) :
+    static_cast<description_level_type>(luaL_safe_checkint(ls, 3)) :
     description_type_by_name(lua_tostring(ls, 3));
     const bool need_stop = lua_isboolean(ls, 4)? lua_toboolean(ls, 4) : false;
-    const string s = feature_description_at(coord_def(luaL_checkint(ls, 1),
-                                                      luaL_checkint(ls, 2)),
+    const string s = feature_description_at(coord_def(luaL_safe_checkint(ls, 1),
+                                                      luaL_safe_checkint(ls, 2)),
                                             false, dtype, need_stop);
     lua_pushstring(ls, s.c_str());
     return 1;
@@ -89,8 +89,8 @@ static int dgn_max_bounds(lua_State *ls)
 
 static int dgn_in_bounds(lua_State *ls)
 {
-    int x = luaL_checkint(ls, 1);
-    int y = luaL_checkint(ls, 2);
+    int x = luaL_safe_checkint(ls, 1);
+    int y = luaL_safe_checkint(ls, 2);
 
     lua_pushboolean(ls, in_bounds(x, y));
     return 1;

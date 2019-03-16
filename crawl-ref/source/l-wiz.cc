@@ -30,7 +30,7 @@ LUAFN(wiz_quick_fsim)
         string err = make_stringf("No such monster: '%s'.", mon_name.c_str());
         return luaL_argerror(ls, 1, err.c_str());
     }
-    const int fsim_rounds = luaL_checkint(ls, 2);
+    const int fsim_rounds = luaL_safe_checkint(ls, 2);
 
     Options.fsim_mons = mon_name;
     Options.fsim_rounds = fsim_rounds;

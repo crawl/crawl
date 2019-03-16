@@ -45,7 +45,7 @@ LUAFN(debug_goto_place)
     {
         const level_id id = level_id::parse_level_id(luaL_checkstring(ls, 1));
         const int bind_entrance =
-            lua_isnumber(ls, 2)? luaL_checkint(ls, 2) : -1;
+            lua_isnumber(ls, 2)? luaL_safe_checkint(ls, 2) : -1;
 
         if (is_connected_branch(id.branch))
             you.level_stack.clear();
@@ -152,11 +152,11 @@ LUAFN(debug_bouncy_beam)
     coord_def source;
     coord_def target;
 
-    source.x = luaL_checkint(ls, 1);
-    source.y = luaL_checkint(ls, 2);
-    target.x = luaL_checkint(ls, 3);
-    target.y = luaL_checkint(ls, 4);
-    int range = luaL_checkint(ls, 5);
+    source.x = luaL_safe_checkint(ls, 1);
+    source.y = luaL_safe_checkint(ls, 2);
+    target.x = luaL_safe_checkint(ls, 3);
+    target.y = luaL_safe_checkint(ls, 4);
+    int range = luaL_safe_checkint(ls, 5);
     bool findray = false;
     if (lua_gettop(ls) > 5)
         findray = lua_toboolean(ls, 6);
@@ -410,7 +410,7 @@ LUAFN(debug_reset_rng)
     else
     {
         // quick and dirty - use only 32 bit seeds
-        unsigned int seed = (unsigned int) luaL_checkint(ls, 1);
+        unsigned int seed = (unsigned int) luaL_safe_checkint(ls, 1);
         Options.seed = (uint64_t) seed;
     }
     reset_rng();

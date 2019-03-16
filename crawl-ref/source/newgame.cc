@@ -694,6 +694,11 @@ static void _choose_seed(newgame_def& ng, newgame_def& choice,
             reader.set_text(timebuf);
             return done = false;
         }
+        else if (key == '-')
+        {
+            reader.set_text("");
+            return done = false;
+        }
 #ifdef USE_TILE_LOCAL
         else if ((key == 'p' || key == 'P') && wm->has_clipboard())
         {
@@ -714,7 +719,8 @@ static void _choose_seed(newgame_def& ng, newgame_def& choice,
         {
             if (key_is_escape(key))
                 return done = cancel = true;
-            return done = true;
+            if (reader.get_text().size() > 0)
+                return done = true;
         }
         return true;
     });
@@ -744,7 +750,7 @@ static void _choose_seed(newgame_def& ng, newgame_def& choice,
             "that you discover. Pregeneration will ensure that these remain\n"
             "the same no matter what order you explore the dungeon in. (See\n"
             "the manual for more details.)\n\n");
-        prompt.cprintf("Seed:");
+        prompt.cprintf("Seed ([-] to clear):");
         string seed_text = make_stringf("%-20s", buf);
         prompt.cprintf("\n%s\n\n", seed_text.c_str());
         prompt_ui->set_text(prompt);
