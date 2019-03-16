@@ -2176,14 +2176,18 @@ bool god_hates_brand(const int brand)
     return false;
 }
 
-static void _rebrand_weapon(item_def& wpn)
+static void _rebrand_weapon(item_def& wpn, item_def* scroll =nullptr)
 {
     if (&wpn == you.weapon() && you.duration[DUR_EXCRUCIATING_WOUNDS])
         end_weapon_brand(wpn);
     const brand_type old_brand = get_weapon_brand(wpn);
     brand_type new_brand = old_brand;
 
+    if (scroll != nullptr && origin_as_god_gift(*scroll) == GOD_XOM)
+        new_brand = SPWPN_CHAOS;
+
     // now try and find an appropriate brand
+    int max_retries = 10000;
     while (old_brand == new_brand || god_hates_brand(new_brand))
     {
         if (is_range_weapon(wpn))
@@ -2209,6 +2213,14 @@ static void _rebrand_weapon(item_def& wpn)
                                     8, SPWPN_VAMPIRISM,
                                     3, SPWPN_CHAOS);
         }
+
+        if (--max_retries <= 0)
+        {
+            // Let's make sure the game won't freeze if the god happens to hate
+            // all of the weapon brands listed above.
+            new_brand = SPWPN_NORMAL;
+            break;
+        }
     }
 
     set_item_ego_type(wpn, OBJ_WEAPONS, new_brand);
@@ -2220,13 +2232,13 @@ static string _item_name(item_def &item)
     return item.name(in_inventory(item) ? DESC_YOUR : DESC_THE);
 }
 
-static void _brand_weapon(item_def &wpn)
+static void _brand_weapon(item_def &wpn, item_def* scroll =nullptr)
 {
     you.wield_change = true;
 
     const string itname = _item_name(wpn);
 
-    _rebrand_weapon(wpn);
+    _rebrand_weapon(wpn, scroll);
 
     bool success = true;
     colour_t flash_colour = BLACK;
@@ -2348,14 +2360,14 @@ static item_def* _scroll_choose_weapon(bool alreadyknown, const string &pre_msg,
 }
 
 // Returns true if the scroll is used up.
-static bool _handle_brand_weapon(bool alreadyknown, const string &pre_msg)
+static bool _handle_brand_weapon(bool alreadyknown, const string &pre_msg, item_def* scroll =nullptr)
 {
     item_def* weapon = _scroll_choose_weapon(alreadyknown, pre_msg,
                                              SCR_BRAND_WEAPON);
     if (!weapon)
         return !alreadyknown;
 
-    _brand_weapon(*weapon);
+    _brand_weapon(*weapon, scroll);
     return true;
 }
 
@@ -3114,7 +3126,7 @@ void read_scroll(item_def& scroll)
             // included in default force_more_message (to show it before menu)
         }
 
-        cancel_scroll = !_handle_brand_weapon(alreadyknown, pre_succ_msg);
+        cancel_scroll = !_handle_brand_weapon(alreadyknown, pre_succ_msg, &scroll);
         break;
 
     case SCR_IDENTIFY:

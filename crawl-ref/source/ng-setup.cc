@@ -258,6 +258,16 @@ static void _give_items_skills(const newgame_def& ng)
         timeout_rnd += random2(40); // force a sequence point between random2s
         you.gift_timeout = max(5, timeout_rnd);
 
+        if (ng.weapon == WPN_UNARMED)
+        {
+            // An unarmed Chaos Knight enters the dungeon with a special scroll
+            // of brand weapon as the initial gift from Xom. Such a scroll will
+            // always produce a chaos brand (unless the weapon already has it).
+            item_def* scroll = newgame_make_item(OBJ_SCROLLS, SCR_BRAND_WEAPON);
+            if (scroll)
+                origin_acquired(*scroll, you.religion);
+        }
+
         if (species_apt(SK_ARMOUR) < species_apt(SK_DODGING))
             you.skills[SK_DODGING]++;
         else
