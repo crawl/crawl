@@ -52,7 +52,10 @@ def update_all_lobbys(game):
 def remove_in_lobbys(process):
     for socket in list(sockets):
         if socket.is_in_lobby():
-            socket.send_message("lobby_remove", id=process.id)
+            socket.send_message("lobby_remove", id=process.id,
+                                reason=process.exit_reason,
+                                message=process.exit_message,
+                                dump=process.exit_dump_url)
 
 def global_announce(text):
     for socket in list(sockets):
