@@ -1589,15 +1589,18 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     if (make_changes && env.elapsed_time && !just_created_level)
         update_level(you.elapsed_time - env.elapsed_time);
 
-    // Apply all delayed actions, if any.
+    // Apply all delayed actions, if any. TODO: logic for marshalling this is
+    // kind of odd.
     if (just_created_level)
-        env.dactions_done = you.dactions.size();
-    else
-        catchup_dactions();
+        env.dactions_done = 0;
 
     // Here's the second cloud clearing, on load (see above).
     if (make_changes)
     {
+        // this includes various things that are irrelevant for new levels, but
+        // also some things that aren't, such as bribe branch.
+        catchup_dactions();
+
         delete_all_clouds();
 
         _place_player(stair_taken, old_level.branch, return_pos, dest_pos,

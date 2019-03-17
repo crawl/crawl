@@ -272,12 +272,7 @@ bool builder(bool enable_random_maps, dungeon_feature_type dest_stairs_type)
         try
         {
             if (_build_level_vetoable(enable_random_maps, dest_stairs_type))
-            {
-                for (monster_iterator mi; mi; ++mi)
-                    gozag_set_bribe(*mi);
-
                 return true;
-            }
         }
         catch (map_load_exception &mload)
         {
