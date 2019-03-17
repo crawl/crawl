@@ -48,12 +48,18 @@ levelup_stats:
   - str
 mutations:
   1:
-    MUT_TOUGH_SKIN: 3
     MUT_REGENERATION: 1
-    MUT_CLAWS: 3
+    MUT_CLAWS: 2
     MUT_GOURMAND: 1
-    MUT_FAST_METABOLISM: 3
+    MUT_FAST_METABOLISM: 2
     MUT_SHAGGY_FUR: 1
+    MUT_TOUGH_SKIN: 1
+  9:
+    MUT_TOUGH_SKIN: 1
+    MUT_CLAWS: 1
+  14:
+    MUT_TOUGH_SKIN: 1
+    MUT_FAST_METABOLISM: 1
 recommended_jobs:
   - JOB_FIGHTER
   - JOB_MONK
