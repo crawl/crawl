@@ -24,7 +24,7 @@ void packed_cell::clear()
     flv.feat = 0;
     flv.special = 0;
 
-    is_highlighted   = false;
+    is_highlighted_summoner   = false;
     is_bloody        = false;
     is_silenced      = false;
     halo             = HALO_NONE;

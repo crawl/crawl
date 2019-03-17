@@ -370,7 +370,7 @@ void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
                 else if (att_flag == TILE_FLAG_NEUTRAL)
                     m_buf_feat.add(TILE_HALO_NEUTRAL, x, y);
 
-                if (cell.is_highlighted)
+                if (cell.is_highlighted_summoner)
                     m_buf_feat.add(TILE_HALO_FRIENDLY, x, y);
             }
 

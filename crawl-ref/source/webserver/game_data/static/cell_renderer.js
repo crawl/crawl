@@ -693,7 +693,7 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
                         else if (fg.NEUTRAL)
                             this.draw_dngn(dngn.HALO_NEUTRAL, x, y);
 
-                        if (cell.highlighted)
+                        if (cell.highlighted_summoner)
                             this.draw_dngn(dngn.HALO_NEUTRAL, x, y);
                     }
 

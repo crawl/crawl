@@ -519,8 +519,6 @@ direction_chooser::direction_chooser(dist& moves_,
     hitfunc(args.hitfunc),
     default_place(args.default_place),
     unrestricted(args.unrestricted),
-    summ_loc(INVALID_COORD),
-    highlight_on_beam(false),
     needs_path(args.needs_path)
 {
     if (!behaviour)
@@ -1157,12 +1155,7 @@ void direction_chooser::draw_beam()
                                             ? LOS_NONE : LOS_DEFAULT;
         for (radius_iterator ri(you.pos(), los); ri; ++ri)
             if (aff_type aff = hitfunc->is_affected(*ri))
-            {
                 _draw_ray_cell(*ri, target(), aff);
-
-                if (summ_loc == *ri)
-                    highlight_on_beam = true;
-            }
 
 #ifdef USE_TILE
         viewwindow(true, true);
@@ -1195,9 +1188,6 @@ void direction_chooser::draw_beam()
 
         if (p == you.pos())
             continue;
-
-        if (summ_loc == p)
-            highlight_on_beam = true;
 
         const bool inrange = in_range(p);
 #ifdef USE_TILE
@@ -1799,8 +1789,6 @@ void direction_chooser::do_redraws()
 
     if (need_viewport_redraw)
     {
-        highlight_on_beam = false;
-        find_summoner();
         draw_beam();
         // draw_beam calls viewwindow(true) at least one in tiles mode, and
         // viewwindow(false) at least once in console, so the old highlight and
@@ -1830,26 +1818,18 @@ void direction_chooser::do_redraws()
     }
 }
 
-void direction_chooser::find_summoner()
+coord_def direction_chooser::find_summoner()
 {
-    const monster* mon = monster_at(target());
-
-    if (!mon)
-    {
-        summ_loc = INVALID_COORD;
-        return;
-    }
-
-    const monster *summ = monster_by_mid(mon -> summoner);
-
-    if (!summ)
-        summ_loc = INVALID_COORD;
-    else
-        summ_loc = summ -> pos();
+    if (const monster* mon = monster_at(target()))
+        if (const monster *summ = monster_by_mid(mon->summoner))
+                return summ->pos();
+    return INVALID_COORD;
 }
 
 void direction_chooser::highlight_summoner()
 {
+    const coord_def summ_loc = find_summoner();
+
     if (summ_loc == INVALID_COORD)
         return;
 
@@ -1859,7 +1839,7 @@ void direction_chooser::highlight_summoner()
     if (!summ_info)  // Can happen, e. g. if the summoner is invisible
         return;
 
-    summ_info->mb.set(MB_HIGHLIGHT);
+    summ_info->mb.set(MB_HIGHLIGHTED_SUMMONER);
 
     // The first argument must be false, because otherwise viewwindow would
     // wipe any beams we might have drawn, and also reset the monster_info we
@@ -1867,7 +1847,7 @@ void direction_chooser::highlight_summoner()
     viewwindow(false, true);
 #else
     char32_t glych  = get_cell_glyph(summ_loc).ch;
-    int col = highlight_on_beam ? RED : CYAN;
+    int col = CYAN;
     col |= COLFLAG_REVERSE;
 
     const coord_def vp = grid2view(summ_loc);

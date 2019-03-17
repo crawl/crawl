@@ -231,7 +231,7 @@ private:
 
     void draw_beam();
     void highlight_summoner();
-    void find_summoner();
+    coord_def find_summoner();
 
     // Whether the current target is you.
     bool looking_at_you() const;
@@ -279,10 +279,6 @@ private:
     static targeting_behaviour stock_behaviour;
 
     bool unrestricted;
-
-    coord_def summ_loc;
-    bool highlight_on_beam;
-
 public:
     // TODO: fix the weird behavior that led to this hack
     bool needs_path;            // Determine a ray while we're at it?
