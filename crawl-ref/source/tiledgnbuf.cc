@@ -371,7 +371,7 @@ void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
                     m_buf_feat.add(TILE_HALO_NEUTRAL, x, y);
 
                 if (cell.is_highlighted_summoner)
-                    m_buf_feat.add(TILE_HALO_FRIENDLY, x, y);
+                    m_buf_feat.add(TILE_HALO_SUMMONER, x, y);
             }
 
             // Apply the travel exclusion under the foreground if the cell is
