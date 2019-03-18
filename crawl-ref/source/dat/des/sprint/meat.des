@@ -211,6 +211,15 @@
     end
   end
 
+  function create_and_tele(x, y, spec)
+    -- TODO: could we do away with the secret placement room altogether?
+    m = dgn.create_monster(x, y, spec)
+    if m then
+      m.random_teleport()
+    end
+    return m
+  end
+
   function blood_spawns(data, triggerable, triggerer, marker, ev)
     local phase
     if triggerer.type == "turn" then
@@ -268,12 +277,20 @@
       "" .. vile .. ""
     end
 
---    dgn.create_monster(35, 63, phase)
-    dgn.create_monster(37, 63, phase)
-    dgn.create_monster(39, 63, phase)
-    dgn.create_monster(41, 63, phase)
-    dgn.create_monster(43, 63, phase)
+    -- here is a representative sample of what this spawn pattern generates with
+    -- two spawns per turn by turn 150:
+    --
+    -- Monsters: The Meatlord, 25 meat beasts, The Captor, The Defiler, The Servant,
+    -- 20 eight-headed meat hydras, 23 observers, 13 tyrants, 16 accurseds, 67 meat
+    -- berserkers, 17 large bags of meat, 16 scourges, 33 destroyers, 13 wretched
+    -- souls, 20 dreads, 161 bags of meat, 36 fleshlords, and 16 sculptors of flesh.
+    -- 480 monsters, 35685031 total exp value (33124737 non-uniq)
 
+    create_and_tele(39, 63, phase)
+    create_and_tele(41, 63, phase)
+
+    -- this isn't in order to spawn anything, it's to set the monster list for
+    -- shadow creatures.
     if you.turns() < 230 then
     dgn.set_random_mon_list("tzitzimitl / nothing")
     else
@@ -281,11 +298,11 @@
     end
 
     if data.spawn_count == 30 then
-      dgn.create_monster(33, 63, servant)
+      create_and_tele(33, 63, servant)
     elseif data.spawn_count == 60 then
-      dgn.create_monster(33, 63, captor)
+      create_and_tele(33, 63, captor)
     elseif data.spawn_count == 100 then
-      dgn.create_monster(33, 63, defiler)
+      create_and_tele(33, 63, defiler)
     elseif data.spawn_count == 150 then
       local m_x, m_y = marker:pos()
       local mons = dgn.mons_at(m_x, m_y)
@@ -299,7 +316,7 @@
           "" .. border_bottom .. "</red>")
           crawl.more()
     elseif data.spawn_count == 300 then
-      dgn.create_monster(33, 63, avatar)
+      create_and_tele(33, 63, avatar)
       -- No message for the Unspeakable.
     end
     end
@@ -412,8 +429,8 @@ NSUBST:    ' = 1:& / *:.
 KITEM:     + = ring of see invisible not_cursed ident:all no_pickup
 KITEM:     * = ring of protection from fire not_cursed ident:all no_pickup
 SUBST:     1 = 1.
+KPROP:     - = no_tele_into
 KFEAT:     _ = altar_makhleb
-KFEAT:     ^ = permanent teleport trap
 KFEAT:     x = rock_wall
 COLOUR:    xX = red
 TILE:      xX = wall_hell
@@ -484,8 +501,8 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxXXXXXXXXXXXXXXXxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxX^.^.^.^.^.^.^Xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxX^^^^^^^^^^^^^Xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxX-------------Xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxX-------------Xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxXXXXXXXXXXXXXXXxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxJxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
