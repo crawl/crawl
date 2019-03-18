@@ -1764,6 +1764,20 @@ void save_player_name()
 #endif // !DISABLE_STICKY_STARTUP_OPTIONS
 }
 
+#ifndef DISABLE_STICKY_STARTUP_OPTIONS
+// TODO: can these functions be generalized? This is called on game end, maybe
+// the entire pref should be updated then?
+void save_seed_pref()
+{
+    // Read other preferences
+    newgame_def prefs = read_startup_prefs();
+    prefs.seed = crawl_state.seed;
+
+    // And save
+    write_newgame_options_file(prefs);
+}
+#endif // !DISABLE_STICKY_STARTUP_OPTIONS
+
 void read_options(const string &s, bool runscript, bool clear_aliases)
 {
     StringLineInput st(s);
