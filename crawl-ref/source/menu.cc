@@ -912,6 +912,11 @@ void Menu::set_flags(int new_flags, bool use_options)
 #endif
 }
 
+bool Menu::minus_is_pageup() const
+{
+    return !is_set(MF_MULTISELECT) && !is_set(MF_SPECIAL_MINUS);
+}
+
 void Menu::set_more(const formatted_string &fs)
 {
     m_keyhelp_more = false;
@@ -922,9 +927,10 @@ void Menu::set_more(const formatted_string &fs)
 void Menu::set_more()
 {
     m_keyhelp_more = true;
+    string pageup_keys = minus_is_pageup() ? "<w>-</w>|<w><<</w>" : "<w><<</w>";
     more = formatted_string::parse_string(
         "<lightgrey>[<w>+</w>|<w>></w>|<w>Space</w>]: page down        "
-        "[<w>-</w>|<w><<</w>]: page up        "
+        "[" + pageup_keys + "]: page up        "
         "[<w>Esc</w>]: close        [<w>XXX</w>]</lightgrey>"
     );
     update_more();
@@ -1188,7 +1194,7 @@ bool Menu::process_key(int keyin)
         sel.clear();
         lastch = keyin;
         return is_set(MF_UNCANCEL) && !crawl_state.seen_hups;
-    case ' ': case CK_PGDN: case '>':
+    case ' ': case CK_PGDN: case '>': case '+':
     case CK_MOUSE_B1:
     case CK_MOUSE_CLICK:
         if (!page_down() && is_set(MF_WRAP))

@@ -351,9 +351,14 @@ void InvMenu::set_title(const string &s)
 
 int InvMenu::pre_process(int key)
 {
-    if (type == menu_type::drop || type == menu_type::invlist)
-        if (key == ';' && you.last_unequip != -1)
-            key = index_to_letter(you.last_unequip);
+    if (key == '-' && minus_is_pageup())
+        key = CK_PGUP;
+    else if (key == ';'
+             && you.last_unequip != -1
+             && (type == menu_type::drop || type == menu_type::invlist))
+    {
+        key = index_to_letter(you.last_unequip);
+    }
     return key;
 }
 
@@ -1888,12 +1893,15 @@ int prompt_invent_item(const char *prompt,
             // The "view inventory listing" mode.
             vector< SelItem > items;
             current_type_expected = keyin == '*' ? OSEL_ANY : type_expect;
+            int mflags = MF_SINGLESELECT | MF_ANYPRINTABLE | MF_NO_SELECT_QTY;
+            if (other_valid_char == '-')
+                mflags |= MF_SPECIAL_MINUS;
             keyin = _invent_select(
                         prompt,
                         mtype,
                         current_type_expected,
                         -1,
-                        MF_SINGLESELECT | MF_ANYPRINTABLE | MF_NO_SELECT_QTY,
+                        mflags,
                         nullptr,
                         &items);
 
