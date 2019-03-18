@@ -1833,7 +1833,7 @@ void direction_chooser::highlight_summoner()
 {
     const coord_def summ_loc = find_summoner();
 
-    if (summ_loc == INVALID_COORD)
+    if (summ_loc == INVALID_COORD || !you.see_cell(summ_loc))
         return;
 
 #ifdef USE_TILE
