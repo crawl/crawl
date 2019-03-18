@@ -627,7 +627,7 @@ static void _choose_name(newgame_def& ng, newgame_def& choice)
         if (!good_name)
             prompt.cprintf("That's a silly name!");
         else if (overwrite_prompt)
-            prompt.cprintf("Really overwrite? [Y/n]");
+            prompt.cprintf("You have an existing game under this name; really overwrite? [Y/n]");
         prompt_ui->set_text(prompt);
 
         ui::pump_events();
