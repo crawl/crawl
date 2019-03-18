@@ -1820,9 +1820,12 @@ void direction_chooser::do_redraws()
 
 coord_def direction_chooser::find_summoner()
 {
-    if (const monster* mon = monster_at(target()))
+    const monster* mon = monster_at(target());
+
+    // Don't leak information about rakshasa mirrored illusions.
+    if (mon && mon->is_summoned() && !mon->has_ench(ENCH_PHANTOM_MIRROR))
         if (const monster *summ = monster_by_mid(mon->summoner))
-                return summ->pos();
+            return summ->pos();
     return INVALID_COORD;
 }
 
