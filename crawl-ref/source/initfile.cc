@@ -1770,6 +1770,8 @@ void save_player_name()
 void save_seed_pref()
 {
 #ifndef DGAMELAUNCH
+    if (!crawl_state.game_standard_levelgen())
+        return;
     // Read other preferences
     newgame_def prefs = read_startup_prefs();
     prefs.seed = crawl_state.seed;
