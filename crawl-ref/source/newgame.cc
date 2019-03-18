@@ -737,7 +737,8 @@ static void _choose_seed(newgame_def& ng, newgame_def& choice,
     {
         formatted_string prompt;
         prompt.textcolour(CYAN);
-        prompt.cprintf("Play a game with a custom seed.\n\n");
+        prompt.cprintf("Play a game with a custom seed for version %s.\n\n",
+            Version::Long);
         prompt.textcolour(LIGHTGREY);
         prompt.cprintf(
             "Choose 0 for a random seed. Press [d] for today's daily seed.\n"
@@ -747,9 +748,10 @@ static void _choose_seed(newgame_def& ng, newgame_def& choice,
 #endif
             "\n"
             "The seed will determine the dungeon layout, monsters, and items\n"
-            "that you discover. Pregeneration will ensure that these remain\n"
-            "the same no matter what order you explore the dungeon in. (See\n"
-            "the manual for more details.)\n\n");
+            "that you discover, relative to this version of the game.\n"
+            "Pregeneration will ensure that these remain the same no matter\n"
+            "what order you explore the dungeon in. (See the manual for more\n"
+            "details.)\n\n");
         prompt.cprintf("Seed ([-] to clear):");
         string seed_text = make_stringf("%-20s", buf);
         prompt.cprintf("\n%s\n\n", seed_text.c_str());
