@@ -1769,12 +1769,14 @@ void save_player_name()
 // the entire pref should be updated then?
 void save_seed_pref()
 {
+#ifndef DGAMELAUNCH
     // Read other preferences
     newgame_def prefs = read_startup_prefs();
     prefs.seed = crawl_state.seed;
 
     // And save
     write_newgame_options_file(prefs);
+#endif
 }
 #endif // !DISABLE_STICKY_STARTUP_OPTIONS
 
