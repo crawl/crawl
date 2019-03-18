@@ -75,6 +75,7 @@ struct newgame_def;
 void write_newgame_options_file(const newgame_def& prefs);
 
 void save_player_name();
+void save_seed_pref();
 
 string channel_to_str(int ch);
 
