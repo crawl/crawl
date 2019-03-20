@@ -70,11 +70,32 @@ ae += [^n]identified.*spellbook
 :   return it.stacks() or nil
 : end)
 
-# Excluding amulets as you only need one of each. (If you know the subtype
-# that means you already have one of it.). Some items may already be excluded
-# as bad_item, e.g. inaccuracy.
-ae += amulet of (nothing|inaccuracy|the gourmand|regeneration|harm)
-ae += amulet of (rage|guardian spirit|faith|magic regeneration|the acrobat)
-
-# Likewise for some rings.
-ae += ring of (see invisible|flight|poison resistance|resist corrosion)
+# Excluding most amulets as you only need one of each. Likewise for some
+# rings. Some items may already be excluded as bad_item, e.g. inaccuracy.
+:add_autopickup_func(function (it, name)
+:  if not it.class(true) == "jewellery" then
+:    return
+:  end
+:  local itsubtype = it.subtype()
+:  if itsubtype == "amulet of faith"
+:  or itsubtype == "amulet of guardian spirit"
+:  or itsubtype == "amulet of harm"
+:  or itsubtype == "amulet of inaccuracy"
+:  or itsubtype == "amulet of magic regeneration"
+:  or itsubtype == "amulet of nothing"
+:  or itsubtype == "amulet of rage"
+:  or itsubtype == "amulet of regeneration"
+:  or itsubtype == "amulet of the acrobat"
+:  or itsubtype == "amulet of the gourmand"
+:  or itsubtype == "ring of flight"
+:  or itsubtype == "ring of poison resistance"
+:  or itsubtype == "ring of resist corrosion"
+:  or itsubtype == "ring of see invisible" then
+:    for inv in iter.invent_iterator:new(items.inventory()) do
+:      if inv.class(true) == "jewellery" and inv.subtype() == itsubtype then
+:        return false
+:      end
+:    end
+:  end
+:  return
+:end)
