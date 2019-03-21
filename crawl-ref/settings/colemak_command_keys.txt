@@ -63,6 +63,9 @@ bindkey = [U] CMD_MAP_FIND_EXCLUDED
 bindkey = [^U] CMD_TOGGLE_TRAVEL_SPEED
 bindkey = [^U] CMD_MAP_CLEAR_EXCLUDES
 
+# fix overwrite on ^U
+bindkey = [F] CMD_MAP_UNFORGET
+
 # replace (i) with (y)
 bindkey = [y] CMD_DISPLAY_INVENTORY
 bindkey = [Y] CMD_DISPLAY_SPELLS
