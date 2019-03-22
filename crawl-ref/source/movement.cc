@@ -592,12 +592,8 @@ void move_player_action(coord_def move)
             you.digging = false;
             canned_msg(MSG_TOO_HUNGRY);
         }
-        else if (grd(targ) == DNGN_ROCK_WALL
-                 || grd(targ) == DNGN_CLEAR_ROCK_WALL
-                 || grd(targ) == DNGN_GRATE)
-        {
+        else if (feat_is_diggable(grd(targ)))
             targ_pass = true;
-        }
         else // moving or attacking ends dig
         {
             you.digging = false;
