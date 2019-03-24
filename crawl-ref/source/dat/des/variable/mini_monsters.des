@@ -2146,6 +2146,41 @@ MAP
   .....
 ENDMAP
 
+NAME: mrpersonman_goblin_village
+MONS: goblin, hobgoblin
+DEPTH: D:2-5
+MAP
+..............
+.cccc..cccccc.
+.c1.+..c.12%c.
+.c%2c..+..1.c.
+.cccc..cccccc.
+..............
+...ccc+c.cc+c.
+...c.1.c.c1.c.
+...c1%1c.c%2c.
+...ccccc.cccc.
+..............
+.ccccccc+cccc.
+.c%21.1...1%c.
+.cccccccccccc.
+..............
+ENDMAP
+
+NAME: mrpersonman_small_orc_temple
+MONS: orc, orc_priest
+KFEAT: 0 = altar_beogh
+DEPTH: D:3-7
+MAP
+.....I..I.....
+.ccccc++ccccc.
+.c%1.c..c.1%c.
+.c1I1+..+.01c.
+.c%1.c..c.2%c.
+.ccccc++ccccc.
+.....I..I.....
+ENDMAP
+
 ################################################################################
 #
 # <<4>> Demons and undead
