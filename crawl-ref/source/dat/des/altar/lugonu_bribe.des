@@ -27,8 +27,7 @@ function callback.tgw_lugonu_bribe_lugonu_item (data, triggerable,
     local item = {
          ["No God"]="amulet of faith ident:type",
          Ashenzari="ring of see invisible ident:type",
-         Beogh="scroll of fear ident:type q:3-6 /\
-              scroll of immolation ident:type q:3-6",
+         Beogh="orc corpse",
          Cheibriados="potion of haste ident:type q:2-4 /\
               good_item quick blade",
          Dithmenos="ring of attention ident:type /\
@@ -40,9 +39,7 @@ function callback.tgw_lugonu_bribe_lugonu_item (data, triggerable,
                        numspells:2",
          Gozag="amulet of the gourmand ident:type /\
               randbook owner:Lugonu spells:corpse_rot&animate_dead numspells:2",
-         Kikubaaqudgha="randbook owner:Lugonu spells:dispel_undead \
-                       numspells:1 / rat corpse w:5 / kobold corpse w:5",
-         Pakellas="staff of energy / crystal ball of energy w:5",
+         Kikubaaqudgha="rat corpse / kobold corpse",
          ["the Shining One"]="good_item " .. weapon .. " ego:pain ident:type /\
               good_item " .. weapon .. " ego:draining ident:type /\
               good_item " .. weapon .. " ego:vampirism ident:type /\
