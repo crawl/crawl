@@ -256,14 +256,9 @@ ENDMAP
 NAME:   ebering_vaults_ghost_disaster_area
 TAGS:   vaults_orient_s
 KMONS:  O = player ghost
-NSUBST: ' = d / e / 8=wWlr / .
+NSUBST: ' = d / e / 8=wWl / .
 : lone_ghost_guarded_loot(_G, "O")
 : lone_ghost_extra_loot(_G, ".")
-: if you.depth() < dgn.br_depth(you.branch()) then
-KFEAT:  r = known shaft trap
-: else
-SUBST:  r = wWl
-: end
 SUBST:  P = GTV
 : vaults_ghost_setup(_G)
 MAP
