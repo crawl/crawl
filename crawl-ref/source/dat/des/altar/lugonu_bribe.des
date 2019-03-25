@@ -31,8 +31,8 @@ function callback.tgw_lugonu_bribe_lugonu_item (data, triggerable,
               scroll of immolation ident:type q:3-6",
          Cheibriados="potion of haste ident:type q:2-4 /\
               good_item quick blade",
-         Dithmenos="lamp of fire w:5 /\
-              good_item " .. weapon .. " ego:flaming ident:type",
+         Dithmenos="ring of attention ident:type /\
+              scroll of noise ident:type q:2-4",
          Elyvilon="book of Necromancy w:5 /\
               book of Death w:5 / book of Unlife w:5",
          Fedhas="randbook owner:Lugonu spells:necromutation numspells:1 /\
@@ -40,11 +40,12 @@ function callback.tgw_lugonu_bribe_lugonu_item (data, triggerable,
                        numspells:2",
          Gozag="amulet of the gourmand ident:type /\
               randbook owner:Lugonu spells:corpse_rot&animate_dead numspells:2",
-         Jiyva="stone q:10-20 / large rock q:2-4",
          Kikubaaqudgha="randbook owner:Lugonu spells:dispel_undead \
                        numspells:1 / rat corpse w:5 / kobold corpse w:5",
          Pakellas="staff of energy / crystal ball of energy w:5",
-         ["the Shining One"]="Young Poisoner's Handbook /\
+         ["the Shining One"]="good_item " .. weapon .. " ego:pain ident:type /\
+              good_item " .. weapon .. " ego:draining ident:type /\
+              good_item " .. weapon .. " ego:vampirism ident:type /\
               potion of invisibility ident:type q:3-6",
          Trog="manual of Spellcasting / manual of Air Magic w:5 /\
               manual of Earth Magic w:5 / manual of Fire Magic w:5 /\
@@ -55,10 +56,9 @@ function callback.tgw_lugonu_bribe_lugonu_item (data, triggerable,
          Xom="manual of Invocations",
          Yredelemnul= "scroll of holy word ident:type q:2-4 /\
               good_item " .. weapon .. " ego:holy_wrath ident:type",
-         Zin="good_item " .. weapon .. " ego:draining ident:type /\
-              good_item " .. weapon .. " ego:pain ident:type /\
-              good_item " .. weapon .. " ego:chaos ident:type /\
-              wand of polymorph ident:type",
+         Zin="good_item " .. weapon .. " ego:chaos ident:type /\
+              wand of polymorph ident:type /\
+              potion of lignification ident:type q:2-4",
     }
     data.triggered = true
     if item[you.god()] ~= nil then
