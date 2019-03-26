@@ -3214,10 +3214,8 @@ static void _do_autopickup()
                 if (you_are_delayed() && current_delay()->want_autoeat())
                     butchery(&mi);
                 else
-                {
                     o = next;
-                    continue;
-                }
+                continue;
             }
 
             // Do this before it's picked up, otherwise the picked up
