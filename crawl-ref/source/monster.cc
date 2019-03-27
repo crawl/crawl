@@ -4348,9 +4348,10 @@ bool monster::corrode_equipment(const char* corrosion_source, int degree)
 
     if (you.see_cell(pos()))
     {
-        mprf("%s corrodes %s!",
-             corrosion_source,
-             name(DESC_THE).c_str());
+        if (!has_ench(ENCH_CORROSION))
+            mprf("%s corrodes %s!", corrosion_source, name(DESC_THE).c_str());
+        else
+            mprf("%s seems to be corroded for longer.", name(DESC_THE).c_str());
     }
 
     add_ench(mon_enchant(ENCH_CORROSION, 0));
