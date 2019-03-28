@@ -189,8 +189,8 @@ static void _dungeon_places()
         if (brdepth[it->id] == -1)
             continue;
 #if TAG_MAJOR_VERSION == 34
-        // Don't want to include Forest since it doesn't generate
-        if (it->id == BRANCH_FOREST)
+        // Don't want to include branches that no longer generate.
+        if (it->id == BRANCH_FOREST || it->id == BRANCH_LABYRINTH)
             continue;
 #endif
 
