@@ -963,46 +963,6 @@ xxxxx xdx xfx xfx
       xxx xxx xxx
 ENDMAP
 
-# 20 items, but you have to dig for them.  Wand is included.
-NAME:    trove_dig
-TAGS:    no_item_gen no_monster_gen allow_dup
-WEIGHT:  5
-ORIENT:  encompass
-ITEM:    acquire armour / any useful armour good_item / any armour w:2
-ITEM:    acquire weapon / any useful weapon good_item / any weapon w:2
-ITEM:    acquire jewellery / any useful jewellery good_item / any jewellery w:2
-ITEM:    any useful armour good_item / any useful weapon good_item / \
-         any useful jewellery good_item
-: trove.good_scroll(_G)
-KITEM:   h = wand of digging ident:all, wand of digging ident:all
-SHUFFLE: defg
-: trove.setup_features(_G)
-MAP
-  vvvvv
-vvv...vvv
-vem.<.mfv
-vvv...vvv
-vem...mfv
-vvv...vvv
-vem...mfv
-vvv...vvv
-vem...mfv
-vvv...vvv
-vem...mfv
-vvv.h.vvv
-vdm...mgv
-vvv...vvv
-vdm...mgv
-vvv...vvv
-vdm...mgv
-vvv...vvv
-vdm...mgv
-vvv...vvv
-vdm.A.mgv
-vvv...vvv
-  vvvvv
-ENDMAP
-
 # 16 pieces of armour
 NAME:   trove_armour_six_rooms
 TAGS:   no_item_gen no_monster_gen allow_dup no_species_fe no_species_op
