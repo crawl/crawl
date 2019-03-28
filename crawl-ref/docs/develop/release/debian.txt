@@ -44,7 +44,7 @@ at least BASEPATH, BUILDPLACE, BUILDRESULT, and APTCACHE.
 
 This should get you the necessary packages:
 
-  sudo apt-get install cowbuilder
+  sudo apt-get install cowbuilder debhelper
 
 1.3 Create a .cow chroot directory for each architecture.
 
@@ -61,6 +61,9 @@ To create these, run the following:
     --basepath /var/cache/pbuilder/stable-amd64.cow
   sudo cowbuilder --create --architecture i386 \
     --basepath /var/cache/pbuilder/stable-i386.cow
+
+In order for these to run succesfully in docker, you will need to be running
+the docker image with --privileged.
 
 This chroot directory needs to be created only once for each OS/ARCH/DIST
 combination on which you what to build the package. If It doesn't need to be
@@ -91,7 +94,7 @@ give you a valid timestamp:
 
   date +'%a, %d %b %Y %R:%S %z'
 
-The entire entry must mach the format of previous entries; note the lines
+The entire entry must match the format of previous entries; note the lines
 following the first `crawl' line have leading spaces. Incorrect formatting
 can cause debuild and hence pbuilder to fail.
 
@@ -128,7 +131,7 @@ rename the original file. Using version 0.17 as an example and with
   mkdir -p ~/crawl-deb
   cp stone_soup-0.17.0-nodeps.tar.xz ~/crawl-deb
   cd ~/crawl-deb
-  tar Jxf stone_soup-0.17.0.tar.xz
+  tar Jxf stone_soup-0.17.0-nodeps.tar.xz
   mv stone_soup-0.17.0 crawl-0.17.0
   mv stone_soup-0.17.0-nodeps.tar.xz crawl_0.17.0.orig.tar.xz
 
