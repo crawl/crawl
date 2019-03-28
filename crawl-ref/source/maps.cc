@@ -397,6 +397,13 @@ static bool _is_portal_place(const coord_def &c)
     return _marker_is_portal(env.markers.find(c, MAT_LUA_MARKER));
 }
 
+static bool _is_transporter_place(const coord_def &c)
+{
+    auto m = env.markers.find(c, MAT_LUA_MARKER);
+    return m && (!m->property(TRANSPORTER_NAME_PROP).empty()
+                 || !m->property(TRANSPORTER_DEST_NAME_PROP).empty());
+}
+
 static bool _map_safe_vault_place(const map_def &map,
                                   const coord_def &c,
                                   const coord_def &size)
@@ -440,12 +447,14 @@ static bool _map_safe_vault_place(const map_def &map,
                     return false;
             }
         }
-        else if (grd(cp) != DNGN_FLOOR || env.pgrid(cp) & FPROP_NO_TELE_INTO)
+        else if (grd(cp) != DNGN_FLOOR || env.pgrid(cp) & FPROP_NO_TELE_INTO
+                                       || _is_transporter_place(cp))
         {
             // Don't place overwrite_floor_cell vaults on anything but floor or
             // on squares that can't be teleported into, because
             // overwrite_floor_cell is used for things that are expected to be
-            // connected.
+            // connected. Don't place on transporter markers, because these will
+            // later themselves overwrite whatever feature this vault places.
             return false;
         }
 
