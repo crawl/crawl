@@ -36,6 +36,7 @@
 #include "dgn-event.h"
 #include "directn.h"
 #include "dungeon.h"
+#include "english.h"
 #include "env.h"
 #include "food.h"
 #include "god-passive.h"
@@ -962,7 +963,7 @@ static bool _id_floor_item(item_def &item)
             bool should_pickup = item_needs_autopickup(item);
             set_ident_type(item, true);
             if (!should_pickup)
-                you.force_autopickup[item.base_type][item.sub_type] = -1;
+                set_item_autopickup(item, AP_FORCE_OFF);
             return true;
         }
     }
@@ -2713,6 +2714,38 @@ static bool _drop_item_order(const SelItem &first, const SelItem &second)
     return first.slot < second.slot;
 }
 
+void set_item_autopickup(const item_def &item, autopickup_level_type ap)
+{
+    you.force_autopickup[item.base_type][_autopickup_subtype(item)] = ap;
+}
+
+int item_autopickup_level(const item_def &item)
+{
+    return you.force_autopickup[item.base_type][_autopickup_subtype(item)];
+}
+
+static void _disable_autopickup_for_starred_items(vector<SelItem> &items)
+{
+    int autopickup_remove_count = 0;
+    const item_def *last_touched_item;
+    for (SelItem &si : items)
+    {
+        if (si.has_star && item_autopickup_level(si.item[0]) != AP_FORCE_OFF)
+        {
+            last_touched_item = si.item;
+            ++autopickup_remove_count;
+            set_item_autopickup(*last_touched_item, AP_FORCE_OFF);
+        }
+    }
+    if (autopickup_remove_count == 1)
+    {
+        mprf("Autopickup disabled for %s.",
+             pluralise(last_touched_item->name(DESC_DBNAME)).c_str());
+    }
+    else if (autopickup_remove_count > 1)
+        mprf("Autopickup disabled for %d items.", autopickup_remove_count);
+}
+
 /**
  * Prompts the user for an item to drop.
  */
@@ -2734,6 +2767,7 @@ void drop()
         return;
     }
 
+    _disable_autopickup_for_starred_items(tmp_items);
     _multidrop(tmp_items);
 }
 
@@ -2908,9 +2942,9 @@ static bool _is_option_autopickup(const item_def &item, bool ignore_force)
 
     if (item.base_type < NUM_OBJECT_CLASSES)
     {
-        const int force = you.force_autopickup[item.base_type][_autopickup_subtype(item)];
-        if (!ignore_force && force != 0)
-            return force == 1;
+        const int force = item_autopickup_level(item);
+        if (!ignore_force && force != AP_FORCE_NONE)
+            return force == AP_FORCE_ON;
     }
     else
         return false;

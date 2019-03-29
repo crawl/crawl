@@ -70,7 +70,6 @@ DEF_BITFIELD(invent_prompt_flags, invprompt_flag);
 #define PROMPT_ABORT         -1
 #define PROMPT_GOT_SPECIAL   -2
 #define PROMPT_NOTHING       -3
-#define PROMPT_INAPPROPRIATE -4
 
 #define SLOT_BARE_HANDS      PROMPT_GOT_SPECIAL
 
@@ -81,10 +80,10 @@ struct SelItem
     int slot;
     int quantity;
     const item_def *item;
-
-    SelItem() : slot(0), quantity(0), item(nullptr) { }
-    SelItem(int s, int q, const item_def *it = nullptr)
-        : slot(s), quantity(q), item(it)
+    bool has_star;
+    SelItem() : slot(0), quantity(0), item(nullptr), has_star(false) { }
+    SelItem(int s, int q, const item_def *it = nullptr, bool do_star = false)
+        : slot(s), quantity(q), item(it), has_star(do_star)
     {
     }
 };
@@ -141,6 +140,8 @@ public:
     }
 
     virtual void select(int qty = -1) override;
+    void set_star(bool);
+    bool has_star() const;
 
     virtual string get_filter_text() const override;
 
@@ -149,6 +150,7 @@ public:
 
 private:
     void add_class_hotkeys(const item_def &i);
+    bool _has_star;
 };
 
 class InvMenu : public Menu
@@ -194,8 +196,13 @@ public:
     const menu_sort_condition *find_menu_sort_condition() const;
     void sort_menu(vector<InvEntry*> &items, const menu_sort_condition *cond);
 
+    // Drop menu only: if true, dropped items are removed from autopickup.
+    bool mode_special_drop() const;
+
 protected:
     void do_preselect(InvEntry *ie);
+    void select_item_index(int idx, int qty, bool draw_cursor = true) override;
+    int pre_process(int key) override;
     virtual bool is_selectable(int index) const override;
     virtual string help_key() const override;
 
@@ -205,6 +212,9 @@ protected:
 
     invtitle_annotator title_annotate;
     string temp_title;
+
+private:
+    bool _mode_special_drop;
 };
 
 void get_class_hotkeys(const int type, vector<char> &glyphs);

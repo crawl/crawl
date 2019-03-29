@@ -71,7 +71,7 @@ static void _give_bonus_items()
 static void _autopickup_ammo(missile_type missile)
 {
     if (Options.autopickup_starting_ammo)
-        you.force_autopickup[OBJ_MISSILES][missile] = 1;
+        you.force_autopickup[OBJ_MISSILES][missile] = AP_FORCE_ON;
 }
 
 /**

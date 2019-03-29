@@ -2388,9 +2388,12 @@ public:
         else
             selected_qty = 0;
 
-        // Set the force_autopickup values
-        const int forceval = (selected_qty == 2 ? -1 : selected_qty);
-        you.force_autopickup[item->base_type][item->sub_type] = forceval;
+        if (selected_qty == 2)
+            set_item_autopickup(*item, AP_FORCE_OFF);
+        else if (selected_qty == 1)
+            set_item_autopickup(*item, AP_FORCE_ON);
+        else
+            set_item_autopickup(*item, AP_FORCE_NONE);
     }
 };
 
@@ -2462,9 +2465,9 @@ static void _add_fake_item(object_class_type base, int sub,
 
     items.push_back(ptmp);
 
-    if (you.force_autopickup[base][sub] == 1)
+    if (you.force_autopickup[base][sub] == AP_FORCE_ON)
         selected.emplace_back(0, 1, ptmp);
-    else if (you.force_autopickup[base][sub] == -1)
+    else if (you.force_autopickup[base][sub] == AP_FORCE_OFF)
         selected.emplace_back(0, 2, ptmp);
 }
 
