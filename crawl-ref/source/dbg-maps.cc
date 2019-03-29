@@ -190,7 +190,7 @@ static void _dungeon_places()
             continue;
 #if TAG_MAJOR_VERSION == 34
         // Don't want to include branches that no longer generate.
-        if (it->id == BRANCH_FOREST || it->id == BRANCH_LABYRINTH)
+        if (branch_is_unfinished(it->id))
             continue;
 #endif
 
