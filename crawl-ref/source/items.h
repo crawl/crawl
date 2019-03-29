@@ -29,6 +29,13 @@ enum item_source_type
     AQ_WIZMODE    = 200,
 };
 
+enum autopickup_level_type
+{
+    AP_FORCE_OFF = -1,
+    AP_FORCE_NONE = 0,
+    AP_FORCE_ON = 1,
+};
+
 /// top-priority item override colour
 #define FORCED_ITEM_COLOUR_KEY "forced_item_colour"
 
@@ -134,6 +141,9 @@ bool can_autopickup();
 
 bool need_to_autopickup();
 void autopickup();
+
+void set_item_autopickup(const item_def &item, autopickup_level_type ap);
+int item_autopickup_level(const item_def &item);
 
 int find_free_slot(const item_def &i);
 

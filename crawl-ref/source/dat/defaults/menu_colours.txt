@@ -68,6 +68,7 @@ menu_colour += pickup:green:god gift
 # Highlight (partly) selected items
 menu_colour += inventory:white:\w \+\s
 menu_colour += inventory:white:\w \#\s
+menu_colour += inventory:white:\w \*\s
 
 
 # Not really menu.

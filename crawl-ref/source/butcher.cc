@@ -365,7 +365,7 @@ void turn_corpse_into_chunks(item_def &item, bool bloodspatter)
     item.quantity  = stepdown_value(item.quantity, 4, 4, 12, 12);
 
     // Don't mark it as dropped if we are forcing autopickup of chunks.
-    if (you.force_autopickup[OBJ_FOOD][FOOD_CHUNK] <= 0
+    if (you.force_autopickup[OBJ_FOOD][FOOD_CHUNK] <= AP_FORCE_NONE
         && is_bad_food(item))
     {
         item.flags |= ISFLAG_DROPPED;

@@ -18,6 +18,7 @@
 #include "colour.h"
 #include "command.h"
 #include "describe.h"
+#include "english.h"
 #include "env.h"
 #include "food.h"
 #include "god-item.h"
@@ -68,7 +69,7 @@ string InvTitle::get_text(const bool) const
 }
 
 InvEntry::InvEntry(const item_def &i)
-    : MenuEntry("", MEL_ITEM), item(&i)
+    : MenuEntry("", MEL_ITEM), item(&i), _has_star(false)
 {
     data = const_cast<item_def *>(item);
 
@@ -175,6 +176,11 @@ void InvEntry::select(int qty)
     MenuEntry::select(qty);
 }
 
+bool InvEntry::has_star() const
+{
+    return _has_star;
+}
+
 string InvEntry::get_filter_text() const
 {
     return item_prefix(*item) + " " + get_text();
@@ -204,6 +210,8 @@ string InvEntry::get_text(bool need_cursor) const
             tstr << '-';
         else if (selected_qty < quantity)
             tstr << '#';
+        else if (_has_star)
+            tstr << '*';
         else
             tstr << '+';
 
@@ -307,7 +315,7 @@ void InvEntry::set_show_glyph(bool doshow)
 
 InvMenu::InvMenu(int mflags)
     : Menu(mflags, "inventory"), type(menu_type::invlist), pre_select(nullptr),
-      title_annotate(nullptr)
+      title_annotate(nullptr), _mode_special_drop(false)
 {
 #ifdef USE_TILE_LOCAL
     if (Options.tile_menu_icons)
@@ -315,6 +323,11 @@ InvMenu::InvMenu(int mflags)
 #endif
 
     InvEntry::set_show_cursor(false);
+}
+
+bool InvMenu::mode_special_drop() const
+{
+    return _mode_special_drop;
 }
 
 void InvMenu::set_type(menu_type t)
@@ -351,15 +364,56 @@ void InvMenu::set_title(const string &s)
 
 int InvMenu::pre_process(int key)
 {
-    if (key == '-' && minus_is_pageup())
-        key = CK_PGUP;
+    if (type == menu_type::drop && key == '\\')
+    {
+        _mode_special_drop = !_mode_special_drop;
+        key = CK_NO_KEY;
+    }
     else if (key == ';'
              && you.last_unequip != -1
              && (type == menu_type::drop || type == menu_type::invlist))
     {
         key = index_to_letter(you.last_unequip);
     }
+    else if (key == '-')
+        _mode_special_drop = false;
     return key;
+}
+
+static bool _item_is_permadrop_candidate(const item_def &item)
+{
+    // Known, non-artefact items of the types you see on the '\' menu proper.
+    // (No disabling autopickup for "green fizzy potion", "+3 whip", etc.)
+    if (item_type_unknown(item))
+        return false;
+    return item.base_type == OBJ_MISCELLANY
+        || is_stackable_item(item)
+        || item_type_has_ids(item.base_type);
+}
+
+void InvMenu::select_item_index(int idx, int qty, bool draw_cursor)
+{
+    if (type != menu_type::drop)
+        return Menu::select_item_index(idx, qty, draw_cursor);
+
+    InvEntry *ie = static_cast<InvEntry*>(items[idx]);
+
+    bool should_toggle_star = _item_is_permadrop_candidate(ie->item[0])
+        && (ie->has_star() || _mode_special_drop);
+
+    if (should_toggle_star)
+    {
+        // Toggle starred items back to selected-but-not-starred in this mode
+        // instead of turning them all the way off.
+        qty = _mode_special_drop ? -2 : 0;
+        ie->set_star(!ie->has_star());
+    }
+    Menu::select_item_index(idx, qty, draw_cursor);
+}
+
+void InvEntry::set_star(bool val)
+{
+    _has_star = val;
 }
 
 static bool _has_melded_armour()
@@ -891,7 +945,7 @@ vector<SelItem> InvMenu::get_selitems() const
     {
         InvEntry *inv = dynamic_cast<InvEntry*>(me);
         selected_items.emplace_back(inv->hotkeys[0], inv->selected_qty,
-                                    inv->item);
+                                    inv->item, inv->has_star());
     }
     return selected_items;
 }
@@ -1256,6 +1310,30 @@ static string _drop_selitem_text(const vector<MenuEntry*> *s)
                         s->size() > 1? "s" : "");
 }
 
+static string _drop_prompt(bool as_menu_title, bool menu_autopickup_mode)
+{
+    string prompt_base;
+
+    if (as_menu_title && menu_autopickup_mode)
+        prompt_base = "Drop (and turn off autopickup for) what? ";
+    else if (as_menu_title)
+        prompt_base = "Drop what?                               ";
+    else
+        prompt_base = "Drop what? ";
+    return prompt_base + slot_description()
+#ifdef TOUCH_UI
+                          + " (<Enter> or tap header to drop)";
+#else
+                          + " (_ for help)";
+#endif
+}
+
+static string _drop_menu_titlefn(const Menu *m, const string &)
+{
+    const InvMenu *invmenu = static_cast<const InvMenu *>(m);
+    return _drop_prompt(true, invmenu->mode_special_drop());
+}
+
 /**
  * Prompt the player to select zero or more items to drop.
  * TODO: deduplicate/merge with prompt_invent_item().
@@ -1265,14 +1343,6 @@ static string _drop_selitem_text(const vector<MenuEntry*> *s)
  */
 vector<SelItem> prompt_drop_items(const vector<SelItem> &preselected_items)
 {
-    const string prompt = "Drop what? " + slot_description()
-#ifdef TOUCH_UI
-                          + " (<Enter> or tap header to drop)"
-#else
-                          + " (_ for help)"
-#endif
-    ;
-
     unsigned char  keyin = '?';
     int            ret = PROMPT_ABORT;
 
@@ -1292,6 +1362,7 @@ vector<SelItem> prompt_drop_items(const vector<SelItem> &preselected_items)
 
         if (need_prompt)
         {
+            const string prompt = _drop_prompt(false, false);
             mprf(MSGCH_PROMPT, "%s (<w>?</w> for menu, <w>Esc</w> to quit)",
                  prompt.c_str());
         }
@@ -1303,17 +1374,18 @@ vector<SelItem> prompt_drop_items(const vector<SelItem> &preselected_items)
         need_prompt = true;
         need_getch  = true;
 
-        // Note:  We handle any "special" character first, so that
-        //        it can be used to override the others.
-        if (keyin == '?' || keyin == '*' || keyin == ',')
+        if (keyin == '_')
+            show_specific_help("pick-up");
+        else if (keyin == '?' || keyin == '*' || keyin == ',')
         {
             // The "view inventory listing" mode.
-            const int ch = _invent_select(prompt.c_str(),
+            const int ch = _invent_select("",
                                           menu_type::drop,
                                           OSEL_ANY,
                                           -1,
                                           MF_MULTISELECT | MF_ALLOW_FILTER,
-                                          nullptr, &items,
+                                          _drop_menu_titlefn,
+                                          &items,
                                           &Options.drop_filter,
                                           _drop_selitem_text,
                                           &preselected_items);
@@ -1388,10 +1460,7 @@ vector<SelItem> prompt_drop_items(const vector<SelItem> &preselected_items)
     }
 
     if (ret != PROMPT_ABORT)
-    {
-        items.emplace_back(ret, count,
-                           ret != PROMPT_GOT_SPECIAL ? &you.inv[ret] : nullptr);
-    }
+        items.emplace_back(ret, count, &you.inv[ret]);
     return items;
 }
 
