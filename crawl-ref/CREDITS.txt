@@ -88,6 +88,7 @@
     Roy Axenov
     Steve 'nfogravity' Balady
     Max Bane
+    G. Bailey
     Beargit
     Bill Beher
     Alexander Beisig
@@ -148,6 +149,7 @@
     Chris Galardi
     GenericPseudonym
     Ge0ff
+    Joshua Gelbard
     Benoît Giannangeli
     Ben Goetter
     Aaron Golden
@@ -239,6 +241,7 @@
     Chris Oelmueller
     John Olender
     Aaron Olowin
+    Andrew O'Neill
     Yuuma Oohara
     Julian Ospald
     Malwyn P
