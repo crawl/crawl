@@ -1398,6 +1398,80 @@ x1...1...1x
 xxx..@..xxx
 ENDMAP
 
+NAME: mrpersonman_orc_shrine_1
+MONS: orc_priest, orc_warrior
+KFEAT: 0 = altar_beogh
+DEPTH: O:1-2
+MAP
+.......
+.ccccc.
+.c.1.c.
+.cI0Ic.
+.c2.2c.
+.cc+cc.
+.......
+ENDMAP
+
+
+NAME: mrpersonman_orc_shrine_2
+MONS: orc_priest, orc_wizard
+KFEAT: 0 = altar_beogh
+DEPTH: O:1-2
+MAP
+......
+.cccc.
+.cI0c.
+.c21c.
+.c++c.
+......
+ENDMAP
+
+
+NAME: mrpersonman_orc_barracks_1
+MONS: orc_warrior, orc_knight
+DEPTH: O:2
+MAP
+.........
+.ccccccc.
+.cI%*%Ic.
+.c2...1c.
+.c2...2c.
+.c.....c.
+.c2...2c.
+.c1...2c.
+.cI...Ic.
+.ccc+ccc.
+ENDMAP
+
+
+NAME: mrpersonman_orc_gathering_1
+MONS: orc_wizard, orc_sorcerer
+DEPTH: O:2
+MAP
+1..1..1
+..2I2..
+1..1..1
+ENDMAP
+
+
+NAME: mrpersonman_orc_dwellings_1
+MONS: orc, orc_wizard, orc_priest, orc_warrior
+DEPTH: O:1-2
+MAP
+................
+.cccc.cccc.cccc.
+.c11c.c%4c.c1.c.
+.c..c.c4.c.c.2c.
+.cc+c.cc+c.cc+c.
+................
+................
+.c+cc.c+cc.c+cc.
+.c..c.c4.c.c.1c.
+.c22c.c%1c.c3%c.
+.cccc.cccc.cccc.
+................
+ENDMAP
+
 ############################################################################
 # Orc endings.
 #
