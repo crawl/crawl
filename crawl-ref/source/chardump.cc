@@ -1092,6 +1092,7 @@ static void _sdump_overview(dump_params &par)
     string overview =
         formatted_string::parse_string(overview_description_string(false));
     trim_string(overview);
+    linebreak_string(overview, 80);
     par.text += overview;
     par.text += "\n\n";
 }
