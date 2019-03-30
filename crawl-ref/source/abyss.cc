@@ -234,6 +234,7 @@ static void _abyss_postvault_fixup()
 {
     fixup_misplaced_items();
     link_items();
+    dgn_make_transporters_from_markers();
     env.markers.activate_all();
 }
 
