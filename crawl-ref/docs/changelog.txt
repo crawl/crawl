@@ -1,3 +1,24 @@
+Stone Soup 0.23.2 (20190330)
+----------------------------
+
+Bugfix Release
+--------------
+* Various seed-related bugfixes and improvements:
+  - Seed input now supports pasting, and is autofilled from the last game.
+  - The seed input box now has an extra digit.
+  - The game seed is saved correctly and will no longer show as 0 for games
+    started after this fix.
+  - Seed stability for floating point calculations: for most configuration the
+    main dungeon should remain unchanged, but 32 bit systems (and 32-bit builds)
+    should now be much more stable, among others. Slime will likely differ.
+  - Seed stability for rc options: certain rc options affected the generation
+    of some layouts, leading to divergent seeds.
+* AK starts will no longer crash when exiting the abyss in pregen games.
+* Gozag bribe branch in pregen games now works correctly when entering a
+  previously unvisited level.
+* Meatsprint is now difficult again.
+* 37 other bugfixes and improvements in total.
+
 Stone Soup 0.23.1 (20190228)
 ----------------------------
 
