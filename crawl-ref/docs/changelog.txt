@@ -1,4 +1,4 @@
-Stone Soup 0.23.2 (not yet released)
+Stone Soup 0.23.2 (20190330)
 ----------------------------
 
 Bugfix Release
@@ -17,7 +17,7 @@ Bugfix Release
 * Gozag bribe branch in pregen games now works correctly when entering a
   previously unvisited level.
 * Meatsprint is now difficult again.
-* 20 other bugfixes and improvements.
+* 37 other bugfixes and improvements in total.
 
 Stone Soup 0.23.1 (20190228)
 ----------------------------
