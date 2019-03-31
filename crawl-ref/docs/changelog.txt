@@ -186,6 +186,17 @@ Spells
 ------
 * Confusing touch works with a weapon wielded
 
+Stone Soup 0.22.2 (20190327)
+----------------------------
+
+Bugfix Release
+--------------
+* Fix a crash on startup when there are seeded games (from 0.23) in a shared
+  save directory.
+* Let Barachim telefrag at their full range.
+* Don't let ball lightnings climb stairs.
+* 52 other bugfixes and cleanups in total.
+
 Stone Soup 0.22.1 (20180916)
 ----------------------------
 
