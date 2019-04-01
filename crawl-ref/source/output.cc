@@ -2504,7 +2504,8 @@ private:
         if (find(equip_chars.begin(), equip_chars.end(), ch) != equip_chars.end())
         {
             item_def& item = you.inv[letter_to_index(ch)];
-            describe_item(item);
+            if (!describe_item(item))
+                return false;
             return true;
         }
         return formatted_scroller::process_key(ch);
