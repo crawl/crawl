@@ -2323,12 +2323,7 @@ public:
             }
         }
         else if (item->base_type == OBJ_MISCELLANY)
-        {
-            if (item->sub_type == MISC_PHANTOM_MIRROR)
-                name = pluralise(item->name(DESC_PLAIN));
-            else
-                name = "miscellaneous";
-        }
+            name = pluralise(item->name(DESC_DBNAME));
         else if (item->is_type(OBJ_BOOKS, BOOK_MANUAL))
             name = "manuals";
         else if (item->base_type == OBJ_GOLD)
@@ -2476,6 +2471,7 @@ void check_item_knowledge(bool unknown_items)
     vector<const item_def*> items;
     vector<const item_def*> items_missile; //List of missiles should go after normal items
     vector<const item_def*> items_food;    //List of foods should come next
+    vector<const item_def*> items_misc;
     vector<const item_def*> items_other;   //List of other items should go after everything
     vector<SelItem> selected_items;
 
@@ -2490,7 +2486,7 @@ void check_item_knowledge(bool unknown_items)
             if (i == OBJ_JEWELLERY && j >= NUM_RINGS && j < AMU_FIRST_AMULET)
                 continue;
 
-            if (i == OBJ_BOOKS && j > MAX_FIXED_BOOK)
+            if (i == OBJ_BOOKS && (j > MAX_FIXED_BOOK || !unknown_items))
                 continue;
 
             if (item_type_removed(i, j))
@@ -2511,7 +2507,7 @@ void check_item_knowledge(bool unknown_items)
         for (int ii = 0; ii < NUM_OBJECT_CLASSES; ii++)
         {
             object_class_type i = (object_class_type)ii;
-            if (!item_type_has_ids(i))
+            if (i == OBJ_BOOKS || !item_type_has_ids(i))
                 continue;
             _add_fake_item(i, get_max_subtype(i), selected_items, items);
         }
@@ -2534,12 +2530,31 @@ void check_item_knowledge(bool unknown_items)
             _add_fake_item(OBJ_FOOD, i, selected_items, items_food);
         }
 
+        for (int i = 0; i < NUM_MISCELLANY; i++)
+        {
+            if (i == MISC_HORN_OF_GERYON
+#if TAG_MAJOR_VERSION == 34
+                || is_deck_type(i)
+                || i == MISC_BUGGY_EBONY_CASKET
+                || i == MISC_BUGGY_LANTERN_OF_SHADOWS
+                || i == MISC_BOTTLED_EFREET
+                || i == MISC_RUNE_OF_ZOT
+                || i == MISC_STONE_OF_TREMORS
+                || i == MISC_XOMS_CHESSBOARD
+#endif
+                || (i == MISC_QUAD_DAMAGE && !crawl_state.game_is_sprint()))
+            {
+                continue;
+            }
+            _add_fake_item(OBJ_MISCELLANY, i, selected_items, items_misc);
+        }
+
         // Misc.
         static const pair<object_class_type, int> misc_list[] =
         {
             { OBJ_BOOKS, BOOK_MANUAL },
             { OBJ_GOLD, 1 },
-            { OBJ_MISCELLANY, NUM_MISCELLANY },
+            { OBJ_BOOKS, NUM_BOOKS },
             { OBJ_RUNES, NUM_RUNE_TYPES },
         };
         for (auto e : misc_list)
@@ -2549,6 +2564,7 @@ void check_item_knowledge(bool unknown_items)
     sort(items.begin(), items.end(), _identified_item_names);
     sort(items_missile.begin(), items_missile.end(), _identified_item_names);
     sort(items_food.begin(), items_food.end(), _identified_item_names);
+    sort(items_misc.begin(), items_misc.end(), _identified_item_names);
 
     KnownMenu menu;
     string stitle;
@@ -2576,6 +2592,7 @@ void check_item_knowledge(bool unknown_items)
 
     ml = menu.load_items(items_missile, known_item_mangle, ml, false);
     ml = menu.load_items(items_food, known_item_mangle, ml, false);
+    ml = menu.load_items(items_misc, known_item_mangle, ml, false);
     if (!items_other.empty())
     {
         menu.add_entry(new MenuEntry("Other Items", MEL_SUBTITLE));
@@ -2590,6 +2607,7 @@ void check_item_knowledge(bool unknown_items)
     deleteAll(items);
     deleteAll(items_missile);
     deleteAll(items_food);
+    deleteAll(items_misc);
     deleteAll(items_other);
 
     if (!all_items_known && (last_char == '\\' || last_char == '-'))
