@@ -7,6 +7,7 @@
 #include "abyss.h"
 #include "act-iter.h"
 #include "areas.h"
+#include "artefact.h"
 #include "bloodspatter.h"
 #include "branch.h"
 #include "chardump.h"
@@ -399,6 +400,22 @@ static void _rune_effect(dungeon_feature_type ftype)
     }
 }
 
+static void _gauntlet_effect()
+{
+    // already doomed
+    if (you.species == SP_FORMICID)
+        return;
+
+    mprf(MSGCH_WARN, "The nature of this place prevents teleportation.");
+
+    if (you.has_mutation(MUT_TELEPORT, true)
+        || you.wearing(EQ_RINGS, RING_TELEPORTATION, true)
+        || you.scan_artefacts(ARTP_CAUSE_TELEPORTATION, true))
+    {
+        mpr("Your feel stable.");
+    }
+}
+
 static void _new_level_amuses_xom(dungeon_feature_type feat,
                                   dungeon_feature_type old_feat,
                                   bool shaft, int shaft_depth, bool voluntary)
@@ -769,6 +786,9 @@ void floor_transition(dungeon_feature_type how,
                 mpr(branches[branch].entry_message);
             else if (branch != BRANCH_ABYSS) // too many messages...
                 mprf("Welcome to %s!", branches[branch].longname);
+
+            if (how == DNGN_ENTER_GAUNTLET)
+                _gauntlet_effect();
         }
 
         const set<branch_type> boring_branch_exits = {
