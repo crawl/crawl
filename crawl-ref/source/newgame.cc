@@ -752,6 +752,11 @@ static void _choose_seed(newgame_def& ng, newgame_def& choice,
             "Pregeneration will ensure that these remain the same no matter\n"
             "what order you explore the dungeon in. (See the manual for more\n"
             "details.)\n\n");
+#ifdef SEEDING_UNRELIABLE
+            prompt.cprintf(
+                "Warning: your build of crawl does not support stable seeding!\n"
+                "Levels may differ from 'official' seeded games.\n\n");
+#endif
         prompt.cprintf("Seed ([-] to clear):");
         string seed_text = make_stringf("%-20s", buf);
         prompt.cprintf("\n%s\n\n", seed_text.c_str());

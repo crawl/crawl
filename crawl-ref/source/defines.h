@@ -7,6 +7,14 @@
 
 #pragma once
 
+// In this case, an x86 CPU will use x87 math for floating point calculations,
+// which uses 80 bit intermediate results, andleads to difference from the
+// (much more common, in 2019) SSE-based calculations.
+// probably far from the only case where seeding isn't reliable...
+#if defined(TARGET_CPU_X86) && !defined(__SSE__)
+#define SEEDING_UNRELIABLE
+#endif
+
 // Minimum terminal size allowed.
 #define MIN_COLS  79
 #define MIN_LINES 24
