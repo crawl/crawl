@@ -786,10 +786,10 @@ void floor_transition(dungeon_feature_type how,
                 mpr(branches[branch].entry_message);
             else if (branch != BRANCH_ABYSS) // too many messages...
                 mprf("Welcome to %s!", branches[branch].longname);
-
-            if (how == DNGN_ENTER_GAUNTLET)
-                _gauntlet_effect();
         }
+
+        if (branch == BRANCH_GAUNTLET)
+            _gauntlet_effect();
 
         const set<branch_type> boring_branch_exits = {
             BRANCH_TEMPLE,
