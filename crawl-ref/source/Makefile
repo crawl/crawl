@@ -109,6 +109,13 @@ include Makefile.obj
 STDFLAG = -std=c++11
 
 CFOTHERS := -pipe $(EXTERNAL_FLAGS)
+# Build with FORCE_SSE=y to get better seed stability on 32 bit x86 builds. It
+# is not recommended to do this unless you are building with contrib lua.
+# On any 64bit  builds where the arch supports it, (at least) sse2 is implied.
+ifdef FORCE_SSE
+CFOTHERS += -mfpmath=sse -msse2
+endif
+
 CFWARN := 
 CFWARN_L := -Wall -Wformat-security -Wundef
 
@@ -1749,9 +1756,9 @@ ifneq ($(GAME),crawl.exe)
 	@echo "This is only for Windows; please specify CROSSHOST.";false
 endif
 	+$(MAKE) clean
-	+$(MAKE) TILES=y DESTDIR=build-win SAVEDIR='~/crawl' install
+	+$(MAKE) TILES=y DESTDIR=build-win FORCE_SSE=y SAVEDIR='~/crawl' install
 	mv build-win/crawl.exe build-win/crawl-tiles.exe
-	+$(MAKE) TILES=  DESTDIR=build-win SAVEDIR='~/crawl' install
+	+$(MAKE) TILES=  DESTDIR=build-win FORCE_SSE=y SAVEDIR='~/crawl' install
 	mv build-win/crawl.exe build-win/crawl-console.exe
 	mv build-win/docs/CREDITS.txt build-win/
 	echo $(SRC_VERSION) >build-win/version.txt
@@ -1762,11 +1769,11 @@ ifneq ($(GAME),crawl.exe)
 	@echo "This is only for Windows; please specify CROSSHOST.";false
 endif
 	+$(MAKE) clean
-	+$(MAKE) TILES=y DESTDIR=build-win/stone_soup-tiles-$(MAJOR_VERSION) install
+	+$(MAKE) TILES=y DESTDIR=build-win/stone_soup-tiles-$(MAJOR_VERSION) FORCE_SSE=y install
 	cp -p $(ZIP_DOCS) build-win/stone_soup-tiles-$(MAJOR_VERSION)/
 	cd build-win && zip -9r ../stone_soup-$(SRC_VERSION)-tiles-win32.zip *
 	rm -rf build-win
-	+$(MAKE) DESTDIR=build-win/stone_soup-$(MAJOR_VERSION) install
+	+$(MAKE) DESTDIR=build-win/stone_soup-$(MAJOR_VERSION) FORCE_SSE=y install
 	cp -p $(ZIP_DOCS) build-win/stone_soup-$(MAJOR_VERSION)/
 	cd build-win && zip -9r ../stone_soup-$(SRC_VERSION)-win32.zip *
 	rm -rf build-win
