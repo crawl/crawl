@@ -412,7 +412,7 @@ static void _gauntlet_effect()
         || you.wearing(EQ_RINGS, RING_TELEPORTATION, true)
         || you.scan_artefacts(ARTP_CAUSE_TELEPORTATION, true))
     {
-        mpr("Your feel stable.");
+        mpr("Your feel stable on this floor.");
     }
 }
 
