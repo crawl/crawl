@@ -174,7 +174,7 @@ ARCH := $(HOST)
 
 ifdef CROSSHOST
 	ARCH := $(CROSSHOST)
-	ifneq (,$($shell which $(ARCH)-pkg-config 2>/dev/null))
+	ifneq (,$(shell which $(ARCH)-pkg-config 2>/dev/null))
 	  PKGCONFIG = $(ARCH)-pkg-config
 	else
 	  ifneq (,$(wildcard /usr/$(ARCH)/lib/pkgconfig))
