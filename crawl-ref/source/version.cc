@@ -39,7 +39,7 @@ namespace Version
 #endif
 
 const char* compilation_info =
-    "Compiled with " COMPILER " on " __DATE__ " at " __TIME__ "\n"
+    "Compiled with " COMPILER "\n"
     "Build platform: " CRAWL_HOST "\n"
     "Platform: " CRAWL_ARCH "\n"
     "CFLAGS: " CRAWL_CFLAGS "\n"
