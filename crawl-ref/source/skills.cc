@@ -399,6 +399,8 @@ void check_skill_level_change(skill_type sk, bool do_level_up)
         else
             you.skills[sk] = new_level;
     }
+
+    check_training_targets();
 }
 
 // Fill a queue in random order with the values of the array.
