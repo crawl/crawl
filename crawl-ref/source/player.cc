@@ -2912,7 +2912,7 @@ void level_change(bool skip_attribute_increase)
                     // do_level_up = false) but save the old values; then when
                     // we want the messages later, we restore the old skill
                     // levels and call check_skill_level_change() again, this
-                    // time passing do_update = true.
+                    // time passing do_level_up = true.
 
                     uint8_t saved_skills[NUM_SKILLS];
                     for (skill_type sk = SK_FIRST_SKILL; sk < NUM_SKILLS; ++sk)
