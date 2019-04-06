@@ -2090,7 +2090,7 @@ kmons("q = deep elf master archer; longbow randart " ..
 MONS:   deep elf blademaster / deep elf master archer
 SUBST:  fg = |*, h = *, i = $%, j= -
 # There aren't any good lower-tier, trog-appropriate warrior types. So use all
-# blademasters and master archers, but reduce the reduce monster count.
+# blademasters and master archers, but reduce the monster count.
 NSUBST: - = 1 / 2=1. / 2=L / q / 3=2. / .
 : elseif you.in_branch("Depths") then
 MONS:   tengu warrior / deep troll / spriggan berserker / stone giant / ettin
