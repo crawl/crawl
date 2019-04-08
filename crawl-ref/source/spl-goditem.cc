@@ -1256,7 +1256,7 @@ void torment_cell(coord_def where, actor *attacker, torment_source_type taux)
     {
         if (mons->observable())
             simple_monster_message(*mons, " convulses!");
-        else
+        else if (you.see_cell(mons->pos()))
             mpr("Something is bathed in an unholy light!");
 
         // Currently, torment doesn't annoy the monsters it affects
