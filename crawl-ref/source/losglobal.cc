@@ -126,9 +126,6 @@ bool cell_see_cell(const coord_def& p, const coord_def& q, los_type l)
     if (!(*flags & (l << LOS_KNOWN)))
         _update_globallos_at(p, l);
 
-    //if (!(*flags & (l << LOS_KNOWN)))
-    //    die("cell_see_cell %d,%d %d,%d", p.x,p.y,q.x,q.y);
     ASSERT(*flags & (l << LOS_KNOWN));
-
     return *flags & l;
 }
