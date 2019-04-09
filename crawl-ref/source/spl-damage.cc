@@ -608,10 +608,7 @@ static spret _cast_los_attack_spell(spell_type spell, int pow,
         }
 
         mpr(player_msg);
-        flash_view(UA_PLAYER, beam.colour, &hitfunc);
-        more();
-        clear_messages();
-        flash_view(UA_PLAYER, 0);
+        flash_view_delay(UA_PLAYER, beam.colour, 300, &hitfunc);
     }
     else if (actual)
     {
