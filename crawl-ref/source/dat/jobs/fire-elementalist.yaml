@@ -1,0 +1,25 @@
+enum: JOB_FIRE_ELEMENTALIST
+name: "Fire Elementalist"
+short_name: FE
+#category: Mage
+#category_priority: 60
+str: 0
+int: 7
+dex: 5
+equipment:
+  - "robe"
+  - "book of Flames"
+recommended_species:
+  - SP_DEEP_ELF
+  - SP_HILL_ORC
+  - SP_NAGA
+  - SP_TENGU
+  - SP_DEMIGOD
+  - SP_GARGOYLE
+skills:
+  SK_DODGING: 2
+  SK_SPELLCASTING: 2
+  SK_CONJURATIONS: 1
+  SK_FIRE_MAGIC: 3
+  SK_STEALTH: 2
+create_enum: false

@@ -1,0 +1,30 @@
+enum: JOB_WARPER
+name: "Warper"
+short_name: Wr
+#category: Warrior-mage
+#category_priority: 80
+str: 3
+int: 5
+dex: 4
+equipment:
+  - "leather armour"
+  - "book of Spatial Translocations"
+  - "scroll of blinking"
+  - "tomahawk ego:dispersal q:5"
+weapon_choice: WCHOICE_PLAIN
+recommended_species:
+  - SP_FELID
+  - SP_HALFLING
+  - SP_DEEP_DWARF
+  - SP_SPRIGGAN
+  - SP_CENTAUR
+  - SP_BASE_DRACONIAN
+skills:
+  SK_FIGHTING: 2
+  SK_ARMOUR: 1
+  SK_DODGING: 2
+  SK_SPELLCASTING: 2
+  SK_TRANSLOCATIONS: 3
+  SK_THROWING: 1
+  SK_WEAPON: 2
+create_enum: false

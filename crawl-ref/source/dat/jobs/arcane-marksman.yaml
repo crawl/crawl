@@ -1,0 +1,26 @@
+enum: JOB_ARCANE_MARKSMAN
+name: "Arcane Marksman"
+short_name: AM
+#category: Warrior-mage
+#category_priority: 70
+str: 2
+int: 5
+dex: 5
+equipment:
+  - "robe"
+  - "book of Debilitation"
+weapon_choice: WCHOICE_RANGED
+recommended_species:
+  - SP_FORMICID
+  - SP_DEEP_ELF
+  - SP_KOBOLD
+  - SP_SPRIGGAN
+  - SP_TROLL
+  - SP_CENTAUR
+skills:
+  SK_FIGHTING: 1
+  SK_DODGING: 2
+  SK_SPELLCASTING: 1
+  SK_HEXES: 3
+  SK_WEAPON: 2
+create_enum: false

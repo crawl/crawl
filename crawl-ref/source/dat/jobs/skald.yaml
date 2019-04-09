@@ -1,0 +1,25 @@
+enum: JOB_SKALD
+name: "Skald"
+#category: Warrior-mage
+#category_priority: 100
+str: 3
+int: 5
+dex: 4
+equipment:
+  - "leather armour"
+  - "book of Battle"
+weapon_choice: WCHOICE_PLAIN
+recommended_species:
+  - SP_HALFLING
+  - SP_CENTAUR
+  - SP_MERFOLK
+  - SP_BASE_DRACONIAN
+  - SP_VAMPIRE
+skills:
+  SK_FIGHTING: 2
+  SK_ARMOUR: 1
+  SK_DODGING: 2
+  SK_SPELLCASTING: 2
+  SK_CHARMS: 3
+  SK_WEAPON: 2
+create_enum: false

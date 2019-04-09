@@ -1,0 +1,24 @@
+enum: JOB_AIR_ELEMENTALIST
+name: "Air Elementalist"
+short_name: AE
+#category: Mage
+#category_priority: 40
+str: 0
+int: 7
+dex: 5
+equipment:
+  - "robe"
+  - "book of Air"
+recommended_species:
+  - SP_DEEP_ELF
+  - SP_NAGA
+  - SP_TENGU
+  - SP_BASE_DRACONIAN
+  - SP_VINE_STALKER
+skills:
+  SK_DODGING: 2
+  SK_SPELLCASTING: 2
+  SK_CONJURATIONS: 1
+  SK_AIR_MAGIC: 3
+  SK_STEALTH: 2
+create_enum: false

@@ -1,0 +1,23 @@
+enum: JOB_CONJURER
+name: "Conjurer"
+short_name: Cj
+#category: Mage
+#category_priority: 90
+str: 0
+int: 7
+dex: 5
+equipment:
+  - "robe"
+  - "book of Conjurations"
+recommended_species:
+  - SP_DEEP_ELF
+  - SP_NAGA
+  - SP_TENGU
+  - SP_BASE_DRACONIAN
+  - SP_DEMIGOD
+skills:
+  SK_DODGING: 2
+  SK_SPELLCASTING: 2
+  SK_CONJURATIONS: 4
+  SK_STEALTH: 2
+create_enum: false

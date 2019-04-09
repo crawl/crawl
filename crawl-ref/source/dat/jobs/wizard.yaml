@@ -1,0 +1,27 @@
+enum: JOB_WIZARD
+name: "Wizard"
+short_name: Wz
+#category: Mage
+#category_priority: 100
+str: -1
+int: 10
+dex: 3
+equipment:
+  - "robe"
+  - "hat"
+  - "book of Minor Magic"
+recommended_species:
+  - SP_DEEP_ELF
+  - SP_NAGA
+  - SP_BASE_DRACONIAN
+  - SP_OCTOPODE
+  - SP_HUMAN
+  - SP_MUMMY
+skills:
+  SK_DODGING: 2
+  SK_SPELLCASTING: 3
+  SK_CONJURATIONS: 1
+  SK_TRANSLOCATIONS: 1
+  SK_SUMMONINGS: 1
+  SK_STEALTH: 2
+create_enum: false

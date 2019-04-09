@@ -1,0 +1,26 @@
+enum: JOB_TRANSMUTER
+name: "Transmuter"
+short_name: Tm
+#category: Warrior-mage
+#category_priority: 90
+str: 2
+int: 5
+dex: 5
+equipment:
+  - "arrow q:12"
+  - "robe"
+  - "book of Changes"
+recommended_species:
+  - SP_NAGA
+  - SP_MERFOLK
+  - SP_BASE_DRACONIAN
+  - SP_DEMIGOD
+  - SP_DEMONSPAWN
+  - SP_TROLL
+skills:
+  SK_FIGHTING: 1
+  SK_DODGING: 2
+  SK_SPELLCASTING: 2
+  SK_TRANSMUTATIONS: 2
+  SK_UNARMED_COMBAT: 3
+create_enum: false

@@ -1,0 +1,23 @@
+enum: JOB_SUMMONER
+name: "Summoner"
+#category: Mage
+#category_priority: 80
+str: 0
+int: 7
+dex: 5
+equipment:
+  - "robe"
+  - "book of Callings"
+recommended_species:
+  - SP_DEEP_ELF
+  - SP_HILL_ORC
+  - SP_VINE_STALKER
+  - SP_MERFOLK
+  - SP_TENGU
+  - SP_VAMPIRE
+skills:
+  SK_DODGING: 2
+  SK_SPELLCASTING: 2
+  SK_SUMMONINGS: 4
+  SK_STEALTH: 2
+create_enum: false

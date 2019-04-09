@@ -1,0 +1,25 @@
+enum: JOB_ABYSSAL_KNIGHT
+name: "Abyssal Knight"
+short_name: AK
+#category: Zealot
+#category_priority: 90
+str: 4
+int: 4
+dex: 4
+equipment:
+  - "leather armour"
+weapon_choice: WCHOICE_PLAIN
+recommended_species:
+  - SP_HILL_ORC
+  - SP_SPRIGGAN
+  - SP_TROLL
+  - SP_MERFOLK
+  - SP_BASE_DRACONIAN
+  - SP_DEMONSPAWN
+skills:
+  SK_FIGHTING: 3
+  SK_DODGING: 1
+  SK_ARMOUR: 1
+  SK_INVOCATIONS: 2
+  SK_WEAPON: 2
+create_enum: false

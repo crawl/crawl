@@ -1,0 +1,27 @@
+enum: JOB_ARTIFICER
+name: "Artificer"
+#category: Adventurer
+#category_priority: 100
+str: 4
+int: 3
+dex: 5
+equipment:
+  - "short sword"
+  - "leather armour"
+  - "wand of flame charges:15"
+  - "wand of enslavement charges:15"
+  - "wand of random effects charges:15"
+recommended_species:
+  - SP_DEEP_DWARF
+  - SP_HALFLING
+  - SP_KOBOLD
+  - SP_SPRIGGAN
+  - SP_BASE_DRACONIAN
+  - SP_DEMONSPAWN
+skills:
+  SK_FIGHTING: 1
+  SK_DODGING: 2
+  SK_STEALTH: 1
+  SK_EVOCATIONS: 3
+  SK_WEAPON: 1
+create_enum: false

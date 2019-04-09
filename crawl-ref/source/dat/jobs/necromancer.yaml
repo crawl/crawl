@@ -1,0 +1,23 @@
+enum: JOB_NECROMANCER
+name: "Necromancer"
+#category: Mage
+#category_priority: 70
+str: 0
+int: 7
+dex: 5
+equipment:
+  - "robe"
+  - "book of Necromancy"
+recommended_species:
+  - SP_DEEP_ELF
+  - SP_DEEP_DWARF
+  - SP_HILL_ORC
+  - SP_DEMONSPAWN
+  - SP_MUMMY
+  - SP_VAMPIRE
+skills:
+  SK_DODGING: 2
+  SK_SPELLCASTING: 2
+  SK_NECROMANCY: 4
+  SK_STEALTH: 2
+create_enum: false

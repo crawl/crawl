@@ -1,0 +1,18 @@
+# Note: wanderers' stats, equipment and skills is randomised.
+enum: JOB_WANDERER
+name: "Wanderer"
+short_name: Wn
+#category: Adventurer
+#category_priority: 90
+str: 0
+int: 0
+dex: 0
+recommended_species:
+  - SP_HILL_ORC
+  - SP_SPRIGGAN
+  - SP_CENTAUR
+  - SP_MERFOLK
+  - SP_BASE_DRACONIAN
+  - SP_HUMAN
+  - SP_DEMONSPAWN
+create_enum: false

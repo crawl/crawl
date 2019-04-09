@@ -1,0 +1,26 @@
+enum: JOB_EARTH_ELEMENTALIST
+name: "Earth Elementalist"
+short_name: EE
+#category: Mage
+#category_priority: 30
+str: 0
+int: 7
+dex: 5
+equipment:
+  - "robe"
+  - "book of Geomancy"
+recommended_species:
+  - SP_DEEP_ELF
+  - SP_DEEP_DWARF
+  - SP_SPRIGGAN
+  - SP_GARGOYLE
+  - SP_DEMIGOD
+  - SP_GHOUL
+  - SP_OCTOPODE
+skills:
+  SK_DODGING: 2
+  SK_SPELLCASTING: 2
+  SK_EARTH_MAGIC: 3
+  SK_TRANSMUTATIONS: 1
+  SK_STEALTH: 2
+create_enum: false

@@ -1,0 +1,26 @@
+enum: JOB_VENOM_MAGE
+name: "Venom Mage"
+short_name: VM
+#category: Mage
+#category_priority: 20
+str: 0
+int: 7
+dex: 5
+equipment:
+  - "robe"
+  - "Young Poisoner's Handbook"
+recommended_species:
+  - SP_DEEP_ELF
+  - SP_SPRIGGAN
+  - SP_NAGA
+  - SP_MERFOLK
+  - SP_TENGU
+  - SP_FELID
+  - SP_DEMONSPAWN
+skills:
+  SK_DODGING: 2
+  SK_SPELLCASTING: 2
+  SK_CONJURATIONS: 1
+  SK_POISON_MAGIC: 3
+  SK_STEALTH: 2
+create_enum: false
