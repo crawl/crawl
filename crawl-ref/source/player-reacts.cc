@@ -289,26 +289,19 @@ static void _maybe_melt_armour()
  */
 static int _current_horror_level()
 {
-    const coord_def& center = you.pos();
-    const int radius = LOS_RADIUS;
     int horror_level = 0;
 
-    for (radius_iterator ri(center, radius, C_SQUARE); ri; ++ri)
+    for (monster_near_iterator mi(&you, LOS_NO_TRANS); mi; ++mi)
     {
-        const monster* const mon = monster_at(*ri);
 
-        if (mon == nullptr
-            || mons_aligned(mon, &you)
-            || !mons_is_threatening(*mon)
-            || !you.can_see(*mon)
-            || mons_is_tentacle_or_tentacle_segment(mon->type))
+        if (mons_aligned(*mi, &you)
+            || !mons_is_threatening(**mi)
+            || mons_is_tentacle_or_tentacle_segment(mi->type))
         {
             continue;
         }
 
-        ASSERT(mon);
-
-        const mon_threat_level_type threat_level = mons_threat_level(*mon);
+        const mon_threat_level_type threat_level = mons_threat_level(**mi);
         if (threat_level == MTHRT_NASTY)
             horror_level += 3;
         else if (threat_level == MTHRT_TOUGH)
