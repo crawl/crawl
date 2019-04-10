@@ -11,6 +11,7 @@
 #include "player.h"
 #include "stringutil.h"
 
+#include "job-def.h"
 #include "job-data.h"
 
 static const job_def& _job_def(job_type job)
