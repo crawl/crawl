@@ -11,7 +11,7 @@ equipment:
   - "book of Spatial Translocations"
   - "scroll of blinking"
   - "tomahawk ego:dispersal q:5"
-weapon_choice: WCHOICE_PLAIN
+weapon_choice: plain
 recommended_species:
   - SP_FELID
   - SP_HALFLING

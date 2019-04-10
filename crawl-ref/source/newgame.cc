@@ -1535,14 +1535,14 @@ static void _prompt_choice(int choice_type, newgame_def& ng, newgame_def& ng_cho
         game_ended(game_exit::abort);
 }
 
-typedef pair<weapon_type, char_choice_restriction> weapon_choice;
+typedef pair<weapon_type, char_choice_restriction> weap_choice;
 
 static weapon_type _fixup_weapon(weapon_type wp,
-                                 const vector<weapon_choice>& weapons)
+                                 const vector<weap_choice>& weapons)
 {
     if (wp == WPN_UNKNOWN || wp == WPN_RANDOM || wp == WPN_VIABLE)
         return wp;
-    for (weapon_choice choice : weapons)
+    for (weap_choice choice : weapons)
         if (wp == choice.first)
             return wp;
     return WPN_UNKNOWN;
@@ -1551,7 +1551,7 @@ static weapon_type _fixup_weapon(weapon_type wp,
 static const int WEAPON_COLUMN_WIDTH = 40;
 static void _construct_weapon_menu(const newgame_def& ng,
                                    const weapon_type& defweapon,
-                                   const vector<weapon_choice>& weapons,
+                                   const vector<weap_choice>& weapons,
                                    MenuFreeform* menu)
 {
 #ifdef USE_TILE_LOCAL
@@ -1847,7 +1847,7 @@ bool UIPrecisionMenuWrapper::on_event(const wm_event& ev)
  */
 static bool _prompt_weapon(const newgame_def& ng, newgame_def& ng_choice,
                            const newgame_def& defaults,
-                           const vector<weapon_choice>& weapons)
+                           const vector<weap_choice>& weapons)
 {
     const int ui_w = 80, ui_h = 24;
     PrecisionMenu menu;
@@ -2000,9 +2000,9 @@ static weapon_type _starting_weapon_upgrade(weapon_type wp, job_type job,
     }
 }
 
-static vector<weapon_choice> _get_weapons(const newgame_def& ng)
+static vector<weap_choice> _get_weapons(const newgame_def& ng)
 {
-    vector<weapon_choice> weapons;
+    vector<weap_choice> weapons;
     if (job_gets_ranged_weapons(ng.job))
     {
         weapon_type startwep[4] = { WPN_THROWN, WPN_HUNTING_SLING,
@@ -2010,7 +2010,7 @@ static vector<weapon_choice> _get_weapons(const newgame_def& ng)
 
         for (int i = 0; i < 4; i++)
         {
-            weapon_choice wp;
+            weap_choice wp;
             wp.first = startwep[i];
 
             wp.second = weapon_restriction(wp.first, ng);
@@ -2025,7 +2025,7 @@ static vector<weapon_choice> _get_weapons(const newgame_def& ng)
                                     WPN_UNARMED };
         for (int i = 0; i < 7; ++i)
         {
-            weapon_choice wp;
+            weap_choice wp;
             wp.first = startwep[i];
             if (job_gets_good_weapons(ng.job))
             {
@@ -2042,7 +2042,7 @@ static vector<weapon_choice> _get_weapons(const newgame_def& ng)
 }
 
 static void _resolve_weapon(newgame_def& ng, newgame_def& ng_choice,
-                            const vector<weapon_choice>& weapons)
+                            const vector<weap_choice>& weapons)
 {
     int weapon = ng_choice.weapon;
 
@@ -2058,7 +2058,7 @@ static void _resolve_weapon(newgame_def& ng, newgame_def& ng_choice,
     case WPN_VIABLE:
     {
         int good_choices = 0;
-        for (weapon_choice choice : weapons)
+        for (weap_choice choice : weapons)
         {
             if (choice.second == CC_UNRESTRICTED
                 && one_chance_in(++good_choices))
@@ -2095,7 +2095,7 @@ static bool _choose_weapon(newgame_def& ng, newgame_def& ng_choice,
     if (!job_has_weapon_choice(ng.job))
         return true;
 
-    vector<weapon_choice> weapons = _get_weapons(ng);
+    vector<weap_choice> weapons = _get_weapons(ng);
 
     ASSERT(!weapons.empty());
     if (weapons.size() == 1)

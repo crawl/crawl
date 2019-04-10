@@ -9,7 +9,7 @@ equipment:
   - "scale mail"
   - "shield"
   - "potion of might"
-weapon_choice: WCHOICE_GOOD
+weapon_choice: good
 recommended_species:
   - SP_DEEP_DWARF
   - SP_HILL_ORC

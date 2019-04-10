@@ -8,7 +8,7 @@ int: 4
 dex: 4
 equipment:
   - "leather armour"
-weapon_choice: WCHOICE_PLAIN
+weapon_choice: plain
 recommended_species:
   - SP_HILL_ORC
   - SP_SPRIGGAN

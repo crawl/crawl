@@ -9,7 +9,7 @@ dex: 5
 equipment:
   - "robe"
   - "book of Debilitation"
-weapon_choice: WCHOICE_RANGED
+weapon_choice: ranged
 recommended_species:
   - SP_FORMICID
   - SP_DEEP_ELF

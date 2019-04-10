@@ -8,7 +8,7 @@ dex: 4
 equipment:
   - "leather armour"
   - "book of Battle"
-weapon_choice: WCHOICE_PLAIN
+weapon_choice: plain
 recommended_species:
   - SP_HALFLING
   - SP_CENTAUR

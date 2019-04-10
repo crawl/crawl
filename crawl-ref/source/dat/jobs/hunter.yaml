@@ -8,7 +8,7 @@ dex: 5
 equipment:
   - "short sword"
   - "leather armour"
-weapon_choice: WCHOICE_RANGED
+weapon_choice: ranged
 recommended_species:
   - SP_HILL_ORC
   - SP_HALFLING

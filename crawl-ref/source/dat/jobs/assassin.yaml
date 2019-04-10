@@ -12,7 +12,6 @@ equipment:
   - "cloak"
   - "needle ego:poisoned q:8"
   - "needle ego:curare q:2"
-weapon_choice: WCHOICE_NONE
 recommended_species:
   - SP_TROLL
   - SP_HALFLING

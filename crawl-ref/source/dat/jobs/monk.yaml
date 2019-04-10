@@ -7,7 +7,7 @@ int: 2
 dex: 7
 equipment:
   - "robe"
-weapon_choice: WCHOICE_PLAIN
+weapon_choice: plain
 recommended_species:
   - SP_DEEP_DWARF
   - SP_HILL_ORC

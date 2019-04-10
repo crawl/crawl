@@ -1,11 +1,13 @@
 #pragma once
 
-enum weapon_choice
+#include "species-type.h"
+
+enum class weapon_choice
 {
-    WCHOICE_NONE,   ///< No weapon choice
-    WCHOICE_PLAIN,  ///< Normal weapon choice
-    WCHOICE_GOOD,   ///< Chooses from "good" weapons
-    WCHOICE_RANGED, ///< Choice of ranged weapon
+    none,   ///< No weapon choice
+    plain,  ///< Normal weapon choice
+    good,   ///< Chooses from "good" weapons
+    ranged, ///< Choice of ranged weapon
 };
 
 struct job_def
