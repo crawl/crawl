@@ -1,7 +1,7 @@
 enum: JOB_NECROMANCER
 name: "Necromancer"
-#category: Mage
-#category_priority: 70
+category: Mage
+category_priority: 70
 str: 0
 int: 7
 dex: 5

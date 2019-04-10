@@ -1153,7 +1153,7 @@ GENERATED_HEADERS := art-enum.h config.h mon-mst.h species-type.h job-type.h
 GENERATED_FILES := $(GENERATED_HEADERS) art-data.h mi-enum.h \
                    $(RLTILES)/dc-unrand.txt build.h compflag.h dat/dlua/tags.lua \
                    cmd-name.h species-data.h aptitudes.h species-groups.h \
-                   job-data.h
+                   job-data.h job-groups.h
 
 LANGUAGES = $(filter-out en, $(notdir $(wildcard dat/descript/??)))
 SRC_PKG_BASE  := stone_soup
@@ -1642,10 +1642,14 @@ species-type.h: species-groups.h
 	$(QUIET_GEN)
 
 job-data.h: dat/jobs/*.yaml util/job-gen.py util/job-gen/*.txt
-	$(QUIET_GEN)util/job-gen.py dat/jobs/ util/job-gen/ job-data.h job-type.h
+	$(QUIET_GEN)util/job-gen.py dat/jobs/ util/job-gen/ job-data.h job-groups.h job-type.h
 
 # no-op
-job-type.h: job-data.h
+job-groups.h: job-data.h
+	$(QUIET_GEN)
+
+# no-op
+job-type.h: job-groups.h
 	$(QUIET_GEN)
 
 $(RLTILES)/dc-unrand.txt: art-data.h

@@ -1,7 +1,7 @@
 enum: JOB_SKALD
 name: "Skald"
-#category: Warrior-mage
-#category_priority: 100
+category: Warrior-mage
+category_priority: 100
 str: 3
 int: 5
 dex: 4

@@ -1,8 +1,8 @@
 enum: JOB_TRANSMUTER
 name: "Transmuter"
 short_name: Tm
-#category: Warrior-mage
-#category_priority: 90
+category: Warrior-mage
+category_priority: 90
 str: 2
 int: 5
 dex: 5

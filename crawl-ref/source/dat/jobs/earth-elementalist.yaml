@@ -1,8 +1,8 @@
 enum: JOB_EARTH_ELEMENTALIST
 name: "Earth Elementalist"
 short_name: EE
-#category: Mage
-#category_priority: 30
+category: Mage
+category_priority: 30
 str: 0
 int: 7
 dex: 5

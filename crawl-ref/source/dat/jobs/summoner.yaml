@@ -1,7 +1,7 @@
 enum: JOB_SUMMONER
 name: "Summoner"
-#category: Mage
-#category_priority: 80
+category: Mage
+category_priority: 80
 str: 0
 int: 7
 dex: 5

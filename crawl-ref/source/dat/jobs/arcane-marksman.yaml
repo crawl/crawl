@@ -1,8 +1,8 @@
 enum: JOB_ARCANE_MARKSMAN
 name: "Arcane Marksman"
 short_name: AM
-#category: Warrior-mage
-#category_priority: 70
+category: Warrior-mage
+category_priority: 70
 str: 2
 int: 5
 dex: 5

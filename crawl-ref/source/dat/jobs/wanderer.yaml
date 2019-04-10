@@ -2,8 +2,8 @@
 enum: JOB_WANDERER
 name: "Wanderer"
 short_name: Wn
-#category: Adventurer
-#category_priority: 90
+category: Adventurer
+category_priority: 90
 str: 0
 int: 0
 dex: 0
