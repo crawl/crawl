@@ -1454,12 +1454,13 @@ show_game_time = true
         By default, the counter in the stat area displays elapsed game time.
         Most actions take one unit of time, but some are quicker (putting on a
         ring, wielding a weapon, ...) and others are slower (swinging a weapon
-        with low skill, changing armour, ...). The duration of the last action
-        is displayed in parenthesis, after the time display.
+        with low skill, changing armour, ...).
         When set to false, the counter will display player turns instead, which
         is the number of actions taken regardless of their duration. It is this
         turn count which is used for scoring (and this turn count is always
         visible on the % overview screen).
+        The duration of the last action is displayed in parenthesis, after the
+        time/player turns display.
 
 equip_bar = false
         When set to true, this option replaces the noise bar with an
