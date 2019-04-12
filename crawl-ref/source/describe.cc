@@ -1271,8 +1271,8 @@ static string _describe_weapon(const item_def &item, bool verbose)
                 description += "It poisons the flesh of those it strikes.";
             break;
         case SPWPN_PROTECTION:
-            description += "It protects the one who uses it against "
-                "injury (+AC on strike).";
+            description += "It grants its wielder temporary protection when "
+                "it strikes (+7 to AC).";
             break;
         case SPWPN_DRAINING:
             description += "A truly terrible weapon, it drains the "
