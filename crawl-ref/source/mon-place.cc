@@ -2845,17 +2845,27 @@ conduct_type player_will_anger_monster(const monster &mon)
     return DID_NOTHING;
 }
 
-bool player_angers_monster(monster* mon)
+bool player_angers_monster(monster* mon, bool real)
 {
     ASSERT(mon); // XXX: change to monster &mon
 
     // Get the drawbacks, not the benefits... (to prevent e.g. demon-scumming).
     conduct_type why = player_will_anger_monster(*mon);
-    if (why && mon->wont_attack())
+    if (why && (!real || mon->wont_attack()))
     {
-        mon->attitude = ATT_HOSTILE;
-        mon->del_ench(ENCH_CHARM);
-        behaviour_event(mon, ME_ALERT, &you);
+        if (real)
+        {
+            mon->attitude = ATT_HOSTILE;
+            mon->del_ench(ENCH_CHARM);
+            behaviour_event(mon, ME_ALERT, &you);
+        }
+        const string modal = real
+                             ? ((why == DID_SACRIFICE_LOVE) ? "can " : "")
+                             : "would ";
+        const string verb = (why == DID_SACRIFICE_LOVE)
+                             ? "feel"
+                             : real ? "is" : "be";
+        const string vcomplex = modal + verb;
 
         if (you.can_see(*mon))
         {
@@ -2864,26 +2874,33 @@ bool player_angers_monster(monster* mon)
             switch (why)
             {
             case DID_EVIL:
-                mprf("%s is enraged by your holy aura!", mname.c_str());
+                mprf("%s %s enraged by your holy aura!",
+                    mname.c_str(), vcomplex.c_str());
                 break;
             case DID_CORPSE_VIOLATION:
-                mprf("%s is revulsed by your support of nature!", mname.c_str());
+                mprf("%s %s revulsed by your support of nature!",
+                    mname.c_str(), vcomplex.c_str());
                 break;
             case DID_HOLY:
-                mprf("%s is enraged by your evilness!", mname.c_str());
+                mprf("%s %s enraged by your evilness!",
+                    mname.c_str(), vcomplex.c_str());
                 break;
             case DID_UNCLEAN:
             case DID_CHAOS:
-                mprf("%s is enraged by your lawfulness!", mname.c_str());
+                mprf("%s %s enraged by your lawfulness!",
+                    mname.c_str(), vcomplex.c_str());
                 break;
             case DID_SPELL_CASTING:
-                mprf("%s is enraged by your magic-hating god!", mname.c_str());
+                mprf("%s %s enraged by your magic-hating god!",
+                    mname.c_str(), vcomplex.c_str());
                 break;
             case DID_SACRIFICE_LOVE:
-                mprf("%s can only feel hate for you!", mname.c_str());
+                mprf("%s %s only hate for you!",
+                    mname.c_str(), vcomplex.c_str());
                 break;
             default:
-                mprf("%s is enraged by a buggy thing about you!", mname.c_str());
+                mprf("%s %s enraged by a buggy thing about you!",
+                    mname.c_str(), vcomplex.c_str());
                 break;
             }
         }
