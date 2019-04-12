@@ -773,13 +773,20 @@ bool dgn_square_travel_ok(const coord_def &c)
 
 static bool _dgn_square_is_passable(const coord_def &c)
 {
-    // [enne] Why does this function check MMT_OPAQUE?
+    // [enne] Why does this function check these flags?
     //
     // Don't peek inside MMT_OPAQUE vaults (all vaults are opaque by
     // default) because vaults may choose to create isolated regions,
     // or otherwise cause connectivity issues even if the map terrain
     // is travel-passable.
-    return !(env.level_map_mask(c) & MMT_OPAQUE) && dgn_square_travel_ok(c);
+    //
+    // For vaults place by Vaults layouts, however, we set MMT_PASSABLE
+    // and always assume they are properly passable from one entrance
+    // to the other.
+    // The V layout code already guarantees that the level is connected
+    // up validly and room entrances connected up to the doors.
+    return env.level_map_mask(c) & MMT_PASSABLE
+        || !(env.level_map_mask(c) & MMT_OPAQUE) && dgn_square_travel_ok(c);
 }
 
 static bool _dgn_square_is_ever_passable(const coord_def &c)
@@ -1090,7 +1097,9 @@ dgn_register_place(const vault_placement &place, bool register_vault)
         else
             _mask_vault(place, MMT_VAULT);
 
-        if (!transparent)
+        if (place.map.has_tag("passable"))
+            _mask_vault(place, MMT_PASSABLE);
+        else if (!transparent)
             _mask_vault(place, MMT_OPAQUE);
     }
 
