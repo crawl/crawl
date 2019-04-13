@@ -5191,6 +5191,8 @@ player::player()
     num_turns        = 0;
     exploration      = 0;
 
+    trapped          = false;
+
     last_view_update = 0;
 
     spell_letter_table.init(-1);
