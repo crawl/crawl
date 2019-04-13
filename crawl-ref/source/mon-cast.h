@@ -37,6 +37,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 void mons_cast_noise(monster* mons, const bolt &pbolt,
                      spell_type spell_cast, mon_spell_slot_flags slot_flags);
 bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
+                     bool evoke = false,
                      bool check_validity = false);
 
 void mons_cast_haunt(monster* mons);

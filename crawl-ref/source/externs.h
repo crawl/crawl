@@ -758,10 +758,11 @@ enum mon_spell_slot_flag
 
     MON_SPELL_SHORT_RANGE = 1 << 10, // only use at short distances
     MON_SPELL_LONG_RANGE  = 1 << 11, // only use at long distances
+    MON_SPELL_EVOKE       = 1 << 12, // a spell from an evoked item
 
-    MON_SPELL_LAST_FLAG = MON_SPELL_LONG_RANGE,
+    MON_SPELL_LAST_FLAG = MON_SPELL_EVOKE,
 };
-DEF_BITFIELD(mon_spell_slot_flags, mon_spell_slot_flag, 11);
+DEF_BITFIELD(mon_spell_slot_flags, mon_spell_slot_flag, 12);
 const int MON_SPELL_LAST_EXPONENT = mon_spell_slot_flags::last_exponent;
 COMPILE_CHECK(mon_spell_slot_flags::exponent(MON_SPELL_LAST_EXPONENT)
               == MON_SPELL_LAST_FLAG);
