@@ -996,7 +996,7 @@ static bool _handle_scroll(monster& mons)
 
     case SCR_BLINKING:
         if ((mons.caught() || mons_is_fleeing(mons) || mons.pacified())
-            && mons.can_see(you) && !mons.no_tele(true, false))
+            && mons.can_see(you) && !mons.no_tele(true, false, true))
         {
             simple_monster_message(mons, " reads a scroll.");
             read = true;

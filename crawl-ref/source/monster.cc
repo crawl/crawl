@@ -4126,6 +4126,11 @@ bool monster::no_tele(bool calc_unid, bool permit_id, bool blinking) const
     if (has_ench(ENCH_DIMENSION_ANCHOR))
         return true;
 
+    // for now, don't allow tele at all: this can bring the minotaur to parts
+    // of the gauntlet that the player can't get back to.
+    if (player_in_branch(BRANCH_GAUNTLET) && !blinking)
+        return true;
+
     return false;
 }
 

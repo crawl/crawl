@@ -526,7 +526,7 @@ void trap_def::trigger(actor& triggerer)
             mprf("%s enters %s!", triggerer.name(DESC_THE).c_str(),
                     name(DESC_A).c_str());
         apply_visible_monsters([] (monster& mons) {
-                return !mons.no_tele() && monster_blink(&mons);
+                return !mons.no_tele(true, false, true) && monster_blink(&mons);
             }, pos);
         if (!you_trigger && you.see_cell_no_trans(pos))
             you.blink();

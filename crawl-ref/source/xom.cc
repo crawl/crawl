@@ -2765,7 +2765,7 @@ static void _xom_noise(int /*sever*/)
 static bool _mon_valid_blink_victim(const monster& mon)
 {
     return !mon.wont_attack()
-            && !mon.no_tele()
+            && !mon.no_tele(true, false, true)
             && !mons_is_projectile(mon);
 }
 

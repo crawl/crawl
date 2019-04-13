@@ -701,7 +701,7 @@ bool ranged_attack::apply_missile_brand()
     case SPMSL_DISPERSAL:
         if (damage_done > 0)
         {
-            if (defender->no_tele(true, true))
+            if (defender->no_tele(true, true, true))
             {
                 if (defender->is_player())
                     canned_msg(MSG_STRANGE_STASIS);

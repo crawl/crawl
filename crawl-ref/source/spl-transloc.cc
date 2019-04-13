@@ -96,7 +96,7 @@ void disjunction_spell()
         shuffle_array(mvec);
         for (auto mons : mvec)
         {
-            if (!mons->alive() || mons->no_tele())
+            if (!mons->alive() || mons->no_tele(true, false, true))
                 continue;
             coord_def p = mons->pos();
             if (!disjunction_haloed(p))
@@ -992,12 +992,16 @@ spret cast_golubrias_passage(const coord_def& where, bool fail)
 
 static int _disperse_monster(monster& mon, int pow)
 {
-    if (mon.no_tele())
+    const bool tele_allowed = mon.no_tele(true, false, false);
+    const bool blink_allowed = mon.no_tele(true, false, true);
+    if (!tele_allowed && !blink_allowed)
         return false;
 
-    if (mon.check_res_magic(pow) > 0)
+    // if there's ever a place that allows tele but not blink, this behavior
+    // may not be what is desired.
+    if (blink_allowed && mon.check_res_magic(pow) > 0)
         monster_blink(&mon);
-    else
+    else if (tele_allowed)
         monster_teleport(&mon, true);
 
     // Moving the monster may have killed it in apply_location_effects.
