@@ -569,8 +569,7 @@ void full_describe_view()
     for (radius_iterator ri(you.pos(),
                             you.xray_vision ? LOS_NONE : LOS_DEFAULT); ri; ++ri)
     {
-        if (feat_stair_direction(grd(*ri)) != CMD_NO_CMD
-            || feat_is_altar(grd(*ri)))
+        if (feat_stair_direction(grd(*ri)) != CMD_NO_CMD)
         {
             list_features.push_back(*ri);
         }
