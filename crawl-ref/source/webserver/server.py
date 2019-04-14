@@ -136,6 +136,8 @@ def bind_server():
     kwargs = {}
     if http_connection_timeout is not None:
         kwargs["connection_timeout"] = http_connection_timeout
+    if getattr(config, "http_xheaders", False):
+        kwargs["xheaders"] = http_xheaders
 
     servers = []
 
