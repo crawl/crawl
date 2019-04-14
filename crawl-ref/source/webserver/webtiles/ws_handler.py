@@ -646,11 +646,14 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         self.init_user(login_callback)
 
     def login(self, username, password):
-        real_username = userdb.user_passwd_match(username, password)
-        if real_username:
+        real_username, fail_reason = userdb.user_passwd_match(username, password)
+        if real_username and fail_reason is None:
             self.logger.info("User %s logging in from %s.",
                                         real_username, self.request.remote_ip)
             self.do_login(real_username)
+        elif fail_reason:
+            self.logger.warning("Failed login for user %s: %s", real_username, fail_reason)
+            self.send_message("login_fail", reason = fail_reason)
         else:
             self.logger.warning("Failed login for user %s.", username)
             self.send_message("login_fail")

@@ -117,24 +117,26 @@ def get_user_info(username):  # type: (str) -> Optional[Tuple[int, str, int]]
         return None
 
 
-def user_passwd_match(username, passwd):  # type: (str, str) -> Optional[str]
-    """Returns the correctly cased username."""
+def user_passwd_match(username, passwd):  # type: (str, str) -> Optional[Tuple[str, str]]
+    """Returns the correctly cased username and a reason for failure."""
     passwd = passwd[0:config.get('max_passwd_length')]
 
     with crawl_db(config.get('password_db')) as db:
         query = """
-            SELECT username, password
+            SELECT username, password, flags
             FROM dglusers
             WHERE username=?
             COLLATE NOCASE
         """
         db.c.execute(query, (username,))
-        result = db.c.fetchone()  # type: Optional[Tuple[str, str]]
+        result = db.c.fetchone()  # type: Optional[Tuple[str, str, str]]
 
-    if result and crypt.crypt(passwd, result[1]) == result[1]:
-        return result[0]
+    if dgl_is_banned(result[2]):
+	    return result[0], 'Account is disabled.'
+    elif result and crypt.crypt(passwd, result[1]) == result[1]:
+        return result[0], None
     else:
-        return None
+        return None, None
 
 
 def ensure_user_db_exists():  # type: () -> None
