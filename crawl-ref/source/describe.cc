@@ -1343,6 +1343,20 @@ static string _describe_weapon(const item_def &item, bool verbose)
         }
     }
 
+    if (is_unrandom_artefact(item, UNRAND_STORM_BOW))
+    {
+        description += "\n\nAmmo fired by it will pass through the "
+            "targets it hits, potentially hitting all targets in "
+            "its path until it reaches maximum range.";
+    }
+    else if (is_unrandom_artefact(item, UNRAND_THERMIC_ENGINE))
+    {
+        description += "\n\nIt has been specially enchanted to freeze "
+            "those struck by it, causing extra injury to most foes "
+            "and up to half again as much damage against particularly "
+            "susceptible opponents.";
+    }
+
     if (you.duration[DUR_EXCRUCIATING_WOUNDS] && &item == you.weapon())
     {
         description += "\nIt is temporarily rebranded; it is actually a";
