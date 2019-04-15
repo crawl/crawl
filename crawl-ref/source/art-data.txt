@@ -1212,9 +1212,8 @@ TYPE:    pair of quick blades
 COLOUR:  ETC_ENCHANT
 TILE:    urand_gyre
 TILE_EQ: gyre
-PLUS:    5
-BRAND:   SPWPN_VORPAL
-DEX:     -3
+PLUS:    7
+BRAND:   SPWPN_PROTECTION
 
 ENUM:    ETHERIC_CAGE
 NAME:    Maxwell's etheric cage
