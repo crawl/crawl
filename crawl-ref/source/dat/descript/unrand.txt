@@ -616,9 +616,8 @@ time its wielder casts a spell.
 %%%%
 pair of quick blades "Gyre" and "Gimble"
 
-Two incredibly sharp quick blades joined by a chain. They are able to slice
-through the hardest metal as if through air. Swinging one compels the wielder to
-swing the other.
+Two quick blades joined by a chain. Swinging one compels the wielder to swing
+the other, as if they have minds of their own.
 %%%%
 Maxwell's etheric cage
 
