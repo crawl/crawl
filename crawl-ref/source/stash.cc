@@ -1251,7 +1251,9 @@ static bool _is_potentially_boring(stash_search_result res)
            && (item_type_known(res.item) || !item_is_branded(res.item));
 }
 
-static bool _is_duplicate_for_search(stash_search_result l, stash_search_result r, bool ignore_missile_stacks=true)
+static bool _is_duplicate_for_search(stash_search_result l,
+                                     stash_search_result r,
+                                     bool ignore_missile_stacks=true)
 {
     if (l.in_inventory || r.in_inventory)
         return false;
@@ -1387,7 +1389,8 @@ static vector<stash_search_result> _stash_filter_duplicates(vector<stash_search_
     for (const stash_search_result &res : in)
     {
         if (out.size() && !out.back().in_inventory &&
-            _is_potentially_boring(res) && _is_duplicate_for_search(out.back(), res))
+            _is_potentially_boring(res) && _is_duplicate_for_search(out.back(),
+                                                                    res))
         {
             // don't push_back the duplicate
             out.back().duplicate_piles++;
@@ -1521,24 +1524,24 @@ void StashTracker::search_stashes()
         {
             // use the deduplicated results if we are filtering useless items
             again = display_search_results(dedup_results,
-                                                      sort_by_dist,
-                                                      filter_useless,
-                                                      default_execute,
-                                                      search,
-                                                      csearch == "."
-                                                      || csearch == "..",
-                                                      results.size());
+                                           sort_by_dist,
+                                           filter_useless,
+                                           default_execute,
+                                           search,
+                                           csearch == "."
+                                           || csearch == "..",
+                                           results.size());
         }
         else
         {
             again = display_search_results(results,
-                                                      sort_by_dist,
-                                                      filter_useless,
-                                                      default_execute,
-                                                      search,
-                                                      csearch == "."
-                                                      || csearch == "..",
-                                                      dedup_results.size());
+                                           sort_by_dist,
+                                           filter_useless,
+                                           default_execute,
+                                           search,
+                                           csearch == "."
+                                           || csearch == "..",
+                                           dedup_results.size());
         }
         if (!again)
             break;
@@ -1624,7 +1627,8 @@ formatted_string StashSearchMenu::calc_title()
             menu_action == ACT_EXECUTE ? "travel" : "view  ",
             sort_style, filtered));
     }
-    fs.cprintf(string(max(0, strwidth(prefixes[!f])-strwidth(prefixes[f])), ' '));
+    fs.cprintf(string(max(0, strwidth(prefixes[!f])-strwidth(prefixes[f])),
+                      ' '));
     return fs;
 }
 
@@ -1665,7 +1669,8 @@ bool StashTracker::display_search_results(
                               filter_useless ? "hide" : "show");
     stashmenu.set_tag("stash");
     stashmenu.action_cycle = Menu::CYCLE_TOGGLE;
-    stashmenu.menu_action  = default_execute ? Menu::ACT_EXECUTE : Menu::ACT_EXAMINE;
+    stashmenu.menu_action  = default_execute ? Menu::ACT_EXECUTE
+                                             : Menu::ACT_EXAMINE;
     string title = "match";
 
     MenuEntry *mtitle = new MenuEntry(title, MEL_TITLE);
@@ -1687,7 +1692,8 @@ bool StashTracker::display_search_results(
         matchtitle << res.match;
         if (res.duplicates > 0)
         {
-            matchtitle << " (" << res.duplicates << " further duplicate" << (res.duplicates == 1 ? "" : "s");
+            matchtitle << " (" << res.duplicates << " further duplicate" <<
+                (res.duplicates == 1 ? "" : "s");
             if (res.duplicates != res.duplicate_piles)
             {
                 matchtitle << " in " << res.duplicate_piles

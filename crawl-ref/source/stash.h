@@ -129,7 +129,7 @@ struct stash_search_result
     // Item that was matched.
     item_def item;
 
-    // The shop in question, if this is result is for a shop name.
+    // The shop in question, if this result is for a shop name.
     const ShopInfo *shop;
 
     // Whether the found items are in the player's inventory.
@@ -139,8 +139,9 @@ struct stash_search_result
     int duplicates;
     int duplicate_piles;
 
-    stash_search_result() : pos(), player_distance(0), match(), primary_sort(), item(),
-                            shop(nullptr), in_inventory(false), duplicates(0), duplicate_piles(0)
+    stash_search_result() : pos(), player_distance(0), match(), primary_sort(),
+                            item(), shop(nullptr), in_inventory(false),
+                            duplicates(0), duplicate_piles(0)
     {
     }
 
@@ -249,7 +250,7 @@ public:
     // Mark nets at (x,y) on current level as no longer trapping an actor.
     bool unmark_trapping_nets(const coord_def &c);
 
-    void  add_stash(coord_def p);
+    void add_stash(coord_def p);
 
     void save(writer&) const;
     void load(reader&);
