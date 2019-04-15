@@ -557,7 +557,7 @@ public:
     void nextline() { cgotoxy(1, wherey() + 1); }
 };
 
-// Lists all the monsters and items currently in view by the player.
+// Lists monsters, items, and some interesting features in the player's view.
 // TODO: Allow sorting of items lists.
 void full_describe_view()
 {
@@ -570,7 +570,7 @@ void full_describe_view()
                             you.xray_vision ? LOS_NONE : LOS_DEFAULT); ri; ++ri)
     {
         if (feat_stair_direction(grd(*ri)) != CMD_NO_CMD
-            || feat_is_altar(grd(*ri)))
+            || (feat_is_trap(grd(*ri))))
         {
             list_features.push_back(*ri);
         }
