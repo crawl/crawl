@@ -1372,6 +1372,15 @@ TILE:     urand_rift
 TILE_EQ:  rift
 BRAND:    SPWPN_DISTORTION
 
+ENUM:     BATTLE
+NAME:     staff of Battle
+OBJ:      OBJ_WEAPONS/WPN_STAFF
+PLUS:     +0
+COLOUR:   ETC_MAGIC
+#TILE:     urand_staff_of_battle
+#TILE_EQ:  battle
+VALUE:    800
+
 # This entry must always be last.
 ENUM:   DUMMY2
 NAME:   DUMMY UNRANDART 2

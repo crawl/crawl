@@ -11,6 +11,7 @@ bool is_evil_item(const item_def& item, bool calc_unid = true);
 bool is_unclean_item(const item_def& item, bool calc_unid = true);
 bool is_chaotic_item(const item_def& item, bool calc_unid = true);
 bool is_hasty_item(const item_def& item, bool calc_unid = true);
+bool is_wizardly_item(const item_def& item, bool calc_unid = true);
 bool is_channeling_item(const item_def& item, bool calc_unid = true);
 bool is_corpse_violating_spell(spell_type spell);
 bool is_evil_spell(spell_type spell);

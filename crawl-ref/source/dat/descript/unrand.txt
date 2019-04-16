@@ -687,3 +687,12 @@ A small wrinkle in the very fabric of reality, magically bound to a shaft by
 some mad acolyte of Lugonu. It possesses an unusually large reach that
 teleports its attack directly to its victim.
 %%%%
+staff of Battle
+
+A tubular staff encased in vividly coloured scales, the handiwork of a
+long-forgotten mage. It was stolen by the wizard Iskenderun who used it for a
+time before unlocking its secrets. The staff increases the power of its
+wielder's conjuration magic and, when its wielder is in danger, the staff will
+conjure a battlesphere to provide support. The strength of the battlesphere
+depends on the wielder's skill with Charms and Conjurations.
+%%%%

@@ -1738,6 +1738,9 @@ int player_spec_conj()
     // Staves
     sc += you.wearing(EQ_STAFF, STAFF_CONJURATION);
 
+    if (player_equip_unrand(UNRAND_BATTLE))
+        sc++;
+
     return sc;
 }
 
