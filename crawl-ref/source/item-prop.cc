@@ -1999,6 +1999,9 @@ bool item_skills(const item_def &item, set<skill_type> &skills)
         skills.insert(SK_EVOCATIONS);
     }
 
+    if (is_unrandom_artefact(item, UNRAND_BATTLE))
+        skills.insert(SK_CONJURATIONS);
+
     skill_type sk = item_attack_skill(item);
     if (sk != SK_FIGHTING && sk != SK_THROWING)
         skills.insert(sk);

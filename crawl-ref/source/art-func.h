@@ -1426,3 +1426,35 @@ static void _ZHOR_world_reacts(item_def *item)
         cast_englaciation(30, false);
     }
 }
+
+////////////////////////////////////////////////////
+
+// XXX: Staff giving a boost to conjuration spells is hardcoded in
+// player_spec_conj(). Spell power is calculated as if you were casting.
+
+static bool _BATTLE_evoke(item_def *item, bool* did_work, bool* unevokable)
+{
+
+    if (!x_chance_in_y(you.skill(SK_CONJURATIONS, 100) + 100, 600))
+        return false;
+
+    // 0 MP cost
+    *did_work = true;
+
+    // set allow_fail to true so casting triggers enhancer and battlesphere
+    your_spells(SPELL_MAGIC_DART, 0, true);
+
+    practise_casting(SPELL_MAGIC_DART, true);
+
+    return false;
+}
+
+static void _BATTLE_world_reacts(item_def *item)
+{
+    if (!find_battlesphere(&you)
+        && there_are_monsters_nearby(true, true, false)
+        && one_chance_in(3 * div_rand_round(BASELINE_DELAY, you.time_taken)))
+    {
+        your_spells(SPELL_BATTLESPHERE, 0, false);
+    }
+}
