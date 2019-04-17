@@ -194,8 +194,7 @@ void init_level_connectivity();
 void read_level_connectivity(reader &th);
 void write_level_connectivity(writer &th);
 
-bool builder(bool enable_random_maps = true,
-             dungeon_feature_type dest_stairs_type = NUM_FEATURES);
+bool builder(bool enable_random_maps = true);
 
 void dgn_clear_vault_placements();
 void dgn_erase_unused_vault_placements();

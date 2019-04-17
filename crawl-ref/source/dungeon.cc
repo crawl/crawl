@@ -80,9 +80,8 @@
 #endif
 
 // DUNGEON BUILDERS
-static bool _build_level_vetoable(bool enable_random_maps,
-                                  dungeon_feature_type dest_stairs_type);
-static void _build_dungeon_level(dungeon_feature_type dest_stairs_type);
+static bool _build_level_vetoable(bool enable_random_maps);
+static void _build_dungeon_level();
 static bool _valid_dungeon_level();
 
 static bool _builder_by_type();
@@ -233,7 +232,7 @@ static string branch_epilogues[NUM_BRANCHES];
 /**********************************************************************
  * builder() - kickoff for the dungeon generator.
  *********************************************************************/
-bool builder(bool enable_random_maps, dungeon_feature_type dest_stairs_type)
+bool builder(bool enable_random_maps)
 {
     // Re-check whether we're in a valid place, it leads to obscure errors
     // otherwise.
@@ -271,7 +270,7 @@ bool builder(bool enable_random_maps, dungeon_feature_type dest_stairs_type)
 
         try
         {
-            if (_build_level_vetoable(enable_random_maps, dest_stairs_type))
+            if (_build_level_vetoable(enable_random_maps))
                 return true;
         }
         catch (map_load_exception &mload)
@@ -305,8 +304,7 @@ bool builder(bool enable_random_maps, dungeon_feature_type dest_stairs_type)
     return false;
 }
 
-static bool _build_level_vetoable(bool enable_random_maps,
-                                  dungeon_feature_type dest_stairs_type)
+static bool _build_level_vetoable(bool enable_random_maps)
 {
 #ifdef DEBUG_STATISTICS
     mapstat_report_map_build_start();
@@ -319,7 +317,7 @@ static bool _build_level_vetoable(bool enable_random_maps,
 
     try
     {
-        _build_dungeon_level(dest_stairs_type);
+        _build_dungeon_level();
     }
     catch (dgn_veto_exception& e)
     {
@@ -2318,7 +2316,7 @@ static bool _mimic_at_level()
            && !crawl_state.game_is_tutorial();
 }
 
-static void _place_feature_mimics(dungeon_feature_type dest_stairs_type)
+static void _place_feature_mimics()
 {
     for (rectangle_iterator ri(1); ri; ++ri)
     {
@@ -2366,7 +2364,7 @@ static void _post_vault_build()
     }
 }
 
-static void _build_dungeon_level(dungeon_feature_type dest_stairs_type)
+static void _build_dungeon_level()
 {
     bool place_vaults = _builder_by_type();
 
@@ -2420,7 +2418,7 @@ static void _build_dungeon_level(dungeon_feature_type dest_stairs_type)
         _place_uniques();
 
         if (_mimic_at_level())
-            _place_feature_mimics(dest_stairs_type);
+            _place_feature_mimics();
 
         _place_traps();
 

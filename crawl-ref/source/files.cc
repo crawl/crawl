@@ -1242,8 +1242,7 @@ static bool _leave_level(dungeon_feature_type stair_taken,
  * @param stair_taken   The means used to leave the last level.
  * @param old_level     The ID of the previous level.
  */
-static void _make_level(dungeon_feature_type stair_taken,
-                        const level_id& old_level)
+static void _make_level()
 {
 
     env.turns_on_level = -1;
@@ -1252,15 +1251,8 @@ static void _make_level(dungeon_feature_type stair_taken,
     tile_clear_flavour();
     env.tile_names.clear();
 
-    // XXX: This is ugly.
-    bool dummy;
-    dungeon_feature_type stair_type = static_cast<dungeon_feature_type>(
-        _get_dest_stair_type(old_level.branch,
-                             static_cast<dungeon_feature_type>(stair_taken),
-                             dummy));
-
     _clear_env_map();
-    builder(true, stair_type);
+    builder(true);
 
     env.turns_on_level = 0;
     // sanctuary
@@ -1543,7 +1535,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     {
         ASSERT(load_mode != LOAD_VISITOR);
         dprf("Generating new level for '%s'.", level_name.c_str());
-        _make_level(stair_taken, old_level);
+        _make_level();
         you.vault_list[level_id::current()] = level_vault_names();
         just_created_level = true;
     }
