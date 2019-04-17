@@ -351,11 +351,7 @@ bool TilesFramework::initialise()
     DATA_DIR_PATH
 #endif
 #endif
-#ifdef TARGET_OS_MACOSX
     "dat/tiles/stone_soup_icon-512x512.png";
-#else
-    "dat/tiles/stone_soup_icon-32x32.png";
-#endif
 
     string title = string(CRAWL " ") + Version::Long;
 
