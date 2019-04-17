@@ -2949,8 +2949,7 @@ void melee_attack::mons_apply_attack_flavour()
     case AF_ENGULF:
         if (x_chance_in_y(2, 3) && attacker->can_constrict(defender, true))
         {
-            if (defender->is_player() && !you.duration[DUR_WATER_HOLD]
-                && !you.duration[DUR_WATER_HOLD_IMMUNITY])
+            if (defender->is_player() && !you.duration[DUR_WATER_HOLD])
             {
                 you.duration[DUR_WATER_HOLD] = 10;
                 you.props["water_holder"].get_int() = attacker->as_monster()->mid;

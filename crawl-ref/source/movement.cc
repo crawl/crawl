@@ -717,8 +717,8 @@ void move_player_action(coord_def move)
         if (you.duration[DUR_WATER_HOLD])
         {
             mpr("You slip free of the water engulfing you.");
-            you.duration[DUR_WATER_HOLD] = 1;
             you.props.erase("water_holder");
+            you.clear_far_engulf();
         }
 
         if (you.digging)
