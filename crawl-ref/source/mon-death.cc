@@ -2876,6 +2876,8 @@ void monster_cleanup(monster* mons)
     // cleaned up first, we wouldn't get a message anyway.
     mons->stop_constricting_all(false, true);
 
+    mons->clear_far_engulf();
+
     if (mons_is_tentacle_head(mons_base_type(*mons)))
         destroy_tentacles(mons);
 
