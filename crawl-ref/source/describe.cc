@@ -1512,9 +1512,11 @@ static string _describe_ammo(const item_def &item)
                            "target, hitting an obstruction, or reaching its "
                            "maximum range.";
             break;
+#if TAG_MAJOR_VERSION == 34
         case SPMSL_STEEL:
             description += "It deals increased damage compared to normal ammo.";
             break;
+#endif
         case SPMSL_SILVER:
             description += "It deals substantially increased damage to chaotic "
                            "and magically transformed beings. It also inflicts "
