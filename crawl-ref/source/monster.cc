@@ -3120,7 +3120,6 @@ bool monster::pacified() const
 bool monster::shielded() const
 {
     return shield()
-           || has_ench(ENCH_BONE_ARMOUR)
            || wearing(EQ_AMULET_PLUS, AMU_REFLECTION) > 0;
 }
 
@@ -3349,8 +3348,6 @@ int monster::armour_class(bool calc_unid) const
         ac += 4 + get_hit_dice() / 3;
     if (has_ench(ENCH_ICEMAIL))
         ac += ICEMAIL_MAX;
-    if (has_ench(ENCH_BONE_ARMOUR))
-        ac += 6 + get_hit_dice() / 3;
     if (has_ench(ENCH_IDEALISED))
         ac += 4 + get_hit_dice() / 3;
 

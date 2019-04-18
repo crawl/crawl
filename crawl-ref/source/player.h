@@ -68,9 +68,6 @@ static const int MR_PIP = 40;
 /// The standard unit of stealth; one level in %/@ screens
 static const int STEALTH_PIP = 50;
 
-/// The rough number of aut getting hit takes off your bone armour
-static const int BONE_ARMOUR_HIT_RATIO = 50;
-
 /// The minimum aut cost for a player move (before haste)
 static const int FASTEST_PLAYER_MOVE_SPEED = 6;
 // relevant for swiftness, etc

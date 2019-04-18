@@ -49,7 +49,6 @@ enum status_type
 #endif
     STATUS_BRIBE,
     STATUS_CLOUD,
-    STATUS_BONE_ARMOUR,
     STATUS_ORB,
     STATUS_DIVINE_ENERGY,
     STATUS_STILL_WINDS,

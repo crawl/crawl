@@ -511,8 +511,7 @@ static bool _boosted_ev()
 static bool _boosted_sh()
 {
     return you.duration[DUR_DIVINE_SHIELD]
-           || qazlal_sh_boost() > 0
-           || you.attribute[ATTR_BONE_ARMOUR] > 0;
+           || qazlal_sh_boost() > 0;
 }
 
 #ifdef DGL_SIMPLE_MESSAGING
