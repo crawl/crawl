@@ -44,7 +44,8 @@ struct packed_cell
     bool operator ==(const packed_cell &other) const;
     bool operator !=(const packed_cell &other) const { return !(*this == other); }
 
-    packed_cell() : num_dngn_overlay(0), fg(0), bg(0), cloud(0), is_bloody(false),
+    packed_cell() : num_dngn_overlay(0), fg(0), bg(0), cloud(0),
+                    is_highlighted_summoner(false), is_bloody(false),
                     is_silenced(false), halo(HALO_NONE), is_moldy(false),
                     glowing_mold(false), is_sanctuary(false), is_liquefied(false),
                     mangrove_water(false), awakened_forest(false), orb_glow(0),
@@ -58,6 +59,7 @@ struct packed_cell
     packed_cell(const packed_cell* c) : num_dngn_overlay(c->num_dngn_overlay),
                                         fg(c->fg), bg(c->bg), flv(c->flv),
                                         cloud(c->cloud),
+                                        is_highlighted_summoner(c->is_highlighted_summoner),
                                         is_bloody(c->is_bloody),
                                         is_silenced(c->is_silenced),
                                         halo(c->halo),
