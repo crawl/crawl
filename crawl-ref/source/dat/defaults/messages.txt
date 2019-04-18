@@ -62,9 +62,9 @@ msc += $warning:settles down
 msc += lightcyan:LOW MAGIC WARNING
 msc += $warning:fails to return
 msc += $warning:no longer ripe
-msc += $warning:This .* contains the .* runes? of Zot.
-msc += $warning:They guard the .* runes? of Zot.
-msc += $warning:Beware\, you cannot shaft yourself on this level.
+msc += $warning:This .* contains the .* runes? of Zot
+msc += $warning:They guard the .* runes? of Zot
+msc += $warning:Beware\, you cannot shaft yourself on this level
 
 # Unimportant messages and combat clutter
 #
@@ -126,7 +126,7 @@ force_more_message += You have lost your religion
 force_more_message += is wielding.*distortion
 # dancing weapons require special handling...
 force_more_message += there is a.*distortion
-force_more_message += of distortion comes into view.
+force_more_message += of distortion comes into view
 
 # Banishment
 force_more_message += You are cast into the Abyss
