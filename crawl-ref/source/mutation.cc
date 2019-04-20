@@ -644,7 +644,7 @@ string describe_mutations(bool drop_title)
 
     if (you.species == SP_VAMPIRE)
     {
-        if (you.hunger_state <= HS_STARVING)
+        if (!you.vampire_alive)
             result += "<green>You do not heal naturally.</green>\n";
         else
             result += "<green>Your natural rate of healing is unusually fast.</green>\n";
@@ -766,21 +766,7 @@ static formatted_string _vampire_Ascreen_footer(bool first_page)
 
 static int _vampire_bloodlessness()
 {
-    switch (you.hunger_state)
-    {
-    case HS_ENGORGED:
-    case HS_VERY_FULL:
-    case HS_FULL:
-    case HS_SATIATED:
-    case HS_HUNGRY:
-    case HS_VERY_HUNGRY:
-    case HS_NEAR_STARVING:
-        return 1;
-    case HS_STARVING:
-    case HS_FAINTING:
-        return 2;
-    }
-    die("bad hunger state %d", you.hunger_state);
+    return you.vampire_alive ? 1 : 2;
 }
 
 static string _display_vampire_attributes()
@@ -797,8 +783,6 @@ static string _display_vampire_attributes()
         {"Regeneration         ", "fast       ", "none  "},
 
         {"Stealth boost        ", "none       ", "major "},
-
-        {"Hunger costs         ", "full       ", "none  "},
 
         {"\n<w>Resistances</w>\n"
          "Poison resistance    ", "           ", "immune"},

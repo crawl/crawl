@@ -42,6 +42,8 @@ enum ability_type
 #endif
     // Vampires
     ABIL_TRAN_BAT,
+    ABIL_EXSANGUINATE,
+    ABIL_REVIVIFY,
 #if TAG_MAJOR_VERSION == 34
     ABIL_BOTTLE_BLOOD,
 #endif

@@ -259,6 +259,38 @@ bool ShaftSelfDelay::try_interrupt()
     return true;
 }
 
+bool ExsanguinateDelay::try_interrupt()
+{
+    if (duration > 1 && !was_prompted)
+    {
+        if (!crawl_state.disables[DIS_CONFIRMATIONS]
+            && !yesno("Keep bloodletting?", false, 0, false))
+        {
+            mpr("You stop emptying yourself of blood.");
+            return true;
+        }
+        else
+            was_prompted = true;
+    }
+    return false;
+}
+
+bool RevivifyDelay::try_interrupt()
+{
+    if (duration > 1 && !was_prompted)
+    {
+        if (!crawl_state.disables[DIS_CONFIRMATIONS]
+            && !yesno("Continue your ritual?", false, 0, false))
+        {
+            mpr("You stop revivifying.");
+            return true;
+        }
+        else
+            was_prompted = true;
+    }
+    return false;
+}
+
 void stop_delay(bool stop_stair_travel)
 {
     if (you.delay_queue.empty())
@@ -475,6 +507,16 @@ void ShaftSelfDelay::start()
 void BlurryScrollDelay::start()
 {
     mprf(MSGCH_MULTITURN_ACTION, "You begin reading the scroll.");
+}
+
+void ExsanguinateDelay::start()
+{
+    mprf(MSGCH_MULTITURN_ACTION, "You begin bloodletting.");
+}
+
+void RevivifyDelay::start()
+{
+    mprf(MSGCH_MULTITURN_ACTION, "You begin the revivification ritual.");
 }
 
 command_type RunDelay::move_cmd() const
@@ -903,6 +945,23 @@ void AscendingStairsDelay::finish()
 void DescendingStairsDelay::finish()
 {
     down_stairs();
+}
+
+void ExsanguinateDelay::finish()
+{
+    blood_spray(you.pos(), MONS_PLAYER, 10);
+    you.vampire_alive = false;
+    you.redraw_status_lights = true;
+    mpr("Now bloodless.");
+    vampire_update_transformations();
+}
+
+void RevivifyDelay::finish()
+{
+    you.vampire_alive = true;
+    you.redraw_status_lights = true;
+    mpr("Now alive.");
+    vampire_update_transformations();
 }
 
 void run_macro(const char *macroname)

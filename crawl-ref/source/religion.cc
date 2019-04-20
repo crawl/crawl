@@ -3125,7 +3125,7 @@ bool player_can_join_god(god_type which_god)
         return false;
 
     // Fedhas hates undead, but will accept demonspawn.
-    if (which_god == GOD_FEDHAS && you.holiness() & MH_UNDEAD)
+    if (which_god == GOD_FEDHAS && you.undead_state())
         return false;
 
     if (which_god == GOD_GOZAG && you.gold < gozag_service_fee())

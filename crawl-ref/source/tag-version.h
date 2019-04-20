@@ -231,6 +231,7 @@ enum tag_minor_version
     TAG_MINOR_GAMESEEDS,           // Game seeds + rng state saved
     TAG_MINOR_YELLOW_DRACONIAN_RACID, // Change yellow draconians' rAcid fake mutation to a true mutation.
     TAG_MINOR_THROW_CONSOLIDATION, // Throwing brands consolidated
+    TAG_MINOR_VAMPIRE_NO_EAT,      // Decouple Vampires from the food system
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

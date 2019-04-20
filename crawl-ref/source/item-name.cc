@@ -3490,7 +3490,7 @@ bool is_useless_item(const item_def &item, bool temp)
         case POT_LIGNIFY:
             return you.undead_state(temp)
                    && (you.species != SP_VAMPIRE
-                       || temp && you.hunger_state <= HS_STARVING);
+                       || temp && !you.vampire_alive);
 
         case POT_FLIGHT:
             return you.permanent_flight()
@@ -3536,7 +3536,7 @@ bool is_useless_item(const item_def &item, bool temp)
         case AMU_RAGE:
             return you.undead_state(temp)
                    && (you.species != SP_VAMPIRE
-                       || temp && you.hunger_state <= HS_STARVING)
+                       || temp && !you.vampire_alive)
                    || you.species == SP_FORMICID
                    || you.get_mutation_level(MUT_NO_ARTIFICE);
 
@@ -3566,7 +3566,7 @@ bool is_useless_item(const item_def &item, bool temp)
                        && you.get_mutation_level(MUT_INHIBITED_REGENERATION) > 0
                        && regeneration_is_inhibited())
                    || (temp && you.species == SP_VAMPIRE
-                       && you.hunger_state <= HS_STARVING);
+                       && !you.vampire_alive);
 
 #if TAG_MAJOR_VERSION == 34
         case AMU_MANA_REGENERATION:
