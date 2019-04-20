@@ -52,6 +52,7 @@
 #include "coordit.h"
 #include "env.h"
 #include "losglobal.h"
+#include "mon-act.h"
 
 // These determine what rays are cast in the precomputation,
 // and affect start-up time significantly.
@@ -934,6 +935,7 @@ void los_terrain_changed(const coord_def& p)
 
 void los_changed()
 {
+    mons_reset_just_seen();
     invalidate_los();
     _handle_los_change();
 }

@@ -17,6 +17,7 @@ public:
 };
 
 void mons_set_just_seen(monster *mon);
+void mons_reset_just_seen();
 
 bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
                          bool just_check = false);

@@ -2293,24 +2293,34 @@ void mons_set_just_seen(monster *mon)
     just_seen_queue.push_back(mon);
 }
 
+void mons_reset_just_seen()
+{
+    // this may be called when the pointers are not valid, so don't mess with
+    // seen_context.
+    just_seen_queue.clear();
+}
+
 static void _display_just_seen()
 {
     // these are monsters that were marked as SC_JUST_SEEN at some point since
     // last time this was called. We announce any that leave all at once so
     // as to handle monsters that may move multiple times per world_reacts.
-    for (auto m : just_seen_queue)
+    if (in_bounds(you.pos()))
     {
-        if (!m || invalid_monster(m) || !m->alive())
-            continue;
-        // can't use simple_monster_message here, because m is out of view.
-        // The monster should be visible to be in this queue.
-        if (in_bounds(m->pos()) && !you.see_cell(m->pos()))
+        for (auto m : just_seen_queue)
         {
-            mprf(MSGCH_PLAIN, "%s moves out of view.",
-                m->name(DESC_THE, true).c_str());
+            if (!m || invalid_monster(m) || !m->alive())
+                continue;
+            // can't use simple_monster_message here, because m is out of view.
+            // The monster should be visible to be in this queue.
+            if (in_bounds(m->pos()) && !you.see_cell(m->pos()))
+            {
+                mprf(MSGCH_PLAIN, "%s moves out of view.",
+                     m->name(DESC_THE, true).c_str());
+            }
         }
     }
-    just_seen_queue.clear();
+    mons_reset_just_seen();
 }
 
 /**
