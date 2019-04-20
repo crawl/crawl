@@ -1196,7 +1196,7 @@ void no_ability_msg()
             mpr("You can't untransform!");
         else
         {
-            ASSERT(you.hunger_state > HS_SATIATED);
+            ASSERT(you.hunger_state > HS_STARVING);
             mpr("Sorry, you're too full to transform right now.");
         }
     }
@@ -3418,7 +3418,7 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
     }
 
     if (you.species == SP_VAMPIRE && you.experience_level >= 3
-        && you.hunger_state <= HS_SATIATED
+        && you.hunger_state <= HS_STARVING
         && you.form != transformation::bat)
     {
         _add_talent(talents, ABIL_TRAN_BAT, check_confused);

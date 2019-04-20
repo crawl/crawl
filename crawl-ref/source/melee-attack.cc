@@ -3653,7 +3653,7 @@ bool melee_attack::_player_vampire_draws_blood(const monster* mon, const int dam
 bool melee_attack::_vamp_wants_blood_from_monster(const monster* mon)
 {
     return you.species == SP_VAMPIRE
-           && you.hunger_state < HS_SATIATED
+           && you.hunger_state <= HS_STARVING
            && actor_is_susceptible_to_vampirism(*mon)
            && mons_has_blood(mon->type);
 }

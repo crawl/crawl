@@ -1517,13 +1517,13 @@ static const char* thirst_names[] =
 {
     "bloodless",
     "bloodless",
-    "near bloodless",
-    "very thirsty",
-    "thirsty",
-    "not thirsty",
-    "full",
-    "very full",
-    "almost alive",
+    "bloodless",
+    "alive",
+    "alive",
+    "alive",
+    "alive",
+    "alive",
+    "alive",
 };
 COMPILE_CHECK(ARRAYSZ(thirst_names) == HS_ENGORGED + 1);
 

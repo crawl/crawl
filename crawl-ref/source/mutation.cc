@@ -646,9 +646,7 @@ string describe_mutations(bool drop_title)
     {
         if (you.hunger_state <= HS_STARVING)
             result += "<green>You do not heal naturally.</green>\n";
-        else if (you.hunger_state < HS_SATIATED)
-            result += "<green>You heal slowly.</green>\n";
-        else if (you.hunger_state >= HS_FULL)
+        else
             result += "<green>Your natural rate of healing is unusually fast.</green>\n";
     }
 
@@ -773,16 +771,14 @@ static int _vampire_bloodlessness()
     case HS_ENGORGED:
     case HS_VERY_FULL:
     case HS_FULL:
-        return 1;
     case HS_SATIATED:
-        return 2;
     case HS_HUNGRY:
     case HS_VERY_HUNGRY:
     case HS_NEAR_STARVING:
-        return 3;
+        return 1;
     case HS_STARVING:
     case HS_FAINTING:
-        return 4;
+        return 2;
     }
     die("bad hunger state %d", you.hunger_state);
 }
@@ -794,41 +790,41 @@ static string _display_vampire_attributes()
     string result;
 
     const int lines = 12;
-    string column[lines][5] =
+    string column[lines][3] =
     {
-        {"                     ", "<green>Full</green>       ", "Satiated   ", "<yellow>Thirsty</yellow>    ", "<lightred>Bloodless</lightred>"},
-                                 //Full       Satiated      Thirsty         Bloodless
-        {"Metabolism           ", "fast       ", "normal     ", "slow       ", "none  "},
+        {"                     ", "<green>Alive</green>      ", "<lightred>Bloodless</lightred>"},
+                                 //Full       Bloodless
+        {"Metabolism           ", "fast       ", "none  "},
 
-        {"Regeneration         ", "fast       ", "normal     ", "slow       ", "none  "},
+        {"Regeneration         ", "fast       ", "none  "},
 
-        {"Stealth boost        ", "none       ", "none       ", "minor      ", "major "},
+        {"Stealth boost        ", "none       ", "major "},
 
-        {"Hunger costs         ", "full       ", "full       ", "halved     ", "none  "},
+        {"Hunger costs         ", "full       ", "none  "},
 
         {"\n<w>Resistances</w>\n"
-         "Poison resistance    ", "           ", "           ", "+          ", "immune"},
+         "Poison resistance    ", "           ", "immune"},
 
-        {"Cold resistance      ", "           ", "           ", "+          ", "++    "},
+        {"Cold resistance      ", "           ", "++    "},
 
-        {"Negative resistance  ", "           ", " +         ", "++         ", "+++   "},
+        {"Negative resistance  ", "           ", "+++   "},
 
-        {"Rotting resistance   ", "           ", "           ", "+          ", "+     "},
+        {"Rotting resistance   ", "           ", "+     "},
 
-        {"Torment resistance   ", "           ", "           ", "           ", "+     "},
+        {"Torment resistance   ", "           ", "+     "},
 
         {"\n<w>Transformations</w>\n"
-         "Bat form             ", "no         ", "yes        ", "yes        ", "yes   "},
+         "Bat form             ", "no         ", "yes   "},
 
         {"Other forms and \n"
-         "berserk              ", "yes        ", "yes        ", "no         ", "no    "}
+         "berserk              ", "yes        ", "no    "}
     };
 
     int current = _vampire_bloodlessness();
 
     for (int y = 0; y < lines; y++)  // lines   (properties)
     {
-        for (int x = 0; x < 5; x++)  // columns (hunger states)
+        for (int x = 0; x < 3; x++)  // columns (hunger states)
         {
             if (y > 0 && x == current)
                 result += "<w>";
