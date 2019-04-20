@@ -858,8 +858,8 @@ i-berserk-rage POT_BERSERK_RAGE
 i-cure-mutation POT_REMOVEME8
 i-mutation POT_MUTATION
 i-resistance POT_RESISTANCE
+# Remove all blood blood when TAG_MAJOR_VERSION > 34
 i-blood POT_BLOOD
-# Remove coagulated blood when TAG_MAJOR_VERSION > 34
 i-coagulated-blood POT_BLOOD_COAGULATED
 i-lignify POT_LIGNIFY
 # Remove beneficial mutation and update POT_ID_LAST when TAG_MAJOR_VERSION > 34

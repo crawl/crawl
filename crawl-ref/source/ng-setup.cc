@@ -358,9 +358,6 @@ static void _give_basic_knowledge()
 {
     identify_inventory();
 
-    // Recognisable by appearance.
-    you.type_ids[OBJ_POTIONS][POT_BLOOD] = true;
-
     // Removed item types are handled in _set_removed_types_as_identified.
 }
 
