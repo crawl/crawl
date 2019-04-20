@@ -1547,16 +1547,16 @@ undead_form_reason lifeless_prevents_form(transformation which_trans,
     if (which_trans == transformation::lich)
         return UFR_TOO_DEAD; // vampires can never lichform
 
-    if (which_trans == transformation::bat) // can batform on satiated or below
+    if (which_trans == transformation::bat) // can batform bloodless
     {
         if (involuntary)
             return UFR_TOO_DEAD; // but not as a forced polymorph effect
 
-        return you.hunger_state <= HS_SATIATED ? UFR_GOOD : UFR_TOO_ALIVE;
+        return you.hunger_state <= HS_STARVING ? UFR_GOOD : UFR_TOO_ALIVE;
     }
 
-    // other forms can only be entered when satiated or above.
-    return you.hunger_state >= HS_SATIATED ? UFR_GOOD : UFR_TOO_DEAD;
+    // other forms can only be entered when alive
+    return you.hunger_state > HS_STARVING ? UFR_GOOD : UFR_TOO_DEAD;
 }
 
 /**
