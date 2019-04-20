@@ -311,11 +311,15 @@ static const ability_def Ability_List[] =
       0, 0, 125, 0, {fail_basis::xl, 30, 1}, abflag::breath },
     { ABIL_BREATHE_STEAM, "Breathe Steam",
       0, 0, 75, 0, {fail_basis::xl, 20, 1}, abflag::breath },
-    { ABIL_TRAN_BAT, "Bat Form",
-      2, 0, 0, 0, {fail_basis::xl, 45, 2}, abflag::starve_ok },
-
     { ABIL_BREATHE_ACID, "Breathe Acid",
       0, 0, 125, 0, {fail_basis::xl, 30, 1}, abflag::breath },
+
+    { ABIL_TRAN_BAT, "Bat Form",
+      2, 0, 0, 0, {fail_basis::xl, 45, 2}, abflag::starve_ok },
+    { ABIL_EXSANGUINATE, "Exsanguinate",
+      0, 0, 0, 0, {}, abflag::delay},
+    { ABIL_REVIVIFY, "Revivify",
+      0, 0, 0, 0, {}, abflag::delay},
 
     { ABIL_FLY, "Fly", 3, 0, 100, 0, {fail_basis::xl, 42, 3}, abflag::none },
     { ABIL_STOP_FLYING, "Stop Flying", 0, 0, 0, 0, {}, abflag::starve_ok },
@@ -1196,8 +1200,8 @@ void no_ability_msg()
             mpr("You can't untransform!");
         else
         {
-            ASSERT(you.hunger_state > HS_STARVING);
-            mpr("Sorry, you're too full to transform right now.");
+            ASSERT(you.vampire_alive);
+            mpr("Sorry, you cannot become a bat while alive.");
         }
     }
     else if (you.get_mutation_level(MUT_TENGU_FLIGHT)
@@ -1327,6 +1331,22 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
             if (!quiet)
             {
                 mprf("Turning back right now would cause you to %s!",
+                    env.grid(you.pos()) == DNGN_LAVA ? "burn" : "drown");
+            }
+
+            return false;
+        }
+    }
+    else if ((abil.ability == ABIL_EXSANGUINATE
+              || abil.ability == ABIL_REVIVIFY)
+            && you.form != transformation::none)
+    {
+        if (feat_dangerous_for_form(transformation::none, env.grid(you.pos())))
+        {
+            if (!quiet)
+            {
+                mprf("Becoming %s right now would cause you to %s!",
+                    abil.ability == ABIL_EXSANGUINATE ? "bloodless" : "alive",
                     env.grid(you.pos()) == DNGN_LAVA ? "burn" : "drown");
             }
 
@@ -2804,6 +2824,16 @@ static spret _do_ability(const ability_def& abil, bool fail)
         }
         break;
 
+    case ABIL_EXSANGUINATE:
+        fail_check();
+        start_delay<ExsanguinateDelay>(5);
+        break;
+
+    case ABIL_REVIVIFY:
+        fail_check();
+        start_delay<RevivifyDelay>(5);
+        break;
+
     case ABIL_JIYVA_CALL_JELLY:
     {
         fail_check();
@@ -3420,11 +3450,16 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
         _add_talent(talents, draconian_breath(you.species), check_confused);
     }
 
-    if (you.species == SP_VAMPIRE && you.experience_level >= 3
-        && you.hunger_state <= HS_STARVING
-        && you.form != transformation::bat)
+    if (you.species == SP_VAMPIRE)
     {
-        _add_talent(talents, ABIL_TRAN_BAT, check_confused);
+        if (!you.vampire_alive)
+        {
+            if (you.experience_level >= 3 && you.form != transformation::bat)
+                _add_talent(talents, ABIL_TRAN_BAT, check_confused);
+            _add_talent(talents, ABIL_REVIVIFY, check_confused);
+        }
+        else
+            _add_talent(talents, ABIL_EXSANGUINATE, check_confused);
     }
 
     if (you.racial_permanent_flight() && !you.attribute[ATTR_PERM_FLIGHT])

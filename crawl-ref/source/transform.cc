@@ -1552,11 +1552,11 @@ undead_form_reason lifeless_prevents_form(transformation which_trans,
         if (involuntary)
             return UFR_TOO_DEAD; // but not as a forced polymorph effect
 
-        return you.hunger_state <= HS_STARVING ? UFR_GOOD : UFR_TOO_ALIVE;
+        return !you.vampire_alive ? UFR_GOOD : UFR_TOO_ALIVE;
     }
 
     // other forms can only be entered when alive
-    return you.hunger_state > HS_STARVING ? UFR_GOOD : UFR_TOO_DEAD;
+    return you.vampire_alive ? UFR_GOOD : UFR_TOO_DEAD;
 }
 
 /**
@@ -2100,4 +2100,17 @@ void merfolk_stop_swimming()
 #ifdef USE_TILE
     init_player_doll();
 #endif
+}
+
+void vampire_update_transformations()
+{
+    const undead_form_reason form_reason = lifeless_prevents_form();
+    if (form_reason != UFR_GOOD && you.duration[DUR_TRANSFORMATION])
+    {
+        print_stats();
+        mprf(MSGCH_WARN,
+             "Your blood-%s body can't sustain your transformation.",
+             form_reason == UFR_TOO_DEAD ? "deprived" : "filled");
+        untransform();
+    }
 }

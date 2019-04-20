@@ -735,7 +735,7 @@ static void _describe_hunger(status_info& inf)
 
     if (you.species == SP_VAMPIRE)
     {
-        if (you.hunger_state <= HS_STARVING)
+        if (!you.vampire_alive)
         {
             inf.light_colour = LIGHTRED;
             inf.light_text = "Bloodless";
@@ -872,10 +872,7 @@ static void _describe_regen(status_info& inf)
         else
             inf.short_text = "regenerating";
 
-        if (you.hunger_state < HS_SATIATED)
-            inf.short_text += " slowly";
-        else
-            inf.short_text += " quickly";
+        inf.short_text += " quickly";
     }
 }
 

@@ -198,6 +198,15 @@ static string _how_hungry()
     return "hungry";
 }
 
+hunger_state_t calc_hunger_state()
+{
+    // Get new hunger state.
+    hunger_state_t newstate = HS_FAINTING;
+    while (newstate < HS_ENGORGED && you.hunger > hunger_threshold[newstate])
+        newstate = (hunger_state_t)(newstate + 1);
+    return newstate;
+}
+
 // "initial" is true when setting the player's initial hunger state on game
 // start or load: in that case it's not really a change, so we suppress the
 // state change message and don't identify rings or stimulate Xom.
@@ -209,10 +218,7 @@ bool food_change(bool initial)
     you.hunger = max(you_min_hunger(), you.hunger);
     you.hunger = min(you_max_hunger(), you.hunger);
 
-    // Get new hunger state.
-    hunger_state_t newstate = HS_FAINTING;
-    while (newstate < HS_ENGORGED && you.hunger > hunger_threshold[newstate])
-        newstate = (hunger_state_t)(newstate + 1);
+    hunger_state_t newstate = calc_hunger_state();
 
     if (newstate != you.hunger_state)
     {

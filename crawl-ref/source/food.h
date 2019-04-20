@@ -53,6 +53,7 @@ bool eat_item(item_def &food);
 
 int prompt_eat_chunks(bool only_auto = false);
 
+hunger_state_t calc_hunger_state();
 bool food_change(bool initial = false);
 
 bool prompt_eat_item(int slot = -1);

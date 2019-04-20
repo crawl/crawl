@@ -655,7 +655,7 @@ public:
 
     bool effect(bool was_known = true, int pow = 40, bool=true) const override
     {
-        if (you.species == SP_VAMPIRE && you.hunger_state <= HS_STARVING)
+        if (you.species == SP_VAMPIRE && !you.vampire_alive)
         {
             mpr("You feel slightly irritated.");
             return false;
