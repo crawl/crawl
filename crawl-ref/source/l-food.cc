@@ -137,19 +137,6 @@ static int food_isveggie(lua_State *ls)
     return 1;
 }
 
-/*** Can we bottle blood from this?
- * @tparam items.Item body
- * @treturn boolean if we succeed
- * @function bottleable
- */
-static int food_bottleable(lua_State *ls)
-{
-    LUA_ITEM(ls, item, 1);
-    lua_pushboolean(ls, item && item->is_type(OBJ_CORPSES, CORPSE_BODY)
-                             && can_bottle_blood_from_corpse(item->mon_type));
-    return 1;
-}
-
 /*** Is this edible?
  * Differs from can_eat in that it checks temporary forms?
  * @tparam items.Item morsel
@@ -175,7 +162,6 @@ static const struct luaL_reg food_lib[] =
     { "isfruit",           food_isfruit },
     { "ismeaty",           food_ismeaty },
     { "isveggie",          food_isveggie },
-    { "bottleable",        food_bottleable },
     { "edible",            food_edible },
     { nullptr, nullptr },
 };

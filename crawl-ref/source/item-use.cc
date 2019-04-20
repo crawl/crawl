@@ -2015,31 +2015,9 @@ void prompt_inscribe_item()
     inscribe_item(you.inv[item_slot]);
 }
 
-static bool _check_blood_corpses_on_ground()
-{
-    for (stack_iterator si(you.pos(), true); si; ++si)
-    {
-        if (si->is_type(OBJ_CORPSES, CORPSE_BODY)
-            && mons_has_blood(si->mon_type))
-        {
-            return true;
-        }
-    }
-    return false;
-}
-
-static void _vampire_corpse_help()
-{
-    if (you.species != SP_VAMPIRE)
-        return;
-
-    if (_check_blood_corpses_on_ground())
-        mpr("Use <w>e</w> to drain blood from corpses.");
-}
-
 void drink(item_def* potion)
 {
-    if (you_foodless())
+    if (you_foodless() && you.species != SP_VAMPIRE)
     {
         mpr("You can't drink.");
         return;
@@ -2062,10 +2040,7 @@ void drink(item_def* potion)
         potion = use_an_item(OBJ_POTIONS, OPER_QUAFF, "Drink which item?");
 
         if (!potion)
-        {
-            _vampire_corpse_help();
             return;
-        }
     }
 
     if (potion->base_type != OBJ_POTIONS)
@@ -2116,11 +2091,6 @@ void drink(item_def* potion)
         // Xom loves it when you drink an unknown potion and there is
         // a dangerous monster nearby...
         xom_is_stimulated(200);
-    }
-    if (is_blood_potion(*potion))
-    {
-        // Always drink oldest potion.
-        remove_oldest_perishable_item(*potion);
     }
 
     // We'll need this later, after destroying the item.
@@ -3384,13 +3354,6 @@ void tile_item_use(int idx)
                 wear_armour(idx);
             return;
 
-        case OBJ_CORPSES:
-            if (you.species != SP_VAMPIRE
-                || item.sub_type == CORPSE_SKELETON)
-            {
-                break;
-            }
-            // intentional fall-through for Vampires
         case OBJ_FOOD:
             if (check_warning_inscriptions(item, OPER_EAT))
                 eat_food(idx);

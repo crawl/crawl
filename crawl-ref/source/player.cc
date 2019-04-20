@@ -1237,18 +1237,8 @@ int player_hunger_rate(bool temp)
         hunger += 4;
     }
 
-    if (you.species == SP_VAMPIRE)
-    {
-        if (you.hunger_state <= HS_STARVING)
-            hunger -= 3;
-        else
-            hunger += 2;
-    }
-    else
-    {
-        hunger += you.get_mutation_level(MUT_FAST_METABOLISM)
-                - you.get_mutation_level(MUT_SLOW_METABOLISM);
-    }
+    hunger += you.get_mutation_level(MUT_FAST_METABOLISM)
+            - you.get_mutation_level(MUT_SLOW_METABOLISM);
 
     // If Cheibriados has slowed your life processes, you will hunger less.
     if (have_passive(passive_t::slow_metabolism))

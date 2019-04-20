@@ -407,13 +407,6 @@ static int _acquirement_food_subtype(bool /*divine*/, int& quantity)
     // Food is a little less predictable now. - bwr
     if (you.species == SP_GHOUL)
         type_wanted = FOOD_CHUNK;
-    else if (you.species == SP_VAMPIRE)
-    {
-        // Vampires really don't want any OBJ_FOOD but OBJ_CORPSES
-        // but it's easier to just give them a potion of blood
-        // class type is set elsewhere
-        type_wanted = POT_BLOOD;
-    }
     else
         type_wanted = FOOD_RATION;
 
@@ -770,10 +763,6 @@ static int _find_acquirement_subtype(object_class_type &class_wanted,
         // Wands and misc have a common acquirement class.
         if (class_wanted == OBJ_MISCELLANY)
             class_wanted = random_choose(OBJ_WANDS, OBJ_MISCELLANY);
-
-        // Vampires acquire blood, not food.
-        if (class_wanted == OBJ_FOOD && you.species == SP_VAMPIRE)
-            class_wanted = OBJ_POTIONS;
 
         if (_subtype_finders[class_wanted])
             type_wanted = (*_subtype_finders[class_wanted])(divine, quantity);
@@ -1516,12 +1505,10 @@ bool acquirement(object_class_type class_wanted, int agent,
         { OBJ_BOOKS,      "Book" },
         { OBJ_STAVES,     "Staff " },
         { OBJ_MISCELLANY, "Evocable" },
-        { OBJ_FOOD,       0 }, // amended below
+        { OBJ_FOOD,       "Food" }, // amended below
         { OBJ_GOLD,       0 },
     };
     ASSERT(acq_classes[6].type == OBJ_FOOD);
-    acq_classes[6].name = you.species == SP_VAMPIRE ? "Blood":
-                                                      "Food";
     string gold_text = make_stringf("Gold (you have $%d)", you.gold);
     ASSERT(acq_classes[7].type == OBJ_GOLD);
     acq_classes[7].name = gold_text.c_str();
