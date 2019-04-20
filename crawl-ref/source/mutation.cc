@@ -794,8 +794,6 @@ static string _display_vampire_attributes()
     {
         {"                     ", "<green>Alive</green>      ", "<lightred>Bloodless</lightred>"},
                                  //Full       Bloodless
-        {"Metabolism           ", "fast       ", "none  "},
-
         {"Regeneration         ", "fast       ", "none  "},
 
         {"Stealth boost        ", "none       ", "major "},

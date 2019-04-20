@@ -662,6 +662,7 @@ potion of berserk rage
 
 A potion which can send one into an incoherent rage.
 %%%%
+# TAG_MAJOR_VERSION == 34
 potion of blood
 
 A potion containing the essence of life.

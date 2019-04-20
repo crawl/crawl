@@ -415,8 +415,6 @@ static int _acquirement_food_subtype(bool /*divine*/, int& quantity)
     // giving more of the lower food value items
     if (type_wanted == FOOD_CHUNK)
         quantity += 2 + random2avg(10, 2);
-    else if (type_wanted == POT_BLOOD)
-        quantity = 8 + random2(5);
 
     return type_wanted;
 }

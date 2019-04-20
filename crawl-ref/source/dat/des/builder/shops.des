@@ -359,7 +359,7 @@ DEPTH:   D:12-, Depths
 KMONS:   1 = vampire / bat
 KMONS:   2 = vampire / vampire mage / vampire knight
 KFEAT:   v = general shop type:Blood suffix:Bar count:7 ; \
-         w:70 potion of blood | w:10 any weapon ego:vampirism | \
+         w:70 nothing | w:10 any weapon ego:vampirism | \
          w:9 randbook disc:necromancy | w:1 book of annihilations
 SUBST:   ? = 2.Y
 : if you.in_branch("D") then
@@ -385,7 +385,7 @@ SUBST: G : YlG
 :   "type:Evil suffix:Emporium", "type:Profane suffix:Products",
 :   "type:Sacrilege suffix:Store", "type:Wicked suffix:Wares"})
 : kfeat("s = general shop " .. shopname .. " ; \
-:   potion of blood | any weapon ego:draining w:15 | any weapon ego:pain | \
+:   any weapon ego:draining w:15 | any weapon ego:pain | \
 :   any weapon ego:vampirism | any weapon ego:chaos w:1 | demon blade w:5 | \
 :   demon trident w:5 | demon whip w:5 | scroll of torment | staff of death | \
 :   book of necromancy | book of death | book of unlife | \

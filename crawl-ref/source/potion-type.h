@@ -41,8 +41,8 @@ enum potion_type
 #endif
     POT_MUTATION,
     POT_RESISTANCE,
-    POT_BLOOD,
 #if TAG_MAJOR_VERSION == 34
+    POT_BLOOD,
     POT_BLOOD_COAGULATED,
 #endif
     POT_LIGNIFY,

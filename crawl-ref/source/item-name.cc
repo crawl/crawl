@@ -728,8 +728,8 @@ const char* potion_type_name(int potiontype)
     case POT_CURE_MUTATION:     return "cure mutation";
 #endif
     case POT_MUTATION:          return "mutation";
-    case POT_BLOOD:             return "blood";
 #if TAG_MAJOR_VERSION == 34
+    case POT_BLOOD:             return "blood";
     case POT_BLOOD_COAGULATED:  return "coagulated blood";
 #endif
     case POT_RESISTANCE:        return "resistance";

@@ -1613,7 +1613,7 @@ ENDMAP
 NAME:  cheibrodos_swamp_pet_leeches
 TAGS:  no_item_gen no_monster_gen
 DEPTH: Swamp, !Swamp:$
-MONS:  vampire ; potion of blood . long sword . robe, tyrant leech
+MONS:  vampire ; long sword . robe, tyrant leech
 KPROP: e' = no_tele_into
 KPROP: .21 = bloody / w:30 nothing
 KPROP: e = bloody
