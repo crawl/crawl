@@ -146,12 +146,6 @@ static void _interrupt_butchering(const char* action)
     mprf("You stop %s the corpse%s.", action, multiple_corpses ? "s" : "");
 }
 
-bool BottleBloodDelay::try_interrupt()
-{
-    _interrupt_butchering("bottling blood from");
-    return true;
-}
-
 bool ButcherDelay::try_interrupt()
 {
     _interrupt_butchering("butchering");
@@ -601,11 +595,6 @@ bool ButcherDelay::invalidated()
     return _check_corpse_gone(corpse, "butcher it");
 }
 
-bool BottleBloodDelay::invalidated()
-{
-    return _check_corpse_gone(corpse, "bottle its blood");
-}
-
 bool MultidropDelay::invalidated()
 {
     // Throw away invalid items. XXX: what are they?
@@ -866,14 +855,14 @@ void BlurryScrollDelay::finish()
         read_scroll(scroll);
 }
 
-static void _finish_butcher_delay(item_def& corpse, bool bottling)
+static void _finish_butcher_delay(item_def& corpse)
 {
     // We know the item is valid and a real corpse, because invalidated()
     // checked for that.
-    finish_butchering(corpse, bottling);
+    finish_butchering(corpse);
     // Don't waste time picking up chunks if you're already
     // starving. (jpeg)
-    if ((you.hunger_state > HS_STARVING || you.species == SP_VAMPIRE)
+    if (you.hunger_state > HS_STARVING
         // Only pick up chunks if this is the last delay...
         && (you.delay_queue.size() == 1
         // ...Or, equivalently, if it's the last butcher one.
@@ -886,12 +875,7 @@ static void _finish_butcher_delay(item_def& corpse, bool bottling)
 
 void ButcherDelay::finish()
 {
-    _finish_butcher_delay(corpse, false);
-}
-
-void BottleBloodDelay::finish()
-{
-    _finish_butcher_delay(corpse, true);
+    _finish_butcher_delay(corpse);
 }
 
 void DropItemDelay::finish()

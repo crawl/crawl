@@ -3802,10 +3802,6 @@ tileidx_t tileidx_corpse_brand(const item_def &item)
     if (item.base_type != OBJ_CORPSES || item.sub_type != CORPSE_BODY)
         return 0;
 
-    // Vampires are only interested in fresh blood.
-    if (you.species == SP_VAMPIRE && !mons_has_blood(item.mon_type))
-        return TILE_FOOD_INEDIBLE;
-
     // Harmful chunk effects > religious rules > reduced nutrition.
     if (is_noxious(item))
         return TILE_FOOD_ROTTING;

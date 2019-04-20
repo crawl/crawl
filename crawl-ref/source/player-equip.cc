@@ -1283,8 +1283,7 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
         break;
 
     case AMU_THE_GOURMAND:
-        if (you.species == SP_VAMPIRE
-            || you_foodless() // Mummy or in lichform
+        if (you_foodless() // Mummy, vampire, or in lichform
             || you.get_mutation_level(MUT_HERBIVOROUS) > 0) // Spriggan
         {
             mpr("After a brief, frighteningly intense craving, "

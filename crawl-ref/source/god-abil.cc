@@ -4266,9 +4266,7 @@ static string _gozag_special_shop_name(shop_type type)
 {
     if (type == SHOP_FOOD)
     {
-        if (you.species == SP_VAMPIRE)
-            return "Blood";
-        else if (you.species == SP_GHOUL)
+        if (you.species == SP_GHOUL)
             return "Carrion"; // yum!
     }
 

@@ -342,36 +342,6 @@ public:
     }
 };
 
-class BottleBloodDelay : public Delay
-{
-    item_def& corpse;
-
-    bool invalidated() override;
-
-    void finish() override;
-public:
-    BottleBloodDelay(int dur, item_def& item) :
-                     Delay(dur), corpse(item)
-    { }
-
-    bool try_interrupt() override;
-
-    bool is_butcher() const override
-    {
-        return true;
-    }
-
-    bool is_being_used(const item_def* item, operation_types oper) const override
-    {
-        return oper == OPER_BUTCHER && (!item || &corpse == item);
-    }
-
-    const char* name() const override
-    {
-        return "bottle_blood";
-    }
-};
-
 class PasswallDelay : public Delay
 {
     coord_def dest;

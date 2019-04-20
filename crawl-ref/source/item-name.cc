@@ -3501,10 +3501,8 @@ bool is_useless_item(const item_def &item, bool temp)
             return you.species == SP_VAMPIRE
                     || you.get_mutation_level(MUT_CARNIVOROUS) > 0;
         case POT_BLOOD_COAGULATED:
-#endif
         case POT_BLOOD:
             return you.species != SP_VAMPIRE;
-#if TAG_MAJOR_VERSION == 34
         case POT_DECAY:
             return you.res_rotting(temp) > 0;
         case POT_STRONG_POISON:

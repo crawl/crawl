@@ -962,14 +962,8 @@ static void _add_formatted_keyhelp(column_composer &cols)
 
     _add_command(cols, 1, CMD_INSCRIBE_ITEM, "inscribe item", 2);
     {
-        const bool vampire = you.species == SP_VAMPIRE;
-        string butcher = vampire ? "bottle blood from"
-                                 : "Chop up";
-        _add_command(cols, 1, CMD_BUTCHER, butcher + " a corpse on floor", 2);
-        string interact = (you.species == SP_VAMPIRE ? "drain corpses"
-                                                     : "Eat food");
-        interact += " (tries floor first)\n";
-        _add_command(cols, 1, CMD_EAT, interact, 2);
+        _add_command(cols, 1, CMD_BUTCHER, "Chop up a corpse on floor", 2);
+        _add_command(cols, 1, CMD_EAT, "Eat food (tries floor first) \n", 2);
     }
     _add_command(cols, 1, CMD_FIRE, "Fire next appropriate item", 2);
     _add_command(cols, 1, CMD_THROW_ITEM_NO_QUIVER, "select an item and Fire it", 2);

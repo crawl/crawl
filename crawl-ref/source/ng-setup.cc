@@ -324,11 +324,6 @@ static void _give_starting_food()
     object_class_type base_type = OBJ_FOOD;
     int sub_type = FOOD_RATION;
     int quantity = 1;
-    if (you.species == SP_VAMPIRE)
-    {
-        base_type = OBJ_POTIONS;
-        sub_type  = POT_BLOOD;
-    }
 
     // Give another one for hungry species.
     if (you.get_mutation_level(MUT_FAST_METABOLISM))

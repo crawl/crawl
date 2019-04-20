@@ -522,7 +522,8 @@ static bool _WUCAD_MU_evoke(item_def *item, bool* did_work, bool* unevokable)
 
 static void _VAMPIRES_TOOTH_equip(item_def *item, bool *show_msgs, bool unmeld)
 {
-    if (you.undead_state() == US_ALIVE && !you_foodless())
+    if (you.undead_state() == US_ALIVE
+        && (you.species == SP_VAMPIRE || !you_foodless()))
     {
         _equip_mpr(show_msgs,
                    "You feel a strange hunger, and smell blood in the air...");
@@ -1348,8 +1349,11 @@ static void _FROSTBITE_melee_effects(item_def* weapon, actor* attacker,
 
 static void _LEECH_equip(item_def *item, bool *show_msgs, bool unmeld)
 {
-    if (you.undead_state() == US_ALIVE && !you_foodless())
+    if (you.undead_state() == US_ALIVE
+        && (you.species == SP_VAMPIRE || !you_foodless()))
+    {
         _equip_mpr(show_msgs, "You feel a powerful hunger.");
+    }
     else if (you.species != SP_VAMPIRE)
         _equip_mpr(show_msgs, "You feel very empty.");
     // else let player-equip.cc handle message
