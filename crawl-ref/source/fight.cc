@@ -1085,13 +1085,10 @@ bool stop_attack_prompt(targeter &hitfunc, const char* verb,
  * penance prompt, because we don't cause penance when monsters enter line of
  * sight when OTR is active, regardless of how they entered LOS.
  *
- * @param always  True if the spell always creates monsters that do not resist
- *                poison, false if the spell only creates non-rPois monsters
- *                sometimes.
  * @param verb    The verb to be used in the prompt. Defaults to "summon".
  * @return        True if the player wants to abort.
  */
-bool otr_stop_summoning_prompt(bool always, string verb)
+bool otr_stop_summoning_prompt(string verb)
 {
     if (!you.duration[DUR_TOXIC_RADIANCE])
         return false;

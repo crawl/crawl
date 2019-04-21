@@ -74,5 +74,4 @@ bool stop_attack_prompt(targeter &hitfunc, const char* verb,
                         bool *prompted = nullptr,
                         const monster *mons = nullptr);
 
-bool otr_stop_summoning_prompt(bool always = true, string verb = "summon",
-                               bool orcs = false);
+bool otr_stop_summoning_prompt(string verb = "summon");

@@ -4195,8 +4195,7 @@ void bolt::handle_stop_attack_prompt(monster* mon)
              && mon->res_poison() <= 0)
     {
         string verb = make_stringf("enslave %s", mon->name(DESC_THE).c_str());
-        if (otr_stop_summoning_prompt(true, verb,
-                                      mons_genus(mon->type) == MONS_ORC))
+        if (otr_stop_summoning_prompt(verb))
         {
             beam_cancelled = true;
             finish_beam();

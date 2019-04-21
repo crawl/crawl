@@ -164,7 +164,7 @@ spret cast_sticks_to_snakes(int pow, god_type god, bool fail)
         return spret::abort;
     }
 
-    if (otr_stop_summoning_prompt(false, "create snakes"))
+    if (otr_stop_summoning_prompt("create snakes"))
         return spret::abort;
 
     // Sort by the quantity if the player has no bow skill; this will
@@ -237,7 +237,7 @@ spret cast_sticks_to_snakes(int pow, god_type god, bool fail)
 
 spret cast_call_canine_familiar(int pow, god_type god, bool fail)
 {
-    if (otr_stop_summoning_prompt(false))
+    if (otr_stop_summoning_prompt())
         return spret::abort;
 
     fail_check();
@@ -279,7 +279,7 @@ spret cast_summon_ice_beast(int pow, god_type god, bool fail)
 
 spret cast_monstrous_menagerie(actor* caster, int pow, god_type god, bool fail)
 {
-    if (otr_stop_summoning_prompt(false))
+    if (otr_stop_summoning_prompt())
         return spret::abort;
 
     fail_check();
@@ -398,7 +398,7 @@ spret cast_dragon_call(int pow, bool fail)
         return spret::abort;
     }
 
-    if (otr_stop_summoning_prompt(false, "call dragons"))
+    if (otr_stop_summoning_prompt("call dragons"))
         return spret::abort;
 
     fail_check();
@@ -1168,7 +1168,7 @@ bool summon_demon_type(monster_type mon, int pow, god_type god,
 spret cast_summon_demon(int pow, god_type god, bool fail)
 {
     // Chaos spawn, orange demons and sixfirhies are not rPois
-    if (otr_stop_summoning_prompt(false))
+    if (otr_stop_summoning_prompt())
         return spret::abort;
 
     fail_check();
@@ -1182,7 +1182,7 @@ spret cast_summon_demon(int pow, god_type god, bool fail)
 
 spret cast_summon_greater_demon(int pow, god_type god, bool fail)
 {
-    if (otr_stop_summoning_prompt(false)) // Hell beasts are not rPois
+    if (otr_stop_summoning_prompt())
         return spret::abort;
 
     fail_check();
@@ -1197,11 +1197,7 @@ spret cast_summon_greater_demon(int pow, god_type god, bool fail)
 spret cast_shadow_creatures(int st, god_type god, level_id place,
                                  bool fail)
 {
-    bool can_summon_orcs = place.branch == BRANCH_DUNGEON
-                           || place.branch == BRANCH_BAILEY
-                           || place.branch == BRANCH_ORC
-                           || place.branch == BRANCH_VAULTS;
-    if (otr_stop_summoning_prompt(false, "summon", can_summon_orcs))
+    if (otr_stop_summoning_prompt("summon"))
         return spret::abort;
 
     fail_check();
@@ -1442,7 +1438,7 @@ spret cast_summon_forest(actor* caster, int pow, god_type god, bool fail)
 
     if (success)
     {
-        if (otr_stop_summoning_prompt(true, "summon a forest"))
+        if (otr_stop_summoning_prompt("summon a forest"))
             return spret::abort;
 
         fail_check();
