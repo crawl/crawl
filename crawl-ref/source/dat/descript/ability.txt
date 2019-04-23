@@ -14,7 +14,8 @@ Randomly translocates the user a short distance.
 Breathe Dispelling Energy ability
 
 Breathes a bolt of dispelling energy at a targeted creature, possibly removing
-some of its enchantments.
+some of its enchantments. The range of the bolt is decreased by one for every
+creature it strikes.
 %%%%
 Breathe Fire ability
 
@@ -51,11 +52,13 @@ for a short time. It may also splash onto other nearby creatures on impact.
 Breathe Steam ability
 
 Breathes a jet of steam at a targeted location, which will scald any creatures
-it hits and will also obscure vision.
+it hits and will also obscure vision. The range of the jet is decreased by one
+for every creature it strikes.
 %%%%
 Breathe Noxious Fumes ability
 
-Breathes a blast of noxious fumes at a targeted creature.
+Breathes a blast of noxious fumes at a targeted creature. The range of the blast
+is decreased by one for every creature it strikes.
 %%%%
 Bat Form ability
 
