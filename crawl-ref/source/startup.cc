@@ -237,85 +237,6 @@ static void _zap_los_monsters(bool items_also)
     }
 }
 
-static void _pregen_levels(const branch_type branch, progress_popup &progress)
-{
-    for (int i = 1; i <= branches[branch].numlevels; i++)
-    {
-        level_id new_level = level_id(branch, i);
-        dprf("Pregenerating %s:%d", branches[new_level.branch].abbrevname,
-                                    new_level.depth);
-        progress.advance_progress();
-        generate_level(new_level);
-    }
-}
-
-static void _pregen_dungeon()
-{
-    // be sure that AK start doesn't interfere with the builder
-    unwind_var<game_chapter> chapter(you.chapter, CHAPTER_ORB_HUNTING);
-
-    // bel's original proposal generated D to lair depth, then lair, then D
-    // to orc depth, then orc, then the rest of D. I have simplified this to
-    // just generate whole branches at a time -- I am not sure how much real
-    // impact this has. One idea might be to shuffle this slightly based on
-    // the seed.
-    // TODO: probably need to do portal vaults too?
-    // Should this use something like logical_branch_order?
-    const vector<branch_type> generation_order =
-    {
-        BRANCH_DUNGEON,
-        BRANCH_TEMPLE,
-        BRANCH_LAIR,
-        BRANCH_ORC,
-        BRANCH_SPIDER,
-        BRANCH_SNAKE,
-        BRANCH_SHOALS,
-        BRANCH_SWAMP,
-        BRANCH_VAULTS,
-        BRANCH_CRYPT,
-        BRANCH_DEPTHS,
-        BRANCH_VESTIBULE,
-        BRANCH_ELF,
-        BRANCH_ZOT,
-        BRANCH_SLIME,
-        BRANCH_TOMB,
-        BRANCH_TARTARUS,
-        BRANCH_COCYTUS,
-        BRANCH_DIS,
-        BRANCH_GEHENNA,
-    };
-
-    progress_popup progress("Generating dungeon...\n\n", 35);
-    progress.advance_progress();
-    // TODO: why is dungeon invalid? it's not set up properly in
-    // `initialise_branch_depths` for some reason. The vestibule is invalid
-    // because its depth isn't set until the player actually enters a portal.
-    for (auto br : generation_order)
-        if (brentry[br].is_valid()
-            || br == BRANCH_DUNGEON || br == BRANCH_VESTIBULE)
-        {
-            string status = "\nbuilding ";
-
-            switch (br)
-            {
-            case BRANCH_SPIDER:
-            case BRANCH_SNAKE:
-                status += "a lair branch";
-                break;
-            case BRANCH_SHOALS:
-            case BRANCH_SWAMP:
-                status += "another lair branch";
-                break;
-            default:
-                status += branches[br].longname;
-                break;
-            }
-            progress.set_status_text(status);
-            _pregen_levels(br, progress);
-            progress.advance_progress();
-        }
-}
-
 static void _post_init(bool newc)
 {
     ASSERT(strwidth(you.your_name) <= MAX_NAME_LENGTH);
@@ -342,7 +263,7 @@ static void _post_init(bool newc)
     if (newc)
     {
         if (Options.pregen_dungeon && crawl_state.game_standard_levelgen())
-            _pregen_dungeon();
+            pregen_dungeon(level_id(NUM_BRANCHES, -1));
 
         you.entering_level = false;
         you.transit_stair = DNGN_UNSEEN;
