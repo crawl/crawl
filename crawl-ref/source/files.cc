@@ -83,6 +83,7 @@
 #include "tileview.h"
 #include "tiles-build-specific.h"
 #include "timed-effects.h"
+#include "ui.h"
 #include "unwind.h"
 #include "version.h"
 #include "view.h"
@@ -1432,6 +1433,143 @@ bool generate_level(const level_id &l)
     return true;
 }
 
+// bel's original proposal generated D to lair depth, then lair, then D
+// to orc depth, then orc, then the rest of D. I have simplified this to
+// just generate whole branches at a time -- I am not sure how much real
+// impact this has. One idea might be to shuffle this slightly based on
+// the seed.
+// TODO: probably need to do portal vaults too?
+// Should this use something like logical_branch_order?
+static const vector<branch_type> branch_generation_order =
+{
+    BRANCH_DUNGEON,
+    BRANCH_TEMPLE,
+    BRANCH_LAIR,
+    BRANCH_ORC,
+    BRANCH_SPIDER,
+    BRANCH_SNAKE,
+    BRANCH_SHOALS,
+    BRANCH_SWAMP,
+    BRANCH_VAULTS,
+    BRANCH_CRYPT,
+    BRANCH_DEPTHS,
+    BRANCH_VESTIBULE,
+    BRANCH_ELF,
+    BRANCH_ZOT,
+    BRANCH_SLIME,
+    BRANCH_TOMB,
+    BRANCH_TARTARUS,
+    BRANCH_COCYTUS,
+    BRANCH_DIS,
+    BRANCH_GEHENNA,
+    NUM_BRANCHES,
+};
+
+static bool _branch_pregenerates(branch_type b)
+{
+    return count(branch_generation_order.begin(),
+        branch_generation_order.end(), b) > 0;
+}
+
+/**
+* Generate dungeon branches in a stable order until the level `stopping_point`
+* is found; `stopping_point` will be generated if it doesn't already exist. If
+* it does exist, the function is a noop.
+*
+* If `stopping_point` is not in the generation order, it will be generated on
+* its own.
+*
+* To generate all generatable levels, pass a level_id with NUM_BRANCHES as the
+* branch.
+*/
+bool pregen_dungeon(const level_id &stopping_point)
+{
+    if (stopping_point.is_valid())
+    {
+        if (you.save->has_chunk(stopping_point.describe()))
+            return false;
+
+        if (!_branch_pregenerates(stopping_point.branch))
+            return generate_level(stopping_point);
+    }
+
+    vector<level_id> to_generate;
+    bool at_end = false;
+    for (auto br : branch_generation_order)
+    {
+        // TODO: why is dungeon invalid? it's not set up properly in
+        // `initialise_branch_depths` for some reason. The vestibule is invalid
+        // because its depth isn't set until the player actually enters a portal.
+        if (br < NUM_BRANCHES &&
+            (brentry[br].is_valid()
+             || br == BRANCH_DUNGEON || br == BRANCH_VESTIBULE))
+        {
+            for (int i = 1; i <= branches[br].numlevels; i++)
+            {
+                level_id new_level = level_id(br, i);
+                if (you.save->has_chunk(new_level.describe()))
+                    continue;
+
+                to_generate.push_back(new_level);
+
+                if (br == stopping_point.branch
+                    && (i == stopping_point.depth
+                        || i == branches[br].numlevels))
+                {
+                    at_end = true;
+                    break;
+                }
+            }
+        }
+        if (at_end)
+            break;
+    }
+
+    if (to_generate.size() == 0)
+        return false;
+    else if (to_generate.size() == 1)
+        return generate_level(to_generate[0]); // no popup for this case
+    else
+    {
+        // be sure that AK start doesn't interfere with the builder
+        unwind_var<game_chapter> chapter(you.chapter, CHAPTER_ORB_HUNTING);
+
+        ui::progress_popup progress("Generating dungeon...\n\n", 35);
+        progress.advance_progress();
+
+        // in normal usage if we get to here, something will generate. But it
+        // is possible to call this in a way that doesn't lead to generation.
+        bool generated = false;
+
+        for (const level_id &new_level : to_generate)
+        {
+            string status = "\nbuilding ";
+
+            switch (new_level.branch)
+            {
+            case BRANCH_SPIDER:
+            case BRANCH_SNAKE:
+                status += "a lair branch";
+                break;
+            case BRANCH_SHOALS:
+            case BRANCH_SWAMP:
+                status += "another lair branch";
+                break;
+            default:
+                status += branches[new_level.branch].longname;
+                break;
+            }
+            progress.set_status_text(status);
+            dprf("Pregenerating %s:%d",
+                branches[new_level.branch].abbrevname, new_level.depth);
+            progress.advance_progress();
+            generated = generate_level(new_level) || generated;
+        }
+
+        return generated;
+    }
+}
+
 /**
  * Load the current level.
  *
@@ -1527,14 +1665,10 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
         you.chapter = CHAPTER_ORB_HUNTING;
     }
 
-    // GENERATE new level when the file can't be opened:
-    if (!you.save->has_chunk(level_name))
+    // GENERATE new level(s) when the file can't be opened:
+    if (!pregen_dungeon(level_id::current()))
     {
-        ASSERT(load_mode != LOAD_VISITOR);
-        generate_level(level_id::current());
-    }
-    else
-    {
+        ASSERT(you.save->has_chunk(level_name));
         dprf("Loading old level '%s'.", level_name.c_str());
         _restore_tagged_chunk(you.save, level_name, TAG_LEVEL, "Level file is invalid.");
         _redraw_all(); // TODO why is there a redraw call here?
