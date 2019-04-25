@@ -237,42 +237,15 @@ static void _zap_los_monsters(bool items_also)
     }
 }
 
-/**
- * Ensure that the level given by `pos` is generated. This does not do much in
- * the way of cleanup, and the caller must ensure the player ends up somewhere
- * sensible (this will not place the player).
- */
-static bool _ensure_level_generated(const level_pos &pos)
-{
-    // TODO: how important is it to get stair_taken right? bel just used stone 1
-    dungeon_feature_type stair_taken =
-        absdungeon_depth(pos.id.branch, pos.id.depth) > env.absdepth0 ?
-        DNGN_STONE_STAIRS_DOWN_I : DNGN_STONE_STAIRS_UP_I;
-
-    if (pos.id.depth == brdepth[pos.id.branch])
-        stair_taken = DNGN_STONE_STAIRS_DOWN_I;
-
-    if (pos.id.depth == 1 && pos.id.branch != BRANCH_DUNGEON)
-        stair_taken = branches[pos.id.branch].entry_stairs;
-
-    const level_id old_level = level_id::current();
-
-    you.where_are_you = static_cast<branch_type>(pos.id.branch);
-    you.depth         = pos.id.depth;
-
-    return load_level(stair_taken, LOAD_GENERATE, old_level);
-}
-
 static void _pregen_levels(const branch_type branch, progress_popup &progress)
 {
     for (int i = 1; i <= branches[branch].numlevels; i++)
     {
         level_id new_level = level_id(branch, i);
-        level_pos pos = level_pos(new_level);
-        dprf("Pregenerating %s:%d", branches[pos.id.branch].abbrevname,
-                                    pos.id.depth);
+        dprf("Pregenerating %s:%d", branches[new_level.branch].abbrevname,
+                                    new_level.depth);
         progress.advance_progress();
-        _ensure_level_generated(pos);
+        generate_level(new_level);
     }
 }
 

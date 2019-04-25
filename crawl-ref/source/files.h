@@ -19,7 +19,6 @@ enum load_mode_type
     LOAD_RESTART_GAME,          // loaded savefile
     LOAD_ENTER_LEVEL,           // entered a level normally
     LOAD_VISITOR,               // Visitor pattern to see all levels
-    LOAD_GENERATE,              // Generating the level only
 };
 
 /// Exception indicating that a dangerous path was supplied.
@@ -82,6 +81,7 @@ class level_id;
 
 void trackers_init_new_level(bool transit);
 
+bool generate_level(const level_id &l);
 bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
                 const level_id& old_level);
 void delete_level(const level_id &level);
