@@ -1413,11 +1413,16 @@ void player::set_level_visited(const level_id &level)
     visited[level.describe()] = true;
 }
 
+/**
+ * Has the player visited the level currently stored in the save under the id
+ * `level`, if there is one? Returns false if there isn't one. This stores
+ * *token level* visited state, not type-level -- it does not answer questions
+ * like, e.g. has the player ever visited a trove? For that, see place_info.
+ * This distinction matters mainly for portal branches, especially ones that can
+ * be revisited, e.g. Pan levels and zigs.
+ */
 bool player::level_visited(const level_id &level)
 {
-    // this will mean that portal maps that the player is not currently on
-    // return false, since the map gets deleted. A continuation of legacy
-    // behavior...
     // `is_existing_level` is not reliable after the game end, because the
     // save no longer exists, so we ignore it for printing morgues
     if (!is_existing_level(level) && you.save)
@@ -2620,6 +2625,10 @@ void delete_level(const level_id &level)
 
     if (you.save)
         you.save->delete_chunk(level.describe());
+
+    auto &visited = you.props[VISITED_LEVELS_KEY].get_table();
+    visited.erase(level.describe());
+
     if (level.branch == BRANCH_ABYSS)
     {
         save_abyss_uniques();
