@@ -1467,6 +1467,8 @@ static const vector<branch_type> branch_generation_order =
 
 static bool _branch_pregenerates(branch_type b)
 {
+    if (!Options.incremental_pregen)
+        return false;
     return count(branch_generation_order.begin(),
         branch_generation_order.end(), b) > 0;
 }

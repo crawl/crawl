@@ -296,6 +296,9 @@ const vector<GameOption*> game_options::build_options_list()
 #ifndef DGAMELAUNCH
         new BoolGameOption(SIMPLE_NAME(pregen_dungeon), false),
 #endif
+        // TODO: should setting this to false be allowed outside of debug builds?
+        new BoolGameOption(SIMPLE_NAME(incremental_pregen), true),
+
 
 #ifdef DGL_SIMPLE_MESSAGING
         new BoolGameOption(SIMPLE_NAME(messaging), false),
