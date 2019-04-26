@@ -61,9 +61,9 @@
 #include "viewgeom.h"
 
 static bool _is_consonant(char let);
-static char _random_vowel(int seed);
-static char _random_cons(int seed);
-static string _random_consonant_set(int seed);
+static char _random_vowel(uint32_t seed);
+static char _random_cons(uint32_t seed);
+static string _random_consonant_set(size_t seed);
 
 static void _maybe_identify_pack_item()
 {
@@ -2764,7 +2764,6 @@ string make_name(uint32_t seed, makename_type name_type)
                                               : '\0';
         const char penult_char = name.length() > 1 ? name[name.length() - 2]
                                                     : '\0';
-
         if (name.empty() && name_type == MNAME_JIYVA)
         {
             // Start the name with a predefined letter.
@@ -2921,7 +2920,7 @@ static bool _is_consonant(char let)
 
 // Returns a random vowel (a, e, i, o, u with equal probability) or space
 // or 'y' with lower chances.
-static char _random_vowel(int seed)
+static char _random_vowel(uint32_t seed)
 {
     static const char vowels[] = "aeiouaeiouaeiouy  ";
     return vowels[ seed % (sizeof(vowels) - 1) ];
@@ -2929,7 +2928,7 @@ static char _random_vowel(int seed)
 
 // Returns a random consonant with not quite equal probability.
 // Does not include 'y'.
-static char _random_cons(int seed)
+static char _random_cons(uint32_t seed)
 {
     static const char consonants[] = "bcdfghjklmnpqrstvwxzcdfghlmnrstlmnrst";
     return consonants[ seed % (sizeof(consonants) - 1) ];
@@ -2944,7 +2943,7 @@ static char _random_cons(int seed)
  * @return      A random length 2 or 3 consonant set; e.g. "kl", "str", etc.
  *              If the seed is out of bounds, return "";
  */
-static string _random_consonant_set(int seed)
+static string _random_consonant_set(size_t seed)
 {
     // Pick a random combination of consonants from the set below.
     //   begin  -> [RCS_BB, RCS_EB) = [ 0, 27)
@@ -2974,7 +2973,7 @@ static string _random_consonant_set(int seed)
     };
     COMPILE_CHECK(ARRAYSZ(consonant_sets) == RCS_END);
 
-    ASSERT_RANGE(seed, 0, (int) ARRAYSZ(consonant_sets));
+    ASSERT_RANGE(seed, 0, ARRAYSZ(consonant_sets));
 
     return consonant_sets[seed];
 }
