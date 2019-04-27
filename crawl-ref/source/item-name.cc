@@ -338,7 +338,9 @@ static bool _missile_brand_is_prefix(special_missile_type brand)
     case SPMSL_BLINDING:
     case SPMSL_FRENZY:
     case SPMSL_EXPLODING:
+#if TAG_MAJOR_VERSION == 34
     case SPMSL_STEEL:
+#endif
     case SPMSL_SILVER:
         return true;
     default:
@@ -367,10 +369,16 @@ const char* missile_brand_name(const item_def &item, mbn_type t)
         return t == MBN_NAME ? "poisoned" : "poison";
     case SPMSL_CURARE:
         return t == MBN_NAME ? "curare-tipped" : "curare";
+#if TAG_MAJOR_VERSION == 34
     case SPMSL_EXPLODING:
         return t == MBN_TERSE ? "explode" : "exploding";
     case SPMSL_STEEL:
         return "steel";
+    case SPMSL_RETURNING:
+        return t == MBN_TERSE ? "return" : "returning";
+    case SPMSL_PENETRATION:
+        return t == MBN_TERSE ? "penet" : "penetration";
+#endif
     case SPMSL_SILVER:
         return "silver";
 #if TAG_MAJOR_VERSION == 34
@@ -387,12 +395,8 @@ const char* missile_brand_name(const item_def &item, mbn_type t)
 #endif
     case SPMSL_FRENZY:
         return t == MBN_NAME ? "datura-tipped" : "datura";
-    case SPMSL_RETURNING:
-        return t == MBN_TERSE ? "return" : "returning";
     case SPMSL_CHAOS:
         return "chaos";
-    case SPMSL_PENETRATION:
-        return t == MBN_TERSE ? "penet" : "penetration";
     case SPMSL_DISPERSAL:
         return t == MBN_TERSE ? "disperse" : "dispersal";
     case SPMSL_BLINDING:

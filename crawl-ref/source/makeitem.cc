@@ -540,20 +540,12 @@ static special_missile_type _determine_missile_brand(const item_def& item,
                                     nw, SPMSL_POISONED);
         break;
     case MI_JAVELIN:
-        rc = random_choose_weighted(30, SPMSL_RETURNING,
-                                    32, SPMSL_PENETRATION,
-                                    32, SPMSL_POISONED,
-                                    21, SPMSL_STEEL,
-                                    20, SPMSL_SILVER,
+        rc = random_choose_weighted(120, SPMSL_SILVER,
                                     nw, SPMSL_NORMAL);
         break;
     case MI_TOMAHAWK:
-        rc = random_choose_weighted(15, SPMSL_POISONED,
-                                    10, SPMSL_SILVER,
-                                    10, SPMSL_STEEL,
-                                    12, SPMSL_DISPERSAL,
-                                    28, SPMSL_RETURNING,
-                                    15, SPMSL_EXPLODING,
+        rc = random_choose_weighted(60, SPMSL_SILVER,
+                                    30, SPMSL_DISPERSAL,
                                     nw, SPMSL_NORMAL);
         break;
     }
@@ -626,18 +618,20 @@ bool is_missile_brand_ok(int type, int brand, bool strict)
     switch (brand)
     {
     case SPMSL_POISONED:
-        return type == MI_JAVELIN || type == MI_TOMAHAWK;
-    case SPMSL_RETURNING:
-        return type == MI_JAVELIN || type == MI_TOMAHAWK;
+        return false;
     case SPMSL_CHAOS:
         return type == MI_TOMAHAWK || type == MI_JAVELIN;
-    case SPMSL_PENETRATION:
-        return type == MI_JAVELIN;
     case SPMSL_DISPERSAL:
         return type == MI_TOMAHAWK;
+#if TAG_MAJOR_VERSION == 34
+    case SPMSL_RETURNING:
+        return type == MI_JAVELIN || type == MI_TOMAHAWK;
+    case SPMSL_PENETRATION:
+        return type == MI_JAVELIN;
     case SPMSL_EXPLODING:
         return type == MI_TOMAHAWK;
     case SPMSL_STEEL: // deliberate fall through
+#endif
     case SPMSL_SILVER:
         return type == MI_JAVELIN || type == MI_TOMAHAWK;
     default: break;

@@ -883,11 +883,7 @@ ITEM:   Young Poisoner's Handbook / book of Changes / \
         randbook numspells:4 title:Nature \
         spells:beastly_appendage&sting&sticks_to_snakes&spider_form
 KMASK:  'f = opaque
-: if crawl.coinflip() then
-KITEM:  f = javelin ego:poisoned q:4-6 / tomahawk ego:poisoned
-: else
 KITEM:  f = dart ego:poisoned / dart ego:curare / dart ego:atropa
-: end
 KITEM:  g = any potion q:2-3
 MONS:   plant, oklob sapling, ball python
 MONS:   adder, oklob plant, water moccasin
@@ -938,11 +934,7 @@ ITEM:   Young Poisoner's Handbook / book of Changes / \
         spells:beastly_appendage&summon_small_mammal&call_canine_familiar&spider_form / \
         randbook numspells:4 title:Nature \
         spells:beastly_appendage&sting&sticks_to_snakes&spider_form
-: if crawl.coinflip() then
-KITEM:  f = javelin ego:poisoned q:4-6 / tomahawk ego:poisoned
-: else
 KITEM:  f = dart ego:poisoned / dart ego:curare / dart ego:atropa
-: end
 KITEM:  g = any potion q:2 / any potion q:3
 MONS:   plant, oklob sapling, ball python
 MONS:   adder, oklob plant, water moccasin
@@ -1299,7 +1291,7 @@ NAME:   minmay_unpleasant_kobolds
 TAGS:   transparent
 DEPTH:  D:6-
 MONS:   kobold ; tomahawk ego:dispersal q:2 / w:3 big kobold ; tomahawk ego:dispersal q:4
-MONS:   kobold ; tomahawk ego:exploding q:2 / w:3 big kobold ; tomahawk ego:exploding q:4
+MONS:   kobold ; tomahawk ego:silver q:2 / w:3 big kobold ; tomahawk ego:silver q:4
 MONS:   kobold ; dart ego:curare q:1 / \
         w:3 big kobold ; dart ego:curare q:2
 : if you.absdepth() > 13 then

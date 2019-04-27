@@ -460,12 +460,18 @@ enum special_missile_type // to separate from weapons in general {dlb}
     SPMSL_FROST,
     SPMSL_POISONED,
     SPMSL_CURARE,                      // Needle-only brand
+#if TAG_MAJOR_VERSION == 34
     SPMSL_RETURNING,
+#endif
     SPMSL_CHAOS,
+#if TAG_MAJOR_VERSION == 34
     SPMSL_PENETRATION,
+#endif
     SPMSL_DISPERSAL,
+#if TAG_MAJOR_VERSION == 34
     SPMSL_EXPLODING,
     SPMSL_STEEL,
+#endif
     SPMSL_SILVER,
 #if TAG_MAJOR_VERSION == 34
     SPMSL_PARALYSIS,                   // dart only from here on
