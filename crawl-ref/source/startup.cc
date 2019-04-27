@@ -85,7 +85,7 @@ static void _initialize()
     you.symbol = MONS_PLAYER;
     msg::initialise_mpr_streams();
 
-    seed_rng(); // don't use any chosen seed yet
+    rng::seed(); // don't use any chosen seed yet
 
     init_char_table(Options.char_set);
     init_show_table();

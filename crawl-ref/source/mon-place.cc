@@ -1510,7 +1510,7 @@ static monster* _place_pghost_aux(const mgen_data &mg, const monster *leader,
     // since depending on the ghost, the aux call can trigger variation in
     // things like whether an enchantment (with a random duration) is
     // triggered.
-    rng_generator rng(RNG_SYSTEM_SPECIFIC);
+    rng::generator rng(rng::SYSTEM_SPECIFIC);
     return _place_monster_aux(mg, leader, place, force_pos, dont_place);
 }
 

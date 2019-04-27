@@ -703,7 +703,7 @@ int main(int argc, char* argv[])
     }
     else if (!strcmp(argv[1], "-name") || !strcmp(argv[1], "--name"))
     {
-        seed_rng();
+        rng::seed();
         printf("%s\n", make_name().c_str());
         return 0;
     }

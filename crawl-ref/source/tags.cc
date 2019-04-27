@@ -1671,7 +1671,7 @@ static void tag_construct_you(writer &th)
     marshallUByte(th, 1); // number of seeds, for historical reasons: always 1
     marshallUnsigned(th, you.game_seed);
     marshallBoolean(th, you.game_is_seeded);
-    CrawlVector rng_states = generators_to_vector();
+    CrawlVector rng_states = rng::generators_to_vector();
     rng_states.write(th);
 
     CANARY;
@@ -3609,7 +3609,7 @@ static void tag_read_you(reader &th)
         if (th.getMinorVersion() >= TAG_MINOR_REMOVE_ABYSS_SEED
             && th.getMinorVersion() < TAG_MINOR_ADD_ABYSS_SEED)
         {
-            abyssal_state.seed = get_uint32();
+            abyssal_state.seed = rng::get_uint32();
         }
         else
 #endif
@@ -3623,7 +3623,7 @@ static void tag_read_you(reader &th)
         unmarshallFloat(th); // converted abyssal_state.depth to int.
         abyssal_state.depth = 0;
         abyssal_state.destroy_all_terrain = true;
-        abyssal_state.seed = get_uint32();
+        abyssal_state.seed = rng::get_uint32();
     }
 #endif
     abyssal_state.phase = unmarshallFloat(th);
@@ -3688,7 +3688,7 @@ static void tag_read_you(reader &th)
     ASSERT(th.getMinorVersion() < TAG_MINOR_GAMESEEDS || count == 1);
     if (th.getMinorVersion() < TAG_MINOR_GAMESEEDS)
     {
-        you.game_seed = count > 0 ? unmarshallInt(th) : get_uint64();
+        you.game_seed = count > 0 ? unmarshallInt(th) : rng::get_uint64();
         dprf("Upgrading from unseeded game.");
         crawl_state.seed = you.game_seed;
         you.game_is_seeded = false;
@@ -3707,7 +3707,7 @@ static void tag_read_you(reader &th)
         you.game_is_seeded = unmarshallBoolean(th);
         CrawlVector rng_states;
         rng_states.read(th);
-        load_generators(rng_states);
+        rng::load_generators(rng_states);
 #if TAG_MAJOR_VERSION == 34
     }
 #endif

@@ -680,7 +680,7 @@ public:
      */
     void more(bool full, bool user=false)
     {
-        rng_generator rng(RNG_UI);
+        rng::generator rng(rng::UI);
 
         if (_pre_more())
             return;
@@ -1402,7 +1402,7 @@ static int _last_msg_turn = -1; // Turn of last message.
 static void _mpr(string text, msg_channel_type channel, int param, bool nojoin,
                  bool cap)
 {
-    rng_generator rng(RNG_UI);
+    rng::generator rng(rng::UI);
 
     if (_msg_dump_file != nullptr)
         fprintf(_msg_dump_file, "%s\n", text.c_str());
@@ -1819,7 +1819,7 @@ static bool _pre_more()
 
 void more(bool user_forced)
 {
-    rng_generator rng(RNG_UI);
+    rng::generator rng(rng::UI);
 
     if (!crawl_state.io_inited)
         return;
