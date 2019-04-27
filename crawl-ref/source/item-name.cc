@@ -2758,8 +2758,8 @@ const size_t RCS_END = RCS_EM;
  */
 string make_name(uint32_t seed, makename_type name_type)
 {
-    uint64_t sarg[1] = { static_cast<uint64_t>(seed) };
-    rng::PcgRNG rng = rng::PcgRNG(sarg, ARRAYSZ(sarg));
+    // TODO: better conversion of the seed to 64 bits
+    rng::PcgRNG rng = rng::PcgRNG(static_cast<uint64_t>(seed));
 
     string name;
 

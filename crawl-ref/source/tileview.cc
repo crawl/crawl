@@ -315,9 +315,11 @@ void tile_init_flavour()
     vector<unsigned int> output;
 
     {
-        uint64_t seed[] = { static_cast<uint64_t>(you.where_are_you ^ you.game_seed),
-            static_cast<uint64_t>(you.depth) };
-        rng::PcgRNG rng(seed, ARRAYSZ(seed));
+<<<<<<< HEAD
+        rng::PcgRNG rng(
+            static_cast<uint64_t>(you.where_are_you ^ you.game_seed),
+            static_cast<uint64_t>(you.depth));
+
         if (you.where_are_you == BRANCH_CRYPT)
         {
             output.reserve(X_WIDTH * Y_WIDTH);

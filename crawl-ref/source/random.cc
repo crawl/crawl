@@ -103,31 +103,33 @@ namespace rng
         return get_uint64(_generator);
     }
 
-    static void _do_seeding(uint64_t seed_array[], int seed_len)
+    static void _do_seeding(PcgRNG &master)
     {
-        PcgRNG seeded(seed_array, seed_len);
         // TODO: don't initialize gameplay/ui rng?
         // Use the just seeded RNG to initialize the rest.
         for (PcgRNG& rng : _global_state)
         {
-            uint64_t key[2] = { seeded.get_uint64(), seeded.get_uint64() };
-            rng = PcgRNG(key, ARRAYSZ(key));
+            uint64_t init_state = master.get_uint64();
+            uint64_t seq = master.get_uint64();
+            rng = PcgRNG(init_state, seq);
         }
     }
 
     void seed(uint64_t seed)
     {
-        uint64_t sarg[1] = { seed };
-        _do_seeding(sarg, ARRAYSZ(sarg));
+        // use the default stream
+        PcgRNG master = PcgRNG(seed);
+        _do_seeding(master);
     }
 
     void seed()
     {
-        /* Use a 128-bit wide seed */
+        // seed both state and sequence from system randomness.
         uint64_t seed_key[2];
         bool seeded = read_urandom((char*)(&seed_key), sizeof(seed_key));
         ASSERT(seeded);
-        _do_seeding(seed_key, ARRAYSZ(seed_key));
+        PcgRNG master = PcgRNG(seed_key[0], seed_key[1]);
+        _do_seeding(master);
     }
 
     /**

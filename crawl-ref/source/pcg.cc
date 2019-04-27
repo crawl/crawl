@@ -17,8 +17,12 @@ namespace rng
     {
         count_++;
         uint64_t oldstate = state_;
-        // Advance internal state
-        state_ = oldstate * static_cast<uint64_t>(6364136223846793005ULL) + (inc_|1);
+        // Advance internal state. Use the 'official' multiplier. Don't change
+        // this without carefully consulting official sources, as not all
+        // multipliers are ok: see
+        // http://www.pcg-random.org/posts/critiquing-pcg-streams.html
+        state_ = oldstate * static_cast<uint64_t>(6364136223846793005ULL)
+                                                                + (inc_|1);
         // Calculate output function (XSH RR), uses old state for max ILP
         uint32_t xorshifted = ((oldstate >> 18u) ^ oldstate) >> 27u;
         uint32_t rot = oldstate >> 59u;
@@ -31,24 +35,37 @@ namespace rng
         return static_cast<uint64_t>(get_uint32()) << 32 | get_uint32();
     }
 
+    // Initialization values only.
+    // don't generate unseeded versions of this. But if you must, go get the
+    // constants from the official PCG implementation...
     PcgRNG::PcgRNG()
-          // Choose base state arbitrarily. There's nothing up my sleeve.
-        : state_(static_cast<uint64_t>(18446744073709551557ULL)), // Largest 64-bit prime.
-          inc_(static_cast<uint64_t>(2305843009213693951ULL)),    // Largest Mersenne prime under 64-bits.
+        : state_(static_cast<uint64_t>(0)),
+          inc_(static_cast<uint64_t>(1)),
           count_(0)
-
     { }
 
-    PcgRNG::PcgRNG(uint64_t init_key[], int key_length)
+    /**
+     * Seed a PCG RNG instance based on a seed (`init_state`) and a sequence/
+     * stream id. Both of these can be any value, but the highest bit of
+     * `sequence` will be discarded.
+     *
+     * @param init_state the seed value to initialize PCG state with.
+     * @param sequence the sequence number/stream id.
+     */
+    PcgRNG::PcgRNG(uint64_t init_state, uint64_t sequence)
         : PcgRNG()
     {
-        if (key_length > 0)
-            state_ = init_key[0];
-        if (key_length > 1)
-            inc_ = init_key[1];
-        else
-            inc_ ^= get_uint32();
+        inc_ = sequence << 1u | 1u; // any odd value is ok
+        get_uint32();
+        state_ += init_state;
+        get_uint32();
+        count_ = 0;
     }
+
+    PcgRNG::PcgRNG(uint64_t init_state)
+        : PcgRNG(init_state, static_cast<uint64_t>(2305843009213693951ULL))
+                             // Largest Mersenne prime under 64-bits.
+    { }
 
     PcgRNG::PcgRNG(const CrawlVector &v)
         : PcgRNG()
