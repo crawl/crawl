@@ -3,7 +3,7 @@
 
 local eol = string.char(13)
 
-local results = {49, 97, 51, 75, 3, 38, 66, 84, 28, 76}
+local results = {51, 11, 78, 21, 19, 95, 21, 43, 33, 75}
 
 debug.reset_rng(1)
 crawl.stderr("Here are 10 random numbers from seed 1:" .. eol)
