@@ -341,7 +341,7 @@ int ranged_attack::weapon_damage()
 
     int dam = property(*projectile, PWPN_DAMAGE);
     if (projectile->base_type == OBJ_MISSILES
-        && get_ammo_brand(*projectile) == SPMSL_STEEL)
+        && get_ammo_brand(*projectile) == SPMSL_SILVER)
     {
         if (dam)
             dam = div_rand_round(dam * 13, 10);
@@ -417,7 +417,6 @@ bool ranged_attack::apply_damage_brand(const char *what)
     // No stacking elemental brands.
     if (projectile->base_type == OBJ_MISSILES
         && get_ammo_brand(*projectile) != SPMSL_NORMAL
-        && get_ammo_brand(*projectile) != SPMSL_PENETRATION
         && (brand == SPWPN_FLAMING
             || brand == SPWPN_FREEZING
             || brand == SPWPN_HOLY_WRATH
