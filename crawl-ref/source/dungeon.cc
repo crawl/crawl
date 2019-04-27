@@ -259,7 +259,7 @@ bool builder(bool enable_random_maps)
     temp_unique_items = you.unique_items;
 
     unwind_bool levelgen(crawl_state.generating_level, true);
-    rng_generator levelgen_rng(you.where_are_you);
+    rng::generator levelgen_rng(you.where_are_you);
 
 #ifdef DEBUG_DIAGNOSTICS // no point in enabling unless dprf works
     CrawlHashTable &debug_logs = you.props["debug_builder_logs"].get_table();

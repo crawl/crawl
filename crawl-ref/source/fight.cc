@@ -599,7 +599,7 @@ int apply_chunked_AC(int dam, int ac)
 
     int hurt = 0;
     for (int i = 0; i < dam; i++)
-        if (get_uint32() < cr)
+        if (rng::get_uint32() < cr)
             hurt++;
 
     return hurt;

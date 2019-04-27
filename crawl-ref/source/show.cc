@@ -441,7 +441,7 @@ static void _update_monster(monster* mons)
     if (you.attribute[ATTR_SEEN_INVIS_TURN] != you.num_turns)
     {
         you.attribute[ATTR_SEEN_INVIS_TURN] = you.num_turns;
-        you.attribute[ATTR_SEEN_INVIS_SEED] = get_uint32();
+        you.attribute[ATTR_SEEN_INVIS_SEED] = rng::get_uint32();
     }
     // After the player finishes this turn, the monster's unseen pos (and
     // its invis indicator due to going unseen) will be erased.

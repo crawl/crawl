@@ -17,129 +17,137 @@
 #include "store.h"
 #include "options.h"
 
-static FixedVector<PcgRNG, NUM_RNGS> rngs;
-static rng_type _generator = RNG_GAMEPLAY;
-
-CrawlVector generators_to_vector()
+namespace rng
 {
-    CrawlVector store;
-    for (PcgRNG& rng : rngs)
-        store.push_back(rng.to_vector()); // TODO is this ok memory-wise?
-    return store;
-}
+    // global/persistent rng state that will be saved
+    static FixedVector<PcgRNG, rng::NUM_RNGS> _global_state;
 
-vector<uint64_t> get_rng_states()
-{
-    // this doesn't return the internal state per se, but it returns the count
-    // of 32 bit integers that have been drawn, which amounts to the same thing.
-    // This isn't saved, though, so it's mainly useful for debugging within a
-    // session.
-    vector<uint64_t> result;
-    for (PcgRNG& rng : rngs)
-        result.push_back(rng.get_count());
-    return result;
-}
+    // temporary rng state
+    static rng_type _generator = rng::GAMEPLAY;
 
-void load_generators(const CrawlVector &v)
-{
-    // as-is, decreasing the number of rngs (e.g. by removing a branch) will
-    // break save compatibility.
-    ASSERT(v.size() <= rngs.size());
-    for (int i = 0; i < v.size(); i++)
+    CrawlVector generators_to_vector()
     {
-        CrawlVector state = v[i].get_vector();
-        rngs[i] = PcgRNG(state);
+        CrawlVector store;
+        for (PcgRNG& rng : _global_state)
+            store.push_back(rng.to_vector()); // TODO is this ok memory-wise?
+        return store;
+    }
+
+    vector<uint64_t> get_states()
+    {
+        // this doesn't return the internal state per se, but it returns the count
+        // of 32 bit integers that have been drawn, which amounts to the same thing.
+        // This isn't saved, though, so it's mainly useful for debugging within a
+        // session.
+        vector<uint64_t> result;
+        for (PcgRNG& rng : _global_state)
+            result.push_back(rng.get_count());
+        return result;
+    }
+
+    void load_generators(const CrawlVector &v)
+    {
+        // as-is, decreasing the number of rngs (e.g. by removing a branch) will
+        // break save compatibility.
+        ASSERT(v.size() <= _global_state.size());
+        for (int i = 0; i < v.size(); i++)
+        {
+            CrawlVector state = v[i].get_vector();
+            _global_state[i] = PcgRNG(state);
+        }
+    }
+
+    generator::generator(rng_type g) : previous(_generator)
+    {
+        _generator = g;
+    }
+
+    static rng_type _get_branch_generator(const branch_type b)
+    {
+        return static_cast<rng_type>(rng::LEVELGEN + static_cast<int>(b));
+    }
+
+    generator::generator(branch_type b) : previous(_generator)
+    {
+        _generator = _get_branch_generator(b);
+    }
+
+    generator::~generator()
+    {
+        _generator = previous;
+    }
+
+    uint32_t get_uint32(rng_type generator)
+    {
+        return _global_state[generator].get_uint32();
+    }
+
+    uint32_t get_uint32()
+    {
+        return get_uint32(_generator);
+    }
+
+    uint32_t peek_uint32()
+    {
+        PcgRNG tmp = _global_state[_generator];
+        return tmp.get_uint32();
+    }
+
+    uint64_t get_uint64(rng_type generator)
+    {
+        return _global_state[generator].get_uint64();
+    }
+
+    uint64_t get_uint64()
+    {
+        return get_uint64(_generator);
+    }
+
+    static void _do_seeding(uint64_t seed_array[], int seed_len)
+    {
+        PcgRNG seeded(seed_array, seed_len);
+        // TODO: don't initialize gameplay/ui rng?
+        // Use the just seeded RNG to initialize the rest.
+        for (PcgRNG& rng : _global_state)
+        {
+            uint64_t key[2] = { seeded.get_uint64(), seeded.get_uint64() };
+            rng = PcgRNG(key, ARRAYSZ(key));
+        }
+    }
+
+    void seed(uint64_t seed)
+    {
+        uint64_t sarg[1] = { seed };
+        _do_seeding(sarg, ARRAYSZ(sarg));
+    }
+
+    void seed()
+    {
+        /* Use a 128-bit wide seed */
+        uint64_t seed_key[2];
+        bool seeded = read_urandom((char*)(&seed_key), sizeof(seed_key));
+        ASSERT(seeded);
+        _do_seeding(seed_key, ARRAYSZ(seed_key));
+    }
+
+    /**
+     * Reset RNG to Options seed, and if that seed is 0, generate a new one.
+     */
+    void reset()
+    {
+        crawl_state.seed = Options.seed;
+        while (!crawl_state.seed) // 0 = random seed
+        {
+            rng::seed(); // reset entirely via read_urandom
+            crawl_state.seed = get_uint64();
+        }
+        dprf("Setting game seed to %" PRIu64, crawl_state.seed);
+        you.game_seed = crawl_state.seed;
+        rng::seed(crawl_state.seed);
     }
 }
 
-rng_generator::rng_generator(rng_type g) : previous(_generator)
-{
-    _generator = g;
-}
-
-static rng_type _get_branch_generator(const branch_type b)
-{
-    return static_cast<rng_type>(RNG_LEVELGEN + static_cast<int>(b));
-}
-
-rng_generator::rng_generator(branch_type b) : previous(_generator)
-{
-    _generator = _get_branch_generator(b);
-}
-
-rng_generator::~rng_generator()
-{
-    _generator = previous;
-}
-
-uint32_t get_uint32(rng_type generator)
-{
-    return rngs[generator].get_uint32();
-}
-
-uint32_t get_uint32()
-{
-    return get_uint32(_generator);
-}
-
-uint32_t peek_uint32()
-{
-    PcgRNG tmp = rngs[_generator];
-    return tmp.get_uint32();
-}
-
-uint64_t get_uint64(rng_type generator)
-{
-    return rngs[generator].get_uint64();
-}
-
-uint64_t get_uint64()
-{
-    return get_uint64(_generator);
-}
-
-static void _seed_rng(uint64_t seed_array[], int seed_len)
-{
-    PcgRNG seeded(seed_array, seed_len);
-    // TODO: don't initialize gameplay/ui rng?
-    // Use the just seeded RNG to initialize the rest.
-    for (PcgRNG& rng : rngs)
-    {
-        uint64_t key[2] = { seeded.get_uint64(), seeded.get_uint64() };
-        rng = PcgRNG(key, ARRAYSZ(key));
-    }
-}
-
-void seed_rng(uint64_t seed)
-{
-    uint64_t sarg[1] = { seed };
-    _seed_rng(sarg, ARRAYSZ(sarg));
-}
-
-void seed_rng()
-{
-    /* Use a 128-bit wide seed */
-    uint64_t seed_key[2];
-    bool seeded = read_urandom((char*)(&seed_key), sizeof(seed_key));
-    ASSERT(seeded);
-    _seed_rng(seed_key, ARRAYSZ(seed_key));
-}
-
-/**
- * Reset RNG to Options seed, and if that seed is 0, generate a new one.
- */
-void reset_rng()
-{
-    crawl_state.seed = Options.seed;
-    while (!crawl_state.seed) // 0 = random seed
-    {
-        seed_rng(); // reset entirely via read_urandom
-        crawl_state.seed = get_uint64();
-    }
-    dprf("Setting game seed to %" PRIu64, crawl_state.seed);
-    you.game_seed = crawl_state.seed;
-    seed_rng(crawl_state.seed);
-}
+// TODO: probably this could all be in the rng namespace
 
 // [low, high]
 int random_range(int low, int high)
@@ -156,16 +164,16 @@ int random_range(int low, int high, int nrolls)
     return low + roll;
 }
 
-static int _random2(int max, rng_type rng)
+static int _random2(int max, rng::rng_type rng)
 {
     if (max <= 1)
         return 0;
 
-    uint32_t partn = PcgRNG::max() / max;
+    uint32_t partn = rng::PcgRNG::max() / max;
 
     while (true)
     {
-        uint32_t bits = get_uint32(rng);
+        uint32_t bits = rng::get_uint32(rng);
         uint32_t val  = bits / partn;
 
         if (val < (uint32_t)max)
@@ -176,13 +184,13 @@ static int _random2(int max, rng_type rng)
 // [0, max)
 int random2(int max)
 {
-    return _random2(max, _generator);
+    return _random2(max, rng::_generator);
 }
 
 // [0, max), separate RNG state
 int ui_random(int max)
 {
-    return _random2(max, RNG_UI);
+    return _random2(max, rng::UI);
 }
 
 // [0, 1]
@@ -367,7 +375,7 @@ double random_real()
 {
     static const uint64_t UPPER_BITS = 0x3FF0000000000000ULL;
     static const uint64_t LOWER_MASK = 0x000FFFFFFFFFFFFFULL;
-    const uint64_t value = UPPER_BITS | (get_uint64() & LOWER_MASK);
+    const uint64_t value = UPPER_BITS | (rng::get_uint64() & LOWER_MASK);
     double result;
     // Portable memory transmutation. The union trick almost always
     // works, but this is safer.
@@ -427,7 +435,7 @@ bool defer_rand::x_chance_in_y_contd(int x, int y, int index)
     do
     {
         if (index == int(bits.size()))
-            bits.push_back(get_uint32());
+            bits.push_back(rng::get_uint32());
 
         uint64_t expn_rand_1 = uint64_t(bits[index++]) * y;
         uint64_t expn_rand_2 = expn_rand_1 + y;
@@ -450,7 +458,7 @@ int defer_rand::random2(int maxp1)
         return 0;
 
     if (bits.empty())
-        bits.push_back(get_uint32());
+        bits.push_back(rng::get_uint32());
 
     uint64_t expn_rand_1 = uint64_t(bits[0]) * maxp1;
     uint64_t expn_rand_2 = expn_rand_1 + maxp1;

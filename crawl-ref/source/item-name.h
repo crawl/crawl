@@ -121,7 +121,7 @@ bool is_bad_item(const item_def &item, bool temp = false);
 bool is_dangerous_item(const item_def& item, bool temp = false);
 bool is_useless_item(const item_def &item, bool temp = false);
 
-string make_name(uint32_t seed = get_uint32(),
+string make_name(uint32_t seed = rng::get_uint32(),
                  makename_type name_type = MNAME_DEFAULT);
 void make_name_tests();
 

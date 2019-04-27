@@ -2759,7 +2759,7 @@ const size_t RCS_END = RCS_EM;
 string make_name(uint32_t seed, makename_type name_type)
 {
     uint64_t sarg[1] = { static_cast<uint64_t>(seed) };
-    PcgRNG rng = PcgRNG(sarg, ARRAYSZ(sarg));
+    rng::PcgRNG rng = rng::PcgRNG(sarg, ARRAYSZ(sarg));
 
     string name;
 
@@ -3035,10 +3035,10 @@ static void _test_jiyva_names(const string& fname)
         sysfail("can't write test output");
 
     string longest;
-    seed_rng(27);
+    rng::seed(27);
     for (int i = 0; i < 1000000; i++)
     {
-        const string name = make_name(get_uint32(), MNAME_JIYVA);
+        const string name = make_name(rng::get_uint32(), MNAME_JIYVA);
         ASSERT(name[0] == 'J');
         if (name.length() > longest.length())
             longest = name;
@@ -3060,7 +3060,7 @@ void make_name_tests()
     _test_jiyva_names("jiyva_names.out");
     _test_scroll_names("scroll_names.out");
 
-    seed_rng(27);
+    rng::seed(27);
     for (int i = 0; i < 1000000; ++i)
         make_name();
 }

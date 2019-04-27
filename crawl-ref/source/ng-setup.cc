@@ -462,7 +462,7 @@ static void _free_up_slot(char letter)
 
 void initial_dungeon_setup()
 {
-    rng_generator levelgen_rng(BRANCH_DUNGEON);
+    rng::generator levelgen_rng(BRANCH_DUNGEON);
 
     initialise_branch_depths();
     initialise_temples();
@@ -472,7 +472,7 @@ void initial_dungeon_setup()
 
 static void _setup_generic(const newgame_def& ng)
 {
-    reset_rng(); // initialize rng from Options.seed
+    rng::reset(); // initialize rng from Options.seed
     _init_player();
     you.game_seed = crawl_state.seed;
 

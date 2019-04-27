@@ -413,7 +413,7 @@ LUAFN(debug_reset_rng)
         unsigned int seed = (unsigned int) luaL_safe_checkint(ls, 1);
         Options.seed = (uint64_t) seed;
     }
-    reset_rng();
+    rng::reset();
     const string ret = make_stringf("%" PRIu64, Options.seed);
     lua_pushstring(ls, ret.c_str());
     return 1;
@@ -423,7 +423,7 @@ LUAFN(debug_get_rng_state)
 {
     string r = make_stringf("seed: %" PRIu64 ", generator states: ",
         Options.seed);
-    vector<uint64_t> states = get_rng_states();
+    vector<uint64_t> states = rng::get_states();
     for (auto i : states)
         r += make_stringf("%" PRIu64 " ", i);
     lua_pushstring(ls, r.c_str());
