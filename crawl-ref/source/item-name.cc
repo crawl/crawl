@@ -367,8 +367,10 @@ const char* missile_brand_name(const item_def &item, mbn_type t)
         return t == MBN_NAME ? "curare-tipped" : "curare";
     case SPMSL_EXPLODING:
         return t == MBN_TERSE ? "explode" : "exploding";
+#if TAG_MAJOR_VERSION == 34
     case SPMSL_STEEL:
         return "steel";
+#endif
     case SPMSL_SILVER:
         return "silver";
     case SPMSL_PARALYSIS:

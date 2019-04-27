@@ -884,8 +884,6 @@ ITEM:   Young Poisoner's Handbook / book of Changes / \
         spells:beastly_appendage&sting&sticks_to_snakes&spider_form
 KMASK:  'f = opaque
 : if crawl.coinflip() then
-KITEM:  f = javelin ego:poisoned q:4-6 / tomahawk ego:poisoned
-: else
 KITEM:  f = blowgun / w:5 nothing, needle ego:poisoned / needle ego:curare / needle ego:paralysis
 : end
 KITEM:  g = any potion q:2-3
@@ -939,8 +937,6 @@ ITEM:   Young Poisoner's Handbook / book of Changes / \
         randbook numspells:4 title:Nature \
         spells:beastly_appendage&sting&sticks_to_snakes&spider_form
 : if crawl.coinflip() then
-KITEM:  f = javelin ego:poisoned q:4-6 / tomahawk ego:poisoned
-: else
 KITEM:  f = blowgun / w:5 nothing, needle ego:poisoned / needle ego:curare / needle ego:paralysis
 : end
 KITEM:  g = any potion q:2 / any potion q:3
