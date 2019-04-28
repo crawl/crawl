@@ -225,7 +225,8 @@ bool Stash::needs_stop() const
 bool Stash::is_boring_feature(dungeon_feature_type feature)
 {
     // Count shops as boring features, because they are handled separately.
-    return !is_notable_terrain(feature) || feature == DNGN_ENTER_SHOP;
+    return !is_notable_terrain(feature) && !feat_is_trap(feature)
+        || feature == DNGN_ENTER_SHOP;
 }
 
 static bool _grid_has_perceived_item(const coord_def& pos)
