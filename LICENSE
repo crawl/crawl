@@ -18,7 +18,7 @@ These include:
 	   resize-observer-polyfill, and scrollbarwidth
        worley.{cc,h}
 * zlib: webserver/static/scripts/contrib/inflate.js
-* Apache v2: pcg.cc
+* Apache v2, MIT (see comments in the file for details): pcg.cc
 
 The majority of Crawl's tiles and artwork are released under the CC0 license
 (https://creativecommons.org/publicdomain/zero/1.0/), and new submissions are
