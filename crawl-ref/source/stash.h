@@ -110,6 +110,15 @@ private:
     friend class ST_ItemIterator;
 };
 
+enum stash_match_type
+{
+    MATCH_UNKNOWN,
+    MATCH_ITEM,
+    MATCH_SHOP,
+    MATCH_FEATURE,
+    MATCH_NUM_MATCH_TYPE
+};
+
 struct stash_search_result
 {
     // Where's this thingummy of interest.
@@ -118,6 +127,9 @@ struct stash_search_result
     // Number of levels the player must cross to reach the level the stash/shop
     // is on.
     int player_distance;
+
+    // Type of thing found.
+    stash_match_type match_type;
 
     // Text that describes this search result - usually the name of
     // the first matching item in the stash or the name of the shop.
@@ -132,6 +144,9 @@ struct stash_search_result
     // The shop in question, if this result is for a shop name.
     const ShopInfo *shop;
 
+    // Type of feature, if this result is for a feature.
+    dungeon_feature_type feat;
+
     // Whether the found items are in the player's inventory.
     bool in_inventory;
 
@@ -139,9 +154,10 @@ struct stash_search_result
     int duplicates;
     int duplicate_piles;
 
-    stash_search_result() : pos(), player_distance(0), match(), primary_sort(),
-                            item(), shop(nullptr), in_inventory(false),
-                            duplicates(0), duplicate_piles(0)
+    stash_search_result() : pos(), player_distance(0), match_type(), match(),
+                            primary_sort(), item(), shop(nullptr), feat(),
+                            in_inventory(false), duplicates(0),
+                            duplicate_piles(0)
     {
     }
 
