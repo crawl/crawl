@@ -2828,19 +2828,6 @@ c.....c.....c.....c
 cccbcccc.@.ccccbccc
 ENDMAP
 
-NAME:   evilmike_surprise_oklob
-DEPTH:  D:9-, Elf
-WEIGHT: 5
-KMONS:  1 = oklob plant
-KITEM:  1 = star_item / nothing
-KITEM:  | = gold, superb_item
-MAP
-cccccccccc
-c1m|mmm..c
-cccccccc.c
-cccccccc@c
-ENDMAP
-
 NAME:   hangedman_tree_tricks
 DEPTH:  D:8-, !D:$
 TAGS:   extra no_monster_gen
