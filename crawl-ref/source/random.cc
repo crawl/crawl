@@ -77,6 +77,11 @@ namespace rng
         _generator = previous;
     }
 
+    PcgRNG &current_generator()
+    {
+        return _global_state[_generator];
+    }
+
     uint32_t get_uint32(rng_type generator)
     {
         return _global_state[generator].get_uint32();
@@ -166,33 +171,21 @@ int random_range(int low, int high, int nrolls)
     return low + roll;
 }
 
-static int _random2(int max, rng::rng_type rng)
+// [0, max)
+int random2(int max)
 {
     if (max <= 1)
         return 0;
 
-    uint32_t partn = rng::PcgRNG::max() / max;
-
-    while (true)
-    {
-        uint32_t bits = rng::get_uint32(rng);
-        uint32_t val  = bits / partn;
-
-        if (val < (uint32_t)max)
-            return (int)val;
-    }
-}
-
-// [0, max)
-int random2(int max)
-{
-    return _random2(max, rng::_generator);
+    return rng::current_generator().get_bounded_uint32(max);
 }
 
 // [0, max), separate RNG state
 int ui_random(int max)
 {
-    return _random2(max, rng::UI);
+    rng::generator ui(rng::UI);
+
+    return random2(max);
 }
 
 // [0, 1]

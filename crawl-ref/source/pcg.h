@@ -12,6 +12,7 @@ namespace rng
         PcgRNG(const CrawlVector &v);
         CrawlVector to_vector();
         uint32_t get_uint32();
+        uint32_t get_bounded_uint32(uint32_t bound);
         uint64_t get_uint64();
         uint32_t operator()() { return get_uint32(); }
 
