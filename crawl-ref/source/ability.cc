@@ -776,6 +776,12 @@ const string make_cost_description(ability_type ability)
     if (ability == ABIL_HEAL_WOUNDS)
         ret += make_stringf(", Permanent MP (%d left)", get_real_mp(false));
 
+    if (ability == ABIL_TRAN_BAT)
+        ret += ", Stat Drain";
+
+    if (ability == ABIL_REVIVIFY)
+        ret += ", Frailty";
+
     if (abil.hp_cost)
         ret += make_stringf(", %d HP", abil.hp_cost.cost(you.hp_max));
 
@@ -2813,13 +2819,18 @@ static spret _do_ability(const ability_def& abil, bool fail)
         return fedhas_evolve_flora(fail);
 
     case ABIL_TRAN_BAT:
+    {
         fail_check();
         if (!transform(100, transformation::bat))
         {
             crawl_state.zero_turns_taken();
             return spret::abort;
         }
+        int statslost = 4 + binomial(5, 50);
+        for (int i = 0; i < statslost; ++i)
+            lose_stat(random_choose(STAT_STR, STAT_INT, STAT_DEX), 1);
         break;
+    }
 
     case ABIL_EXSANGUINATE:
         fail_check();

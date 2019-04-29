@@ -49,6 +49,7 @@
 #include "mon-gear.h"
 #include "mon-tentacle.h"
 #include "mon-util.h"
+#include "mutation.h"
 #include "nearby-danger.h"
 #include "notes.h"
 #include "options.h"
@@ -962,6 +963,7 @@ void RevivifyDelay::finish()
     you.vampire_alive = true;
     you.redraw_status_lights = true;
     mpr("Now alive.");
+    temp_mutate(MUT_FRAIL, "vampire revification");
     vampire_update_transformations();
 }
 
