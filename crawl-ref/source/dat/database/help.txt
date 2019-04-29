@@ -110,12 +110,13 @@ that contain the spell.
 You can search for artefact item properties (such as <w>/prevents.*teleport</w>)
 to find artefacts that have the property.
 
-You can search by some additional item properties: <w>artefact</w> or <w>artifact</w> will
-find identified artefacts, <w>ego</w> or <w>branded</w> will find non-artefacts with a
-brand and unidentified items which may be branded, <w>throwable</w> will find things
-you can throw, <w>dropped</w> will find items you have dropped, <w>in_shop</w> will find
-items in shops, and (if the autopickup_search option is enabled) <w>autopickup</w> will find
-items that would be automatically picked up.
+You can search by some additional item properties: <w>artefact</w> or
+<w>artifact</w> will find identified artefacts, <w>ego</w> or <w>branded</w>
+will find non-artefacts with a brand and unidentified items which may be
+branded, <w>throwable</w> will find things you can throw, <w>dropped</w> will
+find items you have dropped, <w>in_shop</w> will find items in shops, and (if
+the autopickup_search option is enabled) <w>autopickup</w> will find items that
+would be automatically picked up.
 
 Skill names (such as <w>Polearms</w> or <w>Long Blades</w>) will find all weapons that
 train that skill. You can also look for <w>melee weapon</w> and <w>ranged weapon</w>.
@@ -126,10 +127,10 @@ Use <w>armour && !!body</w> to list all armour pieces except for body armour.
 
 <h>Finding Dungeon Features:</h>
 
-You can search for dungeon features by name: all shops will be found by a
-search for <w>shop</w> (including shops that do not have "shop" in their name);
-other dungeon features can also be found by name: <w>fountain</w>, <w>spear trap</w>,
-<w>altar</w>, etc. You can also search for altars by deity name: <w>Zin</w>.
+You can search for dungeon features by name: all shops will be found by a search
+for <w>shop</w> (including shops that do not have "shop" in their name); other
+dungeon features can also be found by name: <w>dispersal trap</w>, <w>altar</w>,
+etc. You can also search for altars by deity name: <w>Zin</w>.
 
 <h>Non-regex operators:</h>
 
