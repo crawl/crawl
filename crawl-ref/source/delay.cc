@@ -952,6 +952,7 @@ void ExsanguinateDelay::finish()
     blood_spray(you.pos(), MONS_PLAYER, 10);
     you.vampire_alive = false;
     you.redraw_status_lights = true;
+    calc_hp(true);
     mpr("Now bloodless.");
     vampire_update_transformations();
 }

@@ -645,7 +645,10 @@ string describe_mutations(bool drop_title)
     if (you.species == SP_VAMPIRE)
     {
         if (!you.vampire_alive)
-            result += "<green>You do not heal naturally.</green>\n";
+        {
+            result += "<green>You do not regenerate when monsters are visible.</green>\n";
+            result += "<green>You are frail without blood (-20% HP).</green>\n";
+        }
         else
             result += "<green>Your natural rate of healing is unusually fast.</green>\n";
     }
@@ -775,12 +778,14 @@ static string _display_vampire_attributes()
 
     string result;
 
-    const int lines = 12;
+    const int lines = 11;
     string column[lines][3] =
     {
         {"                     ", "<green>Alive</green>      ", "<lightred>Bloodless</lightred>"},
                                  //Full       Bloodless
-        {"Regeneration         ", "fast       ", "none  "},
+        {"Regeneration         ", "fast       ", "none with monsters in sight"},
+
+        {"HP Modifier          ", "none       ", "-20%"},
 
         {"Stealth boost        ", "none       ", "major "},
 
