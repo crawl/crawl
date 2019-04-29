@@ -7,6 +7,7 @@
 
 #include "hash.h"
 #include "rng-type.h"
+#include "pcg.h"
 
 class CrawlVector;
 
@@ -22,9 +23,24 @@ namespace rng
         rng_type previous;
     };
 
+    class subgenerator
+    {
+    public:
+        subgenerator();
+        subgenerator(uint64_t seed);
+        subgenerator(uint64_t seed, uint64_t sequence);
+        ~subgenerator();
+    private:
+        PcgRNG current;
+        PcgRNG *previous;
+        rng_type previous_main;
+    };
+
     CrawlVector generators_to_vector();
     void load_generators(const CrawlVector &v);
     vector<uint64_t> get_states();
+    PcgRNG *get_generator(rng_type r);
+    PcgRNG &current_generator();
 
     void seed();
     void seed(uint64_t seed);

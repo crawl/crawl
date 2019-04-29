@@ -315,8 +315,7 @@ void tile_init_flavour()
     vector<unsigned int> output;
 
     {
-<<<<<<< HEAD
-        rng::PcgRNG rng(
+        rng::subgenerator sub_rng(
             static_cast<uint64_t>(you.where_are_you ^ you.game_seed),
             static_cast<uint64_t>(you.depth));
 
@@ -324,13 +323,15 @@ void tile_init_flavour()
         {
             output.reserve(X_WIDTH * Y_WIDTH);
             domino::DominoSet<domino::EdgeDomino> dominoes(domino::cohen_set, 8);
-            dominoes.Generate(X_WIDTH, Y_WIDTH, output, rng);
+            // TODO: don't pass a PcgRNG object
+            dominoes.Generate(X_WIDTH, Y_WIDTH, output,
+                                                    rng::current_generator());
         }
         else
         {
             output.resize(X_WIDTH * Y_WIDTH);
             for (auto &o : output)
-                o = rng();
+                o = rng::get_uint32();
         }
     }
     for (rectangle_iterator ri(0); ri; ++ri)

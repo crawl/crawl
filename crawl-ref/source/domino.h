@@ -441,7 +441,7 @@ class DominoSet
                     tiling[pt] = choices[0];
                 }
                 else
-                    tiling[pt] = rng() % adjacencies_.size();
+                    tiling[pt] = rng(adjacencies_.size());
 
                 has_conflicts |= Conflicts(pt, tiling);
             }
@@ -475,7 +475,7 @@ class DominoSet
                                 tiling[pt] = choices[0];
                             }
                             else
-                                tiling[pt] = rng() % adjacencies_.size();
+                                tiling[pt] = rng(adjacencies_.size());
 
                             int after = Conflicts(pt, tiling);
                             if (after >= conflicts)
@@ -574,13 +574,13 @@ class DominoSet
                         for (int y = -sz; y <= sz; ++y)
                         {
                             Point nb = {pt.x + x, pt.y + y};
-                            if (tiling.find(nb) != tiling.end() && rng() % 2)
+                            if (tiling.find(nb) != tiling.end() && rng(2))
                                 shuffle.insert(nb);
                         }
                     }
                 }
                 for (auto itr : shuffle)
-                    tiling[itr] = rng() % adjacencies_.size();
+                    tiling[itr] = rng(adjacencies_.size());
             }
 
         int Conflicts(Point pt, const std::map<Point, uint32_t>& tiling) const
