@@ -1402,7 +1402,7 @@ static vector<stash_search_result> _stash_filter_duplicates(vector<stash_search_
         // don't push_back duplicates
         {
             stash_match_type mtype = out.back().match_type;
-            switch(mtype)
+            switch (mtype)
             {
             case MATCH_ITEM:
                 out.back().duplicate_piles++;
