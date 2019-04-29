@@ -471,7 +471,7 @@ vector<stash_search_result> Stash::matches_search(
     if (feat != DNGN_FLOOR)
     {
         const string fdesc = feature_description();
-        if (!fdesc.empty() && search.matches(fdesc))
+        if (!fdesc.empty() && search.matches(prefix + " " + fdesc))
         {
             stash_search_result res;
             res.match = fdesc;
