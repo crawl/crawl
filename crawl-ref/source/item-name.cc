@@ -15,7 +15,6 @@
 #include "areas.h"
 #include "artefact.h"
 #include "art-enum.h"
-#include "pcg.h" // for make_name()'s use
 #include "branch.h"
 #include "butcher.h"
 #include "cio.h"
@@ -61,8 +60,8 @@
 #include "viewgeom.h"
 
 static bool _is_consonant(char let);
-static char _random_vowel(uint32_t seed);
-static char _random_cons(uint32_t seed);
+static char _random_vowel();
+static char _random_cons();
 static string _random_consonant_set(size_t seed);
 
 static void _maybe_identify_pack_item()
@@ -2746,7 +2745,7 @@ const size_t RCS_END = RCS_EM;
  *
  * @param seed      The seed to generate the name from.
  *                  The same seed will always generate the same name.
- *                  By default a random number from the RNG.
+ *                  By default a random number from the current RNG.
  * @param name_type The type of name to be generated.
  *                  If MNAME_SCROLL, increase length by 6 and force to allcaps.
  *                  If MNAME_JIYVA, start with J, do not generate spaces,
@@ -2758,16 +2757,18 @@ const size_t RCS_END = RCS_EM;
  */
 string make_name(uint32_t seed, makename_type name_type)
 {
-    // TODO: better conversion of the seed to 64 bits
-    rng::PcgRNG rng = rng::PcgRNG(static_cast<uint64_t>(seed));
+    // use the seed to select sequence, rather than seed per se. This is
+    // because it is not important that the sequence be randomly distributed
+    // in uint64_t.
+    rng::subgenerator subgen(you.game_seed, static_cast<uint64_t>(seed));
 
     string name;
 
     bool has_space  = false; // Keep track of whether the name contains a space.
 
     size_t len = 3;
-    len += rng.get_uint32() % 5;
-    len += (rng.get_uint32() % 5 == 0) ? rng.get_uint32() % 6 : 1;
+    len += random2(5);
+    len += (random2(5) == 0) ? random2(6) : 1;
 
     if (name_type == MNAME_SCROLL)   // scrolls have longer names
         len += 6;
@@ -2792,11 +2793,11 @@ string make_name(uint32_t seed, makename_type name_type)
         else if (name.empty() || prev_char == ' ')
         {
             // Start the word with any letter.
-            name += 'a' + (rng.get_uint32() % 26);
+            name += 'a' + random2(26);
         }
         else if (!has_space && name_type != MNAME_JIYVA
                  && name.length() > 5 && name.length() < len - 4
-                 && rng.get_uint32() % 5 != 0) // 4/5 chance
+                 && random2(5) != 0) // 4/5 chance
         {
              // Hand out a space.
             name += ' ';
@@ -2806,10 +2807,10 @@ string make_name(uint32_t seed, makename_type name_type)
                      || (name.length() > 1
                          && !_is_consonant(prev_char)
                          && _is_consonant(penult_char)
-                         && rng.get_uint32() % 5 <= 1))) // 2/5
+                         && random2(5) <= 1))) // 2/5
         {
             // Place a vowel.
-            const char vowel = _random_vowel(rng.get_uint32());
+            const char vowel = _random_vowel();
 
             if (vowel == ' ')
             {
@@ -2833,7 +2834,7 @@ string make_name(uint32_t seed, makename_type name_type)
             else if (name.length() > 1
                      && vowel == prev_char
                      && (vowel == 'y' || vowel == 'i'
-                         || rng.get_uint32() % 5 <= 1))
+                         || random2(5) <= 1))
             {
                 // Replace the vowel with something else if the previous
                 // letter was the same, and it's a 'y', 'i' or with 2/5 chance.
@@ -2850,7 +2851,7 @@ string make_name(uint32_t seed, makename_type name_type)
 
             // Use one of number of predefined letter combinations.
             if ((len > 3 || !name.empty())
-                && rng.get_uint32() % 7 <= 1 // 2/7 chance
+                && random2(7) <= 1 // 2/7 chance
                 && (!beg || !end))
             {
                 const int first = (beg ? RCS_BB : (end ? RCS_BE : RCS_BM));
@@ -2858,7 +2859,7 @@ string make_name(uint32_t seed, makename_type name_type)
 
                 const int range = last - first;
 
-                const int cons_seed = rng.get_uint32() % range + first;
+                const int cons_seed = random2(range) + first;
 
                 const string consonant_set = _random_consonant_set(cons_seed);
 
@@ -2869,7 +2870,7 @@ string make_name(uint32_t seed, makename_type name_type)
             else // Place a single letter instead.
             {
                 // Pick a random consonant.
-                name += _random_cons(rng.get_uint32());
+                name += _random_cons();
             }
         }
 
@@ -2888,10 +2889,10 @@ string make_name(uint32_t seed, makename_type name_type)
         && !_is_consonant(name[name.length() - 1])
         && (name.length() < len    // early exit
             || (len < 8
-                && rng.get_uint32() % 3 != 0))) // 2/3 chance for other short names
+                && random2(3) != 0))) // 2/3 chance for other short names
     {
         // Specifically, add a consonant.
-        name += _random_cons(rng.get_uint32());
+        name += _random_cons();
     }
 
     if (maxlen != SIZE_MAX)
@@ -2903,7 +2904,7 @@ string make_name(uint32_t seed, makename_type name_type)
     {
         // convolute & recurse
         if (name_type == MNAME_JIYVA)
-            return make_name(rng.get_uint32(), MNAME_JIYVA);
+            return make_name(rng::get_uint32(), MNAME_JIYVA);
 
         name = "plog";
     }
@@ -2940,18 +2941,18 @@ static bool _is_consonant(char let)
 
 // Returns a random vowel (a, e, i, o, u with equal probability) or space
 // or 'y' with lower chances.
-static char _random_vowel(uint32_t seed)
+static char _random_vowel()
 {
     static const char vowels[] = "aeiouaeiouaeiouy  ";
-    return vowels[ seed % (sizeof(vowels) - 1) ];
+    return vowels[random2(sizeof(vowels) - 1)];
 }
 
 // Returns a random consonant with not quite equal probability.
 // Does not include 'y'.
-static char _random_cons(uint32_t seed)
+static char _random_cons()
 {
     static const char consonants[] = "bcdfghjklmnpqrstvwxzcdfghlmnrstlmnrst";
-    return consonants[ seed % (sizeof(consonants) - 1) ];
+    return consonants[random2(sizeof(consonants) - 1)];
 }
 
 /**
@@ -2963,7 +2964,7 @@ static char _random_cons(uint32_t seed)
  * @return      A random length 2 or 3 consonant set; e.g. "kl", "str", etc.
  *              If the seed is out of bounds, return "";
  */
-static string _random_consonant_set(size_t seed)
+static string _random_consonant_set(size_t c)
 {
     // Pick a random combination of consonants from the set below.
     //   begin  -> [RCS_BB, RCS_EB) = [ 0, 27)
@@ -2993,9 +2994,9 @@ static string _random_consonant_set(size_t seed)
     };
     COMPILE_CHECK(ARRAYSZ(consonant_sets) == RCS_END);
 
-    ASSERT_RANGE(seed, 0, ARRAYSZ(consonant_sets));
+    ASSERT_RANGE(c, 0, ARRAYSZ(consonant_sets));
 
-    return consonant_sets[seed];
+    return consonant_sets[c];
 }
 
 /**

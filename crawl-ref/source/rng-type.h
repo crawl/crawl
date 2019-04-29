@@ -11,5 +11,6 @@ namespace rng
         SPARE3,
         LEVELGEN,        // branch 0, i.e. the dungeon
         NUM_RNGS = LEVELGEN + NUM_BRANCHES, // and then one for each other branch
+        SUB_GENERATOR,   // unsaved -- past NUM_RNGS
     };
 }

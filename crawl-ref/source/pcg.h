@@ -15,6 +15,7 @@ namespace rng
         uint32_t get_bounded_uint32(uint32_t bound);
         uint64_t get_uint64();
         uint32_t operator()() { return get_uint32(); }
+        uint32_t operator()(uint32_t bound) { return get_bounded_uint32(bound); }
 
         typedef uint32_t result_type;
         static constexpr uint32_t min() { return 0; }

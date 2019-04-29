@@ -24,6 +24,8 @@ namespace rng
 
     // temporary rng state
     static rng_type _generator = rng::GAMEPLAY;
+    // TODO: once we have c++17, convert to type optional<PcgRNG>
+    static PcgRNG * _sub_generator = nullptr;
 
     CrawlVector generators_to_vector()
     {
@@ -77,35 +79,58 @@ namespace rng
         _generator = previous;
     }
 
-    PcgRNG &current_generator()
+    subgenerator::subgenerator(uint64_t seed, uint64_t sequence)
+        : current(seed, sequence),
+          previous(_sub_generator),
+          previous_main(_generator)
     {
-        return _global_state[_generator];
+        _generator = rng::SUB_GENERATOR;
+        _sub_generator = &current;
     }
 
-    uint32_t get_uint32(rng_type generator)
+    subgenerator::~subgenerator()
     {
-        return _global_state[generator].get_uint32();
+        _generator = previous_main;
+        _sub_generator = previous;
+    }
+
+    subgenerator::subgenerator(uint64_t seed)
+        : subgenerator(seed, get_uint64())
+    { }
+
+    subgenerator::subgenerator()
+        : subgenerator(get_uint64(), get_uint64())
+    { }
+
+    PcgRNG *get_generator(rng_type r)
+    {
+        if (_generator == SUB_GENERATOR)
+            return _sub_generator;
+        else
+            return &_global_state[_generator];
+    }
+
+    PcgRNG &current_generator()
+    {
+        PcgRNG *ret = get_generator(_generator);
+        ASSERT(ret);
+        return *ret;
     }
 
     uint32_t get_uint32()
     {
-        return get_uint32(_generator);
+        return current_generator().get_uint32();
     }
 
     uint32_t peek_uint32()
     {
-        PcgRNG tmp = _global_state[_generator];
+        PcgRNG tmp = current_generator(); // make a copy
         return tmp.get_uint32();
-    }
-
-    uint64_t get_uint64(rng_type generator)
-    {
-        return _global_state[generator].get_uint64();
     }
 
     uint64_t get_uint64()
     {
-        return get_uint64(_generator);
+        return current_generator().get_uint64();
     }
 
     static void _do_seeding(PcgRNG &master)
