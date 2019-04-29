@@ -461,6 +461,7 @@ vector<stash_search_result> Stash::matches_search(
             || is_dumpable_artefact(item) && search.matches(chardump_desc(item)))
         {
             stash_search_result res;
+            res.match_type = MATCH_ITEM;
             res.match = s;
             res.primary_sort = item.name(DESC_QUALNAME);
             res.item = item;
@@ -474,8 +475,10 @@ vector<stash_search_result> Stash::matches_search(
         if (!fdesc.empty() && search.matches(prefix + " " + fdesc))
         {
             stash_search_result res;
+            res.match_type = MATCH_FEATURE;
             res.match = fdesc;
             res.primary_sort = fdesc;
+            res.feat = feat;
             results.push_back(res);
         }
     }
@@ -708,6 +711,7 @@ vector<stash_search_result> ShopInfo::matches_search(
         stash_search_result res;
         res.match = shoptitle;
         res.primary_sort = shoptitle;
+        res.match_type = MATCH_SHOP;
         res.shop = this;
         res.pos.pos = shop.pos;
         results.push_back(res);
@@ -730,6 +734,7 @@ vector<stash_search_result> ShopInfo::matches_search(
             || search.matches(shop_item_desc(item)))
         {
             stash_search_result res;
+            res.match_type = MATCH_ITEM;
             res.match = sname;
             res.primary_sort = item.name(DESC_QUALNAME);
             res.item = item;
@@ -1245,11 +1250,13 @@ protected:
 
 static bool _is_potentially_boring(stash_search_result res)
 {
-    return res.item.defined() && !res.in_inventory && !res.shop
-           && (res.item.base_type == OBJ_WEAPONS
-               || res.item.base_type == OBJ_ARMOUR
-               || res.item.base_type == OBJ_MISSILES)
-           && (item_type_known(res.item) || !item_is_branded(res.item));
+    return res.match_type == MATCH_ITEM && res.item.defined()
+        && !res.in_inventory
+        && (res.item.base_type == OBJ_WEAPONS
+            || res.item.base_type == OBJ_ARMOUR
+            || res.item.base_type == OBJ_MISSILES)
+        && (item_type_known(res.item) || !item_is_branded(res.item))
+        || res.match_type == MATCH_FEATURE && feat_is_trap(res.feat);
 }
 
 static bool _is_duplicate_for_search(stash_search_result l,
@@ -1392,10 +1399,29 @@ static vector<stash_search_result> _stash_filter_duplicates(vector<stash_search_
         if (out.size() && !out.back().in_inventory &&
             _is_potentially_boring(res) && _is_duplicate_for_search(out.back(),
                                                                     res))
+        // don't push_back duplicates
         {
-            // don't push_back the duplicate
-            out.back().duplicate_piles++;
-            out.back().duplicates += res.item.quantity;
+            stash_match_type mtype = out.back().match_type;
+            switch(mtype)
+            {
+            case MATCH_ITEM:
+                out.back().duplicate_piles++;
+                out.back().duplicates += res.item.quantity;
+                break;
+            case MATCH_FEATURE:
+                // number of piles is meaningless for features; just keep track
+                // of how many we've found
+                out.back().duplicates++;
+                break;
+                // We shouldn't get here (shops aren't boring enough to
+                // deduplicate). But in case it becomes possible we won't
+                // collapse entries.
+            default:
+                out.push_back(res);
+                out.back().duplicate_piles = 0;
+                out.back().duplicates = 0;
+                break;
+            }
         }
         else
         {
@@ -1695,7 +1721,9 @@ bool StashTracker::display_search_results(
         {
             matchtitle << " (" << res.duplicates << " further duplicate" <<
                 (res.duplicates == 1 ? "" : "s");
-            if (res.duplicates != res.duplicate_piles)
+            if (res.duplicates != res.duplicate_piles  // piles are only
+                                                       // meaningful for items
+                && res.match_type == MATCH_ITEM)
             {
                 matchtitle << " in " << res.duplicate_piles
                            << " pile" << (res.duplicate_piles == 1 ? "" : "s");
