@@ -1304,14 +1304,14 @@ ENDMAP
 NAME:    minmay_guarded_unrand_secular_launcher
 TAGS:    vaults_hard vaults_orient_s
 WEIGHT:  3
-: if you.unrands("sniper") and you.unrands("piercer") then
+: if you.unrands("sniper") and you.unrands("storm_bow") then
 ITEM:    triple crossbow randart no_pickup / longbow randart no_pickup
 : elseif you.unrands("sniper") then
-ITEM:    piercer no_pickup
-: elseif you.unrands("piercer") then
+ITEM:    storm_bow no_pickup
+: elseif you.unrands("storm_bow") then
 ITEM:    sniper no_pickup
 : else
-ITEM:    piercer no_pickup / sniper no_pickup
+ITEM:    storm_bow no_pickup / sniper no_pickup
 : end
 NSUBST:  3:9 / 6=9. / ., 8 = 2:8 / 6=8.. / .
 MAP

@@ -796,7 +796,7 @@ KITEM:    R = obsidian_axe ident:all, \
               dark_maul ident:all, \
               sniper ident:all, \
               majin-bo ident:all
-KITEM:    T = piercer ident:all, \
+KITEM:    T = storm_bow ident:all, \
               singing_sword ident:all, \
               mace_of_variability ident:all, \
               sword_of_power ident:all, \
