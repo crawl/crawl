@@ -12,8 +12,8 @@ You can view existing files to get a sense of the format, it's quite straightfor
 
 | key  | type | required | description |
 | ---- | ---- | -------- | ----------- |
-| enum | `string` | **Yes** | Set the species enum. Must match the pattern `SP_[A-Z]+`. |
-| monster | `string` | **Yes** | Species' corresponding monster. Must match the pattern `MONS_[A-Z]+`. |
+| enum | `string` | **Yes** | Set the species enum. Must match the pattern `SP_[A-Z_]+`. |
+| monster | `string` | **Yes** | Species' corresponding monster. Must match the pattern `MONS_[A-Z_]+`. |
 | name | `string` | **Yes** | Species name, like 'Deep Dwarf' or 'Felid'. Required. Must be unique. |
 | short_name | `string` | No | Two letter species code. Must be unique (excepting special cases like Draconian sub-species). Defaults to the first two letters of the name. |
 | adjective | `string` | No | Species adjective, like 'Dwarven' or 'Feline'. Defaults to `$name`. |
@@ -44,4 +44,4 @@ You probably don't need or want to use these.
 | key  | type | required | description |
 | ---- | ---- | -------- | ----------- |
 | TAG_MAJOR_VERSION | `int` | No | Wrap the species in `#if TAG_MAJOR_VERSION == [...]` to deprecate it. See existing deprecated species for examples. |
-| create_enum | `boolean` | No | Set `true` if the species already has an enum in species-type.h. Any new species should not set this (and will fail to compile if you try). Defaults to `false`. |
+| create_enum | `boolean` | No | Set `false` if the species has a hardcoded enum in species-type.h. New species should use the default value. Defaults to `true`. |
