@@ -41,7 +41,7 @@ You can:
 - view your past games or those of others
 - battle ghosts of other players
 - compete using a common score list
-- take part in the annual tournament
+- take part in the semiannual tournament
 - play the most recent development version
 
 A full list of available servers and information on how to connect to them can
