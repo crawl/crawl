@@ -11,7 +11,7 @@ void wizard_tweak_object();
 void wizard_make_object_randart();
 void wizard_value_item();
 void wizard_uncurse_item();
-void wizard_create_all_artefacts();
+void wizard_create_all_artefacts(bool override_unique = true);
 void wizard_identify_pack();
 void wizard_unidentify_pack();
 void wizard_draw_card();

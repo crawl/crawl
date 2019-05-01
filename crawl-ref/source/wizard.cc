@@ -210,7 +210,8 @@ static void _do_wizard_command(int wiz_command)
         break;
 
     case '\\': debug_make_shop(); break;
-    case '|': wizard_create_all_artefacts(); break;
+    case '|': wizard_create_all_artefacts(true); break;
+    case CONTROL('\\'): wizard_create_all_artefacts(false); break;
 
     case ';': wizard_list_levels(); break;
     case ':': wizard_list_branches(); break;
@@ -486,6 +487,7 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>Ctrl-V</w> show gold value of an item\n"
                        "<w>-</w>      get a god gift\n"
                        "<w>|</w>      create all unrand artefacts\n"
+                       "<w>Ctrl-\\</w> create all unrands / fallbacks\n"
                        "<w>+</w>      make randart from item\n"
                        "<w>'</w>      list items\n"
                        "<w>J</w>      Jiyva off-level sacrifice\n"

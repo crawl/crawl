@@ -92,6 +92,9 @@ my %field_type = (
     plus2     => "num",
     base_type => "enum",
     sub_type  => "enum",
+    fallback_base_type => "enum",
+    fallback_sub_type => "enum",
+    FB_BRAND => "enum",
 
     unused    => "unused",
 );
@@ -169,6 +172,17 @@ sub finish_art
         {
             $artefact->{BRAND} = "0";
         }
+    }
+
+    if (!exists($artefact->{FALLBACK}))
+    {
+        $artefact->{fallback_base_type} = "OBJ_UNASSIGNED";
+        $artefact->{fallback_sub_type} = 250;
+    }
+
+    if (!exists($artefact->{FB_BRAND}))
+    {
+        $artefact->{FB_BRAND} = "-1";
     }
 
     # Appearance is no longer mandatory.
@@ -364,6 +378,29 @@ sub process_line
         $artefact->{base_type} = $parts[0];
         $artefact->{sub_type}  = $parts[1];
     }
+    elsif ($field eq "FALLBACK")
+    {
+        my @parts = split(m!/!, $value);
+
+        if (@parts > 2)
+        {
+            error($artefact, "Too many parts to FALLBACK");
+            return;
+        }
+        elsif (@parts == 1)
+        {
+            error($artefact, "Too few parts to FALLBACK");
+            return;
+        }
+
+        if ($parts[0] !~ /^OBJ_/)
+        {
+            error($artefact, "FALLBACK base type must start with 'OBJ_'");
+            return;
+        }
+        $artefact->{fallback_base_type} = $parts[0];
+        $artefact->{fallback_sub_type}  = $parts[1];
+    }
     elsif ($field eq "PLUS")
     {
         my @parts = split(m!/!, $value);
@@ -480,7 +517,9 @@ sub process_line
 
 my @art_order = (
     "NAME", "APPEAR", "TYPE", "INSCRIP", "\n",
-    "base_type", "sub_type", "plus", "plus2", "COLOUR", "VALUE", "\n",
+    "base_type", "sub_type", "\n",
+    "fallback_base_type", "fallback_sub_type", "FB_BRAND", "\n",
+    "plus", "plus2", "COLOUR", "VALUE", "\n",
     "flags",
 
     # Move FOG after FLY, and remove four copies of "unused", when

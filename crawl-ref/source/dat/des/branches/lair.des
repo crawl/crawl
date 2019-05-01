@@ -2379,13 +2379,7 @@ NAME:    minmay_guarded_unrand_snakebite
 TAGS:    ruin
 DEPTH:   Lair
 ORIENT:  southeast
-: if you.unrands("snakebite") then
-# A randart venom demon whip is unlikely to be useful
-# for someone with snakebite, so just do this
-ITEM:    demon whip good_item
-: else
 ITEM:    snakebite no_pickup
-: end
 KMONS:   A = adder
 KMONS:   B = water moccasin
 KMONS:   C = black mamba

@@ -881,11 +881,7 @@ KMONS:      & = col:mutagenic primal ox-sting-weird mutant beast \
                 name:Cigotuvi's_Monster name_replace tile:mons_cigotuvis_monster
 ITEM:       potion of mutation
 ITEM:       potion of mutation q:1, potion of mutation
-: if you.unrands("hat of the alchemist") then
-ITEM:       any jewellery randart
-: else
 ITEM:       any jewellery randart / w:5 hat_of_the_alchemist
-: end
 ITEM:       randbook disc:transmutation disc2:necromancy owner:Cigotuvi
 ITEM:       book of transfigurations / randbook disc:transmutation
 ITEM:       staff of death, scroll of summoning
