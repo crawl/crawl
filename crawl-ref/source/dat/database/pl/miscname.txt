@@ -8,12 +8,7 @@
 %%%%
 # "dust glows XXX", "eyes glow XXX", "hands glow XXX", "<actor> glows XXX".
 # If a language needs these keys split, please say so.
-#
-# Also used by Tome of Destruction below.
 #glowing_colour_name
-%%%%
-# Tome of Destruction: "The book opens to a page covered in XXX."
-#writing_name
 %%%%
 # random uselessness: "You smell XXX."
 #smell_name

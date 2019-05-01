@@ -2780,8 +2780,7 @@ static bool _scroll_will_harm(const scroll_type scr, const actor &m)
 
 /**
  * Check to see if the player can read the item in the given slot, and if so,
- * reads it. (Examining books, evoking the tome of destruction, & using
- * scrolls.)
+ * reads it. (Examining books and using scrolls.)
  *
  * @param slot      The slot of the item in the player's inventory. If -1, the
  *                  player is prompted to choose a slot.
