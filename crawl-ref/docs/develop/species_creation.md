@@ -44,4 +44,4 @@ You probably don't need or want to use these.
 | key  | type | required | description |
 | ---- | ---- | -------- | ----------- |
 | TAG_MAJOR_VERSION | `int` | No | Wrap the species in `#if TAG_MAJOR_VERSION == [...]` to deprecate it. See existing deprecated species for examples. |
-| create_enum | `boolean` | No | Set `false` if the species has a hardcoded enum in species-type.h. Only used for old hardcoded species (Lava Orc, High Elf, etc). Setting `false` for a new species will fail to compile. Defaults to `true`. |
+| create_enum | `boolean` | No | Set `false` if the species has a hardcoded enum in species-type.h. New species should use the default value. Defaults to `true`. |
