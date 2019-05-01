@@ -6162,6 +6162,8 @@ void monster::react_to_damage(const actor *oppressor, int damage,
         }
         if (caught())
             check_net_will_hold_monster(this);
+        if (this->is_constricted())
+            this->stop_being_constricted();
 
         add_ench(ENCH_RING_OF_THUNDER);
     }
