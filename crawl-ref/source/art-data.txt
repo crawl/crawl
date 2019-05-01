@@ -123,6 +123,11 @@
 
 # PLUS: The pluses of the artefact.
 
+# FALLBACK: if an artifact has already generated, the builder instead usually
+# creates a randart with the same base type. This field allows overriding the
+# base type for certain special cases (e.g. if a randart's special properties
+# put it on par with a much stronger base type).
+
 #####
 
 # Explanation of normal fields:
@@ -160,6 +165,7 @@
 ENUM:   DUMMY1
 NAME:   DUMMY UNRANDART 1
 OBJ:    OBJ_UNASSIGNED/250
+FALLBACK: OBJ_UNASSIGNED/250
 PLUS:   250
 COLOUR: BLACK
 
@@ -177,6 +183,7 @@ BRAND:   SPWPN_VORPAL
 
 NAME:    Wrath of Trog
 OBJ:     OBJ_WEAPONS/WPN_BATTLEAXE
+FALLBACK: OBJ_WEAPONS/WPN_EXECUTIONERS_AXE
 PLUS:    +8
 COLOUR:  ETC_BLOOD
 TILE:    spwpn_wrath_of_trog
@@ -187,6 +194,7 @@ BRAND:   SPWPN_ANTIMAGIC
 
 NAME:    mace of Variability
 OBJ:     OBJ_WEAPONS/WPN_GREAT_MACE
+FALLBACK: OBJ_WEAPONS/OBJ_RANDOM
 INSCRIP: chain chaos
 PLUS:    +7
 COLOUR:  ETC_RANDOM
@@ -207,6 +215,7 @@ BRAND:   SPWPN_VORPAL
 
 NAME:    sword of Power
 OBJ:     OBJ_WEAPONS/WPN_GREAT_SWORD
+FB_BRAND: SPWPN_VORPAL
 PLUS:    +0 # Set on wield
 COLOUR:  RED
 TILE:    spwpn_sword_of_power
@@ -235,6 +244,7 @@ VALUE:   1000
 NAME:    Vampire's Tooth
 OBJ:     OBJ_WEAPONS/WPN_QUICK_BLADE
 # it's a quick blade made from a tooth -> no TYPE
+FB_BRAND: SPWPN_VAMPIRISM
 PLUS:    +12
 COLOUR:  ETC_BONE
 TILE:    spwpn_vampires_tooth
@@ -270,6 +280,7 @@ COLOUR:  ETC_BONE
 TILE:    spwpn_sword_of_zonguldrok
 TILE_EQ: zonguldrok
 BRAND:   SPWPN_REAPING
+FB_BRAND: SPWPN_PAIN
 VALUE:   800
 BOOL:    evil, corpse_violating
 
@@ -405,6 +416,8 @@ COLOUR:  ETC_SLIME
 TILE:    urand_punk
 TILE_EQ: punk
 BRAND:   SPWPN_ACID
+# random fallback brand
+FB_BRAND: SPWPN_NORMAL
 BOOL:    rCorr
 
 NAME:     longbow "Zephyr"
@@ -428,6 +441,7 @@ STR:     7
 
 NAME:     glaive of the Guard
 OBJ:      OBJ_WEAPONS/WPN_GLAIVE
+FALLBACK: OBJ_WEAPONS/WPN_BARDICHE
 PLUS:     +8
 COLOUR:   ETC_ELECTRICITY
 TILE:     urand_guard
@@ -443,6 +457,7 @@ PLUS:     +10
 COLOUR:   ETC_HOLY
 TILE:     unrand_zealot_sword
 TILE_EQ:  zealot_sword
+# fallback places a randart eudemon blade!
 BRAND:    SPWPN_HOLY_WRATH
 EV:       3
 ANGRY:    5
@@ -451,6 +466,7 @@ LIFE:     1
 NAME:    arbalest "Damnation"
 INSCRIP: damnation,
 OBJ:     OBJ_WEAPONS/WPN_ARBALEST
+FB_BRAND: SPWPN_FLAMING
 PLUS:    +6
 COLOUR:  ETC_FIRE
 TILE:    urand_damnation
@@ -492,6 +508,7 @@ COLOUR:   ETC_UNHOLY
 TILE:     urand_botono
 TILE_EQ:  botono
 BRAND:    SPWPN_REAPING
+FB_BRAND: SPWPN_PAIN
 HP:       -6
 LIFE:     1
 BOOL:     poison, nogen
@@ -517,6 +534,8 @@ MAGIC:   1
 
 NAME:     Elemental Staff
 OBJ:      OBJ_WEAPONS/WPN_STAFF
+FALLBACK: OBJ_WEAPONS/WPN_LAJATANG
+FB_BRAND: SPWPN_FREEZING
 PLUS:     +3
 COLOUR:   DARKGREY
 TILE:     urand_elemental
@@ -555,6 +574,8 @@ ENUM:    BLOWGUN_ASSASSIN
 NAME:    blowgun of the Assassin
 INSCRIP: stab,
 OBJ:     OBJ_WEAPONS/WPN_BLOWGUN
+# fallback is just to prevent errors
+FALLBACK: OBJ_WEAPONS/WPN_LONGBOW
 PLUS:    +6
 COLOUR:  ETC_DEATH
 TILE:    urand_blowgun
@@ -564,6 +585,8 @@ BOOL:    inv, tilerim, nogen
 
 NAME:    lance "Wyrmbane"
 OBJ:     OBJ_WEAPONS/WPN_SPEAR
+FALLBACK: OBJ_WEAPONS/WPN_DEMON_TRIDENT
+FB_BRAND: SPWPN_VORPAL
 INSCRIP: slay drac,
 TYPE:    lance
 BASE_DAM: +2
@@ -589,6 +612,7 @@ STEALTH:  1
 
 NAME:    plutonium sword
 OBJ:     OBJ_WEAPONS/WPN_TRIPLE_SWORD
+FB_BRAND: SPWPN_CHAOS
 PLUS:    +11
 COLOUR:  ETC_MUTAGENIC
 TILE:    urand_plutonium
@@ -600,6 +624,7 @@ VALUE:   1000
 NAME:     great mace "Undeadhunter"
 INSCRIP:  disrupt,
 OBJ:      OBJ_WEAPONS/WPN_GREAT_MACE
+FB_BRAND: SPWPN_HOLY_WRATH
 PLUS:     +7
 COLOUR:   LIGHTGREY
 TILE:     urand_undeadhunter
@@ -608,6 +633,7 @@ LIFE:     1
 
 NAME:    whip "Snakebite"
 OBJ:     OBJ_WEAPONS/WPN_WHIP
+FALLBACK: OBJ_WEAPONS/WPN_DEMON_WHIP
 INSCRIP: curare,
 PLUS:    +8
 COLOUR:  DARKGREY
@@ -679,6 +705,7 @@ DEX:     4
 
 NAME:     cloak of the Thief
 OBJ:      OBJ_ARMOUR/ARM_CLOAK
+FB_BRAND: SPARM_INVISIBILITY
 INSCRIP:  +Fog
 PLUS:     +2
 COLOUR:   ETC_DARK
@@ -700,6 +727,7 @@ BOOL:    nogen
 
 NAME:    crown of Dyrovepreva
 OBJ:     OBJ_ARMOUR/ARM_HAT
+FB_BRAND: SPARM_SEE_INVISIBLE
 PLUS:    +3
 COLOUR:  ETC_JEWEL
 TILE:    urand_dyrovepreva
@@ -713,6 +741,7 @@ PLUS:     +2
 COLOUR:   DARKGREY
 TILE:     urand_bear
 TILE_EQ:  bear
+# TODO: why isn't this brand working on the fallback?
 BRAND:    SPARM_SPIRIT_SHIELD
 BOOL:     berserk
 MAGIC:    2
@@ -720,6 +749,8 @@ LIFE:     1
 
 NAME:     robe of Misfortune
 OBJ:      OBJ_ARMOUR/ARM_ROBE
+# try to make it bad, this is the only bad SPARM:
+FB_BRAND: SPARM_PONDEROUSNESS
 PLUS:     5
 COLOUR:   LIGHTMAGENTA
 TILE:     urand_misfortune
@@ -740,6 +771,7 @@ BOOL:     fly, nogen
 ENUM:     BOOTS_ASSASSIN
 NAME:     boots of the Assassin
 OBJ:      OBJ_ARMOUR/ARM_BOOTS
+FB_BRAND: SPARM_STEALTH
 INSCRIP:  Detection Stab+
 PLUS:     +2
 COLOUR:   BROWN
@@ -751,6 +783,7 @@ VALUE:    600
 ENUM:    LEAR
 NAME:    Lear's hauberk
 OBJ:     OBJ_ARMOUR/ARM_CHAIN_MAIL
+FALLBACK: OBJ_ARMOUR/ARM_PLATE_ARMOUR
 PLUS:    27
 COLOUR:  ETC_GOLD
 TILE:    urand_lear
@@ -759,6 +792,9 @@ BOOL:    special
 
 NAME:    skin of Zhor
 OBJ:     OBJ_ARMOUR/ARM_ANIMAL_SKIN
+# because animal skins count as "mundane" use something else to ensure a randart
+# is generated; this isn't a great match:
+FALLBACK: OBJ_ARMOUR/ARM_STEAM_DRAGON_ARMOUR
 PLUS:    +4
 COLOUR:  BROWN
 TILE:    urand_zhor
@@ -770,6 +806,7 @@ INSCRIP: Hibernate
 ENUM:    SALAMANDER
 NAME:    salamander hide armour
 OBJ:     OBJ_ARMOUR/ARM_LEATHER_ARMOUR
+FB_BRAND: SPARM_FIRE_RESISTANCE
 PLUS:    +3
 COLOUR:  ETC_FIRE
 TILE:    urand_salamander
@@ -827,6 +864,7 @@ BOOL:    seeinv
 
 NAME:     robe of Night
 OBJ:      OBJ_ARMOUR/ARM_ROBE
+# there's not a very appropriate fallback brand that works on robes...
 PLUS:     +5
 INSCRIP:  Dark
 COLOUR:   ETC_DARK
@@ -893,6 +931,7 @@ BOOL:     poison
 
 NAME:     shield of the Gong
 OBJ:      OBJ_ARMOUR/ARM_SHIELD
+FALLBACK: OBJ_ARMOUR/ARM_LARGE_SHIELD
 PLUS:     +18
 COLOUR:   ETC_GOLD
 TILE:     urand_gong
@@ -999,6 +1038,7 @@ COLOUR:   ETC_UNHOLY
 TILE:     spwpn_demon_axe
 TILE_EQ:  demon_axe
 BRAND:    SPWPN_VORPAL
+FB_BRAND: SPWPN_PAIN
 BOOL:     evil, seeinv, fly, curse
 
 NAME:     lightning scales
@@ -1029,6 +1069,7 @@ TILE:     urand_vitality
 
 NAME:     autumn katana
 OBJ:      OBJ_WEAPONS/WPN_LONG_SWORD
+FALLBACK: OBJ_WEAPONS/WPN_DOUBLE_SWORD
 TYPE:     katana
 TILE:     urand_katana
 TILE_EQ:  katana_slant
@@ -1043,6 +1084,8 @@ BRAND:    SPWPN_VORPAL
 NAME:     shillelagh "Devastator"
 INSCRIP:  shatter
 OBJ:      OBJ_WEAPONS/WPN_CLUB
+FALLBACK: OBJ_WEAPONS/WPN_EVENINGSTAR
+FB_BRAND: SPWPN_VORPAL
 TYPE:     shillelagh
 TILE:     urand_shillelagh
 TILE_EQ:  shillelagh
@@ -1145,6 +1188,8 @@ BOOL:    nogen
 NAME:     arc blade
 INSCRIP:  discharge,
 OBJ:      OBJ_WEAPONS/WPN_RAPIER
+FALLBACK: OBJ_WEAPONS/WPN_QUICK_BLADE
+FB_BRAND: SPWPN_ELECTROCUTION
 PLUS:     +8
 COLOUR:   ETC_ELECTRICITY
 TILE:     urand_arc_blade
@@ -1165,6 +1210,8 @@ MAGIC:    1
 NAME:    lajatang of Order
 INSCRIP: silver,
 OBJ:     OBJ_WEAPONS/WPN_LAJATANG
+# not really comparable...
+FB_BRAND: SPWPN_HOLY_WRATH
 COLOUR:  ETC_SILVER
 TILE:    urand_order
 TILE_EQ: order
@@ -1191,12 +1238,14 @@ TILE_EQ:  orange_crystal
 PLUS:     8
 INT:      3
 BRAND:    SPARM_ARCHMAGI
+FB_BRAND: SPWPN_NORMAL
 BOOL:     clarity
 
 ENUM:    MAJIN
 NAME:    Majin-Bo
 INSCRIP: Archmagi
 OBJ:     OBJ_WEAPONS/WPN_QUARTERSTAFF
+FALLBACK: OBJ_WEAPONS/WPN_LAJATANG
 PLUS:    +6
 COLOUR:  ETC_UNHOLY
 TILE:    spwpn_majin
@@ -1214,6 +1263,7 @@ TILE:    urand_gyre
 TILE_EQ: gyre
 PLUS:    7
 BRAND:   SPWPN_PROTECTION
+FB_BRAND: SPWPN_VORPAL
 
 ENUM:    ETHERIC_CAGE
 NAME:    Maxwell's etheric cage

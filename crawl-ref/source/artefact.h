@@ -52,6 +52,9 @@ struct unrandart_entry
 
     object_class_type base_type;
     uint8_t           sub_type;
+    object_class_type fallback_base_type;
+    uint8_t           fallback_sub_type;
+    int               fallback_brand;
     short             plus;
     short             plus2;
     colour_t          colour;

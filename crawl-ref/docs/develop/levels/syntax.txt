@@ -634,9 +634,9 @@ ITEM:     (list of items, separated by comma)
           will be created instead. Staff unrands, since they have no
           corresponding type that can be transformed into a randart, are
           replaced by an appropriate magical staff. (E.g. a staff of poison.)
-          The lua function you.unrands() ('you.unrands("scythe of curses")')
-          can be used to check whether an unrand has already been seen, if
-          you don't want to use the default fallback.
+          You should not use `you.unrands` to check whether an unrand has been
+          seen in normal levelgen scenarios, as it will impact seeding. Some
+          details about default fallbacks can be specified in art-data.txt.
 
           Randart spell books
           -------------------

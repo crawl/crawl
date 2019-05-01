@@ -536,7 +536,14 @@ void wizard_value_item()
         mprf("Value: %d", real_value);
 }
 
-void wizard_create_all_artefacts()
+/**
+ * Generate every unrand (including removed ones).
+ *
+ * @param override_unique if true, will generate unrands that have alread
+ * placed in the game. If false, will generate fallback randarts for any
+ * unrands that have already placed.
+ */
+void wizard_create_all_artefacts(bool override_unique)
 {
     you.octopus_king_rings = 0x00;
     int octorings = 8;
@@ -551,18 +558,50 @@ void wizard_create_all_artefacts()
         if (entry->base_type == OBJ_UNASSIGNED)
             continue;
 
-        int islot = get_mitm_slot();
-        if (islot == NON_ITEM)
-            break;
+        int islot;
 
-        item_def& item = mitm[islot];
-        make_item_unrandart(item, index);
-        item.quantity = 1;
+        if (override_unique)
+        {
+            // force create: use make_item_unrandart to override a bunch of the
+            // usual checks on getting randarts.
+            islot = get_mitm_slot();
+            if (islot == NON_ITEM)
+                break;
+
+            item_def &tmp_item = mitm[islot];
+            make_item_unrandart(tmp_item, index);
+            tmp_item.quantity = 1;
+        }
+        else
+        {
+            // mimic the way unrands are created normally, and respect
+            // uniqueness. If an unrand has already generated, this will place
+            // a relevant fallback randart instead. Useful for testing fallback
+            // properties, since various error conditions will print.
+            islot = items(true, entry->base_type, 0, 0, -index, -1);
+            if (islot == NON_ITEM)
+            {
+                mprf(MSGCH_ERROR, "Failed to generate item for '%s'",
+                    entry->name);
+                continue;
+            }
+        }
+        item_def &item = mitm[islot];
         set_ident_flags(item, ISFLAG_IDENT_MASK);
 
-        msg::streams(MSGCH_DIAGNOSTICS) << "Made " << item.name(DESC_A)
-                                        << " (" << debug_art_val_str(item)
-                                        << ")" << endl;
+        if (!is_artefact(item))
+        {
+            // for now, staves are ok...
+            mprf(item.base_type == OBJ_STAVES ? MSGCH_DIAGNOSTICS : MSGCH_ERROR,
+                "Made non-artefact '%s' when trying to make '%s'",
+                item.name(DESC_A).c_str(), entry->name);
+        }
+        else
+        {
+            msg::streams(MSGCH_DIAGNOSTICS) << "Made " << item.name(DESC_A)
+                                            << " (" << debug_art_val_str(item)
+                                            << ")" << endl;
+        }
         move_item_to_grid(&islot, you.pos());
 
         // Make all eight.

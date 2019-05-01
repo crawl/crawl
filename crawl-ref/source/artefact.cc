@@ -460,6 +460,12 @@ static void _add_randart_weapon_brand(const item_def &item,
 {
     const int item_type = item.sub_type;
 
+    if (!is_weapon_brand_ok(item_type, item_props[ARTP_BRAND], true))
+        item_props[ARTP_BRAND] = SPWPN_NORMAL;
+
+    if (item_props[ARTP_BRAND] != SPWPN_NORMAL)
+        return;
+
     if (is_range_weapon(item))
     {
         item_props[ARTP_BRAND] = random_choose_weighted(

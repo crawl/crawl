@@ -4241,6 +4241,8 @@ static bool _book_from_spell(const char* specs, item_def &item)
 bool get_item_by_name(item_def *item, const char* specs,
                       object_class_type class_wanted, bool create_for_real)
 {
+    // used only for wizmode and item lookup
+
     int            type_wanted    = -1;
     int            special_wanted = 0;
 

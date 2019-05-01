@@ -312,11 +312,10 @@ function setup_xom_dancing_weapon(e)
         quality = crawl.coinflip() and "good_item"
                   or crawl.coinflip() and "randart"
                   or ""
-        -- do  this check independently of global state so that the effect
-        -- on the rng is the same either way
-        local can_try_variability = crawl.one_chance_in(100)
-        variability = not you.unrands("mace of Variability")
-                      and can_try_variability and "mace of Variability"
+
+        -- if variability has already generated, this will end up with a
+        -- chaos branded great mace as a backup.
+        variability = crawl.one_chance_in(100) and "mace of Variability"
     end
 
     -- Make one weapons table with each weapon getting weight by class.

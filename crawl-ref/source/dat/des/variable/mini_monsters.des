@@ -6709,11 +6709,7 @@ DEPTH:   D:12-
 MONS:    deep elf mage / ogre mage / wizard / \
          kobold demonologist w:2 / vampire mage w:2 / naga mage w:2
 NSUBST:  1 = 6:1 / 10=1.... / .
-: if you.unrands("glaive of prune") then
-ITEM:    any weapon good_item randart no_pickup
-: else
 ITEM:    glaive_of_prune no_pickup
-: end
 SUBST:   " : .:50 cvbnG
 SUBST:   ' : .:50 cvbnG
 SUBST:   ? : .:50 cvbnG
@@ -6748,12 +6744,7 @@ TAGS:    transparent
 DEPTH:   D:8-
 MONS:    chaos spawn
 KFEAT:   _ = altar_xom
-: if you.unrands("mace of variability") then
-# could be a launcher!
-ITEM:    any weapon good_item randart ego:chaos ident:type no_pickup
-: else
-ITEM:    mace_of_variability no_pickup
-: end
+ITEM:    mace_of_variability no_pickup ident:type
 # walls are carefully placed and guarantee no islands
 SUBST:   x = xcvbmGwWlTUVYt+ <:4 >:4 A:2 1:160
 NSUBST:  1 = 2:1 / 2:% / 3=1%...... / .
@@ -6777,12 +6768,8 @@ TAGS:    no_monster_gen no_trap_gen transparent
 MONS:    worker ant / soldier ant
 MONS:    killer bee
 MONS:    adder / water moccasin
-: if you.unrands("staff_of_olgreb") then
-ITEM:    young poisoner's handbook / ring of poison resistance ident:type / \
-         staff of poison ident:type / swamp dragon scales
-: else
-ITEM:    staff_of_olgreb no_pickup
-: end
+# TODO: built in fallback for staff of olgreb is kind of dumb
+ITEM:    staff_of_olgreb no_pickup ident:type
 NSUBST:  1 = 5:1 / 6=1.. / ., 2 = 5:2 / 9=2.. / ., 3 = 5:3 / 6=1.. / .
 MAP
       ...
@@ -6820,11 +6807,7 @@ MONS:    vampire mosquito / tyrant leech / vampire, vampire knight
 : else
 MONS:    vampire knight, vampire mage
 : end
-: if you.unrands("vampires_tooth") then
-ITEM:    quick blade randart no_pickup
-: else
 ITEM:    vampires_tooth no_pickup
-: end
 MAP
 .........
 .ccc.ccc.
@@ -6842,11 +6825,7 @@ TAGS:    transparent
 DEPTH:   D:14-, Depths
 MONS:    spriggan berserker
 NSUBST:  1 = 3:1 / 9=1...... / .
-: if you.unrands("wrath_of_trog") then
-ITEM:    executioner's axe randart ego:antimagic ident:type no_pickup
-: else
-ITEM:    wrath_of_trog no_pickup
-: end
+ITEM:    wrath_of_trog no_pickup ident:type
 MAP
     .......
    .."""""..
@@ -6874,12 +6853,7 @@ NSUBST:  d = 1:d / *:*
 MONS:    skeletal warrior
 NSUBST:  d = 1:d / *:%
 : end
-: if you.unrands("skullcrusher") then
-ITEM:    giant club randart ego:speed ident:type no_pickup / \
-         giant spiked club randart no_pickup
-: else
-ITEM:    skullcrusher no_pickup
-: end
+ITEM:    skullcrusher no_pickup ident:type
 NSUBST:  ' = 12:1 / 14=1...... / .
 SUBST:   " = 1., ! = 2.
 MAP
@@ -6913,11 +6887,7 @@ NAME:    minmay_guarded_unrand_finisher
 TAGS:    transparent
 DEPTH:   D:7-13
 MONS:    wraith
-: if you.unrands("finisher") then
-ITEM:    scythe randart ego:speed ident:type no_pickup
-: else
-ITEM:    finisher no_pickup
-: end
+ITEM:    finisher no_pickup ident:type
 SUBST:   1 = 1.
 NSUBST:  A = 1:. / *:c, B = 1:. / *:c
 SUBST:   c = c .:2
@@ -6941,12 +6911,7 @@ NAME:    minmay_guarded_unrand_resistance
 DEPTH:   D:9-14
 TAGS:    no_monster_gen no_trap_gen transparent
 KMASK:   lw = opaque
-: if you.unrands("shield_of_resistance") then
-ITEM:    buckler randart no_pickup / shield randart no_pickup / \
-         large shield randart no_pickup
-: else
 ITEM:    shield_of_resistance no_pickup
-: end
 MONS:    fire dragon, ice dragon
 MAP
 ...........
@@ -6965,11 +6930,7 @@ ENDMAP
 NAME:    chequers_guarded_unrand_ignorance
 DEPTH:   D:7-12, Orc
 TAGS:    no_monster_gen no_trap_gen transparent
-: if you.unrands("large_shield_of_ignorance") then
-ITEM:    large shield randart no_pickup
-: else
 ITEM:    large_shield_of_ignorance no_pickup
-: end
 MONS:    orange crystal statue
 KPROP:   .d1 = no_tele_into
 SUBST:   - = .
@@ -6990,11 +6951,7 @@ ENDMAP
 NAME:    chequers_guarded_unrand_mask_of_the_dragon
 DEPTH:   Zot, !Zot:$
 TAGS:    no_monster_gen no_trap_gen
-: if you.unrands("mask_of_the_dragon") then
-ITEM:    hat randart no_pickup
-: else
 ITEM:    mask_of_the_dragon no_pickup
-: end
 # Shuffle one transporter destination location
 NSUBST:  r = 1:R / *:-
 # Randomly swap which transporter is the entrance and the loot locations.
@@ -7040,11 +6997,7 @@ ENDMAP
 NAME:   brannock_guarded_unrand_thermic_engine
 DEPTH:  Depths
 TAGS:   no_monster_gen no_item_gen transparent
-: if you.unrands("maxwell's_thermic_engine") then
-ITEM:   demon blade randart no_pickup
-: else
 ITEM:   maxwell's_thermic_engine no_pickup
-: end
 MONS:   ice devil, blizzard demon, ice fiend
 MONS:   sun demon, balrug, brimstone fiend
 # 6-2-1, 9 total demons for each side
@@ -7068,11 +7021,7 @@ TAGS:   no_monster_gen no_item_gen transparent
 DEPTH:  D:5-8
 ORIENT: float
 MONS:   rat, river rat, hell rat
-: if you.unrands("ratskin_cloak") then
-ITEM:   cloak randart
-: else
 ITEM: ratskin_cloak
-:end
 NSUBST: - = 8:1 / *:.
 NSUBST: ' = 6:1 / 4:2 / 2:23 / 1:3 / *:.
 MAP

@@ -285,6 +285,8 @@ static bool _apply_weapon_spec(const mon_weapon_spec &spec, item_def &item,
  */
 int make_mons_weapon(monster_type type, int level, bool melee_only)
 {
+    rng::subgenerator item_rng;
+
     static const weapon_list GOBLIN_WEAPONS = // total 10
     {   { WPN_DAGGER,           3 },
         { WPN_CLUB,             3 },
