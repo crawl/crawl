@@ -1880,6 +1880,14 @@ bool transform(int pow, transformation which_trans, bool involuntary,
     if (was_flying && !you.airborne())
         move_player_to_grid(you.pos(), false);
 
+    // Stop emergency flight if it's activated and this form can fly
+    if (you.props[EMERGENCY_FLIGHT_KEY]
+        && form_can_fly()
+        && you.airborne())
+    {
+        you.props.erase(EMERGENCY_FLIGHT_KEY);
+    }
+
     // Update merfolk swimming for the form change.
     if (you.species == SP_MERFOLK)
         merfolk_check_swimming(false);
