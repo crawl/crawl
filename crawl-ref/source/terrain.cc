@@ -1144,10 +1144,15 @@ static void _dgn_check_terrain_items(const coord_def &pos, bool preserve_items)
     }
 }
 
-static void _dgn_check_terrain_monsters(const coord_def &pos)
+static bool _dgn_check_terrain_monsters(const coord_def &pos)
 {
     if (monster* m = monster_at(pos))
+    {
         m->apply_location_effects(pos);
+        return true;
+    }
+    else
+        return false;
 }
 
 // Clear blood or mold off of terrain that shouldn't have it. Also clear
@@ -1223,6 +1228,8 @@ void dungeon_terrain_changed(const coord_def &pos,
 {
     if (grd(pos) == nfeat)
         return;
+    if (_dgn_check_terrain_monsters(pos) && feat_is_wall(nfeat))
+        return;
 
     _dgn_check_terrain_covering(pos, grd(pos), nfeat);
 
@@ -1248,7 +1255,6 @@ void dungeon_terrain_changed(const coord_def &pos,
     }
 
     _dgn_check_terrain_items(pos, preserve_items);
-    _dgn_check_terrain_monsters(pos);
     if (!wizmode)
         _dgn_check_terrain_player(pos);
     if (!temporary && feature_mimic_at(pos))
