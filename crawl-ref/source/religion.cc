@@ -203,10 +203,7 @@ const vector<god_power> god_powers[NUM_GODS] =
       { 3, "Trog will now gift you ammunition as you gain piety.",
            "Trog will no longer gift you ammunition.",
            "Trog will gift you ammunition as you gain piety." },
-      { 4, ABIL_TROG_BROTHERS_IN_ARMS, "call in reinforcements" },
-      { 5, "Trog will now gift you weapons as you gain piety.",
-           "Trog will no longer gift you weapons.",
-           "Trog will gift you weapons as you gain piety." },
+      { 4, ABIL_TROG_BROTHERS_IN_ARMS, "call in reinforcements" }
     },
 
     // Nemelex
@@ -1372,25 +1369,19 @@ static bool _give_trog_oka_gift(bool forced)
     if (you.species == SP_FELID)
         return false;
 
-    const bool need_missiles = _need_missile_gift(forced);
-    object_class_type gift_type;
+    const bool enough_piety = you.piety >= piety_breakpoint(4);
+    if (!enough_piety)
+        return false;
 
-    if (forced && coinflip()
-        || (!forced && you.piety >= piety_breakpoint(4)
-            && random2(you.piety) > 120
-            && one_chance_in(4)))
+    // What sort of gift?
+    object_class_type gift_type = OBJ_MISSILES;
+    const bool can_get_item = random2(you.piety) > 120 && one_chance_in(4);
+    if (you_worship(GOD_OKAWARU))
     {
-        if (you_worship(GOD_TROG)
-            || (you_worship(GOD_OKAWARU) && coinflip()))
-        {
-            gift_type = OBJ_WEAPONS;
-        }
-        else
-            gift_type = OBJ_ARMOUR;
+        if (forced || can_get_item)
+            gift_type = coinflip() ? OBJ_WEAPONS : OBJ_ARMOUR;
     }
-    else if (need_missiles)
-        gift_type = OBJ_MISSILES;
-    else
+    if (gift_type == OBJ_MISSILES && !_need_missile_gift(forced))
         return false;
 
     success = acquirement(gift_type, you.religion);

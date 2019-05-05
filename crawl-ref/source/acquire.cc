@@ -1188,18 +1188,6 @@ static string _why_reject(const item_def &item, int agent)
         return "Destroying unusable weapon or armour!";
     }
 
-    // Trog does not gift the Wrath of Trog, nor weapons of pain
-    // (which work together with Necromantic magic).
-    // nor fancy magic staffs (wucad mu, majin-bo)
-    if (agent == GOD_TROG
-        && (get_weapon_brand(item) == SPWPN_PAIN
-            || is_unrandom_artefact(item, UNRAND_TROG)
-            || is_unrandom_artefact(item, UNRAND_WUCAD_MU)
-            || is_unrandom_artefact(item, UNRAND_MAJIN)))
-    {
-        return "Destroying a weapon Trog hates!";
-    }
-
     // Pain brand is useless if you've sacrificed Necromacy.
     if (you.get_mutation_level(MUT_NO_NECROMANCY_MAGIC)
         && get_weapon_brand(item) == SPWPN_PAIN)
@@ -1239,7 +1227,6 @@ int acquirement_create_item(object_class_type class_wanted,
     ASSERT(class_wanted != OBJ_RANDOM);
 
     const bool divine = (agent == GOD_OKAWARU || agent == GOD_XOM
-                         || agent == GOD_TROG
 #if TAG_MAJOR_VERSION == 34
                          || agent == GOD_PAKELLAS
 #endif
@@ -1263,8 +1250,6 @@ int acquirement_create_item(object_class_type class_wanted,
         // Don't generate randart books in items(), we do that
         // ourselves.
         bool want_arts = (class_wanted != OBJ_BOOKS);
-        if (agent == GOD_TROG && !one_chance_in(3))
-            want_arts = false;
 
         thing_created = items(want_arts, class_wanted, type_wanted,
                               ITEM_LEVEL, 0, agent);
@@ -1327,14 +1312,6 @@ int acquirement_create_item(object_class_type class_wanted,
                     continue;
                 }
             }
-        }
-
-        if (agent == GOD_TROG && coinflip()
-            && acq_item.base_type == OBJ_WEAPONS && !is_range_weapon(acq_item)
-            && !is_unrandom_artefact(acq_item))
-        {
-            // ... but Trog loves the antimagic brand specially.
-            set_item_ego_type(acq_item, OBJ_WEAPONS, SPWPN_ANTIMAGIC);
         }
 
         const string rejection_reason = _why_reject(acq_item, agent);
@@ -1426,14 +1403,9 @@ int acquirement_create_item(object_class_type class_wanted,
                 make_item_randart(acq_item, true);
             }
 
-            if (agent == GOD_TROG || agent == GOD_OKAWARU)
-            {
-                if (agent == GOD_TROG)
-                    acq_item.plus += random2(3);
-
-                // On a weapon, an enchantment of less than 0 is never viable.
+            // On a weapon, an enchantment of less than 0 is never viable.
+            if (agent == GOD_OKAWARU)
                 acq_item.plus = max(static_cast<int>(acq_item.plus), random2(2));
-            }
         }
 
         // Last check: don't acquire items your god hates.
