@@ -214,7 +214,9 @@ static void _sdump_header(dump_params &par)
 
     if (you.game_is_seeded
 #ifdef DGAMELAUNCH
-        && par.se // for online games, only show seed for a dead char
+        && (par.se // for online games, show seed for a dead char
+            || you.wizard
+            || crawl_state.type == GAME_TYPE_CUSTOM_SEED)
 #endif
         )
     {

@@ -95,7 +95,7 @@ static string _get_version_features()
     string result;
     if (crawl_state.need_save
 #ifdef DGAMELAUNCH
-        && you.wizard
+        && (you.wizard || crawl_state.type == GAME_TYPE_CUSTOM_SEED)
 #endif
        )
     {
