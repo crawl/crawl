@@ -471,31 +471,30 @@ Seeded play
 ========================================
 
 Crawl dungeons are determined by a "seed" number used to initialise the game's
-random number generator. If you initialise the game, keeping the game version
-constant, then the same seed should (within certain parameters) lead to the same
-dungeon. In offline games you can view your game's seed with '?V' as well as in
-a character file; in online games you normally must finish a game in order to
-see the game's seed. There are two seeded modes:
+random number generator. You may either let the game choose a seed randomly,
+or specify a seed; if you choose a seed this puts the game in "Seeded" mode,
+which is scored separately. Playing games with the same seed value, as long as
+the game version is constant, should (within certain parameters) lead to the
+same dungeon. The entire connected dungeon will be determined by the game
+seed, including dungeon layout, monster placement, and items. Portal vaults
+and chaotic zones such as the abyss are not guaranteed to be the same, and the
+placement of rare unique artefacts may vary depending on certain player
+actions.
 
-Without dungeon pregeneration ('pregen_dungeon = false')
-  If dungeon pregeneration is turned off (the default), every game with the
-  same seed will have at least the same initial dungeon level and temple
-  layout. However, the order in which you explore levels after the first one
-  can lead to multiple possible dungeon layouts, depending on your choices. This
-  is implicitly how dungeon generation always worked before version 0.23.
-
-With dungeon pregeneration ('pregen_dungeon = true')
-  If dungeon pregeneration is turned on, the entire connected dungeon will be
-  determined by the game seed. Portal vaults and chaotic zones such as the
-  abyss are not guaranteed to be the same, though.
-
-To set a game seed, use the 'game_seed' rc file option, or the '-seed' command
-line option.
+To set a game seed, use the "Choose game seed" option from the main menu; you
+can also use the 'game_seed' rc file option, or the '-seed' command line
+option. In offline games you can view your game's seed with '?V' as well as in
+a character file; in online games a randomly chosen seed will only be shown to
+you after finishing the game.
 
 If you find that the same seed generates distinct parts of a dungeon on the
 same or different devices, please report it as a bug. However, keep in mind
-that upgrading your save game between multiple versions of crawl, or traversing
-dungeon levels in different orders, will naturally lead to seed divergence.
+that upgrading your save game between multiple versions of crawl will
+naturally lead to seed divergence. When playing offline, if you would like to
+ensure that your game can be upgraded without divergence, you can set
+'pregen_dungeon = true' in your options file. (This will also ensure
+completely stable unique artefact placement.) On the other hand, to completely
+disable incremental pregeneration, you can set 'incremental_pregen = false'.
 
 Further Help
 ========================================
