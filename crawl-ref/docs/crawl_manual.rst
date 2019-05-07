@@ -883,12 +883,11 @@ the 'q' command.
 ========================================
 
 Sometimes you will be lucky enough to find a stick which contains stored magical
-energies. Wands each have a certain amount of charges, and a wand will cease to
-function when its charges run out. You must identify a wand to find out how many
-uses it has left. This can be done with a scroll of identify; characters with a
-good Evocations skill may also deduce the number of charges simply upon evoking
-the wand. Evoking a wand without having fully identified the number of charges
-remaining will waste some charges.
+energies. Wands each have a certain number of charges, which you immediately
+recognise when you pick them up. When you pick up a wand of type you already
+have in inventory, the charges from the new wand are merged into the existing
+one, and the new wand no longer exists. Beware that when the last charge of a
+wand is used, the wand is destroyed.
 
 Wands are aimed in the same way as missile weapons, and you can release the power
 of a wand by evoking it with 'V'. See section I for targeting. There are also a
