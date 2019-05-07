@@ -67,10 +67,13 @@ Game modes are:
 Dungeon Crawl
   Start a standard game of Crawl.
 
+Choose game seed
+  Start a standard game of Crawl with a custom seed (see `Seeded play`_ below).
+
 Tutorial for Dungeon Crawl
   Start one of several specialised tutorials to learn how to play.
 
-Hints mode for Dungeon Crawl
+Hints Mode for Dungeon Crawl
   Start a standard game of Crawl, modified to provide help as you play.
 
 Dungeon Sprint
@@ -889,9 +892,8 @@ have in inventory, the charges from the new wand are merged into the existing
 one, and the new wand no longer exists. Beware that when the last charge of a
 wand is used, the wand is destroyed.
 
-Wands are aimed in the same way as missile weapons, and you can release the power
-of a wand by evoking it with 'V'. See section I for targeting. There are also a
-number of wands that may be useful to aim at yourself.
+Wands are aimed in the same way as missile weapons, and you can release the
+power of a wand by evoking it with 'V'. See section I for targeting.
 
 =" Rings and Amulets
 ========================================
@@ -924,9 +926,10 @@ magic school tend to have no combat powers at all.
 : Books
 ========================================
 
-Most books contain magical spells which your character may be able to learn. You
-can read a book with the 'r' command, which lets you access a description of
-each spell or memorise spells from it with the 'M' command.
+Most books contain magical spells which your character may be able to learn.
+Upon picking up a book, all of the spells in it will be added to your spell
+library, allowing you to access a description of each spell or memorise spells
+from it with the 'M' command.
 
 Occasionally you will find manuals of some skill. Carrying these will cause your
 experience to have twice the effect as usual when used for training that skill.
@@ -988,10 +991,9 @@ Air and Earth) and, finally, Poison. A particular spell can belong to (and thus
 allow training of) up to three areas. Being good in the areas of a spell will
 improve the casting chance and, in many cases, the effect as well.
 
-Spells are stored in books, which you will occasionally find in the dungeon. You
-can read books with 'r' to check what spells they contain; doing so will allow
-you to read the individual spells' descriptions. In order to memorise a certain
-spell, use the 'M' command.
+Spells are stored in books, which you will occasionally find in the dungeon.
+Once you have picked up a book and added its contents to your spell library, you
+can memorise a spell using the 'M' command.
 
 In addition to picking up new spells, your character may also wish to get rid of
 old ones by reading a scroll of amnesia, which will let you pick a spell to
@@ -1065,11 +1067,11 @@ There are some shortcuts while targeting:
   strokes. At times, it will be useful to switch targets with the '+' or '-'
   commands, though.
 
-It is possible to target yourself: obviously beneficial effects like hasting or
-healing will actually target the cursor on you, leaving to you only the pressing
-of '.', Enter, etc. - except if you want to heal or haste someone else. If you
-target yourself while firing something harmful (which can be sensible at times),
-you will be asked for confirmation.
+It is possible to target yourself, and some beneficial effects like invisibility
+will automatically target the cursor on you, leaving to you only the pressing
+of '.', Enter, etc. - except if you want to aim at someone else. If you target
+yourself while firing something harmful (which can be sensible at times), you
+will be asked for confirmation.
 
 Finally, the ':' key allows you to hide the path of your spell/wand/missile.
 
@@ -1085,8 +1087,7 @@ faith (use the 'a' command - but most gods resent being scorned). Further detail
 can be seen with '!' while in the '^' screen.
 
 To use any powers which your god deems you fit for, access the abilities menu
-via the 'a' command; god-given abilities are listed as invocations. The god
-Fedhas Madash also has a corpse decay ability specially accessed through 'p'.
+via the 'a' command; god-given abilities are listed as invocations.
 
 Depending on background, some characters start out religious; others have to
 pray at an altar to dedicate themselves to a life of servitude. There are altars
@@ -2269,9 +2270,8 @@ Invocations
 
 Evocations
   This skill lets you use wands much more effectively, in terms of both damage
-  and precision. Furthermore, with high Evocations, you can easily deduce the
-  number of charges in a wand through usage. Similarly, various other items
-  that have evocable powers work better for characters trained in this skill.
+  and precision. Similarly, various other items that have evocable powers work
+  better for characters trained in this skill.
 
   Invocations and Evocations can increase your maximum magical reserves,
   although both have a smaller effect than Spellcasting in this regard. The
