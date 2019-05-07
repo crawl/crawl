@@ -2337,6 +2337,9 @@ static void _prompt_gamemode_map(newgame_def& ng, newgame_def& ng_choice,
     formatted_string welcome;
     welcome.textcolour(BROWN);
     welcome.cprintf("%s\n", _welcome(ng).c_str());
+    if (Options.seed_from_rc)
+        welcome.cprintf("Custom seed: %" PRIu64 "\n", Options.seed_from_rc);
+
     welcome.textcolour(CYAN);
     welcome.cprintf("\nYou have a choice of %s:\n\n",
             ng_choice.type == GAME_TYPE_TUTORIAL ? "lessons" : "maps");
