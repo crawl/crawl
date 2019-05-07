@@ -380,17 +380,25 @@ static void _setup_generic(const newgame_def& ng);
 // Initialise a game based on the choice stored in ng.
 void setup_game(const newgame_def& ng)
 {
-    if (Options.seed_from_rc && ng.type == GAME_TYPE_NORMAL)
+    crawl_state.type = ng.type; // by default
+    if (Options.seed_from_rc && ng.type != GAME_TYPE_CUSTOM_SEED)
     {
+        // rc seed overrides seed from other sources, and forces a normal game
+        // to be a custom seed game. There is currently no special designation
+        // for sprint etc. games that involve a custom seed.
+        // TODO: does this make any sense for hints mode?
         Options.seed = Options.seed_from_rc;
-        crawl_state.type = GAME_TYPE_CUSTOM_SEED;
+        if (ng.type == GAME_TYPE_NORMAL)
+            crawl_state.type = GAME_TYPE_CUSTOM_SEED;
     }
-    else if (Options.seed && ng.type == GAME_TYPE_NORMAL)
+    else if (Options.seed && ng.type != GAME_TYPE_CUSTOM_SEED)
+    {
+        // there's a seed lingering in the options, but we shouldn't use it.
         Options.seed = 0;
+    }
     else if (!Options.seed && ng.type == GAME_TYPE_CUSTOM_SEED)
         crawl_state.type = GAME_TYPE_NORMAL;
-    else
-        crawl_state.type = ng.type;
+
     crawl_state.map  = ng.map;
 
     switch (crawl_state.type)
