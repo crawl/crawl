@@ -1804,7 +1804,6 @@ int make_mons_armour(monster_type type, int level)
                                                 2, ARM_CHAIN_MAIL);
         break;
 
-    case MONS_SLAVE:
     case MONS_GRUM:
     case MONS_SPRIGGAN_BERSERKER:
         item.base_type = OBJ_ARMOUR;
