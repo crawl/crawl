@@ -113,8 +113,7 @@ enum monclass_flag_type : uint64_t
     /// An ancestor granted by Hepliaklqana
     M_ANCESTOR          = BIT(35),
 
-    /// always leaves a corpse
-    M_ALWAYS_CORPSE     = BIT(36),
+                        //BIT(36), // was M_ALWAYS_CORPSE
 
     /// mostly doesn't try to melee
     M_DONT_MELEE        = BIT(37),
