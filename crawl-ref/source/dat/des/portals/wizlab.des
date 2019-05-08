@@ -1351,7 +1351,7 @@ KITEM:   d = scroll of blinking / scroll of teleportation q:3 w:15 / \
              any scroll w:1
 KITEM:   e = any ring
 KITEM:   f = book of spatial translocations w:5 / book of the warp w:5 / \
-             akashic record w:5 / manual of translocations w:5 / \
+             manual of translocations w:5 / \
              randbook disc:translocation numspells:5 / \
              randbook disc:translocation owner:Golubria numspells:7 \
              spells:shroud_of_golubria&passage_of_golubria
