@@ -525,9 +525,6 @@ static special_missile_type _determine_missile_brand(const item_def& item,
         rc = SPMSL_NORMAL;
         break;
     case MI_DART:
-#if TAG_MAJOR_VERSION == 34
-    case MI_NEEDLE:
-#endif
         // Curare is special cased, all the others aren't.
         if (got_curare_roll(item_level))
         {
@@ -584,12 +581,6 @@ bool is_missile_brand_ok(int type, int brand, bool strict)
 
     case SPMSL_CURARE:
     case SPMSL_PARALYSIS:
-#if TAG_MAJOR_VERSION == 34
-    case SPMSL_SLOW:
-    case SPMSL_SLEEP:
-    case SPMSL_CONFUSION:
-    case SPMSL_SICKNESS:
-#endif
     case SPMSL_FRENZY:
         return type == MI_DART;
 
@@ -623,15 +614,6 @@ bool is_missile_brand_ok(int type, int brand, bool strict)
         return type == MI_TOMAHAWK || type == MI_JAVELIN;
     case SPMSL_DISPERSAL:
         return type == MI_TOMAHAWK;
-#if TAG_MAJOR_VERSION == 34
-    case SPMSL_RETURNING:
-        return type == MI_JAVELIN || type == MI_TOMAHAWK;
-    case SPMSL_PENETRATION:
-        return type == MI_JAVELIN;
-    case SPMSL_EXPLODING:
-        return type == MI_TOMAHAWK;
-    case SPMSL_STEEL: // deliberate fall through
-#endif
     case SPMSL_SILVER:
         return type == MI_JAVELIN || type == MI_TOMAHAWK;
     default: break;
