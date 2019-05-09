@@ -272,9 +272,9 @@ bool ranged_attack::handle_phase_hit()
     if (!is_penetrating_attack(*attacker, weapon, *projectile))
         range_used = BEAM_STOP;
 
-    if (projectile->is_type(OBJ_MISSILES, MI_NEEDLE))
+    if (projectile->is_type(OBJ_MISSILES, MI_DART))
     {
-        damage_done = blowgun_duration_roll(get_ammo_brand(*projectile));
+        damage_done = dart_duration_roll(get_ammo_brand(*projectile));
         set_attack_verb(0);
         announce_hit();
     }
@@ -290,7 +290,7 @@ bool ranged_attack::handle_phase_hit()
     else
     {
         damage_done = calc_damage();
-        if (damage_done > 0 || projectile->is_type(OBJ_MISSILES, MI_NEEDLE))
+        if (damage_done > 0 || projectile->is_type(OBJ_MISSILES, MI_DART))
         {
             if (!handle_phase_damaged())
                 return false;
@@ -528,7 +528,7 @@ special_missile_type ranged_attack::random_chaos_missile_brand()
     return brand;
 }
 
-bool ranged_attack::blowgun_check(special_missile_type type)
+bool ranged_attack::dart_check(special_missile_type type)
 {
     if (defender->holiness() & (MH_UNDEAD | MH_NONLIVING))
     {
@@ -545,13 +545,10 @@ bool ranged_attack::blowgun_check(special_missile_type type)
         return false;
     }
 
-    const int enchantment = using_weapon() ? weapon->plus : 0;
-
     if (attacker->is_monster())
     {
         int chance = 85 - ((defender->get_hit_dice()
                             - attacker->get_hit_dice()) * 5 / 2);
-        chance += enchantment * 4;
         chance = min(95, chance);
 
         if (type == SPMSL_FRENZY)
@@ -562,14 +559,14 @@ bool ranged_attack::blowgun_check(special_missile_type type)
         return x_chance_in_y(chance, 100);
     }
 
-    const int skill = you.skill_rdiv(SK_THROWING);
+    const int pow = (2 * (you.skill_rdiv(SK_THROWING)
+                          + you.skill_rdiv(SK_STEALTH))) / 3;
 
-    // You have a really minor chance of hitting with no skills or good
-    // enchants.
+    // You have a really minor chance of hitting weak things no matter what
     if (defender->get_hit_dice() < 15 && random2(100) <= 2)
         return true;
 
-    const int resist_roll = 2 + random2(4 + skill + enchantment);
+    const int resist_roll = 2 + random2(4 + pow);
 
     dprf(DIAG_COMBAT, "Brand rolled %d against defender HD: %d.",
          resist_roll, defender->get_hit_dice());
@@ -590,7 +587,7 @@ bool ranged_attack::blowgun_check(special_missile_type type)
 
 }
 
-int ranged_attack::blowgun_duration_roll(special_missile_type type)
+int ranged_attack::dart_duration_roll(special_missile_type type)
 {
     // Leaving monster poison the same by separating it from player poison
     if (type == SPMSL_POISONED && attacker->is_monster())
@@ -603,9 +600,7 @@ int ranged_attack::blowgun_duration_roll(special_missile_type type)
                            ? attacker->get_hit_dice()
                            : attacker->skill_rdiv(SK_THROWING);
 
-    const int plus = using_weapon() ? weapon->plus : 0;
-
-    // Scale down nastier needle effects against players.
+    // Scale down nastier dart effects against players.
     // Fixed duration regardless of power, since power already affects success
     // chance considerably, and this helps avoid effects being too nasty from
     // high HD shooters and too ignorable from low ones.
@@ -624,9 +619,9 @@ int ranged_attack::blowgun_duration_roll(special_missile_type type)
         }
     }
     else if (type == SPMSL_POISONED) // Player poison needles
-        return random2(3 + base_power * 2 + plus);
+        return random2(3 + base_power * 2);
     else
-        return 5 + random2(base_power + plus);
+        return 5 + random2(base_power);
 }
 
 bool ranged_attack::apply_missile_brand()
@@ -658,8 +653,7 @@ bool ranged_attack::apply_missile_brand()
         defender->expose_to_element(BEAM_COLD, 2);
         break;
     case SPMSL_POISONED:
-        if (projectile->is_type(OBJ_MISSILES, MI_NEEDLE)
-                && using_weapon()
+        if (projectile->is_type(OBJ_MISSILES, MI_DART)
                 && damage_done > 0
             || !one_chance_in(4))
         {
@@ -674,7 +668,7 @@ bool ranged_attack::apply_missile_brand()
             }
 
             defender->poison(attacker,
-                             projectile->is_type(OBJ_MISSILES, MI_NEEDLE)
+                             projectile->is_type(OBJ_MISSILES, MI_DART)
                              ? damage_done
                              : 6 + random2(8) + random2(damage_done * 3 / 2));
 
@@ -732,23 +726,23 @@ bool ranged_attack::apply_missile_brand()
                                                special_damage_message);
         break;
     case SPMSL_PARALYSIS:
-        if (!blowgun_check(brand))
+        if (!dart_check(brand))
             break;
         defender->paralyse(attacker, damage_done);
         break;
     case SPMSL_SLEEP:
-        if (!blowgun_check(brand))
+        if (!dart_check(brand))
             break;
         defender->put_to_sleep(attacker, damage_done);
         should_alert_defender = false;
         break;
     case SPMSL_CONFUSION:
-        if (!blowgun_check(brand))
+        if (!dart_check(brand))
             break;
         defender->confuse(attacker, damage_done);
         break;
     case SPMSL_FRENZY:
-        if (!blowgun_check(brand))
+        if (!dart_check(brand))
             break;
         if (defender->is_monster())
         {

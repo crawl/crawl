@@ -633,6 +633,8 @@ static fire_type _str_to_fire_types(const string &str)
         return FIRE_JAVELIN;
     else if (str == "tomahawk")
         return FIRE_TOMAHAWK;
+    else if (str == "dart")
+        return FIRE_DART;
     else if (str == "net")
         return FIRE_NET;
     else if (str == "return" || str == "returning")
@@ -1077,7 +1079,7 @@ void game_options::reset_options()
 
     // Clear fire_order and set up the defaults.
     set_fire_order("launcher, return, "
-                   "javelin / tomahawk / stone / rock / net, "
+                   "javelin / tomahawk / stone / rock / net / dart, "
                    "inscribed",
                    false, false);
 

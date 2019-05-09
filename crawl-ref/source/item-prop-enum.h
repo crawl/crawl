@@ -325,10 +325,10 @@ const vector<misc_item_type> misc_types =
 
 enum missile_type
 {
-#if TAG_MAJOR_VERSION == 34
     MI_DART,
-#endif
+#if TAG_MAJOR_VERSION == 34
     MI_NEEDLE,
+#endif
     MI_ARROW,
     MI_BOLT,
     MI_JAVELIN,
@@ -467,7 +467,7 @@ enum special_missile_type // to separate from weapons in general {dlb}
     SPMSL_EXPLODING,
     SPMSL_STEEL,
     SPMSL_SILVER,
-    SPMSL_PARALYSIS,                   // needle only from here on
+    SPMSL_PARALYSIS,                   // dart only from here on
 #if TAG_MAJOR_VERSION == 34
     SPMSL_SLOW,
 #endif
@@ -566,7 +566,9 @@ enum weapon_type
     WPN_GLAIVE,
     WPN_BARDICHE,
 
+#if TAG_MAJOR_VERSION == 34
     WPN_BLOWGUN,
+#endif
 
 #if TAG_MAJOR_VERSION > 34
     WPN_HAND_CROSSBOW,

@@ -2,9 +2,7 @@
 
 enum trap_type
 {
-#if TAG_MAJOR_VERSION == 34
     TRAP_DART,
-#endif
     TRAP_ARROW,
     TRAP_SPEAR,
 #if TAG_MAJOR_VERSION > 34
@@ -17,7 +15,9 @@ enum trap_type
     TRAP_BOLT,
     TRAP_NET,
     TRAP_ZOT,
+#if TAG_MAJOR_VERSION == 34
     TRAP_NEEDLE,
+#endif
     TRAP_SHAFT,
     TRAP_GOLUBRIA,
     TRAP_PLATE,

@@ -51,7 +51,7 @@
 
 static int  _fire_prompt_for_item();
 static bool _fire_validate_item(int selected, string& err);
-static int  _get_blowgun_chance(const int hd);
+static int  _get_dart_chance(const int hd);
 
 bool is_penetrating_attack(const actor& attacker, const item_def* weapon,
                            const item_def& projectile)
@@ -285,15 +285,15 @@ vector<string> fire_target_behaviour::get_monster_desc(const monster_info& mi)
             descs.emplace_back("immune to nets");
         }
 
-        // Display the chance for a needle of para/confuse/sleep/frenzy
+        // Display the chance for a dart of para/confuse/sleep/frenzy
         // to affect monster
-        if (you.weapon() && you.weapon()->is_type(OBJ_WEAPONS, WPN_BLOWGUN))
+        if (item->is_type(OBJ_MISSILES, MI_DART))
         {
             special_missile_type brand = get_ammo_brand(*item);
             if (brand == SPMSL_PARALYSIS || brand == SPMSL_CONFUSION
                 || brand == SPMSL_FRENZY || brand == SPMSL_SLEEP)
             {
-                int chance = _get_blowgun_chance(mi.hd);
+                int chance = _get_dart_chance(mi.hd);
                 bool immune = false;
                 if (mi.holi & (MH_UNDEAD | MH_NONLIVING))
                     immune = true;
@@ -314,26 +314,26 @@ vector<string> fire_target_behaviour::get_monster_desc(const monster_info& mi)
 }
 
 /**
- *  Chance for a needle fired by the player to affect a monster of a particular
- *  hit dice, given the player's throwing skill and blowgun enchantment.
+ *  Chance for a dart fired by the player to affect a monster of a particular
+ *  hit dice, given the player's throwing skill.
  *
  *    @param hd     The monster's hit dice.
  *    @return       The percentage chance for the player to affect the monster,
  *                  rounded down.
  *
- *  This chance is rolled in ranged_attack::blowgun_check using this formula for
+ *  This chance is rolled in ranged_attack::dart_check using this formula for
  *  success:
  *      if hd < 15, fixed 3% chance to succeed regardless of roll
  *      else, or if the 3% chance fails,
- *                      succeed if 2 + random2(4 + skill + enchantment) >= hd
+ *            succeed if 2 + random2(4 + (2/3)*(throwing + stealth) ) >= hd
  */
-static int _get_blowgun_chance(const int hd)
+static int _get_dart_chance(const int hd)
 {
     ASSERT(you.weapon()->is_type(OBJ_WEAPONS, WPN_BLOWGUN));
-    const int plus = you.weapon()->plus;
-    const int skill = you.skill_rdiv(SK_THROWING);
+    const int pow = (2 * (you.skill_rdiv(SK_THROWING)
+                          + you.skill_rdiv(SK_STEALTH))) / 3;
 
-    int chance = 10000 - 10000 * (hd - 2) / (4 + skill + plus);
+    int chance = 10000 - 10000 * (hd - 2) / (4 + pow);
     chance = min(max(chance, 0), 10000);
     if (hd < 15)
     {
@@ -723,15 +723,11 @@ static void _throw_noise(actor* act, const bolt &pbolt, const item_def &ammo)
     if (is_launched(act, launcher, ammo) != launch_retval::LAUNCHED)
         return;
 
-    // Throwing and blowguns are silent...
     int         level = 0;
     const char* msg   = nullptr;
 
     switch (launcher->sub_type)
     {
-    case WPN_BLOWGUN:
-        return;
-
     case WPN_HUNTING_SLING:
         level = 1;
         msg   = "You hear a whirring sound.";
@@ -1073,7 +1069,7 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
         && projected != launch_retval::FUMBLED
         && will_have_passive(passive_t::shadow_attacks)
         && thrown.base_type == OBJ_MISSILES
-        && thrown.sub_type != MI_NEEDLE)
+        && thrown.sub_type != MI_DART)
     {
         dithmenos_shadow_throw(thr, item);
     }

@@ -3892,7 +3892,7 @@ bool mons_has_incapacitating_ranged_attack(const monster& mon, const actor& foe)
 
     if (missile && missile->sub_type == MI_THROWING_NET)
         return true;
-    else if (missile && missile->sub_type == MI_NEEDLE)
+    else if (missile && missile->sub_type == MI_DART)
     {
         switch (get_ammo_brand(*missile))
         {
