@@ -69,7 +69,7 @@
        "broad axe", "pair of boots", "potion of berserk rage",
        "potion of blood", "potion of brilliance",
        "scroll of blinking", "scroll of brand weapon",
-       "manual of bows", "buckler" }
+       "manual of bows", "buckler", "boomerang" }
 
       elseif s == "C" then i = { "book of callings", "book of cantrips",
        "club", "book of changes", "book of conjurations", "centaur barding",
@@ -163,7 +163,7 @@
        "book of transfigurations", "ring of teleportation",
        "scroll of teleportation", "triple sword", "triple crossbow",
        "troll leather armour", "manual of throwing",
-       "manual of translocations", "manual of transmutations", "tomahawk",
+       "manual of translocations", "manual of transmutations",
        "trident", "throwing net" }
 
       elseif s == "U" then i = { "book of unlife", "manual of unarmed combat" }

@@ -545,7 +545,7 @@ static int _acquirement_missile_subtype(bool /*divine*/, int & /*quantity*/)
             skill = i;
     }
 
-    missile_type result = MI_TOMAHAWK;
+    missile_type result = MI_BOOMERANG;
 
     switch (skill)
     {
@@ -558,7 +558,7 @@ static int _acquirement_missile_subtype(bool /*divine*/, int & /*quantity*/)
             // Choose from among all usable missile types.
             vector<pair<missile_type, int> > missile_weights;
 
-            missile_weights.emplace_back(MI_TOMAHAWK, 50);
+            missile_weights.emplace_back(MI_BOOMERANG, 50);
             missile_weights.emplace_back(MI_DART, 75);
 
             if (you.body_size() >= SIZE_MEDIUM)

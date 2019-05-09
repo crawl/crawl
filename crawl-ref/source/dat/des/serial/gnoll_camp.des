@@ -29,7 +29,7 @@ TAGS:   serial_gnoll_camp patrolling no_pool_fixup
 WEIGHT: 8
 KMASK:  w = no_monster_gen
 MONS:   gnoll
-MONS:   gnoll ; stone q:10 | tomahawk q:3 | throwing net q:3 / nothing
+MONS:   gnoll ; stone q:10 | boomerang q:3 | throwing net q:3 / nothing
 MONS:   gnoll shaman
 MONS:   gnoll sergeant
 MONS:   jackal / hound / wolf w:1
@@ -56,7 +56,7 @@ NAME:   gnoll_camp_medium_02
 TAGS:   serial_gnoll_camp patrolling
 WEIGHT: 8
 MONS:   gnoll
-MONS:   gnoll ; stone q:10 | tomahawk q:3 | throwing net q:3
+MONS:   gnoll ; stone q:10 | boomerang q:3 | throwing net q:3
 MONS:   gnoll shaman
 MONS:   gnoll sergeant
 MONS:   jackal w:20 / hound / wolf w:1 / nothing w:5
@@ -141,7 +141,7 @@ MONS:   gnoll
 MONS:   gnoll shaman
 MONS:   gnoll sergeant
 MONS:   jackal / hound / wolf w:1
-MONS:   gnoll ; stone q:10 | tomahawk q:3 | throwing net q:3
+MONS:   gnoll ; stone q:10 | boomerang q:3 | throwing net q:3
 MAP
     .......
     .41.14.

@@ -665,7 +665,7 @@ static const missile_def Missile_prop[] =
     { MI_SLING_BULLET,  "sling bullet",  4, 8,  5,  false },
     { MI_JAVELIN,       "javelin",      10, 20, 8,  true  },
     { MI_THROWING_NET,  "throwing net",  0, 0,  30, true  },
-    { MI_TOMAHAWK,      "tomahawk",      6, 20, 5,  true  },
+    { MI_BOOMERANG,     "boomerang",     6, 20, 5,  true  },
 };
 
 struct food_def
@@ -2074,7 +2074,7 @@ bool has_launcher(const item_def &ammo)
            && ammo.sub_type != MI_DART
 #endif
            && ammo.sub_type != MI_JAVELIN
-           && ammo.sub_type != MI_TOMAHAWK
+           && ammo.sub_type != MI_BOOMERANG
            && ammo.sub_type != MI_THROWING_NET;
 }
 

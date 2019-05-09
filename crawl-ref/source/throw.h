@@ -18,7 +18,7 @@ enum fire_type
     FIRE_JAVELIN   = 0x0010,
     FIRE_ROCK      = 0x0100,
     FIRE_NET       = 0x0200,
-    FIRE_TOMAHAWK  = 0x0800,
+    FIRE_BOOMERANG = 0x0800,
     FIRE_INSCRIBED = 0x1000,   // Only used for _get_fire_order
 };
 

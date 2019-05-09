@@ -1644,9 +1644,9 @@ static void _construct_weapon_menu(const newgame_def& ng,
             }
             else if (species_size(ng.species, PSIZE_TORSO) <= SIZE_SMALL)
             {
-                thrown_name = "tomahawks";
+                thrown_name = "boomerangs";
 #ifdef USE_TILE_LOCAL
-                tmp->add_tile(tile_def(TILE_MI_TOMAHAWK, TEX_DEFAULT));
+                tmp->add_tile(tile_def(TILE_MI_BOOMERANG, TEX_DEFAULT));
 #endif
             }
             else
