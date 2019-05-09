@@ -294,10 +294,10 @@ effect/tomahawk6 MI_TOMAHAWK6
 effect/tomahawk7 MI_TOMAHAWK7
 
 %rim 1
-needle1 MI_DART
-needle2
-needle-p MI_DART_P
-needle-c MI_DART_CURARE
+dart1 MI_DART
+dart2
+dart-p MI_DART_P
+dart-c MI_DART_CURARE
 # flying needles
 effect/needle0 MI_DART0
 effect/needle1 MI_DART1
