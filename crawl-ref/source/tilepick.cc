@@ -3764,20 +3764,22 @@ tileidx_t tileidx_known_brand(const item_def &item)
             return TILE_BRAND_DISPERSAL;
         case SPMSL_EXPLODING:
             return TILE_BRAND_EXPLOSION;
+#if TAG_MAJOR_VERSION == 34
         case SPMSL_CONFUSION:
             return TILE_BRAND_CONFUSION;
         case SPMSL_PARALYSIS:
             return TILE_BRAND_PARALYSIS;
-#if TAG_MAJOR_VERSION == 34
         case SPMSL_SLOW:
             return TILE_BRAND_SLOWING;
         case SPMSL_SICKNESS:
             return TILE_BRAND_SICKNESS;
+        case SPMSL_SLEEP:
+            return TILE_BRAND_SLEEP;
 #endif
         case SPMSL_FRENZY:
             return TILE_BRAND_FRENZY;
-        case SPMSL_SLEEP:
-            return TILE_BRAND_SLEEP;
+        case SPMSL_BLINDING:
+            return TILE_BRAND_BLINDING;
         default:
             break;
         }

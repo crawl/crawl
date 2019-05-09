@@ -467,19 +467,17 @@ enum special_missile_type // to separate from weapons in general {dlb}
     SPMSL_EXPLODING,
     SPMSL_STEEL,
     SPMSL_SILVER,
-    SPMSL_PARALYSIS,                   // dart only from here on
 #if TAG_MAJOR_VERSION == 34
+    SPMSL_PARALYSIS,                   // dart only from here on
     SPMSL_SLOW,
-#endif
     SPMSL_SLEEP,
     SPMSL_CONFUSION,
-#if TAG_MAJOR_VERSION == 34
     SPMSL_SICKNESS,
 #endif
     SPMSL_FRENZY,
-    NUM_REAL_SPECIAL_MISSILES,
     SPMSL_BLINDING,
-    NUM_SPECIAL_MISSILES,
+    NUM_REAL_SPECIAL_MISSILES,
+    NUM_SPECIAL_MISSILES = NUM_REAL_SPECIAL_MISSILES,
 };
 
 enum special_ring_type // jewellery mitm[].special values

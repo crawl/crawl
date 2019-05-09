@@ -535,10 +535,8 @@ static special_missile_type _determine_missile_brand(const item_def& item,
             break;
         }
 
-        rc = random_choose_weighted(30, SPMSL_SLEEP,
-                                    30, SPMSL_CONFUSION,
-                                    10, SPMSL_PARALYSIS,
-                                    10, SPMSL_FRENZY,
+        rc = random_choose_weighted(60, SPMSL_BLINDING,
+                                    30, SPMSL_FRENZY,
                                     nw, SPMSL_POISONED);
         break;
     case MI_JAVELIN:
@@ -596,20 +594,16 @@ bool is_missile_brand_ok(int type, int brand, bool strict)
     case SPMSL_PARALYSIS:
 #if TAG_MAJOR_VERSION == 34
     case SPMSL_SLOW:
-#endif
     case SPMSL_SLEEP:
     case SPMSL_CONFUSION:
-#if TAG_MAJOR_VERSION == 34
     case SPMSL_SICKNESS:
 #endif
     case SPMSL_FRENZY:
         return type == MI_DART;
 
-#if TAG_MAJOR_VERSION == 34
     case SPMSL_BLINDING:
         // possible on ex-pies
-        return type == MI_TOMAHAWK && !strict;
-#endif
+        return type == MI_DART || (type == MI_TOMAHAWK && !strict);
 
     default:
         if (type == MI_DART)

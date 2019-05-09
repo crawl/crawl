@@ -4950,16 +4950,15 @@ int str_to_ego(object_class_type item_type, string ego_str)
         "exploding",
         "steel",
         "silver",
-        "paralysis",
 #if TAG_MAJOR_VERSION == 34
+        "paralysis",
         "slow",
-#endif
         "sleep",
         "confusion",
-#if TAG_MAJOR_VERSION == 34
         "sickness",
 #endif
         "frenzy",
+        "blind",
         nullptr
     };
     COMPILE_CHECK(ARRAYSZ(missile_brands) == NUM_REAL_SPECIAL_MISSILES);

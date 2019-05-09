@@ -1489,24 +1489,14 @@ static string _describe_ammo(const item_def &item)
                            "It is twice as likely to be destroyed on impact as "
                            "other darts.";
             break;
-        case SPMSL_PARALYSIS:
-            description += "It is tipped with a paralysing substance.";
-            break;
-        case SPMSL_SLEEP:
-            description += "It is coated with a fast-acting tranquilizer.";
-            break;
-        case SPMSL_CONFUSION:
-            description += "It is tipped with a substance that causes confusion.";
-            break;
-#if TAG_MAJOR_VERSION == 34
-        case SPMSL_SICKNESS:
-            description += "It has been contaminated by something likely to cause disease.";
-            break;
-#endif
         case SPMSL_FRENZY:
             description += "It is tipped with a substance that sends those it "
                            "hits into a mindless rage, attacking friend and "
                            "foe alike.";
+            break;
+        case SPMSL_BLINDING:
+            description += "It is tipped with a substance that causes "
+                           "blindness and brief confusion.";
             break;
         case SPMSL_RETURNING:
             description += "A skilled user can throw it in such a way that it "

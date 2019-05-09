@@ -4423,7 +4423,6 @@ void bolt::monster_post_hit(monster* mon, int dmg)
     // did no damage. Hostiles will still take umbrage.
     if (dmg > 0 || !mon->wont_attack() || !YOU_KILL(thrower))
     {
-        bool was_asleep = mon->asleep();
         special_missile_type m_brand = SPMSL_FORBID_BRAND;
         if (item && item->base_type == OBJ_MISSILES)
             m_brand = get_ammo_brand(*item);
@@ -4436,11 +4435,6 @@ void bolt::monster_post_hit(monster* mon, int dmg)
             if (!mon->alive())
                 return;
         }
-
-
-        // Don't allow darts of sleeping to awaken monsters.
-        if (m_brand == SPMSL_SLEEP && was_asleep && !mon->asleep())
-            mon->put_to_sleep(agent(), 0);
     }
 
     if (YOU_KILL(thrower) && !mon->wont_attack() && !mons_is_firewood(*mon))

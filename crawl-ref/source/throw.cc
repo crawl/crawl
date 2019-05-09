@@ -290,18 +290,14 @@ vector<string> fire_target_behaviour::get_monster_desc(const monster_info& mi)
         if (item->is_type(OBJ_MISSILES, MI_DART))
         {
             special_missile_type brand = get_ammo_brand(*item);
-            if (brand == SPMSL_PARALYSIS || brand == SPMSL_CONFUSION
-                || brand == SPMSL_FRENZY || brand == SPMSL_SLEEP)
+            if (brand == SPMSL_FRENZY || brand == SPMSL_BLINDING)
             {
                 int chance = _get_dart_chance(mi.hd);
                 bool immune = false;
                 if (mi.holi & (MH_UNDEAD | MH_NONLIVING))
                     immune = true;
 
-                string verb = brand == SPMSL_PARALYSIS ? "paralyse" :
-                              brand == SPMSL_CONFUSION ? "confuse"  :
-                              brand == SPMSL_FRENZY    ? "frenzy"
-                              /* SPMSL_SLEEP */        : "sleep";
+                string verb = brand == SPMSL_FRENZY ? "frenzy" : "blind";
 
                 string chance_string = immune ? "immune to needles" :
                                        make_stringf("chance to %s on hit: %d%%",

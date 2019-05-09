@@ -207,7 +207,7 @@ i-returning BRAND_RETURNING
 i-chaos BRAND_CHAOS
 # Remove evasion when TAG_MAJOR_VERSION > 34
 i-evasion BRAND_EVASION
-# Move i-confusion down to missile-only brands when TAG_MAJOR_VERSION > 34
+# Remove confusion down when TAG_MAJOR_VERSION > 34
 i-confusion BRAND_CONFUSION
 i-penetration BRAND_PENETRATION
 i-reaping BRAND_REAPING BRAND_WEP_LAST
@@ -217,12 +217,13 @@ i-explosion BRAND_EXPLOSION
 i-venom BRAND_POISONED
 i-curare BRAND_CURARE
 i-electrocution BRAND_ELECTRIC
-# Remove sickness and slowing when TAG_MAJOR_VERSION > 34
+# Remove sickness, slowingr, paralysis, and sleep when TAG_MAJOR_VERSION > 34
 i-sickness BRAND_SICKNESS
 i-slowing BRAND_SLOWING
 i-paralysis BRAND_PARALYSIS
 i-frenzy BRAND_FRENZY
 i-sleep BRAND_SLEEP
+i-blinding BRAND_BLINDING
 %rim 1
 %sdir item/weapon/ranged
 

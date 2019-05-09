@@ -295,7 +295,10 @@ unsigned int item_value(item_def item, bool ident)
                 break;
 
             case SPMSL_CURARE:
+            case SPMSL_BLINDING:
+#if TAG_MAJOR_VERSION == 34
             case SPMSL_PARALYSIS:
+#endif
             case SPMSL_PENETRATION:
             case SPMSL_SILVER:
             case SPMSL_STEEL:
@@ -306,11 +309,11 @@ unsigned int item_value(item_def item, bool ident)
 #if TAG_MAJOR_VERSION == 34
             case SPMSL_FLAME:
             case SPMSL_FROST:
-#endif
             case SPMSL_SLEEP:
             case SPMSL_CONFUSION:
                 valued *= 25;
                 break;
+#endif
 
             case SPMSL_EXPLODING:
             case SPMSL_POISONED:

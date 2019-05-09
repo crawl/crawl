@@ -445,11 +445,9 @@ special_missile_type ranged_attack::random_chaos_missile_brand()
                     10, SPMSL_FROST,
                     10, SPMSL_POISONED,
                     10, SPMSL_CHAOS,
-                     5, SPMSL_PARALYSIS,
-                     5, SPMSL_SLEEP,
+                    10, SPMSL_BLINDING,
                      5, SPMSL_FRENZY,
                      2, SPMSL_CURARE,
-                     2, SPMSL_CONFUSION,
                      2, SPMSL_DISPERSAL));
 
         if (one_chance_in(3))
@@ -472,18 +470,6 @@ special_missile_type ranged_attack::random_chaos_missile_brand()
             break;
         case SPMSL_DISPERSAL:
             if (defender->no_tele(true, false, true))
-                susceptible = false;
-            break;
-        case SPMSL_CONFUSION:
-            if (defender->holiness() & MH_PLANT)
-            {
-                susceptible = false;
-                break;
-            }
-            // fall through
-        case SPMSL_SLEEP:
-        case SPMSL_PARALYSIS:
-            if (defender->holiness() & (MH_UNDEAD | MH_NONLIVING))
                 susceptible = false;
             break;
         case SPMSL_FRENZY:
@@ -514,9 +500,8 @@ special_missile_type ranged_attack::random_chaos_missile_brand()
     case SPMSL_CURARE:          brand_name += "curare"; break;
     case SPMSL_CHAOS:           brand_name += "chaos"; break;
     case SPMSL_DISPERSAL:       brand_name += "dispersal"; break;
-    case SPMSL_SLEEP:           brand_name += "sleep"; break;
-    case SPMSL_CONFUSION:       brand_name += "confusion"; break;
     case SPMSL_FRENZY:          brand_name += "frenzy"; break;
+    case SPMSL_BLINDING:        brand_name += "blinding"; break;
     default:                    brand_name += "(other)"; break;
     }
 
@@ -553,8 +538,6 @@ bool ranged_attack::dart_check(special_missile_type type)
 
         if (type == SPMSL_FRENZY)
             chance = chance / 2;
-        else if (type == SPMSL_PARALYSIS || type == SPMSL_SLEEP)
-            chance = chance * 4 / 5;
 
         return x_chance_in_y(chance, 100);
     }
@@ -605,19 +588,7 @@ int ranged_attack::dart_duration_roll(special_missile_type type)
     // chance considerably, and this helps avoid effects being too nasty from
     // high HD shooters and too ignorable from low ones.
     if (defender->is_player())
-    {
-        switch (type)
-        {
-            case SPMSL_PARALYSIS:
-                return 3 + random2(4);
-            case SPMSL_SLEEP:
-                return 5 + random2(5);
-            case SPMSL_CONFUSION:
-                return 2 + random2(4);
-            default:
-                return 5 + random2(5);
-        }
-    }
+        return 5 + random2(5);
     else if (type == SPMSL_POISONED) // Player poison needles
         return random2(3 + base_power * 2);
     else
@@ -725,21 +696,19 @@ bool ranged_attack::apply_missile_brand()
         special_damage = silver_damages_victim(defender, damage_done,
                                                special_damage_message);
         break;
-    case SPMSL_PARALYSIS:
+    case SPMSL_BLINDING:
         if (!dart_check(brand))
             break;
-        defender->paralyse(attacker, damage_done);
-        break;
-    case SPMSL_SLEEP:
-        if (!dart_check(brand))
-            break;
-        defender->put_to_sleep(attacker, damage_done);
-        should_alert_defender = false;
-        break;
-    case SPMSL_CONFUSION:
-        if (!dart_check(brand))
-            break;
-        defender->confuse(attacker, damage_done);
+        if (defender->is_monster())
+        {
+            monster* mon = defender->as_monster();
+            if (mons_can_be_blinded(mon->type))
+            {
+                mon->add_ench(mon_enchant(ENCH_BLIND, 1, attacker,
+                       damage_done * BASELINE_DELAY));
+            }
+        }
+        defender->confuse(attacker, damage_done / 3);
         break;
     case SPMSL_FRENZY:
         if (!dart_check(brand))

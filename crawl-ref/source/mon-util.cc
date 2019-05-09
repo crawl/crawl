@@ -3903,13 +3903,11 @@ bool mons_has_incapacitating_ranged_attack(const monster& mon, const actor& foe)
                 return true;
             break;
 
-        case SPMSL_SLEEP:
-            if (foe.can_sleep())
-                return true;
-            break;
-
+        case SPMSL_BLINDING:
+#if TAG_MAJOR_VERSION == 34
         case SPMSL_CONFUSION:
         case SPMSL_PARALYSIS:
+#endif
             return true;
 
         default:
