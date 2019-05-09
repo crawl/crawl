@@ -3519,7 +3519,6 @@ colour_t item_def::missile_colour() const
         case MI_TOMAHAWK:
             return GREEN;
         case NUM_SPECIAL_MISSILES:
-        case NUM_REAL_SPECIAL_MISSILES:
         default:
             die("invalid missile type");
     }
