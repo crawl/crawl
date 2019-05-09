@@ -58,7 +58,7 @@ bool is_penetrating_attack(const actor& attacker, const item_def* weapon,
 {
     return is_launched(&attacker, weapon, projectile) != launch_retval::FUMBLED
             && projectile.base_type == OBJ_MISSILES
-            && get_ammo_brand(projectile) == SPMSL_PENETRATION
+            && projectile.sub_type == MI_JAVELIN
            || weapon
               && is_launched(&attacker, weapon, projectile) == launch_retval::LAUNCHED
               && (get_weapon_brand(*weapon) == SPWPN_PENETRATION
@@ -672,7 +672,7 @@ static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
     }
 
     returning = item.base_type == OBJ_MISSILES
-                && get_ammo_brand(item) == SPMSL_RETURNING;
+                && item.sub_type == MI_TOMAHAWK;
 
     if (item.base_type == OBJ_MISSILES
         && get_ammo_brand(item) == SPMSL_EXPLODING)
@@ -952,15 +952,6 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
     if (teleport)
         returning = false;
 
-    if (returning && projected != launch_retval::FUMBLED)
-    {
-        const skill_type sk =
-            projected == launch_retval::THROWN ? SK_THROWING
-                                     : item_attack_skill(*you.weapon());
-        if (!one_chance_in(1 + skill_bump(sk)))
-            did_return = true;
-    }
-
     you.time_taken = you.attack_delay(&item).roll();
 
     // Create message.
@@ -1004,14 +995,14 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
             Hints.hints_throw_counter++;
 
         // Dropping item copy, since the launched item might be different.
-        pbolt.drop_item = !did_return;
+        pbolt.drop_item = !returning;
         pbolt.fire();
 
         hit = !pbolt.hit_verb.empty();
 
         // The item can be destroyed before returning.
-        if (did_return && thrown_object_destroyed(&item, pbolt.target))
-            did_return = false;
+        if (returning && thrown_object_destroyed(&item, pbolt.target))
+            returning = false;
     }
 
     if (bow_brand == SPWPN_CHAOS || ammo_brand == SPMSL_CHAOS)
@@ -1023,28 +1014,15 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
     if (ammo_brand == SPMSL_FRENZY)
         did_god_conduct(DID_HASTY, 6 + random2(3), true);
 
-    if (did_return)
+    if (returning)
     {
         // Fire beam in reverse.
         pbolt.setup_retrace();
         viewwindow();
         pbolt.fire();
-
-        msg::stream << item.name(DESC_THE) << " returns to your pack!"
-                    << endl;
-
-        // Player saw the item return.
-        if (!is_artefact(you.inv[throw_2]))
-            set_ident_flags(you.inv[throw_2], ISFLAG_KNOW_TYPE);
     }
     else
     {
-        // Should have returned but didn't.
-        if (returning && item_type_known(you.inv[throw_2]))
-        {
-            msg::stream << item.name(DESC_THE)
-                        << " fails to return to your pack!" << endl;
-        }
         dec_inv_item_quantity(throw_2, 1);
         if (unwielded)
             canned_msg(MSG_EMPTY_HANDED_NOW);
@@ -1168,14 +1146,7 @@ bool mons_throw(monster* mons, bolt &beam, int msl, bool teleport)
 
     _throw_noise(mons, beam, item);
 
-    // decrease inventory
-    bool really_returns;
-    if (returning && !one_chance_in(mons_power(mons->type) + 3))
-        really_returns = true;
-    else
-        really_returns = false;
-
-    beam.drop_item = !really_returns;
+    beam.drop_item = !returning;
 
     // Redraw the screen before firing, in case the monster just
     // came into view and the screen hasn't been updated yet.
@@ -1185,7 +1156,7 @@ bool mons_throw(monster* mons, bolt &beam, int msl, bool teleport)
         beam.use_target_as_pos = true;
         beam.affect_cell();
         beam.affect_endpoint();
-        if (!really_returns)
+        if (!returning)
             beam.drop_object();
     }
     else
@@ -1193,11 +1164,11 @@ bool mons_throw(monster* mons, bolt &beam, int msl, bool teleport)
         beam.fire();
 
         // The item can be destroyed before returning.
-        if (really_returns && thrown_object_destroyed(&item, beam.target))
-            really_returns = false;
+        if (returning && thrown_object_destroyed(&item, beam.target))
+            returning = false;
     }
 
-    if (really_returns)
+    if (returning)
     {
         // Fire beam in reverse.
         beam.setup_retrace();
