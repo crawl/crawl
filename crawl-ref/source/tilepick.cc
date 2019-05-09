@@ -99,8 +99,8 @@ static tileidx_t _tileidx_trap(trap_type type)
         return TILE_DNGN_TRAP_NET;
     case TRAP_ZOT:
         return TILE_DNGN_TRAP_ZOT;
-    case TRAP_NEEDLE:
-        return TILE_DNGN_TRAP_NEEDLE;
+    case TRAP_DART:
+        return TILE_DNGN_TRAP_DART;
     case TRAP_SHAFT:
         return TILE_DNGN_TRAP_SHAFT;
     case TRAP_GOLUBRIA:
@@ -2157,13 +2157,13 @@ static tileidx_t _tileidx_missile_base(const item_def &item)
         case SPMSL_SILVER:   return TILE_MI_TOMAHAWK_SILVER;
         }
 
-    case MI_NEEDLE:
+    case MI_DART:
         switch (brand)
         {
-        default:             return TILE_MI_NEEDLE + 1;
-        case 0:              return TILE_MI_NEEDLE;
-        case SPMSL_POISONED: return TILE_MI_NEEDLE_P;
-        case SPMSL_CURARE:   return TILE_MI_NEEDLE_CURARE;
+        default:             return TILE_MI_DART + 1;
+        case 0:              return TILE_MI_DART;
+        case SPMSL_POISONED: return TILE_MI_DART_P;
+        case SPMSL_CURARE:   return TILE_MI_DART_CURARE;
         }
 
     case MI_ARROW:
@@ -2739,8 +2739,8 @@ tileidx_t tileidx_item_throw(const item_def &item, int dx, int dy)
             case MI_BOLT:
                 ch = TILE_MI_BOLT0;
                 break;
-            case MI_NEEDLE:
-                ch = TILE_MI_NEEDLE0;
+            case MI_DART:
+                ch = TILE_MI_DART0;
                 break;
             case MI_JAVELIN:
                 ch = TILE_MI_JAVELIN0;

@@ -632,9 +632,7 @@ static string _randart_descrip(const item_def &item)
 
 static const char *trap_names[] =
 {
-#if TAG_MAJOR_VERSION == 34
     "dart",
-#endif
     "arrow", "spear",
 #if TAG_MAJOR_VERSION > 34
     "dispersal",
@@ -642,7 +640,10 @@ static const char *trap_names[] =
 #endif
     "permanent teleport",
     "alarm", "blade",
-    "bolt", "net", "Zot", "needle",
+    "bolt", "net", "Zot",
+#if TAG_MAJOR_VERSION == 34
+    "needle",
+#endif
     "shaft", "passage", "pressure plate", "web",
 #if TAG_MAJOR_VERSION == 34
     "gas", "teleport",
@@ -1486,7 +1487,7 @@ static string _describe_ammo(const item_def &item)
                            "asphyxiation, dealing direct damage as well as "
                            "poisoning and slowing those it strikes.\n"
                            "It is twice as likely to be destroyed on impact as "
-                           "other needles.";
+                           "other darts.";
             break;
         case SPMSL_PARALYSIS:
             description += "It is tipped with a paralysing substance.";

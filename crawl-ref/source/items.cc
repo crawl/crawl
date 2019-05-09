@@ -3499,16 +3499,16 @@ colour_t item_def::missile_colour() const
     {
         case MI_STONE:
             return BROWN;
-#if TAG_MAJOR_VERSION == 34
-        case MI_DART:
-#endif
         case MI_SLING_BULLET:
             return CYAN;
         case MI_LARGE_ROCK:
             return LIGHTGREY;
         case MI_ARROW:
             return BLUE;
+#if TAG_MAJOR_VERSION == 34
         case MI_NEEDLE:
+#endif
+        case MI_DART:
             return WHITE;
         case MI_BOLT:
             return LIGHTBLUE;

@@ -511,8 +511,8 @@ autopickup_exceptions ^= <pickup-regex, >don't-pickup-regex, ...
         be subject to autopickup.
 
         An example:
-             autopickup_exceptions += <curare-tipped needle
-        Forces autopickup to grab all curare-tipped needles, even if
+             autopickup_exceptions += <curare-tipped dart
+        Forces autopickup to grab all curare-tipped darts, even if
         missiles are not set in the "autopickup" option.
 
         Whitespace between <> and the match expression is significant,
@@ -1293,7 +1293,7 @@ autofight_hunger_stop_undead = false
 autofight_throw = false
         If your quiver contains a throwable item, autofight will throw it
         at enemies out of melee range. Without this option, only a wielded
-        launcher (a bow, crossbow, sling or blowgun) will be considered.
+        launcher (a bow, crossbow or sling) will be considered.
 
 autofight_throw_nomove = true
         This works same as above, except only for ===hit_closest_nomove rather
@@ -1739,7 +1739,7 @@ fire_items_start = a
         missiles to fire. The default is a.
 
 fire_order  = launcher, return
-fire_order += javelin / tomahawk / stone / rock / net
+fire_order += javelin / tomahawk / stone / rock / net / dart
 fire_order += inscribed
         (Ordered list option)
         Controls the order of items autoselected for firing. Items
@@ -1752,7 +1752,7 @@ fire_order += inscribed
         firing.
 
         'launcher' refers to firing the appropriate missile for the
-        wielded weapon (i.e. crossbow, bow, sling, blowgun). You'll almost
+        wielded weapon (i.e. crossbow, bow, sling). You'll almost
         certainly want it first, as it'll be ignored when you're not
         wielding a ranged weapon. 'return' refers to (identified)
         weapons of returning.

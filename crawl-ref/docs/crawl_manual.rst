@@ -1975,8 +1975,8 @@ Hunters
 
 Assassins
   An Assassin is a stealthy character who is especially good at killing, using
-  daggers or blowguns. They start with a dagger, a robe and cloak, a blowgun,
-  poisoned needles, and a few deadly and rare curare needles.
+  daggers or darts. They start with a dagger, a robe and cloak, poisoned darts,
+  and a few deadly and rare curare darts.
 
 Adventurer backgrounds
 ======================
@@ -2187,16 +2187,15 @@ Ranged combat skills
 
 There are a number of individual weapon skills for missile weapons:
 
-  * Throwing (includes blowguns)
+  * Throwing
   * Bows
   * Crossbows
   * Slings
 
 Throwing is the skill for all things hurled without a launcher: tomahawks,
-javelins, nets, etc. The other skills refer to various types of missiles shot
-with a launcher. An exception to this are needles: these are launched using
-blowguns, an action which uses the Throwing skill. Since stones can be thrown
-without launchers to some effect, these skills crosstrain:
+javelins, nets, darts, etc. The other skills refer to various types of missiles
+shot with a launcher. Since stones can be thrown without launchers to some
+effect, these skills crosstrain:
 
   * Throwing and Slings
 

@@ -64,10 +64,10 @@ bool trap_def::type_has_ammo() const
     switch (type)
     {
 #if TAG_MAJOR_VERSION == 34
-    case TRAP_DART:
+    case TRAP_NEEDLE:
 #endif
     case TRAP_ARROW:  case TRAP_BOLT:
-    case TRAP_NEEDLE: case TRAP_SPEAR:
+    case TRAP_DART: case TRAP_SPEAR:
         return true;
     default:
         break;
@@ -102,7 +102,7 @@ void trap_def::prepare_ammo(int charges)
     {
     case TRAP_ARROW:
     case TRAP_BOLT:
-    case TRAP_NEEDLE:
+    case TRAP_DART:
         ammo_qty = 3 + random2avg(9, 3);
         break;
     case TRAP_SPEAR:
@@ -188,7 +188,7 @@ bool trap_def::is_safe(actor* act) const
         return true;
 #endif
 
-    if (type == TRAP_NEEDLE)
+    if (type == TRAP_DART)
         return you.hp > 15;
     else if (type == TRAP_ARROW)
         return you.hp > 35;
@@ -850,7 +850,7 @@ int trap_def::max_damage(const actor& act)
 
     switch (type)
     {
-        case TRAP_NEEDLE: return 0;
+        case TRAP_DART: return 0;
         case TRAP_ARROW:  return mon ?  7 : 15;
         case TRAP_SPEAR:  return mon ? 10 : 26;
         case TRAP_BOLT:   return mon ? 18 : 40;
@@ -883,7 +883,7 @@ int trap_def::to_hit_bonus()
         return 15;
     case TRAP_NET:
         return 5;
-    case TRAP_NEEDLE:
+    case TRAP_DART:
         return 8;
     // Irrelevant:
     default:
@@ -1096,12 +1096,12 @@ item_def trap_def::generate_trap_item()
     switch (type)
     {
 #if TAG_MAJOR_VERSION == 34
-    case TRAP_DART:   base = OBJ_MISSILES; sub = MI_DART;         break;
+    case TRAP_NEEDLE: base = OBJ_MISSILES; sub = MI_NEEDLE;       break;
 #endif
     case TRAP_ARROW:  base = OBJ_MISSILES; sub = MI_ARROW;        break;
     case TRAP_BOLT:   base = OBJ_MISSILES; sub = MI_BOLT;         break;
     case TRAP_SPEAR:  base = OBJ_WEAPONS;  sub = WPN_SPEAR;       break;
-    case TRAP_NEEDLE: base = OBJ_MISSILES; sub = MI_NEEDLE;       break;
+    case TRAP_DART:   base = OBJ_MISSILES; sub = MI_DART;         break;
     case TRAP_NET:    base = OBJ_MISSILES; sub = MI_THROWING_NET; break;
     default:          return item;
     }
@@ -1113,7 +1113,7 @@ item_def trap_def::generate_trap_item()
     if (base == OBJ_MISSILES)
     {
         set_item_ego_type(item, base,
-                          (sub == MI_NEEDLE) ? SPMSL_POISONED : SPMSL_NORMAL);
+                          (sub == MI_DART) ? SPMSL_POISONED : SPMSL_NORMAL);
     }
     else
         set_item_ego_type(item, base, SPWPN_NORMAL);
@@ -1195,7 +1195,7 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
     }
     else // OK, we've been hit.
     {
-        bool poison = type == TRAP_NEEDLE
+        bool poison = type == TRAP_DART
                        && (x_chance_in_y(50 - (3*act.armour_class()) / 2, 100));
 
         int damage_taken = act.apply_ac(shot_damage(act));
@@ -1266,12 +1266,12 @@ dungeon_feature_type trap_category(trap_type type)
     case TRAP_ARROW:
     case TRAP_SPEAR:
     case TRAP_BLADE:
+    case TRAP_DART:
     case TRAP_BOLT:
-    case TRAP_NEEDLE:
     case TRAP_NET:
 #if TAG_MAJOR_VERSION == 34
+    case TRAP_NEEDLE:
     case TRAP_GAS:
-    case TRAP_DART:
 #endif
     case TRAP_PLATE:
         return DNGN_TRAP_MECHANICAL;
@@ -1497,7 +1497,7 @@ trap_type random_vault_trap()
     trap_type type = TRAP_ARROW;
 
     if ((random2(1 + level_number) > 1) && one_chance_in(4))
-        type = TRAP_NEEDLE;
+        type = TRAP_DART;
     if (random2(1 + level_number) > 3)
         type = TRAP_SPEAR;
 

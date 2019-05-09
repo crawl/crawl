@@ -357,7 +357,7 @@ NAME:    ossuary_tomb_2
 WEIGHT:  40
 ORIENT:  encompass
 TAGS:    no_item_gen no_monster_gen no_rotate
-KFEAT:   ~ = arrow trap w:2 / needle trap
+KFEAT:   ~ = arrow trap w:2 / dart trap
 KFEAT:   ^ = arrow trap / floor w:5
 # Number of 1's is 53, number of ~'s is 57.
 : if crawl.one_chance_in(10) then
@@ -556,7 +556,7 @@ MONS:   gnoll zombie / hobgoblin zombie / orc zombie / \
         human zombie / kobold zombie / goblin zombie / \
         big kobold zombie / centaur zombie / scorpion zombie w:20
 ITEM:   any scroll / any potion / any jewellery w:1 / nothing
-KFEAT:  ~ = needle trap / arrow trap / spear trap w:5
+KFEAT:  ~ = dart trap / arrow trap / spear trap w:5
 SUBST:  1 = 1.
 SUBST:  3 = 3.
 : ossuary_setup_features(_G)
@@ -1110,7 +1110,7 @@ MONS:   rat zombie / quokka zombie / adder zombie /\
         big kobold zombie w:1 / human zombie w:1 / elf zombie w:1 / orc zombie w:1
 MONS:   generate_awake mummy
 ITEM:   any scroll / any potion / gold w:4
-KFEAT:  ~ = arrow trap / needle trap
+KFEAT:  ~ = arrow trap / dart trap
 : ossuary_setup_features(_G)
 MAP
 ccccc     ccc ccc ccc
@@ -1214,7 +1214,7 @@ KMONS:  3 = goblin zombie / hobgoblin zombie / kobold zombie / gnoll zombie w:2 
         big kobold zombie w:1 / human zombie w:1 / elf zombie w:1 / orc zombie w:1 /\
                 nothing w:36
 KITEM:  12d = any potion / any scroll / any jewellery w:1
-KFEAT:  . = needle trap / arrow trap / spear trap w:5 / floor w:600
+KFEAT:  . = dart trap / arrow trap / spear trap w:5 / floor w:600
 NSUBST: d = 1:1 / 3:2 / 4:. / *:d
 : ossuary_setup_features(_G)
 MAP

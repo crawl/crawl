@@ -1550,9 +1550,9 @@ KMONS:  pq = plant / fungus
 KFEAT:  q = W
 KMONS:  O = player ghost
 MONS:   kobold, big kobold, kobold demonologist
-KMONS:  D = kobold ; blowgun . needle ego:curare | needle ego:poisoned . dagger
-KMONS:  E = big kobold ; blowgun . needle ego:curare | \
-                needle ego:poisoned w:5 . dagger | short sword | whip
+KMONS:  D = kobold ; dart ego:curare | dart ego:poisoned . dagger
+KMONS:  E = big kobold ; dart ego:curare | \
+                dart ego:poisoned w:5 . dagger | short sword | whip
 KMONS:  F = kobold ; wand of flame | wand of acid | wand of polymorph | \
                 wand of enslavement | wand of paralysis | \
                 wand of disintegration . dagger
@@ -1998,7 +1998,7 @@ NSUBST: R = R / -
 {{
 kmons("q = kobold; " .. wrathful_weapon("kobold",
                crawl.one_chance_in(3) and "randart" or "good_item") ..
-      "    . blowgun good_item . needle ego:curare | needle ego:poisoned w:5")
+      "    . dart ego:curare | dart ego:poisoned w:5")
 kmons("r = gnoll sergeant; " .. wrathful_weapon("sergeant",
                crawl.one_chance_in(3) and "randart" or "good_item") ..
       "    . leather armour good_item | ring mail good_item" ..
