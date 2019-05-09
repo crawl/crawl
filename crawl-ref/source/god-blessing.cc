@@ -166,7 +166,7 @@ void gift_ammo_to_orc(monster* orc, bool initial_gift)
     ammo.base_type = OBJ_MISSILES;
 
     if (!launcher)
-        ammo.sub_type = MI_TOMAHAWK;
+        ammo.sub_type = MI_BOOMERANG;
     else
         ammo.sub_type = fires_ammo_type(*launcher);
 
@@ -287,7 +287,7 @@ static string _beogh_bless_ranged_weapon(monster* mon)
         }
     }
 
-    // If they have a shield but no launcher, give tomahawks.
+    // If they have a shield but no launcher, give boomerangs.
     if (mon->shield() != nullptr)
     {
         gift_ammo_to_orc(mon);

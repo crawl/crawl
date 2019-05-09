@@ -279,19 +279,19 @@ effect/bolt6 MI_BOLT6
 effect/bolt7 MI_BOLT7
 
 %rim 0
-tomahawk1 MI_TOMAHAWK
+tomahawk1 MI_BOOMERANG
 tomahawk2
-steel_tomahawk MI_TOMAHAWK_STEEL
-silver_tomahawk MI_TOMAHAWK_SILVER
-# flying tomahawks
-effect/tomahawk0 MI_TOMAHAWK0
-effect/tomahawk1 MI_TOMAHAWK1
-effect/tomahawk2 MI_TOMAHAWK2
-effect/tomahawk3 MI_TOMAHAWK3
-effect/tomahawk4 MI_TOMAHAWK4
-effect/tomahawk5 MI_TOMAHAWK5
-effect/tomahawk6 MI_TOMAHAWK6
-effect/tomahawk7 MI_TOMAHAWK7
+steel_tomahawk MI_BOOMERANG_STEEL
+silver_tomahawk MI_BOOMERANG_SILVER
+# flying boomerangs
+effect/tomahawk0 MI_BOOMERANG0
+effect/tomahawk1 MI_BOOMERANG1
+effect/tomahawk2 MI_BOOMERANG2
+effect/tomahawk3 MI_BOOMERANG3
+effect/tomahawk4 MI_BOOMERANG4
+effect/tomahawk5 MI_BOOMERANG5
+effect/tomahawk6 MI_BOOMERANG6
+effect/tomahawk7 MI_BOOMERANG7
 
 %rim 1
 dart1 MI_DART

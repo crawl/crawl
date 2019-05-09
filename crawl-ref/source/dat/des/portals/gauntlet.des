@@ -1146,7 +1146,7 @@ dgn.delayed_decay_extra(_G, "Q", "halfling skeleton",
     "randbook disc:translocation / book of spatial translocations" ..
     "    / book of the warp" ..
     ", scroll of blinking / scroll of teleportation q:2" ..
-    "    / tomahawk ego:dispersal" ..
+    "    / boomerang ego:dispersal" ..
     ", dagger good_item / short sword good_item / rapier good_item" ..
     "    / long sword good_item / double sword / demon blade" ..
     "    / hunting sling randart / fustibalus good_item" ..

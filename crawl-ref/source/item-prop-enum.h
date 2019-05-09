@@ -337,7 +337,7 @@ enum missile_type
     MI_LARGE_ROCK,
     MI_SLING_BULLET,
     MI_THROWING_NET,
-    MI_TOMAHAWK,
+    MI_BOOMERANG,
 
     NUM_MISSILES,
     MI_NONE             // was MI_EGGPLANT... used for launch type detection
@@ -637,7 +637,7 @@ enum weapon_type
     WPN_RANDOM,
     WPN_VIABLE,
 
-// thrown weapons (for hunter weapon selection) - rocks, javelins, tomahawks
+// thrown weapons (for hunter weapon selection) - rocks, javelins, boomerangs
     WPN_THROWN,
 };
 

@@ -226,15 +226,15 @@ tutorial2 newlevel
 Remember: You can reread old messages with
 <input>$cmd[CMD_REPLAY_MESSAGES]</input>.
 %%%%
-tutorial2 tomahawks
+tutorial2 boomerangs
 
-Now, for ranged combat! Pick up these tomahawks with
+Now, for ranged combat! Pick up these boomerangs with
 <input>$cmd[CMD_PICKUP]</input> or <input>g</input><localtiles>, or by
 <input>mouseclick</input>,</localtiles> and continue.
 %%%%
 tutorial2 throwing
 
-You can fire your tomahawks at a monster with <input>$cmd[CMD_FIRE]</input>
+You can fire your boomerangs at a monster with <input>$cmd[CMD_FIRE]</input>
 <localtiles> or by <input>clicking</input> on them in the inventory
 panel</localtiles>. To confirm the auto-targeted monster, press
 <input>$cmd[CMD_TARGET_SELECT]</input> or <input>Enter</input>.
@@ -247,7 +247,7 @@ Pick up this shortbow and wield it with <input>$cmd[CMD_WIELD_WEAPON]</input>
 tutorial2 firing
 
 # FIXME: Lengthy because of the hint for choosing target.
-Firing arrows from your wielded shortbow works exactly the same as throwing tomahawks:
+Firing arrows from your wielded shortbow works exactly the same as throwing boomerangs:
 via <input>$cmd[CMD_FIRE]</input><localtiles> or <input>mouseclick</input>
 </localtiles>. You can change the targeted monster by pressing
 <input>$cmd[CMD_TARGET_CYCLE_FORWARD]</input> while in target mode. The worm is

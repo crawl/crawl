@@ -1970,7 +1970,7 @@ bool monster::pickup_missile(item_def &item, bool msg, bool force)
 
         // Allow upgrading throwing weapon brands (XXX: improve this!)
         if (item.sub_type == miss->sub_type
-            && (item.sub_type == MI_TOMAHAWK || item.sub_type == MI_JAVELIN)
+            && (item.sub_type == MI_BOOMERANG || item.sub_type == MI_JAVELIN)
             && get_ammo_brand(*miss) == SPMSL_NORMAL
             && get_ammo_brand(item) != SPMSL_NORMAL)
         {

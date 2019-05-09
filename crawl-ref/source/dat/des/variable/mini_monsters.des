@@ -1290,8 +1290,8 @@ ENDMAP
 NAME:   minmay_unpleasant_kobolds
 TAGS:   transparent
 DEPTH:  D:6-
-MONS:   kobold ; tomahawk ego:dispersal q:2 / w:3 big kobold ; tomahawk ego:dispersal q:4
-MONS:   kobold ; tomahawk ego:silver q:2 / w:3 big kobold ; tomahawk ego:silver q:4
+MONS:   kobold ; boomerang ego:dispersal q:2 / w:3 big kobold ; boomerang ego:dispersal q:4
+MONS:   kobold ; boomerang ego:silver q:2 / w:3 big kobold ; boomerang ego:silver q:4
 MONS:   kobold ; dart ego:curare q:1 / \
         w:3 big kobold ; dart ego:curare q:2
 : if you.absdepth() > 13 then
@@ -2259,7 +2259,7 @@ DEPTH:   D:12-, Elf, !Elf:$
 MONS:    red devil ; spear | trident . ring mail | scale mail
 MONS:    red devil ; spear | trident . buckler
 MONS:    red devil ; spear good_item | trident good_item
-MONS:    red devil ; spear | trident . tomahawk
+MONS:    red devil ; spear | trident . boomerang
 SHUFFLE: 1234
 KMASK:   l = no_monster_gen
 MAP
