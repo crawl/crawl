@@ -886,7 +886,7 @@ KMASK:  'f = opaque
 : if crawl.coinflip() then
 KITEM:  f = javelin ego:poisoned q:4-6 / tomahawk ego:poisoned
 : else
-KITEM:  f = dart ego:poisoned / dart ego:curare / dart ego:blind
+KITEM:  f = dart ego:poisoned / dart ego:curare / dart ego:atropa
 : end
 KITEM:  g = any potion q:2-3
 MONS:   plant, oklob sapling, ball python
@@ -941,7 +941,7 @@ ITEM:   Young Poisoner's Handbook / book of Changes / \
 : if crawl.coinflip() then
 KITEM:  f = javelin ego:poisoned q:4-6 / tomahawk ego:poisoned
 : else
-KITEM:  f = dart ego:poisoned / dart ego:curare / dart ego:blind
+KITEM:  f = dart ego:poisoned / dart ego:curare / dart ego:atropa
 : end
 KITEM:  g = any potion q:2 / any potion q:3
 MONS:   plant, oklob sapling, ball python
