@@ -32,8 +32,7 @@ function callback.tgw_lugonu_bribe_lugonu_item (data, triggerable,
               good_item quick blade",
          Dithmenos="ring of attention ident:type /\
               scroll of noise ident:type q:2-4",
-         Elyvilon="book of Necromancy w:5 /\
-              book of Death w:5 / book of Unlife w:5",
+         Elyvilon="book of Necromancy / book of Death / book of Unlife",
          Fedhas="randbook owner:Lugonu spells:necromutation numspells:1 /\
               randbook owner:Lugonu spells:simulacrum&animate_dead \
                        numspells:2",
