@@ -325,7 +325,6 @@ vector<string> fire_target_behaviour::get_monster_desc(const monster_info& mi)
  */
 static int _get_dart_chance(const int hd)
 {
-    ASSERT(you.weapon()->is_type(OBJ_WEAPONS, WPN_BLOWGUN));
     const int pow = (2 * (you.skill_rdiv(SK_THROWING)
                           + you.skill_rdiv(SK_STEALTH))) / 3;
 
