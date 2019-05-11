@@ -862,11 +862,6 @@ produce a number of 'chunks', which can be eaten with the 'e' command as above.
 Some species are happy to eat raw meat at any time, and others cannot eat meat at
 all. Information on special diets is displayed on the 'A' screen.
 
-Vampires are a special case. Members of this species can try to drink blood
-directly from a fresh corpse (use the 'e' command). They can also bottle potions
-of blood from corpses instead of chopping corpses into chunks with the 'c'
-command.
-
 ? Magical Scrolls
 ========================================
 
@@ -1765,17 +1760,14 @@ Vine Stalkers (VS)
   spells' fuel with each voracious bite.
 
 Vampires (Vp)
-  Vampires are another form of undead, but with a peculiarity: by consuming
-  fresh blood, they may become alive. A bloodless Vampire has the traits of
-  an undead (immunity to poisons, negative energy and torment, resistant to
-  damage from the cold), but cannot regain lost physical attributes or
-  regenerate from wounds over time - in particular, magical items or spells
-  which increase the rate of regeneration will not work (though divine ones
-  will). On the other hand, a Vampire full with blood will regenerate very
-  quickly, but lose all undead powers. Vampires can never starve. They can
-  drink from fresh corpses with the 'e' command, or can bottle blood for later
-  use with 'c'. Upon growing, they learn to transform into quick bats. Unlike
-  other undead species, they may be mutated normally at all times.
+  Vampires are another form of undead, but with a peculiarity they may become
+  alive. A bloodless Vampire has the traits of an undead (immunity to poisons,
+  negative energy and torment, resistant to damage from the cold), but cannot
+  physically regenerate when monsters are in sight and are less resilient. On
+  the other hand, a Vampire full with blood will regenerate very quickly, but
+  will lose all undead powers. Vampires can never starve. Upon growing, they
+  learn to transform into quick bats. Unlike other undead species, they may be
+  mutated normally at all times.
 
 Demigods (Dg)
   Demigods are mortals with some divine or angelic ancestry, however distant;
