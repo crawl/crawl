@@ -248,9 +248,11 @@ tileidx_t tilep_equ_weapon(const item_def &item)
     case WPN_TRIPLE_CROSSBOW:
         tile = TILEP_HAND1_TRIPLE_CROSSBOW;
         break;
+#if TAG_MAJOR_VERSION == 34
     case WPN_BLOWGUN:
         tile = TILEP_HAND1_BLOWGUN;
         break;
+#endif
     case WPN_LONGBOW:
         tile = TILEP_HAND1_BOW3;
         break;

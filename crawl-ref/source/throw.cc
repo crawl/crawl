@@ -471,7 +471,10 @@ bool fire_warn_if_impossible(bool silent)
                 mprf("You cannot throw anything while %s.", held_status());
             return true;
         }
-        else if (weapon->sub_type != WPN_BLOWGUN)
+        else
+#if TAG_MAJOR_VERSION == 34
+             if (weapon->sub_type != WPN_BLOWGUN)
+#endif
         {
             if (!silent)
             {
