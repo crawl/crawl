@@ -92,6 +92,8 @@ TAGS:   overwritable layout allow_dup unrand layout_type_swamp
     dgn.layout_swamp()
 
     -- Prevent tele closets
+    -- TODO: there's also code in dungeon.cc (in _build_vault_impl) that does
+    -- something very similar; do we really need both?
     zonify.grid_fill_water_zones(1,"tree")
 
 }}

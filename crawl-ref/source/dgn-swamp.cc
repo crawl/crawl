@@ -54,7 +54,7 @@ static void _swamp_apply_features(int margin)
                 grd(c) = DNGN_TREE;
             }
             else
-               grd(c) = _swamp_feature_for_height(dgn_height_at(c));
+                grd(c) = _swamp_feature_for_height(dgn_height_at(c));
         }
     }
 }

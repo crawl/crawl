@@ -751,6 +751,17 @@ static bool _dgn_square_is_passable(const coord_def &c)
     return !(env.level_map_mask(c) & MMT_OPAQUE) && dgn_square_travel_ok(c);
 }
 
+static bool _dgn_square_is_ever_passable(const coord_def &c)
+{
+    if (!(env.level_map_mask(c) & MMT_OPAQUE))
+    {
+        const dungeon_feature_type feat = grd(c);
+        if (feat == DNGN_DEEP_WATER || feat == DNGN_LAVA)
+            return true;
+    }
+    return _dgn_square_is_passable(c);
+}
+
 static inline void _dgn_point_record_stub(const coord_def &) { }
 
 template <class point_record>
@@ -905,8 +916,9 @@ static bool _is_exit_stair(const coord_def &c)
 // If fill is non-zero, it fills any disconnected regions with fill.
 //
 static int _process_disconnected_zones(int x1, int y1, int x2, int y2,
-                                       bool choose_stairless,
-                                       dungeon_feature_type fill)
+                bool choose_stairless,
+                dungeon_feature_type fill,
+                bool (*passable)(const coord_def &) = _dgn_square_is_passable)
 {
     memset(travel_point_distance, 0, sizeof(travel_distance_grid_t));
     int nzones = 0;
@@ -917,7 +929,7 @@ static int _process_disconnected_zones(int x1, int y1, int x2, int y2,
         {
             if (!map_bounds(x, y)
                 || travel_point_distance[x][y]
-                || !_dgn_square_is_passable(coord_def(x, y)))
+                || !passable(coord_def(x, y)))
             {
                 continue;
             }
@@ -925,7 +937,7 @@ static int _process_disconnected_zones(int x1, int y1, int x2, int y2,
             const bool found_exit_stair =
                 _dgn_fill_zone(coord_def(x, y), ++nzones,
                                _dgn_point_record_stub,
-                               _dgn_square_is_passable,
+                               passable,
                                choose_stairless ? (at_branch_bottom() ?
                                                    _is_upwards_exit_stair :
                                                    _is_exit_stair) : nullptr);
@@ -4210,6 +4222,13 @@ static const vault_placement *_build_vault_impl(const map_def *vault,
         && player_in_branch(BRANCH_SWAMP))
     {
         _process_disconnected_zones(0, 0, GXM-1, GYM-1, true, DNGN_TREE);
+        // do a second pass to remove tele closets consisting of deep water
+        // created by the first pass -- which will not fill in deep water
+        // because it is treated as impassable.
+        // TODO: get zonify to prevent these?
+        // TODO: does this come up anywhere outside of swamp?
+        _process_disconnected_zones(0, 0, GXM-1, GYM-1, true, DNGN_TREE,
+                                    _dgn_square_is_ever_passable);
     }
 
     if (!make_no_exits)
