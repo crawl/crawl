@@ -84,6 +84,7 @@ void game_state::reset_game()
     need_save = false;
     type = GAME_TYPE_UNSPECIFIED;
     updating_scores = false;
+    clear_mon_acting();
     reset_cmd_repeat();
     reset_cmd_again();
 }
