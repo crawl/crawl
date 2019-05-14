@@ -526,7 +526,9 @@ inedible chunk of flesh
 %%%%
 javelin
 
-A lightweight spear, designed for throwing.
+A lightweight spear, designed for throwing. It will pass through the targets it
+hits, potentially hitting all targets in its path until it reaches maximum
+range.
 {{
     if you.race() == "Halfling"
         or you.race() == "Kobold"
