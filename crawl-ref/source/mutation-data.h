@@ -1339,6 +1339,22 @@ static const mutation_def mut_data[] =
 },
 #endif
 
+{ MUT_LUMPY_BLACK_SCALES, 2, 3, mutflag::good, true,
+  "lumpy black scales",
+
+  {"You are partially covered in lumpy black scales. (AC +2, ER -2)",
+   "You are mostly covered in lumpy black scales. (AC +5, ER -3)",
+   "You are completely covered in lumpy black scales. (AC +8, ER -4)"},
+
+  {"lumpy black scales grow over part of your body.",
+   "lumpy black scales spread over more of your body.",
+   "lumpy black scales cover your body completely."},
+
+  {"Your lumpy black scales disappear.",
+   "Your lumpy black scales recede somewhat.",
+   "Your lumpy black scales recede somewhat."},
+},
+
 { MUT_RUGGED_BROWN_SCALES, 2, 3, mutflag::good, true,
   "rugged brown scales",
 

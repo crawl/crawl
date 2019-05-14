@@ -5689,7 +5689,8 @@ void player::ablate_deflection()
  * stealth penalty calculations.
  *
  * @return  The player's body armour's PARM_EVASION, if any, taking into account
- *          the sturdy frame mutation that reduces encumbrance.
+ *          the sturdy frame mutation that reduces encumbrance and the lumpy
+ *          black scales mutation that increases it.
  */
 int player::unadjusted_body_armour_penalty() const
 {
@@ -5699,7 +5700,9 @@ int player::unadjusted_body_armour_penalty() const
 
     // PARM_EVASION is always less than or equal to 0
     return max(0, -property(*body_armour, PARM_EVASION) / 10
-                  - get_mutation_level(MUT_STURDY_FRAME) * 2);
+                  - get_mutation_level(MUT_STURDY_FRAME) * 2
+                  + get_mutation_level(MUT_LUMPY_BLACK_SCALES) ? // 2, 3, 4
+                    1 + get_mutation_level(MUT_LUMPY_BLACK_SCALES) : 0);
 }
 
 /**
@@ -5945,7 +5948,10 @@ int player::base_ac(int scale) const
     AC += get_mutation_level(MUT_ROUGH_BLACK_SCALES, mutation_activity_type::FULL)
           ? -100 + get_mutation_level(MUT_ROUGH_BLACK_SCALES, mutation_activity_type::FULL) * 300 : 0;
               // +2, +5, +8
-#endif
+#endif    
+    AC += get_mutation_level(MUT_LUMPY_BLACK_SCALES, mutation_activity_type::FULL)
+          ? -100 + get_mutation_level(MUT_LUMPY_BLACK_SCALES, mutation_activity_type::FULL) * 300 : 0;
+              // +2, +5, +8
     AC += get_mutation_level(MUT_RUGGED_BROWN_SCALES, mutation_activity_type::FULL) * 100;
               // +1, +2, +3
     AC += get_mutation_level(MUT_ICY_BLUE_SCALES, mutation_activity_type::FULL)
