@@ -89,7 +89,7 @@ public:
         if (you.duration[DUR_DEATHS_DOOR])
         {
             if (reason)
-                *reason = "You can't heal while in Death's door.";
+                *reason = "You can't heal while in death's door.";
             return false;
         }
         if (!you.can_potion_heal()
@@ -175,7 +175,7 @@ public:
         if (you.duration[DUR_DEATHS_DOOR])
         {
             if (reason)
-                *reason = "You cannot heal while in Death's door!";
+                *reason = "You cannot heal while in death's door.";
             return false;
         }
         if (you.hp == you.hp_max && player_rotted() == 0)

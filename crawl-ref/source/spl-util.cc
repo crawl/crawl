@@ -1218,7 +1218,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "you're too dead.";
         break;
     case SPELL_NECROMUTATION:
-        // only prohibted to actual undead, not lichformed players
+        // only prohibited to actual undead, not lichformed players
         if (you.undead_state(false))
             return "you're too dead.";
         break;
