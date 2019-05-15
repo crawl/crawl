@@ -47,7 +47,7 @@ spret cast_deaths_door(int pow, bool fail)
     you.set_duration(DUR_DEATHS_DOOR, 10 + random2avg(13, 3)
                                        + (random2(pow) / 10));
 
-    calc_hp(false, true);
+    set_hp(allowed_deaths_door_hp());
 
     if (you.duration[DUR_DEATHS_DOOR] > 25 * BASELINE_DELAY)
         you.duration[DUR_DEATHS_DOOR] = (23 + random2(5)) * BASELINE_DELAY;

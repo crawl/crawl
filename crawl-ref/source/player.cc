@@ -3929,7 +3929,7 @@ int get_real_hp(bool trans, bool rotted)
     hitp /= 10;
 
     const bool hep_frail = have_passive(passive_t::frail)
-                          || player_under_penance(GOD_HEPLIAKLQANA);
+                           || player_under_penance(GOD_HEPLIAKLQANA);
 
     // Mutations that increase HP by a percentage
     hitp *= 100 + (you.get_mutation_level(MUT_ROBUST) * 10)
@@ -3959,9 +3959,6 @@ int get_real_hp(bool trans, bool rotted)
     if (trans && player_equip_unrand(UNRAND_ETERNAL_TORMENT))
         hitp = hitp * 4 / 5;
 #endif
-
-    if (trans && you.duration[DUR_DEATHS_DOOR] > 0)
-        hitp = allowed_deaths_door_hp();
 
     return max(1, hitp);
 }
