@@ -157,6 +157,7 @@ static const int conflict[][3] =
     { MUT_MAGIC_RESISTANCE,    MUT_MAGICAL_VULNERABILITY,  -1},
     { MUT_NO_REGENERATION,     MUT_INHIBITED_REGENERATION, -1},
     { MUT_NO_REGENERATION,     MUT_REGENERATION,           -1},
+    { MUT_STURDY_FRAME,        MUT_LUMPY_BLACK_SCALES,     -1},
 };
 
 equipment_type beastly_slot(int mut)
@@ -1305,7 +1306,7 @@ bool physiology_mutation_conflict(mutation_type mutat)
     // We can't use is_useless_skill() here, since species that can still wear
     // body armour can sacrifice armour skill with Ru.
     if (species_apt(SK_ARMOUR) == UNUSABLE_SKILL
-        && (mutat == MUT_DEFORMED || mutat == MUT_STURDY_FRAME))
+        && (mutat == MUT_DEFORMED || mutat == MUT_STURDY_FRAME || mutat == MUT_LUMPY_BLACK_SCALES))
     {
         return true;
     }

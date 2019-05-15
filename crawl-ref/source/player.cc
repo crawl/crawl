@@ -5948,7 +5948,7 @@ int player::base_ac(int scale) const
     AC += get_mutation_level(MUT_ROUGH_BLACK_SCALES, mutation_activity_type::FULL)
           ? -100 + get_mutation_level(MUT_ROUGH_BLACK_SCALES, mutation_activity_type::FULL) * 300 : 0;
               // +2, +5, +8
-#endif    
+#endif
     AC += get_mutation_level(MUT_LUMPY_BLACK_SCALES, mutation_activity_type::FULL)
           ? -100 + get_mutation_level(MUT_LUMPY_BLACK_SCALES, mutation_activity_type::FULL) * 300 : 0;
               // +2, +5, +8
