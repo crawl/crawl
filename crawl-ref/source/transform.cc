@@ -1665,7 +1665,7 @@ bool transform(int pow, transformation which_trans, bool involuntary,
     else if (which_trans == transformation::lich
              && you.duration[DUR_DEATHS_DOOR])
     {
-        msg = "You cannot become a lich while in death's Door.";
+        msg = "You cannot become a lich while in death's door.";
         success = false;
     }
 
