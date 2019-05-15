@@ -2730,7 +2730,8 @@ void calc_hp(bool scale, bool set)
 
     you.hp_max = get_real_hp(true, true);
 
-    if (scale) {
+    if (scale)
+    {
         int hp = you.hp * 100 + you.hit_points_regeneration;
         int new_max = you.hp_max;
         hp = hp * new_max / old_max;
