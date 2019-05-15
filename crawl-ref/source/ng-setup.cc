@@ -166,7 +166,7 @@ item_def* newgame_make_item(object_class_type base,
     else if (item.base_type == OBJ_BOOKS && item.sub_type == BOOK_CHANGES)
         _autopickup_ammo(MI_ARROW);
     // You probably want to pick up both.
-    if (item.is_type(OBJ_MISSILES, MI_SLING_BULLET))
+    if (item.is_type(OBJ_MISSILES, MI_STONE))
         _autopickup_ammo(MI_STONE);
 
     origin_set_startequip(item);
@@ -225,7 +225,7 @@ static void _give_ammo(weapon_type weapon, int plus)
         newgame_make_item(OBJ_MISSILES, MI_BOLT, 20);
         break;
     case WPN_HUNTING_SLING:
-        newgame_make_item(OBJ_MISSILES, MI_SLING_BULLET, 20);
+        newgame_make_item(OBJ_MISSILES, MI_STONE, 20);
         break;
     default:
         break;

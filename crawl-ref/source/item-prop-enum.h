@@ -335,7 +335,9 @@ enum missile_type
 
     MI_STONE,
     MI_LARGE_ROCK,
+#if TAG_MAJOR_VERSION == 34
     MI_SLING_BULLET,
+#endif
     MI_THROWING_NET,
     MI_BOOMERANG,
 

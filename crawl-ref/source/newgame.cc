@@ -1670,7 +1670,7 @@ static void _construct_weapon_menu(const newgame_def& ng,
             if (is_ranged_weapon_type(wpn_type))
             {
                 text += " and ";
-                text += wpn_type == WPN_HUNTING_SLING ? ammo_name(MI_SLING_BULLET)
+                text += wpn_type == WPN_HUNTING_SLING ? ammo_name(MI_STONE)
                                                       : ammo_name(wpn_type);
                 text += "s";
             }

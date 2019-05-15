@@ -2185,15 +2185,6 @@ static tileidx_t _tileidx_missile_base(const item_def &item)
         case SPMSL_SILVER:   return TILE_MI_BOLT_SILVER;
         }
 
-    case MI_SLING_BULLET:
-        switch (brand)
-        {
-        default:             return TILE_MI_SLING_BULLET + 1;
-        case 0:              return TILE_MI_SLING_BULLET;
-        case SPMSL_STEEL:    return TILE_MI_SLING_BULLET_STEEL;
-        case SPMSL_SILVER:   return TILE_MI_SLING_BULLET_SILVER;
-        }
-
     case MI_JAVELIN:
         switch (brand)
         {
@@ -2760,20 +2751,6 @@ tileidx_t tileidx_item_throw(const item_def &item, int dx, int dy)
         {
             case MI_STONE:
                 ch = TILE_MI_STONE0;
-                break;
-            case MI_SLING_BULLET:
-                switch (item.brand)
-                {
-                default:
-                    ch = TILE_MI_SLING_BULLET0;
-                    break;
-                case SPMSL_STEEL:
-                    ch = TILE_MI_SLING_BULLET_STEEL0;
-                    break;
-                case SPMSL_SILVER:
-                    ch = TILE_MI_SLING_BULLET_SILVER0;
-                    break;
-                }
                 break;
             case MI_LARGE_ROCK:
                 ch = TILE_MI_LARGE_ROCK0;

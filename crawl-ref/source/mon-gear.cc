@@ -1323,10 +1323,7 @@ static void _give_ammo(monster* mon, int level, bool mons_summoned)
             && (mon->type == MONS_JOSEPH
                 || mon->type == MONS_SATYR
                 || (mon->type == MONS_FAUN && one_chance_in(3))
-                || one_chance_in(15)))
-        {
-            xitt = MI_SLING_BULLET;
-        }
+                || one_chance_in(15)));
 
         const int thing_created = items(false, xitc, xitt, level);
 

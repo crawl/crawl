@@ -1035,11 +1035,6 @@ short sword
 
 A personal stabbing weapon with a short grip.
 %%%%
-sling bullet
-
-A small, heavy projectile specially shaped for use with slings. It is more
-effective as ammunition than simple stones.
-%%%%
 spear
 
 A hunting weapon consisting of a wooden shaft with a pointed metal head

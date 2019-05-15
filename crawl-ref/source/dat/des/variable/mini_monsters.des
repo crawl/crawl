@@ -1338,7 +1338,7 @@ NAME:   minmay_ruffians
 TAGS:   transparent
 DEPTH:  D:6-10
 MONS:   human; club | mace w:3 . animal skin | leather armour
-MONS:   human; hunting sling . stone | sling bullet w:3 . animal skin | \
+MONS:   human; hunting sling . stone w:3 . animal skin | \
         leather armour
 SUBST:  1 = 112.
 KMONS:  3 = human; flail . ring mail | scale mail
@@ -5605,7 +5605,7 @@ COLOUR:  F = lightred
 : elseif you.in_branch("Coc") then
 KMONS:   9 = ice devil w:15 / ice dragon / simulacrum w:5 / \
              skeletal warrior ; hunting sling ego:freezing ident:type . \
-             mundane sling bullet . mace ego:freezing ident:type
+             mundane stone . mace ego:freezing ident:type
 KMONS:   8 = blizzard demon / lich / shard shrike / \
              reaper ; scythe ego:freezing ident:type
 KMONS:   7 = ice fiend

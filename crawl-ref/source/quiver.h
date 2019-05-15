@@ -15,7 +15,7 @@ enum ammo_t
 {
     AMMO_THROW,           // no launcher wielded -> darts, stones, ...
     AMMO_BOW,             // wielded bow -> arrows
-    AMMO_SLING,           // wielded sling -> stones, sling bullets
+    AMMO_SLING,           // wielded sling -> stones
     AMMO_CROSSBOW,        // wielded crossbow -> bolts
     // Used to be hand crossbows
 #if TAG_MAJOR_VERSION == 34
