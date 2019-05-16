@@ -870,7 +870,8 @@ function (exports, $, key_conversion, chat, comm) {
 
         if (exit_reason)
         {
-            if (was_watching || normal_exit.indexOf(exit_reason) === -1)
+            if (was_watching || normal_exit.indexOf(exit_reason) === -1
+                || exit_message.length > 0)
             {
                 show_exit_dialog(exit_reason, exit_message, exit_dump,
                                  was_watching ? watching_username : null);

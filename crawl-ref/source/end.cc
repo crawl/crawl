@@ -520,7 +520,7 @@ NORETURN void game_ended(game_exit exit, const string &message)
     }
 #ifdef USE_TILE_WEB
     else if (exit == game_exit::abort)
-        tiles.send_exit_reason("cancel");
+        tiles.send_exit_reason("cancel", message);
 #endif
     throw game_ended_condition(exit, message);
 }
