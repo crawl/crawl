@@ -397,12 +397,7 @@ static bool _reroll_random(newgame_def& ng)
     ui::run_layout(move(popup), done);
 
     if (key_is_escape(c) || toalower(c) == 'q' || crawl_state.seen_hups)
-    {
-#ifdef USE_TILE_WEB
-        tiles.send_exit_reason("cancel");
-#endif
         game_ended(game_exit::abort);
-    }
     return toalower(c) == 'n' || c == '\t' || c == '!' || c == '#';
 }
 
@@ -433,9 +428,6 @@ static void _choose_char(newgame_def& ng, newgame_def& choice,
         if (!yesno("Trunk games don't count for the tournament, you want "
                    TOURNEY ". Play trunk anyway? (Y/N)", false, 'n'))
         {
-#ifdef USE_TILE_WEB
-            tiles.send_exit_reason("cancel");
-#endif
             game_ended(game_exit::abort);
         }
     }
@@ -1438,9 +1430,6 @@ bool UINewGameMenu::on_event(const wm_event& ev)
             return done = end_game = true;
         CASE_ESCAPE
         case CK_MOUSE_CMD:
-#ifdef USE_TILE_WEB
-            tiles.send_exit_reason("cancel");
-#endif
             return done = cancel = true;
         case CK_BKSP:
             if (choice_type == C_JOB)
@@ -2375,9 +2364,6 @@ static void _prompt_gamemode_map(newgame_def& ng, newgame_def& ng_choice,
                 end(0);
                 break;
             CASE_ESCAPE
-#ifdef USE_TILE_WEB
-                tiles.send_exit_reason("cancel");
-#endif
                 return done = cancel = true;
                 break;
             case ' ':
