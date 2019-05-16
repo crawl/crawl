@@ -638,15 +638,8 @@ void trap_def::trigger(actor& triggerer)
         // Nets need LOF to hit the player, no netting through glass.
         if (!you.see_cell_no_trans(pos))
             break;
-        bool triggered = false;
-        if (you_trigger)
-        {
-            if (one_chance_in(3))
-                mpr("A net swings high above you.");
-            else
-                triggered = true;
-        }
-        else if (m)
+        bool triggered = you_triggered;
+        if (m)
         {
             if (mons_intel(*m) < I_HUMAN)
             {
