@@ -3348,6 +3348,10 @@ tileidx_t tileidx_ability(const ability_type ability)
     // Vampires
     case ABIL_TRAN_BAT:
         return TILEG_ABILITY_BAT_FORM;
+    case ABIL_EXSANGUINATE:
+        return TILEG_ABILITY_EXSANGUINATE;
+    case ABIL_REVIVIFY:
+        return TILEG_ABILITY_REVIVIFY;
     // Deep Dwarves
     case ABIL_HEAL_WOUNDS:
         return TILEG_ABILITY_HEAL_WOUNDS;
