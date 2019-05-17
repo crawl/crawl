@@ -540,13 +540,10 @@ static level_id _travel_destination(const dungeon_feature_type how,
                                     + shaft_dest.describe() + ".");
         }
 
-        string howfar;
-        if (shaft_depth > 1)
-            howfar = make_stringf(" for %d floors", shaft_depth);
-
-        mprf("You %s a shaft%s!", you.airborne() ? "are sucked into"
-                                                 : "fall through",
-                                  howfar.c_str());
+        mprf("You %s a shaft and drop %d floor%s!",
+             you.airborne() ? "are sucked" : "fall",
+             shaft_depth,
+             shaft_depth > 1 ? "s" : "");
 
         // Shafts are one-time-use.
         mpr("The shaft crumbles and collapses.");
