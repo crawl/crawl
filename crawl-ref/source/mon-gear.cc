@@ -1319,12 +1319,6 @@ static void _give_ammo(monster* mon, int level, bool mons_summoned)
         const object_class_type xitc = OBJ_MISSILES;
         int xitt = fires_ammo_type(*launcher);
 
-        if (xitt == MI_STONE
-            && (mon->type == MONS_JOSEPH
-                || mon->type == MONS_SATYR
-                || (mon->type == MONS_FAUN && one_chance_in(3))
-                || one_chance_in(15)));
-
         const int thing_created = items(false, xitc, xitt, level);
 
         if (thing_created == NON_ITEM)

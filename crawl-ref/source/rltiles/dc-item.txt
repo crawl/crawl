@@ -231,7 +231,7 @@ i-blinding BRAND_BLINDING
 stone MI_STONE
 # flying stone
 effect/stone0 MI_STONE0
-
+# Remove sling bullets when TAG_MAJOR_VERSION > 34
 sling_bullet1 MI_SLING_BULLET
 sling_bullet2
 steel_sling_bullet1 MI_SLING_BULLET_STEEL

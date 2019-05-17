@@ -1094,7 +1094,6 @@ static void _append_weapon_stats(string &description, const item_def &item)
 
     const bool could_set_target = _could_set_training_target(item, true);
 
-    if (skill == SK_SLINGS)
     description += make_stringf(
     "\nBase accuracy: %+d  Base damage: %d  Base attack delay: %.1f"
     "\nThis weapon's minimum attack delay (%.1f) is reached at skill level %d.",
