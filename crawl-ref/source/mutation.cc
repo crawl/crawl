@@ -2540,6 +2540,12 @@ _schedule_ds_mutations(vector<mutation_type> muts)
 
 void roll_demonspawn_mutations()
 {
+    // intentionally create the subgenerator either way, so that this has the
+    // same impact on the current main rng for all chars.
+    rng::subgenerator ds_rng;
+
+    if (you.species != SP_DEMONSPAWN)
+        return;
     you.demonic_traits = _schedule_ds_mutations(
                          _order_ds_mutations(
                          _select_ds_mutations()));

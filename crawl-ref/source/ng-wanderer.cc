@@ -683,6 +683,12 @@ static void _wanderer_cover_equip_holes()
 // levels/equipment, but pretty randomised.
 void create_wanderer()
 {
+    // intentionally create the subgenerator either way, so that this has the
+    // same impact on the current main rng for all chars.
+    rng::subgenerator wn_rng;
+    if (you.char_class != JOB_WANDERER)
+        return;
+
     // Decide what our character roles are.
     stat_type primary_role   = _wanderer_choose_role();
     stat_type secondary_role = _wanderer_choose_role();
