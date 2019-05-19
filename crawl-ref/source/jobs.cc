@@ -68,6 +68,8 @@ job_type get_job_by_name(const char *name)
 // Must be called after species_stat_init for the wanderer formula to work.
 void job_stat_init(job_type job)
 {
+    rng::subgenerator stat_rng;
+
     you.hp_max_adj_perm = 0;
 
     you.base_stats[STAT_STR] += _job_def(job).s;

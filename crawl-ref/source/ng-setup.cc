@@ -234,6 +234,8 @@ static void _give_ammo(weapon_type weapon, int plus)
 
 static void _give_items_skills(const newgame_def& ng)
 {
+    create_wanderer();
+
     switch (you.char_class)
     {
     case JOB_BERSERKER:
@@ -275,10 +277,6 @@ static void _give_items_skills(const newgame_def& ng)
         else
             you.skills[SK_ARMOUR]++;
 
-        break;
-
-    case JOB_WANDERER:
-        create_wanderer();
         break;
 
     default:
@@ -508,8 +506,7 @@ static void _setup_generic(const newgame_def& ng)
     // This function depends on stats and mutations being finalised.
     _give_items_skills(ng);
 
-    if (you.species == SP_DEMONSPAWN)
-        roll_demonspawn_mutations();
+    roll_demonspawn_mutations();
 
     _give_starting_food();
 
