@@ -1077,6 +1077,7 @@ static int _mons_power_hd_factor(spell_type spell, bool random)
             return 10 * ENCH_POW_FACTOR;
 
         case SPELL_SIREN_SONG:
+        case SPELL_AVATAR_SONG:
             return 9 * ENCH_POW_FACTOR;
 
         case SPELL_MASS_CONFUSION:
