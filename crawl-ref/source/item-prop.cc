@@ -832,34 +832,22 @@ static bool _maybe_note_found_unrand(const item_def &item)
 }
 
 /**
- * Is the provided item cursable? Note: this function would leak
- * information about unidentified holy wrath weapons, which is alright
- * because only Ashenzari worshippers can deliberately curse items and
- * they see all weapon egos anyway.
+ * Is the provided item cursable?
  *
  * @param item  The item under consideration.
- * @return      Whether the given item is a blessed weapon.
+ * @return      Whether the given item is cursable.
  */
-bool item_is_cursable(const item_def &item, bool ignore_holy_wrath)
+bool item_is_cursable(const item_def &item)
 {
     if (!item_type_has_curses(item.base_type))
         return false;
     if (item_known_cursed(item))
         return false;
-    if (!ignore_holy_wrath
-        && item.base_type == OBJ_WEAPONS
-        && (get_weapon_brand(item) == SPWPN_HOLY_WRATH
-            || you.duration[DUR_EXCRUCIATING_WOUNDS]
-               && item_is_equipped(item)
-               && you.props[ORIGINAL_BRAND_KEY].get_int() == SPWPN_HOLY_WRATH))
-    {
-        return false;
-    }
     return true;
 }
 
 // Curses a random player inventory item.
-bool curse_an_item(bool ignore_holy_wrath)
+bool curse_an_item()
 {
     // allowing these would enable mummy scumming
     if (have_passive(passive_t::want_curses))
@@ -877,7 +865,7 @@ bool curse_an_item(bool ignore_holy_wrath)
         if (!item.defined())
             continue;
 
-        if (!item_is_cursable(item, ignore_holy_wrath))
+        if (!item_is_cursable(item))
             continue;
 
         // Item is valid for cursing, so we'll give it a chance.
@@ -911,28 +899,6 @@ void do_curse_item(item_def &item, bool quiet)
     if (!is_weapon(item) && item.base_type != OBJ_ARMOUR
         && item.base_type != OBJ_JEWELLERY)
     {
-        return;
-    }
-
-    // Holy wrath weapons cannot be cursed.
-    if (item.base_type == OBJ_WEAPONS
-        && (get_weapon_brand(item) == SPWPN_HOLY_WRATH
-            || you.duration[DUR_EXCRUCIATING_WOUNDS]
-               && item_is_equipped(item)
-               && you.props[ORIGINAL_BRAND_KEY].get_int() == SPWPN_HOLY_WRATH))
-    {
-        if (!quiet)
-        {
-            mprf("Your %s glows black briefly, but repels the curse.",
-                 item.name(DESC_PLAIN).c_str());
-            if (is_artefact(item))
-                artefact_learn_prop(item, ARTP_BRAND);
-            else
-                set_ident_flags(item, ISFLAG_KNOW_TYPE);
-
-            if (!item_brand_known(item))
-                mprf_nocap("%s", item.name(DESC_INVENTORY_EQUIP).c_str());
-        }
         return;
     }
 

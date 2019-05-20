@@ -247,8 +247,6 @@ static bool _try_make_weapon_artefact(item_def& item, int force_type,
         if (cursed)
             do_curse_item(item);
 
-        if (get_weapon_brand(item) == SPWPN_HOLY_WRATH)
-            item.flags &= (~ISFLAG_CURSED);
         return true;
     }
 

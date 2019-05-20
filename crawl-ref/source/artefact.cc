@@ -162,12 +162,6 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
         }
         break;
 
-    case GOD_ASHENZARI:
-        // Cursed god: no holy wrath (since that brand repels curses).
-        if (brand == SPWPN_HOLY_WRATH)
-            return false;
-        break;
-
     case GOD_DITHMENOS:
         // No reducing stealth.
         if (artefact_property(item, ARTP_STEALTH) < 0)
@@ -1522,8 +1516,7 @@ static bool _randart_is_conflicting(const item_def &item,
 {
     if (item.base_type == OBJ_WEAPONS
         && get_weapon_brand(item) == SPWPN_HOLY_WRATH
-        && (is_demonic(item)
-            || proprt[ARTP_CURSE]))
+        && is_demonic(item))
     {
         return true;
     }
