@@ -540,7 +540,7 @@ static level_id _travel_destination(const dungeon_feature_type how,
                                     + shaft_dest.describe() + ".");
         }
 
-        mprf("You %s a shaft and drop %d floor%s!",
+        mprf("You %s into a shaft and drop %d floor%s!",
              you.airborne() ? "are sucked" : "fall",
              shaft_depth,
              shaft_depth > 1 ? "s" : "");
