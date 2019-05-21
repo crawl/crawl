@@ -2985,7 +2985,6 @@ void excommunication(bool voluntary, god_type new_god)
     case GOD_WU_JIAN:
         you.attribute[ATTR_SERPENTS_LASH] = 0;
         you.attribute[ATTR_HEAVENLY_STORM] = 0;
-        _set_penance(old_god, 25);
         break;
 
     default:
