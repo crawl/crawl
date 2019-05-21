@@ -91,7 +91,7 @@ msc += mute:Uskayaw will no longer force your foes to share their pain\.
 
 force_more_message += You have reached level
 force_more_message += Your scales start
-force_more_message += You (fall through|are sucked into) a shaft
+force_more_message += You (fall|are sucked) into a shaft
 force_more_message += You fall into the water!
 force_more_message += You fall into the lava!
 force_more_message += You focus on prolonging your flight
