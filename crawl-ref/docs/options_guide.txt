@@ -491,10 +491,8 @@ autopickup = $?!+"/%
         !       Potions
         + or :  Books
         |       Staves
-        \       Rods
         0       Orbs
         }       Misc. items
-        X       Corpses
         $       Gold
         Note that _whether_ items are picked up automatically or not, is
         controlled by the in-game toggle Ctrl-A. Also note that picking
@@ -517,7 +515,7 @@ autopickup_exceptions ^= <pickup-regex, >don't-pickup-regex, ...
 
         Whitespace between <> and the match expression is significant,
         so the following won't work:
-             autopickup_exceptions += <   ebony casket
+             autopickup_exceptions += <   box of beasts
 
         autopickup_exceptions replace the older ban_pickup. Using
              autopickup_exceptions += >uselessness, >inaccuracy
@@ -529,8 +527,7 @@ autopickup_exceptions ^= <pickup-regex, >don't-pickup-regex, ...
              autopickup_exceptions += uselessness, inaccuracy
 
         You can use multiple autopickup_exceptions lines. Some examples:
-             autopickup_exceptions += inaccuracy, scrolls? of paper
-             autopickup_exceptions += immolation, curse (armour|weapon)
+             autopickup_exceptions += inaccuracy, immolation
              autopickup_exceptions += uselessness, noise, torment
 
         Unless you clear the list of exceptions, you won't need to set
