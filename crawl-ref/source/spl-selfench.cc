@@ -175,7 +175,6 @@ int cast_selective_amnesia(const string &pre_msg)
         }
     }
 
-    canned_msg(MSG_OK);
     return -1;
 }
 

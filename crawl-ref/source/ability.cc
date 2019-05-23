@@ -2571,7 +2571,10 @@ static spret _do_ability(const ability_def& abil, bool fail)
     case ABIL_SIF_MUNA_FORGET_SPELL:
         fail_check();
         if (cast_selective_amnesia() <= 0)
+        {
+            canned_msg(MSG_OK);
             return spret::abort;
+        }
         break;
 
     case ABIL_SIF_MUNA_CHANNEL_ENERGY:
