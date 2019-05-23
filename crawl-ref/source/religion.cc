@@ -3440,7 +3440,7 @@ static void _join_gozag()
 #endif
     }
 
-    // Move gold to top of piles.
+    // Move gold to top of piles & detect it.
     add_daction(DACT_GOLD_ON_TOP);
 }
 
@@ -3637,10 +3637,6 @@ void join_religion(god_type which_god)
         add_daction(DACT_ALLY_UNHOLY_EVIL);
         mprf(MSGCH_MONSTER_ENCHANT, "Your unholy and evil allies forsake you.");
     }
-
-    // Move gold to top of piles with Gozag.
-    if (have_passive(passive_t::detect_gold))
-        add_daction(DACT_GOLD_ON_TOP);
 
     const function<void ()> *join_effect = map_find(on_join, you.religion);
     if (join_effect != nullptr)
