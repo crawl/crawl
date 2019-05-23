@@ -51,6 +51,7 @@
 #include "hints.h"
 #include "initfile.h"
 #include "item-name.h"
+#include "item-status-flag-type.h"
 #include "items.h"
 #include "jobs.h"
 #include "kills.h"
@@ -1350,7 +1351,7 @@ static void _count_gold()
     {
         for (stack_iterator j(*ri); j; ++j)
         {
-            if (j->base_type == OBJ_GOLD)
+            if (j->base_type == OBJ_GOLD && !(j->flags & ISFLAG_UNOBTAINABLE))
             {
                 gold += j->quantity;
                 gold_piles.push_back(&(*j));
