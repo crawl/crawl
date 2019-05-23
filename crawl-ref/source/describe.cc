@@ -1512,7 +1512,8 @@ static string _describe_ammo(const item_def &item)
     }
 
     const int dam = property(item, PWPN_DAMAGE);
-    if (can_throw)
+    const bool player_throwable = is_throwable(&you, item, false);
+    if (player_throwable)
     {
         const int throw_delay = (10 + dam / 2);
         const int target_skill = _item_training_target(item);
