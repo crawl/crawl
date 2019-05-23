@@ -3219,9 +3219,12 @@ static void _place_traps()
         {
             ts.pos.x = random2(GXM);
             ts.pos.y = random2(GYM);
+            // Don't place random traps under vault monsters; if a vault
+            // wants this they have to request it specifically.
             if (in_bounds(ts.pos)
                 && grd(ts.pos) == DNGN_FLOOR
-                && !map_masked(ts.pos, MMT_NO_TRAP))
+                && !map_masked(ts.pos, MMT_NO_TRAP)
+                && mgrd(ts.pos) == NON_MONSTER)
             {
                 break;
             }
@@ -4566,6 +4569,7 @@ int dgn_place_item(const item_spec &spec,
                     mitm[item_made].name(DESC_PLAIN).c_str(),
                     mitm[item_made].name(DESC_PLAIN, false, true).c_str(),
                     where.x, where.y);
+                env.level_map_mask(where) |= MMT_NO_TRAP;
                 return item_made;
             }
             else
@@ -5079,6 +5083,7 @@ static void _vault_grid_glyph(vault_placement &place, const coord_def& where,
         if (item_made != NON_ITEM)
         {
             mitm[item_made].pos = where;
+            env.level_map_mask(where) |= MMT_NO_TRAP;
             dprf(DIAG_DNGN, "vault grid: placing %s (%s) at %d,%d",
                 mitm[item_made].name(DESC_PLAIN).c_str(),
                 mitm[item_made].name(DESC_PLAIN, false, true).c_str(),
