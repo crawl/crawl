@@ -28,6 +28,7 @@
 #include "god-passive.h" // passive_t::slow_abyss
 #include "hiscores.h"
 #include "item-prop.h"
+#include "item-status-flag-type.h"
 #include "items.h"
 #include "libutil.h"
 #include "mapmark.h"
@@ -667,6 +668,7 @@ static void _push_items()
             if (!_pushy_feature(grd(*di)))
             {
                 int j = i;
+                ASSERT(!testbits(item.flags, ISFLAG_SUMMONED));
                 move_item_to_grid(&j, *di, true);
                 break;
             }
@@ -1670,6 +1672,7 @@ void abyss_morph()
     _abyss_apply_terrain(abyss_genlevel_mask, true);
     _place_displaced_monsters();
     _push_items();
+    // TODO: does gozag gold detection need to be here too?
     los_changed();
 }
 
