@@ -1047,7 +1047,7 @@ KMONS: 7 = patrolling simulacrum
 SUBST: 1 = 1122334455667
 KITEM: 1234567 = star_item / nothing
 KFEAT: ^ = zot trap
-KFEAT: - = spear trap / needle trap / net trap / blade trap / bolt trap
+KFEAT: - = spear trap / dart trap / net trap / blade trap / bolt trap
 NSUBST: ~ = 1:^ / 10:- / *:.
 SUBST: ! = +
 
@@ -1069,7 +1069,7 @@ MONS: patrolling iron golem, patrolling necromancer
 MONS: patrolling hell knight, patrolling skeletal warrior
 KMONS: 5 = lich
 KITEM: 5 = star_item, star_item, star_item, star_item, star_item, star_item
-KFEAT: - = spear trap / needle trap / net trap / blade trap / bolt trap
+KFEAT: - = spear trap / dart trap / net trap / blade trap / bolt trap
 NSUBST: . = 6:- / *:.
 
 MAP
@@ -1087,7 +1087,7 @@ ENDMAP
 NAME: sprint_mu_crypt_lich
 TAGS: sprint_mu_crypt no_rotate no_hmirror no_vmirror
 MONS: ancient lich, skeletal warrior
-KFEAT: - = spear trap / needle trap / net trap / blade trap / bolt trap
+KFEAT: - = spear trap / dart trap / net trap / blade trap / bolt trap
 NSUBST: . = 10:- / *:.
 SUBST: : = .
 
@@ -1109,7 +1109,7 @@ NAME: sprint_mu_tomb_spiral
 TAGS: sprint_mu_tomb no_rotate no_hmirror no_vmirror
 MONS: patrolling greater mummy, patrolling mummy priest
 MONS: patrolling guardian mummy, patrolling sphinx
-KFEAT: - = needle trap / net trap / blade trap / bolt trap / spear trap / zot trap
+KFEAT: - = dart trap / net trap / blade trap / bolt trap / spear trap / zot trap
 SUBST: . = -----.................332
 KITEM: $ = golden rune of zot
 KITEM: ? = scroll of acquirement ident:all q:5

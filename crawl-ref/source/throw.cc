@@ -299,7 +299,7 @@ vector<string> fire_target_behaviour::get_monster_desc(const monster_info& mi)
 
                 string verb = brand == SPMSL_FRENZY ? "frenzy" : "blind";
 
-                string chance_string = immune ? "immune to needles" :
+                string chance_string = immune ? "immune to darts" :
                                        make_stringf("chance to %s on hit: %d%%",
                                                     verb.c_str(), chance);
                 descs.emplace_back(chance_string);
