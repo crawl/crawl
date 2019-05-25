@@ -12,6 +12,7 @@ module "crawl"
 #include "mon-util.h"
 #include "stringutil.h"
 #include "wiz-fsim.h"
+#include "wiz-item.h"
 
 #ifdef WIZARD
 
@@ -39,10 +40,12 @@ LUAFN(wiz_quick_fsim)
     PLUARET(number, fdata.player.av_eff_dam);
 }
 
+LUAWRAP(wiz_identify_all_items, wizard_identify_all_items())
+
 static const struct luaL_reg wiz_dlib[] =
 {
 { "quick_fsim", wiz_quick_fsim },
-
+{ "identify_all_items", wiz_identify_all_items},
 { nullptr, nullptr }
 };
 

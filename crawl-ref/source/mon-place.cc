@@ -264,7 +264,7 @@ static void _apply_ood(level_id &place)
         if (fuzz)
         {
             place.depth += fuzz;
-            dprf(DIAG_MONPLACE, "Monster level fuzz: %d (old: %s, new: %s)",
+            dprf("Monster level fuzz: %d (old: %s, new: %s)",
                  fuzz, old_place.describe().c_str(), place.describe().c_str());
         }
     }
@@ -646,6 +646,7 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
     mg.cls = resolve_monster_type(mg.cls, mg.base_type, mg.proximity,
                                   &mg.pos, mg.map_mask,
                                   &place, &want_band, allow_ood);
+    // TODO: it doesn't seem that this check can ever come out to be true??
     bool chose_ood_monster = place.absdepth() > mg.place.absdepth() + 5;
     if (want_band)
         mg.flags |= MG_PERMIT_BANDS;
@@ -736,6 +737,9 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
 
     if (mg.props.exists(MAP_KEY))
         mon->set_originating_map(mg.props[MAP_KEY].get_string());
+
+    if (chose_ood_monster)
+        mon->props[MON_OOD_KEY].get_bool() = true;
 
     if (mg.needs_patrol_point()
         || (mon->type == MONS_ALLIGATOR

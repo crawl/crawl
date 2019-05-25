@@ -124,6 +124,8 @@ void replace_boris();
 // Active monster band may influence gear generation on band followers.
 extern band_type active_monster_band;
 
+#define MON_OOD_KEY "mons_is_ood"
+
 #if TAG_MAJOR_VERSION == 34
 #define VAULT_MON_TYPES_KEY   "vault_mon_types"
 #define VAULT_MON_BASES_KEY   "vault_mon_bases"

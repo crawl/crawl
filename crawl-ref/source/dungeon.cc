@@ -4705,6 +4705,8 @@ monster* dgn_place_monster(mons_spec &mspec, coord_def where,
 
     if (!mspec.place.is_valid())
         mspec.place = level_id::current();
+    bool chose_ood = false;
+    const int starting_depth = mspec.place.depth;
 
     if (type == RANDOM_SUPER_OOD || type == RANDOM_MODERATE_OOD)
     {
@@ -4742,7 +4744,12 @@ monster* dgn_place_monster(mons_spec &mspec, coord_def where,
         if (mons_class_is_zombified(mspec.monbase))
             type = pick_local_zombifiable_monster(mspec.place, mspec.monbase, coord_def());
         else
-            type = pick_random_monster(mspec.place, mspec.monbase);
+        {
+            level_id place = mspec.place;
+            type = pick_random_monster(mspec.place, mspec.monbase, &place);
+            if (place.depth > starting_depth + 5)
+                chose_ood = true;
+        }
         if (!type)
             type = RANDOM_MONSTER;
     }
@@ -4829,6 +4836,12 @@ monster* dgn_place_monster(mons_spec &mspec, coord_def where,
         mons->spells = mspec.spells[random2(mspec.spells.size())];
         mons->props[CUSTOM_SPELLS_KEY] = true;
     }
+
+    // this prop is mainly for the seed explorer.
+    // not a great or complete measure of monster danger: the builder can roll
+    // on the low side of the ood range, and vaults don't get this set.
+    if (chose_ood)
+        mons->props[MON_OOD_KEY].get_bool() = true;
 
     if (!mspec.items.empty())
         _dgn_give_mon_spec_items(mspec, mons, type);
