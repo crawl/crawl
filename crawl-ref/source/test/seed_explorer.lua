@@ -68,6 +68,7 @@ function collapse_dups(l)
 end
 
 function fancy_join(l, indent, width, sep, initial_indent)
+    -- TODO: reflow around spaces?
     if #l == 0 then
         return ""
     end
@@ -78,7 +79,7 @@ function fancy_join(l, indent, width, sep, initial_indent)
         if (i ~= #l) then
             full_s = full_s .. sep
         end
-        if #cur_line + #full_s > width then
+        if #cur_line + #full_s > width and i ~= 1 then
             lines[#lines + 1] = cur_line
             cur_line = string.rep(" ", indent)
         end
@@ -231,7 +232,11 @@ function make_highlight(h, key, name, to_show, hide_empty)
     if not h[key] or not to_show[key] then
         return ""
     end
-    s = fancy_join(collapse_dups(h[key]), #name, 80, ", ")
+    local l = h[key]
+    if key ~= "vaults" then
+        l = collapse_dups(l)
+    end
+    s = fancy_join(l, #name, 80, ", ")
     if (#s == 0 and hide_empty) then
         return ""
     end
@@ -250,7 +255,7 @@ function catalog_current_place(lvl, to_show, hide_empty)
     h_l[#h_l+1] = make_highlight(highlights, "items",    "    Items: ", to_show, hide_empty)
     h_l = util.filter(function (a) return #a > 0 end, h_l)
     if #h_l > 0 or not hide_empty then
-        crawl.stderr(lvl .. ":")
+        crawl.stderr(lvl .. " highlights:")
         for _, h in ipairs(h_l) do
             crawl.stderr(h)
         end
