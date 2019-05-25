@@ -279,7 +279,7 @@ spret cast_summon_ice_beast(int pow, god_type god, bool fail)
 
 spret cast_monstrous_menagerie(actor* caster, int pow, god_type god, bool fail)
 {
-    if (otr_stop_summoning_prompt())
+    if (caster->is_player() && otr_stop_summoning_prompt())
         return spret::abort;
 
     fail_check();
