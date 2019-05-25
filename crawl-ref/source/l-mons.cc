@@ -9,6 +9,7 @@
 #include "cluautil.h"
 #include "database.h"
 #include "dlua.h"
+#include "items.h"
 #include "libutil.h"
 #include "mon-act.h"
 #include "mon-behv.h"
@@ -206,6 +207,23 @@ MDEF(muse)
         PLUARET(string, _monuse_to_str(me->gmon_use));
     return 0;
 }
+
+static int l_mons_get_inventory(lua_State *ls)
+{
+    monster* mons = clua_get_lightuserdata<monster>(ls, lua_upvalueindex(1));
+    lua_newtable(ls);
+    int index = 0;
+    for (mon_inv_iterator ii(*mons); ii; ++ii)
+    {
+        if (ii->defined())
+        {
+            clua_push_item(ls, &*ii);
+            lua_rawseti(ls, -2, ++index);
+        }
+    }
+    return 1;
+}
+MDEFN(inventory, get_inventory)
 
 static int l_mons_do_dismiss(lua_State *ls)
 {
@@ -521,6 +539,7 @@ static MonsAccessor mons_attrs[] =
     { "add_ench",        l_mons_add_ench        },
     { "del_ench",        l_mons_del_ench        },
     { "you_can_see",     l_mons_you_can_see     },
+    { "get_inventory",   l_mons_inventory       },
 
     { "speak",           l_mons_speak           }
 };
