@@ -1696,15 +1696,6 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
             return true;
         }
 
-        if (get_weapon_brand(item) == SPWPN_VAMPIRISM
-            && you.undead_state() == US_ALIVE
-            && !you_foodless()
-            // Don't prompt if you aren't wielding it and you can't.
-            && (you.hunger_state >= HS_FULL || _is_wielded(item)))
-        {
-            return true;
-        }
-
         if (is_artefact(item) && artefact_property(item, ARTP_CONTAM))
         {
             if (_is_wielded(item) && you_worship(GOD_ZIN))
