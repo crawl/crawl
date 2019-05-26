@@ -113,7 +113,7 @@ CFOTHERS := -pipe $(EXTERNAL_FLAGS)
 # is not recommended to do this unless you are building with contrib lua.
 # On any 64bit  builds where the arch supports it, (at least) sse2 is implied.
 ifdef FORCE_SSE
-CFOTHERS += -mfpmath=sse -msse2
+CFOTHERS += -mfpmath=sse -msse2 -mavx2 -maes
 endif
 
 CFWARN := 

@@ -192,6 +192,7 @@ potion.o \
 prompt.o \
 quiver.o \
 randbook.o \
+randen.o \
 random.o \
 random-var.o \
 ranged-attack.o \
