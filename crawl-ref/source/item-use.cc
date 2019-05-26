@@ -381,21 +381,6 @@ bool can_wield(const item_def *weapon, bool say_reason,
         else
             return false;
     }
-    else if (!ignore_temporary_disability
-             && you.hunger_state < HS_FULL
-             && get_weapon_brand(*weapon) == SPWPN_VAMPIRISM
-             && you.undead_state() == US_ALIVE
-             && !you_foodless()
-             && (item_type_known(*weapon) || !only_known))
-    {
-        if (say_reason)
-        {
-            mpr("This weapon is vampiric, and you must be Full or above to equip it.");
-            id_brand = true;
-        }
-        else
-            return false;
-    }
     if (id_brand)
     {
         auto wwpn = const_cast<item_def*>(weapon);
