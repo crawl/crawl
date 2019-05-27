@@ -13,6 +13,7 @@
 #include "l-defs.h"
 #include "libutil.h" // map_find
 #include "mon-book.h"
+#include "mon-pick.h"
 #include "spl-util.h"
 #include "stringutil.h"
 #include "transform.h"
@@ -336,6 +337,33 @@ LUAFN(moninf_get_holiness)
     else
         PLUARET(string, holiness_description(mi->holi).c_str());
 }
+
+/*** Get the monster's average depth of (random) generation in the current branch
+ * Returns -1 if the monster is not generated in this branch. Does not handle
+ * fish or zombies.
+ * @treturn number
+ * @function avg_local_depth
+ */
+LUAFN(moninf_get_avg_local_depth)
+{
+    MONINF(ls, 1, mi);
+    PLUARET(number, monster_pop_depth_avg(you.where_are_you, mi->type));
+}
+
+/*** Get the monster's probability of randomly generating on the current floor
+ * This can be used to estimate difficulty, but keep in mind that it is highly
+ * dependent on the branch's generation table.
+ * Returns -1 if the monster is not generated in this branch. Does not handle
+ * fish or zombies.
+ * @treturn number
+ * @function avg_local_prob
+ */
+LUAFN(moninf_get_avg_local_prob)
+{
+    MONINF(ls, 1, mi);
+    PLUARET(number, monster_probability(level_id::current(), mi->type));
+}
+
 
 // const char* here would save a tiny bit of memory, but every map
 // for an unique pair of types costs 35KB of code. We have
@@ -705,6 +733,8 @@ static const struct luaL_reg moninf_lib[] =
     MIREG(x_pos),
     MIREG(y_pos),
     MIREG(pos),
+    MIREG(avg_local_depth),
+    MIREG(avg_local_prob),
 
     { nullptr, nullptr }
 };

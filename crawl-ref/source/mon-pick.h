@@ -12,8 +12,9 @@ typedef random_pick_entry<monster_type> pop_entry;
 typedef bool (*mon_pick_vetoer)(monster_type);
 typedef bool (*mon_pick_pos_vetoer)(monster_type, coord_def);
 
-int mons_rarity(monster_type mcls, branch_type branch);
-int mons_depth(monster_type mcls, branch_type branch);
+bool monster_in_population(branch_type branch, monster_type m, bool check_noncore=true);
+int monster_probability(level_id place, monster_type m);
+int monster_pop_depth_avg(branch_type branch, monster_type m);
 
 monster_type pick_monster(level_id place, mon_pick_vetoer veto = nullptr);
 monster_type pick_monster_from(const pop_entry *fpop, int depth,
