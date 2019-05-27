@@ -166,19 +166,69 @@ function mons_ignore_boring(mons)
 end
 
 local mons_notable = mons_ignore_boring
+--local mons_notable = function (m) return false end
+
+function mons_always_native(m, mi)
+    return (mi:is_unique()
+            or m.type_name == "player ghost"
+            or mi:is_firewood())
+end
+
+function rare_ood(mi)
+    local depth = mi:avg_local_depth()
+    -- TODO: really, probability can't be interpreted without some sense of what
+    -- the overall distribution for the branch is, so this is fairly heuristic
+    local prob = mi:avg_local_prob()
+    local ood_threshold = math.max(2, dgn.br_depth() / 3)
+    return depth > you.depth() + ood_threshold and prob < 2
+end
+
+function feat_in_set(s)
+    return function (f) if s[f] then return f else return nil end end
+end
+
+--mons_feat_filter = feat_in_set(util.set({ "OOD" }))
+mons_feat_filter = nil
 
 function describe_mons(mons)
+    local mi = mons.get_info()
+    -- TODO: weird distribution of labor between mons and moninfo, can this be
+    -- cleaned up?
     -- TODO: does it make sense to use the same item notability function here?
     local feats = util.map(function (i) return i.name() end,
                     util.filter(item_notable, mons.get_inventory()))
+    local force_notable = false
+    if mons_feat_filter then
+        feats = util.map(mons_feat_filter, feats) -- TODO don't brute force this
+    end
+    if mons.type_name == "dancing weapon" and #feats > 0 then
+        -- don't repeat the dancing weapon's item, but if the item_notable check
+        -- has deemed the item notable, make sure to show it.
+        feats = { }
+        force_notable = true
+    end
+
     -- may or may not be useful -- OOD is an indicator of builder choices, not
     -- intrinsic monster quality, and it is possible for monsters to be chosen
     -- as OOD that are within range, e.g. you can sometimes get the same monster
     -- generating as OOD and not OOD.
     -- TODO: maybe worth rethinking what counts as OOD? might be something like,
     -- average spawn depth for monster in branch is greater than depth + 5.
-    if mons.has_prop("mons_is_ood") then
+    -- if mons.has_prop("mons_is_ood") then
+    --     feats[#feats + 1] = "builder OOD"
+    -- end
+    if rare_ood(mi) then
         feats[#feats + 1] = "OOD"
+    end
+    if not mons.in_local_population and not mons_always_native(mons, mi) then
+        -- this is a different sense of "native" than used internally to crawl,
+        -- in that it includes anything that would normally generate in a
+        -- branch. The internal sense is just supposed to be about which
+        -- monsters "live" in a particular branch, which is covered as well.
+        feats[#feats + 1] = "non-native"
+    end
+    if mons_feat_filter then
+        feats = util.map(mons_feat_filter, feats)
     end
     local feat_string = ""
     if #feats > 0 then
@@ -192,7 +242,7 @@ function describe_mons(mons)
     else
         name_string = mons.name
     end
-    if (mons_notable(mons) or #feats > 0) then
+    if (force_notable or mons_notable(mons) or #feats > 0) then
         return name_string .. feat_string
     else
         return nil
@@ -294,6 +344,12 @@ function seed_arts(seed)
     item_notable = ignore_boring
 end
 
+function seed_mons(seed)
+    seed_used = debug.reset_rng(seed)
+    crawl.stderr("Monster catalog for seed " .. seed .. ":")
+    local run1 = catalog_dungeon(generation_order, util.set{ "monsters" })
+end
+
 function seed_full_catalog(seed)
     seed_used = debug.reset_rng(seed)
     crawl.stderr("Catalog for seed " .. seed .. ":")
@@ -302,6 +358,7 @@ end
 
 function catalog_seeds(seeds, cat_fun)
     for _, i in ipairs(seeds) do
+        if _ > 1 then crawl.stderr("") end
         cat_fun(i)
     end
 end

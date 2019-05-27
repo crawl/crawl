@@ -184,6 +184,45 @@ const pop_entry* zombie_population(branch_type br)
     return population_zombie[br].pop;
 }
 
+bool monster_in_population(branch_type branch, monster_type m, bool check_noncore)
+{
+    for (const pop_entry *pop = population[branch].pop; pop->value; pop++)
+        if (pop->value == m)
+            return true;
+    if (check_noncore)
+    {
+        for (const pop_entry *pop = population_water[branch].pop; pop->value; pop++)
+            if (pop->value == m)
+                return true;
+        for (const pop_entry *pop = population_lava[branch].pop; pop->value; pop++)
+            if (pop->value == m)
+                return true;
+        for (const pop_entry *pop = population_zombie[branch].pop; pop->value; pop++)
+            if (pop->value == m)
+                return true;
+    }
+    return false;
+}
+
+int monster_probability(level_id place, monster_type m)
+{
+    // TODO: does not check fish, zombies etc...
+    if (!monster_in_population(place.branch, m, false))
+        return -1;
+    monster_picker picker = monster_picker();
+    return picker.probability_at(m, population[place.branch].pop, place.depth);
+}
+
+int monster_pop_depth_avg(branch_type branch, monster_type m)
+{
+    for (const pop_entry *pop = population[branch].pop; pop->value; pop++)
+        if (pop->value == m)
+            return max(0, (pop->minr + pop->maxr) / 2);
+    // negative values *are* sometimes used in the data, but the above max will
+    // prevent them from ever being naturally returned as an average.
+    return -1;
+}
+
 #if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_TESTS)
 static bool _not_skeletonable(monster_type mt)
 {

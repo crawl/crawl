@@ -33,6 +33,7 @@ class random_picker
 public:
     virtual ~random_picker();
     T pick(const random_pick_entry<T> *weights, int level, T none);
+    int probability_at(T entry, const random_pick_entry<T> *weights, int level);
     int rarity_at(const random_pick_entry<T> *pop,
                   int depth);
     virtual bool veto(T val) { return false; }
@@ -79,6 +80,40 @@ T random_picker<T, max>::pick(const random_pick_entry<T> *weights, int level,
 
     die("random_pick roll out of range");
 }
+
+template <typename T, int max>
+int random_picker<T, max>::probability_at(T entry,
+                    const random_pick_entry<T> *weights, int level)
+{
+    struct { T value; int rarity; } valid[max];
+    int nvalid = 0;
+    int totalrar = 0;
+    int entry_rarity = 0;
+
+    for (const random_pick_entry<T> *pop = weights; pop->rarity; pop++)
+    {
+        if (level < pop->minr || level > pop->maxr)
+            continue;
+
+        if (veto(pop->value))
+            continue;
+
+        int rar = rarity_at(pop, level);
+        ASSERTM(rar > 0, "Rarity %d: %d at level %d", rar, pop->value, level);
+
+        valid[nvalid].value = pop->value;
+        valid[nvalid].rarity = rar;
+        if (entry == pop->value)
+            entry_rarity = rar;
+        totalrar += rar;
+        nvalid++;
+    }
+
+    if (totalrar == 0)
+        return 0;
+    return entry_rarity * 100 / totalrar;
+}
+
 
 template <typename T, int max>
 int random_picker<T, max>::rarity_at(const random_pick_entry<T> *pop, int depth)
