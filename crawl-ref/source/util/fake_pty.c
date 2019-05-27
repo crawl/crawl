@@ -21,6 +21,15 @@ static void sigalrm(int signum)
     kill(crawl, SIGTERM);
 }
 
+static void kill_crawl(int signum)
+{
+    // I can't figure out any other signal than this that works. SIGTERM
+    // prints a crash log, which is not what I'm going for. SIGHUP works
+    // normally, but just seems to freeze a crawl process run from fake_pty
+    // for some reason...
+    kill(crawl, SIGKILL);
+}
+
 static void slurp_output()
 {
     struct pollfd pfd;
@@ -82,6 +91,14 @@ int main(int argc, char * const *argv)
         return 1;
 
     default:
+    {
+        struct sigaction sa;
+        sa.sa_handler = kill_crawl;
+        sigemptyset(&sa.sa_mask);
+        sigaction(SIGINT, &sa, NULL);
+        sigaction(SIGTERM, &sa, NULL);
+
+        /* Handle error */;
         close(slave);
         slurp_output();
         if (waitpid(crawl, &ret, 0) != crawl)
@@ -93,5 +110,6 @@ int main(int argc, char * const *argv)
         // Neither exited nor signaled?  Did the process eat mushrooms meant
         // fo the mother-in-law or what?
         return 1;
+    }
     }
 }
