@@ -85,8 +85,6 @@ template <typename T, int max>
 int random_picker<T, max>::probability_at(T entry,
                     const random_pick_entry<T> *weights, int level)
 {
-    struct { T value; int rarity; } valid[max];
-    int nvalid = 0;
     int totalrar = 0;
     int entry_rarity = 0;
 
@@ -101,12 +99,9 @@ int random_picker<T, max>::probability_at(T entry,
         int rar = rarity_at(pop, level);
         ASSERTM(rar > 0, "Rarity %d: %d at level %d", rar, pop->value, level);
 
-        valid[nvalid].value = pop->value;
-        valid[nvalid].rarity = rar;
         if (entry == pop->value)
             entry_rarity = rar;
         totalrar += rar;
-        nvalid++;
     }
 
     if (totalrar == 0)
