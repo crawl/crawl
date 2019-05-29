@@ -98,11 +98,11 @@ function tomb_1_centre_setup(e)
 end
 
 --[[
-Setup Tomb:1 hall stairs. Vaults should place an P glyph for the hallway entry
+Setup Tomb:1 hall stairs. Vaults should place a P glyph for the hallway entry
 destination, a Q glyph for the first hall exit (near P), and an R glyph for the
 second hall exit (to the second set of rooms on Tomb:2). Any '.' glyphs have a
 small chance of placing a '3' guardian or an appropriate trap type. About 7 '3'
-and about 6 traps on-average.
+and about 6 traps on average.
 ]]
 function tomb_1_stairs_setup(e)
   e.lua_marker("P", hatch_dest_name("tomb1_hall_entry"))
@@ -469,7 +469,7 @@ SUBVAULT: B : tomb_1_hall_stairs
 MONS:     greater mummy / nothing
 MONS:     sphinx / nothing
 MONS:     obsidian statue / orange crystal statue
-SHUFFLE:  ([{
+NSUBST:   ( = 1:( / *:.
 # Set up decorative statues.
 : if crawl.coinflip() then
 SUBST:    I = I:900 5, N = N:900 5
@@ -494,7 +494,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxx(.............................[..............................{xxxxxxxxx
+xxxxxxxxx(.............................(..............................(xxxxxxxxx
 xxxxxxxxx..............................................................xxxxxxxxx
 xxxxxxxxx..............................................................xxxxxxxxx
 xxxxxxxxx..............................................................xxxxxxxxx
