@@ -3538,8 +3538,6 @@ w:50
 
 @The_monster@ says, "Don't you get tired of all these old geezers telling you what to do?"
 
-@The_monster@ says, "Heaven on Earth? Sounds overrated."
-
 @The_monster@ says, "No way as a way? Sounds like nonsense."
 %%%%
 No God Donald
