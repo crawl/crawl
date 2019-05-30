@@ -1648,10 +1648,12 @@ void monster::apply_enchantment(const mon_enchant &me)
             maybe_bloodify_square(base_position);
             add_ench(ENCH_SEVERED);
 
-            // Severed tentacles immediately become "hostile" to everyone (or insane)
+            // Severed tentacles immediately become "hostile" to everyone
+            // (or insane)
             attitude = ATT_NEUTRAL;
             mons_att_changed(this);
-            behaviour_event(this, ME_ALERT);
+            if (!crawl_state.game_is_arena())
+                behaviour_event(this, ME_ALERT);
         }
     }
     break;
