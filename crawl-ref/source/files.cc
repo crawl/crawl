@@ -1462,6 +1462,7 @@ static const vector<branch_type> branch_generation_order =
     BRANCH_COCYTUS,
     BRANCH_DIS,
     BRANCH_GEHENNA,
+    BRANCH_PANDEMONIUM,
     NUM_BRANCHES,
 };
 
@@ -1501,17 +1502,18 @@ bool pregen_dungeon(const level_id &stopping_point)
     {
         // TODO: why is dungeon invalid? it's not set up properly in
         // `initialise_branch_depths` for some reason. The vestibule is invalid
-        // because its depth isn't set until the player actually enters a portal.
+        // because its depth isn't set until the player actually enters a
+        // portal, similarly for other portal branches.
         if (br < NUM_BRANCHES &&
             (brentry[br].is_valid()
-             || br == BRANCH_DUNGEON || br == BRANCH_VESTIBULE))
+             || br == BRANCH_DUNGEON || br == BRANCH_VESTIBULE
+             || !is_connected_branch(br)))
         {
             for (int i = 1; i <= branches[br].numlevels; i++)
             {
                 level_id new_level = level_id(br, i);
                 if (you.save->has_chunk(new_level.describe()))
                     continue;
-
                 to_generate.push_back(new_level);
 
                 if (br == stopping_point.branch
@@ -1528,7 +1530,10 @@ bool pregen_dungeon(const level_id &stopping_point)
     }
 
     if (to_generate.size() == 0)
+    {
+        dprf("levelgen: No valid levels to generate.");
         return false;
+    }
     else if (to_generate.size() == 1)
         return generate_level(to_generate[0]); // no popup for this case
     else
