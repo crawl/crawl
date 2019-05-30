@@ -88,15 +88,23 @@ local function make_tagged_room(options,chosen)
   -- Temporarily prevent map getting mirrored / rotated during resolution because it'll seriously
   -- screw with our attempts to understand and position the vault later; and hardwire transparency because lack of it can fail a whole layout
   -- TODO: Store these tags on the room first so we can actually support them down the line ...
-  dgn.tags(mapdef, "no_vmirror no_hmirror no_rotate transparent");
+  local old_tags = dgn.tags(mapdef)
+  dgn.tags(mapdef, "no_vmirror no_hmirror no_rotate transparent")
   -- Resolve the map so we can find its width / height
   local map, vplace = dgn.resolve_map(mapdef,false)
   local room,room_width,room_height
 
     -- If we can't find a map then we're probably not going to find one
-  if map == nil then return nil end
+  if map == nil then
+    dgn.tags(mapdef, nil)
+    dgn.tags(mapdef, old_tags)
+    return nil
+  end
   -- Allow map to be flipped and rotated again, otherwise we'll struggle later when we want to rotate it into the correct orientation
   dgn.tags_remove(map, "no_vmirror no_hmirror no_rotate")
+  -- restore the original tags to mapdef, since this state is persistent
+  dgn.tags(mapdef, nil)
+  dgn.tags(mapdef, old_tags .. " transparent")
 
   local room_width,room_height = dgn.mapsize(map)
   local veto = false
