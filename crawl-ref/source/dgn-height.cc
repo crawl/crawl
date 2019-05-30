@@ -146,8 +146,10 @@ coord_def dgn_island_plan::pick_island_spot()
 void dgn_island_plan::build_island()
 {
     const coord_def c = pick_island_spot();
-    dgn_island_centred_at(c, resolve_range(n_island_centre_delta_points),
-                          resolve_range(island_centre_radius_range),
+    const int npoints = resolve_range(n_island_centre_delta_points);
+    const int radius = resolve_range(island_centre_radius_range);
+    dgn_island_centred_at(c, npoints,
+                          radius,
                           island_centre_point_height_increment,
                           level_border_depth,
                           x_chance_in_y(atoll_roll, 100));
@@ -161,9 +163,11 @@ void dgn_island_plan::build_island()
             dgn_random_point_from(c, addition_offset, level_border_depth);
         if (!offsetC.origin())
         {
+            const int extra_npoints = resolve_range(n_island_aux_delta_points);
+            const int extra_radius = resolve_range(island_aux_radius_range);
             dgn_island_centred_at(
-                offsetC, resolve_range(n_island_aux_delta_points),
-                resolve_range(island_aux_radius_range),
+                offsetC, extra_npoints,
+                extra_radius,
                 island_aux_point_height_increment,
                 level_border_depth,
                 x_chance_in_y(atoll_roll, 100));
