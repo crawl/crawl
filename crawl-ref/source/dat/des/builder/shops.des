@@ -709,7 +709,7 @@ local kstr =
 local i = 0
 while i < itemCount do
     local itm = items[crawl.random2(#items) + 1]
-    if not (chosen[itm] or you.unrands(itm)) then
+    if not (chosen[itm]) then
         i = i + 1
         chosen[itm] = true
         kstr = kstr .. itm
