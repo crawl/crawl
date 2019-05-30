@@ -5746,6 +5746,7 @@ static void _stock_shop_item(int j, shop_type shop_type_,
  */
 void place_spec_shop(const coord_def& where, shop_spec &spec, int shop_level)
 {
+    rng::subgenerator shop_rng; // isolate shop rolls from levelgen
     no_notes nx;
 
     shop_struct& shop = env.shop[where];
