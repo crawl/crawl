@@ -3177,10 +3177,11 @@ void read_scroll(item_def& scroll)
             {
                 aborted = cast_selective_amnesia() == -1;
                 done = !aborted
-                           || alreadyknown
-                           || crawl_state.seen_hups
-                           || yesno("Really abort (and waste the scroll)?", false, 0);
-                cancel_scroll = aborted && !alreadyknown;
+                       || alreadyknown
+                       || crawl_state.seen_hups
+                       || yesno("Really abort (and waste the scroll)?",
+                                false, 0);
+                cancel_scroll = aborted && alreadyknown;
             } while (!done);
             if (aborted)
                 canned_msg(MSG_OK);
