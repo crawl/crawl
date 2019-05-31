@@ -69,6 +69,7 @@
 #include "prompt.h"
 #include "species.h"
 #include "spl-summoning.h"
+#include "stairs.h"
 #include "stash.h"  // for fedhas_rot_all_corpses
 #include "state.h"
 #include "stringutil.h"
@@ -1370,6 +1371,63 @@ static void _generic_level_reset()
     clear_travel_trail();
 }
 
+
+// used to resolve generation order for cases where a single level has multiple
+// portals.
+static const vector<branch_type> portal_generation_order =
+{
+    BRANCH_SEWER,
+    BRANCH_OSSUARY,
+    BRANCH_ICE_CAVE,
+    BRANCH_VOLCANO,
+    BRANCH_BAILEY,
+    BRANCH_GAUNTLET,
+#if TAG_MAJOR_VERSION == 34
+    BRANCH_LABYRINTH,
+#endif
+    BRANCH_BAZAAR,
+    // do not pregenerate trove
+    BRANCH_WIZLAB,
+    BRANCH_DESOLATION,
+};
+
+static void _update_portal_entrances()
+{
+    for (rectangle_iterator ri(0); ri; ++ri)
+    {
+        dungeon_feature_type feat = env.grid(*ri);
+        // excludes pan, hell, abyss.
+        if (feat_is_portal_entrance(feat))
+        {
+            level_id whither = stair_destination(feat, "", false);
+            if (whither.branch == BRANCH_ZIGGURAT || whither.branch == BRANCH_TROVE)
+                continue; // handle these differently
+            dprf("Setting up entry for %s.", whither.describe().c_str());
+            ASSERT(count(portal_generation_order.begin(),
+                         portal_generation_order.end(),
+                         whither.branch) == 1);
+            ASSERT(brentry[whither.branch] == level_id()); // violated by multiple portals
+            brentry[whither.branch] = level_id::current();
+        }
+    }
+}
+
+static bool _generate_portal_levels()
+{
+    // find any portals that branch off of the current level.
+    level_id here = level_id::current();
+    vector<level_id> to_build;
+    for (auto b : portal_generation_order)
+        if (brentry[b] == here)
+            for (int i = 1; i <= branches[b].numlevels; i++)
+                to_build.push_back(level_id(b, i));
+
+    bool generated = false;
+    for (auto lid : to_build)
+        generated = generate_level(lid) || generated;
+    return generated;
+}
+
 /**
  * Ensure that the level given by `l` is generated. This does not do much in
  * the way of cleanup, and the caller must ensure the player ends up somewhere
@@ -1427,9 +1485,22 @@ bool generate_level(const level_id &l)
     env.sanctuary_time = 0;
     env.markers.init_all(); // init first, activation happens when entering
     show_update_emphasis(); // Clear map knowledge stair emphasis in env.
+    _update_portal_entrances();
 
     // save the level and associated env state
     _save_level(level_id::current());
+
+    const string save_name = level_id::current().describe(); // should be same as level_name...
+
+    // generate levels for all portals that branch off from here
+    if (_generate_portal_levels())
+    {
+        // if portals were generated, we're currently elsewhere.
+        ASSERT(you.save->has_chunk(save_name));
+        dprf("Reloading new level '%s'.", save_name.c_str());
+        _restore_tagged_chunk(you.save, save_name, TAG_LEVEL,
+            "Level file is invalid.");
+    }
     return true;
 }
 
@@ -1463,6 +1534,7 @@ static const vector<branch_type> branch_generation_order =
     BRANCH_DIS,
     BRANCH_GEHENNA,
     BRANCH_PANDEMONIUM,
+    BRANCH_ZIGGURAT,
     NUM_BRANCHES,
 };
 
@@ -1500,6 +1572,15 @@ bool pregen_dungeon(const level_id &stopping_point)
     bool at_end = false;
     for (auto br : branch_generation_order)
     {
+        if (br == BRANCH_ZIGGURAT &&
+            stopping_point.branch == BRANCH_ZIGGURAT)
+        {
+            // zigs delete levels as they go, so don't catchup when we're
+            // already in one. Zigs are only handled this way so that everything
+            // else generates first.
+            to_generate.push_back(stopping_point);
+            continue;
+        }
         // TODO: why is dungeon invalid? it's not set up properly in
         // `initialise_branch_depths` for some reason. The vestibule is invalid
         // because its depth isn't set until the player actually enters a
