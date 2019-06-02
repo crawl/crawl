@@ -2082,9 +2082,12 @@ void drink(item_def* potion)
         return;
     }
 
-    string prompt = make_stringf("Really quaff the %s?",
-                                 potion->name(DESC_DBNAME).c_str());
-    if (alreadyknown && is_dangerous_item(*potion, true)
+    bool penance = god_hates_item(*potion);
+    string prompt = make_stringf("Really quaff the %s?%s",
+                                 potion->name(DESC_DBNAME).c_str(),
+                                 penance ? " This action would place"
+                                           " you under penance!" : "");
+    if (alreadyknown && (is_dangerous_item(*potion, true) || penance)
         && Options.bad_item_prompt
         && !yesno(prompt.c_str(), false, 'n'))
     {
