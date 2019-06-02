@@ -2,6 +2,10 @@
 -- out a few levels from some early seeds in detail, but fairly configurable.
 -- TODO: maybe move some of the core code out into dat/dlua?
 
+you.enter_wizard_mode() -- necessary so that magic mapping behaves correctly.
+                        -- this is implied by you.save = false, so it shouldn't
+                        -- affect other tests in actual test mode...
+
 -- to use a >32bit seed, you will need to use a string here. If you use a
 -- string, `fixed_seed` is maxed at 1.
 local starting_seed = 1   -- fixed seed to start with, number or string
@@ -135,6 +139,46 @@ function catalog_items()
             end
         end
         -- TODO: shops
+    end
+    return notable
+end
+
+------------------------------
+-- code for looking at features
+
+local hell_branches = util.set{ "Geh", "Coc", "Dis", "Tar" }
+
+function in_hell()
+    return hell_branches[you.branch()]
+end
+
+function feat_interesting(feat_name)
+    -- most features are pretty boring...
+    if string.find(feat_name, "altar_") == 1 then
+        return true
+    elseif string.find(feat_name, "enter_") == 1 then -- could be more selective
+        if in_hell() then
+            return feat_name ~= "enter_hell"
+        else
+            return true
+        end
+    elseif feat_name == "transporter" or string.find(feat_name, "runed_") then
+        return true
+    end
+    return false
+end
+
+function catalog_features()
+    -- TODO: this could be a lot more efficient in skipping things like walls
+    wiz.map_level() -- abyss will break this call...
+    local gxm, gym = dgn.max_bounds()
+    local notable = {}
+    for p in iter.rect_iterator(dgn.point(1,1), dgn.point(gxm-2, gym-2)) do
+        local feat = dgn.grid(p.x, p.y)
+        --crawl.stderr(dgn.feature_desc(feat))
+        if feat_interesting(dgn.feature_name(feat)) then
+            notable[#notable + 1] = dgn.feature_desc_at(p.x, p.y, "A")
+        end
     end
     return notable
 end
@@ -301,10 +345,12 @@ function catalog_current_place(lvl, to_show, hide_empty)
     highlights["vaults"] = catalog_vaults()
     highlights["items"] = catalog_items()
     highlights["monsters"] = catalog_monsters()
+    highlights["features"] = catalog_features()
     h_l = { }
     h_l[#h_l+1] = make_highlight(highlights, "vaults",   "   Vaults: ", to_show, hide_empty)
     h_l[#h_l+1] = make_highlight(highlights, "monsters", " Monsters: ", to_show, hide_empty)
     h_l[#h_l+1] = make_highlight(highlights, "items",    "    Items: ", to_show, hide_empty)
+    h_l[#h_l+1] = make_highlight(highlights, "features", " Features: ", to_show, hide_empty)
     h_l = util.filter(function (a) return #a > 0 end, h_l)
     if #h_l > 0 or not hide_empty then
         crawl.stderr(lvl .. " highlights:")
@@ -352,10 +398,16 @@ function seed_mons(seed)
     local run1 = catalog_dungeon(generation_order, util.set{ "monsters" })
 end
 
+function seed_feats(seed)
+    seed_used = debug.reset_rng(seed)
+    crawl.stderr("Dungeon feature catalog for seed " .. seed .. ":")
+    local run1 = catalog_dungeon(generation_order, util.set{ "features" })
+end
+
 function seed_full_catalog(seed)
     seed_used = debug.reset_rng(seed)
     crawl.stderr("Catalog for seed " .. seed .. ":")
-    local run1 = catalog_dungeon(generation_order, util.set{ "vaults", "items", "monsters" })
+    local run1 = catalog_dungeon(generation_order, util.set{ "vaults", "items", "features", "monsters" })
 end
 
 function catalog_seeds(seeds, cat_fun)
