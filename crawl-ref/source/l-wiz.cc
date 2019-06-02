@@ -11,6 +11,7 @@ module "crawl"
 #include "cluautil.h"
 #include "mon-util.h"
 #include "stringutil.h"
+#include "wiz-dgn.h"
 #include "wiz-fsim.h"
 #include "wiz-item.h"
 
@@ -42,10 +43,13 @@ LUAFN(wiz_quick_fsim)
 
 LUAWRAP(wiz_identify_all_items, wizard_identify_all_items())
 
+LUAWRAP(wiz_map_level, wizard_map_level())
+
 static const struct luaL_reg wiz_dlib[] =
 {
 { "quick_fsim", wiz_quick_fsim },
 { "identify_all_items", wiz_identify_all_items},
+{ "map_level", wiz_map_level},
 { nullptr, nullptr }
 };
 
