@@ -1678,7 +1678,8 @@ void monster::apply_enchantment(const mon_enchant &me)
 
             attitude = ATT_HOSTILE;
             mons_att_changed(this);
-            behaviour_event(this, ME_ALERT, &you);
+            if (!crawl_state.game_is_arena())
+                behaviour_event(this, ME_ALERT, &you);
         }
     }
     break;
