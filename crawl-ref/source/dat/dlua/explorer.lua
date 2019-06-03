@@ -341,23 +341,29 @@ function explorer.catalog_vaults()
     return second_split
 end
 
+function explorer.catalog_vaults_raw()
+    return { debug.vault_names() }
+end
+
 ------------------------------
 -- general code for building highlight descriptions
 
 -- could do this by having each category register itself...
-explorer.catalog_funs =     {vaults   = explorer.catalog_vaults,
-                             items    = explorer.catalog_items_setup,
-                             monsters = explorer.catalog_monsters_setup,
-                             features = explorer.catalog_features_setup}
+explorer.catalog_funs =     {vaults    = explorer.catalog_vaults,
+                             vaults_raw= explorer.catalog_vaults_raw,
+                             items     = explorer.catalog_items_setup,
+                             monsters  = explorer.catalog_monsters_setup,
+                             features  = explorer.catalog_features_setup}
 
-explorer.catalog_pos_funs = {items    = explorer.catalog_items,
-                             monsters = explorer.catalog_monsters,
-                             features = explorer.catalog_features}
+explorer.catalog_pos_funs = {items     = explorer.catalog_items,
+                             monsters  = explorer.catalog_monsters,
+                             features  = explorer.catalog_features}
 
-explorer.catalog_names =    {vaults   = "   Vaults: ",
-                             items    = "    Items: ",
-                             monsters = " Monsters: ",
-                             features = " Features: "}
+explorer.catalog_names =    {vaults    = "   Vaults: ",
+                             vaults_raw= "   Vaults: ",
+                             items     = "    Items: ",
+                             monsters  = " Monsters: ",
+                             features  = " Features: "}
 
 function explorer.make_highlight(h, key, hide_empty)
     if not h[key] then
@@ -376,9 +382,16 @@ function explorer.make_highlight(h, key, hide_empty)
 end
 
 function explorer.catalog_all_positions(cats, highlights)
+    funs = { }
     for _, c in ipairs(cats) do
-        if highlights[c] == nil then highlights[c] = { } end
+        if explorer.catalog_pos_funs[c] ~= nil then
+            if highlights[c] == nil then highlights[c] = { } end
+            funs[#funs + 1] = explorer.catalog_pos_funs[c]
+        end
     end
+    -- don't bother if there are no positional funs to run
+    if #funs == 0 then return end
+
     local gxm, gym = dgn.max_bounds()
     for p in iter.rect_iterator(dgn.point(1,1), dgn.point(gxm-2, gym-2)) do
         for _,c in ipairs(cats) do
