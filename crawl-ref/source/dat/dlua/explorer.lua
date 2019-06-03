@@ -135,22 +135,19 @@ end
 
 explorer.item_notable = explorer.item_ignore_boring
 
-function explorer.catalog_items()
+function explorer.catalog_items_setup()
     wiz.identify_all_items()
-    local gxm, gym = dgn.max_bounds()
-    local notable = {}
-    for p in iter.rect_iterator(dgn.point(1,1), dgn.point(gxm-2, gym-2)) do
-        local stack = dgn.items_at(p.x, p.y)
-        if #stack > 0 then
-            for i, item in ipairs(stack) do
-                if explorer.item_notable(item) then
-                    notable[#notable + 1] = item.name()
-                end
+end
+
+function explorer.catalog_items(pos, notable)
+    local stack = dgn.items_at(pos.x, pos.y)
+    if #stack > 0 then
+        for i, item in ipairs(stack) do
+            if explorer.item_notable(item) then
+                notable[#notable + 1] = item.name()
             end
         end
-        -- TODO: shops
     end
-    return notable
 end
 
 ------------------------------
@@ -178,23 +175,19 @@ function explorer.feat_interesting(feat_name)
     return false
 end
 
-function explorer.catalog_features()
+function explorer.catalog_features_setup()
     you.enter_wizard_mode() -- necessary so that magic mapping behaves
                             -- correctly. this is implied by you.save = false,
                             -- so it shouldn't affect other tests in actual
                             -- test mode...
-    -- TODO: this could be a lot more efficient in skipping things like walls
     wiz.map_level() -- abyss will break this call...
-    local gxm, gym = dgn.max_bounds()
-    local notable = {}
-    for p in iter.rect_iterator(dgn.point(1,1), dgn.point(gxm-2, gym-2)) do
-        local feat = dgn.grid(p.x, p.y)
-        --crawl.stderr(dgn.feature_desc(feat))
-        if explorer.feat_interesting(dgn.feature_name(feat)) then
-            notable[#notable + 1] = dgn.feature_desc_at(p.x, p.y, "A")
-        end
+end
+
+function explorer.catalog_features(pos, notable)
+    local feat = dgn.grid(pos.x, pos.y)
+    if explorer.feat_interesting(dgn.feature_name(feat)) then
+        notable[#notable + 1] = dgn.feature_desc_at(pos.x, pos.y, "A")
     end
-    return notable
 end
 
 ------------------------------
@@ -321,9 +314,15 @@ function explorer.get_all_monsters()
     return mons_list
 end
 
-function explorer.catalog_monsters()
+function explorer.catalog_monsters_setup()
     wiz.identify_all_items()
-    return util.map(explorer.describe_mons, explorer.get_all_monsters())
+end
+
+function explorer.catalog_monsters(pos, notable)
+    local mons = dgn.mons_at(pos.x, pos.y)
+    if mons then
+        notable[#notable + 1] = explorer.describe_mons(mons)
+    end
 end
 
 ------------------------------
@@ -345,15 +344,20 @@ end
 ------------------------------
 -- general code for building highlight descriptions
 
-explorer.catalog_funs = {vaults=explorer.catalog_vaults,
-                         items=explorer.catalog_items,
-                         monsters=explorer.catalog_monsters,
-                         features=explorer.catalog_features}
+-- could do this by having each category register itself...
+explorer.catalog_funs =     {vaults   = explorer.catalog_vaults,
+                             items    = explorer.catalog_items_setup,
+                             monsters = explorer.catalog_monsters_setup,
+                             features = explorer.catalog_features_setup}
 
-explorer.catalog_names = {vaults   = "   Vaults: ",
-                          items    = "    Items: ",
-                          monsters = " Monsters: ",
-                          features = " Features: "}
+explorer.catalog_pos_funs = {items    = explorer.catalog_items,
+                             monsters = explorer.catalog_monsters,
+                             features = explorer.catalog_features}
+
+explorer.catalog_names =    {vaults   = "   Vaults: ",
+                             items    = "    Items: ",
+                             monsters = " Monsters: ",
+                             features = " Features: "}
 
 function explorer.make_highlight(h, key, hide_empty)
     if not h[key] then
@@ -371,16 +375,36 @@ function explorer.make_highlight(h, key, hide_empty)
     return name .. s
 end
 
+function explorer.catalog_all_positions(cats, highlights)
+    for _, c in ipairs(cats) do
+        if highlights[c] == nil then highlights[c] = { } end
+    end
+    local gxm, gym = dgn.max_bounds()
+    for p in iter.rect_iterator(dgn.point(1,1), dgn.point(gxm-2, gym-2)) do
+        for _,c in ipairs(cats) do
+            if explorer.catalog_pos_funs[c] ~= nil then
+                explorer.catalog_pos_funs[c](p, highlights[c])
+            end
+        end
+    end
+    for _, c in ipairs(cats) do
+        if #highlights[c] == 0 then highlights[c] = nil end
+    end
+end
+
 function explorer.catalog_current_place(lvl, to_show, hide_empty)
     -- TODO: shop items
     highlights = {}
+    -- setup functions and anything that doesn't require looking at positions
     for _, cat in ipairs(to_show) do
-        if explorer.catalog_funs[cat] == nil then
-            crawl.stderr("Unknown seed explorer category '" .. cat .. "'!")
-        else
+        if explorer.catalog_funs[cat] ~= nil then
             highlights[cat] = explorer.catalog_funs[cat]()
         end
     end
+    -- explorer categories that collect information from map positions
+    explorer.catalog_all_positions(to_show, highlights)
+
+    -- output
     if not explorer.quiet then
         h_l = { }
         for _, cat in ipairs(to_show) do
