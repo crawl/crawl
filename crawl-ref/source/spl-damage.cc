@@ -30,6 +30,7 @@
 #include "invent.h"
 #include "item-name.h"
 #include "items.h"
+#include "los.h"
 #include "losglobal.h"
 #include "macro.h"
 #include "message.h"
@@ -225,6 +226,18 @@ spret cast_chain_spell(spell_type spell_cast, int pow,
             {
                 continue;
             }
+
+            // check for actors along the arc path
+            ray_def ray;
+            if (!find_ray(source, mi->pos(), ray, opc_solid))
+                continue;
+
+            while (ray.advance())
+                if (actor_at(ray.pos()))
+                    break;
+
+            if (ray.pos() != mi->pos())
+                continue;
 
             count++;
 
