@@ -457,7 +457,7 @@ function explorer.catalog_seed(seed, depth, cats, describe_cat)
         out(describe_cat(seed))
     else
         out("Catalog for seed " .. seed ..
-            " (categories " .. table.concat(cats, ", ") .. "):")
+            " (" .. table.concat(cats, ", ") .. "):")
     end
     return explorer.catalog_dungeon(depth, cats)
 end

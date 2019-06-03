@@ -1,6 +1,4 @@
--- tools for seeing what's in a seed. Currently packaged as a test that prints
--- out a few levels from some early seeds in detail, but fairly configurable.
--- TODO: maybe move some of the core code out into dat/dlua?
+-- test to exercise seed explorer: look at the first 5 levels of 5 seeds.
 
 crawl_require('dlua/explorer.lua')
 
