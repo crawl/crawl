@@ -1044,7 +1044,6 @@ easy_eat_chunks = false
         If this is set to true then when using the (e)at command, the
         game will automatically determine the oldest chunk that is safe
         to eat, and eat it without prompting.
-        You will always be prompted to eat harmful chunks.
 
 auto_eat_chunks = true
         Setting this option to true will allow you to automatically eat a chunk
