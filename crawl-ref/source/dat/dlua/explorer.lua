@@ -352,7 +352,7 @@ function explorer.reset_to_defaults()
     --explorer.mons_feat_filter = explorer.feat_in_set(util.set({ "OOD" }))
     explorer.mons_feat_filter = nil
     explorer.mons_notable = explorer.mons_ignore_boring
-    
+
     explorer.always_interesting_mons = util.set(explorer.dangerous_monsters)
     explorer.item_notable = explorer.item_ignore_boring
     explorer.feat_notable = explorer.feat_interesting
