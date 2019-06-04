@@ -71,8 +71,7 @@ user becomes unable to cast spells.
 %%%%
 Exsanguinate ability
 
-Remove all of your blood, transitioning to a bloodless state. Returning to life
-costs permanent hit points.
+Remove all of your blood, transitioning to a bloodless state.
 %%%%
 Revivify ability
 
