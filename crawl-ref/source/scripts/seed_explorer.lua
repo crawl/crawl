@@ -9,6 +9,8 @@ crawl_require('dlua/explorer.lua')
 --   util/fake_pty ./crawl -script seed_explorer.lua -seed 1 -cats monsters items -mon-items -artefacts
 -- look at D:1 for 10 random seeds:
 --   util/fake_pty ./crawl -script seed_explorer.lua -seed random -count 10 -depth 1
+-- find all artefacts in shops (and print all shop names):
+--   util/fake_pty ./crawl -script seed_explorer.lua -seed 1 -depth all -cats features items -shops -artefacts
 
 local basic_usage = [=[
 Usage: seed_explorer.lua -seed <seed> ([<seed> ...]|[-count <n>]) [-depth <depth>] [-cats <cat> [<cat ...]] [-artefacts] [-mon-items]
@@ -25,6 +27,7 @@ Usage: seed_explorer.lua -seed <seed> ([<seed> ...]|[-count <n>]) [-depth <depth
     Category-specific flags (ignored if category is not shown):
         -artefacts: show only artefact items (items, monsters).
         -mon-items: show only monsters with items (monsters).
+        -shops:     show only shops (items, features).
         -all-mons:  show all monsters (monsters).
         -all-items: show all items on ground (items).]]
 
@@ -130,6 +133,7 @@ end
 -- TODO: these are kind of ad hoc, maybe some kind of more general interface?
 local arts_only = (args["-artefacts"] ~= nil)
 local all_items = (args["-all-items"] ~= nil)
+local shops_only = (args["-shops"] ~= nil)
 if arts_only and all_items then
     usage_error("\n-artefacts and -all-items are not compatible.")
 end
@@ -142,6 +146,11 @@ end
 explorer.reset_to_defaults()
 if arts_only then explorer.item_notable = explorer.arts_only end
 if all_items then explorer.item_notable = function (x) return true end end
+if shops_only then -- TODO: generalize the technique here
+    local old_fun = explorer.item_notable
+    explorer.item_notable = function(i) return i.is_in_shop and old_fun(i) end
+    explorer.feat_notable = function(f) return f == "enter_shop" end
+end
 if mon_items_only then
     explorer.mons_notable = function (m) return false end
     explorer.mons_feat_filter = function (f)

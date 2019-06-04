@@ -146,6 +146,14 @@ function explorer.catalog_items(pos, notable)
             end
         end
     end
+    stack = dgn.shop_inventory_at(pos.x, pos.y)
+    if stack ~= nil and #stack > 0 then
+        for i, item in ipairs(stack) do
+            if explorer.item_notable(item[1]) then
+                notable[#notable + 1] = item[1].name() .. " (cost: " .. item[2] ..")"
+            end
+        end
+    end
 end
 
 ------------------------------
@@ -183,7 +191,7 @@ end
 
 function explorer.catalog_features(pos, notable)
     local feat = dgn.grid(pos.x, pos.y)
-    if explorer.feat_interesting(dgn.feature_name(feat)) then
+    if explorer.feat_notable(dgn.feature_name(feat)) then
         notable[#notable + 1] = dgn.feature_desc_at(pos.x, pos.y, "A")
     end
 end
@@ -365,6 +373,7 @@ function explorer.reset_to_defaults()
         "curse toe",
     }
     explorer.item_notable = explorer.item_ignore_boring
+    explorer.feat_notable = explorer.feat_interesting
 end
 
 function explorer.make_highlight(h, key, hide_empty)
