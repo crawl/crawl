@@ -2,6 +2,11 @@
 
 crawl_require('dlua/explorer.lua')
 
+-- This requires a debug build to run, as well as fake_pty, which may need to
+-- be built manually. It also needs a pty-based system, i.e. linux or mac.
+--   make debug    OR (this will be a lot faster):    make profile
+--   make util/fake_pty
+--
 -- examples.
 -- full catalog for a seed:
 --   util/fake_pty ./crawl -script seed_explorer.lua -seed 1
@@ -11,6 +16,10 @@ crawl_require('dlua/explorer.lua')
 --   util/fake_pty ./crawl -script seed_explorer.lua -seed random -count 10 -depth 1
 -- find all artefacts in shops (and print all shop names):
 --   util/fake_pty ./crawl -script seed_explorer.lua -seed 1 -depth all -cats features items -shops -artefacts
+--
+-- When running scripts with fake_pty, all output goes to stderr, so to
+-- redirect this to a file you will need to do something like:
+--   util/fake_pty ./crawl -script seed_explorer.lua -seed 1 > out.txt 2>&1
 
 local basic_usage = [=[
 Usage: seed_explorer.lua -seed <seed> ([<seed> ...]|[-count <n>]) [-depth <depth>] [-cats <cat> [<cat ...]] [-artefacts] [-mon-items]
