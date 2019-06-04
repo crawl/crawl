@@ -2536,7 +2536,7 @@ static const struct spell_desc spelldata[] =
     spschool::charms | spschool::translocation,
     spflag::selfench,
     2,
-    200,
+    50,
     -1, -1,
     2, 0,
     TILEG_SHROUD_OF_GOLUBRIA,
