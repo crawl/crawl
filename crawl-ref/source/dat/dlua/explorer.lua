@@ -133,8 +133,6 @@ function explorer.item_ignore_boring(item)
     return true
 end
 
-explorer.item_notable = explorer.item_ignore_boring
-
 function explorer.catalog_items_setup()
     wiz.identify_all_items()
 end
@@ -193,33 +191,12 @@ end
 ------------------------------
 -- code for looking at monsters
 
--- fairly subjective, some of these should probably be relative to depth
-explorer.always_interesting_mons = util.set{
-    "ancient lich",
-    "orb of fire",
-    "greater mummy",
-    "Hell Sentinel",
-    "Ice Fiend",
-    "Brimstone Fiend",
-    "Tzitzimitl",
-    "shard shrike",
-    "caustic shrike",
-    "iron giant",
-    "juggernaut",
-    "Killer Klown",
-    "Orb Guardian",
-    "curse toe",
-}
-
 function explorer.mons_ignore_boring(mons)
     return (mons.unique
             or explorer.always_interesting_mons[mons.name]
             or mons.type_name == "player ghost"
             or mons.type_name == "pandemonium lord")
 end
-
-explorer.mons_notable = explorer.mons_ignore_boring
---local mons_notable = function (m) return false end
 
 function explorer.mons_always_native(m, mi)
     return (mi:is_unique()
@@ -240,15 +217,12 @@ function explorer.feat_in_set(s)
     return function (f) if s[f] then return f else return nil end end
 end
 
---explorer.mons_feat_filter = explorer.feat_in_set(util.set({ "OOD" }))
-explorer.mons_feat_filter = nil
-
 function explorer.describe_mons(mons)
     local mi = mons.get_info()
     -- TODO: weird distribution of labor between mons and moninfo, can this be
     -- cleaned up?
     -- TODO: does it make sense to use the same item notability function here?
-    local feats = util.map(function (i) return i.name() end,
+    local feats = util.map(function (i) return "item:" .. i.name() end,
                     util.filter(explorer.item_notable, mons.get_inventory()))
     local force_notable = false
     if explorer.mons_feat_filter then
@@ -283,6 +257,10 @@ function explorer.describe_mons(mons)
     if explorer.mons_feat_filter then
         feats = util.map(explorer.mons_feat_filter, feats)
     end
+    -- the `item:` prefix is really only there for filtering purposes
+    feats = util.map(function (s)
+            return s:find("item:") == 1 and s:sub(6) or s
+        end, feats)
     local feat_string = ""
     if #feats > 0 then
         feat_string = " (" .. table.concat(feats, ", ") .. ")"
@@ -364,6 +342,30 @@ explorer.catalog_names =    {vaults    = "   Vaults: ",
                              items     = "    Items: ",
                              monsters  = " Monsters: ",
                              features  = " Features: "}
+
+function explorer.reset_to_defaults()
+    --explorer.mons_feat_filter = explorer.feat_in_set(util.set({ "OOD" }))
+    explorer.mons_feat_filter = nil
+    explorer.mons_notable = explorer.mons_ignore_boring
+    -- fairly subjective, some of these should probably be relative to depth
+    explorer.always_interesting_mons = util.set{
+        "ancient lich",
+        "orb of fire",
+        "greater mummy",
+        "Hell Sentinel",
+        "Ice Fiend",
+        "Brimstone Fiend",
+        "Tzitzimitl",
+        "shard shrike",
+        "caustic shrike",
+        "iron giant",
+        "juggernaut",
+        "Killer Klown",
+        "Orb Guardian",
+        "curse toe",
+    }
+    explorer.item_notable = explorer.item_ignore_boring
+end
 
 function explorer.make_highlight(h, key, hide_empty)
     if not h[key] then
@@ -463,7 +465,9 @@ function explorer.catalog_seed(seed, depth, cats, describe_cat)
 end
 
 explorer.available_categories = { "vaults", "items", "features", "monsters" }
-
+function explorer.is_category(c)
+    return util.set(explorer.available_categories)[c]
+end
 
 -- seeds is an array of seeds. If you pass numbers in with this, keep in mind
 -- that the max int limit is rather complicated and less than 64bits, because
@@ -481,8 +485,10 @@ function explorer.catalog_seeds(seeds, depth, cats, describe_cat)
 end
 
 function explorer.catalog_arts(seeds, depth)
-    explorer.item_notable = arts_only
+    explorer.item_notable = explorer.arts_only
     local run1 = explorer.catalog_dungeon(seeds, depth, { "items" },
         function(seed) out("Artefact catalog for seed " .. seed .. ":") end)
-    explorer.item_notable = ignore_boring
+    explorer.item_notable = explorer.ignore_boring
 end
+
+explorer.reset_to_defaults()
