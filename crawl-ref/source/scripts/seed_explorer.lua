@@ -2,10 +2,31 @@
 
 crawl_require('dlua/explorer.lua')
 
-local basic_usage = [[
-Usage: seed_explorer.lua -seed <seed> [<seed> ...] [-depth <depth>]
-    <seed>: either a number, or 'random'.
-    <depth>: either a number, or 'all'. Defaults to 'all'.]]
+-- examples.
+-- full catalog for a seed:
+--   util/fake_pty ./crawl -script seed_explorer.lua -seed 1
+-- find all artefacts in a seed:
+--   util/fake_pty ./crawl -script seed_explorer.lua -seed 1 -cats monsters items -mon-items -artefacts
+-- look at D:1 for 10 random seeds:
+--   util/fake_pty ./crawl -script seed_explorer.lua -seed random -count 10 -depth 1
+
+local basic_usage = [=[
+Usage: seed_explorer.lua -seed <seed> ([<seed> ...]|[-count <n>]) [-depth <depth>] [-cats <cat> [<cat ...]] [-artefacts] [-mon-items]
+    <seed>:  either a number, or 'random'. Random values are 32 bits only.
+    <n>:     a number of times to iterate from <seed>. If seed is a number, this
+             will count up; if it is 'random' it will choose n random seeds.
+             Note that this converts seed values to doubles in lua, so limits
+             the range of possible values to some degree.
+    <depth>: either a number, or 'all'. Defaults to 'all'.
+    <cat>:   a seed explorer category, drawn from:
+               {]=] ..
+        table.concat(explorer.available_categories, ", ") .. [[}
+             The '-cats' list defaults to all categories.
+    Category-specific flags (ignored if category is not shown):
+        -artefacts: show only artefact items (items, monsters).
+        -mon-items: show only monsters with items (monsters).
+        -all-mons:  show all monsters (monsters).
+        -all-items: show all items on ground (items).]]
 
 function parse_args(args, err_fun)
     accum_init = { }
@@ -44,11 +65,29 @@ local arg_list = crawl.script_args()
 local args_init, args = parse_args(arg_list, usage_error)
 
 if #arg_list == 0 or #args_init ~= 0 or args["-seed"] == nil or #(args["-seed"]) < 1 then
-    usage_error("No seeds supplied!")
+    usage_error("\nNo seed(s) supplied!")
 end
 
 -- let these be converted to numbers on the crawl side
 local seed_seq = args["-seed"]
+
+local count = 1
+if args["-count"] ~= nil then
+    count = tonumber(one_arg(args, "-count"))
+    if count == nil then usage_error("\nInvalid argument to -count") end
+end
+
+if count > 1 then
+    if seed_seq[1] == "random" then
+        for i = 2, count do seed_seq[#seed_seq+1] = "random" end
+    else
+        -- this has the caveats that come with forcing this to be a number...
+        local n = tonumber(seed_seq[1])
+        for i = n+1, n+count-1 do
+            seed_seq[#seed_seq+1] = i
+        end
+    end
+end
 
 math.randomseed(crawl.millis())
 for _, seed in ipairs(seed_seq) do
@@ -72,8 +111,44 @@ if args["-depth"] ~= nil then
     end
 end
 
+local categories = { }
+if args["-cats"] == nil then
+    categories = explorer.available_categories
+else
+    categories = args["-cats"]
+end
+
+categories = util.filter(explorer.is_category, categories)
+if #categories == 0 then
+    usage_error("\nNo valid categories specified!")
+end
+
 if max_depth == nil then
     max_depth = #explorer.generation_order
 end
 
-explorer.catalog_seeds(seed_seq, max_depth, explorer.available_categories)
+-- TODO: these are kind of ad hoc, maybe some kind of more general interface?
+local arts_only = (args["-artefacts"] ~= nil)
+local all_items = (args["-all-items"] ~= nil)
+if arts_only and all_items then
+    usage_error("\n-artefacts and -all-items are not compatible.")
+end
+local mon_items_only = (args["-mon-items"] ~= nil)
+local all_mons = (args["-all-mons"] ~= nil)
+if mon_items_only and all_mons then
+    usage_error("\n-mon-items and -all-mons are not compatible.")
+end
+
+explorer.reset_to_defaults()
+if arts_only then explorer.item_notable = explorer.arts_only end
+if all_items then explorer.item_notable = function (x) return true end end
+if mon_items_only then
+    explorer.mons_notable = function (m) return false end
+    explorer.mons_feat_filter = function (f)
+            return f:find("item:") == 1 and f or nil
+        end
+end
+if all_mons then explorer.mons_notable = function (x) return true end end
+
+explorer.catalog_seeds(seed_seq, max_depth, categories)
+explorer.reset_to_defaults()
