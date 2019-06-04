@@ -1600,6 +1600,9 @@ void wizard_identify_all_items()
     for (auto &item : mitm)
         if (item.defined())
             set_ident_flags(item, ISFLAG_IDENT_MASK);
+    for (auto& entry : env.shop)
+        for (auto &item : entry.second.stock)
+            set_ident_flags(item, ISFLAG_IDENT_MASK);
     for (int ii = 0; ii < NUM_OBJECT_CLASSES; ii++)
     {
         object_class_type i = (object_class_type)ii;
@@ -1615,6 +1618,9 @@ void wizard_unidentify_all_items()
     wizard_unidentify_pack();
     for (auto &item : mitm)
         if (item.defined())
+            _forget_item(item);
+    for (auto& entry : env.shop)
+        for (auto &item : entry.second.stock)
             _forget_item(item);
     for (int ii = 0; ii < NUM_OBJECT_CLASSES; ii++)
     {

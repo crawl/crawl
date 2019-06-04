@@ -1467,16 +1467,13 @@ static int l_item_get_items_at(lua_State *ls)
     return 1;
 }
 
-/*** See what a shop has for sale.
- * Only works when standing at a shop.
- * @treturn array|nil An array of @{Item} objects or nil if not on a shop
- * @function shop_inventory
- */
-static int l_item_shop_inventory(lua_State *ls)
+int lua_push_shop_items_at(lua_State *ls, const coord_def &s)
 {
-    shop_struct *shop = shop_at(you.pos());
+    // also used in l-dgnit.cc
+    shop_struct *shop = shop_at(s);
     if (!shop)
         return 0;
+    shopping_list.refresh(); // prevent crash if called during tests
 
     lua_newtable(ls);
 
@@ -1495,6 +1492,16 @@ static int l_item_shop_inventory(lua_State *ls)
     }
 
     return 1;
+}
+
+/*** See what a shop has for sale.
+ * Only works when standing at a shop.
+ * @treturn array|nil An array of @{Item} objects or nil if not on a shop
+ * @function shop_inventory
+ */
+static int l_item_shop_inventory(lua_State *ls)
+{
+    return lua_push_shop_items_at(ls, you.pos());
 }
 
 /*** Look at the shopping list.

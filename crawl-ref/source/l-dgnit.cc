@@ -67,6 +67,13 @@ static int dgn_items_at(lua_State *ls)
     return 1;
 }
 
+static int dgn_shop_inventory_at(lua_State *ls)
+{
+    // TODO: this could probably be done in a way that didn't need to be dlua.
+    COORDS(s, 1, 2);
+    return lua_push_shop_items_at(ls, s);
+}
+
 static int _dgn_item_spec(lua_State *ls)
 {
     const item_list ilist = _lua_get_ilist(ls, 1);
@@ -248,6 +255,7 @@ const struct luaL_reg dgn_item_dlib[] =
 {
     { "item_from_index", dgn_item_from_index },
     { "items_at", dgn_items_at },
+    { "shop_inventory_at", dgn_shop_inventory_at },
     { "create_item", dgn_create_item },
     { "item_property_remove", dgn_item_property_remove },
     { "item_property_set", dgn_item_property_set },
