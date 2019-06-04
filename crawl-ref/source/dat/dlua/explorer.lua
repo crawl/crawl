@@ -1,10 +1,6 @@
--- tools for seeing what's in a seed.
-
--- -- to use a >32bit seed, you will need to use a string here. If you use a
--- -- string, `fixed_seed` is maxed at 1.
--- local starting_seed = 1   -- fixed seed to start with, number or string
--- local fixed_seeds = 5     -- how many fixed seeds to run? Can be 0.
--- local rand_seeds = 0      -- how many random seeds to run
+-- tools for seeing what's in a seed. For example use cases, see both
+-- crawl-ref/source/scripts/seed_explorer.lua, and
+-- crawl-ref/source/tests/seed_explorer.lua.
 
 util.namespace('explorer')
 
@@ -33,8 +29,8 @@ explorer.generation_order = {
                 "Dis:1", "Dis:2", "Dis:3", "Dis:4", "Dis:5", "Dis:6", "Dis:7",
             }
 
+-- a useful depth preset
 explorer.zot_depth = 0
-
 for i, l in ipairs(explorer.generation_order) do
     if l == "Zot:5" then
         explorer.zot_depth = i
@@ -43,10 +39,6 @@ for i, l in ipairs(explorer.generation_order) do
 end
 
 assert(explorer.zot_depth ~= 0)
-
--- -- this variable determines how deep in the generation order to go
--- --local max_depth = #generation_order
--- local max_depth = 5
 
 -- TODO: generalize, allow changing?
 local out = function(s) if not explorer.quiet then crawl.stderr(s) end end
@@ -243,15 +235,14 @@ function explorer.describe_mons(mons)
         force_notable = true
     end
 
-    -- may or may not be useful -- OOD is an indicator of builder choices, not
-    -- intrinsic monster quality, and it is possible for monsters to be chosen
-    -- as OOD that are within range, e.g. you can sometimes get the same monster
-    -- generating as OOD and not OOD.
-    -- TODO: maybe worth rethinking what counts as OOD? might be something like,
-    -- average spawn depth for monster in branch is greater than depth + 5.
+    -- may or may not ever be useful -- builder OOD is an indicator of builder
+    -- choices, not intrinsic monster quality, and it is possible for monsters
+    -- to be chosen as OOD that are within range, e.g. you can sometimes get
+    -- the same monster generating as OOD and not OOD at the same depth.
     -- if mons.has_prop("mons_is_ood") then
     --     feats[#feats + 1] = "builder OOD"
     -- end
+
     if explorer.rare_ood(mi) then
         feats[#feats + 1] = "OOD"
     end
@@ -265,7 +256,7 @@ function explorer.describe_mons(mons)
     if explorer.mons_feat_filter then
         feats = util.map(explorer.mons_feat_filter, feats)
     end
-    -- the `item:` prefix is really only there for filtering purposes
+    -- the `item:` prefix is really only there for filtering purposes, remove it
     feats = util.map(function (s)
             return s:find("item:") == 1 and s:sub(6) or s
         end, feats)
@@ -286,18 +277,6 @@ function explorer.describe_mons(mons)
     else
         return nil
     end
-end
-
-function explorer.get_all_monsters()
-    local gxm, gym = dgn.max_bounds()
-    local mons_list = {}
-    for p in iter.rect_iterator(dgn.point(1,1), dgn.point(gxm-2, gym-2)) do
-        local mons = dgn.mons_at(p.x, p.y)
-        if mons then
-            mons_list[#mons_list + 1] = mons
-        end
-    end
-    return mons_list
 end
 
 function explorer.catalog_monsters_setup()
@@ -351,12 +330,8 @@ explorer.catalog_names =    {vaults    = "   Vaults: ",
                              monsters  = " Monsters: ",
                              features  = " Features: "}
 
-function explorer.reset_to_defaults()
-    --explorer.mons_feat_filter = explorer.feat_in_set(util.set({ "OOD" }))
-    explorer.mons_feat_filter = nil
-    explorer.mons_notable = explorer.mons_ignore_boring
-    -- fairly subjective, some of these should probably be relative to depth
-    explorer.always_interesting_mons = util.set{
+-- fairly subjective, some of these should probably be relative to depth
+explorer.dangerous_monsters = {
         "ancient lich",
         "orb of fire",
         "greater mummy",
@@ -372,6 +347,13 @@ function explorer.reset_to_defaults()
         "Orb Guardian",
         "curse toe",
     }
+
+function explorer.reset_to_defaults()
+    --explorer.mons_feat_filter = explorer.feat_in_set(util.set({ "OOD" }))
+    explorer.mons_feat_filter = nil
+    explorer.mons_notable = explorer.mons_ignore_boring
+    
+    explorer.always_interesting_mons = util.set(explorer.dangerous_monsters)
     explorer.item_notable = explorer.item_ignore_boring
     explorer.feat_notable = explorer.feat_interesting
 end
@@ -417,7 +399,6 @@ function explorer.catalog_all_positions(cats, highlights)
 end
 
 function explorer.catalog_current_place(lvl, to_show, hide_empty)
-    -- TODO: shop items
     highlights = {}
     -- setup functions and anything that doesn't require looking at positions
     for _, cat in ipairs(to_show) do
@@ -473,14 +454,14 @@ function explorer.catalog_seed(seed, depth, cats, describe_cat)
     return explorer.catalog_dungeon(depth, cats)
 end
 
-explorer.available_categories = { "vaults", "items", "features", "monsters" }
+explorer.available_categories = { "vaults", "vaults_raw", "items", "features", "monsters" }
 function explorer.is_category(c)
     return util.set(explorer.available_categories)[c]
 end
 
--- seeds is an array of seeds. If you pass numbers in with this, keep in mind
+-- `seeds` is an array of seeds. If you pass numbers in with this, keep in mind
 -- that the max int limit is rather complicated and less than 64bits, because
--- these are numbers behind the scenes. This code will accept strings of digits
+-- these are doubles behind the scenes. This code will accept strings of digits
 -- instead, which is always safe.
 function explorer.catalog_seeds(seeds, depth, cats, describe_cat)
     if depth == nil then depth = #explorer.generation_order end
