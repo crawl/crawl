@@ -44,9 +44,9 @@ function explorer.branch_to_gendepth(b)
     if dgn.br_exists(b) then
         local depth = dgn.br_depth(b)
         if depth == 1 then
-            return b
+            return explorer.level_to_gendepth(b)
         else
-            return b .. ":" .. dgn.br_depth(b)
+            return explorer.level_to_gendepth(b .. ":" .. depth)
         end
     end
     return nil

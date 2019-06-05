@@ -41,7 +41,7 @@ Usage: seed_explorer.lua -seed <seed> ([<seed> ...]|[-count <n>]) ([-depth <dept
               depth relative to the level generation order. Defaults to `all`.
     <lvl>:    same format as <depth>, but will only show levels in the list.
               Note that this doesn't affect which levels are generated, so
-              `-show Zot:5` will take as long to run as `-depth Zot:5`. 
+              `-show Zot:5` will take as long to run as `-depth Zot:5`.
     <cat>:    a seed explorer category, drawn from:
                {]=] ..
         table.concat(explorer.available_categories, ", ") .. [[}
