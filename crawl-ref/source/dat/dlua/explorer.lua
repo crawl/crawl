@@ -1,6 +1,7 @@
 -- tools for seeing what's in a seed. For example use cases, see both
 -- crawl-ref/source/scripts/seed_explorer.lua, and
 -- crawl-ref/source/tests/seed_explorer.lua.
+-- TODO: LDoc this
 
 util.namespace('explorer')
 
@@ -29,15 +30,42 @@ explorer.generation_order = {
                 "Dis:1", "Dis:2", "Dis:3", "Dis:4", "Dis:5", "Dis:6", "Dis:7",
             }
 
--- a useful depth preset
-explorer.zot_depth = 0
-for i, l in ipairs(explorer.generation_order) do
-    if l == "Zot:5" then
-        explorer.zot_depth = i
-        break
+function explorer.level_to_gendepth(lvl)
+    -- TODO could parse l, handle things like Hell:1
+    for i, l in ipairs(explorer.generation_order) do
+        if lvl:lower() == l:lower() then
+            return i
+        end
     end
+    return nil
 end
 
+function explorer.branch_to_gendepth(b)
+    if dgn.br_exists(b) then
+        local depth = dgn.br_depth(b)
+        if depth == 1 then
+            return b
+        else
+            return b .. ":" .. dgn.br_depth(b)
+        end
+    end
+    return nil
+end
+
+function explorer.to_gendepth(depth)
+    if type(depth) == "number" then return depth end
+    if depth == "all" then return #explorer.generation_order end
+    local num = string.match(depth, "^%d+$")
+    if num ~= nil then return tonumber(depth) end
+    local result = explorer.level_to_gendepth(depth)
+    if result == nil then
+        result = explorer.branch_to_gendepth(depth)
+    end
+    return result
+end
+
+-- a useful depth preset
+explorer.zot_depth = explorer.to_gendepth("Zot")
 assert(explorer.zot_depth ~= 0)
 
 -- TODO: generalize, allow changing?
@@ -427,7 +455,7 @@ function explorer.catalog_current_place(lvl, to_show, hide_empty)
 end
 
 -- a bit redundant with mapstat?
-function explorer.catalog_dungeon(max_depth, to_show)
+function explorer.catalog_dungeon(max_depth, cats_to_show, show_level_fun)
     local result = {}
     dgn.reset_level()
     debug.flush_map_memory()
@@ -437,13 +465,18 @@ function explorer.catalog_dungeon(max_depth, to_show)
         if (dgn.br_exists(string.match(lvl, "[^:]+"))) then
             debug.goto_place(lvl)
             debug.generate_level()
-            result[lvl] = explorer.catalog_current_place(lvl, to_show, true)
+            local old_quiet = explorer.quiet
+            if show_level_fun ~= nil and not show_level_fun(i) then
+                explorer.quiet = true
+            end
+            result[lvl] = explorer.catalog_current_place(lvl, cats_to_show, true)
+            explorer.quiet = old_quiet
         end
     end
     return result
 end
 
-function explorer.catalog_seed(seed, depth, cats, describe_cat)
+function explorer.catalog_seed(seed, depth, cats, show_level_fun, describe_cat)
     seed_used = debug.reset_rng(seed)
     if describe_cat then
         out(describe_cat(seed))
@@ -451,29 +484,32 @@ function explorer.catalog_seed(seed, depth, cats, describe_cat)
         out("Catalog for seed " .. seed ..
             " (" .. table.concat(cats, ", ") .. "):")
     end
-    return explorer.catalog_dungeon(depth, cats)
+    return explorer.catalog_dungeon(depth, cats, show_level_fun)
 end
 
-explorer.available_categories = { "vaults", "vaults_raw", "items", "features", "monsters" }
+explorer.internal_categories = { "vaults_raw" }
+explorer.available_categories = { "vaults", "items", "features", "monsters" }
 function explorer.is_category(c)
-    return util.set(explorer.available_categories)[c]
+    return util.set(explorer.available_categories)[c] or
+           util.set(explorer.internal_categories)[c]
 end
 
 -- `seeds` is an array of seeds. If you pass numbers in with this, keep in mind
 -- that the max int limit is rather complicated and less than 64bits, because
 -- these are doubles behind the scenes. This code will accept strings of digits
 -- instead, which is always safe.
-function explorer.catalog_seeds(seeds, depth, cats, describe_cat)
+function explorer.catalog_seeds(seeds, depth, cats, show_level_fun, describe_cat)
     if depth == nil then depth = #explorer.generation_order end
     if cats == nil then
         cats = util.set(explorer.available_cats)
     end
     for _, i in ipairs(seeds) do
         if _ > 1 then out("") end -- generates a newline for stderr output
-        explorer.catalog_seed(i, depth, cats, describe_cat)
+        explorer.catalog_seed(i, depth, cats, show_level_fun, describe_cat)
     end
 end
 
+-- example custom catalog function
 function explorer.catalog_arts(seeds, depth)
     explorer.item_notable = explorer.arts_only
     local run1 = explorer.catalog_dungeon(seeds, depth, { "items" },
