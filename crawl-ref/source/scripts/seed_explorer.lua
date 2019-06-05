@@ -10,26 +10,39 @@ crawl_require('dlua/explorer.lua')
 -- examples.
 -- full catalog for a seed:
 --   util/fake_pty ./crawl -script seed_explorer.lua -seed 1
+--
 -- find all artefacts in a seed:
 --   util/fake_pty ./crawl -script seed_explorer.lua -seed 1 -cats monsters items -mon-items -artefacts
+--
 -- look at D:1 for 10 random seeds:
 --   util/fake_pty ./crawl -script seed_explorer.lua -seed random -count 10 -depth 1
+--
 -- find all artefacts in shops (and print all shop names):
 --   util/fake_pty ./crawl -script seed_explorer.lua -seed 1 -depth all -cats features items -shops -artefacts
+--
+-- show temple altars for 10 random seeds:
+--   util/fake_pty ./crawl -script seed_explorer.lua -seed random -count 10 -show Temple -cats features
+-- (This will need to generate all of D before getting to the temple, so is
+-- somewhat slow.)
 --
 -- When running scripts with fake_pty, all output goes to stderr, so to
 -- redirect this to a file you will need to do something like:
 --   util/fake_pty ./crawl -script seed_explorer.lua -seed 1 > out.txt 2>&1
 
 local basic_usage = [=[
-Usage: seed_explorer.lua -seed <seed> ([<seed> ...]|[-count <n>]) [-depth <depth>] [-cats <cat> [<cat ...]] [-artefacts] [-mon-items]
-    <seed>:  either a number, or 'random'. Random values are 32 bits only.
-    <n>:     a number of times to iterate from <seed>. If seed is a number, this
-             will count up; if it is 'random' it will choose n random seeds.
-             Note that this converts seed values to doubles in lua, so limits
-             the range of possible values to some degree.
-    <depth>: either a number, or 'all'. Defaults to 'all'.
-    <cat>:   a seed explorer category, drawn from:
+Usage: seed_explorer.lua -seed <seed> ([<seed> ...]|[-count <n>]) ([-depth <depth>]|[-show <lvl> [<lvl> ...]]) [-cats <cat> [<cat ...]] [-artefacts] [-mon-items]
+    <seed>:   either a number, or 'random'. Random values are 32 bits only.
+    <n>:      a number of times to iterate from <seed>. If seed is a number, this
+              will count up; if it is 'random' it will choose n random seeds.
+              Note that this converts seed values to doubles in lua, so limits
+              the range of possible values to some degree.
+    <depth>:  A level or branch name in short form, e.g. `Zot:5`, `Hell`, or
+              `D`, a number, or 'all'. If this is a number, then this value is
+              depth relative to the level generation order. Defaults to `all`.
+    <lvl>:    same format as <depth>, but will only show levels in the list.
+              Note that this doesn't affect which levels are generated, so
+              `-show Zot:5` will take as long to run as `-depth Zot:5`. 
+    <cat>:    a seed explorer category, drawn from:
                {]=] ..
         table.concat(explorer.available_categories, ", ") .. [[}
              The '-cats' list defaults to all categories.
@@ -112,14 +125,9 @@ end
 
 local max_depth = nil
 if args["-depth"] ~= nil then
-    max_depth = one_arg(args, "-depth")
-    if max_depth == "all" then
-        max_depth = nil
-    else
-        max_depth = tonumber(max_depth)
-        if max_depth == nil then
-            usage_error("\n<depth> must be a number or 'all'!")
-        end
+    max_depth = explorer.to_gendepth(one_arg(args, "-depth"))
+    if max_depth == nil then
+        usage_error("\n<depth> must be level name/branch, a number, or 'all'!")
     end
 end
 
@@ -133,6 +141,19 @@ end
 categories = util.filter(explorer.is_category, categories)
 if #categories == 0 then
     usage_error("\nNo valid categories specified!")
+end
+
+local show_level_fun = nil
+
+if args["-show"] ~= nil then
+    local levels_to_show = util.map(explorer.to_gendepth, args["-show"])
+    if #levels_to_show == 0 then
+        usage_error("\nNo valid levels or depths provided with -show!")
+    end
+    table.sort(levels_to_show)
+    if max_depth == nil then max_depth = levels_to_show[#levels_to_show] end
+    local levels_set = util.set(levels_to_show)
+    show_level_fun = function (l) return levels_set[l] end
 end
 
 if max_depth == nil then
@@ -168,5 +189,5 @@ if mon_items_only then
 end
 if all_mons then explorer.mons_notable = function (x) return true end end
 
-explorer.catalog_seeds(seed_seq, max_depth, categories)
+explorer.catalog_seeds(seed_seq, max_depth, categories, show_level_fun)
 explorer.reset_to_defaults()
