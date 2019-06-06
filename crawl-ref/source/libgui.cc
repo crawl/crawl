@@ -24,6 +24,16 @@
 #include "viewgeom.h"
 #include "windowmanager.h"
 
+void enter_headless_mode()
+{
+    crawl_state.tiles_disabled = true;
+}
+
+bool in_headless_mode()
+{
+    return crawl_state.tiles_disabled;
+}
+
 void set_mouse_enabled(bool enabled)
 {
     crawl_state.mouse_enabled = enabled;
@@ -133,14 +143,23 @@ int wherey()
     return TextRegion::wherey();
 }
 
+#define HEADLESS_LINES 24
+#define HEADLESS_COLS 80
+
 int get_number_of_lines()
 {
-    return tiles.get_number_of_lines();
+    if (crawl_state.tiles_disabled)
+        return HEADLESS_LINES;
+    else
+        return tiles.get_number_of_lines();
 }
 
 int get_number_of_cols()
 {
-    return tiles.get_number_of_cols();
+    if (crawl_state.tiles_disabled)
+        return HEADLESS_COLS;
+    else
+        return tiles.get_number_of_cols();
 }
 
 int num_to_lines(int num)
@@ -205,11 +224,13 @@ bool kbhit()
 
 void console_startup()
 {
-    tiles.resize();
+    if (!crawl_state.tiles_disabled)
+        tiles.resize();
 }
 
 void console_shutdown()
 {
-    tiles.shutdown();
+    if (!crawl_state.tiles_disabled)
+        tiles.shutdown();
 }
 #endif // #ifdef USE_TILE_LOCAL

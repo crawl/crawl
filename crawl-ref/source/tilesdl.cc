@@ -499,6 +499,8 @@ void TilesFramework::load_dungeon(const coord_def &cen)
 
 bool TilesFramework::update_dpi()
 {
+    if (crawl_state.tiles_disabled)
+        return false;
     if (wm->init_hidpi())
     {
         reconfigure_fonts();

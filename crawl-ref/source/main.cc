@@ -485,6 +485,17 @@ static void _show_commandline_options_help()
     string help;
 # define puts(x) (help += x, help += '\n')
 #endif
+    if (in_headless_mode())
+    {
+        // TODO: derive exact list from initfile.cc
+#ifdef USE_TILE_LOCAL
+        puts("Headless crawl tiles build: requires -objstat or -mapstat.");
+#else
+        puts("Headless crawl: requires -test, -script, -objstat, -builddb, or other similar parameter.");
+        puts("A single argument will be interpreted as a script name.");
+#endif
+        puts("");
+    }
 
     puts("Command line options:");
     puts("  -help                 prints this list of options");

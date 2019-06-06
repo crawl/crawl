@@ -308,5 +308,6 @@ private:
     static mouse_mode ms_current_mode;
 };
 
+void handle_hangup(int);
 void init_signals();
 void release_cli_signals();

@@ -125,6 +125,9 @@ static COLOURS FG_COL = LIGHTGREY;
 /** @brief The current background @em colour. */
 static COLOURS BG_COL = BLACK;
 
+void enter_headless_mode() { }
+bool in_headless_mode() { return false; }
+
 void writeChar(char32_t c)
 {
     if (c == '\t')
