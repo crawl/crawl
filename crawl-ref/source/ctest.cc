@@ -150,6 +150,9 @@ static bool _has_test(const string& test)
 
 static void _run_test(const string &name, void (*func)())
 {
+    // halt immediately if there are HUPs. TODO: interrupt tests?
+    if (crawl_state.seen_hups)
+        end(0);
     if (crawl_state.test_list)
         return (void)printf("%s\n", name.c_str());
 

@@ -651,7 +651,7 @@ void text_popup(const string& text, const wchar_t *caption)
 /* [ds] This SIGHUP handling is primitive and far from safe, but it
  * should be better than nothing. Feel free to get rigorous on this.
  */
-static void handle_hangup(int)
+void handle_hangup(int)
 {
     if (crawl_state.seen_hups++)
         return;
