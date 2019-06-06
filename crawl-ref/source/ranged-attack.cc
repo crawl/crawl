@@ -340,14 +340,6 @@ int ranged_attack::weapon_damage()
         return 0;
 
     int dam = property(*projectile, PWPN_DAMAGE);
-    if (projectile->base_type == OBJ_MISSILES
-        && get_ammo_brand(*projectile) == SPMSL_SILVER)
-    {
-        if (dam)
-            dam = div_rand_round(dam * 13, 10);
-        else
-            dam += 2;
-    }
     if (using_weapon())
         dam += property(*weapon, PWPN_DAMAGE);
     else if (attacker->is_player())
@@ -692,8 +684,9 @@ bool ranged_attack::apply_missile_brand()
         }
         break;
     case SPMSL_SILVER:
-        special_damage = silver_damages_victim(defender, damage_done,
-                                               special_damage_message);
+        special_damage = max(1 + random2(damage_done) / 3,
+                             silver_damages_victim(defender, damage_done,
+                                                   special_damage_message);
         break;
     case SPMSL_BLINDING:
         if (!dart_check(brand))
