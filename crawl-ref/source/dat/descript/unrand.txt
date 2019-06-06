@@ -593,6 +593,10 @@ lajatang of Order
 A silver-bladed lajatang, once bestowed upon a favoured worshipper of Zin. It
 became the most prized weapon of the many priests of Zin. After their order was
 destroyed, it fell into disuse and vanished from history.
+
+It deals increased damage compared to a normal lajatang and substantially
+increased damage to chaotic and magically transformed beings. It also inflicts
+extra damage against mutated beings, according to how mutated they are.
 %%%%
 great mace "Firestarter"
 
