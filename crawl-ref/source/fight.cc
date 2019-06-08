@@ -619,10 +619,11 @@ bool wielded_weapon_check(item_def *weapon)
         return true;
     }
 
-    // Don't pester the player if they're using UC or if they don't have any
-    // melee weapons yet.
+    // Don't pester the player if they're using UC, in treeform,
+    // or if they don't have any melee weapons yet.
     if (!weapon
         && (you.skill(SK_UNARMED_COMBAT) > 0
+            || you.form == transformation::tree
             || !any_of(you.inv.begin(), you.inv.end(),
                        [](item_def &it)
                        { return is_melee_weapon(it) && can_wield(&it); })))
