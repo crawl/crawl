@@ -1192,6 +1192,10 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
     case SPELL_SPECTRAL_WEAPON:
         if (you.species == SP_FELID)
             return "this spell is useless without hands.";
+        if(you.attribute[ATTR_SPECTRAL_WEAPON])
+        {
+            return "you already have your spectral weapon prepared";
+        }
         break;
 
     case SPELL_LEDAS_LIQUEFACTION:

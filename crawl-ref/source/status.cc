@@ -721,6 +721,28 @@ bool fill_status_info(int status, status_info& inf)
         break;
     }
 
+    case STATUS_SPECTRAL_WEAPON:
+    {
+        if(you.attribute[ATTR_SPECTRAL_WEAPON])
+        {
+            const item_def* weapon = you.weapon();
+            inf.light_text = "Weap";
+            if (!weapon_can_be_spectral(weapon))
+            {
+			    inf.short_text   = "unsuitable spectral weapon";
+                inf.long_text   = "can't summon spectral weapon";
+                inf.light_colour = DARKGREY;
+            }
+            else
+            {
+                inf.short_text   = "spectral weapon";
+                inf.long_text   = "ready to summon spectral weapon";
+                inf.light_colour = WHITE;
+            }
+        }
+        break;
+	}
+
     case STATUS_ORB:
     {
         if (player_has_orb())

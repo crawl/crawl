@@ -1644,6 +1644,8 @@ static spret _handle_buff_spells(spell_type spell, int powc, bolt& beam, god_typ
             return cast_ring_of_flames(powc, false);
         case SPELL_INFUSION:
             return cast_infusion(powc, false);
+        case SPELL_SPECTRAL_WEAPON:
+            return cast_spectral_weapon(&you, powc, god, false);
         default:
 		    return spret::none;
     }
@@ -1836,9 +1838,6 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
 
     case SPELL_SPELLFORGED_SERVITOR:
         return cast_spellforged_servitor(powc, god, fail);
-
-    case SPELL_SPECTRAL_WEAPON:
-        return cast_spectral_weapon(&you, powc, god, fail);
 
     case SPELL_BATTLESPHERE:
         return cast_battlesphere(&you, powc, god, fail);

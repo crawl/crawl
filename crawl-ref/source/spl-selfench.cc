@@ -23,6 +23,7 @@
 #include "prompt.h"
 #include "religion.h"
 #include "showsymb.h"
+#include "spl-summoning.h"
 #include "spl-transloc.h"
 #include "spl-util.h"
 #include "stringutil.h"
@@ -276,18 +277,57 @@ int calculate_frozen_mp()
     {
 		frozen_mp += spell_mp_freeze(SPELL_INFUSION);
 	}
+    if (you.attribute[ATTR_SPECTRAL_WEAPON] > 0)
+    {
+		frozen_mp += spell_mp_freeze(SPELL_SPECTRAL_WEAPON);
+	}
     return frozen_mp;
 }
 
 void dispel_permanent_buffs()
 {
-	you.attribute[ATTR_SPELL_REGEN] = 0;
-    you.attribute[ATTR_SONG_OF_SLAYING] = 0;
-    you.attribute[ATTR_DARKNESS] = 0;
-    you.attribute[ATTR_DEFLECT_MISSILES] = 0;
-    you.attribute[ATTR_FIRE_SHIELD] = 0;
-    you.attribute[ATTR_INFUSION] = 0;
+    bool dispelled = false;
+    if(you.attribute[ATTR_SPELL_REGEN])
+    {
+	    you.attribute[ATTR_SPELL_REGEN] = 0;
+        dispelled = true;
+    }
+    if(you.attribute[ATTR_SONG_OF_SLAYING])
+    {
+        you.attribute[ATTR_SONG_OF_SLAYING] = 0;
+        dispelled = true;
+    }
+    if(you.attribute[ATTR_DARKNESS])
+    {
+        you.attribute[ATTR_DARKNESS] = 0;
+        update_vision_range();
+        dispelled = true;
+    }
+    if(you.attribute[ATTR_DEFLECT_MISSILES])
+    {
+        you.attribute[ATTR_DEFLECT_MISSILES] = 0;
+        dispelled = true;
+    }
+    if(you.attribute[ATTR_FIRE_SHIELD])
+    {
+        you.attribute[ATTR_FIRE_SHIELD] = 0;
+        dispelled = true;
+    }
+    if(you.attribute[ATTR_INFUSION])
+    {
+        you.attribute[ATTR_INFUSION] = 0;
+        dispelled = true;
+    }
+    if(you.attribute[ATTR_SPECTRAL_WEAPON])
+    {
+        monster* old_weap = find_spectral_weapon(&you);
+        if(old_weap)
+            end_spectral_weapon(old_weap, false);
+        you.attribute[ATTR_SPECTRAL_WEAPON] = 0;
+        dispelled = true;
+    }
     you.redraw_armour_class = true;
     unfreeze_mp();
-	mpr("Your buffs unravel");
+    if (dispelled)
+        mpr("Your buffs unravel.");
 }

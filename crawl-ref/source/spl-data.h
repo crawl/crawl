@@ -2902,7 +2902,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_SPECTRAL_WEAPON, "Spectral Weapon",
     spschool::hexes | spschool::charms,
-    spflag::selfench | spflag::utility | spflag::no_ghost,
+    spflag::selfench | spflag::utility | spflag::no_ghost | spflag::permabuff,
     3,
     100,
     -1, -1,
