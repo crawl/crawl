@@ -2867,7 +2867,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_INFUSION, "Infusion",
     spschool::charms,
-    spflag::utility,
+    spflag::utility | spflag::permabuff,
     1,
     25,
     -1, -1,

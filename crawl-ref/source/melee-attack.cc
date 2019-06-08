@@ -429,12 +429,12 @@ bool melee_attack::handle_phase_hit()
         return false;
     }
 
-    if (attacker->is_player() && you.duration[DUR_INFUSION])
+    if (attacker->is_player() && you.attribute[ATTR_INFUSION])
     {
         if (enough_mp(1, true, false))
         {
-            // infusion_power is set when the infusion spell is cast
-            const int pow = you.props["infusion_power"].get_int();
+            // infusion_power is recalculated on the fly
+            const int pow = calc_spell_power(SPELL_INFUSION, true);
             const int dmg = 2 + div_rand_round(pow, 12);
             const int hurt = defender->apply_ac(dmg);
 

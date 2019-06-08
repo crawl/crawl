@@ -1218,6 +1218,11 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "you're already singing.";
         break;
 
+    case SPELL_INFUSION:
+        if(you.attribute[ATTR_INFUSION])
+            return "you are already infusing your attacks with magic.";
+        break;
+
     case SPELL_DEATHS_DOOR:
         if (temp && you.duration[DUR_DEATHS_DOOR])
             return "you are already standing in death's doorway.";

@@ -1642,6 +1642,8 @@ static spret _handle_buff_spells(spell_type spell, int powc, bolt& beam, god_typ
             return deflection(powc, false);
 		case SPELL_RING_OF_FLAMES:
             return cast_ring_of_flames(powc, false);
+        case SPELL_INFUSION:
+            return cast_infusion(powc, false);
         default:
 		    return spret::none;
     }
@@ -1901,9 +1903,6 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
 
     case SPELL_SILENCE:
         return cast_silence(powc, fail);
-
-    case SPELL_INFUSION:
-        return cast_infusion(powc, fail);
 
     case SPELL_PORTAL_PROJECTILE:
         return cast_portal_projectile(powc, fail);

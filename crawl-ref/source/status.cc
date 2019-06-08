@@ -708,10 +708,16 @@ bool fill_status_info(int status, status_info& inf)
         break;
     }
 
-    case DUR_INFUSION:
+    case STATUS_INFUSION:
     {
-        if (!enough_mp(1, true, false))
-            inf.light_colour = DARKGREY;
+        if(you.attribute[ATTR_INFUSION])
+        {
+            inf.light_text = "Infus";
+            if (!enough_mp(1, true, false))
+                inf.light_colour = DARKGREY;
+            else
+                inf.light_colour = WHITE;
+        }
         break;
     }
 

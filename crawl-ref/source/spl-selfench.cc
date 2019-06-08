@@ -180,14 +180,8 @@ int cast_selective_amnesia(const string &pre_msg)
 spret cast_infusion(int pow, bool fail)
 {
     fail_check();
-    if (!you.duration[DUR_INFUSION])
-        mpr("You begin infusing your attacks with magical energy.");
-    else
-        mpr("You extend your infusion's duration.");
-
-    you.increase_duration(DUR_INFUSION,  8 + roll_dice(2, pow), 100);
-    you.props["infusion_power"] = pow;
-
+    you.attribute[ATTR_INFUSION] = 1;
+    mpr("You begin infusing your attacks with magical energy");
     return spret::success;
 }
 
@@ -278,6 +272,10 @@ int calculate_frozen_mp()
     {
 		frozen_mp += spell_mp_freeze(SPELL_RING_OF_FLAMES);
 	}
+    if (you.attribute[ATTR_INFUSION] > 0)
+    {
+		frozen_mp += spell_mp_freeze(SPELL_INFUSION);
+	}
     return frozen_mp;
 }
 
@@ -288,6 +286,7 @@ void dispel_permanent_buffs()
     you.attribute[ATTR_DARKNESS] = 0;
     you.attribute[ATTR_DEFLECT_MISSILES] = 0;
     you.attribute[ATTR_FIRE_SHIELD] = 0;
+    you.attribute[ATTR_INFUSION] = 0;
     you.redraw_armour_class = true;
     unfreeze_mp();
 	mpr("Your buffs unravel");
