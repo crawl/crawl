@@ -1141,6 +1141,8 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         // mere corona is not enough, but divine light blocks it completely
         if (temp && (you.haloed() || !prevent && have_passive(passive_t::halo)))
             return "darkness is useless against divine light.";
+        if(you.attribute[ATTR_DARKNESS])
+            return "it's already dark.";
         break;
 
     case SPELL_DEFLECT_MISSILES:
@@ -1173,6 +1175,8 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "you can't regenerate without divine aid.";
         if (you.undead_state(temp) == US_UNDEAD)
             return "you're too dead to regenerate.";
+        if(you.attribute[ATTR_SPELL_REGEN])
+            return "you're already regenerating.";
         break;
 
     case SPELL_EXCRUCIATING_WOUNDS:
@@ -1208,6 +1212,12 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         if (you.undead_state(temp))
             return "you're too dead.";
         break;
+
+    case SPELL_SONG_OF_SLAYING:
+        if (you.attribute[ATTR_SONG_OF_SLAYING])
+            return "you're already singing.";
+        break;
+
     case SPELL_DEATHS_DOOR:
         if (temp && you.duration[DUR_DEATHS_DOOR])
             return "you are already standing in death's doorway.";

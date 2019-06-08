@@ -307,7 +307,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_RING_OF_FLAMES, "Ring of Flames",
     spschool::charms | spschool::fire,
-    spflag::area,
+    spflag::area | spflag::permabuff,
     7,
     200,
     -1, -1,
@@ -867,7 +867,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_REGENERATION, "Regeneration",
     spschool::charms | spschool::necromancy,
-    spflag::selfench | spflag::utility,
+    spflag::selfench | spflag::utility | spflag::permabuff,
     3,
     200,
     -1, -1,
@@ -1270,7 +1270,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_DEFLECT_MISSILES, "Deflect Missiles",
     spschool::charms | spschool::air,
-    spflag::helpful | spflag::utility,
+    spflag::helpful | spflag::utility | spflag::permabuff,
     6,
     200,
     -1, -1,
@@ -2476,8 +2476,8 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_DARKNESS, "Darkness",
-    spschool::hexes,
-    spflag::none,
+    spschool::hexes | spschool::charms,
+    spflag::none | spflag::permabuff,
     6,
     200,
     -1, -1,
@@ -2878,7 +2878,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_SONG_OF_SLAYING, "Song of Slaying",
     spschool::charms,
-    spflag::utility,
+    spflag::utility | spflag::permabuff,
     2,
     100,
     -1, -1,

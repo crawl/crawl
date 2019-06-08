@@ -329,6 +329,9 @@ static const ability_def Ability_List[] =
     { ABIL_CANCEL_PPROJ, "Cancel Portal Projectile",
       0, 0, 0, 0, {}, abflag::instant | abflag::starve_ok },
 
+    { ABIL_END_BUFFS, "Release Buffs",
+      0, 0, 0, 0, {}, abflag::none },
+
     { ABIL_DIG, "Dig", 0, 0, 0, 0, {}, abflag::instant | abflag::starve_ok },
     { ABIL_SHAFT_SELF, "Shaft Self", 0, 0, 250, 0, {}, abflag::delay },
 
@@ -2216,6 +2219,11 @@ static spret _do_ability(const ability_def& abil, bool fail)
         untransform();
         break;
 
+    case ABIL_END_BUFFS:
+        fail_check();
+        dispel_permanent_buffs();
+        break;
+
     // INVOCATIONS:
     case ABIL_ZIN_RECITE:
     {
@@ -3484,6 +3492,9 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
 
     if (you.attribute[ATTR_PERM_FLIGHT] && you.racial_permanent_flight())
         _add_talent(talents, ABIL_STOP_FLYING, check_confused);
+
+    if (you.mp_frozen > 0)
+        _add_talent(talents, ABIL_END_BUFFS, check_confused);
 
     // Mutations
     if (you.get_mutation_level(MUT_HURL_DAMNATION))

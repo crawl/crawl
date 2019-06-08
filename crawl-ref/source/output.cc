@@ -712,6 +712,7 @@ static void _print_stats_mp(int x, int y)
     short mp_colour = HUD_VALUE_COLOUR;
 
     const bool boosted = _boosted_mp();
+    int max_max_mp = get_real_mp(true, true);
 
     if (boosted)
         mp_colour = LIGHTBLUE;
@@ -734,6 +735,8 @@ static void _print_stats_mp(int x, int y)
     if (!boosted)
         textcolour(HUD_VALUE_COLOUR);
     CPRINTF("/%d", you.max_magic_points);
+    if (max_max_mp != you.max_magic_points)
+        CPRINTF(" (%d)", max_max_mp);
 
     int col = _count_digits(you.magic_points)
               + _count_digits(you.max_magic_points) + 1;

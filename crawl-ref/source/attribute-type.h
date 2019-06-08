@@ -96,5 +96,9 @@ enum attribute_type
     ATTR_SERPENTS_LASH,        // Remaining instant movement actions.
     ATTR_HEAVENLY_STORM,       // Strength of Heavenly Storm slaying.
     ATTR_WALL_JUMP_READY,      // Ready to perform a wall jump.
+    ATTR_SPELL_REGEN,          // Regeneration spell
+    ATTR_SONG_OF_SLAYING,      // Song of Slaying
+    ATTR_DARKNESS,             // Darkness
+    ATTR_FIRE_SHIELD,          // ring of flames
     NUM_ATTRIBUTES
 };

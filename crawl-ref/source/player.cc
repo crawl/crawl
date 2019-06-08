@@ -647,7 +647,7 @@ void update_vision_range()
     }
 
     // the Darkness spell.
-    if (you.duration[DUR_DARKNESS])
+    if (you.attribute[ATTR_DARKNESS])
         nom *= 3, denom *= 4;
 
     // robe of Night.
@@ -1059,10 +1059,10 @@ static int _player_bonus_regen()
 
     // Trog's Hand is handled separately so that it will bypass slow
     // regeneration, and it overrides the spell.
-    if (you.duration[DUR_REGENERATION]
+    if (you.attribute[ATTR_SPELL_REGEN]
         && !you.duration[DUR_TROGS_HAND])
     {
-        rr += 100;
+        rr += 40 + calc_spell_power(SPELL_REGENERATION, true) / 2;
     }
 
     // Jewellery.
@@ -1218,7 +1218,7 @@ int player_hunger_rate(bool temp)
         hunger += 3;            // in addition to the +3 for fast metabolism
 
     if (temp
-        && (you.duration[DUR_REGENERATION]
+        && (you.attribute[ATTR_SPELL_REGEN]
             || you.duration[DUR_TROGS_HAND])
         && you.hp < you.hp_max)
     {
@@ -1345,6 +1345,9 @@ int player_res_fire(bool calc_unid, bool temp, bool items)
             rf++;
 
         if (you.duration[DUR_FIRE_SHIELD])
+            rf += 2;
+
+        if (you.attribute[ATTR_FIRE_SHIELD])
             rf += 2;
 
         if (you.duration[DUR_QAZLAL_FIRE_RES])
@@ -1693,6 +1696,9 @@ int player_spec_fire()
     sf += you.wearing(EQ_RINGS, RING_FIRE);
 
     if (you.duration[DUR_FIRE_SHIELD])
+        sf++;
+
+    if (you.attribute[ATTR_FIRE_SHIELD])
         sf++;
 
     return sf;
@@ -3503,8 +3509,8 @@ int slaying_bonus(bool ranged)
 
     ret += 3 * augmentation_amount();
 
-    if (you.duration[DUR_SONG_OF_SLAYING])
-        ret += you.props[SONG_OF_SLAYING_KEY].get_int();
+    if (you.attribute[ATTR_SONG_OF_SLAYING])
+        ret += you.attribute[ATTR_SONG_OF_SLAYING];
 
     if (you.duration[DUR_HORROR])
         ret -= you.props[HORROR_PENALTY_KEY].get_int();
@@ -3817,6 +3823,20 @@ void set_mp(int new_amount)
     you.redraw_magic_points = true;
 }
 
+void freeze_mp(int mp_loss)
+{
+    you.mp_frozen = mp_loss;
+    calc_mp();
+    you.redraw_magic_points = true;
+}
+
+void unfreeze_mp()
+{
+    you.mp_frozen = 0;
+    calc_mp();
+    you.redraw_magic_points = true;
+}
+
 /**
  * Get the player's max HP
  * @param trans          Whether to include transformations, berserk,
@@ -3874,7 +3894,7 @@ int get_real_hp(bool trans, bool rotted)
     return max(1, hitp);
 }
 
-int get_real_mp(bool include_items)
+int get_real_mp(bool include_items, bool frozen)
 {
     const int scale = 100;
     int spellcasting = you.skill(SK_SPELLCASTING, 1 * scale, true);
@@ -3914,6 +3934,8 @@ int get_real_mp(bool include_items)
     if (include_items && you.wearing_ego(EQ_WEAPON, SPWPN_ANTIMAGIC))
         enp /= 3;
 
+    if (!frozen)
+        enp -= you.mp_frozen;
     enp = max(enp, 0);
 
     return enp;
@@ -4952,6 +4974,7 @@ player::player()
     magic_points     = 0;
     max_magic_points = 0;
     mp_max_adj       = 0;
+    mp_frozen        = 0;
 
     stat_loss.init(0);
     base_stats.init(0);

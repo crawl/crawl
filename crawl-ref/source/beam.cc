@@ -3195,7 +3195,6 @@ bool bolt::misses_player()
         // active voice to imply stronger effect
         mprf(defl == 1 ? "The %s is repelled." : "You deflect the %s!",
              name.c_str());
-        you.ablate_deflection();
         count_action(CACT_DODGE, DODGE_DEFLECT);
     }
     else

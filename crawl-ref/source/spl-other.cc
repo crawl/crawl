@@ -466,11 +466,8 @@ spret cast_intoxicate(int pow, bool fail)
 spret cast_darkness(int pow, bool fail)
 {
     fail_check();
-    if (you.duration[DUR_DARKNESS])
-        mprf(MSGCH_DURATION, "It gets a bit darker.");
-    else
-        mprf(MSGCH_DURATION, "It gets dark.");
-    you.increase_duration(DUR_DARKNESS, 15 + random2(1 + pow/3), 100);
+    you.attribute[ATTR_DARKNESS] = 1;
+    mpr("It gets dark.");
     update_vision_range();
 
     return spret::success;

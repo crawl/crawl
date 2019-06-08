@@ -27,6 +27,7 @@ enum ability_type
     ABIL_STOP_SINGING, // From song of slaying
 #endif
     ABIL_CANCEL_PPROJ,
+    ABIL_END_BUFFS,
 
     // Species-specific abilities.
     // Demonspawn-only

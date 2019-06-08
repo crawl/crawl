@@ -91,9 +91,8 @@ spret deflection(int pow, bool fail)
 spret cast_regen(int pow, bool fail)
 {
     fail_check();
-    you.increase_duration(DUR_REGENERATION, 5 + roll_dice(2, pow / 3 + 1), 100,
-                          "Your skin crawls.");
-
+    you.attribute[ATTR_SPELL_REGEN] = 1;
+    mpr("Your skin crawls.");
     return spret::success;
 }
 
@@ -195,15 +194,8 @@ spret cast_infusion(int pow, bool fail)
 spret cast_song_of_slaying(int pow, bool fail)
 {
     fail_check();
-
-    if (you.duration[DUR_SONG_OF_SLAYING])
-        mpr("You start a new song!");
-    else
-        mpr("You start singing a song of slaying.");
-
-    you.set_duration(DUR_SONG_OF_SLAYING, 20 + random2avg(pow, 2));
-
-    you.props[SONG_OF_SLAYING_KEY] = 0;
+    you.attribute[ATTR_SONG_OF_SLAYING] = 1;
+    mpr("You start singing a song of slaying.");
     return spret::success;
 }
 
@@ -259,4 +251,44 @@ spret cast_transform(int pow, transformation which_trans, bool fail)
     fail_check();
     transform(pow, which_trans);
     return spret::success;
+}
+
+//return the total amount of mp the player has frozen using a really ugly 
+//chain of ifs, probably should, like, use a real data structure
+int calculate_frozen_mp()
+{
+    int frozen_mp = 0;
+	if (you.attribute[ATTR_SPELL_REGEN] > 0)
+    {
+		frozen_mp += spell_mp_freeze(SPELL_REGENERATION);
+	}
+	if (you.attribute[ATTR_SONG_OF_SLAYING] > 0)
+    {
+		frozen_mp += spell_mp_freeze(SPELL_SONG_OF_SLAYING);
+	}
+    if (you.attribute[ATTR_DARKNESS] > 0)
+    {
+		frozen_mp += spell_mp_freeze(SPELL_DARKNESS);
+	}
+    if (you.attribute[ATTR_DEFLECT_MISSILES] > 0)
+    {
+		frozen_mp += spell_mp_freeze(SPELL_DEFLECT_MISSILES);
+	}
+    if (you.attribute[ATTR_FIRE_SHIELD] > 0)
+    {
+		frozen_mp += spell_mp_freeze(SPELL_RING_OF_FLAMES);
+	}
+    return frozen_mp;
+}
+
+void dispel_permanent_buffs()
+{
+	you.attribute[ATTR_SPELL_REGEN] = 0;
+    you.attribute[ATTR_SONG_OF_SLAYING] = 0;
+    you.attribute[ATTR_DARKNESS] = 0;
+    you.attribute[ATTR_DEFLECT_MISSILES] = 0;
+    you.attribute[ATTR_FIRE_SHIELD] = 0;
+    you.redraw_armour_class = true;
+    unfreeze_mp();
+	mpr("Your buffs unravel");
 }

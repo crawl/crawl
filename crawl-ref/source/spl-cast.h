@@ -47,6 +47,7 @@ enum class spflag
                                           // good gods
     holy               = 0x40000000,      // considered holy (can't be
                                           // used by Yred enslaved souls)
+    permabuff          = 0x60000000,      // permabuff that reserves max mp
 };
 DEF_BITFIELD(spell_flags, spflag);
 
@@ -105,6 +106,8 @@ vector<string> desc_success_chance(const monster_info& mi, int pow, bool evoked,
 spret your_spells(spell_type spell, int powc = 0, bool allow_fail = true,
                        const item_def* const evoked_item = nullptr);
 
+int spell_mp_freeze(spell_type spell);
+bool is_buff_spell (spell_type spell);
 extern const char *fail_severity_adjs[];
 
 double get_miscast_chance(spell_type spell, int severity = 2);
@@ -116,6 +119,7 @@ string failure_rate_to_string(int fail);
 int power_to_barcount(int power);
 
 string spell_power_string(spell_type spell);
+string spell_reserved_mp_string(spell_type spell);
 string spell_range_string(spell_type spell);
 string range_string(int range, int maxrange, char32_t caster_char);
 string spell_schools_string(spell_type spell);

@@ -2166,13 +2166,15 @@ item_def* monster_die(monster& mons, killer_type killer,
 
     // Adjust song of slaying bonus. Kills by relevant avatars are adjusted by
     // now to KILL_YOU and are counted.
-    if (you.duration[DUR_SONG_OF_SLAYING]
+    if (you.attribute[ATTR_SONG_OF_SLAYING]
         && killer == KILL_YOU
         && gives_player_xp)
     {
-        const int sos_bonus = you.props[SONG_OF_SLAYING_KEY].get_int();
-        if (sos_bonus <= 8) // cap at +9 slay
-            you.props[SONG_OF_SLAYING_KEY] = sos_bonus + 1;
+        const int sos_bonus = you.attribute[ATTR_SONG_OF_SLAYING];
+        // spellpower dependent cap, slightly randomized.
+		// Always can get to at least 6, getting higher is hard and spellpower dependent.
+		if (sos_bonus < 6 + min(3,random2(div_rand_round(calc_spell_power(SPELL_SONG_OF_SLAYING, true),10)))) 
+            you.attribute[ATTR_SONG_OF_SLAYING] = sos_bonus + 1;
     }
 
     switch (killer)

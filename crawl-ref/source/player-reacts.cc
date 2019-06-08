@@ -456,7 +456,7 @@ void player_reacts_to_monsters()
     if (!you_are_delayed())
         update_can_train();
 
-    if (you.duration[DUR_FIRE_SHIELD] > 0)
+    if (you.attribute[ATTR_FIRE_SHIELD] || you.duration[DUR_FIRE_SHIELD] > 0)
         manage_fire_shield(you.time_taken);
 
     check_monster_detect();
@@ -968,18 +968,19 @@ void player_reacts()
     if (you.unrand_reacts.any())
         unrand_reacts();
 
-    // Handle sound-dependent effects that are silenced
-    if (silenced(you.pos()))
+    //decrement song of slaying's bonus over time
+    //chance to decrement is spellpower dependent
+    if (you.attribute[ATTR_SONG_OF_SLAYING]
+        && x_chance_in_y(you.time_taken * 50, 
+            (50 + calc_spell_power(SPELL_SONG_OF_SLAYING, true)) * 8 * BASELINE_DELAY))
     {
-        if (you.duration[DUR_SONG_OF_SLAYING])
-        {
-            mpr("The silence causes your song to end.");
-            _decrement_a_duration(DUR_SONG_OF_SLAYING, you.duration[DUR_SONG_OF_SLAYING]);
-        }
+        const int sos_bonus = you.attribute[ATTR_SONG_OF_SLAYING];
+	            if (sos_bonus > 1)
+            you.attribute[ATTR_SONG_OF_SLAYING] = sos_bonus - 1;
     }
 
     // Singing makes a continuous noise
-    if (you.duration[DUR_SONG_OF_SLAYING])
+    if (you.attribute[ATTR_SONG_OF_SLAYING])
         noisy(spell_effect_noise(SPELL_SONG_OF_SLAYING), you.pos());
 
     if (x_chance_in_y(you.time_taken, 10 * BASELINE_DELAY))
@@ -1060,6 +1061,21 @@ void player_reacts()
 
     if (you.props[EMERGENCY_FLIGHT_KEY].get_bool())
         _handle_emergency_flight();
+
+
+    const int mp_to_freeze = calculate_frozen_mp();
+    if (mp_to_freeze > get_real_mp(true,true))
+    {
+        set_mp(0);
+        dispel_permanent_buffs();
+		        mpr("Your buffs unravel, as your magical reserves can no longer sustain them.");
+		        unfreeze_mp();
+    }
+    // so we don't redraw every turn if nothing changed
+    else if (mp_to_freeze != you.mp_frozen)
+    {
+        freeze_mp(mp_to_freeze);
+    }
 }
 
 void extract_manticore_spikes(const char* endmsg)

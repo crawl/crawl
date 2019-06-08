@@ -250,19 +250,15 @@ void big_cloud(cloud_type cl_type, const actor *agent,
 spret cast_ring_of_flames(int power, bool fail)
 {
     fail_check();
-    you.increase_duration(DUR_FIRE_SHIELD,
-                          6 + (power / 10) + (random2(power) / 5), 50,
-                          "The air around you leaps into flame!");
-    manage_fire_shield(1);
+    you.attribute[ATTR_FIRE_SHIELD] = 1;
+    mpr("The air around you leaps into flames!");
+	    manage_fire_shield(1);
     return spret::success;
 }
 
 void manage_fire_shield(int delay)
 {
-    ASSERT(you.duration[DUR_FIRE_SHIELD]);
-
-    // Melt ice armour entirely.
-    maybe_melt_player_enchantments(BEAM_FIRE, 100);
+    ASSERT(you.duration[DUR_FIRE_SHIELD] || you.attribute[ATTR_FIRE_SHIELD]);
 
     // Remove fire clouds on top of you
     if (cloud_at(you.pos()) && cloud_at(you.pos())->type == CLOUD_FIRE)

@@ -3,6 +3,12 @@ No ability ability
 
 If you get this description, it is a bug.
 %%%%
+Release buffs ability
+
+Releases the bound energies of any spells that you are sustaining, canceling
+their effects. This will restore your maximum mp to its true value but will 
+not replenish your currently available mp.
+%%%%
 Spit Poison ability
 
 Spits poison at a targeted creature.
