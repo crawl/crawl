@@ -55,9 +55,7 @@ This reduces their remaining time before being sent back where they came from.
 Aura of Brilliance spell
 
 Empowers the magic of nearby wizard allies of the caster, allowing them to
-cast their magic more powerfully and more often, but at the price of fixing
-the caster in place until they no longer have any nearby allies they can
-empower.
+cast their magic more powerfully and more often.
 %%%%
 Avatar Song spell
 
