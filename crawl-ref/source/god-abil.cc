@@ -7037,16 +7037,22 @@ static void _hepliaklqana_choose_name()
 
 static void _hepliaklqana_choose_gender()
 {
-    static const string gender_names[] = { "neither", "male", "female" };
-    const int current_gender
-        = you.props[HEPLIAKLQANA_ALLY_GENDER_KEY].get_int();
-    const int hep_current_gender = current_gender == 4 ? 0 : current_gender;
-    ASSERT(size_t(hep_current_gender) < ARRAYSZ(gender_names));
+    static const map<gender_type, string> gender_map =
+    {
+        { GENDER_NEUTRAL, "neither" },
+        { GENDER_MALE,    "male"    },
+        { GENDER_FEMALE,  "female"  },
+    };
+
+    const gender_type current_gender =
+        (gender_type)you.props[HEPLIAKLQANA_ALLY_GENDER_KEY].get_int();
+    const string* desc = map_find(gender_map, current_gender);
+    ASSERT(desc);
 
     mprf(MSGCH_PROMPT,
          "Was %s a) male, b) female, or c) neither? (Currently %s.)",
          hepliaklqana_ally_name().c_str(),
-         gender_names[hep_current_gender].c_str());
+         desc->c_str());
 
     int keyin = toalower(get_ch());
     if (!isaalpha(keyin))
@@ -7055,15 +7061,18 @@ static void _hepliaklqana_choose_gender()
         return;
     }
 
+    static const gender_type gender_options[] = { GENDER_MALE,
+                                                  GENDER_FEMALE,
+                                                  GENDER_NEUTRAL };
+
     const uint32_t choice = keyin - 'a';
-    if (choice >= ARRAYSZ(gender_names))
+    if (choice >= ARRAYSZ(gender_options))
     {
         canned_msg(MSG_OK);
         return;
     }
 
-    const int new_gender = choice == 2 ? 4 : choice + 1;
-    const int hep_new_gender = (choice + 1) % 3;
+    const gender_type new_gender = gender_options[choice];
 
     if (new_gender == current_gender)
     {
@@ -7074,7 +7083,7 @@ static void _hepliaklqana_choose_gender()
     you.props[HEPLIAKLQANA_ALLY_GENDER_KEY] = new_gender;
     mprf("%s was always %s, you're pretty sure.",
          hepliaklqana_ally_name().c_str(),
-         gender_names[hep_new_gender].c_str());
+         map_find(gender_map, new_gender)->c_str());
     upgrade_hepliaklqana_ancestor(true);
 }
 

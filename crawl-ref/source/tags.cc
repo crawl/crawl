@@ -3750,6 +3750,12 @@ static void tag_read_you(reader &th)
         for (int i = 0; i < you.props[THUNDERBOLT_CHARGES_KEY].get_int(); i++)
             expend_xp_evoker(MISC_LIGHTNING_ROD);
     }
+    if (th.getMinorVersion() < TAG_MINOR_SINGULAR_THEY
+        && you.props.exists(HEPLIAKLQANA_ALLY_GENDER_KEY))
+    {
+        if (you.props[HEPLIAKLQANA_ALLY_GENDER_KEY].get_int() == GENDER_NEUTER)
+            you.props[HEPLIAKLQANA_ALLY_GENDER_KEY] = GENDER_NEUTRAL;
+    }
 #endif
 }
 
