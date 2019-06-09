@@ -10,6 +10,7 @@
 #include "cio.h"
 #include "delay.h"
 #include "describe.h"
+#include "english.h"
 #include "externs.h"
 #include "invent.h"
 #include "libutil.h"
@@ -124,7 +125,7 @@ static string _describe_spell_filtering(mon_spell_slot_flag type, const char* pr
  *                          "possesses the following natural abilities:"
  */
 static string _booktype_header(mon_spell_slot_flag type, size_t num_books,
-                               bool has_silencable, bool has_filtered, const char* pronoun)
+                               bool has_silencable, bool has_filtered, const char* pronoun, bool pronoun_plural)
 {
     const string vulnerabilities =
         _ability_type_vulnerabilities(type, has_silencable);
@@ -133,7 +134,8 @@ static string _booktype_header(mon_spell_slot_flag type, size_t num_books,
 
     if (type == MON_SPELL_WIZARD)
     {
-        return make_stringf("has mastered %s%s%s:",
+        return make_stringf("%s mastered %s%s%s:",
+                            conjugate_verb("have", pronoun_plural).c_str(),
                             num_books > 1 ? "one of the following spellbooks"
                                           : "the following spells",
                             spell_filter_desc.c_str(),
@@ -142,7 +144,8 @@ static string _booktype_header(mon_spell_slot_flag type, size_t num_books,
 
     const string descriptor = _ability_type_descriptor(type);
 
-    return make_stringf("possesses the following %s abilities%s%s:",
+    return make_stringf("%s the following %s abilities%s%s:",
+                        conjugate_verb("possess", pronoun_plural).c_str(),
                         descriptor.c_str(),
                         spell_filter_desc.c_str(),
                         vulnerabilities.c_str());
@@ -261,7 +264,8 @@ static void _monster_spellbooks(const monster_info &mi,
                 uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE)) +
                 " " +
                 _booktype_header(type, valid_books.size(), has_silencable,
-                                 filtered_books, mi.pronoun(PRONOUN_OBJECTIVE));
+                                 filtered_books, mi.pronoun(PRONOUN_OBJECTIVE),
+                                 mi.pronoun_plurality());
         }
         else
         {
