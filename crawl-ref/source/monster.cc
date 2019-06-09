@@ -2354,14 +2354,7 @@ string monster::pronoun(pronoun_type pro, bool force_visible) const
 string monster::conj_verb(const string &verb) const
 {
     const monster_info mi(this);
-    bool plural_conj = false;
-    // Conjugate neutral (not neuter) gender monsters as if they were plural.
-    if (mi.props.exists(MON_GENDER_KEY))
-    {
-        if (mi.props[MON_GENDER_KEY].get_int() == GENDER_NEUTRAL)
-            plural_conj = true;
-    }
-    return conjugate_verb(verb, plural_conj);
+    return conjugate_verb(verb, mi.pronoun_plurality());
 }
 
 string monster::hand_name(bool plural, bool *can_plural) const
