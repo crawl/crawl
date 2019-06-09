@@ -202,7 +202,7 @@ string apostrophise(const string &name)
     if (name == "herself")
         return "her own";
 
-    if (name == "themselves")
+    if (name == "themselves" || name == "themself")
         return "their own";
 
     if (name == "yourself")
@@ -269,6 +269,7 @@ static const char * const _pronoun_declension[][NUM_PRONOUN_CASES] =
     { "he",  "his",  "himself",  "him" }, // masculine
     { "she", "her",  "herself",  "her" }, // feminine
     { "you", "your", "yourself", "you" }, // 2nd person
+    { "they", "their", "themself", "them" }, // neutral
 };
 
 const char *decline_pronoun(gender_type gender, pronoun_type variant)

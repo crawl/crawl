@@ -3086,7 +3086,9 @@ static string _mon_enchantments_string(const monster_info& mi)
     if (!enchant_descriptors.empty())
     {
         return uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE))
-            + " is "
+            + " "
+            + conjugate_verb("are", mi.pronoun_plurality())
+            + " "
             + comma_separated_line(enchant_descriptors.begin(),
                                    enchant_descriptors.end())
             + ".";
@@ -3183,59 +3185,91 @@ static string _get_monster_desc(const monster_info& mi)
     string pronoun = uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE));
 
     if (mi.is(MB_CLINGING))
-        text += pronoun + " is clinging to the wall.\n";
+    {
+        text += pronoun + " " + conjugate_verb("are", mi.pronoun_plurality())
+                + " clinging to the wall.\n";
+    }
 
     if (mi.is(MB_MESMERIZING))
     {
         text += string("You are mesmerised by ")
-              + mi.pronoun(PRONOUN_POSSESSIVE) + " song.\n";
+                + mi.pronoun(PRONOUN_POSSESSIVE) + " song.\n";
     }
 
     if (mi.is(MB_SLEEPING) || mi.is(MB_DORMANT))
     {
-        text += pronoun + " appears to be "
-                + (mi.is(MB_CONFUSED) ? "sleepwalking"
-                        : "resting")
-                          + ".\n";
+        text += pronoun + " "
+                + conjugate_verb("appear", mi.pronoun_plurality()) + " to be "
+                + (mi.is(MB_CONFUSED) ? "sleepwalking" : "resting") + ".\n";
     }
     // Applies to both friendlies and hostiles
     else if (mi.is(MB_FLEEING))
-        text += pronoun + " is fleeing.\n";
+    {
+        text += pronoun + " " + conjugate_verb("are", mi.pronoun_plurality())
+                + " fleeing.\n";
+    }
     // hostile with target != you
-    else if (mi.attitude == ATT_HOSTILE && (mi.is(MB_UNAWARE) || mi.is(MB_WANDERING)))
-        text += pronoun + " doesn't appear to have noticed you.\n";
+    else if (mi.attitude == ATT_HOSTILE
+             && (mi.is(MB_UNAWARE) || mi.is(MB_WANDERING)))
+    {
+        text += pronoun + " " + conjugate_verb("have", mi.pronoun_plurality())
+                + " not noticed you.\n";
+    }
 
     if (mi.attitude == ATT_FRIENDLY)
-        text += pronoun + " is friendly.\n";
+    {
+        text += pronoun + " " + conjugate_verb("are", mi.pronoun_plurality())
+                + " friendly.\n";
+    }
     else if (mi.attitude == ATT_GOOD_NEUTRAL)
-        text += pronoun + " seems to be peaceful towards you.\n";
+    {
+        text += pronoun + " " + conjugate_verb("seem", mi.pronoun_plurality())
+                + " to be peaceful towards you.\n";
+    }
     else if (mi.attitude != ATT_HOSTILE && !mi.is(MB_INSANE))
     {
         // don't differentiate between permanent or not
-        text += pronoun + " is indifferent to you.\n";
+        text += pronoun + " " + conjugate_verb("are", mi.pronoun_plurality())
+                + " indifferent to you.\n";
     }
 
     if (mi.is(MB_SUMMONED) || mi.is(MB_PERM_SUMMON))
     {
-        text += pronoun + " has been summoned";
+        text += pronoun + " " + conjugate_verb("have", mi.pronoun_plurality())
+                + " been summoned";
         if (mi.is(MB_SUMMONED_CAPPED))
-            text += ", and is expiring";
+        {
+            text += ", and " + conjugate_verb("are", mi.pronoun_plurality())
+                    + " expiring";
+        }
         else if (mi.is(MB_PERM_SUMMON))
             text += " but will not time out";
         text += ".\n";
     }
 
     if (mi.is(MB_HALOED))
-        text += pronoun + " is illuminated by a divine halo.\n";
+    {
+        text += pronoun + " " + conjugate_verb("are", mi.pronoun_plurality())
+                + " illuminated by a divine halo.\n";
+    }
 
     if (mi.is(MB_UMBRAED))
-        text += pronoun + " is wreathed by an umbra.\n";
+    {
+        text += pronoun + " " + conjugate_verb("are", mi.pronoun_plurality())
+                + " wreathed by an umbra.\n";
+    }
 
     if (mi.intel() <= I_BRAINLESS)
-        text += pronoun + " is mindless.\n";
+    {
+        text += pronoun + " " + conjugate_verb("are", mi.pronoun_plurality())
+                + " mindless.\n";
+    }
 
     if (mi.is(MB_CHAOTIC))
-        text += pronoun + " is chaotic.\n";
+    {
+        text += pronoun + " " + conjugate_verb("are", mi.pronoun_plurality())
+                + " chaotic.\n";
+    }
 
     if (mi.is(MB_POSSESSABLE))
     {
@@ -3243,21 +3277,30 @@ static string _get_monster_desc(const monster_info& mi)
                 + " soul is ripe for the taking.\n";
     }
     else if (mi.is(MB_ENSLAVED))
-        text += pronoun + " is a disembodied soul.\n";
+    {
+        text += pronoun + " " + conjugate_verb("are", mi.pronoun_plurality())
+                + " a disembodied soul.\n";
+    }
 
     if (mi.is(MB_MIRROR_DAMAGE))
-        text += pronoun + " is reflecting injuries back at attackers.\n";
+    {
+        text += pronoun + " " + conjugate_verb("are", mi.pronoun_plurality())
+                + " reflecting injuries back at attackers.\n";
+    }
 
     if (mi.is(MB_INNER_FLAME))
-        text += pronoun + " is filled with an inner flame.\n";
+    {
+        text += pronoun + " " + conjugate_verb("are", mi.pronoun_plurality())
+                + " filled with an inner flame.\n";
+    }
 
     if (mi.fire_blocker)
     {
         text += string("Your line of fire to ") + mi.pronoun(PRONOUN_OBJECTIVE)
-              + " is blocked by " // FIXME: renamed features
-              + feature_description(mi.fire_blocker, NUM_TRAPS, "",
-                                    DESC_A)
-              + "\n";
+                + " is blocked by " // FIXME: renamed features
+                + feature_description(mi.fire_blocker, NUM_TRAPS, "",
+                                      DESC_A)
+                + "\n";
     }
 
     text += _mon_enchantments_string(mi);
@@ -3580,8 +3623,9 @@ static void _describe_cell(const coord_def& where, bool in_range)
 
         if (!in_range)
         {
-            mprf(MSGCH_EXAMINE_FILTER, "%s is out of range.",
-                 mon->pronoun(PRONOUN_SUBJECTIVE).c_str());
+            mprf(MSGCH_EXAMINE_FILTER, "%s %s out of range.",
+                 mon->pronoun(PRONOUN_SUBJECTIVE).c_str(),
+                 conjugate_verb("are", mi.pronoun_plurality()).c_str());
         }
 #ifndef DEBUG_DIAGNOSTICS
         monster_described = true;
