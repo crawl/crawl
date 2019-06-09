@@ -7061,9 +7061,9 @@ static void _hepliaklqana_choose_gender()
         canned_msg(MSG_OK);
         return;
     }
-    
+
     const int new_gender = choice == 2 ? 4 : choice + 1;
-	   const int hep_new_gender = (choice + 1) % 3;
+    const int hep_new_gender = (choice + 1) % 3;
 
     if (new_gender == current_gender)
     {

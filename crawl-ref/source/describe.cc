@@ -3935,15 +3935,15 @@ static string _monster_stat_description(const monster_info& mi)
 
     if (mi.threat != MTHRT_UNDEF)
     {
-        result << uppercase_first(pronoun)
-			   << " " << conjugate_verb("look", plural) << " " 
-			   << _get_threat_desc(mi.threat) << ".\n";
+        result << uppercase_first(pronoun) << " "
+               << conjugate_verb("look", plural) << " "
+               << _get_threat_desc(mi.threat) << ".\n";
     }
 
     if (!resist_descriptions.empty())
     {
-        result << uppercase_first(pronoun)
-			   << " " << conjugate_verb("are", plural) << " "
+        result << uppercase_first(pronoun) << " "
+               << conjugate_verb("are", plural) << " "
                << comma_separated_line(resist_descriptions.begin(),
                                        resist_descriptions.end(),
                                        "; and ", "; ")
@@ -3953,18 +3953,17 @@ static string _monster_stat_description(const monster_info& mi)
     // Is monster susceptible to anything? (On a new line.)
     if (!suscept.empty())
     {
-        result << uppercase_first(pronoun)
-			   << " " << conjugate_verb("are", plural) << " "
-			   << "susceptible to "
+        result << uppercase_first(pronoun) << " "
+               << conjugate_verb("are", plural) << " susceptible to "
                << comma_separated_line(suscept.begin(), suscept.end())
                << ".\n";
     }
 
     if (mi.is(MB_CHAOTIC))
     {
-        result << uppercase_first(pronoun)
-			   << " " << conjugate_verb("are", plural) << " "
-			   << "vulnerable to silver and hated by Zin.\n";
+        result << uppercase_first(pronoun) << " "
+               << conjugate_verb("are", plural)
+               << " vulnerable to silver and hated by Zin.\n";
     }
 
     if (mons_class_flag(mi.type, M_STATIONARY)
@@ -3977,8 +3976,8 @@ static string _monster_stat_description(const monster_info& mi)
         && get_resist(resist, MR_RES_COLD) <= 0)
     {
         result << uppercase_first(pronoun)
-			   << " " << conjugate_verb("are", plural) << " "
-			   << "cold-blooded and may be slowed by cold attacks.\n";
+               << " " << conjugate_verb("are", plural)
+               << " cold-blooded and may be slowed by cold attacks.\n";
     }
 
     // Seeing invisible.
@@ -3987,9 +3986,11 @@ static string _monster_stat_description(const monster_info& mi)
 
     // Echolocation, wolf noses, jellies, etc
     if (!mons_can_be_blinded(mi.type))
-        result << uppercase_first(pronoun)
-			   << " " << conjugate_verb("are", plural) << " "
-			   << "immune to blinding.\n";
+    {
+        result << uppercase_first(pronoun) << " "
+               << conjugate_verb("are", plural)
+               << " immune to blinding.\n";
+    }
     // XXX: could mention "immune to dazzling" here, but that's spammy, since
     // it's true of such a huge number of monsters. (undead, statues, plants).
     // Might be better to have some place where players can see holiness &
@@ -3998,14 +3999,14 @@ static string _monster_stat_description(const monster_info& mi)
     if (mi.intel() <= I_BRAINLESS)
     {
         // Matters for Ely.
-        result << uppercase_first(pronoun) << " " 
-			   << conjugate_verb("are", plural) << " mindless.\n";
+        result << uppercase_first(pronoun) << " "
+               << conjugate_verb("are", plural) << " mindless.\n";
     }
     else if (mi.intel() >= I_HUMAN)
     {
         // Matters for Yred, Gozag, Zin, TSO, Alistair....
         result << uppercase_first(pronoun) << " "
-			   << conjugate_verb("are", plural) << " intelligent.\n";
+               << conjugate_verb("are", plural) << " intelligent.\n";
     }
 
     // Unusual monster speed.
@@ -4014,9 +4015,9 @@ static string _monster_stat_description(const monster_info& mi)
     if (speed != 10 && speed != 0)
     {
         did_speed = true;
-        result << uppercase_first(pronoun)
-			   << " " << conjugate_verb("are", plural) << " "
-			   << mi.speed_description();
+        result << uppercase_first(pronoun) << " "
+               << conjugate_verb("are", plural) << " "
+               << mi.speed_description();
     }
     const mon_energy_usage def = DEFAULT_ENERGY;
     if (!(mi.menergy == def))
@@ -4026,25 +4027,35 @@ static string _monster_stat_description(const monster_info& mi)
         if (!did_speed)
             result << uppercase_first(pronoun) << " ";
         _add_energy_to_string(speed, me.move,
-							  conjugate_verb("cover", plural) + " ground", fast, slow);
+                              conjugate_verb("cover", plural) + " ground",
+                              fast, slow);
         // since MOVE_ENERGY also sets me.swim
         if (me.swim != me.move)
+        {
             _add_energy_to_string(speed, me.swim,
-								  conjugate_verb("swim", plural), fast, slow);
+                                  conjugate_verb("swim", plural), fast, slow);
+        }
         _add_energy_to_string(speed, me.attack,
-							  conjugate_verb("attack", plural), fast, slow);
+                              conjugate_verb("attack", plural), fast, slow);
         if (mons_class_itemuse(mi.type) >= MONUSE_STARTING_EQUIPMENT)
+        {
             _add_energy_to_string(speed, me.missile,
-								  conjugate_verb("shoot", plural), fast, slow);
+                                  conjugate_verb("shoot", plural), fast, slow);
+        }
         _add_energy_to_string(
             speed, me.spell,
             mi.is_actual_spellcaster() ? conjugate_verb("cast", plural) + " spells" :
             mi.is_priest()             ? conjugate_verb("use", plural) + " invocations"
                                        : conjugate_verb("use", plural) + " natural abilities", fast, slow);
-        _add_energy_to_string(speed, me.special, conjugate_verb("use", plural) + " special abilities",
+        _add_energy_to_string(speed, me.special,
+                              conjugate_verb("use", plural) + " special abilities",
                               fast, slow);
         if (mons_class_itemuse(mi.type) >= MONUSE_STARTING_EQUIPMENT)
-            _add_energy_to_string(speed, me.item, conjugate_verb("use", plural) + " items", fast, slow);
+        {
+            _add_energy_to_string(speed, me.item,
+                                  conjugate_verb("use", plural) + " items",
+                                  fast, slow);
+        }
 
         if (speed >= 10)
         {
@@ -4088,9 +4099,9 @@ static string _monster_stat_description(const monster_info& mi)
     if (mi.type == MONS_SHADOW)
     {
         // Cf. monster::action_energy() in monster.cc.
-        result << uppercase_first(pronoun)
-			   << " " << conjugate_verb("cover", plural)
-			   << " ground more quickly when invisible.\n";
+        result << uppercase_first(pronoun) << " "
+               << conjugate_verb("cover", plural)
+               << " ground more quickly when invisible.\n";
     }
 
     if (mi.airborne())
@@ -4100,15 +4111,17 @@ static string _monster_stat_description(const monster_info& mi)
     if (!mi.can_regenerate())
         result << uppercase_first(pronoun) << " cannot regenerate.\n";
     else if (mons_class_fast_regen(mi.type))
-        result << uppercase_first(pronoun)
-			   << " " << conjugate_verb("regenerate", plural)
-			   << " quickly.\n";
+        result << uppercase_first(pronoun) << " "
+               << conjugate_verb("regenerate", plural)
+               << " quickly.\n";
 
     const char* mon_size = get_size_adj(mi.body_size(), true);
     if (mon_size)
-        result << uppercase_first(pronoun)
-			   << " " << conjugate_verb("are", plural) << " "
-			   << mon_size << ".\n";
+    {
+        result << uppercase_first(pronoun) << " "
+               << conjugate_verb("are", plural) << " "
+               << mon_size << ".\n";
+    }
 
     if (in_good_standing(GOD_ZIN, 0) && !mi.pos.origin() && monster_at(mi.pos))
     {
@@ -4122,9 +4135,9 @@ static string _monster_stat_description(const monster_info& mi)
         }
         else if (eligibility == RE_TOO_STRONG)
         {
-            result << uppercase_first(pronoun)
-				   << " " << conjugate_verb("are", plural)
-				   << " too strong to be affected by reciting Zin's laws.";
+            result << uppercase_first(pronoun) << " "
+                   << conjugate_verb("are", plural)
+                   << " too strong to be affected by reciting Zin's laws.";
         }
         else // RE_ELIGIBLE || RE_RECITE_TIMER
         {
@@ -4229,7 +4242,7 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
     const string it = mi.pronoun(PRONOUN_SUBJECTIVE);
     const string it_o = mi.pronoun(PRONOUN_OBJECTIVE);
     const string It = uppercase_first(it);
-	const string is = conjugate_verb("are", mi.pronoun_plurality());
+    const string is = conjugate_verb("are", mi.pronoun_plurality());
 
     switch (mi.type)
     {
