@@ -257,7 +257,7 @@ static feature_def feat_defs[] =
 }
 
 TRAP(DNGN_TRAP_MECHANICAL, "mechanical trap", "trap_mechanical", LIGHTCYAN),
-TRAP(DNGN_TRAP_DISPERSAL, "disperal trap", "trap_dispersal", MAGENTA),
+TRAP(DNGN_TRAP_DISPERSAL, "dispersal trap", "trap_dispersal", MAGENTA),
 TRAP(DNGN_TRAP_TELEPORT, "teleport trap", "trap_teleport", LIGHTBLUE),
 #if TAG_MAJOR_VERSION == 34
 TRAP(DNGN_TRAP_SHADOW, "shadow trap", "trap_shadow", BLUE),
