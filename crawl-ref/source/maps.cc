@@ -730,10 +730,11 @@ mapref_vector find_maps_for_tag(const string &tag,
 {
     mapref_vector maps;
     level_id place = level_id::current();
+    set<string> tag_set = parse_tags(tag);
 
     for (const map_def &mapdef : vdefs)
     {
-        if (mapdef.has_tag(tag)
+        if (mapdef.has_tag(tag_set)
             && !mapdef.has_tag("dummy")
             && (!check_depth || !mapdef.has_depth()
                 || mapdef.is_usable_in(place))
