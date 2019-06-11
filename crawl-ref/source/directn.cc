@@ -3185,8 +3185,10 @@ static string _get_monster_desc(const monster_info& mi)
     string pronoun = uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE));
 
     if (mi.is(MB_CLINGING))
+    {
         text += pronoun + " " + conjugate_verb("are", mi.pronoun_plurality())
                 + " clinging to the wall.\n";
+    }
 
     if (mi.is(MB_MESMERIZING))
     {
@@ -3212,8 +3214,10 @@ static string _get_monster_desc(const monster_info& mi)
                 + " appear to have noticed you.\n";
 
     if (mi.attitude == ATT_FRIENDLY)
+    {
         text += pronoun + " " + conjugate_verb("are", mi.pronoun_plurality())
                 + " friendly.\n";
+    }
     else if (mi.attitude == ATT_GOOD_NEUTRAL)
         text += pronoun + " " + conjugate_verb("seem", mi.pronoun_plurality())
                 + " to be peaceful towards you.\n";
@@ -3229,28 +3233,38 @@ static string _get_monster_desc(const monster_info& mi)
         text += pronoun + " " + conjugate_verb("have", mi.pronoun_plurality())
                 + " been summoned";
         if (mi.is(MB_SUMMONED_CAPPED))
+        {
             text += ", and " + conjugate_verb("are", mi.pronoun_plurality())
                     + " expiring";
+        }
         else if (mi.is(MB_PERM_SUMMON))
             text += " but will not time out";
         text += ".\n";
     }
 
     if (mi.is(MB_HALOED))
+    {
         text += pronoun + " " + conjugate_verb("are", mi.pronoun_plurality())
                 + " illuminated by a divine halo.\n";
+    }
 
     if (mi.is(MB_UMBRAED))
+    {
         text += pronoun + " " + conjugate_verb("are", mi.pronoun_plurality())
                 + " wreathed by an umbra.\n";
+    }
 
     if (mi.intel() <= I_BRAINLESS)
+    {
         text += pronoun + " " + conjugate_verb("are", mi.pronoun_plurality())
                 + " mindless.\n";
+    }
 
     if (mi.is(MB_CHAOTIC))
+    {
         text += pronoun + " " + conjugate_verb("are", mi.pronoun_plurality())
                 + " chaotic.\n";
+    }
 
     if (mi.is(MB_POSSESSABLE))
     {
@@ -3262,12 +3276,16 @@ static string _get_monster_desc(const monster_info& mi)
                 + " a disembodied soul.\n";
 
     if (mi.is(MB_MIRROR_DAMAGE))
+    {
         text += pronoun + " " + conjugate_verb("are", mi.pronoun_plurality())
                 + " reflecting injuries back at attackers.\n";
+    }
 
     if (mi.is(MB_INNER_FLAME))
+    {
         text += pronoun + " " + conjugate_verb("are", mi.pronoun_plurality())
                 + " filled with an inner flame.\n";
+    }
 
     if (mi.fire_blocker)
     {
