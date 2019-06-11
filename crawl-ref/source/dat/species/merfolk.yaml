@@ -42,7 +42,7 @@ int: 7
 dex: 9
 levelup_stat_frequency: 5
 fake_mutations:
-  - long: You revert to your normal form in water
+  - long: You revert to your normal form in water.
     short: change form in water
   - long: You are very nimble and swift while swimming.
     short: swift swim
