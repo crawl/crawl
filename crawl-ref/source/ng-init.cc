@@ -268,58 +268,98 @@ void initialise_temples()
             overflow_weights[i] = 0;
     }
 
-    // Try to find combinations of overflow gods that have specialised
-    // overflow vaults.
-multi_overflow:
-    for (unsigned int i = 1, size = 1 << overflow_gods.size();
-         i <= size; i++)
+    // Check for temple_overflow vaults that specify certain gods.
+    mapref_vector maps;
+    // the >1 range is based on previous code; 1-altar temple_overflow maps
+    // are placed by the next part, though their weight is not used here. There
+    // are currently no such vaults with more than 3 altars, but there's not
+    // much cost to checking a few higher.
+    for (int num = 2; num <= 5; num++)
     {
-        unsigned int num = count_bits(i);
+        mapref_vector num_maps = find_maps_for_tag(
+            make_stringf("temple_overflow_%d", num));
+        maps.insert(maps.end(), num_maps.begin(), num_maps.end());
+    }
 
-        // TODO: possibly make this place single-god vaults too?
-        // XXX: upper limit on num here because this code gets really
-        // slow otherwise.
-        if (num <= 1 || num > 3)
-            continue;
-
+    for (const map_def *map : maps)
+    {
+        if (overflow_gods.size() < 2)
+            break;
+        int num = 0;
         vector<god_type> this_temple_gods;
-        vector<god_type> new_overflow_gods;
-
-        string tags = make_stringf("temple_overflow_%d", num);
-        for (unsigned int j = 0; j < overflow_gods.size(); j++)
+        for (auto &tag : map->get_tags())
         {
-            if (i & (1 << j))
+            if (!starts_with(tag, "temple_overflow_"))
+                continue;
+            string temple_tag = tag_without_prefix(tag, "temple_overflow_");
+            if (temple_tag.empty())
             {
-                string name = replace_all(god_name(overflow_gods[j]), " ", "_");
-                lowercase(name);
-                tags = tags + " temple_overflow_" + name;
-                this_temple_gods.push_back(overflow_gods[j]);
+                mprf(MSGCH_ERROR, "Malformed temple tag '%s' in map %s",
+                    tag.c_str(), map->name.c_str());
+                continue;
             }
+            int test_num;
+            if (parse_int(temple_tag.c_str(), test_num))
+                num = test_num;
             else
-                new_overflow_gods.push_back(overflow_gods[j]);
+            {
+                replace(temple_tag.begin(), temple_tag.end(), '_', ' ');
+                god_type this_god = str_to_god(temple_tag);
+                if (this_god == GOD_NO_GOD)
+                {
+                    mprf(MSGCH_ERROR, "Malformed temple tag '%s' in map %s",
+                        tag.c_str(), map->name.c_str());
+                    continue;
+                }
+                this_temple_gods.push_back(this_god);
+            }
+            if (num == 0)
+            {
+                if (this_temple_gods.size() > 0)
+                {
+                    mprf(MSGCH_ERROR,
+                        "Map %s has temple_overflow_god tags but no count tag",
+                        map->name.c_str());
+                }
+                continue;
+            }
         }
-
-        mapref_vector maps = find_maps_for_tag(tags);
-        if (maps.empty())
+        // there is one vault that currently triggers this, where it allows
+        // one of two specified gods on a particular altar. This code won't
+        // handle (or error) on that case right now.
+        if (num != this_temple_gods.size())
             continue;
 
-        if (overflow_weights[num] > 0)
-        {
-            int chance = 0;
-            for (auto map : maps)
+        // does this temple place only gods that we need to place?
+        bool ok = true;
+        for (auto god : this_temple_gods)
+            if (count(overflow_gods.begin(), overflow_gods.end(), god) == 0)
             {
-                chance += map->weight(level_id(BRANCH_DUNGEON,
-                                               MAX_OVERFLOW_LEVEL));
+                ok = false;
+                break;
             }
-            if (!x_chance_in_y(chance, overflow_weights[num] + chance))
-                continue;
+        if (!ok)
+            continue;
+        // finally: this overflow vault will place a subset of our current
+        // overflow list. Do we actually place it?
+        // TODO: The weight calculation here is kind of odd, though based on
+        // what it is directly replacing. It should sum all compatible
+        // maps first. But, the end result of this choice isn't a map anyways...
+        // More generally, I wonder if this list should be shuffled before this
+        // step, so that it's not prioritizing smaller vaults?
+        int chance = map->weight(level_id(BRANCH_DUNGEON,
+                                           MAX_OVERFLOW_LEVEL));
+        if (x_chance_in_y(chance, overflow_weights[num] + chance))
+        {
+            vector<god_type> new_overflow_gods;
+            for (auto god : overflow_gods)
+                if (count(this_temple_gods.begin(), this_temple_gods.end(), god) == 0)
+                    new_overflow_gods.push_back(god);
+            fprintf(stderr,"Overflow temple with tags '%s'\n", map->tags_string().c_str());
+            _use_overflow_temple(this_temple_gods);
+
+            overflow_gods = new_overflow_gods;
         }
-
-        _use_overflow_temple(this_temple_gods);
-
-        overflow_gods = new_overflow_gods;
-
-        goto multi_overflow;
     }
 
     // NOTE: The overflow temples don't have to contain only one
