@@ -1231,6 +1231,8 @@ static bool _updating_view = false;
 static bool _check_option(const string& line, msg_channel_type channel,
                           const vector<message_filter>& option)
 {
+    if (crawl_state.generating_level)
+        return false;
     return any_of(begin(option),
                   end(option),
                   bind(mem_fn(&message_filter::is_filtered),
@@ -1598,6 +1600,8 @@ static void mpr_check_patterns(const string& message,
                                msg_channel_type channel,
                                int param)
 {
+    if (crawl_state.generating_level)
+        return;
     for (const text_pattern &pat : Options.note_messages)
     {
         if (channel == MSGCH_EQUIPMENT || channel == MSGCH_FLOOR_ITEMS
@@ -1655,12 +1659,15 @@ static msg_colour_type prepare_message(const string& imsg,
     if (colour != MSGCOL_MUTED)
         mpr_check_patterns(imsg, channel, param);
 
-    for (const message_colour_mapping &mcm : Options.message_colour_mappings)
+    if (!crawl_state.generating_level)
     {
-        if (mcm.message.is_filtered(channel, imsg))
+        for (const message_colour_mapping &mcm : Options.message_colour_mappings)
         {
-            colour = mcm.colour;
-            break;
+            if (mcm.message.is_filtered(channel, imsg))
+            {
+                colour = mcm.colour;
+                break;
+            }
         }
     }
 
