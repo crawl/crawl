@@ -421,7 +421,6 @@ static void _post_init(bool newc)
     ash_check_bondage(false);
 
     trackers_init_new_level(false);
-    tile_new_level(newc);
 
     if (newc) // start a new game
     {
