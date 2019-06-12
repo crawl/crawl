@@ -734,7 +734,7 @@ mapref_vector find_maps_for_tag(const string &tag,
 
     for (const map_def &mapdef : vdefs)
     {
-        if (mapdef.has_tag(tag_set)
+        if (mapdef.has_tags(tag_set)
             && !mapdef.has_tag("dummy")
             && (!check_depth || !mapdef.has_depth()
                 || mapdef.is_usable_in(place))
@@ -888,7 +888,7 @@ bool map_selector::accept(const map_def &mapdef) const
     }
 
     case TAG:
-        return mapdef.has_tag(tag)
+        return mapdef.has_tags(tag) // allow multiple tags, for temple overflow vaults
                && (!check_depth
                    || !mapdef.has_depth()
                    || mapdef.is_usable_in(place))

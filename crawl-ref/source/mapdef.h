@@ -1247,8 +1247,9 @@ public:
 
     bool is_minivault() const;
     bool is_overwritable_layout() const;
-    bool has_tag(const string &tagswanted) const;
-    bool has_tag(const set<string> &tagswanted) const;
+    bool has_tag(const string &tagwanted) const;
+    bool has_tags(const string &tagswanted) const;
+    bool has_tags(const set<string> &tagswanted) const;
     bool has_tag_prefix(const string &tag) const;
     bool has_tag_suffix(const string &suffix) const;
 
