@@ -355,7 +355,6 @@ void initialise_temples()
             for (auto god : overflow_gods)
                 if (count(this_temple_gods.begin(), this_temple_gods.end(), god) == 0)
                     new_overflow_gods.push_back(god);
-            fprintf(stderr,"Overflow temple with tags '%s'\n", map->tags_string().c_str());
             _use_overflow_temple(this_temple_gods);
 
             overflow_gods = new_overflow_gods;
