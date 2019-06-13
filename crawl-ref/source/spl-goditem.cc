@@ -12,6 +12,7 @@
 #include "coordit.h"
 #include "database.h"
 #include "directn.h"
+#include "english.h"
 #include "env.h"
 #include "fight.h"
 #include "god-conduct.h"
@@ -101,9 +102,11 @@ string unpacifiable_reason(const monster_info& mi)
 
     if (mi.is(MB_SLEEPING)) // not aware of what is happening
     {
-        return make_stringf("You cannot pacify this monster while %s is "
+        return make_stringf("You cannot pacify this monster while %s %s "
                             "sleeping!",
-                            mi.pronoun(PRONOUN_SUBJECTIVE));
+                            mi.pronoun(PRONOUN_SUBJECTIVE),
+                            conjugate_verb("are",
+                                           mi.pronoun_plurality()).c_str());
     }
 
     // pacifiable, maybe!

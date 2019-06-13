@@ -169,6 +169,9 @@ enum monclass_flag_type : uint64_t
 
     /// monster always receives a wand
     M_ALWAYS_WAND       = BIT(56),
+
+    /// uses they/them pronouns
+    M_GENDER_NEUTRAL    = BIT(57),
 };
 DEF_BITFIELD(monclass_flags_t, monclass_flag_type);
 

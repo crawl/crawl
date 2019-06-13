@@ -3936,15 +3936,17 @@ bool mons_can_attack(const monster& mon)
  * Used for pronoun selection.
  *
  * @param mc        The type of monster in question
- * @return          GENDER_NEUTER, _FEMALE, or _MALE.
+ * @return          GENDER_NEUTER, _NEUTRAL, _FEMALE, or _MALE.
  */
-static gender_type _mons_class_gender(monster_type mc)
+gender_type mons_class_gender(monster_type mc)
 {
     const bool female = mons_class_flag(mc, M_FEMALE);
     const bool male = mons_class_flag(mc, M_MALE);
-    ASSERT(!(male && female));
+    const bool neutral = mons_class_flag(mc, M_GENDER_NEUTRAL);
+    ASSERT(male + female + neutral <= 1);
     return male ? GENDER_MALE :
          female ? GENDER_FEMALE :
+        neutral ? GENDER_NEUTRAL :
                   GENDER_NEUTER;
 }
 
@@ -3957,7 +3959,7 @@ const char *mons_pronoun(monster_type mon_type, pronoun_type variant,
                          bool visible)
 {
     const gender_type gender = !visible ? GENDER_NEUTER
-                                        : _mons_class_gender(mon_type);
+                                        : mons_class_gender(mon_type);
     return decline_pronoun(gender, variant);
 }
 
@@ -4986,8 +4988,9 @@ void debug_mondata()
 
         const bool male = mons_class_flag(mc, M_MALE);
         const bool female = mons_class_flag(mc, M_FEMALE);
-        if (male && female)
-            fails += make_stringf("%s is both male and female\n", name);
+        const bool neutral = mons_class_flag(mc, M_GENDER_NEUTRAL);
+        if (male + female + neutral > 1)
+            fails += make_stringf("%s has too many genders\n", name);
 
         if (md->shape == MON_SHAPE_BUGGY)
             fails += make_stringf("%s has no defined shape\n", name);
@@ -5010,7 +5013,8 @@ void debug_mondata()
                 fails += make_stringf("%s has a corpse tile & no corpse\n",
                                       name);
             }
-        } else if (!has_corpse_tile)
+        }
+        else if (!has_corpse_tile)
             fails += make_stringf("%s has a corpse but no corpse tile\n", name);
     }
 

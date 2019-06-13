@@ -332,6 +332,7 @@ public:
     // will return "Arbolt the orc priest".
     string full_name(description_level_type type) const;
     string pronoun(pronoun_type pro, bool force_visible = false) const override;
+    bool pronoun_plurality(bool force_visible = false) const;
     string conj_verb(const string &verb) const override;
     string hand_name(bool plural, bool *can_plural = nullptr) const override;
     string foot_name(bool plural, bool *can_plural = nullptr) const override;

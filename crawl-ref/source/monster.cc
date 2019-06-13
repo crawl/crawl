@@ -847,13 +847,14 @@ void monster::equip_weapon_message(item_def &item)
     {
         bool plural = true;
         string hand = hand_name(true, &plural);
-        mprf("%s %s briefly %s through it before %s manages to get a "
+        mprf("%s %s briefly %s through it before %s %s to get a "
              "firm grip on it.",
              pronoun(PRONOUN_POSSESSIVE).c_str(),
              hand.c_str(),
              // Not conj_verb: the monster isn't the subject.
              conjugate_verb("pass", plural).c_str(),
-             pronoun(PRONOUN_SUBJECTIVE).c_str());
+             pronoun(PRONOUN_SUBJECTIVE).c_str(),
+             conjugate_verb("manage", pronoun_plurality()).c_str());
     }
         break;
     case SPWPN_REAPING:
@@ -2349,6 +2350,15 @@ string monster::pronoun(pronoun_type pro, bool force_visible) const
                                pro);
     }
     return mons_pronoun(type, pro, seen);
+}
+
+bool monster::pronoun_plurality(bool force_visible) const
+{
+    const bool seen = force_visible || you.can_see(*this);
+    if (seen && props.exists(MON_GENDER_KEY))
+        return props[MON_GENDER_KEY].get_int() == GENDER_NEUTRAL;
+
+    return seen && mons_class_gender(type) == GENDER_NEUTRAL;
 }
 
 string monster::conj_verb(const string &verb) const

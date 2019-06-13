@@ -305,7 +305,12 @@ static string _monster_headsup(const vector<monster*> &monsters,
             monname = mon->full_name(DESC_A);
         warning_msg += uppercase_first(monname);
 
-        warning_msg += " is";
+        warning_msg += " ";
+        if (monsters.size() == 1)
+            warning_msg += conjugate_verb("are", mon->pronoun_plurality());
+        else
+            warning_msg += "is";
+
         if (!divine)
         {
             warning_msg += get_monster_equipment_desc(mi, DESC_WEAPON_WARNING,

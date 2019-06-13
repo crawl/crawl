@@ -694,9 +694,11 @@ static void _hydra_consider_devouring(monster &defender)
     if (defender.is_shapeshifter())
     {
         // handle this carefully, so the player knows what's going on
-        mprf("You spit out %s as %s twists & changes in your mouth!",
+        mprf("You spit out %s as %s %s & %s in your mouth!",
              defender.name(DESC_THE).c_str(),
-             defender.pronoun(PRONOUN_SUBJECTIVE).c_str());
+             defender.pronoun(PRONOUN_SUBJECTIVE).c_str(),
+             conjugate_verb("twist", defender.pronoun_plurality()).c_str(),
+             conjugate_verb("change", defender.pronoun_plurality()).c_str());
         return;
     }
 

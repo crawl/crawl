@@ -8,6 +8,7 @@
 #include <functional>
 
 #include "enum.h"
+#include "gender-type.h"
 #include "los-type.h"
 #include "mon-enum.h"
 #include "mon-inv-type.h"
@@ -350,6 +351,7 @@ bool mons_can_attack(const monster& mon);
 bool mons_has_incapacitating_spell(const monster& mon, const actor& foe);
 bool mons_has_incapacitating_ranged_attack(const monster& mon, const actor& foe);
 
+gender_type mons_class_gender(monster_type mc);
 const char *mons_pronoun(monster_type mon_type, pronoun_type variant,
                          bool visible = true);
 
