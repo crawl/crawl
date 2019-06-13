@@ -4387,7 +4387,7 @@ static void _gozag_place_shop(int index)
     ASSERT(shop);
 
     const gender_type gender = random_choose(GENDER_FEMALE, GENDER_MALE,
-                                             GENDER_NEUTER);
+                                             GENDER_NEUTRAL);
 
     mprf(MSGCH_GOD, "%s invites you to visit %s %s%s%s.",
                     shop->shop_name.c_str(),

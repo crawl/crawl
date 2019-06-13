@@ -1218,7 +1218,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     if (mon->type == MONS_HELLBINDER || mon->type == MONS_CLOUD_MAGE)
     {
         mon->props[MON_GENDER_KEY] = random_choose(GENDER_FEMALE, GENDER_MALE,
-                                                   GENDER_NEUTER);
+                                                   GENDER_NEUTRAL);
     }
 
     if (mon->has_spell(SPELL_OZOCUBUS_ARMOUR))
