@@ -42,6 +42,10 @@
 #define RANDBK_SLVLS_KEY "randbook_slevels"
 #define RANDBK_NSPELLS_KEY "randbook_num_spells"
 
+#ifdef DEBUG_TAG_PROFILING
+void tag_profile_out();
+#endif
+
 class mon_enchant;
 extern const char *traversable_glyphs;
 
@@ -1165,6 +1169,14 @@ private:
     // True if this map is in the process of being validated.
     bool validating_map_flag;
 
+    // values cached from tags -- adding to this is only recommended if you've
+    // actually done the profiling...
+    // These are the top three worst tags, which jointly amount to about 3-4%
+    // of levelgen time if not cached.
+    bool cache_minivault;
+    bool cache_overwritable;
+    bool cache_extra;
+
 public:
     map_def();
 
@@ -1248,6 +1260,7 @@ public:
 
     bool is_minivault() const;
     bool is_overwritable_layout() const;
+    bool is_extra_vault() const;
     bool has_tag(const string &tagwanted) const;
     bool has_tag_prefix(const string &tag) const;
     bool has_tag_suffix(const string &suffix) const;
@@ -1327,6 +1340,7 @@ private:
     string apply_subvault(string_spec &);
     string validate_map_placeable();
     bool has_exit() const;
+    void update_cached_tags();
 };
 
 const int CHANCE_ROLL = 10000;

@@ -1139,7 +1139,7 @@ dgn_register_place(const vault_placement &place, bool register_vault)
     vault_placement *new_vault_place = new vault_placement(place);
     env.level_vaults.emplace_back(new_vault_place);
     if (register_vault)
-        _remember_vault_placement(place, place.map.has_tag("extra"));
+        _remember_vault_placement(place, place.map.is_extra_vault());
     return new_vault_place;
 }
 
@@ -1156,7 +1156,7 @@ static bool _dgn_ensure_vault_placed(bool vault_success,
 static bool _ensure_vault_placed_ex(bool vault_success, const map_def *vault)
 {
     return _dgn_ensure_vault_placed(vault_success,
-                                    (!vault->has_tag("extra")
+                                    (!vault->is_extra_vault()
                                      && vault->orient == MAP_ENCOMPASS));
 }
 
@@ -3161,7 +3161,7 @@ static void _place_minivaults()
             if (vault)
                 _build_secondary_vault(vault);
         } // if ALL maps eligible are "extra" but fail to place, we'd be screwed
-        while (vault && vault->has_tag("extra") && tries++ < 10000);
+        while (vault && vault->is_extra_vault() && tries++ < 10000);
     }
 }
 
@@ -3541,7 +3541,7 @@ static void _place_extra_vaults()
             if (_build_secondary_vault(vault))
             {
                 const map_def &map(*vault);
-                if (map.has_tag("extra"))
+                if (map.is_extra_vault())
                     continue;
                 use_random_maps = false;
             }

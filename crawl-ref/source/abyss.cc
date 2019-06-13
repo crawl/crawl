@@ -1378,7 +1378,7 @@ static int _abyss_place_vaults(const map_bitmask &abyss_genlevel_mask)
         const map_def *map = random_map_in_depth(level_id::current(), extra);
         if (map)
         {
-            if (_abyss_place_map(map) && !map->has_tag("extra"))
+            if (_abyss_place_map(map) && !map->is_extra_vault())
             {
                 extra = true;
 

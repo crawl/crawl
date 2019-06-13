@@ -861,7 +861,7 @@ bool map_selector::accept(const map_def &mapdef) const
             return false;
         }
         return mapdef.is_minivault() == mini
-               && _is_extra_compatible(extra, mapdef.has_tag("extra"))
+               && _is_extra_compatible(extra, mapdef.is_extra_vault())
                && mapdef.place.is_usable_in(place)
                && _map_matches_layout_type(mapdef)
                && !mapdef.map_already_used();
@@ -870,7 +870,7 @@ bool map_selector::accept(const map_def &mapdef) const
     {
         const map_chance chance(mapdef.chance(place));
         return mapdef.is_minivault() == mini
-               && _is_extra_compatible(extra, mapdef.has_tag("extra"))
+               && _is_extra_compatible(extra, mapdef.is_extra_vault())
                && (!chance.valid() || mapdef.has_tag("dummy"))
                && depth_selectable(mapdef)
                && !mapdef.map_already_used();
@@ -883,7 +883,7 @@ bool map_selector::accept(const map_def &mapdef) const
         return chance.valid()
                && !mapdef.has_tag("dummy")
                && depth_selectable(mapdef)
-               && _is_extra_compatible(extra, mapdef.has_tag("extra"))
+               && _is_extra_compatible(extra, mapdef.is_extra_vault())
                && !mapdef.map_already_used();
     }
 

@@ -47,6 +47,36 @@
 #include "tiledef-dngn.h"
 #include "tiledef-player.h"
 
+#ifdef DEBUG_TAG_PROFILING
+static map<string,int> _tag_profile;
+
+static void _profile_inc_tag(const string &tag)
+{
+    if (!_tag_profile.count(tag))
+        _tag_profile[tag] = 0;
+    _tag_profile[tag]++;
+}
+
+void tag_profile_out()
+{
+    long total = 0;
+    vector<pair<int, string>> resort;
+    fprintf(stderr, "\nTag hits:\n");
+    for (auto k : _tag_profile)
+    {
+        resort.emplace_back(k.second, k.first);
+        total += k.second;
+    }
+    sort(resort.begin(), resort.end());
+    for (auto p : resort)
+    {
+        long percent = ((long) p.first) * 100 / total;
+        fprintf(stderr, "%8d (%2ld%%): %s\n", p.first, percent, p.second.c_str());
+    }
+    fprintf(stderr, "Total: %ld\n", total);
+}
+#endif
+
 static const char *map_section_names[] =
 {
     "",
@@ -2172,7 +2202,8 @@ map_def::map_def()
       rock_colour(BLACK), floor_colour(BLACK), rock_tile(""),
       floor_tile(""), border_fill_type(DNGN_ROCK_WALL),
       tags(),
-      index_only(false), cache_offset(0L), validating_map_flag(false)
+      index_only(false), cache_offset(0L), validating_map_flag(false),
+      cache_minivault(false), cache_overwritable(false), cache_extra(false)
 {
     init();
 }
@@ -2231,6 +2262,7 @@ void map_def::reinit()
     mons.clear();
     feat_renames.clear();
     subvault_places.clear();
+    update_cached_tags();
 }
 
 bool map_def::map_already_used() const
@@ -2933,16 +2965,37 @@ bool map_def::has_depth() const
     return !depths.empty();
 }
 
+void map_def::update_cached_tags()
+{
+    cache_minivault = has_tag("minivault");
+    cache_overwritable = has_tag("overwritable");
+    cache_extra = has_tag("extra");
+}
+
 bool map_def::is_minivault() const
 {
-    return has_tag("minivault");
+#ifdef DEBUG_TAG_PROFILING
+    ASSERT(cache_minivault == has_tag("minivault"));
+#endif
+    return cache_minivault;
 }
 
 // Returns true if the map is a layout that allows other vaults to be
 // built on it.
 bool map_def::is_overwritable_layout() const
 {
-    return has_tag("overwritable");
+#ifdef DEBUG_TAG_PROFILING
+    ASSERT(cache_overwritable == has_tag("overwritable"));
+#endif
+    return cache_overwritable;
+}
+
+bool map_def::is_extra_vault() const
+{
+#ifdef DEBUG_TAG_PROFILING
+    ASSERT(cache_extra == has_tag("extra"));
+#endif
+    return cache_extra;
 }
 
 // Tries to dock a floating vault - push it to one edge of the level.
@@ -3253,6 +3306,9 @@ bool map_def::has_all_tags(const string &tagswanted) const
 
 bool map_def::has_tag(const string &tagwanted) const
 {
+#ifdef DEBUG_TAG_PROFILING
+    _profile_inc_tag(tagwanted);
+#endif
     return tags.count(tagwanted) > 0;
 }
 
@@ -3294,6 +3350,7 @@ void map_def::add_tags(const string &tag)
 {
     auto parsed_tags = parse_tags(tag);
     tags.insert(parsed_tags.begin(), parsed_tags.end());
+    update_cached_tags();
 }
 
 bool map_def::remove_tags(const string &tag)
@@ -3302,18 +3359,21 @@ bool map_def::remove_tags(const string &tag)
     auto parsed_tags = parse_tags(tag);
     for (auto &t : parsed_tags)
         removed = tags.erase(t) || removed; // would iterator overload be ok?
+    update_cached_tags();
     return removed;
 }
 
 void map_def::clear_tags()
 {
     tags.clear();
+    update_cached_tags();
 }
 
 void map_def::set_tags(const string &tag)
 {
     clear_tags();
     add_tags(tag);
+    update_cached_tags();
 }
 
 string map_def::tags_string() const

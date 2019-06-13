@@ -30,6 +30,7 @@
 #include "item-name.h"
 #include "jobs.h"
 #include "libutil.h"
+#include "mapdef.h"
 #include "maps.h"
 #include "message.h"
 #include "mon-pick.h"
@@ -213,6 +214,10 @@ void run_tests()
                                            ", ", ", "));
         }
     }
+
+#ifdef DEBUG_TAG_PROFILING
+    tag_profile_out();
+#endif
 
     if (crawl_state.test_list)
         end(0);
