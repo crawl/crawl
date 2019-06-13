@@ -9,6 +9,7 @@
 #include <map>
 #include <string>
 #include <vector>
+#include <unordered_set>
 
 #include "enum.h"
 
@@ -74,7 +75,7 @@ int strip_number_tag(string &s, const string &tagprefix);
 vector<string> strip_multiple_tag_prefix(string &s, const string &tagprefix);
 string strip_tag_prefix(string &s, const string &tagprefix);
 const string tag_without_prefix(const string &s, const string &tagprefix);
-set<string> parse_tags(const string &tags);
+unordered_set<string> parse_tags(const string &tags);
 bool parse_int(const char *s, int &i);
 
 // String 'descriptions'

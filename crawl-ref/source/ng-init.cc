@@ -142,7 +142,7 @@ void initialise_temples()
         if (main_temple->has_tag("temple_variable"))
         {
             vector<int> sizes;
-            for (auto &tag : main_temple->get_tags())
+            for (const auto &tag : main_temple->get_tags())
             {
                 if (starts_with(tag, "temple_altars_"))
                 {
@@ -287,7 +287,7 @@ void initialise_temples()
             break;
         unsigned int num = 0;
         vector<god_type> this_temple_gods;
-        for (auto &tag : map->get_tags())
+        for (const auto &tag : map->get_tags())
         {
             if (!starts_with(tag, "temple_overflow_"))
                 continue;

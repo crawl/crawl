@@ -730,11 +730,11 @@ mapref_vector find_maps_for_tag(const string &tag,
 {
     mapref_vector maps;
     level_id place = level_id::current();
-    set<string> tag_set = parse_tags(tag);
+    unordered_set<string> tag_set = parse_tags(tag);
 
     for (const map_def &mapdef : vdefs)
     {
-        if (mapdef.has_tags(tag_set)
+        if (mapdef.has_all_tags(tag_set.begin(), tag_set.end())
             && !mapdef.has_tag("dummy")
             && (!check_depth || !mapdef.has_depth()
                 || mapdef.is_usable_in(place))
@@ -888,7 +888,7 @@ bool map_selector::accept(const map_def &mapdef) const
     }
 
     case TAG:
-        return mapdef.has_tags(tag) // allow multiple tags, for temple overflow vaults
+        return mapdef.has_all_tags(tag) // allow multiple tags, for temple overflow vaults
                && (!check_depth
                    || !mapdef.has_depth()
                    || mapdef.is_usable_in(place))

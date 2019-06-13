@@ -2732,7 +2732,7 @@ string map_def::validate_map_placeable()
     // Ok, the map wants to be placed by tag. In this case it should have
     // at least one tag that's not a map flag.
     bool has_selectable_tag = false;
-    for (const string &piece : get_tags())
+    for (const string &piece : tags)
     {
         if (_map_tag_is_selectable(piece))
         {
@@ -3245,21 +3245,10 @@ void map_def::fixup()
     }
 }
 
-bool map_def::has_tags(const set<string> &tagswanted) const
+bool map_def::has_all_tags(const string &tagswanted) const
 {
-    if (tags.empty() || tagswanted.size() == 0)
-        return false;
-
-    for (const string &tag : tagswanted)
-        if (!tags.count(tag))
-            return false;
-
-    return true;
-}
-
-bool map_def::has_tags(const string &tagswanted) const
-{
-    return has_tags(parse_tags(tagswanted));
+    const auto &tags_set = parse_tags(tagswanted);
+    return has_all_tags(tags_set.begin(), tags_set.end());
 }
 
 bool map_def::has_tag(const string &tagwanted) const
@@ -3287,9 +3276,18 @@ bool map_def::has_tag_suffix(const string &suffix) const
     return false;
 }
 
-const set<string> map_def::get_tags() const
+const unordered_set<string> map_def::get_tags_unsorted() const
 {
     return tags;
+}
+
+const vector<string> map_def::get_tags() const
+{
+    // this might seem inefficient, but get_tags is not called very much; the
+    // hotspot revealed by profiling is actually has_tag checks.
+    vector<string> result(tags.begin(), tags.end());
+    sort(result.begin(), result.end());
+    return result;
 }
 
 void map_def::add_tags(const string &tag)

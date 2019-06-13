@@ -218,11 +218,11 @@ int strip_number_tag(string &s, const string &tagprefix)
     return x;
 }
 
-set<string> parse_tags(const string &tags)
+unordered_set<string> parse_tags(const string &tags)
 {
     vector<string> split_tags = split_string(" ", tags);
-    set<string> ordered_tags(split_tags.begin(), split_tags.end());
-    return ordered_tags;
+    unordered_set<string> tags_set(split_tags.begin(), split_tags.end());
+    return tags_set;
 }
 
 bool parse_int(const char *s, int &i)
