@@ -285,7 +285,7 @@ void initialise_temples()
     {
         if (overflow_gods.size() < 2)
             break;
-        int num = 0;
+        unsigned int num = 0;
         vector<god_type> this_temple_gods;
         for (auto &tag : map->get_tags())
         {
@@ -299,7 +299,7 @@ void initialise_temples()
                 continue;
             }
             int test_num;
-            if (parse_int(temple_tag.c_str(), test_num))
+            if (parse_int(temple_tag.c_str(), test_num) && test_num > 0)
                 num = test_num;
             else
             {
