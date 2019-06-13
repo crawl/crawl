@@ -1078,9 +1078,8 @@ ENDMAP
 
 NAME:   biasface_ghost_orc_armoury
 DEPTH:  D:3-, Orc
-ITEM:   pair of boots / helmet / hat / pair of gloves / cloak
-ITEM:   pair of boots good_item / helmet good_item / hat good_item / \
-        pair of gloves good_item / cloak good_item
+:item(dgn.aux_armour)
+:item(dgn.good_aux_armour)
 ITEM:   any armour, any armour good_item, any weapon, any weapon good_item
 ITEM:   any jewellery, any jewellery good_item
 KMONS:  O = player ghost
