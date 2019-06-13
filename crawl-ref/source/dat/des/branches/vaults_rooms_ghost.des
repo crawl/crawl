@@ -183,7 +183,7 @@ KITEM:  P = robe cursed plus:-8 randart ident:all
 ITEM:   quick blade good_item w:5 / rapier good_item / scimitar good_item / \
         double sword good_item w:5 / demon blade good_item w:5 / \
         triple sword good_item w:5 /  morningstar good_item / \
-        eveningstar good_item w:5 / demon whip good_item w:5 \
+        eveningstar good_item w:5 / demon whip good_item w:5 / \
         dire flail good_item / great mace good_item / broad axe good_item / \
         battleaxe good_item / executioner's axe good_item w:5 / \
         demon trident good_item w:5 / glaive good_item / \
