@@ -224,7 +224,7 @@ string join_strings(Z start, Z end, const string &sep = " ")
 
 static inline bool starts_with(const string &s, const string &prefix)
 {
-    return s.rfind(prefix, 0) != string::npos;
+    return s.compare(0, prefix.size(), prefix) == 0;
 }
 
 static inline bool ends_with(const string &s, const string &suffix)
