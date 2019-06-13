@@ -3841,6 +3841,7 @@ COMPILE_CHECK(ARRAYSZ(size_adj) == NUM_SIZE_LEVELS);
 // This is used in monster description and on '%' screen for player size
 const char* get_size_adj(const size_type size, bool ignore_medium)
 {
+    ASSERT_RANGE(static_cast<int>(size), 0, ARRAYSZ(size_adj));
     if (ignore_medium && size == SIZE_MEDIUM)
         return nullptr; // don't mention medium size
     return size_adj[size];
