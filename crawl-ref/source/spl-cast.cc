@@ -2052,9 +2052,9 @@ int spell_mp_freeze (spell_type spell)
         // divide by the square of the success rate to prevent dumb shit like casting 99% fail charms
 		double success = 1 - _get_true_fail_rate(raw_spell_fail(spell));
         // and max out an absurdly high value to avoid weird behaviors 
-        if (success < 0.05)
-            return 400;
-		double mp_to_freeze = spell_difficulty(spell) / (success * success);
+        if (success < 0.5)
+            return 100;
+		double mp_to_freeze = spell_difficulty(spell) / pow(success, 10);
         return (int) mp_to_freeze;
     }
 }
