@@ -4044,9 +4044,12 @@ static string _monster_stat_description(const monster_info& mi)
         }
         _add_energy_to_string(
             speed, me.spell,
-            mi.is_actual_spellcaster() ? conjugate_verb("cast", plural) + " spells" :
-            mi.is_priest()             ? conjugate_verb("use", plural) + " invocations"
-                                       : conjugate_verb("use", plural) + " natural abilities", fast, slow);
+            mi.is_actual_spellcaster() ? conjugate_verb("cast", plural)
+                                        + " spells" :
+            mi.is_priest()             ? conjugate_verb("use", plural)
+                                        + " invocations"
+                                       : conjugate_verb("use", plural)
+                                        + " natural abilities", fast, slow);
         _add_energy_to_string(speed, me.special,
                               conjugate_verb("use", plural) + " special abilities",
                               fast, slow);
