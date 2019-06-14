@@ -1073,7 +1073,7 @@ caster, over a short duration.
 Regeneration spell
 
 Reanimates parts of the caster's wounds. This unnatural act dramatically but
-temporarily increases the caster's health regeneration, while also speeding
+in semi-permanent increases the caster's health regeneration, while also speeding
 their metabolism.
 %%%%
 Repel Missiles spell
@@ -1218,7 +1218,7 @@ Smiting spell
 Song of Slaying spell
 
 Recites ancient verses of battle. Each non-summoned enemy the caster slays in
-combat during this recitation temporarily enhances their melee and ranged
+combat during this recitation in semi-permanent enhances their melee and ranged
 skills. The bonus only lasts for the duration of the song; casting this spell
 while already singing will start a new song, not extend an existing one.
 %%%%
@@ -1236,8 +1236,7 @@ Spectral Weapon spell
 
 Draws out the spirit within a wielded weapon to fight for the caster, with its
 strength increasing with power. It only attacks when the caster does, and its
-kills count as the caster's own. If the weapon is damaged, part of the injury
-will be echoed on the caster's body. Only one spectral weapon can be maintained
+kills count as the caster's own. Only one spectral weapon can be maintained
 at a time, and only while the original weapon remains wielded.
 
 Certain powerful named artefacts cannot be affected, and any abilities that
