@@ -34,6 +34,7 @@
 #include "spl-book.h"
 #include "spl-damage.h"
 #include "spl-summoning.h"
+#include "spl-wpnench.h"
 #include "spl-zap.h"
 #include "stringutil.h"
 #include "target.h"
@@ -355,6 +356,49 @@ static void _remove_spell_attributes(spell_type spell)
                                  you.missile_deflection() < orig_defl
                                  ? "less protected"
                                  : "your spell is no longer protecting you");
+        }
+        break;
+	case SPELL_REGENERATION:
+	    if (you.attribute[ATTR_SPELL_REGEN])
+        {
+            you.attribute[ATTR_SPELL_REGEN] = 0;
+            mprf(MSGCH_DURATION, "Your regeneration ceases.");
+        }
+        break;
+	case SPELL_SONG_OF_SLAYING:
+	    if (you.attribute[ATTR_SONG_OF_SLAYING])
+        {
+            you.attribute[ATTR_SONG_OF_SLAYING] = 0;
+            mprf(MSGCH_DURATION, "Your song of slaying ends.");
+        }
+        break;
+    case SPELL_DARKNESS:
+	    if (you.attribute[ATTR_DARKNESS])
+        {
+            you.attribute[ATTR_DARKNESS] = 0;
+            update_vision_range();
+            mprf(MSGCH_DURATION, "The darkness lifts.");
+        }
+        break;
+    case SPELL_RING_OF_FLAMES:
+	    if (you.attribute[ATTR_FIRE_SHIELD])
+        {
+            you.attribute[ATTR_FIRE_SHIELD] = 0;
+            mprf(MSGCH_DURATION, "Your ring of flames gutters out.");
+        }
+        break;
+    case SPELL_INFUSION: 
+        if (you.attribute[ATTR_INFUSION])
+        {
+            you.attribute[ATTR_INFUSION] = 0;
+            mprf(MSGCH_DURATION, "Your attacks are no longer infused with magic.");
+        }
+        break;
+    case SPELL_SPECTRAL_WEAPON:
+        if (you.attribute[ATTR_SPECTRAL_WEAPON])
+        {
+            you.attribute[ATTR_SPECTRAL_WEAPON] = 0;
+            mprf(MSGCH_DURATION, "You are no longer ready to draw out your spectral weapon.");
         }
         break;
     default:
@@ -1614,3 +1658,4 @@ const vector<spell_type> *soh_breath_spells(spell_type spell)
 
     return map_find(soh_breaths, spell);
 }
+
