@@ -6003,41 +6003,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
     if (type == MONS_ROYAL_JELLY && !is_summoned())
         trj_spawn_fineff::schedule(oppressor, this, pos(), damage);
 
-    // Damage sharing from the spectral weapon to its owner
-    // The damage shared should not be directly lethal, though like the
-    // pain spell, it can leave the player at a very dangerous 1hp.
-    // XXX: This makes a lot of messages, especially when the spectral weapon
-    //      is hit by a monster with multiple attacks and is frozen, burned, etc.
-    if (type == MONS_SPECTRAL_WEAPON && oppressor)
-    {
-        // The owner should not be able to damage itself
-        // XXX: the mid check here is intended to treat the player's shadow
-        // mimic as the player itself, i.e. the weapon won't share damage
-        // the shadow mimic inflicts on it (this causes a crash).
-        actor *owner = actor_by_mid(summoner);
-        if (owner && owner != oppressor && oppressor->mid != summoner)
-        {
-            int shared_damage = damage / 2;
-            if (shared_damage > 0)
-            {
-                if (owner->is_player())
-                    mpr("Your spectral weapon shares its damage with you!");
-                else if (owner->alive() && you.can_see(*owner))
-                {
-                    string buf = " shares ";
-                    buf += owner->pronoun(PRONOUN_POSSESSIVE);
-                    buf += " spectral weapon's damage!";
-                    simple_monster_message(*owner->as_monster(), buf.c_str());
-                }
-
-                // Share damage using a fineff, so that it's non-fatal
-                // regardless of processing order in an AoE attack.
-                deferred_damage_fineff::schedule(oppressor, owner,
-                                                 shared_damage, false, false);
-            }
-        }
-    }
-    else if (mons_is_tentacle_or_tentacle_segment(type)
+    if (mons_is_tentacle_or_tentacle_segment(type)
              && !mons_is_solo_tentacle(type)
              && flavour != BEAM_TORMENT_DAMAGE
              && monster_by_mid(tentacle_connect)

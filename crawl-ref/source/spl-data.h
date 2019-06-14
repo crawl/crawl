@@ -868,7 +868,7 @@ static const struct spell_desc spelldata[] =
     SPELL_REGENERATION, "Regeneration",
     spschool::charms | spschool::necromancy,
     spflag::selfench | spflag::utility | spflag::permabuff,
-    3,
+    4,
     200,
     -1, -1,
     3, 0,
@@ -2476,7 +2476,7 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_DARKNESS, "Darkness",
-    spschool::hexes | spschool::charms,
+    spschool::hexes
     spflag::none | spflag::permabuff,
     6,
     200,
@@ -2879,7 +2879,7 @@ static const struct spell_desc spelldata[] =
     SPELL_SONG_OF_SLAYING, "Song of Slaying",
     spschool::charms,
     spflag::utility | spflag::permabuff,
-    2,
+    3,
     100,
     -1, -1,
     2, 8,
@@ -2903,7 +2903,7 @@ static const struct spell_desc spelldata[] =
     SPELL_SPECTRAL_WEAPON, "Spectral Weapon",
     spschool::hexes | spschool::charms,
     spflag::selfench | spflag::utility | spflag::no_ghost | spflag::permabuff,
-    3,
+    5,
     100,
     -1, -1,
     3, 0,
