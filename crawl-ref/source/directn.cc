@@ -3210,8 +3210,8 @@ static string _get_monster_desc(const monster_info& mi)
                 + " fleeing.\n";
     // hostile with target != you
     else if (mi.attitude == ATT_HOSTILE && (mi.is(MB_UNAWARE) || mi.is(MB_WANDERING)))
-        text += pronoun + " " + conjugate_verb("don't", mi.pronoun_plurality())
-                + " appear to have noticed you.\n";
+        text += pronoun + " " + conjugate_verb("have", mi.pronoun_plurality())
+                + " not noticed you.\n";
 
     if (mi.attitude == ATT_FRIENDLY)
     {
