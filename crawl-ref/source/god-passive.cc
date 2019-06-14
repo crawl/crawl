@@ -1096,13 +1096,19 @@ void gozag_detect_level_gold(bool count)
                 || env.map_knowledge(pos).item()->base_type != OBJ_GOLD)
             {
                 detected = true;
+                update_item_at(pos, true);
             }
-            update_item_at(pos, true);
             // the pile can still remain undetected if it is not in
             // you.visible_igrd, for example if it is under deep water and the
             // player will not be able to see it.
             if (detected && env.map_knowledge(pos).item())
+            {
                 env.map_knowledge(pos).flags |= MAP_DETECTED_ITEM;
+#ifdef USE_TILE
+                // force an update for gold generated during Abyss shifts
+                tiles.update_minimap(pos);
+#endif
+            }
         }
     }
 }
