@@ -2476,7 +2476,7 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_DARKNESS, "Darkness",
-    spschool::hexes
+    spschool::hexes,
     spflag::none | spflag::permabuff,
     6,
     200,
