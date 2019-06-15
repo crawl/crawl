@@ -1630,7 +1630,7 @@ bool is_buff_spell(spell_type spell)
 
 static spret _handle_buff_spells(spell_type spell, int powc, bolt& beam, god_type god, bool fail)
 {
-	switch(spell)
+    switch(spell)
     {
         case SPELL_REGENERATION:
             return cast_regen(powc, false);
@@ -1640,14 +1640,14 @@ static spret _handle_buff_spells(spell_type spell, int powc, bolt& beam, god_typ
             return cast_darkness(powc, false);     
         case SPELL_DEFLECT_MISSILES:
             return deflection(powc, false);
-		case SPELL_RING_OF_FLAMES:
+    	case SPELL_RING_OF_FLAMES:
             return cast_ring_of_flames(powc, false);
         case SPELL_INFUSION:
             return cast_infusion(powc, false);
         case SPELL_SPECTRAL_WEAPON:
             return cast_spectral_weapon(&you, powc, god, false);
         default:
-		    return spret::none;
+            return spret::none;
     }
 }
 
@@ -2046,15 +2046,15 @@ int spell_mp_freeze (spell_type spell)
 {
     //no need to freeze mp if it's not a buff spell
     if (!is_buff_spell(spell))
-	    return 0;
+        return 0;
     else 
     {
         // divide by the square of the success rate to prevent dumb shit like casting 99% fail charms
-		double success = 1 - _get_true_fail_rate(raw_spell_fail(spell));
+        double success = 1 - _get_true_fail_rate(raw_spell_fail(spell));
         // and max out an absurdly high value to avoid weird behaviors 
         if (success < 0.5)
             return 100;
-		double mp_to_freeze = spell_difficulty(spell) / pow(success, 10);
+		double mp_to_freeze = spell_difficulty(spell) / pow(success, 5);
         return (int) mp_to_freeze;
     }
 }
@@ -2263,7 +2263,7 @@ string spell_power_string(spell_type spell)
 
 string spell_reserved_mp_string(spell_type spell)
 {
-	if (! is_buff_spell(spell))
+    if (! is_buff_spell(spell))
         return "N/A";
     else 
     {

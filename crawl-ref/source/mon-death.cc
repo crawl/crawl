@@ -2172,8 +2172,8 @@ item_def* monster_die(monster& mons, killer_type killer,
     {
         const int sos_bonus = you.attribute[ATTR_SONG_OF_SLAYING];
         // spellpower dependent cap, slightly randomized.
-		// Always can get to at least 6, getting higher is hard and spellpower dependent.
-		if (sos_bonus < 6 + min(3,random2(div_rand_round(calc_spell_power(SPELL_SONG_OF_SLAYING, true),10)))) 
+        // Always can get to at least 6, getting higher is hard and spellpower dependent.
+        if (sos_bonus < 6 + min(3,random2(div_rand_round(calc_spell_power(SPELL_SONG_OF_SLAYING, true),10)))) 
             you.attribute[ATTR_SONG_OF_SLAYING] = sos_bonus + 1;
     }
 

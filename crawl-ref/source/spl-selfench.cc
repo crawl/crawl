@@ -253,34 +253,34 @@ spret cast_transform(int pow, transformation which_trans, bool fail)
 int calculate_frozen_mp()
 {
     int frozen_mp = 0;
-	if (you.attribute[ATTR_SPELL_REGEN] > 0)
+    if (you.attribute[ATTR_SPELL_REGEN] > 0)
     {
-		frozen_mp += spell_mp_freeze(SPELL_REGENERATION);
-	}
-	if (you.attribute[ATTR_SONG_OF_SLAYING] > 0)
+        frozen_mp += spell_mp_freeze(SPELL_REGENERATION);
+    }
+    if (you.attribute[ATTR_SONG_OF_SLAYING] > 0)
     {
-		frozen_mp += spell_mp_freeze(SPELL_SONG_OF_SLAYING);
-	}
+        frozen_mp += spell_mp_freeze(SPELL_SONG_OF_SLAYING);
+    }
     if (you.attribute[ATTR_DARKNESS] > 0)
     {
-		frozen_mp += spell_mp_freeze(SPELL_DARKNESS);
-	}
+        frozen_mp += spell_mp_freeze(SPELL_DARKNESS);
+    }
     if (you.attribute[ATTR_DEFLECT_MISSILES] > 0)
     {
-		frozen_mp += spell_mp_freeze(SPELL_DEFLECT_MISSILES);
-	}
+        frozen_mp += spell_mp_freeze(SPELL_DEFLECT_MISSILES);
+    }
     if (you.attribute[ATTR_FIRE_SHIELD] > 0)
     {
-		frozen_mp += spell_mp_freeze(SPELL_RING_OF_FLAMES);
-	}
+        frozen_mp += spell_mp_freeze(SPELL_RING_OF_FLAMES);
+    }
     if (you.attribute[ATTR_INFUSION] > 0)
     {
-		frozen_mp += spell_mp_freeze(SPELL_INFUSION);
-	}
+        frozen_mp += spell_mp_freeze(SPELL_INFUSION);
+    }
     if (you.attribute[ATTR_SPECTRAL_WEAPON] > 0)
     {
-		frozen_mp += spell_mp_freeze(SPELL_SPECTRAL_WEAPON);
-	}
+        frozen_mp += spell_mp_freeze(SPELL_SPECTRAL_WEAPON);
+    }
     return frozen_mp;
 }
 
@@ -289,7 +289,7 @@ void dispel_permanent_buffs()
     bool dispelled = false;
     if(you.attribute[ATTR_SPELL_REGEN])
     {
-	    you.attribute[ATTR_SPELL_REGEN] = 0;
+        you.attribute[ATTR_SPELL_REGEN] = 0;
         dispelled = true;
     }
     if(you.attribute[ATTR_SONG_OF_SLAYING])

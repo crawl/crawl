@@ -3109,7 +3109,7 @@ void summon_spectral_weapon(actor *agent, int pow, god_type god)
     mg.props[TUKIMA_WEAPON] = *wpn;
     mg.props[TUKIMA_POWER] = pow;
 
-	//return if the weapon wasn't created for some reason
+    //return if the weapon wasn't created for some reason
     monster *mons = create_monster(mg);
     if (!mons)
     {

@@ -358,22 +358,22 @@ static void _remove_spell_attributes(spell_type spell)
                                  : "your spell is no longer protecting you");
         }
         break;
-	case SPELL_REGENERATION:
-	    if (you.attribute[ATTR_SPELL_REGEN])
+    case SPELL_REGENERATION:
+        if (you.attribute[ATTR_SPELL_REGEN])
         {
             you.attribute[ATTR_SPELL_REGEN] = 0;
             mprf(MSGCH_DURATION, "Your regeneration ceases.");
         }
         break;
-	case SPELL_SONG_OF_SLAYING:
-	    if (you.attribute[ATTR_SONG_OF_SLAYING])
+    case SPELL_SONG_OF_SLAYING:
+        if (you.attribute[ATTR_SONG_OF_SLAYING])
         {
             you.attribute[ATTR_SONG_OF_SLAYING] = 0;
             mprf(MSGCH_DURATION, "Your song of slaying ends.");
         }
         break;
     case SPELL_DARKNESS:
-	    if (you.attribute[ATTR_DARKNESS])
+        if (you.attribute[ATTR_DARKNESS])
         {
             you.attribute[ATTR_DARKNESS] = 0;
             update_vision_range();
@@ -381,7 +381,7 @@ static void _remove_spell_attributes(spell_type spell)
         }
         break;
     case SPELL_RING_OF_FLAMES:
-	    if (you.attribute[ATTR_FIRE_SHIELD])
+        if (you.attribute[ATTR_FIRE_SHIELD])
         {
             you.attribute[ATTR_FIRE_SHIELD] = 0;
             mprf(MSGCH_DURATION, "Your ring of flames gutters out.");

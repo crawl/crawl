@@ -100,7 +100,7 @@ enum attribute_type
     ATTR_SONG_OF_SLAYING,      // Song of Slaying
     ATTR_DARKNESS,             // Darkness
     ATTR_FIRE_SHIELD,          // ring of flames
-	ATTR_INFUSION,             // infusion
+    ATTR_INFUSION,             // infusion
     ATTR_SPECTRAL_WEAPON,      // spectral weapon
     NUM_ATTRIBUTES
 };

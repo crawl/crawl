@@ -252,7 +252,7 @@ spret cast_ring_of_flames(int power, bool fail)
     fail_check();
     you.attribute[ATTR_FIRE_SHIELD] = 1;
     mpr("The air around you leaps into flames!");
-	    manage_fire_shield(1);
+        manage_fire_shield(1);
     return spret::success;
 }
 

@@ -451,7 +451,7 @@ bool melee_attack::handle_phase_hit()
     if (attacker->is_player() && you.attribute[ATTR_SPECTRAL_WEAPON])
     {
         summon_spectral_weapon(&you, calc_spell_power(SPELL_SPECTRAL_WEAPON,true),you.religion);         
-	}
+    }
 
     // This does more than just calculate the damage, it also sets up
     // messages, etc. It also wakes nearby creatures on a failed stab,

@@ -975,7 +975,7 @@ void player_reacts()
             (50 + calc_spell_power(SPELL_SONG_OF_SLAYING, true)) * 8 * BASELINE_DELAY))
     {
         const int sos_bonus = you.attribute[ATTR_SONG_OF_SLAYING];
-	            if (sos_bonus > 1)
+                if (sos_bonus > 1)
             you.attribute[ATTR_SONG_OF_SLAYING] = sos_bonus - 1;
     }
 
@@ -1066,7 +1066,7 @@ void player_reacts()
     if (you_worship(GOD_TROG) && you.mp_frozen > 0)
     {
         did_god_conduct(DID_SPELL_CASTING, 1 + random2(5));
-		        redraw_screen();
+                redraw_screen();
     }
 
     const int mp_to_freeze = calculate_frozen_mp();
@@ -1074,8 +1074,8 @@ void player_reacts()
     {
         set_mp(0);
         dispel_permanent_buffs();
-		        mpr("Your magical reserves can no longer sustain your buffs.");
-		        unfreeze_mp();
+                mpr("Your magical reserves can no longer sustain your buffs.");
+                unfreeze_mp();
     }
     // so we don't redraw every turn if nothing changed
     else if (mp_to_freeze != you.mp_frozen)

@@ -322,11 +322,11 @@ bool fill_status_info(int status, status_info& inf)
 
     case STATUS_RING_OF_FLAMES:
     {
-		if (you.attribute[ATTR_FIRE_SHIELD])
+        if (you.attribute[ATTR_FIRE_SHIELD])
         {
             inf.light_colour = LIGHTMAGENTA;
             inf.light_text = "RoF";
-			inf.long_text += "You are surrounded by a ring of flames.\n";
+            inf.long_text += "You are surrounded by a ring of flames.\n";
             inf.long_text += "You are immune to clouds of flame.";
         }
         break;
@@ -729,7 +729,7 @@ bool fill_status_info(int status, status_info& inf)
             inf.light_text = "Weap";
             if (!weapon_can_be_spectral(weapon))
             {
-			    inf.short_text   = "unsuitable spectral weapon";
+                inf.short_text   = "unsuitable spectral weapon";
                 inf.long_text   = "can't summon spectral weapon";
                 inf.light_colour = DARKGREY;
             }
@@ -741,7 +741,7 @@ bool fill_status_info(int status, status_info& inf)
             }
         }
         break;
-	}
+    }
 
     case STATUS_ORB:
     {
