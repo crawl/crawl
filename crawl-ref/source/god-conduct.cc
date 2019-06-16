@@ -773,51 +773,11 @@ static like_map divine_likes[] =
     },
     // GOD_SIF_MUNA,
     {
-        { DID_KILL_LIVING, _on_kill("you kill living beings", MH_NATURAL, false,
-                                  [](int &piety, int &denom,
-                                     const monster* victim)
-            {
-                denom *= 3;
-            }
-        ) },
-        { DID_KILL_UNDEAD, _on_kill("you destroy the undead", MH_UNDEAD, false,
-                                  [](int &piety, int &denom,
-                                     const monster* victim)
-            {
-                denom *= 3;
-            }
-        ) },
-        { DID_KILL_DEMON, _on_kill("you kill demons", MH_DEMONIC, false,
-                                  [](int &piety, int &denom,
-                                     const monster* victim)
-            {
-                denom *= 3;
-            }
-        ) },
-        { DID_KILL_HOLY, _on_kill("you kill holy beings", MH_HOLY, false,
-                                  [](int &piety, int &denom,
-                                     const monster* victim)
-            {
-                denom *= 3;
-            }
-        ) },
-        { DID_KILL_NONLIVING, _on_kill("you destroy nonliving beings",
-                                       MH_NONLIVING, false,
-                                       [](int &piety, int &denom,
-                                          const monster* victim)
-            {
-                denom *= 3;
-            }
-        ) },
-        { DID_SPELL_PRACTISE, {
-            "you train your various spell casting skills", true,
-            0, 0, 0, nullptr,
-            [] (int &piety, int &denom, const monster* /*victim*/)
-            {
-                // piety = denom = level at the start of the function
-                denom = 6;
-            }
-        } },
+        { DID_KILL_LIVING, KILL_LIVING_RESPONSE },
+        { DID_KILL_UNDEAD, KILL_UNDEAD_RESPONSE },
+        { DID_KILL_DEMON, KILL_DEMON_RESPONSE },
+        { DID_KILL_HOLY, KILL_HOLY_RESPONSE },
+        { DID_KILL_NONLIVING, KILL_NONLIVING_RESPONSE },
     },
     // GOD_TROG,
     {
