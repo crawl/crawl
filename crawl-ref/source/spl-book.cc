@@ -36,6 +36,7 @@
 #include "output.h"
 #include "prompt.h"
 #include "religion.h"
+#include "spl-cast.h"
 #include "spl-util.h"
 #include "state.h"
 #include "stringutil.h"
@@ -412,7 +413,9 @@ static spell_list _get_spell_list(bool just_check = false,
     for (const spell_type spell : available_spells)
     {
         if (you.has_spell(spell))
+        {
             num_known++;
+
             // Divine Exegesis includes spells the player already knows.
             if (you.divine_exegesis)
                 mem_spells.emplace_back(spell);
@@ -515,11 +518,30 @@ static bool _sort_mem_spells(const sortable_spell &a, const sortable_spell &b)
     return strcasecmp(spell_title(a.spell), spell_title(b.spell)) < 0;
 }
 
+static bool _sort_divine_spells(const sortable_spell &a, const sortable_spell &b)
+{
+    // Put useless spells last
+    const bool useful_a = !spell_is_useless(a.spell, true, true);
+    const bool useful_b = !spell_is_useless(b.spell, true, true);
+    if (useful_a != useful_b)
+        return useful_a;
+
+    // Put higher levels spells first, as they're more likely to be what we
+    // want.
+    if (a.difficulty != b.difficulty)
+        return a.difficulty > b.difficulty;
+
+    return strcasecmp(spell_title(a.spell), spell_title(b.spell)) < 0;
+}
+
 vector<spell_type> get_sorted_spell_list(bool silent, bool memorise_only)
 {
     spell_list mem_spells(_get_spell_list(silent, memorise_only));
 
-    sort(mem_spells.begin(), mem_spells.end(), _sort_mem_spells);
+    if (you.divine_exegesis)
+        sort(mem_spells.begin(), mem_spells.end(), _sort_divine_spells);
+    else
+        sort(mem_spells.begin(), mem_spells.end(), _sort_mem_spells);
 
     vector<spell_type> result;
     for (auto s : mem_spells)
@@ -528,23 +550,22 @@ vector<spell_type> get_sorted_spell_list(bool silent, bool memorise_only)
     return result;
 }
 
-class MemoriseMenu : public Menu
+class SpellLibraryMenu : public Menu
 {
 public:
-    enum class action { memorise, describe, hide, unhide } current_action;
+    enum class action { cast, memorise, describe, hide, unhide } current_action;
 
 protected:
     virtual formatted_string calc_title() override
     {
         return formatted_string::parse_string(
-                    make_stringf("<w>Spells %s                 Type                          Failure  Level ",
-                        current_action == action::memorise ?
-                            "(Memorise)" :
-                        current_action == action::describe ?
-                            "(Describe)" :
-                        current_action == action::hide ?
-                            "(Hide)    " :
-                            "(Show)    "));
+                    make_stringf("<w>Spells %s                 Type                          %sLevel ",
+                        current_action == action::cast ? "(Cast)" :
+                        current_action == action::memorise ? "(Memorise)" :
+                        current_action == action::describe ? "(Describe)" :
+                        current_action == action::hide ? "(Hide)    " :
+                            "(Show)    ",
+                        you.divine_exegesis ? "" : "Failure  "));
     }
 
 private:
@@ -582,17 +603,20 @@ private:
         }
         desc << "\n";
 
+        const string act = you.divine_exegesis ? "Cast" : "Memorise";
         // line 2
         desc << "[<yellow>?</yellow>] help                "
                 "[<yellow>Ctrl-f</yellow>] search      "
                 "[<yellow>!</yellow>] ";
-        desc << (  current_action == action::memorise
+        desc << ( current_action == action::cast
+                            ? "<w>Cast</w>|Describe|Hide|Show"
+                 : current_action == action::memorise
                             ? "<w>Memorise</w>|Describe|Hide|Show"
                  : current_action == action::describe
-                            ? "Memorise|<w>Describe</w>|Hide|Show"
+                            ? act + "|<w>Describe</w>|Hide|Show"
                  : current_action == action::hide
-                            ? "Memorise|Describe|<w>Hide</w>|Show"
-                 : "Memorise|Describe|Hide|<w>Show</w>");
+                            ? act + "|Describe|<w>Hide</w>|Show"
+                 : act + "|Describe|Hide|<w>Show</w>");
 
         set_more(formatted_string::parse_string(desc.str()));
     }
@@ -608,6 +632,7 @@ private:
 #endif
             switch (current_action)
             {
+                case action::cast:
                 case action::memorise:
                     current_action = action::describe;
                     entries_changed = true; // need to add hotkeys
@@ -620,7 +645,8 @@ private:
                     entries_changed = true;
                     break;
                 case action::unhide:
-                    current_action = action::memorise;
+                    current_action = you.divine_exegesis ? action::cast
+                                                          : action::memorise;
                     entries_changed = true;
                     break;
             }
@@ -718,18 +744,24 @@ private:
                 desc << string(60 - so_far, ' ');
             desc << "</" << colour_to_str(colour) << ">";
 
-            colour = spell.fail_rate_colour;
-            desc << "<" << colour_to_str(colour) << ">";
-            desc << chop_string(failure_rate_to_string(spell.raw_fail), 12);
-            desc << "</" << colour_to_str(colour) << ">";
+            if (!you.divine_exegesis)
+            {
+                colour = spell.fail_rate_colour;
+                desc << "<" << colour_to_str(colour) << ">";
+                desc << chop_string(failure_rate_to_string(spell.raw_fail), 12);
+                desc << "</" << colour_to_str(colour) << ">";
+            }
+
             desc << spell.difficulty;
 
             MenuEntry* me = new MenuEntry(desc.str(), MEL_ITEM, 1,
-            // don't add a hotkey if you can't memorise it
+            // don't add a hotkey if you can't memorise/cast it
                     (current_action == action::memorise &&
-                        !you_can_memorise(spell.spell)) ? ' ' : char(hotkey));
-            // But do increment hotkeys anyway, to keep the memorise and
-            // describe hotkeys consistent.
+                        !you_can_memorise(spell.spell))
+                     || current_action == action::cast &&
+                        spell_is_useless(spell.spell, true, true)
+                     ? ' ' : char(hotkey));
+            // But do increment hotkeys anyway, to keep the hotkeys consistent.
             ++hotkey;
 
 #ifdef USE_TILE
@@ -743,26 +775,31 @@ private:
     }
 
 public:
-    MemoriseMenu(spell_list& list)
+    SpellLibraryMenu(spell_list& list)
         : Menu(MF_SINGLESELECT | MF_ANYPRINTABLE
                | MF_ALWAYS_SHOW_MORE | MF_ALLOW_FORMATTING
                // To have the ctrl-f menu show up in webtiles
                | MF_ALLOW_FILTER, "spell"),
-        current_action(action::memorise),
+        current_action(you.divine_exegesis ? action::cast : action::memorise),
         spells(list),
         hidden_count(0)
     {
         set_highlighter(nullptr);
-        set_title(new MenuEntry(""), true, true); // Actual text handled by calc_title
+        // Actual text handled by calc_title
+        set_title(new MenuEntry(""), true, true);
 
-        spell_levels_str = make_stringf("<lightgreen>%d spell level%s"
-                    "</lightgreen>", player_spell_levels(),
-                    (player_spell_levels() > 1 || player_spell_levels() == 0)
-                                                ? "s left" : " left ");
-        if (player_spell_levels() < 9)
-            spell_levels_str += " ";
+        if (!you.divine_exegesis)
+        {
+            spell_levels_str = make_stringf("<lightgreen>%d spell level%s"
+                        "</lightgreen>", player_spell_levels(),
+                        (player_spell_levels() > 1 || player_spell_levels() == 0)
+                                                    ? "s left" : " left ");
+            if (player_spell_levels() < 9)
+                spell_levels_str += " ";
 
-        set_more(formatted_string::parse_string(spell_levels_str + "\n"));
+            set_more(formatted_string::parse_string(spell_levels_str + "\n"));
+        }
+
 #ifdef USE_TILE_LOCAL
         FontWrapper *font = tiles.get_crt_font();
         int title_width = font->string_width(calc_title());
@@ -780,6 +817,7 @@ public:
             switch (current_action)
             {
             case action::memorise:
+            case action::cast:
                 return false;
             case action::describe:
                 describe_spell(spell, nullptr);
@@ -802,7 +840,7 @@ static spell_type _choose_mem_spell(spell_list &spells)
     // If we've gotten this far, we know that at least one spell here is
     // memorisable, which is enough.
 
-    MemoriseMenu spell_menu(spells);
+    SpellLibraryMenu spell_menu(spells);
 
     const vector<MenuEntry*> sel = spell_menu.show();
     if (!crawl_state.doing_prev_cmd_again)
@@ -842,7 +880,7 @@ bool can_learn_spell(bool silent)
 
 bool learn_spell()
 {
-    spell_list spells(_get_spell_list(false, true));
+    spell_list spells(_get_spell_list());
     if (spells.empty())
         return false;
 
@@ -1001,4 +1039,42 @@ bool book_has_title(const item_def &book)
 
     return book.props.exists(BOOK_TITLED_KEY)
            && book.props[BOOK_TITLED_KEY].get_bool() == true;
+}
+
+spret divine_exegesis(bool fail)
+{
+    unwind_var<bool> dk(you.divine_exegesis, true);
+
+    spell_list spells(_get_spell_list(true, true));
+    if (spells.empty())
+    {
+        mpr("You don't know of any spells!");
+        return spret::abort;
+    }
+
+    sort(spells.begin(), spells.end(), _sort_divine_spells);
+    // If we've gotten this far, we know at least one useful spell.
+
+    SpellLibraryMenu spell_menu(spells);
+
+    const vector<MenuEntry*> sel = spell_menu.show();
+    if (!crawl_state.doing_prev_cmd_again)
+        redraw_screen();
+
+    if (sel.empty())
+        return spret::abort;
+
+    const spell_type spell = *static_cast<spell_type*>(sel[0]->data);
+    if (spell == SPELL_NO_SPELL)
+        return spret::abort;
+
+    ASSERT(is_valid_spell(spell));
+
+    if (fail)
+        return spret::fail;
+
+    if (cast_a_spell(false, spell))
+        return spret::success;
+
+    return spret::abort;
 }

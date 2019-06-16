@@ -5108,6 +5108,7 @@ player::player()
     // Non-saved UI state:
     prev_targ        = MHITNOT;
     prev_grd_targ.reset();
+    divine_exegesis  = false;
 
     travel_x         = 0;
     travel_y         = 0;

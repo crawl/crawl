@@ -187,6 +187,8 @@ const vector<god_power> god_powers[NUM_GODS] =
       { 3, ABIL_SIF_MUNA_FORGET_SPELL,
            "freely open your mind to new spells",
            "forget spells at will" },
+      { 4, ABIL_SIF_MUNA_DIVINE_EXEGESIS,
+           "call upon Sif Muna to cast any spell from your library" },
       { 5, "Sif Muna will now gift you books as you gain piety.",
            "Sif Muna will no longer gift you books.",
            "Sif Muna will gift you books as you gain piety." },

@@ -442,6 +442,9 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
 
     power += you.skill(SK_SPELLCASTING, 50);
 
+    if (you.divine_exegesis)
+        power += you.skill(SK_INVOCATIONS, 300);
+
     if (fail_rate_check)
     {
         // Scale appropriately.
@@ -839,7 +842,8 @@ bool cast_a_spell(bool check_range, spell_type spell)
     // Silently take MP before the spell.
     dec_mp(cost, true);
 
-    const spret cast_result = your_spells(spell, 0, true);
+    const spret cast_result = your_spells(spell, 0, !you.divine_exegesis,
+                                          nullptr);
     if (cast_result == spret::abort)
     {
         crawl_state.zero_turns_taken();

@@ -366,6 +366,8 @@ public:
     // -------------------
     unsigned short prev_targ;
     coord_def      prev_grd_targ;
+    // Examining spell library spells for Sif Muna's ability
+    bool           divine_exegesis;
 
     // Coordinates of last travel target; note that this is never used by
     // travel itself, only by the level-map to remember the last travel target.

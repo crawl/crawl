@@ -2833,7 +2833,12 @@ static string _player_spell_stats(const spell_type spell)
         return description; // all other info is player-dependent
     }
 
-    const string failure = failure_rate_to_string(raw_spell_fail(spell));
+
+    string failure;
+    if (you.divine_exegesis)
+        failure = "0%";
+    else
+        failure = failure_rate_to_string(raw_spell_fail(spell));
     description += make_stringf("        Fail: %s", failure.c_str());
 
     description += "\n\nPower : ";
