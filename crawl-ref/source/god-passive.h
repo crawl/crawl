@@ -147,9 +147,6 @@ enum class passive_t
     /// Torment resistance, piety dependent.
     resist_torment,
 
-    /// Protection against miscasts. Piety dependent.
-    miscast_protection,
-
     /// Protection against necromancy miscasts and mummy death curses.
     miscast_protection_necromancy,
 
