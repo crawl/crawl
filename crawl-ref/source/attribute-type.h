@@ -91,8 +91,8 @@ enum attribute_type
 #if TAG_MAJOR_VERSION == 34
     ATTR_SURGE_REMOVED,        // Was surge power applied to next evocation.
     ATTR_PAKELLAS_EXTRA_MP,    // MP to be collected to get a !magic from P
-#endif
     ATTR_DIVINE_ENERGY,        // Divine energy from Sif to cast with no MP.
+#endif
     ATTR_SERPENTS_LASH,        // Remaining instant movement actions.
     ATTR_HEAVENLY_STORM,       // Strength of Heavenly Storm slaying.
     ATTR_WALL_JUMP_READY,      // Ready to perform a wall jump.

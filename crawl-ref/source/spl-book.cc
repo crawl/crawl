@@ -413,6 +413,10 @@ static spell_list _get_spell_list(bool just_check = false,
     {
         if (you.has_spell(spell))
             num_known++;
+            // Divine Exegesis includes spells the player already knows.
+            if (you.divine_exegesis)
+                mem_spells.emplace_back(spell);
+        }
         else if (!you_can_memorise(spell))
         {
             if (!memorise_only)

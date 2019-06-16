@@ -607,8 +607,6 @@ static const duration_def duration_data[] =
     { DUR_BRAINLESS, 0, "", "", "brainless", "", D_NO_FLAGS },
     { DUR_CLUMSY, 0, "", "", "clumsy", "", D_NO_FLAGS },
     { DUR_ANCESTOR_DELAY, 0, "", "", "ancestor delay", "", D_NO_FLAGS, {{""}}},
-    { DUR_NO_CAST, 0, "", "", "no cast", "", D_NO_FLAGS,
-      {{ "You regain access to your magic." }, {}, true }},
     { DUR_HEAVENLY_STORM, 0, "", "", "", "", D_NO_FLAGS,
       {{ "",  wu_jian_heaven_tick }}},
     { DUR_GRASPING_ROOTS, 0, "", "grasped by roots", "grasping roots",
@@ -651,6 +649,6 @@ static const duration_def duration_data[] =
     { DUR_MAGIC_SHIELD, 0, "", "", "old magic shield", "", D_NO_FLAGS},
     { DUR_FORTITUDE, 0, "", "", "old fortitude", "", D_NO_FLAGS},
     { DUR_WATER_HOLD_IMMUNITY, 0, "", "", "old drowning immunity", "", D_NO_FLAGS, {{""}}},
-
+    { DUR_NO_CAST, 0, "", "", "old no cast", "", D_NO_FLAGS},
 #endif
 };

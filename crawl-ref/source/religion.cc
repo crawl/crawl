@@ -181,9 +181,6 @@ const vector<god_power> god_powers[NUM_GODS] =
     // Sif Muna
     { { 1, ABIL_SIF_MUNA_CHANNEL_ENERGY,
            "call upon Sif Muna for magical energy" },
-      { 1, ABIL_SIF_MUNA_DIVINE_ENERGY,
-           "request divine energy to cast spells with insufficient magic",
-           "request divine energy" },
       { 2, "Sif Muna is now protecting you from the effects of miscast magic.",
            "Sif Muna will no longer protect you from the effects of miscast magic.",
            "Sif Muna protects you from the effects of miscast magic." },
@@ -853,8 +850,10 @@ static void _inc_penance(god_type god, int val)
         {
             if (you.duration[DUR_CHANNEL_ENERGY])
                 you.duration[DUR_CHANNEL_ENERGY] = 0;
+#if TAG_MAJOR_VERSION == 34
             if (you.attribute[ATTR_DIVINE_ENERGY])
                 you.attribute[ATTR_DIVINE_ENERGY] = 0;
+#endif
         }
 
         if (you_worship(god))
@@ -2569,9 +2568,11 @@ void lose_piety(int pgn)
                             end(you.ability_letter_table),
                             ABIL_YRED_ANIMATE_DEAD, ABIL_YRED_ANIMATE_REMAINS);
                 }
+#if TAG_MAJOR_VERSION == 34
                 // Deactivate the toggle
                 if (power.abil == ABIL_SIF_MUNA_DIVINE_ENERGY)
                     you.attribute[ATTR_DIVINE_ENERGY] = 0;
+#endif
             }
         }
 #ifdef USE_TILE_LOCAL
@@ -2840,8 +2841,10 @@ void excommunication(bool voluntary, god_type new_god)
     case GOD_SIF_MUNA:
         if (you.duration[DUR_CHANNEL_ENERGY])
             you.duration[DUR_CHANNEL_ENERGY] = 0;
+#if TAG_MAJOR_VERSION == 34
         if (you.attribute[ATTR_DIVINE_ENERGY])
             you.attribute[ATTR_DIVINE_ENERGY] = 0;
+#endif
         break;
 
     case GOD_NEMELEX_XOBEH:
