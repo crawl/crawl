@@ -150,7 +150,7 @@ if args["-show"] ~= nil then
     if #levels_to_show == 0 then
         usage_error("\nNo valid levels or depths provided with -show!")
     end
-    table.sort(levels_to_show)
+    util.sort(levels_to_show)
     if max_depth == nil then max_depth = levels_to_show[#levels_to_show] end
     local levels_set = util.set(levels_to_show)
     show_level_fun = function (l) return levels_set[l] end

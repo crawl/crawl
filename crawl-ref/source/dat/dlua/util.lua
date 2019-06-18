@@ -118,6 +118,27 @@ function util.pairs(map)
   return mappairs
 end
 
+--- a locale-insensitive less-than operation.
+function util.stable_lessthan(x1, x2)
+  if type(t) == "string" then
+    return crawl.string_compare(s1, s2) == -1
+  else
+    return x1 < x2
+  end
+end
+
+--- A wrapper on `table.sort` that uses locale-insensitive comparison for
+--- strings by default. Like `table.sort`, this sorts an array in-place.
+--- @tparam t an array to sort.
+--- @tparam f an optional less-than function to use for determining sort order.
+function util.sort(t, f)
+  if f == nil then
+    return table.sort(t, util.stable_lessthan)
+  else
+    return table.sort(t, f)
+  end
+end
+
 --- Creates a string of the elements in list joined by separator.
 function util.join(sep, list)
   return table.concat(list, sep)
@@ -313,9 +334,9 @@ function util.random_weighted_keys(weightfn, list, order)
     keys[#keys+1] = k
   end
   if order then
-    table.sort(keys, order)
+    util.sort(keys, order)
   else
-    table.sort(keys)
+    util.sort(keys)
   end
   for i,k in ipairs(keys) do
     v = list[k]
@@ -334,7 +355,7 @@ function util.sorted_weight_table(t, sort)
   local keys = { }
   for k, v in pairs(t) do table.insert(keys, k) end
   if sort == nil then
-    table.sort(keys)
+    util.sort(keys)
   else
     table.sort(keys, sort)
   end

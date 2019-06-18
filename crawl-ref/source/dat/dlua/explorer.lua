@@ -76,7 +76,7 @@ local out = function(s) if not explorer.quiet then crawl.stderr(s) end end
 
 function explorer.collapse_dups(l)
     local result = {}
-    table.sort(l)
+    util.sort(l)
     local cur = ""
     local count = 0
     for i, name in ipairs(l) do

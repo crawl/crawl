@@ -846,6 +846,23 @@ static int crawl_split(lua_State *ls)
     return 1;
 }
 
+/*** Compare two strings in a locale-independent way.
+ * Lua's built in comparison operations for strings are dependent on locale,
+ * which isn't always desireable. This is just a wrapper on
+ * std::basic_string::compare.
+ *
+ * @tparam string s1 the first string.
+ * @tparam string s2 the second sring.
+ * @treturn -1 if s1 < s2, 1 if s2 < s1, 0 if s1 == s2.
+ */
+static int crawl_string_compare(lua_State *ls)
+{
+    const string s1 = luaL_checkstring(ls, 1),
+                 s2 = luaL_checkstring(ls, 2);
+    lua_pushnumber(ls, s1.compare(s2));
+    return 1;
+}
+
 /*** Grammatically describe something.
  * Crawl provides the following description types:
  *
@@ -1390,6 +1407,7 @@ static const struct luaL_reg crawl_clib[] =
     { "message_filter",     crawl_message_filter },
     { "trim",               crawl_trim },
     { "split",              crawl_split },
+    { "string_compare",     crawl_string_compare },
     { "grammar",            _crawl_grammar },
     { "article_a",          crawl_article_a },
     { "game_started",       crawl_game_started },
