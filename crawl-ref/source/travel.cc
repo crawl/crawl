@@ -2175,7 +2175,7 @@ static int _prompt_travel_branch(int prompt_flags)
             // Is this a branch hotkey?
             for (branch_type br : brs)
             {
-                if (toaupper(keyin) == branches[br].travel_shortcut)
+                if (toupper_safe(keyin) == branches[br].travel_shortcut)
                 {
 #ifdef WIZARD
                     const Branch &target = branches[br];

@@ -74,6 +74,16 @@ static inline int toaupper(int c)
     return isalower(c) ? c + 'A' - 'a' : c;
 }
 
+template<typename T> inline T tolower_safe(T c)
+{
+    return isaupper(c) ? toalower(c) : tolower(c);
+}
+
+template<typename T> inline T toupper_safe(T c)
+{
+    return isalower(c) ? toaupper(c) : toupper(c);
+}
+
 int numcmp(const char *a, const char *b, int limit = 0);
 bool numcmpstr(const string &a, const string &b);
 

@@ -521,7 +521,7 @@ static int _issue_orders_prompt()
     if (!you.cannot_speak())
     {
         string cap_shout = you.shout_verb(false);
-        cap_shout[0] = toaupper(cap_shout[0]);
+        cap_shout[0] = toupper_safe(cap_shout[0]);
         mprf(" t - %s!", cap_shout.c_str());
     }
 

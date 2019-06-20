@@ -66,12 +66,7 @@ string &lowercase(string &s)
 string &uppercase(string &s)
 {
     for (char &ch : s)
-    {
-        if (isaalpha(ch))
-            ch = toaupper(ch);
-        else
-            ch = toupper(ch);
-    }
+        ch = toupper_safe(ch);
     return s;
 }
 

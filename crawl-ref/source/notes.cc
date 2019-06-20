@@ -414,7 +414,7 @@ void Note::check_milestone() const
             string branch = place.describe(true, false);
 
             if (starts_with(branch, "The "))
-                branch[0] = toalower(branch[0]);
+                branch[0] = tolower_safe(branch[0]);
 
             if (dep == 1)
             {
@@ -426,7 +426,7 @@ void Note::check_milestone() const
             {
                 string level = place.describe(true, true);
                 if (starts_with(level, "Level "))
-                    level[0] = toalower(level[0]);
+                    level[0] = tolower_safe(level[0]);
 
                 mark_milestone(br == BRANCH_ZIGGURAT ? "zig" : "br.end",
                                "reached " + level + ".");

@@ -1313,7 +1313,7 @@ string scorefile_entry::long_kill_message() const
 {
     string msg = death_description(DDV_LOGVERBOSE);
     msg = make_oneline(msg);
-    msg[0] = toalower(msg[0]);
+    msg[0] = tolower_safe(msg[0]);
     trim_string(msg);
     return msg;
 }
@@ -1322,7 +1322,7 @@ string scorefile_entry::short_kill_message() const
 {
     string msg = death_description(DDV_ONELINE);
     msg = make_oneline(msg);
-    msg[0] = toalower(msg[0]);
+    msg[0] = tolower_safe(msg[0]);
     trim_string(msg);
     return msg;
 }
@@ -2667,7 +2667,7 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
     }
 
     if (oneline && desc.length() > 2)
-        desc[1] = toalower(desc[1]);
+        desc[1] = tolower_safe(desc[1]);
 
     // TODO: Eventually, get rid of "..." for cases where the text fits.
     if (terse)

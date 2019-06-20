@@ -1360,14 +1360,14 @@ bool describe_god_with_join(god_type which_god)
             goto update_ui;
         }
 
-        if (keyin != 'Y' && toaupper(keyin) != 'N')
+        if (keyin != 'Y' && toupper_safe(keyin) != 'N')
         {
             yesno_only = true;
             goto update_ui;
         }
         yesno_only = false;
 
-        if (toaupper(keyin) == 'N')
+        if (toupper_safe(keyin) == 'N')
         {
             canned_msg(MSG_OK);
             return done = true;
