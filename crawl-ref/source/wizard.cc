@@ -316,7 +316,7 @@ void handle_wizard_command()
         cursor_control con(true);
         wiz_command = getchm();
         if (wiz_command == '*')
-            wiz_command = CONTROL(toupper(getchm()));
+            wiz_command = CONTROL(toaupper(getchm()));
     }
 
     if (crawl_state.cmd_repeat_start)

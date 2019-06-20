@@ -156,7 +156,7 @@ bool attribute_increase()
         {
             string result;
             clua.fnreturns(">s", &result);
-            keyin = toupper(result[0]);
+            keyin = toaupper(result[0]);
         }
         else
         {

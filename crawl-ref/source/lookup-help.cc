@@ -737,7 +737,7 @@ static MenuEntry* _branch_menu_gen(char letter, const string &str, string &key)
 
     const branch_type branch = branch_by_shortname(str);
     int hotkey = branches[branch].travel_shortcut;
-    me->hotkeys = {hotkey, tolower(hotkey)};
+    me->hotkeys = {hotkey, toalower(hotkey)};
 #ifdef USE_TILE
     me->add_tile(tile_def(tileidx_branch(branch), TEX_FEAT));
 #endif
@@ -783,10 +783,10 @@ static MenuEntry* _cloud_menu_gen(char letter, const string &str, string &key)
 string LookupType::prompt_string() const
 {
     string prompt_str = lowercase_string(type);
-    const size_t symbol_pos = prompt_str.find(tolower(symbol));
+    const size_t symbol_pos = prompt_str.find(toalower(symbol));
     ASSERT(symbol_pos != string::npos);
 
-    prompt_str.replace(symbol_pos, 1, make_stringf("(%c)", toupper(symbol)));
+    prompt_str.replace(symbol_pos, 1, make_stringf("(%c)", toaupper(symbol)));
     return prompt_str;
 }
 
@@ -1426,7 +1426,7 @@ static int _lookup_prompt()
             ch = getchm();
         }
     }
-    return toupper(ch);
+    return toaupper(ch);
 }
 
 /**

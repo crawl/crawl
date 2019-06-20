@@ -6,6 +6,39 @@
 #include <vector>
 using namespace std;
 
+// copied from libutil.h
+static inline bool isalower(int c)
+{
+    return c >= 'a' && c <= 'z';
+}
+
+static inline bool isaupper(int c)
+{
+    return c >= 'A' && c <= 'Z';
+}
+
+static inline char32_t toalower(char32_t c)
+{
+    return isaupper(c) ? c + 'a' - 'A' : c;
+}
+
+// Same thing with signed int, so we can pass though -1 undisturbed.
+static inline int toalower(int c)
+{
+    return isaupper(c) ? c + 'a' - 'A' : c;
+}
+
+static inline char32_t toaupper(char32_t c)
+{
+    return isalower(c) ? c + 'A' - 'a' : c;
+}
+
+// Same thing with signed int, so we can pass though -1 undisturbed.
+static inline int toaupper(int c)
+{
+    return isalower(c) ? c + 'A' - 'a' : c;
+}
+
 class tile
 {
 public:

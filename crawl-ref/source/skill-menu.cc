@@ -226,7 +226,7 @@ void SkillMenuEntry::set_name(bool keep_hotkey)
         if (!keep_hotkey)
         {
             m_name->add_hotkey(++m_letter);
-            m_name->add_hotkey(toupper(m_letter));
+            m_name->add_hotkey(toaupper(m_letter));
         }
         m_name->set_id(m_sk);
         m_name->allow_highlight(true);

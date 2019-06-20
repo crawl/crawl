@@ -261,7 +261,7 @@ static int read_key_code(string s)
     else if (s[0] == '^')
     {
         // ^A = 1, etc.
-        return 1 + toupper(s[1]) - 'A';
+        return 1 + toaupper(s[1]) - 'A';
     }
 
     char *tail;

@@ -2533,7 +2533,7 @@ static command_type _get_action(int key, vector<command_type> actions)
         { CMD_SET_SKILL_TARGET, 's' },
     };
 
-    key = tolower(key);
+    key = toalower(key);
 
     for (auto cmd : actions)
         if (key == act_key.at(cmd))
@@ -3196,7 +3196,7 @@ void describe_spell(spell_type spell, const monster_info *mon_owner,
         if (ev.type != WME_KEYDOWN)
             return false;
         lastch = ev.key.keysym.sym;
-        done = (toupper(lastch) == 'M' && can_mem || lastch == CK_ESCAPE
+        done = (toaupper(lastch) == 'M' && can_mem || lastch == CK_ESCAPE
             || lastch == CK_ENTER || lastch == ' ');
         return done;
     });
@@ -3222,7 +3222,7 @@ void describe_spell(spell_type spell, const monster_info *mon_owner,
     tiles.pop_ui_layout();
 #endif
 
-    if (toupper(lastch) == 'M' && can_mem)
+    if (toaupper(lastch) == 'M' && can_mem)
     {
         redraw_screen(); // necessary to ensure stats is redrawn (!?)
         if (!learn_spell(spell) || !you.turn_is_over)

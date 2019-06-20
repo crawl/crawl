@@ -1201,7 +1201,7 @@ static int _get_help_section(int section, formatted_string &header_out, formatte
                 text += formatted_string(buf);
                 if (next_is_hotkey && (isaupper(buf[0]) || isadigit(buf[0])))
                 {
-                    int hotkey = tolower(buf[0]);
+                    int hotkey = toalower(buf[0]);
                     hotkeys[hotkey] = count_occurrences(text.tostring(), "\n");
                 }
 

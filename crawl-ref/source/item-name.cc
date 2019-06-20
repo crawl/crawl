@@ -2915,7 +2915,7 @@ string make_name(uint32_t seed, makename_type name_type)
             ASSERT(name[i] != ' ');
 
         if (name_type == MNAME_SCROLL || i == 0 || name[i - 1] == ' ')
-            uppercased_name += toupper(name[i]);
+            uppercased_name += toaupper(name[i]);
         else
             uppercased_name += name[i];
     }

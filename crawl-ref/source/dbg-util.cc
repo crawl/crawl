@@ -472,7 +472,7 @@ void debug_list_vacant_keys()
     {
         check(base, string(1, base));
 
-        char lower = tolower(base);
+        char lower = toalower(base);
         check(lower, string(1, lower));
 
         char ctrl = CONTROL(base);

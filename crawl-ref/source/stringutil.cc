@@ -44,7 +44,16 @@ string lowercase_string(const string &s)
     char32_t c;
     char buf[4];
     for (const char *tp = s.c_str(); int len = utf8towc(&c, tp); tp += len)
-        res.append(buf, wctoutf8(buf, towlower(c)));
+    {
+        // crawl breaks horribly if this is allowed to affect ascii chars,
+        // so override locale-specific casing for ascii. (For example, in
+        // Turkish; tr_TR.utf8 lowercase I is a dotless i that is not
+        // ascii, which breaks many things.)
+        if (isaalpha(tp[0]))
+            res.append(1, toalower(tp[0]));
+        else
+            res.append(buf, wctoutf8(buf, towlower(c)));
+    }
     return res;
 }
 
@@ -57,8 +66,12 @@ string &lowercase(string &s)
 string &uppercase(string &s)
 {
     for (char &ch : s)
-        ch = toupper(ch);
-
+    {
+        if (isaalpha(ch))
+            ch = toaupper(ch);
+        else
+            ch = toupper(ch);
+    }
     return s;
 }
 

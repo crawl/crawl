@@ -192,6 +192,7 @@ void init_mon_name_cache()
     {
         string name = me.name;
         lowercase(name);
+        dprf("lowercasing %s to %s", me.name, name.c_str());
 
         const int          mtype = me.mc;
         const monster_type mon   = monster_type(mtype);
@@ -4492,7 +4493,7 @@ string do_mon_str_replacements(const string &in_msg, const monster& mons,
     msg = replace_all(msg, "@a_something@", mons.name(DESC_A));
     msg = replace_all(msg, "@the_something@", mons.name(nocap));
 
-    something[0] = toupper(something[0]);
+    something[0] = toaupper(something[0]);
     msg = replace_all(msg, "@Something@",   something);
     msg = replace_all(msg, "@A_something@", mons.name(DESC_A));
     msg = replace_all(msg, "@The_something@", mons.name(cap));
@@ -4505,7 +4506,7 @@ string do_mon_str_replacements(const string &in_msg, const monster& mons,
     msg = replace_all(msg, "@a_monster@",   mons.name(DESC_A));
     msg = replace_all(msg, "@the_monster@", mons.name(nocap));
 
-    plain[0] = toupper(plain[0]);
+    plain[0] = toaupper(plain[0]);
     msg = replace_all(msg, "@Monster@",     plain);
     msg = replace_all(msg, "@A_monster@",   mons.name(DESC_A));
     msg = replace_all(msg, "@The_monster@", mons.name(cap));

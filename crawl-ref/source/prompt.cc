@@ -137,7 +137,7 @@ bool yesno(const char *str, bool allow_lowercase, int default_answer, bool clear
             || Options.easy_confirm == easy_confirm_type::safe
                && allow_lowercase)
         {
-            tmp = toupper(tmp);
+            tmp = toaupper(tmp);
         }
 
         if (clear_after && message)
@@ -250,7 +250,7 @@ int yesnoquit(const char* str, bool allow_lowercase, int default_answer, bool al
             || allow_lowercase
                && Options.easy_confirm == easy_confirm_type::safe)
         {
-            tmp = toupper(tmp);
+            tmp = toaupper(tmp);
         }
 
         if (clear_after)

@@ -63,6 +63,17 @@ static inline int toalower(int c)
     return isaupper(c) ? c + 'a' - 'A' : c;
 }
 
+static inline char32_t toaupper(char32_t c)
+{
+    return isalower(c) ? c + 'A' - 'a' : c;
+}
+
+// Same thing with signed int, so we can pass though -1 undisturbed.
+static inline int toaupper(int c)
+{
+    return isalower(c) ? c + 'A' - 'a' : c;
+}
+
 int numcmp(const char *a, const char *b, int limit = 0);
 bool numcmpstr(const string &a, const string &b);
 

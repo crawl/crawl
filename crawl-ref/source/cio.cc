@@ -94,7 +94,7 @@ int unmangle_direction_keys(int keyin, KeymapContext keymap,
             cprintf("CTRL");
             keyin = getchm(keymap);
             // return control-key
-            keyin = CONTROL(toupper(_numpad2vi(keyin)));
+            keyin = CONTROL(toaupper(_numpad2vi(keyin)));
         }
         else if (keyin == '/')
         {
@@ -102,7 +102,7 @@ int unmangle_direction_keys(int keyin, KeymapContext keymap,
             cprintf("SHIFT");
             keyin = getchm(keymap);
             // return shift-key
-            keyin = toupper(_numpad2vi(keyin));
+            keyin = toaupper(_numpad2vi(keyin));
         }
     }
 
