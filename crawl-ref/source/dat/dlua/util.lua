@@ -120,8 +120,8 @@ end
 
 --- a locale-insensitive less-than operation.
 function util.stable_lessthan(x1, x2)
-  if type(t) == "string" then
-    return crawl.string_compare(s1, s2) == -1
+  if type(x1) == "string" then
+    return crawl.string_compare(x1, x2) < 0
   else
     return x1 < x2
   end
