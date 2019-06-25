@@ -556,7 +556,7 @@ SHUFFLE: {}, XXT
 COLOUR:  ' : brown / white
 FTILE:   ' = floor_dirt
 SUBST:   '=., X=x, T:tttT, T=t x:1
-: if crawl.coinflip() then
+: if not is_validating() and crawl.coinflip() then
 TAGS:    no_pool_fixup
 : end
 WEIGHT:  3
