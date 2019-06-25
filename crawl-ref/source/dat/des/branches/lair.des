@@ -58,7 +58,9 @@ function beast_lair_populate_mons_large(e)
     if you.depth() > 3 then
       set = set + 3
     end
-    e.tags("no_monster_gen")
+    if not e.is_validating() then
+        e.tags("no_monster_gen")
+    end
     e.mons("plant") -- 1 is always plant.
     if set == 0 then
         e.mons("hound / wolf")
