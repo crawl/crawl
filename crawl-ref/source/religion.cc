@@ -1505,8 +1505,8 @@ static bool _gift_sif_kiku_gift(bool forced)
             gift = BOOK_DEATH;
         }
     }
-    else if (forced || you.piety >= piety_breakpoint(4)
-                       && random2(you.piety) > 100)
+    else if (forced
+             || you.piety >= piety_breakpoint(4) && random2(you.piety) > 100)
     {
         // Sif Muna special: Keep quiet if acquirement fails
         // because the player already has seen all spells.
