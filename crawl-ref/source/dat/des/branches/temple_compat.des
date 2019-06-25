@@ -713,7 +713,7 @@ ENDMAP
 NAME:  minmay_temple_bridge_a_8
 TAGS:  no_pool_fixup
 SUBST: A : TUV
-: if crawl.one_chance_in(10) then
+: if not is_validating() and crawl.one_chance_in(10) then
 SUBST: w = l
 :   set_border_fill_type("endless_lava")
 : else
@@ -759,7 +759,7 @@ ENDMAP
 NAME:  minmay_temple_bridge_b_8
 TAGS:  no_pool_fixup
 SUBST: A : TUV
-: if crawl.one_chance_in(10) then
+: if not is_validating() and crawl.one_chance_in(10) then
 SUBST: w = l
 :   set_border_fill_type("endless_lava")
 : else
@@ -805,7 +805,7 @@ ENDMAP
 NAME:  minmay_temple_bridge_c_8
 TAGS:  no_pool_fixup
 SUBST: A : TUV
-: if crawl.one_chance_in(10) then
+: if not is_validating() and crawl.one_chance_in(10) then
 SUBST: w = l
 :   set_border_fill_type("endless_lava")
 : else
@@ -851,7 +851,7 @@ ENDMAP
 NAME:  minmay_temple_bridge_d_8
 TAGS:  no_pool_fixup
 SUBST: A : TUV
-: if crawl.one_chance_in(10) then
+: if not is_validating() and crawl.one_chance_in(10) then
 SUBST:  w = l
 :   set_border_fill_type("endless_lava")
 : else
