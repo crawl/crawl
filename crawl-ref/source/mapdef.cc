@@ -3378,7 +3378,8 @@ void map_def::set_tags(const string &tag)
 
 string map_def::tags_string() const
 {
-    return join_strings(tags.begin(), tags.end());
+    auto sorted_tags = get_tags();
+    return join_strings(sorted_tags.begin(), sorted_tags.end());
 }
 
 keyed_mapspec *map_def::mapspec_at(const coord_def &c)
