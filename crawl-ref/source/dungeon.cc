@@ -612,6 +612,7 @@ void dgn_flush_map_memory()
     you.zig_max = 0;
     you.exploration = 0;
     you.seen_portals = 0; // should be just cosmetic
+    reset_portal_entrances();
     // would it be safe to just clear you.props?
     you.props.erase(TEMPLE_SIZE_KEY);
     you.props.erase(TEMPLE_MAP_KEY);
@@ -1332,6 +1333,8 @@ void dgn_reset_level(bool enable_random_maps)
     tile_init_default_flavour();
     tile_clear_flavour();
     env.tile_names.clear();
+
+    update_portal_entrances();
 }
 
 static int _num_items_wanted(int absdepth0)
