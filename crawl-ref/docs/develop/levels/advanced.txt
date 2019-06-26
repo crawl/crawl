@@ -114,6 +114,10 @@ two contexts:
 1) An initial compilation phase before the game starts.
 2) The actual mapgen phase when the dungeon builder is at work.
 
+There are a number of caveats that go with phase 1. You can detect this phase
+by using the `is_validating()` call or an `e.is_validating()` call where `e` is
+the current map (`_G`).
+
 In context (1), you will not get useful answers from the Crawl Lua API
 in general, because the game hasn't started. This is generally
 ignorable (as in the case above) because the compilation phase just
@@ -155,6 +159,16 @@ thinks you've neglected to define a map.
 Lua code can detect the compile phase using crawl.game_started() which
 returns true only when the player has started a game (and will return
 false when the map is being initially compiled).
+
+In phase (1), you should avoid conditionals that impact tags randomly, and if
+you are using any form of tag randomization, wrap it in a validating check. For
+example:
+
+: if not is_validating() and crawl.coinflip() then
+TAGS:    no_pool_fixup
+: end
+
+See `rng_guidelines.md` for more details on this particular caveat.
 
 For more details on the available Lua API and syntax, see the Lua
 reference section.

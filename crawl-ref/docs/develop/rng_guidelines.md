@@ -195,7 +195,19 @@ example, don't use lua's `math.rand`, or C stdlib's `rand`.
 Try to avoid vault design elements that will lead to variable .des caches; any
 random choices made here will be outside of levelgen rng, and potentially
 set at the time the player first opens crawl. Especially try to avoid
-determining a set of tags for a map randomly using lua `tags` calls.
+determining a set of tags for a map randomly using lua `tags` calls. If you
+must randomize tags, wrap your conditionals in a validating check. For lua,
+this usually looks like:
+
+    if not e.is_validating() and crawl.one_chance_in(25) then
+        e.tags("no_monster_gen")
+    end
+
+and for conditionalizing the TAGS field in a .des file, this looks like:
+
+    : if not is_validating() and crawl.coinflip() then
+    TAGS:    no_pool_fixup
+    : end
 
 ## 4. Dealing with seed divergence
 
