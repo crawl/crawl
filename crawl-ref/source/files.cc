@@ -1391,7 +1391,7 @@ static const vector<branch_type> portal_generation_order =
     BRANCH_DESOLATION,
 };
 
-static void _update_portal_entrances()
+void update_portal_entrances()
 {
     for (rectangle_iterator ri(0); ri; ++ri)
     {
@@ -1485,7 +1485,7 @@ bool generate_level(const level_id &l)
     env.sanctuary_time = 0;
     env.markers.init_all(); // init first, activation happens when entering
     show_update_emphasis(); // Clear map knowledge stair emphasis in env.
-    _update_portal_entrances();
+    update_portal_entrances();
 
     // save the level and associated env state
     _save_level(level_id::current());

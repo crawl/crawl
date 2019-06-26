@@ -28,13 +28,36 @@ explorer.generation_order = {
                 "Tar:1", "Tar:2", "Tar:3", "Tar:4", "Tar:5", "Tar:6", "Tar:7",
                 "Coc:1", "Coc:2", "Coc:3", "Coc:4", "Coc:5", "Coc:6", "Coc:7",
                 "Dis:1", "Dis:2", "Dis:3", "Dis:4", "Dis:5", "Dis:6", "Dis:7",
+                "Geh:1", "Geh:2", "Geh:3", "Geh:4", "Geh:5", "Geh:6", "Geh:7",
             }
+-- generation order continues: pan, zig. However, these are really only in the
+-- official generation order so that entering them forces the rest of the
+-- dungeon to generate first, so we ignore them here.
+
+explorer.portal_order = {
+    "Sewer",
+    "Ossuary",
+    "IceCv",
+    "Volcano",
+    "Bailey",
+    "Gauntlet",
+    "Bazaar",
+    -- Trove is not pregenerated, so should be ignored here
+    "WizLab",
+    "Desolation"
+}
+
 
 function explorer.level_to_gendepth(lvl)
     -- TODO could parse l, handle things like Hell:1
     for i, l in ipairs(explorer.generation_order) do
         if lvl:lower() == l:lower() then
             return i
+        end
+    end
+    for i, l in ipairs(explorer.portal_order) do
+        if lvl:lower() == l:lower() then
+            return -i -- fairly hacky
         end
     end
     return nil
@@ -274,11 +297,15 @@ function explorer.describe_mons(mons)
     if explorer.rare_ood(mi) then
         feats[#feats + 1] = "OOD"
     end
-    if not mons.in_local_population and not explorer.mons_always_native(mons, mi) then
+    if not mons.in_local_population and not explorer.mons_always_native(mons, mi)
+        and not util.set(explorer.portal_order)[you.branch()] then
         -- this is a different sense of "native" than used internally to crawl,
         -- in that it includes anything that would normally generate in a
         -- branch. The internal sense is just supposed to be about which
         -- monsters "live" in a particular branch, which is covered as well.
+        --
+        -- portals are ignored because their monsters are mostly determined by
+        -- vaults, so too many things show up as "non-native".
         feats[#feats + 1] = "non-native"
     end
     if explorer.mons_feat_filter then
@@ -454,6 +481,31 @@ function explorer.catalog_current_place(lvl, to_show, hide_empty)
     return highlights
 end
 
+function explorer.catalog_place(i, lvl, cats_to_show, show_level_fun)
+    local result = nil
+    if (dgn.br_exists(string.match(lvl, "[^:]+"))) then
+        debug.goto_place(lvl)
+        debug.generate_level()
+        local old_quiet = explorer.quiet
+        if show_level_fun ~= nil and not show_level_fun(i) then
+            explorer.quiet = true
+        end
+        result = explorer.catalog_current_place(lvl, cats_to_show, true)
+        explorer.quiet = old_quiet
+    end
+    return result
+end
+
+function explorer.catalog_portals(i, lvl, cats_to_show, show_level_fun)
+    local result = { }
+    for j,port in ipairs(explorer.portal_order) do
+        if you.where() == dgn.level_name(dgn.br_entrance(port)) then
+            result[port] = explorer.catalog_place(-j, port, cats_to_show, show_level_fun)
+        end
+    end
+    return result
+end
+
 -- a bit redundant with mapstat?
 function explorer.catalog_dungeon(max_depth, cats_to_show, show_level_fun)
     local result = {}
@@ -462,16 +514,21 @@ function explorer.catalog_dungeon(max_depth, cats_to_show, show_level_fun)
     debug.dungeon_setup()
     for i,lvl in ipairs(explorer.generation_order) do
         if i > max_depth then break end
-        if (dgn.br_exists(string.match(lvl, "[^:]+"))) then
-            debug.goto_place(lvl)
-            debug.generate_level()
-            local old_quiet = explorer.quiet
-            if show_level_fun ~= nil and not show_level_fun(i) then
-                explorer.quiet = true
-            end
-            result[lvl] = explorer.catalog_current_place(lvl, cats_to_show, true)
-            explorer.quiet = old_quiet
+        result[lvl] = explorer.catalog_place(i, lvl, cats_to_show, show_level_fun)
+        local portals = explorer.catalog_portals(i, lvl, cats_to_show, show_level_fun)
+        for port, cat in pairs(portals) do
+            result[port] = cat
         end
+        -- if (dgn.br_exists(string.match(lvl, "[^:]+"))) then
+        --     debug.goto_place(lvl)
+        --     debug.generate_level()
+        --     local old_quiet = explorer.quiet
+        --     if show_level_fun ~= nil and not show_level_fun(i) then
+        --         explorer.quiet = true
+        --     end
+        --     result[lvl] = explorer.catalog_current_place(lvl, cats_to_show, true)
+        --     explorer.quiet = old_quiet
+        -- end
     end
     return result
 end

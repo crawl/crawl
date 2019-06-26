@@ -81,6 +81,7 @@ class level_id;
 
 void trackers_init_new_level(bool transit);
 
+void update_portal_entrances();
 bool generate_level(const level_id &l);
 bool pregen_dungeon(const level_id &stopping_point);
 bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
