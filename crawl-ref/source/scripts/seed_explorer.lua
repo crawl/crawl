@@ -38,7 +38,8 @@ Usage: seed_explorer.lua -seed <seed> ([<seed> ...]|[-count <n>]) ([-depth <dept
               the range of possible values to some degree.
     <depth>:  A level or branch name in short form, e.g. `Zot:5`, `Hell`, or
               `D`, a number, or 'all'. If this is a number, then this value is
-              depth relative to the level generation order. Defaults to `all`.
+              depth relative to the level generation order. Defaults to Tomb:3,
+              i.e. excluding the hells.
     <lvl>:    same format as <depth>, but will only show levels in the list.
               Note that this doesn't affect which levels are generated, so
               `-show Zot:5` will take as long to run as `-depth Zot:5`.
@@ -150,14 +151,25 @@ if args["-show"] ~= nil then
     if #levels_to_show == 0 then
         usage_error("\nNo valid levels or depths provided with -show!")
     end
-    util.sort(levels_to_show)
-    if max_depth == nil then max_depth = levels_to_show[#levels_to_show] end
+    if max_depth == nil then
+        -- this doesn't handle portal-only lists correctly
+        max_depth = 0
+        for i, depth in ipairs(levels_to_show) do
+            if depth > max_depth then max_depth = depth end
+        end
+        if max_depth == 0 then
+            -- portals only.
+            -- TODO: this is a heuristic; but no portals currently generate
+            -- later than this. (In fact, elf:2 is really the latest.)
+            max_depth = explorer.level_to_gendepth("Zot:4")
+        end
+    end
     local levels_set = util.set(levels_to_show)
     show_level_fun = function (l) return levels_set[l] end
 end
 
 if max_depth == nil then
-    max_depth = #explorer.generation_order
+    max_depth = explorer.level_to_gendepth("Tomb:3")
 end
 
 -- TODO: these are kind of ad hoc, maybe some kind of more general interface?

@@ -105,6 +105,7 @@ LUAFN(debug_generate_level)
     tile_clear_flavour();
     tile_new_level(true);
     builder(lua_isboolean(ls, 1)? lua_toboolean(ls, 1) : true);
+    update_portal_entrances();
     return 0;
 }
 
