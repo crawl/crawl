@@ -8502,6 +8502,7 @@ DEPTH:  D:8-, Depths
 ORIENT: float
 KMONS:  8 = 8
 KITEM:  8 = |
+KPROP:  8 = no_tele_into
 SUBST:  c : cvb, x : xcvb
 MAP
  xxxxxx@xx
