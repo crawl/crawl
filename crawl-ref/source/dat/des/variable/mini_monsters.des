@@ -4831,6 +4831,7 @@ ENDMAP
 NAME:   minmay_hidden_floor
 DEPTH:  D:12-, Depths
 SUBST:  9 = 9999., 8 = 8888.
+KPROP:  8*$ = no_tele_into
 MAP
      @
 cccccnccccc
@@ -4838,7 +4839,7 @@ c.........c
 c.ccc9ccc.c
 c.c8ncn8c.c
 c.cn***nc.c
-@.9c*.*c9.n@
+@.9c*$*c9.n@
 cncn***nc.c
 c.=8ncn8c.c
 c.ccc9ccc.c
