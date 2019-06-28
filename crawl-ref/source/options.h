@@ -401,7 +401,6 @@ public:
 
     int         dump_item_origins;  // Show where items came from?
     int         dump_item_origin_price;
-    bool        dump_book_spells;
 
     // Order of sections in the character dump.
     vector<string> dump_order;
