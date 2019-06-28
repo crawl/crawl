@@ -1982,8 +1982,7 @@ string get_item_description(const item_def &item, bool verbose,
         break;
 
     case OBJ_BOOKS:
-        if (!verbose
-            && (Options.dump_book_spells || is_random_artefact(item)))
+        if (!verbose && is_random_artefact(item))
         {
             desc += describe_item_spells(item);
             if (desc.empty())

@@ -809,12 +809,8 @@ static void _sdump_inventory(dump_params &par)
                 if (origin_describable(item) && _dump_item_origin(item))
                     text += "\n" "   (" + origin_desc(item) + ")";
 
-                if (is_dumpable_artefact(item)
-                    || Options.dump_book_spells
-                       && item.base_type == OBJ_BOOKS)
-                {
+                if (is_dumpable_artefact(item))
                     text += chardump_desc(item);
-                }
                 else
                     text += "\n";
             }

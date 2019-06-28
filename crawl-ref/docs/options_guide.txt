@@ -122,7 +122,7 @@ The contents of this text are:
 4-b     Items and Kills.
                 kill_map, dump_kill_places, dump_kill_breakdowns,
                 dump_item_origins, dump_item_origin_price, dump_message_count,
-                dump_order, dump_book_spells
+                dump_order
 4-c     Notes.
                 user_note_prefix, note_items, note_monsters, note_hp_percent,
                 note_skill_levels, note_all_skill_levels, note_skill_max,
@@ -2281,11 +2281,6 @@ dump_order += monlist,kills,notes,skill_gains,action_counts
         while in wizard mode). The "vaults" section is enabled by default
         in trunk builds of Crawl (not releases or pre-release betas),
         appearing between "notes" and "skill_gains".
-
-dump_book_spells = true
-        By default all randart spellbooks in inventory will have all their
-        spells listed in the dump. If this option is set to true, spells will
-        also be dumped for non-randart spellbooks.
 
 4-c     Notes.
 --------------
