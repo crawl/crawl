@@ -429,13 +429,18 @@ store_val_type CrawlStoreValue::get_type() const
 // Read/write from/to savefile
 void CrawlStoreValue::write(writer &th) const
 {
-    ASSERT(type != SV_NONE || (flags & SFLAG_UNSET));
-    ASSERT(!(flags & SFLAG_UNSET) || type == SV_NONE);
+    auto _type = type;
+    ASSERT(_type != SV_NONE || (flags & SFLAG_UNSET));
+    ASSERT(!(flags & SFLAG_UNSET) || _type == SV_NONE);
+    // if the string is too long to save using the regular way, write it with
+    // a 4 byte length. SV_STR_LONG is for saving/loading only.
+    if (_type == SV_STR && static_cast<string*>(val.ptr)->length() > SHRT_MAX)
+        _type = SV_STR_LONG;
 
-    marshallByte(th,  (char) type);
+    marshallByte(th,  (char) _type);
     marshallByte(th, (char) flags);
 
-    switch (type)
+    switch (_type)
     {
     case SV_BOOL:
         marshallBoolean(th, val.boolean);
@@ -465,6 +470,13 @@ void CrawlStoreValue::write(writer &th) const
     {
         string* str = static_cast<string*>(val.ptr);
         marshallString(th, *str);
+        break;
+    }
+
+    case SV_STR_LONG:
+    {
+        string* str = static_cast<string*>(val.ptr);
+        marshallString4(th, *str);
         break;
     }
 
@@ -575,6 +587,15 @@ void CrawlStoreValue::read(reader &th)
         break;
     }
 
+    case SV_STR_LONG:
+    {
+        val.ptr = (void*) new string();
+        unmarshallString4(th, *static_cast<string *>(val.ptr));
+        // SV_STR_LONG is used only for saving
+        type = SV_STR;
+        break;
+    }
+
     case SV_COORD:
     {
         const coord_def coord = unmarshallCoord(th);
@@ -650,6 +671,7 @@ void CrawlStoreValue::read(reader &th)
         break;
 
     case NUM_STORE_VAL_TYPES:
+    default:
         die("unknown stored value type");
     }
 }
@@ -1264,6 +1286,7 @@ void CrawlHashTable::assert_validity() const
         ASSERT(key == trimmed);
 
         ASSERT(val.type != SV_NONE);
+        ASSERT(val.type != SV_STR_LONG);
         ASSERT(!(val.flags & SFLAG_UNSET));
 
         switch (val.type)

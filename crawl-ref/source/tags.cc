@@ -866,14 +866,20 @@ static string unmarshallString2(reader &th)
 // string -- 4 byte length, non-terminated string data.
 void marshallString4(writer &th, const string &data)
 {
-    marshallInt(th, data.length());
-    th.write(data.c_str(), data.length());
+    const size_t len = data.length();
+    if (len > INT_MAX)
+        die("trying to marshall too long a string (len=%ld)", (long int) len);
+    marshallInt(th, len);
+    th.write(data.c_str(), len);
 }
+
 void unmarshallString4(reader &th, string& s)
 {
     const int len = unmarshallInt(th);
+    ASSERT(len >= 0);
     s.resize(len);
-    if (len) th.read(&s.at(0), len);
+    if (len)
+        th.read(&s.at(0), len);
 }
 
 // boolean (to avoid system-dependent bool implementations)

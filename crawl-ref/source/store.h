@@ -49,7 +49,8 @@ enum store_val_type
     SV_MONST,
     SV_LUA,
     SV_INT64,
-    NUM_STORE_VAL_TYPES
+    NUM_STORE_VAL_TYPES,
+    SV_STR_LONG, // this is a save-only type
 };
 
 enum store_flag_type
