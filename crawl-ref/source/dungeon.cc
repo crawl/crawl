@@ -50,6 +50,7 @@
 #include "libutil.h"
 #include "mapmark.h"
 #include "maps.h"
+#include "message.h"
 #include "mon-death.h"
 #include "mon-pick.h"
 #include "mon-place.h"
@@ -259,6 +260,14 @@ bool builder(bool enable_random_maps)
 
     unwind_bool levelgen(crawl_state.generating_level, true);
     rng_generator levelgen_rng(you.where_are_you);
+
+#ifdef DEBUG_DIAGNOSTICS // no point in enabling unless dprf works
+    CrawlHashTable &debug_logs = you.props["debug_builder_logs"].get_table();
+    string &cur_level_log = debug_logs[level_id::current().describe()].get_string();
+    message_tee debug_messages(cur_level_log);
+    debug_messages.append_line(make_stringf("Builder log for %s:",
+        level_id::current().describe().c_str()));
+#endif
 
     // N tries to build the level, after which we bail with a capital B.
     int tries = 50;

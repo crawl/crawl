@@ -10,12 +10,14 @@
 #include "artefact.h"
 #include "directn.h"
 #include "dungeon.h"
+#include "format.h"
 #include "item-name.h"
 #include "libutil.h"
 #include "macro.h"
 #include "message.h"
 #include "options.h"
 #include "religion.h"
+#include "scroller.h"
 #include "shopping.h"
 #include "skills.h"
 #include "spl-util.h"
@@ -115,6 +117,45 @@ void debug_dump_levgen()
             mprf("    %s", vname.c_str());
     }
     mpr("");
+}
+
+void debug_show_builder_logs()
+{
+    if (!you.props.exists("debug_builder_logs"))
+    {
+        mprf("This save was not generated on a build that stores logs.");
+        return;
+    }
+    const string cur_level = level_id::current().describe();
+    CrawlHashTable &log_table = you.props["debug_builder_logs"].get_table();
+    if (!log_table.exists(cur_level)
+        || log_table[cur_level].get_string().size() == 0)
+    {
+        mprf("No builder logs are saved for %s.", cur_level.c_str());
+        return;
+    }
+    const string &props_text = log_table[cur_level].get_string();
+    stringstream st(props_text);
+    string text;
+    formatted_string lines;
+
+    while (getline(st, text))
+    {
+        linebreak_string(text, cgetsize(GOTO_CRT).x - 1);
+        vector<formatted_string> parts;
+        formatted_string::parse_string_to_multiple(text, parts, 80);
+        for (unsigned int j = 0; j < parts.size(); ++j)
+        {
+            if (!lines.empty())
+                lines.add_glyph('\n');
+            lines += parts[j];
+        }
+    }
+
+    formatted_scroller hist(FS_PREWRAPPED_TEXT);
+    hist.set_more();
+    hist.add_formatted_string(lines, !lines.empty());
+    hist.show();
 }
 
 string debug_coord_str(const coord_def &pos)

@@ -945,6 +945,49 @@ static msg_colour_type prepare_message(const string& imsg,
                                        msg_channel_type channel,
                                        int param);
 
+static unordered_set<message_tee *> current_message_tees;
+
+message_tee::message_tee()
+    : target(nullptr)
+{
+    current_message_tees.insert(this);
+}
+
+message_tee::message_tee(string &_target)
+    : target(&_target)
+{
+    current_message_tees.insert(this);
+}
+
+message_tee::~message_tee()
+{
+    if (target)
+        *target += get_store();
+    current_message_tees.erase(this);
+}
+
+void message_tee::append(const string &s)
+{
+    // could use a more c++y external interface -- but that just complicates things
+    store << s;
+}
+
+void message_tee::append_line(const string &s)
+{
+    store << s << "\n";
+}
+
+string message_tee::get_store() const
+{
+    return store.str();
+}
+
+static void _append_to_tees(const string &s)
+{
+    for (auto tee : current_message_tees)
+        tee->append(s);
+}
+
 no_messages::no_messages() : msuppressed(suppress_messages)
 {
     suppress_messages = true;
@@ -1415,6 +1458,9 @@ static void _mpr(string text, msg_channel_type channel, int param, bool nojoin,
     // that doesn't preserve close tags!
     string col = colour_to_str(colour_msg(colour));
     text = "<" + col + ">" + text + "</" + col + ">"; // XXX
+
+    if (current_message_tees.size())
+        _append_to_tees(text + "\n");
 
     formatted_string fs = formatted_string::parse_string(text);
 

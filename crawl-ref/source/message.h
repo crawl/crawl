@@ -8,6 +8,7 @@
 #include <iostream>
 #include <streambuf>
 #include <string>
+#include <sstream>
 
 #include "canned-message-type.h"
 #include "enum.h"
@@ -94,6 +95,21 @@ void msgwin_new_cmd();
 void msgwin_new_turn();
 
 bool msgwin_errors_to_stderr();
+
+class message_tee
+{
+public:
+    message_tee();
+    message_tee(string &_target);
+    ~message_tee();
+    void append(const string &s);
+    void append_line(const string &s);
+    string get_store() const;
+
+private:
+    stringstream store;
+    string *target;
+};
 
 class no_messages
 {

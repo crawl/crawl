@@ -12,6 +12,7 @@ skill_type skill_from_name(const char *name);
 int debug_cap_stat(int stat);
 
 void debug_dump_levgen();
+void debug_show_builder_logs();
 
 struct item_def;
 string debug_art_val_str(const item_def& item);
