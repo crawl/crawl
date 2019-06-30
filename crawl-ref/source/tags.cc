@@ -376,6 +376,7 @@ uint8_t unmarshallUByte(reader &th)
 // Marshall 2 byte short in network order.
 void marshallShort(writer &th, short data)
 {
+    // TODO: why does this use `short` and `char` when unmarshall uses int16_t??
     CHECK_INITIALIZED(data);
     const char b2 = (char)(data & 0x00FF);
     const char b1 = (char)((data & 0xFF00) >> 8);
@@ -830,7 +831,7 @@ float unmarshallFloat(reader &th)
 void marshallString(writer &th, const string &data)
 {
     size_t len = data.length();
-    // A limit of 32K.
+    // A limit of 32K. TODO: why doesn't this use int16_t?
     if (len > SHRT_MAX)
         die("trying to marshall too long a string (len=%ld)", (long int)len);
     marshallShort(th, len);
@@ -840,7 +841,7 @@ void marshallString(writer &th, const string &data)
 
 string unmarshallString(reader &th)
 {
-    char buffer[SHRT_MAX];
+    char buffer[SHRT_MAX]; // TODO: why doesn't this use int16_t?
 
     short len = unmarshallShort(th);
     ASSERT(len >= 0);
@@ -867,7 +868,7 @@ static string unmarshallString2(reader &th)
 void marshallString4(writer &th, const string &data)
 {
     const size_t len = data.length();
-    if (len > INT_MAX)
+    if (len > numeric_limits<int32_t>::max())
         die("trying to marshall too long a string (len=%ld)", (long int) len);
     marshallInt(th, len);
     th.write(data.c_str(), len);
