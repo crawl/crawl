@@ -1018,6 +1018,13 @@ void shoals_apply_tides(int turns_elapsed, bool force, bool incremental_tide)
         return;
     }
 
+    // isolate from main levelgen rng if called from there; the behavior of
+    // this function is dependent on global state (tide direction, etc) that
+    // may impact the number of rolls depending on when the player changes
+    // shoals levels, so doing this with the levelgen rng has downstream
+    // effects.
+    rng::generator tide_rng(rng::GAMEPLAY);
+
     CrawlHashTable &props(you.props);
     _shoals_init_tide();
 
