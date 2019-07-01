@@ -82,13 +82,16 @@
 
 class UseItemMenu : public InvMenu
 {
-    bool is_inventory = true;
-
-    void populate_list(int item_type);
+    void populate_list();
     void populate_menu();
     bool process_key(int key) override;
+    void repopulate_menu();
 
 public:
+    bool display_all;
+    bool is_inventory;
+    int item_type_filter;
+
     vector<const item_def*> item_inv;
     vector<const item_def*> item_floor;
 
@@ -97,35 +100,55 @@ public:
     // Accepts:
     //      OBJ_POTIONS
     //      OBJ_SCROLLS
+    //      OSEL_WIELD
+    //      OBJ_ARMOUR
+    //      OBJ_FOOD
     UseItemMenu(int selector, const char* prompt);
 
-    void toggle();
+    void toggle_display_all();
+    void toggle_inv_or_floor();
 };
 
 UseItemMenu::UseItemMenu(int item_type, const char* prompt)
-    : InvMenu(MF_SINGLESELECT)
+    : InvMenu(MF_SINGLESELECT), display_all(false), is_inventory(true),
+      item_type_filter(item_type)
 {
     set_title(prompt);
-    populate_list(item_type);
+    populate_list();
     populate_menu();
 }
 
-void UseItemMenu::populate_list(int item_type)
+void UseItemMenu::populate_list()
 {
     // Load inv items first
     for (const auto &item : you.inv)
     {
-        // Populate the vector with filter
-        if (item.defined() && item_is_selected(item, item_type))
+        if (item.defined())
             item_inv.push_back(&item);
     }
-    // Load floor items
+    // Load floor items...
     item_floor = item_list_on_square(you.visible_igrd(you.pos()));
-    // Filter
-    erase_if(item_floor, [=](const item_def* item)
+    // ...only stuff that can go into your inventory though
+    erase_if(item_floor, [=](const item_def* it)
     {
-        return !item_is_selected(*item,item_type);
+        // Did we get them all...?
+        return !it->defined() || item_is_stationary(*it) || item_is_orb(*it)
+            || item_is_spellbook(*it) || it->base_type == OBJ_GOLD
+            || it->base_type == OBJ_RUNES;
     });
+
+    // Filter by type
+    if (!display_all)
+    {
+        erase_if(item_inv, [=](const item_def* item)
+        {
+            return !item_is_selected(*item, item_type_filter);
+        });
+        erase_if(item_floor, [=](const item_def* item)
+        {
+            return !item_is_selected(*item, item_type_filter);
+        });
+    }
 }
 
 void UseItemMenu::populate_menu()
@@ -134,6 +157,14 @@ void UseItemMenu::populate_menu()
         is_inventory = false;
     else if (item_floor.empty())
         is_inventory = true;
+
+    // Entry for unarmed
+    if (item_type_filter == OSEL_WIELD)
+    {
+        string hands_title = " -   unarmed";
+        MenuEntry *hands = new MenuEntry (hands_title, MEL_ITEM);
+        add_entry(hands);
+    }
 
     if (!item_inv.empty())
     {
@@ -193,16 +224,31 @@ void UseItemMenu::populate_menu()
     }
 }
 
-void UseItemMenu::toggle()
+void UseItemMenu::repopulate_menu()
 {
-    is_inventory = !is_inventory;
     deleteAll(items);
     populate_menu();
 }
 
+void UseItemMenu::toggle_display_all()
+{
+    display_all = !display_all;
+    item_inv.clear();
+    item_floor.clear();
+    populate_list();
+    repopulate_menu();
+}
+
+void UseItemMenu::toggle_inv_or_floor()
+{
+    is_inventory = !is_inventory;
+    repopulate_menu();
+}
+
 bool UseItemMenu::process_key(int key)
 {
-    if (isadigit(key) || key == '*' || key == '\\' || key == ',')
+    if (isadigit(key) || key == '*' || key == '\\' || key == ','
+        || key == '-' && item_type_filter == OSEL_WIELD)
     {
         lastch = key;
         return false;
@@ -221,13 +267,17 @@ static string _weird_sound()
 }
 
 /**
- * Prompt use of a consumable from either player inventory or the floor.
+ * Prompt use of an item from either player inventory or the floor.
  *
  * This function generates a menu containing type_expect items based on the
  * object_class_type to be acted on by another function. First it will list
- * items in inventory, then items on the floor. If player cancels out of menu,
- * nullptr is returned.
+ * items in inventory, then items on the floor. If the prompt is cancelled,
+ * false is returned. If something is successfully choosen, then true is
+ * returned, and at function exit the parameter target points to the object the
+ * player chose or to nullptr if the player chose to wield bare hands (this is
+ * only possible if item_type is OSEL_WIELD).
  *
+ * @param target A pointer by reference to indicate the object selected.
  * @param item_type The object_class_type or OSEL_* of items to list.
  * @param oper The operation being done to the selected item.
  * @param prompt The prompt on the menu title
@@ -235,22 +285,24 @@ static string _weird_sound()
  *                    function. If it returns false, continue the prompt rather
  *                    than returning null.
  *
- * @return a pointer to the chosen item, or nullptr if none was chosen.
+ * @return boolean true if something was chosen, false if the process failed and
+ *                 no choice was made
  */
-item_def* use_an_item(int item_type, operation_types oper, const char* prompt,
-                      function<bool ()> allowcancel)
+bool use_an_item(item_def *&target, int item_type, operation_types oper,
+                      const char* prompt, function<bool ()> allowcancel)
 {
-    item_def* target = nullptr;
-
-    // First handle things that will return nullptr
-
-    // No selectable items in inv or floor
-    if (!any_items_of_type(item_type, -1, true))
+    // First bail if there's nothing appropriate to choose in inv or on floor
+    // (if choosing weapons, then bare hands are always a possibility)
+    if (item_type != OSEL_WIELD && !any_items_of_type(item_type, -1, true))
     {
         mprf(MSGCH_PROMPT, "%s",
              no_selectables_message(item_type).c_str());
-        return nullptr;
+        return false;
     }
+
+    bool choice_made = false;
+    item_def *tmp_tgt = nullptr; // We'll change target only if the player
+                                 // actually chooses
 
     // Init the menu
     UseItemMenu menu(item_type, prompt);
@@ -262,15 +314,30 @@ item_def* use_an_item(int item_type, operation_types oper, const char* prompt,
 
         // Handle inscribed item keys
         if (isadigit(keyin))
-            target = digit_inscription_to_item(keyin, oper);
-        // TODO: handle * key
+        {
+        // This allows you to select stuff by inscription that is not on the
+        // screen, but only if you couldn't by default use it for that operation
+        // anyway. It's a bit weird, but it does save a '*' keypress for
+        // bread-swingers.
+            tmp_tgt = digit_inscription_to_item(keyin, oper);
+            if (tmp_tgt)
+                choice_made = true;
+        }
+        else if (keyin == '*')
+        {
+            menu.toggle_display_all();
+            continue;
+        }
         else if (keyin == ',')
         {
             if (Options.easy_floor_use && menu.item_floor.size() == 1)
-                target = const_cast<item_def*>(menu.item_floor[0]);
+            {
+                choice_made = true;
+                tmp_tgt = const_cast<item_def*>(menu.item_floor[0]);
+            }
             else
             {
-                menu.toggle();
+                menu.toggle_inv_or_floor();
                 continue;
             }
         }
@@ -279,27 +346,44 @@ item_def* use_an_item(int item_type, operation_types oper, const char* prompt,
             check_item_knowledge();
             continue;
         }
+        else if (keyin == '-' && menu.item_type_filter == OSEL_WIELD)
+        {
+            choice_made = true;
+            tmp_tgt = nullptr;
+        }
         else if (!sel.empty())
         {
             ASSERT(sel.size() == 1);
 
+            choice_made = true;
             auto ie = dynamic_cast<InvEntry *>(sel[0]);
-            target = const_cast<item_def*>(ie->item);
+            tmp_tgt = const_cast<item_def*>(ie->item);
         }
 
         redraw_screen();
-        if (target && !check_warning_inscriptions(*target, oper))
-            target = nullptr;
-        if (target)
-            return target;
+        // For weapons and armour this is handled in wield_weapon and
+        // wear_armour separately from selection
+        if (item_type != OSEL_WIELD && item_type != OBJ_ARMOUR && choice_made
+            && tmp_tgt && !check_warning_inscriptions(*tmp_tgt, oper))
+        {
+            choice_made = false;
+        }
+
+        if (choice_made)
+            break;
         else if (allowcancel())
         {
             prompt_failed(PROMPT_ABORT);
-            return nullptr;
+            break;
         }
         else
             continue;
     }
+    if (choice_made)
+        target = tmp_tgt;
+
+    ASSERT(!choice_made || target || item_type == OSEL_WIELD);
+    return choice_made;
 }
 
 static bool _safe_to_remove_or_wear(const item_def &item, bool remove,
@@ -409,6 +493,72 @@ bool can_wield(const item_def *weapon, bool say_reason,
 }
 
 /**
+ * Helper function for wield_weapon & wear_armour
+ * @param  item    item on floor (where the player is standing)
+ * @param  quiet   print message or not
+ * @return boolean can the player move the item into their inventory, or are
+ *                 they out of space?
+ */
+static bool _can_move_item_from_floor_to_inv(const item_def &item)
+{
+    if (inv_count() < ENDOFPACK)
+        return true;
+    if (!is_stackable_item(item))
+    {
+        mpr("You can't carry that many items.");
+        return false;
+    }
+    for (int i = 0; i < ENDOFPACK; ++i)
+    {
+        if (items_stack(you.inv[i], item))
+            return true;
+    }
+    mpr("You can't carry that many items.");
+    return false;
+}
+
+/**
+ * Helper function for wield_weapon & wear_armour
+ * @param  to_get item on floor (where the player is standing) to move into
+                  inventory
+ * @return int -1 if failure due to already full inventory; otherwise, index in
+ *             you.inv where the item ended up
+ */
+static int _move_item_from_floor_to_inv(const item_def &to_get)
+{
+    map<int,int> tmp_l_p = you.last_pickup; // if we need to restore
+    you.last_pickup.clear();
+
+    if (!move_item_to_inv(to_get.index(), to_get.quantity, true))
+    {
+        mpr("You can't carry that many items.");
+        you.last_pickup = tmp_l_p;
+    }
+    // Get the slot of the last thing picked up
+    // TODO: this is a bit hacky---perhaps it's worth making a function like
+    // move_item_to_inv that returns the slot the item moved into
+    else
+    {
+        ASSERT(you.last_pickup.size() == 1); // Sanity check...
+        return you.last_pickup.begin()->first;
+    }
+    return -1;
+}
+
+/**
+ * Helper function for wield_weapon & wear_armour
+ * @param  item  item on floor (where the player is standing) or in inventory
+ * @return ret index in you.inv where the item is (either because it was already
+ *               there or just got moved there), or -1 if we tried and failed to
+ *               move the item into inventory
+ */
+static int _get_item_slot(const item_def &item)
+{
+    int ret = item.pos == ITEM_IN_INVENTORY
+        ? item.link : _move_item_from_floor_to_inv(item);
+    return ret;
+}
+/**
  * @param auto_wield false if this was initiated by the wield weapon command (w)
  *      true otherwise (e.g. switching between ranged and melee with the
  *      auto_switch option)
@@ -422,59 +572,63 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
                   bool show_unwield_msg, bool show_wield_msg,
                   bool adjust_time_taken)
 {
-    if (inv_count() < 1)
-    {
-        canned_msg(MSG_NOTHING_CARRIED);
-        return false;
-    }
-
-    // Look for conditions like berserking that could prevent wielding
+    // Abort immediately if there's some condition that could prevent wielding
     // weapons.
     if (!can_wield(nullptr, true, false, slot == SLOT_BARE_HANDS))
         return false;
 
-    int item_slot = 0;          // default is 'a'
+    item_def *to_wield = &you.inv[0]; // default is 'a'
+        // we'll set this to nullptr to indicate bare hands
 
     if (auto_wield)
     {
-        if (item_slot == you.equip[EQ_WEAPON]
-            || you.equip[EQ_WEAPON] == -1
-               && !item_is_wieldable(you.inv[item_slot]))
+        if (to_wield == you.weapon()
+            || you.equip[EQ_WEAPON] == -1 && !item_is_wieldable(*to_wield))
         {
-            item_slot = 1;      // backup is 'b'
+            to_wield = &you.inv[1];      // backup is 'b'
         }
 
         if (slot != -1)         // allow external override
-            item_slot = slot;
+        {
+            if (slot == SLOT_BARE_HANDS)
+                to_wield = nullptr;
+            else
+                to_wield = &you.inv[slot];
+        }
     }
 
-    // If the swap slot has a bad (but valid) item in it,
-    // the swap will be to bare hands.
-    const bool good_swap = (item_slot == SLOT_BARE_HANDS
-                            || item_is_wieldable(you.inv[item_slot]));
-
-    // Prompt if not using the auto swap command, or if the swap slot
-    // is empty.
-    if (item_slot != SLOT_BARE_HANDS
-        && (!auto_wield || !you.inv[item_slot].defined() || !good_swap))
+    if (to_wield)
     {
+    // Prompt if not using the auto swap command
         if (!auto_wield)
         {
-            item_slot = prompt_invent_item(
-                            "Wield which item (- for none, * to show all)?",
-                            menu_type::invlist, OSEL_WIELD,
-                            OPER_WIELD, invprompt_flag::no_warning, '-');
+            if (!use_an_item(to_wield, OSEL_WIELD, OPER_WIELD, "Wield "
+                             "which item (- for none, * to show all)?"))
+            {
+                return false;
+            }
+    // We abort if trying to wield from the floor with full inventory. We could
+    // try something more sophisticated, e.g., drop the currently held weapon,
+    // but that's surely not always what's wanted, and the problem persists if
+    // the player's hands are empty. For now, let's stick with simple behaviour
+    // over trying to guess what the player would like.
+            if (to_wield && to_wield->pos != ITEM_IN_INVENTORY
+                && !_can_move_item_from_floor_to_inv(*to_wield))
+            {
+                return false;
+            }
         }
-        else
-            item_slot = SLOT_BARE_HANDS;
+
+    // If autowielding and the swap slot has a bad or invalid item in it, the
+    // swap will be to bare hands.
+        else if (!to_wield->defined() || !item_is_wieldable(*to_wield))
+            to_wield = nullptr;
     }
 
-    if (prompt_failed(item_slot))
-        return false;
-    else if (item_slot == you.equip[EQ_WEAPON])
+    if (to_wield && to_wield == you.weapon())
     {
         if (Options.equip_unequip)
-            item_slot = SLOT_BARE_HANDS;
+            to_wield = nullptr;
         else
         {
             mpr("You are already wielding that!");
@@ -485,7 +639,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
     // Reset the warning counter.
     you.received_weapon_warning = false;
 
-    if (item_slot == SLOT_BARE_HANDS)
+    if (!to_wield)
     {
         if (const item_def* wpn = you.weapon())
         {
@@ -534,7 +688,9 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
         return true;
     }
 
-    item_def& new_wpn(you.inv[item_slot]);
+    // By now we're sure we're swapping to a real weapon, not bare hands
+
+    item_def& new_wpn = *to_wield;
 
     // Switching to a launcher while berserk is likely a mistake.
     if (you.berserk() && is_range_weapon(new_wpn))
@@ -579,6 +735,15 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
 
     const unsigned int old_talents = your_talents(false).size();
 
+    // If it's on the ground, pick it up. Once it's picked up, there should be
+    // no aborting, lest we introduce a way to instantly pick things up
+    // NB we already made sure there was space for the item
+    int item_slot = _get_item_slot(new_wpn);
+
+    // At this point new_wpn is potentially not the right thing anymore (the
+    // thing actually in the player's inventory), that is, in the case where the
+    // player chose something from the floor. So use item_slot from here on.
+
     // Go ahead and wield the weapon.
     equip_item(EQ_WEAPON, item_slot, show_weff_messages);
 
@@ -587,10 +752,10 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
 #ifdef USE_SOUND
         parse_sound(WIELD_WEAPON_SOUND);
 #endif
-        mprf_nocap("%s", new_wpn.name(DESC_INVENTORY_EQUIP).c_str());
+        mprf_nocap("%s", you.inv[item_slot].name(DESC_INVENTORY_EQUIP).c_str());
     }
 
-    check_item_hint(new_wpn, old_talents);
+    check_item_hint(you.inv[item_slot], old_talents);
 
     // Time calculations.
     if (adjust_time_taken)
@@ -1011,31 +1176,41 @@ bool wear_armour(int item)
         return false;
     }
 
+    item_def *to_wear = nullptr;
+
     if (item == -1)
     {
-        item = prompt_invent_item("Wear which item?", menu_type::invlist,
-                                  OBJ_ARMOUR, OPER_WEAR,
-                                  invprompt_flag::no_warning);
-        if (prompt_failed(item))
+        if (!use_an_item(to_wear, OBJ_ARMOUR, OPER_WEAR,
+                         "Wear which item (* to show all)?"))
+        {
             return false;
+        }
+        // use_an_item on armour should never return true and leave to_wear
+        // nullptr
+        if (to_wear->pos != ITEM_IN_INVENTORY
+            && !_can_move_item_from_floor_to_inv(*to_wear))
+        {
+            return false;
+        }
     }
+    else
+        to_wear = &you.inv[item];
 
-    item_def &invitem = you.inv[item];
     // First, let's check for any conditions that would make it impossible to
     // equip the given item
-    if (!invitem.defined())
+    if (!to_wear->defined())
     {
         mpr("You don't have any such object.");
         return false;
     }
 
-    if (item == you.equip[EQ_WEAPON])
+    if (to_wear == you.weapon())
     {
         mpr("You are wielding that object!");
         return false;
     }
 
-    if (item_is_worn(item))
+    if (to_wear->pos == ITEM_IN_INVENTORY && item_is_worn(to_wear->link))
     {
         if (Options.equip_unequip)
             // TODO: huh? Why are we inverting the return value?
@@ -1047,20 +1222,20 @@ bool wear_armour(int item)
         }
     }
 
-    if (!_can_equip_armour(invitem))
+    if (!_can_equip_armour(*to_wear))
         return false;
 
     // At this point, we know it's possible to equip this item. However, there
     // might be reasons it's not advisable. Warn about any dangerous
     // inscriptions, giving the player an opportunity to bail out.
-    if (!check_warning_inscriptions(invitem, OPER_WEAR))
+    if (!check_warning_inscriptions(*to_wear, OPER_WEAR))
     {
         canned_msg(MSG_OK);
         return false;
     }
 
     bool swapping = false;
-    const equipment_type slot = get_armour_slot(invitem);
+    const equipment_type slot = get_armour_slot(*to_wear);
     if ((slot == EQ_CLOAK
            || slot == EQ_HELMET
            || slot == EQ_GLOVES
@@ -1079,12 +1254,20 @@ bool wear_armour(int item)
     // TODO: It would be nice if we checked this before taking off the item
     // currently in the slot. But doing so is not quite trivial. Also applies
     // to jewellery.
-    if (!_safe_to_remove_or_wear(invitem, false))
+    if (!_safe_to_remove_or_wear(*to_wear, false))
         return false;
 
-    const int delay = armour_equip_delay(invitem);
+    // If it's on the ground, pick it up. Once it's picked up, there should be
+    // no aborting
+    // NB we already made sure there was space for the item
+    int item_slot = _get_item_slot(*to_wear);
+
+    const int delay = armour_equip_delay(*to_wear);
     if (delay)
-        start_delay<ArmourOnDelay>(delay - (swapping ? 0 : 1), invitem);
+    {
+        start_delay<ArmourOnDelay>(delay - (swapping ? 0 : 1),
+                                   you.inv[item_slot]);
+    }
 
     return true;
 }
@@ -2037,9 +2220,7 @@ void drink(item_def* potion)
 
     if (!potion)
     {
-        potion = use_an_item(OBJ_POTIONS, OPER_QUAFF, "Drink which item?");
-
-        if (!potion)
+        if (!use_an_item(potion, OBJ_POTIONS, OPER_QUAFF, "Drink which item (* to show all)?"))
             return;
     }
 
@@ -2265,7 +2446,10 @@ static void _brand_weapon(item_def &wpn)
 static item_def* _choose_target_item_for_scroll(bool scroll_known, object_selector selector,
                                                 const char* prompt)
 {
-    return use_an_item(selector, OPER_ANY, prompt,
+    item_def *target = nullptr;
+    bool success = false;
+
+    success = use_an_item(target, selector, OPER_ANY, prompt,
                        [=]()
                        {
                            if (scroll_known
@@ -2276,6 +2460,7 @@ static item_def* _choose_target_item_for_scroll(bool scroll_known, object_select
                            }
                            return false;
                        });
+    return success ? target : nullptr;
 }
 
 static object_selector _enchant_selector(scroll_type scroll)
@@ -2750,8 +2935,7 @@ void read(item_def* scroll)
 
     if (!scroll)
     {
-        scroll = use_an_item(OBJ_SCROLLS, OPER_READ, "Read which item?");
-        if (!scroll)
+        if (!use_an_item(scroll, OBJ_SCROLLS, OPER_READ, "Read which item (* to show all)?"))
             return;
     }
 

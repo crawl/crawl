@@ -128,8 +128,7 @@ bool prompt_eat_item(int slot)
     item_def* item = nullptr;
     if (slot == -1)
     {
-        item = use_an_item(OBJ_FOOD, OPER_EAT, "Eat which item?");
-        if (!item)
+        if (!use_an_item(item, OBJ_FOOD, OPER_EAT, "Eat which item (* to show all)?"))
             return false;
     }
     else
