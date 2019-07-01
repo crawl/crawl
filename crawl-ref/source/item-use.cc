@@ -455,8 +455,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
 
     // Prompt if not using the auto swap command, or if the swap slot
     // is empty.
-    if (item_slot != SLOT_BARE_HANDS
-        && (!auto_wield || !you.inv[item_slot].defined() || !good_swap))
+    if (item_slot != SLOT_BARE_HANDS)
     {
         if (!auto_wield)
         {
@@ -465,7 +464,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
                             menu_type::invlist, OSEL_WIELD,
                             OPER_WIELD, invprompt_flag::no_warning, '-');
         }
-        else
+        else if (!you.inv[item_slot].defined() || !good_swap)
             item_slot = SLOT_BARE_HANDS;
     }
 
