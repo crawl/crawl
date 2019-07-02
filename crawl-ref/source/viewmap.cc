@@ -1188,6 +1188,7 @@ bool show_map(level_pos &lpos,
                             move_y = you.travel_y - lpos.pos.y;
                         }
                         else if (allow_offlevel && you.travel_z.is_valid()
+                                        && can_travel_to(you.travel_z)
                                         && you.level_visited(you.travel_z))
                         {
                             // previous travel target is offlevel
