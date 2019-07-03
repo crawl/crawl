@@ -362,8 +362,28 @@ int SDLWrapper::init(coord_def *m_windowsz)
         return false;
     }
 
+    // find the current display, based on the mouse position
+    // TODO: probably want to allow configuring this?
+    int mouse_x, mouse_y;
+    SDL_GetGlobalMouseState(&mouse_x, &mouse_y);
+
+    int displays = SDL_GetNumVideoDisplays();
+    int cur_display;
+    for (cur_display = 0; cur_display < displays; cur_display++)
+    {
+        SDL_Rect bounds;
+        SDL_GetDisplayBounds(cur_display, &bounds);
+        if (mouse_x >= bounds.x && mouse_y >= bounds.y &&
+            mouse_x < bounds.x + bounds.w && mouse_y < bounds.y + bounds.h)
+        {
+            break;
+        }
+    }
+    if (cur_display >= displays)
+        cur_display = 0; // can this happen?
+
     SDL_DisplayMode display_mode;
-    SDL_GetDesktopDisplayMode(0, &display_mode);
+    SDL_GetDesktopDisplayMode(cur_display, &display_mode);
 
     _desktop_width = display_mode.w;
     _desktop_height = display_mode.h;
@@ -439,8 +459,8 @@ int SDLWrapper::init(coord_def *m_windowsz)
 
     string title = string(CRAWL " ") + Version::Long;
     m_window = SDL_CreateWindow(title.c_str(),
-                                SDL_WINDOWPOS_UNDEFINED,
-                                SDL_WINDOWPOS_UNDEFINED,
+                                SDL_WINDOWPOS_CENTERED_DISPLAY(cur_display),
+                                SDL_WINDOWPOS_CENTERED_DISPLAY(cur_display),
                                 m_windowsz->x, m_windowsz->y, flags);
     glDebug("SDL_CreateWindow");
     if (!m_window)
