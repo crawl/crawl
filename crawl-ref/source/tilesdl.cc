@@ -297,6 +297,8 @@ void TilesFramework::set_map_display(const bool display)
     m_map_mode_enabled = display;
     if (!display && !tiles.is_using_small_layout())
         m_region_tab->activate_tab(TAB_ITEM);
+    do_layout(); // recalculate the viewport setup for zoom levels
+    redraw_screen(false);
 }
 
 bool TilesFramework::get_map_display()
@@ -307,6 +309,8 @@ bool TilesFramework::get_map_display()
 void TilesFramework::do_map_display()
 {
     m_map_mode_enabled = true;
+    do_layout(); // recalculate the viewport setup for zoom levels
+    redraw_screen(false);
     m_region_tab->activate_tab(TAB_NAVIGATION);
 }
 
@@ -892,8 +896,10 @@ static int round_up_to_multiple(int a, int b)
 void TilesFramework::do_layout()
 {
     // View size in pixels is (m_viewsc * crawl_view.viewsz)
-    m_viewsc.x = Options.tile_cell_pixels * Options.tile_viewport_scale / 100;
-    m_viewsc.y = Options.tile_cell_pixels * Options.tile_viewport_scale / 100;
+    const int scale = m_map_mode_enabled ? Options.tile_map_scale
+                                         : Options.tile_viewport_scale;
+    m_viewsc.x = Options.tile_cell_pixels * scale / 100;
+    m_viewsc.y = Options.tile_cell_pixels * scale / 100;
 
     crawl_view.viewsz.x = Options.view_max_width;
     crawl_view.viewsz.y = Options.view_max_height;
@@ -1096,19 +1102,18 @@ void TilesFramework::zoom_dungeon(bool in)
 #ifdef TOUCH_UI
     m_region_tile->zoom(in);
 #elif defined(USE_TILE_LOCAL)
+    int &current_scale = m_map_mode_enabled ?  Options.tile_map_scale
+                                            :  Options.tile_viewport_scale;
     // max zoom relative to to tile size that keeps LOS in view
     int max_zoom = 100 * m_windowsz.y / Options.tile_cell_pixels
                                       / ENV_SHOW_DIAMETER;
     if (max_zoom % ZOOM_INC != 0)
         max_zoom += ZOOM_INC - max_zoom % ZOOM_INC; // round up
-    Options.tile_viewport_scale = min(max_zoom, max(20,
-                    Options.tile_viewport_scale + (in ? ZOOM_INC : -ZOOM_INC)));
+    current_scale = min(max_zoom, max(20,
+                    current_scale + (in ? ZOOM_INC : -ZOOM_INC)));
     do_layout(); // recalculate the viewport setup
-    dprf("Zooming to %d", Options.tile_viewport_scale);
-    ui::ui_force_render(); // this will trigger a redraw -- need to do a
-                           // higher-level rerender than just a tiles redraw,
-                           // otherwise some text gets blanked out (not sure
-                           // why).
+    dprf("Zooming to %d", current_scale);
+    redraw_screen(false);
 #endif
 }
 

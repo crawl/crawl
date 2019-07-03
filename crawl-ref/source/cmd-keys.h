@@ -378,10 +378,16 @@
 {CK_NUMPAD_PLUS, CMD_ZOOM_IN},
 {CK_NUMPAD_MINUS, CMD_ZOOM_OUT},
 #elif defined(USE_TILE_LOCAL)
+// no good webtiles keys available for the main view case, and browser zoom
+// already more or less accomplishes this.
 {'=' - SDLK_a + 1, CMD_ZOOM_IN},  // Believe it or not, this is how we map SDL
 {'-' - SDLK_a + 1, CMD_ZOOM_OUT}, // ctrl scancodes...
-// no good webtiles keys available, and browser zoom already more or less
-// accomplishes this anyways.
+{'=' - SDLK_a + 1, CMD_MAP_ZOOM_IN},
+{'-' - SDLK_a + 1, CMD_MAP_ZOOM_OUT},
+#endif
+#ifdef USE_TILE
+{'}', CMD_MAP_ZOOM_IN},
+{'{', CMD_MAP_ZOOM_OUT},
 #endif
 
 {'\0', CMD_NO_CMD}

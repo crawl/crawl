@@ -2040,6 +2040,11 @@ tile_viewport_scale = 1.0
         so that at a minimum, your line of sight is always visible. This can
         also be adjusted in-game in local tiles with ctrl-'-' and ctrl-'='.
 
+tile_map_scale = 0.6
+        A scale factor to apply to the dungeon view in map mode (X). This can
+        also be adjusted in map mode in tiles with '{' and '}', as well as in
+        local tiles with ctrl-'-' and ctrl-'='.
+
 tile_cell_pixels = 32
         The width and height of tiles in the dungeon view at 1.0 scale, in
         (logical) pixels. This is a legacy option, and it is recommended that

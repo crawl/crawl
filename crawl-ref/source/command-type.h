@@ -221,6 +221,11 @@ enum command_type
     CMD_MAP_FORGET,
     CMD_MAP_UNFORGET,
 
+#ifdef USE_TILE
+    CMD_MAP_ZOOM_IN,
+    CMD_MAP_ZOOM_OUT,
+#endif
+
     CMD_MAP_EXIT_MAP,
 
     CMD_MAX_OVERMAP = CMD_MAP_EXIT_MAP,

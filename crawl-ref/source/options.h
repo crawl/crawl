@@ -554,6 +554,7 @@ public:
 #endif
     int         tile_cell_pixels;
     int         tile_viewport_scale;
+    int         tile_map_scale;
     bool        tile_filter_scaling;
     int         tile_map_pixels;
 

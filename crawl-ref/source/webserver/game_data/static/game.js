@@ -137,13 +137,16 @@ function ($, comm, client, dungeon_renderer, display, minimap, enums, messages,
             messages.show();
         }
         minimap.stop_minimap_farview();
+        minimap.update_overlay();
         display.invalidate(true);
         display.display();
     }
 
     function set_ui_state(state)
     {
+        dungeon_renderer.set_ui_state(state);
         if (state == ui_state) return;
+
         var old_state = ui_state;
         ui_state = state;
         switch (ui_state)

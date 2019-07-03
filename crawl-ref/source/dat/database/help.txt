@@ -162,6 +162,7 @@ level-map
 <w>[</w> or <w>]</w>     : Examine the next higher or lower level
 <w>G</w>          : Go to another level by branch and depth
 <w>o</w>          : Move the cursor to the next autoexplore target.
+<w>{</w> or <w>}</w>     : Zoom out or in (tiles only).
 
 <h>Travel exclusions</h>
 <w>e</w>          : Create a travel exclusion, change its radius, or remove it.

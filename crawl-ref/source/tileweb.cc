@@ -552,17 +552,32 @@ void TilesFramework::_send_options()
 
 #define ZOOM_INC 10
 
-void TilesFramework::zoom_dungeon(bool in)
+static void _set_option_int(string name, int value)
 {
-    Options.tile_viewport_scale = min(300, max(20,
-                    Options.tile_viewport_scale + (in ? ZOOM_INC : -ZOOM_INC)));
     tiles.json_open_object();
     tiles.json_write_string("msg", "set_option");
-    tiles.json_write_string("name", "tile_viewport_scale");
-    tiles.json_write_int("value", Options.tile_viewport_scale);
+    tiles.json_write_string("name", name);
+    tiles.json_write_int("value", value);
     tiles.json_close_object();
     tiles.finish_message();
-    dprf("Zooming to %d", Options.tile_viewport_scale);
+}
+
+void TilesFramework::zoom_dungeon(bool in)
+{
+    if (m_ui_state == UI_VIEW_MAP)
+    {
+        Options.tile_map_scale = min(300, max(20,
+                    Options.tile_map_scale + (in ? ZOOM_INC : -ZOOM_INC)));
+        _set_option_int("tile_map_scale", Options.tile_map_scale);
+        dprf("Zooming map to %d", Options.tile_map_scale);
+    }
+    else
+    {
+        Options.tile_viewport_scale = min(300, max(20,
+                    Options.tile_viewport_scale + (in ? ZOOM_INC : -ZOOM_INC)));
+        _set_option_int("tile_viewport_scale", Options.tile_viewport_scale);
+        dprf("Zooming to %d", Options.tile_viewport_scale);
+    }
     // calling redraw explicitly is not needed here: it triggers from a
     // listener on the webtiles side.
     // TODO: how to implement dynamic max zoom that reacts to the webtiles side?
@@ -1855,11 +1870,6 @@ void TilesFramework::cgotoxy(int x, int y, GotoRegion region)
 {
     m_print_x = x - 1;
     m_print_y = y - 1;
-
-    // XXX: an ugly hack necessary for webtiles X to work properly
-    // when showing message prompts (e.g. X!, XG)
-    if (region == GOTO_STAT || region == GOTO_MSG)
-        set_ui_state(UI_NORMAL);
 
     bool crt_popup = region == GOTO_CRT && !m_menu_stack.empty() &&
             m_menu_stack.back().type == UIStackFrame::CRT;

@@ -51,6 +51,7 @@ function ($, cr, map_knowledge, options, dngn, util, view_data, enums) {
 
         this.view = { x: 0, y: 0 };
         this.view_center = { x: 0, y: 0 };
+        this.ui_state = -1;
     }
 
     DungeonViewRenderer.prototype = new cr.DungeonCellRenderer();
@@ -236,8 +237,13 @@ function ($, cr, map_knowledge, options, dngn, util, view_data, enums) {
         fit_to: function(width, height, min_diameter)
         {
             var ratio = window.devicePixelRatio;
+            var scale;
+            if (this.ui_state == enums.ui.VIEW_MAP)
+                scale = options.get("tile_map_scale");
+            else
+                scale = options.get("tile_viewport_scale");
             var tile_size = Math.floor(options.get("tile_cell_pixels")
-                                * options.get("tile_viewport_scale") / 100);
+                                * scale / 100);
             var cell_size = {
                 w: Math.floor(tile_size * ratio),
                 h: Math.floor(tile_size * ratio)
@@ -350,6 +356,11 @@ function ($, cr, map_knowledge, options, dngn, util, view_data, enums) {
             renderer.draw_tiles(tiles);
 
             return renderer;
+        },
+
+        set_ui_state: function(s)
+        {
+            this.ui_state = s;
         }
     });
 
