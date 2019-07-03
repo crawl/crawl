@@ -2034,12 +2034,16 @@ tile_map_pixels = 0
         downside is that travelling by clicking on the minimap becomes much
         harder. If set to zero, it will auto-size the minimap.
 
+tile_viewport_scale = 1.0
+        A scale factor to apply to the dungeon view. The minimum value is 0.2
+        and the maximum value is determined by resolution; zoom will be capped
+        so that at a minimum, your line of sight is always visible. This can
+        also be adjusted in-game in local tiles with ctrl-'-' and ctrl-'='.
+
 tile_cell_pixels = 32
-        The width and height of tiles in the dungeon view. If you want
-        to see the tiles in all their glory and have a large
-        resolution, set this to 48 or even 64; but note that tiles
-        will be automatically scaled down to fit the visible area on
-        the screen.
+        The width and height of tiles in the dungeon view at 1.0 scale, in
+        (logical) pixels. This is a legacy option, and it is recommended that
+        you adjust scaling via tile_viewport_scale instead.
 
 tile_filter_scaling = false
         Used in conjunction with tile_cell_pixels. Setting it to true filters

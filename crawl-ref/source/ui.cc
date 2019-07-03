@@ -1723,6 +1723,7 @@ static void remap_key(wm_event &event)
 void ui_force_render()
 {
     ui_root.layout();
+    ui_root.needs_paint = true;
     ui_root.render();
 }
 

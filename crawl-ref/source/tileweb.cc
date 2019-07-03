@@ -550,6 +550,24 @@ void TilesFramework::_send_options()
     finish_message();
 }
 
+#define ZOOM_INC 10
+
+void TilesFramework::zoom_dungeon(bool in)
+{
+    Options.tile_viewport_scale = min(300, max(20,
+                    Options.tile_viewport_scale + (in ? ZOOM_INC : -ZOOM_INC)));
+    tiles.json_open_object();
+    tiles.json_write_string("msg", "set_option");
+    tiles.json_write_string("name", "tile_viewport_scale");
+    tiles.json_write_int("value", Options.tile_viewport_scale);
+    tiles.json_close_object();
+    tiles.finish_message();
+    dprf("Zooming to %d", Options.tile_viewport_scale);
+    // calling redraw explicitly is not needed here: it triggers from a
+    // listener on the webtiles side.
+    // TODO: how to implement dynamic max zoom that reacts to the webtiles side?
+}
+
 void TilesFramework::_send_layout()
 {
     tiles.json_open_object();

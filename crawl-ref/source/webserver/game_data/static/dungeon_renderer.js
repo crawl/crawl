@@ -236,9 +236,11 @@ function ($, cr, map_knowledge, options, dngn, util, view_data, enums) {
         fit_to: function(width, height, min_diameter)
         {
             var ratio = window.devicePixelRatio;
+            var tile_size = Math.floor(options.get("tile_cell_pixels")
+                                * options.get("tile_viewport_scale") / 100);
             var cell_size = {
-                w: Math.floor(options.get("tile_cell_pixels") * ratio),
-                h: Math.floor(options.get("tile_cell_pixels") * ratio)
+                w: Math.floor(tile_size * ratio),
+                h: Math.floor(tile_size * ratio)
             };
 
             if (options.get("tile_display_mode") == "glyphs")

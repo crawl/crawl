@@ -1131,6 +1131,7 @@ void game_options::reset_options()
     tile_weapon_offsets.second = INT_MAX;
     tile_shield_offsets.first  = INT_MAX;
     tile_shield_offsets.second = INT_MAX;
+    tile_viewport_scale = 100;
 #endif
 
 #ifdef USE_TILE_WEB
@@ -3452,6 +3453,22 @@ void game_options::read_option_line(const string &str, bool runscript)
         }
 #endif
     }
+#ifdef USE_TILE
+    else if (key == "tile_viewport_scale")
+    {
+        float tmp_scale;
+        if (sscanf(field.c_str(), "%f", &tmp_scale))
+        {
+            tile_viewport_scale = min(1600, max(20,
+                                        static_cast<int>(tmp_scale * 100)));
+        }
+        else
+        {
+            report_error("Expected a decimal value for tile_viewport_scale,"
+                " but got '%s'.", field.c_str());
+        }
+    }
+#endif
 
     // Catch-all else, copies option into map
     else if (runscript)
@@ -4468,6 +4485,7 @@ void game_options::write_webtiles_options(const string& name)
 
     tiles.json_write_string("tile_display_mode", Options.tile_display_mode);
     tiles.json_write_int("tile_cell_pixels", Options.tile_cell_pixels);
+    tiles.json_write_int("tile_viewport_scale", Options.tile_viewport_scale);
     tiles.json_write_bool("tile_filter_scaling", Options.tile_filter_scaling);
     tiles.json_write_bool("tile_water_anim", Options.tile_water_anim);
     tiles.json_write_bool("tile_misc_anim", Options.tile_misc_anim);

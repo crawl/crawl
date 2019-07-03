@@ -31,6 +31,10 @@
 #include <string>
 #include <vector>
 
+#ifdef USE_TILE_LOCAL
+#include <SDL_keycode.h>
+#endif
+
 #include "cio.h"
 #include "command.h"
 #include "files.h"

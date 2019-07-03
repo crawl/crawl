@@ -137,16 +137,15 @@ enum command_type
 #endif
 
 #ifdef USE_TILE
+    CMD_ZOOM_IN,
+    CMD_ZOOM_OUT,
+
     CMD_EDIT_PLAYER_TILE,
     CMD_MIN_TILE = CMD_EDIT_PLAYER_TILE,
     CMD_MAX_TILE = CMD_EDIT_PLAYER_TILE,
 #endif
 
 #ifdef TOUCH_UI
-    // zoom on dungeon
-    CMD_ZOOM_IN,
-    CMD_ZOOM_OUT,
-
     // bring up the on-screen keyboard if needed
     CMD_SHOW_KEYBOARD,
 #endif

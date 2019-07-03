@@ -208,6 +208,8 @@ public:
                      bool send_doll = true);
     void write_tileidx(tileidx_t t);
 
+    void zoom_dungeon(bool in);
+
 protected:
     int m_sock;
     int m_max_msg_size;
