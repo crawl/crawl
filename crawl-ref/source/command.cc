@@ -914,9 +914,9 @@ static void _add_formatted_keyhelp(column_composer &cols)
             1,
             "<h>Dungeon Interaction and Information:\n");
 
-    _add_insert_commands(cols, 1, "<w>%</w>/<w>%</w> : Open/Close door",
+    _add_insert_commands(cols, 1, "<w>%</w>/<w>%</w>    : Open/Close door",
                          { CMD_OPEN_DOOR, CMD_CLOSE_DOOR });
-    _add_insert_commands(cols, 1, "<w>%</w>/<w>%</w> : use staircase",
+    _add_insert_commands(cols, 1, "<w>%</w>/<w>%</w>    : use staircase",
                          { CMD_GO_UPSTAIRS, CMD_GO_DOWNSTAIRS });
 
     _add_command(cols, 1, CMD_INSPECT_FLOOR, "examine occupied tile and");
@@ -939,6 +939,10 @@ static void _add_formatted_keyhelp(column_composer &cols)
     _add_command(cols, 1, CMD_TOGGLE_TRAVEL_SPEED, "set your travel speed to your");
     cols.add_formatted(1, "         slowest ally\n",
                            false);
+#ifdef USE_TILE_LOCAL
+    _add_insert_commands(cols, 1, "<w>%</w>/<w>%</w> : zoom out/in",
+                        { CMD_ZOOM_OUT, CMD_ZOOM_IN });
+#endif
 
     cols.add_formatted(
             1,

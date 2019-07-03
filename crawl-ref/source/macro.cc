@@ -1508,6 +1508,11 @@ string command_to_string(command_type cmd, bool tutorial)
         const int numpad = (key - 1000);
         result = make_stringf("Numpad %d", numpad);
     }
+#ifdef USE_TILE_LOCAL
+    // SDL allows control modifiers for some extra punctuation
+    else if (key < 0 && key > SDLK_EXCLAIM - SDLK_a + 1)
+        result = make_stringf("Ctrl-%c", (char) (key + SDLK_a - 1));
+#endif
     else
     {
         const int ch = key + 'A' - 1;
