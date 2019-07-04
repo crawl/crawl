@@ -3,7 +3,6 @@ use strict;
 use warnings;
 
 run(qw(sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y));
-run(qw(sudo add-apt-repository ppa:zoogie/sdl2-snapshots -y));
 
 retry(qw(sudo apt-get update -qq));
 
