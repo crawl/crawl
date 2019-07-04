@@ -12,6 +12,7 @@ if ($ENV{BUILD_ALL} || $ENV{CROSSCOMPILE}) {
 
     push @deps, qw(
        libegl1-mesa-dev
+       mesa-common-dev
        libasound2-dev
        libxss-dev
     );
