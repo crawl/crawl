@@ -748,10 +748,17 @@ static void _decrement_durations()
         }
     }
 
-    if (you.duration[DUR_DEATHS_DOOR] && you.hp > allowed_deaths_door_hp())
+    if (you.duration[DUR_DEATHS_DOOR]
+        && you.attribute[ATTR_DEATHS_DOOR_HP] > 0
+        && you.hp > you.attribute[ATTR_DEATHS_DOOR_HP])
     {
-        set_hp(allowed_deaths_door_hp());
+        set_hp(you.attribute[ATTR_DEATHS_DOOR_HP]);
         you.redraw_hit_points = true;
+    }
+    else if (!you.duration[DUR_DEATHS_DOOR]
+             && you.attribute[ATTR_DEATHS_DOOR_HP] > 0)
+    {
+        you.attribute[ATTR_DEATHS_DOOR_HP] = 0;
     }
 
     if (_decrement_a_duration(DUR_CLOUD_TRAIL, delay,

@@ -31,13 +31,6 @@
 #include "view.h"
 #include "viewchar.h"
 
-int allowed_deaths_door_hp()
-{
-    int hp = calc_spell_power(SPELL_DEATHS_DOOR, true) / 10;
-
-    return max(hp, 1);
-}
-
 spret cast_deaths_door(int pow, bool fail)
 {
     fail_check();
@@ -47,7 +40,9 @@ spret cast_deaths_door(int pow, bool fail)
     you.set_duration(DUR_DEATHS_DOOR, 10 + random2avg(13, 3)
                                        + (random2(pow) / 10));
 
-    set_hp(allowed_deaths_door_hp());
+    const int hp = max(calc_spell_power(SPELL_DEATHS_DOOR, true) / 10, 1);
+    you.attribute[ATTR_DEATHS_DOOR_HP] = hp;
+    set_hp(hp);
 
     if (you.duration[DUR_DEATHS_DOOR] > 25 * BASELINE_DELAY)
         you.duration[DUR_DEATHS_DOOR] = (23 + random2(5)) * BASELINE_DELAY;
