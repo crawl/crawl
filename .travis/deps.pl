@@ -23,6 +23,8 @@ else {
     );
 
     push @deps, qw(
+        libegl1-mesa-dev
+        libgles2-mesa-dev
         libsdl2-dev
         libsdl2-image-dev
         libsdl2-mixer-dev
