@@ -134,7 +134,7 @@ On Fedora, and possibly other RPM-based systems, you can get the dependencies
 by running the following as root:
 
     dnf install gcc gcc-c++ make bison flex ncurses-devel compat-lua-devel \
-      sqlite-devel zlib-devel pkgconfig python-yaml SDL-devel SDL_image-devel \
+      sqlite-devel zlib-devel pkgconfig python-yaml SDL2-devel SDL2_image-devel \
       libpng-devel freetype-devel dejavu-sans-fonts dejavu-sans-mono-fonts
 
 (the last six are needed only for tile builds). As with Debian, this package
