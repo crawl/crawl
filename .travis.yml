@@ -1,37 +1,107 @@
 language: cpp
 dist: xenial
 compiler:
-    - clang
     - gcc
+    - clang
+cache: ccache
 sudo: required
-before_install:
-    - sudo apt-get update --option Acquire::Retries=100 --option Acquire::http::Timeout="60"
-    - perl .travis/apt.pl
-    - if [ "$CXX" = "g++" ]; then export CXX="g++-4.7" CC="gcc-4.7"; fi
+addons:
+    apt:
+        update: true
+        retries: true
+        packages: &basic_deps
+            - xorg-dev
+            - python3-yaml
+            - liblua5.1-0-dev # strictly speaking, only BUILD_ALL builds
+            - liblua5.1-0-dbg
+            - gdb
+
 env:
-    - NOTHING=1
-    - UNBRACE=1
-    - CHECKWHITE=1
-    - FULLDEBUG=1
-    - TILES=1
-    - TILES=1 FULLDEBUG=1
-    - WEBTILES=1
-    - WEBTILES=1 FULLDEBUG=1
-    - USE_DGAMELAUNCH=1 EXTERNAL_DEFINES=-UTOURNEY
-    - USE_DGAMELAUNCH=1 WEBTILES=1 EXTERNAL_DEFINES=-UTOURNEY
-    - TILES=1 BUILD_ALL=1
-    - WEBTILES=1 BUILD_ALL=1
-    - CROSSCOMPILE=1
+    global:
+        - CCACHE_CPP2=yes
+    matrix: # anything here is fully crossed with compilers, uses *basic_deps
+        - NOTHING=1
+        - FULLDEBUG=1
+        - WEBTILES=1 FULLDEBUG=1
+
 git:
     submodules: false
+
+# the rest of the build matrix, specifying each combo directly. Anything
+# without explicit addons here will uses *basic_deps above, and any addons list
+# overrides the global one.
 matrix:
-    exclude:
+    include:
+        # lint-type checks
+        - env: CHECKWHITE=1
+          addons: {apt: {packages: [] }}
+        - env: UNBRACE=1
+          addons: {apt: {packages: [] }}
+        # the rest of the actual builds.
+        - compiler: gcc
+          env: WEBTILES=1
+        - compiler: gcc
+          env: WEBTILES=1 BUILD_ALL=1
+        - compiler: gcc
+          env: TILES=1
+          addons:
+            apt:
+                packages:
+                    - *basic_deps
+                    - &sdl_deps [libegl1-mesa-dev, libgles2-mesa-dev, libsdl2-dev, libsdl2-image-dev, libsdl2-mixer-dev]
         - compiler: clang
-          env: UNBRACE=1
+          env: TILES=1
+          addons:
+            apt:
+                packages:
+                    - *basic_deps
+                    - *sdl_deps
+        - compiler: gcc
+          env: TILES=1 FULLDEBUG=1
+          addons:
+            apt:
+                packages:
+                    - *basic_deps
+                    - *sdl_deps
         - compiler: clang
-          env: CHECKWHITE=1
+          env: TILES=1 FULLDEBUG=1
+          addons:
+            apt:
+                packages:
+                    - *basic_deps
+                    - *sdl_deps
+        - compiler: gcc
+          env: TILES=1 BUILD_ALL=1
+          addons:
+            apt:
+                packages:
+                    - *basic_deps
+                    - &sdl_buildall_deps [libegl1-mesa-dev, mesa-common-dev, libglu1-mesa-dev, libasound2-dev, libxss-dev]
         - compiler: clang
-          env: CROSSCOMPILE=1
+          env: TILES=1 BUILD_ALL=1
+          addons:
+            apt:
+                packages:
+                    - *basic_deps
+                    - *sdl_buildall_deps
+        - env: CROSSCOMPILE=1
+          addons:
+            apt:
+                packages:
+                    - mingw-w64
+                    - binutils-mingw-w64
+                    - g++-mingw-w64-i686
+                    - gcc-mingw-w64-i686
+                    - nsis
+                    - *sdl_buildall_deps
+        - compiler: gcc
+          env: USE_DGAMELAUNCH=1 EXTERNAL_DEFINES=-UTOURNEY
+        - compiler: gcc
+          env: USE_DGAMELAUNCH=1 WEBTILES=1 EXTERNAL_DEFINES=-UTOURNEY
+
+before_install:
+    - if [ "$TRAVIS_OS_NAME" == "linux" ]; then if [ "$CC" == "clang" ]; then sudo ln -s `which ccache` /usr/lib/ccache/clang; fi; fi
+    - if [ "$TRAVIS_OS_NAME" == "linux" ]; then if [ "$CXX" == "clang++" ]; then sudo ln -s `which ccache` /usr/lib/ccache/clang++; fi; fi
 install: perl .travis/deps.pl
 script: perl .travis/build.pl
 notifications:

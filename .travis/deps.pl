@@ -2,38 +2,12 @@
 use strict;
 use warnings;
 
-my @deps = qw(
-    gdb
-);
-
+# this file used to do a bunch of apt stuff, but that's now all done in the
+# travis build matrix.
 if ($ENV{BUILD_ALL} || $ENV{CROSSCOMPILE}) {
     retry(qw(git fetch --unshallow));
     retry(qw(git submodule update --init --recursive));
-
-    push @deps, qw(
-       libegl1-mesa-dev
-       mesa-common-dev
-       libglu1-mesa-dev
-       libasound2-dev
-       libxss-dev
-    );
 }
-else {
-    push @deps, qw(
-        liblua5.1-0-dev
-        liblua5.1-0-dbg
-    );
-
-    push @deps, qw(
-        libegl1-mesa-dev
-        libgles2-mesa-dev
-        libsdl2-dev
-        libsdl2-image-dev
-        libsdl2-mixer-dev
-    ) if $ENV{TILES} || $ENV{WEBTILES};
-}
-
-retry(qw(sudo apt-get install), @deps);
 
 sub retry {
     my (@cmd) = @_;

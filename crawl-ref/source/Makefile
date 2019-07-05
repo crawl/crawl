@@ -261,10 +261,17 @@ ifneq (,$(findstring CYGWIN,$(uname_S)))
 endif
 
 ifdef BUILD_ALL
-	BUILD_FREETYPE = YesPlease
+	ifdef TILES
+		BUILD_FREETYPE = YesPlease
+		BUILD_SDL2 = YesPlease
+		BUILD_SDL2IMAGE = YesPlease
+		BUILD_LIBPNG = YesPlease
+	endif
+	ifdef WEBTILES
+		BUILD_LIBPNG = YesPlease
+	endif
+
 	BUILD_PCRE = YesPlease
-	BUILD_SDL2 = YesPlease
-	BUILD_SDL2IMAGE = YesPlease
 	ifdef SOUND
 		ifndef WIN32 
 			BUILD_SDL2MIXER = YesPlease
@@ -272,7 +279,6 @@ ifdef BUILD_ALL
 	endif
 	BUILD_SQLITE = YesPlease
 	BUILD_LUA = YesPlease
-	BUILD_LIBPNG = YesPlease
 	BUILD_ZLIB = YesPlease
 endif
 
