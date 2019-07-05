@@ -849,11 +849,7 @@ static void _describe_regen(status_info& inf)
     }
     else if (vampmod)
     {
-        if (you.disease)
-            inf.short_text = "recuperating";
-        else
-            inf.short_text = "regenerating";
-
+        inf.short_text = you.disease ? "recuperating" : "regenerating";
         inf.short_text += " quickly";
     }
 }
