@@ -219,7 +219,7 @@ string comma_separated_line(Z start, Z end, const string &andc = " and ",
 template <typename Z>
 string join_strings(Z start, Z end, const string &sep = " ")
 {
-    return comma_separated_line(start, end, " ", " ");
+    return comma_separated_line(start, end, sep, sep);
 }
 
 static inline bool starts_with(const string &s, const string &prefix)
