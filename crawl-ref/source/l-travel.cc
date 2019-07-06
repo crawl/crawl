@@ -114,7 +114,7 @@ LUAFN(l_waypoint_delta)
 
 /*** Set a numbered waypoint.
  * Uses player-centered coordinates.
- * @tparam int n Waypoint number
+ * @tparam int waynum
  * @tparam int x
  * @tparam int y
  * @function set_waypoint
