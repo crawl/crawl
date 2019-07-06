@@ -112,6 +112,28 @@ LUAFN(l_waypoint_delta)
     return 2;
 }
 
+/*** Set a numbered waypoint.
+ * Uses player-centered coordinates.
+ * @tparam int n Waypoint number
+ * @tparam int x
+ * @tparam int y
+ * @function set_waypoint
+ */
+LUAFN(l_set_waypoint)
+{
+    int waynum = luaL_safe_checkint(ls, 1);
+    if (waynum < 0 || waynum > 9)
+        return 0;
+    coord_def s;
+    s.x = luaL_safe_checkint(ls, 2);
+    s.y = luaL_safe_checkint(ls, 3);
+    const coord_def p = player2grid(s);
+    if (!in_bounds(p))
+        return 0;
+    travel_cache.set_waypoint(waynum, p.x, p.y);
+    return 0;
+}
+
 static const struct luaL_reg travel_lib[] =
 {
     { "set_exclude", l_set_exclude },
@@ -120,6 +142,7 @@ static const struct luaL_reg travel_lib[] =
     { "feature_solid", l_feature_is_solid },
     { "find_deepest_explored", l_find_deepest_explored },
     { "waypoint_delta", l_waypoint_delta },
+    { "set_waypoint", l_set_waypoint },
 
     { nullptr, nullptr }
 };
