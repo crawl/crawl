@@ -3962,8 +3962,13 @@ void TravelCache::add_waypoint(int x, int y)
         return;
     }
 
-    int waynum = keyin - '0';
+    set_waypoint(keyin - '0', x, y);
 
+}
+
+void TravelCache::set_waypoint(int waynum, int x, int y)
+{
+    // Assumes that the waynum input is a valid number between 0 and 9 inclusive.
     coord_def pos(x,y);
     if (x == -1 || y == -1)
         pos = you.pos();
