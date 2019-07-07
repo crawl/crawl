@@ -1385,7 +1385,7 @@ static const vector<branch_type> portal_generation_order =
 #if TAG_MAJOR_VERSION == 34
     BRANCH_LABYRINTH,
 #endif
-    BRANCH_BAZAAR,
+    // do not pregenerate bazaar (TODO: this is non-ideal)
     // do not pregenerate trove
     BRANCH_WIZLAB,
     BRANCH_DESOLATION,
@@ -1403,8 +1403,12 @@ void update_portal_entrances()
         if (feat_is_portal_entrance(feat))
         {
             level_id whither = stair_destination(feat, "", false);
-            if (whither.branch == BRANCH_ZIGGURAT || whither.branch == BRANCH_TROVE)
+            if (whither.branch == BRANCH_ZIGGURAT // not (quite) pregenerated
+                || whither.branch == BRANCH_TROVE // not pregenerated
+                || whither.branch == BRANCH_BAZAAR) // multiple bazaars possible
+            {
                 continue; // handle these differently
+            }
             dprf("Setting up entry for %s.", whither.describe().c_str());
             ASSERT(count(portal_generation_order.begin(),
                          portal_generation_order.end(),
