@@ -98,8 +98,10 @@ namespace rng
         : subgenerator(seed, get_uint64())
     { }
 
+    // call the 1-arg constructor so as to ensure a sequence point between the
+    // two get_uint64 calls.
     subgenerator::subgenerator()
-        : subgenerator(get_uint64(), get_uint64())
+        : subgenerator(get_uint64())
     { }
 
     PcgRNG *get_generator(rng_type r)
