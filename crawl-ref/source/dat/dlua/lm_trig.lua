@@ -240,7 +240,6 @@ function Triggerable:event(marker, ev)
     error("Triggerable type " .. class .. " at (" ..x .. ", " .. y .. ") " ..
            "has no triggerers for dgn_event " .. e_type )
   end
-
   for _, trig_idx in ipairs(trig_list) do
     self.triggerers[trig_idx]:event(self, marker, ev)
 
@@ -627,8 +626,9 @@ function DgnTriggerer:new(pars)
   tr:setup()
 
   if tr.type == "turn" and (tr.delay or (tr.delay_min and tr.delay_max)) then
-    tr.delay_min = tr.delay_min or tr.delay or 1
-    tr.delay_max = tr.delay_max or tr.delay
+    -- lua gotcha reminder: 0 does not evaluate to false.
+    tr.delay_min = math.max(tr.delay_min or tr.delay, 1)
+    tr.delay_max = math.max(tr.delay_max or tr.delay, tr.delay_min)
 
     tr.buildup_turns = 0
     tr.countdown     = 0
