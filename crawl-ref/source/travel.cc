@@ -3962,8 +3962,13 @@ void TravelCache::add_waypoint(int x, int y)
         return;
     }
 
-    int waynum = keyin - '0';
+    set_waypoint(keyin - '0', x, y);
 
+}
+
+void TravelCache::set_waypoint(int waynum, int x, int y)
+{
+    ASSERT_RANGE(waynum, 0, TRAVEL_WAYPOINT_COUNT);
     coord_def pos(x,y);
     if (x == -1 || y == -1)
         pos = you.pos();
@@ -3984,7 +3989,7 @@ void TravelCache::add_waypoint(int x, int y)
     if (overwrite)
     {
         if (lid == old_lid) // same level
-            mprf("Waypoint %d re-assigned to your current position.", waynum);
+            mprf("Waypoint %d re-assigned to %s.", waynum, new_dest.c_str());
         else
         {
             mprf("Waypoint %d re-assigned from %s to %s.",
