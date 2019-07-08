@@ -138,7 +138,8 @@ KMONS:      O = saltling band
 SUBST:      . = ;.
 FTILE:      ;OP = FLOOR_SALT
 MARKER:     P = lua:fog_machine { cloud_type = "salt",  walk_dist=3, \
-                                  pow_max=6, delay=0, size=5, spread_rate=3, }
+                                  pow_min=6, pow_max=20, \
+                                  delay=5, size=5, spread_rate=5, }
 MAP
 .......
 .;;;;;.
@@ -177,8 +178,9 @@ TAGS: transparent no_monster_gen
 SUBST: C = c;, - = ; .:50
 KMONS: O = saltling band
 FTILE: ;Os = FLOOR_SALT
-MARKER: O = lua:fog_machine { cloud_type = "salt",  walk_dist = 4, size = 3, \
-                              pow_max = 6, delay = 10 }
+MARKER: O = lua:fog_machine { cloud_type = "salt",  walk_dist=3, \
+                                  pow_min=6, pow_max=20, \
+                                  delay=5, size=5, spread_rate=5, }
 MAP
 ...........
 .-;-;--;--.
@@ -965,7 +967,8 @@ ORIENT: float
 NSUBST: - = 2:c / 2:x / 2=c. / 2=x. / 4:% / 1:G. / 2:1 / 2:2 / 1:S / *:.
 SUBST: C = c.., c = ccccx
 MARKER: S = lua:fog_machine { cloud_type = "salt",  walk_dist=3, \
-   pow_max=6, delay=0, size=5, spread_rate=3, }
+                                  pow_min=6, pow_max=20, \
+                                  delay=5, size=5, spread_rate=5, }
  : desolation_ruins_setup(_G)
 MAP
 C.........C.
@@ -1011,7 +1014,8 @@ TAGS: desolation_ruin transparent
 ORIENT: float
 NSUBST: c = 4:- / *=cccx-, - = 7:% / 2:x / 2:2 / 2:1 / *:., . = S / .
 MARKER: S = lua:fog_machine { cloud_type = "salt",  walk_dist=3, \
-   pow_max=6, delay=0, size=5, spread_rate=3, }
+                                  pow_min=6, pow_max=20, \
+                                  delay=5, size=5, spread_rate=5, }
  : desolation_ruins_setup(_G)
 MAP
 ............
@@ -1309,7 +1313,8 @@ MONS:       saltling band
 :           set_border_fill_type('endless_salt')
 :           set_feature_name("granite_statue", "ruined idol")
 MARKER:     S = lua:fog_machine { cloud_type = "salt",  walk_dist=3, \
-                                  pow_max=6, delay=0, size=5, spread_rate=3, }
+                                  pow_min=6, pow_max=20, \
+                                  delay=5, size=15, spread_rate=10, }
 
 MAP
 PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
