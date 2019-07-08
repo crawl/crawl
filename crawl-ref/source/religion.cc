@@ -3399,12 +3399,12 @@ static void _set_initial_god_piety()
         // monk bonus...
         you.props[RU_SACRIFICE_PROGRESS_KEY] = 0;
         // offer the first sacrifice faster than normal
-    {
-        int delay = 50;
-        if (crawl_state.game_is_sprint())
-            delay /= SPRINT_MULTIPLIER;
-        you.props[RU_SACRIFICE_DELAY_KEY] = delay;
-    }
+        {
+            int delay = 50;
+            if (crawl_state.game_is_sprint())
+                delay /= SPRINT_MULTIPLIER;
+            you.props[RU_SACRIFICE_DELAY_KEY] = delay;
+        }
         you.props[RU_SACRIFICE_PENALTY_KEY] = 0;
         break;
 
