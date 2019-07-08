@@ -26,7 +26,7 @@ LUAFN(l_set_exclude)
     s.y = luaL_safe_checkint(ls, 2);
     const coord_def p = player2grid(s);
     if (!in_bounds(p))
-        return luaL_error(ls, "Coordinates out of bounds: (%d, %d)", p.x, p.y);
+        return luaL_error(ls, "Coordinates out of bounds: (%d, %d)", s.x, s.y);
     // XXX: dedup w/_get_full_exclusion_radius()?
     int r = LOS_RADIUS;
     if (lua_gettop(ls) > 2)
@@ -48,7 +48,7 @@ LUAFN(l_del_exclude)
     s.y = luaL_safe_checkint(ls, 2);
     const coord_def p = player2grid(s);
     if (!in_bounds(p))
-        return luaL_error(ls, "Coordinates out of bounds: (%d, %d)", p.x, p.y);
+        return luaL_error(ls, "Coordinates out of bounds: (%d, %d)", s.x, s.y);
     del_exclude(p);
     return 0;
 }
@@ -129,7 +129,7 @@ LUAFN(l_set_waypoint)
     s.y = luaL_safe_checkint(ls, 3);
     const coord_def p = player2grid(s);
     if (!in_bounds(p))
-        return luaL_error(ls, "Coordinates out of bounds: (%d, %d)", p.x, p.y);
+        return luaL_error(ls, "Coordinates out of bounds: (%d, %d)", s.x, s.y);
     travel_cache.set_waypoint(waynum, p.x, p.y);
     return 0;
 }
