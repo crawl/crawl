@@ -101,8 +101,8 @@ LUAFN(l_find_deepest_explored)
 LUAFN(l_waypoint_delta)
 {
     int waynum = luaL_safe_checkint(ls, 1);
-    if (waynum < 0 || waynum > 9)
-        return 0;
+    if (waynum < 0 || waynum >= TRAVEL_WAYPOINT_COUNT)
+        luaL_error(ls, "Bad waypoint number: %d", waynum);
     const level_pos waypoint = travel_cache.get_waypoint(waynum);
     if (waypoint.id != level_id::current())
         return 0;
@@ -122,8 +122,8 @@ LUAFN(l_waypoint_delta)
 LUAFN(l_set_waypoint)
 {
     int waynum = luaL_safe_checkint(ls, 1);
-    if (waynum < 0 || waynum > 9)
-        return 0;
+    if (waynum < 0 || waynum >= TRAVEL_WAYPOINT_COUNT)
+        luaL_error(ls, "Bad waypoint number: %d", waynum);
     coord_def s;
     s.x = luaL_safe_checkint(ls, 2);
     s.y = luaL_safe_checkint(ls, 3);
