@@ -13,7 +13,7 @@
 #include "travel.h"
 
 /*** Set an exclusion.
- * Uses player centered coordinates
+ * Uses player-centered coordinates
  * @tparam int x
  * @tparam int y
  * @tparam[opt=LOS_RADIUS] int r
@@ -36,7 +36,7 @@ LUAFN(l_set_exclude)
 }
 
 /*** Remove an exclusion.
- * Uses player centered coordinates
+ * Uses player-centered coordinates
  * @tparam int x
  * @tparam int y
  * @function del_eclude
@@ -113,7 +113,7 @@ LUAFN(l_waypoint_delta)
 }
 
 /*** Set a numbered waypoint.
- * Uses player-centered coordinates.
+ * Uses player-centered coordinates
  * @tparam int waynum
  * @tparam int x
  * @tparam int y
