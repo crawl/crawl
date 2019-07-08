@@ -3989,7 +3989,7 @@ void TravelCache::set_waypoint(int waynum, int x, int y)
     if (overwrite)
     {
         if (lid == old_lid) // same level
-            mprf("Waypoint %d re-assigned to your current position.", waynum);
+            mprf("Waypoint %d re-assigned to %s.", waynum, new_dest.c_str());
         else
         {
             mprf("Waypoint %d re-assigned from %s to %s.",
