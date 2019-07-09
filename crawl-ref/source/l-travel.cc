@@ -8,46 +8,16 @@
 #include "branch.h"
 #include "cluautil.h"
 #include "coord.h"
-#include "env.h"
 #include "player.h"
 #include "terrain.h"
 #include "travel.h"
-
-static bool _in_map_bounds(int x, int y)
-{
-    // code to get bounds stolen from viewmap.cc
-    int min_x = GXM, max_x = 0, min_y = 0, max_y = 0;
-    bool found_y = false;
-
-    for (int j = 0; j < GYM; j++)
-        for (int i = 0; i < GXM; i++)
-        {
-            if (env.map_knowledge[i][j].known())
-            {
-                if (!found_y)
-                {
-                    found_y = true;
-                    min_y = j;
-                    if (y < min_y)
-                        return false;
-                }
-
-                max_y = j;
-
-                if (i < min_x)
-                    min_x = i;
-
-                if (i > max_x)
-                    max_x = i;
-            }
-        }
-
-    return y <= max_y && x >= min_x && x <= max_x;
-}
+#include "map-knowledge.h"
 
 static bool _in_map_bounds(const coord_def& p)
 {
-    return _in_map_bounds(p.x, p.y);
+    std::pair<coord_def, coord_def> b = known_map_bounds();
+    return p.x >= b.first.x && p.y >= b.first.y
+        && p.x <= b.second.x && p.y <= b.second.y;
 }
 
 /*** Set an exclusion.
