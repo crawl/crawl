@@ -38,6 +38,7 @@
 #include "view.h"
 #include "viewchar.h"
 #include "viewgeom.h"
+#include "delay.h"
 
 #ifdef USE_TILE
 #endif
@@ -812,12 +813,19 @@ bool show_map(level_pos &lpos,
             c_input_reset(true);
 #ifdef USE_TILE_LOCAL
             const int key = getchm(KMC_LEVELMAP);
-            command_type cmd = key_to_command(key, KMC_LEVELMAP);
 #else
             const int key = unmangle_direction_keys(getchm(KMC_LEVELMAP),
                                                     KMC_LEVELMAP);
-            command_type cmd = key_to_command(key, KMC_LEVELMAP);
 #endif
+            command_type cmd;
+            if (is_userfunction(key))
+            {
+                run_macro(get_userfunction(key).c_str());
+                continue;
+            }
+            else
+                cmd = key_to_command(key, KMC_LEVELMAP);
+
             if (cmd < CMD_MIN_OVERMAP || cmd > CMD_MAX_OVERMAP)
                 cmd = CMD_NO_CMD;
 
