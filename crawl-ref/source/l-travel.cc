@@ -8,9 +8,47 @@
 #include "branch.h"
 #include "cluautil.h"
 #include "coord.h"
+#include "env.h"
 #include "player.h"
 #include "terrain.h"
 #include "travel.h"
+
+static bool _in_map_bounds(int x, int y)
+{
+    // code to get bounds stolen from viewmap.cc
+    int min_x = GXM, max_x = 0, min_y = 0, max_y = 0;
+    bool found_y = false;
+
+    for (int j = 0; j < GYM; j++)
+        for (int i = 0; i < GXM; i++)
+        {
+            if (env.map_knowledge[i][j].known())
+            {
+                if (!found_y)
+                {
+                    found_y = true;
+                    min_y = j;
+                    if (y < min_y)
+                        return false;
+                }
+
+                max_y = j;
+
+                if (i < min_x)
+                    min_x = i;
+
+                if (i > max_x)
+                    max_x = i;
+            }
+        }
+
+    return y <= max_y && x >= min_x && x <= max_x;
+}
+
+static bool _in_map_bounds(const coord_def& p)
+{
+    return _in_map_bounds(p.x, p.y);
+}
 
 /*** Set an exclusion.
  * Uses player-centered coordinates
@@ -25,7 +63,7 @@ LUAFN(l_set_exclude)
     s.x = luaL_safe_checkint(ls, 1);
     s.y = luaL_safe_checkint(ls, 2);
     const coord_def p = player2grid(s);
-    if (!in_bounds(p))
+    if (!_in_map_bounds(p))
         return luaL_error(ls, "Coordinates out of bounds: (%d, %d)", s.x, s.y);
     // XXX: dedup w/_get_full_exclusion_radius()?
     int r = LOS_RADIUS;
@@ -47,7 +85,7 @@ LUAFN(l_del_exclude)
     s.x = luaL_safe_checkint(ls, 1);
     s.y = luaL_safe_checkint(ls, 2);
     const coord_def p = player2grid(s);
-    if (!in_bounds(p))
+    if (!_in_map_bounds(p))
         return luaL_error(ls, "Coordinates out of bounds: (%d, %d)", s.x, s.y);
     del_exclude(p);
     return 0;
@@ -128,7 +166,7 @@ LUAFN(l_set_waypoint)
     s.x = luaL_safe_checkint(ls, 2);
     s.y = luaL_safe_checkint(ls, 3);
     const coord_def p = player2grid(s);
-    if (!in_bounds(p))
+    if (!_in_map_bounds(p))
         return luaL_error(ls, "Coordinates out of bounds: (%d, %d)", s.x, s.y);
     travel_cache.set_waypoint(waynum, p.x, p.y);
     return 0;
