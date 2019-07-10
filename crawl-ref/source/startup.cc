@@ -1188,66 +1188,6 @@ static void _show_startup_menu(newgame_def& ng_choice,
 }
 #endif
 
-static void _choose_arena_teams(newgame_def& choice,
-                                const newgame_def& defaults)
-{
-#ifdef USE_TILE_WEB
-    tiles_crt_popup show_as_popup;
-#endif
-
-    if (!choice.arena_teams.empty())
-        return;
-    clear_message_store();
-
-    char buf[80];
-    resumable_line_reader reader(buf, sizeof(buf));
-    bool done = false, cancel;
-    auto prompt_ui = make_shared<Text>();
-
-    prompt_ui->on(Widget::slots.event, [&](wm_event ev)  {
-        if (ev.type != WME_KEYDOWN)
-            return false;
-        int key = ev.key.keysym.sym;
-        key = reader.putkey(key);
-        if (key == -1)
-            return true;
-        cancel = !!key;
-        return done = true;
-    });
-
-    auto popup = make_shared<ui::Popup>(prompt_ui);
-    ui::push_layout(move(popup));
-    while (!done && !crawl_state.seen_hups)
-    {
-        string hlbuf = formatted_string(buf).to_colour_string();
-        if (hlbuf.find(" v ") != string::npos)
-            hlbuf = "<w>" + replace_all(hlbuf, " v ", "</w> v <w>") + "</w>";
-
-        formatted_string prompt;
-        prompt.cprintf("Enter your choice of teams:\n\n  ");
-        prompt += formatted_string::parse_string(hlbuf);
-
-        prompt.cprintf("\n\n");
-        if (!defaults.arena_teams.empty())
-            prompt.cprintf("Enter - %s\n", defaults.arena_teams.c_str());
-        prompt.cprintf("\n");
-        prompt.cprintf("Examples:\n");
-        prompt.cprintf("  Sigmund v Jessica\n");
-        prompt.cprintf("  99 orc v the Royal Jelly\n");
-        prompt.cprintf("  20-headed hydra v 10 kobold ; scimitar ego:flaming");
-        prompt_ui->set_text(prompt);
-
-        ui::pump_events();
-    }
-    ui::pop_layout();
-
-    if (cancel || crawl_state.seen_hups)
-        game_ended(game_exit::abort);
-    choice.arena_teams = buf;
-    if (choice.arena_teams.empty())
-        choice.arena_teams = defaults.arena_teams;
-}
-
 #ifndef DGAMELAUNCH
 static bool _exit_type_allows_menu_bypass(game_exit exit)
 {
@@ -1334,10 +1274,8 @@ bool startup_step()
     //       choose_game and setup_game
     if (choice.type == GAME_TYPE_ARENA)
     {
-        _choose_arena_teams(choice, defaults);
-        write_newgame_options_file(choice);
         crawl_state.last_type = GAME_TYPE_ARENA;
-        run_arena(choice.arena_teams); // this is NORETURN
+        run_arena(choice, defaults.arena_teams); // this is NORETURN
     }
 
     bool newchar = false;

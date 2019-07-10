@@ -13,7 +13,9 @@ struct mgen_data;
 
 struct coord_def;
 
-NORETURN void run_arena(const string& teams);
+struct newgame_def;
+
+NORETURN void run_arena(const newgame_def& choice, const string &default_arena_teams);
 
 monster_type arena_pick_random_monster(const level_id &place);
 
