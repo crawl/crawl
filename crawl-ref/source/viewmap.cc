@@ -638,7 +638,7 @@ bool show_map(level_pos &lpos,
     {
         levelview_excursion le(travel_mode);
         level_id original(level_id::current());
-        crawl_state.map_mode_info.original_lid = original;
+        unwind_var<level_id> _original_lid(crawl_state.map_mode_info.original_lid, original);
 
         if (!lpos.id.is_valid() || !allow_offlevel)
             lpos.id = level_id::current();
