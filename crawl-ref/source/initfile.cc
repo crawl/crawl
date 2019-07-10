@@ -194,7 +194,11 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(note_chat_messages), false),
         new BoolGameOption(SIMPLE_NAME(note_dgl_messages), true),
         new BoolGameOption(SIMPLE_NAME(clear_messages), false),
+#ifdef DEBUG
+        new BoolGameOption(SIMPLE_NAME(show_more), false),
+#else
         new BoolGameOption(SIMPLE_NAME(show_more), !USING_TOUCH),
+#endif
         new BoolGameOption(SIMPLE_NAME(small_more), false),
         new BoolGameOption(SIMPLE_NAME(pickup_thrown), true),
         new BoolGameOption(SIMPLE_NAME(show_travel_trail), USING_DGL),
