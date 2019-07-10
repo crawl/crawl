@@ -46,6 +46,6 @@ void reautomap_level();
 /**
  * @brief Get the bounding box of the known map.
  *
- * @return vector of [topleft coord, bottomright coord] of bbox.
+ * @return pair of {topleft coord, bottomright coord} of bbox.
  */
 std::pair<coord_def, coord_def> known_map_bounds();
