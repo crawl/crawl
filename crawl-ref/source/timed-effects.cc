@@ -431,6 +431,8 @@ struct timed_effect
     bool              arena;
 };
 
+// If you add an entry to this list, remember to add a matching entry
+// to timed_effect_type in timef-effect-type.h!
 static struct timed_effect timed_effects[] =
 {
     { rot_floor_items,               200,   200, true  },
