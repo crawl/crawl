@@ -912,8 +912,8 @@ static int crawl_article_a(lua_State *ls)
     return 1;
 }
 
-/*** If we are in map view mode and on the same level as the player,
- * get player-relative position of cursor.
+/*** If we are in map mode and the cursor is on the same
+ * level as the player, get player-relative position of cursor.
  * @treturn int, int
  * @function cursor_pos
  */
@@ -932,7 +932,8 @@ LUAFN(crawl_cursor_pos)
     return 2;
 }
 
-/*** If we are in map view mode, get short level description of cursor.
+/*** If we are in map mode, get description of cursor level
+ * in the form <branch-abbreviation>:<depth>.
  * @treturn string
  * @function cursor_level
  */
@@ -946,7 +947,7 @@ LUAFN(crawl_cursor_level)
     return 1;
 }
 
-/*** Are we in map view mode?
+/*** Are we in map mode?
  * @treturn boolean
  * @function in_map_mode
  */
