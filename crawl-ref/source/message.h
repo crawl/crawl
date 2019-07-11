@@ -101,10 +101,10 @@ class message_tee
 public:
     message_tee();
     message_tee(string &_target);
-    ~message_tee();
-    void append(const string &s);
-    void append_line(const string &s);
-    string get_store() const;
+    virtual ~message_tee();
+    virtual void append(const string &s, msg_channel_type ch = MSGCH_PLAIN);
+    virtual void append_line(const string &s, msg_channel_type ch = MSGCH_PLAIN);
+    virtual string get_store() const;
 
 private:
     stringstream store;

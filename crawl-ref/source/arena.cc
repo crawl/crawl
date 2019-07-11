@@ -49,6 +49,71 @@ using namespace ui;
 
 #define ARENA_VERBOSE
 
+// wrap a message tee around a file ptr, which can be null.
+// for a more general purpose application you'd want this to handle opening
+// and closing the file too, but that would require some restructuring of the
+// arena.
+class arena_message_tee : message_tee
+{
+public:
+    arena_message_tee(FILE **_file) : message_tee(), file(_file) { }
+
+    ~arena_message_tee()
+    {
+        if (*file)
+            fflush(*file);
+    }
+
+    void append(const string &s, msg_channel_type ch = MSGCH_PLAIN)
+    {
+        if (Options.arena_dump_msgs && *file)
+        {
+            if (!s.size())
+                return;
+            string prefix;
+            switch (ch)
+            {
+                case MSGCH_DIAGNOSTICS:
+                    prefix = "DIAG: ";
+                    if (Options.arena_dump_msgs_all)
+                        break;
+                    return;
+
+                // Ignore messages generated while the user examines
+                // the arnea.
+                case MSGCH_PROMPT:
+                case MSGCH_MONSTER_TARGET:
+                case MSGCH_FLOOR_ITEMS:
+                case MSGCH_EXAMINE:
+                case MSGCH_EXAMINE_FILTER:
+                    return;
+
+                // If a monster-damage message ends with '!' it's a
+                // death message, otherwise it's an examination message
+                // and should be skipped.
+                case MSGCH_MONSTER_DAMAGE:
+                    if (s[s.size() - 1] != '!')
+                        return;
+                    break;
+
+                case MSGCH_ERROR: prefix = "ERROR: "; break;
+                case MSGCH_WARN: prefix = "WARN: "; break;
+                case MSGCH_SOUND: prefix = "SOUND: "; break;
+
+                case MSGCH_TALK_VISUAL:
+                case MSGCH_TALK: prefix = "TALK: "; break;
+                default: break;
+            }
+            formatted_string fs = formatted_string::parse_string(s);
+            fprintf(*file, "%s%s", prefix.c_str(), fs.tostring().c_str());
+            fflush(*file);
+        }
+    }
+
+private:
+    FILE **file;
+};
+
 extern void world_reacts();
 
 static void _results_popup(string msg, bool error=false)
@@ -192,6 +257,7 @@ namespace arena
 
     static FILE *file = nullptr;
     static level_id place(BRANCH_DEPTHS, 1);
+    static string arena_log;
 
     static void adjust_spells(monster* mons, bool no_summons, bool no_animate)
     {
@@ -640,59 +706,6 @@ namespace arena
         return faction_a.active_members > 0 && faction_b.active_members > 0;
     }
 
-    static void dump_messages()
-    {
-        if (!Options.arena_dump_msgs || file == nullptr)
-            return;
-
-        vector<string> messages;
-        vector<msg_channel_type> channels;
-        get_recent_messages(messages, channels);
-
-        for (unsigned int i = 0; i < messages.size(); i++)
-        {
-            string msg  = messages[i];
-            int         chan = channels[i];
-
-            string prefix;
-            switch (chan)
-            {
-                case MSGCH_DIAGNOSTICS:
-                    prefix = "DIAG: ";
-                    if (Options.arena_dump_msgs_all)
-                        break;
-                    continue;
-
-                // Ignore messages generated while the user examines
-                // the arnea.
-                case MSGCH_PROMPT:
-                case MSGCH_MONSTER_TARGET:
-                case MSGCH_FLOOR_ITEMS:
-                case MSGCH_EXAMINE:
-                case MSGCH_EXAMINE_FILTER:
-                    continue;
-
-                // If a monster-damage message ends with '!' it's a
-                // death message, otherwise it's an examination message
-                // and should be skipped.
-                case MSGCH_MONSTER_DAMAGE:
-                    if (msg[msg.length() - 1] != '!')
-                        continue;
-                    break;
-
-                case MSGCH_ERROR: prefix = "ERROR: "; break;
-                case MSGCH_WARN: prefix = "WARN: "; break;
-                case MSGCH_SOUND: prefix = "SOUND: "; break;
-
-                case MSGCH_TALK_VISUAL:
-                case MSGCH_TALK: prefix = "TALK: "; break;
-            }
-            msg = prefix + msg;
-
-            fprintf(file, "%s\n", msg.c_str());
-        }
-    }
-
     // Try to prevent random luck from letting one spawner fill up the
     // arena with so many monsters that the other spawner can never get
     // back on even footing.
@@ -842,6 +855,7 @@ namespace arena
     {
         viewwindow();
         clear_messages(true);
+
         {
             cursor_control coff(false);
             while (fight_is_on() && !contest_cancelled)
@@ -865,7 +879,6 @@ namespace arena
                 balance_spawners();
                 ui_delay(Options.view_delay);
                 clear_messages();
-                dump_messages();
                 ASSERT(you.pet_target == MHITNOT);
             }
             viewwindow();
@@ -874,8 +887,8 @@ namespace arena
         if (contest_cancelled)
         {
             mpr("Canceled contest at user request");
+            ui_delay(Options.view_delay);
             clear_messages();
-            dump_messages();
             return;
         }
 
@@ -950,7 +963,6 @@ namespace arena
             mprf(msg.c_str(),
                  faction_a.won ? faction_a.desc.c_str()
                                : faction_b.desc.c_str());
-        dump_messages();
     }
 
     static void global_setup(const string& arena_teams)
@@ -964,6 +976,7 @@ namespace arena
         memset(banned_glyphs, 0, sizeof(banned_glyphs));
         arena_type = "";
         place = level_id(BRANCH_DEPTHS, 1);
+        arena_log = "";
 
         // [ds] Turning off view_lock crashes arena.
         Options.view_lock_x = Options.view_lock_y = true;
@@ -971,19 +984,6 @@ namespace arena
         teams = arena_teams;
         // Set various options from the arena spec's tags
         parse_monster_spec(); // may throw an arena_error
-
-        if (file != nullptr)
-            end(0, false, "Results file already open");
-        file = fopen("arena.result", "w");
-
-        if (file != nullptr)
-        {
-            string spec = find_monster_spec();
-            fprintf(file, "%s\n", spec.c_str());
-
-            if (Options.arena_dump_msgs || Options.arena_list_eq)
-                fprintf(file, "========================================\n");
-        }
 
         expand_mlist(5);
 
@@ -1003,6 +1003,7 @@ namespace arena
             fclose(file);
 
         file = nullptr;
+        arena_log = "";
     }
 
     static void write_results()
@@ -1525,6 +1526,7 @@ static void _choose_arena_teams(newgame_def& choice,
 
     if (cancel || crawl_state.seen_hups)
     {
+        arena::global_shutdown();
         game_ended(crawl_state.bypassed_startup_menu
                     ? game_exit::death : game_exit::abort);
     }
@@ -1539,6 +1541,12 @@ NORETURN void run_arena(const newgame_def& choice, const string &default_arena_t
 
     newgame_def arena_choice = choice;
     string last_teams = default_arena_teams;
+    if (arena::file != nullptr)
+        end(0, false, "Results file already open");
+    // would be more elegant if arena_message_tee handled file open/close, but
+    // that would need a bunch of refactoring of how the file is handled here.
+    arena::file = fopen("arena.result", "w");
+    arena_message_tee log(&arena::file);
 
     do
     {
@@ -1569,7 +1577,7 @@ NORETURN void run_arena(const newgame_def& choice, const string &default_arena_t
             }
             else
             {
-                arena::write_error(error.what());
+                mprf(MSGCH_ERROR, "%s", error.what());
                 _results_popup(error.what(), true);
                 last_teams = arena_choice.arena_teams;
                 arena_choice.arena_teams = "";

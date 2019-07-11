@@ -966,15 +966,15 @@ message_tee::~message_tee()
     current_message_tees.erase(this);
 }
 
-void message_tee::append(const string &s)
+void message_tee::append(const string &s, msg_channel_type ch)
 {
     // could use a more c++y external interface -- but that just complicates things
     store << s;
 }
 
-void message_tee::append_line(const string &s)
+void message_tee::append_line(const string &s, msg_channel_type ch)
 {
-    store << s << "\n";
+    append(s + "\n", ch);
 }
 
 string message_tee::get_store() const
@@ -982,10 +982,10 @@ string message_tee::get_store() const
     return store.str();
 }
 
-static void _append_to_tees(const string &s)
+static void _append_to_tees(const string &s, msg_channel_type ch)
 {
     for (auto tee : current_message_tees)
-        tee->append(s);
+        tee->append(s, ch);
 }
 
 no_messages::no_messages() : msuppressed(suppress_messages)
@@ -1460,7 +1460,7 @@ static void _mpr(string text, msg_channel_type channel, int param, bool nojoin,
     text = "<" + col + ">" + text + "</" + col + ">"; // XXX
 
     if (current_message_tees.size())
-        _append_to_tees(text + "\n");
+        _append_to_tees(text + "\n", channel);
 
     formatted_string fs = formatted_string::parse_string(text);
 
