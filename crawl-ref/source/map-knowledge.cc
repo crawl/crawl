@@ -326,3 +326,31 @@ bool map_cell::update_cloud_state()
     // TODO: track decay & vanish appropriately (based on some worst case?)
     return false;
 }
+
+std::pair<coord_def, coord_def> known_map_bounds() {
+    int min_x = GXM, max_x = 0, min_y = 0, max_y = 0;
+    bool found_y = false;
+
+    for (int j = 0; j < GYM; j++)
+        for (int i = 0; i < GXM; i++)
+        {
+            if (env.map_knowledge[i][j].known())
+            {
+                if (!found_y)
+                {
+                    found_y = true;
+                    min_y = j;
+                }
+
+                max_y = j;
+
+                if (i < min_x)
+                    min_x = i;
+
+                if (i > max_x)
+                    max_x = i;
+            }
+        }
+
+    return std::make_pair(coord_def(min_x, min_y), coord_def(max_x, max_y));
+}

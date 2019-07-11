@@ -644,7 +644,6 @@ bool show_map(level_pos &lpos,
             lpos.id = level_id::current();
 
         cursor_control ccon(!Options.use_fake_cursor);
-        int i, j;
 
         int move_x = 0, move_y = 0, scroll_y = 0;
 
@@ -705,29 +704,11 @@ bool show_map(level_pos &lpos,
 
                 feats.init();
 
-                min_x = GXM, max_x = 0, min_y = 0, max_y = 0;
-                bool found_y = false;
-
-                for (j = 0; j < GYM; j++)
-                    for (i = 0; i < GXM; i++)
-                    {
-                        if (env.map_knowledge[i][j].known())
-                        {
-                            if (!found_y)
-                            {
-                                found_y = true;
-                                min_y = j;
-                            }
-
-                            max_y = j;
-
-                            if (i < min_x)
-                                min_x = i;
-
-                            if (i > max_x)
-                                max_x = i;
-                        }
-                    }
+                std::pair<coord_def, coord_def> bounds = known_map_bounds();
+                min_x = bounds.first.x;
+                min_y = bounds.first.y;
+                max_x = bounds.second.x;
+                max_y = bounds.second.y;
 
                 map_lines = max_y - min_y + 1;
 

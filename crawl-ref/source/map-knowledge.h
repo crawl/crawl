@@ -3,6 +3,7 @@
 #include "coord.h"
 #include "enum.h"
 #include "feature.h"
+#include "externs.h"
 
 void set_terrain_mapped(const coord_def c);
 void set_terrain_seen(const coord_def c);
@@ -41,3 +42,10 @@ map_feature get_cell_map_feature(const map_cell& cell);
 bool is_explore_horizon(const coord_def& c);
 
 void reautomap_level();
+
+/**
+ * @brief Get the bounding box of the known map.
+ *
+ * @return pair of {topleft coord, bottomright coord} of bbox.
+ */
+std::pair<coord_def, coord_def> known_map_bounds();
