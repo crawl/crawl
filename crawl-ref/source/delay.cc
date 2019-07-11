@@ -28,6 +28,7 @@
 #include "env.h"
 #include "exclude.h"
 #include "exercise.h"
+#include "fineff.h"
 #include "food.h"
 #include "fprop.h"
 #include "god-abil.h"
@@ -896,7 +897,17 @@ void BlurryScrollDelay::finish()
 {
     // Make sure the scroll still exists, the player isn't confused, etc
     if (_can_read_scroll(scroll))
+    {
         read_scroll(scroll);
+        // we are now probably out of sync with regular world_reacts timing, so
+        // trigger any fineffs that might have been caused by reading this
+        // scroll, e.g. torment vs. TRJ. Otherwise they'd have to wait until
+        // the next world_reacts.
+        // TODO: is there a more general condition that this can be triggered
+        // under? it might impact other obscure cases, e.g. passwalling with
+        // spiny.
+        fire_final_effects();
+    }
 }
 
 static void _finish_butcher_delay(item_def& corpse)
