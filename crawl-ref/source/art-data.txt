@@ -1326,11 +1326,12 @@ BRAND:    SPWPN_DISTORTION
 ENUM:     BATTLE
 NAME:     staff of Battle
 OBJ:      OBJ_WEAPONS/WPN_STAFF
+SH:       4
 PLUS:     +0
-COLOUR:   ETC_DISCO
-#TILE:     spwpn_staff_of_battle
+COLOUR:   ETC_JEWEL
+#TILE:     urand_staff_of_battle
 #TILE_EQ:  battle
-VALUE:    1000
+VALUE:    800
 
 # This entry must always be last.
 ENUM:   DUMMY2

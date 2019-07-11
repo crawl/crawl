@@ -1429,32 +1429,21 @@ static void _ZHOR_world_reacts(item_def *item)
 
 ////////////////////////////////////////////////////
 
-// XXX: Staff giving a boost to conjuration spells is hardcoded in
-// player_spec_conj(). Spell power is calculated as if you were casting.
+// XXX: Staff of Battle giving a boost to conjuration spells is hardcoded in
+// player_spec_conj().
 
-static bool _BATTLE_evoke(item_def *item, bool* did_work, bool* unevokable)
+static void _BATTLE_unequip(item_def *item, bool *show_msgs)
 {
-
-    if (!x_chance_in_y(you.skill(SK_CONJURATIONS, 100) + 100, 600))
-        return false;
-
-    // 0 MP cost
-    *did_work = true;
-
-    // set allow_fail to true so casting triggers enhancer and battlesphere
-    your_spells(SPELL_MAGIC_DART, 0, true);
-
-    practise_casting(SPELL_MAGIC_DART, true);
-
-    return false;
+    end_battlesphere(find_battlesphere(&you), false);
 }
 
 static void _BATTLE_world_reacts(item_def *item)
 {
-    if (!find_battlesphere(&you)
-        && there_are_monsters_nearby(true, true, false)
-        && one_chance_in(3 * div_rand_round(BASELINE_DELAY, you.time_taken)))
+    if (!find_battlesphere(&you) && there_are_monsters_nearby(true, true, false))
     {
-        your_spells(SPELL_BATTLESPHERE, 0, false);
+        int power = 46 + you.skill(SK_CONJURATIONS, 2);
+
+        cast_battlesphere(&you, power, GOD_NO_GOD, false);
+        did_god_conduct(DID_SPELL_PRACTISE, 1);
     }
 }
