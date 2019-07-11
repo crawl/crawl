@@ -61,6 +61,7 @@ game_state::game_state()
       darken_range(nullptr), unsaved_macros(false), disables(),
       minor_version(-1), save_rcs_version(),
       nonempty_buffer_flush_errors(false),
+      in_map_mode(false), map_mode_info({}),
       mon_act(nullptr)
 {
     reset_cmd_repeat();

@@ -912,6 +912,47 @@ static int crawl_article_a(lua_State *ls)
     return 1;
 }
 
+/*** If we are in map mode and the cursor is on the same
+ * level as the player, get player-relative position of cursor.
+ * @treturn int, int
+ * @function cursor_pos
+ */
+LUAFN(crawl_cursor_pos)
+{
+    map_mode_state &info = crawl_state.map_mode_info;
+    if (!crawl_state.in_map_mode
+        || info.cursor_lpos.id != info.original_lid)
+    {
+        return 0;
+    }
+
+    lua_pushinteger(ls, info.cursor_lpos.pos.x - you.position.x);
+    lua_pushinteger(ls, info.cursor_lpos.pos.y - you.position.y);
+
+    return 2;
+}
+
+/*** If we are in map mode, get description of cursor level
+ * in the form <branch-abbreviation>:<depth>.
+ * @treturn string
+ * @function cursor_level
+ */
+LUAFN(crawl_cursor_level)
+{
+    if (!crawl_state.in_map_mode)
+        return 0;
+
+    lua_pushstring(ls, crawl_state.map_mode_info.cursor_lpos.id.describe().c_str());
+
+    return 1;
+}
+
+/*** Are we in map mode?
+ * @treturn boolean
+ * @function in_map_mode
+ */
+LUARET1(crawl_in_map_mode, boolean, crawl_state.in_map_mode)
+
 /*** Has the game started?
  * @treturn boolean
  * @function game_started
@@ -1424,7 +1465,10 @@ static const struct luaL_reg crawl_clib[] =
     { "call_dlua",          crawl_call_dlua },
 #endif
     { "version",            crawl_version },
-    { "weapon_check",       crawl_weapon_check},
+    { "weapon_check",       crawl_weapon_check },
+    { "in_map_mode",        crawl_in_map_mode },
+    { "cursor_pos",         crawl_cursor_pos },
+    { "cursor_level",       crawl_cursor_level },
     { nullptr, nullptr },
 };
 
