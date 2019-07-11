@@ -527,7 +527,7 @@ ancestor
 
 A humanoid construct of insubstantial memory, floating through the air. Though
 perhaps somewhat changed in shape and bearing few discernable features, still
-it seems somehow to resemble a warrior from the distantly remembered past.
+they seem somehow to resemble a warrior from the distantly remembered past.
 %%%%
 ancient champion
 
