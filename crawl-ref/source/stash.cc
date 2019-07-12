@@ -1433,43 +1433,45 @@ static vector<stash_search_result> _stash_filter_duplicates(vector<stash_search_
     return out;
 }
 
-void StashTracker::search_stashes()
+void StashTracker::search_stashes(string search_term)
 {
     char buf[400];
 
     update_corpses();
     update_identification();
 
-    stash_search_reader reader(buf, sizeof buf);
-
-    bool validline = false;
-    msgwin_prompt(stash_search_prompt());
-    while (true)
+    if (search_term.empty())
     {
-        int ret = reader.read_line();
-        if (!ret)
-        {
-            validline = true;
-            break;
-        }
-        else if (ret == '?')
-        {
-            show_stash_search_help();
-            redraw_screen();
-        }
-        else
-            break;
-    }
-    msgwin_reply(validline ? buf : "");
+        stash_search_reader reader(buf, sizeof buf);
 
-    clear_messages();
-    if (!validline || (!*buf && lastsearch.empty()))
-    {
-        canned_msg(MSG_OK);
-        return;
-    }
+        bool validline = false;
+        msgwin_prompt(stash_search_prompt());
+        while (true)
+        {
+            int ret = reader.read_line();
+            if (!ret)
+            {
+                validline = true;
+                break;
+            }
+            else if (ret == '?')
+            {
+                show_stash_search_help();
+                redraw_screen();
+            }
+            else
+                break;
+        }
+        msgwin_reply(validline ? buf : "");
 
-    string csearch_literal = *buf? buf : lastsearch;
+        clear_messages();
+        if (!validline || (!*buf && lastsearch.empty()))
+        {
+            canned_msg(MSG_OK);
+            return;
+        }
+    }
+    string csearch_literal = search_term.empty() ? (*buf? buf : lastsearch) : search_term;
     string csearch = csearch_literal;
 
     bool curr_lev = (csearch[0] == '@' || csearch == ".");
