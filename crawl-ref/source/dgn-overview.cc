@@ -18,6 +18,7 @@
 #include "feature.h"
 #include "files.h"
 #include "libutil.h"
+#include "macro.h"
 #include "menu.h"
 #include "message.h"
 #include "mon-poly.h"
@@ -55,12 +56,13 @@ static void _seen_altar(god_type god, const coord_def& pos);
 static void _seen_staircase(const coord_def& pos);
 static void _seen_shop(const coord_def& pos);
 static void _seen_portal(dungeon_feature_type feat, const coord_def& pos);
+static void _process_command(const char keypress);
 
 static string _get_branches(bool display);
 static string _get_altars(bool display);
 static string _get_shops(bool display);
 static string _get_portals();
-static string _get_notes();
+static string _get_notes(bool display);
 static string _print_altars_for_gods(const vector<god_type>& gods,
                                      bool print_unseen, bool display);
 static const string _get_coloured_level_annotation(level_id li);
@@ -219,7 +221,7 @@ string overview_description_string(bool display)
     disp += _get_altars(display);
     disp += _get_shops(display);
     disp += _get_portals();
-    disp += _get_notes();
+    disp += _get_notes(display);
 
     return disp.substr(0, disp.find_last_not_of('\n')+1);
 }
@@ -237,7 +239,7 @@ static string _get_seen_branches(bool display)
     disp += "\n<green>Branches:</green>";
     if (display)
     {
-        disp += " (use <white>G</white> to reach them and "
+        disp += " (press <white>G</white> to reach them and "
                 "<white>?/B</white> for more information)";
     }
     disp += "\n";
@@ -365,7 +367,7 @@ static string _get_altars(bool display)
     disp += "\n<green>Altars:</green>";
     if (display)
     {
-        disp += " (use <white>Ctrl-F \"altar\"</white> to reach them and "
+        disp += " (press <white>_</white> to reach them and "
                 "<white>?/G</white> for information about gods)";
     }
     disp += "\n";
@@ -468,7 +470,7 @@ static string _get_shops(bool display)
     {
         disp +="\n<green>Shops:</green>";
         if (display)
-            disp += " (use <white>Ctrl-F \"shop\"</white> to reach them - yellow denotes antique shop)";
+            disp += " (press <white>$</white> to reach them - yellow denotes antique shop)";
         disp += "\n";
     }
     last_id.depth = 10000;
@@ -531,7 +533,7 @@ static string _get_portals()
 }
 
 // Loop through each branch, printing stored notes.
-static string _get_notes()
+static string _get_notes(bool display)
 {
     string disp;
 
@@ -545,6 +547,9 @@ static string _get_notes()
 
     if (disp.empty())
         return disp;
+
+    if (display)
+        return "\n<green>Annotations:</green> (press <white>!</white> to annotate current level)\n" + disp;
     return "\n<green>Annotations:</green>\n" + disp;
 }
 
@@ -607,12 +612,59 @@ bool unnotice_feature(const level_pos &pos)
         || _unnotice_stair(pos);
 }
 
+class dgn_overview : public formatted_scroller
+{
+public:
+    dgn_overview(const string& text = "") : formatted_scroller(FS_PREWRAPPED_TEXT, text) {};
+
+private:
+    bool process_key(int ch) override
+    {
+        // We handle these after exiting dungeon overview window
+        // to prevent menus from stacking on top of each other.
+        if (ch == 'G' || ch == '_' || ch == '$' || ch =='!')
+            return false;
+        else
+            return formatted_scroller::process_key(ch);
+    }
+};
+
 void display_overview()
 {
     string disp = overview_description_string(true);
     linebreak_string(disp, 80);
-    int flags = FS_PREWRAPPED_TEXT; // TODO: add ANYPRINTABLE
-    formatted_scroller(flags, disp).show();
+    dgn_overview overview(disp);
+    _process_command(overview.show());
+}
+
+static void _process_command(const char keypress)
+{
+    switch (keypress)
+    {
+        case 'G':
+            do_interlevel_travel();
+            return;
+        case '_':
+            if (!altars_present.empty())
+            {
+                macro_sendkeys_end_add_expanded('_');
+                do_interlevel_travel();
+            }
+            else
+                mpr("Sorry, you haven't seen any altar yet.");
+            return;
+        case '$':
+            if (!shops_present.empty())
+                StashTrack.search_stashes("shop");
+            else
+                mpr("Sorry, you haven't seen any shop yet.");
+            return;
+        case '!':
+            annotate_level();
+            return;
+        default:
+            return;
+    }
 }
 
 static void _seen_staircase(const coord_def& pos)
