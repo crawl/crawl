@@ -599,7 +599,7 @@ Call Merchant ability
 
 Sends funds to a merchant to help them set up shop at your location. The cost of
 funding a shop increases with the number of shops funded.{{
-    if you.race() == "Mummy" then
+    if you.race() == "Mummy" or you.race() == "Vampire" then
         return
     end
 
@@ -607,8 +607,6 @@ funding a shop increases with the number of shops funded.{{
 
     if you.race() == "Ghoul" then
         desc = desc .. "carrion"
-    elseif you.race() == "Vampire" then
-        desc = desc .. "blood"
     else
         desc = desc .. "food"
     end
