@@ -38,7 +38,6 @@
 #include "view.h"
 #include "viewchar.h"
 #include "viewgeom.h"
-#include "delay.h"
 
 #ifdef USE_TILE
 #endif
@@ -619,7 +618,6 @@ static void _forget_map(bool wizard_forget = false)
 bool show_map(level_pos &lpos,
               bool travel_mode, bool allow_esc, bool allow_offlevel)
 {
-    unwind_bool _in_map_mode(crawl_state.in_map_mode, true);
     bool chose      = false;
 #ifdef USE_TILE_LOCAL
     bool first_run  = true;
@@ -638,7 +636,6 @@ bool show_map(level_pos &lpos,
     {
         levelview_excursion le(travel_mode);
         level_id original(level_id::current());
-        unwind_var<level_id> _original_lid(crawl_state.map_mode_info.original_lid, original);
 
         if (!lpos.id.is_valid() || !allow_offlevel)
             lpos.id = level_id::current();
@@ -791,24 +788,17 @@ bool show_map(level_pos &lpos,
 #ifndef USE_TILE_LOCAL
             cursorxy(curs_x, curs_y + top - 1);
 #endif
-            crawl_state.map_mode_info.cursor_lpos = lpos;
             redraw_map = true;
 
             c_input_reset(true);
 #ifdef USE_TILE_LOCAL
             const int key = getchm(KMC_LEVELMAP);
+            command_type cmd = key_to_command(key, KMC_LEVELMAP);
 #else
             const int key = unmangle_direction_keys(getchm(KMC_LEVELMAP),
                                                     KMC_LEVELMAP);
-#endif
-            if (is_userfunction(key))
-            {
-                run_macro(get_userfunction(key).c_str());
-                continue;
-            }
-
             command_type cmd = key_to_command(key, KMC_LEVELMAP);
-
+#endif
             if (cmd < CMD_MIN_OVERMAP || cmd > CMD_MAX_OVERMAP)
                 cmd = CMD_NO_CMD;
 
