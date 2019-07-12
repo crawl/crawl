@@ -73,6 +73,9 @@ enum IntertravelDestination
     // Repeat last travel
     ID_REPEAT   = -101,
 
+    // Altar as target
+    ID_ALTAR    = -102,
+
     // Cancel interlevel travel
     ID_CANCEL   = -1000,
 };
@@ -2152,6 +2155,8 @@ static int _prompt_travel_branch(int prompt_flags)
             show_interlevel_travel_branch_help();
             redraw_screen();
             break;
+        case '_':
+            return ID_ALTAR;
         case '\n': case '\r':
             return ID_REPEAT;
         case '<':
@@ -2247,6 +2252,92 @@ static god_type _god_from_initial(const char god_initial)
         case 'Y': return GOD_YREDELEMNUL;
         case 'Z': return GOD_ZIN;
         default:  return GOD_NO_GOD;
+    }
+}
+
+static level_pos _prompt_travel_altar()
+{
+    extern map<level_pos, god_type> altars_present;
+
+    if (altars_present.empty())
+        return level_pos();
+
+    level_pos nearest_altars[NUM_GODS];
+    const level_id curr = level_id::current();
+
+    // Populate nearest_altars[] with nearest altars
+    for (const auto &entry : altars_present)
+    {
+        // This is necessary because faded altars (i.e., GOD_ECUMENICAL)
+        // are also recorded in altars_present
+        if (entry.second >= NUM_GODS)
+            continue;
+
+        int dist = level_distance(curr, entry.first.id);
+        if (dist == -1)
+            continue;
+
+        level_pos *best = &nearest_altars[entry.second];
+        int old_dist = best->id.is_valid() ? level_distance(curr, best->id) : INT_MAX;
+
+        if (dist < old_dist)
+            *best = entry.first;
+    }
+
+    while (true)
+    {
+        clear_messages();
+
+        int col = 0;
+        string line;
+        string altar_name;
+        char god_initial;
+        vector<god_type> god_list = temple_god_list();
+        vector<god_type> nt_god_list = nontemple_god_list();
+        god_list.insert(god_list.end(), nt_god_list.begin(), nt_god_list.end());
+
+        // list gods in the same order as dgn-overview.cc lists them.
+        for (const god_type god : god_list)
+        {
+            if (!nearest_altars[god].is_valid())
+                continue;
+
+            // "The Shining One" is too long to keep the same G menu layout
+            altar_name  = god == GOD_SHINING_ONE ? "TSO" : god_name(god);
+            god_initial = god == GOD_SHINING_ONE ? '1'   : altar_name.at(0);
+
+            if (col == 4)
+            {
+                col = 0;
+                mpr(line);
+                line = "";
+            }
+            line += make_stringf("(%c) %-14s ", god_initial, altar_name.c_str());
+            ++col;
+        }
+        if (!line.empty())
+            mpr(line);
+
+        mprf(MSGCH_PROMPT, "Go to which altar? (? - help) ");
+
+        int keyin = get_ch();
+        switch (keyin)
+        {
+            CASE_ESCAPE
+                return level_pos();
+            case '?':
+                show_interlevel_travel_altar_help();
+                redraw_screen();
+                break;
+            case '\n': case '\r':
+                return level_target;
+            default:
+                const level_pos altar_pos = nearest_altars[_god_from_initial(keyin)];
+                if (altar_pos.is_valid())
+                    return altar_pos;
+
+                return level_pos();
+        }
     }
 }
 
@@ -2492,6 +2583,9 @@ level_pos prompt_translevel_target(int prompt_flags, string& dest_name)
 
     if (branch == ID_CANCEL)
         return target;
+
+    if (branch == ID_ALTAR)
+        return _prompt_travel_altar();
 
     // If user chose to repeat last travel, return that.
     if (branch == ID_REPEAT)
