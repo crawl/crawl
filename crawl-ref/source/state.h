@@ -30,15 +30,6 @@ public:
     int      depth;
 };
 
-struct map_mode_state
-{
-    // Absolute position + level_id of the cursor
-    level_pos cursor_lpos;
-
-    // Stored level_id of the player character
-    level_id original_lid;
-};
-
 // Track various aspects of Crawl game state.
 struct game_state
 {
@@ -147,12 +138,6 @@ struct game_state
 
     // Should flushing a nonempty key buffer error or crash? Used for tests.
     bool nonempty_buffer_flush_errors;
-
-    // Whether we are in "map mode", i.e. currently in eXamine
-    bool in_map_mode;
-
-    // Info pertaining to map mode, if we are in map mode. If we aren't, value is undefined.
-    map_mode_state map_mode_info;
 
 protected:
     void reset_cmd_repeat();
