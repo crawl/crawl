@@ -2882,6 +2882,11 @@ void level_change(bool skip_attribute_increase)
                         check_skill_level_change(sk);
                     }
 
+                    // It's possible we passed a training target due to
+                    // skills being rescaled to new aptitudes. Thus, we must
+                    // check the training targets.
+                    check_training_targets();
+
                     // Tell the player about their new species
                     for (auto &mut : fake_mutations(you.species, false))
                         mprf(MSGCH_INTRINSIC_GAIN, "%s", mut.c_str());
