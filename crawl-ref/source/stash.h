@@ -240,7 +240,7 @@ public:
     {
     }
 
-    void search_stashes();
+    void search_stashes(string search_term = "");
 
     LevelStashes &get_current_level();
     LevelStashes *find_current_level();
