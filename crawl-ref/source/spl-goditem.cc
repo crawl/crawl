@@ -1190,6 +1190,7 @@ void torment_player(actor *attacker, torment_source_type taux)
     {
     case TORMENT_CARDS:
     case TORMENT_SPELL:
+    case TORMENT_CARDS_PAIN:
         aux = "Symbol of Torment";
         break;
 
@@ -1232,8 +1233,8 @@ void torment_player(actor *attacker, torment_source_type taux)
 void torment_cell(coord_def where, actor *attacker, torment_source_type taux)
 {
     if (where == you.pos()
-        // The Sceptre of Torment doesn't affect the  wielder.
-        && !(attacker && attacker->is_player() && taux == TORMENT_SCEPTRE))
+        // The Sceptre of Torment doesn't affect the  wielder, also pain card.
+        && !(attacker && attacker->is_player() && (taux == TORMENT_SCEPTRE || taux == TORMENT_CARDS_PAIN)))
     {
         torment_player(attacker, taux);
     }
