@@ -81,11 +81,23 @@ include(FindPkgConfig)
 # Windows native - crawl console TODO
 # Windows native - crawl local tiles TODO
 
+function(debug_print variable)
+    message(STATUS "${variable}=${${variable}}")
+endfunction()
+
+# Det default build type to "Debug"
+set(default_build_type "Debug")
+if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+  message(STATUS "Setting build type to '${default_build_type}' as none was specified.")
+  set(CMAKE_BUILD_TYPE "${default_build_type}" CACHE
+      STRING "Choose the type of build." FORCE)
+endif()
+
 # Setting: USE_PREBUILT_LEVCOMP
 # Can be 'ON' or 'OFF'. If this setting is OFF the prebuild header / source
 # files are taken. Recomended is leave it 'OFF' (default) unless you absolutely
 # do not have bison / flex available.
-set(CACHE USE_PREBUILT_LEVCOMP ON BOOL
+set(USE_PREBUILT_LEVCOMP ON CACHE BOOL
     "If USE_PREBUILT_LEVCOMP is set to OFF BISON and YACC are requird to
     generate the level compiler")
 
@@ -134,12 +146,12 @@ endif()
 
 # Setting ADDITIONAL_DEFINES
 # Here you can provide a list of defines to pass on to the build. Note that
-# cmake expects a semicolon seperated list of defines. E.g. call
-# '-DADDITIONAL_DEFINES="CLUA_BINDINGS;DGAMELAUNCH"' from the comand line to
+# cmake expects a semicolon separated list of defines. E.g. call
+# '-DADDITIONAL_DEFINES="CLUA_BINDINGS;DGAMELAUNCH"' from the command line to
 # pass the CLUA_BINDINGS and DGAMELAUNCH define to the compilation.
 # Be aware that the defines are passed on to each an every compilation in this
 # build.
-set(CACHE ADDITIONAL_DEFINES "" CACHE STRING
+set(ADDITIONAL_DEFINES "" CACHE STRING
     "Additional preprocessor defines to pass on to the build ca be added here.
     To for example pass two defines to the build set ADDITIONAL_DEFINES to:
     \"FOO;BAR=1\"")
@@ -174,65 +186,284 @@ message(STATUS "Target acitecure is: ${ARCH}")
 
 
 ################################################################################
-# Deps
+# Always required dependencies
 ################################################################################
-# A note about external dependencies in contrib: Native builds for Linux and
-# MacOS should use OS packages. Dependencies in contrib are only used for cross
-# compilation builds Linux to Windows.
+# All of the following dependenies are required for all modes.
+# A note about external dependencies in contrib: Native builds for Linux use OS
+# packages. Dependencies in contrib are only used for MacOS compilation.
+# Linux cross compilation and compilation on Windows are not yet supported.
+if("${CMAKE_SYSTEM}" MATCHES "Linux")
+    set(use_contrib_default OFF)
+elseif("${CMAKE_SYSTEM}" MATCHES "Darwin")
+    set(use_contrib_default ON)
+else()
+    set(use_contrib_default OFF)
+endif()
+set(USE_ALL_DEPS_FROM_CONTRIB ${use_contrib_default} CACHE BOOL
+    "Controls if dependencies are taken from contrib or system")
 
+################################################################################
 # Lua
-find_package(Lua 5.1 EXACT REQUIRED)
-#ExternalProject_Add(build-lua
-#    BUILD_IN_SOURCE ON
-#    SOURCE_DIR "${CMAKE_SOURCE_DIR}/source/contrib/lua/src"
-#    CONFIGURE_COMMAND ""
-#    BUILD_COMMAND make install prefix=${CMAKE_BINARY_DIR}/contrib/lua
-#    INSTALL_COMMAND ""
-#)
-#file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/contrib/lua/include)
-#add_library(lua STATIC IMPORTED GLOBAL)
-#set_target_properties(lua PROPERTIES
-#    IMPORTED_LOCATION "${CMAKE_BINARY_DIR}/contrib/lua/lib/liblua.a"
-#    INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_BINARY_DIR}/contrib/lua/include"
-#)
-#add_dependencies(lua build-lua)
+################################################################################
+set(USE_LUA_FROM_CONTRIB OFF CACHE BOOL
+    "Controls if Lua dependency is taken from contrib or system")
 
+if(USE_ALL_DEPS_FROM_CONTRIB OR USE_LUA_FROM_CONTRIB)
+    message(STATUS "Using Lua from contrib")
+    ExternalProject_Add(build-lua
+        BUILD_IN_SOURCE ON
+        SOURCE_DIR "${CMAKE_SOURCE_DIR}/source/contrib/lua/src"
+        CONFIGURE_COMMAND ""
+        BUILD_COMMAND make prefix=${CMAKE_BINARY_DIR}/contrib
+        INSTALL_COMMAND make install prefix=${CMAKE_BINARY_DIR}/contrib
+        BUILD_BYPRODUCTS ${CMAKE_BINARY_DIR}/contrib/lib/liblua.a
+    )
+    file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/contrib/lua/include)
+    add_library(lua STATIC IMPORTED GLOBAL)
+    set_target_properties(lua PROPERTIES
+        IMPORTED_LOCATION "${CMAKE_BINARY_DIR}/contrib/lib/liblua.a"
+        INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_BINARY_DIR}/contrib/include"
+    )
+    add_dependencies(lua build-lua)
+else()
+    message(STATUS "Using Lua from system")
+    find_package(Lua 5.1 EXACT REQUIRED)
+    # Currently the FindLua module does not export a lua target, only old style
+    # LUA_LIBRARIES and LUA_INCLUDE_DIR are exported. Hence we create a import
+    # target ourselves
+    add_library(lua INTERFACE)
+    set_target_properties(lua PROPERTIES
+        INTERFACE_INCLUDE_DIRECTORIES "${LUA_INCLUDE_DIR}"
+    )
+    target_link_libraries(lua INTERFACE ${LUA_LIBRARIES})
+endif()
+
+################################################################################
 # Zlib
-find_package(ZLIB REQUIRED)
-#ExternalProject_Add(build-zlib
-#    SOURCE_DIR "${CMAKE_SOURCE_DIR}/source/contrib/zlib"
-#    CMAKE_ARGS
-#        -Wno-dev
-#        "-DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/contrib/zlib"
-#)
-#file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/contrib/zlib/include)
-#add_library(zlib STATIC IMPORTED GLOBAL)
-#set_target_properties(zlib PROPERTIES
-#    IMPORTED_LOCATION "${CMAKE_BINARY_DIR}/contrib/zlib/lib/libz.a"
-#    INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_BINARY_DIR}/contrib/zlib/include"
-#)
-#add_dependencies(zlib build-zlib)
+################################################################################
+set(USE_ZLIB_FROM_CONTRIB OFF CACHE BOOL
+    "Controls if zlib dependency is taken from contrib or system")
 
+if(USE_ALL_DEPS_FROM_CONTRIB OR USE_ZLIB_FROM_CONTRIB)
+    message(STATUS "Using zlib from contrib")
+    ExternalProject_Add(build-zlib
+        BUILD_IN_SOURCE ON
+        SOURCE_DIR "${CMAKE_SOURCE_DIR}/source/contrib/zlib"
+        CONFIGURE_COMMAND ""
+        BUILD_COMMAND make prefix=${CMAKE_BINARY_DIR}/contrib
+        INSTALL_COMMAND make install prefix=${CMAKE_BINARY_DIR}/contrib
+        BUILD_BYPRODUCTS "${CMAKE_BINARY_DIR}/contrib/lib/libz.a"
+    )
+    file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/contrib/include)
+    add_library(ZLIB::ZLIB STATIC IMPORTED GLOBAL)
+    set_target_properties(ZLIB::ZLIB PROPERTIES
+       IMPORTED_LOCATION "${CMAKE_BINARY_DIR}/contrib/lib/libz.a"
+       INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_BINARY_DIR}/contrib/include"
+    )
+    add_dependencies(ZLIB::ZLIB build-zlib)
+else()
+    message(STATUS "Using zlib from system")
+    find_package(ZLIB REQUIRED)
+endif()
+
+################################################################################
+# Sqlite
+################################################################################
+set(USE_SQLITE_FROM_CONTRIB OFF CACHE BOOL
+    "Controls if sqlite dependency is taken from contrib or system")
+if(USE_ALL_DEPS_FROM_CONTRIB OR USE_SQLITE_FROM_CONTRIB)
+    message(STATUS "Using sqlite from contrib")
+    file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/contrib/include)
+    ExternalProject_Add(build-sqlite
+       BUILD_IN_SOURCE ON
+       SOURCE_DIR "${CMAKE_SOURCE_DIR}/source/contrib/sqlite"
+       CONFIGURE_COMMAND ""
+       BUILD_COMMAND make prefix=${CMAKE_BINARY_DIR}/contrib
+       INSTALL_COMMAND make install prefix=${CMAKE_BINARY_DIR}/contrib
+       BUILD_BYPRODUCTS "${CMAKE_BINARY_DIR}/contrib/lib/libsqlite3.a"
+    )
+    add_library(sqlite STATIC IMPORTED GLOBAL)
+    set_target_properties(sqlite PROPERTIES
+       IMPORTED_LOCATION "${CMAKE_BINARY_DIR}/contrib/lib/libsqlite3.a"
+       INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_BINARY_DIR}/contrib/include"
+    )
+    add_dependencies(sqlite build-sqlite)
+else()
+    message(STATUS "Using sqlite from system")
+    pkg_search_module(sqlite REQUIRED sqlite3 IMPORTED_TARGET GLOBAL)
+    add_library(sqlite ALIAS PkgConfig::sqlite)
+endif()
+
+################################################################################
 # Perl
+################################################################################
 find_package(Perl REQUIRED)
 
-# Sqlite
-pkg_search_module(sqlite REQUIRED sqlite3 IMPORTED_TARGET GLOBAL)
+################################################################################
+# Threads
+################################################################################
+find_package(Threads REQUIRED)
 
-#file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/contrib/sqlite/include)
-#ExternalProject_Add(build-sqlite
-#    BUILD_IN_SOURCE ON
-#    SOURCE_DIR "${CMAKE_SOURCE_DIR}/source/contrib/sqlite"
-#    CONFIGURE_COMMAND ""
-#    BUILD_COMMAND make install prefix=${CMAKE_BINARY_DIR}/contrib/sqlite
-#    INSTALL_COMMAND ""
-#)
-#add_library(sqlite STATIC IMPORTED GLOBAL)
-#set_target_properties(sqlite PROPERTIES
-#    IMPORTED_LOCATION "${CMAKE_BINARY_DIR}/contrib/sqlite/lib/libsqlite3.a"
-#    INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_BINARY_DIR}/contrib/sqlite/include"
-#)
-#add_dependencies(sqlite build-sqlite)
+################################################################################
+# Conditional dependencies
+################################################################################
+if(NOT USE_PREBUILT_LEVCOMP)
+    find_package(BISON REQUIRED)
+    find_package(FLEX REQUIRED)
+endif()
+
+set(NEEDS_CURSES OFF)
+set(NEEDS_PNG OFF)
+set(NEEDS_SDL2 OFF)
+set(NEEDS_SDL2_IMAGE OFF)
+set(NEEDS_OPENGL OFF)
+set(NEEDS_FREETYPE2 OFF)
+
+if(TILE_MODE STREQUAL LOCAL_TILES)
+    set(NEEDS_PNG ON)
+    set(NEEDS_SDL2 ON)
+    set(NEEDS_SDL2_IMAGE ON)
+    set(NEEDS_OPENGL ON)
+    set(NEEDS_FREETYPE2 ON)
+endif()
+
+################################################################################
+# libpng
+################################################################################
+set(USE_LIBPNG_FROM_CONTRIB OFF CACHE BOOL
+    "Controls if libpng dependency is taken from contrib or system")
+if(NEEDS_PNG)
+    if(USE_ALL_DEPS_FROM_CONTRIB OR USE_LIBPNG_FROM_CONTRIB)
+        message(STATUS "Using libpng from contrib")
+        file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/contrib/include)
+        ExternalProject_Add(build-png
+            BUILD_IN_SOURCE ON
+            SOURCE_DIR "${CMAKE_SOURCE_DIR}/source/contrib/libpng"
+            CONFIGURE_COMMAND ""
+            BUILD_COMMAND make
+            INSTALL_COMMAND make install prefix=${CMAKE_BINARY_DIR}/contrib
+            BUILD_BYPRODUCTS "${CMAKE_BINARY_DIR}/contrib/lib/libpng.a"
+        )
+        add_library(png STATIC IMPORTED GLOBAL)
+        set_target_properties(png PROPERTIES
+            IMPORTED_LOCATION "${CMAKE_BINARY_DIR}/contrib/lib/libpng.a"
+            INTERFACE_INCLUDE_DIRECTORIES
+                "${CMAKE_BINARY_DIR}/contrib/include"
+        )
+        add_dependencies(png build-png)
+    else()
+        message(STATUS "Using libpng from system")
+        find_package(PNG REQUIRED)
+    endif()
+endif()
+
+################################################################################
+# SDL2
+################################################################################
+set(USE_SDL2_FROM_CONTRIB OFF CACHE BOOL
+    "Controls if SDL2 dependency is taken from contrib or system")
+if(NEEDS_SDL2)
+    if(USE_ALL_DEPS_FROM_CONTRIB OR USE_SDL2_FROM_CONTRIB)
+        message(STATUS "Using sdl2 from contrib")
+        file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/contrib/include/SDL2)
+        ExternalProject_Add(build-sdl2
+            BUILD_IN_SOURCE ON
+            SOURCE_DIR "${CMAKE_SOURCE_DIR}/source/contrib/sdl2"
+            CONFIGURE_COMMAND ""
+            BUILD_COMMAND make prefix=${CMAKE_BINARY_DIR}/contrib
+            INSTALL_COMMAND make install prefix=${CMAKE_BINARY_DIR}/contrib
+            BUILD_BYPRODUCTS "${CMAKE_BINARY_DIR}/contrib/lib/libSDL2.a"
+        )
+        add_library(sdl2 STATIC IMPORTED GLOBAL)
+        set_target_properties(sdl2 PROPERTIES
+            IMPORTED_LOCATION "${CMAKE_BINARY_DIR}/contrib/lib/libSDL2.a"
+            INTERFACE_INCLUDE_DIRECTORIES
+                "${CMAKE_BINARY_DIR}/contrib/include/SDL2"
+        )
+        add_dependencies(sdl2 build-sdl2)
+        target_link_libraries(sdl2 INTERFACE dl png)
+    else()
+        message(STATUS "Using sdl2 from system")
+        pkg_search_module(SDL2 REQUIRED sdl2 IMPORTED_TARGET GLOBAL)
+        add_library(sdl2 ALIAS PkgConfig::SDL2)
+    endif()
+endif()
+
+################################################################################
+# SDL2 Image
+################################################################################
+set(USE_SDL2_IMAGE_FROM_CONTRIB OFF CACHE BOOL
+    "Controls if SDL2-image dependency is taken from contrib or system")
+if(NEEDS_SDL2_IMAGE)
+    if(USE_ALL_DEPS_FROM_CONTRIB OR USE_SDL2_IMAGE_FROM_CONTRIB)
+        message(STATUS "Using sdl2-image from contrib")
+        file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/contrib/include)
+        ExternalProject_Add(build-sdl2-image
+            BUILD_IN_SOURCE ON
+            SOURCE_DIR "${CMAKE_SOURCE_DIR}/source/contrib/sdl2-image"
+            CONFIGURE_COMMAND ""
+            BUILD_COMMAND make prefix=${CMAKE_BINARY_DIR}/contrib
+            INSTALL_COMMAND make install prefix=${CMAKE_BINARY_DIR}/contrib
+            BUILD_BYPRODUCTS
+                "${CMAKE_BINARY_DIR}/contrib/lib/libSDL2_image.a"
+            DEPENDS build-sdl2 build-png
+        )
+        add_library(sdl2-image STATIC IMPORTED GLOBAL)
+        set_target_properties(sdl2-image PROPERTIES
+            IMPORTED_LOCATION
+                "${CMAKE_BINARY_DIR}/contrib/lib/libSDL2_image.a"
+            INTERFACE_INCLUDE_DIRECTORIES
+                "${CMAKE_BINARY_DIR}/contrib/include"
+        )
+        add_dependencies(sdl2-image build-sdl2-image build-sdl2 build-png)
+        target_link_libraries(sdl2-image INTERFACE sdl2)
+    else()
+        message(STATUS "Using sdl2-image from system")
+        pkg_search_module(SDL2_IMAGE REQUIRED SDL2_image>=2 IMPORTED_TARGET GLOBAL)
+        add_library(sdl2-image ALIAS PkgConfig::SDL2_IMAGE)
+    endif()
+endif()
+
+################################################################################
+# OpenGL
+################################################################################
+if(NEEDS_OPENGL)
+    find_package(OpenGL REQUIRED)
+endif()
+
+################################################################################
+# Freetype2
+################################################################################
+set(USE_FREETYPE2_FROM_CONTRIB OFF CACHE BOOL
+    "Controls if Freetype2 dependency is taken from contrib or system")
+if(NEEDS_FREETYPE2)
+    if(USE_ALL_DEPS_FROM_CONTRIB OR USE_FREETYPE2_FROM_CONTRIB)
+        message(STATUS "Using Freetype2 from contrib")
+        file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/contrib/include)
+        ExternalProject_Add(build-freetype
+            BUILD_IN_SOURCE ON
+            SOURCE_DIR "${CMAKE_SOURCE_DIR}/source/contrib/freetype"
+            CONFIGURE_COMMAND ""
+            BUILD_COMMAND make prefix=${CMAKE_BINARY_DIR}/contrib
+            INSTALL_COMMAND make install prefix=${CMAKE_BINARY_DIR}/contrib
+            BUILD_BYPRODUCTS
+                "${CMAKE_BINARY_DIR}/contrib/lib/libfreetype.a"
+        )
+        add_library(freetype STATIC IMPORTED GLOBAL)
+        set_target_properties(freetype PROPERTIES
+            IMPORTED_LOCATION
+                "${CMAKE_BINARY_DIR}/contrib/lib/libfreetype.a"
+            INTERFACE_INCLUDE_DIRECTORIES
+                "${CMAKE_BINARY_DIR}/contrib/include/freetype2"
+        )
+        add_dependencies(freetype build-freetype)
+    else()
+        message(STATUS "Using Freetype2 from system")
+        find_package(Freetype REQUIRED)
+        add_library(freetype ALIAS Freetype::Freetype)
+    endif()
+endif()
+
 
 # Frontend (console, local tiles, web tiles)
 if(TILE_MODE STREQUAL NO_TILES OR TILE_MODE STREQUAL WEB_TILES)
@@ -287,32 +518,6 @@ if(TILE_MODE STREQUAL LOCAL_TILES OR TILE_MODE STREQUAL WEB_TILES)
 
     find_package(PNG REQUIRED)
 endif()
-
-if(TILE_MODE STREQUAL LOCAL_TILES)
-    # SDL2
-    pkg_search_module(SDL2 REQUIRED sdl2 IMPORTED_TARGET GLOBAL)
-
-    # SDL_Image 2
-    pkg_search_module(SDL2_IMAGE REQUIRED SDL2_image>=2 IMPORTED_TARGET GLOBAL)
-
-    # OpenGL
-    find_package(OpenGL REQUIRED)
-
-    #Freetype2
-    find_package(Freetype REQUIRED)
-endif()
-
-# Threads
-find_package(Threads REQUIRED)
-
-if(NOT USE_PREBUILT_LEVCOMP)
-    # Bison (YACC)
-    find_package(BISON REQUIRED)
-
-    # Flex (LEX)
-    find_package(FLEX REQUIRED)
-endif()
-
 
 ################################################################################
 # Crawl

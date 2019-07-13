@@ -1014,19 +1014,17 @@ target_include_directories(${target}
     PUBLIC
         .
         prebuild
-    PRIVATE
-        ${LUA_INCLUDE_DIR}
 )
 
 target_link_libraries(${target} PUBLIC
-    ${LUA_LIBRARIES}
+    lua
     $<$<NOT:$<STREQUAL:${TILE_MODE},LOCAL_TILES>>:curses>
-    $<$<STREQUAL:${TILE_MODE},LOCAL_TILES>:PkgConfig::SDL2>
-    $<$<STREQUAL:${TILE_MODE},LOCAL_TILES>:PkgConfig::SDL2_IMAGE>
+    $<$<STREQUAL:${TILE_MODE},LOCAL_TILES>:sdl2>
+    $<$<STREQUAL:${TILE_MODE},LOCAL_TILES>:sdl2-image>
     $<$<STREQUAL:${TILE_MODE},LOCAL_TILES>:OpenGL::GL>
     $<$<STREQUAL:${TILE_MODE},LOCAL_TILES>:OpenGL::GLU>
-    $<$<STREQUAL:${TILE_MODE},LOCAL_TILES>:Freetype::Freetype>
-    PkgConfig::sqlite
+    $<$<STREQUAL:${TILE_MODE},LOCAL_TILES>:freetype>
+    sqlite
     generated-config
     Threads::Threads
     rltiles
