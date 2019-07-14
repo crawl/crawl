@@ -510,7 +510,7 @@ static void _describe_book(const spellbook_contents &book,
     if (source_item)
     {
         description.cprintf(
-            "\n Spells                           Type                      Level");
+            "\n Spells                           Type                      Level       Known");
     }
     description.cprintf("\n");
 
@@ -580,9 +580,16 @@ static void _describe_book(const spellbook_contents &book,
                                                :
 #endif
                          _spell_schools(spell);
-        description.cprintf("%s%d\n",
+
+        string known = "";
+        if (!mon_owner) {
+            known = you.spell_library[spell] ? "         yes" : "          no";
+        }
+
+        description.cprintf("%s%d%s\n",
                             chop_string(schools, 30).c_str(),
-                            spell_difficulty(spell));
+                            spell_difficulty(spell),
+                            known.c_str());
     }
 
     // are we halfway through a column?
