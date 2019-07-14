@@ -988,7 +988,7 @@ static bool _could_set_training_target(const item_def &item, bool ignore_current
 
 /**
  * Produce the "Your skill:" line for item descriptions where specific skill targets
- * are releveant (weapons, missiles, shields)
+ * are relevant (weapons, missiles, shields)
  *
  * @param skill the skill to look at.
  * @param show_target_button whether to show the button for setting a skill target.
