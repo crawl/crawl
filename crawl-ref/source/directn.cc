@@ -841,6 +841,21 @@ void do_look_around(const coord_def &whence)
     }
 }
 
+bool get_look_position(coord_def *c)
+{
+    dist lmove;   // Will be initialised by direction().
+    direction_chooser_args args;
+    args.restricts = DIR_TARGET;
+    args.just_looking = true;
+    args.needs_path = false;
+    args.target_prefix = "Here";
+    args.default_place = coord_def(0, 0);
+    direction(lmove, args);
+    if (lmove.isCancel)
+        return false;
+    *c = lmove.target;
+    return true;
+}
 
 range_view_annotator::range_view_annotator(targeter *range)
 {

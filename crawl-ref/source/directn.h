@@ -321,5 +321,6 @@ vector<dungeon_feature_type> features_by_desc(const base_pattern &pattern);
 
 void full_describe_view();
 void do_look_around(const coord_def &whence = coord_def(0, 0));
+bool get_look_position(coord_def *c);
 
 extern const struct coord_def Compass[9];
