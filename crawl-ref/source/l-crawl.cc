@@ -11,6 +11,7 @@
 #include "cluautil.h"
 #include "command.h"
 #include "delay.h"
+#include "directn.h"
 #include "dlua.h"
 #include "end.h"
 #include "english.h"
@@ -210,13 +211,34 @@ static int crawl_c_input_line(lua_State *ls)
     return 1;
 }
 
+/*** Prompt the user to choose a location via the targeting screen.
+ * This is useful for scripts that require a user-selected target. For example,
+ * one could imagine a "mark dangerous monster" script that would place a large
+ * exclusion around a user-chosen monster that would then be deleted if the
+ * monster moved or died. This function could be used for the user to select
+ * a target monster.
+ * @treturn int, int the relative position of the chosen location to the user
+ * @function get_target
+ */
+LUAFN(crawl_get_target) {
+    coord_def out;
+
+    if (!get_look_position(&out))
+        return 0;
+
+    lua_pushinteger(ls, out.x - you.position.x);
+    lua_pushinteger(ls, out.y - you.position.y);
+
+    return 2;
+}
+
 /*** Get input key (combo).
  * @treturn int the key (combo) input
  * @function getch */
 LUARET1(crawl_getch, number, getchm())
 /*** Check for pending input.
  * @return int 1 if there is, 0 otherwise
- * function kbhit
+ * @function kbhit
  */
 LUARET1(crawl_kbhit, number, kbhit())
 /*** Flush the input buffer (typeahead).
@@ -1385,6 +1407,7 @@ static const struct luaL_reg crawl_clib[] =
 
     { "redraw_screen",      crawl_redraw_screen },
     { "c_input_line",       crawl_c_input_line},
+    { "get_target",         crawl_get_target },
     { "getch",              crawl_getch },
     { "yesno",              crawl_yesno },
     { "yesnoquit",          crawl_yesnoquit },
