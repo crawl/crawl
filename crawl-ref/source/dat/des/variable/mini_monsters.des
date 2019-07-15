@@ -6971,18 +6971,20 @@ ITEM:    large shield randart no_pickup
 ITEM:    large_shield_of_ignorance no_pickup
 : end
 MONS:    orange crystal statue
+KPROP:   .d1 = no_tele_into
+SUBST:   - = .
 MAP
-...........
-.cccc=cccc.
-.c1.....1c.
-.c.c...c.c.
-.c.......c.
-.n...d...n.
-.c.......c.
-.c.c...c.c.
-.c1.....1c.
-.cncc=cccc.
-...........
+-----------
+-cccc=cccc-
+-c1.....1c-
+-c.c...c.c-
+-c.......c-
+-n...d...n-
+-c.......c-
+-c.c...c.c-
+-c1.....1c-
+-cncc=cccc-
+-----------
 ENDMAP
 
 NAME:    chequers_guarded_unrand_mask_of_the_dragon
@@ -7010,6 +7012,7 @@ MARKER: R = lua:transp_loc("mask_of_the_dragon_exit")
 MARKER: S = lua:transp_dest_loc("mask_of_the_dragon_exit")
 KMASK:  @" = !opaque
 KFEAT:  " = floor
+KPROP:   -$*|rQDEFH = no_tele_into
 MAP
          """""""""
  """""""""ccccccc"
