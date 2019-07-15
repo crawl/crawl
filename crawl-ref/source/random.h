@@ -36,6 +36,7 @@ namespace rng
         rng_type previous_main;
     };
 
+    rng_type get_branch_generator(const branch_type b);
     CrawlVector generators_to_vector();
     void load_generators(const CrawlVector &v);
     vector<uint64_t> get_states();
