@@ -369,7 +369,7 @@ bool chardump_parser::_check_stats1(const vector<string> &tokens)
 {
     size_t size = tokens.size();
     // Health: 248/248    AC: 44    Str: 35    XL:     26   Next: 58%
-    if (size <= 7 || (tokens[0] != "HP" && tokens[0] != "Health:"))
+    if (size <= 7 || (tokens[0] != "HP" && tokens[0] != "HP:"&& tokens[0] != "Health:"))
         return false;
 
     bool found = false;
@@ -396,7 +396,7 @@ bool chardump_parser::_check_stats2(const vector<string> &tokens)
 {
     size_t size = tokens.size();
     // Magic:  36/36      EV: 31    Int: 17    God:    Cheibriados [****..]
-    if (size <= 8 || (tokens[0] != "MP" && tokens[0] != "Magic:"))
+    if (size <= 7 || (tokens[0] != "MP" && tokens[0] != "MP:" && tokens[0] != "Magic:"))
         return false;
 
     bool found = false;
@@ -423,6 +423,8 @@ bool chardump_parser::_check_stats2(const vector<string> &tokens)
                 join_religion(god);
             }
 
+            if (god == GOD_GOZAG)
+                continue;
             string piety = tokens[k+2];
             int piety_levels = std::count(piety.begin(), piety.end(), '*');
             wizard_set_piety_to(piety_levels > 0
