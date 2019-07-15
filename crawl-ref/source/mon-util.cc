@@ -2023,14 +2023,19 @@ mon_attack_def mons_attack_spec(const monster& m, int attk_number,
             attk.damage = max(1, you.skill_rdiv(SK_UNARMED_COMBAT, 10, 20));
     }
 
-    if (attk.type == AT_RANDOM)
-        attk.type = random_choose(AT_HIT, AT_GORE);
+    if (!base_flavour)
+    {
+        // TODO: randomization here is not the greatest way of doing any of
+        // these...
+        if (attk.type == AT_RANDOM)
+            attk.type = random_choose(AT_HIT, AT_GORE);
 
-    if (attk.type == AT_CHERUB)
-        attk.type = random_choose(AT_HIT, AT_BITE, AT_PECK, AT_GORE);
+        if (attk.type == AT_CHERUB)
+            attk.type = random_choose(AT_HIT, AT_BITE, AT_PECK, AT_GORE);
 
-    if (attk.flavour == AF_DRAIN_STAT)
-        attk.flavour = random_choose(AF_DRAIN_STR, AF_DRAIN_INT,AF_DRAIN_DEX);
+        if (attk.flavour == AF_DRAIN_STAT)
+            attk.flavour = random_choose(AF_DRAIN_STR, AF_DRAIN_INT,AF_DRAIN_DEX);
+    }
 
     // Slime creature attacks are multiplied by the number merged.
     if (mon.type == MONS_SLIME_CREATURE && mon.blob_size > 1)
@@ -2088,12 +2093,12 @@ string mon_attack_name(attack_type attack, bool with_object)
 #if TAG_MAJOR_VERSION == 34
         "sting",
 #endif
-        "hit", // AT_CHERUB
+        "hit, bite, peck, or gore", // AT_CHERUB
 #if TAG_MAJOR_VERSION == 34
         "hit", // AT_SHOOT
 #endif
         "hit", // AT_WEAP_ONLY,
-        "hit", // AT_RANDOM
+        "hit or gore", // AT_RANDOM
     };
     COMPILE_CHECK(ARRAYSZ(attack_types) == NUM_ATTACK_TYPES - AT_FIRST_ATTACK);
 

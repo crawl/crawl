@@ -381,7 +381,8 @@ void attack::init_attack(skill_type unarmed_skill, int attack_number)
     if (attacker->is_monster())
     {
         mon_attack_def mon_attk = mons_attack_spec(*attacker->as_monster(),
-                                                   attack_number);
+                                                   attack_number,
+                                                   false);
 
         attk_type       = mon_attk.type;
         attk_flavour    = mon_attk.flavour;

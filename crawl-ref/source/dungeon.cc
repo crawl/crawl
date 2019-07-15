@@ -3831,13 +3831,14 @@ static void _randomly_place_item(int item)
     }
     if (!found)
     {
+        dprf(DIAG_DNGN, "Builder failed to place %s",
+            mitm[item].name(DESC_PLAIN, false, true).c_str());
         // Couldn't find a single good spot!
         destroy_item(item);
     }
     else
     {
-        dprf(DIAG_DNGN, "builder placing %s (%s) at %d,%d",
-            mitm[item].name(DESC_PLAIN).c_str(),
+        dprf(DIAG_DNGN, "Builder placing %s at %d,%d",
             mitm[item].name(DESC_PLAIN, false, true).c_str(),
             itempos.x, itempos.y);
         move_item_to_grid(&item, itempos);
@@ -4579,8 +4580,7 @@ int dgn_place_item(const item_spec &spec,
 
             if (_apply_item_props(item, spec, (useless_tries >= 10), false))
             {
-                dprf(DIAG_DNGN, "vault spec: placing %s (%s) at %d,%d",
-                    mitm[item_made].name(DESC_PLAIN).c_str(),
+                dprf(DIAG_DNGN, "vault spec: placing %s at %d,%d",
                     mitm[item_made].name(DESC_PLAIN, false, true).c_str(),
                     where.x, where.y);
                 env.level_map_mask(where) |= MMT_NO_TRAP;
@@ -5111,8 +5111,7 @@ static void _vault_grid_glyph(vault_placement &place, const coord_def& where,
         {
             mitm[item_made].pos = where;
             env.level_map_mask(where) |= MMT_NO_TRAP;
-            dprf(DIAG_DNGN, "vault grid: placing %s (%s) at %d,%d",
-                mitm[item_made].name(DESC_PLAIN).c_str(),
+            dprf(DIAG_DNGN, "vault grid: placing %s at %d,%d",
                 mitm[item_made].name(DESC_PLAIN, false, true).c_str(),
                 mitm[item_made].pos.x, mitm[item_made].pos.y);
         }
@@ -5736,6 +5735,8 @@ static void _stock_shop_item(int j, shop_type shop_type_,
     item.pos = shop.pos;
     item.link = ITEM_IN_SHOP;
     shop.stock.push_back(item);
+    dprf(DIAG_DNGN, "shop spec: placing %s",
+                    item.name(DESC_PLAIN, false, true).c_str());
 }
 
 /**

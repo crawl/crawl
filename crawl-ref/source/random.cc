@@ -135,6 +135,12 @@ namespace rng
         return current_generator().get_uint64();
     }
 
+    uint64_t peek_uint64()
+    {
+        PcgRNG tmp = current_generator(); // make a copy
+        return tmp.get_uint64();
+    }
+
     static void _do_seeding(PcgRNG &master)
     {
         // TODO: don't initialize gameplay/ui rng?
