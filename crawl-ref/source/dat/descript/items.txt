@@ -926,8 +926,8 @@ contaminated with magical energy.
 scroll of brand weapon
 
 A scroll that imbues a weapon with a random brand, such as flame, freezing, or
-venom. Any existing brand will be replaced. Blowguns and artefacts cannot be
-branded in this way.
+venom. Any existing brand will be replaced. Artefacts cannot be branded in this
+way.
 %%%%
 scroll of enchant armour
 
