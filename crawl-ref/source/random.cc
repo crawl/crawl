@@ -61,17 +61,18 @@ namespace rng
 
     generator::generator(rng_type g) : previous(_generator)
     {
+        ASSERT(g != rng::SUB_GENERATOR);
         _generator = g;
     }
 
-    static rng_type _get_branch_generator(const branch_type b)
+    rng_type get_branch_generator(const branch_type b)
     {
         return static_cast<rng_type>(rng::LEVELGEN + static_cast<int>(b));
     }
 
     generator::generator(branch_type b) : previous(_generator)
     {
-        _generator = _get_branch_generator(b);
+        _generator = get_branch_generator(b);
     }
 
     generator::~generator()

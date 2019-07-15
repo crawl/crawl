@@ -6,6 +6,7 @@
 
 #include "l-libs.h"
 
+#include "branch.h"
 #include "chardump.h"
 #include "cluautil.h"
 #include "command.h"
@@ -1652,6 +1653,50 @@ LUAFN(crawl_hints_type)
     return 1;
 }
 
+LUAFN(crawl_rng_wrap)
+{
+    if (!lua_isstring(ls, 2))
+        luaL_error(ls, "rng_wrap missing rng name");
+    string rng_name = lua_tostring(ls, 2);
+    if (!rng_name.size())
+        luaL_error(ls, "rng_wrap missing rng name");
+    rng::rng_type r = rng::NUM_RNGS;
+    if (rng_name == "gameplay")
+        r = rng::GAMEPLAY;
+    else if (rng_name == "ui")
+        r = rng::UI;
+    else if (rng_name == "system_specific")
+        r = rng::SYSTEM_SPECIFIC;
+    else if (rng_name == "subgenerator")
+        r = rng::SUB_GENERATOR;
+    else
+    {
+        branch_type b = NUM_BRANCHES;
+        if ((b = branch_by_shortname(rng_name)) == NUM_BRANCHES)
+            if ((b = branch_by_abbrevname(rng_name)) == NUM_BRANCHES)
+                luaL_error(ls, "Unknown rng name %s", rng_name.c_str());
+        r = rng::get_branch_generator(b);
+    }
+
+    lua_pop(ls, 1); // get rid of the rng name
+    if (!lua_isfunction(ls, 1))
+        luaL_error(ls, "rng_wrap missing function");
+    int result;
+    if (r == rng::SUB_GENERATOR)
+    {
+        rng::subgenerator subgen; // TODO: implement seed + seq?
+        result = lua_pcall(ls, 0, LUA_MULTRET, 0);
+    }
+    else
+    {
+        rng::generator gen(r); // generator to use
+        result = lua_pcall(ls, 0, LUA_MULTRET, 0);
+    }
+    if (result != 0)
+        luaL_error(ls, "Failed to run rng-wrapped function (%d)", result);
+    return lua_gettop(ls);
+}
+
 static const struct luaL_reg crawl_dlib[] =
 {
 { "args", _crawl_args },
@@ -1669,6 +1714,7 @@ static const struct luaL_reg crawl_dlib[] =
 { "mark_game_won", _crawl_mark_game_won },
 { "hints_type", crawl_hints_type },
 { "unavailable_god", _crawl_unavailable_god },
+{ "rng_wrap", crawl_rng_wrap },
 
 { nullptr, nullptr }
 };

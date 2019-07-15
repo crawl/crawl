@@ -194,7 +194,10 @@ function trove.get_toll_nopiety()
 end
 
 function trove.portal(e)
-    local toll = trove.get_trove_toll(e)
+    -- dependent on player stats (skills, race, etc) so needs to be isolated
+    -- from gameplay rng.
+    local toll = crawl.rng_wrap(function () return trove.get_trove_toll(e) end,
+                                "subgenerator")
 
     local function stair ()
         return trove_marker  {
