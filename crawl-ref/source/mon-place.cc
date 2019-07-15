@@ -578,6 +578,10 @@ static bool _valid_monster_generation_location(const mgen_data &mg,
         || monster_at(mg_pos)
         || you.pos() == mg_pos && !fedhas_passthrough_class(mg.cls))
     {
+        ASSERT(!crawl_state.generating_level
+                || !in_bounds(mg_pos)
+                || you.pos() != mg_pos
+                || you.where_are_you == BRANCH_ABYSS);
         return false;
     }
 
@@ -594,6 +598,7 @@ static bool _valid_monster_generation_location(const mgen_data &mg,
     if (mg.proximity == PROX_AWAY_FROM_PLAYER && close_to_player
         || mg.proximity == PROX_CLOSE_TO_PLAYER && !close_to_player)
     {
+        ASSERT(!crawl_state.generating_level || you.where_are_you == BRANCH_ABYSS);
         return false;
     }
     // Check that the location is not proximal to level stairs.
@@ -828,6 +833,8 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
                 member->props["kirke_band"] = true;
         }
     }
+    dprf(DIAG_DNGN, "Placing %s at %d,%d", mon->name(DESC_PLAIN, true).c_str(),
+                mon->pos().x, mon->pos().y);
 
     // Placement of first monster, at least, was a success.
     return mon;

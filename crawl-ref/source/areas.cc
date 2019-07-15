@@ -145,6 +145,9 @@ static void _actor_areas(actor *a)
  */
 static void _update_agrid()
 {
+    // sanitize rng in case this gets indirectly called by the builder.
+    rng::generator gameplay(rng::GAMEPLAY);
+
     if (no_areas)
     {
         _agrid_valid = true;

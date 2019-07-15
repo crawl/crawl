@@ -3533,6 +3533,8 @@ void monster::suicide(int hp_target)
 
 mon_holy_type monster::holiness(bool /*temp*/) const
 {
+    rng::ASSERT_stable rng_check;
+
     // zombie kraken tentacles
     if (testbits(flags, MF_FAKE_UNDEAD))
         return MH_UNDEAD;

@@ -52,6 +52,20 @@ namespace rng
     uint32_t get_uint32();
     uint64_t get_uint64();
     uint32_t peek_uint32();
+    uint64_t peek_uint64();
+
+    class ASSERT_stable
+    {
+    public:
+        ASSERT_stable() : initial_peek(peek_uint64()) { }
+        ~ASSERT_stable()
+        {
+            ASSERT(peek_uint64() == initial_peek);
+        }
+
+    private:
+        uint64_t initial_peek;
+    };
 }
 
 bool coinflip();
