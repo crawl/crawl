@@ -2214,6 +2214,42 @@ static int _prompt_travel_branch(int prompt_flags)
     }
 }
 
+static god_type _god_from_initial(const char god_initial)
+{
+    switch (toupper_safe(god_initial))
+    {
+        case '1': return GOD_SHINING_ONE;
+        case 'A': return GOD_ASHENZARI;
+        case 'B': return GOD_BEOGH;
+        case 'C': return GOD_CHEIBRIADOS;
+        case 'D': return GOD_DITHMENOS;
+        case 'E': return GOD_ELYVILON;
+        case 'F': return GOD_FEDHAS;
+        case 'G': return GOD_GOZAG;
+        case 'H': return GOD_HEPLIAKLQANA;
+        case 'J': return GOD_JIYVA;
+        case 'K': return GOD_KIKUBAAQUDGHA;
+        case 'L': return GOD_LUGONU;
+        case 'M': return GOD_MAKHLEB;
+        case 'N': return GOD_NEMELEX_XOBEH;
+        case 'O': return GOD_OKAWARU;
+#if TAG_MAJOR_VERSION == 34
+        case 'P': return GOD_PAKELLAS;
+#endif
+        case 'Q': return GOD_QAZLAL;
+        case 'R': return GOD_RU;
+        case 'S': return GOD_SIF_MUNA;
+        case 'T': return GOD_TROG;
+        case 'U': return GOD_USKAYAW;
+        case 'V': return GOD_VEHUMET;
+        case 'W': return GOD_WU_JIAN;
+        case 'X': return GOD_XOM;
+        case 'Y': return GOD_YREDELEMNUL;
+        case 'Z': return GOD_ZIN;
+        default:  return GOD_NO_GOD;
+    }
+}
+
 level_id find_up_level(level_id curr, bool up_branch)
 {
     --curr.depth;
