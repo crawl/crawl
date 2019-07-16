@@ -585,9 +585,6 @@ void validate_mutations(bool debug_msg)
         }
     }
     ASSERT(total_temp == you.attribute[ATTR_TEMP_MUTATIONS]);
-    ASSERT(you.attribute[ATTR_TEMP_MUT_XP] >=0);
-    if (total_temp > 0)
-        ASSERT(you.attribute[ATTR_TEMP_MUT_XP] > 0);
 }
 
 string describe_mutations(bool drop_title)
