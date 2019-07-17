@@ -391,7 +391,7 @@ static void _handle_uskayaw_time(int time_taken)
     // timer down to a minimum of 0, at which point it becomes eligible to
     // trigger again.
     if (audience_timer == -1 || (you.piety >= piety_breakpoint(2)
-            && x_chance_in_y(time_taken, time_taken * 10 + audience_timer)))
+            && x_chance_in_y(time_taken, 100 + audience_timer)))
     {
         uskayaw_prepares_audience();
     }
@@ -399,7 +399,7 @@ static void _handle_uskayaw_time(int time_taken)
         you.props[USKAYAW_AUDIENCE_TIMER] = max(0, audience_timer - time_taken);
 
     if (bond_timer == -1 || (you.piety >= piety_breakpoint(3)
-            && x_chance_in_y(time_taken, time_taken * 10 + bond_timer)))
+            && x_chance_in_y(time_taken, 100 + bond_timer)))
     {
         uskayaw_bonds_audience();
     }
