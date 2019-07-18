@@ -2198,6 +2198,7 @@ void get_feature_desc(const coord_def &pos, describe_info &inf, bool include_ext
 
     string desc      = feature_description_at(pos, false, DESC_A, false);
     string db_name   = feat == DNGN_ENTER_SHOP ? "a shop" : desc;
+    strip_suffix(db_name, " (summoned)");
     string long_desc = getLongDescription(db_name);
 
     inf.title = uppercase_first(desc);
@@ -2234,6 +2235,15 @@ void get_feature_desc(const coord_def &pos, describe_info &inf, bool include_ext
         long_desc +=
             make_stringf("\n(Pray here with '%s' to learn more.)\n",
                          command_to_string(CMD_GO_DOWNSTAIRS).c_str());
+    }
+
+    // mention that permanent trees are usually flammable
+    // (expect for autumnal trees in Wucad Mu's Monastery)
+    if (feat_is_tree(feat) && !is_temp_terrain(pos)
+        && env.markers.property_at(pos, MAT_ANY, "veto_fire") != "veto")
+    {
+        long_desc += "\nIt is susceptible to bolts of lightning";
+        long_desc += " and to sufficiently intense sources of fire.";
     }
 
     inf.body << long_desc;
