@@ -232,6 +232,14 @@ void leaving_level_now(dungeon_feature_type stair_used)
                        you.depth));
     }
 
+    if (stair_used == DNGN_EXIT_ABYSS)
+    {
+#ifdef DEBUG
+        auto &vault_list =  you.vault_list[level_id::current()];
+        vault_list.push_back("[exit]");
+#endif
+    }
+
     dungeon_events.fire_position_event(DET_PLAYER_CLIMBS, you.pos());
     dungeon_events.fire_event(DET_LEAVING_LEVEL);
 

@@ -20,6 +20,7 @@
 #include "colour.h"
 #include "coordit.h"
 #include "dbg-scan.h"
+#include "dbg-util.h"
 #include "delay.h"
 #include "dgn-overview.h"
 #include "dgn-proclayouts.h"
@@ -1493,6 +1494,15 @@ static void abyss_area_shift()
     // And allow monsters in transit another chance to return.
     place_transiting_monsters();
 
+    auto &vault_list =  you.vault_list[level_id::current()];
+#ifdef DEBUG
+    vault_list.push_back("[shift]");
+#endif
+    const auto &level_vaults = level_vault_names();
+    vault_list.insert(vault_list.end(),
+                        level_vaults.begin(), level_vaults.end());
+
+
     check_map_validity();
     // TODO: should dactions be rerun at this point instead? That would cover
     // this particular case...
@@ -1721,6 +1731,14 @@ void abyss_teleport()
     forget_map(false);
     clear_excludes();
     gozag_detect_level_gold(false);
+    auto &vault_list =  you.vault_list[level_id::current()];
+#ifdef DEBUG
+    vault_list.push_back("[tele]");
+#endif
+    const auto &level_vaults = level_vault_names();
+    vault_list.insert(vault_list.end(),
+                        level_vaults.begin(), level_vaults.end());
+
     more();
 }
 

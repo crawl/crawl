@@ -107,6 +107,7 @@ namespace rng
 
     PcgRNG *get_generator(rng_type r)
     {
+        ASSERT(_generator != ASSERT_NO_RNG);
         if (_generator == SUB_GENERATOR)
             return _sub_generator;
         else

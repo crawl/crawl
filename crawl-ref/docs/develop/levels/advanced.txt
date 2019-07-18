@@ -275,10 +275,14 @@ a. Abyssal vaults must be small: no larger than 28x23. 23x23 or
    smaller vaults are best so that they can be rotated and fit in
    anywhere on the level.
 
-b. The player may never get a chance to explore unique abyss vaults
-   (vaults without the "allow_dup" tag). The player may be teleported
-   away to a different area of the abyss, or never notice your vault
-   before it shifts away.
+b. Unique vaults (vaults without the "allow_dup" tag) are tracked
+   separately for the abyss, so if a map's DEPTH spec allows it to
+   place both inside and outside of the abyss, it may appear up to
+   two times even if unique. The same applies to unique tags.
+
+c. The player may never get a chance to explore unique abyss vaults.
+   The player may be teleported away to a different area of the abyss,
+   or never notice your vault before it shifts away.
 
    Unique vaults that the player never sees will be reused by the
    abyss builder, but it is still possible for the player to see an
@@ -287,9 +291,9 @@ b. The player may never get a chance to explore unique abyss vaults
    can finish exploring it.
 
    Once any square of a unique vault has been seen by the player in
-   the abyss, that vault cannot be reused.
+   the abyss, that vault cannot be reused within the abyss.
 
-c. Timers and other listeners in an abyssal vault may be discarded at
+d. Timers and other listeners in an abyssal vault may be discarded at
    any time when the abyss shifts and the vault is destroyed. You can
    still use timers to modify your vaults, but be aware that the timer
    may be removed at any time as the abyss shifts away from your

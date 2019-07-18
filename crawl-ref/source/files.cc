@@ -1497,7 +1497,21 @@ bool generate_level(const level_id &l)
     dprf("Generating new level for '%s'.", level_name.c_str());
     builder(true);
 
-    you.vault_list[level_id::current()] = level_vault_names();
+    auto &vault_list =  you.vault_list[level_id::current()];
+#ifdef DEBUG
+    // places where a level can generate multiple times.
+    // could add portals to this list for debugging purposes?
+    if (   you.where_are_you == BRANCH_ABYSS
+        || you.where_are_you == BRANCH_PANDEMONIUM
+        || you.where_are_you == BRANCH_BAZAAR
+        || you.where_are_you == BRANCH_ZIGGURAT)
+    {
+        vault_list.push_back("[gen]");
+    }
+#endif
+    const auto &level_vaults = level_vault_names();
+    vault_list.insert(vault_list.end(),
+                        level_vaults.begin(), level_vaults.end());
 
     // initialize env for a new level
     env.turns_on_level = 0;

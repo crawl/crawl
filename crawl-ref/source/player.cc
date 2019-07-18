@@ -5089,6 +5089,8 @@ player::player()
 
     uniq_map_tags.clear();
     uniq_map_names.clear();
+    uniq_map_tags_abyss.clear();
+    uniq_map_names_abyss.clear();
     vault_list.clear();
 
     global_info = PlaceInfo();
