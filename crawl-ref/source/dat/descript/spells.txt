@@ -94,7 +94,8 @@ Beastly Appendage spell
     if you.race() == "Octopode" then
         return "Causes a vicious spike to grow from one of the caster's " ..
                "tentacles, increasing the damage of their extra tentacle " ..
-               "attacks."
+               "attacks. It is not powerful enough to affect tentacles " ..
+               "which are already mutated."
     else
         return "Causes monstrous horns or talons to grow from the caster's " ..
                "body, granting them a chance of making an extra attack in " ..
