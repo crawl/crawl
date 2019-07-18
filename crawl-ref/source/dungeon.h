@@ -190,6 +190,9 @@ extern vector<vault_placement> Temp_Vaults;
 
 extern const map_bitmask *Vault_Placement_Mask;
 
+set<string> &get_uniq_map_tags();
+set<string> &get_uniq_map_names();
+
 void init_level_connectivity();
 void read_level_connectivity(reader &th);
 void write_level_connectivity(writer &th);

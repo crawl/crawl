@@ -588,6 +588,8 @@ static void debug_load_map_by_name(string name, bool primary)
     {
         unwind_var<string_set> um(you.uniq_map_names, string_set());
         unwind_var<string_set> umt(you.uniq_map_tags, string_set());
+        unwind_var<string_set> um_a(you.uniq_map_names_abyss, string_set());
+        unwind_var<string_set> umt_a(you.uniq_map_tags_abyss, string_set());
         unwind_var<string_set> lum(env.level_uniq_maps, string_set());
         unwind_var<string_set> lumt(env.level_uniq_map_tags, string_set());
         if (dgn_place_map(toplace, false, false, where))
@@ -790,6 +792,8 @@ void wizard_clear_used_vaults()
 {
     you.uniq_map_tags.clear();
     you.uniq_map_names.clear();
+    you.uniq_map_tags_abyss.clear();
+    you.uniq_map_names_abyss.clear();
     env.level_uniq_maps.clear();
     env.level_uniq_map_tags.clear();
     mpr("All vaults are now eligible for [re]use.");

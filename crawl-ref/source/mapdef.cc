@@ -2267,13 +2267,13 @@ void map_def::reinit()
 
 bool map_def::map_already_used() const
 {
-    return you.uniq_map_names.count(name)
+    return get_uniq_map_names().count(name)
            || env.level_uniq_maps.find(name) !=
                env.level_uniq_maps.end()
            || env.new_used_subvault_names.find(name) !=
                env.new_used_subvault_names.end()
-           || has_any_tag(you.uniq_map_tags.begin(),
-                          you.uniq_map_tags.end())
+           || has_any_tag(get_uniq_map_tags().begin(),
+                          get_uniq_map_tags().end())
            || has_any_tag(env.level_uniq_map_tags.begin(),
                           env.level_uniq_map_tags.end())
            || has_any_tag(env.new_used_subvault_tags.begin(),

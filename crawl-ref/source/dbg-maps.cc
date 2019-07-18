@@ -263,6 +263,8 @@ bool mapstat_build_levels()
         dlua.callfn("dgn_clear_data", "");
         you.uniq_map_tags.clear();
         you.uniq_map_names.clear();
+        you.uniq_map_tags_abyss.clear();
+        you.uniq_map_names_abyss.clear();
         you.unique_creatures.reset();
         initialise_branch_depths();
         init_level_connectivity();
@@ -303,6 +305,8 @@ static void _report_available_random_vaults(FILE *outf)
 {
     you.uniq_map_tags.clear();
     you.uniq_map_names.clear();
+    you.uniq_map_tags_abyss.clear();
+    you.uniq_map_names_abyss.clear();
 
     fprintf(outf, "\n\nRandom vaults available by dungeon level:\n");
     for (auto lvl : generated_levels)

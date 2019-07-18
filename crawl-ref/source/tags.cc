@@ -1838,6 +1838,10 @@ static void tag_construct_you_dungeon(writer &th)
                       marshallString);
     marshall_iterator(th, you.uniq_map_names.begin(), you.uniq_map_names.end(),
                       marshallString);
+    marshall_iterator(th, you.uniq_map_tags_abyss.begin(),
+                        you.uniq_map_tags_abyss.end(), marshallString);
+    marshall_iterator(th, you.uniq_map_names_abyss.begin(),
+                        you.uniq_map_names_abyss.end(), marshallString);
     marshallMap(th, you.vault_list, marshall_level_id, marshallStringVector);
 
     write_level_connectivity(th);
@@ -4297,6 +4301,19 @@ static void tag_read_you_dungeon(reader &th)
                          &string_set::insert,
                          unmarshallString);
 #if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() >= TAG_MINOR_ABYSS_UNIQUE_VAULTS)
+    {
+#endif
+    unmarshall_container(th, you.uniq_map_tags_abyss,
+                         (ssipair (string_set::*)(const string &))
+                         &string_set::insert,
+                         unmarshallString);
+    unmarshall_container(th, you.uniq_map_names_abyss,
+                         (ssipair (string_set::*)(const string &))
+                         &string_set::insert,
+                         unmarshallString);
+#if TAG_MAJOR_VERSION == 34
+    }
     if (th.getMinorVersion() >= TAG_MINOR_VAULT_LIST) // 33:17 has it
 #endif
     unmarshallMap(th, you.vault_list, unmarshall_level_id,

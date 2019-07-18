@@ -327,7 +327,8 @@ TAGS:     Tags go on a TAGS: line and are space-separated. You can have several
              property to every square of the vault. See KPROP: below.
           * "allow_dup": Vaults are normally used only once per game. If you
              have a vault that can be used more than once, use allow_dup to tell
-             the dungeon builder that the vault can be reused.
+             the dungeon builder that the vault can be reused. This is tracked
+             separately for the abyss and the rest of the dungeon.
           * "chance_FOO": Maps can be tagged chance_ with any unique suffix
              to indicate that if the map's CHANCE roll is made, one of the maps
              tagged chance_FOO should be picked.
@@ -379,7 +380,8 @@ TAGS:     Tags go on a TAGS: line and are space-separated. You can have several
           * "uniq_BAR": (uniq_ with any suffix) specifies that only one of
              the vaults with this tag can be used in a game. In particular,
              late-Dungeon encompass vaults have the tag uniq_d_encompass, so
-             that only one will occur per game.
+             that only one will occur per game. This is tracked separately
+             for the abyss and the rest of the dungeon.
           * "luniq": specifies that this vault can be used only once on a
              given level. "luniq" is only relevant when used with "allow_dup".
           * "luniq_BAR": (luniq_ with any suffix) specifies that only one

@@ -309,6 +309,8 @@ public:
     // Maps without allow_dup that have been already used.
     set<string> uniq_map_tags;
     set<string> uniq_map_names;
+    set<string> uniq_map_tags_abyss;
+    set<string> uniq_map_names_abyss;
     // All maps, by level.
     map<level_id, vector<string> > vault_list;
 
