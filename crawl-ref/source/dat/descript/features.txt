@@ -242,15 +242,13 @@ A tree
 
 A large tree. While in most places the dim light of the dungeon is not bright
 enough to sustain large plants, there are spots where, with the grace of
-Fedhas, trees as big as those on the surface can grow underground. It is
-susceptible to bolts of lightning and to sufficiently intense sources of fire.
+Fedhas, trees as big as those on the surface can grow underground.
 %%%%
 An awoken tree
 
 A large tree that has been enchanted to grant it some limited motility,
 allowing it to lash out out at any adjacent enemies of the creature who awoke
-it. It is susceptible to bolts of lightning and to sufficiently intense sources
-of fire.
+it.
 %%%%
 An abandoned shop
 
