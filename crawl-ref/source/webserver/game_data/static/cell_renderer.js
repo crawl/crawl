@@ -95,8 +95,8 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
         {
             this.cell_width = Math.floor(w);
             this.cell_height = Math.floor(h);
-            this.x_scale = w / 32;
-            this.y_scale = h / 32;
+            this.x_scale = this.cell_width / 32;
+            this.y_scale = this.cell_height / 32;
         },
 
         glyph_mode_font_name: function ()
@@ -106,7 +106,6 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
                 glyph_scale = options.get("tile_map_scale");
             else
                 glyph_scale = options.get("tile_viewport_scale");
-            console.log("scale is " + glyph_scale);
 
             return (Math.floor(this.glyph_mode_font_size * glyph_scale / 100)
                 + "px " + this.glyph_mode_font);
