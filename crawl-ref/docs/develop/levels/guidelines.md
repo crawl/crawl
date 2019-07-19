@@ -3,6 +3,7 @@
 1. [Guidelines for D:1 arrival vaults](#guidelines-for-d1-arrival-vaults)
 2. [Guidelines for creating serial vaults](#guidelines-for-creating-serial-vaults)
 3. [Guidelines for creating ghost vaults](#guidelines-for-creating-ghost-vaults)
+4. [Guidelines for no_tele_into](#guidelines-for-no_tele_into)
 
 ## Guidelines for D:1 arrival vaults
 
@@ -186,3 +187,36 @@ CHANCE directly in the vault. For ghost vault rooms for Vaults, instead set the
 Other tags we generally require for ghost vaults are `no_tele_into` and
 `no_trap_gen`. If you use `allow_dup` in your vault, also use
 `luniq_player_ghost` to avoid multiple vault placement on the same level.
+
+
+## Guidelines for no_tele_into
+
+The `no_tele_into` KPROP prevents teleports landing you on the tagged locations.
+
+Example:
+
+```
+NAME:  example_vault
+KPROP: - = no_tele_into
+SUBST: - = .
+MAP
+xxxxxx
++.m--x
+xxxxxx
+ENDMAP
+```
+
+Teleports will never land the player behind the glass wall.
+
+Don't overuse this property. It's a hidden mechanic not exposed to the player.
+
+Good places to use `no_tele_into`:
+
+* Vaults which need the player to enter in a controlled manner to understand/enjoy. For example `gammafunk_steamed_eel`.
+* Teleport closets: areas the player cannot escape without a scroll of teleportation (or similar). For example `lemuel_altar_in_water`.
+* Egregiously dangerous/unfair situations. For example `chequers_guarded_unrand_ignorance` (four orange crystal statues).
+
+Bad places to use `no_tele_into`:
+
+* Any old runed door / transporter vault. It's fine for players to teleport into tough or scary situations.
+* Islands: areas the player can also reach with flight or similar tools. `no_tele_into` would be an incomplete solution. It's better to place a hatch/shaft, which solves all cases.
