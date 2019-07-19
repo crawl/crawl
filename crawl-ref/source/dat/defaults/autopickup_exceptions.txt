@@ -73,7 +73,7 @@ ae += [^n]identified.*spellbook
 # Excluding most amulets as you only need one of each. Likewise for some
 # rings. Some items may already be excluded as bad_item, e.g. inaccuracy.
 :add_autopickup_func(function (it, name)
-:  if not it.class(true) == "jewellery" then
+:  if (not it.class(true) == "jewellery") or it.artefact then
 :    return
 :  end
 :  local itsubtype = it.subtype()
