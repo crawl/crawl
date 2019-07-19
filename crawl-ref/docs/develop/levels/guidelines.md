@@ -3,6 +3,7 @@
 1. [Guidelines for D:1 arrival vaults](#guidelines-for-d1-arrival-vaults)
 2. [Guidelines for creating serial vaults](#guidelines-for-creating-serial-vaults)
 3. [Guidelines for creating ghost vaults](#guidelines-for-creating-ghost-vaults)
+4. [Guidelines for no_tele_into](#guidelines-for-no_tele_into)
 
 ## Guidelines for D:1 arrival vaults
 
@@ -186,3 +187,10 @@ CHANCE directly in the vault. For ghost vault rooms for Vaults, instead set the
 Other tags we generally require for ghost vaults are `no_tele_into` and
 `no_trap_gen`. If you use `allow_dup` in your vault, also use
 `luniq_player_ghost` to avoid multiple vault placement on the same level.
+
+
+## Guidelines for no_tele_into
+
+The `no_tele_into` KPROP prevents teleports landing you on the tagged locations. Don't overuse this. Prevent egregiously unfair situations only.
+
+You don't need to tag the interior of all runed door / transporter vaults. For example, no ghost vaults use this KPROP.
