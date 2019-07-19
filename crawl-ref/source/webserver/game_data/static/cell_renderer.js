@@ -7,8 +7,11 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
 
     function DungeonCellRenderer()
     {
+        // see also, renderer_settings in game.js. In fact, do these values
+        // do anything?
+        var ratio = window.devicePixelRatio;
         this.set_cell_size(32, 32);
-        this.glyph_mode_font_size = 24;
+        this.glyph_mode_font_size = 24 * ratio;
         this.glyph_mode_font = "monospace";
     }
 
@@ -98,8 +101,15 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
 
         glyph_mode_font_name: function ()
         {
-            return (this.glyph_mode_font_size + "px " +
-                    this.glyph_mode_font);
+            var glyph_scale;
+            if (this.ui_state == enums.ui.VIEW_MAP)
+                glyph_scale = options.get("tile_map_scale");
+            else
+                glyph_scale = options.get("tile_viewport_scale");
+            console.log("scale is " + glyph_scale);
+
+            return (Math.floor(this.glyph_mode_font_size * glyph_scale / 100)
+                + "px " + this.glyph_mode_font);
         },
 
         render_cursors: function(cx, cy, x, y)

@@ -251,17 +251,22 @@ function ($, cr, map_knowledge, options, dngn, util, view_data, enums) {
 
             if (options.get("tile_display_mode") == "glyphs")
             {
+                // font size ratio: handled in cell_renderer.js
+                var margin = 2 * ratio;
                 this.ctx.font = this.glyph_mode_font_name();
                 var metrics = this.ctx.measureText("@");
-                this.set_cell_size(metrics.width + 2, this.glyph_mode_font_size + 2);
+                this.set_cell_size(metrics.width + margin,
+                        Math.floor(this.glyph_mode_font_size * scale / 100)
+                        + margin);
             }
             else if ((min_diameter * cell_size.w / ratio > width)
                 || (min_diameter * cell_size.h / ratio > height))
             {
-                var scale = Math.min(width * ratio / (min_diameter * cell_size.w),
+                // scale down if necessary, so that los is in view
+                var rescale = Math.min(width * ratio / (min_diameter * cell_size.w),
                                      height * ratio / (min_diameter * cell_size.h));
-                this.set_cell_size(Math.floor(cell_size.w * scale),
-                                   Math.floor(cell_size.h * scale));
+                this.set_cell_size(Math.floor(cell_size.w * rescale),
+                                   Math.floor(cell_size.h * rescale));
             }
             else
                 this.set_cell_size(cell_size.w, cell_size.h);

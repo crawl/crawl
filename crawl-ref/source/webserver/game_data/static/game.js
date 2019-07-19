@@ -225,8 +225,9 @@ function ($, comm, client, dungeon_renderer, display, minimap, enums, messages,
         document.title = data.text;
     }
 
+    var device_ratio = window.devicePixelRatio;
     var renderer_settings = {
-        glyph_mode_font_size: 24,
+        glyph_mode_font_size: 24 * device_ratio,
         glyph_mode_font: "monospace"
     };
 
