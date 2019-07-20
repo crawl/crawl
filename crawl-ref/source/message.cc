@@ -1490,8 +1490,12 @@ static void _mpr(string text, msg_channel_type channel, int param, bool nojoin,
     if (domore)
         more(true);
 
-    if (do_flash_screen)
+    if (do_flash_screen && !crawl_state.game_is_arena())
+    {
+        // unwind cursor doesn't work, for unclear reasons, in arena
+        unwind_cursor pos;
         flash_view_delay(UA_ALWAYS_ON, YELLOW, 50);
+    }
 
 }
 

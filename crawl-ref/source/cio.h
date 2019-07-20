@@ -364,3 +364,23 @@ protected:
 typedef int keycode_type;
 
 keyfun_action keyfun_num_and_char(int &ch);
+
+// Save and restore the cursor region.
+class unwind_cursor
+{
+public:
+    unwind_cursor()
+        : region(get_cursor_region()), pos(cgetpos(get_cursor_region()))
+    { }
+    unwind_cursor(int x, int y, GotoRegion reg) : unwind_cursor()
+    {
+        cgotoxy(x, y, reg);
+    }
+    ~unwind_cursor()
+    {
+        cgotoxy(pos.x, pos.y, region);
+    }
+private:
+    GotoRegion region;
+    coord_def pos;
+};
