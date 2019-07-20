@@ -928,10 +928,7 @@ void flash_view(use_animation_type a, colour_t colour, targeter *where)
     {
         you.flash_colour = colour;
         you.flash_where = where;
-        const auto region = get_cursor_region();
-        const coord_def pos = cgetpos(region);
         viewwindow(false);
-        cgotoxy(pos.x, pos.y, region);
     }
 }
 
@@ -1459,7 +1456,6 @@ void viewwindow(bool show_updates, bool tiles_only, animation *a)
         {
             puttext(crawl_view.viewp.x, crawl_view.viewp.y, crawl_view.vbuf);
             update_monster_pane();
-            // these can change region...
         }
 #endif
 #ifdef USE_TILE
