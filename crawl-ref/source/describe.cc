@@ -981,7 +981,7 @@ static bool _could_set_training_target(const item_def &item, bool ignore_current
 
     const int target = min(_item_training_target(item), 270);
 
-    return target && you.can_train[skill]
+    return target && !is_useless_skill(skill)
        && you.skill(skill, 10, false, false, false) < target
        && (ignore_current || you.get_training_target(skill) < target);
 }
