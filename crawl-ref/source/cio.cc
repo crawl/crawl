@@ -599,6 +599,7 @@ int line_reader::read_line(bool clear_previous, bool reset_cursor)
     draw_colour draw(fg_colour, bg_colour);
 
     region = get_cursor_region();
+    ASSERT(region != GOTO_MLIST);
     if (start.x < 0)
         start = cgetpos(region); // inherit location from cursor
     else
