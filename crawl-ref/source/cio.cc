@@ -58,6 +58,26 @@ static keycode_type _numpad2vi(keycode_type key)
     return key;
 }
 
+// Save and restore the cursor region.
+class unwind_cursor
+{
+public:
+    unwind_cursor()
+        : region(get_cursor_region()), pos(cgetpos(get_cursor_region()))
+    { }
+    unwind_cursor(int x, int y, GotoRegion reg) : unwind_cursor()
+    {
+        cgotoxy(x, y, reg);
+    }
+    ~unwind_cursor()
+    {
+        cgotoxy(pos.x, pos.y, region);
+    }
+private:
+    GotoRegion region;
+    coord_def pos;
+};
+
 int unmangle_direction_keys(int keyin, KeymapContext keymap,
                             bool allow_fake_modifiers)
 {
@@ -579,7 +599,6 @@ int line_reader::read_line(bool clear_previous, bool reset_cursor)
     draw_colour draw(fg_colour, bg_colour);
 
     region = get_cursor_region();
-    ASSERT(region != GOTO_MLIST);
     if (start.x < 0)
         start = cgetpos(region); // inherit location from cursor
     else

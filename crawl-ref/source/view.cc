@@ -1456,7 +1456,6 @@ void viewwindow(bool show_updates, bool tiles_only, animation *a)
         {
             puttext(crawl_view.viewp.x, crawl_view.viewp.y, crawl_view.vbuf);
             update_monster_pane();
-            // these can change region...
         }
 #endif
 #ifdef USE_TILE
