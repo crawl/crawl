@@ -443,7 +443,7 @@ static void _post_init(bool newc)
     if (newc)
         run_map_epilogues();
 
-    // Sanitize skills, init can_train[].
+    // Sanitize skills, init can_currently_train[].
     fixup_skills();
 }
 

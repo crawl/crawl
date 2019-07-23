@@ -3007,8 +3007,8 @@ void excommunication(bool voluntary, god_type new_god)
     for (ability_type abil : get_god_abilities())
         you.stop_train.insert(abil_skill(abil));
 
-    update_can_train();
-    you.can_train.set(SK_INVOCATIONS, false);
+    update_can_currently_train();
+    you.can_currently_train.set(SK_INVOCATIONS, false);
     reset_training();
 
     // Perhaps we abandoned Trog with everything but Spellcasting maxed out.
@@ -3692,7 +3692,7 @@ void join_religion(god_type which_god)
     vector<ability_type> abilities = get_god_abilities();
     for (ability_type abil : abilities)
         you.start_train.insert(abil_skill(abil));
-    update_can_train();
+    update_can_currently_train();
 
     // now that you have a god, you can't save any piety from your prev god
     you.previous_good_god = GOD_NO_GOD;

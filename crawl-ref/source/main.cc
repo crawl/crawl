@@ -1071,7 +1071,7 @@ static void _input()
         }
 
         if (!you_are_delayed())
-            update_can_train();
+            update_can_currently_train();
 
 #ifdef USE_TILE_WEB
         tiles.flush_messages();
@@ -1189,7 +1189,7 @@ static void _input()
         viewwindow();
     }
 
-    update_can_train();
+    update_can_currently_train();
 
     _update_replay_state();
 

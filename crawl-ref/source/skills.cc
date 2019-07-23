@@ -488,9 +488,9 @@ static void _check_start_train()
         if (is_invalid_skill(sk) || is_useless_skill(sk))
             continue;
 
-        if (!you.can_train[sk] && you.train[sk])
+        if (!you.can_currently_train[sk] && you.train[sk])
             skills.insert(sk);
-        you.can_train.set(sk);
+        you.can_currently_train.set(sk);
     }
 
     reset_training();
@@ -536,7 +536,7 @@ static void _check_stop_train()
 
         if (skill_trained(sk) && you.training[sk])
             skills.insert(sk);
-        you.can_train.set(sk, false);
+        you.can_currently_train.set(sk, false);
     }
 
     if (!skills.empty())
@@ -549,7 +549,7 @@ static void _check_stop_train()
     you.stop_train.clear();
 }
 
-void update_can_train()
+void update_can_currently_train()
 {
     if (!you.start_train.empty())
         _check_start_train();
@@ -580,15 +580,15 @@ bool training_restricted(skill_type sk)
 }
 
 /*
- * Init the can_train array by examining inventory and spell list to see which
- * skills can be trained.
+ * Init the can_currently_train array by examining inventory and spell list to
+ * see which skills can be trained.
  */
-void init_can_train()
+void init_can_currently_train()
 {
     // Clear everything out, in case this isn't the first game.
     you.start_train.clear();
     you.stop_train.clear();
-    you.can_train.reset();
+    you.can_currently_train.reset();
 
     for (int i = 0; i < NUM_SKILLS; ++i)
     {
@@ -597,7 +597,7 @@ void init_can_train()
         if (is_useless_skill(sk))
             continue;
 
-        you.can_train.set(sk);
+        you.can_currently_train.set(sk);
         if (training_restricted(sk))
             you.stop_train.insert(sk);
     }
@@ -609,7 +609,7 @@ void init_train()
 {
     for (int i = 0; i < NUM_SKILLS; ++i)
     {
-        if (you.can_train[i] && you.skill_points[i])
+        if (you.can_currently_train[i] && you.skill_points[i])
             you.train[i] = you.train_alt[i] = TRAINING_ENABLED;
         else
         {
@@ -824,8 +824,11 @@ void reset_training()
 
         // Focused skills get at least 20% training.
         for (int sk = 0; sk < NUM_SKILLS; ++sk)
-            if (you.train[sk] == 2 && you.training[sk] < 20 && you.can_train[sk])
+            if (you.train[sk] == 2 && you.training[sk] < 20
+                && you.can_currently_train[sk])
+            {
                 you.training[sk] += 5 * (5 - you.training[sk] / 4);
+            }
     }
 
     _scale_array(you.training, 100, you.auto_training);
@@ -1082,7 +1085,7 @@ static void _train_skills(int exp, const int cost, const bool simu)
 
 bool skill_trained(int i)
 {
-    return you.can_train[i] && you.train[i];
+    return you.can_currently_train[i] && you.train[i];
 }
 
 /**
@@ -2042,7 +2045,7 @@ void dump_skills(string &text)
         {
             text += make_stringf(" %c Level %.*f%s %s\n",
                                  real == 270       ? 'O' :
-                                 !you.can_train[i] ? ' ' :
+                                 !you.can_currently_train[i] ? ' ' :
                                  you.train[i] == 2 ? '*' :
                                  you.train[i]      ? '+' :
                                                      '-',
@@ -2192,18 +2195,18 @@ skill_state::skill_state() :
 
 void skill_state::save()
 {
-    can_train          = you.can_train;
-    skills             = you.skills;
-    train              = you.train;
-    training           = you.training;
-    skill_points       = you.skill_points;
-    training_targets   = you.training_targets;
-    ct_skill_points    = you.ct_skill_points;
-    skill_cost_level   = you.skill_cost_level;
-    skill_order        = you.skill_order;
-    auto_training      = you.auto_training;
-    exp_available      = you.exp_available;
-    total_experience   = you.total_experience;
+    can_currently_train = you.can_currently_train;
+    skills              = you.skills;
+    train               = you.train;
+    training            = you.training;
+    skill_points        = you.skill_points;
+    training_targets    = you.training_targets;
+    ct_skill_points     = you.ct_skill_points;
+    skill_cost_level    = you.skill_cost_level;
+    skill_order         = you.skill_order;
+    auto_training       = you.auto_training;
+    exp_available       = you.exp_available;
+    total_experience    = you.total_experience;
     get_all_manual_charges(manual_charges);
     for (int i = 0; i < NUM_SKILLS; i++)
     {
@@ -2244,7 +2247,7 @@ void skill_state::restore_training()
         }
     }
 
-    you.can_train                   = can_train;
+    you.can_currently_train         = can_currently_train;
     you.auto_training               = auto_training;
     reset_training();
 }
@@ -2271,7 +2274,7 @@ void fixup_skills()
                                    skill_exp_needed(MAX_SKILL_LEVEL, sk));
         check_skill_level_change(sk);
     }
-    init_can_train();
+    init_can_currently_train();
     reset_training();
 
     if (you.exp_available >= 10 * calc_skill_cost(you.skill_cost_level) && !_player_is_gnoll())
@@ -2293,5 +2296,5 @@ bool can_enable_skill(skill_type sk, bool override)
     return !_player_is_gnoll()
        && you.skills[sk] < MAX_SKILL_LEVEL
        && !is_useless_skill(sk)
-       && (override || (you.can_train[sk] && !is_harmful_skill(sk)));
+       && (override || (you.can_currently_train[sk] && !is_harmful_skill(sk)));
 }

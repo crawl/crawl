@@ -111,7 +111,7 @@ static bool _show_skill(skill_type sk, skill_menu_state state)
     switch (state)
     {
     case SKM_SHOW_DEFAULT:
-        return you.can_train[sk] || you.skill(sk, 10, false, false)
+        return you.can_currently_train[sk] || you.skill(sk, 10, false, false)
                || sk == you.transfer_from_skill || sk == you.transfer_to_skill;
     case SKM_SHOW_ALL:     return true;
     default:               return false;
@@ -149,7 +149,7 @@ bool SkillMenuEntry::is_selectable(bool keep_hotkey)
         return false;
     }
 
-    if (!you.can_train[m_sk] && !is_set(SKMF_RESKILL_TO)
+    if (!you.can_currently_train[m_sk] && !is_set(SKMF_RESKILL_TO)
         && !is_set(SKMF_RESKILL_FROM))
     {
         return false;
@@ -336,7 +336,7 @@ string SkillMenuEntry::get_prefix()
     else
         letter = ' ';
 
-    const int sign = (!you.can_train[m_sk] || mastered()) ? ' ' :
+    const int sign = (!you.can_currently_train[m_sk] || mastered()) ? ' ' :
                                    (you.train[m_sk] == TRAINING_FOCUSED) ? '*' :
                                           you.train[m_sk] ? '+'
                                                           : '-';
@@ -791,9 +791,9 @@ void SkillMenu::init_experience()
         for (int i = 0; i < NUM_SKILLS; ++i)
         {
             const skill_type sk = skill_type(i);
-            if (!is_useless_skill(sk) && !you.can_train[sk])
+            if (!is_useless_skill(sk) && !you.can_currently_train[sk])
             {
-                you.can_train.set(sk);
+                you.can_currently_train.set(sk);
                 you.train[sk] = TRAINING_DISABLED;
             }
         }
@@ -1603,7 +1603,7 @@ void SkillMenu::set_skills()
 
 void SkillMenu::toggle_practise(skill_type sk, int keyn)
 {
-    ASSERT(you.can_train[sk]);
+    ASSERT(you.can_currently_train[sk]);
     if (keyn >= 'A' && keyn <= 'Z')
         you.train.init(TRAINING_DISABLED);
     if (get_state(SKM_DO) == SKM_DO_PRACTISE)

@@ -188,7 +188,7 @@ LUARET1(you_skill_progress, number,
  * @function can_train_skill
  */
 LUARET1(you_can_train_skill, boolean,
-        lua_isstring(ls, 1) ? you.can_train[str_to_skill(lua_tostring(ls, 1))]
+        lua_isstring(ls, 1) ? you.can_currently_train[str_to_skill(lua_tostring(ls, 1))]
                             : false)
 /*** Best skill.
  * @treturn string

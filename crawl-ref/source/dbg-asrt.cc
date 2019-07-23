@@ -212,7 +212,7 @@ static void _dump_player(FILE *file)
 
         fprintf(file, "%-16s|     %c     |   %u   |   %3u    |   %2d  | %6d | %d/%d\n",
                 skill_name(sk),
-                you.can_train[sk] ? 'X' : ' ',
+                you.can_currently_train[sk] ? 'X' : ' ',
                 you.train[sk],
                 you.training[sk],
                 you.skills[sk],

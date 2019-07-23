@@ -1267,10 +1267,10 @@ void tag_read(reader &inf, tag_type tag_id)
 #endif
         tag_read_companions(th);
 
-        // If somebody SIGHUP'ed out of the skill menu with all skills disabled.
-        // Doing this here rather in tag_read_you() because you.can_train()
-        // requires the player's equipment be loaded.
-        init_can_train();
+        // If somebody SIGHUP'ed out of the skill menu with every skill
+        // disabled. Doing this here rather in tag_read_you() because
+        // you.can_currently_train() requires the player's equipment be loaded.
+        init_can_currently_train();
         check_selected_skills();
         break;
     case TAG_LEVEL:

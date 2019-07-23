@@ -12,7 +12,7 @@ struct skill_state
 {
     skill_state();
 
-    FixedBitVector<NUM_SKILLS>            can_train;
+    FixedBitVector<NUM_SKILLS>            can_currently_train;
     FixedVector<uint8_t, NUM_SKILLS>      skills;
     FixedVector<int, NUM_SKILLS>          real_skills;    // Those two are
     FixedVector<int, NUM_SKILLS>          changed_skills; // scaled by 10.
@@ -62,9 +62,9 @@ bool training_restricted(skill_type sk);
 void reassess_starting_skills();
 bool check_selected_skills();
 void init_train();
-void init_can_train();
+void init_can_currently_train();
 void init_training();
-void update_can_train();
+void update_can_currently_train();
 void reset_training();
 int calc_skill_level_change(skill_type sk, int starting_level, int sk_points);
 void check_skill_level_change(skill_type sk, bool do_level_up = true);

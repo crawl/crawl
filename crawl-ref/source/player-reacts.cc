@@ -454,7 +454,7 @@ void player_reacts_to_monsters()
 {
     // In case Maurice managed to steal a needed item for example.
     if (!you_are_delayed())
-        update_can_train();
+        update_can_currently_train();
 
     if (you.duration[DUR_FIRE_SHIELD] > 0)
         manage_fire_shield(you.time_taken);
