@@ -1577,6 +1577,18 @@ bool MonsterMenuEntry::get_tiles(vector<tile_def>& tileset) const
         tileset.emplace_back(TILE_HALO_GD_NEUTRAL, TEX_FEAT);
     else if (m->neutral())
         tileset.emplace_back(TILE_HALO_NEUTRAL, TEX_FEAT);
+    else
+    {
+        // Monster is hostile; give it the appropriate threat indicator
+        if (m->threat == MTHRT_TRIVIAL)
+            tileset.emplace_back(TILE_BORDER_TRIVIAL, TEX_FEAT);
+        else if (m->threat == MTHRT_EASY)
+            tileset.emplace_back(TILE_BORDER_EASY, TEX_FEAT);
+        else if (m->threat == MTHRT_TOUGH)
+            tileset.emplace_back(TILE_BORDER_TOUGH, TEX_FEAT);
+        else if (m->threat == MTHRT_NASTY)
+            tileset.emplace_back(TILE_BORDER_NASTY, TEX_FEAT);
+    }
 
     if (m->type == MONS_DANCING_WEAPON)
     {
