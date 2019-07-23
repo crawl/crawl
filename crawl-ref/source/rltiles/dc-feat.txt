@@ -673,6 +673,10 @@ halo_friendly HALO_FRIENDLY
 halo_gd_neutral HALO_GD_NEUTRAL
 halo_neutral HALO_NEUTRAL
 halo_summoner HALO_SUMMONER
+monster_threat_trivial THREAT_TRIVIAL
+monster_threat_easy THREAT_EASY
+monster_threat_tough THREAT_TOUGH
+monster_threat_nasty THREAT_NASTY
 ray RAY
 ray_multi RAY_MULTI
 ray_out_of_range RAY_OUT_OF_RANGE

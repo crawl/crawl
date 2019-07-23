@@ -1549,6 +1549,28 @@ bool MonsterMenuEntry::get_tiles(vector<tile_def>& tileset) const
         tileset.emplace_back(TILE_HALO_GD_NEUTRAL, TEX_FEAT);
     else if (m->neutral())
         tileset.emplace_back(TILE_HALO_NEUTRAL, TEX_FEAT);
+    else
+        switch (m->threat)
+        {
+        case MTHRT_TRIVIAL:
+            if (Options.tile_show_threat_levels.find("trivial") != string::npos)
+                tileset.emplace_back(TILE_THREAT_TRIVIAL, TEX_FEAT);
+            break;
+        case MTHRT_EASY:
+            if (Options.tile_show_threat_levels.find("easy") != string::npos)
+                tileset.emplace_back(TILE_THREAT_EASY, TEX_FEAT);
+            break;
+        case MTHRT_TOUGH:
+            if (Options.tile_show_threat_levels.find("tough") != string::npos)
+                tileset.emplace_back(TILE_THREAT_TOUGH, TEX_FEAT);
+            break;
+        case MTHRT_NASTY:
+            if (Options.tile_show_threat_levels.find("nasty") != string::npos)
+                tileset.emplace_back(TILE_THREAT_NASTY, TEX_FEAT);
+            break;
+        default:
+            break;
+        }
 
     if (m->type == MONS_DANCING_WEAPON)
     {
