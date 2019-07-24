@@ -1580,14 +1580,27 @@ bool MonsterMenuEntry::get_tiles(vector<tile_def>& tileset) const
     else
     {
         // Monster is hostile; give it the appropriate threat indicator
-        if (m->threat == MTHRT_TRIVIAL)
-            tileset.emplace_back(TILE_BORDER_TRIVIAL, TEX_FEAT);
-        else if (m->threat == MTHRT_EASY)
-            tileset.emplace_back(TILE_BORDER_EASY, TEX_FEAT);
-        else if (m->threat == MTHRT_TOUGH)
-            tileset.emplace_back(TILE_BORDER_TOUGH, TEX_FEAT);
-        else if (m->threat == MTHRT_NASTY)
-            tileset.emplace_back(TILE_BORDER_NASTY, TEX_FEAT);
+        switch (m->threat)
+        {
+        case MTHRT_TRIVIAL:
+            if (Options.tile_show_threat_levels.find("trivial") != string::npos)
+                tileset.emplace_back(TILE_BORDER_TRIVIAL, TEX_FEAT);
+            break;
+        case MTHRT_EASY:
+            if (Options.tile_show_threat_levels.find("easy") != string::npos)
+                tileset.emplace_back(TILE_BORDER_EASY, TEX_FEAT);
+            break;
+        case MTHRT_TOUGH:
+            if (Options.tile_show_threat_levels.find("tough") != string::npos)
+                tileset.emplace_back(TILE_BORDER_TOUGH, TEX_FEAT);
+            break;
+        case MTHRT_NASTY:
+            if (Options.tile_show_threat_levels.find("nasty") != string::npos)
+                tileset.emplace_back(TILE_BORDER_NASTY, TEX_FEAT);
+            break;
+        default:
+            break;
+        }
     }
 
     if (m->type == MONS_DANCING_WEAPON)
