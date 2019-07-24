@@ -1933,21 +1933,18 @@ tileidx_t tileidx_monster(const monster_info& mons)
         ch |= TILE_FLAG_GD_NEUTRAL;
     else if (mons.neutral())
         ch |= TILE_FLAG_NEUTRAL;
-    else
-    {
-        if (mons.threat == MTHRT_TRIVIAL &&
-            Options.tile_show_threat_levels.find("trivial") != string::npos)
-                ch |= TILE_FLAG_TRIVIAL;
-        if (mons.threat == MTHRT_EASY &&
-            Options.tile_show_threat_levels.find("easy") != string::npos)
-                ch |= TILE_FLAG_EASY;
-        if (mons.threat == MTHRT_TOUGH &&
-            Options.tile_show_threat_levels.find("tough") != string::npos)
-                ch |= TILE_FLAG_TOUGH;
-        if (mons.threat == MTHRT_NASTY &&
-            Options.tile_show_threat_levels.find("nasty") != string::npos)
-                ch |= TILE_FLAG_NASTY;
-    }
+    else if (mons.threat == MTHRT_TRIVIAL &&
+        Options.tile_show_threat_levels.find("trivial") != string::npos)
+            ch |= TILE_FLAG_TRIVIAL;
+    else if (mons.threat == MTHRT_EASY &&
+        Options.tile_show_threat_levels.find("easy") != string::npos)
+            ch |= TILE_FLAG_EASY;
+    else if (mons.threat == MTHRT_TOUGH &&
+        Options.tile_show_threat_levels.find("tough") != string::npos)
+            ch |= TILE_FLAG_TOUGH;
+    else if (mons.threat == MTHRT_NASTY &&
+        Options.tile_show_threat_levels.find("nasty") != string::npos)
+            ch |= TILE_FLAG_NASTY;
 
     if (mons.is(MB_FLEEING))
         ch |= TILE_FLAG_FLEEING;
