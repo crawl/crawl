@@ -1684,6 +1684,47 @@ static string _sdump_kills_place_info(const PlaceInfo place_info, string name = 
     return _denanify(out);
 }
 
+static JsonNode *_json_sdump_kills_place_info(const PlaceInfo place_info, string name = "")
+{
+    JsonNode *place(json_mkobject());
+
+    json_append_member(place, "place", json_mkstring(place_info.short_name().c_str()));
+
+    if (name.empty())
+        name = place_info.short_name();
+
+    unsigned int global_total_kills = 0;
+    for (int i = 0; i < KC_NCATEGORIES; i++)
+        global_total_kills += you.global_info.mon_kill_num[i];
+
+    unsigned int total_kills = 0;
+    for (int i = 0; i < KC_NCATEGORIES; i++)
+        total_kills += place_info.mon_kill_num[i];
+
+    float a, b, c, d, e, f;
+
+    a = TO_PERCENT(total_kills, global_total_kills);
+    b = TO_PERCENT(place_info.mon_kill_num[KC_YOU],
+                   you.global_info.mon_kill_num[KC_YOU]);
+    c = TO_PERCENT(place_info.mon_kill_num[KC_FRIENDLY],
+                   you.global_info.mon_kill_num[KC_FRIENDLY]);
+    d = TO_PERCENT(place_info.mon_kill_num[KC_OTHER],
+                   you.global_info.mon_kill_num[KC_OTHER]);
+    e = TO_PERCENT(place_info.mon_kill_exp,
+                   you.global_info.mon_kill_exp);
+
+    f = float(place_info.mon_kill_exp) / place_info.levels_seen;
+    
+    json_append_member(place, "killsPercent", json_mknumber(a));
+    json_append_member(place, "ownKillsPercent", json_mknumber(b));
+    json_append_member(place, "friendsKillsPercent", json_mknumber(c));
+    json_append_member(place, "otherKillsPercent", json_mknumber(d));
+    json_append_member(place, "xpGainedPercent", json_mknumber(e));
+    json_append_member(place, "xpGainedProportion", json_mknumber(f));
+
+    return place;
+}
+
 static void _sdump_kills_by_place(dump_params &par)
 {
     string &text(par.text);
@@ -1727,7 +1768,10 @@ static void _json_sdump_kills_by_place(json_dump_params &jpar)
 {
     JsonNode *kills_by_place(json_mkarray());
 
-    // TODO
+    const vector<PlaceInfo> all_visited = you.get_all_place_info(true);
+
+    for (const PlaceInfo &pi : all_visited)
+        json_append_element(kills_by_place, _json_sdump_kills_place_info(pi));
 
     json_append_member(jpar.json, "killsByPlace", kills_by_place);
 }
