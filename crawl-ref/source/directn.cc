@@ -88,6 +88,7 @@ enum LOSSelect
 #ifdef WIZARD
 static void _wizard_make_friendly(monster* m);
 #endif
+static dist _look_around_target(const coord_def &whence);
 static void _describe_oos_feature(const coord_def& where);
 static void _describe_cell(const coord_def& where, bool in_range = true);
 static bool _print_cloud_desc(const coord_def where);
@@ -826,14 +827,7 @@ void full_describe_view()
 
 void do_look_around(const coord_def &whence)
 {
-    dist lmove;   // Will be initialised by direction().
-    direction_chooser_args args;
-    args.restricts = DIR_TARGET;
-    args.just_looking = true;
-    args.needs_path = false;
-    args.target_prefix = "Here";
-    args.default_place = whence;
-    direction(lmove, args);
+    dist lmove = _look_around_target(you.pos() + whence);
     if (lmove.isValid && lmove.isTarget && !lmove.isCancel
         && !crawl_state.arena_suspended)
     {
@@ -843,18 +837,24 @@ void do_look_around(const coord_def &whence)
 
 bool get_look_position(coord_def *c)
 {
+    dist lmove = _look_around_target(you.pos());
+    if (lmove.isCancel)
+        return false;
+    *c = lmove.target;
+    return true;
+}
+
+static dist _look_around_target(const coord_def &whence)
+{
     dist lmove;   // Will be initialised by direction().
     direction_chooser_args args;
     args.restricts = DIR_TARGET;
     args.just_looking = true;
     args.needs_path = false;
     args.target_prefix = "Here";
-    args.default_place = coord_def(0, 0);
+    args.default_place = whence - you.pos();
     direction(lmove, args);
-    if (lmove.isCancel)
-        return false;
-    *c = lmove.target;
-    return true;
+    return lmove;
 }
 
 range_view_annotator::range_view_annotator(targeter *range)
