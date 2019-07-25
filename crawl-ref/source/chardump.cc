@@ -1639,11 +1639,8 @@ static void _sdump_kills(dump_params &par)
 
 static void _json_sdump_kills(json_dump_params &jpar)
 {
-    JsonNode *kills(json_mkarray());
-
-    // TODO
-
-    json_append_member(jpar.json, "kills", kills);
+    // TODO: do we need the grouping done by kills.lua
+    json_append_member(jpar.json, "kills", you.kills.json_kills());
 }
 
 static string _sdump_kills_place_info(const PlaceInfo place_info, string name = "")
