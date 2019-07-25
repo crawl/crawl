@@ -1790,7 +1790,11 @@ static void _json_sdump_overview(json_dump_params &jpar)
 {
     JsonNode *overview(json_mkobject());
 
-    // TODO
+    json_append_member(overview, "branches", get_json_branches());
+    json_append_member(overview, "altars", get_json_altars());
+    json_append_member(overview, "shops", get_json_shops());
+    json_append_member(overview, "portals", get_json_portals());
+    json_append_member(overview, "annotations", get_json_notes());
 
     json_append_member(jpar.json, "overview", overview);
 }
