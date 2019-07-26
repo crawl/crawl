@@ -10,6 +10,8 @@
 #include <stdexcept>
 #include <vector>
 
+#include "json.h"
+
 #include "env.h"
 #include "mapdef.h"
 
@@ -285,6 +287,7 @@ static inline int count_neighbours(const coord_def& p, dungeon_feature_type feat
 }
 
 string dump_vault_maps();
+JsonNode *json_dump_vault_maps();
 
 bool dgn_square_travel_ok(const coord_def &c);
 

@@ -17,6 +17,8 @@
 #include <set>
 #include <sstream>
 
+#include "json.h"
+
 #include "abyss.h"
 #include "acquire.h"
 #include "artefact.h"
@@ -7029,6 +7031,55 @@ string dump_vault_maps()
 
     }
     return out;
+}
+
+JsonNode *json_dump_vault_maps()
+{
+    JsonNode *json_vaults(json_mkarray());
+    
+    vector<level_id> levels = all_dungeon_ids();
+
+    for (const level_id &lid : levels)
+    {
+        // n.b. portal vaults get cleared from here, so won't show up.
+        // kind of spammy in wizmode. To test non-wizmode, use &ctrl-y
+        if (!you.wizard && (!you.level_visited(lid)
+                            || !you.vault_list.count(lid))
+            || branch_is_unfinished(lid.branch))
+        {
+            continue;
+        }
+
+        JsonNode *json_level(json_mkobject());
+
+        json_append_member(json_level, "level", json_mkstring(lid.describe().c_str()));
+
+        if (you.wizard)
+        {
+            // because the save is already gone at the point where we are
+            // printing a morgue, this check isn't reliable. Ignore it.
+            if (!is_existing_level(lid) && you.save)
+            {
+                json_append_member(json_level, "generated", json_mkbool(false));
+                json_append_member(json_level, "visited", json_mkbool(false));
+                continue;
+            }
+            json_append_member(json_level, "generated", json_mkbool(false));
+            json_append_member(json_level, "visited", json_mkbool(you.level_visited(lid)));
+        }
+
+        JsonNode *json_maps(json_mkarray());
+
+        vector<string> &maps(you.vault_list[lid]);
+        for (const string map : maps)
+            json_append_element(json_maps, json_mkstring(map.c_str()));
+
+        json_append_member(json_level, "vaults",  json_maps);
+
+        json_append_element(json_vaults, json_level);
+    }
+
+    return json_vaults;
 }
 
 ///////////////////////////////////////////////////////////////////////////

@@ -1848,11 +1848,14 @@ static void _sdump_vault_list(dump_params &par)
 
 static void _json_sdump_vault_list(json_dump_params &jpar)
 {
-    JsonNode *vault_list(json_mkarray());
-
-    // TODO
-
-    json_append_member(jpar.json, "vaults", vault_list);
+    if (jpar.full_id || jpar.se
+#ifdef WIZARD
+        || you.wizard || you.suppress_wizard
+#endif
+     )
+    {
+        json_append_member(jpar.json, "vaults", json_dump_vault_maps());
+    }
 }
 
 static bool _sort_by_first(pair<int, FixedVector<int, 28> > a,
