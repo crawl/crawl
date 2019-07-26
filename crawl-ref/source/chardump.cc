@@ -639,26 +639,23 @@ static void _json_sdump_gold(json_dump_params &jpar)
 {
     JsonNode *gold(json_mkobject());
 
-    if (you.attribute[ATTR_GOLD_FOUND] > 0)
-        json_append_member(
-            gold,
-            "collected",
-            json_mknumber(you.attribute[ATTR_GOLD_FOUND])
-        );
+    json_append_member(
+        gold,
+        "collected",
+        json_mknumber(you.attribute[ATTR_GOLD_FOUND])
+    );
 
-    if (you.attribute[ATTR_PURCHASES] > 0)
-        json_append_member(
-            gold,
-            "spent",
-            json_mknumber(you.attribute[ATTR_PURCHASES])
-        );
+    json_append_member(
+        gold,
+        "spent",
+        json_mknumber(you.attribute[ATTR_PURCHASES])
+    );
 
-    if (you.attribute[ATTR_DONATIONS] > 0)
-        json_append_member(
-            gold,
-            "donated",
-            json_mknumber(you.attribute[ATTR_DONATIONS])
-        );
+    json_append_member(
+        gold,
+        "donated",
+        json_mknumber(you.attribute[ATTR_DONATIONS])
+    );
 
     if (you.attribute[ATTR_GOZAG_GOLD_USED] > 0)
         json_append_member(
@@ -667,12 +664,11 @@ static void _json_sdump_gold(json_dump_params &jpar)
             json_mknumber(you.attribute[ATTR_GOZAG_GOLD_USED])
         );
 
-    if (you.attribute[ATTR_MISC_SPENDING] > 0)
-        json_append_member(
-            gold,
-            "misc",
-            json_mknumber(you.attribute[ATTR_MISC_SPENDING])
-        );
+    json_append_member(
+        gold,
+        "misc",
+        json_mknumber(you.attribute[ATTR_MISC_SPENDING])
+    );
 
     json_append_member(jpar.json, "gold", gold);
 }
