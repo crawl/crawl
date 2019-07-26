@@ -14,6 +14,8 @@
 #include <cstring>
 #include <sstream>
 
+#include "json.h"
+
 #include "ability.h"
 #include "cio.h"
 #include "coordit.h"
@@ -772,7 +774,7 @@ string describe_mutations(bool drop_title)
         }
     }
 
-    //Finally, temporary mutations.
+    // Finally, temporary mutations.
     for (int i = 0; i < NUM_MUTATIONS; i++)
     {
         mutation_type mut_type = static_cast<mutation_type>(i);
@@ -787,6 +789,133 @@ string describe_mutations(bool drop_title)
         result += "You are rather mundane.\n";
 
     return result;
+}
+
+// TODO: maybe we want the mutation id along with its description
+JsonNode *get_json_mutations()
+{
+    JsonNode *json_mutations(json_mkarray());
+
+    // Innate abilities which haven't been implemented as mutations yet.
+    // TODO: clean these up with respect to transformations. Currently
+    // we handle only Naga/Draconian AC and Yellow Draconian rAcid.
+    for (const string& str : fake_mutations(you.species, false))
+        json_append_element(json_mutations, json_mkstring(str.c_str()));
+
+    if (you.racial_ac(false) > 0)
+    {
+        const string scale_clause = string(scale_type(you.species))
+              + " scales are "
+              + (you.species == SP_GREY_DRACONIAN ? "very " : "") + "hard";
+
+        ostringstream mutation;
+        mutation << "Your " << (you.species == SP_NAGA ? "serpentine skin is tough" :
+                                you.species == SP_GARGOYLE ? "stone body is resilient" :
+                                                             scale_clause.c_str());
+        mutation << ". (AC +" << (you.racial_ac(false) / 100) << ")";
+
+        json_append_element(json_mutations, json_mkstring(mutation.str().c_str()));
+    }
+
+    if (you.species == SP_VAMPIRE)
+    {
+        if (!you.vampire_alive)
+        {
+            json_append_element(json_mutations, json_mkstring("You do not regenerate when monsters are visible."));
+            json_append_element(json_mutations, json_mkstring("You are frail without blood (-20% HP)."));
+        }
+        else
+            json_append_element(json_mutations, json_mkstring("Your natural rate of healing is unusually fast."));
+    }
+
+    if (you.species == SP_OCTOPODE)
+    {
+        json_append_element(json_mutations, json_mkstring("You are amphibious."));
+
+
+        ostringstream tentacles;
+        const string num_tentacles =
+               number_in_words(you.has_usable_tentacles(false));
+        tentacles << "You can wear up to " << num_tentacles << " rings at the same time.";
+        json_append_element(json_mutations, json_mkstring(tentacles.str().c_str()));
+
+        ostringstream tentacles_constrict;
+        tentacles_constrict << "You can use your tentacles to constrict " << num_tentacles << " enemies at once.";
+        json_append_element(json_mutations, json_mkstring(tentacles_constrict.str().c_str()));
+    }
+
+    if (you.species != SP_FELID)
+    {
+        switch (you.body_size(PSIZE_TORSO, true))
+        {
+        case SIZE_LITTLE:
+            json_append_element(json_mutations,
+                                json_mkstring("You are very small and have problems with some larger weapons."));
+            json_append_element(json_mutations,
+                                json_mkstring("You are too small for most types of armour."));
+            break;
+        case SIZE_SMALL:
+            json_append_element(json_mutations,
+                                json_mkstring("You are small and have problems with some larger weapons."));
+            break;
+        case SIZE_LARGE:
+            json_append_element(json_mutations,
+                                json_mkstring("You are too large for most types of armour."));
+            break;
+        default:
+            break;
+        }
+    }
+
+    // Could move this into species-data, but then the hack that assumes
+    // _dragon_abil should get called on all draconian fake muts would break.
+    if (species_is_draconian(you.species))
+        json_append_element(json_mutations, json_mkstring("You cannot fit into any form of body armour."));
+
+    if (player_res_poison(false, false, false) == 3)
+        json_append_element(json_mutations, json_mkstring("You are immune to poison."));
+
+    // First add (non-removable) inborn abilities and demon powers.
+    for (int i = 0; i < NUM_MUTATIONS; i++)
+    {
+        mutation_type mut_type = static_cast<mutation_type>(i);
+        if (you.has_innate_mutation(mut_type))
+        {
+            const string mutation = mutation_desc(mut_type, -1, false,
+                                                  ((you.sacrifices[i] != 0) ? true : false));
+
+            json_append_element(json_mutations, json_mkstring(mutation.c_str()));
+        }
+    }
+
+    if (have_passive(passive_t::water_walk))
+        json_append_element(json_mutations, json_mkstring("You can walk on water."));
+    else if (you.can_water_walk())
+        json_append_element(json_mutations, json_mkstring("You can walk on water until reaching land."));
+
+    if (have_passive(passive_t::frail)
+        || player_under_penance(GOD_HEPLIAKLQANA))
+        json_append_element(json_mutations,
+                            json_mkstring("Your life essence is reduced to manifest your ancestor. (-10% HP)"));
+
+    // Now add removable mutations.
+    for (int i = 0; i < NUM_MUTATIONS; i++)
+    {
+        mutation_type mut_type = static_cast<mutation_type>(i);
+        if (you.get_base_mutation_level(mut_type, false, false, true) > 0
+            && !you.has_innate_mutation(mut_type) && !you.has_temporary_mutation(mut_type))
+            json_append_element(json_mutations, json_mkstring(mutation_desc(mut_type, -1, false).c_str()));
+    }
+
+    // Finally, temporary mutations.
+    for (int i = 0; i < NUM_MUTATIONS; i++)
+    {
+        mutation_type mut_type = static_cast<mutation_type>(i);
+        if (you.has_temporary_mutation(mut_type))
+            json_append_element(json_mutations, json_mkstring(mutation_desc(mut_type, -1, false).c_str()));
+    }
+
+    return json_mutations;
 }
 
 static formatted_string _vampire_Ascreen_footer(bool first_page)

@@ -2372,13 +2372,8 @@ static void _sdump_mutations(dump_params &par)
 
 static void _json_sdump_mutations(json_dump_params &jpar)
 {
-    if (you.how_mutated(true, false)) {
-        JsonNode *mutations(json_mkarray());
-
-        // TODO
-
-        json_append_member(jpar.json, "mutations", mutations);
-    }
+    if (you.how_mutated(true, false))
+        json_append_member(jpar.json, "mutations", get_json_mutations());
 }
 
 string morgue_directory()
