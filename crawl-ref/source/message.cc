@@ -2139,6 +2139,85 @@ string get_last_messages(int mcount, bool full)
     return text;
 }
 
+static string _channel_name(msg_channel_type chan)
+{
+    switch (chan)
+    {
+    case MSGCH_PLAIN:
+        return string("plain");
+    case MSGCH_FRIEND_ACTION:
+        return string("friend_action");
+    case MSGCH_PROMPT:
+        return string("prompt");
+    case MSGCH_GOD:
+        return string("god");
+    case MSGCH_DURATION:
+        return string("duration");
+    case MSGCH_DANGER:
+        return string("danger");
+    case MSGCH_WARN:
+        return string("warn");
+    case MSGCH_FOOD:
+        return string("food");
+    case MSGCH_RECOVERY:
+        return string("recovery");
+    case MSGCH_SOUND:
+        return string("sound");
+    case MSGCH_TALK:
+        return string("talk");
+    case MSGCH_TALK_VISUAL:
+        return string("talk_visual");
+    case MSGCH_INTRINSIC_GAIN:
+        return string("intrinsic_gain");
+    case MSGCH_MUTATION:
+        return string("mutation");
+    case MSGCH_MONSTER_SPELL:
+        return string("monster_spell");
+    case MSGCH_MONSTER_ENCHANT:
+        return string("monster_enchant");
+    case MSGCH_FRIEND_SPELL:
+        return string("friend_spell");
+    case MSGCH_FRIEND_ENCHANT:
+        return string("friend_enchant");
+    case MSGCH_MONSTER_DAMAGE:
+        return string("monster_damage");
+    case MSGCH_MONSTER_TARGET:
+        return string("monster_target");
+    case MSGCH_BANISHMENT:
+        return string("banishment");
+    case MSGCH_ROTTEN_MEAT:
+        return string("rotten_meat");
+    case MSGCH_EQUIPMENT:
+        return string("equipment");
+    case MSGCH_FLOOR_ITEMS:
+        return string("floor_items");
+    case MSGCH_MULTITURN_ACTION:
+        return string("multiturn_action");
+    case MSGCH_EXAMINE:
+        return string("examine");
+    case MSGCH_EXAMINE_FILTER:
+        return string("examine_filter");
+    case MSGCH_DIAGNOSTICS:
+        return string("diagnostics");
+    case MSGCH_ERROR:
+        return string("error");
+    case MSGCH_TUTORIAL:
+        return string("tutorial");
+    case MSGCH_ORB:
+        return string("orb");
+    case MSGCH_TIMED_PORTAL:
+        return string("timed_portal");
+    case MSGCH_HELL_EFFECT:
+        return string("hell_effect");
+    case MSGCH_MONSTER_WARNING:
+        return string("monster_warning");
+    case MSGCH_DGL_MESSAGE:
+        return string("dgl_message");
+    default:
+        return string("none");
+    }
+}
+
 JsonNode *get_json_last_messages(int mcount, bool full)
 {
     flush_prev_message();
@@ -2157,7 +2236,7 @@ JsonNode *get_json_last_messages(int mcount, bool full)
         if (full || is_channel_dumpworthy(msg.channel))
         {
             JsonNode *message(json_mkobject());
-            json_append_member(message, "channel", json_mknumber(msg.channel));
+            json_append_member(message, "channel", json_mkstring(_channel_name(msg.channel).c_str()));
             json_append_member(message, "content", json_mkstring(msg.pure_text_with_repeats().c_str()));
 
             json_append_element(messages, message);
