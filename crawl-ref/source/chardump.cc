@@ -2155,11 +2155,79 @@ static void _sdump_action_counts(dump_params &par)
 
 static void _json_sdump_action_counts(json_dump_params &jpar)
 {
-    JsonNode *action_counts(json_mkarray());
+    if (you.action_count.empty())
+        return;
 
-    // TODO
+    JsonNode *json_action_counts(json_mkarray());
 
-    json_append_member(jpar.json, "actions", action_counts);
+    int max_lt = (min<int>(you.max_level, 27) - 1) / 3;
+
+    // Don't show both a total and 1..3 when there's only one tier.
+    if (max_lt)
+        max_lt++;
+
+    for (int cact = 0; cact < NUM_CACTIONS; cact++)
+    {
+        vector<pair<int, FixedVector<int, 28> > > action_vec;
+        for (const auto &entry : you.action_count)
+        {
+            if (entry.first.first != cact)
+                continue;
+            FixedVector<int, 28> v;
+            v[27] = 0;
+            for (int i = 0; i < 27; i++)
+            {
+                v[i] = entry.second[i];
+                v[27] += v[i];
+            }
+            action_vec.emplace_back(entry.first.second, v);
+        }
+        sort(action_vec.begin(), action_vec.end(), _sort_by_first);
+
+        if (action_vec.size() > 0)
+        {
+            JsonNode *json_action_cat(json_mkobject());
+            json_append_member(json_action_cat, "category",
+                               json_mkstring(_describe_action(caction_type(cact)).c_str()));
+
+            JsonNode *json_action_subcats(json_mkarray());
+            for (auto ac = action_vec.begin(); ac != action_vec.end(); ++ac)
+            {
+                JsonNode *json_action_subcat(json_mkobject());
+                json_append_member(json_action_subcat, "subcategory",
+                                   json_mkstring(_describe_action_subtype(caction_type(cact), ac->first).c_str()));
+
+                JsonNode *json_action_count(json_mkarray());
+                for (int lt = 0; lt < max_lt; lt++)
+                {
+                    JsonNode *json_count_range(json_mkobject());
+
+                    JsonNode *json_range(json_mkobject());
+                    json_append_member(json_range, "from", json_mknumber(lt * 3 + 1));
+                    json_append_member(json_range, "to", json_mknumber(lt * 3 + 3));
+                    json_append_member(json_count_range, "range", json_range);
+
+                    int ltotal = 0;
+                    for (int i = lt * 3; i < lt * 3 + 3; i++)
+                        ltotal += ac->second[i];
+
+                    json_append_member(json_count_range, "count", json_mknumber(ltotal));
+
+                    json_append_element(json_action_count, json_count_range);
+                }
+                json_append_member(json_action_subcat, "count", json_action_count);
+
+                json_append_member(json_action_subcat, "total", json_mknumber(ac->second[27]));
+
+                json_append_element(json_action_subcats, json_action_subcat);
+            }
+            json_append_member(json_action_cat, "subcategories", json_action_subcats);
+
+            json_append_element(json_action_counts, json_action_cat);
+        }
+    }
+
+    json_append_member(jpar.json, "actions", json_action_counts);
 }
 
 static void _sdump_skill_gains(dump_params &par)
