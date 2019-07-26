@@ -7036,7 +7036,7 @@ string dump_vault_maps()
 JsonNode *json_dump_vault_maps()
 {
     JsonNode *json_vaults(json_mkarray());
-    
+
     vector<level_id> levels = all_dungeon_ids();
 
     for (const level_id &lid : levels)

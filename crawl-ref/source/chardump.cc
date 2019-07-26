@@ -387,7 +387,7 @@ static void _json_sdump_header(json_dump_params &jpar)
     // Seed
     if (you.game_is_seeded
 #ifdef DGAMELAUNCH
-        && par.se // for online games, only show seed for a dead char
+        && jpar.se // for online games, only show seed for a dead char
 #endif
         )
     {
@@ -418,11 +418,13 @@ static void _sdump_transform(dump_params &par)
 static void _json_sdump_transform(json_dump_params &jpar)
 {
     if (you.form != transformation::none)
+    {
         json_append_member(
             jpar.json,
             "transform",
             json_mkstring(get_form()->get_description(jpar.se).c_str())
         );
+    }
 }
 
 static branch_type single_portals[] =
@@ -658,11 +660,13 @@ static void _json_sdump_gold(json_dump_params &jpar)
     );
 
     if (you.attribute[ATTR_GOZAG_GOLD_USED] > 0)
+    {
         json_append_member(
             gold,
             "gozag",
             json_mknumber(you.attribute[ATTR_GOZAG_GOLD_USED])
         );
+    }
 
     json_append_member(
         gold,
@@ -1141,8 +1145,10 @@ static void _json_sdump_religion(json_dump_params &jpar)
         if (!you_worship(GOD_XOM))
         {
             if (!player_under_penance())
+            {
                 json_append_member(religion, "favour",
                                    json_mkstring(god_prayer_reaction().c_str()));
+            }
             else {
                 string verb = jpar.se ? "was" : "is";
 
@@ -1710,7 +1716,7 @@ static JsonNode *_json_sdump_kills_place_info(const PlaceInfo place_info, string
                    you.global_info.mon_kill_exp);
 
     f = float(place_info.mon_kill_exp) / place_info.levels_seen;
-    
+
     json_append_member(place, "killsPercent", json_mknumber(a));
     json_append_member(place, "ownKillsPercent", json_mknumber(b));
     json_append_member(place, "friendsKillsPercent", json_mknumber(c));

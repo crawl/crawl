@@ -455,9 +455,11 @@ static void _get_json_unseen_branches(JsonNode *json_branches)
                 ostringstream location;
                 location << it->abbrevname << ":" << it->mindepth;
                 if (it->mindepth != it->maxdepth)
+                {
                     location << "-" << it->maxdepth;
-                
+
                 json_append_member(json_branch, "location", json_mkstring(location.str().c_str()));
+                }
 
                 json_append_element(json_branches, json_branch);
             }
@@ -727,14 +729,12 @@ JsonNode *get_json_portals()
         {
             if (entry.second == it->id && last_id.depth == 10000) {
                 JsonNode *json_portal(json_mkobject());
-                
+
                 string location;
                 if (entry.first.id == last_id)
                     location += '*';
                 else
-                {
                     location += entry.first.id.describe(false, true);
-                }
                 last_id = entry.first.id;
 
                 json_append_member(json_portal, "destination",

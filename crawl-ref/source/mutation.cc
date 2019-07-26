@@ -895,8 +895,10 @@ JsonNode *get_json_mutations()
 
     if (have_passive(passive_t::frail)
         || player_under_penance(GOD_HEPLIAKLQANA))
+    {
         json_append_element(json_mutations,
                             json_mkstring("Your life essence is reduced to manifest your ancestor. (-10% HP)"));
+    }
 
     // Now add removable mutations.
     for (int i = 0; i < NUM_MUTATIONS; i++)
@@ -904,7 +906,9 @@ JsonNode *get_json_mutations()
         mutation_type mut_type = static_cast<mutation_type>(i);
         if (you.get_base_mutation_level(mut_type, false, false, true) > 0
             && !you.has_innate_mutation(mut_type) && !you.has_temporary_mutation(mut_type))
+        {
             json_append_element(json_mutations, json_mkstring(mutation_desc(mut_type, -1, false).c_str()));
+        }
     }
 
     // Finally, temporary mutations.
