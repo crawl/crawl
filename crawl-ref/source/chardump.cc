@@ -2294,11 +2294,68 @@ static void _sdump_skill_gains(dump_params &par)
 
 static void _json_sdump_skill_gains(json_dump_params &jpar)
 {
-    JsonNode *skill_gains(json_mkarray());
+    typedef map<int, int> XlToSkillLevelMap;
+    map<skill_type, XlToSkillLevelMap> skill_gains;
+    vector<skill_type> skill_order;
+    int xl = 0;
+    int max_xl = 0;
+    for (const Note &note : note_list)
+    {
+        if (note.type == NOTE_XP_LEVEL_CHANGE)
+            xl = note.first;
+        else if (note.type == NOTE_GAIN_SKILL || note.type == NOTE_LOSE_SKILL)
+        {
+            skill_type skill = static_cast<skill_type>(note.first);
+            int skill_level = note.second;
+            if (skill_gains.find(skill) == skill_gains.end())
+                skill_order.push_back(skill);
+            skill_gains[skill][xl] = skill_level;
+            max_xl = max(max_xl, xl);
+        }
+    }
 
-    // TODO
+    if (skill_order.empty())
+        return;
 
-    json_append_member(jpar.json, "skillGains", skill_gains);
+    for (int i = 0; i < NUM_SKILLS; i++)
+    {
+        skill_type skill = static_cast<skill_type>(i);
+        if (you.skill(skill, 10, true) > 0
+            && skill_gains.find(skill) == skill_gains.end())
+        {
+            skill_order.push_back(skill);
+        }
+    }
+
+    JsonNode *json_skill_gains(json_mkarray());
+
+    for (skill_type skill : skill_order)
+    {
+        JsonNode *json_skill(json_mkobject());
+        json_append_member(json_skill, "skill", json_mkstring(skill_name(skill)));
+
+        JsonNode *json_gains(json_mkarray());
+        const XlToSkillLevelMap &gains = skill_gains[skill];
+        for (xl = 1; xl <= max_xl; xl++)
+        {
+            auto it = gains.find(xl);
+
+            if (it != gains.end()) {
+                JsonNode *json_gain(json_mkobject());
+                json_append_member(json_gain, "xl", json_mknumber(xl));
+                json_append_member(json_gain, "gain", json_mknumber(it->second));
+
+                json_append_element(json_gains, json_gain);
+            }
+        }
+
+        json_append_member(json_skill, "gains", json_gains);
+        json_append_member(json_skill, "final", json_mknumber(you.skill(skill, 10, true) * 0.1));
+
+        json_append_element(json_skill_gains, json_skill);
+    }
+
+    json_append_member(jpar.json, "skillGains", json_skill_gains);
 }
 
 static void _sdump_mutations(dump_params &par)
