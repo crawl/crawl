@@ -1609,6 +1609,34 @@ string mpr_monster_list(bool past)
     return msg;
 }
 
+JsonNode *json_monster_list()
+{
+    JsonNode *monsters(json_mkarray());
+
+    // Get monsters via the monster_pane_info, sorted by difficulty.
+    vector<monster_info> mons;
+    get_monster_info(mons);
+
+    if (!mons.empty()) {
+        int count = 0;
+        for (unsigned int i = 0; i < mons.size(); ++i)
+        {
+            if (i > 0 && monster_info::less_than(mons[i-1], mons[i]))
+            {
+                json_append_element(monsters,
+                                    json_mkstring(_get_monster_name(mons[i-1], count, true).c_str()));
+                count = 0;
+            }
+            count++;
+        }
+
+        json_append_element(monsters,
+                            json_mkstring(_get_monster_name(mons[mons.size()-1], count, true).c_str()));
+    }
+
+    return monsters;
+}
+
 #ifndef USE_TILE_LOCAL
 static void _print_next_monster_desc(const vector<monster_info>& mons,
                                      int& start, bool zombified = false)

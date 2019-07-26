@@ -22,6 +22,7 @@ void draw_border();
 void redraw_screen(bool show_updates = true);
 
 string mpr_monster_list(bool past = false);
+JsonNode *json_monster_list();
 int update_monster_pane();
 
 const char *equip_slot_to_name(int equip);

@@ -1829,11 +1829,7 @@ static void _sdump_monster_list(dump_params &par)
 
 static void _json_sdump_monster_list(json_dump_params &jpar)
 {
-    JsonNode *monster_list(json_mkarray());
-
-    // TODO
-
-    json_append_member(jpar.json, "monsters", monster_list);
+    json_append_member(jpar.json, "monsters", json_monster_list());
 }
 
 static void _sdump_vault_list(dump_params &par)
