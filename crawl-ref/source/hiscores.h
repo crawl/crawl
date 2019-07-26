@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include "json.h"
+
 #include "god-type.h"
 #include "score-format-type.h"
 
@@ -164,6 +166,7 @@ public:
     bool parse(const string &line);
 
     string hiscore_line(death_desc_verbosity verbosity) const;
+    JsonNode *hiscore_json() const;
 
     string character_description(death_desc_verbosity) const;
     // Full description of death: Killed by an xyz wielding foo

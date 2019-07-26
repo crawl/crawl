@@ -1320,7 +1320,7 @@ static void _json_sdump_inventory(json_dump_params &jpar)
             json_append_member(json_item, "count",
                                json_mknumber(item.quantity));
             json_append_member(json_item, "inscription",
-                               json_mkstring(item_inscription(item).c_str()));
+                               json_mkstring(trimmed_string(item_inscription(item)).c_str()));
             json_append_member(json_item, "slot",
                                json_mkstring(item_slot(item).c_str()));
             json_append_member(json_item, "cursed",
@@ -1812,11 +1812,10 @@ static void _sdump_hiscore(dump_params &par)
 
 static void _json_sdump_hiscore(json_dump_params &jpar)
 {
-    JsonNode *hiscore(json_mkobject());
+    if (!jpar.se)
+        return;
 
-    // TODO
-
-    json_append_member(jpar.json, "hiscore", hiscore);
+    json_append_member(jpar.json, "hiscore", jpar.se->hiscore_json());
 }
 
 static void _sdump_monster_list(dump_params &par)

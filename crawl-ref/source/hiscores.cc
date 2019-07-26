@@ -14,6 +14,8 @@
 
 #include "hiscores.h"
 
+#include "json.h"
+
 #include <algorithm>
 #include <cctype>
 #include <cstdio>
@@ -1784,6 +1786,30 @@ string scorefile_entry::hiscore_line(death_desc_verbosity verbosity) const
     line += game_time(verbosity);
 
     return line;
+}
+
+JsonNode *scorefile_entry::hiscore_json() const
+{
+    JsonNode *hiscore(json_mkobject());
+
+    // Data available elsewhere in the morgue file (stats section) are not repeated here
+    if (wiz_mode)
+        json_append_member(hiscore, "mode", json_mkstring("wizard"));
+    else if (explore_mode)
+        json_append_member(hiscore, "mode", json_mkstring("explore"));
+    else
+        json_append_member(hiscore, "mode", json_mkstring("regular"));
+
+    json_append_member(hiscore, "points", json_mknumber(points));
+    json_append_member(hiscore, "birth", json_mkstring(_hiscore_date_string(birth_time).c_str()));
+
+    json_append_member(hiscore, "death",
+                       json_mkstring(trimmed_string(death_description(scorefile_entry::DDV_ONELINE)).c_str()));
+    json_append_member(hiscore, "location", json_mkstring(level_id(branch, dlvl).describe().c_str()));
+    json_append_member(hiscore, "turns", json_mknumber(num_turns));
+    json_append_member(hiscore, "time", json_mknumber(real_time));
+
+    return hiscore;
 }
 
 string scorefile_entry::game_time(death_desc_verbosity verbosity) const
