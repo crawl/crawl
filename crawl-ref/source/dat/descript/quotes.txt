@@ -121,10 +121,23 @@ A broken pillar
 A faded altar of an unknown god
 
 “Then Paul stood in the midst of Mars' hill, and said, Ye men of Athens, I
-perceive that in all things ye are too superstitious. For as I passed by, and
-beheld your devotions, I found an altar with this inscription, TO THE UNKNOWN
-GOD.”
+ perceive that in all things ye are too superstitious. For as I passed by, and
+ beheld your devotions, I found an altar with this inscription, TO THE UNKNOWN
+ GOD.”
     -KJV Bible, Acts 17:23-24.
+%%%%
+A flagged portal
+
+“We made an expedition;
+ We met a host and quelled it;
+ We forced a strong position,
+ And killed the men who held it.
+ ...
+“Fierce warriors rushed to meet us;
+ We met them, and o’erthrew them:
+ They struggled hard to beat us;
+ But we conquered them, and slew them.”
+    -Thomas Love Peacock, “The War Song of Dinas Vawr”. 1829.
 %%%%
 A gateway to Hell
 
@@ -812,7 +825,16 @@ amulet of magic regeneration
 %%%%
 amulet of rage
 
-<amulet>
+“We there, in strife bewild’ring,
+ Split blood enough to swim in:
+ We orphaned many children,
+ And widowed many women.
+ The eagles and the ravens
+ We glutted with our foemen;
+ The heroes and the cravens,
+ The spearmen and the bowmen.”
+    -Thomas Love Peacock, “The War Song of Dinas Vawr”. 1829.
+
 %%%%
 amulet of regeneration
 
