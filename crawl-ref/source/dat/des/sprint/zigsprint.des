@@ -810,10 +810,18 @@ KITEM:    S = lightning rod ident:all
 KFEAT:    ^ = granite_statue
 KFEAT:    & = granite_statue
 COLOUR:   & = magenta
+
+# Don't place the guaranteed artefacts (represented by glyphs R and T) any
+# lower in this subvault. They are placed on the top line to ensure they are
+# generated before any superb_items in the sprint. If the superb_items were
+# generated before the guaranteed artefacts, they would be able to generate the
+# guaranteed artefacts elsewhere in the sprint, which would prevent them from
+# spawning in the initial room.
+
 MAP
 ^g^h^j&A&k^l^m^
-f.............n
-^.........RT..^
+f.........RT..n
+^.............^
 e..HG.........o
 ^..IF.........^
 d..JE.....S...q
