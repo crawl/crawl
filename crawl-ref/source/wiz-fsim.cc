@@ -86,7 +86,7 @@ static skill_type _equipped_skill()
     const int weapon = you.equip[EQ_WEAPON];
     const item_def * iweap = weapon != -1 ? &you.inv[weapon] : nullptr;
 
-    if (iweap && iweap->base_type == OBJ_WEAPONS)
+    if (iweap && is_weapon(*iweap))
         return item_attack_skill(*iweap);
 
     if (!iweap && you.m_quiver.get_fire_item() != -1)
