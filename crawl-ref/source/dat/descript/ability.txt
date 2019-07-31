@@ -261,6 +261,8 @@ skeletons cannot leave the level they were created on.
 %%%%
 Drain Life ability
 
+# Note: part of this description duplicates the Drain Life spell description.
+
 Drains the life force of any nearby creatures, healing the user depending on
 the damage dealt. The amount of life force drained is increased by Invocations
 skill.

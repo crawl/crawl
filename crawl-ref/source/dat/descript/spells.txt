@@ -489,7 +489,10 @@ reserves. After the call ends, it cannot be issued again for a short time.
 %%%%
 Drain Life spell
 
-<Drain Life ability>
+# Note: this description duplicates part of the Drain Life ability description.
+
+Drains the life force of any nearby creatures, healing the user depending on
+the damage dealt.
 %%%%
 Drain Magic spell
 
