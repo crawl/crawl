@@ -20,6 +20,7 @@
 #include "l-libs.h"
 #include "mon-death.h"
 #include "mon-info.h"
+#include "output.h"
 #include "monster.h"
 #include "options.h"
 #include "stringutil.h"
@@ -133,7 +134,10 @@ JsonNode *KillMaster::json_kills() const
         for (const kill_exp kill : kills)
         {
             JsonNode *json_kill(json_mkobject());
-            json_append_member(json_kill, "name", json_mkstring(kill.base_name.c_str()));
+
+            json_append_member(json_kill, "monster",
+                               get_monster_json(monster_info{kill.monnum}, kill.nkills));
+
             json_append_member(json_kill, "count", json_mknumber(kill.nkills));
 
             if (Options.dump_kill_places != KDO_NO_PLACES

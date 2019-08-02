@@ -475,8 +475,8 @@
                         "items": {
                             "type": "object",
                             "properties": {
-                                "name": {
-                                    "type": "string"
+                                "monster": {
+                                    "$ref": "#/definitions/_monster"
                                 },
                                 "count": {
                                     "type": "number"
@@ -681,7 +681,7 @@
         "monsters": {
             "type": "array",
             "items": {
-                "type": "string"
+                "$ref": "#/definitions/_monster"
             }
         },
         "vaults": {
@@ -832,6 +832,33 @@
         "actionCounts"
     ],
     "definitions": {
+        "_monster": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "tileName": {
+                    "type": "string"
+                },
+                "tileIndex": {
+                    "type": "number"
+                },
+                "symbol": {
+                    "type": "string"
+                },
+                "color": {
+                    "type": "number"
+                }
+            },
+            "required": [
+                "name"
+                "tile_name"
+                "tile_index"
+                "symbol"
+                "color"
+            ]
+        },
         "_statValue": {
             "type": "object",
             "properties": {

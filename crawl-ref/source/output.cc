@@ -24,6 +24,8 @@
 #endif
 #include "english.h"
 #include "env.h"
+#include "tiledef_defines.h"
+#include "tiledef-player.h"
 #include "files.h"
 #include "god-passive.h"
 #include "initfile.h"
@@ -36,6 +38,7 @@
 #include "message.h"
 #include "misc.h"
 #include "mutation.h"
+#include "mon-util.h"
 #include "notes.h"
 #include "player-equip.h"
 #include "player-stats.h"
@@ -1609,6 +1612,24 @@ string mpr_monster_list(bool past)
     return msg;
 }
 
+JsonNode *get_monster_json(const monster_info& mi, int count)
+{
+    JsonNode *monster_json(json_mkobject());
+
+    json_append_member(monster_json, "name",
+                       json_mkstring(_get_monster_name(mi, count, true).c_str()));
+
+    tileidx_t monster_index = get_mon_base_tile(mi.base_type);
+    json_append_member(monster_json, "tileName", json_mkstring(tile_player_name(monster_index)));
+    json_append_member(monster_json, "tileIndex", json_mknumber(monster_index));
+    string symbol;
+    symbol.push_back(mons_char(mi.base_type));
+    json_append_member(monster_json, "symbol", json_mkstring(symbol.c_str()));
+    json_append_member(monster_json, "color", json_mknumber(mi.colour()));
+
+    return monster_json;
+}
+
 JsonNode *json_monster_list()
 {
     JsonNode *monsters(json_mkarray());
@@ -1623,15 +1644,13 @@ JsonNode *json_monster_list()
         {
             if (i > 0 && monster_info::less_than(mons[i-1], mons[i]))
             {
-                json_append_element(monsters,
-                                    json_mkstring(_get_monster_name(mons[i-1], count, true).c_str()));
+                json_append_element(monsters, get_monster_json(mons[i-1], count));
                 count = 0;
             }
             count++;
         }
 
-        json_append_element(monsters,
-                            json_mkstring(_get_monster_name(mons[mons.size()-1], count, true).c_str()));
+        json_append_element(monsters, get_monster_json(mons[mons.size()-1], count));
     }
 
     return monsters;
