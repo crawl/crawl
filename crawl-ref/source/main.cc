@@ -1367,6 +1367,18 @@ static bool _prompt_stairs(dungeon_feature_type ygrd, bool down, bool shaft)
         }
     }
 
+    // Leaving ziggurat figurines behind.
+    if (ygrd == DNGN_EXIT_ZIGGURAT
+        && you.depth == brdepth[BRANCH_ZIGGURAT]
+        && find_floor_item(OBJ_MISCELLANY, MISC_ZIGGURAT))
+    {
+        if (!yesno("Really leave the ziggurat figurine behind?", false, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return false;
+        }
+    }
+
     // Leaving Pan runes behind.
     if (!_prompt_unique_pan_rune(ygrd))
     {
