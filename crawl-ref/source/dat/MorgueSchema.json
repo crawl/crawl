@@ -33,6 +33,12 @@
         "stats": {
             "type": "object",
             "properties": {
+                "turns": {
+                    "type": "string"
+                },
+                "time": {
+                    "type": "string"
+                },
                 "name": {
                     "type": "string"
                 },
@@ -97,6 +103,8 @@
                 }
             },
             "required": [
+                "turns",
+                "time",
                 "name",
                 "title",
                 "species",
@@ -664,6 +672,9 @@
                 "death": {
                     "type": "string"
                 },
+                "deathDescription": {
+                    "type": "string"
+                },
                 "location": {
                     "$ref": "#/definitions/_location"
                 },
@@ -679,6 +690,7 @@
                 "points",
                 "birth",
                 "death",
+                "deathDescription",
                 "location",
                 "turns",
                 "time"

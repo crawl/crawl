@@ -2605,6 +2605,9 @@ JsonNode *json_dump_overview_screen(bool full_id)
 {
     JsonNode *overview(json_mkobject());
 
+    json_append_member(overview, "turns", json_mknumber(you.num_turns));
+    json_append_member(overview, "time", json_mkstring(make_time_string(you.real_time(), true).c_str()));
+
     json_append_member(overview, "name", json_mkstring(you.your_name.c_str()));
     json_append_member(overview, "title", json_mkstring(player_title().c_str()));
     json_append_member(overview, "species", json_mkstring(species_name(you.species).c_str()));
