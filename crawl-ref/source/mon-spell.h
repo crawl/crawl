@@ -2166,6 +2166,13 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_MAGGIE,
+      {
+       { SPELL_BOLT_OF_FIRE, 20, MON_SPELL_WIZARD },
+       { SPELL_MESMERISE, 36, MON_SPELL_WIZARD },
+      }
+    },
+
     {  MST_MARGERY,
       {
        { SPELL_BOLT_OF_FIRE, 36, MON_SPELL_WIZARD },

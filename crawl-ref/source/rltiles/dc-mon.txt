@@ -506,6 +506,7 @@ joseph MONS_JOSEPH
 josephine MONS_JOSEPHINE
 kirke MONS_KIRKE
 louise MONS_LOUISE
+maggie MONS_MAGGIE
 margery MONS_MARGERY
 maurice MONS_MAURICE
 %rim 0
