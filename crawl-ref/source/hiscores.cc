@@ -1810,6 +1810,34 @@ JsonNode *scorefile_entry::hiscore_json() const
     json_append_member(hiscore, "turns", json_mknumber(num_turns));
     json_append_member(hiscore, "time", json_mknumber(real_time));
 
+    if (race != SP_DEMIGOD && god != GOD_NO_GOD)
+    {
+        string rank;
+
+        if (god == GOD_XOM)
+        {
+            rank += make_stringf("a %sPlaything",
+                                (lvl >= 20) ? "Favourite " : "");
+        }
+        else
+        {
+            // Not exactly the same as the religion screen, but
+            // good enough to fill this slot for now.
+            rank += make_stringf("%s%s",
+                         (piety >= piety_breakpoint(5)) ? "the Champion" :
+                         (piety >= piety_breakpoint(4)) ? "a High Priest" :
+                         (piety >= piety_breakpoint(3)) ? "an Elder" :
+                         (piety >= piety_breakpoint(2)) ? "a Priest" :
+                         (piety >= piety_breakpoint(1)) ? "a Believer" :
+                         (piety >= piety_breakpoint(0)) ? "a Follower"
+                                                        : "an Initiate",
+                      god_name(god).c_str(),
+                         (penance > 0) ? " (penitent)" : "");
+        }
+
+        json_append_member(hiscore, "godRank", json_mkstring(rank.c_str()));
+    }
+
     return hiscore;
 }
 

@@ -675,6 +675,9 @@
                 "deathDescription": {
                     "type": "string"
                 },
+                "godRank": {
+                    "type": "string"
+                },
                 "location": {
                     "$ref": "#/definitions/_location"
                 },
