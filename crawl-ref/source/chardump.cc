@@ -1087,6 +1087,7 @@ static void _json_sdump_location(json_dump_params &jpar)
 {
     JsonNode *location(json_mkobject());
     json_append_member(location, "branch", json_mkstring(branches[you.where_are_you].shortname));
+    json_append_member(location, "branchLong", json_mkstring(branches[you.where_are_you].longname));
     json_append_member(location, "depth", json_mknumber(you.depth));
 
     json_append_member(jpar.json, "location", location);

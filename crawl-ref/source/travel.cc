@@ -3269,6 +3269,7 @@ JsonNode *level_id::to_json() const
 {
     JsonNode *json(json_mkobject());
     json_append_member(json, "branch", json_mkstring(branches[branch].shortname));
+    json_append_member(json, "branchLong", json_mkstring(branches[branch].longname));
     json_append_member(json, "depth", json_mknumber(depth));
     return json;
 }

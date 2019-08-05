@@ -859,6 +859,9 @@
                 "branch": {
                     "type": "string"
                 },
+                "branchLong": {
+                    "type": "string"
+                },
                 "depth": {
                     "type": "number"
                 },
