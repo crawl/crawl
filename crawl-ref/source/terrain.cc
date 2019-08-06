@@ -1077,7 +1077,10 @@ void dgn_move_entities_at(coord_def src, coord_def dst,
         move_item_stack_to_grid(src, dst);
 
     if (cell_is_solid(dst))
+    {
         delete_cloud(src);
+        delete_cloud(dst); // in case there was already a clear there
+    }
     else
         move_cloud(src, dst);
 
