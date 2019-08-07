@@ -148,6 +148,29 @@
                 },
                 "noCast": {
                     "type": "boolean"
+                },
+                "equipment": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "slot": {
+                                "type": "string"
+                            },
+                            "position": {
+                                "type": "string"
+                            },
+                            "melded": {
+                                "type": "boolean"
+                            },
+                            "item": {
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+
+                        ]
+                    }
                 }
             },
             "required": [
@@ -313,45 +336,7 @@
                     "items": {
                         "type": "array",
                         "items": {
-                            "type": "object",
-                            "properties": {
-                                "pronoun": {
-                                    "type": "string"
-                                },
-                                "name": {
-                                    "type": "string"
-                                },
-                                "position": {
-                                    "type": "string"
-                                },
-                                "count": {
-                                    "type": "number"
-                                },
-                                "inscription": {
-                                    "type": "string"
-                                },
-                                "slot": {
-                                    "type": "string"
-                                },
-                                "cursed": {
-                                    "type": "boolean"
-                                },
-                                "origin": {
-                                    "type": "string"
-                                },
-                                "description": {
-                                    "type": "string"
-                                }
-                            },
-                            "required": [
-                                "pronoun",
-                                "name",
-                                "position",
-                                "count",
-                                "inscription",
-                                "slot",
-                                "cursed"
-                            ]
+                            "$ref": "#/definitions/_item"
                         }
                     }
                 },
@@ -1008,6 +993,47 @@
                 "level",
                 "hunger",
                 "type"
+            ]
+        },
+        "_item": {
+            "type": "object",
+            "properties": {
+                "pronoun": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "position": {
+                    "type": "string"
+                },
+                "count": {
+                    "type": "number"
+                },
+                "inscription": {
+                    "type": "string"
+                },
+                // TODO: enum?
+                "slot": {
+                    "type": "string"
+                },
+                "cursed": {
+                    "type": "boolean"
+                },
+                "origin": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "name",
+                "position",
+                "count",
+                "inscription",
+                "slot",
+                "cursed"
             ]
         }
     }

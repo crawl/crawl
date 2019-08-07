@@ -2823,6 +2823,79 @@ JsonNode *json_dump_overview_screen(bool full_id)
     // NoCast
     json_append_member(overview, "noCast", json_mkbool(you.no_cast(full_id)));
 
+    // Equipment (needed because we give information like melded equipment or restricted slots)
+    JsonNode *equipment(json_mkarray()); // Array because slots can vary (octopode)
+    for (equipment_type eqslot : e_order)
+    {
+        if (you.species == SP_OCTOPODE
+            && eqslot != EQ_WEAPON
+            && !you_can_wear(eqslot))
+        {
+            continue;
+        }
+
+        if (you.species != SP_OCTOPODE
+            && eqslot >= EQ_RING_ONE && eqslot <= EQ_RING_EIGHT)
+        {
+            continue;
+        }
+
+        if (eqslot == EQ_RING_AMULET && !you_can_wear(eqslot))
+            continue;
+
+        JsonNode *equipment_slot(json_mkobject());
+        json_append_member(equipment_slot, "slot",
+                           json_mkstring(s_equip_slot_names[eqslot]));
+
+        if (you.slot_item(eqslot))
+        {
+            // The player has something equipped.
+            const item_def& item = *you.slot_item(eqslot);
+            const bool melded    = you.melded[eqslot];
+            const string prefix  = item_prefix(item);
+            const int item_idx   = you.equip[eqslot];
+            string equip_char;
+            equip_char          += index_to_letter(item_idx);
+
+            json_append_member(equipment_slot, "position", json_mkstring(equip_char.c_str()));
+            json_append_member(equipment_slot, "melded", json_mkbool(melded));
+            // Complete definition of the item in the `inventory` section so just take the name as-is
+            json_append_member(equipment_slot, "item", json_mkstring(item.name(DESC_PLAIN, true).c_str()));
+        }
+        else if (eqslot == EQ_WEAPON
+                 && you.skill(SK_UNARMED_COMBAT))
+        {
+            json_append_member(equipment_slot, "item", json_mkstring("Unarmed"));
+        }
+        else if (eqslot == EQ_WEAPON
+                 && you.form == transformation::blade_hands)
+        {
+            const bool plural = !you.get_mutation_level(MUT_MISSING_HAND);
+            const string str = string("  - Blade Hand") + (plural ? "s" : "");
+
+            json_append_member(equipment_slot, "item", json_mkstring(str.c_str()));
+        }
+        else if (eqslot == EQ_BOOTS
+                 && (you.species == SP_NAGA || you.species == SP_CENTAUR))
+        {
+            json_append_member(equipment_slot, "item", json_mkstring("empty"));
+        }
+        else if (!you_can_wear(eqslot))
+            json_append_member(equipment_slot, "item", json_mkstring("unavailable"));
+        else if (!you_can_wear(eqslot, true))
+        {
+            json_append_member(equipment_slot, "item", json_mkstring("currently unavailable"));
+        }
+        else if (you_can_wear(eqslot) == MB_MAYBE)
+            json_append_member(equipment_slot, "item", json_mkstring("restricted"));
+        else
+            json_append_member(equipment_slot, "item", json_mkstring("empty"));
+
+        json_append_element(equipment, equipment_slot);
+    }
+
+    json_append_member(overview, "equipment", equipment);
+
     return overview;
 }
 
