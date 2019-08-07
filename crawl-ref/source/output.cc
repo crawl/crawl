@@ -2685,6 +2685,144 @@ JsonNode *json_dump_overview_screen(bool full_id)
         json_append_member(overview, "deaths", json_mknumber(you.deaths));
     }
 
+    // Resistances
+    JsonNode *resistances(json_mkarray());
+
+    const int rfire = player_res_fire(full_id);
+    JsonNode *json_rfire(json_mkobject());
+    json_append_member(json_rfire, "name", json_mkstring("rFire"));
+    json_append_member(json_rfire, "value", json_mknumber(rfire));
+    json_append_member(json_rfire, "symbolValue",
+                       json_mkstring(_itosym(rfire, 3).c_str()));
+    json_append_element(resistances, json_rfire);
+
+    const int rcold = player_res_cold(full_id);
+    JsonNode *json_rcold(json_mkobject());
+    json_append_member(json_rcold, "name", json_mkstring("rCold"));
+    json_append_member(json_rcold, "value", json_mknumber(rcold));
+    json_append_member(json_rcold, "symbolValue",
+                       json_mkstring(_itosym(rcold, 3).c_str()));
+    json_append_element(resistances, json_rcold);
+
+    const int rneg = player_prot_life(full_id);
+    JsonNode *json_rneg(json_mkobject());
+    json_append_member(json_rneg, "name", json_mkstring("rNeg"));
+    json_append_member(json_rneg, "value", json_mknumber(rneg));
+    json_append_member(json_rneg, "symbolValue",
+                       json_mkstring(_itosym(rneg, 3).c_str()));
+    json_append_element(resistances, json_rneg);
+
+    const int rpois = player_res_poison(full_id);
+    JsonNode *json_rpois(json_mkobject());
+    json_append_member(json_rpois, "name", json_mkstring("rPois"));
+    json_append_member(json_rpois, "value", json_mknumber(rpois));
+    if (rpois == 3)
+        json_append_member(json_rpois, "symbolValue", json_mkstring("∞"));
+    else
+        json_append_member(json_rpois, "symbolValue",
+                           json_mkstring(_itosym(rpois, 1).c_str()));
+    json_append_element(resistances, json_rpois);
+
+    const int relec = player_res_electricity(full_id);
+    JsonNode *json_relec(json_mkobject());
+    json_append_member(json_relec, "name", json_mkstring("rElec"));
+    json_append_member(json_relec, "value", json_mknumber(relec));
+    json_append_member(json_relec, "symbolValue",
+                       json_mkstring(_itosym(relec, 1).c_str()));
+    json_append_element(resistances, json_relec);
+
+    const int rcorr = you.res_corr(full_id);
+    JsonNode *json_rcorr(json_mkobject());
+    json_append_member(json_rcorr, "name", json_mkstring("rCorr"));
+    json_append_member(json_rcorr, "value", json_mknumber(rcorr));
+    json_append_member(json_rcorr, "symbolValue",
+                       json_mkstring(_itosym(rcorr, 1).c_str()));
+    json_append_element(resistances, json_rcorr);
+
+    const int rmuta = (you.rmut_from_item(full_id)
+                       || you.get_mutation_level(MUT_MUTATION_RESISTANCE) == 3);
+
+    if (rmuta) {
+        JsonNode *json_rmuta(json_mkobject());
+        json_append_member(json_rmuta, "name", json_mkstring("rMut"));
+        json_append_member(json_rmuta, "value", json_mknumber(rmuta));
+        json_append_member(json_rmuta, "symbolValue",
+                           json_mkstring(_itosym(rmuta, 1).c_str()));
+        json_append_element(resistances, json_rmuta);
+    }
+
+    const int rmagi = player_res_magic(full_id);
+    JsonNode *json_rmagi(json_mkobject());
+    json_append_member(json_rmagi, "name", json_mkstring("MR"));
+    json_append_member(json_rmagi, "value", json_mknumber(rmagi));
+    json_append_member(json_rmagi, "symbolValue",
+                       json_mkstring(_itosym(rmagi, 5).c_str()));
+    json_append_element(resistances, json_rmagi);
+
+    json_append_member(overview, "resistances", resistances);
+
+    // Stealth
+    const int stealth_num = stealth_breakpoint(player_stealth());
+    JsonNode *json_stealth(json_mkobject());
+    json_append_member(json_stealth, "value", json_mknumber(stealth_num));
+    json_append_member(json_stealth, "symbolValue",
+                       json_mkstring(_itosym(stealth_num, 10).c_str()));
+    json_append_member(overview, "stealth", json_stealth);
+
+    // HP regen
+    json_append_member(overview, "hpRegen", json_mknumber(player_regen()));
+
+    // MP regen
+    const bool etheric = player_equip_unrand(UNRAND_ETHERIC_CAGE);
+    const int mp_regen = player_mp_regen() //round up
+                         + (etheric ? 50 : 0); // on average
+    json_append_member(overview, "mpRegen", json_mknumber(mp_regen));
+
+    // SeeInvis
+    json_append_member(overview, "seeInvisible", json_mkbool(you.can_see_invisible(full_id)));
+
+    // Gourm
+    json_append_member(overview, "gourmand", json_mkbool(you.gourmand(full_id)));
+
+    // Faith
+    json_append_member(overview, "faith", json_mkbool(you.faith(full_id)));
+
+    // Spirit
+    json_append_member(overview, "spirit", json_mkbool(you.spirit_shield(full_id)));
+
+    // Reflect
+    const item_def *sh = you.shield();
+    const int reflect = you.reflection(full_id)
+                        || sh && shield_reflects(*sh);
+    json_append_member(overview, "reflect", json_mkbool(reflect));
+
+    // Harm
+    json_append_member(overview, "harm", json_mkbool(you.extra_harm(full_id)));
+
+    // Clarity
+    const int rclar = you.clarity(full_id);
+    json_append_member(overview, "clarity", json_mkbool(rclar));
+
+    // Rnd*Rage
+    const int stasis = you.stasis();
+    // TODO: what about different levels of anger/berserkitis?
+    const bool show_angry = (you.angry(full_id)
+                             || you.get_mutation_level(MUT_BERSERK))
+                            && !rclar && !stasis
+                            && !you.is_lifeless_undead();
+    json_append_member(overview, "randomRage", json_mkbool(show_angry));
+
+    // NoTele
+    const int no_tele = you.no_tele(full_id);
+    json_append_member(overview, "noTeleportation", json_mkbool(!stasis && no_tele));
+
+    // Rnd*Tele
+    const int rnd_tele = player_teleport(full_id);
+    json_append_member(overview, "randomTeleportation", json_mkbool(!stasis && !no_tele && rnd_tele));    
+
+    // NoCast
+    json_append_member(overview, "noCast", json_mkbool(you.no_cast(full_id)));
+
     return overview;
 }
 

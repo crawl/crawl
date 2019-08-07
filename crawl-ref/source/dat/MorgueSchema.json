@@ -100,6 +100,54 @@
                 },
                 "deaths": {
                     "type": "string"
+                },
+                "resistances": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/_statValue"
+                    }
+                },
+                "stealth": {
+                    "$ref": "#/definitions/_statValue"
+                },
+                "hpRegen": {
+                    "type": "number"
+                },
+                "mpRegen": {
+                    "type": "number"
+                },
+                "seeInvisible": {
+                    "type": "boolean"
+                },
+                "gourmand": {
+                    "type": "boolean"
+                },
+                "faith": {
+                    "type": "boolean"
+                },
+                "spirit": {
+                    "type": "boolean"
+                },
+                "reflect": {
+                    "type": "boolean"
+                },
+                "harm": {
+                    "type": "boolean"
+                },
+                "clarity": {
+                    "type": "boolean"
+                },
+                "randomRage": {
+                    "type": "boolean"
+                },
+                "noTeleportation": {
+                    "type": "boolean"
+                },
+                "randomTeleportation": {
+                    "type": "boolean"
+                },
+                "noCast": {
+                    "type": "boolean"
                 }
             },
             "required": [
@@ -917,6 +965,12 @@
                 },
                 "next": {
                     "type": "number"
+                },
+                "symbolValue": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
                 }
             },
             "required": [
