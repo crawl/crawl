@@ -86,11 +86,6 @@ An iron altar of Okawaru
 An altar of iron and steel dedicated to the Warmaster Okawaru. Its edges are
 surprisingly sharp.
 %%%%
-An oddly glowing altar of Pakellas
-
-An altar to Pakellas the Inventive, adorned with strange half-completed devices
-and tools, and glowing with an odd, persistent light.
-%%%%
 A stormy altar of Qazlal
 
 An altar dedicated to Qazlal Stormbringer, surrounded by fierce winds,
