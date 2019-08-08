@@ -1809,6 +1809,7 @@ JsonNode *scorefile_entry::hiscore_json() const
     json_append_member(hiscore, "location", level_id(branch, dlvl).to_json());
     json_append_member(hiscore, "turns", json_mknumber(num_turns));
     json_append_member(hiscore, "time", json_mknumber(real_time));
+    json_append_member(hiscore, "hasEscaped", json_mkbool(death_type == KILLED_BY_WINNING));
 
     if (race != SP_DEMIGOD && god != GOD_NO_GOD)
     {

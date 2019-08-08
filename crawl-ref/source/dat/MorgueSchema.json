@@ -740,6 +740,9 @@
                 },
                 "time": {
                     "type": "number"
+                },
+                "hasEscaped": {
+                    "type": "boolean"
                 }
             },
             "required": [
@@ -750,7 +753,8 @@
                 "deathDescription",
                 "location",
                 "turns",
-                "time"
+                "time",
+                "hasEscaped"
             ]
         },
         "monsters": {
