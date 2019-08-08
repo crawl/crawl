@@ -286,6 +286,12 @@
                 "misc"
             ]
         },
+        "completedZiggurats": {
+            "type" :"number"
+        },
+        "deepestZiggurat": {
+            "type" :"number"
+        },
         "turnsByPlace": {
             "type": "array",
             "items": {

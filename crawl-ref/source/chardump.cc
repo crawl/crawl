@@ -693,6 +693,9 @@ static void _json_sdump_misc(json_dump_params &jpar)
     _json_sdump_transform(jpar);
     _json_sdump_visits(jpar);
     _json_sdump_gold(jpar);
+
+    json_append_member(jpar.json, "completedZiggurats", json_mknumber(you.zigs_completed));
+    json_append_member(jpar.json, "deepestZiggurat", json_mknumber(you.zig_max));
 }
 
 #define TO_PERCENT(x, y) (100.0f * (static_cast<float>(x)) / (static_cast<float>(y)))
