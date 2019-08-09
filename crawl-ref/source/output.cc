@@ -2938,7 +2938,7 @@ JsonNode *json_dump_overview_screen(bool full_id)
 
     // Rnd*Tele
     const int rnd_tele = player_teleport(full_id);
-    json_append_member(overview, "randomTeleportation", json_mkbool(!stasis && !no_tele && rnd_tele));    
+    json_append_member(overview, "randomTeleportation", json_mkbool(!stasis && !no_tele && rnd_tele));
 
     // NoCast
     json_append_member(overview, "noCast", json_mkbool(you.no_cast(full_id)));
@@ -3003,9 +3003,7 @@ JsonNode *json_dump_overview_screen(bool full_id)
         else if (!you_can_wear(eqslot))
             json_append_member(equipment_slot, "item", json_mkstring("unavailable"));
         else if (!you_can_wear(eqslot, true))
-        {
             json_append_member(equipment_slot, "item", json_mkstring("currently unavailable"));
-        }
         else if (you_can_wear(eqslot) == MB_MAYBE)
             json_append_member(equipment_slot, "item", json_mkstring("restricted"));
         else
@@ -3042,9 +3040,7 @@ JsonNode *json_dump_overview_screen(bool full_id)
 
     const vector<string> mutations = _get_mutations();
     for (string mut : mutations)
-    {
         json_append_element(json_mutations, json_mkstring(mut.c_str()));
-    }
 
     json_append_member(overview, "mutations", json_mutations);
 

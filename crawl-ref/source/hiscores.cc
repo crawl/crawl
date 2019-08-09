@@ -1803,7 +1803,7 @@ JsonNode *scorefile_entry::hiscore_json() const
     json_append_member(hiscore, "points", json_mknumber(points));
     json_append_member(hiscore, "birth", json_mkstring(_hiscore_date_string(birth_time).c_str()));
 
-    json_append_member(hiscore, "death", json_mkstring(_hiscore_date_string(death_time).c_str()));    
+    json_append_member(hiscore, "death", json_mkstring(_hiscore_date_string(death_time).c_str()));
     json_append_member(hiscore, "deathDescription",
                        json_mkstring(trimmed_string(death_description(scorefile_entry::DDV_ONELINE)).c_str()));
     json_append_member(hiscore, "location", level_id(branch, dlvl).to_json());

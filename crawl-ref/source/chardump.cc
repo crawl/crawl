@@ -1314,6 +1314,7 @@ static void _json_sdump_inventory(json_dump_params &jpar)
             bool startvowel = is_vowel(unqualified_name[0]);
 
             JsonNode *json_item(json_mkobject());
+            json_append_member(json_item, "colour", json_mknumber(item.get_colour()));
             json_append_member(json_item, "pronoun",
                                json_mkstring(item_pronoun(DESC_INVENTORY_EQUIP, item, startvowel).c_str()));
             json_append_member(json_item, "name",
@@ -1382,7 +1383,7 @@ static void _json_sdump_skills(json_dump_params &jpar)
                             you.train[i]      ? "trained" :
                                                 "untrained";
 
-            json_append_member(skill, "status", json_mknumber(you.skill((skill_type)i, 10)));
+            json_append_member(skill, "status", json_mkstring(status.c_str()));
 
             json_append_element(skills, skill);
         }
