@@ -461,7 +461,10 @@ makhleb_flame5
 makhleb_flame6
 makhleb_flame7
 makhleb_flame8
-sif_muna DNGN_ALTAR_SIF_MUNA
+sif_muna1 DNGN_ALTAR_SIF_MUNA
+sif_muna2
+sif_muna3
+sif_muna4
 trog DNGN_ALTAR_TROG
 nemelex1 DNGN_ALTAR_NEMELEX_XOBEH
 nemelex2
