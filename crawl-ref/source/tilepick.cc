@@ -1462,7 +1462,7 @@ tileidx_t tileidx_monster_base(int type, bool in_water, int colour, int number,
         case LIGHTMAGENTA:  offset = 4; break;
         case CYAN:          offset = 5; break;
         case MAGENTA:       offset = 6; break;
-        case RED:           offset = 7; break;
+        case LIGHTRED:      offset = 7; break;
         case WHITE:         offset = 8; break;
         }
 
