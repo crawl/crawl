@@ -495,8 +495,6 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
     }
 }
 
-// Current list is based on dpeg's original post to the Wiki, found at the
-// page: <http://crawl.develz.org/wiki/doku.php?id=DCSS%3Aissue%3A41>.
 // Remember to update the code in is_missile_brand_ok if adding or altering
 // brands that are applied to missiles. {due}
 static special_missile_type _determine_missile_brand(const item_def& item,
@@ -506,11 +504,17 @@ static special_missile_type _determine_missile_brand(const item_def& item,
     if (item.brand != 0)
         return static_cast<special_missile_type>(item.brand);
 
-    const bool force_good = item_level >= ISPEC_GIFT;
     special_missile_type rc = SPMSL_NORMAL;
 
-    // "Normal weight" of SPMSL_NORMAL.
-    int nw = force_good ? 0 : random2(2000 - 55 * item_level);
+    // Weight of SPMSL_NORMAL
+    // Gifts from Trog/Oka can be unbranded boomerangs/javelins
+    // but not poisoned darts
+    int nw = item_level >= ISPEC_GOOD_ITEM ?   0 :
+             item_level == ISPEC_GIFT      ? 120
+                                           : random2(2000 - 55 * item_level);
+
+    // Weight of SPMSL_POISONED
+    int pw = item_level >= ISPEC_GIFT ? 0 : random2(2000 - 55 * item_level);
 
     switch (item.sub_type)
     {
@@ -532,7 +536,7 @@ static special_missile_type _determine_missile_brand(const item_def& item,
 
         rc = random_choose_weighted(60, SPMSL_BLINDING,
                                     20, SPMSL_FRENZY,
-                                    nw, SPMSL_POISONED);
+                                    pw, SPMSL_POISONED);
         break;
     case MI_JAVELIN:
         rc = random_choose_weighted(90, SPMSL_SILVER,
