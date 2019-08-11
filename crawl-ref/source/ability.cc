@@ -3534,7 +3534,7 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
         }
 
         // Try to find a free hotkey for i, starting from Z.
-        for (int k = 51; k >= 0; ++k)
+        for (int k = 51; k >= 0; --k)
         {
             const int kkey = index_to_letter(k);
             bool good_key = true;
@@ -3549,7 +3549,7 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
 
             if (good_key)
             {
-                tal.hotkey = k;
+                tal.hotkey = kkey;
                 you.ability_letter_table[k] = tal.which;
                 break;
             }
