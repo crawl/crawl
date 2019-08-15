@@ -14,6 +14,11 @@
 ##### Artefacts (fixed and unrandart)
 %include dc-unrand.txt
 
+urand_wyrmbane1 UNRAND_WYRMBANE1
+urand_wyrmbane2 UNRAND_WYRMBANE2
+urand_wyrmbane3 UNRAND_WYRMBANE3
+urand_wyrmbane4 UNRAND_WYRMBANE4
+
 #####NORMAL
 %sdir item/weapon
 %rim 0

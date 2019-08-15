@@ -2073,6 +2073,20 @@ static tileidx_t _tileidx_unrand_artefact(int idx)
     return tile ? tile : TILE_TODO;
 }
 
+static tileidx_t _tileidx_wyrmbane(int plus)
+{
+    if (plus < 10)
+        return TILE_UNRAND_WYRMBANE;
+    else if (plus < 12)
+        return TILE_UNRAND_WYRMBANE1;
+    else if (plus < 15)
+        return TILE_UNRAND_WYRMBANE2;
+    else if (plus < 18)
+        return TILE_UNRAND_WYRMBANE3;
+    else
+        return TILE_UNRAND_WYRMBANE4;
+}
+
 static tileidx_t _tileidx_weapon_base(const item_def &item)
 {
     switch (item.sub_type)
@@ -2574,7 +2588,9 @@ tileidx_t tileidx_item(const item_def &item)
     switch (clas)
     {
     case OBJ_WEAPONS:
-        if (is_unrandom_artefact(item) && !is_randapp_artefact(item))
+        if (is_unrandom_artefact(item, UNRAND_WYRMBANE))
+            return _tileidx_wyrmbane(item.plus);
+        else if (is_unrandom_artefact(item) && !is_randapp_artefact(item))
             return _tileidx_unrand_artefact(find_unrandart_index(item));
         else
             return _tileidx_weapon(item);
