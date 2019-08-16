@@ -615,6 +615,9 @@ void UIMenu::update_hovered_entry()
         const auto& entry = item_info[i];
         if (entry.heading)
             continue;
+        const auto me = m_menu->items[i];
+        if (me->hotkeys.size() == 0)
+            continue;
         const int w = m_region[2] / m_num_columns;
         const int entry_x = entry.column * w;
         const int entry_h = row_heights[entry.row+1] - row_heights[entry.row];
