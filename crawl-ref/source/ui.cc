@@ -267,6 +267,20 @@ void Widget::_set_parent(Widget* p)
     m_parent = p;
 }
 
+/**
+ * Unparent a widget.
+ *
+ * This function verifies that a widget has the correct parent before orphaning.
+ * Intended for use in container widget destructors.
+ *
+ * @param child   The child widget to unparent.
+ */
+void Widget::_unparent(shared_ptr<Widget>& child)
+{
+    if (child->m_parent == this)
+        child->_set_parent(nullptr);
+}
+
 void Widget::_invalidate_sizereq(bool immediate)
 {
     for (auto w = this; w; w = w->m_parent)

@@ -158,6 +158,8 @@ public:
 protected:
     i4 m_region;
 
+    void _unparent(shared_ptr<Widget>& child);
+
 private:
     bool cached_sr_valid[2] = { false, false };
     SizeReq cached_sr[2];
@@ -231,7 +233,7 @@ class Bin : public Container
 public:
     virtual ~Bin() {
         if (m_child)
-            m_child->_set_parent(nullptr);
+            _unparent(m_child);
     };
     virtual bool on_event(const wm_event& event) override;
     void set_child(shared_ptr<Widget> child);
@@ -273,7 +275,7 @@ public:
     virtual ~ContainerVec() {
         for (auto& child : m_children)
             if (child)
-                child->_set_parent(nullptr);
+                _unparent(child);
     }
     virtual shared_ptr<Widget> get_child_at_offset(int x, int y) override;
     size_t num_children() const { return m_children.size(); }
@@ -453,7 +455,7 @@ public:
     virtual ~Grid() {
         for (auto& child : m_child_info)
             if (child.widget)
-                child.widget->_set_parent(nullptr);
+                _unparent(child.widget);
     };
     void add_child(shared_ptr<Widget> child, int x, int y, int w = 1, int h = 1);
     const int column_flex_grow(int x) const { return m_col_info[x].flex_grow; }
