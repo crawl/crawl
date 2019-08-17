@@ -32,7 +32,8 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
             return;
         }
         $.each(spellset, function (i, book) {
-            $container.append(book.label);
+            if (book.label.trim())
+                $container.append(book.label);
             var $list = $("<ol>");
             $.each(book.spells, function (i, spell) {
                 var $item = $("<li class=selectable>");
