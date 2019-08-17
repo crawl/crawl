@@ -458,17 +458,17 @@ public:
                 _unparent(child.widget);
     };
     void add_child(shared_ptr<Widget> child, int x, int y, int w = 1, int h = 1);
-    const int column_flex_grow(int x) const { return m_col_info[x].flex_grow; }
-    const int row_flex_grow(int y) const { return m_row_info[y].flex_grow; }
+    const int column_flex_grow(int x) const { return m_col_info.at(x).flex_grow; }
+    const int row_flex_grow(int y) const { return m_row_info.at(y).flex_grow; }
     int& column_flex_grow(int x)
     {
         init_track_info();
-        return m_col_info[x].flex_grow;
+        return m_col_info.at(x).flex_grow;
     }
     int& row_flex_grow(int y)
     {
         init_track_info();
-        return m_row_info[y].flex_grow;
+        return m_row_info.at(y).flex_grow;
     }
     virtual shared_ptr<Widget> get_child_at_offset(int x, int y) override;
 
