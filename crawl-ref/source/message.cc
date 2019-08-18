@@ -2176,7 +2176,7 @@ static void _replay_messages_core(formatted_scroller &hist)
             }
         }
 
-    hist.add_formatted_string(lines, !lines.empty());
+    hist.add_formatted_string(lines);
     hist.show();
 }
 
