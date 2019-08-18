@@ -313,21 +313,12 @@ void tile_clear_flavour()
 void tile_init_flavour()
 {
     vector<unsigned int> output;
-    output.reserve(X_WIDTH * Y_WIDTH);
     {
+        domino::DominoSet<domino::EdgeDomino> dominoes(domino::cohen_set, 8);
         uint64_t seed[] = { static_cast<uint64_t>(you.where_are_you ^ you.game_seed),
             static_cast<uint64_t>(you.depth) };
         PcgRNG rng(seed, ARRAYSZ(seed));
-        if (you.where_are_you == BRANCH_CRYPT)
-        {
-            domino::DominoSet<domino::EdgeDomino> dominoes(domino::cohen_set, 8);
-            dominoes.Generate(X_WIDTH, Y_WIDTH, output, rng);
-        }
-        else
-        {
-            for (auto &o : output)
-                o = rng();
-        }
+        dominoes.Generate(X_WIDTH, Y_WIDTH, output, rng);
     }
     for (rectangle_iterator ri(0); ri; ++ri)
     {
