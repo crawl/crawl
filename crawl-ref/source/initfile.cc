@@ -293,11 +293,6 @@ const vector<GameOption*> game_options::build_options_list()
         new ColourThresholdOption(stat_colour, {"stat_colour", "stat_color"},
                                   "3:red", _first_less),
         new StringGameOption(SIMPLE_NAME(sound_file_path), ""),
-#ifndef DGAMELAUNCH
-        new BoolGameOption(SIMPLE_NAME(pregen_dungeon), false),
-#endif
-        new BoolGameOption(SIMPLE_NAME(incremental_pregen), false),
-
 
 #ifdef DGL_SIMPLE_MESSAGING
         new BoolGameOption(SIMPLE_NAME(messaging), false),
@@ -1031,6 +1026,9 @@ void game_options::reset_options()
     game = newgame_def();
 
     char_set      = CSET_DEFAULT;
+
+    incremental_pregen = false;
+    pregen_dungeon = false;
 
     // set it to the .crawlrc default
     autopickups.reset();
@@ -3454,6 +3452,34 @@ void game_options::read_option_line(const string &str, bool runscript)
                 seed_from_rc = tmp_seed;
         }
 #endif
+    }
+    else if (key == "pregen_dungeon")
+    {
+        // TODO: probably convert the underlying values to some kind of enum
+        // TODO: store these options in a save?
+        if (field == "true" || field == "full")
+        {
+#ifdef DGAMELAUNCH
+            report_error(
+                "Full pregeneration is not allowed on this build of crawl.");
+#else
+            pregen_dungeon = true;
+            incremental_pregen = true; // still affects loading games not
+                                       // started with full pregen
+#endif
+        }
+        else if (field == "incremental")
+        {
+            pregen_dungeon = false;
+            incremental_pregen = true;
+        }
+        else if (field == "false" || field == "classic")
+            pregen_dungeon = incremental_pregen = false;
+        else
+        {
+            report_error("Unknown value '%s' for pregen_dungeon.",
+                                                            field.c_str());
+        }
     }
 #ifdef USE_TILE
     // TODO: generalize these to an option type?

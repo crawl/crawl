@@ -492,9 +492,9 @@ same or different devices, please report it as a bug. However, keep in mind
 that upgrading your save game between multiple versions of crawl will
 naturally lead to seed divergence. When playing offline, if you would like to
 ensure that your game can be upgraded without divergence, you can set
-'pregen_dungeon = true' in your options file. (This will also ensure
+'pregen_dungeon = full' in your options file. (This will also ensure
 completely stable unique artefact placement.) On the other hand, to completely
-disable incremental pregeneration, you can set 'incremental_pregen = false'.
+disable incremental pregeneration, you can set 'pregen_dungeon = false'.
 
 Further Help
 ========================================
