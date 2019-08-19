@@ -888,14 +888,16 @@ void display_mutations()
         lastch = ev.key.keysym.sym;
         if (you.species == SP_VAMPIRE && (lastch == '!' || lastch == CK_MOUSE_CMD || lastch == '^'))
         {
-            int c = 1 - switcher->current();
-            switcher->current() = c;
+            int& c = switcher->current();
+
+            bottom->set_text(_vampire_Ascreen_footer(c));
+
+            c = 1 - c;
 #ifdef USE_TILE_WEB
             tiles.json_open_object();
             tiles.json_write_int("pane", c);
             tiles.ui_state_change("mutations", 0);
 #endif
-            bottom->set_text(_vampire_Ascreen_footer(c));
         } else
             done = !vbox->on_event(ev);
         return true;
