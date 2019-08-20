@@ -868,7 +868,7 @@ static string unmarshallString2(reader &th)
 void marshallString4(writer &th, const string &data)
 {
     const size_t len = data.length();
-    if (len > numeric_limits<int32_t>::max())
+    if (len > static_cast<size_t>(numeric_limits<int32_t>::max()))
         die("trying to marshall too long a string (len=%ld)", (long int) len);
     marshallInt(th, len);
     th.write(data.c_str(), len);
