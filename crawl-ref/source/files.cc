@@ -1400,7 +1400,7 @@ void update_portal_entrances()
     {
         dungeon_feature_type feat = env.grid(*ri);
         // excludes pan, hell, abyss.
-        if (feat_is_portal_entrance(feat))
+        if (feat_is_portal_entrance(feat) && !feature_mimic_at(*ri))
         {
             level_id whither = stair_destination(feat, "", false);
             if (whither.branch == BRANCH_ZIGGURAT // not (quite) pregenerated
@@ -1413,7 +1413,11 @@ void update_portal_entrances()
             ASSERT(count(portal_generation_order.begin(),
                          portal_generation_order.end(),
                          whither.branch) == 1);
-            ASSERT(brentry[whither.branch] == level_id()); // violated by multiple portals
+            if (brentry[whither.branch] != level_id())
+            {
+                mprf(MSGCH_ERROR, "Second portal entrance for %s!",
+                    whither.describe().c_str());
+            }
             brentry[whither.branch] = cur_level;
             seen_portals.insert(whither.branch);
         }
