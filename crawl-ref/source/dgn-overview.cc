@@ -254,6 +254,8 @@ static string _get_seen_branches(bool display)
         if (branch == root_branch
             || stair_level.count(branch))
         {
+            // having an entry for branch that is an empty set means a branch
+            // that no longer has any stairs.
             level_id lid(branch, 0);
             lid = find_deepest_explored(lid);
 
@@ -266,10 +268,21 @@ static string _get_seen_branches(bool display)
                                   ? it->shortname
                                   : it->abbrevname);
 
-            snprintf(buffer, sizeof buffer,
-                "<yellow>%*s</yellow> <darkgrey>(%d/%d)</darkgrey>%s",
-                branch == root_branch ? -7 : 7,
-                brname, lid.depth, brdepth[branch], entry_desc.c_str());
+            if (entry_desc.size() == 0 && branch != BRANCH_DUNGEON
+                && you.where_are_you != branch)
+            {
+                // previously visited portal branches
+                snprintf(buffer, sizeof buffer,
+                    "<yellow>%7s</yellow> <darkgrey>(visited)</darkgrey>",
+                    brname);
+            }
+            else
+            {
+                snprintf(buffer, sizeof buffer,
+                    "<yellow>%*s</yellow> <darkgrey>(%d/%d)</darkgrey>%s",
+                    branch == root_branch ? -7 : 7,
+                    brname, lid.depth, brdepth[branch], entry_desc.c_str());
+            }
 
             disp += buffer;
             num_printed_branches++;
@@ -810,6 +823,8 @@ void explored_tracked_feature(dungeon_feature_type feat)
 
 void enter_branch(branch_type branch, level_id from)
 {
+    // this will ensure that branch is in stair_level either way
+    // TODO: track stair levels for portal branches somehow?
     if (stair_level[branch].size() > 1)
     {
         stair_level[branch].clear();

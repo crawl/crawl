@@ -2040,7 +2040,7 @@ bool is_known_branch_id(branch_type branch)
 
     // If the overview knows the stairs to this branch, we know the branch.
     return stair_level.find(static_cast<branch_type>(branch))
-           != stair_level.end();
+           != stair_level.end() && stair_level[branch].size();
 }
 
 static bool _is_known_branch(const Branch &br)

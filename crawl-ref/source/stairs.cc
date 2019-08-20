@@ -824,8 +824,8 @@ void floor_transition(dungeon_feature_type how,
                 mpr(rune_msg);
         }
 
-        // Entered a regular (non-portal) branch from above.
-        if (!going_up && parent_branch(branch) == old_level.branch)
+        // Entered a branch from its parent.
+        if (parent_branch(branch) == old_level.branch)
             enter_branch(branch, old_level);
     }
 
