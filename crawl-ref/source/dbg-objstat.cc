@@ -1103,7 +1103,6 @@ static void _write_branch_item_stats(branch_type br, const item_type &item)
 {
     unsigned int level_count = 0;
     const vector<string> &fields = item_fields[item.base_type];
-    vector<level_id>::const_iterator li;
     const string name = _item_name(item);
     const char *num_field = _item_has_antiquity(item.base_type) ? "AllNum"
                                                                 : "Num";
