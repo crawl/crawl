@@ -461,18 +461,11 @@ void FTFontWrapper::draw_m_buf(unsigned int x_pos, unsigned int y_pos,
     glmanager->reset_transform();
 }
 
-static void _draw_box(int x_pos, int y_pos, float width, float height,
-                      float box_width, unsigned char box_colour,
-                      unsigned char box_alpha)
+static void _draw_box(int x_pos, int y_pos, int width, int height, VColour colour)
 {
     unique_ptr<GLShapeBuffer> buf(GLShapeBuffer::create(false, true));
-    GLWPrim rect(x_pos - box_width, y_pos - box_width,
-                 x_pos + width + box_width, y_pos + height + box_width);
+    GLWPrim rect(x_pos, y_pos, x_pos + width, y_pos + height);
 
-    VColour colour(term_colours[box_colour].r,
-                   term_colours[box_colour].g,
-                   term_colours[box_colour].b,
-                   box_alpha);
     rect.set_col(colour);
 
     buf->add(rect);
@@ -648,9 +641,7 @@ void FTFontWrapper::render_string(unsigned int px, unsigned int py,
                                   const char *text,
                                   const coord_def &min_pos,
                                   const coord_def &max_pos,
-                                  unsigned char font_colour, bool drop_shadow,
-                                  unsigned char box_alpha,
-                                  unsigned char box_colour,
+                                  unsigned char font_colour,
                                   unsigned int outline,
                                   bool tooltip)
 {
@@ -743,10 +734,16 @@ void FTFontWrapper::render_string(unsigned int px, unsigned int py,
     else if (sy < min_pos.y)
         ty -= sy - min_pos.y;
 
-    if (box_alpha != 0)
-        _draw_box(tx, ty, wx, wy, outline, box_colour, box_alpha);
+    if (tooltip)
+    {
+        const VColour border_colour(125, 98, 60);
+        const VColour bg_colour(4, 2, 4);
+        _draw_box(tx-outline, ty-outline, wx+2*outline, wy+2*outline, border_colour);
+        outline -= 2;
+        _draw_box(tx-outline, ty-outline, wx+2*outline, wy+2*outline, bg_colour);
+    }
 
-    render_textblock(tx, ty, chars, colours, max_cols, max_rows, drop_shadow);
+    render_textblock(tx, ty, chars, colours, max_cols, max_rows, false);
 
     free(chars);
     free(colours);

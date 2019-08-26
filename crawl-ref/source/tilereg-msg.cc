@@ -71,8 +71,7 @@ void MessageRegion::render()
         if (ends_with(text, ".."))
             text = text.substr(0, text.find_last_of('\n')) + "\n...";
 
-        m_font->render_string(sx + ox, sy + oy, text.c_str(),
-                              min_pos, max_pos, WHITE, false);
+        m_font->render_string(sx + ox, sy + oy, text.c_str(), min_pos, max_pos, WHITE);
         return;
     }
 

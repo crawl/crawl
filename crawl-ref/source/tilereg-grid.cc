@@ -90,7 +90,7 @@ void GridRegion::draw_desc(const char *desc)
     const coord_def min_pos(sx, sy - dy);
     const coord_def max_pos(ex, ey);
 
-    m_tag_font->render_string(x, y, desc, min_pos, max_pos, WHITE, false, 200);
+    m_tag_font->render_string(x, y, desc, min_pos, max_pos, WHITE);
 }
 
 bool GridRegion::place_cursor(MouseEvent &event, unsigned int &item_idx)

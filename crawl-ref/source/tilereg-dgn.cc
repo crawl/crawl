@@ -256,8 +256,7 @@ void DungeonRegion::render()
 
             const coord_def min_pos(sx, sy);
             const coord_def max_pos(ex, ey);
-            m_tag_font->render_string(pc.x, pc.y, def.text,
-                                      min_pos, max_pos, WHITE, false);
+            m_tag_font->render_string(pc.x, pc.y, def.text, min_pos, max_pos, WHITE);
         }
 }
 

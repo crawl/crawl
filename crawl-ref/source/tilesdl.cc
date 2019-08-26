@@ -1476,8 +1476,7 @@ void TilesFramework::redraw()
         FontWrapper *font = m_fonts[m_tip_font].font;
 
         font->render_string(m_mouse.x, m_mouse.y - 2, m_tooltip.c_str(),
-                            min_pos, m_windowsz, WHITE, false, 220, BLUE, 5,
-                            true);
+                            min_pos, m_windowsz, LIGHTGREY, 7, true);
     }
     wm->swap_buffers();
 
