@@ -637,92 +637,32 @@ formatted_string FTFontWrapper::split(const formatted_string &str,
     return ret;
 }
 
-void FTFontWrapper::render_string(unsigned int px, unsigned int py,
-                                  const char *text,
+/**
+ * Render a tooltip around the given position.
+ *
+ * @param px the x coordinate
+ * @param py the y coordinate
+ * @param text the string to render
+ * @param min_pos the top-left boundary of the screen
+ * @param max_pos the bottom-right boundary of the screen
+ */
+void FTFontWrapper::render_tooltip(unsigned int px, unsigned int py,
+                                  const formatted_string &text,
                                   const coord_def &min_pos,
-                                  const coord_def &max_pos,
-                                  unsigned char font_colour,
-                                  unsigned int outline,
-                                  bool tooltip)
+                                  const coord_def &max_pos)
 {
-    ASSERT(text);
+    int outline = 7;
+    const int wx = string_width(text);
+    const int wy = string_height(text);
 
-    // Determine extent of this text
-    unsigned int max_rows = 1;
-    unsigned int cols = 0;
-    unsigned int max_cols = 0;
-    char32_t c;
-    for (const char *tp = text; int s = utf8towc(&c, tp); tp += s)
-    {
-        int w = wcwidth(c);
-        if (w != -1)
-            cols += w;
-        max_cols = max(cols, max_cols);
+    // text starting location
+    int tx = px - 15, ty = py + 20;
 
-        // NOTE: only newlines should be used for tool tips. Don't use EOL.
-        ASSERT(c != '\r');
-
-        if (c == '\n')
-        {
-            cols = 0;
-            max_rows++;
-        }
-    }
-
-    // Create the text block
-    char32_t *chars = (char32_t*)malloc(max_rows * max_cols * sizeof(char32_t));
-    uint8_t *colours = (uint8_t*)malloc(max_rows * max_cols);
-    for (unsigned int i = 0; i < max_rows * max_cols; i++)
-        chars[i] = ' ';
-    memset(colours, font_colour, max_rows * max_cols);
-
-    // Fill the text block
-    cols = 0;
-    unsigned int rows = 0;
-    for (const char *tp = text; int s = utf8towc(&c, tp); tp += s)
-    {
-        int w = wcwidth(c);
-        if (w > 0) // FIXME: combining characters are silently ignored
-        {
-            chars[cols + rows * max_cols] = c;
-            cols++;
-            if (w == 2)
-                chars[cols + rows * max_cols] = ' ', cols++;
-        }
-
-        if (c == '\n')
-        {
-            cols = 0;
-            rows++;
-        }
-    }
-
-    // Find a suitable location on screen
-    const int buffer = 5;  // additional buffer size from edges
-
-    int wx = string_width(text);
-    int wy = max_rows * char_height();
-
-    int sx, sy; // box starting location, uses extra buffer
-    int tx, ty; // text starting location
-
-    if (tooltip)
-    {
-        sy = py + outline;
-        ty = sy + buffer;
-        tx = px - 20;
-        sx = tx - buffer;
-    }
-    else
-    {
-        ty = py - wy - outline;
-        sy = ty - buffer;
-        tx = px - wx / 2;
-        sx = tx - buffer;
-    }
-    // box ending position
-    int ex = tx + wx + buffer;
-    int ey = ty + wy + buffer;
+    // box position, before shifting
+    const int sx = tx - outline;
+    const int sy = ty - outline;
+    const int ex = tx + wx + outline;
+    const int ey = ty + wy + outline;
 
     if (ex > max_pos.x)
         tx += max_pos.x - ex;
@@ -734,19 +674,49 @@ void FTFontWrapper::render_string(unsigned int px, unsigned int py,
     else if (sy < min_pos.y)
         ty -= sy - min_pos.y;
 
-    if (tooltip)
-    {
-        const VColour border_colour(125, 98, 60);
-        const VColour bg_colour(4, 2, 4);
-        _draw_box(tx-outline, ty-outline, wx+2*outline, wy+2*outline, border_colour);
-        outline -= 2;
-        _draw_box(tx-outline, ty-outline, wx+2*outline, wy+2*outline, bg_colour);
-    }
+    const VColour border_colour(125, 98, 60);
+    const VColour bg_colour(4, 2, 4);
+    _draw_box(tx-outline, ty-outline, wx+2*outline, wy+2*outline, border_colour);
+    outline -= 2;
+    _draw_box(tx-outline, ty-outline, wx+2*outline, wy+2*outline, bg_colour);
 
-    render_textblock(tx, ty, chars, colours, max_cols, max_rows, false);
+    render_string(tx, ty, text);
+}
 
-    free(chars);
-    free(colours);
+/**
+ * Render a string at the given position.
+ *
+ * @param px the x coordinate
+ * @param py the y coordinate
+ * @param text the string to render
+ * @param font_colour the text colour to use
+ */
+void FTFontWrapper::render_string(unsigned int px, unsigned int py,
+                                  const formatted_string &text)
+{
+    glmanager->reset_transform();
+    FontBuffer m_font_buf(this);
+    m_font_buf.add(text, px, py);
+    m_font_buf.draw();
+}
+
+/**
+ * Render a string hovering above the given position, centred horizontally.
+ *
+ * @param px the x coordinate
+ * @param py the y coordinate
+ * @param text the string to render
+ * @param font_colour the text colour to use
+ */
+void FTFontWrapper::render_hover_string(unsigned int px, unsigned int py,
+                                  const formatted_string &text)
+{
+    const int wx = string_width(text);
+    const int wy = string_height(text);
+    const int ty = py - wy;
+    const int tx = px - wx / 2;
+
+    render_string(tx, ty, text);
 }
 
 /**

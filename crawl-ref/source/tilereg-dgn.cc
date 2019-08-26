@@ -254,9 +254,8 @@ void DungeonRegion::render()
             // center this coord, which is at the top left of gc's cell
             pc.x += dx / 2;
 
-            const coord_def min_pos(sx, sy);
-            const coord_def max_pos(ex, ey);
-            m_tag_font->render_string(pc.x, pc.y, def.text, min_pos, max_pos, WHITE);
+            const auto text = formatted_string(def.text, WHITE);
+            m_tag_font->render_hover_string(pc.x, pc.y, text);
         }
 }
 

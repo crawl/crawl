@@ -1472,11 +1472,12 @@ void TilesFramework::redraw()
     // Draw tooltip
     if (Options.tile_tooltip_ms > 0 && !m_tooltip.empty())
     {
-        const coord_def min_pos(0, 0);
+        const int buffer = 5;
+        const coord_def min_pos = coord_def() + buffer;
+        const coord_def max_pos = m_windowsz - buffer;
         FontWrapper *font = m_fonts[m_tip_font].font;
-
-        font->render_string(m_mouse.x, m_mouse.y - 2, m_tooltip.c_str(),
-                            min_pos, m_windowsz, LIGHTGREY, 7, true);
+        font->render_tooltip(m_mouse.x, m_mouse.y, formatted_string(m_tooltip),
+                min_pos, max_pos);
     }
     wm->swap_buffers();
 

@@ -37,12 +37,16 @@ public:
                                   bool drop_shadow = false) override;
 
     // render text + background box
+    virtual void render_tooltip(unsigned int x, unsigned int y,
+                               const formatted_string &text,
+                               const coord_def &min_pos,
+                               const coord_def &max_pos) override;
+
     virtual void render_string(unsigned int x, unsigned int y,
-                               const char *text, const coord_def &min_pos,
-                               const coord_def &max_pos,
-                               unsigned char font_colour,
-                               unsigned int outline = 0,
-                               bool tooltip = false) override;
+                               const formatted_string &text) override;
+
+    virtual void render_hover_string(unsigned int x, unsigned int y,
+                               const formatted_string &text) override;
 
     // FontBuffer helper functions
     virtual void store(FontBuffer &buf, float &x, float &y,
