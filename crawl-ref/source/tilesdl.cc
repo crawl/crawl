@@ -1030,8 +1030,8 @@ void TilesFramework::do_layout()
     // Expand dungeon region to cover partial tiles, then offset to keep player centred
     int tile_iw = m_stat_x_divider;
     int tile_ih = message_y_divider;
-    int tile_ow = round_up_to_multiple(tile_iw, m_region_tile->dx*2);
-    int tile_oh = round_up_to_multiple(tile_ih, m_region_tile->dy*2);
+    int tile_ow = round_up_to_multiple(tile_iw, m_region_tile->dx*2) + m_region_tile->dx;
+    int tile_oh = round_up_to_multiple(tile_ih, m_region_tile->dy*2) + m_region_tile->dx;
     m_region_tile->resize_to_fit(tile_ow, tile_oh);
     m_region_tile->place(-(tile_ow - tile_iw)/2, -(tile_oh - tile_ih)/2, 0);
     m_region_tile->tile_iw = tile_iw;
