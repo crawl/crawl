@@ -567,7 +567,7 @@ int show_keyhelp_menu(const vector<formatted_string> &lines,
     cmd_help.set_more();
 
     for (unsigned i = 0; i < lines.size(); ++i)
-        cmd_help.add_formatted_string(lines[i], true);
+        cmd_help.add_formatted_string(lines[i], i < lines.size()-1);
 
     cmd_help.show();
 
@@ -576,7 +576,8 @@ int show_keyhelp_menu(const vector<formatted_string> &lines,
 
 void show_specific_help(const string &key)
 {
-    const string help = getHelpString(key);
+    string help = getHelpString(key);
+    trim_string_right(help);
     vector<formatted_string> formatted_lines;
     for (const string &line : split_string("\n", help, false, true))
         formatted_lines.push_back(formatted_string::parse_string(line));
