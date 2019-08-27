@@ -424,13 +424,13 @@ void OGLStateManager::load_texture(unsigned char *pixels, unsigned int width,
     }
 }
 
-void OGLStateManager::reset_view_for_redraw(float x, float y)
+void OGLStateManager::reset_view_for_redraw()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
-    glTranslatef(x, y , 1.0f);
+    glTranslatef(0.0f, 0.0f, 1.0f);
     glDebug("glTranslatef");
 }
 

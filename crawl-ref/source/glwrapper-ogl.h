@@ -15,7 +15,7 @@ public:
     // State Manipulation
     virtual void set(const GLState& state) override;
     virtual void pixelstore_unpack_alignment(unsigned int bpp) override;
-    virtual void reset_view_for_redraw(float x, float y) override;
+    virtual void reset_view_for_redraw() override;
     virtual void reset_view_for_resize(const coord_def &m_windowsz,
                                        const coord_def &m_drawablesz) override;
     virtual void set_transform(const GLW_3VF &trans, const GLW_3VF &scale) override;
