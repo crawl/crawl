@@ -468,33 +468,14 @@ static void _handle_FAQ()
     title->colour = YELLOW;
     FAQmenu.set_title(title);
 
-    const int width = get_number_of_cols();
-
     for (unsigned int i = 0, size = question_keys.size(); i < size; i++)
     {
         const char letter = index_to_letter(i);
-
         string question = getFAQ_Question(question_keys[i]);
-        // Wraparound if the question is longer than fits into a line.
-        linebreak_string(question, width - 4);
-        vector<formatted_string> fss;
-        formatted_string::parse_string_to_multiple(question, fss);
-
-        MenuEntry *me;
-        for (unsigned int j = 0; j < fss.size(); j++)
-        {
-            if (j == 0)
-            {
-                me = new MenuEntry(question, MEL_ITEM, 1, letter);
-                me->data = &question_keys[i];
-            }
-            else
-            {
-                question = "    " + fss[j].tostring();
-                me = new MenuEntry(question, MEL_ITEM, 1);
-            }
-            FAQmenu.add_entry(me);
-        }
+        trim_string_right(question);
+        MenuEntry *me = new MenuEntry(question, MEL_ITEM, 1, letter);
+        me->data = &question_keys[i];
+        FAQmenu.add_entry(me);
     }
 
     while (true)
