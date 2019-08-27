@@ -1002,7 +1002,7 @@ bool DungeonRegion::update_tip_text(string &tip)
 #ifdef WIZARD
     if (you.wizard)
     {
-        if (ret)
+        if (!tip.empty())
             tip += "\n\n";
 
         if (you.see_cell(gc))
@@ -1039,7 +1039,7 @@ bool DungeonRegion::update_tip_text(string &tip)
         tip += make_stringf("\nFLV: floor: %d (%s) (%d)"
                             "\n     wall:  %d (%s) (%d)"
                             "\n     feat:  %d (%s) (%d)"
-                            "\n  special:  %d\n",
+                            "\n  special:  %d",
                             env.tile_flv(gc).floor,
                             tile_dngn_name(env.tile_flv(gc).floor),
                             env.tile_flv(gc).floor_idx,
