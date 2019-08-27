@@ -186,9 +186,6 @@ int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
                 titlestring + "         Type                          Failure  Level  ",
                 titlestring + "         Power        Range    Hunger  Noise           ",
                 MEL_TITLE);
-#ifdef USE_TILE_LOCAL
-        me->colour = BLUE;
-#endif
         spell_menu.set_title(me, true, true);
     }
     spell_menu.set_highlighter(nullptr);

@@ -532,9 +532,6 @@ static deck_type _choose_deck(const string title = "Draw")
                                     "Describe which deck?    "
                                     "Cards available",
                                     MEL_TITLE);
-#ifdef USE_TILE_LOCAL
-        me->colour = BLUE;
-#endif
         deck_menu.set_title(me, true, true);
     }
     deck_menu.set_tag("deck");
@@ -718,9 +715,6 @@ static void _draw_stack(int to_stack)
                                     "Describe which deck?    "
                                     "Cards available",
                                     MEL_TITLE);
-#ifdef USE_TILE_LOCAL
-        me->colour = BLUE;
-#endif
         deck_menu.set_title(me, true, true);
     }
     deck_menu.set_tag("deck");
