@@ -3441,38 +3441,6 @@ string hints_describe_item(const item_def &item)
     return broken;
 }
 
-void hints_inscription_info(string prompt)
-{
-    // Don't print anything if there's not enough space.
-    if (wherey() >= get_number_of_lines() - 1)
-        return;
-
-    ostringstream text;
-    text << "<" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
-
-    bool longtext = false;
-    if (wherey() <= get_number_of_lines() - 8)
-    {
-        text << "\n"
-         "Inscriptions are a powerful concept of Dungeon Crawl.\n"
-         "You can inscribe items to comment on them \n"
-         "or to set rules for item interaction. If you are new to Crawl, \n"
-         "you can safely ignore this feature.";
-
-        longtext = true;
-    }
-
-    text << "\n"
-       "(In the main screen, press <w>?6</w> for more information.)\n";
-    text << "</" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
-
-    formatted_string::parse_string(text.str()).display();
-
-    // Ask a second time, if it's been a longish interruption.
-    if (longtext && !prompt.empty() && wherey() <= get_number_of_lines() - 2)
-        formatted_string::parse_string(prompt).display();
-}
-
 // FIXME: With the new targeting system, the hints for interesting monsters
 //        and features ("right-click/press v for more information") are no
 //        longer getting displayed.
