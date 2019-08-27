@@ -523,7 +523,7 @@ static char _deck_hotkey(deck_type deck)
 
 static deck_type _choose_deck(const string title = "Draw")
 {
-    ToggleableMenu deck_menu(MF_SINGLESELECT | MF_ANYPRINTABLE
+    ToggleableMenu deck_menu(MF_SINGLESELECT
             | MF_NO_WRAP_ROWS | MF_TOGGLE_ACTION | MF_ALWAYS_SHOW_MORE);
     {
         ToggleableMenuEntry* me =
