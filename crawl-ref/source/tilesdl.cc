@@ -160,7 +160,6 @@ bool HiDPIState::update(int ndevice, int nlogical)
 
 TilesFramework::TilesFramework() :
     m_windowsz(1024, 768),
-    m_viewsc(0, 0),
     m_fullscreen(false),
     m_need_redraw(false),
     m_active_layer(LAYER_CRT),
@@ -870,18 +869,15 @@ static int round_up_to_multiple(int a, int b)
  */
 void TilesFramework::do_layout()
 {
-    // View size in pixels is (m_viewsc * crawl_view.viewsz)
+    // View size in pixels is ((dx, dy) * crawl_view.viewsz)
     const int scale = m_map_mode_enabled ? Options.tile_map_scale
                                          : Options.tile_viewport_scale;
-    m_viewsc.x = Options.tile_cell_pixels * scale / 100;
-    m_viewsc.y = Options.tile_cell_pixels * scale / 100;
+    m_region_tile->dx = Options.tile_cell_pixels * scale / 100;
+    m_region_tile->dy = Options.tile_cell_pixels * scale / 100;
 
     crawl_view.viewsz.x = Options.view_max_width;
     crawl_view.viewsz.y = Options.view_max_height;
 
-    // Initial sizes.
-    m_region_tile->dx = m_viewsc.x;
-    m_region_tile->dy = m_viewsc.y;
     int message_y_divider = 0;
     int sidebar_pw;
 
@@ -1441,7 +1437,7 @@ void TilesFramework::redraw()
 #endif
     m_need_redraw = false;
 
-    glmanager->reset_view_for_redraw(m_viewsc.x, m_viewsc.y);
+    glmanager->reset_view_for_redraw();
 
     for (Region *region : m_layers[m_active_layer].m_regions)
         region->render();

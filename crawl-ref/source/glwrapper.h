@@ -143,7 +143,7 @@ public:
     // State Manipulation
     virtual void set(const GLState& state) = 0;
     virtual void pixelstore_unpack_alignment(unsigned int bpp) = 0;
-    virtual void reset_view_for_redraw(float x, float y) = 0;
+    virtual void reset_view_for_redraw() = 0;
     virtual void reset_view_for_resize(const coord_def &m_windowsz,
                                        const coord_def &m_drawablesz) = 0;
     virtual void set_transform(const GLW_3VF &trans, const GLW_3VF &scale) = 0;

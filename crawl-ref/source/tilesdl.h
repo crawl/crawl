@@ -168,8 +168,6 @@ protected:
 
     // screen pixel dimensions
     coord_def m_windowsz;
-    // screen pixels per view cell
-    coord_def m_viewsc;
 
     bool m_fullscreen;
     bool m_need_redraw;

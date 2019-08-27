@@ -2515,7 +2515,7 @@ void UIRoot::render()
         return;
 
 #ifdef USE_TILE_LOCAL
-    glmanager->reset_view_for_redraw(0, 0);
+    glmanager->reset_view_for_redraw();
     tiles.render_current_regions();
     glmanager->reset_transform();
 #else
