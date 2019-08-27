@@ -5160,7 +5160,8 @@ player::player()
 
     abyss_speed         = 0;
     game_seed           = 0;
-    game_is_seeded      = true;
+    fully_seeded        = true;
+    deterministic_levelgen = true;
 
     old_hunger          = hunger;
 

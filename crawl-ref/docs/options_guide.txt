@@ -410,7 +410,7 @@ game_seed = none
         "-seed", which will override any rc file setting. This value is an
         unsigned 64 bit integer.
 
-pregen_dungeon = classic
+pregen_dungeon = incremental
         When set to `true` or `full`, the game will pregenerate the entire
         connected dungeon when starting a new character. This leads to
         deterministic dungeon generation relative to a particular game seed, at

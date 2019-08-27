@@ -1027,7 +1027,7 @@ void game_options::reset_options()
 
     char_set      = CSET_DEFAULT;
 
-    incremental_pregen = false;
+    incremental_pregen = true;
     pregen_dungeon = false;
 
     // set it to the .crawlrc default

@@ -99,11 +99,14 @@ static string _get_version_features()
 #endif
        )
     {
-        if (you.game_is_seeded)
+        if (you.fully_seeded)
         {
-            result += make_stringf("Game seed: %" PRIu64, crawl_state.seed);
+            result += make_stringf(
+                "Game seed: %" PRIu64 ", levelgen mode: %s",
+                crawl_state.seed, you.deterministic_levelgen
+                                                ? "deterministic" : "classic");
             if (Version::history_size() > 1)
-                result += " (game has been upgraded, seed may be affected)";
+                result += " (seed may be affected by game upgrades)";
         }
         else
             result += "Game is not seeded.";

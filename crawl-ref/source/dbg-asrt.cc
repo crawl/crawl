@@ -564,8 +564,11 @@ static void _dump_ver_stuff(FILE* file)
 #else
     fprintf(file, "Tiles: no\n\n");
 #endif
-    if (you.game_is_seeded)
-        fprintf(file, "Seed: %" PRIu64 "\n", crawl_state.seed);
+    if (you.fully_seeded)
+    {
+        fprintf(file, "Seed: %" PRIu64 ", deterministic pregen: %d\n",
+            crawl_state.seed, (int) you.deterministic_levelgen);
+    }
     if (Version::history_size() > 1)
         fprintf(file, "Version history:\n%s\n\n", Version::history().c_str());
 }

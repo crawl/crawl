@@ -473,6 +473,7 @@ static void _setup_generic(const newgame_def& ng)
     rng::reset(); // initialize rng from Options.seed
     _init_player();
     you.game_seed = crawl_state.seed;
+    you.deterministic_levelgen = Options.incremental_pregen;
 
 #if TAG_MAJOR_VERSION == 34
     // Avoid the remove_dead_shops() Gozag fixup in new games: see
