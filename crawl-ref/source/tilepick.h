@@ -8,6 +8,7 @@
 #include "ability-type.h"
 #include "command-type.h"
 #include "game-type.h"
+#include "trap-type.h"
 #include "tiledef_defines.h"
 
 #define TILE_NUM_KEY "tile_num"
@@ -24,6 +25,7 @@ bool is_door_tile(tileidx_t tile);
 
 // Tile index lookup from Crawl data.
 tileidx_t tileidx_feature(const coord_def &gc);
+tileidx_t tileidx_trap(trap_type type);
 tileidx_t tileidx_shop(const shop_struct *shop);
 tileidx_t tileidx_feature_base(dungeon_feature_type feat);
 tileidx_t tileidx_out_of_bounds(int branch);
