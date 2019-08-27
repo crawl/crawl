@@ -479,6 +479,7 @@ vector<stash_search_result> Stash::matches_search(
             res.match = fdesc;
             res.primary_sort = fdesc;
             res.feat = feat;
+            res.trap = trap;
             results.push_back(res);
         }
     }
@@ -1759,6 +1760,17 @@ bool StashTracker::display_search_results(
         }
         else if (res.shop)
             me->add_tile(tile_def(tileidx_shop(&res.shop->shop), TEX_FEAT));
+        else if (feat_is_trap(res.feat))
+        {
+            const tileidx_t idx = tileidx_trap(res.trap);
+            me->add_tile(tile_def(idx, get_dngn_tex(idx)));
+        }
+        else if (feat_is_runed(res.feat))
+        {
+            // Handle large doors and huge gates
+            const tileidx_t idx = tileidx_feature_base(res.feat);
+            me->add_tile(tile_def(idx, get_dngn_tex(idx)));
+        }
         else
         {
             const dungeon_feature_type feat = feat_by_desc(res.match);
