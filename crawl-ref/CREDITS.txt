@@ -341,7 +341,7 @@ The Dungeon Crawl Stone Soup development team is:
     Corin Buchanan-Howland
     James Bulgin
     Robert Burnham
-    Chris Campbell
+    Kate Campbell
     Matthew Cline
     Florian Diebold
     Rax E. Dillon
