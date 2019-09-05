@@ -265,6 +265,12 @@ const crawl_view_buffer &crawl_view_buffer::operator = (const crawl_view_buffer 
     return *this;
 }
 
+void crawl_view_buffer::fill(const screen_cell_t& value)
+{
+    for (int i = 0; i < m_size.x * m_size.y; ++i)
+        m_buffer[i] = value;
+}
+
 void crawl_view_buffer::clear()
 {
     delete [] m_buffer;

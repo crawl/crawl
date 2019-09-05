@@ -1501,6 +1501,10 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
     else
         _draw_outside_los(cell, gc, ep); // in los bounds but not visible
 
+#ifdef USE_TILE
+    cell->tile.map_knowledge = map_bounds(gc) ? env.map_knowledge(gc) : map_cell();
+#endif
+
     cell->flash_colour = BLACK;
 
     // Don't hide important information by recolouring monsters.

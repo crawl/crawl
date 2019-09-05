@@ -109,6 +109,16 @@ struct map_cell
         return *this;
     }
 
+    bool operator ==(const map_cell &other) const
+    {
+        return memcmp(this, &other, sizeof(map_cell)) == 0;
+    }
+
+    bool operator !=(const map_cell &other) const
+    {
+        return memcmp(this, &other, sizeof(map_cell)) != 0;
+    }
+
     void clear()
     {
         *this = map_cell();

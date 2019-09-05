@@ -1,6 +1,8 @@
 #ifdef USE_TILE
 #pragma once
 
+#include "map-cell.h"
+
 enum halo_type
 {
     HALO_NONE = 0,
@@ -20,6 +22,9 @@ struct packed_cell
     tileidx_t bg;
     tile_flavour flv;
     tileidx_t cloud;
+
+    // This is directly copied from env.map_knowledge by viewwindow()
+    map_cell map_knowledge;
 
     bool is_highlighted_summoner;
     bool is_bloody;
@@ -59,6 +64,7 @@ struct packed_cell
     packed_cell(const packed_cell* c) : num_dngn_overlay(c->num_dngn_overlay),
                                         fg(c->fg), bg(c->bg), flv(c->flv),
                                         cloud(c->cloud),
+                                        map_knowledge(c->map_knowledge),
                                         is_highlighted_summoner(c->is_highlighted_summoner),
                                         is_bloody(c->is_bloody),
                                         is_silenced(c->is_silenced),
@@ -83,8 +89,10 @@ struct packed_cell
     void clear();
 };
 
+class crawl_view_buffer;
+
 // For a given location, pack any waves/ink/wall shadow tiles
 // that require knowledge of the surrounding env cells.
-void pack_cell_overlays(const coord_def &gc, packed_cell *cell);
+void pack_cell_overlays(const coord_def &gc, crawl_view_buffer &vbuf);
 
 #endif // TILECELL_H

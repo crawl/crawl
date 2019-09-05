@@ -75,6 +75,8 @@ TilesFramework::TilesFramework() :
       _send_lock(false),
       m_last_ui_state(UI_INIT),
       m_view_loaded(false),
+      m_current_view(coord_def(GXM, GYM)),
+      m_next_view(coord_def(GXM, GYM)),
       m_next_view_tl(0, 0),
       m_next_view_br(-1, -1),
       m_current_flash_colour(BLACK),
@@ -85,8 +87,8 @@ TilesFramework::TilesFramework() :
 {
     screen_cell_t default_cell;
     default_cell.tile.bg = TILE_FLAG_UNSEEN;
-    m_next_view.init(default_cell);
-    m_current_view.init(default_cell);
+    m_current_view.fill(default_cell);
+    m_next_view.fill(default_cell);
 }
 
 TilesFramework::~TilesFramework()
@@ -1594,7 +1596,7 @@ void TilesFramework::_send_map(bool force_full)
 
                 draw_cell(cell, gc, false, m_current_flash_colour);
                 cell->tile.flv = env.tile_flv(gc);
-                pack_cell_overlays(gc, &(cell->tile));
+                pack_cell_overlays(gc, m_next_view);
             }
 
             mark_clean(gc);
@@ -1759,7 +1761,7 @@ void TilesFramework::load_dungeon(const crawl_view_buffer &vbuf,
 
             *cell = ((const screen_cell_t *) vbuf)[x + vbuf.size().x * y];
             cell->tile.flv = env.tile_flv(grid);
-            pack_cell_overlays(grid, &(cell->tile));
+            pack_cell_overlays(grid, m_next_view);
 
             mark_clean(grid); // Remove redraw flag
             mark_dirty(grid);

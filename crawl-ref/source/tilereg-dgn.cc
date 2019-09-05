@@ -119,11 +119,9 @@ void DungeonRegion::pack_buffers()
         {
             coord_def gc(x + m_cx_to_gx, y + m_cy_to_gy);
 
-            packed_cell tile_cell = packed_cell(vbuf_cell->tile);
             if (map_bounds(gc))
-                pack_cell_overlays(gc, &tile_cell);
-
-            m_buf_dngn.add(tile_cell, x, y);
+                pack_cell_overlays(coord_def(x, y), m_vbuf);
+            m_buf_dngn.add(vbuf_cell->tile, x, y);
 
             const int fcol = vbuf_cell->flash_colour;
             if (fcol)
