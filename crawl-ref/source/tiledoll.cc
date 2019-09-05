@@ -416,6 +416,8 @@ void fill_doll_equipment(dolls_data &result)
                     result.parts[TILEP_PART_HELM] = TILEP_HELM_HORNS_CAT;
                 }
             }
+            else if (species_is_draconian(you.species))
+                result.parts[TILEP_PART_HELM] = TILEP_HELM_HORNS_DRAC;
             else
                 switch (you.get_mutation_level(MUT_HORNS))
                 {

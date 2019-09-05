@@ -1069,6 +1069,7 @@ cat7
 cat8
 cat9
 cat10
+draconian1 HORNS_DRAC
 %sdir player/head
 
 ## Doll editor tiles, but not randomly picked
