@@ -1132,6 +1132,17 @@ static void _send_doll(const dolls_data &doll, bool submerged, bool ghost)
         p_order[6] = TILEP_PART_LEG;
     }
 
+    // Draw scarves above other clothing.
+    if (doll.parts[TILEP_PART_CLOAK] >= TILEP_CLOAK_SCARF_FIRST_NORM)
+    {
+        p_order[4] = p_order[5];
+        p_order[5] = p_order[6];
+        p_order[6] = p_order[7];
+        p_order[7] = p_order[8];
+        p_order[8] = p_order[9];
+        p_order[9] = TILEP_PART_CLOAK;
+    }
+
     // Special case bardings from being cut off.
     const bool is_naga = is_player_tile(doll.parts[TILEP_PART_BASE],
                                         TILEP_BASE_NAGA);
