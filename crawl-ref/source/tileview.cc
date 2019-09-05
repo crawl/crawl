@@ -1497,5 +1497,7 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
             }
         }
     }
+
+    cell.flv = env.tile_flv(gc);
 }
 #endif
