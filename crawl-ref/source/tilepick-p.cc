@@ -346,7 +346,7 @@ tileidx_t tilep_equ_armour(const item_def &item)
 
 tileidx_t tilep_equ_cloak(const item_def &item)
 {
-    if (item.base_type != OBJ_ARMOUR || item.sub_type != ARM_CLOAK)
+    if (item.base_type != OBJ_ARMOUR)
         return 0;
 
     if (item.props.exists("worn_tile"))
@@ -359,7 +359,18 @@ tileidx_t tilep_equ_cloak(const item_def &item)
             return tile;
     }
 
-    return _modrng(item.rnd, TILEP_CLOAK_FIRST_NORM, TILEP_CLOAK_LAST_NORM);
+    switch (item.sub_type)
+    {
+        case ARM_CLOAK:
+            return _modrng(item.rnd, TILEP_CLOAK_FIRST_NORM,
+                           TILEP_CLOAK_LAST_NORM);
+
+        case ARM_SCARF:
+            return _modrng(item.rnd, TILEP_CLOAK_SCARF_FIRST_NORM,
+                           TILEP_CLOAK_SCARF_LAST_NORM);
+    }
+
+    return 0;
 }
 
 tileidx_t tilep_equ_helm(const item_def &item)
