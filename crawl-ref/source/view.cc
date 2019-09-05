@@ -1418,6 +1418,8 @@ void viewwindow(bool show_updates, bool tiles_only, animation *a)
 
         bool run_dont_draw = you.running && Options.travel_delay < 0
                     && (!you.running.is_explore() || Options.explore_delay < 0);
+        if (you.running && you.running.is_rest())
+            run_dont_draw = Options.rest_delay == -1;
 
         if (run_dont_draw || you.asleep())
         {
