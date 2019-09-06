@@ -2,6 +2,7 @@
 #ifdef USE_TILE
 #include "tilecell.h"
 
+#include "colour.h"
 #include "coord.h"
 #include "coordit.h"
 #include "terrain.h"
@@ -370,6 +371,16 @@ static bool _is_seen_shallow(coord_def gc, crawl_view_buffer& vbuf)
     return feat == DNGN_SHALLOW_WATER || _feat_is_mangrove(feat);
 }
 
+static tileidx_t _base_wave_tile(colour_t colour)
+{
+    switch (colour)
+    {
+        case BLACK: return TILE_DNGN_WAVE_N;
+        case GREEN: return TILE_MURKY_WAVE_N;
+        default: die("no %s deep water wave tiles", colour_to_str(colour).c_str());
+    }
+}
+
 static void _pack_default_waves(const coord_def &gc, crawl_view_buffer& vbuf)
 {
     auto& cell = vbuf(gc).tile;
@@ -385,45 +396,13 @@ static void _pack_default_waves(const coord_def &gc, crawl_view_buffer& vbuf)
     if (!feat_is_water(feat) && !feat_is_lava(feat))
         return;
 
-    if (feat == DNGN_DEEP_WATER && colour)
+    if (feat == DNGN_DEEP_WATER && (colour == BLACK || colour == GREEN))
     {
-        if (_is_seen_shallow(coord_def(gc.x, gc.y - 1), vbuf))
-            _add_overlay(TILE_DNGN_WAVE_N, cell);
-        if (_is_seen_shallow(coord_def(gc.x + 1, gc.y - 1), vbuf))
-            _add_overlay(TILE_DNGN_WAVE_NE, cell);
-        if (_is_seen_shallow(coord_def(gc.x + 1, gc.y), vbuf))
-            _add_overlay(TILE_DNGN_WAVE_E, cell);
-        if (_is_seen_shallow(coord_def(gc.x + 1, gc.y + 1), vbuf))
-            _add_overlay(TILE_DNGN_WAVE_SE, cell);
-        if (_is_seen_shallow(coord_def(gc.x, gc.y + 1), vbuf))
-            _add_overlay(TILE_DNGN_WAVE_S, cell);
-        if (_is_seen_shallow(coord_def(gc.x - 1, gc.y + 1), vbuf))
-            _add_overlay(TILE_DNGN_WAVE_SW, cell);
-        if (_is_seen_shallow(coord_def(gc.x - 1, gc.y), vbuf))
-            _add_overlay(TILE_DNGN_WAVE_W, cell);
-        if (_is_seen_shallow(coord_def(gc.x - 1, gc.y - 1), vbuf))
-            _add_overlay(TILE_DNGN_WAVE_NW, cell);
-    }
-
-    // Sewer water
-    if (feat == DNGN_DEEP_WATER && colour == GREEN)
-    {
-        if (_is_seen_shallow(coord_def(gc.x, gc.y - 1), vbuf))
-            _add_overlay(TILE_MURKY_WAVE_N, cell);
-        if (_is_seen_shallow(coord_def(gc.x + 1, gc.y - 1), vbuf))
-            _add_overlay(TILE_MURKY_WAVE_NE, cell);
-        if (_is_seen_shallow(coord_def(gc.x + 1, gc.y), vbuf))
-            _add_overlay(TILE_MURKY_WAVE_E, cell);
-        if (_is_seen_shallow(coord_def(gc.x + 1, gc.y + 1), vbuf))
-            _add_overlay(TILE_MURKY_WAVE_SE, cell);
-        if (_is_seen_shallow(coord_def(gc.x, gc.y + 1), vbuf))
-            _add_overlay(TILE_MURKY_WAVE_S, cell);
-        if (_is_seen_shallow(coord_def(gc.x - 1, gc.y + 1), vbuf))
-            _add_overlay(TILE_MURKY_WAVE_SW, cell);
-        if (_is_seen_shallow(coord_def(gc.x - 1, gc.y), vbuf))
-            _add_overlay(TILE_MURKY_WAVE_W, cell);
-        if (_is_seen_shallow(coord_def(gc.x - 1, gc.y - 1), vbuf))
-            _add_overlay(TILE_MURKY_WAVE_NW, cell);
+        // +7 and -- reverse the iteration order
+        int tile = _base_wave_tile(colour) + 7;
+        for (adjacent_iterator ai(gc); ai; ++ai, --tile)
+            if (_is_seen_shallow(*ai, vbuf))
+                _add_overlay(tile, cell);
     }
 
     bool north = _is_seen_land(coord_def(gc.x, gc.y - 1), vbuf);
