@@ -2114,12 +2114,10 @@ static dungeon_feature_type _destroyed_feat_type()
 static bool _revert_terrain_to_floor(coord_def pos)
 {
     dungeon_feature_type newfeat = _destroyed_feat_type();
-    bool found_marker = false;
     for (map_marker *marker : env.markers.get_markers_at(pos))
     {
         if (marker->get_type() == MAT_TERRAIN_CHANGE)
         {
-            found_marker = true;
             map_terrain_change_marker* tmarker =
                     dynamic_cast<map_terrain_change_marker*>(marker);
 
@@ -2151,11 +2149,8 @@ static bool _revert_terrain_to_floor(coord_def pos)
     grd(pos) = newfeat;
     set_terrain_changed(pos);
 
-    if (found_marker)
-    {
-        tile_clear_flavour(pos);
-        tile_init_flavour(pos);
-    }
+    tile_clear_flavour(pos);
+    tile_init_flavour(pos);
 
     return true;
 }
