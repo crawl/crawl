@@ -579,6 +579,13 @@ static const FixedArray<uint8_t, GXM, GYM>& _tile_difficulties(bool random)
     return cache;
 }
 
+static colour_t _feat_default_map_colour(dungeon_feature_type feat)
+{
+    if (player_in_branch(BRANCH_SEWER) && feat_is_water(feat))
+        return feat == DNGN_DEEP_WATER ? GREEN : LIGHTGREEN;
+    return BLACK;
+}
+
 // Returns true if it succeeded.
 bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
                    bool force, bool deterministic,
@@ -677,12 +684,16 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
         {
             if (wizard_map)
             {
-                knowledge.set_feature(grd(pos), 0,
+                knowledge.set_feature(feat, _feat_default_map_colour(feat),
                     feat_is_trap(grd(pos)) ? get_trap_type(pos)
                                            : TRAP_UNASSIGNED);
             }
             else if (!knowledge.feat())
-                knowledge.set_feature(magic_map_base_feat(grd(pos)));
+            {
+                auto base_feat = magic_map_base_feat(feat);
+                auto colour = _feat_default_map_colour(base_feat);
+                knowledge.set_feature(base_feat, colour);
+            }
             if (emphasise(pos))
                 knowledge.flags |= MAP_EMPHASIZE;
 
