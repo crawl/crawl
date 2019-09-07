@@ -81,48 +81,40 @@ static int _get_full_exclusion_radius()
                              + (you.species == SP_BARACHI ? 1 : 0);
 }
 
-// If the monster is in the auto_exclude list, automatically set an
-// exclusion.
-void set_auto_exclude(const monster* mon)
+/**
+ * Adds auto-exclusions for any monsters in LOS that need them.
+ */
+void add_auto_excludes()
 {
-    if (!is_map_persistent())
+    if (!is_map_persistent() || !map_bounds(you.pos()))
         return;
 
-    // Something of a speed hack, but some vaults have a TON of plants.
-    if (mon->type == MONS_PLANT)
+    vector<monster*> mons;
+    for (radius_iterator ri(you.pos(), LOS_DEFAULT); ri; ++ri)
+    {
+        monster *mon = monster_at(*ri);
+        if (!mon)
+            continue;
+        // Something of a speed hack, but some vaults have a TON of plants.
+        if (mon->type == MONS_PLANT)
+            continue;
+        if (_need_auto_exclude(mon) && !is_exclude_root(*ri))
+        {
+            int radius = _get_full_exclusion_radius();
+            if (mon->type == MONS_HYPERACTIVE_BALLISTOMYCETE)
+                radius = 2;
+
+            set_exclude(*ri, radius, true);
+            mons.emplace_back(mon);
+        }
+    }
+
+    if (mons.empty())
         return;
 
-    if (_need_auto_exclude(mon) && !is_exclude_root(mon->pos()))
-    {
-        int rad = _get_full_exclusion_radius();
-        if (mon->type == MONS_HYPERACTIVE_BALLISTOMYCETE)
-            rad = 2;
-        set_exclude(mon->pos(), rad, true);
-        // FIXME: If this happens for several monsters in the same turn
-        //        (as is possible for some vaults), this could be really
-        //        annoying. (jpeg)
-        mprf(MSGCH_WARN,
-             "Marking area around %s as unsafe for travelling.",
-             mon->name(DESC_THE).c_str());
-
-#ifdef USE_TILE
-        viewwindow();
-#endif
-        learned_something_new(HINT_AUTO_EXCLUSION, mon->pos());
-    }
-}
-
-// Clear auto exclusion if the monster is killed or wakes up with the
-// player in sight. If sleepy is true, stationary monsters are ignored.
-void remove_auto_exclude(const monster* mon, bool sleepy)
-{
-    if (_need_auto_exclude(mon, sleepy))
-    {
-        del_exclude(mon->pos());
-#ifdef USE_TILE
-        viewwindow();
-#endif
-    }
+    mprf(MSGCH_WARN, "Marking area around %s as unsafe for travelling.",
+            describe_monsters_condensed(mons).c_str());
+    learned_something_new(HINT_AUTO_EXCLUSION);
 }
 
 travel_exclude::travel_exclude(const coord_def &p, int r,
@@ -556,10 +548,8 @@ void maybe_remove_autoexclusion(const coord_def &p)
         string desc = exc->desc;
         bool cloudy_exc = ends_with(desc, "cloud");
         if ((!m || !you.can_see(*m)
-                || m->attitude != ATT_HOSTILE
-                    && m->type != MONS_HYPERACTIVE_BALLISTOMYCETE
-                || strcmp(mons_type_name(m->type, DESC_PLAIN).c_str(),
-                          exc->desc.c_str()) != 0)
+                || !_need_auto_exclude(m)
+                || mons_type_name(m->type, DESC_PLAIN) != desc)
             && !cloudy_exc)
         {
             del_exclude(p);

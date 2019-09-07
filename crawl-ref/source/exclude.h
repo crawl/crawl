@@ -2,8 +2,7 @@
 
 #include "los-def.h"
 
-void set_auto_exclude(const monster* mon);
-void remove_auto_exclude(const monster* mon, bool sleepy = false);
+void add_auto_excludes();
 
 void init_exclusion_los();
 void update_exclusion_los(vector<coord_def> changed);

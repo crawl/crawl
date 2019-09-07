@@ -1205,7 +1205,6 @@ static inline bool _monster_warning(activity_interrupt ai,
             text += make_stringf(" (%s)",
                                  short_ghost_description(mon).c_str());
         }
-        set_auto_exclude(mon);
 
         if (at.context == SC_DOOR)
             text += " opens the door.";

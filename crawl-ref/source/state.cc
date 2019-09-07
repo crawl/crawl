@@ -236,7 +236,6 @@ bool interrupt_cmd_repeat(activity_interrupt ai,
         if (at.context == SC_NEWLY_SEEN)
         {
             monster_info mi(mon);
-            set_auto_exclude(mon);
 
             mprf(MSGCH_WARN, "%s comes into view.",
                  get_monster_equipment_desc(mi, DESC_WEAPON).c_str());

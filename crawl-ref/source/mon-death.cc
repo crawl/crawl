@@ -1911,10 +1911,6 @@ item_def* monster_die(monster& mons, killer_type killer,
     // Uniques leave notes and milestones, so this information is already leaked.
     remove_unique_annotation(&mons);
 
-    // Clear auto exclusion now the monster is killed - if we know about it.
-    if (you.see_cell(mons.pos()) || wizard || mons_is_unique(mons.type))
-        remove_auto_exclude(&mons);
-
           int  duration      = 0;
     const bool summoned      = mons.is_summoned(&duration);
     const int monster_killed = mons.mindex();

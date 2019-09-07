@@ -624,9 +624,6 @@ void slimify_monster(monster* mon)
 
 void seen_monster(monster* mons)
 {
-    // If the monster is in the auto_exclude list, automatically
-    // set an exclusion.
-    set_auto_exclude(mons);
     set_unique_annotation(mons);
 
     // id equipment (do this every time we see them, it may have changed)

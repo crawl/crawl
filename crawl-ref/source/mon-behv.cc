@@ -1055,12 +1055,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
 #endif
         // Assumes disturbed by noise...
         if (mon->asleep())
-        {
             mon->behaviour = BEH_WANDER;
-
-            if (you.can_see(*mon))
-                remove_auto_exclude(mon, true);
-        }
 
         // A bit of code to make Projected Noise actually do
         // something again. Basically, dumb monsters and
@@ -1104,9 +1099,6 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         }
 
         mon->foe = src_idx;
-
-        if (mon->asleep() && you.can_see(*mon))
-            remove_auto_exclude(mon, true);
 
         // If the monster can't reach its target and can't attack it
         // either, retreat.
@@ -1185,9 +1177,6 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
                 mon->behaviour = BEH_WANDER;
             break;
         }
-
-        if (mon->asleep() && you.can_see(*mon))
-            remove_auto_exclude(mon, true);
 
         // Will alert monster to <src> and turn them
         // against them, unless they have a current foe.
