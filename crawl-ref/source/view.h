@@ -13,6 +13,8 @@
 bool mon_enemies_around(const monster* mons);
 void seen_monsters_react(int stealth = player_stealth());
 
+string describe_monsters_condensed(const vector<monster*>& monsters);
+
 bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
                    bool force = false, bool deterministic = false,
                    coord_def origin = coord_def(-1, -1));
