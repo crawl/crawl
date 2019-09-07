@@ -368,6 +368,9 @@ static bool _is_seen_shallow(coord_def gc, crawl_view_buffer& vbuf)
 {
     const auto feat = _safe_feat(gc, vbuf);
 
+    if (!vbuf(gc).tile.map_knowledge.seen())
+        return false;
+
     return feat == DNGN_SHALLOW_WATER || _feat_is_mangrove(feat);
 }
 
