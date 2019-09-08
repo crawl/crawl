@@ -667,7 +667,7 @@ adventures, how they are displayed, and what commands there are to use them:
 =        rings          (use 'P'ut on and 'R'emove)
 "        amulets        (use 'P'ut on and 'R'emove)
 \|        staves         (use 'w'ield)
-:        spellbooks     (use 'r'ead and 'M'emorise and 'z'ap)
+:        spellbooks     (use 'M'emorise and 'z'ap)
 }        miscellaneous  (use 'V' for evoking from the inventory)
 $        gold           (use 'g' to pick up)
 =======  =============  ================================================
@@ -2550,7 +2550,7 @@ e
   synonymous to y.
 
 r
-  Read a scroll or book.
+  Read a scroll.
 
 M
   Memorise a spell from a book.
