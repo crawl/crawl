@@ -494,7 +494,8 @@ bool can_wield(const item_def *weapon, bool say_reason,
 
 /**
  * Helper function for wield_weapon & wear_armour
- * @param  item item on floor (where the player is standing)
+ * @param  item    item on floor (where the player is standing)
+ * @param  quiet   print message or not
  * @return boolean can the player move the item into their inventory, or are
  *                 they out of space?
  */
@@ -503,12 +504,16 @@ static bool _can_move_item_from_floor_to_inv(const item_def &item)
     if (inv_count() < ENDOFPACK)
         return true;
     if (!is_stackable_item(item))
+    {
+        mpr("You can't carry that many items.");
         return false;
+    }
     for (int i = 0; i < ENDOFPACK; ++i)
     {
         if (items_stack(you.inv[i], item))
             return true;
     }
+    mpr("You can't carry that many items.");
     return false;
 }
 
@@ -540,6 +545,19 @@ static int _move_item_from_floor_to_inv(const item_def &to_get)
     return -1;
 }
 
+/**
+ * Helper function for wield_weapon & wear_armour
+ * @param  item  item on floor (where the player is standing) or in inventory
+ * @return ret index in you.inv where the item is (either because it was already
+ *               there or just got moved there), or -1 if we tried and failed to
+ *               move the item into inventory
+ */
+static int _get_item_slot(const item_def &item)
+{
+    int ret = item.pos == ITEM_IN_INVENTORY
+        ? item.link : _move_item_from_floor_to_inv(item);
+    return ret;
+}
 /**
  * @param auto_wield false if this was initiated by the wield weapon command (w)
  *      true otherwise (e.g. switching between ranged and melee with the
@@ -597,7 +615,6 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
             if (to_wield && to_wield->pos != ITEM_IN_INVENTORY
                 && !_can_move_item_from_floor_to_inv(*to_wield))
             {
-                mpr("You can't carry that many items.");
                 return false;
             }
         }
@@ -718,20 +735,10 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
 
     const unsigned int old_talents = your_talents(false).size();
 
-    int item_slot = 0;
     // If it's on the ground, pick it up. Once it's picked up, there should be
     // no aborting, lest we introduce a way to instantly pick things up
-    if (new_wpn.pos != ITEM_IN_INVENTORY)
-    {
-        item_slot = _move_item_from_floor_to_inv(new_wpn);
-        if (item_slot == -1)
-        {
-            return false; // We already made sure there was space, so this
-                          // shouldn't happen....
-        }
-    }
-    else
-        item_slot = new_wpn.link;
+    // NB we already made sure there was space for the item
+    int item_slot = _get_item_slot(new_wpn);
 
     // At this point new_wpn is potentially not the right thing anymore (the
     // thing actually in the player's inventory), that is, in the case where the
@@ -1183,7 +1190,6 @@ bool wear_armour(int item)
         if (to_wear->pos != ITEM_IN_INVENTORY
             && !_can_move_item_from_floor_to_inv(*to_wear))
         {
-            mpr("You can't carry that many items.");
             return false;
         }
     }
@@ -1253,21 +1259,15 @@ bool wear_armour(int item)
 
     // If it's on the ground, pick it up. Once it's picked up, there should be
     // no aborting
-    if (to_wear->pos != ITEM_IN_INVENTORY)
-    {
-        int inv_slot = _move_item_from_floor_to_inv(*to_wear);
-        if (inv_slot == -1)
-        {
-            // Shouldn't be possible since we already checked above, but...
-            mpr("You can't carry that many items.");
-            return false;
-        }
-        to_wear = &you.inv[inv_slot];
-    }
+    // NB we already made sure there was space for the item
+    int item_slot = _get_item_slot(*to_wear);
 
     const int delay = armour_equip_delay(*to_wear);
     if (delay)
-        start_delay<ArmourOnDelay>(delay - (swapping ? 0 : 1), *to_wear);
+    {
+        start_delay<ArmourOnDelay>(delay - (swapping ? 0 : 1),
+                                   you.inv[item_slot]);
+    }
 
     return true;
 }
