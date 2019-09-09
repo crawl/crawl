@@ -524,6 +524,8 @@ static const ability_def Ability_List[] =
       4, 0, 100, 1, {fail_basis::invo, 60, 4, 25}, abflag::none },
     { ABIL_FEDHAS_RAIN, "Rain",
       4, 0, 150, 4, {fail_basis::invo, 70, 4, 25}, abflag::none },
+    { ABIL_FEDHAS_WALL_OF_BRIARS, "Wall of Briars",
+      3, 0, 50, 2, {fail_basis::invo, 30, 6, 20}, abflag::none},
 
     // Cheibriados
     { ABIL_CHEIBRIADOS_TIME_BEND, "Bend Time",
@@ -2868,6 +2870,12 @@ static spret _do_ability(const ability_def& abil, bool fail)
     case ABIL_FEDHAS_PLANT_RING:
         fail_check();
         if (!fedhas_plant_ring_from_rations())
+            return spret::abort;
+        break;
+
+    case ABIL_FEDHAS_WALL_OF_BRIARS:
+        fail_check();
+        if (!fedhas_wall_of_briars())
             return spret::abort;
         break;
 

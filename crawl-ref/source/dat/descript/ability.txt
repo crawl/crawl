@@ -481,6 +481,11 @@ Bring an orc corpse back to life. The orc will be an ally, even if it was not
 already one before it died.
 %%%%
 # Fedhas
+Wall of Briars ability
+
+Grow short-lived briar patches around you. Monsters attacking these briars will
+be damaged by sharp thorns. Invocations skill increases the briars' health.
+%%%%
 Sunlight ability
 
 Calls sunlight down over a small area of the dungeon. Monsters illuminated by

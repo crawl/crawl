@@ -3473,3 +3473,54 @@ int count_summons(const actor *summoner, spell_type spell)
 
     return count;
 }
+
+static bool _create_briar_patch(coord_def& target)
+{
+    mgen_data mgen = mgen_data(MONS_BRIAR_PATCH, BEH_FRIENDLY, target,
+            MHITNOT, MG_FORCE_PLACE, GOD_FEDHAS);
+    mgen.hd = mons_class_hit_dice(MONS_BRIAR_PATCH) +
+        you.skill_rdiv(SK_INVOCATIONS);
+    mgen.set_summoned(&you, 3 + you.skill_rdiv(SK_INVOCATIONS, 1, 6),
+            SPELL_NO_SPELL);
+
+    if (create_monster(mgen))
+    {
+        mpr("A briar patch grows up from the ground.");
+        return true;
+    }
+
+    return false;
+}
+
+bool fedhas_wall_of_briars()
+{
+    // How many adjacent open spaces are there?
+    vector<coord_def> adjacent;
+    for (adjacent_iterator adj_it(you.pos()); adj_it; ++adj_it)
+    {
+        if (monster_habitable_grid(MONS_BRIAR_PATCH, env.grid(*adj_it))
+            && !actor_at(*adj_it))
+        {
+            adjacent.push_back(*adj_it);
+        }
+    }
+
+    // Don't prompt if we can't do anything.
+    if (adjacent.empty())
+    {
+        mpr("No empty adjacent squares.");
+        return false;
+    }
+
+    int created_count = 0;
+    for (auto p : adjacent)
+    {
+        if (_create_briar_patch(p))
+            created_count++;
+    }
+
+    if (!created_count)
+        canned_msg(MSG_NOTHING_HAPPENS);
+
+    return created_count;
+}

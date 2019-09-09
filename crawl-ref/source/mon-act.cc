@@ -2990,6 +2990,7 @@ static bool _may_cutdown(monster* mons, monster* targ)
     // (but don't try to attack briars unless their damage will be insignificant)
     return mons_is_firewood(*targ)
         && (targ->type != MONS_BRIAR_PATCH
+            || (targ->friendly() && !mons_aligned(mons, targ))
             || mons->type == MONS_THORN_HUNTER
             || mons->armour_class() * mons->hit_points >= 400);
 }
