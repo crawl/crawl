@@ -365,10 +365,9 @@ static void _secular_headsup(const vector<monster*> &monsters,
     mprf(MSGCH_MONSTER_WARNING, "%s", warnings.c_str());
 }
 
-static map<monster_type, int> _count_monster_types(const vector<monster*>& monsters)
+static map<monster_type, int> _count_monster_types(const vector<monster*>& monsters,
+                                                   const unsigned int max_types = UINT_MAX)
 {
-    const unsigned int max_msgs = 4;
-
     map<monster_type, int> types;
     map<monster_type, int> genera; // This is the plural for genus!
     for (const monster *mon : monsters)
@@ -378,7 +377,7 @@ static map<monster_type, int> _count_monster_types(const vector<monster*>& monst
         genera[_mons_genus_keep_uniques(type)]++;
     }
 
-    while (types.size() > max_msgs && !genera.empty())
+    while (types.size() > max_types && !genera.empty())
         _genus_factoring(types, genera);
 
     return types;
@@ -392,7 +391,7 @@ static map<monster_type, int> _count_monster_types(const vector<monster*>& monst
  */
 string describe_monsters_condensed(const vector<monster*>& monsters)
 {
-    return _desc_mons_type_map(_count_monster_types(monsters));
+    return _desc_mons_type_map(_count_monster_types(monsters), 4);
 }
 
 /**
