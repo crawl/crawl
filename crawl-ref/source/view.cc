@@ -391,7 +391,7 @@ static map<monster_type, int> _count_monster_types(const vector<monster*>& monst
  */
 string describe_monsters_condensed(const vector<monster*>& monsters)
 {
-    return _desc_mons_type_map(_count_monster_types(monsters), 4);
+    return _desc_mons_type_map(_count_monster_types(monsters, 4));
 }
 
 /**
