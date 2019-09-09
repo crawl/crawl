@@ -117,7 +117,6 @@ int place_ring(vector<coord_def>& ring_points,
 // (walls/statues).
 void collect_radius_points(vector<vector<coord_def> > &radius_points,
                            const coord_def &origin, los_type los);
-int fedhas_fungal_bloom();
 spret fedhas_sunlight(bool fail = false);
 void process_sunlights(bool future = false);
 bool prioritise_adjacent(const coord_def& target, vector<coord_def>& candidates);

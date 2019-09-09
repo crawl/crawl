@@ -63,10 +63,9 @@ static const char *conducts[] =
     "Spell Cast", "Spell Practise", "Cannibalism", "Eat Souled Being",
     "Deliberate Mutation", "Cause Glowing", "Use Unclean", "Use Chaos",
     "Desecrate Orcish Remains", "Kill Slime", "Kill Plant", "Was Hasty",
-    "Corpse Violation", "Carrion Rot", "Souled Friend Died",
-    "Attack In Sanctuary", "Kill Artificial", "Exploration",
-    "Desecrate Holy Remains", "Seen Monster", "Sacrificed Love", "Channel",
-    "Hurt Foe",
+    "Corpse Violation", "Souled Friend Died", "Attack In Sanctuary",
+    "Kill Artificial", "Exploration", "Desecrate Holy Remains", "Seen Monster",
+    "Sacrificed Love", "Channel", "Hurt Foe",
 };
 COMPILE_CHECK(ARRAYSZ(conducts) == NUM_CONDUCTS);
 
@@ -835,9 +834,11 @@ static like_map divine_likes[] =
     like_map(),
     // GOD_FEDHAS,
     {
-        { DID_ROT_CARRION, {
-            "corpses rot away", false, 0, 0, 0, " appreciates ongoing decay."
-        } },
+        { DID_KILL_LIVING, KILL_LIVING_RESPONSE },
+        { DID_KILL_UNDEAD, KILL_UNDEAD_RESPONSE },
+        { DID_KILL_DEMON, KILL_DEMON_RESPONSE },
+        { DID_KILL_HOLY, KILL_HOLY_RESPONSE },
+        { DID_KILL_NONLIVING, KILL_NONLIVING_RESPONSE },
     },
     // GOD_CHEIBRIADOS,
     {

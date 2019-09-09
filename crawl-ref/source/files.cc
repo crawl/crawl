@@ -29,7 +29,6 @@
 #include "act-iter.h"
 #include "areas.h"
 #include "branch.h"
-#include "butcher.h" // for fedhas_rot_all_corpses
 #include "chardump.h"
 #include "cloud.h"
 #include "coordit.h"
@@ -45,7 +44,6 @@
 #include "food.h" //for HUNGER_MAXIMUM
 #include "ghost.h"
 #include "god-abil.h"
-#include "god-conduct.h" // for fedhas_rot_all_corpses
 #include "god-companions.h"
 #include "god-passive.h"
 #include "hints.h"
@@ -70,7 +68,6 @@
 #include "species.h"
 #include "spl-summoning.h"
 #include "stairs.h"
-#include "stash.h"  // for fedhas_rot_all_corpses
 #include "state.h"
 #include "stringutil.h"
 #include "syscalls.h"
@@ -1130,45 +1127,6 @@ static void _do_lost_items()
             item_was_lost(item);
 }
 
-/// Rot all corpses remaining on the level, giving Fedhas piety for doing so.
-static void _fedhas_rot_all_corpses(const level_id& old_level)
-{
-    bool messaged = false;
-    for (size_t mitm_index = 0; mitm_index < mitm.size(); ++mitm_index)
-    {
-        item_def &item = mitm[mitm_index];
-        if (!item.defined()
-            || !item.is_type(OBJ_CORPSES, CORPSE_BODY)
-            || item.props.exists(CORPSE_NEVER_DECAYS))
-        {
-            continue;
-        }
-
-        if (mons_skeleton(item.mon_type))
-            ASSERT(turn_corpse_into_skeleton(item));
-        else
-        {
-            item_was_destroyed(item);
-            destroy_item(mitm_index);
-        }
-
-        if (!messaged)
-        {
-            simple_god_message("'s fungi set to work.");
-            messaged = true;
-        }
-
-        const int piety = x_chance_in_y(2, 5) ? 2 : 1; // match fungal_bloom()
-        // XXX: deduplicate above ^
-        did_god_conduct(DID_ROT_CARRION, piety);
-    }
-
-    // assumption: CORPSE_NEVER_DECAYS is never set for seen corpses
-    LevelStashes *ls = StashTrack.find_level(old_level);
-    if (ls) // assert?
-        ls->rot_all_corpses();
-}
-
 /**
  * Perform cleanup when leaving a level.
  *
@@ -1186,9 +1144,6 @@ static bool _leave_level(dungeon_feature_type stair_taken,
                          const level_id& old_level, coord_def *return_pos)
 {
     bool popped = false;
-
-    if (you.religion == GOD_FEDHAS)
-        _fedhas_rot_all_corpses(old_level);
 
     if (!you.level_stack.empty()
         && you.level_stack.back().id == level_id::current())

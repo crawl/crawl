@@ -204,11 +204,7 @@ static void _rot_corpse(item_def &it, int mitm_index, int rot_time)
         destroy_item(mitm_index);
     }
     else
-    {
         turn_corpse_into_skeleton(it);
-        const int piety = x_chance_in_y(2, 5) ? 2 : 1; // match fungal_bloom()
-        did_god_conduct(DID_ROT_CARRION, piety);
-    }
 }
 
 /**
