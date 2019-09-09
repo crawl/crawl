@@ -199,13 +199,6 @@ static void _update_agrid()
         no_areas = false;
     }
 
-    if (!env.sunlight.empty())
-    {
-        for (const auto &entry : env.sunlight)
-            _set_agrid_flag(entry.first, areaprop::halo);
-        no_areas = false;
-    }
-
     // TODO: update sanctuary here.
 
     _agrid_valid = true;

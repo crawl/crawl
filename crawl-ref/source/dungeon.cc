@@ -1339,7 +1339,6 @@ void dgn_reset_level(bool enable_random_maps)
         env.spawn_random_rate = 0;
     env.density = 0;
     env.forest_awoken_until = 0;
-    env.sunlight.clear();
 
     env.floor_colour = BLACK;
     env.rock_colour  = BLACK;

@@ -839,9 +839,6 @@ static void _decrement_durations()
                 you.berserk() ? "rip and tear" : "carefully extract").c_str());
     }
 
-    if (!env.sunlight.empty())
-        process_sunlights();
-
     if (!you.duration[DUR_ANCESTOR_DELAY]
         && in_good_standing(GOD_HEPLIAKLQANA)
         && hepliaklqana_ancestor() == MID_NOBODY)

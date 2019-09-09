@@ -222,8 +222,6 @@ static void _clear_prisms()
 
 void leaving_level_now(dungeon_feature_type stair_used)
 {
-    process_sunlights(true);
-
     if (stair_used == DNGN_EXIT_ZIGGURAT)
     {
         if (you.depth == 27)

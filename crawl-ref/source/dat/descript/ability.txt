@@ -486,13 +486,6 @@ Wall of Briars ability
 Grow short-lived briar patches around you. Monsters attacking these briars will
 be damaged by sharp thorns. Invocations skill increases the briars' health.
 %%%%
-Sunlight ability
-
-Calls sunlight down over a small area of the dungeon. Monsters illuminated by
-the light will be easier to hit. Water affected by the sunlight will evaporate.
-In particular, deep water will become shallow water, and shallow water will dry
-up completely, revealing the dungeon floor.
-%%%%
 Growth ability
 
 Uses food to grow a ring of plants around yourself. If a complete ring cannot

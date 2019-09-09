@@ -107,7 +107,6 @@ struct crawl_environment
     int forest_awoken_until;
     int density;
     int absdepth0;
-    vector<pair<coord_def, int> > sunlight;
 
     // Remaining fields not marshalled:
 
