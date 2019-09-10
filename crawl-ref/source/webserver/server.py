@@ -3,6 +3,7 @@ import os, os.path, errno, sys
 
 import tornado.httpserver
 import tornado.ioloop
+from tornado.ioloop import IOLoop
 import tornado.web
 import tornado.template
 
@@ -111,12 +112,19 @@ def shed_privileges():
     if uid is not None:
         os.setuid(uid)
 
+def stop_everything():
+    for server in servers:
+        server.stop()
+    shutdown()
+    # TODO: shouldn't this actually wait for everything to close??
+    if len(sockets) == 0:
+        IOLoop.current().stop()
+    else:
+        IOLoop.current().add_timeout(time.time() + 2, IOLoop.current().stop)
 
 def signal_handler(signum, frame):
     logging.info("Received signal %i, shutting down.", signum)
-    shutdown()
-    if len(sockets) == 0:
-        ioloop.stop()
+    IOLoop.current().add_callback_from_signal(stop_everything)
 
 def bind_server():
     settings = {
@@ -131,12 +139,12 @@ def bind_server():
     application = tornado.web.Application([
             (r"/", MainHandler),
             (r"/socket", CrawlWebSocket),
-            (r"/gamedata/(.*)/(.*)", GameDataHandler)
+            (r"/gamedata/([0-9abcdef]*\/.*)", GameDataHandler)
             ], gzip=getattr(config,"use_gzip",True), **settings)
 
     kwargs = {}
     if http_connection_timeout is not None:
-        kwargs["connection_timeout"] = http_connection_timeout
+        kwargs["idle_connection_timeout"] = http_connection_timeout
     if getattr(config, "http_xheaders", False):
         kwargs["xheaders"] = http_xheaders
 
@@ -220,6 +228,7 @@ if __name__ == "__main__":
 
     signal.signal(signal.SIGTERM, signal_handler)
     signal.signal(signal.SIGHUP, signal_handler)
+    signal.signal(signal.SIGINT, signal_handler)
 
     if umask is not None:
         os.umask(umask)
@@ -235,9 +244,6 @@ if __name__ == "__main__":
         userdb.upgrade_user_db()
     userdb.ensure_settings_db_exists()
 
-    ioloop = tornado.ioloop.IOLoop.instance()
-    ioloop.set_blocking_log_threshold(0.5)
-
     if dgl_mode:
         status_file_timeout()
         purge_login_tokens_timeout()
@@ -246,16 +252,10 @@ if __name__ == "__main__":
         if watch_socket_dirs:
             process_handler.watch_socket_dirs()
 
-    logging.info("Webtiles server started! (PID: %s)" % os.getpid())
+    logging.info("DCSS Webtiles server started with Tornado %s! (PID: %s)" %
+                                                (tornado.version, os.getpid()))
 
-    try:
-        ioloop.start()
-    except KeyboardInterrupt:
-        logging.info("Received keyboard interrupt, shutting down.")
-        for server in servers: server.stop()
-        shutdown()
-        ioloop.add_timeout(time.time() + 2, ioloop.stop)
-        if len(sockets) > 0:
-            ioloop.start() # We'll wait until all crawl processes have ended.
+    IOLoop.current().start()
 
+    logging.info("Bye!")
     remove_pidfile()

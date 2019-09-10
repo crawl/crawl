@@ -7,12 +7,13 @@ import resource
 import signal
 import sys
 import time
+import tornado.ioloop
+from tornado.ioloop import IOLoop
 
 BUFSIZ = 2048
 
 class TerminalRecorder(object):
-    def __init__(self, command, filename, id_header, logger, io_loop, termsize):
-        self.io_loop = io_loop
+    def __init__(self, command, filename, id_header, logger, termsize):
         self.command = command
         if filename:
             self.ttyrec = open(filename, "w", 0)
@@ -81,16 +82,16 @@ class TerminalRecorder(object):
         # We're the parent
         os.close(errpipe_write)
 
-        self.io_loop.add_handler(self.child_fd,
-                                 self._handle_read,
-                                 self.io_loop.ERROR | self.io_loop.READ)
+        IOLoop.current().add_handler(self.child_fd,
+                                     self._handle_read,
+                                     IOLoop.ERROR | IOLoop.READ)
 
-        self.io_loop.add_handler(self.errpipe_read,
-                                 self._handle_err_read,
-                                 self.io_loop.READ)
+        IOLoop.current().add_handler(self.errpipe_read,
+                                     self._handle_err_read,
+                                     IOLoop.READ)
 
     def _handle_read(self, fd, events):
-        if events & self.io_loop.READ:
+        if events & IOLoop.READ:
             buf = os.read(fd, BUFSIZ)
 
             if len(buf) > 0:
@@ -104,11 +105,11 @@ class TerminalRecorder(object):
 
             self.poll()
 
-        if events & self.io_loop.ERROR:
+        if events & IOLoop.ERROR:
             self.poll()
 
     def _handle_err_read(self, fd, events):
-        if events & self.io_loop.READ:
+        if events & IOLoop.READ:
             buf = os.read(fd, BUFSIZ)
 
             if len(buf) > 0:
@@ -174,8 +175,8 @@ class TerminalRecorder(object):
                     raise RuntimeError("Unknown child exit status!")
 
             if self.returncode is not None:
-                self.io_loop.remove_handler(self.child_fd)
-                self.io_loop.remove_handler(self.errpipe_read)
+                IOLoop.current().remove_handler(self.child_fd)
+                IOLoop.current().remove_handler(self.errpipe_read)
 
                 os.close(self.child_fd)
                 os.close(self.errpipe_read)

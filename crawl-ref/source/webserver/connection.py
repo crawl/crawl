@@ -6,12 +6,12 @@ import warnings
 
 from datetime import datetime, timedelta
 from tornado.escape import json_encode
+from tornado.ioloop import IOLoop
 
 from config import server_socket_path
 
 class WebtilesSocketConnection(object):
-    def __init__(self, io_loop, socketpath, logger):
-        self.io_loop = io_loop
+    def __init__(self, socketpath, logger):
         self.crawl_socketpath = socketpath
         self.logger = logger
         self.message_callback = None
@@ -25,7 +25,7 @@ class WebtilesSocketConnection(object):
     def connect(self, primary = True):
         if not os.path.exists(self.crawl_socketpath):
             # Wait until the socket exists
-            self.io_loop.add_timeout(time.time() + 1, self.connect)
+            IOLoop.current().add_timeout(time.time() + 1, self.connect)
             return
 
         self.socket = socket.socket(socket.AF_UNIX, socket.SOCK_DGRAM)
@@ -55,9 +55,9 @@ class WebtilesSocketConnection(object):
         self.socket.bind(self.socketpath)
 
         # Install handler
-        self.io_loop.add_handler(self.socket.fileno(),
-                                 self._handle_read,
-                                 self.io_loop.ERROR | self.io_loop.READ)
+        IOLoop.current().add_handler(self.socket.fileno(),
+                                     self._handle_read,
+                                     IOLoop.ERROR | IOLoop.READ)
 
         msg = json_encode({
                 "msg": "attach",
@@ -69,12 +69,12 @@ class WebtilesSocketConnection(object):
         self.send_message(msg)
 
     def _handle_read(self, fd, events):
-        if events & self.io_loop.READ:
+        if events & IOLoop.READ:
             data = self.socket.recv(128 * 1024, socket.MSG_DONTWAIT)
 
             self._handle_data(data)
 
-        if events & self.io_loop.ERROR:
+        if events & IOLoop.ERROR:
             pass
 
     def _handle_data(self, data):
@@ -106,7 +106,7 @@ class WebtilesSocketConnection(object):
 
     def close(self):
         if self.socket:
-            self.io_loop.remove_handler(self.socket.fileno())
+            IOLoop.current().remove_handler(self.socket.fileno())
             self.socket.close()
             os.remove(self.socketpath)
             self.socket = None

@@ -47,13 +47,12 @@ class DynamicTemplateLoader(tornado.template.Loader):
             return l
 
 class FileTailer(object):
-    def __init__(self, filename, callback, interval_ms = 1000, io_loop = None):
+    def __init__(self, filename, callback, interval_ms = 1000):
         self.file = None
         self.filename = filename
         self.callback = callback
-        self.io_loop = io_loop or tornado.ioloop.IOLoop.instance()
-        self.scheduler = tornado.ioloop.PeriodicCallback(self.check, interval_ms,
-                                                         io_loop = self.io_loop)
+        self.scheduler = tornado.ioloop.PeriodicCallback(self.check,
+                                                         interval_ms)
         self.scheduler.start()
 
     def check(self):
@@ -101,8 +100,7 @@ def send_email(to_address, subject, body_plaintext, body_html):
     email_server = None
     try:
         # establish connection
-        # n.b. if this times out, you may need to adjust the call to
-        # ioloop.set_blocking_log_threshold in server.py.
+        # TODO: this should not be a blocking call at all...
         if config.smtp_use_ssl:
             email_server = smtplib.SMTP_SSL(config.smtp_host, config.smtp_port)
         else:

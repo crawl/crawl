@@ -78,12 +78,11 @@ def watch_socket_dirs():
         watcher.watch(socket_dir, handle_new_socket)
 
 class CrawlProcessHandlerBase(object):
-    def __init__(self, game_params, username, logger, io_loop=None):
+    def __init__(self, game_params, username, logger):
         self.game_params = game_params
         self.username = username
         self.logger = logging.LoggerAdapter(logger, {})
         self.logger.process = self._process_log_msg
-        self.io_loop = io_loop or IOLoop.instance()
         self.queue_messages = False
 
         self.process = None
@@ -103,8 +102,7 @@ class CrawlProcessHandlerBase(object):
         self.end_callback = None
         self._receivers = set()
         self.last_activity_time = time.time()
-        self.idle_checker = PeriodicCallback(self.check_idle, 10000,
-                                             io_loop = self.io_loop)
+        self.idle_checker = PeriodicCallback(self.check_idle, 10000)
         self.idle_checker.start()
         self._was_idle = False
         self.last_watcher_join = 0
@@ -239,7 +237,7 @@ class CrawlProcessHandlerBase(object):
 
     def handle_process_end(self):
         if self.kill_timeout:
-            self.io_loop.remove_timeout(self.kill_timeout)
+            IOLoop.current().remove_timeout(self.kill_timeout)
             self.kill_timeout = None
 
         self.idle_checker.stop()
@@ -451,7 +449,7 @@ class CrawlProcessHandlerBase(object):
         if self.process:
             self.process.send_signal(subprocess.signal.SIGHUP)
             t = time.time() + config.kill_timeout
-            self.kill_timeout = self.io_loop.add_timeout(t, self.kill)
+            self.kill_timeout = IOLoop.current().add_timeout(t, self.kill)
 
     def kill(self):
         if self.process:
@@ -549,9 +547,8 @@ class CrawlProcessHandlerBase(object):
         raise NotImplementedError()
 
 class CrawlProcessHandler(CrawlProcessHandlerBase):
-    def __init__(self, game_params, username, logger, io_loop=None):
-        super(CrawlProcessHandler, self).__init__(game_params, username,
-                                                  logger, io_loop)
+    def __init__(self, game_params, username, logger):
+        super(CrawlProcessHandler, self).__init__(game_params, username, logger)
         self.socketpath = None
         self.conn = None
         self.ttyrec_filename = None
@@ -589,8 +586,8 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
                     hup_wait = 10
                     self.send_to_all("stale_processes",
                                      timeout=hup_wait, game=self.game_params["name"])
-                    to = self.io_loop.add_timeout(time.time() + hup_wait,
-                                                  self._kill_stale_process)
+                    to = IOLoop.current().add_timeout(time.time() + hup_wait,
+                                                      self._kill_stale_process)
                     self._process_hup_timeout = to
                 else:
                     self._kill_stale_process()
@@ -609,7 +606,7 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
 
     def _stop_purging_stale_processes(self):
         if not self._process_hup_timeout: return
-        self.io_loop.remove_timeout(self._process_hup_timeout)
+        IOLoop.current().remove_timeout(self._process_hup_timeout)
         self._stale_pid = None
         self._stale_lockfile = None
         self._purging_timer = None
@@ -659,8 +656,8 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
                     self._purging_timer -= 1
 
                 if self._purging_timer > 0:
-                    self.io_loop.add_timeout(time.time() + 1,
-                                             self._check_stale_process)
+                    IOLoop.current().add_timeout(time.time() + 1,
+                                                 self._check_stale_process)
                 else:
                     self.logger.warning("Couldn't terminate pid %s gracefully.",
                                         self._stale_pid)
@@ -713,7 +710,7 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
         try:
             self.process = TerminalRecorder(call, self.ttyrec_filename,
                                             self._ttyrec_id_header(),
-                                            self.logger, self.io_loop,
+                                            self.logger,
                                             config.recording_term_size)
             self.process.end_callback = self._on_process_end
             self.process.output_callback = self._on_process_output
@@ -740,7 +737,7 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
 
     def connect(self, socketpath, primary = False):
         self.socketpath = socketpath
-        self.conn = WebtilesSocketConnection(self.io_loop, self.socketpath, self.logger)
+        self.conn = WebtilesSocketConnection(self.socketpath, self.logger)
         self.conn.message_callback = self._on_socket_message
         self.conn.close_callback = self._on_socket_close
         self.conn.connect(primary)
@@ -936,7 +933,7 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
 
 
 class DGLLessCrawlProcessHandler(CrawlProcessHandler):
-    def __init__(self, logger, io_loop):
+    def __init__(self, logger):
         game_params = dict(
             name = "DCSS",
             ttyrec_path = "./",
@@ -945,7 +942,7 @@ class DGLLessCrawlProcessHandler(CrawlProcessHandler):
             client_path = "./webserver/game_data")
         super(DGLLessCrawlProcessHandler, self).__init__(game_params,
                                                          "game",
-                                                         logger, io_loop)
+                                                         logger)
 
     def _base_call(self):
         return ["./crawl"]
