@@ -3533,8 +3533,6 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_FEDHAS_WALL_OF_BRIARS;
     case ABIL_FEDHAS_RAIN:
         return TILEG_ABILITY_FEDHAS_RAIN;
-    case ABIL_FEDHAS_PLANT_RING:
-        return TILEG_ABILITY_FEDHAS_PLANT_RING;
     case ABIL_FEDHAS_SPAWN_SPORES:
         return TILEG_ABILITY_FEDHAS_SPAWN_SPORES;
     case ABIL_FEDHAS_EVOLUTION:

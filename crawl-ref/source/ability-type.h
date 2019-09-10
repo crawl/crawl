@@ -175,7 +175,6 @@ enum ability_type
     // Fedhas
     ABIL_FEDHAS_WALL_OF_BRIARS = 1140,
     ABIL_FEDHAS_RAIN,
-    ABIL_FEDHAS_PLANT_RING,
     ABIL_FEDHAS_SPAWN_SPORES,
     ABIL_FEDHAS_EVOLUTION,
     // Cheibriados

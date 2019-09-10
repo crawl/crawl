@@ -118,7 +118,6 @@ int place_ring(vector<coord_def>& ring_points,
 void collect_radius_points(vector<vector<coord_def> > &radius_points,
                            const coord_def &origin, los_type los);
 bool prioritise_adjacent(const coord_def& target, vector<coord_def>& candidates);
-bool fedhas_plant_ring_from_rations();
 int fedhas_rain(const coord_def &target);
 int count_corpses_in_los(vector<stack_iterator> *positions);
 int fedhas_check_corpse_spores(bool quiet = false);

@@ -486,13 +486,6 @@ Wall of Briars ability
 Grow short-lived briar patches around you. Monsters attacking these briars will
 be damaged by sharp thorns. Invocations skill increases the briars' health.
 %%%%
-Growth ability
-
-Uses food to grow a ring of plants around yourself. If a complete ring cannot
-be formed (because you do not have enough food), plants will grow on squares
-adjacent to you that are close to monsters. The plants you create gain bonus
-health proportional to your Invocations skill.
-%%%%
 Rain ability
 
 Causes rain to fall around you, turning the dungeon floor into shallow water

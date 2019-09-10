@@ -265,7 +265,6 @@ const vector<god_power> god_powers[NUM_GODS] =
     {
       { 2, ABIL_FEDHAS_WALL_OF_BRIARS, "encircle yourself with summoned briar patches"},
       { 2, ABIL_FEDHAS_EVOLUTION, "induce evolution" },
-      { 3, ABIL_FEDHAS_PLANT_RING, "cause a ring of plants to grow" },
       { 4, ABIL_FEDHAS_SPAWN_SPORES, "spawn explosive spores" },
       { 5, ABIL_FEDHAS_RAIN, "control the weather" },
     },
