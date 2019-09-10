@@ -414,7 +414,7 @@ static void _gauntlet_effect()
     if (you.species == SP_FORMICID)
         return;
 
-    mprf(MSGCH_WARN, "The nature of this place prevents teleportation.");
+    mprf(MSGCH_WARN, "The nature of this place prevents you from teleporting.");
 
     if (you.has_mutation(MUT_TELEPORT, true)
         || you.wearing(EQ_RINGS, RING_TELEPORTATION, true)
