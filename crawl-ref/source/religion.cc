@@ -264,7 +264,6 @@ const vector<god_power> god_powers[NUM_GODS] =
     // Fedhas
     {
       { 2, ABIL_FEDHAS_WALL_OF_BRIARS, "encircle yourself with summoned briar patches"},
-      { 2, ABIL_FEDHAS_EVOLUTION, "induce evolution" },
       { 4, ABIL_FEDHAS_SPAWN_SPORES, "spawn explosive spores" },
       { 5, ABIL_FEDHAS_RAIN, "control the weather" },
     },

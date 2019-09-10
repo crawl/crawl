@@ -498,14 +498,6 @@ Reproduction ability
 Creates ballistomycete spores from corpses in your line of sight. The spores will
 explode, causing damage to you or your enemies.
 %%%%
-Evolution ability
-
-Turns plants and fungi into stronger species. Upgraded plants gain a bonus to attack
-accuracy proportional to the user's Invocations skill, and oklob plants are
-more likely to spit acid at higher Invocations.
-
-Upgrading fungi requires piety, while upgrading plants requires food.
-%%%%
 # Cheibriados
 Bend Time ability
 

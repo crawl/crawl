@@ -514,8 +514,6 @@ static const ability_def Ability_List[] =
       0, 0, 0, 15, {fail_basis::invo}, abflag::none },
 
     // Fedhas
-    { ABIL_FEDHAS_EVOLUTION, "Evolution",
-      2, 0, 0, 0, {fail_basis::invo, 30, 6, 20}, abflag::rations_or_piety },
     { ABIL_FEDHAS_SPAWN_SPORES, "Reproduction",
       4, 0, 100, 1, {fail_basis::invo, 60, 4, 25}, abflag::none },
     { ABIL_FEDHAS_RAIN, "Rain",
@@ -1571,8 +1569,6 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         }
         return true;
 
-    case ABIL_FEDHAS_EVOLUTION:
-        return fedhas_check_evolve_flora(quiet);
 
     case ABIL_FEDHAS_SPAWN_SPORES:
     {
@@ -2882,9 +2878,6 @@ static spret _do_ability(const ability_def& abil, bool fail)
         ASSERT(num > 0);
         break;
     }
-
-    case ABIL_FEDHAS_EVOLUTION:
-        return fedhas_evolve_flora(fail);
 
     case ABIL_TRAN_BAT:
     {

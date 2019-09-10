@@ -3535,8 +3535,6 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_FEDHAS_RAIN;
     case ABIL_FEDHAS_SPAWN_SPORES:
         return TILEG_ABILITY_FEDHAS_SPAWN_SPORES;
-    case ABIL_FEDHAS_EVOLUTION:
-        return TILEG_ABILITY_FEDHAS_EVOLUTION;
     // Cheibriados
     case ABIL_CHEIBRIADOS_TIME_STEP:
         return TILEG_ABILITY_CHEIBRIADOS_TIME_STEP;
