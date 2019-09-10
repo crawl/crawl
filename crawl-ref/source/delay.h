@@ -271,13 +271,13 @@ public:
 
 class JewelleryOnDelay : public Delay
 {
-    item_def& jewellery;
+    const item_def& jewellery;
 
     void tick() override;
 
     void finish() override;
 public:
-    JewelleryOnDelay(int dur, item_def& item) :
+    JewelleryOnDelay(int dur, const item_def& item) :
                      Delay(dur), jewellery(item)
     { }
 

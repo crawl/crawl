@@ -361,10 +361,11 @@ bool use_an_item(item_def *&target, int item_type, operation_types oper,
         }
 
         redraw_screen();
-        // For weapons and armour this is handled in wield_weapon and
-        // wear_armour separately from selection
-        if (item_type != OSEL_WIELD && item_type != OBJ_ARMOUR && choice_made
-            && tmp_tgt && !check_warning_inscriptions(*tmp_tgt, oper))
+        // For weapons, armour, and jewellery this is handled in wield_weapon,
+        // wear_armour, and _puton_item after selection
+        if (item_type != OSEL_WIELD && item_type != OBJ_ARMOUR
+            && item_type != OBJ_JEWELLERY && choice_made && tmp_tgt
+            && !check_warning_inscriptions(*tmp_tgt, oper))
         {
             choice_made = false;
         }
@@ -493,7 +494,7 @@ bool can_wield(const item_def *weapon, bool say_reason,
 }
 
 /**
- * Helper function for wield_weapon & wear_armour
+ * Helper function for wield_weapon, wear_armour, and puton_ring
  * @param  item    item on floor (where the player is standing)
  * @param  quiet   print message or not
  * @return boolean can the player move the item into their inventory, or are
@@ -518,7 +519,7 @@ static bool _can_move_item_from_floor_to_inv(const item_def &item)
 }
 
 /**
- * Helper function for wield_weapon & wear_armour
+ * Helper function for wield_weapon, wear_armour, and puton_ring
  * @param  to_get item on floor (where the player is standing) to move into
                   inventory
  * @return int -1 if failure due to already full inventory; otherwise, index in
@@ -546,13 +547,13 @@ static int _move_item_from_floor_to_inv(const item_def &to_get)
 }
 
 /**
- * Helper function for wield_weapon & wear_armour
+ * Helper function for wield_weapon, wear_armour, and puton_ring
  * @param  item  item on floor (where the player is standing) or in inventory
  * @return ret index in you.inv where the item is (either because it was already
  *               there or just got moved there), or -1 if we tried and failed to
  *               move the item into inventory
  */
-static int _get_item_slot(const item_def &item)
+static int _get_item_slot_maybe_with_move(const item_def &item)
 {
     int ret = item.pos == ITEM_IN_INVENTORY
         ? item.link : _move_item_from_floor_to_inv(item);
@@ -738,7 +739,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
     // If it's on the ground, pick it up. Once it's picked up, there should be
     // no aborting, lest we introduce a way to instantly pick things up
     // NB we already made sure there was space for the item
-    int item_slot = _get_item_slot(new_wpn);
+    int item_slot = _get_item_slot_maybe_with_move(new_wpn);
 
     // At this point new_wpn is potentially not the right thing anymore (the
     // thing actually in the player's inventory), that is, in the case where the
@@ -1260,7 +1261,7 @@ bool wear_armour(int item)
     // If it's on the ground, pick it up. Once it's picked up, there should be
     // no aborting
     // NB we already made sure there was space for the item
-    int item_slot = _get_item_slot(*to_wear);
+    int item_slot = _get_item_slot_maybe_with_move(*to_wear);
 
     const int delay = armour_equip_delay(*to_wear);
     if (delay)
@@ -1415,7 +1416,7 @@ static const char _ring_slot_key(equipment_type slot)
     }
 }
 
-static int _prompt_ring_to_remove(int new_ring)
+static int _prompt_ring_to_remove()
 {
     const vector<equipment_type> ring_types = _current_ring_types();
     vector<char> slot_chars;
@@ -1622,12 +1623,12 @@ bool safe_to_remove(const item_def &item, bool quiet)
 }
 
 // Assumptions:
-// you.inv[ring_slot] is a valid ring.
-// EQ_LEFT_RING and EQ_RIGHT_RING are both occupied, and ring_slot is not
-// one of the worn rings.
+// item is an item in inventory or on the floor where the player is standing
+// EQ_LEFT_RING and EQ_RIGHT_RING are both occupied, and item is not
+// in one of those slots.
 //
 // Does not do amulets.
-static bool _swap_rings(int ring_slot)
+static bool _swap_rings(const item_def& to_puton)
 {
     vector<equipment_type> ring_types = _current_ring_types();
     const int num_rings = ring_types.size();
@@ -1710,7 +1711,7 @@ static bool _swap_rings(int ring_slot)
     {
         // Don't prompt if all the rings are the same.
         if (!all_same || Options.jewellery_prompt)
-            unwanted = _prompt_ring_to_remove(ring_slot);
+            unwanted = _prompt_ring_to_remove();
 
         if (unwanted == EQ_NONE)
         {
@@ -1734,7 +1735,7 @@ static bool _swap_rings(int ring_slot)
     }
 
     // Put on the new ring.
-    start_delay<JewelleryOnDelay>(1, you.inv[ring_slot]);
+    start_delay<JewelleryOnDelay>(1, to_puton);
 
     return true;
 }
@@ -1797,14 +1798,12 @@ static equipment_type _choose_ring_slot()
 
 // Is it possible to put on the given item in a jewellery slot?
 // Preconditions:
-// - item_slot is a valid index into inventory
 // - item is not already equipped in a jewellery slot
-static bool _can_puton_jewellery(int item_slot)
+static bool _can_puton_jewellery(const item_def &item)
 {
     // TODO: between this function, _puton_item, _swap_rings, and remove_ring,
     // there's a bit of duplicated work, and sep. of concerns not clear
-    item_def& item = you.inv[item_slot];
-    if (item_slot == you.equip[EQ_WEAPON])
+    if (&item == you.weapon())
     {
         mpr("You are wielding that object.");
         return false;
@@ -1871,19 +1870,20 @@ static bool _can_puton_jewellery(int item_slot)
 }
 
 // Put on a particular ring or amulet
-static bool _puton_item(int item_slot, bool prompt_slot,
+static bool _puton_item(const item_def &item, bool prompt_slot,
                         bool check_for_inscriptions)
 {
-    item_def& item = you.inv[item_slot];
+    vector<equipment_type> current_jewellery = _current_ring_types();
+    current_jewellery.push_back(EQ_AMULET);
 
-    for (int eq = EQ_FIRST_JEWELLERY; eq <= EQ_LAST_JEWELLERY; eq++)
-        if (item_slot == you.equip[eq])
+    for (auto eq : current_jewellery)
+        if (&item == you.slot_item(eq, true))
         {
             // "Putting on" an equipped item means taking it off.
             if (Options.equip_unequip)
                 // TODO: why invert the return value here? failing to remove
                 // a ring is equivalent to successfully putting one on?
-                return !remove_ring(item_slot);
+                return !remove_ring(item.link);
             else
             {
                 mpr("You're already wearing that object!");
@@ -1891,7 +1891,7 @@ static bool _puton_item(int item_slot, bool prompt_slot,
             }
         }
 
-    if (!_can_puton_jewellery(item_slot))
+    if (!_can_puton_jewellery(item))
         return false;
 
     // It looks to be possible to equip this item. Before going any further,
@@ -1923,7 +1923,7 @@ static bool _puton_item(int item_slot, bool prompt_slot,
 
         // No unused ring slots. Swap out a worn ring for the new one.
         if (need_swap)
-            return _swap_rings(item_slot);
+            return _swap_rings(item);
     }
     else if (you.slot_item(EQ_AMULET, true))
     {
@@ -1987,6 +1987,7 @@ static bool _puton_item(int item_slot, bool prompt_slot,
     const unsigned int old_talents = your_talents(false).size();
 
     // Actually equip the item.
+    int item_slot = _get_item_slot_maybe_with_move(item);
     equip_item(hand_used, item_slot);
 
     check_item_hint(you.inv[item_slot], old_talents);
@@ -2005,38 +2006,47 @@ static bool _puton_item(int item_slot, bool prompt_slot,
     return true;
 }
 
-// Put on a ring or amulet. (If slot is -1, first prompt for which item to put on)
-bool puton_ring(int slot, bool allow_prompt, bool check_for_inscriptions)
+// Put on a ring or amulet. (Most of the work is in _puton_item.)
+bool puton_ring(const item_def &to_puton, bool allow_prompt,
+                bool check_for_inscriptions)
 {
-    int item_slot;
-
-    if (inv_count() < 1)
-    {
-        canned_msg(MSG_NOTHING_CARRIED);
-        return false;
-    }
-
     if (you.berserk())
     {
         canned_msg(MSG_TOO_BERSERK);
         return false;
     }
-
-    if (slot != -1)
-        item_slot = slot;
-    else
+    if (!to_puton.defined())
     {
-        item_slot = prompt_invent_item("Put on which piece of jewellery?",
-                                       menu_type::invlist, OBJ_JEWELLERY,
-                                       OPER_PUTON, invprompt_flag::no_warning);
+        mpr("You don't have any such object.");
+        return false;
+    }
+    if (to_puton.pos != ITEM_IN_INVENTORY
+        && !_can_move_item_from_floor_to_inv(to_puton))
+    {
+        return false;
     }
 
-    if (prompt_failed(item_slot))
-        return false;
-
     bool prompt = allow_prompt ? Options.jewellery_prompt : false;
+    return _puton_item(to_puton, prompt, check_for_inscriptions);
+}
 
-    return _puton_item(item_slot, prompt, check_for_inscriptions);
+// Wraps version of puton_ring with item_def param. If slot is -1, prompt for
+// which item to put on; otherwise, pass on the item in inventory slot
+bool puton_ring(int slot, bool allow_prompt, bool check_for_inscriptions)
+{
+    item_def *to_puton_ptr = nullptr;
+    if (slot == -1)
+    {
+        if (!use_an_item(to_puton_ptr, OBJ_JEWELLERY, OPER_PUTON,
+                        "Put on which piece of jewellery (* to show all)?"))
+        {
+            return false;
+        }
+    }
+    else
+        to_puton_ptr = &you.inv[slot];
+
+    return puton_ring(*to_puton_ptr, allow_prompt, check_for_inscriptions);
 }
 
 // Remove the amulet/ring at given inventory slot (or, if slot is -1, prompt
