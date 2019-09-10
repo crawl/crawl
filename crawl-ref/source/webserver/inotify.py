@@ -4,6 +4,7 @@ import os, os.path
 import errno
 import sys
 import tornado.ioloop
+from tornado.ioloop import IOLoop
 import tornado.platform.posix
 
 # The below class is from pyinotify, released under the MIT license
@@ -70,16 +71,15 @@ class DirectoryWatcher(object):
     CREATE = 0x100 # IN_CREATE
     DELETE = 0x200 # IN_DELETE
 
-    def __init__(self, io_loop=None):
-        self.io_loop = io_loop or tornado.ioloop.IOLoop.instance()
+    def __init__(self):
         self.inotify = _CtypesLibcINotifyWrapper()
         self.enabled = self.inotify.init()
         if self.enabled:
             self.fd = self.inotify._inotify_init()
             tornado.platform.posix._set_nonblocking(self.fd)
             tornado.platform.posix.set_close_exec(self.fd)
-            self.io_loop.add_handler(self.fd, self._handle_read,
-                                     self.io_loop.ERROR | self.io_loop.READ)
+            IOLoop.current().add_handler(self.fd, self._handle_read,
+                                         IOLoop.ERROR | IOLoop.READ)
         self.handlers = dict()
         self.paths = dict()
         self.buffer = bytes()
@@ -93,7 +93,7 @@ class DirectoryWatcher(object):
             self.paths[w] = path
 
     def _handle_read(self, fd, event):
-        if event & self.io_loop.ERROR:
+        if event & IOLoop.ERROR:
             return
 
         try:

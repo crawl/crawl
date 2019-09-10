@@ -1,6 +1,7 @@
 from tornado.escape import json_encode, json_decode, utf8
 import tornado.websocket
 import tornado.ioloop
+from tornado.ioloop import IOLoop
 import tornado.template
 
 import os
@@ -66,15 +67,13 @@ def purge_login_tokens():
 
 def purge_login_tokens_timeout():
     purge_login_tokens()
-    ioloop = tornado.ioloop.IOLoop.instance()
-    ioloop.add_timeout(time.time() + 60 * 60 * 1000,
-                       purge_login_tokens_timeout)
+    IOLoop.current().add_timeout(time.time() + 60 * 60 * 1000,
+                                 purge_login_tokens_timeout)
 
 def status_file_timeout():
     write_dgl_status_file()
-    ioloop = tornado.ioloop.IOLoop.instance()
-    ioloop.add_timeout(time.time() + config.status_file_update_rate,
-                       status_file_timeout)
+    IOLoop.current().add_timeout(time.time() + config.status_file_update_rate,
+                                 status_file_timeout)
 
 def find_user_sockets(username):
     for socket in list(sockets):
@@ -119,7 +118,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         self.game_id = None
         self.received_pong = None
 
-        self.ioloop = tornado.ioloop.IOLoop.instance()
+        tornado.ioloop.IOLoop.current()
 
         global current_id
         self.id = current_id
@@ -244,12 +243,13 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
     def reset_timeout(self):
         if self.timeout:
-            self.ioloop.remove_timeout(self.timeout)
+            IOLoop.current().remove_timeout(self.timeout)
 
         self.received_pong = False
         self.send_message("ping")
-        self.timeout = self.ioloop.add_timeout(time.time() + config.connection_timeout,
-                                               self.check_connection)
+        self.timeout = IOLoop.current().add_timeout(
+                                        time.time() + config.connection_timeout,
+                                        self.check_connection)
 
     def check_connection(self):
         self.timeout = None
@@ -291,10 +291,10 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
         if config.dgl_mode:
             game_params["id"] = game_id
-            args = (game_params, self.username, self.logger, self.ioloop)
+            args = (game_params, self.username, self.logger)
             self.process = process_handler.CrawlProcessHandler(*args)
         else:
-            self.process = process_handler.DGLLessCrawlProcessHandler(self.logger, self.ioloop)
+            self.process = process_handler.DGLLessCrawlProcessHandler(self.logger)
 
         self.process.end_callback = self._on_crawl_end
         self.process.add_watcher(self)
@@ -349,7 +349,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
         if shutting_down and len(sockets) == 0:
             # The last crawl process has ended, now we can go
-            self.ioloop.stop()
+            IOLoop.current().stop()
 
     def init_user(self):
         with open("/dev/null", "w") as f:
@@ -367,6 +367,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
     def shutdown(self):
         if not self.client_closed:
+            self.logger.info("Shutting down user %s id %d", self.username, self.id)
             msg = self.render_string("shutdown.html", game=self)
             self.send_message("close", reason = msg)
             self.close()
@@ -500,7 +501,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             call += game["options"]
         call.append("-print-webtiles-options")
 
-        checkoutput.check_output(call, do_send, self.ioloop)
+        checkoutput.check_output(call, do_send)
 
     def watch(self, username):
         if self.is_running():
@@ -690,7 +691,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             sockets.remove(self)
             if shutting_down and len(sockets) == 0:
                 # The last socket has been closed, now we can go
-                self.ioloop.stop()
+                IOLoop.current().stop()
         elif self.is_running():
             self.process.stop()
 
@@ -698,7 +699,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.watched_game.remove_watcher(self)
 
         if self.timeout:
-            self.ioloop.remove_timeout(self.timeout)
+            IOLoop.current().remove_timeout(self.timeout)
 
         if self.total_message_bytes == 0:
             comp_ratio = "N/A"

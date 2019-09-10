@@ -7,14 +7,14 @@ class GameDataHandler(tornado.web.StaticFileHandler):
     def initialize(self):
         super(GameDataHandler, self).initialize(".")
 
-    def head(self, version, path):
-        self.get(version, path, include_body=False)
-
-    def get(self, version, path, include_body=True):
+    def parse_url_path(self, url_path):
+        # the path should already match "([0-9abcdef]*\/.*)", from server.py
+        import sys
+        version, url_path = url_path.split("/", 1)
         if version not in GameDataHandler._client_paths:
             raise tornado.web.HTTPError(404)
-        self.root = GameDataHandler._client_paths[version]
-        super(GameDataHandler, self).get(path, include_body)
+        return super(GameDataHandler, self).parse_url_path(
+                        GameDataHandler._client_paths[version] + "/" + url_path)
 
     def set_extra_headers(self, path):
         if config.game_data_no_cache:
