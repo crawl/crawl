@@ -4014,6 +4014,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_SPORULATE, "Sporulate",
+    spschool::conjuration | spschool::earth,
+    spflag::monster | spflag::selfench,
+    5,
+    200,
+    -1, -1,
+    5, 0,
+    TILEG_GENERIC_MONSTER_SPELL,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     spschool::none,
     spflag::testing,

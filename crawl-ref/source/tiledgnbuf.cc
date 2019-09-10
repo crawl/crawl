@@ -230,16 +230,6 @@ void DungeonCellBuffer::add_blood_overlay(int x, int y, const packed_cell &cell,
         const int offset = cell.flv.special % tile_dngn_count(basetile);
         m_buf_feat.add(basetile + offset, x, y);
     }
-    else if (cell.is_moldy)
-    {
-        int offset = cell.flv.special % tile_dngn_count(TILE_MOLD);
-        m_buf_feat.add(TILE_MOLD + offset, x, y);
-    }
-    else if (cell.glowing_mold)
-    {
-        int offset = cell.flv.special % tile_dngn_count(TILE_GLOWING_MOLD);
-        m_buf_feat.add(TILE_GLOWING_MOLD + offset, x, y);
-    }
 }
 
 void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)

@@ -1243,12 +1243,10 @@ static bool _needs_flavour(const packed_cell &cell)
     tileidx_t bg_idx = cell.bg & TILE_FLAG_MASK;
     if (bg_idx >= TILE_DNGN_FIRST_TRANSPARENT)
         return true; // Needs flv.floor
-    if (cell.is_liquefied || cell.is_bloody ||
-        cell.is_moldy || cell.glowing_mold)
-    {
+    if (cell.is_liquefied || cell.is_bloody)
         return true; // Needs flv.special
-    }
     return false;
+
 }
 
 static inline unsigned _get_brand(int col)
@@ -1360,12 +1358,6 @@ void TilesFramework::_send_cell(const coord_def &gc,
             json_write_bool("highlighted_summoner",
                             next_pc.is_highlighted_summoner);
         }
-
-        if (next_pc.is_moldy != current_pc.is_moldy)
-            json_write_bool("moldy", next_pc.is_moldy);
-
-        if (next_pc.glowing_mold != current_pc.glowing_mold)
-            json_write_bool("glowing_mold", next_pc.glowing_mold);
 
         if (next_pc.is_sanctuary != current_pc.is_sanctuary)
             json_write_bool("sanctuary", next_pc.is_sanctuary);

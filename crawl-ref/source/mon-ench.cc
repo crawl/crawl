@@ -1541,69 +1541,6 @@ void monster::apply_enchantment(const mon_enchant &me)
         }
         break;
 
-    case ENCH_SPORE_PRODUCTION:
-        // Reduce the timer, if that means we lose the enchantment then
-        // spawn a spore and re-add the enchantment.
-        if (decay_enchantment(en))
-        {
-            bool re_add = true;
-
-            for (fair_adjacent_iterator ai(pos()); ai; ++ai)
-            {
-                if (mons_class_can_pass(MONS_BALLISTOMYCETE_SPORE, grd(*ai))
-                    && !actor_at(*ai))
-                {
-                    beh_type plant_attitude = SAME_ATTITUDE(this);
-
-                    if (monster *plant = create_monster(mgen_data(MONS_BALLISTOMYCETE_SPORE,
-                                                            plant_attitude,
-                                                            *ai,
-                                                            MHITNOT,
-                                                            MG_FORCE_PLACE)))
-                    {
-                        if (mons_is_god_gift(*this, GOD_FEDHAS))
-                        {
-                            plant->flags |= MF_NO_REWARD;
-
-                            if (plant_attitude == BEH_FRIENDLY)
-                            {
-                                plant->flags |= MF_ATT_CHANGE_ATTEMPT;
-
-                                mons_make_god_gift(*plant, GOD_FEDHAS);
-                            }
-                        }
-
-                        plant->behaviour = BEH_WANDER;
-                        plant->spore_cooldown = 20;
-
-                        if (you.see_cell(*ai) && you.see_cell(pos()))
-                            mpr("A ballistomycete spawns a ballistomycete spore.");
-
-                        // Decrease the count and maybe become inactive
-                        // again.
-                        if (ballisto_activity)
-                        {
-                            ballisto_activity--;
-                            if (ballisto_activity == 0)
-                            {
-                                colour = MAGENTA;
-                                del_ench(ENCH_SPORE_PRODUCTION);
-                                re_add = false;
-                            }
-                        }
-
-                    }
-                    break;
-                }
-            }
-            // Re-add the enchantment (this resets the spore production
-            // timer).
-            if (re_add)
-                add_ench(ENCH_SPORE_PRODUCTION);
-        }
-
-        break;
-
     case ENCH_EXPLODING:
     {
         // Reduce the timer, if that means we lose the enchantment then
@@ -2307,11 +2244,6 @@ int mon_enchant::calc_duration(const monster* mons,
         return (2 * FRESHEST_CORPSE + random2(10))
                   * dur;
     }
-    case ENCH_SPORE_PRODUCTION:
-        // This is used as a simple timer, when the enchantment runs out
-        // the monster will create a ballistomycete spore.
-        return random_range(475, 525) * 10;
-
     case ENCH_EXPLODING:
         return random_range(3, 7) * 10;
 

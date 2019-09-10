@@ -2127,53 +2127,6 @@ static void _check_trapped()
     }
 }
 
-static void _update_mold_state(const coord_def & pos)
-{
-    if (coinflip())
-    {
-        // Doing a weird little state thing with the two mold
-        // fprops. 'glowing' mold should turn back to normal after
-        // a couple display update (i.e. after the player makes their
-        // next move), since we happen to have two bits dedicated to
-        // mold now we may as well use them? -cao
-        if (env.pgrid(pos) & FPROP_MOLD)
-            env.pgrid(pos) &= ~FPROP_MOLD;
-        else
-        {
-            env.pgrid(pos) |= FPROP_MOLD;
-            env.pgrid(pos) &= ~FPROP_GLOW_MOLD;
-        }
-    }
-}
-
-static void _update_mold()
-{
-    env.level_state &= ~LSTATE_GLOW_MOLD; // we'll restore it if any
-
-    for (rectangle_iterator ri(0); ri; ++ri)
-    {
-        if (glowing_mold(*ri))
-        {
-            _update_mold_state(*ri);
-            env.level_state |= LSTATE_GLOW_MOLD;
-        }
-    }
-    for (monster_iterator mon_it; mon_it; ++mon_it)
-    {
-        if (mon_it->type == MONS_HYPERACTIVE_BALLISTOMYCETE)
-        {
-            for (radius_iterator rad_it(mon_it->pos(), 2, C_SQUARE);
-                 rad_it; ++rad_it)
-            {
-                // Matche the blast of a radius 2 explosion.
-                env.pgrid(*rad_it) |= FPROP_MOLD;
-                env.pgrid(*rad_it) |= FPROP_GLOW_MOLD;
-            }
-            env.level_state |= LSTATE_GLOW_MOLD;
-        }
-    }
-}
-
 static void _update_golubria_traps()
 {
     vector<coord_def> traps = find_golubria_on_level();
@@ -2279,8 +2232,6 @@ void world_reacts()
 
     handle_time();
     manage_clouds();
-    if (env.level_state & LSTATE_GLOW_MOLD)
-        _update_mold();
     if (env.level_state & LSTATE_GOLUBRIA)
         _update_golubria_traps();
     if (env.level_state & LSTATE_STILL_WINDS)

@@ -167,13 +167,6 @@ static void _update_feat_at(const coord_def &gp)
     if (is_bloodcovered(gp))
         env.map_knowledge(gp).flags |= MAP_BLOODY;
 
-    if (is_moldy(gp))
-    {
-        env.map_knowledge(gp).flags |= MAP_MOLDY;
-        if (glowing_mold(gp))
-            env.map_knowledge(gp).flags |= MAP_GLOWING_MOLDY;
-    }
-
     if (env.level_state & LSTATE_SLIMY_WALL && slime_wall_neighbour(gp))
         env.map_knowledge(gp).flags |= MAP_CORRODING;
 

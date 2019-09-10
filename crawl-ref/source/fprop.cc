@@ -32,31 +32,12 @@ bool is_tide_immune(const coord_def &p)
     return bool(env.pgrid(p) & FPROP_NO_TIDE);
 }
 
-bool is_moldy(const coord_def & p)
-{
-    return env.pgrid(p) & FPROP_MOLD
-           || env.pgrid(p) & FPROP_GLOW_MOLD;
-}
-
-bool glowing_mold(const coord_def & p)
-{
-    return bool(env.pgrid(p) & FPROP_GLOW_MOLD);
-}
-
-void remove_mold(const coord_def & p)
-{
-    env.pgrid(p) &= ~FPROP_MOLD;
-    env.pgrid(p) &= ~FPROP_GLOW_MOLD;
-}
-
 feature_property_type str_to_fprop(const string &str)
 {
     if (str == "bloody")
         return FPROP_BLOODY;
     if (str == "highlight")
         return FPROP_HIGHLIGHT;
-    if (str == "mold")
-        return FPROP_MOLD;
     if (str == "no_cloud_gen")
         return FPROP_NO_CLOUD_GEN;
     if (str == "no_tele_into")

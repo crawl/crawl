@@ -1431,15 +1431,10 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
         print_blood = false;
     }
 
-    // Mold has the same restrictions as blood but takes precedence.
     if (print_blood)
     {
-        if (mc.flags & MAP_GLOWING_MOLDY)
-            cell.glowing_mold = true;
-        else if (mc.flags & MAP_MOLDY)
-            cell.is_moldy = true;
         // Corpses have a blood puddle of their own.
-        else if (mc.flags & MAP_BLOODY && !_top_item_is_corpse(mc))
+        if (mc.flags & MAP_BLOODY && !_top_item_is_corpse(mc))
         {
             cell.is_bloody = true;
             cell.blood_rotation = blood_rotation(gc);

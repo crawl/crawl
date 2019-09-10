@@ -1205,6 +1205,12 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_BALLISTOMYCETE,
+      {
+       { SPELL_SPORULATE, 67, MON_SPELL_NATURAL },
+      }
+    },
+
     // ('Q') Tengu.
     {  MST_TENGU_CONJURER_I,
       {

@@ -30,8 +30,6 @@ struct packed_cell
     bool is_bloody;
     bool is_silenced;
     char halo;
-    bool is_moldy;
-    bool glowing_mold;
     bool is_sanctuary;
     bool is_liquefied;
     bool mangrove_water;
@@ -51,10 +49,10 @@ struct packed_cell
 
     packed_cell() : num_dngn_overlay(0), fg(0), bg(0), cloud(0),
                     is_highlighted_summoner(false), is_bloody(false),
-                    is_silenced(false), halo(HALO_NONE), is_moldy(false),
-                    glowing_mold(false), is_sanctuary(false), is_liquefied(false),
-                    mangrove_water(false), awakened_forest(false), orb_glow(0),
-                    blood_rotation(0), old_blood(false), travel_trail(0),
+                    is_silenced(false), halo(HALO_NONE), is_sanctuary(false),
+                    is_liquefied(false), mangrove_water(false),
+                    awakened_forest(false), orb_glow(0), blood_rotation(0),
+                    old_blood(false), travel_trail(0),
                     quad_glow(false), disjunct(false)
 #if TAG_MAJOR_VERSION == 34
                     , heat_aura(false)
@@ -69,8 +67,6 @@ struct packed_cell
                                         is_bloody(c->is_bloody),
                                         is_silenced(c->is_silenced),
                                         halo(c->halo),
-                                        is_moldy(c->is_moldy),
-                                        glowing_mold(c->glowing_mold),
                                         is_sanctuary(c->is_sanctuary),
                                         is_liquefied(c->is_liquefied),
                                         mangrove_water(c->mangrove_water),

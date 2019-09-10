@@ -1071,18 +1071,6 @@ void down_stairs(dungeon_feature_type force_stair, bool force_known_shaft, bool 
     take_stairs(force_stair, false, force_known_shaft, update_travel_cache);
 }
 
-static bool _any_glowing_mold()
-{
-    for (rectangle_iterator ri(0); ri; ++ri)
-        if (glowing_mold(*ri))
-            return true;
-    for (monster_iterator mon_it; mon_it; ++mon_it)
-        if (mon_it->type == MONS_HYPERACTIVE_BALLISTOMYCETE)
-            return true;
-
-    return false;
-}
-
 static void _update_level_state()
 {
     env.level_state = 0;
@@ -1091,8 +1079,6 @@ static void _update_level_state()
     if (!golub.empty())
         env.level_state |= LSTATE_GOLUBRIA;
 
-    if (_any_glowing_mold())
-        env.level_state |= LSTATE_GLOW_MOLD;
     for (monster_iterator mon_it; mon_it; ++mon_it)
     {
         if (mons_allows_beogh(**mon_it))

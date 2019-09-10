@@ -938,9 +938,7 @@ fungus6
 fungus7
 fungus8
 fungus9
-ballistomycete MONS_BALLISTOMYCETE_INACTIVE
-active_ballistomycete
-hyperactive_ballistomycete MONS_HYPERACTIVE_BALLISTOMYCETE
+ballistomycete MONS_BALLISTOMYCETE
 wandering_mushroom MONS_WANDERING_MUSHROOM
 deathcap MONS_DEATHCAP
 %rim 1

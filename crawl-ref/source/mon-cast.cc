@@ -1912,6 +1912,7 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_GREATER_SERVANT_MAKHLEB:
     case SPELL_BIND_SOULS:
     case SPELL_DREAM_DUST:
+    case SPELL_SPORULATE:
         pbolt.range = 0;
         pbolt.glyph = 0;
         return true;
@@ -6878,6 +6879,19 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     case SPELL_UPHEAVAL:
         _mons_upheaval(*mons, *foe);
         return;
+
+    case SPELL_SPORULATE:
+    {
+        mgen_data spored (MONS_BALLISTOMYCETE_SPORE,
+                mons->friendly() ? BEH_FRIENDLY : BEH_HOSTILE, mons->pos(),
+                mons->foe);
+        spored.set_summoned(mons, 0, SPELL_SPORULATE);
+
+        if (monster *spore = create_monster(spored))
+            spore->add_ench(ENCH_SHORT_LIVED);
+
+        return;
+    }
 
     }
 

@@ -3095,60 +3095,6 @@ static void _jelly_grows(monster& mons)
     _jelly_divide(mons);
 }
 
-/**
- * Possibly place mold & ballistomycetes in ballistomycete spores' wake.
- *
- * @param mons      The ballistomycete spore in question.
- * @param position  Its last location. (Where to place the ballistomycete.)
- */
-static void _ballisto_on_move(monster& mons, const coord_def& position)
-{
-    if (mons.type != MONS_BALLISTOMYCETE_SPORE
-        || mons.is_summoned())
-    {
-        return;
-    }
-
-    // place mold under the spore's current tile, if there isn't any now.
-    const dungeon_feature_type current_ftype = env.grid(mons.pos());
-    if (current_ftype == DNGN_FLOOR)
-        env.pgrid(mons.pos()) |= FPROP_MOLD;
-
-    if (mons.spore_cooldown > 0)
-    {
-        mons.spore_cooldown--;
-        return;
-    }
-
-    if (!one_chance_in(4))
-        return;
-
-    // Try to make a ballistomycete.
-    beh_type attitude = attitude_creation_behavior(mons.attitude);
-    // Make Fedhas ballistos neutral, so as not to inflict extra piety loss.
-    if (mons_is_god_gift(mons, GOD_FEDHAS))
-        attitude = BEH_GOOD_NEUTRAL;
-
-    monster *plant = create_monster(mgen_data(MONS_BALLISTOMYCETE, attitude,
-                                              position, MHITNOT,
-                                              MG_FORCE_PLACE));
-
-    if (!plant)
-        return;
-
-    // Don't leave mold on squares we place ballistos on
-    remove_mold(position);
-
-    if (you.can_see(*plant))
-    {
-        mprf("%s grows in the wake of %s.",
-             plant->name(DESC_A).c_str(), mons.name(DESC_THE).c_str());
-    }
-
-    // reset the cooldown.
-    mons.spore_cooldown = 40;
-}
-
 bool monster_swaps_places(monster* mon, const coord_def& delta,
                           bool takes_time, bool apply_effects)
 {
@@ -3311,12 +3257,9 @@ static bool _do_move_monster(monster& mons, const coord_def& delta)
         mons.seen_context = SC_NONSWIMMER_SURFACES_FROM_DEEP;
     }
 
-    coord_def old_pos = mons.pos();
-
     mons.move_to_pos(f, false);
 
     mons.check_clinging(true);
-    _ballisto_on_move(mons, old_pos);
 
     // Let go of all constrictees; only stop *being* constricted if we are now
     // too far away (done in move_to_pos above).

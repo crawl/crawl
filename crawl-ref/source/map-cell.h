@@ -23,8 +23,6 @@
 
 /* these flags require more space to serialize: put infrequently used ones there */
 #define MAP_EXCLUDED_STAIRS  0x10000
-#define MAP_MOLDY            0x20000
-#define MAP_GLOWING_MOLDY    0x40000
 #define MAP_SANCTUARY_1      0x80000
 #define MAP_SANCTUARY_2     0x100000
 #define MAP_WITHHELD        0x200000

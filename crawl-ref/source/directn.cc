@@ -2878,15 +2878,8 @@ string feature_description_at(const coord_def& where, bool covering,
 
     string covering_description = "";
 
-    if (covering && you.see_cell(where))
-    {
-        if (is_bloodcovered(where))
-            covering_description = ", spattered with blood";
-        else if (glowing_mold(where))
-            covering_description = ", covered with glowing mould";
-        else if (is_moldy(where))
-            covering_description = ", covered with mould";
-    }
+    if (covering && you.see_cell(where) && is_bloodcovered(where))
+        covering_description = ", spattered with blood";
 
     // FIXME: remove desc markers completely; only Zin walls are left.
     // They suffer, among other problems, from an information leak.
