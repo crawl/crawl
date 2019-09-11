@@ -7,7 +7,7 @@ import re
 
 import config
 
-from tornado.escape import json_decode, json_encode, xhtml_escape
+from tornado.escape import json_decode, json_encode, xhtml_escape, utf8, to_unicode
 from tornado.ioloop import PeriodicCallback, IOLoop
 
 from terminal import TerminalRecorder
@@ -30,7 +30,7 @@ def find_game_info(socket_dir, socket_file):
         return config.games[game_id]
 
     game_info = None
-    for game_id in config.games.keys():
+    for game_id in list(config.games.keys()):
         gi = config.games[game_id]
         if os.path.abspath(gi["socket_path"]) == os.path.abspath(socket_dir):
             game_info = gi
@@ -71,7 +71,7 @@ def handle_new_socket(path, event):
 def watch_socket_dirs():
     watcher = DirectoryWatcher()
     added_dirs = set()
-    for game_id in config.games.keys():
+    for game_id in list(config.games.keys()):
         game_info = config.games[game_id]
         socket_dir = os.path.abspath(game_info["socket_path"])
         if socket_dir in added_dirs: continue
@@ -432,7 +432,7 @@ class CrawlProcessHandlerBase(object):
                                            self.username)
 
     def _send_client(self, watcher):
-        h = hashlib.sha1(os.path.abspath(self.client_path))
+        h = hashlib.sha1(utf8(os.path.abspath(self.client_path)))
         if self.crawl_version:
             h.update(self.crawl_version)
         v = h.hexdigest()
@@ -442,7 +442,7 @@ class CrawlProcessHandlerBase(object):
         templ_path = os.path.join(self.client_path, "templates")
         loader = DynamicTemplateLoader.get(templ_path)
         templ = loader.load("game.html")
-        game_html = templ.generate(version = v)
+        game_html = to_unicode(templ.generate(version = v))
         watcher.send_message("game_client", version = v, content = game_html)
 
     def stop(self):
@@ -632,7 +632,7 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
                                 self._stale_pid)
         try:
             os.kill(self._stale_pid, signal)
-        except OSError, e:
+        except OSError as e:
             if e.errno == errno.ESRCH:
                 # Process doesn't exist
                 self._purge_stale_lock()
@@ -687,7 +687,7 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
 
         try: # Unlink if necessary
             os.unlink(self.socketpath)
-        except OSError, e:
+        except OSError as e:
             if e.errno != errno.ENOENT:
                 raise
 
@@ -763,20 +763,17 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
             pass
 
     def _ttyrec_id_header(self):
-        clrscr = "\033[2J"
-        crlf = "\r\n"
-        templ = (clrscr + "\033[1;1H" + crlf +
-                 "Player: %s" + crlf +
-                 "Game: %s" + crlf +
-                 "Server: %s" + crlf +
-                 "Filename: %s" + crlf +
-                 "Time: (%s) %s" + crlf +
-                 clrscr)
+        clrscr = b"\033[2J"
+        crlf = b"\r\n"
         tstamp = int(time.time())
         ctime = time.ctime()
-        return templ % (self.username, self.game_params["name"],
-                        config.server_id, self.lock_basename,
-                        tstamp, ctime)
+        return (clrscr + b"\033[1;1H" + crlf +
+                 utf8("Player: %s" % self.username) + crlf +
+                 utf8("Game: %s" % self.game_params["name"]) + crlf +
+                 utf8("Server: %s" % config.server_id) + crlf +
+                 utf8("Filename: %s" % self.lock_basename) + crlf +
+                 utf8("Time: (%s) %s" % (tstamp, ctime)) + crlf +
+                 clrscr)
 
     def _on_process_end(self):
         self.logger.info("Crawl terminated.")
@@ -821,9 +818,9 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
             for x in obj.get("data", []):
                 data += chr(x)
 
-            data += obj.get("text", u"").encode("utf8")
+            data += obj.get("text", "")
 
-            self.process.write_input(data)
+            self.process.write_input(utf8(data))
 
         elif obj["msg"] == "force_terminate":
             self._do_force_terminate(obj["answer"])
@@ -832,7 +829,7 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
             self._stop_purging_stale_processes()
 
         elif self.conn and self.conn.open:
-            self.conn.send_message(msg.encode("utf8"))
+            self.conn.send_message(utf8(msg))
 
     def handle_chat_message(self, username, text):
         super(CrawlProcessHandler, self).handle_chat_message(username, text)
@@ -865,7 +862,7 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
         elif line.startswith("We crashed!"):
             self.exit_reason = "crash"
             if self.game_params["morgue_url"] != None:
-                match = re.search("\(([^)]+)\)", line)
+                match = re.search(r"\(([^)]+)\)", line)
                 if match != None:
                     self.exit_dump_url = self.game_params["morgue_url"].replace("%n", self.username)
                     self.exit_dump_url += os.path.splitext(os.path.basename(match.group(1)))[0]
@@ -887,6 +884,7 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
         if self.process:
             self.process.output_callback = None
 
+        # msg is a str already
         if msg.startswith("*"):
             # Special message to the server
             msg = msg[1:]

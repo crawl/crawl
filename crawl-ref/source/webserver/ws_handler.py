@@ -1,4 +1,4 @@
-from tornado.escape import json_encode, json_decode, utf8
+from tornado.escape import json_encode, json_decode, utf8, to_unicode
 import tornado.websocket
 import tornado.ioloop
 from tornado.ioloop import IOLoop
@@ -82,7 +82,7 @@ def find_user_sockets(username):
 
 def find_running_game(charname, start):
     from process_handler import processes
-    for process in processes.values():
+    for process in list(processes.values()):
         if (process.where.get("name") == charname and
             process.where.get("start") == start):
             return process
@@ -92,7 +92,7 @@ milestone_file_tailers = []
 def start_reading_milestones():
     if config.milestone_file is None: return
 
-    if isinstance(config.milestone_file, basestring):
+    if isinstance(config.milestone_file, str):
         files = [config.milestone_file]
     else:
         files = config.milestone_file
@@ -230,15 +230,17 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
     def send_lobby(self):
         self.queue_message("lobby_clear")
         from process_handler import processes
-        for process in processes.values():
+        for process in list(processes.values()):
             self.queue_message("lobby_entry", **process.lobby_entry())
         self.send_message("lobby_complete")
 
     def send_game_links(self):
         # Rerender Banner
-        banner_html = self.render_string("banner.html", username = self.username)
+        banner_html = to_unicode(self.render_string("banner.html",
+                                                    username = self.username))
         self.queue_message("html", id = "banner", content = banner_html)
-        play_html = self.render_string("game_links.html", games = config.games)
+        play_html = to_unicode(self.render_string("game_links.html",
+                                                  games = config.games))
         self.send_message("set_game_links", content = play_html)
 
     def reset_timeout(self):
@@ -368,7 +370,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
     def shutdown(self):
         if not self.client_closed:
             self.logger.info("Shutting down user %s id %d", self.username, self.id)
-            msg = self.render_string("shutdown.html", game=self)
+            msg = to_unicode(self.render_string("shutdown.html", game=self))
             self.send_message("close", reason = msg)
             self.close()
         if self.is_running():
@@ -407,7 +409,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
     def token_login(self, cookie):
         username, _, token = cookie.partition(' ')
         try:
-            token = long(token)
+            token = int(token)
         except ValueError:
             token = None
         if (token, username) in login_tokens:
@@ -431,7 +433,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         try:
             username, _, token = cookie.partition(' ')
             try:
-                token = long(token)
+                token = int(token)
             except ValueError:
                 token = None
             if (token, username) in login_tokens:
@@ -455,7 +457,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         if db_string is None:
             db_string = ""
         # list constructor here is for forward compatibility with python 3.
-        muted = list(filter(None, db_string.strip().split(' ')))
+        muted = list([_f for _f in db_string.strip().split(' ') if _f])
         receiver.restore_mutelist(self.username, muted)
 
     def save_mutelist(self, muted):
@@ -508,7 +510,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.process.stop()
 
         from process_handler import processes
-        procs = [process for process in processes.values()
+        procs = [process for process in list(processes.values())
                  if process.username.lower() == username.lower()]
         if len(procs) >= 1:
             process = procs[0]
@@ -625,8 +627,9 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         rcfile_path = dgl_format_str(config.games[game_id]["rcfile_path"],
                                      self.username, config.games[game_id])
         rcfile_path = os.path.join(rcfile_path, self.username + ".rc")
-        with open(rcfile_path, 'w') as f:
-            f.write(contents.encode("utf8"))
+        with open(rcfile_path, 'wb') as f:
+            # TODO: is binary + encode necessary in py 3?
+            f.write(utf8(contents))
 
     def on_message(self, message):
         try:
@@ -647,10 +650,13 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
     def flush_messages(self):
         if self.client_closed or len(self.message_queue) == 0:
             return
-        msg = "{\"msgs\":[" + ",".join(self.message_queue) + "]}"
+        msg = ("{\"msgs\":["
+                + ",".join(self.message_queue)
+                + "]}")
         self.message_queue = []
 
         try:
+            msg = utf8(msg)
             self.total_message_bytes += len(msg)
             if self.deflate:
                 # Compress like in deflate-frame extension:
@@ -671,7 +677,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
     def write_message(self, msg, send=True):
         if self.client_closed: return
-        self.message_queue.append(utf8(msg))
+        self.message_queue.append(msg)
         if send:
             self.flush_messages()
 

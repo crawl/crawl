@@ -1,11 +1,11 @@
 import socket
 import fcntl
-import os, os.path
+import os, os.path, tempfile
 import time
 import warnings
 
 from datetime import datetime, timedelta
-from tornado.escape import json_encode
+from tornado.escape import json_encode, utf8, to_unicode
 from tornado.ioloop import IOLoop
 
 from config import server_socket_path
@@ -46,12 +46,16 @@ class WebtilesSocketConnection(object):
             self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, 212992)
 
         # Bind to a temp path
-        # Ignore the security warning about tempnam; in this case,
-        # there is no security risk (the most that can happen is that
-        # the bind call fails)
+        # there's a race condition here...
+        # note that mktmp here is deprecated, and we may eventually need to
+        # do something different. One simple idea is to keep sockets in a
+        # temporary directory generated from tempfile calls (i.e
+        # tempfile.mkdtemp), but use our own naming scheme. Because this is a
+        # socket, regular calls in tempfile are not appropriate.
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
-            self.socketpath = os.tempnam(server_socket_path, "crawl")
+            self.socketpath = tempfile.mktemp(dir=server_socket_path,
+                                              prefix="crawl", suffix=".socket")
         self.socket.bind(self.socketpath)
 
         # Install handler
@@ -66,7 +70,7 @@ class WebtilesSocketConnection(object):
 
         self.open = True
 
-        self.send_message(msg)
+        self.send_message(utf8(msg))
 
     def _handle_read(self, fd, events):
         if events & IOLoop.READ:
@@ -78,24 +82,26 @@ class WebtilesSocketConnection(object):
             pass
 
     def _handle_data(self, data):
+        # `data` should be bytes at this point
         if self.msg_buffer is not None:
             data = self.msg_buffer + data
 
-        if data[-1] != "\n":
+        # TODO: is this check safe? Decoding won't always work for
+        # fragmented messages...
+        if data[-1] != b'\n'[0]:
             # All messages from crawl end with \n.
             # If this one doesn't, it's fragmented.
             self.msg_buffer = data
-
         else:
             self.msg_buffer = None
 
             if self.message_callback:
-                self.message_callback(data)
+                self.message_callback(to_unicode(data))
 
     def send_message(self, data):
         start = datetime.now()
         try:
-            self.socket.sendto(data, self.crawl_socketpath)
+            self.socket.sendto(utf8(data), self.crawl_socketpath)
         except socket.timeout:
             self.logger.warning("Game socket send timeout", exc_info=True)
             self.close()

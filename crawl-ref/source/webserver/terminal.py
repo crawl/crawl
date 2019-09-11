@@ -16,12 +16,12 @@ class TerminalRecorder(object):
     def __init__(self, command, filename, id_header, logger, termsize):
         self.command = command
         if filename:
-            self.ttyrec = open(filename, "w", 0)
+            self.ttyrec = open(filename, "wb", 0)
         else:
             self.ttyrec = None
         self.id = id
         self.returncode = None
-        self.output_buffer = ""
+        self.output_buffer = b""
         self.termsize = termsize
 
         self.pid = None
@@ -33,7 +33,7 @@ class TerminalRecorder(object):
         self.error_callback = None
 
         self.errpipe_read = None
-        self.error_buffer = ""
+        self.error_buffer = b""
 
         self.logger = logger
 
@@ -130,33 +130,33 @@ class TerminalRecorder(object):
         self.ttyrec.write(data)
 
     def _do_output_callback(self):
-        pos = self.output_buffer.find("\n")
+        pos = self.output_buffer.find(b"\n")
         while pos >= 0:
             line = self.output_buffer[:pos]
             self.output_buffer = self.output_buffer[pos + 1:]
 
             if len(line) > 0:
-                if line[-1] == "\r": line = line[:-1]
+                if line[-1] == b"\r": line = line[:-1]
 
                 if self.output_callback:
                     self.output_callback(line)
 
-            pos = self.output_buffer.find("\n")
+            pos = self.output_buffer.find(b"\n")
 
     def _log_error_output(self):
-        pos = self.error_buffer.find("\n")
+        pos = self.error_buffer.find(b"\n")
         while pos >= 0:
             line = self.error_buffer[:pos]
             self.error_buffer = self.error_buffer[pos + 1:]
 
             if len(line) > 0:
-                if line[-1] == "\r": line = line[:-1]
+                if line[-1] == b"\r": line = line[:-1]
 
                 self.logger.info("ERR: %s", line)
                 if self.error_callback:
                     self.error_callback(line)
 
-            pos = self.error_buffer.find("\n")
+            pos = self.error_buffer.find(b"\n")
 
 
     def send_signal(self, signal):
