@@ -265,6 +265,7 @@ const vector<god_power> god_powers[NUM_GODS] =
     {
       { 2, ABIL_FEDHAS_WALL_OF_BRIARS, "encircle yourself with summoned briar patches"},
       { 3, ABIL_FEDHAS_GROW_BALLISTOMYCETE, "grow a ballistomycete" },
+      { 4, ABIL_FEDHAS_OVERGROW, "transform dungeon walls and trees into plant allies"},
     },
 
     // Cheibriados

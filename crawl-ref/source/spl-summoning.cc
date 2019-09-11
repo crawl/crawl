@@ -3525,6 +3525,61 @@ bool fedhas_wall_of_briars()
     return created_count;
 }
 
+static void _overgrow_wall(const coord_def &pos)
+{
+    const dungeon_feature_type feat = grd(pos);
+    const string what = feature_description(feat, NUM_TRAPS, "", DESC_THE,
+            false);
+
+    if (monster_at(pos))
+    {
+        mprf("Something unseen blocks growth in %s.", what.c_str());
+        return;
+    }
+
+    destroy_wall(pos);
+
+    const monster_type mon = random_choose_weighted(4, MONS_OKLOB_SAPLING,
+                                                    4, MONS_BURNING_BUSH,
+                                                    4, MONS_WANDERING_MUSHROOM,
+                                                    1, MONS_BALLISTOMYCETE,
+                                                    1, MONS_OKLOB_PLANT);
+    mgen_data mgen(mon, BEH_FRIENDLY, pos, MHITYOU, MG_FORCE_PLACE);
+    mgen.hd = mons_class_hit_dice(mon) + you.skill_rdiv(SK_INVOCATIONS);
+    mgen.set_summoned(&you, 3 + you.skill_rdiv(SK_INVOCATIONS, 1, 5),
+            SPELL_NO_SPELL);
+    if (const monster* const plant = create_monster(mgen))
+    {
+        mprf("%s is torn apart as %s grows in its place.", what.c_str(),
+                plant->name(DESC_A).c_str());
+    }
+    // XXX: Maybe try to make this revert the terrain if a monster isn't placed.
+    else
+        mprf("%s falls apart, but nothing grows.", what.c_str());
+}
+
+bool fedhas_overgrow()
+{
+    targeter_overgrow tgt;
+    direction_chooser_args args;
+    args.hitfunc = &tgt;
+    args.restricts = DIR_TARGET;
+    args.mode = TARG_ANY;
+    args.range = LOS_RADIUS;
+    args.just_looking = false;
+    args.needs_path = false;
+    args.top_prompt = "Aiming: <white>Overgrow</white>";
+    dist sdirect;
+    direction(sdirect, args);
+    if (!sdirect.isValid)
+        return false;
+
+    for (auto site : tgt.affected_positions)
+        _overgrow_wall(site);
+
+    return true;
+}
+
 spret fedhas_grow_ballistomycete(bool fail)
 {
     dist spd;

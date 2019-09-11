@@ -1604,3 +1604,74 @@ aff_type targeter_monster_sequence::is_affected(coord_def loc)
 
     return on_path ? AFF_TRACER : AFF_NO;
 }
+
+targeter_overgrow::targeter_overgrow()
+{
+    agent = &you;
+    origin = you.pos();
+}
+
+bool targeter_overgrow::overgrow_affects_pos(const coord_def &p)
+{
+    if (env.markers.property_at(p, MAT_ANY, "veto_shatter") == "veto")
+        return false;
+
+    const dungeon_feature_type feat = grd(p);
+    if (feat_is_open_door(feat))
+    {
+        const monster* const mons = monster_at(p);
+        if (mons && agent && agent->can_see(*mons))
+            return false;
+
+        return true;
+    }
+
+    return feat_is_diggable(feat)
+        || feat_is_closed_door(feat)
+        || feat_is_tree(feat)
+        || (feat_is_wall(feat) && !feat_is_permarock(feat));
+}
+
+aff_type targeter_overgrow::is_affected(coord_def loc)
+{
+    if (affected_positions.count(loc))
+        return AFF_YES;
+
+    return AFF_NO;
+}
+
+bool targeter_overgrow::valid_aim(coord_def a)
+{
+    if (a != origin && !cell_see_cell(origin, a, LOS_NO_TRANS))
+    {
+        if (agent && agent->see_cell(a))
+            return notify_fail("There's something in the way.");
+        return notify_fail("You cannot see that place.");
+    }
+
+    if (!overgrow_affects_pos(a))
+        return notify_fail("You cannot grow anything here.");
+
+    return true;
+}
+
+bool targeter_overgrow::set_aim(coord_def a)
+{
+    affected_positions.clear();
+
+    if (!targeter::set_aim(a))
+        return false;
+
+    if (overgrow_affects_pos(a))
+        affected_positions.insert(a);
+    else
+        return false;
+
+    for (adjacent_iterator ai(a, true); ai; ++ai)
+    {
+        if (overgrow_affects_pos(*ai) && you.see_cell_no_trans(*ai))
+            affected_positions.insert(*ai);
+    }
+
+    return affected_positions.size();
+}

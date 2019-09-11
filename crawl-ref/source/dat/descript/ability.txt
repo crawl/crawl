@@ -492,6 +492,11 @@ Grow a short-lived Ballistomycete at the location you choose. A Ballistomycete
 occasionally release spores that quickly seek out foes and violently explode,
 damaging and confusing all living things caught in the blast.
 %%%%
+Overgrow ability
+
+Permanently destroy wall-like structures, growing a short-lived plant ally in
+its place. Even a tree will give its life to support the will of Fedhas.
+%%%%
 # Cheibriados
 Bend Time ability
 

@@ -324,3 +324,15 @@ public:
 private:
     map<coord_def, int> aim_test_cache;
 };
+
+class targeter_overgrow: public targeter
+{
+public:
+    targeter_overgrow();
+    bool valid_aim(coord_def a) override;
+    aff_type is_affected(coord_def loc) override;
+    bool set_aim(coord_def a) override;
+    set<coord_def> affected_positions;
+private:
+    bool overgrow_affects_pos(const coord_def &p);
+};

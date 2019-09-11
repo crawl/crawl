@@ -128,3 +128,4 @@ int count_summons(const actor *summoner, spell_type spell);
 
 bool fedhas_wall_of_briars();
 spret fedhas_grow_ballistomycete(bool fail);
+bool fedhas_overgrow();
