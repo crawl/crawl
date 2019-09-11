@@ -514,8 +514,6 @@ static const ability_def Ability_List[] =
       0, 0, 0, 15, {fail_basis::invo}, abflag::none },
 
     // Fedhas
-    { ABIL_FEDHAS_RAIN, "Rain",
-      4, 0, 150, 4, {fail_basis::invo, 70, 4, 25}, abflag::none },
     { ABIL_FEDHAS_WALL_OF_BRIARS, "Wall of Briars",
       3, 0, 50, 2, {fail_basis::invo, 30, 6, 20}, abflag::none},
     { ABIL_FEDHAS_GROW_BALLISTOMYCETE, "Grow Ballistomycete",
@@ -1568,7 +1566,6 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
             return false;
         }
         return true;
-
 
     case ABIL_SPIT_POISON:
     case ABIL_BREATHE_FIRE:
@@ -2851,15 +2848,6 @@ static spret _do_ability(const ability_def& abil, bool fail)
 
         break;
     }
-
-    case ABIL_FEDHAS_RAIN:
-        fail_check();
-        if (!fedhas_rain(you.pos()))
-        {
-            canned_msg(MSG_NOTHING_HAPPENS);
-            return spret::abort;
-        }
-        break;
 
     case ABIL_TRAN_BAT:
     {
