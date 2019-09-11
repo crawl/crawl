@@ -520,6 +520,8 @@ static const ability_def Ability_List[] =
       4, 0, 100, 4, {fail_basis::invo, 60, 4, 25}, abflag::none },
     { ABIL_FEDHAS_OVERGROW, "Overgrow",
       8, 0, 200, 12, {fail_basis::invo, 70, 5, 20}, abflag::none},
+    { ABIL_FEDHAS_GROW_OKLOB, "Grow Oklob",
+      6, 0, 150, 6, {fail_basis::invo, 80, 4, 25}, abflag::none },
 
     // Cheibriados
     { ABIL_CHEIBRIADOS_TIME_BEND, "Bend Time",
@@ -2857,6 +2859,13 @@ static spret _do_ability(const ability_def& abil, bool fail)
 
         if (!fedhas_overgrow())
             return spret::abort;
+
+        break;
+    }
+
+    case ABIL_FEDHAS_GROW_OKLOB:
+    {
+        return fedhas_grow_oklob(fail);
 
         break;
     }

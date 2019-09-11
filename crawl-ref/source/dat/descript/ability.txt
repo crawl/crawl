@@ -497,6 +497,10 @@ Overgrow ability
 Permanently destroy wall-like structures, growing a short-lived plant ally in
 its place. Even a tree will give its life to support the will of Fedhas.
 %%%%
+Grow Oklob ability
+
+Grow a short-lived oklob plant at the location you choose. These dangerous plants spray corrosive vitriol at your foes.
+%%%%
 # Cheibriados
 Bend Time ability
 

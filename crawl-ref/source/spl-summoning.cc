@@ -3636,3 +3636,61 @@ spret fedhas_grow_ballistomycete(bool fail)
 
     return spret::success;
 }
+
+spret fedhas_grow_oklob(bool fail)
+{
+    dist spd;
+    bolt beam;
+    beam.range = 2;
+    direction_chooser_args args;
+    args.restricts = DIR_TARGET;
+    args.mode = TARG_HOSTILE;
+    args.needs_path = false;
+    if (!spell_direction(spd, beam, &args))
+        return spret::abort;
+
+    if (grid_distance(beam.target, you.pos()) > 2 || !in_bounds(beam.target))
+    {
+        mpr("That's too far away.");
+        return spret::abort;
+    }
+
+    if (!monster_habitable_grid(MONS_OKLOB_PLANT, grd(beam.target)))
+    {
+        mpr("You can't grow an oklob plant there.");
+        return spret::abort;
+    }
+
+    monster* mons = monster_at(beam.target);
+    if (mons)
+    {
+        if (you.can_see(*mons))
+        {
+            mpr("That space is already occupied.");
+            return spret::abort;
+        }
+
+        fail_check();
+
+        // invisible monster
+        mpr("Something you can't see is occupying that space!");
+        return spret::success;
+    }
+
+    fail_check();
+
+    mgen_data mgen(MONS_OKLOB_PLANT, BEH_FRIENDLY, beam.target, MHITYOU,
+            MG_FORCE_BEH | MG_FORCE_PLACE | MG_AUTOFOE);
+    mgen.hd = mons_class_hit_dice(MONS_OKLOB_PLANT) +
+        you.skill_rdiv(SK_INVOCATIONS);
+    mgen.set_summoned(&you, 3 + you.skill_rdiv(SK_INVOCATIONS, 1, 5),
+            SPELL_NO_SPELL);
+
+    if (create_monster(mgen))
+        mpr("An oklob plant grows from the ground.");
+    else
+        canned_msg(MSG_NOTHING_HAPPENS);
+
+    return spret::success;
+
+}
