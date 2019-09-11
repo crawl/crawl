@@ -3196,8 +3196,8 @@ monster* cast_phantom_mirror(monster* mons, monster* targ, int hp_perc, int summ
     mirror->mark_summoned(5, true, summ_type);
     mirror->add_ench(ENCH_PHANTOM_MIRROR);
     mirror->summoner = mons->mid;
-    mirror->hit_points = mirror->hit_points * 100 / hp_perc;
-    mirror->max_hit_points = mirror->max_hit_points * 100 / hp_perc;
+    mirror->hit_points = mirror->hit_points * hp_perc / 100;
+    mirror->max_hit_points = mirror->max_hit_points * hp_perc / 100;
 
     // Sometimes swap the two monsters, so as to disguise the original and the
     // copy.
