@@ -51,7 +51,7 @@ def daemonize():
         pid = os.fork()
         if pid > 0:
             os._exit(0)
-    except OSError, e:
+    except OSError as e:
         err_exit("Fork #1 failed! (%s)" % (e.strerror))
 
     os.setsid()
@@ -60,7 +60,7 @@ def daemonize():
         pid = os.fork()
         if pid > 0:
             os._exit(0)
-    except OSError, e:
+    except OSError as e:
         err_exit("Fork #2 failed! (%s)" % e.strerror)
 
     with open("/dev/null", "rw") as f:
@@ -79,7 +79,7 @@ def write_pidfile():
             err_exit("PIDfile %s contains non-numeric value" % pidfile)
         try:
             os.kill(pid, 0)
-        except OSError, why:
+        except OSError as why:
             if why[0] == errno.ESRCH:
                 # The pid doesn't exist.
                 logging.warn("Removing stale pidfile %s" % pidfile)
@@ -98,7 +98,7 @@ def remove_pidfile():
         return
     try:
         os.remove(pidfile)
-    except OSError, e:
+    except OSError as e:
         if e.errno == errno.EACCES or e.errno == errno.EPERM:
             logging.warn("No permission to delete pidfile!")
         else:
@@ -199,7 +199,7 @@ def init_logging(logging_config):
 
 def check_config():
     success = True
-    for (game_id, game_data) in games.iteritems():
+    for (game_id, game_data) in games.items():
         if not os.path.exists(game_data["crawl_binary"]):
             logging.warning("Crawl executable %s doesn't exist!", game_data["crawl_binary"])
             success = False

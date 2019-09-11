@@ -162,7 +162,7 @@ def upgrade_user_db():
 saltchars = "./0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
 
 def make_salt(saltlen):
-    return ''.join(random.choice(saltchars) for x in xrange(0,saltlen))
+    return ''.join(random.choice(saltchars) for x in range(0,saltlen))
 
 def encrypt_pw(passwd):
     passwd = passwd[0:max_passwd_length]
