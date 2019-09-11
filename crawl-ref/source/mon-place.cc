@@ -2833,13 +2833,6 @@ conduct_type player_will_anger_monster(const monster &mon)
     if (is_good_god(you.religion) && mon.evil())
         return DID_EVIL;
 
-    if (you_worship(GOD_FEDHAS)
-        && ((mon.holiness() & MH_UNDEAD && !mon.is_insubstantial())
-            || mon.has_corpse_violating_spell()))
-    {
-        return DID_CORPSE_VIOLATION;
-    }
-
     if (is_evil_god(you.religion) && mon.is_holy())
         return DID_HOLY;
 
@@ -2886,10 +2879,6 @@ bool player_angers_monster(monster* mon, bool real)
             {
             case DID_EVIL:
                 mprf("%s %s enraged by your holy aura!",
-                    mname.c_str(), vcomplex.c_str());
-                break;
-            case DID_CORPSE_VIOLATION:
-                mprf("%s %s revulsed by your support of nature!",
                     mname.c_str(), vcomplex.c_str());
                 break;
             case DID_HOLY:

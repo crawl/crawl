@@ -28,7 +28,6 @@ my %field_type = (
     CLARITY  => "bool",
     COLD     => "num",
     COLOUR   => "enum",
-    CORPSE_VIOLATING => "bool",
     CORRODE  => "bool",
     CURSE    => "bool",
     DEX      => "num",
@@ -256,8 +255,8 @@ sub finish_art
 
     my $flags = "";
     my $flag;
-    foreach $flag ("SPECIAL", "HOLY", "EVIL", "CHAOTIC",
-                   "CORPSE_VIOLATING", "NOGEN", "RANDAPP", "UNIDED", "SKIP_EGO")
+    foreach $flag ("SPECIAL", "HOLY", "EVIL", "CHAOTIC", "NOGEN", "RANDAPP",
+                   "UNIDED", "SKIP_EGO")
     {
         if ($artefact->{$flag})
         {

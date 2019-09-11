@@ -8,7 +8,6 @@ enum conduct_type
     DID_ATTACK_HOLY,
     DID_ATTACK_NEUTRAL,
     DID_ATTACK_FRIEND,
-    DID_FRIEND_DIED,
     DID_KILL_LIVING,
     DID_KILL_UNDEAD,
     DID_KILL_DEMON,
@@ -33,9 +32,6 @@ enum conduct_type
     DID_KILL_SLIME,                       // Jiyva
     DID_KILL_PLANT,                       // Fedhas
     DID_HASTY,                            // Cheibriados
-    DID_CORPSE_VIOLATION,                 // Fedhas (Necromancy involving
-                                          // corpses/chunks).
-    DID_SOULED_FRIEND_DIED,               // Zin
     DID_ATTACK_IN_SANCTUARY,              // Zin
     DID_KILL_NONLIVING,
     DID_EXPLORATION,                      // Ashenzari, wrath timers

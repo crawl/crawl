@@ -559,10 +559,7 @@ static void _ZONGULDROK_melee_effects(item_def* weapon, actor* attacker,
                                       actor* defender, bool mondied, int dam)
 {
     if (attacker->is_player())
-    {
         did_god_conduct(DID_EVIL, 3);
-        did_god_conduct(DID_CORPSE_VIOLATION, 3);
-    }
 }
 
 ///////////////////////////////////////////////////

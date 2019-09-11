@@ -898,9 +898,6 @@ static void _spellcasting_god_conduct(spell_type spell)
     if (is_chaotic_spell(spell))
         did_god_conduct(DID_CHAOS, conduct_level);
 
-    if (is_corpse_violating_spell(spell))
-        did_god_conduct(DID_CORPSE_VIOLATION, conduct_level);
-
     // not is_hasty_spell since the other ones handle the conduct themselves.
     if (spell == SPELL_SWIFTNESS)
         did_god_conduct(DID_HASTY, conduct_level);

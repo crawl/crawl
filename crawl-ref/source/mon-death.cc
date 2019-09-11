@@ -2216,21 +2216,6 @@ item_def* monster_die(monster& mons, killer_type killer,
 
             _fire_kill_conducts(mons, killer, killer_index, gives_player_xp);
 
-            // Kill conducts do not assess piety loss for friends
-            // killed by other monsters.
-            if (mons.friendly())
-            {
-                const bool sentient = mons_class_intel(mons.type) >= I_HUMAN;
-                // plant HD aren't very meaningful. (fedhas hack)
-                const int severity = mons.holiness() & MH_PLANT ?
-                                     1 :
-                                     1 + (mons.get_experience_level() / 4);
-
-                did_god_conduct(sentient ? DID_SOULED_FRIEND_DIED
-                                         : DID_FRIEND_DIED,
-                                severity, true, &mons);
-            }
-
             // Trying to prevent summoning abuse here, so we're trying to
             // prevent summoned creatures from being done_good kills. Only
             // affects creatures which were friendly when summoned.

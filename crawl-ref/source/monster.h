@@ -447,7 +447,6 @@ public:
     mon_spell_slot_flags spell_slot_flags(spell_type spell) const;
     bool has_unclean_spell() const;
     bool has_chaotic_spell() const;
-    bool has_corpse_violating_spell() const;
 
     bool has_attack_flavour(int flavour) const;
     bool has_damage_type(int dam_type);

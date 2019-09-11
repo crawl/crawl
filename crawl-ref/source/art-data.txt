@@ -282,7 +282,7 @@ TILE_EQ: zonguldrok
 BRAND:   SPWPN_REAPING
 FB_BRAND: SPWPN_PAIN
 VALUE:   800
-BOOL:    evil, corpse_violating
+BOOL:    evil
 
 NAME:    sword of Cerebov
 APPEAR:  great serpentine sword

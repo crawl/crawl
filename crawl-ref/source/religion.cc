@@ -3070,7 +3070,7 @@ static bool _transformed_player_can_join_god(god_type which_god)
     switch (you.form)
     {
     case transformation::lich:
-        return !(is_good_god(which_god) || which_god == GOD_FEDHAS);
+        return !is_good_god(which_god);
     case transformation::statue:
     case transformation::wisp:
         return !(which_god == GOD_YREDELEMNUL);
@@ -3121,10 +3121,6 @@ bool player_can_join_god(god_type which_god)
         return false;
 
     if (which_god == GOD_BEOGH && !species_is_orcish(you.species))
-        return false;
-
-    // Fedhas hates undead, but will accept demonspawn.
-    if (which_god == GOD_FEDHAS && you.undead_state())
         return false;
 
     if (which_god == GOD_GOZAG && you.gold < gozag_service_fee())
