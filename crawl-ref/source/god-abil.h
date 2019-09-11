@@ -106,22 +106,7 @@ bool kiku_gift_necronomicon();
 bool fedhas_passthrough_class(const monster_type mc);
 bool fedhas_passthrough(const monster* target);
 bool fedhas_passthrough(const monster_info* target);
-struct mgen_data;
-int place_ring(vector<coord_def>& ring_points,
-               const coord_def& origin,
-               mgen_data prototype,
-               int n_arcs,
-               int arc_occupancy,
-               int& seen_count);
-// Collect lists of points that are within LOS, unoccupied, and not solid
-// (walls/statues).
-void collect_radius_points(vector<vector<coord_def> > &radius_points,
-                           const coord_def &origin, los_type los);
-bool prioritise_adjacent(const coord_def& target, vector<coord_def>& candidates);
 int fedhas_rain(const coord_def &target);
-int count_corpses_in_los(vector<stack_iterator> *positions);
-int fedhas_check_corpse_spores(bool quiet = false);
-int fedhas_corpse_spores(beh_type attitude = BEH_FRIENDLY);
 
 void lugonu_bend_space();
 

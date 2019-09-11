@@ -127,3 +127,4 @@ int summons_limit(spell_type spell);
 int count_summons(const actor *summoner, spell_type spell);
 
 bool fedhas_wall_of_briars();
+spret fedhas_grow_ballistomycete(bool fail);

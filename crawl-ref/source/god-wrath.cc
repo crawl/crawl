@@ -7,11 +7,14 @@
 
 #include "god-wrath.h"
 
+#include <cmath>
+#include <queue>
 #include <sstream>
 
 #include "areas.h"
 #include "artefact.h"
 #include "attitude-change.h"
+#include "butcher.h"
 #include "cleansing-flame-source-type.h"
 #include "coordit.h"
 #include "database.h"
@@ -26,6 +29,7 @@
 #include "item-prop.h"
 #include "item-status-flag-type.h"
 #include "items.h"
+#include "losglobal.h"
 #include "makeitem.h"
 #include "message.h"
 #include "misc.h"
@@ -611,6 +615,31 @@ static bool _makhleb_retribution()
         return _makhleb_summon_servants();
 }
 
+static int _count_corpses_in_los(vector<stack_iterator> *positions)
+{
+    int count = 0;
+
+    for (radius_iterator rad(you.pos(), LOS_NO_TRANS, true); rad;
+         ++rad)
+    {
+        if (actor_at(*rad))
+            continue;
+
+        for (stack_iterator stack_it(*rad); stack_it; ++stack_it)
+        {
+            if (stack_it->is_type(OBJ_CORPSES, CORPSE_BODY))
+            {
+                if (positions)
+                    positions->push_back(stack_it);
+                count++;
+                break;
+            }
+        }
+    }
+
+    return count;
+}
+
 static bool _kikubaaqudgha_retribution()
 {
     // death/necromancy theme
@@ -619,7 +648,7 @@ static bool _kikubaaqudgha_retribution()
     god_speaks(god, coinflip() ? "You hear Kikubaaqudgha cackling."
                                : "Kikubaaqudgha's malice focuses upon you.");
 
-    if (!count_corpses_in_los(nullptr) || random2(you.experience_level) > 4)
+    if (!_count_corpses_in_los(nullptr) || random2(you.experience_level) > 4)
     {
         // Either zombies, or corpse rot + skeletons.
         kiku_receive_corpses(you.experience_level * 4);
@@ -1303,6 +1332,280 @@ static void _fedhas_elemental_miscast()
                   _god_wrath_name(god));
 }
 
+// Collect lists of points that are within LOS (under the given env map),
+// unoccupied, and not solid (walls/statues).
+static void _collect_radius_points(vector<vector<coord_def> > &radius_points,
+                                   const coord_def &origin, los_type los)
+{
+    radius_points.clear();
+    radius_points.resize(LOS_RADIUS);
+
+    // Just want to associate a point with a distance here for convenience.
+    typedef pair<coord_def, int> coord_dist;
+
+    // Using a priority queue because squares don't make very good circles at
+    // larger radii. We will visit points in order of increasing euclidean
+    // distance from the origin (not path distance). We want a min queue
+    // based on the distance, so we use greater_second as the comparator.
+    priority_queue<coord_dist, vector<coord_dist>,
+                   greater_second<coord_dist> > fringe;
+
+    fringe.push(coord_dist(origin, 0));
+
+    set<int> visited_indices;
+
+    int current_r = 1;
+    int current_thresh = current_r * (current_r + 1);
+
+    int max_distance = LOS_RADIUS * LOS_RADIUS + 1;
+
+    while (!fringe.empty())
+    {
+        coord_dist current = fringe.top();
+        // We're done here once we hit a point that is farther away from the
+        // origin than our maximum permissible radius.
+        if (current.second > max_distance)
+            break;
+
+        fringe.pop();
+
+        int idx = current.first.x + current.first.y * X_WIDTH;
+        if (!visited_indices.insert(idx).second)
+            continue;
+
+        while (current.second > current_thresh)
+        {
+            current_r++;
+            current_thresh = current_r * (current_r + 1);
+        }
+
+        // We don't include radius 0. This is also a good place to check if
+        // the squares are already occupied since we want to search past
+        // occupied squares but don't want to consider them valid targets.
+        if (current.second && !actor_at(current.first))
+            radius_points[current_r - 1].push_back(current.first);
+
+        for (adjacent_iterator i(current.first); i; ++i)
+        {
+            coord_dist temp(*i, current.second);
+
+            // If the grid is out of LOS, skip it.
+            if (!cell_see_cell(origin, temp.first, los))
+                continue;
+
+            coord_def local = temp.first - origin;
+
+            temp.second = local.abs();
+
+            idx = temp.first.x + temp.first.y * X_WIDTH;
+
+            if (!visited_indices.count(idx)
+                && in_bounds(temp.first)
+                && !cell_is_solid(temp.first))
+            {
+                fringe.push(temp);
+            }
+        }
+
+    }
+}
+
+// Basically we want to break a circle into n_arcs equal sized arcs and find
+// out which arc the input point pos falls on.
+static int _arc_decomposition(const coord_def & pos, int n_arcs)
+{
+    float theta = atan2((float)pos.y, (float)pos.x);
+
+    if (pos.x == 0 && pos.y != 0)
+        theta = pos.y > 0 ? PI / 2 : -PI / 2;
+
+    if (theta < 0)
+        theta += 2 * PI;
+
+    float arc_angle = 2 * PI / n_arcs;
+
+    theta += arc_angle / 2.0f;
+
+    if (theta >= 2 * PI)
+        theta -= 2 * PI;
+
+    return static_cast<int> (theta / arc_angle);
+}
+
+static int _place_ring(vector<coord_def> &ring_points,
+                       const coord_def &origin, mgen_data prototype,
+                       int n_arcs, int arc_occupancy, int &seen_count)
+{
+    shuffle_array(ring_points);
+
+    int target_amount = ring_points.size();
+    int spawned_count = 0;
+    seen_count = 0;
+
+    vector<int> arc_counts(n_arcs, arc_occupancy);
+
+    for (unsigned i = 0;
+         spawned_count < target_amount && i < ring_points.size();
+         i++)
+    {
+        int direction = _arc_decomposition(ring_points.at(i)
+                                           - origin, n_arcs);
+
+        if (arc_counts[direction]-- <= 0)
+            continue;
+
+        prototype.pos = ring_points.at(i);
+
+        if (create_monster(prototype, false))
+        {
+            spawned_count++;
+            if (you.see_cell(ring_points.at(i)))
+                seen_count++;
+        }
+    }
+
+    return spawned_count;
+}
+
+template<typename T>
+static bool less_second(const T & left, const T & right)
+{
+    return left.second < right.second;
+}
+
+typedef pair<coord_def, int> point_distance;
+
+// Find the distance from origin to each of the targets, those results
+// are stored in distances (which is the same size as targets). Exclusion
+// is a set of points which are considered disconnected for the search.
+static void _path_distance(const coord_def& origin,
+                           const vector<coord_def>& targets,
+                           set<int> exclusion,
+                           vector<int>& distances)
+{
+    queue<point_distance> fringe;
+    fringe.push(point_distance(origin,0));
+    distances.clear();
+    distances.resize(targets.size(), INT_MAX);
+
+    while (!fringe.empty())
+    {
+        point_distance current = fringe.front();
+        fringe.pop();
+
+        // did we hit a target?
+        for (unsigned i = 0; i < targets.size(); ++i)
+        {
+            if (current.first == targets[i])
+            {
+                distances[i] = current.second;
+                break;
+            }
+        }
+
+        for (adjacent_iterator adj_it(current.first); adj_it; ++adj_it)
+        {
+            int idx = adj_it->x + adj_it->y * X_WIDTH;
+            if (you.see_cell(*adj_it)
+                && !feat_is_solid(env.grid(*adj_it))
+                && *adj_it != you.pos()
+                && exclusion.insert(idx).second)
+            {
+                monster* temp = monster_at(*adj_it);
+                if (!temp || (temp->attitude == ATT_HOSTILE
+                              && !temp->is_stationary()))
+                {
+                    fringe.push(point_distance(*adj_it, current.second+1));
+                }
+            }
+        }
+    }
+}
+
+// Find the minimum distance from each point of origin to one of the targets
+// The distance is stored in 'distances', which is the same size as origins.
+static void _point_point_distance(const vector<coord_def>& origins,
+                                  const vector<coord_def>& targets,
+                                  vector<int>& distances)
+{
+    distances.clear();
+    distances.resize(origins.size(), INT_MAX);
+
+    // Consider all points of origin as blocked (you can search outward
+    // from one, but you can't form a path across a different one).
+    set<int> base_exclusions;
+    for (coord_def c : origins)
+    {
+        int idx = c.x + c.y * X_WIDTH;
+        base_exclusions.insert(idx);
+    }
+
+    vector<int> current_distances;
+    for (unsigned i = 0; i < origins.size(); ++i)
+    {
+        // Find the distance from the point of origin to each of the targets.
+        _path_distance(origins[i], targets, base_exclusions,
+                       current_distances);
+
+        // Find the smallest of those distances
+        int min_dist = current_distances[0];
+        for (unsigned j = 1; j < current_distances.size(); ++j)
+            if (current_distances[j] < min_dist)
+                min_dist = current_distances[j];
+
+        distances[i] = min_dist;
+    }
+}
+
+// So the idea is we want to decide which adjacent tiles are in the most
+// 'danger' We claim danger is proportional to the minimum distances from the
+// point to a (hostile) monster. This function carries out at most 7 searches
+// to calculate the distances in question.
+static bool _prioritise_adjacent(const coord_def &target,
+                                 vector<coord_def>& candidates)
+{
+    radius_iterator los_it(target, LOS_NO_TRANS, true);
+
+    vector<coord_def> mons_positions;
+    // collect hostile monster positions in LOS
+    for (; los_it; ++los_it)
+    {
+        monster* hostile = monster_at(*los_it);
+
+        if (hostile && hostile->attitude == ATT_HOSTILE
+            && you.can_see(*hostile))
+        {
+            mons_positions.push_back(hostile->pos());
+        }
+    }
+
+    if (mons_positions.empty())
+    {
+        shuffle_array(candidates);
+        return true;
+    }
+
+    vector<int> distances;
+
+    _point_point_distance(candidates, mons_positions, distances);
+
+    vector<point_distance> possible_moves(candidates.size());
+
+    for (unsigned i = 0; i < possible_moves.size(); ++i)
+    {
+        possible_moves[i].first  = candidates[i];
+        possible_moves[i].second = distances[i];
+    }
+
+    sort(possible_moves.begin(), possible_moves.end(),
+              less_second<point_distance>);
+
+    for (unsigned i = 0; i < candidates.size(); ++i)
+        candidates[i] = possible_moves[i].first;
+
+    return true;
+}
+
 /**
  * Summon Fedhas's oklobs & mushrooms around the player.
  *
@@ -1316,7 +1619,7 @@ static bool _fedhas_summon_plants()
     // We are going to spawn some oklobs but first we need to find
     // out a little about the situation.
     vector<vector<coord_def> > radius_points;
-    collect_radius_points(radius_points, you.pos(), LOS_NO_TRANS);
+    _collect_radius_points(radius_points, you.pos(), LOS_NO_TRANS);
 
     int max_idx = 3;
     unsigned max_points = radius_points[max_idx].size();
@@ -1340,22 +1643,16 @@ static bool _fedhas_summon_plants()
 
         temp.cls = MONS_PLANT;
 
-        place_ring(radius_points[0],
-                   you.pos(),
-                   temp,
-                   1, radius_points[0].size(),
-                   seen_count);
+        _place_ring(radius_points[0], you.pos(), temp, 1,
+                radius_points[0].size(), seen_count);
 
         if (seen_count > 0)
             success = true;
 
         temp.cls = MONS_OKLOB_PLANT;
 
-        place_ring(radius_points[max_idx],
-                   you.pos(),
-                   temp,
-                   random_range(3, 8), 1,
-                   seen_count);
+        _place_ring(radius_points[max_idx], you.pos(), temp,
+                random_range(3, 8), 1, seen_count);
 
         if (seen_count > 0)
             success = true;
@@ -1366,7 +1663,7 @@ static bool _fedhas_summon_plants()
     {
         unsigned target_count = random_range(2, 8);
         if (target_count < radius_points[0].size())
-            prioritise_adjacent(you.pos(), radius_points[0]);
+            _prioritise_adjacent(you.pos(), radius_points[0]);
         else
             target_count = radius_points[0].size();
 
@@ -1391,6 +1688,54 @@ static bool _fedhas_summon_plants()
     return true;
 }
 
+static int _fedhas_corpse_spores(beh_type attitude)
+{
+    vector<stack_iterator> positions;
+    int count = _count_corpses_in_los(&positions);
+    ASSERT(attitude != BEH_FRIENDLY || count > 0);
+
+    if (count == 0)
+        return count;
+
+    for (const stack_iterator &si : positions)
+    {
+        count++;
+
+        if (monster *plant = create_monster(mgen_data(MONS_BALLISTOMYCETE_SPORE,
+                                               attitude,
+                                               si->pos,
+                                               MHITNOT,
+                                               MG_FORCE_PLACE,
+                                               GOD_FEDHAS)
+                                            .set_summoned(&you, 0, 0)))
+        {
+            plant->flags |= MF_NO_REWARD;
+
+            if (attitude == BEH_FRIENDLY)
+            {
+                plant->flags |= MF_ATT_CHANGE_ATTEMPT;
+
+                mons_make_god_gift(*plant, GOD_FEDHAS);
+
+                plant->behaviour = BEH_WANDER;
+                plant->foe = MHITNOT;
+            }
+        }
+
+        if (mons_skeleton(si->mon_type))
+            turn_corpse_into_skeleton(*si);
+        else
+        {
+            item_was_destroyed(*si);
+            destroy_item(si->index());
+        }
+    }
+
+    viewwindow(false);
+
+    return count;
+}
+
 /**
  * Call down the wrath of Fedhas upon the player!
  *
@@ -1411,7 +1756,7 @@ static bool _fedhas_retribution()
     case 0:
         // Try and spawn some hostile ballistomycete spores, if none are created
         // fall through to the elemental miscast effects.
-        if (fedhas_corpse_spores(BEH_HOSTILE))
+        if (_fedhas_corpse_spores(BEH_HOSTILE))
         {
             simple_god_message(" produces spores.", god);
             return true;

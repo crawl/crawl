@@ -514,12 +514,12 @@ static const ability_def Ability_List[] =
       0, 0, 0, 15, {fail_basis::invo}, abflag::none },
 
     // Fedhas
-    { ABIL_FEDHAS_SPAWN_SPORES, "Reproduction",
-      4, 0, 100, 1, {fail_basis::invo, 60, 4, 25}, abflag::none },
     { ABIL_FEDHAS_RAIN, "Rain",
       4, 0, 150, 4, {fail_basis::invo, 70, 4, 25}, abflag::none },
     { ABIL_FEDHAS_WALL_OF_BRIARS, "Wall of Briars",
       3, 0, 50, 2, {fail_basis::invo, 30, 6, 20}, abflag::none},
+    { ABIL_FEDHAS_GROW_BALLISTOMYCETE, "Grow Ballistomycete",
+      4, 0, 100, 4, {fail_basis::invo, 60, 4, 25}, abflag::none },
 
     // Cheibriados
     { ABIL_CHEIBRIADOS_TIME_BEND, "Bend Time",
@@ -1569,23 +1569,6 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         }
         return true;
 
-
-    case ABIL_FEDHAS_SPAWN_SPORES:
-    {
-        const int retval = fedhas_check_corpse_spores(quiet);
-        if (retval <= 0)
-        {
-            if (!quiet)
-            {
-                if (retval == 0)
-                    mpr("No corpses are in range.");
-                else
-                    canned_msg(MSG_OK);
-            }
-            return false;
-        }
-        return true;
-    }
 
     case ABIL_SPIT_POISON:
     case ABIL_BREATHE_FIRE:
@@ -2862,6 +2845,13 @@ static spret _do_ability(const ability_def& abil, bool fail)
             return spret::abort;
         break;
 
+    case ABIL_FEDHAS_GROW_BALLISTOMYCETE:
+    {
+        return fedhas_grow_ballistomycete(fail);
+
+        break;
+    }
+
     case ABIL_FEDHAS_RAIN:
         fail_check();
         if (!fedhas_rain(you.pos()))
@@ -2870,14 +2860,6 @@ static spret _do_ability(const ability_def& abil, bool fail)
             return spret::abort;
         }
         break;
-
-    case ABIL_FEDHAS_SPAWN_SPORES:
-    {
-        fail_check();
-        const int num = fedhas_corpse_spores();
-        ASSERT(num > 0);
-        break;
-    }
 
     case ABIL_TRAN_BAT:
     {

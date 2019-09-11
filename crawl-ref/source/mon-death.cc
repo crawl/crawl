@@ -1087,7 +1087,7 @@ void setup_spore_explosion(bolt & beam, const monster& origin)
     beam.damage  = dice_def(3, 15);
     beam.name    = "explosion of spores";
     beam.colour  = LIGHTGREY;
-    beam.ex_size = 2;
+    beam.ex_size = 1;
 }
 
 static void _setup_lightning_explosion(bolt & beam, const monster& origin)

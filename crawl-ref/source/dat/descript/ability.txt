@@ -486,17 +486,18 @@ Wall of Briars ability
 Grow short-lived briar patches around you. Monsters attacking these briars will
 be damaged by sharp thorns. Invocations skill increases the briars' health.
 %%%%
+Grow Ballistomycete ability
+
+Grow a short-lived Ballistomycete at the location you choose. A Ballistomycete
+occasionally release spores that quickly seek out foes and violently explode,
+damaging and confusing all living things caught in the blast.
+%%%%
 Rain ability
 
 Causes rain to fall around you, turning the dungeon floor into shallow water
 and shallow water into deep water. This may also allow plants and mushrooms to
 grow in areas that are not directly drenched. Invocations skill increases the
 number of rain-clouds created.
-%%%%
-Reproduction ability
-
-Creates ballistomycete spores from corpses in your line of sight. The spores will
-explode, causing damage to you or your enemies.
 %%%%
 # Cheibriados
 Bend Time ability
