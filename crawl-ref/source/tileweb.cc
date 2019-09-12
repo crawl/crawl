@@ -1744,6 +1744,16 @@ void TilesFramework::load_dungeon(const crawl_view_buffer &vbuf,
                 mark_for_redraw(coord_def(x, y));
         }
 
+    // re-cache the map knowledge for the whole map, not just the updated portion
+    // fixes render bugs for out-of-LOS when transitioning levels in shoals/slime
+    for (int y = 0; y < GYM; y++)
+        for (int x = 0; x < GXM; x++)
+        {
+            const coord_def gc(x, y);
+            screen_cell_t *cell = &m_next_view(gc);
+            cell->tile.map_knowledge = map_bounds(gc) ? env.map_knowledge(gc) : map_cell();
+        }
+
     m_next_view_tl = view2grid(coord_def(1, 1));
     m_next_view_br = view2grid(crawl_view.viewsz);
 
