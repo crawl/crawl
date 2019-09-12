@@ -14,11 +14,11 @@ from terminal import TerminalRecorder
 from connection import WebtilesSocketConnection
 from util import DynamicTemplateLoader, dgl_format_str, parse_where_data
 from game_data_handler import GameDataHandler
-from ws_handler import update_all_lobbys, remove_in_lobbys
+from ws_handler import update_all_lobbys, remove_in_lobbys, CrawlWebSocket
 from inotify import DirectoryWatcher
 
 try:
-    from typing import Dict, Set, Tuple
+    from typing import Dict, Set, Tuple, Any
 except:
     pass
 
@@ -142,11 +142,11 @@ class CrawlProcessHandlerBase(object):
         for receiver in self._receivers:
             receiver.flush_messages()
 
-    def write_to_all(self, msg, send):
+    def write_to_all(self, msg, send): # type: (str, bool) -> None
         for receiver in self._receivers:
-            receiver.write_message(msg, send)
+            receiver.append_message(msg, send)
 
-    def send_to_all(self, msg, **data):
+    def send_to_all(self, msg, **data): # type: (str, Any) -> None
         for receiver in self._receivers:
             receiver.send_message(msg, **data)
 
@@ -174,6 +174,7 @@ class CrawlProcessHandlerBase(object):
             self.chat_help_message(source, "/unmute *", "clear your mute list.")
 
     def handle_chat_command(self, source_ws, text):
+        # type: (CrawlWebSocket, str) -> bool
         source = source_ws.username
         text = text.strip()
         if len(text) == 0 or text[0] != '/':
@@ -200,7 +201,7 @@ class CrawlProcessHandlerBase(object):
             return False
         return True
 
-    def handle_chat_message(self, username, text):
+    def handle_chat_message(self, username, text): # type: (str, str) -> None
         if username in self.muted: # TODO: message?
             return
         chat_msg = ("<span class='chat_sender'>%s</span>: <span class='chat_msg'>%s</span>" %
@@ -227,6 +228,7 @@ class CrawlProcessHandlerBase(object):
         return None
 
     def send_to_user(self, username, msg, **data):
+        # type: (str, str, Any) -> None
         # a single user may be viewing from multiple receivers
         for receiver in self.get_receivers_by_username(username):
             receiver.send_message(msg, **data)
@@ -234,10 +236,12 @@ class CrawlProcessHandlerBase(object):
     # obviously, don't use this for player/spectator-accessible data. But, it
     # is still partially sanitized in chat.js.
     def handle_notification_raw(self, username, text):
+        # type: (str, str) -> None
         msg = ("<span class='chat_msg'>%s</span>" % text)
         self.send_to_user(username, "chat", content=msg)
 
     def handle_notification(self, username, text):
+        # type: (str, str) -> None
         self.handle_notification_raw(username, xhtml_escape(text))
 
     def handle_process_end(self):
@@ -767,7 +771,7 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
             # Lock already got deleted
             pass
 
-    def _ttyrec_id_header(self):
+    def _ttyrec_id_header(self): # type: () -> bytes
         clrscr = b"\033[2J"
         crlf = b"\r\n"
         tstamp = int(time.time())
@@ -813,7 +817,7 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
         if self.conn and self.conn.open:
             self.conn.send_message('{"msg":"spectator_joined"}')
 
-    def handle_input(self, msg):
+    def handle_input(self, msg): # type: (str) -> None
         obj = json_decode(msg)
 
         if obj["msg"] == "input" and self.process:
@@ -836,7 +840,7 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
         elif self.conn and self.conn.open:
             self.conn.send_message(utf8(msg))
 
-    def handle_chat_message(self, username, text):
+    def handle_chat_message(self, username, text): # type: (str, str) -> None
         super(CrawlProcessHandler, self).handle_chat_message(username, text)
 
         if self.conn and self.conn.open:
@@ -845,7 +849,7 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
                         "content": "%s: %s" % (username, text)
                         }))
 
-    def _on_process_output(self, line):
+    def _on_process_output(self, line): # type: (str) -> None
         self.check_where()
 
         try:
@@ -857,9 +861,9 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
         # send messages from wrapper scripts only to the player
         for receiver in self._receivers:
             if not receiver.watched_game:
-                receiver.write_message(line, True)
+                receiver.append_message(line, True)
 
-    def _on_process_error(self, line):
+    def _on_process_error(self, line): # type: (str) -> None
         if line.startswith("ERROR"):
             self.exit_reason = "crash"
             if line.rfind(":") != -1:
@@ -868,7 +872,7 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
             self.exit_reason = "crash"
             if self.game_params["morgue_url"] != None:
                 match = re.search(r"\(([^)]+)\)", line)
-                if match != None:
+                if match is not None:
                     self.exit_dump_url = self.game_params["morgue_url"].replace("%n", self.username)
                     self.exit_dump_url += os.path.splitext(os.path.basename(match.group(1)))[0]
         elif line.startswith("Writing crash info to"): # before 0.15-b1-84-gded71f8
@@ -879,17 +883,16 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
                     url = line[line.rfind("/") + 1:].strip()
                 elif line.rfind(" ") != -1:
                     url = line[line.rfind(" ") + 1:].strip()
-                if url != None:
+                if url is not None:
                     self.exit_dump_url = self.game_params["morgue_url"].replace("%n", self.username) + os.path.splitext(url)[0]
 
-    def _on_socket_message(self, msg):
+    def _on_socket_message(self, msg): # type: (str) -> None
         # stdout data is only used for compatibility to wrapper
         # scripts -- so as soon as we receive something on the socket,
         # we stop using stdout
         if self.process:
             self.process.output_callback = None
 
-        # msg is a str already
         if msg.startswith("*"):
             # Special message to the server
             msg = msg[1:]

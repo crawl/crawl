@@ -81,8 +81,7 @@ class WebtilesSocketConnection(object):
         if events & IOLoop.ERROR:
             pass
 
-    def _handle_data(self, data):
-        # `data` should be bytes at this point
+    def _handle_data(self, data): # type: (bytes) -> None
         if self.msg_buffer is not None:
             data = self.msg_buffer + data
 
@@ -98,7 +97,7 @@ class WebtilesSocketConnection(object):
             if self.message_callback:
                 self.message_callback(to_unicode(data))
 
-    def send_message(self, data):
+    def send_message(self, data): # type: (str) -> None
         start = datetime.now()
         try:
             self.socket.sendto(utf8(data), self.crawl_socketpath)

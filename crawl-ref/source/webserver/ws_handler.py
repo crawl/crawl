@@ -19,7 +19,7 @@ import userdb
 from util import *
 
 try:
-    from typing import Dict, Set, Tuple
+    from typing import Dict, Set, Tuple, Any, Union, Optional
 except:
     pass
 
@@ -136,7 +136,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         self.total_message_bytes = 0
         self.compressed_bytes_sent = 0
         self.uncompressed_bytes_sent = 0
-        self.message_queue = []
+        self.message_queue = []  # type: List[str]
 
         self.subprotocol = None
 
@@ -207,8 +207,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         self.reset_timeout()
 
         if config.max_connections < len(sockets):
-            self.write_message("connection_closed('The maximum number of connections "
-                               + "has been reached, sorry :(');")
+            self.append_message("connection_closed('The maximum number of "
+                              + "connections has been reached, sorry :(');")
             self.close()
         elif shutting_down:
             self.close()
@@ -487,8 +487,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 if returncode != 1:
                     self.logger.warning("Error while getting JSON options!")
                 return
-            self.write_message('{"msg":"options","watcher":true,"options":'
-                               + data + '}')
+            self.append_message('{"msg":"options","watcher":true,"options":'
+                                + data + '}')
 
         if not self.username: return
         if game_id not in config.games: return
@@ -636,9 +636,9 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             # TODO: is binary + encode necessary in py 3?
             f.write(utf8(contents))
 
-    def on_message(self, message):
+    def on_message(self, message): # type: (Union[str, bytes]) -> None
         try:
-            obj = json_decode(message)
+            obj = json_decode(message) # type: Dict[str, Any]
             if obj["msg"] in self.message_handlers:
                 handler = self.message_handlers[obj["msg"]]
                 del obj["msg"]
@@ -653,49 +653,60 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                                 exc_info=True)
 
     def flush_messages(self):
+        # type: () -> Optional[tornado.concurrent.Future[None]]
         if self.client_closed or len(self.message_queue) == 0:
-            return
+            return None
         msg = ("{\"msgs\":["
                 + ",".join(self.message_queue)
                 + "]}")
         self.message_queue = []
 
         try:
-            msg = utf8(msg)
-            self.total_message_bytes += len(msg)
+            binmsg = utf8(msg)
+            self.total_message_bytes += len(binmsg)
             if self.deflate:
                 # Compress like in deflate-frame extension:
                 # Apply deflate, flush, then remove the 00 00 FF FF
                 # at the end
-                compressed = self._compressobj.compress(msg)
+                compressed = self._compressobj.compress(binmsg)
                 compressed += self._compressobj.flush(zlib.Z_SYNC_FLUSH)
                 compressed = compressed[:-4]
                 self.compressed_bytes_sent += len(compressed)
-                super(CrawlWebSocket, self).write_message(compressed, binary=True)
+                return self.write_message(compressed, binary=True)
             else:
-                self.uncompressed_bytes_sent += len(msg)
-                super(CrawlWebSocket, self).write_message(msg)
+                self.uncompressed_bytes_sent += len(binmsg)
+                return self.write_message(binmsg)
         except:
             self.logger.warning("Exception trying to send message.", exc_info = True)
-            if self.ws_connection != None:
+            if self.ws_connection is not None:
                 self.ws_connection._abort()
+        return None
 
-    def write_message(self, msg, send=True):
-        if self.client_closed: return
+    # n.b. this looks a lot like superclass write_message, but has a static
+    # type signature that is not compatible with it, so we do not override
+    # that function.
+    def append_message(self,
+                       msg,      # type: str
+                       send=True # type: bool
+                       ):
+        # type: (...) -> Optional[tornado.concurrent.Future[None]]
+        if self.client_closed:
+            return None
         self.message_queue.append(msg)
         if send:
-            self.flush_messages()
+            return self.flush_messages()
+        return None
 
     def send_message(self, msg, **data):
+        # type: (str, Any) -> Optional[tornado.concurrent.Future[None]]
         """Sends a JSON message to the client."""
         data["msg"] = msg
-        if not self.client_closed:
-            self.write_message(json_encode(data))
+        return self.append_message(json_encode(data), True)
 
     def queue_message(self, msg, **data):
+        # type: (str, Any) -> Optional[tornado.concurrent.Future[None]]
         data["msg"] = msg
-        if not self.client_closed:
-            self.write_message(json_encode(data), False)
+        return self.append_message(json_encode(data), False)
 
     def on_close(self):
         if self.process is None and self in sockets:
