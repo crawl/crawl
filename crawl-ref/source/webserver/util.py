@@ -9,6 +9,11 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
+try:
+    from typing import Dict
+except:
+    pass
+
 import config
 
 class TornadoFilter(logging.Filter):
@@ -35,7 +40,7 @@ class DynamicTemplateLoader(tornado.template.Loader):
         template.load_time = time.time()
         return template
 
-    _instances = {}
+    _instances = {} # type: Dict[str, DynamicTemplateLoader]
 
     @classmethod
     def get(cls, path):

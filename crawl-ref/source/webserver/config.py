@@ -18,7 +18,7 @@ import logging
 try:
     from collections import OrderedDict
 except ImportError:
-    from ordereddict import OrderedDict
+    from ordereddict import OrderedDict # type: ignore
 
 dgl_mode = True
 
