@@ -18,6 +18,9 @@
 #include <utility> // pair
 #include <vector>
 #include <fcntl.h>
+#ifdef DGAMELAUNCH
+# include <unistd.h>
+#endif
 
 #ifndef TARGET_OS_WINDOWS
 # ifndef __ANDROID__
@@ -763,6 +766,7 @@ static bool _cmd_is_repeatable(command_type cmd, bool is_again = false)
         return false;
 
     // Multi-turn commands
+    case CMD_REST:
     case CMD_PICKUP:
     case CMD_DROP:
     case CMD_DROP_LAST:
@@ -838,7 +842,6 @@ static bool _cmd_is_repeatable(command_type cmd, bool is_again = false)
 
         return _cmd_is_repeatable(crawl_state.prev_cmd, true);
 
-    case CMD_REST:
     case CMD_WAIT:
     case CMD_SAFE_WAIT:
     case CMD_SAFE_MOVE_LEFT:
@@ -2723,6 +2726,12 @@ static void _do_cmd_repeat()
     for (; i < count && crawl_state.is_repeating_cmd(); ++i)
     {
         last_repeat_turn = you.num_turns;
+#ifdef DGAMELAUNCH
+        if (i == 100)
+            mpr("Throttling repeat for the sake of the server...");
+        if (i >= 100)
+            usleep(500000);
+#endif
         _run_input_with_keys(repeat_keys);
         _check_cmd_repeat(last_repeat_turn);
     }
