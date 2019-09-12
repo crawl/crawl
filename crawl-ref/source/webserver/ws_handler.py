@@ -18,10 +18,15 @@ import checkoutput
 import userdb
 from util import *
 
-sockets = set()
+try:
+    from typing import Dict, Set, Tuple
+except:
+    pass
+
+sockets = set() # type: Set[CrawlWebSocket]
 current_id = 0
 shutting_down = False
-login_tokens = {}
+login_tokens = {} # type: Dict[Tuple[str,str],datetime.datetime]
 rand = random.SystemRandom()
 
 def shutdown():

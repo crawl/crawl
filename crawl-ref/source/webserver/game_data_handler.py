@@ -3,6 +3,11 @@ import os.path
 
 import config
 
+try:
+    from typing import Dict
+except:
+    pass
+
 class GameDataHandler(tornado.web.StaticFileHandler):
     def initialize(self):
         super(GameDataHandler, self).initialize(".")
@@ -23,7 +28,7 @@ class GameDataHandler(tornado.web.StaticFileHandler):
             self.set_header("Pragma", "no-cache")
             self.set_header("Expires", "0")
 
-    _client_paths = {}
+    _client_paths = {} # type: Dict[str, str]
 
     @classmethod
     def add_version(cls, version, path):

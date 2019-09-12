@@ -193,6 +193,7 @@ Thumbs.db
 
 # Python (webtiles) junk
 *.pyc
+.mypy_cache/
 
 # Webtiles stuff
 passwd.db3

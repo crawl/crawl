@@ -17,9 +17,14 @@ from game_data_handler import GameDataHandler
 from ws_handler import update_all_lobbys, remove_in_lobbys
 from inotify import DirectoryWatcher
 
+try:
+    from typing import Dict, Set, Tuple
+except:
+    pass
+
 last_game_id = 0
 
-processes = dict()
+processes = dict() # type: Dict[str,CrawlProcessHandler]
 unowned_process_logger = logging.LoggerAdapter(logging.getLogger(), {})
 
 def find_game_info(socket_dir, socket_file):
