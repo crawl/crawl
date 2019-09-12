@@ -2555,16 +2555,10 @@ static void _safe_move_player(coord_def move)
 static int _get_num_and_char(const char* prompt, char* buf, int buf_len)
 {
     if (prompt != nullptr)
-        mprf(MSGCH_PROMPT, "%s", prompt);
-
-    line_reader reader(buf, buf_len);
-
-    reader.set_keyproc(keyfun_num_and_char);
-#ifdef USE_TILE_WEB
-    reader.set_tag("repeat");
-#endif
-
-    return reader.read_line(true);
+        msgwin_prompt(prompt);
+    auto ret = cancellable_get_line(buf, buf_len, nullptr, keyfun_num_and_char, "", "repeat");
+    msgwin_reply(buf);
+    return ret;
 }
 
 static void _cancel_cmd_repeat()
