@@ -134,28 +134,12 @@ void debug_show_builder_logs()
         mprf("No builder logs are saved for %s.", cur_level.c_str());
         return;
     }
-    const string &props_text = log_table[cur_level].get_string();
-    stringstream st(props_text);
-    string text;
-    formatted_string lines;
-
-    while (getline(st, text))
-    {
-        linebreak_string(text, cgetsize(GOTO_CRT).x - 1);
-        vector<formatted_string> parts;
-        formatted_string::parse_string_to_multiple(text, parts, 80);
-        for (unsigned int j = 0; j < parts.size(); ++j)
-        {
-            if (!lines.empty())
-                lines.add_glyph('\n');
-            lines += parts[j];
-        }
-    }
-
-    formatted_scroller hist(FS_PREWRAPPED_TEXT);
-    hist.set_more();
-    hist.add_formatted_string(lines, !lines.empty());
-    hist.show();
+    string props_text = log_table[cur_level].get_string();
+    auto log = formatted_string::parse_string(trim_string_right(props_text));
+    formatted_scroller log_scroller;
+    log_scroller.set_more();
+    log_scroller.add_formatted_string(log, false);
+    log_scroller.show();
 }
 
 string debug_coord_str(const coord_def &pos)
