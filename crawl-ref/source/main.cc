@@ -2727,8 +2727,6 @@ static void _do_cmd_repeat()
     {
         last_repeat_turn = you.num_turns;
 #ifdef DGAMELAUNCH
-        if (i == 100)
-            mpr("Throttling repeat for the sake of the server...");
         if (i >= 100)
             usleep(500000);
 #endif
