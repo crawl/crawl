@@ -147,13 +147,13 @@ public:
     bool is_fullscreen() { return m_fullscreen; }
 
     bool fonts_initialized();
-    FontWrapper* get_crt_font() { return m_fonts.at(m_crt_font).font; }
+    FontWrapper* get_crt_font() const { return m_crt_font; }
     CRTRegion* get_crt() { return m_region_crt; }
     const ImageManager* get_image_manager() { return m_image; }
     int to_lines(int num_tiles, int tile_height = TILE_Y);
 protected:
     void reconfigure_fonts();
-    int load_font(const char *font_file, int font_size,
+    FontWrapper* load_font(const char *font_file, int font_size,
                   bool default_on_fail);
     int handle_mouse(MouseEvent &event);
 
@@ -222,10 +222,11 @@ protected:
         FontWrapper *font;
     };
     vector<font_info> m_fonts;
-    int m_crt_font;
-    int m_msg_font;
-    int m_tip_font;
-    int m_lbl_font;
+    FontWrapper* m_crt_font = nullptr;
+    FontWrapper* m_msg_font = nullptr;
+    FontWrapper* m_stat_font = nullptr;
+    FontWrapper* m_tip_font = nullptr;
+    FontWrapper* m_lbl_font = nullptr;
 
     int m_tab_margin;
     int m_stat_col;
