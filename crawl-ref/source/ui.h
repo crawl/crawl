@@ -354,7 +354,7 @@ protected:
 class Text : public Widget
 {
 public:
-    Text() {}
+    Text();
     Text(string text) : Text()
     {
         set_text(formatted_string(text));
@@ -370,6 +370,8 @@ public:
     {
         set_text(formatted_string(text));
     };
+
+    void set_font(FontWrapper *font);
 
     const formatted_string& get_text() { return m_text; };
     void set_highlight_pattern(string pattern, bool hl_line = false);
@@ -390,6 +392,7 @@ protected:
     vector<brkpt> m_brkpts;
     formatted_string m_text_wrapped;
     ShapeBuffer m_hl_buf;
+    FontWrapper *m_font;
 #else
     vector<formatted_string> m_wrapped_lines;
 #endif

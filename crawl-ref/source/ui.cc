@@ -455,6 +455,13 @@ void Box::_allocate_region()
     }
 }
 
+Text::Text()
+{
+#ifdef USE_TILE_LOCAL
+    set_font(tiles.get_crt_font());
+#endif
+}
+
 void Text::set_text(const formatted_string &fs)
 {
     m_text.clear();
@@ -464,6 +471,15 @@ void Text::set_text(const formatted_string &fs)
     m_wrapped_size = { -1, -1 };
     _queue_allocation();
 }
+
+#ifdef USE_TILE_LOCAL
+void Text::set_font(FontWrapper *font)
+{
+    ASSERT(font);
+    m_font = font;
+    _queue_allocation();
+}
+#endif
 
 void Text::set_highlight_pattern(string pattern, bool line)
 {
@@ -483,7 +499,7 @@ void Text::wrap_text_to_size(int width, int height)
 
 #ifdef USE_TILE_LOCAL
     if (wrap_text || ellipsize)
-        m_text_wrapped = tiles.get_crt_font()->split(m_text, width, height);
+        m_text_wrapped = m_font->split(m_text, width, height);
     else
         m_text_wrapped = m_text;
 
@@ -545,7 +561,7 @@ void Text::_render()
     wrap_text_to_size(m_region[2], m_region[3]);
 
 #ifdef USE_TILE_LOCAL
-    const int dev_line_height = tiles.get_crt_font()->char_height(false);
+    const int dev_line_height = m_font->char_height(false);
     const int line_min_pos = display_density.logical_to_device(
                                                     region[1] - m_region[1]);
     const int line_max_pos = display_density.logical_to_device(
@@ -609,7 +625,6 @@ void Text::_render()
         size_t lacc = 0; // the start char of the current op relative to region
         size_t line = 0; // the line we are at relative to the region
 
-        FontWrapper *font = tiles.get_crt_font();
         bool inside = false;
         // Iterate over formatted_string op slices, looking for highlight
         // sequences. Highlight sequences may span multiple op slices, hence
@@ -637,13 +652,13 @@ void Text::_render()
             string line_before_op = full_text.substr(op_line_start,
                                             begin_idx + lacc - op_line_start);
             // pixel positions for the current op
-            size_t op_x = font->string_width(line_before_op.c_str());
+            size_t op_x = m_font->string_width(line_before_op.c_str());
             const size_t op_y =
-                            font->string_height(line_before_op.c_str(), false)
+                            m_font->string_height(line_before_op.c_str(), false)
                             - dev_line_height;
 
             // positions in device pixels to highlight relative to current op
-            size_t sx = 0, ex = font->string_width(op.text.c_str());
+            size_t sx = 0, ex = m_font->string_width(op.text.c_str());
             size_t sy = 0, ey = dev_line_height;
 
             bool started = false; // does the highlight start in the current op?
@@ -659,16 +674,16 @@ void Text::_render()
                     op_x = 0;
                 // start position is somewhere in the current op
                 const string before = full_text.substr(begin_idx + lacc, start);
-                sx = font->string_width(before.c_str());
-                sy = font->string_height(before.c_str(), false)
+                sx = m_font->string_width(before.c_str());
+                sy = m_font->string_height(before.c_str(), false)
                                                             - dev_line_height;
                 started = true;
             }
             if (end <= oplen) // assume end is unsigned and so >=0
             {
                 const string to_end = full_text.substr(begin_idx + lacc, end);
-                ex = font->string_width(to_end.c_str());
-                ey = font->string_height(to_end.c_str(), false);
+                ex = m_font->string_width(to_end.c_str());
+                ey = m_font->string_height(to_end.c_str(), false);
                 ended = true;
             }
 
@@ -715,7 +730,7 @@ void Text::_render()
             else
             {
                 lacc += oplen;
-                line += font->string_height(op.text.c_str(), false)
+                line += m_font->string_height(op.text.c_str(), false)
                                                             - dev_line_height;
             }
         }
@@ -724,7 +739,7 @@ void Text::_render()
     // XXX: should be moved into a new function render_formatted_string()
     // in FTFontWrapper, that, like render_textblock(), would automatically
     // handle swapping atlas glyphs as necessary.
-    FontBuffer m_font_buf(tiles.get_crt_font());
+    FontBuffer m_font_buf(m_font);
     m_font_buf.add(slice, m_region[0], m_region[1] +
             display_density.device_to_logical(dev_line_height * line_off));
     m_font_buf.draw();
@@ -790,10 +805,9 @@ void Text::_render()
 SizeReq Text::_get_preferred_size(Direction dim, int prosp_width)
 {
 #ifdef USE_TILE_LOCAL
-    FontWrapper *font = tiles.get_crt_font();
     if (!dim)
     {
-        int w = font->string_width(m_text);
+        int w = m_font->string_width(m_text);
         // XXX: should be width of '..', unless string itself is shorter than '..'
         static constexpr int min_ellipsized_width = 0;
         static constexpr int min_wrapped_width = 0; // XXX: should be width of longest word
@@ -802,8 +816,8 @@ SizeReq Text::_get_preferred_size(Direction dim, int prosp_width)
     else
     {
         wrap_text_to_size(prosp_width, 0);
-        int height = font->string_height(m_text_wrapped);
-        return { ellipsize ? (int)font->char_height() : height, height };
+        int height = m_font->string_height(m_text_wrapped);
+        return { ellipsize ? (int)m_font->char_height() : height, height };
     }
 #else
     if (!dim)
