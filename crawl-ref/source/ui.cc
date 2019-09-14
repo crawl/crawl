@@ -119,6 +119,8 @@ public:
             const vector<Widget*>& new_hover_path);
 #endif
 
+    coord_def cursor_pos;
+
 protected:
     int m_w, m_h;
     Region m_region;
@@ -1807,6 +1809,12 @@ void UIRoot::render()
         m_root.get_child(m_root.num_children()-1)->render();
     else
         redraw_screen(false);
+
+    if (is_cursor_enabled() && !cursor_pos.origin())
+    {
+        cgotoxy(cursor_pos.x, cursor_pos.y, GOTO_CRT);
+        cursor_pos.reset();
+    }
 #endif
     pop_scissor();
 
@@ -2395,6 +2403,20 @@ bool is_available()
 #else
     return crawl_state.io_inited;
 #endif
+}
+
+/**
+ * Show the terminal cursor at the given position on the next redraw.
+ * The cursor is only shown if the cursor is enabled. 1-indexed.
+ */
+void show_cursor_at(coord_def pos)
+{
+    ui_root.cursor_pos = pos;
+}
+
+void show_cursor_at(int x, int y)
+{
+    show_cursor_at(coord_def(x, y));
 }
 
 /**
