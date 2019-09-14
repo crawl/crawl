@@ -279,9 +279,6 @@ static void _post_init(bool newc)
     level_id old_level;
     old_level.branch = NUM_BRANCHES;
 
-    handle_terminal_resize(false); // resize HUD now that we know player
-                                   // species and game mode
-
     load_level(you.entering_level ? you.transit_stair : DNGN_STONE_STAIRS_DOWN_I,
                you.entering_level ? LOAD_ENTER_LEVEL :
                newc               ? LOAD_START_GAME : LOAD_RESTART_GAME,

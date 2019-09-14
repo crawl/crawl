@@ -324,7 +324,7 @@ static void set_w32_screen_size()
 static void w32_handle_resize_event()
 {
     if (crawl_state.waiting_for_command)
-        handle_terminal_resize(true);
+        handle_terminal_resize();
     else
         crawl_state.terminal_resized = true;
 }
