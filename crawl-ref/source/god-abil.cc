@@ -2633,12 +2633,11 @@ spret fedhas_sunlight(bool fail)
         process_sunlights(false);
     }
 
-#ifndef USE_TILE_LOCAL
-    // Move the cursor out of the way (it looks weird).
-    coord_def temp = grid2view(base);
-    cgotoxy(temp.x, temp.y, GOTO_DNGN);
-#endif
-    scaled_delay(200);
+    {
+        // hide the cursor (it looks weird).
+        cursor_control con(false);
+        scaled_delay(200);
+    }
 
     if (revealed_count)
     {
