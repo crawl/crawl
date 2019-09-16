@@ -253,10 +253,11 @@ protected:
 
     // Mouse state.
     coord_def m_mouse;
-    unsigned int m_last_tick_moved;
     unsigned int m_last_tick_redraw;
 
     string m_tooltip;
+    bool m_show_tooltip = false;
+    unsigned int m_tooltip_timer_id = 0;
 
     int m_screen_width;
     int m_screen_height;

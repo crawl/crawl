@@ -165,7 +165,6 @@ TilesFramework::TilesFramework() :
     m_need_redraw(false),
     m_active_layer(LAYER_CRT),
     m_mouse(-1, -1),
-    m_last_tick_moved(0),
     m_last_tick_redraw(0)
 {
 }
@@ -617,8 +616,7 @@ static unsigned int _timer_callback(unsigned int ticks, void *param)
     // force the event loop to break
     wm->raise_custom_event();
 
-    unsigned int res = Options.tile_tooltip_ms;
-    return res;
+    return 0;
 }
 
 int TilesFramework::getch_ck()
@@ -635,8 +633,6 @@ int TilesFramework::getch_ck()
 
     const unsigned int ticks_per_screen_redraw = Options.tile_update_rate;
 
-    unsigned int res = Options.tile_tooltip_ms;
-    unsigned int timer_id = wm->set_timer(res, &_timer_callback);
 
     m_tooltip.clear();
     m_region_msg->alt_text().clear();
@@ -707,11 +703,13 @@ int TilesFramework::getch_ck()
 
                 // If you hit a key, disable tooltips until the mouse
                 // is moved again.
-                m_last_tick_moved = UINT_MAX;
+                m_show_tooltip = false;
+                wm->remove_timer(m_tooltip_timer_id);
                 break;
 
             case WME_KEYUP:
-                m_last_tick_moved = UINT_MAX;
+                m_show_tooltip = false;
+                wm->remove_timer(m_tooltip_timer_id);
                 break;
 
             case WME_MOUSEMOTION:
@@ -727,11 +725,6 @@ int TilesFramework::getch_ck()
                         continue;
 
                     // Record mouse pos for tooltip timer
-                    if (m_mouse.x != (int)event.mouse_event.px
-                        || m_mouse.y != (int)event.mouse_event.py)
-                    {
-                        m_last_tick_moved = ticks;
-                    }
                     m_mouse.x = event.mouse_event.px;
                     m_mouse.y = event.mouse_event.py;
 
@@ -768,21 +761,16 @@ int TilesFramework::getch_ck()
                         prev_msg_alt_text = m_region_msg->alt_text();
                         set_need_redraw();
                     }
+
+                    wm->remove_timer(m_tooltip_timer_id);
+                    m_tooltip_timer_id = wm->set_timer(Options.tile_tooltip_ms, &_timer_callback);
+                    m_show_tooltip = false;
                 }
                break;
 
             case WME_MOUSEBUTTONUP:
-                {
-                    key = handle_mouse(event.mouse_event);
-                    m_last_tick_moved = UINT_MAX;
-                }
-                break;
-
             case WME_MOUSEBUTTONDOWN:
-                {
-                    key = handle_mouse(event.mouse_event);
-                    m_last_tick_moved = UINT_MAX;
-                }
+                key = handle_mouse(event.mouse_event);
                 break;
 
             case WME_QUIT:
@@ -812,17 +800,14 @@ int TilesFramework::getch_ck()
             case WME_CUSTOMEVENT:
             default:
                 // This is only used to refresh the tooltip.
+                m_show_tooltip = true;
                 break;
             }
         }
 
         if (!mouse_target_mode)
         {
-            const bool timeout = (ticks > m_last_tick_moved
-                                  && (ticks - m_last_tick_moved
-                                      > (unsigned int)Options.tile_tooltip_ms));
-
-            if (timeout)
+            if (m_show_tooltip)
             {
                 tiles.clear_text_tags(TAG_CELL_DESC);
                 if (Options.tile_tooltip_ms > 0 && m_tooltip.empty())
@@ -859,8 +844,6 @@ int TilesFramework::getch_ck()
 
     // We got some input, so we'll probably have to redraw something.
     set_need_redraw();
-
-    wm->remove_timer(timer_id);
 
     return key;
 }

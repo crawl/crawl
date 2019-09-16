@@ -38,7 +38,7 @@ public:
     // System time functions
     virtual unsigned int set_timer(unsigned int interval,
                                    wm_timer_callback callback) override;
-    virtual void remove_timer(unsigned int timer_id) override;
+    virtual void remove_timer(unsigned int& timer_id) override;
     virtual unsigned int get_ticks() const override;
     virtual void delay(unsigned int ms) override;
 

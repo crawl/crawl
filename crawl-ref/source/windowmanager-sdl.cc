@@ -934,9 +934,13 @@ unsigned int SDLWrapper::set_timer(unsigned int interval,
     return SDL_AddTimer(interval, callback, nullptr);
 }
 
-void SDLWrapper::remove_timer(unsigned int timer_id)
+void SDLWrapper::remove_timer(unsigned int& timer_id)
 {
-    SDL_RemoveTimer(timer_id);
+    if (timer_id)
+    {
+        SDL_RemoveTimer(timer_id);
+        timer_id = 0;
+    }
 }
 
 int SDLWrapper::raise_custom_event()
