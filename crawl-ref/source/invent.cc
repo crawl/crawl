@@ -226,12 +226,7 @@ string InvEntry::get_text(bool need_cursor) const
         tstr << "(" << glyph_to_tagstr(get_item_glyph(*item)) << ")" << " ";
 
     tstr << text;
-    const string str = tstr.str();
-
-    if (printed_width(str) > get_number_of_cols())
-        return chop_tagged_string(str, get_number_of_cols() - 2) + "..";
-    else
-        return str;
+    return tstr.str();
 }
 
 void get_class_hotkeys(const int type, vector<char> &glyphs)
