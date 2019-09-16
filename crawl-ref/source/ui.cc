@@ -1658,7 +1658,9 @@ void pop_scissor()
 
 i4 get_scissor()
 {
-    return scissor_stack.top();
+    if (scissor_stack.size() > 0)
+        return scissor_stack.top();
+    return {0, 0, INT_MAX, INT_MAX};
 }
 
 #ifndef USE_TILE_LOCAL
