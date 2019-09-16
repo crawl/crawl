@@ -517,6 +517,8 @@ void Text::wrap_text_to_size(int width, int height)
         last_line += formatted_string("..");
         m_wrapped_lines.resize(height);
     }
+    if (m_wrapped_lines.empty())
+        m_wrapped_lines.emplace_back("");
 #endif
 }
 
