@@ -19,6 +19,10 @@ dull
 
 faint
 
+gleaming
+
+luminous
+
 mottled
 
 pale
@@ -114,27 +118,31 @@ smell_name
 
 baking bread
 
+brimstone
+
 burning hair
 
-coffee
+burnt toast
+
+centaur manure
 
 dragon dung
 
-fire and brimstone
+fresh coffee
+
+leather and polished metal
 
 mustard
 
-pepper
-
-salt
+pepper and sneeze
 
 something weird
 
-sulphur
-
 tea
 
-the scent of fear
+the cold sweat of fear
+
+wet dog
 
 wet wool
 %%%%
@@ -154,6 +162,8 @@ human
 
 millipede
 
+orc
+
 pill bug
 
 slug
@@ -169,7 +179,13 @@ a burbling brook
 
 a crunching sound
 
+a distant blaring wail to the South
+
+a distant slurping noise
+
 a lullaby played backwards
+
+a tolling bell
 
 a very strange noise
 
@@ -177,13 +193,23 @@ a very strange noise indeed
 
 a voice calling someone else's name
 
+a witch cackle
+
+an angry and manifold buzzing
+
 roaring flames
+
+something behind you
 
 snatches of song
 
+the chiming of a distant gong
+
+the clinking of coins
+
 the distant roaring of an enraged @_roaring_animal_name_@
 
-the chiming of a distant gong
+the frantic ticking of a clock
 
 the sound of one hand clapping
 
@@ -256,13 +282,24 @@ Seething terrors besiege your sanity!
 
 Lucidity slithers from your feeble grasp.
 %%%%
+# How great is the Orb of Zot?
+_great_adj_
+
+awesome
+
+fabled
+
+fabulous
+
+transcendent
+%%%%
 welcome_spam
 
 Will you prevail where others failed? Will you find the Orb of Zot?
 
 The bosom of this dungeon contains the fabled artefact, the Orb of Zot.
 
-Will you be the one to retrieve the fabulous Orb of Zot from the depths?
+Will you be the one to retrieve the @_great_adj_@ Orb of Zot from the depths?
 
 It is said that the Orb of Zot exists deep within this dungeon.
 %%%%
@@ -270,7 +307,7 @@ welcome_spam Halloween
 
 @welcome_spam@ Be careful! Halloween tonight.
 
-The monsters here aren't big trick-or-treat fans. If they won't give you the Orb of Zot, you'll have to take it.
+The monsters here aren't big trick-or-treat fans. They won't give you the Orb of Zot, you'll have to take it.
 
 A terrible geas has sent you after the Orb of Zot. What a horrible night to have a curse!
 
