@@ -164,6 +164,8 @@ frog
 
 gnoll
 
+herd of yaktaurs
+
 human
 
 kobold
