@@ -116,17 +116,19 @@ glowing_colour_name
 # random uselessness: "You smell XXX."
 smell_name
 
-and ogre midden
+an ogre midden
 
 baking bread
-
-brimstone
 
 burning hair
 
 centaur manure
 
+coffee
+
 dragon dung
+
+fire and brimstone
 
 halfling feet
 
@@ -136,9 +138,17 @@ mustard
 
 pepper and sneeze
 
+roast spriggan
+
+salt and feel a cool breeze blow past you
+
 something weird
 
+sulphur
+
 tea
+
+terrible
 
 the stench of fear
 
@@ -147,6 +157,8 @@ wet dog
 wet wool
 
 wet yak
+
+yourself and realize you really need a bath
 %%%%
 # This doesn't necessarily have to make sense. For example, a name of a
 # fruit or an insect will work here.
@@ -163,6 +175,8 @@ eggplant
 frog
 
 gnoll
+
+grizzly bear
 
 herd of yaktaurs
 
@@ -191,7 +205,7 @@ yak
 # random uselessness: "You hear XXX."
 sound_name
 
-a babbling brook
+a burbling brook
 
 a crunching sound
 
@@ -213,7 +227,7 @@ a witch cackle
 
 an angry and manifold buzzing
 
-orcs screaming and clashing their armour in every direction
+orcs closing in on you from all sides
 
 roaring flames
 
@@ -229,15 +243,17 @@ the distant roaring of an enraged @_roaring_animal_name_@
 
 the frantic ticking of a clock
 
+the ringing of an enormous bell
+
 the sound of one hand clapping
 
 the tinkle of a tiny bell
 
-the ringing of an enormous bell
-
-the wind whistling through your ears
+the terrible death whinny of a yaktaur
 
 whispers in a strange and terrifying language
+
+whistling wind
 %%%%
 # Used by Summon Horrible Things.
 SHT_int_loss
