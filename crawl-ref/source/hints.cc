@@ -220,7 +220,6 @@ void pick_hints(newgame_def& choice)
 #endif
         game_ended(game_exit::abort);
     case 'X':
-        cprintf("\nGoodbye!");
 #ifdef USE_TILE_WEB
         tiles.send_exit_reason("cancel");
 #endif
