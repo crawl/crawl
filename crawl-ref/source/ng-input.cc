@@ -64,10 +64,10 @@ bool is_good_name(const string& name, bool blankOK)
     // Disallow names that would result in a save named just ".cs".
     if (strip_filename_unsafe_chars(name).empty())
         return blankOK && name.empty();
-    return validate_player_name(name, false);
+    return validate_player_name(name);
 }
 
-bool validate_player_name(const string &name, bool verbose)
+bool validate_player_name(const string &name)
 {
 #if defined(TARGET_OS_WINDOWS)
     // Quick check for CON -- blows up real good under DOS/Windows.
@@ -76,18 +76,12 @@ bool validate_player_name(const string &name, bool verbose)
         || strcasecmp(name.c_str(), "prn") == 0
         || strnicmp(name.c_str(), "LPT", 3) == 0)
     {
-        if (verbose)
-            cprintf("\nSorry, that name gives your OS a headache.\n");
         return false;
     }
 #endif
 
     if (strwidth(name) > MAX_NAME_LENGTH)
-    {
-        if (verbose)
-            cprintf("\nThat name is too long.\n");
         return false;
-    }
 
     char32_t c;
     for (const char *str = name.c_str(); int l = utf8towc(&c, str); str += l)
@@ -95,16 +89,7 @@ bool validate_player_name(const string &name, bool verbose)
         // The technical reasons are gone, but enforcing some sanity doesn't
         // hurt.
         if (!iswalnum(c) && c != '-' && c != '.' && c != '_' && c != ' ')
-        {
-            if (verbose)
-            {
-                cprintf("\n"
-                        "Alpha-numerics, spaces, hyphens, periods "
-                        "and underscores only, please."
-                        "\n");
-            }
             return false;
-        }
     }
 
     return true;

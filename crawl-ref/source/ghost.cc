@@ -780,7 +780,7 @@ bool debug_check_ghost(const ghost_demon &ghost)
         return false;
 
     // Name validation.
-    if (!validate_player_name(ghost.name, false))
+    if (!validate_player_name(ghost.name))
         return false;
     // Many combining characters can come per every letter, but if there's
     // that much, it's probably a maliciously forged ghost of some kind.
