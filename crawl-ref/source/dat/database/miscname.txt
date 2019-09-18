@@ -116,19 +116,19 @@ glowing_colour_name
 # random uselessness: "You smell XXX."
 smell_name
 
+and ogre midden
+
 baking bread
 
 brimstone
 
 burning hair
 
-burnt toast
-
 centaur manure
 
 dragon dung
 
-fresh coffee
+halfling feet
 
 leather and polished metal
 
@@ -140,11 +140,13 @@ something weird
 
 tea
 
-the cold sweat of fear
+the stench of fear
 
 wet dog
 
 wet wool
+
+wet yak
 %%%%
 # This doesn't necessarily have to make sense. For example, a name of a
 # fruit or an insect will work here.
@@ -152,19 +154,31 @@ _roaring_animal_name_
 
 albino dragon
 
+dwarf
+
 dragon
 
 eggplant
 
 frog
 
+gnoll
+
 human
 
+kobold
+
 millipede
+
+ogre
 
 orc
 
 pill bug
+
+polar bear
+
+squirrel
 
 slug
 
@@ -175,7 +189,7 @@ yak
 # random uselessness: "You hear XXX."
 sound_name
 
-a burbling brook
+a babbling brook
 
 a crunching sound
 
@@ -197,11 +211,13 @@ a witch cackle
 
 an angry and manifold buzzing
 
+orcs screaming and clashing their armour in every direction
+
 roaring flames
 
 something behind you
 
-snatches of song
+snatches of sad song
 
 the chiming of a distant gong
 
@@ -217,9 +233,9 @@ the tinkle of a tiny bell
 
 the ringing of an enormous bell
 
-whispers in an ancient language
+the wind whistling through your ears
 
-whistling wind
+whispers in a strange and terrifying language
 %%%%
 # Used by Summon Horrible Things.
 SHT_int_loss
@@ -282,6 +298,15 @@ Seething terrors besiege your sanity!
 
 Lucidity slithers from your feeble grasp.
 %%%%
+# How famous is the Orb of Zot?
+_famous_adj_
+
+fabled
+
+legendary
+
+storied
+%%%%
 # How great is the Orb of Zot?
 _great_adj_
 
@@ -291,17 +316,32 @@ fabled
 
 fabulous
 
+legendary
+
 transcendent
 %%%%
 welcome_spam
 
 Will you prevail where others failed? Will you find the Orb of Zot?
 
-The bosom of this dungeon contains the fabled artefact, the Orb of Zot.
+The bosom of this dungeon contains the @_famous_adj_@ artefact, the Orb of Zot.
 
 Will you be the one to retrieve the @_great_adj_@ Orb of Zot from the depths?
 
 It is said that the Orb of Zot exists deep within this dungeon.
+%%%%
+# things that surround us on Halloween
+_halloween_things_
+
+demonic hallucinations
+
+disembodied spirits
+
+ghosts and spectres
+
+grim specetres
+
+horrible apparitions
 %%%%
 welcome_spam Halloween
 
@@ -311,7 +351,7 @@ The monsters here aren't big trick-or-treat fans. They won't give you the Orb of
 
 A terrible geas has sent you after the Orb of Zot. What a horrible night to have a curse!
 
-As you descend in search of the Orb, ghosts and spectres flock about you. This place is haunted!
+As you descend in search of the Orb, @_halloween_things_@ flock about you. This place is haunted!
 
 You hear a witch cackle, and suddenly arrive in the dungeon. If you don't find the Orb of Zot, you'll turn into a toad!
 %%%%
