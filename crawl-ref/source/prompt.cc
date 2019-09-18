@@ -50,9 +50,8 @@ bool yes_or_no(const char* fmt, ...)
 //      -- idea borrowed from Nethack
 bool yesno(const char *str, bool allow_lowercase, int default_answer, bool clear_after,
            bool interrupt_delays, bool noprompt,
-           const explicit_keymap *map, GotoRegion region)
+           const explicit_keymap *map)
 {
-    bool message = (region == GOTO_MSG);
     if (interrupt_delays && !crawl_state.is_repeating_cmd())
         interrupt_activity(activity_interrupt::force);
 
@@ -104,12 +103,7 @@ bool yesno(const char *str, bool allow_lowercase, int default_answer, bool clear
             else
             {
                 if (!noprompt)
-                {
-                    if (message)
-                        mprf(MSGCH_PROMPT, "%s", prompt.c_str());
-                    else
-                        cprintf("%s", prompt.c_str());
-                }
+                    mprf(MSGCH_PROMPT, "%s", prompt.c_str());
 
                 tmp = ui::getch(KMC_CONFIRM);
             }
@@ -140,7 +134,7 @@ bool yesno(const char *str, bool allow_lowercase, int default_answer, bool clear
             tmp = toupper_safe(tmp);
         }
 
-        if (clear_after && message)
+        if (clear_after)
             clear_messages();
 
         if (tmp == 'N')
@@ -156,10 +150,8 @@ bool yesno(const char *str, bool allow_lowercase, int default_answer, bool clear
                                            upper ? "Uppercase " : "");
             if (use_popup && status) // redundant, but will quiet a warning
                 status->text = pr;
-            else if (message)
-                mpr(pr);
             else
-                cprintf("%s\n", pr.c_str());
+                mpr(pr);
         }
     }
 }
