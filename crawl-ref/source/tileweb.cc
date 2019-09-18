@@ -710,7 +710,7 @@ void TilesFramework::push_ui_cutoff()
 void TilesFramework::pop_ui_cutoff()
 {
     m_ui_cutoff_stack.pop_back();
-    int cutoff = m_ui_cutoff_stack.empty() ? 0 : m_ui_cutoff_stack.back();
+    int cutoff = m_ui_cutoff_stack.empty() ? -1 : m_ui_cutoff_stack.back();
     send_message("{\"msg\":\"ui_cutoff\",\"cutoff\":%d}", cutoff);
 }
 
