@@ -2842,10 +2842,6 @@ void PrecisionMenu::draw_menu()
 {
     for (MenuObject *obj : m_attached_objects)
         obj->render();
-    // Render everything else here
-
-    // Reset textcolour just in case
-    textcolour(LIGHTGRAY);
 }
 
 MenuItem::MenuItem(): m_min_coord(0,0), m_max_coord(0,0), m_selected(false),
@@ -3345,7 +3341,6 @@ void FormattedTextItem::render()
     {
         m_font_buf.clear();
         // FIXME: m_fg_colour doesn't work here while it works in console.
-        textcolour(m_fg_colour);
         m_font_buf.add(formatted_string::parse_string(m_render_text,
                                                       m_fg_colour),
                        m_min_coord.x, m_min_coord.y + get_vertical_offset());

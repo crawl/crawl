@@ -2730,7 +2730,6 @@ formatted_string hints_abilities_info()
 // aptitude information.
 string hints_skills_info()
 {
-    textcolour(channel_to_colour(MSGCH_TUTORIAL));
     ostringstream text;
     text << "<" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
     string broken = "This screen shows the skill set of your character. "
@@ -2749,7 +2748,6 @@ string hints_skills_info()
 
 string hints_skill_training_info()
 {
-    textcolour(channel_to_colour(MSGCH_TUTORIAL));
     ostringstream text;
     text << "<" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
     string broken = "The training percentage (in <brown>brown</brown>) "
@@ -2765,7 +2763,6 @@ string hints_skill_training_info()
 
 string hints_skill_costs_info()
 {
-    textcolour(channel_to_colour(MSGCH_TUTORIAL));
     ostringstream text;
     text << "<" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
     string broken = "The training cost (in <cyan>cyan</cyan>) "
@@ -2780,7 +2777,6 @@ string hints_skill_costs_info()
 
 string hints_skill_targets_info()
 {
-    textcolour(channel_to_colour(MSGCH_TUTORIAL));
     ostringstream text;
     text << "<" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
     string broken = "Press the letter of a skill to set a training target. "
@@ -2794,7 +2790,6 @@ string hints_skill_targets_info()
 
 string hints_skills_description_info()
 {
-    textcolour(channel_to_colour(MSGCH_TUTORIAL));
     ostringstream text;
     text << "<" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
     string broken = "This screen shows the skill set of your character. "
@@ -2841,7 +2836,6 @@ string hints_memorise_info()
 {
     // TODO: this should probably be in z or I, but adding it to the memorise
     // menu was easier for the moment.
-    //textcolour(channel_to_colour(MSGCH_TUTORIAL));
     ostringstream text;
     vector<command_type> cmd;
     text << "<" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";

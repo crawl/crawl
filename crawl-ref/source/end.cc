@@ -443,7 +443,6 @@ NORETURN void end_game(scorefile_entry &se)
 
     if (!crawl_state.disables[DIS_CONFIRMATIONS])
         display_inventory();
-    textcolour(LIGHTGREY);
 
     clua.save_persist();
 

@@ -349,7 +349,6 @@ static void _post_init(bool newc)
 
     // This just puts the view up for the first turn.
     you.redraw_title = true;
-    textcolour(LIGHTGREY);
     you.redraw_status_lights = true;
     print_stats();
     viewwindow();

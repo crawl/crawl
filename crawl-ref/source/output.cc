@@ -1417,7 +1417,6 @@ void print_stats()
         you.redraw_status_lights = false;
         _print_status_lights(11 + yhack);
     }
-    textcolour(LIGHTGREY);
 
 #ifdef USE_TILE_LOCAL
     if (has_changed)
