@@ -1512,7 +1512,9 @@ hand axe
 %%%%
 hand crossbow
 
-<arbalest>
+“Energy may be likened to the bending of a crossbow;
+ decision, to the releasing of a trigger.”
+    -Sun Tzu
 %%%%
 harpy
 
@@ -1806,7 +1808,8 @@ hee most desireth.”
 %%%%
 manual
 
-<book>
+“Manuals have their uses... but they are not to be confused with living.”
+    -Robert Fulghum
 %%%%
 merfolk
 
@@ -2338,7 +2341,9 @@ see rightly; what is essential is invisible to the eye.”
 %%%%
 ring of slaying
 
-<ring>
+“Life is too short to occupy oneself with the slaying of the slain more than
+ once.”
+    -Thomas Huxley
 %%%%
 ring of strength
 
@@ -2346,7 +2351,9 @@ ring of strength
 %%%%
 ring of stealth
 
-<ring>
+“No one ever approaches perfection except by stealth, and unknown to
+ themselves.”
+    -William Hazlitt
 %%%%
 ring of teleportation
 
@@ -2483,7 +2490,9 @@ scroll of silence
 %%%%
 scroll of summoning
 
-<scroll>
+“When thou attended gloriously from heaven , Shalt in the sky appear, and from
+ thee send Thy summoning archangels to proclaim Thy dread tribunal.”
+    -John Milton
 %%%%
 scroll of teleportation
 
