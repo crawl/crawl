@@ -985,6 +985,7 @@ namespace arena
         // Set various options from the arena spec's tags
         parse_monster_spec(); // may throw an arena_error
 
+        crawl_view.init_geometry();
         expand_mlist(5);
 
         for (monster_type i = MONS_0; i < NUM_MONSTERS; ++i)
