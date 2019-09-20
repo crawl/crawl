@@ -337,8 +337,10 @@ bool check_awaken(monster* mons, int stealth)
     return false;
 }
 
-void item_noise(const item_def &item, string msg, int loudness)
+void item_noise(const item_def &item, actor &act, string msg, int loudness)
 {
+    // TODO: messaging for cases where act != you. (This doesn't come up right
+    // now.)
     if (is_unrandom_artefact(item))
     {
         // "Your Singing Sword" sounds disrespectful
@@ -412,7 +414,7 @@ void item_noise(const item_def &item, string msg, int loudness)
     mprf(channel, "%s", msg.c_str());
 
     if (channel != MSGCH_TALK_VISUAL)
-        noisy(loudness, you.pos());
+        noisy(loudness, act.pos());
 }
 
 // TODO: Let artefacts besides weapons generate noise.
@@ -439,7 +441,7 @@ void noisy_equipment()
     if (msg.empty())
         msg = getSpeakString("noisy weapon");
 
-    item_noise(*weapon, msg, 20);
+    item_noise(*weapon, you, msg, 20);
 }
 
 // Berserking monsters cannot be ordered around.

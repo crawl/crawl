@@ -11,7 +11,7 @@ bool fake_noisy(int loudness, const coord_def& where);
 void yell(const actor* mon = nullptr);
 void issue_orders();
 
-void item_noise(const item_def& item, string msg, int loudness = 25);
+void item_noise(const item_def& item, actor &act, string msg, int loudness = 25);
 void noisy_equipment();
 
 void check_monsters_sense(sense_type sense, int range, const coord_def& where);
