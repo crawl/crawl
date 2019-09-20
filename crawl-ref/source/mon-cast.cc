@@ -6882,12 +6882,15 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
     case SPELL_SPORULATE:
     {
-        mgen_data spored (MONS_BALLISTOMYCETE_SPORE,
+        mgen_data mgen (MONS_BALLISTOMYCETE_SPORE,
                 mons->friendly() ? BEH_FRIENDLY : BEH_HOSTILE, mons->pos(),
                 mons->foe);
-        spored.set_summoned(mons, 0, SPELL_SPORULATE);
+        mgen.set_summoned(mons, 0, SPELL_SPORULATE);
+        // Add 1HD to the spore for each additional HD the spawner has.
+        mgen.hd = mons_class_hit_dice(MONS_BALLISTOMYCETE_SPORE) +
+            max(0, mons->spell_hd() - mons_class_hit_dice(mons->type));
 
-        if (monster *spore = create_monster(spored))
+        if (monster* const spore = create_monster(mgen))
             spore->add_ench(ENCH_SHORT_LIVED);
 
         return;

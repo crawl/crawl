@@ -1084,7 +1084,7 @@ void setup_spore_explosion(bolt & beam, const monster& origin)
 {
     _setup_base_explosion(beam, origin);
     beam.flavour = BEAM_SPORE;
-    beam.damage  = dice_def(3, 15);
+    beam.damage  = dice_def(3, 5 + origin.get_hit_dice());
     beam.name    = "explosion of spores";
     beam.colour  = LIGHTGREY;
     beam.ex_size = 1;
