@@ -238,7 +238,8 @@ A staircase to the Shoals
 %%%%
 A staircase to the Tomb
 
-<Tomb>
+“A tomb now suffices him for whom the world was not enough.”
+    -Alexander the Great's epitaph
 %%%%
 A stormy altar of Qazlal
 
@@ -1512,7 +1513,9 @@ hand axe
 %%%%
 hand crossbow
 
-<arbalest>
+“Energy may be likened to the bending of a crossbow;
+ decision, to the releasing of a trigger.”
+    -Sun Tzu
 %%%%
 harpy
 
@@ -1806,7 +1809,8 @@ hee most desireth.”
 %%%%
 manual
 
-<book>
+“Manuals have their uses... but they are not to be confused with living.”
+    -Robert Fulghum
 %%%%
 merfolk
 
@@ -2338,15 +2342,20 @@ see rightly; what is essential is invisible to the eye.”
 %%%%
 ring of slaying
 
-<ring>
+“Life is too short to occupy oneself with the slaying of the slain more than
+ once.”
+    -Thomas Huxley
 %%%%
 ring of strength
 
-<ring>
+“That which does not kill us makes us stronger.”
+    -Friedrich Nietzsche
 %%%%
 ring of stealth
 
-<ring>
+“No one ever approaches perfection except by stealth, and unknown to
+ themselves.”
+    -William Hazlitt
 %%%%
 ring of teleportation
 
@@ -2414,7 +2423,8 @@ scroll of acquirement
 %%%%
 scroll of amnesia
 
-<scroll>
+“But revenge is hollow. I'd prefer amnesia.”
+    -Tera Lynn Childs
 %%%%
 scroll of blinking
 
@@ -2434,7 +2444,9 @@ scroll of enchant weapon
 %%%%
 scroll of fear
 
-<scroll>
+“We can easily forgive a child who is afraid of the dark;
+the real tragedy of life is when men are afraid of the light.”
+    -Plato
 %%%%
 scroll of fog
 
@@ -2442,7 +2454,9 @@ scroll of fog
 %%%%
 scroll of holy word
 
-<scroll>
+“However many holy words you read, however many you speak,
+what good will they do you if you do not act on upon them?”
+    -Gautama Buddha
 %%%%
 scroll of identify
 
@@ -2483,7 +2497,9 @@ scroll of silence
 %%%%
 scroll of summoning
 
-<scroll>
+“When thou attended gloriously from heaven , Shalt in the sky appear, and from
+ thee send Thy summoning archangels to proclaim Thy dread tribunal.”
+    -John Milton
 %%%%
 scroll of teleportation
 
@@ -2579,7 +2595,8 @@ shapeshifter
 %%%%
 shield
 
-<buckler>
+“...for the shield may be as important for victory, as the sword or spear.”
+    -Charles Darwin, “The Origin of Species”. 1859.
 %%%%
 shortbow
 
