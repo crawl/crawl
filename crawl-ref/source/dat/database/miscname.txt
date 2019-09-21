@@ -128,8 +128,6 @@ coffee
 
 dragon dung
 
-fire and brimstone
-
 halfling feet
 
 leather and polished metal
@@ -141,6 +139,8 @@ pepper and sneeze
 roast spriggan
 
 salt and feel a cool breeze blow past you
+
+smoke and brimstone
 
 something weird
 
@@ -223,9 +223,13 @@ a very strange noise indeed
 
 a voice calling someone else's name
 
+a voice calling your name
+
 a witch cackle
 
 an angry and manifold buzzing
+
+an army of orcs preparing for battle nearby
 
 orcs closing in on you from all sides
 
