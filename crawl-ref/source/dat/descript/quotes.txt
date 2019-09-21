@@ -238,7 +238,8 @@ A staircase to the Shoals
 %%%%
 A staircase to the Tomb
 
-<Tomb>
+“A tomb now suffices him for whom the world was not enough.”
+    -Alexander the Great's tombstone epitaph
 %%%%
 A stormy altar of Qazlal
 
@@ -2347,7 +2348,8 @@ ring of slaying
 %%%%
 ring of strength
 
-<ring>
+“That which does not kill us makes us stronger.”
+    -Friedrich Nietzsche
 %%%%
 ring of stealth
 
@@ -2421,7 +2423,8 @@ scroll of acquirement
 %%%%
 scroll of amnesia
 
-<scroll>
+“But revenge is hollow. I'd prefer amnesia.”
+    -Tera Lynn Childs
 %%%%
 scroll of blinking
 
@@ -2441,7 +2444,9 @@ scroll of enchant weapon
 %%%%
 scroll of fear
 
-<scroll>
+“We can easily forgive a child who is afraid of the dark;
+the real tragedy of life is when men are afraid of the light.”
+    -Plato
 %%%%
 scroll of fog
 
@@ -2588,7 +2593,8 @@ shapeshifter
 %%%%
 shield
 
-<buckler>
+“...for the shield may be as important for victory, as the sword or spear.”
+    -Charles Darwin, “The Origin of Species”. 1859.
 %%%%
 shortbow
 
