@@ -1540,7 +1540,7 @@ hell hound
  If aught disturbed their noise, into her womb,
  And kennel there; yet there still barked and howled
  Within unseen.”
-    -John Milton, _Paradise Lost_, Book II, l. 653-659. 1667.
+    -John Milton, _Paradise Lost_, Book II, 1667.
 %%%%
 hell knight
 
@@ -1630,7 +1630,7 @@ insubstantial wisp
  Misleads th' amaz'd Night-wanderer from his way
  To Boggs and Mires, and oft through Pond or Poole,
  There swallow'd up and lost, from succour farr.”
-    -John Milton, _Paradise Lost_
+    -John Milton, _Paradise Lost_, Book IX, 1667.
 %%%%
 Iskenderun's Battlesphere spell
 
@@ -2054,7 +2054,7 @@ pandemonium lord
  A solemn Councel forthwith to be held
  At Pandaemonium, the high Capital
  Of Satan and his Peers...”
-    -John Milton, _Paradise Lost_,  Book I, l. 752-7. 1667.
+    -John Milton, _Paradise Lost_, Book I, 1667.
 %%%%
 Passwall spell
 
@@ -2495,9 +2495,9 @@ scroll of silence
 %%%%
 scroll of summoning
 
-“When thou attended gloriously from heaven , Shalt in the sky appear, and from
+“When thou attended gloriously from heaven, Shalt in the sky appear, and from
  thee send Thy summoning archangels to proclaim Thy dread tribunal.”
-    -John Milton
+    -John Milton, _Paradise Lost_, Book III, 1667.
 %%%%
 scroll of teleportation
 
