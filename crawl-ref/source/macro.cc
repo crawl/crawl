@@ -714,8 +714,7 @@ int getchm(KeymapContext mc, int (*rgetch)())
         return a;
 
     // Read some keys...
-    keyseq keys = _getch_mul(rgetch);
-    macro_buf_add_with_keymap(keys, mc);
+    macro_buf_add_with_keymap(_getch_mul(rgetch), mc);
     return macro_buf_get();
 }
 
@@ -750,7 +749,7 @@ int getch_with_command_macros()
     _macro_inject_sent_keys();
 
     if (Buffer.empty())
-        macro_buf_add_long(_getch_mul());
+        macro_buf_add_with_keymap(_getch_mul(), KMC_DEFAULT);
 
     macro_buf_apply_command_macro();
 
