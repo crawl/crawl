@@ -16,8 +16,7 @@ string newgame_char_description(const newgame_def& ng);
 
 void choose_tutorial_character(newgame_def& ng_choice);
 
-bool choose_game(newgame_def& ng, newgame_def& choice,
-                 const newgame_def& defaults);
+newgame_def choose_game(newgame_def& choice, const newgame_def& defaults);
 
 string newgame_random_name();
 

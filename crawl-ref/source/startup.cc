@@ -76,7 +76,7 @@ static void _loading_message(string m)
 }
 
 // Initialise a whole lot of stuff...
-static void _initialize()
+void startup_initialize()
 {
     Options.fixup_options();
 
@@ -966,17 +966,14 @@ static bool _exit_type_allows_menu_bypass(game_exit exit)
 }
 #endif
 
-bool startup_step()
+newgame_def startup_step(const newgame_def& defaults)
 {
-    _initialize();
-
-    newgame_def choice   = Options.game;
+    newgame_def choice = Options.game;
 
     // Setup base game type *before* reading startup prefs -- the prefs file
     // may be in a game-specific subdirectory.
     crawl_state.type = choice.type;
 
-    newgame_def defaults = read_startup_prefs();
     if (crawl_state.default_startup_name.size() == 0 && Options.remember_name)
         crawl_state.default_startup_name = defaults.name;
 
@@ -1032,28 +1029,20 @@ bool startup_step()
         crawl_state.bypassed_startup_menu = true;
 #endif
 
-    // TODO: integrate arena better with
-    //       choose_game and setup_game
-    if (choice.type == GAME_TYPE_ARENA)
-    {
-        crawl_state.last_type = GAME_TYPE_ARENA;
-        run_arena(choice, defaults.arena_teams); // this is NORETURN
-    }
+    return choice;
+}
 
+bool startup_load_regular(newgame_def choice, const newgame_def& defaults)
+{
     bool newchar = false;
-    newgame_def ng;
     if (choice.filename.empty() && !choice.name.empty())
         choice.filename = get_save_filename(choice.name);
 
     if (save_exists(choice.filename) && restore_game(choice.filename))
         save_player_name();
-    else if (choose_game(ng, choice, defaults)
-             && restore_game(ng.filename))
-    {
-        save_player_name();
-    }
     else
     {
+        const newgame_def ng = choose_game(choice, defaults);
         clear_message_store();
         setup_game(ng);
         newchar = true;
@@ -1065,7 +1054,6 @@ bool startup_step()
         crawl_state.default_startup_name = you.your_name;
 
     _post_init(newchar);
-
     return newchar;
 }
 

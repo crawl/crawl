@@ -957,10 +957,9 @@ static void _choose_seed(newgame_def& ng, newgame_def& choice,
     Options.pregen_dungeon = choice.pregenerate = pregen_check->checked();
 }
 
-// Read a choice of game into ng.
-// Returns false if a game (with name ng.name) should
+// Calls game_ended(game_exit::abort) if a game (with name ng.name) should
 // be restored instead of starting a new character.
-bool choose_game(newgame_def& ng, newgame_def& choice,
+newgame_def choose_game(newgame_def& choice,
                  const newgame_def& defaults)
 {
 #ifdef USE_TILE_WEB
@@ -971,6 +970,7 @@ bool choose_game(newgame_def& ng, newgame_def& choice,
 
     textcolour(LIGHTGREY);
 
+    newgame_def ng;
     ng.name = choice.name;
     ng.type = choice.type;
     ng.map  = choice.map;
@@ -1006,7 +1006,7 @@ bool choose_game(newgame_def& ng, newgame_def& choice,
 
     write_newgame_options_file(choice);
 
-    return false;
+    return ng;
 }
 
 // Set ng_choice to defaults without overwriting name and game type.

@@ -140,6 +140,7 @@
 #include "transform.h"
 #include "traps.h"
 #include "travel.h"
+#include "ui.h"
 #include "uncancel.h"
 #include "version.h"
 #include "viewchar.h"
@@ -187,7 +188,7 @@ const struct coord_def Compass[9] =
 
 // Functions in main module
 static void _launch_game_loop();
-NORETURN static void _launch_game();
+NORETURN static void _launch_game(bool game_start);
 
 static void _do_berserk_no_combat_penalty();
 static void _do_searing_ray();
@@ -360,7 +361,21 @@ static void _launch_game_loop()
         try
         {
             game_ended = false;
-            _launch_game();
+            startup_initialize();
+
+            const newgame_def defaults = read_startup_prefs();
+            newgame_def choice = startup_step(defaults);
+
+            if (choice.type == GAME_TYPE_ARENA)
+            {
+                crawl_state.last_type = GAME_TYPE_ARENA;
+                run_arena(choice, defaults.arena_teams); // this is NORETURN
+            }
+            else
+            {
+                bool newchar = startup_load_regular(choice, defaults);
+                _launch_game(newchar);
+            }
         }
         catch (game_ended_condition &ge)
         {
@@ -386,10 +401,8 @@ static void _launch_game_loop()
              && !crawl_state.seen_hups);
 }
 
-NORETURN static void _launch_game()
+NORETURN static void _launch_game(bool game_start)
 {
-    const bool game_start = startup_step();
-
     // Attach the macro key recorder
     remove_key_recorder(&repeat_again_rec);
     add_key_recorder(&repeat_again_rec);
