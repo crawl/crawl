@@ -1069,7 +1069,10 @@ namespace arena
             catch (const arena_error &error)
             {
                 write_error(error.what());
-                game_ended_with_error(error.what());
+                if(error.fatal)
+                  {
+                    game_ended_with_error(error.what());
+                  }
                 continue;
             }
             do_fight();
