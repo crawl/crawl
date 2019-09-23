@@ -116,13 +116,23 @@ glowing_colour_name
 # random uselessness: "You smell XXX."
 smell_name
 
+a campfire
+
+a dewy forest on a spring morning
+
 an ogre midden
 
 baking bread
 
+bat guano
+
 burning hair
 
 centaur manure
+
+cherry blossoms
+
+clean mountain air
 
 coffee
 
@@ -130,13 +140,25 @@ dragon dung
 
 halfling feet
 
+honeysuckles
+
+lavender
+
 leather and polished metal
+
+meat roasting over an open fire
 
 mustard
 
 pepper and sneeze
 
+pipe weed
+
 roast spriggan
+
+rotten fruit
+
+rotten potatoes
 
 salt and feel a cool breeze blow past you
 
@@ -146,13 +168,13 @@ something weird
 
 sulphur
 
-tea
+sweaty leather boots
 
-terrible
+tea
 
 the stench of fear
 
-wet dog
+wet warg
 
 wet wool
 
@@ -166,6 +188,8 @@ _roaring_animal_name_
 
 albino dragon
 
+centaur
+
 dwarf
 
 dragon
@@ -178,9 +202,9 @@ gnoll
 
 grizzly bear
 
-herd of yaktaurs
-
 human
+
+kimodo dragon
 
 kobold
 
@@ -198,9 +222,13 @@ squirrel
 
 slug
 
+troll
+
 wumpus
 
 yak
+
+yaktaur
 %%%%
 # random uselessness: "You hear XXX."
 sound_name
