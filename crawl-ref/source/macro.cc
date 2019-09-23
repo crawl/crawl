@@ -666,11 +666,8 @@ void macro_save()
  * Reads as many keypresses as are available (waiting for at least one),
  * and returns them as a single keyseq.
  */
-static keyseq _getch_mul(int (*rgetch)() = nullptr)
+static int _getch_single(int (*rgetch)() = nullptr)
 {
-    keyseq keys;
-    int    a;
-
     // Something's gone wrong with replaying keys if crawl needs to
     // get new keys from the user.
     if (crawl_state.is_replaying_keys())
@@ -683,17 +680,16 @@ static keyseq _getch_mul(int (*rgetch)() = nullptr)
     if (!rgetch)
         rgetch = m_getch;
 
-    // The a == 0 test is legacy code that I don't dare to remove. I
+    // The key == 0 test is legacy code that I don't dare to remove. I
     // have a vague recollection of it being a kludge for conio support.
+    int key;
     do
     {
-        a = rgetch();
-        if (a != CK_NO_KEY)
-            keys.push_back(a);
+        key = rgetch();
     }
-    while (keys.size() == 0 || ((kbhit() || a == 0) && a != CK_REDRAW));
+    while (key == 0 || key == CK_NO_KEY);
 
-    return keys;
+    return key;
 }
 
 /*
@@ -713,8 +709,8 @@ int getchm(KeymapContext mc, int (*rgetch)())
     if ((a = macro_buf_get()) != -1)
         return a;
 
-    // Read some keys...
-    macro_buf_add_with_keymap(_getch_mul(rgetch), mc);
+    // Read a key...
+    macro_buf_add_with_keymap({_getch_single(rgetch)}, mc);
     return macro_buf_get();
 }
 
@@ -749,7 +745,7 @@ int getch_with_command_macros()
     _macro_inject_sent_keys();
 
     if (Buffer.empty())
-        macro_buf_add_with_keymap(_getch_mul(), KMC_DEFAULT);
+        macro_buf_add_with_keymap({_getch_single()}, KMC_DEFAULT);
 
     macro_buf_apply_command_macro();
 
