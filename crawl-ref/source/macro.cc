@@ -52,7 +52,7 @@
 #include "version.h"
 
 typedef deque<int> keybuf;
-typedef map<keyseq,keyseq> macromap;
+typedef map<int,keyseq> macromap;
 
 static macromap Keymaps[KMC_CONTEXT_COUNT];
 static macromap Macros;
@@ -391,15 +391,16 @@ static string vtostr(const keyseq &seq)
 /*
  * Add a macro (surprise, surprise).
  */
-static void macro_add(macromap &mapref, keyseq key, keyseq action)
+static void macro_add(macromap &mapref, int key, keyseq action)
 {
-    mapref[key] = action;
+    if (!action.empty())
+        mapref[key] = action;
 }
 
 /*
  * Remove a macro.
  */
-static bool macro_del(macromap &mapref, keyseq key)
+static bool macro_del(macromap &mapref, int key)
 {
     return mapref.erase(key) != 0;
 }
@@ -493,57 +494,17 @@ void macro_buf_add_cmd(command_type cmd, bool reverse)
 }
 
 /*
- * Adds keypresses from a sequence into the internal keybuffer. Does some
- * O(N^2) analysis to the sequence to apply keymaps.
+ * Adds keys from a sequence to the end of the internal keybuffer.
+ * Each key is expanded/converted with the given keymap.
  */
 static void macro_buf_add_long(keyseq actions,
                                macromap &keymap = Keymaps[KMC_DEFAULT])
 {
-    keyseq tmp;
-
-    // debug << "Adding: " << vtostr(actions) << endl;
-    // debug.flush();
-
-    // Check whether any subsequences of the sequence are macros.
-    // The matching starts from as early as possible, and is
-    // as long as possible given the first constraint. I.e from
-    // the sequence "abcdef" and macros "ab", "bcde" and "de"
-    // "ab" and "de" are recognised as macros.
-
-    while (!actions.empty())
+    for (const auto key : actions)
     {
-        tmp = actions;
-
-        while (!tmp.empty())
-        {
-            auto subst = keymap.find(tmp);
-            // Found a macro. Add the expansion (action) of the
-            // macro into the buffer.
-            if (subst != keymap.end() && !subst->second.empty())
-            {
-                macro_buf_add(subst->second, false, false);
-                break;
-            }
-
-            // Didn't find a macro. Remove a key from the end
-            // of the sequence, and try again.
-            tmp.pop_back();
-        }
-
-        if (tmp.empty())
-        {
-            // Didn't find a macro. Add the first keypress of the sequence
-            // into the buffer, remove it from the sequence, and try again.
-            macro_buf_add(actions.front(), false, false);
-            actions.pop_front();
-        }
-        else
-        {
-            // Found a macro, which has already been added above. Now just
-            // remove the macroed keys from the sequence.
-            for (unsigned int i = 0; i < tmp.size(); i++)
-                actions.pop_front();
-        }
+        const auto subst = keymap.find(key);
+        const auto out = subst == keymap.end() ? keyseq({key}) : subst->second;
+        macro_buf_add(out, false, false);
     }
 }
 
@@ -596,29 +557,15 @@ static void macro_buf_apply_command_macro()
     if (macro_keys_left > 0 || expanded_keys_left > 0)
         return;
 
-    keyseq tmp = Buffer;
-
-    // find the longest match from the start of the buffer and replace it
-    while (!tmp.empty())
+    const auto expansion = Macros.find(Buffer.front());
+    if (expansion != Macros.end())
     {
-        auto expansion = Macros.find(tmp);
+        const keyseq &result = expansion->second;
 
-        if (expansion != Macros.end() && !expansion->second.empty())
-        {
-            const keyseq &result = expansion->second;
-
-            // Found macro, remove match from front:
-            for (unsigned int i = 0; i < tmp.size(); i++)
-                Buffer.pop_front();
-
-            macro_keys_left = result.size();
-
-            macro_buf_add(result, true, true);
-
-            break;
-        }
-
-        tmp.pop_back();
+        // Found macro, remove match from front:
+        Buffer.pop_front();
+        macro_keys_left = result.size();
+        macro_buf_add(result, true, true);
     }
 }
 
@@ -675,7 +622,7 @@ static void write_map(FILE *f, const macromap &mp, const char *key)
         if (entry.second.size())
         {
             fprintf(f, "%s%s\nA:%s\n\n", OUTS(key),
-                OUTS(vtostr(entry.first)), OUTS(vtostr(entry.second)));
+                OUTS(vtostr({entry.first})), OUTS(vtostr(entry.second)));
         }
     }
 }
@@ -803,14 +750,8 @@ int getch_with_command_macros()
     _macro_inject_sent_keys();
 
     if (Buffer.empty())
-    {
-        // Read some keys...
-        keyseq keys = _getch_mul();
-        // ... and add them into the buffer (apply keymaps)
-        macro_buf_add_long(keys);
-    }
+        macro_buf_add_long(_getch_mul());
 
-    // Apply longest matching macro at front of buffer:
     macro_buf_apply_command_macro();
 
     return macro_buf_get();
@@ -1015,15 +956,14 @@ void macro_add_query()
                                                macro_type.c_str());
     msgwin_prompt(trigger_prompt);
 
-    keyseq key;
     mouse_control mc(MOUSE_MODE_MACRO);
-    key = _getch_mul();
-    string key_str = vtostr(key);
+    int key = m_getch();
+    string key_str = vtostr({key});
     key_str = replace_all(key_str, "<", "<<");
 
-    msgwin_reply(vtostr(key));
+    msgwin_reply(vtostr({key}));
 
-    if (mapref.count(key) && !mapref[key].empty())
+    if (mapref.count(key))
     {
         string action_str = vtostr(mapref[key]);
         action_str = replace_all(action_str, "<", "<<");
@@ -1126,7 +1066,8 @@ static void _read_macros_from(const char* filename)
         else if (s.substr(0, 2) == "A:")
         {
             action = parse_keyseq(s.substr(2));
-            macro_add((keymap ? Keymaps[keymc] : Macros), key, action);
+            if (!key.empty())
+                macro_add((keymap ? Keymaps[keymc] : Macros), key.front(), action);
         }
     }
 }
@@ -1189,10 +1130,10 @@ string read_rc_file_macro(const string& field)
 
 
     keyseq key = parse_keyseq(macro_key_string);
-
     keyseq action = parse_keyseq(action_string);
 
-    macro_add((keymap ? Keymaps[keymc] : Macros), key, action);
+    if (!key.empty())
+        macro_add((keymap ? Keymaps[keymc] : Macros), key.front(), action);
 
     // If we didn't save here, macros in rc files would be saved iff you also
     // changed another macro with cntrl-D and saved at the exit prompt.
