@@ -710,16 +710,16 @@ int getchm(KeymapContext mc, int (*rgetch)())
         return a;
 
     // Read a key...
-    macro_buf_add_with_keymap({_getch_single(rgetch)}, mc);
+    macro_buf_add_with_keymap(_getch_single(rgetch), mc);
     return macro_buf_get();
 }
 
-void macro_buf_add_with_keymap(keyseq keys, KeymapContext mc)
+void macro_buf_add_with_keymap(int key, KeymapContext mc)
 {
     if (mc == KMC_NONE)
-        macro_buf_add(keys, false, false);
+        macro_buf_add({key}, false, false);
     else
-        macro_buf_add_long(keys, Keymaps[mc]);
+        macro_buf_add_long({key}, Keymaps[mc]);
 }
 
 /**
@@ -745,7 +745,7 @@ int getch_with_command_macros()
     _macro_inject_sent_keys();
 
     if (Buffer.empty())
-        macro_buf_add_with_keymap({_getch_single()}, KMC_DEFAULT);
+        macro_buf_add_with_keymap(_getch_single(), KMC_DEFAULT);
 
     macro_buf_apply_command_macro();
 
