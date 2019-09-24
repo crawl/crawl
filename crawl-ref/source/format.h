@@ -92,7 +92,4 @@ public:
 
 int count_linebreaks(const formatted_string& fs);
 
-int tagged_string_tag_length(const string& s);
-int printed_width(const string& s);
-
 void display_tagged_block(const string& s);
