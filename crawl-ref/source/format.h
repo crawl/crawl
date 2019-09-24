@@ -68,17 +68,14 @@ public:
     struct fs_op
     {
         fs_op_type type;
-        int x, y;
-        bool relative;
+        int colour;
         string text;
 
-        fs_op(int colour)
-            : type(FSOP_COLOUR), x(colour), y(-1), relative(false), text()
+        fs_op(int _colour) : type(FSOP_COLOUR), colour(_colour), text()
         {
         }
 
-        fs_op(const string &s)
-            : type(FSOP_TEXT), x(-1), y(-1), relative(false), text(s)
+        fs_op(const string &s) : type(FSOP_TEXT), colour(-1), text(s)
         {
         }
 

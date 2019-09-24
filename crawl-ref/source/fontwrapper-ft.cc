@@ -795,7 +795,7 @@ void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
         {
             case FSOP_COLOUR:
                 // Only foreground colors for now...
-                colour = op.x & 0xF;
+                colour = op.colour & 0xF;
                 break;
             case FSOP_TEXT:
                 store(buf, x, y, op.text, term_colours[colour], orig_x);

@@ -273,7 +273,7 @@ string formatted_string::html_dump() const
             break;
         case FSOP_COLOUR:
             s += "<font color=";
-            s += colour_to_str(op.x);
+            s += colour_to_str(op.colour);
             s += ">";
             break;
         }
@@ -372,7 +372,7 @@ string formatted_string::to_colour_string() const
         else if (ops[i] == FSOP_COLOUR)
         {
             st += "<";
-            st += colour_to_str(ops[i].x);
+            st += colour_to_str(ops[i].colour);
             st += ">";
         }
     }
@@ -399,7 +399,7 @@ int formatted_string::find_last_colour() const
     {
         for (int i = ops.size() - 1; i >= 0; --i)
             if (ops[i].type == FSOP_COLOUR)
-                return ops[i].x;
+                return ops[i].colour;
     }
     return LIGHTGREY;
 }
@@ -532,9 +532,9 @@ void formatted_string::fs_op::display() const
     {
     case FSOP_COLOUR:
 #ifndef USE_TILE_LOCAL
-        if (x < NUM_TERM_COLOURS)
+        if (colour < NUM_TERM_COLOURS)
 #endif
-            ::textcolour(x);
+            ::textcolour(colour);
         break;
     case FSOP_TEXT:
         ::cprintf("%s", text.c_str());
