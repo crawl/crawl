@@ -286,6 +286,12 @@ bool formatted_string::operator < (const formatted_string &other) const
     return string(*this) < string(other);
 }
 
+bool formatted_string::operator == (const formatted_string &other) const
+{
+    // May produce false negative in some cases, e.g. duplicated colour ops
+    return ops == other.ops;
+}
+
 const formatted_string &
 formatted_string::operator += (const formatted_string &other)
 {

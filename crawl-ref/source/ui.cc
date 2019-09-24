@@ -464,6 +464,8 @@ Text::Text()
 
 void Text::set_text(const formatted_string &fs)
 {
+    if (fs == m_text)
+        return;
     m_text.clear();
     m_text += fs;
     _invalidate_sizereq();

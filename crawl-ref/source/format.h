@@ -44,6 +44,7 @@ public:
     string html_dump() const;
 
     bool operator < (const formatted_string &other) const;
+    bool operator == (const formatted_string &other) const;
     const formatted_string &operator += (const formatted_string &other);
     char &operator [] (size_t idx);
 
