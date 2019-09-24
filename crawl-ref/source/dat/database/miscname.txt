@@ -348,15 +348,6 @@ Seething terrors besiege your sanity!
 
 Lucidity slithers from your feeble grasp.
 %%%%
-# How famous is the Orb of Zot?
-_famous_adj_
-
-fabled
-
-legendary
-
-storied
-%%%%
 # How great is the Orb of Zot?
 _great_adj_
 
@@ -367,14 +358,12 @@ fabled
 fabulous
 
 legendary
-
-transcendent
 %%%%
 welcome_spam
 
 Will you prevail where others failed? Will you find the Orb of Zot?
 
-The bosom of this dungeon contains the @_famous_adj_@ artefact, the Orb of Zot.
+The bosom of this dungeon contains the @_great_adj_@ artefact, the Orb of Zot.
 
 Will you be the one to retrieve the @_great_adj_@ Orb of Zot from the depths?
 
