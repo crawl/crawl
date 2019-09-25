@@ -619,6 +619,7 @@ void run_layout(shared_ptr<Widget> root, const bool& done);
 bool has_layout();
 int getch(KeymapContext km = KMC_DEFAULT);
 void ui_force_render();
+void ui_render();
 void ui_delay(unsigned int ms);
 
 void push_scissor(i4 scissor);
