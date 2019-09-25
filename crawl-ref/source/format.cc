@@ -236,7 +236,7 @@ formatted_string::operator string() const
 {
     string s;
     for (const fs_op &op : ops)
-        if (op == FSOP_TEXT)
+        if (op.type == FSOP_TEXT)
             s += op.text;
 
     return s;
@@ -304,7 +304,7 @@ int formatted_string::width() const
     // Just add up the individual string lengths.
     int len = 0;
     for (const fs_op &op : ops)
-        if (op == FSOP_TEXT)
+        if (op.type == FSOP_TEXT)
             len += strwidth(op.text);
     return len;
 }
@@ -325,7 +325,7 @@ char &formatted_string::operator [] (size_t idx)
     int size = ops.size();
     for (int i = 0; i < size; ++i)
     {
-        if (ops[i] != FSOP_TEXT)
+        if (ops[i].type != FSOP_TEXT)
             continue;
 
         size_t len = ops[i].text.length();
@@ -347,7 +347,7 @@ string formatted_string::tostring(int s, int e) const
 
     for (int i = s; i <= e && i < size; ++i)
     {
-        if (ops[i] == FSOP_TEXT)
+        if (ops[i].type == FSOP_TEXT)
             st += ops[i].text;
     }
     return st;
@@ -359,7 +359,7 @@ string formatted_string::to_colour_string() const
     const int size = ops.size();
     for (int i = 0; i < size; ++i)
     {
-        if (ops[i] == FSOP_TEXT)
+        if (ops[i].type == FSOP_TEXT)
         {
             // gotta double up those '<' chars ...
             size_t start = st.size();
@@ -375,7 +375,7 @@ string formatted_string::to_colour_string() const
                 start = left_angle + 2;
             }
         }
-        else if (ops[i] == FSOP_COLOUR)
+        else if (ops[i].type == FSOP_COLOUR)
         {
             st += "<";
             st += colour_to_str(ops[i].colour);
@@ -503,7 +503,7 @@ void formatted_string::add_glyph(cglyph_t g)
 
 void formatted_string::textcolour(int colour)
 {
-    if (!ops.empty() && ops[ ops.size() - 1 ].type == FSOP_COLOUR)
+    if (!ops.empty() && ops.back().type == FSOP_COLOUR)
         ops.pop_back();
 
     ops.emplace_back(colour);

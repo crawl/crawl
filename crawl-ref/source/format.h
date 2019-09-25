@@ -80,9 +80,9 @@ public:
         {
         }
 
-        operator fs_op_type () const
+        bool operator == (const fs_op &other) const
         {
-            return type;
+            return type == other.type && colour == other.colour && text == other.text;
         }
         void display() const;
     };
