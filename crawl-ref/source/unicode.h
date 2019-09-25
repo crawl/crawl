@@ -9,8 +9,6 @@ int strwidth(const char *s);
 int strwidth(const string &s);
 string chop_string(const char *s, int width, bool spaces = true);
 string chop_string(const string &s, int width, bool spaces = true);
-string chop_tagged_string(const char *s, int width, bool spaces = true);
-string chop_tagged_string(const string &s, int width, bool spaces = true);
 
 int wctoutf8(char *d, char32_t s);
 int utf8towc(char32_t *d, const char *s);
