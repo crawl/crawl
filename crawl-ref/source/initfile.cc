@@ -110,11 +110,13 @@ static bool _first_greater(const pair<int, int> &l, const pair<int, int> &r)
 
 const vector<GameOption*> game_options::build_options_list()
 {
+#ifndef DEBUG
     const bool USING_TOUCH =
 #if defined(TOUCH_UI)
         true;
 #else
         false;
+#endif
 #endif
     const bool USING_DGL =
 #if defined(DGAMELAUNCH)

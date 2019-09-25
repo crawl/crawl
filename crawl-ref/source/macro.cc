@@ -717,9 +717,9 @@ int getchm(KeymapContext mc, int (*rgetch)())
 void macro_buf_add_with_keymap(int key, KeymapContext mc)
 {
     if (mc == KMC_NONE)
-        macro_buf_add({key}, false, false);
+        macro_buf_add(keyseq(key), false, false);
     else
-        macro_buf_add_long({key}, Keymaps[mc]);
+        macro_buf_add_long(keyseq(key), Keymaps[mc]);
 }
 
 /**
