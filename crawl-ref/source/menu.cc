@@ -3709,7 +3709,7 @@ MenuObject::InputReturnValue MenuFreeform::handle_mouse(const MouseEvent& me)
     {
         if (m_active_item != nullptr)
         {
-            _set_active_item_by_index(-1);
+            _set_active_item(nullptr);
             return INPUT_FOCUS_LOST;
         }
         else
@@ -3726,7 +3726,7 @@ MenuObject::InputReturnValue MenuFreeform::handle_mouse(const MouseEvent& me)
         {
             if (m_active_item != nullptr)
             {
-                _set_active_item_by_index(-1);
+                _set_active_item(nullptr);
                 return INPUT_NO_ACTION;
             }
         }
@@ -3787,21 +3787,14 @@ MenuItem* MenuFreeform::get_active_item()
     return m_active_item;
 }
 
-// Predicate for std::find_if
-static bool _id_comparison(MenuItem* item, int ID)
-{
-    return item->get_id() == ID;
-}
-
 /**
  * Sets item by ID
  * Clears active item if ID not found
  */
-void MenuFreeform ::set_active_item(int ID)
+void MenuFreeform::set_active_item(int ID)
 {
     auto it = find_if(m_entries.begin(), m_entries.end(),
-                      bind(_id_comparison, placeholders::_1, ID));
-
+            [=](const MenuItem* item) { return item->get_id() == ID; });
     m_active_item = (it != m_entries.end()) ? *it : nullptr;
     m_dirty = true;
 }
@@ -3810,61 +3803,34 @@ void MenuFreeform ::set_active_item(int ID)
  * Sets active item based on index
  * This function is for internal use if object does not have ID set
  */
-void MenuFreeform::_set_active_item_by_index(int index)
+void MenuFreeform::_set_active_item(MenuItem* item)
 {
-    if (index >= 0 && index < static_cast<int> (m_entries.size()))
-    {
-        if (m_entries.at(index)->can_be_highlighted())
-        {
-            m_active_item = m_entries.at(index);
-            m_dirty = true;
-            return;
-        }
-    }
-    // Clear active selection
-    m_active_item = nullptr;
+    ASSERT(!item || item->can_be_highlighted());
+    m_active_item = item;
     m_dirty = true;
 }
 
 void MenuFreeform::set_active_item(MenuItem* item)
 {
-    // Does item exist in the menu?
-    auto it = find(m_entries.begin(), m_entries.end(), item);
-    m_active_item = (it != end(m_entries) && item->can_be_highlighted())
-                    ? item : nullptr;
+    bool present = find(m_entries.begin(), m_entries.end(), item) != m_entries.end();
+    m_active_item = (present && item->can_be_highlighted()) ? item : nullptr;
     m_dirty = true;
 }
 
 void MenuFreeform::activate_first_item()
 {
-    if (!m_entries.empty())
-    {
-        // find the first activeable item
-        for (int i = 0; i < static_cast<int> (m_entries.size()); ++i)
-        {
-            if (m_entries.at(i)->can_be_highlighted())
-            {
-                _set_active_item_by_index(i);
-                break; // escape loop
-            }
-        }
-    }
+    auto el = find_if(m_entries.begin(), m_entries.end(),
+            [=](const MenuItem* item) { return item->can_be_highlighted(); });
+    if (el != m_entries.end())
+        _set_active_item(*el);
 }
 
 void MenuFreeform::activate_last_item()
 {
-    if (!m_entries.empty())
-    {
-        // find the last activeable item
-        for (int i = m_entries.size() -1; i >= 0; --i)
-        {
-            if (m_entries.at(i)->can_be_highlighted())
-            {
-                _set_active_item_by_index(i);
-                break; // escape loop
-            }
-        }
-    }
+    auto el = find_if(m_entries.rbegin(), m_entries.rend(),
+            [=](const MenuItem* item) { return item->can_be_highlighted(); });
+    if (el != m_entries.rend())
+        _set_active_item(*el);
 }
 
 bool MenuFreeform::select_item(int index)

@@ -835,7 +835,7 @@ public:
 
 protected:
     virtual void _place_items() override;
-    virtual void _set_active_item_by_index(int index);
+    virtual void _set_active_item(MenuItem *item);
     virtual MenuItem* _find_item_by_direction(
             const MenuItem* start, MenuObject::Direction dir) override;
 
