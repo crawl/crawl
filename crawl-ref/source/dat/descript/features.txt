@@ -704,7 +704,8 @@ A passage leading to a sewer. It is gradually rusting away.
 %%%%
 A portal to a secret trove of treasure
 
-A portal leading to a treasure trove.
+A portal leading to a treasure trove. This portal is unstable and will collapse
+after a single use.
 %%%%
 A dark tunnel
 
