@@ -707,27 +707,6 @@ protected:
     vector<tile_def> m_tiles;
     FixedVector<TileBuffer, TEX_MAX> m_tile_buf;
 };
-
-/**
- * Specialization of TextTileItem that knows how to pack a player doll
- * TODO: reform _pack_doll() since it currently holds duplicate code from
- * tilereg.cc pack_doll_buf()
- */
-class SaveMenuItem : public TextTileItem
-{
-public:
-    friend class TilesFramework;
-    SaveMenuItem();
-    virtual ~SaveMenuItem();
-
-    virtual void render() override;
-
-    void set_doll(dolls_data doll);
-
-protected:
-    void _pack_doll();
-    dolls_data m_save_doll;
-};
 #endif
 
 class PrecisionMenu;
@@ -866,137 +845,6 @@ protected:
 };
 
 /**
- * Container that can hold any number of objects in a scroll list style.
- * Only certain number of items are visible at the same time.
- * Navigating the list works with ARROW_UP and ARROW_DOWN keys.
- * Eventually it should also support scrollbars.
- */
-class MenuScroller : public MenuObject
-{
-public:
-    MenuScroller();
-    virtual ~MenuScroller();
-
-    virtual InputReturnValue process_input(int key) override;
-#ifdef USE_TILE_LOCAL
-    virtual InputReturnValue handle_mouse(const MouseEvent& me) override;
-#endif
-    virtual void render() override;
-    virtual MenuItem* get_active_item() override;
-    virtual void set_active_item(int ID) override;
-    virtual void set_active_item(MenuItem* item) override;
-    virtual void activate_first_item() override;
-    virtual void activate_last_item() override;
-
-    virtual bool select_item(int index) override;
-    virtual bool select_item(MenuItem* item) override;
-    virtual bool attach_item(MenuItem* item) override;
-protected:
-    virtual void _place_items() override;
-    virtual void _set_active_item_by_index(int index);
-    virtual MenuItem* _find_item_by_direction(int start_index,
-                                              MenuObject::Direction dir);
-    virtual MenuItem* _find_item_by_direction(
-            const MenuItem* start, MenuObject::Direction dir) override
-    {
-        return nullptr;
-    }
-
-    int m_topmost_visible;
-    int m_currently_active;
-    int m_items_shown;
-
-#ifdef USE_TILE_LOCAL
-    TextTileItem *m_arrow_up;
-    TextTileItem *m_arrow_down;
-#endif
-};
-
-/**
- * Base class for various descriptor and highlighter objects.
- * These should probably be attached last to the menu to be rendered last.
- */
-class MenuDescriptor : public MenuObject
-{
-public:
-    MenuDescriptor(PrecisionMenu* parent);
-    virtual ~MenuDescriptor();
-
-    void init(const coord_def& min_coord, const coord_def& max_coord,
-              const string& name);
-
-    virtual InputReturnValue process_input(int key) override;
-#ifdef USE_TILE_LOCAL
-    virtual InputReturnValue handle_mouse(const MouseEvent& me) override;
-#endif
-    virtual void render() override;
-
-    // these are not used, clear them
-    virtual vector<MenuItem*> get_selected_items() override;
-    virtual MenuItem* get_active_item() override { return nullptr; }
-    virtual bool attach_item(MenuItem* item) override { return false; }
-    virtual void set_active_item(int index) override {}
-    virtual void set_active_item(MenuItem* item) override {}
-    virtual void activate_first_item() override {}
-    virtual void activate_last_item() override {}
-
-    virtual bool select_item(int index) override { return false; }
-    virtual bool select_item(MenuItem* item) override { return false;}
-    virtual MenuItem* select_item_by_hotkey(int key) override
-    {
-        return nullptr;
-    }
-    virtual void clear_selections() override {}
-
-    // Do not allow focus
-    virtual void allow_focus(bool toggle) override {}
-    virtual bool can_be_focused() override { return false; }
-
-    void override_description(const string &t);
-
-protected:
-    virtual void _place_items() override;
-    virtual MenuItem* _find_item_by_mouse_coords(const coord_def& pos) override
-    {
-        return nullptr;
-    }
-    virtual MenuItem* _find_item_by_direction(
-            const MenuItem* start, MenuObject::Direction dir) override
-    {
-        return nullptr;
-    }
-
-    // Used to pull out currently active item
-    PrecisionMenu* m_parent;
-    MenuItem* m_active_item;
-    NoSelectTextItem m_desc_item;
-    string override_text;
-};
-
-/**
- * Class for mouse over tooltips, does nothing if USE_TILE_LOCAL is not defined
- * TODO: actually implement render() and _place_items()
- */
-class MenuTooltip : public MenuDescriptor
-{
-public:
-    MenuTooltip(PrecisionMenu* parent);
-    virtual ~MenuTooltip();
-
-#ifdef USE_TILE_LOCAL
-    virtual InputReturnValue handle_mouse(const MouseEvent& me) override;
-#endif
-    virtual void render() override;
-protected:
-    virtual void _place_items() override;
-
-#ifdef USE_TILE_LOCAL
-    ShapeBuffer m_background;
-    FontBuffer m_font_buf;
-#endif
-};
-
-/**
  * Highlighter object.
  * TILES: It will create a colored rectangle around the currently active item.
  * CONSOLE: It will muck with the Item background color, setting it to highlight
@@ -1057,24 +905,6 @@ protected:
 #else
     COLOURS m_old_bg_colour;
 #endif
-};
-
-class BlackWhiteHighlighter : public BoxMenuHighlighter
-{
-public:
-    BlackWhiteHighlighter(PrecisionMenu* parent);
-    virtual ~BlackWhiteHighlighter();
-
-    virtual void render() override;
-protected:
-    virtual void _place_items() override;
-
-#ifdef USE_TILE_LOCAL
-    // Tiles does not seem to support background colors
-    ShapeBuffer m_shape_buf;
-#endif
-    COLOURS m_old_bg_colour;
-    COLOURS m_old_fg_colour;
 };
 
 /**
