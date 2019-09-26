@@ -250,6 +250,14 @@ A large tree that has been enchanted to grant it some limited motility,
 allowing it to lash out out at any adjacent enemies of the creature who awoke
 it.
 %%%%
+An awoken autumnal tree
+
+<An awoken tree>
+%%%%
+An awoken dead tree
+
+<An awoken tree>
+%%%%
 An abandoned shop
 
 A shop that has been abandoned.
