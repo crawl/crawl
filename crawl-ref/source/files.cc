@@ -1580,6 +1580,8 @@ static bool _branch_pregenerates(branch_type b)
 {
     if (!you.deterministic_levelgen)
         return false;
+    if (!brentry[b].is_valid() && is_random_subbranch(b))
+        return false;
     return count(branch_generation_order.begin(),
         branch_generation_order.end(), b) > 0;
 }
@@ -1597,7 +1599,10 @@ static bool _branch_pregenerates(branch_type b)
 */
 bool pregen_dungeon(const level_id &stopping_point)
 {
-    if (stopping_point.is_valid())
+    // TODO: the is_valid() check here doesn't look quite right to me, but so
+    // far I can't get it to break anything...
+    if (stopping_point.is_valid()
+        || is_random_subbranch(stopping_point.branch) && you.wizard)
     {
         if (you.save->has_chunk(stopping_point.describe()))
             return false;
