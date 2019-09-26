@@ -199,7 +199,7 @@ static spret _try_to_pacify(monster &mon, int healed, int pow,
     if (_pacification_sides(mon.type, pow) < mon_hp)
     {
         // monster avg hp too high to ever be pacified with your invo skill.
-        mprf("%s would be completely unfazed by your meager offer of peace.",
+        mprf("%s would be completely unfazed by your meagre offer of peace.",
              mon.name(DESC_THE).c_str());
         return spret::abort;
     }
