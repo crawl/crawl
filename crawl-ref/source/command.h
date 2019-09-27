@@ -29,8 +29,7 @@ void show_spell_library_help();
 
 void show_help(int section = CK_HOME, string highlight_string = "");
 
-int show_keyhelp_menu(const vector<formatted_string> &lines,
-            int hotkey = 0, string highlight_string = "");
+int show_keyhelp_menu(const vector<formatted_string> &lines);
 
 // XXX: Actually defined in main.cc; we may want to move this to command.cc.
 void process_command(command_type cmd);

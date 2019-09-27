@@ -503,44 +503,9 @@ static void _handle_FAQ()
     return;
 }
 
-///////////////////////////////////////////////////////////////////////////
-// Manual menu highlighter.
-
-class help_highlighter : public MenuHighlighter
-{
-public:
-    help_highlighter(string = "");
-    int entry_colour(const MenuEntry *entry) const override;
-private:
-    text_pattern pattern;
-    string get_species_key() const;
-};
-
-help_highlighter::help_highlighter(string highlight_string) :
-    pattern(highlight_string.empty() ? get_species_key() : highlight_string)
-{
-}
-
-int help_highlighter::entry_colour(const MenuEntry *entry) const
-{
-    return !pattern.empty() && pattern.matches(entry->text) ? WHITE : -1;
-}
-
-// To highlight species in aptitudes list. ('?%')
-string help_highlighter::get_species_key() const
-{
-    string result = species_name(you.species);
-    // The table doesn't repeat the word "Draconian".
-    if (you.species != SP_BASE_DRACONIAN && species_is_draconian(you.species))
-        strip_tag(result, "Draconian");
-
-    result += "  ";
-    return result;
-}
 ////////////////////////////////////////////////////////////////////////////
 
-int show_keyhelp_menu(const vector<formatted_string> &lines,
-                      int hotkey, string highlight_string)
+int show_keyhelp_menu(const vector<formatted_string> &lines)
 {
     int flags = FS_PREWRAPPED_TEXT | FS_EASY_EXIT;
     formatted_scroller cmd_help(flags);
