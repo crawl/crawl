@@ -1135,9 +1135,6 @@ static bool curs_color_combo_has_pair(short fg, short bg)
 static void curs_adjust_color_pair_to_non_identical(short &fg, short &bg,
     bool adjust_background)
 {
-    // The color to assign.
-    short non_conflicting_color = adjust_background ? bg : fg;
-
     // The default colors.
     short fg_default = translate_colour(FG_COL_DEFAULT);
     short bg_default = translate_colour(BG_COL_DEFAULT);
@@ -1164,76 +1161,73 @@ static void curs_adjust_color_pair_to_non_identical(short &fg, short &bg,
         }
     }
 
-    // Got the adjusted colors -- resolve any conflict.
-    if (fg_to_compare == bg_to_compare)
-    {
-        // Choose terminal's current default colors as the default failsafe.
-        short failsafe_col = adjust_background ? fg_default : bg_default;
+    if (fg_to_compare != bg_to_compare)
+        return;  // colours look different; no need to adjust
 
-        if (!adjust_background && fg_to_compare == bg_default_to_compare)
+    // Choose terminal's current default colors as the default failsafe.
+    short failsafe_col = adjust_background ? fg_default : bg_default;
+
+    if (!adjust_background && fg_to_compare == bg_default_to_compare)
+    {
+        /*
+            * Replacing the *foreground* color with a secondary failsafe.
+            *
+            * In general, use black as a failsafe for non-black backgrounds
+            * and white as a failsafe for black backgrounds. Black tends to
+            * look good on any visible background.
+            *
+            * However, for black and white *default* background colours,
+            * mitigate information contrast issues with bright black
+            * foregrounds by using blue as a special-case failsafe color.
+            */
+        switch (bg_default_to_compare)
         {
-            /*
-             * Replacing the *foreground* color with a secondary failsafe.
-             *
-             * In general, use black as a failsafe for non-black backgrounds
-             * and white as a failsafe for black backgrounds. Black tends to
-             * look good on any visible background.
-             *
-             * However, for black and white *default* background colours,
-             * mitigate information contrast issues with bright black
-             * foregrounds by using blue as a special-case failsafe color.
-             */
-            switch (bg_default_to_compare)
+        case COLOR_BLACK:
+            if (fg_default_to_compare == COLOR_WHITE
+                || fg_default_to_compare == COLOR_BLACK)
             {
-            case COLOR_BLACK:
-                if (fg_default_to_compare == COLOR_WHITE
-                    || fg_default_to_compare == COLOR_BLACK)
-                {
-                    failsafe_col = COLOR_BLUE;
-                }
-                else
-                    failsafe_col = COLOR_WHITE;
-                break;
-            case COLOR_WHITE:
-                if (fg_default_to_compare == COLOR_WHITE
-                    || fg_default_to_compare == COLOR_BLACK)
-                {
-                    failsafe_col = COLOR_BLUE;
-                }
-                else
-                    failsafe_col = COLOR_BLACK;
-                break;
-            default:
-                failsafe_col = COLOR_BLACK;
-                break;
+                failsafe_col = COLOR_BLUE;
             }
-        }
-        else if (adjust_background && bg_to_compare == fg_default_to_compare)
-        {
-            /*
-             * Replacing the *background* color with a secondary failsafe.
-             *
-             * Don't bother special-casing bright black:
-             *  - The information contrast issue is not as prevalent for
-             *    backgrounds as foregrounds.
-             *  - A visible bright-black-on-black glyph actively changing into
-             *    black-on-blue when reversed looks much worse than a change to
-             *    black-on-white.
-             */
-            if (fg_default_to_compare == COLOR_BLACK)
+            else
                 failsafe_col = COLOR_WHITE;
+            break;
+        case COLOR_WHITE:
+            if (fg_default_to_compare == COLOR_WHITE
+                || fg_default_to_compare == COLOR_BLACK)
+            {
+                failsafe_col = COLOR_BLUE;
+            }
             else
                 failsafe_col = COLOR_BLACK;
+            break;
+        default:
+            failsafe_col = COLOR_BLACK;
+            break;
         }
-
-        non_conflicting_color = failsafe_col;
+    }
+    else if (adjust_background && bg_to_compare == fg_default_to_compare)
+    {
+        /*
+            * Replacing the *background* color with a secondary failsafe.
+            *
+            * Don't bother special-casing bright black:
+            *  - The information contrast issue is not as prevalent for
+            *    backgrounds as foregrounds.
+            *  - A visible bright-black-on-black glyph actively changing into
+            *    black-on-blue when reversed looks much worse than a change to
+            *    black-on-white.
+            */
+        if (fg_default_to_compare == COLOR_BLACK)
+            failsafe_col = COLOR_WHITE;
+        else
+            failsafe_col = COLOR_BLACK;
     }
 
     // Update the appropriate color in the pair.
     if (adjust_background)
-        bg = non_conflicting_color;
+        bg = failsafe_col;
     else
-        fg = non_conflicting_color;
+        fg = failsafe_col;
 }
 
 // see declaration
