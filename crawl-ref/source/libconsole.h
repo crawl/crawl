@@ -31,8 +31,6 @@ void update_screen();
 
 void set_cursor_enabled(bool enabled);
 bool is_cursor_enabled();
-void enable_smart_cursor(bool cursor);
-bool is_smart_cursor_enabled();
 void set_mouse_enabled(bool enabled);
 
 static inline void put_colour_ch(int colour, unsigned ch)

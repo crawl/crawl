@@ -884,15 +884,6 @@ bool is_cursor_enabled()
     return cursor_is_enabled;
 }
 
-bool is_smart_cursor_enabled()
-{
-    return false;
-}
-
-void enable_smart_cursor(bool /*cursor*/)
-{
-}
-
 static inline unsigned get_brand(int col)
 {
     return (col & COLFLAG_FRIENDLY_MONSTER) ? Options.friend_brand :

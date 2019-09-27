@@ -90,13 +90,10 @@ static COORD screensize;
 static unsigned InputCP, OutputCP;
 static const unsigned PREFERRED_CODEPAGE = 437;
 
-static bool w32_smart_cursor = true;
-
 // we can do straight translation of DOS colour to win32 console colour.
 #define WIN32COLOR(col) (WORD)(col)
 static void writeChar(char32_t c);
 static void bFlush();
-static void _setcursortype_internal(bool curstype);
 
 // [ds] Unused for portability reasons
 /*
@@ -188,16 +185,6 @@ void writeChar(char32_t c)
     cx += 1;
     if (cx >= screensize.X)
         cx = screensize.X - 1;
-}
-
-void enable_smart_cursor(bool cursor)
-{
-    w32_smart_cursor = cursor;
-}
-
-bool is_smart_cursor_enabled()
-{
-    return w32_smart_cursor;
 }
 
 void bFlush()
@@ -402,8 +389,8 @@ void console_startup()
     // initialise text colour
     textcolour(DARKGREY);
 
-    // initialise cursor to NONE.
-    _setcursortype_internal(false);
+    cursor_is_enabled = true; // ensure cursor is set regardless of actual state
+    set_cursor_enabled(false);
 
     crawl_state.terminal_resize_handler = w32_term_resizer;
     crawl_state.terminal_resize_check   = w32_check_screen_resize;
@@ -441,7 +428,7 @@ void console_shutdown()
     _set_string_input(true);
 
     // set cursor and normal textcolour
-    _setcursortype_internal(true);
+    set_cursor_enabled(true);
     textcolour(DARKGREY);
 
     inbuf = nullptr;
@@ -463,18 +450,12 @@ void console_shutdown()
     }
 }
 
-void set_cursor_enabled(bool enabled)
-{
-    if (!w32_smart_cursor)
-        _setcursortype_internal(enabled);
-}
-
 bool is_cursor_enabled()
 {
     return cursor_is_enabled;
 }
 
-static void _setcursortype_internal(bool curstype)
+void set_cursor_enabled(bool curstype)
 {
     CONSOLE_CURSOR_INFO cci;
 
@@ -812,8 +793,6 @@ int getch_ck()
     }
 
     const bool oldValue = cursor_is_enabled;
-    if (w32_smart_cursor)
-        _setcursortype_internal(true);
 
     bool waiting_for_event = true;
     while (waiting_for_event)
@@ -857,9 +836,6 @@ int getch_ck()
             }
         }
     }
-
-    if (w32_smart_cursor)
-        _setcursortype_internal(oldValue);
 
     return key;
 }

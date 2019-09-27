@@ -516,14 +516,9 @@ bool UIHiscoresMenu::on_event(const wm_event& ev)
 void show_hiscore_table()
 {
     unwind_var<string> sprintmap(crawl_state.map, crawl_state.sprint_map);
-    bool smart_cursor_enabled = is_smart_cursor_enabled();
-
     auto hiscore_ui = make_shared<UIHiscoresMenu>();
     auto popup = make_shared<ui::Popup>(hiscore_ui);
     ui::run_layout(move(popup), hiscore_ui->done);
-
-    // Go back to the menu and return the smart cursor to its previous state
-    enable_smart_cursor(smart_cursor_enabled);
 }
 
 // Trying to supply an appropriate verb for the attack type. -- bwr

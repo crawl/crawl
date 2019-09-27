@@ -113,15 +113,6 @@ bool is_cursor_enabled()
     return false;
 }
 
-bool is_smart_cursor_enabled()
-{
-    return false;
-}
-
-void enable_smart_cursor(bool /*cursor*/)
-{
-}
-
 int wherex()
 {
     return TextRegion::wherex();

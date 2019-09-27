@@ -224,19 +224,16 @@ class cursor_control
 {
 public:
     cursor_control(bool cursor_enabled)
-        : cstate(is_cursor_enabled()), smartcstate(is_smart_cursor_enabled())
+        : cstate(is_cursor_enabled())
     {
-        enable_smart_cursor(false);
         set_cursor_enabled(cursor_enabled);
     }
     ~cursor_control()
     {
         set_cursor_enabled(cstate);
-        enable_smart_cursor(smartcstate);
     }
 private:
     bool cstate;
-    bool smartcstate;
 };
 
 enum edit_mode
