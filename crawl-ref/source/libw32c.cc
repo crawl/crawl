@@ -122,6 +122,12 @@ static DWORD crawlColorData[16] =
 };
  */
 
+/** @brief The current foreground @em colour. */
+static COLOURS FG_COL = LIGHTGREY;
+
+/** @brief The current background @em colour. */
+static COLOURS BG_COL = BLACK;
+
 void writeChar(char32_t c)
 {
     if (c == '\t')
@@ -553,25 +559,23 @@ void gotoxy_sys(int x, int y)
     }
 }
 
+static void update_text_colours()
+{
+    short macro_fg = Options.colour[FG_COL];
+    short macro_bg = Options.colour[BG_COL];
+    current_colour = (macro_bg << 4) | macro_fg;
+}
+
 void textcolour(int c)
 {
-    // change current colour used to stamp chars
-    short fg = c & 0xF;
-    short bg = (c >> 4) & 0xF;
-    short macro_fg = Options.colour[fg];
-    short macro_bg = Options.colour[bg];
-
-    current_colour = macro_fg | (macro_bg << 4);
+    FG_COL = static_cast<COLOURS>(c & 0xF);
+    update_text_colours();
 }
 
 void textbackground(int c)
 {
-    // change current background colour used to stamp chars
-    // parameter does NOT come bitshifted by four
-    short bg = c & 0xF;
-    short macro_bg = Options.colour[bg];
-
-    current_colour = current_colour | (macro_bg << 4);
+    BG_COL = static_cast<COLOURS>(c & 0xF);
+    update_text_colours();
 }
 
 static void cprintf_aux(const char *s)
