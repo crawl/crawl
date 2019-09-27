@@ -128,6 +128,9 @@ static COLOURS FG_COL = LIGHTGREY;
 /** @brief The current background @em colour. */
 static COLOURS BG_COL = BLACK;
 
+/** @brief The default background @em colour. */
+static COLOURS BG_COL_DEFAULT = BLACK;
+
 void writeChar(char32_t c)
 {
     if (c == '\t')
@@ -559,10 +562,21 @@ void gotoxy_sys(int x, int y)
     }
 }
 
+// Hacked-up version of corresponding function in libunix.cc
+static void adjust_color_pair_to_non_identical(short &fg, short &bg)
+{
+    // ignore brighness when comparing visually
+    if ((fg & ~COLFLAG_CURSES_BRIGHTEN) != bg)
+        return;  // colours look different; no need to adjust
+    fg &= ~COLFLAG_CURSES_BRIGHTEN;
+    fg = fg == BG_COL_DEFAULT ? WHITE : BG_COL_DEFAULT;;
+}
+
 static void update_text_colours()
 {
     short macro_fg = Options.colour[FG_COL];
     short macro_bg = Options.colour[BG_COL];
+    adjust_color_pair_to_non_identical(macro_fg, macro_bg);
     current_colour = (macro_bg << 4) | macro_fg;
 }
 
