@@ -244,7 +244,22 @@ void OuterMenu::add_button(shared_ptr<MenuButton> btn, int x, int y)
         if (ev.type == WME_FOCUSIN || ev.type == WME_FOCUSOUT)
         {
             auto btn2 = this->m_buttons[y*this->m_width+x];
+#ifdef USE_TILE_WEB
+            Text* tw = dynamic_cast<Text*>(btn2->get_child().get());
+            if (!tw)
+            {
+                // TODO: very hacky: the label might be in position 1 of a Box.
+                // is there a more elegant way of doing this? Maybe do it for
+                // every label in the widget?
+                auto tw_cont = dynamic_cast<ContainerVec*>(
+                                                    btn2->get_child().get());
+                if (tw_cont && tw_cont->num_children() > 1)
+                    tw = dynamic_cast<Text*>((*tw_cont)[1].get());
+            }
+            if (tw)
+#else
             if (auto tw = dynamic_cast<Text*>(btn2->get_child().get()))
+#endif
             {
                 tw->set_bg_colour(ev.type == WME_FOCUSIN
                                             ? btn2->highlight_colour : BLACK);
