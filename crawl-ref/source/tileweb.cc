@@ -1758,9 +1758,9 @@ void TilesFramework::load_dungeon(const crawl_view_buffer &vbuf,
     for (int y = 0; y < GYM; y++)
         for (int x = 0; x < GXM; x++)
         {
-            const coord_def gc(x, y);
-            screen_cell_t *cell = &m_next_view(gc);
-            cell->tile.map_knowledge = map_bounds(gc) ? env.map_knowledge(gc) : map_cell();
+            const coord_def cache_gc(x, y);
+            screen_cell_t *cell = &m_next_view(cache_gc);
+            cell->tile.map_knowledge = map_bounds(cache_gc) ? env.map_knowledge(cache_gc) : map_cell();
         }
 
     m_next_view_tl = view2grid(coord_def(1, 1));
