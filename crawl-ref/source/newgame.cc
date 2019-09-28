@@ -1713,10 +1713,22 @@ static void _construct_weapon_menu(const newgame_def& ng,
                     tile_def(TILE_MI_THROWING_NET, TEX_DEFAULT)));
         }
         if (choice.skill == SK_UNARMED_COMBAT)
-            tile_stack->min_size() = { TILE_Y, TILE_Y };
+        {
+            tile_stack->min_size() =
+#ifdef USE_TILE_WEB
+                            // these dimensions are apparently unused for
+                            // webtiles, we do this so they're not interpreted
+                            // as characters for webtiles console.
+                            { 0,0 };
+#else
+                            { TILE_Y, TILE_Y };
+#endif
+        }
         else
+        {
             tile_stack->add_child(make_shared<Image>(
                     tile_def(choice.tile, TEX_DEFAULT)));
+        }
 #endif
 
         auto label = make_shared<Text>();
