@@ -245,7 +245,10 @@ void OuterMenu::add_button(shared_ptr<MenuButton> btn, int x, int y)
         {
             auto btn2 = this->m_buttons[y*this->m_width+x];
             if (auto tw = dynamic_cast<Text*>(btn2->get_child().get()))
-                tw->set_bg_colour(ev.type == WME_FOCUSIN ? LIGHTGREY : BLACK);
+            {
+                tw->set_bg_colour(ev.type == WME_FOCUSIN
+                                            ? btn2->highlight_colour : BLACK);
+            }
         }
 #endif
         return false;
