@@ -1624,7 +1624,7 @@ static void _construct_weapon_menu(const newgame_def& ng,
         weapon_menu_item(skill_type _skill, string _label, tileidx_t _tile)
             : skill(move(_skill)), label(move(_label)), tile(move(_tile)) {};
         weapon_menu_item(skill_type _skill, string _label)
-            : skill(move(_skill)), label(move(_label)) {};
+            : skill(move(_skill)), label(move(_label)), tile(0) {};
     };
     vector<weapon_menu_item> choices;
 
