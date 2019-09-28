@@ -1085,6 +1085,19 @@ body {
     border: 1px solid rgba(255, 255, 255, 0.001);
 }
 
+@media screen and (max-height: 780px) {
+    .newgame-choice .grid .button canvas {
+        margin: -1px 0;
+    }
+    .ui-popup-outer {
+        margin: 20px;
+        max-height: calc(100vh - 40px);
+    }
+    .ui-popup-inner {
+        max-height: calc(100vh - 40px - 46px);
+    }
+}
+
 .newgame-choice .grid .button.selected
 {
     background: black;
