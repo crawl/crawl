@@ -678,7 +678,6 @@ private:
             switch (startup_menu_game_type)
             {
             case GAME_TYPE_ARENA:
-                input_string = "";
                 break;
             case GAME_TYPE_NORMAL:
             case GAME_TYPE_CUSTOM_SEED:
