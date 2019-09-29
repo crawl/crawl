@@ -1806,21 +1806,12 @@ static bool _prompt_weapon(const newgame_def& ng, newgame_def& ng_choice,
     weapon_type defweapon = _fixup_weapon(defaults.weapon, weapons);
 
     auto title_hbox = make_shared<Box>(Widget::HORZ);
-#ifdef USE_TILE_LOCAL
-    mpr("test 1");
-#endif
 #ifdef USE_TILE
     dolls_data doll;
-#ifdef USE_TILE_LOCAL
-    mpr("test 2");
-#endif
     fill_doll_for_newgame(doll, ng);
 #ifdef USE_TILE_LOCAL
-    mpr("test 3");
     auto tile = make_shared<ui::PlayerDoll>(doll);
-    mpr("test 4");
     tile->set_margin_for_sdl({0, 10, 0, 0});
-    mpr("test 5");
     title_hbox->add_child(move(tile));
 #endif
 #endif
