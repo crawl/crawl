@@ -314,9 +314,9 @@ from within the MSYS2 Shell.
 
   pacman -S mingw64/mingw-w64-x86_64-python3-pip
   pip install pyyaml
-  
+
   OR
-  
+
   pacman -S mingw-w64-x86_64-python3-yaml
 
   You can verify PyYAML is installed by running `python -m yaml`, which should
