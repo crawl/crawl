@@ -237,7 +237,7 @@ a burbling brook
 
 a crunching sound
 
-a distant blaring wail to the South
+a distant blaring wail
 
 a distant slurping noise
 
@@ -382,6 +382,17 @@ grim specetres
 
 horrible apparitions
 %%%%
+# things you don't want a witch to turn you into
+_lowly_
+
+newt
+
+slug
+
+toad
+
+worm
+%%%%
 welcome_spam Halloween
 
 @welcome_spam@ Be careful! Halloween tonight.
@@ -392,7 +403,7 @@ A terrible geas has sent you after the Orb of Zot. What a horrible night to have
 
 As you descend in search of the Orb, @_halloween_things_@ flock about you. This place is haunted!
 
-You hear a witch cackle, and suddenly arrive in the dungeon. If you don't find the Orb of Zot, you'll turn into a toad!
+You hear a witch cackle, and suddenly arrive in the dungeon. If you don't find the Orb of Zot, you'll turn into a @_lowly_@!
 %%%%
 hell_effect_quiet
 
