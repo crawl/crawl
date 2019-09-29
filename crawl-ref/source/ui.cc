@@ -1892,8 +1892,8 @@ bool UIRoot::on_event(const wm_event& event)
             if (!layer_idx)
                 return false;
             Widget* layer_root = m_root.get_child(layer_idx-1).get();
-            Layout* layout = dynamic_cast<Layout*>(layer_root);
-            if (layout && layout->event_filters.emit(layout, event))
+            Layout* layout_root = dynamic_cast<Layout*>(layer_root);
+            if (layout_root && layout_root->event_filters.emit(layout_root, event))
                 return true;
             for (Widget* w = focus_stack.back(); w; w = w->_get_parent())
                 if (w->on_event(event))
