@@ -312,8 +312,8 @@ from within the MSYS2 Shell.
 
 * To install PyYAML, you can install it from Pip/PyPA:
 
-  pacman -S mingw64/mingw-w64-x86_64-python2-pip
-  pip2 install pyyaml
+  pacman -S mingw64/mingw-w64-x86_64-python3-pip
+  pip install pyyaml
 
   You can verify PyYAML is installed by running `python -m yaml`, which should
   give an error like "'yaml' is a package and cannot be directly imported"
