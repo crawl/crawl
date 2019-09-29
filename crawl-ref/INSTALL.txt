@@ -310,10 +310,14 @@ from within the MSYS2 Shell.
 
   After the packages are installed and gcc runs, you're ready to build crawl!
 
-* To install PyYAML, you can install it from Pip/PyPA:
+* To install PyYAML, you can install it from either pacman or from Pip/PyPA:
 
   pacman -S mingw64/mingw-w64-x86_64-python3-pip
   pip install pyyaml
+  
+  OR
+  
+  pacman -S mingw-w64-x86_64-python3-yaml
 
   You can verify PyYAML is installed by running `python -m yaml`, which should
   give an error like "'yaml' is a package and cannot be directly imported"
