@@ -537,7 +537,8 @@ NORETURN void end_game(scorefile_entry &se)
     tiles.json_write_int("tex", death_tile.tex);
     tiles.json_close_object();
     tiles.json_write_string("title", goodbye_title);
-    tiles.json_write_string("body", goodbye_msg);
+    tiles.json_write_string("body", goodbye_msg
+            + hiscores_print_list(11, SCORE_TERSE, hiscore_index, start));
     tiles.push_ui_layout("game-over", 0);
 #endif
 

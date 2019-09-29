@@ -845,7 +845,7 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
     {
         var $popup = $(".templates > .game-over").clone();
         $popup.find(".header > span").html(desc.title);
-        $popup.children(".body").html(fmt_body_txt(desc.body));
+        $popup.children(".body").html(fmt_body_txt(util.formatted_string_to_html(desc.body)));
         var s = scroller($popup.children(".body")[0]);
         $popup.on("keydown keypress", function (event) {
             scroller_handle_key(s, event);
