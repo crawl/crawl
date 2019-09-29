@@ -98,7 +98,9 @@ item_def* newgame_make_item(object_class_type base,
         return nullptr;
 
     // not an actual item
-    if (sub_type == WPN_UNARMED)
+    // the WPN_UNKNOWN case is used when generating a paper doll during
+    // character creation
+    if (sub_type == WPN_UNARMED || sub_type == WPN_UNKNOWN)
         return nullptr;
 
     int slot;

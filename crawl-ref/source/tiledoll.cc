@@ -506,32 +506,23 @@ void fill_doll_equipment(dolls_data &result)
 
 void fill_doll_for_newgame(dolls_data &result, const newgame_def& ng)
 {
-    mpr("test 1");
     for (int j = 0; j < TILEP_PART_MAX; j++)
         result.parts[j] = TILEP_SHOW_EQUIP;
-    mpr("test 2");
 
     unwind_var<player> unwind_you(you);
     you = player();
-    mpr("test 3");
 
     // The following is part of the new game setup code from _setup_generic()
     you.your_name  = ng.name;
     you.species    = ng.species;
     you.char_class = ng.job;
     you.chr_class_name = get_job_name(you.char_class);
-    mpr("test 4");
 
     species_stat_init(you.species);
-    mpr("test 5");
     update_vision_range();
-    mpr("test 6");
     job_stat_init(you.char_class);
-    mpr("test 7");
     give_basic_mutations(you.species);
-    mpr("test 8");
     give_items_skills(ng);
-    mpr("test 9");
 
     for (int i = 0; i < ENDOFPACK; ++i)
     {
@@ -539,7 +530,6 @@ void fill_doll_for_newgame(dolls_data &result, const newgame_def& ng)
         if (item.defined())
             item_colour(item);
     }
-    mpr("test 10");
 
     fill_doll_equipment(result);
 }
