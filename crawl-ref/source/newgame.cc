@@ -1630,15 +1630,8 @@ static void _construct_weapon_menu(const newgame_def& ng,
 
     string thrown_name;
 
-#ifdef USE_TILE_LOCAL
-    mpr("test 3.1");
-#endif
-
     for (unsigned int i = 0; i < weapons.size(); ++i)
     {
-#ifdef USE_TILE_LOCAL
-    mprf("test 3.2 loop %d", i);
-#endif
         weapon_type wpn_type = weapons[i].first;
 
         switch (wpn_type)
@@ -1699,10 +1692,6 @@ static void _construct_weapon_menu(const newgame_def& ng,
     int max_text_width = 0;
     for (const auto& choice : choices)
         max_text_width = max(max_text_width, strwidth(choice.label));
-
-#ifdef USE_TILE_LOCAL
-    mpr("test 3.3");
-#endif
 
     for (unsigned int i = 0; i < weapons.size(); ++i)
     {
@@ -1779,10 +1768,6 @@ static void _construct_weapon_menu(const newgame_def& ng,
         main_items->add_button(move(btn), 0, i);
     }
 
-#ifdef USE_TILE_LOCAL
-    mpr("test 3.4");
-#endif
-
     _add_menu_sub_item(sub_items, 0, 0, "+ - Recommended random choice",
             "Picks a random recommended weapon", '+', M_VIABLE);
     _add_menu_sub_item(sub_items, 0, 1, "% - List aptitudes",
@@ -1826,15 +1811,18 @@ static bool _prompt_weapon(const newgame_def& ng, newgame_def& ng_choice,
 #endif
 #ifdef USE_TILE
     dolls_data doll;
-    fill_doll_for_newgame(doll, ng);
-#ifdef USE_TILE_LOCAL
-    auto tile = make_shared<ui::PlayerDoll>(doll);
-    tile->set_margin_for_sdl({0, 10, 0, 0});
-    title_hbox->add_child(move(tile));
-#endif
-#endif
 #ifdef USE_TILE_LOCAL
     mpr("test 2");
+#endif
+    fill_doll_for_newgame(doll, ng);
+#ifdef USE_TILE_LOCAL
+    mpr("test 3");
+    auto tile = make_shared<ui::PlayerDoll>(doll);
+    mpr("test 4");
+    tile->set_margin_for_sdl({0, 10, 0, 0});
+    mpr("test 5");
+    title_hbox->add_child(move(tile));
+#endif
 #endif
     auto title = make_shared<Text>(formatted_string(_welcome(ng), BROWN));
     title_hbox->add_child(title);
@@ -1861,15 +1849,7 @@ static bool _prompt_weapon(const newgame_def& ng, newgame_def& ng_choice,
     main_items->linked_menus[2] = sub_items;
     sub_items->linked_menus[0] = main_items;
 
-#ifdef USE_TILE_LOCAL
-    mpr("test 3");
-#endif
-
     _construct_weapon_menu(ng, defweapon, weapons, main_items, sub_items);
-
-#ifdef USE_TILE_LOCAL
-    mpr("test 4");
-#endif
 
     bool done = false, ret = false;
 
@@ -1909,10 +1889,6 @@ static bool _prompt_weapon(const newgame_def& ng, newgame_def& ng_choice,
     };
     main_items->on_button_activated = menu_item_activated;
     sub_items->on_button_activated = menu_item_activated;
-
-#ifdef USE_TILE_LOCAL
-    mpr("test 5");
-#endif
 
     auto popup = make_shared<ui::Popup>(vbox);
     popup->add_event_filter([&](wm_event ev)  {
