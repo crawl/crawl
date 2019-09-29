@@ -2269,6 +2269,13 @@ progress_popup::progress_popup(string title, int width)
 {
     auto container = make_shared<Box>(Widget::VERT);
     container->align_items = Widget::CENTER;
+#ifndef USE_TILE_LOCAL
+    // Center the popup in console.
+    // if webtiles browser ever uses this property, then this will probably
+    // look bad there and need another solution. But right now, webtiles ignores
+    // expand_h.
+    container->expand_h = true;
+#endif
     formatted_string bar_string = get_progress_string(bar_width);
     progress_bar = make_shared<Text>(bar_string);
     auto title_text = make_shared<Text>(title);
