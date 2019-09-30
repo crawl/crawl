@@ -554,6 +554,7 @@ NAME:      bazaar_minmay_generic_island
 TAGS:      no_rotate
 ORIENT:    encompass
 WEIGHT:    20
+KPROP:     w = no_tele_into
 SUBST:     w : wl
 SHUFFLE:   Aa/Bb/Cc/Dd, Cc/Ee, Dd/Ff
 COLOUR:    EeFf = yellow
