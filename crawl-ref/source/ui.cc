@@ -1457,7 +1457,7 @@ SizeReq Popup::_get_preferred_size(Direction dim, int prosp_width)
 #endif
     SizeReq sr = m_child->get_preferred_size(dim, prosp_width);
 #ifdef USE_TILE_LOCAL
-    constexpr int pad = m_base_margin + m_padding;
+    const int pad = base_margin() + m_padding;
     return {
         0, sr.nat + 2*pad + (dim ? m_depth*m_depth_indent*(!m_centred) : 0)
     };
@@ -1474,7 +1474,7 @@ void Popup::_allocate_region()
     m_buf.add(m_region[0], m_region[1],
             m_region[0] + m_region[2], m_region[1] + m_region[3],
             VColour(0, 0, 0, 150));
-    constexpr int pad = m_base_margin + m_padding;
+    const int pad = base_margin() + m_padding;
     region[2] -= 2*pad;
     region[3] -= 2*pad + m_depth*m_depth_indent*(!m_centred);
 
@@ -1511,7 +1511,7 @@ void Popup::_allocate_region()
 i2 Popup::get_max_child_size()
 {
 #ifdef USE_TILE_LOCAL
-    constexpr int pad = m_base_margin + m_padding;
+    const int pad = base_margin() + m_padding;
     return {
         (m_region[2] - 2*pad) & ~0x1,
         (m_region[3] - 2*pad - m_depth*m_depth_indent) & ~0x1,
@@ -1522,6 +1522,15 @@ i2 Popup::get_max_child_size()
 }
 
 #ifdef USE_TILE_LOCAL
+int Popup::base_margin()
+{
+    const int screen_small = 800, screen_large = 1000;
+    const int margin_small = 10, margin_large = 50;
+    const int clipped = max(screen_small, min(screen_large, m_region[3]));
+    return margin_small + (clipped-screen_small)
+            *(margin_large-margin_small)/(screen_large-screen_small);
+}
+
 void Dungeon::_render()
 {
 #ifdef USE_TILE_LOCAL

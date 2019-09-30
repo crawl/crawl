@@ -604,8 +604,9 @@ protected:
 #ifdef USE_TILE_LOCAL
     ShapeBuffer m_buf;
     static constexpr int m_depth_indent = 20;
-    static constexpr int m_base_margin = 50;
     static constexpr int m_padding = 23;
+
+    int base_margin();
 #endif
     bool m_centred{!crawl_state.need_save};
 };
