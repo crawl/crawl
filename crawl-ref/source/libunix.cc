@@ -73,13 +73,15 @@ static COLOURS BG_COL = BLACK;
 /** @brief The default background @em colour. */
 static COLOURS BG_COL_DEFAULT = BLACK;
 
+struct curses_style
+{
+    attr_t attr;
+    short color_pair;
+};
+
 /**
  * @brief Get curses attributes for the current internal color combination.
  *
- * @param attr
- *  The destination for the resulting character attributes.
- * @param color_pair
- *  The destination for the resulting color pair index.
  * @param fg
  *  The internal colour for the foreground.
  * @param bg
@@ -87,33 +89,33 @@ static COLOURS BG_COL_DEFAULT = BLACK;
  * @param adjust_background
  *  Determines which color in the pair is adjusted if adjustment is necessary.
  *  True chooses the background, while false chooses the foreground.
+ *
+ *  @return
+ *   Returns the character attributes and colour pair index.
  */
-static void curs_attr(attr_t &attr, short &color_pair, COLOURS fg, COLOURS bg,
-    bool adjust_background = false);
+static curses_style curs_attr(COLOURS fg, COLOURS bg, bool adjust_background = false);
 
 /**
  * @brief Change the foreground colour and returns the resulting curses info.
  *
- * @param attr
- *  The destination for the resulting character attributes.
- * @param color_pair
- *  The destination for the resulting color pair index.
  * @param col
  *  An internal color with attached brand.
+ *
+ *  @return
+ *   Returns the character attributes and colour pair index.
  */
-static void curs_attr_bg(attr_t &attr, short &color_pair, int col);
+static curses_style curs_attr_bg(int col);
 
 /**
  * @brief Change the background colour and returns the resulting curses info.
  *
- * @param attr
- *  The destination for the resulting character attributes.
- * @param color_pair
- *  The destination for the resulting color pair index.
  * @param col
  *  An internal color with attached brand.
+ *
+ *  @return
+ *   Returns the character attributes and colour pair index.
  */
-static void curs_attr_fg(attr_t &attr, short &color_pair, int col);
+static curses_style curs_attr_fg(int col);
 
 /**
  * @brief Get curses attributes for the passed internal color combination.
@@ -121,19 +123,17 @@ static void curs_attr_fg(attr_t &attr, short &color_pair, int col);
  * Performs colour mapping for both default colours as well as the color map.
  * Additionally, this function takes into consideration a passed brand.
  *
- * @param attr
- *  The destination for the resulting character attributes.
- * @param color_pair
- *  The destination for the resulting color pair index.
  * @param fg
  *  The internal colour for the foreground.
  * @param bg
  *  The internal colour for the background.
  * @param brand
  *  Internal color branding information.
+ *
+ *  @return
+ *   Returns the character attributes and colour pair index.
  */
-static void curs_attr_mapped(attr_t &attr, short &color_pair, COLOURS fg,
-    COLOURS bg, int brand);
+static curses_style curs_attr_mapped(COLOURS fg, COLOURS bg, int brand);
 
 /**
  * @brief Returns a curses color pair index for the passed fg/bg combo.
@@ -264,17 +264,15 @@ static void flip_colour(cchar_t &ch);
  * resulting color combination may not be a strict color swap, but one that
  * is guaranteed to be visible.
  *
- * @param attr_flipped
- *  The location to store the resulting character attributes.
- * @param color_pair_flipped
- *  The location to store the resulting color pair.
- * @param attr_original
+ * @param attr
  *  The character attributes to flip.
- * @param color_pair_original
+ * @param color
  *  The color pair to flip.
+ *
+ *  @return
+ *   Returns the flipped character attributes and colour pair index.
  */
-static void flip_colour(attr_t &attr_flipped, short &color_pair_flipped,
-    attr_t attr_original, short color_pair_original);
+static curses_style flip_colour(curses_style style);
 
 /**
  * @brief Translate internal colours to flagged curses colors.
@@ -305,7 +303,7 @@ static void write_char_at(int y, int x, const cchar_t &ch);
 
 static bool cursor_is_enabled = true;
 
-static unsigned int convert_to_curses_attr(int chattr)
+static unsigned int convert_to_curses_style(int chattr)
 {
     switch (chattr & CHATTR_ATTRMASK)
     {
@@ -898,11 +896,11 @@ static inline unsigned get_brand(int col)
 }
 
 // see declaration
-static void curs_attr(attr_t &attr, short &color_pair, COLOURS fg, COLOURS bg,
-    bool adjust_background)
+static curses_style curs_attr(COLOURS fg, COLOURS bg, bool adjust_background)
 {
-    attr_t flags = 0;
-    short temp_color_pair = 0;
+    curses_style style;
+    style.attr = 0;
+    style.color_pair = 0;
     bool monochrome_output_requested = curs_palette_size() == 0;
 
     // Convert over to curses colors.
@@ -916,10 +914,10 @@ static void curs_attr(attr_t &attr, short &color_pair, COLOURS fg, COLOURS bg,
     if (!monochrome_output_requested)
     {
         // Grab the color pair.
-        temp_color_pair = curs_calc_pair_safe(fg_curses, bg_curses);
+        style.color_pair = curs_calc_pair_safe(fg_curses, bg_curses);
 
         // Request decolorize if the pair doesn't actually exist.
-        if (temp_color_pair == 0
+        if (style.color_pair == 0
             && !curs_color_combo_has_pair(fg_curses, bg_curses))
         {
             monochrome_output_requested = true;
@@ -934,7 +932,7 @@ static void curs_attr(attr_t &attr, short &color_pair, COLOURS fg, COLOURS bg,
             && (Options.bold_brightens_foreground
                 || Options.best_effort_brighten_foreground))
         {
-            flags |= WA_BOLD;
+            style.attr |= WA_BOLD;
         }
 
         // curses typically uses WA_BLINK to give bright background colour,
@@ -943,7 +941,7 @@ static void curs_attr(attr_t &attr, short &color_pair, COLOURS fg, COLOURS bg,
             && (Options.blink_brightens_background
                 || Options.best_effort_brighten_background))
         {
-            flags |= WA_BLINK;
+            style.attr |= WA_BLINK;
         }
     }
 
@@ -951,46 +949,41 @@ static void curs_attr(attr_t &attr, short &color_pair, COLOURS fg, COLOURS bg,
     {
         // Decolorize the output if necessary.
         if (curs_palette_size() != 0)
-            temp_color_pair = curs_calc_pair_safe(COLOR_WHITE, COLOR_BLACK);
+            style.color_pair = curs_calc_pair_safe(COLOR_WHITE, COLOR_BLACK);
 
         // Do the best we can for backgrounds with monochrome output.
         if (bg_curses != COLOR_BLACK)
-            flags |= WA_REVERSE;
+            style.attr |= WA_REVERSE;
     }
 
-    // Got everything we need -- write out the results.
-    color_pair = temp_color_pair;
-    attr = flags;
+    return style;
 }
 
 // see declaration
-static void curs_attr_bg(attr_t &attr, short &color_pair, int col)
+static curses_style curs_attr_bg(int col)
 {
     BG_COL = static_cast<COLOURS>(col & 0x00ff);
-    curs_attr_mapped(attr, color_pair, FG_COL, BG_COL, get_brand(col));
+    return curs_attr_mapped(FG_COL, BG_COL, get_brand(col));
 }
 
 // see declaration
-static void curs_attr_fg(attr_t &attr, short &color_pair, int col)
+static curses_style curs_attr_fg(int col)
 {
     FG_COL = static_cast<COLOURS>(col & 0x00ff);
-    curs_attr_mapped(attr, color_pair, FG_COL, BG_COL, get_brand(col));
+    return curs_attr_mapped(FG_COL, BG_COL, get_brand(col));
 }
 
 // see declaration
-static void curs_attr_mapped(attr_t &attr, short &color_pair, COLOURS fg,
-    COLOURS bg, int brand)
+static curses_style curs_attr_mapped(COLOURS fg, COLOURS bg, int brand)
 {
     COLOURS fg_mod = fg;
     COLOURS bg_mod = bg;
     attr_t flags = 0;
-    attr_t temp_attr = 0;
-    short temp_color_pair = 0;
 
     // calculate which curses flags we need...
     if (brand != CHATTR_NORMAL)
     {
-        flags |= convert_to_curses_attr(brand);
+        flags |= convert_to_curses_style(brand);
 
         // Allow highlights to override the current background color.
         if ((brand & CHATTR_ATTRMASK) == CHATTR_HILITE)
@@ -1014,16 +1007,14 @@ static void curs_attr_mapped(attr_t &attr, short &color_pair, COLOURS fg,
         bg_mod = BLACK;
 
     // Done with color mapping; get the resulting attributes.
-    curs_attr(temp_attr, temp_color_pair, fg_mod, bg_mod);
-    temp_attr |= flags;
+    curses_style ret = curs_attr(fg_mod, bg_mod);
+    ret.attr |= flags;
 
     // Reverse color manually to ensure correct brightening attrs.
     if ((brand & CHATTR_ATTRMASK) == CHATTR_REVERSE)
-        flip_colour(temp_attr, temp_color_pair, temp_attr, temp_color_pair);
+        return flip_colour(ret);
 
-    // Write out the results.
-    color_pair = temp_color_pair;
-    attr = temp_attr;
+    return ret;
 }
 
 // see declaration
@@ -1364,10 +1355,8 @@ static COLOURS curses_color_to_internal_colour(short col)
 
 void textcolour(int col)
 {
-    attr_t attr = 0;
-    short color_pair = 0;
-    curs_attr_fg(attr, color_pair, col);
-    attr_set(attr, color_pair, nullptr);
+    const auto style = curs_attr_fg(col);
+    attr_set(style.attr, style.color_pair, nullptr);
 
 #ifdef USE_TILE_WEB
     tiles.textcolour(col);
@@ -1376,10 +1365,8 @@ void textcolour(int col)
 
 void textbackground(int col)
 {
-    attr_t attr = 0;
-    short color_pair = 0;
-    curs_attr_bg(attr, color_pair, col);
-    attr_set(attr, color_pair, nullptr);
+    const auto style = curs_attr_bg(col);
+    attr_set(style.attr, style.color_pair, nullptr);
 
 #ifdef USE_TILE_WEB
     tiles.textbackground(col);
@@ -1445,28 +1432,24 @@ static void flip_colour(cchar_t &ch)
         wch = new wchar_t[chars_to_allocate];
 
     // Good to go. Grab the color / attr info.
-    getcchar(&ch, wch, &attr, &color_pair, nullptr);
-
-    // Pass along to the more generic function for the heavy lifting.
-    flip_colour(attr, color_pair, attr, color_pair);
+    curses_style style;
+    getcchar(&ch, wch, &style.attr, &style.color_pair, nullptr);
+    style = flip_colour(style);
 
     // Assign the new, reversed info and clean up.
-    setcchar(&ch, wch, attr, color_pair, nullptr);
+    setcchar(&ch, wch, style.attr, style.color_pair, nullptr);
     if (chars_to_allocate > 0)
         delete [] wch;
 }
 
 // see declaration
-void flip_colour(attr_t &attr_flipped, short &color_pair_flipped,
-    attr_t attr_original, short color_pair_original)
+static curses_style flip_colour(curses_style style)
 {
     short fg = COLOR_WHITE;
     short bg = COLOR_BLACK;
-    attr_t temp_attr = attr_original;
-    short temp_color_pair = color_pair_original;
 
-    if (color_pair_original != 0)
-        pair_content(color_pair_original, &fg, &bg);
+    if (style.color_pair != 0)
+        pair_content(style.color_pair, &fg, &bg);
     else
     {
         // Default pair; use the current default colors.
@@ -1480,22 +1463,21 @@ void flip_colour(attr_t &attr_flipped, short &color_pair_flipped,
     if (!curs_can_use_extended_colors())
     {
         // Check if these were brightened colours.
-        if (temp_attr & WA_BOLD)
+        if (style.attr & WA_BOLD)
             fg |= COLFLAG_CURSES_BRIGHTEN;
-        if (temp_attr & WA_BLINK)
+        if (style.attr & WA_BLINK)
             bg |= COLFLAG_CURSES_BRIGHTEN;
-        temp_attr &= ~(WA_BOLD | WA_BLINK);
+        style.attr &= ~(WA_BOLD | WA_BLINK);
     }
 
     if (!need_attribute_only_flip)
     {
         // Perform a flip using the inverse color pair, preferring to adjust
         // the background color in case of a conflict.
-        attr_t brightness_attr;
-        curs_attr(brightness_attr, temp_color_pair,
-            curses_color_to_internal_colour(bg),
-            curses_color_to_internal_colour(fg), true);
-        temp_attr |= brightness_attr;
+        const auto out = curs_attr(curses_color_to_internal_colour(bg),
+                                   curses_color_to_internal_colour(fg), true);
+        style.color_pair = out.color_pair;
+        style.attr |= out.attr;
     }
     else
     {
@@ -1508,26 +1490,20 @@ void flip_colour(attr_t &attr_flipped, short &color_pair_flipped,
                 && (Options.blink_brightens_background
                     || Options.best_effort_brighten_background))
             {
-                temp_attr |= WA_BLINK;
+                style.attr |= WA_BLINK;
             }
             if ((bg & COLFLAG_CURSES_BRIGHTEN)
                 && (Options.bold_brightens_foreground
                     || Options.best_effort_brighten_foreground))
             {
-                temp_attr |= WA_BOLD;
+                style.attr |= WA_BOLD;
             }
         }
 
-        // Toggle the reverse video bit.
-        if (temp_attr & WA_REVERSE)
-            temp_attr &= ~WA_REVERSE;
-        else
-            temp_attr |= WA_REVERSE;
+        style.attr ^= WA_REVERSE;
     }
 
-    // Write out the results.
-    color_pair_flipped = temp_color_pair;
-    attr_flipped = temp_attr;
+    return style;
 }
 
 void fakecursorxy(int x, int y)
