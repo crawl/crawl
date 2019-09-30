@@ -765,6 +765,7 @@ private:
             // But do increment hotkeys anyway, to keep the hotkeys consistent.
             ++hotkey;
 
+            me->colour = colour;
 #ifdef USE_TILE
             me->add_tile(tile_def(tileidx_spell(spell.spell), TEX_GUI));
 #endif
