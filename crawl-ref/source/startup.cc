@@ -547,7 +547,6 @@ public:
         // If the game filled in a complete name, the user will
         // usually want to enter a new name instead of adding
         // to the current one.
-        full_name = !input_string.empty();
         input_text = make_shared<Text>();
         input_text->set_text(formatted_string(input_string, WHITE));
         input_text->set_margin_for_crt({0, 0, 1, 0});
@@ -677,7 +676,6 @@ private:
     newgame_def& ng_choice;
     const newgame_def &defaults;
     string input_string;
-    bool full_name;
     vector<player_save_info> chars;
     int num_saves;
 
@@ -713,7 +711,6 @@ private:
                     input_string = chars.at(save_number).name;
                 else // new game
                     input_string = "";
-                full_name = true;
                 break;
             }
             input_text->set_text(formatted_string(input_string, WHITE));
@@ -816,11 +813,6 @@ void UIStartupMenu::on_show()
         if (iswalnum(keyn) || keyn == '-' || keyn == '.'
             || keyn == '_' || keyn == ' ')
         {
-            if (full_name)
-            {
-                full_name = false;
-                input_string = "";
-            }
             if (strwidth(input_string) < MAX_NAME_LENGTH)
             {
                 input_string += stringize_glyph(keyn);
@@ -831,12 +823,8 @@ void UIStartupMenu::on_show()
         {
             if (!input_string.empty())
             {
-                if (full_name)
-                    input_string = "";
-                else
-                    input_string.erase(input_string.size() - 1);
+                input_string.erase(input_string.size() - 1);
                 changed_name = true;
-                full_name = false;
             }
         }
         else
