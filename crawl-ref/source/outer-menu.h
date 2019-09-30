@@ -21,7 +21,10 @@ public:
 
     int id = 0;
     int hotkey = 0;
-    COLOURS highlight_colour = LIGHTGREY;
+    colour_t highlight_colour = LIGHTGREY;
+#ifndef USE_TILE_LOCAL
+    colour_t fg_highlight = BLACK;
+#endif
     string description;
 
 #ifdef USE_TILE_WEB
@@ -36,6 +39,11 @@ protected:
     LineBuffer m_line_buf;
 #endif
     static bool focus_on_mouse;
+
+#ifndef USE_TILE_LOCAL
+    void recolour_descendants(const shared_ptr<Widget>& node);
+    colour_t fg_normal = LIGHTGREY;
+#endif
 };
 
 class OuterMenu : public ui::Widget

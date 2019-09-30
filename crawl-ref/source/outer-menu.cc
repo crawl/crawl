@@ -50,6 +50,35 @@ void MenuButton::_allocate_region()
 #endif
 }
 
+#ifndef USE_TILE_LOCAL
+void MenuButton::recolour_descendants(const shared_ptr<Widget>& node)
+{
+    auto tw = dynamic_pointer_cast<Text>(node);
+    if (tw)
+    {
+        if (focused)
+        {
+            // keep the original colour so we can restore it on unfocus
+            const auto& first_op = tw->get_text().ops[0];
+            fg_normal = first_op.type == FSOP_COLOUR ? first_op.colour : LIGHTGREY;
+        }
+
+        const colour_t fg = focused ? fg_highlight : fg_normal;
+        const colour_t bg = focused ? highlight_colour : BLACK;
+        formatted_string new_contents;
+        new_contents.textcolour(fg);
+        new_contents.cprintf("%s", tw->get_text().tostring().c_str());
+        tw->set_text(move(new_contents));
+        tw->set_bg_colour(static_cast<COLOURS>(bg));
+        return;
+    }
+    auto container = dynamic_pointer_cast<Container>(node);
+    if (container)
+        for (auto it = container->begin(); it != container->end(); ++it)
+            recolour_descendants(*it);
+}
+#endif
+
 bool MenuButton::on_event(const wm_event& event)
 {
     if (Bin::on_event(event))
@@ -66,6 +95,11 @@ bool MenuButton::on_event(const wm_event& event)
         focused = true;
     if (event.type == WME_FOCUSOUT)
         focused = false;
+
+#ifndef USE_TILE_LOCAL
+    if (event.type == WME_FOCUSIN || event.type == WME_FOCUSOUT)
+        recolour_descendants(shared_from_this());
+#endif
 
 #ifdef USE_TILE_LOCAL
     if (event.type == WME_MOUSEENTER)
@@ -240,35 +274,6 @@ void OuterMenu::add_button(shared_ptr<MenuButton> btn, int x, int y)
         }
         if (ev.type == WME_FOCUSIN && m_description_indexes[y*this->m_width+x] != -1)
             descriptions->current() = m_description_indexes[y*this->m_width+x];
-#ifndef USE_TILE_LOCAL
-        if (ev.type == WME_FOCUSIN || ev.type == WME_FOCUSOUT)
-        {
-            auto btn2 = this->m_buttons[y*this->m_width+x];
-            Text* tw = dynamic_cast<Text*>(btn2->get_child().get());
-            if (!tw)
-            {
-                // TODO: very hacky: if the child is a container,
-                // find the first label in a container.
-                // This handles several cases: webtiles menus on console,
-                // weapon select on local console. Is there a more elegant way
-                // of doing this? Maybe do it for every label in the widget?
-                auto tw_cont = dynamic_cast<ContainerVec*>(
-                                                    btn2->get_child().get());
-                if (tw_cont)
-                    for (auto it = tw_cont->begin(); it != tw_cont->end(); ++it)
-                    {
-                        tw = dynamic_cast<Text*>((*it).get());
-                        if (tw)
-                            break;
-                    }
-            }
-            if (tw)
-            {
-                tw->set_bg_colour(ev.type == WME_FOCUSIN
-                                            ? btn2->highlight_colour : BLACK);
-            }
-        }
-#endif
         return false;
     });
 
