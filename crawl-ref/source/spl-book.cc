@@ -693,6 +693,19 @@ private:
         return true;
     }
 
+    colour_t entry_colour(const sortable_spell& entry)
+    {
+        if (vehumet_is_offering(entry.spell))
+            return LIGHTBLUE;
+        else
+        {
+            bool transient = false;
+            bool memcheck = true;
+            return spell_highlight_by_utility(entry.spell, COL_UNKNOWN,
+                                                    transient, memcheck);
+        }
+    }
+
     // Update the list of spells. If show_hidden is true, show only hidden
     // ones; otherwise, show only non-hidden ones.
     void update_entries()
@@ -719,20 +732,9 @@ private:
             if (spell_hidden != show_hidden)
                 continue;
 
+            const int colour = entry_colour(spell);
+
             ostringstream desc;
-
-            int colour = LIGHTGRAY;
-            if (vehumet_is_offering(spell.spell))
-                colour = LIGHTBLUE;
-            else
-            {
-                bool transient = false;
-                bool memcheck = true;
-                colour = spell_highlight_by_utility(spell.spell, COL_UNKNOWN,
-                                                        transient, memcheck);
-            }
-
-
             desc << "<" << colour_to_str(colour) << ">";
 
             desc << left;
@@ -746,10 +748,9 @@ private:
 
             if (!you.divine_exegesis)
             {
-                colour = spell.fail_rate_colour;
-                desc << "<" << colour_to_str(colour) << ">";
+                desc << "<" << colour_to_str(spell.fail_rate_colour) << ">";
                 desc << chop_string(failure_rate_to_string(spell.raw_fail), 12);
-                desc << "</" << colour_to_str(colour) << ">";
+                desc << "</" << colour_to_str(spell.fail_rate_colour) << ">";
             }
 
             desc << spell.difficulty;
