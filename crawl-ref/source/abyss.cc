@@ -1062,8 +1062,11 @@ static level_id _get_random_level()
     vector<level_id> levels;
     for (branch_iterator it; it; ++it)
     {
-        if (it->id == BRANCH_ABYSS || it->id == BRANCH_SHOALS)
+        if (it->id == BRANCH_VESTIBULE || it->id == BRANCH_ABYSS
+            || it->id == BRANCH_SHOALS)
+        {
             continue;
+        }
         for (int j = 1; j <= brdepth[it->id]; ++j)
         {
             const level_id id(it->id, j);
