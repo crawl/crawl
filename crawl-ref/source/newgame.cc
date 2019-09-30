@@ -1175,9 +1175,11 @@ protected:
 #ifdef USE_TILE
         auto hbox = make_shared<Box>(Box::HORZ);
         hbox->align_items = Widget::Align::CENTER;
+        hbox->justify_items = Widget::Align::STRETCH;
         auto tile = make_shared<Image>();
         tile->set_tile(item_tile);
         tile->set_margin_for_sdl({0, 6, 0, 0});
+        tile->flex_grow = 0;
         hbox->add_child(move(tile));
         hbox->add_child(label);
 #endif
