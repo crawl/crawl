@@ -728,10 +728,8 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
         {
             var br = $button[0].getBoundingClientRect();
             var gr = $scr.parent()[0].getBoundingClientRect();
-            console.log(br.bottom, gr.bottom);
             var delta = br.top < gr.top ? br.top - gr.top :
                     br.bottom > gr.bottom ? br.bottom - gr.bottom : 0;
-            console.log("delta: ", delta);
             $scr[0].scrollTop += delta;
         }
 
