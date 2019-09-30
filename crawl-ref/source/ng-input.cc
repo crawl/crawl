@@ -21,15 +21,19 @@ formatted_string opening_screen()
 {
     string msg =
     "<yellow>Hello, welcome to " CRAWL " " + string(Version::Long) + "!</yellow>\n"
-    "<brown>(c) Copyright 1997-2002 Linley Henzell, 2002-2019 Crawl DevTeam\n"
-    "Read the instructions for legal details.</brown> ";
+    "<brown>(c) Copyright 1997-2002 Linley Henzell, 2002-2019 Crawl DevTeam";
 
+    return formatted_string::parse_string(msg);
+}
 
+formatted_string options_read_status()
+{
+    string msg;
     FileLineInput f(Options.filename.c_str());
 
     if (!f.error())
     {
-        msg += "<lightgrey>(Options read from ";
+        msg += "<lightgrey>Options read from \"";
 #ifdef DGAMELAUNCH
         // For dgl installs, show only the last segment of the .crawlrc
         // file name so that we don't leak details of the directory
@@ -38,11 +42,11 @@ formatted_string opening_screen()
 #else
         msg += Options.filename;
 #endif
-        msg += ".)</lightgrey>";
+        msg += "\".</lightgrey>";
     }
     else
     {
-        msg += "<lightred>(Options file ";
+        msg += "<lightred>Options file ";
         if (!Options.filename.empty())
         {
             msg += make_stringf("\"%s\" is not readable",
@@ -50,7 +54,7 @@ formatted_string opening_screen()
         }
         else
             msg += "not found";
-        msg += "; using defaults.)</lightred>";
+        msg += "; using defaults.</lightred>";
     }
 
     msg += "\n";

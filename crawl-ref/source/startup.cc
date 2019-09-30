@@ -200,6 +200,7 @@ static void _initialize()
     }
 
     mpr(opening_screen().tostring().c_str());
+    mpr(options_read_status().tostring().c_str());
 }
 
 /** KILL_RESETs all monsters in LOS.
@@ -536,10 +537,12 @@ public:
         m_root->_set_parent(this);
         m_root->align_items = Widget::Align::STRETCH;
 
-        m_root->add_child(make_shared<Text>(opening_screen()));
+        formatted_string about = opening_screen();
+
+        m_root->add_child(make_shared<Text>(about));
 
         auto grid = make_shared<Grid>();
-        grid->set_margin_for_crt({1, 0, 2, 0});
+        grid->set_margin_for_crt({1, 0, 1, 0});
 
         // If the game filled in a complete name, the user will
         // usually want to enter a new name instead of adding
@@ -627,26 +630,34 @@ public:
 
         m_root->add_child(move(grid));
 
-        string text = "Use the up/down keys to select the type of game or load a "
-                    "character.";
-#ifdef USE_TILE_LOCAL
-        if (tiles.is_using_small_layout())
-            text += " ";
-        else
-#endif
-            text += "\n";
-        text +=       "You can type your name; if you leave it blank you will be "
-                    "asked later.\n"
-                    "Press Enter to start";
-        // TODO: this should include a description of that character.
-        if (_game_defined(defaults))
-            text += ", Tab to repeat the last game's choice";
-        text += ".\n";
+        string instructions_text;
+        // TODO: these can overflow on console 80x24 and won't line-wrap, is
+        // there any good solution to this? e.g.
+        // `long name long name the Vine Stalker Earth Elementalist`
+        if (defaults.name.size() > 0 && _find_save(chars, defaults.name) != -1)
+        {
+            auto save = _find_save(chars, defaults.name);
+            instructions_text +=
+                    "<white>[tab]</white> quick-load last game: "
+                    + chars[save].really_short_desc() + "\n";
+        }
+        else if (_game_defined(defaults))
+        {
+            instructions_text +=
+                    "<white>[tab]</white> quick-start last combo: "
+                    + defaults.name + " the "
+                    + newgame_char_description(defaults) + "\n";
+        }
+        instructions_text +=
+            "<white>[ctrl-p]</white> view rc file information and log";
         if (recent_error_messages())
-            text += "Errors during initialization; press ctrl-p to view the full log.\n";
-        m_root->add_child(make_shared<Text>(text));
+            instructions_text += " (<red>Errors during initialization!</red>)";
+
+        m_root->add_child(make_shared<Text>(
+                        formatted_string::parse_string(instructions_text)));
 
         descriptions->set_margin_for_crt({1, 0, 0, 0});
+        descriptions->set_margin_for_sdl({10, 0, 0, 0});
         m_root->add_child(descriptions);
     };
 

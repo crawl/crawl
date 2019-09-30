@@ -135,7 +135,7 @@ static bool _char_defined(const newgame_def& ng)
     return ng.species != SP_UNKNOWN && ng.job != JOB_UNKNOWN;
 }
 
-static string _char_description(const newgame_def& ng)
+string newgame_char_description(const newgame_def& ng)
 {
     if (_is_random_viable_choice(ng))
         return "Recommended character";
@@ -370,7 +370,7 @@ static void _choose_species_job(newgame_def& ng, newgame_def& ng_choice,
         // Either an invalid combination was passed in through options,
         // or we messed up.
         end(1, false, "Incompatible species and background (%s) selected.",
-                                _char_description(ng).c_str());
+                                newgame_char_description(ng).c_str());
     }
 }
 
@@ -1310,7 +1310,8 @@ protected:
         if (_char_defined(defaults))
         {
             _add_choice_menu_option(1, 3,
-                    "  Tab - " + _char_description(defaults), '\t', M_DEFAULT_CHOICE,
+                    "  Tab - " + newgame_char_description(defaults), '\t',
+                    M_DEFAULT_CHOICE,
                     "Play a new game with your previous choice.");
         }
     }

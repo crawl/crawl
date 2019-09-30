@@ -5228,6 +5228,14 @@ bool player_save_info::operator<(const player_save_info& rhs) const
            || (experience_level == rhs.experience_level && name < rhs.name);
 }
 
+string player_save_info::really_short_desc() const
+{
+    ostringstream desc;
+    desc << name << " the " << species_name << ' ' << class_name;
+
+    return desc.str();
+}
+
 string player_save_info::short_desc() const
 {
     ostringstream desc;
