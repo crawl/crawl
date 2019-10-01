@@ -1083,7 +1083,7 @@ static int _mons_power_hd_factor(spell_type spell, bool random, int roll)
                 
                 default:
                     const int avgroll = 3 / 2; // average roll rounding up
-                	return 5 * (2 + avgroll) * ENCH_POW_FACTOR;
+                    return 5 * (2 + avgroll) * ENCH_POW_FACTOR;
              }
 
         case SPELL_CAUSE_FEAR:
