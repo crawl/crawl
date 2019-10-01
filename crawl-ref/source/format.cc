@@ -299,6 +299,13 @@ formatted_string::operator += (const formatted_string &other)
     return *this;
 }
 
+const formatted_string &
+formatted_string::operator += (const string& other)
+{
+    ops.emplace_back(other);
+    return *this;
+}
+
 int formatted_string::width() const
 {
     // Just add up the individual string lengths.
