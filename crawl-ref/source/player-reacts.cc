@@ -829,8 +829,15 @@ static void _decrement_durations()
         doom_howl(min(delay, you.duration[DUR_DOOM_HOWL]));
 
     dec_elixir_player(delay);
-    extract_manticore_spikes("You carefully extract the barbed spikes from "
-                             "your body.");
+
+    if (!you.cannot_move()
+        && !you.confused()
+        && !you.asleep())
+    {
+        extract_manticore_spikes(
+            make_stringf("You %s the barbed spikes from your body.",
+                you.berserk() ? "rip and tear" : "carefully extract").c_str());
+    }
 
     if (!env.sunlight.empty())
         process_sunlights();
