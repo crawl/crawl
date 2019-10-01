@@ -1833,8 +1833,8 @@ static const mutation_def mut_data[] =
   "MP-powered wands",
 
   {"You expend magic power (3 MP) to strengthen your wands.", "", ""},
-  {"You feel your magical essence would now empower your wands.", "", ""},
-  {"Your magical essence will no longer be empower your wands.", "", ""},
+  {"You feel your magical essence link to your wands.", "", ""},
+  {"Your magical essence is no longer linked to your wands.", "", ""},
 },
 
 { MUT_UNSKILLED, 0, 3, mutflag::bad, false,
