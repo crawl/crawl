@@ -114,6 +114,7 @@ class LineBuffer : public VertBuffer
 {
 public:
     LineBuffer();
-    void add(float sx, float sy, float ex, float ey, const VColour &c);
     void add_square(float sx, float sy, float ex, float ey, const VColour &c);
+private:
+    void add(float sx, float sy, float ex, float ey, const VColour &c);
 };

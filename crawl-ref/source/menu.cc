@@ -744,7 +744,7 @@ void UIMenu::pack_buffers()
             int line_y = entry.y  + (i == 0 ? 0 : 5) + item_pad;
             if (i < (int)item_info.size()-1 && !item_info[i+1].heading)
             {
-                m_div_line_buf.add(entry.x, line_y,
+                m_div_line_buf.add_square(entry.x, line_y,
                         entry.x+m_num_columns*col_width, line_y, header_div_colour);
             }
             m_text_buf.add(split, entry.x, line_y+3);
