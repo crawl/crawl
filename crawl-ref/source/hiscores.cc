@@ -477,7 +477,7 @@ void UIHiscoresMenu::_add_hiscore_row(scorefile_entry& se, int id)
 {
     auto tmp = make_shared<Text>();
 
-    tmp->set_text(formatted_string(hiscores_format_single(se)));
+    tmp->set_text(hiscores_format_single(se));
     auto btn = make_shared<MenuButton>();
     tmp->set_margin_for_sdl(2);
     btn->set_child(move(tmp));

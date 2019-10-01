@@ -539,10 +539,10 @@ void Text::wrap_text_to_size(int width, int height)
     if (height < (int)m_wrapped_lines.size())
     {
         auto& last_line = m_wrapped_lines[height-1], next_line = m_wrapped_lines[height];
-        last_line += formatted_string(" ");
+        last_line += " ";
         last_line += next_line;
         last_line = last_line.chop(width-2);
-        last_line += formatted_string("..");
+        last_line += "..";
         m_wrapped_lines.resize(height);
     }
     if (m_wrapped_lines.empty())

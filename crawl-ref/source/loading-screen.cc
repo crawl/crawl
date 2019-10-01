@@ -93,7 +93,7 @@ void loading_screen_close()
 
 void loading_screen_update_msg(string message)
 {
-    loading_text->set_text(formatted_string(message));
+    loading_text->set_text(message);
     ui::pump_events(0);
 }
 

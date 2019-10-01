@@ -46,6 +46,7 @@ public:
     bool operator < (const formatted_string &other) const;
     bool operator == (const formatted_string &other) const;
     const formatted_string &operator += (const formatted_string &other);
+    const formatted_string &operator += (const string &other);
     char &operator [] (size_t idx);
 
 public:

@@ -580,7 +580,7 @@ static formatted_string _beogh_extra_description()
         if (!mons->is_named()) continue;
         has_named_followers = true;
 
-        desc += formatted_string(mons->full_name(DESC_PLAIN).c_str());
+        desc += mons->full_name(DESC_PLAIN);
         if (companion_is_elsewhere(mons->mid))
         {
             desc += formatted_string::parse_string(
@@ -1048,7 +1048,7 @@ static formatted_string _god_overview_description(god_type which_god)
 
     // Print god's description.
     const string god_desc = getLongDescription(god_name(which_god));
-    desc += formatted_string(trimmed_string(god_desc) + "\n");
+    desc += trimmed_string(god_desc) + "\n";
 
     // Title only shown for our own god.
     if (you_worship(which_god))

@@ -622,7 +622,7 @@ formatted_string FTFontWrapper::split(const formatted_string &str,
             }
 
             ret = ret.chop_bytes(&line[ellipses] - &base[0]);
-            ret += formatted_string("..");
+            ret += "..";
             return ret;
         }
         else

@@ -1935,7 +1935,7 @@ void Menu::update_title()
         auto col = item_colour(first ? title : title2);
         string text = (first ? title->get_text() : title2->get_text());
 
-        fs = formatted_string(col);
+        fs = col;
 
         if (flags & MF_ALLOW_FORMATTING)
             fs += formatted_string::parse_string(text);

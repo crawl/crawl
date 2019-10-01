@@ -3189,7 +3189,7 @@ void describe_spell(spell_type spell, const monster_info *mon_owner,
     trim_string(desc);
 
     auto title = make_shared<Text>();
-    title->set_text(formatted_string(spl_title));
+    title->set_text(spl_title);
     title->set_margin_for_sdl(0, 0, 0, 10);
     title_hbox->add_child(move(title));
 
@@ -4556,7 +4556,7 @@ int describe_monsters(const monster_info &mi, const string& /*footer*/)
 #endif
 
     auto title = make_shared<Text>();
-    title->set_text(formatted_string(inf.title));
+    title->set_text(inf.title);
     title->set_margin_for_sdl(0, 0, 0, 10);
     title_hbox->add_child(move(title));
 
@@ -4565,10 +4565,10 @@ int describe_monsters(const monster_info &mi, const string& /*footer*/)
     title_hbox->set_margin_for_sdl(0, 0, 20, 0);
     vbox->add_child(move(title_hbox));
 
-    desc += formatted_string(inf.body.str());
+    desc += inf.body.str();
     if (crawl_state.game_is_hints())
         desc += formatted_string(hints_describe_monster(mi, has_stat_desc));
-    desc += formatted_string(inf.footer);
+    desc += inf.footer;
     desc = formatted_string::parse_string(trimmed_string(desc));
 
     const formatted_string quote = formatted_string(trimmed_string(inf.quote));
