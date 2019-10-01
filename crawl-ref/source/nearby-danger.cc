@@ -214,15 +214,6 @@ vector<monster* > get_nearby_monsters(bool want_move,
     return mons;
 }
 
-static bool _exposed_monsters_nearby(bool want_move)
-{
-    const int radius = want_move ? 2 : 1;
-    for (radius_iterator ri(you.pos(), radius, C_SQUARE, LOS_DEFAULT); ri; ++ri)
-        if (env.map_knowledge(*ri).flags & MAP_INVISIBLE_MONSTER)
-            return true;
-    return false;
-}
-
 bool i_feel_safe(bool announce, bool want_move, bool just_monsters,
                  bool check_dist, int range)
 {
@@ -286,9 +277,18 @@ bool i_feel_safe(bool announce, bool want_move, bool just_monsters,
     }
 
     // Monster check.
-    vector<monster* > visible =
-        get_nearby_monsters(want_move, !announce, true, true, true,
+    vector<monster* > monsters =
+        get_nearby_monsters(want_move, !announce, true, true, false,
                             check_dist, range);
+
+    vector<monster* > visible;
+    copy_if(monsters.begin(), monsters.end(), back_inserter(visible),
+            [](const monster *mon){ return mon->visible_to(&you); });
+
+    const bool sensed_monster = any_of(monsters.begin(), monsters.end(),
+            [](const monster *mon){
+                return env.map_knowledge(mon->pos()).flags & MAP_INVISIBLE_MONSTER;
+            });
 
     // Announce the presence of monsters (Eidolos).
     string msg;
@@ -299,7 +299,7 @@ bool i_feel_safe(bool announce, bool want_move, bool just_monsters,
     }
     else if (visible.size() > 1)
         msg = "There are monsters nearby!";
-    else if (_exposed_monsters_nearby(want_move))
+    else if (sensed_monster)
         msg = "There is a strange disturbance nearby!";
     else
         return true;
