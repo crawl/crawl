@@ -413,7 +413,6 @@ bool herd_monster(const monster& mon);
 
 int cheibriados_monster_player_speed_delta(const monster& mon);
 bool cheibriados_thinks_mons_is_fast(const monster& mon);
-bool mons_is_fiery(const monster& mon);
 bool mons_is_projectile(monster_type mc);
 bool mons_is_projectile(const monster& mon);
 bool mons_can_cling_to_walls(const monster& mon);
