@@ -1377,8 +1377,8 @@ NAME:     staff of Battle
 OBJ:      OBJ_WEAPONS/WPN_STAFF
 PLUS:     +0
 COLOUR:   ETC_MAGIC
-#TILE:     urand_staff_of_battle
-#TILE_EQ:  battle
+TILE:     urand_staff_of_battle
+TILE_EQ:  battle_staff
 VALUE:    800
 
 # This entry must always be last.

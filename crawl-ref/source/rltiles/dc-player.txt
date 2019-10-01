@@ -546,6 +546,7 @@ asmodeus ASMODEUS
 dispater DISPATER
 olgreb OLGREB
 order ORDER
+battle_staff BATTLE_STAFF
 ## axes
 axe_trog AXE_TROG
 arga ARGA
