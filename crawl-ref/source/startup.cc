@@ -467,10 +467,10 @@ static void _construct_save_games_menu(shared_ptr<OuterMenu>& container,
         hbox->add_child(move(tile));
 #endif
 
-        const COLOURS bg = chars.at(i).save_loadable ? WHITE : RED;
+        const COLOURS fg = chars.at(i).save_loadable ? WHITE : RED;
         auto text = chars.at(i).short_desc();
         bool wiz = strip_suffix(text, " (WIZ)");
-        auto label = make_shared<Text>(formatted_string( text, bg));
+        auto label = make_shared<Text>(formatted_string(text, fg));
         label->ellipsize = true;
 #ifdef USE_TILE_LOCAL
         label->max_size() = { INT_MAX, (int)tiles.get_crt_font()->char_height() };

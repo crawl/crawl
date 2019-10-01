@@ -1745,25 +1745,24 @@ static void _construct_weapon_menu(const newgame_def& ng,
 
         weapon_type wpn_type = weapons[i].first;
         char_choice_restriction wpn_restriction = weapons[i].second;
-        label->set_text(formatted_string(text,
-                    wpn_restriction == CC_UNRESTRICTED ? WHITE : LIGHTGREY));
+
+        const auto fg = wpn_restriction == CC_UNRESTRICTED ? WHITE : LIGHTGREY;
+        const auto bg = wpn_restriction == CC_UNRESTRICTED ?
+            STARTUP_HIGHLIGHT_GOOD : STARTUP_HIGHLIGHT_BAD;
+
+        label->set_text(formatted_string(text, fg));
 
         hbox->justify_items = Widget::Align::STRETCH;
         string apt_text = make_stringf("(%+d apt)",
                 species_apt(choice.skill, ng.species));
-        auto suffix = make_shared<Text>(formatted_string(apt_text,
-                wpn_restriction == CC_UNRESTRICTED ? WHITE : LIGHTGREY));
+        auto suffix = make_shared<Text>(formatted_string(apt_text, fg));
         hbox->add_child(suffix);
 
         auto btn = make_shared<MenuButton>();
         btn->set_child(move(hbox));
         btn->id = wpn_type;
         btn->hotkey = letter;
-
-        if (wpn_restriction == CC_UNRESTRICTED)
-            btn->highlight_colour = STARTUP_HIGHLIGHT_GOOD;
-        else
-            btn->highlight_colour = STARTUP_HIGHLIGHT_BAD;
+        btn->highlight_colour = bg;
 
         // Is this item our default weapon?
         if (wpn_type == defweapon || (defweapon == WPN_UNKNOWN && i == 0))
