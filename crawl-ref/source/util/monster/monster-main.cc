@@ -16,7 +16,7 @@
 #include "mon-abil.h"
 #include "mon-book.h"
 #include "mon-cast.h"
-#include "mon-util.h"
+#include "mon-util.h"mon
 #include "version.h"
 #include "view.h"
 #include "los.h"

@@ -2897,11 +2897,14 @@ string get_skill_description(skill_type skill, bool need_title)
     return result;
 }
 
-/// How much power do we think the given monster casts this spell with?
-static int _hex_pow(const spell_type spell, const int hd)
+/** 
+ * How much power does the given monster, with the given roll for randomized spellpower,
+ * cast this spell with?
+ */
+static int _hex_pow(const spell_type spell, const int hd, const int roll)
 {
     const int cap = 200;
-    const int pow = mons_power_for_hd(spell, hd, false) / ENCH_POW_FACTOR;
+    const int pow = mons_power_for_hd(spell, hd, false, roll) / ENCH_POW_FACTOR;
     return min(cap, pow);
 }
 
@@ -2909,13 +2912,26 @@ static int _hex_pow(const spell_type spell, const int hd)
  * What are the odds of the given spell, cast by a monster with the given
  * spell_hd, affecting the player?
  */
-int hex_chance(const spell_type spell, const int hd)
+int hex_chance(const spell_type spell, const int hd, bool round_up)
 {
-    const int capped_pow = _hex_pow(spell, hd);
+    const int capped_pow = _hex_pow(spell, hd, -1);
     const int chance = hex_success_chance(you.res_magic(), capped_pow,
                                           100, true);
+    const int adjust = round_up ? 3 - 1 : 0; // appropriately round divisions by 3 appearing below
     if (spell == SPELL_STRIP_RESISTANCE)
-        return chance + (100 - chance) / 3; // ignores mr 1/3rd of the time
+        return chance + (100 - chance + adjust) / 3; // ignores mr 1/3rd of the time
+    if (spell == SPELL_CONFUSION_GAZE) // average chance for 3 possible spellpower rolls
+    {
+        int capped_pows [3]; 
+        int chance_sum = 0;
+        for ( int roll = 0; roll < 3; roll++)
+        {
+            capped_pows[roll] = _hex_pow(spell, hd, roll);
+            chance_sum += hex_success_chance(you.res_magic(), capped_pows[roll],
+                100, true);
+        }
+    	return (chance_sum + adjust) / 3;
+    }
     return chance;
 }
 
@@ -3041,7 +3057,10 @@ static bool _get_spell_description(const spell_type spell,
             string wiz_info;
 #ifdef WIZARD
             if (you.wizard)
-                wiz_info += make_stringf(" (pow %d)", _hex_pow(spell, hd));
+                wiz_info += (spell == SPELL_CONFUSION_GAZE) ? 
+                            make_stringf(" (pow %d-%d)", _hex_pow(spell, hd, 0), 
+                                _hex_pow(spell, hd, 2)) :
+                            make_stringf(" (pow %d)", _hex_pow(spell, hd, -1));
 #endif
             description += you.immune_to_hex(spell)
                 ? make_stringf("You cannot be affected by this "

@@ -1053,11 +1053,13 @@ static bool _set_hex_target(monster* caster, bolt& pbolt)
  *
  * @param spell     The spell in question.
  * @param random    Whether to randomize powers for weird spells.
- *                  If false, the average value is used.
+ *                  If false, the value of roll is used.
+ * @param roll      The dice roll used for spells with randomized power
+ *                  when random is false.
  * @return          A multiplier to HD for spellpower.
  *                  Value may exceed 200.
  */
-static int _mons_power_hd_factor(spell_type spell, bool random)
+static int _mons_power_hd_factor(spell_type spell, bool random, int roll)
 {
     const mons_spell_logic* logic = map_find(spell_to_logic, spell);
     if (logic && logic->power_hd_factor)
@@ -1068,7 +1070,21 @@ static int _mons_power_hd_factor(spell_type spell, bool random)
         case SPELL_CONFUSION_GAZE:
             if (random)
                 return 5 * (2 + random2(3)) * ENCH_POW_FACTOR;
-            return 5 * (2 + 1) * ENCH_POW_FACTOR;
+            switch (roll)
+            {
+                case 0:
+                	return 5 * (2 + 0) * ENCH_POW_FACTOR;
+                
+                case 1:
+                	return 5 * (2 + 1) * ENCH_POW_FACTOR;
+                
+                case 2:
+                	return 5 * (2 + 2) * ENCH_POW_FACTOR;
+                
+                default:
+                    const int avgroll = 3 / 2; // average roll rounding up
+                	return 5 * (2 + avgroll) * ENCH_POW_FACTOR;
+             }
 
         case SPELL_CAUSE_FEAR:
             return 18 * ENCH_POW_FACTOR;
@@ -1117,12 +1133,14 @@ static int _mons_power_hd_factor(spell_type spell, bool random)
  * @param spell     The spell in question.
  * @param hd        The spell_hd of the given monster.
  * @param random    Whether to randomize powers for weird spells.
- *                  If false, the average value is used.
+ *                  If false, the value of roll is used.
+ * @param roll      The dice roll used for spells with randomized power
+ *                  when random is false.
  * @return          A spellpower value for the spell.
  */
-int mons_power_for_hd(spell_type spell, int hd, bool random)
+int mons_power_for_hd(spell_type spell, int hd, bool random, int roll)
 {
-    const int power = hd * _mons_power_hd_factor(spell, random);
+    const int power = hd * _mons_power_hd_factor(spell, random, roll);
     if (spell == SPELL_PAIN)
         return max(50 * ENCH_POW_FACTOR, power);
     return power;
