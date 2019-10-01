@@ -177,59 +177,9 @@ private:
 
 class Container : public Widget
 {
-protected:
-    class iter_impl
-    {
-    public:
-        virtual ~iter_impl() {};
-        virtual void operator++() = 0;
-        virtual shared_ptr<Widget>& operator*() = 0;
-        virtual iter_impl* clone() const = 0;
-        virtual bool equal(iter_impl &other) const = 0;
-    };
-
 public:
     virtual ~Container() {}
-    class iterator : public std::iterator<input_iterator_tag, shared_ptr<Widget>>
-    {
-    public:
-        iterator(iter_impl *_it) : it(_it) {};
-        ~iterator() { delete it; it = nullptr; };
-        iterator(const iterator& other) : it(other.it->clone()) {};
-        iterator& operator=(const iterator& other)
-        {
-            if (it != other.it)
-            {
-                delete it;
-                it = other.it->clone();
-            }
-            return *this;
-        }
-        iterator& operator=(iterator&& other)
-        {
-            if (it != other.it)
-            {
-                delete it;
-                it = other.it;
-                other.it = nullptr;
-            }
-            return *this;
-        }
-
-        void operator++() { ++(*it); };
-        bool operator==(const iterator& other) const
-        {
-            return typeid(it) == typeid(other.it) && it->equal(*other.it);
-        };
-        bool operator!=(const iterator& other) const { return !(*this == other); }
-        shared_ptr<Widget>& operator*() { return **it; };
-    protected:
-        iter_impl *it;
-    };
-
-public:
-    virtual iterator begin() = 0;
-    virtual iterator end() = 0;
+    virtual void foreach(function<void(shared_ptr<Widget>&)> f) = 0;
 };
 
 class Bin : public Container
@@ -243,31 +193,35 @@ public:
     virtual shared_ptr<Widget> get_child() { return m_child; };
     virtual shared_ptr<Widget> get_child_at_offset(int x, int y) override;
 
-private:
-    typedef Container::iterator I;
-
-    class iter_impl_bin : public iter_impl
+protected:
+    class iterator
     {
-    private:
-        typedef shared_ptr<Widget> C;
     public:
-        explicit iter_impl_bin (C& _c, bool _state) : c(_c), state(_state) {};
-    protected:
-        virtual void operator++() override { state = true; };
-        virtual shared_ptr<Widget>& operator*() override { return c; };
-        virtual iter_impl_bin* clone() const override { return new iter_impl_bin(c, state); };
-        virtual bool equal (iter_impl &_other) const override {
-            iter_impl_bin &other = static_cast<iter_impl_bin&>(_other);
-            return c == other.c && state == other.state;
-        };
+        typedef shared_ptr<Widget> value_type;
+        typedef ptrdiff_t distance;
+        typedef shared_ptr<Widget>* pointer;
+        typedef shared_ptr<Widget>& reference;
+        typedef input_iterator_tag iterator_category;
 
-        C& c;
+        value_type c;
         bool state;
+
+        iterator(value_type& _c, bool _state) : c(_c), state(_state) {};
+        void operator++ () { state = true; };
+        value_type& operator* () { return c; };
+        bool operator== (const iterator& other) { return c == other.c && state == other.state; }
+        bool operator!= (const iterator& other) { return !(*this == other); }
     };
 
 public:
-    virtual I begin() override { return I(new iter_impl_bin(m_child, false)); }
-    virtual I end() override { return I(new iter_impl_bin(m_child, true)); }
+    iterator begin() { return iterator(m_child, false); }
+    iterator end() { return iterator(m_child, true); }
+    virtual void foreach(function<void(shared_ptr<Widget>&)> f) override
+    {
+        for (auto& child : *this)
+            f(child);
+    }
+
 protected:
     shared_ptr<Widget> m_child;
 };
@@ -284,31 +238,36 @@ public:
     size_t num_children() const { return m_children.size(); }
     shared_ptr<Widget>& operator[](size_t pos) { return m_children[pos]; };
     const shared_ptr<Widget>& operator[](size_t pos) const { return m_children[pos]; };
-private:
-    typedef Container::iterator I;
 
-    class iter_impl_vec : public iter_impl
+protected:
+    class iterator
     {
-    private:
-        typedef vector<shared_ptr<Widget>> C;
     public:
-        explicit iter_impl_vec (C& _c, C::iterator _it) : c(_c), it(_it) {};
-    protected:
-        virtual void operator++() override { ++it; };
-        virtual shared_ptr<Widget>& operator*() override { return *it; };
-        virtual iter_impl_vec* clone() const override { return new iter_impl_vec(c, it); };
-        virtual bool equal (iter_impl &_other) const override {
-            iter_impl_vec &other = static_cast<iter_impl_vec&>(_other);
-            return c == other.c && it == other.it;
-        };
+        typedef shared_ptr<Widget> value_type;
+        typedef ptrdiff_t distance;
+        typedef shared_ptr<Widget>* pointer;
+        typedef shared_ptr<Widget>& reference;
+        typedef input_iterator_tag iterator_category;
 
-        C& c;
-        C::iterator it;
+        vector<value_type>& c;
+        vector<value_type>::iterator it;
+
+        iterator(vector<value_type>& _c, vector<value_type>::iterator _it) : c(_c), it(_it) {};
+        void operator++ () { ++it; };
+        value_type& operator* () { return *it; };
+        bool operator== (const iterator& other) { return c == other.c && it == other.it; }
+        bool operator!= (const iterator& other) { return !(*this == other); }
     };
 
 public:
-    virtual I begin() override { return I(new iter_impl_vec(m_children, m_children.begin())); }
-    virtual I end() override { return I(new iter_impl_vec(m_children, m_children.end())); }
+    iterator begin() { return iterator(m_children, m_children.begin()); }
+    iterator end() { return iterator(m_children, m_children.end()); }
+    virtual void foreach(function<void(shared_ptr<Widget>&)> f) override
+    {
+        for (auto& child : *this)
+            f(child);
+    }
+
 protected:
     vector<shared_ptr<Widget>> m_children;
 };
@@ -520,33 +479,34 @@ protected:
     void init_track_info();
     bool m_track_info_dirty = false;
 
-private:
-    typedef Container::iterator I;
-
-    class iter_impl_grid : public iter_impl
+protected:
+    class iterator
     {
-    private:
-        typedef vector<child_info> C;
     public:
-        explicit iter_impl_grid (C& _c, C::iterator _it) : c(_c), it(_it) {};
-    protected:
-        virtual void operator++() override { ++it; };
-        virtual shared_ptr<Widget>& operator*() override { return it->widget; };
-        virtual iter_impl_grid* clone() const override {
-            return new iter_impl_grid(c, it);
-        };
-        virtual bool equal (iter_impl &_other) const override {
-            iter_impl_grid &other = static_cast<iter_impl_grid&>(_other);
-            return c == other.c && it == other.it;
-        };
+        typedef shared_ptr<Widget> value_type;
+        typedef ptrdiff_t distance;
+        typedef shared_ptr<Widget>* pointer;
+        typedef shared_ptr<Widget>& reference;
+        typedef input_iterator_tag iterator_category;
 
-        C& c;
-        C::iterator it;
+        vector<child_info>& c;
+        vector<child_info>::iterator it;
+
+        iterator(vector<child_info>& _c, vector<child_info>::iterator _it) : c(_c), it(_it) {};
+        void operator++ () { ++it; };
+        value_type& operator* () { return it->widget; };
+        bool operator== (const iterator& other) { return c == other.c && it == other.it; }
+        bool operator!= (const iterator& other) { return !(*this == other); }
     };
 
 public:
-    virtual I begin() override { return I(new iter_impl_grid(m_child_info, m_child_info.begin())); }
-    virtual I end() override { return I(new iter_impl_grid(m_child_info, m_child_info.end())); }
+    iterator begin() { return iterator(m_child_info, m_child_info.begin()); }
+    iterator end() { return iterator(m_child_info, m_child_info.end()); }
+    virtual void foreach(function<void(shared_ptr<Widget>&)> f) override
+    {
+        for (auto& child : *this)
+            f(child);
+    }
 };
 
 class Scroller : public Bin

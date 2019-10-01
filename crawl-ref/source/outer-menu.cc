@@ -74,8 +74,11 @@ void MenuButton::recolour_descendants(const shared_ptr<Widget>& node)
     }
     auto container = dynamic_pointer_cast<Container>(node);
     if (container)
-        for (auto it = container->begin(); it != container->end(); ++it)
-            recolour_descendants(*it);
+    {
+        container->foreach([this](shared_ptr<Widget>& child) {
+                recolour_descendants(child);
+            });
+    }
 }
 #endif
 
