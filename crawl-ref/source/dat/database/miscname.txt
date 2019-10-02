@@ -19,6 +19,10 @@ dull
 
 faint
 
+gleaming
+
+luminous
+
 mottled
 
 pale
@@ -112,9 +116,19 @@ glowing_colour_name
 # random uselessness: "You smell XXX."
 smell_name
 
+a campfire
+
+a dewy forest on a spring morning
+
 baking bread
 
+bat guano
+
 burning hair
+
+cherry blossoms
+
+clean mountain air
 
 coffee
 
@@ -122,9 +136,27 @@ dragon dung
 
 fire and brimstone
 
+halfling feet
+
+honeysuckles
+
+lavender
+
+leather and polished metal
+
+meat roasting over an open fire
+
 mustard
 
 pepper
+
+pipe weed
+
+roast spriggan
+
+rotten fruit
+
+rotten potatoes
 
 salt
 
@@ -132,11 +164,17 @@ something weird
 
 sulphur
 
+sweaty leather boots
+
 tea
 
-the scent of fear
+the stench of fear
+
+wet warg
 
 wet wool
+
+wet yak
 %%%%
 # This doesn't necessarily have to make sense. For example, a name of a
 # fruit or an insect will work here.
@@ -144,23 +182,45 @@ _roaring_animal_name_
 
 albino dragon
 
+centaur
+
+dwarf
+
 dragon
 
 eggplant
 
 frog
 
+gnoll
+
+grizzly bear
+
 human
+
+komodo dragon
+
+kobold
 
 millipede
 
+ogre
+
+orc
+
 pill bug
 
+polar bear
+
 slug
+
+troll
 
 wumpus
 
 yak
+
+yaktaur
 %%%%
 # random uselessness: "You hear XXX."
 sound_name
@@ -177,19 +237,23 @@ a very strange noise indeed
 
 a voice calling someone else's name
 
+a witch cackle
+
 roaring flames
 
 snatches of song
 
-the distant roaring of an enraged @_roaring_animal_name_@
 
 the chiming of a distant gong
+
+the distant roaring of an enraged @_roaring_animal_name_@
+
+the ringing of an enormous bell
 
 the sound of one hand clapping
 
 the tinkle of a tiny bell
 
-the ringing of an enormous bell
 
 whispers in an ancient language
 
