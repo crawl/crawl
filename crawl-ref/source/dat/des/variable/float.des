@@ -3924,7 +3924,7 @@ ENDMAP
 
 NAME: cheibrodos_wizards_tower
 TAGS: no_item_gen no_monster_gen no_pool_fixup
-DEPTH: D:7-12, Elf
+DEPTH: D:12-15, Elf
 ORIENT: float
 : if you.branch() == "Elf" then
 MONS: deep elf sorcerer / deep elf annihilator
