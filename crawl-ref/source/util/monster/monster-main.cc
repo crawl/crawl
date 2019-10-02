@@ -346,7 +346,7 @@ static string mons_human_readable_spell_damage_string(monster* monster,
                                                       spell_type sp)
 {
     bolt spell_beam = mons_spell_beam(
-        monster, sp, mons_power_for_hd(sp, monster->spell_hd(sp), false), true);
+        monster, sp, mons_power_for_hd(sp, monster->spell_hd(sp)), true);
     switch (sp)
     {
         case SPELL_PORTAL_PROJECTILE:

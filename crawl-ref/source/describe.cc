@@ -2911,7 +2911,7 @@ string get_skill_description(skill_type skill, bool need_title)
 static int _hex_pow(const spell_type spell, const int hd)
 {
     const int cap = 200;
-    const int pow = mons_power_for_hd(spell, hd, false) / ENCH_POW_FACTOR;
+    const int pow = mons_power_for_hd(spell, hd) / ENCH_POW_FACTOR;
     return min(cap, pow);
 }
 

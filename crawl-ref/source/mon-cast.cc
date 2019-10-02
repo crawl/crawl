@@ -1048,16 +1048,13 @@ static bool _set_hex_target(monster* caster, bolt& pbolt)
  * What value do monsters multiply their hd with to get spellpower, for the
  * given spell?
  *
- * XXX: everything except SPELL_CONFUSION_GAZE could be trivially exported to
- * data.
+ * XXX: everything could be trivially exported to data.
  *
  * @param spell     The spell in question.
- * @param random    Whether to randomize powers for weird spells.
- *                  If false, the average value is used.
  * @return          A multiplier to HD for spellpower.
  *                  Value may exceed 200.
  */
-static int _mons_power_hd_factor(spell_type spell, bool random)
+static int _mons_power_hd_factor(spell_type spell)
 {
     const mons_spell_logic* logic = map_find(spell_to_logic, spell);
     if (logic && logic->power_hd_factor)
@@ -1066,9 +1063,7 @@ static int _mons_power_hd_factor(spell_type spell, bool random)
     switch (spell)
     {
         case SPELL_CONFUSION_GAZE:
-            if (random)
-                return 5 * (2 + random2(3)) * ENCH_POW_FACTOR;
-            return 5 * (2 + 1) * ENCH_POW_FACTOR;
+            return 8 * ENCH_POW_FACTOR;
 
         case SPELL_CAUSE_FEAR:
             return 18 * ENCH_POW_FACTOR;
@@ -1116,13 +1111,11 @@ static int _mons_power_hd_factor(spell_type spell, bool random)
  *
  * @param spell     The spell in question.
  * @param hd        The spell_hd of the given monster.
- * @param random    Whether to randomize powers for weird spells.
- *                  If false, the average value is used.
  * @return          A spellpower value for the spell.
  */
-int mons_power_for_hd(spell_type spell, int hd, bool random)
+int mons_power_for_hd(spell_type spell, int hd)
 {
-    const int power = hd * _mons_power_hd_factor(spell, random);
+    const int power = hd * _mons_power_hd_factor(spell);
     if (spell == SPELL_PAIN)
         return max(50 * ENCH_POW_FACTOR, power);
     return power;

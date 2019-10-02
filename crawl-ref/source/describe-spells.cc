@@ -469,7 +469,7 @@ vector<pair<spell_type,char>> map_chars_to_spells(const spellset &spells,
 static string _range_string(const spell_type &spell, const monster_info *mon_owner, int hd)
 {
     auto flags = get_spell_flags(spell);
-    int pow = mons_power_for_hd(spell, hd, false);
+    int pow = mons_power_for_hd(spell, hd);
     int range = spell_range(spell, pow, false);
     const bool has_range = mon_owner
                         && range > 0
