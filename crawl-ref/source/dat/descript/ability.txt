@@ -488,18 +488,26 @@ be damaged by sharp thorns. Invocations skill increases the briars' health.
 %%%%
 Grow Ballistomycete ability
 
-Grow a short-lived Ballistomycete at the location you choose. A Ballistomycete
+Grow a short-lived ballistomycete at the location you choose. A Ballistomycete
 occasionally release spores that quickly seek out foes and violently explode,
 damaging and confusing all living things caught in the blast.
+
+Invocations skill increases the health and duration of the ballistomycete as
+well as the damage of its exploding spores.
 %%%%
 Overgrow ability
 
-Permanently destroy wall-like structures, growing a short-lived plant ally in
-its place. Even a tree will give its life to support the will of Fedhas.
+Permanently destroy a wall-like structure, growing a short-lived plant ally in
+its place. Even a tree will give its life to support the will of Fedhas, and
+only truly indestructible walls are immune to this power.
 %%%%
 Grow Oklob ability
 
-Grow a short-lived oklob plant at the location you choose. These dangerous plants spray corrosive vitriol at your foes.
+Grow a short-lived oklob plant at the location you choose. These dangerous
+plants spray corrosive vitriol at your foes.
+
+Invocations skill increases the health and duration of the oklob as well as the
+frequency with which it sprays its acid.
 %%%%
 # Cheibriados
 Bend Time ability
