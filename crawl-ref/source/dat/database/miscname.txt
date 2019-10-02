@@ -343,6 +343,30 @@ Will you be the one to retrieve the @_great_adj_@ Orb of Zot from the depths?
 
 It is said that the Orb of Zot exists deep within this dungeon.
 %%%%
+# things that surround us on Halloween
+_halloween_things_
+
+demonic hallucinations
+
+disembodied spirits
+
+ghosts and spectres
+
+grim specetres
+
+horrible apparitions
+%%%%
+# things you don't want a witch to turn you into
+_lowly_
+
+newt
+
+slug
+
+toad
+
+worm
+%%%%
 welcome_spam Halloween
 
 @welcome_spam@ Be careful! Halloween tonight.
@@ -351,9 +375,9 @@ The monsters here aren't big trick-or-treat fans. If they won't give you the Orb
 
 A terrible geas has sent you after the Orb of Zot. What a horrible night to have a curse!
 
-As you descend in search of the Orb, ghosts and spectres flock about you. This place is haunted!
+As you descend in search of the Orb, @_halloween_things_@ flock about you. This place is haunted!
 
-You hear a witch cackle, and suddenly arrive in the dungeon. If you don't find the Orb of Zot, you'll turn into a toad!
+You hear a witch cackle, and suddenly arrive in the dungeon. If you don't find the Orb of Zot, you'll turn into a @_lowly_@!
 %%%%
 hell_effect_quiet
 
