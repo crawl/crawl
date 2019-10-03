@@ -1042,8 +1042,8 @@ shared_ptr<Widget> Switcher::get_child_at_offset(int x, int y)
 
     int c = max(0, min(m_current, (int)m_children.size()));
     const auto region = m_children[c]->get_region();
-    bool inside = (x > region[0] && x < region[0] + region[2])
-        && (y > region[1] && y < region[1] + region[3]);
+    bool inside = (x >= region[0] && x < region[0] + region[2])
+        && (y >= region[1] && y < region[1] + region[3]);
     return inside ? m_children[c] : nullptr;
 }
 
