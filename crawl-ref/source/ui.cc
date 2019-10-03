@@ -104,7 +104,9 @@ public:
     void send_mouse_enter_leave_events(int mx, int my);
 
     bool needs_paint;
+#ifdef DEBUG
     bool debug_draw = false;
+#endif
     vector<KeymapContext> keymap_stack;
     vector<int> cutoff_stack;
     vector<Widget*> focus_stack;
@@ -1769,6 +1771,7 @@ void UIRoot::render()
     ASSERT(cutoff <= static_cast<int>(m_root.num_children()));
     for (int i = cutoff; i < static_cast<int>(m_root.num_children()); i++)
         m_root.get_child(i)->render();
+#ifdef DEBUG
     if (debug_draw)
     {
         LineBuffer lb;
@@ -1802,6 +1805,7 @@ void UIRoot::render()
         lb.draw();
         sb.draw();
     }
+#endif
 #else
     // Render only the top of the UI stack on console
     if (m_root.num_children() > 0)
@@ -1883,6 +1887,7 @@ bool UIRoot::on_event(const wm_event& event)
     if (event_filter && event_filter(event))
         return true;
 
+#ifdef DEBUG
     if (event.type == WME_KEYDOWN && event.key.keysym.sym == CK_INSERT)
     {
         ui_root.debug_draw = !ui_root.debug_draw;
@@ -1890,17 +1895,20 @@ bool UIRoot::on_event(const wm_event& event)
         ui_root.expose_region({0,0,INT_MAX,INT_MAX});
         return true;
     }
+#endif
 
     switch (event.type)
     {
         case WME_MOUSEBUTTONDOWN:
         case WME_MOUSEBUTTONUP:
         case WME_MOUSEMOTION:
+#ifdef DEBUG
             if (ui_root.debug_draw)
             {
                 ui_root.queue_layout();
                 ui_root.expose_region({0,0,INT_MAX,INT_MAX});
             }
+#endif
         case WME_MOUSEWHEEL:
             for (auto w = prev_hover_path.rbegin(); w != prev_hover_path.rend(); ++w)
                 if ((*w)->on_event(event))
