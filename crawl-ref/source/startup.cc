@@ -537,12 +537,14 @@ public:
         m_root->_set_parent(this);
         m_root->align_items = Widget::Align::STRETCH;
 
-        formatted_string about = opening_screen();
+        auto about = make_shared<Text>(opening_screen());
+        about->set_margin_for_crt({0, 0, 1, 0});
+        about->set_margin_for_sdl({0, 0, 10, 0});
 
-        m_root->add_child(make_shared<Text>(about));
+        m_root->add_child(move(about));
 
         auto grid = make_shared<Grid>();
-        grid->set_margin_for_crt({1, 0, 1, 0});
+        grid->set_margin_for_crt({0, 0, 1, 0});
 
         // If the game filled in a complete name, the user will
         // usually want to enter a new name instead of adding
@@ -553,9 +555,7 @@ public:
 
         auto name_prompt = make_shared<Text>("Enter your name:");
         name_prompt->set_margin_for_crt({0, 1, 1, 0});
-#ifdef USE_TILE_LOCAL
-        name_prompt->min_size() = { 0, TILE_Y + 2 };
-#endif
+        name_prompt->set_margin_for_sdl({0, 0, 10, 0});
         input_text->set_margin_for_sdl({0, 0, 10, 10});
         grid->add_child(move(name_prompt), 0, 0);
         grid->add_child(input_text, 1, 0);
@@ -564,9 +564,7 @@ public:
 
         auto mode_prompt = make_shared<Text>("Choices:");
         mode_prompt->set_margin_for_crt({0, 1, 1, 0});
-#ifdef USE_TILE_LOCAL
-        mode_prompt->min_size() = { 0, TILE_Y + 2 };
-#endif
+        mode_prompt->set_margin_for_sdl({0, 0, 10, 0});
         game_modes_menu = make_shared<OuterMenu>(true, 1, ARRAYSZ(entries));
         game_modes_menu->set_margin_for_sdl({0, 0, 10, 10});
         game_modes_menu->set_margin_for_crt({0, 0, 1, 0});
@@ -587,6 +585,7 @@ public:
         {
             auto save_prompt = make_shared<Text>("Saved games:");
             save_prompt->set_margin_for_crt({0, 1, 1, 0});
+            save_prompt->set_margin_for_sdl({0, 0, 10, 0});
             save_games_menu->set_margin_for_sdl({0, 0, 10, 10});
 #ifdef USE_TILE_LOCAL
             save_prompt->min_size() = { 0, TILE_Y + 2 };
