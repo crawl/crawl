@@ -546,17 +546,17 @@ public:
         auto grid = make_shared<Grid>();
         grid->set_margin_for_crt({0, 0, 1, 0});
 
-        // If the game filled in a complete name, the user will
-        // usually want to enter a new name instead of adding
-        // to the current one.
-        input_text = make_shared<Text>();
-        input_text->set_text(formatted_string(input_string, WHITE));
-        input_text->set_margin_for_crt({0, 0, 1, 0});
-
         auto name_prompt = make_shared<Text>("Enter your name:");
         name_prompt->set_margin_for_crt({0, 1, 1, 0});
         name_prompt->set_margin_for_sdl({0, 0, 10, 0});
+
+        // If the game filled in a complete name, the user will
+        // usually want to enter a new name instead of adding
+        // to the current one.
+        input_text = make_shared<Text>(formatted_string(input_string, WHITE));
+        input_text->set_margin_for_crt({0, 0, 1, 0});
         input_text->set_margin_for_sdl({0, 0, 10, 10});
+
         grid->add_child(move(name_prompt), 0, 0);
         grid->add_child(input_text, 1, 0);
 
