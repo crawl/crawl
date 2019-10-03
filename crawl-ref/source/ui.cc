@@ -1772,6 +1772,7 @@ void UIRoot::render()
     if (debug_draw)
     {
         LineBuffer lb;
+        ShapeBuffer sb;
         size_t i = 0;
         for (const auto& w : prev_hover_path)
         {
@@ -1782,11 +1783,24 @@ void UIRoot::render()
                 VColour(255, 100, 0, 100) : VColour(0, 50 + i*40, 0, 100);
             lb.add_square(r[0]+1, r[1]+1, r[0]+r[2], r[1]+r[3], lc);
         }
+        if (!prev_hover_path.empty())
+        {
+            const auto& hovered_widget = prev_hover_path.back();
+            i4 r = hovered_widget->get_region();
+            i4 m = hovered_widget->margin;
+
+            VColour lc = VColour(0, 0, 100, 100);
+            sb.add(r[0], r[1]-m[0], r[0]+r[2], r[1], lc);
+            sb.add(r[0]+r[2], r[1], r[0]+r[2]+m[1], r[1]+r[3], lc);
+            sb.add(r[0], r[1]+r[3], r[0]+r[2], r[1]+r[3]+m[2], lc);
+            sb.add(r[0]-m[3], r[1], r[0], r[1]+r[3], lc);
+        }
         if (auto w = get_focused_widget()) {
             i4 r = w->get_region();
             lb.add_square(r[0]+1, r[1]+1, r[0]+r[2], r[1]+r[3], VColour(128,31,239,255));
         }
         lb.draw();
+        sb.draw();
     }
 #else
     // Render only the top of the UI stack on console
