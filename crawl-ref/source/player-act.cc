@@ -169,10 +169,8 @@ bool player::can_pass_through_feat(dungeon_feature_type grid) const
 
 bool player::is_habitable_feat(dungeon_feature_type actual_grid) const
 {
-    if (!can_pass_through_feat(actual_grid))
-        return false;
-
-    return !is_feat_dangerous(actual_grid);
+    return can_pass_through_feat(actual_grid)
+           && !is_feat_dangerous(actual_grid);
 }
 
 size_type player::body_size(size_part_type psize, bool base) const
