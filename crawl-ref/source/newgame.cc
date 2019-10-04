@@ -1114,6 +1114,77 @@ public:
         m_sub_items->menu_id = m_choice_type == C_JOB ?
             "background-sub" : "species-sub";
         m_sub_items->descriptions = descriptions;
+        
+        auto stat = make_shared<Box>(Box::HORZ);
+        
+        auto attributes = make_shared<Box>(Box::HORZ);
+        auto attributes_str = make_shared<Text>(formatted_string("Base:", LIGHTBLUE));
+        attributes_str->margin = {0, 1, 0, 0};
+        attributes->add_child(attributes_str);
+        auto strength = make_shared<Box>(Box::HORZ);
+        strength->margin = {0, 1, 0, 0};
+        auto strength_str = make_shared<Text>(formatted_string("Str:", WHITE));
+        strength_str->margin = {0, 1, 0, 0};
+        strength->add_child(strength_str);
+        auto strength_num = make_shared<Text>("10");
+        strength->add_child(strength_num);
+        attributes->add_child(strength);
+        auto intelligence = make_shared<Box>(Box::HORZ);
+        intelligence->margin = {0, 1, 0, 0};
+        auto intelligence_str = make_shared<Text>(formatted_string("Int:", WHITE));
+        intelligence_str->margin = {0, 1, 0, 0};
+        intelligence->add_child(intelligence_str);
+        auto intelligence_num = make_shared<Text>("10");
+        intelligence->add_child(intelligence_num);
+        attributes->add_child(intelligence);
+        auto dexterity = make_shared<Box>(Box::HORZ);
+        dexterity->margin = {0, 1, 0, 0};
+        auto dexterity_str = make_shared<Text>(formatted_string("Dex:", WHITE));
+        dexterity_str->margin = {0, 1, 0, 0};
+        dexterity->add_child(dexterity_str);
+        auto dexterity_num = make_shared<Text>("10");
+        dexterity->add_child(dexterity_num);
+        attributes->add_child(dexterity);
+        stat->add_child(attributes);
+
+        auto xp = make_shared<Box>(Box::HORZ);
+        xp->margin = {0, 1, 0, 0};
+        auto xp_str = make_shared<Text>(formatted_string("XP apt:", LIGHTBLUE));
+        xp_str->margin = {0, 1, 0, 0};
+        xp->add_child(xp_str);
+        auto xp_num = make_shared<Text>("+1");
+        xp->add_child(xp_num);
+        stat->add_child(xp);
+
+        auto hp = make_shared<Box>(Box::HORZ);
+        hp->margin = {0, 1, 0, 0};
+        auto hp_str = make_shared<Text>(formatted_string("HP:", LIGHTBLUE));
+        hp_str->margin = {0, 1, 0, 0};
+        hp->add_child(hp_str);
+        auto hp_num = make_shared<Text>("+10%");
+        hp->add_child(hp_num);
+        stat->add_child(hp);
+
+        auto mp = make_shared<Box>(Box::HORZ);
+        mp->margin = {0, 1, 0, 0};
+        auto mp_str = make_shared<Text>(formatted_string("MP:", LIGHTBLUE));
+        mp_str->margin = {0, 1, 0, 0};
+        mp->add_child(mp_str);
+        auto mp_num = make_shared<Text>("+2");
+        mp->add_child(mp_num);
+        stat->add_child(mp);
+
+        auto mr = make_shared<Box>(Box::HORZ);
+        mr->margin = {0, 1, 0, 0};
+        auto mr_str = make_shared<Text>(formatted_string("MR (/XL):", LIGHTBLUE));
+        mr_str->margin = {0, 1, 0, 0};
+        mr->add_child(mr_str);
+        auto mr_num = make_shared<Text>("3");
+        mr->add_child(mr_num);
+        stat->add_child(mr);
+
+        m_vbox->add_child(stat);
+
         m_vbox->add_child(m_sub_items);
         _add_choice_menu_options(m_choice_type, m_ng, m_defaults);
 
