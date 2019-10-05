@@ -639,8 +639,6 @@ VISUAL:@The_monster@ ponders the situation.
 @The_monster@ says, "Why is everything spinning?"
 
 @The_monster@ screams, "I'll kill you anyway!"
-
-VISUAL:@The_monster@ covers @possessive@ eyes.
 %%%%
 _confused_humanoid_rare_
 
