@@ -134,7 +134,12 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
             var $feat = $feat_tmpl.clone().removeClass("hidden").addClass("describe-feature-feat");
             $feat.find(".header > span").html(feat.title);
             if (feat.body != feat.title)
-                $feat.find(".body").html(feat.body);
+            {
+                var text = feat.body;
+                if (feat.quote)
+                     text += "\n\n" + feat.quote;
+                $feat.find(".body").html(text);
+            }
             else
                 $feat.find(".body").remove();
 

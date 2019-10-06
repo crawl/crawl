@@ -2261,7 +2261,7 @@ void get_feature_desc(const coord_def &pos, describe_info &inf, bool include_ext
 void describe_feature_wide(const coord_def& pos)
 {
     typedef struct {
-        string title, body;
+        string title, body, quote;
         tile_def tile;
     } feat_info;
 
@@ -2270,7 +2270,7 @@ void describe_feature_wide(const coord_def& pos)
     {
         describe_info inf;
         get_feature_desc(pos, inf, false);
-        feat_info f = { "", "", tile_def(TILEG_TODO, TEX_GUI)};
+        feat_info f = { "", "", "", tile_def(TILEG_TODO, TEX_GUI)};
         f.title = inf.title;
         f.body = trimmed_string(inf.body.str());
 #ifdef USE_TILE
@@ -2278,12 +2278,13 @@ void describe_feature_wide(const coord_def& pos)
         apply_variations(env.tile_flv(pos), &tile, pos);
         f.tile = tile_def(tile, get_dngn_tex(tile));
 #endif
+        f.quote = trimmed_string(inf.quote);
         feats.emplace_back(f);
     }
     auto extra_descs = _get_feature_extra_descs(pos);
     for (const auto &desc : extra_descs)
     {
-        feat_info f = { "", "", tile_def(TILEG_TODO, TEX_GUI)};
+        feat_info f = { "", "", "", tile_def(TILEG_TODO, TEX_GUI)};
         f.title = desc.first;
         f.body = trimmed_string(desc.second);
 #ifdef USE_TILE
@@ -2303,7 +2304,7 @@ void describe_feature_wide(const coord_def& pos)
         string hint_text = trimmed_string(hints_describe_pos(pos.x, pos.y));
         if (!hint_text.empty())
         {
-            feat_info f = { "", "", tile_def(TILEG_TODO, TEX_GUI)};
+            feat_info f = { "", "", "", tile_def(TILEG_TODO, TEX_GUI)};
             f.title = "Hints.";
             f.body = hint_text;
             f.tile = tile_def(TILEG_STARTUP_HINTS, TEX_GUI);
@@ -2328,7 +2329,8 @@ void describe_feature_wide(const coord_def& pos)
         title_hbox->add_child(move(title));
         title_hbox->align_items = Widget::CENTER;
 
-        bool has_desc = feat.body != feat.title && feat.body != "";
+        const bool has_desc = feat.body != feat.title && feat.body != "";
+
         if (has_desc || &feat != &feats.back())
         {
             title_hbox->set_margin_for_crt({0, 0, 1, 0});
@@ -2338,9 +2340,18 @@ void describe_feature_wide(const coord_def& pos)
 
         if (has_desc)
         {
-            auto text = make_shared<Text>(formatted_string::parse_string(feat.body));
+            formatted_string desc_text = formatted_string::parse_string(feat.body);
+            if (!feat.quote.empty())
+            {
+                desc_text.cprintf("\n\n");
+                desc_text += formatted_string::parse_string(feat.quote);
+            }
+            auto text = make_shared<Text>(desc_text);
             if (&feat != &feats.back())
+            {
                 text->set_margin_for_sdl({0, 0, 20, 0});
+                text->set_margin_for_crt({0, 0, 1, 0});
+            }
             text->wrap_text = true;
             vbox->add_child(text);
         }
@@ -2367,7 +2378,8 @@ void describe_feature_wide(const coord_def& pos)
     {
         tiles.json_open_object();
         tiles.json_write_string("title", feat.title);
-        tiles.json_write_string("body", feat.body);
+        tiles.json_write_string("body", trimmed_string(feat.body));
+        tiles.json_write_string("quote", trimmed_string(feat.quote));
         tiles.json_open_object("tile");
         tiles.json_write_int("t", feat.tile.tile);
         tiles.json_write_int("tex", feat.tile.tex);
