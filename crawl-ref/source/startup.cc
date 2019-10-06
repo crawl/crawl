@@ -783,7 +783,8 @@ void UIStartupMenu::on_show()
     layout->add_event_filter([this](wm_event ev) {
         if (ev.type != WME_KEYDOWN)
             return false;
-        int keyn = ev.key.keysym.sym;
+        const int keyn = ev.key.keysym.sym;
+        bool changed_name = false;
 
         if (key_is_escape(keyn) || keyn == CK_MOUSE_CMD)
         {
@@ -805,10 +806,14 @@ void UIStartupMenu::on_show()
             replay_messages_during_startup();
             return true;
         }
+        else if (keyn == CONTROL('U'))
+        {
+            input_string = "";
+            changed_name = true;
+        }
 
         // handle the non-action keys by hand to poll input
         // Only consider alphanumeric keys and -_ .
-        bool changed_name = false;
         if (iswalnum(keyn) || keyn == '-' || keyn == '.'
             || keyn == '_' || keyn == ' ')
         {
@@ -826,7 +831,8 @@ void UIStartupMenu::on_show()
                 changed_name = true;
             }
         }
-        else
+
+        if (!changed_name)
             return false;
 
         input_text->set_text(formatted_string(input_string, WHITE));
@@ -836,13 +842,10 @@ void UIStartupMenu::on_show()
         // We want enter to start a new game if no character
         // with the given name exists, or load the corresponding
         // game.
-        if (changed_name)
-        {
-            int i = _find_save(chars, input_string);
-            auto menu = i == -1 ? game_modes_menu : save_games_menu;
-            auto btn = menu->get_button(0, i == -1 ? 0 : i);
-            menu->scroll_button_into_view(btn);
-        }
+        int i = _find_save(chars, input_string);
+        auto menu = i == -1 ? game_modes_menu : save_games_menu;
+        auto btn = menu->get_button(0, i == -1 ? 0 : i);
+        menu->scroll_button_into_view(btn);
         return true;
     });
 }
