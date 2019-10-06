@@ -400,8 +400,12 @@ static void _pack_default_waves(const coord_def &gc, crawl_view_buffer& vbuf)
         // +7 and -- reverse the iteration order
         int tile = _base_wave_tile(colour) + 7;
         for (adjacent_iterator ai(gc); ai; ++ai, --tile)
+        {
+            if (ai->x < 0 || ai->x >= vbuf.size().x || ai->y < 0 || ai->y >= vbuf.size().y)
+                continue;
             if (_is_seen_shallow(*ai, vbuf))
                 _add_overlay(tile, cell);
+        }
     }
 
     bool north = _is_seen_land(coord_def(gc.x, gc.y - 1), vbuf);
