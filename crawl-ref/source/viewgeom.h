@@ -30,6 +30,7 @@ public:
     template<class Indexer>
     screen_cell_t& operator () (const Indexer &i)
     {
+        ASSERT(i.x >= 0 && i.y >= 0 && i.x < m_size.x && i.y < m_size.y);
         return m_buffer[i.y*m_size.x + i.x];
     }
 
