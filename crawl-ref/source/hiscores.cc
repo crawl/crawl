@@ -423,8 +423,17 @@ UIHiscoresMenu::UIHiscoresMenu()
     _construct_hiscore_table();
 
     m_root->add_child(move(title));
-    m_root->add_child(m_description);
-    m_root->add_child(m_score_entries);
+    if (initial_focus)
+    {
+        m_root->add_child(m_description);
+        m_root->add_child(m_score_entries);
+    }
+    else
+    {
+        auto placeholder = formatted_string("No high sscores yet...", DARKGRAY);
+        m_root->add_child(make_shared<Text>(placeholder));
+        initial_focus = this;
+    }
 }
 
 void UIHiscoresMenu::_construct_hiscore_table()
