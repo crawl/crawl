@@ -1587,7 +1587,7 @@ static void _prompt_choice(int choice_type, newgame_def& ng, newgame_def& ng_cho
 
     ui::push_layout(move(popup));
     ui::set_focused_widget(newgame_ui.get());
-    while (!newgame_ui->done)
+    while (!newgame_ui->done && !crawl_state.seen_hups)
         ui::pump_events();
     ui::pop_layout();
 

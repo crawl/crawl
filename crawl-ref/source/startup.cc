@@ -922,7 +922,7 @@ static void _show_startup_menu(newgame_def& ng_choice,
 
     ui::run_layout(move(popup), startup_ui->done);
 
-    if (startup_ui->end_game)
+    if (startup_ui->end_game || crawl_state.seen_hups)
     {
 #ifdef USE_TILE_WEB
         tiles.send_exit_reason("cancel");
