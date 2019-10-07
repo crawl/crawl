@@ -80,17 +80,6 @@
 #include "view.h"
 #include "xom.h"
 
-class interrupt_block
-{
-public:
-    interrupt_block() { ++interrupts_blocked; }
-    ~interrupt_block() { --interrupts_blocked; }
-
-    static bool blocked() { return interrupts_blocked > 0; }
-private:
-    static int interrupts_blocked;
-};
-
 int interrupt_block::interrupts_blocked = 0;
 
 static void _xom_check_corpse_waste();

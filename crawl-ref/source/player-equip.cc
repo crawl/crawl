@@ -162,6 +162,8 @@ void equip_effect(equipment_type slot, int item_slot, bool unmeld, bool msg)
     if (msg)
         _equip_use_warning(item);
 
+    const interrupt_block block_unmeld_interrupts(unmeld);
+
     if (slot == EQ_WEAPON)
         _equip_weapon_effect(item, msg, unmeld);
     else if (slot >= EQ_CLOAK && slot <= EQ_BODY_ARMOUR)
@@ -179,6 +181,8 @@ void unequip_effect(equipment_type slot, int item_slot, bool meld, bool msg)
         return;
 
     _assert_valid_slot(eq, slot);
+
+    const interrupt_block block_meld_interrupts(meld);
 
     if (slot == EQ_WEAPON)
         _unequip_weapon_effect(item, msg, meld);
