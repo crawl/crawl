@@ -203,6 +203,7 @@ sleep SLEEP
 spectral_cloud SPECTRAL_CLOUD
 spit_acid SPIT_ACID
 spit_poison SPIT_POISON
+sprint SPRINT
 steam_ball STEAM_BALL
 sticky_flame_range STICKY_FLAME_RANGE
 summon_drakes SUMMON_DRAKES

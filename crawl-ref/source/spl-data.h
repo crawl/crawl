@@ -3820,7 +3820,7 @@ static const struct spell_desc spelldata[] =
     100,
     -1, -1,
     2, 0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_SPRINT,
 },
 
 {
