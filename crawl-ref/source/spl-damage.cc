@@ -1457,7 +1457,13 @@ static int _ignite_poison_monsters(coord_def where, int pow, actor *agent)
             return mons_aligned(mon, agent) ? -1 : 1;
         return mons_aligned(mon, agent) ? -1 * damage : damage;
     }
-    simple_monster_message(*mon, " seems to burn from within!");
+
+    if (you.see_cell(mon->pos()))
+    {
+        mprf("%s seems to burn from within%s",
+             mon->name(DESC_THE).c_str(),
+             attack_strength_punctuation(damage).c_str());
+    }
 
     dprf("Dice: %dd%d; Damage: %d", dam_dice.num, dam_dice.size, damage);
 
