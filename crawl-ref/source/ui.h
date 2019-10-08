@@ -389,15 +389,31 @@ public:
     virtual SizeReq _get_preferred_size(Direction dim, int prosp_width) override;
     virtual void _allocate_region() override;
 
-    bool wrap_text = false;
-    bool ellipsize = false;
-
 #ifndef USE_TILE_LOCAL
     void set_bg_colour(COLOURS colour);
 #endif
 
+    void set_wrap_text(bool _wrap_text)
+    {
+        if (wrap_text == _wrap_text)
+            return;
+        wrap_text = _wrap_text;
+        _invalidate_sizereq();
+    };
+
+    void set_ellipsize(bool _ellipsize)
+    {
+        if (ellipsize == _ellipsize)
+            return;
+        ellipsize = _ellipsize;
+        _invalidate_sizereq();
+    };
+
 protected:
     void wrap_text_to_size(int width, int height);
+
+    bool wrap_text = false;
+    bool ellipsize = false;
 
     formatted_string m_text;
 #ifdef USE_TILE_LOCAL

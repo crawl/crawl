@@ -417,7 +417,7 @@ static void _describe_cards(CrawlVector& cards)
         vbox->add_child(move(title_hbox));
 
         auto text = make_shared<Text>(desc);
-        text->wrap_text = true;
+        text->set_wrap_text(true);
         vbox->add_child(move(text));
 
 #ifdef USE_TILE_WEB

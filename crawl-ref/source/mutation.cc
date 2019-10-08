@@ -858,7 +858,7 @@ void display_mutations()
         auto scroller = make_shared<Scroller>();
         auto text = make_shared<Text>(formatted_string::parse_string(
                 descs[static_cast<int>(i)]));
-        text->wrap_text = true;
+        text->set_wrap_text(true);
         scroller->set_child(text);
         switcher->add_child(move(scroller));
     }

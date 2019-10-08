@@ -145,7 +145,7 @@ int show_description(const describe_info &inf, const tile_def *tile)
         auto scroller = make_shared<Scroller>();
         auto fs = formatted_string::parse_string(trimmed_string(desc));
         auto text = make_shared<Text>(fs);
-        text->wrap_text = true;
+        text->set_wrap_text(true);
         scroller->set_child(text);
         switcher->add_child(move(scroller));
     }
@@ -2351,7 +2351,7 @@ void describe_feature_wide(const coord_def& pos)
                 text->set_margin_for_sdl(0, 0, 20, 0);
                 text->set_margin_for_crt(0, 0, 1, 0);
             }
-            text->wrap_text = true;
+            text->set_wrap_text(true);
             vbox->add_child(text);
         }
     }
@@ -2709,7 +2709,7 @@ bool describe_item(item_def &item, function<void (string&)> fixup_desc)
 
     auto scroller = make_shared<Scroller>();
     auto text = make_shared<Text>(fs_desc.trim());
-    text->wrap_text = true;
+    text->set_wrap_text(true);
     scroller->set_child(text);
     vbox->add_child(scroller);
 
@@ -3198,7 +3198,7 @@ void describe_spell(spell_type spell, const monster_info *mon_owner,
     auto scroller = make_shared<Scroller>();
     auto text = make_shared<Text>();
     text->set_text(formatted_string::parse_string(desc));
-    text->wrap_text = true;
+    text->set_wrap_text(true);
     scroller->set_child(move(text));
     vbox->add_child(scroller);
 
@@ -4590,7 +4590,7 @@ int describe_monsters(const monster_info &mi, bool force_seen,
         const formatted_string *content[2] = { &desc, &quote };
         auto scroller = make_shared<Scroller>();
         auto text = make_shared<Text>(content[i]->trim());
-        text->wrap_text = true;
+        text->set_wrap_text(true);
         scroller->set_child(text);
         desc_sw->add_child(move(scroller));
 

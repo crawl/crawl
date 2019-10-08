@@ -282,7 +282,7 @@ void OuterMenu::add_button(shared_ptr<MenuButton> btn, int x, int y)
     if (descriptions)
     {
         auto desc_text = make_shared<Text>(formatted_string(btn->description, WHITE));
-        desc_text->wrap_text = true;
+        desc_text->set_wrap_text(true);
         descriptions->add_child(move(desc_text));
         m_description_indexes[y*m_width + x] = descriptions->num_children()-1;
     }

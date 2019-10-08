@@ -1151,7 +1151,7 @@ static void build_partial_god_ui(god_type which_god, shared_ptr<ui::Popup>& popu
 
         auto scroller = make_shared<Scroller>();
         auto text = make_shared<Text>(desc.trim());
-        text->wrap_text = true;
+        text->set_wrap_text(true);
         scroller->set_child(text);
         desc_sw->add_child(move(scroller));
 

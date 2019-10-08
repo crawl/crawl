@@ -97,7 +97,7 @@ int formatted_scroller::show()
     formatted_string c = formatted_string::parse_string(contents.to_colour_string());
     text->set_text(c);
     text->set_highlight_pattern(highlight, true);
-    text->wrap_text = !(m_flags & FS_PREWRAPPED_TEXT);
+    text->set_wrap_text(!(m_flags & FS_PREWRAPPED_TEXT));
     m_scroller->set_child(text);
     vbox->add_child(m_scroller);
 

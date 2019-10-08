@@ -416,7 +416,7 @@ void hints_starting_screen()
     trim_string(text);
 
     auto prompt_ui = make_shared<Text>(formatted_string::parse_string(text));
-    prompt_ui->wrap_text = true;
+    prompt_ui->set_wrap_text(true);
 #ifdef USE_TILE_LOCAL
     prompt_ui->max_size().width = 800;
 #else

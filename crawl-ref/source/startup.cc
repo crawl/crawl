@@ -471,7 +471,7 @@ static void _construct_save_games_menu(shared_ptr<OuterMenu>& container,
         auto text = chars.at(i).short_desc();
         bool wiz = strip_suffix(text, " (WIZ)");
         auto label = make_shared<Text>(formatted_string(text, fg));
-        label->ellipsize = true;
+        label->set_ellipsize(true);
 #ifdef USE_TILE_LOCAL
         label->max_size().height = tiles.get_crt_font()->char_height();
 #else
