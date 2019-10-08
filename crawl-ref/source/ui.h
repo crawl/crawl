@@ -11,15 +11,15 @@
 #include "format.h"
 #include "KeymapContext.h"
 #include "state.h"
-#include "tilefont.h"
 #include "tiledef-gui.h"
+#include "tilefont.h"
 #include "unwind.h"
 #include "windowmanager.h"
 #ifdef USE_TILE_LOCAL
-# include "tiledoll.h"
-# include "tilesdl.h"
 # include "tilebuf.h"
 # include "tiledgnbuf.h"
+# include "tiledoll.h"
+# include "tilesdl.h"
 #endif
 #ifdef USE_TILE_WEB
 # include "tileweb.h"

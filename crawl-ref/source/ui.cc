@@ -12,22 +12,20 @@
 #include "ui.h"
 #include "cio.h"
 #include "macro.h"
-# include "state.h"
+#include "state.h"
 #include "tileweb.h"
 
 #ifdef USE_TILE_LOCAL
 # include "glwrapper.h"
 # include "tilebuf.h"
-#else
-# include <unistd.h>
-# include "output.h"
-# include "view.h"
-# include "stringutil.h"
-#endif
-#ifdef USE_TILE_LOCAL
 # include "tilepick.h"
 # include "tilepick-p.h"
 # include "tile-player-flag-cut.h"
+#else
+# include <unistd.h>
+# include "output.h"
+# include "stringutil.h"
+# include "view.h"
 #endif
 
 namespace ui {
