@@ -354,7 +354,8 @@ void fill_doll_equipment(dolls_data &result)
         {
             if (is_player_tile(result.parts[TILEP_PART_BASE], TILEP_BASE_OCTOPODE))
                 result.parts[TILEP_PART_HAND1] = TILEP_HAND1_BLADEHAND_OP;
-            else if (is_player_tile(result.parts[TILEP_PART_BASE], TILEP_BASE_FELID))
+            else if (is_player_tile(result.parts[TILEP_PART_BASE], TILEP_BASE_FELID)
+                     || Options.tile_use_monster == MONS_NATASHA)
                 result.parts[TILEP_PART_HAND1] = TILEP_HAND1_BLADEHAND_FE;
             else result.parts[TILEP_PART_HAND1] = TILEP_HAND1_BLADEHAND;
         }
@@ -371,7 +372,8 @@ void fill_doll_equipment(dolls_data &result)
         {
             if (is_player_tile(result.parts[TILEP_PART_BASE], TILEP_BASE_OCTOPODE))
                 result.parts[TILEP_PART_HAND2] = TILEP_HAND1_BLADEHAND_OP;
-            else if (is_player_tile(result.parts[TILEP_PART_BASE], TILEP_BASE_FELID))
+            else if (is_player_tile(result.parts[TILEP_PART_BASE], TILEP_BASE_FELID)
+                     || Options.tile_use_monster == MONS_NATASHA)
                 result.parts[TILEP_PART_HAND2] = TILEP_HAND1_BLADEHAND_FE;
             else result.parts[TILEP_PART_HAND2] = TILEP_HAND1_BLADEHAND;
         }
