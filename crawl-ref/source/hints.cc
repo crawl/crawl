@@ -182,7 +182,7 @@ void pick_hints(newgame_def& choice)
     auto prompt_ui = make_shared<Text>(formatted_string::parse_string(prompt));
 
     auto vbox = make_shared<Box>(Box::VERT);
-    vbox->align_items = Widget::Align::STRETCH;
+    vbox->align_cross = Widget::Align::STRETCH;
     vbox->add_child(prompt_ui);
 
     auto main_items = make_shared<OuterMenu>(true, 1, 3);
@@ -197,7 +197,7 @@ void pick_hints(newgame_def& choice)
 
 #ifdef USE_TILE_LOCAL
         auto hbox = make_shared<Box>(Box::HORZ);
-        hbox->align_items = Widget::Align::CENTER;
+        hbox->align_cross = Widget::Align::CENTER;
         dolls_data doll;
         newgame_def tng = choice;
         _fill_newgame_choice_for_hints(tng, static_cast<hints_types>(i));

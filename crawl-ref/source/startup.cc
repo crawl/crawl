@@ -405,7 +405,7 @@ static void _construct_game_modes_menu(shared_ptr<OuterMenu>& container)
 
 #ifdef USE_TILE_LOCAL
         auto hbox = make_shared<Box>(Box::HORZ);
-        hbox->align_items = Widget::Align::CENTER;
+        hbox->align_cross = Widget::Align::CENTER;
         auto tile = make_shared<Image>();
         tile->set_tile(tile_def(tileidx_gametype(entry.id), TEX_GUI));
         tile->set_margin_for_sdl(0, 6, 0, 0);
@@ -435,7 +435,7 @@ static shared_ptr<MenuButton> _make_newgame_button(shared_ptr<OuterMenu>& contai
 
 #ifdef USE_TILE_LOCAL
     auto hbox = make_shared<Box>(Box::HORZ);
-    hbox->align_items = Widget::Align::CENTER;
+    hbox->align_cross = Widget::Align::CENTER;
     hbox->add_child(label);
     label->set_margin_for_sdl(0,0,0,TILE_Y+6);
     hbox->min_size().height = TILE_Y;
@@ -459,7 +459,7 @@ static void _construct_save_games_menu(shared_ptr<OuterMenu>& container,
     for (unsigned int i = 0; i < chars.size(); ++i)
     {
         auto hbox = make_shared<Box>(Box::HORZ);
-        hbox->align_items = Widget::Align::CENTER;
+        hbox->align_cross = Widget::Align::CENTER;
 
 #ifdef USE_TILE_LOCAL
         auto tile = make_shared<ui::PlayerDoll>(chars.at(i).doll);
@@ -535,7 +535,7 @@ public:
 
         m_root = make_shared<Box>(Box::VERT);
         m_root->_set_parent(this);
-        m_root->align_items = Widget::Align::STRETCH;
+        m_root->align_cross = Widget::Align::STRETCH;
 
         auto about = make_shared<Text>(opening_screen());
         about->set_margin_for_crt(0, 0, 1, 0);

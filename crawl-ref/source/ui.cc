@@ -326,7 +326,7 @@ vector<int> Box::layout_main_axis(vector<SizeReq>& ch_psz, int main_sz)
     {
         ch_sz[i] = ch_psz[i].min;
         extra -= ch_psz[i].min;
-        if (justify_items == Align::STRETCH)
+        if (align_main == Align::STRETCH)
             ch_psz[i].nat = INT_MAX;
     }
     ASSERT(extra >= 0);
@@ -364,7 +364,7 @@ vector<int> Box::layout_cross_axis(vector<SizeReq>& ch_psz, int cross_sz)
         auto const& child = m_children[i];
         // find the child's size on the cross axis
         bool stretch = child->align_self == STRETCH ? true
-            : align_items == STRETCH;
+            : align_cross == STRETCH;
         ch_sz[i] = stretch ? cross_sz : min(max(ch_psz[i].min, cross_sz), ch_psz[i].nat);
     }
 
@@ -424,7 +424,7 @@ void Box::_allocate_region()
 
     // main axis offset
     int mo;
-    switch (justify_items)
+    switch (align_main)
     {
         case Widget::START:   mo = 0; break;
         case Widget::CENTER:  mo = extra_main_space/2; break;
@@ -443,7 +443,7 @@ void Box::_allocate_region()
 
         auto const& child = m_children[i];
         Align child_align = child->align_self ? child->align_self
-                : align_items ? align_items
+                : align_cross ? align_cross
                 : Align::START;
         int xo;
         switch (child_align)
@@ -2322,7 +2322,7 @@ progress_popup::progress_popup(string title, int width)
     : position(0), bar_width(width), no_more(crawl_state.show_more_prompt, false)
 {
     auto container = make_shared<Box>(Widget::VERT);
-    container->align_items = Widget::CENTER;
+    container->align_cross = Widget::CENTER;
 #ifndef USE_TILE_LOCAL
     // Center the popup in console.
     // if webtiles browser ever uses this property, then this will probably

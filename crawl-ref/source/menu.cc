@@ -798,7 +798,7 @@ Menu::Menu(int _flags, const string& tagname, KeymapContext kmc)
     m_ui.title = make_shared<Text>();
     m_ui.more = make_shared<UIMenuMore>();
     m_ui.vbox = make_shared<Box>(Widget::VERT);
-    m_ui.vbox->align_items = Widget::STRETCH;
+    m_ui.vbox->align_cross = Widget::STRETCH;
 
     m_ui.title->set_margin_for_sdl(0, 0, 10, 0);
     m_ui.more->set_margin_for_sdl(10, 0, 0, 0);
@@ -808,7 +808,7 @@ Menu::Menu(int _flags, const string& tagname, KeymapContext kmc)
     m_ui.vbox->add_child(m_ui.scroller);
 #else
     auto scroller_wrap = make_shared<Box>(Widget::VERT, Box::Expand::EXPAND_V);
-    scroller_wrap->align_items = Widget::STRETCH;
+    scroller_wrap->align_cross = Widget::STRETCH;
     scroller_wrap->add_child(m_ui.scroller);
     m_ui.vbox->add_child(scroller_wrap);
 #endif

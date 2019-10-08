@@ -478,7 +478,7 @@ NORETURN void end_game(scorefile_entry &se)
 #endif
     string goodbye_title = make_stringf("Goodbye, %s.", you.your_name.c_str());
     title_hbox->add_child(make_shared<Text>(goodbye_title));
-    title_hbox->align_items = Widget::CENTER;
+    title_hbox->align_cross = Widget::CENTER;
     title_hbox->set_margin_for_sdl(0, 0, 20, 0);
     title_hbox->set_margin_for_crt(0, 0, 1, 0);
 

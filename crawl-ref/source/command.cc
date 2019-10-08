@@ -224,7 +224,7 @@ static void _print_version()
     title->set_margin_for_sdl(0, 0, 0, 10);
     title_hbox->add_child(move(title));
 
-    title_hbox->align_items = Widget::CENTER;
+    title_hbox->align_cross = Widget::CENTER;
     title_hbox->set_margin_for_crt(0, 0, 1, 0);
     title_hbox->set_margin_for_sdl(0, 0, 20, 0);
     vbox->add_child(move(title_hbox));

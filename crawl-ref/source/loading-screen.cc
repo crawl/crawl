@@ -67,7 +67,7 @@ void loading_screen_open()
     loading_text = make_shared<Text>();
     loading_text->set_margin_for_sdl(15, 0, 0, 0);
     auto vbox = make_shared<Box>(Widget::VERT);
-    vbox->align_items = Widget::CENTER;
+    vbox->align_cross = Widget::CENTER;
     vbox->add_child(move(splash));
     vbox->add_child(loading_text);
     FontWrapper *font = tiles.get_crt_font();

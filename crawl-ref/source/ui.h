@@ -328,7 +328,6 @@ protected:
 // Box widget: similar to the CSS flexbox (without wrapping)
 //  - Lays its children out in either a row or a column
 //  - Extra space is allocated according to each child's flex_grow property
-//  - align and justify properties work like flexbox's
 
 class Box : public ContainerVec
 {
@@ -350,8 +349,8 @@ public:
     virtual ~Box() {}
     void add_child(shared_ptr<Widget> child);
     bool horz;
-    Widget::Align justify_items = START;
-    Widget::Align align_items = UNSET;
+    Widget::Align align_main = START;
+    Widget::Align align_cross = UNSET;
 
     virtual void _render() override;
     virtual SizeReq _get_preferred_size(Direction dim, int prosp_width) override;
