@@ -348,7 +348,6 @@ public:
     };
     virtual ~Box() {}
     void add_child(shared_ptr<Widget> child);
-    bool horz;
     Widget::Align align_main = START;
     Widget::Align align_cross = UNSET;
 
@@ -357,6 +356,8 @@ public:
     virtual void _allocate_region() override;
 
 protected:
+    bool horz;
+
     vector<int> layout_main_axis(vector<SizeReq>& ch_psz, int main_sz);
     vector<int> layout_cross_axis(vector<SizeReq>& ch_psz, int cross_sz);
 };
