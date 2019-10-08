@@ -300,7 +300,7 @@ public:
 
 void HiscoreScroller::_allocate_region()
 {
-    m_scroll = scroll_target - m_region[3]/2;
+    m_scroll = scroll_target - m_region.height/2;
     Scroller::_allocate_region();
 }
 

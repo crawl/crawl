@@ -1774,14 +1774,13 @@ SizeReq UISkillMenu::_get_preferred_size(Direction dim, int prosp_width)
 void UISkillMenu::_allocate_region()
 {
     skm.exit(true);
-    int height = m_region[3];
-    skm.init(flag, height);
+    skm.init(flag, m_region.height);
 }
 
 void UISkillMenu::_render()
 {
 #ifdef USE_TILE_LOCAL
-    GLW_3VF t = {(float)m_region[0], (float)m_region[1], 0}, s = {1, 1, 1};
+    GLW_3VF t = {(float)m_region.x, (float)m_region.y, 0}, s = {1, 1, 1};
     glmanager->set_transform(t, s);
 #endif
     skm.draw_menu();
@@ -1801,8 +1800,8 @@ bool UISkillMenu::on_event(const wm_event& ev)
     }
 
     MouseEvent mouse_ev = ev.mouse_event;
-    mouse_ev.px -= m_region[0];
-    mouse_ev.py -= m_region[1];
+    mouse_ev.px -= m_region.x;
+    mouse_ev.py -= m_region.y;
 
     int key = skm.handle_mouse(mouse_ev);
     if (key && key != CK_NO_KEY)

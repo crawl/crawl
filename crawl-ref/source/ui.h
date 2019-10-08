@@ -60,6 +60,29 @@ public:
     int top, right, bottom, left;
 };
 
+class Region
+{
+public:
+    constexpr Region() : x(0), y(0), width(0), height(0) {};
+    constexpr Region(int _x, int _y, int _width, int _height) : x(_x), y(_y), width(_width), height(_height) {};
+
+    constexpr bool operator == (const Region& other) const
+    {
+        return x == other.x && y == other.y
+            && width == other.width && height == other.height;
+    }
+
+    constexpr bool empty() const
+    {
+        return width == 0 || height == 0;
+    }
+
+    constexpr int ex() const { return x + width; }
+    constexpr int ey() const { return y + height; }
+
+    int x, y, width, height;
+};
+
 class Size
 {
 public:
@@ -139,7 +162,8 @@ public:
     Align align_self = UNSET;
     bool expand_h = false, expand_v = false;
     bool shrink_h = false, shrink_v = false;
-    const i4 get_region() const { return m_region; }
+    Region get_region() const { return m_region; }
+
     Size& min_size() { _invalidate_sizereq(); return m_min_size; }
     Size& max_size() { _invalidate_sizereq(); return m_max_size; }
 
@@ -164,7 +188,7 @@ public:
     // - caching
     void render();
     SizeReq get_preferred_size(Direction dim, int prosp_width);
-    void allocate_region(i4 region);
+    void allocate_region(Region region);
 
     Margin get_margin() const {
         return margin;
@@ -205,7 +229,7 @@ public:
     };
 
 protected:
-    i4 m_region;
+    Region m_region;
     Margin margin = { 0 };
 
     void _unparent(shared_ptr<Widget>& child);
@@ -494,13 +518,14 @@ public:
     bool stretch_h = false, stretch_v = false;
 
 protected:
-    i4 get_tracks_region(int x, int y, int w, int h) const
+    Region get_tracks_region(int x, int y, int w, int h) const
     {
-        return {
-            m_col_info[x].offset, m_row_info[y].offset,
-            m_col_info[x+w-1].size + m_col_info[x+w-1].offset - m_col_info[x].offset,
-            m_row_info[y+h-1].size + m_row_info[y+h-1].offset - m_row_info[y].offset,
-        };
+        Region track_region;
+        track_region.x = m_col_info[x].offset;
+        track_region.y = m_row_info[y].offset;
+        track_region.width = m_col_info[x+w-1].size + m_col_info[x+w-1].offset - m_col_info[x].offset;
+        track_region.height = m_row_info[y+h-1].size + m_row_info[y+h-1].offset - m_row_info[y].offset;
+        return track_region;
     }
 
     struct track_info {
@@ -678,9 +703,9 @@ void ui_force_render();
 void ui_render();
 void ui_delay(unsigned int ms);
 
-void push_scissor(i4 scissor);
+void push_scissor(Region scissor);
 void pop_scissor();
-i4 get_scissor();
+Region get_scissor();
 
 void set_focused_widget(Widget* w);
 Widget* get_focused_widget();

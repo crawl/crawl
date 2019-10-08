@@ -30,8 +30,8 @@ protected:
 void UIShrinkableImage::_render()
 {
     int iw = m_img.orig_width()*scale, ih = m_img.orig_height()*scale;
-    int dx = (m_region[2]-iw)/2, dy = (m_region[3]-ih)/2;
-    int x = m_region[0] + dx, y = m_region[1] + dy;
+    int dx = (m_region.width-iw)/2, dy = (m_region.height-ih)/2;
+    int x = m_region.x + dx, y = m_region.y + dy;
     GLWPrim rect(x, y, x+iw, y+ih);
     rect.set_tex(0, 0, (float)m_img.orig_width()/m_img.width(),
             (float)m_img.orig_height()/m_img.height());
@@ -48,7 +48,7 @@ SizeReq UIShrinkableImage::_get_preferred_size(Direction dim, int prosp_width)
 void UIShrinkableImage::_allocate_region()
 {
     float iw = m_img.orig_width(), ih = m_img.orig_height();
-    scale = min({1.0f, m_region[2]/iw, m_region[3]/ih});
+    scale = min({1.0f, m_region.width/iw, m_region.height/ih});
 }
 
 static shared_ptr<Text> loading_text;

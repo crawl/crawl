@@ -40,12 +40,11 @@ void MenuButton::_allocate_region()
     {
         const VColour bg = active ?
             VColour(0, 0, 0, 255) : VColour(255, 255, 255, 25);
-        m_buf.add(m_region[0], m_region[1],
-                m_region[0]+m_region[2], m_region[1]+m_region[3], bg);
+        m_buf.add(m_region.x, m_region.y, m_region.ex(), m_region.ey(), bg);
         const VColour mouse_colour = active ?
             VColour(34, 34, 34, 255) : term_colours[highlight_colour];
-        m_line_buf.add_square(m_region[0]+1, m_region[1]+1,
-                m_region[0]+m_region[2], m_region[1]+m_region[3], mouse_colour);
+        m_line_buf.add_square(m_region.x+1, m_region.y+1,
+            m_region.ex(), m_region.ey(), mouse_colour);
     }
 #endif
 }
@@ -313,7 +312,7 @@ void OuterMenu::scroll_button_into_view(MenuButton *btn)
     Scroller* scroller = dynamic_cast<Scroller*>(gp);
     if (!scroller)
         return;
-    i4 btn_reg = btn->get_region(), scr_reg = scroller->get_region();
+    const auto btn_reg = btn->get_region(), scr_reg = scroller->get_region();
 
 #ifdef USE_TILE_LOCAL
     constexpr int shade_height = 12;
@@ -321,9 +320,9 @@ void OuterMenu::scroll_button_into_view(MenuButton *btn)
     constexpr int shade_height = 0;
 #endif
 
-    const int btn_top = btn_reg[1], btn_bot = btn_top + btn_reg[3],
-                scr_top = scr_reg[1] + shade_height,
-                scr_bot = scr_reg[1] + scr_reg[3] - shade_height;
+    const int btn_top = btn_reg.y, btn_bot = btn_top + btn_reg.height,
+                scr_top = scr_reg.y + shade_height,
+                scr_bot = scr_reg.y + scr_reg.height - shade_height;
     const int delta = btn_top < scr_top ? btn_top - scr_top :
                 btn_bot > scr_bot ? btn_bot - scr_bot : 0;
     scroller->set_scroll(scroller->get_scroll() + delta);
@@ -388,7 +387,7 @@ bool OuterMenu::scroller_event_hook(const wm_event& ev)
                 }
         ASSERT(fx >= 0 && fy >= 0);
 
-        const int pagesz = m_root->get_region()[3] / focus->get_region()[3] - 1;
+        const int pagesz = m_root->get_region().height / focus->get_region().height - 1;
         const int limit = (key == CK_HOME || key == CK_END) ? INT_MAX
             : (key == CK_PGUP || key == CK_PGDN) ? pagesz : 1;
 

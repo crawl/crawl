@@ -352,8 +352,8 @@ void UIDollEditor::_render()
 
 void UIDollEditor::_allocate_region()
 {
-    reg->sx = m_region[0];
-    reg->sy = m_region[1];
+    reg->sx = m_region.x;
+    reg->sy = m_region.y;
 }
 
 void DollEditRegion::run()

@@ -176,7 +176,7 @@ void UIMenu::update_items()
 
 void UIMenu::is_visible_item_range(int *vis_min, int *vis_max)
 {
-    const int viewport_height = m_menu->m_ui.scroller->get_region()[3];
+    const int viewport_height = m_menu->m_ui.scroller->get_region().height;
     const int scroll = m_menu->m_ui.scroller->get_scroll();
 
 #ifdef USE_TILE_LOCAL
@@ -381,7 +381,7 @@ int UIMenu::get_max_viewport_height()
 void UIMenu::_render()
 {
 #ifdef USE_TILE_LOCAL
-    GLW_3VF t = {(float)m_region[0], (float)m_region[1], 0}, s = {1, 1, 1};
+    GLW_3VF t = {(float)m_region.x, (float)m_region.y, 0}, s = {1, 1, 1};
     glmanager->set_transform(t, s);
 
     m_shape_buf.draw();
@@ -402,7 +402,7 @@ void UIMenu::_render()
     {
         const MenuEntry *me = m_menu->items[i];
         int y = i - vis_min + 1;
-        cgotoxy(m_region[0]+1, m_region[1]+scroll+y);
+        cgotoxy(m_region.x+1, m_region.y+scroll+y);
         const int col = m_menu->item_colour(me);
         textcolour(col);
         const bool needs_cursor = (m_menu->get_cursor() == i && m_menu->is_set(MF_MULTISELECT));
@@ -411,12 +411,12 @@ void UIMenu::_render()
         {
             formatted_string s = formatted_string::parse_string(
                 me->get_text(needs_cursor), col);
-            s.chop(m_region[2]).display();
+            s.chop(m_region.width).display();
         }
         else
         {
             string text = me->get_text(needs_cursor);
-            text = chop_string(text, m_region[2]);
+            text = chop_string(text, m_region.width);
             cprintf("%s", text.c_str());
         }
     }
@@ -466,7 +466,7 @@ public:
         m_text += fs;
         _expose();
         m_wrapped_size = Size(-1);
-        wrap_text_to_size(m_region[2], m_region[3]);
+        wrap_text_to_size(m_region.width, m_region.height);
     };
 };
 
@@ -487,16 +487,16 @@ void UIMenuPopup::_allocate_region()
     Popup::_allocate_region();
 
     int max_height = m_menu->m_ui.popup->get_max_child_size().height;
-    max_height -= m_menu->m_ui.title->get_region()[3];
+    max_height -= m_menu->m_ui.title->get_region().height;
     max_height -= m_menu->m_ui.title->get_margin().bottom;
-    int viewport_height = m_menu->m_ui.scroller->get_region()[3];
+    int viewport_height = m_menu->m_ui.scroller->get_region().height;
 
 #ifdef USE_TILE_LOCAL
-    int menu_w = m_menu->m_ui.menu->get_region()[2];
+    int menu_w = m_menu->m_ui.menu->get_region().width;
     m_menu->m_ui.menu->do_layout(menu_w, 1);
     int m_height = m_menu->m_ui.menu->m_height;
 
-    int more_height = m_menu->m_ui.more->get_region()[3];
+    int more_height = m_menu->m_ui.more->get_region().height;
     // switch number of columns
     int num_cols = m_menu->m_ui.menu->get_num_columns();
     if (m_menu->m_ui.menu->m_draw_tiles && m_menu->is_set(MF_USE_TWO_COLUMNS)
@@ -513,7 +513,7 @@ void UIMenuPopup::_allocate_region()
 #endif
 
 #ifndef USE_TILE_LOCAL
-    int menu_height = m_menu->m_ui.menu->get_region()[3];
+    int menu_height = m_menu->m_ui.menu->get_region().height;
 
     // change more visibility
     bool can_toggle_more = !m_menu->is_set(MF_ALWAYS_SHOW_MORE)
@@ -565,7 +565,7 @@ void UIMenu::_allocate_region()
     // XXX: is this needed?
     m_height = m_menu->items.size();
 #else
-    do_layout(m_region[2], m_num_columns);
+    do_layout(m_region.width, m_num_columns);
     update_hovered_entry();
     pack_buffers();
 #endif
@@ -574,8 +574,8 @@ void UIMenu::_allocate_region()
 #ifdef USE_TILE_LOCAL
 void UIMenu::update_hovered_entry()
 {
-    const int x = m_mouse_x - m_region[0],
-              y = m_mouse_y - m_region[1];
+    const int x = m_mouse_x - m_region.x,
+              y = m_mouse_y - m_region.y;
     int vis_min, vis_max;
     is_visible_item_range(&vis_min, &vis_max);
 
@@ -587,7 +587,7 @@ void UIMenu::update_hovered_entry()
         const auto me = m_menu->items[i];
         if (me->hotkeys.size() == 0)
             continue;
-        const int w = m_region[2] / m_num_columns;
+        const int w = m_region.width / m_num_columns;
         const int entry_x = entry.column * w;
         const int entry_h = row_heights[entry.row+1] - row_heights[entry.row];
         if (x >= entry_x && x < entry_x+w && y >= entry.y && y < entry.y+entry_h)
@@ -620,7 +620,7 @@ bool UIMenu::on_event(const wm_event& event)
 
     if (event.type == WME_MOUSEENTER)
     {
-        do_layout(m_region[2], m_num_columns);
+        do_layout(m_region.width, m_num_columns);
         update_hovered_entry();
         pack_buffers();
         _expose();
@@ -634,7 +634,7 @@ bool UIMenu::on_event(const wm_event& event)
         m_mouse_y = -1;
         m_mouse_pressed = false;
         m_mouse_idx = -1;
-        do_layout(m_region[2], m_num_columns);
+        do_layout(m_region.width, m_num_columns);
         pack_buffers();
         _expose();
         return false;
@@ -642,7 +642,7 @@ bool UIMenu::on_event(const wm_event& event)
 
     if (event.type == WME_MOUSEMOTION)
     {
-        do_layout(m_region[2], m_num_columns);
+        do_layout(m_region.width, m_num_columns);
         update_hovered_entry();
         pack_buffers();
         _expose();
@@ -693,7 +693,7 @@ void UIMenu::pack_buffers()
     if (!item_info.size())
         return;
 
-    const int col_width = m_region[2] / m_num_columns;
+    const int col_width = m_region.width / m_num_columns;
 
     int vis_min, vis_max;
     is_visible_item_range(&vis_min, &vis_max);
@@ -708,7 +708,7 @@ void UIMenu::pack_buffers()
 
         if (entry.heading)
         {
-            formatted_string split = m_font_entry->split(entry.text, m_region[2], entry_h);
+            formatted_string split = m_font_entry->split(entry.text, m_region.width, entry_h);
             // see corresponding section in do_layout()
             int line_y = entry.y  + (i == 0 ? 0 : 5) + item_pad;
             if (i < (int)item_info.size()-1 && !item_info[i+1].heading)
@@ -1962,16 +1962,16 @@ bool Menu::in_page(int index) const
 {
     int y1, y2;
     m_ui.menu->get_item_region(index, &y1, &y2);
-    int vph = m_ui.menu->get_region()[3];
+    int vph = m_ui.menu->get_region().height;
     int vpy = m_ui.scroller->get_scroll();
     return (vpy < y1 && y1 < vpy+vph) || (vpy < y2 && y2 < vpy+vph);
 }
 
 bool Menu::page_down()
 {
-    int dy = m_ui.scroller->get_region()[3];
+    int dy = m_ui.scroller->get_region().height;
     int y = m_ui.scroller->get_scroll();
-    bool at_bottom = y+dy >= m_ui.menu->get_region()[3];
+    bool at_bottom = y+dy >= m_ui.menu->get_region().height;
     m_ui.scroller->set_scroll(y+dy);
 #ifndef USE_TILE_LOCAL
     if (!at_bottom)
@@ -1982,7 +1982,7 @@ bool Menu::page_down()
 
 bool Menu::page_up()
 {
-    int dy = m_ui.scroller->get_region()[3];
+    int dy = m_ui.scroller->get_region().height;
     int y = m_ui.scroller->get_scroll();
     m_ui.scroller->set_scroll(y-dy);
 #ifndef USE_TILE_LOCAL
@@ -2021,7 +2021,7 @@ bool Menu::line_up()
         m_ui.menu->get_item_region(index-1, &y, nullptr);
         m_ui.scroller->set_scroll(y);
 #ifndef USE_TILE_LOCAL
-        int dy = m_ui.scroller->get_region()[3];
+        int dy = m_ui.scroller->get_region().height;
         m_ui.menu->set_showable_height(y+dy);
 #endif
         return true;
