@@ -44,11 +44,11 @@ static Region aabb_union(Region a, Region b)
     return i;
 }
 
-static inline bool pos_in_rect(i2 pos, Region rect)
+static inline bool pos_in_rect(int x, int y, Region rect)
 {
-    if (pos[0] < rect.x || pos[0] >= rect.ex())
+    if (x < rect.x || x >= rect.ex())
         return false;
-    if (pos[1] < rect.y || pos[1] >= rect.ey())
+    if (y < rect.y || y >= rect.ey())
         return false;
     return true;
 }
@@ -1092,9 +1092,9 @@ shared_ptr<Widget> Grid::get_child_at_offset(int x, int y)
         return nullptr;
     for (auto& child : m_child_info)
     {
-        if (child.pos[0] <= col && col < child.pos[0] + child.span[0])
-        if (child.pos[1] <= row && row < child.pos[1] + child.span[1])
-        if (pos_in_rect({x, y}, child.widget->get_region()))
+        if (child.pos.x <= col && col < child.pos.x + child.span.width)
+        if (child.pos.y <= row && row < child.pos.y + child.span.height)
+        if (pos_in_rect(x, y, child.widget->get_region()))
             return child.widget;
     }
     return nullptr;
@@ -1119,15 +1119,15 @@ void Grid::init_track_info()
     int n_rows = 0, n_cols = 0;
     for (auto info : m_child_info)
     {
-        n_rows = max(n_rows, info.pos[1]+info.span[1]);
-        n_cols = max(n_cols, info.pos[0]+info.span[0]);
+        n_rows = max(n_rows, info.pos.y+info.span.height);
+        n_cols = max(n_cols, info.pos.x+info.span.width);
     }
     m_row_info.resize(n_rows);
     m_col_info.resize(n_cols);
 
     sort(m_child_info.begin(), m_child_info.end(),
             [](const child_info& a, const child_info& b) {
-        return a.pos[1] < b.pos[1];
+        return a.pos.y < b.pos.y;
     });
 }
 
@@ -1151,8 +1151,8 @@ void Grid::_render()
 
     for (auto const& child : m_child_info)
     {
-        if (child.pos[1] < row_min) continue;
-        if (child.pos[1] > row_max) break;
+        if (child.pos.y < row_min) continue;
+        if (child.pos.y > row_max) break;
         child.widget->render();
     }
 }
@@ -1166,15 +1166,16 @@ void Grid::compute_track_sizereqs(Direction dim)
         t.sr = {0, 0};
     for (size_t i = 0; i < m_child_info.size(); i++)
     {
-        auto& cp = m_child_info[i].pos, cs = m_child_info[i].span;
+        auto& cp = m_child_info[i].pos;
+        auto& cs = m_child_info[i].span;
         // if merging horizontally, need to find (possibly multi-col) width
-        int prosp_width = dim ? get_tracks_region(cp[0], cp[1], cs[0], cs[1]).width : -1;
+        int prosp_width = dim ? get_tracks_region(cp.x, cp.y, cs.width, cs.height).width : -1;
 
         const SizeReq c = m_child_info[i].widget->get_preferred_size(dim, prosp_width);
         // NOTE: items spanning multiple rows/cols don't contribute!
-        if (cs[0] == 1 && cs[1] == 1)
+        if (cs.width == 1 && cs.height == 1)
         {
-            auto& s = track[cp[dim]].sr;
+            auto& s = track[dim ? cp.y : cp.x].sr;
             s.min = max(s.min, c.min);
             s.nat = max(s.nat, c.nat);
         }
@@ -1282,8 +1283,9 @@ void Grid::_allocate_region()
 
     for (size_t i = 0; i < m_child_info.size(); i++)
     {
-        auto& cp = m_child_info[i].pos, cs = m_child_info[i].span;
-        Region cell_reg = get_tracks_region(cp[0], cp[1], cs[0], cs[1]);
+        auto& cp = m_child_info[i].pos;
+        auto& cs = m_child_info[i].span;
+        Region cell_reg = get_tracks_region(cp.x, cp.y, cs.width, cs.height);
         cell_reg.x += m_region.x;
         cell_reg.y += m_region.y;
         m_child_info[i].widget->allocate_region(cell_reg);

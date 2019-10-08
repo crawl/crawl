@@ -538,8 +538,10 @@ protected:
     vector<track_info> m_row_info;
 
     struct child_info {
-        i2 pos;
-        i2 span;
+        struct {
+            int x, y;
+        } pos;
+        Size span;
         shared_ptr<Widget> widget;
         inline bool operator==(const child_info& rhs) const { return widget == rhs.widget; }
     };
