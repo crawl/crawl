@@ -36,8 +36,8 @@ teleportation.
 Fly status
 
 You fly above the ground, and are able to cross water and lava or fight above
-shallow water without penalties. Most types of flight will time out – be sure
-you're not above deadly liquids when that happens!
+shallow water without penalties. Most types of flight will time out – be
+careful what you are above when that happens!
 %%%%
 Agi status
 
