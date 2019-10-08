@@ -194,9 +194,12 @@ SizeReq Widget::get_preferred_size(Direction dim, int prosp_width)
     else if (shrink)
         ret.nat = ret.min;
 
-    ASSERT(m_min_size[dim] <= m_max_size[dim]);
-    ret.min = max(ret.min, m_min_size[dim]);
-    ret.nat = min(ret.nat, max(m_max_size[dim], ret.min));
+    int& min_size = dim ? m_min_size.height : m_min_size.width;
+    int& max_size = dim ? m_max_size.height : m_max_size.width;
+
+    ASSERT(min_size <= max_size);
+    ret.min = max(ret.min, min_size);
+    ret.nat = min(ret.nat, max(max_size, ret.min));
     ret.nat = max(ret.nat, ret.min);
     ASSERT(ret.min <= ret.nat);
 
@@ -483,7 +486,7 @@ void Text::set_text(const formatted_string &fs)
     m_text += fs;
     _invalidate_sizereq();
     _expose();
-    m_wrapped_size = { -1, -1 };
+    m_wrapped_size = Size(-1);
     _queue_allocation();
 }
 
@@ -505,7 +508,7 @@ void Text::set_highlight_pattern(string pattern, bool line)
 
 void Text::wrap_text_to_size(int width, int height)
 {
-    i2 wrapped_size = { width, height };
+    Size wrapped_size = { width, height };
     if (m_wrapped_size == wrapped_size)
         return;
     m_wrapped_size = wrapped_size;
@@ -1525,17 +1528,15 @@ void Popup::_allocate_region()
     m_child->allocate_region(region);
 }
 
-i2 Popup::get_max_child_size()
+Size Popup::get_max_child_size()
 {
+    Size max_child_size = Size(m_region[2], m_region[3]);
 #ifdef USE_TILE_LOCAL
     const int pad = base_margin() + m_padding;
-    return {
-        (m_region[2] - 2*pad) & ~0x1,
-        (m_region[3] - 2*pad - m_depth*m_depth_indent) & ~0x1,
-    };
-#else
-    return { m_region[2], m_region[3] };
+    max_child_size.width = (max_child_size.width - 2*pad) & ~0x1;
+    max_child_size.height = (max_child_size.height - 2*pad - m_depth*m_depth_indent) & ~0x1;
 #endif
+    return max_child_size;
 }
 
 #ifdef USE_TILE_LOCAL
@@ -1805,7 +1806,7 @@ void UIRoot::render()
         {
             const auto& hovered_widget = prev_hover_path.back();
             i4 r = hovered_widget->get_region();
-            i4 m = hovered_widget->margin;
+            i4 m = hovered_widget->get_margin();
 
             VColour lc = VColour(0, 0, 100, 100);
             sb.add(r[0], r[1]-m[0], r[0]+r[2], r[1], lc);

@@ -71,7 +71,7 @@ void loading_screen_open()
     vbox->add_child(move(splash));
     vbox->add_child(loading_text);
     FontWrapper *font = tiles.get_crt_font();
-    vbox->min_size()[0] = font->string_width(load_complete_msg.c_str());
+    vbox->min_size().width = font->string_width(load_complete_msg.c_str());
     popup = make_shared<ui::Popup>(move(vbox));
     ui::push_layout(popup);
 }

@@ -868,7 +868,7 @@ void display_mutations()
     switcher->set_margin_for_crt({1, 0, 0, 0});
     switcher->expand_h = false;
 #ifdef USE_TILE_LOCAL
-    switcher->max_size()[0] = tiles.get_crt_font()->char_width()*80;
+    switcher->max_size().width = tiles.get_crt_font()->char_width()*80;
 #endif
     vbox->add_child(switcher);
 

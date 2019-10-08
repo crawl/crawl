@@ -1163,7 +1163,7 @@ static void build_partial_god_ui(god_type which_god, shared_ptr<ui::Popup>& popu
     desc_sw->set_margin_for_crt({1, 0, 1, 0});
     desc_sw->expand_h = false;
 #ifdef USE_TILE_LOCAL
-    desc_sw->max_size()[0] = tiles.get_crt_font()->char_width()*80;
+    desc_sw->max_size().width = tiles.get_crt_font()->char_width()*80;
 #endif
     vbox->add_child(desc_sw);
 

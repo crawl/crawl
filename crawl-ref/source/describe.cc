@@ -153,7 +153,7 @@ int show_description(const describe_info &inf, const tile_def *tile)
     switcher->current() = 0;
     switcher->expand_h = false;
 #ifdef USE_TILE_LOCAL
-    switcher->max_size()[0] = tiles.get_crt_font()->char_width()*80;
+    switcher->max_size().width = tiles.get_crt_font()->char_width()*80;
 #endif
     vbox->add_child(switcher);
 
@@ -2357,7 +2357,7 @@ void describe_feature_wide(const coord_def& pos)
         }
     }
 #ifdef USE_TILE_LOCAL
-    vbox->max_size()[0] = tiles.get_crt_font()->char_width()*80;
+    vbox->max_size().width = tiles.get_crt_font()->char_width()*80;
 #endif
     scroller->set_child(move(vbox));
 
@@ -2729,7 +2729,7 @@ bool describe_item(item_def &item, function<void (string&)> fixup_desc)
     }
 
 #ifdef USE_TILE_LOCAL
-    vbox->max_size()[0] = tiles.get_crt_font()->char_width()*80;
+    vbox->max_size().width = tiles.get_crt_font()->char_width()*80;
 #endif
 
     auto popup = make_shared<ui::Popup>(move(vbox));
@@ -3174,7 +3174,7 @@ void describe_spell(spell_type spell, const monster_info *mon_owner,
 
     auto vbox = make_shared<Box>(Widget::VERT);
 #ifdef USE_TILE_LOCAL
-    vbox->max_size()[0] = tiles.get_crt_font()->char_width()*80;
+    vbox->max_size().width = tiles.get_crt_font()->char_width()*80;
 #endif
 
     auto title_hbox = make_shared<Box>(Widget::HORZ);
@@ -4610,7 +4610,7 @@ int describe_monsters(const monster_info &mi, bool force_seen,
         vbox->add_child(more_sw);
 
 #ifdef USE_TILE_LOCAL
-    vbox->max_size()[0] = tiles.get_crt_font()->char_width()*80;
+    vbox->max_size().width = tiles.get_crt_font()->char_width()*80;
 #endif
 
     auto popup = make_shared<ui::Popup>(move(vbox));

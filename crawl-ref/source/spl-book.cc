@@ -805,7 +805,7 @@ public:
 #ifdef USE_TILE_LOCAL
         FontWrapper *font = tiles.get_crt_font();
         int title_width = font->string_width(calc_title());
-        m_ui.vbox->min_size() = {38 + title_width + 10, 0};
+        m_ui.vbox->min_size().width = 38 + title_width + 10;
 #endif
         m_ui.scroller->expand_v = true; // TODO: doesn't work on webtiles
 

@@ -1722,9 +1722,9 @@ static void _construct_weapon_menu(const newgame_def& ng,
                             // these dimensions are apparently unused for
                             // webtiles, we do this so they're not interpreted
                             // as characters for webtiles console.
-                            { 0,0 };
+                            0;
 #else
-                            { TILE_Y, TILE_Y };
+                            TILE_Y;
 #endif
         }
         else

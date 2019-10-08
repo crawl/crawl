@@ -465,7 +465,7 @@ public:
         m_text.clear();
         m_text += fs;
         _expose();
-        m_wrapped_size = { -1, -1 };
+        m_wrapped_size = Size(-1);
         wrap_text_to_size(m_region[2], m_region[3]);
     };
 };
@@ -486,9 +486,9 @@ void UIMenuPopup::_allocate_region()
 {
     Popup::_allocate_region();
 
-    int max_height = m_menu->m_ui.popup->get_max_child_size()[1];
+    int max_height = m_menu->m_ui.popup->get_max_child_size().height;
     max_height -= m_menu->m_ui.title->get_region()[3];
-    max_height -= m_menu->m_ui.title->margin[2];
+    max_height -= m_menu->m_ui.title->get_margin()[2];
     int viewport_height = m_menu->m_ui.scroller->get_region()[3];
 
 #ifdef USE_TILE_LOCAL
@@ -550,7 +550,7 @@ void UIMenuPopup::_allocate_region()
 #else
     const int max_viewport_height = 52;
 #endif
-    m_menu->m_ui.scroller->max_size() = { INT_MAX, max_viewport_height };
+    m_menu->m_ui.scroller->max_size().height = max_viewport_height;
     if (max_viewport_height < viewport_height)
     {
         m_menu->m_ui.scroller->_invalidate_sizereq();

@@ -48,6 +48,26 @@ struct SizeReq
     int min, nat;
 };
 
+class Size
+{
+public:
+    constexpr Size() : width(0), height(0) {};
+    constexpr Size(int v) : width(v), height(v) {};
+    constexpr Size(int w, int h) : width(w), height(h) {};
+
+    constexpr bool operator <= (const Size& other) const
+    {
+        return width <= other.width && height <= other.height;
+    }
+
+    constexpr bool operator == (const Size& other) const
+    {
+        return width == other.width && height == other.height;
+    }
+
+    int width, height;
+};
+
 struct RestartAllocation {};
 
 template<typename, typename> class Slot;
@@ -103,14 +123,13 @@ public:
 
     virtual ~Widget();
 
-    i4 margin = {0,0,0,0};
     int flex_grow = 1;
     Align align_self = UNSET;
     bool expand_h = false, expand_v = false;
     bool shrink_h = false, shrink_v = false;
     const i4 get_region() const { return m_region; }
-    i2& min_size() { _invalidate_sizereq(); return m_min_size; }
-    i2& max_size() { _invalidate_sizereq(); return m_max_size; }
+    Size& min_size() { _invalidate_sizereq(); return m_min_size; }
+    Size& max_size() { _invalidate_sizereq(); return m_max_size; }
 
     virtual void _render() = 0;
     virtual SizeReq _get_preferred_size(Direction dim, int prosp_width);
@@ -135,6 +154,9 @@ public:
     SizeReq get_preferred_size(Direction dim, int prosp_width);
     void allocate_region(i4 region);
 
+    i4 get_margin() const {
+        return margin;
+    }
     void set_margin_for_crt(i4 _margin)
     {
 #ifndef USE_TILE_LOCAL
@@ -166,6 +188,7 @@ public:
 
 protected:
     i4 m_region;
+    i4 margin = {0, 0, 0, 0};
 
     void _unparent(shared_ptr<Widget>& child);
 
@@ -176,7 +199,9 @@ private:
     bool alloc_queued = false;
     bool m_visible = true;
     Widget* m_parent = nullptr;
-    i2 m_min_size = { 0, 0 }, m_max_size = { INT_MAX, INT_MAX };
+
+    Size m_min_size = { 0 };
+    Size m_max_size = { INT_MAX };
 };
 
 class Container : public Widget
@@ -363,7 +388,7 @@ protected:
     vector<formatted_string> m_wrapped_lines;
     COLOURS m_bg_colour = BLACK;
 #endif
-    i2 m_wrapped_size = { -1, -1 };
+    Size m_wrapped_size = { -1 };
     string hl_pat;
     bool hl_line;
 };
@@ -562,7 +587,7 @@ public:
     virtual SizeReq _get_preferred_size(Direction dim, int prosp_width) override;
     virtual void _allocate_region() override;
 
-    i2 get_max_child_size();
+    Size get_max_child_size();
 
 protected:
 #ifdef USE_TILE_LOCAL

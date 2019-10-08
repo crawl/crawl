@@ -438,7 +438,7 @@ static shared_ptr<MenuButton> _make_newgame_button(shared_ptr<OuterMenu>& contai
     hbox->align_items = Widget::Align::CENTER;
     hbox->add_child(label);
     label->set_margin_for_sdl({0,0,0,TILE_Y+6});
-    hbox->min_size() = { 0, TILE_Y };
+    hbox->min_size().height = TILE_Y;
 #endif
 
     auto btn = make_shared<MenuButton>();
@@ -473,9 +473,9 @@ static void _construct_save_games_menu(shared_ptr<OuterMenu>& container,
         auto label = make_shared<Text>(formatted_string(text, fg));
         label->ellipsize = true;
 #ifdef USE_TILE_LOCAL
-        label->max_size() = { INT_MAX, (int)tiles.get_crt_font()->char_height() };
+        label->max_size().height = tiles.get_crt_font()->char_height();
 #else
-        label->max_size() = { INT_MAX, 1 };
+        label->max_size().height = 1;
 #endif
         hbox->add_child(label);
 
@@ -572,9 +572,9 @@ public:
         _construct_game_modes_menu(game_modes_menu);
 
 #ifdef USE_TILE_LOCAL
-        game_modes_menu->min_size() = { 0, TILE_Y*3 };
+        game_modes_menu->min_size().height = TILE_Y*3;
 #else
-        game_modes_menu->min_size() = { 0, 2 };
+        game_modes_menu->min_size().height = 2;
 #endif
 
         grid->add_child(move(mode_prompt), 0, 1);
@@ -588,10 +588,10 @@ public:
             save_prompt->set_margin_for_sdl({0, 0, 10, 0});
             save_games_menu->set_margin_for_sdl({0, 0, 10, 10});
 #ifdef USE_TILE_LOCAL
-            save_prompt->min_size() = { 0, TILE_Y + 2 };
-            save_games_menu->min_size() = { 0, TILE_Y * min(num_saves, 3) };
+            save_prompt->min_size().height = TILE_Y + 2;
+            save_games_menu->min_size().height = TILE_Y * min(num_saves, 3);
 #else
-            save_games_menu->min_size() = { 0, 2 };
+            save_games_menu->min_size().height = 2;
 #endif
             save_games_menu->descriptions = descriptions;
 

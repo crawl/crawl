@@ -210,7 +210,7 @@ static void _print_version()
     auto vbox = make_shared<Box>(Widget::VERT);
 
 #ifdef USE_TILE_LOCAL
-    vbox->max_size()[0] = tiles.get_crt_font()->char_width()*80;
+    vbox->max_size().width = tiles.get_crt_font()->char_width()*80;
 #endif
 
     auto title_hbox = make_shared<Box>(Widget::HORZ);
