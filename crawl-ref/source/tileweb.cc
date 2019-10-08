@@ -1727,9 +1727,6 @@ void TilesFramework::load_dungeon(const crawl_view_buffer &vbuf,
 
     m_view_loaded = true;
 
-    if (m_ui_state == UI_CRT)
-        set_ui_state(UI_NORMAL);
-
     m_next_flash_colour = you.flash_colour;
     if (m_next_flash_colour == BLACK)
         m_next_flash_colour = viewmap_flash_colour();

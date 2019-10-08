@@ -121,11 +121,6 @@ static void _results_popup(string msg, bool error=false)
     // TODO: shared code here with end.cc
     linebreak_string(msg, 79);
 
-#ifdef USE_TILE_WEB
-    tiles_crt_popup show_as_popup;
-    tiles.set_ui_state(UI_CRT);
-#endif
-
     if (error)
     {
         msg = string("Arena error:\n\n<lightred>")
@@ -1468,10 +1463,6 @@ static void _init_arena()
 static void _choose_arena_teams(newgame_def& choice,
                                 const string &default_arena_teams)
 {
-#ifdef USE_TILE_WEB
-    tiles_crt_popup show_as_popup;
-#endif
-
     if (!choice.arena_teams.empty())
         return;
     arena::skipped_arena_ui = false;

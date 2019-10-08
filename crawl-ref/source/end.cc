@@ -117,11 +117,6 @@ bool fatal_error_notification(string error_msg)
         return false;
 
 #if (!defined(DGAMELAUNCH)) || defined(DGL_PAUSE_AFTER_ERROR)
-#ifdef USE_TILE_WEB
-    tiles_crt_popup show_as_popup;
-    tiles.set_ui_state(UI_CRT);
-#endif
-
     // TODO: better formatting, maybe use a formatted_scroller?
     // Escape '<'.
     // NOTE: This assumes that the error message doesn't contain

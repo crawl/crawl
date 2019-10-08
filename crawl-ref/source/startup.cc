@@ -915,10 +915,7 @@ static void _show_startup_menu(newgame_def& ng_choice,
 
 #if defined(USE_TILE_LOCAL) && defined(TOUCH_UI)
     wm->show_keyboard();
-#elif defined(USE_TILE_WEB)
-    tiles_crt_popup show_as_popup;
 #endif
-
 
     auto startup_ui = make_shared<UIStartupMenu>(ng_choice, defaults);
     auto popup = make_shared<ui::Popup>(startup_ui);
