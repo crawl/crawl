@@ -27,22 +27,6 @@
 
 namespace ui {
 
-// This is used instead of std::array because travis uses older versions of GCC
-// and Clang that demand braces around initializer lists everywhere.
-template <size_t N>
-struct vec {
-    int items[N];
-    template <typename... Ts> vec<N> (Ts... l) : items{l...} {}
-    const int& operator[](int index) const { return items[index]; }
-    int& operator[](int index) { return items[index]; }
-    inline bool operator==(const vec<N>& rhs) {
-        return equal(begin(items), end(items), begin(rhs.items));
-    }
-    inline bool operator!=(const vec<N>& rhs) { return !(*this == rhs); }
-};
-using i2 = vec<2>;
-using i4 = vec<4>;
-
 struct SizeReq
 {
     int min, nat;
