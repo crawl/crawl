@@ -165,12 +165,16 @@ void Bin::set_child(shared_ptr<Widget> child)
 
 void Widget::render()
 {
-    _render();
+    if (m_visible)
+        _render();
 }
 
 SizeReq Widget::get_preferred_size(Direction dim, int prosp_width)
 {
     ASSERT((dim == HORZ) == (prosp_width == -1));
+
+    if (!m_visible)
+        return { 0, 0 };
 
     if (cached_sr_valid[dim] && (!dim || cached_sr_pw == prosp_width))
         return cached_sr[dim];
@@ -212,6 +216,9 @@ SizeReq Widget::get_preferred_size(Direction dim, int prosp_width)
 
 void Widget::allocate_region(i4 region)
 {
+    if (!m_visible)
+        return;
+
     i4 new_region = {
         region[0] + margin[3],
         region[1] + margin[0],
@@ -288,6 +295,14 @@ void Widget::_queue_allocation(bool immediate)
 void Widget::_expose()
 {
     ui_root.expose_region(m_region);
+}
+
+void Widget::set_visible(bool visible)
+{
+    if (m_visible == visible)
+        return;
+    m_visible = visible;
+    _invalidate_sizereq();
 }
 
 void Box::add_child(shared_ptr<Widget> child)

@@ -125,6 +125,9 @@ public:
     void set_allocation_needed() { alloc_queued = true; };
     void _expose();
 
+    bool is_visible() const { return m_visible; }
+    void set_visible(bool);
+
     // Wrapper functions which handle common behavior
     // - margins
     // - caching
@@ -171,6 +174,7 @@ private:
     SizeReq cached_sr[2];
     int cached_sr_pw;
     bool alloc_queued = false;
+    bool m_visible = true;
     Widget* m_parent = nullptr;
     i2 m_min_size = { 0, 0 }, m_max_size = { INT_MAX, INT_MAX };
 };
