@@ -488,7 +488,7 @@ void UIMenuPopup::_allocate_region()
 
     int max_height = m_menu->m_ui.popup->get_max_child_size().height;
     max_height -= m_menu->m_ui.title->get_region()[3];
-    max_height -= m_menu->m_ui.title->get_margin()[2];
+    max_height -= m_menu->m_ui.title->get_margin().bottom;
     int viewport_height = m_menu->m_ui.scroller->get_region()[3];
 
 #ifdef USE_TILE_LOCAL
@@ -800,8 +800,8 @@ Menu::Menu(int _flags, const string& tagname, KeymapContext kmc)
     m_ui.vbox = make_shared<Box>(Widget::VERT);
     m_ui.vbox->align_items = Widget::STRETCH;
 
-    m_ui.title->set_margin_for_sdl({0, 0, 10, 0});
-    m_ui.more->set_margin_for_sdl({10, 0, 0, 0});
+    m_ui.title->set_margin_for_sdl(0, 0, 10, 0);
+    m_ui.more->set_margin_for_sdl(10, 0, 0, 0);
 
     m_ui.vbox->add_child(m_ui.title);
 #ifdef USE_TILE_LOCAL
@@ -1949,8 +1949,8 @@ void Menu::update_title()
     }
 
 #ifdef USE_TILE_LOCAL
-    m_ui.title->set_margin_for_sdl({0, 0, 10,
-            UIMenu::item_pad + (m_indent_title ? 38 : 0)});
+    m_ui.title->set_margin_for_sdl(0, 0, 10,
+            UIMenu::item_pad + (m_indent_title ? 38 : 0));
 #endif
     m_ui.title->set_text(fs);
 #ifdef USE_TILE_WEB

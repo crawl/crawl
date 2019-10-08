@@ -1100,8 +1100,7 @@ static void build_partial_god_ui(god_type which_god, shared_ptr<ui::Popup>& popu
 #endif
 
     auto title = make_shared<Text>(topline.trim());
-    title->set_margin_for_crt({0, 0, 0, 0});
-    title->set_margin_for_sdl({0, 0, 0, 16});
+    title->set_margin_for_sdl(0, 0, 0, 16);
     title_hbox->add_child(move(title));
 
     title_hbox->align_items = Widget::CENTER;
@@ -1159,8 +1158,8 @@ static void build_partial_god_ui(god_type which_god, shared_ptr<ui::Popup>& popu
                 formatted_string::parse_string(mores[mores_index][i])));
     }
 
-    desc_sw->set_margin_for_sdl({20, 0, 20, 0});
-    desc_sw->set_margin_for_crt({1, 0, 1, 0});
+    desc_sw->set_margin_for_sdl(20, 0);
+    desc_sw->set_margin_for_crt(1, 0);
     desc_sw->expand_h = false;
 #ifdef USE_TILE_LOCAL
     desc_sw->max_size().width = tiles.get_crt_font()->char_width()*80;

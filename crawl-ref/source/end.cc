@@ -473,14 +473,14 @@ NORETURN void end_game(scorefile_entry &se)
         death_tile = tile_def(TILE_DNGN_GRAVESTONE+1, TEX_FEAT);
 
     auto tile = make_shared<Image>(death_tile);
-    tile->set_margin_for_sdl({0, 10, 0, 0});
+    tile->set_margin_for_sdl(0, 10, 0, 0);
     title_hbox->add_child(move(tile));
 #endif
     string goodbye_title = make_stringf("Goodbye, %s.", you.your_name.c_str());
     title_hbox->add_child(make_shared<Text>(goodbye_title));
     title_hbox->align_items = Widget::CENTER;
-    title_hbox->set_margin_for_sdl({0, 0, 20, 0});
-    title_hbox->set_margin_for_crt({0, 0, 1, 0});
+    title_hbox->set_margin_for_sdl(0, 0, 20, 0);
+    title_hbox->set_margin_for_crt(0, 0, 1, 0);
 
     auto vbox = make_shared<Box>(Box::VERT);
     vbox->add_child(move(title_hbox));

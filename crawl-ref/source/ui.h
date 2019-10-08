@@ -48,6 +48,18 @@ struct SizeReq
     int min, nat;
 };
 
+class Margin
+{
+public:
+    constexpr Margin() : top(0), right(0), bottom(0), left(0) {};
+    constexpr Margin(int v) : top(v), right(v), bottom(v), left(v) {};
+    constexpr Margin(int v, int h) : top(v), right(h), bottom(v), left(h) {};
+    constexpr Margin(int t, int lr, int b) : top(t), right(lr), bottom(b), left(lr) {};
+    constexpr Margin(int t, int r, int b, int l) : top(t), right(r), bottom(b), left(l) {};
+
+    int top, right, bottom, left;
+};
+
 class Size
 {
 public:
@@ -154,21 +166,27 @@ public:
     SizeReq get_preferred_size(Direction dim, int prosp_width);
     void allocate_region(i4 region);
 
-    i4 get_margin() const {
+    Margin get_margin() const {
         return margin;
     }
-    void set_margin_for_crt(i4 _margin)
+
+    template<class... Args>
+    void set_margin_for_crt(Args&&... args)
     {
 #ifndef USE_TILE_LOCAL
-        margin = _margin;
+        margin = Margin(forward<Args>(args)...);
+        _invalidate_sizereq();
 #endif
-    };
-    void set_margin_for_sdl(i4 _margin)
+    }
+
+    template<class... Args>
+    void set_margin_for_sdl(Args&&... args)
     {
 #ifdef USE_TILE_LOCAL
-        margin = _margin;
+        margin = Margin(forward<Args>(args)...);
+        _invalidate_sizereq();
 #endif
-    };
+    }
 
     virtual bool on_event(const wm_event& event);
 
@@ -188,7 +206,7 @@ public:
 
 protected:
     i4 m_region;
-    i4 margin = {0, 0, 0, 0};
+    Margin margin = { 0 };
 
     void _unparent(shared_ptr<Widget>& child);
 

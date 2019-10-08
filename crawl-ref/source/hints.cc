@@ -186,8 +186,8 @@ void pick_hints(newgame_def& choice)
     vbox->add_child(prompt_ui);
 
     auto main_items = make_shared<OuterMenu>(true, 1, 3);
-    main_items->set_margin_for_sdl({15, 0, 15, 0});
-    main_items->set_margin_for_crt({1, 0, 1, 0});
+    main_items->set_margin_for_sdl(15, 0);
+    main_items->set_margin_for_crt(1, 0);
     vbox->add_child(main_items);
 
     for (int i = 0; i < 3; i++)
@@ -203,14 +203,14 @@ void pick_hints(newgame_def& choice)
         _fill_newgame_choice_for_hints(tng, static_cast<hints_types>(i));
         fill_doll_for_newgame(doll, tng);
         auto tile = make_shared<ui::PlayerDoll>(doll);
-        tile->set_margin_for_sdl({0, 6, 0, 0});
+        tile->set_margin_for_sdl(0, 6, 0, 0);
         hbox->add_child(move(tile));
         hbox->add_child(label);
 #endif
 
         auto btn = make_shared<MenuButton>();
 #ifdef USE_TILE_LOCAL
-        hbox->set_margin_for_sdl({4,8,4,8});
+        hbox->set_margin_for_sdl(4,8);
         btn->set_child(move(hbox));
 #else
         btn->set_child(move(label));

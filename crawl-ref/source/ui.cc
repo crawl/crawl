@@ -179,7 +179,7 @@ SizeReq Widget::get_preferred_size(Direction dim, int prosp_width)
     if (cached_sr_valid[dim] && (!dim || cached_sr_pw == prosp_width))
         return cached_sr[dim];
 
-    prosp_width = dim ? prosp_width - margin[1] - margin[3] : prosp_width;
+    prosp_width = dim ? prosp_width - margin.right - margin.left : prosp_width;
     SizeReq ret = _get_preferred_size(dim, prosp_width);
     ASSERT(ret.min <= ret.nat);
 
@@ -203,7 +203,7 @@ SizeReq Widget::get_preferred_size(Direction dim, int prosp_width)
     ret.nat = max(ret.nat, ret.min);
     ASSERT(ret.min <= ret.nat);
 
-    int m = margin[1-dim] + margin[3-dim];
+    const int m = dim ? margin.top + margin.bottom : margin.left + margin.right;
     ret.min += m;
     ret.nat += m;
 
@@ -223,10 +223,10 @@ void Widget::allocate_region(i4 region)
         return;
 
     i4 new_region = {
-        region[0] + margin[3],
-        region[1] + margin[0],
-        region[2] - margin[3] - margin[1],
-        region[3] - margin[0] - margin[2],
+        region[0] + margin.left,
+        region[1] + margin.top,
+        region[2] - margin.left - margin.right,
+        region[3] - margin.top - margin.bottom,
     };
 
     if (m_region == new_region && !alloc_queued)
@@ -1806,13 +1806,13 @@ void UIRoot::render()
         {
             const auto& hovered_widget = prev_hover_path.back();
             i4 r = hovered_widget->get_region();
-            i4 m = hovered_widget->get_margin();
+            const Margin m = hovered_widget->get_margin();
 
             VColour lc = VColour(0, 0, 100, 100);
-            sb.add(r[0], r[1]-m[0], r[0]+r[2], r[1], lc);
-            sb.add(r[0]+r[2], r[1], r[0]+r[2]+m[1], r[1]+r[3], lc);
-            sb.add(r[0], r[1]+r[3], r[0]+r[2], r[1]+r[3]+m[2], lc);
-            sb.add(r[0]-m[3], r[1], r[0], r[1]+r[3], lc);
+            sb.add(r[0], r[1]-m.top, r[0]+r[2], r[1], lc);
+            sb.add(r[0]+r[2], r[1], r[0]+r[2]+m.right, r[1]+r[3], lc);
+            sb.add(r[0], r[1]+r[3], r[0]+r[2], r[1]+r[3]+m.bottom, lc);
+            sb.add(r[0]-m.left, r[1], r[0], r[1]+r[3], lc);
         }
         if (auto w = get_focused_widget()) {
             i4 r = w->get_region();

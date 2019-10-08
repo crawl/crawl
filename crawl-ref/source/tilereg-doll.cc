@@ -389,7 +389,7 @@ void DollEditRegion::run()
     auto vbox = make_shared<Box>(Widget::VERT);
     auto title = make_shared<Text>(formatted_string("Doll Editor", YELLOW));
     title->align_self = Widget::CENTER;
-    title->set_margin_for_sdl({0, 0, 20, 0});
+    title->set_margin_for_sdl(0, 0, 20, 0);
     vbox->add_child(move(title));
     vbox->add_child(doll_ui);
     auto popup = make_shared<ui::Popup>(move(vbox));

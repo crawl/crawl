@@ -76,8 +76,8 @@ int formatted_scroller::show()
     {
         shared_ptr<Text> title = make_shared<Text>();
         title->set_text(m_title);
-        title->set_margin_for_crt({0, 0, 1, 0});
-        title->set_margin_for_sdl({0, 0, 20, 0});
+        title->set_margin_for_crt(0, 0, 1, 0);
+        title->set_margin_for_sdl(0, 0, 20, 0);
 #ifdef USE_TILE_LOCAL
         title->align_self = Widget::Align::CENTER;
 #endif
@@ -106,8 +106,8 @@ int formatted_scroller::show()
         shared_ptr<Text> more = make_shared<Text>();
         more = make_shared<Text>();
         more->set_text(m_more);
-        more->set_margin_for_crt({1, 0, 0, 0});
-        more->set_margin_for_sdl({20, 0, 0, 0});
+        more->set_margin_for_crt(1, 0, 0, 0);
+        more->set_margin_for_sdl(20, 0, 0, 0);
         vbox->add_child(move(more));
     }
 

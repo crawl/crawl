@@ -65,7 +65,7 @@ void loading_screen_open()
 {
     auto splash = make_shared<UIShrinkableImage>(_get_title_image());
     loading_text = make_shared<Text>();
-    loading_text->set_margin_for_sdl({15, 0, 0, 0});
+    loading_text->set_margin_for_sdl(15, 0, 0, 0);
     auto vbox = make_shared<Box>(Widget::VERT);
     vbox->align_items = Widget::CENTER;
     vbox->add_child(move(splash));

@@ -864,8 +864,8 @@ void display_mutations()
     }
 
     switcher->current() = 0;
-    switcher->set_margin_for_sdl({20, 0, 0, 0});
-    switcher->set_margin_for_crt({1, 0, 0, 0});
+    switcher->set_margin_for_sdl(20, 0, 0, 0);
+    switcher->set_margin_for_crt(1, 0, 0, 0);
     switcher->expand_h = false;
 #ifdef USE_TILE_LOCAL
     switcher->max_size().width = tiles.get_crt_font()->char_width()*80;
@@ -873,8 +873,8 @@ void display_mutations()
     vbox->add_child(switcher);
 
     auto bottom = make_shared<Text>(_vampire_Ascreen_footer(true));
-    bottom->set_margin_for_sdl({20, 0, 0, 0});
-    bottom->set_margin_for_crt({1, 0, 0, 0});
+    bottom->set_margin_for_sdl(20, 0, 0, 0);
+    bottom->set_margin_for_crt(1, 0, 0, 0);
     if (you.species == SP_VAMPIRE)
         vbox->add_child(bottom);
 

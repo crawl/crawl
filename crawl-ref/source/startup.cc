@@ -408,7 +408,7 @@ static void _construct_game_modes_menu(shared_ptr<OuterMenu>& container)
         hbox->align_items = Widget::Align::CENTER;
         auto tile = make_shared<Image>();
         tile->set_tile(tile_def(tileidx_gametype(entry.id), TEX_GUI));
-        tile->set_margin_for_sdl({0, 6, 0, 0});
+        tile->set_margin_for_sdl(0, 6, 0, 0);
         hbox->add_child(move(tile));
         hbox->add_child(label);
 #endif
@@ -417,7 +417,7 @@ static void _construct_game_modes_menu(shared_ptr<OuterMenu>& container)
 
         auto btn = make_shared<MenuButton>();
 #ifdef USE_TILE_LOCAL
-        hbox->set_margin_for_sdl({2,10,2,2});
+        hbox->set_margin_for_sdl(2, 10, 2, 2);
         btn->set_child(move(hbox));
 #else
         btn->set_child(move(label));
@@ -437,7 +437,7 @@ static shared_ptr<MenuButton> _make_newgame_button(shared_ptr<OuterMenu>& contai
     auto hbox = make_shared<Box>(Box::HORZ);
     hbox->align_items = Widget::Align::CENTER;
     hbox->add_child(label);
-    label->set_margin_for_sdl({0,0,0,TILE_Y+6});
+    label->set_margin_for_sdl(0,0,0,TILE_Y+6);
     hbox->min_size().height = TILE_Y;
 #endif
 
@@ -447,7 +447,7 @@ static shared_ptr<MenuButton> _make_newgame_button(shared_ptr<OuterMenu>& contai
 #else
     btn->set_child(move(label));
 #endif
-    btn->get_child()->set_margin_for_sdl({2,10,2,2});
+    btn->get_child()->set_margin_for_sdl(2, 10, 2, 2);
     btn->id = NUM_GAME_TYPE + num_chars;
     btn->highlight_colour = LIGHTGREY;
     return btn;
@@ -463,7 +463,7 @@ static void _construct_save_games_menu(shared_ptr<OuterMenu>& container,
 
 #ifdef USE_TILE_LOCAL
         auto tile = make_shared<ui::PlayerDoll>(chars.at(i).doll);
-        tile->set_margin_for_sdl({0, 6, 0, 0});
+        tile->set_margin_for_sdl(0, 6, 0, 0);
         hbox->add_child(move(tile));
 #endif
 
@@ -492,7 +492,7 @@ static void _construct_save_games_menu(shared_ptr<OuterMenu>& container,
 #else
         btn->set_child(move(label));
 #endif
-        btn->get_child()->set_margin_for_sdl({2,10,2,2});
+        btn->get_child()->set_margin_for_sdl(2, 10, 2, 2);
         btn->id = NUM_GAME_TYPE + i;
         btn->highlight_colour = LIGHTGREY;
         container->add_button(move(btn), 0, i);
@@ -538,24 +538,24 @@ public:
         m_root->align_items = Widget::Align::STRETCH;
 
         auto about = make_shared<Text>(opening_screen());
-        about->set_margin_for_crt({0, 0, 1, 0});
-        about->set_margin_for_sdl({0, 0, 10, 0});
+        about->set_margin_for_crt(0, 0, 1, 0);
+        about->set_margin_for_sdl(0, 0, 10, 0);
 
         m_root->add_child(move(about));
 
         auto grid = make_shared<Grid>();
-        grid->set_margin_for_crt({0, 0, 1, 0});
+        grid->set_margin_for_crt(0, 0, 1, 0);
 
         auto name_prompt = make_shared<Text>("Enter your name:");
-        name_prompt->set_margin_for_crt({0, 1, 1, 0});
-        name_prompt->set_margin_for_sdl({0, 0, 10, 0});
+        name_prompt->set_margin_for_crt(0, 1, 1, 0);
+        name_prompt->set_margin_for_sdl(0, 0, 10, 0);
 
         // If the game filled in a complete name, the user will
         // usually want to enter a new name instead of adding
         // to the current one.
         input_text = make_shared<Text>(formatted_string(input_string, WHITE));
-        input_text->set_margin_for_crt({0, 0, 1, 0});
-        input_text->set_margin_for_sdl({0, 0, 10, 10});
+        input_text->set_margin_for_crt(0, 0, 1, 0);
+        input_text->set_margin_for_sdl(0, 0, 10, 10);
 
         grid->add_child(move(name_prompt), 0, 0);
         grid->add_child(input_text, 1, 0);
@@ -563,11 +563,11 @@ public:
         descriptions = make_shared<Switcher>();
 
         auto mode_prompt = make_shared<Text>("Choices:");
-        mode_prompt->set_margin_for_crt({0, 1, 1, 0});
-        mode_prompt->set_margin_for_sdl({0, 0, 10, 0});
+        mode_prompt->set_margin_for_crt(0, 1, 1, 0);
+        mode_prompt->set_margin_for_sdl(0, 0, 10, 0);
         game_modes_menu = make_shared<OuterMenu>(true, 1, ARRAYSZ(entries));
-        game_modes_menu->set_margin_for_sdl({0, 0, 10, 10});
-        game_modes_menu->set_margin_for_crt({0, 0, 1, 0});
+        game_modes_menu->set_margin_for_sdl(0, 0, 10, 10);
+        game_modes_menu->set_margin_for_crt(0, 0, 1, 0);
         game_modes_menu->descriptions = descriptions;
         _construct_game_modes_menu(game_modes_menu);
 
@@ -584,9 +584,9 @@ public:
         if (num_saves > 0)
         {
             auto save_prompt = make_shared<Text>("Saved games:");
-            save_prompt->set_margin_for_crt({0, 1, 1, 0});
-            save_prompt->set_margin_for_sdl({0, 0, 10, 0});
-            save_games_menu->set_margin_for_sdl({0, 0, 10, 10});
+            save_prompt->set_margin_for_crt(0, 1, 1, 0);
+            save_prompt->set_margin_for_sdl(0, 0, 10, 0);
+            save_games_menu->set_margin_for_sdl(0, 0, 10, 10);
 #ifdef USE_TILE_LOCAL
             save_prompt->min_size().height = TILE_Y + 2;
             save_games_menu->min_size().height = TILE_Y * min(num_saves, 3);
@@ -654,8 +654,8 @@ public:
         m_root->add_child(make_shared<Text>(
                         formatted_string::parse_string(instructions_text)));
 
-        descriptions->set_margin_for_crt({1, 0, 0, 0});
-        descriptions->set_margin_for_sdl({10, 0, 0, 0});
+        descriptions->set_margin_for_crt(1, 0, 0, 0);
+        descriptions->set_margin_for_sdl(10, 0, 0, 0);
         m_root->add_child(descriptions);
     };
 

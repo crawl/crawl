@@ -391,14 +391,14 @@ static bool _reroll_random(newgame_def& ng)
     fill_doll_for_newgame(doll, ng);
 #ifdef USE_TILE_LOCAL
     auto tile = make_shared<ui::PlayerDoll>(doll);
-    tile->set_margin_for_sdl({0, 10, 0, 0});
+    tile->set_margin_for_sdl(0, 10, 0, 0);
     title_hbox->add_child(move(tile));
 #endif
 #endif
     title_hbox->add_child(make_shared<Text>(prompt));
     title_hbox->align_items = Widget::CENTER;
-    title_hbox->set_margin_for_sdl({0, 0, 20, 0});
-    title_hbox->set_margin_for_crt({0, 0, 1, 0});
+    title_hbox->set_margin_for_sdl(0, 0, 20, 0);
+    title_hbox->set_margin_for_crt(0, 0, 1, 0);
 
     auto vbox = make_shared<Box>(Box::VERT);
     vbox->add_child(move(title_hbox));
@@ -562,8 +562,8 @@ static void _add_menu_sub_item(shared_ptr<OuterMenu>& menu, int x, int y, const 
 {
     auto tmp = make_shared<Text>();
     tmp->set_text(formatted_string(text, BROWN));
-    tmp->set_margin_for_sdl({4,8,4,8});
-    tmp->set_margin_for_crt({0,2,0,0});
+    tmp->set_margin_for_sdl(4,8);
+    tmp->set_margin_for_crt(0, 2, 0, 0);
 
     auto btn = make_shared<MenuButton>();
     btn->set_child(move(tmp));
@@ -619,14 +619,14 @@ static void _choose_name(newgame_def& ng, newgame_def& choice)
     fill_doll_for_newgame(doll, ng);
 #ifdef USE_TILE_LOCAL
     auto tile = make_shared<ui::PlayerDoll>(doll);
-    tile->set_margin_for_sdl({0, 10, 0, 0});
+    tile->set_margin_for_sdl(0, 10, 0, 0);
     title_hbox->add_child(move(tile));
 #endif
 #endif
     title_hbox->add_child(make_shared<Text>(title));
     title_hbox->align_items = Widget::CENTER;
-    title_hbox->set_margin_for_sdl({0, 0, 20, 0});
-    title_hbox->set_margin_for_crt({0, 0, 1, 0});
+    title_hbox->set_margin_for_sdl(0, 0, 20, 0);
+    title_hbox->set_margin_for_crt(0, 0, 1, 0);
 
     auto vbox = make_shared<Box>(Box::VERT);
     vbox->add_child(move(title_hbox));
@@ -648,8 +648,8 @@ static void _choose_name(newgame_def& ng, newgame_def& choice)
         tmp->set_text(formatted_string("Enter - Begin!", BROWN));
 
         auto btn = make_shared<MenuButton>();
-        tmp->set_margin_for_sdl({4,8,4,8});
-        tmp->set_margin_for_crt({0,2,0,0});
+        tmp->set_margin_for_sdl(4,8);
+        tmp->set_margin_for_crt(0, 2, 0, 0);
         btn->set_child(move(tmp));
         btn->id = CK_ENTER;
         btn->description = "";
@@ -658,7 +658,7 @@ static void _choose_name(newgame_def& ng, newgame_def& choice)
 
         auto err = make_shared<Text>(
                 formatted_string("That's a silly name!", LIGHTRED));
-        err->set_margin_for_sdl({0,0,0,10});
+        err->set_margin_for_sdl(0, 0, 0, 10);
         auto box = make_shared<Box>(Box::HORZ);
         box->align_items = Widget::CENTER;
         box->add_child(err);
@@ -1089,8 +1089,8 @@ public:
         m_main_items = make_shared<OuterMenu>(true, 3, 20);
         m_main_items->menu_id = m_choice_type == C_JOB ?
             "background-main" : "species-main";
-        m_main_items->set_margin_for_crt({1, 0, 1, 0});
-        m_main_items->set_margin_for_sdl({15, 0, 15, 0});
+        m_main_items->set_margin_for_crt(1, 0);
+        m_main_items->set_margin_for_sdl(15, 0);
         m_main_items->descriptions = descriptions;
         m_vbox->add_child(m_main_items);
 
@@ -1099,8 +1099,8 @@ public:
         max_size() = { 80, INT_MAX };
 #endif
 
-        descriptions->set_margin_for_crt({1, 0, 1, 0});
-        descriptions->set_margin_for_sdl({0, 0, 15, 0});
+        descriptions->set_margin_for_crt(1, 0);
+        descriptions->set_margin_for_sdl(0, 0, 15, 0);
         descriptions->current() = -1;
         descriptions->shrink_h = true;
         m_vbox->add_child(descriptions);
@@ -1178,7 +1178,7 @@ protected:
         hbox->justify_items = Widget::Align::STRETCH;
         auto tile = make_shared<Image>();
         tile->set_tile(item_tile);
-        tile->set_margin_for_sdl({0, 6, 0, 0});
+        tile->set_margin_for_sdl(0, 6, 0, 0);
         tile->flex_grow = 0;
         hbox->add_child(move(tile));
         hbox->add_child(label);
@@ -1213,7 +1213,7 @@ protected:
 
         auto btn = make_shared<MenuButton>();
 #ifdef USE_TILE
-        hbox->set_margin_for_sdl({2,10,2,2});
+        hbox->set_margin_for_sdl(2, 10, 2, 2);
         btn->set_child(move(hbox));
 #else
         btn->set_child(move(label));
@@ -1222,7 +1222,7 @@ protected:
         btn->description = desc;
         btn->hotkey = letter;
         btn->highlight_colour = hl;
-        btn->set_margin_for_crt({0,1,0,0});
+        btn->set_margin_for_crt(0, 1, 0, 0);
 
         m_main_items->add_button(btn, position.x, position.y);
 
@@ -1233,7 +1233,7 @@ protected:
     void _add_group_title(const char* name, coord_def position)
     {
         auto text = make_shared<Text>(formatted_string(name, LIGHTBLUE));
-        text->set_margin_for_sdl({7, 0, 7, 32+2+6});
+        text->set_margin_for_sdl(7, 0, 7, 32+2+6);
         m_main_items->add_label(move(text), position.x, position.y);
     }
 
@@ -1702,11 +1702,11 @@ static void _construct_weapon_menu(const newgame_def& ng,
 
         auto hbox = make_shared<Box>(Box::HORZ);
         hbox->align_items = Widget::Align::CENTER;
-        hbox->set_margin_for_sdl({2,10,2,2});
+        hbox->set_margin_for_sdl(2, 10, 2, 2);
 
 #ifdef USE_TILE
         auto tile_stack = make_shared<Stack>();
-        tile_stack->set_margin_for_sdl({0, 6, 0, 0});
+        tile_stack->set_margin_for_sdl(0, 6, 0, 0);
         tile_stack->flex_grow = 0;
         hbox->add_child(tile_stack);
 
@@ -1813,15 +1813,15 @@ static bool _prompt_weapon(const newgame_def& ng, newgame_def& ng_choice,
     fill_doll_for_newgame(doll, ng);
 #ifdef USE_TILE_LOCAL
     auto tile = make_shared<ui::PlayerDoll>(doll);
-    tile->set_margin_for_sdl({0, 10, 0, 0});
+    tile->set_margin_for_sdl(0, 10, 0, 0);
     title_hbox->add_child(move(tile));
 #endif
 #endif
     auto title = make_shared<Text>(formatted_string(_welcome(ng), BROWN));
     title_hbox->add_child(title);
     title_hbox->align_items = Widget::CENTER;
-    title_hbox->set_margin_for_sdl({0, 0, 20, 0});
-    title_hbox->set_margin_for_crt({0, 0, 1, 0});
+    title_hbox->set_margin_for_sdl(0, 0, 20, 0);
+    title_hbox->set_margin_for_crt(0, 0, 1, 0);
 
     auto vbox = make_shared<Box>(Box::VERT);
     vbox->align_items = Widget::Align::STRETCH;
@@ -1831,8 +1831,8 @@ static bool _prompt_weapon(const newgame_def& ng, newgame_def& ng_choice,
 
     auto main_items = make_shared<OuterMenu>(true, 1, weapons.size());
     main_items->menu_id = "weapon-main";
-    main_items->set_margin_for_sdl({15, 0, 15, 0});
-    main_items->set_margin_for_crt({1, 0, 1, 0});
+    main_items->set_margin_for_sdl(15, 0);
+    main_items->set_margin_for_crt(1, 0);
     vbox->add_child(main_items);
 
     auto sub_items = make_shared<OuterMenu>(false, 2, 3);
@@ -2131,7 +2131,7 @@ static void _construct_gamemode_map_menu(const mapref_vector& maps,
         hbox->align_items = Widget::Align::CENTER;
         auto tile = make_shared<Image>();
         tile->set_tile(tile_for_map_name(map_name));
-        tile->set_margin_for_sdl({0, 6, 0, 0});
+        tile->set_margin_for_sdl(0, 6, 0, 0);
         hbox->add_child(move(tile));
         hbox->add_child(label);
 #endif
@@ -2140,7 +2140,7 @@ static void _construct_gamemode_map_menu(const mapref_vector& maps,
 
         auto btn = make_shared<MenuButton>();
 #ifdef USE_TILE
-        hbox->set_margin_for_sdl({2,10,2,2});
+        hbox->set_margin_for_sdl(2, 10, 2, 2);
         btn->set_child(move(hbox));
 #else
         btn->set_child(move(label));
@@ -2227,8 +2227,8 @@ static void _prompt_gamemode_map(newgame_def& ng, newgame_def& ng_choice,
 
     auto main_items = make_shared<OuterMenu>(true, 1, maps.size());
     main_items->menu_id = "map-main";
-    main_items->set_margin_for_sdl({15, 0, 15, 0});
-    main_items->set_margin_for_crt({1, 0, 1, 0});
+    main_items->set_margin_for_sdl(15, 0);
+    main_items->set_margin_for_crt(1, 0);
     vbox->add_child(main_items);
 
     auto sub_items = make_shared<OuterMenu>(false, 2, 2);
