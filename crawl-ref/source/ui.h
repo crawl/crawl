@@ -87,8 +87,6 @@ public:
     int width, height;
 };
 
-struct RestartAllocation {};
-
 template<typename, typename> class Slot;
 
 template<class Target, class... Args>
@@ -684,6 +682,7 @@ shared_ptr<Widget> top_layout();
 void pump_events(int wait_event_timeout = INT_MAX);
 void run_layout(shared_ptr<Widget> root, const bool& done);
 bool has_layout();
+NORETURN void restart_layout();
 int getch(KeymapContext km = KMC_DEFAULT);
 void ui_force_render();
 void ui_render();

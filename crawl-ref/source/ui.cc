@@ -104,6 +104,8 @@ public:
     vector<int> cutoff_stack;
     vector<Widget*> focus_stack;
 
+    struct RestartAllocation {};
+
 protected:
     int m_w, m_h;
     Region m_region;
@@ -2223,6 +2225,11 @@ void run_layout(shared_ptr<Widget> root, const bool& done)
 bool has_layout()
 {
     return ui_root.num_children() > 0;
+}
+
+NORETURN void restart_layout()
+{
+    throw UIRoot::RestartAllocation();
 }
 
 int getch(KeymapContext km)

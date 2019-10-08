@@ -506,7 +506,7 @@ void UIMenuPopup::_allocate_region()
          || (num_cols == 2 && m_height+more_height <= max_height))
         {
             m_menu->m_ui.menu->set_num_columns(3 - num_cols);
-            throw RestartAllocation();
+            ui::restart_layout();
         }
     }
     m_menu->m_ui.menu->do_layout(menu_w, num_cols);
@@ -526,7 +526,7 @@ void UIMenuPopup::_allocate_region()
             m_menu->m_ui.more->set_visible(!more_visible);
             _invalidate_sizereq();
             m_menu->m_ui.more->_queue_allocation();
-            throw RestartAllocation();
+            ui::restart_layout();
         }
     }
 
@@ -555,7 +555,7 @@ void UIMenuPopup::_allocate_region()
     {
         m_menu->m_ui.scroller->_invalidate_sizereq();
         m_menu->m_ui.scroller->_queue_allocation();
-        throw RestartAllocation();
+        ui::restart_layout();
     }
 }
 
