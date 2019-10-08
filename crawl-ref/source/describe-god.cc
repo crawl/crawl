@@ -1090,6 +1090,7 @@ static void build_partial_god_ui(god_type which_god, shared_ptr<ui::Popup>& popu
     topline += formatted_string(uppercase_first(god_name(which_god, true)));
 
     auto vbox = make_shared<Box>(Widget::VERT);
+    vbox->align_cross = Widget::STRETCH;
     auto title_hbox = make_shared<Box>(Widget::HORZ);
 
 #ifdef USE_TILE
@@ -1103,8 +1104,8 @@ static void build_partial_god_ui(god_type which_god, shared_ptr<ui::Popup>& popu
     title->set_margin_for_sdl(0, 0, 0, 16);
     title_hbox->add_child(move(title));
 
+    title_hbox->align_main = Widget::CENTER;
     title_hbox->align_cross = Widget::CENTER;
-    title_hbox->align_self = Widget::CENTER;
     vbox->add_child(move(title_hbox));
 
     desc_sw = make_shared<Switcher>();

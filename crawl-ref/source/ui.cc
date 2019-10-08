@@ -361,10 +361,7 @@ vector<int> Box::layout_cross_axis(vector<SizeReq>& ch_psz, int cross_sz)
 
     for (size_t i = 0; i < m_children.size(); i++)
     {
-        auto const& child = m_children[i];
-        // find the child's size on the cross axis
-        bool stretch = child->align_self == STRETCH ? true
-            : align_cross == STRETCH;
+        const bool stretch = align_cross == STRETCH;
         ch_sz[i] = stretch ? cross_sz : min(max(ch_psz[i].min, cross_sz), ch_psz[i].nat);
     }
 
@@ -441,10 +438,7 @@ void Box::_allocate_region()
         // cross axis offset
         int extra_cross_space = horz ? m_region.height - ch[i] : m_region.width - cw[i];
 
-        auto const& child = m_children[i];
-        Align child_align = child->align_self ? child->align_self
-                : align_cross ? align_cross
-                : Align::START;
+        const Align child_align = align_cross;
         int xo;
         switch (child_align)
         {

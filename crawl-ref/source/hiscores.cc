@@ -411,10 +411,10 @@ UIHiscoresMenu::UIHiscoresMenu()
 {
     m_root = make_shared<Box>(Widget::VERT);
     m_root->_set_parent(this);
+    m_root->align_cross = Widget::CENTER;
 
     auto title = make_shared<Text>(formatted_string(
                 "Dungeon Crawl Stone Soup: High Scores", YELLOW));
-    title->align_self = Widget::CENTER;
     title->set_margin_for_sdl(0, 0, 20, 0);
     m_description = make_shared<Text>(string(9, '\n'));
 

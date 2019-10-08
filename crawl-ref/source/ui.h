@@ -126,8 +126,7 @@ class Widget : public enable_shared_from_this<Widget>
 {
 public:
     enum Align {
-        UNSET = 0,
-        START,
+        START = 0,
         END,
         CENTER,
         STRETCH,
@@ -141,7 +140,6 @@ public:
     virtual ~Widget();
 
     int flex_grow = 1;
-    Align align_self = UNSET;
     bool expand_h = false, expand_v = false;
     bool shrink_h = false, shrink_v = false;
     Region get_region() const { return m_region; }
@@ -349,7 +347,7 @@ public:
     virtual ~Box() {}
     void add_child(shared_ptr<Widget> child);
     Widget::Align align_main = START;
-    Widget::Align align_cross = UNSET;
+    Widget::Align align_cross = START;
 
     virtual void _render() override;
     virtual SizeReq _get_preferred_size(Direction dim, int prosp_width) override;
