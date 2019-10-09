@@ -103,13 +103,6 @@ void monster_drop_things(monster* mons,
 
 static bool _valid_morph(monster* mons, monster_type new_mclass)
 {
-    const dungeon_feature_type current_tile = grd(mons->pos());
-
-    monster_type old_mclass = mons->type;
-    if (mons_class_is_zombified(old_mclass))
-        old_mclass = mons->base_monster;
-    // don't force spectral shapeshifters to become natural|undead mons only
-
     // Shapeshifters cannot polymorph into glowing shapeshifters or
     // vice versa.
     if ((new_mclass == MONS_GLOWING_SHAPESHIFTER
@@ -130,7 +123,7 @@ static bool _valid_morph(monster* mons, monster_type new_mclass)
     }
 
     // Various inappropriate polymorph targets.
-    if ( !(mons_class_holiness(new_mclass) & mons_class_holiness(old_mclass))
+    if ( !(mons_class_holiness(new_mclass) & mons_class_holiness(mons->type))
         // normally holiness just needs to overlap, but we don't want
         // shapeshifters to become demons
         || mons->is_shapeshifter() && !(mons_class_holiness(new_mclass) & MH_NATURAL)
@@ -145,7 +138,7 @@ static bool _valid_morph(monster* mons, monster_type new_mclass)
 
         // 'morph targets are _always_ "base" classes, not derived ones.
         || new_mclass != mons_species(new_mclass)
-        || new_mclass == mons_species(old_mclass)
+        || new_mclass == mons_species(mons->type)
         // They act as separate polymorph classes on their own.
         || mons_class_is_zombified(new_mclass)
 
@@ -167,7 +160,7 @@ static bool _valid_morph(monster* mons, monster_type new_mclass)
     }
 
     // Determine if the monster is happy on current tile.
-    return monster_habitable_grid(new_mclass, current_tile);
+    return monster_habitable_grid(new_mclass, grd(mons->pos()));
 }
 
 static bool _is_poly_power_unsuitable(poly_power_type power,
