@@ -5,8 +5,7 @@
 struct bolt;
 class dist;
 
-spret conjure_flame(const actor *agent, int pow, const coord_def& where,
-                         bool fail);
+spret conjure_flame(int pow, bool fail);
 
 spret cast_poisonous_vapours(int pow, const dist &beam, bool fail);
 

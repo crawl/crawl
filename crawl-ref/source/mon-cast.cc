@@ -94,7 +94,6 @@ static int  _mons_mesmerise(monster* mons, bool actual = true);
 static int  _mons_cause_fear(monster* mons, bool actual = true);
 static int  _mons_mass_confuse(monster* mons, bool actual = true);
 static coord_def _mons_fragment_target(const monster &mons);
-static coord_def _mons_conjure_flame_pos(const monster &mon);
 static coord_def _mons_awaken_earth_target(const monster& mon);
 static void _maybe_throw_ally(const monster &mons);
 static void _siren_sing(monster* mons, bool avatar);
@@ -386,23 +385,6 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             cast_fragmentation(splpow, &caster, pbolt.target, false);
         },
         _target_beam_setup(_mons_fragment_target),
-        MSPELL_LOGIC_NONE, 6
-    } },
-    { SPELL_CONJURE_FLAME, {
-        [](const monster &/*caster*/) {
-            return !(env.level_state & LSTATE_STILL_WINDS);
-        },
-        [](monster &caster, mon_spell_slot slot, bolt& pbolt) {
-            const int splpow = mons_spellpower(caster, slot.spell);
-            if ((!in_bounds(pbolt.target)
-                 || conjure_flame(&caster, splpow, pbolt.target, false)
-                    != spret::success)
-                && you.can_see(caster))
-            {
-                canned_msg(MSG_NOTHING_HAPPENS);
-            }
-        },
-        _target_beam_setup(_mons_conjure_flame_pos),
         MSPELL_LOGIC_NONE, 6
     } },
     { SPELL_AWAKEN_EARTH, {
@@ -3383,75 +3365,6 @@ static bool _spray_tracer(monster *caster, int pow, bolt parent_beam, spell_type
     }
 
     return mons_should_fire(beam);
-}
-
-/**
- * Pick a target for conjuring a flame.
- *
- * @param[in] mon The monster casting this.
- * @param[in] foe The victim whose movement we are trying to impede.
- * @return A position for conjuring a cloud.
- */
-static coord_def _mons_conjure_flame_pos(const monster &mons)
-{
-    const monster *mon = &mons; // TODO: rewriteme
-    actor* foe = mon->get_foe();
-    // Don't bother if our target is sufficiently fire-resistant,
-    // or doesn't exist.
-    if (!foe || foe->res_fire() >= 3)
-        return coord_def(GXM+1, GYM+1);
-
-    const coord_def foe_pos = foe->pos();
-    const coord_def a = foe_pos - mon->pos();
-    vector<coord_def> targets;
-
-    const int range = _mons_spell_range(*mon, SPELL_CONJURE_FLAME);
-    for (distance_iterator di(mon->pos(), true, true, range); di; ++di)
-    {
-        // Our target needs to be in LOS, and we can't have a creature or
-        // cloud there. Technically we can target flame clouds, but that's
-        // usually not very constructive where monsters are concerned.
-        if (!cell_see_cell(mon->pos(), *di, LOS_SOLID)
-            || cell_is_solid(*di)
-            || (actor_at(*di) && mon->can_see(*actor_at(*di))))
-        {
-            continue;
-        }
-
-        if (cloud_at(*di))
-            continue;
-
-        // Conjure flames *behind* the target; blocking the target from
-        // accessing us just lets them run away, which is bad if our target
-        // is usually the player.
-        coord_def b = *di - foe_pos;
-        int dot = (a.x * b.x + a.y * b.y);
-        if (dot < 0)
-            continue;
-
-        // Try to block off a hallway.
-        int floor_count = 0;
-        for (adjacent_iterator ai(*di); ai; ++ai)
-        {
-            if (feat_is_traversable(grd(*ai))
-                && is_damaging_cloud(cloud_type_at(*ai)))
-            {
-                floor_count++;
-            }
-        }
-
-        if (floor_count != 2)
-            continue;
-
-        targets.push_back(*di);
-    }
-
-    // If we found something, pick a square at random to block.
-    const int count = targets.size();
-    if (!count)
-        return coord_def(GXM+1, GYM+1);
-
-    return targets[random2(count)];
 }
 
 /**

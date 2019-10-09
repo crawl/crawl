@@ -33,84 +33,47 @@
 #include "terrain.h"
 #include "viewchar.h"
 
-spret conjure_flame(const actor *agent, int pow, const coord_def& where,
-                         bool fail)
+spret conjure_flame(int pow, bool fail)
 {
-    // FIXME: This would be better handled by a flag to enforce max range.
-    if (grid_distance(where, agent->pos()) > spell_range(SPELL_CONJURE_FLAME, pow)
-        || !in_bounds(where))
+    cloud_struct* cloud = cloud_at(you.pos());
+
+    if (cloud && !(cloud->type == CLOUD_FIRE || cloud->type == CLOUD_EMBERS))
     {
-        if (agent->is_player())
-            mpr("That's too far away.");
+        mpr("There's already a cloud here!");
         return spret::abort;
-    }
-
-    if (cell_is_solid(where))
-    {
-        if (agent->is_player())
-        {
-            const char *feat = feat_type_name(grd(where));
-            mprf("You can't place the cloud on %s.", article_a(feat).c_str());
-        }
-        return spret::abort;
-    }
-
-    cloud_struct* cloud = cloud_at(where);
-
-    if (cloud && cloud->type != CLOUD_FIRE)
-    {
-        if (agent->is_player())
-            mpr("There's already a cloud there!");
-        return spret::abort;
-    }
-
-    actor* victim = actor_at(where);
-    if (victim)
-    {
-        if (agent->can_see(*victim))
-        {
-            if (agent->is_player())
-                mpr("You can't place the cloud on a creature.");
-            return spret::abort;
-        }
-
-        fail_check();
-
-        // FIXME: maybe should do _paranoid_option_disable() here?
-        if (agent->is_player())
-            canned_msg(MSG_GHOSTLY_OUTLINE);
-        return spret::success;      // Don't give free detection!
     }
 
     fail_check();
 
-    if (cloud)
+    if (cloud && cloud->type == CLOUD_FIRE)
     {
         // Reinforce the cloud - but not too much.
         // It must be a fire cloud from a previous test.
-        if (you.see_cell(where))
-            mpr("The fire blazes with new energy!");
+        mpr("The fire blazes with new energy!");
         const int extra_dur = 2 + min(random2(pow) / 2, 20);
         cloud->decay += extra_dur * 5;
-        cloud->source = agent->mid;
-        if (agent->is_player())
-            cloud->set_whose(KC_YOU);
-        else
-            cloud->set_killer(KILL_MON_MISSILE);
+        cloud->source = you.mid ;
+        cloud->set_whose(KC_YOU);
+        cloud->set_killer(KILL_MON_MISSILE);
+    }
+    else if (cloud && cloud->type == CLOUD_EMBERS)
+    {
+        mpr("The fire ignites!");
+        place_cloud(CLOUD_FIRE, you.pos(), min(5 + (random2(pow)/2)
+                                                 + (random2(pow)/2), 23), &you);
     }
     else
     {
-        const int durat = min(5 + (random2(pow)/2) + (random2(pow)/2), 23);
-        place_cloud(CLOUD_FIRE, where, durat, agent);
-        if (you.see_cell(where))
-        {
-            if (agent->is_player())
-                mpr("The fire ignites!");
-            else
-                mpr("A cloud of flames bursts into life!");
-        }
+        you.props["cflame_dur"] = min(5 + (random2(pow)/2)
+                                               + (random2(pow)/2), 23);
+        place_cloud(CLOUD_EMBERS, you.pos(), 1, &you);
+        // Create a cloud for 11 auts, so that no matter what happens
+        // the flame tries to ignite after one player action.
+        cloud = cloud_at(you.pos());
+        cloud->decay++;
+        mpr("The fire begins to smolder!");
     }
-    noisy(spell_effect_noise(SPELL_CONJURE_FLAME), where);
+    noisy(spell_effect_noise(SPELL_CONJURE_FLAME), you.pos());
 
     return spret::success;
 }
