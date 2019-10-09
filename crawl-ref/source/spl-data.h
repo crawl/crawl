@@ -114,7 +114,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_BOLT_OF_FIRE, "Bolt of Fire",
     spschool::conjuration | spschool::fire,
-    spflag::dir_or_target | spflag::needs_tracer,
+    spflag::dir_or_target | spflag::needs_tracer | spflag::monster,
     6,
     200,
     6, 6,
@@ -238,7 +238,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_THROW_FLAME, "Throw Flame",
     spschool::conjuration | spschool::fire,
-    spflag::dir_or_target | spflag::needs_tracer,
+    spflag::dir_or_target | spflag::needs_tracer | spflag::monster,
     2,
     50,
     LOS_RADIUS, LOS_RADIUS,
