@@ -75,3 +75,5 @@ spret cast_scattershot(const actor *caster, int pow, const coord_def &pos,
 spret cast_ignition(const actor *caster, int pow, bool fail);
 
 spret cast_borgnjors_vile_clutch(int pow, bolt &beam, bool fail);
+
+spret cast_starburst(int pow, bool fail, bool tracer=false);

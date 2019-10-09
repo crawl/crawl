@@ -464,5 +464,6 @@ enum spell_type : int
     SPELL_SONIC_WAVE,
     SPELL_THROW_PIE,
     SPELL_SPORULATE,
+    SPELL_STARBURST,
     NUM_SPELLS
 };

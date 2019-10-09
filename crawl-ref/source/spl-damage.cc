@@ -41,6 +41,7 @@
 #include "mutation.h"
 #include "ouch.h"
 #include "prompt.h"
+#include "random.h"
 #include "religion.h"
 #include "shout.h"
 #include "spl-summoning.h"
@@ -3068,6 +3069,65 @@ spret cast_borgnjors_vile_clutch(int pow, bolt &beam, bool fail)
     _setup_borgnjors_vile_clutch(beam, pow);
     mpr("Decaying hands burst forth from the earth!");
     beam.explode();
+
+    return spret::success;
+}
+
+spret cast_starburst(int pow, bool fail, bool tracer)
+{
+    int range = spell_range(SPELL_STARBURST, pow);
+
+    vector<coord_def> offsets = { coord_def(range, 0),
+                                coord_def(range, range),
+                                coord_def(0, range),
+                                coord_def(-range, range),
+                                coord_def(-range, 0),
+                                coord_def(-range, -range),
+                                coord_def(0, -range),
+                                coord_def(range, -range) };
+
+    bolt beam;
+    beam.range        = range;
+    beam.source       = you.pos();
+    beam.source_id    = MID_PLAYER;
+    beam.is_tracer    = tracer;
+    beam.is_targeting = tracer;
+    beam.dont_stop_player = true;
+    beam.friend_info.dont_stop = true;
+    beam.foe_info.dont_stop = true;
+    beam.attitude = ATT_FRIENDLY;
+    beam.thrower      = KILL_YOU;
+    beam.origin_spell = SPELL_STARBURST;
+    beam.draw_delay   = 5;
+    zappy(ZAP_BOLT_OF_FIRE, pow, false, beam);
+
+    for (const coord_def & offset : offsets)
+    {
+        beam.target = you.pos() + offset;
+        if (!tracer && !player_tracer(ZAP_BOLT_OF_FIRE, pow, beam))
+            return spret::abort;
+
+        if (tracer)
+        {
+            beam.fire();
+            // something to hit
+            if (beam.foe_info.count > 0)
+                return spret::success;
+        }
+    }
+
+    if (tracer)
+        return spret::abort;
+
+    fail_check();
+
+    // Randomize for nice animations
+    shuffle_array(offsets);
+    for (auto & offset : offsets)
+    {
+        beam.target = you.pos() + offset;
+        beam.fire();
+    }
 
     return spret::success;
 }
