@@ -5801,7 +5801,6 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
     case SPELL_AIRSTRIKE:
     {
-        // Damage averages 14 for 5HD, 18 for 10HD, 28 for 20HD, +50% if flying.
         if (foe->is_player())
         {
             if (you.airborne())
@@ -5817,12 +5816,10 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
         pbolt.flavour = BEAM_AIR;
 
-        int damage_taken = 10 + 2 * mons->get_hit_dice();
+        int damage_taken = 8 + random2(2 + div_rand_round(splpow, 7));
         damage_taken = foe->beam_resists(pbolt, damage_taken, false);
 
-        // Previous method of damage calculation (in line with player
-        // airstrike) had absurd variance.
-        damage_taken = foe->apply_ac(random2avg(damage_taken, 3));
+        damage_taken = foe->apply_ac(damage_taken);
         foe->hurt(mons, damage_taken, BEAM_MISSILE, KILLED_BY_BEAM,
                   "", "by the air");
         return;
