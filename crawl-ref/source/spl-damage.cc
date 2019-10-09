@@ -868,7 +868,15 @@ spret cast_airstrike(int pow, const dist &beam, bool fail)
     bolt pbeam;
     pbeam.flavour = BEAM_AIR;
 
-    int hurted = 8 + random2(2 + div_rand_round(pow, 7));
+    int empty_space = 0;
+    for (adjacent_iterator ai(beam.target); ai; ++ai)
+        if (!monster_at(*ai) && !cell_is_solid(*ai))
+            empty_space++;
+
+    empty_space = max(3, empty_space);
+
+    int hurted = 5 + empty_space + random2avg(2 + div_rand_round(pow, 7),
+                                              empty_space - 2);
 #ifdef DEBUG_DIAGNOSTICS
     const int preac = hurted;
 #endif
