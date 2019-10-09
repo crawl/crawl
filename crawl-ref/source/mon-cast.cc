@@ -14,6 +14,7 @@
 
 #include "act-iter.h"
 #include "areas.h"
+#include "attack.h"
 #include "bloodspatter.h"
 #include "branch.h"
 #include "cleansing-flame-source-type.h"
@@ -5780,19 +5781,19 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
     case SPELL_WATERSTRIKE:
     {
-        if (you.can_see(*foe))
-        {
-            if (foe->airborne())
-                mprf("The water rises up and strikes %s!", foe->name(DESC_THE).c_str());
-            else
-                mprf("The water swirls and strikes %s!", foe->name(DESC_THE).c_str());
-        }
-
         pbolt.flavour    = BEAM_WATER;
 
         int damage_taken = waterstrike_damage(*mons).roll();
         damage_taken = foe->beam_resists(pbolt, damage_taken, false);
         damage_taken = foe->apply_ac(damage_taken);
+
+        if (you.can_see(*foe))
+        {
+                mprf("The water %s and strikes %s%s",
+                        foe->airborne() ? "rises up" : "swirls",
+                        foe->name(DESC_THE).c_str(),
+                        attack_strength_punctuation(damage_taken).c_str());
+        }
 
         foe->hurt(mons, damage_taken, BEAM_MISSILE, KILLED_BY_BEAM,
                       "", "by the raging water");
@@ -5801,25 +5802,22 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
     case SPELL_AIRSTRIKE:
     {
-        if (foe->is_player())
-        {
-            if (you.airborne())
-                mpr("The air twists around and violently strikes you in flight!");
-            else
-                mpr("The air twists around and strikes you!");
-        }
-        else
-        {
-            simple_monster_message(*foe->as_monster(),
-                                   " is struck by the twisting air!");
-        }
-
         pbolt.flavour = BEAM_AIR;
 
         int damage_taken = 8 + random2(2 + div_rand_round(splpow, 7));
         damage_taken = foe->beam_resists(pbolt, damage_taken, false);
 
         damage_taken = foe->apply_ac(damage_taken);
+
+        if (you.can_see(*foe))
+        {
+                mprf("The air twists around and %sstrikes %s%s%s",
+                        foe->airborne() ? "violently " : "",
+                        foe->name(DESC_THE).c_str(),
+                        foe->airborne() ? " in flight" : "",
+                        attack_strength_punctuation(damage_taken).c_str());
+        }
+
         foe->hurt(mons, damage_taken, BEAM_MISSILE, KILLED_BY_BEAM,
                   "", "by the air");
         return;
