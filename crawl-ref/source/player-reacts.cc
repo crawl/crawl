@@ -799,7 +799,7 @@ static void _decrement_durations()
     }
 
     if (you.duration[DUR_TOXIC_RADIANCE])
-        toxic_radiance_effect(&you, delay);
+        toxic_radiance_effect(&you, max(delay, you.duration[DUR_TOXIC_RADIANCE]));
 
     if (you.duration[DUR_RECITE] && _check_recite())
     {
