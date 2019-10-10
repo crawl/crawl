@@ -797,6 +797,7 @@ Menu::Menu(int _flags, const string& tagname, KeymapContext kmc)
     m_ui.scroller = make_shared<UIMenuScroller>();
     m_ui.title = make_shared<Text>();
     m_ui.more = make_shared<UIMenuMore>();
+    m_ui.more->set_visible(false);
     m_ui.vbox = make_shared<Box>(Widget::VERT);
     m_ui.vbox->align_cross = Widget::STRETCH;
 
