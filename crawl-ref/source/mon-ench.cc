@@ -1783,7 +1783,7 @@ void monster::apply_enchantment(const mon_enchant &me)
         break;
 
     case ENCH_TOXIC_RADIANCE:
-        toxic_radiance_effect(this, 1);
+        toxic_radiance_effect(this, 10);
         decay_enchantment(en);
         break;
 
