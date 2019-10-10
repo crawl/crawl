@@ -1118,6 +1118,9 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         break;
 
     case SPELL_SWIFTNESS:
+        if (you.species == SP_FORMICID)
+            return "your stasis precludes magical swiftness.";
+
         if (temp)
         {
             if (you.duration[DUR_SWIFTNESS])
