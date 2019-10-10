@@ -318,10 +318,8 @@ void LineBuffer::add(float pos_sx, float pos_sy, float pos_ex, float pos_ey,
 void LineBuffer::add_square(float sx, float sy, float ex, float ey,
                             const VColour &col)
 {
-    GLW_3VF scale;
-    glmanager->get_transform(nullptr, &scale);
-    const float dx = 1.0/scale.x, dy = 1.0/scale.y;
-    const float tx = dx, ty = dy;
+    const float dx = 1, dy = 1; // line thickness
+    const float tx = 1, ty = 1; // shift used to prevent corner overlap
 
     add(sx-dx, sy-ty, ex-dx, sy, col);
     add(ex-tx, sy-dy, ex, ey-dy, col);

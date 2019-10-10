@@ -86,11 +86,11 @@ void MapRegion::pack_buffers()
 
     float pos_sx = (m_win_start.x - m_min_gx);
     float pos_sy = (m_win_start.y - m_min_gy);
-    float pos_ex = (m_win_end.x - m_min_gx) - 1 / (float)dx;
-    float pos_ey = (m_win_end.y - m_min_gy) - 1 / (float)dy;
+    float pos_ex = (m_win_end.x - m_min_gx);
+    float pos_ey = (m_win_end.y - m_min_gy);
 
-    set_transform();
-    m_buf_lines.add_square(pos_sx, pos_sy, pos_ex, pos_ey,
+    set_transform(true);
+    m_buf_lines.add_square(pos_sx*dx, pos_sy*dy, pos_ex*dx + 1, pos_ey*dy + 1,
                            Options.tile_window_col);
 }
 
@@ -111,6 +111,7 @@ void MapRegion::render()
     set_transform();
     glmanager->set_scissor(sx, sy, wx, wy);
     m_buf_map.draw();
+    set_transform(true);
     m_buf_lines.draw();
     glmanager->reset_scissor();
 }
