@@ -2637,7 +2637,7 @@ spret cast_toxic_radiance(actor *agent, int pow, bool fail, bool mon_tracer)
             mpr("Your toxic radiance grows in intensity.");
 
         you.increase_duration(DUR_TOXIC_RADIANCE, 2 + random2(pow/20), 15);
-        toxic_radiance_effect(&you, 1, true);
+        toxic_radiance_effect(&you, 10, true);
 
         flash_view_delay(UA_PLAYER, GREEN, 300, &hitfunc);
 
@@ -2664,7 +2664,7 @@ spret cast_toxic_radiance(actor *agent, int pow, bool fail, bool mon_tracer)
 
         mon_agent->add_ench(mon_enchant(ENCH_TOXIC_RADIANCE, 1, mon_agent,
                                         (4 + random2avg(pow/15, 2)) * BASELINE_DELAY));
-        toxic_radiance_effect(agent, 1);
+        toxic_radiance_effect(agent, 10);
 
         targeter_los hitfunc(mon_agent, LOS_NO_TRANS);
         flash_view_delay(UA_MONSTER, GREEN, 300, &hitfunc);
@@ -2678,8 +2678,8 @@ spret cast_toxic_radiance(actor *agent, int pow, bool fail, bool mon_tracer)
  *
  * @param agent   The caster.
  * @param mult    A number to multiply the damage by.
- *                This is the time taken for the player's action in turns,
- *                or 1 if the spell was cast this turn.
+ *                This is the time taken for the player's action in auts,
+ *                or 10 if the spell was cast this turn.
  * @param on_cast Whether the spell was cast this turn. This only matters
  *                if the player cast the spell. If true, we trigger conducts
  *                if the player hurts allies; if false, we don't, to avoid
@@ -2705,7 +2705,7 @@ void toxic_radiance_effect(actor* agent, int mult, bool on_cast)
         if (agent->is_monster() && mons_aligned(agent, *ai))
             continue;
 
-        int dam = roll_dice(1, 1 + pow / 20) * mult;
+        int dam = roll_dice(1, 1 + pow / 20) * div_rand_round(mult, BASELINE_DELAY);
         dam = resist_adjust_damage(*ai, BEAM_POISON, dam);
 
         if (ai->is_player())
@@ -2741,8 +2741,11 @@ void toxic_radiance_effect(actor* agent, int mult, bool on_cast)
             {
                 behaviour_event(ai->as_monster(), ME_ANNOY, agent,
                                 agent->pos());
-                if (coinflip() || !ai->as_monster()->has_ench(ENCH_POISON))
-                    poison_monster(ai->as_monster(), agent, 1);
+                int q = mult / BASELINE_DELAY;
+                int levels = roll_dice(q, 2) - q + (roll_dice(1, 20) <= (mult % BASELINE_DELAY));
+                if (!ai->as_monster()->has_ench(ENCH_POISON)) // Always apply poison to an unpoisoned enemy
+                    levels = max(levels, 1);
+                poison_monster(ai->as_monster(), agent, levels);
             }
         }
     }
