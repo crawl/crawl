@@ -1396,6 +1396,10 @@ static int _lookup_prompt()
                                                 lookup_type_prompts.c_str());
         linebreak_string(prompt, 72);
 
+#ifdef USE_TILE_WEB
+        tiles_crt_popup show_as_popup;
+        tiles.set_ui_state(UI_CRT);
+#endif
         auto prompt_ui =
                 make_shared<ui::Text>(formatted_string::parse_string(prompt));
         bool done = false;

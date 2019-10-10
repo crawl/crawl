@@ -28,6 +28,7 @@ enum WebtilesUIState
 {
     UI_INIT = -1,
     UI_NORMAL,
+    UI_CRT,
     UI_VIEW_MAP,
 };
 
