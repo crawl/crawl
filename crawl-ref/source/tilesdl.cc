@@ -1153,9 +1153,11 @@ void TilesFramework::autosize_minimap()
     const int vert = (m_statcol_bottom - (m_region_map->sy ? m_region_map->sy
                                                            : m_statcol_top)
                      - map_margin * 2) / GYM;
-    m_region_map->dx = m_region_map->dy = min(horiz, vert);
+
+    int sz = min(horiz, vert);
     if (Options.tile_map_pixels)
-        m_region_map->dx = min(m_region_map->dx, Options.tile_map_pixels);
+        sz = min(sz, Options.tile_map_pixels);
+    m_region_map->dx = m_region_map->dy = sz;
 }
 
 void TilesFramework::place_minimap()
