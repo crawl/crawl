@@ -125,7 +125,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_BOLT_OF_COLD, "Bolt of Cold",
     spschool::conjuration | spschool::ice,
-    spflag::dir_or_target | spflag::needs_tracer,
+    spflag::dir_or_target | spflag::needs_tracer | spflag::monster,
     6,
     200,
     5, 5,
@@ -249,7 +249,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_THROW_FROST, "Throw Frost",
     spschool::conjuration | spschool::ice,
-    spflag::dir_or_target | spflag::needs_tracer,
+    spflag::dir_or_target | spflag::needs_tracer | spflag::monster,
     2,
     50,
     6, 6,
@@ -1280,7 +1280,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_THROW_ICICLE, "Throw Icicle",
     spschool::conjuration | spschool::ice,
-    spflag::dir_or_target | spflag::needs_tracer,
+    spflag::dir_or_target | spflag::needs_tracer | spflag::monster,
     4,
     100,
     5, 5,
