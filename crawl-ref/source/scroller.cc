@@ -209,5 +209,5 @@ void recv_formatted_scroller_scroll(int line)
     // XXX: since the scroll event from webtiles is not delivered by the event
     // pumping loop in ui::pump_events, the UI system won't automatically draw
     // any changes for console spectators, so we need to force a redraw here.
-    ui_force_render();
+    ui::force_render();
 }

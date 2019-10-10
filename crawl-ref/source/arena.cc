@@ -872,7 +872,7 @@ namespace arena
                 do_respawn(faction_a);
                 do_respawn(faction_b);
                 balance_spawners();
-                ui_delay(Options.view_delay);
+                ui::delay(Options.view_delay);
                 clear_messages();
                 ASSERT(you.pet_target == MHITNOT);
             }
@@ -882,7 +882,7 @@ namespace arena
         if (contest_cancelled)
         {
             mpr("Canceled contest at user request");
-            ui_delay(Options.view_delay);
+            ui::delay(Options.view_delay);
             clear_messages();
             return;
         }
@@ -1070,11 +1070,11 @@ namespace arena
             do_fight();
 
             if (trials_done < total_trials)
-                ui_delay(Options.view_delay * 5);
+                ui::delay(Options.view_delay * 5);
         }
         while (!contest_cancelled && trials_done < total_trials);
 
-        ui_delay(Options.view_delay * 5);
+        ui::delay(Options.view_delay * 5);
 
         if (total_trials > 0)
         {

@@ -2053,14 +2053,14 @@ static void remap_key(wm_event &event)
     ASSERT(event.key.keysym.sym != -1);
 }
 
-void ui_force_render()
+void force_render()
 {
     ui_root.layout();
     ui_root.needs_paint = true;
     ui_root.render();
 }
 
-void ui_render()
+void render()
 {
     ui_root.layout();
     ui_root.render();
@@ -2255,7 +2255,7 @@ int getch(KeymapContext km)
     return key;
 }
 
-void ui_delay(unsigned int ms)
+void delay(unsigned int ms)
 {
     if (crawl_state.disables[DIS_DELAY])
         ms = 0;

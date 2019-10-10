@@ -2081,7 +2081,7 @@ void Menu::webtiles_scroll(int first)
     {
         m_ui.scroller->set_scroll(item_y);
         webtiles_update_scroll_pos();
-        ui_force_render();
+        ui::force_render();
     }
 }
 
