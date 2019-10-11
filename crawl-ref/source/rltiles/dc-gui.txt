@@ -230,18 +230,24 @@ felids/cat3 SP_RECOMMENDED_FELID
 %start
 %compose base/centaur_lightgrey_f
 %compose body/animal_skin
+%compose hair/short_black
+%compose boots/hooves
 %finish SP_RECOMMENDED_CENTAUR
 %start
 %compose base/deep_dwarf_m
 %compose body/animal_skin
+%compose hair/short_white
+%compose beard/garibaldi_white
 %finish SP_RECOMMENDED_DEEP_DWARF
 %start
 %compose base/deep_elf_f
 %compose body/animal_skin
+%compose hair/elf_white
 %finish SP_RECOMMENDED_DEEP_ELF
 %start
 %compose base/demigod_f
 %compose body/animal_skin
+%compose hair/short_black
 %finish SP_RECOMMENDED_DEMIGOD
 %start
 %compose base/demonspawn_pink
@@ -250,6 +256,7 @@ felids/cat3 SP_RECOMMENDED_FELID
 %start
 %compose base/draconian_f
 %compose body/animal_skin
+%compose drchead/drchead_brown
 %finish SP_RECOMMENDED_BASE_DRACONIAN
 %start
 %compose base/formicid
@@ -274,10 +281,12 @@ felids/cat3 SP_RECOMMENDED_FELID
 %start
 %compose base/halfling_m
 %compose body/animal_skin
+%compose hair/short_black
 %finish SP_RECOMMENDED_HALFLING
 %start
 %compose base/human_f
 %compose body/animal_skin
+%compose hair/short_black
 %finish SP_RECOMMENDED_HUMAN
 %start
 %compose base/kobold_m
@@ -286,20 +295,24 @@ felids/cat3 SP_RECOMMENDED_FELID
 %start
 %compose base/merfolk_water_f
 %compose body/animal_skin
+%compose hair/green
 %finish SP_RECOMMENDED_MERFOLK
 %start
 %compose base/minotaur_m
 %compose body/animal_skin
+%compose head/horns2
 %finish SP_RECOMMENDED_MINOTAUR
 base/mummy_m SP_RECOMMENDED_MUMMY
 %start
 %compose base/naga_f
 %compose body/animal_skin
+%compose hair/part2_red
 %finish SP_RECOMMENDED_NAGA
 base/octopode1 SP_RECOMMENDED_OCTOPODE
 %start
 %compose base/ogre_m
 %compose body/animal_skin
+%compose hair/short_black
 %finish SP_RECOMMENDED_OGRE
 %start
 %compose base/orc_f
@@ -308,18 +321,23 @@ base/octopode1 SP_RECOMMENDED_OCTOPODE
 %start
 %compose base/spriggan_m
 %compose body/animal_skin
+%compose beard/medium_green
 %finish SP_RECOMMENDED_SPRIGGAN
 %start
 %compose base/tengu_winged_f
 %compose body/animal_skin
+%compose hair/short_black
 %finish SP_RECOMMENDED_TENGU
 %start
 %compose base/troll_f
 %compose body/animal_skin
+%compose hair/troll
+%compose gloves/claws
 %finish SP_RECOMMENDED_TROLL
 %start
 %compose base/vampire_f
 %compose body/animal_skin
+%compose hair/arwen
 %finish SP_RECOMMENDED_VAMPIRE
 %start
 %compose base/vine_stalker_f
@@ -329,32 +347,122 @@ base/octopode1 SP_RECOMMENDED_OCTOPODE
 
 %sdir gui/backgrounds
 %texture disabled-fg
-%sdir player/base
-../felids/cat3 SP_FELID
-centaur_lightgrey_f SP_CENTAUR
-deep_dwarf_m SP_DEEP_DWARF
-deep_elf_f SP_DEEP_ELF
-demigod_f SP_DEMIGOD
-demonspawn_pink SP_DEMONSPAWN
-draconian_f SP_DRACONIAN
-formicid SP_FORMICID
-frog_m SP_BARACHI
-gargoyle_m SP_GARGOYLE
-ghoul_m SP_GHOUL
-gnoll_m SP_GNOLL
-halfling_m SP_HALFLING
-human_f SP_HUMAN
-kobold_m SP_KOBOLD
-merfolk_water_f SP_MERFOLK
-minotaur_m SP_MINOTAUR
-mummy_m SP_MUMMY
-naga_f SP_NAGA
-octopode1 SP_OCTOPODE
-ogre_m SP_OGRE
-orc_f SP_HILL_ORC
-spriggan_m SP_SPRIGGAN
-tengu_wingless_f SP_TENGU
-troll_f SP_TROLL
-vampire_f SP_VAMPIRE
-vine_stalker_f SP_VINE_STALKER
+%sdir player
+felids/cat3 SP_FELID
+%start
+%compose base/centaur_lightgrey_f
+%compose body/animal_skin
+%compose hair/short_black
+%compose boots/hooves
+%finish SP_CENTAUR
+%start
+%compose base/deep_dwarf_m
+%compose body/animal_skin
+%compose hair/short_white
+%compose beard/garibaldi_white
+%finish SP_DEEP_DWARF
+%start
+%compose base/deep_elf_f
+%compose body/animal_skin
+%compose hair/elf_white
+%finish SP_DEEP_ELF
+%start
+%compose base/demigod_f
+%compose body/animal_skin
+%compose hair/short_black
+%finish SP_DEMIGOD
+%start
+%compose base/demonspawn_pink
+%compose body/animal_skin
+%finish SP_DEMONSPAWN
+%start
+%compose base/draconian_f
+%compose body/animal_skin
+%compose drchead/drchead_brown
+%finish SP_DRACONIAN
+%start
+%compose base/formicid
+%compose body/animal_skin
+%finish SP_FORMICID
+%start
+%compose base/frog_m
+%compose body/animal_skin
+%finish SP_BARACHI
+%start
+%compose base/gargoyle_m
+%compose body/animal_skin
+%finish SP_GARGOYLE
+%start
+%compose base/ghoul_m
+%compose body/animal_skin
+%finish SP_GHOUL
+%start
+%compose base/gnoll_m
+%compose body/animal_skin
+%finish SP_GNOLL
+%start
+%compose base/halfling_m
+%compose body/animal_skin
+%compose hair/short_black
+%finish SP_HALFLING
+%start
+%compose base/human_f
+%compose body/animal_skin
+%compose hair/short_black
+%finish SP_HUMAN
+%start
+%compose base/kobold_m
+%compose body/animal_skin
+%finish SP_KOBOLD
+%start
+%compose base/merfolk_water_f
+%compose body/animal_skin
+%compose hair/green
+%finish SP_MERFOLK
+%start
+%compose base/minotaur_m
+%compose body/animal_skin
+%compose head/horns2
+%finish SP_MINOTAUR
+base/mummy_m SP_MUMMY
+%start
+%compose base/naga_f
+%compose body/animal_skin
+%compose hair/part2_red
+%finish SP_NAGA
+base/octopode1 SP_OCTOPODE
+%start
+%compose base/ogre_m
+%compose body/animal_skin
+%compose hair/short_black
+%finish SP_OGRE
+%start
+%compose base/orc_f
+%compose body/animal_skin
+%finish SP_HILL_ORC
+%start
+%compose base/spriggan_m
+%compose body/animal_skin
+%compose beard/medium_green
+%finish SP_SPRIGGAN
+%start
+%compose base/tengu_winged_f
+%compose body/animal_skin
+%compose hair/short_black
+%finish SP_TENGU
+%start
+%compose base/troll_f
+%compose body/animal_skin
+%compose hair/troll
+%compose gloves/claws
+%finish SP_TROLL
+%start
+%compose base/vampire_f
+%compose body/animal_skin
+%compose hair/arwen
+%finish SP_VAMPIRE
+%start
+%compose base/vine_stalker_f
+%compose body/animal_skin
+%finish SP_VINE_STALKER
 %syn LAST_SPECIES
