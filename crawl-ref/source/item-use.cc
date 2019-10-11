@@ -1215,7 +1215,7 @@ bool wear_armour(int item)
     {
         if (Options.equip_unequip)
             // TODO: huh? Why are we inverting the return value?
-            return !takeoff_armour(item);
+            return !takeoff_armour(to_wear->link);
         else
         {
             mpr("You're already wearing that object!");
