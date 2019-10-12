@@ -1930,9 +1930,11 @@ bool UIRoot::on_event(const wm_event& event)
             }
 #endif
         case WME_MOUSEWHEEL:
-            for (auto w = prev_hover_path.rbegin(); w != prev_hover_path.rend(); ++w)
-                if ((*w)->on_event(event))
-                    return true;
+            if (!prev_hover_path.empty()) {
+                for (auto w = prev_hover_path.back(); w; w = w->_get_parent())
+                    if (w->on_event(event))
+                        return true;
+            }
             break;
         case WME_MOUSEENTER:
         case WME_MOUSELEAVE:
