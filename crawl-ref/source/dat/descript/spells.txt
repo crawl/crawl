@@ -1272,6 +1272,11 @@ Spit Poison spell
 
 <Spit Poison ability>
 %%%%
+Sporulate spell
+
+Releases a spore, which will attempt to seek out the ballistomycete's enemies
+before exploding.
+%%%%
 Sprint spell
 
 Causes the caster to move across terrain more rapidly for a short duration.

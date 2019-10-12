@@ -4019,7 +4019,7 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     5, 0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_ABILITY_FEDHAS_GROW_BALLISTOMYCETE,
 },
 
 {
