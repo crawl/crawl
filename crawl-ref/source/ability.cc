@@ -3227,8 +3227,7 @@ static spret _do_ability(const ability_def& abil, bool fail)
         fail_check();
         if (yesno("Really renounce your faith, foregoing its fabulous benefits?",
                   false, 'n')
-            && yesno("Are you sure you won't change your mind later?",
-                     false, 'n'))
+            && yesno("Are you sure?", false, 'n'))
         {
             excommunication(true);
         }
