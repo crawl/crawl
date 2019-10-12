@@ -48,9 +48,6 @@ static Region aabb_union(Region a, Region b)
 static void clear_text_region(Region region, COLOURS bg);
 #endif
 
-// must be before ui_root declaration for correct destruction order
-vector<Widget*> prev_hover_path;
-
 static struct UIRoot
 {
 public:
@@ -98,8 +95,6 @@ public:
         needs_paint = true;
     }
 
-    void send_mouse_enter_leave_events(int mx, int my);
-
     bool needs_paint;
 
 #ifdef DEBUG
@@ -113,6 +108,16 @@ public:
     vector<Widget*> focus_stack;
 
     struct RestartAllocation {};
+
+#ifdef USE_TILE_LOCAL
+    vector<Widget*> hover_path;
+
+    void update_hover_path();
+    void update_hover_path_for_widget(Widget* widget);
+    void send_mouse_enter_leave_events(
+            const vector<Widget*>& old_hover_path,
+            const vector<Widget*>& new_hover_path);
+#endif
 
 protected:
     int m_w, m_h;
@@ -265,16 +270,10 @@ bool Widget::is_ancestor_of(const shared_ptr<Widget>& other)
 
 void Widget::_set_parent(Widget* p)
 {
-    if (!p)
-    {
-        for (size_t i = 0; i < prev_hover_path.size(); i++)
-            if (prev_hover_path[i] == this)
-            {
-                prev_hover_path.resize(i);
-                break;
-            }
-    }
     m_parent = p;
+#ifdef USE_TILE_LOCAL
+    ui_root.update_hover_path_for_widget(this);
+#endif
 }
 
 /**
@@ -1771,9 +1770,7 @@ void UIRoot::layout()
         }
 
 #ifdef USE_TILE_LOCAL
-        int x, y;
-        wm->get_mouse_state(&x, &y);
-        ui_root.send_mouse_enter_leave_events(x, y);
+        update_hover_path();
 #endif
     }
 }
@@ -1832,18 +1829,18 @@ void UIRoot::debug_render()
         LineBuffer lb;
         ShapeBuffer sb;
         size_t i = 0;
-        for (const auto& w : prev_hover_path)
+        for (const auto& w : hover_path)
         {
             const auto r = w->get_region();
             i++;
             VColour lc;
-            lc = i == prev_hover_path.size() ?
+            lc = i == hover_path.size() ?
                 VColour(255, 100, 0, 100) : VColour(0, 50 + i*40, 0, 100);
             lb.add_square(r.x+1, r.y+1, r.ex(), r.ey(), lc);
         }
-        if (!prev_hover_path.empty())
+        if (!hover_path.empty())
         {
-            const auto& hovered_widget = prev_hover_path.back();
+            const auto& hovered_widget = hover_path.back();
             Region r = hovered_widget->get_region();
             const Margin m = hovered_widget->get_margin();
 
@@ -1866,60 +1863,98 @@ void UIRoot::debug_render()
 
 static function<bool(const wm_event&)> event_filter;
 
-void UIRoot::send_mouse_enter_leave_events(int mx, int my)
+#ifdef USE_TILE_LOCAL
+void UIRoot::update_hover_path()
 {
+    int mx, my;
+    wm->get_mouse_state(&mx, &my);
+
     /* Find current hover path */
-    vector<Widget*> hover_path;
+    vector<Widget*> new_hover_path;
     shared_ptr<Widget> current = m_root.get_child_at_offset(mx, my);
     while (current)
     {
-        hover_path.emplace_back(current.get());
+        new_hover_path.emplace_back(current.get());
         current = current->get_child_at_offset(mx, my);
     }
 
-    size_t new_hover_path_size = hover_path.size();
-    size_t sz = max(prev_hover_path.size(), hover_path.size());
-    prev_hover_path.resize(sz, nullptr);
+    size_t new_hover_path_size = new_hover_path.size();
+    size_t sz = max(hover_path.size(), new_hover_path.size());
     hover_path.resize(sz, nullptr);
+    new_hover_path.resize(sz, nullptr);
+
+    send_mouse_enter_leave_events(hover_path, new_hover_path);
+
+    hover_path = move(new_hover_path);
+    hover_path.resize(new_hover_path_size);
+}
+
+void UIRoot::send_mouse_enter_leave_events(
+        const vector<Widget*>& old_hover_path,
+        const vector<Widget*>& new_hover_path)
+{
+    ASSERT(old_hover_path.size() == new_hover_path.size());
+
+    // event_filter takes a wm_event, and we don't have one, so don't bother to
+    // call it; this is fine, since this is a private API and it only checks for
+    // keydown events.
+    if (event_filter)
+        return;
+
+    const size_t size = old_hover_path.size();
 
     size_t diff;
-    for (diff = 0; diff < sz; diff++)
-        if (hover_path[diff] != prev_hover_path[diff])
+    for (diff = 0; diff < size; diff++)
+        if (new_hover_path[diff] != old_hover_path[diff])
             break;
 
-    /* send events */
-    if (diff < sz)
+    if (diff == size)
+        return;
+
+    int mx, my;
+    wm->get_mouse_state(&mx, &my);
+
+    wm_event ev = {0};
+    ev.mouse_event.px = mx;
+    ev.mouse_event.py = my;
+
+    if (old_hover_path[diff])
     {
-        wm_event ev = {0};
-        ev.mouse_event.px = mx;
-        ev.mouse_event.py = my;
-        if (prev_hover_path[diff])
-        {
-            ev.type = WME_MOUSELEAVE;
-            if (!event_filter || !event_filter(ev))
-                for (size_t i = sz; i > diff; --i)
-                {
-                    if (!prev_hover_path[i-1])
-                        continue;
-                    prev_hover_path[i-1]->on_event(ev);
-                }
-        }
-        if (hover_path[diff])
-        {
-            ev.type = WME_MOUSEENTER;
-            if (!event_filter || !event_filter(ev))
-                for (size_t i = diff; i < sz; ++i)
-                {
-                    if (!hover_path[i])
-                        break;
-                    hover_path[i]->on_event(ev);
-                }
-        }
+        ev.type = WME_MOUSELEAVE;
+        for (size_t i = size; i > diff; --i)
+            if (old_hover_path[i-1])
+                old_hover_path[i-1]->on_event(ev);
     }
 
-    prev_hover_path = move(hover_path);
-    prev_hover_path.resize(new_hover_path_size);
+    if (new_hover_path[diff])
+    {
+        ev.type = WME_MOUSEENTER;
+        for (size_t i = diff; i < size; ++i)
+            if (new_hover_path[i])
+                new_hover_path[i]->on_event(ev);
+    }
 }
+
+void UIRoot::update_hover_path_for_widget(Widget *widget)
+{
+    // truncate the hover path if the widget was previously hovered,
+    // but don't deliver any mouseleave events.
+    if (!widget->_get_parent())
+    {
+        for (size_t i = 0; i < hover_path.size(); i++)
+            if (hover_path[i] == widget)
+            {
+                hover_path.resize(i);
+                break;
+            }
+        return;
+    }
+
+    auto top = top_layout();
+    if (top && top->is_ancestor_of(widget->get_shared()))
+        update_hover_path();
+}
+#endif
 
 bool UIRoot::on_event(const wm_event& event)
 {
@@ -1937,16 +1972,18 @@ bool UIRoot::on_event(const wm_event& event)
         case WME_MOUSEBUTTONUP:
         case WME_MOUSEMOTION:
         case WME_MOUSEWHEEL:
+#ifdef USE_TILE_LOCAL
             if (event.type == WME_MOUSEBUTTONDOWN)
                 m_changed_layout_since_click = false;
             else if (event.type == WME_MOUSEBUTTONUP)
                 if (m_changed_layout_since_click)
                     break;
-            if (!prev_hover_path.empty()) {
-                for (auto w = prev_hover_path.back(); w; w = w->_get_parent())
+            if (!hover_path.empty()) {
+                for (auto w = hover_path.back(); w; w = w->_get_parent())
                     if (w->on_event(event))
                         return true;
             }
+#endif
             break;
         case WME_MOUSEENTER:
         case WME_MOUSELEAVE:
@@ -2075,9 +2112,7 @@ void pop_layout()
 {
     ui_root.pop_child();
 #ifdef USE_TILE_LOCAL
-    int x, y;
-    wm->get_mouse_state(&x, &y);
-    ui_root.send_mouse_enter_leave_events(x, y);
+    ui_root.update_hover_path();
 #else
     if (!has_layout())
         redraw_screen(false);
@@ -2210,8 +2245,7 @@ void pump_events(int wait_event_timeout)
             break;
 
         case WME_MOUSEMOTION:
-            ui_root.send_mouse_enter_leave_events(event.mouse_event.px,
-                    event.mouse_event.py);
+            ui_root.update_hover_path();
             ui_root.on_event(event);
 
         default:
