@@ -168,6 +168,8 @@ public:
     bool is_visible() const { return m_visible; }
     void set_visible(bool);
 
+    bool is_ancestor_of(const shared_ptr<Widget>& other);
+
     // Wrapper functions which handle common behavior
     // - margins
     // - caching

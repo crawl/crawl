@@ -232,6 +232,20 @@ void Widget::_allocate_region()
 {
 }
 
+/**
+ * Determine whether a widget contains the given widget.
+ *
+ * @param child   The other widget.
+ * @return        True if the other widget is a descendant of this widget.
+ */
+bool Widget::is_ancestor_of(const shared_ptr<Widget>& other)
+{
+    for (Widget* w = other.get(); w; w = w->_get_parent())
+        if (w == this)
+            return true;
+    return false;
+}
+
 void Widget::_set_parent(Widget* p)
 {
     if (!p)
