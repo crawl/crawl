@@ -2042,13 +2042,13 @@ Warpers
   Warpers specialise in translocation magic, and are experts in traveling long
   distances and positioning themselves precisely and use this to their advantage
   in melee or missile combat. They start with a scroll of blinking, the Book of
-  Spatial Translocations, some dispersal tomahawks, a simple weapon of thier
+  Spatial Translocations, some dispersal tomahawks, a simple weapon of their
   choice, and leather armour.
 
 Arcane Marksmen
   Arcane Marksmen are Hunters who use debilitating spells to assist their ranged
   attacks. They are particularly good at keeping their enemies at a distance.
-  They begin the game with a the Book of Debilitation, a ranged weapon of their
+  They begin the game with the Book of Debilitation, a ranged weapon of their
   choice, and a robe.
 
 Enchanters
@@ -2254,7 +2254,7 @@ Shields
   Affects the amount of protection you gain by using a shield, and the degree to
   which it hinders you. For most races, 5/15/25 skill is enough to mitigate the
   encumbrance of bucklers/shields/large shields respectively, though larger
-  races need less skill and and smaller races more.
+  races need less skill and smaller races more.
 
 Invocations
   Affects your ability to call on your god for aid. Those skilled at Invocations
