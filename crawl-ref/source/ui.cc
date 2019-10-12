@@ -101,9 +101,13 @@ public:
     void send_mouse_enter_leave_events(int mx, int my);
 
     bool needs_paint;
+
 #ifdef DEBUG
     bool debug_draw = false;
+    bool debug_on_event(const wm_event& event);
+    void debug_render();
 #endif
+
     vector<KeymapContext> keymap_stack;
     vector<int> cutoff_stack;
     vector<Widget*> focus_stack;
@@ -1798,6 +1802,31 @@ void UIRoot::render()
     for (int i = cutoff; i < static_cast<int>(m_root.num_children()); i++)
         m_root.get_child(i)->render();
 #ifdef DEBUG
+    debug_render();
+#endif
+#else
+    // Render only the top of the UI stack on console
+    if (m_root.num_children() > 0)
+        m_root.get_child(m_root.num_children()-1)->render();
+    else
+        redraw_screen(false);
+#endif
+    pop_scissor();
+
+#ifdef USE_TILE_LOCAL
+    wm->swap_buffers();
+#else
+    update_screen();
+#endif
+
+    needs_paint = false;
+    m_dirty_region = {0, 0, 0, 0};
+}
+
+#ifdef DEBUG
+void UIRoot::debug_render()
+{
+#ifdef USE_TILE_LOCAL
     if (debug_draw)
     {
         LineBuffer lb;
@@ -1832,24 +1861,8 @@ void UIRoot::render()
         sb.draw();
     }
 #endif
-#else
-    // Render only the top of the UI stack on console
-    if (m_root.num_children() > 0)
-        m_root.get_child(m_root.num_children()-1)->render();
-    else
-        redraw_screen(false);
-#endif
-    pop_scissor();
-
-#ifdef USE_TILE_LOCAL
-    wm->swap_buffers();
-#else
-    update_screen();
-#endif
-
-    needs_paint = false;
-    m_dirty_region = {0, 0, 0, 0};
 }
+#endif
 
 static function<bool(const wm_event&)> event_filter;
 
@@ -1914,13 +1927,8 @@ bool UIRoot::on_event(const wm_event& event)
         return true;
 
 #ifdef DEBUG
-    if (event.type == WME_KEYDOWN && event.key.keysym.sym == CK_INSERT)
-    {
-        ui_root.debug_draw = !ui_root.debug_draw;
-        ui_root.queue_layout();
-        ui_root.expose_region({0, 0, INT_MAX, INT_MAX});
+    if (debug_on_event(event))
         return true;
-    }
 #endif
 
     switch (event.type)
@@ -1928,13 +1936,6 @@ bool UIRoot::on_event(const wm_event& event)
         case WME_MOUSEBUTTONDOWN:
         case WME_MOUSEBUTTONUP:
         case WME_MOUSEMOTION:
-#ifdef DEBUG
-            if (ui_root.debug_draw)
-            {
-                ui_root.queue_layout();
-                ui_root.expose_region({0, 0, INT_MAX, INT_MAX});
-            }
-#endif
         case WME_MOUSEWHEEL:
             if (event.type == WME_MOUSEBUTTONDOWN)
                 m_changed_layout_since_click = false;
@@ -1967,6 +1968,35 @@ bool UIRoot::on_event(const wm_event& event)
 
     return false;
 }
+
+#ifdef DEBUG
+bool UIRoot::debug_on_event(const wm_event& event)
+{
+    if (event.type == WME_KEYDOWN && event.key.keysym.sym == CK_INSERT)
+    {
+        ui_root.debug_draw = !ui_root.debug_draw;
+        ui_root.queue_layout();
+        ui_root.expose_region({0, 0, INT_MAX, INT_MAX});
+        return true;
+    }
+
+    switch (event.type)
+    {
+        case WME_MOUSEBUTTONDOWN:
+        case WME_MOUSEBUTTONUP:
+        case WME_MOUSEMOTION:
+            if (ui_root.debug_draw)
+            {
+                ui_root.queue_layout();
+                ui_root.expose_region({0, 0, INT_MAX, INT_MAX});
+            }
+        default:
+            break;
+    }
+
+    return false;
+}
+#endif
 
 void push_scissor(Region scissor)
 {
