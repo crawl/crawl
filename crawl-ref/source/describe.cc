@@ -176,7 +176,7 @@ int show_description(const describe_info &inf, const tile_def *tile)
         if (!inf.quote.empty() && (lastch == '!' || lastch == CK_MOUSE_CMD || lastch == '^'))
             switcher->current() = 1 - switcher->current();
         else
-            done = !vbox->on_event(ev);
+            done = !switcher->current_widget()->on_event(ev);
         return true;
     });
 
@@ -2364,10 +2364,9 @@ void describe_feature_wide(const coord_def& pos)
 
     bool done = false;
     popup->on(Widget::slots.event, [&](wm_event ev) {
-        if (ev.type != WME_KEYDOWN)
-            return false;
-        done = !scroller->on_event(ev);
-        return true;
+        if (scroller->on_event(ev))
+            return true;
+        return done = ev.type == WME_KEYDOWN;
     });
 
 #ifdef USE_TILE_WEB

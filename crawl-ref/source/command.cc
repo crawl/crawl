@@ -239,11 +239,10 @@ static void _print_version()
     auto popup = make_shared<ui::Popup>(vbox);
 
     bool done = false;
-    popup->on(Widget::slots.event, [&done, &vbox](wm_event ev) {
-        if (ev.type != WME_KEYDOWN)
-            return false;
-        done = !vbox->on_event(ev);
-        return true;
+    popup->on(Widget::slots.event, [&done, &scroller](wm_event ev) {
+        if (scroller->on_event(ev))
+            return true;
+        return done = ev.type == WME_KEYDOWN;
     });
 
 #ifdef USE_TILE_WEB
