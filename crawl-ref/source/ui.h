@@ -472,6 +472,7 @@ public:
     virtual ~Switcher() {};
     void add_child(shared_ptr<Widget> child);
     int& current();
+    shared_ptr<Widget> current_widget();
 
     Widget::Align align_x = START, align_y = START;
 
