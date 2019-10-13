@@ -575,13 +575,14 @@ A small snake that can augment its bite by constricting small creatures.
 ballistomycete
 
 A lumpy reddish fungus covered in knobbly rhizome growths, growing well in the
-dank underground dungeon. When active it will occasionally produce giant
-spores, which in turn will give rise to more ballistomycetes.
+dank underground dungeon. When it senses a threat, the ballistomycete may
+release a deadly floating spore that explodes on its victims.
 %%%%
 ballistomycete spore
 
-A deceptively fast, floating ball filled with gas and spores, prone to burst at
-the slightest disturbance.
+A fast, gas-filled floating spore released by a ballistomycete when it senses a
+threat. After seeking out its foe, the spore will explode, damaging anything
+caught in the blast and further confusing living creatures.
 %%%%
 balrug
 
