@@ -997,7 +997,7 @@ void Switcher::_render()
 {
     if (m_children.size() == 0)
         return;
-    m_current = max(0, min(m_current, (int)m_children.size()));
+    m_current = max(0, min(m_current, (int)m_children.size()-1));
     m_children[m_current]->render();
 }
 
