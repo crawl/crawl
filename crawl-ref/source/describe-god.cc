@@ -1239,7 +1239,7 @@ void describe_god(god_type which_god)
 #endif
             return true;
         }
-        return done = !popup->get_child()->on_event(ev);
+        return done = !desc_sw->current_widget()->on_event(ev);
     });
 
 #ifdef USE_TILE_WEB
@@ -1351,7 +1351,7 @@ bool describe_god_with_join(god_type which_god)
 
         // Next, allow child widgets to handle scrolling keys
         if (keyin != ' ' && keyin != CK_ENTER)
-        if (popup->get_child()->on_event(ev))
+        if (desc_sw->current_widget()->on_event(ev))
             return true;
 
         if (step == SHOW)

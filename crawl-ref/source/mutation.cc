@@ -902,7 +902,7 @@ void display_mutations()
             tiles.ui_state_change("mutations", 0);
 #endif
         } else
-            done = !vbox->on_event(ev);
+            done = !switcher->current_widget()->on_event(ev);
         return true;
     });
 
