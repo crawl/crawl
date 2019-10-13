@@ -1272,6 +1272,12 @@ Spit Poison spell
 
 <Spit Poison ability>
 %%%%
+Sporulate spell
+
+Releases a fast, gas-filled floating spore. After seeking out its foe, the
+spore will explode, damaging anything caught in the blast and further confusing
+living creatures.
+%%%%
 Sprint spell
 
 Causes the caster to move across terrain more rapidly for a short duration.
