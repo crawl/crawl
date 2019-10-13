@@ -993,6 +993,14 @@ int& Switcher::current()
     return m_current;
 }
 
+shared_ptr<Widget> Switcher::current_widget()
+{
+    if (m_children.size() == 0)
+        return nullptr;
+    m_current = max(0, min(m_current, (int)m_children.size()-1));
+    return m_children[m_current];
+}
+
 void Switcher::_render()
 {
     if (m_children.size() == 0)
