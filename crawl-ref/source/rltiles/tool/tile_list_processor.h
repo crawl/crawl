@@ -16,6 +16,7 @@ public:
     bool process_list(const char *list_file);
     bool write_data(bool image, bool code);
 protected:
+    bool load_image_from_tile(tile &img, string filename);
     bool load_image(tile &img, const char *filename, bool background = false);
     bool process_line(char *read_line, const char *list_file, int line);
     void add_image(tile &img, const char *enumname);

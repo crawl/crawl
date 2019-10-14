@@ -39,10 +39,29 @@ tile_list_processor::~tile_list_processor()
         delete m_texture;
 }
 
+bool tile_list_processor::load_image_from_tile(tile &img, string filename)
+{
+    if (filename.substr(0, 5) != "enum:")
+        return false;
+    const string enumname = filename.substr(5);
+
+    int idx = m_page.find(enumname);
+    if (idx == -1)
+        return false;
+
+    img.copy(*m_page.m_tiles[idx]);
+    for (int i = 0; i < MAX_COLOUR; ++i)
+        img.add_variation(i, -1);
+    return true;
+}
+
 bool tile_list_processor::load_image(tile &img, const char *filename,
                                      bool background)
 {
     assert(filename);
+
+    if (load_image_from_tile(img, filename))
+        return true;
 
     char temp[1024];
 
