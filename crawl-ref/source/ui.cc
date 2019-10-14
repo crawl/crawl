@@ -44,15 +44,6 @@ static Region aabb_union(Region a, Region b)
     return i;
 }
 
-static inline bool pos_in_rect(int x, int y, Region rect)
-{
-    if (x < rect.x || x >= rect.ex())
-        return false;
-    if (y < rect.y || y >= rect.ey())
-        return false;
-    return true;
-}
-
 #ifndef USE_TILE_LOCAL
 static void clear_text_region(Region region, COLOURS bg);
 #endif
@@ -134,21 +125,16 @@ bool Widget::on_event(const wm_event& event)
 shared_ptr<Widget> ContainerVec::get_child_at_offset(int x, int y)
 {
     for (shared_ptr<Widget>& child : m_children)
-    {
-        const Region region = child->get_region();
-        bool inside = (x >= region.x && x < region.x + region.width)
-            && (y >= region.y && y < region.y + region.height);
-        if (inside)
+        if (child->get_region().contains_point(x, y))
             return child;
-    }
     return nullptr;
 }
 
 shared_ptr<Widget> Bin::get_child_at_offset(int x, int y)
 {
-    bool inside = (x > m_region.x && x < m_region.x + m_region.width)
-        && (y > m_region.y && y < m_region.y + m_region.height);
-    return inside ? m_child : nullptr;
+    if (m_child && m_child->get_region().contains_point(x, y))
+        return m_child;
+    return nullptr;
 }
 
 void Bin::set_child(shared_ptr<Widget> child)
@@ -937,9 +923,7 @@ shared_ptr<Widget> Stack::get_child_at_offset(int x, int y)
 {
     if (m_children.size() == 0)
         return nullptr;
-    const Region region = m_children.back()->get_region();
-    bool inside = (x > region.x && x < region.x + region.width)
-        && (y > region.y && y < region.y + region.height);
+    bool inside = m_children.back()->get_region().contains_point(x, y);
     return inside ? m_children.back() : nullptr;
 }
 
@@ -1063,9 +1047,7 @@ shared_ptr<Widget> Switcher::get_child_at_offset(int x, int y)
         return nullptr;
 
     int c = max(0, min(m_current, (int)m_children.size()));
-    const auto region = m_children[c]->get_region();
-    bool inside = (x >= region.x && x < region.x + region.width)
-        && (y >= region.y && y < region.y + region.height);
+    bool inside = m_children[c]->get_region().contains_point(x, y);
     return inside ? m_children[c] : nullptr;
 }
 
@@ -1098,7 +1080,7 @@ shared_ptr<Widget> Grid::get_child_at_offset(int x, int y)
     {
         if (child.pos.x <= col && col < child.pos.x + child.span.width)
         if (child.pos.y <= row && row < child.pos.y + child.span.height)
-        if (pos_in_rect(x, y, child.widget->get_region()))
+        if (child.widget->get_region().contains_point(x, y))
             return child.widget;
     }
     return nullptr;

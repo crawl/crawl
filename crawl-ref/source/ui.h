@@ -64,6 +64,11 @@ public:
     constexpr int ex() const { return x + width; }
     constexpr int ey() const { return y + height; }
 
+    constexpr bool contains_point(int _x, int _y) const
+    {
+        return _x >= x && _x < ex() && _y >= y && _y < ey();
+    }
+
     int x, y, width, height;
 };
 
