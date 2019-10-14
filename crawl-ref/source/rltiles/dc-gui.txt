@@ -165,6 +165,11 @@ misc/error ERROR
 prompt_yes PROMPT_YES
 prompt_no PROMPT_NO
 
+checkbox CHECKBOX
+checkbox_check CHECKBOX_CHECK
+checkbox_hover CHECKBOX_HOVER
+checkbox_check_hover CHECKBOX_CHECK_HOVER
+
 %sdir gui/tutorial
 movement TUT_MOVEMENT
 combat TUT_COMBAT

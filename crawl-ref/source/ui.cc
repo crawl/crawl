@@ -1567,15 +1567,112 @@ int Popup::base_margin()
     return margin_small + (clipped-screen_small)
             *(margin_large-margin_small)/(screen_large-screen_small);
 }
+#endif
 
-void Dungeon::_render()
+void Checkbox::_render()
+{
+    if (m_child)
+        m_child->render();
+
+    const bool has_focus = ui::get_focused_widget() == this;
+
+#ifdef USE_TILE_LOCAL
+    tileidx_t tile = TILEG_CHECKBOX;
+    if (m_checked)
+        tile += 1;
+    if (m_hovered || has_focus)
+        tile += 2;
+
+    const int x = m_region.x, y = m_region.y;
+    TileBuffer tb;
+    tb.set_tex(&tiles.get_image_manager()->m_textures[TEX_GUI]);
+    tb.add(tile, x, y, 0, 0, false, check_h, 1.0, 1.0);
+    tb.draw();
+#else
+    cgotoxy(m_region.x+1, m_region.y+1, GOTO_CRT);
+    textbackground(has_focus ? LIGHTGREY : BLACK);
+    cprintf("[ ]");
+    if (m_checked)
+    {
+        cgotoxy(m_region.x+2, m_region.y+1, GOTO_CRT);
+        textcolour(has_focus ? BLACK : WHITE);
+        cprintf("X");
+    }
+#endif
+}
+
+const int Checkbox::check_w;
+const int Checkbox::check_h;
+
+SizeReq Checkbox::_get_preferred_size(Direction dim, int prosp_width)
+{
+    SizeReq child_sr = { 0, 0 };
+    if (m_child)
+        child_sr = m_child->get_preferred_size(dim, prosp_width);
+
+    if (dim == HORZ)
+        return { child_sr.min + check_w, child_sr.nat + check_w };
+    else
+        return { max(child_sr.min, check_h), max(child_sr.nat, check_h) };
+}
+
+void Checkbox::_allocate_region()
+{
+    if (m_child)
+    {
+        auto child_region = m_region;
+        child_region.x += check_w;
+        child_region.width -= check_w;
+        auto child_sr = m_child->get_preferred_size(VERT, child_region.width);
+        child_region.height = min(max(child_sr.min, m_region.height), child_sr.nat);
+        child_region.y += (m_region.height - child_region.height)/2;
+        m_child->allocate_region(child_region);
+    }
+}
+
+bool Checkbox::on_event(const wm_event& event)
 {
 #ifdef USE_TILE_LOCAL
+    if (event.type == WME_MOUSEENTER || event.type == WME_MOUSELEAVE)
+    {
+        bool new_hovered = event.type == WME_MOUSEENTER;
+        if (new_hovered != m_hovered)
+            _expose();
+        m_hovered = new_hovered;
+    }
+    if (event.type == WME_MOUSEBUTTONDOWN)
+    {
+        set_checked(!checked());
+        set_focused_widget(this);
+        _expose();
+        return true;
+    }
+#endif
+    if (event.type == WME_FOCUSIN || event.type == WME_FOCUSOUT)
+    {
+        _expose();
+        return true;
+    }
+    if (event.type == WME_KEYDOWN)
+    {
+        int key = event.key.keysym.sym;
+        if (key == CK_ENTER || key == ' ')
+        {
+            set_checked(!checked());
+            _expose();
+            return true;
+        }
+    }
+    return false;
+}
+
+#ifdef USE_TILE_LOCAL
+void Dungeon::_render()
+{
     GLW_3VF t = {(float)m_region.x, (float)m_region.y, 0}, s = {32, 32, 1};
     glmanager->set_transform(t, s);
     m_buf.draw();
     glmanager->reset_transform();
-#endif
 }
 
 SizeReq Dungeon::_get_preferred_size(Direction dim, int /*prosp_width*/)
