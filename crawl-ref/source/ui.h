@@ -800,6 +800,45 @@ protected:
     bool m_centred{!crawl_state.need_save};
 };
 
+class Checkbox : public Bin
+{
+public:
+    Checkbox() {};
+
+    virtual void _render() override;
+    virtual SizeReq _get_preferred_size(Direction dim, int prosp_width) override;
+    virtual void _allocate_region() override;
+
+    virtual bool on_event(const wm_event& event) override;
+
+    bool checked() const
+    {
+        return m_checked;
+    };
+
+    void set_checked(bool checked)
+    {
+        if (m_checked == checked)
+            return;
+        m_checked = checked;
+        _expose();
+    };
+
+protected:
+    bool m_checked = false;
+#ifdef USE_TILE_LOCAL
+    bool m_hovered = false;
+#endif
+
+#ifdef USE_TILE_LOCAL
+    static const int check_w = 30;
+    static const int check_h = 20;
+#else
+    static const int check_w = 4;
+    static const int check_h = 1;
+#endif
+};
+
 #ifdef USE_TILE_LOCAL
 class Dungeon : public Widget
 {
