@@ -15,6 +15,7 @@
 #include "tilefont.h"
 #include "unwind.h"
 #include "windowmanager.h"
+#include "cio.h"
 #ifdef USE_TILE_LOCAL
 # include "tilebuf.h"
 # include "tiledgnbuf.h"
@@ -836,6 +837,111 @@ protected:
 #else
     static const int check_w = 4;
     static const int check_h = 1;
+#endif
+};
+
+class TextEntry : public Widget
+{
+public:
+    TextEntry();
+    virtual void _render() override;
+    virtual SizeReq _get_preferred_size(Direction dim, int prosp_width) override;
+    virtual void _allocate_region() override;
+    virtual bool on_event(const wm_event& event) override;
+
+    void set_font(FontWrapper *font);
+
+    string get_text() const { return m_text; };
+    void set_text(string s) {
+        m_line_reader.set_text(s);
+        m_text = m_line_reader.get_text();
+        m_cursor = m_line_reader.get_cursor_position();
+        _expose();
+    };
+
+    template<typename T>
+    void set_input_history(T&& fn) {
+        m_line_reader.set_input_history(forward<T>(fn));
+    }
+
+    template<typename T>
+    void set_keyproc(T&& fn) {
+        m_line_reader.set_keyproc(forward<T>(fn));
+    }
+
+protected:
+#ifdef USE_TILE_LOCAL
+    int padding_size();
+#endif
+
+    string m_text;
+    int m_cursor = 0;
+    int m_hscroll = 0;
+
+    class LineReader
+    {
+    public:
+        LineReader(char *buffer, size_t bufsz);
+        virtual ~LineReader();
+
+        typedef keyfun_action (*keyproc)(int &key);
+
+        string get_text() const;
+        void set_text(string s);
+
+        void set_input_history(input_history *ih);
+        void set_keyproc(keyproc fn);
+
+        void set_edit_mode(edit_mode m);
+        edit_mode get_edit_mode();
+
+        void set_prompt(string p);
+
+        void insert_char_at_cursor(int ch);
+        void overwrite_char_at_cursor(int ch);
+#ifdef USE_TILE_WEB
+        void set_tag(const string &tag);
+#endif
+
+        int get_cursor_position() {
+            return cur - buffer;
+        };
+
+        int process_key_core(int ch);
+        int process_key(int ch);
+
+    protected:
+        void backspace();
+        void delete_char();
+        void killword();
+        void kill_to_begin();
+        void kill_to_end();
+
+        bool is_wordchar(char32_t c);
+
+    protected:
+        char            *buffer;
+        size_t          bufsz;
+        input_history   *history;
+        keyproc         keyfn;
+        edit_mode       mode;
+        string          prompt; // currently only used for webtiles input dialogs
+
+#ifdef USE_TILE_WEB
+        string          tag; // For identification on the Webtiles client side
+#endif
+
+        // These are subject to change during editing.
+        char            *cur;
+        int             length;
+    };
+
+    char m_buffer[1024];
+    LineReader m_line_reader;
+
+#ifdef USE_TILE_LOCAL
+    ShapeBuffer m_buf;
+    FontWrapper *m_font;
 #endif
 };
 
