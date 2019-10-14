@@ -193,6 +193,10 @@ bool fill_status_info(int status, status_info& inf)
                           (-4 * you.props["corrosion_amount"].get_int()));
         break;
 
+    case DUR_FLAYED:
+        inf.light_text = make_stringf("Flay (%d)",
+                          (-1 * you.props["flay_damage"].get_int()));
+
     case DUR_NO_POTIONS:
         if (you_foodless())
             inf.light_colour = DARKGREY;
