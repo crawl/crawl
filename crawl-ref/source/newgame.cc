@@ -760,6 +760,8 @@ static keyfun_action _keyfun_seed_input(int &ch)
 static void _choose_seed(newgame_def& ng, newgame_def& choice,
     const newgame_def& defaults)
 {
+    tiles_crt_popup show_as_popup;
+
     char buf[21]; // max unsigned 64 bit integer is 20 chars in decimal,
                   // specifically 18446744073709551615
     buf[0] = '\0';
