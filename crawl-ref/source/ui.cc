@@ -14,6 +14,8 @@
 #include "macro.h"
 #include "state.h"
 #include "tileweb.h"
+#include "unicode.h"
+#include "libutil.h"
 
 #ifdef USE_TILE_LOCAL
 # include "glwrapper.h"
@@ -1664,6 +1666,473 @@ bool Checkbox::on_event(const wm_event& event)
         }
     }
     return false;
+}
+
+TextEntry::TextEntry() : m_line_reader(m_buffer, sizeof(m_buffer))
+{
+#ifdef USE_TILE_LOCAL
+    set_font(tiles.get_crt_font());
+#endif
+}
+
+void TextEntry::_render()
+{
+    const bool has_focus = ui::get_focused_widget() == this;
+
+#ifdef USE_TILE_LOCAL
+    const int line_height = m_font->char_height();
+    const int text_y = m_region.y + (m_region.height - line_height)/2;
+
+    const auto bg = has_focus ? VColour(30, 30, 30, 255)
+                              : VColour(29, 27, 21, 255);
+
+    m_buf.clear();
+    m_buf.add(m_region.x, m_region.y, m_region.ex(), m_region.ey(), bg);
+    m_buf.draw();
+
+    const auto border_bg = has_focus ? VColour(184, 141, 25)
+                                     : VColour(125, 98, 60);
+
+    LineBuffer bbuf;
+    bbuf.add_square(m_region.x+1, m_region.y+1,
+                    m_region.ex(), m_region.ey(), border_bg);
+    bbuf.draw();
+
+    const int content_width = m_font->string_width(m_text.c_str());
+    const int cursor_x = m_font->string_width(
+            m_text.substr(0, m_cursor).c_str());
+    constexpr int x_pad = 3;
+#else
+    const int content_width = strwidth(m_text);
+    const int cursor_x = strwidth(m_text.substr(0, m_cursor));
+    constexpr int x_pad = 0;
+#endif
+
+    const int viewport_width = m_region.width - 2*x_pad;
+
+    // Scroll to keep the cursor in view
+    if (cursor_x < m_hscroll)
+        m_hscroll = cursor_x;
+    else if (cursor_x >= m_hscroll + viewport_width)
+        m_hscroll = cursor_x - viewport_width + 1;
+
+    // scroll to keep the textbox full of text, if possible
+    m_hscroll = min(m_hscroll, max(0, content_width - viewport_width + 1));
+
+#ifdef USE_TILE_LOCAL
+    // XXX: we need to transform the scissor because the skill menu is rendered
+    // using the CRT, with an appropriate transform that positions it into the
+    // centre of the screen
+    GLW_3VF translate;
+    glmanager->get_transform(&translate, nullptr);
+    const Region scissor_region = {
+        m_region.x - static_cast<int>(translate.x),
+        m_region.y - static_cast<int>(translate.y),
+        m_region.width, m_region.height,
+    };
+    push_scissor(scissor_region);
+
+    const int text_x = m_region.x - m_hscroll + x_pad;
+
+    FontBuffer m_font_buf(m_font);
+    m_font_buf.add(formatted_string(m_text), text_x, text_y);
+    m_font_buf.draw();
+
+    pop_scissor();
+
+    if (has_focus)
+    {
+        m_buf.clear();
+        m_buf.add(text_x + cursor_x, text_y,
+                  text_x + cursor_x + 1, text_y + line_height,
+                  VColour(255, 255, 255, 255));
+        m_buf.draw();
+    }
+#else
+    auto prefix_size = chop_string(m_text, m_hscroll, false).size();
+    auto remain = chop_string(m_text.substr(prefix_size), m_region.width, true);
+
+    const auto fg_colour = has_focus ? BLACK : WHITE;
+    const auto bg_colour = has_focus ? LIGHTGREY : DARKGREY;
+
+    draw_colour draw(fg_colour, bg_colour);
+    cgotoxy(m_region.x+1, m_region.y+1, GOTO_CRT);
+    cprintf("%s", remain.c_str());
+
+    if (has_focus)
+    {
+        cgotoxy(m_region.x+cursor_x-m_hscroll+1, m_region.y+1, GOTO_CRT);
+        textcolour(DARKGREY);
+        cprintf(" ");
+        show_cursor_at(m_region.x+cursor_x-m_hscroll+1, m_region.y+1);
+    }
+#endif
+}
+
+SizeReq TextEntry::_get_preferred_size(Direction dim, int /*prosp_width*/)
+{
+    if (!dim)
+        return { 0, 300 };
+    else
+    {
+#ifdef USE_TILE_LOCAL
+        const int line_height = m_font->char_height(false);
+        const int height = line_height + 2*padding_size();
+        return { height, height };
+#else
+        return { 1, 1 };
+#endif
+    }
+}
+
+#ifdef USE_TILE_LOCAL
+int TextEntry::padding_size()
+{
+    const int line_height = m_font->char_height(false);
+    const float pad_amount = 0.2;
+    return (static_cast<int>(line_height*pad_amount) + 1)/2;
+}
+#endif
+
+void TextEntry::_allocate_region()
+{
+}
+
+bool TextEntry::on_event(const wm_event& event)
+{
+    switch (event.type)
+    {
+    case WME_FOCUSIN:
+    case WME_FOCUSOUT:
+        set_cursor_enabled(event.type == WME_FOCUSIN);
+        _expose();
+        return true;
+    case WME_MOUSEBUTTONDOWN:
+        // TODO: unfocus if the mouse is clicked outside
+        // TODO: move the cursor to the clicked position
+        if (event.mouse_event.button == wm_mouse_event::LEFT)
+            ui::set_focused_widget(this);
+        return true;
+    case WME_KEYDOWN:
+        {
+            int key = event.key.keysym.sym;
+            int ret = m_line_reader.process_key_core(key);
+            if (ret == CK_ESCAPE || ret == 0)
+                ui::set_focused_widget(nullptr);
+            m_text = m_line_reader.get_text();
+            m_cursor = m_line_reader.get_cursor_position();
+            _expose();
+            return key != '\t' && key != CK_SHIFT_TAB;
+        }
+    default:
+        return false;
+    }
+}
+
+#ifdef USE_TILE_LOCAL
+void TextEntry::set_font(FontWrapper *font)
+{
+    ASSERT(font);
+    m_font = font;
+    _invalidate_sizereq();
+}
+#endif
+
+TextEntry::LineReader::LineReader(char *buf, size_t sz)
+    : buffer(buf), bufsz(sz), history(nullptr), keyfn(nullptr),
+      mode(EDIT_MODE_INSERT),
+      cur(nullptr), length(0)
+{
+    *buffer = 0;
+    length = 0;
+    cur = buffer;
+
+    if (history)
+        history->go_end();
+}
+
+TextEntry::LineReader::~LineReader()
+{
+}
+
+string TextEntry::LineReader::get_text() const
+{
+    return buffer;
+}
+
+void TextEntry::LineReader::set_text(string text)
+{
+    snprintf(buffer, bufsz, "%s", text.c_str());
+    length = min(text.size(), bufsz - 1);
+    buffer[length] = 0;
+    cur = buffer + length;
+}
+
+void TextEntry::LineReader::set_input_history(input_history *i)
+{
+    history = i;
+}
+
+void TextEntry::LineReader::set_keyproc(keyproc fn)
+{
+    keyfn = fn;
+}
+
+void TextEntry::LineReader::set_edit_mode(edit_mode m)
+{
+    mode = m;
+}
+
+void TextEntry::LineReader::set_prompt(string p)
+{
+    prompt = p;
+}
+
+edit_mode TextEntry::LineReader::get_edit_mode()
+{
+    return mode;
+}
+
+#ifdef USE_TILE_WEB
+void TextEntry::LineReader::set_tag(const string &id)
+{
+    tag = id;
+}
+#endif
+
+int TextEntry::LineReader::process_key_core(int ch)
+{
+    if (keyfn)
+    {
+        // if you intercept esc, don't forget to provide another way to
+        // exit. Processing esc will safely cancel.
+        keyfun_action whattodo = (*keyfn)(ch);
+        if (whattodo == KEYFUN_CLEAR)
+        {
+            buffer[length] = 0;
+            if (history && length)
+                history->new_input(buffer);
+            return 0;
+        }
+        else if (whattodo == KEYFUN_BREAK)
+        {
+            buffer[length] = 0;
+            return ch;
+        }
+        else if (whattodo == KEYFUN_IGNORE)
+            return -1;
+        // else case: KEYFUN_PROCESS
+    }
+
+    return process_key(ch);
+}
+
+void TextEntry::LineReader::backspace()
+{
+    char *np = prev_glyph(cur, buffer);
+    if (!np)
+        return;
+    char32_t ch;
+    utf8towc(&ch, np);
+    buffer[length] = 0;
+    length -= cur - np;
+    char *c = cur;
+    cur = np;
+    while (*c)
+        *np++ = *c++;
+    buffer[length] = 0;
+}
+
+void TextEntry::LineReader::delete_char()
+{
+    // TODO: unify with backspace
+    if (*cur)
+    {
+        const char *np = next_glyph(cur);
+        ASSERT(np);
+        char32_t ch_at_point;
+        utf8towc(&ch_at_point, cur);
+        const size_t del_bytes = np - cur;
+        const size_t follow_bytes = (buffer + length) - np;
+        // Copy the NUL too.
+        memmove(cur, np, follow_bytes + 1);
+        length -= del_bytes;
+    }
+}
+
+bool TextEntry::LineReader::is_wordchar(char32_t c)
+{
+    return iswalnum(c) || c == '_' || c == '-';
+}
+
+void TextEntry::LineReader::kill_to_begin()
+{
+    if (cur == buffer)
+        return;
+
+    const int rest = length - (cur - buffer);
+    memmove(buffer, cur, rest);
+    length = rest;
+    buffer[length] = 0;
+    cur = buffer;
+}
+
+void TextEntry::LineReader::kill_to_end()
+{
+    if (*cur)
+    {
+        length = cur - buffer;
+        *cur = 0;
+    }
+}
+
+void TextEntry::LineReader::killword()
+{
+    if (cur == buffer)
+        return;
+
+    bool foundwc = false;
+    char *word = cur;
+    int ew = 0;
+    while (1)
+    {
+        char *np = prev_glyph(word, buffer);
+        if (!np)
+            break;
+
+        char32_t c;
+        utf8towc(&c, np);
+        if (is_wordchar(c))
+            foundwc = true;
+        else if (foundwc)
+            break;
+
+        word = np;
+        ew += wcwidth(c);
+    }
+    memmove(word, cur, strlen(cur) + 1);
+    length -= cur - word;
+    cur = word;
+}
+
+void TextEntry::LineReader::overwrite_char_at_cursor(int ch)
+{
+    int len = wclen(ch);
+    int w = wcwidth(ch);
+
+    if (w >= 0 && cur - buffer + len < static_cast<int>(bufsz))
+    {
+        bool empty = !*cur;
+
+        wctoutf8(cur, ch);
+        cur += len;
+        if (empty)
+            length += len;
+        buffer[length] = 0;
+    }
+}
+
+void TextEntry::LineReader::insert_char_at_cursor(int ch)
+{
+    if (wcwidth(ch) >= 0 && length + wclen(ch) < static_cast<int>(bufsz))
+    {
+        int len = wclen(ch);
+        if (*cur)
+        {
+            char *c = buffer + length - 1;
+            while (c >= cur)
+            {
+                c[len] = *c;
+                c--;
+            }
+        }
+        wctoutf8(cur, ch);
+        cur += len;
+        length += len;
+        buffer[length] = 0;
+    }
+}
+
+int TextEntry::LineReader::process_key(int ch)
+{
+    switch (ch)
+    {
+    CASE_ESCAPE
+        return CK_ESCAPE;
+    case CK_UP:
+    case CONTROL('P'):
+    case CK_DOWN:
+    case CONTROL('N'):
+    {
+        if (!history)
+            break;
+
+        const string *text = (ch == CK_UP || ch == CONTROL('P'))
+                             ? history->prev()
+                             : history->next();
+
+        if (text)
+            set_text(*text);
+        break;
+    }
+    case CK_ENTER:
+        buffer[length] = 0;
+        if (history && length)
+            history->new_input(buffer);
+        return 0;
+
+    case CONTROL('K'):
+        kill_to_end();
+        break;
+
+    case CK_DELETE:
+    case CONTROL('D'):
+        delete_char();
+        break;
+
+    case CK_BKSP:
+        backspace();
+        break;
+
+    case CONTROL('W'):
+        killword();
+        break;
+
+    case CONTROL('U'):
+        kill_to_begin();
+        break;
+
+    case CK_LEFT:
+    case CONTROL('B'):
+        if (char *np = prev_glyph(cur, buffer))
+            cur = np;
+        break;
+    case CK_RIGHT:
+    case CONTROL('F'):
+        if (char *np = next_glyph(cur))
+            cur = np;
+        break;
+    case CK_HOME:
+    case CONTROL('A'):
+        cur = buffer;
+        break;
+    case CK_END:
+    case CONTROL('E'):
+        cur = buffer + length;
+        break;
+    case CK_REDRAW:
+        //redraw_screen();
+        return -1;
+    default:
+        if (mode == EDIT_MODE_OVERWRITE)
+            overwrite_char_at_cursor(ch);
+        else // mode == EDIT_MODE_INSERT
+            insert_char_at_cursor(ch);
+
+        break;
+    }
+
+    return -1;
 }
 
 #ifdef USE_TILE_LOCAL
