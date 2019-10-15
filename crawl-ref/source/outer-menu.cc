@@ -71,13 +71,9 @@ void MenuButton::recolour_descendants(const shared_ptr<Widget>& node)
         tw->set_bg_colour(static_cast<COLOURS>(bg));
         return;
     }
-    auto container = dynamic_pointer_cast<Container>(node);
-    if (container)
-    {
-        container->foreach([this](shared_ptr<Widget>& child) {
-                recolour_descendants(child);
-            });
-    }
+    node->for_each_child([this](shared_ptr<Widget>& child) {
+        recolour_descendants(child);
+    });
 }
 #endif
 
