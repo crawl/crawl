@@ -721,7 +721,6 @@ static void _choose_name(newgame_def& ng, newgame_def& choice)
     });
 
     ui::push_layout(move(popup));
-    ui::set_focused_widget(sub_items.get());
     while (!done && !crawl_state.seen_hups)
     {
         formatted_string prompt;
@@ -1933,9 +1932,7 @@ static bool _prompt_weapon(const newgame_def& ng, newgame_def& ng_choice,
     sub_items->on_button_activated = menu_item_activated;
 
     auto popup = make_shared<ui::Popup>(vbox);
-    popup->add_event_filter([&](wm_event ev)  {
-        if (ev.type != WME_KEYDOWN)
-            return false;
+    popup->on(Widget::slots.hotkey, [&](wm_event ev)  {
         int key = ev.key.keysym.sym;
 
         switch (key)
@@ -2322,9 +2319,7 @@ static void _prompt_gamemode_map(newgame_def& ng, newgame_def& ng_choice,
     sub_items->on_button_activated = menu_item_activated;
 
     auto popup = make_shared<ui::Popup>(vbox);
-    popup->add_event_filter([&](wm_event ev)  {
-        if (ev.type != WME_KEYDOWN)
-            return false;
+    popup->on(Widget::slots.hotkey, [&](wm_event ev)  {
         int keyn = ev.key.keysym.sym;
 
         switch (keyn)
