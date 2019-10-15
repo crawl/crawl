@@ -173,6 +173,18 @@ OuterMenu::OuterMenu(bool can_shrink, int width, int height)
         return this->scroller_event_hook(ev);
     });
 
+    on(Widget::slots.hotkey, [&](wm_event ev)  {
+        if (!on_button_activated)
+            return false;
+        for (const auto& btn : this->m_buttons)
+            if (btn && ev.key.keysym.sym == btn->hotkey)
+            {
+                this->on_button_activated(btn->id);
+                return true;
+            }
+        return false;
+    });
+
     if (can_shrink)
     {
         auto scroller = make_shared<Scroller>();
@@ -213,24 +225,9 @@ SizeReq OuterMenu::_get_preferred_size(Direction dim, int prosp_width)
 
 void OuterMenu::_allocate_region()
 {
-    if (!have_allocated && on_button_activated)
+    if (!have_allocated)
     {
         have_allocated = true;
-        Layout *layout = nullptr;
-        for (Widget *w = _get_parent(); w && !layout; w = w->_get_parent())
-            layout = dynamic_cast<Layout*>(w);
-        ASSERT(layout);
-        layout->add_event_filter([this](wm_event ev) {
-            if (ev.type != WME_KEYDOWN)
-                return false;
-            for (const auto& btn : this->m_buttons)
-                if (btn && ev.key.keysym.sym == btn->hotkey)
-                {
-                    this->on_button_activated(btn->id);
-                    return true;
-                }
-            return false;
-        });
 #ifdef USE_TILE_WEB
         if (menu_id)
             open_menus.emplace(menu_id, this);

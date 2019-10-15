@@ -777,13 +777,7 @@ void UIStartupMenu::on_show()
     else if (auto focus2 = save_games_menu->get_button_by_id(id))
         save_games_menu->scroll_button_into_view(focus2);
 
-    Layout *layout = nullptr;
-    for (Widget *w = _get_parent(); w && !layout; w = w->_get_parent())
-        layout = dynamic_cast<Layout*>(w);
-    ASSERT(layout);
-    layout->add_event_filter([this](wm_event ev) {
-        if (ev.type != WME_KEYDOWN)
-            return false;
+    on(Widget::slots.hotkey, [this](wm_event ev) {
         const int keyn = ev.key.keysym.sym;
         bool changed_name = false;
 

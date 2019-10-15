@@ -141,14 +141,11 @@ static void _results_popup(string msg, bool error=false)
     auto prompt_ui = make_shared<Text>(
             formatted_string::parse_string(msg));
     bool done = false;
-    prompt_ui->on(Widget::slots.event, [&](wm_event ev) {
-        if (ev.type == WME_KEYDOWN)
-        {
-            if (ev.key.keysym.sym == CONTROL('P'))
-                replay_messages();
-            else
-                done = true;
-        }
+    prompt_ui->on(Widget::slots.hotkey, [&](wm_event ev) {
+        if (ev.key.keysym.sym == CONTROL('P'))
+            replay_messages();
+        else
+            done = true;
         return done;
     });
 
@@ -1486,9 +1483,7 @@ static void _choose_arena_teams(newgame_def& choice,
     auto prompt_ui = make_shared<Text>();
     auto popup = make_shared<ui::Popup>(prompt_ui);
 
-    popup->on(Widget::slots.event, [&](wm_event ev)  {
-        if (ev.type != WME_KEYDOWN)
-            return false;
+    popup->on(Widget::slots.hotkey, [&](wm_event ev)  {
         const int key = reader.putkey(ev.key.keysym.sym);
         if (key == -1)
             return true;

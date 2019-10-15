@@ -135,20 +135,18 @@ bool fatal_error_notification(string error_msg)
     auto prompt_ui =
                 make_shared<Text>(formatted_string::parse_string(error_msg));
     bool done = false;
-    prompt_ui->on(Widget::slots.event, [&](wm_event ev) {
-        if (ev.type == WME_KEYDOWN)
+
+    prompt_ui->on(Widget::slots.hotkey, [&](wm_event ev) {
+        if (ev.type == WME_KEYDOWN && ev.key.keysym.sym == CONTROL('P'))
         {
-            if (ev.key.keysym.sym == CONTROL('P'))
-            {
-                done = false;
-                replay_messages();
-            }
-            else
-                done = true;
+            replay_messages();
+            return true;
         }
-        else
-            done = false;
-        return done;
+        return false;
+    });
+
+    prompt_ui->on(Widget::slots.event, [&](wm_event ev) {
+        return done = ev.type == WME_KEYDOWN;
     });
 
     mouse_control mc(MOUSE_MODE_MORE);
