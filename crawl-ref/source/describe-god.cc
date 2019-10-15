@@ -1224,8 +1224,8 @@ void describe_god(god_type which_god)
     build_partial_god_ui(which_god, popup, desc_sw, more_sw);
 
     bool done = false;
-    popup->on_keydown_event([&](wm_event ev) {
-        int key = ev.key.keysym.sym;
+    popup->on_keydown_event([&](const KeyEvent& ev) {
+        const auto key = ev.key();
         if (key == '!' || key == CK_MOUSE_CMD || key == '^')
         {
             int n = (desc_sw->current() + 1) % desc_sw->num_children();
@@ -1320,8 +1320,8 @@ bool describe_god_with_join(god_type which_god)
     bool done = false, join = false;
 
     // The join-god UI state machine transition function
-    popup->on_keydown_event([&](wm_event ev) {
-        int keyin = ev.key.keysym.sym;
+    popup->on_keydown_event([&](const KeyEvent& ev) {
+        const auto keyin = ev.key();
 
         // Always handle escape and pane-switching keys the same way
         if (keyin == CK_ESCAPE)

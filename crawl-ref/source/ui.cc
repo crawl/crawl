@@ -16,6 +16,7 @@
 #include "tileweb.h"
 #include "unicode.h"
 #include "libutil.h"
+#include "windowmanager.h"
 
 #ifdef USE_TILE_LOCAL
 # include "glwrapper.h"
@@ -164,6 +165,30 @@ static stack<Region> scissor_stack;
 
 struct Widget::slots Widget::slots = {};
 
+Event::Event(Event::Type type) : m_type(type)
+{
+}
+
+KeyEvent::KeyEvent(Event::Type type, const wm_keyboard_event& wm_ev) : Event(type)
+{
+    m_key = wm_ev.keysym.sym;
+}
+
+#ifdef USE_TILE_LOCAL
+MouseEvent::MouseEvent(Event::Type type, const wm_mouse_event& wm_ev) : Event(type)
+{
+    m_button = static_cast<MouseEvent::Button>(wm_ev.button);
+    // XXX: is it possible that the cursor has moved since the SDL event fired?
+    wm->get_mouse_state(&m_x, &m_y);
+    m_wheel_dx = type == MouseWheel ? wm_ev.px : 0;
+    m_wheel_dy = type == MouseWheel ? wm_ev.py : 0;
+}
+#endif
+
+FocusEvent::FocusEvent(Event::Type type) : Event(type)
+{
+}
+
 Widget::~Widget()
 {
     Widget::slots.event.remove_by_target(this);
@@ -178,7 +203,7 @@ Widget::~Widget()
 #endif
 }
 
-bool Widget::on_event(const wm_event& event)
+bool Widget::on_event(const Event& event)
 {
     return Widget::slots.event.emit(this, event);
 }
@@ -1473,7 +1498,7 @@ void Scroller::_allocate_region()
 #endif
 }
 
-bool Scroller::on_event(const wm_event& event)
+bool Scroller::on_event(const Event& event)
 {
     if (Bin::on_event(event))
         return true;
@@ -1483,9 +1508,10 @@ bool Scroller::on_event(const wm_event& event)
     const int line_delta = 1;
 #endif
     int delta = 0;
-    if (event.type == WME_KEYDOWN)
+    if (event.type() == Event::Type::KeyDown)
     {
-        switch (event.key.keysym.sym)
+        const auto key = static_cast<const KeyEvent&>(event).key();
+        switch (key)
         {
             case ' ': case '+': case CK_PGDN: case '>': case '\'':
                 delta = m_region.height;
@@ -1513,9 +1539,13 @@ bool Scroller::on_event(const wm_event& event)
                 return true;
         }
     }
-    else if (event.type == WME_MOUSEWHEEL)
-        delta = -1 * event.mouse_event.py * line_delta;
-    else if (event.type == WME_MOUSEBUTTONDOWN && event.mouse_event.button == wm_mouse_event::LEFT)
+    else if (event.type() == Event::Type::MouseWheel)
+    {
+        auto mouse_event = static_cast<const MouseEvent&>(event);
+        delta = -1 * mouse_event.wheel_dy() * line_delta;
+    }
+    else if (event.type() == Event::Type::MouseDown
+             && static_cast<const MouseEvent&>(event).button() == MouseEvent::Button::Left)
         delta = line_delta;
     if (delta != 0)
     {
@@ -1705,17 +1735,17 @@ void Checkbox::_allocate_region()
     }
 }
 
-bool Checkbox::on_event(const wm_event& event)
+bool Checkbox::on_event(const Event& event)
 {
 #ifdef USE_TILE_LOCAL
-    if (event.type == WME_MOUSEENTER || event.type == WME_MOUSELEAVE)
+    if (event.type() == Event::Type::MouseEnter || event.type() == Event::Type::MouseLeave)
     {
-        bool new_hovered = event.type == WME_MOUSEENTER;
+        bool new_hovered = event.type() == Event::Type::MouseEnter;
         if (new_hovered != m_hovered)
             _expose();
         m_hovered = new_hovered;
     }
-    if (event.type == WME_MOUSEBUTTONDOWN)
+    if (event.type() == Event::Type::MouseDown)
     {
         set_checked(!checked());
         set_focused_widget(this);
@@ -1723,14 +1753,14 @@ bool Checkbox::on_event(const wm_event& event)
         return true;
     }
 #endif
-    if (event.type == WME_FOCUSIN || event.type == WME_FOCUSOUT)
+    if (event.type() == Event::Type::FocusIn || event.type() == Event::Type::FocusOut)
     {
         _expose();
         return true;
     }
-    if (event.type == WME_KEYDOWN)
+    if (event.type() == Event::Type::KeyDown)
     {
-        int key = event.key.keysym.sym;
+        const auto key = static_cast<const KeyEvent&>(event).key();
         if (key == CK_ENTER || key == ' ')
         {
             set_checked(!checked());
@@ -1885,24 +1915,24 @@ void TextEntry::_allocate_region()
 {
 }
 
-bool TextEntry::on_event(const wm_event& event)
+bool TextEntry::on_event(const Event& event)
 {
-    switch (event.type)
+    switch (event.type())
     {
-    case WME_FOCUSIN:
-    case WME_FOCUSOUT:
-        set_cursor_enabled(event.type == WME_FOCUSIN);
+    case Event::Type::FocusIn:
+    case Event::Type::FocusOut:
+        set_cursor_enabled(event.type() == Event::Type::FocusIn);
         _expose();
         return true;
-    case WME_MOUSEBUTTONDOWN:
+    case Event::Type::MouseDown:
         // TODO: unfocus if the mouse is clicked outside
         // TODO: move the cursor to the clicked position
-        if (event.mouse_event.button == wm_mouse_event::LEFT)
+        if (static_cast<const MouseEvent&>(event).button() == MouseEvent::Button::Left)
             ui::set_focused_widget(this);
         return true;
-    case WME_KEYDOWN:
+    case Event::Type::KeyDown:
         {
-            int key = event.key.keysym.sym;
+            const auto key = static_cast<const KeyEvent&>(event).key();
             int ret = m_line_reader.process_key_core(key);
             if (ret == CK_ESCAPE || ret == 0)
                 ui::set_focused_widget(nullptr);
@@ -2677,16 +2707,10 @@ void UIRoot::send_mouse_enter_leave_events(
     if (diff == size)
         return;
 
-    int mx, my;
-    wm->get_mouse_state(&mx, &my);
-
-    wm_event ev = {0};
-    ev.mouse_event.px = mx;
-    ev.mouse_event.py = my;
-
     if (old_hover_path[diff])
     {
-        ev.type = WME_MOUSELEAVE;
+        const wm_mouse_event dummy = {};
+        MouseEvent ev(Event::Type::MouseLeave, dummy);
         for (size_t i = size; i > diff; --i)
             if (old_hover_path[i-1])
                 old_hover_path[i-1]->on_event(ev);
@@ -2694,7 +2718,8 @@ void UIRoot::send_mouse_enter_leave_events(
 
     if (new_hover_path[diff])
     {
-        ev.type = WME_MOUSEENTER;
+        const wm_mouse_event dummy = {};
+        MouseEvent ev(Event::Type::MouseEnter, dummy);
         for (size_t i = diff; i < size; ++i)
             if (new_hover_path[i])
                 new_hover_path[i]->on_event(ev);
@@ -2722,6 +2747,22 @@ void UIRoot::update_hover_path_for_widget(Widget *widget)
 }
 #endif
 
+static Event::Type convert_event_type(const wm_event& event)
+{
+    switch (event.type)
+    {
+        case WME_MOUSEBUTTONDOWN: return Event::Type::MouseDown;
+        case WME_MOUSEBUTTONUP: return Event::Type::MouseUp;
+        case WME_MOUSEMOTION: return Event::Type::MouseMove;
+        case WME_MOUSEWHEEL: return Event::Type::MouseWheel;
+        case WME_MOUSEENTER: return Event::Type::MouseEnter;
+        case WME_MOUSELEAVE: return Event::Type::MouseLeave;
+        case WME_KEYDOWN: return Event::Type::KeyDown;
+        case WME_KEYUP: return Event::Type::KeyUp;
+        default: abort();
+    }
+}
+
 bool UIRoot::on_event(const wm_event& event)
 {
     if (event_filter && event_filter(event))
@@ -2736,44 +2777,54 @@ bool UIRoot::on_event(const wm_event& event)
     {
         case WME_MOUSEBUTTONDOWN:
         case WME_MOUSEBUTTONUP:
-        case WME_MOUSEMOTION:
-        case WME_MOUSEWHEEL:
 #ifdef USE_TILE_LOCAL
             if (event.type == WME_MOUSEBUTTONDOWN)
                 m_changed_layout_since_click = false;
             else if (event.type == WME_MOUSEBUTTONUP)
                 if (m_changed_layout_since_click)
                     break;
+#endif
+            // fall through
+        case WME_MOUSEMOTION:
+        case WME_MOUSEWHEEL:
+        {
+#ifdef USE_TILE_LOCAL
+            const auto mouse_event = MouseEvent(convert_event_type(event),
+                    event.mouse_event);
             if (!hover_path.empty()) {
                 for (auto w = hover_path.back(); w; w = w->_get_parent())
-                    if (w->on_event(event))
+                    if (w->on_event(mouse_event))
                         return true;
             }
 #endif
             break;
+        }
         case WME_MOUSEENTER:
         case WME_MOUSELEAVE:
             die("unreachable");
             break;
-        default:
+        case WME_KEYDOWN:
+        case WME_KEYUP:
             size_t layer_idx = m_root.num_children();
             if (!layer_idx)
                 return false;
 
             Widget* layer_root = m_root.get_child(layer_idx-1).get();
 
+            const auto key_event = KeyEvent(convert_event_type(event), event.key);
+
             if (event.type == WME_KEYDOWN)
             {
                 bool hotkey_handled = Widget::slots.hotkey.emit_if([&](Widget* w){
                         return layer_root->is_ancestor_of(w->get_shared());
-                    }, event);
+                    }, key_event);
                 if (hotkey_handled)
                     return true;
             }
 
             if (auto w = get_focused_widget())
             {
-                if (w->on_event(event))
+                if (w->on_event(key_event))
                     return true;
 
                 if (w != state.default_focus && event.type == WME_KEYDOWN)
@@ -2796,7 +2847,7 @@ bool UIRoot::on_event(const wm_event& event)
                 }
 
                 for (w = w->_get_parent(); w; w = w->_get_parent())
-                    if (w->on_event(event))
+                    if (w->on_event(key_event))
                         return true;
             }
 
@@ -3411,8 +3462,7 @@ void set_focused_widget(Widget* w)
     if (current_focus && !sent_focusout)
     {
         sent_focusout = true;
-        wm_event ev = {0};
-        ev.type = WME_FOCUSOUT;
+        const auto ev = FocusEvent(Event::Type::FocusOut);
         current_focus->on_event(ev);
     }
 
@@ -3425,8 +3475,7 @@ void set_focused_widget(Widget* w)
 
     if (new_focus)
     {
-        wm_event ev = {0};
-        ev.type = WME_FOCUSIN;
+        const auto ev = FocusEvent(Event::Type::FocusIn);
         new_focus->on_event(ev);
     }
 }

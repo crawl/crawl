@@ -17,7 +17,7 @@ public:
     virtual void _render() override;
     virtual ui::SizeReq _get_preferred_size(ui::Widget::Direction, int) override;
     virtual void _allocate_region() override;
-    virtual bool on_event(const wm_event& event) override;
+    virtual bool on_event(const ui::Event& event) override;
 
     int id = 0;
     int hotkey = 0;
@@ -62,7 +62,7 @@ public:
     virtual void _render() override;
     virtual ui::SizeReq _get_preferred_size(ui::Widget::Direction, int) override;
     virtual void _allocate_region() override;
-    virtual bool on_event(const wm_event& event) override;
+    virtual bool on_event(const ui::Event& event) override;
 
     virtual shared_ptr<Widget> get_child_at_offset(int, int) override {
         return m_root;
@@ -87,7 +87,7 @@ public:
     const char *menu_id {nullptr};
 
 protected:
-    bool scroller_event_hook(const wm_event& ev);
+    bool scroller_event_hook(const ui::Event& ev);
     bool move_button_focus(int fx, int fy, int dx, int dy, int limit);
 
     shared_ptr<ui::Grid> m_grid;

@@ -239,7 +239,7 @@ static void _print_version()
     auto popup = make_shared<ui::Popup>(vbox);
 
     bool done = false;
-    popup->on_keydown_event([&](wm_event ev) {
+    popup->on_keydown_event([&](const KeyEvent& ev) {
         done = !scroller->on_event(ev);
         return true;
     });

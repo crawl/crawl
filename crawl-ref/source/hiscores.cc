@@ -387,7 +387,7 @@ public:
     virtual void _render() override;
     virtual SizeReq _get_preferred_size(Direction dim, int prosp_width) override;
     virtual void _allocate_region() override;
-    virtual bool on_event(const wm_event& event) override;
+    virtual bool on_event(const Event& event) override;
 
     void on_show();
 
@@ -481,14 +481,19 @@ void UIHiscoresMenu::_add_hiscore_row(scorefile_entry& se, int id)
     auto btn = make_shared<MenuButton>();
     tmp->set_margin_for_sdl(2);
     btn->set_child(move(tmp));
-    btn->on_any_event([this, id, se](wm_event ev) {
-        if (ev.type == WME_MOUSEBUTTONUP && ev.mouse_event.button == wm_mouse_event::LEFT
-                || ev.type == WME_KEYDOWN && ev.key.keysym.sym == CK_ENTER)
+    btn->on_any_event([this, id, se](const Event& ev) {
+        // FIXME: add on_activate event
+        const bool lmb = ev.type() == Event::Type::MouseUp
+            && static_cast<const MouseEvent&>(ev).button() == MouseEvent::Button::Left;
+        const bool keyboard = ev.type() == Event::Type::KeyDown
+            && static_cast<const KeyEvent&>(ev).key() == CK_ENTER;
+        if (lmb || keyboard)
         {
             _show_morgue(*hs_list[id]);
             return true;
         }
-        if (ev.type == WME_FOCUSIN)
+        // FIXME: add on_focusin event
+        if (ev.type() == Event::Type::FocusIn)
         {
             formatted_string desc(hiscores_format_single_long(se, true));
             desc.cprintf(string(max(0, 9-count_linebreaks(desc)), '\n'));
@@ -527,11 +532,11 @@ void UIHiscoresMenu::_allocate_region()
     m_root->allocate_region(m_region);
 }
 
-bool UIHiscoresMenu::on_event(const wm_event& ev)
+bool UIHiscoresMenu::on_event(const Event& ev)
 {
-    if (ev.type != WME_KEYDOWN)
+    if (ev.type() != Event::Type::KeyDown)
         return false;
-    int key = ev.key.keysym.sym;
+    const auto key = static_cast<const KeyEvent&>(ev).key();
     if (key_is_escape(key) || key == CK_MOUSE_CMD)
         return done = true;
     return true;

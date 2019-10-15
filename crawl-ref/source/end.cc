@@ -137,8 +137,8 @@ bool fatal_error_notification(string error_msg)
     auto popup = make_shared<ui::Popup>(prompt_ui);
     bool done = false;
 
-    popup->on_hotkey_event([&](wm_event ev) {
-        if (ev.key.keysym.sym == CONTROL('P'))
+    popup->on_hotkey_event([&](const KeyEvent& ev) {
+        if (ev.key() == CONTROL('P'))
         {
             replay_messages();
             return true;
@@ -146,7 +146,7 @@ bool fatal_error_notification(string error_msg)
         return false;
     });
 
-    popup->on_keydown_event([&](const wm_event&) { return done = true; });
+    popup->on_keydown_event([&](const KeyEvent&) { return done = true; });
 
     mouse_control mc(MOUSE_MODE_MORE);
     ui::run_layout(move(popup), done);
@@ -249,7 +249,7 @@ NORETURN void screen_end_game(string text)
                 formatted_string::parse_string(text));
         auto popup = make_shared<ui::Popup>(prompt_ui);
         bool done = false;
-        popup->on_keydown_event([&](const wm_event&) { return done = true; });
+        popup->on_keydown_event([&](const KeyEvent&) { return done = true; });
 
         mouse_control mc(MOUSE_MODE_MORE);
         ui::run_layout(move(popup), done);
@@ -519,7 +519,7 @@ NORETURN void end_game(scorefile_entry &se)
 
     auto popup = make_shared<ui::Popup>(move(vbox));
     bool done = false;
-    popup->on_keydown_event([&](const wm_event&) { return done = true; });
+    popup->on_keydown_event([&](const KeyEvent&) { return done = true; });
 
     if (!crawl_state.seen_hups && !crawl_state.disables[DIS_CONFIRMATIONS])
     {

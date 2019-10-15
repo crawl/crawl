@@ -394,8 +394,8 @@ void DollEditRegion::run()
     vbox->add_child(doll_ui);
     auto popup = make_shared<ui::Popup>(move(vbox));
 
-    popup->on_keydown_event([this, &done, &doll_ui, &update_part_idx](wm_event ev) {
-        int key = ev.key.keysym.sym;
+    popup->on_keydown_event([this, &done, &doll_ui, &update_part_idx](const KeyEvent& ev) {
+        const auto key = ev.key();
         command_type cmd = key_to_command(key, KMC_DOLL);
 
         switch (cmd)

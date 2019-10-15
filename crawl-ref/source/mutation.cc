@@ -888,8 +888,8 @@ void display_mutations()
 
     bool done = false;
     int lastch;
-    popup->on_keydown_event([&](wm_event ev) {
-        lastch = ev.key.keysym.sym;
+    popup->on_keydown_event([&](const KeyEvent& ev) {
+        lastch = ev.key();
         if (you.species == SP_VAMPIRE && (lastch == '!' || lastch == CK_MOUSE_CMD || lastch == '^'))
         {
             int& c = switcher->current();
