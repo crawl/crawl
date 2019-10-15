@@ -1403,8 +1403,8 @@ static int _lookup_prompt()
         auto popup = make_shared<ui::Popup>(prompt_ui);
         bool done = false;
 
-        popup->on_keydown_event([&](wm_event ev) {
-            ch = ev.key.keysym.sym;
+        popup->on_keydown_event([&](const ui::KeyEvent& ev) {
+            ch = ev.key();
             return done = true;
         });
 

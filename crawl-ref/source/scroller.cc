@@ -118,8 +118,8 @@ int formatted_scroller::show()
 
     m_contents_dirty = false;
     bool done = false;
-    popup->on_keydown_event([&done, &text, this](wm_event ev) {
-        m_lastch = ev.key.keysym.sym;
+    popup->on_keydown_event([&done, &text, this](const KeyEvent& ev) {
+        m_lastch = ev.key();
         done = !process_key(m_lastch);
         if (m_contents_dirty)
         {

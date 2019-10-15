@@ -407,8 +407,8 @@ static bool _reroll_random(newgame_def& ng)
 
     bool done = false;
     char c;
-    popup->on_keydown_event([&](wm_event ev)  {
-        c = ev.key.keysym.sym;
+    popup->on_keydown_event([&](const KeyEvent& ev) {
+        c = ev.key();
         return done = true;
     });
 
@@ -698,8 +698,8 @@ static void _choose_name(newgame_def& ng, newgame_def& choice)
 
     };
 
-    popup->on_keydown_event([&](wm_event ev)  {
-        int key = ev.key.keysym.sym;
+    popup->on_keydown_event([&](const KeyEvent& ev) {
+        auto key = ev.key();
 
         if (!overwrite_prompt)
         {
@@ -849,8 +849,8 @@ static void _choose_seed(newgame_def& ng, newgame_def& choice,
     begin_btn->hotkey = CK_ENTER;
     button_hbox->add_child(move(begin_btn));
 
-    popup->on_keydown_event([&](wm_event ev)  {
-        int key = ev.key.keysym.sym;
+    popup->on_keydown_event([&](const KeyEvent& ev) {
+        const auto key = ev.key();
 
         if (key == 'd' || key == 'D')
         {
@@ -1133,13 +1133,13 @@ public:
 
         for (auto &w : m_main_items->get_buttons())
         {
-            w->on_any_event([w, this](wm_event ev) {
+            w->on_any_event([w, this](const Event& ev) {
                 return this->button_event_hook(ev, w);
             });
         }
         for (auto &w : m_sub_items->get_buttons())
         {
-            w->on_any_event([w, this](wm_event ev) {
+            w->on_any_event([w, this](const Event& ev) {
                 return this->button_event_hook(ev, w);
             });
         }
@@ -1152,7 +1152,7 @@ public:
     virtual void _render() override;
     virtual SizeReq _get_preferred_size(Direction dim, int prosp_width) override;
     virtual void _allocate_region() override;
-    virtual bool on_event(const wm_event& event) override;
+    virtual bool on_event(const Event& event) override;
 
 #ifdef USE_TILE_WEB
     void serialize();
@@ -1325,9 +1325,9 @@ protected:
     }
 
 private:
-    bool button_event_hook(const wm_event& ev, MenuButton* /*btn*/)
+    bool button_event_hook(const Event& ev, MenuButton* /*btn*/)
     {
-        if (ev.type == WME_KEYDOWN)
+        if (ev.type() == Event::Type::KeyDown)
             return on_event(ev);
         return false;
     }
@@ -1360,17 +1360,17 @@ void UINewGameMenu::_allocate_region()
     m_vbox->allocate_region(m_region);
 }
 
-bool UINewGameMenu::on_event(const wm_event& ev)
+bool UINewGameMenu::on_event(const Event& ev)
 {
-    if (ev.type != WME_KEYDOWN)
+    if (ev.type() != Event::Type::KeyDown)
         return false;
-    int keyn = ev.key.keysym.sym;
+    const auto key = static_cast<const KeyEvent&>(ev).key();
 
     // First process all the menu entries available
-    if (keyn != CK_ENTER)
+    if (key != CK_ENTER)
     {
         // Process all the other keys that are not assigned to the menu
-        switch (keyn)
+        switch (key)
         {
         case 'X':
         case CONTROL('Q'):
@@ -1886,10 +1886,8 @@ static bool _prompt_weapon(const newgame_def& ng, newgame_def& ng_choice,
     sub_items->on_button_activated = menu_item_activated;
 
     auto popup = make_shared<ui::Popup>(vbox);
-    popup->on_hotkey_event([&](wm_event ev)  {
-        int key = ev.key.keysym.sym;
-
-        switch (key)
+    popup->on_hotkey_event([&](const KeyEvent& ev) {
+        switch (ev.key())
         {
             case 'X':
             case CONTROL('Q'):
@@ -2273,10 +2271,8 @@ static void _prompt_gamemode_map(newgame_def& ng, newgame_def& ng_choice,
     sub_items->on_button_activated = menu_item_activated;
 
     auto popup = make_shared<ui::Popup>(vbox);
-    popup->on_hotkey_event([&](wm_event ev)  {
-        int keyn = ev.key.keysym.sym;
-
-        switch (keyn)
+    popup->on_hotkey_event([&](const KeyEvent& ev) {
+        switch (ev.key())
         {
             case 'X':
             case CONTROL('Q'):

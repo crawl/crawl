@@ -176,8 +176,8 @@ int show_description(const describe_info &inf, const tile_def *tile)
 
     bool done = false;
     int lastch;
-    popup->on_keydown_event([&](wm_event ev) {
-        lastch = ev.key.keysym.sym;
+    popup->on_keydown_event([&](const KeyEvent& ev) {
+        lastch = ev.key();
         if (!inf.quote.empty() && (lastch == '!' || lastch == CK_MOUSE_CMD || lastch == '^'))
             desc_sw->current() = more_sw->current() = 1 - desc_sw->current();
         else
@@ -2368,7 +2368,7 @@ void describe_feature_wide(const coord_def& pos)
     auto popup = make_shared<ui::Popup>(scroller);
 
     bool done = false;
-    popup->on_keydown_event([&](wm_event ev) {
+    popup->on_keydown_event([&](const KeyEvent& ev) {
         done = !scroller->on_event(ev);
         return true;
     });
@@ -2738,9 +2738,8 @@ bool describe_item(item_def &item, function<void (string&)> fixup_desc)
     bool done = false;
     command_type action;
     int lastch;
-    popup->on_keydown_event([&](wm_event ev) {
-        int key = ev.key.keysym.sym;
-        key = key == '{' ? 'i' : key;
+    popup->on_keydown_event([&](const KeyEvent& ev) {
+        const auto key = ev.key() == '{' ? 'i' : ev.key();
         lastch = key;
         action = _get_action(key, actions);
         if (action != CMD_NO_CMD)
@@ -3218,8 +3217,8 @@ void describe_spell(spell_type spell, const monster_info *mon_owner,
 
     bool done = false;
     int lastch;
-    popup->on_keydown_event([&](wm_event ev) {
-        lastch = ev.key.keysym.sym;
+    popup->on_keydown_event([&](const KeyEvent& ev) {
+        lastch = ev.key();
         done = (toupper_safe(lastch) == 'M' && can_mem || lastch == CK_ESCAPE
             || lastch == CK_ENTER || lastch == ' ');
         if (scroller->on_event(ev))
@@ -4616,8 +4615,8 @@ int describe_monsters(const monster_info &mi, const string& /*footer*/)
 
     bool done = false;
     int lastch;
-    popup->on_keydown_event([&](wm_event ev) {
-        int key = ev.key.keysym.sym;
+    popup->on_keydown_event([&](const KeyEvent& ev) {
+        const auto key = ev.key();
         lastch = key;
         done = key == CK_ESCAPE;
         if (!inf.quote.empty() && (key == '!' || key == CK_MOUSE_CMD))

@@ -610,16 +610,18 @@ public:
         save_games_menu->on_button_activated =
             [this](int id) { this->menu_item_activated(id); };
 
+        // TODO: focus events should probably not bubble, but there should be
+        // some way to capture them...
         for (auto &w : game_modes_menu->get_buttons())
         {
-            w->on_keydown_event([w, this](wm_event ev) {
-                return this->button_event_hook(ev, w);
+            w->on_focusin_event([w, this](const FocusEvent&) {
+                return this->on_button_focusin(*w);
             });
         }
         for (auto &w : save_games_menu->get_buttons())
         {
-            w->on_keydown_event([w, this](wm_event ev) {
-                return this->button_event_hook(ev, w);
+            w->on_focusin_event([w, this](const FocusEvent&) {
+                return this->on_button_focusin(*w);
             });
         }
 
@@ -679,42 +681,36 @@ private:
     int num_saves;
     bool first_action = true;
 
-    bool button_event_hook(const wm_event& ev, MenuButton* btn)
+    bool on_button_focusin(const MenuButton& btn)
     {
-        if (ev.type == WME_FOCUSIN)
+        startup_menu_game_type = btn.id;
+        switch (startup_menu_game_type)
         {
-            startup_menu_game_type = btn->id;
-            switch (startup_menu_game_type)
-            {
-            case GAME_TYPE_ARENA:
-                break;
-            case GAME_TYPE_NORMAL:
-            case GAME_TYPE_CUSTOM_SEED:
-            case GAME_TYPE_TUTORIAL:
-            case GAME_TYPE_SPRINT:
-            case GAME_TYPE_HINTS:
-                // If a game type is chosen, the user expects
-                // to start a new game. Just blanking the name
-                // it it clashes for now.
-                if (_find_save(chars, input_string) != -1)
-                    input_string = "";
-                break;
-            case GAME_TYPE_HIGH_SCORES:
-                break;
+        case GAME_TYPE_NORMAL:
+        case GAME_TYPE_CUSTOM_SEED:
+        case GAME_TYPE_TUTORIAL:
+        case GAME_TYPE_SPRINT:
+        case GAME_TYPE_HINTS:
+            // If a game type is chosen, the user expects to start a new game.
+            // Just blanking the name it it clashes for now.
+            if (_find_save(chars, input_string) != -1)
+                input_string = "";
+            break;
 
-            case GAME_TYPE_INSTRUCTIONS:
-                break;
+        case GAME_TYPE_ARENA:
+        case GAME_TYPE_HIGH_SCORES:
+        case GAME_TYPE_INSTRUCTIONS:
+            break;
 
-            default:
-                int save_number = startup_menu_game_type - NUM_GAME_TYPE;
-                if (save_number < num_saves)
-                    input_string = chars.at(save_number).name;
-                else // new game
-                    input_string = "";
-                break;
-            }
-            input_text->set_text(formatted_string(input_string, WHITE));
+        default:
+            int save_number = startup_menu_game_type - NUM_GAME_TYPE;
+            if (save_number < num_saves)
+                input_string = chars.at(save_number).name;
+            else // new game
+                input_string = "";
+            break;
         }
+        input_text->set_text(formatted_string(input_string, WHITE));
         return false;
     }
 
@@ -777,8 +773,8 @@ void UIStartupMenu::on_show()
     else if (auto focus2 = save_games_menu->get_button_by_id(id))
         save_games_menu->scroll_button_into_view(focus2);
 
-    on_hotkey_event([this](wm_event ev) {
-        const int keyn = ev.key.keysym.sym;
+    on_hotkey_event([this](const KeyEvent& ev) {
+        const auto keyn = ev.key();
         bool changed_name = false;
 
         if (key_is_escape(keyn) || keyn == CK_MOUSE_CMD)

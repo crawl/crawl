@@ -77,39 +77,45 @@ void MenuButton::recolour_descendants(const shared_ptr<Widget>& node)
 }
 #endif
 
-bool MenuButton::on_event(const wm_event& event)
+bool MenuButton::on_event(const Event& event)
 {
     if (Bin::on_event(event))
         return true;
 
     bool old_focused = focused, old_active = active;
 
-    if (event.type == WME_MOUSEENTER && focus_on_mouse)
+    if (event.type() == Event::Type::MouseEnter && focus_on_mouse)
         ui::set_focused_widget(this);
-    if (event.type == WME_MOUSEMOTION)
+    if (event.type() == Event::Type::MouseMove)
         ui::set_focused_widget(this);
 
-    if (event.type == WME_FOCUSIN)
+    if (event.type() == Event::Type::FocusIn)
         focused = true;
-    if (event.type == WME_FOCUSOUT)
+    if (event.type() == Event::Type::FocusOut)
         focused = false;
 
 #ifndef USE_TILE_LOCAL
-    if (event.type == WME_FOCUSIN || event.type == WME_FOCUSOUT)
+    if (event.type() == Event::Type::FocusIn || event.type() == Event::Type::FocusOut)
         recolour_descendants(shared_from_this());
 #endif
 
 #ifdef USE_TILE_LOCAL
-    if (event.type == WME_MOUSEENTER)
+    if (event.type() == Event::Type::MouseEnter)
         wm->set_mouse_cursor(MOUSE_CURSOR_POINTER);
-    if (event.type == WME_MOUSELEAVE)
+    if (event.type() == Event::Type::MouseLeave)
         wm->set_mouse_cursor(MOUSE_CURSOR_ARROW);
 #endif
 
-    if (event.type == WME_MOUSEBUTTONDOWN && event.mouse_event.button == wm_mouse_event::LEFT)
+    if (event.type() == Event::Type::MouseDown
+        && static_cast<const MouseEvent&>(event).button() == MouseEvent::Button::Left)
+    {
         active = true;
-    if (event.type == WME_MOUSEBUTTONUP && event.mouse_event.button == wm_mouse_event::LEFT)
+    }
+    if (event.type() == Event::Type::MouseUp
+        && static_cast<const MouseEvent&>(event).button() == MouseEvent::Button::Left)
+    {
         active = false;
+    }
 
     if (old_focused != focused || old_active != active)
         _queue_allocation();
@@ -165,15 +171,15 @@ OuterMenu::OuterMenu(bool can_shrink, int width, int height)
     m_grid = make_shared<Grid>();
     m_grid->stretch_h = true;
 
-    m_grid->on_any_event([this](wm_event ev){
+    m_grid->on_any_event([this](const Event& ev) {
         return this->scroller_event_hook(ev);
     });
 
-    on_hotkey_event([&](wm_event ev)  {
+    on_hotkey_event([&](const KeyEvent& ev) {
         if (!on_button_activated)
             return false;
         for (const auto& btn : this->m_buttons)
-            if (btn && ev.key.keysym.sym == btn->hotkey)
+            if (btn && ev.key() == btn->hotkey)
             {
                 this->on_button_activated(btn->id);
                 return true;
@@ -234,7 +240,7 @@ void OuterMenu::_allocate_region()
     m_root->allocate_region(m_region);
 }
 
-bool OuterMenu::on_event(const wm_event& event)
+bool OuterMenu::on_event(const Event& event)
 {
     return Widget::on_event(event);
 }
@@ -258,16 +264,17 @@ void OuterMenu::add_button(shared_ptr<MenuButton> btn, int x, int y)
     item = btn.get();
 
     const int btn_id = btn->id;
-    btn->on_any_event([btn_id, this, x, y](const wm_event& ev) {
-        if (on_button_activated)
-        if ((ev.type == WME_MOUSEBUTTONUP
-                && ev.mouse_event.button == wm_mouse_event::LEFT)
-            || (ev.type == WME_KEYDOWN && ev.key.keysym.sym == CK_ENTER))
+    btn->on_any_event([btn_id, this, x, y](const Event& ev) {
+        const bool lmb = ev.type() == Event::Type::MouseUp
+            && static_cast<const MouseEvent&>(ev).button() == MouseEvent::Button::Left;
+        const bool keyboard = ev.type() == Event::Type::KeyDown
+            && static_cast<const KeyEvent&>(ev).key() == CK_ENTER;
+        if (lmb || keyboard)
         {
             this->on_button_activated(btn_id);
-            return ev.type == WME_KEYDOWN; // button needs to catch clicks
+            return ev.type() == Event::Type::KeyDown; // button needs to catch clicks
         }
-        if (ev.type == WME_FOCUSIN && m_description_indexes[y*this->m_width+x] != -1)
+        if (ev.type() == Event::Type::FocusIn && m_description_indexes[y*this->m_width+x] != -1)
             descriptions->current() = m_description_indexes[y*this->m_width+x];
         return false;
     });
@@ -352,13 +359,14 @@ bool OuterMenu::move_button_focus(int fx, int fy, int dx, int dy, int limit)
     return btn != nullptr;
 }
 
-bool OuterMenu::scroller_event_hook(const wm_event& ev)
+bool OuterMenu::scroller_event_hook(const Event& ev)
 {
-    MenuButton::focus_on_mouse = ev.type == WME_MOUSEWHEEL;
+    MenuButton::focus_on_mouse = ev.type() == Event::Type::MouseWheel;
 
-    if (ev.type != WME_KEYDOWN)
+    if (ev.type() != Event::Type::KeyDown)
         return false;
-    int key = ev.key.keysym.sym;
+
+    const auto key = static_cast<const KeyEvent&>(ev).key();
 
     if (key == CK_DOWN || key == CK_UP || key == CK_LEFT || key == CK_RIGHT
             || key == CK_HOME || key == CK_END || key == CK_PGUP || key == CK_PGDN)

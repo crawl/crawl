@@ -1569,8 +1569,8 @@ int msgwin_get_line(string prompt, char *buf, int len,
             tiles.ui_state_change("msgwin-get-line", 0);
 #endif
         };
-        popup->on_keydown_event([&](wm_event ev) {
-            ret = reader.putkey(ev.key.keysym.sym);
+        popup->on_keydown_event([&](const ui::KeyEvent& ev) {
+            ret = reader.putkey(ev.key());
             if (ret != -1)
                 done = true;
             update_text();

@@ -22,8 +22,6 @@ enum wm_event_type
     WME_RESIZE,
     WME_EXPOSE,
     WME_MOVE,
-    WME_FOCUSIN,
-    WME_FOCUSOUT,
     WME_NUMEVENTS = 15
 };
 

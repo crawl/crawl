@@ -406,7 +406,7 @@ void hints_starting_screen()
 
     bool done = false;
     auto popup = make_shared<ui::Popup>(prompt_ui);
-    popup->on_keydown_event([&](const wm_event&) { return done = true; });
+    popup->on_keydown_event([&](const KeyEvent&) { return done = true; });
 
     mouse_control mc(MOUSE_MODE_MORE);
     ui::run_layout(move(popup), done);

@@ -141,8 +141,8 @@ static void _results_popup(string msg, bool error=false)
     auto prompt_ui = make_shared<Text>(
             formatted_string::parse_string(msg));
     bool done = false;
-    prompt_ui->on_hotkey_event([&](wm_event ev) {
-        if (ev.key.keysym.sym == CONTROL('P'))
+    prompt_ui->on_hotkey_event([&](const KeyEvent& ev) {
+        if (ev.key() == CONTROL('P'))
             replay_messages();
         else
             done = true;
@@ -1044,10 +1044,10 @@ namespace arena
                 viewwindow();
                 display_message_window();
             };
-            virtual bool on_event(const wm_event& ev) override {
-                if (ev.type != WME_KEYDOWN)
+            virtual bool on_event(const Event& ev) override {
+                if (ev.type() != Event::Type::KeyDown)
                     return false;
-                handle_keypress(ev.key.keysym.sym);
+                handle_keypress(static_cast<const KeyEvent&>(ev).key());
                 ASSERT(crawl_state.game_is_arena());
                 ASSERT(!crawl_state.arena_suspended);
                 return true;
@@ -1483,8 +1483,8 @@ static void _choose_arena_teams(newgame_def& choice,
     auto prompt_ui = make_shared<Text>();
     auto popup = make_shared<ui::Popup>(prompt_ui);
 
-    popup->on_hotkey_event([&](wm_event ev)  {
-        const int key = reader.putkey(ev.key.keysym.sym);
+    popup->on_hotkey_event([&](const KeyEvent& ev) {
+        const auto key = reader.putkey(ev.key());
         if (key == -1)
             return true;
         cancel = !!key;

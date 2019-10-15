@@ -437,7 +437,7 @@ static void _describe_cards(CrawlVector& cards)
     auto popup = make_shared<ui::Popup>(scroller);
 
     bool done = false;
-    popup->on_keydown_event([&done, &scroller](const wm_event& ev) {
+    popup->on_keydown_event([&done, &scroller](const KeyEvent& ev) {
         done = !scroller->on_event(ev);
         return true;
     });
