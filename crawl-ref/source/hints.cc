@@ -227,13 +227,12 @@ void pick_hints(newgame_def& choice)
     auto sub_items = make_shared<OuterMenu>(false, 1, 2);
     vbox->add_child(sub_items);
 
-    int keyn;
+    bool cancelled = false;
     bool done = false;
     auto menu_item_activated = [&](int id) {
         if (id == CK_ESCAPE)
         {
-            keyn = CK_ESCAPE;
-            done = true;
+            done = cancelled = true;
             return;
         }
         else if (id == '*')
@@ -267,18 +266,9 @@ void pick_hints(newgame_def& choice)
 
     auto popup = make_shared<ui::Popup>(vbox);
 
-    popup->on(Widget::slots.event, [&](wm_event ev) {
-        if (ev.type != WME_KEYDOWN)
-            return false;
-        keyn = ev.key.keysym.sym;
-        // Random choice.
-        if (keyn == '+' || keyn == '!' || keyn == '#')
-            ev.key.keysym.sym = '*';
-        return false;
-    });
     ui::run_layout(move(popup), done);
 
-    if (key_is_escape(keyn))
+    if (cancelled)
     {
 #ifdef USE_TILE_WEB
         tiles.send_exit_reason("cancel");
