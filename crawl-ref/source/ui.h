@@ -113,6 +113,18 @@ public:
     ~Slot() { alive = false; }
     typedef function<bool (Args...)> HandlerSig;
     typedef multimap<Target*, HandlerSig> HandlerMap;
+    template<typename P>
+    bool emit_if(P pred, Args&... args)
+    {
+        for (auto it : handlers)
+            if (pred(it.first))
+            {
+                HandlerSig func = it.second;
+                if (func(forward<Args>(args)...))
+                    return true;
+            }
+        return false;
+    }
     bool emit(Target *target, Args&... args)
     {
         auto i = handlers.equal_range(target);
@@ -272,6 +284,7 @@ public:
 
     static struct slots {
         Slot<Widget, bool(const wm_event&)> event;
+        Slot<Widget, bool(const wm_event&)> hotkey;
     } slots;
 
     /**

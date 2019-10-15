@@ -139,6 +139,7 @@ struct Widget::slots Widget::slots = {};
 Widget::~Widget()
 {
     Widget::slots.event.remove_by_target(this);
+    Widget::slots.hotkey.remove_by_target(this);
     if (m_parent && get_focused_widget() == this)
         set_focused_widget(nullptr);
     _set_parent(nullptr);
@@ -2567,7 +2568,18 @@ bool UIRoot::on_event(const wm_event& event)
             size_t layer_idx = m_root.num_children();
             if (!layer_idx)
                 return false;
+
             Widget* layer_root = m_root.get_child(layer_idx-1).get();
+
+            if (event.type == WME_KEYDOWN)
+            {
+                bool hotkey_handled = Widget::slots.hotkey.emit_if([&](Widget* w){
+                        return layer_root->is_ancestor_of(w->get_shared());
+                    }, event);
+                if (hotkey_handled)
+                    return true;
+            }
+
             Layout* layout_root = dynamic_cast<Layout*>(layer_root);
             if (layout_root && layout_root->event_filters.emit(layout_root, event))
                 return true;
