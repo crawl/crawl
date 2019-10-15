@@ -240,6 +240,8 @@ public:
 
     bool is_ancestor_of(const shared_ptr<Widget>& other);
 
+    virtual void for_each_child(function<void(shared_ptr<Widget>&)>) {};
+
     // Wrapper functions which handle common behavior
     // - margins
     // - caching
@@ -318,7 +320,7 @@ class Container : public Widget
 {
 public:
     virtual ~Container() {}
-    virtual void foreach(function<void(shared_ptr<Widget>&)> f) = 0;
+    virtual void for_each_child(function<void(shared_ptr<Widget>&)> f) = 0;
 };
 
 class Bin : public Container
@@ -359,7 +361,7 @@ protected:
 public:
     iterator begin() { return iterator(m_child, false); }
     iterator end() { return iterator(m_child, true); }
-    void foreach(function<void(shared_ptr<Widget>&)> f) override
+    void for_each_child(function<void(shared_ptr<Widget>&)> f) override
     {
         for (auto& child : *this)
             f(child);
@@ -440,7 +442,7 @@ public:
         return iterator(m_children, m_children.end());
     }
 
-    void foreach(function<void(shared_ptr<Widget>&)> f) override
+    void for_each_child(function<void(shared_ptr<Widget>&)> f) override
     {
         for (auto& child : *this)
             f(child);
@@ -733,7 +735,7 @@ protected:
 public:
     iterator begin() { return iterator(m_child_info, m_child_info.begin()); }
     iterator end() { return iterator(m_child_info, m_child_info.end()); }
-    void foreach(function<void(shared_ptr<Widget>&)> f) override
+    void for_each_child(function<void(shared_ptr<Widget>&)> f) override
     {
         for (auto& child : *this)
             f(child);
