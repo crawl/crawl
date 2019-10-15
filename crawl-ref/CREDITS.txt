@@ -120,11 +120,13 @@
     Thom Chiovoloni
     Anthony Chuah
     Henry Cipolla
+    CollinJ
     Nicholas Connelly
     Tom Conrad
     Vitor 'Baconkid' Costa
     Aaron Curtis
     Simon Curtis
+    cut1less
     Paul Dejean
     Denzi
     Lothar Dierkes
@@ -141,6 +143,7 @@
     Micha Elsner
     Carl-Oscar Erneholm
     Erich Erstu
+    Higor Eurípedes
     Christopher Evenstar
     Floodkiller
     floraline
@@ -268,6 +271,7 @@
     Terence Reeves
     Tobias Rehbein
     Remsleep
+    Chris Rendle-Short
     Ryan Riegel
     RjY
     rmcneive
@@ -303,6 +307,7 @@
     Jan 'heftig' Steffens
     Stenella
     Timothy Stiles
+    John Stilley
     Johan Strandell
     Ben Striegel
     Derrick Sund
@@ -315,8 +320,10 @@
     Jared 'Twinge' Tinney
     Matt Titus
     Tommy
+    Sean VanMeter
     Mikko Vepsäläinen
     WanderingBlade
+    Richard Wardin
     waylon531
     Steven Wheeler
     Thomas Willem
