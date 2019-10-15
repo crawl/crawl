@@ -1487,13 +1487,7 @@ static void _choose_arena_teams(newgame_def& choice,
     popup->on(Widget::slots.event, [&](wm_event ev)  {
         if (ev.type != WME_KEYDOWN)
             return false;
-        int key = ev.key.keysym.sym;
-        if (key == CONTROL('P'))
-            {
-                replay_messages();
-                return false;
-            }
-        key = reader.putkey(key);
+        const int key = reader.putkey(ev.key.keysym.sym);
         if (key == -1)
             return true;
         cancel = !!key;
