@@ -28,7 +28,7 @@ public:
 
     virtual void render() override;
     virtual void clear() override;
-    virtual int handle_mouse(MouseEvent &event) override;
+    virtual int handle_mouse(wm_mouse_event &event) override;
     virtual bool update_tip_text(string &tip) override;
     virtual bool update_alt_text(string &alt) override;
     virtual void on_resize() override;

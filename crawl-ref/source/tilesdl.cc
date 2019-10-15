@@ -569,7 +569,7 @@ void TilesFramework::resize_event(int w, int h)
     wm->resize(m_windowsz);
 }
 
-int TilesFramework::handle_mouse(MouseEvent &event)
+int TilesFramework::handle_mouse(wm_mouse_event &event)
 {
     // Note: the mouse event goes to all regions in the active layer because
     // we want to be able to start some GUI event (e.g. far viewing) and
@@ -598,11 +598,11 @@ int TilesFramework::handle_mouse(MouseEvent &event)
     if ((mouse_control::current_mode() == MOUSE_MODE_MORE
          || mouse_control::current_mode() == MOUSE_MODE_PROMPT
          || mouse_control::current_mode() == MOUSE_MODE_YESNO)
-        && event.event == MouseEvent::PRESS)
+        && event.event == wm_mouse_event::PRESS)
     {
-        if (event.button == MouseEvent::LEFT)
+        if (event.button == wm_mouse_event::LEFT)
             return CK_MOUSE_CLICK;
-        else if (event.button == MouseEvent::RIGHT)
+        else if (event.button == wm_mouse_event::RIGHT)
             return CK_MOUSE_CMD;
     }
 

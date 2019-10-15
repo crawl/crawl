@@ -51,14 +51,14 @@ void AbilityRegion::draw_tag()
     draw_desc(desc.c_str());
 }
 
-int AbilityRegion::handle_mouse(MouseEvent &event)
+int AbilityRegion::handle_mouse(wm_mouse_event &event)
 {
     unsigned int item_idx;
     if (!place_cursor(event, item_idx))
         return 0;
 
     const ability_type ability = (ability_type) m_items[item_idx].idx;
-    if (event.button == MouseEvent::LEFT)
+    if (event.button == wm_mouse_event::LEFT)
     {
         // close tab again if using small layout
         if (tiles.is_using_small_layout())
@@ -74,7 +74,7 @@ int AbilityRegion::handle_mouse(MouseEvent &event)
             flush_input_buffer(FLUSH_ON_FAILURE);
         return CK_MOUSE_CMD;
     }
-    else if (ability != NUM_ABILITIES && event.button == MouseEvent::RIGHT)
+    else if (ability != NUM_ABILITIES && event.button == wm_mouse_event::RIGHT)
     {
         describe_ability(ability);
         redraw_screen();

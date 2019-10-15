@@ -21,7 +21,7 @@ public:
 
     virtual void render() override;
 
-    virtual int handle_mouse(MouseEvent& event) override;
+    virtual int handle_mouse(wm_mouse_event& event) override;
 
     virtual void on_resize() override;
 };
@@ -35,7 +35,7 @@ class CRTSingleSelect : public CRTRegion
 public:
     CRTSingleSelect(FontWrapper* font);
 
-    virtual int handle_mouse(MouseEvent& event) override;
+    virtual int handle_mouse(wm_mouse_event& event) override;
 };
 
 #endif

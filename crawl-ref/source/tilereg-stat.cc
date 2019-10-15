@@ -12,7 +12,7 @@ StatRegion::StatRegion(FontWrapper *font_arg) : TextRegion(font_arg)
 {
 }
 
-int StatRegion::handle_mouse(MouseEvent &event)
+int StatRegion::handle_mouse(wm_mouse_event &event)
 {
     if (mouse_control::current_mode() != MOUSE_MODE_COMMAND)
         return 0;
@@ -20,7 +20,7 @@ int StatRegion::handle_mouse(MouseEvent &event)
     if (!inside(event.px, event.py))
         return 0;
 
-    if (event.event != MouseEvent::PRESS || event.button != MouseEvent::LEFT)
+    if (event.event != wm_mouse_event::PRESS || event.button != wm_mouse_event::LEFT)
         return 0;
 
     // clicking on stats should show all the stats

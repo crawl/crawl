@@ -47,7 +47,7 @@ protected:
 
     // Place the cursor and set idx with the index into m_items of the click.
     // If click was invalid, return false.
-    bool place_cursor(MouseEvent &event, unsigned int &idx);
+    bool place_cursor(wm_mouse_event &event, unsigned int &idx);
     unsigned int cursor_index() const;
     int add_quad_char(char c, int x, int y, int ox, int oy);
     void draw_number(int x, int y, int number);

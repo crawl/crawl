@@ -110,9 +110,9 @@ bool MenuButton::on_event(const wm_event& event)
         wm->set_mouse_cursor(MOUSE_CURSOR_ARROW);
 #endif
 
-    if (event.type == WME_MOUSEBUTTONDOWN && event.mouse_event.button == MouseEvent::LEFT)
+    if (event.type == WME_MOUSEBUTTONDOWN && event.mouse_event.button == wm_mouse_event::LEFT)
         active = true;
-    if (event.type == WME_MOUSEBUTTONUP && event.mouse_event.button == MouseEvent::LEFT)
+    if (event.type == WME_MOUSEBUTTONUP && event.mouse_event.button == wm_mouse_event::LEFT)
         active = false;
 
     if (old_focused != focused || old_active != active)
@@ -268,7 +268,7 @@ void OuterMenu::add_button(shared_ptr<MenuButton> btn, int x, int y)
     btn->on(Widget::slots.event, [btn_id, this, x, y](const wm_event& ev) {
         if (on_button_activated)
         if ((ev.type == WME_MOUSEBUTTONUP
-                && ev.mouse_event.button == MouseEvent::LEFT)
+                && ev.mouse_event.button == wm_mouse_event::LEFT)
             || (ev.type == WME_KEYDOWN && ev.key.keysym.sym == CK_ENTER))
         {
             this->on_button_activated(btn_id);

@@ -335,7 +335,7 @@ void TabbedRegion::on_resize()
     }
 }
 
-int TabbedRegion::get_mouseover_tab(MouseEvent &event) const
+int TabbedRegion::get_mouseover_tab(wm_mouse_event &event) const
 {
     int x = event.px - sx;
     int y = event.py - sy;
@@ -359,7 +359,7 @@ int TabbedRegion::get_mouseover_tab(MouseEvent &event) const
     return -1;
 }
 
-int TabbedRegion::handle_mouse(MouseEvent &event)
+int TabbedRegion::handle_mouse(wm_mouse_event &event)
 {
     if (mouse_control::current_mode() != MOUSE_MODE_COMMAND
         && !tiles.get_map_display())
@@ -377,7 +377,7 @@ int TabbedRegion::handle_mouse(MouseEvent &event)
 
     if (m_mouse_tab != -1)
     {
-        if (event.event == MouseEvent::PRESS)
+        if (event.event == wm_mouse_event::PRESS)
         {
             if (m_tabs[m_mouse_tab].cmd == CMD_NO_CMD)
             {

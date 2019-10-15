@@ -655,13 +655,13 @@ bool UIMenu::on_event(const wm_event& event)
 
     int key = -1;
     if (event.type == WME_MOUSEBUTTONDOWN
-            && event.mouse_event.button == MouseEvent::LEFT)
+            && event.mouse_event.button == wm_mouse_event::LEFT)
     {
         m_mouse_pressed = true;
         _queue_allocation();
     }
     else if (event.type == WME_MOUSEBUTTONUP
-            && event.mouse_event.button == MouseEvent::LEFT
+            && event.mouse_event.button == wm_mouse_event::LEFT
             && m_mouse_pressed)
     {
         int entry = m_mouse_idx;
@@ -991,7 +991,7 @@ void Menu::do_menu()
 #ifdef TOUCH_UI
     auto menu_wrap_click = [this, &done](const wm_event& ev) {
         if (!m_filter && ev.type == WME_MOUSEBUTTONDOWN
-                && ev.mouse_event.button == MouseEvent::LEFT)
+                && ev.mouse_event.button == wm_mouse_event::LEFT)
         {
             done = !process_key(CK_TOUCH_DUMMY);
             return true;
@@ -2614,7 +2614,7 @@ bool PrecisionMenu::process_key(int key)
 }
 
 #ifdef USE_TILE_LOCAL
-int PrecisionMenu::handle_mouse(const MouseEvent &me)
+int PrecisionMenu::handle_mouse(const wm_mouse_event &me)
 {
     // Feed input to each attached object that the mouse is over
     // The objects are responsible for processing the input
@@ -3674,7 +3674,7 @@ MenuObject::InputReturnValue MenuFreeform::process_input(int key)
 }
 
 #ifdef USE_TILE_LOCAL
-MenuObject::InputReturnValue MenuFreeform::handle_mouse(const MouseEvent& me)
+MenuObject::InputReturnValue MenuFreeform::handle_mouse(const wm_mouse_event& me)
 {
     if (!m_allow_focus || !m_visible)
         return INPUT_NO_ACTION;
@@ -3694,7 +3694,7 @@ MenuObject::InputReturnValue MenuFreeform::handle_mouse(const MouseEvent& me)
 
     if (find_item && find_item->handle_mouse(me))
         return MenuObject::INPUT_SELECTED; // The object handled the event
-    else if (me.event == MouseEvent::MOVE)
+    else if (me.event == wm_mouse_event::MOVE)
     {
         if (find_item == nullptr)
         {
@@ -3715,9 +3715,9 @@ MenuObject::InputReturnValue MenuFreeform::handle_mouse(const MouseEvent& me)
         return INPUT_NO_ACTION;
     }
     InputReturnValue ret = INPUT_NO_ACTION;
-    if (me.event == MouseEvent::PRESS)
+    if (me.event == wm_mouse_event::PRESS)
     {
-        if (me.button == MouseEvent::LEFT)
+        if (me.button == wm_mouse_event::LEFT)
         {
             if (find_item != nullptr)
             {
@@ -3728,7 +3728,7 @@ MenuObject::InputReturnValue MenuFreeform::handle_mouse(const MouseEvent& me)
                     ret = INPUT_DESELECTED;
             }
         }
-        else if (me.button == MouseEvent::RIGHT)
+        else if (me.button == wm_mouse_event::RIGHT)
             ret = INPUT_END_MENU_ABORT;
     }
     // all the other Mouse Events are uninteresting and are ignored
@@ -3987,7 +3987,7 @@ MenuObject::InputReturnValue BoxMenuHighlighter::process_input(int /*key*/)
 }
 
 #ifdef USE_TILE_LOCAL
-MenuObject::InputReturnValue BoxMenuHighlighter::handle_mouse(const MouseEvent &/*me*/)
+MenuObject::InputReturnValue BoxMenuHighlighter::handle_mouse(const wm_mouse_event &/*me*/)
 {
     // we have nothing interesting to do on mouse events because render()
     // always checks if the active has changed

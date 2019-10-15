@@ -1438,7 +1438,7 @@ bool Scroller::on_event(const wm_event& event)
     }
     else if (event.type == WME_MOUSEWHEEL)
         delta = -1 * event.mouse_event.py * line_delta;
-    else if (event.type == WME_MOUSEBUTTONDOWN && event.mouse_event.button == MouseEvent::LEFT)
+    else if (event.type == WME_MOUSEBUTTONDOWN && event.mouse_event.button == wm_mouse_event::LEFT)
         delta = line_delta;
     if (delta != 0)
     {
@@ -2254,9 +2254,9 @@ void pump_events(int wait_event_timeout)
                 // If a mouse event wasn't handled, send it through again as a
                 // fake key event, for compatibility
                 int key;
-                if (event.mouse_event.button == MouseEvent::LEFT)
+                if (event.mouse_event.button == wm_mouse_event::LEFT)
                     key = CK_MOUSE_CLICK;
-                else if (event.mouse_event.button == MouseEvent::RIGHT)
+                else if (event.mouse_event.button == wm_mouse_event::RIGHT)
                     key = CK_MOUSE_CMD;
                 else break;
 

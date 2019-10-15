@@ -14,7 +14,7 @@ public:
     virtual void clear() override;
     virtual void run() override;
 
-    virtual int handle_mouse(MouseEvent &event) override;
+    virtual int handle_mouse(wm_mouse_event &event) override;
 protected:
     virtual void on_resize() override {}
 
