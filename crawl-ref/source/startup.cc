@@ -534,7 +534,7 @@ public:
         input_string = crawl_state.default_startup_name;
 
         m_root = make_shared<Box>(Box::VERT);
-        m_root->_set_parent(this);
+        add_internal_child(m_root);
         m_root->set_cross_alignment(Widget::Align::STRETCH);
 
         auto about = make_shared<Text>(opening_screen());

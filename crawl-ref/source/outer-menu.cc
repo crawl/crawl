@@ -190,7 +190,7 @@ OuterMenu::OuterMenu(bool can_shrink, int width, int height)
     else
         m_root = m_grid;
 
-    m_root->_set_parent(this);
+    add_internal_child(m_root);
 
     m_width = width;
     m_height = height;
