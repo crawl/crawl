@@ -271,8 +271,6 @@ void pick_hints(newgame_def& choice)
         if (ev.type != WME_KEYDOWN)
             return false;
         keyn = ev.key.keysym.sym;
-        if (keyn == 'X')
-            return done = true;
         // Random choice.
         if (keyn == '+' || keyn == '!' || keyn == '#')
             ev.key.keysym.sym = '*';
@@ -280,19 +278,12 @@ void pick_hints(newgame_def& choice)
     });
     ui::run_layout(move(popup), done);
 
-    switch (keyn)
+    if (key_is_escape(keyn))
     {
-    CASE_ESCAPE
 #ifdef USE_TILE_WEB
         tiles.send_exit_reason("cancel");
 #endif
         game_ended(game_exit::abort);
-    case 'X':
-#ifdef USE_TILE_WEB
-        tiles.send_exit_reason("cancel");
-#endif
-        end(0);
-        return;
     }
 }
 
