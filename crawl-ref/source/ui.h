@@ -780,16 +780,10 @@ public:
     void _render() override;
     SizeReq _get_preferred_size(Direction dim, int prosp_width) override;
     void _allocate_region() override;
-
-    void add_event_filter(function<bool(const wm_event&)> handler)
-    {
-        event_filters.on(this, handler);
-    }
 protected:
 #ifdef USE_TILE_LOCAL
     int m_depth;
 #endif
-    Slot<Widget, bool(const wm_event&)> event_filters;
 };
 
 class Popup : public Layout
