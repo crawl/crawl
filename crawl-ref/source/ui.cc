@@ -324,6 +324,12 @@ void Widget::set_visible(bool visible)
     _invalidate_sizereq();
 }
 
+void Widget::add_internal_child(shared_ptr<Widget> child)
+{
+    child->_set_parent(this);
+    m_internal_children.emplace_back(move(child));
+}
+
 void Box::add_child(shared_ptr<Widget> child)
 {
     child->_set_parent(this);

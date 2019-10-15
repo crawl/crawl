@@ -410,7 +410,7 @@ static int nhsr;
 UIHiscoresMenu::UIHiscoresMenu()
 {
     m_root = make_shared<Box>(Widget::VERT);
-    m_root->_set_parent(this);
+    add_internal_child(m_root);
     m_root->set_cross_alignment(Widget::STRETCH);
 
     auto title_hbox = make_shared<Box>(Widget::HORZ);

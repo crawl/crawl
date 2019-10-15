@@ -240,7 +240,9 @@ public:
 
     bool is_ancestor_of(const shared_ptr<Widget>& other);
 
-    virtual void for_each_child(function<void(shared_ptr<Widget>&)>) {};
+    virtual void for_each_child(function<void(shared_ptr<Widget>&)>)
+    {
+    }
 
     // Wrapper functions which handle common behavior
     // - margins
@@ -303,6 +305,23 @@ protected:
     Margin margin = Margin{0};
 
     void _unparent(shared_ptr<Widget>& child);
+
+    vector<shared_ptr<Widget>> m_internal_children;
+    void add_internal_child(shared_ptr<Widget> child);
+
+    template<class F>
+    void for_each_internal_child(F&& cb)
+    {
+        for (auto& child : m_internal_children)
+            cb(child);
+    }
+
+    template<class F>
+    void for_each_child_including_internal(F&& cb)
+    {
+        for_each_internal_child(forward<F>(cb));
+        for_each_child(forward<F>(cb));
+    }
 
 private:
     bool cached_sr_valid[2] = { false, false };

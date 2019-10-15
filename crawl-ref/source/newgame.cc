@@ -1128,7 +1128,7 @@ public:
     UINewGameMenu(int _choice_type, newgame_def& _ng, newgame_def& _ng_choice, const newgame_def& _defaults) : m_choice_type(_choice_type), m_ng(_ng), m_ng_choice(_ng_choice), m_defaults(_defaults)
     {
         m_vbox = make_shared<Box>(Box::VERT);
-        m_vbox->_set_parent(this);
+        add_internal_child(m_vbox);
         m_vbox->set_cross_alignment(Widget::Align::STRETCH);
 
         welcome.textcolour(BROWN);
