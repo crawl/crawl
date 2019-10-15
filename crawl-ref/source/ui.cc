@@ -2580,9 +2580,6 @@ bool UIRoot::on_event(const wm_event& event)
                     return true;
             }
 
-            Layout* layout_root = dynamic_cast<Layout*>(layer_root);
-            if (layout_root && layout_root->event_filters.emit(layout_root, event))
-                return true;
             for (Widget* w = focus_stack.back(); w; w = w->_get_parent())
                 if (w->on_event(event))
                     return true;
