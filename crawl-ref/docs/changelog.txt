@@ -1,3 +1,128 @@
+Stone Soup 0.24 (up to 83157970ee)
+----------------------------------
+
+Highlights
+----------
+* Vampire species reworked
+* Thrown weapons reworked
+* Fedhas reworked
+* Sif Muna reworked
+
+Branches, Environment
+---------------------
+* Incremental pregeneration:
+  - This mode generates the dungeon in a stable order for all games regardless
+    of the path taken by the player.
+  - Games using the same seed will see the same dungeon if they are
+    incrementally pregenerated without requiring the long initial generation
+    time of a fully pregenerated game.
+  - Incremental pregeneration is the default mode for new games.
+* A Trove map requiring many uses of digging has been removed.
+* Identification scrolls are no longer used as a potential Trove cost.
+* Transporters in vaults now correctly place in the Abyss.
+* Fog generation in the Desolation of Salt portal now happens far less often
+  per turn, greatly reducing slowdown from high CPU usage.
+* Random traps no longer place under items placed by vaults.
+
+Character
+---------
+* Formicids can now use their dig ability on diggable statues.
+* Manticore barbs now can only be picked out if the player can move, isn't
+  confused, and isn't asleep.
+* Net traps now always trigger when the player steps on them.
+* Vampiric weapons no longer have a hunger cost upon wield.
+
+Gods
+----
+* Fedhas reworked:
+  - Piety is gained exclusively from kills instead of through corpse decay.
+  - Fedhas abilities now create plant allies directly as temporary summons
+    instead of creating permanent allies using plants. All abilities cost
+    piety instead of food.
+  - New abilities:
+    * 2*: Active 'Wall of Briars' ability to surround the player with briar
+          patches. Hostile monsters will attack briars to reach you, taking
+          damage.
+    * 3*: Active 'Grow Ballistomycete' ability to place a ballistomycete at
+          any location within radius 2. The ballistomycete will fire spores
+          that seek out foes and make a 1-radius damaging explosion that
+          additionally confuses living creatures.
+    * 4*: Active 'Overgrow' ability to destroy any non-permarock walls in a
+          3x3 area, replacing them with plant allies, mostly wandering
+          mushrooms or burning bushes and sometimes ballistomycetes or oklob
+          plants.
+    * 5*: Active 'Grow Oklob' ability to place an oklob plant at any location
+          within radius 2.
+  - Fedhas no longer hates any necromancy spells, and allows worship by undead
+    species.
+  - Removed abilities: Fungal Bloom, Reproduction, Growth, Evolution, Rain.
+* Sif Muna reworked:
+  - Piety gain is exclusively from kills.
+  - 'Channel Energy' is available at 1* piety instead of 3*.
+  - 'Forget Spell' is available at 3* piety instead of 4*.
+  - New 4* 'Divine Exegesis' ability to cast any spell in your library
+    regardless of skill training. Receives a spell-power bonus based on
+    Invocations skill of 1.5 times the spell-power received from equivalent
+    levels of training in the spell's schools.
+  - The Divine Energy ability and Sif's miscast protection are removed.
+* Trog and Okawaru now can gift unbranded boomerangs and javelins.
+* Jiyva's Slimify ability now works properly on skeletons, zombies and
+   simulacra.
+* Torment can now trigger Jiyva jelly spawns and Xom butterfly spawns.
+
+Interface
+---------
+* The 'X' key map mode has zoom support, defaulting to 60% zoom.
+* Sealed off clinging and sensed monsters no longer stop autoexplore.
+* Armour, jewellery, and weapons can be worn/wielded from the floor.
+* Summoner monsters are now highlighted when the cursor is over one of its
+  summons.
+* Traps are now shown in the ctrl-x listing and are indexed in the stash
+  tracker.
+* Scarves are now properly shown on player tiles.
+
+Items
+-----
+* New unrand: Staff of Battle, a staff of conjuration that spawns a
+  battlesphere when a hostile monster is in view.
+* Unrandart changes:
+  - The Storm Bow now has a penetration effect.
+  - Gyre and Gimble now has the protection brand, enchantment of +7, and no
+    longer has Dex-3.
+  - Piercer has been removed, its effect having been merged into Storm Bow.
+* Weapons with the holy wrath ego can now be cursed.
+* Randart rings no longer generate with both rCorr and *Corrode.
+
+Lua
+---
+* Monster AC, EV, MR, MaxHP, and descriptions are now exposed in the CLua
+  monster.info class.
+* A new function 'defeat_mr()' to determine the chance that a given spell
+  defeats a monster's magic resistance.
+* There is a basic seed explorer available in tests/seed_explorer.lua.
+
+Monsters
+--------
+* Monsters can now use wands of clouds, iceblast, and scattershot.
+* Monsters clones created by Mara, rakshasa, and phantom mirrors have the
+  intended reduced HP of the original monster instead of several times
+  that value.
+* A monster having the Dig spell no longer allows it to cast spells out of
+  LOS.
+* Azrael and draconian scorchers can use Call Down Damnation when not at
+  low HP.
+* Player ghosts can be shafted.
+* Golden Eyes no longer have randomized spellpower for their gaze.
+* Pikel's slaves no longer drop corpses nor items.
+
+Spells
+------
+* The HP from Death's Door if fixed at time of casting rather than being
+  updated continuously, hence being subject to changes in spellpower.
+* Olgreb's Toxic Radiance now properly triggers ally conducts when cast.
+* Shroud of Golubria's spellpower is now capped at 50.
+
+
 Stone Soup 0.23.2 (20190330)
 ----------------------------
 
