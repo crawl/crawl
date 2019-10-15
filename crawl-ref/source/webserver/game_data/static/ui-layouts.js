@@ -863,6 +863,18 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
         return $popup;
     }
 
+    function seed_selection(desc)
+    {
+        var $popup = $(".templates > .seed-selection").clone();
+        $popup.find(".header > span").html(desc.title);
+        $popup.find(".body > span").html(fmt_body_txt(
+                                util.formatted_string_to_html(desc.body)));
+        $popup.find(".footer > span").html(fmt_body_txt(
+                                util.formatted_string_to_html(desc.footer)));
+        // TODO: handle input here? currently handled from c++ side.
+        return $popup;
+    }
+
     var ui_handlers = {
         "describe-generic" : describe_generic,
         "describe-feature-wide" : describe_feature_wide,
@@ -875,6 +887,7 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
         "version" : version,
         "formatted-scroller" : formatted_scroller,
         "progress-bar" : progress_bar,
+        "seed-selection" : seed_selection,
         "msgwin-get-line" : msgwin_get_line,
         "newgame-choice": newgame_choice,
         "newgame-random-combo": newgame_random_combo,
