@@ -18,7 +18,7 @@ MessageRegion::MessageRegion(FontWrapper *font_arg) :
 {
 }
 
-int MessageRegion::handle_mouse(MouseEvent &event)
+int MessageRegion::handle_mouse(wm_mouse_event &event)
 {
     if (m_overlay)
         return 0;
@@ -29,7 +29,7 @@ int MessageRegion::handle_mouse(MouseEvent &event)
     if (!inside(event.px, event.py))
         return 0;
 
-    if (event.event != MouseEvent::PRESS || event.button != MouseEvent::LEFT)
+    if (event.event != wm_mouse_event::PRESS || event.button != wm_mouse_event::LEFT)
         return 0;
 
     if (mouse_control::current_mode() != MOUSE_MODE_COMMAND)

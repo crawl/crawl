@@ -195,7 +195,7 @@ void MapRegion::clear()
     m_buf_lines.clear();
 }
 
-int MapRegion::handle_mouse(MouseEvent &event)
+int MapRegion::handle_mouse(wm_mouse_event &event)
 {
     if (mouse_control::current_mode() != MOUSE_MODE_COMMAND
         && !tiles.get_map_display())
@@ -222,21 +222,21 @@ int MapRegion::handle_mouse(MouseEvent &event)
 
     switch (event.event)
     {
-    case MouseEvent::MOVE:
+    case wm_mouse_event::MOVE:
         if (m_far_view)
             tiles.load_dungeon(gc);
         return 0;
 #ifdef TOUCH_UI
-    case MouseEvent::WHEEL:
+    case wm_mouse_event::WHEEL:
         // ctrl-rolley-wheel on the minimap (this ensures busting out of minimap when zooming in again on very small layouts)
         if (event.mod & TILES_MOD_CTRL)
         {
-            tiles.zoom_dungeon(event.button == MouseEvent::SCROLL_UP);
+            tiles.zoom_dungeon(event.button == wm_mouse_event::SCROLL_UP);
             return CK_NO_KEY; // prevents this being handled by the dungeon underneath too(!)
         }
         return 0;
-    case MouseEvent::PRESS:
-        if (event.button == MouseEvent::LEFT)
+    case wm_mouse_event::PRESS:
+        if (event.button == wm_mouse_event::LEFT)
         {
             m_far_view = true;
             tiles.load_dungeon(gc);
@@ -248,13 +248,13 @@ int MapRegion::handle_mouse(MouseEvent &event)
             }
         }
         return 0;
-    case MouseEvent::RELEASE:
-        if (event.button == MouseEvent::LEFT && m_far_view)
+    case wm_mouse_event::RELEASE:
+        if (event.button == wm_mouse_event::LEFT && m_far_view)
             m_far_view = false;
         return 0;
 #else
-    case MouseEvent::PRESS:
-        if (event.button == MouseEvent::LEFT)
+    case wm_mouse_event::PRESS:
+        if (event.button == wm_mouse_event::LEFT)
         {
             if (event.mod & TILES_MOD_SHIFT)
             {
@@ -271,7 +271,7 @@ int MapRegion::handle_mouse(MouseEvent &event)
                 return CK_MOUSE_CMD;
             }
         }
-        else if (event.button == MouseEvent::RIGHT)
+        else if (event.button == wm_mouse_event::RIGHT)
         {
             m_far_view = true;
             tiles.load_dungeon(gc);
@@ -283,8 +283,8 @@ int MapRegion::handle_mouse(MouseEvent &event)
             }
         }
         return 0;
-    case MouseEvent::RELEASE:
-        if (event.button == MouseEvent::RIGHT && m_far_view)
+    case wm_mouse_event::RELEASE:
+        if (event.button == wm_mouse_event::RIGHT && m_far_view)
             m_far_view = false;
         return 0;
 #endif

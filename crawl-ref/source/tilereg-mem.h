@@ -9,7 +9,7 @@ public:
     MemoriseRegion(const TileRegionInit &init);
 
     virtual void update() override;
-    virtual int handle_mouse(MouseEvent &event) override;
+    virtual int handle_mouse(wm_mouse_event &event) override;
     virtual bool update_tip_text(string &tip) override;
     virtual bool update_tab_tip_text(string &tip, bool active) override;
 

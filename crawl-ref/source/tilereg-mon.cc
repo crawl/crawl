@@ -52,7 +52,7 @@ void MonsterRegion::update()
     }
 }
 
-int MonsterRegion::handle_mouse(MouseEvent &event)
+int MonsterRegion::handle_mouse(wm_mouse_event &event)
 {
     int cx, cy;
     if (!mouse_pos(event.px, event.py, cx, cy))
@@ -75,15 +75,15 @@ int MonsterRegion::handle_mouse(MouseEvent &event)
     const coord_def &gc = mon->pos;
     tiles.place_cursor(CURSOR_MOUSE, gc);
 
-    if (event.event != MouseEvent::PRESS)
+    if (event.event != wm_mouse_event::PRESS)
         return 0;
 
-    if (event.button == MouseEvent::LEFT)
+    if (event.button == wm_mouse_event::LEFT)
     {
         m_last_clicked_item = item_idx;
         return tile_click_cell(gc, event.mod);
     }
-    else if (event.button == MouseEvent::RIGHT)
+    else if (event.button == wm_mouse_event::RIGHT)
     {
         full_describe_square(gc);
         redraw_screen();

@@ -277,11 +277,11 @@ static int _translate_keysym(SDL_Keysym &keysym)
 }
 
 static void _translate_event(const SDL_MouseMotionEvent &sdl_event,
-                             MouseEvent &tile_event)
+                             wm_mouse_event &tile_event)
 {
-    tile_event.held   = MouseEvent::NONE;
-    tile_event.event  = MouseEvent::MOVE;
-    tile_event.button = MouseEvent::NONE;
+    tile_event.held   = wm_mouse_event::NONE;
+    tile_event.event  = wm_mouse_event::MOVE;
+    tile_event.button = wm_mouse_event::NONE;
     tile_event.px     = sdl_event.x;
     tile_event.py     = sdl_event.y;
     tile_event.held   = wm->get_mouse_state(nullptr, nullptr);
@@ -291,25 +291,25 @@ static void _translate_event(const SDL_MouseMotionEvent &sdl_event,
 }
 
 static void _translate_event(const SDL_MouseButtonEvent &sdl_event,
-                             MouseEvent &tile_event)
+                             wm_mouse_event &tile_event)
 {
-    tile_event.held  = MouseEvent::NONE;
+    tile_event.held  = wm_mouse_event::NONE;
     tile_event.event = (sdl_event.type == SDL_MOUSEBUTTONDOWN) ?
-    MouseEvent::PRESS : MouseEvent::RELEASE;
+    wm_mouse_event::PRESS : wm_mouse_event::RELEASE;
     switch (sdl_event.button)
     {
     case SDL_BUTTON_LEFT:
-        tile_event.button = MouseEvent::LEFT;
+        tile_event.button = wm_mouse_event::LEFT;
         break;
     case SDL_BUTTON_RIGHT:
-        tile_event.button = MouseEvent::RIGHT;
+        tile_event.button = wm_mouse_event::RIGHT;
         break;
     case SDL_BUTTON_MIDDLE:
-        tile_event.button = MouseEvent::MIDDLE;
+        tile_event.button = wm_mouse_event::MIDDLE;
         break;
     default:
         // Unhandled button.
-        tile_event.button = MouseEvent::NONE;
+        tile_event.button = wm_mouse_event::NONE;
         break;
     }
     tile_event.px = sdl_event.x;
@@ -319,12 +319,12 @@ static void _translate_event(const SDL_MouseButtonEvent &sdl_event,
 }
 
 static void _translate_wheel_event(const SDL_MouseWheelEvent &sdl_event,
-                                   MouseEvent &tile_event)
+                                   wm_mouse_event &tile_event)
 {
-    tile_event.held  = MouseEvent::NONE;
-    tile_event.event = MouseEvent::WHEEL;
-    tile_event.button = (sdl_event.y < 0) ? MouseEvent::SCROLL_DOWN
-                                          : MouseEvent::SCROLL_UP;
+    tile_event.held  = wm_mouse_event::NONE;
+    tile_event.event = wm_mouse_event::WHEEL;
+    tile_event.button = (sdl_event.y < 0) ? wm_mouse_event::SCROLL_DOWN
+                                          : wm_mouse_event::SCROLL_UP;
     tile_event.px = sdl_event.x;
     tile_event.py = sdl_event.y;
 }
@@ -723,11 +723,11 @@ unsigned short SDLWrapper::get_mouse_state(int *x, int *y) const
     Uint32 state = SDL_GetMouseState(x, y);
     unsigned short ret = 0;
     if (state & SDL_BUTTON(SDL_BUTTON_LEFT))
-        ret |= MouseEvent::LEFT;
+        ret |= wm_mouse_event::LEFT;
     if (state & SDL_BUTTON(SDL_BUTTON_RIGHT))
-        ret |= MouseEvent::RIGHT;
+        ret |= wm_mouse_event::RIGHT;
     if (state & SDL_BUTTON(SDL_BUTTON_MIDDLE))
-        ret |= MouseEvent::MIDDLE;
+        ret |= wm_mouse_event::MIDDLE;
     return ret;
 }
 

@@ -57,13 +57,13 @@ void CommandRegion::draw_tag()
     draw_desc(get_command_description(cmd, true).c_str());
 }
 
-int CommandRegion::handle_mouse(MouseEvent &event)
+int CommandRegion::handle_mouse(wm_mouse_event &event)
 {
     unsigned int item_idx;
     if (!place_cursor(event, item_idx))
         return 0;
 
-    if (event.button == MouseEvent::LEFT)
+    if (event.button == wm_mouse_event::LEFT)
     {
         const command_type cmd = (command_type) m_items[item_idx].idx;
         m_last_clicked_item = item_idx;

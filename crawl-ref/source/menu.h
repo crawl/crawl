@@ -535,7 +535,7 @@ public:
     virtual const string& get_description_text() const { return m_description; }
 
 #ifdef USE_TILE_LOCAL
-    virtual bool handle_mouse(const MouseEvent&) {return false; }
+    virtual bool handle_mouse(const wm_mouse_event&) {return false; }
 #endif
 
     virtual void select(bool toggle);
@@ -750,7 +750,7 @@ public:
 
     virtual InputReturnValue process_input(int key) = 0;
 #ifdef USE_TILE_LOCAL
-    virtual InputReturnValue handle_mouse(const MouseEvent& me) = 0;
+    virtual InputReturnValue handle_mouse(const wm_mouse_event& me) = 0;
 #endif
     virtual void render() = 0;
 
@@ -817,7 +817,7 @@ public:
 
     virtual InputReturnValue process_input(int key) override;
 #ifdef USE_TILE_LOCAL
-    virtual InputReturnValue handle_mouse(const MouseEvent& me) override;
+    virtual InputReturnValue handle_mouse(const wm_mouse_event& me) override;
 #endif
     virtual void render() override;
     virtual MenuItem* get_active_item() override;
@@ -857,7 +857,7 @@ public:
 
     virtual InputReturnValue process_input(int key) override;
 #ifdef USE_TILE_LOCAL
-    virtual InputReturnValue handle_mouse(const MouseEvent& me) override;
+    virtual InputReturnValue handle_mouse(const wm_mouse_event& me) override;
 #endif
     virtual void render() override;
 
@@ -931,7 +931,7 @@ public:
     virtual void draw_menu();
     virtual bool process_key(int key);
 #ifdef USE_TILE_LOCAL
-    virtual int handle_mouse(const MouseEvent& me);
+    virtual int handle_mouse(const wm_mouse_event& me);
 #endif
 
     // not const on purpose

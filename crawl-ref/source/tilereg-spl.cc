@@ -53,14 +53,14 @@ void SpellRegion::draw_tag()
     draw_desc(desc.c_str());
 }
 
-int SpellRegion::handle_mouse(MouseEvent &event)
+int SpellRegion::handle_mouse(wm_mouse_event &event)
 {
     unsigned int item_idx;
     if (!place_cursor(event, item_idx))
         return 0;
 
     const spell_type spell = (spell_type) m_items[item_idx].idx;
-    if (event.button == MouseEvent::LEFT)
+    if (event.button == wm_mouse_event::LEFT)
     {
         // close tab again if using small layout
         if (tiles.is_using_small_layout())
@@ -72,7 +72,7 @@ int SpellRegion::handle_mouse(MouseEvent &event)
             flush_input_buffer(FLUSH_ON_FAILURE);
         return CK_MOUSE_CMD;
     }
-    else if (spell != NUM_SPELLS && event.button == MouseEvent::RIGHT)
+    else if (spell != NUM_SPELLS && event.button == wm_mouse_event::RIGHT)
     {
         describe_spell(spell);
         redraw_screen();

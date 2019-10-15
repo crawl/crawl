@@ -37,10 +37,10 @@ menu_letter2 SkillMenuEntry::m_letter;
 SkillMenu skm;
 
 #ifdef USE_TILE_LOCAL
-bool SkillTextTileItem::handle_mouse(const MouseEvent& me)
+bool SkillTextTileItem::handle_mouse(const wm_mouse_event& me)
 {
-    if (me.event == MouseEvent::PRESS
-        && (me.button == MouseEvent::LEFT && me.mod & TILES_MOD_SHIFT))
+    if (me.event == wm_mouse_event::PRESS
+        && (me.button == wm_mouse_event::LEFT && me.mod & TILES_MOD_SHIFT))
     {
         skill_type sk = skill_type(get_id());
         if (is_invalid_skill(sk))
@@ -1799,7 +1799,7 @@ bool UISkillMenu::on_event(const wm_event& ev)
         return Widget::on_event(ev);
     }
 
-    MouseEvent mouse_ev = ev.mouse_event;
+    wm_mouse_event mouse_ev = ev.mouse_event;
     mouse_ev.px -= m_region.x;
     mouse_ev.py -= m_region.y;
 

@@ -482,7 +482,7 @@ void UIHiscoresMenu::_add_hiscore_row(scorefile_entry& se, int id)
     tmp->set_margin_for_sdl(2);
     btn->set_child(move(tmp));
     btn->on(Widget::slots.event, [this, id, se](wm_event ev) {
-        if (ev.type == WME_MOUSEBUTTONUP && ev.mouse_event.button == MouseEvent::LEFT
+        if (ev.type == WME_MOUSEBUTTONUP && ev.mouse_event.button == wm_mouse_event::LEFT
                 || ev.type == WME_KEYDOWN && ev.key.keysym.sym == CK_ENTER)
         {
             _show_morgue(*hs_list[id]);

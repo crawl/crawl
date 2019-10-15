@@ -18,13 +18,13 @@ CRTRegion::~CRTRegion()
     clear();
 }
 
-int CRTRegion::handle_mouse(MouseEvent &event)
+int CRTRegion::handle_mouse(wm_mouse_event &event)
 {
-    if (event.event == MouseEvent::PRESS)
+    if (event.event == wm_mouse_event::PRESS)
     {
-        if (event.button == MouseEvent::LEFT)
+        if (event.button == wm_mouse_event::LEFT)
             return CK_MOUSE_CLICK;
-        else if (event.button == MouseEvent::RIGHT)
+        else if (event.button == wm_mouse_event::RIGHT)
             return CK_MOUSE_CMD;
     }
     return 0;

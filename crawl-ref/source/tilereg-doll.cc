@@ -319,7 +319,7 @@ void DollEditRegion::render()
     glmanager->reset_transform();
 }
 
-int DollEditRegion::handle_mouse(MouseEvent &/*event*/)
+int DollEditRegion::handle_mouse(wm_mouse_event &/*event*/)
 {
     return 0;
 }

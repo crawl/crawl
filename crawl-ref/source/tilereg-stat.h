@@ -9,7 +9,7 @@ class StatRegion : public TextRegion
 public:
     StatRegion(FontWrapper *font_arg);
 
-    virtual int handle_mouse(MouseEvent &event) override;
+    virtual int handle_mouse(wm_mouse_event &event) override;
     virtual bool update_tip_text(string &tip) override;
 
     virtual void render() override;

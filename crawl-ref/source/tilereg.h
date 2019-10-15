@@ -2,7 +2,7 @@
 #pragma once
 
 class ImageManager;
-struct MouseEvent;
+struct wm_mouse_event;
 
 class Region
 {
@@ -23,7 +23,7 @@ public:
     virtual bool inside(int px, int py);
     virtual bool update_tip_text(string &) { return false; }
     virtual bool update_alt_text(string &) { return false; }
-    virtual int handle_mouse(MouseEvent &event) = 0;
+    virtual int handle_mouse(wm_mouse_event &event) = 0;
 
     virtual void render() = 0;
     virtual void clear() = 0;

@@ -59,7 +59,7 @@ class SkillTextTileItem : public TextTileItem
 public:
     SkillTextTileItem() {};
 protected:
-    bool handle_mouse(const MouseEvent& me) override;
+    bool handle_mouse(const wm_mouse_event& me) override;
 };
 #endif
 
