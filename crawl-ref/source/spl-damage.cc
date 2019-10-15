@@ -3156,3 +3156,95 @@ void foxfire_attack(const monster *foxfire, const actor *target)
     beam.target      = target->pos();
     beam.fire();
 }
+
+/**
+ * Hailstorm the given cell. (Per the spell.)
+ *
+ * @param where     The cell in question.
+ * @param pow       The power with which the spell is being cast.
+ * @param agent     The agent (player or monster) doing the hailstorming.
+ */
+static void _hailstorm_cell(coord_def where, int pow, actor *agent)
+{
+    bolt beam;
+    beam.flavour    = BEAM_ICE;
+    beam.thrower    = agent->is_player() ? KILL_YOU : KILL_MON;
+    beam.source_id  = agent->mid;
+    beam.attitude   = agent->temp_attitude();
+    beam.glyph      = dchar_glyph(DCHAR_FIRED_BURST);
+    beam.colour     = ETC_ICE;
+#ifdef USE_TILE
+    beam.tile_beam  = -1;
+#endif
+    beam.draw_delay = 10;
+    beam.source     = where;
+    beam.target     = where;
+    beam.damage     = calc_dice(3, 10 + pow / 2);
+    beam.hit        = 18 + pow / 6;
+    beam.name       = "hail";
+    beam.hit_verb   = "pelts";
+
+    monster *mons = monster_at(where);
+    if (mons && mons->is_icy())
+    {
+        string msg;
+        one_chance_in(20) ? msg = "%s dances in the hail." :
+                            msg = "%s is unaffected.";
+        if (you.can_see(*mons))
+            mprf(msg.c_str(), mons->name(DESC_THE).c_str());
+        else
+            mprf(msg.c_str(), "Something");
+
+        beam.draw(where);
+        return;
+    }
+
+    beam.fire();
+}
+
+spret cast_hailstorm(int pow, bool fail, bool tracer)
+{
+    targeter_radius hitfunc(&you, LOS_NO_TRANS, 3, 0, 2);
+    bool (*vulnerable) (const actor *) = [](const actor * act) -> bool
+    {
+        return !act->is_icy()
+            && !(you_worship(GOD_FEDHAS)
+                 && fedhas_protects(*(act->as_monster())));
+    };
+
+    if (tracer)
+    {
+        for (radius_iterator ri(you.pos(), 3, C_SQUARE, LOS_NO_TRANS, true); ri; ++ri)
+        {
+            if (grid_distance(you.pos(), *ri) == 1 || !in_bounds(*ri))
+                continue;
+
+            const monster* mon = monster_at(*ri);
+
+            if (!mon || !you.can_see(*mon))
+                continue;
+
+            if (!mon->friendly() && (*vulnerable)(mon))
+                return spret::success;
+        }
+
+        return spret::abort;
+    }
+
+    if (stop_attack_prompt(hitfunc, "hailstorm", vulnerable))
+        return spret::abort;
+
+    fail_check();
+
+    mpr("A cannonade of hail descends around you!");
+
+    for (radius_iterator ri(you.pos(), 3, C_SQUARE, LOS_NO_TRANS, true); ri; ++ri)
+    {
+        if (grid_distance(you.pos(), *ri) == 1 || !in_bounds(*ri))
+            continue;
+
+        _hailstorm_cell(*ri, pow, &you);
+    }
+
+    return spret::success;
+}

@@ -1924,6 +1924,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_STARBURST:
         return cast_starburst(powc, fail);
 
+    case SPELL_HAILSTORM:
+        return cast_hailstorm(powc, fail);
+
     // non-player spells that have a zap, but that shouldn't be called (e.g
     // because they will crash as a player zap).
     case SPELL_DRAIN_LIFE:
@@ -2209,6 +2212,9 @@ int calc_spell_range(spell_type spell, int power, bool allow_bonus)
  */
 string spell_range_string(spell_type spell)
 {
+    if (spell == SPELL_HAILSTORM)
+        return "@.->"; // Special case: hailstorm is a ring
+
     const int cap      = spell_power_cap(spell);
     const int range    = calc_spell_range(spell, 0);
     const int maxrange = spell_range(spell, cap);

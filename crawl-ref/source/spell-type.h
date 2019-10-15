@@ -466,5 +466,6 @@ enum spell_type : int
     SPELL_SPORULATE,
     SPELL_STARBURST,
     SPELL_FOXFIRE,
+    SPELL_HAILSTORM,
     NUM_SPELLS
 };
