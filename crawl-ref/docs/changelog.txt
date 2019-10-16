@@ -3,9 +3,9 @@ Stone Soup 0.24 (up to 83157970ee)
 
 Highlights
 ----------
-* Vampire species reworked
-* Thrown weapons reworked
-* Fedhas reworked
+* Vampire species simplified
+* Thrown weapons streamlined
+* Fedhas reimagined
 * Sif Muna reworked
 
 Branches, Environment
@@ -31,6 +31,16 @@ Character
   confused, and isn't asleep.
 * Net traps now always trigger when the player steps on them.
 * Vampiric weapons no longer have a hunger cost upon wield.
+* Vampire simplification: Player vampires no longer eat or drink blood, and
+  have exactly two blood states.
+  - Alive: Regenerates quickly, normal HP modifier, no undead bonuses, no
+    batform, can transform and berserk normally.
+  - Bloodless: No regeneration with monsters in sight, -20% HP, stealth bonus,
+    undead resistances, batform, no other transformations or berserk.
+  - Blood states are transitioned by an ability which costs delay; becoming
+    bloodless incurs no penalty, becoming alive causes a temporary frail
+    mutation.
+  - Bat form causes stat drain.
 
 Gods
 ----
@@ -92,6 +102,20 @@ Items
   - Piercer has been removed, its effect having been merged into Storm Bow.
 * Weapons with the holy wrath ego can now be cursed.
 * Randart rings no longer generate with both rCorr and *Corrode.
+* Throwing weapons have been simplified.
+  - Blowguns are removed, needles are replaced with throwing darts.
+  - Dart effects scale with Throwing and Stealth skill.
+  - Darts of sleep, paralysis, confusion are removed.
+  - Darts of frenzy are renamed datura-tipped darts.
+  - A new dart brand, atropa is added. Atropa-tipped darts cause brief
+      confusion and longer-lasting blindness in the target.
+  - Tomahawks always return.
+  - Javelins always penetrate.
+  - Steel and silver are merged into a single brand, called silver. Silver
+      ammunition applies 30% bonus damage to most targets and the old silver
+      damage bonus to silver-vulnerable targets.
+  - Poison, returning, penetration, and exploding are no longer available
+      brands for tomahawks and javelins.
 
 Lua
 ---
@@ -117,7 +141,7 @@ Monsters
 
 Spells
 ------
-* The HP from Death's Door if fixed at time of casting rather than being
+* The HP from Death's Door is fixed at time of casting rather than being
   updated continuously, hence being subject to changes in spellpower.
 * Olgreb's Toxic Radiance now properly triggers ally conducts when cast.
 * Shroud of Golubria's spellpower is now capped at 50.
