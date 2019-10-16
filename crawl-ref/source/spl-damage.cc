@@ -2750,16 +2750,22 @@ void toxic_radiance_effect(actor* agent, int mult, bool on_cast)
 
 spret cast_searing_ray(int pow, bolt &beam, bool fail)
 {
-    const spret ret = zapping(ZAP_SEARING_RAY_I, pow, beam, true, nullptr,
+    const spret ret = zapping(ZAP_SEARING_RAY, pow, beam, true, nullptr,
                                    fail);
 
     if (ret == spret::success)
     {
+        monster * mons = monster_at(beam.target);
         // Special value, used to avoid terminating ray immediately, since we
         // took a non-wait action on this turn (ie: casting it)
         you.attribute[ATTR_SEARING_RAY] = -1;
+        you.props["searing_ray_aimed_at_spot"].get_bool() = beam.aimed_at_spot
+                                                            || !mons;
         you.props["searing_ray_target"].get_coord() = beam.target;
-        you.props["searing_ray_aimed_at_spot"].get_bool() = beam.aimed_at_spot;
+
+        if (mons)
+            you.props["searing_ray_mid"].get_int() = mons->mid;
+
         string msg = "(Press <w>%</w> to maintain the ray.)";
         insert_commands(msg, { CMD_WAIT });
         mpr(msg);
@@ -2786,15 +2792,25 @@ void handle_searing_ray()
         return;
     }
 
-    const zap_type zap = zap_type(ZAP_SEARING_RAY_I + (you.attribute[ATTR_SEARING_RAY]-1));
+    const zap_type zap = zap_type(ZAP_SEARING_RAY);
     const int pow = calc_spell_power(SPELL_SEARING_RAY, true);
+
+    if (!you.props["searing_ray_aimed_at_spot"].get_bool())
+    {
+        monster* mons = nullptr;
+        mons = monster_by_mid(you.props["searing_ray_mid"].get_int());
+        // homing targeting, save the target location in case it dies
+        if (mons && mons->alive())
+            you.props["searing_ray_target"].get_coord() = mons->pos();
+        else
+            you.props["searing_ray_aimed_at_spot"] = true;
+    }
 
     bolt beam;
     beam.thrower = KILL_YOU_MISSILE;
     beam.range   = calc_spell_range(SPELL_SEARING_RAY, pow);
     beam.source  = you.pos();
     beam.target  = you.props["searing_ray_target"].get_coord();
-    beam.aimed_at_spot = you.props["searing_ray_aimed_at_spot"].get_bool();
 
     // If friendlies have moved into the beam path, give a chance to abort
     if (!player_tracer(zap, pow, beam))

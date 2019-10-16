@@ -2981,7 +2981,7 @@ tileidx_t tileidx_bolt(const bolt &bolt)
         else if (bolt.name == "shard of ice")
             return TILE_BOLT_ICICLE + dir;
         else if (bolt.name == "searing ray")
-            return TILE_BOLT_SEARING_RAY_III;
+            return TILE_BOLT_SEARING_RAY;
         break;
 
     case LIGHTCYAN:
@@ -3004,8 +3004,6 @@ tileidx_t tileidx_bolt(const bolt &bolt)
     case LIGHTMAGENTA:
         if (bolt.name == "magic dart")
             return TILE_BOLT_MAGIC_DART;
-        else if (bolt.name == "searing ray")
-            return TILE_BOLT_SEARING_RAY_II;
         break;
 
     case BROWN:
@@ -3036,8 +3034,6 @@ tileidx_t tileidx_bolt(const bolt &bolt)
         break;
 
     case MAGENTA:
-        if (bolt.name == "searing ray")
-            return TILE_BOLT_SEARING_RAY_I;
         break;
 
     case CYAN:
