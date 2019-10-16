@@ -52,7 +52,7 @@
 #include "version.h"
 
 typedef deque<int> keybuf;
-typedef map<int,keyseq> macromap;
+typedef map<keyseq,keyseq> macromap;
 
 static macromap Keymaps[KMC_CONTEXT_COUNT];
 static macromap Macros;
@@ -391,16 +391,15 @@ static string vtostr(const keyseq &seq)
 /*
  * Add a macro (surprise, surprise).
  */
-static void macro_add(macromap &mapref, int key, keyseq action)
+static void macro_add(macromap &mapref, keyseq key, keyseq action)
 {
-    if (!action.empty())
-        mapref[key] = action;
+    mapref[key] = action;
 }
 
 /*
  * Remove a macro.
  */
-static bool macro_del(macromap &mapref, int key)
+static bool macro_del(macromap &mapref, keyseq key)
 {
     return mapref.erase(key) != 0;
 }
@@ -494,17 +493,57 @@ void macro_buf_add_cmd(command_type cmd, bool reverse)
 }
 
 /*
- * Adds keys from a sequence to the end of the internal keybuffer.
- * Each key is expanded/converted with the given keymap.
+ * Adds keypresses from a sequence into the internal keybuffer. Does some
+ * O(N^2) analysis to the sequence to apply keymaps.
  */
 static void macro_buf_add_long(keyseq actions,
                                macromap &keymap = Keymaps[KMC_DEFAULT])
 {
-    for (const auto key : actions)
+    keyseq tmp;
+
+    // debug << "Adding: " << vtostr(actions) << endl;
+    // debug.flush();
+
+    // Check whether any subsequences of the sequence are macros.
+    // The matching starts from as early as possible, and is
+    // as long as possible given the first constraint. I.e from
+    // the sequence "abcdef" and macros "ab", "bcde" and "de"
+    // "ab" and "de" are recognised as macros.
+
+    while (!actions.empty())
     {
-        const auto subst = keymap.find(key);
-        const auto out = subst == keymap.end() ? keyseq({key}) : subst->second;
-        macro_buf_add(out, false, false);
+        tmp = actions;
+
+        while (!tmp.empty())
+        {
+            auto subst = keymap.find(tmp);
+            // Found a macro. Add the expansion (action) of the
+            // macro into the buffer.
+            if (subst != keymap.end() && !subst->second.empty())
+            {
+                macro_buf_add(subst->second, false, false);
+                break;
+            }
+
+            // Didn't find a macro. Remove a key from the end
+            // of the sequence, and try again.
+            tmp.pop_back();
+        }
+
+        if (tmp.empty())
+        {
+            // Didn't find a macro. Add the first keypress of the sequence
+            // into the buffer, remove it from the sequence, and try again.
+            macro_buf_add(actions.front(), false, false);
+            actions.pop_front();
+        }
+        else
+        {
+            // Found a macro, which has already been added above. Now just
+            // remove the macroed keys from the sequence.
+            for (unsigned int i = 0; i < tmp.size(); i++)
+                actions.pop_front();
+        }
     }
 }
 
@@ -557,15 +596,29 @@ static void macro_buf_apply_command_macro()
     if (macro_keys_left > 0 || expanded_keys_left > 0)
         return;
 
-    const auto expansion = Macros.find(Buffer.front());
-    if (expansion != Macros.end())
-    {
-        const keyseq &result = expansion->second;
+    keyseq tmp = Buffer;
 
-        // Found macro, remove match from front:
-        Buffer.pop_front();
-        macro_keys_left = result.size();
-        macro_buf_add(result, true, true);
+    // find the longest match from the start of the buffer and replace it
+    while (!tmp.empty())
+    {
+        auto expansion = Macros.find(tmp);
+
+        if (expansion != Macros.end() && !expansion->second.empty())
+        {
+            const keyseq &result = expansion->second;
+
+            // Found macro, remove match from front:
+            for (unsigned int i = 0; i < tmp.size(); i++)
+                Buffer.pop_front();
+
+            macro_keys_left = result.size();
+
+            macro_buf_add(result, true, true);
+
+            break;
+        }
+
+        tmp.pop_back();
     }
 }
 
@@ -622,7 +675,7 @@ static void write_map(FILE *f, const macromap &mp, const char *key)
         if (entry.second.size())
         {
             fprintf(f, "%s%s\nA:%s\n\n", OUTS(key),
-                OUTS(vtostr({entry.first})), OUTS(vtostr(entry.second)));
+                OUTS(vtostr(entry.first)), OUTS(vtostr(entry.second)));
         }
     }
 }
@@ -666,8 +719,11 @@ void macro_save()
  * Reads as many keypresses as are available (waiting for at least one),
  * and returns them as a single keyseq.
  */
-static int _getch_single(int (*rgetch)() = nullptr)
+static keyseq _getch_mul(int (*rgetch)() = nullptr)
 {
+    keyseq keys;
+    int    a;
+
     // Something's gone wrong with replaying keys if crawl needs to
     // get new keys from the user.
     if (crawl_state.is_replaying_keys())
@@ -680,16 +736,17 @@ static int _getch_single(int (*rgetch)() = nullptr)
     if (!rgetch)
         rgetch = m_getch;
 
-    // The key == 0 test is legacy code that I don't dare to remove. I
+    // The a == 0 test is legacy code that I don't dare to remove. I
     // have a vague recollection of it being a kludge for conio support.
-    int key;
     do
     {
-        key = rgetch();
+        a = rgetch();
+        if (a != CK_NO_KEY)
+            keys.push_back(a);
     }
-    while (key == 0 || key == CK_NO_KEY);
+    while (keys.size() == 0 || ((kbhit() || a == 0) && a != CK_REDRAW));
 
-    return key;
+    return keys;
 }
 
 /*
@@ -709,17 +766,18 @@ int getchm(KeymapContext mc, int (*rgetch)())
     if ((a = macro_buf_get()) != -1)
         return a;
 
-    // Read a key...
-    macro_buf_add_with_keymap(_getch_single(rgetch), mc);
+    // Read some keys...
+    keyseq keys = _getch_mul(rgetch);
+    macro_buf_add_with_keymap(keys, mc);
     return macro_buf_get();
 }
 
-void macro_buf_add_with_keymap(int key, KeymapContext mc)
+void macro_buf_add_with_keymap(keyseq keys, KeymapContext mc)
 {
     if (mc == KMC_NONE)
-        macro_buf_add(keyseq({key}), false, false);
+        macro_buf_add(keys, false, false);
     else
-        macro_buf_add_long(keyseq({key}), Keymaps[mc]);
+        macro_buf_add_long(keys, Keymaps[mc]);
 }
 
 /**
@@ -745,8 +803,14 @@ int getch_with_command_macros()
     _macro_inject_sent_keys();
 
     if (Buffer.empty())
-        macro_buf_add_with_keymap(_getch_single(), KMC_DEFAULT);
+    {
+        // Read some keys...
+        keyseq keys = _getch_mul();
+        // ... and add them into the buffer (apply keymaps)
+        macro_buf_add_long(keys);
+    }
 
+    // Apply longest matching macro at front of buffer:
     macro_buf_apply_command_macro();
 
     return macro_buf_get();
@@ -951,14 +1015,15 @@ void macro_add_query()
                                                macro_type.c_str());
     msgwin_prompt(trigger_prompt);
 
+    keyseq key;
     mouse_control mc(MOUSE_MODE_MACRO);
-    int key = m_getch();
-    string key_str = vtostr({key});
+    key = _getch_mul();
+    string key_str = vtostr(key);
     key_str = replace_all(key_str, "<", "<<");
 
-    msgwin_reply(vtostr({key}));
+    msgwin_reply(vtostr(key));
 
-    if (mapref.count(key))
+    if (mapref.count(key) && !mapref[key].empty())
     {
         string action_str = vtostr(mapref[key]);
         action_str = replace_all(action_str, "<", "<<");
@@ -1061,8 +1126,7 @@ static void _read_macros_from(const char* filename)
         else if (s.substr(0, 2) == "A:")
         {
             action = parse_keyseq(s.substr(2));
-            if (!key.empty())
-                macro_add((keymap ? Keymaps[keymc] : Macros), key.front(), action);
+            macro_add((keymap ? Keymaps[keymc] : Macros), key, action);
         }
     }
 }
@@ -1125,10 +1189,10 @@ string read_rc_file_macro(const string& field)
 
 
     keyseq key = parse_keyseq(macro_key_string);
+
     keyseq action = parse_keyseq(action_string);
 
-    if (!key.empty())
-        macro_add((keymap ? Keymaps[keymc] : Macros), key.front(), action);
+    macro_add((keymap ? Keymaps[keymc] : Macros), key, action);
 
     // If we didn't save here, macros in rc files would be saved iff you also
     // changed another macro with cntrl-D and saved at the exit prompt.
