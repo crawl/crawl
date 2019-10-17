@@ -429,7 +429,8 @@ SizeReq UIMenu::_get_preferred_size(Direction dim, int prosp_width)
     if (!dim)
     {
         do_layout(INT_MAX, m_num_columns);
-        int max_menu_width = min(1400, m_nat_column_width * m_num_columns);
+        const int em = Options.tile_font_crt_size;
+        int max_menu_width = min(93*em, m_nat_column_width * m_num_columns);
         return {0, max_menu_width};
     }
     else
