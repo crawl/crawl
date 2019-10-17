@@ -174,6 +174,7 @@ generic GENERIC_MONSTER_SPELL
 air_elementals AIR_ELEMENTALS
 blink_other BLINK_OTHER
 brain_feed BRAIN_FEED
+call_down_damnation CALL_DOWN_DAMNATION
 cantrip CANTRIP
 cold_breath COLD_BREATH
 earth_elementals EARTH_ELEMENTALS
@@ -184,7 +185,6 @@ fire_elementals FIRE_ELEMENTALS
 ghostly_fireball GHOSTLY_FIREBALL
 grasping_roots GRASPING_ROOTS
 haste_other HASTE_OTHER
-call_down_damnation CALL_DOWN_DAMNATION
 ink_cloud INK_CLOUD
 iron_elementals IRON_ELEMENTALS
 malmutate MALMUTATE
@@ -198,7 +198,6 @@ phantom_mirror PHANTOM_MIRROR
 polymorph POLYMORPH
 porkalator PORKALATOR
 quicksilver_bolt QUICKSILVER_BOLT
-# Remove when TAG_MAJOR_VERSION > 34
 sleep SLEEP
 spectral_cloud SPECTRAL_CLOUD
 spit_acid SPIT_ACID
