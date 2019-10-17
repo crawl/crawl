@@ -813,7 +813,7 @@ SUBST: P = PPPPPPPPP.
 : if d2rnd == 0 then
 KMONS: a = patrolling Sigmund hd:15 hp:100 \
  spells:bolt_of_fire.16.wizard;confuse.16.wizard;invisibility.16.wizard;\
-        iskenderun's_mystic_blast.16.wizard \
+        force_lance.16.wizard \
  ; scythe ego:distortion
 KMONS: b = patrolling Edmund hp:150 ; great mace ego:freezing \
  . dart ego:curare q:7

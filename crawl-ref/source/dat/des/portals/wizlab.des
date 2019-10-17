@@ -982,9 +982,8 @@ ENDMAP
 NAME:       wizlab_iskenderun
 TAGS:       no_rotate patrolling
 MONS:       deep elf mage spells:magic_dart.11.wizard;\
-                                 force_lance.11.wizard;\
-                                 iskenderun's_battlesphere.22.wizard;\
-                                 iskenderun's_mystic_blast.11.wizard
+                                 force_lance.22.wizard;\
+                                 iskenderun's_battlesphere.22.wizard
 MONS:       statue hd:12 spells:orb_of_destruction.62.magical \
             tile:mons_statue_mage col:vehumet name:conjurer n_adj
 KMONS:      3DEF = purple draconian

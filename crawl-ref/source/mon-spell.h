@@ -165,8 +165,7 @@ static const mon_spellbook mspell_list[] =
     {  MST_DEEP_ELF_MAGE_VI,
       {
        { SPELL_MAGIC_DART, 12, MON_SPELL_WIZARD },
-       { SPELL_ISKENDERUNS_MYSTIC_BLAST, 12, MON_SPELL_WIZARD },
-       { SPELL_FORCE_LANCE, 12, MON_SPELL_WIZARD },
+       { SPELL_FORCE_LANCE, 18, MON_SPELL_WIZARD },
        { SPELL_BATTLESPHERE, 24, MON_SPELL_WIZARD },
       }
     },
@@ -182,7 +181,7 @@ static const mon_spellbook mspell_list[] =
     {  MST_DEEP_ELF_KNIGHT_II,
       {
        { SPELL_STONE_ARROW, 24, MON_SPELL_WIZARD },
-       { SPELL_ISKENDERUNS_MYSTIC_BLAST, 12, MON_SPELL_WIZARD },
+       { SPELL_FORCE_LANCE, 12, MON_SPELL_WIZARD },
        { SPELL_HASTE, 12, MON_SPELL_WIZARD },
       }
     },
@@ -518,7 +517,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_WIZARD_II,
       {
-       { SPELL_ISKENDERUNS_MYSTIC_BLAST, 14, MON_SPELL_WIZARD },
+       { SPELL_FORCE_LANCE, 14, MON_SPELL_WIZARD },
        { SPELL_FIREBALL, 12, MON_SPELL_WIZARD },
        { SPELL_PARALYSE, 12, MON_SPELL_WIZARD },
        { SPELL_BLINK, 12, MON_SPELL_WIZARD },
@@ -1130,7 +1129,7 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_SPIT_POISON, 55, MON_SPELL_NATURAL | MON_SPELL_BREATH },
        { SPELL_VENOM_BOLT, 10, MON_SPELL_WIZARD },
-       { SPELL_ISKENDERUNS_MYSTIC_BLAST, 10, MON_SPELL_WIZARD },
+       { SPELL_FORCE_LANCE, 10, MON_SPELL_WIZARD },
        { SPELL_POISON_ARROW, 10, MON_SPELL_WIZARD },
        { SPELL_TELEPORT_OTHER, 10, MON_SPELL_WIZARD },
        { SPELL_HASTE, 10, MON_SPELL_WIZARD },
@@ -1155,7 +1154,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_SALAMANDER_MYSTIC,
       {
-       { SPELL_ISKENDERUNS_MYSTIC_BLAST, 12, MON_SPELL_WIZARD },
+       { SPELL_FORCE_LANCE, 12, MON_SPELL_WIZARD },
        { SPELL_BOLT_OF_MAGMA, 12, MON_SPELL_WIZARD },
        { SPELL_HASTE_OTHER, 24, MON_SPELL_WIZARD },
       }
@@ -1214,8 +1213,7 @@ static const mon_spellbook mspell_list[] =
     // ('Q') Tengu.
     {  MST_TENGU_CONJURER_I,
       {
-       { SPELL_ISKENDERUNS_MYSTIC_BLAST, 19, MON_SPELL_WIZARD },
-       { SPELL_FORCE_LANCE, 10, MON_SPELL_WIZARD },
+       { SPELL_FORCE_LANCE, 19, MON_SPELL_WIZARD },
        { SPELL_BATTLESPHERE, 19, MON_SPELL_WIZARD },
        { SPELL_BLINK, 10, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
       }
@@ -1276,7 +1274,7 @@ static const mon_spellbook mspell_list[] =
     // ('R') Spirituals.
     {  MST_RAKSHASA,
       {
-       { SPELL_ISKENDERUNS_MYSTIC_BLAST, 20, MON_SPELL_MAGICAL },
+       { SPELL_FORCE_LANCE, 20, MON_SPELL_MAGICAL },
        { SPELL_PHANTOM_MIRROR, 20, MON_SPELL_MAGICAL },
        { SPELL_BLINK, 10, MON_SPELL_MAGICAL },
       }
@@ -1669,7 +1667,7 @@ static const mon_spellbook mspell_list[] =
     // ('*') Concentrated orbs.
     {  MST_WRETCHED_STAR,
       {
-       { SPELL_ISKENDERUNS_MYSTIC_BLAST, 60, MON_SPELL_MAGICAL },
+       { SPELL_FORCE_LANCE, 60, MON_SPELL_MAGICAL },
        { SPELL_CORRUPTING_PULSE, 40, MON_SPELL_MAGICAL },
       }
     },
@@ -2040,7 +2038,6 @@ static const mon_spellbook mspell_list[] =
     // ('8') Statues.
     { MST_ROXANNE,
       {
-       { SPELL_ISKENDERUNS_MYSTIC_BLAST, 13, MON_SPELL_WIZARD },
        { SPELL_BOLT_OF_MAGMA, 13, MON_SPELL_WIZARD },
        { SPELL_IRON_SHOT, 13, MON_SPELL_WIZARD },
        { SPELL_LEHUDIBS_CRYSTAL_SPEAR, 13, MON_SPELL_WIZARD },
@@ -2069,7 +2066,7 @@ static const mon_spellbook mspell_list[] =
     {  MST_ERICA,
       {
        { SPELL_VENOM_BOLT, 10, MON_SPELL_WIZARD },
-       { SPELL_ISKENDERUNS_MYSTIC_BLAST, 10, MON_SPELL_WIZARD },
+       { SPELL_FORCE_LANCE, 10, MON_SPELL_WIZARD },
        { SPELL_CONFUSE, 10, MON_SPELL_WIZARD },
        { SPELL_SLOW, 10, MON_SPELL_WIZARD },
        { SPELL_INVISIBILITY, 10, MON_SPELL_WIZARD },
@@ -2178,7 +2175,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_FREDERICK,
       {
-       { SPELL_ISKENDERUNS_MYSTIC_BLAST, 12, MON_SPELL_WIZARD },
+       { SPELL_FORCE_LANCE, 12, MON_SPELL_WIZARD },
        { SPELL_BOLT_OF_COLD, 12, MON_SPELL_WIZARD },
        { SPELL_IRON_SHOT, 12, MON_SPELL_WIZARD },
        { SPELL_SPELLFORGED_SERVITOR, 24, MON_SPELL_WIZARD },

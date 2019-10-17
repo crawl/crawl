@@ -384,24 +384,6 @@ _mon_hex_zap(ZAP_POLYMORPH, BEAM_POLYMORPH),
     8
 },
 
-{
-    ZAP_ISKENDERUNS_MYSTIC_BLAST,
-    "orb of energy",
-    100,
-    new calcdice_calculator<2, 12, 1, 3>,
-    new tohit_calculator<10, 1, 7>,
-    new dicedef_calculator<3, 7, 1, 14>,
-    new tohit_calculator<20, 1, 20>,
-    LIGHTMAGENTA,
-    false,
-    BEAM_MMISSILE,
-    DCHAR_FIRED_ZAP,
-    true,
-    false,
-    false,
-    4
-},
-
 _mon_hex_zap(ZAP_ENSLAVEMENT, BEAM_ENSLAVE),
 
 {

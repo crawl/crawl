@@ -72,17 +72,6 @@ public:
     bool set_aim(coord_def a) override;
 };
 
-class targeter_imb : public targeter_beam
-{
-public:
-    targeter_imb(const actor *act, int pow, int range);
-    bool set_aim(coord_def a) override;
-    aff_type is_affected(coord_def loc) override;
-private:
-    vector<coord_def> splash;
-    vector<coord_def> splash2;
-};
-
 class targeter_view : public targeter
 {
 public:

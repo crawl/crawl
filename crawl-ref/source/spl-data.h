@@ -571,7 +571,7 @@ static const struct spell_desc spelldata[] =
     spflag::dir_or_target | spflag::needs_tracer,
     4,
     100,
-    6, 6,
+    2, 2,
     4, 10,
     TILEG_ISKENDERUNS_MYSTIC_BLAST,
 },

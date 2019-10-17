@@ -2107,28 +2107,6 @@ void create_feat_splash(coord_def center,
     }
 }
 
-bool imb_can_splash(coord_def origin, coord_def center,
-                    vector<coord_def> path_taken, coord_def target)
-{
-    // Don't go back along the path of the beam (the explosion doesn't
-    // reverse direction). We do this to avoid hitting the caster and
-    // also because we don't want aiming one
-    // square past a lone monster to be optimal.
-    if (origin == target)
-        return false;
-    if (find(begin(path_taken), end(path_taken), target) != end(path_taken))
-        return false;
-
-    // Don't go far away from the caster (not enough momentum).
-    if (grid_distance(origin, center + (target - center)*2)
-        > you.current_vision)
-    {
-        return false;
-    }
-
-    return true;
-}
-
 void bolt_parent_init(const bolt &parent, bolt &child)
 {
     child.name           = parent.name;
@@ -2169,67 +2147,6 @@ void bolt_parent_init(const bolt &parent, bolt &child)
 #ifdef DEBUG_DIAGNOSTICS
     child.quiet_debug    = parent.quiet_debug;
 #endif
-}
-
-static void _maybe_imb_explosion(bolt *parent, coord_def center)
-{
-    if (parent->origin_spell != SPELL_ISKENDERUNS_MYSTIC_BLAST
-        || parent->in_explosion_phase)
-    {
-        return;
-    }
-    const int dist = grid_distance(parent->source, center);
-    if (dist == 0 || (!parent->is_tracer && !x_chance_in_y(3, 2 + 2 * dist)))
-        return;
-    bolt beam;
-
-    bolt_parent_init(*parent, beam);
-    beam.name           = "mystic blast";
-    beam.aux_source     = "orb of energy";
-    beam.range          = 3;
-    beam.hit            = AUTOMATIC_HIT;
-    beam.colour         = MAGENTA;
-    beam.obvious_effect = true;
-    beam.pierce         = false;
-    beam.is_explosion   = false;
-    // So as not to recur infinitely
-    beam.origin_spell = SPELL_NO_SPELL;
-    beam.passed_target  = true; // The centre was the target.
-    beam.aimed_at_spot  = true;
-    if (you.see_cell(center))
-        beam.seen = true;
-    beam.source         = center;
-
-    bool first = true;
-    for (adjacent_iterator ai(center); ai; ++ai)
-    {
-        if (!imb_can_splash(parent->source, center, parent->path_taken, *ai))
-            continue;
-        if (!beam.is_tracer && one_chance_in(4))
-            continue;
-
-        if (first && !beam.is_tracer)
-        {
-            if (you.see_cell(center))
-                mpr("The orb of energy explodes!");
-            noisy(spell_effect_noise(SPELL_ISKENDERUNS_MYSTIC_BLAST),
-                  center);
-            first = false;
-        }
-        beam.friend_info.reset();
-        beam.foe_info.reset();
-        beam.friend_info.dont_stop = parent->friend_info.dont_stop;
-        beam.foe_info.dont_stop = parent->foe_info.dont_stop;
-        beam.target = center + (*ai - center) * 2;
-        beam.fire();
-        parent->friend_info += beam.friend_info;
-        parent->foe_info    += beam.foe_info;
-        if (beam.is_tracer && beam.beam_cancelled)
-        {
-            parent->beam_cancelled = true;
-            return;
-        }
-    }
 }
 
 static void _malign_offering_effect(actor* victim, const actor* agent, int damage)
@@ -2400,8 +2317,6 @@ void bolt::affect_endpoint()
         explode();
         return;
     }
-
-    _maybe_imb_explosion(this, pos());
 
     const cloud_type cloud = get_cloud_type();
 
@@ -4249,8 +4164,6 @@ void bolt::tracer_affect_monster(monster* mon)
         tracer_enchantment_affect_monster(mon);
     else
         tracer_nonenchantment_affect_monster(mon);
-
-    _maybe_imb_explosion(this, pos());
 }
 
 void bolt::enchantment_affect_monster(monster* mon)
@@ -6407,11 +6320,8 @@ string bolt::get_short_name() const
     if (flavour == BEAM_ELECTRICITY && pierce)
         return "lightning";
 
-    if (origin_spell == SPELL_ISKENDERUNS_MYSTIC_BLAST
-        || origin_spell == SPELL_DAZZLING_SPRAY)
-    {
+    if (origin_spell == SPELL_DAZZLING_SPRAY)
         return "energy";
-    }
 
     if (name == "bolt of dispelling energy")
         return "dispelling energy";

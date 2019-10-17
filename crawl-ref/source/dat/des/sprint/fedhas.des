@@ -18,7 +18,7 @@ KMONS:  L = oklob plant
 KMONS:  J = spriggan druid
 KMONS:  M = oklob plant hp:30 name:conjurer n_suf \
             spells:spit_acid.67.natural;stone_arrow.30.wizard;\
-                   iskenderun's_mystic_blast.30.wizard
+                   force_lance.30.wizard
 KMONS:  N = ballistomycete spore
 KMONS:  O = oklob plant hp:30 name:summoner n_suf \
             spells:spit_acid.67.natural;call_imp.30.wizard;\

@@ -2368,7 +2368,6 @@ static spell_type servitor_spells[] =
     SPELL_VENOM_BOLT,
     SPELL_THROW_ICICLE,
     SPELL_STONE_ARROW,
-    SPELL_ISKENDERUNS_MYSTIC_BLAST,
     // secondary spells
     SPELL_CONJURE_BALL_LIGHTNING,
     SPELL_FIREBALL,

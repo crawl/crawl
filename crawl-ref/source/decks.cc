@@ -1116,8 +1116,6 @@ static void _damaging_card(card_type card, int power,
     const zap_type painzaps[2] = { ZAP_AGONY, ZAP_BOLT_OF_DRAINING };
     const zap_type acidzaps[3] = { ZAP_BREATHE_ACID, ZAP_CORROSIVE_BOLT,
                                    ZAP_CORROSIVE_BOLT };
-    const zap_type orbzaps[3]  = { ZAP_ISKENDERUNS_MYSTIC_BLAST, ZAP_IOOD,
-                                   ZAP_IOOD };
 
     switch (card)
     {
@@ -1139,7 +1137,7 @@ static void _damaging_card(card_type card, int power,
         break;
 
     case CARD_ORB:
-        ztype = orbzaps[power_level];
+        ztype = ZAP_IOOD;
         break;
 
     case CARD_PAIN:
