@@ -1950,8 +1950,9 @@ void Menu::update_title()
     }
 
 #ifdef USE_TILE_LOCAL
+    const bool tile_indent = m_indent_title && Options.tile_menu_icons;
     m_ui.title->set_margin_for_sdl(0, 0, 10,
-            UIMenu::item_pad + (m_indent_title ? 38 : 0));
+            UIMenu::item_pad + (tile_indent ? 38 : 0));
 #endif
     m_ui.title->set_text(fs);
 #ifdef USE_TILE_WEB
