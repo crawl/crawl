@@ -920,24 +920,6 @@ _mon_hex_zap(ZAP_SLEEP, BEAM_SLEEP),
 },
 
 {
-    ZAP_DAZZLING_SPRAY,
-    "spray of energy",
-    50,
-    new calcdice_calculator<2, 6, 1, 4>,
-    new tohit_calculator<9, 1, 7>,
-    new dicedef_calculator<3, 5, 1, 17>,
-    new tohit_calculator<16, 1, 22>,
-    LIGHTMAGENTA,
-    false,
-    BEAM_MMISSILE,
-    DCHAR_FIRED_ZAP,
-    true,
-    false,
-    false,
-    3
-},
-
-{
     ZAP_FORCE_LANCE,
     "lance of force",
     100,

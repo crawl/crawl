@@ -199,21 +199,6 @@ private:
     int range;
 };
 
-class targeter_spray : public targeter
-{
-public:
-    targeter_spray(const actor* act, int range, zap_type zap);
-
-    bool valid_aim(coord_def a) override;
-    bool set_aim(coord_def a) override;
-    aff_type is_affected(coord_def loc) override;
-    bolt base_beam;
-    vector<bolt> beams;
-private:
-    vector<vector<coord_def> > paths_taken;
-    int _range;
-};
-
 enum class shadow_step_blocked
 {
     none,

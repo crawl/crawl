@@ -51,8 +51,6 @@ void forest_message(const coord_def pos, const string &msg,
                     msg_channel_type ch = MSGCH_PLAIN);
 void forest_damage(const actor *mon);
 
-vector<bolt> get_spray_rays(const actor *caster, coord_def aim, int range,
-                            int max_rays, int max_spacing = 3);
 spret cast_dazzling_spray(int pow, coord_def aim, bool fail);
 
 spret cast_toxic_radiance(actor *caster, int pow, bool fail = false,
