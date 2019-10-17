@@ -16,7 +16,6 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_SEARING_RAY,
     SPELL_DAZZLING_SPRAY,
     SPELL_FULMINANT_PRISM,
-    SPELL_FORCE_LANCE,
     SPELL_ISKENDERUNS_MYSTIC_BLAST,
 },
 
@@ -196,7 +195,6 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of the Warp
     SPELL_GRAVITAS,
     SPELL_PORTAL_PROJECTILE,
-    SPELL_FORCE_LANCE,
     SPELL_DISPERSAL,
     SPELL_CONTROLLED_BLINK,
     SPELL_DISJUNCTION,
@@ -250,7 +248,6 @@ static const vector<spell_type> spellbook_templates[] =
 
 #if TAG_MAJOR_VERSION == 34
 {   // Book of Wizardry
-    SPELL_FORCE_LANCE,
     SPELL_AGONY,
     SPELL_INVISIBILITY,
     SPELL_SPELLFORGED_SERVITOR,

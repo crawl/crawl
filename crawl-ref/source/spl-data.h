@@ -2661,7 +2661,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_FORCE_LANCE, "Force Lance",
     spschool::conjuration | spschool::translocation,
-    spflag::dir_or_target | spflag::needs_tracer,
+    spflag::dir_or_target | spflag::needs_tracer | spflag::monster,
     4,
     100,
     3, 3,
