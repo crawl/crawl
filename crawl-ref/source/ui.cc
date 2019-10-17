@@ -2417,7 +2417,12 @@ void set_focused_widget(Widget* w)
     static bool sent_focusout;
     static Widget* new_focus;
 
-    if (!ui_root.num_children())
+    const auto top = top_layout();
+
+    if (!top)
+        return;
+
+    if (w && !top->is_ancestor_of(w->get_shared()))
         return;
 
     auto current_focus = ui_root.focus_stack.back();
