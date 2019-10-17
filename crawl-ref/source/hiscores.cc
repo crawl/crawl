@@ -411,18 +411,33 @@ UIHiscoresMenu::UIHiscoresMenu()
 {
     m_root = make_shared<Box>(Widget::VERT);
     m_root->_set_parent(this);
-    m_root->align_cross = Widget::CENTER;
+    m_root->align_cross = Widget::STRETCH;
+
+    auto title_hbox = make_shared<Box>(Widget::HORZ);
+    title_hbox->set_margin_for_sdl(0, 0, 20, 0);
+    title_hbox->set_margin_for_crt(0, 0, 1, 0);
+
+#ifdef USE_TILE
+    auto tile = make_shared<Image>();
+    tile->set_tile(tile_def(TILEG_STARTUP_HIGH_SCORES, TEX_GUI));
+    title_hbox->add_child(move(tile));
+#endif
 
     auto title = make_shared<Text>(formatted_string(
                 "Dungeon Crawl Stone Soup: High Scores", YELLOW));
-    title->set_margin_for_sdl(0, 0, 20, 0);
+    title->set_margin_for_sdl(0, 0, 0, 16);
+    title_hbox->add_child(move(title));
+
+    title_hbox->align_main = Widget::CENTER;
+    title_hbox->align_cross = Widget::CENTER;
+
     m_description = make_shared<Text>(string(9, '\n'));
 
     m_score_entries= make_shared<OuterMenu>(true, 1, 100);
     nhsr = 0;
     _construct_hiscore_table();
 
-    m_root->add_child(move(title));
+    m_root->add_child(move(title_hbox));
     if (initial_focus)
     {
         m_root->add_child(m_description);
