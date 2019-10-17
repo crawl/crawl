@@ -1,4 +1,4 @@
-Stone Soup 0.24 (up to 83157970ee)
+Stone Soup 0.24 (up to f18fdeb47f)
 ----------------------------------
 
 Highlights
@@ -84,12 +84,15 @@ Interface
 ---------
 * The 'X' key map mode has zoom support, defaulting to 60% zoom.
 * Sealed off clinging and sensed monsters no longer stop autoexplore.
+* Equipment melding no longer stops autoexplore and autotravel.
 * Armour, jewellery, and weapons can be worn/wielded from the floor.
 * Summoner monsters are now highlighted when the cursor is over one of its
   summons.
 * Traps are now shown in the ctrl-x listing and are indexed in the stash
   tracker.
 * Scarves are now properly shown on player tiles.
+* Species and background selection menus now have tiles.
+* Updated visual theme for main menu, high scores, and related screens.
 
 Items
 -----
