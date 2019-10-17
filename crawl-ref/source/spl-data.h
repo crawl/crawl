@@ -2091,7 +2091,7 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     4, 0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_CREATE_TENTACLES,
 },
 
 {
@@ -2364,7 +2364,7 @@ static const struct spell_desc spelldata[] =
     0,
     LOS_RADIUS, LOS_RADIUS,
     4, 0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_SUMMON_SPECTRAL_ORCS,
 },
 
 #if TAG_MAJOR_VERSION == 34
@@ -2676,7 +2676,7 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     4, 0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_SENTINEL_MARK,
 },
 
 // Ironbrand Convoker version (delayed activation, recalls only humanoids)
@@ -2688,7 +2688,7 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     3, 0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_RECALL,
 },
 
 {
@@ -2779,7 +2779,7 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     5, 0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_AWAKEN_VINES,
 },
 
 #if TAG_MAJOR_VERSION == 34
@@ -2814,7 +2814,7 @@ static const struct spell_desc spelldata[] =
     100,
     LOS_RADIUS, LOS_RADIUS,
     5, 0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_WALL_OF_BRAMBLES,
 },
 
 {
@@ -2860,7 +2860,7 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     4, 0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_STRIP_RESISTANCE,
 },
 
 {
@@ -2961,7 +2961,7 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     5, 0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_INVISIBILITY,
 },
 
 {
@@ -3514,7 +3514,7 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     5, 0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_SEAL_DOORS,
 },
 
 {
@@ -4019,7 +4019,7 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     5, 0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_SPORULATE,
 },
 
 {
