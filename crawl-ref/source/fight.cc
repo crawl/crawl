@@ -635,7 +635,7 @@ bool wielded_weapon_check(item_def *weapon)
     if (weapon)
         prompt = "Really attack while wielding " + weapon->name(DESC_YOUR) + "?";
     else
-        prompt = "Really attack barehanded?";
+        prompt = "Really attack unarmed?";
     if (penance)
         prompt += " This could place you under penance!";
 
