@@ -1412,6 +1412,9 @@ bool spell_no_hostile_in_range(spell_type spell)
     case SPELL_HAILSTORM:
         return cast_hailstorm(-1, false, true) == spret::abort;
 
+    case SPELL_DAZZLING_FLASH:
+        return cast_dazzling_flash(-1, false, true) == spret::abort;
+
     default:
         break;
     }

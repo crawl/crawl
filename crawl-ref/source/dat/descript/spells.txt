@@ -367,10 +367,11 @@ Darkness spell
 
 Dims the light of the dungeon, reducing the range of vision.
 %%%%
-Dazzling Spray spell
+Dazzling Flash spell
 
-Fires a spread of scintillating energy bolts from the caster's fingertips. Any
-living creature they strike may be dazzled and left stumbling blindly.
+The caster erupts in a scintillating display of light. Any living creature
+nearby may be dazzled and left stumbling blindly. Creatures closer to the
+caster are more likely to be dazzled.
 %%%%
 Death Channel spell
 
