@@ -849,7 +849,7 @@ void display_mutations()
     trim_string_right(mutation_s);
 
     auto vbox = make_shared<Box>(Widget::VERT);
-    vbox->align_cross = Widget::CENTER;
+    vbox->set_cross_alignment(Widget::CENTER);
 
     const char *title_text = "Innate Abilities, Weirdness & Mutations";
     auto title = make_shared<Text>(formatted_string(title_text, WHITE));

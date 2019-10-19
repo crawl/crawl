@@ -411,7 +411,7 @@ UIHiscoresMenu::UIHiscoresMenu()
 {
     m_root = make_shared<Box>(Widget::VERT);
     m_root->_set_parent(this);
-    m_root->align_cross = Widget::STRETCH;
+    m_root->set_cross_alignment(Widget::STRETCH);
 
     auto title_hbox = make_shared<Box>(Widget::HORZ);
     title_hbox->set_margin_for_sdl(0, 0, 20, 0);
@@ -428,8 +428,8 @@ UIHiscoresMenu::UIHiscoresMenu()
     title->set_margin_for_sdl(0, 0, 0, 16);
     title_hbox->add_child(move(title));
 
-    title_hbox->align_main = Widget::CENTER;
-    title_hbox->align_cross = Widget::CENTER;
+    title_hbox->set_main_alignment(Widget::CENTER);
+    title_hbox->set_cross_alignment(Widget::CENTER);
 
     m_description = make_shared<Text>(string(9, '\n'));
 

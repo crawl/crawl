@@ -460,8 +460,20 @@ public:
 
     virtual ~Box() {}
     void add_child(shared_ptr<Widget> child);
-    Widget::Align align_main = START;
-    Widget::Align align_cross = START;
+
+    Widget::Align main_alignment() const { return align_main; }
+    Widget::Align cross_alignment() const { return align_cross; }
+
+    void set_main_alignment(Widget::Align align)
+    {
+        align_main = align;
+        _invalidate_sizereq();
+    };
+    void set_cross_alignment(Widget::Align align)
+    {
+        align_cross = align;
+        _invalidate_sizereq();
+    };
 
     void _render() override;
     SizeReq _get_preferred_size(Direction dim, int prosp_width) override;
@@ -469,6 +481,8 @@ public:
 
 protected:
     bool horz;
+    Widget::Align align_main = START;
+    Widget::Align align_cross = START;
 
     vector<int> layout_main_axis(vector<SizeReq>& ch_psz, int main_sz);
     vector<int> layout_cross_axis(vector<SizeReq>& ch_psz, int cross_sz);
