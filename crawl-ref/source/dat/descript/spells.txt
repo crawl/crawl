@@ -817,9 +817,8 @@ and deals more damage per volley.
 %%%%
 Iskenderun's Mystic Blast spell
 
-Throws a crackling sphere of destructive energy. The sphere will sometimes
-explode on impact, and the chance of it doing so is higher if the sphere has
-traveled less distance.
+Detonates a crackling sphere of destructive energy. The explosion will hit all
+nearby monsters with physical force, knocking them back if damage is done.
 %%%%
 Leda's Liquefaction spell
 

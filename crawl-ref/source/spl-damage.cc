@@ -3204,3 +3204,82 @@ spret cast_hailstorm(int pow, bool fail, bool tracer)
 
     return spret::success;
 }
+
+static void _imb_actor(actor * act, int pow)
+{
+    bolt beam;
+    beam.source          = you.pos();
+    beam.thrower         = KILL_YOU;
+    beam.source_id       = MID_PLAYER;
+    beam.range           = LOS_RADIUS;
+    beam.colour          = LIGHTMAGENTA;
+    beam.glyph           = dchar_glyph(DCHAR_FIRED_ZAP);
+    beam.name            = "mystic blast";
+    beam.origin_spell    = SPELL_ISKENDERUNS_MYSTIC_BLAST;
+    beam.ench_power      = pow;
+    beam.aimed_at_spot   = true;
+    beam.loudness        = 10;
+
+    beam.target          = act->pos();
+
+    beam.flavour          = BEAM_VISUAL;
+    beam.affects_nothing = true;
+    beam.pierce          = true;
+    beam.fire();
+
+    beam.flavour          = BEAM_MMISSILE;
+    beam.affects_nothing = false;
+    beam.hit             = 10 + pow / 7;
+    beam.damage          = calc_dice(2, 6 + pow / 3);
+
+    beam.affect_actor(act);
+}
+
+struct dist_sorter
+{
+    coord_def pos;
+    bool operator()(const actor* a, const actor* b)
+    {
+        return a->pos().distance_from(pos) > b->pos().distance_from(pos);
+    }
+};
+
+spret cast_imb(int pow, bool fail)
+{
+    int range = spell_range(SPELL_ISKENDERUNS_MYSTIC_BLAST, pow);
+    targeter_radius hitfunc(&you, LOS_SOLID_SEE, range);
+    bool (*vulnerable) (const actor *) = [](const actor * act) -> bool
+    {
+        return !(act->is_monster()
+                 && mons_is_conjured(act->as_monster()->type));
+    };
+
+    if (stop_attack_prompt(hitfunc, "blast", vulnerable))
+        return spret::abort;
+
+    fail_check();
+
+    mpr("You erupt in a blast of force!");
+
+    vector<actor *> act_list;
+
+    for (actor_near_iterator ai(you.pos(), LOS_SOLID_SEE); ai; ++ai)
+    {
+        if (ai->pos().distance_from(you.pos()) > range
+            || ai->pos() == you.pos() // so it's never aimed_at_feet
+            || mons_is_conjured(ai->as_monster()->type)) // skip prisms &c.
+        {
+            continue;
+        }
+
+        act_list.push_back(*ai);
+    }
+
+    dist_sorter sorter = {you.pos()};
+    sort(act_list.begin(), act_list.end(), sorter);
+
+    for (actor *act : act_list)
+        _imb_actor(act, pow);
+
+    return spret::success;
+}

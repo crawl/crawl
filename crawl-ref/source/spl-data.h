@@ -567,8 +567,8 @@ static const struct spell_desc spelldata[] =
 // of PCHACK - credit goes to its creator (whoever that may be):
 {
     SPELL_ISKENDERUNS_MYSTIC_BLAST, "Iskenderun's Mystic Blast",
-    spschool::conjuration,
-    spflag::dir_or_target | spflag::needs_tracer,
+    spschool::conjuration | spschool::translocation,
+    spflag::area,
     4,
     100,
     2, 2,

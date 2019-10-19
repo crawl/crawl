@@ -4382,8 +4382,9 @@ void bolt::knockback_actor(actor *act, int dam)
         return;
 
     const int distance =
-        (origin_spell == SPELL_FORCE_LANCE)
-            ? 1 + div_rand_round(ench_power, 40) :
+        (origin_spell == SPELL_FORCE_LANCE
+         || origin_spell == SPELL_ISKENDERUNS_MYSTIC_BLAST)
+            ? 2 + div_rand_round(ench_power, 50) :
         (origin_spell == SPELL_CHILLING_BREATH) ? 2 : 1;
 
     const int roll = origin_spell == SPELL_FORCE_LANCE
@@ -6425,7 +6426,8 @@ bool bolt::can_knockback(const actor &act, int dam) const
 
     return flavour == BEAM_WATER && origin_spell == SPELL_PRIMAL_WAVE
            || origin_spell == SPELL_CHILLING_BREATH && act.airborne()
-           || origin_spell == SPELL_FORCE_LANCE && dam;
+           || origin_spell == SPELL_FORCE_LANCE && dam
+           || origin_spell == SPELL_ISKENDERUNS_MYSTIC_BLAST && dam;
 }
 
 /**

@@ -78,3 +78,5 @@ spret cast_starburst(int pow, bool fail, bool tracer=false);
 void foxfire_attack(const monster *foxfire, const actor *target);
 
 spret cast_hailstorm(int pow, bool fail, bool tracer=false);
+
+spret cast_imb(int pow, bool fail);
