@@ -2342,7 +2342,7 @@ progress_popup::progress_popup(string title, int width)
     : position(0), bar_width(width), no_more(crawl_state.show_more_prompt, false)
 {
     auto container = make_shared<Box>(Widget::VERT);
-    container->align_cross = Widget::CENTER;
+    container->set_cross_alignment(Widget::CENTER);
 #ifndef USE_TILE_LOCAL
     // Center the popup in console.
     // if webtiles browser ever uses this property, then this will probably

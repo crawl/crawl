@@ -71,7 +71,7 @@ void formatted_scroller::scroll_to_end()
 int formatted_scroller::show()
 {
     auto vbox = make_shared<Box>(Widget::VERT);
-    vbox->align_cross = Widget::Align::STRETCH;
+    vbox->set_cross_alignment(Widget::Align::STRETCH);
 
     if (!m_title.empty())
     {
@@ -81,7 +81,7 @@ int formatted_scroller::show()
         title->set_margin_for_sdl(0, 0, 20, 0);
         auto title_hbox = make_shared<Box>(Widget::HORZ);
 #ifdef USE_TILE_LOCAL
-        title_hbox->align_main = Widget::Align::CENTER;
+        title_hbox->set_main_alignment(Widget::Align::CENTER);
 #endif
         title_hbox->add_child(move(title));
         vbox->add_child(move(title_hbox));
