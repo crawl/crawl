@@ -134,9 +134,10 @@ bool fatal_error_notification(string error_msg)
 
     auto prompt_ui =
                 make_shared<Text>(formatted_string::parse_string(error_msg));
+    auto popup = make_shared<ui::Popup>(prompt_ui);
     bool done = false;
 
-    prompt_ui->on(Widget::slots.hotkey, [&](wm_event ev) {
+    popup->on(Widget::slots.hotkey, [&](wm_event ev) {
         if (ev.type == WME_KEYDOWN && ev.key.keysym.sym == CONTROL('P'))
         {
             replay_messages();
@@ -145,12 +146,11 @@ bool fatal_error_notification(string error_msg)
         return false;
     });
 
-    prompt_ui->on(Widget::slots.event, [&](wm_event ev) {
+    popup->on(Widget::slots.event, [&](wm_event ev) {
         return done = ev.type == WME_KEYDOWN;
     });
 
     mouse_control mc(MOUSE_MODE_MORE);
-    auto popup = make_shared<ui::Popup>(prompt_ui);
     ui::run_layout(move(popup), done);
 #endif
 
@@ -249,13 +249,13 @@ NORETURN void screen_end_game(string text)
     {
         auto prompt_ui = make_shared<Text>(
                 formatted_string::parse_string(text));
+        auto popup = make_shared<ui::Popup>(prompt_ui);
         bool done = false;
-        prompt_ui->on(Widget::slots.event, [&](wm_event ev)  {
+        popup->on(Widget::slots.event, [&](wm_event ev)  {
             return done = ev.type == WME_KEYDOWN;
         });
 
         mouse_control mc(MOUSE_MODE_MORE);
-        auto popup = make_shared<ui::Popup>(prompt_ui);
         ui::run_layout(move(popup), done);
     }
 

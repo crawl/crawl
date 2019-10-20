@@ -783,7 +783,10 @@ static void _choose_seed(newgame_def& ng, newgame_def& choice,
     choice.pregenerate = Options.pregen_dungeon;
 
     auto prompt_ui = make_shared<Text>();
-    prompt_ui->on(Widget::slots.event, [&](wm_event ev)  {
+    auto box = make_shared<ui::Box>(ui::Widget::VERT);
+    auto popup = make_shared<ui::Popup>(box);
+
+    popup->on(Widget::slots.event, [&](wm_event ev)  {
         if (ev.type != WME_KEYDOWN)
             return false;
         int key = ev.key.keysym.sym;
@@ -856,7 +859,6 @@ static void _choose_seed(newgame_def& ng, newgame_def& choice,
         return true;
     });
 
-    auto box = make_shared<ui::Box>(ui::Widget::VERT);
     box->add_child(prompt_ui);
     auto pregen_choice = make_shared<ui::Text>("");
     box->add_child(pregen_choice);
@@ -886,9 +888,7 @@ static void _choose_seed(newgame_def& ng, newgame_def& choice,
 #endif
         ;
 
-    auto popup = make_shared<ui::Popup>(box);
     ui::push_layout(move(popup));
-    ui::set_focused_widget(prompt_ui.get());
 #ifdef USE_TILE_WEB
     // activate seed selection popup
     tiles.json_open_object();

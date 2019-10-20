@@ -405,12 +405,12 @@ void hints_starting_screen()
 #endif
 
     bool done = false;
-    prompt_ui->on(Widget::slots.event, [&](wm_event ev)  {
+    auto popup = make_shared<ui::Popup>(prompt_ui);
+    popup->on(Widget::slots.event, [&](wm_event ev)  {
         return done = ev.type == WME_KEYDOWN;
     });
 
     mouse_control mc(MOUSE_MODE_MORE);
-    auto popup = make_shared<ui::Popup>(prompt_ui);
     ui::run_layout(move(popup), done);
 }
 
