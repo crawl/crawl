@@ -761,16 +761,11 @@ static void _choose_seed(newgame_def& ng, newgame_def& choice,
 {
     UNUSED(ng, defaults);
 
-    char buf[21]; // max unsigned 64 bit integer is 20 chars in decimal,
-                  // specifically 18446744073709551615
-    buf[0] = '\0';
-    resumable_line_reader reader(buf, sizeof(buf));
     if (Options.seed)
         choice.seed = Options.seed;
     else if (Options.seed_from_rc)
         choice.seed = Options.seed_from_rc;
-    reader.set_text(make_stringf("%" PRIu64, choice.seed));
-    reader.set_keyproc(_keyfun_seed_input);
+
     const bool show_pregen_toggle =
 #ifdef DEBUG
                         true;
@@ -780,58 +775,101 @@ static void _choose_seed(newgame_def& ng, newgame_def& choice,
 
     bool done = false;
     bool cancel = false;
-    choice.pregenerate = Options.pregen_dungeon;
 
     auto prompt_ui = make_shared<Text>();
     auto box = make_shared<ui::Box>(ui::Widget::VERT);
+    box->set_cross_alignment(Widget::Align::STRETCH);
     auto popup = make_shared<ui::Popup>(box);
+
+    const string title_text = make_stringf(
+        "Play a game with a custom seed for version %s.\n",
+        Version::Long);
+    box->add_child(make_shared<ui::Text>(formatted_string(title_text, CYAN)));
+
+    const string body_text = "Choose 0 for a random seed. "
+            "[Tab]/[Shift-Tab] cycle input focus.\n";
+    box->add_child(make_shared<ui::Text>(body_text));
+
+    auto seed_hbox = make_shared<ui::Box>(ui::Box::HORZ);
+    box->add_child(seed_hbox);
+
+    const string prompt_text = "Seed ([-] to clear): ";
+    seed_hbox->add_child(make_shared<ui::Text>(prompt_text));
+    auto seed_input = make_shared<ui::TextEntry>();
+    seed_input->set_text(make_stringf("%" PRIu64, choice.seed));
+    seed_input->set_keyproc(_keyfun_seed_input);
+#ifndef USE_TILE_LOCAL
+    seed_input->max_size().width = 20;
+#endif
+    seed_hbox->add_child(seed_input);
+    seed_hbox->set_cross_alignment(Widget::CENTER);
+
+    auto btn_label = make_shared<ui::Text>();
+    btn_label->set_text(formatted_string("d - Today's daily seed", BROWN));
+    btn_label->set_margin_for_sdl(4,8);
+    btn_label->set_margin_for_crt(0, 2, 0, 0);
+
+    auto daily_seed_btn = make_shared<MenuButton>();
+    daily_seed_btn->set_child(move(btn_label));
+    daily_seed_btn->hotkey = 'd';
+    daily_seed_btn->set_margin_for_sdl(0,0,0,10);
+    daily_seed_btn->set_margin_for_crt(0, 0, 0, 1);
+    seed_hbox->add_child(move(daily_seed_btn));
+
+    const string footer_text =
+        "\n"
+        "The seed will determine the dungeon layout, monsters, and items\n"
+        "that you discover, relative to this version of crawl. (See the \n"
+        "manual for more details.)"
+#ifdef SEEDING_UNRELIABLE
+        "Warning: your build of crawl does not support stable seeding!\n"
+        "Levels may differ from 'official' seeded games."
+#endif
+        "\n"
+        ;
+    box->add_child(make_shared<ui::Text>(footer_text));
+
+    auto pregen_check = make_shared<ui::Checkbox>();
+    pregen_check->set_checked(choice.pregenerate = Options.pregen_dungeon);
+    pregen_check->set_visible(show_pregen_toggle);
+    pregen_check->set_child(make_shared<ui::Text>("Pregenerate the dungeon"));
+    box->add_child(pregen_check);
+
+    auto button_hbox = make_shared<ui::Box>(ui::Box::HORZ);
+    button_hbox->set_main_alignment(Widget::Align::END);
+    box->add_child(button_hbox);
+
+    btn_label = make_shared<ui::Text>();
+    btn_label->set_text(formatted_string("Enter - Begin!", BROWN));
+    btn_label->set_margin_for_sdl(4,8);
+    btn_label->set_margin_for_crt(0, 2, 0, 0);
+
+    auto begin_btn = make_shared<MenuButton>();
+    begin_btn->set_child(move(btn_label));
+    begin_btn->hotkey = CK_ENTER;
+    button_hbox->add_child(move(begin_btn));
 
     popup->on(Widget::slots.event, [&](wm_event ev)  {
         if (ev.type != WME_KEYDOWN)
             return false;
         int key = ev.key.keysym.sym;
 
-        if (show_pregen_toggle && key == CONTROL('I'))
-        {
-            choice.pregenerate = !choice.pregenerate;
-            return done = false;
-        }
-        else if (key == 'd' || key == 'D')
+        if (key == 'd' || key == 'D')
         {
             time_t now;
-            struct tm * timeinfo;
-
             time(&now);
-            timeinfo = localtime(&now);
+            struct tm * timeinfo = localtime(&now);
             char timebuf[9];
             strftime(timebuf, sizeof(timebuf), "%Y%m%d", timeinfo);
-            reader.set_text(timebuf);
-#ifdef USE_TILE_WEB
-            // TODO: can this be done more automatically somehow?
-            tiles.json_open_object();
-            tiles.json_write_string("msg", "update_input");
-            tiles.json_write_string("input_text", string(timebuf));
-            tiles.json_write_bool("select", true);
-            tiles.json_close_object();
-            tiles.finish_message();
-#endif
-            return done = false;
+            seed_input->set_text(timebuf);
+            return true;
         }
         else if (key == '?')
             show_help('D', "Seeded play"); // TODO: scroll to section
         else if (key == '-')
         {
-            reader.set_text("");
-#ifdef USE_TILE_WEB
-            // TODO: can this be done more automatically somehow?
-            tiles.json_open_object();
-            tiles.json_write_string("msg", "update_input");
-            tiles.json_write_string("input_text", string(""));
-            tiles.json_write_bool("select", true);
-            tiles.json_close_object();
-            tiles.finish_message();
-#endif
-            return done = false;
+            seed_input->set_text("");
+            return false;
         }
 #ifdef USE_TILE_LOCAL
         else if ((key == 'p' || key == 'P') && wm->has_clipboard())
@@ -842,113 +880,31 @@ static void _choose_seed(newgame_def& ng, newgame_def& choice,
             uint64_t clip_seed;
             int clip_found = sscanf(clip.c_str(), "%" SCNu64, &clip_seed);
             if (clip_found)
-                reader.set_text(make_stringf("%" PRIu64, clip_seed));
-            return done = false;
+                seed_input->set_text(make_stringf("%" PRIu64, clip_seed));
+            return false;
         }
 #endif
-        // TODO: digits only
-        key = reader.putkey(key);
-
-        if (key != -1)
-        {
-            if (key_is_escape(key))
-                return done = cancel = true;
-            if (reader.get_text().size() > 0)
-                return done = true;
-        }
-        return true;
+        else if (key_is_escape(key))
+            return done = cancel = true;
+        else if (key == CK_ENTER)
+            return done = true;
+        return false;
     });
 
-    box->add_child(prompt_ui);
-    auto pregen_choice = make_shared<ui::Text>("");
-    box->add_child(pregen_choice);
-    if (show_pregen_toggle)
-    {
-        pregen_choice->set_text(
-            "Pregenerate the dungeon ([tab] to switch)? Yes | No");
-    }
-    const string title_text = make_stringf(
-        "Play a game with a custom seed for version %s.",
-        Version::Long);
-    const string body_text =
-        "Choose 0 for a random seed. Press [d] for today's daily seed.\n"
-#ifdef USE_TILE_LOCAL
-        "Press [p] to paste a seed from the clipboard (overwriting the\n"
-        "current value).\n"
-#endif
-        ;
-    const string prompt_text = "Seed ([-] to clear):";
-    const string footer_text =
-        "The seed will determine the dungeon layout, monsters, and items\n"
-        "that you discover, relative to this version of crawl. (See the \n"
-        "manual for more details.)"
-#ifdef SEEDING_UNRELIABLE
-        "Warning: your build of crawl does not support stable seeding!\n"
-        "Levels may differ from 'official' seeded games."
-#endif
-        ;
-
-    ui::push_layout(move(popup));
 #ifdef USE_TILE_WEB
-    // activate seed selection popup
     tiles.json_open_object();
     tiles.json_write_string("body", body_text);
     tiles.json_write_string("title", title_text);
     tiles.json_write_string("footer", footer_text);
-    tiles.push_ui_layout("seed-selection", 1);
-    // activate input box. TODO: have this happen automatically on the js side
-    // when the popup is in place?
-    tiles.json_open_object();
-    tiles.json_write_string("msg", "init_input");
-    tiles.json_write_string("type", "seed-selection");
-    tiles.json_write_string("prefill", string(buf));
-    tiles.json_write_string("prompt", prompt_text);
-    tiles.json_write_int("maxlen", sizeof(buf) - 1);
-    tiles.json_write_bool("select_prefill", true);
-    tiles.json_close_object();
-    tiles.finish_message();
+    tiles.json_write_bool("show_pregen_toggle", show_pregen_toggle);
+    tiles.push_ui_layout("seed-selection", 0);
 #endif
-    while (!done && !crawl_state.seen_hups)
-    {
-        // TODO: rewrite with widgets
-        formatted_string prompt;
-        prompt.textcolour(CYAN);
-        prompt.cprintf(title_text + "\n\n");
-        prompt.textcolour(LIGHTGREY);
-        prompt.cprintf(body_text + "\n");
 
-        prompt.cprintf(prompt_text);
-        string seed_text = make_stringf("%-20s", buf);
-        prompt.cprintf("\n%s\n\n", seed_text.c_str());
-
-        prompt.cprintf(footer_text + "\n\n");
-        prompt_ui->set_text(prompt);
-        // yes this appalling, some day we will have real buttons and text
-        // input. The seed highlight doesn't do much on console, but makes
-        // tiles look a lot better. N.b. the newline before the seed above
-        // is really so that an empty seed string won't get multiple highlights.
-        // TODO: not implemented on the webtiles side.
-        prompt_ui->set_highlight_pattern(seed_text, false);
-        if (show_pregen_toggle)
-        {
-            if (choice.pregenerate)
-                pregen_choice->set_highlight_pattern("Yes", false);
-            else
-                pregen_choice->set_highlight_pattern("No", false);
-        }
-        ui::pump_events();
-    }
-    ui::pop_layout();
+    ui::run_layout(move(popup), done);
 #ifdef USE_TILE_WEB
-    // decomission input box, if it's still around
-    tiles.json_open_object();
-    tiles.json_write_string("msg", "close_input");
-    tiles.json_close_object();
-    tiles.finish_message();
-
     tiles.pop_ui_layout();
 #endif
-    string result = reader.get_text();
+    string result = seed_input->get_text();
     uint64_t tmp_seed = 0;
     // TODO: if the user types in a number that exceeds the max value, sscanf
     // will give back the max value. Probably better to print an error?
@@ -958,7 +914,7 @@ static void _choose_seed(newgame_def& ng, newgame_def& choice,
         game_ended(game_exit::abort);
 
     Options.seed = choice.seed = tmp_seed;
-    Options.pregen_dungeon = choice.pregenerate;
+    Options.pregen_dungeon = choice.pregenerate = pregen_check->checked();
 }
 
 // Read a choice of game into ng.

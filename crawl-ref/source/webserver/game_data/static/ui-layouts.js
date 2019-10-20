@@ -796,9 +796,7 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
                 $button.addClass("hlc-" + button.highlight_colour);
                 $container.append($button);
 
-                $button.on("click", function () {
-                    comm.send_message("key", { keycode: button.hotkey });
-                }).on('hover', function () { focus_button($(this)) });
+                $button.on('hover', function () { focus_button($(this)) });
             });
             $.each(data.labels, function (i, button) {
                 var $button = $("<div class=label>");
@@ -866,12 +864,22 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
     function seed_selection(desc)
     {
         var $popup = $(".templates > .seed-selection").clone();
-        $popup.find(".header > span").html(desc.title);
-        $popup.find(".body > span").html(fmt_body_txt(
-                                util.formatted_string_to_html(desc.body)));
-        $popup.find(".footer > span").html(fmt_body_txt(
-                                util.formatted_string_to_html(desc.footer)));
-        // TODO: handle input here? currently handled from c++ side.
+        $popup.find(".header").html(desc.title);
+        $popup.find(".body").html(desc.body);
+        $popup.find(".footer").html(desc.footer);
+        if (!desc.show_pregen_toggle)
+            $popup.find(".pregen-toggle").remove();
+
+        var $input = $popup.find("input[type=text]");
+        var input_val = $input.val();
+        $input.on("input change", function (event) {
+            var valid_seed = $input.val().match(/^\d*$/);
+            if (valid_seed)
+                input_val = $input.val();
+            else
+                $input.val(input_val);
+        });
+
         return $popup;
     }
 
