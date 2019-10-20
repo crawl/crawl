@@ -62,7 +62,7 @@ function ($, comm, client, options, focus_trap) {
             ev.preventDefault();
             ev.stopPropagation();
         }
-
+        ui_hotkey_handler(ev);
         maybe_prevent_server_from_handling_key(ev);
     }
 
@@ -183,6 +183,21 @@ function ($, comm, client, options, focus_trap) {
         }
     }
 
+    function ui_hotkey_handler(ev) {
+        if (ev.type === "click") {
+            comm.send_message("key", {
+                keycode: parseInt($(ev.currentTarget).attr("data-hotkey"), 10),
+            });
+        } else if (ev.type == "keydown") {
+            var $elem = $("#ui-stack [data-hotkey="+event.which+"]");
+            if ($elem.length === 1) {
+                $elem.click();
+                ev.preventDefault();
+                ev.stopPropagation();
+            }
+        }
+    }
+
     options.add_listener(function ()
     {
         var size = options.get("tile_font_crt_size");
@@ -203,7 +218,9 @@ function ($, comm, client, options, focus_trap) {
         .on("game_init.ui", function () {
         $(document).off("game_keydown.ui game_keypress.ui")
             .on("game_keydown.ui", ui_key_handler)
-            .on("game_keypress.ui", ui_key_handler);
+            .on("game_keypress.ui", ui_key_handler)
+            .off("click.ui", "[data-hotkey]")
+            .on("click.ui", "[data-hotkey]", ui_hotkey_handler);
         $(window).off("resize.ui").on("resize.ui", ui_resize_handler);
     });
 
