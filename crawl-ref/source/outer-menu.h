@@ -32,6 +32,8 @@ public:
 #endif
 
 protected:
+    bool can_take_focus() override { return true; };
+
     bool focused = false;
     bool active = false;
 #ifdef USE_TILE_LOCAL

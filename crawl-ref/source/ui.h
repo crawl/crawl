@@ -153,6 +153,8 @@ protected:
 
 class Widget : public enable_shared_from_this<Widget>
 {
+    friend struct UIRoot;
+
 public:
     enum Align {
         START = 0,
@@ -321,6 +323,22 @@ protected:
     {
         for_each_internal_child(forward<F>(cb));
         for_each_child(forward<F>(cb));
+    }
+
+    /**
+     * Whether widgets of this class should be included in the set of focusable
+     * widgets. Should return a constant boolean.
+     */
+    virtual bool can_take_focus() { return false; };
+
+    /**
+     * Whether a widget is currently focusable.
+     */
+    bool focusable()
+    {
+        // FIXME: does not take into account hierarchical visibility
+        // e.g. widget in currently hidden child of switcher
+        return is_visible();
     }
 
 private:
@@ -794,7 +812,6 @@ protected:
 
 class Layout : public Bin
 {
-    friend struct UIRoot;
 public:
     explicit Layout(shared_ptr<Widget> child);
 
@@ -854,6 +871,8 @@ public:
     };
 
 protected:
+    bool can_take_focus() override { return true; };
+
     bool m_checked = false;
 #ifdef USE_TILE_LOCAL
     bool m_hovered = false;
@@ -898,6 +917,8 @@ public:
     }
 
 protected:
+    bool can_take_focus() override { return true; };
+
 #ifdef USE_TILE_LOCAL
     int padding_size();
 #endif
