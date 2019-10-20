@@ -1400,9 +1400,10 @@ static int _lookup_prompt()
 #endif
         auto prompt_ui =
                 make_shared<ui::Text>(formatted_string::parse_string(prompt));
+        auto popup = make_shared<ui::Popup>(prompt_ui);
         bool done = false;
 
-        prompt_ui->on(ui::Widget::slots.event, [&](wm_event ev) {
+        popup->on(ui::Widget::slots.event, [&](wm_event ev) {
             if (ev.type == WME_KEYDOWN)
             {
                 ch = ev.key.keysym.sym;
@@ -1412,7 +1413,6 @@ static int _lookup_prompt()
         });
 
         mouse_control mc(MOUSE_MODE_MORE);
-        auto popup = make_shared<ui::Popup>(prompt_ui);
         ui::run_layout(move(popup), done);
     }
     else

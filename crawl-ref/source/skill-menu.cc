@@ -1840,8 +1840,9 @@ void skill_menu(int flag, int exp)
 
     bool done = false;
     auto skill_menu_ui = make_shared<UISkillMenu>(flag);
+    auto popup = make_shared<ui::Popup>(skill_menu_ui);
 
-    skill_menu_ui->on(Widget::slots.event, [&done, &skill_menu_ui](wm_event ev) {
+    popup->on(Widget::slots.event, [&done, &skill_menu_ui](wm_event ev) {
         if (ev.type != WME_KEYDOWN)
             return false;
         int keyn = ev.key.keysym.sym;
@@ -1929,7 +1930,6 @@ void skill_menu(int flag, int exp)
 #ifdef USE_TILE_WEB
     tiles_crt_popup show_as_popup("skills");
 #endif
-    auto popup = make_shared<ui::Popup>(skill_menu_ui);
     // XXX: this is, in theory, an arbitrary initial height. In practice,
     // there's a bug where an item in the MenuFreeform stays at its original
     // position even after skm.init is called again, crashing when the screen
