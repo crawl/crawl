@@ -854,6 +854,11 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
                     monster *am = monster_at(*ai);
                     if (am)
                         cancelled = stop_attack_prompt(am, false, *ai);
+                    else if (*ai == you.pos())
+                    {
+                        cancelled = !yesno("That is likely to hit you. Continue anyway?",
+                                           false, 'n');
+                    }
                 }
             }
         }
