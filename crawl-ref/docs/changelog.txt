@@ -1,4 +1,4 @@
-Stone Soup 0.24 (up to 6c54e258)
+Stone Soup 0.24 (up to 6afad29e)
 --------------------------------
 
 Highlights
@@ -115,8 +115,8 @@ Items
   - Tomahawks are renamed to boomerangs and always return.
   - Javelins always penetrate.
   - Steel and silver are merged into a single brand, called silver. Silver
-    ammunition applies 30% bonus damage to most targets and the old silver
-    damage bonus to silver-vulnerable targets.
+    ammunition applies the maximum of vorpal bonus damage and the old silver
+    damage bonus.
   - Poison, returning, penetration, and exploding are no longer available
     brands for tomahawks and javelins.
 
