@@ -1834,7 +1834,7 @@ static const mutation_def mut_data[] =
 
   {"You expend magic power (3 MP) to strengthen your wands.", "", ""},
   {"You feel your magical essence link to the dungeon's wands.", "", ""},
-  {"Your magical essence longer links to wands of the dungeon.", "", ""},
+  {"Your magical essence no longer links to wands of the dungeon.", "", ""},
 },
 
 { MUT_UNSKILLED, 0, 3, mutflag::bad, false,
