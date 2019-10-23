@@ -12,11 +12,13 @@ Branches, Environment
 ---------------------
 * Incremental pregeneration:
   - This mode generates the dungeon in a stable order for all games regardless
-    of the path taken by the player.
+    of the path taken by the player, meaning that the behavior of seeds for
+    online and offline games should now be the same.
   - Games using the same seed will see the same dungeon if they are
     incrementally pregenerated without requiring the long initial generation
-    time of a fully pregenerated game.
+    time of full pregeneration as introduced in 0.23.
   - Incremental pregeneration is the default mode for new games.
+  - Servers can now enable seed selection without heavy CPU cost.
 * A Trove map requiring many uses of digging has been removed.
 * Identification scrolls are no longer used as a potential Trove cost.
 * Transporters in vaults now correctly place in the Abyss.
@@ -105,7 +107,7 @@ Items
   - Piercer has been removed, its effect having been merged into Storm Bow.
 * Weapons with the holy wrath ego can now be cursed.
 * Randart rings no longer generate with both rCorr and *Corrode.
-* Throwing weapons have been simplified.
+* Throwing weapons have been streamlined.
   - Blowguns are removed, needles are replaced with throwing darts.
   - Dart effects scale with Throwing and Stealth skill.
   - Darts of sleep, paralysis, confusion are removed.
@@ -126,7 +128,7 @@ Lua
   monster.info class.
 * A new function 'defeat_mr()' to determine the chance that a given spell
   defeats a monster's magic resistance.
-* There is a basic seed explorer available in tests/seed_explorer.lua.
+* There is a basic seed explorer available in scripts/seed_explorer.lua.
 
 Monsters
 --------
