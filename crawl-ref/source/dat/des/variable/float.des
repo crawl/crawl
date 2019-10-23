@@ -3922,18 +3922,28 @@ xx...xx xxxxxx
   .@.
 ENDMAP
 
-NAME: cheibrodos_wizards_tower
-TAGS: no_item_gen no_monster_gen no_pool_fixup
-DEPTH: D:7-12, Elf
+NAME:   cheibrodos_wizards_tower
+TAGS:   no_pool_fixup
+DEPTH:  D:7-, Elf
 ORIENT: float
-: if you.branch() == "Elf" then
-MONS: deep elf sorcerer / deep elf annihilator
+ITEM:   robe good_item / cloak good_item / scarf / pair of boots good_item \
+        / pair of gloves good_item / hat good_item
+ITEM:   randbook w:40 / any magical staff
+: if you.in_branch("D") then
+MONS:   wizard / orc sorcerer, deep elf annihilator
+:   if you.depth() < 10 then
+NSUBST: " = 1 / 1... / ., - = d / *% / %$.. / .
+:   elseif you.depth() < 13 then
+NSUBST: " = 1 / 1. / 2... / ., - = de / |* / %$ / .
+:   else
+NSUBST: " = 1 / 2=1. / 2. / ., - = d / e / |* / %$ / .
+:   end
 : else
-MONS: wizard / orc sorcerer
+MONS:   deep elf sorcerer / deep elf annihilator
+NSUBST: " = 2=1 / 4=1. / ., - = d / e / 2=|* / *% / %$.. / .
 : end
 SHUFFLE: AB / CD / EF
-SUBST: A = ., B = W, CDEF = w
-NSUBST: " = 2:1 / 2=1., - = 1=*| / 2=*% / 2=%.
+SUBST:   A = ., B = W, CDEF = w
 MAP
  ....@....
 ..wwFEFww..
