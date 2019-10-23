@@ -103,6 +103,7 @@ protected:
     Region m_dirty_region;
     Stack m_root;
     bool m_needs_layout{false};
+    bool m_changed_layout_since_click = false;
 } ui_root;
 
 static stack<Region> scissor_stack;
@@ -1690,6 +1691,7 @@ void UIRoot::push_child(shared_ptr<Widget> ch, KeymapContext km)
     m_root.add_child(move(ch));
     m_needs_layout = true;
     keymap_stack.push_back(km);
+    m_changed_layout_since_click = true;
 #ifndef USE_TILE_LOCAL
     if (m_root.num_children() == 1)
     {
@@ -1705,6 +1707,7 @@ void UIRoot::pop_child()
     m_needs_layout = true;
     keymap_stack.pop_back();
     focus_stack.pop_back();
+    m_changed_layout_since_click = true;
 #ifndef USE_TILE_LOCAL
     if (m_root.num_children() == 0)
         clrscr();
@@ -1926,6 +1929,11 @@ bool UIRoot::on_event(const wm_event& event)
             }
 #endif
         case WME_MOUSEWHEEL:
+            if (event.type == WME_MOUSEBUTTONDOWN)
+                m_changed_layout_since_click = false;
+            else if (event.type == WME_MOUSEBUTTONUP)
+                if (m_changed_layout_since_click)
+                    break;
             if (!prev_hover_path.empty()) {
                 for (auto w = prev_hover_path.back(); w; w = w->_get_parent())
                     if (w->on_event(event))
