@@ -378,7 +378,7 @@ protected:
           killer(_killer), pow(_pow)
     {
     }
-    const actor *fixup_attacker(const actor *att);
+    const actor *fixup_attacker(const actor *a);
 
     string name;
     killer_type killer;
