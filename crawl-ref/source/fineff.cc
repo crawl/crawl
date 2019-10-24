@@ -581,15 +581,15 @@ void make_derived_undead_fineff::fire()
     }
 }
 
-const actor *mummy_death_curse_fineff::fixup_attacker(const actor *att)
+const actor *mummy_death_curse_fineff::fixup_attacker(const actor *a)
 {
-    if (att && att->is_monster() && att->as_monster()->friendly()
+    if (a && a->is_monster() && a->as_monster()->friendly()
         && !crawl_state.game_is_arena())
     {
         // Mummies are smart enough not to waste curses on summons or allies.
         return &you;
     }
-    return att;
+    return a;
 }
 
 void mummy_death_curse_fineff::fire()
