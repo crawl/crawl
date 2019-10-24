@@ -581,6 +581,17 @@ void make_derived_undead_fineff::fire()
     }
 }
 
+const actor *mummy_death_curse_fineff::fixup_attacker(const actor *att)
+{
+    if (att && att->is_monster() && att->as_monster()->friendly()
+        && !crawl_state.game_is_arena())
+    {
+        // Mummies are smart enough not to waste curses on summons or allies.
+        return &you;
+    }
+    return att;
+}
+
 void mummy_death_curse_fineff::fire()
 {
     if (pow <= 0)
@@ -614,13 +625,6 @@ void mummy_death_curse_fineff::fire()
     // Mummy was killed by a ballistomycete spore or ball lightning?
     if (!victim->alive())
         return;
-
-    // Mummies are smart enough not to waste curses on summons or allies.
-    if (victim->is_monster() && victim->as_monster()->friendly()
-        && !crawl_state.game_is_arena())
-    {
-        victim = &you;
-    }
 
     // Stepped from time?
     if (!in_bounds(victim->pos()))
