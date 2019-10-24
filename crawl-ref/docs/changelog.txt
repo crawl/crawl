@@ -1,4 +1,4 @@
-Stone Soup 0.24 (up to 6afad29e)
+Stone Soup 0.24 (20191024)
 --------------------------------
 
 Highlights
