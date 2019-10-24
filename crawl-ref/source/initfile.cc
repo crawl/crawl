@@ -1156,10 +1156,8 @@ void game_options::reset_options()
     dump_order.clear();
     new_dump_fields("header,hiscore,stats,misc,inventory,"
                     "skills,spells,overview,mutations,messages,"
-                    "screenshot,monlist,kills,notes");
-    if (Version::ReleaseType == VER_ALPHA)
-        new_dump_fields("vaults");
-    new_dump_fields("skill_gains,action_counts");
+                    "screenshot,monlist,kills,notes,vaults",
+                    "skill_gains,action_counts");
     // Currently enabled by default for testing in trunk.
     if (Version::ReleaseType == VER_ALPHA)
         new_dump_fields("xp_by_level");
