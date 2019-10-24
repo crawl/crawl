@@ -374,9 +374,12 @@ public:
     }
 protected:
     mummy_death_curse_fineff(const actor * attack, string _name, killer_type _killer, int _pow)
-        : final_effect(attack, 0, coord_def()), name(_name), killer(_killer), pow(_pow)
+        : final_effect(fixup_attacker(attack), 0, coord_def()), name(_name),
+          killer(_killer), pow(_pow)
     {
     }
+    const actor *fixup_attacker(const actor *att);
+
     string name;
     killer_type killer;
     int pow;

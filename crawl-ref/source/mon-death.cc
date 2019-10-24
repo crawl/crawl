@@ -2475,8 +2475,11 @@ item_def* monster_die(monster& mons, killer_type killer,
     }
     else if (!mons.is_summoned() && mummy_curse_power(mons.type) > 0)
     {
+        // TODO: set attacker better? (Player attacker is handled by checking
+        // killer when running the fineff.)
         mummy_death_curse_fineff::schedule(
-                actor_by_mid(killer_index),
+                invalid_monster_index(killer_index)
+                                            ? nullptr : &menv[killer_index],
                 mons.name(DESC_A),
                 killer,
                 mummy_curse_power(mons.type));
