@@ -119,7 +119,7 @@ endif
 CFWARN := 
 CFWARN_L := -Wall -Wformat-security -Wundef
 
-DEFINES := $(EXTERNAL_DEFINES)
+DEFINES := -DTOURNEY='"0.24"' $(EXTERNAL_DEFINES)
 
 ifndef ANDROID
 LDFLAGS :=
