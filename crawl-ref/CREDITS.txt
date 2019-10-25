@@ -38,6 +38,7 @@
     Marc H. Thoben (crawl.develz.org)
     dplusplus (lazy-life.ddo.jp)
     floraline (crawl.kelbi.org)
+    Namanix (crawl.xtahua.com)
   and past:
     Jan Anders Bremer (crawl.lantea.net)
     Aleksi Miikkael Luukkonen (crawl.lantea.net)
@@ -45,6 +46,7 @@
     sd1989 (kr.dobrazupa.org)
     phunktion (crawl.somatika.net)
     ZiBuDo (crawl.jorgrun.rocks)
+    Medar, Zkyp (crawl.xtahua.com)
 
 * The members of various usability testing teams from the department of
   Information Processing Science in Oulu University:
@@ -71,6 +73,7 @@
 
 * Members of the Dungeon Crawl community who have contributed to Dungeon
   Crawl Stone Soup:
+    achuah
     Brent Adams
     Mike Adams
     Aj Adamson
@@ -228,6 +231,7 @@
     mgdelmonte
     mikee
     Andrew Minton
+    Byrel Mitchell
     Yer Mivvaggah
     Shawn M Moore
     Muffindrake
@@ -280,6 +284,7 @@
     Will Rogers
     Nate Rook
     David Rose
+    runrin
     Risto Saarelma
     Sebastian Salman
     Sandman25
@@ -317,6 +322,7 @@
     William Tanksley, Jr.
     Tedronai
     Chris Terenzi
+    theJollySin
     Jared 'Twinge' Tinney
     Matt Titus
     Tommy
@@ -329,6 +335,7 @@
     Thomas Willem
     Evan Williams
     Jeremey Wilson
+    wjchen
     ximxim
     Yelve Yakut
     Edward Z. Yang
