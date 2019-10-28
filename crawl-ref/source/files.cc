@@ -3235,7 +3235,11 @@ void save_ghosts(const vector<ghost_demon> &ghosts, bool force, bool use_store)
         return;
     }
 
-    vector<ghost_demon> leftovers = _update_permastore(ghosts);
+    vector<ghost_demon> leftovers;
+    if (use_store)
+        leftovers = _update_permastore(ghosts);
+    else
+        leftovers = ghosts;
     if (leftovers.size() == 0)
         return;
 
