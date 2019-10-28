@@ -121,7 +121,7 @@ bool read_urandom(char *buf, int len)
 #ifdef TARGET_OS_WINDOWS
 # ifndef UNIX
 // should check the presence of alarm() instead
-static void CALLBACK _abortion(PVOID dummy, BOOLEAN timedout)
+static void CALLBACK _abortion(PVOID /*dummy*/, BOOLEAN /*timedout*/)
 {
     TerminateProcess(GetCurrentProcess(), 0);
 }
@@ -518,6 +518,7 @@ FILE *fopen_u(const char *path, const char *mode)
 int mkdir_u(const char *pathname, mode_t mode)
 {
 #ifdef TARGET_OS_WINDOWS
+    UNUSED(mode);
     return _wmkdir(OUTW(pathname));
 #else
     return mkdir(OUTS(pathname), mode);

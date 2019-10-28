@@ -978,7 +978,7 @@ static void _spellcasting_side_effects(spell_type spell, god_type god,
 }
 
 #ifdef WIZARD
-static void _try_monster_cast(spell_type spell, int powc,
+static void _try_monster_cast(spell_type spell, int /*powc*/,
                               dist &spd, bolt &beam)
 {
     if (monster_at(you.pos()))

@@ -703,6 +703,8 @@ recite_eligibility zin_check_recite_to_single_monster(const monster *mon,
             elig += '0' + eligibility[i];
         dprf("Eligibility: %s", elig.c_str());
     }
+#else
+    UNUSED(quiet);
 #endif
 
     bool maybe_eligible = false;
@@ -1059,7 +1061,7 @@ bool zin_recite_to_single_monster(const coord_def& where)
         break;
 
     case zin_eff::confuse:
-        if (!mon->check_clarity(false)
+        if (!mon->check_clarity()
             && mon->add_ench(mon_enchant(ENCH_CONFUSION, degree, &you,
                              (degree + random2(spellpower)) * BASELINE_DELAY)))
         {
@@ -5804,7 +5806,7 @@ bool wu_jian_do_wall_jump(coord_def targ, bool ability)
     move_player_to_grid(wall_jump_landing_spot, false);
     if (!ability)
         count_action(CACT_INVOKE, ABIL_WU_JIAN_WALLJUMP);
-    wu_jian_wall_jump_effects(initial_position);
+    wu_jian_wall_jump_effects();
 
     if (ability)
     {

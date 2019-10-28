@@ -109,6 +109,8 @@ bool flood_find<fgrd, bound_check>::path_flood(
     const coord_def &c,
     const coord_def &dc)
 {
+    UNUSED(c); // XXX: why is this parameter unused?
+
     if (!bcheck(dc))
     {
         if (want_exit)

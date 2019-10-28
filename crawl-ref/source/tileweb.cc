@@ -2016,16 +2016,16 @@ void TilesFramework::place_cursor(cursor_type type, const coord_def &gc)
     }
 }
 
-void TilesFramework::clear_text_tags(text_tag_type type)
+void TilesFramework::clear_text_tags(text_tag_type /*type*/)
 {
 }
 
-void TilesFramework::add_text_tag(text_tag_type type, const string &tag,
-                                  const coord_def &gc)
+void TilesFramework::add_text_tag(text_tag_type /*type*/, const string &/*tag*/,
+                                  const coord_def &/*gc*/)
 {
 }
 
-void TilesFramework::add_text_tag(text_tag_type type, const monster_info& mon)
+void TilesFramework::add_text_tag(text_tag_type /*type*/, const monster_info& /*mon*/)
 {
 }
 

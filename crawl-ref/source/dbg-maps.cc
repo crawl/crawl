@@ -296,7 +296,7 @@ void mapstat_report_map_success(const string &map_name)
     success_count[map_name]++;
 }
 
-void mapstat_report_error(const map_def &map, const string &err)
+void mapstat_report_error(const map_def &/*map*/, const string &err)
 {
     last_error = err;
 }

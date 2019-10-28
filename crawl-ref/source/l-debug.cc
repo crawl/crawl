@@ -69,14 +69,12 @@ LUAFN(debug_goto_place)
     return 0;
 }
 
-LUAFN(debug_dungeon_setup)
-{
-    initial_dungeon_setup();
-    return 0;
-}
+LUAWRAP(debug_dungeon_setup, initial_dungeon_setup())
 
 LUAFN(debug_enter_dungeon)
 {
+    UNUSED(ls);
+
     init_level_connectivity();
 
     you.where_are_you = BRANCH_DUNGEON;
@@ -91,6 +89,7 @@ LUAWRAP(debug_up_stairs, up_stairs(DNGN_STONE_STAIRS_UP_I))
 
 LUAFN(debug_flush_map_memory)
 {
+    UNUSED(ls);
     dgn_flush_map_memory();
     init_level_connectivity();
     return 0;
@@ -111,17 +110,14 @@ LUAFN(debug_generate_level)
 
 LUAFN(debug_reveal_mimics)
 {
+    UNUSED(ls);
     for (rectangle_iterator ri(1); ri; ++ri)
         if (mimic_at(*ri))
             discover_mimic(*ri);
     return 0;
 }
 
-LUAFN(debug_los_changed)
-{
-    los_changed();
-    return 0;
-}
+LUAWRAP(debug_los_changed, los_changed())
 
 LUAFN(debug_dump_map)
 {
@@ -142,6 +138,7 @@ LUAFN(debug_vault_names)
 
 LUAFN(_debug_test_explore)
 {
+    UNUSED(ls);
 #ifdef WIZARD
     debug_test_explore();
 #endif
@@ -187,6 +184,8 @@ LUAFN(debug_bouncy_beam)
 // If menv[] is full, dismiss all monsters not near the player.
 LUAFN(debug_cull_monsters)
 {
+    UNUSED(ls);
+
     // At least one empty space in menv
     for (const auto &mons : menv_real)
         if (mons.type == MONS_NO_MONSTER)
@@ -209,6 +208,8 @@ LUAFN(debug_cull_monsters)
 
 LUAFN(debug_dismiss_adjacent)
 {
+    UNUSED(ls);
+
     for (adjacent_iterator ai(you.pos()); ai; ++ai)
     {
         monster* mon = monster_at(*ai);
@@ -225,6 +226,8 @@ LUAFN(debug_dismiss_adjacent)
 
 LUAFN(debug_dismiss_monsters)
 {
+    UNUSED(ls);
+
     for (monster_iterator mi; mi; ++mi)
     {
         if (mi)
@@ -273,18 +276,21 @@ static FixedBitVector<NUM_MONSTERS> saved_uniques;
 
 LUAFN(debug_save_uniques)
 {
+    UNUSED(ls);
     saved_uniques = you.unique_creatures;
     return 0;
 }
 
 LUAFN(debug_reset_uniques)
 {
+    UNUSED(ls);
     you.unique_creatures.reset();
     return 0;
 }
 
 LUAFN(debug_randomize_uniques)
 {
+    UNUSED(ls);
     you.unique_creatures.reset();
     for (monster_type mt = MONS_0; mt < NUM_MONSTERS; ++mt)
     {
@@ -340,11 +346,7 @@ LUAFN(debug_viewwindow)
     return 0;
 }
 
-LUAFN(debug_seen_monsters_react)
-{
-    seen_monsters_react();
-    return 0;
-}
+LUAWRAP(debug_seen_monsters_react, seen_monsters_react())
 
 static const char* disablements[] =
 {

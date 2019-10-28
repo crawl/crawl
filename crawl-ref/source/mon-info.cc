@@ -1750,8 +1750,9 @@ bool monster_info::has_spells() const
 }
 
 /// What hd does this monster cast spells with? May vary from actual HD.
-int monster_info::spell_hd() const
+int monster_info::spell_hd(spell_type spell) const
 {
+    UNUSED(spell);
     if (!props.exists(SPELL_HD_KEY))
         return hd;
     return props[SPELL_HD_KEY].get_int();

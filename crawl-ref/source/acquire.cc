@@ -1221,7 +1221,7 @@ static string _why_reject(const item_def &item, int agent)
 
 int acquirement_create_item(object_class_type class_wanted,
                             int agent, bool quiet,
-                            const coord_def &pos, bool debug)
+                            const coord_def &pos)
 {
     ASSERT(class_wanted != OBJ_RANDOM);
 
@@ -1478,7 +1478,7 @@ int acquirement_create_item(object_class_type class_wanted,
 }
 
 bool acquirement(object_class_type class_wanted, int agent,
-                 bool quiet, int* item_index, bool debug, bool known_scroll)
+                 bool quiet, int* item_index, bool known_scroll)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -1580,7 +1580,7 @@ bool acquirement(object_class_type class_wanted, int agent,
     }
 
     *item_index = acquirement_create_item(class_wanted, agent, quiet,
-                                          you.pos(), debug);
+                                          you.pos());
     ASSERT(*item_index == NON_ITEM || !god_hates_item(mitm[*item_index]));
 
     return true;

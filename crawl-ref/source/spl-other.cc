@@ -428,7 +428,7 @@ static int _intoxicate_monsters(coord_def where, int pow)
     if (mons == nullptr
         || mons_intel(*mons) < I_HUMAN
         || !(mons->holiness() & MH_NATURAL)
-        || mons->check_clarity(false)
+        || mons->check_clarity()
         || monster_resists_this_poison(*mons))
     {
         return 0;

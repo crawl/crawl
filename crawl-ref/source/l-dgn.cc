@@ -1740,11 +1740,7 @@ LUAFN(dgn_fill_grd_area)
     return 0;
 }
 
-LUAFN(dgn_apply_tide)
-{
-    shoals_apply_tides(0, true, true);
-    return 0;
-}
+LUAWRAP(dgn_apply_tide, shoals_apply_tides(0, true))
 
 const struct luaL_reg dgn_dlib[] =
 {

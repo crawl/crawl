@@ -74,7 +74,7 @@ spret ice_armour(int pow, bool fail)
     return spret::success;
 }
 
-spret deflection(int pow, bool fail)
+spret deflection(int /*pow*/, bool fail)
 {
     fail_check();
     you.attribute[ATTR_DEFLECT_MISSILES] = 1;

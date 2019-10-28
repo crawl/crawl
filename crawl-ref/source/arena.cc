@@ -1151,6 +1151,8 @@ bool arena_veto_random_monster(monster_type type)
 bool arena_veto_place_monster(const mgen_data &mg, bool first_band_member,
                               const coord_def& pos)
 {
+    UNUSED(pos);
+
     // If the first band member makes it past the summon throttle cut,
     // let all of the rest of its band in too regardless of the summon
     // throttle.

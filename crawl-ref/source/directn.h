@@ -45,7 +45,7 @@ public:
     virtual void clear_redraw()  { return; }
 
     // Update the prompt shown at top.
-    virtual void update_top_prompt(string* p_top_prompt) {}
+    virtual void update_top_prompt(string*) {}
 
     // Add relevant descriptions to the target status.
     virtual vector<string> get_monster_desc(const monster_info& mi);

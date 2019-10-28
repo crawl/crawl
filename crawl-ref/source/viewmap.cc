@@ -449,6 +449,8 @@ class feature_list
         group grp = get_group(gc);
         if (grp != G_NONE)
             data[grp].push_back(_get_feat_glyph(gc));
+#else
+        UNUSED(gc);
 #endif
     }
 

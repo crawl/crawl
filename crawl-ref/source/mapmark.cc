@@ -85,6 +85,7 @@ void map_marker::read(reader &inf)
 
 string map_marker::property(const string &pname) const
 {
+    UNUSED(pname);
     return "";
 }
 
@@ -560,7 +561,7 @@ map_marker *map_wiz_props_marker::read(reader &inf, map_marker_type)
     return mapf;
 }
 
-map_marker *map_wiz_props_marker::parse(const string &s, const string &)
+map_marker *map_wiz_props_marker::parse(const string &, const string &)
 {
     throw bad_map_marker("map_wiz_props_marker::parse() not implemented");
 }
@@ -1185,6 +1186,7 @@ vector<map_marker*> map_markers::get_markers_at(const coord_def &c)
 string map_markers::property_at(const coord_def &c, map_marker_type type,
                                 const string &key)
 {
+    UNUSED(type);
     auto els = markers.equal_range(c);
     for (auto i = els.first; i != els.second; ++i)
     {

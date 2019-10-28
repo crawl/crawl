@@ -115,7 +115,7 @@ private:
 
 private:
     void init();
-    string get_default_cause(bool attribute_to_user) const;
+    string get_default_cause() const;
 
     bool neither_end_silenced();
 

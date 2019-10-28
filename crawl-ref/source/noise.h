@@ -48,6 +48,7 @@ struct noise_t
           noise_id(-1),
           noise_producer_mid(_noise_producer_mid)
     {
+        UNUSED(_flags);
     }
 
     bool silent() const
@@ -127,8 +128,7 @@ private:
                                       const coord_def &next_position);
     void apply_noise_effects(const coord_def &pos,
                              int noise_intensity_millis,
-                             const noise_t &noise,
-                             int noise_travel_distance);
+                             const noise_t &noise);
 
     coord_def noise_perceived_position(actor *act,
                                        const coord_def &affected_position,

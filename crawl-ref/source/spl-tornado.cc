@@ -104,7 +104,7 @@ bool WindSystem::has_wind(coord_def c)
     return wind(c - org);
 }
 
-static void _set_tornado_durations(int powc)
+static void _set_tornado_durations()
 {
     int dur = 60;
     you.duration[DUR_TORNADO] = dur;
@@ -115,7 +115,7 @@ static void _set_tornado_durations(int powc)
     }
 }
 
-spret cast_tornado(int powc, bool fail)
+spret cast_tornado(int /*powc*/, bool fail)
 {
     bool friendlies = false;
     for (radius_iterator ri(you.pos(), TORNADO_RADIUS, C_SQUARE); ri; ++ri)
@@ -149,7 +149,7 @@ spret cast_tornado(int powc, bool fail)
         merfolk_stop_swimming();
 
     you.props["tornado_since"].get_int() = you.elapsed_time;
-    _set_tornado_durations(powc);
+    _set_tornado_durations();
     if (you.species == SP_TENGU)
         you.redraw_evasion = true;
 

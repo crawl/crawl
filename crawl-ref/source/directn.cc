@@ -1103,7 +1103,8 @@ void direction_chooser::set_target(const coord_def& new_target)
 
 static void _draw_ray_cell(coord_def p, coord_def target, aff_type aff)
 {
- #ifdef USE_TILE
+    UNUSED(target);
+#ifdef USE_TILE
     tile_place_ray(p, aff);
 #endif
 #ifndef USE_TILE_LOCAL

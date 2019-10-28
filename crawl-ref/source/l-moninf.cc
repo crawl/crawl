@@ -632,7 +632,7 @@ LUAFN(moninf_get_desc)
         // full description
         describe_info inf;
         bool has_stat_desc;
-        get_monster_db_desc(*mi, inf, has_stat_desc, false);
+        get_monster_db_desc(*mi, inf, has_stat_desc);
         lua_pushstring(ls, inf.body.str().c_str());
     }
     else

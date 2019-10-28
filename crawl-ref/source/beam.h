@@ -232,8 +232,7 @@ private:
     void emit_message(const char* msg);
 
     int apply_AC(const actor* victim, int hurted);
-    bool determine_damage(monster* mon, int& preac, int& postac, int& final,
-                          vector<string> &messages);
+    bool determine_damage(monster* mon, int& preac, int& postac, int& final);
 
     // Functions which handle actually affecting things. They all
     // operate on the beam's current position (i.e., whatever pos()

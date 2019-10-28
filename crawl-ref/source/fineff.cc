@@ -113,7 +113,7 @@ bool shock_serpent_discharge_fineff::mergeable(const final_effect &fe) const
     return o && def == o->def;
 }
 
-bool delayed_action_fineff::mergeable(const final_effect &fe) const
+bool delayed_action_fineff::mergeable(const final_effect &) const
 {
     return false;
 }

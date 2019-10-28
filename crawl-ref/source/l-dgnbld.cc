@@ -146,7 +146,7 @@ static bool _valid_coord(lua_State *ls, map_lines &lines, int x, int y, bool err
 
 // Does what fill_area did, but here, so that it can be used through
 // multiple functions (including make_box).
-static int _fill_area(lua_State *ls, map_lines &lines, int x1, int y1, int x2, int y2, char fill)
+static int _fill_area(lua_State */*ls*/, map_lines &lines, int x1, int y1, int x2, int y2, char fill)
 {
     for (int y = y1; y <= y2; ++y)
         for (int x = x1; x <= x2; ++x)
@@ -2269,12 +2269,14 @@ LUAFN(dgn_farthest_from)
 
 LUAFN(dgn_layout_basic)
 {
+    UNUSED(ls);
     dgn_build_basic_level();
     return 0;
 }
 
 LUAFN(dgn_layout_bigger_room)
 {
+    UNUSED(ls);
     dgn_build_bigger_room_level();
     return 0;
 }
@@ -2288,12 +2290,14 @@ LUAFN(dgn_layout_chaotic_city)
 
 LUAFN(dgn_layout_shoals)
 {
+    UNUSED(ls);
     dgn_build_shoals_level();
     return 0;
 }
 
 LUAFN(dgn_layout_swamp)
 {
+    UNUSED(ls);
     dgn_build_swamp_level();
     return 0;
 }

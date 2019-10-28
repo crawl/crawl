@@ -132,6 +132,8 @@ LUAFN(crawl_dpr)
     const char *text = luaL_checkstring(ls, 1);
     if (crawl_state.io_inited)
         dprf("%s", text);
+#else
+    UNUSED(ls);
 #endif
     return 0;
 }
@@ -1475,11 +1477,7 @@ LUAFN(_crawl_milestone)
  * @within dlua
  * @function redraw_view
  */
-LUAFN(_crawl_redraw_view)
-{
-    viewwindow();
-    return 0;
-}
+LUAWRAP(_crawl_redraw_view, viewwindow())
 
 /*** Redraw the player stats.
  * You probably want @{redraw_screen} unless you specifically want only the
@@ -1489,6 +1487,8 @@ LUAFN(_crawl_redraw_view)
  */
 LUAFN(_crawl_redraw_stats)
 {
+    UNUSED(ls);
+
     you.wield_change         = true;
     you.redraw_title         = true;
     you.redraw_quiver        = true;
@@ -1529,7 +1529,7 @@ LUAFN(_crawl_millis)
 #endif
     return 1;
 }
-static string _crawl_make_name(lua_State *ls)
+static string _crawl_make_name(lua_State */*ls*/)
 {
     // A quick wrapper around itemname:make_name.
     return make_name();

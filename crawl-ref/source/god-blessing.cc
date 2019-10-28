@@ -551,6 +551,7 @@ static bool _tso_blessing_friendliness(monster* mon)
 
 static void _beogh_reinf_callback(const mgen_data &mg, monster *&mon, int placed)
 {
+    UNUSED(placed);
     ASSERT(mg.god == GOD_BEOGH);
 
     // Beogh tries a second time to place reinforcements.

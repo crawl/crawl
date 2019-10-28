@@ -710,7 +710,7 @@ static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
     return false;
 }
 
-static void _throw_noise(actor* act, const bolt &pbolt, const item_def &ammo)
+static void _throw_noise(actor* act, const item_def &ammo)
 {
     ASSERT(act); // XXX: change to actor &act
     const item_def* launcher = act->weapon();
@@ -1008,7 +1008,7 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
         hit = !pbolt.hit_verb.empty();
 
         // The item can be destroyed before returning.
-        if (returning && thrown_object_destroyed(&item, pbolt.target))
+        if (returning && thrown_object_destroyed(&item))
             returning = false;
     }
 
@@ -1035,7 +1035,7 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
             canned_msg(MSG_EMPTY_HANDED_NOW);
     }
 
-    _throw_noise(&you, pbolt, thrown);
+    _throw_noise(&you, thrown);
 
     // ...any monster nearby can see that something has been thrown, even
     // if it didn't make any noise.
@@ -1151,7 +1151,7 @@ bool mons_throw(monster* mons, bolt &beam, int msl, bool teleport)
         mpr(msg);
     }
 
-    _throw_noise(mons, beam, item);
+    _throw_noise(mons, item);
 
     beam.drop_item = !returning;
 
@@ -1171,7 +1171,7 @@ bool mons_throw(monster* mons, bolt &beam, int msl, bool teleport)
         beam.fire();
 
         // The item can be destroyed before returning.
-        if (returning && thrown_object_destroyed(&item, beam.target))
+        if (returning && thrown_object_destroyed(&item))
             returning = false;
     }
 
@@ -1206,7 +1206,7 @@ bool mons_throw(monster* mons, bolt &beam, int msl, bool teleport)
     return true;
 }
 
-bool thrown_object_destroyed(item_def *item, const coord_def& where)
+bool thrown_object_destroyed(item_def *item)
 {
     ASSERT(item != nullptr);
 

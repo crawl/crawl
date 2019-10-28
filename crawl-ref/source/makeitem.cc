@@ -25,7 +25,7 @@
 #include "stepdown.h"
 #include "stringutil.h"
 
-int create_item_named(string name, coord_def p, string *error)
+int create_item_named(string name, coord_def pos, string *error)
 {
     trim_string(name);
 
@@ -39,7 +39,7 @@ int create_item_named(string name, coord_def p, string *error)
     }
 
     item_spec ispec = ilist.get_item(0);
-    int item = dgn_place_item(ispec, you.pos());
+    int item = dgn_place_item(ispec, pos);
     if (item != NON_ITEM)
         link_items();
     else if (error)
@@ -286,7 +286,7 @@ brand_type determine_weapon_brand(const item_def& item, int item_level)
 
 // Reject brands which are outright bad for the item. Unorthodox combinations
 // are ok, since they can happen on randarts.
-bool is_weapon_brand_ok(int type, int brand, bool strict)
+bool is_weapon_brand_ok(int type, int brand, bool /*strict*/)
 {
     item_def item;
     item.base_type = OBJ_WEAPONS;
@@ -772,13 +772,10 @@ static bool _try_make_armour_artefact(item_def& item, int force_type,
  * Generate an appropriate ego for a type of armour.
  *
  * @param item          The type of armour in question.
- * @param item_level    A 'level' of item to generate.
- *                      Only currently used for robes.
  * @return              An ego appropriate to the item type.
  *                      May be SPARM_NORMAL.
  */
-static special_armour_type _generate_armour_type_ego(armour_type type,
-                                                     int item_level)
+static special_armour_type _generate_armour_type_ego(armour_type type)
 {
     // TODO: move this into data
     switch (type)
@@ -868,20 +865,17 @@ static special_armour_type _generate_armour_type_ego(armour_type type,
  * Generate an appropriate ego for a piece of armour.
  *
  * @param item          The item in question.
- * @param item_level    A 'level' of item to generate.
  * @return              The item's current ego, if it already has one;
  *                      otherwise, an ego appropriate to the item.
  *                      May be SPARM_NORMAL.
  */
-static special_armour_type _generate_armour_ego(const item_def& item,
-                                                int item_level)
+static special_armour_type _generate_armour_ego(const item_def& item)
 {
     if (item.brand != SPARM_NORMAL)
         return static_cast<special_armour_type>(item.brand);
 
     const special_armour_type ego
-        = _generate_armour_type_ego(static_cast<armour_type>(item.sub_type),
-                                    item_level);
+        = _generate_armour_type_ego(static_cast<armour_type>(item.sub_type));
 
     ASSERT(is_armour_brand_ok(item.sub_type, ego, true));
     return ego;
@@ -1172,8 +1166,7 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
         if (!no_ego && (forced_ego || one_chance_in(4)))
         {
             // Brand is set as for "good" items.
-            set_item_ego_type(item, OBJ_ARMOUR,
-                _generate_armour_ego(item, 2 + 2 * env.absdepth0));
+            set_item_ego_type(item, OBJ_ARMOUR, _generate_armour_ego(item));
         }
 
         item.plus -= 1 + random2(3);
@@ -1183,10 +1176,7 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
     }
     // Scarves always get an ego.
     else if (item.sub_type == ARM_SCARF)
-    {
-        set_item_ego_type(item, OBJ_ARMOUR,
-                          _generate_armour_ego(item, item_level));
-    }
+        set_item_ego_type(item, OBJ_ARMOUR, _generate_armour_ego(item));
     else if ((forced_ego || item.sub_type == ARM_HAT
                     || x_chance_in_y(51 + item_level, 250))
                 && !item.is_mundane() || force_good)
@@ -1203,8 +1193,7 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
         if (!no_ego && x_chance_in_y(31 + item_level, 350))
         {
             // ...an ego item, in fact.
-            set_item_ego_type(item, OBJ_ARMOUR,
-                              _generate_armour_ego(item, item_level));
+            set_item_ego_type(item, OBJ_ARMOUR, _generate_armour_ego(item));
 
             if (get_armour_ego_type(item) == SPARM_PONDEROUSNESS)
                 item.plus += 3 + random2(8);
@@ -1726,7 +1715,7 @@ static void _generate_jewellery_item(item_def& item, bool allow_uniques,
     }
 }
 
-static void _generate_misc_item(item_def& item, int force_type, int force_ego)
+static void _generate_misc_item(item_def& item, int force_type)
 {
     if (force_type != OBJ_RANDOM)
         item.sub_type = force_type;
@@ -2024,7 +2013,7 @@ int items(bool allow_uniques,
         break;
 
     case OBJ_MISCELLANY:
-        _generate_misc_item(item, force_type, force_ego);
+        _generate_misc_item(item, force_type);
         break;
 
     // that is, everything turns to gold if not enumerated above, so ... {dlb}
@@ -2084,7 +2073,7 @@ void reroll_brand(item_def &item, int item_level)
         item.brand = _determine_missile_brand(item, item_level);
         break;
     case OBJ_ARMOUR:
-        item.brand = _generate_armour_ego(item, item_level);
+        item.brand = _generate_armour_ego(item);
         break;
     default:
         die("can't reroll brands of this type");

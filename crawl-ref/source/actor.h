@@ -139,14 +139,14 @@ public:
                              bool ignore_transform = false,
                              bool quiet = true) const = 0;
 
-    virtual void make_hungry(int nutrition, bool silent = true)
+    virtual void make_hungry(int /*nutrition*/, bool /*silent*/ = true)
     {
     }
 
-    virtual void lose_energy(energy_use_type, int div = 1, int mult = 1)
+    virtual void lose_energy(energy_use_type, int /*div*/ = 1, int /*mult*/ = 1)
     {
     }
-    virtual void gain_energy(energy_use_type, int div = 1, int mult = 1)
+    virtual void gain_energy(energy_use_type, int /*div*/ = 1, int /*mult*/ = 1)
     {
     }
 
@@ -162,7 +162,7 @@ public:
 
     virtual bool fumbles_attack() = 0;
 
-    virtual bool fights_well_unarmed(int heavy_armour_penalty)
+    virtual bool fights_well_unarmed(int /*heavy_armour_penalty*/)
     {
         return true;
     }
@@ -227,7 +227,7 @@ public:
     virtual void weaken(actor *attacker, int pow) = 0;
     virtual void expose_to_element(beam_type element, int strength = 0,
                                    bool slow_cold_blood = true) = 0;
-    virtual void drain_stat(stat_type stat, int amount) { }
+    virtual void drain_stat(stat_type /*stat*/, int /*amount*/) { }
     virtual void splash_with_acid(const actor* evildoer, int acid_strength = -1,
                                   bool allow_corrosion = true,
                                   const char* hurt_msg = nullptr) = 0;
@@ -382,7 +382,7 @@ public:
 
     virtual bool handle_trap();
 
-    virtual void god_conduct(conduct_type thing_done, int level) { }
+    virtual void god_conduct(conduct_type /*thing_done*/, int /*level*/) { }
 
     virtual bool incapacitated() const
     {
@@ -400,7 +400,7 @@ public:
     virtual bool has_spell(spell_type spell) const = 0;
 
     virtual bool     will_trigger_shaft() const;
-    virtual level_id shaft_dest(bool known) const;
+    virtual level_id shaft_dest() const;
     virtual bool     do_shaft() = 0;
 
     coord_def position;

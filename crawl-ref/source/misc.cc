@@ -155,8 +155,7 @@ int counted_monster_list::count()
     return nmons;
 }
 
-string counted_monster_list::describe(description_level_type desc,
-                                      bool force_article)
+string counted_monster_list::describe(description_level_type desc)
 {
     string out;
 

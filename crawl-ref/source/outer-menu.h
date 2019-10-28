@@ -62,7 +62,7 @@ public:
     virtual void _allocate_region() override;
     virtual bool on_event(const wm_event& event) override;
 
-    virtual shared_ptr<Widget> get_child_at_offset(int x, int y) override {
+    virtual shared_ptr<Widget> get_child_at_offset(int, int) override {
         return m_root;
     }
 

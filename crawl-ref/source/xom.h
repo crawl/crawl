@@ -99,7 +99,7 @@ xom_event_type xom_maybe_reverts_banishment(bool xom_banished = true,
 void xom_check_lost_item(const item_def& item);
 void xom_check_destroyed_item(const item_def& item);
 void xom_death_message(const kill_method_type killed_by);
-bool xom_saves_your_life(const kill_method_type death_type, const char *aux);
+bool xom_saves_your_life(const kill_method_type death_type);
 void xom_new_level_noise_or_stealth();
 
 string xom_effect_to_name(xom_event_type effect);

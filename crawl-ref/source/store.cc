@@ -684,15 +684,14 @@ CrawlHashTable &CrawlStoreValue::new_table()
 ////////////////////////////////////////////////////////////////
 // Setup a new vector with the given flags and/or type; assert if
 // a vector already exists.
-CrawlVector &CrawlStoreValue::new_vector(store_flags _flags,
-                                         vec_size max_size)
+CrawlVector &CrawlStoreValue::new_vector(store_flags _flags)
 {
-    return new_vector(SV_NONE, flags, max_size);
+    UNUSED(_flags); // XXX: is ignoring the parameter _flags intentional?
+    return new_vector(SV_NONE, flags);
 }
 
 CrawlVector &CrawlStoreValue::new_vector(store_val_type _type,
-                                         store_flags _flags,
-                                         vec_size _max_size)
+                                         store_flags _flags)
 {
 #ifdef DEBUG
     CrawlVector* old_vec = static_cast<CrawlVector*>(val.ptr);

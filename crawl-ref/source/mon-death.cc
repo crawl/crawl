@@ -927,7 +927,7 @@ static void _jiyva_died()
 
 void fire_monster_death_event(monster* mons,
                               killer_type killer,
-                              int i, bool polymorph)
+                              bool polymorph)
 {
     int type = mons->type;
 
@@ -1146,7 +1146,7 @@ static void _setup_inner_flame_explosion(bolt & beam, const monster& origin,
 }
 
 static bool _explode_monster(monster* mons, killer_type killer,
-                             int killer_index, bool pet_kill, bool wizard)
+                             bool pet_kill, bool wizard)
 {
     if (mons->hit_points > 0 || mons->hit_points <= -15 || wizard
         || killer == KILL_RESET || killer == KILL_DISMISSED
@@ -1888,7 +1888,7 @@ item_def* monster_die(monster& mons, killer_type killer,
         || mons.has_ench(ENCH_INNER_FLAME))
     {
         did_death_message =
-            _explode_monster(&mons, killer, killer_index, pet_kill, wizard);
+            _explode_monster(&mons, killer, pet_kill, wizard);
     }
     else if (mons.type == MONS_FULMINANT_PRISM && mons.prism_charge == 0)
     {
@@ -2561,7 +2561,7 @@ item_def* monster_die(monster& mons, killer_type killer,
     }
 
     mons_remove_from_grid(mons);
-    fire_monster_death_event(&mons, killer, killer_index, false);
+    fire_monster_death_event(&mons, killer, false);
 
     if (crawl_state.game_is_arena())
         arena_monster_died(&mons, killer, killer_index, silent, corpse);

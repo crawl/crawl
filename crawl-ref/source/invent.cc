@@ -632,7 +632,7 @@ bool InvEntry::get_tiles(vector<tile_def>& tileset) const
     return get_tiles_for_item(*item, tileset, show_background);
 }
 #else
-bool InvEntry::get_tiles(vector<tile_def>& tileset) const { return false; }
+bool InvEntry::get_tiles(vector<tile_def>& /*tileset*/) const { return false; }
 #endif
 
 bool InvMenu::is_selectable(int index) const
@@ -1029,8 +1029,7 @@ const char* item_slot_name(equipment_type type)
 
 vector<SelItem> select_items(const vector<const item_def*> &items,
                              const char *title, bool noselect,
-                             menu_type mtype,
-                             invtitle_annotator titlefn)
+                             menu_type mtype)
 {
     vector<SelItem> selected;
     if (!items.empty())

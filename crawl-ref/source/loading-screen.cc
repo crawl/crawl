@@ -40,7 +40,7 @@ void UIShrinkableImage::_render()
     m_buf.draw();
 }
 
-SizeReq UIShrinkableImage::_get_preferred_size(Direction dim, int prosp_width)
+SizeReq UIShrinkableImage::_get_preferred_size(Direction dim, int /*prosp_width*/)
 {
     return { 0, (int)(!dim ? m_img.orig_width() : m_img.orig_height()) };
 }

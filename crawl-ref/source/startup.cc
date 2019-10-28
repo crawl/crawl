@@ -340,7 +340,7 @@ static void _post_init(bool newc)
     init_exclusion_los();
     ash_check_bondage(false);
 
-    trackers_init_new_level(false);
+    trackers_init_new_level();
 
     if (newc) // start a new game
     {
@@ -429,7 +429,7 @@ static void _construct_game_modes_menu(shared_ptr<OuterMenu>& container)
     }
 }
 
-static shared_ptr<MenuButton> _make_newgame_button(shared_ptr<OuterMenu>& container, int num_chars)
+static shared_ptr<MenuButton> _make_newgame_button(int num_chars)
 {
     auto label = make_shared<Text>(formatted_string("New Game", WHITE));
 
@@ -500,7 +500,7 @@ static void _construct_save_games_menu(shared_ptr<OuterMenu>& container,
 
     if (!chars.empty())
     {
-        auto btn = _make_newgame_button(container, chars.size());
+        auto btn = _make_newgame_button(chars.size());
         container->add_button(move(btn), 0, (int)chars.size());
     }
 }
@@ -667,7 +667,7 @@ public:
 
     bool done;
     bool end_game;
-    virtual shared_ptr<Widget> get_child_at_offset(int x, int y) override {
+    virtual shared_ptr<Widget> get_child_at_offset(int, int) override {
         return m_root;
     }
 

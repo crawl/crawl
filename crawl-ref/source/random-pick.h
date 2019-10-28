@@ -36,7 +36,7 @@ public:
     int probability_at(T entry, const random_pick_entry<T> *weights, int level);
     int rarity_at(const random_pick_entry<T> *pop,
                   int depth);
-    virtual bool veto(T val) { return false; }
+    virtual bool veto(T) { return false; }
 };
 
 template <typename T, int max>

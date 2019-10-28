@@ -1780,7 +1780,7 @@ static bool _wu_jian_trigger_martial_arts(const coord_def& old_pos)
     return did_wu_jian_attacks;
 }
 
-void wu_jian_wall_jump_effects(const coord_def& old_pos)
+void wu_jian_wall_jump_effects()
 {
     vector<monster*> targets;
     for (adjacent_iterator ai(you.pos(), true); ai; ++ai)

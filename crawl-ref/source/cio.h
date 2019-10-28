@@ -354,7 +354,7 @@ protected:
     {
         return ch == CK_NO_KEY ? CK_NO_KEY : line_reader::process_key(ch);
     }
-    virtual void print_segment(int start_point=0, int overprint=0) override {};
+    virtual void print_segment(int, int) override {};
     void cursorto(int) override {};
     int key;
 };

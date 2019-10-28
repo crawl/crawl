@@ -611,7 +611,7 @@ int TilesFramework::handle_mouse(MouseEvent &event)
 
 static unsigned int _timer_callback(unsigned int ticks, void *param)
 {
-    UNUSED(param);
+    UNUSED(ticks, param);
 
     // force the event loop to break
     wm->raise_custom_event();
@@ -1543,7 +1543,7 @@ void TilesFramework::add_text_tag(text_tag_type type, const string &tag,
     m_region_tile->add_text_tag(type, tag, gc);
 }
 
-void TilesFramework::add_text_tag(text_tag_type type, const monster_info& mon)
+void TilesFramework::add_text_tag(text_tag_type /*type*/, const monster_info& mon)
 {
     // HACK. Large-tile monsters don't interact well with name tags.
     if (mons_class_flag(mon.type, M_TALL_TILE)

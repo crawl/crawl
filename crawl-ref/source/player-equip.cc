@@ -91,7 +91,7 @@ bool unequip_item(equipment_type slot, bool msg)
 // Meld a slot (if equipped).
 // Does not handle unequip effects, since melding should be simultaneous (so
 // you should call all unequip effects after all melding is done)
-bool meld_slot(equipment_type slot, bool msg)
+bool meld_slot(equipment_type slot)
 {
     ASSERT_RANGE(slot, EQ_FIRST_EQUIP, NUM_EQUIP);
     ASSERT(!you.melded[slot] || you.equip[slot] != -1);
@@ -106,7 +106,7 @@ bool meld_slot(equipment_type slot, bool msg)
 
 // Does not handle equip effects, since unmelding should be simultaneous (so
 // you should call all equip effects after all unmelding is done)
-bool unmeld_slot(equipment_type slot, bool msg)
+bool unmeld_slot(equipment_type slot)
 {
     ASSERT_RANGE(slot, EQ_FIRST_EQUIP, NUM_EQUIP);
     ASSERT(!you.melded[slot] || you.equip[slot] != -1);
@@ -1097,6 +1097,9 @@ static void _unequip_armour_effect(item_def& item, bool meld,
 
 static void _remove_amulet_of_faith(item_def &item)
 {
+#ifndef DEBUG_DIAGNOSTICS
+    UNUSED(item);
+#endif
     if (you_worship(GOD_RU))
     {
         // next sacrifice is going to be delaaaayed.

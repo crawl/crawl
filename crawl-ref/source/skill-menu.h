@@ -156,7 +156,7 @@ public:
     void clear_targets();
     void set_target_mode();
     void cancel_set_target();
-    int read_skill_target(skill_type sk, int keyn);
+    int read_skill_target(skill_type sk);
     void select(skill_type sk, int keyn);
     void toggle(skill_menu_switch sw);
 

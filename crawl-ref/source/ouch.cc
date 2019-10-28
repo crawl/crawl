@@ -1003,7 +1003,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
             death_type = KILLED_BY_XOM;
     }
     // Xom may still try to save your life.
-    else if (xom_saves_your_life(death_type, aux))
+    else if (xom_saves_your_life(death_type))
         return;
 
 #if defined(WIZARD) || defined(DEBUG)

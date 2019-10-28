@@ -79,7 +79,7 @@ vector<string> get_title_files();
 
 class level_id;
 
-void trackers_init_new_level(bool transit);
+void trackers_init_new_level();
 
 void update_portal_entrances();
 void reset_portal_entrances();
@@ -125,7 +125,7 @@ save_version read_ghost_header(reader &inf);
 
 FILE *lk_open(const char *mode, const string &file);
 FILE *lk_open_exclusive(const string &file);
-void lk_close(FILE *handle, const string &file);
+void lk_close(FILE *handle);
 
 // file locking stuff
 bool lock_file_handle(FILE *handle, bool write);

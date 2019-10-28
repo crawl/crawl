@@ -32,7 +32,7 @@ struct option_handler
     ohandler    handler;
 };
 
-static int option_hboolean(lua_State *ls, const char *name, void *data,
+static int option_hboolean(lua_State *ls, const char */*name*/, void *data,
                            bool get)
 {
     if (get)
@@ -48,8 +48,8 @@ static int option_hboolean(lua_State *ls, const char *name, void *data,
     }
 }
 
-static int option_autopick(lua_State *ls, const char *name, void *data,
-                           bool get)
+static int option_autopick(lua_State *ls, const char */*name*/, void */*data*/,
+                           bool /*get*/)
 {
     lua_pushboolean(ls, Options.autopickup_on>0);
     return 1;

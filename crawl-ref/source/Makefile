@@ -117,7 +117,7 @@ CFOTHERS += -mfpmath=sse -msse2
 endif
 
 CFWARN := 
-CFWARN_L := -Wall -Wformat-security -Wundef
+CFWARN_L := -Wall -Wunused-parameter -Wformat-security -Wundef
 
 DEFINES := $(EXTERNAL_DEFINES)
 

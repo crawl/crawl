@@ -310,8 +310,7 @@ public:
     colour_bar(colour_t default_colour,
                colour_t change_pos,
                colour_t change_neg,
-               colour_t empty,
-               bool round = false)
+               colour_t empty)
         : m_default(default_colour), m_change_pos(change_pos),
           m_change_neg(change_neg), m_empty(empty),
           horiz_bar_width(-1),
@@ -693,7 +692,7 @@ static void _print_stats_noise(int x, int y)
     }
 }
 
-static void _print_stats_gold(int x, int y, colour_t colour)
+static void _print_stats_gold(int x, int y)
 {
     CGOTOXY(x, y, GOTO_STAT);
     textcolour(HUD_CAPTION_COLOUR);
@@ -1281,8 +1280,7 @@ static void _redraw_title()
         if (you_worship(GOD_GOZAG))
         {
             // "Mottled Draconian of Gozag  Gold: 99999" just fits
-            _print_stats_gold(textwidth + 2, 2,
-                              _god_status_colour(god_colour(you.religion)));
+            _print_stats_gold(textwidth + 2, 2);
         }
     }
 

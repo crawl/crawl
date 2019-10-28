@@ -194,7 +194,7 @@ int random_choose_weighted(const FixedVector<T, SIZE>& choices)
 }
 
 template <typename T>
-T random_choose_weighted(int cweight, T curr)
+T random_choose_weighted(int, T curr)
 {
     return curr;
 }

@@ -69,12 +69,12 @@ bool targeter::anyone_there(coord_def loc)
     return actor_at(loc);
 }
 
-bool targeter::has_additional_sites(coord_def loc)
+bool targeter::has_additional_sites(coord_def /*loc*/)
 {
     return false;
 }
 
-bool targeter::affects_monster(const monster_info& mon)
+bool targeter::affects_monster(const monster_info& /*mon*/)
 {
     return true; //TODO: false
 }
@@ -387,7 +387,7 @@ targeter_view::targeter_view()
     origin = aim = you.pos();
 }
 
-bool targeter_view::valid_aim(coord_def a)
+bool targeter_view::valid_aim(coord_def /*a*/)
 {
     return true; // don't reveal map bounds
 }
@@ -555,7 +555,7 @@ bool targeter_passwall::can_affect_unseen()
     return true;
 }
 
-bool targeter_passwall::affects_monster(const monster_info& mon)
+bool targeter_passwall::affects_monster(const monster_info& /*mon*/)
 {
     return false;
 }
@@ -605,7 +605,7 @@ bool targeter_dig::can_affect_unseen()
     return true;
 }
 
-bool targeter_dig::affects_monster(const monster_info& mon)
+bool targeter_dig::affects_monster(const monster_info& /*mon*/)
 {
     return false;
 }
@@ -1077,7 +1077,7 @@ aff_type targeter_thunderbolt::is_affected(coord_def loc)
     return zapped[loc];
 }
 
-targeter_spray::targeter_spray(const actor* act, int range, zap_type zap)
+targeter_spray::targeter_spray(const actor* act, int range, zap_type /*zap*/)
 {
     ASSERT(act);
     agent = act;

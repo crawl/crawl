@@ -636,7 +636,7 @@ private:
     item_spec pick_item(item_spec_slot &slot);
     bool parse_corpse_spec(item_spec &result, string s);
     bool monster_corpse_is_valid(monster_type *, const string &name,
-                                 bool corpse, bool skeleton, bool chunk);
+                                 bool skeleton);
 
 private:
     vector<item_spec_slot> items;
@@ -1207,7 +1207,7 @@ public:
     void write_maplines(writer &) const;
 
     void read_index(reader&);
-    void read_full(reader&, bool check_cache_version);
+    void read_full(reader&);
     void read_maplines(reader&);
 
     void set_file(const string &s);

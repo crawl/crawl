@@ -293,7 +293,7 @@ void dithmenos_shadow_spell(bolt* orig_beam, spell_type spell);
 void uskayaw_prepares_audience();
 void uskayaw_bonds_audience();
 
-void wu_jian_wall_jump_effects(const coord_def& old_pos);
+void wu_jian_wall_jump_effects();
 bool wu_jian_has_momentum(wu_jian_attack_type);
 void wu_jian_heaven_tick();
 bool wu_jian_post_move_effects(bool did_wall_jump,

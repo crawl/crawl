@@ -4055,7 +4055,7 @@ tileidx_t tileidx_enchant_equ(const item_def &item, tileidx_t tile, bool player)
     return tile;
 }
 
-string tile_debug_string(tileidx_t fg, tileidx_t bg, tileidx_t cloud, char prefix)
+string tile_debug_string(tileidx_t fg, tileidx_t bg, char prefix)
 {
     tileidx_t fg_idx = fg & TILE_FLAG_MASK;
     tileidx_t bg_idx = bg & TILE_FLAG_MASK;

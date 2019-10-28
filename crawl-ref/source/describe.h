@@ -57,11 +57,10 @@ void get_item_desc(const item_def &item, describe_info &inf);
 void inscribe_item(item_def &item);
 void target_item(item_def &item);
 
-int describe_monsters(const monster_info &mi, bool force_seen = false,
-                      const string &footer = "");
+int describe_monsters(const monster_info &mi, const string& footer = "");
 
 void get_monster_db_desc(const monster_info &mi, describe_info &inf,
-                         bool &has_stat_desc, bool force_seen = false);
+                         bool &has_stat_desc);
 branch_type serpent_of_hell_branch(monster_type m);
 string serpent_of_hell_flavour(monster_type m);
 

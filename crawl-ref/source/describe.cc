@@ -94,7 +94,7 @@ int show_description(const string &body, const tile_def *tile)
 {
     describe_info inf;
     inf.body << body;
-    return show_description(inf);
+    return show_description(inf, tile);
 }
 
 int show_description(const describe_info &inf, const tile_def *tile)
@@ -113,6 +113,8 @@ int show_description(const describe_info &inf, const tile_def *tile)
             icon->set_margin_for_sdl(0, 10, 0, 0);
             title_hbox->add_child(move(icon));
         }
+#else
+        UNUSED(tile);
 #endif
 
         auto title = make_shared<Text>(inf.title);
@@ -4219,7 +4221,7 @@ string serpent_of_hell_flavour(monster_type m)
 
 // Fetches the monster's database description and reads it into inf.
 void get_monster_db_desc(const monster_info& mi, describe_info &inf,
-                         bool &has_stat_desc, bool force_seen)
+                         bool &has_stat_desc)
 {
     if (inf.title.empty())
         inf.title = getMiscString(mi.common_name(DESC_DBNAME) + " title");
@@ -4538,14 +4540,13 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
 #endif
 }
 
-int describe_monsters(const monster_info &mi, bool force_seen,
-                      const string &footer)
+int describe_monsters(const monster_info &mi, const string& /*footer*/)
 {
     bool has_stat_desc = false;
     describe_info inf;
     formatted_string desc;
 
-    get_monster_db_desc(mi, inf, has_stat_desc, force_seen);
+    get_monster_db_desc(mi, inf, has_stat_desc);
 
     spellset spells = monster_spellset(mi);
 

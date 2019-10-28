@@ -554,7 +554,7 @@ double ProceduralFunction::operator()(const coord_def &p, const uint32_t offset)
     return ProceduralFunction::operator()(p.x,p.y,offset);
 }
 
-double ProceduralFunction::operator()(double x, double y, double z) const
+double ProceduralFunction::operator()(double, double, double) const
 {
     return 0;
 }

@@ -2227,7 +2227,7 @@ static const char* old_gods[]=
     "Ashenzari",
 };
 
-void tag_read_char(reader &th, uint8_t format, uint8_t major, uint8_t minor)
+void tag_read_char(reader &th, uint8_t /*format*/, uint8_t major, uint8_t minor)
 {
     // Important: values out of bounds are good here, the save browser needs to
     // be forward-compatible. We validate them only on an actual restore.

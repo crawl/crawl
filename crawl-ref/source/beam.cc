@@ -334,9 +334,7 @@ bool player_tracer(zap_type ztype, int power, bolt &pbolt, int range)
 // Returns true if the player wants / needs to abort based on god displeasure
 // with targeting this target with this spell. Returns false otherwise.
 static bool _stop_because_god_hates_target_prompt(monster* mon,
-                                                  spell_type spell,
-                                                  beam_type flavour,
-                                                  item_def *item)
+                                                  spell_type spell)
 {
     if (spell == SPELL_TUKIMAS_DANCE)
     {
@@ -546,6 +544,8 @@ bool bolt::can_affect_actor(const actor *act) const
 // this and SPWPN_CHAOS to use the same tables.
 static beam_type _chaos_beam_flavour(bolt* beam)
 {
+    UNUSED(beam);
+
     beam_type flavour;
     flavour = random_choose_weighted(
          // SPWPN_CHAOS randomizes to brands analogous to these beam effects
@@ -2513,7 +2513,7 @@ void bolt::drop_object()
         return;
     }
 
-    if (!thrown_object_destroyed(item, pos()))
+    if (!thrown_object_destroyed(item))
     {
         if (item->sub_type == MI_THROWING_NET)
         {
@@ -3578,7 +3578,7 @@ static const vector<pie_effect> pie_effects = {
         [](const actor &defender) {
             return defender.is_player();
         },
-        [](actor &defender, const bolt &/*beam*/) {
+        [](actor &/*defender*/, const bolt &/*beam*/) {
             if (you.duration[DUR_VERTIGO])
                 mpr("You feel your light-headedness will last longer.");
             else
@@ -3593,7 +3593,7 @@ static const vector<pie_effect> pie_effects = {
         [](const actor &defender) {
             return defender.is_player() && !you_foodless();
         },
-        [](actor &defender, const bolt &beam) {
+        [](actor &/*defender*/, const bolt &/*beam*/) {
             if (you.duration[DUR_NO_POTIONS])
                 mpr("You feel your inability to drink will last longer.");
             else
@@ -3635,7 +3635,7 @@ static const vector<pie_effect> pie_effects = {
         [](const actor &defender) {
             return defender.is_player();
         },
-        [](actor &defender, const bolt &beam) {
+        [](actor &/*defender*/, const bolt &/*beam*/) {
             for (int i = 0; i < NUM_STATS; ++i)
                 lose_stat(static_cast<stat_type>(i), 1 + random2(3));
         },
@@ -3677,7 +3677,7 @@ static const vector<pie_effect> pie_effects = {
         [](const actor &defender) {
             return defender.can_polymorph();
         },
-        [](actor &defender, const bolt &beam) {
+        [](actor &defender, const bolt &/*beam*/) {
             defender.polymorph(100, false);
         },
         4
@@ -4053,8 +4053,7 @@ void bolt::tracer_enchantment_affect_monster(monster* mon)
 }
 
 // Return false if we should skip handling this monster.
-bool bolt::determine_damage(monster* mon, int& preac, int& postac, int& final,
-                            vector<string>& messages)
+bool bolt::determine_damage(monster* mon, int& preac, int& postac, int& final)
 {
     preac = postac = final = 0;
 
@@ -4146,8 +4145,7 @@ void bolt::handle_stop_attack_prompt(monster* mon)
     bool prompted = false;
 
     if (stop_attack_prompt(mon, true, target, &prompted)
-        || _stop_because_god_hates_target_prompt(mon, origin_spell, flavour,
-                                                 item))
+        || _stop_because_god_hates_target_prompt(mon, origin_spell))
     {
         beam_cancelled = true;
         finish_beam();
@@ -4175,10 +4173,9 @@ void bolt::handle_stop_attack_prompt(monster* mon)
 
 void bolt::tracer_nonenchantment_affect_monster(monster* mon)
 {
-    vector<string> messages;
     int preac, post, final;
 
-    if (!determine_damage(mon, preac, post, final, messages))
+    if (!determine_damage(mon, preac, post, final))
         return;
 
     // Check only if actual damage and the monster is worth caring about.
@@ -4217,13 +4214,6 @@ void bolt::tracer_nonenchantment_affect_monster(monster* mon)
     handle_stop_attack_prompt(mon);
     if (beam_cancelled)
         return;
-
-    // Check only if actual damage.
-    if (!is_tracer && final > 0)
-    {
-        for (const string &msg : messages)
-            mprf(MSGCH_MONSTER_DAMAGE, "%s", msg.c_str());
-    }
 
     // Either way, we could hit this monster, so update range used.
     extra_range_used += range_used_on_hit();
@@ -4801,9 +4791,8 @@ void bolt::affect_monster(monster* mon)
 
     // We need to know how much the monster _would_ be hurt by this,
     // before we decide if it actually hits.
-    vector<string> messages;
     int preac, postac, final;
-    if (!determine_damage(mon, preac, postac, final, messages))
+    if (!determine_damage(mon, preac, postac, final))
         return;
 
 #ifdef DEBUG_DIAGNOSTICS
@@ -4949,12 +4938,6 @@ void bolt::affect_monster(monster* mon)
              && YOU_KILL(thrower))
     {
         mprf(MSGCH_SOUND, "The %s hits something.", name.c_str());
-    }
-
-    if (final > 0)
-    {
-        for (const string &msg : messages)
-            mprf(MSGCH_MONSTER_DAMAGE, "%s", msg.c_str());
     }
 
     // Apply flavoured specials.
@@ -5473,7 +5456,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
     case BEAM_SPORE:
     case BEAM_CONFUSION:
     case BEAM_IRRESISTIBLE_CONFUSION:
-        if (mon->check_clarity(false))
+        if (mon->check_clarity())
         {
             if (you.can_see(*mon))
                 obvious_effect = true;

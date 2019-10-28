@@ -431,6 +431,8 @@ void set_mouse_enabled(bool enabled)
 #ifdef NCURSES_MOUSE_VERSION
 static int proc_mouse_event(int c, const MEVENT *me)
 {
+    UNUSED(c);
+
     crawl_view.mousep.x = me->x + 1;
     crawl_view.mousep.y = me->y + 1;
 

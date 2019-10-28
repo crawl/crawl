@@ -611,7 +611,7 @@ void do_crash_dump()
         _dump_ver_stuff(stderr);
 
         fprintf(stderr, "%s\n\n", crash_signal_info().c_str());
-        write_stack_trace(stderr, 0);
+        write_stack_trace(stderr);
         call_gdb(stderr);
 
         return;
@@ -679,7 +679,7 @@ void do_crash_dump()
     // might themselves cause crashes.
     if (!signal_info.empty())
         fprintf(file, "%s\n\n", signal_info.c_str());
-    write_stack_trace(file, 0);
+    write_stack_trace(file);
     fprintf(file, "\n");
 
     call_gdb(file);
@@ -783,6 +783,7 @@ void do_crash_dump()
 
 NORETURN static void _BreakStrToDebugger(const char *mesg, bool assert)
 {
+    UNUSED(assert);
 // FIXME: this needs a way to get the SDL_window in windowmanager-sdl.cc
 #if 0
 #if defined(USE_TILE_LOCAL) && defined(TARGET_OS_WINDOWS)

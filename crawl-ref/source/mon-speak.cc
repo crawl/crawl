@@ -207,7 +207,6 @@ static string _try_exact_string(const vector<string> &prefixes,
 
 static string __get_speak_string(const vector<string> &prefixes,
                                  const string &key,
-                                 const monster* mons,
                                  bool no_player, bool no_foe,
                                  bool no_foe_name, bool no_god,
                                  bool unseen)
@@ -303,7 +302,7 @@ static string _get_speak_string(const vector<string> &prefixes,
     for (int tries = 0; tries < 10; tries++)
     {
         msg =
-            __get_speak_string(prefixes, key, mons, no_player, no_foe,
+            __get_speak_string(prefixes, key, no_player, no_foe,
                                no_foe_name, no_god, unseen);
 
         // If the first message was non-empty and discarded then discard

@@ -268,7 +268,7 @@ void ghost_demon::init_pandemonium_lord()
 static const set<brand_type> ghost_banned_brands =
                 { SPWPN_HOLY_WRATH, SPWPN_CHAOS };
 
-void ghost_demon::init_player_ghost(bool actual_ghost)
+void ghost_demon::init_player_ghost()
 {
     // don't preserve transformations for ghosty purposes
     unwind_var<transformation> form(you.form, transformation::none);
@@ -374,7 +374,7 @@ void ghost_demon::init_player_ghost(bool actual_ghost)
 
     flies = true;
 
-    add_spells(actual_ghost);
+    add_spells();
 }
 
 static colour_t _ugly_thing_assign_colour(colour_t force_colour,
@@ -618,7 +618,7 @@ void ghost_demon::init_spectral_weapon(const item_def& weapon, int power)
 // Used when creating ghosts: goes through and finds spells for the
 // ghost to cast. Death is a traumatic experience, so ghosts only
 // remember a few spells.
-void ghost_demon::add_spells(bool actual_ghost)
+void ghost_demon::add_spells()
 {
     spells.clear();
 
@@ -705,6 +705,7 @@ void ghost_demon::find_transiting_ghosts(
 
 void ghost_demon::announce_ghost(const ghost_demon &g)
 {
+    UNUSED(g);
 #if defined(DEBUG_BONES) || defined(DEBUG_DIAGNOSTICS)
     mprf(MSGCH_DIAGNOSTICS, "Saving ghost: %s", g.name.c_str());
 #endif
