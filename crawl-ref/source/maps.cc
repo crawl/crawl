@@ -925,6 +925,8 @@ void map_selector::announce(const map_def *vault) const
                  sel == TAG ? tag.c_str() : place.describe().c_str());
         }
     }
+#else
+    UNUSED(vault);
 #endif
 }
 

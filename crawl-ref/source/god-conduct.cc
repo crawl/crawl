@@ -657,7 +657,7 @@ static like_response okawaru_kill(const char* desc)
 static const like_response EXPLORE_RESPONSE = {
     "you explore the world", false,
     0, 0, 0, nullptr,
-    [] (int &piety, int &denom, const monster* /*victim*/)
+    [] (int &piety, int &/*denom*/, const monster* /*victim*/)
     {
         // piety = denom = level at the start of the function
         piety = 14;
@@ -710,8 +710,8 @@ static like_map divine_likes[] =
         { DID_KILL_UNDEAD, KILL_UNDEAD_RESPONSE },
         { DID_KILL_DEMON, KILL_DEMON_RESPONSE },
         { DID_KILL_HOLY, _on_kill("you kill holy beings", MH_HOLY, false,
-                                  [](int &piety, int &denom,
-                                     const monster* victim)
+                                  [](int &piety, int &/*denom*/,
+                                     const monster* /*victim*/)
             {
                 piety *= 2;
                 simple_god_message(" appreciates your killing of a holy being.");
@@ -777,7 +777,7 @@ static like_map divine_likes[] =
         { DID_EXPLORATION, {
             "you explore the world", false,
             0, 0, 0, nullptr,
-            [] (int &piety, int &denom, const monster* /*victim*/)
+            [] (int &piety, int &/*denom*/, const monster* /*victim*/)
             {
                 // piety = denom = level at the start of the function
                 piety = 20;
@@ -895,7 +895,7 @@ static like_map divine_likes[] =
     {
         { DID_KILL_LIVING, _on_kill("you kill living beings", MH_NATURAL, false,
                                   [](int &piety, int &denom,
-                                     const monster* victim)
+                                     const monster* /*victim*/)
             {
                 piety *= 4;
                 denom *= 3;
@@ -912,7 +912,7 @@ static like_map divine_likes[] =
         { DID_HURT_FOE, {
             "you hurt your foes; however, effects that cause damage over "
             "time do not interest Uskayaw", true, 1, 1, 0, nullptr,
-            [] (int &piety, int &denom, const monster* /*victim*/)
+            [] (int &/*piety*/, int &denom, const monster* /*victim*/)
             {
                 denom = 1;
             }
@@ -1126,6 +1126,7 @@ void did_hurt_conduct(conduct_type thing_done,
                       const monster &victim,
                       int damage_done)
 {
+    UNUSED(thing_done);
     // Currently only used by Uskayaw; initially planned to use god conduct
     // logic more heavily, but the god seems to need something different.
 

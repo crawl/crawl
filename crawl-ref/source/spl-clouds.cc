@@ -253,11 +253,11 @@ spret cast_ring_of_flames(int power, bool fail)
     you.increase_duration(DUR_FIRE_SHIELD,
                           6 + (power / 10) + (random2(power) / 5), 50,
                           "The air around you leaps into flame!");
-    manage_fire_shield(1);
+    manage_fire_shield();
     return spret::success;
 }
 
-void manage_fire_shield(int delay)
+void manage_fire_shield()
 {
     ASSERT(you.duration[DUR_FIRE_SHIELD]);
 

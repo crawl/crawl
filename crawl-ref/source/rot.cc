@@ -346,7 +346,7 @@ void rot_floor_items(int elapsedTime)
  *
  * @param time_delta    The amount of time to rot for.
  */
-void rot_inventory_food(int time_delta)
+void rot_inventory_food(int /*time_delta*/)
 {
     int num_chunks         = 0;
     int num_chunks_gone    = 0;

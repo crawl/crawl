@@ -70,15 +70,17 @@ void tile_new_level(bool first_time, bool init_unseen)
     for (unsigned int x = 0; x < GXM; x++)
         for (unsigned int y = 0; y < GYM; y++)
             tiles.update_minimap(coord_def(x, y));
+#else
+    UNUSED(init_unseen);
 #endif
 }
 
 void tile_init_default_flavour()
 {
-    tile_default_flv(you.where_are_you, you.depth, env.tile_default);
+    tile_default_flv(you.where_are_you, env.tile_default);
 }
 
-void tile_default_flv(branch_type br, int depth, tile_flavour &flv)
+void tile_default_flv(branch_type br, tile_flavour &flv)
 {
     flv.wall    = TILE_WALL_NORMAL;
     flv.floor   = TILE_FLOOR_NORMAL;
@@ -1167,6 +1169,8 @@ void tile_apply_animations(tileidx_t bg, tile_flavour *flv)
         if (_is_torch(basetile))
             flv->wall = basetile + (flv->wall - basetile + 1) % tile_dngn_count(basetile);
     }
+#else
+    UNUSED(bg, flv);
 #endif
 }
 

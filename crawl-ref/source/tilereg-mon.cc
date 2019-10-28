@@ -106,7 +106,7 @@ bool MonsterRegion::update_tip_text(string &tip)
     return tile_dungeon_tip(mon->pos, tip);
 }
 
-bool MonsterRegion::update_tab_tip_text(string &tip, bool active)
+bool MonsterRegion::update_tab_tip_text(string &/*tip*/, bool /*active*/)
 {
     return false;
 }

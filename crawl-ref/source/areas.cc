@@ -79,6 +79,7 @@ void invalidate_agrid(bool recheck_new)
 
 void areas_actor_moved(const actor* act, const coord_def& oldpos)
 {
+    UNUSED(oldpos);
     if (act->alive() &&
         (you.entering_level
          || act->halo_radius() > -1 || act->silence_radius() > -1

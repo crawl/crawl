@@ -39,9 +39,9 @@ bool actor::will_trigger_shaft() const
                 && mons_is_elven_twin(static_cast<const monster* >(this)));
 }
 
-level_id actor::shaft_dest(bool known = false) const
+level_id actor::shaft_dest() const
 {
-    return generic_shaft_dest(pos(), known);
+    return generic_shaft_dest(level_id::current());
 }
 
 /**
@@ -275,6 +275,8 @@ int actor::archmagi(bool calc_unid, bool items) const
  */
 int actor::spec_evoke(bool calc_unid, bool items) const
 {
+    UNUSED(calc_unid);
+    UNUSED(items);
     return 0;
 }
 

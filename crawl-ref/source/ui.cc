@@ -223,10 +223,9 @@ void Widget::allocate_region(Region region)
     _allocate_region();
 }
 
-SizeReq Widget::_get_preferred_size(Direction dim, int prosp_width)
+SizeReq Widget::_get_preferred_size(Direction, int)
 {
-    SizeReq ret = { 0, 0 };
-    return ret;
+    return { 0, 0 };
 }
 
 void Widget::_allocate_region()
@@ -882,6 +881,8 @@ void Image::set_tile(tile_def tile)
     m_th = ti.height;
     _invalidate_sizereq();
 #endif
+#else
+    UNUSED(tile);
 #endif
 }
 
@@ -902,19 +903,18 @@ void Image::_render()
 #endif
 }
 
-SizeReq Image::_get_preferred_size(Direction dim, int prosp_width)
+SizeReq Image::_get_preferred_size(Direction dim, int /*prosp_width*/)
 {
 #ifdef USE_TILE_LOCAL
-    SizeReq ret = {
-        // This is a little ad-hoc, but expand taking precedence over shrink when
-        // determining the natural size makes the textured dialog box work
+    return {
+        // expand takes precedence over shrink for historical reasons
         dim ? (shrink_v ? 0 : m_th) : (shrink_h ? 0 : m_tw),
         dim ? (shrink_v ? 0 : m_th) : (shrink_h ? 0 : m_tw)
     };
 #else
-    SizeReq ret = { 0, 0 };
+    UNUSED(dim);
+    return { 0, 0 };
 #endif
-    return ret;
 }
 
 void Stack::add_child(shared_ptr<Widget> child)
@@ -1560,10 +1560,10 @@ void Dungeon::_render()
 #endif
 }
 
-SizeReq Dungeon::_get_preferred_size(Direction dim, int prosp_width)
+SizeReq Dungeon::_get_preferred_size(Direction dim, int /*prosp_width*/)
 {
-    int sz = (dim ? height : width)*32;
-    return {sz, sz};
+    const int sz = (dim ? height : width)*32;
+    return { sz, sz };
 }
 
 PlayerDoll::PlayerDoll(dolls_data doll)
@@ -1658,7 +1658,7 @@ void PlayerDoll::_render()
         m_tile_buf[i].draw();
 }
 
-SizeReq PlayerDoll::_get_preferred_size(Direction dim, int prosp_width)
+SizeReq PlayerDoll::_get_preferred_size(Direction /*dim*/, int /*prosp_width*/)
 {
     return { TILE_Y, TILE_Y };
 }
@@ -1674,12 +1674,6 @@ void PlayerDoll::_allocate_region()
         m_tile_buf[tex].add_unscaled(tile, m_region.x, m_region.y, tdef.ymax);
     }
 }
-
-bool PlayerDoll::on_event(const wm_event& event)
-{
-    return false;
-}
-
 #endif
 
 void UIRoot::push_child(shared_ptr<Widget> ch, KeymapContext km)
@@ -2346,12 +2340,6 @@ progress_popup::progress_popup(string title, int width)
     container->add_child(status_text);
     contents = make_shared<Popup>(container);
 
-    contents->on(Widget::slots.event, [&](wm_event ev)
-    {
-        // don't wait or react - this kind of popup needs to be controlled by
-        // the caller.
-        return true;
-    });
 #ifdef USE_TILE_WEB
     tiles.json_open_object();
     tiles.json_write_string("title", title);

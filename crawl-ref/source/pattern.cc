@@ -98,6 +98,7 @@ static void _free_compiled_pattern(void *cp)
 
 static bool _pattern_match(void *compiled_pattern, const char *text, int length)
 {
+    UNUSED(length);
     regex_t *re = static_cast<regex_t *>(compiled_pattern);
     return !regexec(re, text, 0, nullptr, 0);
 }
@@ -105,6 +106,7 @@ static bool _pattern_match(void *compiled_pattern, const char *text, int length)
 static pattern_match _pattern_match_location(void *compiled_pattern,
                                              const char *text, int length)
 {
+    UNUSED(length);
     regmatch_t match;
     regex_t *re = static_cast<regex_t *>(compiled_pattern);
     if (!regexec(re, text, 1, &match, 0))

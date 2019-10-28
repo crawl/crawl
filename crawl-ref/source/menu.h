@@ -149,6 +149,7 @@ public:
 
     virtual string get_text(const bool unused = false) const
     {
+        UNUSED(unused);
         if (level == MEL_ITEM && hotkeys.size())
         {
             char buf[300];
@@ -302,9 +303,7 @@ public:
     // Remove all items from the Menu, leave title intact.
     void clear();
 
-    // Sets menu flags to new_flags. If use_options is true, game options may
-    // override options.
-    virtual void set_flags(int new_flags, bool use_options = true);
+    virtual void set_flags(int new_flags);
     int  get_flags() const        { return flags; }
     virtual bool is_set(int flag) const;
     void set_tag(const string& t) { tag = t; }
@@ -419,7 +418,7 @@ protected:
     void webtiles_update_scroll_pos() const;
 
     virtual void webtiles_write_title() const;
-    virtual void webtiles_write_item(int index, const MenuEntry *me) const;
+    virtual void webtiles_write_item(const MenuEntry *me) const;
 
     bool _webtiles_title_changed;
     formatted_string _webtiles_title;
@@ -536,7 +535,7 @@ public:
     virtual const string& get_description_text() const { return m_description; }
 
 #ifdef USE_TILE_LOCAL
-    virtual bool handle_mouse(const MouseEvent& me) {return false; }
+    virtual bool handle_mouse(const MouseEvent&) {return false; }
 #endif
 
     virtual void select(bool toggle);
@@ -865,32 +864,32 @@ public:
     // these are not used, clear them
     virtual vector<MenuItem*> get_selected_items() override;
     virtual MenuItem* get_active_item() override { return nullptr; }
-    virtual bool attach_item(MenuItem* item) override { return false; }
-    virtual void set_active_item(int index) override {}
-    virtual void set_active_item(MenuItem* item) override {}
+    virtual bool attach_item(MenuItem*) override { return false; }
+    virtual void set_active_item(int) override {}
+    virtual void set_active_item(MenuItem*) override {}
     virtual void activate_first_item() override {}
     virtual void activate_last_item() override {}
 
-    virtual bool select_item(int index) override { return false; }
-    virtual bool select_item(MenuItem* item) override { return false;}
-    virtual MenuItem* select_item_by_hotkey(int key) override
+    virtual bool select_item(int) override { return false; }
+    virtual bool select_item(MenuItem*) override { return false;}
+    virtual MenuItem* select_item_by_hotkey(int) override
     {
         return nullptr;
     }
     virtual void clear_selections() override {}
 
     // Do not allow focus
-    virtual void allow_focus(bool toggle) override {}
+    virtual void allow_focus(bool) override {}
     virtual bool can_be_focused() override { return false; }
 
 protected:
     virtual void _place_items() override;
-    virtual MenuItem* _find_item_by_mouse_coords(const coord_def& pos) override
+    virtual MenuItem* _find_item_by_mouse_coords(const coord_def&) override
     {
         return nullptr;
     }
-    virtual MenuItem* _find_item_by_direction(
-            const MenuItem* start, MenuObject::Direction dir) override
+    virtual MenuItem* _find_item_by_direction(const MenuItem*,
+            MenuObject::Direction) override
     {
         return nullptr;
     }

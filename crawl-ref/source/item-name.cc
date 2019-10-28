@@ -1000,7 +1000,7 @@ const char* rune_type_name(short p)
     }
 }
 
-static string misc_type_name(int type, bool known)
+static string misc_type_name(int type)
 {
 #if TAG_MAJOR_VERSION == 34
     if (is_deck_type(type))
@@ -1242,7 +1242,7 @@ string sub_type_string(const item_def &item, bool known)
 #if TAG_MAJOR_VERSION == 34
     case OBJ_RODS:   return "removed rod";
 #endif
-    case OBJ_MISCELLANY: return misc_type_name(sub_type, known);
+    case OBJ_MISCELLANY: return misc_type_name(sub_type);
     // these repeat as base_type_string
     case OBJ_ORBS: return "orb of Zot";
     case OBJ_CORPSES: return "corpse";
@@ -1904,7 +1904,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         if (!dbname && item_typ == MISC_ZIGGURAT && you.zigs_completed > 0)
             buff << "+" << you.zigs_completed << " ";
 
-        buff << misc_type_name(item_typ, know_type);
+        buff << misc_type_name(item_typ);
 
         if (is_xp_evoker(*this) && !dbname && !evoker_charges(sub_type))
             buff << " (inert)";

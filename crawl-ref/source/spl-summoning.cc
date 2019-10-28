@@ -369,7 +369,7 @@ spret cast_summon_hydra(actor *caster, int pow, god_type god, bool fail)
     return spret::success;
 }
 
-static monster_type _choose_dragon_type(int pow, god_type god, bool player)
+static monster_type _choose_dragon_type(int pow, god_type /*god*/, bool player)
 {
     monster_type mon = MONS_PROGRAM_BUG;
 
@@ -1076,7 +1076,7 @@ spret cast_call_imp(int pow, god_type god, bool fail)
 
 static bool _summon_demon_wrapper(int pow, god_type god, int spell,
                                   monster_type mon, int dur, bool friendly,
-                                  bool charmed, bool quiet)
+                                  bool charmed)
 {
     bool success = false;
 
@@ -1131,7 +1131,7 @@ static bool _summon_demon_wrapper(int pow, god_type god, int spell,
     return success;
 }
 
-static bool _summon_common_demon(int pow, god_type god, int spell, bool quiet)
+static bool _summon_common_demon(int pow, god_type god, int spell)
 {
     const int chance = 70 - (pow / 3);
     monster_type type = MONS_PROGRAM_BUG;
@@ -1143,10 +1143,10 @@ static bool _summon_common_demon(int pow, god_type god, int spell, bool quiet)
 
     return _summon_demon_wrapper(pow, god, spell, type,
                                  min(2 + (random2(pow) / 4), 6),
-                                 random2(pow) > 3, false, quiet);
+                                 random2(pow) > 3, false);
 }
 
-static bool _summon_greater_demon(int pow, god_type god, int spell, bool quiet)
+static bool _summon_greater_demon(int pow, god_type god, int spell)
 {
     monster_type mon = summon_any_demon(RANDOM_DEMON_GREATER);
 
@@ -1154,7 +1154,7 @@ static bool _summon_greater_demon(int pow, god_type god, int spell, bool quiet)
     const bool friendly = (charmed && mons_demon_tier(mon) == 2);
 
     return _summon_demon_wrapper(pow, god, spell, mon,
-                                 4, friendly, charmed, quiet);
+                                 4, friendly, charmed);
 }
 
 bool summon_demon_type(monster_type mon, int pow, god_type god,
@@ -1162,7 +1162,7 @@ bool summon_demon_type(monster_type mon, int pow, god_type god,
 {
     return _summon_demon_wrapper(pow, god, spell, mon,
                                  min(2 + (random2(pow) / 4), 6),
-                                 friendly, false, false);
+                                 friendly, false);
 }
 
 spret cast_summon_demon(int pow, god_type god, bool fail)
@@ -1174,7 +1174,7 @@ spret cast_summon_demon(int pow, god_type god, bool fail)
     fail_check();
     mpr("You open a gate to Pandemonium!");
 
-    if (!_summon_common_demon(pow, god, SPELL_SUMMON_DEMON, false))
+    if (!_summon_common_demon(pow, god, SPELL_SUMMON_DEMON))
         canned_msg(MSG_NOTHING_HAPPENS);
 
     return spret::success;
@@ -1188,7 +1188,7 @@ spret cast_summon_greater_demon(int pow, god_type god, bool fail)
     fail_check();
     mpr("You open a gate to Pandemonium!");
 
-    if (!_summon_greater_demon(pow, god, SPELL_SUMMON_GREATER_DEMON, false))
+    if (!_summon_greater_demon(pow, god, SPELL_SUMMON_GREATER_DEMON))
         canned_msg(MSG_NOTHING_HAPPENS);
 
     return spret::success;
@@ -2458,7 +2458,7 @@ void init_servitor(monster* servitor, actor* caster)
     servitor->props["ideal_range"].get_int() = shortest_range;
 }
 
-spret cast_spellforged_servitor(int pow, god_type god, bool fail)
+spret cast_spellforged_servitor(int /*pow*/, god_type god, bool fail)
 {
     fail_check();
 

@@ -1833,8 +1833,7 @@ void find_travel_pos(const coord_def& youpos,
 
 extern map<branch_type, set<level_id> > stair_level;
 
-static void _find_parent_branch(branch_type br, int depth,
-                                branch_type *pb, int *pd)
+static void _find_parent_branch(branch_type br, branch_type *pb, int *pd)
 {
     *pb = parent_branch(br);   // Check depth before using *pb.
 
@@ -1874,7 +1873,7 @@ static void _trackback(vector<level_id> &vec, branch_type branch, int subdepth)
     {
         branch_type pb;
         int pd;
-        _find_parent_branch(branch, subdepth, &pb, &pd);
+        _find_parent_branch(branch, &pb, &pd);
         if (pd)
             _trackback(vec, pb, pd);
     }
@@ -1932,8 +1931,7 @@ int level_distance(level_id first, level_id second)
     {
         distance += first.depth;
 
-        _find_parent_branch(first.branch, first.depth,
-                            &first.branch, &first.depth);
+        _find_parent_branch(first.branch, &first.branch, &first.depth);
         if (!first.depth)
             return -1;
     }
@@ -2004,8 +2002,7 @@ static int _get_nearest_level_depth(uint8_t branch)
     level_id id = level_id::current();
     do
     {
-        _find_parent_branch(id.branch, id.depth,
-                            &id.branch, &id.depth);
+        _find_parent_branch(id.branch, &id.branch, &id.depth);
         if (id.depth && id.branch == branch)
         {
             depth = id.depth;
@@ -2353,8 +2350,7 @@ level_id find_up_level(level_id curr, bool up_branch)
         if (curr.branch != BRANCH_DUNGEON && curr.branch != root_branch)
         {
             level_id parent;
-            _find_parent_branch(curr.branch, curr.depth,
-                                &parent.branch, &parent.depth);
+            _find_parent_branch(curr.branch, &parent.branch, &parent.depth);
             if (parent.depth > 0)
                 return parent;
             else if (curr.branch == BRANCH_VESTIBULE)

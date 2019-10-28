@@ -135,7 +135,7 @@ static bool will_autoinscribe = false;
 
 static inline string _autopickup_item_name(const item_def &item)
 {
-    return userdef_annotate_item(STASH_LUA_SEARCH_ANNOTATE, &item, true)
+    return userdef_annotate_item(STASH_LUA_SEARCH_ANNOTATE, &item)
            + item_prefix(item, false) + " " + item.name(DESC_PLAIN);
 }
 
@@ -1152,7 +1152,7 @@ void origin_set(const coord_def& where)
     }
 }
 
-static void _origin_freeze(item_def &item, const coord_def& where)
+static void _origin_freeze(item_def &item)
 {
     if (!origin_known(item))
     {
@@ -1191,7 +1191,7 @@ bool origin_describable(const item_def &item)
            && (item.base_type != OBJ_FOOD || item.sub_type != FOOD_CHUNK);
 }
 
-static string _article_it(const item_def &item)
+static string _article_it(const item_def &/*item*/)
 {
     // "it" is always correct, since gloves and boots also come in pairs.
     return "it";
@@ -1734,7 +1734,7 @@ void get_gold(const item_def& item, int quant, bool quiet)
 void note_inscribe_item(item_def &item)
 {
     _autoinscribe_item(item);
-    _origin_freeze(item, you.pos());
+    _origin_freeze(item);
     _check_note_item(item);
 }
 
@@ -1911,11 +1911,8 @@ static void _get_rune(const item_def& it, bool quiet)
 
 /**
  * Place the Orb of Zot into the player's inventory.
- *
- * @param it      The ORB!
- * @param quiet   Unused.
  */
-static void _get_orb(const item_def &it, bool quiet)
+static void _get_orb()
 {
     run_animation(ANIMATION_ORB, UA_PICKUP);
 
@@ -2190,7 +2187,7 @@ static bool _merge_items_into_inv(item_def &it, int quant_got,
     // The Orb is also handled specially.
     if (item_is_orb(it))
     {
-        _get_orb(it, quiet);
+        _get_orb();
         return true;
     }
 
@@ -3037,7 +3034,7 @@ static bool _identical_types(const item_def& pickup_item,
     return pickup_item.is_type(inv_item.base_type, inv_item.sub_type);
 }
 
-static bool _edible_food(const item_def& pickup_item,
+static bool _edible_food(const item_def& /*pickup_item*/,
                          const item_def& inv_item)
 {
     return inv_item.base_type == OBJ_FOOD && !is_inedible(inv_item);

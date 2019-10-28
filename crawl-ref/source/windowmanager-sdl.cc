@@ -1248,6 +1248,8 @@ void SDLWrapper::glDebug(const char* msg)
     int e = glGetError();
     if (e > 0)
        __android_log_print(ANDROID_LOG_INFO, "Crawl", "ERROR %x: %s", e, msg);
+#else
+    UNUSED(msg);
 #endif
 }
 #endif // USE_SDL

@@ -148,7 +148,7 @@ void try_god_conversion(god_type god)
     }
 }
 
-int zin_tithe(const item_def& item, int quant, bool quiet, bool converting)
+int zin_tithe(const item_def& item, int quant, bool converting)
 {
     if (item.tithe_state == TS_NO_TITHE)
         return 0;

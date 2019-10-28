@@ -1230,6 +1230,7 @@ void macro_init()
 
 void macro_userfn(const char *keys, const char *regname)
 {
+    UNUSED(keys, regname);
     // TODO: Implement.
     // Converting 'keys' to a key sequence is the difficulty. Doing it portably
     // requires a mapping of key names to whatever getch() spits back, unlikely

@@ -514,6 +514,8 @@ int CLua::push_args(lua_State *ls, const char *format, va_list args,
 
 int CLua::return_count(lua_State *ls, const char *format)
 {
+    UNUSED(ls);
+
     if (!format)
         return 0;
 
@@ -1093,6 +1095,7 @@ lua_call_throttle::lua_clua_map lua_call_throttle::lua_map;
 //
 static int _clua_panic(lua_State *ls)
 {
+    UNUSED(ls);
     if (crawl_state.need_save && !crawl_state.saving_game
         && !crawl_state.updating_scores)
     {
@@ -1125,6 +1128,8 @@ static void *_clua_allocator(void *ud, void *ptr, size_t osize, size_t nsize)
 
 static void _clua_throttle_hook(lua_State *ls, lua_Debug *dbg)
 {
+    UNUSED(dbg);
+
     CLua *lua = lua_call_throttle::find_clua(ls);
 
     // Co-routines can create a new Lua state; in such cases, we must

@@ -198,7 +198,7 @@ void MiscastEffect::init()
     // [ds] Don't attribute the beam's cause to the actor, because the
     // death message will name the actor anyway.
     if (cause.empty())
-        cause = get_default_cause(false);
+        cause = get_default_cause();
     beam.aux_source  = cause;
     if (act_source)
         beam.source_id = act_source->mid;
@@ -207,7 +207,7 @@ void MiscastEffect::init()
     beam.thrower     = kt;
 }
 
-string MiscastEffect::get_default_cause(bool attribute_to_user) const
+string MiscastEffect::get_default_cause() const
 {
     // This is only for true miscasts, which means both a spell and that
     // the source of the miscast is the same as the target of the miscast.
@@ -630,7 +630,7 @@ bool MiscastEffect::_create_monster(monster_type what, int abj_deg,
                                       : GOD_NO_GOD;
 
     if (cause.empty())
-        cause = get_default_cause(true);
+        cause = get_default_cause();
     mgen_data data = mgen_data::hostile_at(what, alert, target->pos());
     data.set_summoned(nullptr, abj_deg, SPELL_NO_SPELL, god);
     data.set_non_actor_summoner(cause);
@@ -864,7 +864,7 @@ void MiscastEffect::_conjuration(int severity)
     }
 }
 
-static void _your_hands_glow(actor* target, string& you_msg,
+static void _your_hands_glow(actor* /*target*/, string& you_msg,
                              string& mon_msg_seen, bool pluralise)
 {
     you_msg      = "Your @hands@ ";

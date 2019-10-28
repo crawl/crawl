@@ -60,7 +60,10 @@ public:
     animation(): frames(10), frame_delay(50) { }
     virtual ~animation() { }
 
-    virtual void init_frame(int frame) { }
+    virtual void init_frame(int frame)
+    {
+        UNUSED(frame);
+    }
     virtual coord_def cell_cb(const coord_def &pos, int &colour) = 0;
 
     int frames;

@@ -1285,12 +1285,7 @@ LUARET1(you_see_cell, boolean,
 LUARET1(you_see_cell_no_trans, boolean,
         you.see_cell_no_trans(coord_def(luaL_safe_checkint(ls, 1), luaL_safe_checkint(ls, 2))))
 
-LUAFN(you_stop_running)
-{
-    stop_running();
-
-    return 0;
-}
+LUAWRAP(you_stop_running, stop_running())
 
 LUAFN(you_moveto)
 {
@@ -1314,11 +1309,7 @@ LUAFN(you_teleport_to)
     return 1;
 }
 
-LUAFN(you_random_teleport)
-{
-    you_teleport_now();
-    return 0;
-}
+LUAWRAP(you_random_teleport, you_teleport_now())
 
 static int _you_uniques(lua_State *ls)
 {
@@ -1524,11 +1515,7 @@ LUAFN(you_init)
     PLUARET(string, skill_name(item_attack_skill(OBJ_WEAPONS, ng.weapon)));
 }
 
-LUAFN(you_enter_wizard_mode)
-{
-    you.wizard = true;
-    return 0;
-}
+LUAWRAP(you_enter_wizard_mode, you.wizard = true)
 
 LUARET1(you_exp_needed, number, exp_needed(luaL_safe_checkint(ls, 1)))
 LUAWRAP(you_exercise, exercise(str_to_skill(luaL_checkstring(ls, 1)), 1))

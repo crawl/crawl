@@ -934,6 +934,8 @@ void flash_monster_colour(const monster* mon, colour_t fmc_colour,
         view_update_at(c);
         update_screen();
     }
+#else
+    UNUSED(fmc_colour, fmc_delay);
 #endif
 }
 
@@ -1127,6 +1129,8 @@ static void _draw_outside_los(screen_cell_t *cell, const coord_def &gc,
         cell->tile.bg = env.tile_bg(ep);
 
     tileidx_out_of_los(&cell->tile.fg, &cell->tile.bg, &cell->tile.cloud, gc);
+#else
+    UNUSED(ep);
 #endif
 }
 
@@ -1156,7 +1160,7 @@ static void _draw_player(screen_cell_t *cell,
     if (anim_updates)
         tile_apply_animations(cell->tile.bg, &env.tile_flv(gc));
 #else
-    UNUSED(anim_updates);
+    UNUSED(ep, anim_updates);
 #endif
 }
 
@@ -1175,7 +1179,7 @@ static void _draw_los(screen_cell_t *cell,
     if (anim_updates)
         tile_apply_animations(cell->tile.bg, &env.tile_flv(gc));
 #else
-    UNUSED(anim_updates);
+    UNUSED(ep, anim_updates);
 #endif
 }
 
@@ -1184,14 +1188,14 @@ class shake_viewport_animation: public animation
 public:
     shake_viewport_animation() { frames = 5; frame_delay = 40; }
 
-    void init_frame(int frame) override
+    void init_frame(int /*frame*/) override
     {
         offset = coord_def();
         offset.x = random2(3) - 1;
         offset.y = random2(3) - 1;
     }
 
-    coord_def cell_cb(const coord_def &pos, int &colour) override
+    coord_def cell_cb(const coord_def &pos, int &/*colour*/) override
     {
         return pos + offset;
     }
@@ -1209,7 +1213,7 @@ public:
         current_frame = frame;
     }
 
-    coord_def cell_cb(const coord_def &pos, int &colour) override
+    coord_def cell_cb(const coord_def &pos, int &/*colour*/) override
     {
         if (current_frame % 2 == (pos.x + pos.y) % 2 && pos != you.pos())
             return coord_def(-1, -1);
@@ -1244,7 +1248,7 @@ public:
         remaining = false;
     }
 
-    coord_def cell_cb(const coord_def &pos, int &colour) override
+    coord_def cell_cb(const coord_def &pos, int &/*colour*/) override
     {
         if (pos == you.pos())
             return pos;
@@ -1278,7 +1282,7 @@ public:
         current_frame = frame;
     }
 
-    coord_def cell_cb(const coord_def &pos, int &colour) override
+    coord_def cell_cb(const coord_def &pos, int &/*colour*/) override
     {
         coord_def ret;
         if (pos.y % 2)
@@ -1486,6 +1490,8 @@ void viewwindow(bool show_updates, bool tiles_only, animation *a)
             puttext(crawl_view.viewp.x, crawl_view.viewp.y, crawl_view.vbuf);
             update_monster_pane();
         }
+#else
+        UNUSED(tiles_only);
 #endif
 #ifdef USE_TILE
         tiles.set_need_redraw(you.running ? Options.tile_runrest_rate : 0);

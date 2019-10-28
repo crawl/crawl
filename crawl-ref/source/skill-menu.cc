@@ -926,7 +926,7 @@ static keyfun_action _keyfun_target_input(int &ch)
     return KEYFUN_IGNORE;
 }
 
-int SkillMenu::read_skill_target(skill_type sk, int keyn)
+int SkillMenu::read_skill_target(skill_type sk)
 {
     SkillMenuEntry *entry = find_entry(sk);
     ASSERT(entry);
@@ -1181,7 +1181,7 @@ void SkillMenu::select(skill_type sk, int keyn)
     else if (skm.get_state(SKM_VIEW) == SKM_VIEW_TARGETS
                                             && skm.is_set(SKMF_SET_TARGET))
     {
-        read_skill_target(sk, keyn);
+        read_skill_target(sk);
     }
     else if (get_state(SKM_DO) == SKM_DO_PRACTISE
              || get_state(SKM_DO) == SKM_DO_FOCUS)
@@ -1748,7 +1748,7 @@ protected:
     int flag;
 };
 
-SizeReq UISkillMenu::_get_preferred_size(Direction dim, int prosp_width)
+SizeReq UISkillMenu::_get_preferred_size(Direction dim, int /*prosp_width*/)
 {
 #ifdef USE_TILE_LOCAL
     SizeReq ret;

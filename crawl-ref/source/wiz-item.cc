@@ -921,7 +921,7 @@ static void _debug_acquirement_stats(FILE *ostat)
 
         int item_index = NON_ITEM;
 
-        if (!acquirement(type, AQ_WIZMODE, true, &item_index, true)
+        if (!acquirement(type, AQ_WIZMODE, true, &item_index)
             || item_index == NON_ITEM
             || !mitm[item_index].defined())
         {

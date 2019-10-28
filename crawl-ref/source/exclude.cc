@@ -390,6 +390,8 @@ static void _exclude_update(const coord_def &p)
 {
 #ifdef USE_TILE
     _tile_exclude_gmap_update(p);
+#else
+    UNUSED(p);
 #endif
     _exclude_update();
 }
@@ -664,6 +666,7 @@ void marshallExcludes(writer& outf, const exclude_set& excludes)
 
 void unmarshallExcludes(reader& inf, int minorVersion, exclude_set &excludes)
 {
+    UNUSED(minorVersion);
     excludes.clear();
     int nexcludes = unmarshallShort(inf);
     if (nexcludes)

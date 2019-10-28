@@ -1004,7 +1004,7 @@ bool DungeonRegion::update_tip_text(string &tip)
                 tip += make_stringf("HEIGHT(%d)\n", dgn_height_at(gc));
 
             tip += "\n";
-            tip += tile_debug_string(env.tile_fg(ep), env.tile_bg(ep), env.tile_cloud(ep), ' ');
+            tip += tile_debug_string(env.tile_fg(ep), env.tile_bg(ep), ' ');
         }
         else
         {
@@ -1014,14 +1014,14 @@ bool DungeonRegion::update_tip_text(string &tip)
             tip += "\n";
         }
 
-        tip += tile_debug_string(env.tile_bk_fg(gc), env.tile_bk_bg(gc), env.tile_bk_bg(gc), 'B');
+        tip += tile_debug_string(env.tile_bk_fg(gc), env.tile_bk_bg(gc), 'B');
 
         if (!m_vbuf.empty())
         {
             const screen_cell_t *vbuf = m_vbuf;
             const coord_def vc(gc.x - m_cx_to_gx, gc.y - m_cy_to_gy);
             const screen_cell_t &cell = vbuf[crawl_view.viewsz.x * vc.y + vc.x];
-            tip += tile_debug_string(cell.tile.fg, cell.tile.bg, cell.tile.cloud, 'V');
+            tip += tile_debug_string(cell.tile.fg, cell.tile.bg, 'V');
         }
 
         tip += make_stringf("\nFLV: floor: %d (%s) (%d)"

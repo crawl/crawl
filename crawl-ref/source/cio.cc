@@ -223,6 +223,8 @@ int cancellable_get_line(char *buf, int len, input_history *mh,
                         keyfun_action (*keyproc)(int &ch), const string &fill,
                         const string &tag)
 {
+    UNUSED(tag);
+
     flush_prev_message();
 
     mouse_control mc(MOUSE_MODE_PROMPT);

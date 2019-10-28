@@ -760,6 +760,8 @@ static keyfun_action _keyfun_seed_input(int &ch)
 static void _choose_seed(newgame_def& ng, newgame_def& choice,
     const newgame_def& defaults)
 {
+    UNUSED(ng, defaults);
+
     char buf[21]; // max unsigned 64 bit integer is 20 chars in decimal,
                   // specifically 18446744073709551615
     buf[0] = '\0';
@@ -1190,7 +1192,7 @@ public:
         }
     };
 
-    virtual shared_ptr<Widget> get_child_at_offset(int x, int y) override {
+    virtual shared_ptr<Widget> get_child_at_offset(int, int) override {
         return static_pointer_cast<Widget>(m_vbox);
     }
 
@@ -1370,7 +1372,7 @@ protected:
     }
 
 private:
-    bool button_event_hook(const wm_event& ev, MenuButton* btn)
+    bool button_event_hook(const wm_event& ev, MenuButton* /*btn*/)
     {
         if (ev.type == WME_KEYDOWN)
             return on_event(ev);

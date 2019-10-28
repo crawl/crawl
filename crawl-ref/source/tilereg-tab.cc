@@ -395,7 +395,7 @@ int TabbedRegion::handle_mouse(MouseEvent &event)
     return get_tab_region(active_tab())->handle_mouse(event);
 }
 
-bool TabbedRegion::update_tab_tip_text(string &tip, bool active)
+bool TabbedRegion::update_tab_tip_text(string &/*tip*/, bool /*active*/)
 {
     return false;
 }

@@ -145,15 +145,14 @@ static dungeon_feature_type _vault_inspect(vault_placement &place,
                                            int vgrid, keyed_mapspec *mapsp);
 static dungeon_feature_type _vault_inspect_mapspec(vault_placement &place,
                                                    keyed_mapspec& mapsp);
-static dungeon_feature_type _vault_inspect_glyph(vault_placement &place,
-                                                 int vgrid);
+static dungeon_feature_type _vault_inspect_glyph(int vgrid);
 
 static const map_def *_dgn_random_map_for_place(bool minivault);
 static void _dgn_load_colour_grid();
 static void _dgn_map_colour_fixup();
 
 static void _dgn_unregister_vault(const map_def &map);
-static void _remember_vault_placement(const vault_placement &place, bool extra);
+static void _remember_vault_placement(const vault_placement &place);
 
 // Returns true if the given square is okay for use by any character,
 // but always false for squares in non-transparent vaults.
@@ -168,7 +167,7 @@ static coord_def _dgn_random_point_in_bounds(
 
 // ALTAR FUNCTIONS
 static int                  _setup_temple_altars(CrawlHashTable &temple);
-static dungeon_feature_type _pick_temple_altar(vault_placement &place);
+static dungeon_feature_type _pick_temple_altar();
 static dungeon_feature_type _pick_an_altar();
 
 static vector<god_type> _temple_altar_list;
@@ -353,7 +352,7 @@ static bool _build_level_vetoable(bool enable_random_maps)
         mapstat_report_map_veto(e.what());
 #endif
         // try not to lose any ghosts that have been placed
-        save_ghosts(ghost_demon::find_ghosts(false), false, false);
+        save_ghosts(ghost_demon::find_ghosts(false), false);
         return false;
     }
 
@@ -1167,7 +1166,7 @@ dgn_register_place(const vault_placement &place, bool register_vault)
     vault_placement *new_vault_place = new vault_placement(place);
     env.level_vaults.emplace_back(new_vault_place);
     if (register_vault)
-        _remember_vault_placement(place, place.map.is_extra_vault());
+        _remember_vault_placement(place);
     return new_vault_place;
 }
 
@@ -2974,7 +2973,7 @@ struct adjacency_test
 
 struct dummy_estimate
 {
-    bool operator() (const coord_def & pos)
+    bool operator() (const coord_def &)
     {
         return 0;
     }
@@ -4639,9 +4638,7 @@ static void _dgn_place_item_explicit(int index, const coord_def& where,
     dgn_place_item(spec, where);
 }
 
-static void _dgn_give_mon_spec_items(mons_spec &mspec,
-                                     monster *mon,
-                                     const monster_type type)
+static void _dgn_give_mon_spec_items(mons_spec &mspec, monster *mon)
 {
     ASSERT(mspec.place.is_valid());
 
@@ -4896,7 +4893,7 @@ monster* dgn_place_monster(mons_spec &mspec, coord_def where,
         mons->props[MON_OOD_KEY].get_bool() = true;
 
     if (!mspec.items.empty())
-        _dgn_give_mon_spec_items(mspec, mons, type);
+        _dgn_give_mon_spec_items(mspec, mons);
 
     if (mspec.props.exists("monster_tile"))
     {
@@ -4975,8 +4972,7 @@ static bool _dgn_place_one_monster(const vault_placement &place,
 }
 
 /* "Oddball grids" are handled in _vault_grid. */
-static dungeon_feature_type _glyph_to_feat(int glyph,
-                                           vault_placement *place = nullptr)
+static dungeon_feature_type _glyph_to_feat(int glyph)
 {
     return (glyph == 'x') ? DNGN_ROCK_WALL :
            (glyph == 'X') ? DNGN_PERMAROCK_WALL :
@@ -5077,7 +5073,7 @@ static void _vault_grid_glyph(vault_placement &place, const coord_def& where,
 {
     // First, set base tile for grids {dlb}:
     if (vgrid != -1)
-        grd(where) = _glyph_to_feat(vgrid, &place);
+        grd(where) = _glyph_to_feat(vgrid);
 
     if (feat_is_altar(grd(where))
         && is_unavailable_god(feat_altar_god(grd(where))))
@@ -5101,7 +5097,7 @@ static void _vault_grid_glyph(vault_placement &place, const coord_def& where,
         place_specific_trap(where, random_vault_trap());
         break;
     case 'B':
-        grd(where) = _pick_temple_altar(place);
+        grd(where) = _pick_temple_altar();
         break;
     }
 
@@ -5388,7 +5384,7 @@ bool join_the_dots(const coord_def &from, const coord_def &to,
     return !path.empty() || from == to;
 }
 
-static dungeon_feature_type _pick_temple_altar(vault_placement &place)
+static dungeon_feature_type _pick_temple_altar()
 {
     if (_temple_altar_list.empty())
     {
@@ -5552,12 +5548,11 @@ static int _shop_greed(shop_type type, int level_number, int spec_greed)
 /**
  * How many items should be placed in a given shop?
  *
- * @param type              The type of the shop. (E.g. SHOP_FOOD.)
  * @param spec              A vault shop spec; may override default results.
  * @return                  The number of items the shop should be generated
  *                          to hold.
  */
-static int _shop_num_items(shop_type type, const shop_spec &spec)
+static int _shop_num_items(const shop_spec &spec)
 {
     if (spec.num_items != -1)
     {
@@ -5788,7 +5783,7 @@ void place_spec_shop(const coord_def& where, shop_spec &spec, int shop_level)
 
     _set_grd(where, DNGN_ENTER_SHOP);
 
-    const int num_items = _shop_num_items(shop.type, spec);
+    const int num_items = _shop_num_items(spec);
 
     // For books shops, store how many copies of a given book are on display.
     // This increases the diversity of books in a shop.
@@ -6864,8 +6859,7 @@ int vault_placement::connect(bool spotty) const
     for (auto c : exits)
     {
         if (spotty && _connect_spotty(c, _feat_is_wall_floor_liquid)
-            || player_in_branch(BRANCH_SHOALS)
-               && dgn_shoals_connect_point(c, _feat_is_wall_floor_liquid)
+            || player_in_branch(BRANCH_SHOALS) && dgn_shoals_connect_point(c)
             || _connect_vault_exit(c))
         {
             exits_placed++;
@@ -6926,12 +6920,13 @@ static dungeon_feature_type _vault_inspect(vault_placement &place,
     if (mapsp && mapsp->replaces_glyph())
         return _vault_inspect_mapspec(place, *mapsp);
     else
-        return _vault_inspect_glyph(place, vgrid);
+        return _vault_inspect_glyph(vgrid);
 }
 
 static dungeon_feature_type _vault_inspect_mapspec(vault_placement &place,
                                                    keyed_mapspec& mapsp)
 {
+    UNUSED(place);
     dungeon_feature_type found = NUM_FEATURES;
     const feature_spec f = mapsp.get_feat();
     if (f.trap)
@@ -6939,7 +6934,7 @@ static dungeon_feature_type _vault_inspect_mapspec(vault_placement &place,
     else if (f.feat >= 0)
         found = static_cast<dungeon_feature_type>(f.feat);
     else if (f.glyph >= 0)
-        found = _vault_inspect_glyph(place, f.glyph);
+        found = _vault_inspect_glyph(f.glyph);
     else if (f.shop)
         found = DNGN_ENTER_SHOP;
     else
@@ -6948,13 +6943,12 @@ static dungeon_feature_type _vault_inspect_mapspec(vault_placement &place,
     return found;
 }
 
-static dungeon_feature_type _vault_inspect_glyph(vault_placement &place,
-                                                 int vgrid)
+static dungeon_feature_type _vault_inspect_glyph(int vgrid)
 {
     // Get the base feature according to the glyph
     dungeon_feature_type found = NUM_FEATURES;
     if (vgrid != -1)
-        found = _glyph_to_feat(vgrid, &place);
+        found = _glyph_to_feat(vgrid);
 
     // If it's an altar for an unavailable god then it will get turned into floor by _vault_grid_glyph
     if (feat_is_altar(found)
@@ -6966,8 +6960,9 @@ static dungeon_feature_type _vault_inspect_glyph(vault_placement &place,
     return found;
 }
 
-static void _remember_vault_placement(const vault_placement &place, bool extra)
+static void _remember_vault_placement(const vault_placement &place)
 {
+    UNUSED(place);
 #ifdef DEBUG_STATISTICS
     _you_all_vault_list.push_back(place.map.name);
 #endif

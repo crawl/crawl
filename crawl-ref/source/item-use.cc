@@ -818,7 +818,7 @@ bool armour_prompt(const string & mesg, int *index, operation_types oper)
  * @param item      The armour in question.
  * @return          The number of turns it takes to don or doff the item.
  */
-static int armour_equip_delay(const item_def &item)
+static int armour_equip_delay(const item_def &/*item*/)
 {
     return 5;
 }
@@ -3151,7 +3151,7 @@ void read_scroll(item_def& scroll)
             run_uncancel(UNC_ACQUIREMENT, AQ_SCROLL);
         else
             cancel_scroll = !acquirement(OBJ_RANDOM, AQ_SCROLL, false, nullptr,
-                    false, true);
+                    true);
         break;
 
     case SCR_FEAR:

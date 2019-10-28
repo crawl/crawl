@@ -16,7 +16,7 @@ public:
     virtual ~final_effect() {}
 
     virtual bool mergeable(const final_effect &a) const = 0;
-    virtual void merge(const final_effect &a)
+    virtual void merge(const final_effect &)
     {
     }
 
@@ -301,7 +301,7 @@ class bennu_revive_fineff : public final_effect
 {
 public:
     // Each trigger is from the death of a different bennu---no merging.
-    bool mergeable(const final_effect &a) const override { return false; }
+    bool mergeable(const final_effect &) const override { return false; }
     void fire() override;
 
     static void schedule(coord_def pos, int revives, beh_type attitude,
@@ -323,7 +323,7 @@ protected:
 class infestation_death_fineff : public final_effect
 {
 public:
-    bool mergeable(const final_effect &a) const override { return false; }
+    bool mergeable(const final_effect &) const override { return false; }
     void fire() override;
 
     static void schedule(coord_def pos, const string &name)
@@ -341,7 +341,7 @@ protected:
 class make_derived_undead_fineff : public final_effect
 {
 public:
-    bool mergeable(const final_effect &a) const override { return false; }
+    bool mergeable(const final_effect &) const override { return false; }
     void fire() override;
 
     static void schedule(coord_def pos, mgen_data mg, int xl,
@@ -365,7 +365,7 @@ protected:
 class mummy_death_curse_fineff : public final_effect
 {
 public:
-    bool mergeable(const final_effect &a) const override { return false; }
+    bool mergeable(const final_effect &) const override { return false; }
     void fire() override;
 
     static void schedule(const actor * attack, string name, killer_type killer, int pow)

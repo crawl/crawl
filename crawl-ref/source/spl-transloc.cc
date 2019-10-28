@@ -550,6 +550,8 @@ static void _handle_teleport_update(bool large_change, const coord_def old_pos)
             init_player_doll();
         }
     }
+#else
+    UNUSED(old_pos);
 #endif
 }
 

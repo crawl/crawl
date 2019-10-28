@@ -319,7 +319,7 @@ void DollEditRegion::render()
     glmanager->reset_transform();
 }
 
-int DollEditRegion::handle_mouse(MouseEvent &event)
+int DollEditRegion::handle_mouse(MouseEvent &/*event*/)
 {
     return 0;
 }
@@ -337,7 +337,7 @@ private:
     DollEditRegion *reg;
 };
 
-SizeReq UIDollEditor::_get_preferred_size(Direction dim, int prosp_width)
+SizeReq UIDollEditor::_get_preferred_size(Direction dim, int /*prosp_width*/)
 {
     if (!dim)
         return { 552, 552 };

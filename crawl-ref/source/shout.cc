@@ -41,9 +41,7 @@
 static noise_grid _noise_grid;
 static void _actor_apply_noise(actor *act,
                                const coord_def &apparent_source,
-                               int noise_intensity_millis,
-                               const noise_t &noise,
-                               int noise_travel_distance);
+                               int noise_intensity_millis);
 
 /// By default, what databse lookup key corresponds to each shout type?
 static const map<shout_type, string> default_msg_keys = {
@@ -1042,8 +1040,7 @@ void noise_grid::propagate_noise()
             {
                 apply_noise_effects(p,
                                     cell.noise_intensity_millis,
-                                    noises[cell.noise_id],
-                                    travel_distance - 1);
+                                    noises[cell.noise_id]);
 
                 const int attenuation = _noise_attenuation_millis(p);
                 // If the base noise attenuation kills the noise, go no farther:
@@ -1128,8 +1125,7 @@ bool noise_grid::propagate_noise_to_neighbour(int base_attenuation,
 
 void noise_grid::apply_noise_effects(const coord_def &pos,
                                      int noise_intensity_millis,
-                                     const noise_t &noise,
-                                     int noise_travel_distance)
+                                     const noise_t &noise)
 {
     if (you.pos() == pos)
     {
@@ -1139,8 +1135,7 @@ void noise_grid::apply_noise_effects(const coord_def &pos,
         // because the type is correct here.
 
         _actor_apply_noise(&you, noise.noise_source,
-                           noise_intensity_millis, noise,
-                           noise_travel_distance);
+                           noise_intensity_millis);
 
         // The next bit stores noise heard at the player's position for
         // display in the HUD. A more interesting (and much more complicated)
@@ -1167,8 +1162,7 @@ void noise_grid::apply_noise_effects(const coord_def &pos,
             const coord_def perceived_position =
                 noise_perceived_position(mons, pos, noise);
             _actor_apply_noise(mons, perceived_position,
-                               noise_intensity_millis, noise,
-                               noise_travel_distance);
+                               noise_intensity_millis);
             ++affected_actor_count;
         }
     }
@@ -1361,9 +1355,7 @@ void noise_grid::dump_noise_grid(const string &filename) const
 
 static void _actor_apply_noise(actor *act,
                                const coord_def &apparent_source,
-                               int noise_intensity_millis,
-                               const noise_t &noise,
-                               int noise_travel_distance)
+                               int noise_intensity_millis)
 {
 #ifdef DEBUG_NOISE_PROPAGATION
     dprf(DIAG_NOISE, "[NOISE] Actor %s (%d,%d) perceives noise (%d) "

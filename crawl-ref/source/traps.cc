@@ -282,10 +282,9 @@ static void _mark_net_trapping(const coord_def& where)
  * Attempt to trap a monster in a net.
  *
  * @param mon       The monster being trapped.
- * @param agent     The entity doing the trapping.
  * @return          Whether the monster was successfully trapped.
  */
-bool monster_caught_in_net(monster* mon, actor* agent)
+bool monster_caught_in_net(monster* mon)
 {
     if (mon->body_size(PSIZE_BODY) >= SIZE_GIANT)
     {
@@ -1317,38 +1316,6 @@ bool is_valid_shaft_effect_level()
                 && brdepth[place.branch] - place.depth == 1);
 }
 
-static level_id _generic_shaft_dest(level_pos lpos, bool known = false)
-{
-    level_id lid = lpos.id;
-
-    if (!is_connected_branch(lid))
-        return lid;
-
-    int curr_depth = lid.depth;
-    int max_depth = brdepth[lid.branch];
-
-    // Shafts drop you 1/2/3 levels with equal chance.
-    // 33.3% for 1, 2, 3 from D:3, less before
-    lid.depth += 1 + random2(min(lid.depth, 3));
-
-    if (lid.depth > max_depth)
-        lid.depth = max_depth;
-
-    if (lid.depth == curr_depth)
-        return lid;
-
-    // Only shafts on the level immediately above a dangerous branch
-    // bottom will take you to that dangerous bottom.
-    if (branches[lid.branch].branch_flags & brflag::dangerous_end
-        && lid.depth == max_depth
-        && (max_depth - curr_depth) > 1)
-    {
-        lid.depth--;
-    }
-
-    return lid;
-}
-
 /***
  * The player rolled a new tile, see if they deserve to be trapped.
  */
@@ -1410,9 +1377,34 @@ void do_trap_effects()
     }
 }
 
-level_id generic_shaft_dest(coord_def pos, bool known = false)
+level_id generic_shaft_dest(level_id place)
 {
-    return _generic_shaft_dest(level_pos(level_id::current(), pos));
+    if (!is_connected_branch(place))
+        return place;
+
+    int curr_depth = place.depth;
+    int max_depth = brdepth[place.branch];
+
+    // Shafts drop you 1/2/3 levels with equal chance.
+    // 33.3% for 1, 2, 3 from D:3, less before
+    place.depth += 1 + random2(min(place.depth, 3));
+
+    if (place.depth > max_depth)
+        place.depth = max_depth;
+
+    if (place.depth == curr_depth)
+        return place;
+
+    // Only shafts on the level immediately above a dangerous branch
+    // bottom will take you to that dangerous bottom.
+    if (branches[place.branch].branch_flags & brflag::dangerous_end
+        && place.depth == max_depth
+        && (max_depth - curr_depth) > 1)
+    {
+        place.depth--;
+    }
+
+    return place;
 }
 
 /**

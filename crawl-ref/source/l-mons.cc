@@ -38,11 +38,10 @@ void push_monster(lua_State *ls, monster* mons)
 }
 
 #define MDEF(name)                                                      \
-    static int l_mons_##name(lua_State *ls, monster* mons,             \
-                             const char *attr)                         \
+    static int l_mons_##name(lua_State *ls, monster* mons)             \
 
 #define MDEFN(name, closure)                    \
-    static int l_mons_##name(lua_State *ls, monster* mons, const char *attrs) \
+    static int l_mons_##name(lua_State *ls, monster* mons) \
     {                                                                   \
     lua_pushlightuserdata(ls, mons);                                    \
     lua_pushcclosure(ls, l_mons_##closure, 1);                          \
@@ -521,7 +520,7 @@ MDEFN(get_info, do_get_info)
 struct MonsAccessor
 {
     const char *attribute;
-    int (*accessor)(lua_State *ls, monster* mons, const char *attr);
+    int (*accessor)(lua_State *ls, monster* mons);
 };
 
 static MonsAccessor mons_attrs[] =
@@ -582,7 +581,7 @@ static int monster_get(lua_State *ls)
 
     for (const MonsAccessor &ma : mons_attrs)
         if (!strcmp(attr, ma.attribute))
-            return ma.accessor(ls, mons, attr);
+            return ma.accessor(ls, mons);
 
     return 0;
 }

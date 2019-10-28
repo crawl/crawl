@@ -150,7 +150,7 @@ static void _wizard_go_to_level(const level_pos &pos)
     viewwindow();
 
     // Tell stash-tracker and travel that we've changed levels.
-    trackers_init_new_level(true);
+    trackers_init_new_level();
 }
 
 void wizard_interlevel_travel()
@@ -785,7 +785,7 @@ void wizard_recreate_level()
     seen_monsters_react();
     viewwindow();
 
-    trackers_init_new_level(true);
+    trackers_init_new_level();
 }
 
 void wizard_clear_used_vaults()

@@ -181,8 +181,7 @@ static string monster_size(const monster& mon)
     }
 }
 
-static string monster_speed(const monster& mon, const monsterentry* me,
-                                 int speed_min, int speed_max)
+static string monster_speed(const monster& mon, int speed_min, int speed_max)
 {
     string speed;
 
@@ -283,7 +282,7 @@ static dice_def mi_calc_iood_damage(monster* mons)
     return dice_def(9, power / 4);
 }
 
-static string mi_calc_smiting_damage(monster* mons) { return "7-17"; }
+static string mi_calc_smiting_damage(monster* /*mons*/) { return "7-17"; }
 
 static string mi_calc_airstrike_damage(monster* mons)
 {
@@ -887,7 +886,7 @@ int main(int argc, char* argv[])
             printf(" | %s", colour(LIGHTRED, "UNFINISHED").c_str());
 
         printf(" | Spd: %s",
-               monster_speed(mon, me, speed_min, speed_max).c_str());
+               monster_speed(mon, speed_min, speed_max).c_str());
 
         const int hd = mon.get_experience_level();
         printf(" | HD: %d", hd);

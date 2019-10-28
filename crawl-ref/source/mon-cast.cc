@@ -166,7 +166,7 @@ struct mons_spell_logic
     int power_hd_factor;
 };
 
-static bool _always_worthwhile(const monster &caster) { return true; }
+static bool _always_worthwhile(const monster &/*caster*/) { return true; }
 static bool _caster_has_foe(const monster &caster) { return caster.foe != 0; }
 static mons_spell_logic _conjuration_logic(spell_type spell);
 static mons_spell_logic _hex_logic(spell_type spell,
@@ -389,7 +389,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
         MSPELL_LOGIC_NONE, 6
     } },
     { SPELL_CONJURE_FLAME, {
-        [](const monster &caster) {
+        [](const monster &/*caster*/) {
             return !(env.level_state & LSTATE_STILL_WINDS);
         },
         [](monster &caster, mon_spell_slot slot, bolt& pbolt) {
@@ -515,7 +515,7 @@ static mons_spell_logic _hex_logic(spell_type spell,
  * @param caster    The monster casting the spell that produced the beam.
  * @param pbolt     A pre-setup & aimed spell beam. (For e.g. FIREBALL.)
  */
-static void _fire_simple_beam(monster &caster, mon_spell_slot, bolt &pbolt)
+static void _fire_simple_beam(monster &/*caster*/, mon_spell_slot, bolt &pbolt)
 {
     // If a monster just came into view and immediately cast a spell,
     // we need to refresh the screen before drawing the beam.
@@ -756,7 +756,7 @@ static void _cast_cantrip(monster &mons, mon_spell_slot slot, bolt& pbolt)
     }
 }
 
-static void _cast_injury_mirror(monster &mons, mon_spell_slot slot, bolt&)
+static void _cast_injury_mirror(monster &mons, mon_spell_slot /*slot*/, bolt&)
 {
     const string msg
         = make_stringf(" offers %s to %s, and fills with unholy energy.",
@@ -5515,7 +5515,7 @@ static void _dream_sheep_sleep(monster& mons, actor& foe)
 // Draconian stormcaller upheaval. Simplified compared to the player version.
 // Noisy! Causes terrain changes. Destroys doors/walls.
 // TODO: Could use further simplification.
-static void _mons_upheaval(monster& mons, actor& foe)
+static void _mons_upheaval(monster& mons, actor& /*foe*/)
 {
     bolt beam;
     beam.source_id   = mons.mid;
@@ -7504,7 +7504,7 @@ static void _throw_ally_to(const monster &thrower, monster &throwee,
     behaviour_event(&throwee, ME_DISTURB, &thrower, throwee.pos());
 }
 
-static int _throw_ally_site_score(const monster& thrower, const actor& throwee,
+static int _throw_ally_site_score(const monster& thrower, const actor& /*throwee*/,
                                   coord_def pos)
 {
     const actor *foe = thrower.get_foe();

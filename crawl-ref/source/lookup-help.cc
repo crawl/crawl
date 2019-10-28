@@ -412,14 +412,14 @@ static vector<string> _get_skill_keys()
     return names;
 }
 
-static bool _monster_filter(string key, string body)
+static bool _monster_filter(string key, string /*body*/)
 {
     const monster_type mon_num = _mon_by_name(key);
     return mons_class_flag(mon_num, M_CANT_SPAWN)
            || mons_is_tentacle_segment(mon_num);
 }
 
-static bool _spell_filter(string key, string body)
+static bool _spell_filter(string key, string /*body*/)
 {
     if (!strip_suffix(key, "spell"))
         return true;
@@ -435,17 +435,17 @@ static bool _spell_filter(string key, string body)
     return false;
 }
 
-static bool _item_filter(string key, string body)
+static bool _item_filter(string key, string /*body*/)
 {
     return item_kind_by_name(key).base_type == OBJ_UNASSIGNED;
 }
 
-static bool _feature_filter(string key, string body)
+static bool _feature_filter(string key, string /*body*/)
 {
     return feat_by_desc(key) == DNGN_UNSEEN;
 }
 
-static bool _card_filter(string key, string body)
+static bool _card_filter(string key, string /*body*/)
 {
     lowercase(key);
 
@@ -461,7 +461,7 @@ static bool _card_filter(string key, string body)
     return true;
 }
 
-static bool _ability_filter(string key, string body)
+static bool _ability_filter(string key, string /*body*/)
 {
     lowercase(key);
 
@@ -471,7 +471,7 @@ static bool _ability_filter(string key, string body)
     return !string_matches_ability_name(key);
 }
 
-static bool _status_filter(string key, string body)
+static bool _status_filter(string key, string /*body*/)
 {
     return !strip_suffix(lowercase(key), " status");
 }
@@ -662,7 +662,7 @@ static MenuEntry* _feature_menu_gen(char letter, const string &str, string &key)
 /**
  * Generate a ?/G menu entry. (ref. _simple_menu_gen()).
  */
-static MenuEntry* _god_menu_gen(char letter, const string &str, string &key)
+static MenuEntry* _god_menu_gen(char /*letter*/, const string &/*str*/, string &key)
 {
     return new GodMenuEntry(str_to_god(key));
 }
@@ -946,17 +946,14 @@ static int _describe_key(const string &key, const string &suffix,
     inf.quote = getQuoteString(key);
 
     const string desc = getLongDescription(key);
-    const int width = min(80, get_number_of_cols());
 
     inf.body << desc << extra_info;
-
-    string title = key;
-    strip_suffix(title, suffix);
-    title = uppercase_first(title);
-    linebreak_string(footer, width - 1);
-
+    inf.title = [&]() {
+        string title = key;
+        strip_suffix(title, suffix);
+        return uppercase_first(title);
+    }();
     inf.footer = footer;
-    inf.title  = title;
 
     return show_description(inf, tile);
 }
@@ -1006,7 +1003,7 @@ static int _describe_monster(const string &key, const string &suffix,
     // Avoid slime creature being described as "buggy"
     if (mi.type == MONS_SLIME_CREATURE)
         mi.slime_size = 1;
-    return describe_monsters(mi, true, footer);
+    return describe_monsters(mi, footer);
 }
 
 
@@ -1019,7 +1016,7 @@ static int _describe_monster(const string &key, const string &suffix,
  * @return          The keypress the user made to exit.
  */
 static int _describe_spell(const string &key, const string &suffix,
-                             string footer)
+                             string /*footer*/)
 {
     const string spell_name = key.substr(0, key.size() - suffix.size());
     const spell_type spell = spell_by_name(spell_name, true);
@@ -1029,7 +1026,7 @@ static int _describe_spell(const string &key, const string &suffix,
 }
 
 static int _describe_skill(const string &key, const string &suffix,
-                             string footer)
+                             string /*footer*/)
 {
     const string skill_name = key.substr(0, key.size() - suffix.size());
     const skill_type skill = skill_from_name(skill_name.c_str());
@@ -1038,7 +1035,7 @@ static int _describe_skill(const string &key, const string &suffix,
 }
 
 static int _describe_ability(const string &key, const string &suffix,
-                             string footer)
+                             string /*footer*/)
 {
     const string abil_name = key.substr(0, key.size() - suffix.size());
     const ability_type abil = ability_by_name(abil_name.c_str());
@@ -1102,17 +1099,18 @@ static int _describe_cloud(const string &key, const string &suffix,
  * @return          The keypress the user made to exit.
  */
 static int _describe_item(const string &key, const string &suffix,
-                           string footer)
+                           string /*footer*/)
 {
+    const string item_name = key.substr(0, key.size() - suffix.size());
     item_def item;
-    if (!get_item_by_exact_name(item, key.c_str()))
+    if (!get_item_by_exact_name(item, item_name.c_str()))
         die("Unable to get item %s by name", key.c_str());
     describe_item(item);
     return 0;
 }
 
 static int _describe_feature(const string &key, const string &suffix,
-                             string footer)
+                             string /*footer*/)
 {
     const string feat_name = key.substr(0, key.size() - suffix.size());
     const dungeon_feature_type feat = feat_by_desc(feat_name);

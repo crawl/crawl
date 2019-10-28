@@ -1281,7 +1281,7 @@ int attack::calc_damage()
         damage_max += attk_damage;
         damage     += 1 + random2(attk_damage);
 
-        damage = apply_damage_modifiers(damage, damage_max);
+        damage = apply_damage_modifiers(damage);
 
         set_attack_verb(damage);
         return apply_defender_ac(damage, damage_max);
@@ -1622,7 +1622,7 @@ bool attack::apply_damage_brand(const char *what)
         }
 
         if (!x_chance_in_y(melee_confuse_chance(defender->get_hit_dice()), 100)
-            || defender->as_monster()->check_clarity(false))
+            || defender->as_monster()->check_clarity())
         {
             break;
         }

@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include "AppHdr.h"
+
 extern "C" {
 #include <lua.h>
 #include <lauxlib.h>
@@ -25,6 +27,7 @@ lua_Integer luaL_safe_tointeger(lua_State *L, int idx);
 #define LUAWRAP(name, wrapexpr) \
     static int name(lua_State *ls) \
     {   \
+        UNUSED(ls); \
         wrapexpr; \
         return 0; \
     }

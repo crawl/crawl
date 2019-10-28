@@ -2352,7 +2352,7 @@ void map_def::write_full(writer& outf) const
     epilogue.write(outf);
 }
 
-void map_def::read_full(reader& inf, bool check_cache_version)
+void map_def::read_full(reader& inf)
 {
     // There's a potential race-condition here:
     // - If someone modifies a .des file while there are games in progress,
@@ -2449,7 +2449,7 @@ void map_def::load()
                 make_stringf("Map inf is invalid: %s", name.c_str()));
     }
     inf.advance(cache_offset);
-    read_full(inf, true);
+    read_full(inf);
 
     index_only = false;
 }
@@ -2814,6 +2814,8 @@ bool map_def::has_exit() const
 
 string map_def::validate_map_def(const depth_ranges &default_depths)
 {
+    UNUSED(default_depths);
+
     unwind_bool valid_flag(validating_map_flag, true);
 
     string err = run_lua(true);
@@ -5099,9 +5101,7 @@ int item_list::parse_acquirement_source(const string &source)
 
 bool item_list::monster_corpse_is_valid(monster_type *mons,
                                         const string &name,
-                                        bool corpse,
-                                        bool skeleton,
-                                        bool chunk)
+                                        bool skeleton)
 {
     if (*mons == RANDOM_NONBASE_DRACONIAN || *mons == RANDOM_NONBASE_DEMONSPAWN)
     {
@@ -5161,7 +5161,7 @@ bool item_list::parse_corpse_spec(item_spec &result, string s)
     // Get the actual monster spec:
     mons_spec spec = mlist.get_monster(0);
     monster_type mtype = static_cast<monster_type>(spec.type);
-    if (!monster_corpse_is_valid(&mtype, s, corpse, skeleton, chunk))
+    if (!monster_corpse_is_valid(&mtype, s, skeleton))
     {
         error = make_stringf("Requested corpse '%s' is invalid",
                              s.c_str());

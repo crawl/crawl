@@ -53,8 +53,7 @@
 // Global
 StashTracker StashTrack;
 
-string userdef_annotate_item(const char *s, const item_def *item,
-                             bool exclusive)
+string userdef_annotate_item(const char *s, const item_def *item)
 {
 #ifdef CLUA_BINDINGS
     lua_stack_cleaner cleaner(clua);
@@ -70,9 +69,9 @@ string userdef_annotate_item(const char *s, const item_def *item,
 #endif
 }
 
-string stash_annotate_item(const char *s, const item_def *item, bool exclusive)
+string stash_annotate_item(const char *s, const item_def *item)
 {
-    string text = userdef_annotate_item(s, item, exclusive);
+    string text = userdef_annotate_item(s, item);
 
     if (item->has_spells())
     {
@@ -728,7 +727,7 @@ vector<stash_search_result> ShopInfo::matches_search(
     {
         const string sname = shop_item_name(item);
         const string ann   = stash_annotate_item(STASH_LUA_SEARCH_ANNOTATE,
-                                                 &item, true);
+                                                 &item);
 
         if (search.matches(prefix + " " + ann + " " + sname +
                                                     " {" + shoptitle + "}")

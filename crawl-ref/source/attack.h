@@ -136,7 +136,7 @@ protected:
     virtual int get_weapon_plus();
     virtual int calc_base_unarmed_damage();
     virtual int calc_mon_to_hit_base() = 0;
-    virtual int apply_damage_modifiers(int damage, int damage_max) = 0;
+    virtual int apply_damage_modifiers(int damage) = 0;
     virtual int calc_damage();
     int test_hit(int to_hit, int ev, bool randomise_ev);
     int apply_defender_ac(int damage, int damage_max = 0) const;
@@ -144,6 +144,7 @@ protected:
     virtual bool attack_shield_blocked(bool verbose);
     virtual bool ignores_shield(bool verbose)
     {
+        UNUSED(verbose);
         return false;
     }
     virtual bool apply_damage_brand(const char *what = nullptr);

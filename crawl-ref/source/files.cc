@@ -862,8 +862,7 @@ static void _write_tagged_chunk(const string &chunkname, tag_type tag)
     tag_write(tag, outf);
 }
 
-static int _get_dest_stair_type(branch_type old_branch,
-                                dungeon_feature_type stair_taken,
+static int _get_dest_stair_type(dungeon_feature_type stair_taken,
                                 bool &find_first)
 {
     // Order is important here.
@@ -944,15 +943,13 @@ static int _get_dest_stair_type(branch_type old_branch,
     return DNGN_FLOOR;
 }
 
-static void _place_player_on_stair(branch_type old_branch,
-                                   int stair_taken, const coord_def& dest_pos,
+static void _place_player_on_stair(int stair_taken, const coord_def& dest_pos,
                                    const string &hatch_name)
 
 {
     bool find_first = true;
     dungeon_feature_type stair_type = static_cast<dungeon_feature_type>(
-            _get_dest_stair_type(old_branch,
-                                 static_cast<dungeon_feature_type>(stair_taken),
+            _get_dest_stair_type(static_cast<dungeon_feature_type>(stair_taken),
                                  find_first));
 
     you.moveto(dgn_find_nearby_stair(stair_type, dest_pos, find_first,
@@ -1194,12 +1191,11 @@ static bool _leave_level(dungeon_feature_type stair_taken,
  * Move the player to the appropriate entrance location in a level.
  *
  * @param stair_taken   The means used to leave the last level.
- * @param old_branch    The previous level's branch.
  * @param return_pos    The location of the entrance portal, if applicable.
  * @param dest_pos      The player's location on the last level.
  */
 static void _place_player(dungeon_feature_type stair_taken,
-                          branch_type old_branch, const coord_def &return_pos,
+                          const coord_def &return_pos,
                           const coord_def &dest_pos, const string &hatch_name)
 {
     if (player_in_branch(BRANCH_ABYSS))
@@ -1207,7 +1203,7 @@ static void _place_player(dungeon_feature_type stair_taken,
     else if (!return_pos.origin())
         you.moveto(return_pos);
     else
-        _place_player_on_stair(old_branch, stair_taken, dest_pos, hatch_name);
+        _place_player_on_stair(stair_taken, dest_pos, hatch_name);
 
     // Don't return the player into walls, deep water, or a trap.
     for (distance_iterator di(you.pos(), true, false); di; ++di)
@@ -1241,7 +1237,7 @@ static void _place_player(dungeon_feature_type stair_taken,
 }
 
 // Update the trackers after the player changed level.
-void trackers_init_new_level(bool transit)
+void trackers_init_new_level()
 {
     travel_init_new_level();
 }
@@ -1797,8 +1793,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
 
         delete_all_clouds();
 
-        _place_player(stair_taken, old_level.branch, return_pos, dest_pos,
-                      hatch_name);
+        _place_player(stair_taken, return_pos, dest_pos, hatch_name);
     }
 
     crawl_view.set_player_at(you.pos(), load_mode != LOAD_VISITOR);
@@ -1817,7 +1812,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     if (make_changes)
     {
         // Tell stash-tracker and travel that we've changed levels.
-        trackers_init_new_level(true);
+        trackers_init_new_level();
         tile_new_level(just_created_level);
     }
     else if (load_mode == LOAD_RESTART_GAME)
@@ -2204,7 +2199,7 @@ static string _bones_permastore_file()
     while ((size = fread(buf, sizeof(char), BUFSIZ, src)) > 0)
         fwrite(buf, sizeof(char), size, target);
 
-    lk_close(target, full_path);
+    lk_close(target);
 
     if (!feof(src))
     {
@@ -2317,7 +2312,7 @@ static bool _backup_bones_for_upgrade(string ghost_filename, save_version &v)
     {
         mprf(MSGCH_ERROR, "Unable to open bones backup file %s for writing",
             upgrade_filename.c_str());
-        lk_close(backup_src, ghost_filename);
+        lk_close(backup_src);
         return false;
     }
 
@@ -2327,7 +2322,7 @@ static bool _backup_bones_for_upgrade(string ghost_filename, save_version &v)
     while ((size = fread(buf, sizeof(char), BUFSIZ, backup_src)) > 0)
         fwrite(buf, sizeof(char), size, backup_target);
 
-    lk_close(backup_target, upgrade_filename);
+    lk_close(backup_target);
 
     if (!feof(backup_src))
     {
@@ -2339,10 +2334,10 @@ static bool _backup_bones_for_upgrade(string ghost_filename, save_version &v)
                 "Failed to unlink probably corrupt bones file: %s",
                 upgrade_filename.c_str());
         }
-        lk_close(backup_src, ghost_filename);
+        lk_close(backup_src);
         return false;
     }
-    lk_close(backup_src, ghost_filename);
+    lk_close(backup_src);
     return true;
 }
 
@@ -3204,7 +3199,7 @@ static vector<ghost_demon> _update_permastore(const vector<ghost_demon> &ghosts)
         write_ghost_version(outw);
         tag_write_ghosts(outw, permastore);
 
-        lk_close(ghost_file, permastore_file);
+        lk_close(ghost_file);
     }
     return leftovers;
 }
@@ -3263,7 +3258,7 @@ void save_ghosts(const vector<ghost_demon> &ghosts, bool force, bool use_store)
     write_ghost_version(outw);
     tag_write_ghosts(outw, leftovers);
 
-    lk_close(ghost_file, g_file_name);
+    lk_close(ghost_file);
 
     _ghost_dprf("Saved ghosts (%s).", g_file_name.c_str());
 }
@@ -3331,7 +3326,7 @@ FILE *lk_open_exclusive(const string &file)
     return fdopen(fd, "wb");
 }
 
-void lk_close(FILE *handle, const string &file)
+void lk_close(FILE *handle)
 {
     if (handle == nullptr || handle == stdin)
         return;
@@ -3357,7 +3352,7 @@ file_lock::file_lock(const string &s, const char *_mode, bool die_on_fail)
 file_lock::~file_lock()
 {
     if (handle)
-        lk_close(handle, filename);
+        lk_close(handle);
 }
 
 /////////////////////////////////////////////////////////////////////////////

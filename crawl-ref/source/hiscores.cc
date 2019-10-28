@@ -69,7 +69,7 @@ static int hs_list_size = 0;
 static bool hs_list_initalized = false;
 
 static FILE *_hs_open(const char *mode, const string &filename);
-static void  _hs_close(FILE *handle, const string &filename);
+static void  _hs_close(FILE *handle);
 static bool  _hs_read(FILE *scores, scorefile_entry &dest);
 static void  _hs_write(FILE *scores, scorefile_entry &entry);
 static time_t _parse_time(const string &st);
@@ -158,7 +158,7 @@ int hiscores_new_entry(const scorefile_entry &ne)
     // If we've still not inserted it, it's not a highscore.
     if (!inserted)
     {
-        _hs_close(scores, _score_file_name());
+        _hs_close(scores);
         return -1;
     }
 
@@ -182,7 +182,7 @@ int hiscores_new_entry(const scorefile_entry &ne)
     }
 
     // close scorefile.
-    _hs_close(scores, _score_file_name());
+    _hs_close(scores);
     return newest_entry;
 }
 
@@ -204,7 +204,7 @@ void logfile_new_entry(const scorefile_entry &ne)
     _hs_write(logfile, le);
 
     // close logfile.
-    _hs_close(logfile, _log_file_name());
+    _hs_close(logfile);
 }
 
 template <class t_printf>
@@ -251,7 +251,7 @@ void hiscores_read_to_memory()
     hs_list_initalized = true;
 
     //close off
-    _hs_close(scores, _score_file_name());
+    _hs_close(scores);
 }
 
 // Writes all entries in the scorefile to stdout in human-readable form.
@@ -279,7 +279,7 @@ void hiscores_print_all(int display_count, int format)
             _hiscores_print_entry(se, entry, format, printf);
     }
 
-    _hs_close(scores, _score_file_name());
+    _hs_close(scores);
 }
 
 // Displays high scores using curses. For output to the console, use
@@ -317,7 +317,7 @@ string hiscores_print_list(int display_count, int format, int newest_entry, int&
         if (i == newest_entry)
             ret += "<yellow>";
 
-        _hiscores_print_entry(*hs_list[i], i, format, [&ret](const char *fmt, const char *s){
+        _hiscores_print_entry(*hs_list[i], i, format, [&ret](const char */*fmt*/, const char *s){
             ret += string(s);
         });
 
@@ -358,7 +358,7 @@ static void _show_morgue(scorefile_entry& se)
         morgue_text += "<w>" + replace_all(line, "<", "<<") + "</w>" + '\n';
     }
 
-    lk_close(morgue, morgue_path);
+    lk_close(morgue);
 
     column_composer cols(2, 40);
     cols.add_formatted(
@@ -380,7 +380,7 @@ class UIHiscoresMenu : public Widget
 public:
     UIHiscoresMenu();
 
-    virtual shared_ptr<Widget> get_child_at_offset(int x, int y) override {
+    virtual shared_ptr<Widget> get_child_at_offset(int, int) override {
         return static_pointer_cast<Widget>(m_root);
     }
 
@@ -467,7 +467,7 @@ void UIHiscoresMenu::_construct_hiscore_table()
             break;
     }
 
-    _hs_close(scores, _score_file_name());
+    _hs_close(scores);
 
     for (int j=0; j<i; j++)
         _add_hiscore_row(*hs_list[j], j);
@@ -612,9 +612,9 @@ static FILE *_hs_open(const char *mode, const string &scores)
     return lk_open(mode, scores);
 }
 
-static void _hs_close(FILE *handle, const string &scores)
+static void _hs_close(FILE *handle)
 {
-    lk_close(handle, scores);
+    lk_close(handle);
 }
 
 static bool _hs_read(FILE *scores, scorefile_entry &dest)
@@ -2995,8 +2995,10 @@ void mark_milestone(const string &type, const string &milestone,
     if (FILE *fp = lk_open("a", milestone_file))
     {
         fprintf(fp, "%s\n", xlog_line.c_str());
-        lk_close(fp, milestone_file);
+        lk_close(fp);
     }
+#else
+    UNUSED(type, milestone, origin_level, milestone_time);
 #endif // DGL_MILESTONES
 }
 

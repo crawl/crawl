@@ -967,7 +967,7 @@ message_tee::~message_tee()
     current_message_tees.erase(this);
 }
 
-void message_tee::append(const string &s, msg_channel_type ch)
+void message_tee::append(const string &s, msg_channel_type /*ch*/)
 {
     // could use a more c++y external interface -- but that just complicates things
     store << s;
@@ -1293,7 +1293,7 @@ static bool _check_flash_screen(const string& line, msg_channel_type channel)
     return _check_option(line, channel, Options.flash_screen_message);
 }
 
-static bool _check_join(const string& line, msg_channel_type channel)
+static bool _check_join(const string& /*line*/, msg_channel_type channel)
 {
     switch (channel)
     {

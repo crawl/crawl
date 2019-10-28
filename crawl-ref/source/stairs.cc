@@ -489,7 +489,7 @@ static level_id _travel_destination(const dungeon_feature_type how,
             return dest;
         }
 
-        shaft_dest = you.shaft_dest(known_shaft);
+        shaft_dest = you.shaft_dest();
     }
     // How far down you fall via a shaft or hatch.
     const int shaft_depth = (shaft ? shaft_dest.depth - you.depth : 1);
@@ -852,7 +852,7 @@ void floor_transition(dungeon_feature_type how,
 
     moveto_location_effects(whence);
 
-    trackers_init_new_level(true);
+    trackers_init_new_level();
 
     if (update_travel_cache && !shaft)
         _update_travel_cache(old_level, stair_pos);

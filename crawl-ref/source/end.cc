@@ -52,6 +52,7 @@ using namespace ui;
 bool crawl_should_restart(game_exit exit)
 {
 #ifdef DGAMELAUNCH
+    UNUSED(exit);
     return false;
 #else
 #ifdef USE_TILE_WEB

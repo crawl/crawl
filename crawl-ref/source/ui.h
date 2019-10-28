@@ -187,6 +187,8 @@ public:
 #ifndef USE_TILE_LOCAL
         margin = Margin(forward<Args>(args)...);
         _invalidate_sizereq();
+#else
+        UNUSED(args...);
 #endif
     }
 
@@ -196,6 +198,8 @@ public:
 #ifdef USE_TILE_LOCAL
         margin = Margin(forward<Args>(args)...);
         _invalidate_sizereq();
+#else
+        UNUSED(args...);
 #endif
     }
 
@@ -211,7 +215,7 @@ public:
     } slots;
 
     // XXX: add documentation
-    virtual shared_ptr<Widget> get_child_at_offset(int x, int y) {
+    virtual shared_ptr<Widget> get_child_at_offset(int, int) {
         return nullptr;
     };
 
@@ -675,7 +679,6 @@ public:
     virtual void _render() override;
     virtual SizeReq _get_preferred_size(Direction dim, int prosp_width) override;
     virtual void _allocate_region() override;
-    virtual bool on_event(const wm_event& event) override;
 
 protected:
     void _pack_doll();

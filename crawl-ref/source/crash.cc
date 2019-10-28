@@ -140,7 +140,7 @@ void crash_signal_handler(int sig_num)
         if (file == nullptr)
             file = stderr;
 
-        write_stack_trace(file, 0);
+        write_stack_trace(file);
 
         if (file != stderr)
             fclose(file);
@@ -296,7 +296,7 @@ string crash_signal_info()
 }
 
 #if defined(BACKTRACE_SUPPORTED)
-void write_stack_trace(FILE* file, int ignore_count)
+void write_stack_trace(FILE* file)
 {
     void* frames[50];
 
@@ -382,7 +382,7 @@ void write_stack_trace(FILE* file, int ignore_count)
     free(symbols);
 }
 #else // BACKTRACE_SUPPORTED
-void write_stack_trace(FILE* file, int ignore_count)
+void write_stack_trace(FILE* file)
 {
     const char* msg = "Unable to get stack trace on this platform.\n";
     fprintf(stderr, "%s", msg);
@@ -434,6 +434,8 @@ void call_gdb(FILE *file)
     default:
         waitpid(gdb, 0, 0);
     }
+#else
+    UNUSED(file);
 #endif
 }
 

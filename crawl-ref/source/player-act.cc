@@ -92,8 +92,8 @@ bool player::move_to_pos(const coord_def &c, bool clear_net, bool /*force*/)
 }
 
 void player::apply_location_effects(const coord_def &oldpos,
-                                    killer_type killer,
-                                    int killernum)
+                                    killer_type /*killer*/,
+                                    int /*killernum*/)
 {
     moveto_location_effects(env.grid(oldpos));
 }

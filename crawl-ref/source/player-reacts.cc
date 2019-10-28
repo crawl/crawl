@@ -457,7 +457,7 @@ void player_reacts_to_monsters()
         update_can_currently_train();
 
     if (you.duration[DUR_FIRE_SHIELD] > 0)
-        manage_fire_shield(you.time_taken);
+        manage_fire_shield();
 
     check_monster_detect();
 

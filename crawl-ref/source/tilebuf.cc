@@ -184,7 +184,7 @@ static unsigned char _get_alpha(float lerp, int alpha_top, int alpha_bottom)
 }
 
 void ColouredTileBuffer::add(tileidx_t idx, int x, int y, int z,
-                             int ox,  int oy, int ymin, int ymax,
+                             int ox,  int oy, int /*ymin*/, int ymax,
                              int alpha_top, int alpha_bottom)
 {
     float pos_sx = x;
