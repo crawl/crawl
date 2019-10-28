@@ -403,6 +403,11 @@ static inline void UNUSED(const volatile T &)
 {
 }
 
+template <class... T>
+static inline void UNUSED(const volatile T &...)
+{
+}
+
 #endif // __cplusplus
 
 
