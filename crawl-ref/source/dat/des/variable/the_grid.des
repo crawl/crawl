@@ -2295,22 +2295,6 @@ MAP
  .......
 ENDMAP
 
-NAME:    minmay_the_grid_zigzags
-TAGS:    the_grid unrand
-SUBST:   0 = 000.
-SUBST:   b : .:140 xcvbnGTUV09%* t:5 Y:5
-MAP
-    ..
-  0  ..
- ...  .0
-.. ....
-.  .b.  .
-  .... ..
- 0.  ...
-  ..  0
-   ..
-ENDMAP
-
 NAME:    minmay_the_grid_rooms
 TAGS:    the_grid unrand
 SUBST:   0 = 0.
