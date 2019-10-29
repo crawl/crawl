@@ -1772,14 +1772,8 @@ static void _construct_weapon_menu(const newgame_def& ng,
         }
         if (choice.skill == SK_UNARMED_COMBAT)
         {
-            tile_stack->min_size() =
-#ifdef USE_TILE_WEB
-                            // these dimensions are apparently unused for
-                            // webtiles, we do this so they're not interpreted
-                            // as characters for webtiles console.
-                            0;
-#else
-                            TILE_Y;
+#ifndef USE_TILE_WEB
+            tile_stack->min_size() = Size{TILE_Y};
 #endif
         }
         else
