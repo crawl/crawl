@@ -13,16 +13,11 @@
 
 typedef int (*lua_element_colour_calculator)(int, const coord_def&, lua_datum);
 
-static int _lua_element_colour(int rand, const coord_def& loc,
-                               lua_datum function);
-
-struct lua_element_colour_calc : public element_colour_calc
+struct lua_element_colour_calc : public base_colour_calc
 {
     lua_element_colour_calc(element_type _type, string _name,
                             lua_datum _function)
-        : element_colour_calc(_type, _name, (element_colour_calculator)_lua_element_colour),
-          function(_function)
-        {};
+        : base_colour_calc(_type, _name), function(_function) {}
 
     virtual int get(const coord_def& loc = coord_def(),
                     bool non_random = false) override;
@@ -33,23 +28,10 @@ protected:
 
 int lua_element_colour_calc::get(const coord_def& loc, bool non_random)
 {
-    // casting function pointers from other function pointers is guaranteed
-    // to be safe, but calling them on pointers not of their type isn't, so
-    // assert here to be safe - add to this assert if something different is
-    // needed
-    ASSERT((lua_element_colour_calculator)calc == _lua_element_colour);
-    lua_element_colour_calculator real_calc =
-        (lua_element_colour_calculator)calc;
-    return (*real_calc)(rand(non_random), loc, function);
-}
-
-static int _lua_element_colour(int rand, const coord_def& loc,
-                               lua_datum function)
-{
     lua_State *ls = dlua.state();
 
     function.push();
-    lua_pushinteger(ls, rand);
+    lua_pushinteger(ls, rand(non_random));
     lua_pushinteger(ls, loc.x);
     lua_pushinteger(ls, loc.y);
     if (!dlua.callfn(nullptr, 3, 1))
