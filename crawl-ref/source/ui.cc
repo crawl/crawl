@@ -56,11 +56,17 @@ static struct UIRoot
 public:
     void push_child(shared_ptr<Widget> child, KeymapContext km);
     void pop_child();
-    shared_ptr<Widget> top_child() {
-        size_t sz = m_root.num_children();
+
+    shared_ptr<Widget> top_child()
+    {
+        const auto sz = m_root.num_children();
         return sz > 0 ? m_root.get_child(sz-1) : nullptr;
+    }
+
+    size_t num_children() const
+    {
+        return m_root.num_children();
     };
-    size_t num_children() const { return m_root.num_children(); };
 
     bool widget_is_in_layout(const Widget* w)
     {
@@ -75,8 +81,14 @@ public:
     void render();
 
     bool on_event(const wm_event& event);
-    void queue_layout() { m_needs_layout = true; };
-    void expose_region(Region r) {
+
+    void queue_layout()
+    {
+        m_needs_layout = true;
+    }
+
+    void expose_region(Region r)
+    {
         if (r.empty())
             return;
         if (m_dirty_region.empty())
@@ -84,7 +96,8 @@ public:
         else
             m_dirty_region = aabb_union(m_dirty_region, r);
         needs_paint = true;
-    };
+    }
+
     void send_mouse_enter_leave_events(int mx, int my);
 
     bool needs_paint;
@@ -1161,7 +1174,7 @@ void Grid::_render()
 void Grid::compute_track_sizereqs(Direction dim)
 {
     auto& track = dim ? m_row_info : m_col_info;
-#define DIV_ROUND_UP(n,d) (((n)+(d)-1)/(d))
+#define DIV_ROUND_UP(n, d) (((n)+(d)-1)/(d))
 
     for (auto& t : track)
         t.sr = {0, 0};
@@ -1348,7 +1361,7 @@ void Scroller::_allocate_region()
     int shade_height = 12, ds = 4;
     int shade_top = min({m_scroll/ds, shade_height, m_region.height/2});
     int shade_bot = min({(sr.nat-m_region.height-m_scroll)/ds, shade_height, m_region.height/2});
-    VColour col_a(4,2,4,0), col_b(4,2,4,200);
+    const VColour col_a(4, 2, 4, 0), col_b(4, 2, 4, 200);
 
     m_shade_buf.clear();
     m_scrollbar_buf.clear();
@@ -1371,7 +1384,7 @@ void Scroller::_allocate_region()
         const float scroll_percent = m_scroll/(float)(ch_reg.height-m_region.height);
         const int y = m_region.y + (m_region.height-h)*scroll_percent;
         GLWPrim bg_rect(x+10, m_region.y, x+12, m_region.y+m_region.height);
-        bg_rect.set_col(VColour(41,41,41));
+        bg_rect.set_col(VColour(41, 41, 41));
         m_scrollbar_buf.add_primitive(bg_rect);
         GLWPrim fg_rect(x+10, y, x+12, y+h);
         fg_rect.set_col(VColour(125, 98, 60));
@@ -1813,7 +1826,7 @@ void UIRoot::render()
         }
         if (auto w = get_focused_widget()) {
             Region r = w->get_region();
-            lb.add_square(r.x+1, r.y+1, r.ex(), r.ey(), VColour(128,31,239,255));
+            lb.add_square(r.x+1, r.y+1, r.ex(), r.ey(), VColour(128, 31, 239));
         }
         lb.draw();
         sb.draw();
@@ -1905,7 +1918,7 @@ bool UIRoot::on_event(const wm_event& event)
     {
         ui_root.debug_draw = !ui_root.debug_draw;
         ui_root.queue_layout();
-        ui_root.expose_region({0,0,INT_MAX,INT_MAX});
+        ui_root.expose_region({0, 0, INT_MAX, INT_MAX});
         return true;
     }
 #endif
@@ -1919,7 +1932,7 @@ bool UIRoot::on_event(const wm_event& event)
             if (ui_root.debug_draw)
             {
                 ui_root.queue_layout();
-                ui_root.expose_region({0,0,INT_MAX,INT_MAX});
+                ui_root.expose_region({0, 0, INT_MAX, INT_MAX});
             }
 #endif
         case WME_MOUSEWHEEL:
@@ -2107,10 +2120,13 @@ void pump_events(int wait_event_timeout)
         }
 
         if (!wm->wait_event(&event, wait_event_timeout))
+        {
             if (wait_event_timeout == INT_MAX)
                 continue;
             else
                 return;
+        }
+
         if (event.type == WME_MOUSEMOTION)
         {
             // For consecutive mouse events, ignore all but the last,
@@ -2275,7 +2291,7 @@ void delay(unsigned int ms)
     int wait_event_timeout = ms;
     do
     {
-        ui_root.expose_region({0,0,INT_MAX,INT_MAX});
+        ui_root.expose_region({0, 0, INT_MAX, INT_MAX});
         pump_events(wait_event_timeout);
         auto now = std::chrono::high_resolution_clock::now();
         wait_event_timeout =
@@ -2284,16 +2300,16 @@ void delay(unsigned int ms)
     }
     while ((unsigned)wait_event_timeout < ms && !crawl_state.seen_hups);
 #else
-    constexpr long poll_interval = 10;
+    constexpr int poll_interval = 10;
     while (!crawl_state.seen_hups)
     {
         auto now = std::chrono::high_resolution_clock::now();
-        long remaining = ms -
+        const int remaining = ms -
             std::chrono::duration_cast<std::chrono::milliseconds>(now - start)
             .count();
         if (remaining < 0)
             break;
-        usleep(max(0l, min(poll_interval, remaining)));
+        usleep(max(0, min(poll_interval, remaining)));
         if (kbhit())
             pump_events();
     }

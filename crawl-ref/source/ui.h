@@ -35,11 +35,14 @@ struct SizeReq
 class Margin
 {
 public:
-    constexpr Margin() : top(0), right(0), bottom(0), left(0) {};
-    constexpr Margin(int v) : top(v), right(v), bottom(v), left(v) {};
-    constexpr Margin(int v, int h) : top(v), right(h), bottom(v), left(h) {};
-    constexpr Margin(int t, int lr, int b) : top(t), right(lr), bottom(b), left(lr) {};
-    constexpr Margin(int t, int r, int b, int l) : top(t), right(r), bottom(b), left(l) {};
+    constexpr Margin() : top(0), right(0), bottom(0), left(0) {}
+
+    explicit constexpr Margin(int v) : top(v), right(v), bottom(v), left(v) {}
+    constexpr Margin(int v, int h) : top(v), right(h), bottom(v), left(h) {}
+    constexpr Margin(int t, int lr, int b)
+        : top(t), right(lr), bottom(b), left(lr) {}
+    constexpr Margin(int t, int r, int b, int l)
+        : top(t), right(r), bottom(b), left(l) {}
 
     int top, right, bottom, left;
 };
@@ -47,8 +50,9 @@ public:
 class Region
 {
 public:
-    constexpr Region() : x(0), y(0), width(0), height(0) {};
-    constexpr Region(int _x, int _y, int _width, int _height) : x(_x), y(_y), width(_width), height(_height) {};
+    constexpr Region() : x(0), y(0), width(0), height(0) {}
+    constexpr Region(int _x, int _y, int _width, int _height)
+        : x(_x), y(_y), width(_width), height(_height) {}
 
     constexpr bool operator == (const Region& other) const
     {
@@ -61,8 +65,15 @@ public:
         return width == 0 || height == 0;
     }
 
-    constexpr int ex() const { return x + width; }
-    constexpr int ey() const { return y + height; }
+    constexpr int ex() const
+    {
+        return x + width;
+    }
+
+    constexpr int ey() const
+    {
+        return y + height;
+    }
 
     constexpr bool contains_point(int _x, int _y) const
     {
@@ -75,9 +86,9 @@ public:
 class Size
 {
 public:
-    constexpr Size() : width(0), height(0) {};
-    constexpr Size(int v) : width(v), height(v) {};
-    constexpr Size(int w, int h) : width(w), height(h) {};
+    constexpr Size() : width(0), height(0) {}
+    explicit constexpr Size(int v) : width(v), height(v) {}
+    constexpr Size(int w, int h) : width(w), height(h) {}
 
     constexpr bool operator <= (const Size& other) const
     {
@@ -95,7 +106,7 @@ public:
 template<typename, typename> class Slot;
 
 template<class Target, class... Args>
-class Slot<Target, bool (Args...)>
+class Slot<Target, bool(Args...)>
 {
 public:
     ~Slot() { alive = false; }
@@ -149,23 +160,69 @@ public:
     bool shrink_h = false, shrink_v = false;
     Region get_region() const { return m_region; }
 
-    Size& min_size() { _invalidate_sizereq(); return m_min_size; }
-    Size& max_size() { _invalidate_sizereq(); return m_max_size; }
+    // FIXME: convert to getter and setter
+    Size& min_size()
+    {
+        _invalidate_sizereq();
+        return m_min_size;
+    }
+
+    Size& max_size()
+    {
+        _invalidate_sizereq();
+        return m_max_size;
+    }
 
     virtual void _render() = 0;
     virtual SizeReq _get_preferred_size(Direction dim, int prosp_width);
     virtual void _allocate_region();
+
     void _set_parent(Widget* p);
-    Widget* _get_parent() const { return m_parent; };
-    shared_ptr<Widget> get_shared() {
+
+    Widget* _get_parent() const
+    {
+        return m_parent;
+    }
+
+    shared_ptr<Widget> get_shared()
+    {
         return shared_from_this();
-    };
+    }
+
+    /**
+     * Mark this widget as possibly having changed size.
+     *
+     * _get_preferred_size() will be called before the next allocation/render.
+     */
     void _invalidate_sizereq(bool immediate = true);
+
+    /**
+     * Mark this widget as needing reallocation.
+     *
+     * _allocate_region() will be called before the next call to _render(), even
+     * if the widget has not resized or moved. This is useful if buffers need to
+     * be repacked due to widget state change.
+     */
     void _queue_allocation(bool immediate = true);
-    void set_allocation_needed() { alloc_queued = true; };
+
+    void set_allocation_needed()
+    {
+        alloc_queued = true;
+    }
+
+    /**
+     * Mark this widget as needing redraw. render() will be called.
+     */
     void _expose();
 
-    bool is_visible() const { return m_visible; }
+    /**
+     * Get/set visibility of this widget only, ignoring the visibility of its
+     * ancestors, if there are any, or whether it is in a layout at all.
+     */
+    bool is_visible() const
+    {
+        return m_visible;
+    }
     void set_visible(bool);
 
     bool is_ancestor_of(const shared_ptr<Widget>& other);
@@ -177,7 +234,8 @@ public:
     SizeReq get_preferred_size(Direction dim, int prosp_width);
     void allocate_region(Region region);
 
-    Margin get_margin() const {
+    Margin get_margin() const
+    {
         return margin;
     }
 
@@ -206,22 +264,27 @@ public:
     virtual bool on_event(const wm_event& event);
 
     template<class T, class... Args, typename F>
-    void on(Slot<T, bool (Args...)>& slot, F&& cb)
+    void on(Slot<T, bool(Args...)>& slot, F&& cb)
     {
         slot.on(this, cb);
     }
+
     static struct slots {
-        Slot<Widget, bool (const wm_event&)> event;
+        Slot<Widget, bool(const wm_event&)> event;
     } slots;
 
-    // XXX: add documentation
-    virtual shared_ptr<Widget> get_child_at_offset(int, int) {
+    /**
+     * Container widget interface. Must return a pointer to the child widget at
+     * the given screen position, or nullptr.
+     */
+    virtual shared_ptr<Widget> get_child_at_offset(int, int)
+    {
         return nullptr;
-    };
+    }
 
 protected:
     Region m_region;
-    Margin margin = { 0 };
+    Margin margin = Margin{0};
 
     void _unparent(shared_ptr<Widget>& child);
 
@@ -233,8 +296,8 @@ private:
     bool m_visible = true;
     Widget* m_parent = nullptr;
 
-    Size m_min_size = { 0 };
-    Size m_max_size = { INT_MAX };
+    Size m_min_size = Size{0};
+    Size m_max_size = Size{INT_MAX};
 };
 
 class Container : public Widget
@@ -247,13 +310,17 @@ public:
 class Bin : public Container
 {
 public:
-    virtual ~Bin() {
+    virtual ~Bin()
+    {
         if (m_child)
             _unparent(m_child);
-    };
+    }
     void set_child(shared_ptr<Widget> child);
-    virtual shared_ptr<Widget> get_child() { return m_child; };
-    virtual shared_ptr<Widget> get_child_at_offset(int x, int y) override;
+    virtual shared_ptr<Widget> get_child() const
+    {
+        return m_child;
+    }
+    shared_ptr<Widget> get_child_at_offset(int x, int y) override;
 
 protected:
     class iterator
@@ -268,9 +335,9 @@ protected:
         value_type c;
         bool state;
 
-        iterator(value_type& _c, bool _state) : c(_c), state(_state) {};
-        void operator++ () { state = true; };
-        value_type& operator* () { return c; };
+        iterator(value_type& _c, bool _state) : c(_c), state(_state) {}
+        void operator++ () { state = true; }
+        value_type& operator* () { return c; }
         bool operator== (const iterator& other) { return c == other.c && state == other.state; }
         bool operator!= (const iterator& other) { return !(*this == other); }
     };
@@ -278,7 +345,7 @@ protected:
 public:
     iterator begin() { return iterator(m_child, false); }
     iterator end() { return iterator(m_child, true); }
-    virtual void foreach(function<void(shared_ptr<Widget>&)> f) override
+    void foreach(function<void(shared_ptr<Widget>&)> f) override
     {
         for (auto& child : *this)
             f(child);
@@ -291,15 +358,43 @@ protected:
 class ContainerVec : public Container
 {
 public:
-    virtual ~ContainerVec() {
+    virtual ~ContainerVec()
+    {
         for (auto& child : m_children)
             if (child)
                 _unparent(child);
     }
-    virtual shared_ptr<Widget> get_child_at_offset(int x, int y) override;
-    size_t num_children() const { return m_children.size(); }
-    shared_ptr<Widget>& operator[](size_t pos) { return m_children[pos]; };
-    const shared_ptr<Widget>& operator[](size_t pos) const { return m_children[pos]; };
+
+    shared_ptr<Widget> get_child_at_offset(int x, int y) override;
+
+    size_t num_children() const
+    {
+        return m_children.size();
+    }
+
+    template<typename T>
+    shared_ptr<Widget>& get_child(T pos)
+    {
+        return m_children[pos];
+    }
+
+    template<typename T>
+    const shared_ptr<Widget>& get_child(T pos) const
+    {
+        return m_children[pos];
+    }
+
+    template<typename T>
+    shared_ptr<Widget>& operator[](T pos)
+    {
+        return m_children[pos];
+    }
+
+    template<typename T>
+    const shared_ptr<Widget>& operator[](T pos) const
+    {
+        return m_children[pos];
+    }
 
 protected:
     class iterator
@@ -314,17 +409,24 @@ protected:
         vector<value_type>& c;
         vector<value_type>::iterator it;
 
-        iterator(vector<value_type>& _c, vector<value_type>::iterator _it) : c(_c), it(_it) {};
-        void operator++ () { ++it; };
-        value_type& operator* () { return *it; };
+        iterator(vector<value_type>& _c, vector<value_type>::iterator _it) : c(_c), it(_it) {}
+        void operator++ () { ++it; }
+        value_type& operator* () { return *it; }
         bool operator== (const iterator& other) { return c == other.c && it == other.it; }
         bool operator!= (const iterator& other) { return !(*this == other); }
     };
 
 public:
-    iterator begin() { return iterator(m_children, m_children.begin()); }
-    iterator end() { return iterator(m_children, m_children.end()); }
-    virtual void foreach(function<void(shared_ptr<Widget>&)> f) override
+    iterator begin()
+    {
+        return iterator(m_children, m_children.begin());
+    }
+    iterator end()
+    {
+        return iterator(m_children, m_children.end());
+    }
+
+    void foreach(function<void(shared_ptr<Widget>&)> f) override
     {
         for (auto& child : *this)
             f(child);
@@ -349,20 +451,21 @@ public:
         SHRINK_V = 0x8,
     };
 
-    Box(Direction dir, Expand expand_flags = NONE)
+    explicit Box(Direction dir, Expand expand_flags = NONE)
     {
         horz = dir == HORZ;
         expand_h = expand_flags & EXPAND_H;
         expand_v = expand_flags & EXPAND_V;
-    };
+    }
+
     virtual ~Box() {}
     void add_child(shared_ptr<Widget> child);
     Widget::Align align_main = START;
     Widget::Align align_cross = START;
 
-    virtual void _render() override;
-    virtual SizeReq _get_preferred_size(Direction dim, int prosp_width) override;
-    virtual void _allocate_region() override;
+    void _render() override;
+    SizeReq _get_preferred_size(Direction dim, int prosp_width) override;
+    void _allocate_region() override;
 
 protected:
     bool horz;
@@ -375,30 +478,31 @@ class Text : public Widget
 {
 public:
     Text();
-    Text(string text) : Text()
-    {
-        set_text(formatted_string(text));
-    }
-    Text(formatted_string text) : Text()
-    {
-        set_text(text);
-    }
     virtual ~Text() {}
 
+    template<class... Args>
+    explicit Text(Args&&... args) : Text()
+    {
+        set_text(forward<Args>(args)...);
+    }
+
     void set_text(const formatted_string &fs);
-    void set_text(string text)
+    void set_text(const string& text)
     {
         set_text(formatted_string(text));
-    };
+    }
+
+    const formatted_string& get_text() const
+    {
+        return m_text;
+    }
 
     void set_font(FontWrapper *font);
-
-    const formatted_string& get_text() { return m_text; };
     void set_highlight_pattern(string pattern, bool hl_line = false);
 
-    virtual void _render() override;
-    virtual SizeReq _get_preferred_size(Direction dim, int prosp_width) override;
-    virtual void _allocate_region() override;
+    void _render() override;
+    SizeReq _get_preferred_size(Direction dim, int prosp_width) override;
+    void _allocate_region() override;
 
 #ifndef USE_TILE_LOCAL
     void set_bg_colour(COLOURS colour);
@@ -410,7 +514,7 @@ public:
             return;
         wrap_text = _wrap_text;
         _invalidate_sizereq();
-    };
+    }
 
     void set_ellipsize(bool _ellipsize)
     {
@@ -418,7 +522,7 @@ public:
             return;
         ellipsize = _ellipsize;
         _invalidate_sizereq();
-    };
+    }
 
 protected:
     void wrap_text_to_size(int width, int height);
@@ -437,7 +541,7 @@ protected:
     vector<formatted_string> m_wrapped_lines;
     COLOURS m_bg_colour = BLACK;
 #endif
-    Size m_wrapped_size = { -1 };
+    Size m_wrapped_size = Size{-1};
     string hl_pat;
     bool hl_line;
 };
@@ -445,14 +549,20 @@ protected:
 class Image : public Widget
 {
 public:
-    Image() {};
-    Image(tile_def tile) { set_tile(tile); };
+    Image() {}
+    explicit Image(tile_def tile) : Image()
+    {
+        set_tile(tile);
+    }
     virtual ~Image() {}
     void set_tile(tile_def tile);
-    tile_def get_tile() const { return m_tile; };
+    tile_def get_tile() const
+    {
+        return m_tile;
+    }
 
-    virtual void _render() override;
-    virtual SizeReq _get_preferred_size(Direction dim, int prosp_width) override;
+    void _render() override;
+    SizeReq _get_preferred_size(Direction dim, int prosp_width) override;
 
 protected:
     tile_def m_tile = {TILEG_ERROR, TEX_GUI};
@@ -466,31 +576,32 @@ protected:
 class Stack : public ContainerVec
 {
 public:
-    virtual ~Stack() {};
+    virtual ~Stack() {}
     void add_child(shared_ptr<Widget> child);
     void pop_child();
-    shared_ptr<Widget> get_child(size_t idx) const { return m_children[idx]; };
-    virtual shared_ptr<Widget> get_child_at_offset(int x, int y) override;
 
-    virtual void _render() override;
-    virtual SizeReq _get_preferred_size(Direction dim, int prosp_width) override;
-    virtual void _allocate_region() override;
+    shared_ptr<Widget> get_child_at_offset(int x, int y) override;
+
+    void _render() override;
+    SizeReq _get_preferred_size(Direction dim, int prosp_width) override;
+    void _allocate_region() override;
 };
 
 class Switcher : public ContainerVec
 {
 public:
-    virtual ~Switcher() {};
+    virtual ~Switcher() {}
     void add_child(shared_ptr<Widget> child);
+    // FIXME: convert to getter and setter
     int& current();
     shared_ptr<Widget> current_widget();
 
     Widget::Align align_x = START, align_y = START;
 
-    virtual void _render() override;
-    virtual SizeReq _get_preferred_size(Direction dim, int prosp_width) override;
-    virtual void _allocate_region() override;
-    virtual shared_ptr<Widget> get_child_at_offset(int x, int y) override;
+    void _render() override;
+    SizeReq _get_preferred_size(Direction dim, int prosp_width) override;
+    void _allocate_region() override;
+    shared_ptr<Widget> get_child_at_offset(int x, int y) override;
 
 protected:
     int m_current;
@@ -503,10 +614,20 @@ public:
         for (auto& child : m_child_info)
             if (child.widget)
                 _unparent(child.widget);
-    };
+    }
+
     void add_child(shared_ptr<Widget> child, int x, int y, int w = 1, int h = 1);
-    int column_flex_grow(int x) const { return m_col_info.at(x).flex_grow; }
-    int row_flex_grow(int y) const { return m_row_info.at(y).flex_grow; }
+
+    int column_flex_grow(int x) const
+    {
+        return m_col_info.at(x).flex_grow;
+    }
+    int row_flex_grow(int y) const
+    {
+        return m_row_info.at(y).flex_grow;
+    }
+
+    // FIXME: convert to getter and setter
     int& column_flex_grow(int x)
     {
         init_track_info();
@@ -517,11 +638,11 @@ public:
         init_track_info();
         return m_row_info.at(y).flex_grow;
     }
-    virtual shared_ptr<Widget> get_child_at_offset(int x, int y) override;
 
-    virtual void _render() override;
-    virtual SizeReq _get_preferred_size(Direction dim, int prosp_width) override;
-    virtual void _allocate_region() override;
+    void _render() override;
+    SizeReq _get_preferred_size(Direction dim, int prosp_width) override;
+    void _allocate_region() override;
+    shared_ptr<Widget> get_child_at_offset(int x, int y) override;
 
     bool stretch_h = false, stretch_v = false;
 
@@ -574,9 +695,9 @@ protected:
         vector<child_info>& c;
         vector<child_info>::iterator it;
 
-        iterator(vector<child_info>& _c, vector<child_info>::iterator _it) : c(_c), it(_it) {};
-        void operator++ () { ++it; };
-        value_type& operator* () { return it->widget; };
+        iterator(vector<child_info>& _c, vector<child_info>::iterator _it) : c(_c), it(_it) {}
+        void operator++ () { ++it; }
+        value_type& operator* () { return it->widget; }
         bool operator== (const iterator& other) { return c == other.c && it == other.it; }
         bool operator!= (const iterator& other) { return !(*this == other); }
     };
@@ -584,7 +705,7 @@ protected:
 public:
     iterator begin() { return iterator(m_child_info, m_child_info.begin()); }
     iterator end() { return iterator(m_child_info, m_child_info.end()); }
-    virtual void foreach(function<void(shared_ptr<Widget>&)> f) override
+    void foreach(function<void(shared_ptr<Widget>&)> f) override
     {
         for (auto& child : *this)
             f(child);
@@ -594,15 +715,25 @@ public:
 class Scroller : public Bin
 {
 public:
-    virtual ~Scroller() {};
+    virtual ~Scroller() {}
 
     virtual void set_scroll(int y);
-    int get_scroll() const { return m_scroll; };
-    void set_scrollbar_visible(bool vis) { m_scrolbar_visible = vis; };
-    virtual void _render() override;
-    virtual SizeReq _get_preferred_size(Direction dim, int prosp_width) override;
-    virtual void _allocate_region() override;
-    virtual bool on_event(const wm_event& event) override;
+
+    int get_scroll() const
+    {
+        return m_scroll;
+    }
+
+    void set_scrollbar_visible(bool vis)
+    {
+        m_scrolbar_visible = vis;
+    }
+
+    void _render() override;
+    SizeReq _get_preferred_size(Direction dim, int prosp_width) override;
+    void _allocate_region() override;
+    bool on_event(const wm_event& event) override;
+
 protected:
     int m_scroll = 0;
     bool m_scrolbar_visible = true;
@@ -616,12 +747,13 @@ class Layout : public Bin
 {
     friend struct UIRoot;
 public:
-    Layout(shared_ptr<Widget> child);
-    virtual void _render() override;
-    virtual SizeReq _get_preferred_size(Direction dim, int prosp_width) override;
-    virtual void _allocate_region() override;
+    explicit Layout(shared_ptr<Widget> child);
 
-    void add_event_filter(function<bool (const wm_event&)> handler)
+    void _render() override;
+    SizeReq _get_preferred_size(Direction dim, int prosp_width) override;
+    void _allocate_region() override;
+
+    void add_event_filter(function<bool(const wm_event&)> handler)
     {
         event_filters.on(this, handler);
     }
@@ -629,16 +761,17 @@ protected:
 #ifdef USE_TILE_LOCAL
     int m_depth;
 #endif
-    Slot<Widget, bool (const wm_event&)> event_filters;
+    Slot<Widget, bool(const wm_event&)> event_filters;
 };
 
 class Popup : public Layout
 {
 public:
-    Popup(shared_ptr<Widget> child) : Layout(move(child)) {};
-    virtual void _render() override;
-    virtual SizeReq _get_preferred_size(Direction dim, int prosp_width) override;
-    virtual void _allocate_region() override;
+    explicit Popup(shared_ptr<Widget> child) : Layout(move(child)) {}
+
+    void _render() override;
+    SizeReq _get_preferred_size(Direction dim, int prosp_width) override;
+    void _allocate_region() override;
 
     Size get_max_child_size();
 
@@ -657,33 +790,41 @@ protected:
 class Dungeon : public Widget
 {
 public:
-    Dungeon() : width(0), height(0), m_buf((ImageManager*)tiles.get_image_manager()), m_dirty(false) {};
-    virtual ~Dungeon() {};
-    virtual void _render() override;
-    virtual SizeReq _get_preferred_size(Direction dim, int prosp_width) override;
+    Dungeon() : m_buf((ImageManager*)tiles.get_image_manager()) {}
+    virtual ~Dungeon() {}
 
-    unsigned width, height;
-    DungeonCellBuffer& buf() { m_dirty = true; return m_buf; };
+    void _render() override;
+    SizeReq _get_preferred_size(Direction dim, int prosp_width) override;
+
+    unsigned width = 0;
+    unsigned height = 0;
+
+    // FIXME: convert to getter and setter
+    DungeonCellBuffer& buf()
+    {
+        m_dirty = true;
+        return m_buf;
+    }
 
 protected:
     DungeonCellBuffer m_buf;
-    bool m_dirty;
+    bool m_dirty = true;
 };
 
 class PlayerDoll : public Widget
 {
 public:
-    PlayerDoll(dolls_data doll);
+    explicit PlayerDoll(dolls_data doll);
     virtual ~PlayerDoll();
 
-    virtual void _render() override;
-    virtual SizeReq _get_preferred_size(Direction dim, int prosp_width) override;
-    virtual void _allocate_region() override;
+    void _render() override;
+    SizeReq _get_preferred_size(Direction dim, int prosp_width) override;
+    void _allocate_region() override;
 
 protected:
     void _pack_doll();
-    dolls_data m_save_doll;
 
+    dolls_data m_save_doll;
     vector<tile_def> m_tiles;
     FixedVector<TileBuffer, TEX_MAX> m_tile_buf;
 };
