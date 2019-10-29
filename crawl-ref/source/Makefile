@@ -117,7 +117,19 @@ CFOTHERS += -mfpmath=sse -msse2
 endif
 
 CFWARN := 
-CFWARN_L := -Wall -Wunused-parameter -Wformat-security -Wundef
+CFWARN_L := -Wall -Wformat-security -Wundef
+
+# Exceptions:
+#  -Wmissing-field-initializers: need c++14 to set default struct fields
+#  -Wimplicit-fallthrough: need c++17 for [[fallthrough]]
+#  -Wtype-limits: mostly complains about ASSERT_RANGE, and _Pragma is buggy on
+#      old g++ anyway: re-enable when we bump the minimum g++ version
+#  -Wuninitialized: added later in this makefile, conditional on NO_OPTIMIZE
+CFWARN_L += -Wextra \
+	    -Wno-missing-field-initializers \
+	    -Wno-implicit-fallthrough \
+	    -Wno-type-limits \
+	    -Wno-uninitialized \
 
 DEFINES := $(EXTERNAL_DEFINES)
 

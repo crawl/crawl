@@ -1847,7 +1847,7 @@ const char *monster_info::pronoun(pronoun_type variant) const
     return mons_pronoun(type, variant, true);
 }
 
-const bool monster_info::pronoun_plurality() const
+bool monster_info::pronoun_plurality() const
 {
     if (props.exists(MON_GENDER_KEY))
         return props[MON_GENDER_KEY].get_int() == GENDER_NEUTRAL;

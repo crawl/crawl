@@ -29,15 +29,6 @@ random_var::random_var(int s, int e, vector<int> ws)
     init();
 }
 
-const random_var& random_var::operator=(const random_var& other)
-{
-    start = other.start;
-    end = other.end;
-    total = other.total;
-    weights = other.weights;
-    return *this;
-}
-
 int random_var::weight(int val) const
 {
     if (val < start || val >= end)

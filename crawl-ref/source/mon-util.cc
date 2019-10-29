@@ -399,7 +399,7 @@ int get_mons_resist(const monster& mon, mon_resist_flags res)
 }
 
 // Returns true if the monster successfully resists this attempt to poison it.
-const bool monster_resists_this_poison(const monster& mons, bool force)
+bool monster_resists_this_poison(const monster& mons, bool force)
 {
     const int res = mons.res_poison();
     if (res >= 3)

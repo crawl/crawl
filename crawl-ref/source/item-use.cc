@@ -1396,7 +1396,7 @@ static vector<equipment_type> _current_jewellery_types()
     return ret;
 }
 
-static const char _ring_slot_key(equipment_type slot)
+static char _ring_slot_key(equipment_type slot)
 {
     switch (slot)
     {

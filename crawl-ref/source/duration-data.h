@@ -103,11 +103,10 @@ struct duration_def
         return name_text[0] ? name_text : short_text;
     }
 
-    const bool duration_has_flag(uint64_t flag_wanted) const
+    bool duration_has_flag(uint64_t flag_wanted) const
     {
         return flags & flag_wanted;
     }
-
 };
 
 /**

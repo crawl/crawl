@@ -2441,7 +2441,7 @@ static bool _find_monster_expl(const coord_def& where, targ_mode_type mode,
     return false;
 }
 
-static const item_def* const _item_at(const coord_def &where)
+static const item_def* _item_at(const coord_def &where)
 {
     // XXX: are we ever interacting with unseen items, anyway?
     return you.see_cell(where)

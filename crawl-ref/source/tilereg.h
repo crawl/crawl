@@ -28,8 +28,8 @@ public:
     virtual void render() = 0;
     virtual void clear() = 0;
 
-    const virtual int grid_width_to_pixels(int x) const;
-    const virtual int grid_height_to_pixels(int y) const;
+    virtual int grid_width_to_pixels(int x) const;
+    virtual int grid_height_to_pixels(int y) const;
 
     // Geometry
     // <-----------------wx----------------------->

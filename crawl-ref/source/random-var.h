@@ -19,7 +19,7 @@ public:
     random_var(int s, int e, weight_func w_ = nullptr);
     random_var(int s, int e, vector<int> ws);
 
-    const random_var& operator=(const random_var& other);
+    random_var& operator=(const random_var& other) = default;
 
     int weight(int val) const;
     int roll() const;        // evaluate the random variable

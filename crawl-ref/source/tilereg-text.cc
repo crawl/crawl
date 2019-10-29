@@ -182,12 +182,12 @@ int TextRegion::wherey()
     return print_y + 1;
 }
 
-const int TextRegion::grid_width_to_pixels(int x) const
+int TextRegion::grid_width_to_pixels(int x) const
 {
     return font().max_width(x);
 }
 
-const int TextRegion::grid_height_to_pixels(int y) const
+int TextRegion::grid_height_to_pixels(int y) const
 {
     return font().max_height(y);
 }

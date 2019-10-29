@@ -39,8 +39,8 @@ monster_type resolve_monster_type(monster_type mon_type,
                                   bool *want_band = nullptr,
                                   bool allow_ood = true);
 
-const monster_type fixup_zombie_type(const monster_type cls,
-                                     const monster_type base_type);
+monster_type fixup_zombie_type(const monster_type cls,
+                               const monster_type base_type);
 
 /* ***********************************************************************
  * This isn't really meant to be a public function. It is a low level
