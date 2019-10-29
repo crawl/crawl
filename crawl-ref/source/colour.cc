@@ -5,6 +5,7 @@
 #include <cmath>
 #include <memory>
 #include <utility>
+#include <unordered_map>
 
 #include "areas.h"
 #include "branch.h"
@@ -15,22 +16,19 @@
 #include "tiles-build-specific.h"
 #include "libutil.h" // map_find
 
-static FixedVector<unique_ptr<element_colour_calc>, NUM_COLOURS> element_colours;
+static FixedVector<unique_ptr<base_colour_calc>, NUM_COLOURS> element_colours;
 // Values point into element_colours.
-static map<string, element_colour_calc*> element_colours_str;
+static unordered_map<string, base_colour_calc*> element_colours_str;
 
 typedef vector< pair<int, int> > random_colour_map;
 typedef int (*randomized_element_colour_calculator)(int, const coord_def&,
                                                     random_colour_map);
 
-static int _randomized_element_colour(int, const coord_def&, random_colour_map);
-
-struct random_element_colour_calc : public element_colour_calc
+struct random_element_colour_calc : public base_colour_calc
 {
     random_element_colour_calc(element_type _type, string _name,
                                vector< pair<int, int> > _rand_vals)
-        : element_colour_calc(_type, _name, (element_colour_calculator)_randomized_element_colour),
-          rand_vals(_rand_vals)
+        : base_colour_calc(_type, _name), rand_vals(_rand_vals)
     {
         rand_max = 0;
         for (const auto &pair : rand_vals)
@@ -44,7 +42,7 @@ protected:
     random_colour_map rand_vals;
 };
 
-int element_colour_calc::rand(bool non_random)
+int base_colour_calc::rand(bool non_random)
 {
     return non_random ? 0 : ui_random(rand_max);
 }
@@ -54,17 +52,14 @@ int element_colour_calc::get(const coord_def& loc, bool non_random)
     return (*calc)(rand(non_random), loc);
 }
 
-int random_element_colour_calc::get(const coord_def& loc, bool non_random)
+int random_element_colour_calc::get(const coord_def& /*loc*/, bool non_random)
 {
-    // casting function pointers from other function pointers is guaranteed
-    // to be safe, but calling them on pointers not of their type isn't, so
-    // assert here to be safe - add to this assert if something different is
-    // needed
-    ASSERT((randomized_element_colour_calculator)calc ==
-                _randomized_element_colour);
-    randomized_element_colour_calculator real_calc =
-        (randomized_element_colour_calculator)calc;
-    return (*real_calc)(rand(non_random), loc, rand_vals);
+    const auto max_val = rand(non_random);
+    int accum = 0;
+    for (const auto &entry : rand_vals)
+        if ((accum += entry.first) > max_val)
+            return entry.second;
+    return BLACK;
 }
 
 colour_t random_colour(bool ui_rand)
@@ -123,17 +118,6 @@ static bool _is_element_colour(int col)
     col = col & 0x007f;
     ASSERT(col < NUM_COLOURS);
     return col >= ETC_FIRE;
-}
-
-static int _randomized_element_colour(int rand, const coord_def&,
-                                      random_colour_map rand_vals)
-{
-    int accum = 0;
-    for (const auto &entry : rand_vals)
-        if ((accum += entry.first) > rand)
-            return entry.second;
-
-    return BLACK;
 }
 
 static int _etc_floor(int, const coord_def& loc)
@@ -358,7 +342,7 @@ static int _etc_random(int, const coord_def&)
     return random_colour(true);
 }
 
-void add_element_colour(element_colour_calc *colour)
+void add_element_colour(base_colour_calc *colour)
 {
     // or else lookups won't work: we strip high bits (because of colflags)
     ASSERT(colour->type < 128);
@@ -769,7 +753,7 @@ int str_to_colour(const string &str, int default_colour, bool accept_number,
     if (ret == NUM_TERM_COLOURS && accept_elemental)
     {
         // Maybe we have an element colour attribute.
-        if (element_colour_calc **calc = map_find(element_colours_str, str))
+        if (base_colour_calc **calc = map_find(element_colours_str, str))
         {
             ASSERT(*calc);
             ret = (*calc)->type;
