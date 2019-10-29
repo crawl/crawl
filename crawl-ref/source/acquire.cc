@@ -979,8 +979,10 @@ static bool _do_book_acquirement(item_def &book, int agent)
             book.sub_type = choose_random_weighted(weights, end(weights));
             break;
         }
-        // else intentional fall-through
+        acquire_themed_randbook(book, agent);
+        break;
     }
+
     case BOOK_RANDART_THEME:
         acquire_themed_randbook(book, agent);
         break;

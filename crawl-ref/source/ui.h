@@ -505,8 +505,8 @@ public:
                 _unparent(child.widget);
     };
     void add_child(shared_ptr<Widget> child, int x, int y, int w = 1, int h = 1);
-    const int column_flex_grow(int x) const { return m_col_info.at(x).flex_grow; }
-    const int row_flex_grow(int y) const { return m_row_info.at(y).flex_grow; }
+    int column_flex_grow(int x) const { return m_col_info.at(x).flex_grow; }
+    int row_flex_grow(int y) const { return m_row_info.at(y).flex_grow; }
     int& column_flex_grow(int x)
     {
         init_track_info();

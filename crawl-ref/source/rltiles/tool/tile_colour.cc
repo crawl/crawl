@@ -23,16 +23,6 @@ bool tile_colour::operator!=(const tile_colour &rhs) const
     return r != rhs.r || g != rhs.g || b != rhs.b || a != rhs.a;
 }
 
-const tile_colour &tile_colour::operator=(const tile_colour &rhs)
-{
-    r = rhs.r;
-    g = rhs.g;
-    b = rhs.b;
-    a = rhs.a;
-
-    return *this;
-}
-
 unsigned char &tile_colour::operator[](int idx)
 {
     assert(idx >= 0 && idx <= 4);

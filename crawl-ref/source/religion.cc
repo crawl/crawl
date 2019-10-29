@@ -517,7 +517,7 @@ god_iterator::operator bool() const
     return i < NUM_GODS;
 }
 
-const god_type god_iterator::operator*() const
+god_type god_iterator::operator*() const
 {
     if (i < NUM_GODS)
         return (god_type)i;
@@ -525,7 +525,7 @@ const god_type god_iterator::operator*() const
         return GOD_NO_GOD;
 }
 
-const god_type god_iterator::operator->() const
+god_type god_iterator::operator->() const
 {
     return **this;
 }

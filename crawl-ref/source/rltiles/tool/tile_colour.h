@@ -28,13 +28,15 @@ enum COLORS
 class tile_colour
 {
 public:
-    tile_colour() {};
     tile_colour(unsigned char _r, unsigned char _g, unsigned char _b,
         unsigned char _a) : r(_r), g(_g), b(_b), a(_a) {}
 
+    tile_colour() = default;
+    tile_colour(const tile_colour &rhs) = default;
+    tile_colour &operator=(const tile_colour &rhs) = default;
+
     bool operator==(const tile_colour &rhs) const;
     bool operator!=(const tile_colour &rhs) const;
-    const tile_colour &operator=(const tile_colour &rhs);
 
     unsigned char &operator[](int idx);
     unsigned char operator[](int idx) const;

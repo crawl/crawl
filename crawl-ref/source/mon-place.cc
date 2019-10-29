@@ -558,7 +558,7 @@ monster_type resolve_monster_type(monster_type mon_type,
 
 // For generation purposes, don't treat simulacra of lava enemies as
 // being able to place on lava.
-const monster_type fixup_zombie_type(const monster_type cls,
+monster_type fixup_zombie_type(const monster_type cls,
                                          const monster_type base_type)
 {
     return (mons_class_is_zombified(cls)

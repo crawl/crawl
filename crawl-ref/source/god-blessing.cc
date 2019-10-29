@@ -357,9 +357,10 @@ static void _upgrade_shield(item_def &sh)
 
 static void _upgrade_body_armour(item_def &arm)
 {
+    const auto type = static_cast<armour_type>(arm.sub_type);
+
     // Promote from robe up through plate.
-    if (arm.sub_type >= ARM_FIRST_MUNDANE_BODY
-        && arm.sub_type < ARM_LAST_MUNDANE_BODY
+    if (type >= ARM_FIRST_MUNDANE_BODY && type < ARM_LAST_MUNDANE_BODY
         // These are supposed to be robe-only.
         && arm.brand != SPARM_ARCHMAGI
         && arm.brand != SPARM_RESISTANCE)
