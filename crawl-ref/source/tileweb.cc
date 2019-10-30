@@ -1258,8 +1258,8 @@ static inline unsigned _get_brand(int col)
            (col & COLFLAG_MAYSTAB)          ? Options.may_stab_brand :
            (col & COLFLAG_FEATURE_ITEM)     ? Options.feature_item_brand :
            (col & COLFLAG_TRAP_ITEM)        ? Options.trap_item_brand :
-           (col & COLFLAG_REVERSE)          ? CHATTR_REVERSE
-                                            : CHATTR_NORMAL;
+           (col & COLFLAG_REVERSE)          ? unsigned{CHATTR_REVERSE}
+                                            : unsigned{CHATTR_NORMAL};
 }
 
 void TilesFramework::write_tileidx(tileidx_t t)

@@ -1684,9 +1684,13 @@ int single_damage_type(const item_def &item)
 // Not adjusted by species or anything, which is why it's "basic".
 hands_reqd_type basic_hands_reqd(const item_def &item, size_type size)
 {
-    const int wpn_type = OBJ_WEAPONS == item.base_type ? item.sub_type :
-                         OBJ_STAVES == item.base_type  ? WPN_STAFF :
-                                                         WPN_UNKNOWN;
+    const auto wpn_type = [&item]() {
+        if (item.base_type == OBJ_WEAPONS)
+            return static_cast<weapon_type>(item.sub_type);
+        if (item.base_type == OBJ_STAVES)
+            return WPN_STAFF;
+        return WPN_UNKNOWN;
+    }();
 
     // Non-weapons.
     if (wpn_type == WPN_UNKNOWN)
@@ -1992,7 +1996,7 @@ bool is_weapon_wieldable(const item_def &item, size_type size)
 {
     ASSERT(is_weapon(item));
 
-    const int subtype = OBJ_STAVES == item.base_type ? WPN_STAFF
+    const int subtype = OBJ_STAVES == item.base_type ? int{WPN_STAFF}
                                                      : item.sub_type;
     return Weapon_prop[Weapon_index[subtype]].min_2h_size <= size;
 }

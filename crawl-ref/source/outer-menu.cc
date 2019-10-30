@@ -63,7 +63,7 @@ void MenuButton::recolour_descendants(const shared_ptr<Widget>& node)
         }
 
         const colour_t fg = focused ? fg_highlight : fg_normal;
-        const colour_t bg = focused ? highlight_colour : BLACK;
+        const colour_t bg = focused ? highlight_colour : colour_t{BLACK};
         formatted_string new_contents;
         new_contents.textcolour(fg);
         new_contents.cprintf("%s", tw->get_text().tostring().c_str());

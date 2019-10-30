@@ -2802,7 +2802,7 @@ bool mons_word_of_recall(monster* mons, int recall_target)
     shuffle_array(mon_list);
 
     const coord_def target   = (mons) ? mons->pos() : you.pos();
-    const unsigned short foe = (mons) ? mons->foe   : MHITYOU;
+    const unsigned short foe = (mons) ? mons->foe   : short{MHITYOU};
 
     // Now actually recall things
     for (monster *mon : mon_list)

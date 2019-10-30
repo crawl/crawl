@@ -83,7 +83,8 @@ int TabbedRegion::_push_tab(GridRegion *reg, command_type cmd, tileidx_t tile_ta
     inf.enabled = true;
     m_tabs.push_back(inf);
 
-    tileidx_t actual_tile_tab = (cmd==CMD_NO_CMD) ? tile_tab : TILEG_TAB_BLANK;
+    tileidx_t actual_tile_tab = (cmd==CMD_NO_CMD) ? tile_tab
+                                                  : tileidx_t{TILEG_TAB_BLANK};
     const tile_info &tinf = tile_gui_info(actual_tile_tab);
     ox = max((int)tinf.width, ox);
 
