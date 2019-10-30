@@ -465,8 +465,8 @@ static void _set_friendly_foes(bool allow_patrol = false)
             mi->behaviour = BEH_SEEK;
             mi->patrol_point = coord_def(0, 0);
         }
-        mi->foe = (allow_patrol && mi->is_patrolling() ? MHITNOT
-                                                         : you.pet_target);
+        mi->foe = (allow_patrol && mi->is_patrolling() ? int{MHITNOT}
+                                                       : you.pet_target);
     }
 }
 

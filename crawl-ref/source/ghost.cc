@@ -262,7 +262,7 @@ void ghost_demon::init_pandemonium_lord()
         normalize_spell_freq(spells, xl);
     }
 
-    colour = one_chance_in(10) ? ETC_RANDOM : random_monster_colour();
+    colour = one_chance_in(10) ? colour_t{ETC_RANDOM} : random_monster_colour();
 }
 
 static const set<brand_type> ghost_banned_brands =
@@ -493,7 +493,7 @@ void ghost_demon::init_ugly_thing(bool very_ugly, bool only_mutate,
     // before.
     colour = _ugly_thing_assign_colour(make_low_colour(force_colour),
                                        only_mutate ? make_low_colour(colour)
-                                                   : COLOUR_UNDEF);
+                                                   : colour_t{COLOUR_UNDEF});
 
     // Pick a compatible attack flavour for this colour.
     att_flav = _ugly_thing_colour_to_flavour(colour);

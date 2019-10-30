@@ -79,7 +79,8 @@ static mgen_data _summon_data(const actor &caster, monster_type mtyp,
                               int dur, god_type god, spell_type spell)
 {
     return mgen_data(mtyp, BEH_COPY, caster.pos(),
-                     caster.is_player() ? MHITYOU : caster.as_monster()->foe,
+                     caster.is_player() ? int{MHITYOU}
+                                        : caster.as_monster()->foe,
                      MG_AUTOFOE)
                      .set_summoned(&caster, dur, spell, god);
 }
@@ -664,7 +665,7 @@ bool summon_berserker(int pow, actor *caster, monster_type override_mons)
     mgen_data mg(mon, caster ? BEH_COPY : BEH_HOSTILE,
                  caster ? caster->pos() : you.pos(),
                  (caster && caster->is_monster()) ? ((monster*)caster)->foe
-                                                  : MHITYOU,
+                                                  : int{MHITYOU},
                  MG_AUTOFOE);
     mg.set_summoned(caster, caster ? dur : 0, SPELL_NO_SPELL, GOD_TROG);
 

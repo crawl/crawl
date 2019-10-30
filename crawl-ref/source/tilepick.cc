@@ -2070,7 +2070,7 @@ tileidx_t tileidx_player_mons()
 static tileidx_t _tileidx_unrand_artefact(int idx)
 {
     const tileidx_t tile = unrandart_to_tile(idx);
-    return tile ? tile : TILE_TODO;
+    return tile ? tile : tileidx_t{TILE_TODO};
 }
 
 static tileidx_t _tileidx_wyrmbane(int plus)

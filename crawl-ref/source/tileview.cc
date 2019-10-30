@@ -806,9 +806,9 @@ void tile_floor_halo(dungeon_feature_type target, tileidx_t tile)
 
             // TODO: these conditions are guaranteed?
             int right_spc = x < GXM - 1 ? env.tile_flv[x+1][y].floor - tile
-                                        : SPECIAL_FULL;
+                                        : int{SPECIAL_FULL};
             int down_spc  = y < GYM - 1 ? env.tile_flv[x][y+1].floor - tile
-                                        : SPECIAL_FULL;
+                                        : int{SPECIAL_FULL};
 
             if (this_spc == SPECIAL_N && right_spc == SPECIAL_S)
             {

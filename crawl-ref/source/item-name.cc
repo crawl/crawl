@@ -2299,7 +2299,7 @@ public:
     virtual string get_text(bool need_cursor) const override
     {
         need_cursor = need_cursor && show_cursor;
-        int flags = item->base_type == OBJ_WANDS ? 0 : ISFLAG_KNOW_PLUSES;
+        int flags = item->base_type == OBJ_WANDS ? 0 : int{ISFLAG_KNOW_PLUSES};
 
         string name;
 
@@ -2399,7 +2399,7 @@ public:
 
     virtual string get_text(const bool = false) const override
     {
-        int flags = item->base_type == OBJ_WANDS ? 0 : ISFLAG_KNOW_PLUSES;
+        int flags = item->base_type == OBJ_WANDS ? 0 : int{ISFLAG_KNOW_PLUSES};
 
         return string(" ") + item->name(DESC_PLAIN, false, true, false,
                                         false, flags);
@@ -2423,7 +2423,7 @@ static MenuEntry *unknown_item_mangle(MenuEntry *me)
 static bool _identified_item_names(const item_def *it1,
                                    const item_def *it2)
 {
-    int flags = it1->base_type == OBJ_WANDS ? 0 : ISFLAG_KNOW_PLUSES;
+    int flags = it1->base_type == OBJ_WANDS ? 0 : int{ISFLAG_KNOW_PLUSES};
     return it1->name(DESC_PLAIN, false, true, false, false, flags)
          < it2->name(DESC_PLAIN, false, true, false, false, flags);
 }
@@ -2623,7 +2623,10 @@ static MenuEntry* _fixup_runeorb_entry(MenuEntry* me)
         colour_t colour;
         // Make Gloorx's rune more distinguishable from uncollected runes.
         if (you.runes[rune])
-            colour = (rune == RUNE_GLOORX_VLOQ) ? LIGHTGREY : rune_colour(rune);
+        {
+            colour = (rune == RUNE_GLOORX_VLOQ) ? colour_t{LIGHTGREY}
+                                                : rune_colour(rune);
+        }
         else
             colour = DARKGREY;
 

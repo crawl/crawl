@@ -1503,7 +1503,8 @@ LUAFN(_dgn_place_map)
 LUAFN(_dgn_in_vault)
 {
     GETCOORD(c, 1, 2, map_bounds);
-    const int mask = lua_isnone(ls, 3) ? MMT_VAULT : luaL_safe_tointeger(ls, 3);
+    const int mask = lua_isnone(ls, 3) ? int{MMT_VAULT}
+                                       : luaL_safe_tointeger(ls, 3);
     lua_pushboolean(ls, env.level_map_mask(c) & mask);
     return 1;
 }
@@ -1511,7 +1512,8 @@ LUAFN(_dgn_in_vault)
 LUAFN(_dgn_set_map_mask)
 {
     GETCOORD(c, 1, 2, map_bounds);
-    const int mask = lua_isnone(ls, 3) ? MMT_VAULT : luaL_safe_tointeger(ls, 3);
+    const int mask = lua_isnone(ls, 3) ? int{MMT_VAULT}
+                                       : luaL_safe_tointeger(ls, 3);
     env.level_map_mask(c) |= mask;
     return 1;
 }
@@ -1519,7 +1521,8 @@ LUAFN(_dgn_set_map_mask)
 LUAFN(_dgn_unset_map_mask)
 {
     GETCOORD(c, 1, 2, map_bounds);
-    const int mask = lua_isnone(ls, 3) ? MMT_VAULT : luaL_safe_tointeger(ls, 3);
+    const int mask = lua_isnone(ls, 3) ? int{MMT_VAULT}
+                                       : luaL_safe_tointeger(ls, 3);
     env.level_map_mask(c) &= ~mask;
     return 1;
 }
