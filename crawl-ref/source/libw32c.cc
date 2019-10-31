@@ -540,23 +540,116 @@ void gotoxy_sys(int x, int y)
     }
 }
 
-static void update_text_colours()
+static unsigned short _dos_reverse_brand(unsigned short colour)
 {
-    short macro_fg = Options.colour[FG_COL];
-    short macro_bg = Options.colour[BG_COL];
+    if (Options.dos_use_background_intensity)
+    {
+        // If the console treats the intensity bit on background colours
+        // correctly, we can do a very simple colour invert.
+
+        // Special casery for shadows.
+        if (colour == BLACK)
+            colour = (DARKGREY << 4);
+        else
+            colour = (colour & 0xF) << 4;
+    }
+    else
+    {
+        // If we're on a console that takes its DOSness very seriously the
+        // background high-intensity bit is actually a blink bit. Blinking is
+        // evil, so we strip the background high-intensity bit. This, sadly,
+        // limits us to 7 background colours.
+
+        // Strip off high-intensity bit. Special case DARKGREY, since it's the
+        // high-intensity counterpart of black, and we don't want black on
+        // black.
+        //
+        // We *could* set the foreground colour to WHITE if the background
+        // intensity bit is set, but I think we've carried the
+        // angry-fruit-salad theme far enough already.
+
+        if (colour == DARKGREY)
+            colour |= (LIGHTGREY << 4);
+        else if (colour == BLACK)
+            colour = LIGHTGREY << 4;
+        else
+        {
+            // Zap out any existing background colour, and the high
+            // intensity bit.
+            colour  &= 7;
+
+            // And swap the foreground colour over to the background
+            // colour, leaving the foreground black.
+            colour <<= 4;
+        }
+    }
+
+    return colour;
+}
+
+static unsigned short _dos_hilite_brand(unsigned short colour,
+                                        unsigned short hilite)
+{
+    if (!hilite)
+        return colour;
+
+    if (colour == hilite)
+        colour = 0;
+
+    colour |= (hilite << 4);
+    return colour;
+}
+
+static unsigned short _dos_brand(unsigned short colour, unsigned brand)
+{
+    if ((brand & CHATTR_ATTRMASK) == CHATTR_NORMAL)
+        return colour;
+
+    colour &= 0xFF;
+
+    if ((brand & CHATTR_ATTRMASK) == CHATTR_HILITE)
+        return _dos_hilite_brand(colour, (brand & CHATTR_COLMASK) >> 8);
+    else
+        return _dos_reverse_brand(colour);
+}
+
+static inline unsigned get_brand(int col)
+{
+    return (col & COLFLAG_FRIENDLY_MONSTER) ? Options.friend_brand :
+           (col & COLFLAG_NEUTRAL_MONSTER)  ? Options.neutral_brand :
+           (col & COLFLAG_ITEM_HEAP)        ? Options.heap_brand :
+           (col & COLFLAG_WILLSTAB)         ? Options.stab_brand :
+           (col & COLFLAG_MAYSTAB)          ? Options.may_stab_brand :
+           (col & COLFLAG_FEATURE_ITEM)     ? Options.feature_item_brand :
+           (col & COLFLAG_TRAP_ITEM)        ? Options.trap_item_brand :
+           (col & COLFLAG_REVERSE)          ? CHATTR_REVERSE
+                                            : CHATTR_NORMAL;
+}
+
+static void update_text_colours(int brand)
+{
+    unsigned short branded_bg_fg = _dos_brand(FG_COL, brand);
+    const bool brand_overrides_bg = branded_bg_fg & 0xF0;
+
+    const short fg = branded_bg_fg & 0x0F;
+    const short bg = brand_overrides_bg ? (branded_bg_fg & 0xF0) >> 4 : BG_COL;
+
+    const short macro_fg = Options.colour[fg];
+    const short macro_bg = Options.colour[bg];
+
     current_colour = (macro_bg << 4) | macro_fg;
 }
 
 void textcolour(int c)
 {
     FG_COL = static_cast<COLOURS>(c & 0xF);
-    update_text_colours();
+    update_text_colours(get_brand(c));
 }
 
 void textbackground(int c)
 {
     BG_COL = static_cast<COLOURS>(c & 0xF);
-    update_text_colours();
+    update_text_colours(get_brand(c));
 }
 
 static void cprintf_aux(const char *s)
