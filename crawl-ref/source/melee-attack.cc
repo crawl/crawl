@@ -3323,6 +3323,9 @@ bool melee_attack::do_knockback(bool trample)
     if (defender->is_stationary())
         return false; // don't even print a message
 
+    if (attacker->cannot_move())
+        return false;
+
     const int size_diff =
         attacker->body_size(PSIZE_BODY) - defender->body_size(PSIZE_BODY);
     const coord_def old_pos = defender->pos();
