@@ -2576,7 +2576,7 @@ void check_item_knowledge(bool unknown_items)
 
     string prompt = "(_ for help)";
     //TODO: when the menu is opened, the text is not justified properly.
-    stitle = stitle + string(max(0, 80 - strwidth(stitle) - strwidth(prompt)),
+    stitle = stitle + string(max(0, MIN_COLS - strwidth(stitle + prompt)),
                              ' ') + prompt;
 
     menu.set_preselect(&selected_items);
