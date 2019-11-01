@@ -802,9 +802,6 @@ Menu::Menu(int _flags, const string& tagname, KeymapContext kmc)
     m_ui.vbox = make_shared<Box>(Widget::VERT);
     m_ui.vbox->align_cross = Widget::STRETCH;
 
-    m_ui.title->set_margin_for_sdl(0, 0, 10, 0);
-    m_ui.more->set_margin_for_sdl(10, 0, 0, 0);
-
     m_ui.vbox->add_child(m_ui.title);
 #ifdef USE_TILE_LOCAL
     m_ui.vbox->add_child(m_ui.scroller);
@@ -1952,8 +1949,9 @@ void Menu::update_title()
 
 #ifdef USE_TILE_LOCAL
     const bool tile_indent = m_indent_title && Options.tile_menu_icons;
-    m_ui.title->set_margin_for_sdl(0, 0, 10,
+    m_ui.title->set_margin_for_sdl(0, UIMenu::item_pad+UIMenu::pad_right, 10,
             UIMenu::item_pad + (tile_indent ? 38 : 0));
+    m_ui.more->set_margin_for_sdl(10, UIMenu::item_pad+UIMenu::pad_right, 0, 0);
 #endif
     m_ui.title->set_text(fs);
 #ifdef USE_TILE_WEB
