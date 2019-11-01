@@ -2745,6 +2745,8 @@ bool describe_item(item_def &item, function<void (string&)> fixup_desc)
             done = true;
         else if (key == ' ' || key == CK_ESCAPE)
             done = true;
+        else if (scroller->on_event(ev))
+            return true;
         const vector<pair<spell_type,char>> spell_map = map_chars_to_spells(spells, &item);
         auto entry = find_if(spell_map.begin(), spell_map.end(),
                 [key](const pair<spell_type,char>& e) { return e.second == key; });
@@ -3214,12 +3216,14 @@ void describe_spell(spell_type spell, const monster_info *mon_owner,
 
     bool done = false;
     int lastch;
-    popup->on(Widget::slots.event, [&done, &lastch, &can_mem](wm_event ev) {
+    popup->on(Widget::slots.event, [&](wm_event ev) {
         if (ev.type != WME_KEYDOWN)
             return false;
         lastch = ev.key.keysym.sym;
         done = (toupper_safe(lastch) == 'M' && can_mem || lastch == CK_ESCAPE
             || lastch == CK_ENTER || lastch == ' ');
+        if (scroller->on_event(ev))
+            return true;
         return done;
     });
 
@@ -4628,6 +4632,8 @@ int describe_monsters(const monster_info &mi, bool force_seen,
             tiles.ui_state_change("describe-monster", 0);
 #endif
         }
+        if (desc_sw->current_widget()->on_event(ev))
+            return true;
         const vector<pair<spell_type,char>> spell_map = map_chars_to_spells(spells, nullptr);
         auto entry = find_if(spell_map.begin(), spell_map.end(),
                 [key](const pair<spell_type,char>& e) { return e.second == key; });
