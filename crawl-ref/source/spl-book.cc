@@ -559,7 +559,7 @@ protected:
     virtual formatted_string calc_title() override
     {
         return formatted_string::parse_string(
-                    make_stringf("<w>Spells %s                 Type                          %sLevel ",
+                    make_stringf("<w>Spells %s                 Type                          %sLevel",
                         current_action == action::cast ? "(Cast)" :
                         current_action == action::memorise ? "(Memorise)" :
                         current_action == action::describe ? "(Describe)" :
