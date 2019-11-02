@@ -796,6 +796,7 @@ static void _choose_seed(newgame_def& ng, newgame_def& choice,
     const string prompt_text = "Seed ([-] to clear): ";
     seed_hbox->add_child(make_shared<ui::Text>(prompt_text));
     auto seed_input = make_shared<ui::TextEntry>();
+    seed_input->set_sync_id("seed");
     seed_input->set_text(make_stringf("%" PRIu64, choice.seed));
     seed_input->set_keyproc(_keyfun_seed_input);
 #ifndef USE_TILE_LOCAL
@@ -830,6 +831,7 @@ static void _choose_seed(newgame_def& ng, newgame_def& choice,
     box->add_child(make_shared<ui::Text>(footer_text));
 
     auto pregen_check = make_shared<ui::Checkbox>();
+    pregen_check->set_sync_id("pregenerate");
     pregen_check->set_checked(choice.pregenerate = Options.pregen_dungeon);
     pregen_check->set_visible(show_pregen_toggle);
     pregen_check->set_child(make_shared<ui::Text>("Pregenerate the dungeon"));

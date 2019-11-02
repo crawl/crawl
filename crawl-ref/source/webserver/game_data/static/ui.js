@@ -198,6 +198,12 @@ function ($, comm, client, options, focus_trap) {
         }
     }
 
+    function ui_input_handler(ev) {
+        var state_msg = {};
+        sync_save_state(ev.target, state_msg);
+        send_state_sync(ev.target, state_msg);
+    }
+
     options.add_listener(function ()
     {
         var size = options.get("tile_font_crt_size");
@@ -220,8 +226,68 @@ function ($, comm, client, options, focus_trap) {
             .on("game_keydown.ui", ui_key_handler)
             .on("game_keypress.ui", ui_key_handler)
             .off("click.ui", "[data-hotkey]")
-            .on("click.ui", "[data-hotkey]", ui_hotkey_handler);
+            .on("click.ui", "[data-hotkey]", ui_hotkey_handler)
+            .off("input.ui focus.ui", "[data-sync-id]")
+            .on("input.ui focus.ui", "[data-sync-id]", ui_input_handler);
         $(window).off("resize.ui").on("resize.ui", ui_resize_handler);
+    });
+
+    function sync_save_state(elem, state)
+    {
+        switch (elem.type)
+        {
+            case "text":
+                state.text = elem.value;
+                return;
+            case "checkbox":
+                state.checked = elem.checked;
+                return;
+        }
+    }
+
+    function sync_load_state(elem, state)
+    {
+        switch (elem.type)
+        {
+            case "text":
+                elem.value = state.text;
+                break;
+            case "checkbox":
+                elem.checked = state.checked;
+                break;
+            default:
+                return;
+        }
+    }
+
+    var receiving_ui_state = false;
+
+    function send_state_sync(elem, state)
+    {
+        if (receiving_ui_state)
+            return;
+        state.widget_id = $(elem).attr("data-sync-id") || null;
+        comm.send_message("ui_state_sync", state);
+    }
+
+    comm.register_handlers({
+        "ui-state-sync": function (msg) {
+            if (msg.from_webtiles && !client.is_watching())
+                return;
+            var popup = top_popup();
+            if (!popup)
+                return;
+            // TODO: add popup generation numbers
+            var elem = popup.find('[data-sync-id='+msg.widget_id+']')[0];
+            if (!elem)
+                return;
+            try {
+                receiving_ui_state = true;
+                sync_load_state(elem, msg);
+            } finally {
+                receiving_ui_state = false;
+            }
+        },
     });
 
     return {
