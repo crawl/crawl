@@ -6264,7 +6264,7 @@ string player::no_tele_reason(bool calc_unid, bool blinking) const
     vector<string> problems;
 
     if (duration[DUR_DIMENSION_ANCHOR])
-        problems.emplace_back("locked down by Dimension Anchor");
+        problems.emplace_back("locked down by a dimension anchor");
 
     if (form == transformation::tree)
         problems.emplace_back("held in place by your roots");
