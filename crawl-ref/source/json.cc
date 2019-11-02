@@ -478,7 +478,7 @@ bool json_validate(const char *json)
     return true;
 }
 
-JsonNode *json_find_element(JsonNode *array, int index)
+JsonNode *json_find_element(const JsonNode *array, int index)
 {
     JsonNode *element;
     int i = 0;
@@ -496,7 +496,7 @@ JsonNode *json_find_element(JsonNode *array, int index)
     return nullptr;
 }
 
-JsonNode *json_find_member(JsonNode *object, const char *name)
+JsonNode *json_find_member(const JsonNode *object, const char *name)
 {
     JsonNode *member;
 
