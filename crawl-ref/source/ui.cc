@@ -30,6 +30,10 @@
 # include "view.h"
 #endif
 
+#ifdef USE_TILE_WEB
+# include <unordered_map>
+#endif
+
 namespace ui {
 
 static Region aabb_intersect(Region a, Region b)
@@ -134,6 +138,13 @@ public:
             const vector<Widget*>& new_hover_path);
 #endif
 
+#ifdef USE_TILE_WEB
+    void update_synced_widgets();
+    unordered_map<string, Widget*> synced_widgets;
+    bool receiving_ui_state = false;
+    void recv_ui_state_change(const JsonNode *state);
+#endif
+
     coord_def cursor_pos;
 
 protected:
@@ -158,6 +169,10 @@ Widget::~Widget()
         set_focused_widget(nullptr);
     _set_parent(nullptr);
     erase_val(ui_root.focus_order, this);
+#ifdef USE_TILE_WEB
+    if (!m_sync_id.empty())
+        ui_root.synced_widgets.erase(m_sync_id);
+#endif
 }
 
 bool Widget::on_event(const wm_event& event)
@@ -344,6 +359,35 @@ void Widget::add_internal_child(shared_ptr<Widget> child)
     child->_set_parent(this);
     m_internal_children.emplace_back(move(child));
 }
+
+void Widget::set_sync_id(string id)
+{
+    ASSERT(!_get_parent()); // synced widgets are collected on layout push/pop
+    m_sync_id = id;
+}
+
+#ifdef USE_TILE_WEB
+void Widget::sync_save_state()
+{
+}
+
+void Widget::sync_load_state(const JsonNode *)
+{
+}
+
+void Widget::sync_state_changed()
+{
+    if (m_sync_id.empty())
+        return;
+    tiles.json_open_object();
+    sync_save_state();
+    tiles.json_write_string("msg", "ui-state-sync");
+    tiles.json_write_string("widget_id", m_sync_id);
+    tiles.json_write_bool("from_webtiles", ui_root.receiving_ui_state);
+    tiles.json_close_object();
+    tiles.finish_message();
+}
+#endif
 
 void Box::add_child(shared_ptr<Widget> child)
 {
@@ -1690,6 +1734,20 @@ bool Checkbox::on_event(const wm_event& event)
     return false;
 }
 
+#ifdef USE_TILE_WEB
+void Checkbox::sync_save_state()
+{
+    tiles.json_write_bool("checked", m_checked);
+}
+
+void Checkbox::sync_load_state(const JsonNode *json)
+{
+    if (auto checked = json_find_member(json, "checked"))
+        if (checked->tag == JSON_BOOL)
+            set_checked(checked->bool_);
+}
+#endif
+
 TextEntry::TextEntry() : m_line_reader(m_buffer, sizeof(m_buffer))
 {
 #ifdef USE_TILE_LOCAL
@@ -2157,6 +2215,23 @@ int TextEntry::LineReader::process_key(int ch)
     return -1;
 }
 
+#ifdef USE_TILE_WEB
+void TextEntry::sync_save_state()
+{
+    tiles.json_write_string("text", m_text);
+    tiles.json_write_int("cursor", m_cursor);
+}
+
+void TextEntry::sync_load_state(const JsonNode *json)
+{
+    if (auto text = json_find_member(json, "text"))
+        if (text->tag == JSON_STRING)
+            set_text(text->string_);
+
+    // TODO: sync cursor state
+}
+#endif
+
 #ifdef USE_TILE_LOCAL
 void Dungeon::_render()
 {
@@ -2298,6 +2373,9 @@ void UIRoot::push_child(shared_ptr<Widget> ch, KeymapContext km)
     m_needs_layout = true;
     m_changed_layout_since_click = true;
     update_focus_order();
+#ifdef USE_TILE_WEB
+    update_synced_widgets();
+#endif
 #ifndef USE_TILE_LOCAL
     if (m_root.num_children() == 1)
     {
@@ -2315,6 +2393,9 @@ void UIRoot::pop_child()
     saved_layout_info.pop_back();
     m_changed_layout_since_click = true;
     update_focus_order();
+#ifdef USE_TILE_WEB
+    update_synced_widgets();
+#endif
 #ifndef USE_TILE_LOCAL
     if (m_root.num_children() == 0)
         clrscr();
@@ -2757,6 +2838,38 @@ bool UIRoot::debug_on_event(const wm_event& event)
     }
 
     return false;
+}
+#endif
+
+#ifdef USE_TILE_WEB
+void UIRoot::update_synced_widgets()
+{
+    synced_widgets.clear();
+
+    function<void(Widget*)> recurse = [&](Widget* widget) {
+        const auto id = widget->sync_id();
+        if (!id.empty())
+        {
+            ASSERT(synced_widgets.count(id) == 0);
+            synced_widgets[id] = widget;
+        }
+        widget->for_each_child_including_internal([&](shared_ptr<Widget>& ch) {
+            recurse(ch.get());
+        });
+    };
+
+    if (const auto top = top_child())
+        recurse(top.get());
+}
+
+void UIRoot::recv_ui_state_change(const JsonNode *json)
+{
+    const auto widget_id = json_find_member(json, "widget_id");
+    if (!widget_id || widget_id->tag != JSON_STRING)
+        return;
+    const auto widget = synced_widgets.at(widget_id->string_);
+    unwind_bool recv(receiving_ui_state, true);
+    widget->sync_load_state(json);
 }
 #endif
 
@@ -3276,5 +3389,12 @@ Widget* get_focused_widget()
 {
     return ui_root.state.current_focus;
 }
+
+#ifdef USE_TILE_WEB
+void recv_ui_state_change(const JsonNode *state)
+{
+    ui_root.recv_ui_state_change(state);
+}
+#endif
 
 }

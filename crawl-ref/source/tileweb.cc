@@ -440,6 +440,8 @@ wint_t TilesFramework::_handle_control_message(sockaddr_un addr, string data)
         hotkey.check(JSON_NUMBER);
         OuterMenu::recv_outer_menu_focus(menu_id->string_, (int)hotkey->number_);
     }
+    else if (msgtype == "ui_state_sync")
+        ui::recv_ui_state_change(obj.node);
 
     return c;
 }
