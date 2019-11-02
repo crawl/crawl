@@ -294,37 +294,59 @@ xx...xxx222xxx...xx
        x+++x
 ENDMAP
 
-NAME:  worms_lemuel
-TAGS:  no_rotate no_monster_gen no_pool_fixup transparent
-DEPTH: D:8-13, Lair, Spider, Swamp
-KITEM: | = |, *, %
-KMONS: 1 = swamp worm
-KMONS: 2 = tyrant leech
-KMONS: P = plant
-KFEAT: 123P| = W
-: if you.absdepth() < 12 then
-KMONS: | = swamp worm
-SUBST: D = 1W, 1 = 1WWW, 2 = 1
-: elseif you.absdepth() < 15 then
-KMONS: | = torpor snail
-SUBST: D = 12W, 1 = 112WWW
+# I've revamped this vault to always place reasonably challenging monsters,
+# with monster/loot types and number scaling with depth. -gammafunk
+NAME:   worms_lemuel
+TAGS:   no_monster_gen no_pool_fixup transparent
+DEPTH:  D:7-, Lair, Spider, Swamp
+KMONS:  1 = swamp worm
+KMONS:  2 = tyrant leech
+KMONS:  3 = demonic crawler
+KMONS:  4 = torpor snail
+KMONS:  5 = moth of wrath
+KMONS:  P = plant
+KITEM:  | = |
+KITEM:  * = *
+KFEAT:  12345P|* = W
+: if you.in_branch("D") then
+:     if you.depth() < 10 then
+SUBST:  D = W
+NSUBST: 1 = 1 / 2=1W / |* / |*WW / W
+:     elseif you.depth() < 13 then
+SUBST:  D = 1WW
+NSUBST: 1 = 1 / 3=1W / 23WW / |* / 2=|*WW / W
+:     else
+SUBST:  D = 1W
+NSUBST: 1 = 2=1 / 3=1W / 23 / 2=23WW / 45 / 2=|* / 2=|*WW / W
+:     end
+: elseif you.in_branch("Lair") then
+:     if you.depth() < 4 then
+SUBST:  D = 1WW
+NSUBST: 1 = 1 / 3=1W / 23WW / |* / 2=|*WW / W
+:     else
+SUBST:  D = 1W
+NSUBST: 1 = 2=1 / 2=1W / 2=23WW / 45WW / |* / 3=|*WW / W
+:     end
+: elseif you.in_branch("Swamp") then
+SUBST:  D = 1W
+NSUBST: 1 = 3=1 / 3=1W / 2 / 3=2W / 45 / 45WW / 2=|* / 3=|*WW / W
+# Spider
 : else
-# Not a worm, but torpor is also from Spider, and the two work well together.
-KMONS: |3 = torpor snail
-KMONS: 4 = moth of wrath
-SUBST: 2 = 4, D = 12
-NSUBST: 1 = 3=2234 / 122
+SUBST:  D = 3W
+NSUBST: 1 = 4=3 / 6=3W / 4 / 4W / 2=|* / 3=|*WW / W
 : end
 MAP
-   WWWWWWW
- WWWWwDwWWWW
-WWwxxxxxxxwWW
-WWxx11111xPWW
-WDx|21111PPWW
-WWxx11111xPWW
-WWwxxxxxxxwWW
- WWWWwDwWWWW
-   WWWWWWW
+    WWWWW
+   WWwDwWW
+ WWWWxxxWWWW
+WWWxxx1xxxwWW
+Wwxx11111xPWW
+WDx111111PPWW
+Wwxx11111xPWW
+WWwxxx1xxxwWW
+ WWWWxxxWWWW
+   WWwDwWW
+    WWWWW
 ENDMAP
 
 NAME:   minmay_another_anthill
