@@ -1445,6 +1445,8 @@ void viewwindow(bool show_updates, bool tiles_only, animation *a)
                     && (!you.running.is_explore() || Options.explore_delay < 0);
         if (you.running && you.running.is_rest())
             run_dont_draw = Options.rest_delay == -1;
+        if (mouse_control::current_mode() != MOUSE_MODE_NORMAL)
+            run_dont_draw = false;
 
         if (run_dont_draw || you.asleep())
         {
