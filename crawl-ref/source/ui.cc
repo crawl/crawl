@@ -84,7 +84,8 @@ public:
     void layout();
     void render();
 
-    bool on_event(const wm_event& event);
+    bool on_event(wm_event& event);
+    bool deliver_event(Event& event);
 
     void queue_layout()
     {
@@ -2763,7 +2764,7 @@ static Event::Type convert_event_type(const wm_event& event)
     }
 }
 
-bool UIRoot::on_event(const wm_event& event)
+bool UIRoot::on_event(wm_event& event)
 {
     if (event_filter && event_filter(event))
         return true;
@@ -2777,97 +2778,138 @@ bool UIRoot::on_event(const wm_event& event)
     {
         case WME_MOUSEBUTTONDOWN:
         case WME_MOUSEBUTTONUP:
-#ifdef USE_TILE_LOCAL
-            if (event.type == WME_MOUSEBUTTONDOWN)
-                m_changed_layout_since_click = false;
-            else if (event.type == WME_MOUSEBUTTONUP)
-                if (m_changed_layout_since_click)
-                    break;
-#endif
-            // fall through
         case WME_MOUSEMOTION:
         case WME_MOUSEWHEEL:
         {
 #ifdef USE_TILE_LOCAL
-            const auto mouse_event = MouseEvent(convert_event_type(event),
+            auto mouse_event = MouseEvent(convert_event_type(event),
                     event.mouse_event);
-            if (!hover_path.empty()) {
-                for (auto w = hover_path.back(); w; w = w->_get_parent())
-                    if (w->on_event(mouse_event))
-                        return true;
-            }
+            return deliver_event(mouse_event);
 #endif
             break;
         }
-        case WME_MOUSEENTER:
-        case WME_MOUSELEAVE:
-            die("unreachable");
-            break;
         case WME_KEYDOWN:
         case WME_KEYUP:
-            size_t layer_idx = m_root.num_children();
-            if (!layer_idx)
-                return false;
+        {
+            auto key_event = KeyEvent(convert_event_type(event), event.key);
+            return deliver_event(key_event);
+        }
+        // TODO: maybe stop windowmanager-sdl from returning these?
+        case WME_NOEVENT:
+            break;
+        default:
+            die("unreachable");
+    }
 
-            Widget* layer_root = m_root.get_child(layer_idx-1).get();
+    return false;
+}
 
-            const auto key_event = KeyEvent(convert_event_type(event), event.key);
-
-            if (event.type == WME_KEYDOWN)
-            {
-                bool hotkey_handled = Widget::slots.hotkey.emit_if([&](Widget* w){
-                        return layer_root->is_ancestor_of(w->get_shared());
-                    }, key_event);
-                if (hotkey_handled)
+bool UIRoot::deliver_event(Event& event)
+{
+    switch (event.type())
+    {
+    case Event::Type::MouseDown:
+    case Event::Type::MouseUp:
+#ifdef USE_TILE_LOCAL
+        if (event.type() == Event::Type::MouseDown)
+            m_changed_layout_since_click = false;
+        else if (event.type() == Event::Type::MouseUp)
+            if (m_changed_layout_since_click)
+                break;
+#endif
+        // fall through
+    case Event::Type::MouseMove:
+    case Event::Type::MouseWheel:
+    {
+#ifdef USE_TILE_LOCAL
+        if (!hover_path.empty())
+        {
+            event.set_target(hover_path.back()->get_shared());
+            for (auto w = hover_path.back(); w; w = w->_get_parent())
+                if (w->on_event(event))
                     return true;
-            }
+        }
+#endif
+        return false;
+    }
 
-            if (auto w = get_focused_widget())
+    case Event::Type::KeyDown:
+    case Event::Type::KeyUp:
+    {
+        const auto top = top_child();
+        if (!top)
+            return false;
+
+        const auto key = static_cast<const KeyEvent&>(event).key();
+        event.set_target(get_focused_widget()->get_shared());
+
+        // give hotkey handlers a chance to intercept this key; they are only
+        // called if on a widget within the layout.
+        if (event.type() == Event::Type::KeyDown)
+        {
+            // TODO: only emit if widget is visible
+            bool hotkey_handled = Widget::slots.hotkey.emit_if([&](Widget* w){
+                return top->is_ancestor_of(w->get_shared());
+            }, event);
+            if (hotkey_handled)
+                return true;
+            // TODO: eat the corresponding KeyUp event
+        }
+
+        if (auto w = get_focused_widget())
+        {
+            if (w->on_event(event))
+                return true;
+
+            if (w != state.default_focus && event.type() == Event::Type::KeyDown)
             {
-                if (w->on_event(key_event))
-                    return true;
-
-                if (w != state.default_focus && event.type == WME_KEYDOWN)
+                if (key_is_escape(key))
                 {
-                    if (key_is_escape(event.key.keysym.sym))
-                    {
-                        set_focused_widget(nullptr);
-                        return true;
-                    }
-                    if (event.key.keysym.sym == '\t')
-                    {
-                        focus_next();
-                        return true;
-                    }
-                    if (event.key.keysym.sym == CK_SHIFT_TAB)
-                    {
-                        focus_prev();
-                        return true;
-                    }
+                    set_focused_widget(nullptr);
+                    return true;
                 }
-
-                for (w = w->_get_parent(); w; w = w->_get_parent())
-                    if (w->on_event(key_event))
-                        return true;
-            }
-
-            if (event.type == WME_KEYDOWN)
-            {
-                if (event.key.keysym.sym == '\t')
+                if (key == '\t')
                 {
                     focus_next();
                     return true;
                 }
-                if (event.key.keysym.sym == CK_SHIFT_TAB)
+                if (key == CK_SHIFT_TAB)
                 {
                     focus_prev();
                     return true;
                 }
             }
 
-            break;
+            for (w = w->_get_parent(); w; w = w->_get_parent())
+                if (w->on_event(event))
+                    return true;
+        }
+
+        if (event.type() == Event::Type::KeyDown)
+        {
+            if (key == '\t')
+            {
+                focus_next();
+                return true;
+            }
+            if (key == CK_SHIFT_TAB)
+            {
+                focus_prev();
+                return true;
+            }
+        }
     }
 
+    case Event::Type::FocusIn:
+    case Event::Type::FocusOut:
+        return event.target()->on_event(event);
+
+    default:
+        for (auto w = event.target().get(); w; w = w->_get_parent())
+            if (w->on_event(event))
+                return true;
+        return false;
+    }
     return false;
 }
 
@@ -3168,6 +3210,7 @@ void pump_events(int wait_event_timeout)
             break;
 
         case WME_MOUSEMOTION:
+            // FIXME: move update_hover_path() into event delivery
             ui_root.update_hover_path();
             ui_root.on_event(event);
 
@@ -3462,8 +3505,9 @@ void set_focused_widget(Widget* w)
     if (current_focus && !sent_focusout)
     {
         sent_focusout = true;
-        const auto ev = FocusEvent(Event::Type::FocusOut);
-        current_focus->on_event(ev);
+        auto ev = FocusEvent(Event::Type::FocusOut);
+        ev.set_target(current_focus->get_shared());
+        ui_root.deliver_event(ev);
     }
 
     if (new_focus != w)
@@ -3475,8 +3519,9 @@ void set_focused_widget(Widget* w)
 
     if (new_focus)
     {
-        const auto ev = FocusEvent(Event::Type::FocusIn);
-        new_focus->on_event(ev);
+        auto ev = FocusEvent(Event::Type::FocusIn);
+        ev.set_target(new_focus->get_shared());
+        ui_root.deliver_event(ev);
     }
 }
 
@@ -3501,5 +3546,10 @@ int layout_generation_id()
     return ui_root.next_generation_id;
 }
 #endif
+
+bool raise_event(Event& event)
+{
+    return ui_root.deliver_event(event);
+}
 
 }
