@@ -1208,6 +1208,7 @@ Region get_scissor();
 
 void set_focused_widget(Widget* w);
 Widget* get_focused_widget();
+bool raise_event(Event& event);
 
 #ifdef USE_TILE_WEB
 void recv_ui_state_change(const JsonNode *json);
