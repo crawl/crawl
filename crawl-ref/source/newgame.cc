@@ -407,9 +407,7 @@ static bool _reroll_random(newgame_def& ng)
 
     bool done = false;
     char c;
-    popup->on(Widget::slots.event, [&](wm_event ev)  {
-        if (ev.type != WME_KEYDOWN)
-            return false;
+    popup->on_keydown_event([&](wm_event ev)  {
         c = ev.key.keysym.sym;
         return done = true;
     });
@@ -700,9 +698,7 @@ static void _choose_name(newgame_def& ng, newgame_def& choice)
 
     };
 
-    popup->on(Widget::slots.event, [&](wm_event ev)  {
-        if (ev.type != WME_KEYDOWN)
-            return false;
+    popup->on_keydown_event([&](wm_event ev)  {
         int key = ev.key.keysym.sym;
 
         if (!overwrite_prompt)
@@ -853,9 +849,7 @@ static void _choose_seed(newgame_def& ng, newgame_def& choice,
     begin_btn->hotkey = CK_ENTER;
     button_hbox->add_child(move(begin_btn));
 
-    popup->on(Widget::slots.event, [&](wm_event ev)  {
-        if (ev.type != WME_KEYDOWN)
-            return false;
+    popup->on_keydown_event([&](wm_event ev)  {
         int key = ev.key.keysym.sym;
 
         if (key == 'd' || key == 'D')
@@ -1139,13 +1133,13 @@ public:
 
         for (auto &w : m_main_items->get_buttons())
         {
-            w->on(Widget::slots.event, [w, this](wm_event ev) {
+            w->on_any_event([w, this](wm_event ev) {
                 return this->button_event_hook(ev, w);
             });
         }
         for (auto &w : m_sub_items->get_buttons())
         {
-            w->on(Widget::slots.event, [w, this](wm_event ev) {
+            w->on_any_event([w, this](wm_event ev) {
                 return this->button_event_hook(ev, w);
             });
         }
@@ -1892,7 +1886,7 @@ static bool _prompt_weapon(const newgame_def& ng, newgame_def& ng_choice,
     sub_items->on_button_activated = menu_item_activated;
 
     auto popup = make_shared<ui::Popup>(vbox);
-    popup->on(Widget::slots.hotkey, [&](wm_event ev)  {
+    popup->on_hotkey_event([&](wm_event ev)  {
         int key = ev.key.keysym.sym;
 
         switch (key)
@@ -2279,7 +2273,7 @@ static void _prompt_gamemode_map(newgame_def& ng, newgame_def& ng_choice,
     sub_items->on_button_activated = menu_item_activated;
 
     auto popup = make_shared<ui::Popup>(vbox);
-    popup->on(Widget::slots.hotkey, [&](wm_event ev)  {
+    popup->on_hotkey_event([&](wm_event ev)  {
         int keyn = ev.key.keysym.sym;
 
         switch (keyn)

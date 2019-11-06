@@ -1224,9 +1224,7 @@ void describe_god(god_type which_god)
     build_partial_god_ui(which_god, popup, desc_sw, more_sw);
 
     bool done = false;
-    popup->on(Widget::slots.event, [&](wm_event ev) {
-        if (ev.type != WME_KEYDOWN)
-            return false;
+    popup->on_keydown_event([&](wm_event ev) {
         int key = ev.key.keysym.sym;
         if (key == '!' || key == CK_MOUSE_CMD || key == '^')
         {
@@ -1322,9 +1320,7 @@ bool describe_god_with_join(god_type which_god)
     bool done = false, join = false;
 
     // The join-god UI state machine transition function
-    popup->on(Widget::slots.event, [&](wm_event ev) {
-        if (ev.type != WME_KEYDOWN)
-            return false;
+    popup->on_keydown_event([&](wm_event ev) {
         int keyin = ev.key.keysym.sym;
 
         // Always handle escape and pane-switching keys the same way

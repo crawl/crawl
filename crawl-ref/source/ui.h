@@ -283,16 +283,27 @@ public:
 
     virtual bool on_event(const wm_event& event);
 
-    template<class T, class... Args, typename F>
-    void on(Slot<T, bool(Args...)>& slot, F&& cb)
+    template<class F>
+    void on_any_event(F&& cb)
     {
-        slot.on(this, cb);
+        slots.event.on(this, forward<F>(cb));
     }
 
-    static struct slots {
-        Slot<Widget, bool(const wm_event&)> event;
-        Slot<Widget, bool(const wm_event&)> hotkey;
-    } slots;
+    template<class F>
+    void on_hotkey_event(F&& cb)
+    {
+        slots.hotkey.on(this, forward<F>(cb));
+    }
+
+    template<class F>
+    void on_keydown_event(F&& cb)
+    {
+        slots.event.on(this, [cb](const wm_event& event){
+            if (event.type != WME_KEYDOWN)
+                return false;
+            return cb(event);
+        });
+    }
 
     /**
      * Container widget interface. Must return a pointer to the child widget at
@@ -367,6 +378,11 @@ private:
     Size m_max_size = Size{INT_MAX};
 
     string m_sync_id;
+
+    static struct slots {
+        Slot<Widget, bool(const wm_event&)> event;
+        Slot<Widget, bool(const wm_event&)> hotkey;
+    } slots;
 };
 
 class Container : public Widget

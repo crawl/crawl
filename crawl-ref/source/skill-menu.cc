@@ -1842,9 +1842,7 @@ void skill_menu(int flag, int exp)
     auto skill_menu_ui = make_shared<UISkillMenu>(flag);
     auto popup = make_shared<ui::Popup>(skill_menu_ui);
 
-    popup->on(Widget::slots.event, [&done, &skill_menu_ui](wm_event ev) {
-        if (ev.type != WME_KEYDOWN)
-            return false;
+    popup->on_keydown_event([&done, &skill_menu_ui](wm_event ev) {
         int keyn = ev.key.keysym.sym;
 
         skill_menu_ui->_expose();

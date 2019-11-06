@@ -1403,13 +1403,9 @@ static int _lookup_prompt()
         auto popup = make_shared<ui::Popup>(prompt_ui);
         bool done = false;
 
-        popup->on(ui::Widget::slots.event, [&](wm_event ev) {
-            if (ev.type == WME_KEYDOWN)
-            {
-                ch = ev.key.keysym.sym;
-                done = true;
-            }
-            return done;
+        popup->on_keydown_event([&](wm_event ev) {
+            ch = ev.key.keysym.sym;
+            return done = true;
         });
 
         mouse_control mc(MOUSE_MODE_MORE);

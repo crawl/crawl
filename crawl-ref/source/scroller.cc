@@ -118,9 +118,7 @@ int formatted_scroller::show()
 
     m_contents_dirty = false;
     bool done = false;
-    popup->on(Widget::slots.event, [&done, &text, this](wm_event ev) {
-        if (ev.type != WME_KEYDOWN)
-            return false; // allow default event handling
+    popup->on_keydown_event([&done, &text, this](wm_event ev) {
         m_lastch = ev.key.keysym.sym;
         done = !process_key(m_lastch);
         if (m_contents_dirty)

@@ -165,11 +165,11 @@ OuterMenu::OuterMenu(bool can_shrink, int width, int height)
     m_grid = make_shared<Grid>();
     m_grid->stretch_h = true;
 
-    m_grid->on(Widget::slots.event, [this](wm_event ev){
+    m_grid->on_any_event([this](wm_event ev){
         return this->scroller_event_hook(ev);
     });
 
-    on(Widget::slots.hotkey, [&](wm_event ev)  {
+    on_hotkey_event([&](wm_event ev)  {
         if (!on_button_activated)
             return false;
         for (const auto& btn : this->m_buttons)
@@ -258,7 +258,7 @@ void OuterMenu::add_button(shared_ptr<MenuButton> btn, int x, int y)
     item = btn.get();
 
     const int btn_id = btn->id;
-    btn->on(Widget::slots.event, [btn_id, this, x, y](const wm_event& ev) {
+    btn->on_any_event([btn_id, this, x, y](const wm_event& ev) {
         if (on_button_activated)
         if ((ev.type == WME_MOUSEBUTTONUP
                 && ev.mouse_event.button == wm_mouse_event::LEFT)

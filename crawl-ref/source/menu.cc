@@ -971,9 +971,7 @@ void Menu::do_menu()
     bool done = false;
     m_ui.popup = make_shared<UIMenuPopup>(m_ui.vbox, this);
 
-    m_ui.popup->on(Widget::slots.event, [this, &done](wm_event ev) {
-        if (ev.type != WME_KEYDOWN)
-            return false;
+    m_ui.popup->on_keydown_event([this, &done](wm_event ev) {
         if (m_filter)
         {
             int key = m_filter->putkey(ev.key.keysym.sym);
@@ -998,8 +996,8 @@ void Menu::do_menu()
         }
         return false;
     };
-    m_ui.title->on(Widget::slots.event, menu_wrap_click);
-    m_ui.more->on(Widget::slots.event, menu_wrap_click);
+    m_ui.title->on_any_event(menu_wrap_click);
+    m_ui.more->on_any_event(menu_wrap_click);
 #endif
 
     update_menu();

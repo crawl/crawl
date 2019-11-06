@@ -612,13 +612,13 @@ public:
 
         for (auto &w : game_modes_menu->get_buttons())
         {
-            w->on(Widget::slots.event, [w, this](wm_event ev) {
+            w->on_keydown_event([w, this](wm_event ev) {
                 return this->button_event_hook(ev, w);
             });
         }
         for (auto &w : save_games_menu->get_buttons())
         {
-            w->on(Widget::slots.event, [w, this](wm_event ev) {
+            w->on_keydown_event([w, this](wm_event ev) {
                 return this->button_event_hook(ev, w);
             });
         }
@@ -777,7 +777,7 @@ void UIStartupMenu::on_show()
     else if (auto focus2 = save_games_menu->get_button_by_id(id))
         save_games_menu->scroll_button_into_view(focus2);
 
-    on(Widget::slots.hotkey, [this](wm_event ev) {
+    on_hotkey_event([this](wm_event ev) {
         const int keyn = ev.key.keysym.sym;
         bool changed_name = false;
 
