@@ -37,12 +37,12 @@ protected:
     bool can_take_focus() override { return true; };
 
     bool focused = false;
+    bool hovered = false;
     bool active = false;
 #ifdef USE_TILE_LOCAL
     ShapeBuffer m_buf;
     LineBuffer m_line_buf;
 #endif
-    static bool focus_on_mouse;
 
 #ifndef USE_TILE_LOCAL
     void recolour_descendants(const shared_ptr<Widget>& node);
@@ -100,4 +100,6 @@ protected:
     MenuButton* m_initial_focus {nullptr};
 
     bool have_allocated {false};
+
+    static bool focus_button_on_mouseenter;
 };
