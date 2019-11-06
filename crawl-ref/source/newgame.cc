@@ -668,7 +668,9 @@ static void _choose_name(newgame_def& ng, newgame_def& choice)
 
     auto popup = make_shared<ui::Popup>(move(vbox));
 
-    sub_items->on_button_activated = [&](int id) {
+    sub_items->on_activate_event([&](const ActivateEvent& event) {
+        const auto button = static_pointer_cast<MenuButton>(event.target());
+        const auto id = button->id;
         switch (id)
         {
             case '*':
@@ -676,7 +678,7 @@ static void _choose_name(newgame_def& ng, newgame_def& choice)
                 reader.putkey(CONTROL('U'));
                 for (char ch : newgame_random_name())
                     reader.putkey(ch);
-                return;
+                break;
             case CK_ENTER:
                 choice.name = buf;
                 trim_string(choice.name);
@@ -690,13 +692,13 @@ static void _choose_name(newgame_def& ng, newgame_def& choice)
                     if (!overwrite_prompt)
                         done = true;
                 }
-                return;
+                break;
             case CK_ESCAPE:
                 done = cancel = true;
-                return;
+                break;
         }
-
-    };
+        return true;
+    });
 
     popup->on_keydown_event([&](const KeyEvent& ev) {
         auto key = ev.key();
@@ -812,6 +814,15 @@ static void _choose_seed(newgame_def& ng, newgame_def& choice,
     daily_seed_btn->hotkey = 'd';
     daily_seed_btn->set_margin_for_sdl(0,0,0,10);
     daily_seed_btn->set_margin_for_crt(0, 0, 0, 1);
+    daily_seed_btn->on_activate_event([&seed_input](const ActivateEvent&) {
+        time_t now;
+        time(&now);
+        struct tm * timeinfo = localtime(&now);
+        char timebuf[9];
+        strftime(timebuf, sizeof(timebuf), "%Y%m%d", timeinfo);
+        seed_input->set_text(timebuf);
+        return true;
+    });
     seed_hbox->add_child(move(daily_seed_btn));
 
     const string footer_text =
@@ -847,22 +858,14 @@ static void _choose_seed(newgame_def& ng, newgame_def& choice,
     begin_btn->set_child(move(btn_label));
     begin_btn->set_sync_id("btn-begin");
     begin_btn->hotkey = CK_ENTER;
+    begin_btn->on_activate_event([&done](const ActivateEvent&) {
+        return done = true;
+    });
     button_hbox->add_child(move(begin_btn));
 
     popup->on_keydown_event([&](const KeyEvent& ev) {
         const auto key = ev.key();
-
-        if (key == 'd' || key == 'D')
-        {
-            time_t now;
-            time(&now);
-            struct tm * timeinfo = localtime(&now);
-            char timebuf[9];
-            strftime(timebuf, sizeof(timebuf), "%Y%m%d", timeinfo);
-            seed_input->set_text(timebuf);
-            return true;
-        }
-        else if (key == '?')
+        if (key == '?')
             show_help('D', "Seeded play"); // TODO: scroll to section
         else if (key == '-')
         {
@@ -884,8 +887,6 @@ static void _choose_seed(newgame_def& ng, newgame_def& choice,
 #endif
         else if (key_is_escape(key))
             return done = cancel = true;
-        else if (key == CK_ENTER)
-            return done = true;
         return false;
     });
 
@@ -1128,21 +1129,34 @@ public:
         m_main_items->linked_menus[2] = m_sub_items;
         m_sub_items->linked_menus[0] = m_main_items;
 
-        m_main_items->on_button_activated = m_sub_items->on_button_activated =
-            [this](int id) { this->menu_item_activated(id); };
+        m_vbox->on_activate_event([this](const ActivateEvent& event) {
+            const auto button = static_pointer_cast<MenuButton>(event.target());
+            this->menu_item_activated(button->id);
+            return true;
+        });
 
-        for (auto &w : m_main_items->get_buttons())
-        {
-            w->on_any_event([w, this](const Event& ev) {
-                return this->button_event_hook(ev, w);
-            });
-        }
-        for (auto &w : m_sub_items->get_buttons())
-        {
-            w->on_any_event([w, this](const Event& ev) {
-                return this->button_event_hook(ev, w);
-            });
-        }
+        m_vbox->on_hotkey_event([this](const KeyEvent& event) {
+            switch (event.key())
+            {
+            case 'X':
+            case CONTROL('Q'):
+#ifdef USE_TILE_WEB
+                tiles.send_exit_reason("cancel");
+#endif
+                return done = end_game = true;
+            CASE_ESCAPE
+            case CK_MOUSE_CMD:
+                return done = cancel = true;
+            case CK_BKSP:
+                if (m_choice_type == C_JOB)
+                    m_ng_choice.job = JOB_UNKNOWN;
+                else
+                    m_ng_choice.species = SP_UNKNOWN;
+                return done = true;
+            default:
+                return false;
+            }
+        });
     };
 
     virtual shared_ptr<Widget> get_child_at_offset(int, int) override {
@@ -1152,7 +1166,6 @@ public:
     virtual void _render() override;
     virtual SizeReq _get_preferred_size(Direction dim, int prosp_width) override;
     virtual void _allocate_region() override;
-    virtual bool on_event(const Event& event) override;
 
 #ifdef USE_TILE_WEB
     void serialize();
@@ -1325,13 +1338,6 @@ protected:
     }
 
 private:
-    bool button_event_hook(const Event& ev, MenuButton* /*btn*/)
-    {
-        if (ev.type() == Event::Type::KeyDown)
-            return on_event(ev);
-        return false;
-    }
-
     formatted_string welcome;
     int m_choice_type;
     newgame_def& m_ng;
@@ -1359,42 +1365,6 @@ void UINewGameMenu::_allocate_region()
 {
     m_vbox->allocate_region(m_region);
 }
-
-bool UINewGameMenu::on_event(const Event& ev)
-{
-    if (ev.type() != Event::Type::KeyDown)
-        return false;
-    const auto key = static_cast<const KeyEvent&>(ev).key();
-
-    // First process all the menu entries available
-    if (key != CK_ENTER)
-    {
-        // Process all the other keys that are not assigned to the menu
-        switch (key)
-        {
-        case 'X':
-        case CONTROL('Q'):
-#ifdef USE_TILE_WEB
-            tiles.send_exit_reason("cancel");
-#endif
-            return done = end_game = true;
-        CASE_ESCAPE
-        case CK_MOUSE_CMD:
-            return done = cancel = true;
-        case CK_BKSP:
-            if (m_choice_type == C_JOB)
-                m_ng_choice.job = JOB_UNKNOWN;
-            else
-                m_ng_choice.species = SP_UNKNOWN;
-            return done = true;
-        default:
-            break;
-        }
-    }
-
-    return false;
-}
-
 
 #ifdef USE_TILE_WEB
 void UINewGameMenu::serialize()
@@ -1848,28 +1818,26 @@ static bool _prompt_weapon(const newgame_def& ng, newgame_def& ng_choice,
 
     bool done = false, ret = false;
 
-    auto menu_item_activated = [&](int id) {
+    vbox->on_activate_event([&](const ActivateEvent& event) {
+        const auto button = static_pointer_cast<MenuButton>(event.target());
+        const auto id = button->id;
         switch (id)
         {
             case M_ABORT:
                 ret = false;
-                done = true;
-                return;
+                return done = true;
             case M_APTITUDES:
                 show_help('%', _highlight_pattern(ng));
-                return;
+                return true;
             case M_HELP:
                 show_help('?');
-                return;
+                return true;
             case M_DEFAULT_CHOICE:
                 if (defweapon != WPN_UNKNOWN)
-                {
                     ng_choice.weapon = defweapon;
-                    break;
-                }
                 // No default weapon defined.
                 // This case should never happen in those cases but just in case
-                return;
+                return true;
             case M_VIABLE:
                 ng_choice.weapon = WPN_VIABLE;
                 break;
@@ -1880,10 +1848,8 @@ static bool _prompt_weapon(const newgame_def& ng, newgame_def& ng_choice,
                 ng_choice.weapon = static_cast<weapon_type> (id);
                 break;
         }
-        ret = done = true;
-    };
-    main_items->on_button_activated = menu_item_activated;
-    sub_items->on_button_activated = menu_item_activated;
+        return ret = done = true;
+    });
 
     auto popup = make_shared<ui::Popup>(vbox);
     popup->on_hotkey_event([&](const KeyEvent& ev) {
@@ -2241,7 +2207,9 @@ static void _prompt_gamemode_map(newgame_def& ng, newgame_def& ng_choice,
 
     bool done = false, cancel = false;
 
-    auto menu_item_activated = [&](int id) {
+    vbox->on_activate_event([&](const ActivateEvent& event) {
+        const auto button = static_pointer_cast<MenuButton>(event.target());
+        const auto id = button->id;
         switch (id)
         {
             case M_ABORT:
@@ -2249,10 +2217,10 @@ static void _prompt_gamemode_map(newgame_def& ng, newgame_def& ng_choice,
                 break;
             case M_APTITUDES:
                 show_help('%', _highlight_pattern(ng));
-                return;
+                return true;
             case M_HELP:
                 show_help('?');
-                return;
+                return true;
             case M_DEFAULT_CHOICE:
                 _set_default_choice(ng, ng_choice, defaults);
                 break;
@@ -2265,10 +2233,8 @@ static void _prompt_gamemode_map(newgame_def& ng, newgame_def& ng_choice,
                 ng_choice.map = maps.at(id)->name;
                 break;
         }
-        done = true;
-    };
-    main_items->on_button_activated = menu_item_activated;
-    sub_items->on_button_activated = menu_item_activated;
+        return done = true;
+    });
 
     auto popup = make_shared<ui::Popup>(vbox);
     popup->on_hotkey_event([&](const KeyEvent& ev) {

@@ -122,6 +122,7 @@ public:
         MouseWheel,
         FocusIn,
         FocusOut,
+        Activate,
     };
 
     explicit Event(Type type);
@@ -181,6 +182,11 @@ public:
     FocusEvent(Type type);
 };
 
+class ActivateEvent final : public Event
+{
+public:
+    ActivateEvent();
+};
 
 template<typename, typename> class Slot;
 
@@ -394,6 +400,7 @@ public:
     EVENT_HANDLER_HELPER(on_mousewheel_event, MouseWheel, MouseEvent)
     EVENT_HANDLER_HELPER(on_focusin_event, FocusIn, FocusEvent)
     EVENT_HANDLER_HELPER(on_focusout_event, FocusOut, FocusEvent)
+    EVENT_HANDLER_HELPER(on_activate_event, Activate, ActivateEvent)
 #undef EVENT_HANDLER_HELPER
 
     /**
