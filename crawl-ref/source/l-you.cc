@@ -173,23 +173,41 @@ LUARET1(you_xl, number, you.experience_level)
  * @function xl_progress
  */
 LUARET1(you_xl_progress, number, get_exp_progress())
+
 /*** Skill progress.
  * @tparam string name skill name
  * @treturn number percentage of the way to the next skill level
  * @function skill_progress
  */
-LUARET1(you_skill_progress, number,
-        lua_isstring(ls, 1)
-            ? get_skill_percentage(str_to_skill(lua_tostring(ls, 1)))
-            : 0)
+LUAFN(you_skill_progress)
+{
+    string sk_name = luaL_checkstring(ls, 1);
+    skill_type sk = str_to_skill(lua_tostring(ls, 1));
+    if (sk > NUM_SKILLS)
+    {
+        string err = make_stringf("Unknown skill name `%s`.", sk_name.c_str());
+        return luaL_argerror(ls, 1, err.c_str());
+    }
+    PLUARET(number, get_skill_percentage(str_to_skill(lua_tostring(ls, 1))));
+}
+
 /*** Can a skill be trained?
  * @tparam string name skill name
  * @treturn boolean
  * @function can_train_skill
  */
-LUARET1(you_can_train_skill, boolean,
-        lua_isstring(ls, 1) ? you.can_currently_train[str_to_skill(lua_tostring(ls, 1))]
-                            : false)
+LUAFN(you_can_train_skill)
+{
+    string sk_name = luaL_checkstring(ls, 1);
+    skill_type sk = str_to_skill(lua_tostring(ls, 1));
+    if (sk > NUM_SKILLS)
+    {
+        string err = make_stringf("Unknown skill name `%s`.", sk_name.c_str());
+        return luaL_argerror(ls, 1, err.c_str());
+    }
+    PLUARET(boolean, you.can_currently_train[sk]);
+}
+
 /*** Best skill.
  * @treturn string
  * @function best_skill
