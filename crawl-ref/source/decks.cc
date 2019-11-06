@@ -437,9 +437,7 @@ static void _describe_cards(CrawlVector& cards)
     auto popup = make_shared<ui::Popup>(scroller);
 
     bool done = false;
-    popup->on(Widget::slots.event, [&done, &scroller](wm_event ev) {
-        if (ev.type != WME_KEYDOWN)
-            return false;
+    popup->on_keydown_event([&done, &scroller](const wm_event& ev) {
         done = !scroller->on_event(ev);
         return true;
     });

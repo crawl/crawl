@@ -1569,9 +1569,7 @@ int msgwin_get_line(string prompt, char *buf, int len,
             tiles.ui_state_change("msgwin-get-line", 0);
 #endif
         };
-        popup->on(ui::Widget::slots.event, [&](wm_event ev) {
-            if (ev.type != WME_KEYDOWN)
-                return false;
+        popup->on_keydown_event([&](wm_event ev) {
             ret = reader.putkey(ev.key.keysym.sym);
             if (ret != -1)
                 done = true;

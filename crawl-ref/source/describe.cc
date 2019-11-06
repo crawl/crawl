@@ -171,9 +171,7 @@ int show_description(const describe_info &inf, const tile_def *tile)
 
     bool done = false;
     int lastch;
-    popup->on(Widget::slots.event, [&](wm_event ev) {
-        if (ev.type != WME_KEYDOWN)
-            return false;
+    popup->on_keydown_event([&](wm_event ev) {
         lastch = ev.key.keysym.sym;
         if (!inf.quote.empty() && (lastch == '!' || lastch == CK_MOUSE_CMD || lastch == '^'))
             switcher->current() = 1 - switcher->current();
@@ -2365,10 +2363,9 @@ void describe_feature_wide(const coord_def& pos)
     auto popup = make_shared<ui::Popup>(scroller);
 
     bool done = false;
-    popup->on(Widget::slots.event, [&](wm_event ev) {
-        if (scroller->on_event(ev))
-            return true;
-        return done = ev.type == WME_KEYDOWN;
+    popup->on_keydown_event([&](wm_event ev) {
+        done = !scroller->on_event(ev);
+        return true;
     });
 
 #ifdef USE_TILE_WEB
@@ -2736,9 +2733,7 @@ bool describe_item(item_def &item, function<void (string&)> fixup_desc)
     bool done = false;
     command_type action;
     int lastch;
-    popup->on(Widget::slots.event, [&](wm_event ev) {
-        if (ev.type != WME_KEYDOWN)
-            return false;
+    popup->on_keydown_event([&](wm_event ev) {
         int key = ev.key.keysym.sym;
         key = key == '{' ? 'i' : key;
         lastch = key;
@@ -3218,9 +3213,7 @@ void describe_spell(spell_type spell, const monster_info *mon_owner,
 
     bool done = false;
     int lastch;
-    popup->on(Widget::slots.event, [&](wm_event ev) {
-        if (ev.type != WME_KEYDOWN)
-            return false;
+    popup->on_keydown_event([&](wm_event ev) {
         lastch = ev.key.keysym.sym;
         done = (toupper_safe(lastch) == 'M' && can_mem || lastch == CK_ESCAPE
             || lastch == CK_ENTER || lastch == ' ');
@@ -4617,9 +4610,7 @@ int describe_monsters(const monster_info &mi, const string& /*footer*/)
 
     bool done = false;
     int lastch;
-    popup->on(Widget::slots.event, [&](wm_event ev) {
-        if (ev.type != WME_KEYDOWN)
-            return false;
+    popup->on_keydown_event([&](wm_event ev) {
         int key = ev.key.keysym.sym;
         lastch = key;
         done = key == CK_ESCAPE;

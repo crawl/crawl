@@ -888,9 +888,7 @@ void display_mutations()
 
     bool done = false;
     int lastch;
-    popup->on(Widget::slots.event, [&](wm_event ev) {
-        if (ev.type != WME_KEYDOWN)
-            return false;
+    popup->on_keydown_event([&](wm_event ev) {
         lastch = ev.key.keysym.sym;
         if (you.species == SP_VAMPIRE && (lastch == '!' || lastch == CK_MOUSE_CMD || lastch == '^'))
         {

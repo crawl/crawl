@@ -394,9 +394,7 @@ void DollEditRegion::run()
     vbox->add_child(doll_ui);
     auto popup = make_shared<ui::Popup>(move(vbox));
 
-    popup->on(Widget::slots.event, [this, &done, &doll_ui, &update_part_idx](wm_event ev) {
-        if (ev.type != WME_KEYDOWN)
-            return false;
+    popup->on_keydown_event([this, &done, &doll_ui, &update_part_idx](wm_event ev) {
         int key = ev.key.keysym.sym;
         command_type cmd = key_to_command(key, KMC_DOLL);
 
