@@ -16,6 +16,25 @@ using namespace ui;
 
 bool MenuButton::focus_on_mouse = false;
 
+MenuButton::MenuButton()
+{
+    on_hotkey_event([this](const KeyEvent& event) {
+        if (event.key() == hotkey)
+        {
+            activate();
+            return true;
+        }
+        return false;
+    });
+}
+
+bool MenuButton::activate()
+{
+    auto ev = ActivateEvent();
+    ev.set_target(get_shared());
+    return ui::raise_event(ev);
+}
+
 void MenuButton::_render()
 {
 #ifdef USE_TILE_LOCAL
@@ -120,6 +139,16 @@ bool MenuButton::on_event(const Event& event)
     if (old_focused != focused || old_active != active)
         _queue_allocation();
 
+    const bool left_mouse_button = old_active && !active;
+    if (left_mouse_button)
+        return activate();
+    else if (event.type() == Event::Type::KeyDown)
+    {
+        const auto key = static_cast<const KeyEvent&>(event).key();
+        if (key == CK_ENTER || key == ' ')
+            return activate();
+    }
+
     return old_active != active;
 }
 
@@ -173,18 +202,6 @@ OuterMenu::OuterMenu(bool can_shrink, int width, int height)
 
     m_grid->on_any_event([this](const Event& ev) {
         return this->scroller_event_hook(ev);
-    });
-
-    on_hotkey_event([&](const KeyEvent& ev) {
-        if (!on_button_activated)
-            return false;
-        for (const auto& btn : this->m_buttons)
-            if (btn && ev.key() == btn->hotkey)
-            {
-                this->on_button_activated(btn->id);
-                return true;
-            }
-        return false;
     });
 
     if (can_shrink)
@@ -263,18 +280,9 @@ void OuterMenu::add_button(shared_ptr<MenuButton> btn, int x, int y)
     ASSERT(item == nullptr);
     item = btn.get();
 
-    const int btn_id = btn->id;
-    btn->on_any_event([btn_id, this, x, y](const Event& ev) {
-        const bool lmb = ev.type() == Event::Type::MouseUp
-            && static_cast<const MouseEvent&>(ev).button() == MouseEvent::Button::Left;
-        const bool keyboard = ev.type() == Event::Type::KeyDown
-            && static_cast<const KeyEvent&>(ev).key() == CK_ENTER;
-        if (lmb || keyboard)
-        {
-            this->on_button_activated(btn_id);
-            return ev.type() == Event::Type::KeyDown; // button needs to catch clicks
-        }
-        if (ev.type() == Event::Type::FocusIn && m_description_indexes[y*this->m_width+x] != -1)
+    // TODO: once we add event capturing, move handlers to menu
+    btn->on_focusin_event([this, x, y](const Event&) {
+        if (m_description_indexes[y*this->m_width+x] != -1)
             descriptions->current() = m_description_indexes[y*this->m_width+x];
         return false;
     });

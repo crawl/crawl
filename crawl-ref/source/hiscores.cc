@@ -481,24 +481,14 @@ void UIHiscoresMenu::_add_hiscore_row(scorefile_entry& se, int id)
     auto btn = make_shared<MenuButton>();
     tmp->set_margin_for_sdl(2);
     btn->set_child(move(tmp));
-    btn->on_any_event([this, id, se](const Event& ev) {
-        // FIXME: add on_activate event
-        const bool lmb = ev.type() == Event::Type::MouseUp
-            && static_cast<const MouseEvent&>(ev).button() == MouseEvent::Button::Left;
-        const bool keyboard = ev.type() == Event::Type::KeyDown
-            && static_cast<const KeyEvent&>(ev).key() == CK_ENTER;
-        if (lmb || keyboard)
-        {
-            _show_morgue(*hs_list[id]);
-            return true;
-        }
-        // FIXME: add on_focusin event
-        if (ev.type() == Event::Type::FocusIn)
-        {
-            formatted_string desc(hiscores_format_single_long(se, true));
-            desc.cprintf(string(max(0, 9-count_linebreaks(desc)), '\n'));
-            m_description->set_text(move(desc));
-        }
+    btn->on_activate_event([id](const ActivateEvent&) {
+        _show_morgue(*hs_list[id]);
+        return true;
+    });
+    btn->on_focusin_event([this, se](const FocusEvent&) {
+        formatted_string desc(hiscores_format_single_long(se, true));
+        desc.cprintf(string(max(0, 9-count_linebreaks(desc)), '\n'));
+        m_description->set_text(move(desc));
         return false;
     });
 

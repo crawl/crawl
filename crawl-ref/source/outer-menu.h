@@ -12,7 +12,7 @@ class MenuButton : public ui::Bin
 {
     friend class OuterMenu;
 public:
-    MenuButton() {};
+    MenuButton();
 
     virtual void _render() override;
     virtual ui::SizeReq _get_preferred_size(ui::Widget::Direction, int) override;
@@ -26,6 +26,8 @@ public:
     colour_t fg_highlight = BLACK;
 #endif
     string description;
+
+    bool activate();
 
 #ifdef USE_TILE_WEB
     void serialize();
@@ -79,8 +81,6 @@ public:
     };
 
     void scroll_button_into_view(MenuButton *btn);
-
-    function<void(int)> on_button_activated;
 
     weak_ptr<OuterMenu> linked_menus[4];
     shared_ptr<ui::Switcher> descriptions;

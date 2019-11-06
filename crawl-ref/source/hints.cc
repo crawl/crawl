@@ -229,21 +229,18 @@ void pick_hints(newgame_def& choice)
 
     bool cancelled = false;
     bool done = false;
-    auto menu_item_activated = [&](int id) {
+    vbox->on_activate_event([&](const ActivateEvent& event) {
+        const auto button = static_pointer_cast<MenuButton>(event.target());
+        int id = button->id;
         if (id == CK_ESCAPE)
-        {
-            done = cancelled = true;
-            return;
-        }
+            return done = cancelled = true;
         else if (id == '*')
             id = random2(HINT_TYPES_NUM);
         Hints.hints_type = id;
         _fill_newgame_choice_for_hints(choice, static_cast<hints_types>(id));
-        done = true;
-    };
+        return done = true;
+    });
 
-    main_items->on_button_activated = menu_item_activated;
-    sub_items->on_button_activated = menu_item_activated;
     main_items->linked_menus[2] = sub_items;
     sub_items->linked_menus[0] = main_items;
 

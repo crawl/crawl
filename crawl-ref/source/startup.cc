@@ -606,9 +606,11 @@ public:
             grid->row_flex_grow(2) = 1;
         }
 
-        game_modes_menu->on_button_activated =
-        save_games_menu->on_button_activated =
-            [this](int id) { this->menu_item_activated(id); };
+        m_root->on_activate_event([this](const ActivateEvent& event) {
+            const auto button = static_pointer_cast<const MenuButton>(event.target());
+            this->menu_item_activated(button->id);
+            return true;
+        });
 
         // TODO: focus events should probably not bubble, but there should be
         // some way to capture them...
