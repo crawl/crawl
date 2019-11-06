@@ -144,6 +144,7 @@ public:
     void update_synced_widgets();
     unordered_map<string, Widget*> synced_widgets;
     bool receiving_ui_state = false;
+    void sync_state();
     void recv_ui_state_change(const JsonNode *state);
 #endif
 
@@ -2869,6 +2870,12 @@ void UIRoot::update_synced_widgets()
         recurse(top.get());
 }
 
+void UIRoot::sync_state()
+{
+    for (const auto& it : synced_widgets)
+        it.second->sync_state_changed();
+}
+
 void UIRoot::recv_ui_state_change(const JsonNode *json)
 {
     const auto generation_id = json_find_member(json, "generation_id");
@@ -2969,6 +2976,9 @@ void pop_cutoff()
 void push_layout(shared_ptr<Widget> root, KeymapContext km)
 {
     ui_root.push_child(move(root), km);
+#ifdef USE_TILE_WEB
+    ui_root.sync_state();
+#endif
 }
 
 void pop_layout()
@@ -3430,6 +3440,11 @@ Widget* get_focused_widget()
 void recv_ui_state_change(const JsonNode *state)
 {
     ui_root.recv_ui_state_change(state);
+}
+
+void sync_ui_state()
+{
+    ui_root.sync_state();
 }
 
 int layout_generation_id()
