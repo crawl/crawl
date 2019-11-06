@@ -14,7 +14,7 @@
 
 using namespace ui;
 
-bool MenuButton::focus_on_mouse = false;
+bool OuterMenu::focus_button_on_mouseenter = false;
 
 MenuButton::MenuButton()
 {
@@ -60,11 +60,21 @@ void MenuButton::_allocate_region()
         const VColour bg = active ?
             VColour(0, 0, 0, 255) : VColour(255, 255, 255, 25);
         m_buf.add(m_region.x, m_region.y, m_region.ex(), m_region.ey(), bg);
-        const VColour mouse_colour = active ?
-            VColour(34, 34, 34, 255) : term_colours[highlight_colour];
-        m_line_buf.add_square(m_region.x+1, m_region.y+1,
-            m_region.ex(), m_region.ey(), mouse_colour);
     }
+
+    const auto darken = [](VColour c) {
+        c.r /= 2;
+        c.g /= 2;
+        c.b /= 2;
+        return c;
+    };
+
+    const VColour border = active ? VColour(34, 34, 34, 255) :
+        focused ? term_colours[highlight_colour] :
+        hovered ? darken(term_colours[highlight_colour]) :
+        VColour(0, 0, 0, 0);
+    m_line_buf.add_square(m_region.x+1, m_region.y+1,
+        m_region.ex(), m_region.ey(), border);
 #endif
 }
 
@@ -101,13 +111,12 @@ bool MenuButton::on_event(const Event& event)
     if (Bin::on_event(event))
         return true;
 
-    bool old_focused = focused, old_active = active;
+    bool old_focused = focused, old_active = active, old_hovered = hovered;
 
-    if (event.type() == Event::Type::MouseEnter && focus_on_mouse)
-        ui::set_focused_widget(this);
-    if (event.type() == Event::Type::MouseMove)
-        ui::set_focused_widget(this);
-
+    if (event.type() == Event::Type::MouseEnter)
+        hovered = true;
+    if (event.type() == Event::Type::MouseLeave)
+        hovered = false;
     if (event.type() == Event::Type::FocusIn)
         focused = true;
     if (event.type() == Event::Type::FocusOut)
@@ -136,7 +145,7 @@ bool MenuButton::on_event(const Event& event)
         active = false;
     }
 
-    if (old_focused != focused || old_active != active)
+    if (old_focused != focused || old_active != active || old_hovered != hovered)
         _queue_allocation();
 
     const bool left_mouse_button = old_active && !active;
@@ -286,6 +295,15 @@ void OuterMenu::add_button(shared_ptr<MenuButton> btn, int x, int y)
             descriptions->current() = m_description_indexes[y*this->m_width+x];
         return false;
     });
+    btn->on_mouseenter_event([btn](const MouseEvent&) {
+        if (focus_button_on_mouseenter)
+            ui::set_focused_widget(btn.get());
+        return false;
+    });
+    btn->on_mousemove_event([btn](const MouseEvent&) {
+        ui::set_focused_widget(btn.get());
+        return false;
+    });
 
     if (descriptions)
     {
@@ -369,7 +387,7 @@ bool OuterMenu::move_button_focus(int fx, int fy, int dx, int dy, int limit)
 
 bool OuterMenu::scroller_event_hook(const Event& ev)
 {
-    MenuButton::focus_on_mouse = ev.type() == Event::Type::MouseWheel;
+    focus_button_on_mouseenter = ev.type() == Event::Type::MouseWheel;
 
     if (ev.type() != Event::Type::KeyDown)
         return false;
