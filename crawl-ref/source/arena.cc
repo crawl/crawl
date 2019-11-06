@@ -1476,45 +1476,31 @@ static void _choose_arena_teams(newgame_def& choice,
     arena::skipped_arena_ui = false;
     clear_message_store();
 
-    char buf[80];
-    resumable_line_reader reader(buf, sizeof(buf));
-    bool done = false;
-    bool cancel = false;
-    auto prompt_ui = make_shared<Text>();
-    auto popup = make_shared<ui::Popup>(prompt_ui);
+    auto vbox = make_shared<Box>(ui::Widget::VERT);
+    vbox->add_child(make_shared<Text>("Enter your choice of teams:\n "));
+    vbox->set_cross_alignment(Widget::Align::STRETCH);
+    auto teams_input = make_shared<ui::TextEntry>();
+    teams_input->set_sync_id("teams");
+    teams_input->set_text(default_arena_teams);
+    vbox->add_child(teams_input);
+    formatted_string prompt;
+    prompt.cprintf("\nExamples:\n");
+    prompt.cprintf("  Sigmund v Jessica\n");
+    prompt.cprintf("  99 orc v the Royal Jelly\n");
+    prompt.cprintf("  20-headed hydra v 10 kobold ; scimitar ego:flaming");
+    vbox->add_child(make_shared<Text>(move(prompt)));
 
+    auto popup = make_shared<ui::Popup>(move(vbox));
+
+    bool done = false, cancel = false;
     popup->on_hotkey_event([&](const KeyEvent& ev) {
-        const auto key = reader.putkey(ev.key());
-        if (key == -1)
-            return true;
-        cancel = !!key;
-        return done = true;
+        return done = (ev.key() == CK_ENTER);
+    });
+    popup->on_keydown_event([&](const KeyEvent& ev) {
+        return done = cancel = key_is_escape(ev.key());
     });
 
-    ui::push_layout(move(popup));
-    while (!done && !crawl_state.seen_hups)
-    {
-        string hlbuf = formatted_string(buf).to_colour_string();
-        if (hlbuf.find(" v ") != string::npos)
-            hlbuf = "<w>" + replace_all(hlbuf, " v ", "</w> v <w>") + "</w>";
-
-        formatted_string prompt;
-        prompt.cprintf("Enter your choice of teams:\n\n  ");
-        prompt += formatted_string::parse_string(hlbuf);
-
-        prompt.cprintf("\n\n");
-        if (!default_arena_teams.empty())
-            prompt.cprintf("Enter - %s\n", default_arena_teams.c_str());
-        prompt.cprintf("\n");
-        prompt.cprintf("Examples:\n");
-        prompt.cprintf("  Sigmund v Jessica\n");
-        prompt.cprintf("  99 orc v the Royal Jelly\n");
-        prompt.cprintf("  20-headed hydra v 10 kobold ; scimitar ego:flaming");
-        prompt_ui->set_text(prompt);
-
-        ui::pump_events();
-    }
-    ui::pop_layout();
+    ui::run_layout(move(popup), done);
 
     if (cancel || crawl_state.seen_hups)
     {
@@ -1522,7 +1508,7 @@ static void _choose_arena_teams(newgame_def& choice,
         game_ended(crawl_state.bypassed_startup_menu
                     ? game_exit::death : game_exit::abort);
     }
-    choice.arena_teams = buf;
+    choice.arena_teams = teams_input->get_text();
     if (choice.arena_teams.empty())
         choice.arena_teams = default_arena_teams;
 }
