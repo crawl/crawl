@@ -1104,6 +1104,7 @@ Widget* get_focused_widget();
 
 #ifdef USE_TILE_WEB
 void recv_ui_state_change(const JsonNode *json);
+void sync_ui_state();
 int layout_generation_id();
 #endif
 

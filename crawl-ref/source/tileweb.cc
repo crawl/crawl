@@ -52,6 +52,7 @@
 #include "tileview.h"
 #include "transform.h"
 #include "travel.h"
+#include "ui.h"
 #include "unicode.h"
 #include "unwind.h"
 #include "version.h"
@@ -1877,6 +1878,8 @@ void TilesFramework::_send_everything()
     update_input_mode(mouse_control::current_mode());
 
     m_text_menu.send(true);
+
+    ui::sync_ui_state();
 }
 
 void TilesFramework::clrscr()
