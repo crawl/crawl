@@ -2669,7 +2669,8 @@ static bool _restore_game(const string& filename)
             you.save = 0;
             return false;
         }
-        crawl_state.default_startup_name = you.your_name; // for main menu
+        if (Options.remember_name)
+            crawl_state.default_startup_name = you.your_name; // for main menu
         you.save->abort();
         delete you.save;
         you.save = 0;
@@ -2695,7 +2696,8 @@ static bool _restore_game(const string& filename)
         }
     }
 
-    crawl_state.default_startup_name = you.your_name; // for main menu
+    if (Options.remember_name)
+        crawl_state.default_startup_name = you.your_name; // for main menu
 
     if (numcmp(you.prev_save_version.c_str(), Version::Long, 2) == -1
         && version_is_stable(you.prev_save_version.c_str()))
