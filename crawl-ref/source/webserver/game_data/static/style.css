@@ -1201,11 +1201,11 @@ body {
     margin-bottom: 15px;
 }
 
-.seed-selection > p {
+.seed-selection p {
     margin: 20px 0;
 }
 
-.seed-selection > .seed-input {
+.seed-selection .seed-input {
     line-height: 1.2em;
     white-space: pre;
     display: -webkit-box;
