@@ -865,10 +865,11 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
     {
         var $popup = $(".templates > .seed-selection").clone();
         $popup.find(".header").html(desc.title);
-        $popup.find(".body").html(desc.body);
+        $popup.find(".body-text").html(desc.body);
         $popup.find(".footer").html(desc.footer);
         if (!desc.show_pregen_toggle)
             $popup.find(".pregen-toggle").remove();
+        scroller($popup.find(".body")[0]);
 
         var $input = $popup.find("input[type=text]");
         var input_val = $input.val();
