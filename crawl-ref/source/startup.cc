@@ -880,13 +880,11 @@ void UIStartupMenu::menu_item_activated(int id)
         return;
 
     case GAME_TYPE_INSTRUCTIONS:
+        show_help();
+        return;
+
     case GAME_TYPE_HIGH_SCORES:
-        {
-            if (id == GAME_TYPE_INSTRUCTIONS)
-                show_help();
-            else
-                show_hiscore_table();
-        }
+        show_hiscore_table();
         return;
 
     default:

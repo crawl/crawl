@@ -387,7 +387,6 @@ public:
     virtual void _render() override;
     virtual SizeReq _get_preferred_size(Direction dim, int prosp_width) override;
     virtual void _allocate_region() override;
-    virtual bool on_event(const Event& event) override;
 
     void on_show();
 
@@ -449,6 +448,10 @@ UIHiscoresMenu::UIHiscoresMenu()
         m_root->add_child(make_shared<Text>(placeholder));
         initial_focus = this;
     }
+
+    on_hotkey_event([this](const KeyEvent& ev) {
+        return done = (key_is_escape(ev.key()) || ev.key() == CK_MOUSE_CMD);
+    });
 }
 
 void UIHiscoresMenu::_construct_hiscore_table()
@@ -520,16 +523,6 @@ void UIHiscoresMenu::_allocate_region()
         on_show();
     }
     m_root->allocate_region(m_region);
-}
-
-bool UIHiscoresMenu::on_event(const Event& ev)
-{
-    if (ev.type() != Event::Type::KeyDown)
-        return false;
-    const auto key = static_cast<const KeyEvent&>(ev).key();
-    if (key_is_escape(key) || key == CK_MOUSE_CMD)
-        return done = true;
-    return true;
 }
 
 void show_hiscore_table()
