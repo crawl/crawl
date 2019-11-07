@@ -646,6 +646,21 @@ static void _choose_name(newgame_def& ng, newgame_def& choice)
         tmp->set_text(formatted_string("Enter - Begin!", BROWN));
 
         auto btn = make_shared<MenuButton>();
+        btn->on_activate_event([&](const ActivateEvent&) {
+            choice.name = buf;
+            trim_string(choice.name);
+            if (choice.name.empty())
+                choice.name = newgame_random_name();
+            if (good_name)
+            {
+                ng.name = choice.name;
+                ng.filename = get_save_filename(choice.name);
+                overwrite_prompt = save_exists(ng.filename);
+                if (!overwrite_prompt)
+                    done = true;
+            }
+            return true;
+        });
         tmp->set_margin_for_sdl(4,8);
         tmp->set_margin_for_crt(0, 2, 0, 0);
         btn->set_child(move(tmp));
@@ -678,20 +693,6 @@ static void _choose_name(newgame_def& ng, newgame_def& choice)
                 reader.putkey(CONTROL('U'));
                 for (char ch : newgame_random_name())
                     reader.putkey(ch);
-                break;
-            case CK_ENTER:
-                choice.name = buf;
-                trim_string(choice.name);
-                if (choice.name.empty())
-                    choice.name = newgame_random_name();
-                if (good_name)
-                {
-                    ng.name = choice.name;
-                    ng.filename = get_save_filename(choice.name);
-                    overwrite_prompt = save_exists(ng.filename);
-                    if (!overwrite_prompt)
-                        done = true;
-                }
                 break;
             case CK_ESCAPE:
                 done = cancel = true;
