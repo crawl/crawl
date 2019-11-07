@@ -1698,6 +1698,8 @@ newgame_def read_startup_prefs()
         temp.game.weapon = temp.game.allowed_weapons[0];
     if (!Options.seed_from_rc)
         Options.seed = temp.seed_from_rc;
+    if (!Options.remember_name)
+        temp.game.name = "";
     return temp.game;
 #endif // !DISABLE_STICKY_STARTUP_OPTIONS
 }

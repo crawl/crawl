@@ -582,7 +582,7 @@ static void _add_menu_sub_item(shared_ptr<OuterMenu>& menu, int x, int y, const 
  * @return  A random name, or the empty string if no good name could be
  *          generated after several tries.
  */
-static string _random_name()
+string newgame_random_name()
 {
     for (int i = 0; i < 100; ++i)
     {
@@ -676,14 +676,14 @@ static void _choose_name(newgame_def& ng, newgame_def& choice)
             case '*':
                 reader.putkey(CK_END);
                 reader.putkey(CONTROL('U'));
-                for (char ch : _random_name())
+                for (char ch : newgame_random_name())
                     reader.putkey(ch);
                 return;
             case CK_ENTER:
                 choice.name = buf;
                 trim_string(choice.name);
                 if (choice.name.empty())
-                    choice.name = _random_name();
+                    choice.name = newgame_random_name();
                 if (good_name)
                 {
                     ng.name = choice.name;
