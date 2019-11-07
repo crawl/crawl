@@ -47,6 +47,7 @@
 #    USE_ICC       -- set to use Intel's compiler
 #    LTO           -- set for better optimization but slower compilation,
 #                     requires gcc4.6+
+#    NO_TRY_LLD    -- if set don't try to detect a working lld linker
 #    NO_TRY_GOLD   -- if set don't try to detect a working gold linker
 #    NOASSERTS     -- set to disable assertion checks (ignored in debug mode)
 #    NOWIZARD      -- set to disable wizard mode.  Use if you have untrusted
@@ -1027,10 +1028,21 @@ CFWARN := -wd383,810,869,981,1418 -we14,193,304
 CFWARN_L :=
 endif
 
+LINKER_LDFLAG=
+ifndef NO_TRY_LLD
+ifeq (,$(shell echo 'int main(){return 1;}'|$(GXX) -x c++ - -o /dev/null -fuse-ld=lld 2>&1))
+ LINKER_LDFLAG = -fuse-ld=lld
+endif
+endif
+ifeq ($(LINKER_LDFLAG),)
 ifndef NO_TRY_GOLD
 ifeq (,$(shell echo 'int main(){return 1;}'|$(GXX) -x c++ - -o /dev/null -fuse-ld=gold 2>&1))
-  LDFLAGS += -fuse-ld=gold
+  LINKER_LDFLAG = -fuse-ld=gold
 endif
+endif
+endif
+ifneq ($(LINKER_LDFLAG),)
+LDFLAGS += $(LINKER_LDFLAG)
 endif
 
 LDFLAGS += $(CFOPTIMIZE) $(CFOPTIMIZE_L) $(EXTERNAL_LDFLAGS)
