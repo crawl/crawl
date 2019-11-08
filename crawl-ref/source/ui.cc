@@ -21,7 +21,6 @@
 #ifdef USE_TILE_LOCAL
 # include "glwrapper.h"
 # include "tilebuf.h"
-# include "tilepick.h"
 # include "tilepick-p.h"
 # include "tile-player-flag-cut.h"
 #else
