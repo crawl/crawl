@@ -5,7 +5,6 @@
 
 #pragma once
 
-#include <array>
 #include <functional>
 
 #include "format.h"
