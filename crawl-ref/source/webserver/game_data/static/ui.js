@@ -205,6 +205,23 @@ function ($, comm, client, options, focus_trap) {
         send_state_sync(ev.target, state_msg);
     }
 
+    function ui_focus_handler(ev) {
+        if (ev.type === "focusin") {
+            var $elem = $(ev.target);
+            if ($elem.closest(".ui-popup[data-generation-id]").length == 0)
+                return;
+            if (!$elem.is("[data-sync-id]"))
+            {
+                console.warn("tabbed to non-syncable element: ", $elem[0]);
+                return;
+            }
+            send_state_sync($elem, { has_focus: true });
+        } else if (ev.type === "focusout") {
+            if (!ev.relatedTarget && top_popup())
+                send_state_sync(top_popup(), { has_focus: true });
+        }
+    }
+
     options.add_listener(function ()
     {
         var size = options.get("tile_font_crt_size");
@@ -229,7 +246,9 @@ function ($, comm, client, options, focus_trap) {
             .off("click.ui", "[data-hotkey]")
             .on("click.ui", "[data-hotkey]", ui_hotkey_handler)
             .off("input.ui focus.ui", "[data-sync-id]")
-            .on("input.ui focus.ui", "[data-sync-id]", ui_input_handler);
+            .on("input.ui focus.ui", "[data-sync-id]", ui_input_handler)
+            .off("focusin.ui focusout.ui")
+            .on("focusin.ui focusout.ui", ui_focus_handler);
         $(window).off("resize.ui").on("resize.ui", ui_resize_handler);
     });
 
@@ -286,12 +305,19 @@ function ($, comm, client, options, focus_trap) {
                     .attr("data-generation-id");
             if (generation_id != msg.generation_id)
                 return;
-            var elem = popup.find('[data-sync-id='+msg.widget_id+']')[0];
-            if (!elem)
-                return;
+            var elem = msg.widget_id != "" ?
+                    popup.find('[data-sync-id='+msg.widget_id+']')[0] : null;
             try {
                 receiving_ui_state = true;
-                sync_load_state(elem, msg);
+                if (msg.has_focus)
+                {
+                    if (elem)
+                        elem.focus();
+                    else
+                        document.activeElement.blur();
+                }
+                else if (elem)
+                    sync_load_state(elem, msg);
             } finally {
                 receiving_ui_state = false;
             }

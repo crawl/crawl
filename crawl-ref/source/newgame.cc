@@ -812,6 +812,7 @@ static void _choose_seed(newgame_def& ng, newgame_def& choice,
 
     auto daily_seed_btn = make_shared<MenuButton>();
     daily_seed_btn->set_child(move(btn_label));
+    daily_seed_btn->set_sync_id("btn-daily");
     daily_seed_btn->hotkey = 'd';
     daily_seed_btn->set_margin_for_sdl(0,0,0,10);
     daily_seed_btn->set_margin_for_crt(0, 0, 0, 1);
@@ -848,6 +849,7 @@ static void _choose_seed(newgame_def& ng, newgame_def& choice,
 
     auto begin_btn = make_shared<MenuButton>();
     begin_btn->set_child(move(btn_label));
+    begin_btn->set_sync_id("btn-begin");
     begin_btn->hotkey = CK_ENTER;
     button_hbox->add_child(move(begin_btn));
 
