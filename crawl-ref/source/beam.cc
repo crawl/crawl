@@ -6624,7 +6624,9 @@ bool shoot_through_monster(const bolt& beam, const monster* victim)
         monster* temp = originator->as_monster();
         if (!temp)
             return false;
-        origin_worships_fedhas = temp->god == GOD_FEDHAS;
+        origin_worships_fedhas = (temp->god == GOD_FEDHAS
+            || (temp->friendly()
+                && have_passive(passive_t::shoot_through_plants)));
         origin_attitude = temp->attitude;
     }
 

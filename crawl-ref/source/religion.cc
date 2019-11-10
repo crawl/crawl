@@ -2619,10 +2619,7 @@ void lose_piety(int pgn)
 static bool _fedhas_protects_species(monster_type mc)
 {
     return mons_class_is_plant(mc)
-           && mons_class_holiness(mc) & MH_PLANT
-           && mc != MONS_BALLISTOMYCETE_SPORE
-           && mc != MONS_SNAPLASHER_VINE
-           && mc != MONS_SNAPLASHER_VINE_SEGMENT;
+           && mons_class_holiness(mc) & MH_PLANT;
 }
 
 bool fedhas_protects(const monster& target)
