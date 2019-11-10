@@ -528,7 +528,7 @@ static JsonNode *mknode(JsonTag tag)
 
 JsonNode *json_mknull()
 {
-    return mknode(JSON_nullptr);
+    return mknode(JSON_NULL);
 }
 
 JsonNode *json_mkbool(bool b)
@@ -1036,7 +1036,7 @@ static void emit_value(SB *out, const JsonNode *node)
     ASSERT(tag_is_valid(node->tag));
     switch (node->tag)
     {
-        case JSON_nullptr:
+        case JSON_NULL:
             sb_puts(out, "null");
             break;
         case JSON_BOOL:
@@ -1064,7 +1064,7 @@ void emit_value_indented(SB *out, const JsonNode *node, const char *space, int i
     ASSERT(tag_is_valid(node->tag));
     switch (node->tag)
     {
-        case JSON_nullptr:
+        case JSON_NULL:
             sb_puts(out, "null");
             break;
         case JSON_BOOL:
@@ -1322,7 +1322,7 @@ static void emit_number(SB *out, double num)
 
 static bool tag_is_valid(unsigned int tag)
 {
-    return /* tag >= JSON_nullptr && */ tag <= JSON_OBJECT;
+    return /* tag >= JSON_NULL && */ tag <= JSON_OBJECT;
 }
 
 static bool number_is_valid(const char *num)

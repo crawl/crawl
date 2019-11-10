@@ -30,7 +30,7 @@
 
 typedef enum
 {
-    JSON_nullptr,
+    JSON_NULL,
     JSON_BOOL,
     JSON_STRING,
     JSON_NUMBER,
