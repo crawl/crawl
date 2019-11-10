@@ -2877,12 +2877,24 @@ void UIRoot::recv_ui_state_change(const JsonNode *json)
     {
         return;
     }
-    const auto widget_id = json_find_member(json, "widget_id");
-    if (!widget_id || widget_id->tag != JSON_STRING)
+
+    const auto has_focus = json_find_member(json, "has_focus");
+    if (has_focus && (has_focus->tag != JSON_BOOL || !has_focus->bool_))
         return;
-    const auto widget = synced_widgets.at(widget_id->string_);
+
+    const auto widget_id = json_find_member(json, "widget_id");
+    if (!widget_id)
+        return;
+    if (!(widget_id->tag == JSON_STRING || widget_id->tag == JSON_NULL))
+        return;
+    const auto widget = widget_id->tag == JSON_STRING ?
+        synced_widgets.at(widget_id->string_) : nullptr;
+
     unwind_bool recv(receiving_ui_state, true);
-    widget->sync_load_state(json);
+    if (has_focus)
+        ui::set_focused_widget(widget);
+    else if (widget)
+        widget->sync_load_state(json);
 }
 #endif
 
@@ -3372,6 +3384,17 @@ void set_focused_widget(Widget* w)
 
     if (w == current_focus)
         return;
+
+#ifdef USE_TILE_WEB
+    tiles.json_open_object();
+    tiles.json_write_string("msg", "ui-state-sync");
+    tiles.json_write_bool("has_focus", true);
+    tiles.json_write_string("widget_id", w->sync_id());  // "" means default
+    tiles.json_write_bool("from_webtiles", ui_root.receiving_ui_state);
+    tiles.json_write_int("generation_id", ui_root.state.generation_id);
+    tiles.json_close_object();
+    tiles.finish_message();
+#endif
 
     new_focus = w;
 
