@@ -685,8 +685,16 @@ public:
         if (_pre_more())
             return;
 
-        mouse_control mc(MOUSE_MODE_MORE);
-        redraw_screen();
+        if (you.running)
+        {
+            mouse_control mc(MOUSE_MODE_MORE);
+            redraw_screen();
+        }
+        else
+        {
+            print_stats();
+            show();
+        }
 
         int last_row = crawl_view.msgsz.y;
         if (first_col_more())
