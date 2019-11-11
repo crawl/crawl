@@ -84,6 +84,8 @@ function ($, comm, client, options, focus_trap) {
         wrapper.attr("data-generation-id", generation_id);
         $("#ui-stack").append(wrapper);
         wrapper.stop(true, true).fadeIn(100, function () {
+            if (client.is_watching())
+                return;
             wrapper[0].focus_trap = focus_trap(elem[0], {
                 escapeDeactivates: false,
                 fallbackFocus: document.body,
@@ -105,6 +107,8 @@ function ($, comm, client, options, focus_trap) {
                 },
             }).activate();
         });
+        if (client.is_watching())
+            wrapper.find("input, button").attr("disabled", true);
         if (elem.find(".paneset").length > 0)
             ui_resize_handler();
     }
@@ -118,7 +122,8 @@ function ($, comm, client, options, focus_trap) {
         var elem = unwrap_popup(wrapper).blur();
         if (!wrapper.data("ephemeral"))
             elem.detach().addClass("hidden").appendTo("body");
-        wrapper[0].focus_trap.deactivate();
+        if (wrapper[0].focus_trap)
+            wrapper[0].focus_trap.deactivate();
         wrapper.remove();
 
         if (show_below === false)
@@ -286,12 +291,28 @@ function ($, comm, client, options, focus_trap) {
     {
         if (receiving_ui_state)
             return;
+        if (client.is_watching())
+            return;
         var $target_popup = $(elem).closest("[data-generation-id]");
         if ($target_popup[0] != top_popup().closest("[data-generation-id]")[0])
             return;
         state.generation_id = +$target_popup.attr("data-generation-id");
         state.widget_id = $(elem).attr("data-sync-id") || null;
         comm.send_message("ui_state_sync", state);
+    }
+
+    function sync_focus_state(elem)
+    {
+        if (client.is_watching())
+            top_popup().find(".style-focused").removeClass("style-focused");
+        if (elem)
+        {
+            elem.focus();
+            if (client.is_watching())
+                $(elem).addClass("style-focused");
+        }
+        else
+            document.activeElement.blur();
     }
 
     comm.register_handlers({
@@ -310,12 +331,7 @@ function ($, comm, client, options, focus_trap) {
             try {
                 receiving_ui_state = true;
                 if (msg.has_focus)
-                {
-                    if (elem)
-                        elem.focus();
-                    else
-                        document.activeElement.blur();
-                }
+                    sync_focus_state(elem);
                 else if (elem)
                     sync_load_state(elem, msg);
             } finally {
