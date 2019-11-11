@@ -1251,6 +1251,7 @@ static int _train(skill_type exsk, int &max_exp, bool simu)
 
     // This will be deducted from you.exp_available.
     int cost = calc_skill_cost(you.skill_cost_level);
+    int total_cost;
 
     if (_player_is_gnoll())
     {
@@ -1259,39 +1260,65 @@ static int _train(skill_type exsk, int &max_exp, bool simu)
         int num = total_count;
         int denom = total_count - useless_count;
         if (num != denom)
-            cost = div_rand_round(num * cost, denom);
+            total_cost = div_rand_round(num * cost, denom);
     }
     else
     {
         // Scale cost and skill_inc to available experience.
         const int spending_limit = min(10 * MAX_SPENDING_LIMIT, max_exp);
         skill_inc = spending_limit / cost;
-        cost = skill_inc * cost;
+        total_cost = skill_inc * cost;
     }
 
     if (skill_inc <= 0 || cost > max_exp)
         return 0;
 
-    // Bonus from manual
-    int slot;
-    int bonus_left = skill_inc;
-    while (bonus_left > 0 && (slot = manual_slot_for_skill(exsk)) != -1)
-    {
-        item_def& manual(you.inv[slot]);
-        const int bonus = min<int>(bonus_left, manual.skill_points);
-        skill_inc += bonus;
-        bonus_left -= bonus;
-        manual.skill_points -= bonus;
-        if (!manual.skill_points && !simu && !crawl_state.simulating_xp_gain)
-            finish_manual(slot);
-    }
-
     const skill_type old_best_skill = best_skill(SK_FIRST_SKILL, SK_LAST_SKILL);
     const int old_level = you.skill(exsk, 10, true);
-    you.skill_points[exsk] += skill_inc;
-    you.exp_available -= cost;
-    you.total_experience += cost;
-    max_exp -= cost;
+
+    int training_target = you.training_targets[exsk];
+    if (training_target > you.skill(exsk, 10, false, false, false))
+    {
+        int manual_slot;
+        int skill_inc_iter;
+        for (skill_inc_iter = 0; skill_inc_iter < skill_inc && training_target > you.skill(exsk, 10, false, false, false); skill_inc_iter++)
+        {
+            you.skill_points[exsk] += 1;
+            you.exp_available -= cost;
+            you.total_experience += cost;
+            max_exp -= cost;
+            if ((manual_slot = manual_slot_for_skill(exsk)) != -1)
+            {
+                item_def& manual(you.inv[manual_slot]);
+                you.skill_points[exsk] += 1;
+                manual.skill_points -= 1;
+                if (!manual.skill_points && !simu && !crawl_state.simulating_xp_gain)
+                    finish_manual(manual_slot);
+            }
+        }
+        skill_inc = skill_inc_iter;
+    }
+    else
+    {
+        // Bonus from manual
+        int slot;
+        int bonus_left = skill_inc;
+        while (bonus_left > 0 && (slot = manual_slot_for_skill(exsk)) != -1)
+        {
+            item_def& manual(you.inv[slot]);
+            const int bonus = min<int>(bonus_left, manual.skill_points);
+            skill_inc += bonus;
+            bonus_left -= bonus;
+            manual.skill_points -= bonus;
+            if (!manual.skill_points && !simu && !crawl_state.simulating_xp_gain)
+                finish_manual(slot);
+        }
+
+        you.skill_points[exsk] += skill_inc;
+        you.exp_available -= total_cost;
+        you.total_experience += total_cost;
+        max_exp -= total_cost;
+    }
 
     if (!simu)
     {
@@ -1299,6 +1326,7 @@ static int _train(skill_type exsk, int &max_exp, bool simu)
         // and clean up cross-training immediately?
         check_training_target(exsk);
         redraw_skill(exsk, old_best_skill, (you.skill(exsk, 10, true) > old_level));
+        check_selected_skills();
     }
 
     check_skill_cost_change();
