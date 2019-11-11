@@ -679,6 +679,7 @@ void TilesFramework::push_ui_layout(const string& type, unsigned num_state_slots
     tiles.json_write_string("msg", "ui-push");
     tiles.json_write_string("type", type);
     tiles.json_write_bool("ui-centred", !crawl_state.need_save);
+    tiles.json_write_int("generation_id", ui::layout_generation_id());
     tiles.json_close_object();
     UIStackFrame frame;
     frame.type = UIStackFrame::UI;
