@@ -51,6 +51,7 @@
 
 static int _train(skill_type exsk, int &max_exp, bool simu = false);
 static void _train_skills(int exp, const int cost, const bool simu);
+static int _training_target_skill_point_diff(skill_type exsk, int training_target);
 
 // Basic goals for titles:
 // The higher titles must come last.
@@ -1244,6 +1245,34 @@ void change_skill_points(skill_type sk, int points, bool do_level_up)
     check_skill_level_change(sk, do_level_up);
 }
 
+// Calculates the skill points required to reach the training target
+// Does not currently consider Ashenzari skill boost for experience currently being gained
+// so this may still result in some overtraining
+static int _training_target_skill_point_diff(skill_type exsk, int training_target)
+{
+    int target_level = training_target / 10;
+    int target_fractional = training_target % 10;
+    int target_level_skill_points = skill_exp_needed(target_level, exsk);
+    int target_next_level_skill_points = skill_exp_needed(target_level + 1, exsk);
+    int target_skill_points = target_level_skill_points +
+        ((target_next_level_skill_points - target_level_skill_points) * target_fractional / 10);
+    // Round up for any remainder to ensure target is hit
+    if ((target_next_level_skill_points - target_level_skill_points) * target_fractional % 10 != 0)
+        target_skill_points++;
+
+    int you_skill_points = you.skill_points[exsk] + get_crosstrain_points(exsk);
+    if (ash_has_skill_boost(exsk))
+        you_skill_points += ash_skill_point_boost(exsk, training_target);
+
+    int target_skill_point_diff = target_skill_points - you_skill_points;
+
+    int manual_charges = get_all_manual_charges_for_skill(exsk);
+    if (manual_charges > 0)
+        target_skill_point_diff -= min(manual_charges, target_skill_point_diff / 2);
+
+    return target_skill_point_diff;
+}
+
 static int _train(skill_type exsk, int &max_exp, bool simu)
 {
     // This will be added to you.skill_points[exsk];
@@ -1251,7 +1280,6 @@ static int _train(skill_type exsk, int &max_exp, bool simu)
 
     // This will be deducted from you.exp_available.
     int cost = calc_skill_cost(you.skill_cost_level);
-    int total_cost;
 
     if (_player_is_gnoll())
     {
@@ -1260,65 +1288,47 @@ static int _train(skill_type exsk, int &max_exp, bool simu)
         int num = total_count;
         int denom = total_count - useless_count;
         if (num != denom)
-            total_cost = div_rand_round(num * cost, denom);
+            cost = div_rand_round(num * cost, denom);
     }
     else
     {
         // Scale cost and skill_inc to available experience.
         const int spending_limit = min(10 * MAX_SPENDING_LIMIT, max_exp);
         skill_inc = spending_limit / cost;
-        total_cost = skill_inc * cost;
+
+        int training_target = you.training_targets[exsk];
+        if (training_target > you.skill(exsk, 10, false, false, false))
+        {
+            int target_skill_point_diff = _training_target_skill_point_diff(exsk, training_target);
+            if (target_skill_point_diff > 0)
+                skill_inc = min(skill_inc, target_skill_point_diff);
+        }
+        cost = skill_inc * cost;
     }
 
     if (skill_inc <= 0 || cost > max_exp)
         return 0;
 
+    // Bonus from manual
+    int slot;
+    int bonus_left = skill_inc;
+    while (bonus_left > 0 && (slot = manual_slot_for_skill(exsk)) != -1)
+    {
+        item_def& manual(you.inv[slot]);
+        const int bonus = min<int>(bonus_left, manual.skill_points);
+        skill_inc += bonus;
+        bonus_left -= bonus;
+        manual.skill_points -= bonus;
+        if (!manual.skill_points && !simu && !crawl_state.simulating_xp_gain)
+            finish_manual(slot);
+    }
+
     const skill_type old_best_skill = best_skill(SK_FIRST_SKILL, SK_LAST_SKILL);
     const int old_level = you.skill(exsk, 10, true);
-
-    int training_target = you.training_targets[exsk];
-    if (training_target > you.skill(exsk, 10, false, false, false))
-    {
-        int manual_slot;
-        int skill_inc_iter;
-        for (skill_inc_iter = 0; skill_inc_iter < skill_inc && training_target > you.skill(exsk, 10, false, false, false); skill_inc_iter++)
-        {
-            you.skill_points[exsk] += 1;
-            you.exp_available -= cost;
-            you.total_experience += cost;
-            max_exp -= cost;
-            if ((manual_slot = manual_slot_for_skill(exsk)) != -1)
-            {
-                item_def& manual(you.inv[manual_slot]);
-                you.skill_points[exsk] += 1;
-                manual.skill_points -= 1;
-                if (!manual.skill_points && !simu && !crawl_state.simulating_xp_gain)
-                    finish_manual(manual_slot);
-            }
-        }
-        skill_inc = skill_inc_iter;
-    }
-    else
-    {
-        // Bonus from manual
-        int slot;
-        int bonus_left = skill_inc;
-        while (bonus_left > 0 && (slot = manual_slot_for_skill(exsk)) != -1)
-        {
-            item_def& manual(you.inv[slot]);
-            const int bonus = min<int>(bonus_left, manual.skill_points);
-            skill_inc += bonus;
-            bonus_left -= bonus;
-            manual.skill_points -= bonus;
-            if (!manual.skill_points && !simu && !crawl_state.simulating_xp_gain)
-                finish_manual(slot);
-        }
-
-        you.skill_points[exsk] += skill_inc;
-        you.exp_available -= total_cost;
-        you.total_experience += total_cost;
-        max_exp -= total_cost;
-    }
+    you.skill_points[exsk] += skill_inc;
+    you.exp_available -= cost;
+    you.total_experience += cost;
+    max_exp -= cost;
 
     if (!simu)
     {
