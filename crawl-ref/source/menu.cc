@@ -1003,7 +1003,6 @@ void Menu::do_menu()
 
     update_menu();
     ui::push_layout(m_ui.popup, m_kmc);
-    ui::set_focused_widget(m_ui.popup.get());
 
 #ifdef USE_TILE_WEB
     tiles.push_menu(this);

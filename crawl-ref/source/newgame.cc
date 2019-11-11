@@ -1564,11 +1564,7 @@ static void _prompt_choice(int choice_type, newgame_def& ng, newgame_def& ng_cho
     tiles.push_ui_layout("newgame-choice", 1);
 #endif
 
-    ui::push_layout(move(popup));
-    ui::set_focused_widget(newgame_ui.get());
-    while (!newgame_ui->done && !crawl_state.seen_hups)
-        ui::pump_events();
-    ui::pop_layout();
+    ui::run_layout(move(popup), newgame_ui->done);
 
 #ifdef USE_TILE_WEB
     tiles.pop_ui_layout();
