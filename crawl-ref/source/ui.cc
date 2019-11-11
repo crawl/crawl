@@ -114,9 +114,11 @@ public:
         KeymapContext keymap = KMC_NONE;
         Widget* current_focus = nullptr;
         Widget* default_focus = nullptr;
+        int generation_id = 0;
     };
 
     LayoutInfo state;  // current keymap and focus info
+    int next_generation_id = 1;
 
     vector<int> cutoff_stack;
     vector<Widget*> default_focus_stack;
@@ -379,11 +381,15 @@ void Widget::sync_state_changed()
 {
     if (m_sync_id.empty())
         return;
+    const auto& top = ui_root.top_child();
+    if (!top || !top->is_ancestor_of(get_shared()))
+        return;
     tiles.json_open_object();
     sync_save_state();
     tiles.json_write_string("msg", "ui-state-sync");
     tiles.json_write_string("widget_id", m_sync_id);
     tiles.json_write_bool("from_webtiles", ui_root.receiving_ui_state);
+    tiles.json_write_int("generation_id", ui_root.state.generation_id);
     tiles.json_close_object();
     tiles.finish_message();
 }
@@ -2368,6 +2374,7 @@ void UIRoot::push_child(shared_ptr<Widget> ch, KeymapContext km)
     saved_layout_info.push_back(state);
     state.keymap = km;
     state.default_focus = state.current_focus = focus;
+    state.generation_id = next_generation_id++;
 
     m_root.add_child(move(ch));
     m_needs_layout = true;
@@ -2864,6 +2871,12 @@ void UIRoot::update_synced_widgets()
 
 void UIRoot::recv_ui_state_change(const JsonNode *json)
 {
+    const auto generation_id = json_find_member(json, "generation_id");
+    if (!generation_id || generation_id->tag != JSON_NUMBER
+        || generation_id->number_ != state.generation_id)
+    {
+        return;
+    }
     const auto widget_id = json_find_member(json, "widget_id");
     if (!widget_id || widget_id->tag != JSON_STRING)
         return;
@@ -3394,6 +3407,11 @@ Widget* get_focused_widget()
 void recv_ui_state_change(const JsonNode *state)
 {
     ui_root.recv_ui_state_change(state);
+}
+
+int layout_generation_id()
+{
+    return ui_root.next_generation_id;
 }
 #endif
 

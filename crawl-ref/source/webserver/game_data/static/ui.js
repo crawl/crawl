@@ -71,7 +71,7 @@ function ($, comm, client, options, focus_trap) {
         maybe_prevent_server_from_handling_key(ev);
     }
 
-    function show_popup(id, centred)
+    function show_popup(id, centred, generation_id)
     {
         var $ui_stack = $("#ui-stack");
         var elem = $(id);
@@ -81,6 +81,7 @@ function ($, comm, client, options, focus_trap) {
         console.assert(elem.length === 1, "no popup to show");
         var wrapper = wrap_popup(elem, ephemeral);
         wrapper.toggleClass("centred", centred == true);
+        wrapper.attr("data-generation-id", generation_id);
         $("#ui-stack").append(wrapper);
         wrapper.stop(true, true).fadeIn(100, function () {
             wrapper[0].focus_trap = focus_trap(elem[0], {
@@ -266,6 +267,10 @@ function ($, comm, client, options, focus_trap) {
     {
         if (receiving_ui_state)
             return;
+        var $target_popup = $(elem).closest("[data-generation-id]");
+        if ($target_popup[0] != top_popup().closest("[data-generation-id]")[0])
+            return;
+        state.generation_id = +$target_popup.attr("data-generation-id");
         state.widget_id = $(elem).attr("data-sync-id") || null;
         comm.send_message("ui_state_sync", state);
     }
@@ -277,7 +282,10 @@ function ($, comm, client, options, focus_trap) {
             var popup = top_popup();
             if (!popup)
                 return;
-            // TODO: add popup generation numbers
+            var generation_id = +popup.closest("[data-generation-id]")
+                    .attr("data-generation-id");
+            if (generation_id != msg.generation_id)
+                return;
             var elem = popup.find('[data-sync-id='+msg.widget_id+']')[0];
             if (!elem)
                 return;

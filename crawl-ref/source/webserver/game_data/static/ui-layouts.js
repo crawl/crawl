@@ -911,7 +911,7 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
     {
         var handler = ui_handlers[msg.type];
         var popup = handler ? handler(msg) : $("<div>Unhandled UI type "+msg.type+"</div>");
-        ui.show_popup(popup, msg["ui-centred"]);
+        ui.show_popup(popup, msg["ui-centred"], msg.generation_id);
     }
 
     function recv_ui_pop(msg)
