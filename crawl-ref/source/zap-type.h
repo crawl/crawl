@@ -87,5 +87,7 @@ enum zap_type
     ZAP_SONIC_WAVE,
     ZAP_THROW_PIE,
     ZAP_FOXFIRE,
+    ZAP_AGONY_RANGE,
+    ZAP_DISPEL_UNDEAD_RANGE,
     NUM_ZAPS
 };

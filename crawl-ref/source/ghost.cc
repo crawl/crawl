@@ -88,7 +88,7 @@ static spell_type search_order_summon[] =
 // Pan lord misc spell list.
 static spell_type search_order_misc[] =
 {
-    SPELL_DISPEL_UNDEAD,
+    SPELL_DISPEL_UNDEAD_RANGE,
     SPELL_PARALYSE,
     SPELL_SLEEP,
     SPELL_MASS_CONFUSION,

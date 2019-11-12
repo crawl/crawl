@@ -458,6 +458,24 @@ _mon_hex_zap(ZAP_ENSLAVEMENT, BEAM_ENSLAVE),
     0
 },
 
+{
+    ZAP_DISPEL_UNDEAD_RANGE,
+    "",
+    100,
+    new calcdice_calculator<3, 20, 3, 4>,
+    new tohit_calculator<0, 3, 2>,
+    new dicedef_calculator<3, 6, 1, 10>,
+    new tohit_calculator<AUTOMATIC_HIT>,
+    BLACK,
+    true,
+    BEAM_DISPEL_UNDEAD,
+    NUM_DCHAR_TYPES,
+    false,
+    false,
+    false,
+    0
+},
+
 _mon_hex_zap(ZAP_BANISHMENT, BEAM_BANISH, 150),
 
 {
@@ -697,6 +715,24 @@ _mon_hex_zap(ZAP_BANISHMENT, BEAM_BANISH, 150),
 
 {
     ZAP_AGONY,
+    "agony",
+    100,
+    nullptr,
+    new tohit_calculator<0, 5, 1>,
+    nullptr,
+    new tohit_calculator<0, 1, 3>,
+    BLACK,
+    true,
+    BEAM_AGONY,
+    NUM_DCHAR_TYPES,
+    false,
+    false,
+    false,
+    0
+},
+
+{
+    ZAP_AGONY_RANGE,
     "agony",
     100,
     nullptr,
