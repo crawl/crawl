@@ -81,7 +81,6 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_POISONOUS_VAPOURS,
     SPELL_MEPHITIC_CLOUD,
     SPELL_OLGREBS_TOXIC_RADIANCE,
-    SPELL_VENOM_BOLT,
 },
 
 {   // Book of the Tempests
@@ -256,7 +255,6 @@ static const vector<spell_type> spellbook_templates[] =
 
 {   // Book of Power
     SPELL_BATTLESPHERE,
-    SPELL_VENOM_BOLT,
     SPELL_BOLT_OF_MAGMA,
     SPELL_IRON_SHOT,
     SPELL_IOOD,
@@ -338,7 +336,6 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Book of Annihilations
-    SPELL_POISON_ARROW,
     SPELL_CHAIN_LIGHTNING,
     SPELL_LEHUDIBS_CRYSTAL_SPEAR,
     SPELL_GLACIATE,

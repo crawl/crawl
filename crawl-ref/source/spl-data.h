@@ -329,7 +329,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_VENOM_BOLT, "Venom Bolt",
     spschool::conjuration | spschool::poison,
-    spflag::dir_or_target | spflag::needs_tracer,
+    spflag::dir_or_target | spflag::needs_tracer | spflag::monster,
     5,
     200,
     5, 5,
@@ -844,7 +844,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_POISON_ARROW, "Poison Arrow",
     spschool::conjuration | spschool::poison,
-    spflag::dir_or_target | spflag::needs_tracer,
+    spflag::dir_or_target | spflag::needs_tracer | spflag::monster,
     6,
     200,
     6, 6,
