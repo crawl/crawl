@@ -227,6 +227,20 @@ function ($, comm, client, options, focus_trap) {
         }
     }
 
+    function ui_chat_focus_handler(ev) {
+        if ($("#chat").hasClass("focus-trap"))
+            return;
+        focus_trap($("#chat")[0], {
+            escapeDeactivates: true,
+            onActivate: function () {
+                $("#chat").addClass("focus-trap");
+            },
+            onDeactivate: function () {
+                $("#chat").removeClass("focus-trap");
+            },
+        }).activate();
+    }
+
     options.add_listener(function ()
     {
         var size = options.get("tile_font_crt_size");
@@ -253,7 +267,9 @@ function ($, comm, client, options, focus_trap) {
             .off("input.ui focus.ui", "[data-sync-id]")
             .on("input.ui focus.ui", "[data-sync-id]", ui_input_handler)
             .off("focusin.ui focusout.ui")
-            .on("focusin.ui focusout.ui", ui_focus_handler);
+            .on("focusin.ui focusout.ui", ui_focus_handler)
+            .off("focusin.ui", "#chat_input")
+            .on("focusin.ui", "#chat_input",  ui_chat_focus_handler);
         $(window).off("resize.ui").on("resize.ui", ui_resize_handler);
     });
 
