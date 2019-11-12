@@ -902,11 +902,11 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_STING, "Sting",
-    spschool::conjuration | spschool::poison,
+    spschool::transmutation | spschool::poison,
     spflag::dir_or_target | spflag::needs_tracer,
     1,
     25,
-    6, 6,
+    3, 3,
     1, 0,
     TILEG_STING,
 },
