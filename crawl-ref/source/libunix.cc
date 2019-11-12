@@ -589,6 +589,7 @@ int getch_ck()
 #ifdef KEY_RESIZE
     case -KEY_RESIZE: return CK_RESIZE;
 #endif
+    case -KEY_BTAB: return CK_SHIFT_TAB;
     default:         return c;
     }
 }
