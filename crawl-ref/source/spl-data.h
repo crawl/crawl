@@ -443,7 +443,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_BOLT_OF_DRAINING, "Bolt of Draining",
     spschool::conjuration | spschool::necromancy,
-    spflag::dir_or_target | spflag::needs_tracer,
+    spflag::dir_or_target | spflag::needs_tracer | spflag::monster,
     5,
     200,
     5, 5,
