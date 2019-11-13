@@ -6635,7 +6635,7 @@ bool shoot_through_monster(const bolt& beam, const monster* victim)
  */
 int omnireflect_chance_denom(int SH)
 {
-    return SH + 40;
+    return SH + 20;
 }
 
 /// Set up a beam aiming from the given monster to their target.
