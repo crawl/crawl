@@ -11,7 +11,7 @@ his will: wounded, he reared up at his enemy and beat the hero down with his
 hooves. Peleus received the resounding blows on helmet and shield, and
 defending his upper arms, and controlling the weapon he held out, with one blow
 through the arm he pierced the bi-formed breast.”
-    -Ovid, _Metamorphoses_, XII, 330. 8 AD.
+    -Ovid, “Metamorphoses”, XII, 330. 8 AD.
 %%%%
 __d_suffix
 
@@ -30,7 +30,7 @@ __r_suffix
 
 HAMLET [Drawing his sword.]: How now! a rat? Dead, for a ducat, dead [Stabs
 through the arras.]
-    -William Shakespeare, _The Tragedy of Hamlet, Prince of Denmark_, III, 4.
+    -William Shakespeare, “The Tragedy of Hamlet, Prince of Denmark”, III, 4.
 1603.
 %%%%
 __cap-D_suffix
@@ -53,15 +53,15 @@ him to the dragon.’”
    Which did him round environ.”
 
     -“An Excellent Ballad of a most dreadful Combat, fought between Moore of
-Moore-Hall, and the Dragon of Wantley”, retold by Ambrose Philips, _A
+Moore-Hall, and the Dragon of Wantley”, retold by Ambrose Philips, “A
 Collection of Old Ballads. Corrected from the Best and Most Ancient Copies
-Extant. With Introductions Historical, Critical, Or Humorous_. 1723.
+Extant. With Introductions Historical, Critical, Or Humorous”. 1723.
 %%%%
 __cap-K_suffix
 
 “The Parts Septentrionall are with these Sp'ryts Much haunted.. About the
 places where they dig for Oare. The Greekes and Germans call them Cobali.”
-    -Thomas Heywood, _The Hierarchy of the Blessed Angels_, Book IX, l. 568.
+    -Thomas Heywood, “The Hierarchy of the Blessed Angels”, Book IX, l. 568.
 1635.
 %%%%
 __cap-O_suffix
@@ -88,7 +88,7 @@ young were full grown, they stood beside him at each of his shoulders as he
 slept, and they purged his ears with their tongues. He started up in a great
 fright, but understood the voices of the birds flying overhead, and from what
 he learned from them he foretold to men what should come to pass.”
-    -Pseudo-Apollodorus , _Library and Epitome_, 1.9.11. circa 150 BC.
+    -Pseudo-Apollodorus , “Library and Epitome”, 1.9.11. circa 150 BC.
     trans. Sir James George Frazer, 1913.
 
 “A snake, with mottles rare,
@@ -108,7 +108,7 @@ __cap-T_suffix
  Which bellowed like a wrathful bear;
  Down to the bottom the vessel sank,
  A laidly Trold has dragged it there.”
-    -George Borrow, _Lavengro: The Scholar, the Gypsy, the Priest_. 1851.
+    -George Borrow, “Lavengro: The Scholar, the Gypsy, the Priest”. 1851.
 %%%%
 A broken pillar
 
@@ -152,7 +152,7 @@ A gateway to Hell
  Only those elements time cannot wear
  Were made before me, and beyond time I stand.
  Abandon all hope, ye who enter here.”
-    -Dante Alighieri, _The Divine Comedy_, “Inferno”, Canto III. ca. 1315.
+    -Dante Alighieri, “The Divine Comedy”, “Inferno”, Canto III. ca. 1315.
      trans. John Ciardi, 1954.
 %%%%
 A gateway to a ziggurat
@@ -186,14 +186,14 @@ A granite statue
 A one-way gate to the infinite horrors of the Abyss
 
 “And if you gaze for long into an abyss, the abyss gazes also into you.”
-    -Friedrich Nietzsche, _Beyond Good and Evil_ , Aphorism 146. 1886.
+    -Friedrich Nietzsche, “Beyond Good and Evil” , Aphorism 146. 1886.
 
 “Well, in our country,” said Alice, still panting a little, “you'd generally
 get to somewhere else — if you ran very fast for a long time, as we've been
 doing.” “A slow sort of country!” said the Queen. “Now here, you see, it takes
 all the running you can do, to keep in the same place. If you want to get
 somewhere else, you must run at least twice as fast as that!”
-    -Lewis Carroll, _Through the Looking-Glass, and What Alice Found There_,
+    -Lewis Carroll, “Through the Looking-Glass, and What Alice Found There”,
 ch. 2
     “The Garden of Live Flowers”. 1871.
 %%%%
@@ -212,7 +212,7 @@ bound in leathern bags and sacks. Seeing these goods and moneys in such
 abundance, Ali Baba determined in his mind that not during a few years only
 but for many generations thieves must have stored their gains and spoils in
 this place.”
-    -_The Arabian Nights_. trans. Sir Richard F. Burton, 1885.
+    -“The Arabian Nights”. trans. Sir Richard F. Burton, 1885.
 %%%%
 A rock wall
 
@@ -253,7 +253,7 @@ A tree
 
 “I like trees because they seem more resigned to the way they have to live than
 other things do.”
-    -Willa Cather, _O Pioneers_. 1913.
+    -Willa Cather, “O Pioneers”. 1913.
 %%%%
 acid dragon scales
 
@@ -264,7 +264,7 @@ Agony spell
 “Unbearable, isn't it? The suffering of strangers, the agony of friends. There
 is a secret song at the center of the world, Joey, and its sound is like razors
 through flesh.”
-    -Pinhead, _Hellraiser 3: Hell on Earth_. 1992.
+    -Pinhead, “Hellraiser 3: Hell on Earth”. 1992.
 %%%%
 Asterion
 
@@ -281,7 +281,7 @@ Aizul
  'Twas a small Town —
  Lit — with a Ruby —
  Lathed — with Down —”
-    -Emily Dickinson, _I went to Heaven_. ca. 1860.
+    -Emily Dickinson, “I went to Heaven”. ca. 1860.
 %%%%
 Antaeus
 
@@ -290,7 +290,7 @@ strangers by forcing them to wrestle. Being forced to wrestle with him,
 Hercules hugged him, lifted him aloft, broke and killed him; for when he
 touched earth so it was that he waxed stronger, wherefore some said that he was
 a son of Earth.”
-    -Pseudo-Apollodorus , _Library and Epitome_, 2.5.11. ca. 150 BC.
+    -Pseudo-Apollodorus, “Library and Epitome”, 2.5.11. ca. 150 BC.
     trans. Sir James George Frazer, 1913.
 %%%%
 arbalest
@@ -307,7 +307,7 @@ arbalest
  That hast so often wing'd the biting shaft:—
  For shouldst thou fly successless from my hand,
  I have no second to send after thee.”
-    -Friedrich Schiller, _Wilhelm Tell_, IV, iii. 1804.
+    -Friedrich Schiller, “Wilhelm Tell”, IV, iii. 1804.
      trans. Sir Theodore Martin, 1898.
 %%%%
 Asmodeus
@@ -318,7 +318,7 @@ tender lovers who have none. It is I who introduced into this world luxury,
 debauchery, games of chance, and chemistry. I am the author of the first
 cookery book, the inventor of festivals, of dancing, music, plays, and of the
 newest fashions; in a word, I am ASMODEUS, surnamed The Devil on Two Sticks.”
-    -Alain René Le Sage, _Asmodeus: Or, The Devil on Two Sticks_. 1707.
+    -Alain René Le Sage, “Asmodeus: Or, The Devil on Two Sticks”. 1707.
 %%%%
 Awaken Forest spell
 
@@ -339,14 +339,14 @@ Azrael
   when bereft of those they love.’
  So Azrael became the messenger of Death.”
 
-    -J. E. Hanauer, _Folk-lore of the Holy Land, Moslem, Christian and Jewish_.
+    -J. E. Hanauer, “Folk-lore of the Holy Land, Moslem, Christian and Jewish”.
 1907.
 %%%%
 black sun
 
 “The sky is sad and beautiful, like a vast altar.
  The sun has drowned in its congealing blood.”
-    -Charles Baudelaire, _Flowers of Evil_, 43: Evening Harmony. 1857.
+    -Charles Baudelaire, “Flowers of Evil”, 43: Evening Harmony. 1857.
      trans. Ruth White, 1969.
 %%%%
 basilisk
@@ -381,7 +381,7 @@ eyes gleamed, and he said.
 ‘Listen to them, the children of the night. What music they make!’ Seeing, I
 suppose, some expression in my face strange to him, he added, ‘Ah, sir, you
 dwellers in the city cannot enter into the feelings of the hunter.’”
-    -Bram Stoker, _Dracula_. 1897.
+    -Bram Stoker, “Dracula”. 1897.
 %%%%
 Cause Fear spell
 
@@ -429,12 +429,12 @@ Crazy Yiuf
  Two Owls and a Hen,
  Four Larks and a Wren,
  Have all built their nests in my beard!’”
-    -Edward Lear, _A Book of Nonsense [No. 1]_. 1846.
+    -Edward Lear, “A Book of Nonsense [No. 1]”. 1846.
 %%%%
 Darkness spell
 
 “If I must die, I will encounter darkness as a bride,
-     And hug it in my arms.”
+ And hug it in my arms.”
     -William Shakespeare, “Measure for Measure”
 %%%%
 Dispater
@@ -447,13 +447,13 @@ Fidium dicebat Diovis filium, ut Graeci Dioskopon Castorem, et putabat hunc
 esse Sancum ab Sabina lingua et Herculem a Graeca. Idem hic Dis pater dicitur
 infimus, qui est coniunctus terrae, ubi omnia ut oriuntur ita aboriuntur;
 quorum quod finis ortuum, Orcus dictus.”
-    -Marcus Terentius Varro, _De Lingua Latina_, Liber V, circa 40 BC.
+    -Marcus Terentius Varro, “De Lingua Latina”, Liber V, circa 40 BC.
 %%%%
 Dowan
 
 “Skill and grace, the twin brother and sister, are dancing playfully on your
 finger tips.”
-    -Rabindranath Tagore, _Chitra_, Act I, Scene iv. 1914.
+    -Rabindranath Tagore, “Chitra”, Act I, Scene iv. 1914.
 %%%%
 Duvessa
 
@@ -462,7 +462,7 @@ Duvessa
  ‘Let him brag of his looks,’
  Father said; ‘mind your books!
  The best beauty is bred in the brain.’”
-    -Aesop & Walter Crane, _The Baby's Own Aesop_, 36: “Brother & Sister”.
+    -Aesop & Walter Crane, “The Baby's Own Aesop”, 36: “Brother & Sister”.
 1887.
 %%%%
 Edmund
@@ -470,13 +470,13 @@ Edmund
 “And my invention thrive, Edmund the base
  Shall top the legitimate. I grow; I prosper.—
  Now, gods, stand up for bastards!”
-    -William Shakespeare, _King Lear_, I, ii. 1606.
+    -William Shakespeare, “King Lear”, I, ii. 1606.
 
 “When the forces stood in array Edmund proposed to decide their claims by
 single combat; but Canute saying that he, a man of small stature, would have
 little chance against the tall athletic Edmund, proposed, on the contrary, for
 them to divide the realm as their fathers had done.”
-    -Thomas Keightley, _The History of England_. 1839.
+    -Thomas Keightley, “The History of England”. 1839.
 %%%%
 Enslavement spell
 
@@ -486,7 +486,7 @@ through countless ages, if you will fall down and worship me!’ And then a red
 cloud, like the colour of blood, seemed to close over my eyes, and before I
 knew what I was doing, I found myself opening the sash and saying to Him,
 ‘Come in, Lord and Master!’”
-    -Bram Stoker, _Dracula_. 1897.
+    -Bram Stoker, “Dracula”. 1897.
 %%%%
 Ensorcelled Hibernation spell
 
@@ -496,7 +496,7 @@ Ensorcelled Hibernation spell
 Fire Storm spell
 
 “Some have said there is no subtlety to destruction. You know what? They're
-dead.”
+ dead.”
     -Jaya Ballard, task mage (Magic: the Gathering)
 %%%%
 Frederick
@@ -504,7 +504,7 @@ Frederick
 “I thoroughly disapprove of duels. I consider them unwise and I know they are
 dangerous. Also, sinful. If a man should challenge me, I would take him kindly
 and forgivingly by the hand and lead him to a quiet retired spot and kill him.”
-    -Mark Twain, _Autobiography of Mark Twain_. 1924.
+    -Mark Twain, “Autobiography of Mark Twain”. 1924.
 %%%%
 Geryon
 
@@ -514,14 +514,14 @@ Herakles at sea-circled Erytheis beside his own shambling cattle on that day
 when Herakles drove those broad-faced cattle toward holy Tiryns, when he
 crossed the stream of Okeanos and had killed Orthos and the oxherd Eurytion out
 in the gloomy meadow beyond fabulous Okeanos.”
-    -Hesiod, _Theogony_, circa 700 BCE.
+    -Hesiod, “Theogony”, circa 700 BCE.
 %%%%
 Ilsuiw
 
 “We have lingered in the chambers of the sea
  By sea-girls wreathed with seaweed red and brown
  Till human voices wake us, and we drown.”
-    -T.S. Eliot, _The Love Song of J. Alfred Prufrock_. lines 129-131. 1915.
+    -T.S. Eliot, “The Love Song of J. Alfred Prufrock”. lines 129-131. 1915.
 %%%%
 Irradiate spell
 
@@ -536,7 +536,7 @@ Khufu
 “And then I looked farther, beyond the pallid line of the sands, and I saw a
 Pyramid of gold, the wonder Khufu had built. As a golden wonder it saluted me,
 as a golden thing it greeted me, as a golden miracle I shall remember it.”
-    -Robert Hichens, _The Spell of Egypt_
+    -Robert Hichens, “The Spell of Egypt”
 %%%%
 Killer Klown
 
@@ -580,7 +580,7 @@ the ways of gods. This is not the answer.”
  his senses uncontrolled, immoderate in his food,
  idle, and weak, Mara will certainly overthrow him,
  as the wind throws down a weak tree.”
-    -The Buddha, _Dhammapada_, 1:7.
+    -The Buddha, “Dhammapada”, 1:7.
      trans. F. Max Muller
 %%%%
 Mass Confusion spell
@@ -600,7 +600,7 @@ they run, pell-mell, helter-skelter, slap-dash: tearing, yelling, screaming,
 knocking down the passengers as they turn the corners, rousing up the dogs, and
 astonishing the fowls: and streets, squares, and courts, re-echo with the
 sound.”
-    -Charles Dickens, _Oliver Twist_. 1838.
+    -Charles Dickens, “Oliver Twist”. 1838.
 %%%%
 Menkaure
 
@@ -610,12 +610,12 @@ Menkaure
  Ill deeds, ill passions, zealous to fulfil
  Their pleasure, to their feet; and reap their praise,
  The praise of Gods, rich boon! and length of days.”
-    -Matthew Arnold, _Mycerinus_
+    -Matthew Arnold, “Mycerinus”
 %%%%
 Murray
 
 “Look behind you! A three-headed monkey!”
-    -Guybrush Threepwood, _The Secret of Monkey Island_
+    -Guybrush Threepwood, “The Secret of Monkey Island”
 %%%%
 Natasha
 
@@ -632,7 +632,7 @@ Nikola
 “One can prophesy with a Daniel's confidence that skilled electricians will
 settle the battles of the near future.”
     -Nikola Tesla, “The Transmission of Electrical Energy Without Wires As a
-Means for Furthering Peace”, _Electrical World and Engineer_. January 7, 1905.
+Means for Furthering Peace”, “Electrical World and Engineer”. January 7, 1905.
 %%%%
 Orcish Mines
 
@@ -649,7 +649,7 @@ my men, and began eating them for his morning's meal. Presently, with the
 utmost ease, he rolled the stone away from the door and drove out his sheep,
 but he at once put it back again—as easily as though he were merely clapping
 the lid on to a quiver full of arrows.”
-    -Homer, _The Odyssey_, Book IX.
+    -Homer, “The Odyssey”, Book IX.
     trans. Samuel Butler, 1900.
 %%%%
 Prince Ribbit
@@ -661,7 +661,7 @@ Prince Ribbit
  Yesterday by the cool waters of the fountain?
  Princess, youngest princess!
  Open the door for me!”
-    -Brothers Grimm (Margaret Hunt), _The Frog King, or Iron Henry_
+    -Brothers Grimm (Margaret Hunt), “The Frog King, or Iron Henry”
 %%%%
 Psyche
 
@@ -675,7 +675,7 @@ Psyche
  With mighty love be subject to his might.
  The rivers black and deadly floods of pain
  And darkness eke as thrall to him remain.”
-    -Apuleius, _Asinus aureus_, “Cupid and Psyche”. circa. 160 AD.
+    -Apuleius, “Asinus aureus”, “Cupid and Psyche”. circa. 160 AD.
     trans. William Adlington, 1566.
 %%%%
 Shatter spell
@@ -716,8 +716,8 @@ Sigmund
  And the blossoming boughs of the Branstock were the wild trees waving about;
 
  So he said: ‘Well seen, my fosterling; let the lip then strain it out.’”
-    -William Morris, _The Story of Sigurd the Volsung and the Fall of the
-Niblungs_. 1891.
+    -William Morris, “The Story of Sigurd the Volsung and the Fall of the
+Niblungs”. 1891.
 %%%%
 Sticky Flame spell
 
@@ -730,7 +730,7 @@ Summon Demon spell
 “'Tis now the very witching time of night,
  When churchyards yawn and hell itself breathes out
  Contagion to this world.”
-    -William Shakespeare, _The Tragedy of Hamlet, Prince of Denmark_, III, 2.
+    -William Shakespeare, “The Tragedy of Hamlet, Prince of Denmark”, III, 2.
 %%%%
 Tartarus
 
@@ -749,12 +749,12 @@ your ways, and pour out the vials of the wrath of God upon the earth.”
 Terence
 
 “A MAN committed a murder, and was pursued by the relations of the man whom he
-murdered. On his reaching the river Nile he saw a Lion on its bank and being
-fearfully afraid, climbed up a tree. He found a serpent in the upper branches
-of the tree, and again being greatly alarmed, he threw himself into the river,
-where a crocodile caught him and ate him. Thus the earth, the air, and the
-water alike refused shelter to a murderer.”
-    -Aesop, _The Manslayer_. 6th century BCE.
+ murdered. On his reaching the river Nile he saw a Lion on its bank and being
+ fearfully afraid, climbed up a tree. He found a serpent in the upper branches
+ of the tree, and again being greatly alarmed, he threw himself into the river,
+ where a crocodile caught him and ate him. Thus the earth, the air, and the
+ water alike refused shelter to a murderer.”
+    -Aesop, “The Manslayer”. 6th century BCE.
      trans. George Fyler Townsend
 %%%%
 Tiamat
@@ -792,8 +792,8 @@ brotherhood of remorse not break their chain.”
 alligator
 
 “Alligators commit errors of diet.”
-    -Bennet Bowler, M.D., _Contributions to the Natural History of the
-     Alligator, (Crocodilus Mississipiensis), with a Microscopic Addendum_,
+    -Bennet Bowler, M.D., “Contributions to the Natural History of the
+     Alligator, (Crocodilus Mississipiensis), with a Microscopic Addendum”,
      p. 17. 1846.
 %%%%
 amulet
@@ -801,7 +801,7 @@ amulet
 “Gringoire put out his hand for the little bag, but she drew back. ‘Do not
 touch it! It is an amulet, and either you will do mischief to the charm, or it
 will hurt you.’”
-    -Victor Marie Hugo, _Notre Dame de Paris_, Book II, chapter VII “A Wedding
+    -Victor Marie Hugo, “Notre Dame de Paris”, Book II, chapter VII “A Wedding
      Night”. 1831.
 %%%%
 amulet of harm
@@ -863,13 +863,13 @@ animal skin
  That's why he put the fur side inside,
  Why he put the skin side outside,
  Why he turned them inside outside.”
-    -Anonymous, in Wells' _A Parody Anthology_, p. 120. 1904.
+    -Anonymous, in Wells' “A Parody Anthology”, p. 120. 1904.
 %%%%
 apocalypse crab
 
 “I should have been a pair of ragged claws
  scuttling across the floors of silent seas.”
-    -T.S. Eliot, _The Love Song of J. Alfred Prufrock_. 1915.
+    -T.S. Eliot, “The Love Song of J. Alfred Prufrock”. 1915.
 %%%%
 arrow
 
@@ -877,7 +877,7 @@ arrow
 symbol had once been a thing of iron, an inescapable and fatal projectile that
 pierced the flesh of men and lions and clouded the sun at Thermopylae and gave
 Harald Sigurdarson six feet of English earth forever.”
-    -Jorge Luis Borges, _Mutations_. 1960.
+    -Jorge Luis Borges, “Mutations”. 1960.
      trans. Mildred Boyle
 %%%%
 bardiche
@@ -888,9 +888,9 @@ these troops; he only pays the Heydukes, the Semelles, and the Janizaries. The
 first-mentioned are dressed in blue, with large buttons and plates of tin, and
 have bonnets made of felt upon their heads. They have firelocks, and the
 bardiche, which they say is a very good weapon.”
-    -John Pinkerton, _A General Collection of the Best and Most Interesting
+    -John Pinkerton, “A General Collection of the Best and Most Interesting
      Voyages and Travels in all parts of the World, many of which are now first
-     translated into English. Digested on a New Plan_. 1808.
+     translated into English. Digested on a New Plan”. 1808.
 %%%%
 bat
 
@@ -902,7 +902,7 @@ bat
 
 “Ere the bat hath flown
  His cloister'd flight.”
-    -William Shakespeare, _Macbeth_, III, 2, line 40. 1605.
+    -William Shakespeare, “Macbeth”, III, 2, line 40. 1605.
 %%%%
 battleaxe
 
@@ -910,7 +910,7 @@ battleaxe
 pillar-like handle, with two dependent fillets, has much the appearance of a
 cult image.”
     -Sir Arthur John Evans, “Mycenaean tree and pillar cult and its
-     Mediterranean relations,” _Journal of Hellenic Studies_ XXI, p. 109. 1901.
+     Mediterranean relations,” “Journal of Hellenic Studies” XXI, p. 109. 1901.
 %%%%
 battlesphere
 
@@ -945,12 +945,12 @@ redipped until well coated. The exact composition of this poison is unknown,
 and probably varies in different localities; but it would seem that the chief
 ingredient is always the juice of a Strychnos plant. It is known among
 different tribes by many names; such as Curari, Ourari, Urari and Woorali.”
-    -C.W. Mead, _The American Museum Journal_, vol. VIII. 1908.
+    -C.W. Mead, “The American Museum Journal”, vol. VIII. 1908.
 %%%%
 boggart
 
 “He thinks every bush a boggart.”
-    -John Ray, _A Compleat Collection of English Proverbs_. 1768.
+    -John Ray, “A Compleat Collection of English Proverbs”. 1768.
 
 “A BOGGART intruded himself, upon what pretext or by what authority is unknown,
 into the house of a quiet, inoffensive, and laborious farmer; and, when once it
@@ -960,7 +960,7 @@ to have a great aversion to children. As there is no point on which a parent
 feels more acutely than that of the maltreatment of his offspring, the feelings
 of the father and more particularly of his good dame, were daily, ay, and
 nightly, harrowed up by the malice of this malignant and invisible boggart.”
-    -C.J.T., _Folk-lore and Legends: English_  1890.
+    -C.J.T., “Folk-lore and Legends: English”  1890.
 %%%%
 bolt
 
@@ -968,8 +968,8 @@ bolt
 given us Paris and in effect France, Joan was struck down by a crossbow bolt,
 and our men fell back instantly and almost in a panic — for what were they
 without her? She was the army, herself.”
-    -Mark Twain, _Personal Recollections of Joan of Arc, by the Sieur Louis de
-     Conte_, Book II, chap. 40 “Treachery Conquers Joan”. 1896.
+    -Mark Twain, “Personal Recollections of Joan of Arc, by the Sieur Louis de
+     Conte”, Book II, chap. 40 “Treachery Conquers Joan”. 1896.
 %%%%
 book
 
@@ -977,7 +977,7 @@ book
  On plastic clay and leathern scroll,
  Man wrote his thoughts; the ages passed,
  And lo! the Press was found at last!”
-    -John Greenleaf Whittier, _The Library_, st. 4.
+    -John Greenleaf Whittier, “The Library”, st. 4.
 %%%%
 broad axe
 
@@ -987,7 +987,7 @@ broad axe
  Gray-blue leaf by red-heat grown! helve produced from a little seed sown!
  Resting the grass amid and upon,
  To be lean'd, and to lean on.”
-    -Walt Whitman, _Song of the Broad-Axe_, l. 1-6. 1867.
+    -Walt Whitman, “Song of the Broad-Axe”, l. 1-6. 1867.
 %%%%
 buckler
 
@@ -1020,7 +1020,7 @@ cacodemon
 “We'll call him Cacodemon, with his black Gib there, his Succuba, his Devil's
 Seed, his Spawn of Phlegethon, that o’ my Consience was bred o’ the Spume of
 Cocytus.”
-    -John Fletcher, _The Knight of Malta_. 1647.
+    -John Fletcher, “The Knight of Malta”. 1647.
 %%%%
 catoblepas
 
@@ -1094,7 +1094,7 @@ crocodile
   How neatly spreads his claws,
  And welcomes little fishes in
   With gently smiling jaws!”
-    -Lewis Carroll, _Alice's Adventures in Wonderland_, 1865.
+    -Lewis Carroll, “Alice's Adventures in Wonderland”, 1865.
 %%%%
 daeva
 
@@ -1128,7 +1128,7 @@ demon blade
 
 “Quemadmodum gladius neminem occidit: occidentis telum est.”
  “A sword by itself does not slay; it is merely the weapon used by the slayer.”
-    -Lucius Annaeus Seneca, _Epistulae Morales ad Lucilium_, Letter LXXXVII:
+    -Lucius Annaeus Seneca, “Epistulae Morales ad Lucilium”, Letter LXXXVII:
      Some arguments in favor of the simple life, l. 30. ca. 65 A.D.
      trans. Richard Mott Gummere, 1917.
 %%%%
@@ -1139,7 +1139,7 @@ maid richly and elegantly attired for the grand Signior's seraglio. No; without
 a gown, in a shift that was somewhat of the coarsest, and none of the cleanest,
 bedewed likewise with some odoriferous effluvia, the produce of the day's
 labour, with a pitchfork in her hand, Molly Seagrim approached.”
-    -Henry Fielding, _The History of Tom Jones, a Foundling_, Book V, ch. X.
+    -Henry Fielding, “The History of Tom Jones, a Foundling”, Book V, ch. X.
      1749.
 %%%%
 demon whip
@@ -1148,14 +1148,14 @@ demon whip
 vanished. But even as it fell it swung its whip, and the thongs lashed and
 curled about the wizard's knees, dragging him to the brink. He staggered, and
 fell, grasped vainly at the stone, and slid into the abyss.”
-    -J.R.R. Tolkien, _The Fellowship of the Ring_. II, 5, “The Bridge of
+    -J.R.R. Tolkien, “The Fellowship of the Ring”. II, 5, “The Bridge of
      Khazad-dûm”. 1954.
 %%%%
 dire flail
 
 “‘Ah! ah! ah!’ laughed his two men, ‘how the Norman villains will be humbled
 when they see their doughty knight's skull beaten in by our brave countryman.’”
-    -_Tales of Chivalry; or, Perils by Flood and Field_. 1830.
+    -“Tales of Chivalry; or, Perils by Flood and Field”. 1830.
 %%%%
 doom hound
 
@@ -1163,7 +1163,7 @@ doom hound
 great, black beast, shaped like a hound, yet larger than any hound that ever
 mortal eye has rested upon. And even as they looked the thing tore the throat
 out of Hugo Baskerville...”
-    -Arthur Conan Doyle, _The Hound of the Baskervilles_. 1902.
+    -Arthur Conan Doyle, “The Hound of the Baskervilles”. 1902.
 %%%%
 Dragon's Call spell
 
@@ -1209,7 +1209,7 @@ bring it to you before you stand up. I am powerful enough to do this.”
 electric golem
 
 “I sing the Body electric”
-    -Walt Whitman, “I Sing the Body Electric”, _Leaves of Grass_. 1867.
+    -Walt Whitman, “I Sing the Body Electric”, “Leaves of Grass”. 1867.
 %%%%
 elephant
 
@@ -1231,7 +1231,7 @@ elephant
 an elephant, such is not elephant, an elephant is not like that, it is like
 this.’”
  And the King, O Bhikkhus, was highly delighted.
-    -_Udāna_, VI “Jaccandhavagga”. ca. 5th cent. B.C.
+    -“Udāna”, VI “Jaccandhavagga”. ca. 5th cent. B.C.
      trans. Dawsonne Melanchthon Strong, 1902.
 %%%%
 emperor scorpion
@@ -1242,7 +1242,7 @@ mausoleum of Augustus of its own accord. When his physicians chided him for
 continuing his usual course of living during his illness and attending to all
 the duties that belonged to his office, he answered: ‘The emperor ought to die
 on his feet.’”
-    -Cassius Dio, _Roman History_, LXVI, xvii, 2. 222 A.D.
+    -Cassius Dio, “Roman History”, LXVI, xvii, 2. 222 A.D.
      trans. Earnest Cary, 1925.
 %%%%
 ettin
@@ -1253,7 +1253,7 @@ and no sooner was he in, than he was heard crying:
   I find the smell of an earthly man,
   Be he living, or be he dead,
   His heart this night shall kitchen my bread.’”
-    -Joseph Jacobs, _The Red Ettin_
+    -Joseph Jacobs, “The Red Ettin”
 %%%%
 eudemon blade
 
@@ -1265,7 +1265,7 @@ eveningstar
 objecting to the shedding of blood, had no scruple about the dashing out of
 brains.”
     -T. M. Allison, “The Flail and Kindred Tools (from a historical and
-     literary standpoint)”, _Archaeologia Aeliana_, Third Series, vol. IV.
+     literary standpoint)”, “Archaeologia Aeliana”, Third Series, vol. IV.
      1908.
 %%%%
 executioner's axe
@@ -1285,15 +1285,15 @@ and into the deep forest.
  And he cut her a pair of wooden feet, with crutches, and taught her a psalm,
 which the criminals always sing; and she kissed the hand that had held the axe,
 and went away across the heath.”
-    -Hans Christian Andersen, “The Red Shoes”, _Nye Eventyr. Første Bind.
-     Tredie Samling._. 1845.
+    -Hans Christian Andersen, “The Red Shoes”, “Nye Eventyr. Første Bind.
+     Tredie Samling.”. 1845.
 %%%%
 falchion
 
 “I have seen the day, with my good biting falchion
  I would have made them skip: I am old now,
  And these same crosses spoil me.”
-    -William Shakespeare, _King Lear_, V, iii. 1608.
+    -William Shakespeare, “King Lear”, V, iii. 1608.
 %%%%
 fire crab
 
@@ -1315,7 +1315,7 @@ armor scarce enabled them to contend on equal terms with the uncouth but
 formidable weapons of their adversaries. The Bohemians were armed with long
 iron flails, which they swung with prodigious force. They seldom failed to hit,
 and when they did so, the flail crashed through brazen helmet, skull and all.”
-    -James A. Wylie, _The History of Protestantism_, vol. I, book 3, ch. 15
+    -James A. Wylie, “The History of Protestantism”, vol. I, book 3, ch. 15
      “Jon Huss and the Hussite Wars”. 1878.
 %%%%
 flying skull
@@ -1323,7 +1323,7 @@ flying skull
 “Alas, poor Yorick! I knew him, Horatio, a fellow of infinite jest, of most
 excellent fancy. He hath bore me on his back a thousand times, and now how
 abhorr'd in my imagination it is! My gorge rises at it.”
-    -William Shakespeare, _The Tragedy of Hamlet, Prince of Denmark_, V, 1.
+    -William Shakespeare, “The Tragedy of Hamlet, Prince of Denmark”, V, 1.
 1603.
 %%%%
 ghost moth
@@ -1350,7 +1350,7 @@ ghoul
  ‘But I like it
  Because it is bitter,
  And because it is my heart.’”
-    -Stephen Crane, _The Black Riders and Other Lines_. 1895.
+    -Stephen Crane, “The Black Riders and Other Lines”. 1895.
 %%%%
 giant club
 
@@ -1359,7 +1359,7 @@ giant club
  And lifting up his dreadful club on hight,
  All armed with ragged snubbes and knottie graine,
  Him thought at first encounter to have slaine.”
-    -Edmund Spenser, _The Faerie Queene_, Book I, “The Legend of the Knight of
+    -Edmund Spenser, “The Faerie Queene”, Book I, “The Legend of the Knight of
      the Red Crosse”, Canto VIII, stanza vii, l. 55-9. 1590.
 %%%%
 floating eye
@@ -1410,7 +1410,7 @@ iuſt, the ſtatures of all men, without any hindrance at all vnto them in their
 fight, becauſe in any weapon wherin the hands may be remoued, and at libertie,
 to make the weapon lõger or ſhorter in fight at his pleaſure, a foot of the
 ſtaffe behind the backmoſt hand doth no harme.”
-    -George Silver,_Paradoxes of Defence_.1599.
+    -George Silver, “Paradoxes of Defence”. 1599.
 %%%%
 gnoll
 
@@ -1431,7 +1431,7 @@ goblin
  While Goblins quaff, and Goblins laugh,
  Round and round far underground
  Below, my lad!”
-    -J.R.R. Tolkien, _The Hobbit_
+    -J.R.R. Tolkien, “The Hobbit”
 %%%%
 gold dragon scales
 
@@ -1444,7 +1444,7 @@ in the chimney corner, offered him a present of gold; but he sent them away
 with this saying; that he, who was content with such a supper, had no need of
 gold; and that he thought it more honourable to conquer those who possessed the
 gold, than to possess the gold itself.”
-    -Plutarch, “Marcus Cato”, _Lives_. 75 AD.
+    -Plutarch, “Marcus Cato”, “Lives”. 75 AD.
     trans. John Dryden, 1683.
 %%%%
 golden dragon
@@ -1460,13 +1460,13 @@ golden eye
    In thy bright golden eye,
  That calm and innocently turns
    On all below the sky.”
-    -Hannah Flagg Gould, _The Youth's Coronal_
+    -Hannah Flagg Gould, “The Youth's Coronal”
 %%%%
 great mace
 
 “There will arise one named Feridoun, who shall inherit thy throne
  and reverse thy fortunes, and strike thee down with a cow-headed mace.”
-    -Firdausi, _Shahnameh_. ca. 1000 A.D.
+    -Firdausi, “Shahnameh”. ca. 1000 A.D.
      trans. Helen Zimmern, 1883.
 %%%%
 great sword
@@ -1500,7 +1500,7 @@ halberd
  His colours they were trampled: he had no chance of life
  If the Lord God Himself stood by!—
   Och, ochone!”
-    -James Clarence Mangan , _A Farewell to Patrick Sarsfield, Earl of Lucan_.
+    -James Clarence Mangan , “A Farewell to Patrick Sarsfield, Earl of Lucan”.
      ca. 1840.
 %%%%
 hand axe
@@ -1540,7 +1540,7 @@ hell hound
  If aught disturbed their noise, into her womb,
  And kennel there; yet there still barked and howled
  Within unseen.”
-    -John Milton, _Paradise Lost_, Book II, 1667.
+    -John Milton, “Paradise Lost”, Book II, 1667.
 %%%%
 hell knight
 
@@ -1552,7 +1552,7 @@ hobgoblin
 
 “A foolish consistency is the hobgoblin of little minds, adored by little
 statesmen and philosophers and divines.”
-    -Ralph Waldo Emerson, _Essays: First Series_, Essay II: Self-Reliance.
+    -Ralph Waldo Emerson, “Essays: First Series”, Essay II: Self-Reliance.
      1841.
 %%%%
 hog
@@ -1564,7 +1564,7 @@ inside, looking up at her, was the newborn pig. It was a white one. The morning
 light shone through its ears, turning them pink. “He's yours,” said Mr. Arable.
 “Saved from an untimely death. And may the good Lord forgive me for this
 foolishness.”
-    -E.B. White, _Charlotte's Web_
+    -E.B. White, “Charlotte's Web”
 %%%%
 horn of Geryon
 
@@ -1613,7 +1613,7 @@ son and said that such friendship was misplaced, for chameleons were low
 creatures, and that if the intimacy was persisted in, calamity would befall the
 whole of the tribe of iguanas. And he enjoined his son to have no more to do
 with the chameleon. But the son continued in his intimacy.”
-    -_Khuddaka Nikāya_, Jātaka 141 “Godha-jātaka”. ca. 4th cent. B.C.
+    -“Khuddaka Nikāya”, Jātaka 141 “Godha-jātaka”. ca. 4th cent. B.C.
      trans. Robert Chalmers, 1895.
 %%%%
 insubstantial wisp
@@ -1630,13 +1630,13 @@ insubstantial wisp
  Misleads th' amaz'd Night-wanderer from his way
  To Boggs and Mires, and oft through Pond or Poole,
  There swallow'd up and lost, from succour farr.”
-    -John Milton, _Paradise Lost_, Book IX, 1667.
+    -John Milton, “Paradise Lost”, Book IX, 1667.
 %%%%
 Iskenderun's Battlesphere spell
 
 “Maxim 4: Close air support covereth a multitude of sins.”
-    -Howard Tayler, _The Seventy Maxims of Maximally Effective Mercenaries_,
-     in _Schlock Mercenary_. 2008.
+    -Howard Tayler, “The Seventy Maxims of Maximally Effective Mercenaries”,
+     in “Schlock Mercenary”. 2008.
 %%%%
 jackal
 
@@ -1644,14 +1644,14 @@ jackal
 a sad parasite, and hangs on the skirts of the larger carnivora as they roam
 the country for prey, in the hope of securing some share of the creatures
 which they destroy or wound.”
-    -John George Wood, _The Illustrated Natural History: Mammalia_. 1865.
+    -John George Wood, “The Illustrated Natural History: Mammalia”. 1865.
 %%%%
 javelin
 
 “Suppose you found your brother in bed with your wife, and put a javelin
 through both of them, you would be justified, and they would atone for their
 sins, and be received into the kingdom of God.”
-    -Brigham Young, _Journal of Discourses_, 3:247. 1856.
+    -Brigham Young, “Journal of Discourses”, 3:247. 1856.
 %%%%
 jelly
 
@@ -1741,9 +1741,9 @@ Fabel ihm andichtet; dann wäre es Wahnsinn, an Drachen und Lindwürmer glauben
 zu wollen. Nehmen wir aber dafür bloß ein furchtbares Ungeheuer überhaupt,
 welches nun aus unserem Welttheile vertilgt ist, so hat der Glaube daran nichts
 Lächerliches.”
-    -Leopold Ziegelhauſer, _Schattenbilder der Vorzeit: Ein Kranz von
+    -Leopold Ziegelhauſer, “Schattenbilder der Vorzeit: Ein Kranz von
      Geschichten, Sagen, Legenden, Märchen, Skizzen und Heldenmahlen, Aus allen
-     Gegenden Deutschlands und des österreichischen Kaiserstaates_. 1844.
+     Gegenden Deutschlands und des österreichischen Kaiserstaates”. 1844.
 %%%%
 long sword
 
@@ -1758,7 +1758,7 @@ slashed at him with their broadswords (maquahuitl), wounding him severely. Then
 they slashed at his mare, cutting her head at the neck so that it only hung by
 the skin. The mare fell dead, and if his mounted comrades had not come to
 Moron's rescue, he would probably have been killed also.”
-    -Bernal Díaz del Castillo, _The Conquest of New Spain_. 1623.
+    -Bernal Díaz del Castillo, “The Conquest of New Spain”. 1623.
      trans. J.M.Cohen, 1963.
 %%%%
 longbow
@@ -1767,7 +1767,7 @@ longbow
  An arrowe he drowe at wyll;
  He hit so the proud sherife
  Upon the grounde he lay full still.”
-    -_A Gest of Robyn Hode_ Sixth Fytte, l. 120-123. ca. 1450.
+    -“A Gest of Robyn Hode” Sixth Fytte, l. 120-123. ca. 1450.
 %%%%
 lorocyproca
 
@@ -1805,7 +1805,7 @@ man, with red eyes; of colour sanguine, bodied like a lyon, and having a taile
 armed with a sting like a scorpion: his voice resembleth the noise of a flute
 and trumpet sounded together: very swift he is, and mans flesh of all others
 hee most desireth.”
-    -Pliny the Elder, _Natural History_, Book 8, Chapter XXI
+    -Pliny the Elder, “Natural History”, Book 8, Chapter XXI
 %%%%
 manual
 
@@ -1822,7 +1822,7 @@ merfolk
  And my broad shoulders cleave the yielding deep;
  My fishy tail, my arms of azure hue,
  And ev'ry part divinely chang'd, I view.”
-    -Ovid, _Metamorphoses_, XIII, 546-7. 8 A.D.
+    -Ovid, “Metamorphoses”, XIII, 546-7. 8 A.D.
      trans. Garth, Dryden, et al.
 %%%%
 merfolk aquamancer
@@ -1836,7 +1836,7 @@ merfolk avatar
  ‘Here's a health to you, my merrie young men,
  For you never will see dry land.’”
     -“Sir Patrick Spens”, Scottish folk song, version 58J in Francis James
-     Child, _The English and Scottish Popular Ballads_. 1898.
+     Child, “The English and Scottish Popular Ballads”. 1898.
 %%%%
 merfolk impaler
 
@@ -1864,7 +1864,7 @@ merfolk siren
  By those high issues that the Gods ordain'd.
  And whatsoever all the earth can show
  T' inform a knowledge of desert, we know.’”
-    -Homer, _The Odyssey_, XII, 268-82.
+    -Homer, “The Odyssey”, XII, 268-82.
      trans. George Chapman, 1857.
 %%%%
 microbat
@@ -1885,13 +1885,13 @@ morningstar
  Drove in through helm and head the spiked mace;
  Or swung its iron weights with shattering sway.
  Which, where they fell, destroyed.”
-    -Robert Southey, _Madoc_. 1805.
+    -Robert Southey, “Madoc”. 1805.
 %%%%
 morningstar "Eos"
 
 “But soon as early Dawn appeared, the rosy-fingered, then gathered the folk
  about the pyre of glorious Hector.”
-    -Homer, _The Iliad_, XXIV, 776.
+    -Homer, “The Iliad”, XXIV, 776.
      trans. A. T. Murray, 1857.
 %%%%
 moth of wrath
@@ -1900,8 +1900,8 @@ moth of wrath
 of frenzy, that they bit their shields and rushed forward to the attack,
 throwing away their arms of defence, reckless of every danger, sometimes having
 nothing but a club, which carried with it death and destruction.”
-    -Paul Belloni Du Chaillu,_The Viking Age: the Early History, Manners, and
-     Customs of the Ancestors of the English Speaking Nations_. 1889.
+    -Paul Belloni Du Chaillu, “The Viking Age: the Early History, Manners, and
+     Customs of the Ancestors of the English Speaking Nations”. 1889.
 %%%%
 mummy
 
@@ -1940,7 +1940,7 @@ nagaraja
  The great naga Eravanna:
  He, too, has come
  to the forest meeting.”
-    -Mahasamaya Sutta, _Dīgha Nikāya_, 20. ca. 500 B.C.
+    -Mahasamaya Sutta, “Dīgha Nikāya”, 20. ca. 500 B.C.
      trans. Thanissaro Bhikkhu
 %%%%
 naga warrior
@@ -1963,7 +1963,7 @@ species, and, indeed, many examples of mutation known among fossil animals are
 apparently due to the advantage produced by the change. I must add here,
 however that probably not all mutations (in a palaeontological meaning) are due
 to natural selection, but that many do not imply an actual improvement.”
-    -_Proceedings of the American Philosophical Society_, Volume XXV, no. 150.
+    -“Proceedings of the American Philosophical Society”, Volume XXV, no. 150.
      1896.
 %%%%
 octopode
@@ -1977,7 +1977,7 @@ every movement, which Slothrop is glad to get away from as he finally scales
 the crab like a discus, with all his strength, out to sea, and the octopus,
 with an eager splash and gurgle, strikes out in pursuit, and is presently
 gone.”
-    -Thomas Pynchon, _Gravity's Rainbow_. 1973.
+    -Thomas Pynchon, “Gravity's Rainbow”. 1973.
 %%%%
 oklob plant
 
@@ -1989,8 +1989,8 @@ and smell; is soluble in water; weighs one-half more than air and can be poured
 from one vessel to another, as a liquid may be; 100 parts of water dissolve 106
 parts of this gas, and it is from this source that the roots of plants derive
 the needed supplies of it.”
-    -Henry Stuart, _The Culture of Farm Crops: A Manual of the Science of
-    Agriculture, and a Hand-book of Practice for American Farmers_, ch X. 1887.
+    -Henry Stuart, “The Culture of Farm Crops: A Manual of the Science of
+    Agriculture, and a Hand-book of Practice for American Farmers”, ch X. 1887.
 %%%%
 oklob sapling
 
@@ -2000,7 +2000,7 @@ ooze
 
 “Sea horses floundering in the slimy mud,
  Tossed up their heads, and dashed the ooze about them.”
-    -John Dryden. _All For Love_, I, i, 15-17. 1678.
+    -John Dryden. “All For Love”, I, i, 15-17. 1678.
 %%%%
 ophan
 
@@ -2044,7 +2044,7 @@ orb of fire
 “There 's not the smallest orb which thou behold'st
  But in his motion like an angel sings,
  Still quiring to the young-eyed cherubins.”
-    -William Shakespeare, _The Merchant of Venice_, V, i. 1597.
+    -William Shakespeare, “The Merchant of Venice”, V, i. 1597.
 %%%%
 pandemonium lord
 
@@ -2054,12 +2054,12 @@ pandemonium lord
  A solemn Councel forthwith to be held
  At Pandaemonium, the high Capital
  Of Satan and his Peers...”
-    -John Milton, _Paradise Lost_, Book I, 1667.
+    -John Milton, “Paradise Lost”, Book I, 1667.
 %%%%
 Passwall spell
 
 “He says the best way out is always through.”
-    -Robert Frost, _A Servant to Servants_. 1915.
+    -Robert Frost, “A Servant to Servants”. 1915.
 %%%%
 pearl dragon scales
 
@@ -2069,7 +2069,7 @@ phantom
 
 “Who wondrous things concerning our welfare, And straunge phantomes doth lett
 us ofte foresee.”
-    -Spenser, _The Faerie Queene_ II. xii. 47
+    -Spenser, “The Faerie Queene” II. xii. 47
 %%%%
 phase bat
 
@@ -2097,7 +2097,7 @@ his seamen, seizing them in their mouths; carrying them off with the utmost
 ease, and devouring them in the sight of their comrades. It is said that they
 will attack and attempt to board armed vessels, at a great distance from shore,
 and have sometimes been with much difficulty repelled.”
-    -George Shaw, _General Zoology, or, Systematic Natural History_, vol. I,
+    -George Shaw, “General Zoology, or, Systematic Natural History”, vol. I,
      p. 2. 1800.
 %%%%
 potion
@@ -2109,7 +2109,7 @@ potion
  That he should hither come as this dire night,
  To help to take her from her borrow'd grave,
  Being the time the potion's force should cease.”
-    -William Shakespeare, _Romeo and Juliet_
+    -William Shakespeare, “Romeo and Juliet”
 %%%%
 # TAG_MAJOR_VERSION == 34
 potion of blood
@@ -2188,7 +2188,7 @@ quasit
 
 “You'll have to pay double reckoning; 'tis only fair you should pay for your
 dexterity.”
-    -Johann Wolfgang von Goethe, _Egmont_, I, 1. 1788.
+    -Johann Wolfgang von Goethe, “Egmont”, I, 1. 1788.
      trans. Anna Swanwick, 1914.
 %%%%
 quick blade
@@ -2205,14 +2205,14 @@ sharp and long teeth. He was now hungry and longing for human flesh. Of long
 shanks and a large belly, his locks and beard were both red in hue. His
 shoulders were broad like the neck of a tree; his ears were like unto arrows,
 and his features were frightful.”
-    -_Mahābhārata_, Adi Parva, Hidimva-vadha Parva, section CLIV. ca. 500 B.C.
+    -“Mahābhārata”, Adi Parva, Hidimva-vadha Parva, section CLIV. ca. 500 B.C.
      trans. Kisari Mohan Ganguli, 1883.
 %%%%
 rapier
 
 “Who was the first that forged the deadly blade?
  Of rugged steel his savage soul was made...”
-    -Albius Tibullus, _Elegies_ I, xi. ca. 25 B.C.
+    -Albius Tibullus, “Elegies” I, xi. ca. 25 B.C.
      trans. James Grainger, 1822.
 %%%%
 ration
@@ -2223,7 +2223,7 @@ other Roman civilians and the more distinguished of the provincials reclined at
 table. He was so punctilious and strict in the management of his household, in
 small matters as well as in those of greater importance, that he put his baker
 in irons for serving him with one kind of bread and his guests with another...”
-    -Suetonius, _De Vita Caesarum, Divus Iulius_. 110 CE.
+    -Suetonius, “De Vita Caesarum, Divus Iulius”. 110 CE.
 %%%%
 reaper
 
@@ -2275,7 +2275,7 @@ ring of flight
 “What surprised him the most, however, was the logic of his wings. They seemed
 so natural on that completely human organism that he couldn't understand why
 other men didn't have them too.”
-    -Gabriel Garcia Marquez, _A Very Old Man with Enormous Wings_. 1955.
+    -Gabriel Garcia Marquez, “A Very Old Man with Enormous Wings”. 1955.
      trans. Gregory Rabassa. 1972
 %%%%
 ring of attention
@@ -2300,7 +2300,7 @@ ring of intelligence
 “HOBBES: Did it work?
 CALVIN: I think so.
         I feel smarter already.”
-    -Bill Watterson, _Calvin and Hobbes_. November 19, 1993.
+    -Bill Watterson, “Calvin and Hobbes”. November 19, 1993.
 %%%%
 ring of resist corrosion
 
@@ -2338,7 +2338,7 @@ ring of see invisible
 
 “Here is my secret. It is very simple: It is only with the heart that one can
 see rightly; what is essential is invisible to the eye.”
-    -Antoine de Saint Exupéry, _The Little Prince_. 1943.
+    -Antoine de Saint Exupéry, “The Little Prince”. 1943.
 %%%%
 ring of slaying
 
@@ -2369,7 +2369,7 @@ robe
 
 “CLEOPATRA: Give me my robe, put on my crown; I have
  Immortal longings in me”
-    -William Shakespeare, _Anthony & Cleopatra_, V, ii. ca. 1605.
+    -William Shakespeare, “Anthony & Cleopatra”, V, ii. ca. 1605.
 %%%%
 rotten bat
 
@@ -2385,7 +2385,7 @@ into it. The Salamander casteth up at the mouth a certaine venomous matter like
 unto milke, let it but once touch any bare part of a man or womans bodie, all
 the haire will fall off: and the part so touched will change the colour of the
 skin to the white morphew.”
-    -Gaius Plinius Secundus, _Naturalis Historia_, Book X, ch. LXVII. 79 A.D.
+    -Gaius Plinius Secundus, “Naturalis Historia”, Book X, ch. LXVII. 79 A.D.
      trans. Philemon Holland, 1601.
 %%%%
 scale mail
@@ -2398,7 +2398,7 @@ scimitar
 floor — there were the controversial and incompatible books that are somehow
 the history of the nineteenth century; there were scimitars from Nishapur, in
 whose frozen crescents the wind and violence of battle seemed to be living on.”
-    -Jorge Luis Borges, _The Form of the Sword_. 1953.
+    -Jorge Luis Borges, “The Form of the Sword”. 1953.
      trans. Andrew Hurley.
 %%%%
 scorpion
@@ -2415,7 +2415,7 @@ scroll
  Mine ancient wisdom, and austere control?
  Methinks my life is a twice-written scroll
  Scrawled over on some boyish holiday.”
-    -Oscar Wilde, _Helas_. 1881.
+    -Oscar Wilde, “Helas”. 1881.
 %%%%
 scroll of acquirement
 
@@ -2493,13 +2493,13 @@ scroll of silence
  No one dared
    Disturb the sound
    Of silence.”
-    -Simon & Garfunkel, _The Sound of Silence_. 1964.
+    -Simon & Garfunkel, “The Sound of Silence”. 1964.
 %%%%
 scroll of summoning
 
 “When thou attended gloriously from heaven, Shalt in the sky appear, and from
  thee send Thy summoning archangels to proclaim Thy dread tribunal.”
-    -John Milton, _Paradise Lost_, Book III, 1667.
+    -John Milton, “Paradise Lost”, Book III, 1667.
 %%%%
 scroll of teleportation
 
@@ -2520,7 +2520,7 @@ grain must be cut. It had to be cut. Why? Well, it just did, that was all. He
 laughed at the scythe in his big hands. Then, whistling, he took it out to the
 ripe and waiting field and did the work. He thought himself a little mad. Hell,
 it was an ordinary-enough wheat field, really, wasn't it?”
-    -Ray Bradbury, _The Scythe_. 1943.
+    -Ray Bradbury, “The Scythe”. 1943.
 %%%%
 seraph
 
@@ -2553,7 +2553,7 @@ shadow demon
 
 “As we grow old, we become aware that death is drawing near; his shadow falls
 across our path...”
-    -Stefan Zweig, _Twenty-Four Hours in the Life of a Woman_. 1927.
+    -Stefan Zweig, “Twenty-Four Hours in the Life of a Woman”. 1927.
 %%%%
 shadow dragon
 
@@ -2573,7 +2573,7 @@ shadow wraith
  I met a man who wasn't there
  He wasn't there again today
  I wish, I wish he'd go away...”
-    -Hughes Mearns ,_Antigonish_, 1-4. 1899.
+    -Hughes Mearns ,“Antigonish”, 1-4. 1899.
 %%%%
 shapeshifter
 
@@ -2590,7 +2590,7 @@ shapeshifter
  A vast boar next, and suddenly did strain
  All into water. Last he was a tree,
  Curl'd all at top, and shot up to the sky.”
-    -Homer, _The Odyssey_, IV, 602-14.
+    -Homer, “The Odyssey”, IV, 602-14.
      trans. George Chapman, 1857.
 %%%%
 shield
@@ -2601,13 +2601,13 @@ shield
 shortbow
 
 “You are the bows from which your children as living arrows are sent forth.”
-    -Khalil Ghibran, _The Prophet_, “On Children”. 1923.
+    -Khalil Ghibran, “The Prophet”, “On Children”. 1923.
 %%%%
 short sword
 
 “Who was the first that forged the deadly blade?
  Of rugged steel his savage soul was made”
-    -Albius Tibullus, _Elegies_ I, xi. ca. 25 B.C.
+    -Albius Tibullus, “Elegies” I, xi. ca. 25 B.C.
      trans. James Grainger, 1822.
 %%%%
 silent spectre
@@ -2635,7 +2635,7 @@ shoulder. It was a child's dream of an arm.
 iron, and laughed its laughter of nails rattling.
  And I saw the more the fist pounded the more the mouth laughed. The fist is
 pounding and pounding, and the mouth answering.”
-    -Carl Sandburg, “Gargoyle”, _Cornhusker_. 1918.
+    -Carl Sandburg, “Gargoyle”, “Cornhusker”. 1918.
 %%%%
 skeletal bat
 
@@ -2657,19 +2657,19 @@ skeleton
 
 “God save us from the skeleton
  Who sitteth at the feast!”
-    -James Jeffrey Roche, _The Skeleton at the Feast_. 1890.
+    -James Jeffrey Roche, “The Skeleton at the Feast”. 1890.
 %%%%
 sky beast
 
 “Her own mother lived the latter years of her life in the horrible suspicion
 that electricity was dripping invisibly all over the house.”
-    -James Thurber, _My Life and Hard Times_. 1934.
+    -James Thurber, “My Life and Hard Times”. 1934.
 %%%%
 slave
 
 “Who rebels? Who rises in arms? Rarely the slave, but almost always the
 oppressor turned slave.”
-    -E.M. Cioran, _History and Utopia_. 1960.
+    -E.M. Cioran, “History and Utopia”. 1960.
 %%%%
 slime creature
 
@@ -2700,7 +2700,7 @@ sling bullet
 “For when things are once come to the execution, there is no secrecy comparable
 to celerity; like the motion of a bullet in the air, which flieth so swift as
 it outruns the eye.”
-    -Francis Bacon, _Essays_, “Of Delays”. 1625.
+    -Francis Bacon, “Essays”, “Of Delays”. 1625.
 %%%%
 small abomination
 
@@ -2708,7 +2708,7 @@ small abomination
 had shapes, a thousand shapes of horror beyond all memory. There were eyes —
 and a blemish. It was the pit — the maelstrom — the ultimate abomination.
 Carter, it was the unnamable!”
-    -H.P. Lovecraft, _The Unnamable_. 1925.
+    -H.P. Lovecraft, “The Unnamable”. 1925.
 %%%%
 smoke demon
 
@@ -2736,14 +2736,14 @@ shall whoop all keep it up. Now is the time that you go to attack this
 village.“ Thus he spoke to those his young men.
 
 ”All right!“ said the other little fellows.”
-    -“When Snapping Turtle went to War”, _Publications of the American
-     Ethnological Society, Volume IX: Kickapoo Tales_. 1915.
+    -“When Snapping Turtle went to War”, ”Publications of the American
+     Ethnological Society, Volume IX: Kickapoo Tales”. 1915.
      trans. Truman Michelson
 %%%%
 soul eater
 
 “Negation is the mind's first freedom.”
-    -E.M. Cioran, _The Temptation to Exist_. 1956.
+    -E.M. Cioran, ”The Temptation to Exist”. 1956.
 %%%%
 spatial vortex
 
@@ -2758,7 +2758,7 @@ spear
 “The halberd is inferior to the spear on the battlefield. With the spear you
 can take the initiative; the halberd is defensive. In the hands of one of two
 men of equal ability, the spear gives a little extra strength.”
-    -Miyamoto Musashi, _The Book of Five Rings_. 1645.
+    -Miyamoto Musashi, ”The Book of Five Rings”. 1645.
 %%%%
 spectral thing
 
@@ -2772,7 +2772,7 @@ spellforged servitor
  Your toys have gone berserk
  It's an illusion
  You cannot shirk”
-    -Siouxsie and the Banshees, "Spellbound"
+    -Siouxsie and the Banshees, “Spellbound”
 %%%%
 Spellforged Servitor spell
 
@@ -2786,7 +2786,7 @@ staff. If you have no staff, I will take it from you.’
  It helps me wade across a river when the bridge is down. It accompanies me to
 the village on a moonless night. If you call it a staff, you will enter hell
 like an arrow.”
-    -Mumon Ekai, _The Gateless Gate_, case 44. 1228.
+    -Mumon Ekai, “The Gateless Gate”, case 44. 1228.
      trans. Katsuki Sekida
 %%%%
 staff of air
@@ -2819,8 +2819,8 @@ mother, and we are sharing our father's treasures.’
  ‘What virtues have these?’ said the Dagda.
  ‘This great staff that thou seest,’ said he, ‘has a smooth end and a rough
 end. One end slays the living, and the other end brings the dead to life.’”
-    -Osborn Bergin, “How the Dagda Got His Magic Staff”, _Medieval Studies in
-     Memory of Gertrude Schoepperle Loomis_. 1927.
+    -Osborn Bergin, “How the Dagda Got His Magic Staff”, “Medieval Studies in
+     Memory of Gertrude Schoepperle Loomis”. 1927.
 %%%%
 staff of earth
 
@@ -2838,7 +2838,7 @@ be a phantom. This memory, which at first calmed him, ended by tormenting him.
 He feared lest his son should meditate on this abnormal privilege and by some
 means find out he was a mere simulacrum. Not to be a man, to be a projection of
 another man's dreams—what an incomparable humiliation, what madness!”
-    -Jorge Luis Borges, _The Circular Ruins_. 1940.
+    -Jorge Luis Borges, “The Circular Ruins”. 1940.
     trans. Anthony Bonner, 1962.
 %%%%
 staff of poison
@@ -2897,8 +2897,8 @@ with the giant, in the most obstinate and outrageous combat that I believe I
 shall ever fight in all the days of my life: with one backstroke, slam went his
 head to the ground; and discharged such a quantity of blood, that it ran like
 rills of water, along the field.”
-    -Miguel de Cervantes Saavedra, _The Ingenious Gentleman Don Quixote of La
-     Mancha_, IV, 10. 1605.
+    -Miguel de Cervantes Saavedra, “The Ingenious Gentleman Don Quixote of La
+     Mancha”, IV, 10. 1605.
      trans. Carlos Fuentes, 1997.
 %%%%
 storm dragon scales
@@ -2959,7 +2959,7 @@ the power of its original to kill with its mere sight. Even now I cannot begin
 to suggest it with any words at my command. I might call it gigantic —
 tentacled — proboscidian — octopus-eyed — semi-amorphous — plastic — partly
 squamous and partly rugose — ugh!”
-    -H.P. Lovecraft and Hazel Heald, “Out of the Aeons”, _Weird Tales_, 25, No.
+    -H.P. Lovecraft and Hazel Heald, “Out of the Aeons”, “Weird Tales”, 25, No.
      4, pp. 478-96. April 1935.
 %%%%
 the Lernaean hydra
@@ -2973,7 +2973,7 @@ the Lernaean hydra
  manage as this Herakles devised an ingenious scheme and commanded Iolaos to
  sear with a burning brand the part which had been severed, in order to check
  the flow of the blood.”
-    -Diodorus Siculus, _Bibliotheca Historica_. [4. 11. 5.]. c. 100.
+    -Diodorus Siculus, “Bibliotheca Historica”. [4. 11. 5.]. c. 100.
 %%%%
 throwing net
 
@@ -2992,13 +2992,13 @@ of their feet in the fearful onset and of their hard missiles. So, then, they
 launched their grievous shafts upon one another, and the cry of both armies as
 they shouted reached to starry heaven; and they met together with a great
 battle-cry.”
-    -Hesiod, _Theogony_, 8th cent. B.C.
+    -Hesiod, “Theogony”, 8th cent. B.C.
      trans. H.G. Evelyn-White, 1914.
 %%%%
 toadstool
 
 “But the Seneschal gathered the toadstool fly-bane.”
-    -Adam Mickiewicz, _Pan Tadeusz_, III. 1834.
+    -Adam Mickiewicz, “Pan Tadeusz”, III. 1834.
      trans. G.R. Noyes, 1917.
 %%%%
 toenail golem
@@ -3021,7 +3021,7 @@ horrible contusion behind, and exciting universal admiration.”
 tormentor
 
 “Thou art to me a delicious torment.”
-    -Ralph Waldo Emerson, _Essays: First Series_, Essay VI: Friendship. 1841.
+    -Ralph Waldo Emerson, “Essays: First Series”, Essay VI: Friendship. 1841.
 %%%%
 torpor snail
 
@@ -3031,7 +3031,7 @@ torpor snail
  I will throw thee out of the door,
  For the crow in the gutter,
  To eat for bread and butter.”
-    -Silesian rhyme. Quoted by S.W. Singer in _Notes and Queries_, no. 69.
+    -Silesian rhyme. Quoted by S.W. Singer in “Notes and Queries”, no. 69.
      1851.
 %%%%
 training dummy
@@ -3039,8 +3039,8 @@ training dummy
 “Things are only mannequins and even the great world-historical events are only
 costumes beneath which they exchange glances with nothingness, with the base
 and the banal.”
-    -Walter Benjamin, _Protocols to the Experiments on Hashish, Opium and
-     Mescaline 1927-1934_, “Protocol II: Highlights of the Second Hashish
+    -Walter Benjamin, “Protocols to the Experiments on Hashish, Opium and
+     Mescaline 1927-1934”, “Protocol II: Highlights of the Second Hashish
      Impression”. 15 January 1928.
      trans. Scott J. Thompson, 1997.
 %%%%
@@ -3053,7 +3053,7 @@ degree peculiar to Scotland, which may be called a sort of salmon-hunting. This
 chase, in which the fish is pursued and struck with barbed spears, or a sort of
 long shafted trident, called a waster, is much practised at the mouth of the
 Esk, and in the other salmon rivers of Scotland.”
-    -Sir Walter Scott, _Guy Mannering_, ch. XXVI. 1815.
+    -Sir Walter Scott, “Guy Mannering”, ch. XXVI. 1815.
 %%%%
 triple crossbow
 
@@ -3083,20 +3083,20 @@ troll leather armour
  To end one's days as a Troll of the mountains —
  Never go back, as you tell me plainly —
  That is a thing that I'll not submit to.”
-    -Henrik Ibsen, _Peer Gynt_ . 1867.
+    -Henrik Ibsen, “Peer Gynt”. 1867.
 %%%%
 ufetubus
 
-“We were permitted to shriek in the tongue of dwarfs and demons”
+“We were permitted to shriek in the tongue of dwarfs and demons.”
     -Czesław Miłosz, “A Task”.
 %%%%
 ugly thing
 
 “Beauty is no quality in things themselves: It exists merely in the mind which
-contemplates them; and each mind perceives a different beauty. One person may
-even perceive deformity, where another is sensible of beauty; and every
-individual ought to acquiesce in his own sentiment, without pretending to
-regulate those of others.”
+ contemplates them; and each mind perceives a different beauty. One person may
+ even perceive deformity, where another is sensible of beauty; and every
+ individual ought to acquiesce in his own sentiment, without pretending to
+ regulate those of others.”
     -David Hume
 %%%%
 Urug
@@ -3143,8 +3143,8 @@ very ugly thing
 “All the infections that sun sucks up
  From bogs, fens, flats, on Prosper fall and make him
  By inch-meal a disease! His spirits hear me
- And yet I needs must curse. ”
-    -William Shakespeare, _The Tempest_, II, 2. 1611.
+ And yet I needs must curse.”
+    -William Shakespeare, “The Tempest”, II, 2. 1611.
 %%%%
 vine stalker
 
@@ -3160,8 +3160,8 @@ wand
 
 “[The principle of selection] is the magician's wand, by means of which he may
 summon into life whatever form and mould he pleases.”
-    -William Youatt, _Sheep: their breeds, management, and diseases; to which
-     is added the Mountain Shepherd's Manual_, ch. III. 1837.
+    -William Youatt, “Sheep: their breeds, management, and diseases; to which
+     is added the Mountain Shepherd's Manual”, ch. III. 1837.
 %%%%
 wand of acid
 
@@ -3208,15 +3208,15 @@ around her head a red cashmere shawl, “but I am going for mushrooms: follow me
 who will!” Under one arm she took the little daughter of the Chamberlain, with
 the other she raised her skirt up to her ankles. Thaddeus silently hastened
 after her—to seek mushrooms!”
-    -Adam Mickiewicz, _Pan Tadeusz_, II. 1834.
+    -Adam Mickiewicz, “Pan Tadeusz”, II. 1834.
      trans. G.R. Noyes, 1917.
 %%%%
 war axe
 
 “‘God speed the kiss,’ said Max, and Katie sigh'd,
  With pray'rful palms close seal'd, ‘God speed the axe!’”
-    -Isabella Valancey Crawford, “Malcolm's Katie: A Love Story”, Part I, _Old
-     Spookses' Pass, Malcolm's Katie and Other Poems_. 1884.
+    -Isabella Valancey Crawford, “Malcolm's Katie: A Love Story”, Part I, “Old
+     Spookses' Pass, Malcolm's Katie and Other Poems”. 1884.
 %%%%
 war gargoyle
 
@@ -3228,7 +3228,7 @@ smoke. And among the monsters thus roused from their sleep of stone by this
 flame, by this noise, there was one who walked about, and who was seen, from
 time to time, to pass across the glowing face of the pile, like a bat in front
 of a candle.”
-    -Victor Hugo, _The Hunchback of Notre-Dame_, 10, ch. IV. 1831.
+    -Victor Hugo, “The Hunchback of Notre-Dame”, 10, ch. IV. 1831.
      trans. Isabel F. Hapgood
 %%%%
 wolf
@@ -3260,7 +3260,7 @@ wight
 
 “Unhappie wight, borne to desastrous end,
  That doth his life in so long tendance spend!”
-    -Edmund Spenser, “Mother Hubberds Tale”, _Complaints_. 1591.
+    -Edmund Spenser, “Mother Hubberds Tale”, “Complaints”. 1591.
 %%%%
 witch
 
@@ -3271,7 +3271,7 @@ wizard
 
 “Each family or tribe has a wizard or conjuring doctor, whose office we could
 never clearly ascertain.”
-    -Charles Darwin, _The Voyage of the Beagle_, ch. X. 1839.
+    -Charles Darwin, “The Voyage of the Beagle”, ch. X. 1839.
 %%%%
 worm
 
@@ -3304,7 +3304,7 @@ devils. Some of them were sitting on the chimneypots, kicking up their legs in
 the air; while others were playing at leapfrog, on the very edge of the
 parapet. His study was so filled with them that he found it difficult to make
 his way to his desk.”
-    -Charles Mackay, _Memoirs of Extraordinary Popular Delusions_, Vol. III,
+    -Charles Mackay, “Memoirs of Extraordinary Popular Delusions”, Vol. III,
      Part I. 1841.
 %%%%
 zombie
@@ -3319,5 +3319,5 @@ galvanize it into movement, and then make of it a servant or slave,
 occasionally for the commission of some crime, more often simply as a drudge
 around the habitation or the farm, setting it dull heavy tasks, and beating it
 like a dumb beast if it slackens.”
-    -William Seabrook, _The Magic Island_. 1929.
+    -William Seabrook, “The Magic Island”. 1929.
 %%%%
