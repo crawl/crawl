@@ -3481,7 +3481,7 @@ static bool _create_briar_patch(coord_def& target)
             MHITNOT, MG_FORCE_PLACE, GOD_FEDHAS);
     mgen.hd = mons_class_hit_dice(MONS_BRIAR_PATCH) +
         you.skill_rdiv(SK_INVOCATIONS);
-    mgen.set_summoned(&you, 3 + you.skill_rdiv(SK_INVOCATIONS, 1, 6),
+    mgen.set_summoned(&you, min(2 + you.skill_rdiv(SK_INVOCATIONS, 1, 5), 6),
             SPELL_NO_SPELL);
 
     if (create_monster(mgen))
@@ -3547,7 +3547,7 @@ static void _overgrow_wall(const coord_def &pos)
                                                     1, MONS_OKLOB_PLANT);
     mgen_data mgen(mon, BEH_FRIENDLY, pos, MHITYOU, MG_FORCE_PLACE);
     mgen.hd = mons_class_hit_dice(mon) + you.skill_rdiv(SK_INVOCATIONS);
-    mgen.set_summoned(&you, 3 + you.skill_rdiv(SK_INVOCATIONS, 1, 5),
+    mgen.set_summoned(&you, min(3 + you.skill_rdiv(SK_INVOCATIONS, 1, 5), 6),
             SPELL_NO_SPELL);
     if (const monster* const plant = create_monster(mgen))
     {
@@ -3627,7 +3627,7 @@ spret fedhas_grow_ballistomycete(bool fail)
             MG_FORCE_BEH | MG_FORCE_PLACE | MG_AUTOFOE);
     mgen.hd = mons_class_hit_dice(MONS_BALLISTOMYCETE) +
         you.skill_rdiv(SK_INVOCATIONS);
-    mgen.set_summoned(&you, 3 + you.skill_rdiv(SK_INVOCATIONS, 1, 5),
+    mgen.set_summoned(&you, min(3 + you.skill_rdiv(SK_INVOCATIONS, 1, 5), 6),
             SPELL_NO_SPELL);
 
     if (create_monster(mgen))
@@ -3684,7 +3684,7 @@ spret fedhas_grow_oklob(bool fail)
             MG_FORCE_BEH | MG_FORCE_PLACE | MG_AUTOFOE);
     mgen.hd = mons_class_hit_dice(MONS_OKLOB_PLANT) +
         you.skill_rdiv(SK_INVOCATIONS);
-    mgen.set_summoned(&you, 3 + you.skill_rdiv(SK_INVOCATIONS, 1, 5),
+    mgen.set_summoned(&you, min(3 + you.skill_rdiv(SK_INVOCATIONS, 1, 5), 6),
             SPELL_NO_SPELL);
 
     if (create_monster(mgen))
