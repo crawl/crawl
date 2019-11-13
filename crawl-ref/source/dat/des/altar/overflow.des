@@ -849,15 +849,7 @@ MONS:   bush, plant, necrophage, zombie
 KFEAT:  _ = altar_fedhas
 FTILE:  '!12@ = floor_moss
 COLOUR: '!@ = green
-: if you.race() ~= "Mummy" and you.race() ~= "Ghoul"
-:   and you.race() ~= "Vampire"
-: then
-MARKER:  ! = lua:message_at_spot("Fedhas urges you to decompose the vile \
-                                 beasts imprisoned behind the altar.", \
-                                 "god")
-: end
 NSUBST: 3 = 3:3 / 3 = 3 4:25 / 3 = 4 .:25 / *:.
-SUBST:  ! = .
 KPROP:  .3 = no_tele_into
 MAP
  xxxxxxxxx
@@ -869,7 +861,7 @@ x3321'1233x
 x3.2x'x2.3x
 x3..x'x..3x
 xxxxx'xxxxx
-   xx!xx
+   xx'xx
    x2@2x
 ENDMAP
 
