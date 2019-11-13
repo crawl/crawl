@@ -3131,3 +3131,28 @@ spret cast_starburst(int pow, bool fail, bool tracer)
 
     return spret::success;
 }
+
+void foxfire_attack(const monster *foxfire, const actor *target)
+{
+    actor * summoner = actor_by_mid(foxfire->summoner);
+
+    // Don't allow foxfires that have wandered off to attack before dissapating
+    if (summoner && !(summoner->can_see(*foxfire)
+                      && summoner->see_cell(target->pos())))
+    {
+        return;
+    }
+
+    bolt beam;
+    beam.thrower = (foxfire && foxfire->friendly()) ? KILL_YOU :
+                   (foxfire)                       ? KILL_MON
+                                                  : KILL_MISC;
+    beam.range       = 1;
+    beam.source      = foxfire->pos();
+    beam.source_id   = foxfire->summoner;
+    beam.source_name = summoner->name(DESC_PLAIN, true);
+    zappy(ZAP_FOXFIRE, foxfire->get_hit_dice(), !foxfire->friendly(), beam);
+    beam.aux_source  = beam.name;
+    beam.target      = target->pos();
+    beam.fire();
+}

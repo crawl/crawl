@@ -1140,6 +1140,11 @@ formicid
 
 A sentient ant that walks upright and is competent at digging.
 %%%%
+foxfire
+
+A thin wisp of flaming swamp gas. It will burn anything that ventures too
+close, friend or foe.
+%%%%
 freezing wraith
 
 An incorporeal skeletal form surrounded by a cloud of freezing air, likely the

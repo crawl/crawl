@@ -30,6 +30,7 @@
 #include "items.h"
 #include "message.h"
 #include "mon-act.h"
+#include "mon-death.h"
 #include "mon-place.h"
 #include "mon-util.h"
 #include "player.h"
@@ -40,6 +41,7 @@
 #include "shout.h"
 #include "state.h"
 #include "stringutil.h"
+#include "spl-damage.h"
 #include "terrain.h"
 #include "traps.h"
 #include "travel.h"
@@ -79,6 +81,14 @@ static void _swap_places(monster* mons, const coord_def &loc)
     mpr("You swap places.");
 
     mons->move_to_pos(loc, true, true);
+
+    // Foxfire attacks and then dissapates at the new location after the swap.
+    if (mons->type == MONS_FOXFIRE)
+    {
+        foxfire_attack(mons, &you);
+        monster_die(*mons, KILL_DISMISSED, NON_MONSTER, true);
+    }
+
     return;
 }
 

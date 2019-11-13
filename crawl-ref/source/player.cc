@@ -376,6 +376,17 @@ bool swap_check(monster* mons, coord_def &loc, bool quiet)
         return false;
     }
 
+    // Foxfire swaps burn you and dissapate the foxfire. Prompt for this.
+    // XXX: We still need the location so we can swap the foxfire and kill it
+    // in its new location (which is finalized after the player's movement is
+    // complete).
+    if (mons->type == MONS_FOXFIRE && !quiet
+        && !yesno(make_stringf("Do you really want to walk into %s?",
+                  mons->name(DESC_YOUR).c_str()).c_str(), true, 'N'))
+    {
+        return false;
+    }
+
     // First try: move monster onto your position.
     bool swap = !monster_at(loc) && monster_habitable_grid(mons, grd(loc));
 

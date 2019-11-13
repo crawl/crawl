@@ -1048,6 +1048,7 @@ enum monster_type                      // menv[].type
     MONS_BARACHI,
     MONS_BULTUNGIN,             // remove this someday
     MONS_TEST_STATUE,
+    MONS_FOXFIRE,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

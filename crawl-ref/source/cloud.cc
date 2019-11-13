@@ -294,6 +294,11 @@ static const cloud_data clouds[] = {
         ETC_SMOKE,
         { TILE_CLOUD_BLACK_SMOKE, CTVARY_NONE },
     },
+    // CLOUD_FLAME,
+    { "wisps of flame", nullptr,          // terse, verbose name
+      ETC_FIRE,                                // colour
+      { TILE_CLOUD_FIRE, CTVARY_DUR },   // tile
+    },
 };
 COMPILE_CHECK(ARRAYSZ(clouds) == NUM_CLOUD_TYPES);
 

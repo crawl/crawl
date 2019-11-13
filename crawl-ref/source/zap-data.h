@@ -1376,4 +1376,22 @@ _mon_hex_zap(ZAP_DRAIN_MAGIC, BEAM_DRAIN_MAGIC),
     6
 },
 
+{
+    ZAP_FOXFIRE,
+    "foxfire",
+    50,
+    new dicedef_calculator<1, 4, 1, 5>,
+    new tohit_calculator<AUTOMATIC_HIT>,
+    new dicedef_calculator<3, 3, 1, 12>,
+    new tohit_calculator<AUTOMATIC_HIT>,
+    RED,
+    false,
+    BEAM_FIRE,
+    DCHAR_FIRED_BOLT,
+    true,
+    false,
+    false,
+    1
+},
+
 };

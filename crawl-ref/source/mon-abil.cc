@@ -1034,6 +1034,35 @@ bool mon_special_ability(monster* mons)
         }
         break;
 
+    case MONS_FOXFIRE:
+        if (is_sanctuary(mons->pos()))
+            break;
+
+        if (mons->attitude == ATT_HOSTILE
+            && grid_distance(you.pos(), mons->pos()) == 1)
+        {
+            foxfire_attack(mons, &you);
+            check_place_cloud(CLOUD_FLAME, mons->pos(), 2, mons);
+            mons->suicide();
+            used = true;
+            break;
+        }
+
+        for (monster_near_iterator targ(mons, LOS_NO_TRANS); targ; ++targ)
+        {
+            if (mons_aligned(mons, *targ) || grid_distance(mons->pos(), targ->pos()) > 1)
+                continue;
+
+            if (!cell_is_solid(targ->pos()))
+            {
+                foxfire_attack(mons, *targ);
+                mons->suicide();
+                used = true;
+                break;
+            }
+        }
+        break;
+
     case MONS_SKY_BEAST:
         if (one_chance_in(8))
         {

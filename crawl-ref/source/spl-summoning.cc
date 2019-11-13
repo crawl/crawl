@@ -3695,3 +3695,38 @@ spret fedhas_grow_oklob(bool fail)
     return spret::success;
 
 }
+
+spret cast_foxfire(int pow, god_type god, bool fail)
+{
+    fail_check();
+    int created = 0;
+
+    for (fair_adjacent_iterator ai(you.pos()); ai; ++ai)
+    {
+        mgen_data fox(MONS_FOXFIRE, BEH_FRIENDLY,
+                      *ai, MHITNOT, MG_FORCE_PLACE);
+        fox.set_summoned(&you, 0, SPELL_FOXFIRE, god);
+        fox.hd = pow;
+        monster *foxfire;
+
+        if (!cell_is_solid(*ai) && !monster_at(*ai)
+            && (foxfire = create_monster(fox)))
+        {
+            ++created;
+            foxfire->add_ench(ENCH_SHORT_LIVED);
+            foxfire->steps_remaining = you.current_vision + 2;
+
+            set_random_target(foxfire);
+        }
+
+        if (created == 2)
+            break;
+    }
+
+    if (created)
+        mpr("You conjure some foxfire!");
+    else
+        canned_msg(MSG_NOTHING_HAPPENS);
+
+    return spret::success;
+}

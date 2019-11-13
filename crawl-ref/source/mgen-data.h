@@ -179,7 +179,8 @@ struct mgen_data
                || summon_type == SPELL_SIMULACRUM
                || summon_type == SPELL_AWAKEN_VINES
                || summon_type == SPELL_FULMINANT_PRISM
-               || summon_type == SPELL_INFESTATION);
+               || summon_type == SPELL_INFESTATION
+               || summon_type == SPELL_FOXFIRE);
         return *this;
     }
 

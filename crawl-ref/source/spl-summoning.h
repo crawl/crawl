@@ -130,3 +130,5 @@ bool fedhas_wall_of_briars();
 spret fedhas_grow_ballistomycete(bool fail);
 bool fedhas_overgrow();
 spret fedhas_grow_oklob(bool fail);
+
+spret cast_foxfire(int pow, god_type god, bool fail);

@@ -598,6 +598,13 @@ Summons some of the lesser threats from one of the Lair of Beasts, the Snake
 Pit, the Spider Nest, the Swamp, the Shoals, the Orcish Mines, the Elven Halls,
 the Vaults, or the Crypt; the specific branch varies with the caster.
 %%%%
+Foxfire spell
+
+Conjures two balls of burning swamp gas adjacent to the caster. The balls will
+rapidly seek the nearest monster and burn them. If unable to reach a target the
+foxfire will dissipate harmlessly. Foxfire will burn anything that tries to
+change places with it.
+%%%%
 Freeze spell
 
 Freezes an adjacent creature, dealing damage that bypasses any armour the

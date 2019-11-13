@@ -21,7 +21,7 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Book of Flames
-    SPELL_FLAME_TONGUE,
+    SPELL_FOXFIRE,
     SPELL_CONJURE_FLAME,
     SPELL_INNER_FLAME,
     SPELL_STICKY_FLAME,
@@ -303,7 +303,7 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Book of the Dragon
-    SPELL_FLAME_TONGUE,
+    SPELL_FOXFIRE,
     SPELL_CAUSE_FEAR,
     SPELL_DRAGON_FORM,
     SPELL_DRAGON_CALL,
