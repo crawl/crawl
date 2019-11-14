@@ -810,7 +810,6 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
         build_item_grid(msg["main-items"], $main, true);
         build_item_grid(msg["sub-items"], $popup.find(".sub-items"));
         scroller($main.parent()[0]);
-        focus_button($popup.find(".main-items").eq(0));
 
         return $popup;
     }
