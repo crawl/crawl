@@ -1110,6 +1110,9 @@ protected:
         void killword();
         void kill_to_begin();
         void kill_to_end();
+#ifdef USE_TILE_LOCAL
+        void clipboard_paste();
+#endif
 
         bool is_wordchar(char32_t c);
 
