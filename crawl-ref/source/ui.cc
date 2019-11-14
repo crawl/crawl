@@ -2174,6 +2174,15 @@ void TextEntry::LineReader::insert_char_at_cursor(int ch)
     }
 }
 
+#ifdef USE_TILE_LOCAL
+void TextEntry::LineReader::clipboard_paste()
+{
+    if (wm->has_clipboard())
+        for (char ch : wm->get_clipboard())
+            process_key(ch);
+}
+#endif
+
 int TextEntry::LineReader::process_key(int ch)
 {
     switch (ch)
@@ -2240,6 +2249,11 @@ int TextEntry::LineReader::process_key(int ch)
     case CK_END:
     case CONTROL('E'):
         cur = buffer + length;
+        break;
+    case CONTROL('V'):
+#ifdef USE_TILE_LOCAL
+        clipboard_paste();
+#endif
         break;
     case CK_REDRAW:
         //redraw_screen();
