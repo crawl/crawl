@@ -14,7 +14,7 @@ enum fs_op_type
 class formatted_string
 {
 public:
-    formatted_string(int init_colour = 0);
+    explicit formatted_string(int init_colour = 0);
     explicit formatted_string(const string &s, int init_colour = 0);
 
     operator string() const;
@@ -91,6 +91,34 @@ public:
     typedef vector<fs_op> oplist;
     oplist ops;
 };
+
+template<typename R>
+formatted_string operator+(const formatted_string& lhs, const R&& rhs)
+{
+    formatted_string ret = lhs;
+    ret += rhs;
+    return ret;
+}
+
+template<typename R>
+formatted_string&& operator+(formatted_string&& lhs, const R&& rhs)
+{
+    lhs += rhs;
+    return move(lhs);
+}
+
+inline formatted_string operator+(const formatted_string& lhs, const char* rhs)
+{
+    formatted_string ret = lhs;
+    ret += rhs;
+    return ret;
+}
+
+inline formatted_string&& operator+(formatted_string&& lhs, const char* rhs)
+{
+    lhs += rhs;
+    return move(lhs);
+}
 
 int count_linebreaks(const formatted_string& fs);
 
