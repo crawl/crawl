@@ -189,13 +189,36 @@ function ($, comm, client, options, focus_trap) {
         }
     }
 
+    function utf8_from_key_value(key)
+    {
+        if (key.length === 1)
+            return key.charCodeAt(0);
+        else switch (key) {
+            case "Tab": return 9;
+            case "Enter": return 13;
+            case "Escape": return 27;
+            default: return 0;
+        }
+    }
+
+    function key_value_from_utf8(num)
+    {
+        switch (num) {
+            case 9: return "Tab";
+            case 13: return "Enter";
+            case 27: return "Escape";
+            default: return String.fromCharCode(num);
+        }
+    }
+
     function ui_hotkey_handler(ev) {
         if (ev.type === "click") {
-            comm.send_message("key", {
-                keycode: parseInt($(ev.currentTarget).attr("data-hotkey"), 10),
-            });
+            var key_value = $(ev.currentTarget).attr("data-hotkey");
+            var keycode = utf8_from_key_value(key_value);
+            if (keycode)
+                comm.send_message("key", { keycode: keycode });
         } else if (ev.type == "keydown") {
-            var $elem = $("#ui-stack [data-hotkey="+event.which+"]");
+            var $elem = $("#ui-stack [data-hotkey=\""+event.key+"\"]");
             if ($elem.length === 1) {
                 $elem.click();
                 ev.preventDefault();
@@ -361,5 +384,7 @@ function ($, comm, client, options, focus_trap) {
         hide_popup: hide_popup,
         top_popup: top_popup,
         hide_all_popups: hide_all_popups,
+        utf8_from_key_value: utf8_from_key_value,
+        key_value_from_utf8: key_value_from_utf8,
     };
 });
