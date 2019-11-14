@@ -741,7 +741,7 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
         var $descriptions = $popup.find(".descriptions");
         paneset_cycle($descriptions, $button.attr("data-description-index"));
         comm.send_message("outer_menu_focus", {
-            hotkey: parseInt($button.attr("data-hotkey"), 10),
+            hotkey: ui.utf8_from_key_value($button.attr("data-hotkey")),
             menu_id: menu_id,
         });
     }
@@ -792,7 +792,7 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
                 $button.attr("style", "grid-row:"+(button.y+1)+"; grid-column:"+(button.x+1)+";");
                 $descriptions.append("<span class='pane'> " + button.description + "</span>");
                 $button.attr("data-description-index", $descriptions.children().length - 1);
-                $button.attr("data-hotkey", button.hotkey);
+                $button.attr("data-hotkey", ui.key_value_from_utf8(button.hotkey));
                 $button.addClass("hlc-" + button.highlight_colour);
                 $container.append($button);
 
@@ -821,7 +821,8 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
         var $popup = ui.top_popup();
         if (!$popup || !$popup.hasClass("newgame-choice"))
             return;
-        focus_button($popup.find("[data-hotkey='"+msg.button_focus+"']"));
+        var hotkey = ui.key_value_from_utf8(msg.button_focus);
+        focus_button($popup.find("[data-hotkey='"+hotkey+"']"));
     }
 
     function newgame_random_combo(msg)
