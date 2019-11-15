@@ -2219,7 +2219,8 @@ void run_layout(shared_ptr<Widget> root, const bool& done,
         shared_ptr<Widget> initial_focus)
 {
     push_layout(root);
-    set_focused_widget(initial_focus.get());
+    if (initial_focus)
+        set_focused_widget(initial_focus.get());
     while (!done && !crawl_state.seen_hups)
         pump_events();
     pop_layout();
