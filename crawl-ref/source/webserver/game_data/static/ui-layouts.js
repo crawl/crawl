@@ -711,15 +711,7 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
     {
         var $popup = $(".templates > .msgwin-get-line").clone();
         $popup.children(".header").html(util.formatted_string_to_html(msg.prompt));
-        $popup.children(".body")[0].textContent = msg.text;
         return $popup;
-    }
-    function msgwin_get_line_update(msg)
-    {
-        var $popup = ui.top_popup();
-        if (!$popup.hasClass("msgwin-get-line"))
-            return;
-        $popup.children(".body")[0].textContent = msg.text;
     }
 
     function focus_button($button)
@@ -935,7 +927,6 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
             "describe-god" : describe_god_update,
             "describe-monster" : describe_monster_update,
             "formatted-scroller" : formatted_scroller_update,
-            "msgwin-get-line" : msgwin_get_line_update,
             "progress-bar" : progress_bar_update,
             "newgame-choice" : newgame_choice_update,
         };

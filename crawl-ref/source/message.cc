@@ -1547,47 +1547,51 @@ int msgwin_get_line(string prompt, char *buf, int len,
     if (use_popup)
     {
         mouse_control mc(MOUSE_MODE_PROMPT);
-        resumable_line_reader reader(buf, len);
-        reader.set_input_history(mh);
-        reader.read_line(fill);
-        reader.putkey(CK_END);
 
         linebreak_string(prompt, 79);
         msg_colour_type colour = prepare_message(prompt, MSGCH_PROMPT, 0);
-        const string colour_prompt = colour_string(prompt, colour_msg(colour));
+        const auto colour_prompt = formatted_string(prompt, colour_msg(colour));
 
         bool done = false;
-        auto text = make_shared<ui::Text>();
-        auto popup = make_shared<ui::Popup>(text);
-        auto update_text = [&]() {
-            formatted_string p = formatted_string::parse_string(colour_prompt);
-            p.cprintf("\n\n%s", reader.get_text().c_str());
-            text->set_text(p);
-#ifdef USE_TILE_WEB
-            tiles.json_open_object();
-            tiles.json_write_string("text", reader.get_text().c_str());
-            tiles.ui_state_change("msgwin-get-line", 0);
+        auto vbox = make_shared<ui::Box>(ui::Widget::VERT);
+        auto popup = make_shared<ui::Popup>(vbox);
+
+        vbox->add_child(make_shared<ui::Text>(colour_prompt + "\n"));
+
+        auto input = make_shared<ui::TextEntry>();
+        input->set_sync_id("input");
+        input->set_text(fill);
+        input->set_input_history(mh);
+#ifndef USE_TILE_LOCAL
+        input->max_size().width = 20;
 #endif
-        };
-        popup->on_keydown_event([&](const ui::KeyEvent& ev) {
-            ret = reader.putkey(ev.key());
-            if (ret != -1)
-                done = true;
-            update_text();
-            return true;
+        vbox->add_child(input);
+
+        popup->on_hotkey_event([&](const ui::KeyEvent& ev) {
+            switch (ev.key())
+            {
+            CASE_ESCAPE
+                ret = CK_ESCAPE;
+                return done = true;
+            case CK_ENTER:
+                ret = 0;
+                return done = true;
+            default:
+                return done = false;
+            }
         });
 
 #ifdef USE_TILE_WEB
         tiles.json_open_object();
-        tiles.json_write_string("prompt", colour_prompt);
-        tiles.json_write_string("text", fill);
-        tiles.push_ui_layout("msgwin-get-line", 1);
+        tiles.json_write_string("prompt", colour_prompt.to_colour_string());
+        tiles.push_ui_layout("msgwin-get-line", 0);
 #endif
-        update_text();
-        ui::run_layout(move(popup), done);
+        ui::run_layout(move(popup), done, input);
 #ifdef USE_TILE_WEB
-    tiles.pop_ui_layout();
+        tiles.pop_ui_layout();
 #endif
+        strncpy(buf, input->get_text().c_str(), len - 1);
+        buf[len - 1] = '\0';
     }
     else
     {
