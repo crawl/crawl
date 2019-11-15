@@ -1310,7 +1310,8 @@ DEPS := $(ALL_OBJECTS:.o=.d)
 # That rebuild will overwrite the stopgap .d file with a good one for
 # the next build.
 ifndef NEED_REBUILD
-  VALID_DEPS := $(shell for x_d in $(DEPS); do \
+  VALID_DEPS := $(shell checkdep () { \
+                          x_d="$$1"; \
                           x="$${x_d%%.d}"; x_cc="$${x}.cc"; x_o="$${x}.o"; \
                           if [ "$$x_cc" -ot "$$x_d" \
                                -a "$$x_d" -nt .cflags ]; \
@@ -1319,6 +1320,9 @@ ifndef NEED_REBUILD
                               || echo "$$x_o: FORCE" > "$$x_d"; \
                             echo "$$x_d"; \
                           fi; \
+                        }; \
+                        for x_d in $(DEPS); do \
+                          checkdep "$$x_d" & \
                         done)
 endif
 -include $(VALID_DEPS)
