@@ -466,8 +466,7 @@ vector<string> split_string(const string &sep, string s, bool trim_segments,
             --nsplits;
     }
 
-    if (!s.empty())
-        add_segment(segments, s, trim_segments, accept_empty_segments);
+    add_segment(segments, s, trim_segments, accept_empty_segments);
 
     return segments;
 }
