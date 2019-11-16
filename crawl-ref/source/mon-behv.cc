@@ -1128,8 +1128,16 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
 
         if (src == &you && mon->angered_by_attacks())
         {
-            mon->attitude = ATT_HOSTILE;
-            breakCharm    = true;
+            if (mon->attitude == ATT_FRIENDLY && mon->is_summoned())
+            {
+                monster_die(*mon, KILL_DISMISSED, NON_MONSTER);
+                return;
+            }
+            else
+            {
+                mon->attitude = ATT_HOSTILE;
+                breakCharm    = true;
+            }
         }
 
         // XXX: Somewhat hacky, this being here.
