@@ -819,8 +819,6 @@ static void _describe_regen(status_info& inf)
     const bool regen = (you.duration[DUR_REGENERATION] > 0
                         || you.duration[DUR_TROGS_HAND] > 0);
     const bool no_heal = !player_regenerates_hp();
-    // Does vampire hunger level affect regeneration rate significantly?
-    const bool vampmod = !no_heal && !regen && you.species == SP_VAMPIRE;
 
     if (regen)
     {
@@ -851,7 +849,7 @@ static void _describe_regen(status_info& inf)
         }
         _mark_expiring(inf, dur_expiring(DUR_REGENERATION));
     }
-    else if (vampmod)
+    else if (you.species == SP_VAMPIRE && you.vampire_alive)
     {
         inf.short_text = you.disease ? "recuperating" : "regenerating";
         inf.short_text += " quickly";
