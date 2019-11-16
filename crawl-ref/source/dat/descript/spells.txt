@@ -1401,6 +1401,8 @@ Summon Greater Demon spell
 Calls forth one of the greater demons of Pandemonium to serve the caster. With
 high power, the summoned demon will be less likely to be initially hostile —
 but the strongest demons may eventually turn against their summoner regardless.
+Unlike other summons, greater demons will not be dismissed when attacked by
+their summoner - they will become hostile.
 %%%%
 Summon Guardian Golem spell
 
