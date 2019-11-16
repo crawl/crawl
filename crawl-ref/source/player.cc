@@ -3235,7 +3235,7 @@ static void _display_vampire_status()
         attrib.push_back("significantly resist cold");
         attrib.push_back("are immune to negative energy");
         attrib.push_back("resist torment");
-        attrib.push_back("do not heal.");
+        attrib.push_back("do not heal with monsters in sight.");
     }
     else
         attrib.push_back("heal quickly.");
