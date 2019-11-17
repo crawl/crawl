@@ -500,7 +500,8 @@ bool feat_is_water(dungeon_feature_type feat)
 {
     return feat == DNGN_SHALLOW_WATER
            || feat == DNGN_DEEP_WATER
-           || feat == DNGN_OPEN_SEA;
+           || feat == DNGN_OPEN_SEA
+           || feat == DNGN_TOXIC_BOG;
 }
 
 /** Does this feature have enough water to keep water-only monsters alive in it?

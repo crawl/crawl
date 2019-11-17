@@ -33,6 +33,7 @@
 #include "los.h"
 #include "losglobal.h"
 #include "macro.h"
+#include "mapmark.h"
 #include "message.h"
 #include "misc.h"
 #include "mon-behv.h"
@@ -3282,4 +3283,70 @@ spret cast_imb(int pow, bool fail)
         _imb_actor(act, pow);
 
     return spret::success;
+}
+
+void actor_apply_toxic_bog(actor * act)
+{
+    if (grd(act->pos()) != DNGN_TOXIC_BOG)
+        return;
+
+    if (!act->ground_level())
+        return;
+
+    const bool player = act->is_player();
+    monster *mons = !player ? act->as_monster() : nullptr;
+
+    actor *oppressor = nullptr;
+
+    for (map_marker *marker : env.markers.get_markers_at(act->pos()))
+    {
+        map_terrain_change_marker* tmarker =
+                dynamic_cast<map_terrain_change_marker*>(marker);
+        oppressor = actor_by_mid(tmarker->mon_num);
+    }
+
+    const int base_damage = dice_def(4, 6).roll();
+    const int damage = resist_adjust_damage(act, BEAM_POISON_ARROW, base_damage);
+    const int resist = base_damage - damage;
+
+    const int final_damage = timescale_damage(act, damage);
+
+    if (player && final_damage > 0)
+    {
+        mprf("You fester in the toxic bog%s",
+                attack_strength_punctuation(final_damage).c_str());
+    }
+    else if (final_damage > 0)
+    {
+        behaviour_event(mons, ME_DISTURB, 0, act->pos());
+        mprf("%s festers in the toxic bog%s",
+                mons->name(DESC_THE).c_str(),
+                attack_strength_punctuation(final_damage).c_str());
+    }
+
+    if (final_damage > 0 && resist > 0)
+    {
+        if (player)
+            canned_msg(MSG_YOU_PARTIALLY_RESIST);
+
+        act->poison(oppressor, 7, true);
+    }
+    else if (final_damage > 0)
+        act->poison(oppressor, 21, true);
+
+    if (final_damage)
+    {
+
+        const string oppr_name =
+            oppressor ? " "+apostrophise(oppressor->name(DESC_THE))
+                      : "";
+        dprf("%s %s %d damage from%s toxic bog.",
+             act->name(DESC_THE).c_str(),
+             act->conj_verb("take").c_str(),
+             final_damage,
+             oppr_name.c_str());
+
+        act->hurt(oppressor, final_damage, BEAM_MISSILE,
+                  KILLED_BY_POISON, "", "toxic bog");
+    }
 }

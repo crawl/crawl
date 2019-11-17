@@ -212,6 +212,13 @@ static feature_def feat_defs[] =
 },
 
 {
+    DNGN_TOXIC_BOG, "a toxic bog", "toxic_bog",
+    DCHAR_WAVY, NUM_DCHAR_TYPES,
+    COLOUR_IS(ETC_POISON),
+    FFT_NONE, MF_WATER,
+},
+
+{
     DNGN_FLOOR, "floor", "floor",
     DCHAR_FLOOR, DCHAR_FLOOR_MAGIC,
     COLOUR_IS(ETC_FLOOR),

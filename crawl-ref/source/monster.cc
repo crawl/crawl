@@ -2712,6 +2712,8 @@ bool monster::fumbles_attack()
         {
             mprf("%s %s", name(DESC_THE).c_str(), liquefied(pos())
                  ? "becomes momentarily stuck in the liquid earth."
+                 : grd(pos()) == DNGN_TOXIC_BOG
+                 ? "becomes momentarily stuck in the toxic bog."
                  : "splashes around in the water.");
         }
         else if (player_can_hear(pos(), LOS_RADIUS))

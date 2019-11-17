@@ -167,6 +167,15 @@ through it; other creatures can wade through it slowly. Non-swimmers will
 occasionally fail to attack in melee when wading through shallow water,
 although large creatures are able to keep their balance and avoid fumbling.
 %%%%
+A toxic bog
+
+A filthy pool of poisonous, waist-deep sludge. Wading or swimming through the
+sludge will damage and poison any creature, even those resistant to poison.
+Those well-adapted to water can swim through it; other creatures can wade
+through it slowly. Non-swimmers will occasionally fail to attack in melee when
+wading through shallow water, although large creatures are able to keep their
+balance and avoid fumbling.
+%%%%
 The open sea
 
 An expanse of endless wind and waves, with not a lighthouse in sight. Anyone

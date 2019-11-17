@@ -1647,6 +1647,8 @@ void handle_monster_move(monster* mons)
     mons->shield_blocks = 0;
 
     _mons_in_cloud(*mons);
+    actor_apply_toxic_bog(mons);
+
     if (!mons->alive())
         return;
 
