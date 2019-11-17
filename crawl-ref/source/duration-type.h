@@ -201,5 +201,6 @@ enum duration_type
     DUR_RECITE_COOLDOWN,
     DUR_ACROBAT,
     DUR_SHAFT_IMMUNITY,
+    DUR_NOXIOUS_BOG,
     NUM_DURATIONS
 };

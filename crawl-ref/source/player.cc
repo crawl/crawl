@@ -516,7 +516,7 @@ void moveto_location_effects(dungeon_feature_type old_feat,
     id_floor_items();
 
     // Falling into a toxic bog, take the damage
-    if (old_pos == you.pos())
+    if (old_pos == you.pos() && stepped)
         actor_apply_toxic_bog(&you);
 
     // Traps go off.
