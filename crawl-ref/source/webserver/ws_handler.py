@@ -359,7 +359,9 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
     def stop_watching(self):
         if self.watched_game:
-            self.logger.info("Stopped watching %s.", self.watched_game.username)
+            self.logger.info("%s stopped watching %s.",
+                                    self.username and self.username or "[Anon]",
+                                    self.watched_game.username)
             self.watched_game.remove_watcher(self)
             self.watched_game = None
 
@@ -394,7 +396,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
     def login(self, username, password):
         real_username = userdb.user_passwd_match(username, password)
         if real_username:
-            self.logger.info("User %s logged in.", real_username)
+            self.logger.info("User %s logged in from %s.",
+                                        real_username, self.request.remote_ip)
             self.do_login(real_username)
         else:
             self.logger.warning("Failed login for user %s.", username)
@@ -512,8 +515,10 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 if self.watched_game == process:
                     return
                 self.stop_watching()
-            self.logger.info("Started watching %s (P%s).", process.username,
-                             process.id)
+            self.logger.info("%s started watching %s (P%s).",
+                                self.username and self.username or "[Anon]",
+                                process.username, process.id)
+
             self.watched_game = process
             process.add_watcher(self)
             self.send_message("watching_started", username = process.username)
