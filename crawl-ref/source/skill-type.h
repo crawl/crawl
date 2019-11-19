@@ -16,6 +16,7 @@ enum skill_type
     SK_MACES_FLAILS,
     SK_POLEARMS,
     SK_STAVES,
+    SK_LAST_MELEE_WEAPON = SK_STAVES,
     SK_SLINGS,
     SK_BOWS,
     SK_CROSSBOWS,

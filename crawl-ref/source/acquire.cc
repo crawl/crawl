@@ -75,7 +75,8 @@ static int _skill_rdiv(skill_type skill, int mult = 1)
  * @param divine    Lowers the odds of high-tier body armours being chosen.
  * @return          The armour_type of the armour to be generated.
  */
-static int _acquirement_armour_subtype(bool divine, int & /*quantity*/)
+static int _acquirement_armour_subtype(bool divine, int & /*quantity*/,
+                                       int /*agent*/)
 {
     const equipment_type slot_type = _acquirement_armour_slot(divine);
     return _acquirement_armour_for_slot(slot_type, divine);
@@ -401,7 +402,8 @@ static armour_type _pick_unseen_armour()
     return picked;
 }
 
-static int _acquirement_food_subtype(bool /*divine*/, int& quantity)
+static int _acquirement_food_subtype(bool /*divine*/, int& quantity,
+                                     int /*agent*/)
 {
     int type_wanted;
     // Food is a little less predictable now. - bwr
@@ -427,12 +429,14 @@ static int _acquirement_food_subtype(bool /*divine*/, int& quantity)
  *                  tailored to the player's skills.
  * @return          An appropriate weapon skill; e.g. SK_LONG_BLADES.
  */
-static skill_type _acquirement_weapon_skill(bool divine)
+static skill_type _acquirement_weapon_skill(bool divine, int agent)
 {
     // reservoir sample.
     int count = 0;
     skill_type skill = SK_FIGHTING;
-    for (skill_type sk = SK_FIRST_WEAPON; sk <= SK_LAST_WEAPON; ++sk)
+    for (skill_type sk = SK_FIRST_WEAPON;
+         sk <= (agent == GOD_TROG ? SK_LAST_MELEE_WEAPON : SK_LAST_WEAPON);
+         ++sk)
     {
         // Adding a small constant allows for the occasional
         // weapon in an untrained skill.
@@ -449,13 +453,17 @@ static skill_type _acquirement_weapon_skill(bool divine)
     return skill;
 }
 
-static int _acquirement_weapon_subtype(bool divine, int & /*quantity*/)
+static int _acquirement_weapon_subtype(bool divine, int & /*quantity*/, int agent)
 {
-    const skill_type skill = _acquirement_weapon_skill(divine);
+    const skill_type skill = _acquirement_weapon_skill(divine, agent);
 
     int best_sk = 0;
-    for (int i = SK_FIRST_WEAPON; i <= SK_LAST_WEAPON; i++)
+    for (int i = SK_FIRST_WEAPON;
+         i <= (agent == GOD_TROG ? SK_LAST_MELEE_WEAPON : SK_LAST_WEAPON);
+         i++)
+    {
         best_sk = max(best_sk, _skill_rdiv((skill_type)i));
+    }
     best_sk = max(best_sk, _skill_rdiv(SK_UNARMED_COMBAT));
 
     // Now choose a subtype which uses that skill.
@@ -523,7 +531,8 @@ static int _acquirement_weapon_subtype(bool divine, int & /*quantity*/)
     return result;
 }
 
-static int _acquirement_missile_subtype(bool /*divine*/, int & /*quantity*/)
+static int _acquirement_missile_subtype(bool /*divine*/, int & /*quantity*/,
+                                        int /*agent*/)
 {
     int count = 0;
     int skill = SK_THROWING;
@@ -568,7 +577,8 @@ static int _acquirement_missile_subtype(bool /*divine*/, int & /*quantity*/)
     return result;
 }
 
-static int _acquirement_jewellery_subtype(bool /*divine*/, int & /*quantity*/)
+static int _acquirement_jewellery_subtype(bool /*divine*/, int & /*quantity*/,
+                                          int /*agent*/)
 {
     int result = 0;
 
@@ -592,7 +602,8 @@ static int _acquirement_jewellery_subtype(bool /*divine*/, int & /*quantity*/)
 }
 
 
-static int _acquirement_staff_subtype(bool /*divine*/, int & /*quantity*/)
+static int _acquirement_staff_subtype(bool /*divine*/, int & /*quantity*/,
+                                      int /*agent*/)
 {
     // Try to pick an enhancer staff matching the player's best skill.
     skill_type best_spell_skill = best_skill(SK_FIRST_MAGIC_SCHOOL,
@@ -637,7 +648,8 @@ static int _acquirement_staff_subtype(bool /*divine*/, int & /*quantity*/)
  * Return a miscellaneous evokable item for acquirement.
  * @return   The item type chosen.
  */
-static int _acquirement_misc_subtype(bool /*divine*/, int & /*quantity*/)
+static int _acquirement_misc_subtype(bool /*divine*/, int & /*quantity*/,
+                                     int /*agent*/)
 {
     // Give a crystal ball based on both evocations and either spellcasting or
     // invocations if we haven't seen one.
@@ -685,7 +697,8 @@ static int _acquirement_misc_subtype(bool /*divine*/, int & /*quantity*/)
  *
  * @return          A random wand type.
  */
-static int _acquirement_wand_subtype(bool /*divine*/, int & /*quantity*/)
+static int _acquirement_wand_subtype(bool /*divine*/, int & /*quantity*/,
+                                     int /*agent */)
 {
     // basic total: 120
     vector<pair<wand_type, int>> weights = {
@@ -712,14 +725,15 @@ static int _acquirement_wand_subtype(bool /*divine*/, int & /*quantity*/)
     return *wand;
 }
 
-static int _acquirement_book_subtype(bool /*divine*/, int & /*quantity*/)
+static int _acquirement_book_subtype(bool /*divine*/, int & /*quantity*/,
+                                     int /*agent*/)
 {
     return BOOK_MINOR_MAGIC;
     //this gets overwritten later, but needs to be a sane value
     //or asserts will get set off
 }
 
-typedef int (*acquirement_subtype_finder)(bool divine, int &quantity);
+typedef int (*acquirement_subtype_finder)(bool divine, int &quantity, int agent);
 static const acquirement_subtype_finder _subtype_finders[] =
 {
     _acquirement_weapon_subtype,
@@ -763,7 +777,10 @@ static int _find_acquirement_subtype(object_class_type &class_wanted,
             class_wanted = random_choose(OBJ_WANDS, OBJ_MISCELLANY);
 
         if (_subtype_finders[class_wanted])
-            type_wanted = (*_subtype_finders[class_wanted])(divine, quantity);
+        {
+            type_wanted =
+                (*_subtype_finders[class_wanted])(divine, quantity, agent);
+        }
 
         item_def dummy;
         dummy.base_type = class_wanted;
@@ -1125,21 +1142,28 @@ static bool _brand_already_seen(const item_def &item)
  * Take a newly-generated acquirement item, and adjust its brand if we don't
  * like it.
  *
- * Specifically, if we think the brand is too weak (for non-divine gifts), or
- * sometimes if we've seen the brand before.
+ * Specifically, when any of:
+ *   - The god doesn't like the brand (for divine gifts)
+ *   - We think the brand is too weak (for non-divine gifts)
+ *   - Sometimes if we've seen the brand before.
  *
  * @param item      The item which may have its brand adjusted. Not necessarily
  *                  a weapon or piece of armour.
  * @param divine    Whether the item is a god gift, rather than from
  *                  acquirement proper.
+ * @param agent     The source of the acquirement. For god gifts, it's equal to
+ *                  the god.
  */
-static void _adjust_brand(item_def &item, bool divine)
+static void _adjust_brand(item_def &item, bool divine, int agent)
 {
     if (item.base_type != OBJ_WEAPONS && item.base_type != OBJ_ARMOUR)
         return; // don't reroll missile brands, I guess
 
     if (is_artefact(item))
         return; // their own kettle of fish
+
+    if (agent == GOD_TROG)
+        return; // handled elsewhere
 
     // Not from a god, so we should prefer better brands.
     if (!divine && item.base_type == OBJ_WEAPONS)
@@ -1179,14 +1203,18 @@ static string _why_reject(const item_def &item, int agent)
 
     // Trog does not gift the Wrath of Trog, nor weapons of pain
     // (which work together with Necromantic magic).
-    // nor fancy magic staffs (wucad mu, majin-bo)
-    if (agent == GOD_TROG
-        && (get_weapon_brand(item) == SPWPN_PAIN
-            || is_unrandom_artefact(item, UNRAND_TROG)
-            || is_unrandom_artefact(item, UNRAND_WUCAD_MU)
-            || is_unrandom_artefact(item, UNRAND_MAJIN)))
+    // nor fancy magic staffs (wucad mu, majin-bo, staff of battle, elem
+    // staff)
+    if (agent == GOD_TROG)
     {
-        return "Destroying a weapon Trog hates!";
+        if (is_unrandom_artefact(item, UNRAND_TROG)
+            || is_unrandom_artefact(item, UNRAND_WUCAD_MU)
+            || is_unrandom_artefact(item, UNRAND_MAJIN)
+            || is_unrandom_artefact(item, UNRAND_BATTLE)
+            || is_unrandom_artefact(item, UNRAND_ELEMENTAL_STAFF))
+        {
+            return "Destroying a weapon Trog hates!";
+        }
     }
 
     // Pain brand is useless if you've sacrificed Necromacy.
@@ -1255,8 +1283,19 @@ int acquirement_create_item(object_class_type class_wanted,
         if (agent == GOD_TROG && !one_chance_in(3))
             want_arts = false;
 
+        int ego = 0;
+
+        // Trog has a restricted brand table for weapons; force the ego
+        // in the call to items()
+        if (agent == GOD_TROG && class_wanted == OBJ_WEAPONS)
+        {
+            // 75% chance of a brand
+            ego = random_choose(SPWPN_FORBID_BRAND, SPWPN_VORPAL,
+                                SPWPN_FLAMING, SPWPN_ANTIMAGIC);
+        }
+
         thing_created = items(want_arts, class_wanted, type_wanted,
-                              ITEM_LEVEL, 0, agent);
+                              ITEM_LEVEL, ego, agent);
 
         if (thing_created == NON_ITEM)
         {
@@ -1266,7 +1305,7 @@ int acquirement_create_item(object_class_type class_wanted,
         }
 
         item_def &acq_item(mitm[thing_created]);
-        _adjust_brand(acq_item, divine);
+        _adjust_brand(acq_item, divine, agent);
 
         // For plain armour, try to change the subtype to something
         // matching a currently unfilled equipment slot.
@@ -1316,14 +1355,6 @@ int acquirement_create_item(object_class_type class_wanted,
                     continue;
                 }
             }
-        }
-
-        if (agent == GOD_TROG && coinflip()
-            && acq_item.base_type == OBJ_WEAPONS && !is_range_weapon(acq_item)
-            && !is_unrandom_artefact(acq_item))
-        {
-            // ... but Trog loves the antimagic brand specially.
-            set_item_ego_type(acq_item, OBJ_WEAPONS, SPWPN_ANTIMAGIC);
         }
 
         const string rejection_reason = _why_reject(acq_item, agent);
@@ -1415,14 +1446,11 @@ int acquirement_create_item(object_class_type class_wanted,
                 make_item_randart(acq_item, true);
             }
 
-            if (agent == GOD_TROG || agent == GOD_OKAWARU)
-            {
-                if (agent == GOD_TROG)
-                    acq_item.plus += random2(3);
-
-                // On a weapon, an enchantment of less than 0 is never viable.
-                acq_item.plus = max(static_cast<int>(acq_item.plus), random2(2));
-            }
+            if (agent == GOD_TROG)
+                acq_item.plus += random2(3);
+            // God gifts (except Xom's) never have a negative enchantment
+            if (divine && agent != GOD_XOM)
+                acq_item.plus = max(static_cast<int>(acq_item.plus), 0);
         }
 
         // Last check: don't acquire items your god hates.

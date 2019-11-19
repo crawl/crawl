@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include "item-prop-enum.h"
+
 bool acquirement(object_class_type force_class, int agent,
                  bool quiet = false, int *item_index = nullptr,
                  bool known_scroll = false);
