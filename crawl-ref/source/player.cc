@@ -3546,10 +3546,10 @@ int player::scan_artefacts(artefact_prop_type which_property,
         if (!is_artefact(inv[ eq ]))
             continue;
 
-        bool known;
-        int val = artefact_property(inv[eq], which_property, known);
-        if (calc_unid || known)
+        // TODO: id check not needed, probably, due to full wear-id?
+        if (calc_unid || fully_identified(inv[eq]))
         {
+            int val = artefact_property(inv[eq], which_property);
             retval += val;
             if (matches && val)
                 matches->push_back(inv[eq]);
