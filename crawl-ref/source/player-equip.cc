@@ -199,8 +199,6 @@ void unequip_effect(equipment_type slot, int item_slot, bool meld, bool msg)
 static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld,
                                    equipment_type slot)
 {
-#define unknown_proprt(prop) (proprt[(prop)] && !known[(prop)])
-
     ASSERT(is_artefact(item));
 
     // Call unrandart equip function first, so that it can modify the
@@ -222,7 +220,8 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld,
 
     artefact_properties_t  proprt;
     artefact_known_props_t known;
-    artefact_properties(item, proprt, known);
+    artefact_properties(item, proprt);
+    artefact_known_properties(item, known);
 
     if (proprt[ARTP_AC] || proprt[ARTP_SHIELDING])
         you.redraw_armour_class = true;
@@ -241,13 +240,13 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld,
 
     // Modify ability scores.
     notify_stat_change(STAT_STR, proprt[ARTP_STRENGTH],
-                       !(msg && unknown_proprt(ARTP_STRENGTH)));
+                       !(msg && proprt[ARTP_STRENGTH] && !unmeld));
     notify_stat_change(STAT_INT, proprt[ARTP_INTELLIGENCE],
-                       !(msg && unknown_proprt(ARTP_INTELLIGENCE)));
+                       !(msg && proprt[ARTP_INTELLIGENCE] && !unmeld));
     notify_stat_change(STAT_DEX, proprt[ARTP_DEXTERITY],
-                       !(msg && unknown_proprt(ARTP_DEXTERITY)));
+                       !(msg && proprt[ARTP_DEXTERITY] && !unmeld));
 
-    if (unknown_proprt(ARTP_CONTAM) && msg)
+    if (proprt[ARTP_CONTAM] && msg && !unmeld)
         mpr("You feel a build-up of mutagenic energy.");
 
     if (!unmeld && !item.cursed() && proprt[ARTP_CURSE])
@@ -272,7 +271,6 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld,
         set_ident_type(item, true);
         set_ident_flags(item, ISFLAG_IDENT_MASK);
     }
-#undef unknown_proprt
 }
 
 /**
@@ -304,11 +302,7 @@ static void _unequip_fragile_artefact(item_def& item, bool meld)
 {
     ASSERT(is_artefact(item));
 
-    artefact_properties_t proprt;
-    artefact_known_props_t known;
-    artefact_properties(item, proprt, known);
-
-    if (proprt[ARTP_FRAGILE] && !meld)
+    if (artefact_property(item, ARTP_FRAGILE) && !meld)
     {
         mprf("%s crumbles to dust!", item.name(DESC_THE).c_str());
         dec_inv_item_quantity(item.link, 1);
@@ -324,7 +318,8 @@ static void _unequip_artefact_effect(item_def &item,
 
     artefact_properties_t proprt;
     artefact_known_props_t known;
-    artefact_properties(item, proprt, known);
+    artefact_properties(item, proprt);
+    artefact_known_properties(item, known);
     const bool msg = !show_msgs || *show_msgs;
 
     if (proprt[ARTP_AC] || proprt[ARTP_SHIELDING])
