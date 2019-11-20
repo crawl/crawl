@@ -97,14 +97,6 @@ int show_description(const string &body, const tile_def *tile)
     return show_description(inf, tile);
 }
 
-/// A message explaining how the player can toggle between quote &
-static const formatted_string _toggle_message = formatted_string::parse_string(
-    "Press '<w>!</w>'"
-#ifdef USE_TILE_LOCAL
-    " or <w>Right-click</w>"
-#endif
-    " to toggle between the description and quote.");
-
 int show_description(const describe_info &inf, const tile_def *tile)
 {
     auto vbox = make_shared<Box>(Widget::VERT);
@@ -134,11 +126,25 @@ int show_description(const describe_info &inf, const tile_def *tile)
         vbox->add_child(move(title_hbox));
     }
 
-    auto switcher = make_shared<Switcher>();
+    auto desc_sw = make_shared<Switcher>();
+    auto more_sw = make_shared<Switcher>();
+    desc_sw->current() = 0;
+    more_sw->current() = 0;
 
     const string descs[2] =  {
         trimmed_string(process_description(inf, false)),
         trimmed_string(inf.quote),
+    };
+
+#ifdef USE_TILE_LOCAL
+# define MORE_PREFIX "[<w>!</w>" "|<w>Right-click</w>" "]: "
+#else
+# define MORE_PREFIX "[<w>!</w>" "]: "
+#endif
+
+    const char* mores[2] = {
+        MORE_PREFIX "<w>Description</w>|Quote",
+        MORE_PREFIX "Description|<w>Quote</w>",
     };
 
     for (int i = 0; i < (inf.quote.empty() ? 1 : 2); i++)
@@ -149,23 +155,21 @@ int show_description(const describe_info &inf, const tile_def *tile)
         auto text = make_shared<Text>(fs);
         text->set_wrap_text(true);
         scroller->set_child(text);
-        switcher->add_child(move(scroller));
+        desc_sw->add_child(move(scroller));
+        more_sw->add_child(make_shared<Text>(
+                formatted_string::parse_string(mores[i])));
     }
 
-    switcher->current() = 0;
-    switcher->expand_h = false;
-#ifdef USE_TILE_LOCAL
-    switcher->max_size().width = tiles.get_crt_font()->char_width()*80;
-#endif
-    vbox->add_child(switcher);
-
+    more_sw->set_margin_for_sdl(20, 0, 0, 0);
+    more_sw->set_margin_for_crt(1, 0, 0, 0);
+    desc_sw->expand_h = false;
+    vbox->add_child(desc_sw);
     if (!inf.quote.empty())
-    {
-        auto footer = make_shared<Text>(_toggle_message);
-        footer->set_margin_for_sdl(20, 0, 0, 0);
-        footer->set_margin_for_crt(1, 0, 0, 0);
-        vbox->add_child(move(footer));
-    }
+        vbox->add_child(more_sw);
+
+#ifdef USE_TILE_LOCAL
+    vbox->max_size().width = tiles.get_crt_font()->char_width()*80;
+#endif
 
     auto popup = make_shared<ui::Popup>(vbox);
 
@@ -174,9 +178,9 @@ int show_description(const describe_info &inf, const tile_def *tile)
     popup->on_keydown_event([&](const KeyEvent& ev) {
         lastch = ev.key();
         if (!inf.quote.empty() && (lastch == '!' || lastch == CK_MOUSE_CMD || lastch == '^'))
-            switcher->current() = 1 - switcher->current();
+            desc_sw->current() = more_sw->current() = 1 - desc_sw->current();
         else
-            done = !switcher->current_widget()->on_event(ev);
+            done = !desc_sw->current_widget()->on_event(ev);
         return true;
     });
 
