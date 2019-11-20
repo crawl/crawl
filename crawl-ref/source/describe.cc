@@ -161,6 +161,7 @@ int show_description(const describe_info &inf, const tile_def *tile)
     more_sw->set_margin_for_sdl(20, 0, 0, 0);
     more_sw->set_margin_for_crt(1, 0, 0, 0);
     desc_sw->expand_h = false;
+    desc_sw->align_x = Widget::STRETCH;
     vbox->add_child(desc_sw);
     if (!inf.quote.empty())
         vbox->add_child(more_sw);
@@ -4608,6 +4609,7 @@ int describe_monsters(const monster_info &mi, bool force_seen,
     more_sw->set_margin_for_sdl(20, 0, 0, 0);
     more_sw->set_margin_for_crt(1, 0, 0, 0);
     desc_sw->expand_h = false;
+    desc_sw->align_x = Widget::STRETCH;
     vbox->add_child(desc_sw);
     if (!inf.quote.empty())
         vbox->add_child(more_sw);
