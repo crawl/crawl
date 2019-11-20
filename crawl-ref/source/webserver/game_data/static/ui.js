@@ -18,9 +18,9 @@ function ($, comm, client, options, focus_trap) {
 
     function maybe_prevent_server_from_handling_key(ev)
     {
-        if (document.activeElement == document.body)
-            return;
         var $focused = $(document.activeElement);
+        if (!$focused.is("[data-sync-id]"))
+            return;
         if ($focused.is("input[type=text]"))
             ev.stopPropagation();
         // stop server handling checkbox/button space/enter key events
@@ -37,6 +37,10 @@ function ($, comm, client, options, focus_trap) {
         var wrapper = $("#ui-stack").children().last();
         var focused = document.activeElement != document.body ?
                 document.activeElement : null;
+
+        // bail if inside a (legacy) input dialog (from line_reader)
+        if ($(focused).closest("#input_dialog").length === 1)
+            return;
 
         if (ev.key == "Escape" && focused)
         {
