@@ -16,8 +16,6 @@
 #include "size-type.h"
 #include "stat-type.h"
 
-#define CLING_KEY "clinging" // 'is creature clinging' property key
-
 enum class ev_ignore
 {
     none       = 0,
@@ -339,12 +337,7 @@ public:
     virtual int evokable_flight(bool calc_unid = true) const;
     virtual int spirit_shield(bool calc_unid = true, bool items = true) const;
 
-    virtual bool is_wall_clinging() const;
     virtual bool is_banished() const = 0;
-    virtual bool can_cling_to_walls() const = 0;
-    virtual bool can_cling_to(const coord_def& p) const;
-    virtual bool check_clinging(bool stepped, bool door = false);
-    virtual void clear_clinging();
     virtual bool is_web_immune() const = 0;
     virtual bool airborne() const = 0;
     virtual bool ground_level() const;

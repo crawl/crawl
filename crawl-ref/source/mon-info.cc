@@ -572,8 +572,6 @@ monster_info::monster_info(const monster* m, int milev)
         mb.set(MB_DISTRACTED);
     if (m->liquefied_ground())
         mb.set(MB_SLOW_MOVEMENT);
-    if (m->is_wall_clinging())
-        mb.set(MB_CLINGING);
 
     dam = mons_get_damage_level(*m);
 
@@ -1715,7 +1713,7 @@ bool monster_info::airborne() const
 
 bool monster_info::ground_level() const
 {
-    return !airborne() && !is(MB_CLINGING);
+    return !airborne();
 }
 
 // Only checks for spells from preset monster spellbooks.

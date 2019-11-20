@@ -2791,7 +2791,7 @@ item_def* mounted_kill(monster* daddy, monster_type mc, killer_type killer,
 void mons_check_pool(monster* mons, const coord_def &oldpos,
                      killer_type killer, int killnum)
 {
-    // Flying/clinging monsters don't make contact with the terrain.
+    // Flying monsters don't make contact with the terrain.
     if (!mons->ground_level())
         return;
 

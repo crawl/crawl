@@ -63,7 +63,7 @@ static void _swap_places(monster* mons, const coord_def &loc)
             // We'll fire location effects for 'mons' back in move_player_action,
             // so don't do so here. The toadstool won't get location effects,
             // but the player will trigger those soon enough. This wouldn't
-            // work so well if toadstools were aquatic, had clinging, or were
+            // work so well if toadstools were aquatic, or were
             // otherwise handled specially in monster_swap_places or in
             // apply_location_effects.
             monster_swaps_places(mons, loc - mons->pos(), true, false);

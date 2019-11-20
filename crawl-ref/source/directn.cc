@@ -3107,9 +3107,6 @@ static vector<string> _get_monster_desc_vector(const monster_info& mi)
 {
     vector<string> descs;
 
-    if (mi.is(MB_CLINGING))
-        descs.emplace_back("clinging");
-
     if (mi.is(MB_MESMERIZING))
         descs.emplace_back("mesmerising");
 
@@ -3174,12 +3171,6 @@ static string _get_monster_desc(const monster_info& mi)
 {
     string text    = "";
     string pronoun = uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE));
-
-    if (mi.is(MB_CLINGING))
-    {
-        text += pronoun + " " + conjugate_verb("are", mi.pronoun_plurality())
-                + " clinging to the wall.\n";
-    }
 
     if (mi.is(MB_MESMERIZING))
     {

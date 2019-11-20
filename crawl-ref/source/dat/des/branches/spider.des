@@ -246,8 +246,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 # Scorpion Pit Map by 7hm
-# Two corridors leading into a scorpion pit.  Deep water pools showcase spider
-# clinging.
+# Two corridors leading into a scorpion pit.
 NAME:   spiders_nest_scorpion_pit
 TAGS:   no_item_gen no_monster_gen no_pool_fixup
 ORIENT: southeast

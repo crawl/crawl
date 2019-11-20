@@ -49,7 +49,7 @@ level_id actor::shaft_dest() const
  */
 bool actor::ground_level() const
 {
-    return !airborne() && !is_wall_clinging();
+    return !airborne();
 }
 
 bool actor::stand_on_solid_ground() const
@@ -95,9 +95,6 @@ bool actor::can_pass_through(const coord_def &c) const
 
 bool actor::is_habitable(const coord_def &_pos) const
 {
-    if (can_cling_to(_pos))
-        return true;
-
     return is_habitable_feat(grd(_pos));
 }
 
@@ -396,70 +393,6 @@ bool actor_slime_wall_immune(const actor *act)
     return act->is_player() && have_passive(passive_t::slime_wall_immune)
         || act->res_acid() == 3
         || act->is_monster() && mons_is_slime(*act->as_monster());
-}
-
-/**
- * Accessor method to the clinging member.
- *
- * @return  The value of clinging.
- */
-bool actor::is_wall_clinging() const
-{
-    return props.exists(CLING_KEY) && props[CLING_KEY].get_bool();
-}
-
-/**
- * Check a cell to see if actor can keep clinging if it moves to it.
- *
- * @param p Coordinates of the cell checked.
- * @return  Whether the actor can cling.
- */
-bool actor::can_cling_to(const coord_def& p) const
-{
-    if (!is_wall_clinging() || !can_pass_through_feat(grd(p)))
-        return false;
-
-    return cell_can_cling_to(pos(), p);
-}
-
-/**
- * Update the clinging status of an actor.
- *
- * It checks adjacent orthogonal walls to see if the actor can cling to them.
- * If actor has fallen from the wall (wall dug or actor changed form), print a
- * message and apply location effects.
- *
- * @param stepped Whether the actor has taken a step.
- * @return the new clinging status.
- */
-bool actor::check_clinging(bool stepped, bool door)
-{
-    bool was_clinging = is_wall_clinging();
-    bool clinging = can_cling_to_walls() && cell_is_clingable(pos())
-                    && !airborne();
-
-    if (can_cling_to_walls())
-        props[CLING_KEY] = clinging;
-    else if (props.exists(CLING_KEY))
-        props.erase(CLING_KEY);
-
-    if (!stepped && was_clinging && !clinging)
-    {
-        if (you.can_see(*this))
-        {
-            mprf("%s %s off the %s.", name(DESC_THE).c_str(),
-                 conj_verb("fall").c_str(),
-                 door ? "door" : "wall");
-        }
-        apply_location_effects(pos());
-    }
-    return clinging;
-}
-
-void actor::clear_clinging()
-{
-    if (props.exists(CLING_KEY))
-        props[CLING_KEY] = false;
 }
 
 void actor::clear_constricted()

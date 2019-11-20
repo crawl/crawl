@@ -47,9 +47,7 @@ int mons_tracking_range(const monster* mon)
 
     if (range)
     {
-        if (mon->can_cling_to_walls())
-            range += 4;
-        else if (mons_is_native_in_branch(*mon))
+        if (mons_is_native_in_branch(*mon))
             range += 3;
         else if (mons_class_flag(mon->type, M_BLOOD_SCENT))
             range++;
@@ -438,11 +436,7 @@ bool monster_pathfind::mons_traversable(const coord_def& p)
     if (!mons->is_habitable(p))
         return false;
 
-    return mons_can_traverse(*mons, p, traverse_in_sight)
-            || mons->can_cling_to_walls()
-               && cell_is_clingable(p)
-               && mons->can_pass_through_feat(grd(p))
-               && cell_can_cling_to(pos, p);
+    return mons_can_traverse(*mons, p, traverse_in_sight);
 }
 
 int monster_pathfind::travel_cost(coord_def npos)

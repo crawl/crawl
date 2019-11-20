@@ -842,18 +842,6 @@ bool mons_is_projectile(const monster& mon)
     return mons_is_projectile(mon.type);
 }
 
-static bool _mons_class_is_clingy(monster_type type)
-{
-    return mons_genus(type) == MONS_SPIDER || type == MONS_LEOPARD_GECKO
-        || type == MONS_GIANT_COCKROACH || type == MONS_DEMONIC_CRAWLER
-        || type == MONS_DART_SLUG;
-}
-
-bool mons_can_cling_to_walls(const monster& mon)
-{
-    return _mons_class_is_clingy(mon.type);
-}
-
 // Conjuration or Hexes. Summoning and Necromancy make the monster a creature
 // at least in some degree, golems have a chem granting them that.
 bool mons_is_object(monster_type mc)

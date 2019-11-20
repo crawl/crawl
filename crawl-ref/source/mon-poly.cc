@@ -408,8 +408,6 @@ void change_monster_type(monster* mons, monster_type targetc)
     // evaporating and reforming justifies this behaviour.
     mons->stop_constricting_all();
     mons->stop_being_constricted();
-
-    mons->check_clinging(false);
 }
 
 // If targetc == RANDOM_MONSTER, then relpower indicates the desired

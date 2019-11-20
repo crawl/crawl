@@ -5576,9 +5576,7 @@ bool monster::swap_with(monster* other)
     }
 
     if (!monster_habitable_grid(this, grd(new_pos))
-         && !can_cling_to(new_pos)
-        || !monster_habitable_grid(other, grd(old_pos))
-            && !other->can_cling_to(old_pos))
+        || !monster_habitable_grid(other, grd(old_pos)))
     {
         return false;
     }
@@ -6182,11 +6180,6 @@ reach_type monster::reach_range() const
     if (wpn)
         return weapon_reach(*wpn);
     return REACH_NONE;
-}
-
-bool monster::can_cling_to_walls() const
-{
-    return mons_can_cling_to_walls(*this);
 }
 
 void monster::steal_item_from_player()

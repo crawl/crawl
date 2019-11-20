@@ -240,9 +240,6 @@ static bool _swap_monsters(monster& mover, monster& moved)
     if (!mover.swap_with(&moved))
         return false;
 
-    mover.check_clinging(true);
-    moved.check_clinging(true);
-
     if (you.can_see(mover) && you.can_see(moved))
     {
         mprf("%s and %s swap places.", mover.name(DESC_THE).c_str(),
@@ -1976,10 +1973,7 @@ void handle_monster_move(monster* mons)
         }
 
         if (mons->cannot_move() || !_monster_move(mons))
-        {
             mons->speed_increment -= non_move_energy;
-            mons->check_clinging(false);
-        }
     }
     you.update_beholder(mons);
     you.update_fearmonger(mons);
@@ -3139,15 +3133,11 @@ bool monster_swaps_places(monster* mon, const coord_def& delta,
     }
 
     mon->check_redraw(m2->pos(), false);
-    if (mon->is_wall_clinging())
-        mon->check_clinging(true); // XXX: avoids location effects!
-    else if (apply_effects)
+    if (apply_effects)
         mon->apply_location_effects(m2->pos());
 
     m2->check_redraw(mon->pos(), false);
-    if (m2->is_wall_clinging())
-        m2->check_clinging(true); // XXX: avoids location effects!
-    else if (apply_effects)
+    if (apply_effects)
         m2->apply_location_effects(mon->pos());
 
     // The seen context no longer applies if the monster is moving normally.
@@ -3259,16 +3249,13 @@ static bool _do_move_monster(monster& mons, const coord_def& delta)
     _escape_water_hold(mons);
 
     if (grd(mons.pos()) == DNGN_DEEP_WATER && grd(f) != DNGN_DEEP_WATER
-        && !monster_habitable_grid(&mons, DNGN_DEEP_WATER)
-        && !mons.is_wall_clinging())
+        && !monster_habitable_grid(&mons, DNGN_DEEP_WATER))
     {
         // er, what?  Seems impossible.
         mons.seen_context = SC_NONSWIMMER_SURFACES_FROM_DEEP;
     }
 
     mons.move_to_pos(f, false);
-
-    mons.check_clinging(true);
 
     // Let go of all constrictees; only stop *being* constricted if we are now
     // too far away (done in move_to_pos above).
