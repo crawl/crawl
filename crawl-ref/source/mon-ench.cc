@@ -65,7 +65,7 @@ static void _place_thunder_ring(const monster &mons)
         }
 }
 
-#ifdef DEBUG_DIAGNOSTICS
+#ifdef DEBUG_ENCH_CACHE_DIAGNOSTICS
 bool monster::has_ench(enchant_type ench) const
 {
     mon_enchant e = get_ench(ench);
