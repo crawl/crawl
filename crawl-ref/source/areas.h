@@ -24,6 +24,7 @@ void areas_actor_moved(const actor* act, const coord_def& oldpos);
 void create_sanctuary(const coord_def& center, int time);
 bool remove_sanctuary(bool did_attack = false);
 void decrease_sanctuary_radius();
+bool sanctuary_exists();
 
 coord_def find_centre_for(const coord_def& f,
                           area_centre_type at = area_centre_type::none);

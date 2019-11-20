@@ -3497,9 +3497,9 @@ bool mons_is_influenced_by_sanctuary(const monster& m)
 
 bool mons_is_fleeing_sanctuary(const monster& m)
 {
-    return mons_is_influenced_by_sanctuary(m)
-           && in_bounds(env.sanctuary_pos)
-           && (m.flags & MF_FLEEING_FROM_SANCTUARY);
+    return sanctuary_exists()
+           && (m.flags & MF_FLEEING_FROM_SANCTUARY)
+           && mons_is_influenced_by_sanctuary(m);
 }
 
 bool mons_just_slept(const monster& m)
@@ -4069,17 +4069,19 @@ bool monster_senior(const monster& m1, const monster& m2, bool fleeing)
             return false;
     }
 
+    const auto holiness = m1.holiness() & m2.holiness();
+
     // If they're the same holiness, monsters smart enough to use stairs can
     // push past monsters too stupid to use stairs (so that e.g. non-zombified
     // or spectral zombified undead can push past non-spectral zombified
     // undead).
-    if (m1.holiness() & m2.holiness() && mons_class_can_use_stairs(m1.type)
+    if (holiness && mons_class_can_use_stairs(m1.type)
         && !mons_class_can_use_stairs(m2.type))
     {
         return true;
     }
     const bool related = mons_genus(m1.type) == mons_genus(m2.type)
-                         || (m1.holiness() & m2.holiness() & MH_DEMONIC);
+                         || (holiness & MH_DEMONIC);
 
     // Let all related monsters (all demons are 'related') push past ones that
     // are weaker at all. Unrelated ones have to be quite a bit stronger, to
