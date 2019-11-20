@@ -359,10 +359,6 @@ static bool _allied_monster_at(monster* mon, coord_def a, coord_def b,
 // some monster types.
 static bool _mon_on_interesting_grid(monster* mon)
 {
-    // Patrolling shouldn't happen all the time.
-    if (one_chance_in(4))
-        return false;
-
     const dungeon_feature_type feat = grd(mon->pos());
 
     switch (feat)
@@ -402,10 +398,11 @@ static bool _mon_on_interesting_grid(monster* mon)
 // if it left it for fighting, seeking etc.
 static void _maybe_set_patrol_route(monster* mons)
 {
-    if (mons_is_wandering(*mons)
-        && !mons->friendly()
+    if (_mon_on_interesting_grid(mons) // Patrolling shouldn't always happen
+        && one_chance_in(4)
+        && mons_is_wandering(*mons)
         && !mons->is_patrolling()
-        && _mon_on_interesting_grid(mons))
+        && !mons->friendly())
     {
         mons->patrol_point = mons->pos();
     }
@@ -523,39 +520,45 @@ static void _handle_movement(monster* mons)
 {
     _maybe_set_patrol_route(mons);
 
-    // Monsters will try to flee out of a sanctuary.
-    if (is_sanctuary(mons->pos())
-        && mons_is_influenced_by_sanctuary(*mons)
-        && !mons_is_fleeing_sanctuary(*mons))
+    if (sanctuary_exists())
     {
-        mons_start_fleeing_from_sanctuary(*mons);
-    }
-    else if (mons_is_fleeing_sanctuary(*mons)
-             && !is_sanctuary(mons->pos()))
-    {
-        // Once outside there's a chance they'll regain their courage.
-        // Nonliving and berserking monsters always stop immediately,
-        // since they're only being forced out rather than actually
-        // scared.
-        if (mons->is_nonliving()
-            || mons->berserk()
-            || mons->has_ench(ENCH_INSANE)
-            || x_chance_in_y(2, 5))
+        // Monsters will try to flee out of a sanctuary.
+        if (is_sanctuary(mons->pos())
+            && mons_is_influenced_by_sanctuary(*mons)
+            && !mons_is_fleeing_sanctuary(*mons))
         {
-            mons_stop_fleeing_from_sanctuary(*mons);
+            mons_start_fleeing_from_sanctuary(*mons);
+        }
+        else if (mons_is_fleeing_sanctuary(*mons)
+                 && !is_sanctuary(mons->pos()))
+        {
+            // Once outside there's a chance they'll regain their courage.
+            // Nonliving and berserking monsters always stop immediately,
+            // since they're only being forced out rather than actually
+            // scared.
+            if (mons->is_nonliving()
+                || mons->berserk()
+                || mons->has_ench(ENCH_INSANE)
+                || x_chance_in_y(2, 5))
+            {
+                mons_stop_fleeing_from_sanctuary(*mons);
+            }
         }
     }
 
     coord_def delta;
     _set_mons_move_dir(mons, &mmov, &delta);
 
-    // Don't allow monsters to enter a sanctuary or attack you inside a
-    // sanctuary, even if you're right next to them.
-    if (is_sanctuary(mons->pos() + mmov)
-        && (!is_sanctuary(mons->pos())
-            || mons->pos() + mmov == you.pos()))
+    if (sanctuary_exists())
     {
-        mmov.reset();
+        // Don't allow monsters to enter a sanctuary or attack you inside a
+        // sanctuary, even if you're right next to them.
+        if (is_sanctuary(mons->pos() + mmov)
+            && (!is_sanctuary(mons->pos())
+                || mons->pos() + mmov == you.pos()))
+        {
+            mmov.reset();
+        }
     }
 
     // Bounds check: don't let fleeing monsters try to run off the grid.
@@ -2784,9 +2787,9 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
 
     // Non-friendly and non-good neutral monsters won't enter
     // sanctuaries.
-    if (!mons->wont_attack()
-        && is_sanctuary(targ)
-        && !is_sanctuary(mons->pos()))
+    if (is_sanctuary(targ)
+        && !is_sanctuary(mons->pos())
+        && !mons->wont_attack())
     {
         return false;
     }
@@ -2957,10 +2960,10 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
 
     // Friendlies shouldn't try to move onto the player's
     // location, if they are aiming for some other target.
-    if (!_unfriendly_or_impaired(*mons)
-        && mons->foe != MHITYOU
+    if (mons->foe != MHITYOU
+        && targ == you.pos()
         && (mons->foe != MHITNOT || mons->is_patrolling())
-        && targ == you.pos())
+        && !_unfriendly_or_impaired(*mons))
     {
         return false;
     }

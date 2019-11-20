@@ -279,12 +279,17 @@ static void _remove_sanctuary_property(const coord_def& where)
     env.pgrid(where) &= ~(FPROP_SANCTUARY_1 | FPROP_SANCTUARY_2);
 }
 
+bool sanctuary_exists()
+{
+    return in_bounds(env.sanctuary_pos);
+}
+
 bool remove_sanctuary(bool did_attack)
 {
     if (env.sanctuary_time)
         env.sanctuary_time = 0;
 
-    if (!in_bounds(env.sanctuary_pos))
+    if (!sanctuary_exists())
         return false;
 
     const int radius = 4;
