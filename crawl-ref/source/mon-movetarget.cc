@@ -154,9 +154,7 @@ bool try_pathfind(monster* mon)
     // and failed, to find a path), there's a chance of trying again.
     // Retreating monsters retry every turn.
     if (target_is_unreachable(mon) && !one_chance_in(12))
-    {
         return false;
-    }
 
 #ifdef DEBUG_PATHFIND
     mprf("%s: Target out of reach! What now?",
