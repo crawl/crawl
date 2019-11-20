@@ -4057,19 +4057,20 @@ bool monster_senior(const monster& m1, const monster& m2, bool fleeing)
             return false;
     }
 
-    const auto holiness = m1.holiness() & m2.holiness();
-
-    // If they're the same holiness, monsters smart enough to use stairs can
-    // push past monsters too stupid to use stairs (so that e.g. non-zombified
-    // or spectral zombified undead can push past non-spectral zombified
-    // undead).
-    if (holiness && mons_class_can_use_stairs(m1.type)
+    // Monsters smart enough to use stairs can push past monsters too stupid
+    // to use stairs (so that e.g. non-zombified or spectral zombified undead
+    // can push past non-spectral zombified undead).
+    if (mons_class_can_use_stairs(m1.type)
         && !mons_class_can_use_stairs(m2.type))
     {
         return true;
     }
+    // This check assumes that demonicness is always carried at the monster type
+    // level; this is because a full holiness check in such an often-called
+    // function is costly.
     const bool related = mons_genus(m1.type) == mons_genus(m2.type)
-                         || (holiness & MH_DEMONIC);
+                            || (   mons_class_holiness(m1.type) & MH_DEMONIC
+                                && mons_class_holiness(m2.type) & MH_DEMONIC);
 
     // Let all related monsters (all demons are 'related') push past ones that
     // are weaker at all. Unrelated ones have to be quite a bit stronger, to
