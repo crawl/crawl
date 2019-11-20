@@ -593,8 +593,10 @@ static void _handle_movement(monster* mons)
 
     const coord_def newpos(mons->pos() + mmov);
 
+    // Filling this is relatively costly and not always needed, so be a bit
+    // lazy about it.
     move_array good_move;
-    _fill_good_move(mons, &good_move);
+    bool good_move_filled = false;
 
     // If the monster is moving in your direction, whether to attack or
     // protect you, or towards a monster it intends to attack, check
@@ -611,6 +613,8 @@ static void _handle_movement(monster* mons)
         && !mons_is_confused(*mons) && !mons->caught()
         && !mons->berserk_or_insane())
     {
+        _fill_good_move(mons, &good_move);
+        good_move_filled = true;
         // If the monster is moving parallel to the x or y axis, check
         // whether
         //
@@ -687,6 +691,11 @@ static void _handle_movement(monster* mons)
     if (mmov.origin())
         return;
 
+    // everything below here is irrelevant if the player is not in bounds, for
+    // example if they have stepped from time.
+    if (!in_bounds(you.pos()))
+        return;
+
     // Try to stay in sight of the player if we're moving towards
     // him/her, in order to avoid the monster coming into view,
     // shouting, and then taking a step in a path to the player which
@@ -731,13 +740,20 @@ static void _handle_movement(monster* mons)
             if (i == 0 && j == 0)
                 continue;
 
+            coord_def d(i - 1, j - 1);
+            coord_def tmp = old_pos + d;
+            if (!you.see_cell(tmp))
+                continue;
+
+            if (!good_move_filled)
+            {
+                _fill_good_move(mons, &good_move);
+                good_move_filled = true;
+            }
             if (!good_move[i][j])
                 continue;
 
-            coord_def d(i - 1, j - 1);
-            coord_def tmp = old_pos + d;
-
-            if (grid_distance(you.pos(), tmp) < old_dist && you.see_cell(tmp))
+            if (grid_distance(you.pos(), tmp) < old_dist)
             {
                 if (one_chance_in(++matches))
                     mmov = d;
