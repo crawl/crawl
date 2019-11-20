@@ -988,7 +988,7 @@ void artefact_known_properties(const item_def &item,
                                artefact_known_props_t &known)
 {
     ASSERT(is_artefact(item));
-    if (!item.props.exists(KNOWN_PROPS_KEY))
+    if (!item.props.exists(KNOWN_PROPS_KEY)) // randbooks
         return;
 
     const CrawlStoreValue &_val = item.props[KNOWN_PROPS_KEY];
@@ -1064,7 +1064,7 @@ bool artefact_property_known(const item_def &item, artefact_prop_type prop)
     if (item_ident(item, ISFLAG_KNOW_PROPERTIES))
         return true;
 
-    if (!item.props.exists(KNOWN_PROPS_KEY))
+    if (!item.props.exists(KNOWN_PROPS_KEY)) // randbooks
         return false;
 
     const CrawlVector &known_vec = item.props[KNOWN_PROPS_KEY].get_vector();

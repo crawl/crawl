@@ -757,7 +757,7 @@ static void _forget_item(item_def &item)
     unset_ident_flags(item, ISFLAG_IDENT_MASK);
     item.flags &= ~(ISFLAG_SEEN | ISFLAG_HANDLED | ISFLAG_THROWN
                     | ISFLAG_DROPPED | ISFLAG_NOTED_ID | ISFLAG_NOTED_GET);
-    if (is_artefact(item))
+    if (is_artefact(item) && item.props.exists(KNOWN_PROPS_KEY))
     {
         ASSERT(item.props.exists(KNOWN_PROPS_KEY));
         CrawlVector &known = item.props[KNOWN_PROPS_KEY].get_vector();
