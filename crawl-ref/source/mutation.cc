@@ -849,11 +849,14 @@ void display_mutations()
     trim_string_right(mutation_s);
 
     auto vbox = make_shared<Box>(Widget::VERT);
-    vbox->set_cross_alignment(Widget::CENTER);
+    vbox->set_cross_alignment(Widget::STRETCH);
 
     const char *title_text = "Innate Abilities, Weirdness & Mutations";
     auto title = make_shared<Text>(formatted_string(title_text, WHITE));
-    vbox->add_child(move(title));
+    auto title_hbox = make_shared<Box>(Widget::HORZ);
+    title_hbox->add_child(move(title));
+    title_hbox->set_main_alignment(Widget::CENTER);
+    vbox->add_child(move(title_hbox));
 
     auto switcher = make_shared<Switcher>();
 
@@ -873,6 +876,7 @@ void display_mutations()
     switcher->set_margin_for_sdl(20, 0, 0, 0);
     switcher->set_margin_for_crt(1, 0, 0, 0);
     switcher->expand_h = false;
+    switcher->align_x = Widget::STRETCH;
 #ifdef USE_TILE_LOCAL
     switcher->max_size().width = tiles.get_crt_font()->char_width()*80;
 #endif
