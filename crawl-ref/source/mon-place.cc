@@ -2545,26 +2545,34 @@ void debug_bands()
 
 static monster_type _pick_zot_exit_defender()
 {
-    // 10% Pan lord
-    //  - ~1% named pan lord / seraph
+    // 10% Pan lord or Boris
+    //  - ~1% named pan lord / seraph / Boris
     //  - ~9% random pan lord
     // 15% Orb Guardian
     // 40% Demon
     //  - 25% greater demon
     //  - 10% common demon
     // 40% Pan spawn (can also include pan lords and demons)
-    if (one_chance_in(10))
+    if (true || one_chance_in(10))
     {
         for (int i = 0; i < 4; i++)
         {
             // Sometimes pick an unique lord whose rune you've stolen.
-            //
             if (you.runes[RUNE_MNOLEG + i]
                 && !you.unique_creatures[MONS_MNOLEG + i]
                 && one_chance_in(10))
             {
                 return static_cast<monster_type>(MONS_MNOLEG + i);
             }
+        }
+
+        // If Boris has spawned once and is not
+        // currently alive he has a chance of coming for you on
+        // the orb run
+        if (you.props["killed_boris_once"]
+            && !you.unique_creatures[MONS_BORIS] && one_chance_in(10))
+        {
+            return MONS_BORIS;
         }
 
         if (one_chance_in(10))
