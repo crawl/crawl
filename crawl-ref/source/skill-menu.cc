@@ -1854,7 +1854,7 @@ void skill_menu(int flag, int exp)
     auto skill_menu_ui = make_shared<UISkillMenu>(flag);
     auto popup = make_shared<ui::Popup>(skill_menu_ui);
 
-    popup->on_keydown_event([&done, &skill_menu_ui](const KeyEvent& ev) {
+    skill_menu_ui->on_keydown_event([&done, &skill_menu_ui](const KeyEvent& ev) {
         const auto keyn = ev.key();
 
         skill_menu_ui->_expose();
