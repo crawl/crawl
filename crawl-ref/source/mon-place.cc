@@ -2553,7 +2553,7 @@ static monster_type _pick_zot_exit_defender()
     //  - 25% greater demon
     //  - 10% common demon
     // 40% Pan spawn (can also include pan lords and demons)
-    if (true || one_chance_in(10))
+    if (one_chance_in(10))
     {
         for (int i = 0; i < 4; i++)
         {
