@@ -2362,20 +2362,20 @@ static spell_type servitor_spells[] =
     SPELL_BOLT_OF_FIRE,
     SPELL_BOLT_OF_COLD,
     SPELL_POISON_ARROW,
+    SPELL_CONJURE_BALL_LIGHTNING,
     SPELL_LIGHTNING_BOLT,
     SPELL_BOLT_OF_MAGMA,
     SPELL_BOLT_OF_DRAINING,
     SPELL_VENOM_BOLT,
+    SPELL_FIREBALL,
     SPELL_THROW_ICICLE,
     SPELL_STONE_ARROW,
-    // secondary spells
-    SPELL_CONJURE_BALL_LIGHTNING,
-    SPELL_FIREBALL,
-    SPELL_AIRSTRIKE,
     SPELL_LRD,
+    SPELL_AIRSTRIKE,
+    SPELL_FORCE_LANCE,
+    // secondary spells
     SPELL_FREEZING_CLOUD,
     SPELL_POISONOUS_CLOUD,
-    SPELL_FORCE_LANCE,
     SPELL_MEPHITIC_CLOUD,
     // fallback spells
     SPELL_STICKY_FLAME,
@@ -2387,6 +2387,20 @@ static spell_type servitor_spells[] =
     SPELL_SANDBLAST,
     SPELL_MAGIC_DART,
 };
+
+/**
+ * Return the spell a player spellforged servitor would use, for the spell
+ * description.
+ *
+ * @return spell_type  The spell a player servitor would use if cast now
+ */
+spell_type player_servitor_spell()
+{
+    for (const spell_type spell : servitor_spells)
+        if (you.has_spell(spell) && raw_spell_fail(spell) < 50)
+            return spell;
+    return SPELL_NO_SPELL;
+}
 
 /**
  * Initialize the given spellforged servitor's HD and spellset, based on the
@@ -2414,11 +2428,15 @@ static void _init_servitor_monster(monster &mon, const actor& caster)
         {
             mon.spells.emplace_back(spell, 0, MON_SPELL_WIZARD);
             spell_levels += spell_difficulty(spell);
+
+            // Player servitors take a single spell
+            if (!caster_mon)
+                break;
         }
     }
 
     // Fix up frequencies now that we know the total number of spell levels.
-    const int base_freq = caster_mon ? 67 : 200;
+    const int base_freq = caster_mon ? 67 : 150;
     for (auto& slot : mon.spells)
     {
         slot.freq = max(1, div_rand_round(spell_difficulty(slot.spell)

@@ -2957,6 +2957,20 @@ static string _player_spell_desc(spell_type spell)
 
     ostringstream description;
 
+    if (spell == SPELL_SPELLFORGED_SERVITOR)
+    {
+        spell_type servitor_spell = player_servitor_spell();
+        description << "Your servitor";
+        if (servitor_spell == SPELL_NO_SPELL)
+            description << " would be unable to mimic any of your spells";
+        else
+        {
+            description << " will cast "
+                        << spell_title(player_servitor_spell());
+        }
+        description << ".\n";
+    }
+
     // Report summon cap
     const int limit = summons_limit(spell);
     if (limit)
