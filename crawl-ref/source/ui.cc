@@ -2812,10 +2812,11 @@ bool UIRoot::on_event(wm_event& event)
             return deliver_event(key_event);
         }
         // TODO: maybe stop windowmanager-sdl from returning these?
+        case WME_CUSTOMEVENT:
         case WME_NOEVENT:
             break;
         default:
-            die("unreachable");
+            die("unreachable, type %d", event.type);
     }
 
     return false;
