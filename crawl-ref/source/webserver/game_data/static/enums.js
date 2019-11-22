@@ -179,7 +179,7 @@ define(function () {
     });
 
     fg_flags.flags.NET          = 0x00400000;
-    fg_flags.flags.POISON       = 0x00800000;
+    // 0x00800000 is used in the POISON 2-bit exclusive flags
     fg_flags.flags.WEB          = 0x01000000;
     fg_flags.flags.GLOWING      = 0x02000000;
     fg_flags.flags.STICKY_FLAME = 0x04000000;
@@ -206,6 +206,14 @@ define(function () {
     fg_flags.flags.SWIFT        = [0, 0x1000000];
     fg_flags.flags.PINNED       = [0, 0x2000000];
     fg_flags.flags.VILE_CLUTCH  = [0, 0x4000000];
+
+    // Three levels of poison in 2 bits.
+    fg_flags.exclusive_flags.push({
+        mask        : [0x00800000, 0x10000000],
+        POISON      : [0x00800000, 0],
+        MORE_POISON : [0, 0x10000000],
+        MAX_POISON  : [0x00800000, 0x10000000]
+    });
 
     // MDAM has 5 possibilities, so uses 3 bits.
     fg_flags.exclusive_flags.push({
