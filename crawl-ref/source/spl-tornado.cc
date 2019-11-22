@@ -382,7 +382,9 @@ void tornado_damage(actor *caster, int dur, bool is_vortex)
                             float_player();
                     }
 
-                    if (dur > 0)
+                    // alive check here in case the annoy event above dismissed
+                    // the victim.
+                    if (dur > 0 && victim->alive())
                     {
                         int dmg = victim->apply_ac(
                                     div_rand_round(roll_dice(9, rpow), 15),
