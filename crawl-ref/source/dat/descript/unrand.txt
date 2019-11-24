@@ -210,7 +210,8 @@ A beautiful mithril axe, probably lost by some dwarven hero.
 Elemental Staff
 
 A powerful staff which used to belong to the leader of the Guild of Five
-Elements. In addition to the protection it provides, those skilled in
+Elements. A staff that increases the power of elemental spells cast by its
+wielder. In addition to the protection it provides, those skilled in
 Evocations may discharge powerful blasts of elemental energy when striking with
 it.
 %%%%
