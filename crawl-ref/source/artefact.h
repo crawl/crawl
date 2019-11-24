@@ -114,6 +114,7 @@ void artefact_properties(const item_def &item,
 
 int artefact_property(const item_def &item, artefact_prop_type prop);
 
+bool artefact_property_known(const item_def &item, artefact_prop_type prop);
 int artefact_known_property(const item_def &item, artefact_prop_type prop);
 
 void artefact_learn_prop(item_def &item, artefact_prop_type prop);
