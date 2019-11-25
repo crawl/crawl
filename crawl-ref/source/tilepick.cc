@@ -1878,9 +1878,9 @@ tileidx_t tileidx_monster(const monster_info& mons)
         ch |= TILE_FLAG_WEB;
     if (mons.is(MB_POISONED))
         ch |= TILE_FLAG_POISON;
-    if (mons.is(MB_MORE_POISONED))
+    else if (mons.is(MB_MORE_POISONED))
         ch |= TILE_FLAG_MORE_POISON;
-    if (mons.is(MB_MAX_POISONED))
+    else if (mons.is(MB_MAX_POISONED))
         ch |= TILE_FLAG_MAX_POISON;
     if (mons.is(MB_BURNING))
         ch |= TILE_FLAG_STICKY_FLAME;
