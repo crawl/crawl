@@ -699,10 +699,8 @@ private:
             return LIGHTBLUE;
         else
         {
-            bool transient = false;
-            bool memcheck = true;
-            return spell_highlight_by_utility(entry.spell, COL_UNKNOWN,
-                                                    transient, memcheck);
+            return spell_highlight_by_utility(entry.spell, COL_UNKNOWN, false,
+                    you.divine_exegesis ? false : true);
         }
     }
 
