@@ -94,7 +94,7 @@ bool cast_a_spell(bool check_range, spell_type spell = SPELL_NO_SPELL);
 int apply_enhancement(const int initial_power, const int enhancer_levels);
 
 void inspect_spells();
-bool can_cast_spells(bool quiet = false);
+bool can_cast_spells(bool quiet = false, bool exegesis = false);
 void do_cast_spell_cmd(bool force);
 
 int hex_success_chance(const int mr, int powc, int scale,

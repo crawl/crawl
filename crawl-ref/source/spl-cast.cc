@@ -579,7 +579,15 @@ void inspect_spells()
     list_spells(true, true);
 }
 
-bool can_cast_spells(bool quiet)
+/**
+ * Can the player cast any spell at all? Checks for things that limit
+ * spellcasting regardless of the specific spell we want to cast.
+ *
+ * @param quiet    If true, don't print a reason why no spell can be cast.
+ * @param exegesis If true, we're considering casting under Divine Exegesis.
+ * @return True if we could cast a spell, false otherwise.
+*/
+bool can_cast_spells(bool quiet, bool exegesis)
 {
     if (!get_form()->can_cast)
     {
@@ -610,7 +618,10 @@ bool can_cast_spells(bool quiet)
         return false;
     }
 
-    if (!you.spell_no)
+    // Check that we have a spell memorized. Divine Exegesis does not need this
+    // condition, but we can't just check you.divine_exegesis in all cases, as
+    // it may not be set yet. Check a passed parameter instead.
+    if (!exegesis && !you.spell_no)
     {
         if (!quiet)
             canned_msg(MSG_NO_SPELLS);
@@ -666,7 +677,7 @@ void do_cast_spell_cmd(bool force)
  **/
 bool cast_a_spell(bool check_range, spell_type spell)
 {
-    if (!can_cast_spells())
+    if (!can_cast_spells(false, you.divine_exegesis))
     {
         crawl_state.zero_turns_taken();
         return false;
