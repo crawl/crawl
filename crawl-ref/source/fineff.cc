@@ -125,6 +125,13 @@ bool rakshasa_clone_fineff::mergeable(const final_effect &fe) const
     return o && att == o->att && def == o->def && posn == o->posn;
 }
 
+bool summon_dismissal_fineff::mergeable(const final_effect &fe) const
+{
+    const summon_dismissal_fineff *o =
+        dynamic_cast<const summon_dismissal_fineff *>(&fe);
+    return o && def == o->def;
+}
+
 void mirror_damage_fineff::merge(const final_effect &fe)
 {
     const mirror_damage_fineff *mdfe =
@@ -173,6 +180,12 @@ void shock_serpent_discharge_fineff::merge(const final_effect &fe)
     const shock_serpent_discharge_fineff *ssdfe =
         dynamic_cast<const shock_serpent_discharge_fineff *>(&fe);
     power += ssdfe->power;
+}
+
+void summon_dismissal_fineff::merge(const final_effect &)
+{
+    // no damage to accumulate, but no need to fire this more than once
+    return;
 }
 
 void mirror_damage_fineff::fire()
@@ -641,6 +654,12 @@ void mummy_death_curse_fineff::fire()
                             apostrophise(name).c_str());
     MiscastEffect(victim, nullptr, {miscast_source::mummy}, spschool::necromancy,
                   pow, random2avg(88, 3), cause.c_str());
+}
+
+void summon_dismissal_fineff::fire()
+{
+    if (defender() && defender()->alive())
+        monster_die(*(defender()->as_monster()), KILL_DISMISSED, NON_MONSTER);
 }
 
 // Effects that occur after all other effects, even if the monster is dead.

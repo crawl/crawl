@@ -16,6 +16,7 @@
 #include "dgn-overview.h"
 #include "dungeon.h"
 #include "exclude.h"
+#include "fineff.h"
 #include "god-passive.h"
 #include "hints.h"
 #include "item-prop.h"
@@ -1131,7 +1132,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         {
             if (mon->attitude == ATT_FRIENDLY && mon->is_summoned())
             {
-                monster_die(*mon, KILL_DISMISSED, NON_MONSTER);
+                summon_dismissal_fineff::schedule(mon);
                 return;
             }
             else

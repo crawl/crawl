@@ -385,4 +385,22 @@ protected:
     int pow;
 };
 
+class summon_dismissal_fineff : public final_effect
+{
+public:
+    bool mergeable(const final_effect &fe) const override;
+    void merge(const final_effect &) override;
+    void fire() override;
+
+    static void schedule(const actor * defender)
+    {
+        final_effect::schedule(new summon_dismissal_fineff(defender));
+    }
+protected:
+    summon_dismissal_fineff(const actor * defender)
+        : final_effect(0, defender, coord_def())
+    {
+    }
+};
+
 void fire_final_effects();
