@@ -239,21 +239,6 @@ void manage_fire_shield()
 
 spret cast_corpse_rot(bool fail)
 {
-    if (!you.res_rotting())
-    {
-        for (stack_iterator si(you.pos()); si; ++si)
-        {
-            if (si->is_type(OBJ_CORPSES, CORPSE_BODY))
-            {
-                if (!yesno(("Really cast Corpse Rot while standing on " + si->name(DESC_A) + "?").c_str(), false, 'n'))
-                {
-                    canned_msg(MSG_OK);
-                    return spret::abort;
-                }
-                break;
-            }
-        }
-    }
     fail_check();
     corpse_rot(&you);
     return spret::success;
@@ -264,6 +249,7 @@ void corpse_rot(actor* caster)
     // If there is no caster (god wrath), centre the effect on the player.
     const coord_def center = caster ? caster->pos() : you.pos();
     bool saw_rot = false;
+    int did_rot = 0;
 
     for (radius_iterator ri(center, LOS_NO_TRANS); ri; ++ri)
     {
@@ -280,14 +266,26 @@ void corpse_rot(actor* caster)
                     else
                         turn_corpse_into_skeleton(*si);
 
-                    place_cloud(CLOUD_MIASMA, *ri, 4+random2avg(16, 3),caster);
-
                     if (!saw_rot && you.see_cell(*ri))
                         saw_rot = true;
+
+                    ++did_rot;
 
                     // Don't look for more corpses here.
                     break;
                 }
+    }
+
+    for (fair_adjacent_iterator ai(center); ai; ++ai)
+    {
+        if (did_rot == 0)
+            break;
+
+        if (cell_is_solid(*ai))
+            continue;
+
+        place_cloud(CLOUD_MIASMA, *ai, 2+random2avg(8, 2),caster);
+        --did_rot;
     }
 
     if (saw_rot)
