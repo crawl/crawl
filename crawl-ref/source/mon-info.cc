@@ -690,8 +690,6 @@ monster_info::monster_info(const monster* m, int milev)
             ok = true;
         else if (i == MSLOT_ALT_WEAPON)
             ok = wields_two_weapons();
-        else if (i == MSLOT_MISSILE)
-            ok = false;
         else
             ok = true;
         if (ok)
