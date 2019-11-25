@@ -16,6 +16,7 @@
 #include "god-passive.h"
 #include "item-prop.h"
 #include "los.h"
+#include "message.h"
 #include "mon-behv.h"
 #include "mon-death.h"
 #include "religion.h"
@@ -927,6 +928,11 @@ string actor::resist_margin_phrase(int margin) const
 void actor::collide(coord_def newpos, const actor *agent, int pow)
 {
     actor *other = actor_at(newpos);
+    const bool fedhas_prot = agent->deity() == GOD_FEDHAS
+                             && is_monster() && fedhas_protects(*as_monster());
+    const bool fedhas_prot_other = agent->deity() == GOD_FEDHAS
+                                   && other && other->is_monster()
+                                   && fedhas_protects(*(other->as_monster()));
     ASSERT(this != other);
     ASSERT(alive());
 
@@ -937,28 +943,42 @@ void actor::collide(coord_def newpos, const actor *agent, int pow)
         return;
     }
 
-    if (is_monster())
+    if (is_monster() && !fedhas_prot)
         behaviour_event(as_monster(), ME_WHACK, agent);
 
     dice_def damage(2, 1 + pow / 10);
 
     if (other && other->alive())
     {
-        if (other->is_monster())
+        if (other->is_monster() && !fedhas_prot_other)
             behaviour_event(other->as_monster(), ME_WHACK, agent);
+
         if (you.can_see(*this) || you.can_see(*other))
         {
             mprf("%s %s with %s!",
                  name(DESC_THE).c_str(),
                  conj_verb("collide").c_str(),
                  other->name(DESC_THE).c_str());
+            if (fedhas_prot || fedhas_prot_other)
+            {
+                const bool both = fedhas_prot && fedhas_prot_other;
+                simple_god_message(
+                    make_stringf(" protects %s plant%s from harm.",
+                        agent->is_player() ? "your" :
+                        both ? "some" : "a",
+                        both ? "s" : "").c_str(), GOD_FEDHAS);
+            }
         }
+
         const string thisname = name(DESC_A, true);
         const string othername = other->name(DESC_A, true);
-        other->hurt(agent, other->apply_ac(damage.roll()),
-                    BEAM_MISSILE, KILLED_BY_COLLISION,
-                    othername, thisname);
-        if (alive())
+        if (!fedhas_prot_other)
+        {
+            other->hurt(agent, other->apply_ac(damage.roll()),
+                        BEAM_MISSILE, KILLED_BY_COLLISION,
+                        othername, thisname);
+        }
+        if (alive() && !fedhas_prot)
         {
             hurt(agent, apply_ac(damage.roll()), BEAM_MISSILE,
                  KILLED_BY_COLLISION, thisname, othername);
@@ -982,10 +1002,21 @@ void actor::collide(coord_def newpos, const actor *agent, int pow)
             mprf("%s violently %s moving!",
                  name(DESC_THE).c_str(), conj_verb("stop").c_str());
         }
+
+        if (fedhas_prot)
+        {
+            simple_god_message(
+                make_stringf(" protects %s plant from harm.",
+                    agent->is_player() ? "your" : "a").c_str(), GOD_FEDHAS);
+        }
     }
-    hurt(agent, apply_ac(damage.roll()), BEAM_MISSILE,
-         KILLED_BY_COLLISION, "",
-         feature_description_at(newpos, false, DESC_A, false));
+
+    if (!fedhas_prot)
+    {
+        hurt(agent, apply_ac(damage.roll()), BEAM_MISSILE,
+             KILLED_BY_COLLISION, "",
+             feature_description_at(newpos, false, DESC_A, false));
+    }
 }
 
 /// Is this creature despised by the so-called 'good gods'?
