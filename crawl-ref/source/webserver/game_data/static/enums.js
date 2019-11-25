@@ -206,7 +206,9 @@ define(function () {
     fg_flags.flags.SWIFT        = [0, 0x1000000];
     fg_flags.flags.PINNED       = [0, 0x2000000];
     fg_flags.flags.VILE_CLUTCH  = [0, 0x4000000];
-
+    // If we run out of enum room, these could be consolidated with POISON into 2 bits.
+    fg_flags.flags.MORE_POISON  = [0, 0x10000000];
+    fg_flags.flags.MAX_POISON   = [0, 0x20000000];
     // MDAM has 5 possibilities, so uses 3 bits.
     fg_flags.exclusive_flags.push({
         mask       : [0x40000000 | highbit, 0x01],
