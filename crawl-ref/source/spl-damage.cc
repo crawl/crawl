@@ -1223,31 +1223,6 @@ void shillelagh(actor *wielder, coord_def where, int pow)
 }
 
 /**
- * Is it OK for the player to cast Irradiate right now, or will they end up
- * injuring a monster they didn't mean to?
- *
- * @return  true if it's ok to go ahead with the spell; false if the player
- *          wants to abort.
- */
-static bool _irradiate_is_safe()
-{
-    for (adjacent_iterator ai(you.pos()); ai; ++ai)
-    {
-        const monster *mon = monster_at(*ai);
-        if (!mon)
-            continue;
-
-        if (you.deity() == GOD_FEDHAS && fedhas_protects(*mon))
-            continue;
-
-        if (stop_attack_prompt(mon, false, you.pos()))
-            return false;
-    }
-
-    return true;
-}
-
-/**
  * Irradiate the given cell. (Per the spell.)
  *
  * @param where     The cell in question.
@@ -1302,7 +1277,15 @@ static int _irradiate_cell(coord_def where, int pow, actor *agent)
  */
 spret cast_irradiate(int powc, actor* who, bool fail)
 {
-    if (!_irradiate_is_safe())
+    targeter_radius hitfunc(who, LOS_NO_TRANS, 1, 0, 1);
+    auto vulnerable = [who](const actor *act) -> bool
+    {
+        return act->is_player()
+               && !(who->deity() == GOD_FEDHAS
+                    && fedhas_protects(*act->as_monster()));
+    };
+
+    if (stop_attack_prompt(hitfunc, "irradiate", vulnerable))
         return spret::abort;
 
     fail_check();
