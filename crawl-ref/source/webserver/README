@@ -29,6 +29,10 @@ Tornado, then run "python webserver/server.py" from the source
 directory. Then open localhost:8080 with a browser, and you should see
 the lobby.
 
+When developing, you'll probably want to automatically log in as a
+testing user and disable caching of non-game-data files; see the
+"autologin" and "no_cache" options in webserver/config.py for this.
+
 3. Running a real server
 ------------------------
 The server can be configured by modifying the file config.py. Most of
