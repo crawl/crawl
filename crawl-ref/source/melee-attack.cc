@@ -132,7 +132,7 @@ bool melee_attack::handle_phase_attempted()
                  || is_unrandom_artefact(*weapon, UNRAND_SPELLBINDER))
                  && you.can_see(*defender))
         {
-            targeter_los hitfunc(&you, LOS_NO_TRANS);
+            targeter_radius hitfunc(&you, LOS_NO_TRANS);
 
             if (stop_attack_prompt(hitfunc, "attack",
                                    [](const actor *act)
@@ -148,7 +148,7 @@ bool melee_attack::handle_phase_attempted()
         else if (weapon && is_unrandom_artefact(*weapon, UNRAND_TORMENT)
                  && you.can_see(*defender))
         {
-            targeter_los hitfunc(&you, LOS_NO_TRANS);
+            targeter_radius hitfunc(&you, LOS_NO_TRANS);
 
             if (stop_attack_prompt(hitfunc, "attack",
                                    [] (const actor *m)

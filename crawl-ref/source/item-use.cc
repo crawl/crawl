@@ -2972,7 +2972,7 @@ void read(item_def* scroll)
                                              " place you under penance!",
                                              verb_object.c_str());
 
-        targeter_los hitfunc(&you, LOS_NO_TRANS);
+        targeter_radius hitfunc(&you, LOS_NO_TRANS);
 
         if (stop_attack_prompt(hitfunc, verb_object.c_str(),
                                [which_scroll] (const actor* m)

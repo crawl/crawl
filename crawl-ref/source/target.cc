@@ -921,9 +921,9 @@ aff_type targeter_splash::is_affected(coord_def loc)
     return anyone_there(loc) ? AFF_YES : AFF_MAYBE;
 }
 
-targeter_los::targeter_los(const actor *act, los_type _los,
-                             int ran, int ran_max):
-    range(ran), range_max(ran_max)
+targeter_radius::targeter_radius(const actor *act, los_type _los,
+                             int ran, int ran_max, int ran_min):
+    range(ran), range_max(ran_max), range_min(ran_min)
 {
     ASSERT(act);
     agent = act;
@@ -934,9 +934,9 @@ targeter_los::targeter_los(const actor *act, los_type _los,
     ASSERT(range_max >= range);
 }
 
-bool targeter_los::valid_aim(coord_def a)
+bool targeter_radius::valid_aim(coord_def a)
 {
-    if ((a - origin).rdist() > range_max)
+    if ((a - origin).rdist() > range_max || (a - origin).rdist() < range_min)
         return notify_fail("Out of range.");
     // If this message ever becomes used, please improve it. I did not
     // bother adding complexity just for monsters and "hit allies" prompts
@@ -946,18 +946,18 @@ bool targeter_los::valid_aim(coord_def a)
     return true;
 }
 
-aff_type targeter_los::is_affected(coord_def loc)
+aff_type targeter_radius::is_affected(coord_def loc)
 {
     if (loc == aim)
         return AFF_YES;
 
-    if ((loc - origin).rdist() > range_max)
+    if ((loc - origin).rdist() > range_max || (loc - origin).rdist() < range_min)
         return AFF_NO;
 
     if (!cell_see_cell(loc, origin, los))
         return AFF_NO;
 
-    return (loc - origin).rdist() > range_max ? AFF_MAYBE : AFF_YES;
+    return AFF_YES;
 }
 
 targeter_thunderbolt::targeter_thunderbolt(const actor *act, int r,
