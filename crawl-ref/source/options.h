@@ -569,6 +569,7 @@ public:
     bool        tile_show_minihealthbar;
     bool        tile_show_minimagicbar;
     bool        tile_show_demon_tier;
+    string      tile_show_threat_levels;
     bool        tile_water_anim;
     bool        tile_misc_anim;
     vector<string> tile_layout_priority;

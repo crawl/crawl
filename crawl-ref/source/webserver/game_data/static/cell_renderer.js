@@ -702,6 +702,16 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
                         else if (fg.NEUTRAL)
                             this.draw_dngn(dngn.HALO_NEUTRAL, x, y);
 
+                        // Monster difficulty
+                        if (fg.TRIVIAL)
+                            this.draw_dngn(dngn.BORDER_TRIVIAL, x, y);
+                        else if (fg.EASY)
+                            this.draw_dngn(dngn.BORDER_EASY, x, y);
+                        else if (fg.TOUGH)
+                            this.draw_dngn(dngn.BORDER_TOUGH, x, y);
+                        else if (fg.NASTY)
+                            this.draw_dngn(dngn.BORDER_NASTY, x, y);
+
                         if (cell.highlighted_summoner)
                             this.draw_dngn(dngn.HALO_SUMMONER, x, y);
                     }

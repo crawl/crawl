@@ -362,6 +362,16 @@ void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
                 else if (att_flag == TILE_FLAG_NEUTRAL)
                     m_buf_feat.add(TILE_HALO_NEUTRAL, x, y);
 
+                const tileidx_t threat_flag = cell.fg & TILE_FLAG_THREAT_MASK;
+                if (threat_flag == TILE_FLAG_TRIVIAL)
+                    m_buf_feat.add(TILE_BORDER_TRIVIAL, x, y);
+                else if (threat_flag == TILE_FLAG_EASY)
+                    m_buf_feat.add(TILE_BORDER_EASY, x, y);
+                else if (threat_flag == TILE_FLAG_TOUGH)
+                    m_buf_feat.add(TILE_BORDER_TOUGH, x, y);
+                else if (threat_flag == TILE_FLAG_NASTY)
+                    m_buf_feat.add(TILE_BORDER_NASTY, x, y);
+
                 if (cell.is_highlighted_summoner)
                     m_buf_feat.add(TILE_HALO_SUMMONER, x, y);
             }
