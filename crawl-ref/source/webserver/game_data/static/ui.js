@@ -41,6 +41,9 @@ function ($, comm, client, options, focus_trap) {
         // bail if inside a (legacy) input dialog (from line_reader)
         if ($(focused).closest("#input_dialog").length === 1)
             return;
+        // or if outside the ui stack (probably the chat dialog)
+        if ($(focused).closest("#ui-stack").length !== 1)
+            return;
 
         if (ev.key == "Escape" && focused)
         {
@@ -108,6 +111,9 @@ function ($, comm, client, options, focus_trap) {
                         document.removeEventListener("keypress",
                             popup_keypress_handler, true);
                     }
+                },
+                allowOutsideClick: function (ev) {
+                    return $(ev.target).closest("#chat").length !== 0;
                 },
             }).activate();
         });
