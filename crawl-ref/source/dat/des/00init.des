@@ -1,0 +1,16 @@
+default-depth: Zot:27
+NAME:   des_cache_test
+WEIGHT: 0
+{{
+    -- this detects an empty des cache. It won't detect a changed des cache
+    -- (except for changes in this .des file). This most commonly happens when
+    -- someone tries to run a test with -test but without building the des
+    -- cache somehow; running tests via the Makefile takes care of this.
+    if crawl.game_started() then
+        local map = dgn.map_by_name("des_cache_test")
+        assert(map, "des cache is not initialized! Use `crawl -builddb` before running this command.")
+    end
+}}
+MAP
+.
+ENDMAP
