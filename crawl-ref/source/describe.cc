@@ -3693,6 +3693,20 @@ static string _monster_attacks_description(const monster_info& mi)
     return result.str();
 }
 
+static string _monster_missiles_description(const monster_info& mi)
+{
+    item_def *missile = mi.inv[MSLOT_MISSILE].get();
+    if (!missile)
+        return "";
+
+    string desc;
+    desc += uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE));
+    desc += mi.pronoun_plurality() ? " are quivering " : " is quivering ";
+    desc += missile->name(DESC_A, false, false, true, false, ISFLAG_KNOW_CURSE);
+    desc += ".\n";
+    return desc;
+}
+
 static string _monster_spells_description(const monster_info& mi)
 {
     // Show monster spells and spell-like abilities.
@@ -4184,6 +4198,7 @@ static string _monster_stat_description(const monster_info& mi)
     }
 
     result << _monster_attacks_description(mi);
+    result << _monster_missiles_description(mi);
     result << _monster_spells_description(mi);
 
     return result.str();
