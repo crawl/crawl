@@ -409,18 +409,19 @@ DEPTH:   Zig:10-
 WEIGHT:  5
 MONS:    lost soul, rakshasa
 KFEAT:   ~ = known permanent teleport trap
-SUBST:   9 : 00., x : bcvx, X : bcnv
+SHUFFLE: xm / cn
+SUBST:   9 : 00., c : bcv
 : if you.depth() > 18 then
 SUBST:   0 : 0112
 : end
 MAP
-  xxx
- Xx0xX
+  xmx
+ mx0xm
 xx9.9xx
-x0.~.0x
+m0.~.0m
 xx9.9xx
- Xx0xX
-  xxx
+ mx0xm
+  xmx
 ENDMAP
 
 NAME:  ziggurat_pillar_centre_dispersal
