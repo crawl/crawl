@@ -13,7 +13,6 @@
 #include "end.h"
 #include "english.h"
 #include "files.h"
-#include "filter-enum.h"
 #include "hints.h"
 #include "initfile.h"
 #include "item-name.h" // make_name
@@ -26,6 +25,7 @@
 #include "ng-input.h"
 #include "ng-restr.h"
 #include "options.h"
+#include "playable.h"
 #include "prompt.h"
 #include "skills.h"
 #include "species-groups.h"
@@ -193,54 +193,33 @@ static void _resolve_species(newgame_def& ng, const newgame_def& ng_choice)
     if (ng.species != SP_UNKNOWN)
         return;
 
-    switch (ng_choice.species)
+    if (ng_choice.species != SP_VIABLE && ng_choice.species != SP_RANDOM)
     {
-    case SP_UNKNOWN:
-        ng.species = SP_UNKNOWN;
-        return;
-
-    case SP_VIABLE:
-    case SP_RANDOM:
-    {
-        vector<species_type> candidate_species;
-        if (is_starting_job(ng.job))
-        {
-            switch (ng_choice.species)
-            {
-            case SP_VIABLE:
-                candidate_species =
-                    filter_enum(NUM_SPECIES, [&](species_type species) {
-                        return is_starting_species(species)
-                            && job_recommends_species(ng.job, species);
-                    });
-                // Note: we know the array has at least one element because all
-                // starting jobs must recommend at least one species.
-                ASSERT(candidate_species.size() > 0);
-                break;
-            case SP_RANDOM:
-                candidate_species =
-                    filter_enum(NUM_SPECIES, [&](species_type species) {
-                        return is_starting_species(species)
-                            && character_is_allowed(species, ng.job);
-                    });
-                if (candidate_species.size() == 0)
-                    die("Selected job allows no species?!");
-                break;
-
-            default:
-                die("How did we get here?");
-            }
-            ng.species = candidate_species[random2(candidate_species.size())];
-        }
-        else
-            ng.species = random_starting_species();
-        return;
-    }
-
-    default:
         ng.species = ng_choice.species;
         return;
     }
+
+    if (!is_starting_job(ng.job)) // VIABLE, RANDOM, UNKNOWN, or disabled
+    {
+        ng.species = random_starting_species();
+        return;
+    }
+
+    auto candidate_species = playable_species();
+
+    if (ng_choice.species == SP_VIABLE)
+    {
+        erase_if(candidate_species, [&](const species_type sp) {
+            return !job_recommends_species(ng.job, sp);
+        });
+    }
+    else
+        erase_if(candidate_species, [&](const species_type sp) {
+            return !character_is_allowed(sp, ng.job);
+        });
+
+    ASSERT(candidate_species.size() > 0);
+    ng.species = candidate_species[random2(candidate_species.size())];
 }
 
 static void _resolve_job(newgame_def& ng, const newgame_def& ng_choice)
@@ -248,55 +227,33 @@ static void _resolve_job(newgame_def& ng, const newgame_def& ng_choice)
     if (ng.job != JOB_UNKNOWN)
         return;
 
-    switch (ng_choice.job)
+    if (ng_choice.job != JOB_VIABLE && ng_choice.job != JOB_RANDOM)
     {
-    case JOB_UNKNOWN:
-        ng.job = JOB_UNKNOWN;
-        return;
-
-    case JOB_VIABLE:
-    case JOB_RANDOM:
-    {
-        vector<job_type> candidate_jobs;
-        if (is_starting_species(ng.species))
-        {
-            switch (ng_choice.job)
-            {
-            case JOB_VIABLE:
-                candidate_jobs =
-                    filter_enum(NUM_JOBS, [&](job_type job) {
-                        return is_starting_job(job)
-                            && species_recommends_job(ng.species, job);
-                    });
-                // Note: we know the array has at least one element because all
-                // starting species must recommend at least one job.
-                ASSERT(candidate_jobs.size() > 0);
-                break;
-            case JOB_RANDOM:
-                candidate_jobs =
-                    filter_enum(NUM_JOBS, [&](job_type job) {
-                        return is_starting_job(job)
-                            && character_is_allowed(ng.species, job);
-                    });
-                if (candidate_jobs.size() == 0)
-                    die("Selected species allows no jobs?!");
-                break;
-
-            default:
-                die("How did we get here?");
-            }
-
-            ng.job = candidate_jobs[random2(candidate_jobs.size())];
-        }
-        else
-            ng.job = random_starting_job();
-        return;
-    }
-
-    default:
         ng.job = ng_choice.job;
         return;
     }
+
+    if (!is_starting_species(ng.species)) // VIABLE, RANDOM, UNKNOWN, or disabled
+    {
+        ng.job = random_starting_job();
+        return;
+    }
+
+    auto candidate_jobs = playable_jobs();
+
+    if (ng_choice.job == JOB_VIABLE)
+    {
+        erase_if(candidate_jobs, [&](const job_type job) {
+            return !species_recommends_job(ng.species, job);
+        });
+    }
+    else
+        erase_if(candidate_jobs, [&](const job_type job) {
+            return !character_is_allowed(ng.species, job);
+        });
+
+    ASSERT(candidate_jobs.size() > 0);
+    ng.job = candidate_jobs[random2(candidate_jobs.size())];
 }
 
 static void _resolve_species_job(newgame_def& ng, const newgame_def& ng_choice)
