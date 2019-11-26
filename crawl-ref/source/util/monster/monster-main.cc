@@ -1155,7 +1155,7 @@ int main(int argc, char* argv[])
         mons_check_flag(mon.is_fighter(), monsterflags, "fighter");
         if (mon.is_archer())
         {
-            if (me->bitfields & M_DONT_MELEE)
+            if (me->bitfields & M_PREFER_RANGED)
                 mons_flag(monsterflags, "master archer");
             else
                 mons_flag(monsterflags, "archer");

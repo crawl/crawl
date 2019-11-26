@@ -1183,7 +1183,13 @@ bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only)
         return false;
     }
 
-    const bool archer = mons_class_flag(mons->type, M_DONT_MELEE);
+    const bool prefer_ranged_attack = mons_class_flag(mons->type,
+                                                            M_PREFER_RANGED);
+    const bool master_archer = prefer_ranged_attack && mons->is_archer();
+    // archers in general get a to-hit bonus and a damage bonus to ranged
+    // attacks (determined elsewhere).
+    // master archers will fire when adjacent, and are more likely to fire
+    // over other actions.
 
     const bool liquefied = mons->liquefied_ground();
 
@@ -1191,21 +1197,27 @@ bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only)
     if (mons->foe == MHITYOU && !you.see_cell(mons->pos()))
         return false;
 
-    // Monsters won't shoot in melee range, largely for balance reasons.
-    // Specialist archers are an exception to this rule.
+    // Most monsters won't shoot in melee range, largely for balance reasons.
+    // Specialist archers are an exception to this rule, though most archers
+    // lack the M_PREFER_RANGED flag.
     if (adjacent(beem.target, mons->pos()))
     {
-        if (!archer)
+        if (!prefer_ranged_attack)
             return false;
-        // If adjacent, archers should always shoot (otherwise they would
-        // try to melee). Hence the else if below.
+        // Monsters who only can attack with ranged still should. Keep in mind
+        // that M_PREFER_RANGED only applies if the monster has ammo.
     }
-    else if (!teleport && ((liquefied && !archer && one_chance_in(9))
-                           || (!liquefied && one_chance_in(archer ? 9 : 5))))
+    else if (!teleport &&
+                    (liquefied && !master_archer && one_chance_in(9)
+                     || !liquefied && one_chance_in(master_archer ? 9 : 5)))
     {
-        // Highly-specialised archers are more likely to shoot than talk.
-        // If we're standing on liquefied ground, try to stand and fire!
-        // (Particularly archers.)
+        // Do we fire, or do something else?
+        // Monsters that are about to teleport will always try to fire.
+        // If we're standing on liquified ground, try to stand and fire.
+        //    regular monsters: 8/9 chance to fire. Master archers: always.
+        // Otherwise, a lower chance of firing vs doing something else.
+        //    regular monsters: 4/5 chance to fire. Master archers: 8/9 chance.
+        // TODO: this seems overly complicated, is 4/5 vs 8/9 even noticeable?
         return false;
     }
 
