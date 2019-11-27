@@ -5637,15 +5637,17 @@ int bolt::range_used_on_hit() const
     // Non-beams can only affect one thing (player/monster).
     if (!pierce)
         used = BEAM_STOP;
-    else if (is_enchantment() && name != "line pass")
-        used = (flavour == BEAM_DIGGING ? 0 : BEAM_STOP);
-    // Damnation stops for nobody!
-    else if (flavour == BEAM_DAMNATION)
+    // These beams fully penetrate regardless of anything else.
+    else if (flavour == BEAM_DAMNATION || flavour == BEAM_DIGGING)
         used = 0;
-    // Generic explosion.
-    else if (is_explosion || is_big_cloud())
+    // Other enchants that aren't Line Pass and explosions/clouds stop.
+    else if (is_enchantment() && name != "line pass"
+             || is_explosion
+             || is_big_cloud())
+    {
         used = BEAM_STOP;
-    // Lightning goes through things.
+    }
+    // Lightning that isn't an explosion goes through things.
     else if (flavour == BEAM_ELECTRICITY)
         used = 0;
     else
