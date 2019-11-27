@@ -24,30 +24,38 @@ string combo_type::abbr() const
     return string(get_species_abbrev(species)) + get_job_abbrev(job);
 }
 
+/* All non-disabled jobs */
+static inline vector<job_type> all_jobs()
+{
+    vector<job_type> jobs;
+    for (int i = 0; i < NUM_JOBS; ++i)
+    {
+        const auto job = static_cast<job_type>(i);
+        if (!job_is_removed(job))
+            jobs.push_back(job);
+    }
+    return jobs;
+}
+
 vector<job_type> playable_jobs()
 {
-    return filter_enum(NUM_JOBS, is_starting_job);
+    return all_jobs();
 }
 
 vector<species_type> playable_species()
 {
-    return filter_enum(NUM_SPECIES, is_starting_species);
+    auto species = all_species();
+    erase_if(species, [&](species_type sp) { return !is_starting_species(sp); });
+    return species;
 }
 
 vector<combo_type> playable_combos()
 {
     vector<combo_type> combos;
-    for (int sp = 0; sp < NUM_SPECIES; ++sp)
-    {
-        if (!is_starting_species(species_type(sp)))
-            continue;
-
-        for (int job = 0; job < NUM_JOBS; ++job)
-        {
-            if (job_allowed(species_type(sp), job_type(job)))
-                combos.push_back(combo_type{species_type(sp), job_type(job)});
-        }
-    }
+    for (const auto sp : playable_species())
+        for (const auto job : playable_jobs())
+            if (job_allowed(sp, job))
+                combos.push_back(combo_type{sp, job});
     return combos;
 }
 

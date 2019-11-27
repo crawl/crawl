@@ -6,6 +6,7 @@
 #include "item-prop.h"
 #include "mutation.h"
 #include "output.h"
+#include "playable.h"
 #include "player.h"
 #include "player-stats.h"
 #include "random.h"
@@ -497,11 +498,8 @@ void change_species_to(species_type sp)
 // A random valid (selectable on the new game screen) species.
 species_type random_starting_species()
 {
-  species_type species;
-  do {
-      species = static_cast<species_type>(random_range(0, NUM_SPECIES - 1));
-  } while (!is_starting_species(species));
-  return species;
+    const auto species = playable_species();
+    return species[random2(species.size())];
 }
 
 // Ensure the species isn't SP_RANDOM/SP_VIABLE and it has recommended jobs

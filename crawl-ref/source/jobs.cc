@@ -7,6 +7,7 @@
 #include "libutil.h"
 #include "mapdef.h"
 #include "ng-setup.h"
+#include "playable.h"
 #include "player.h"
 #include "stringutil.h"
 
@@ -173,11 +174,8 @@ bool job_recommends_species(job_type job, species_type species)
 // A random valid (selectable on the new game screen) job.
 job_type random_starting_job()
 {
-    job_type job;
-    do {
-        job = static_cast<job_type>(random_range(0, NUM_JOBS - 1));
-    } while (!is_starting_job(job));
-    return job;
+    const auto jobs = playable_jobs();
+    return jobs[random2(jobs.size())];
 }
 
 bool is_starting_job(job_type job)

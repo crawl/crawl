@@ -440,24 +440,16 @@ static void _choose_char(newgame_def& ng, newgame_def& choice,
                 }
                 else
                 {
-                    species_type sp = SP_UNKNOWN;;
-                    // XXX: This is awkward; find a better way?
-                    for (int i = 0; i < NUM_SPECIES; ++i)
+                    for (const auto sp : playable_species())
                     {
-                        sp = static_cast<species_type>(i);
-                        if (character.length() >= species_name(sp).length()
-                            && character.substr(0, species_name(sp).length())
-                               == species_name(sp))
+                        if (starts_with(character, species_name(sp)))
                         {
                             choice.species = sp;
+                            string temp =
+                                character.substr(species_name(sp).length());
+                            choice.job = str_to_job(trim_string(temp));
                             break;
                         }
-                    }
-                    if (sp != SP_UNKNOWN)
-                    {
-                        string temp =
-                            character.substr(species_name(sp).length());
-                        choice.job = str_to_job(trim_string(temp));
                     }
                 }
 

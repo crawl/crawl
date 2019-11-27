@@ -90,10 +90,8 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
 char_choice_restriction weapon_restriction(weapon_type wpn,
                                            const newgame_def &ng)
 {
-    ASSERT_RANGE(ng.species, 0, NUM_SPECIES);
-    ASSERT_RANGE(ng.job, 0, NUM_JOBS);
-    ASSERT(ng.species == SP_BASE_DRACONIAN
-           || !species_is_draconian(ng.species));
+    ASSERT(is_starting_species(ng.species));
+    ASSERT(is_starting_job(ng.job));
 
     // Some special cases:
 

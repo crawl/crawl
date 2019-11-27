@@ -23,6 +23,7 @@
 #include "misc.h" // frombool
 #include "mutation.h"
 #include "output.h"
+#include "playable.h"
 #include "player-stats.h"
 #include "prompt.h"
 #include "religion.h"
@@ -40,32 +41,24 @@
 
 #ifdef WIZARD
 
-job_type find_job_from_string(const string &job)
+job_type find_job_from_string(const string &str)
 {
-    string spec = lowercase_string(job);
+    const string spec = lowercase_string(str);
 
-    job_type j = JOB_UNKNOWN;
+    job_type partial_match = JOB_UNKNOWN;
 
-    for (int i = 0; i < NUM_JOBS; ++i)
+    for (const auto job : playable_jobs())
     {
-        const job_type ji = static_cast<job_type>(i);
-        const string name = lowercase_string(get_job_name(ji));
+        const auto name = lowercase_string(get_job_name(job));
+        const auto pos = name.find(spec);
 
-        string::size_type pos = name.find(spec);
-        if (pos != string::npos)
-        {
-            if (pos == 0)
-            {
-                // We prefer prefixes over partial matches.
-                j = ji;
-                break;
-            }
-            else
-                j = ji;
-        }
+        if (pos == 0)
+            return job;  // We prefer prefixes over partial matches.
+        else if (pos != string::npos)
+            partial_match = job;
     }
 
-    return j;
+    return partial_match;
 }
 
 static xom_event_type _find_xom_event_from_string(const string &event_name)
