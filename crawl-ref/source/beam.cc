@@ -5638,8 +5638,12 @@ int bolt::range_used_on_hit() const
     if (!pierce)
         used = BEAM_STOP;
     // These beams fully penetrate regardless of anything else.
-    else if (flavour == BEAM_DAMNATION || flavour == BEAM_DIGGING)
+    else if (flavour == BEAM_DAMNATION
+             || flavour == BEAM_DIGGING
+             || flavour == BEAM_VILE_CLUTCH)
+    {
         used = 0;
+    }
     // Other enchants that aren't Line Pass and explosions/clouds stop.
     else if (is_enchantment() && name != "line pass"
              || is_explosion
@@ -5871,7 +5875,6 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
 
         // Not an "explosion", but still a bit noisy at the target location.
         if (origin_spell == SPELL_INFESTATION
-            || origin_spell == SPELL_BORGNJORS_VILE_CLUTCH
             || origin_spell == SPELL_DAZZLING_FLASH)
         {
             loudness = spell_effect_noise(origin_spell);

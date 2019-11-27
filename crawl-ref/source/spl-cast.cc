@@ -1182,11 +1182,6 @@ static unique_ptr<targeter> _spell_targeter(spell_type spell, int pow,
         return make_unique<targeter_smite>(&you, range, 2, 2, false,
                                            [](const coord_def& p) -> bool {
                                               return you.pos() != p; });
-
-    case SPELL_BORGNJORS_VILE_CLUTCH:
-        return make_unique<targeter_smite>(&you, range, 1, 1, false,
-                                           [](const coord_def& p) -> bool {
-                                              return you.pos() != p; });
     case SPELL_PASSWALL:
         return make_unique<targeter_passwall>(range);
     case SPELL_DIG:
@@ -1680,9 +1675,6 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
 
     case SPELL_IGNITION:
         return cast_ignition(&you, powc, fail);
-
-    case SPELL_BORGNJORS_VILE_CLUTCH:
-        return cast_borgnjors_vile_clutch(powc, beam, fail);
 
     // Summoning spells, and other spells that create new monsters.
     // If a god is making you cast one of these spells, any monsters

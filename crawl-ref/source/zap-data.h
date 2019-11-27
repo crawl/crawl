@@ -1263,9 +1263,9 @@ _mon_hex_zap(ZAP_DRAIN_MAGIC, BEAM_DRAIN_MAGIC),
     BEAM_VILE_CLUTCH,
     DCHAR_FIRED_BURST,
     true,
-    false,
     true,
-    0 // handled by explosion
+    false,
+    5
 },
 
 {
