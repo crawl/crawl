@@ -512,16 +512,6 @@ bool is_starting_species(species_type species)
         && !get_species_def(species).recommended_jobs.empty();
 }
 
-// Check that we can give this draconian species to players as a color.
-static bool _is_viable_draconian(species_type species)
-{
-#if TAG_MAJOR_VERSION == 34
-    if (species == SP_MOTTLED_DRACONIAN)
-        return false;
-#endif
-    return true;
-}
-
 // A random non-base draconian colour appropriate for the player.
 species_type random_draconian_colour()
 {
@@ -530,6 +520,20 @@ species_type random_draconian_colour()
       species =
           static_cast<species_type>(random_range(SP_FIRST_NONBASE_DRACONIAN,
                                                  SP_LAST_NONBASE_DRACONIAN));
-  } while (!_is_viable_draconian(species));
+  } while (!species_is_removed(species));
   return species;
+}
+
+bool species_is_removed(species_type species)
+{
+#if TAG_MAJOR_VERSION == 34
+    if (species == SP_MOTTLED_DRACONIAN)
+        return true;
+#endif
+    // all other derived Dr are ok and don't have recommended jobs
+    if (species_is_draconian(species))
+        return false;
+    if (get_species_def(species).recommended_jobs.empty())
+        return true;
+    return false;
 }

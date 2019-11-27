@@ -71,7 +71,22 @@ species_type random_starting_species();
 bool is_starting_species(species_type species);
 species_type random_draconian_colour();
 
+bool species_is_removed(species_type species);
+
 static inline bool species_type_valid(species_type species)
 {
     return 0 <= species && species < NUM_SPECIES;
+}
+
+/** All non-removed species, including base and derived species */
+static inline vector<species_type> all_species()
+{
+    vector<species_type> species;
+    for (int i = 0; i < NUM_SPECIES; ++i)
+    {
+        const auto sp = static_cast<species_type>(i);
+        if (!species_is_removed(sp))
+            species.push_back(sp);
+    }
+    return species;
 }
