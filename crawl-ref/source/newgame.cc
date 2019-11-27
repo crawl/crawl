@@ -287,13 +287,10 @@ static string _highlight_pattern(const newgame_def& ng)
         return "";
 
     string ret;
-    species_type temp;
-    for (int sp = 0; sp < NUM_SPECIES; ++sp)
-    {
-        temp = static_cast<species_type>(sp);
-        if (is_good_combination(temp, ng.job, false, true))
-            ret += species_name(temp) + "  |";
-    }
+
+    for (const auto sp : playable_species())
+        if (species_allowed(ng.job, sp) == CC_UNRESTRICTED)
+            ret += species_name(sp) + "  |";
 
     if (!ret.empty())
         ret.resize(ret.size() - 1);

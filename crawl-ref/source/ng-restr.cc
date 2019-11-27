@@ -85,18 +85,6 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
     return CC_RESTRICTED;
 }
 
-bool is_good_combination(species_type spc, job_type job, bool species_first,
-                         bool good)
-{
-    const char_choice_restriction restrict =
-        species_first ? job_allowed(spc, job) : species_allowed(job, spc);
-
-    if (good)
-        return restrict == CC_UNRESTRICTED;
-
-    return restrict != CC_BANNED;
-}
-
 // Is the given god restricted for the character defined by ng?
 // Only uses ng.species and ng.job.
 char_choice_restriction weapon_restriction(weapon_type wpn,
