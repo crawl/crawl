@@ -128,23 +128,11 @@ static JsonNode *_species_metadata(species_type sp,
 static JsonNode *_species_metadata_array()
 {
     JsonNode *species(json_mkarray());
-    for (species_type sp : playable_species())
+    for (const species_type sp : all_species())
     {
-        json_append_element(species, _species_metadata(sp));
-        if (sp == SP_BASE_DRACONIAN)
-        {
-            for (int drac = 0;
-                 drac < static_cast<int>(NUM_SPECIES); ++drac)
-            {
-                if (species_is_draconian(static_cast<species_type>(drac))
-                    && drac != SP_BASE_DRACONIAN)
-                {
-                    json_append_element(species,
-                                        _species_metadata(species_type(drac),
-                                                          SP_BASE_DRACONIAN));
-                }
-            }
-        }
+        const bool sub_drac = sp != SP_BASE_DRACONIAN && species_is_draconian(sp);
+        const species_type derives = sub_drac ? SP_BASE_DRACONIAN : SP_UNKNOWN;
+        json_append_element(species, _species_metadata(sp, derives));
     }
     return species;
 }
