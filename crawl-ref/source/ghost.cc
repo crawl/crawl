@@ -16,6 +16,7 @@
 #include "god-type.h"
 #include "item-name.h"
 #include "item-prop.h"
+#include "jobs.h"
 #include "mon-cast.h"
 #include "mon-transit.h"
 #include "ng-input.h"
@@ -760,9 +761,9 @@ bool debug_check_ghost(const ghost_demon &ghost)
         return false;
     if (ghost.brand < SPWPN_NORMAL || ghost.brand > MAX_GHOST_BRAND)
         return false;
-    if (ghost.species < 0 || ghost.species >= NUM_SPECIES)
+    if (!species_type_valid(ghost.species))
         return false;
-    if (ghost.job < JOB_FIGHTER || ghost.job >= NUM_JOBS)
+    if (!job_type_valid(ghost.job))
         return false;
     if (ghost.best_skill < SK_FIGHTING || ghost.best_skill >= NUM_SKILLS)
         return false;

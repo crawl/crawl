@@ -691,7 +691,7 @@ static bool _map_matches_layout_type(const map_def &map)
 
 static bool _map_matches_species(const map_def &map)
 {
-    if (you.species < 0 || you.species >= NUM_SPECIES)
+    if (!species_type_valid(you.species))
         return true;
     return !map.has_tag("no_species_"
            + lowercase_string(get_species_abbrev(you.species)));

@@ -2373,8 +2373,8 @@ static void tag_read_you(reader &th)
 {
     int count;
 
-    ASSERT_RANGE(you.species, 0, NUM_SPECIES);
-    ASSERT_RANGE(you.char_class, 0, NUM_JOBS);
+    ASSERT(species_type_valid(you.species));
+    ASSERT(job_type_valid(you.char_class));
     ASSERT_RANGE(you.experience_level, 1, 28);
     ASSERT(you.religion < NUM_GODS);
     ASSERT_RANGE(crawl_state.type, GAME_TYPE_UNSPECIFIED + 1, NUM_GAME_TYPE);

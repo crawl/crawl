@@ -70,3 +70,8 @@ const species_def& get_species_def(species_type species);
 species_type random_starting_species();
 bool is_starting_species(species_type species);
 species_type random_draconian_colour();
+
+static inline bool species_type_valid(species_type species)
+{
+    return 0 <= species && species < NUM_SPECIES;
+}
