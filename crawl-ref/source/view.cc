@@ -278,7 +278,7 @@ static string _monster_headsup(const vector<monster*> &monsters,
     {
         const bool zin_ided = mon->props.exists("zin_id");
         const bool has_branded_weapon
-            = _is_weapon_worth_listing(mon->weapon())
+            = _is_weapon_worth_listing(mon->weapon(0))
               || _is_weapon_worth_listing(mon->weapon(1));
         if ((divine && !zin_ided)
             || (!divine && !has_branded_weapon))
