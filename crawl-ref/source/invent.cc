@@ -275,9 +275,6 @@ void get_class_hotkeys(const int type, vector<char> &glyphs)
     case OBJ_MISCELLANY:
         glyphs.push_back('}');
         break;
-    case OBJ_CORPSES:
-        glyphs.push_back('&');
-        break;
     default:
         break;
     }
