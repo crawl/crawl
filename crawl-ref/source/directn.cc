@@ -17,6 +17,7 @@
 
 #include "act-iter.h"
 #include "areas.h"
+#include "artefact.h"
 #include "attitude-change.h"
 #include "cloud.h"
 #include "colour.h"
@@ -3383,25 +3384,22 @@ string get_monster_equipment_desc(const monster_info& mi,
     item_def* mon_wnd = mi.inv[MSLOT_WAND].get();
     item_def* mon_rng = mi.inv[MSLOT_JEWELLERY].get();
 
-#define no_warn(x) (!item_type_known(*x) || !item_is_branded(*x))
-    // For Ashenzari warnings, we only care about ided and branded stuff.
+#define uninteresting(x) (x && !item_is_branded(*x) && !is_artefact(*x))
+    // For "comes into view" msgs, only care about branded stuff and artefacts
     if (level == DESC_IDENTIFIED)
     {
-        if (mon_arm && no_warn(mon_arm))
-            mon_arm = 0;
-        if (mon_shd && no_warn(mon_shd))
-            mon_shd = 0;
-        if (mon_qvr && no_warn(mon_qvr))
-            mon_qvr = 0;
-        if (mon_rng && no_warn(mon_rng))
-            mon_rng = 0;
-        if (mon_alt && (!item_type_known(*mon_alt)
-                        || mon_alt->base_type == OBJ_WANDS
-                        && !is_offensive_wand(*mon_alt)))
-        {
-            mon_alt = 0;
-        }
+        if (uninteresting(mon_arm))
+            mon_arm = nullptr;
+        if (uninteresting(mon_shd))
+            mon_shd = nullptr;
+        if (uninteresting(mon_qvr))
+            mon_qvr = nullptr;
+        if (uninteresting(mon_rng))
+            mon_rng = nullptr;
+        if (uninteresting(mon_alt) && mon_alt->base_type != OBJ_WANDS)
+            mon_alt = nullptr;
     }
+#undef uninteresting
 
     // _describe_monster_weapon already took care of this
     if (mi.wields_two_weapons())
