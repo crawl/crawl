@@ -1582,21 +1582,21 @@ bool is_offensive_wand(const item_def& item)
 {
     switch (item.sub_type)
     {
-    // Monsters don't use those, so no need to warn the player about them.
-    case WAND_CLOUDS:
-    case WAND_ICEBLAST:
+    // Monsters don't use it
     case WAND_RANDOM_EFFECTS:
-    case WAND_SCATTERSHOT:
     // Monsters use it, but it's not an offensive wand
     case WAND_DIGGING:
         return false;
 
+    case WAND_ACID:
+    case WAND_CLOUDS:
+    case WAND_DISINTEGRATION:
     case WAND_ENSLAVEMENT:
     case WAND_FLAME:
+    case WAND_ICEBLAST:
     case WAND_PARALYSIS:
     case WAND_POLYMORPH:
-    case WAND_ACID:
-    case WAND_DISINTEGRATION:
+    case WAND_SCATTERSHOT:
         return true;
     }
     return false;
