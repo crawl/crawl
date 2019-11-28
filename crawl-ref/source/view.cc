@@ -37,6 +37,7 @@
 #include "god-passive.h"
 #include "god-wrath.h"
 #include "hints.h"
+#include "items.h"
 #include "item-name.h" // item_type_known
 #include "item-prop.h" // get_weapon_brand
 #include "item-status-flag-type.h"
@@ -261,11 +262,38 @@ static void _genus_factoring(map<monster_type, int> &types,
     types[genus] = num;
 }
 
-static bool _is_weapon_worth_listing(const item_def *wpn)
+static bool _is_weapon_worth_listing(const unique_ptr<item_def> &wpn)
 {
     return wpn && (wpn->base_type == OBJ_STAVES
-                   || is_unrandom_artefact(*wpn)
-                   || get_weapon_brand(*wpn) != SPWPN_NORMAL);
+                   || is_unrandom_artefact(*wpn.get())
+                   || get_weapon_brand(*wpn.get()) != SPWPN_NORMAL);
+}
+
+static bool _is_item_worth_listing(const unique_ptr<item_def> &item)
+{
+    return item && (item_is_branded(*item.get())
+                    || is_artefact(*item.get()));
+}
+
+static bool _is_mon_equipment_worth_listing(const monster_info &mi)
+{
+
+    if (_is_weapon_worth_listing(mi.inv[MSLOT_WEAPON]))
+        return true;
+    const unique_ptr<item_def> &alt_weap = mi.inv[MSLOT_ALT_WEAPON];
+    if (mi.wields_two_weapons() && _is_weapon_worth_listing(alt_weap))
+        return true;
+    // can a wand be in the alt weapon slot? get_monster_equipment_desc seems to
+    // think so, so we'll check
+    if (alt_weap && alt_weap->base_type == OBJ_WANDS)
+        return true;
+    if (mi.inv[MSLOT_WAND])
+        return true;
+
+    return _is_item_worth_listing(mi.inv[MSLOT_SHIELD])
+        || _is_item_worth_listing(mi.inv[MSLOT_ARMOUR])
+        || _is_item_worth_listing(mi.inv[MSLOT_JEWELLERY])
+        || _is_item_worth_listing(mi.inv[MSLOT_MISSILE]);
 }
 
 /// Return a warning for the player about newly-seen monsters, as appropriate.
@@ -276,20 +304,18 @@ static string _monster_headsup(const vector<monster*> &monsters,
     string warning_msg = "";
     for (const monster* mon : monsters)
     {
+        monster_info mi(mon);
         const bool zin_ided = mon->props.exists("zin_id");
-        const bool has_branded_weapon
-            = _is_weapon_worth_listing(mon->weapon())
-              || _is_weapon_worth_listing(mon->weapon(1));
+        const bool has_interesting_equipment
+            = _is_mon_equipment_worth_listing(mi);
         if ((divine && !zin_ided)
-            || (!divine && !has_branded_weapon))
+            || (!divine && !has_interesting_equipment))
         {
             continue;
         }
 
         if (!divine && monsters.size() == 1)
             continue; // don't give redundant warnings for enemies
-
-        monster_info mi(mon);
 
         if (warning_msg.size())
             warning_msg += " ";
@@ -313,8 +339,10 @@ static string _monster_headsup(const vector<monster*> &monsters,
 
         if (!divine)
         {
-            warning_msg += get_monster_equipment_desc(mi, DESC_WEAPON_WARNING,
-                                                      DESC_NONE) + ".";
+            warning_msg += " ";
+            warning_msg += get_monster_equipment_desc(mi, DESC_IDENTIFIED,
+                                                      DESC_NONE);
+            warning_msg += ".";
             continue;
         }
 
