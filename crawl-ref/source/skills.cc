@@ -1022,7 +1022,7 @@ static void _train_skills(int exp, const int cost, const bool simu)
         skill_type sk = SK_NONE;
         if (!skip_first_phase)
             sk = static_cast<skill_type>(random_choose_weighted(sk_exp));
-        if (is_invalid_skill(sk))
+        if (is_invalid_skill(sk) || !you.train[sk])
             sk = static_cast<skill_type>(random_choose_weighted(you.training));
         if (!is_invalid_skill(sk))
         {
@@ -1334,7 +1334,8 @@ static int _train(skill_type exsk, int &max_exp, bool simu)
     {
         // TODO should check_training_targets be called here, to halt training
         // and clean up cross-training immediately?
-        check_training_target(exsk);
+        if (check_training_target(exsk))
+            reset_training();
         redraw_skill(exsk, old_best_skill, (you.skill(exsk, 10, true) > old_level));
         check_selected_skills();
     }
