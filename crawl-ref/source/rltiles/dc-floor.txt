@@ -1100,6 +1100,9 @@ shallow_water_murky2
 shallow_water_murky_disturbance DNGN_SHALLOW_WATER_MURKY_DISTURBANCE
 shallow_water_murky_disturbance2
 
+toxic_bog1 DNGN_TOXIC_BOG
+toxic_bog2
+
 grey_dirt_bb SHORE_N
 grey_dirt_bl SHORE_W
 grey_dirt_br SHORE_E
