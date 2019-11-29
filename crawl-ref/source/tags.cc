@@ -2331,6 +2331,29 @@ static spell_type _fixup_positional_player_spell(spell_type s)
     }
 }
 
+static spell_type _fixup_positional_monster_spell(spell_type s)
+{
+    switch (s)
+    {
+        case SPELL_DAZZLING_FLASH:
+        case SPELL_INNER_FLAME:
+        case SPELL_CONJURE_FLAME:
+            return SPELL_NO_SPELL;
+
+        case SPELL_ISKENDERUNS_MYSTIC_BLAST:
+            return SPELL_FORCE_LANCE;
+
+        case SPELL_AGONY:
+            return SPELL_AGONY_RANGE;
+
+        case SPELL_DISPEL_UNDEAD:
+            return SPELL_DISPEL_UNDEAD_RANGE;
+
+        default:
+            return s;
+    }
+}
+
 static void _fixup_library_spells(FixedBitVector<NUM_SPELLS>& lib)
 {
     for (int i = 0; i < NUM_SPELLS; ++i)
@@ -6326,6 +6349,9 @@ void unmarshallMonster(reader &th, monster& m)
     m.spells.clear();
     for (mon_spell_slot &slot : oldspells)
     {
+        if (th.getMinorVersion() < TAG_MINOR_POSITIONAL_MAGIC)
+            slot.spell = _fixup_positional_monster_spell(slot.spell);
+
         if (mons_is_zombified(m) && !mons_enslaved_soul(m)
             && slot.spell != SPELL_CREATE_TENTACLES)
         {
@@ -6358,7 +6384,8 @@ void unmarshallMonster(reader &th, monster& m)
         }
 #if TAG_MAJOR_VERSION == 34
         else if (slot.spell != SPELL_DELAYED_FIREBALL
-                 && slot.spell != SPELL_MELEE)
+                 && slot.spell != SPELL_MELEE
+                 && slot.spell != SPELL_NO_SPELL)
         {
             m.spells.push_back(slot);
         }
