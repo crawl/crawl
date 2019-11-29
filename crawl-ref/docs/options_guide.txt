@@ -2139,9 +2139,11 @@ tile_show_player_species = false
         If enabled, displays the player using the monster tile for her species,
         instead of using the normal doll and showing equipment.
 
-tile_show_threat_levels = trivial easy tough nasty
+tile_show_threat_levels = none
         This option controls which monsters will be highlighted with their
-        threat level.
+        threat level. Valid levels include: trivial, easy, tough, nasty.
+        You can specify multiple levels at once.
+
 
 tile_layout_priority = minimap, inventory, command, spell, monster
         (Ordered list option)
