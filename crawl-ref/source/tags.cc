@@ -2303,6 +2303,49 @@ static void _cap_mutation_at(mutation_type mut, int cap)
     if (you.innate_mutation[mut] > cap)
         you.innate_mutation[mut] = cap;
 }
+
+static spell_type _fixup_positional_player_spell(spell_type s)
+{
+    switch (s)
+    {
+        case SPELL_FORCE_LANCE:
+        case SPELL_VENOM_BOLT:
+        case SPELL_POISON_ARROW:
+        case SPELL_BOLT_OF_COLD:
+        case SPELL_BOLT_OF_DRAINING:
+        case SPELL_THROW_FLAME:
+        case SPELL_THROW_FROST:
+            return SPELL_NO_SPELL;
+
+        case SPELL_FLAME_TONGUE:
+            return SPELL_FOXFIRE;
+
+        case SPELL_THROW_ICICLE:
+            return SPELL_HAILSTORM;
+
+        case SPELL_BOLT_OF_FIRE:
+            return SPELL_STARBURST;
+
+        default:
+            return s;
+    }
+}
+
+static void _fixup_library_spells(FixedBitVector<NUM_SPELLS>& lib)
+{
+    for (int i = 0; i < NUM_SPELLS; ++i)
+    {
+        spell_type newspell = _fixup_positional_player_spell((spell_type) i);
+
+        if (newspell == SPELL_NO_SPELL)
+            lib.set(i, false);
+        else if (newspell != (spell_type) i)
+        {
+            lib.set(newspell, lib[i]);
+            lib.set(i, false);
+        }
+    }
+}
 #endif
 
 static void tag_read_you(reader &th)
@@ -2533,6 +2576,11 @@ static void tag_read_you(reader &th)
     unmarshallFixedBitVector<NUM_SPELLS>(th, you.spell_library);
     unmarshallFixedBitVector<NUM_SPELLS>(th, you.hidden_spells);
 #if TAG_MAJOR_VERSION == 34
+        if (th.getMinorVersion() < TAG_MINOR_POSITIONAL_MAGIC)
+        {
+            _fixup_library_spells(you.spell_library);
+            _fixup_library_spells(you.hidden_spells);
+        }
     }
 #endif
     // how many spells?
@@ -2542,6 +2590,9 @@ static void tag_read_you(reader &th)
     for (int i = 0; i < count && i < MAX_KNOWN_SPELLS; ++i)
     {
         you.spells[i] = unmarshallSpellType(th);
+#if TAG_MAJOR_VERSION == 34
+        you.spells[i] = _fixup_positional_player_spell(you.spells[i]);
+#endif
         if (you.spells[i] != SPELL_NO_SPELL)
             you.spell_no++;
     }
