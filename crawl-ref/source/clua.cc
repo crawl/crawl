@@ -769,6 +769,17 @@ void CLua::init_lua()
     }
 #endif
 
+    lua_pushboolean(_state, managed_vm);
+    setregistry("lua_vm_is_managed");
+
+    lua_pushlightuserdata(_state, this);
+    setregistry("__clua");
+}
+
+void CLua::init_libraries()
+{
+    lua_stack_cleaner clean(state());
+
     // Open Crawl bindings
     cluaopen_kills(_state);
     cluaopen_you(_state);
@@ -784,8 +795,10 @@ void CLua::init_lua()
 
     cluaopen_globals(_state);
 
-    load_cmacro();
-    load_chooks();
+    execfile("dlua/macro.lua", true, true);
+
+    // All hook names must be chk_????
+    execstring("chk_startgame = { }", "base");
 
     lua_register(_state, "loadfile", _clua_loadfile);
     lua_register(_state, "dofile", _clua_dofile);
@@ -803,12 +816,6 @@ void CLua::init_lua()
         execfile("dlua/userbase.lua", true, true);
         execfile("dlua/persist.lua", true, true);
     }
-
-    lua_pushboolean(_state, managed_vm);
-    setregistry("lua_vm_is_managed");
-
-    lua_pushlightuserdata(_state, this);
-    setregistry("__clua");
 }
 
 CLua &CLua::get_vm(lua_State *ls)
@@ -827,20 +834,6 @@ bool CLua::is_managed_vm(lua_State *ls)
     lua_pushstring(ls, "lua_vm_is_managed");
     lua_gettable(ls, LUA_REGISTRYINDEX);
     return lua_toboolean(ls, -1);
-}
-
-void CLua::load_chooks()
-{
-    // All hook names must be chk_????
-    static const char *c_hooks =
-        "chk_startgame = { }"
-        ;
-    execstring(c_hooks, "base");
-}
-
-void CLua::load_cmacro()
-{
-    execfile("dlua/macro.lua", true, true);
 }
 
 void CLua::add_shutdown_listener(lua_shutdown_listener *listener)

@@ -144,6 +144,9 @@ public:
 
     void print_stack();
 
+    /* Add the libaries and globals currently used by clua and dlua */
+    void init_libraries();
+
 public:
     string error;
 
@@ -175,8 +178,6 @@ private:
 private:
     void init_lua();
     void set_error(int err, lua_State *ls = nullptr);
-    void load_cmacro();
-    void load_chooks();
     void init_throttle();
 
     static void _getregistry(lua_State *, const char *name);
