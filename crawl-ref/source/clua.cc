@@ -28,17 +28,6 @@
 #define NO_CUSTOM_ALLOCATOR
 #endif
 
-#define CL_RESETSTACK_RETURN(ls, oldtop, retval) \
-    do \
-    {\
-        if (oldtop != lua_gettop(ls)) \
-        { \
-            lua_settop(ls, oldtop); \
-        } \
-        return retval; \
-    } \
-    while (false)
-
 static int  _clua_panic(lua_State *);
 static void _clua_throttle_hook(lua_State *, lua_Debug *);
 #ifndef NO_CUSTOM_ALLOCATOR
@@ -350,17 +339,15 @@ bool CLua::runhook(const char *hook, const char *params, ...)
     if (!ls)
         return false;
 
-    // Remember top of stack, for debugging porpoises
-    int stack_top = lua_gettop(ls);
+    lua_stack_cleaner clean(ls);
+
     pushglobal(hook);
     if (!lua_istable(ls, -1))
-    {
-        lua_pop(ls, 1);
-        CL_RESETSTACK_RETURN(ls, stack_top, false);
-    }
+        return false;
     for (int i = 1; ; ++i)
     {
-        int currtop = lua_gettop(ls);
+        lua_stack_cleaner clean2(ls);
+
         lua_rawgeti(ls, -1, i);
         if (!lua_isfunction(ls, -1))
         {
@@ -373,10 +360,8 @@ bool CLua::runhook(const char *hook, const char *params, ...)
         va_start(args, params);
         calltopfn(ls, params, args);
         va_end(args);
-
-        lua_settop(ls, currtop);
     }
-    CL_RESETSTACK_RETURN(ls, stack_top, true);
+    return true;
 }
 
 void CLua::fnreturns(const char *format, ...)
@@ -560,21 +545,17 @@ maybe_bool CLua::callmbooleanfn(const char *fn, const char *params,
     if (!ls)
         return MB_MAYBE;
 
-    int stacktop = lua_gettop(ls);
+    lua_stack_cleaner clean(ls);
 
     pushglobal(fn);
     if (!lua_isfunction(ls, -1))
-    {
-        lua_pop(ls, 1);
-        CL_RESETSTACK_RETURN(ls, stacktop, MB_MAYBE);
-    }
+        return MB_MAYBE;
 
     bool ret = calltopfn(ls, params, args, 1);
     if (!ret)
-        CL_RESETSTACK_RETURN(ls, stacktop, MB_MAYBE);
+        return MB_MAYBE;
 
-    maybe_bool r = frombool(lua_toboolean(ls, -1));
-    CL_RESETSTACK_RETURN(ls, stacktop, r);
+    return frombool(lua_toboolean(ls, -1));
 }
 
 maybe_bool CLua::callmbooleanfn(const char *fn, const char *params, ...)
@@ -593,22 +574,17 @@ maybe_bool CLua::callmaybefn(const char *fn, const char *params, va_list args)
     if (!ls)
         return MB_MAYBE;
 
-    int stacktop = lua_gettop(ls);
+    lua_stack_cleaner clean(ls);
 
     pushglobal(fn);
     if (!lua_isfunction(ls, -1))
-    {
-        lua_pop(ls, 1);
-        CL_RESETSTACK_RETURN(ls, stacktop, MB_MAYBE);
-    }
+        return MB_MAYBE;
 
     bool ret = calltopfn(ls, params, args, 1);
     if (!ret)
-        CL_RESETSTACK_RETURN(ls, stacktop, MB_MAYBE);
+        return MB_MAYBE;
 
-    maybe_bool r = lua_isboolean(ls, -1) ? frombool(lua_toboolean(ls, -1))
-                                         : MB_MAYBE;
-    CL_RESETSTACK_RETURN(ls, stacktop, r);
+    return lua_isboolean(ls, -1) ? frombool(lua_toboolean(ls, -1)) : MB_MAYBE;
 }
 
 maybe_bool CLua::callmaybefn(const char *fn, const char *params, ...)
