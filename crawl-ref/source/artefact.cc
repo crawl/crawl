@@ -140,13 +140,6 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
             return false;
         break;
 
-    case GOD_FEDHAS:
-        // Fedhas forbids necromancy involving corpses, only reaping
-        // really applies.
-        if (brand == SPWPN_REAPING)
-            return false;
-        break;
-
     case GOD_CHEIBRIADOS:
         // Slow god: no speed, no berserking.
         if (brand == SPWPN_SPEED)
