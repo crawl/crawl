@@ -33,9 +33,7 @@ function callback.tgw_lugonu_bribe_lugonu_item (data, triggerable,
          Dithmenos="ring of attention ident:type /\
               scroll of noise ident:type q:2-4",
          Elyvilon="book of Necromancy / book of Death / book of Unlife",
-         Fedhas="randbook owner:Lugonu spells:necromutation numspells:1 /\
-              randbook owner:Lugonu spells:simulacrum&animate_dead \
-                       numspells:2",
+         Fedhas="randbook owner:Lugonu spells:Recall numspells:1",
          Gozag="amulet of the gourmand ident:type /\
               randbook owner:Lugonu spells:corpse_rot&animate_dead numspells:2",
          Kikubaaqudgha="rat corpse / kobold corpse",
