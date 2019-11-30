@@ -3665,9 +3665,6 @@ bool is_useless_item(const item_def &item, bool temp)
                 return false;
         }
 
-        if (you_worship(GOD_FEDHAS) && item.is_type(OBJ_FOOD, FOOD_RATION))
-            return false;
-
         return true;
 
     case OBJ_CORPSES:

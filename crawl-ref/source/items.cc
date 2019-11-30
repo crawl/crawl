@@ -3176,9 +3176,6 @@ static bool _interesting_explore_pickup(const item_def& item)
         return _item_different_than_inv(item, _similar_jewellery);
 
     case OBJ_FOOD:
-        if (you_worship(GOD_FEDHAS) && item.is_type(OBJ_FOOD, FOOD_RATION))
-            return true;
-
         if (is_inedible(item))
             return false;
 
