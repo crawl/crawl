@@ -3384,7 +3384,6 @@ string get_monster_equipment_desc(const monster_info& mi,
     item_def* mon_rng = mi.inv[MSLOT_JEWELLERY].get();
 
 #define no_warn(x) (!item_type_known(*x) || !item_is_branded(*x))
-    // For Ashenzari warnings, we only care about ided and branded stuff.
     if (level == DESC_IDENTIFIED)
     {
         if (mon_arm && no_warn(mon_arm))
