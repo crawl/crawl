@@ -113,7 +113,7 @@ function ($, comm, client, options, focus_trap) {
                     }
                 },
                 allowOutsideClick: function (ev) {
-                    return $(ev.target).closest("#chat").length !== 0;
+                    return $(ev.target).closest("#game").length !== 1;
                 },
             }).activate();
         });
