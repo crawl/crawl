@@ -1571,26 +1571,24 @@ bool is_known_empty_wand(const item_def &item)
 #endif
 
 /**
- * For purpose of Ashenzari's monster equipment identification & warning
- * passive, what wands are a potential threat to the player in monsters'
- * hands?
+ * What wands could a monster use to directly harm the player?
  *
  * @param item      The wand to be examined.
- * @return          Whether the player should be warned about the given wand.
+ * @return          True if the wand could harm the player, false otherwise.
  */
 bool is_offensive_wand(const item_def& item)
 {
     switch (item.sub_type)
     {
-    // Monsters don't use those, so no need to warn the player about them.
-    case WAND_CLOUDS:
-    case WAND_ICEBLAST:
+    // Monsters don't use these, so no need to warn the player about them.
     case WAND_RANDOM_EFFECTS:
-    case WAND_SCATTERSHOT:
     // Monsters use it, but it's not an offensive wand
     case WAND_DIGGING:
         return false;
 
+    case WAND_SCATTERSHOT:
+    case WAND_CLOUDS:
+    case WAND_ICEBLAST:
     case WAND_ENSLAVEMENT:
     case WAND_FLAME:
     case WAND_PARALYSIS:
