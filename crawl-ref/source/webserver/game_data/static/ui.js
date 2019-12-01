@@ -271,6 +271,7 @@ function ($, comm, client, options, focus_trap) {
             onDeactivate: function () {
                 $("#chat").removeClass("focus-trap");
             },
+            returnFocusOnDeactivate: false,
         }).activate();
     }
 
