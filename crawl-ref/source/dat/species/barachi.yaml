@@ -47,7 +47,7 @@ mutations:
   13:
     MUT_HOP: 1
 fake_mutations:
-  - long: Shadows flee at your approach. (+LOS)
+  - long: You can be seen from farther away. (+LOS)
     short: +LOS
   - long: You can swim through water.
     short: swims
