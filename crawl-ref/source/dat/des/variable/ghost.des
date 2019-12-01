@@ -1165,7 +1165,7 @@ NSUBST: - = 4=1 / 6=1' / 2=45 / 3=45'' / 67 / D''' / '
 :     end
 : elseif you.in_branch("Lair") then
 KITEM:  O = ring of fire ident:type / ring of fire randart ident:type
-SUBST:  f = *%, h = %$--, ij = -
+SUBST:  f = *%, g = %$--, hij = -
 NSUBST: - = 4=1 / 5=1' / 2=4 / 2=4' / 7''' / '
 # Depths
 : else
