@@ -8054,6 +8054,7 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
     case SPELL_DEATHS_DOOR:
     case SPELL_FULMINANT_PRISM:
     case SPELL_CONTROL_UNDEAD:
+    case SPELL_DAZZLING_FLASH:
 #endif
     case SPELL_NO_SPELL:
         return true;
