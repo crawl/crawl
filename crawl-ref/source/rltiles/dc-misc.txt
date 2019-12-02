@@ -208,6 +208,11 @@ cloud_gold_dust1
 cloud_gold_dust2
 cloud_gold_dust3
 
+cloud_flame_trail0 CLOUD_FLAME
+cloud_flame_trail1
+cloud_flame_trail2
+cloud_flame_trail3
+
 %sdir mon
 fungi_plants/ballistomycete_spore SPORE_OVERLAY
 

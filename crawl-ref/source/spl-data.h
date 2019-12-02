@@ -4042,7 +4042,7 @@ static const struct spell_desc spelldata[] =
     25,
     -1, -1,
     1, 0,
-    TILEG_FLAME_TONGUE,
+    TILEG_FOXFIRE,
 },
 
 
