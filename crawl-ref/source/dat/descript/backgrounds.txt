@@ -54,7 +54,7 @@ choice and a potion of might.
 %%%%
 Fire Elementalist
 
-Fire Elementalists start with the book of Flames and know the Flame Tongue
+Fire Elementalists start with the book of Flames and know the Foxfire
 spell. Their other starting spells focus on destruction as well.
 %%%%
 Gladiator
