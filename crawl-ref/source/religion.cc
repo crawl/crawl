@@ -3644,9 +3644,9 @@ void join_religion(god_type which_god)
     whereis_record();
 #endif
 
-    _set_initial_god_piety();
-
     set_god_ability_slots();    // remove old god's slots, reserve new god's
+
+    _set_initial_god_piety();
 
     // When you start worshipping a good god, you make all non-hostile
     // unholy and evil beings hostile.
