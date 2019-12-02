@@ -54,7 +54,6 @@ spret conjure_flame(int pow, bool fail)
         cloud->decay += extra_dur * 5;
         cloud->source = you.mid ;
         cloud->set_whose(KC_YOU);
-        cloud->set_killer(KILL_MON_MISSILE);
     }
     else if (cloud && cloud->type == CLOUD_EMBERS)
     {
