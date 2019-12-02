@@ -1333,6 +1333,9 @@ function (exports, $, key_conversion, chat, comm) {
             if (location.hash.match(/^#play-(.+)/i) &&
                 socket.readyState == 1)
             {
+                ev.preventDefault();
+                ev.returnValue = '';
+                // n.b. this return value is ignored by 95% of browsers
                 return "Really save and quit the game?";
             }
         });
