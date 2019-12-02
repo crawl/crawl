@@ -237,6 +237,7 @@ enum tag_minor_version
     TAG_MINOR_INCREMENTAL_PREGEN,  // save tracks whether the game is an incremental pregen game
     TAG_MINOR_NO_SUNLIGHT,         // Removal of Fedhas' Sunlight
     TAG_MINOR_POSITIONAL_MAGIC,    // Positional attack magic overhaul
+    TAG_MINOR_GHOST_MAGIC,         // Ghost update for positional magic
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
@@ -255,6 +256,7 @@ const set<int> bones_minor_tags =
          TAG_MINOR_GHOST_ENERGY,
          TAG_MINOR_BOOL_FLIGHT,
          TAG_MINOR_POSITIONAL_MAGIC,
+         TAG_MINOR_GHOST_MAGIC,
 #endif
         };
 
