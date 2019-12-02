@@ -1353,8 +1353,11 @@ static int _ignite_tracer_cloud_value(coord_def where, actor *agent)
                         ? 0
                         : resist_adjust_damage(act, BEAM_FIRE, 40);
 
-        if (agent->deity() == GOD_FEDHAS && fedhas_protects(*act->as_monster()))
+        if (agent->deity() == GOD_FEDHAS &&
+            agent->is_player() && fedhas_protects(*act->as_monster()))
+        {
             return 0;
+        }
 
         return mons_aligned(act, agent) ? -dam : dam;
     }
