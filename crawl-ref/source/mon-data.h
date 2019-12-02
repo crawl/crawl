@@ -6114,7 +6114,7 @@ DUMMY(MONS_HELL_LORD, '&', COLOUR_UNDEF, "hell lord", TILEP_MONS_PROGRAM_BUG)
 },
 
 { // not an actual monster, used by a spell
-    MONS_FOXFIRE, '*', LIGHTRED, "foxfire",
+    MONS_FOXFIRE, 'v', LIGHTRED, "foxfire",
     M_SEE_INVIS | M_INSUBSTANTIAL | M_NOT_DANGEROUS | M_NO_POLY_TO
         | M_CONJURED | M_FLIES,
     mrd(MR_RES_FIRE, 3) | MR_RES_STICKY_FLAME,
@@ -6124,7 +6124,7 @@ DUMMY(MONS_HELL_LORD, '&', COLOUR_UNDEF, "hell lord", TILEP_MONS_PROGRAM_BUG)
     0, 10, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_BRAINLESS, HT_LAND, 50, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_LITTLE, MON_SHAPE_ORB,
-    {TILE_ERROR}, TILE_ERROR
+    {TILE_FOXFIRE}, TILE_ERROR
 },
 
 { // not an actual monster, used by a spell
