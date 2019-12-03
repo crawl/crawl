@@ -1364,7 +1364,8 @@ Sting spell
 
 Briefly transforms one of the caster's limbs into a long insectoid stinger,
 which lashes out at the target. The stinger's impact will always poison the
-target, and a portion of the direct damage is from the physical impact.
+target unless completely immune to poison, and even immune monsters will be
+damaged by the physical impact of the stringer.
 %%%%
 Stone Arrow spell
 
