@@ -4006,7 +4006,7 @@ lifesaving_chance elyvilon_lifesaving()
     if (you.piety < piety_breakpoint(0))
         return lifesaving_chance::never;
 
-    return you.piety > 119 ? lifesaving_chance::always
+    return you.piety >= piety_breakpoint(4) ? lifesaving_chance::always
                            : lifesaving_chance::sometimes;
 }
 
