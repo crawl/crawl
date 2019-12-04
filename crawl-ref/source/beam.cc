@@ -1450,9 +1450,8 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
             if (doFlavouredEffects)
             {
                 simple_monster_message(*mons, " partially resists.");
-
-                if (pbolt.origin_spell != SPELL_STING)
-                    poison_monster(mons, pbolt.agent(), stacks / 2, true);
+                poison_monster(mons, pbolt.agent(), div_rand_round(stacks, 2),
+                               true);
             }
         }
         else if (doFlavouredEffects)
