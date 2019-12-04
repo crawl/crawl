@@ -74,6 +74,7 @@
 * Members of the Dungeon Crawl community who have contributed to Dungeon
   Crawl Stone Soup:
     achuah
+    AdamPG
     Brent Adams
     Mike Adams
     Aj Adamson
@@ -224,6 +225,7 @@
     Paul Maloney
     Pablo Mansanet
     Wille Mäntylä
+    István Markó
     Gabriel Marks
     Jean Martel
     James 'Eronarn' Meickle
