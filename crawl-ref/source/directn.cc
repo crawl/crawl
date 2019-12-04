@@ -827,7 +827,7 @@ void full_describe_view()
 
 void do_look_around(const coord_def &whence)
 {
-    dist lmove = _look_around_target(whence);
+    dist lmove = _look_around_target(you.pos() + whence);
     if (lmove.isValid && lmove.isTarget && !lmove.isCancel
         && !crawl_state.arena_suspended)
     {
@@ -837,7 +837,7 @@ void do_look_around(const coord_def &whence)
 
 bool get_look_position(coord_def *c)
 {
-    dist lmove = _look_around_target(coord_def(0, 0));
+    dist lmove = _look_around_target(you.pos());
     if (lmove.isCancel)
         return false;
     *c = lmove.target;
@@ -852,7 +852,7 @@ static dist _look_around_target(const coord_def &whence)
     args.just_looking = true;
     args.needs_path = false;
     args.target_prefix = "Here";
-    args.default_place = whence;
+    args.default_place = whence - you.pos();
     direction(lmove, args);
     return lmove;
 }
