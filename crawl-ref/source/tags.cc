@@ -6349,7 +6349,7 @@ void unmarshallMonster(reader &th, monster& m)
     m.spells.clear();
     for (mon_spell_slot &slot : oldspells)
     {
-        if (th.getMinorVersion() < TAG_MINOR_POSITIONAL_MAGIC)
+        if (th.getMinorVersion() < TAG_MINOR_MORE_GHOST_MAGIC)
             slot.spell = _fixup_positional_monster_spell(slot.spell);
 
         if (mons_is_zombified(m) && !mons_enslaved_soul(m)
