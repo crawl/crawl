@@ -3295,15 +3295,11 @@ spret cast_imb(int pow, bool fail)
 
 void actor_apply_toxic_bog(actor * act)
 {
-    mpr("Applying toxic bog.");
-
     if (grd(act->pos()) != DNGN_TOXIC_BOG)
         return;
 
     if (!act->ground_level())
         return;
-
-    mpr("Really applying toxic bog.");
 
     const bool player = act->is_player();
     monster *mons = !player ? act->as_monster() : nullptr;
