@@ -66,10 +66,11 @@ spret conjure_flame(int pow, bool fail)
         you.props["cflame_dur"] = min(5 + (random2(pow)/2)
                                                + (random2(pow)/2), 23);
         place_cloud(CLOUD_EMBERS, you.pos(), 1, &you);
-        // Create a cloud for 11 auts, so that no matter what happens
-        // the flame tries to ignite after one player action.
+        // Create a cloud for the time it takes to cast plus 1 aut, so that no
+        // matter what happens the flame tries to ignite after the next player
+        // action.
         cloud = cloud_at(you.pos());
-        cloud->decay++;
+        cloud->decay = player_speed() + 1;
         mpr("The fire begins to smolder!");
     }
     noisy(spell_effect_noise(SPELL_CONJURE_FLAME), you.pos());
