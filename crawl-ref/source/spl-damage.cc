@@ -3295,11 +3295,15 @@ spret cast_imb(int pow, bool fail)
 
 void actor_apply_toxic_bog(actor * act)
 {
+    mpr("Applying toxic bog.");
+
     if (grd(act->pos()) != DNGN_TOXIC_BOG)
         return;
 
     if (!act->ground_level())
         return;
+
+    mpr("Really applying toxic bog.");
 
     const bool player = act->is_player();
     monster *mons = !player ? act->as_monster() : nullptr;
@@ -3308,9 +3312,13 @@ void actor_apply_toxic_bog(actor * act)
 
     for (map_marker *marker : env.markers.get_markers_at(act->pos()))
     {
-        map_terrain_change_marker* tmarker =
-                dynamic_cast<map_terrain_change_marker*>(marker);
-        oppressor = actor_by_mid(tmarker->mon_num);
+        if (marker->get_type() == MAT_TERRAIN_CHANGE)
+        {
+            map_terrain_change_marker* tmarker =
+                    dynamic_cast<map_terrain_change_marker*>(marker);
+            if (tmarker->change_type == TERRAIN_CHANGE_BOG)
+                oppressor = actor_by_mid(tmarker->mon_num);
+        }
     }
 
     const int base_damage = dice_def(4, 6).roll();
