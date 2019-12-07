@@ -1423,6 +1423,10 @@ bool is_damaging_cloud(cloud_type type, bool accept_temp_resistances, bool yours
 static bool _mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
                                bool extra_careful)
 {
+    // Friendlies avoid snuffing the player's conjured flames
+    if (mons->attitude == ATT_FRIENDLY && cloud.type == CLOUD_EMBERS)
+        return true;
+
     // clouds you're immune to are inherently safe.
     if (actor_cloud_immune(*mons, cloud))
         return false;
