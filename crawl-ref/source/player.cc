@@ -1091,14 +1091,6 @@ static int _player_bonus_regen()
 {
     int rr = 0;
 
-    // Trog's Hand is handled separately so that it will bypass slow
-    // regeneration, and it overrides the spell.
-    if (you.duration[DUR_REGENERATION]
-        && !you.duration[DUR_TROGS_HAND])
-    {
-        rr += 100;
-    }
-
     // Jewellery.
     if (you.props[REGEN_AMULET_ACTIVE].get_int() == 1)
         rr += REGEN_PIP * you.wearing(EQ_AMULET, AMU_REGENERATION);
@@ -1252,8 +1244,7 @@ int player_hunger_rate(bool temp)
         hunger += 3;            // in addition to the +3 for fast metabolism
 
     if (temp
-        && (you.duration[DUR_REGENERATION]
-            || you.duration[DUR_TROGS_HAND])
+        && you.duration[DUR_TROGS_HAND]
         && you.hp < you.hp_max)
     {
         hunger += 4;

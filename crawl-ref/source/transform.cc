@@ -1802,13 +1802,6 @@ bool transform(int pow, transformation which_trans, bool involuntary,
         break;
 
     case transformation::lich:
-        // undead cannot regenerate -- bwr
-        if (you.duration[DUR_REGENERATION])
-        {
-            mprf(MSGCH_DURATION, "You stop regenerating.");
-            you.duration[DUR_REGENERATION] = 0;
-        }
-
         you.hunger_state = HS_SATIATED;  // no hunger effects while transformed
         you.redraw_status_lights = true;
         break;

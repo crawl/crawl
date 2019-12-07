@@ -391,8 +391,7 @@ LUARET1(you_silencing, boolean, you.duration[DUR_SILENCE])
  * @treturn boolean
  * @function regenerating
  */
-LUARET1(you_regenerating, boolean, you.duration[DUR_REGENERATION]
-                                   || you.duration[DUR_TROGS_HAND])
+LUARET1(you_regenerating, boolean, you.duration[DUR_TROGS_HAND])
 /*** Are you out of breath?
  * @treturn boolean
  * @function breath_timeout

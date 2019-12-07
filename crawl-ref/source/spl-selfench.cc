@@ -79,15 +79,6 @@ spret deflection(int /*pow*/, bool fail)
     return spret::success;
 }
 
-spret cast_regen(int pow, bool fail)
-{
-    fail_check();
-    you.increase_duration(DUR_REGENERATION, 5 + roll_dice(2, pow / 3 + 1), 100,
-                          "Your skin crawls.");
-
-    return spret::success;
-}
-
 spret cast_revivification(int pow, bool fail)
 {
     fail_check();
