@@ -1848,7 +1848,8 @@ void direction_chooser::highlight_summoner()
     // wipe any beams we might have drawn, and also reset the monster_info we
     // just altered, before it draws anything.
     viewwindow(false, true);
-#else
+#endif
+#if defined(USE_TILE_WEB) || !defined(USE_TILE)
     char32_t glych  = get_cell_glyph(summ_loc).ch;
     int col = CYAN;
     col |= COLFLAG_REVERSE;
