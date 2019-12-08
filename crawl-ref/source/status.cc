@@ -196,6 +196,7 @@ bool fill_status_info(int status, status_info& inf)
     case DUR_FLAYED:
         inf.light_text = make_stringf("Flay (%d)",
                           (-1 * you.props["flay_damage"].get_int()));
+        break;
 
     case DUR_NO_POTIONS:
         if (you_foodless())
