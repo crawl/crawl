@@ -100,6 +100,7 @@ static void _mons_summon_monster_illusion(monster* caster,
                        "woven by " + caster->name(DESC_THE));
         if (!clone->has_ench(ENCH_ABJ))
             clone->mark_summoned(6, true, MON_SUMM_CLONE);
+        clone->add_ench(ENCH_PHANTOM_MIRROR);
         clone->summoner = caster->mid;
 
         // Discard unsuitable enchantments.
@@ -205,6 +206,7 @@ void mons_summon_illusion_from(monster* mons, actor *foe,
             _init_player_illusion_properties(
                 get_monster_data(MONS_PLAYER_ILLUSION));
             _mons_load_player_enchantments(mons, clone);
+            clone->add_ench(ENCH_PHANTOM_MIRROR);
         }
         else if (card_power >= 0)
             mpr("You see a puff of smoke.");
