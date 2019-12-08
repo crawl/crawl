@@ -1,5 +1,117 @@
+Stone Soup 0.25 (through 0.25-a0-277-g7046ed1b37)
+-------------------------------------------------
+
+Highlights
+----------
+* Spells in many schools have been redesigned to make the schools more
+  distinct.
+
+Branches, Environment
+---------------------
+* Potions of cancellation now appear as loot in Ziggurats.
+* Boris can now spawn after the player picks up the Orb of Zot.
+* Forest fires and the Tornado spell can no longer destroy temporary trees
+  made by Summon Forest.
+
+Character
+---------
+* Monsters summoned by the player now dismiss when they become hostile.
+* Players can now renounce their religion while silenced.
+
+Gods
+----
+* Trog no longer gifts ranged weapons nor ammunition, gifting only melee
+  weapons. These weapons can only have egos of plain, vorpal, flaming, and
+  anti-magic.
+* Elyvilon's Divine Protection now always protects exactly at 5* piety instead
+  of protecting at a value between 5* and 6*.
+* Fedhas now protects plant allies from collisions and from ranged attacks by
+  other allies.
+
+Items
+-----
+* The chaos brand now has might and agility effects, no longer causes miscast
+  effects, and its cloning effect can create friendly and neutral monsters.
+* Unrandart changes:
+  - The Elemental Staff now acts as an enhancer for all elemental schools,
+    with enhancement applying independently for each school.
+
+Monsters
+--------
+* Monsters such as spiders no longer have a clinging ability.
+* Monsters pinned by Wu Jian's Whirlwind can no longer trample the player.
+
+Spells
+------
+* Spell in many schools have been redesigned to make the schools have better
+  differentiation, more positional considerations, and better UI. The
+  descriptions below describe the schools' individual focus and any new,
+  changed, and removed spells in each school:
+  - Fire spells have directed explosions or set things on fire:
+    + New L1 Conjurations/Fire spell Foxfire that conjures two foxfire
+      projectiles that quickly hone in on their target, each doing a bit more
+      than half the damage of Flame Tongue.
+    + Conjure Flame now creates embers on the player's position that turn into
+      a flame cloud a turn later. The embers smother if a monster steps on them.
+    + Inner Flame is now creates a flame cloud under the affected monster
+      whenever it takes damage in addition to the usual explosion it makes
+      when the monster dies.
+    + New L6 Conjurations/Fire spell Starburst that fires 8 range 5 bolts in
+      the principle directions.
+    + Removed spells: Flame Tongue, Throw Flame, Bolt of Fire.
+  - Air school spells bounce, are pointy, or are hard to direct:
+    + Airstrike damage now scales so it's greater the more unoccupied squares
+      there are surrounding the target.
+  - Earth spells are directed:
+    + Borgnjor's Vile Clutch now is a range 6 always-penetrating beam instead
+      of a smite-targeted 3x3 explosion.
+  - Ice spells are diffuse and subtle:
+    + New L4 Conjurations/Ice spell Hailstorm that fires a ring of ice beams
+      from radius 2 to radius 3, not affecting radius 1 squares. Monsters with
+      rC+++ such as ice beasts are immune to this effect.
+    + Ozocubu's Refrigeration does 33% more damage on-average and no longer
+      harms the caster.
+    + Removed spells: Throw Frost, Throw Icicle, Bolt of Cold.
+    + As a result of these changes, Ice Elementalists no longer put starting
+      skill in Conjurations.
+  - Conjurations are pure magic with good accuracy in some way:
+    + Iskenderun's mystic blast now makes a range 5 explosion around the
+      player that damages and pushes back monsters, potentially colliding them
+      with features and other monsters.
+    + Dazzling Flash replaces Dazzling Spray. Makes a flash centered on the
+      player of up to radius 3 that can blind monsters in the affected area.
+    + Searing Ray now fires all its rays at the chosen target, adjusting
+      the rays as the target moves. If no target is chosen, the spell
+      repeatedly fires in the chosen direction. The rays all penetrate and
+      each has the same damage and to-hit. The ray damage is adjusted to have
+      the same overall damage distribution as before this change.
+    + Spellforged Servitor now gives only one spell to the servitor. This is
+      the highest level servitor-compatible spell the player has from the
+      following sets, in order of preference: L4 and higher ranged damage
+      spells, cloud spells, and low-level or short-range spells.
+    + Force Lance is removed.
+  - Poison spells poison things or perform some kind of alchemy
+    + Sting is now a range 3 Poison/Transmutations spell using the same
+      partly-resistable beam type previously used by Poison Arrow.
+    + New L6 Poison/Transmutations spell Eringya's Noxious Bog that creates a
+      temporary toxic bog trail as the player moves. The bog terrain applies
+      the same partly-resistable damage flavor as Sting as well as the
+      movement and combat penalties of shallow water.
+    + Removed spells: Venom Bolt, Poison Arrow
+    + As a result of these changes, Venom Mages now put starting skill in
+      Transmutations instead of Conjurations.
+  - Necromancy has balance adjustments to make the school not so strong and
+    to begin to move it closer to a melee support school:
+    + Corpse Rot now creates miasma clouds in a ring around the player, making
+      one cloud for each corpse in LOS, but with lower duration.
+    + Agony and Dispel Undead are now range 1.
+    + Bolt of Draining is removed.
+* The Young Poisoner's Handbook now contains Ignite Poison.
+* Firestorm and ignition now can burn trees, and Fireball burns trees in all
+  squares of its explosion.
+
 Stone Soup 0.24 (20191024)
---------------------------------
+--------------------------
 
 Highlights
 ----------
