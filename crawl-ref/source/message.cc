@@ -2169,6 +2169,8 @@ static void _replay_messages_core(formatted_scroller &hist)
         if (channel_message_history(msgs[i].channel))
         {
             string text = msgs[i].full_text();
+            if (!text.size())
+                continue;
             linebreak_string(text, cgetsize(GOTO_CRT).x - 1);
             vector<formatted_string> parts;
             formatted_string::parse_string_to_multiple(text, parts, 80);
