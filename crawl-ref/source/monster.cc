@@ -3855,6 +3855,12 @@ int monster::res_poison(bool temp) const
 {
     int u = get_mons_resist(*this, MR_RES_POISON);
 
+    if (const item_def* w = primary_weapon())
+    {
+        if (is_unrandom_artefact(*w, UNRAND_OLGREB))
+            return 3;
+    }
+
     if (temp && has_ench(ENCH_POISON_VULN))
         u--;
 

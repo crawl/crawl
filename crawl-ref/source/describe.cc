@@ -1360,6 +1360,8 @@ static string _describe_weapon(const item_def &item, bool verbose)
             "and up to half again as much damage against particularly "
             "susceptible opponents.";
     }
+    else if (is_unrandom_artefact(item, UNRAND_OLGREB))
+        description += "\n\nIt grants immunity to poison.";
 
     if (you.duration[DUR_EXCRUCIATING_WOUNDS] && &item == you.weapon())
     {
