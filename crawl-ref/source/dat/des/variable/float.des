@@ -4600,6 +4600,63 @@ ccccc---kkk---ccccc
      ...@@@...
 ENDMAP
 
+NAME:   gammafunk_worm_tunnel
+TAGS:   no_monster_gen no_trap_gen no_tele_into no_item_gen
+DEPTH:  D:12-, Swamp
+ORIENT: float
+: item(dgn.good_aux_armour)
+: item(dgn.randart_aux_armour)
+ITEM:   any good_item jewellery, any randart jewellery
+KMONS:  p = briar patch
+MONS:   swamp worm
+: if you.in_branch('D') then
+:   if you.depth() < 14 then
+NSUBST: * = * / .
+:   else
+SUBST:  d = de, f = fg
+NSUBST: t = 1 / 2=1t / t, * = 2=* / .
+:   end
+# Swamp
+: else
+SUBST:  d = e, f = g
+NSUBST: t = 2=1 / 4=1t / t
+: end
+KFEAT:  ^ = zot trap
+MARKER: D =  lua:fog_machine { cloud_type = "foul pestilence", pow_min = 3,  \
+                               pow_max = 5, delay = 5, start_clouds = 3, \
+                               size = 1, spread_rate = 0, excl_rad = 0 }
+MARKER: P = lua:transp_loc("worm_tunnel_entry")
+MARKER: Q = lua:transp_dest_loc("worm_tunnel_entry")
+MARKER: R = lua:transp_loc("worm_tunnel_exit")
+MARKER: S = lua:transp_dest_loc("worm_tunnel_exit")
+MAP
+  ...S...
+  .cnnnc.
+  .cdRfc.
+...c***c.
+.cccc+cccc.
+.n1lp.plcc.
+.cclp^pltn.
+.ntlp^Dncc.
+.cclp^pl1n.
+.ntlp^plcc.
+.ccnD^pltn.
+.n1lp^plcc.
+.cclp^pltn.
+.ntlp^Dncc.
+.cclp^pl1n.
+.ntlp^plcc.
+.ccnD^pltn.
+.n1lp^plcc.
+.cclp^pltn.
+.ntlp^plcc.
+.cclp^plcc.
+..ccpQpcc..
+ ..cnnnc..
+  ...P...
+ENDMAP
+
+
 ###############################################################################
 #
 # <<3>> Abstract or generic threat vaults.
