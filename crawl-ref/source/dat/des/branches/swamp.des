@@ -2361,3 +2361,63 @@ ttccccC'''cC'-'Cc'''1'1cctt
      ttttttttttttttttt t
        tt   ttt ttt t
 ENDMAP
+
+###############################################################################
+# Growth, Death and Undeath, by byrel
+# Presided over by an undead Lernaean hydra
+NAME:    byrel_swamp_growth_death_and_undeath
+TAGS:    no_monster_gen
+PLACE:   Swamp:$
+ORIENT:  float
+TAGS:    no_rotate
+MONS:    swamp dragon / swamp drake / hydra
+MONS:    freezing wraith / flayed ghost / phantasmal warrior / ghoul
+MONS:    hydra skeleton / swamp dragon skeleton / death drake skeleton
+MONS:    hydra zombie / swamp dragon zombie / death drake zombie
+MONS:    spectral hydra / hydra simulacrum
+MONS:    patrolling thorn hunter / patrolling shambling mangrove
+MONS:    patrolling spriggan druid god:fedhas
+KITEM:   O = decaying rune of Zot
+KFEAT:   _ = altar_fedhas
+KFEAT:   - = altar_yredelemnul
+NSUBST:  O = 1:O / *:%
+SUBST:   x = xxxxxxttT
+SUBST:   1 = 1.W
+NSUBST:  3 = 3=5 / 3..
+SUBST:   3 = 2344
+SUBST:   . = ...W
+NSUBST:  P = 3=' / ppW
+KMONS:   p = plant
+KMONS:   ' = oklob plant
+KMONS:   q = vampire knight
+KMONS:   L = patrolling the lernaean hydra zombie / patrolling the lernaean hydra skeleton / patrolling the lernaean hydra simulacrum / patrolling spectral the lernaean hydra
+KPROP:   q = bloody
+TILE:    E = WALL_UNDEAD, T = DNGN_TREE_DEAD, G = DNGN_GRAVESTONE, x = WALL_BRICK_VINES
+SUBST:   T = t
+SUBST:   E = c
+{{
+dgn.delayed_decay_extra(_G, 'q', 'hydra corpse')
+}}
+MAP
+         xxxx@@xx
+        xxxx11xxxx
+        xxx1111xxxx
+       xxxx11T11xxxx
+      xxxx1111t11xxxx
+     xxxt111t1111T1Txx
+    ccct.11111T1111ccx
+   cccct..ttTxLxT..ccccc
+  ccccct6.txxxxxxE5EEEEcc
+ ccccP....TccccccE333sEcccc
+cccc..t....ccccEEEE333TEEEcc
+ccc........cccE2T3333EE2Eccc
+ccP....o.t.PccEE533G5333Eccc
+cct6..P_P.6tcccE3T33q3T5Eccc
+cc6.P.7P7.P6cccE3333-333Eccc
+ccPppPpppPppcccE33G3qG3EEccc
+ccccppppppcccccEEEE335EEcccc
+cccccccOcccccccccE235332Eccc
+  cccccccccccccccEEOEEEEEcc
+    ccccccc    cccEEEcccccc
+      cc        ccccccc cc
+ENDMAP
