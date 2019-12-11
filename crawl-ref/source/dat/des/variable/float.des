@@ -4450,52 +4450,51 @@ c.-3...1..c
 ccccccccccc
 ENDMAP
 
-NAME: gammafunk_cloud_chamber
-TAGS: no_monster_gen no_trap_gen no_tele_into
-DEPTH: D:4-, Lair
+NAME:   gammafunk_cloud_chamber
+TAGS:   no_monster_gen no_trap_gen no_tele_into
+DEPTH:  D:4-, Lair
 ORIENT: float
-KMASK: -'DE12 = no_item_gen
+KMASK:  -'DE12 = no_item_gen
 # Cancellation placed only for mutagenic clouds.
-ITEM: potion of resistance ident:type, potion of cancellation ident:type q:2
+ITEM:   potion of resistance ident:type, potion of cancellation ident:type q:2
 # Replaces a gold pile in late Dungeon
-ITEM: cloak good_item / scarf good_item / pair of boots good_item \
-      / pair of gloves good_item / hat good_item
+: item(dgn.good_aux_armour)
 # Monsters appropriate for the cloud type must be defined in order of
 # cloud_types and come in pairs. Some levels define a more difficult monster on
 # '2', otherwise the monster is repeated.
 : if you.in_branch("D") then
 :   if you.depth() <= 6 then
-:     cloud_types = {"flame", "freezing vapour", "poison gas"}
-KMONS: 1 = fire bat
-KMONS: 2 = nothing
-KMONS: 34 = ice beast
-KMONS: 56 = ogre zombie ; giant club ego:venom | giant spiked club ego:venom \
+:       cloud_types = {"flame", "freezing vapour", "poison gas"}
+KMONS:  1 = fire bat
+KMONS:  2 = nothing
+KMONS:  34 = ice beast
+KMONS:  56 = ogre zombie ; giant club ego:venom | giant spiked club ego:venom \
            / orc warrior zombie ; hand axe ego:venom | war axe ego:venom \
                | short sword ego:venom | long sword ego:venom \
                | flail ego:venom | mace ego:venom \
            / gnoll sergeant zombie ; spear ego:venom | trident ego:venom
 # In earliest 3 levels, thin out monsters and downgrade loot a bit.
-SUBST: | = %, ' = -
+SUBST:  | = %, ' = -
 NSUBST: 1 = 1 / 2 / 1- / 1---- / -
 :   elseif you.depth() <= 9 then
-:     cloud_types = {"flame", "freezing vapour", "poison gas", "acidic fog"}
-MONS: fire bat, fire elemental / hell hound
-MONS: ice beast, simulacrum place:D:15
-MONS: water moccasin
-KMONS: 6 = ogre zombie ; giant club ego:venom | giant spiked club ego:venom \
+:      cloud_types = {"flame", "freezing vapour", "poison gas", "acidic fog"}
+MONS:   fire bat, fire elemental / hell hound
+MONS:   ice beast, simulacrum place:D:15
+MONS:   water moccasin
+KMONS:  6 = ogre zombie ; giant club ego:venom | giant spiked club ego:venom \
            / orc warrior zombie ; hand axe ego:venom | war axe ego:venom \
                | short sword ego:venom | long sword ego:venom \
                | flail ego:venom | mace ego:venom \
            / gnoll sergeant zombie ; spear ego:venom | trident ego:venom
-KMONS: 7 = jelly
-KMONS: 8 = acid dragon
-SUBST: | = *
-NSUBST: 1 = 2:1 / 2 / *=12-, $ = f / $
+KMONS:  7 = jelly
+KMONS:  8 = acid dragon
+SUBST:  | = *
+NSUBST: 1 = 2=1 / 2 / 12-, $ = f / $
 :   elseif you.depth() <= 12 then
 :     cloud_types = {"flame", "poison gas", "acidic fog"}
 MONS: fire bat / fire elemental, hell hound w:20 / fire crab
 MONS: water moccasin w:40 / spiny frog / black mamba
-KMONS: 4 = two-headed ogre zombie \
+KMONS:  4 = two-headed ogre zombie \
                ; dire flail ego:venom | great mace ego:venom \
                . giant club ego:venom | giant spiked club ego:venom \
            / orc knight zombie ; war axe ego:venom | battleaxe ego:venom \
@@ -4503,27 +4502,27 @@ KMONS: 4 = two-headed ogre zombie \
                | dire flail ego:venom | great mace ego:venom \
            / tengu warrior zombie ; halberd ego:venom | glaive ego:venom \
                | bardiche ego:venom
-KMONS: 5 = jelly / acid dragon
-KMONS: 6 = acid dragon
-NSUBST: 1 = 2:1 / 2 / *=12-, $ = f / $
+KMONS:  5 = jelly / acid dragon
+KMONS:  6 = acid dragon
+NSUBST: 1 = 2=1 / 2 / 12-, $ = f / $
 :   else
-:     cloud_types = {"acidic fog", "mutagenic fog"}
-MONS: acid dragon, acid dragon / acid blob
-MONS: ugly thing, ugly thing / very ugly thing
-SUBST: ' = n
-NSUBST: 1 = 2:1 / 2 / *=12-, $ = f / * / $
+:       cloud_types = {"acidic fog", "mutagenic fog"}
+MONS:   acid dragon, acid dragon / acid blob
+MONS:   ugly thing, ugly thing / very ugly thing
+SUBST:  ' = n
+NSUBST: 1 = 2=1 / 2 / 12-, $ = f / * / $
 :   end
 : elseif you.in_branch("Lair") then
-:  cloud_types = {"flame", "freezing vapour", "poison gas"}
-MONS: fire bat / fire elemental, hell hound / fire crab
-MONS: simulacrum place:Lair
-MONS: dire elephant simulacrum / anaconda simulacrum / wolf spider simulacrum \
-      / hydra simulacrum
-MONS: spiny frog / black mamba, swamp dragon
-NSUBST: 1 = 2:1 / 2 / *=12-, $ = f / * / $
+:       cloud_types = {"flame", "freezing vapour", "poison gas"}
+MONS:   fire bat / fire elemental, hell hound / fire crab
+MONS:   simulacrum place:Lair
+MONS:   dire elephant simulacrum / anaconda simulacrum \
+        / wolf spider simulacrum / hydra simulacrum
+MONS:   spiny frog / black mamba, swamp dragon
+NSUBST: 1 = 2=1 / 2 / 12-, $ = f / * / $
 : end
 # Any ' not replace with floor or wall above become cloud squares
-SUBST: ' = E
+SUBST:  ' = E
 {{
   -- Choose the cloud theme; the monster glyphs are defined in pairs in the
   -- order as cloud_types. The D and E glyphs become fog machines of sizes 2
