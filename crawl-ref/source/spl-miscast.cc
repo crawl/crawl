@@ -2468,31 +2468,26 @@ void MiscastEffect::_earth(int severity)
         break;
 
     case 2:         // slightly less harmless stuff
-        switch (random2(1))
+        switch (random2(3))
         {
         case 0:
-            switch (random2(3))
-            {
-            case 0:
-                you_msg        = "You are hit by flying rocks!";
-                mon_msg_seen   = "@The_monster@ is hit by flying rocks!";
-                mon_msg_unseen = "Flying rocks appear out of thin air!";
-                break;
-            case 1:
-                you_msg        = "You are blasted with sand!";
-                mon_msg_seen   = "@The_monster@ is blasted with sand!";
-                mon_msg_unseen = "A miniature sandstorm briefly appears!";
-                break;
-            case 2:
-                you_msg        = "Rocks fall onto you out of nowhere!";
-                mon_msg_seen   = "Rocks fall onto @the_monster@ out of "
-                                 "nowhere!";
-                mon_msg_unseen = "Rocks fall out of nowhere!";
-                break;
-            }
-            _ouch(target->apply_ac(random2avg(13, 2) + 10));
+            you_msg        = "You are hit by flying rocks!";
+            mon_msg_seen   = "@The_monster@ is hit by flying rocks!";
+            mon_msg_unseen = "Flying rocks appear out of thin air!";
+            break;
+        case 1:
+            you_msg        = "You are blasted with sand!";
+            mon_msg_seen   = "@The_monster@ is blasted with sand!";
+            mon_msg_unseen = "A miniature sandstorm briefly appears!";
+            break;
+        case 2:
+            you_msg        = "Rocks fall onto you out of nowhere!";
+            mon_msg_seen   = "Rocks fall onto @the_monster@ out of "
+                             "nowhere!";
+            mon_msg_unseen = "Rocks fall out of nowhere!";
             break;
         }
+        _ouch(target->apply_ac(random2avg(13, 2) + 10));
         break;
 
     case 3:         // less harmless stuff
