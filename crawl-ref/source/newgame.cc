@@ -744,9 +744,11 @@ static void _choose_name(newgame_def& ng, newgame_def& choice)
 
 static keyfun_action _keyfun_seed_input(int &ch)
 {
+    // CK_ENTER is excluded because processing it will cause the TextEntry to
+    // lose focus. (TODO: maybe handle this better in TextEntry somehow?)
     if (ch == CONTROL('K') || ch == CONTROL('D') || ch == CONTROL('W') ||
             ch == CONTROL('U') || ch == CONTROL('A') || ch == CONTROL('E') ||
-            ch == CK_ENTER || ch == CK_BKSP || ch == CK_ESCAPE ||
+            ch == CK_BKSP || ch == CK_ESCAPE ||
             ch < 0 || // this should get all other special keys
             isadigit(ch))
     {
@@ -754,6 +756,77 @@ static keyfun_action _keyfun_seed_input(int &ch)
     }
     return KEYFUN_IGNORE;
 }
+
+// TODO: is there a more elevant way to set this up without a full-on custom
+// class?
+class SeedTextEntry : public ui::TextEntry
+{
+public:
+    SeedTextEntry(ui::Text *_begin_button)
+        : ui::TextEntry(), begin_button(_begin_button)
+    { }
+
+    bool on_event(const Event& event) override
+    {
+#ifdef USE_TILE_LOCAL
+        // some ugly code duplication here, but we need to preempt the internal
+        // class version of pasting
+        if (event.type() == Event::Type::KeyDown)
+        {
+            const auto key = static_cast<const KeyEvent&>(event).key();
+            if (key == 'p' || key == 'P' || key == CONTROL('V'))
+            {
+                paste();
+                update_buttons();
+                return true;
+            }
+        }
+#endif
+        bool result = ui::TextEntry::on_event(event);
+        if (event.type() == Event::Type::KeyDown)
+            update_buttons();
+        return result;
+    }
+
+    bool valid_seed()
+    {
+        return begin_button && get_text().size() > 0;
+    }
+
+    void update_buttons()
+    {
+        if (valid_seed())
+            begin_button->set_text(formatted_string("[Enter] Begin!", BROWN));
+        else
+            begin_button->set_text(formatted_string("[Enter] Begin!", DARKGRAY));
+    }
+
+    void set_text(const string &s) // why is it `string s` in TextEntry?
+    {
+        ui::TextEntry::set_text(s);
+        update_buttons();
+    }
+
+#ifdef USE_TILE_LOCAL
+    void paste()
+    {
+        // this is set up to completely preempt
+        // TextEntry::LineReader::clipboard_paste
+        if (wm->has_clipboard())
+        {
+            string clip = wm->get_clipboard();
+            // try to avoid pasting in crazy garbage, by parsing as uint64
+            // this could be done better
+            uint64_t clip_seed;
+            int clip_found = sscanf(clip.c_str(), "%" SCNu64, &clip_seed);
+            if (clip_found)
+                set_text(make_stringf("%" PRIu64, clip_seed));
+        }
+    }
+#endif
+private:
+    ui::Text *begin_button;
+};
 
 static void _choose_seed(newgame_def& ng, newgame_def& choice,
     const newgame_def& defaults)
@@ -766,7 +839,7 @@ static void _choose_seed(newgame_def& ng, newgame_def& choice,
         choice.seed = Options.seed_from_rc;
 
     const bool show_pregen_toggle =
-#ifdef DEBUG
+#ifndef DGAMELAUNCH
                         true;
 #else
                         false;
@@ -774,6 +847,11 @@ static void _choose_seed(newgame_def& ng, newgame_def& choice,
 
     bool done = false;
     bool cancel = false;
+
+    auto begin_label = make_shared<ui::Text>();
+    begin_label->set_text(formatted_string("[Enter] Begin!", BROWN));
+    begin_label->set_margin_for_sdl(4,8);
+    begin_label->set_margin_for_crt(0, 2, 0, 0);
 
     auto prompt_ui = make_shared<Text>();
     auto box = make_shared<ui::Box>(ui::Widget::VERT);
@@ -792,25 +870,43 @@ static void _choose_seed(newgame_def& ng, newgame_def& choice,
     auto seed_hbox = make_shared<ui::Box>(ui::Box::HORZ);
     box->add_child(seed_hbox);
 
-    const string prompt_text = "Seed ([-] to clear): ";
+    const string prompt_text = "Seed: ";
     seed_hbox->add_child(make_shared<ui::Text>(prompt_text));
-    auto seed_input = make_shared<ui::TextEntry>();
+    auto seed_input = make_shared<SeedTextEntry>(begin_label.get());
     seed_input->set_sync_id("seed");
     seed_input->set_text(make_stringf("%" PRIu64, choice.seed));
     seed_input->set_keyproc(_keyfun_seed_input);
+
 #ifndef USE_TILE_LOCAL
-    seed_input->max_size().width = 20;
+    seed_input->max_size().width = 21;
 #endif
     seed_hbox->add_child(seed_input);
     seed_hbox->set_cross_alignment(Widget::CENTER);
 
-    auto btn_label = make_shared<ui::Text>();
-    btn_label->set_text(formatted_string("d - Today's daily seed", BROWN));
-    btn_label->set_margin_for_sdl(4,8);
-    btn_label->set_margin_for_crt(0, 2, 0, 0);
+    auto clear_btn_label = make_shared<ui::Text>();
+    clear_btn_label->set_text(formatted_string("[-] Clear", BROWN));
+    clear_btn_label->set_margin_for_sdl(4, 4);
+    clear_btn_label->set_margin_for_crt(0, 1, 0, 1);
+    auto clear_btn = make_shared<MenuButton>();
+    clear_btn->set_child(move(clear_btn_label));
+    clear_btn->set_sync_id("btn-clear");
+    clear_btn->hotkey = '-';
+    clear_btn->set_margin_for_sdl(0,0,0,10);
+    clear_btn->set_margin_for_crt(0, 0, 0, 1);
+    clear_btn->on_activate_event([&seed_input](const ActivateEvent&) {
+        seed_input->set_text("");
+        ui::set_focused_widget(seed_input.get());
+        return true;
+    });
+    seed_hbox->add_child(move(clear_btn));
+
+    auto d_btn_label = make_shared<ui::Text>();
+    d_btn_label->set_text(formatted_string("[d] Today's daily seed", BROWN));
+    d_btn_label->set_margin_for_sdl(4,8);
+    d_btn_label->set_margin_for_crt(0, 2, 0, 0);
 
     auto daily_seed_btn = make_shared<MenuButton>();
-    daily_seed_btn->set_child(move(btn_label));
+    daily_seed_btn->set_child(move(d_btn_label));
     daily_seed_btn->set_sync_id("btn-daily");
     daily_seed_btn->hotkey = 'd';
     daily_seed_btn->set_margin_for_sdl(0,0,0,10);
@@ -821,7 +917,8 @@ static void _choose_seed(newgame_def& ng, newgame_def& choice,
         struct tm * timeinfo = localtime(&now);
         char timebuf[9];
         strftime(timebuf, sizeof(timebuf), "%Y%m%d", timeinfo);
-        seed_input->set_text(timebuf);
+        seed_input->set_text(string(timebuf));
+        ui::set_focused_widget(seed_input.get());
         return true;
     });
     seed_hbox->add_child(move(daily_seed_btn));
@@ -829,13 +926,12 @@ static void _choose_seed(newgame_def& ng, newgame_def& choice,
     const string footer_text =
         "\n"
         "The seed will determine the dungeon layout, monsters, and items\n"
-        "that you discover, relative to this version of crawl. (See the \n"
-        "manual for more details.)"
+        "that you discover, relative to this version of crawl. Upgrading\n"
+        "mid-game may affect seeding. (See the manual for more details.)\n"
 #ifdef SEEDING_UNRELIABLE
         "Warning: your build of crawl does not support stable seeding!\n"
-        "Levels may differ from 'official' seeded games."
+        "Levels may differ from 'official' seeded games.\n"
 #endif
-        "\n"
         ;
     box->add_child(make_shared<ui::Text>(footer_text));
 
@@ -843,46 +939,47 @@ static void _choose_seed(newgame_def& ng, newgame_def& choice,
     pregen_check->set_sync_id("pregenerate");
     pregen_check->set_checked(choice.pregenerate = Options.pregen_dungeon);
     pregen_check->set_visible(show_pregen_toggle);
-    pregen_check->set_child(make_shared<ui::Text>("Pregenerate the dungeon"));
+    pregen_check->set_child(make_shared<ui::Text>("Fully pregenerate the dungeon"));
     box->add_child(pregen_check);
 
     auto button_hbox = make_shared<ui::Box>(ui::Box::HORZ);
     button_hbox->set_main_alignment(Widget::Align::END);
     box->add_child(button_hbox);
 
-    btn_label = make_shared<ui::Text>();
-    btn_label->set_text(formatted_string("Enter - Begin!", BROWN));
-    btn_label->set_margin_for_sdl(4,8);
-    btn_label->set_margin_for_crt(0, 2, 0, 0);
-
     auto begin_btn = make_shared<MenuButton>();
-    begin_btn->set_child(move(btn_label));
+    begin_btn->set_child(begin_label);
     begin_btn->set_sync_id("btn-begin");
     begin_btn->hotkey = CK_ENTER;
-    begin_btn->on_activate_event([&done](const ActivateEvent&) {
-        return done = true;
+    begin_btn->on_activate_event(
+        [&done, &seed_input, &begin_btn](const ActivateEvent&)
+    {
+        if (!seed_input->valid_seed())
+            return false; // TODO: message why this failed
+        auto cur_focus = ui::get_focused_widget();
+        if (
+#ifdef USE_TILE_WEB
+            // focus doesn't seem to be tracked right from web?
+            tiles.is_controlled_from_web() ||
+#endif
+            cur_focus == begin_btn.get() || cur_focus == seed_input.get())
+        {
+            return done = true;
+        }
+        // let the other buttons activate on enter
+        return false;
     });
-    button_hbox->add_child(move(begin_btn));
+    button_hbox->add_child(begin_btn);
 
+    // TODO: ESC gets absorbed by active buttons, does this make sense?
     popup->on_keydown_event([&](const KeyEvent& ev) {
         const auto key = ev.key();
-        if (key == '?')
+        if (key == '?') // TODO: text box absorbs this still
             show_help('D', "Seeded play"); // TODO: scroll to section
-        else if (key == '-')
-        {
-            seed_input->set_text("");
-            return false;
-        }
 #ifdef USE_TILE_LOCAL
-        else if ((key == 'p' || key == 'P') && wm->has_clipboard())
+        else if ((key == 'p' || key == 'P' || key == CONTROL('V')))
         {
-            string clip = wm->get_clipboard();
-            // try to avoid pasting in crazy garbage, by parsing as uint64
-            // this could be done better
-            uint64_t clip_seed;
-            int clip_found = sscanf(clip.c_str(), "%" SCNu64, &clip_seed);
-            if (clip_found)
-                seed_input->set_text(make_stringf("%" PRIu64, clip_seed));
+            seed_input->paste();
+            ui::set_focused_widget(seed_input.get());
             return false;
         }
 #endif
@@ -900,7 +997,7 @@ static void _choose_seed(newgame_def& ng, newgame_def& choice,
     tiles.push_ui_layout("seed-selection", 0);
 #endif
 
-    ui::run_layout(move(popup), done);
+    ui::run_layout(move(popup), done, seed_input);
 #ifdef USE_TILE_WEB
     tiles.pop_ui_layout();
 #endif

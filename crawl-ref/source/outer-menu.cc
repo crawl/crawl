@@ -20,10 +20,7 @@ MenuButton::MenuButton()
 {
     on_hotkey_event([this](const KeyEvent& event) {
         if (event.key() == hotkey)
-        {
-            activate();
-            return true;
-        }
+            return activate();
         return false;
     });
 }
