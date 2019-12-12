@@ -323,21 +323,24 @@
             <div class="seed-input">
                 <span>Enter seed: </span>
                 <input type="text" data-sync-id="seed">
+                <button data-hotkey="-" data-sync-id="btn-clear">
+                    <span>[-] Clear</span>
+                </button>
                 <button data-hotkey="d" data-sync-id="btn-daily">
-                    <span>d - Today's daily seed</span>
+                    <span>[d] Today's daily seed</span>
                 </button>
             </div>
             <p class="footer"></p>
             <div class="pregen-toggle">
                 <label>
                     <input type=checkbox data-sync-id="pregenerate" />
-                    <span>Pregenerate the Dungeon</span>
+                    <span>Fully pregenerate the Dungeon</span>
                 </label>
             </div>
         </div>
         <div class="button-bar">
             <button data-hotkey="Enter" data-sync-id="btn-begin">
-                <span>Enter - Begin!</span>
+                <span>[Enter] Begin!</span>
             </button>
         </div>
     </div>
