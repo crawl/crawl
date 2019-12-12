@@ -238,6 +238,11 @@ function ($, comm, client, options, focus_trap) {
     }
 
     function ui_input_handler(ev) {
+        // this check is intended to fix a race condition when starting the
+        // game: don't send any state info to the server until we have
+        // received some. I'm not sure if it is really the right solution...
+        if (!has_received_ui_state)
+            return;
         var state_msg = {};
         sync_save_state(ev.target, state_msg);
         send_state_sync(ev.target, state_msg);
@@ -306,8 +311,10 @@ function ($, comm, client, options, focus_trap) {
                 options.get("tile_display_mode"));
     });
 
+    var has_received_ui_state = false;
     $(document).off("game_init.ui")
         .on("game_init.ui", function () {
+        has_received_ui_state = false;
         $(document).off("game_keydown.ui game_keypress.ui")
             .on("game_keydown.ui", ui_key_handler)
             .on("game_keypress.ui", ui_key_handler)
@@ -382,6 +389,7 @@ function ($, comm, client, options, focus_trap) {
 
     comm.register_handlers({
         "ui-state-sync": function (msg) {
+            has_received_ui_state = true;
             if (msg.from_webtiles && !client.is_watching())
                 return;
             var popup = top_popup();
