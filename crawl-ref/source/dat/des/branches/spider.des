@@ -1524,9 +1524,9 @@ SUBST:  - = ....WWW^
 KFEAT:  ^ = known web trap
 TILE:   c = wall_brick_gray
 MAP
-    4    x       xx       x
-  ..4@xcxxx xxxxxxxxxxx xxx xx
- W4W.4Wcccxxxccxxxccccxxxcxxxxx
+    4 xxx        xx       x
+  ..4@xcxxxxxxxxxxxxxxx xxx xx
+ W4W.4Wcccxxccccxxccccxxxcxxxxx
  @..4W6W6ccccWWccccWWcccccccccxxxx
 W54.x6W6WcWWW.4..........444.ccccxx
 wW.xcccW666....W5.W....WWWWW..cccxx
