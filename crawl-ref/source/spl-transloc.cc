@@ -1037,7 +1037,7 @@ static void _attract_actor(const actor* agent, actor* victim,
     ASSERT(victim); // XXX: change to actor &victim
     const bool fedhas_prot = agent->deity() == GOD_FEDHAS
                              && victim->is_monster()
-                             && fedhas_protects(*(victim->as_monster()));
+                             && fedhas_protects(victim->as_monster());
 
     ray_def ray;
     if (!find_ray(victim->pos(), pos, ray, opc_solid))

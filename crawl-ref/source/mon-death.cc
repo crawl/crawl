@@ -1628,7 +1628,7 @@ static void _fire_kill_conducts(monster &mons, killer_type killer,
 
     // Fedhas shrooms cause confusion which leads to subsequent
     // confusion kills, sometimes of the player's own plants
-    if (fedhas_protects(mons) && killer != KILL_YOU_CONF)
+    if (fedhas_protects(&mons) && killer != KILL_YOU_CONF)
         did_kill_conduct(DID_KILL_PLANT, mons);
 
     // Cheibriados hates fast monsters.

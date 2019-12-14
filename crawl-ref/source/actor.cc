@@ -929,10 +929,10 @@ void actor::collide(coord_def newpos, const actor *agent, int pow)
 {
     actor *other = actor_at(newpos);
     const bool fedhas_prot = agent->deity() == GOD_FEDHAS
-                             && is_monster() && fedhas_protects(*as_monster());
+                             && is_monster() && fedhas_protects(as_monster());
     const bool fedhas_prot_other = agent->deity() == GOD_FEDHAS
                                    && other && other->is_monster()
-                                   && fedhas_protects(*(other->as_monster()));
+                                   && fedhas_protects(other->as_monster());
     ASSERT(this != other);
     ASSERT(alive());
 

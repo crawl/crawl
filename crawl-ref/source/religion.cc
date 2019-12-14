@@ -2620,9 +2620,11 @@ static bool _fedhas_protects_species(monster_type mc)
            && mons_class_holiness(mc) & MH_PLANT;
 }
 
-bool fedhas_protects(const monster& target)
+bool fedhas_protects(const monster *target)
 {
-    return _fedhas_protects_species(mons_base_type(target));
+    return target
+        ? _fedhas_protects_species(mons_base_type(*target))
+        : false;
 }
 
 // Fedhas neutralises most plants and fungi
@@ -3865,7 +3867,7 @@ bool god_hates_killing(god_type god, const monster& mon)
         retval = (god == GOD_ELYVILON);
 
     if (god == GOD_FEDHAS)
-        retval = (fedhas_protects(mon));
+        retval = (fedhas_protects(&mon));
 
     return retval;
 }

@@ -138,7 +138,7 @@ bool melee_attack::handle_phase_attempted()
                                    [](const actor *act)
                                    {
                                        return !(you.deity() == GOD_FEDHAS
-                                       && fedhas_protects(*act->as_monster()));
+                                       && fedhas_protects(act->as_monster()));
                                    }, nullptr, defender->as_monster()))
             {
                 cancel_attack = true;
