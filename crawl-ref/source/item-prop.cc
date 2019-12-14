@@ -157,7 +157,7 @@ static const armour_def Armour_prop[] =
         ARMF_RES_STEAM),
     DRAGON_ARMOUR(ACID,        "acid",                    6,  -50,  400,
         ARMF_RES_CORR),
-    DRAGON_ARMOUR(QUICKSILVER, "quicksilver",             9,  -70,  600,
+    DRAGON_ARMOUR(QUICKSILVER, "quicksilver",             9,  -80,  600,
         ARMF_RES_MAGIC),
     DRAGON_ARMOUR(SWAMP,       "swamp",                   7,  -70,  500,
         ARMF_RES_POISON),
