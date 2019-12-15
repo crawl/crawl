@@ -1500,7 +1500,7 @@ static void _choose_arena_teams(newgame_def& choice,
         return done = cancel = key_is_escape(ev.key());
     });
 
-    ui::run_layout(move(popup), done);
+    ui::run_layout(move(popup), done, teams_input);
 
     if (cancel || crawl_state.seen_hups)
     {
