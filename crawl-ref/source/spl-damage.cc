@@ -1290,7 +1290,7 @@ spret cast_irradiate(int powc, actor* who, bool fail)
     targeter_radius hitfunc(who, LOS_NO_TRANS, 1, 0, 1);
     auto vulnerable = [who](const actor *act) -> bool
     {
-        return act->is_player()
+        return !act->is_player()
                && !(who->deity() == GOD_FEDHAS
                     && fedhas_protects(act->as_monster()));
     };
