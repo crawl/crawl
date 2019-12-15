@@ -855,7 +855,7 @@ void display_mutations()
     auto title = make_shared<Text>(formatted_string(title_text, WHITE));
     auto title_hbox = make_shared<Box>(Widget::HORZ);
     title_hbox->add_child(move(title));
-    title_hbox->align_main = Widget::CENTER;
+    title_hbox->set_main_alignment(Widget::CENTER);
     vbox->add_child(move(title_hbox));
 
     auto switcher = make_shared<Switcher>();
