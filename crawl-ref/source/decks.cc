@@ -1630,6 +1630,7 @@ static void _degeneration_card(int power)
                if (mons.can_polymorph())
                {
                    mons.polymorph(PPT_LESS);
+                   mons.hit_points -= mons.hit_points * power_level / 5;
                    mons.malmutate("");
                }
                else
