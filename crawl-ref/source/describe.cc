@@ -22,6 +22,7 @@
 #include "art-enum.h"
 #include "artefact.h"
 #include "branch.h"
+#include "butcher.h"
 #include "cloud.h" // cloud_type_name
 #include "clua.h"
 #include "colour.h"

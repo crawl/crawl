@@ -24,6 +24,7 @@
 #include "english.h"
 #include "env.h"
 #include "fprop.h"
+#include "ghost.h"
 #include "god-conduct.h"
 #include "god-item.h"
 #include "invent.h"

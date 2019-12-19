@@ -15,6 +15,7 @@
 #include "database.h"
 #include "dgn-overview.h"
 #include "dungeon.h"
+#include "exclude.h"
 #include "fineff.h"
 #include "god-passive.h"
 #include "hints.h"

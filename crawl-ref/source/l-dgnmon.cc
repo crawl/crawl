@@ -6,6 +6,7 @@
 #include "l-libs.h"
 
 #include "cluautil.h"
+#include "coord.h"
 #include "dungeon.h"
 #include "mon-death.h"
 #include "mon-pick.h"

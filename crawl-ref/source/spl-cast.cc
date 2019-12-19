@@ -14,7 +14,9 @@
 #include "areas.h"
 #include "art-enum.h"
 #include "beam.h"
+#include "branch.h"
 #include "chardump.h"
+#include "cloud.h"
 #include "colour.h"
 #include "database.h"
 #include "describe.h"
@@ -29,6 +31,7 @@
 #include "god-conduct.h"
 #include "god-item.h"
 #include "god-passive.h" // passive_t::shadow_spells
+#include "god-wrath.h"
 #include "hints.h"
 #include "item-prop.h"
 #include "item-status-flag-type.h"

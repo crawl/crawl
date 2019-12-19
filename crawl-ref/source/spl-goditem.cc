@@ -8,6 +8,7 @@
 #include "spl-goditem.h"
 
 #include "cleansing-flame-source-type.h"
+#include "cloud.h"
 #include "coordit.h"
 #include "database.h"
 #include "directn.h"

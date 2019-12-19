@@ -17,8 +17,10 @@
 #include "eq-type-flags.h"
 #include "fight.h"
 #include "files.h"
+#include "food.h"
 #include "fprop.h"
 #include "god-abil.h"
+#include "god-item.h"
 #include "god-prayer.h"
 #include "invent.h" // in_inventory
 #include "item-name.h"

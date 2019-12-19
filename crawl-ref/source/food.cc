@@ -13,11 +13,13 @@
 #include <cstring>
 #include <sstream>
 
+#include "butcher.h"
 #include "chardump.h"
 #include "database.h"
 #include "delay.h"
 #include "env.h"
 #include "god-abil.h"
+#include "god-conduct.h"
 #include "hints.h"
 #include "invent.h"
 #include "item-prop.h"

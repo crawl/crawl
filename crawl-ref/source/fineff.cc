@@ -8,6 +8,7 @@
 
 #include "fineff.h"
 
+#include "act-iter.h"
 #include "bloodspatter.h"
 #include "coordit.h"
 #include "dactions.h"

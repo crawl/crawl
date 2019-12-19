@@ -32,6 +32,7 @@
 #include "food.h"
 #include "fprop.h"
 #include "ghost.h"
+#include "god-abil.h"
 #include "god-item.h"
 #include "god-passive.h"
 #include "item-name.h"

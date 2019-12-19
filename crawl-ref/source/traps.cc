@@ -11,6 +11,7 @@
 #include <algorithm>
 #include <cmath>
 
+#include "act-iter.h"
 #include "areas.h"
 #include "bloodspatter.h"
 #include "branch.h"
@@ -18,8 +19,10 @@
 #include "coordit.h"
 #include "delay.h"
 #include "describe.h"
+#include "directn.h"
 #include "dungeon.h"
 #include "english.h"
+#include "exercise.h"
 #include "god-passive.h" // passive_t::avoid_traps
 #include "hints.h"
 #include "item-prop.h"
