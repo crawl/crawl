@@ -871,8 +871,6 @@ int getch_ck()
         return repeat_key;
     }
 
-    const bool oldValue = cursor_is_enabled;
-
     bool waiting_for_event = true;
     while (waiting_for_event)
     {
