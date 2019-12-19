@@ -23,7 +23,6 @@
 #include "random.h"
 #include "stringutil.h"
 #include "syscalls.h"
-#include "threads.h"
 #include "unicode.h"
 
 // TextDB handles dependency checking the db vs text files, creating the

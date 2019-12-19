@@ -29,7 +29,6 @@
 #include "makeitem.h"
 #include "mapdef.h"
 #include "message.h"
-#include "misc.h"
 #include "mon-death.h"
 #include "options.h"
 #include "orb-type.h"

@@ -14,8 +14,6 @@
 #include "god-passive.h"
 #include "hiscores.h"
 #include "invent.h"
-#include "item-prop.h"
-#include "items.h"
 #include "item-use.h"
 #include "makeitem.h"
 #include "message.h"
@@ -23,13 +21,11 @@
 #include "prompt.h"
 #include "religion.h"
 #include "shopping.h"
-#include "spl-goditem.h"
 #include "state.h"
 #include "stepdown.h"
 #include "stringutil.h"
 #include "terrain.h"
 #include "unwind.h"
-#include "view.h"
 
 string god_prayer_reaction()
 {

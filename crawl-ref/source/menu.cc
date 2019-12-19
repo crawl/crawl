@@ -18,7 +18,6 @@
 #include "hints.h"
 #include "invent.h"
 #include "libutil.h"
-#include "macro.h"
 #include "message.h"
 #ifdef USE_TILE
  #include "mon-util.h"

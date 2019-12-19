@@ -8,8 +8,6 @@
 #include "cluautil.h"
 #include "food.h"
 #include "religion.h"
-#include "spl-book.h"
-#include "spl-damage.h"
 #include "spl-util.h"
 #include "spl-zap.h"
 

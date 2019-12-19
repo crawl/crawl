@@ -13,12 +13,10 @@
 #include "externs.h"
 #include "invent.h"
 #include "libutil.h"
-#include "macro.h"
 #include "menu.h"
 #include "mon-book.h"
 #include "mon-cast.h"
 #include "monster.h" // SEEN_SPELLS_KEY
-#include "prompt.h"
 #include "religion.h"
 #include "shopping.h"
 #include "spl-book.h"

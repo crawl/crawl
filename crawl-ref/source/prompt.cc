@@ -11,11 +11,9 @@
 #include "clua.h"
 #include "delay.h"
 #include "libutil.h"
-#include "macro.h"
 #include "menu.h"
 #include "message.h"
 #include "options.h"
-#include "output.h"
 #include "state.h"
 #include "stringutil.h"
 #ifdef USE_TILE

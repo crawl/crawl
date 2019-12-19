@@ -45,7 +45,6 @@
 #include "macro.h"
 #include "mapdef.h"
 #include "message.h"
-#include "misc.h"
 #include "mon-util.h"
 #include "monster.h"
 #include "newgame.h"

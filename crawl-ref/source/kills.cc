@@ -20,7 +20,6 @@
 #include "mon-info.h"
 #include "monster.h"
 #include "options.h"
-#include "place.h"
 #include "stringutil.h"
 #include "tags.h"
 #include "travel.h"

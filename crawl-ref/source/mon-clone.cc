@@ -23,7 +23,6 @@
 #include "stringutil.h"
 #include "terrain.h"
 #include "transform.h"
-#include "unwind.h"
 #include "view.h"
 
 static string _monster_clone_id_for(monster* mons)

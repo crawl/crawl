@@ -32,7 +32,6 @@
 #include "libutil.h"
 #include "mapmark.h"
 #include "maps.h"
-#include "mon-book.h"
 #include "mon-cast.h"
 #include "mon-place.h"
 #include "mutant-beast.h"

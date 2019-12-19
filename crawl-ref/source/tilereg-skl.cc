@@ -15,7 +15,6 @@
 #include "tiledef-icons.h"
 #include "tilepick.h"
 #include "tiles-build-specific.h"
-#include "viewgeom.h"
 #ifdef WIZARD
 #include "wiz-you.h"
 #endif

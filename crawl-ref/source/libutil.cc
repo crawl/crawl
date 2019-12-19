@@ -16,7 +16,6 @@
 #include "colour.h"
 #include "files.h"
 #include "message.h"
-#include "sound.h"
 #include "state.h"
 #include "stringutil.h"
 #include "tiles-build-specific.h"

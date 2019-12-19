@@ -16,20 +16,16 @@
 #include "hints.h"
 #include "items.h" // stack_iterator
 #include "libutil.h"
-#include "macro.h"
 #include "message.h"
 #include "output.h"
 #include "prompt.h"
 #include "religion.h"
-#include "showsymb.h"
-#include "spl-transloc.h"
 #include "spl-util.h"
 #include "stringutil.h"
 #include "terrain.h"
 #include "transform.h"
 #include "tilepick.h"
 #include "view.h"
-#include "viewchar.h"
 
 spret cast_deaths_door(int pow, bool fail)
 {

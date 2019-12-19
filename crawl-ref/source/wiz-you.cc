@@ -22,7 +22,6 @@
 #include "message.h"
 #include "misc.h" // frombool
 #include "mutation.h"
-#include "ng-setup.h"
 #include "output.h"
 #include "player-stats.h"
 #include "prompt.h"
@@ -36,7 +35,6 @@
 #include "stringutil.h"
 #include "transform.h"
 #include "unicode.h"
-#include "unwind.h"
 #include "view.h"
 #include "xom.h"
 

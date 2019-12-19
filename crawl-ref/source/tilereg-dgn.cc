@@ -29,7 +29,6 @@
 #include "religion.h"
 #include "spl-book.h"
 #include "spl-cast.h"
-#include "spl-zap.h"
 #include "stash.h"
 #include "stringutil.h"
 #include "terrain.h"

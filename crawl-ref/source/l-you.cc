@@ -24,7 +24,6 @@
 #include "items.h"
 #include "jobs.h"
 #include "losglobal.h"
-#include "mapmark.h"
 #include "mutation.h"
 #include "nearby-danger.h"
 #include "newgame-def.h"

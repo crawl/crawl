@@ -19,7 +19,6 @@
 #include "maps.h"
 #include "random.h"
 #include "religion.h"
-#include "spl-util.h"
 #include "state.h"
 #include "stringutil.h"
 #include "unicode.h"

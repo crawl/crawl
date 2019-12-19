@@ -21,7 +21,6 @@
 #include "mon-place.h"
 #include "nearby-danger.h"
 #include "terrain.h"
-#include "view.h"
 
 const int MAX_KRAKEN_TENTACLE_DIST = 12;
 const int MAX_ACTIVE_KRAKEN_TENTACLES = 4;

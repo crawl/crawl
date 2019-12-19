@@ -14,7 +14,6 @@
 #include "filter-enum.h"
 #include "playable.h"
 #include "jobs.h"
-#include "newgame.h"
 #include "ng-restr.h"
 #include "species.h"
 #include "skills.h"

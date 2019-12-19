@@ -21,7 +21,6 @@
 #include "mon-util.h"
 #include "options.h"
 #include "player.h"
-#include "rot.h"
 #include "shopping.h"
 #include "state.h"
 #include "stringutil.h"

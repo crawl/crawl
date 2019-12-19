@@ -23,7 +23,6 @@
 #include "fprop.h"
 #include "monster.h"
 #include "mon-pathfind.h"
-#include "mon-place.h"
 #include "mon-tentacle.h"
 #include "player.h"
 #include "player-stats.h"

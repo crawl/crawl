@@ -14,7 +14,6 @@
 #include "dungeon.h"
 #include "god-companions.h" // hepliaklqana_ancestor
 #include "god-passive.h"
-#include "items.h"
 #include "libutil.h"
 #include "mapmark.h"
 #include "map-knowledge.h"

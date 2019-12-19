@@ -31,7 +31,6 @@
 #include "god-passive.h" // passive_t::shadow_spells
 #include "hints.h"
 #include "item-prop.h"
-#include "item-status-flag-type.h"
 #include "item-use.h"
 #include "libutil.h"
 #include "macro.h"
@@ -39,7 +38,6 @@
 #include "message.h"
 #include "misc.h"
 #include "mon-behv.h"
-#include "mon-book.h"
 #include "mon-cast.h"
 #include "mon-place.h"
 #include "mon-project.h"

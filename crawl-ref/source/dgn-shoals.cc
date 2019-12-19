@@ -14,7 +14,6 @@
 #include "english.h"
 #include "flood-find.h"
 #include "item-prop.h"
-#include "items.h"
 #include "libutil.h"
 #include "mapmark.h"
 #include "maps.h"

@@ -42,7 +42,6 @@
 #include "state.h"
 #include "stringutil.h"
 #include "terrain.h"
-#include "unwind.h"
 #include "view.h"
 #include "viewmap.h"
 

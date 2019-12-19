@@ -32,7 +32,6 @@
 #include "stringutil.h"
 #include "terrain.h"
 #include "traps.h"
-#include "view.h"
 #include "xom.h"
 
 bool feature_mimic_at(const coord_def &c)

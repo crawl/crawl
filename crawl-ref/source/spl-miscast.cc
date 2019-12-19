@@ -28,7 +28,6 @@
 #include "mon-place.h"
 #include "mutation.h"
 #include "player-stats.h"
-#include "potion.h"
 #include "religion.h"
 #include "shout.h"
 #include "spl-clouds.h"
@@ -40,7 +39,6 @@
 #include "transform.h"
 #include "unwind.h"
 #include "viewchar.h"
-#include "view.h"
 #include "xom.h"
 
 // This determines how likely it is that more powerful wild magic

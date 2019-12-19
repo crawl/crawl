@@ -28,7 +28,6 @@
 #include "item-use.h"
 #include "melee-attack.h"
 #include "message.h"
-#include "mgen-data.h"
 #include "misc.h"
 #include "mon-behv.h"
 #include "mon-cast.h"

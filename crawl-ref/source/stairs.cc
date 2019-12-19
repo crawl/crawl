@@ -22,7 +22,6 @@
 #include "hints.h"
 #include "hiscores.h"
 #include "item-name.h"
-#include "item-status-flag-type.h"
 #include "items.h"
 #include "level-state-type.h"
 #include "mapmark.h"

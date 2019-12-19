@@ -39,7 +39,6 @@
 #include "invent.h"
 #include "item-prop.h"
 #include "items.h"
-#include "item-status-flag-type.h"
 #include "item-use.h"
 #include "level-state-type.h"
 #include "libutil.h"

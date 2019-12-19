@@ -34,7 +34,6 @@
 #include "state.h"
 #include "stepdown.h"
 #include "stringutil.h"
-#include "terrain.h"
 #include "version.h"
 
 #ifdef DEBUG_STATISTICS

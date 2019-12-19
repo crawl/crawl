@@ -10,17 +10,13 @@
 #include "files.h"
 #include "god-passive.h"
 #include "hints.h"
-#include "item-status-flag-type.h"
-#include "item-use.h"
 #include "libutil.h"
 #include "macro.h"
 #ifdef TOUCH_UI
 #include "menu.h"
 #endif
 #include "message.h"
-#include "misc.h"
 #include "monster.h"
-#include "mon-util.h"
 #include "notes.h"
 #include "ouch.h"
 #include "output.h"

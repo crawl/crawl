@@ -16,7 +16,6 @@
 #include "god-type.h"
 #include "item-name.h"
 #include "item-prop.h"
-#include "mon-book.h"
 #include "mon-cast.h"
 #include "mon-transit.h"
 #include "ng-input.h"

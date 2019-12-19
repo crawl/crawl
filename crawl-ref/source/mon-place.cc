@@ -28,7 +28,6 @@
 #include "ghost.h"
 #include "god-abil.h"
 #include "god-passive.h" // passive_t::slow_abyss, slow_orb_run
-#include "lev-pand.h"
 #include "libutil.h"
 #include "losglobal.h"
 #include "message.h"
@@ -39,7 +38,6 @@
 #include "mon-pick.h"
 #include "mon-poly.h"
 #include "mon-tentacle.h"
-#include "options.h"
 #include "random.h"
 #include "religion.h"
 #include "shopping.h"
@@ -56,7 +54,6 @@
 #include "traps.h"
 #include "travel.h"
 #include "unwind.h"
-#include "viewchar.h"
 #include "view.h"
 
 band_type active_monster_band = BAND_NO_BAND;

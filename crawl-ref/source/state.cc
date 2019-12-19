@@ -18,11 +18,9 @@
 #include "macro.h"
 #include "menu.h"
 #include "message.h"
-#include "misc.h"
 #include "monster.h"
 #include "player.h"
 #include "religion.h"
-#include "scroller.h"
 #include "showsymb.h"
 #include "unwind.h"
 

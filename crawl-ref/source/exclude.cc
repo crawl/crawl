@@ -18,7 +18,6 @@
 #include "env.h"
 #include "hints.h"
 #include "libutil.h"
-#include "map-knowledge.h"
 #include "mon-util.h"
 #include "options.h"
 #include "stringutil.h"

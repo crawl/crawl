@@ -11,7 +11,6 @@
 #include "god-item.h"
 #include "god-passive.h"
 #include "item-prop.h"
-#include "makeitem.h"
 #include "message.h"
 #include "player-equip.h"
 #include "prompt.h"

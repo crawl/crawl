@@ -34,7 +34,6 @@
 #include "stringutil.h"
 #include "terrain.h"
 #include "traps.h"
-#include "view.h"
 
 static void _guess_invis_foe_pos(monster* mon)
 {

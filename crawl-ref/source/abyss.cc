@@ -35,7 +35,6 @@
 #include "mapmark.h"
 #include "maps.h"
 #include "message.h"
-#include "misc.h"
 #include "mon-cast.h"
 #include "mon-death.h"
 #include "mon-pathfind.h"

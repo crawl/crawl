@@ -19,7 +19,6 @@
 #include "tiledef-main.h"
 #include "tilepick.h"
 #include "tiles-build-specific.h"
-#include "viewgeom.h"
 
 SpellRegion::SpellRegion(const TileRegionInit &init) : GridRegion(init)
 {

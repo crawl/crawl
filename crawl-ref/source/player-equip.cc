@@ -23,10 +23,8 @@
 #include "libutil.h"
 #include "macro.h" // command_to_string
 #include "message.h"
-#include "mutation.h"
 #include "nearby-danger.h"
 #include "notes.h"
-#include "options.h"
 #include "player-stats.h"
 #include "religion.h"
 #include "shopping.h"

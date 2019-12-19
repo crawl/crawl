@@ -25,7 +25,6 @@
 #include "maps.h"
 #include "menu.h"
 #include "message.h"
-#include "misc.h"
 #include "mgen-data.h"
 #include "mon-death.h"
 #include "mon-pick.h"

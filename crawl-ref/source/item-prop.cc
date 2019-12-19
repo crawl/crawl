@@ -23,9 +23,7 @@
 #include "item-use.h"
 #include "libutil.h" // map_find
 #include "message.h"
-#include "misc.h"
 #include "notes.h"
-#include "options.h"
 #include "orb-type.h"
 #include "potion-type.h"
 #include "random.h"

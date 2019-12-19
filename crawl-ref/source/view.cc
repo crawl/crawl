@@ -38,7 +38,6 @@
 #include "items.h"
 #include "item-name.h" // item_type_known
 #include "item-prop.h" // get_weapon_brand
-#include "item-status-flag-type.h"
 #include "libutil.h"
 #include "macro.h"
 #include "map-knowledge.h"

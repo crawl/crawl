@@ -41,7 +41,6 @@
 #include "mapmark.h"
 #include "message.h"
 #include "mgen-data.h"
-#include "misc.h"
 #include "mon-abil.h"
 #include "mon-behv.h"
 #include "mon-book.h"
@@ -57,7 +56,6 @@
 #include "religion.h"
 #include "showsymb.h"
 #include "species.h"
-#include "spl-summoning.h"
 #include "spl-util.h"
 #include "state.h"
 #include "stringutil.h"
@@ -69,7 +67,6 @@
 #include "traps.h"
 #include "unicode.h"
 #include "unwind.h"
-#include "view.h"
 
 static FixedVector < int, NUM_MONSTERS > mon_entry;
 

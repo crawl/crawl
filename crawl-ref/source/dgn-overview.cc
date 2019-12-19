@@ -21,8 +21,6 @@
 #include "macro.h"
 #include "menu.h"
 #include "message.h"
-#include "mon-poly.h"
-#include "output.h"
 #include "prompt.h"
 #include "religion.h"
 #include "scroller.h"

@@ -46,7 +46,6 @@
 #include "nearby-danger.h"
 #include "notes.h"
 #include "output.h"
-#include "player-equip.h"
 #include "player-stats.h"
 #include "potion.h"
 #include "prompt.h"
@@ -67,7 +66,6 @@
 #include "transform.h"
 #include "traps.h"
 #include "travel.h"
-#include "unwind.h"
 #include "viewchar.h"
 #include "view.h"
 

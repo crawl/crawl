@@ -17,7 +17,6 @@
 #include "god-conduct.h"
 #include "libutil.h"
 #include "message.h"
-#include "misc.h"
 #include "mon-behv.h"
 #include "mon-tentacle.h"
 #include "ouch.h"
