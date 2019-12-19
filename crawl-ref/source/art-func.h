@@ -20,8 +20,10 @@
 
 #define ART_FUNC_H
 
+#include "areas.h"         // For silenced() and invalidate_agrid()
 #include "beam.h"          // For Lajatang of Order's silver damage
 #include "cloud.h"         // For storm bow's and robe of clouds' rain
+#include "coordit.h"       // For distance_iterator()
 #include "english.h"       // For apostrophise
 #include "exercise.h"      // For practise_evoking
 #include "fight.h"
