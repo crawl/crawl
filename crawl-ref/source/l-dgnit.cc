@@ -6,7 +6,6 @@
 #include "l-libs.h"
 
 #include "cluautil.h"
-#include "coord.h"
 #include "dungeon.h"
 #include "item-status-flag-type.h"
 #include "items.h"

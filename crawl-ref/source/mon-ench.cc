@@ -20,7 +20,6 @@
 #include "english.h"
 #include "env.h"
 #include "fight.h"
-#include "fprop.h"
 #include "hints.h"
 #include "item-status-flag-type.h"
 #include "items.h"

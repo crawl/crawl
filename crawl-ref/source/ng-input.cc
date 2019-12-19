@@ -4,9 +4,7 @@
 
 #include <cwctype>
 
-#include "cio.h"
 #include "end.h"
-#include "files.h"
 #include "format.h"
 #include "item-name.h" // make_name
 #include "initfile.h"

@@ -16,17 +16,14 @@
 #include "artefact.h"
 #include "art-enum.h"
 #include "branch.h"
-#include "butcher.h"
 #include "cio.h"
 #include "colour.h"
-#include "command.h"
 #include "decks.h"
 #include "describe.h"
 #include "dgn-overview.h"
 #include "english.h"
 #include "env.h" // LSTATE_STILL_WINDS
 #include "errors.h" // sysfail
-#include "evoke.h"
 #include "food.h"
 #include "god-item.h"
 #include "god-passive.h" // passive_t::want_curses, no_haste

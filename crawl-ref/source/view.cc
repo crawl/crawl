@@ -15,7 +15,6 @@
 
 #include "act-iter.h"
 #include "artefact.h"
-#include "attitude-change.h"
 #include "cio.h"
 #include "cloud.h"
 #include "clua.h"
@@ -32,7 +31,6 @@
 #include "feature.h"
 #include "files.h"
 #include "fprop.h"
-#include "god-abil.h"
 #include "god-conduct.h"
 #include "god-passive.h"
 #include "god-wrath.h"

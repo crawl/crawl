@@ -7,7 +7,6 @@
 
 #include "teleport.h"
 
-#include "act-iter.h"
 #include "cloud.h"
 #include "coord.h"
 #include "coordit.h"

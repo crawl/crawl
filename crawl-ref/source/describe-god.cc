@@ -24,7 +24,6 @@
 #include "god-companions.h"
 #include "god-conduct.h"
 #include "god-passive.h"
-#include "god-prayer.h"
 #include "god-type.h"
 #include "item-name.h"
 #include "libutil.h"

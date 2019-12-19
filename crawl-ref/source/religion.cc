@@ -32,7 +32,6 @@
 #include "dlua.h"
 #include "english.h"
 #include "env.h"
-#include "exercise.h"
 #include "god-abil.h"
 #include "god-companions.h"
 #include "god-conduct.h"

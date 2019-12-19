@@ -13,7 +13,6 @@
 #include "describe.h"
 #include "dgn-overview.h"
 #include "dungeon.h"
-#include "exclude.h"
 #include "fineff.h"
 #include "god-conduct.h"
 #include "hints.h"

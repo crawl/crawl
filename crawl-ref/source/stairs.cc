@@ -18,8 +18,6 @@
 #include "directn.h"
 #include "env.h"
 #include "files.h"
-#include "fprop.h"
-#include "god-abil.h"
 #include "god-passive.h" // passive_t::slow_abyss
 #include "hints.h"
 #include "hiscores.h"

@@ -18,12 +18,10 @@
 #include "colour.h"
 #include "describe.h"
 #ifndef USE_TILE_LOCAL
-#include "directn.h"
 #endif
 #include "english.h"
 #include "env.h"
 #include "files.h"
-#include "god-abil.h"
 #include "god-passive.h"
 #include "initfile.h"
 #include "item-name.h"

@@ -19,7 +19,6 @@
 #include "decks.h"
 #include "describe.h"
 #include "describe-god.h"
-#include "describe-spells.h"
 #include "directn.h"
 #include "english.h"
 #include "enum.h"
