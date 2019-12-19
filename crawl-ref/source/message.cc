@@ -12,7 +12,6 @@
 #include "areas.h"
 #include "colour.h"
 #include "delay.h"
-#include "english.h"
 #include "hints.h"
 #include "initfile.h"
 #include "libutil.h"

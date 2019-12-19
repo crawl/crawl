@@ -21,7 +21,6 @@
 #include "attack.h"
 #include "attitude-change.h"
 #include "bloodspatter.h"
-#include "branch.h"
 #include "chardump.h"
 #include "cloud.h"
 #include "colour.h"
@@ -33,7 +32,6 @@
 #include "exercise.h"
 #include "fight.h"
 #include "food.h"
-#include "god-abil.h"
 #include "god-conduct.h"
 #include "god-item.h"
 #include "god-passive.h" // passive_t::convert_orcs

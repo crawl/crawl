@@ -5,7 +5,6 @@
 
 #include "l-libs.h"
 
-#include "butcher.h"
 #include "cluautil.h"
 #include "food.h"
 #include "item-prop.h"

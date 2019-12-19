@@ -18,7 +18,6 @@
 #include "colour.h"
 #include "command.h"
 #include "describe.h"
-#include "english.h"
 #include "env.h"
 #include "food.h"
 #include "god-item.h"

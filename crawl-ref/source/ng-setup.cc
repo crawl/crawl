@@ -2,7 +2,6 @@
 
 #include "ng-setup.h"
 
-#include "ability.h"
 #include "adjust.h"
 #include "dungeon.h"
 #include "end.h"

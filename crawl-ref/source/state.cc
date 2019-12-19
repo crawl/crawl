@@ -14,7 +14,6 @@
 #include "dbg-util.h"
 #include "delay.h"
 #include "directn.h"
-#include "exclude.h"
 #include "hints.h"
 #include "macro.h"
 #include "menu.h"

@@ -28,7 +28,6 @@
 #include "english.h"
 #include "externs.h" // INVALID_COORD
 #include "fight.h" // melee_confuse_chance
-#include "food.h"
 #include "god-abil.h"
 #include "hints.h"
 #include "invent.h"

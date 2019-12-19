@@ -6,7 +6,6 @@
 #include "l-libs.h"
 
 #include "cluautil.h"
-#include "coord.h"
 #include "env.h"
 #include "mapdef.h"
 #include "stringutil.h"

@@ -19,7 +19,6 @@
 #include "delay.h"
 #include "directn.h"
 #include "dungeon.h"
-#include "english.h"
 #include "item-prop.h"
 #include "items.h"
 #include "level-state-type.h"

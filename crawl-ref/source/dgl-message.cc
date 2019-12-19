@@ -10,7 +10,6 @@
 #include <unistd.h>
 
 #include "files.h"
-#include "format.h"
 #include "initfile.h"
 #include "libutil.h"
 #include "message.h"

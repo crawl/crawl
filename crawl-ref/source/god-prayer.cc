@@ -5,16 +5,12 @@
 #include <cmath>
 
 #include "artefact.h"
-#include "butcher.h"
-#include "coordit.h"
 #include "database.h"
 #include "describe-god.h"
-#include "english.h"
 #include "env.h"
 #include "food.h"
 #include "fprop.h"
 #include "god-abil.h"
-#include "god-item.h"
 #include "god-passive.h"
 #include "hiscores.h"
 #include "invent.h"

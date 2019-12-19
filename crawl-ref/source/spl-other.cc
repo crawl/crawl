@@ -11,7 +11,6 @@
 #include "act-iter.h"
 #include "delay.h"
 #include "env.h"
-#include "food.h"
 #include "god-companions.h"
 #include "libutil.h"
 #include "message.h"

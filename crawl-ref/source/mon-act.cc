@@ -12,7 +12,6 @@
 #include "arena.h"
 #include "attitude-change.h"
 #include "bloodspatter.h"
-#include "butcher.h"
 #include "cloud.h"
 #include "colour.h"
 #include "coordit.h"
@@ -21,7 +20,6 @@
 #include "directn.h" // feature_description_at
 #include "dungeon.h"
 #include "english.h" // apostrophise
-#include "evoke.h"
 #include "fight.h"
 #include "fineff.h"
 #include "ghost.h"
