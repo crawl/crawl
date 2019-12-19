@@ -70,10 +70,18 @@ checkhdr ()
 # run check on all pairs
 checkall ()
 {
+    checkafter ""
+}
+
+# Run checkhdr on all pairs alphabetically after a specific header
+# Useful to run directly in the case running checkall is interrupted.
+checkafter ()
+{
     for hdr in *.h; do
-        if [ $hdr = AppHdr.h ]; then
+        if [[ $hdr < $1 || $hdr = AppHdr.h ]]; then
             continue;
         fi
+
         checkhdr $hdr
     done
 }
