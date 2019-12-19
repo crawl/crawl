@@ -87,7 +87,7 @@ typedef map<card_type, int> deck_archetype;
 deck_archetype deck_of_escape =
 {
     { CARD_TOMB,       5 },
-    { CARD_EXILE,      1 },
+    { CARD_EXILE,      2 },
     { CARD_ELIXIR,     5 },
     { CARD_CLOUD,      5 },
     { CARD_VELOCITY,   5 },
@@ -1007,16 +1007,15 @@ static void _exile_card(int power)
 
     for (int i = 0; i < 1 + extra_targets; ++i)
     {
-        // Pick a random monster nearby to banish (or yourself).
+        // Pick a random monster nearby to banish.
         monster* mon_to_banish = choose_random_nearby_monster(1);
 
         // Bonus banishments only banish monsters.
         if (i != 0 && !mon_to_banish)
             continue;
 
-        if (!mon_to_banish) // Banish yourself!
+        if (!mon_to_banish)
         {
-            banished("drawing a card");
             break;              // Don't banish anything else.
         }
         else
