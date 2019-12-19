@@ -26,7 +26,6 @@ enum card_type
     CARD_VELOCITY,            // remove slow, alter others' speeds
     CARD_TOMB,                // a ring of rock walls
     CARD_EXILE,               // banish others, maybe self
-    CARD_SHAFT,               // under the user, maybe others
     CARD_VITRIOL,             // acid damage
     CARD_CLOUD,               // encage enemies in rings of clouds
     CARD_STORM,               // wind and rain
