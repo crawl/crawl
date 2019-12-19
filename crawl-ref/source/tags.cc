@@ -3915,6 +3915,19 @@ static void _tag_read_you(reader &th)
         if (you.props[HEPLIAKLQANA_ALLY_GENDER_KEY].get_int() == GENDER_NEUTER)
             you.props[HEPLIAKLQANA_ALLY_GENDER_KEY] = GENDER_NEUTRAL;
     }
+
+    if (th.getMinorVersion() < TAG_MINOR_SHAFT_CARD
+            && you.props.exists(NEMELEX_STACK_KEY))
+    {
+        auto oldstack = you.props[NEMELEX_STACK_KEY].get_vector();
+        you.props[NEMELEX_STACK_KEY].get_vector().clear();
+        for (auto c : oldstack)
+        {
+            card_type card = static_cast<card_type>(c.get_int());
+            if (card != CARD_SHAFT_REMOVED)
+                you.props[NEMELEX_STACK_KEY].get_vector().push_back(card);
+        }
+    }
 #endif
 }
 

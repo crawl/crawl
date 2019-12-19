@@ -76,7 +76,6 @@ deck_archetype deck_of_escape =
     { CARD_ELIXIR,     5 },
     { CARD_CLOUD,      5 },
     { CARD_VELOCITY,   5 },
-    { CARD_SHAFT,      5 },
 };
 
 deck_archetype deck_of_destruction =
@@ -164,7 +163,6 @@ const char* card_name(card_type card)
     case CARD_SUMMON_WEAPON:   return "the Dance";
     case CARD_SUMMON_FLYING:   return "Foxfire";
     case CARD_RANGERS:         return "the Rangers";
-    case CARD_SHAFT:           return "the Shaft";
     case CARD_VITRIOL:         return "Vitriol";
     case CARD_CLOUD:           return "the Cloud";
     case CARD_STORM:           return "the Storm";
@@ -178,6 +176,7 @@ const char* card_name(card_type card)
     case CARD_DEGEN:           return "Degeneration";
     case CARD_FAMINE:          return "Famine";
 
+    case CARD_SHAFT_REMOVED:
     case NUM_CARDS:            return "a buggy card";
     }
     return "a very buggy card";
@@ -1026,34 +1025,6 @@ static void _exile_card(int power)
     }
 }
 
-static void _shaft_card(int power)
-{
-    const int power_level = _get_power_level(power);
-    bool did_something = false;
-
-    if (is_valid_shaft_level())
-    {
-        if (grd(you.pos()) == DNGN_FLOOR)
-        {
-            place_specific_trap(you.pos(), TRAP_SHAFT);
-            trap_at(you.pos())->reveal();
-            mpr("A shaft materialises beneath you!");
-            did_something = true;
-        }
-
-        did_something = apply_visible_monsters([=](monster& mons)
-        {
-            return !mons.wont_attack()
-                   && mons_is_threatening(mons)
-                   && x_chance_in_y(power_level, 3)
-                   && mons.do_shaft();
-        }) || did_something;
-    }
-
-    if (!did_something)
-        canned_msg(MSG_NOTHING_HAPPENS);
-}
-
 static int stair_draw_count = 0;
 
 // This does not describe an actual card. Instead, it only exists to test
@@ -1717,7 +1688,6 @@ void card_effect(card_type which_card,
     case CARD_EXILE:            _exile_card(power); break;
     case CARD_ELIXIR:           _elixir_card(power); break;
     case CARD_STAIRS:           _stairs_card(power); break;
-    case CARD_SHAFT:            _shaft_card(power); break;
     case CARD_TOMB:             entomb(10 + power/20 + random2(power/4)); break;
     case CARD_WRAITH:           drain_player(power / 4, false, true); break;
     case CARD_WRATH:            _godly_wrath(); break;
@@ -1753,6 +1723,7 @@ void card_effect(card_type which_card,
             mpr("You feel a momentary urge to oink.");
         break;
 
+    case CARD_SHAFT_REMOVED:
     case NUM_CARDS:
         // The compiler will complain if any card remains unhandled.
         mprf("You have %s a buggy card!", participle);
