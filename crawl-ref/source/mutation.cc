@@ -15,6 +15,8 @@
 #include <sstream>
 
 #include "ability.h"
+#include "act-iter.h"
+#include "butcher.h"
 #include "cio.h"
 #include "coordit.h"
 #include "dactions.h"

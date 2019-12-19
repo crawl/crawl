@@ -5,9 +5,11 @@
 #include "tilereg-cmd.h"
 
 #include "ability.h"
+#include "areas.h"
 #include "cio.h"
 #include "command.h"
 #include "describe.h"
+#include "enum.h"
 #include "env.h"
 #include "items.h"
 #include "libutil.h"

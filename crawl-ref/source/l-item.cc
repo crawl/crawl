@@ -13,6 +13,7 @@
 #include "cluautil.h"
 #include "colour.h"
 #include "coord.h"
+#include "enum.h"
 #include "env.h"
 #include "food.h"
 #include "invent.h"

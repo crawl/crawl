@@ -15,8 +15,10 @@
 #include <cstring>
 #include <functional>
 
+#include "areas.h"
 #include "branch.h"
 #include "colour.h"
+#include "coordit.h"
 #include "database.h"
 #include "god-item.h"
 #include "item-name.h"

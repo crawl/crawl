@@ -15,9 +15,11 @@
 #include <sstream>
 
 #include "abyss.h"
+#include "acquire.h"
 #include "areas.h"
 #include "art-enum.h"
 #include "branch.h"
+#include "butcher.h"
 #include "chardump.h"
 #include "cleansing-flame-source-type.h"
 #include "cloud.h"
@@ -35,6 +37,8 @@
 #include "god-abil.h"
 #include "god-companions.h"
 #include "god-conduct.h"
+#include "god-prayer.h"
+#include "god-wrath.h"
 #include "hints.h"
 #include "invent.h"
 #include "item-prop.h"

@@ -18,6 +18,7 @@
 #include "env.h"
 #include "food.h"
 #include "god-passive.h"
+#include "god-wrath.h"
 #include "item-use.h"
 #include "item-prop.h"
 #include "mapmark.h"

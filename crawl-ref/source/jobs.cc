@@ -2,6 +2,7 @@
 
 #include "jobs.h"
 
+#include "enum.h"
 #include "errors.h"
 #include "item-prop.h"
 #include "libutil.h"

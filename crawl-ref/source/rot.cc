@@ -9,10 +9,12 @@
 
 #include <algorithm>
 
+#include "areas.h"
 #include "butcher.h"
 #include "delay.h"
 #include "english.h"
 #include "env.h"
+#include "god-conduct.h"
 #include "item-prop.h"
 #include "items.h"
 #include "player-equip.h"

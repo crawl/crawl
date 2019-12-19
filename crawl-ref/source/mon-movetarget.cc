@@ -3,6 +3,7 @@
 #include "mon-movetarget.h"
 
 #include "act-iter.h"
+#include "branch.h"
 #include "coord.h"
 #include "coordit.h"
 #include "env.h"

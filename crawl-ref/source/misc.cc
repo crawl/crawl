@@ -15,8 +15,10 @@
 #include <unistd.h>
 #endif
 
+#include "coordit.h"
 #include "database.h"
 #include "english.h"
+#include "fprop.h"
 #include "items.h"
 #include "item-use.h"
 #include "libutil.h"

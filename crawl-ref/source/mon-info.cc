@@ -18,6 +18,8 @@
 #include "coordit.h"
 #include "english.h"
 #include "env.h"
+#include "fight.h"
+#include "god-abil.h"
 #include "ghost.h"
 #include "item-name.h"
 #include "item-prop.h"

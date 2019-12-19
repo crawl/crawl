@@ -18,6 +18,7 @@
 #include "env.h"
 #include "fprop.h"
 #include "fight.h"
+#include "god-conduct.h"
 #include "items.h"
 #include "level-state-type.h"
 #include "losglobal.h"
