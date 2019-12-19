@@ -16,7 +16,6 @@
 
 #include "artefact.h"
 #include "art-enum.h"
-#include "food.h"
 #include "god-conduct.h"
 #include "god-passive.h"
 #include "item-name.h"

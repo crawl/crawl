@@ -12,7 +12,6 @@
 #include "artefact.h"
 #include "database.h"
 #include "english.h"
-#include "god-item.h"
 #include "item-name.h"
 #include "item-status-flag-type.h"
 #include "items.h"

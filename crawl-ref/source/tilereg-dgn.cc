@@ -12,7 +12,6 @@
 #include "coord.h"
 #include "describe.h"
 #include "directn.h"
-#include "dgn-height.h"
 #include "env.h"
 #include "invent.h"
 #include "item-prop.h"

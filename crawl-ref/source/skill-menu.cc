@@ -9,7 +9,6 @@
 
 #include "skill-menu.h"
 
-#include "art-enum.h"
 #include "cio.h"
 #include "clua.h"
 #include "command.h"

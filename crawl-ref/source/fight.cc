@@ -14,7 +14,6 @@
 #include <cstring>
 
 #include "art-enum.h"
-#include "cloud.h"
 #include "coord.h"
 #include "coordit.h"
 #include "delay.h"
@@ -22,7 +21,6 @@
 #include "env.h"
 #include "fineff.h"
 #include "fprop.h"
-#include "god-abil.h"
 #include "god-passive.h" // passive_t::shadow_attacks
 #include "hints.h"
 #include "invent.h"

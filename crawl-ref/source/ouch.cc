@@ -21,13 +21,10 @@
 #endif
 
 #include "artefact.h"
-#include "art-enum.h"
 #include "beam.h"
 #include "chardump.h"
-#include "cloud.h"
 #include "colour.h"
 #include "delay.h"
-#include "describe.h"
 #include "dgn-event.h"
 #include "end.h"
 #include "env.h"
@@ -35,7 +32,6 @@
 #include "files.h"
 #include "fineff.h"
 #include "god-abil.h"
-#include "god-conduct.h"
 #include "god-passive.h"
 #include "hints.h"
 #include "hiscores.h"

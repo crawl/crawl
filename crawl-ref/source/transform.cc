@@ -12,11 +12,9 @@
 
 #include "artefact.h"
 #include "art-enum.h"
-#include "cloud.h"
 #include "delay.h"
 #include "english.h"
 #include "env.h"
-#include "god-abil.h"
 #include "god-item.h"
 #include "god-passive.h" // passive_t::resist_polymorph
 #include "invent.h" // check_old_item_warning

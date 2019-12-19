@@ -10,10 +10,8 @@
 #include <cmath>
 
 #include "areas.h"
-#include "art-enum.h"
 #include "coordit.h" // radius_iterator
 #include "env.h"
-#include "god-conduct.h"
 #include "god-passive.h"
 #include "hints.h"
 #include "items.h" // stack_iterator

@@ -16,7 +16,6 @@
 #include "database.h"
 #include "dbg-maps.h"
 #include "dbg-objstat.h"
-#include "dgn-overview.h"
 #include "dungeon.h"
 #include "end.h"
 #include "exclude.h"
