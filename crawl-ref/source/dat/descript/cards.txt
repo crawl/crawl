@@ -44,8 +44,8 @@ the Cloud card
 
 The card depicts an iron gate enshrouded in mist.
 
-Drawing this card imprisons the user's foes in rings of clouds. The type of clouds
-produced will improve with card power.
+Drawing this card enshrouds the user's foes in rings of sight-blocking clouds.
+The duration of clouds produced will improve with card power.
 %%%%
 # Destruction
 Vitriol card
