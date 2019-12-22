@@ -44,7 +44,7 @@ the Cloud card
 
 The card depicts an iron gate enshrouded in mist.
 
-Drawing this card imprisons the user's foes in rings of clouds. The type of clouds
+Drawing this card imprisons the user's foes in rings of clouds. The duration of clouds
 produced will improve with card power.
 %%%%
 # Destruction

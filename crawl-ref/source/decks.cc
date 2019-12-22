@@ -1483,33 +1483,16 @@ static void _cloud_card(int power)
     {
         monster *mons = monster_at(*di);
         cloud_type cloudy;
-
-        switch (power_level)
-        {
-            case 0: cloudy = !one_chance_in(5) ? CLOUD_MEPHITIC : CLOUD_POISON;
-                    break;
-
-            case 1: cloudy = coinflip() ? CLOUD_COLD : CLOUD_FIRE;
-                    break;
-
-            case 2: cloudy = coinflip() ? CLOUD_ACID: CLOUD_MIASMA;
-                    break;
-
-            default: cloudy = CLOUD_DEBUGGING;
-        }
+        cloudy = CLOUD_BLACK_SMOKE;
 
         if (!mons || mons->wont_attack() || !mons_is_threatening(*mons))
             continue;
 
         for (adjacent_iterator ai(mons->pos()); ai; ++ai)
         {
-            // don't place clouds on the player or monsters
-            if (*ai == you.pos() || monster_at(*ai))
-                continue;
-
             if (grd(*ai) == DNGN_FLOOR && !cloud_at(*ai))
             {
-                const int cloud_power = 5 + random2((power_level + 1) * 3);
+                const int cloud_power = 5 + random2(power_level * 3) + random2((power_level + 1) * 3);
                 place_cloud(cloudy, *ai, cloud_power, &you);
 
                 if (you.see_cell(*ai))
