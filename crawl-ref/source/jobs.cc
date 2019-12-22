@@ -180,10 +180,13 @@ job_type random_starting_job()
     return job;
 }
 
-// Ensure the job isn't JOB_RANDOM/JOB_VIABLE and it has recommended species
-// (old disabled jobs have none).
 bool is_starting_job(job_type job)
 {
-    return job < NUM_JOBS
-        && !_job_def(job).recommended_species.empty();
+    return job_type_valid(job)  // Ensure the job isn't RANDOM/VIABLE/UNKNOWN
+        && !job_is_removed(job);
+}
+
+bool job_is_removed(job_type job)
+{
+    return _job_def(job).recommended_species.empty();
 }
