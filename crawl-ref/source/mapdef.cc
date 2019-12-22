@@ -2817,6 +2817,11 @@ string map_def::validate_map_def(const depth_ranges &default_depths)
 
     unwind_bool valid_flag(validating_map_flag, true);
 
+    /* Maps are validated at startup. At this point, you.species is UNKNOWN, but
+     * many vaults are altered via Lua based on the player species. To avoid
+     * crashing when these maps access you.race(), set a temporary species */
+    unwind_var<species_type> temp_species(you.species, SP_HUMAN);
+
     string err = run_lua(true);
     if (!err.empty())
         return err;
