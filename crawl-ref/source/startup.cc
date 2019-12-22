@@ -807,9 +807,15 @@ void UIStartupMenu::on_show()
             changed_name = true;
         }
 
+        if (keyn == ' ' && first_action)
+        {
+            first_action = false;
+            input_string = "";
+            changed_name = true;
+        }
         // handle the non-action keys by hand to poll input
         // Only consider alphanumeric keys and -_ .
-        if (iswalnum(keyn) || keyn == '-' || keyn == '.'
+        else if (iswalnum(keyn) || keyn == '-' || keyn == '.'
             || keyn == '_' || keyn == ' ')
         {
             first_action = false;
