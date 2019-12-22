@@ -870,6 +870,13 @@ static int round_up_to_multiple(int a, int b)
  */
 void TilesFramework::do_layout()
 {
+    /**
+     * XXX: don't layout unless we're in a game / arena
+     * this is to prevent layout code from accessing `you` while it's invalid.
+     */
+    if (!species_type_valid(you.species))
+        return;
+
     // View size in pixels is ((dx, dy) * crawl_view.viewsz)
     const int scale = m_map_mode_enabled ? Options.tile_map_scale
                                          : Options.tile_viewport_scale;
