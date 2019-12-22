@@ -430,7 +430,7 @@ monster_info::monster_info(const monster* m, int milev)
     attitude = mons_attitude(*m);
 
     type = m->type;
-    threat = mons_threat_level(*m);
+    threat = milev <= MILEV_NAME ? MTHRT_TRIVIAL : mons_threat_level(*m);
 
     props.clear();
     // CrawlHashTable::begin() const can fail if the hash is empty.
