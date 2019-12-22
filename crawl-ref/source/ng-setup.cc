@@ -391,8 +391,6 @@ void setup_game(const newgame_def& ng)
     case GAME_TYPE_NORMAL:
     case GAME_TYPE_CUSTOM_SEED:
     case GAME_TYPE_TUTORIAL:
-        make_hungry(0, true);
-        break;
     case GAME_TYPE_SPRINT:
         break;
     case GAME_TYPE_HINTS:
