@@ -67,6 +67,16 @@ checkhdr ()
     done
 }
 
+# Run check on all headers for a given source
+# This is useful when you just want to check a single source file, most
+# likely because that source file has recently been heavily modified.
+checkcc ()
+{
+    for hdr in *.h; do
+        check $hdr $1
+    done
+}
+
 # run check on all pairs
 checkall ()
 {
