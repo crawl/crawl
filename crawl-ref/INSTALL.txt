@@ -127,6 +127,10 @@ recommended that you also install and configure ccache and binutils-gold:
     apt-get install ccache binutils-gold
     less /usr/share/doc/ccache/README.Debian
 
+To build HTML code coverage reports (using `make catch2-coverage`), you need
+gcovr:
+    pip3 install gcovr
+
 
 Prerequisites (Fedora):
 
