@@ -65,6 +65,7 @@
 #
 #    ANDROID       -- perform an Android build (see docs/develop/android.txt)
 #    TOUCH_UI      -- enable UI behaviour more compatible with touch-screens
+#    COVERAGE	   -- compile with coverage information (for gcov)
 #
 #
 # Requirements:
@@ -553,6 +554,10 @@ ifdef AUTO_OPT
 ifndef NO_AUTO_OPT
 CFOPTIMIZE += -march=native
 endif
+endif
+
+ifdef COVERAGE
+	CFOPTIMIZE_L = -fprofile-arcs -ftest-coverage
 endif
 
 ifdef LTO
@@ -1597,8 +1602,12 @@ plug-and-play-tests: $(CATCH2_PNP_OBJECTS) $(CONTRIB_LIBS) dat/dlua/tags.lua
 catch2-tests: just-compile-catch2-tests
 	./catch2-tests-executable
 
+catch2-coverage: catch2-tests
+	mkdir -p coverage-html-report
+	gcovr --html coverage-html-report/index.html --html-details coverage-html-report/ -e 'levcomp' -e 'conftest' .
+
 clean-catch2:
-	$(RM) catch2-tests-executable catch2-tests-executable.exe
+	$(RM) catch2-tests-executable catch2-tests-executable.exe coverage-html-report
 
 clean-plug-and-play-tests:
 	$(RM) plug-and-play-tests plug-and-play-tests.exe
