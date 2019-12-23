@@ -37,6 +37,9 @@ matrix:
           addons: {apt: {packages: [] }}
         - env: UNBRACE=1
           addons: {apt: {packages: [] }}
+        # catch2 tests
+        - compiler: gcc
+          env: CATCH2_TESTS=1
         # the rest of the actual builds.
         - compiler: gcc
           env: WEBTILES=1

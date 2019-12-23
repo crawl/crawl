@@ -27,6 +27,11 @@ if ($ENV{CHECKWHITE}) {
     exit 0;
 }
 
+if ($ENV{CATCH2_TESTS}) {
+    try("make catch2-tests");
+    exit 0;
+}
+
 if ($ENV{CROSSCOMPILE}) {
     try("make CROSSHOST=i686-w64-mingw32 package-windows");
     exit 0;
