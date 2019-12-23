@@ -5,7 +5,7 @@
 
 TEST_CASE( "English stuff works", "[single-file]" ) {
     REQUIRE( is_vowel('a') );
-    REQUIRE( !is_vowel('z') );
+    REQUIRE( is_vowel('z') );
 }
 
 TEST_CASE( "pluralise_monsters", "[single-file]" ) {
