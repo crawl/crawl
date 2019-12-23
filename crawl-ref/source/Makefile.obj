@@ -300,6 +300,9 @@ windowmanager-sdl.o \
 glwrapper-ogl.o \
 fontwrapper-ft.o
 
+TEST_OBJECTS = \
+catch2-tests/test_english.o
+
 WEBTILES_OBJECTS = \
 tileweb.o \
 tileweb-text.o
@@ -308,10 +311,12 @@ YACC_OBJECTS = \
 util/levcomp.tab.o \
 util/levcomp.lex.o
 
-ALL_OBJECTS = $(OBJECTS) $(TILES_OBJECTS) $(GLTILES_OBJECTS) \
+ALL_OBJECTS = $(OBJECTS) $(TEST_OBJECTS) $(TILES_OBJECTS) $(GLTILES_OBJECTS) \
 $(WEBTILES_OBJECTS) $(YACC_OBJECTS) $(TILEDEFOBJS) \
 libw32c.o \
 libunix.o \
+catch2-tests/test_plug_and_play.o \
+catch2-tests/test_main.o \
 main.o \
 util/monster/monster-main.o \
 version.o

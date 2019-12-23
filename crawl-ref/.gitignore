@@ -233,3 +233,13 @@ icon.png
 /source/util/monster/monster
 /source/util/monster/vault_monster_data.h
 /source/util/monster/*.d
+
+# executable files for catch2_tests
+/source/catch2-tests-executable
+/source/catch2-tests-executable.exe
+
+# option test file. See docs/develop/test_bisect_cc.txt for details
+/source/catch2-tests/test_plug_and_play.cc
+
+# generated files for catch2-tests
+/source/catch2-tests/*.d

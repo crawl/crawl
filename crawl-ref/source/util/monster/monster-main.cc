@@ -4,39 +4,16 @@
 **/
 
 #include "AppHdr.h"
-#include "externs.h"
-#include "directn.h"
-#include "unwind.h"
-#include "env.h"
-#include "colour.h"
+
+#include "fake-main.hpp"
+
 #include "coordit.h"
-#include "dungeon.h"
-#include "los.h"
-#include "message.h"
-#include "mon-abil.h"
-#include "mon-book.h"
-#include "mon-cast.h"
-#include "mon-util.h"
-#include "version.h"
-#include "view.h"
-#include "los.h"
-#include "maps.h"
-#include "initfile.h"
-#include "libutil.h"
 #include "item-name.h"
 #include "item-prop.h"
-#include "act-iter.h"
-#include "mon-death.h"
-#include "random.h"
-#include "spl-util.h"
-#include "state.h"
-#include "stepdown.h"
-#include "stringutil.h"
+#include "los.h"
+#include "message.h"
 #include "syscalls.h"
-#include "artefact.h"
-#include <sstream>
-#include <set>
-#include <unistd.h>
+#include "version.h"
 
 const coord_def MONSTER_PLACE(20, 20);
 
@@ -44,13 +21,6 @@ const string CANG = "cang";
 
 const int PLAYER_MAXHP = 500;
 const int PLAYER_MAXMP = 50;
-
-// Clockwise, around the compass from north (same order as enum RUN_DIR)
-const struct coord_def Compass[9] = {
-    coord_def(0, -1), coord_def(1, -1),  coord_def(1, 0),
-    coord_def(1, 1),  coord_def(0, 1),   coord_def(-1, 1),
-    coord_def(-1, 0), coord_def(-1, -1), coord_def(0, 0),
-};
 
 static bool _is_element_colour(int col)
 {
@@ -1291,18 +1261,3 @@ int main(int argc, char* argv[])
     }
     return 1;
 }
-
-//////////////////////////////////////////////////////////////////////////
-// main.cc stuff
-
-CLua clua(true);
-CLua dlua(false);      // Lua interpreter for the dungeon builder.
-crawl_environment env; // Requires dlua.
-player you;
-game_state crawl_state;
-
-void process_command(command_type);
-void process_command(command_type) {}
-
-void world_reacts();
-void world_reacts() {}

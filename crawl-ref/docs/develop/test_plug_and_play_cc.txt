@@ -1,0 +1,42 @@
+"test_plug_and_play.cc" is an optional source file for catch2 tests. If
+the source file is available, the "make plug-and-play-tests" command
+will use it to create a catch2 tests binary. If the source file is not
+available, the "make plug-and-play-tests" command will fail. This source
+file is in the .gitignore and should never be added to the git project.
+
+The main use of test_plug_and_play.cc is for the file to be used in
+conjunction with the "git bisect" command. If you don't know how the git
+bisect command works, reference "git bisect --help" because otherwise
+none of the following will make sense.
+
+test_plug_and_play.cc is a file which:
+
+1) Compilations of versions of crawl older than master can search for
+catch2 tests
+
+2) Will not be overwritten by git history changes, such as those which
+occur while using git bisect.
+
+This combination of features allows for you to write tests once, then
+use them for any version of crawl which has previously existed, all the
+way back to the original implementation of catch2 support for crawl.
+
+While you are hunting down a bug introduced in newer versions of crawl,
+see if you can create a catch2 test which checks for the bug in
+test_plug_and_play.cc. Verify this test works with "make
+plug-and-play-tests". Then, see if this test works correctly when you
+"git checkout" a version of crawl which does not have the bug. If both
+are true, you can use test_plug_and_play.cc to easily find the bug.
+
+Simply use git bisect as normally, but compile and run
+plug-and-play-tests instead of normal crawl. Whenever the bug is
+present, your test will fail and you can mark that commit as bad.
+Whenever the bug is absent, your test will pass and you can mark that
+commit as good.
+
+This test process is so easy git bisect allows you to automate it. Look
+into "git bisect run" for more details.
+
+When you've finished solving the bug, remember to move the new test from
+test_plug_and_play.cc to a regular test file included in the git
+project! This will help prevent regressions.

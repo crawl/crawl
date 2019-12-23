@@ -83,9 +83,10 @@ MAKEFLAGS += -rR # This only works for recursive makes, i.e. contribs ...
 .SUFFIXES:       # ... so zap the suffix list to neutralize most predifined rules, too
 
 .PHONY: all test install clean clean-contrib clean-rltiles clean-android \
+        clean-catch2 clean-plug-and-play-tests \
         distclean debug debug-lite profile package-source source \
         build-windows package-windows docs greet api api-dev android FORCE \
-	monster
+        monster just-compile-catch2-tests catch2-tests plug-and-play-tests
 
 include Makefile.obj
 
@@ -1067,17 +1068,25 @@ endif
 
 ifneq ($(findstring s,$(MAKEFLAGS)),s)
 ifndef V
-        QUIET_CC       = @echo '   ' CC $@;
-        QUIET_CXX      = @echo '   ' CXX $@;
-        QUIET_PCH      = @echo '   ' PCH $@;
-        QUIET_LINK     = @echo '   ' LINK $@;
-        QUIET_GEN      = @echo '   ' GEN $@;
-        QUIET_COPY     = @echo '   ' COPY $@;
-        QUIET_DEPEND   = @echo '   ' DEPEND $@;
-        QUIET_WINDRES  = @echo '   ' WINDRES $@;
-        QUIET_HOSTCC   = @echo '   ' HOSTCC $@;
-        QUIET_PNGCRUSH = @echo '   ' $(PNGCRUSH_LABEL) $@;
-        QUIET_ADVPNG   = @echo '   ' ADVPNG $@;
+        QUIET_CC          = @echo '   ' CC $@;
+        QUIET_CXX         = @echo '   ' CXX $@;
+        QUIET_PCH         = @echo '   ' PCH $@;
+        QUIET_LINK        = @echo '   ' LINK $@;
+        QUIET_GEN         = @echo '   ' GEN $@;
+        QUIET_COPY        = @echo '   ' COPY $@;
+        QUIET_DEPEND      = @echo '   ' DEPEND $@;
+        QUIET_WINDRES     = @echo '   ' WINDRES $@;
+        QUIET_HOSTCC      = @echo '   ' HOSTCC $@;
+        QUIET_PNGCRUSH    = @echo '   ' $(PNGCRUSH_LABEL) $@;
+        QUIET_ADVPNG      = @echo '   ' ADVPNG $@;
+
+        # The following is just QUIET_LINK with a hard coded string
+        # replacing $@. The point of this is to fix a text bug where
+        # compiling catch2-tests would say
+        # "LINK just-compile-catch2-tests" when
+        # "LINK catch2-tests-executable" is more informative.
+
+        QUIET_CATCH2_LINK = @echo '   ' LINK catch2-tests-executable;
         export V
 endif
 endif
@@ -1252,6 +1261,21 @@ endif
 
 GAME_OBJS=$(OBJECTS) main.o $(EXTRA_OBJECTS)
 MONSTER_OBJS=$(OBJECTS) util/monster/monster-main.o $(EXTRA_OBJECTS)
+CATCH2_TEST_OBJECTS = $(OBJECTS) $(TEST_OBJECTS) catch2-tests/test_main.o $(EXTRA_OBJECTS)
+
+
+ifneq (,$(filter plug-and-play-tests,$(MAKECMDGOALS)))
+    ifeq ("$(wildcard catch2-tests/test_plug_and_play.cc)","")
+$(info  ----------------------------------------------------------------)
+$(info  ERROR: 'catch2-tests_files/test_plug_and_play.cc' is not present)
+$(info  you must create a catch2-tests_files/test_plug_and_play.cc file)
+$(info  in order to use the 'make plug-and-play-tests' option. See )
+$(info  'docs/develop/test_plug_and_play_cc.txt' for more details.)
+$(info  ----------------------------------------------------------------)
+$(error See above ^ ^ ^ ^ ^ ^ ^)
+
+    endif
+endif
 
 # There might not have been any goals passed on the commandline, so...
 GOALS = $(or $(MAKECMDGOALS),$(.DEFAULT_GOAL))
@@ -1508,7 +1532,8 @@ ifeq ($(USE_DGAMELAUNCH),)
 	$(CHMOD) $(MCHMOD) $(prefix_fp)/$(bin_prefix)/$(GAME) || true
 endif
 
-clean: clean-rltiles clean-webserver clean-android clean-monster
+clean: clean-rltiles clean-webserver clean-android clean-monster clean-catch2 \
+       clean-plug-and-play-tests
 	+$(MAKE) -C $(UTIL) clean
 	$(RM) $(GAME) $(GAME).exe $(GENERATED_FILES) $(EXTRA_OBJECTS) libw32c.o\
 	    libunix.o $(ALL_OBJECTS) $(ALL_OBJECTS:.o=.d) *.ixx  \
@@ -1559,6 +1584,25 @@ install-monster: monster
 	if [ -f ~/source/announcements.log ]; then \
 	  echo 'Monster database of master branch on crawl.develz.org updated to: $(VERSION)' >>~/source/announcements.log;\
 	fi
+
+just-compile-catch2-tests: $(CATCH2_TEST_OBJECTS) $(CONTRIB_LIBS) dat/dlua/tags.lua
+	+$(QUIET_CATCH2_LINK)$(CXX) $(LDFLAGS) $(CATCH2_TEST_OBJECTS) -o catch2-tests-executable $(LIBS)
+
+CATCH2_PNP_OBJECTS = $(OBJECTS) catch2-tests/test_plug_and_play.o \
+                     catch2-tests/test_main.o $(EXTRA_OBJECTS)
+
+plug-and-play-tests: $(CATCH2_PNP_OBJECTS) $(CONTRIB_LIBS) dat/dlua/tags.lua
+	+$(QUIET_LINK)$(CXX) $(LDFLAGS) $(CATCH2_PNP_OBJECTS) -o $@ $(LIBS)
+
+catch2-tests: just-compile-catch2-tests
+	./catch2-tests-executable
+
+clean-catch2:
+	$(RM) catch2-tests-executable catch2-tests-executable.exe
+
+clean-plug-and-play-tests:
+	$(RM) plug-and-play-tests plug-and-play-tests.exe
+
 debug: all
 debug-lite: all
 profile: all
