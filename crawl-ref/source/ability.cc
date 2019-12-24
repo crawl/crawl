@@ -616,7 +616,7 @@ static const ability_def Ability_List[] =
     { ABIL_USKAYAW_STOMP, "Stomp",
         3, 0, 100, generic_cost::fixed(20), {fail_basis::invo}, abflag::none },
     { ABIL_USKAYAW_LINE_PASS, "Line Pass",
-        4, 0, 200, generic_cost::fixed(20), {fail_basis::invo}, abflag::none},
+        4, 0, 200, generic_cost::fixed(0), {fail_basis::invo}, abflag::exhaustion },
     { ABIL_USKAYAW_GRAND_FINALE, "Grand Finale",
         8, 0, 500, generic_cost::fixed(0),
         {fail_basis::invo, 120 + piety_breakpoint(4), 5, 1}, abflag::none},
@@ -3150,8 +3150,15 @@ static spret _do_ability(const ability_def& abil, bool fail)
         if (_abort_if_stationary())
             return spret::abort;
         fail_check();
+        if (you.duration[DUR_EXHAUSTED])
+        {
+            mpr("You are too exhausted to line pass out.");
+            return spret::abort;
+        }
+        fail_check();
         if (!uskayaw_line_pass())
             return spret::abort;
+        you.increase_duration(DUR_EXHAUSTED, 12 + random2(5));
         break;
 
     case ABIL_USKAYAW_GRAND_FINALE:
