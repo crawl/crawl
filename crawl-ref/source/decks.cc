@@ -87,7 +87,7 @@ typedef map<card_type, int> deck_archetype;
 deck_archetype deck_of_escape =
 {
     { CARD_TOMB,       5 },
-    { CARD_EXILE,      2 },
+    { CARD_EXILE,      3 },
     { CARD_ELIXIR,     5 },
     { CARD_CLOUD,      5 },
     { CARD_VELOCITY,   5 },
