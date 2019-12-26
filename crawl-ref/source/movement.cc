@@ -79,16 +79,18 @@ static void _swap_places(monster* mons, const coord_def &loc)
         }
     }
 
+    // Friendly foxfire dissipates instead of damaging the player.
+    if (mons->type == MONS_FOXFIRE)
+    {
+        simple_monster_message(*mons, " dissipates!",
+                               MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
+        monster_die(*mons, KILL_DISMISSED, NON_MONSTER, true);
+        return;
+    }
+
     mpr("You swap places.");
 
     mons->move_to_pos(loc, true, true);
-
-    // Foxfire attacks and then dissapates at the new location after the swap.
-    if (mons->type == MONS_FOXFIRE)
-    {
-        foxfire_attack(mons, &you);
-        monster_die(*mons, KILL_DISMISSED, NON_MONSTER, true);
-    }
 
     return;
 }

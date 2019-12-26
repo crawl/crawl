@@ -611,9 +611,8 @@ the Vaults, or the Crypt; the specific branch varies with the caster.
 Foxfire spell
 
 Conjures two balls of burning swamp gas adjacent to the caster. The balls will
-rapidly seek the nearest monster and burn them. If unable to reach a target the
-foxfire will dissipate harmlessly. Foxfire will burn anything that tries to
-change places with it.
+rapidly seek the nearest monster and burn them. They will dissipate harmlessly
+if unable to reach a target or if the caster swaps places with them.
 %%%%
 Freeze spell
 
