@@ -4547,7 +4547,7 @@ bool bolt::attempt_block(monster* mon)
             }
             else
             {
-                mprf("The %s bounces off an invisible shield around %s!",
+                mprf("The %s reflects off an invisible shield around %s!",
                      name.c_str(),
                      mon->name(DESC_THE).c_str());
 

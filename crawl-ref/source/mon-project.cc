@@ -547,10 +547,10 @@ move_again:
                 {
                     if (shield && shield_reflects(*shield))
                     {
-                        mprf("%s reflects %s with %s %s!",
+                        mprf("%s reflects %s off %s %s!",
                              victim->name(DESC_THE, true).c_str(),
                              mon.name(DESC_THE, true).c_str(),
-                             mon.pronoun(PRONOUN_POSSESSIVE).c_str(),
+                             victim->pronoun(PRONOUN_POSSESSIVE).c_str(),
                              shield->name(DESC_PLAIN).c_str());
                         ident_reflector(shield);
                     }
@@ -567,7 +567,7 @@ move_again:
                 }
                 else
                 {
-                    mprf("%s bounces off thin air!",
+                    mprf("%s bounces off of thin air!",
                          mon.name(DESC_THE, true).c_str());
                 }
             }
