@@ -366,6 +366,9 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
 
 
         $popup.on("keydown keypress", function (event) {
+            var enter = event.which == 13, space = event.which == 32;
+            if (enter || space)
+                return;
             var s = scroller($panes.filter(".current")[0]);
             scroller_handle_key(s, event);
         });
