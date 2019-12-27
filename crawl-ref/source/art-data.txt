@@ -611,13 +611,14 @@ EV:       4
 STEALTH:  1
 
 NAME:    plutonium sword
+INSCRIP: irradiate,
 OBJ:     OBJ_WEAPONS/WPN_TRIPLE_SWORD
 FB_BRAND: SPWPN_CHAOS
 PLUS:    +11
 COLOUR:  ETC_MUTAGENIC
 TILE:    urand_plutonium
 TILE_EQ: plutonium_sword
-BOOL:    mutate, chaotic
+BOOL:    chaotic, skip_ego
 STEALTH: -1
 VALUE:   1000
 

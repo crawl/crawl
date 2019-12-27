@@ -858,15 +858,17 @@ static void _PLUTONIUM_SWORD_melee_effects(item_def* /*weapon*/,
                                            actor* attacker, actor* defender,
                                            bool mondied, int /*dam*/)
 {
-    if (!mondied && one_chance_in(5)
-        && (!defender->is_monster()
-             || !mons_immune_magic(*defender->as_monster())))
+    if (!mondied && one_chance_in(3))
     {
-        mpr("Mutagenic energy flows through the plutonium sword!");
-        const int pow = random2(9);
-        MiscastEffect(defender, attacker, {miscast_source::melee},
-                      spschool::transmutation, pow, random2(70),
-                      "the plutonium sword", nothing_happens::NEVER);
+        const int pow = 75 + random2avg(75, 2);
+        if (you.can_see(*attacker))
+        {
+            mpr("Mutagenic energy flows through the plutonium sword!");
+            cast_irradiate(pow, defender, false);
+
+            if (defender->alive())
+                defender->malmutate("");
+        }
 
         if (attacker->is_player())
             did_god_conduct(DID_CHAOS, 3);

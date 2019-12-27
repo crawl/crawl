@@ -245,7 +245,7 @@ were asleep.
 plutonium sword
 
 A triple sword made of weird glowing metal. It irradiates those it strikes,
-causing a range of unpredictable effects — if they survive the impact of the
+causing radiation explosion — if they survive the impact of the
 blade itself, that is.
 %%%%
 great mace "Undeadhunter"
