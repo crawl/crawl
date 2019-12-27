@@ -356,6 +356,54 @@ ghost_knight_weap = {
     ["dire flail"] = 10, ["great mace"] = 10, ["lajatang"] = 5
 }
 
+-- Randomized weapon sets for ghost vault monsters. Many are based on the sets
+-- mon-gear.cc, but some have more variety (e.g. ogre) and some are more
+-- favorable for the better weapon types.
+ghost_monster_weapons = {
+    ["kobold"] =      {["dagger"] = 5, ["short sword"] = 10, ["rapier"] = 5,
+                       ["whip"] = 10},
+    ["gnoll"] =       {["spear"] = 10, ["halberd"] = 5, ["whip"] = 5,
+                       ["flail"] = 5},
+    ["sergeant"] =    {["spear"] = 5, ["trident"] = 10},
+    ["ogre"] =        {["dire flail"] = 5, ["great mace"] = 10,
+                       ["giant club"] = 10, ["giant spiked club"] = 10},
+    ["warrior"] =     ghost_warrior_weap,
+    ["knight"] =      ghost_knight_weap,
+    ["spriggan"] =    {["dagger"] = 1, ["short sword"] = 1, ["rapier"] = 2},
+    ["rider"] =       {["spear"] = 5, ["trident"] = 10, ["demon trident"] = 2},
+    ["druid"] =       {["quarterstaff"] = 10, ["lajatang"] = 10},
+    ["berserker"] =   {["rapier"] = 10, ["quick blade"] = 5, ["war axe"] = 5,
+                       ["broad axe"] = 10, ["morningstar"] = 10,
+                       ["morningstar"] = 10, ["demon whip"] = 5,
+                       ["quarterstaff"] = 10, ["lajatang"] = 5},
+    ["impaler"] =     {["trident"] = 15, ["demon trident"] = 5},
+    ["elf knight"] =  {["long sword"] = 10, ["scimitar"] = 20,
+                       ["demon blade"] = 5},
+    ["defender"] =    {["rapier"] = 10, ["quick blade"] = 10,
+                       ["morningstar"] = 10, ["demon whip"] = 10,
+                       ["lajatang"] = 10},
+    ["blademaster"] = {["rapier"] = 20, ["quick blade"] = 5},
+}
+
+-- Set up a monster equipment string based on the table of monster class weapon
+-- weights above.
+--
+-- @param class     A string, which should be a key in the ghost_monster_table
+--                  above.
+-- @param egos      An optional table with ego names as keys and weights as
+--                  values.
+-- @param args      An optional string giving modifiers to add to every item
+--                  entry in the final item definition. Typically either
+--                  'randart' or 'good_item'
+-- @returns A string containing the item definition.
+function ghost_monster_weapon(class, egos, quality)
+    if ghost_monster_weapons[class] == nil  then
+        error("Unknown weapon class: " .. class)
+    end
+    local weap = ghost_monster_weapons[class]
+    return random_item_def(weap, egos, quality, '|')
+end
+
 -- Set up equipment for the fancier orc warriors, knights, and warlord in
 -- biasface_ghost_orc_armoury and biasface_vaults_ghost_orc_armoury.
 function setup_armoury_orcs(e)

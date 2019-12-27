@@ -41,39 +41,7 @@ function setup_hydra_weapon(e)
     e.kitem("O = " .. weapon_def)
 end
 
--- Set up equipment for monsters with Trog-themed gifts in
--- gammafunk_ghost_wrathful_warriors.
 function wrathful_weapon(class, quality)
-    local weap
-    if class == "kobold" then
-        weap = {["dagger"] = 5, ["short sword"] = 10, ["rapier"] = 5,
-                ["whip"] = 10}
-    elseif class == "sergeant" then
-        weap = {["spear"] = 5, ["trident"] = 10}
-    elseif class == "ogre" then
-        weap = {["dire flail"] = 5, ["great mace"] = 10, ["giant club"] = 10,
-                ["giant spiked club"] = 10}
-    elseif class == "warrior" then
-        weap = ghost_warrior_weap
-    elseif class == "knight" then
-        weap = ghost_knight_weap
-    elseif class == "rider" then
-        weap = {["spear"] = 5, ["trident"] = 10, ["demon trident"] = 2}
-    elseif class == "berserker" then
-        weap = {["rapier"] = 10, ["quick blade"] = 5, ["war axe"] = 5,
-                ["broad axe"] = 10, ["morningstar"] = 10, ["morningstar"] = 10,
-                ["demon whip"] = 5, ["quarterstaff"] = 10, ["lajatang"] = 5}
-    elseif class == "impaler" then
-        weap = {["trident"] = 15, ["demon trident"] = 5}
-    elseif class == "defender" then
-        weap = {["rapier"] = 10, ["quick blade"] = 10, ["morningstar"] = 10,
-                ["demon whip"] = 10, ["lajatang"] = 10}
-    elseif class == "blademaster" then
-        weap = {["rapier"] = 20, ["quick blade"] = 5}
-    else
-        error("Unknown weapon class: " .. class)
-    end
-
     local egos
     if quality == "good_item" then
         -- No egos that Trog hates (pain) or that don't occur on mundane
@@ -93,7 +61,7 @@ function wrathful_weapon(class, quality)
         error("Unknown weapon quality: " .. quality)
     end
 
-    return random_item_def(weap, egos, quality, '|')
+    return ghost_monster_weapon(class, egos, quality, '|')
  end
 }}
 
