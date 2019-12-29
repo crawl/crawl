@@ -310,6 +310,7 @@ catch2-tests/test_coordit.o \
 catch2-tests/test_describe.o \
 catch2-tests/test_english.o \
 catch2-tests/test_files.o \
+catch2-tests/test_format.o \
 catch2-tests/test_items.o \
 catch2-tests/test_mon-util.o \
 catch2-tests/test_ng-init-branches.o \

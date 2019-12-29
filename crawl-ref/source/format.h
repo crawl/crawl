@@ -31,6 +31,10 @@ public:
     void cprintf(const string &s);
     void add_glyph(cglyph_t g);
     void textcolour(int colour);
+
+    void push_colour(int colour, vector<int> &colour_stack);
+    void pop_colour(vector<int> &colour_stack);
+
     formatted_string chop(int length) const;
     formatted_string chop_bytes(int length) const;
     formatted_string substr_bytes(int pos, int length) const;
@@ -78,7 +82,8 @@ public:
     struct fs_op
     {
         fs_op_type type;
-        int colour;
+        colour_t colour;
+        colour_t closing_colour = -1;
         string text;
 
         fs_op(int _colour) : type(FSOP_COLOUR), colour(_colour), text()

@@ -31,7 +31,8 @@ function () {
 
     function formatted_string_to_html(str)
     {
-        var other_open = false;
+        var colour_stack = [];
+
         var filtered = str.replace(/<?<(\/?[a-z]*)>?|>|&/ig, function (str, p1) {
             if (p1 === undefined)
                 p1 = "";
@@ -45,15 +46,20 @@ function () {
             {
                 if (closing)
                 {
-                    other_open = false;
-                    return "</span>";
+                    if (colour_stack.length == 0)
+                        return "";
+                    colour_stack.pop();
+                    var text = "</span>";
+                    if (colour_stack.length > 0)
+                        text += "<span class='fg" + colour_stack[colour_stack.length - 1] + "'>";
+                    return text;
                 }
                 else
                 {
                     var text = "<span class='fg" + cols[p1] + "'>";
-                    if (other_open)
+                    if (colour_stack.length > 0)
                         text = "</span>" + text;
-                    other_open = true;
+                    colour_stack.push(cols[p1]);
                     return text;
                 }
             }
@@ -67,8 +73,13 @@ function () {
                 }
             }
         });
-        if (other_open)
+
+        while (colour_stack.length > 0)
+        {
             filtered += "</span>";
+            colour_stack.pop();
+        }
+
         return filtered;
     }
 
