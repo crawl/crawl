@@ -301,7 +301,8 @@ glwrapper-ogl.o \
 fontwrapper-ft.o
 
 TEST_OBJECTS = \
-catch2-tests/test_english.o
+catch2-tests/test_english.o \
+catch2-tests/test_species.o
 
 WEBTILES_OBJECTS = \
 tileweb.o \

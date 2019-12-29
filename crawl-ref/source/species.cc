@@ -518,7 +518,7 @@ species_type random_draconian_colour()
       species =
           static_cast<species_type>(random_range(SP_FIRST_NONBASE_DRACONIAN,
                                                  SP_LAST_NONBASE_DRACONIAN));
-  } while (!species_is_removed(species));
+  } while (species_is_removed(species));
   return species;
 }
 
