@@ -118,7 +118,7 @@ util/coverage # Add --help to see customisation options
 
 ### Quirks
 
-1. Coverage data from multiple runs is combined. This can lead to confusing execution counts for source code lines in reports. Use `make clean-coverage` to remove all temporary coverage files (including reports!).
+1. Coverage data from multiple runs is combined. This can lead to confusing execution counts for source code lines in reports. Use `make clean-coverage` to remove all temporary coverage files (including reports).
 
 ### A Quick Comparison of HTML Report Formats
 
@@ -128,7 +128,7 @@ Sub-expression coverage covers the granularity of testing a line of code like th
 if (test1() && test2())
 ```
 
-#### lcov (genhtml)
+#### lcov / genhtml
 
 * Included with GCC on many Linux distributions (if not, easy to install)
 * No sub-expression coverage (line-coverage only)
@@ -149,10 +149,15 @@ Code coverage is handled very differently between the GCC and LLVM toolchains. T
 
 #### GCC
 
-1. Compile with `-fprofile-arcs -ftest-coverage`
-2. When run, your executable creates `.gcda` and `.gcno` files (one per source file)
-3. Parse these with `gcov` into a `.gcov` file
-4. Generate reports with `genhtml`.
+1. Compile with `-fprofile-arcs -ftest-coverage`, this generates `.gcno` files (one per source file)
+2. When run, your executable creates `.gcda` (one per source file)
+3. Use either `lcov`/`genhtml` or `gcovr`:
+    * `lcov`/`genhtml`
+        1. Parse `gcno`/`gcda` files with `lcov` into a `.info` file
+        2. Generate reports with `genhtml`.
+    * `gcovr`
+        1. Generate reports with `gcovr`.
+            * (`gcovr` uses `gcov` to parse `gcno`/`gcda` files.)
 
 #### LLVM
 
