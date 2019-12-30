@@ -86,7 +86,7 @@ MAKEFLAGS += -rR # This only works for recursive makes, i.e. contribs ...
         clean-catch2 clean-plug-and-play-tests clean-coverage \
         distclean debug debug-lite profile package-source source \
         build-windows package-windows docs greet api api-dev android FORCE \
-        monster just-compile-catch2-tests catch2-tests plug-and-play-tests
+        monster catch2-tests plug-and-play-tests
 
 include Makefile.obj
 
@@ -1097,14 +1097,6 @@ ifndef V
         QUIET_HOSTCC      = @echo '   ' HOSTCC $@;
         QUIET_PNGCRUSH    = @echo '   ' $(PNGCRUSH_LABEL) $@;
         QUIET_ADVPNG      = @echo '   ' ADVPNG $@;
-
-        # The following is just QUIET_LINK with a hard coded string
-        # replacing $@. The point of this is to fix a text bug where
-        # compiling catch2-tests would say
-        # "LINK just-compile-catch2-tests" when
-        # "LINK catch2-tests-executable" is more informative.
-
-        QUIET_CATCH2_LINK = @echo '   ' LINK catch2-tests-executable;
         export V
 endif
 endif
@@ -1603,8 +1595,8 @@ install-monster: monster
 	  echo 'Monster database of master branch on crawl.develz.org updated to: $(VERSION)' >>~/source/announcements.log;\
 	fi
 
-just-compile-catch2-tests: $(CATCH2_TEST_OBJECTS) $(CONTRIB_LIBS) dat/dlua/tags.lua
-	+$(QUIET_CATCH2_LINK)$(CXX) $(LDFLAGS) $(CATCH2_TEST_OBJECTS) -o catch2-tests-executable $(LIBS)
+catch2-tests-executable: $(CATCH2_TEST_OBJECTS) $(CONTRIB_LIBS) dat/dlua/tags.lua
+	+$(QUIET_LINK)$(CXX) $(LDFLAGS) $(CATCH2_TEST_OBJECTS) -o catch2-tests-executable $(LIBS)
 
 CATCH2_PNP_OBJECTS = $(OBJECTS) catch2-tests/test_plug_and_play.o \
                      catch2-tests/test_main.o $(EXTRA_OBJECTS)
@@ -1612,7 +1604,7 @@ CATCH2_PNP_OBJECTS = $(OBJECTS) catch2-tests/test_plug_and_play.o \
 plug-and-play-tests: $(CATCH2_PNP_OBJECTS) $(CONTRIB_LIBS) dat/dlua/tags.lua
 	+$(QUIET_LINK)$(CXX) $(LDFLAGS) $(CATCH2_PNP_OBJECTS) -o $@ $(LIBS)
 
-catch2-tests: just-compile-catch2-tests
+catch2-tests: catch2-tests-executable
 	./catch2-tests-executable
 
 clean-coverage:
