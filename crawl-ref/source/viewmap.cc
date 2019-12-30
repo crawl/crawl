@@ -142,7 +142,7 @@ bool is_feature(char32_t feature, const coord_def& where)
     switch (feature)
     {
     case 'E':
-        return travel_point_distance[where.x][where.y] == PD_EXCLUDED;
+        return is_exclude_root(where);
     case 'F':
     case 'W':
         return is_waypoint(where);
