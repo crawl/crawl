@@ -83,7 +83,7 @@ MAKEFLAGS += -rR # This only works for recursive makes, i.e. contribs ...
 .SUFFIXES:       # ... so zap the suffix list to neutralize most predifined rules, too
 
 .PHONY: all test install clean clean-contrib clean-rltiles clean-android \
-        clean-catch2 clean-plug-and-play-tests \
+        clean-catch2 clean-plug-and-play-tests clean-coverage \
         distclean debug debug-lite profile package-source source \
         build-windows package-windows docs greet api api-dev android FORCE \
         monster just-compile-catch2-tests catch2-tests plug-and-play-tests
@@ -783,6 +783,7 @@ ifneq (,$(filter debug,$(MAKECMDGOALS)))
 	FULLDEBUG=YesPlease
 	DEBUG=YesPlease
 	NO_OPTIMIZE=YesPlease
+	COVERAGE=YesPlease
 endif
 
 # Debug-Lite
@@ -790,6 +791,7 @@ endif
 ifneq (,$(filter debug-lite,$(MAKECMDGOALS)))
 	DEBUG=YesPlease
 	NO_OPTIMIZE=YesPlease
+	COVERAGE=YesPlease
 endif
 
 # Profile
@@ -797,10 +799,26 @@ endif
 ifneq (,$(filter profile,$(MAKECMDGOALS)))
 	FULLDEBUG=YesPlease
 	DEBUG=YesPlease
+	COVERAGE=YesPlease
+endif
+
+# Unit tests
+ifneq (,$(filter catch2-tests,$(MAKECMDGOALS)))
+	COVERAGE=YesPlease
 endif
 
 ifdef HURRY
 	NO_OPTIMIZE=YesPlease
+endif
+
+ifdef COVERAGE
+    # GCC
+    ifeq ($(shell $(GXX) -v 2>&1|grep clang),)
+		CFOPTIMIZE_L = -fprofile-arcs -ftest-coverage
+    else
+    # Clang
+		CFOPTIMIZE_L = -fprofile-instr-generate -fcoverage-mapping
+    endif
 endif
 
 ifdef FULLDEBUG
@@ -1533,7 +1551,7 @@ ifeq ($(USE_DGAMELAUNCH),)
 endif
 
 clean: clean-rltiles clean-webserver clean-android clean-monster clean-catch2 \
-       clean-plug-and-play-tests
+       clean-plug-and-play-tests clean-coverage
 	+$(MAKE) -C $(UTIL) clean
 	$(RM) $(GAME) $(GAME).exe $(GENERATED_FILES) $(EXTRA_OBJECTS) libw32c.o\
 	    libunix.o $(ALL_OBJECTS) $(ALL_OBJECTS:.o=.d) *.ixx  \
@@ -1596,6 +1614,11 @@ plug-and-play-tests: $(CATCH2_PNP_OBJECTS) $(CONTRIB_LIBS) dat/dlua/tags.lua
 
 catch2-tests: just-compile-catch2-tests
 	./catch2-tests-executable
+
+clean-coverage:
+	$(RM) default.profraw default.profdata coverage.info coverage.profdata
+	find . -type f \( -name '*.gcda' -or -name '*.gcno' \) -delete
+	$(RM) -r coverage-html-report
 
 clean-catch2:
 	$(RM) catch2-tests-executable catch2-tests-executable.exe
