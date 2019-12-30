@@ -84,6 +84,18 @@ def clean(name: str):
         die("Not sure how to do that actually...")
 
 
+def gcovr_common_args():
+    return (
+        "gcovr",
+        "--exclude=catch2-tests/catch.hpp",
+        "--exclude=conftest",
+        "--exclude=levcomp",
+        "--exclude=catch2-tests/catch.hpp",
+        "--exclude=conftest",
+        "--exclude=levcomp",
+    )
+
+
 def generate_report(generator, report_format, binary):
     if report_format == "html":
         clean("coverage-html-report")
@@ -112,25 +124,13 @@ def generate_report(generator, report_format, binary):
             ]
         )
     elif generator == "gcovr" and report_format == "summary":
-        run(
-            [
-                "gcovr",
-                "--keep",
-                # "--use-gcov-files",
-                "--print-summary",
-                "--exclude=catch2-tests/catch.hpp",
-                "--exclude=conftest",
-            ]
-        )
+        run([*gcovr_common_args(), "--print-summary"])
     elif generator == "gcovr" and report_format == "html":
         run(
             [
-                "gcovr",
-                "--keep",
-                # "--use-gcov-files",
+                *gcovr_common_args(),
                 "--html=coverage-html-report/index.html",
                 "--html-details",
-                "--exclude=conftest",
             ]
         )
     else:
