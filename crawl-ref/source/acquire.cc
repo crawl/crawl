@@ -1162,8 +1162,15 @@ static void _adjust_brand(item_def &item, bool divine, int agent)
     if (is_artefact(item))
         return; // their own kettle of fish
 
-    if (agent == GOD_TROG)
-        return; // handled elsewhere
+
+    // Trog has a restricted brand table.
+    if (agent == GOD_TROG && item.base_type == OBJ_WEAPONS)
+    {
+        // 75% chance of a brand
+        item.brand = random_choose(SPWPN_NORMAL, SPWPN_VORPAL,
+                                   SPWPN_FLAMING, SPWPN_ANTIMAGIC);
+        return;
+    }
 
     // Not from a god, so we should prefer better brands.
     if (!divine && item.base_type == OBJ_WEAPONS)
@@ -1204,14 +1211,16 @@ static string _why_reject(const item_def &item, int agent)
     // Trog does not gift the Wrath of Trog, nor weapons of pain
     // (which work together with Necromantic magic).
     // nor fancy magic staffs (wucad mu, majin-bo, staff of battle, elem
-    // staff)
+    // staff, staff of olgreb)
     if (agent == GOD_TROG)
     {
         if (is_unrandom_artefact(item, UNRAND_TROG)
             || is_unrandom_artefact(item, UNRAND_WUCAD_MU)
             || is_unrandom_artefact(item, UNRAND_MAJIN)
             || is_unrandom_artefact(item, UNRAND_BATTLE)
-            || is_unrandom_artefact(item, UNRAND_ELEMENTAL_STAFF))
+            || is_unrandom_artefact(item, UNRAND_ELEMENTAL_STAFF)
+            || is_unrandom_artefact(item, UNRAND_OLGREB)
+            || get_weapon_brand(item) == SPWPN_PAIN)
         {
             return "Destroying a weapon Trog hates!";
         }
@@ -1283,19 +1292,8 @@ int acquirement_create_item(object_class_type class_wanted,
         if (agent == GOD_TROG && !one_chance_in(3))
             want_arts = false;
 
-        int ego = 0;
-
-        // Trog has a restricted brand table for weapons; force the ego
-        // in the call to items()
-        if (agent == GOD_TROG && class_wanted == OBJ_WEAPONS)
-        {
-            // 75% chance of a brand
-            ego = random_choose(SPWPN_FORBID_BRAND, SPWPN_VORPAL,
-                                SPWPN_FLAMING, SPWPN_ANTIMAGIC);
-        }
-
         thing_created = items(want_arts, class_wanted, type_wanted,
-                              ITEM_LEVEL, ego, agent);
+                              ITEM_LEVEL, 0, agent);
 
         if (thing_created == NON_ITEM)
         {

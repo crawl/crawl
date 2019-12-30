@@ -130,9 +130,13 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
         break;
 
     case GOD_TROG:
-        // Anti-magic god: no spell use, no enhancing magic.
-        if (brand == SPWPN_PAIN) // Pain involves necromantic spell use.
+        // Limited selection of brands.
+        if (brand != SPWPN_VORPAL
+            && brand != SPWPN_FLAMING
+            && brand != SPWPN_ANTIMAGIC)
+        {
             return false;
+        }
 
         if (artefact_property(item, ARTP_MAGICAL_POWER) > 0)
             return false;
