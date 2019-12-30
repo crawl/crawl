@@ -118,7 +118,7 @@ ifdef FORCE_SSE
 CFOTHERS += -mfpmath=sse -msse2
 endif
 
-CFWARN := 
+CFWARN :=
 CFWARN_L := -Wall -Wformat-security -Wundef
 
 # Exceptions:
@@ -255,7 +255,7 @@ ifeq ($(uname_S),Darwin)
 		BUILD_SDL2 = YesPlease
 		BUILD_SDL2IMAGE = YesPlease
 		ifdef SOUND
-			ifndef WIN32 
+			ifndef WIN32
 				BUILD_SDL2MIXER = YesPlease
 			endif
 		endif
@@ -287,7 +287,7 @@ ifdef BUILD_ALL
 
 	BUILD_PCRE = YesPlease
 	ifdef SOUND
-		ifndef WIN32 
+		ifndef WIN32
 			BUILD_SDL2MIXER = YesPlease
 		endif
 	endif
@@ -720,7 +720,7 @@ SDL2_LDFLAGS := $(shell $(PKGCONFIG) sdl2 --libs-only-L) $(shell $(PKGCONFIG) sd
 endif
 
 ifdef SOUND
-ifndef WIN32 
+ifndef WIN32
 LIBS += -lSDL2_mixer
 endif
 endif
@@ -1029,7 +1029,7 @@ endif
 
 ifdef BUILD_PCRE
 DEFINES += -DREGEX_PCRE
-else 
+else
   ifdef USE_PCRE
   DEFINES += -DREGEX_PCRE
   LIBS += -lpcre
