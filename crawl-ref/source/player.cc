@@ -300,7 +300,9 @@ bool check_moveto_exclusions(const vector<coord_def> &areas,
                              const string &move_verb,
                              bool *prompted)
 {
-    if (is_excluded(you.pos()) || crawl_state.disables[DIS_CONFIRMATIONS])
+    const bool you_pos_excluded = is_excluded(you.pos())
+            && !is_stair_exclusion(you.pos());
+    if (you_pos_excluded || crawl_state.disables[DIS_CONFIRMATIONS])
         return true;
 
     int count = 0;
