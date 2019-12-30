@@ -205,9 +205,10 @@ def default_coverage() -> str:
 
 def default_generator() -> str:
     if default_coverage() == "gcov":
+        if shutil.which("gcovr"):
+            return "gcovr"
         return "genhtml"
-    else:
-        return "llvm-cov"
+    return "llvm-cov"
 
 
 def default_binary() -> str:
