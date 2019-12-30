@@ -1,0 +1,7 @@
+coverage-html-report/
+*.gcda
+*.gcno
+*.gcov
+default.profraw
+coverage.profdata
+coverage.info

@@ -1,30 +1,4 @@
-A.   Unit tests
-===============
-
-Crawl has a set of unit tests in the source/test/ directory, with each lua
-file being a separate unit test. To use unit tests, you must compile Crawl
-either with the macro DEBUG_DIAGNOSTICS defined (the debug make target) or
-with both the macros DEBUG and DEBUG_TESTS defined (the wizard make target,
-plus -DDEBUG_TESTS). You can then do
-
-    crawl -test
-
-to run the unit tests. To run paricular unit tests, you can do
-
-    crawl -test foo
-
-and that will run all unit tests which have "foo" in their file name.
-
-If you want to write your own unit tests, take a look at the files in
-source/test for examples. test/los_maps.lua and test/bounce.lua have
-examples which use vaults (maps) which are located in test/des. You
-might need to create new Lua functions in the source/l_*.cc files if none of
-the crawl.foo()/dgn.foo()/etc functions do what you need.
-
-=============================================================================
-=============================================================================
-
-B.    Testing with the arena
+A.    Testing with the arena
 ============================
 
 Crawl's arena mode can be used to pit one set of monsters against another and
@@ -48,7 +22,7 @@ prefixed with the channel name, to make grepping for results easier:
 
 See docs/arena.txt for more details.
 
-B.1  Testing specific problems with the arena
+A.1  Testing specific problems with the arena
 =============================================
 
 Using the arena to test problems with specific monsters is rather easy:
@@ -82,7 +56,7 @@ an appropriate amount is given automatically.
 For more on monster and item specifications, look up ITEM and MONS in
 docs/develop/level/syntax.txt
 
-B.2  Testing general problems with the arena
+A.2  Testing general problems with the arena
 ============================================
 
 You can also use the arena to just see if anything unusual is happening, or if
@@ -113,7 +87,7 @@ can forbid monsters with certain glyphs from being randomly generated:
 
     crawl -arena "ban_glyphs:J 10 random v 10 random"
 
-B.3  Getting the arena to run for a long time
+A.3  Getting the arena to run for a long time
 ==============================================
 
 By default the arena exits when all the monsters on one team die, ending the
@@ -154,7 +128,7 @@ through the monsters that can possibly appear in the place chosen by
 "arena_place:", rather than being chosen with the weights appropriate for that
 place. This will cause rare monsters to be generated a lot more often.
 
-B.4  Speeding up the arena
+A.4  Speeding up the arena
 ==========================
 
 You can speed up the arena by reducing the delay in miliseconds between turns.
@@ -166,7 +140,7 @@ This will cause there to be no delay between turns, or when animating beams or
 explosions. You can also set the option "arena_delay" in your init file to
 have it apply to all arena runs.
 
-B.5  Changing the arena terrain
+A.5  Changing the arena terrain
 ===============================
 
 You can change the terrain used in the arena with the "arena:" tag. For
