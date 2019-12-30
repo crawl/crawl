@@ -1445,8 +1445,9 @@ void viewwindow(bool show_updates, bool tiles_only, animation *a)
 
         // Update the animation of cells only once per turn.
         const bool anim_updates = (you.last_view_update != you.num_turns);
-        // Except for elemental colours, which should be updated every refresh.
-        you.frame_no++;
+
+        if (anim_updates)
+            you.frame_no++;
 
 #ifdef USE_TILE
         tiles.clear_text_tags(TAG_NAMED_MONSTER);
