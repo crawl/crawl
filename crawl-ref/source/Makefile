@@ -151,6 +151,7 @@ RM = rm -f
 COPY = cp
 COPY_R = cp -r
 STRIP = strip -s
+SED = sed
 WINDRES = windres
 CHMOD = chmod 2>/dev/null
 CHOWN = chown 2>/dev/null
@@ -1207,7 +1208,7 @@ GENERATED_FILES := $(GENERATED_HEADERS) art-data.h mi-enum.h \
 LANGUAGES = $(filter-out en, $(notdir $(wildcard dat/descript/??)))
 SRC_PKG_BASE  := stone_soup
 SRC_VERSION   := $(shell git describe --tags $(MERGE_BASE) 2>/dev/null || cat util/release_ver)
-MAJOR_VERSION = $(shell echo "$(SRC_VERSION)"|sed -r 's/-.*//;s/^([^.]+\.[^.]+).*/\1/')
+MAJOR_VERSION = $(shell echo "$(SRC_VERSION)"|$(SED) -r 's/-.*//;s/^([^.]+\.[^.]+).*/\1/')
 RECENT_TAG    := $(shell git describe --abbrev=0 --tags $(MERGE_BASE))
 
 export SRC_VERSION
@@ -1493,7 +1494,7 @@ endif
 	$(COPY) ../CREDITS.txt $(datadir_fp)/docs/
 	$(COPY_R) ../settings/* $(datadir_fp)/settings/
 ifeq ($(GAME),crawl.exe)
-	sed -i 's/$$/\r/' `find $(datadir_fp) -iname '*.txt' -o -iname '*.des'`
+	$(SED) -i 's/$$/\r/' `find $(datadir_fp) -iname '*.txt' -or -iname '*.des'`
 endif
 ifdef TILES
 	mkdir -p $(datadir_fp)/dat/tiles
