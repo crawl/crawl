@@ -2,7 +2,7 @@
 
 ## Contents
 
-* [Installing Prebuilt Versions](#installing-prebuilt-versions)
+* [Getting DCSS To Run](#getting-dcss-to-run)
 * [Compiling](#compiling)
   * [Ubuntu / Debian](#ubuntu--debian)
   * [Fedora](#fedora)
@@ -21,10 +21,13 @@
   * [Lua](#lua)
   * [PCRE](#pcre)
   * [Unicode](#unicode)
+* [Getting Help](#getting-help)
 
-## Installing Prebuilt Versions
+## Getting DCSS To Run
 
 You can download prebuild versions of DCSS from the [DCSS homepage](https://crawl.develz.org/download.htm).
+
+If you're having any trouble running these versions, try asking for help in [any of the community forums detailed in the README](../README.md#community).
 
 The rest of this file deals with compiling DCSS from source.
 
@@ -464,3 +467,9 @@ settings. For anything more, please select one of TrueType fonts. If, like one
 of our players, you are deeply attached to the looks of bitmap fonts, you can
 download a corrected version of the Terminal font from
 http://www.yohng.com/software/terminalvector.html
+
+## Getting Help
+
+The best place to ask for help is ##crawl-dev on Freenode IRC, where developers chat.
+
+You can also try [any of the community forums detailed in the README](../README.md#community).
