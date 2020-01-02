@@ -6060,11 +6060,11 @@ void monster::react_to_damage(const actor *oppressor, int damage,
         return;
 
     if (!mons_is_tentacle_or_tentacle_segment(type)
-        && has_ench(ENCH_INNER_FLAME) && oppressor
-        && damage)
+        && has_ench(ENCH_INNER_FLAME) && oppressor && damage)
     {
         mon_enchant i_f = get_ench(ENCH_INNER_FLAME);
-        mprf("Flame seeps out of %s.", name(DESC_THE).c_str());
+        if (you.see_cell(pos()))
+            mprf("Flame seeps out of %s.", name(DESC_THE).c_str());
         check_place_cloud(CLOUD_FIRE, pos(), 3, actor_by_mid(i_f.source));
     }
 
