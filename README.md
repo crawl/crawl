@@ -32,11 +32,13 @@ Both classical ASCII and tiles (GUI) versions of Crawl are available to [downloa
 
 ## Community
 
-### Web
-Our official homepage is [https://crawl.develz.org](https://crawl.develz.org/). You can find online play, offline downloads, a community forum and the development bug tracker/wiki.
-
-### IRC
-Chat with fellow crawlers in [##crawl on irc.freenode.net](https://webchat.freenode.net/?channels=##crawl), or talk development in [##crawl-dev](https://webchat.freenode.net/?channels=##crawl-dev).
+* Our official homepage: [crawl.develz.org](https://crawl.develz.org/)
+  * Online webtiles play
+  * Offline downloads
+  * A community forum.
+* The official [Reddit /r/dcss subreddit](https://www.reddit.com/r/dcss/)
+* [Reddit /r/roguelikes Discord](https://discord.gg/S5F2H32)
+* IRC: ##crawl on Freenode (or ##crawl-dev to chat development)
 
 ## How you can help
 
