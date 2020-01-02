@@ -10,6 +10,11 @@ for a short time. It may also splash onto other nearby creatures on impact.
 %%%%
 Agony spell
 
+Cuts the resilience of an adjacent creature in half. This damage is never
+directly lethal.
+%%%%
+Agony Range spell
+
 Cuts the resilience of a target creature in half. This damage is never directly
 lethal.
 %%%%
@@ -432,6 +437,11 @@ the distance from the caster, being nearly certain when directly adjacent. It
 causes magical contamination when cast.
 %%%%
 Dispel Undead spell
+
+Harms an adjacent undead creature greatly by interfering with the forces
+binding it together.
+%%%%
+Dispel Undead Range spell
 
 Harms an undead creature greatly by interfering with the forces binding it
 together.
