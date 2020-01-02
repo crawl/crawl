@@ -25,7 +25,7 @@
 
 ## Getting DCSS To Run
 
-You can download prebuild versions of DCSS from the [DCSS homepage](https://crawl.develz.org/download.htm).
+You can download prebuilt versions of DCSS from the [DCSS homepage](https://crawl.develz.org/download.htm).
 
 If you're having any trouble running these versions, try asking for help in [any of the community forums detailed in the README](../README.md#community).
 
