@@ -57,7 +57,7 @@ You can install all needed dependencies from the OS:
 ```sh
 sudo apt install build-essential libncursesw5-dev bison flex liblua5.1-0-dev libsqlite3-dev libz-dev pkg-config python-yaml binutils-gold
 
-# Additional dependencies for tiles builds
+# Dependencies for tiles builds
 sudo apt install libsdl2-image-dev libsdl2-mixer-dev libsdl2-dev libfreetype6-dev libpng-dev ttf-dejavu-core
 ```
 
@@ -65,14 +65,14 @@ Then follow [the above compilation steps](#compiling).
 
 ### Fedora
 
-These instructions will possibly also work for other RPM-based distros.
+These instructions may work for other RPM-based distros.
 
 You can install all needed dependencies from the OS:
 
 ```sh
 sudo dnf install gcc gcc-c++ make bison flex ncurses-devel compat-lua-devel sqlite-devel zlib-devel pkgconfig python-yaml
 
-# Additional dependencies for tiles builds:
+# Dependencies for tiles builds:
 sudo dnf install SDL2-devel SDL2_image-devel libpng-devel freetype-devel dejavu-sans-fonts dejavu-sans-mono-fonts
 ```
 
@@ -85,7 +85,7 @@ You can install all needed dependencies from the OS:
 ```sh
 sudo xbps-install make gcc perl flex bison pkg-config ncurses-devel lua51-devel sqlite-devel zlib-devel python-yaml
 
-# Additional dependencies for tiles builds:
+# Dependencies for tiles builds:
 sudo xbps-install pngcrush dejavu-fonts-ttf SDL2-devel SDL2_mixer-devel SDL2_image-devel freetype-devel
 ```
 
@@ -103,7 +103,7 @@ You need the following dependencies:
 * libncurses (and headers)
 * flex / bison (optional)
 
-These dependencies can be supplied by your OS, or installed from DCSS's submodules (`git submodule update --init`):
+You can install these dependencies from your OS package manager, or use DCSS's packaged versions (`git submodule update --init`):
 
 * lua 5.1 (and headers)
 * sqlite (and headers)
@@ -252,7 +252,7 @@ from within the MSYS2 Shell.
 
 ### Windows Subsystem for Linux (WSL)
 
-These instructions have been tested with Ubuntu.
+These instructions have been successfully tested with Ubuntu only.
 
 1. [Follow the instructions on Microsoft's website](https://docs.microsoft.com/en-us/windows/wsl/install-win10) at to set up the Windows Subsystem for Linux.
 
@@ -393,7 +393,7 @@ uses these search paths: ., ./dat, ./docs, .., ../dat, ../docs.
 
 ### ccache
 
-If you're recompiling DCSS many times (eg while developing features), `ccache` can significantly speed up your compile times. It is generally easy to install and set up.
+If you're recompiling DCSS many times (eg while developing features), `ccache` can significantly speed up this process. It is generally easy to install and set up.
 
 On Linux, try installing the `ccache` with your package manager. You will need to add the ccache directory to your `PATH`.
 
@@ -401,7 +401,7 @@ On macOS, run `brew install ccache` and follow the instructions to update your `
 
 ### Installing For All Users
 
-You might want to install DCSS if you want to allow all users on your machine to play it, rather than just yourself.
+You might want to install DCSS if you want to allow all users on your machine to play it.
 
 Use `make install prefix=/usr/local` to build and install DCSS.
 
@@ -435,7 +435,7 @@ automatically if flex/bison is not available.
 
 ### Code Coverage
 
-Code coverage requires some additional packages, see [testing.md](crawl-ref/docs/develop/testing.md) for more info.
+Code coverage requires some more package to be installed. See [testing.md](crawl-ref/docs/develop/testing.md) for more info.
 
 ### Lua
 
