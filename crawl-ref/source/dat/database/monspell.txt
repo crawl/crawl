@@ -200,6 +200,11 @@ unseen Call of Chaos cast
 Wind Blast cast
 
 @The_monster@ conjures a fierce blast of wind!
+%%%%
+Harpoon Shot cast
+
+@The_monster@ fires a harpoon shot @at@ @target@.
+%%%%
 #################################################
 # These have special hard-coded messaging.
 #################################################
