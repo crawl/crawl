@@ -1776,7 +1776,6 @@ int make_mons_armour(monster_type type, int level)
 
     case MONS_JOSEPH:
     case MONS_IMPERIAL_MYRMIDON:
-    case MONS_MAGGIE:
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = random_choose_weighted(3, ARM_LEATHER_ARMOUR,
                                                 2, ARM_RING_MAIL);
@@ -1852,10 +1851,17 @@ int make_mons_armour(monster_type type, int level)
         item.sub_type  = random_choose(ARM_RING_MAIL,   ARM_SCALE_MAIL);
         break;
 
-    case MONS_MARGERY:
+    case MONS_MAGGIE:
         item.base_type = OBJ_ARMOUR;
         item.sub_type = random_choose_weighted(3, ARM_ACID_DRAGON_ARMOUR,
-                                               1, ARM_SWAMP_DRAGON_ARMOUR,
+                                               3, ARM_SWAMP_DRAGON_ARMOUR,
+                                               6, ARM_STEAM_DRAGON_ARMOUR);
+        break;
+
+    case MONS_MARGERY:
+        item.base_type = OBJ_ARMOUR;
+        item.sub_type = random_choose_weighted(3, ARM_STORM_DRAGON_ARMOUR,
+                                               3, ARM_SHADOW_DRAGON_ARMOUR,
                                                6, ARM_FIRE_DRAGON_ARMOUR);
         break;
 
