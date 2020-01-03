@@ -2752,7 +2752,7 @@ static bool _mons_can_displace(const monster* mpusher,
 
     // Foxfires can always be pushed
     if (mpushee->type == MONS_FOXFIRE)
-        return mpusher->type != MONS_FOXFIRE; // Except by each other
+        return !mons_aligned(mpushee, mpusher); // But allies won't do it
 
     if (!mpushee->has_action_energy()
         && !_same_tentacle_parts(mpusher, mpushee))
