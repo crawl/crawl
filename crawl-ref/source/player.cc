@@ -1153,7 +1153,7 @@ int player_regen()
 
     // Bonus regeneration for alive vampires.
     if (you.species == SP_VAMPIRE && you.vampire_alive)
-            rr += 20;
+        rr += 20;
 
     if (you.duration[DUR_COLLAPSE])
         rr /= 4;
