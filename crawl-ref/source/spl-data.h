@@ -863,7 +863,6 @@ static const struct spell_desc spelldata[] =
     TILEG_TWISTED_RESURRECTION,
 },
 
-#if TAG_MAJOR_VERSION == 34
 {
     SPELL_REGENERATION, "Regeneration",
     spschool::charms | spschool::necromancy,
@@ -872,9 +871,8 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     3, 0,
-    TILEG_ERROR,
+    TILEG_REGENERATION,
 },
-#endif
 
 // Monster-only, players can use Lugonu's ability
 {

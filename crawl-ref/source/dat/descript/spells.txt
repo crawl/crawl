@@ -1111,6 +1111,14 @@ Recall spell
 Recalls any friendly creatures on the same level to a position adjacent to the
 caster, over a short duration.
 %%%%
+Regeneration spell
+
+The caster sacrifices a small amount of their body to rot in exchange for
+dramatically increased health regeneration. Greater power lengthens the duration
+of this effect.
+
+Those who cannot rot are unable to use this spell.
+%%%%
 Repel Missiles spell
 
 Reduces the chance of projectile attacks striking the caster, making them

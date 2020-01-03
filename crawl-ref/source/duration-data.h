@@ -575,6 +575,9 @@ static const duration_def duration_data[] =
     { DUR_FLIGHT, 0, "", "", "flight", "", D_DISPELLABLE /*but special-cased*/, {}, 10},
     { DUR_POISONING, 0, "", "", "poisoning", "", D_NO_FLAGS},
     { DUR_PIETY_POOL, 0, "", "", "piety pool", "", D_NO_FLAGS},
+    { DUR_REGENERATION, 0, "", "", "regeneration", "", D_DISPELLABLE,
+      {{ "Your skin stops crawling." },
+          { "Your skin is crawling a little less now.", 1}}, 6},
     { DUR_TRANSFORMATION, 0, "", "", "transformation", "", D_DISPELLABLE /*but special-cased*/, {}, 10},
     { DUR_EXCRUCIATING_WOUNDS, 0, "", "", "excruciating wounds", "", D_DISPELLABLE,
       {{ "", _end_weapon_brand }}},
@@ -650,7 +653,6 @@ static const duration_def duration_data[] =
     { DUR_MAGIC_SHIELD, 0, "", "", "old magic shield", "", D_NO_FLAGS},
     { DUR_FORTITUDE, 0, "", "", "old fortitude", "", D_NO_FLAGS},
     { DUR_WATER_HOLD_IMMUNITY, 0, "", "", "old drowning immunity", "", D_NO_FLAGS, {{""}}},
-    { DUR_REGENERATION, 0, "", "", "old regeneration", "", D_NO_FLAGS},
     { DUR_NO_CAST, 0, "", "", "old no cast", "", D_NO_FLAGS},
 #endif
 };

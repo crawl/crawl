@@ -1091,6 +1091,9 @@ static int _player_bonus_regen()
 {
     int rr = 0;
 
+    if (you.duration[DUR_REGENERATION])
+        rr += 200;
+
     // Jewellery.
     if (you.props[REGEN_AMULET_ACTIVE].get_int() == 1)
         rr += REGEN_PIP * you.wearing(EQ_AMULET, AMU_REGENERATION);

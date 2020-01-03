@@ -154,8 +154,8 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_PAIN,
     SPELL_ANIMATE_SKELETON,
     SPELL_VAMPIRIC_DRAINING,
+    SPELL_REGENERATION,
     SPELL_ANIMATE_DEAD,
-    SPELL_AGONY,
 },
 
 {   // Book of Callings
