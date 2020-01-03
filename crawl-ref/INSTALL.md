@@ -210,9 +210,9 @@ from within the MSYS2 Shell.
 4. To install PyYAML, you can install it from either pacman or Pip/PyPA:
 
     ```sh
-    pacman -S mingw-w64-x86_64-python3-yaml
+    pacman -S mingw-w64-x86_64-python-yaml
     # or
-    pacman -S mingw64/mingw-w64-x86_64-python3-pip
+    pacman -S mingw64/mingw-w64-x86_64-python-pip
     pip install pyyaml
     ```
 
