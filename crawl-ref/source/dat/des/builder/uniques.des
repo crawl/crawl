@@ -181,7 +181,7 @@ DEPTH:  D:14-, Elf, Swamp, Snake, Shoals, Spider
 : place_unique(_G, "Louise")
 
 NAME:   uniq_maggie
-DEPTH:  D:6-12, Lair
+DEPTH:  D:8-12, Lair:1-4
 : place_unique(_G, "Maggie")
 
 NAME:   uniq_maurice
