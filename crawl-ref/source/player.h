@@ -964,7 +964,7 @@ int player_armour_shield_spell_penalty();
 
 int player_movement_speed();
 
-int player_hunger_rate(bool temp = true);
+int player_hunger_rate();
 
 int calc_hunger(int food_cost);
 

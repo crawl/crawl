@@ -1236,7 +1236,7 @@ void update_mana_regen_amulet_attunement()
         you.props[MANA_REGEN_AMULET_ACTIVE] = 0;
 }
 
-int player_hunger_rate(bool temp)
+int player_hunger_rate()
 {
     int hunger = 3;
 
