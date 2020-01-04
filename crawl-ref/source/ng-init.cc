@@ -17,6 +17,7 @@
 #include "item-name.h"
 #include "libutil.h"
 #include "maps.h"
+#include "ng-init-branches.h"
 #include "random.h"
 #include "religion.h"
 #include "state.h"
@@ -71,30 +72,7 @@ void initialise_branch_depths()
         ASSERT(b->id == branch);
     }
 
-    for (branch_iterator it; it; ++it)
-    {
-        if (!branch_is_unfinished(it->id) && it->parent_branch != NUM_BRANCHES)
-        {
-            brentry[it->id] = level_id(it->parent_branch,
-                                       random_range(it->mindepth,
-                                                    it->maxdepth));
-        }
-    }
-
-    // You will get one of Shoals/Swamp and one of Spider/Snake.
-    // This way you get one "water" branch and one "poison" branch.
-    vector<branch_type> disabled_branch;
-    disabled_branch.push_back(random_choose(BRANCH_SWAMP, BRANCH_SHOALS));
-    disabled_branch.push_back(random_choose(BRANCH_SNAKE, BRANCH_SPIDER));
-
-    for (branch_type disabled : disabled_branch)
-    {
-        dprf("Disabling branch: %s", branches[disabled].shortname);
-        brentry[disabled].clear();
-    }
-
-    for (branch_iterator it; it; ++it)
-        brdepth[it->id] = it->numlevels;
+    initialise_brentry();
 }
 
 #define MAX_OVERFLOW_LEVEL 9

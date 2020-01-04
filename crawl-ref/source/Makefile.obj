@@ -168,6 +168,7 @@ mutation.o \
 nearby-danger.o \
 newgame.o \
 ng-init.o \
+ng-init-branches.o \
 ng-input.o \
 ng-restr.o \
 ng-setup.o \
@@ -301,7 +302,9 @@ glwrapper-ogl.o \
 fontwrapper-ft.o
 
 TEST_OBJECTS = \
+catch2-tests/test_branch.o \
 catch2-tests/test_english.o \
+catch2-tests/test_ng-init-branches.o \
 catch2-tests/test_species.o
 
 WEBTILES_OBJECTS = \
