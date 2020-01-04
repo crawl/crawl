@@ -331,13 +331,14 @@ enum missile_type
 #endif
     MI_ARROW,
     MI_BOLT,
-    MI_JAVELIN,
+    MI_SLING_BULLET,
+    MI_BULLET,
 
     MI_STONE,
     MI_LARGE_ROCK,
-    MI_SLING_BULLET,
     MI_THROWING_NET,
     MI_BOOMERANG,
+    MI_JAVELIN,
 
     NUM_MISSILES,
     MI_NONE             // was MI_EGGPLANT... used for launch type detection

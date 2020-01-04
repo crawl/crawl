@@ -142,7 +142,7 @@ spret cast_sticks_to_snakes(int pow, god_type god, bool fail)
     list<item_def*> valid_sticks;
     int num_sticks = 0;
     for (item_def& i : you.inv)
-        if (i.is_type(OBJ_MISSILES, MI_ARROW)
+        if (i.is_type(OBJ_MISSILES, MI_BULLET)
             && check_warning_inscriptions(i, OPER_DESTROY))
         {
             // If the player has bow skill, assume that they

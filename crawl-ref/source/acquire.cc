@@ -549,9 +549,9 @@ static int _acquirement_missile_subtype(bool /*divine*/, int & /*quantity*/,
 
     switch (skill)
     {
-    case SK_SLINGS:    result = MI_SLING_BULLET; break;
-    case SK_BOWS:      result = MI_ARROW; break;
-    case SK_CROSSBOWS: result = MI_BOLT; break;
+    case SK_SLINGS:    result = MI_BULLET; break;
+    case SK_BOWS:      result = MI_BULLET; break;
+    case SK_CROSSBOWS: result = MI_BULLET; break;
 
     case SK_THROWING:
         {

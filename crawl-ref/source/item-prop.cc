@@ -622,20 +622,20 @@ static const weapon_def Weapon_prop[] =
         DAMV_NON_MELEE, 2, 2, 150, RANGED_BRANDS },
 
     { WPN_HAND_CROSSBOW,     "hand crossbow",      12,  5, 15,
-        SK_CROSSBOWS,    SIZE_LITTLE, SIZE_LITTLE, MI_BOLT,
+        SK_CROSSBOWS,    SIZE_LITTLE, SIZE_LITTLE, MI_BULLET,
         DAMV_NON_MELEE, 7, 10, 35, RANGED_BRANDS },
     { WPN_ARBALEST,          "arbalest",           18,  2, 19,
-        SK_CROSSBOWS,    SIZE_LITTLE, NUM_SIZE_LEVELS, MI_BOLT,
+        SK_CROSSBOWS,    SIZE_LITTLE, NUM_SIZE_LEVELS, MI_BULLET,
         DAMV_NON_MELEE, 5, 10, 45, RANGED_BRANDS },
     { WPN_TRIPLE_CROSSBOW,   "triple crossbow",    22,  0, 23,
-        SK_CROSSBOWS,    SIZE_LITTLE, NUM_SIZE_LEVELS, MI_BOLT,
+        SK_CROSSBOWS,    SIZE_LITTLE, NUM_SIZE_LEVELS, MI_BULLET,
         DAMV_NON_MELEE, 0, 2, 100, RANGED_BRANDS },
 
     { WPN_SHORTBOW,          "shortbow",            9,  2, 13,
-        SK_BOWS,         SIZE_LITTLE, NUM_SIZE_LEVELS, MI_ARROW,
+        SK_BOWS,         SIZE_LITTLE, NUM_SIZE_LEVELS, MI_BULLET,
         DAMV_NON_MELEE, 8, 10, 30, RANGED_BRANDS },
     { WPN_LONGBOW,           "longbow",            15,  0, 17,
-        SK_BOWS,         SIZE_MEDIUM, NUM_SIZE_LEVELS, MI_ARROW,
+        SK_BOWS,         SIZE_MEDIUM, NUM_SIZE_LEVELS, MI_BULLET,
         DAMV_NON_MELEE, 2, 10, 45, RANGED_BRANDS },
 };
 
@@ -657,10 +657,8 @@ static const missile_def Missile_prop[] =
     { MI_NEEDLE,        "needle",        0, 12, 2,  false },
 #endif
     { MI_STONE,         "stone",         2, 8,  1,  true  },
-    { MI_ARROW,         "arrow",         0, 8,  2,  false },
-    { MI_BOLT,          "bolt",          0, 8,  2,  false },
+    { MI_BULLET,        "bullet",        0, 8,  2,  false },
     { MI_LARGE_ROCK,    "large rock",   20, 25, 7,  true  },
-    { MI_SLING_BULLET,  "sling bullet",  4, 8,  5,  false },
     { MI_JAVELIN,       "javelin",      10, 20, 8,  true  },
     { MI_THROWING_NET,  "throwing net",  0, 0,  30, true  },
     { MI_BOOMERANG,     "boomerang",     6, 20, 5,  true  },

@@ -1360,7 +1360,7 @@ NAME:   minmay_ruffians
 TAGS:   transparent
 DEPTH:  D:6-10
 MONS:   human; club | mace w:3 . animal skin | leather armour
-MONS:   human; hunting sling . stone | sling bullet w:3 . animal skin | \
+MONS:   human; hunting sling . stone | bullet w:3 . animal skin | \
         leather armour
 SUBST:  1 = 112.
 KMONS:  3 = human; flail . ring mail | scale mail
@@ -2682,7 +2682,7 @@ TAGS:   transparent
 DEPTH:  D:10-
 WEIGHT: 2
 MONS:   statue tile:mons_statue_archer name:archer name_adjective; \
-        longbow . arrow q:30
+        longbow . bullet q:30
 MONS:   bush
 MAP
 .........
@@ -5628,7 +5628,7 @@ COLOUR:  F = lightred
 : elseif you.in_branch("Coc") then
 KMONS:   9 = ice devil w:15 / ice dragon / simulacrum w:5 / \
              skeletal warrior ; hunting sling ego:freezing ident:type . \
-             mundane sling bullet . mace ego:freezing ident:type
+             mundane bullet . mace ego:freezing ident:type
 KMONS:   8 = blizzard demon / lich / shard shrike / \
              reaper ; scythe ego:freezing ident:type
 KMONS:   7 = ice fiend
@@ -5651,7 +5651,7 @@ COLOUR:  F = lightmagenta
 : elseif you.in_branch("Dis") then
 KMONS:   9 = ynoxinul / rust devil w:5 / vampire knight w:5 / \
              phantasmal warrior / skeletal warrior ; mundane arbalest . \
-             mundane bolt . mace good_item
+             mundane bullet . mace good_item
 KMONS:   8 = war gargoyle / iron dragon /  \
              dancing weapon ; great sword good_item | great mace good_item | \
                               glaive good_item | battleaxe good_item

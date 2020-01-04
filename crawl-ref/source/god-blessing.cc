@@ -171,7 +171,7 @@ void gift_ammo_to_orc(monster* orc, bool initial_gift)
         ammo.sub_type = fires_ammo_type(*launcher);
 
     if (ammo.sub_type == MI_STONE)
-        ammo.sub_type = MI_SLING_BULLET; // ugly special case
+        ammo.sub_type = MI_BULLET; // ugly special case
 
     ammo.quantity = 30 + random2(10);
     if (initial_gift || !launcher)

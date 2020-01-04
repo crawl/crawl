@@ -2208,33 +2208,6 @@ static tileidx_t _tileidx_missile_base(const item_def &item)
         case SPMSL_CURARE:   return TILE_MI_DART_CURARE;
         }
 
-    case MI_ARROW:
-        switch (brand)
-        {
-        default:             return TILE_MI_ARROW + 1;
-        case 0:              return TILE_MI_ARROW;
-        case SPMSL_STEEL:    return TILE_MI_ARROW_STEEL;
-        case SPMSL_SILVER:   return TILE_MI_ARROW_SILVER;
-        }
-
-    case MI_BOLT:
-        switch (brand)
-        {
-        default:             return TILE_MI_BOLT + 1;
-        case 0:              return TILE_MI_BOLT;
-        case SPMSL_STEEL:    return TILE_MI_BOLT_STEEL;
-        case SPMSL_SILVER:   return TILE_MI_BOLT_SILVER;
-        }
-
-    case MI_SLING_BULLET:
-        switch (brand)
-        {
-        default:             return TILE_MI_SLING_BULLET + 1;
-        case 0:              return TILE_MI_SLING_BULLET;
-        case SPMSL_STEEL:    return TILE_MI_SLING_BULLET_STEEL;
-        case SPMSL_SILVER:   return TILE_MI_SLING_BULLET_SILVER;
-        }
-
     case MI_JAVELIN:
         switch (brand)
         {
@@ -2252,6 +2225,30 @@ static tileidx_t _tileidx_missile(const item_def &item)
 {
     int tile = _tileidx_missile_base(item);
     return tileidx_enchant_equ(item, tile);
+}
+
+static tileidx_t _tileidx_bullet(int item.sub_type)
+{
+    if (defender->weapon()
+        && item_attack_skill(*defender->weapon()) == SK_BOWS)
+    {
+    default:             return TILE_MI_ARROW + 1;
+    case 0:              return TILE_MI_ARROW;
+    }
+
+    else if (defender->weapon()
+        && item_attack_skill(*defender->weapon()) == SK_CROSSBOWS)
+    {
+    default:             return TILE_MI_BOLT + 1;
+    case 0:              return TILE_MI_BOLT;
+    }
+
+    else if (defender->weapon()
+        && item_attack_skill(*defender->weapon()) == SK_SLINGS)
+    {
+    default:             return TILE_MI_SLING_BULLET + 1;
+    case 0:              return TILE_MI_SLING_BULLET;
+    }
 }
 
 static tileidx_t _tileidx_armour_base(const item_def &item)

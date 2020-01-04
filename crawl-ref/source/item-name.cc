@@ -3372,7 +3372,7 @@ bool is_useless_item(const item_def &item, bool temp)
     case OBJ_MISSILES:
         if ((you.has_spell(SPELL_STICKS_TO_SNAKES)
                 || !you.num_turns && you.char_class == JOB_TRANSMUTER)
-                && item.sub_type == MI_ARROW
+                && item.sub_type == MI_BULLET
             || (you.has_spell(SPELL_SANDBLAST)
                 || !you.num_turns && you.char_class == JOB_EARTH_ELEMENTALIST)
                 && item.sub_type == MI_STONE)

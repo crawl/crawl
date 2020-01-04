@@ -3399,7 +3399,7 @@ bool item_def::launched_by(const item_def &launcher) const
     if (base_type != OBJ_MISSILES)
         return false;
     const missile_type mt = fires_ammo_type(launcher);
-    return sub_type == mt || (mt == MI_STONE && sub_type == MI_SLING_BULLET);
+    return sub_type == mt || (mt == MI_STONE && sub_type == MI_BULLET);
 }
 
 int item_def::index() const
@@ -3523,19 +3523,18 @@ colour_t item_def::missile_colour() const
     {
         case MI_STONE:
             return BROWN;
-        case MI_SLING_BULLET:
+        case MI_BULLET:
             return CYAN;
         case MI_LARGE_ROCK:
             return LIGHTGREY;
-        case MI_ARROW:
-            return BLUE;
 #if TAG_MAJOR_VERSION == 34
         case MI_NEEDLE:
 #endif
+        case MI_ARROW:
+        case MI_BOLT:
+        case MI_SLING_BULLET:
         case MI_DART:
             return WHITE;
-        case MI_BOLT:
-            return LIGHTBLUE;
         case MI_JAVELIN:
             return RED;
         case MI_THROWING_NET:
