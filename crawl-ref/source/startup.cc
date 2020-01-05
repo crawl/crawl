@@ -242,6 +242,13 @@ static void _post_init(bool newc)
 {
     ASSERT(strwidth(you.your_name) <= MAX_NAME_LENGTH);
 
+    // XXX: now that the player is loaded, do a layout.
+    // This is necessary to ensure that the message window is positioned, in
+    // case there are any early game warning messages to be logged.
+#ifdef USE_TILE
+    tiles.resize();
+#endif
+
     clua.load_persist();
 
     // Load macros
@@ -311,13 +318,6 @@ static void _post_init(bool newc)
 
     // Start timer on session.
     you.last_keypress_time = chrono::system_clock::now();
-
-    // XXX: now that the player is loaded, do a layout.
-    // This is necessary to ensure that the message window is positioned, in
-    // case there are any early game warning messages to be logged.
-#ifdef USE_TILE
-    tiles.resize();
-#endif
 
 #ifdef CLUA_BINDINGS
     clua.runhook("chk_startgame", "b", newc);
