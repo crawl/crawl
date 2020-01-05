@@ -3412,3 +3412,149 @@ MAP
   ...........
    .........
 ENDMAP
+
+##############################################################
+NAME:    heliophobic_arrival_battle_scene
+TAGS:    arrival no_monster_gen no_trap_gen no_pool_fixup
+ORIENT:  float
+NSUBST:  - = 6:u / 12:v / *:.
+KPROP:   uv = bloody
+KPROP:   . = bloody / w:30 nothing
+TILE:    c = wall_hall
+FTILE:   .{uvt+ = floor_marble
+COLOUR:  .c = silver
+: local race = you.race()
+: local ally = you.monster()
+: -- The corpseless. Before the game starts, you.monster() is "program bug".
+: if (not crawl.game_started()) or race == "Vampire"
+:     or race == "Mummy" or race == "Ghoul" or race == "Octopode"
+:     or race == "Gargoyle" or race == "Vine Stalker"
+:     or race == "Yak" or race == "Formicid" then
+:   ally = util.random_from({"dwarf", "human"})
+: end
+:
+: local axis = util.random_from({"goblin", "gnoll", "kobold", "orc"})
+:
+: dgn.delayed_decay(_G, 'u', ally .. " skeleton")
+: dgn.delayed_decay(_G, 'v', axis .. " skeleton")
+MAP
+cc+ccc+cc
+cc-ccc-cc
+c--->---c
+c---c---c
+c---c---c
+c---c---c
+c-------c
+c---{---c
+c-------c
+ccccccccc
+ENDMAP
+
+##############################################################
+NAME:    heliophobic_arrival_enchanted_forest
+TAGS:    arrival no_monster_gen no_trap_gen
+ORIENT:  float
+SHUFFLE: TAG
+FTILE:   .{TAGtRS = floor_moss
+COLOUR:  .{t = green
+MARKER:  S = lua:fog_machine{ \
+             pow_max = 30, delay_min = 20, delay_max = 200, \
+             size = 9, start_clouds = 5, \
+             cloud_type = "magical condensation"}
+MAP
+     .tt.t
+  Tt.t.t.tt.S
+ S.tt.A.At.t.t
+ tt.tA...A.tt.
+..t.A..G..Att.t
+tt.A.......A.tt
+.tt..G.{.G....@
+t.tA.......At.t
+t.t.A..G..A.t.t
+ tt.tA...At.tt
+ ..tt.A.At.t.t
+  .S.tt..t.TS
+     t.tt.
+ENDMAP
+
+##############################################################
+NAME:   heliophobic_arrival_ceremonial_halls
+TAGS:   arrival no_monster_gen no_trap_gen
+ORIENT: float
+TILE:   c = wall_marble
+FTILE:  '+{cG = floor_marble
+COLOUR: 'c = silver
+SUBST:  ' = .
+MAP
+>....ccc+ccc....>
+.....cG'''Gc.....
+..c..cc'c'cc..c..
+.ccc.cG'c'Gc.ccc.
+.ccc.cc'c'cc.ccc.
+..c..cG'c'Gc..c..
+.....cc'c'cc.....
+ccccccG'''Gcccccc
+cGcGcGc'''cGcGcGc
+c'''''''''''''''c
++'ccc'''{'''ccc'+
+c'''''''''''''''c
+cGcGcGc'''cGcGcGc
+ccccccG'''Gcccccc
+.....cc'c'cc.....
+..c..cG'c'Gc..c..
+.ccc.cc'c'cc.ccc.
+.ccc.cG'c'Gc.ccc.
+..c..cc'c'cc..c..
+.....cG'''Gc.....
+>....ccc+ccc....>
+ENDMAP
+
+##############################################################
+NAME:    heliophobic_arrival_henge
+TAGS:    arrival no_monster_gen no_trap_gen
+ORIENT:  float
+FTILE:  .t{A = floor_moss
+COLOUR: .t = green
+SUBST:   ? = >:30 T V:5
+MAP
+    .......
+   ..tt.tt..
+  .tttt.tttt.
+?.ttttA.Atttt.?
+..ttA.....Att..
+.ttA..ttt..Att.
+.ttA...{...Att.
+.ttA..ttt..Att.
+..ttA.....Att..
+?.ttt.AAAt.tt.?
+  .t.ttttt...
+   ..ttttt..
+    .......
+ENDMAP
+
+##############################################################
+NAME:    heliophobic_arrival_glass_houses
+TAGS:    arrival no_monster_gen no_pool_fixup no_trap_gen
+ORIENT:  float
+KPROP:   w = no_tele_into
+SHUFFLE: bnv
+SUBST:   ? = >:20 A G T V:5
+MAP
+wwwwwwwwwwwwwww
+wbbbbwwwwwbbbbw
+wb{.bbbbbbb.?bw
+wb..+.....+..bw
+wbb+bbb+bbb+bbw
+wwb.b.....b.bww
+wwb.b..b..b.bww
+wwb.b..b..b.bww
+@.+.+.GbG.+.+.@
+wwb.b..b..b.bww
+wwb.b..b..b.bww
+wwb.b.....b.bww
+wbb+bbb+bbb+bbw
+wb..+.....+..bw
+wb?.bbbbbbb.?bw
+wbbbbwwwwwbbbbw
+wwwwwwwwwwwwwww
+ENDMAP

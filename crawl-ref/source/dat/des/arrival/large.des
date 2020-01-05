@@ -1110,3 +1110,36 @@ cxx..xxc
 ccG..Gcc
  cc++cc
 ENDMAP
+
+##############################################################################
+NAME:    heliophobic_arrival_dark_side_of_the_moon
+TAGS:    arrival no_monster_gen no_trap_gen
+ORIENT:  float
+MARKER:  F = lua:fog_machine{ \
+             pow_max = 32, delay_min = 20, delay_max = 200, \
+             size = 7, start_clouds = 7, cloud_type = "black smoke"}
+MAP
+        xxxxxxxxx
+      xxxxxxGxxxxxx
+     xxx.........xxx
+    xx.....F.......xx
+   xx...............xx
+  xx........xxxx.....xx
+  xx......xxxxxxxx...xx
+ xx......xxxxxxxxxx...xx
+ xx.....xxxxxxxxxxxx...@
+ xx.....xxxxxxxxxxxx..xx
+ xx....xxxxxxxxxxxxxx.xx
+ xG{...xxxxxxxxxxxxxx.xx
+ xx....xxxxxxxxxxxxxx.xx
+ xx....xxxxxxxxxxxxxx.xx
+ xx.....xxxxxxxxxxxx...@
+ xx.....xxxxxxxxxxxx..xx
+  xx.....xxxxxxxxxx..xx
+  xx......xxxxxxxx...xx
+   xx.......xxxx....xx
+    xx....F........xx
+     xxx.........xxx
+      xxxxxxGxxxxxx
+        xxxxxxxxx
+ENDMAP
