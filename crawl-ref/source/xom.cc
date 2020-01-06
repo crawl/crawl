@@ -678,9 +678,9 @@ static void _xom_acquirement(int /*sever*/)
     };
     const object_class_type force_class = RANDOM_ELEMENT(types);
 
-    int item_index = NON_ITEM;
-    if (!acquirement(force_class, GOD_XOM, false, &item_index)
-        || item_index == NON_ITEM)
+    const int item_index = acquirement_create_item(force_class, GOD_XOM,
+            false, you.pos());
+    if (item_index == NON_ITEM)
     {
         god_speaks(GOD_XOM, "\"No, never mind.\"");
         return;

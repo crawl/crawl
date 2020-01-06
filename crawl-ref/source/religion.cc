@@ -1352,7 +1352,6 @@ static bool _give_pakellas_gift()
 
 static bool _give_trog_oka_gift(bool forced)
 {
-    bool success = false;
     // Break early if giving a gift now means it would be lost.
     if (!(feat_has_solid_floor(grd(you.pos()))
         || feat_is_watery(grd(you.pos())) && species_likes_water(you.species)))
@@ -1386,7 +1385,9 @@ static bool _give_trog_oka_gift(bool forced)
     else
         return false;
 
-    success = acquirement(gift_type, you.religion);
+    const bool success =
+        acquirement_create_item(gift_type, you.religion,
+                false, you.pos()) != NON_ITEM;
     if (success)
     {
         if (gift_type == OBJ_MISSILES)

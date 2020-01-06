@@ -926,11 +926,10 @@ static void _debug_acquirement_stats(FILE *ostat)
             break;
         }
 
-        int item_index = NON_ITEM;
+        const int item_index = acquirement_create_item(type, AQ_WIZMODE, true,
+                you.pos());
 
-        if (!acquirement(type, AQ_WIZMODE, true, &item_index)
-            || item_index == NON_ITEM
-            || !mitm[item_index].defined())
+        if (item_index == NON_ITEM || !mitm[item_index].defined())
         {
             mpr("Acquirement failed, stopping early.");
             break;
