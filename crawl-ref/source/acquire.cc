@@ -1489,13 +1489,13 @@ int acquirement_create_item(object_class_type class_wanted,
         && agent > GOD_NO_GOD
         && agent < NUM_GODS)
     {
-        if (agent == GOD_XOM)
+        if (!quiet && agent == GOD_XOM)
             simple_god_message(" snickers.", GOD_XOM);
         else
             return _failed_acquirement(quiet);
     }
 
-    move_item_to_grid(&thing_created, pos);
+    move_item_to_grid(&thing_created, pos, quiet);
 
     if (thing_created != NON_ITEM)
     {
