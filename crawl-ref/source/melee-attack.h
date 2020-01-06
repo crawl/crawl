@@ -66,6 +66,7 @@ private:
     int calc_mon_to_hit_base() override;
     int apply_damage_modifiers(int damage) override;
     int calc_damage() override;
+    bool apply_damage_brand(const char *what = nullptr) override;
 
     /* Attack effects */
     void check_autoberserk();
@@ -134,7 +135,7 @@ private:
     bool player_monattk_hit_effects();
     void attacker_sustain_passive_damage();
     int  staff_damage(skill_type skill);
-    void apply_staff_damage();
+    bool apply_staff_damage();
     void player_stab_check() override;
     bool player_good_stab() override;
     void player_announce_aux_hit();
