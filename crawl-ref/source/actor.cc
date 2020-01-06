@@ -950,9 +950,6 @@ void actor::collide(coord_def newpos, const actor *agent, int pow)
 
     if (other && other->alive())
     {
-        if (other->is_monster() && !fedhas_prot_other)
-            behaviour_event(other->as_monster(), ME_WHACK, agent);
-
         if (you.can_see(*this) || you.can_see(*other))
         {
             mprf("%s %s with %s!",
@@ -970,9 +967,12 @@ void actor::collide(coord_def newpos, const actor *agent, int pow)
             }
         }
 
+        if (other->is_monster() && !fedhas_prot_other)
+            behaviour_event(other->as_monster(), ME_WHACK, agent);
+
         const string thisname = name(DESC_A, true);
         const string othername = other->name(DESC_A, true);
-        if (!fedhas_prot_other)
+        if (other->alive() && !fedhas_prot_other)
         {
             other->hurt(agent, other->apply_ac(damage.roll()),
                         BEAM_MISSILE, KILLED_BY_COLLISION,
