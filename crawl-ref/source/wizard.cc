@@ -55,7 +55,7 @@ static void _do_wizard_command(int wiz_command)
         return;
     }
 
-    case 'a': acquirement(OBJ_RANDOM, AQ_WIZMODE); break;
+    case 'a': acquirement_menu(); break;
     case 'A': wizard_set_all_skills(); break;
     case CONTROL('A'):
         if (player_in_branch(BRANCH_ABYSS))
