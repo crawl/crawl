@@ -1360,7 +1360,7 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
     if ((abil.ability == ABIL_EVOKE_FLIGHT
          || abil.ability == ABIL_TRAN_BAT
          || abil.ability == ABIL_FLY)
-        && !flight_allowed())
+        && !flight_allowed(quiet))
     {
         return false;
     }
