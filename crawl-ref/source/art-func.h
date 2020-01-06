@@ -21,6 +21,7 @@
 #define ART_FUNC_H
 
 #include "areas.h"         // For silenced() and invalidate_agrid()
+#include "attack.h"        // For attack_strength_punctuation()
 #include "beam.h"          // For Lajatang of Order's silver damage
 #include "cloud.h"         // For storm bow's and robe of clouds' rain
 #include "coordit.h"       // For distance_iterator()
@@ -722,11 +723,13 @@ static void _WYRMBANE_melee_effects(item_def* weapon, actor* attacker,
 
     if (!mondied)
     {
-        mprf("%s %s!",
+        int bonus_dam = 1 + random2(3 * dam / 2);
+        mprf("%s %s%s",
             defender->name(DESC_THE).c_str(),
-            defender->conj_verb("convulse").c_str());
+            defender->conj_verb("convulse").c_str(),
+            attack_strength_punctuation(bonus_dam).c_str());
 
-        defender->hurt(attacker, 1 + random2(3*dam/2));
+        defender->hurt(attacker, bonus_dam);
 
         // Allow the lance to charge when killing dragonform felid players.
         mondied = defender->is_player() ? defender->as_player()->pending_revival
@@ -777,10 +780,12 @@ static void _UNDEADHUNTER_melee_effects(item_def* /*item*/, actor* attacker,
     if (defender->holiness() & MH_UNDEAD && !one_chance_in(3)
         && !mondied && dam)
     {
-        mprf("%s %s blasted by disruptive energy!",
+        int bonus_dam = random2avg((1 + (dam * 3)), 3);
+        mprf("%s %s blasted by disruptive energy%s",
               defender->name(DESC_THE).c_str(),
-              defender->conj_verb("be").c_str());
-        defender->hurt(attacker, random2avg((1 + (dam * 3)), 3));
+              defender->conj_verb("be").c_str(),
+              attack_strength_punctuation(bonus_dam).c_str());
+        defender->hurt(attacker, bonus_dam);
     }
 }
 
@@ -1002,11 +1007,12 @@ static void _ELEMENTAL_STAFF_melee_effects(item_def*, actor* attacker,
     if (bonus_dam <= 0)
         return;
 
-    mprf("%s %s %s.",
+    mprf("%s %s %s%s",
          attacker->name(DESC_THE).c_str(),
          attacker->conj_verb(verb).c_str(),
          (attacker == defender ? defender->pronoun(PRONOUN_REFLEXIVE)
-                               : defender->name(DESC_THE)).c_str());
+                               : defender->name(DESC_THE)).c_str(),
+         attack_strength_punctuation(bonus_dam).c_str());
 
     defender->hurt(attacker, bonus_dam, flavour);
 
