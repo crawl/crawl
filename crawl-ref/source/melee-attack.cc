@@ -2159,9 +2159,11 @@ bool melee_attack::apply_staff_damage()
         if (special_damage)
         {
             special_damage_message =
-                make_stringf("%s %s electrocuted!",
-                             defender->name(DESC_THE).c_str(),
-                             defender->conj_verb("are").c_str());
+                make_stringf(
+                    "%s %s electrocuted%s",
+                    defender->name(DESC_THE).c_str(),
+                    defender->conj_verb("are").c_str(),
+                    attack_strength_punctuation(special_damage).c_str());
             special_damage_flavour = BEAM_ELECTRICITY;
         }
 
@@ -2177,10 +2179,11 @@ bool melee_attack::apply_staff_damage()
         {
             special_damage_message =
                 make_stringf(
-                    "%s freeze%s %s!",
+                    "%s freeze%s %s%s",
                     attacker->name(DESC_THE).c_str(),
                     attacker->is_player() ? "" : "s",
-                    defender->name(DESC_THE).c_str());
+                    defender->name(DESC_THE).c_str(),
+                    attack_strength_punctuation(special_damage).c_str());
             special_damage_flavour = BEAM_COLD;
         }
         break;
@@ -2193,10 +2196,11 @@ bool melee_attack::apply_staff_damage()
         {
             special_damage_message =
                 make_stringf(
-                    "%s crush%s %s!",
+                    "%s crush%s %s%s",
                     attacker->name(DESC_THE).c_str(),
                     attacker->is_player() ? "" : "es",
-                    defender->name(DESC_THE).c_str());
+                    defender->name(DESC_THE).c_str(),
+                    attack_strength_punctuation(special_damage).c_str());
         }
         break;
 
@@ -2210,10 +2214,11 @@ bool melee_attack::apply_staff_damage()
         {
             special_damage_message =
                 make_stringf(
-                    "%s burn%s %s!",
+                    "%s burn%s %s%s",
                     attacker->name(DESC_THE).c_str(),
                     attacker->is_player() ? "" : "s",
-                    defender->name(DESC_THE).c_str());
+                    defender->name(DESC_THE).c_str(),
+                    attack_strength_punctuation(special_damage).c_str());
             special_damage_flavour = BEAM_FIRE;
 
             if (defender->is_player())
@@ -2242,9 +2247,10 @@ bool melee_attack::apply_staff_damage()
         {
             special_damage_message =
                 make_stringf(
-                    "%s %s in agony!",
+                    "%s %s in agony%s",
                     defender->name(DESC_THE).c_str(),
-                    defender->conj_verb("writhe").c_str());
+                    defender->conj_verb("writhe").c_str(),
+                    attack_strength_punctuation(special_damage).c_str());
 
             attacker->god_conduct(DID_EVIL, 4);
         }
