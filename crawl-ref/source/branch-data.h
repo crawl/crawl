@@ -363,3 +363,8 @@ const Branch branches[NUM_BRANCHES] =
       '!', {}, branch_noise::normal },
 #endif
 };
+
+/*
+ * There's a few more constant data structures related to branches in
+ * the early parts of branch.cc (Example: danger_branch_order)
+ */
