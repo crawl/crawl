@@ -1256,14 +1256,13 @@ bool describe_god_with_join(god_type which_god)
     {
         if (fee == 0)
         {
-            service_fee = string("Gozag will waive the service fee if you ")
-                          + random_choose("act now", "join today") + "!\n";
+            service_fee = string(" (no fee if you ")
+                          + random_choose("act now", "join today") + ")";
         }
         else
         {
             service_fee = make_stringf(
-                    "The service fee for joining is currently %d gold; you"
-                    " have %d.\n",
+                    " (%d gold; you have %d)",
                     fee, you.gold);
         }
     }
@@ -1277,40 +1276,38 @@ bool describe_god_with_join(god_type which_god)
     {
         Text* label = static_cast<Text*>(child.get());
         formatted_string text = label->get_text();
-        text += formatted_string::parse_string("  [<w>Enter</w>]: join religion");
+        text += formatted_string::parse_string("  [<w>J</w>/<w>Enter</w>]: "
+                                               "join");
+
+        // We assume that a player who has enough gold such that
+        // the join fee plus accumulated gold overflows knows what this menu
+        // does.
+        if (text.width() + service_fee.length() + 9 <= MIN_COLS)
+            text += " religion";
+        if (!service_fee.empty())
+            text += service_fee;
         label->set_text(text);
     }
 
     // States for the state machine
     enum join_step_type {
         SHOW = -1, // Show the usual god UI
-        JOIN, // Ask whether to join
         ABANDON, // Ask whether to abandon god, if applicable
     };
 
-    // Add separate text widgets for each of the four possible join-god prompts;
+    // Add separate text widgets the possible abandon-god prompts;
     // then when a different prompt needs to be shown, we switch to that prompt.
     // This is somewhat brittle, but ensures that the UI doesn't resize when
     // switching between prompts.
-    const string prompts[] = {
-        make_stringf("%sDo you wish to %sjoin this religion?",
-                service_fee.c_str(),
-                (you.worshipped[which_god]) ? "re" : ""),
+    const string abandon_prompt =
         make_stringf("Are you sure you want to abandon %s?",
-                god_name(you.religion).c_str())
-    };
-    formatted_string prompt_fs;
-    for (int i = JOIN; i <= ABANDON; i++)
-    {
-        prompt_fs.clear();
-        prompt_fs.textcolour(channel_to_colour(MSGCH_PROMPT));
+                god_name(you.religion).c_str());
+    formatted_string prompt_fs(abandon_prompt, channel_to_colour(MSGCH_PROMPT));
 
-        prompt_fs.cprintf("%s", prompts[i].c_str());
-        more_sw->add_child(make_shared<Text>(prompt_fs));
+    more_sw->add_child(make_shared<Text>(prompt_fs));
 
-        prompt_fs.cprintf(" [Y]es or [n]o only, please.");
-        more_sw->add_child(make_shared<Text>(prompt_fs));
-    }
+    prompt_fs.cprintf(" [Y]es or [n]o only, please.");
+    more_sw->add_child(make_shared<Text>(prompt_fs));
 
     join_step_type step = SHOW;
     bool yesno_only = false;
@@ -1333,53 +1330,55 @@ bool describe_god_with_join(god_type which_god)
             tiles.ui_state_change("describe-god", 0);
 #endif
             if (step == SHOW)
-                more_sw->current() = n;
-            else
             {
-                yesno_only = false;
-                goto update_ui;
+                more_sw->current() = n;
+                return true;
             }
-            return true;
+            else
+                yesno_only = false;
         }
 
         // Next, allow child widgets to handle scrolling keys
         // NOTE: these key exceptions are also specified in ui-layouts.js
-        if (keyin != ' ' && keyin != CK_ENTER)
+        if (keyin != 'J' && keyin != CK_ENTER)
         if (desc_sw->current_widget()->on_event(ev))
             return true;
 
-        if (step == SHOW)
+        if (step == ABANDON)
         {
-            step = JOIN;
-            goto update_ui;
-        }
+            if (keyin != 'Y' && toupper_safe(keyin) != 'N')
+                yesno_only = true;
+            else
+                yesno_only = false;
 
-        if (keyin != 'Y' && toupper_safe(keyin) != 'N')
-        {
-            yesno_only = true;
-            goto update_ui;
-        }
-        yesno_only = false;
+            if (toupper_safe(keyin) == 'N')
+            {
+                canned_msg(MSG_OK);
+                return done = true;
+            }
 
-        if (toupper_safe(keyin) == 'N')
+            if (keyin == 'Y')
+                return done = join = true;
+        }
+        else if ((keyin == 'J' || keyin == CK_ENTER) && step == SHOW)
         {
-            canned_msg(MSG_OK);
+            if (you_worship(GOD_NO_GOD))
+                return done = join = true;
+
+            step = ABANDON;
+        }
+        else
             return done = true;
-        }
 
-        if (step == ABANDON || (step == JOIN && you_worship(GOD_NO_GOD)))
-            return done = join = true;
-        step = static_cast<join_step_type>(step + 1);
-
-update_ui:
 #ifdef USE_TILE_WEB
         tiles.json_open_object();
-        string prompt = prompts[step] + (yesno_only ? " [Y]es or [n]o only, please." : "");
+        string prompt = abandon_prompt + (yesno_only ? " [Y]es or [n]o only, please." : "");
         tiles.json_write_string("prompt", prompt);
         tiles.json_write_int("pane", desc_sw->current());
         tiles.ui_state_change("describe-god", 0);
 #endif
-        more_sw->current() = desc_sw->num_children() + step*2 + yesno_only;
+        if (step == ABANDON)
+            more_sw->current() = desc_sw->num_children() + step*2 + yesno_only;
         return true;
     });
 
