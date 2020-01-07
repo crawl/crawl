@@ -316,6 +316,8 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
 
         if (!desc.is_altar)
             $footer.find('.join-keyhelp').remove();
+        else
+            $footer.find('.join-keyhelp').append(desc.service_fee)
 
         $panes.eq(0).find(".desc").html(desc.description);
         $panes.eq(0).find(".god-favour td.title")
