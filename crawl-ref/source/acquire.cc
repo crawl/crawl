@@ -1533,8 +1533,6 @@ public:
 
 class AcquireEntry : public InvEntry
 {
-    AcquireMenu& menu;
-
     string get_text(bool need_cursor = false) const override
     {
         need_cursor = need_cursor && show_cursor;
@@ -1558,9 +1556,7 @@ class AcquireEntry : public InvEntry
     }
 
 public:
-    AcquireEntry(const item_def& i, AcquireMenu& m)
-        : InvEntry(i),
-          menu(m)
+    AcquireEntry(const item_def& i) : InvEntry(i)
     {
         show_background = false;
     }
@@ -1588,7 +1584,7 @@ void AcquireMenu::init_entries()
     menu_letter ckey = 'a';
     for (item_def& item : acq_items)
     {
-        auto newentry = make_unique<AcquireEntry>(item, *this);
+        auto newentry = make_unique<AcquireEntry>(item);
         newentry->hotkeys.clear();
         newentry->add_hotkey(ckey++);
         add_entry(move(newentry));
