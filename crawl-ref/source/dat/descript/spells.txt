@@ -375,8 +375,7 @@ Dims the light of the dungeon, reducing the range of vision.
 Dazzling Flash spell
 
 The caster erupts in a scintillating display of light. Any living creature
-nearby may be dazzled and left stumbling blindly. Creatures closer to the
-caster are more likely to be dazzled.
+nearby may be dazzled and left stumbling blindly.
 %%%%
 Death Channel spell
 

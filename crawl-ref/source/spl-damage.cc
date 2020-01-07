@@ -2582,9 +2582,7 @@ spret cast_dazzling_flash(int pow, bool fail, bool tracer)
         if (!mons || !mons_can_be_dazzled(mons->type))
             continue;
 
-        int mult = 3 + grid_distance(you.pos(), *ri);
-
-        if (x_chance_in_y(95 - mons->get_hit_dice() * mult , 150 - pow))
+        if (x_chance_in_y(95 - mons->get_hit_dice() * 4 , 150 - pow))
         {
             simple_monster_message(*mons, " is dazzled.");
             mons->add_ench(mon_enchant(ENCH_BLIND, 1, &you,
