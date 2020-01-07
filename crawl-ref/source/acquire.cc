@@ -1727,9 +1727,6 @@ static void _make_acquirement_items()
     rand_acq_classes.emplace_back(OBJ_JEWELLERY);
     rand_acq_classes.emplace_back(OBJ_BOOKS);
 
-    if (!you.get_mutation_level(MUT_NO_ARTIFICE))
-        rand_acq_classes.emplace_back(OBJ_MISCELLANY);
-
     vector<object_class_type> chosen_classes;
     const int num_wanted = 3;
     shuffle_array(rand_acq_classes);
