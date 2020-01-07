@@ -1184,12 +1184,8 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         break;
 
     case SPELL_LEDAS_LIQUEFACTION:
-        if (temp && (!you.stand_on_solid_ground()
-                     || you.duration[DUR_LIQUEFYING]
-                     || liquefied(you.pos())))
-        {
-            return "you must stand on solid ground to cast this.";
-        }
+        if (temp && you.duration[DUR_LIQUEFYING])
+            return "you need to wait for the ground to become solid again.";
         break;
 
     case SPELL_BORGNJORS_REVIVIFICATION:
