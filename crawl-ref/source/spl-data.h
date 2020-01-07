@@ -821,7 +821,7 @@ static const struct spell_desc spelldata[] =
     SPELL_DISPEL_UNDEAD, "Dispel Undead",
     spschool::necromancy,
     spflag::dir_or_target | spflag::needs_tracer,
-    5,
+    4,
     100,
     1, 1,
     4, 0,

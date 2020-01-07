@@ -95,8 +95,8 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of Death
     SPELL_CORPSE_ROT,
     SPELL_SUBLIMATION_OF_BLOOD,
-    SPELL_AGONY,
     SPELL_DISPEL_UNDEAD,
+    SPELL_AGONY,
     SPELL_EXCRUCIATING_WOUNDS,
 },
 
