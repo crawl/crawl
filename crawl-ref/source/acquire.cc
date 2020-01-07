@@ -1728,7 +1728,7 @@ static void _make_acquirement_items()
     rand_acq_classes.emplace_back(OBJ_BOOKS);
 
     vector<object_class_type> chosen_classes;
-    const int num_wanted = 3;
+    const int num_wanted = min(3, (int) rand_acq_classes.size());
     shuffle_array(rand_acq_classes);
     for (int i = 0 ; i < num_wanted ; i++)
         chosen_classes.emplace_back(rand_acq_classes[i]);
