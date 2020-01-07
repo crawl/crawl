@@ -1169,7 +1169,7 @@ static void build_partial_god_ui(god_type which_god, shared_ptr<ui::Popup>& popu
     popup = make_shared<ui::Popup>(vbox);
 }
 
-const string _god_service_fee_description(god_type which_god)
+static const string _god_service_fee_description(god_type which_god)
 {
     const int fee = (which_god == GOD_GOZAG) ? gozag_service_fee() : 0;
 
