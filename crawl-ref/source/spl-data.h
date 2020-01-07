@@ -1318,7 +1318,7 @@ static const struct spell_desc spelldata[] =
     spschool::hexes,
     spflag::none,
     3,
-    50,
+    100,
     -1, -1,
     2, 0,
     TILEG_CONFUSING_TOUCH,

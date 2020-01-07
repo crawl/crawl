@@ -1603,26 +1603,33 @@ bool attack::apply_damage_brand(const char *what)
             break;
         }
 
-        if (!x_chance_in_y(melee_confuse_chance(defender->get_hit_dice()), 100)
-            || defender->as_monster()->check_clarity())
-        {
-            break;
-        }
-
         // Declaring these just to pass to the enchant function.
         bolt beam_temp;
         beam_temp.thrower   = attacker->is_player() ? KILL_YOU : KILL_MON;
         beam_temp.flavour   = BEAM_CONFUSION;
         beam_temp.source_id = attacker->mid;
-        beam_temp.apply_enchantment_to_monster(defender->as_monster());
-        obvious_effect = beam_temp.obvious_effect;
 
         if (attacker->is_player() && damage_brand == SPWPN_CONFUSE
             && you.duration[DUR_CONFUSING_TOUCH])
         {
-            you.duration[DUR_CONFUSING_TOUCH] = 0;
-            obvious_effect = false;
+            beam_temp.ench_power = you.props["confusing touch power"].get_int();
+            int margin;
+            if (beam_temp.try_enchant_monster(defender->as_monster(), margin)
+                    == MON_AFFECTED)
+            {
+                you.duration[DUR_CONFUSING_TOUCH] = 0;
+                obvious_effect = false;
+            }
         }
+        else if (!x_chance_in_y(melee_confuse_chance(defender->get_hit_dice()),
+                                                     100)
+                 || defender->as_monster()->check_clarity())
+        {
+            beam_temp.apply_enchantment_to_monster(defender->as_monster());
+            obvious_effect = beam_temp.obvious_effect;
+            break;
+        }
+
         break;
     }
 
