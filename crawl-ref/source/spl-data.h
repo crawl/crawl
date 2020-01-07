@@ -215,7 +215,8 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_CONFUSE, "Confuse",
     spschool::hexes,
-    spflag::dir_or_target | spflag::needs_tracer | spflag::MR_check,
+    spflag::dir_or_target | spflag::needs_tracer | spflag::MR_check
+        | spflag::monster,
     3,
     200,
     LOS_RADIUS, LOS_RADIUS,
@@ -1316,7 +1317,7 @@ static const struct spell_desc spelldata[] =
     SPELL_CONFUSING_TOUCH, "Confusing Touch",
     spschool::hexes,
     spflag::none,
-    1,
+    3,
     50,
     -1, -1,
     2, 0,

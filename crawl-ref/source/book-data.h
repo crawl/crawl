@@ -102,7 +102,6 @@ static const vector<spell_type> spellbook_templates[] =
 
 {   // Book of Misfortune
     SPELL_CONFUSING_TOUCH,
-    SPELL_CONFUSE,
     SPELL_GRAVITAS,
     SPELL_PETRIFY,
     SPELL_ENGLACIATION,
@@ -170,7 +169,7 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of Maledictions
     SPELL_CORONA,
     SPELL_HIBERNATION,
-    SPELL_CONFUSE,
+    SPELL_CONFUSING_TOUCH,
     SPELL_TUKIMAS_DANCE,
     SPELL_DAZZLING_FLASH,
 },
@@ -262,7 +261,7 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Book of Cantrips
-    SPELL_CONFUSING_TOUCH,
+    SPELL_CORONA,
     SPELL_ANIMATE_SKELETON,
     SPELL_SUMMON_SMALL_MAMMAL,
     SPELL_APPORTATION,
