@@ -462,14 +462,12 @@ void create_sanctuary(const coord_def& center, int time)
         mpr("The monsters scatter in all directions!");
 }
 
-/////////////
-// Silence
-
-// radius, calculated from remaining duration
+// Range calculation for spells whose radius shrinks over time with remaining
+// duration.
 // dur starts at 10 (low power) and is capped at 100
 // maximal range: 5
-// last 6 turns: range 0, hence only the player silenced
-static int _silence_range(int dur)
+// last 6 turns: range 0, hence only the player affected
+static int _shrinking_aoe_range(int dur)
 {
     if (dur <= 0)
         return -1;
@@ -477,9 +475,12 @@ static int _silence_range(int dur)
     return isqrt(max(0, min(3*(dur - 5)/4, 25)));
 }
 
+/////////////
+// Silence
+
 int player::silence_radius() const
 {
-    return _silence_range(duration[DUR_SILENCE]);
+    return _shrinking_aoe_range(duration[DUR_SILENCE]);
 }
 
 int monster::silence_radius() const
@@ -494,7 +495,7 @@ int monster::silence_radius() const
     // The below is arbitrarily chosen to make monster decay look reasonable.
     const int moddur = BASELINE_DELAY
                        * max(7, stepdown_value(dur * 10 - 60, 10, 5, 45, 100));
-    return _silence_range(moddur);
+    return _shrinking_aoe_range(moddur);
 }
 
 bool silenced(const coord_def& p)
@@ -588,7 +589,7 @@ int monster::halo_radius() const
 
 int player::liquefying_radius() const
 {
-    return _silence_range(duration[DUR_LIQUEFYING]);
+    return _shrinking_aoe_range(duration[DUR_LIQUEFYING]);
 }
 
 int monster::liquefying_radius() const
@@ -599,7 +600,7 @@ int monster::liquefying_radius() const
     // The below is arbitrarily chosen to make monster decay look reasonable.
     const int moddur = BASELINE_DELAY *
         max(7, stepdown_value(dur * 10 - 60, 10, 5, 45, 100));
-    return _silence_range(moddur);
+    return _shrinking_aoe_range(moddur);
 }
 
 bool liquefied(const coord_def& p, bool check_actual)
