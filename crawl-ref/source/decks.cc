@@ -799,9 +799,13 @@ bool stack_five(int to_stack)
                 " or <w>Enter</w> to accept."));
     menu.show();
 
-    std::reverse(stack.begin(), stack.end());
-
-    return true;
+    if (crawl_state.seen_hups)
+        return false;
+    else
+    {
+        std::reverse(stack.begin(), stack.end());
+        return true;
+    }
 }
 
 // Draw the top four cards of an deck and play them all.
