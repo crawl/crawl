@@ -704,9 +704,22 @@ static void _draw_stack(int to_stack)
     deck_menu.add_toggle_key('?');
     deck_menu.menu_action = Menu::ACT_EXECUTE;
 
-    deck_menu.set_more(formatted_string::parse_string(
+    auto& stack = you.props[NEMELEX_STACK_KEY].get_vector();
+
+    if (!stack.empty())
+    {
+            string status = "Drawn so far: " + stack_contents();
+            deck_menu.set_more(formatted_string::parse_string(
+                       status + "\n" +
                        "Press '<w>!</w>' or '<w>?</w>' to toggle "
                        "between deck selection and description."));
+    }
+    else
+    {
+        deck_menu.set_more(formatted_string::parse_string(
+                           "Press '<w>!</w>' or '<w>?</w>' to toggle "
+                           "between deck selection and description."));
+    }
 
     int numbers[NUM_DECKS];
 
@@ -726,8 +739,6 @@ static void _draw_stack(int to_stack)
 #endif
         deck_menu.add_entry(me);
     }
-
-    auto& stack = you.props[NEMELEX_STACK_KEY].get_vector();
     deck_menu.on_single_selection = [&deck_menu, &stack, to_stack](const MenuEntry& sel)
     {
         ASSERT(sel.hotkeys.size() == 1);
