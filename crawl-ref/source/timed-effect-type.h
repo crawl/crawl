@@ -17,7 +17,9 @@ enum timed_effect_type
 #endif
     TIMER_FOOD_ROT,
     TIMER_PRACTICE,
+#if TAG_MAJOR_VERSION == 34
     TIMER_LABYRINTH,
+#endif
     TIMER_ABYSS_SPEED,
     TIMER_JIYVA,
     TIMER_EVOLUTION,
