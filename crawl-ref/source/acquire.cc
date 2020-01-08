@@ -33,6 +33,7 @@
 #include "macro.h"
 #include "message.h"
 #include "output.h"
+#include "options.h"
 #include "prompt.h"
 #include "randbook.h"
 #include "random.h"
@@ -1630,8 +1631,9 @@ bool AcquireMenu::acquire_selected()
     update_help();
     const formatted_string old_more = more;
     more = formatted_string::parse_string(make_stringf(
-               "<%s>Acquire this item? (y/N)</%s>\n",
+               "<%s>Acquire this item? (%s/N)</%s>\n",
                col.c_str(),
+               Options.easy_confirm == easy_confirm_type::none ? "Y" : "y",
                col.c_str()));
     more += old_more;
     update_more();
@@ -1650,7 +1652,7 @@ bool AcquireMenu::acquire_selected()
         canned_msg(MSG_SOMETHING_APPEARS);
     else
         canned_msg(MSG_NOTHING_HAPPENS);
-    acq_items.empty();
+    acq_items.clear();
     return false;
 }
 
@@ -1763,7 +1765,11 @@ bool acquirement_menu()
     AcquireMenu acq_menu(acq_items);
     acq_menu.show();
 
-    you.props.erase(ACQUIRE_ITEMS_KEY);
-
-    return true;
+    if (acq_items.empty())
+    {
+        you.props.erase(ACQUIRE_ITEMS_KEY);
+        return true;
+    }
+    else
+        return false;
 }
