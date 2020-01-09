@@ -72,7 +72,7 @@ These instructions may work for other DPKG-based distros.
 
 ```sh
 sudo apt install build-essential libncursesw5-dev bison flex liblua5.1-0-dev \
-libsqlite3-dev libz-dev pkg-config python-yaml binutils-gold
+libsqlite3-dev libz-dev pkg-config python3-yaml binutils-gold
 
 # Dependencies for tiles builds
 sudo apt install libsdl2-image-dev libsdl2-mixer-dev libsdl2-dev \
@@ -87,7 +87,7 @@ These instructions may work for other RPM-based distros.
 
 ```sh
 sudo dnf install gcc gcc-c++ make bison flex ncurses-devel compat-lua-devel \
-sqlite-devel zlib-devel pkgconfig python-yaml
+sqlite-devel zlib-devel pkgconfig python3-yaml
 
 # Dependencies for tiles builds:
 sudo dnf install SDL2-devel SDL2_image-devel libpng-devel freetype-devel \
@@ -104,7 +104,7 @@ You need the following dependencies:
 * gcc / clang
 * perl
 * pkg-config
-* Python and PyYAML
+* Python 3 and PyYAML
 * libncurses
 * flex / bison (optional)
 
