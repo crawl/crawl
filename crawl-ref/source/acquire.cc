@@ -1743,7 +1743,11 @@ static void _make_acquirement_items()
         const int item_index = acquirement_create_item(acq_class, AQ_SCROLL,
                 true);
 
-        ASSERT(item_index == NON_ITEM || !god_hates_item(mitm[item_index]));
+        // If we couldn't make an item of this type, just skip it.
+        // TODO: it would be nice to instead try another item class.
+        if (item_index == NON_ITEM)
+            continue;
+        ASSERT(!god_hates_item(mitm[item_index]));
 
         item_def item = mitm[item_index];
         set_ident_flags(item, ISFLAG_IDENT_MASK);
