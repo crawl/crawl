@@ -163,6 +163,11 @@ DOXYGEN = doxygen
 DOXYGEN_SIMPLE_CONF = crawl_simple.doxy
 DOXYGEN_ALL_CONF = crawl_all.doxy
 DOXYGEN_HTML_GEN = html/
+# Prefer python3, if available
+PYTHON = python
+ifneq (, $(shell which python3 2>&1))
+	PYTHON = python3
+endif
 
 export AR
 export RANLIB
@@ -1086,6 +1091,7 @@ ifndef V
         QUIET_HOSTCC      = @echo '   ' HOSTCC $@;
         QUIET_PNGCRUSH    = @echo '   ' $(PNGCRUSH_LABEL) $@;
         QUIET_ADVPNG      = @echo '   ' ADVPNG $@;
+        QUIET_PYTHON      = @echo '   ' PYTHON $@;
         export V
 endif
 endif
@@ -1714,18 +1720,16 @@ mi-enum.h: mon-info.h util/gen-mi-enum
 	$(QUIET_GEN)util/gen-mi-enum
 
 # species-gen.py creates multiple files at once. Ensure Make doesn't run it once
-# per target file. https://stackoverflow.com/q/2973445
+# per target file by adding all the files into a single dependency chain.
+# Ref: https://stackoverflow.com/q/2973445
 species-data.h: dat/species/*.yaml util/species-gen.py util/species-gen/*.txt
-	$(QUIET_GEN)util/species-gen.py dat/species/ util/species-gen/ species-data.h aptitudes.h species-groups.h species-type.h
-
+	$(QUIET_PYTHON)$(PYTHON) util/species-gen.py dat/species/ util/species-gen/ species-data.h aptitudes.h species-groups.h species-type.h
 # no-op
 aptitudes.h: species-data.h
 	$(QUIET_GEN)
-
 # no-op
 species-groups.h: aptitudes.h
 	$(QUIET_GEN)
-
 # no-op
 species-type.h: species-groups.h
 	$(QUIET_GEN)

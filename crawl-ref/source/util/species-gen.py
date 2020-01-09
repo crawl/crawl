@@ -1,4 +1,11 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
+
+"""
+Generate species-data.h, aptitudes.h, species-groups.h, and species-type.h
+
+Works with both Python 2 & 3. If that changes, update how the Makefile calls
+this.
+"""
 
 from __future__ import print_function
 
@@ -6,8 +13,12 @@ import argparse
 import os
 import sys
 import traceback
-import collections
 import re
+import collections
+if sys.version_info.major == 2:
+    from collections import MutableMapping
+else:
+    from collections.abc import MutableMapping
 
 import yaml  # pip install pyyaml
 
@@ -17,7 +28,7 @@ def quote_or_nullptr(key, d):
     else:
         return 'nullptr'
 
-class Species(collections.MutableMapping):
+class Species(MutableMapping):
     """Parser for YAML definition files.
 
     If any YAML content is invalid, the relevant parser function below should
