@@ -38,6 +38,8 @@ for what is going on. New maps are always welcome.
 * Note that at the start of the game, the dungeon builder removes all
   monsters in view of the player. Zero experience monsters like plants
   are exempt.
+* Arrival vaults should have multiple entry points, escape hatches, or enough
+  space to permit tactics.
 
 ### Naming conventions
 
