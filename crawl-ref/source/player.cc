@@ -5836,6 +5836,101 @@ int player::racial_ac(bool temp) const
     return 0;
 }
 
+// Each instance of this class stores a mutation which might change a
+// player's AC and how much their AC should change if the player has
+// said mutation.
+class mutation_ac_changes{
+    public:
+        /**
+         * The AC a player gains from a given mutation. If the player
+         * lacks said mutation, return 0.
+         *
+         * @return How much AC to give the player for the handled
+         *         mutation.
+         */
+        int get_ac_change_for_mutation(){
+            int ac_change = 0;
+
+            int mutation_level = you.get_mutation_level(mut, mutation_activation_threshold);
+
+            switch (mutation_level){
+                case 0:
+                    ac_change = 0;
+                    break;
+                case 1:
+                case 2:
+                case 3:
+                    ac_change = ac_changes[mutation_level - 1];
+                    break;
+            }
+
+            // The output for this function is scaled differently than the UI.
+            return ac_change * 100;
+        }
+
+        mutation_ac_changes(mutation_type mut_aug,
+                            mutation_activity_type mutation_activation_threshold_aug,
+                            vector<int> ac_changes_aug)
+        : mut (mut_aug),
+          mutation_activation_threshold (mutation_activation_threshold_aug),
+          ac_changes (ac_changes_aug)
+        {
+        }
+
+    private:
+        mutation_type mut;
+        mutation_activity_type mutation_activation_threshold;
+        vector<int> ac_changes;
+};
+
+// Constant vectors for the most common mutation ac results used in
+// all_mutation_ac_changes
+const vector<int> ONE_TWO_THREE  = {1,2,3};
+const vector<int> TWO_THREE_FOUR = {2,3,4};
+
+vector<mutation_ac_changes> all_mutation_ac_changes = {
+     mutation_ac_changes(MUT_GELATINOUS_BODY,        mutation_activity_type::PARTIAL, ONE_TWO_THREE)
+    ,mutation_ac_changes(MUT_TOUGH_SKIN,             mutation_activity_type::PARTIAL, ONE_TWO_THREE)
+    ,mutation_ac_changes(MUT_SHAGGY_FUR,             mutation_activity_type::PARTIAL, ONE_TWO_THREE)
+    ,mutation_ac_changes(MUT_PHYSICAL_VULNERABILITY, mutation_activity_type::PARTIAL, {-5,-10,-15})
+    // Scale mutations are more easily disabled (forms etc.). This appears to be for flavour reasons.
+    // Preserved behavior from before mutation ac was turned to data.
+    ,mutation_ac_changes(MUT_IRIDESCENT_SCALES,      mutation_activity_type::FULL,    {2, 4, 6})
+    ,mutation_ac_changes(MUT_RUGGED_BROWN_SCALES,    mutation_activity_type::FULL,    ONE_TWO_THREE)
+    ,mutation_ac_changes(MUT_ICY_BLUE_SCALES,        mutation_activity_type::FULL,    TWO_THREE_FOUR)
+    ,mutation_ac_changes(MUT_MOLTEN_SCALES,          mutation_activity_type::FULL,    TWO_THREE_FOUR)
+    ,mutation_ac_changes(MUT_SLIMY_GREEN_SCALES,     mutation_activity_type::FULL,    TWO_THREE_FOUR)
+    ,mutation_ac_changes(MUT_THIN_METALLIC_SCALES,   mutation_activity_type::FULL,    TWO_THREE_FOUR)
+    ,mutation_ac_changes(MUT_YELLOW_SCALES,          mutation_activity_type::FULL,    TWO_THREE_FOUR)
+#if TAG_MAJOR_VERSION == 34
+    ,mutation_ac_changes(MUT_ROUGH_BLACK_SCALES,     mutation_activity_type::FULL,    {2, 5, 8})
+#endif
+};
+
+/**
+ * The AC changes the player has from mutations.
+ *
+ * Mostly additions from things like scales, but the physical vulnerability
+ * mutation is also accounted for.
+ *
+ * @return  The player's AC gain from mutation, with 100 scaling (i.e,
+ *          the returned result 100 times the UI shows as of Jan 2020)
+*/
+int player::ac_changes_from_mutations() const
+{
+
+    int AC = 0;
+
+    for (vector<mutation_ac_changes>::iterator it =
+            all_mutation_ac_changes.begin();
+            it != all_mutation_ac_changes.end(); ++it)
+    {
+        AC += it->get_ac_change_for_mutation();
+    }
+
+    return AC;
+}
+
 /**
  * The player's "base" armour class, before transitory buffs are applied.
  *
@@ -5873,44 +5968,7 @@ int player::base_ac(int scale) const
 
     AC += racial_ac(true);
 
-    // Scale mutations, etc. Statues don't get an AC benefit from scales,
-    // since the scales are made of the same stone as everything else.
-    AC += get_mutation_level(MUT_TOUGH_SKIN)
-          ? get_mutation_level(MUT_TOUGH_SKIN) * 100 : 0;
-              // +1, +2, +3
-    AC += get_mutation_level(MUT_SHAGGY_FUR)
-          ? get_mutation_level(MUT_SHAGGY_FUR) * 100 : 0;
-              // +1, +2, +3
-    AC += get_mutation_level(MUT_GELATINOUS_BODY)
-          ? get_mutation_level(MUT_GELATINOUS_BODY) * 100 : 0;
-              // +1, +2, +3
-    AC += get_mutation_level(MUT_IRIDESCENT_SCALES, mutation_activity_type::FULL) * 200;
-              // +2, +4, +6
-#if TAG_MAJOR_VERSION == 34
-    AC += get_mutation_level(MUT_ROUGH_BLACK_SCALES, mutation_activity_type::FULL)
-          ? -100 + get_mutation_level(MUT_ROUGH_BLACK_SCALES, mutation_activity_type::FULL) * 300 : 0;
-              // +2, +5, +8
-#endif
-    AC += get_mutation_level(MUT_RUGGED_BROWN_SCALES, mutation_activity_type::FULL) * 100;
-              // +1, +2, +3
-    AC += get_mutation_level(MUT_ICY_BLUE_SCALES, mutation_activity_type::FULL)
-          ? 100 + get_mutation_level(MUT_ICY_BLUE_SCALES, mutation_activity_type::FULL) * 100 : 0;
-              // +2, +3, +4
-    AC += get_mutation_level(MUT_MOLTEN_SCALES, mutation_activity_type::FULL)
-          ? 100 + get_mutation_level(MUT_MOLTEN_SCALES, mutation_activity_type::FULL) * 100 : 0;
-              // +2, +3, +4
-    AC += get_mutation_level(MUT_SLIMY_GREEN_SCALES, mutation_activity_type::FULL)
-          ? 100 + get_mutation_level(MUT_SLIMY_GREEN_SCALES, mutation_activity_type::FULL) * 100 : 0;
-              // +2, +3, +4
-    AC += get_mutation_level(MUT_THIN_METALLIC_SCALES, mutation_activity_type::FULL)
-          ? 100 + get_mutation_level(MUT_THIN_METALLIC_SCALES, mutation_activity_type::FULL) * 100 : 0;
-              // +2, +3, +4
-    AC += get_mutation_level(MUT_YELLOW_SCALES, mutation_activity_type::FULL)
-          ? 100 + get_mutation_level(MUT_YELLOW_SCALES, mutation_activity_type::FULL) * 100 : 0;
-              // +2, +3, +4
-    AC -= get_mutation_level(MUT_PHYSICAL_VULNERABILITY)
-          ? get_mutation_level(MUT_PHYSICAL_VULNERABILITY) * 500 : 0;
-              // +3, +6, +9
+    AC += ac_changes_from_mutations();
 
     return AC * scale / 100;
 }
