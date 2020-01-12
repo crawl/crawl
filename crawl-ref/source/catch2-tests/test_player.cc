@@ -201,4 +201,3 @@ TEST_CASE_METHOD(MockPlayerYouTestsFixture,
 
     REQUIRE(you.base_ac(100) == -1500);
 }
-
