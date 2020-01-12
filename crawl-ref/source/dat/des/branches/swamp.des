@@ -2371,7 +2371,7 @@ PLACE:   Swamp:$
 ORIENT:  float
 TAGS:    no_rotate
 MONS:    swamp dragon / swamp drake / hydra
-MONS:    freezing wraith / flayed ghost / phantasmal warrior / ghoul
+MONS:    freezing wraith / flayed ghost / phantasmal warrior
 MONS:    hydra skeleton / swamp dragon skeleton / death drake skeleton
 MONS:    hydra zombie / swamp dragon zombie / death drake zombie
 MONS:    spectral hydra / hydra simulacrum
@@ -2382,15 +2382,16 @@ KFEAT:   _ = altar_fedhas
 KFEAT:   - = altar_yredelemnul
 NSUBST:  O = 1:O / *:%
 SUBST:   x = xxxxxxttT
-SUBST:   1 = 1.W
-NSUBST:  3 = 3=5 / 3..
+NSUBST:  1 = 8=1 / 8=1. / .W
+NSUBST:  3 = 6=5 / 8=3 / 8=3. / .
 SUBST:   3 = 2344
+NSUBST:  6 = 3=6 / 3=6. / .
 SUBST:   . = ...W
 NSUBST:  P = 3=' / ppW
 KMONS:   p = plant
 KMONS:   ' = oklob plant
 KMONS:   q = vampire knight
-KMONS:   L = patrolling the lernaean hydra zombie / patrolling the lernaean hydra skeleton / patrolling the lernaean hydra simulacrum / patrolling spectral the lernaean hydra
+KMONS:   L = patrolling the lernaean hydra zombie / patrolling the lernaean hydra skeleton
 KPROP:   q = bloody
 TILE:    E = WALL_UNDEAD, T = DNGN_TREE_DEAD, G = DNGN_GRAVESTONE, x = WALL_BRICK_VINES
 SUBST:   T = t
@@ -2399,7 +2400,7 @@ SUBST:   E = c
 dgn.delayed_decay_extra(_G, 'q', 'hydra corpse')
 }}
 MAP
-         xxxx@@xx
+         xxx@@@xx
         xxxx11xxxx
         xxx1111xxxx
        xxxx11T11xxxx
@@ -2407,16 +2408,16 @@ MAP
      xxxt111t1111T1Txx
     ccct.11111T1111ccx
    cccct..ttTxLxT..ccccc
-  ccccct6.txxxxxxE5EEEEcc
+  ccccct..txxxxxxE3EEEEcc
  ccccP....TccccccE333sEcccc
-cccc..t....ccccEEEE333TEEEcc
-ccc........cccE2T3333EE2Eccc
-ccP....o.t.PccEE533G5333Eccc
-cct6..P_P.6tcccE3T33q3T5Eccc
-cc6.P.7P7.P6cccE3333-333Eccc
+cccc..t6...ccccEEEE333TEEEcc
+ccc..66....cccE3T3333EE3Eccc
+ccP...6P.t.PccEE333G3333Eccc
+cct66.P_P66tcccE3T33q3T3Eccc
+cc66P.7P7.P6cccE3333-333Eccc
 ccPppPpppPppcccE33G3qG3EEccc
-ccccppppppcccccEEEE335EEcccc
-cccccccOcccccccccE235332Eccc
+ccccppppppcccccEEEE333EEcccc
+cccccccOcccccccccE333333Eccc
   cccccccccccccccEEOEEEEEcc
     ccccccc    cccEEEcccccc
       cc        ccccccc cc
