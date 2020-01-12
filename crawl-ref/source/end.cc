@@ -227,7 +227,8 @@ NORETURN void end(int exit_code, bool print_error, const char *format, ...)
 }
 
 // Delete save files on game end.
-static void _delete_files()
+// Non-static for catch2-tests.
+void delete_files()
 {
     crawl_state.need_save = false;
     you.save->unlink();
@@ -241,7 +242,7 @@ NORETURN void screen_end_game(string text)
     tiles.send_exit_reason("quit");
 #endif
     crawl_state.cancel_cmd_all();
-    _delete_files();
+    delete_files();
 
     if (!text.empty())
     {
@@ -335,7 +336,7 @@ NORETURN void end_game(scorefile_entry &se)
 
     identify_inventory();
 
-    _delete_files();
+    delete_files();
 
     // death message
     if (!non_death)

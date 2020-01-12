@@ -1,9 +1,11 @@
 #include "catch.hpp"
 
 #include "AppHdr.h"
+#include "end.h"
 #include "mutation.h"
-#include "player.h"
 #include "ng-setup.h"
+
+#include "player.h"
 
 // The way this test fixture generates a "mock" player object is a total
 // hack which makes crawl's startup code even worse. That said, it is
@@ -17,13 +19,13 @@
 class MockPlayerYouTestsFixture {
     public:
     MockPlayerYouTestsFixture() {
-        Options.no_save = true;
-
         you = player();
         newgame_def game_choices;
         game_choices.name = "TestChar";
         game_choices.type = GAME_TYPE_NORMAL;
-        game_choices.filename = "TestChar.cs";
+        game_choices.filename = "this_should_never_be_a_name_of_a_file"
+                                "_in_a_directory_check"
+                                "_catch2_tests_slash_test_player_cc";
 
         game_choices.species = SP_HUMAN;
         game_choices.job = JOB_MONK;
@@ -33,13 +35,7 @@ class MockPlayerYouTestsFixture {
     }
 
     ~MockPlayerYouTestsFixture() {
-        // Not sure how much of this is necessary now that Options.no_save
-        // is set before creating the mock player object, but I'm
-        // pretty sure the delete you.save part is still required to
-        // avoid a memory leak.
-        you.save->abort();
-        delete you.save;
-        you.save = nullptr;
+        delete_files();
     }
 
 };
