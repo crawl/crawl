@@ -7,6 +7,7 @@ jobs:
     name: Unit Tests (GCC/Linux) + Coveralls
     runs-on: ubuntu-latest
     steps:
+      - run: pwd # test
       - uses: actions/checkout@v2
         with:
           # all history
@@ -32,4 +33,4 @@ jobs:
       - name: Install Coveralls agent
         run: sudo pip install cpp-coveralls
       - name: Run Coveralls
-        run: coveralls --gcov-options '\-lp' --exclude conftest.cc
+        run: coveralls --gcov-options '\-lp' --exclude crawl-ref/source/conftest.cc
