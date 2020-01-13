@@ -32,7 +32,4 @@ jobs:
       - name: Install Coveralls agent
         run: sudo pip install cpp-coveralls
       - name: Run Coveralls
-        run: |
-          coveralls --gcov-options '\-lp'
-          --exclude crawl-ref/source/conftest.cc
-          --exclude crawl-ref/source/util/mapdef.h
+        run: coveralls --gcov-options '\-lp' --exclude crawl-ref/source/conftest.cc --exclude crawl-ref/source/util/mapdef.h
