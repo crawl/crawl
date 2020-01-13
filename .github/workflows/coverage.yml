@@ -1,0 +1,33 @@
+name: CI
+on:
+  - push
+  - pull_request
+jobs:
+  coveralls_catch2:
+    name: Coveralls (catch2)
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          # all history
+          fetch-depth: 0
+      - name: Fetch Tags
+        run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
+      - name: Install dependencies
+        run: >
+          sudo apt-get install build-essential libncursesw5-dev bison flex liblua5.1-0-dev
+          libsqlite3-dev libz-dev pkg-config python-yaml libsdl2-image-dev
+          libsdl2-mixer-dev libsdl2-dev libfreetype6-dev libpng-dev ttf-dejavu-core
+          ccache git
+      - name: Add ccache to PATH
+        run: echo "::add-path::/usr/lib/ccache"
+      - name: Cache compilation
+        uses: actions/cache@v1
+        with:
+          path: .
+          key: gcc-crawl-catch2
+          restore-keys: |
+            gcc-crawl-catch2
+            gcc-crawl-
+            gcc-
+      - run: make -j$(nproc) catch2-tests
+        working-directory: crawl-ref/source
