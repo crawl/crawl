@@ -734,7 +734,8 @@ static bool _cloudable(coord_def loc, bool avoid_clouds)
 {
     return in_bounds(loc)
            && !cell_is_solid(loc)
-           && !(avoid_clouds && cloud_at(loc));
+           && !(avoid_clouds && cloud_at(loc)
+           && !is_sanctuary(loc));
 }
 
 bool targeter_cloud::valid_aim(coord_def a)
@@ -757,6 +758,8 @@ bool targeter_cloud::valid_aim(coord_def a)
     {
         if (cloud_at(a) && avoid_clouds)
             return notify_fail("There's already a cloud there.");
+        else if (is_sanctuary(a))
+            return notify_fail("You can't place clouds in a sanctuary.");
         ASSERT(_cloudable(a, avoid_clouds));
     }
     return true;
