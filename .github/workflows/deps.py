@@ -43,5 +43,7 @@ if os.geteuid() != 0:
 
 cmd.extend(packages)
 
+print("%s: Running '%s'..." % (sys.argv[0], " ".join(cmd)))
+
 rc = subprocess.call(cmd)
 sys.exit(rc)
