@@ -32,4 +32,4 @@ jobs:
       - name: Install Coveralls agent
         run: sudo pip install cpp-coveralls
       - name: Run Coveralls
-        run: coveralls --gcov-options '\-lp'
+        run: coveralls --gcov-options '\-lp' --exclude conftest.cpp
