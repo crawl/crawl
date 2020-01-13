@@ -249,7 +249,8 @@ private:
 class targeter_shotgun : public targeter
 {
 public:
-    targeter_shotgun(const actor* act, size_t beam_count, int r);
+    targeter_shotgun(const actor* act, size_t beam_count, int r,
+                     bool cloud = false);
     bool valid_aim(coord_def a) override;
     bool set_aim(coord_def a) override;
     aff_type is_affected(coord_def loc) override;
@@ -258,6 +259,7 @@ public:
 private:
     size_t num_beams;
     int range;
+    bool uses_clouds;
 };
 
 class targeter_monster_sequence : public targeter_beam
