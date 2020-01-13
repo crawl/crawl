@@ -6,7 +6,6 @@ import subprocess
 import sys
 
 parser = argparse.ArgumentParser(description="Install packages required to build DCSS")
-parser.add_argument("--coverage", action="store_true")
 parser.add_argument("--tiles", action="store_true")
 
 args = parser.parse_args()
@@ -26,9 +25,6 @@ packages = set(
         "git",
     ]
 )
-
-if args.coverage:
-    packages.add("gcov")
 
 if args.tiles:
     packages.update(

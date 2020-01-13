@@ -1,4 +1,4 @@
-name: CI
+name: Unit Tests
 on:
   - push
   - pull_request
@@ -14,7 +14,7 @@ jobs:
       - name: Fetch Tags
         run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
       - name: Install dependencies
-        run: ./deps.py --coverage
+        run: ./deps.py
         working-directory: .github/workflows
       - name: Add ccache to PATH
         run: echo "::add-path::/usr/lib/ccache"
