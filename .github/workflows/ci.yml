@@ -1,0 +1,157 @@
+name: Build
+
+on:
+  - push
+  - pull_request
+
+jobs:
+  linting:
+    name: Code Linting
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Unbrace
+        run: util/unbrace -n
+        working-directory: crawl-ref/source
+      - name: Checkwhite
+        run: util/checkwhite -n
+        working-directory: crawl-ref/source
+  build_linux:
+    name: "${{ matrix.compiler }} ${{ matrix.build_opts }} ${{ matrix.debug }}"
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        compiler:
+          - gcc
+          - clang
+        build_opts:
+          - ""
+          - WEBTILES=1
+          - WEBTILES=1 USE_DGAMELAUNCH=1
+          - TILES=1
+        debug:
+          - ""
+          - FULLDEBUG=1
+        exclude:
+          # Only build non-debug with GCC
+          - compiler: clang
+            debug: ""
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set fake version
+        run: echo "1.0.0" > util/release_ver
+        working-directory: crawl-ref/source
+      - name: Install dependencies
+        run: ./deps.py --compiler ${{ matrix.compiler }} --build-opts "${{ matrix.build_opts }}"
+        working-directory: .github/workflows
+      - name: Add ccache to PATH
+        run: echo "::add-path::/usr/lib/ccache"
+      - name: Cache compilation
+        uses: actions/cache@v1
+        with:
+          path: $HOME/.ccache
+          key: ccache-linux-${{ matrix.compiler }}-${{ matrix.build_opts }}-${{ matrix.debug }}
+          restore-keys: |
+            ccache-linux-${{ matrix.compiler }}-${{ matrix.build_opts }}-${{ matrix.debug }}
+            ccache-linux-${{ matrix.compiler }}-${{ matrix.build_opts }}-
+            ccache-linux-${{ matrix.compiler }}-
+      - run: make -j$(nproc) ${{ matrix.build_opts }} ${{ matrix.debug }}
+        working-directory: crawl-ref/source
+
+  build_macos:
+    name: "clang macOS"
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Checkout submodules (for crosscompile)
+        shell: bash
+        run: |
+          auth_header="$(git config --local --get http.https://github.com/.extraheader)"
+          git submodule sync --recursive
+          git -c "http.extraheader=$auth_header" -c protocol.version=2 submodule update --init --force --recursive --depth=1
+      - name: Set fake version
+        run: echo "1.0.0" > util/release_ver
+        working-directory: crawl-ref/source
+      - name: Install Dependencies
+        run: |
+          brew install ccache
+          sudo easy_install pip
+          sudo pip install PyYAML
+      - name: Add ccache to PATH
+        run: echo "::add-path::/usr/local/opt/ccache/libexec"
+      - name: Cache compilation
+        uses: actions/cache@v1
+        with:
+          path: $HOME/.ccache
+          key: ccache-macos-clang
+          restore-keys: |
+            ccache-macos-clang
+      - run: make -j$(nproc)
+        working-directory: crawl-ref/source
+
+  build_mingw64_crosscompile:
+    name: "gcc mingw64 crosscompile"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Checkout submodules (for crosscompile)
+        shell: bash
+        run: |
+          auth_header="$(git config --local --get http.https://github.com/.extraheader)"
+          git submodule sync --recursive
+          git -c "http.extraheader=$auth_header" -c protocol.version=2 submodule update --init --force --recursive --depth=1
+      - name: Set fake version
+        run: echo "1.0.0" > util/release_ver
+        working-directory: crawl-ref/source
+      - name: Install dependencies
+        run: ./deps.py --crosscompile
+        working-directory: .github/workflows
+      - name: Add ccache to PATH
+        run: echo "::add-path::/usr/lib/ccache"
+      - name: Cache compilation
+        uses: actions/cache@v1
+        with:
+          path: $HOME/.ccache
+          key: ccache-mingw64
+          restore-keys: |
+            ccache-mingw64
+      - run: make -j$(nproc) CROSSHOST=i686-w64-mingw32 package-windows-zips
+        working-directory: crawl-ref/source
+  coveralls_catch2:
+    name: Catch2 (GCC/Linux) + Coveralls
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set fake version
+        run: echo "1.0.0" > util/release_ver
+        working-directory: crawl-ref/source
+      - name: Install dependencies
+        run: ./deps.py --coverage
+        working-directory: .github/workflows
+      - name: Add ccache to PATH
+        run: echo "::add-path::/usr/lib/ccache"
+      - name: Cache compilation
+        uses: actions/cache@v1
+        with:
+          path: /home/runner/.ccache
+          key: ccache-catch2
+          restore-keys: |
+            ccache-catch2
+      - run: make -j$(nproc) catch2-tests
+        working-directory: crawl-ref/source
+      - name: Generate LCOV data
+        run: >
+          lcov
+          --capture
+          --directory .
+          --output-file ../../coverage.info
+          --ignore-errors source
+          --rc lcov_branch_coverage=1
+        working-directory: crawl-ref/source
+      - name: Send coverage data to Codecov
+        uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: ./coverage.info
+          flags: catch2
+          fail_ci_if_error: true
