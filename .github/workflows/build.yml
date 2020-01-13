@@ -1,0 +1,108 @@
+name: Build
+
+on:
+  - push
+  - pull_request
+
+jobs:
+  linux:
+    name: "${{ matrix.compiler }} ${{ matrix.build_opts }} ${{ matrix.debug }}"
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        compiler:
+          - gcc
+          - clang
+        build_opts:
+          - ""
+          - WEBTILES=1
+          - WEBTILES=1 USE_DGAMELAUNCH=1
+          - TILES=1
+        debug:
+          - ""
+          - FULLDEBUG=1
+        exclude:
+          # Only build non-debug with GCC
+          - compiler: clang
+            debug: ""
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set fake version
+        run: echo "1.0.0" > util/release_ver
+        working-directory: crawl-ref/source
+      - name: Install dependencies
+        run: ./deps.py --compiler ${{ matrix.compiler }} --build-opts "${{ matrix.build_opts }}"
+        working-directory: .github/workflows
+      - name: Add ccache to PATH
+        run: echo "::add-path::/usr/lib/ccache"
+      - name: Cache compilation
+        uses: actions/cache@v1
+        with:
+          path: $HOME/.ccache
+          key: ccache-${{ runner.os }}-${{ matrix.compiler }}-${{ matrix.build_opts }}-${{ matrix.debug }}
+          restore-keys: |
+            ccache-${{ runner.os }}-${{ matrix.compiler }}-${{ matrix.build_opts }}-${{ matrix.debug }}
+            ccache-${{ runner.os }}-${{ matrix.compiler }}-${{ matrix.build_opts }}-
+            ccache-${{ runner.os }}-${{ matrix.compiler }}-
+      - run: make -j$(nproc) ${{ matrix.build_opts }} ${{ matrix.debug }}
+        working-directory: crawl-ref/source
+
+  macos:
+    name: "clang macOS"
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Checkout submodules (for crosscompile)
+        shell: bash
+        run: |
+          auth_header="$(git config --local --get http.https://github.com/.extraheader)"
+          git submodule sync --recursive
+          git -c "http.extraheader=$auth_header" -c protocol.version=2 submodule update --init --force --recursive --depth=1
+      - name: Set fake version
+        run: echo "1.0.0" > util/release_ver
+        working-directory: crawl-ref/source
+      - name: Install Dependencies
+        run: |
+          brew install ccache
+          sudo easy_install pip
+          sudo pip install PyYAML
+      - name: Add ccache to PATH
+        run: echo "::add-path::/usr/local/opt/ccache/libexec"
+      - name: Cache compilation
+        uses: actions/cache@v1
+        with:
+          path: $HOME/.ccache
+          key: ccache-${{ runner.os }}-clang
+          restore-keys: |
+            ccache-${{ runner.os }}-clang
+      - run: make -j$(nproc)
+        working-directory: crawl-ref/source
+
+  mingw64_crosscompile:
+    name: "gcc mingw64 crosscompile"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Checkout submodules (for crosscompile)
+        shell: bash
+        run: |
+          auth_header="$(git config --local --get http.https://github.com/.extraheader)"
+          git submodule sync --recursive
+          git -c "http.extraheader=$auth_header" -c protocol.version=2 submodule update --init --force --recursive --depth=1
+      - name: Set fake version
+        run: echo "1.0.0" > util/release_ver
+        working-directory: crawl-ref/source
+      - name: Install dependencies
+        run: ./deps.py --crosscompile
+        working-directory: .github/workflows
+      - name: Add ccache to PATH
+        run: echo "::add-path::/usr/lib/ccache"
+      - name: Cache compilation
+        uses: actions/cache@v1
+        with:
+          path: $HOME/.ccache
+          key: ccache-${{ runner.os }}-mingw64
+          restore-keys: |
+            ccache-${{ runner.os }}-mingw64
+      - run: make -j$(nproc) CROSSHOST=i686-w64-mingw32 package-windows-zips
+        working-directory: crawl-ref/source

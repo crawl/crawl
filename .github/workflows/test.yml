@@ -1,0 +1,58 @@
+name: Test & Coverage
+
+on:
+  - push
+  - pull_request
+
+jobs:
+  linting:
+    name: Code Linting
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Unbrace
+        run: util/unbrace -n
+        working-directory: crawl-ref/source
+      - name: Checkwhite
+        run: util/checkwhite -n
+        working-directory: crawl-ref/source
+  coveralls_catch2:
+    name: Catch2 (GCC/Linux) + Coveralls
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set fake version
+        run: echo "1.0.0" > util/release_ver
+        working-directory: crawl-ref/source
+      - name: Install dependencies
+        run: ./deps.py --coverage
+        working-directory: .github/workflows
+      - name: Add ccache to PATH
+        run: echo "::add-path::/usr/lib/ccache"
+      - name: Cache compilation
+        uses: actions/cache@v1
+        with:
+          path: /home/runner/.ccache
+          key: ccache-gcc-crawl-catch2
+          restore-keys: |
+            ccache-gcc-crawl-catch2
+            ccache-gcc-crawl-
+            ccache-gcc-
+      - run: make -j$(nproc) catch2-tests
+        working-directory: crawl-ref/source
+      - name: Generate LCOV data
+        run: >
+          lcov
+          --capture
+          --directory .
+          --output-file ../../coverage.info
+          --ignore-errors source
+          --rc lcov_branch_coverage=1
+        working-directory: crawl-ref/source
+      - name: Send coverage data to Codecov
+        uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: ./coverage.info
+          flags: catch2
+          fail_ci_if_error: true
