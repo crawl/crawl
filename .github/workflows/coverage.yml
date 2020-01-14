@@ -4,7 +4,8 @@ on:
   - pull_request
 jobs:
   coveralls_catch2:
-    name: Coveralls (catch2)
+    name: Unit Tests (GCC/Linux) + Coveralls
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
         with:
