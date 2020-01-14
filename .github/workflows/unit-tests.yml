@@ -32,4 +32,4 @@ jobs:
       - name: Install Coveralls agent
         run: sudo pip install cpp-coveralls
       - name: Run Coveralls
-        run: cpp-coveralls --gcov-options '\-lp' -E '.*rltiles' -E '.*levcomp\.' -E '.*conftest\.' -E '.*mapdef\.'
+        run: cpp-coveralls --gcov-options '\-lp' -E '.*/rltiles/' -E '.*/levcomp\.' -E '.*/conftest\.' -E '.*/mapdef\.' -E '.*/tag-version\.h'
