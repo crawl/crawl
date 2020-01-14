@@ -4,6 +4,7 @@ on: [push]
 
 jobs:
   build_gcc_linux:
+    name: "Build: GCC/Linux"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
