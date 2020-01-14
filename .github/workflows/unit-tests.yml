@@ -21,12 +21,12 @@ jobs:
       - name: Cache compilation
         uses: actions/cache@v1
         with:
-          path: .
-          key: gcc-crawl-catch2
+          path: /home/runner/.ccache
+          key: ccache-gcc-crawl-catch2
           restore-keys: |
-            gcc-crawl-catch2
-            gcc-crawl-
-            gcc-
+            ccache-gcc-crawl-catch2
+            ccache-gcc-crawl-
+            ccache-gcc-
       - run: make -j$(nproc) catch2-tests
         working-directory: crawl-ref/source
       - name: Install Coveralls agent
