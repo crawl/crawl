@@ -33,3 +33,5 @@ jobs:
         run: sudo pip install cpp-coveralls
       - name: Run Coveralls
         run: cpp-coveralls --gcov-options '\-lp' -E '.*/rltiles/' -E '.*/levcomp\.' -E '.*/conftest\.' -E '.*/mapdef\.' -E '.*/tag-version\.h$' -E '.*/item-prop-enum\.h$' -E '.*/catch2-tests/'
+        env:
+          COVERALLS_REPO_TOKEN: ${{ secrets. COVERALLS_REPO_TOKEN }}
