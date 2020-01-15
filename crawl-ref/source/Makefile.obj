@@ -304,8 +304,10 @@ fontwrapper-ft.o
 TEST_OBJECTS = \
 catch2-tests/test_branch.o \
 catch2-tests/test_english.o \
+catch2-tests/test_items.o \
 catch2-tests/test_ng-init-branches.o \
 catch2-tests/test_player.o \
+catch2-tests/test_player_fixture.o \
 catch2-tests/test_species.o
 
 WEBTILES_OBJECTS = \

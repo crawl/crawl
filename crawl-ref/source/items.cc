@@ -2649,6 +2649,14 @@ void drop_last()
     }
 }
 
+/** Get the equipment slot an item is equipped in. If the item is not
+ * equipped by the player, return -1 instead.
+ *
+ * @param item The item to check.
+ *
+ * @returns The equipment slot (equipment_type) the item is in or -1
+ * (EQ_NONE)
+*/
 int get_equip_slot(const item_def *item)
 {
     int worn = -1;
