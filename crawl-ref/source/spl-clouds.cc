@@ -238,6 +238,15 @@ void big_cloud(cloud_type cl_type, const actor *agent,
 
 spret cast_ring_of_flames(int power, bool fail)
 {
+    targeter_radius hitfunc(&you, LOS_NO_TRANS, 1);
+    if (stop_attack_prompt(hitfunc, "make a ring of flames",
+                [](const actor *act) -> bool {
+                    return act->res_fire() < 3;
+                }))
+    {
+        return spret::abort;
+    }
+
     fail_check();
     you.increase_duration(DUR_FIRE_SHIELD,
                           6 + (power / 10) + (random2(power) / 5), 50,
