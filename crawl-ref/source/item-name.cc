@@ -407,7 +407,7 @@ static const char *weapon_brands_terse[] =
 #if TAG_MAJOR_VERSION == 34
     "obsolete", "obsolete",
 #endif
-    "venom", "protect", "drain", "speed", "buggy-vorpal",
+    "venom", "protect", "drain", "speed", "vorpal",
 #if TAG_MAJOR_VERSION == 34
     "obsolete", "obsolete",
 #endif
@@ -419,7 +419,7 @@ static const char *weapon_brands_terse[] =
 #if TAG_MAJOR_VERSION == 34
     "evade", "confuse",
 #endif
-    "penet", "reap", "buggy-num", "acid",
+    "penet", "reap", "vorpal", "acid",
 #if TAG_MAJOR_VERSION > 34
     "confuse",
 #endif
@@ -432,11 +432,11 @@ static const char *weapon_brands_verbose[] =
 #if TAG_MAJOR_VERSION == 34
     "orc slaying", "dragon slaying",
 #endif
-    "venom", "protection", "draining", "speed", "buggy-vorpal",
+    "venom", "protection", "draining", "speed", "vorpality",
 #if TAG_MAJOR_VERSION == 34
     "flame", "frost",
 #endif
-    "", "pain", "", "distortion",
+    "vampirism", "pain", "antimagic", "distortion",
 #if TAG_MAJOR_VERSION == 34
     "reaching", "returning",
 #endif
@@ -444,7 +444,7 @@ static const char *weapon_brands_verbose[] =
 #if TAG_MAJOR_VERSION == 34
     "evasion", "confusion",
 #endif
-    "penetration", "reaping", "buggy-num", "acid",
+    "penetration", "reaping", "vorpal", "acid",
 #if TAG_MAJOR_VERSION > 34
     "confusion",
 #endif
@@ -469,7 +469,7 @@ static const char *weapon_brands_adj[] =
 #if TAG_MAJOR_VERSION == 34
     "evasive", "confusing",
 #endif
-    "penetrating", "reaping", "buggy-num", "acidic",
+    "penetrating", "reaping", "vorpal", "acidic",
 #if TAG_MAJOR_VERSION > 34
     "confusing",
 #endif
@@ -481,38 +481,7 @@ static const set<brand_type> brand_prefers_adj =
             { SPWPN_VAMPIRISM, SPWPN_ANTIMAGIC, SPWPN_VORPAL };
 
 /**
- * What's the name of a type of vorpal brand?
- *
- * @param item      The weapon with the vorpal brand.
- * @param bool      Whether to use a terse or verbose name.
- * @return          The name of the given item's brand.
- */
-static const char* _vorpal_brand_name(const item_def &item, bool terse)
-{
-    // Dummy "All Hand Weapons" item from objstat.
-    if (item.sub_type == NUM_WEAPONS)
-        return "vorpal";
-
-    if (is_range_weapon(item))
-        return "velocity";
-
-    // Would be nice to implement this as an array (like other brands), but
-    // mapping the DVORP flags to array entries seems very fragile.
-    switch (get_vorpal_type(item))
-    {
-        case DVORP_CRUSHING: return terse ? "crush" :"crushing";
-        case DVORP_SLICING:  return terse ? "slice" : "slicing";
-        case DVORP_PIERCING: return terse ? "pierce" : "piercing";
-        case DVORP_CHOPPING: return terse ? "chop" : "chopping";
-        case DVORP_SLASHING: return terse ? "slash" :"slashing";
-        default:             return terse ? "buggy vorpal"
-                                          : "buggy destruction";
-    }
-}
-
-
-/**
- * What's the name of a weapon brand brand?
+ * What's the name of a type of weapon brand?
  *
  * @param brand             The type of brand in question.
  * @param bool              Whether to use a terse or verbose name.
@@ -545,17 +514,12 @@ const char* brand_type_adj(brand_type brand)
  *
  * @param item              The weapon with the brand.
  * @param bool              Whether to use a terse or verbose name.
- * @param override_brand    A brand type to use, instead of the weapon's actual
- *                          brand.
  * @return                  The name of the given item's brand.
  */
 const char* weapon_brand_name(const item_def& item, bool terse,
                               brand_type override_brand)
 {
     const brand_type brand = override_brand ? override_brand : get_weapon_brand(item);
-
-    if (brand == SPWPN_VORPAL)
-        return _vorpal_brand_name(item, terse);
 
     return brand_type_name(brand, terse);
 }
@@ -1274,26 +1238,15 @@ string ghost_brand_name(brand_type brand, monster_type mtype)
         return make_stringf("%s touch", brand_type_adj(brand));
 }
 
-string ego_type_string(const item_def &item, bool terse, brand_type override_brand)
+string ego_type_string(const item_def &item, bool terse)
 {
     switch (item.base_type)
     {
     case OBJ_ARMOUR:
         return armour_ego_name(item, terse);
     case OBJ_WEAPONS:
-        if (!terse)
-        {
-            brand_type checkbrand = override_brand ? override_brand
-                                            : get_weapon_brand(item);
-            // this is specialcased out of weapon_brand_name
-            // ("vampiric hand axe", etc)
-            if (checkbrand == SPWPN_VAMPIRISM)
-                return "vampirism";
-            else if (checkbrand == SPWPN_ANTIMAGIC)
-                return "antimagic";
-        }
         if (get_weapon_brand(item) != SPWPN_NORMAL)
-            return weapon_brand_name(item, terse, override_brand);
+            return weapon_brand_name(item, terse);
         else
             return "";
     case OBJ_MISSILES:
@@ -1435,46 +1388,37 @@ static string _cosmetic_text(const item_def &weap, iflags_t ignore_flags)
 }
 
 /**
- * The ego-describing prefix to a weapon's name, including trailing space if
- * appropriate. (Empty if the weapon's brand shouldn't be prefixed.)
+ * Surrounds a given string with the weapon's brand-describing prefix/suffix
+ * as appropriate.
  */
-static string _ego_prefix(const item_def &weap, description_level_type desc,
-                          bool terse, bool ident, iflags_t ignore_flags)
+string weapon_brand_desc(const char *body, const item_def &weap,
+                         bool terse, brand_type override_brand)
 {
-    if (!_know_ego(weap, desc, ident, ignore_flags) || terse)
-        return "";
 
-    switch (get_weapon_brand(weap))
-    {
-        case SPWPN_VAMPIRISM:
-            return "vampiric ";
-        case SPWPN_ANTIMAGIC:
-            return "antimagic ";
-        case SPWPN_NORMAL:
-            if (!_know_pluses(weap, desc, ident, ignore_flags)
-                && get_equip_desc(weap))
-            {
-                return "enchanted ";
-            }
-            // fallthrough to default
-        default:
-            return "";
-    }
-}
+    const string brand_name = weapon_brand_name(weap, terse, override_brand);
 
-/**
- * The ego-describing suffix to a weapon's name, May be empty. Does not include
- * trailing space.
- */
-static string _ego_suffix(const item_def &weap, bool terse)
-{
-    const string brand_name = weapon_brand_name(weap, terse);
     if (brand_name.empty())
-        return "";
+        return body;
 
     if (terse)
-        return make_stringf(" (%s)", brand_name.c_str());
-    return " of " + brand_name;
+        return make_stringf("%s (%s)", body, brand_name.c_str());
+
+    switch (override_brand ? override_brand : get_weapon_brand(weap))
+    {
+        case SPWPN_VAMPIRISM:
+            return make_stringf("vampiric %s", body);
+        case SPWPN_ANTIMAGIC:
+            return make_stringf("antimagic %s", body);
+        case SPWPN_VORPAL:
+            return make_stringf("vorpal %s", body);
+        case SPWPN_NORMAL:
+            if (get_equip_desc(weap))
+                return make_stringf("enchanted %s", body);
+            else
+                return body;
+        default:
+            return make_stringf("%s of %s", body, brand_name.c_str());
+    }
 }
 
 /**
@@ -1559,14 +1503,14 @@ static string _name_weapon(const item_def &weap, description_level_type desc,
 
     const string cosmetic_text
         = show_cosmetic ? _cosmetic_text(weap, ignore_flags) : "";
-    const string ego_prefix
-        = _ego_prefix(weap, desc, terse, ident, ignore_flags);
-    const string ego_suffix = know_ego ? _ego_suffix(weap, terse) : "";
+    const string base_name = item_base_name(weap);
+    const string name_with_ego
+        = know_ego ? weapon_brand_desc(base_name.c_str(), weap, terse)
+        : base_name;
     const string curse_suffix
         = know_curse && weap.cursed() && terse ? " (curse)" :  "";
-    return curse_prefix + plus_text + cosmetic_text + ego_prefix
-           + item_base_name(weap)
-           + ego_suffix + curse_suffix;
+    return curse_prefix + plus_text + cosmetic_text
+           + name_with_ego + curse_suffix;
 }
 
 // Note that "terse" is only currently used for the "in hand" listing on

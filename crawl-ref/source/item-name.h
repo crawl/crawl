@@ -157,8 +157,11 @@ const char *base_type_string(const item_def &item);
 
 string sub_type_string(const item_def &item, bool known = true);
 
-string ego_type_string(const item_def &item, bool terse = false, brand_type override_brand = SPWPN_NORMAL);
+string ego_type_string(const item_def &item, bool terse = false);
 string ghost_brand_name(brand_type brand, monster_type mtype);
+string weapon_brand_desc(const char *body, const item_def &weap,
+                         bool terse = false,
+                         brand_type override_brand = SPWPN_NORMAL);
 
 const char* potion_type_name(int potiontype);  //used in xom.cc
 const char* jewellery_effect_name(int jeweltype, bool terse = false) PURE; //used in l-item.cc

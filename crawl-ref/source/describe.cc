@@ -1360,15 +1360,15 @@ static string _describe_weapon(const item_def &item, bool verbose)
 
     if (you.duration[DUR_EXCRUCIATING_WOUNDS] && &item == you.weapon())
     {
-        description += "\nIt is temporarily rebranded; it is actually a";
+        description += "\nIt is temporarily rebranded; it is actually ";
         if ((int) you.props[ORIGINAL_BRAND_KEY] == SPWPN_NORMAL)
-            description += "n unbranded weapon.";
+            description += "an unbranded weapon.";
         else
         {
-            description += " weapon of "
-                        + ego_type_string(item, false,
-                           (brand_type) you.props[ORIGINAL_BRAND_KEY].get_int())
-                        + ".";
+            brand_type original = static_cast<brand_type>(
+                you.props[ORIGINAL_BRAND_KEY].get_int());
+            description += article_a(
+                weapon_brand_desc("weapon", item, false, original) + ".", true);
         }
     }
 
