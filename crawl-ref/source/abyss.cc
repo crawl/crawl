@@ -614,7 +614,7 @@ static void _abyss_move_sanctuary(const coord_def abyss_shift_start_centre,
                                   abyss_shift_start_centre);
         }
         else
-            remove_sanctuary(false);
+            remove_sanctuary();
     }
 }
 
@@ -1574,7 +1574,7 @@ static void _abyss_generate_new_area()
     _initialize_abyss_state();
     dprf(DIAG_ABYSS, "Abyss Coord (%d, %d)",
          abyssal_state.major_coord.x, abyssal_state.major_coord.y);
-    remove_sanctuary(false);
+    remove_sanctuary();
 
     env.floor_colour = _roll_abyss_floor_colour();
     env.rock_colour = _roll_abyss_rock_colour();

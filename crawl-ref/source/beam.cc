@@ -4174,9 +4174,6 @@ void bolt::enchantment_affect_monster(monster* mon)
     {
         if (YOU_KILL(thrower))
         {
-            if (is_sanctuary(mon->pos()) || is_sanctuary(you.pos()))
-                remove_sanctuary(true);
-
             set_attack_conducts(conducts, *mon, you.can_see(*mon));
 
             if (have_passive(passive_t::convert_orcs)
@@ -4703,13 +4700,7 @@ void bolt::affect_monster(monster* mon)
     if (nasty_to(mon))
     {
         if (YOU_KILL(thrower) && final > 0)
-        {
-            if (is_sanctuary(mon->pos()) || is_sanctuary(you.pos()))
-                remove_sanctuary(true);
-
-            // It's not the player's fault if the monster couldn't be seen
             set_attack_conducts(conducts, *mon, you.can_see(*mon));
-        }
     }
 
     if (engulfs && flavour == BEAM_SPORE // XXX: engulfs is redundant?

@@ -15,6 +15,7 @@ struct god_conduct_trigger
     int pgain;
     bool known;
     unique_ptr<monster> victim;
+    bool did_sanctuary;
 
     god_conduct_trigger(conduct_type c = NUM_CONDUCTS,
                         int pg = 0,

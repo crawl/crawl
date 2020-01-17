@@ -2,6 +2,8 @@
 
 #include "god-conduct.h"
 
+#include "areas.h"
+#include "fprop.h"
 #include "god-abil.h" // ru sac key
 #include "god-item.h" // is_*_spell
 #include "libutil.h"
@@ -24,6 +26,8 @@ god_conduct_trigger::god_conduct_trigger(
     conduct_type c, int pg, bool kn, const monster* vict)
   : conduct(c), pgain(pg), known(kn), victim(nullptr)
 {
+    did_sanctuary = false;
+
     if (vict)
     {
         victim.reset(new monster);
@@ -34,6 +38,15 @@ god_conduct_trigger::god_conduct_trigger(
 void god_conduct_trigger::set(conduct_type c, int pg, bool kn,
                               const monster* vict)
 {
+    // This conduct only needs to be set once per instance; subsequent calls
+    // would just uselessly update the victim pointer.
+    if (c == DID_ATTACK_IN_SANCTUARY)
+    {
+        if (did_sanctuary)
+            return;
+
+        did_sanctuary = true;
+    }
     conduct = c;
     pgain = pg;
     known = kn;
@@ -47,7 +60,10 @@ void god_conduct_trigger::set(conduct_type c, int pg, bool kn,
 
 god_conduct_trigger::~god_conduct_trigger()
 {
-    if (conduct != NUM_CONDUCTS)
+    // For order of events, let remove_sanctuary() apply the conduct.
+    if (conduct == DID_ATTACK_IN_SANCTUARY)
+        remove_sanctuary(true);
+    else if (conduct != NUM_CONDUCTS)
         did_god_conduct(conduct, pgain, known, victim.get());
 }
 
@@ -1020,6 +1036,10 @@ void set_attack_conducts(god_conduct_trigger conduct[3], const monster &mon,
     }
     else if (mon.neutral())
         conduct[0].set(DID_ATTACK_NEUTRAL, 5, known, &mon);
+
+    // Penance value is handled by remove_sanctuary().
+    if (is_sanctuary(mon.pos()) || is_sanctuary(you.pos()))
+        conduct[1].set(DID_ATTACK_IN_SANCTUARY, -1, known, &mon);
 
     if (mon.is_holy() && !mon.is_illusion())
     {

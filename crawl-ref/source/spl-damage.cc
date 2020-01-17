@@ -369,9 +369,6 @@ spret cast_chain_spell(spell_type spell_cast, int pow,
 static void _player_hurt_monster(monster &mon, int damage, beam_type flavour,
                                  bool god_conducts = true)
 {
-    if (is_sanctuary(you.pos()) || is_sanctuary(mon.pos()))
-        remove_sanctuary(true);
-
     if (god_conducts && you.deity() == GOD_FEDHAS && fedhas_neutralises(mon))
     {
         simple_god_message(" protects your plant from harm.", GOD_FEDHAS);
@@ -2676,8 +2673,6 @@ void toxic_radiance_effect(actor* agent, int mult, bool on_cast)
     else
         pow = agent->as_monster()->get_hit_dice() * 8;
 
-    bool break_sanctuary = (agent->is_player() && is_sanctuary(you.pos()));
-
     for (actor_near_iterator ai(agent->pos(), LOS_NO_TRANS); ai; ++ai)
     {
         if (!_toxic_can_affect(*ai))
@@ -2705,17 +2700,12 @@ void toxic_radiance_effect(actor* agent, int mult, bool on_cast)
         }
         else
         {
-            // We need to deal with conducts before damaging the monster,
-            // because otherwise friendly monsters that are one-shot won't
-            // trigger conducts. Only trigger conducts on the turn the player
-            // casts the spell (see PR #999).
+            god_conduct_trigger conducts[3];
+
+            // Only trigger conducts on the turn the player casts the spell
+            // (see PR #999).
             if (on_cast && agent->is_player())
-            {
-                god_conduct_trigger conducts[3];
                 set_attack_conducts(conducts, *ai->as_monster());
-                if (is_sanctuary(ai->pos()))
-                    break_sanctuary = true;
-            }
 
             ai->hurt(agent, dam, BEAM_POISON);
 
@@ -2731,9 +2721,6 @@ void toxic_radiance_effect(actor* agent, int mult, bool on_cast)
             }
         }
     }
-
-    if (break_sanctuary)
-        remove_sanctuary(true);
 }
 
 spret cast_searing_ray(int pow, bolt &beam, bool fail)

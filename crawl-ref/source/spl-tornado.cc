@@ -392,13 +392,6 @@ void tornado_damage(actor *caster, int dur, bool is_vortex)
                         dprf("damage done: %d", dmg);
                         victim->hurt(caster, dmg, BEAM_AIR, KILLED_BY_BEAM,
                                      "", "tornado");
-
-                        if (caster->is_player()
-                            && (is_sanctuary(you.pos())
-                                || is_sanctuary(victim->pos())))
-                        {
-                            remove_sanctuary(true);
-                        }
                     }
                 }
 

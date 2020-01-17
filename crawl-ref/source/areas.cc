@@ -284,6 +284,14 @@ bool sanctuary_exists()
     return in_bounds(env.sanctuary_pos);
 }
 
+/*
+ * Remove any sanctuary from the level.
+ *
+ * @param did_attack If true, the sanctuary removal was the result of a player
+ *                   attack, so we apply penance. Otherwise the sanctuary is
+ *                   removed with no penance.
+ * @returns True if we removed an existing sanctuary, false otherwise.
+ */
 bool remove_sanctuary(bool did_attack)
 {
     if (env.sanctuary_time)
