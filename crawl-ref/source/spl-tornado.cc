@@ -12,7 +12,6 @@
 #include "delay.h"
 #include "directn.h"
 #include "env.h"
-#include "fight.h"
 #include "fineff.h"
 #include "fprop.h"
 #include "god-conduct.h"
@@ -23,7 +22,6 @@
 #include "ouch.h"
 #include "prompt.h"
 #include "shout.h"
-#include "target.h"
 #include "terrain.h"
 #include "transform.h"
 
@@ -118,12 +116,25 @@ static void _set_tornado_durations()
 
 spret cast_tornado(int /*powc*/, bool fail)
 {
-    targeter_radius hitfunc(&you, LOS_NO_TRANS, TORNADO_RADIUS);
-    if (stop_attack_prompt(hitfunc, "make a tornado",
-                [](const actor *act) -> bool {
-                    return !act->res_tornado();
-                }))
+    bool friendlies = false;
+    for (radius_iterator ri(you.pos(), TORNADO_RADIUS, C_SQUARE); ri; ++ri)
     {
+        const monster_info* m = env.map_knowledge(*ri).monsterinfo();
+        if (!m)
+            continue;
+        if (mons_att_wont_attack(m->attitude)
+            && !mons_class_res_tornado(m->type)
+            && !mons_is_projectile(m->type))
+        {
+            friendlies = true;
+        }
+    }
+
+    if (friendlies
+        && !yesno("There are friendlies around, are you sure you want to hurt them?",
+                  true, 'n'))
+    {
+        canned_msg(MSG_OK);
         return spret::abort;
     }
 

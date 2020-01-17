@@ -2604,9 +2604,10 @@ spret cast_toxic_radiance(actor *agent, int pow, bool fail, bool mon_tracer)
     if (agent->is_player())
     {
         targeter_radius hitfunc(&you, LOS_NO_TRANS);
-        if (stop_attack_prompt(hitfunc, "poison", _toxic_can_affect))
-            return spret::abort;
-
+        {
+            if (stop_attack_prompt(hitfunc, "poison", _toxic_can_affect))
+                return spret::abort;
+        }
         fail_check();
 
         if (!you.duration[DUR_TOXIC_RADIANCE])
