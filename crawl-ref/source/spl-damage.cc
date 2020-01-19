@@ -857,9 +857,6 @@ spret cast_airstrike(int pow, const dist &beam, bool fail)
         return spret::abort;
     fail_check();
 
-    god_conduct_trigger conducts[3];
-    set_attack_conducts(conducts, *mons, you.can_see(*mons));
-
     noisy(spell_effect_noise(SPELL_AIRSTRIKE), beam.target);
 
     bolt pbeam;
