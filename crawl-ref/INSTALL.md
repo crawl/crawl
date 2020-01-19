@@ -148,7 +148,7 @@ Then follow [the above compilation steps](#compiling).
 
 ### MSYS2 (Recommended)
 
-This is the only currently recommended process for building Crawl on windows.
+This is the only currently recommended process for building DCSS on windows.
 It is also possible to cross-compile windows builds; see the release guide
 for instructions.
 
@@ -181,7 +181,7 @@ installation. These steps are repeated here:
     6. At the command line, run `pacman -Su` to update all packages.
 
 After MSYS2 is fully installed and updated, follow steps below to install
-development packages and compile Crawl. The commands shown below should be run
+development packages and compile DCSS. The commands shown below should be run
 from within the MSYS2 Shell.
 
 1. To install git and the base development packages, run:
@@ -229,8 +229,8 @@ from within the MSYS2 Shell.
     give an error like `'yaml' is a package and cannot be directly imported`
     (rather than `No module named yaml`).
 
-5. To get the Crawl source, follow the steps in the [Getting The
-   Source](#getting-the-source) section above to clone Crawl into your MSYS2
+5. To get the DCSS source, follow the steps in the [Getting The
+   Source](#getting-the-source) section above to clone DCSS into your MSYS2
    home directory. We recommend using the MSYS2-installed version of git for
    these steps. In brief:
 
@@ -241,7 +241,7 @@ from within the MSYS2 Shell.
     3. Run `cd crawl/crawl-ref/source`.
     4. Run `git submodule update --init`.
 
-6. Build Crawl by simply running:
+6. Build DCSS by simply running:
 
     ```sh
     # console build
@@ -256,8 +256,8 @@ from within the MSYS2 Shell.
 
 7. When the build process finishes, you can run crawl.exe directly from the
    source directory in the MSYS2 shell. For Tiles, type `./crawl.exe`, and for
-   console, type `start crawl`, which will open Crawl in a new command.exe
-   window (the Windows version of Crawl requires a command.exe shell and will
+   console, type `start crawl`, which will open DCSS in a new command.exe
+   window (the Windows version of DCSS requires a command.exe shell and will
    not run in an MSYS2 shell). Both versions can also be started by
    double-clicking `crawl.exe` using the graphical file explorer.
 
@@ -269,7 +269,7 @@ These instructions have been successfully tested with Ubuntu only.
    website](https://docs.microsoft.com/en-us/windows/wsl/install-win10) at to
    set up the Windows Subsystem for Linux.
 
-2. Follow the [Ubuntu instructions](#ubuntu--debian) to build Crawl.
+2. Follow the [Ubuntu instructions](#ubuntu--debian) to build DCSS.
 
 3. Console and Webtiles will work without any further configuration. To get SDL
    tiles to work, you need an X server running on Windows; Xming is an option
@@ -289,7 +289,7 @@ This build is tested on Visual Studio 2017 15.8.7 on Windows 8.1 and 10.
 Tested configurations are `Debug/Release;Console/Tiles;Win32/x64`, Python and
 Lua support for editing are untested, and a webtiles build is not available.
 
-1. To get the Crawl source, follow the steps in the [Getting The
+1. To get the DCSS source, follow the steps in the [Getting The
    Source](#getting-the-source) section above.
 
     ```sh
@@ -300,12 +300,12 @@ Lua support for editing are untested, and a webtiles build is not available.
 2. Install a perl environment, [Perl provides links to several Windows
    binaries](http://www.perl.org/get.html).
 
-3. In the Crawl source, run `gen-all.cmd` inside `crawl-ref/source/util/`. This
+3. In the DCSS source, run `gen-all.cmd` inside `crawl-ref/source/util/`. This
    step must be executed any time you update to a new version of the source (or
    if you have modified tile data or unrandarts).
 
 4. The first time you compile, you need to build the `Contribs` solution. This
-   compiles various libraries which Crawl itself needs to build. This
+   compiles various libraries which DCSS itself needs to build. This
    needs to be performed the first time you build, when changing to the `Debug`
    configuration, and when the contribs are
    updated. To do this open and compile `Contribs.sln` in
@@ -363,7 +363,7 @@ Troubleshooting tips:
 
 ## Advanced
 
-Crawl looks for several data files when starting up. They include:
+DCSS looks for several data files when starting up. They include:
 
 * Special level and vault layout (`dat/*.des`) files.
 * Core Lua code (`dat/dlua/*.lua`).
@@ -372,12 +372,12 @@ Crawl looks for several data files when starting up. They include:
 
 All these files are in the source tree under `source/dat`.
 
-Crawl will also look for documentation files when players invoke the help
+DCSS will also look for documentation files when players invoke the help
 system. These files are available under the docs directory.
 
-Your built Crawl binary must be able to find these files, or it will not start.
+Your built DCSS binary must be able to find these files, or it will not start.
 
-If Crawl is built without an explicit `DATA_DIR_PATH` (this is the most common
+If DCSS is built without an explicit `DATA_DIR_PATH` (this is the most common
 setup), it will search for its data files under the current directory, and if
 it can't find them there, one level above the current directory. In short, it
 uses these search paths: `.`, `./dat`, `./docs`, `..`, `../dat`, `../docs`.
@@ -409,7 +409,7 @@ Make options:
 
 ### .des level compiler
 
-Crawl uses a level compiler to read the level design (.des) files in the
+DCSS uses a level compiler to read the level design (.des) files in the
 `source/dat` directory.
 
 If you're using one of standard makefile, the steps described in this section
@@ -422,11 +422,11 @@ The level compiler source is in the `source/util` directory (`levcomp.lpp` and
 * Run `bison` on `levcomp.ypp` to produce the `levcomp.tab.cc` parser and
   `levcomp.tab.h`
 * Compile the resulting C++ source files and `levcomp.cc` and link the object
-  files into the Crawl executable.
+  files into the DCSS executable.
 
 For convenience on systems that don't have flex/bison, pre-generated
 intermediate files are provided under `source/prebuilt`. The makefiles provided
-with the Crawl source distribution will use these pre-generated files
+with the DCSS source distribution will use these pre-generated files
 automatically if flex/bison is not available.
 
 ### Code Coverage
@@ -436,7 +436,7 @@ Code coverage requires some more package to be installed. See
 
 ### Lua
 
-The Lua source is included with Crawl. It will be used if you don't have Lua
+The Lua source is included with DCSS. It will be used if you don't have Lua
 headers installed. Note that we don't provide security support for Lua, and
 thus if you run a public server or a kiosk, it is strongly recommended to use
 system Lua which does receive security updates from whatever distribution you
@@ -445,7 +445,7 @@ use.
 ### PCRE
 
 PCRE 8.12, with a custom build system but otherwise unchanged, is included with
-Crawl. It is enabled by default on Windows; otherwise, unless you build with
+DCSS. It is enabled by default on Windows; otherwise, unless you build with
 `BUILD_PCRE=y` (to use the contrib) or `USE_PCRE=y` (to use a development
 package from your manager), the system POSIX regex will be used.
 
@@ -459,7 +459,7 @@ LC_ALL=en_US.UTF-8`.
 
 On Windows, the console behaves differently for TrueType and legacy (bitmap)
 fonts. The latter (mostly) work only on certain language editions of Windows,
-such as English, and even there, they work adequately only for Crawl's default
+such as English, and even there, they work adequately only for DCSS's default
 settings. For anything more, please select one of TrueType fonts. If, like one
 of our players, you are deeply attached to the looks of bitmap fonts, you can
 [download a corrected version of the Terminal
