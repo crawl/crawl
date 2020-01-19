@@ -11,7 +11,7 @@
 #include "tilemcache.h"
 #include "tilepick.h"
 
-DungeonCellBuffer::DungeonCellBuffer(ImageManager *im) :
+DungeonCellBuffer::DungeonCellBuffer(const ImageManager *im) :
     m_buf_floor(&im->m_textures[TEX_FLOOR]),
     m_buf_wall(&im->m_textures[TEX_WALL]),
     m_buf_feat(&im->m_textures[TEX_FEAT]),

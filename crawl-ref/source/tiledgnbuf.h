@@ -19,7 +19,7 @@ class ImageManager;
 class DungeonCellBuffer
 {
 public:
-    DungeonCellBuffer(ImageManager *im);
+    DungeonCellBuffer(const ImageManager *im);
 
     void add(const packed_cell &cell, int x, int y);
     void add_monster(const monster_info &mon, int x, int y);
