@@ -187,6 +187,22 @@ spret cast_big_c(int pow, spell_type spl, const actor *caster, bolt &beam,
     return spret::success;
 }
 
+/*
+ * A cloud_func that places an individual cloud as part of a cloud area. This
+ * function is called by apply_area_cloud();
+ *
+ * @param where       The location of the cloud.
+ * @param pow         The spellpower of the spell placing the clouds, which
+ *                    determines how long the cloud will last.
+ * @param spread_rate How quickly the cloud spreads.
+ * @param ctype       The type of cloud to place.
+ * @param agent       Any agent that may have caused the cloud. If this is the
+ *                    player, god conducts are applied.
+ * @param excl_rad    How large of an exclusion radius to make around the
+ *                    cloud.
+ * @returns           The number of clouds made, which is always 1.
+ *
+*/
 static int _make_a_normal_cloud(coord_def where, int pow, int spread_rate,
                                 cloud_type ctype, const actor *agent,
                                 int excl_rad)
@@ -198,6 +214,20 @@ static int _make_a_normal_cloud(coord_def where, int pow, int spread_rate,
     return 1;
 }
 
+/*
+ * Make a large area of clouds centered on a given place. This never creates
+ * player exclusions.
+ *
+ * @param ctype       The type of cloud to place.
+ * @param agent       Any agent that may have caused the cloud. If this is the
+ *                    player, god conducts are applied.
+ * @param where       The location of the cloud.
+ * @param pow         The spellpower of the spell placing the clouds, which
+ *                    determines how long the cloud will last.
+ * @param size        How large a radius of clouds to place from the `where'
+ *                    argument.
+ * @param spread_rate How quickly the cloud spreads.
+*/
 void big_cloud(cloud_type cl_type, const actor *agent,
                const coord_def& where, int pow, int size, int spread_rate)
 {
@@ -208,6 +238,15 @@ void big_cloud(cloud_type cl_type, const actor *agent,
 
 spret cast_ring_of_flames(int power, bool fail)
 {
+    targeter_radius hitfunc(&you, LOS_NO_TRANS, 1);
+    if (stop_attack_prompt(hitfunc, "make a ring of flames",
+                [](const actor *act) -> bool {
+                    return act->res_fire() < 3;
+                }))
+    {
+        return spret::abort;
+    }
+
     fail_check();
     you.increase_duration(DUR_FIRE_SHIELD,
                           6 + (power / 10) + (random2(power) / 5), 50,

@@ -764,10 +764,21 @@ static bool _cloud_is_stronger(cloud_type ct, const cloud_struct& cloud)
            || ct == CLOUD_TORNADO; // soon gone
 }
 
-//   Places a cloud with the given stats. Will overwrite an old
-//   cloud under some circumstances.
+/*
+ * Places a cloud with the given stats. Will overwrite an old cloud under some
+ * circumstances.
+ *
+ * @param cl_type     The type of cloud to place.
+ * @param ctarget     The location of the cloud.
+ * @param cl_range    How many turns the cloud will take to decay.
+ * @param agent       Any agent that may have caused the cloud. If this is the
+ *                    player, god conducts are applied.
+ * @param spread_rate How quickly the cloud spreads.
+ * @param excl_rad    How large of an exclusion radius to make around the
+ *                    cloud.
+*/
 void place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
-                 const actor *agent, int _spread_rate, int excl_rad)
+                 const actor *agent, int spread_rate, int excl_rad)
 {
     if (is_sanctuary(ctarget) && !is_harmless_cloud(cl_type))
         return;
@@ -784,11 +795,22 @@ void place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
 
     ASSERT(!cell_is_solid(ctarget));
 
+    god_conduct_trigger conducts[3];
     kill_category whose = KC_OTHER;
     killer_type killer  = KILL_MISC;
     mid_t source        = MID_NOBODY;
     if (agent && agent->is_player())
-        whose = KC_YOU, killer = KILL_YOU_MISSILE, source = MID_PLAYER;
+    {
+        const monster * const mons = monster_at(ctarget);
+        // We only apply conducts for monsters that are alive and would be
+        // harmed when the cloud was placed.
+        if (mons && mons->alive() && !actor_cloud_immune(*mons, cl_type))
+            set_attack_conducts(conducts, *mons, you.can_see(*mons));
+
+        whose = KC_YOU;
+        killer = KILL_YOU_MISSILE;
+        source = MID_PLAYER;
+    }
     else if (agent && agent->is_monster())
     {
         if (agent->as_monster()->friendly())
@@ -800,18 +822,17 @@ void place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
     }
 
     // There's already a cloud here. See if we can overwrite it.
-    if (cloud_at(ctarget) && !_cloud_is_stronger(cl_type, *cloud_at(ctarget)))
+    const cloud_struct *cloud = cloud_at(ctarget);
+    if (cloud && !_cloud_is_stronger(cl_type, *cloud))
         return;
 
-    // if the old cloud was opaque, may need to recalculate los.
-    // It *is* possible to overwrite an opaque cloud with a non-opaque one; OOD will do this.
-    const cloud_type old = cloud_type_at(ctarget);
-
-    const int spread_rate = _actual_spread_rate(cl_type, _spread_rate);
-
+    // If the old cloud was opaque, may need to recalculate los. It *is*
+    // possible to overwrite an opaque cloud with a non-opaque one; OOD will do
+    // this.
+    const cloud_type old = cloud ? cloud->type : CLOUD_NONE;
     env.cloud[ctarget] = cloud_struct(ctarget, cl_type, cl_range * 10,
-                                      spread_rate, whose, killer, source,
-                                      excl_rad);
+            _actual_spread_rate(cl_type, spread_rate), whose, killer, source,
+            excl_rad);
     _los_cloud_changed(ctarget, env.cloud[ctarget].type, old);
 }
 
