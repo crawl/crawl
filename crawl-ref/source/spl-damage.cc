@@ -355,20 +355,23 @@ spret cast_chain_spell(spell_type spell_cast, int pow,
 
 /*
  * Handle the application of damage from a player spell that doesn't apply these
- * through struct bolt. This applies any Zin sancuary violation and can apply
- * god conducts as well.
+ * through struct bolt. This can apply god conducts and handles any necessary
+ * death cleanup.
  * @param mon          The monster.
  * @param damage       The damage to apply, if any. Regardless of damage done,
  *                     the monster will have death cleanup applied via
  *                     monster_die() if it's now dead.
  * @param flavour      The beam flavour of damage.
- * @param god_conducts If true, apply any god conducts. Some callers need to
- *                     apply effects prior to damage that might kill the
- *                     monster, hence handle conducts on their own.
+ * @param god_conducts If true, apply any god conducts, in which case the
+ *                     monster must be alive. Some callers need to apply
+ *                     effects prior to damage that might kill the monster,
+ *                     hence handle conducts on their own.
 */
 static void _player_hurt_monster(monster &mon, int damage, beam_type flavour,
                                  bool god_conducts = true)
 {
+    ASSERT(mon.alive() || !god_conducts);
+
     if (god_conducts && you.deity() == GOD_FEDHAS && fedhas_neutralises(mon))
     {
         simple_god_message(" protects your plant from harm.", GOD_FEDHAS);
@@ -379,11 +382,8 @@ static void _player_hurt_monster(monster &mon, int damage, beam_type flavour,
     if (god_conducts)
         set_attack_conducts(conducts, mon, you.can_see(mon));
 
-    // Don't let monster::hurt() do death cleanup here. We're handling death
-    // cleanup at the end to cover cases where we've done no damage and the
-    // monster is dead from previous effects.
     if (damage)
-        mon.hurt(&you, damage, flavour, KILLED_BY_BEAM, "", "", false);
+        mon.hurt(&you, damage, flavour, KILLED_BY_BEAM);
 
     if (mon.alive())
     {
@@ -392,7 +392,8 @@ static void _player_hurt_monster(monster &mon, int damage, beam_type flavour,
         if (damage && you.can_see(mon))
             print_wounds(mon);
     }
-    else
+    // monster::hurt() wasn't called, so we do death cleanup.
+    else if (!damage)
         monster_die(mon, KILL_YOU, NON_MONSTER);
 }
 
