@@ -493,12 +493,19 @@ int line_reader::read_line_core(bool reset_cursor)
     if (history)
         history->go_end();
 
+    if (get_cursor_region() == GOTO_MSG)
+        set_attached_line_reader(this);
+
     int ret;
     do
     {
         ret = process_key_core(getkey());
     }
     while (ret == -1);
+
+    if (get_cursor_region() == GOTO_MSG)
+        set_attached_line_reader(nullptr);
+
     return ret;
 }
 
@@ -628,6 +635,12 @@ void line_reader::print_segment(int start_point, int overprint)
     overprint = max(overprint, 0);
 
     wrapcprintf(wrapcol, "%s%*s", buffer + start_point, overprint, "");
+}
+
+void line_reader::render()
+{
+    print_segment();
+    cursorto(pos);
 }
 
 void line_reader::backspace()

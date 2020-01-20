@@ -33,6 +33,7 @@
 #include "known-items.h"
 #include "libutil.h"
 #include "macro.h"
+#include "main-game.h"
 #include "message.h"
 #include "output.h"
 #include "options.h"

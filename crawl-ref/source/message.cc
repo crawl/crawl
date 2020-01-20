@@ -11,6 +11,7 @@
 
 #include "areas.h"
 #include "colour.h"
+#include "cio.h"
 #include "delay.h"
 #include "hints.h"
 #include "initfile.h"
@@ -611,6 +612,12 @@ public:
         for (size_t i = diff; i < lines.size(); ++i)
             out_line(lines[i], i - diff);
         place_cursor();
+
+        if (attached_line_reader)
+            attached_line_reader->render();
+        if (inside_more)
+            draw_more();
+
 #ifdef USE_TILE
         tiles.set_need_redraw();
 #endif
@@ -674,40 +681,19 @@ public:
         return next_line > input_line;
     }
 
-    /*
-     * Handling of more prompts (both types).
-     */
-    void more(bool full, bool user=false)
+    void draw_more()
     {
-        rng::generator rng(rng::UI);
-
-        if (_pre_more())
-            return;
-
-        if (you.running)
-        {
-            mouse_control mc(MOUSE_MODE_MORE);
-            redraw_screen();
-        }
-        else
-        {
-            print_stats();
-            show();
-        }
-
         int last_row = crawl_view.msgsz.y;
         if (first_col_more())
         {
             cgotoxy(1, last_row, GOTO_MSG);
-            cglyph_t g = _prefix_glyph(full ? prefix_type::full_more : prefix_type::other_more);
+            cglyph_t g = _prefix_glyph(full_more ? prefix_type::full_more : prefix_type::other_more);
             formatted_string f;
             f.add_glyph(g);
             f.display();
             // Move cursor back for nicer display.
             cgotoxy(1, last_row, GOTO_MSG);
             // Need to read_key while cursor_control in scope.
-            cursor_control con(true);
-            readkey_more();
         }
         else
         {
@@ -724,10 +710,39 @@ public:
             }
             else
                 cprintf("--more--");
-
-            readkey_more(user);
         }
     }
+
+    /*
+     * Handling of more prompts (both types).
+     */
+    void more(bool full, bool user=false)
+    {
+        rng::generator rng(rng::UI);
+
+        if (_pre_more())
+            return;
+
+        unwind_bool set_inside_more(inside_more, true);
+        full_more = full;
+
+        mouse_control mc(MOUSE_MODE_MORE);
+        redraw_screen();
+
+        draw_more();
+
+        if (first_col_more())
+        {
+            cursor_control con(true);
+            readkey_more();
+        }
+        else
+            readkey_more(user);
+    }
+
+    bool inside_more = false;
+    bool full_more;
+    line_reader *attached_line_reader = nullptr;
 };
 
 message_window msgwin;
@@ -751,6 +766,12 @@ void scroll_message_window(int n)
 bool any_messages()
 {
     return msgwin.any_messages();
+}
+
+void set_attached_line_reader(line_reader* reader)
+{
+    ASSERT((!reader) != (!msgwin.attached_line_reader));
+    msgwin.attached_line_reader = reader;
 }
 
 typedef circ_vec<message_line, NUM_STORED_MESSAGES> store_t;

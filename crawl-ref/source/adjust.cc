@@ -12,6 +12,7 @@
 #include "invent.h"
 #include "items.h"
 #include "macro.h"
+#include "main-game.h"
 #include "message.h"
 #include "prompt.h"
 #include "spl-util.h"

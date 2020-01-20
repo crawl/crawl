@@ -2526,7 +2526,6 @@ void UIRoot::render()
 
 #ifdef USE_TILE_LOCAL
     glmanager->reset_view_for_redraw();
-    tiles.render_current_regions();
     glmanager->reset_transform();
 #else
     // On console, clear and redraw only the dirty region of the screen
@@ -3116,9 +3115,6 @@ void pop_layout()
     ui_root.pop_child();
 #ifdef USE_TILE_LOCAL
     ui_root.update_hover_path();
-#else
-    if (!has_layout())
-        redraw_screen(false);
 #endif
 }
 
@@ -3304,7 +3300,7 @@ void run_layout(shared_ptr<Widget> root, const bool& done,
 
 bool has_layout()
 {
-    return ui_root.num_children() > 0;
+    return ui_root.num_children() > 1;
 }
 
 NORETURN void restart_layout()

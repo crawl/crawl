@@ -90,6 +90,7 @@
 #include "luaterp.h"
 #include "lookup-help.h"
 #include "macro.h"
+#include "main-game.h"
 #include "makeitem.h"
 #include "map-knowledge.h"
 #include "mapmark.h"
@@ -366,14 +367,18 @@ static void _launch_game_loop()
             const newgame_def defaults = read_startup_prefs();
             newgame_def choice = startup_step(defaults);
 
+
             if (choice.type == GAME_TYPE_ARENA)
             {
                 crawl_state.last_type = GAME_TYPE_ARENA;
+                // XXX: currently the arena also needs a UIMainGame
+                ui::push_layout(make_shared<UIMainGame>(), KMC_NONE);
                 run_arena(choice, defaults.arena_teams); // this is NORETURN
             }
             else
             {
                 bool newchar = startup_load_regular(choice, defaults);
+                ui::push_layout(make_shared<UIMainGame>(), KMC_NONE);
                 _launch_game(newchar);
             }
         }
@@ -396,6 +401,8 @@ static void _launch_game_loop()
         {
             end(1, false, "Error: truncation inside the save file.\n");
         }
+        while (ui::top_layout())
+            ui::pop_layout();
     } while (crawl_should_restart(crawl_state.last_game_exit.exit_reason)
              && game_ended
              && !crawl_state.seen_hups);

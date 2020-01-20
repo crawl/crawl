@@ -13,6 +13,8 @@
 #include "files.h"
 #include "glwrapper.h"
 #include "libutil.h"
+#include "macro.h"
+#include "main-game.h"
 #include "map-knowledge.h"
 #include "menu.h"
 #include "message.h"
@@ -569,8 +571,21 @@ void TilesFramework::resize_event(int w, int h)
     wm->resize(m_windowsz);
 }
 
-int TilesFramework::handle_mouse(wm_mouse_event &event)
+int TilesFramework::handle_mouse(const ui::MouseEvent &ev)
 {
+    // XXX: convert Event back into a wm_mouse_event for the tile regions'
+    // handle_mouse() callbacks.
+    wm_mouse_event event;
+    event.event = ev.type() == ui::Event::Type::MouseMove ? wm_mouse_event::MOVE :
+                ev.type() == ui::Event::Type::MouseDown ? wm_mouse_event::PRESS :
+                wm_mouse_event::WHEEL;
+    event.button = static_cast<wm_mouse_event::mouse_event_button>(ev.button());
+    event.mod = wm->get_mod_state();
+    int x, y;
+    event.held = wm->get_mouse_state(&x, &y);
+    event.px = x;
+    event.py = y;
+
     // Note: the mouse event goes to all regions in the active layer because
     // we want to be able to start some GUI event (e.g. far viewing) and
     // stop if it moves to another region.
@@ -613,13 +628,13 @@ static unsigned int _timer_callback(unsigned int ticks, void *param)
 {
     UNUSED(ticks, param);
 
+    tiles.set_show_tooltip();
 
     return 0;
 }
 
-int TilesFramework::getch_ck()
+int TilesFramework::handle_event(const ui::Event& event)
 {
-    wm_event event;
     cursor_loc last_redraw_loc = m_cur_loc;
 
     int key = 0;
@@ -629,216 +644,114 @@ int TilesFramework::getch_ck()
                 = (mouse_control::current_mode() == MOUSE_MODE_TARGET_PATH
                    || mouse_control::current_mode() == MOUSE_MODE_TARGET_DIR);
 
-    const unsigned int ticks_per_screen_redraw = Options.tile_update_rate;
-
-
-    m_tooltip.clear();
-    m_region_msg->alt_text().clear();
     string prev_msg_alt_text = "";
 
-    if (need_redraw())
-        redraw();
+    if (crawl_state.seen_hups)
+        return ESCAPE;
 
-    while (!key)
+    if (!mouse_target_mode)
+        tiles.clear_text_tags(TAG_CELL_DESC);
+
+    switch (event.type())
     {
-        if (crawl_state.seen_hups)
-            return ESCAPE;
+    case ui::Event::KeyDown:
+        key = static_cast<const ui::KeyEvent&>(event).key();
+        m_region_tile->place_cursor(CURSOR_MOUSE, NO_CURSOR);
 
-        unsigned int ticks = 0;
+        // If you hit a key, disable tooltips until the mouse
+        // is moved again.
+        m_show_tooltip = false;
+        wm->remove_timer(m_tooltip_timer_id);
+        break;
 
-        if (wm->wait_event(&event, INT_MAX))
+    case ui::Event::KeyUp:
+        m_show_tooltip = false;
+        wm->remove_timer(m_tooltip_timer_id);
+        break;
+
+    case ui::Event::MouseMove:
         {
-            ticks = wm->get_ticks();
-            if (!mouse_target_mode && event.type != WME_CUSTOMEVENT)
+            // Record mouse pos for tooltip timer
+            m_mouse.x = static_cast<const ui::MouseEvent&>(event).x();
+            m_mouse.y = static_cast<const ui::MouseEvent&>(event).y();
+
+            // Find the new mouse location
+            m_cur_loc.reg = nullptr;
+            for (Region *reg : m_layers[m_active_layer].m_regions)
             {
-                tiles.clear_text_tags(TAG_CELL_DESC);
-                m_region_msg->alt_text().clear();
+                // inside() can return false here for DungeonRegion
+                // order is important: either way, cx and cy need to be set
+                if (reg->mouse_pos(m_mouse.x, m_mouse.y, m_cur_loc.cx, m_cur_loc.cy)
+                    && reg->inside(m_mouse.x, m_mouse.y)) {
+                    m_cur_loc.reg = reg;
+                    m_cur_loc.mode = mouse_control::current_mode();
+                    break;
+                }
             }
 
-            switch (event.type)
+            // If the mouse has left a region, clear any cursors left behind
+            // handle_mouse() is called after this, since it might place cursors
+            if (m_cur_loc.reg != last_redraw_loc.reg)
             {
-            case WME_ACTIVEEVENT:
-#ifdef __ANDROID__
-                // short-term: when crawl is 'iconified' in android,
-                // close it
-                if (/*event.active.state == 0x04 SDL_APPACTIVE &&*/ event.active.gain == 0)
-                {
-                    crawl_state.seen_hups++;
-                    return ESCAPE;
-                }
-                // long-term pseudo-code:
-                /*
-                if (event.active.state == SDL_APPACTIVE)
-                {
-                    if (event.active.gain == 0)
-                    {
-                        if (crawl_state.need_save)
-                            save_game(true);
-                        do_no_SDL_or_GL_calls();
-                    }
-                    else
-                    {
-                        reload_gl_textures();
-                        reset_gl_state();
-                        wm->set_mod_state(TILES_MOD_NONE);
-                        set_need_redraw();
-                    }
-                }
-                 */
-#else
-                // When game gains focus back then set mod state clean
-                // to get rid of stupid Windows/SDL bug with Alt-Tab.
-                if (event.active.gain != 0)
-                {
-                    wm->set_mod_state(TILES_MOD_NONE);
-                    set_need_redraw();
-                }
-#endif
-                break;
-            case WME_KEYDOWN:
-                key        = event.key.keysym.sym;
-                m_region_tile->place_cursor(CURSOR_MOUSE, NO_CURSOR);
-
-                // If you hit a key, disable tooltips until the mouse
-                // is moved again.
-                m_show_tooltip = false;
-                wm->remove_timer(m_tooltip_timer_id);
-                break;
-
-            case WME_KEYUP:
-                m_show_tooltip = false;
-                wm->remove_timer(m_tooltip_timer_id);
-                break;
-
-            case WME_MOUSEMOTION:
-                {
-                    // For consecutive mouse events, ignore all but the last,
-                    // since these can come in faster than crawl can redraw.
-                    if (wm->next_event_is(WME_MOUSEMOTION))
-                        continue;
-
-                    // Record mouse pos for tooltip timer
-                    m_mouse.x = event.mouse_event.px;
-                    m_mouse.y = event.mouse_event.py;
-
-                    // Find the new mouse location
-                    m_cur_loc.reg = nullptr;
-                    for (Region *reg : m_layers[m_active_layer].m_regions)
-                    {
-                        // inside() can return false here for DungeonRegion
-                        // order is important: either way, cx and cy need to be set
-                        if (reg->mouse_pos(m_mouse.x, m_mouse.y, m_cur_loc.cx, m_cur_loc.cy)
-                            && reg->inside(m_mouse.x, m_mouse.y)) {
-                            m_cur_loc.reg = reg;
-                            m_cur_loc.mode = mouse_control::current_mode();
-                            break;
-                        }
-                    }
-
-                    // If the mouse has left a region, clear any cursors left behind
-                    // handle_mouse() is called after this, since it might place cursors
-                    if (m_cur_loc.reg != last_redraw_loc.reg)
-                    {
-                        for (int i = 0; i < CURSOR_MAX; i++)
-                            tiles.place_cursor((cursor_type)i, NO_CURSOR);
-                    }
-
-                    key = handle_mouse(event.mouse_event);
-
-                    // update_alt_text() handlers may depend on data set in handle_mouse() handler
-                    m_region_msg->alt_text().clear();
-                    if (m_cur_loc.reg)
-                        m_cur_loc.reg->update_alt_text(m_region_msg->alt_text());
-                    if (prev_msg_alt_text != m_region_msg->alt_text())
-                    {
-                        prev_msg_alt_text = m_region_msg->alt_text();
-                        set_need_redraw();
-                    }
-
-                    wm->remove_timer(m_tooltip_timer_id);
-                    m_tooltip_timer_id = wm->set_timer(Options.tile_tooltip_ms, &_timer_callback);
-                    m_show_tooltip = false;
-                }
-               break;
-
-            case WME_MOUSEBUTTONUP:
-            case WME_MOUSEBUTTONDOWN:
-                key = handle_mouse(event.mouse_event);
-                break;
-
-            case WME_QUIT:
-                crawl_state.seen_hups++;
-                return ESCAPE;
-
-            case WME_RESIZE:
-                m_windowsz.x = event.resize.w;
-                m_windowsz.y = event.resize.h;
-                resize();
-                set_need_redraw();
-                return CK_REDRAW;
-
-            case WME_MOVE:
-                if (update_dpi())
-                {
-                    resize();
-                    set_need_redraw();
-                    return CK_REDRAW;
-                }
-                // intentional fallthrough
-            case WME_EXPOSE:
-                set_need_redraw();
-                // AFAIK no need to return CK_REDRAW, as resize() hasn't been called
-                break;
-
-            case WME_CUSTOMEVENT:
-            default:
-                // This is only used to refresh the tooltip.
-                m_show_tooltip = true;
-                break;
+                for (int i = 0; i < CURSOR_MAX; i++)
+                    tiles.place_cursor((cursor_type)i, NO_CURSOR);
             }
+
+            key = handle_mouse(static_cast<const ui::MouseEvent&>(event));
+
+            wm->remove_timer(m_tooltip_timer_id);
+            m_tooltip_timer_id = wm->set_timer(Options.tile_tooltip_ms, &_timer_callback);
+            m_show_tooltip = false;
         }
+        break;
 
-        if (!mouse_target_mode)
+    case ui::Event::MouseDown:
+    case ui::Event::MouseUp:
+        key = handle_mouse(static_cast<const ui::MouseEvent&>(event));
+
+    default:
+        break;
+    }
+
+    if (!mouse_target_mode)
+    {
+        if (!m_show_tooltip)
         {
-            if (m_show_tooltip)
-            {
-                tiles.clear_text_tags(TAG_CELL_DESC);
-                if (Options.tile_tooltip_ms > 0 && m_tooltip.empty())
-                {
-                    for (Region *reg : m_layers[m_active_layer].m_regions)
-                    {
-                        if (!reg->inside(m_mouse.x, m_mouse.y))
-                            continue;
-                        if (reg->update_tip_text(m_tooltip))
-                        {
-                            set_need_redraw();
-                            break;
-                        }
-                    }
-                }
-            }
-            else
-            {
-                if (last_redraw_loc != m_cur_loc)
-                    set_need_redraw();
+            if (last_redraw_loc != m_cur_loc)
+                set_need_redraw();
 
-                m_tooltip.clear();
-            }
-
-            if (need_redraw()
-                || ticks > m_last_tick_redraw
-                   && ticks - m_last_tick_redraw > ticks_per_screen_redraw)
-            {
-                last_redraw_loc = m_cur_loc;
-                redraw();
-            }
+            m_tooltip.clear();
         }
     }
 
-    // We got some input, so we'll probably have to redraw something.
-    set_need_redraw();
-
     return key;
+}
+
+void TilesFramework::set_show_tooltip()
+{
+    m_show_tooltip = true;
+
+    const bool mouse_target_mode
+                = (mouse_control::current_mode() == MOUSE_MODE_TARGET_PATH
+                   || mouse_control::current_mode() == MOUSE_MODE_TARGET_DIR);
+
+    if (!mouse_target_mode)
+    {
+        tiles.clear_text_tags(TAG_CELL_DESC);
+        if (Options.tile_tooltip_ms > 0 && m_tooltip.empty())
+        {
+            for (Region *reg : m_layers[m_active_layer].m_regions)
+            {
+                if (!reg->inside(m_mouse.x, m_mouse.y))
+                    continue;
+                if (reg->update_tip_text(m_tooltip))
+                {
+                    set_need_redraw();
+                    break;
+                }
+            }
+        }
+    }
 }
 
 static const int map_margin      = 2;
@@ -863,20 +776,6 @@ static int round_up_to_multiple(int a, int b)
  */
 void TilesFramework::do_layout()
 {
-    /**
-     * XXX: don't layout unless we're in a game / arena
-     * this is to prevent layout code from accessing `you` while it's invalid.
-     */
-    if (!species_type_valid(you.species))
-    {
-        /* HACK: some code called while loading the game calls mprf(), so even
-         * if we're not ready to do an actual layout, we should still give the
-         * message region a size, to prevent a crash. */
-        m_region_msg->place(0, 0, 0);
-        m_region_msg->resize_to_fit(10000, 10000);
-        return;
-    }
-
     // View size in pixels is ((dx, dy) * crawl_view.viewsz)
     const int scale = m_map_mode_enabled ? Options.tile_map_scale
                                          : Options.tile_viewport_scale;
@@ -1430,15 +1329,11 @@ void TilesFramework::set_cursor_region(GotoRegion region)
     }
 }
 
-// #define DEBUG_TILES_REDRAW
-void TilesFramework::redraw()
+void TilesFramework::render_current_regions()
 {
-#ifdef DEBUG_TILES_REDRAW
-    cprintf("\nredrawing tiles");
-#endif
-    m_need_redraw = false;
-
-    glmanager->reset_view_for_redraw();
+    // need to call with show_updates=false, which is passed to viewwindow
+    if (m_active_layer == LAYER_NORMAL && !crawl_state.game_is_arena())
+        redraw_screen(false);
 
     for (Region *region : m_layers[m_active_layer].m_regions)
         region->render();
@@ -1452,23 +1347,6 @@ void TilesFramework::redraw()
         m_tip_font->render_tooltip(m_mouse.x, m_mouse.y,
                 formatted_string(m_tooltip), min_pos, max_pos);
     }
-    wm->swap_buffers();
-
-#ifdef __ANDROID__
-    glmanager->fixup_gl_state();
-#endif
-
-    m_last_tick_redraw = wm->get_ticks();
-}
-
-void TilesFramework::render_current_regions()
-{
-    // need to call with show_updates=false, which is passed to viewwindow
-    if (m_active_layer == LAYER_NORMAL && !crawl_state.game_is_arena())
-        redraw_screen(false);
-
-    for (Region *region : m_layers[m_active_layer].m_regions)
-        region->render();
 }
 
 void TilesFramework::update_minimap(const coord_def& gc)
@@ -1584,6 +1462,9 @@ void TilesFramework::set_need_redraw(unsigned int min_tick_delay)
         return;
 
     m_need_redraw = true;
+
+    if (UIMainGame::main_game)
+        return UIMainGame::main_game->_expose();
 }
 
 bool TilesFramework::need_redraw() const

@@ -18,7 +18,6 @@
 # include "tilebuf.h"
 # include "tiledgnbuf.h"
 # include "tiledoll.h"
-# include "tilesdl.h"
 #endif
 #ifdef USE_TILE_WEB
 # include "tileweb.h"
@@ -26,6 +25,7 @@
 #endif
 
 struct wm_keyboard_event;
+struct wm_mouse_event;
 
 namespace ui {
 
@@ -1158,7 +1158,7 @@ protected:
 class Dungeon : public Widget
 {
 public:
-    Dungeon() : m_buf((ImageManager*)tiles.get_image_manager()) {}
+    Dungeon(const ImageManager* image_manager) : m_buf(image_manager) {}
     virtual ~Dungeon() {}
 
     void _render() override;

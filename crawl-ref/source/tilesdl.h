@@ -7,9 +7,12 @@
 
 #ifdef USE_TILE_LOCAL
 
+#include <deque>
+
 #include "cursor-type.h"
 #include "text-tag-type.h"
 #include "tilereg.h"
+#include "ui.h"
 
 #ifndef PROPORTIONAL_FONT
 # error PROPORTIONAL_FONT not defined
@@ -93,11 +96,12 @@ public:
     void shutdown();
     void load_dungeon(const crawl_view_buffer &vbuf, const coord_def &gc);
     void load_dungeon(const coord_def &gc);
-    int getch_ck();
+    int handle_event(const ui::Event& event);
     void resize();
     void resize_event(int w, int h);
     void layout_statcol();
     void calculate_default_options();
+    void do_layout();
     void clrscr();
 
     void cgotoxy(int x, int y, GotoRegion region = GOTO_CRT);
@@ -120,7 +124,6 @@ public:
 
     void set_need_redraw(unsigned int min_tick_delay = 0);
     bool need_redraw() const;
-    void redraw();
     bool update_dpi();
 
     void render_current_regions();
@@ -158,11 +161,13 @@ public:
 
     const ImageManager* get_image_manager() { return m_image; }
     int to_lines(int num_tiles, int tile_height = TILE_Y);
+
+    void set_show_tooltip();
 protected:
     void reconfigure_fonts();
     FontWrapper* load_font(const char *font_file, int font_size,
                   bool default_on_fail);
-    int handle_mouse(wm_mouse_event &event);
+    int handle_mouse(const ui::MouseEvent &event);
 
     bool m_map_mode_enabled;
 
@@ -240,7 +245,6 @@ protected:
     int m_statcol_bottom;
     int m_map_pixels;
 
-    void do_layout();
     int calc_tab_lines(const int num_elements);
     void place_tab(int idx);
     void autosize_minimap();

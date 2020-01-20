@@ -14,6 +14,7 @@
 #include "cio.h"
 #include "defines.h"
 #include "env.h"
+#include "main-game.h"
 #include "message.h"
 #include "state.h"
 #include "terrain.h"
@@ -135,7 +136,7 @@ int num_to_lines(int num)
 
 int getch_ck()
 {
-    return tiles.getch_ck();
+    return UIMainGame::get_key();
 }
 
 void clrscr()
@@ -169,7 +170,7 @@ void delay(unsigned int ms)
     if (crawl_state.disables[DIS_DELAY])
         return;
 
-    tiles.redraw();
+    ui::render();
     wm->delay(ms);
 }
 

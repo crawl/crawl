@@ -384,8 +384,8 @@ static command_type _get_running_command()
         you.running.rest();
 
 #ifdef USE_TILE
-        if (Options.rest_delay >= 0 && tiles.need_redraw())
-            tiles.redraw();
+        if (Options.rest_delay >= 0)
+            ui::render();
 #endif
 
         if (!is_resting() && you.running.hp == you.hp

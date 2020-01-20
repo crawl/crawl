@@ -135,6 +135,7 @@ losglobal.o \
 losparam.o \
 luaterp.o \
 macro.o \
+main-game.o \
 makeitem.o \
 map-knowledge.o \
 mapdef.o \

@@ -283,6 +283,8 @@ public:
     void set_tag(const string &tag);
 #endif
 
+    void render();
+
 protected:
     int read_line_core(bool reset_cursor);
     int process_key_core(int ch);

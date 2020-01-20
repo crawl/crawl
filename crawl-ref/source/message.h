@@ -201,3 +201,6 @@ ostream& operator<<(ostream& os, const msg::setparam& sp);
 ostream& operator<<(ostream& os, const msg::capitalisation& cap);
 
 void set_msg_dump_file(FILE* file);
+
+class line_reader;
+void set_attached_line_reader(line_reader* reader);

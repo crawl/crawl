@@ -8,6 +8,7 @@
 #include "random.h"
 #include "state.h"
 #include "ui.h"
+#include "tilesdl.h"
 
 using namespace ui;
 

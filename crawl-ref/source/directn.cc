@@ -37,6 +37,7 @@
 #include "libutil.h"
 #include "losglobal.h"
 #include "macro.h"
+#include "main-game.h"
 #include "mapmark.h"
 #include "message.h"
 #include "mon-death.h"

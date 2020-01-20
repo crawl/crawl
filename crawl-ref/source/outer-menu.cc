@@ -11,6 +11,7 @@
 #include "outer-menu.h"
 #include "tileweb.h"
 #include "unwind.h"
+#include "windowmanager.h"
 
 using namespace ui;
 
