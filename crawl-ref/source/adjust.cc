@@ -40,9 +40,9 @@ void adjust()
 
 void adjust_item(int from_slot)
 {
-#ifdef USE_TILE_WEB
-    ui::cutoff_point ui_cutoff_point;
-#endif
+    while (ui::top_layout())
+        ui::pop_layout();
+
     if (inv_count() < 1)
     {
         canned_msg(MSG_NOTHING_CARRIED);

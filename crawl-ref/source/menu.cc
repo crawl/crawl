@@ -1018,7 +1018,8 @@ void Menu::do_menu()
         ui::pump_events();
     }
     alive = false;
-    ui::pop_layout();
+    if (ui::top_layout() == m_ui.popup)
+        ui::pop_layout();
 }
 
 int Menu::get_cursor() const

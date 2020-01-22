@@ -628,9 +628,9 @@ bool show_map(level_pos &lpos,
     tiles.do_map_display();
 #endif
 
-#ifdef USE_TILE
-    ui::cutoff_point ui_cutoff_point;
-#endif
+    while (ui::top_layout())
+        ui::pop_layout();
+
 #ifdef USE_TILE_WEB
     tiles_ui_control ui(UI_VIEW_MAP);
 #endif

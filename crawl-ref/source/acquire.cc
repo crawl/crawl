@@ -1766,6 +1766,9 @@ bool acquirement_menu()
 
     auto &acq_items = you.props[ACQUIRE_ITEMS_KEY].get_vector();
 
+    while (ui::top_layout())
+        ui::pop_layout();
+
     AcquireMenu acq_menu(acq_items);
     acq_menu.show();
 

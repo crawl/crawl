@@ -1198,18 +1198,6 @@ protected:
 };
 #endif
 
-#ifdef USE_TILE
-void push_cutoff();
-void pop_cutoff();
-
-class cutoff_point
-{
-public:
-    cutoff_point() { push_cutoff(); }
-    ~cutoff_point() { pop_cutoff(); }
-};
-#endif
-
 void push_layout(shared_ptr<Widget> root, KeymapContext km = KMC_DEFAULT);
 void pop_layout();
 shared_ptr<Widget> top_layout();
