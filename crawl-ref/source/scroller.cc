@@ -154,6 +154,7 @@ int formatted_scroller::show()
     tiles.json_write_string("more", m_more.to_colour_string());
     tiles.json_write_bool("start_at_end", m_flags & FS_START_AT_END);
     tiles.push_ui_layout("formatted-scroller", 2);
+    popup->on_layout_pop([](){ tiles.pop_ui_layout(); });
 #endif
 
     if (m_flags & FS_START_AT_END)
@@ -168,10 +169,6 @@ int formatted_scroller::show()
 
     ui::run_layout(move(popup), done);
     open_scrollers.pop_back();
-
-#ifdef USE_TILE_WEB
-    tiles.pop_ui_layout();
-#endif
 
     return m_lastch;
 }

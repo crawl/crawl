@@ -960,10 +960,6 @@ vector<MenuEntry *> Menu::show(bool reuse_selections)
 
     do_menu();
 
-#ifdef USE_TILE_WEB
-    tiles.pop_menu();
-#endif
-
     return sel;
 }
 
@@ -1006,6 +1002,7 @@ void Menu::do_menu()
 #ifdef USE_TILE_WEB
     tiles.push_menu(this);
     _webtiles_title_changed = false;
+    m_ui.popup->on_layout_pop([](){ tiles.pop_menu(); });
 #endif
 
     alive = true;

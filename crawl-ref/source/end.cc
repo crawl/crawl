@@ -534,13 +534,10 @@ NORETURN void end_game(scorefile_entry &se)
     tiles.json_write_string("body", goodbye_msg
             + hiscores_print_list(11, SCORE_TERSE, hiscore_index, start));
     tiles.push_ui_layout("game-over", 0);
+    popup->on_layout_pop([](){ tiles.pop_ui_layout(); });
 #endif
 
         ui::run_layout(move(popup), done);
-
-#ifdef USE_TILE_WEB
-    tiles.pop_ui_layout();
-#endif
     }
 
 #ifdef USE_TILE_WEB

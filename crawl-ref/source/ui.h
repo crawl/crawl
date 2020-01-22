@@ -379,6 +379,15 @@ public:
         });
     }
 
+    template<class F>
+    void on_layout_pop(F&& cb)
+    {
+        slots.layout_pop.on(this, [cb](){
+            cb();
+            return false;
+        });
+    }
+
 #define EVENT_HANDLER_HELPER(NAME, ENUM, CLASS) \
     template<class F> \
     void NAME(F&& cb) \
@@ -463,6 +472,8 @@ protected:
     void sync_state_changed();
 #endif
 
+    void _emit_layout_pop();
+
 private:
     bool cached_sr_valid[2] = { false, false };
     SizeReq cached_sr[2];
@@ -479,6 +490,7 @@ private:
     static struct slots {
         Slot<Widget, bool(const Event&)> event;
         Slot<Widget, bool(const Event&)> hotkey;
+        Slot<Widget, bool()> layout_pop;
     } slots;
 };
 

@@ -247,13 +247,10 @@ static void _print_version()
     tiles.json_write_string("features", feats);
     tiles.json_write_string("changes", changes);
     tiles.push_ui_layout("version", 0);
+    popup->on_layout_pop([](){ tiles.pop_ui_layout(); });
 #endif
 
     ui::run_layout(move(popup), done);
-
-#ifdef USE_TILE_WEB
-    tiles.pop_ui_layout();
-#endif
 }
 
 void list_armour()

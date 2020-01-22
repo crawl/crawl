@@ -371,11 +371,9 @@ static bool _reroll_random(newgame_def& ng)
     tiles.json_write_string("prompt", prompt.to_colour_string());
     tiles.send_doll(doll, false, false);
     tiles.push_ui_layout("newgame-random-combo", 0);
+    popup->on_layout_pop([](){ tiles.pop_ui_layout(); });
 #endif
     ui::run_layout(move(popup), done);
-#ifdef USE_TILE_WEB
-    tiles.pop_ui_layout();
-#endif
 
     if (key_is_escape(c) || toalower(c) == 'q' || crawl_state.seen_hups)
         game_ended(game_exit::abort);
@@ -941,12 +939,11 @@ static void _choose_seed(newgame_def& ng, newgame_def& choice,
     tiles.json_write_string("footer", footer_text);
     tiles.json_write_bool("show_pregen_toggle", show_pregen_toggle);
     tiles.push_ui_layout("seed-selection", 0);
+    popup->on_layout_pop([](){ tiles.pop_ui_layout(); });
 #endif
 
     ui::run_layout(move(popup), done, seed_input);
-#ifdef USE_TILE_WEB
-    tiles.pop_ui_layout();
-#endif
+
     string result = seed_input->get_text();
     uint64_t tmp_seed = 0;
     // TODO: if the user types in a number that exceeds the max value, sscanf
@@ -1605,13 +1602,10 @@ static void _prompt_choice(int choice_type, newgame_def& ng, newgame_def& ng_cho
     tiles.json_open_object();
     newgame_ui->serialize();
     tiles.push_ui_layout("newgame-choice", 1);
+    popup->on_layout_pop([](){ tiles.pop_ui_layout(); });
 #endif
 
     ui::run_layout(move(popup), newgame_ui->done);
-
-#ifdef USE_TILE_WEB
-    tiles.pop_ui_layout();
-#endif
 
     if (newgame_ui->end_game)
         end(0);
@@ -1922,11 +1916,9 @@ static bool _prompt_weapon(const newgame_def& ng, newgame_def& ng_choice,
     sub_items->serialize("sub-items");
     tiles.send_doll(doll, false, false);
     tiles.push_ui_layout("newgame-choice", 1);
+    popup->on_layout_pop([](){ tiles.pop_ui_layout(); });
 #endif
     ui::run_layout(move(popup), done);
-#ifdef USE_TILE_WEB
-    tiles.pop_ui_layout();
-#endif
 
     return ret;
 }
@@ -2305,11 +2297,9 @@ static void _prompt_gamemode_map(newgame_def& ng, newgame_def& ng_choice,
     main_items->serialize("main-items");
     sub_items->serialize("sub-items");
     tiles.push_ui_layout("newgame-choice", 1);
+    popup->on_layout_pop([](){ tiles.pop_ui_layout(); });
 #endif
     ui::run_layout(move(popup), done);
-#ifdef USE_TILE_WEB
-    tiles.pop_ui_layout();
-#endif
 
     if (cancel || crawl_state.seen_hups)
         game_ended(game_exit::abort);

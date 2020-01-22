@@ -207,6 +207,12 @@ Widget::~Widget()
 #endif
 }
 
+void Widget::_emit_layout_pop()
+{
+    Widget::slots.layout_pop.emit(this);
+    Widget::slots.layout_pop.remove_by_target(this);
+}
+
 bool Widget::on_event(const Event& event)
 {
     return Widget::slots.event.emit(this, event);
@@ -2443,6 +2449,7 @@ void UIRoot::push_child(shared_ptr<Widget> ch, KeymapContext km)
 
 void UIRoot::pop_child()
 {
+    top_child()->_emit_layout_pop();
     m_root.pop_child();
     m_needs_layout = true;
     state = saved_layout_info.back();
@@ -3426,6 +3433,7 @@ progress_popup::progress_popup(string title, int width)
     tiles.json_write_string("status", "");
     tiles.push_ui_layout("progress-bar", 1);
     tiles.flush_messages();
+    contents->on_layout_pop([](){ tiles.pop_ui_layout(); });
 #endif
 
     push_layout(move(contents));
@@ -3437,7 +3445,6 @@ progress_popup::~progress_popup()
     pop_layout();
 
 #ifdef USE_TILE_WEB
-    tiles.pop_ui_layout();
     tiles.flush_messages();
 #endif
 }

@@ -1259,13 +1259,10 @@ void describe_god(god_type which_god)
 
 #ifdef USE_TILE_WEB
     _send_god_ui(which_god, false);
+    popup->on_layout_pop([](){ tiles.pop_ui_layout(); });
 #endif
 
     ui::run_layout(popup, done);
-
-#ifdef USE_TILE_WEB
-    tiles.pop_ui_layout();
-#endif
 }
 
 bool describe_god_with_join(god_type which_god)
@@ -1389,13 +1386,10 @@ bool describe_god_with_join(god_type which_god)
 
 #ifdef USE_TILE_WEB
     _send_god_ui(which_god, true);
+    popup->on_layout_pop([](){ tiles.pop_ui_layout(); });
 #endif
 
     ui::run_layout(popup, done);
-
-#ifdef USE_TILE_WEB
-    tiles.pop_ui_layout();
-#endif
 
     return join;
 }

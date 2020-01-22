@@ -1584,11 +1584,10 @@ int msgwin_get_line(string prompt, char *buf, int len,
         tiles.json_open_object();
         tiles.json_write_string("prompt", colour_prompt.to_colour_string());
         tiles.push_ui_layout("msgwin-get-line", 0);
+        popup->on_layout_pop([](){ tiles.pop_ui_layout(); });
 #endif
         ui::run_layout(move(popup), done, input);
-#ifdef USE_TILE_WEB
-        tiles.pop_ui_layout();
-#endif
+
         strncpy(buf, input->get_text().c_str(), len - 1);
         buf[len - 1] = '\0';
     }

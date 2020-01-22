@@ -912,13 +912,10 @@ void display_mutations()
     if (you.species == SP_VAMPIRE)
         tiles.json_write_int("vampire", _vampire_bloodlessness());
     tiles.push_ui_layout("mutations", 1);
+    popup->on_layout_pop([](){ tiles.pop_ui_layout(); });
 #endif
 
     ui::run_layout(move(popup), done);
-
-#ifdef USE_TILE_WEB
-    tiles.pop_ui_layout();
-#endif
 }
 
 static int _calc_mutation_amusement_value(mutation_type which_mutation)
