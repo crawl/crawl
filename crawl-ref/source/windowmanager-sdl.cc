@@ -954,13 +954,6 @@ void SDLWrapper::remove_timer(unsigned int& timer_id)
     }
 }
 
-int SDLWrapper::raise_custom_event()
-{
-    SDL_Event send_event;
-    send_event.type = SDL_USEREVENT;
-    return SDL_PushEvent(&send_event);
-}
-
 void SDLWrapper::swap_buffers()
 {
     SDL_GL_SwapWindow(m_window);
