@@ -2656,13 +2656,11 @@ static command_type _get_action(int key, vector<command_type> actions)
  * Do the specified action on the specified item.
  *
  * @param item    the item to have actions done on
- * @param actions the list of actions to search in
- * @param keyin   the key that was pressed
+ * @param action  the action to do
  * @return whether to stay in the inventory menu afterwards
  */
-static bool _do_action(item_def &item, const vector<command_type>& actions, int keyin)
+static bool _do_action(item_def &item, const command_type action)
 {
-    const command_type action = _get_action(keyin, actions);
     if (action == CMD_NO_CMD)
         return true;
 
@@ -2871,15 +2869,7 @@ bool describe_item(item_def &item, function<void (string&)> fixup_desc)
 
     ui::run_layout(move(popup), done);
 
-    if (action != CMD_NO_CMD)
-        return _do_action(item, actions, lastch);
-    else if (item.has_spells())
-    {
-        // only continue the inventory loop if we didn't start memorising a
-        // spell & didn't destroy the item for amnesia.
-        return !already_learning_spell();
-    }
-    return true;
+    return _do_action(item, action);
 }
 
 void inscribe_item(item_def &item)
