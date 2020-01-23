@@ -89,7 +89,7 @@
   local wretched_soul =
     "phantom hp:500 hd:50 name:wretched_soul n_rpl n_des n_spe " ..
     "never_corpse col:red generate_awake " ..
-    "spells:bolt_of_draining.50.natural;dispel_undead.50.natural " ..
+    "spells:bolt_of_draining.50.natural;dispel_undead_range.50.natural " ..
     "perm_ench:invis"
 
   local fleshlord =
