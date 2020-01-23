@@ -928,10 +928,21 @@ int SDLWrapper::wait_event(wm_event *event, int timeout)
     return 1;
 }
 
+static unsigned int _timer_callback(unsigned int ticks, void *param)
+{
+    UNUSED(ticks);
+
+    SDL_Event event;
+    memset(&event, 0, sizeof(event));
+    event.type = SDL_USEREVENT;
+    event.user.data1 = param;
+    return SDL_PushEvent(&event);
+}
+
 unsigned int SDLWrapper::set_timer(unsigned int interval,
                                    wm_timer_callback callback)
 {
-    return SDL_AddTimer(interval, callback, nullptr);
+    return SDL_AddTimer(interval, _timer_callback, reinterpret_cast<void*>(callback));
 }
 
 void SDLWrapper::remove_timer(unsigned int& timer_id)

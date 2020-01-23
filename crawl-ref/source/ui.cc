@@ -2818,8 +2818,17 @@ bool UIRoot::on_event(wm_event& event)
             auto key_event = KeyEvent(convert_event_type(event), event.key);
             return deliver_event(key_event);
         }
-        // TODO: maybe stop windowmanager-sdl from returning these?
         case WME_CUSTOMEVENT:
+#ifdef USE_TILE_LOCAL
+        {
+            auto callback = reinterpret_cast<wm_timer_callback>(event.custom.data1);
+            callback(0, nullptr);
+            break;
+        }
+#else
+            break;
+#endif
+        // TODO: maybe stop windowmanager-sdl from returning these?
         case WME_NOEVENT:
             break;
         default:
