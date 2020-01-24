@@ -47,10 +47,6 @@ private:
 void cursorxy(int x, int y);
 static inline void cursorxy(const coord_def& p) { cursorxy(p.x, p.y); }
 
-// Read one key, flag it as a mouse event if appropriate, but apply no
-// other conversions. Defined in lib$OS.cc, not in cio.cc.
-int m_getch();
-
 // Converts a key to a direction key, converting keypad and other sequences
 // to vi key sequences (shifted/control key directions are also handled). Non
 // direction keys (hopefully) pass through unmangled.

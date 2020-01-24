@@ -808,11 +808,6 @@ static int vk_translate(WORD VirtCode, WCHAR c, DWORD cKeys)
     return vk_tr[1][mkey];
 }
 
-int m_getch()
-{
-    return getchk();
-}
-
 static int w32_proc_mouse_event(const MOUSE_EVENT_RECORD &mer)
 {
     const coord_def pos(mer.dwMousePosition.X + 1, mer.dwMousePosition.Y + 1);

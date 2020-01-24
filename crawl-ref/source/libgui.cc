@@ -24,11 +24,6 @@
 #include "viewgeom.h"
 #include "windowmanager.h"
 
-int m_getch()
-{
-    return getchk();
-}
-
 void set_mouse_enabled(bool enabled)
 {
     crawl_state.mouse_enabled = enabled;

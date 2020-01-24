@@ -528,11 +528,6 @@ void set_getch_returns_resizes(bool rr)
     getch_returns_resizes = rr;
 }
 
-int m_getch()
-{
-    return getchk();
-}
-
 int getchk()
 {
     while (true)
@@ -577,7 +572,7 @@ int getchk()
 
 int getch_ck()
 {
-    int c = m_getch();
+    int c = getchk();
     switch (c)
     {
     // [dshaligram] MacOS ncurses returns 127 for backspace.
