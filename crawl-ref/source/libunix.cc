@@ -589,11 +589,6 @@ int getch_ck()
     }
 }
 
-int getchk()
-{
-    return getch_ck();
-}
-
 static void unix_handle_terminal_resize()
 {
     console_shutdown();

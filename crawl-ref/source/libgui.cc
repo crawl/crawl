@@ -138,11 +138,6 @@ int getch_ck()
     return tiles.getch_ck();
 }
 
-int getchk()
-{
-    return getch_ck();
-}
-
 void clrscr()
 {
     tiles.clrscr();

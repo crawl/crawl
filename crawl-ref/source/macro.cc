@@ -734,7 +734,7 @@ static keyseq _getch_mul(int (*rgetch)() = nullptr)
     }
 
     if (!rgetch)
-        rgetch = getchk;
+        rgetch = getch_ck;
 
     // The a == 0 test is legacy code that I don't dare to remove. I
     // have a vague recollection of it being a kludge for conio support.
@@ -909,7 +909,7 @@ static void _input_action_raw(const string &macro_type, keyseq* action)
         cgotoxy(x, y);
         cprintf("%s", vtostr(*action).c_str());
 
-        int input = getchk();
+        int input = getch_ck();
 
         switch (input)
         {
@@ -963,7 +963,7 @@ void macro_add_query()
     mprf(MSGCH_PROMPT, "(m)acro, (M)acro raw, keymap "
                        "[(k) default, (x) level-map, (t)argeting, "
                        "(c)onfirm, m(e)nu], (s)ave? ");
-    input = getchk();
+    input = getch_ck();
     int low = toalower(input);
 
     if (low == 'k')
@@ -1030,7 +1030,7 @@ void macro_add_query()
         mprf(MSGCH_WARN, "Current Action: %s", action_str.c_str());
         mprf(MSGCH_PROMPT, "Do you wish to (r)edefine, (c)lear, or (a)bort? ");
 
-        input = getchk();
+        input = getch_ck();
 
         input = toalower(input);
         if (input == 'c')

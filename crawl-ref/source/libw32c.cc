@@ -891,11 +891,6 @@ int getch_ck()
     return key;
 }
 
-int getchk()
-{
-    return getch_ck();
-}
-
 bool kbhit()
 {
     if (crawl_state.seen_hups)
