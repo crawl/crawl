@@ -718,27 +718,6 @@ static int vk_tr[4][VKEY_MAPPINGS] = // virtual key, unmodified, shifted, contro
       CK_CTRL_HOME, CK_CTRL_UP, CK_CTRL_PGUP, CK_CTRL_INSERT, CK_CTRL_TAB },
 };
 
-static int ck_tr[] =
-{
-    'k', 'j', 'h', 'l', '0', 'y', 'b', '.', 'u', 'n', '0',
-    // 'b', 'j', 'n', 'h', '.', 'l', 'y', 'k', 'u', (autofight)
-    '8', '2', '4', '6', '0', '7', '1', '5', '9', '3', '0',
-    // '1', '2', '3', '4', '5', '6', '7', '8', '9', (non-move autofight)
-    11, 10, 8, 12, '0', 25, 2, 0, 21, 14, '0',
-    // 2, 10, 14, 8, 0, 12, 25, 11, 21,
-};
-
-static int key_to_command(int keyin)
-{
-    if (keyin >= CK_UP && keyin <= CK_CTRL_PGDN)
-        return ck_tr[ keyin - CK_UP ];
-
-    if (keyin == CK_DELETE)
-        return '.';
-
-    return keyin;
-}
-
 static int vk_translate(WORD VirtCode, WCHAR c, DWORD cKeys)
 {
     bool shftDown = false;
@@ -914,8 +893,7 @@ int getch_ck()
 
 int getchk()
 {
-    int c = getch_ck();
-    return key_to_command(c);
+    return getch_ck();
 }
 
 bool kbhit()
