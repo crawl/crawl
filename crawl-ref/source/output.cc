@@ -1515,13 +1515,6 @@ void redraw_console_sidebar()
 
 void redraw_screen(bool show_updates)
 {
-    if (!crawl_state.need_save)
-    {
-        // If the game hasn't started, don't do much.
-        clrscr();
-        return;
-    }
-
 #ifdef USE_TILE_WEB
     if (!ui::has_layout())
         tiles.pop_all_ui_layouts();
