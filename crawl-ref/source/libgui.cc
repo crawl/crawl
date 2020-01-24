@@ -134,11 +134,6 @@ int num_to_lines(int num)
     return tiles.to_lines(num);
 }
 
-int getch_ck()
-{
-    return UIMainGame::get_key();
-}
-
 void clrscr()
 {
     tiles.clrscr();

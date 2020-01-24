@@ -13,6 +13,7 @@
 #include "ui.h"
 #include "cio.h"
 #include "macro.h"
+#include "main-game.h"
 #include "state.h"
 #include "tileweb.h"
 #include "unicode.h"
@@ -2519,10 +2520,19 @@ void UIRoot::layout()
     }
 }
 
+#ifndef USE_TILE_LOCAL
+bool block_rendering = false;
+#endif
+
 void UIRoot::render()
 {
     if (!needs_paint)
         return;
+
+#ifndef USE_TILE_LOCAL
+    if (block_rendering)
+        return;
+#endif
 
 #ifdef USE_TILE_LOCAL
     glmanager->reset_view_for_redraw();
@@ -3264,7 +3274,7 @@ void pump_events(int wait_event_timeout)
     if (wait_event_timeout <= 0) // resizing probably breaks this case
         return;
     set_getch_returns_resizes(true);
-    int k = macro_key != -1 ? macro_key : getch_ck();
+    int k = macro_key != -1 ? macro_key : get_key_from_terminal();
     set_getch_returns_resizes(false);
 
     if (k == CK_RESIZE)
@@ -3579,4 +3589,9 @@ bool raise_event(Event& event)
     return ui_root.deliver_event(event);
 }
 
+}
+
+int getch_ck()
+{
+    return UIMainGame::get_key();
 }

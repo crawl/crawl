@@ -39,6 +39,7 @@
 #include "state.h"
 #include "stringutil.h"
 #include "throw.h"
+#include "ui.h"
 #include "unwind.h"
 #include "version.h"
 #include "wiz-you.h"

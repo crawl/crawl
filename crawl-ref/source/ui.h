@@ -1265,4 +1265,10 @@ private:
     unwind_bool no_more;
 };
 
+#ifndef USE_TILE_LOCAL
+extern bool block_rendering;
+#endif
+
 }
+
+int getch_ck();

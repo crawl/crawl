@@ -828,7 +828,7 @@ void set_getch_returns_resizes(bool rr)
     // no-op on windows console: see mantis issue #11532
 }
 
-int getch_ck()
+int get_key_from_terminal()
 {
     INPUT_RECORD ir;
     DWORD nread;

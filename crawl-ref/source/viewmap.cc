@@ -672,6 +672,10 @@ bool show_map(level_pos &lpos, bool travel_mode, bool allow_offlevel)
             new_level = true;
         }
 
+#ifndef USE_TILE_LOCAL
+        unwind_bool block_rendering(ui::block_rendering, true);
+#endif
+
         if (new_level)
         {
             state.on_level = (level_id::current() == state.original);

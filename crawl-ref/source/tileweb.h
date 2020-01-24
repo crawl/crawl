@@ -93,7 +93,6 @@ public:
     void shutdown();
     void load_dungeon(const crawl_view_buffer &vbuf, const coord_def &gc);
     void load_dungeon(const coord_def &gc);
-    int getch_ck();
     void resize();
     void clrscr();
     void layout_reset();

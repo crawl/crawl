@@ -528,7 +528,7 @@ void set_getch_returns_resizes(bool rr)
     getch_returns_resizes = rr;
 }
 
-int getch_ck()
+int get_key_from_terminal()
 {
     while (true)
     {

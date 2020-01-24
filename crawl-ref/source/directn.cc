@@ -3630,6 +3630,9 @@ static int targeting_behaviour_get_key()
 
     flush_prev_message();
     msgwin_got_input();
+#ifndef USE_TILE_LOCAL
+    unwind_bool block_rendering(ui::block_rendering, true);
+#endif
     return unmangle_direction_keys(getchm(KMC_TARGETING), KMC_TARGETING,
                                    false);
 }

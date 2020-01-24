@@ -22,7 +22,7 @@ int wherex();
 int wherey();
 void putwch(char32_t c);
 void set_getch_returns_resizes(bool rr);
-int getch_ck();
+int get_key_from_terminal();
 bool kbhit();
 void delay(unsigned int ms);
 void puttext(int x, int y, const crawl_view_buffer &vbuf);

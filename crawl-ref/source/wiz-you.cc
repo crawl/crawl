@@ -35,6 +35,7 @@
 #include "status.h"
 #include "stringutil.h"
 #include "transform.h"
+#include "ui.h"
 #include "unicode.h"
 #include "view.h"
 #include "xom.h"

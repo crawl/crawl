@@ -48,6 +48,7 @@
 #include "state.h"
 #include "stringutil.h"
 #include "syscalls.h"
+#include "ui.h"
 #include "unicode.h"
 #include "version.h"
 
