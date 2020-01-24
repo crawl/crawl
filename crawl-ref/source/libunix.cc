@@ -528,7 +528,7 @@ void set_getch_returns_resizes(bool rr)
     getch_returns_resizes = rr;
 }
 
-int getchk()
+int getch_ck()
 {
     while (true)
     {
@@ -566,33 +566,32 @@ int getchk()
         }
 #endif
 
-        return c;
+        switch (c)
+        {
+        // [dshaligram] MacOS ncurses returns 127 for backspace.
+        case 127:
+        case -KEY_BACKSPACE: return CK_BKSP;
+        case -KEY_DC:    return CK_DELETE;
+        case -KEY_HOME:  return CK_HOME;
+        case -KEY_PPAGE: return CK_PGUP;
+        case -KEY_END:   return CK_END;
+        case -KEY_NPAGE: return CK_PGDN;
+        case -KEY_UP:    return CK_UP;
+        case -KEY_DOWN:  return CK_DOWN;
+        case -KEY_LEFT:  return CK_LEFT;
+        case -KEY_RIGHT: return CK_RIGHT;
+#ifdef KEY_RESIZE
+        case -KEY_RESIZE: return CK_RESIZE;
+#endif
+        case -KEY_BTAB: return CK_SHIFT_TAB;
+        default:         return c;
+        }
     }
 }
 
-int getch_ck()
+int getchk()
 {
-    int c = getchk();
-    switch (c)
-    {
-    // [dshaligram] MacOS ncurses returns 127 for backspace.
-    case 127:
-    case -KEY_BACKSPACE: return CK_BKSP;
-    case -KEY_DC:    return CK_DELETE;
-    case -KEY_HOME:  return CK_HOME;
-    case -KEY_PPAGE: return CK_PGUP;
-    case -KEY_END:   return CK_END;
-    case -KEY_NPAGE: return CK_PGDN;
-    case -KEY_UP:    return CK_UP;
-    case -KEY_DOWN:  return CK_DOWN;
-    case -KEY_LEFT:  return CK_LEFT;
-    case -KEY_RIGHT: return CK_RIGHT;
-#ifdef KEY_RESIZE
-    case -KEY_RESIZE: return CK_RESIZE;
-#endif
-    case -KEY_BTAB: return CK_SHIFT_TAB;
-    default:         return c;
-    }
+    return getch_ck();
 }
 
 static void unix_handle_terminal_resize()
