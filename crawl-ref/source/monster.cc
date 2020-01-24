@@ -2685,17 +2685,22 @@ void monster::set_hit_dice(int new_hit_dice)
     }
 }
 
-void monster::moveto(const coord_def& c, bool clear_net)
+void monster::set_position(const coord_def &c)
 {
-    if (clear_net && c != pos() && in_bounds(pos()))
-        mons_clear_trapping_net(this);
-
     if (mons_is_projectile(*this))
     {
         // Assume some means of displacement, normal moves will overwrite this.
         props[IOOD_X].get_float() += c.x - pos().x;
         props[IOOD_Y].get_float() += c.y - pos().y;
     }
+
+    actor::set_position(c);
+}
+
+void monster::moveto(const coord_def& c, bool clear_net)
+{
+    if (clear_net && c != pos() && in_bounds(pos()))
+        mons_clear_trapping_net(this);
 
     set_position(c);
 
@@ -5569,6 +5574,10 @@ bool monster::move_to_pos(const coord_def &newpos, bool clear_net, bool force)
  *  to a spot that's occupied. This will abort if either monster can't survive
  *  in the new place.
  *
+ *  We also cannot use moveto, since that calls clear_invalid_constrictions,
+ *  which may cause a more(), causing a render. While monsters are being
+ *  swapped, their positions and the mgrd mismatch, so rendering would crash.
+ *
  *  @param other the monster to swap with
  *  @returns whether they ended up moving.
  */
@@ -5589,11 +5598,19 @@ bool monster::swap_with(monster* other)
         return false;
     }
 
-    moveto(new_pos);
-    other->moveto(old_pos);
+    mons_clear_trapping_net(this);
+    mons_clear_trapping_net(other);
 
+    // Swap monster positions. Cannot render inside here, since mgrd and monster
+    // positions would mismatch.
     mgrd(old_pos) = other->mindex();
     mgrd(new_pos) = mindex();
+    set_position(new_pos);
+    other->set_position(old_pos);
+
+    // Okay to render again now
+    clear_invalid_constrictions(true);
+    other->clear_invalid_constrictions(true);
 
     return true;
 }

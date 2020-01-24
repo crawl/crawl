@@ -152,6 +152,7 @@ public:
                                 int killernum = -1) override;
     void self_destruct() override;
 
+    void set_position(const coord_def &c) override;
     void moveto(const coord_def& c, bool clear_net = true) override;
     bool move_to_pos(const coord_def &newpos, bool clear_net = true,
                      bool force = false) override;
