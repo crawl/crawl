@@ -530,10 +530,9 @@ void set_getch_returns_resizes(bool rr)
 
 int m_getch()
 {
-    int c;
-    do
+    while (true)
     {
-        c = getchk();
+        int c = getchk();
 
 #ifdef NCURSES_MOUSE_VERSION
         if (c == -KEY_MOUSE)
@@ -541,8 +540,12 @@ int m_getch()
             MEVENT me;
             getmouse(&me);
             c = proc_mouse_event(c, &me);
+
+            if (!crawl_state.mouse_enabled)
+                continue;
         }
 #endif
+
 #ifdef KEY_RESIZE
         if (c == -KEY_RESIZE)
         {
@@ -557,16 +560,14 @@ int m_getch()
             // This causes crashiness: e.g. in a menu, make the window taller,
             // then scroll down one line. To fix this, we always sync termsz:
             crawl_view.init_geometry();
+
+            if (!getch_returns_resizes)
+                continue;
         }
 #endif
-    } while (
-#ifdef KEY_RESIZE
-             (c == -KEY_RESIZE && !getch_returns_resizes) ||
-#endif
-             ((c == CK_MOUSE_MOVE || c == CK_MOUSE_CLICK)
-                 && !crawl_state.mouse_enabled));
 
-    return c;
+        return c;
+    }
 }
 
 int getch_ck()
