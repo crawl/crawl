@@ -469,7 +469,7 @@ static int proc_mouse_event(int c, const MEVENT *me)
 
 static int pending = 0;
 
-int getchk()
+static int _get_key_from_curses()
 {
 #ifdef WATCHDOG
     // If we have (or wait for) actual keyboard input, it's not an infinite
@@ -530,9 +530,14 @@ void set_getch_returns_resizes(bool rr)
 
 int m_getch()
 {
+    return getchk();
+}
+
+int getchk()
+{
     while (true)
     {
-        int c = getchk();
+        int c = _get_key_from_curses();
 
 #ifdef NCURSES_MOUSE_VERSION
         if (c == -KEY_MOUSE)
