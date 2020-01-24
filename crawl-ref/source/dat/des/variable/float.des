@@ -9213,8 +9213,8 @@ ENDMAP
 NAME:    nzn_random_ring
 TAGS:    no_pool_fixup no_monster_gen no_trap_gen
 DEPTH:   D:4-, !D:$, Depths, !Depths:$, Lair, !Lair:$, Zot, !Zot:$
-NSUBST:  D = 4:0 / 4 = 0. / 4=^. / r / ., E = 20:W / 12:w
-NSUBST:  F = 9 / 4:0 / 4=0. / 4:r / 4=^. / ., H = 0 / 9 / 4=09.. / 2:r / .
+NSUBST:  D = 4=0 / 4=0. / 4=^. / r / ., E = 20=W / 12=w / .
+NSUBST:  F = 9 / 4=0 / 4=0. / 4=r / 4=^. / ., H = 0 / 9 / 4=09.. / 2=r / .
 NSUBST:  J = wl, K = 1 / } / s / K, 2 = 2 / G
 NSUBST:  h = 2:@ / c, j = 2:. / *:cv, k = . / *:bcv
 : if you.absdepth() < 8 then
@@ -9239,7 +9239,7 @@ SUBST:   2 = G:50 2, r = $*, s = |
 KFEAT:   ^ = shaft trap / alarm trap / zot trap
 : elseif you.in_branch("Zot") then
 MONS:    ancient lich / orb of fire, orange crystal statue
-SUBST:   2 = G:50 2 r = *:30 |, wW = l, K = ), s = ]
+SUBST:   2 = G:50 2, r = *:30 |, wW = l, K = ), s = ]
 KFEAT:   ^ = zot trap
 : end
 SUBST: K = TUV, L = .
