@@ -5967,6 +5967,8 @@ vector<item_def> player::get_armour_items() const
  * Get a vector with the items of armour the player would be wearing
  * if they put on a specific piece of armour
  *
+ * @param   The item which the player would be wearing in this theoretical
+ *          situation.
  * @return  A vector<item_def> of each armour the player would have equipped.
  */
 vector<item_def> player::get_armour_items_one_sub(item_def sub) const
@@ -5978,6 +5980,15 @@ vector<item_def> player::get_armour_items_one_sub(item_def sub) const
     return armour_items;
 }
 
+/**
+ * Get a vector with the items of armour the player would be wearing
+ * if they removed a specific piece of armour
+ *
+ * @param   The item which the player would be remove in this theoretical
+ *          situation.
+ * @return  A vector<item_def> of each armour the player would have
+ *          equipped after removing the item passed in.
+ */
 vector<item_def> player::get_armour_items_one_removal(item_def remove) const
 {
     vector<item_def> armour_items;
@@ -6000,6 +6011,15 @@ vector<item_def> player::get_armour_items_one_removal(item_def remove) const
     return armour_items;
 }
 
+/**
+ * Get the players "base" ac, assuming they are wearing a particular set of
+ * armour items (which isn't necessarily the set of armour items they are
+ * currently wearing.)
+ *
+ * @param   A scale by which the player's base AC is multiplied.
+ * @param   A list of items to assume the player is wearing.
+ * @return  The player's AC, multiplied by the given scale.
+ */
 int player::base_ac_with_specific_items(int scale,
                             vector<item_def> armour_items) const
 {
