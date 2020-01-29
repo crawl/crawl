@@ -503,8 +503,6 @@ reserves. After the call ends, it cannot be issued again for a short time.
 %%%%
 Drain Life spell
 
-# Note: this description duplicates part of the Drain Life ability description.
-
 Drains the life force of any nearby creatures, healing the user depending on
 the damage dealt.
 %%%%
@@ -683,7 +681,7 @@ out of view.
 %%%%
 Greater Servant of Makhleb spell
 
-<Greater Servant of Makhleb ability>
+Summons a major demon.
 %%%%
 %%%%
 Hailstorm spell
@@ -889,7 +887,7 @@ Fires a small bolt of magical energy which never misses.
 %%%%
 Major Destruction spell
 
-<Major Destruction ability>
+Shoots a random harmful beam or explosion at the targeted creature.
 %%%%
 Major Healing spell
 
@@ -1253,7 +1251,7 @@ Fires a sharp dart of hardened chitin.
 %%%%
 Smiting spell
 
-<Smiting ability>
+Smites any targeted enemy within sight, with no direct line of fire required.
 %%%%
 Song of Slaying spell
 
