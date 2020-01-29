@@ -796,10 +796,8 @@ int getch_with_command_macros()
 
     if (Buffer.empty())
     {
-        // Read some keys...
         keyseq keys = _getch_mul();
-        // ... and add them into the buffer (apply keymaps)
-        macro_buf_add_long(keys);
+        macro_buf_add_with_keymap(keys, KMC_DEFAULT);
     }
 
     // Apply longest matching macro at front of buffer:
