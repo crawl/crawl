@@ -719,7 +719,7 @@ void macro_save()
  * Reads as many keypresses as are available (waiting for at least one),
  * and returns them as a single keyseq.
  */
-static keyseq _getch_mul(int (*rgetch)() = nullptr)
+static keyseq _getch_mul()
 {
     keyseq keys;
     int    a;
@@ -733,14 +733,11 @@ static keyseq _getch_mul(int (*rgetch)() = nullptr)
         crawl_state.cancel_cmd_again();
     }
 
-    if (!rgetch)
-        rgetch = getch_ck;
-
     // The a == 0 test is legacy code that I don't dare to remove. I
     // have a vague recollection of it being a kludge for conio support.
     do
     {
-        a = rgetch();
+        a = getch_ck();
         if (a != CK_NO_KEY)
             keys.push_back(a);
     }
@@ -753,12 +750,7 @@ static keyseq _getch_mul(int (*rgetch)() = nullptr)
  * Replacement for getch(). Returns keys from the key buffer if available.
  * If not, adds some content to the buffer, and returns some of it.
  */
-int getchm(int (*rgetch)())
-{
-    return getchm(KMC_DEFAULT, rgetch);
-}
-
-int getchm(KeymapContext mc, int (*rgetch)())
+int getchm(KeymapContext mc)
 {
     int a;
 
@@ -767,7 +759,7 @@ int getchm(KeymapContext mc, int (*rgetch)())
         return a;
 
     // Read some keys...
-    keyseq keys = _getch_mul(rgetch);
+    keyseq keys = _getch_mul();
     macro_buf_add_with_keymap(keys, mc);
     return macro_buf_get();
 }

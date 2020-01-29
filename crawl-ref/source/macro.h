@@ -37,8 +37,7 @@ private:
     vector<bool> prev_pause_status;
 };
 
-int getchm(int (*rgetch)() = nullptr);       // keymaps applied (ie for prompts)
-int getchm(KeymapContext context, int (*rgetch)() = nullptr);
+int getchm(KeymapContext context = KMC_DEFAULT);
 
 int get_ch();
 

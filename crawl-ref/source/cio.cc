@@ -460,7 +460,7 @@ static void _webtiles_abort_get_line()
 
 int line_reader::getkey()
 {
-    return getchm(getch_ck);
+    return getchm();
 }
 
 int line_reader::read_line_core(bool reset_cursor)
