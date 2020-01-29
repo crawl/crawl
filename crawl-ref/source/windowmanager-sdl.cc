@@ -960,12 +960,12 @@ void SDLWrapper::delay(unsigned int ms)
     SDL_Delay(ms);
 }
 
-unsigned int SDLWrapper::get_event_count(wm_event_type type)
+bool SDLWrapper::next_event_is(wm_event_type type)
 {
     // check for enqueued characters from a multi-char textinput event
     // count is floored to 1 for consistency with other event types
     if (type == WME_KEYDOWN && m_textinput_queue.size() > 0)
-        return 1;
+        return true;
 
     // Look for the presence of any keyboard events in the queue.
     Uint32 event;
@@ -1024,7 +1024,7 @@ unsigned int SDLWrapper::get_event_count(wm_event_type type)
         count += SDL_PeepEvents(&store, 1, SDL_PEEKEVENT, SDL_TEXTINPUT, SDL_TEXTINPUT);
     ASSERT(count >= 0);
 
-    return max(count, 0);
+    return count != 0;
 }
 
 void SDLWrapper::show_keyboard()

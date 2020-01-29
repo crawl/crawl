@@ -716,12 +716,7 @@ int TilesFramework::getch_ck()
                 {
                     // For consecutive mouse events, ignore all but the last,
                     // since these can come in faster than crawl can redraw.
-                    //
-                    // Note that get_event_count() is misleadingly named and only
-                    // peeks at the first event, and so will only return 0 or 1.
-                    unsigned int count = wm->get_event_count(WME_MOUSEMOTION);
-                    ASSERT(count >= 0);
-                    if (count > 0)
+                    if (wm->next_event_is(WME_MOUSEMOTION))
                         continue;
 
                     // Record mouse pos for tooltip timer

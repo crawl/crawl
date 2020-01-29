@@ -3150,7 +3150,7 @@ void pump_events(int wait_event_timeout)
     // since these can come in faster than crawl can redraw.
     // unlike mousemotion events, we don't drop all but the last event
     // ...but if there are macro keys, we do need to layout (for menu UI)
-    if (!wm->get_event_count(WME_MOUSEWHEEL) || macro_key != -1)
+    if (!wm->next_event_is(WME_MOUSEWHEEL) || macro_key != -1)
 #endif
     {
         ui_root.layout();
@@ -3182,16 +3182,10 @@ void pump_events(int wait_event_timeout)
                 return;
         }
 
-        if (event.type == WME_MOUSEMOTION)
-        {
-            // For consecutive mouse events, ignore all but the last,
-            // since these can come in faster than crawl can redraw.
-            //
-            // Note that get_event_count() is misleadingly named and only
-            // peeks at the first event, and so will only return 0 or 1.
-            if (wm->get_event_count(WME_MOUSEMOTION) > 0)
-                continue;
-        }
+        // For consecutive mouse events, ignore all but the last,
+        // since these can come in faster than crawl can redraw.
+        if (event.type == WME_MOUSEMOTION && wm->next_event_is(WME_MOUSEMOTION))
+            continue;
         if (event.type == WME_KEYDOWN && event.key.keysym.sym == 0)
             continue;
 
