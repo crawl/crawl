@@ -3261,17 +3261,13 @@ void aura_of_brilliance(monster* agent)
                     mon->name(DESC_THE).c_str(),
                     apostrophise(agent->name(DESC_THE)).c_str());
             }
+
             mon_enchant ench = mon->get_ench(ENCH_EMPOWERED_SPELLS);
             if (ench.ench != ENCH_NONE)
-            {
-                ench.duration = 2 * BASELINE_DELAY;
                 mon->update_ench(ench);
-            }
             else
-            {
-                mon->add_ench(mon_enchant(ENCH_EMPOWERED_SPELLS, 1,
-                                          agent, 2 * BASELINE_DELAY));
-            }
+                mon->add_ench(mon_enchant(ENCH_EMPOWERED_SPELLS, 1, agent));
+
             did_something = true;
         }
     }

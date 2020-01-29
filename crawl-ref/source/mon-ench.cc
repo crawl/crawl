@@ -2298,13 +2298,13 @@ int mon_enchant::calc_duration(const monster* mons,
         cturn = random_range(7, 17) * 10 / _mod_speed(10, mons->speed);
         break;
     case ENCH_FROZEN:
-        cturn = 3 * BASELINE_DELAY;
+        cturn = 3 * 10 / _mod_speed(10, mons->speed);
         break;
     case ENCH_BRILLIANCE_AURA:
-        cturn = 20 * BASELINE_DELAY;
+        cturn = 20 * 10 / _mod_speed(10, mons->speed);
         break;
     case ENCH_EMPOWERED_SPELLS:
-        cturn = 2 * BASELINE_DELAY;
+        cturn = 20 * 10 / _mod_speed(10, mons->speed);
         break;
     case ENCH_GOZAG_INCITE:
         cturn = 100; // is never decremented
