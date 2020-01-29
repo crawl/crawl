@@ -261,11 +261,8 @@ skeletons cannot leave the level they were created on.
 %%%%
 Drain Life ability
 
-# Note: part of this description duplicates the Drain Life spell description.
-
-Drains the life force of any nearby creatures, healing the user depending on
-the damage dealt. The amount of life force drained is increased by Invocations
-skill.
+[[Drain Life spell]] The amount of life force drained is increased by
+Invocations skill.
 %%%%
 Enslave Soul ability
 
@@ -303,13 +300,13 @@ demon hostile.
 %%%%
 Major Destruction ability
 
-Shoots a random harmful beam or explosion at the targeted creature. Damage and
-accuracy are increased by Invocations skill.
+[[Major Destruction spell]] Damage and accuracy are increased by Invocations
+skill.
 %%%%
 Greater Servant of Makhleb ability
 
-Summons a major demon. Failing to use this ability correctly will turn the
-demon hostile.
+[[Greater Servant of Makhleb spell]] Failing to use this ability correctly will
+turn the demon hostile.
 %%%%
 # Sif Muna
 %%%%
@@ -459,8 +456,7 @@ Re-using this ability will discard the current stack.
 # Beogh
 Smiting ability
 
-Smites any targeted enemy within sight, with no direct line of fire required.
-The strength of the smiting is increased by Invocations skill.
+[[Smiting spell]] The strength of the smiting is increased by Invocations skill.
 %%%%
 Recall Orcish Followers ability
 
