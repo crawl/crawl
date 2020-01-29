@@ -613,6 +613,8 @@ static unsigned int _timer_callback(unsigned int ticks, void *param)
 {
     UNUSED(ticks, param);
 
+    // force the event loop to break
+    wm->raise_custom_event();
 
     return 0;
 }
