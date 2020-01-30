@@ -2077,8 +2077,9 @@ void direction_chooser::finalize_moves()
 
 bool direction_chooser::choose_direction()
 {
-    while (ui::top_layout())
-        ui::pop_layout();
+#ifdef USE_TILE
+    ui::cutoff_point ui_cutoff_point;
+#endif
 
     if (restricts == DIR_DIR)
         return choose_compass();

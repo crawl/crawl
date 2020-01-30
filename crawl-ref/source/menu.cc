@@ -1008,9 +1008,6 @@ void Menu::do_menu()
     alive = true;
     while (alive && !done && !crawl_state.seen_hups)
     {
-        if (ui::top_layout() != m_ui.popup)
-            ui::push_layout(m_ui.popup, m_kmc);
-
 #ifdef USE_TILE_WEB
         if (_webtiles_title_changed)
         {
@@ -1021,8 +1018,7 @@ void Menu::do_menu()
         ui::pump_events();
     }
     alive = false;
-    if (ui::top_layout() == m_ui.popup)
-        ui::pop_layout();
+    ui::pop_layout();
 }
 
 int Menu::get_cursor() const

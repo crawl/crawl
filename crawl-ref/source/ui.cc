@@ -3286,13 +3286,8 @@ void run_layout(shared_ptr<Widget> root, const bool& done,
     push_layout(root);
     set_focused_widget(initial_focus.get());
     while (!done && !crawl_state.seen_hups)
-    {
-        if (top_layout() != root)
-            push_layout(root);
         pump_events();
-    }
-    if (top_layout() == root)
-        pop_layout();
+    pop_layout();
 }
 
 bool has_layout()
