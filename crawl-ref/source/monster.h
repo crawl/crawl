@@ -284,7 +284,7 @@ public:
         override;
     int scan_artefacts(artefact_prop_type which_property,
                        bool calc_unid = true,
-                       vector<item_def> *_unused_matches = nullptr) const
+                       vector<const item_def *> *_unused_matches = nullptr) const
         override;
 
     item_def *slot_item(equipment_type eq, bool include_melded=false) const

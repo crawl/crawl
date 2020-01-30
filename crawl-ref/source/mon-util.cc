@@ -565,7 +565,7 @@ int monster::wearing_ego(equipment_type slot, int special, bool calc_unid) const
 }
 
 int monster::scan_artefacts(artefact_prop_type ra_prop, bool /*calc_unid*/,
-                            vector<item_def> *matches) const
+                            vector<const item_def *> *matches) const
 {
     UNUSED(matches); //TODO: implement this when it will be required somewhere
 

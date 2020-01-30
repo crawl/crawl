@@ -224,7 +224,7 @@ bool actor::holy_wrath_susceptible() const
 // not an actor is capable of teleporting, only whether they are specifically
 // under the influence of the "notele" effect. See actor::no_tele() for a
 // superset of this function.
-bool actor::has_notele_item(bool calc_unid, vector<item_def> *matches) const
+bool actor::has_notele_item(bool calc_unid, vector<const item_def *> *matches) const
 {
     return scan_artefacts(ARTP_PREVENT_TELEPORTATION, calc_unid, matches);
 }

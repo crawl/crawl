@@ -117,7 +117,7 @@ public:
                             bool calc_unid = true) const = 0;
     virtual int scan_artefacts(artefact_prop_type which_property,
                                bool calc_unid = true,
-                               vector<item_def> *matches = nullptr) const = 0;
+                               vector<const item_def *> *matches = nullptr) const = 0;
 
     virtual hands_reqd_type hands_reqd(const item_def &item,
                                        bool base = false) const;
@@ -316,7 +316,7 @@ public:
 
     virtual bool res_corr(bool calc_unid = true, bool items = true) const;
     bool has_notele_item(bool calc_unid = true,
-                         vector<item_def> *matches = nullptr) const;
+                         vector<const item_def *> *matches = nullptr) const;
     virtual bool stasis() const = 0;
     virtual bool cloud_immune(bool calc_unid = true, bool items = true) const;
     virtual bool run(bool calc_unid = true, bool items = true) const;

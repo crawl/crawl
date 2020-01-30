@@ -3551,28 +3551,13 @@ int slaying_bonus(bool ranged)
     return ret;
 }
 
-int player::scan_artefact(artefact_prop_type which_property,
-                          bool calc_unid,
-                          item_def item) const
-{
-
-    if (!is_artefact(item))
-        return 0;
-
-    // TODO: id check not needed, probably, due to full wear-id?
-    if (calc_unid || fully_identified(item))
-        return artefact_property(item, which_property);
-    // else
-        return 0;
-}
-
 // Checks each equip slot for a randart, and adds up all of those with
 // a given property. Slow if any randarts are worn, so avoid where
 // possible. If `matches' is non-nullptr, items with nonzero property are
 // pushed onto *matches.
 int player::scan_artefacts(artefact_prop_type which_property,
                            bool calc_unid,
-                           vector<item_def> *matches) const
+                           vector<const item_def *> *matches) const
 {
     int retval = 0;
 
@@ -3589,12 +3574,16 @@ int player::scan_artefacts(artefact_prop_type which_property,
         if (i == EQ_WEAPON && item.base_type != OBJ_WEAPONS)
             continue;
 
-        int val = scan_artefact(which_property, calc_unid, item);
+        int val = 0;
+
+        // TODO: id check not needed, probably, due to full wear-id?
+        if (is_artefact(item) && (calc_unid || fully_identified(item)))
+            val = artefact_property(item, which_property);
 
         retval += val;
 
         if (matches && val)
-            matches->push_back(item);
+            matches->push_back(&item);
     }
 
     return retval;
@@ -5943,20 +5932,18 @@ int player::ac_changes_from_mutations() const
 /**
  * Get a vector with the items of armour the player is wearing.
  *
- * @return  A vector<item_def> of each armour the player has equipped.
+ * @return  A vector of non-null pointers to all armour the player has equipped.
  */
-vector<item_def> player::get_armour_items() const
+vector<const item_def *> player::get_armour_items() const
 {
-    vector<item_def> armour_items;
+    vector<const item_def *> armour_items;
 
     for (int eq = EQ_MIN_ARMOUR; eq <= EQ_MAX_ARMOUR; ++eq)
     {
         if (!slot_item(static_cast<equipment_type>(eq)))
             continue;
 
-        const item_def& item = inv[equip[eq]];
-
-        armour_items.push_back(item);
+        armour_items.push_back(&inv[equip[eq]]);
 
     }
 
@@ -5969,13 +5956,14 @@ vector<item_def> player::get_armour_items() const
  *
  * @param   The item which the player would be wearing in this theoretical
  *          situation.
- * @return  A vector<item_def> of each armour the player would have equipped.
+ * @return  A vector of non-null pointers to all armour the player would have
+ *          equipped.
  */
-vector<item_def> player::get_armour_items_one_sub(item_def sub) const
+vector<const item_def *> player::get_armour_items_one_sub(const item_def& sub) const
 {
-    vector<item_def> armour_items = get_armour_items_one_removal(sub);
+    vector<const item_def *> armour_items = get_armour_items_one_removal(sub);
 
-    armour_items.push_back(sub);
+    armour_items.push_back(&sub);
 
     return armour_items;
 }
@@ -5986,25 +5974,22 @@ vector<item_def> player::get_armour_items_one_sub(item_def sub) const
  *
  * @param   The item which the player would be remove in this theoretical
  *          situation.
- * @return  A vector<item_def> of each armour the player would have
+ * @return  A vector of non-null pointers to all armour the player would have
  *          equipped after removing the item passed in.
  */
-vector<item_def> player::get_armour_items_one_removal(item_def remove) const
+vector<const item_def *> player::get_armour_items_one_removal(const item_def& remove) const
 {
-    vector<item_def> armour_items;
+    vector<const item_def *> armour_items;
 
     for (int eq = EQ_MIN_ARMOUR; eq <= EQ_MAX_ARMOUR; ++eq)
     {
-        if (get_armour_slot(remove) == eq){
+        if (get_armour_slot(remove) == eq)
             continue;
-        }
 
         if (!slot_item(static_cast<equipment_type>(eq)))
             continue;
 
-        const item_def& item = inv[equip[eq]];
-
-        armour_items.push_back(item);
+        armour_items.push_back(&inv[equip[eq]]);
 
     }
 
@@ -6021,26 +6006,27 @@ vector<item_def> player::get_armour_items_one_removal(item_def remove) const
  * @return  The player's AC, multiplied by the given scale.
  */
 int player::base_ac_with_specific_items(int scale,
-                            vector<item_def> armour_items) const
+                            vector<const item_def *> armour_items) const
 {
     int AC = 0;
 
-    for (unsigned int i = 0; i < armour_items.size(); i++)
+    for (auto item : armour_items)
     {
-        const item_def& item = armour_items[i];
-
         // Shields give SH instead of AC
-        if (get_armour_slot(item) != EQ_SHIELD){
-            AC += base_ac_from(item, 100);
-            AC += item.plus * 100;
+        if (get_armour_slot(*item) != EQ_SHIELD)
+        {
+            AC += base_ac_from(*item, 100);
+            AC += item->plus * 100;
         }
 
-        if (get_armour_ego_type(item) == SPARM_PROTECTION)
+        if (get_armour_ego_type(*item) == SPARM_PROTECTION)
             AC += 300;
     }
 
     AC += wearing(EQ_RINGS_PLUS, RING_PROTECTION) * 100;
 
+    //XXX: This doesn't take into account armour_items, so an unrand shield
+    //     with +AC would have a buggy display.
     AC += scan_artefacts(ARTP_AC) * 100;
 
     AC += get_form()->get_ac_bonus();
@@ -6062,7 +6048,7 @@ int player::base_ac_with_specific_items(int scale,
  */
 int player::base_ac(int scale) const
 {
-    vector<item_def> armour_items = get_armour_items();
+    vector<const item_def *> armour_items = get_armour_items();
 
     return base_ac_with_specific_items(scale, armour_items);
 }
@@ -6084,7 +6070,7 @@ int player::armour_class_with_one_removal(item_def removed) const
                             get_armour_items_one_removal(removed));
 }
 
-int player::armour_class_with_specific_items(vector<item_def> items) const
+int player::armour_class_with_specific_items(vector<const item_def *> items) const
 {
     const int scale = 100;
     int AC = base_ac_with_specific_items(scale, items);
@@ -6468,21 +6454,21 @@ string player::no_tele_reason(bool calc_unid, bool blinking) const
     if (form == transformation::tree)
         problems.emplace_back("held in place by your roots");
 
-    vector<item_def> notele_items;
+    vector<const item_def *> notele_items;
     if (has_notele_item(calc_unid, &notele_items))
     {
         vector<string> worn_notele;
         bool found_nonartefact = false;
 
-        for (const auto &item : notele_items)
+        for (const auto item : notele_items)
         {
-            if (item.base_type == OBJ_WEAPONS)
+            if (item->base_type == OBJ_WEAPONS)
             {
                 problems.push_back(make_stringf("wielding %s",
-                                                item.name(DESC_A).c_str()));
+                                                item->name(DESC_A).c_str()));
             }
             else
-                worn_notele.push_back(item.name(DESC_A));
+                worn_notele.push_back(item->name(DESC_A));
         }
 
         if (worn_notele.size() > (problems.empty() ? 3 : 1))
