@@ -94,6 +94,7 @@ item-prop.o \
 items.o \
 jobs.o \
 json.o \
+keymapper.o \
 kills.o \
 known-items.o \
 l-colour.o \
