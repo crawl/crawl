@@ -1000,8 +1000,8 @@ covering only the reader, before it times out.
 %%%%
 scroll of summoning
 
-A scroll that calls forth several creatures woven from shadow into the shapes
-of those beings found within the reader's immediate vicinity.
+A scroll that calls forth several allied creatures woven from shadow into the
+shapes of those beings found within the reader's immediate vicinity.
 %%%%
 scroll of teleportation
 
