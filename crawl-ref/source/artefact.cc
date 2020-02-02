@@ -286,19 +286,12 @@ bool is_special_unrandom_artefact(const item_def &item)
            && (_seekunrandart(item)->flags & UNRAND_FLAG_SPECIAL);
 }
 
-bool is_randapp_artefact(const item_def &item)
-{
-    return item.flags & ISFLAG_UNRANDART
-           && !(item.flags & ISFLAG_KNOW_TYPE)
-           && (_seekunrandart(item)->flags & UNRAND_FLAG_RANDAPP);
-}
-
 void autoid_unrand(item_def &item)
 {
     if (!(item.flags & ISFLAG_UNRANDART) || item.flags & ISFLAG_KNOW_TYPE)
         return;
     const uint16_t uflags = _seekunrandart(item)->flags;
-    if (uflags & UNRAND_FLAG_RANDAPP || uflags & UNRAND_FLAG_UNIDED)
+    if (uflags & UNRAND_FLAG_UNIDED)
         return;
 
     set_ident_flags(item, ISFLAG_IDENT_MASK | ISFLAG_NOTED_ID);
@@ -1176,8 +1169,7 @@ string make_artefact_name(const item_def &item, bool appearance)
         const unrandart_entry *unrand = _seekunrandart(item);
         if (!appearance)
             return unrand->name;
-        if (!(unrand->flags & UNRAND_FLAG_RANDAPP))
-            return unrand->unid_name;
+        return unrand->unid_name;
     }
 
     string lookup;
@@ -1774,13 +1766,7 @@ bool make_item_unrandart(item_def &item, int unrand_index)
 
     // get artefact appearance
     ASSERT(!item.props.exists(ARTEFACT_APPEAR_KEY));
-    if (!(unrand->flags & UNRAND_FLAG_RANDAPP))
-        item.props[ARTEFACT_APPEAR_KEY].get_string() = unrand->unid_name;
-    else
-    {
-        item.props[ARTEFACT_APPEAR_KEY].get_string() = make_artefact_name(item, true);
-        item_colour(item);
-    }
+    item.props[ARTEFACT_APPEAR_KEY].get_string() = unrand->unid_name;
 
     _set_unique_item_status(unrand_index, UNIQ_EXISTS);
 
@@ -1795,8 +1781,7 @@ bool make_item_unrandart(item_def &item, int unrand_index)
         item.sub_type = WPN_BROAD_AXE;
     }
 
-    if (!(unrand->flags & UNRAND_FLAG_RANDAPP)
-        && !(unrand->flags & UNRAND_FLAG_UNIDED)
+    if (!(unrand->flags & UNRAND_FLAG_UNIDED)
         && !strcmp(unrand->name, unrand->unid_name))
     {
         set_ident_flags(item, ISFLAG_IDENT_MASK | ISFLAG_NOTED_ID);

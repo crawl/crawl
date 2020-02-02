@@ -4012,8 +4012,7 @@ colour_t item_def::get_colour() const
     }
 
     // unrands get to override everything else (wrt colour)
-    // ...except for un-ID'd random-appearance artefacts (Misfortune)
-    if (is_unrandom_artefact(*this) && !is_randapp_artefact(*this))
+    if (is_unrandom_artefact(*this))
     {
         const unrandart_entry *unrand = get_unrand_entry(
                                             find_unrandart_index(*this));
@@ -4563,19 +4562,10 @@ item_info get_item_info(const item_def& item)
 
     if (is_unrandom_artefact(item))
     {
-        if (!is_randapp_artefact(item))
-        {
-            // Unrandart index
-            // Since the appearance of unrandarts is fixed anyway, this
-            // is not an information leak.
-            ii.unrand_idx = item.unrand_idx;
-        }
-        else
-        {
-            // Disguise as a normal randart
-            ii.flags &= ~ISFLAG_UNRANDART;
-            ii.flags |= ISFLAG_RANDART;
-        }
+        // Unrandart index
+        // Since the appearance of unrandarts is fixed anyway, this
+        // is not an information leak.
+        ii.unrand_idx = item.unrand_idx;
     }
 
     switch (item.base_type)
