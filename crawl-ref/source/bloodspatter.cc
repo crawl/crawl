@@ -144,11 +144,13 @@ static void _maybe_bloodify_square(const coord_def& where, int amount,
             env.pgrid(where) |= FPROP_BLOODY;
             _orient_wall_blood(where, from, old_blood);
 
+            // Don't apply penance for involuntary cloud placement.
             if (ignite_blood
                 && !cell_is_solid(where)
                 && !cloud_at(where))
             {
-                place_cloud(CLOUD_FIRE, where, 5 + random2(6), &you);
+                place_cloud(CLOUD_FIRE, where, 5 + random2(6), &you, -1, -1,
+                            false);
             }
         }
 

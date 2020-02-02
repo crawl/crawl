@@ -776,9 +776,12 @@ static bool _cloud_is_stronger(cloud_type ct, const cloud_struct& cloud)
  * @param spread_rate How quickly the cloud spreads.
  * @param excl_rad    How large of an exclusion radius to make around the
  *                    cloud.
+ * @param do_conducts If true, apply any relevant god conducts for flame
+ *                    placement.
 */
 void place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
-                 const actor *agent, int spread_rate, int excl_rad)
+                 const actor *agent, int spread_rate, int excl_rad,
+                 bool do_conducts)
 {
     if (is_sanctuary(ctarget) && !is_harmless_cloud(cl_type))
         return;
@@ -802,10 +805,12 @@ void place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
     if (agent && agent->is_player())
     {
         const monster * const mons = monster_at(ctarget);
-        // We only apply conducts for monsters that are alive and would be
-        // harmed when the cloud was placed.
-        if (mons && mons->alive() && !actor_cloud_immune(*mons, cl_type))
+        if (do_conducts
+            && mons && mons->alive()
+            && !actor_cloud_immune(*mons, cl_type))
+        {
             set_attack_conducts(conducts, *mons, you.can_see(*mons));
+        }
 
         whose = KC_YOU;
         killer = KILL_YOU_MISSILE;
