@@ -688,10 +688,8 @@ teleports its attack directly to its victim.
 %%%%
 staff of Battle
 
-A tubular staff encased in vividly coloured scales, the handiwork of a
-long-forgotten mage. It was stolen by the wizard Iskenderun who used it for a
-time before unlocking its secrets. The staff increases the power of its
-wielder's conjuration magic and, when its wielder is in danger, the staff will
-conjure a battlesphere to provide support. The strength of the battlesphere
-depends on the wielder's skill with Charms and Conjurations.
+A staff encased in vividly coloured scales, wrought by a long-forgotten wizard.
+It was the mage Iskenderun's favorite playtoy. The staff increases the power of
+its wielder's conjurations. When danger looms, it conjures a battlesphere, the
+strength of which depends on the wielder's skill with Charms and Conjurations.
 %%%%
