@@ -55,7 +55,7 @@ make -j4 TILES=y
 
 ### Ubuntu / Debian
 
-You can install all needed dependencies from the OS:
+These instructions may work for other DPKG-based distros.
 
 ```sh
 sudo apt install build-essential libncursesw5-dev bison flex liblua5.1-0-dev \
@@ -72,8 +72,6 @@ Then follow [the above compilation steps](#compiling).
 
 These instructions may work for other RPM-based distros.
 
-You can install all needed dependencies from the OS:
-
 ```sh
 sudo dnf install gcc gcc-c++ make bison flex ncurses-devel compat-lua-devel \
 sqlite-devel zlib-devel pkgconfig python-yaml
@@ -87,15 +85,30 @@ Then follow [the above compilation steps](#compiling).
 
 ### Void
 
-You can install all needed dependencies from the OS:
-
 ```sh
 sudo xbps-install make gcc perl flex bison pkg-config ncurses-devel \
 lua51-devel sqlite-devel zlib-devel python-yaml
 
 # Dependencies for tiles builds:
 sudo xbps-install pngcrush dejavu-fonts-ttf SDL2-devel SDL2_mixer-devel \
-SDL2_image-devel freetype-devel
+SDL2_image-devel freetype-devel advancecomp pngcrush
+```
+
+Then follow [the above compilation steps](#compiling).
+
+### Alpine Linux
+
+```sh
+apk add git g++ make python3 py3-yaml ncurses-dev perl zlib-dev curl \
+lua5.1-dev sqlite-dev binutils-gold
+
+# Dependencies for tiles builds:
+apk add glu-dev freetype-dev libpng-dev sdl2-dev sdl2_image-dev sdl2_mixer-dev \
+ttf-dejavu pngcrush
+# Optional: advpng (advancecomp) is not in Alpine v3.11, but can be installed
+# from the edge repository:
+apk add advancecomp --update-cache \
+--repository http://dl-3.alpinelinux.org/alpine/edge/testing/
 ```
 
 Then follow [the above compilation steps](#compiling).
