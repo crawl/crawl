@@ -73,7 +73,7 @@ libsqlite3-dev libz-dev pkg-config python-yaml binutils-gold
 
 # Dependencies for tiles builds
 sudo apt install libsdl2-image-dev libsdl2-mixer-dev libsdl2-dev \
-libfreetype6-dev libpng-dev ttf-dejavu-core
+libfreetype6-dev libpng-dev ttf-dejavu-core advancecomp pngcrush
 ```
 
 Then follow [the above compilation steps](#compiling).
@@ -88,7 +88,7 @@ sqlite-devel zlib-devel pkgconfig python-yaml
 
 # Dependencies for tiles builds:
 sudo dnf install SDL2-devel SDL2_image-devel libpng-devel freetype-devel \
-dejavu-sans-fonts dejavu-sans-mono-fonts
+dejavu-sans-fonts dejavu-sans-mono-fonts advancecomp pngcrush
 ```
 
 Then follow [the above compilation steps](#compiling).
