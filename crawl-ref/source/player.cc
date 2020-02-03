@@ -6294,31 +6294,31 @@ int player::res_poison(bool temp) const
     return player_res_poison(true, temp);
 }
 
-int player::res_rotting(bool temp) const
+rot_resistance player::res_rotting(bool temp) const
 {
     if (get_mutation_level(MUT_ROT_IMMUNITY)
         || is_nonliving(temp)
         || temp && get_form()->res_rot())
     {
-        return 3;
+        return ROT_RESIST_FULL;
     }
 
     switch (undead_state(temp))
     {
     default:
     case US_ALIVE:
-        return 0;
+        return ROT_RESIST_NONE;
 
     case US_HUNGRY_DEAD:
-        return 1; // rottable by Zin, not by necromancy
+        return ROT_RESIST_MUNDANE; // rottable by Zin, not by necromancy
 
     case US_SEMI_UNDEAD:
         if (temp && !you.vampire_alive)
-            return 1;
-        return 0; // no permanent resistance
+            return ROT_RESIST_MUNDANE;
+        return ROT_RESIST_NONE; // no permanent resistance
 
     case US_UNDEAD:
-        return 3; // full immunity
+        return ROT_RESIST_FULL;
     }
 }
 

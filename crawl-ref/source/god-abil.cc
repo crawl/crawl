@@ -957,7 +957,7 @@ bool zin_recite_to_single_monster(const coord_def& where)
         if (check < 5)
         {
             // nastier -- fallthrough if immune
-            if (coinflip() && mon->res_rotting() <= 1)
+            if (coinflip() && mon->res_rotting() < ROT_RESIST_FULL)
                 effect = zin_eff::rot;
             else
                 effect = zin_eff::smite;
@@ -986,7 +986,7 @@ bool zin_recite_to_single_monster(const coord_def& where)
         // immune, of course.
         if (check < 5)
         {
-            if (coinflip() && mon->res_rotting() <= 1)
+            if (coinflip() && mon->res_rotting() < ROT_RESIST_FULL)
                 effect = zin_eff::rot;
             else
                 effect = zin_eff::smite;

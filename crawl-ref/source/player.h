@@ -757,7 +757,7 @@ public:
     int res_cold() const override;
     int res_elec() const override;
     int res_poison(bool temp = true) const override;
-    int res_rotting(bool temp = true) const override;
+    rot_resistance res_rotting(bool temp = true) const override;
     int res_water_drowning() const override;
     bool res_sticky_flame() const override;
     int res_holy_energy() const override;
