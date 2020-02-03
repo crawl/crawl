@@ -3909,7 +3909,7 @@ bool monster::res_sticky_flame() const
     return is_insubstantial() || get_mons_resist(*this, MR_RES_STICKY_FLAME) > 0;
 }
 
-rot_resistance base_rot_resistance(const monster &mons) {
+static rot_resistance _base_rot_resistance(const monster &mons) {
     const mon_holy_type holi = mons.holiness();
 
     // handle undead first so that multi-holiness undead get their due
@@ -3932,7 +3932,7 @@ rot_resistance base_rot_resistance(const monster &mons) {
 
 rot_resistance monster::res_rotting(bool /*temp*/) const
 {
-    const rot_resistance res = base_rot_resistance(*this);
+    const rot_resistance res = _base_rot_resistance(*this);
     if (res == ROT_RESIST_NONE && get_mons_resist(*this, MR_RES_ROTTING))
         return ROT_RESIST_MUNDANE;
     return res;
