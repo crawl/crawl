@@ -6303,11 +6303,15 @@ rot_resistance player::res_rotting(bool temp) const
         return ROT_RESIST_FULL;
     }
 
+    const item_def *armour = slot_item(EQ_BODY_ARMOUR);
+    const bool embraced = armour && is_unrandom_artefact(*armour, UNRAND_EMBRACE);
+    const rot_resistance base_res = embraced ? ROT_RESIST_MUNDANE : ROT_RESIST_NONE;
+
     switch (undead_state(temp))
     {
     default:
     case US_ALIVE:
-        return ROT_RESIST_NONE;
+        return base_res;
 
     case US_HUNGRY_DEAD:
         return ROT_RESIST_MUNDANE; // rottable by Zin, not by necromancy
@@ -6315,7 +6319,7 @@ rot_resistance player::res_rotting(bool temp) const
     case US_SEMI_UNDEAD:
         if (temp && !you.vampire_alive)
             return ROT_RESIST_MUNDANE;
-        return ROT_RESIST_NONE; // no permanent resistance
+        return base_res;
 
     case US_UNDEAD:
         return ROT_RESIST_FULL;
