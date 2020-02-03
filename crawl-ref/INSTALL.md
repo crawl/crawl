@@ -53,6 +53,16 @@ cd crawl-ref/source
 make -j4 TILES=y
 ```
 
+### Packaged Dependencies
+
+DCSS uses Lua, SDL, Sqlite and several other third party packages. Generally you should use the versions supplied by your OS's package manager. If that's not possible, you can use the versions packaged with DCSS.
+
+To use packaged dependencies:
+
+1. Clone the repository with Git (you can't use a tarball - the dependencies use Git Submodules).
+2. Run `git submodule update --init` in the repository.
+3. Compile as per above.
+
 ### Ubuntu / Debian
 
 These instructions may work for other DPKG-based distros.
