@@ -7,7 +7,9 @@
 
 #include "crash.h"
 
-#if defined(UNIX)
+// musl doesn't suport execinfo.h and doesn't provide a clean way to detect it,
+// so assume any non-glibc Linux system is using it.
+#if defined(UNIX) && (!defined(TARGET_OS_LINUX) || defined(_GLIBC_))
 #include <unistd.h>
 #include <sys/param.h>
         #define BACKTRACE_SUPPORTED
