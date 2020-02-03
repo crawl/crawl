@@ -53,9 +53,19 @@ cd crawl-ref/source
 make -j4 TILES=y
 ```
 
+### Packaged Dependencies
+
+DCSS uses Lua, SDL, Sqlite and several other third party packages. Generally you should use the versions supplied by your OS's package manager. If that's not possible, you can use the versions packaged with DCSS.
+
+To use packaged dependencies:
+
+1. Clone the repository with Git (you can't use a tarball - the dependencies use Git Submodules).
+2. Run `git submodule update --init` in the repository.
+3. Compile as per above.
+
 ### Ubuntu / Debian
 
-You can install all needed dependencies from the OS:
+ These instructions may work for other DPKG-based distros.
 
 ```sh
 sudo apt install build-essential libncursesw5-dev bison flex liblua5.1-0-dev \
@@ -63,7 +73,7 @@ libsqlite3-dev libz-dev pkg-config python-yaml binutils-gold
 
 # Dependencies for tiles builds
 sudo apt install libsdl2-image-dev libsdl2-mixer-dev libsdl2-dev \
-libfreetype6-dev libpng-dev ttf-dejavu-core
+libfreetype6-dev libpng-dev ttf-dejavu-core advancecomp pngcrush
 ```
 
 Then follow [the above compilation steps](#compiling).
@@ -72,22 +82,18 @@ Then follow [the above compilation steps](#compiling).
 
 These instructions may work for other RPM-based distros.
 
-You can install all needed dependencies from the OS:
-
 ```sh
 sudo dnf install gcc gcc-c++ make bison flex ncurses-devel compat-lua-devel \
 sqlite-devel zlib-devel pkgconfig python-yaml
 
 # Dependencies for tiles builds:
 sudo dnf install SDL2-devel SDL2_image-devel libpng-devel freetype-devel \
-dejavu-sans-fonts dejavu-sans-mono-fonts
+dejavu-sans-fonts dejavu-sans-mono-fonts advancecomp pngcrush
 ```
 
 Then follow [the above compilation steps](#compiling).
 
 ### Void
-
-You can install all needed dependencies from the OS:
 
 ```sh
 sudo xbps-install make gcc perl flex bison pkg-config ncurses-devel \
@@ -95,7 +101,7 @@ lua51-devel sqlite-devel zlib-devel python-yaml
 
 # Dependencies for tiles builds:
 sudo xbps-install pngcrush dejavu-fonts-ttf SDL2-devel SDL2_mixer-devel \
-SDL2_image-devel freetype-devel
+SDL2_image-devel freetype-devel advancecomp pngcrush
 ```
 
 Then follow [the above compilation steps](#compiling).
@@ -109,20 +115,20 @@ You need the following dependencies:
 * perl
 * pkg-config
 * Python and PyYAML
-* libncurses (and headers)
+* libncurses
 * flex / bison (optional)
 
-You can install these dependencies from your OS package manager, or use DCSS's packaged versions (`git submodule update --init`):
+You can install these dependencies from your OS package manager, or use DCSS's packaged versions (as described in [Packaged Dependencies](#packaged-dependencies) above):
 
-* lua 5.1 (and headers)
-* sqlite (and headers)
-* zlib (and headers)
-* freetype (and headers)
-* DejaVu fonts (when compiling in tiles mode)
-* SDL2 (and headers)
-* libpng (and headers)
-* pcre (and headers)
-* zlib (and headers)
+* lua 5.1
+* sqlite
+* zlib
+* pcre
+* zlib
+* freetype (tiles builds only)
+* DejaVu fonts (tiles builds only)
+* SDL2 (tiles builds only)
+* libpng (tiles builds only)
 
 Then follow [the above compilation steps](#compiling).
 
