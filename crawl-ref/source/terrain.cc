@@ -2364,3 +2364,43 @@ void dgn_open_door(const coord_def &dest)
     else
         grd(dest) = DNGN_OPEN_DOOR;
 }
+
+void ice_wall_damage(monster &mons, int delay)
+{
+    if (!you.duration[DUR_FROZEN_RAMPARTS]
+        || !you.see_cell_no_trans(mons.pos())
+        || mons_aligned(&you, &mons))
+    {
+        return;
+    }
+
+    const int walls = count_adjacent_icy_walls(mons.pos());
+    if (!walls)
+        return;
+
+    mprf((walls > 1) ? "The walls release a blast of icicles at %s!"
+                     : "The wall releases a blast of icicles at %s!",
+         you.can_see(mons) ? mons.name(DESC_THE).c_str() : "something");
+
+    const int pow = calc_spell_power(SPELL_FROZEN_RAMPARTS, true);
+    int dam = div_rand_round(delay * roll_dice(1, 2 + div_rand_round(pow, 4)),
+                BASELINE_DELAY);
+
+    dam = mons.apply_ac(dam);
+
+    bolt beam;
+    beam.flavour = BEAM_ICE;
+    beam.thrower = KILL_YOU;
+    dam = mons_adjust_flavoured(&mons, beam, dam);
+
+    if (dam > 0)
+    {
+        mons.hurt(&you, dam, BEAM_ICE);
+
+        if (mons.alive() && !mons.has_ench(ENCH_FROZEN))
+        {
+            simple_monster_message(mons, " is encased in ice.");
+            mons.add_ench(ENCH_FROZEN);
+        }
+    }
+}

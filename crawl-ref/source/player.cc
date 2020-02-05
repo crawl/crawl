@@ -47,6 +47,7 @@
 #include "items.h"
 #include "item-use.h"
 #include "kills.h"
+#include "level-state-type.h"
 #include "libutil.h"
 #include "macro.h"
 #include "melee-attack.h"
@@ -4735,6 +4736,35 @@ void dec_channel_player(int delay)
 
     if (!you.duration[DUR_CHANNEL_ENERGY])
         mpr("You feel less invigorated.");
+}
+
+void dec_frozen_ramparts(int delay)
+{
+    if (!you.duration[DUR_FROZEN_RAMPARTS])
+        return;
+
+    you.duration[DUR_FROZEN_RAMPARTS] =
+        max(0, you.duration[DUR_FROZEN_RAMPARTS] - delay);
+
+    if (!you.duration[DUR_FROZEN_RAMPARTS])
+    {
+        ASSERT(you.props.exists(FROZEN_RAMPARTS_KEY));
+        const auto &pos = you.props[FROZEN_RAMPARTS_KEY].get_coord();
+        ASSERT(in_bounds(pos));
+
+        for (distance_iterator di(pos, false, false, FROZEN_RAMPARTS_RADIUS);
+                di; di++)
+        {
+            env.pgrid(*di) &= ~FPROP_ICY;
+            env.map_knowledge(*di).flags &= ~MAP_ICY;
+        }
+
+        you.props.erase(FROZEN_RAMPARTS_KEY);
+
+        env.level_state &= ~LSTATE_ICY_WALL;
+
+        mpr("The frozen ramparts melt away.");
+    }
 }
 
 bool invis_allowed(bool quiet, string *fail_reason)

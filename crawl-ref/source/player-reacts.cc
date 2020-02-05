@@ -781,6 +781,7 @@ static void _decrement_durations()
         doom_howl(min(delay, you.duration[DUR_DOOM_HOWL]));
 
     dec_elixir_player(delay);
+    dec_frozen_ramparts(delay);
 
     if (!you.cannot_move()
         && !you.confused()

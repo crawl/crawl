@@ -80,3 +80,5 @@ spret cast_hailstorm(int pow, bool fail, bool tracer=false);
 spret cast_imb(int pow, bool fail);
 
 void actor_apply_toxic_bog(actor *act);
+
+spret cast_frozen_ramparts(int pow, bool fail);

@@ -613,6 +613,9 @@ static const duration_def duration_data[] =
       "noxious spew", "noxious bog",
       "You are spewing a noxious bog.", D_DISPELLABLE,
       {{ "Your noxious spew wanes." }}},
+    { DUR_FROZEN_RAMPARTS, LIGHTBLUE, "Ramparts", "frozen ramparts",
+        "frozen ramparts", "You have covered nearby walls with an icy ambush.",
+        D_DISPELLABLE},
 
 #if TAG_MAJOR_VERSION == 34
     // And removed ones

@@ -27,6 +27,7 @@
 #include "god-conduct.h"
 #include "invent.h"
 #include "items.h"
+#include "level-state-type.h"
 #include "los.h"
 #include "losglobal.h"
 #include "macro.h"
@@ -3354,4 +3355,50 @@ void actor_apply_toxic_bog(actor * act)
         act->hurt(oppressor, final_damage, BEAM_MISSILE,
                   KILLED_BY_POISON, "", "toxic bog");
     }
+}
+
+/**
+ * Cast Frozen Ramparts
+ *
+ * @param caster The caster.
+ * @param pow    The spell power.
+ * @param fail   Did this spell miscast? If true, abort the cast.
+ * @return       spret::fail if one could be found but we miscast, and
+ *               spret::success if the spell was successfully cast.
+*/
+spret cast_frozen_ramparts(int pow, bool fail)
+{
+    vector<coord_def> walls;
+    for (distance_iterator di(you.pos(), false, false, FROZEN_RAMPARTS_RADIUS);
+            di; ++di)
+    {
+        const auto feat = grd(*di);
+        if (you.see_cell(*di)
+            && feat_is_wall(feat)
+            && !feat_is_permarock(feat))
+        {
+            walls.push_back(*di);
+        }
+    }
+
+    if (walls.empty())
+    {
+        mpr("There are no walls around you to affect.");
+        return spret::abort;
+    }
+
+    fail_check();
+
+    for (auto wall : walls)
+        env.pgrid(wall) |= FPROP_ICY;
+
+    env.level_state |= LSTATE_ICY_WALL;
+    you.props[FROZEN_RAMPARTS_KEY] = you.pos();
+
+    mpr("The walls around you are covered in icicles.");
+    noisy(spell_effect_noise(SPELL_FROZEN_RAMPARTS), you.pos());
+
+    you.duration[DUR_FROZEN_RAMPARTS] = random_range(40 + pow,
+                                                     80 + pow * 3 / 2);
+    return spret::success;
 }

@@ -632,6 +632,13 @@ Freezing Cloud spell
 
 Conjures up a large cloud of lethally cold vapour.
 %%%%
+Frozen Ramparts spell
+
+Encases surrounding rock walls with a myriad of enchanted icicles for a short
+time. The icicles release explosively when a victim wanders nearby, damaging
+and encasing them in a frozen shroud that impedes movement. The caster and any
+allies can safely wander near these frozen ramparts, however.
+%%%%
 Fulminant Prism spell
 
 Conjures a prism which unleashes a violent explosion of arcane force after a

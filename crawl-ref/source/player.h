@@ -53,12 +53,15 @@
 #define PARALYSED_BY_KEY "paralysed_by"
 #define PETRIFIED_BY_KEY "petrified_by"
 #define NOXIOUS_BOG_KEY "noxious_bog_pow"
+#define FROZEN_RAMPARTS_KEY "frozen_ramparts_position"
 
 // display/messaging breakpoints for penalties from Ru's MUT_HORROR
 #define HORROR_LVL_EXTREME  3
 #define HORROR_LVL_OVERWHELMING  5
 
 #define SEVERE_CONTAM_LEVEL 3
+
+#define FROZEN_RAMPARTS_RADIUS 3
 
 /// Maximum stat value
 static const int MAX_STAT_VALUE = 125;
@@ -1144,6 +1147,7 @@ void dec_haste_player(int delay);
 void dec_elixir_player(int delay);
 void dec_ambrosia_player(int delay);
 void dec_channel_player(int delay);
+void dec_frozen_ramparts(int delay);
 bool invis_allowed(bool quiet = false, string *fail_reason = nullptr);
 bool flight_allowed(bool quiet = false, string *fail_reason = nullptr);
 void fly_player(int pow, bool already_flying = false);

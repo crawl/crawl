@@ -29,6 +29,7 @@ static const vector<spell_type> spellbook_templates[] =
 
 {   // Book of Frost
     SPELL_FREEZE,
+    SPELL_FROZEN_RAMPARTS,
     SPELL_OZOCUBUS_ARMOUR,
     SPELL_HAILSTORM,
     SPELL_SUMMON_ICE_BEAST,
