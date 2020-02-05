@@ -1733,5 +1733,10 @@ shadow_e_darker
 shadow_w_top_darker
 shadow_e_top_darker
 
+icy_wall_overlay0 DNGN_WALL_ICY_WALL_OVERLAY
+icy_wall_overlay1
+icy_wall_overlay2
+icy_wall_overlay3
+
 %sdir dngn/vaults
 brick_dark_leak WALL_BRICK_DARK_LEAK

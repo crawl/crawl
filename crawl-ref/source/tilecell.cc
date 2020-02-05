@@ -515,11 +515,19 @@ void pack_cell_overlays(const coord_def &gc, crawl_view_buffer &vbuf)
                                   _is_seen_slimy_wall);
     }
     else if (env.level_state & LSTATE_ICY_WALL
-             && (!feat_is_wall(cell.map_knowledge.feat())
-                 || !(cell.map_knowledge.flags & MAP_ICY)))
+             && cell.map_knowledge.flags & MAP_ICY)
     {
-        _add_directional_overlays(gc, vbuf, TILE_ICE_OVERLAY,
-                                  _is_seen_icy_wall);
+        if (feat_is_wall(cell.map_knowledge.feat()))
+        {
+            const int count = tile_dngn_count(TILE_DNGN_WALL_ICY_WALL_OVERLAY);
+            _add_overlay(TILE_DNGN_WALL_ICY_WALL_OVERLAY
+                    + (gc.y * GXM + gc.x) % count, cell);
+        }
+        else
+        {
+            _add_directional_overlays(gc, vbuf, TILE_ICE_OVERLAY,
+                                      _is_seen_icy_wall);
+        }
     }
     else
     {
