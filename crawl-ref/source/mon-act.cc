@@ -2803,18 +2803,31 @@ static bool _mons_can_displace(const monster* mpusher,
 }
 
 // Returns true if the monster should try to avoid that position
-// because of taking damage from slime walls.
-static bool _check_slime_walls(const monster *mon,
-                               const coord_def &targ)
+// because of taking damage from damaging walls.
+static bool _check_damaging_walls(const monster *mon,
+                                  const coord_def &targ)
 {
-    if (actor_slime_wall_immune(mon) || mons_intel(*mon) <= I_BRAINLESS)
+    const bool have_slimy = env.level_state & LSTATE_SLIMY_WALL;
+    const bool have_icy   = env.level_state & LSTATE_ICY_WALL;
+
+    if (!have_slimy && !have_icy)
         return false;
-    const int target_count = count_adjacent_slime_walls(targ);
+
+    if (!have_icy && actor_slime_wall_immune(mon)
+        || mons_intel(*mon) <= I_BRAINLESS)
+    {
+        return false;
+    }
+
+    int target_count = count_adjacent_slime_walls(targ);
+    target_count += count_adjacent_icy_walls(targ);
+
     // Entirely safe.
     if (!target_count)
         return false;
 
-    const int current_count = count_adjacent_slime_walls(mon->pos());
+    int current_count = count_adjacent_slime_walls(mon->pos());
+    current_count += count_adjacent_icy_walls(mon->pos());
     if (target_count <= current_count)
         return false;
 
@@ -2826,6 +2839,7 @@ static bool _check_slime_walls(const monster *mon,
     // onto more dangerous squares.
     return mon->hit_points < mon->max_hit_points / 2;
 }
+
 // Check whether a monster can move to given square (described by its relative
 // coordinates to the current monster position). just_check is true only for
 // calls from is_trap_safe when checking the surrounding squares of a trap.
@@ -2866,7 +2880,7 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
     if (mons_avoids_cloud(mons, targ))
         return false;
 
-    if (env.level_state & LSTATE_SLIMY_WALL && _check_slime_walls(mons, targ))
+    if (_check_damaging_walls(mons, targ))
         return false;
 
     const bool digs = _mons_can_cast_dig(mons, false)

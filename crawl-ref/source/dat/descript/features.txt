@@ -1044,3 +1044,12 @@ This area is bathed in translocational energy, causing creatures to blink away
 from the originator of the energy with an increasing chance the closer they are
 to the caster.
 %%%%
+########################################################################
+### Other effects
+########################################################################
+icicle covered
+
+This wall bristles with sharp icicles that will release explosively when a foe
+wanders nearby. The shards damage and encase the victim in a frozen shroud that
+impedes movement.
+%%%%

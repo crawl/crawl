@@ -5,6 +5,8 @@
 #include "colour.h"
 #include "coord.h"
 #include "coordit.h"
+#include "env.h"
+#include "level-state-type.h"
 #include "terrain.h"
 #include "tile-flags.h"
 #include "tiledef-dngn.h"
@@ -111,8 +113,11 @@ static void _add_directional_overlays(const coord_def& gc, crawl_view_buffer& vb
 
     for (int i = 0; i < 8; ++i)
     {
-        if (!pred(gc + overlay_directions[i], vbuf))
+        if (!pred(gc + overlay_directions[i], vbuf)
+            || feat_is_wall(cell.map_knowledge.feat()))
+        {
             continue;
+        }
 
         if (i > 3)
         {
@@ -480,6 +485,15 @@ static bool _is_seen_slimy_wall(const coord_def& gc, crawl_view_buffer &vbuf)
     return feat == DNGN_SLIMY_WALL;
 }
 
+static bool _is_seen_icy_wall(const coord_def& gc, crawl_view_buffer &vbuf)
+{
+    if (gc.x < 0 || gc.x >= vbuf.size().x || gc.y < 0 || gc.y >= vbuf.size().y)
+        return false;
+
+    return feat_is_wall(vbuf(gc).tile.map_knowledge.feat())
+           && vbuf(gc).tile.map_knowledge.flags & MAP_ICY;
+}
+
 void pack_cell_overlays(const coord_def &gc, crawl_view_buffer &vbuf)
 {
     auto& cell = vbuf(gc).tile;
@@ -499,6 +513,13 @@ void pack_cell_overlays(const coord_def &gc, crawl_view_buffer &vbuf)
     {
         _add_directional_overlays(gc, vbuf, TILE_SLIME_OVERLAY,
                                   _is_seen_slimy_wall);
+    }
+    else if (env.level_state & LSTATE_ICY_WALL
+             && (!feat_is_wall(cell.map_knowledge.feat())
+                 || !(cell.map_knowledge.flags & MAP_ICY)))
+    {
+        _add_directional_overlays(gc, vbuf, TILE_ICE_OVERLAY,
+                                  _is_seen_icy_wall);
     }
     else
     {

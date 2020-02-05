@@ -20,6 +20,7 @@
 #define MAP_BLOODY            0x1000
 #define MAP_CORRODING         0x2000
 #define MAP_INVISIBLE_UPDATE  0x4000 // Used for invis redraws by show_init()
+#define MAP_ICY               0x8000
 
 /* these flags require more space to serialize: put infrequently used ones there */
 #define MAP_EXCLUDED_STAIRS  0x10000

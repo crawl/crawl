@@ -510,6 +510,18 @@ tileidx_t tileidx_feature(const coord_def &gc)
             for (adjacent_iterator ai(gc); ai; ++ai)
                 if (env.map_knowledge(*ai).feat() == DNGN_SLIMY_WALL)
                     return TILE_FLOOR_SLIME_ACIDIC;
+
+        if (env.level_state & LSTATE_ICY_WALL)
+        {
+            for (adjacent_iterator ai(gc); ai; ++ai)
+            {
+                if (feat_is_wall(env.map_knowledge(*ai).feat())
+                    && env.map_knowledge(*ai).flags & MAP_ICY)
+                {
+                    return TILE_FLOOR_ICY;
+                }
+            }
+        }
         // deliberate fall-through
     case DNGN_ROCK_WALL:
     case DNGN_STONE_WALL:

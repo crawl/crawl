@@ -13,4 +13,5 @@ enum level_state_type
     LSTATE_BEOGH          = (1 << 3), // Possibly an orcish priest around.
     LSTATE_SLIMY_WALL     = (1 << 4), // Any slime walls exist.
     LSTATE_STILL_WINDS    = (1 << 5), // Cloud generation is disabled
+    LSTATE_ICY_WALL       = (1 << 6), // Any icy walls exist.
 };

@@ -886,6 +886,16 @@ void slime_wall_damage(actor* act, int delay)
     }
 }
 
+int count_adjacent_icy_walls(const coord_def &pos)
+{
+    int count = 0;
+    for (adjacent_iterator ai(pos); ai; ++ai)
+        if (is_icecovered(*ai))
+            count++;
+
+    return count;
+}
+
 void feat_splash_noise(dungeon_feature_type feat)
 {
     switch (feat)

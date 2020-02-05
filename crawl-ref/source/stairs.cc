@@ -1088,8 +1088,12 @@ static void _update_level_state()
         }
     }
     for (rectangle_iterator ri(0); ri; ++ri)
+    {
         if (grd(*ri) == DNGN_SLIMY_WALL)
             env.level_state |= LSTATE_SLIMY_WALL;
+        else if (is_icecovered(*ri))
+            env.level_state |= LSTATE_ICY_WALL;
+    }
 
     env.orb_pos = coord_def();
     if (item_def* orb = find_floor_item(OBJ_ORBS, ORB_ZOT))

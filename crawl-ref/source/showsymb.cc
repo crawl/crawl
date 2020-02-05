@@ -84,6 +84,13 @@ static unsigned short _cell_feat_show_colour(const map_cell& cell,
     {
         colour = LIGHTGREEN;
     }
+    else if (cell.flags & MAP_ICY && !norecolour)
+    {
+        if (feat_is_wall(feat))
+            colour = ETC_ICE;
+        else if (!feat_is_lava(feat) && !feat_is_water(feat))
+            colour = LIGHTCYAN;
+    }
     else if (cell.feat_colour() && !no_vault_recolour)
         colour = cell.feat_colour();
     else
