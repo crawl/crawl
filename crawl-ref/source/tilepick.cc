@@ -15,6 +15,7 @@
 #include "item-name.h"
 #include "item-prop.h"
 #include "item-status-flag-type.h"
+#include "level-state-type.h"
 #include "libutil.h"
 #include "mon-death.h"
 #include "mon-tentacle.h"
@@ -505,23 +506,10 @@ tileidx_t tileidx_feature(const coord_def &gc)
     switch (feat)
     {
     case DNGN_FLOOR:
-        // branches that can have slime walls (premature optimization?)
-        if (player_in_branch(BRANCH_SLIME)
-            || player_in_branch(BRANCH_TEMPLE)
-            || player_in_branch(BRANCH_LAIR))
-        {
-            bool slimy = false;
+        if (env.level_state & LSTATE_SLIMY_WALL)
             for (adjacent_iterator ai(gc); ai; ++ai)
-            {
                 if (env.map_knowledge(*ai).feat() == DNGN_SLIMY_WALL)
-                {
-                    slimy = true;
-                    break;
-                }
-            }
-            if (slimy)
-                return TILE_FLOOR_SLIME_ACIDIC;
-        }
+                    return TILE_FLOOR_SLIME_ACIDIC;
         // deliberate fall-through
     case DNGN_ROCK_WALL:
     case DNGN_STONE_WALL:
