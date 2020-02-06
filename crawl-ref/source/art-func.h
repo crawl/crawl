@@ -1497,6 +1497,8 @@ static void _EMBRACE_unequip(item_def *item, bool *show_msgs)
 static int _harvest_corpses()
 {
     int harvested = 0;
+    bool divine_intervention = false;
+    static const string DIVINE_KEY = "GOD_PREVENTED_HARVESTING";
 
     for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
     {
@@ -1506,13 +1508,15 @@ static int _harvest_corpses()
             if (item.base_type != OBJ_CORPSES)
                 continue;
 
-            // forbid harvesting orcs under Beogh
-            if (you.religion == GOD_BEOGH)
-            {
-                const monster_type monnum
-                    = static_cast<monster_type>(item.orig_monnum);
-                if (mons_genus(monnum) == MONS_ORC)
-                    continue;
+            if (is_forbidden_food(item)) {
+                // Cannibalism should be accepted, but it's
+                // a lot of extra work for a niche concern.
+                bool &seen_before = item.props[DIVINE_KEY].get_bool();
+                if (!seen_before) {
+                    seen_before = true;
+                    divine_intervention = true;
+                }
+                continue;
             }
 
             ++harvested;
@@ -1536,6 +1540,10 @@ static int _harvest_corpses()
 
             destroy_item(item.index());
         }
+    }
+
+    if (divine_intervention) {
+        mprf(MSGCH_GOD, "A divine presence forbids the dead from embracing you.");
     }
 
     return harvested;
