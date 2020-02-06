@@ -314,7 +314,7 @@ static bool _check_stairs(const dungeon_feature_type ftype, bool going_up)
             if (ftype == DNGN_STONE_ARCH)
                 mpr("There is nothing on the other side of the stone arch.");
             else if (ftype == DNGN_ABANDONED_SHOP)
-                mpr("This shop appears to be closed.");
+                mpr("This shop has been abandoned, nothing of value remains.");
             else if (going_up)
                 mpr("You can't go up here!");
             else
