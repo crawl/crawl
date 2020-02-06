@@ -2826,16 +2826,20 @@ static bool _check_damaging_walls(const monster *mon,
         return false;
     }
 
-    int target_count = count_adjacent_slime_walls(targ);
-    target_count += count_adjacent_icy_walls(targ);
+    // Monsters are only ever affected by one wall at a time, so we don't care
+    // about wall counts past 1.
+    const bool target_damages = count_adjacent_slime_walls(targ)
+        + count_adjacent_icy_walls(targ);
 
     // Entirely safe.
-    if (!target_count)
+    if (!target_damages)
         return false;
 
-    int current_count = count_adjacent_slime_walls(mon->pos());
-    current_count += count_adjacent_icy_walls(mon->pos());
-    if (target_count <= current_count)
+    const bool current_damages = count_adjacent_slime_walls(mon->pos())
+        + count_adjacent_icy_walls(mon->pos());
+
+    // We're already taking damage, so moving into damage is fine.
+    if (current_damages)
         return false;
 
     // The monster needs to have a purpose to risk taking damage.
