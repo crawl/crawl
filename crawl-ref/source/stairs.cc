@@ -622,6 +622,7 @@ void floor_transition(dungeon_feature_type how,
     you.stop_being_constricted();
     you.clear_beholders();
     you.clear_fearmongers();
+    dec_frozen_ramparts(you.duration[DUR_FROZEN_RAMPARTS]);
 
     if (!forced)
     {
