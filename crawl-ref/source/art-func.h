@@ -1512,17 +1512,13 @@ static int _harvest_corpses()
             if (you.religion == GOD_BEOGH && mons_genus(monnum) == MONS_ORC)
                 continue;
 
-            // other conducts
-            if (mons_class_holiness(item.mon_type) & MH_HOLY)
-                did_god_conduct(DID_DESECRATE_HOLY_REMAINS, 4);
-            else if (corpse_intelligence(item) >= I_HUMAN)
-                did_god_conduct(DID_DESECRATE_SOULED_BEING, 1);
-            else {
-                // Let's make this unambigously evil, to avoid tricking players
-                // into using it with good gods and then getting surprised when
-                // a shedu or something dies.
-                did_god_conduct(DID_EVIL, 1);
-            }
+            did_god_conduct(DID_EVIL, 1);
+
+             // apply these in addition to use of an evil item
+             if (mons_class_holiness(item.mon_type) & MH_HOLY)
+                 did_god_conduct(DID_DESECRATE_HOLY_REMAINS, 4);
+             else if (corpse_intelligence(item) >= I_HUMAN)
+                 did_god_conduct(DID_DESECRATE_SOULED_BEING, 1);
 
             ++harvested;
 
