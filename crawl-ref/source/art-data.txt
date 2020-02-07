@@ -1388,7 +1388,7 @@ COLOUR:   ETC_UNHOLY
 # XXX TODO: tiles
 LIFE:     1
 INSCRIP:  rRot
-BOOL:     evil
+BOOL:     curse, evil
 
 # This entry must always be last.
 ENUM:   DUMMY2
