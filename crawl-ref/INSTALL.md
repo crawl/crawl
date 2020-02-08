@@ -55,11 +55,11 @@ make -j4 TILES=y
 
 ### Packaged Dependencies
 
-DCSS uses Lua, SDL, Sqlite and several other third party packages. Generally you should use the versions supplied by your OS's package manager. If that's not possible, you can use the versions packaged with DCSS.
+DCSS uses Lua, SDL, SQLite and several other third party packages. Generally you should use the versions supplied by your OS's package manager. If that's not possible, you can use the versions packaged with DCSS.
 
 To use packaged dependencies:
 
-1. Clone the repository with Git (you can't use a tarball - the dependencies use Git Submodules).
+1. Clone the repository with Git (you can't use a tarball - the dependencies use Git submodules).
 2. Run `git submodule update --init` in the repository.
 3. Compile as per above.
 
@@ -89,19 +89,6 @@ sqlite-devel zlib-devel pkgconfig python-yaml
 # Dependencies for tiles builds:
 sudo dnf install SDL2-devel SDL2_image-devel libpng-devel freetype-devel \
 dejavu-sans-fonts dejavu-sans-mono-fonts advancecomp pngcrush
-```
-
-Then follow [the above compilation steps](#compiling).
-
-### Void
-
-```sh
-sudo xbps-install make gcc perl flex bison pkg-config ncurses-devel \
-lua51-devel sqlite-devel zlib-devel python-yaml
-
-# Dependencies for tiles builds:
-sudo xbps-install pngcrush dejavu-fonts-ttf SDL2-devel SDL2_mixer-devel \
-SDL2_image-devel freetype-devel advancecomp pngcrush
 ```
 
 Then follow [the above compilation steps](#compiling).
