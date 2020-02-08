@@ -59,10 +59,6 @@ faerie dragon scales
 가죽 때문에 요정 용은 멸종해버리고 말았다. 이 소중한 유물은, 요정 용이
 존재했었다는 것을 증명하기 위한 마지막 증거물일지도 모른다.
 %%%%
-demon blade "Bloodbane"
-
-귀신들린 검이다. 착용자는 피를 보고자 하는 광기에 휩싸이게 된다.
-%%%%
 scimitar of Flaming Death
 
 검에서 연기가 난다!

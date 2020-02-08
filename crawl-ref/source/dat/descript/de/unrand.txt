@@ -48,10 +48,6 @@ Verhängnis, da sie potentielle Beute warnten. Sie sind nun ausgestorben, und
 dieses wertvolle Relikt ist einer der letzten Beweise dafür, dass sie jemals
 existiert haben.
 %%%%
-demon blade "Bloodbane"
-
-Es trägt die Blutflecken eines unmenschlichen Verrückten.
-%%%%
 scimitar of Flaming Death
 
 Heißes Teil !

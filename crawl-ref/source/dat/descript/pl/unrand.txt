@@ -45,10 +45,6 @@ nieszczęście, ich żywe kolory stały się ich zgubą, alarmując potencjalną
 zdobycz. Dziś już zupełnie wyginęły, a ten cenny relikt jest jednym z ostatnich
 dowodów że kiedykolwiek istniały.
 %%%%
-demon blade "Bloodbane"
-
-Ta broń jest skażona krwią nieludzkiego szaleńca.
-%%%%
 scimitar of Flaming Death
 
 Gorące ostrze!

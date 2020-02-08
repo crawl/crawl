@@ -41,10 +41,6 @@ faerie dragon scales
 它们的鲜艳肤色却成了它们的致命弱点，因为它们在接近猎物的时候太容易被发现了。
 妖精龙现在已经灭绝了；这件珍贵的遗物正是仅存的能证明它们曾经存在过的证据之一。
 %%%%
-demon blade "Bloodbane"
-
-某个丧失人性的狂人在它上面留下了无法抹去的污染。
-%%%%
 scimitar of Flaming Death
 
 冒烟中……

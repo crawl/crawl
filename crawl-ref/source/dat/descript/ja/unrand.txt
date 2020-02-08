@@ -58,10 +58,6 @@ faerie dragon scales
 彼らは既に地上から姿を消してしまっており、
 この貴重な遺品は彼らがかつてこの世に息づいていたことの最後の証だ。
 %%%%
-demon blade "Bloodbane"
-
-これは残忍な狂戦士の血塗られた痕跡を幾らか孕んでいる。
-%%%%
 scimitar of Flaming Death
 
 煙たい！

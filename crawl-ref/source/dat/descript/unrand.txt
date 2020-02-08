@@ -96,11 +96,13 @@ An enchanted suit of armour created from the scales of a rare breed of dragon,
 now thought to be extinct. This prized relic is now one of the last proofs that
 the vividly coloured faerie dragons ever existed.
 %%%%
+# TAG_MAJOR_VERSION == 34
 demon blade "Bloodbane"
 
 A blade forged in Hell by the sacrifice of countless tortured souls. It
 inflicts the rage and suffering of those souls upon its wielder.
 %%%%
+# TAG_MAJOR_VERSION == 34
 scimitar of Flaming Death
 
 A scimitar with a mysteriously smoking blade. Occasionally its heat leaks out,
@@ -115,9 +117,11 @@ reveals the machinations of those who would prefer to stay invisible.
 %%%%
 demon blade "Leech"
 
-An unerringly vampiric blade which gorges itself on drained life force every
-time it strikes.
+An unerringly vampiric blade, forged in Hell by the sacrifice of countless
+tortured souls. It fills its wielder with the rage and suffering of those
+souls, and gorges itself further on drained life force every time it strikes.
 %%%%
+# TAG_MAJOR_VERSION == 34
 dagger of Chilly Death
 
 A dagger made of one huge shard of sapphire. It covers opponents in ice,

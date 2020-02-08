@@ -45,10 +45,6 @@ jejich pestré zbarvení stalo zkázou, protože jím odstrašovali potenciáln�
 kořist. Dnes jsou již vyhynulí, a tento vzácný pozůstatek je jedním z
 posledních důkazů jejich existence.
 %%%%
-demon blade "Bloodbane"
-
-Je poskvrněna krví nelidského šílence.
-%%%%
 scimitar of Flaming Death
 
 Kouř!

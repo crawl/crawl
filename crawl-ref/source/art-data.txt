@@ -325,6 +325,7 @@ TILE:    urand_faerie
 TILE_EQ: faerie_dragon_armour
 BOOL:    nogen, no_upgrade
 
+# TAG_MAJOR_VERSION == 34
 NAME:    demon blade "Bloodbane"
 OBJ:     OBJ_WEAPONS/WPN_DEMON_BLADE
 PLUS:    +8
@@ -333,7 +334,7 @@ TILE:    urand_bloodbane
 TILE_EQ: bloodbane
 BRAND:   SPWPN_VORPAL
 ANGRY:   5
-BOOL:    berserk
+BOOL:    berserk, nogen
 STEALTH: -1
 
 # TAG_MAJOR_VERSION == 34
@@ -370,9 +371,9 @@ COLOUR:  ETC_DARK
 TILE:    urand_leech
 TILE_EQ: leech
 BRAND:   SPWPN_VAMPIRISM
-AC:      -3
-EV:      -3
-LIFE:     1
+LIFE:    1
+ANGRY:   5
+BOOL:    berserk
 
 # TAG_MAJOR_VERSION == 34
 NAME:    dagger of Chilly Death

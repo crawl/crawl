@@ -61,10 +61,6 @@ livlige farver deres undergang, fordi de advarede eventuelt bytte. De er nu
 uddøde, og dette skattede relikvie er et af de sidste beviser på, at de
 overhovedet har eksisteret.
 %%%%
-demon blade "Bloodbane"
-
-Den bærer en umenneskelig galnings blodige besmittelse.
-%%%%
 scimitar of Flaming Death
 
 Brandvarm!

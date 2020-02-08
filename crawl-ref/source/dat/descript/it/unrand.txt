@@ -45,10 +45,6 @@ Sfortunatamente, i loro vividi colori furono la loro disgrazia, poiché
 allertavano le potenziali prede. Adesso sono estinti, e questo prezioso
 artefatto è una delle ultime prove della loro passata esistenza.
 %%%%
-demon blade "Bloodbane"
-
-Porta la macchia di un inumano folle.
-%%%%
 scimitar of Flaming Death
 
 Fumo!

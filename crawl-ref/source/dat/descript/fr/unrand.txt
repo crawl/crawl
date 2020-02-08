@@ -85,10 +85,6 @@ Malheureusement, leurs couleurs vives firent leur perte, car elles alertaient
 leurs proies potentielles. Ils sont maintenant presque tous éteints, et cette
 précieuse relique est l'une des dernières preuves de leur existence.
 %%%%
-demon blade "Bloodbane"
-
-Elle porte la soif sanglante d'un fou inhumain.
-%%%%
 scimitar of Flaming Death
 
 Ça fume !
