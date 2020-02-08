@@ -332,12 +332,12 @@ cloak of Flash
 
 A cloak that twitches and jerks without any intervention.
 %%%%
-boots of the Assassin
+hood of the Assassin
 
-A pair of soft boots, specially designed by the Assassin's Guild, that allow
-the wearer to sense potential victims nearby. They also allow the wearer to
-easily find vulnerabilities when attacking unaware opponents, allowing
-effective stabbing attacks with any weapon.
+A soft hood, enchanted by members of the Assassin's Guild to allow the wearer
+to sense potential victims nearby. It also allows the wearer to easily spot
+vulnerabilities when attacking unaware opponents, allowing effective stabbing
+attacks with any weapon.
 %%%%
 Lear's hauberk
 

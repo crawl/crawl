@@ -281,12 +281,6 @@ cloak of Flash
 
 Une cape vibrante.
 %%%%
-boots of the Assassin
-
-Des bottes souples, conçue spécialement par la Guilde des Assassins. Elles
-permettent au porteur de sentir la présence de victimes potentielles et le rend
-plus à même de trouver les points faibles de ses victimes.
-%%%%
 Lear's hauberk
 
 Un haubert d'or de bonne facture qui couvre toutes les parties du corps de son

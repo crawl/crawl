@@ -209,12 +209,6 @@ cloak of Flash
 
 En vibrerende kappe.
 %%%%
-boots of the Assassin
-
-Et par bløde støvler, som er omhyggeligt formgivet af Snigmordernes Lav. De gør
-bæreren mere opmærksom på potentielle ofre og bedre til at få øje på svagheder
-hos uopmærksomme ofre.
-%%%%
 Lear's hauberk
 
 En veludført, gylden kjortel af ringbrynje, som dækker alle brugerens lemmer.
