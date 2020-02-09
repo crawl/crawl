@@ -823,6 +823,10 @@ static formatted_string _describe_god_powers(god_type which_god)
                 default:
                     break;
             }
+            have_any = true;
+            desc.cprintf("% heals you little by little when you are "
+                "in a holy cloud.\n",
+                uppercase_first(god_name(which_god)).c_str());
         }
 
         const char *how = (prot_chance >= 85) ? "carefully" :

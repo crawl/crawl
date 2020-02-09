@@ -30,6 +30,7 @@
 #include "mon-death.h"
 #include "mon-place.h"
 #include "nearby-danger.h" // Compass (for random_walk, CloudGenerator)
+#include "player-stats.h"
 #include "religion.h"
 #include "shout.h"
 #include "spl-util.h"
@@ -1341,7 +1342,17 @@ int actor_apply_cloud(actor *act)
     const beam_type cloud_flavour = _cloud2beam(cloud.type);
 
     if (actor_cloud_immune(*act, cloud))
+    {
+        if (player)
+        {
+            if (you.religion == GOD_ELYVILON && you.piety >= piety_breakpoint(0))
+            {
+                if (cloud.type == CLOUD_HOLY)
+                    inc_hp(2 + random2(2));
+            }
+        }
         return 0;
+    }
 
     const int resist = _actor_cloud_resist(act, cloud);
     const int cloud_max_base_damage =
