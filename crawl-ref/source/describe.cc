@@ -1560,19 +1560,9 @@ static string _describe_point_change(int points)
 {
     string point_diff_description;
 
-    if (points < 0){
-        point_diff_description += "fall ";
-        point_diff_description += to_string(-1 * points);
-    }else{
-        point_diff_description += "rise ";
-        point_diff_description += to_string(points);
-    }
-
-    if (points == 1 || points == -1){
-        point_diff_description += " point";
-    }else{
-        point_diff_description += " points";
-    }
+    point_diff_description += make_stringf("%s by %d",
+                                           points > 0 ? "increase" : "decrease",
+                                           abs(points));
 
     return point_diff_description;
 }
@@ -1584,12 +1574,15 @@ static string _describe_point_diff(int original,
 
     int difference = changed - original;
 
+    if (difference == 0)
+        return "remain unchanged.\n";
+
     description += _describe_point_change(difference);
     description += " (";
     description += to_string(original);
     description += " -> ";
     description += to_string(changed);
-    description += ")\n";
+    description += ").\n";
 
     return description;
 }
@@ -1854,7 +1847,7 @@ static string _describe_armour(const item_def &item, bool verbose)
 
     }
 
-    if (item_ident(item, ISFLAG_KNOW_PLUSES))
+    if (item_ident(item, ISFLAG_KNOW_PLUSES) && !is_shield(item))
         description += _armour_ac_change(item);
 
     return description;
