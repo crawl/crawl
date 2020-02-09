@@ -1327,7 +1327,7 @@ DEPTH: Shoals, !Shoals:$
 ORIENT: float
 KMONS: P = plant
 MONS: sea snake, merfolk aquamancer
-ITEM: buckler ego:reflection / shield ego:reflection \
+ITEM: buckler ego:reflection / hoplon ego:reflection \
       / pavise ego:reflection
 KPROP: . = no_tide
 NSUBST: " = 1:2 / 1:1 / 3=1., _ = 1:2 / 1:1 / 3=1.

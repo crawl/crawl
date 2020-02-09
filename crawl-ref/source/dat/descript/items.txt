@@ -933,7 +933,7 @@ scroll of enchant armour
 
 A scroll that places an enchantment on a piece of armour chosen by the reader.
 Body armour and bardings can be enchanted up to the same value as their base
-AC. Bucklers, shields and pavises can be enchanted up to +3, +5 or +8
+AC. Bucklers, hoplons and pavises can be enchanted up to +3, +5 or +8
 respectively, and other armour can be enchanted up to +2. Magical artefacts
 cannot be enchanted at all.
 %%%%
@@ -1024,7 +1024,7 @@ scythe
 
 A farm implement, usually only used by untrained mobs in combat.
 %%%%
-shield
+hoplon
 
 A piece of wood and metal, to be strapped on one arm for defence. It is
 cumbersome to wear, and impedes the evasion, spellcasting ability, and attack

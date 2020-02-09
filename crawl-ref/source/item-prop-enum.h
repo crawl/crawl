@@ -40,7 +40,7 @@ enum armour_type
 
     ARM_BUCKLER, // order of shields matters
     ARM_FIRST_SHIELD = ARM_BUCKLER,
-    ARM_SHIELD,
+    ARM_HOPLON,
     ARM_PAVISE,
     ARM_LAST_SHIELD = ARM_PAVISE,
 

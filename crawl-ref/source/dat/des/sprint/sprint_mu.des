@@ -833,7 +833,7 @@ KMONS: b = patrolling Joseph hd:5 hp:150 ; quarterstaff ego:freezing \
  . dart ego:curare q:7
 : else
 KMONS: a = patrolling Donald ; war axe ego:holy_wrath . scale mail \
- . shield ego:reflection
+ . hoplon ego:reflection
 KMONS: b = patrolling Frances ; war axe ego:holy_wrath \
  . dart ego:curare q:7
 :end
@@ -919,7 +919,7 @@ MONS: vault guard ; short sword ego:electrocution | long sword ego:flaming |\
       chain mail ego:poison_resistance | chain mail ego:cold_resistance |\
       scale mail ego:poison_resistance | scale mail ego:cold_resistance |\
       plate armour ego:fire_resistance . pavise ego:reflection |\
-      shield ego:protection | pavise ego:positive_energy
+      hoplon ego:protection | pavise ego:positive_energy
 MONS: stone giant / shadow dragon / quicksilver dragon / golden dragon /\
       titan / fire giant / frost giant
 MONS: skeletal warrior

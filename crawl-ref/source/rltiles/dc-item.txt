@@ -425,19 +425,19 @@ buckler3
 
 buckler_spriggan ARM_BUCKLER_SPRIGGAN
 
-shield1 ARM_SHIELD
-shield2
-shield3
+hoplon1 ARM_HOPLON
+hoplon2
+hoplon3
 
 pavise1 ARM_PAVISE
 pavise2
 pavise3
 
-shield_dd SHIELD_DEEP_DWARF
-shield_dd_scion SHIELD_DEEP_DWARF_SCION
+hoplon_dd HOPLON_DEEP_DWARF
+hoplon_dd_scion HOPLON_DEEP_DWARF_SCION
 pavise_dd_dk PAVISE_DEEP_DWARF_DEATH_KNIGHT
 %rim 0
-shield_donald SHIELD_DONALD
+hoplon_donald HOPLON_DONALD
 pavise_louise PAVISE_LOUISE
 %rim 1
 

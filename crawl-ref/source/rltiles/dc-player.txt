@@ -814,13 +814,13 @@ buckler_rb BUCKLER_RB
 buckler_green BUCKLER_GREEN
 buckler_spiral BUCKLER_SPIRAL BUCKLER_LAST_NORM
 
-shield_knight_blue SHIELD_KNIGHT_BLUE SHIELD_FIRST_NORM
-shield_knight_gray SHIELD_KNIGHT_GRAY
-shield_knight_rw SHIELD_KNIGHT_RW
-shield_kite1 SHIELD_KITE1
-shield_kite2 SHIELD_KITE2
-shield_kite3 SHIELD_KITE3
-shield_kite4 SHIELD_KITE4 SHIELD_LAST_NORM
+hoplon_knight_blue HOPLON_KNIGHT_BLUE HOPLON_FIRST_NORM
+hoplon_knight_gray HOPLON_KNIGHT_GRAY
+hoplon_knight_rw HOPLON_KNIGHT_RW
+hoplon_kite1 HOPLON_KITE1
+hoplon_kite2 HOPLON_KITE2
+hoplon_kite3 HOPLON_KITE3
+hoplon_kite4 HOPLON_KITE4 HOPLON_LAST_NORM
 
 pavise_long_red PAVISE_LONG_RED PAVISE_FIRST_NORM
 pavise_gold PAVISE_GOLD
@@ -833,41 +833,41 @@ pavise_spiral PAVISE_SPIRAL PAVISE_LAST_NORM
 buckler_spriggan BUCKLER_SPRIGGAN
 buckler_warlock BUCKLER_WARLOCK
 
-shield_donald SHIELD_DONALD
-shield_bullseye SHIELD_BULLSEYE
-shield_gong SHIELD_GONG
-shield_of_resistance SHIELD_OF_RESISTANCE
+hoplon_donald HOPLON_DONALD
+hoplon_bullseye HOPLON_BULLSEYE
+hoplon_gong HOPLON_GONG
+hoplon_of_resistance HOPLON_OF_RESISTANCE
 
 pavise_of_ignorance PAVISE_OF_IGNORANCE
 pavise_louise PAVISE_LOUISE
 
 %sdir player/hand2/doll_only
 
-shield_middle_round SHIELD_MIDDLE_ROUND
-shield_skull SHIELD_SKULL
-shield_round_white SHIELD_ROUND_WHITE
+hoplon_middle_round HOPLON_MIDDLE_ROUND
+hoplon_skull HOPLON_SKULL
+hoplon_round_white HOPLON_ROUND_WHITE
 boromir BOROMIR
-shield_round1 SHIELD_ROUND1
-shield_round2 SHIELD_ROUND2
-shield_round3 SHIELD_ROUND3
-shield_round4 SHIELD_ROUND4
-shield_round5 SHIELD_ROUND5
-shield_round6 SHIELD_ROUND6
-shield_round7 SHIELD_ROUND7
+hoplon_round1 HOPLON_ROUND1
+hoplon_round2 HOPLON_ROUND2
+hoplon_round3 HOPLON_ROUND3
+hoplon_round4 HOPLON_ROUND4
+hoplon_round5 HOPLON_ROUND5
+hoplon_round6 HOPLON_ROUND6
+hoplon_round7 HOPLON_ROUND7
 
-shield_middle_unicorn SHIELD_MIDDLE_UNICORN
-shield_middle_gray SHIELD_MIDDLE_GRAY
-shield_diamond_yellow SHIELD_DIAMOND_YELLOW
-shield_middle_brown SHIELD_MIDDLE_BROWN
-shield_middle_black SHIELD_MIDDLE_BLACK
-shield_middle_cyan SHIELD_MIDDLE_CYAN
-shield_middle_ethn SHIELD_MIDDLE_ETHN
-shield_long_cross SHIELD_LONG_CROSS
-shield_shaman SHIELD_SHAMAN
-gil-galad SHIELD_GILGALAD
+hoplon_middle_unicorn HOPLON_MIDDLE_UNICORN
+hoplon_middle_gray HOPLON_MIDDLE_GRAY
+hoplon_diamond_yellow HOPLON_DIAMOND_YELLOW
+hoplon_middle_brown HOPLON_MIDDLE_BROWN
+hoplon_middle_black HOPLON_MIDDLE_BLACK
+hoplon_middle_cyan HOPLON_MIDDLE_CYAN
+hoplon_middle_ethn HOPLON_MIDDLE_ETHN
+hoplon_long_cross HOPLON_LONG_CROSS
+hoplon_shaman HOPLON_SHAMAN
+gil-galad HOPLON_GILGALAD
 
-shield_dd SHIELD_DEEP_DWARF
-shield_dd_scion SHIELD_DEEP_DWARF_SCION
+hoplon_dd HOPLON_DEEP_DWARF
+hoplon_dd_scion HOPLON_DEEP_DWARF_SCION
 pavise_dd_dk PAVISE_DEEP_DWARF_DEATH_KNIGHT
 
 ## books

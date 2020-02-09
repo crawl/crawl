@@ -203,12 +203,12 @@ static armour_type _acquirement_armour_for_slot(equipment_type slot_type,
  *
  * Weighted by Shields skill & the secret racial shield bonus.
  *
- * Ratios by shields skill & player size (B = buckler, S = shield, L = lg. sh.)
+ * Ratios by shields skill & player size (B = buckler, H = hoplon, P = pavise)
  *
  *     Shields    0           5         10          15        20
- * Large:   {6B}/5S/4L  ~{1B}/1S/1L  ~{1B}/5S/7L  ~2S/3L     1S/2L
- * Med.:        2B/1S    6B/4S/1L      2B/2S/1L   4B/8S/3L   1S/1L
- * Small:      ~3B/1S     ~5B/2S      ~2B/1S     ~3B/2S     ~1B/1S
+ * Large:   {6B}/5H/4P  ~{1B}/1H/1P  ~{1B}/5H/7P  ~2H/3P     1H/2P
+ * Med.:        2B/1H    6B/4H/1P      2B/2H/1P   4B/8H/3P   1H/1P
+ * Small:      ~3B/1H     ~5B/2H      ~2B/1H     ~3B/2H     ~1B/1H
  *
  * XXX: possibly shield skill should count for more for non-med races?
  *
@@ -220,7 +220,7 @@ static armour_type _acquirement_shield_type()
     vector<pair<armour_type, int>> weights = {
         { ARM_BUCKLER,       player_shield_racial_factor() * 4 * scale
                                 - _skill_rdiv(SK_SHIELDS, scale) },
-        { ARM_SHIELD,        10 * scale },
+        { ARM_HOPLON,        10 * scale },
         { ARM_PAVISE,  20 * scale
                              - player_shield_racial_factor() * 4 * scale
                              + _skill_rdiv(SK_SHIELDS, scale / 2) },
@@ -352,7 +352,7 @@ static armour_type _useless_armour_type()
         {
             vector<pair<armour_type, int>> shield_weights = {
                 { ARM_BUCKLER,       1 },
-                { ARM_SHIELD,        1 },
+                { ARM_HOPLON,        1 },
                 { ARM_PAVISE,  1 },
             };
 

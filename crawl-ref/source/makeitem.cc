@@ -780,7 +780,7 @@ static special_armour_type _generate_armour_type_ego(armour_type type)
     // TODO: move this into data
     switch (type)
     {
-    case ARM_SHIELD:
+    case ARM_HOPLON:
     case ARM_PAVISE:
     case ARM_BUCKLER:
         return random_choose_weighted(1, SPARM_RESISTANCE,
@@ -1030,7 +1030,7 @@ static armour_type _get_random_armour_type(int item_level)
                                          10, ARM_HELMET,
                                          2, ARM_HAT,
                                          // Shield slot
-                                         4, ARM_SHIELD,
+                                         4, ARM_HOPLON,
                                          6, ARM_BUCKLER,
                                          2, ARM_PAVISE);
     }

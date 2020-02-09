@@ -280,9 +280,9 @@ tileidx_t tilep_equ_shield(const item_def &item)
 
     switch (item.sub_type)
     {
-        case ARM_SHIELD:
-            return _modrng(item.rnd, TILEP_HAND2_SHIELD_FIRST_NORM,
-                           TILEP_HAND2_SHIELD_LAST_NORM);
+        case ARM_HOPLON:
+            return _modrng(item.rnd, TILEP_HAND2_HOPLON_FIRST_NORM,
+                           TILEP_HAND2_HOPLON_LAST_NORM);
         case ARM_BUCKLER:
             return _modrng(item.rnd, TILEP_HAND2_BUCKLER_FIRST_NORM,
                            TILEP_HAND2_BUCKLER_LAST_NORM);
@@ -952,7 +952,7 @@ void tilep_job_default(int job, dolls_data *doll)
             break;
 
         case JOB_GLADIATOR:
-            parts[TILEP_PART_HAND2] = TILEP_HAND2_SHIELD_ROUND2;
+            parts[TILEP_PART_HAND2] = TILEP_HAND2_HOPLON_ROUND2;
             parts[TILEP_PART_BODY]  = TILEP_BODY_BELT1;
             parts[TILEP_PART_LEG]   = TILEP_LEG_BELT_GRAY;
             parts[TILEP_PART_BOOTS] = TILEP_BOOTS_MIDDLE_GRAY;

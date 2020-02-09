@@ -783,7 +783,7 @@ maybe_bool you_can_wear(equipment_type eq, bool temp)
         break;
 
     case EQ_SHIELD:
-        // No races right now that can wear ARM_PAVISE but not ARM_SHIELD
+        // No races right now that can wear ARM_PAVISE but not ARM_HOPLON
         dummy.sub_type = ARM_PAVISE;
         if (you.body_size(PSIZE_TORSO, !temp) < SIZE_MEDIUM)
             alternate.sub_type = ARM_BUCKLER;
