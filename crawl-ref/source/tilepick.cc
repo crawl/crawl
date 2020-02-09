@@ -2280,8 +2280,8 @@ static tileidx_t _tileidx_armour_base(const item_def &item)
     case ARM_CRYSTAL_PLATE_ARMOUR:
         return TILE_ARM_CRYSTAL_PLATE_ARMOUR;
 
-    case ARM_SHIELD:
-        return TILE_ARM_SHIELD;
+    case ARM_KITE_SHIELD:
+        return TILE_ARM_KITE_SHIELD;
 
     case ARM_CLOAK:
         return TILE_ARM_CLOAK;

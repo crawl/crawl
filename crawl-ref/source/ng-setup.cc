@@ -135,7 +135,7 @@ item_def* newgame_make_item(object_class_type base,
         if (item.sub_type == ARM_HELMET || item.sub_type == ARM_HAT)
             item.sub_type = ARM_HAT;
         else if (item.sub_type == ARM_BUCKLER)
-            item.sub_type = ARM_SHIELD;
+            item.sub_type = ARM_KITE_SHIELD;
         else if (is_shield(item))
             item.sub_type = ARM_BUCKLER;
         else

@@ -822,7 +822,7 @@ TILE_EQ: glove_black
 SLAY:    5
 
 NAME:    shield of Resistance
-OBJ:     OBJ_ARMOUR/ARM_SHIELD
+OBJ:     OBJ_ARMOUR/ARM_KITE_SHIELD
 PLUS:    +2
 COLOUR:  LIGHTRED
 TILE:    urand_resistance
@@ -929,7 +929,7 @@ LIFE:     1
 BOOL:     poison
 
 NAME:     shield of the Gong
-OBJ:      OBJ_ARMOUR/ARM_SHIELD
+OBJ:      OBJ_ARMOUR/ARM_KITE_SHIELD
 FALLBACK: OBJ_ARMOUR/ARM_PAVISE
 PLUS:     +18
 COLOUR:   ETC_GOLD

@@ -596,7 +596,7 @@ scythe
 sling
 
 布切れと皮紐でできた投石器だ。それほどのダメージは期待できない。 Unlike with
-other launchers, wearing a shield does not slow down its rate of fire.
+other launchers, wearing a kite shield does not slow down its rate of fire.
 %%%%
 sling bullet
 

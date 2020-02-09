@@ -1559,7 +1559,7 @@ NAME: nicolae_vaults_blade_armed_guards
 KMONS: 2 = deep elf knight ; battleaxe | broad axe | flail | glaive | great mace | \
    halberd | hand axe | long sword | morningstar | scimitar | short sword | \
    trident | war axe . chain mail | plate armour . \
-   shield | buckler w:20 | nothing w:60
+   kite shield | buckler w:20 | nothing w:60
 : elven_blade_entry(_G)
 MAP
       =

@@ -916,7 +916,7 @@ scythe
 Un outil agricole, généralement utilisée au combat par des gens
 inexpérimentées.
 %%%%
-shield
+kite shield
 
 Une planche de bois avec du métal que l'on attache au bras pour se défendre. Il
 est un peu encombrant à porter, et il peut réduire la vitesse de frappe des

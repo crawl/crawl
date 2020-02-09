@@ -732,7 +732,7 @@ WEIGHT:  5
 MONS:    rakshasa, guardian serpent / great orb of eyes
 ITEM:    potion of might / potion of haste / potion of heal wounds w:12 / \
          wand of iceblast / wand of acid / wand of paralysis / \
-         ring mail good_item / chain mail good_item w:12 / shield / \
+         ring mail good_item / chain mail good_item w:12 / kite shield / \
          spear good_item / trident good_item / any weapon w:12 / any w:2
 SUBST:   x = ccccvbb
 MAP

@@ -1966,7 +1966,7 @@ static armour_type _hepliaklqana_shield_type(monster_type mc, int HD)
     if (mc != MONS_ANCESTOR_KNIGHT)
         return NUM_ARMOURS;
     if (HD < 13)
-        return ARM_SHIELD;
+        return ARM_KITE_SHIELD;
     return ARM_PAVISE;
 }
 

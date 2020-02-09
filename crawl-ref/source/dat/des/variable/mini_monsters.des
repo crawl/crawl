@@ -1122,7 +1122,7 @@ TAGS:   no_monster_gen
 DEPTH:  D:12-, Shoals
 MONS:   harpy, basilisk, catoblepas
 KMONS:  P = withered plant
-ITEM:   shield ego:reflection ident:type / \
+ITEM:   kite shield ego:reflection ident:type / \
         buckler ego:reflection ident:type w:1 / \
         pavise ego:reflection ident:type w:1
 ITEM:   stone
@@ -6596,18 +6596,18 @@ ENDMAP
 NAME:    sword_in_stone
 TAGS:    no_monster_gen patrolling vaults_hard transparent
 DEPTH:   D:5-, Depths, !Depths:$, Vaults, Orc, Elf
-KMONS:   A = gnoll sergeant ; trident . scale mail | chain mail . shield
-KMONS:   B = wight ; falchion | long sword . ring mail | scale mail . shield | nothing
+KMONS:   A = gnoll sergeant ; trident . scale mail | chain mail . kite shield
+KMONS:   B = wight ; falchion | long sword . ring mail | scale mail . kite shield | nothing
 KMONS:   C = Blork the orc / orc warrior ; great sword . chain mail | plate armour, \
                              orc warrior ; great sword . chain mail | plate armour / nothing
-KMONS:   D = Eustachio / orc warrior ; long sword | falchion . chain mail . shield, \
-                         orc warrior ; long sword | falchion . chain mail . shield / nothing
-KMONS:   E = Joseph / orc knight ; long sword | scimitar . chain mail . shield, \
-                      orc knight ; long sword | scimitar . chain mail . shield / nothing
+KMONS:   D = Eustachio / orc warrior ; long sword | falchion . chain mail . kite shield, \
+                         orc warrior ; long sword | falchion . chain mail . kite shield / nothing
+KMONS:   E = Joseph / orc knight ; long sword | scimitar . chain mail . kite shield, \
+                      orc knight ; long sword | scimitar . chain mail . kite shield / nothing
 KMONS:   F = Urug / orc knight ; rapier | long sword . leather armour . buckler | nothing, \
                     orc knight ; rapier | long sword . leather armour . buckler | nothing / nothing
-KMONS:   G = Erica / wizard ; long sword . robe | leather armour . shield, \
-                     wizard ; long sword . robe | leather armour . shield / nothing
+KMONS:   G = Erica / wizard ; long sword . robe | leather armour . kite shield, \
+                     wizard ; long sword . robe | leather armour . kite shield / nothing
 KMONS:   H = Harold / deep elf knight, deep elf knight / nothing
 KMONS:   I = Donald / orc warlord, orc warlord / nothing
 KMONS:   J = Louise / hell knight, hell knight / nothing

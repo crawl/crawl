@@ -560,7 +560,7 @@ scythe
 
 Un ápero de granja, normalmente no apto para el combate.
 %%%%
-shield
+kite shield
 
 Una pieza de metal diseñada para llevarse atada en un brazo. Es pesada de
 llevar y hace algo más lenta la velocidad a la que se puede atacar.

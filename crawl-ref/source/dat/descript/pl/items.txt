@@ -625,7 +625,7 @@ scythe
 
 Narzędzie rolnicze, niezbyt przydatne do walki.
 %%%%
-shield
+kite shield
 
 Kawał metalu, z uchwytem i paskami umożliwiającymi przyczepienie do ramienia.
 Pozwala blokować ciosy, jednak utrudnia ruchy co spowalnia szybkość ataków oraz

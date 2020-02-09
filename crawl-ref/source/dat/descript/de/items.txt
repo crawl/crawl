@@ -664,7 +664,7 @@ scythe
 Ein Farm-Werkzeug, das gewöhnlich nur durch ungeschulte Mengen im Kampf
 verwendet ist.
 %%%%
-shield
+kite shield
 
 Ein Stück von Holz und Metall, um auf einem Arm für die Verteidigung
 festgeschnallt zu werden. Es ist beschwerlich, um, und ohne Ausbildung zu

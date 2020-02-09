@@ -785,7 +785,7 @@ scythe
 
 Et landbrugsredskab, der som regel bruges af utrænet bærme i kamp.
 %%%%
-shield
+kite shield
 
 Et stykke træ og metal, som spændes på den ene arm til beskyttelse. Det er
 uhåndterligt at gå med, og uden træning vil det få dig til at angribe

@@ -525,7 +525,7 @@ static void _wanderer_good_equipment(skill_type & skill)
 
 
     case SK_SHIELDS:
-        newgame_make_item(OBJ_ARMOUR, ARM_SHIELD);
+        newgame_make_item(OBJ_ARMOUR, ARM_KITE_SHIELD);
         break;
 
     case SK_SPELLCASTING:
