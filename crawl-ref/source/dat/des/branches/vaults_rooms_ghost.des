@@ -326,8 +326,8 @@ ENDMAP
 
 NAME:   biasface_vaults_ghost_orc_armoury
 TAGS:   vaults_orient_s
-ITEM:   boots good_item / helmet good_item / hat good_item / \
-        gloves good_item / cloak good_item
+ITEM:   pair of boots good_item / helmet good_item / hat good_item / \
+        pair of gloves good_item / cloak good_item
 ITEM:   any armour good_item, any weapon good_item, any jewellery good_item
 : item(dgn.loot_potions .. " / " .. dgn.loot_scrolls)
 KMONS:  O = player ghost
@@ -354,8 +354,8 @@ TAGS:   vaults_orient_s
 WEIGHT: 5
 ITEM:   potion of mutation ident:type q:1
 : item(dgn.loot_potions)
-ITEM:   hat randart / robe randart / gloves randart / boots randart / \
-        cloak randart
+ITEM:   hat randart / robe randart / pair of gloves randart / \
+        pair of boots randart / cloak randart
 KITEM:  O = potion of cancellation q:2 ident:type
 KMONS:  O = player ghost
 MONS:   shapeshifter, glowing orange brain, very ugly thing
