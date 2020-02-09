@@ -211,12 +211,7 @@ const vector<god_power> god_powers[NUM_GODS] =
     },
 
     // Elyvilon
-    { { 1, ABIL_ELYVILON_LESSER_HEALING, "provide lesser healing for yourself" },
-      { 2, ABIL_ELYVILON_HEAL_OTHER, "heal and attempt to pacify others" },
-      { 3, ABIL_ELYVILON_PURIFICATION, "purify yourself" },
-      { 4, ABIL_ELYVILON_GREATER_HEALING, "provide greater healing for yourself" },
-      { 5, ABIL_ELYVILON_DIVINE_VIGOUR, "call upon Elyvilon for divine vigour" },
-      { 1, ABIL_ELYVILON_LIFESAVING, "call on Elyvilon to save your life" },
+    { { 2, ABIL_ELYVILON_HEAL_OTHER, "heal and attempt to pacify others" },
     },
 
     // Lugonu
@@ -2864,8 +2859,6 @@ void excommunication(bool voluntary, god_type new_god)
 
     case GOD_ELYVILON:
         you.duration[DUR_LIFESAVING] = 0;
-        if (you.duration[DUR_DIVINE_VIGOUR])
-            elyvilon_remove_divine_vigour();
         you.exp_docked[old_god] = exp_needed(min<int>(you.max_level, 27) + 1)
                                   - exp_needed(min<int>(you.max_level, 27));
         you.exp_docked_total[old_god] = you.exp_docked[old_god];

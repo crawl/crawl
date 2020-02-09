@@ -447,18 +447,8 @@ static const ability_def Ability_List[] =
       {fail_basis::invo, piety_breakpoint(5), 0, 1}, abflag::none },
 
     // Elyvilon
-    { ABIL_ELYVILON_LIFESAVING, "Divine Protection",
-      0, 0, 0, 0, {fail_basis::invo}, abflag::piety },
-    { ABIL_ELYVILON_LESSER_HEALING, "Lesser Healing", 1, 0, 100,
-      generic_cost::range(0, 1), {fail_basis::invo, 30, 6, 20}, abflag::none },
     { ABIL_ELYVILON_HEAL_OTHER, "Heal Other",
       2, 0, 250, 2, {fail_basis::invo, 40, 5, 20}, abflag::none },
-    { ABIL_ELYVILON_PURIFICATION, "Purification",
-      3, 0, 300, 3, {fail_basis::invo, 20, 5, 20}, abflag::conf_ok },
-    { ABIL_ELYVILON_GREATER_HEALING, "Greater Healing",
-      2, 0, 250, 3, {fail_basis::invo, 40, 5, 20}, abflag::none },
-    { ABIL_ELYVILON_DIVINE_VIGOUR, "Divine Vigour",
-      0, 0, 600, 6, {fail_basis::invo, 80, 4, 25}, abflag::none },
 
     // Lugonu
     { ABIL_LUGONU_ABYSS_EXIT, "Depart the Abyss",
@@ -2657,41 +2647,6 @@ static spret _do_ability(const ability_def& abil, bool fail)
         return divine_exegesis(fail);
         break;
     }
-
-    case ABIL_ELYVILON_LIFESAVING:
-        fail_check();
-        if (you.duration[DUR_LIFESAVING])
-            mpr("You renew your call for help.");
-        else
-        {
-            mprf("You beseech %s to protect your life.",
-                 god_name(you.religion).c_str());
-        }
-        // Might be a decrease, this is intentional (like Yred).
-        you.duration[DUR_LIFESAVING] = 9 * BASELINE_DELAY
-                     + random2avg(you.piety * BASELINE_DELAY, 2) / 10;
-        break;
-
-    case ABIL_ELYVILON_LESSER_HEALING:
-    case ABIL_ELYVILON_GREATER_HEALING:
-    {
-        fail_check();
-        int pow = 0;
-        if (abil.ability == ABIL_ELYVILON_LESSER_HEALING)
-            pow = 3 + you.skill_rdiv(SK_INVOCATIONS, 1, 6);
-        else
-            pow = 10 + you.skill_rdiv(SK_INVOCATIONS, 1, 3);
-        pow = min(50, pow);
-        const int healed = pow + roll_dice(2, pow) - 2;
-        mpr("You are healed.");
-        inc_hp(healed);
-        break;
-    }
-
-    case ABIL_ELYVILON_PURIFICATION:
-        fail_check();
-        elyvilon_purification();
-        break;
 
     case ABIL_ELYVILON_HEAL_OTHER:
     {
