@@ -8,6 +8,7 @@
 #include "spl-goditem.h"
 
 #include "cleansing-flame-source-type.h"
+#include "cloud.h"
 #include "coordit.h"
 #include "database.h"
 #include "directn.h"
@@ -1375,5 +1376,39 @@ spret cast_random_effects(int pow, bolt& beam, bool fail)
 
     zapping(zap, pow, beam, false);
 
+    return spret::success;
+}
+
+spret ely_holy_mist(bool fail)
+{
+    int pow = 0;
+    pow = 10 + you.skill_rdiv(SK_INVOCATIONS, 1, 3);
+    pow = min(50, pow);
+    int dur = pow + roll_dice(2, pow) - 2;
+
+    cloud_struct* cloud = cloud_at(you.pos());
+
+    if (cloud && !(cloud->type == CLOUD_HOLY))
+    {
+        mpr("There's already a cloud here!");
+        return spret::abort;
+    }
+
+    fail_check();
+
+    if (cloud && cloud->type == CLOUD_HOLY)
+    {
+        mpr("The mist shine with new energy!");
+        const int extra_dur = random2(3) + dur;
+        cloud->decay += extra_dur;
+        cloud->source = you.mid;
+        cloud->set_whose(KC_YOU);
+    }
+    else
+    {
+        you.props["hmist_dur"] = dur;
+        mpr("The mist shine!");
+        place_cloud(CLOUD_HOLY, you.pos(), you.props["hmist_dur"], &you);
+    }
     return spret::success;
 }

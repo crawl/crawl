@@ -350,6 +350,14 @@ Brothers in Arms ability
 Summons huge angry allies to wreak havoc.
 %%%%
 # Elyvilon
+Mist of Purification ability
+
+Purges your body of negative effects such as poison, confusion, slowness,
+petrification, rotting, and sickness, and fully restores any lost strength,
+dexterity or intelligence and then create a holy cloud under your feet.
+
+The duration is increases with Invocations skill.
+%%%%
 Heal Other ability
 
 Heals a creature other than yourself by a moderate amount, depending on

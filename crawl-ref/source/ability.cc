@@ -447,6 +447,8 @@ static const ability_def Ability_List[] =
       {fail_basis::invo, piety_breakpoint(5), 0, 1}, abflag::none },
 
     // Elyvilon
+    { ABIL_ELYVILON_PURIFICATION, "Mist of Purification",
+      2, 0, 250, 2, {fail_basis::invo, 40, 5, 20}, abflag::conf_ok },
     { ABIL_ELYVILON_HEAL_OTHER, "Heal Other",
       2, 0, 250, 2, {fail_basis::invo, 40, 5, 20}, abflag::none },
 
@@ -1494,22 +1496,6 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         {
             if (!quiet)
                 mpr("You have nothing to donate!");
-            return false;
-        }
-        return true;
-
-    case ABIL_ELYVILON_PURIFICATION:
-        if (!you.disease && !you.duration[DUR_POISONING]
-            && !you.duration[DUR_CONF] && !you.duration[DUR_SLOW]
-            && !you.petrifying()
-            && you.strength(false) == you.max_strength()
-            && you.intel(false) == you.max_intel()
-            && you.dex(false) == you.max_dex()
-            && !player_rotted()
-            && !you.duration[DUR_WEAK])
-        {
-            if (!quiet)
-                mpr("Nothing ails you!");
             return false;
         }
         return true;
@@ -2647,6 +2633,14 @@ static spret _do_ability(const ability_def& abil, bool fail)
         return divine_exegesis(fail);
         break;
     }
+
+    case ABIL_ELYVILON_PURIFICATION:
+        fail_check();
+        elyvilon_purification();
+        {
+            return ely_holy_mist(fail);
+        }
+        break;
 
     case ABIL_ELYVILON_HEAL_OTHER:
     {

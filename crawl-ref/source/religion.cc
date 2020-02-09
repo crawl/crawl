@@ -211,7 +211,8 @@ const vector<god_power> god_powers[NUM_GODS] =
     },
 
     // Elyvilon
-    { { 2, ABIL_ELYVILON_HEAL_OTHER, "heal and attempt to pacify others" },
+    { { 1, ABIL_ELYVILON_PURIFICATION, "purify yourself and then Create a holy cloud" },
+      { 2, ABIL_ELYVILON_HEAL_OTHER, "heal and attempt to pacify others" },
     },
 
     // Lugonu

@@ -3494,6 +3494,8 @@ tileidx_t tileidx_ability(const ability_type ability)
     case ABIL_TROG_BROTHERS_IN_ARMS:
         return TILEG_ABILITY_TROG_BROTHERS_IN_ARMS;
     // Elyvilon
+    case ABIL_ELYVILON_PURIFICATION:
+        return TILEG_ABILITY_ELYVILON_PURIFICATION;
     case ABIL_ELYVILON_HEAL_OTHER:
         return TILEG_ABILITY_ELYVILON_HEAL_OTHER;
     // Lugonu
