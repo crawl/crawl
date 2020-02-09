@@ -790,7 +790,7 @@ KFEAT:  S = general shop type:Mass suffix:Market ; \
         triple sword w:2 | \
         bardiche w:5 | \
         plate armour w:20 | \
-        large shield | \
+        pavise | \
         crystal plate armour w:1
 MAP
 S

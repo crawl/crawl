@@ -250,7 +250,7 @@ storm bow
 Cet arc a la couleur des nuages noirs chargés de pluie et l'odeur de l'ozone
 humide.
 %%%%
-large shield of Ignorance
+pavise of Ignorance
 
 « Un esprit ouvert est comme une forteresse aux portes non verrouillées et sans
 garde. »
@@ -264,7 +264,7 @@ cloak of the Thief
 Elle permet à son porteur d'exceller dans l'art du vol, et peut être évoqué
 pour libérer d’épais nuages de fumée, fort utiles en cas de fuite.
 %%%%
-large shield "Bullseye"
+pavise "Bullseye"
 
 Juste au cas où vous auriez du mal à vous faire toucher.
 %%%%

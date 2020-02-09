@@ -1031,7 +1031,7 @@ dgn.delayed_decay_extra(_G, "D", "dwarf skeleton",
     "    / executioner's axe w:2 " ..
     ", ring mail randart w:50 / " .. heavy_armour .. " / " .. medium_scales ..
     "    / " .. heavy_scales ..
-    ", shield good_item / large shield good_item / " .. dgn.good_aux_armour ..
+    ", shield good_item / pavise good_item / " .. dgn.good_aux_armour ..
     "    / nothing w:80" ..
     ", any wand w:20 / any misc / gold / any scroll / any potion" ..
     "    / nothing w:60")
@@ -1064,7 +1064,7 @@ dgn.delayed_decay_extra(_G, "H", "merfolk skeleton",
     "    / " .. light_scales .. " / " .. medium_scales ..
     ", randbook disc:charms / book of battle" ..
     -- Give this a 1/4 in chance of placing since we guarantee 3 items above.
-    ", buckler good_item / shield good_item / large shield good_item" ..
+    ", buckler good_item / shield good_item / pavise good_item" ..
     "    / " .. dgn.good_aux_armour .. " / any wand w:20 / any misc / gold" ..
     "    / any scroll / any potion / nothing w:480")
 
@@ -1074,7 +1074,7 @@ dgn.delayed_decay_extra(_G, "J", "orc skeleton",
     "    / flail good_item / morningstar good_item / eveningstar" ..
     "    / war axe good_item / broad axe good_item / trident good_item" ..
     "    / demon trident w:5" ..
-    ", shield good_item / large shield good_item w:5" ..
+    ", shield good_item / pavise good_item w:5" ..
     ", ring mail randart w:50 / " .. heavy_armour .. " / " .. medium_scales ..
     "    / " .. heavy_scales ..
     -- Give this a 1/4 in chance of placing since we guarantee 3 items above.
@@ -1091,7 +1091,7 @@ dgn.delayed_decay_extra(_G, "K", "ogre skeleton",
     ", robe good_item w:200 / " .. light_scales .. " / " .. medium_scales ..
     "    / " .. heavy_scales ..
     ", hat good_item w:20 / cloak good_item w:20 / shield good_item" ..
-    "    / large shield good_item / nothing w:60" ..
+    "    / pavise good_item / nothing w:60" ..
     ", randbook w:20 / any wand w:20 / any misc / gold / any scroll" ..
     "    / any potion / nothing w:80")
 
@@ -1127,7 +1127,7 @@ dgn.delayed_decay_extra(_G, "O", "octopode corpse",
     ", any ring w:150 / any magical staff / trident good_item" ..
     "    / demon trident w:5 / glaive good_item w:5 / nothing w:180" ..
     ", any ring w:60 / hat good_item w:20 / buckler good_item w:20" ..
-    "    / shield good_item / large shield good_item / any wand w:20" ..
+    "    / shield good_item / pavise good_item / any wand w:20" ..
     "    / any misc / gold / any scroll / any potion / nothing w:180")
 
 -- Felid Transmuter.

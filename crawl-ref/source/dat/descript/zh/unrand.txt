@@ -119,7 +119,7 @@ storm bow
 
 这张弓的颜色和阴暗的雨云一样，而且还发出潮湿的臭氧味。
 %%%%
-large shield of Ignorance
+pavise of Ignorance
 
 “敞开心房无异于开门揖盗。”
 %%%%
@@ -131,7 +131,7 @@ cloak of the Thief
 
 它使穿戴者变得精通盗术。你也可以手动启动它，让它放出厚厚的烟云来掩护你逃跑。
 %%%%
-large shield "Bullseye"
+pavise "Bullseye"
 
 如果你觉得自己被打中的次数还不够多，那你现在可找到救星了！
 %%%%

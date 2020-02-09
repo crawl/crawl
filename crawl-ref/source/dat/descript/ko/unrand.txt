@@ -178,7 +178,7 @@ storm bow
 어두운 비구름 색의 이 활에서는, 번개가 친 곳에서 맡을 수 있는 오존 특유의
 냄새가 난다.
 %%%%
-large shield of Ignorance
+pavise of Ignorance
 
 “그렇게 개방적인 사고방식은, 마치 빗장도 수비병도 없는 요새와도 같으니라.”
 %%%%
@@ -190,7 +190,7 @@ cloak of the Thief
 
 이 망토는 착용자에게 예술적으로 탁월한 도둑질 능력을 선사한다.
 %%%%
-large shield "Bullseye"
+pavise "Bullseye"
 
 적에게 얻어맞을 경우를 위한, 완벽한 대비책.
 %%%%
