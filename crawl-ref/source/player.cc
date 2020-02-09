@@ -783,8 +783,8 @@ maybe_bool you_can_wear(equipment_type eq, bool temp)
         break;
 
     case EQ_SHIELD:
-        // No races right now that can wear ARM_LARGE_SHIELD but not ARM_SHIELD
-        dummy.sub_type = ARM_LARGE_SHIELD;
+        // No races right now that can wear ARM_PAVISE but not ARM_SHIELD
+        dummy.sub_type = ARM_PAVISE;
         if (you.body_size(PSIZE_TORSO, !temp) < SIZE_MEDIUM)
             alternate.sub_type = ARM_BUCKLER;
         break;
@@ -2267,7 +2267,7 @@ int player_shield_class()
     {
         const item_def& item = you.inv[you.equip[EQ_SHIELD]];
         int size_factor = (you.body_size(PSIZE_TORSO) - SIZE_MEDIUM)
-                        * (item.sub_type - ARM_LARGE_SHIELD);
+                        * (item.sub_type - ARM_PAVISE);
         int base_shield = property(item, PARM_AC) * 2 + size_factor;
 
         // bonus applied only to base, see above for effect:
@@ -2282,7 +2282,7 @@ int player_shield_class()
         int stat = 0;
         if (item.sub_type == ARM_BUCKLER)
             stat = you.dex() * 38;
-        else if (item.sub_type == ARM_LARGE_SHIELD)
+        else if (item.sub_type == ARM_PAVISE)
             stat = you.dex() * 12 + you.strength() * 26;
         else
             stat = you.dex() * 19 + you.strength() * 19;

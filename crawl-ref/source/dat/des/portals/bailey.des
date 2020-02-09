@@ -712,7 +712,7 @@ ITEM:   good_item crystal plate armour / good_item plate armour /\
         good_item fire dragon scales w:5 / good_item steam dragon scales w:5
 ITEM:   good_item cloak / good_item pair of gloves /\
         good_item helmet / good_item pair of boots /\
-        good_item large shield / good_item shield
+        good_item pavise / good_item shield
 : bailey_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx

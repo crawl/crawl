@@ -1565,7 +1565,7 @@ static void _give_shield(monster* mon, int level)
         break;
     case MONS_DAEVA:
     case MONS_MENNAS:
-        make_item_for_monster(mon, OBJ_ARMOUR, ARM_LARGE_SHIELD,
+        make_item_for_monster(mon, OBJ_ARMOUR, ARM_PAVISE,
                               level * 2 + 1, 1);
         break;
 
@@ -1581,7 +1581,7 @@ static void _give_shield(monster* mon, int level)
         if (one_chance_in(3))
         {
             make_item_for_monster(mon, OBJ_ARMOUR,
-                                  one_chance_in(3) ? ARM_LARGE_SHIELD
+                                  one_chance_in(3) ? ARM_PAVISE
                                                    : ARM_SHIELD,
                                   level);
         }
@@ -1591,7 +1591,7 @@ static void _give_shield(monster* mon, int level)
         if (coinflip())
         {
             make_item_for_monster(mon, OBJ_ARMOUR,
-                                  random_choose(ARM_LARGE_SHIELD, ARM_SHIELD),
+                                  random_choose(ARM_PAVISE, ARM_SHIELD),
                                   level);
         }
         break;
@@ -1640,12 +1640,12 @@ static void _give_shield(monster* mon, int level)
         break;
 
     case MONS_LOUISE:
-        shield = make_item_for_monster(mon, OBJ_ARMOUR, ARM_LARGE_SHIELD,
+        shield = make_item_for_monster(mon, OBJ_ARMOUR, ARM_PAVISE,
                                        level * 2 + 1, 1);
         if (shield && !is_artefact(*shield))
         {
-            shield->props["item_tile_name"] = "lshield_louise";
-            shield->props["worn_tile_name"] = "lshield_louise";
+            shield->props["item_tile_name"] = "pavise_louise";
+            shield->props["worn_tile_name"] = "pavise_louise";
             bind_item_tile(*shield);
         }
         break;
@@ -1696,7 +1696,7 @@ static void _give_shield(monster* mon, int level)
 
     case MONS_WARMONGER:
         make_item_for_monster(mon, OBJ_ARMOUR,
-                              random_choose(ARM_LARGE_SHIELD, ARM_SHIELD),
+                              random_choose(ARM_PAVISE, ARM_SHIELD),
                               ISPEC_GOOD_ITEM);
         break;
 

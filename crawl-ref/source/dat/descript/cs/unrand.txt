@@ -129,7 +129,7 @@ storm bow
 Tento luk má barvu temných, bouřkových mraků, a line se z něj zápach vlhkého
 ozónu.
 %%%%
-large shield of Ignorance
+pavise of Ignorance
 
 „Otevřená mysl je jako pevnost jejíž brány jsou neblokované a nehlídané.“
 %%%%
@@ -141,7 +141,7 @@ cloak of the Thief
 
 Umožňuje jeho nositeli, aby vynikl v umění krádeže.
 %%%%
-large shield "Bullseye"
+pavise "Bullseye"
 
 Jen kdybys náhodou měl problém se trefit.
 %%%%

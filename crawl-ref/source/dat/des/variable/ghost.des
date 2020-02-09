@@ -2040,7 +2040,7 @@ NSUBST: - = 1 / 1. / 3=2. / q / r / 3=3. / .
 {{
 kmons("q = naga warrior; " .. wrathful_weapon("warrior", "randart") ..
       "    . nothing w:95 | robe good_item w:95 | naga barding good_item" ..
-      "    . nothing w:40 | shield good_item | large shield good_item")
+      "    . nothing w:40 | shield good_item | pavise good_item")
 }}
 MONS:   naga / salamander
 MONS:   naga warrior
@@ -2255,7 +2255,7 @@ NSUBST: - = q / -
 {{
 kmons("q = naga warrior ; " .. disto_weapon("warrior", "randart") ..
       "    . nothing w:95 | robe good_item w:95 | naga barding good_item" ..
-      "    . nothing w:40 | shield good_item | large shield good_item")
+      "    . nothing w:40 | shield good_item | pavise good_item")
 kmons("r = nagaraja ; " .. disto_weapon("warrior", "randart") ..
       "    . robe good_item w:40 | naga barding good_item")
 }}
@@ -2325,7 +2325,7 @@ NSUBST: - = Hqr / 4=1 / 4=1. / 2=2 / 2=2. / 3 / 3. / 4 / 4. / .
 : elseif you.in_branch("Zot") then
 {{
 kmons("q = draconian knight; " .. disto_weapon("knight", "randart") ..
-      "    . cloak good_item . shield good_item | large shield good_item")
+      "    . cloak good_item . shield good_item | pavise good_item")
 kmons("r = killer klown; club ego:distortion plus:" ..
        tostring(8 + crawl.random2(5)))
 }}

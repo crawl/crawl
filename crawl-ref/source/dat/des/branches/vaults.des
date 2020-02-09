@@ -357,7 +357,7 @@ NAME: ximxim_vaults_locker_room
 TAGS: vaults_entry no_monster_gen no_item_gen no_trap_gen
 MONS: human w:15 / vault guard w:5
 ITEM: w:30 plate armour / w:7 broad axe / glaive / shield \
-      / w:5 large shield / w:3 arbalest / great sword / great mace
+      / w:5 pavise / w:3 arbalest / great sword / great mace
 KFEAT: O = enter_vaults
 KFEAT: Z = shallow_water
 MARKER: Z = lua:fog_machine { cloud_type = "rain", \

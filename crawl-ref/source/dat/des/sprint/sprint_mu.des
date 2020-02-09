@@ -918,15 +918,15 @@ MONS: vault guard ; short sword ego:electrocution | long sword ego:flaming |\
       great mace ego:pain | great sword ego:venom .\
       chain mail ego:poison_resistance | chain mail ego:cold_resistance |\
       scale mail ego:poison_resistance | scale mail ego:cold_resistance |\
-      plate armour ego:fire_resistance . large shield ego:reflection |\
-      shield ego:protection | large shield ego:positive_energy
+      plate armour ego:fire_resistance . pavise ego:reflection |\
+      shield ego:protection | pavise ego:positive_energy
 MONS: stone giant / shadow dragon / quicksilver dragon / golden dragon /\
       titan / fire giant / frost giant
 MONS: skeletal warrior
 KMONS: 8 = obsidian statue
 KMONS: f = butterfly
-KMONS: U = Sojobo ; morningstar ego:vorpal . large shield ego:reflection / \
-           Frederick ; trident ego:freezing . large shield ego:reflection
+KMONS: U = Sojobo ; morningstar ego:vorpal . pavise ego:reflection / \
+           Frederick ; trident ego:freezing . pavise ego:reflection
 KMONS: C = generate_awake Chuck
 KMONS: k = yaktaur captain ; arbalest ego:chaos . bolt
 KMONS: b = bush
@@ -1353,7 +1353,7 @@ ENDMAP
 # Cocytus 1, islands
 NAME: sprint_mu_cocytus_islands
 TAGS: sprint_mu_cocytus no_rotate no_hmirror no_vmirror
-KMONS: 1 = patrolling Antaeus ; large shield ego:reflection
+KMONS: 1 = patrolling Antaeus ; pavise ego:reflection
 KMONS: 2 = patrolling ice fiend
 KMONS: 3 = kraken simulacrum
 KFEAT: 3 = deep_water

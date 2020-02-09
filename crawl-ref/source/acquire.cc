@@ -221,7 +221,7 @@ static armour_type _acquirement_shield_type()
         { ARM_BUCKLER,       player_shield_racial_factor() * 4 * scale
                                 - _skill_rdiv(SK_SHIELDS, scale) },
         { ARM_SHIELD,        10 * scale },
-        { ARM_LARGE_SHIELD,  20 * scale
+        { ARM_PAVISE,  20 * scale
                              - player_shield_racial_factor() * 4 * scale
                              + _skill_rdiv(SK_SHIELDS, scale / 2) },
     };
@@ -353,7 +353,7 @@ static armour_type _useless_armour_type()
             vector<pair<armour_type, int>> shield_weights = {
                 { ARM_BUCKLER,       1 },
                 { ARM_SHIELD,        1 },
-                { ARM_LARGE_SHIELD,  1 },
+                { ARM_PAVISE,  1 },
             };
 
             return filtered_vector_select<armour_type>(shield_weights,

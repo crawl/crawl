@@ -350,7 +350,7 @@ static string _beogh_bless_weapon(monster* mon)
 
 static void _upgrade_shield(item_def &sh)
 {
-    // Promote from buckler up through large shield.
+    // Promote from buckler up through pavise.
     if (sh.sub_type >= ARM_FIRST_SHIELD && sh.sub_type < ARM_LAST_SHIELD)
         sh.sub_type++;
 }

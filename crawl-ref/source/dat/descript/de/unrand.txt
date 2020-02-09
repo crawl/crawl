@@ -126,7 +126,7 @@ storm bow
 Dieser Bogen hat die Farbe von dunklen Regenwolken, und den Geruch kaltem
 Ozons.
 %%%%
-large shield of Ignorance
+pavise of Ignorance
 
 „Ein offener Geist ist wie eine Festung mit unverschlossenen und unbewachten
 Toren.“
@@ -140,7 +140,7 @@ cloak of the Thief
 Es erlaubt seinem Träger, das Diebeshandwerk überragend auszuführen, und kann
 aktiviert werden, um dicke Rauchwolken zur schnellen Flucht auszustoßen.
 %%%%
-large shield "Bullseye"
+pavise "Bullseye"
 
 Nur für den Fall, dass du Probleme hattest, getroffen zu werden.
 %%%%
