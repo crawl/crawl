@@ -258,7 +258,7 @@ enum class passive_t
     restore_hp_mp_from_pacified,
 
     // Ely sometimes disarm your enemies
-    disarm_enemy,
+    disarms_enemy,
 };
 
 enum ru_interference

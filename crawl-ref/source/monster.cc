@@ -6751,7 +6751,7 @@ bool monster::angered_by_attacks() const
             && !mons_is_hepliaklqana_ancestor(type);
 }
 
-item_def* monster::ely_disarm(monster* mon)
+item_def* monster::ely_disarms(monster* mon)
 {
     item_def* mons_wpn = mslot_item(MSLOT_WEAPON);
 
@@ -6802,7 +6802,7 @@ item_def* monster::ely_disarm(monster* mon)
     return mons_wpn;
 }
 
-item_def* monster::ely_rwpn_disarm(monster* mon)
+item_def* monster::ely_rwpn_disarms(monster* mon)
 {
     item_def* mons_mi = mslot_item(MSLOT_MISSILE);
 

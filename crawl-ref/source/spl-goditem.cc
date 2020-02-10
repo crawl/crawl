@@ -1422,7 +1422,7 @@ spret ely_holy_mist(bool fail)
 
     if (cloud && cloud->type == CLOUD_HOLY)
     {
-        mpr("The mist shine with new energy!");
+        mpr("The mist shines with new energy!");
         const int extra_dur = random2(3) + dur;
         cloud->decay += extra_dur;
         cloud->source = you.mid;
@@ -1431,32 +1431,32 @@ spret ely_holy_mist(bool fail)
     else
     {
         you.props["hmist_dur"] = dur;
-        mpr("The mist shine!");
+        mpr("The mist shines!");
         place_cloud(CLOUD_HOLY, you.pos(), you.props["hmist_dur"], &you);
     }
     return spret::success;
 }
 
-void ely_disarm_enemy(monster* mon)
+void ely_disarms_enemy(monster* mon)
 {
     if (you.can_see(*mon) &&
         mons_intel(*mon) >= I_HUMAN &&
-        have_passive(passive_t::disarm_enemy))
+        have_passive(passive_t::disarms_enemy))
     {
         if (mon->friendly() || mon->is_summoned())
             return;
     }
-    mon->ely_disarm(mon);
+    mon->ely_disarms(mon);
 }
 
-void ely_disarm_rwpn_enemy(monster* mon)
+void ely_disarms_rwpn_enemy(monster* mon)
 {
         if (you.can_see(*mon) &&
             mons_intel(*mon) >= I_HUMAN &&
-            have_passive(passive_t::disarm_enemy))
+            have_passive(passive_t::disarms_enemy))
         {
             if (mon->friendly() || mon->is_summoned())
                 return;
         }
-        mon->ely_rwpn_disarm(mon);
+        mon->ely_rwpn_disarms(mon);
 }

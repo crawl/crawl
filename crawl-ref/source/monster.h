@@ -572,8 +572,8 @@ public:
     bool has_facet(int facet) const;
     bool angered_by_attacks() const;
 
-    item_def* ely_disarm(monster* mon);
-	item_def* ely_rwpn_disarm(monster* mon);
+    item_def* ely_disarms(monster* mon);
+	item_def* ely_rwpn_disarms(monster* mon);
 
 private:
     int hit_dice;

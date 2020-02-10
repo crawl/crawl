@@ -90,5 +90,5 @@ spret cast_random_effects(int pow, bolt& beam, bool fail);
 
 spret ely_holy_mist(bool fail);
 
-void ely_disarm_enemy(monster* mon);
-void ely_disarm_rwpn_enemy(monster* mon);
+void ely_disarms_enemy(monster* mon);
+void ely_disarms_rwpn_enemy(monster* mon);

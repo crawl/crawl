@@ -1503,8 +1503,8 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         && !crawl_state.generating_level)
     {
         gozag_set_bribe(mon);
-        ely_disarm_enemy(mon);
-        ely_disarm_rwpn_enemy(mon);
+        ely_disarms_enemy(mon);
+        ely_disarms_rwpn_enemy(mon);
     }
 
     return mon;

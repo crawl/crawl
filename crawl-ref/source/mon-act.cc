@@ -1462,8 +1462,8 @@ static void _pre_monster_move(monster& mons)
 
     fedhas_neutralise(&mons);
     slime_convert(&mons);
-    ely_disarm_enemy(&mons);
-    ely_disarm_rwpn_enemy(&mons);
+    ely_disarms_enemy(&mons);
+    ely_disarms_rwpn_enemy(&mons);
 
     // Monster just summoned (or just took stairs), skip this action.
     if (testbits(mons.flags, MF_JUST_SUMMONED))

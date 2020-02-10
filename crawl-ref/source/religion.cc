@@ -211,7 +211,7 @@ const vector<god_power> god_powers[NUM_GODS] =
     },
 
     // Elyvilon
-    { { 1, ABIL_ELYVILON_PURIFICATION, "purify yourself and then Create a holy cloud" },
+    { { 1, ABIL_ELYVILON_PURIFICATION, "purify yourself and then create a holy cloud" },
       { 3, ABIL_ELYVILON_HEAL_OTHER, "heal and attempt to pacify others" },
       { 5, ABIL_ELYVILON_METAMORPHOSIS, "transform into a holy creature protected "
                                         "by Elyvilon" },

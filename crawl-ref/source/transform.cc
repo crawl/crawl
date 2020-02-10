@@ -915,7 +915,7 @@ public:
      */
     string get_untransform_message() const override
     {
-        return "You emerge from the shine.";
+        return "Your sacred energy has waned.";
     }
 };
 
