@@ -182,7 +182,7 @@ large shield of Ignorance
 
 “그렇게 개방적인 사고방식은, 마치 빗장도 수비병도 없는 요새와도 같으니라.”
 %%%%
-robe of Augmentation
+shroud of the High Priestess
 
 최고급 비단으로 만들어진 로브다.
 %%%%

@@ -162,7 +162,7 @@ large shield of Ignorance
 
 «Открытый ум подобен крепости, врата которой открыты и оставлены без охраны»
 %%%%
-robe of Augmentation
+shroud of the High Priestess
 
 Роба, сделанная из лучшего шелка.
 %%%%

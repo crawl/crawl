@@ -692,15 +692,17 @@ TILE_EQ: lshield_of_ignorance
 INT:     -4
 LIFE:    1
 
-NAME:    robe of Augmentation
+NAME:    shroud of the High Priestess
 OBJ:     OBJ_ARMOUR/ARM_ROBE
 PLUS:    +4
-COLOUR:  LIGHTRED
+COLOUR:  WHITE
 TILE:    urand_augmentation
 TILE_EQ: robe_white_blue
-STR:     4
+INSCRIP: rTorment
+STEALTH: 2
 INT:     4
 DEX:     4
+BOOL:    holy, fragile
 
 NAME:     cloak of the Thief
 OBJ:      OBJ_ARMOUR/ARM_CLOAK

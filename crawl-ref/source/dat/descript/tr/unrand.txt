@@ -16,7 +16,7 @@ crossbow "Hellfire"
 Cehennem ateşinde dövülmüş ateşten bir arbelat; adı gibi güçlü ateşten oklar
 fırlatır
 %%%%
-robe of Augmentation
+shroud of the High Priestess
 
 En iyi ipekten yapılmış cübbe
 %%%%
