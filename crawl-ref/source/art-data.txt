@@ -720,7 +720,7 @@ OBJ:     OBJ_ARMOUR/ARM_PAVISE
 PLUS:    +15
 COLOUR:  RED
 TILE:    urand_bullseye
-TILE_EQ: shield_bullseye
+TILE_EQ: kite_shield_bullseye
 EV:      -5
 BOOL:    nogen
 
@@ -826,7 +826,7 @@ OBJ:     OBJ_ARMOUR/ARM_KITE_SHIELD
 PLUS:    +2
 COLOUR:  LIGHTRED
 TILE:    urand_resistance
-TILE_EQ: shield_of_resistance
+TILE_EQ: kite_shield_of_resistance
 FIRE:    1
 COLD:    1
 MAGIC:   1
@@ -934,7 +934,7 @@ FALLBACK: OBJ_ARMOUR/ARM_PAVISE
 PLUS:     +18
 COLOUR:   ETC_GOLD
 TILE:     urand_gong
-TILE_EQ:  shield_gong
+TILE_EQ:  kite_shield_gong
 EV:       -5
 MAGIC:    1
 LIFE:     1
