@@ -248,6 +248,29 @@ static spret _try_to_pacify(monster &mon, int healed, int pow,
     mons_pacify(mon, ATT_NEUTRAL);
 
     heal_monster(mon, healed);
+
+    int hp_heal = 0, mp_heal = 0;
+    if (have_passive(passive_t::restore_hp_mp_from_pacified))
+    {
+        hp_heal = random2(1 + 2 * mon.get_experience_level());
+        mp_heal = random2(2 + mon.get_experience_level() / 3);
+
+        if (hp_heal && you.hp < you.hp_max)
+        {
+            canned_msg(MSG_GAIN_HEALTH);
+            inc_hp(hp_heal);
+        }
+
+        if (mp_heal && you.magic_points < you.max_magic_points)
+        {
+            int tmp = min(you.max_magic_points - you.magic_points,
+                mp_heal);
+            canned_msg(MSG_GAIN_MAGIC);
+            inc_mp(mp_heal);
+            mp_heal -= tmp;
+        }
+    }
+
     return spret::success;
 }
 

@@ -450,7 +450,7 @@ static const ability_def Ability_List[] =
     { ABIL_ELYVILON_PURIFICATION, "Mist of Purification",
       2, 0, 250, 2, {fail_basis::invo, 40, 5, 20}, abflag::conf_ok },
     { ABIL_ELYVILON_HEAL_OTHER, "Heal Other",
-      2, 0, 250, 2, {fail_basis::invo, 40, 5, 20}, abflag::none },
+      0, 0, 250, 2, {fail_basis::invo, 85, 7, 20}, abflag::none },
     { ABIL_ELYVILON_METAMORPHOSIS, "Metamorphosis",
       0, 0, 600, 6, {fail_basis::invo, 80, 4, 25}, abflag::none },
 

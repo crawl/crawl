@@ -253,6 +253,9 @@ enum class passive_t
     wu_jian_lunge,
     wu_jian_whirlwind,
     wu_jian_wall_jump,
+
+    /// Gain HP and MP when pacified monsters.
+    restore_hp_mp_from_pacified,
 };
 
 enum ru_interference
