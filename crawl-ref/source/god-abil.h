@@ -77,6 +77,8 @@ void zin_sanctuary();
 void tso_divine_shield();
 void tso_remove_divine_shield();
 
+void elyvilon_purification();
+
 bool vehumet_supports_spell(spell_type spell);
 
 void sif_do_channel_energy(int pow);

@@ -378,7 +378,7 @@ static peeve_map divine_peeves[] =
         { DID_EVIL, GOOD_EVIL_RESPONSE },
         { DID_ATTACK_NEUTRAL, GOOD_ATTACK_NEUTRAL_RESPONSE },
         { DID_ATTACK_FRIEND, _on_attack_friend("you attack allies") },
-        },
+    },
     // GOD_LUGONU,
     peeve_map(),
     // GOD_BEOGH,

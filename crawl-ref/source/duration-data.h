@@ -650,6 +650,6 @@ static const duration_def duration_data[] =
     { DUR_WATER_HOLD_IMMUNITY, 0, "", "", "old drowning immunity", "", D_NO_FLAGS, {{""}}},
     { DUR_REGENERATION, 0, "", "", "old regeneration", "", D_NO_FLAGS},
     { DUR_NO_CAST, 0, "", "", "old no cast", "", D_NO_FLAGS},
-    { DUR_DIVINE_VIGOUR, 0, "", "", "", "", D_NO_FLAGS, {{""}} },
+    { DUR_DIVINE_VIGOUR, 0, "", "", "", "", D_NO_FLAGS, {{""}}},
 #endif
 };

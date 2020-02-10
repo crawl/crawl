@@ -787,11 +787,6 @@ static void _inc_penance(god_type god, int val)
 
             make_god_gifts_disappear();
         }
-        else if (god == GOD_ELYVILON)
-        {
-            if (you.duration[DUR_DIVINE_VIGOUR])
-                elyvilon_remove_divine_vigour();
-        }
         else if (god == GOD_JIYVA)
         {
             if (you.duration[DUR_SLIMIFY])

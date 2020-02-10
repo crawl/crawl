@@ -805,18 +805,18 @@ static formatted_string _describe_god_powers(god_type which_god)
     {
         have_any = true;
 
-        int prot_chance = 10 + piety / 10; // chance * 100
+        int prot_chance = 10 + piety/10; // chance * 100
         const char *when = "";
 
         const char *how = (prot_chance >= 85) ? "carefully" :
-            (prot_chance >= 55) ? "often" :
-            (prot_chance >= 25) ? "sometimes"
-            : "occasionally";
+                          (prot_chance >= 55) ? "often" :
+                          (prot_chance >= 25) ? "sometimes"
+                                              : "occasionally";
 
         desc.cprintf("%s %s watches over you%s.\n",
-            uppercase_first(god_name(which_god)).c_str(),
-            how,
-            when);
+                uppercase_first(god_name(which_god)).c_str(),
+                how,
+                when);
     }
 
     switch (which_god)
@@ -974,6 +974,8 @@ static formatted_string _describe_god_powers(god_type which_god)
         have_any = true;
         desc.cprintf("%s heals you little by little when you are "
             "in a holy cloud.\n",
+            uppercase_first(god_name(which_god)).c_str());
+        desc.cprintf("%s sometimes disarm your enemies.\n",
             uppercase_first(god_name(which_god)).c_str());
         break;
 

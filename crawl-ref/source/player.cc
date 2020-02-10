@@ -6153,7 +6153,7 @@ int player::gdr_perc() const
     const item_def *body_armour = slot_item(EQ_BODY_ARMOUR, false);
 
     int body_base_AC = (form == transformation::holy_form ? 6 : 0 ||
-        species == SP_GARGOYLE ? 5 : 0);
+                        species == SP_GARGOYLE ? 5 : 0);
     if (body_armour)
         body_base_AC += property(*body_armour, PARM_AC);
 
@@ -6920,7 +6920,8 @@ int player::has_claws(bool allow_tran) const
     if (allow_tran)
     {
         // these transformations bring claws with them
-        if (form == transformation::dragon)
+        if ((form == transformation::dragon)
+            || (form == transformation::holy_form))
             return 3;
 
         // blade hands override claws
@@ -6938,6 +6939,9 @@ bool player::has_usable_claws(bool allow_tran) const
 
 int player::has_talons(bool allow_tran) const
 {
+    if (form == transformation::holy_form)
+        return 3;
+
     // XXX: Do merfolk in water belong under allow_tran?
     if (fishtail)
         return 0;

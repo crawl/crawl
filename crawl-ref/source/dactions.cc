@@ -22,6 +22,7 @@
 #include "mon-death.h"
 #include "mon-transit.h"
 #include "religion.h"
+#include "spl-goditem.h"
 #include "state.h"
 #include "view.h"
 
@@ -261,6 +262,10 @@ void apply_daction_to_mons(monster* mon, daction_type act, bool local,
         case DACT_SET_BRIBES:
             gozag_set_bribe(mon);
 
+        case DACT_ELY_DISARM:
+            ely_disarm_enemy(mon);
+            ely_disarm_rwpn_enemy(mon);
+
         // The other dactions do not affect monsters directly.
         default:
             break;
@@ -340,6 +345,14 @@ static void _apply_daction(daction_type act)
         if (!companion_is_elsewhere(hepliaklqana_ancestor()))
             upgrade_hepliaklqana_ancestor(true);
         break;
+    case DACT_ELY_DISARM:
+        for (monster_iterator mi; mi; ++mi)
+        {
+            if (mons_matches_daction(*mi, act))
+                apply_daction_to_mons(*mi, act, true, false);
+        }
+        break;
+
 #if TAG_MAJOR_VERSION == 34
     case DACT_END_SPIRIT_HOWL:
     case DACT_HOLY_NEW_ATTEMPT:

@@ -1375,6 +1375,21 @@ void tso_remove_divine_shield()
     you.redraw_armour_class = true;
 }
 
+void elyvilon_purification()
+{
+    mpr("You feel purified!");
+
+    you.disease = 0;
+    you.duration[DUR_POISONING] = 0;
+    you.duration[DUR_CONF] = 0;
+    you.duration[DUR_SLOW] = 0;
+    you.duration[DUR_PETRIFYING] = 0;
+    you.duration[DUR_WEAK] = 0;
+    restore_stat(STAT_ALL, 0, false);
+    unrot_hp(9999);
+    you.redraw_evasion = true;
+}
+
 bool vehumet_supports_spell(spell_type spell)
 {
     if (spell_typematch(spell, spschool::conjuration))

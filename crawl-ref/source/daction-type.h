@@ -49,6 +49,7 @@ enum daction_type
 #endif
     DACT_ALLY_HEPLIAKLQANA,
     DACT_UPGRADE_ANCESTOR,
+    DACT_ELY_DISARM,
     NUM_DACTIONS,
     // If you want to add a new daction, you need to
     // add a corresponding entry to *daction_names[]
