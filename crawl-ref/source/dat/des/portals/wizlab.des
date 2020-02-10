@@ -1757,12 +1757,10 @@ ENDMAP
 
 NAME:       wizlab_lehudib
 KPROP:      ` = no_tele_into
-
 : item(dgn.loot_scrolls .. " / " .. dgn.loot_potions)
 ITEM:       potion of mutation
-ITEM:       any randart jewellery w:60 / cloak good_item / scarf good_item \
-            / helmet good_item / hat good_item / pair of gloves good_item \
-            / pair of boots good_item
+# Equall chance between randart jewellery and good aux armour.
+: item("any randart jewellery w:60" .. " / " .. dgn.good_aux_armour)
 ITEM:       randbook owner:Lehudib disc:earth disc2:transmutation \
                      spells:lehudib's_crystal_spear \
             / randbook owner:Lehudib disc:earth disc2:translocation \

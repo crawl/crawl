@@ -326,8 +326,7 @@ ENDMAP
 
 NAME:   biasface_vaults_ghost_orc_armoury
 TAGS:   vaults_orient_s
-ITEM:   pair of boots good_item / helmet good_item / hat good_item / \
-        pair of gloves good_item / cloak good_item
+:item(dgn.good_aux_armour)
 ITEM:   any armour good_item, any weapon good_item, any jewellery good_item
 : item(dgn.loot_potions .. " / " .. dgn.loot_scrolls)
 KMONS:  O = player ghost
