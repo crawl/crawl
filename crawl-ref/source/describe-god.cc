@@ -972,10 +972,10 @@ static formatted_string _describe_god_powers(god_type which_god)
 #endif
     case GOD_ELYVILON:
         have_any = true;
-        desc.cprintf("%s heals you little by little when you are "
-            "in a holy cloud.\n",
+        desc.cprintf("%s lets you create a holy cloud that heals you "
+            "slowly.\n",
             uppercase_first(god_name(which_god)).c_str());
-        desc.cprintf("%s sometimes disarm your enemies.\n",
+        desc.cprintf("%s sometimes disarms your enemies.\n",
             uppercase_first(god_name(which_god)).c_str());
         break;
 

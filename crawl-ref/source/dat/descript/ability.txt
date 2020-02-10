@@ -374,19 +374,18 @@ Whether the pacification succeeds or not, the invested food, piety are lost.
 If it does succeed, the monster is healed and you gain half the monster's
 experience value. Otherwise, the monster is unaffected and you gain nothing.
 
-Elyvilon will give health and magic energies you if you succeed in pacifying
-the creature.
+Elyvilon will grant you HP and MP if you succeed in pacifying the creature.
 %%%%
 Metamorphosis ability
 
 Transform into a holy creature protected by Elyvilon for a duration.
 If you are mortally wounded, the Healer may undo the killing blow.
-While you're transform, you may be certain of this help, but in that case,
+While you're transformed, you may be certain of this help, but in that case,
 any intervention costs piety.
 
 While you transform into a holy creature, you become highly resistant to
 negative energy, and more resistant to rot and hostile enchantments.
-You become able to deal great damage in melee combat and much more robust.
+You become able to deal great damage in melee combat, and much more robust.
 Your Unarmed Combat attacks deal holy damage. You can also see invisible enemies.
 The duration and armour are increased by Invocations skill.
 

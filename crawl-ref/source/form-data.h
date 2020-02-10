@@ -246,7 +246,7 @@ static const form_entry formdata[] =
 
 {
     transformation::holy_form, MONS_PROGRAM_BUG, "Holy Creature", "holy-form", "holy creature",
-    "a shine holy creature!",
+    "a shining holy creature!",
     EQF_HOLY, mrd(MR_RES_NEG, 3) | MR_RES_ROTTING,
     FormDuration(30, PS_TRIPLE, 120), 0, 0, SIZE_CHARACTER, 13,
     6, 20, 0, true, 0, 10, 22,

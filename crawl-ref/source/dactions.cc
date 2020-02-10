@@ -263,8 +263,8 @@ void apply_daction_to_mons(monster* mon, daction_type act, bool local,
             gozag_set_bribe(mon);
 
         case DACT_ELY_DISARM:
-            ely_disarm_enemy(mon);
-            ely_disarm_rwpn_enemy(mon);
+            ely_disarms_enemy(mon);
+            ely_disarms_rwpn_enemy(mon);
 
         // The other dactions do not affect monsters directly.
         default:
