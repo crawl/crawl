@@ -3116,7 +3116,7 @@ bool monster::wont_attack() const
 
 bool monster::pacified() const
 {
-    return attitude == ATT_NEUTRAL && testbits(flags, MF_PACIFIED);
+    return attitude == ATT_STRICT_NEUTRAL && testbits(flags, MF_PACIFIED);
 }
 
 /**
