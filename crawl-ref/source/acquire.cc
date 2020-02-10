@@ -1626,28 +1626,29 @@ bool AcquireMenu::acquire_selected()
 {
     vector<MenuEntry*> selected = selected_entries();
     ASSERT(selected.size() == 1);
+    auto& entry = *selected[0];
 
     const string col = colour_to_str(channel_to_colour(MSGCH_PROMPT));
     update_help();
     const formatted_string old_more = more;
     more = formatted_string::parse_string(make_stringf(
-               "<%s>Acquire this item? (%s/N)</%s>\n",
+               "<%s>Acquire %s? (%s/N)</%s>\n",
                col.c_str(),
+               entry.text.c_str(),
                Options.easy_confirm == easy_confirm_type::none ? "Y" : "y",
                col.c_str()));
     more += old_more;
     update_more();
 
-    auto entry = selected[0];
     if (!yesno(nullptr, true, 'n', false, false, true))
     {
-        entry->select();
+        entry.select();
         more = old_more;
         update_more();
         return true;
     }
 
-    item_def &acq_item = *static_cast<item_def*>(entry->data);
+    item_def &acq_item = *static_cast<item_def*>(entry.data);
     if (copy_item_to_grid(acq_item, you.pos()))
         canned_msg(MSG_SOMETHING_APPEARS);
     else
