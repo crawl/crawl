@@ -15,6 +15,7 @@
 #include <queue>
 #include <set>
 
+#include "ability.h"
 #include "artefact.h"
 #include "art-enum.h"
 #include "colour.h"
@@ -858,23 +859,23 @@ static bool _is_magic_skill(int skill)
 
 static bool _skill_useless_with_god(int skill)
 {
+    if (skill == SK_INVOCATIONS)
+    {
+        // No active invocations, or uses a different skill.
+        return invo_skill() != SK_INVOCATIONS
+               || you_worship(GOD_XOM)
+               || you_worship(GOD_VEHUMET)
+               || you_worship(GOD_NO_GOD);
+    }
+
     switch (you.religion)
     {
     case GOD_TROG:
-        return _is_magic_skill(skill) || skill == SK_INVOCATIONS;
+        return _is_magic_skill(skill);
     case GOD_ZIN:
     case GOD_SHINING_ONE:
     case GOD_ELYVILON:
         return skill == SK_NECROMANCY;
-    case GOD_XOM:
-    case GOD_RU:
-    case GOD_KIKUBAAQUDGHA:
-    case GOD_VEHUMET:
-    case GOD_ASHENZARI:
-    case GOD_JIYVA:
-    case GOD_GOZAG:
-    case GOD_NO_GOD:
-        return skill == SK_INVOCATIONS;
     default:
         return false;
     }
