@@ -897,6 +897,23 @@ public:
     }
 };
 
+class FormHoly : public Form
+{
+private:
+    FormHoly() : Form(transformation::holy_form) { }
+    DISALLOW_COPY_AND_ASSIGN(FormHoly);
+public:
+    static const FormHoly& instance() { static FormHoly inst; return inst; }
+
+    /**
+     * Get a message for untransforming from this form.
+     */
+    string get_untransform_message() const override
+    {
+        return "You emerge from the shine.";
+    }
+};
+
 /**
  * Set the number of hydra heads that the player currently has.
  *
@@ -989,6 +1006,7 @@ static const Form* forms[] =
     &FormFungus::instance(),
     &FormShadow::instance(),
     &FormHydra::instance(),
+    &FormHoly::instance(),
 };
 
 const Form* get_form(transformation xform)

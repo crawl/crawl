@@ -395,6 +395,8 @@ static void _dispellable_player_buffs(player_debuff_effects &buffs)
             continue;
         if (i == DUR_TRANSFORMATION && you.form == transformation::shadow)
             continue;
+        if (i == DUR_TRANSFORMATION && you.form == transformation::holy_form)
+            continue;
         buffs.durations.push_back((duration_type) i);
         // this includes some buffs that won't be reduced in duration -
         // anything already at 1 aut, or flight/transform while <= 11 aut

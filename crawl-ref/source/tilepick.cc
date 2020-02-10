@@ -3498,6 +3498,8 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_ELYVILON_PURIFICATION;
     case ABIL_ELYVILON_HEAL_OTHER:
         return TILEG_ABILITY_ELYVILON_HEAL_OTHER;
+    case ABIL_ELYVILON_METAMORPHOSIS:
+        return TILEG_ABILITY_ELYVILON_METAMORPHOSIS;
     // Lugonu
     case ABIL_LUGONU_ABYSS_EXIT:
         return TILEG_ABILITY_LUGONU_EXIT_ABYSS;

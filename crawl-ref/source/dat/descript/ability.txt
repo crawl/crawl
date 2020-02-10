@@ -374,6 +374,21 @@ points are lost. If it does succeed, the monster is healed and you gain half
 the monster's experience value. Otherwise, the monster is unaffected and you
 gain nothing.
 %%%%
+Metamorphosis ability
+
+Transform into a holy creature protected by Elyvilon for a duration.
+If you are mortally wounded, the Healer may undo the killing blow.
+You may be certain of this help, but in that case, any intervention
+costs piety.
+
+While you transform into a holy creature, You becomes highly resistant to
+negative energy, and more resistant to rot and hostile enchantments.
+You becomes able to deal great damage in melee combat, and much more robust.
+You gain a holy melee attack. You will also be able to sense a transparent
+enemy. The duration and armour increases with Invocations skill.
+
+While transformed, any equipped gloves and boots are melded.
+%%%%
 # Lugonu
 Depart the Abyss ability
 

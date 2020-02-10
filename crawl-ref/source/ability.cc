@@ -451,6 +451,8 @@ static const ability_def Ability_List[] =
       2, 0, 250, 2, {fail_basis::invo, 40, 5, 20}, abflag::conf_ok },
     { ABIL_ELYVILON_HEAL_OTHER, "Heal Other",
       2, 0, 250, 2, {fail_basis::invo, 40, 5, 20}, abflag::none },
+    { ABIL_ELYVILON_METAMORPHOSIS, "Metamorphosis",
+      0, 0, 600, 6, {fail_basis::invo, 80, 4, 25}, abflag::none },
 
     // Lugonu
     { ABIL_LUGONU_ABYSS_EXIT, "Depart the Abyss",
@@ -2648,10 +2650,24 @@ static spret _do_ability(const ability_def& abil, bool fail)
         return cast_healing(pow, fail);
     }
 
-    case ABIL_ELYVILON_DIVINE_VIGOUR:
+    case ABIL_ELYVILON_METAMORPHOSIS:
         fail_check();
-        if (!elyvilon_divine_vigour())
+        if (you.duration[DUR_LIFESAVING])
+            mpr("You renew your call for help.");
+        else
+        {
+            mprf("You beseech %s to protect your life.",
+                god_name(you.religion).c_str());
+        }
+        // Might be a decrease, this is intentional (like Yred).
+        you.duration[DUR_LIFESAVING] = 30 * BASELINE_DELAY
+            + random2avg(you.piety * BASELINE_DELAY, 2) / 2;
+
+        if (!transform(you.skill(SK_INVOCATIONS, 2), transformation::holy_form))
+        {
+            crawl_state.zero_turns_taken();
             return spret::abort;
+        }
         break;
 
     case ABIL_LUGONU_ABYSS_EXIT:

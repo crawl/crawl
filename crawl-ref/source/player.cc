@@ -2028,7 +2028,8 @@ bool player_is_shapechanged()
         || you.form == transformation::blade_hands
         || you.form == transformation::lich
         || you.form == transformation::shadow
-        || you.form == transformation::appendage)
+        || you.form == transformation::appendage
+        || you.form == transformation::holy_form)
     {
         return false;
     }
@@ -5843,7 +5844,7 @@ int player::racial_ac(bool temp) const
     // drac scales suppressed in all serious forms, except dragon
     if (species_is_draconian(species)
         && (!player_is_shapechanged() || form == transformation::dragon
-            || !temp))
+            || form == transformation::holy_form || !temp))
     {
         int AC = 400 + 100 * (experience_level / 3);  // max 13
         if (species == SP_GREY_DRACONIAN) // no breath
@@ -6436,7 +6437,8 @@ int player_res_magic(bool calc_unid, bool temp)
     rm -= MR_PIP * you.get_mutation_level(MUT_MAGICAL_VULNERABILITY);
 
     // transformations
-    if (you.form == transformation::lich && temp)
+    if ((you.form == transformation::lich && temp)
+        || (you.form == transformation::holy_form && temp))
         rm += MR_PIP;
 
     // Trog's Hand
@@ -6968,7 +6970,8 @@ int player::has_fangs(bool allow_tran) const
     if (allow_tran)
     {
         // these transformations bring fangs with them
-        if (form == transformation::dragon)
+        if ((form == transformation::dragon)
+            || (form == transformation::holy_form))
             return 3;
     }
 
@@ -6985,7 +6988,8 @@ int player::has_tail(bool allow_tran) const
     if (allow_tran)
     {
         // these transformations bring a tail with them
-        if (form == transformation::dragon)
+        if ((form == transformation::dragon)
+            || (form == transformation::holy_form))
             return 1;
 
         // Most transformations suppress a tail.

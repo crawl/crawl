@@ -242,6 +242,17 @@ static const form_entry formdata[] =
     SPWPN_NORMAL, GREEN, "", { "nip at", "bite", "gouge", "chomp" },
     FC_DEFAULT, FC_ENABLE, FC_ENABLE, true, false,
     "roar", 4, "foreclaw", "", "bow your heads before", "flesh"
+},
+
+{
+    transformation::holy_form, MONS_PROGRAM_BUG, "Holy Creature", "holy-form", "holy creature",
+    "a shine holy creature!",
+    EQF_HOLY, mrd(MR_RES_NEG, 3) | MR_RES_ROTTING,
+    FormDuration(30, PS_TRIPLE, 120), 0, 0, SIZE_CHARACTER, 13,
+    6, 20, 0, true, 0, 10, 22,
+    SPWPN_HOLY_WRATH, WHITE, "Teeth and claws", { "hit", "claw", "bite", "maul" },
+    FC_DEFAULT, FC_FORBID, FC_ENABLE, true, true,
+    "roar", 4, "foreclaw", "", "bow your head before", "flesh"
 }
 };
 COMPILE_CHECK(ARRAYSZ(formdata) == NUM_TRANSFORMS);

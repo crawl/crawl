@@ -23,6 +23,7 @@ enum class transformation
     fungus,
     shadow,
     hydra,
+    holy_form,
     COUNT
 };
 constexpr int NUM_TRANSFORMS = static_cast<int>(transformation::COUNT);
