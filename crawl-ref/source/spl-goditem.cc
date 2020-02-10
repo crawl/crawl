@@ -270,7 +270,6 @@ static spret _try_to_pacify(monster &mon, int healed, int pow,
             mp_heal -= tmp;
         }
     }
-
     return spret::success;
 }
 
@@ -1436,4 +1435,28 @@ spret ely_holy_mist(bool fail)
         place_cloud(CLOUD_HOLY, you.pos(), you.props["hmist_dur"], &you);
     }
     return spret::success;
+}
+
+void ely_disarm_enemy(monster* mon)
+{
+    if (you.can_see(*mon) &&
+        mons_intel(*mon) >= I_HUMAN &&
+        have_passive(passive_t::disarm_enemy))
+    {
+        if (mon->friendly() || mon->is_summoned())
+            return;
+    }
+    mon->ely_disarm(mon);
+}
+
+void ely_disarm_rwpn_enemy(monster* mon)
+{
+        if (you.can_see(*mon) &&
+            mons_intel(*mon) >= I_HUMAN &&
+            have_passive(passive_t::disarm_enemy))
+        {
+            if (mon->friendly() || mon->is_summoned())
+                return;
+        }
+        mon->ely_rwpn_disarm(mon);
 }

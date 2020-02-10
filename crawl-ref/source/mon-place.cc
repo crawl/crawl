@@ -43,6 +43,7 @@
 #include "shopping.h"
 #include "spl-clouds.h"
 #include "spl-damage.h"
+#include "spl-goditem.h"
 #include "spl-summoning.h"
 #include "state.h"
 #include "stringutil.h"
@@ -1502,6 +1503,8 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         && !crawl_state.generating_level)
     {
         gozag_set_bribe(mon);
+        ely_disarm_enemy(mon);
+        ely_disarm_rwpn_enemy(mon);
     }
 
     return mon;

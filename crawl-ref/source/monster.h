@@ -35,6 +35,9 @@ const int KRAKEN_TENTACLE_RANGE = 3;
 
 #define MAP_KEY "map"
 
+#define DISARMED_KEY "elyvilon_disarmed"
+#define DISARMED_RWPN_KEY "elyvilon_disarmed_mi"
+
 typedef map<enchant_type, mon_enchant> mon_enchant_list;
 
 struct monsterentry;
@@ -568,6 +571,9 @@ public:
 
     bool has_facet(int facet) const;
     bool angered_by_attacks() const;
+
+    item_def* ely_disarm(monster* mon);
+	item_def* ely_rwpn_disarm(monster* mon);
 
 private:
     int hit_dice;

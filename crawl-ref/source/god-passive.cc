@@ -244,6 +244,13 @@ static const vector<god_passive> god_passives[] =
               "GOD can protect the life of your allies",
               "GOD NOW protects the life of your allies"
         },
+        { -1, passive_t::disarm_enemy,
+              "GOD sometimes disarm your enemies",
+              "GOD no longer disarm your enemies"
+        },
+        {  4, passive_t::restore_hp_mp_from_pacified,
+              "gain health and magic from pacified beings"
+        },
     },
 
     // Lugonu

@@ -89,3 +89,6 @@ void cleansing_flame(int pow, cleansing_flame_source caster, coord_def where,
 spret cast_random_effects(int pow, bolt& beam, bool fail);
 
 spret ely_holy_mist(bool fail);
+
+void ely_disarm_enemy(monster* mon);
+void ely_disarm_rwpn_enemy(monster* mon);

@@ -33,6 +33,7 @@
 #include "god-abil.h"
 #include "god-conduct.h"
 #include "god-item.h"
+#include "god-passive.h"
 #include "item-name.h"
 #include "item-prop.h"
 #include "item-status-flag-type.h"
@@ -6748,4 +6749,102 @@ bool monster::angered_by_attacks() const
             && !mons_is_conjured(type)
             && !testbits(flags, MF_DEMONIC_GUARDIAN)
             && !mons_is_hepliaklqana_ancestor(type);
+}
+
+item_def* monster::ely_disarm(monster* mon)
+{
+    item_def* mons_wpn = mslot_item(MSLOT_WEAPON);
+
+    // is it ok to move the weapon into your tile (w/o destroying it?)
+    const bool your_tile_ok = !feat_eliminates_items(grd(you.pos()));
+
+    // It's ok to drop the weapon into deep water if it comes out right away,
+    // but if the monster is on lava we just have to abort.
+    const bool mon_tile_ok = !feat_destroys_items(grd(pos()))
+        && (your_tile_ok
+            || !feat_eliminates_items(grd(pos())));
+
+    if (mon->props.exists(DISARMED_KEY))
+        return nullptr;
+
+    if (!mons_wpn
+        || mons_wpn->cursed()
+        || mons_class_is_animated_weapon(type)
+        || !you.can_see(*this)
+        || !mon_tile_ok
+        || mons_wpn->flags & ISFLAG_SUMMONED)
+    {
+        return nullptr;
+    }
+
+    int r = random2(100);
+    int chance = 25 + div_rand_round(you.piety, 8);
+    if (r > chance)
+    {
+        mon->props[DISARMED_KEY].get_bool() = true;
+    }
+
+    // 50% chance of disarm from max piety
+    else
+    {
+        drop_item(MSLOT_WEAPON, false);
+        mprf(MSGCH_GOD, "The weapon disappeared from %ss hand like a mirage.",
+            mon->name(DESC_THE).c_str());
+        mon->props[DISARMED_KEY].get_bool() = true;
+
+        // XXX: assumes nothing's re-ordering items - e.g. gozag gold
+        if (your_tile_ok)
+            move_top_item(pos(), you.pos());
+
+        if (type == MONS_CEREBOV)
+            you.props[CEREBOV_DISARMED_KEY] = true;
+    }
+    return mons_wpn;
+}
+
+item_def* monster::ely_rwpn_disarm(monster* mon)
+{
+    item_def* mons_mi = mslot_item(MSLOT_MISSILE);
+
+    // is it ok to move the weapon into your tile (w/o destroying it?)
+    const bool your_tile_ok = !feat_eliminates_items(grd(you.pos()));
+
+    // It's ok to drop the weapon into deep water if it comes out right away,
+    // but if the monster is on lava we just have to abort.
+    const bool mon_tile_ok = !feat_destroys_items(grd(pos()))
+        && (your_tile_ok
+            || !feat_eliminates_items(grd(pos())));
+
+    if (mon->props.exists(DISARMED_RWPN_KEY))
+        return nullptr;
+
+    if (!mons_mi
+        || !you.can_see(*this)
+        || !mon_tile_ok
+        || mons_mi->flags & ISFLAG_SUMMONED)
+    {
+    return nullptr;
+    }
+
+    int r = random2(100);
+    int chance = 25 + div_rand_round(you.piety, 8);
+    if (r > chance)
+    {
+        mon->props[DISARMED_RWPN_KEY].get_bool() = true;
+    }
+
+    // 50% chance of disarm from max piety
+    else
+    {
+        drop_item((MSLOT_MISSILE), false);
+        mprf(MSGCH_GOD, "The ammunition disappeared from %ss hand like a mirage.",
+            mon->name(DESC_THE).c_str());
+        mon->props[DISARMED_RWPN_KEY].get_bool() = true;
+
+        // XXX: assumes nothing's re-ordering items - e.g. gozag gold
+        if (your_tile_ok)
+            move_top_item(pos(), you.pos());
+
+    }
+    return mons_mi;
 }

@@ -256,6 +256,9 @@ enum class passive_t
 
     /// Gain HP and MP when pacified monsters.
     restore_hp_mp_from_pacified,
+
+    // Ely sometimes disarm your enemies
+    disarm_enemy,
 };
 
 enum ru_interference
