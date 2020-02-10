@@ -73,6 +73,9 @@ static const FormDuration DEFAULT_DURATION = FormDuration(20, PS_DOUBLE, 100);
 static const FormDuration BAD_DURATION = FormDuration(15, PS_ONE_AND_A_HALF,
                                                       100);
 
+// core body slots (holy form)
+static const int EQF_HOLY = SLOTF(EQ_GLOVES) | SLOTF(EQ_BOOTS);
+
 // Class form_entry and the formdata array
 #include "form-data.h"
 
@@ -174,6 +177,8 @@ int FormDuration::power_bonus(int pow) const
             return random2(pow) + random2(pow/2);
         case PS_DOUBLE:
             return random2(pow) + random2(pow);
+        case PS_TRIPLE:
+            return random2(pow) + random2(pow) + random2(pow);
         default:
             die("Unknown scaling type!");
             return -1;

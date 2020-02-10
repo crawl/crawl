@@ -805,35 +805,18 @@ static formatted_string _describe_god_powers(god_type which_god)
     {
         have_any = true;
 
-        int prot_chance = 10 + piety/10; // chance * 100
+        int prot_chance = 10 + piety / 10; // chance * 100
         const char *when = "";
 
-        if (which_god == GOD_ELYVILON)
-        {
-            switch (elyvilon_lifesaving())
-            {
-                case lifesaving_chance::sometimes:
-                    when = ", especially when called upon";
-                    prot_chance += 100 - 3000/piety;
-                    break;
-                case lifesaving_chance::always:
-                    when = ", and always does so when called upon";
-                    prot_chance = 100;
-                    break;
-                default:
-                    break;
-            }
-        }
-
         const char *how = (prot_chance >= 85) ? "carefully" :
-                          (prot_chance >= 55) ? "often" :
-                          (prot_chance >= 25) ? "sometimes"
-                                              : "occasionally";
+            (prot_chance >= 55) ? "often" :
+            (prot_chance >= 25) ? "sometimes"
+            : "occasionally";
 
         desc.cprintf("%s %s watches over you%s.\n",
-                uppercase_first(god_name(which_god)).c_str(),
-                how,
-                when);
+            uppercase_first(god_name(which_god)).c_str(),
+            how,
+            when);
     }
 
     switch (which_god)

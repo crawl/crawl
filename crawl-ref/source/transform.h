@@ -45,7 +45,8 @@ enum duration_power_scaling
     PS_NONE,                ///< no bonus
     PS_SINGLE,              ///< bonus based on rand2(power)
     PS_ONE_AND_A_HALF,      ///< bonus based on r(power) + r(power/2)
-    PS_DOUBLE               ///< bonus based on r(power) + r(power)
+    PS_DOUBLE,              ///< bonus based on r(power) + r(power)
+    PS_TRIPLE               ///< bonus based on r(power) + r(power) + r(power)
 };
 
 class FormDuration

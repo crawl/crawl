@@ -4004,8 +4004,7 @@ lifesaving_chance elyvilon_lifesaving()
     if (you.piety < piety_breakpoint(0))
         return lifesaving_chance::never;
 
-    return you.piety >= piety_breakpoint(4) ? lifesaving_chance::always
-                           : lifesaving_chance::sometimes;
+    return lifesaving_chance::always;
 }
 
 bool god_protects_from_harm()
@@ -4014,13 +4013,9 @@ bool god_protects_from_harm()
     {
         switch (elyvilon_lifesaving())
         {
-        case lifesaving_chance::sometimes:
-            if (random2(you.piety) >= piety_breakpoint(0))
-                return true;
-            break;
         case lifesaving_chance::always:
             // Reliable lifesaving is costly.
-            lose_piety(21 + random2(20));
+            lose_piety(10 + random2(20));
             return true;
         default:
             break;

@@ -22,7 +22,6 @@
 enum class lifesaving_chance
 {
     never,
-    sometimes,
     always,
 };
 

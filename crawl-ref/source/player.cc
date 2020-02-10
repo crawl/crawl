@@ -6152,7 +6152,8 @@ int player::gdr_perc() const
 
     const item_def *body_armour = slot_item(EQ_BODY_ARMOUR, false);
 
-    int body_base_AC = (species == SP_GARGOYLE ? 5 : 0);
+    int body_base_AC = (form == transformation::holy_form ? 6 : 0 ||
+        species == SP_GARGOYLE ? 5 : 0);
     if (body_armour)
         body_base_AC += property(*body_armour, PARM_AC);
 
@@ -7110,6 +7111,9 @@ bool player::sicken(int amount)
 /// Can the player see invisible things?
 bool player::can_see_invisible(bool calc_unid) const
 {
+    if (form == transformation::holy_form)
+        return true;
+
     if (crawl_state.game_is_arena())
         return true;
 
