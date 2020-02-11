@@ -1,4 +1,4 @@
-Stone Soup 0.25 (through 0.25-a0-277-g7046ed1b37)
+Stone Soup 0.25 (through 0.25-a0-491-gd071885120)
 -------------------------------------------------
 
 Highlights
@@ -12,6 +12,13 @@ Branches, Environment
 * Boris can now spawn after the player picks up the Orb of Zot.
 * Forest fires and the Tornado spell can no longer destroy temporary trees
   made by Summon Forest.
+* New vaults:
+    - A new Swamp ending themed as a conflict between Yred and Fedhas that
+      includes an undead version of the Lernaean Hydra.
+    - A transporter vault featuring briar patches, Zot traps, and many swamp
+      worms that pull the player into this terrain.
+    - A transporter ghost vault themed as having the ghost of a player that
+      died trying to escape from the Abyss.
 
 Character
 ---------
@@ -27,17 +34,51 @@ Gods
   of protecting at a value between 5* and 6*.
 * Fedhas now protects plant allies from collisions and from ranged attacks by
   other allies.
+* God conducts for harming allies now apply to spells and items that place
+  harmful clouds. The spells Ring of Flames and Tornado now have prompts
+  whenever allies would be harmed.
+* Trog's Hand now has a slightly higher nutrition cost, but no longer
+  increases the hunger rate while it's active.
+* The effect of Teleport Other will no longer be undone by Dithmenos' shadow
+  mimic. A mimic will only occur if the cast failed to affect the monster.
 
 Items
 -----
+* Scroll of Acquirement rework:
+  - Players a choice of five fully generated items.
+  - Three of the item categories are randomly chosen and the other two are
+    always gold and food (for species that eat).
+  - Generated items are always useable and not hated by the player's current
+    god.
+  - The Miscellaneous category for evokeable items is no longer available.
 * The chaos brand now has might and agility effects, no longer causes miscast
   effects, and its cloning effect can create friendly and neutral monsters.
+* Scrolls of Magic Mapping now reveal any floor traps on the level.
+* Ordinary shields have been renamed to kite shields and large shields have
+  been renamed to tower shields. This helps make equipment descriptions less
+  ambiguous.
+* The vorpal weapon ego no longer has distinct adjectives for each weapon
+  class. Now all such weapons are described as 'vorpal'.
 * Unrandart changes:
+  - New unrand: the Staff of Battle, a staff of conjurations which spawns a
+    battlesphere when monsters are in sight and which dissipates upon unwield.
+  - New unrand: Cigotuvi's Embrace, a +4 leather armour with rN+, rRot and
+    *Drain that automatically gathers corpses to increase AC. The AC decays
+    slowly over time but decays more quickly as more corpses are added.
   - The Elemental Staff now acts as an enhancer for all elemental schools,
     with enhancement applying independently for each school.
+  - Warlock's Mirror can now reflect piercing ranged weapons.
+  - The Staff of Olgreb now grants poison immunity to monsters wielding it.
 
 Monsters
 --------
+* New unique: Maggie, a younger version of the unique Margey, who appears
+  just before and in Lair. She has a steam, acid, or swamp dragon scales, Bolt
+  of Fire, and Mesmerize. Only one of Maggie or Margey will place in a game.
+* Margery now always gets Fire, Shadow, or Storm dragon scales as a
+  counterpart to Maggie's armour.
+* Both Maggie and Margery have a small extra chance of spawning with a
+  pre-enchanted Wyrmbane (1 or 2 points of enchant, respectively).
 * Monsters such as spiders no longer have a clinging ability.
 * Monsters pinned by Wu Jian's Whirlwind can no longer trample the player.
 
@@ -66,6 +107,11 @@ Spells
     + Borgnjor's Vile Clutch now is a range 6 always-penetrating beam instead
       of a smite-targeted 3x3 explosion.
   - Ice spells are diffuse and subtle:
+    + New L3 Ice spell Frozen Ramparts that makes all walls within radius 3
+      become covered in icicles that release when a monster walks nearby. The
+      icicles do light damage that checks AC but is only partly resistable.
+      Affected monsters additionally receive a "frozen" debuff that slows
+      their movement by 4 aut for a few turns.
     + New L4 Conjurations/Ice spell Hailstorm that fires a ring of ice beams
       from radius 2 to radius 3, not affecting radius 1 squares. Monsters with
       rC+++ such as ice beasts are immune to this effect.
@@ -104,11 +150,20 @@ Spells
     to begin to move it closer to a melee support school:
     + Corpse Rot now creates miasma clouds in a ring around the player, making
       one cloud for each corpse in LOS, but with lower duration.
-    + Agony and Dispel Undead are now range 1.
-    + Bolt of Draining is removed.
+    + Agony and Dispel Undead are now range 1, and Dispel Undead is now L4.
+    + Regeneration and Bolt of Draining are removed.
 * The Young Poisoner's Handbook now contains Ignite Poison.
+* Confusing Touch is now level 3 and checks MR instead of monster hit dice.
+* The player is now immune to the effects of liquefied ground made by casting
+  Ledas' Liquefaction.
 * Firestorm and ignition now can burn trees, and Fireball burns trees in all
   squares of its explosion.
+* The Confuse spell has been removed.
+
+Development
+-----------
+* The catch2 testing framework is now integrated into the project and is
+  enabled in our Travis CI testing.
 
 Stone Soup 0.24 (20191024)
 --------------------------
