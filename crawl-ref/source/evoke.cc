@@ -1475,6 +1475,78 @@ static spret _phantom_mirror()
     return spret::success;
 }
 
+/**
+ * Find an adjacent tile for a tremorstone explosion to go off in.
+ *
+ * @param center    The original target of the stone.
+ * @return          The new, final origin of the stone's explosion.
+ */
+static coord_def _get_tremorstone_target(coord_def center)
+{
+    coord_def chosen = center;
+    int seen = 1;
+    for (adjacent_iterator ai(center); ai; ++ai)
+        if (!cell_is_solid(*ai) && one_chance_in(++seen))
+            chosen = *ai;
+    return chosen;
+}
+
+/**
+ * Evokes a tremorstone, blasting something in the general area of a
+ * chosen target.
+ *
+ * @return          spret::abort if the player cancels, spret::fail if they
+ *                  try to evoke but fail, and spret::success otherwise.
+ */
+static spret _tremorstone() {
+    dist target;
+    bolt beam;
+
+    static const int RADIUS = 2;
+    static const int SPREAD = 1;
+    static const int RANGE = RADIUS + SPREAD;
+
+    beam.source_id  = MID_PLAYER;
+    beam.thrower    = KILL_YOU;
+    zappy(ZAP_TREMORSTONE, 1, false, beam);
+    beam.range = RANGE;
+    beam.ex_size = RADIUS;
+
+    direction_chooser_args args;
+    args.mode = TARG_HOSTILE;
+    args.top_prompt = "Throw a tremorstone where?";
+    unique_ptr<targeter> hitfunc = make_unique<targeter_beam>(&you, RANGE, ZAP_TREMORSTONE, 1, 1, 3);
+    args.hitfunc = hitfunc.get();
+    if (!spell_direction(target, beam, &args))
+        return spret::abort;
+
+    if (grid_distance(beam.target, beam.source) > beam.range)
+    {
+        mpr("That is beyond the maximum range.");
+        return spret::abort;
+    }
+
+    if (cell_is_solid(beam.target))
+    {
+        const char *feat = feat_type_name(grd(beam.target));
+        mprf("There's %s there.", article_a(feat).c_str());
+        return spret::abort;
+    }
+
+    bolt tracer = beam;
+    tracer.is_tracer = true;
+    tracer.ex_size = RADIUS + SPREAD;
+    tracer.explode(false);
+    if (tracer.beam_cancelled)
+        return spret::abort;
+
+    beam.target = _get_tremorstone_target(beam.target);
+    mpr("The tremorstone explodes into fragments!");
+    beam.explode(true);
+
+    return spret::success;
+}
+
 bool evoke_check(int slot, bool quiet)
 {
     const bool reaching = slot != -1 && slot == you.equip[EQ_WEAPON]
@@ -1768,6 +1840,22 @@ bool evoke_item(int slot)
         case MISC_ZIGGURAT:
             // Don't set did_work to false, _make_zig handles the message.
             unevokable = !_make_zig(item);
+            break;
+
+        case MISC_TREMORSTONE:
+            switch (_tremorstone()) {
+                default:
+                case spret::abort:
+                    return false;
+
+                case spret::success:
+                    ASSERT(in_inventory(item));
+                    dec_inv_item_quantity(item.link, 1);
+                    break;
+
+                case spret::fail:
+                    break;
+            }
             break;
 
         default:

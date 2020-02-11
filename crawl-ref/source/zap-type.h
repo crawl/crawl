@@ -89,5 +89,6 @@ enum zap_type
     ZAP_FOXFIRE,
     ZAP_AGONY_RANGE,
     ZAP_DISPEL_UNDEAD_RANGE,
+    ZAP_TREMORSTONE,
     NUM_ZAPS
 };

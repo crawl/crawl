@@ -1143,6 +1143,15 @@ boomerang
 
 A curved, flat, throwing baton designed to return to its user.
 %%%%
+tremorstone
+
+A dormant earth elemental in the form of a tiny, very heavy pebble. When hurled,
+the elemental literally explodes with rage at its rest being disturbed.
+Tremorstones usually land slightly off-target, and the user is always at risk of
+being hit. However, armour is extremely effective at repelling the lightweight
+fragments of rock from a tremorstone's explosion, so a well-armoured wielder has
+little to fear. Evocations skill has no effect on tremorstones.
+%%%%
 trident
 
 A fishing spear improved with a longer shaft and a three-pronged metal head.

@@ -2078,13 +2078,14 @@ static bool _item_ally_only(const item_def &item)
  * Return whether an item can be evoked.
  *
  * @param item      The item to check
- * @param reach     Do weapons of reaching count?
+ * @param unskilled Do items that don't use Evocations skill (weapons of
+ *                  reaching and tremorstones) count?
  * @param known     When set, return true for items of unknown type which
  *                  might be evokable.
  * @param msg       Whether we need to print a message.
  * @param equip     When false, ignore wield and meld requirements.
  */
-bool item_is_evokable(const item_def &item, bool reach, bool known,
+bool item_is_evokable(const item_def &item, bool unskilled, bool known,
                       bool msg, bool equip)
 {
     const string error = item_is_melded(item)
@@ -2146,10 +2147,10 @@ bool item_is_evokable(const item_def &item, bool reach, bool known,
         return true;
 
     case OBJ_WEAPONS:
-        if ((!wielded || !reach) && !msg)
+        if ((!wielded || !unskilled) && !msg)
             return false;
 
-        if (reach && weapon_reach(item) > REACH_NONE && item_type_known(item))
+        if (unskilled && weapon_reach(item) > REACH_NONE && item_type_known(item))
         {
             if (!wielded)
             {
@@ -2181,16 +2182,17 @@ bool item_is_evokable(const item_def &item, bool reach, bool known,
             mpr("That item cannot be evoked!");
         return false;
 
-#if TAG_MAJOR_VERSION == 34
     case OBJ_MISCELLANY:
+#if TAG_MAJOR_VERSION == 34
         if (item.sub_type != MISC_BUGGY_LANTERN_OF_SHADOWS
-            && item.sub_type != MISC_BUGGY_EBONY_CASKET
-            )
+            && item.sub_type != MISC_BUGGY_EBONY_CASKET)
         {
-            return true;
-        }
 #endif
+            return unskilled || item.sub_type != MISC_TREMORSTONE;
+#if TAG_MAJOR_VERSION == 34
+        }
         // removed items fallthrough to failure
+#endif
 
     default:
         if (msg)

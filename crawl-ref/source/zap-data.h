@@ -1358,4 +1358,22 @@ _mon_hex_zap(ZAP_DRAIN_MAGIC, BEAM_DRAIN_MAGIC),
     1
 },
 
+{
+    ZAP_TREMORSTONE,
+    "shards of rock",
+    200,
+    new dicedef_calculator<6, 12, 0, 1>,
+    new tohit_calculator<40>,
+    nullptr,
+    nullptr,
+    BROWN,
+    false,
+    BEAM_FRAG,
+    DCHAR_FIRED_BURST,
+    true,
+    false,
+    true,
+    0 // Noise comes from explosion
+},
+
 };

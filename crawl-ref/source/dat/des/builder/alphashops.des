@@ -117,7 +117,7 @@
       elseif s == "K" then i = { "any" }
 
       elseif s == "L" then i = { "lamp of fire", "manual of long blades",
-       "large rock", "tower shield", "leather armour", "long sword",
+       "large rock", "leather armour", "long sword",
        "potion of lignification", "lajatang", "longbow", "lightning rod" }
 
       elseif s == "M" then i = { "manual of maces & flails",
@@ -153,7 +153,7 @@
        "ring of see invisible", "ring of slaying", "spear", "ring of stealth",
        "ring of strength", "manual of stealth", "sack of spiders",
        "scroll of summoning", "scythe", "book of spatial translocations",
-       "scroll of silence", "kite shield", "shortbow", "manual of staves",
+       "scroll of silence", "shortbow", "manual of staves",
        "steam dragon scales", "shadow dragon scales", "storm dragon scales",
        "swamp dragon scales", "manual of short blades", "staff of summoning",
        "manual of slings", "manual of shields", "manual of spellcasting",
@@ -164,7 +164,7 @@
        "scroll of teleportation", "triple sword", "triple crossbow",
        "troll leather armour", "manual of throwing",
        "manual of translocations", "manual of transmutations",
-       "trident", "throwing net" }
+       "trident", "throwing net", "tower shield", "tremorstone" }
 
       elseif s == "U" then i = { "book of unlife", "manual of unarmed combat" }
 

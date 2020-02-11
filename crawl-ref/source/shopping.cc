@@ -739,6 +739,7 @@ unsigned int item_value(item_def item, bool ident)
 
         case MISC_BOX_OF_BEASTS:
         case MISC_SACK_OF_SPIDERS:
+        case MISC_TREMORSTONE:
             valued += 200;
             break;
 

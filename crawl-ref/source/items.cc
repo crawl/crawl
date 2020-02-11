@@ -1500,23 +1500,25 @@ bool is_stackable_item(const item_def &item)
     if (!item.defined())
         return false;
 
-    if (item.base_type == OBJ_MISSILES
-        || item.base_type == OBJ_FOOD
-        || item.base_type == OBJ_SCROLLS
-        || item.base_type == OBJ_POTIONS
-        || item.base_type == OBJ_GOLD)
-    {
-        return true;
+    switch (item.base_type) {
+        case OBJ_MISSILES:
+        case OBJ_FOOD:
+        case OBJ_SCROLLS:
+        case OBJ_POTIONS:
+        case OBJ_GOLD:
+            return true;
+        case OBJ_MISCELLANY:
+            switch (item.sub_type) {
+                case MISC_PHANTOM_MIRROR:
+                case MISC_ZIGGURAT:
+                case MISC_SACK_OF_SPIDERS:
+                case MISC_BOX_OF_BEASTS:
+                case MISC_TREMORSTONE:
+                    return true;
+                default: break;
+            }
+        default: break;
     }
-
-    if (item.is_type(OBJ_MISCELLANY, MISC_PHANTOM_MIRROR)
-        || item.is_type(OBJ_MISCELLANY, MISC_ZIGGURAT)
-        || item.is_type(OBJ_MISCELLANY, MISC_SACK_OF_SPIDERS)
-        || item.is_type(OBJ_MISCELLANY, MISC_BOX_OF_BEASTS))
-    {
-        return true;
-    }
-
     return false;
 }
 
@@ -3959,6 +3961,8 @@ colour_t item_def::miscellany_colour() const
         case MISC_XOMS_CHESSBOARD:
             return DARKGREY;
 #endif
+        case MISC_TREMORSTONE:
+            return BROWN;
         case MISC_QUAD_DAMAGE:
             return ETC_DARK;
         case MISC_ZIGGURAT:
