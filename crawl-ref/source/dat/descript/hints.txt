@@ -159,12 +159,11 @@ with the <input>left mouse button</input></localtiles>.
 %%%%
 HINT_CONVERT Xom
 
-You've just converted to worshipping <w>Xom</w>. You can keep Xom happy by
-keeping him amused; you absolutely do not want this god to grow bored with you!
+You've just converted to worshipping <w>Xom</w>. As a follower of Xom, you'll
+be treated like a plaything, randomly helped or harmed for Xom's own amusement.
 
-If you keep Xom amused he'll treat you like a plaything, randomly helping and
-harming you for his own amusement; otherwise he'll treat you like a disfavoured
-plaything.
+There is no way to guarantee Xom remains in a good mood - the best any follower
+can hope for is to avoid letting Xom grow bored!
 %%%%
 HINT_CONVERT Gozag
 
