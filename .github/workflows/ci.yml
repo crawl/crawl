@@ -117,8 +117,8 @@ jobs:
             ccache-mingw64
       - run: make -j$(nproc) CROSSHOST=i686-w64-mingw32 package-windows-zips
         working-directory: crawl-ref/source
-  coveralls_catch2:
-    name: Catch2 (GCC/Linux) + Coveralls
+  codecov_catch2:
+    name: Catch2 (GCC/Linux) + Codecov
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
