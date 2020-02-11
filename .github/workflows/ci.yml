@@ -44,6 +44,16 @@ jobs:
       - name: Install dependencies
         run: ./deps.py --compiler ${{ matrix.compiler }} --build-opts "${{ matrix.build_opts }}"
         working-directory: .github/workflows
+      # - name: Configure ccache
+      #   run: >
+      #     cat >~/.ccache/ccache.conf <<EOF
+      #     # ccache uses around 100mb to store the output from a single crawl run
+      #     # (when compressed)
+      #     compression = True
+      #     compression_level = 9
+      #     log_file = /tmp/ccache.log
+      #     max_size = 500M
+      #     EOF
       - name: Add ccache to PATH
         run: echo "::add-path::/usr/lib/ccache"
       - name: Cache compilation
@@ -55,8 +65,14 @@ jobs:
             ccache-linux-${{ matrix.compiler }}-${{ matrix.build_opts }}-${{ matrix.debug }}
             ccache-linux-${{ matrix.compiler }}-${{ matrix.build_opts }}-
             ccache-linux-${{ matrix.compiler }}-
+      - name: Display ccache configuration
+        run: |
+          ccache -s
+          ls -l /usr/lib/ccache
       - run: make -j$(nproc) ${{ matrix.build_opts }} ${{ matrix.debug }}
         working-directory: crawl-ref/source
+      - name: Print ccache stats
+        run: ccache -s
 
   build_macos:
     name: "clang macOS"
@@ -86,8 +102,14 @@ jobs:
           key: ccache-macos-clang
           restore-keys: |
             ccache-macos-clang
+      - name: Display ccache configuration
+        run: |
+          ccache -s
+          ls -l /usr/local/opt/ccache/libexec
       - run: make -j$(nproc)
         working-directory: crawl-ref/source
+      - name: Print ccache stats
+        run: ccache -s
 
   build_mingw64_crosscompile:
     name: "gcc mingw64 crosscompile"
@@ -115,8 +137,14 @@ jobs:
           key: ccache-mingw64
           restore-keys: |
             ccache-mingw64
+      - name: Display ccache configuration
+        run: |
+          ccache -s
+          ls -l /usr/lib/ccache
       - run: make -j$(nproc) CROSSHOST=i686-w64-mingw32 package-windows-zips
         working-directory: crawl-ref/source
+      - name: Print ccache stats
+        run: ccache -s
   codecov_catch2:
     name: Catch2 (GCC/Linux) + Codecov
     runs-on: ubuntu-latest
@@ -137,8 +165,14 @@ jobs:
           key: ccache-catch2
           restore-keys: |
             ccache-catch2
+      - name: Display ccache configuration
+        run: |
+          ccache -s
+          ls -l /usr/lib/ccache
       - run: make -j$(nproc) catch2-tests
         working-directory: crawl-ref/source
+      - name: Print ccache stats
+        run: ccache -s
       - name: Generate LCOV data
         working-directory: crawl-ref/source
         run: >
