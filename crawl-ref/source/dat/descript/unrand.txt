@@ -283,7 +283,7 @@ storm bow
 A longbow with the colour of dark rain clouds that fires arrows like
 lightning.
 %%%%
-pavise of Ignorance
+tower shield of Ignorance
 
 A shield unearthed from the remains of a ruined city. It bears an inscription
 written in an ancient language. Scholars and wise men laboured for countless
@@ -303,7 +303,7 @@ A pitch-black cloak which allows its wearer to excel in the arts of thievery,
 and can be evoked to release thick clouds of smoke for a hasty escape.
 %%%%
 # TAG_MAJOR_VERSION == 34
-pavise "Bullseye"
+tower shield "Bullseye"
 
 Just in case you had trouble getting hit.
 %%%%

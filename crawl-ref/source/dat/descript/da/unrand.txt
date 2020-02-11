@@ -177,7 +177,7 @@ storm bow
 
 Denne bue har samme farve som mørke regnvejrsskyer og lugter af våd ozon.
 %%%%
-pavise of Ignorance
+tower shield of Ignorance
 
 »Et åbent sind er som en fæstning, hvor portene står åbne og murene er
 ubevogtede.«
@@ -191,7 +191,7 @@ cloak of the Thief
 Den lader bæreren brillere i tyveriets kunst og kan udløse tykke røgskyer, når
 den vækkes, så det bliver lettere at tage flugten.
 %%%%
-pavise "Bullseye"
+tower shield "Bullseye"
 
 Bare hvis du nu havde svært ved at blive ramt.
 %%%%

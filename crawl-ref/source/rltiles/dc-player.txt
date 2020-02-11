@@ -822,12 +822,12 @@ kite_shield_kite2 KITE_SHIELD_KITE2
 kite_shield_kite3 KITE_SHIELD_KITE3
 kite_shield_kite4 KITE_SHIELD_KITE4 KITE_SHIELD_LAST_NORM
 
-pavise_long_red PAVISE_LONG_RED PAVISE_FIRST_NORM
-pavise_gold PAVISE_GOLD
-pavise_green PAVISE_GREEN
-pavise_quartered PAVISE_QUARTERED
-pavise_teal PAVISE_TEAL
-pavise_spiral PAVISE_SPIRAL PAVISE_LAST_NORM
+tower_shield_long_red TOWER_SHIELD_LONG_RED TOWER_SHIELD_FIRST_NORM
+tower_shield_gold TOWER_SHIELD_GOLD
+tower_shield_green TOWER_SHIELD_GREEN
+tower_shield_quartered TOWER_SHIELD_QUARTERED
+tower_shield_teal TOWER_SHIELD_TEAL
+tower_shield_spiral TOWER_SHIELD_SPIRAL TOWER_SHIELD_LAST_NORM
 
 ##unrand (or unique) shields
 buckler_spriggan BUCKLER_SPRIGGAN
@@ -838,8 +838,8 @@ kite_shield_bullseye KITE_SHIELD_BULLSEYE
 kite_shield_gong KITE_SHIELD_GONG
 kite_shield_of_resistance KITE_SHIELD_OF_RESISTANCE
 
-pavise_of_ignorance PAVISE_OF_IGNORANCE
-pavise_louise PAVISE_LOUISE
+tower_shield_of_ignorance TOWER_SHIELD_OF_IGNORANCE
+tower_shield_louise TOWER_SHIELD_LOUISE
 
 %sdir player/hand2/doll_only
 
@@ -868,7 +868,7 @@ gil-galad KITE_SHIELD_GILGALAD
 
 kite_shield_dd KITE_SHIELD_DEEP_DWARF
 kite_shield_dd_scion KITE_SHIELD_DEEP_DWARF_SCION
-pavise_dd_dk PAVISE_DEEP_DWARF_DEATH_KNIGHT
+tower_shield_dd_dk TOWER_SHIELD_DEEP_DWARF_DEATH_KNIGHT
 
 ## books
 %sdir player/hand2/misc

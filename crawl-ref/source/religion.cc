@@ -1967,7 +1967,7 @@ static armour_type _hepliaklqana_shield_type(monster_type mc, int HD)
         return NUM_ARMOURS;
     if (HD < 13)
         return ARM_KITE_SHIELD;
-    return ARM_PAVISE;
+    return ARM_TOWER_SHIELD;
 }
 
 static special_armour_type _hepliaklqana_shield_ego(int HD)

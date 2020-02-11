@@ -541,7 +541,7 @@ ITEM:    great mace good_item / battleaxe good_item / glaive good_item / \
 :   " / halberd " .. goodfreezeweap .. " / great sword " .. goodfreezeweap ..
 :   " / nothing w:80")
 : item("cloak " .. coldres .. " w:15 / hat good_item " ..
-:   " / kite shield " .. coldres ..  " / pavise " .. coldres ..
+:   " / kite shield " .. coldres ..  " / tower shield " .. coldres ..
 :   " / nothing w:60")
 ITEM:    potion of resistance w:5 / potion of mutation q:2 w:5 / \
          potion of might / potion of flight / \

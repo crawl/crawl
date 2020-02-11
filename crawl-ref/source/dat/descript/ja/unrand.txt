@@ -171,7 +171,7 @@ storm bow
 
 この弓は暗い雨雲の色をしており、オゾンの臭いを放っている。
 %%%%
-pavise of Ignorance
+tower shield of Ignorance
 
 広い心というものは扉が開け放たれ、守備されていない要塞のようなものだ。
 %%%%
@@ -184,7 +184,7 @@ cloak of the Thief
 これは着用者を盗みの技巧に於いて卓越した存在とする。これは迅速な逃走を助ける、
 濃密な煙幕を放つことを可能にする。
 %%%%
-pavise "Bullseye"
+tower shield "Bullseye"
 
 もし敵の攻撃でお困りでしたらどうぞ。
 %%%%

@@ -843,22 +843,18 @@ HEADER_END
             next;
         }
         elsif ($artefact->{sub_type} =~ /_SHIELD/
-               || $artefact->{sub_type} =~ /_BUCKLER/
-               || $artefact->{sub_type} =~ /_PAVISE/)
+               || $artefact->{sub_type} =~ /_BUCKLER/)
         {
             $part = "HAND2";
         }
-        elsif ($artefact->{sub_type} =~ /_CLOAK/)
+        elsif ($artefact->{sub_type} =~ /_CLOAK/
+               || $artefact->{sub_type} =~ /_SCARF/)
         {
             $part = "CLOAK";
         }
         elsif ($artefact->{sub_type} =~ /_HAT|_HELMET/)
         {
             $part = "HELM";
-        }
-        elsif ($artefact->{sub_type} =~ /_SHIELD/)
-        {
-            $part = "HAND2";
         }
         elsif ($artefact->{sub_type} =~ /_BOOTS|_BARDING/)
         {

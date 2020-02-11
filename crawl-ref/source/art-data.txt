@@ -683,12 +683,12 @@ TILE_EQ:  storm_bow
 BRAND:    SPWPN_ELECTROCUTION
 INSCRIP:  penet
 
-NAME:    pavise of Ignorance
-OBJ:     OBJ_ARMOUR/ARM_PAVISE
+NAME:    tower shield of Ignorance
+OBJ:     OBJ_ARMOUR/ARM_TOWER_SHIELD
 PLUS:    +10
 COLOUR:  BROWN
 TILE:    urand_ignorance
-TILE_EQ: pavise_of_ignorance
+TILE_EQ: tower_shield_of_ignorance
 INT:     -4
 LIFE:    1
 
@@ -715,8 +715,8 @@ STEALTH:  1
 BOOL:     seeinv, fog
 
 # TAG_MAJOR_VERSION == 34
-NAME:    pavise "Bullseye"
-OBJ:     OBJ_ARMOUR/ARM_PAVISE
+NAME:    tower shield "Bullseye"
+OBJ:     OBJ_ARMOUR/ARM_TOWER_SHIELD
 PLUS:    +15
 COLOUR:  RED
 TILE:    urand_bullseye
@@ -930,7 +930,7 @@ BOOL:     poison
 
 NAME:     shield of the Gong
 OBJ:      OBJ_ARMOUR/ARM_KITE_SHIELD
-FALLBACK: OBJ_ARMOUR/ARM_PAVISE
+FALLBACK: OBJ_ARMOUR/ARM_TOWER_SHIELD
 PLUS:     +18
 COLOUR:   ETC_GOLD
 TILE:     urand_gong

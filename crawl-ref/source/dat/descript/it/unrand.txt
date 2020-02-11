@@ -133,7 +133,7 @@ storm bow
 
 Quest'arco ha il colore delle nere nubi da pioggia, e l'odore di ozono bagnato.
 %%%%
-pavise of Ignorance
+tower shield of Ignorance
 
 «Una mente aperta è come una fortezza con i suoi cancello spalancati e
 sguarniti.»
@@ -148,7 +148,7 @@ Permette al suo indossatore di eccellere nelle arti del furto, e può essere
 evocata per rilasciare delle dense nuvole di fumo per aiutare una fuga
 affrettata.
 %%%%
-pavise "Bullseye"
+tower shield "Bullseye"
 
 Giusto in caso avessi problemi a farti colpire.
 %%%%

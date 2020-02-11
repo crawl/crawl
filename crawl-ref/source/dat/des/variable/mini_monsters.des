@@ -1124,7 +1124,7 @@ MONS:   harpy, basilisk, catoblepas
 KMONS:  P = withered plant
 ITEM:   kite shield ego:reflection ident:type / \
         buckler ego:reflection ident:type w:1 / \
-        pavise ego:reflection ident:type w:1
+        tower shield ego:reflection ident:type w:1
 ITEM:   stone
 NSUBST: H = 4:G / 2:G. / *:e
 MAP
@@ -6952,7 +6952,7 @@ ENDMAP
 NAME:    chequers_guarded_unrand_ignorance
 DEPTH:   D:7-12, Orc
 TAGS:    no_monster_gen no_trap_gen transparent
-ITEM:    pavise_of_ignorance no_pickup
+ITEM:    tower shield_of_ignorance no_pickup
 MONS:    orange crystal statue
 KPROP:   .d1 = no_tele_into
 SUBST:   - = .

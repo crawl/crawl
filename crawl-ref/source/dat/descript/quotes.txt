@@ -1718,7 +1718,7 @@ large rock
  There's no hiding place down here.”
     -Negro spiritual. 19th cent.
 %%%%
-pavise
+tower shield
 
 <buckler>
 %%%%

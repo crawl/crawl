@@ -781,7 +781,7 @@ static special_armour_type _generate_armour_type_ego(armour_type type)
     switch (type)
     {
     case ARM_KITE_SHIELD:
-    case ARM_PAVISE:
+    case ARM_TOWER_SHIELD:
     case ARM_BUCKLER:
         return random_choose_weighted(1, SPARM_RESISTANCE,
                                       3, SPARM_FIRE_RESISTANCE,
@@ -1032,7 +1032,7 @@ static armour_type _get_random_armour_type(int item_level)
                                          // Shield slot
                                          4, ARM_KITE_SHIELD,
                                          6, ARM_BUCKLER,
-                                         2, ARM_PAVISE);
+                                         2, ARM_TOWER_SHIELD);
     }
     else if (x_chance_in_y(11 + item_level, 10000))
     {

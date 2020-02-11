@@ -246,8 +246,8 @@ function general_item_setup(e)
     cloak plus:2 good_item not_cursed ident:all /\
     hat plus:4 not_cursed ident:all /\
     hat plus:2 good_item not_cursed ident:all /\
-    pavise plus:5 not_cursed ident:all /\
-    pavise plus:3 good_item not_cursed ident:all /\
+    tower shield plus:5 not_cursed ident:all /\
+    tower shield plus:3 good_item not_cursed ident:all /\
     naga barding plus:6 not_cursed ident:all w:5 /\
     centaur barding plus:6 not_cursed ident:all w:5")
   e.kitem("( = battleaxe plus:6 ego:none not_cursed ident:all /\
@@ -306,8 +306,8 @@ function general_item_setup(e)
     cloak plus:0 good_item not_cursed ident:all /\
     hat plus:2 not_cursed ident:all /\
     hat plus:0 good_item not_cursed ident:all /\
-    pavise plus:3 not_cursed ident:all /\
-    pavise plus:0 good_item not_cursed ident:all /\
+    tower shield plus:3 not_cursed ident:all /\
+    tower shield plus:0 good_item not_cursed ident:all /\
     naga barding plus:2 not_cursed ident:all w:5 /\
     centaur barding plus:2 not_cursed ident:all w:5")
 end
@@ -446,7 +446,7 @@ function armoury_setup(e)
           storm dragon scales plus:3 not_cursed ident:all w:5 /\
           shadow dragon scales plus:3 not_cursed ident:all w:5 /\
           gold dragon scales plus:2 not_cursed ident:all /\
-          pavise plus:1 not_cursed ident:all /\
+          tower shield plus:1 not_cursed ident:all /\
           any armour good_item ident:all w:20")
   e.kitem("c = any weapon good_item ident:all")
   e.kitem("d = any armour good_item ident:all")

@@ -129,7 +129,7 @@
     "; ring of slaying plus:250 not_cursed ident:all " ..
     "no_pickup . demon whip plus:9 not_cursed ego:vorpal " ..
     "ident:all no_pickup " ..
-    ". pavise plus:12 not_cursed ego:none " ..
+    ". tower shield plus:12 not_cursed ego:none " ..
     "ident:all no_pickup"
 
   -- Meatlord shadow creatures will be tzitzimimeh

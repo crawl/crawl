@@ -203,7 +203,7 @@ static armour_type _acquirement_armour_for_slot(equipment_type slot_type,
  *
  * Weighted by Shields skill & the secret racial shield bonus.
  *
- * Ratios by shields skill & player size (B = buckler, K = kite shield, P = pavise)
+ * Ratios by shields skill & player size (B = buckler, K = kite shield, P = tower shield)
  *
  *     Shields    0           5         10          15        20
  * Large:   {6B}/5K/4P  ~{1B}/1K/1P  ~{1B}/5K/7P  ~2K/3P     1K/2P
@@ -221,7 +221,7 @@ static armour_type _acquirement_shield_type()
         { ARM_BUCKLER,       player_shield_racial_factor() * 4 * scale
                                 - _skill_rdiv(SK_SHIELDS, scale) },
         { ARM_KITE_SHIELD,        10 * scale },
-        { ARM_PAVISE,  20 * scale
+        { ARM_TOWER_SHIELD,  20 * scale
                              - player_shield_racial_factor() * 4 * scale
                              + _skill_rdiv(SK_SHIELDS, scale / 2) },
     };
@@ -353,7 +353,7 @@ static armour_type _useless_armour_type()
             vector<pair<armour_type, int>> shield_weights = {
                 { ARM_BUCKLER,       1 },
                 { ARM_KITE_SHIELD,        1 },
-                { ARM_PAVISE,  1 },
+                { ARM_TOWER_SHIELD,  1 },
             };
 
             return filtered_vector_select<armour_type>(shield_weights,

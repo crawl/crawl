@@ -429,16 +429,16 @@ kite_shield1 ARM_KITE_SHIELD
 kite_shield2
 kite_shield3
 
-pavise1 ARM_PAVISE
-pavise2
-pavise3
+tower_shield1 ARM_TOWER_SHIELD
+tower_shield2
+tower_shield3
 
 kite_shield_dd KITE_SHIELD_DEEP_DWARF
 kite_shield_dd_scion KITE_SHIELD_DEEP_DWARF_SCION
-pavise_dd_dk PAVISE_DEEP_DWARF_DEATH_KNIGHT
+tower_shield_dd_dk TOWER_SHIELD_DEEP_DWARF_DEATH_KNIGHT
 %rim 0
 kite_shield_donald KITE_SHIELD_DONALD
-pavise_louise PAVISE_LOUISE
+tower_shield_louise TOWER_SHIELD_LOUISE
 %rim 1
 
 %sdir item/armour/headgear
