@@ -140,6 +140,7 @@ jobs:
       - run: make -j$(nproc) catch2-tests
         working-directory: crawl-ref/source
       - name: Generate LCOV data
+        working-directory: crawl-ref/source
         run: >
           lcov
           --capture
@@ -147,7 +148,14 @@ jobs:
           --output-file ../../coverage.info
           --ignore-errors source
           --rc lcov_branch_coverage=1
+      - name: Remove unimportant files from coverage
         working-directory: crawl-ref/source
+        run: |
+          mv ../../coverage.info ../../coverage.info.old
+          lcov --remove ../../coverage.info.old \
+            'crawl-ref/source/catch2-tests/*' \
+            --rc lcov_branch_coverage=1 \
+            -o ../../coverage.info
       - name: Send coverage data to Codecov
         uses: codecov/codecov-action@v1
         with:
