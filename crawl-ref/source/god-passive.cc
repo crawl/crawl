@@ -1839,8 +1839,6 @@ void wu_jian_end_of_turn_effects()
         {
             mi->lose_ench_levels(mi->get_ench(ENCH_WHIRLWIND_PINNED), 1, true);
         }
-
-    you.attribute[ATTR_WALL_JUMP_READY] = 0;
 }
 
 bool wu_jian_post_move_effects(bool did_wall_jump,

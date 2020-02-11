@@ -464,7 +464,6 @@ void revive()
     you.attribute[ATTR_XP_DRAIN] = 0;
     you.attribute[ATTR_SERPENTS_LASH] = 0;
     you.attribute[ATTR_HEAVENLY_STORM] = 0;
-    you.attribute[ATTR_WALL_JUMP_READY] = 0;
     you.los_noise_level = 0;
     you.los_noise_last_turn = 0; // silence in death
     if (you.duration[DUR_SCRYING])

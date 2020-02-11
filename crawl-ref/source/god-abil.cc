@@ -5747,7 +5747,6 @@ bool wu_jian_can_wall_jump(const coord_def& target, string &error_ret)
         }
         else
             error_ret = "You have no room to wall jump there.";
-        you.attribute[ATTR_WALL_JUMP_READY] = 0;
         return false;
     }
     error_ret = "";
@@ -5763,7 +5762,7 @@ bool wu_jian_can_wall_jump(const coord_def& target, string &error_ret)
  * @param targ the movement target (i.e. the wall being moved against).
  * @return whether the jump culminated.
  */
-bool wu_jian_do_wall_jump(coord_def targ, bool ability)
+bool wu_jian_do_wall_jump(coord_def targ)
 {
     // whether there's space in the first place is checked earlier
     // in wu_jian_can_wall_jump.
@@ -5773,58 +5772,31 @@ bool wu_jian_do_wall_jump(coord_def targ, bool ability)
     if (!check_moveto(wall_jump_landing_spot, "wall jump"))
     {
         you.turn_is_over = false;
-        if (!ability && Options.wall_jump_prompt)
-        {
-            mprf(MSGCH_PLAIN, "You take your %s off %s.",
-                 you.foot_name(true).c_str(),
-                 feature_description_at(targ, false, DESC_THE).c_str());
-            you.attribute[ATTR_WALL_JUMP_READY] = 0;
-        }
-        return false;
-    }
-
-    if (!ability
-        && Options.wall_jump_prompt
-        && you.attribute[ATTR_WALL_JUMP_READY] == 0)
-    {
-        you.turn_is_over = false;
-        mprf(MSGCH_PLAIN,
-             "You put your %s on %s. Move against it again to jump.",
-             you.foot_name(true).c_str(),
-             feature_description_at(targ, false, DESC_THE).c_str());
-        you.attribute[ATTR_WALL_JUMP_READY] = 1;
         return false;
     }
 
     auto initial_position = you.pos();
     move_player_to_grid(wall_jump_landing_spot, false);
-    if (!ability)
-        count_action(CACT_INVOKE, ABIL_WU_JIAN_WALLJUMP);
     wu_jian_wall_jump_effects();
 
-    if (ability)
-    {
-        // TODO: code duplication with movement...
-        // TODO: check engulfing
-        int wall_jump_modifier = (you.attribute[ATTR_SERPENTS_LASH] != 1) ? 2
-                                                                          : 1;
+    // TODO: check engulfing
+    int wall_jump_modifier = (you.attribute[ATTR_SERPENTS_LASH] != 1) ? 2
+                                                                      : 1;
 
-        you.time_taken = player_speed() * wall_jump_modifier
-                         * player_movement_speed();
-        you.time_taken = div_rand_round(you.time_taken, 10);
+    you.time_taken = player_speed() * wall_jump_modifier
+                     * player_movement_speed();
+    you.time_taken = div_rand_round(you.time_taken, 10);
 
-        // need to set this here in case serpent's lash isn't active
-        you.turn_is_over = true;
-        request_autopickup();
-        wu_jian_post_move_effects(true, initial_position);
-    }
+    // need to set this here in case serpent's lash isn't active
+    you.turn_is_over = true;
+    request_autopickup();
+    wu_jian_post_move_effects(true, initial_position);
+
     return true;
 }
 
 spret wu_jian_wall_jump_ability()
 {
-    // This needs to be kept in sync with direct walljumping via movement.
-    // TODO: Refactor to call the same code.
     ASSERT(!crawl_state.game_is_arena());
 
     if (crawl_state.is_repeating_cmd())
@@ -5911,7 +5883,7 @@ spret wu_jian_wall_jump_ability()
             break;
     }
 
-    if (!wu_jian_do_wall_jump(beam.target, true))
+    if (!wu_jian_do_wall_jump(beam.target))
         return spret::abort;
 
     crawl_state.cancel_cmd_again();

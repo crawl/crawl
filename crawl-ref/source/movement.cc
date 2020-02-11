@@ -549,17 +549,8 @@ void move_player_action(coord_def move)
     }
 
     const coord_def targ = you.pos() + move;
-    string wall_jump_err;
-    // Don't allow wall jump against close doors via movement -- need to use
-    // the ability. Also, if moving into a closed door, don't call
-    // wu_jian_can_wall_jump, to avoid printing a spurious message (see 11940).
-    bool can_wall_jump = Options.wall_jump_move
-                         && (!in_bounds(targ)
-                             || !feat_is_closed_door(grd(targ)))
-                         && wu_jian_can_wall_jump(targ, wall_jump_err);
-    bool did_wall_jump = false;
     // You can't walk out of bounds!
-    if (!in_bounds(targ) && !can_wall_jump)
+    if (!in_bounds(targ))
     {
         // Why isn't the border permarock?
         if (you.digging)
@@ -697,8 +688,7 @@ void move_player_action(coord_def move)
 
     const bool running = you_are_delayed() && current_delay()->is_run();
 
-    if (!attacking && (targ_pass || can_wall_jump)
-        && moving && !beholder && !fmonger)
+    if (!attacking && targ_pass && moving && !beholder && !fmonger)
     {
         if (you.confused() && is_feat_dangerous(env.grid(targ)))
         {
@@ -709,10 +699,7 @@ void move_player_action(coord_def move)
             return;
         }
 
-        // can_wall_jump means `targ` is solid and can be walljumped off of,
-        // so the player will never enter `targ`. Therefore, we don't want to
-        // check exclusions at `targ`.
-        if (!you.confused() && !can_wall_jump && !check_moveto(targ, walkverb))
+        if (!you.confused() && !check_moveto(targ, walkverb))
         {
             stop_running();
             you.turn_is_over = false;
@@ -761,13 +748,6 @@ void move_player_action(coord_def move)
         // Don't trigger traps when confusion causes no move.
         if (you.pos() != targ && targ_pass)
             move_player_to_grid(targ, true);
-        else if (can_wall_jump && !running)
-        {
-            if (!wu_jian_do_wall_jump(targ, false))
-                return; // wall jump only in the ready state, or cancelled
-            else
-                did_wall_jump = true;
-        }
 
         // Now it is safe to apply the swappee's location effects and add
         // trailing effects. Doing so earlier would allow e.g. shadow traps to
@@ -805,12 +785,7 @@ void move_player_action(coord_def move)
         if (you_are_delayed() && current_delay()->is_run())
             env.travel_trail.push_back(you.pos());
 
-        // Serpent's Lash = 1 means half of the wall jump time is refunded, so
-        // the modifier is 2 * 1/2 = 1;
-        int wall_jump_modifier =
-            (did_wall_jump && you.attribute[ATTR_SERPENTS_LASH] != 1) ? 2 : 1;
-
-        you.time_taken *= wall_jump_modifier * player_movement_speed();
+        you.time_taken *= player_movement_speed();
         you.time_taken = div_rand_round(you.time_taken, 10);
         you.time_taken += additional_time_taken;
 
@@ -826,15 +801,6 @@ void move_player_action(coord_def move)
         move.reset();
         you.turn_is_over = true;
         request_autopickup();
-    }
-
-    if (!attacking && !targ_pass && !can_wall_jump && !running
-        && moving && !beholder && !fmonger
-        && Options.wall_jump_move
-        && wu_jian_can_wall_jump_in_principle(targ))
-    {
-        // do messaging for a failed wall jump
-        mpr(wall_jump_err);
     }
 
     // BCR - Easy doors single move
@@ -861,7 +827,7 @@ void move_player_action(coord_def move)
         _entered_malign_portal(&you);
         return;
     }
-    else if (!targ_pass && !attacking && !can_wall_jump)
+    else if (!targ_pass && !attacking)
     {
         if (you.is_stationary())
             canned_msg(MSG_CANNOT_MOVE);
@@ -878,14 +844,14 @@ void move_player_action(coord_def move)
         crawl_state.cancel_cmd_repeat();
         return;
     }
-    else if (beholder && !attacking && !can_wall_jump)
+    else if (beholder && !attacking)
     {
         mprf("You cannot move away from %s!",
             beholder->name(DESC_THE).c_str());
         stop_running();
         return;
     }
-    else if (fmonger && !attacking && !can_wall_jump)
+    else if (fmonger && !attacking)
     {
         mprf("You cannot move closer to %s!",
             fmonger->name(DESC_THE).c_str());
@@ -909,12 +875,9 @@ void move_player_action(coord_def move)
 
     bool did_wu_jian_attack = false;
     if (you_worship(GOD_WU_JIAN) && !attacking)
-    {
-        did_wu_jian_attack = wu_jian_post_move_effects(did_wall_jump,
-                                                       initial_position);
-    }
+        did_wu_jian_attack = wu_jian_post_move_effects(false, initial_position);
 
     // If you actually moved you are eligible for amulet of the acrobat.
-    if (!attacking && moving && !did_wu_jian_attack && !did_wall_jump)
+    if (!attacking && moving && !did_wu_jian_attack)
         update_acrobat_status();
 }

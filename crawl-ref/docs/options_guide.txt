@@ -967,17 +967,6 @@ auto_exclude += <monster name>, <monster name>, ...
         ever bring you into its line of sight. If the monster dies or wakes up
         while you are in sight, this exclusion is automatically removed again.
 
-wall_jump_move = false
-        If true, a WJC character (with the appropriate piety level) can wall
-        jump simply by moving against a solid feature. Otherwise, they can only
-        do so by using the (a)bility. It is never possible to wall jump off of
-        closed doors via movement.
-
-wall_jump_prompt = false
-        If true, and wall_jump_move is also true, then a WJC character can wall
-        jump via movement by moving twice against a solid feature. No effect if
-        wall_jump_move = false.
-
 3-g     Command Enhancements.
 -----------------------------
 
