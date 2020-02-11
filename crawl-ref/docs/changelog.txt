@@ -38,14 +38,14 @@ Gods
   harmful clouds. The spells Ring of Flames and Tornado now have prompts
   whenever allies would be harmed.
 * Trog's Hand now has a slightly higher nutrition cost, but no longer
-  increases the hunger rate while it's active.
+  increases hunger rate while it's active.
 * The effect of Teleport Other will no longer be undone by Dithmenos' shadow
   mimic. A mimic will only occur if the cast failed to affect the monster.
 
 Items
 -----
 * Scroll of Acquirement rework:
-  - Players a choice of five fully generated items.
+  - Offers players a choice of five fully generated items.
   - Three of the item categories are randomly chosen and the other two are
     always gold and food (for species that eat).
   - Generated items are always useable and not hated by the player's current
@@ -72,13 +72,13 @@ Items
 
 Monsters
 --------
-* New unique: Maggie, a younger version of the unique Margey, who appears
+* New unique: Maggie, a younger version of the unique Margery, who appears
   just before and in Lair. She has a steam, acid, or swamp dragon scales, Bolt
-  of Fire, and Mesmerize. Only one of Maggie or Margey will place in a game.
+  of Fire, and Mesmerize. Only one of Maggie or Margery will place in a game.
 * Margery now always gets Fire, Shadow, or Storm dragon scales as a
   counterpart to Maggie's armour.
 * Both Maggie and Margery have a small extra chance of spawning with a
-  pre-enchanted Wyrmbane (1 or 2 points of enchant, respectively).
+  pre-enchanted Wyrmbane (1 or 2 points of enchantment, respectively).
 * Monsters such as spiders no longer have a clinging ability.
 * Monsters pinned by Wu Jian's Whirlwind can no longer trample the player.
 
@@ -94,7 +94,7 @@ Spells
       than half the damage of Flame Tongue.
     + Conjure Flame now creates embers on the player's position that turn into
       a flame cloud a turn later. The embers smother if a monster steps on them.
-    + Inner Flame is now creates a flame cloud under the affected monster
+    + Inner Flame now creates a flame cloud under the affected monster
       whenever it takes damage in addition to the usual explosion it makes
       when the monster dies.
     + New L6 Conjurations/Fire spell Starburst that fires 8 range 5 bolts in
@@ -156,7 +156,7 @@ Spells
 * Confusing Touch is now level 3 and checks MR instead of monster hit dice.
 * The player is now immune to the effects of liquefied ground made by casting
   Ledas' Liquefaction.
-* Firestorm and ignition now can burn trees, and Fireball burns trees in all
+* Firestorm and Ignition now can burn trees, and Fireball burns trees in all
   squares of its explosion.
 * The Confuse spell has been removed.
 
