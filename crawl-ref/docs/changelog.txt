@@ -12,13 +12,8 @@ Branches, Environment
 * Boris can now spawn after the player picks up the Orb of Zot.
 * Forest fires and the Tornado spell can no longer destroy temporary trees
   made by Summon Forest.
-* New vaults:
-    - A new Swamp ending themed as a conflict between Yred and Fedhas that
-      includes an undead version of the Lernaean Hydra.
-    - A transporter vault featuring briar patches, Zot traps, and many swamp
-      worms that pull the player into this terrain.
-    - A transporter ghost vault themed as having the ghost of a player that
-      died trying to escape from the Abyss.
+* A new Swamp ending themed as a conflict between Yred and Fedhas that
+  includes an undead version of the Lernaean Hydra.
 
 Character
 ---------
@@ -35,12 +30,7 @@ Gods
 * Fedhas now protects plant allies from collisions and from ranged attacks by
   other allies.
 * God conducts for harming allies now apply to spells and items that place
-  harmful clouds. The spells Ring of Flames and Tornado now have prompts
-  whenever allies would be harmed.
-* Trog's Hand now has a slightly higher nutrition cost, but no longer
-  increases hunger rate while it's active.
-* The effect of Teleport Other will no longer be undone by Dithmenos' shadow
-  mimic. A mimic will only occur if the cast failed to affect the monster.
+  harmful clouds.
 
 Items
 -----
