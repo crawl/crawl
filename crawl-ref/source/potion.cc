@@ -381,6 +381,29 @@ public:
     }
 };
 
+class PotionStabbing : public PotionEffect
+{
+private:
+    PotionStabbing() : PotionEffect(POT_STABBING) { }
+    DISALLOW_COPY_AND_ASSIGN(PotionStabbing);
+public:
+    static const PotionStabbing &instance()
+    {
+        static PotionStabbing inst; return inst;
+    }
+
+    bool effect(bool=true, int pow = 40, bool=true) const override
+    {
+        const bool was_stabbing = you.duration[DUR_STABBING] > 0;
+
+        mprf(MSGCH_DURATION, "You feel %sready to backstab.",
+             was_stabbing ? "more " : "");
+
+        you.increase_duration(DUR_STABBING, 35 + random2(pow), 80);
+        return true;
+    }
+};
+
 
 class PotionFlight : public PotionEffect
 {
@@ -1290,7 +1313,7 @@ static const PotionEffect* potion_effects[] =
     &PotionHaste::instance(),
     &PotionMight::instance(),
     &PotionBrilliance::instance(),
-    &PotionAgility::instance(),
+    &PotionStabbing::instance(),
 #if TAG_MAJOR_VERSION == 34
     &PotionGainStrength::instance(),
     &PotionGainDexterity::instance(),
@@ -1332,6 +1355,7 @@ static const PotionEffect* potion_effects[] =
 #if TAG_MAJOR_VERSION == 34
     &PotionBeneficialMutation::instance(),
 #endif
+    &PotionAgility::instance(),
     &PotionStale::instance()
 };
 

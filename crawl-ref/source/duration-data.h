@@ -561,6 +561,12 @@ static const duration_def duration_data[] =
       {{ "", []() {
           you.redraw_evasion = true;
       }}}},
+    { DUR_STABBING,
+      LIGHTBLUE, "Stab",
+      "stab", "stabbing",
+      "You are ready to backstab.", D_DISPELLABLE,
+      {{ "You feel more trustworthy now.", }}},
+
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.
 

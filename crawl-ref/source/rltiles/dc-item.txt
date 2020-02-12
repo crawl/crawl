@@ -835,7 +835,7 @@ i-heal-wounds POT_HEAL_WOUNDS
 i-haste POT_HASTE
 i-might POT_MIGHT
 i-brilliance POT_BRILLIANCE
-i-agility POT_AGILITY
+i-stabbing POT_STABBING
 # please remove these 3 when TAG_MAJOR_VERSION is bumped
 i-gain-strength POT_REMOVEME2
 i-gain-dexterity POT_REMOVEME3
@@ -867,8 +867,10 @@ i-resistance POT_RESISTANCE
 i-blood POT_BLOOD
 i-coagulated-blood POT_BLOOD_COAGULATED
 i-lignify POT_LIGNIFY
-# Remove beneficial mutation and update POT_ID_LAST when TAG_MAJOR_VERSION > 34
-i-good-mutation POT_REMOVEME9 POT_ID_LAST
+# Remove beneficial mutation when TAG_MAJOR_VERSION > 34
+i-good-mutation POT_REMOVEME9
+# agility is a dummy and shouldn't exist
+i-agility POT_AGILITY POT_ID_LAST
 %back none
 %rim 1
 
