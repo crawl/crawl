@@ -2574,8 +2574,10 @@ static tileidx_t _tileidx_misc(const item_def &item)
         return evoker_charges(item.sub_type) ? TILE_MISC_LIGHTNING_ROD
                                              : TILE_MISC_LIGHTNING_ROD_INERT;
 
+#if TAG_MAJOR_VERSION == 34
     case MISC_SACK_OF_SPIDERS:
         return TILE_MISC_SACK_OF_SPIDERS;
+#endif
 
     case MISC_PHANTOM_MIRROR:
         return TILE_MISC_PHANTOM_MIRROR;

@@ -1244,7 +1244,6 @@ static int _pakellas_low_misc()
 {
     // Limited uses, so any of these are fine even if they've been seen before.
     return random_choose(MISC_BOX_OF_BEASTS,
-                         MISC_SACK_OF_SPIDERS,
                          MISC_PHANTOM_MIRROR);
 }
 

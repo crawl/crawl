@@ -2066,7 +2066,6 @@ static bool _item_ally_only(const item_def &item)
         case MISC_PHANTOM_MIRROR:
         case MISC_HORN_OF_GERYON:
         case MISC_BOX_OF_BEASTS:
-        case MISC_SACK_OF_SPIDERS:
             return true;
         default:
             return false;
