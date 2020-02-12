@@ -1500,7 +1500,8 @@ bool is_stackable_item(const item_def &item)
     if (!item.defined())
         return false;
 
-    switch (item.base_type) {
+    switch (item.base_type)
+    {
         case OBJ_MISSILES:
         case OBJ_FOOD:
         case OBJ_SCROLLS:
@@ -1508,16 +1509,19 @@ bool is_stackable_item(const item_def &item)
         case OBJ_GOLD:
             return true;
         case OBJ_MISCELLANY:
-            switch (item.sub_type) {
+            switch (item.sub_type)
+            {
                 case MISC_PHANTOM_MIRROR:
                 case MISC_ZIGGURAT:
                 case MISC_SACK_OF_SPIDERS:
                 case MISC_BOX_OF_BEASTS:
                 case MISC_TIN_OF_TREMORSTONES:
                     return true;
-                default: break;
+                default:
+                    break;
             }
-        default: break;
+        default:
+            break;
     }
     return false;
 }
