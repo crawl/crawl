@@ -381,6 +381,29 @@ public:
     }
 };
 
+class PotionLaunching : public PotionEffect
+{
+private:
+    PotionLaunching() : PotionEffect(POT_LAUNCHING) { }
+    DISALLOW_COPY_AND_ASSIGN(PotionLaunching);
+public:
+    static const PotionLaunching &instance()
+    {
+        static PotionLaunching inst; return inst;
+    }
+
+    bool effect(bool=true, int pow = 40, bool=true) const override
+    {
+        const bool was_launching = you.duration[DUR_LAUNCHING] > 0;
+
+        mprf(MSGCH_DURATION, "Your aim feels %ssteady all of a sudden.",
+             was_launching ? "more " : "");
+
+        you.increase_duration(DUR_LAUNCHING, 35 + random2(pow), 60);
+        return true;
+    }
+};
+
 
 class PotionFlight : public PotionEffect
 {
@@ -1290,7 +1313,7 @@ static const PotionEffect* potion_effects[] =
     &PotionHaste::instance(),
     &PotionMight::instance(),
     &PotionBrilliance::instance(),
-    &PotionAgility::instance(),
+    &PotionLaunching::instance(),
 #if TAG_MAJOR_VERSION == 34
     &PotionGainStrength::instance(),
     &PotionGainDexterity::instance(),
@@ -1332,6 +1355,7 @@ static const PotionEffect* potion_effects[] =
 #if TAG_MAJOR_VERSION == 34
     &PotionBeneficialMutation::instance(),
 #endif
+    &PotionAgility::instance(),
     &PotionStale::instance()
 };
 

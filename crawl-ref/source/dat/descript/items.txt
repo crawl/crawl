@@ -653,11 +653,6 @@ plate armour
 A full suit of solid metal plate: cuirass, pauldrons, vambraces, waist plate
 and greaves. It provides excellent protection.
 %%%%
-potion of agility
-
-A potion which greatly increases the dexterity and evasiveness of one who
-drinks it.
-%%%%
 potion of ambrosia
 
 A strange substance, produced by ghost moths. Consuming it causes regeneration
@@ -677,6 +672,12 @@ potion of brilliance
 
 A potion which greatly increases the intelligence and spell power of one who
 drinks it.
+%%%%
+potion of launching
+
+A potion which steadies the drinker's limbs, making their thrown and fired
+projectiles more accurate and able to pierce through multiple foes. (Spells
+are unaffected.)
 %%%%
 potion of cancellation
 

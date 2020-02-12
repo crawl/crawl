@@ -7,7 +7,7 @@ enum potion_type
     POT_HASTE,
     POT_MIGHT,
     POT_BRILLIANCE,
-    POT_AGILITY,
+    POT_LAUNCHING,
 #if TAG_MAJOR_VERSION == 34
     POT_GAIN_STRENGTH,
     POT_GAIN_DEXTERITY,
@@ -49,5 +49,6 @@ enum potion_type
 #if TAG_MAJOR_VERSION == 34
     POT_BENEFICIAL_MUTATION,
 #endif
+    POT_AGILITY, // dummy for potionlike_effects
     NUM_POTIONS
 };

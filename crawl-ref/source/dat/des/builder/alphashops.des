@@ -59,7 +59,7 @@
       local i = {}
       if s == "A" then i = { "arbalest", "book of alchemy", "book of air",
        "manual of air magic", "book of annihilations", "arrow",
-       "potion of agility", "potion of ambrosia", "scroll of acquirement q:1",
+       "potion of ambrosia", "scroll of acquirement q:1",
        "scroll of amnesia", "staff of air", "ring of attention",
        "manual of axes", "manual of armour", "wand of acid",
        "acid dragon scales" }
@@ -117,7 +117,7 @@
       elseif s == "K" then i = { "any" }
 
       elseif s == "L" then i = { "lamp of fire", "manual of long blades",
-       "large rock", "leather armour", "long sword",
+       "large rock", "leather armour", "long sword", "potion of launching",
        "potion of lignification", "lajatang", "longbow", "lightning rod" }
 
       elseif s == "M" then i = { "manual of maces & flails",

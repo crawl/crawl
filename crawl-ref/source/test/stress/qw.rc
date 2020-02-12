@@ -166,11 +166,11 @@ df += scrolls? of (immolation|noise|random uselessness|torment)
 # keep: curing,heal wounds,haste,cancellation,resistance,experience,
 #       might,restore abilities
 ae += potions? of (brilliance|magic|berserk rage)
-ae += potions? of (flight|invisibility|agility)
+ae += potions? of (flight|invisibility|camouflage)
 ae += potions? of (ambrosia|decay|degeneration|mutation)
 ae += potions? of (poison|lignification)
 df += potions? of (brilliance|magic|berserk rage)
-df += potions? of (flight|invisibility|agility)
+df += potions? of (flight|invisibility|camouflage)
 df += potions? of (ambrosia|decay|degeneration|mutation)
 df += potions? of (poison|lignification)
 : if you.race() ~= "Vampire" then

@@ -5832,7 +5832,6 @@ bool monster::can_drink_potion(potion_type ptype) const
             return can_go_berserk();
         case POT_HASTE:
         case POT_MIGHT:
-        case POT_AGILITY:
         case POT_INVISIBILITY:
         case POT_RESISTANCE:
             // If there are any item using monsters that are permanently
@@ -5869,8 +5868,6 @@ bool monster::should_drink_potion(potion_type ptype) const
         return !has_ench(ENCH_HASTE);
     case POT_MIGHT:
         return !has_ench(ENCH_MIGHT) && foe_distance() <= 2;
-    case POT_AGILITY:
-        return !has_ench(ENCH_AGILE);
     case POT_RESISTANCE:
         return !has_ench(ENCH_RESISTANCE);
     case POT_INVISIBILITY:
@@ -5938,10 +5935,6 @@ bool monster::drink_potion_effect(potion_type pot_eff, bool card)
 
     case POT_INVISIBILITY:
         enchant_actor_with_flavour(this, this, BEAM_INVISIBILITY);
-        break;
-
-    case POT_AGILITY:
-        enchant_actor_with_flavour(this, this, BEAM_AGILITY);
         break;
 
     case POT_RESISTANCE:

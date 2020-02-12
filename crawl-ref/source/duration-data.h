@@ -561,6 +561,12 @@ static const duration_def duration_data[] =
       {{ "", []() {
           you.redraw_evasion = true;
       }}}},
+    { DUR_LAUNCHING,
+      LIGHTBLUE, "Aim",
+      "aim", "steadied aim",
+      "Your aim is steadied.", D_DISPELLABLE,
+      {{ "Your aim feels shakier now.", }}},
+
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.
 

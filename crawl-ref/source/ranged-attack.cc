@@ -79,6 +79,10 @@ int ranged_attack::calc_to_hit(bool random)
             : 3 * attacker->as_monster()->get_hit_dice();
     }
 
+    if (attacker->is_player() && you.duration[DUR_LAUNCHING] > 0) {
+        orig_to_hit += 5;
+    }
+
     int hit = orig_to_hit;
     const int defl = defender->missile_deflection();
     if (defl)

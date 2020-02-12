@@ -60,7 +60,8 @@ bool is_penetrating_attack(const actor& attacker, const item_def* weapon,
            || weapon
               && is_launched(&attacker, weapon, projectile) == launch_retval::LAUNCHED
               && (get_weapon_brand(*weapon) == SPWPN_PENETRATION
-                  || is_unrandom_artefact(*weapon, UNRAND_STORM_BOW));
+                  || is_unrandom_artefact(*weapon, UNRAND_STORM_BOW))
+           || attacker.is_player() && you.duration[DUR_LAUNCHING] > 0;
 }
 
 bool item_is_quivered(const item_def &item)
