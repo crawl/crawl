@@ -448,8 +448,7 @@ static void _wanderer_random_evokable()
     if (one_chance_in(3))
     {
         int selected_evoker =
-              random_choose(MISC_BOX_OF_BEASTS, MISC_LAMP_OF_FIRE,
-                            MISC_PHIAL_OF_FLOODS);
+              random_choose(MISC_BOX_OF_BEASTS, MISC_PHIAL_OF_FLOODS);
 
         newgame_make_item(OBJ_MISCELLANY, selected_evoker, 1);
     }

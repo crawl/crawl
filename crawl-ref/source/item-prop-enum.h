@@ -257,9 +257,7 @@ enum misc_item_type
 #if TAG_MAJOR_VERSION == 34
     MISC_BOTTLED_EFREET,
     MISC_FAN_OF_GALES,
-#endif
     MISC_LAMP_OF_FIRE,
-#if TAG_MAJOR_VERSION == 34
     MISC_STONE_OF_TREMORS,
     MISC_BUGGY_LANTERN_OF_SHADOWS,
 #endif
@@ -311,9 +309,7 @@ const vector<misc_item_type> misc_types =
 {
 #if TAG_MAJOR_VERSION == 34
     MISC_FAN_OF_GALES,
-#endif
     MISC_LAMP_OF_FIRE,
-#if TAG_MAJOR_VERSION == 34
     MISC_STONE_OF_TREMORS,
     MISC_BUGGY_LANTERN_OF_SHADOWS,
 #endif

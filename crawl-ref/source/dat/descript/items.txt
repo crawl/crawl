@@ -550,11 +550,6 @@ lajatang
 A very rare and extremely effective weapon, featuring a pole with half-moon
 blades at both ends.
 %%%%
-lamp of fire
-
-A magical lamp which can be aimed at a creature to unleash trails of searing
-flame around the target.
-%%%%
 large rock
 
 A very large and very heavy stone. {{

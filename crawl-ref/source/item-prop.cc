@@ -2956,7 +2956,6 @@ void seen_item(const item_def &item)
 
 /// Map of xp evokers to you.props[] xp debt keys.
 static const map<int, const char*> debt_map = {
-    { MISC_LAMP_OF_FIRE,        "lamp_debt" },
     { MISC_PHIAL_OF_FLOODS,     "phial_debt" },
     { MISC_HORN_OF_GERYON,      "horn_debt" },
     { MISC_LIGHTNING_ROD,       "rod_debt" },

@@ -465,9 +465,9 @@ KFEAT: s = general shop type:Demolitions suffix:Depot ; \
    randbook disc:conjuration | book of the tempests | book of clouds | \
    wand of iceblast | wand of flame | wand of disintegration | \
    wand of clouds | wand of scattershot | staff of conjuration | \
-   wand of acid | lightning rod | lamp of fire | phial of floods | \
-   scroll of immolation | book of flames | book of fire | book of air | \
-   manual of conjurations | manual of evocations
+   wand of acid | lightning rod | phial of floods | scroll of immolation | \
+   book of flames | book of fire | book of air | manual of conjurations | \
+   manual of evocations
 FTILE: ' = floor_rough_red
 COLOUR: ' = red
 MAP
@@ -481,7 +481,7 @@ MAP
 ENDMAP
 
 #####################################################
-# Contains only four items: an evocable item, a staff, a randbook, and a wand,
+# Contains only four items: two evocable items/wands, a staff, and a randbook,
 # associated with one of each of the four elemental schools.
 NAME: nicolae_elemental_shop
 TAGS: no_monster_gen no_item_gen no_pool_fixup transparent extra
@@ -494,23 +494,20 @@ MARKER: a = lua:fog_machine { cloud_type = "thin mist", \
             pow_min = 100, pow_max = 100, delay = 1, \
             size = 1, walk_dist = 0, start_clouds = 1 }
 {{
--- No earth-themed evoker, so just include another wand type.
-  local evocables = {"lamp of fire","phial of floods",
-                     "lightning rod","wand of scattershot"}
+  local evocables = {"wand of flame","wand of iceblast",
+                     "lightning rod","tin of tremorstones"}
   local staffs    = {"staff of fire","staff of cold",
                      "staff of air","staff of earth"}
   local randbooks = {"randbook disc:fire","randbook disc:ice",
                      "randbook disc:air","randbook disc:earth"}
-  local wands     = {"wand of flame","wand of iceblast",
-                     "wand of clouds","wand of digging"}
   local choices   = {1, 2, 3, 4}
   local i, j, temp
   for i = 4, 2, -1 do
      j = crawl.random_range(1,i)
      temp = choices[j] ; choices[j] = choices[i] ; choices[i] = temp
   end
-  local inventory = evocables[choices[1]] .. " | " .. staffs[choices[2]] ..
-           " | " .. randbooks[choices[3]] .. " | " .. wands[choices[4]]
+  local inventory = evocables[choices[1]] .. " | " .. evocables[choices[2]] ..
+           " | " .. staffs[choices[3]] .. " | " .. randbooks[choices[4]]
   kfeat("s = general shop type:Elemental suffix:Accessories count:4 use_all ; "
          .. inventory )
 }}

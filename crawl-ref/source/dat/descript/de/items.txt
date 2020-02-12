@@ -368,12 +368,6 @@ lajatang
 Eine sehr seltene und extrem effektive importierte Waffe aus einem Stab mit
 halbmondförmigen Klingen an beiden Enden.
 %%%%
-lamp of fire
-
-Eine magische Lampe von wohlwollenden Feuergeistern bewohnt. Entriegeln des
-Gehäuses setzt die Geister frei, diese tanzen in Form eines Brandes auf den
-Feinden des Inhabers.
-%%%%
 leather armour
 
 Eine von Schichten des braun gebrannten Tieres gemachte Klage verbirgt sich,

@@ -3053,18 +3053,18 @@ NAME:    hangedman_elemental_death_ray
 TAGS:    transparent patrolling
 DEPTH:   Depths, !Depths:$
 ORIENT:  float
-MONS:    necromancer ; wand of iceblast . \
+MONS:    necromancer ; \
          staff of fire w:15 | quarterstaff ego:flaming w:15 . \
          robe ego:fire_resistance w:14 | robe ego:cold_resistance w:15 | \
          robe ego:resistance w:1
-MONS:    necromancer ; wand of iceblast . \
+MONS:    necromancer ; \
          staff of cold ident:type | quarterstaff ego:freezing ident:type . \
          robe ego:fire_resistance w:15 | robe ego:cold_resistance w:14 | \
          robe ego:resistance w:1
 MONS:    fire giant ; battleaxe ego:freezing
 MONS:    frost giant ; great sword ego:flaming
 MONS:    ettin simulacrum, efreet, deep elf mage
-KITEM:   d = lamp of fire, *
+KITEM:   d = triple crossbow ego:flaming ident:type, *
 KITEM:   e = lajatang ego:freezing ident:type, *
 SHUFFLE: 12, 34, 5df / 6eF, {[(<
 FTILE:   fF'@{[(< = floor_pebble_darkgray
@@ -3328,7 +3328,7 @@ ORIENT: float
 MONS:   fire bat
 KMONS:  2 = fire giant / fire dragon
 ITEM:   book of flames / book of fire / manual of fire magic / \
-        staff of fire ident:type / ring of fire ident:type / lamp of fire / \
+        staff of fire ident:type / ring of fire ident:type / \
         fire dragon scales w:5
 KITEM:  2 = firestarter ident:type
 : minmay_elemental_octagon_setup(_G)

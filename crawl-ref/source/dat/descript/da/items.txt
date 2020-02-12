@@ -385,11 +385,6 @@ lajatang
 Et meget sjældent og ekstremt effektivt eksotisk våben, bestående af en stav
 med halvmåneformede klinger i begge ender.
 %%%%
-lamp of fire
-
-En magisk lampe, som er beboet af venligtsindede ildånder. Åbner du dens hægte,
-sætter du ånderne fri til at danse på dine fjender i et flammehav.
-%%%%
 large rock
 
 En meget stor og meget tung sten. {{

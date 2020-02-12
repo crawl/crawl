@@ -675,14 +675,12 @@ static int _acquirement_misc_subtype(bool /*divine*/, int & quantity,
         {MISC_BOX_OF_BEASTS,            (NO_LOVE ? 0 : 10)},
         {MISC_PHANTOM_MIRROR,           (NO_LOVE ? 0 : 10)},
         // Tremorstones are better for heavily armoured characters.
-        {MISC_TIN_OF_TREMORSTONES, 3 + _skill_rdiv(SK_ARMOUR) / 3 },
+        {MISC_TIN_OF_TREMORSTONES, 5 + _skill_rdiv(SK_ARMOUR) / 3 },
         // The player never needs more than one.
         {MISC_LIGHTNING_ROD,
-            (you.seen_misc[MISC_LIGHTNING_ROD] ?   0 : 17)},
-        {MISC_LAMP_OF_FIRE,
-            (you.seen_misc[MISC_LAMP_OF_FIRE] ?    0 : 17)},
+            (you.seen_misc[MISC_LIGHTNING_ROD] ?   0 : 20)},
         {MISC_PHIAL_OF_FLOODS,
-            (you.seen_misc[MISC_PHIAL_OF_FLOODS] ? 0 : 17)},
+            (you.seen_misc[MISC_PHIAL_OF_FLOODS] ? 0 : 20)},
 
     };
 

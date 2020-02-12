@@ -533,11 +533,6 @@ lajatang
 Une arme exotique très rare et extremement efficace, ce baton présente une lame
 en croissant de lune à chaque extrémité.
 %%%%
-lamp of fire
-
-Une lampe magique habitée par des esprits du feu bienveillants. Ouvrir la porte
-libère les esprits et fait danser les flammes sur les ennemies du porteur.
-%%%%
 large rock
 
 Un rocher très lourd et imposant. {{

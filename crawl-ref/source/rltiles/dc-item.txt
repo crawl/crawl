@@ -993,6 +993,7 @@ misc_crystal MISC_CRYSTAL_BALL_OF_ENERGY UNSEEN_MISC
 # Remove fan when TAG_MAJOR_VERSION > 34
 misc_fan MISC_FAN_OF_GALES
 misc_fan_inert MISC_FAN_OF_GALES_INERT
+# Remove lamp when TAG_MAJOR_VERSION > 34
 misc_lamp MISC_LAMP_OF_FIRE
 misc_lamp_inert MISC_LAMP_OF_FIRE_INERT
 # Remove stone when TAG_MAJOR_VERSION > 34

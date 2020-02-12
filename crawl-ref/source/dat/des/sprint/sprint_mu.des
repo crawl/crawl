@@ -836,8 +836,8 @@ KMONS: a = patrolling Donald ; war axe ego:holy_wrath . scale mail \
  . kite shield ego:reflection
 KMONS: b = patrolling Frances ; war axe ego:holy_wrath \
  . dart ego:curare q:7
-:end
-KITEM: & = lamp of fire, scroll of acquirement q:1 ident:all, \
+: end
+KITEM: & = scroll of acquirement q:1 ident:all, \
  scroll of acquirement q:1 ident:all / w:15 scroll of torment ident:all, \
  scroll of acquirement q:1 ident:all / w:25 scroll of torment ident:all
 NSUBST: L = 1:& / *:l

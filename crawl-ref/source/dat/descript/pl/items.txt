@@ -299,12 +299,6 @@ kosy osadzonych na sztorc na obu końcach drzewca. Wymaga ona pewnych
 umiejętności aby jej dobrze użyć, jednak w rękach zręcznego wojownika walka
 stanowi morderczy dla wrogów taniec.
 %%%%
-lamp of fire
-
-Magiczna lampa zamieszkała przez przyjazne duchy ognia. Otwarcie pokrywy
-wyzwoli te duchy, pozwalając im spowić twych wrogów w ogniu, po czym dobrać się
-tym wrogom do skóry.
-%%%%
 large rock
 
 Wielki głaz, używany przez gigantów jako pocisk. {{
