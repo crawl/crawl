@@ -654,7 +654,7 @@ static int _acquirement_staff_subtype(bool /*divine*/, int & /*quantity*/,
  * Return a miscellaneous evokable item for acquirement.
  * @return   The item type chosen.
  */
-static int _acquirement_misc_subtype(bool /*divine*/, int & /*quantity*/,
+static int _acquirement_misc_subtype(bool /*divine*/, int & quantity,
                                      int /*agent*/)
 {
     // Give a crystal ball based on both evocations and either spellcasting or
@@ -693,6 +693,9 @@ static int _acquirement_misc_subtype(bool /*divine*/, int & /*quantity*/,
     };
 
     const int * const choice = random_choose_weighted(choices);
+
+    if (choice != nullptr && *choice == MISC_TREMORSTONE)
+        quantity = 2; // not quite worth it alone
 
     // Could be nullptr if all the weights were 0.
     return choice ? *choice : MISC_CRYSTAL_BALL_OF_ENERGY;
