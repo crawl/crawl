@@ -2536,11 +2536,10 @@ static tileidx_t _tileidx_misc(const item_def &item)
 #if TAG_MAJOR_VERSION == 34
     case MISC_BOTTLED_EFREET:
         return TILE_MISC_BOTTLED_EFREET;
-#endif
 
     case MISC_FAN_OF_GALES:
-        return evoker_charges(item.sub_type) ? TILE_MISC_FAN_OF_GALES
-                                             : TILE_MISC_FAN_OF_GALES_INERT;
+        return TILE_MISC_FAN_OF_GALES_INERT;
+#endif
 
     case MISC_LAMP_OF_FIRE:
         return evoker_charges(item.sub_type) ? TILE_MISC_LAMP_OF_FIRE

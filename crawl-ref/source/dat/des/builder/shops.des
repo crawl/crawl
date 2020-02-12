@@ -465,9 +465,9 @@ KFEAT: s = general shop type:Demolitions suffix:Depot ; \
    randbook disc:conjuration | book of the tempests | book of clouds | \
    wand of iceblast | wand of flame | wand of disintegration | \
    wand of clouds | wand of scattershot | staff of conjuration | \
-   wand of acid | fan of gales | lightning rod | lamp of fire | \
-   phial of floods | scroll of immolation | book of flames | book of fire | \
-   book of air | manual of conjurations | manual of evocations
+   wand of acid | lightning rod | lamp of fire | phial of floods | \
+   scroll of immolation | book of flames | book of fire | book of air | \
+   manual of conjurations | manual of evocations
 FTILE: ' = floor_rough_red
 COLOUR: ' = red
 MAP
@@ -496,13 +496,13 @@ MARKER: a = lua:fog_machine { cloud_type = "thin mist", \
 {{
 -- No earth-themed evoker, so just include another wand type.
   local evocables = {"lamp of fire","phial of floods",
-                     "fan of gales","wand of scattershot"}
+                     "lightning rod","wand of scattershot"}
   local staffs    = {"staff of fire","staff of cold",
                      "staff of air","staff of earth"}
   local randbooks = {"randbook disc:fire","randbook disc:ice",
                      "randbook disc:air","randbook disc:earth"}
   local wands     = {"wand of flame","wand of iceblast",
-                     "lightning rod","wand of digging"}
+                     "wand of clouds","wand of digging"}
   local choices   = {1, 2, 3, 4}
   local i, j, temp
   for i = 4, 2, -1 do

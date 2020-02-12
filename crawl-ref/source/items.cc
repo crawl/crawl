@@ -3933,9 +3933,9 @@ colour_t item_def::miscellany_colour() const
 
     switch (sub_type)
     {
+#if TAG_MAJOR_VERSION == 34
         case MISC_FAN_OF_GALES:
             return CYAN;
-#if TAG_MAJOR_VERSION == 34
         case MISC_BOTTLED_EFREET:
             return RED;
 #endif

@@ -971,8 +971,8 @@ static string misc_type_name(int type)
     case MISC_BOX_OF_BEASTS:             return "box of beasts";
 #if TAG_MAJOR_VERSION == 34
     case MISC_BUGGY_EBONY_CASKET:        return "removed ebony casket";
+    case MISC_FAN_OF_GALES:              return "removed fan of gales";
 #endif
-    case MISC_FAN_OF_GALES:              return "fan of gales";
     case MISC_LAMP_OF_FIRE:              return "lamp of fire";
 #if TAG_MAJOR_VERSION == 34
     case MISC_BUGGY_LANTERN_OF_SHADOWS:  return "removed lantern of shadows";

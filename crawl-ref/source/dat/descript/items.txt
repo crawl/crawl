@@ -419,11 +419,6 @@ falchion
 
 A long single-edged sword with a slightly curved blade.
 %%%%
-fan of gales
-
-An enchanted fan. Swinging the fan unleashes a powerful blast of wind around
-the bearer.
-%%%%
 fen folio
 
 A collection of spells once used by the great swamp civilizations.

@@ -350,6 +350,7 @@ void check_item_knowledge(bool unknown_items)
                 || i == MISC_RUNE_OF_ZOT
                 || i == MISC_STONE_OF_TREMORS
                 || i == MISC_XOMS_CHESSBOARD
+                || i == MISC_FAN_OF_GALES
 #endif
                 || (i == MISC_QUAD_DAMAGE && !crawl_state.game_is_sprint()))
             {

@@ -1805,7 +1805,7 @@ ITEM:    book of callings w:5 / book of summonings / grand grimoire w:5 / \
 ITEM:    staff of summoning
 ITEM:    amulet of magic regeneration w:5 ident:type / \
             amulet of magic regeneration randart
-ITEM:    fan of gales / lamp of fire / phial of floods
+ITEM:    lamp of fire / phial of floods
 KITEM:   % = any, any / gold / nothing, any / nothing
 KITEM:   _ = scroll of summoning, scroll of summoning / nothing
 KFEAT:   _ = altar_sif_muna

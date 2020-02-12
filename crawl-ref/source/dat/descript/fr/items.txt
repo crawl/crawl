@@ -438,12 +438,6 @@ eveningstar
 
 L'opposé d'une étoile du matin.
 %%%%
-fan of gales
-
-Un éventail enchanté habité par des esprits de l'air bienveillants. Agiter
-l'éventail déclenche un violent coup de vent autour du porteur et libère les
-esprits pour balayer ses ennemies.
-%%%%
 fire dragon scales
 
 Une armure magique faite des écailles d'un dragon cracheur de feu. Elle offre

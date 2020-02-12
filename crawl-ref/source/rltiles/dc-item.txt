@@ -986,9 +986,11 @@ misc_orb2
 uncollected_orb UNCOLLECTED_ORB
 
 #OBJ_MISCELLANY
+# Remove bottle when TAG_MAJOR_VERSION > 34
 misc_bottle MISC_BOTTLED_EFREET
 %rim 0
 misc_crystal MISC_CRYSTAL_BALL_OF_ENERGY UNSEEN_MISC
+# Remove fan when TAG_MAJOR_VERSION > 34
 misc_fan MISC_FAN_OF_GALES
 misc_fan_inert MISC_FAN_OF_GALES_INERT
 misc_lamp MISC_LAMP_OF_FIRE

@@ -256,8 +256,8 @@ enum misc_item_type
 {
 #if TAG_MAJOR_VERSION == 34
     MISC_BOTTLED_EFREET,
-#endif
     MISC_FAN_OF_GALES,
+#endif
     MISC_LAMP_OF_FIRE,
 #if TAG_MAJOR_VERSION == 34
     MISC_STONE_OF_TREMORS,
@@ -307,7 +307,10 @@ enum misc_item_type
 // in no particular order (but we need *a* fixed order for dbg-scan)
 const vector<misc_item_type> misc_types =
 {
-    MISC_FAN_OF_GALES, MISC_LAMP_OF_FIRE,
+#if TAG_MAJOR_VERSION == 34
+    MISC_FAN_OF_GALES,
+#endif
+    MISC_LAMP_OF_FIRE,
 #if TAG_MAJOR_VERSION == 34
     MISC_STONE_OF_TREMORS,
     MISC_BUGGY_LANTERN_OF_SHADOWS,

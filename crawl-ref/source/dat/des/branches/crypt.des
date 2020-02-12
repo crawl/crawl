@@ -90,8 +90,8 @@ function crypt_loot_plus(e)
   e.kitem("i = necronomicon / " .. book .. "necromutation / " ..
           book .. "death's_door / " .. book .. "haunt / " ..
           book .. "borgnjor's_revivification / " .. book .. "infestation")
-  e.kitem("j = lamp of fire w:15 / phial of floods w:15 / " ..
-          "fan of gales w:15 / crystal ball of energy / " ..
+  e.kitem("j = lamp of fire w:20 / phial of floods w:20 / " ..
+          "crystal ball of energy w:15 / " ..
           "staff of energy ident:type, staff of death / staff of power / " ..
           "staff of wizardry / any magical staff w:5")
   e.subst("d = d:20 ef g:20")

@@ -1721,30 +1721,11 @@ bool evoke_item(int slot)
         case MISC_BOTTLED_EFREET:
             canned_msg(MSG_NOTHING_HAPPENS);
             return false;
-#endif
 
         case MISC_FAN_OF_GALES:
-        {
-            if (!evoker_charges(item.sub_type))
-            {
-                mpr("That is presently inert.");
-                return false;
-            }
-
-#if TAG_MAJOR_VERSION == 34
-            const int surge = pakellas_surge_devices();
-            surge_power(you.spec_evoke() + surge);
-#else
-            const int surge = 0;
+            canned_msg(MSG_NOTHING_HAPPENS);
+            return false;
 #endif
-            wind_blast(&you,
-                       player_adjust_evoc_power(you.skill(SK_EVOCATIONS, 15),
-                                                surge),
-                       coord_def());
-            expend_xp_evoker(item.sub_type);
-            practise_evoking(3);
-            break;
-        }
 
         case MISC_LAMP_OF_FIRE:
             if (!evoker_charges(item.sub_type))

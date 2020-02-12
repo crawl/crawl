@@ -687,8 +687,6 @@ static int _acquirement_misc_subtype(bool /*divine*/, int & quantity,
             (you.seen_misc[MISC_LAMP_OF_FIRE] ?       0 : 17)},
         {MISC_PHIAL_OF_FLOODS,
             (you.seen_misc[MISC_PHIAL_OF_FLOODS] ?    0 : 17)},
-        {MISC_FAN_OF_GALES,
-            (you.seen_misc[MISC_FAN_OF_GALES] ?       0 : 17)},
 
     };
 

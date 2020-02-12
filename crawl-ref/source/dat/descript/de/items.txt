@@ -291,12 +291,6 @@ eveningstar
 Die Stacheln dieser Art von Morgenstern sind besonders lang und ermöglichen
 ihm, gemeine Wunden zu verursachen.
 %%%%
-fan of gales
-
-Ein verzauberter Fächer von wohlwollenden Luftgeistern bewohnt. Schwingen
-dieses Fächers entfesselt einen starken Windstoß um den Träger und setzt
-Geister frei die des Inhabers Feinde hinwegfegen.
-%%%%
 fire dragon scales
 
 Rüstung von den Skalen eines feueratmenden Drachen gemacht. Es stellt großen

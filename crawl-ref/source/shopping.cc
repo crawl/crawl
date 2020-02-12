@@ -726,7 +726,6 @@ unsigned int item_value(item_def item, bool ident)
             valued += 5000;
             break;
 
-        case MISC_FAN_OF_GALES:
         case MISC_PHIAL_OF_FLOODS:
         case MISC_LAMP_OF_FIRE:
         case MISC_LIGHTNING_ROD:
