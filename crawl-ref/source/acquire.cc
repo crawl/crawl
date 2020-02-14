@@ -55,7 +55,6 @@ static armour_type _acquirement_shield_type();
 static armour_type _acquirement_body_armour(bool);
 static armour_type _useless_armour_type();
 
-
 /**
  * Get a randomly rounded value for the player's specified skill, unmodified
  * by crosstraining, draining, etc.
@@ -1656,6 +1655,10 @@ bool AcquireMenu::acquire_selected()
     }
 
     item_def &acq_item = *static_cast<item_def*>(entry.data);
+
+    if (is_unrandom_artefact(acq_item))
+        set_unique_item_status(acq_item, UNIQ_EXISTS);
+
     if (copy_item_to_grid(acq_item, you.pos()))
         canned_msg(MSG_SOMETHING_APPEARS);
     else
