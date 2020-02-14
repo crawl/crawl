@@ -1540,9 +1540,13 @@ static spret _tremorstone() {
     if (tracer.beam_cancelled)
         return spret::abort;
 
-    beam.target = _get_tremorstone_target(beam.target);
     mpr("The tremorstone explodes into fragments!");
-    beam.explode(true);
+    const coord_def center = beam.target;
+    for (int i = 0; i < 2; i++) {
+        bolt explosion = beam;
+        explosion.target = _get_tremorstone_target(center);
+        explosion.explode(i == 1);
+    }
 
     return spret::success;
 }
