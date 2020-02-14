@@ -1306,6 +1306,15 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "a magic seal in the Gauntlet prevents this spell "
                 "from working.";
         }
+        break;
+
+    case  SPELL_DRAGON_CALL:
+        if (temp && (you.duration[DUR_DRAGON_CALL]
+                     || you.duration[DUR_DRAGON_CALL_COOLDOWN]))
+        {
+            return "you cannot issue another dragon's call so soon.";
+        }
+        break;
 
     default:
         break;
