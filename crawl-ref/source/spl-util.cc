@@ -1316,6 +1316,11 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         }
         break;
 
+    case SPELL_FROZEN_RAMPARTS:
+        if (temp && you.duration[DUR_FROZEN_RAMPARTS])
+            return "you cannot sustain more frozen ramparts right now.";
+        break;
+
     default:
         break;
     }
