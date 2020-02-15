@@ -16,9 +16,7 @@ spret cast_chain_spell(spell_type spell_cast, int pow,
 spret trace_los_attack_spell(spell_type spell, int pow,
                                   const actor* agent);
 spret fire_los_attack_spell(spell_type spell, int pow, const actor* agent,
-                                 actor* defender = nullptr,
-                                 bool fail = false,
-                                 int* damage_done = nullptr);
+                            bool fail = false, int* damage_done = nullptr);
 void sonic_damage(bool scream);
 bool mons_shatter(monster* caster, bool actual = true);
 void shillelagh(actor *wielder, coord_def where, int pow);

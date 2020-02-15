@@ -2455,7 +2455,7 @@ static spret _do_ability(const ability_def& abil, bool fail)
         const spret result =
             fire_los_attack_spell(SPELL_DRAIN_LIFE,
                                   you.skill_rdiv(SK_INVOCATIONS),
-                                  &you, nullptr, fail, &damage);
+                                  &you, fail, &damage);
         if (result != spret::success)
             return result;
 
