@@ -272,36 +272,6 @@ static bool _evoke_horn_of_geryon()
     return true;
 }
 
-static bool _check_crystal_ball()
-{
-    if (you.confused())
-    {
-        canned_msg(MSG_TOO_CONFUSED);
-        return false;
-    }
-
-    if (!enough_mp(1, false))
-    {
-        mpr("Your reserves of magic are too empty for the crystal ball to "
-            "function.");
-        return false;
-    }
-
-    if (you.magic_points == you.max_magic_points)
-    {
-        canned_msg(MSG_FULL_MAGIC);
-        return false;
-    }
-
-    if (you.skill(SK_EVOCATIONS) < 2)
-    {
-        mpr("You lack the skill to use this item.");
-        return false;
-    }
-
-    return true;
-}
-
 /**
  * Spray lightning in all directions. (Randomly: shock, lightning bolt, OoE.)
  *
@@ -662,59 +632,6 @@ static bool _make_zig(item_def &zig)
     dungeon_terrain_changed(you.pos(), DNGN_ENTER_ZIGGURAT);
     mpr("You set the figurine down, and a mystic portal to a ziggurat forms.");
     return true;
-}
-
-static bool _ball_of_energy()
-{
-    bool ret = false;
-
-    mpr("You gaze into the crystal ball.");
-#if TAG_MAJOR_VERSION == 34
-    const int surge = pakellas_surge_devices();
-    surge_power(you.spec_evoke() + surge);
-#else
-    const int surge = 0;
-#endif
-
-    int use = player_adjust_evoc_power(random2(you.skill(SK_EVOCATIONS, 6)),
-                                       surge);
-
-    if (use < 2)
-        lose_stat(STAT_INT, 1 + random2avg(5, 2));
-    else if (use < 5 && enough_mp(1, true))
-    {
-        mpr("You feel your power drain away!");
-        dec_mp(you.magic_points);
-    }
-    else if (use < 10)
-        confuse_player(10 + random2(10));
-    else
-    {
-        int proportional = (you.magic_points * 100) / you.max_magic_points;
-
-        if (random2avg(
-                77 - player_adjust_evoc_power(you.skill(SK_EVOCATIONS, 2),
-                                              surge), 4)
-            > proportional
-            || one_chance_in(25))
-        {
-            mpr("You feel your power drain away!");
-            dec_mp(you.magic_points);
-        }
-        else
-        {
-            mpr("You are suffused with power!");
-            inc_mp(
-                player_adjust_evoc_power(
-                    5 + random2avg(you.skill(SK_EVOCATIONS), 2), surge));
-
-            ret = true;
-        }
-    }
-
-    did_god_conduct(DID_CHANNEL, 5, true);
-
-    return ret;
 }
 
 static int _num_evoker_elementals(int surge)
@@ -1429,14 +1346,11 @@ bool evoke_item(int slot)
         case MISC_SACK_OF_SPIDERS:
             canned_msg(MSG_NOTHING_HAPPENS);
             return false;
-#endif
 
         case MISC_CRYSTAL_BALL_OF_ENERGY:
-            if (!_check_crystal_ball())
-                unevokable = true;
-            else if (_ball_of_energy())
-                practise_evoking(1);
-            break;
+            canned_msg(MSG_NOTHING_HAPPENS);
+            return false;
+#endif
 
         case MISC_LIGHTNING_ROD:
             if (!evoker_charges(item.sub_type))

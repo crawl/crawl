@@ -1119,7 +1119,7 @@ TAGS: no_item_gen no_trap_gen luniq_orc_cave
 DEPTH: Orc
 SUBST: B = b'
 NSUBST: ' = d / '
-KITEM: d = nothing w:48 / crystal ball of energy w:1 / crystal plate armour w:1
+KITEM: d = nothing w:49 / crystal plate armour w:1
 MAP
  xxxxxxxx
 xx....xxxx

@@ -989,6 +989,7 @@ uncollected_orb UNCOLLECTED_ORB
 # Remove bottle when TAG_MAJOR_VERSION > 34
 misc_bottle MISC_BOTTLED_EFREET
 %rim 0
+# Remove crystal ball when TAG_MAJOR_VERSION > 34
 misc_crystal MISC_CRYSTAL_BALL_OF_ENERGY UNSEEN_MISC
 # Remove fan when TAG_MAJOR_VERSION > 34
 misc_fan MISC_FAN_OF_GALES

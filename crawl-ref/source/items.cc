@@ -3953,8 +3953,10 @@ colour_t item_def::miscellany_colour() const
             return LIGHTBLUE;
         case MISC_BOX_OF_BEASTS:
             return LIGHTGREEN; // ugh, but we're out of other options
+#if TAG_MAJOR_VERSION == 34
         case MISC_CRYSTAL_BALL_OF_ENERGY:
             return LIGHTCYAN;
+#endif
         case MISC_HORN_OF_GERYON:
             return LIGHTRED;
         case MISC_LAMP_OF_FIRE:

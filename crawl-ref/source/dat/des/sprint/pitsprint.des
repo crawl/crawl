@@ -508,7 +508,7 @@ function coven_setup(e)
   e.kitem("f = any wand good_item ident:all")
   e.kitem("g = staff of energy ident:all")
   e.kitem("h = staff of power ident:all")
-  e.kitem("i = crystal ball of energy")
+  e.kitem("i = potion of magic q:5 ident:all")
   e.kitem("j = potion of mutation ident:all")
   e.lua_marker('~', props_marker {
            door_description_suffix=" to the Coven (Very Hard)",

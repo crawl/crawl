@@ -1795,14 +1795,8 @@ bool ShoppingList::cull_identical_items(const item_def& item, int cost)
         break;
     case OBJ_MISCELLANY:
         // ... and a few of these.
-        switch (item.sub_type)
-        {
-            case MISC_CRYSTAL_BALL_OF_ENERGY:
-                break;
-            default:
-                if (!is_xp_evoker(item))
-                    return 0;
-        }
+        if (!is_xp_evoker(item))
+            return 0;
         break;
     default:
         return 0;

@@ -2562,10 +2562,10 @@ static tileidx_t _tileidx_misc(const item_def &item)
     case MISC_BOX_OF_BEASTS:
         return TILE_MISC_BOX_OF_BEASTS;
 
-    // Detault for summary menus
-    case NUM_MISCELLANY:
+#if TAG_MAJOR_VERSION == 34
     case MISC_CRYSTAL_BALL_OF_ENERGY:
         return TILE_MISC_CRYSTAL_BALL_OF_ENERGY;
+#endif
 
     case MISC_LIGHTNING_ROD:
         return evoker_charges(item.sub_type) ? TILE_MISC_LIGHTNING_ROD
@@ -2576,6 +2576,8 @@ static tileidx_t _tileidx_misc(const item_def &item)
         return TILE_MISC_SACK_OF_SPIDERS;
 #endif
 
+    // Default for summary menus
+    case NUM_MISCELLANY:
     case MISC_PHANTOM_MIRROR:
         return TILE_MISC_PHANTOM_MIRROR;
 

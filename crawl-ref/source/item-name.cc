@@ -967,7 +967,9 @@ static string misc_type_name(int type)
 
     switch (static_cast<misc_item_type>(type))
     {
-    case MISC_CRYSTAL_BALL_OF_ENERGY:    return "crystal ball of energy";
+#if TAG_MAJOR_VERSION == 34
+    case MISC_CRYSTAL_BALL_OF_ENERGY:    return "removed crystal ball";
+#endif
     case MISC_BOX_OF_BEASTS:             return "box of beasts";
 #if TAG_MAJOR_VERSION == 34
     case MISC_BUGGY_EBONY_CASKET:        return "removed ebony casket";

@@ -320,9 +320,7 @@ bool is_channeling_item(const item_def& item, bool calc_unid)
     if (!calc_unid && !item_type_known(item))
         return false;
 
-    return item.base_type == OBJ_STAVES && item.sub_type == STAFF_ENERGY
-           || item.base_type == OBJ_MISCELLANY
-              && item.sub_type == MISC_CRYSTAL_BALL_OF_ENERGY;
+    return item.base_type == OBJ_STAVES && item.sub_type == STAFF_ENERGY;
 }
 
 bool is_wizardly_item(const item_def& item, bool calc_unid)
