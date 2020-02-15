@@ -24,6 +24,7 @@
 #include "item-name.h"
 #include "items.h"
 #include "level-state-type.h"
+#include "losglobal.h"
 #include "mapmark.h"
 #include "message.h"
 #include "mon-death.h"
@@ -1088,12 +1089,34 @@ static void _update_level_state()
                   + mon_it->get_ench(ENCH_AWAKEN_FOREST).duration;
         }
     }
+
+#if TAG_MAJOR_VERSION == 34
+    const bool have_ramparts = you.duration[DUR_FROZEN_RAMPARTS];
+    const auto &ramparts_pos = you.props[FROZEN_RAMPARTS_KEY].get_coord();
+#endif
     for (rectangle_iterator ri(0); ri; ++ri)
     {
         if (grd(*ri) == DNGN_SLIMY_WALL)
             env.level_state |= LSTATE_SLIMY_WALL;
-        else if (is_icecovered(*ri))
+
+        if (is_icecovered(*ri))
+#if TAG_MAJOR_VERSION == 34
+        {
+            // Buggy versions of Frozen Ramparts didn't properly clear
+            // FPROP_ICY from walls in some cases, so we detect invalid walls
+            // and remove the flag.
+            if (have_ramparts
+                && ramparts_pos.distance_from(*ri) <= FROZEN_RAMPARTS_RADIUS
+                && cell_see_cell(*ri, ramparts_pos, LOS_NO_TRANS))
+            {
+#endif
             env.level_state |= LSTATE_ICY_WALL;
+#if TAG_MAJOR_VERSION == 34
+            }
+            else
+                env.pgrid(*ri) &= ~FPROP_ICY;
+        }
+#endif
     }
 
     env.orb_pos = coord_def();
