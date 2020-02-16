@@ -92,7 +92,7 @@ int unmangle_direction_keys(int keyin, KeymapContext keymap,
         {
             unwind_cursor saved(1, crawl_view.msgsz.y, GOTO_MSG);
             cprintf("CTRL");
-            keyin = getchm(keymap);
+            keyin = ui::getch(keymap);
             // return control-key
             keyin = CONTROL(toupper_safe(_numpad2vi(keyin)));
         }
@@ -100,7 +100,7 @@ int unmangle_direction_keys(int keyin, KeymapContext keymap,
         {
             unwind_cursor saved(1, crawl_view.msgsz.y, GOTO_MSG);
             cprintf("SHIFT");
-            keyin = getchm(keymap);
+            keyin = ui::getch(keymap);
             // return shift-key
             keyin = toupper_safe(_numpad2vi(keyin));
         }
@@ -460,7 +460,7 @@ static void _webtiles_abort_get_line()
 
 int line_reader::getkey()
 {
-    return getchm();
+    return ui::getch();
 }
 
 int line_reader::read_line_core(bool reset_cursor)

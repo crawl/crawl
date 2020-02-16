@@ -1818,7 +1818,7 @@ static void readkey_more(bool user_forced)
 
     do
     {
-        keypress = getch_ck();
+        keypress = ui::getch();
         if (keypress == CK_REDRAW)
         {
             redraw_screen();

@@ -507,7 +507,7 @@ static bool _make_book_randart(item_def &book)
     do
     {
         mprf(MSGCH_PROMPT, "Make book fixed [t]heme or fixed [l]evel? ");
-        type = toalower(getch_ck());
+        type = toalower(ui::getch());
     }
     while (type != 't' && type != 'l');
 
@@ -921,7 +921,7 @@ static void _debug_acquirement_stats(FILE *ostat)
     {
         if (kbhit())
         {
-            getch_ck();
+            ui::getch();
             mpr("Stopping early due to keyboard input.");
             break;
         }
@@ -1392,7 +1392,7 @@ static void _debug_rap_stats(FILE *ostat)
     {
         if (kbhit())
         {
-            getch_ck();
+            ui::getch();
             mpr("Stopping early due to keyboard input.");
             break;
         }

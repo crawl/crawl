@@ -288,7 +288,7 @@ int prompt_for_quantity(const char *prompt)
 {
     msgwin_prompt(prompt);
 
-    int ch = getch_ck();
+    int ch = ui::getch();
     if (ch == CK_ENTER || ch == ';')
         return -1;
     else if (ch == CK_ESCAPE || ch == CK_REDRAW)

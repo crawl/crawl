@@ -738,7 +738,7 @@ static keyseq _getch_mul()
     // have a vague recollection of it being a kludge for conio support.
     do
     {
-        a = getch_ck();
+        a = ui::getch();
         if (a != CK_NO_KEY)
             keys.push_back(a);
     }
@@ -900,7 +900,7 @@ static void _input_action_raw(const string &macro_type, keyseq* action)
         cgotoxy(x, y);
         cprintf("%s", vtostr(*action).c_str());
 
-        int input = getch_ck();
+        int input = ui::getch();
 
         switch (input)
         {
@@ -954,7 +954,7 @@ void macro_add_query()
     mprf(MSGCH_PROMPT, "(m)acro, (M)acro raw, keymap "
                        "[(k) default, (x) level-map, (t)argeting, "
                        "(c)onfirm, m(e)nu], (s)ave? ");
-    input = getch_ck();
+    input = ui::getch();
     int low = toalower(input);
 
     if (low == 'k')
@@ -1021,7 +1021,7 @@ void macro_add_query()
         mprf(MSGCH_WARN, "Current Action: %s", action_str.c_str());
         mprf(MSGCH_PROMPT, "Do you wish to (r)edefine, (c)lear, or (a)bort? ");
 
-        input = getch_ck();
+        input = ui::getch();
 
         input = toalower(input);
         if (input == 'c')
