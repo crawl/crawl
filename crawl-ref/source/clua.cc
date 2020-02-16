@@ -304,6 +304,9 @@ int CLua::loadfile(lua_State *ls, const char *filename, bool trusted,
     while (!f.eof())
         script += f.get_line() + "\n";
 
+    if (script[0] == 0x1b)
+        abort();
+
     // prefixing with @ stops lua from adding [string "%s"]
     return luaL_loadbuffer(ls, &script[0], script.length(),
                            ("@" + file).c_str());
@@ -796,6 +799,8 @@ void CLua::init_libraries()
 
     lua_pushcfunction(_state, lua_loadstring);
     lua_setglobal(_state, "loadstring");
+    lua_pushnil(_state);
+    lua_setglobal(_state, "load");
 
     // Open Crawl bindings
     cluaopen_kills(_state);
