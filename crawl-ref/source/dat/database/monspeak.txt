@@ -851,14 +851,14 @@ VISUAL:@The_monster@ gnaws at a bone — where's that from?
 
 @hound@
 %%%%
-friendly hound Shoals
+friendly Shoals hound
 
 w:50
 @friendly hound@
 
 VISUAL:@The_monster@ [plays|frolics] in the surf!
 
-There's a distinct wet dog smell emanating from @the_monster@.
+A distinct wet dog smell emanates from @the_monster@.
 
 w:1
 VISUAL:@The_monster@ hopefully picks up a piece of driftwood and looks at you.
