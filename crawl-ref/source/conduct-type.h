@@ -40,5 +40,6 @@ enum conduct_type
     DID_SACRIFICE_LOVE,                   // Ru
     DID_CHANNEL,                          // Pakellas
     DID_HURT_FOE,                         // Uskayaw
+    DID_WIZARDLY_ITEM,                    // Trog
     NUM_CONDUCTS
 };

@@ -1195,23 +1195,9 @@ static string _why_reject(const item_def &item, int agent)
         return "Destroying unusable weapon or armour!";
     }
 
-    // Trog does not gift the Wrath of Trog, nor weapons of pain
-    // (which work together with Necromantic magic).
-    // nor fancy magic staffs (wucad mu, majin-bo, staff of battle, elem
-    // staff, staff of olgreb)
-    if (agent == GOD_TROG)
-    {
-        if (is_unrandom_artefact(item, UNRAND_TROG)
-            || is_unrandom_artefact(item, UNRAND_WUCAD_MU)
-            || is_unrandom_artefact(item, UNRAND_MAJIN)
-            || is_unrandom_artefact(item, UNRAND_BATTLE)
-            || is_unrandom_artefact(item, UNRAND_ELEMENTAL_STAFF)
-            || is_unrandom_artefact(item, UNRAND_OLGREB)
-            || get_weapon_brand(item) == SPWPN_PAIN)
-        {
-            return "Destroying a weapon Trog hates!";
-        }
-    }
+    // Trog does not gift the Wrath of Trog.
+    if (agent == GOD_TROG && is_unrandom_artefact(item, UNRAND_TROG))
+        return "Destroying Trog-gifted Wrath of Trog!";
 
     // Pain brand is useless if you've sacrificed Necromacy.
     if (you.get_mutation_level(MUT_NO_NECROMANCY_MAGIC)

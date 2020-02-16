@@ -1817,11 +1817,12 @@ void melee_attack::player_exercise_combat_skills()
 /*
  * Applies god conduct for weapon ego
  *
- * Using speed brand as a chei worshipper, or holy/unholy weapons
+ * Using speed brand as a chei worshipper, or holy/unholy/wizardly weapons etc
  */
 void melee_attack::player_weapon_upsets_god()
 {
-    if (weapon && weapon->base_type == OBJ_WEAPONS
+    if (weapon
+        && (weapon->base_type == OBJ_WEAPONS || weapon->base_type == OBJ_STAVES)
         && god_hates_item_handling(*weapon))
     {
         did_god_conduct(god_hates_item_handling(*weapon), 2);
