@@ -239,6 +239,7 @@ enum tag_minor_version
     TAG_MINOR_POSITIONAL_MAGIC,    // Positional attack magic overhaul
     TAG_MINOR_GHOST_MAGIC,         // Ghost update for positional magic
     TAG_MINOR_MORE_GHOST_MAGIC,    // Update already placed ghosts for positional magic
+    TAG_MINOR_DUMMY_AGILITY,       // Convert garbage "agility" potions into stab
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

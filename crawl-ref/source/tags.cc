@@ -5164,6 +5164,12 @@ void unmarshallItem(reader &th, item_def &item)
         }
     }
 
+    if (th.getMinorVersion() < TAG_MINOR_DUMMY_AGILITY
+        && item.is_type(OBJ_POTIONS, POT_BENEFICIAL_MUTATION + 1))
+    {
+        item.sub_type = POT_STABBING;
+    }
+
 #endif
 
     if (is_unrandom_artefact(item))
