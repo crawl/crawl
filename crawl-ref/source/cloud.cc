@@ -1348,7 +1348,7 @@ int actor_apply_cloud(actor *act)
             if (you.religion == GOD_ELYVILON && you.piety >= piety_breakpoint(0))
             {
                 if (cloud.type == CLOUD_HOLY)
-                    inc_hp(2 + random2(2));
+                    inc_hp(2 + random2(1));
             }
         }
         return 0;
