@@ -6764,6 +6764,9 @@ item_def* monster::ely_disarms(monster* mon)
         && (your_tile_ok
             || !feat_eliminates_items(grd(pos())));
 
+    if (!have_passive(passive_t::disarms_enemy))
+        return nullptr;
+
     if (mon->props.exists(DISARMED_KEY))
         return nullptr;
 
@@ -6814,6 +6817,9 @@ item_def* monster::ely_rwpn_disarms(monster* mon)
     const bool mon_tile_ok = !feat_destroys_items(grd(pos()))
         && (your_tile_ok
             || !feat_eliminates_items(grd(pos())));
+
+    if (!have_passive(passive_t::disarms_enemy))
+        return nullptr;
 
     if (mon->props.exists(DISARMED_RWPN_KEY))
         return nullptr;
