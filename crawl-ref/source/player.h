@@ -863,6 +863,8 @@ public:
                                 killer_type killer = KILL_NONE,
                                 int killernum = -1) override;
 
+    void be_agile(int pow);
+
     ////////////////////////////////////////////////////////////////
 
     PlaceInfo& get_place_info() const ; // Current place info

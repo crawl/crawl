@@ -8392,3 +8392,14 @@ bool player::immune_to_hex(const spell_type hex) const
         return false;
     }
 }
+
+// Activate DUR_AGILE.
+void player::be_agile(int pow) {
+    const bool were_agile = you.duration[DUR_AGILITY] > 0;
+    mprf(MSGCH_DURATION, "You feel %sagile all of a sudden.",
+        were_agile ? "more " : "");
+
+    you.increase_duration(DUR_AGILITY, 35 + random2(pow), 80);
+    if (!were_agile)
+        notify_stat_change(STAT_DEX, 5, true);
+}

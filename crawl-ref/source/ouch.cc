@@ -613,7 +613,7 @@ static void _powered_by_pain(int dam)
             break;
         case 3:
             mpr("You focus on the pain.");
-            potionlike_effect(POT_AGILITY, level * 20);
+            you.be_agile(level * 20);
             break;
         }
     }

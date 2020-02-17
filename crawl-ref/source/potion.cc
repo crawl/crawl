@@ -355,32 +355,6 @@ public:
     }
 };
 
-class PotionAgility : public PotionEffect
-{
-private:
-    PotionAgility() : PotionEffect(POT_AGILITY) { }
-    DISALLOW_COPY_AND_ASSIGN(PotionAgility);
-public:
-    static const PotionAgility &instance()
-    {
-        static PotionAgility inst; return inst;
-    }
-
-    bool effect(bool=true, int pow = 40, bool=true) const override
-    {
-        const bool were_agile = you.duration[DUR_AGILITY] > 0;
-
-        mprf(MSGCH_DURATION, "You feel %sagile all of a sudden.",
-             were_agile ? "more " : "");
-
-        you.increase_duration(DUR_AGILITY, 35 + random2(pow), 80);
-
-        if (!were_agile)
-            notify_stat_change(STAT_DEX, 5, true);
-        return true;
-    }
-};
-
 class PotionStabbing : public PotionEffect
 {
 private:
@@ -1355,7 +1329,6 @@ static const PotionEffect* potion_effects[] =
 #if TAG_MAJOR_VERSION == 34
     &PotionBeneficialMutation::instance(),
 #endif
-    &PotionAgility::instance(),
     &PotionStale::instance()
 };
 

@@ -868,9 +868,7 @@ i-blood POT_BLOOD
 i-coagulated-blood POT_BLOOD_COAGULATED
 i-lignify POT_LIGNIFY
 # Remove beneficial mutation when TAG_MAJOR_VERSION > 34
-i-good-mutation POT_REMOVEME9
-# agility is a dummy and shouldn't exist
-i-agility POT_AGILITY POT_ID_LAST
+i-good-mutation POT_REMOVEME9 POT_ID_LAST
 %back none
 %rim 1
 
