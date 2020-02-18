@@ -853,16 +853,19 @@ static void _equip_armour_effect(item_def& arm, bool unmeld,
                     float_player();
                 }
             }
-            if (!unmeld && !you.has_mutation(MUT_NO_ARTIFICE))
+            if (!unmeld)
             {
                 if (you.has_mutation(MUT_NO_ARTIFICE))
-                    mpr("Take it off to stop flying.");
+                {
+                    mprf("Take your %s off to stop flying.",
+                         arm.name(DESC_BASENAME).c_str());
+                }
                 else
                 {
-                mprf("(use the <w>%s</w>bility menu to %s flying)",
-                     command_to_string(CMD_USE_ABILITY).c_str(),
-                     you.attribute[ATTR_LAST_FLIGHT_STATUS]
-                         ? "stop or start" : "start or stop");
+                    mprf("(use the <w>%s</w>bility menu to %s flying)",
+                         command_to_string(CMD_USE_ABILITY).c_str(),
+                         you.attribute[ATTR_LAST_FLIGHT_STATUS]
+                             ? "stop or start" : "start or stop");
                 }
             }
 
