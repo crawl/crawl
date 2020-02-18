@@ -4748,8 +4748,7 @@ void unmarshallItem(reader &th, item_def &item)
     }
 
     if (item.is_type(OBJ_POTIONS, POT_WATER)
-        || item.is_type(OBJ_POTIONS, POT_POISON)
-        || item.is_type(OBJ_POTIONS, POT_DUMMY_AGILITY))
+        || item.is_type(OBJ_POTIONS, POT_POISON))
     {
         item.sub_type = POT_DEGENERATION;
     }
