@@ -565,7 +565,7 @@ static const duration_def duration_data[] =
       LIGHTBLUE, "Stab",
       "stab", "stabbing",
       "You are ready to backstab.", D_DISPELLABLE,
-      {{ "You feel more trustworthy now.", }}},
+      {{ "You feel less ready to backstab.", }}},
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.
