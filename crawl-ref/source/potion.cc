@@ -1328,6 +1328,8 @@ static const PotionEffect* potion_effects[] =
     &PotionLignify::instance(),
 #if TAG_MAJOR_VERSION == 34
     &PotionBeneficialMutation::instance(),
+    &PotionStale::instance(), // placeholder for POT_DUMMY_AGILITY, a very
+                              // temporary then removed potion type
 #endif
     &PotionStale::instance()
 };

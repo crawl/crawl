@@ -48,6 +48,7 @@ enum potion_type
     POT_LIGNIFY,
 #if TAG_MAJOR_VERSION == 34
     POT_BENEFICIAL_MUTATION,
+    POT_DUMMY_AGILITY,
 #endif
     NUM_POTIONS
 };

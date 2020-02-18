@@ -4748,7 +4748,8 @@ void unmarshallItem(reader &th, item_def &item)
     }
 
     if (item.is_type(OBJ_POTIONS, POT_WATER)
-        || item.is_type(OBJ_POTIONS, POT_POISON))
+        || item.is_type(OBJ_POTIONS, POT_POISON)
+        || item.is_type(OBJ_POTIONS, POT_DUMMY_AGILITY))
     {
         item.sub_type = POT_DEGENERATION;
     }
@@ -4758,6 +4759,9 @@ void unmarshallItem(reader &th, item_def &item)
     {
         item.sub_type = POT_MUTATION;
     }
+
+    if (item.is_type(OBJ_POTIONS, POT_DUMMY_AGILITY))
+        item.sub_type = POT_STABBING;
 
     if (item.is_type(OBJ_STAVES, STAFF_CHANNELING))
         item.sub_type = STAFF_ENERGY;
@@ -5162,12 +5166,6 @@ void unmarshallItem(reader &th, item_def &item)
                     break;
             }
         }
-    }
-
-    if (th.getMinorVersion() < TAG_MINOR_DUMMY_AGILITY
-        && item.is_type(OBJ_POTIONS, POT_BENEFICIAL_MUTATION + 1))
-    {
-        item.sub_type = POT_STABBING;
     }
 
 #endif
