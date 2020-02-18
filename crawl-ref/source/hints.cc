@@ -3355,10 +3355,9 @@ string hints_describe_item(const item_def &item)
 
             if (item_known_cursed(item))
             {
-                ostr << "\nA cursed piece of jewellery will cling to its "
-                        "unfortunate wearer's neck or fingers until the curse "
-                        "is finally lifted when he or she reads a scroll of "
-                        "remove curse.";
+                ostr << "\nA cursed piece of jewellery will stick to its "
+                        "wearer when equipped, and cannot be removed until "
+                        "you read a scroll of remove curse.";
             }
             if (gives_resistance(item))
             {
