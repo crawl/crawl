@@ -1182,61 +1182,6 @@ int player_mp_regen()
     return regen_amount;
 }
 
-// Some amulets need to be worn while at full health before they begin to
-// function.
-void update_amulet_attunement_by_health()
-{
-    // amulet of regeneration
-    // You must be wearing the amulet and able to regenerate to get benefits.
-    if (you.wearing(EQ_AMULET, AMU_REGENERATION)
-        && you.get_mutation_level(MUT_NO_REGENERATION) == 0)
-    {
-        // If you hit max HP, turn on the amulet.
-        if (you.hp == you.hp_max
-            && you.props[REGEN_AMULET_ACTIVE].get_int() == 0)
-        {
-            you.props[REGEN_AMULET_ACTIVE] = 1;
-            mpr("Your amulet attunes itself to your body and you begin to "
-                "regenerate more quickly.");
-        }
-    }
-    else
-        you.props[REGEN_AMULET_ACTIVE] = 0;
-
-    // amulet of the acrobat
-    if (you.wearing(EQ_AMULET, AMU_ACROBAT))
-    {
-        if (you.hp == you.hp_max
-            && you.props[ACROBAT_AMULET_ACTIVE].get_int() == 0)
-        {
-            you.props[ACROBAT_AMULET_ACTIVE] = 1;
-            mpr("Your amulet attunes itself to your body. You feel like "
-                "doing cartwheels.");
-        }
-    }
-    else
-        you.props[ACROBAT_AMULET_ACTIVE] = 0;
-}
-
-// Amulet of magic regeneration needs to be worn while at full magic before it
-// begins to function.
-void update_mana_regen_amulet_attunement()
-{
-    if (you.wearing(EQ_AMULET, AMU_MANA_REGENERATION)
-        && player_regenerates_mp())
-    {
-        if (you.magic_points == you.max_magic_points
-            && you.props[MANA_REGEN_AMULET_ACTIVE].get_int() == 0)
-        {
-            you.props[MANA_REGEN_AMULET_ACTIVE] = 1;
-            mpr("Your amulet attunes itself to your body and you begin to "
-                "regenerate magic more quickly.");
-        }
-    }
-    else
-        you.props[MANA_REGEN_AMULET_ACTIVE] = 0;
-}
-
 int player_hunger_rate()
 {
     int hunger = 3;
