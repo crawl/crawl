@@ -855,6 +855,24 @@ static void _handle_emergency_flight()
     }
 }
 
+// Some equipment only begins to function when some condition is met, e.g., full
+// health is reached.
+static void _update_equipment_attunement(equipment_type slot, int eq, string msg,
+                                         bool activate_condition, string prop_key,
+                                         bool active_requirement = true)
+{
+    if (you.wearing(slot, eq) && active_requirement)
+    {
+        if (activate_condition && !you.props[prop_key].get_int())
+        {
+            you.props[prop_key] = 1;
+            mpr(msg);
+        }
+    }
+    else
+        you.props[prop_key] = 0;
+}
+
 // cjo: Handles player hp and mp regeneration. If the counter
 // you.hit_points_regeneration is over 100, a loop restores 1 hp and decreases
 // the counter by 100 (so you can regen more than 1 hp per turn). If the counter
@@ -889,7 +907,14 @@ static void _regenerate_hp_and_mp(int delay)
 
     ASSERT_RANGE(you.hit_points_regeneration, 0, 100);
 
-    update_amulet_attunement_by_health();
+    _update_equipment_attunement(EQ_AMULET, AMU_REGENERATION,
+        "Your amulet attunes itself to your body and you begin to regenerate "
+        "more quickly.", you.hp == you.hp_max, REGEN_AMULET_ACTIVE,
+                             !you.get_mutation_level(MUT_NO_REGENERATION));
+
+    _update_equipment_attunement(EQ_AMULET, AMU_ACROBAT,
+        "Your amulet attunes itself to your body. You feel like doing "
+        "cartwheels.", you.hp == you.hp_max, ACROBAT_AMULET_ACTIVE);
 
     // MP Regeneration
     if (!player_regenerates_mp())
@@ -910,7 +935,10 @@ static void _regenerate_hp_and_mp(int delay)
 
     ASSERT_RANGE(you.magic_points_regeneration, 0, 100);
 
-    update_mana_regen_amulet_attunement();
+    _update_equipment_attunement(EQ_AMULET, AMU_MANA_REGENERATION,
+        "Your amulet attunes itself to your body and you begin to regenerate "
+        "magic more quickly.", you.magic_points == you.max_magic_points,
+        MANA_REGEN_AMULET_ACTIVE);
 }
 
 void player_reacts()
