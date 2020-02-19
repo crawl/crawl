@@ -107,6 +107,7 @@ jobs:
       # (including submodules) (when compressed)
       - name: Configure ccache
         run: |
+          mkdir -p ~/.ccache
           cat >~/.ccache/ccache.conf <<EOF
           compression = true
           compression_level = 9
@@ -152,6 +153,7 @@ jobs:
       # (including submodules) (when compressed)
       - name: Configure ccache
         run: |
+          mkdir -p ~/.ccache
           cat >~/.ccache/ccache.conf <<EOF
           compression = true
           compression_level = 9
@@ -190,6 +192,7 @@ jobs:
       # (including submodules) (when compressed)
       - name: Configure ccache
         run: |
+          mkdir -p ~/.ccache
           cat >~/.ccache/ccache.conf <<EOF
           compression = true
           compression_level = 9
