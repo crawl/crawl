@@ -55,17 +55,20 @@ make -j4 TILES=y
 
 ### Packaged Dependencies
 
-DCSS uses Lua, SDL, SQLite and several other third party packages. Generally you should use the versions supplied by your OS's package manager. If that's not possible, you can use the versions packaged with DCSS.
+DCSS uses Lua, SDL, SQLite and several other third party packages. Generally
+you should use the versions supplied by your OS's package manager. If that's
+not possible, you can use the versions packaged with DCSS.
 
 To use packaged dependencies:
 
-1. Clone the repository with Git (you can't use a tarball - the dependencies use Git submodules).
+1. Clone the repository with Git (you can't use a tarball - the dependencies
+   use Git submodules).
 2. Run `git submodule update --init` in the repository.
 3. Compile as per above.
 
 ### Ubuntu / Debian
 
- These instructions may work for other DPKG-based distros.
+These instructions may work for other DPKG-based distros.
 
 ```sh
 sudo apt install build-essential libncursesw5-dev bison flex liblua5.1-0-dev \
@@ -105,7 +108,9 @@ You need the following dependencies:
 * libncurses
 * flex / bison (optional)
 
-You can install these dependencies from your OS package manager, or use DCSS's packaged versions (as described in [Packaged Dependencies](#packaged-dependencies) above):
+You can install these dependencies from your OS package manager, or use DCSS's
+packaged versions (as described in [Packaged
+Dependencies](#packaged-dependencies) above):
 
 * lua 5.1
 * sqlite
