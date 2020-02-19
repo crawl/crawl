@@ -4,60 +4,166 @@ This document gives new team members some general guidance for DCSS development 
 
 ## Setup
 
-Other team members will help you get the items in the [*new dev checklist*](../team/new_dev_checklist.txt) covered. Once you’ve been given commit access, configuring git properly so that you can make your first commit is a priority. See the [*git configuration doc*](../git/config.txt), especially the options about rebasing so you avoid making unnecessary merge commits.
+Other team members will help you get the items in the [*new dev
+checklist*](../team/new_dev_checklist.txt) covered. Once you’ve been given
+commit access, configuring git properly so that you can make your first commit
+is a priority. See the [*git configuration doc*](../git/config.txt), especially
+the options about rebasing so you avoid making unnecessary merge commits.
 
 ## Team Discussion and Coordination
 
-Most development discussion happens on IRC in the \#\#crawl-dev on Freenode, so it's good to join and participate in that channel. Use the !tell command through Sequell to leave IRC messages to other team or community members you’re working with. The channel is also [*logged*](http://s-z.org/crawl-dev/#), if you’d like to read or search previous discussions.
+Most development discussion happens on IRC in the \#\#crawl-dev on Freenode, so
+it's good to join and participate in that channel. Use the !tell command
+through Sequell to leave IRC messages to other team or community members you’re
+working with. The channel is also [*logged*](http://s-z.org/crawl-dev/#), if
+you’d like to read or search previous discussions.
 
-Although nearly all changes are just discussed on IRC, larger projects can be written up in an email sent to the [*CRD mailing list*](http://sourceforge.net/p/crawl-ref/mailman/crawl-ref-discuss/) or placed on page in the [*Dev Wiki*](https://crawl.develz.org/wiki/doku.php). The Dev Wiki is helpful if you’d like to brainstorm and organize a large list of changes. The CRD mailing list is a way to discuss high-impact changes if you feel extended, organized discussion is necessary.
+Although nearly all changes are just discussed on IRC, larger projects can be
+written up in an email sent to the [*CRD mailing
+list*](http://sourceforge.net/p/crawl-ref/mailman/crawl-ref-discuss/) or placed
+on page in the [*GitHub Wiki*](https://github.com/crawl/crawl/wiki). The
+Wiki is helpful if you’d like to brainstorm and organize a large list of
+changes. The CRD mailing list is a way to discuss high-impact changes if you
+feel extended, organized discussion is necessary.
 
-We also coordinate [*release plans*](https://crawl.develz.org/wiki/doku.php?id=dcss:planning:release_plans) on the Dev Wiki. These plans are most useful at the beginning of each version, when we’re brainstorming what major areas to work on, and closer to release, when we decide which features will make it in the next version. You don’t have to continuously update entries you make in a release plan during the alpha version, but it’s good to update items as you complete them.
+We also coordinate *release plans* on the GitHub Wiki. These plans are most
+useful at the beginning of each version, when we’re brainstorming what major
+areas to work on, and closer to release, when we decide which features will
+make it in the next version. You don’t have to continuously update entries you
+make in a release plan during the alpha version, but it’s good to update items
+as you complete them.
 
 ## Coding Standards
 
-We value having reasonably correct, well-thought out code that doesn't break other aspects of the game over simply getting in content changes as fast as possible. If you're not sure how to implement something, please ask other team members who have more experience with the codebase. You can use a code pasting service like github gist, dpaste, sprunge, or pastebin to share code snippets.
+We value having reasonably correct, well-thought out code that doesn't break
+other aspects of the game over simply getting in content changes as fast as
+possible. If you're not sure how to implement something, please ask other team
+members who have more experience with the codebase. You can use a code pasting
+service like github gist, dpaste, sprunge, or pastebin to share code snippets.
 
 ## Documentation and Formatting
 
-The [*coding conventions*](http://s-z.org/neil/git/?p=crawl.git;a=blob;f=crawl-ref/docs/develop/coding_conventions.txt) document describes how Crawl’s C++ source code should be formatted. For documenting C++ code, we use [*Doxygen*](http://www.stack.nl/~dimitri/doxygen/index.html) comments and the JavaDoc style, and example of which you can see [*here*](http://s-z.org/neil/git/?p=crawl.git;a=blob;f=crawl-ref/source/ability.cc#l3553). It’s preferred that you document all new functions and data structures in this way, but not required.
+The [*coding conventions*](crawl-ref/docs/develop/coding_conventions.txt)
+document describes how Crawl’s C++ source code should be formatted. For
+documenting C++ code, we use
+[*Doxygen*](http://www.stack.nl/~dimitri/doxygen/index.html) comments and the
+JavaDoc style, and example of which you can see
+[*here*](crawl-ref/source/ability.cc#l3553). It’s preferred that you document
+all new functions and data structures in this way, but not required.
 
-Significant changes that affect the gameplay should be documented in the [*changelog*](http://s-z.org/neil/git/?p=crawl.git;a=blob;f=crawl-ref/docs/changelog.txt;hb=HEAD). We try to be brief in these entries, giving players a simple description of the change without technical detail. It’s good to read previous entries or ask a team member if you’re not sure about including an item or how to word it.
+Significant changes that affect the gameplay should be documented in the
+[*changelog*](crawl-ref/docs/changelog.txt). We try to be brief in
+these entries, giving players a simple description of the change without
+technical detail. It’s good to read previous entries or ask a team member if
+you’re not sure about including an item or how to word it.
 
 ## Save Compatibility
 
-Each trunk commit creates a new version, and we try hard to not break trunk games when a save is transferred to a new version. Making changes that force users to abandon a game they have in-progress is frustrating for players and creates problems for server administrators as well. There’s a [*document*](../save_compatibility.txt) in the source tree that discusses basic save compatibility and the technical reasons behind it. In general, if you’re not sure if a change will create a save compatibility issue or how to address it, ask another team member before pushing your changes.
+Each trunk commit creates a new version, and we try hard to not break trunk
+games when a save is transferred to a new version. Making changes that force
+users to abandon a game they have in-progress is frustrating for players and
+creates problems for server administrators as well. There’s a
+[*document*](../save_compatibility.txt) in the source tree that discusses basic
+save compatibility and the technical reasons behind it. In general, if you’re
+not sure if a change will create a save compatibility issue or how to address
+it, ask another team member before pushing your changes.
 
 ## Bug Reports and Community Contributions
 
-We handle these through our [*Mantis issue tracker*](https://crawl.develz.org/mantis/view_all_bug_page.php) and our [*GitHub page*](https://github.com/crawl/crawl).
+We handle these through our [*Mantis issue
+tracker*](https://crawl.develz.org/mantis/view_all_bug_page.php) and our
+[*GitHub page*](https://github.com/crawl/crawl).
 
-On Mantis, we can also assign issues to ourselves or to other developers. Self-assignment is used if the developer in question is working on the issue. Assigning to someone else is used if the issue in question is in their area of expertise, or if the assigner wants their opinion. Either way, the reason for assignment should be explained in the assigning message.
+On Mantis, we can also assign issues to ourselves or to other developers.
+Self-assignment is used if the developer in question is working on the issue.
+Assigning to someone else is used if the issue in question is in their area of
+expertise, or if the assigner wants their opinion. Either way, the reason for
+assignment should be explained in the assigning message.
 
-Contributions and patches are submitted through both systems. Depending on quality of submission, concordance to design guidelines, and general suitability, comment and ask for improvement/clarification on these, then close/merge accordingly.
+Contributions and patches are submitted through both systems. Depending on
+quality of submission, concordance to design guidelines, and general
+suitability, comment and ask for improvement/clarification on these, then
+close/merge accordingly.
 
-Desired features and changes -- "Implementables" -- can be posted to either system, informally requesting that someone from the community takes up the project and completes them. Do not expect that this will be fulfilled within a short time frame. On GitHub, you can post these as an Issue asking for help, and on Mantis you will need to tag them explicitly as an implementable. If people are looking for things to work on, then we can point them towards these implementables.
+Desired features and changes -- "Implementables" -- can be posted to either
+system, informally requesting that someone from the community takes up the
+project and completes them. Do not expect that this will be fulfilled within a
+short time frame. On GitHub, you can post these as an Issue asking for help,
+and on Mantis you will need to tag them explicitly as an implementable. If
+people are looking for things to work on, then we can point them towards these
+implementables.
 
 ## Release Schedule
 
-Although there isn’t a fixed schedule, releases tend to happen every 6 months and are followed by a two week [*online tournament*](http://dobrazupa.org/tournament/0.19/) based on the released version. The steps for branching and tagging the release in git as well as building the release packages are described in the [*release guide*](https://github.com/crawl/crawl/blob/master/crawl-ref/docs/develop/release/guide.txt). The work for release and tournament is usually done by several people who help out with specific portions of the process from release to release. Ask other team members if you’d like to help out.
+Although there isn’t a fixed schedule, releases tend to happen every 6 months
+and are followed by a two week *online tournament* based on the released
+version. The steps for branching and tagging the release in git as well as
+building the release packages are described in the [*release
+guide*](crawl-ref/docs/develop/release/guide.txt). The work for release and
+tournament is usually done by several people who help out with specific
+portions of the process from release to release. Ask other team members if
+you’d like to help out.
 
 ## Development Philosophy
 
-As a new developer, it's good to discuss significant gameplay changes with at least a few others before pushing them and to not be too attached to a new idea you may have. Below are some general principles about the development process.
+As a new developer, it's good to discuss significant gameplay changes with at
+least a few others before pushing them and to not be too attached to a new idea
+you may have. Below are some general principles about the development process.
 
 #### Team Cooperation
 
-Team members have varying levels of free time, and their availability fluctuates. It's important to listen when others say they may not have time to critique your idea or double-check your code. Be prepared to ask someone else or the team as a whole in \#\#crawl-dev or on CRD. If your implementation seems well tested and reasonably agreed upon by the rest of the team in your best judgement, go ahead and push it to the repository!
+Team members have varying levels of free time, and their availability
+fluctuates. It's important to listen when others say they may not have time to
+critique your idea or double-check your code. Be prepared to ask someone else
+or the team as a whole in \#\#crawl-dev or on CRD. If your implementation seems
+well tested and reasonably agreed upon by the rest of the team in your best
+judgement, go ahead and push it to the repository!
 
 #### Game Design
 
-It's important to play Crawl if you want to design for it. Experiencing the content you create is very helpful in determining whether that content is enjoyable and creates the intended game-play experience. Playing a variety of characters in Crawl also helps you understand how the game does and does not succeed in being highly replayable, with an emphasis on combat, and where the player is generally not rewarded for tedious game-play. You can also help us uncover bugs and problems with existing code, and stay informed as to the current state of Crawl.
+It's important to play Crawl if you want to design for it. Experiencing the
+content you create is very helpful in determining whether that content is
+enjoyable and creates the intended game-play experience. Playing a variety of
+characters in Crawl also helps you understand how the game does and does not
+succeed in being highly replayable, with an emphasis on combat, and where the
+player is generally not rewarded for tedious game-play. You can also help us
+uncover bugs and problems with existing code, and stay informed as to the
+current state of Crawl.
 
 #### Consensus and the Development Process
 
-While we strive towards a general consensus, it is not required. There will be occasional disagreement on how to improve Crawl, or what paths to take towards that goal. There are no formal rules or processes for resolving these disagreements. Developers are free, within reason, to make commits and changes to the game. Not requiring the full consensus of the dev team to make any particular change prevents design stagnation (it is much more likely that at least one person disagrees than it is that everyone agrees), but because members of the team are allowed to disagree with each other monopolies are also prevented (others are capable of having good ideas, even if someone might disagree initially or continuously).
+While we strive towards a general consensus, it is not required. There will be
+occasional disagreement on how to improve Crawl, or what paths to take towards
+that goal. There are no formal rules or processes for resolving these
+disagreements. Developers are free, within reason, to make commits and changes
+to the game. Not requiring the full consensus of the dev team to make any
+particular change prevents design stagnation (it is much more likely that at
+least one person disagrees than it is that everyone agrees), but because
+members of the team are allowed to disagree with each other monopolies are also
+prevented (others are capable of having good ideas, even if someone might
+disagree initially or continuously).
 
 #### Player Feedback
 
-In addition to play-testing, it’s good to watch players through WebTiles, via console ttyrecs, videos and other online recordings. Likewise, it can be useful to see what players think about certain features by reading online discussion on [*Tavern*](https://crawl.develz.org/tavern/), Reddit (see [*/r/dcss*](http://www.reddit.com/r/dcss/) and [*/r/roguelikes*](http://www.reddit.com/r/roguelikes/)), and other online discussion sites. However it’s important that player praise or criticism is always taken with a grain of salt. If in doubt, get in touch with other developers for some grounding -- \#\#crawl-dev is always good for that.
+In addition to play-testing, it’s good to watch players through WebTiles, via
+console ttyrecs, videos and other online recordings. Likewise, it can be useful
+to see what players think about certain features by reading online discussion
+on [*Tavern*](https://crawl.develz.org/tavern/), Reddit (see
+[*/r/dcss*](http://www.reddit.com/r/dcss/) and
+[*/r/roguelikes*](http://www.reddit.com/r/roguelikes/)), and other online
+discussion sites. However it’s important that player praise or criticism is
+always taken with a grain of salt. If in doubt, get in touch with other
+developers for some grounding -- \#\#crawl-dev is always good for that.
+
+#### Adding new members
+
+An development team member may suggest to others in a private e-mail that
+commit rights be given to a contributor. As other members agree (or there
+are no objections), commit rights are usually given, and this is then
+announced.
+
+Generally, if a contributor supplies a substantial amount of patches of good
+quality (i.e. patches don't break things, don't need cleaning up before
+committing and are in line with the general direction of the development) and
+fits with the spirit of team cooperation it makes sense to give them commit
+rights.
