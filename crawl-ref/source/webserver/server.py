@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+from __future__ import absolute_import
 import os, os.path, errno, sys
 
 import tornado.httpserver
@@ -139,7 +140,7 @@ def bind_server():
     application = tornado.web.Application([
             (r"/", MainHandler),
             (r"/socket", CrawlWebSocket),
-            (r"/gamedata/([0-9abcdef]*\/.*)", GameDataHandler)
+            (r"/gamedata/([0-9a-f]*\/.*)", GameDataHandler)
             ], gzip=getattr(config,"use_gzip",True), **settings)
 
     kwargs = {}
@@ -243,6 +244,12 @@ if __name__ == "__main__":
         userdb.ensure_user_db_exists()
         userdb.upgrade_user_db()
     userdb.ensure_settings_db_exists()
+    try:
+        IOLoop.current().set_blocking_log_threshold(0.5)
+        logging.info("Blocking call timeout: 500ms.")
+    except:
+        # this is the new normal; still not sure of a way to deal with this.
+        logging.info("Webserver running without a blocking call timeout.")
 
     if dgl_mode:
         status_file_timeout()
