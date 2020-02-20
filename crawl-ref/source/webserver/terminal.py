@@ -9,6 +9,7 @@ import sys
 import time
 import tornado.ioloop
 from tornado.ioloop import IOLoop
+from tornado.escape import to_unicode
 
 BUFSIZ = 2048
 
@@ -152,9 +153,9 @@ class TerminalRecorder(object):
             if len(line) > 0:
                 if line[-1] == b"\r": line = line[:-1]
 
-                self.logger.info("ERR: %s", line)
+                self.logger.info("ERR: %s", to_unicode(line))
                 if self.error_callback:
-                    self.error_callback(line)
+                    self.error_callback(to_unicode(line))
 
             pos = self.error_buffer.find(b"\n")
 

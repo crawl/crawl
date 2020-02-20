@@ -13,7 +13,7 @@ class GameDataHandler(tornado.web.StaticFileHandler):
         super(GameDataHandler, self).initialize(".")
 
     def parse_url_path(self, url_path):
-        # the path should already match "([0-9abcdef]*\/.*)", from server.py
+        # the path should already match "([0-9a-f]*\/.*)", from server.py
         import sys
         version, url_path = url_path.split("/", 1)
         if version not in GameDataHandler._client_paths:
