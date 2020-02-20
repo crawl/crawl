@@ -860,20 +860,16 @@ static void _handle_emergency_flight()
 
 // Some equipment only begins to function when some condition is met, e.g., full
 // health is reached.
-static void _update_equipment_attunement(equipment_type slot, int eq, string msg,
-                                         bool activate_condition, string prop_key,
-                                         bool active_requirement = true)
+static void _update_equipment_attunement(equipment_type slot, int eq,
+                                         string msg, bool activate_condition,
+                                         string prop_key)
 {
-    if (you.wearing(slot, eq) && active_requirement)
-    {
-        if (activate_condition && !you.props[prop_key].get_int())
+    if (you.wearing(slot, eq) && activate_condition
+        && !you.props[prop_key].get_int())
         {
             you.props[prop_key] = 1;
             mpr(msg);
         }
-    }
-    else
-        you.props[prop_key] = 0;
 }
 
 // cjo: Handles player hp and mp regeneration. If the counter
@@ -910,14 +906,16 @@ static void _regenerate_hp_and_mp(int delay)
 
     ASSERT_RANGE(you.hit_points_regeneration, 0, 100);
 
+    if (!you.get_mutation_level(MUT_NO_REGENERATION))
+    {
     _update_equipment_attunement(EQ_AMULET, AMU_REGENERATION,
         "Your amulet attunes itself to your body and you begin to regenerate "
-        "more quickly.", you.hp == you.hp_max, REGEN_AMULET_ACTIVE,
-                             !you.get_mutation_level(MUT_NO_REGENERATION));
+        "more quickly.", you.hp == you.hp_max, REGEN_AMULET_ACTIVE);
 
     _update_equipment_attunement(EQ_BODY_ARMOUR, ARM_TROLL_LEATHER_ARMOUR,
         "Your armour attunes itself to your body and you begin to regenerate "
         "more quickly.", you.hp == you.hp_max, REGEN_ARMOUR_ACTIVE);
+    }
 
     _update_equipment_attunement(EQ_AMULET, AMU_ACROBAT,
         "Your amulet attunes itself to your body. You feel like doing "

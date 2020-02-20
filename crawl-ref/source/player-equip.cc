@@ -128,6 +128,7 @@ static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld,
                                       equipment_type slot);
 static void _equip_use_warning(const item_def& item);
 static void _equip_regeneration_item(const item_def& item);
+static void _deactivate_regeneration_item(const item_def& item, bool meld);
 
 static void _assert_valid_slot(equipment_type eq, equipment_type slot)
 {
@@ -1103,6 +1104,9 @@ static void _unequip_armour_effect(item_def& item, bool meld,
         break;
     }
 
+    if (armour_type_prop(item.sub_type, ARMF_REGENERATION))
+        _deactivate_regeneration_item(item, meld);
+
     if (is_artefact(item))
         _unequip_artefact_effect(item, nullptr, meld, slot, false);
 }
@@ -1375,6 +1379,16 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
         auto_assign_item_slot(item);
 }
 
+static void _deactivate_regeneration_item(const item_def &item, bool meld)
+{
+    if (!meld)
+    {
+        string prop_key = item.base_type == OBJ_JEWELLERY ? REGEN_AMULET_ACTIVE
+            : REGEN_ARMOUR_ACTIVE;
+        you.props[prop_key] = 0;
+    }
+}
+
 static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld,
                                       equipment_type slot)
 {
@@ -1393,7 +1407,10 @@ static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld,
     case RING_STEALTH:
     case RING_TELEPORTATION:
     case RING_WIZARDRY:
+        break;
+
     case AMU_REGENERATION:
+        _deactivate_regeneration_item(item, meld);
         break;
 
     case RING_SEE_INVISIBLE:
