@@ -242,7 +242,7 @@ MONS:    worm
 ITEM:    stone
 MAP
 xxxxxxxxxxxxxxxxx
-x%1.+d....{....'+
+x%1.+d....{...>'+
 xxxxxxxxxxxxxxxxx
 ENDMAP
 
@@ -265,13 +265,13 @@ FTILE:   " = floor_pebble_lightgray
 : end
 SUBST:   ' = ., " = .
 MAP
-xcx@xcx
-c'"'"'c
-x"'"'"x
+xcx+xcx
 c'"'"'c
 x"'"'"x
 c'"{"'c
-xcxcxcx
+x"'"'"x
+c'"'"'c
+xcx+xcx
 ENDMAP
 
 ##############################################################
@@ -418,15 +418,17 @@ NAME:    minmay_arrival_solitary_statue
 TAGS:    arrival
 WEIGHT:  9
 ORIENT:  float
+SUBST:   d : c+
+SUBST:   e : c+
 SUBST:   c : cccx
 MAP
-ccccccc
-c..{..c
-c.....c
-c..G..c
-c.....c
-c.....c
-ccc+ccc
+.ccccccc.
+.c..{..c.
+.d.....e.
+.c..G..c.
+.d.....e.
+.c.....c.
+.cc+c+cc.
 ENDMAP
 
 NAME:    minmay_arrival_statue_studded
@@ -848,11 +850,13 @@ TAGS:    arrival no_monster_gen no_rotate
 ORIENT:  float
 SHUFFLE: cxxx
 NSUBST:  . = 1:d / *:.
+SUBST:   e = .+
 SUBST:   T = TVVVV
 ITEM:    stone
 MAP
-        ccccccc@ccccccc
-    ccccc.............ccccc
+      ...................
+      ..ccccccccccccccc..
+    ccecc.............ccecc
   ccc..........T..........ccc
  cc...T.................T...cc
 cc........T.........T........cc
@@ -2981,6 +2985,9 @@ xl......lx
 xl......lx
 xG......Gx
 xxxx++xxxx
+..........
+..xxxxxx..
+..........
 ENDMAP
 
 ##############################################################################
