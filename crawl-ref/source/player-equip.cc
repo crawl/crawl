@@ -127,6 +127,7 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
 static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld,
                                       equipment_type slot);
 static void _equip_use_warning(const item_def& item);
+static void _equip_regeneration_item(const item_def& item);
 
 static void _assert_valid_slot(equipment_type eq, equipment_type slot)
 {
@@ -233,6 +234,14 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld,
     {
         canned_msg(proprt[ARTP_MAGICAL_POWER] > 0 ? MSG_MANA_INCREASE
                                                   : MSG_MANA_DECREASE);
+    }
+
+    // Regen is only an artp on armour; if it's an intrinsic property too, don't
+    // print messages etc. twice
+    if (proprt[ARTP_REGENERATION] && !unmeld
+        && !armour_type_prop(item.sub_type, ARMF_REGENERATION))
+    {
+        _equip_regeneration_item(item);
     }
 
     // Modify ability scores.
@@ -922,6 +931,9 @@ static void _equip_armour_effect(item_def& arm, bool unmeld,
         }
     }
 
+    if (armour_type_prop(arm.sub_type, ARMF_REGENERATION) && !unmeld)
+        _equip_regeneration_item(arm);
+
     if (is_artefact(arm))
     {
         bool show_msgs = true;
@@ -1141,21 +1153,28 @@ static void _remove_amulet_of_harm()
     drain_player(150, false, true);
 }
 
-static void _equip_amulet_of_regeneration()
+static void _equip_regeneration_item(const item_def &item)
 {
+    string prop_key;
+    string msg = "The ";
+    // currently regen is only on the amulet and armour
+    msg += item.base_type == OBJ_JEWELLERY
+        ? (prop_key = "regen_amulet_active", "amulet ")
+        : (prop_key = "regen_armour_active", "armour ");
+
     if (you.get_mutation_level(MUT_NO_REGENERATION) > 0)
-        mpr("The amulet feels cold and inert.");
+        msg += "feels cold and inert.";
     else if (you.hp == you.hp_max)
     {
-        you.props[REGEN_AMULET_ACTIVE] = 1;
-        mpr("The amulet throbs as it attunes itself to your uninjured body.");
+        you.props[prop_key] = 1;
+        msg += "throbs as it attunes itself to your uninjured body.";
     }
     else
     {
-        mpr("You sense that the amulet cannot attune itself to your injured"
-            " body.");
-        you.props[REGEN_AMULET_ACTIVE] = 0;
+        you.props[prop_key] = 0;
+        msg += "cannot attune itself to your injured body.";
     }
+    mpr(msg);
 }
 
 static void _equip_amulet_of_the_acrobat()
@@ -1296,7 +1315,7 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
 
     case AMU_REGENERATION:
         if (!unmeld)
-            _equip_amulet_of_regeneration();
+            _equip_regeneration_item(item);
         break;
 
     case AMU_ACROBAT:

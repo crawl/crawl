@@ -45,6 +45,7 @@
 #define SONG_OF_SLAYING_KEY "song_of_slaying_bonus"
 #define FORCE_MAPPABLE_KEY "force_mappable"
 #define REGEN_AMULET_ACTIVE "regen_amulet_active"
+#define REGEN_ARMOUR_ACTIVE "regen_armour_active"
 #define MANA_REGEN_AMULET_ACTIVE "mana_regen_amulet_active"
 #define ACROBAT_AMULET_ACTIVE "acrobat_amulet_active"
 #define SAP_MAGIC_KEY "sap_magic_amount"

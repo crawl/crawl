@@ -1096,12 +1096,15 @@ static int _player_bonus_regen()
     if (you.props[REGEN_AMULET_ACTIVE].get_int() == 1)
         rr += REGEN_PIP * you.wearing(EQ_AMULET, AMU_REGENERATION);
 
-    // Artefacts
-    rr += REGEN_PIP * you.scan_artefacts(ARTP_REGENERATION);
-
-    // Troll leather
-    if (you.wearing(EQ_BODY_ARMOUR, ARM_TROLL_LEATHER_ARMOUR))
-        rr += REGEN_PIP;
+    // Artefact & Troll Leather Armour
+    item_def *armour = you.slot_item(EQ_BODY_ARMOUR);
+    if (you.props[REGEN_ARMOUR_ACTIVE].get_int() && armour)
+    {
+        if (is_artefact(*armour) && artefact_property(*armour, ARTP_REGENERATION))
+            rr += REGEN_PIP;
+        if (armour_type_prop(armour->sub_type, ARMF_REGENERATION))
+            rr += REGEN_PIP;
+    }
 
     // Fast heal mutation.
     rr += you.get_mutation_level(MUT_REGENERATION) * REGEN_PIP;
