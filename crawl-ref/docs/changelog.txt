@@ -1,4 +1,4 @@
-Stone Soup 0.25 (through 0.25-a0-491-gd071885120)
+Stone Soup 0.25 (through 0.25-a0-544-gee0576305d)
 -------------------------------------------------
 
 Highlights
@@ -40,7 +40,13 @@ Items
     always gold and food (for species that eat).
   - Generated items are always useable and not hated by the player's current
     god.
-  - The Miscellaneous category for evokeable items is no longer available.
+  - The Miscellaneous category for evocable items is no longer available.
+* New Potion of Stabbing that gives a 50% chance to upgrade weak stabs (e.g.
+  distracted monsters) to strong ones (e.g. sleeping monsters).
+* Tremorstone, a new single use evocable. When used, it creates two radius 2
+  explosions at range 3 that are triple-affected by AC (like LRD), but the
+  explosions are randomly skewed and may hit the user. Most useful for players
+  with good armour.
 * The chaos brand now has might and agility effects, no longer causes miscast
   effects, and its cloning effect can create friendly and neutral monsters.
 * Scrolls of Magic Mapping now reveal any floor traps on the level.
@@ -50,15 +56,19 @@ Items
 * The vorpal weapon ego no longer has distinct adjectives for each weapon
   class. Now all such weapons are described as 'vorpal'.
 * Unrandart changes:
-  - New unrand: the Staff of Battle, a staff of conjurations which spawns a
-    battlesphere when monsters are in sight and which dissipates upon unwield.
   - New unrand: Cigotuvi's Embrace, a +4 leather armour with rN+, rRot and
     *Drain that automatically gathers corpses to increase AC. The AC decays
     slowly over time but decays more quickly as more corpses are added.
+  - Boots of the Assassin are now called the hood of the Assassin and use the
+    headgear slot.
+  - The demon blade Leech gains *Rage/+Rage and loses its AC-3 and EV-3
+    properties.
   - The Elemental Staff now acts as an enhancer for all elemental schools,
     with enhancement applying independently for each school.
   - Warlock's Mirror can now reflect piercing ranged weapons.
   - The Staff of Olgreb now grants poison immunity to monsters wielding it.
+  - Bloodbane has been removed, having been merged into Leech.
+* Potions of agility are removed.
 
 Monsters
 --------
