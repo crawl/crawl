@@ -1092,15 +1092,20 @@ static int _player_bonus_regen()
     int rr = 0;
 
     // Jewellery.
-    if (you.props[REGEN_AMULET_ACTIVE].get_int() == 1)
+    if (you.activated[EQ_AMULET])
         rr += REGEN_PIP * you.wearing(EQ_AMULET, AMU_REGENERATION);
 
-    // Artefacts
-    rr += REGEN_PIP * you.scan_artefacts(ARTP_REGENERATION);
-
-    // Troll leather
-    if (you.wearing(EQ_BODY_ARMOUR, ARM_TROLL_LEATHER_ARMOUR))
-        rr += REGEN_PIP;
+    // Artefacts (artp_regen is only on armour) and troll leather armour
+    for (int slot = EQ_MIN_ARMOUR; slot <= EQ_MAX_ARMOUR; ++slot)
+    {
+        if (you.melded[slot] || you.equip[slot] == -1 || !you.activated[slot])
+            continue;
+        const item_def &arm = you.inv[you.equip[slot]];
+        if (armour_type_prop(arm.sub_type, ARMF_REGENERATION))
+            rr += REGEN_PIP;
+        if (is_artefact(arm))
+            rr += REGEN_PIP * artefact_property(arm, ARTP_REGENERATION);
+    }
 
     // Fast heal mutation.
     rr += you.get_mutation_level(MUT_REGENERATION) * REGEN_PIP;
@@ -1969,7 +1974,7 @@ bool player_is_shapechanged()
 
 void update_acrobat_status()
 {
-    if (you.props[ACROBAT_AMULET_ACTIVE].get_int() != 1)
+    if (!you.wearing(EQ_AMULET, AMU_ACROBAT) || !you.activated[EQ_AMULET])
         return;
 
     // Acrobat duration goes slightly into the next turn, giving the
@@ -4968,6 +4973,7 @@ player::player()
     equip.init(-1);
     melded.reset();
     unrand_reacts.reset();
+    activated.reset();
     last_unequip = -1;
 
     symbol          = MONS_PLAYER;
