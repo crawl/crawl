@@ -114,8 +114,7 @@ jobs:
       - name: Install Dependencies
         run: |
           brew install ccache
-          sudo easy_install pip
-          sudo pip install PyYAML
+          sudo pip3 install PyYAML
       - name: Add ccache to PATH
         run: echo "::add-path::/usr/local/opt/ccache/libexec"
       - name: Cache compilation
