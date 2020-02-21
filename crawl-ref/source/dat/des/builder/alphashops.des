@@ -165,7 +165,7 @@
        "scroll of teleportation", "triple sword", "triple crossbow",
        "troll leather armour", "manual of throwing",
        "manual of translocations", "manual of transmutations",
-       "trident", "throwing net", "tower shield", "tremorstone" }
+       "trident", "throwing net", "tower shield", "case of tremorstones" }
 
       elseif s == "U" then i = { "book of unlife", "manual of unarmed combat" }
 

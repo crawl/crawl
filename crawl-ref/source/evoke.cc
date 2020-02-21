@@ -1846,15 +1846,18 @@ bool evoke_item(int slot)
             unevokable = !_make_zig(item);
             break;
 
-        case MISC_TREMORSTONE:
+        case MISC_TIN_OF_TREMORSTONES:
             switch (_tremorstone()) {
                 default:
                 case spret::abort:
                     return false;
 
                 case spret::success:
-                    ASSERT(in_inventory(item));
-                    dec_inv_item_quantity(item.link, 1);
+                    if (one_chance_in(3)) {
+                        mpr("The tin disintegrates.");
+                        ASSERT(in_inventory(item));
+                        dec_inv_item_quantity(item.link, 1);
+                    }
                     break;
 
                 case spret::fail:

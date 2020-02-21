@@ -1513,7 +1513,7 @@ bool is_stackable_item(const item_def &item)
                 case MISC_ZIGGURAT:
                 case MISC_SACK_OF_SPIDERS:
                 case MISC_BOX_OF_BEASTS:
-                case MISC_TREMORSTONE:
+                case MISC_TIN_OF_TREMORSTONES:
                     return true;
                 default: break;
             }
@@ -3961,7 +3961,7 @@ colour_t item_def::miscellany_colour() const
         case MISC_XOMS_CHESSBOARD:
             return DARKGREY;
 #endif
-        case MISC_TREMORSTONE:
+        case MISC_TIN_OF_TREMORSTONES:
             return BROWN;
         case MISC_QUAD_DAMAGE:
             return ETC_DARK;

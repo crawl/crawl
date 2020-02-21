@@ -992,7 +992,7 @@ static string misc_type_name(int type)
 #if TAG_MAJOR_VERSION == 34
     case MISC_XOMS_CHESSBOARD:           return "removed chess piece";
 #endif
-    case MISC_TREMORSTONE:               return "tremorstone";
+    case MISC_TIN_OF_TREMORSTONES:      return "tin of tremorstones";
 
     default:
         return "buggy miscellaneous item";
@@ -3253,7 +3253,7 @@ bool is_dangerous_item(const item_def &item, bool temp)
 
     case OBJ_MISCELLANY:
         // Tremorstones will blow you right up.
-        return item.sub_type == MISC_TREMORSTONE;
+        return item.sub_type == MISC_TIN_OF_TREMORSTONES;
 
     default:
         return false;

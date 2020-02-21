@@ -2188,7 +2188,7 @@ bool item_is_evokable(const item_def &item, bool unskilled, bool known,
             && item.sub_type != MISC_BUGGY_EBONY_CASKET)
         {
 #endif
-            return unskilled || item.sub_type != MISC_TREMORSTONE;
+            return unskilled || item.sub_type != MISC_TIN_OF_TREMORSTONES;
 #if TAG_MAJOR_VERSION == 34
         }
         // removed items fallthrough to failure

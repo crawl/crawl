@@ -1142,14 +1142,15 @@ A large piece of wood and metal, to be strapped on one arm for defence. It is
 cumbersome to wear, and impedes the evasion, spellcasting ability, and attack
 speed of an unskilled wearer.
 %%%%
-tremorstone
+tin of tremorstones
 
-A dormant earth elemental in the form of a tiny, very heavy pebble. When hurled,
-the elemental literally explodes with rage at its rest being disturbed.
+A set of dormant earth elementals in the form of tiny, very heavy pebbles. When
+thrown, the elementals literally explode with rage at their rest being disturbed.
 Tremorstones usually land slightly off-target, and the user is always at risk of
 being hit. However, armour is extremely effective at repelling the lightweight
 fragments of rock from a tremorstone's explosion, so a well-armoured wielder has
-little to fear. Evocations skill has no effect on tremorstones.
+little to fear. Evocations skill has no effect on tremorstones, and there is a
+one in three chance of accidentally destroying the case when using it.
 %%%%
 trident
 
