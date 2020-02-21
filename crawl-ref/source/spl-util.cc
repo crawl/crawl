@@ -417,6 +417,10 @@ int spell_hunger(spell_type which_spell)
 
     hunger -= you.skill(SK_SPELLCASTING, you.intel());
 
+    if (you.duration[DUR_BRILLIANCE] > 0) {
+        hunger /= 2;
+    }
+
     if (hunger < 0)
         hunger = 0;
 

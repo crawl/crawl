@@ -152,9 +152,7 @@ static const duration_def duration_data[] =
       LIGHTBLUE, "Brill",
       "brilliant", "brilliance",
       "You are brilliant.", D_DISPELLABLE,
-      {{ "You feel a little less clever now.", []() {
-          notify_stat_change(STAT_INT, -5, true);
-      }}}},
+      {{ "You feel a little less clever now." }}},
     { DUR_CONF,
       RED, "Conf",
       "confused", "conf",

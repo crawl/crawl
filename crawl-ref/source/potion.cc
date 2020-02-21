@@ -348,9 +348,7 @@ public:
 
         mprf(MSGCH_DURATION, "You feel %sclever all of a sudden.",
              were_brilliant ? "more " : "");
-        you.increase_duration(DUR_BRILLIANCE, 35 + random2(pow), 80);
-        if (!were_brilliant)
-            notify_stat_change(STAT_INT, 5, true);
+        you.increase_duration(DUR_BRILLIANCE, 20 + random2(pow/2), 80);
         return true;
     }
 };
