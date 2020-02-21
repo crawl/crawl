@@ -1480,7 +1480,8 @@ static void _BATTLE_world_reacts(item_def */*item*/)
 static void _EMBRACE_unequip(item_def *item, bool *show_msgs)
 {
     int &armour = item->props[EMBRACE_ARMOUR_KEY].get_int();
-    if (armour > 0) {
+    if (armour > 0)
+    {
         _equip_mpr(show_msgs, "Your corpse armour falls away.");
         armour = 0;
         item->plus = get_unrand_entry(item->unrand_idx)->plus;
@@ -1549,28 +1550,29 @@ static void _EMBRACE_world_reacts(item_def *item)
     int &armour = item->props[EMBRACE_ARMOUR_KEY].get_int();
     const int harvested = _harvest_corpses();
     // diminishing returns for more corpses
-    for (int i = 0; i < harvested; i++) {
+    for (int i = 0; i < harvested; i++)
         armour += div_rand_round(100 * 100, (armour + 100));
-    }
 
     // decay over time - 1 turn per 'armour' base, 0.5 turns at 400 'armour'
     armour -= div_rand_round(you.time_taken * (armour + 400), 10 * 400);
 
     const int last_plus = item->plus;
     const int base_plus = get_unrand_entry(item->unrand_idx)->plus;
-    if (armour <= 0) {
+    if (armour <= 0)
+    {
         armour = 0;
         item->plus = base_plus;
-        if (last_plus > base_plus) {
+        if (last_plus > base_plus)
             mpr("Your corpse armour falls away.");
-        }
-    } else {
+    }
+    else
+    {
         item->plus = base_plus + 1 + (armour-1) * 6 / 100;
-        if (item->plus < last_plus) {
+        if (item->plus < last_plus)
             mpr("A chunk of your corpse armour falls away.");
-        } else if (last_plus == base_plus) {
+        else if (last_plus == base_plus)
             mpr("The bodies of the dead rush to embrace you!");
-        } else if (item->plus > last_plus)
+        else if (item->plus > last_plus)
             mpr("Your shell of carrion and bone grows thicker.");
     }
 

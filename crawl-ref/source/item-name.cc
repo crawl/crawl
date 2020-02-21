@@ -992,7 +992,7 @@ static string misc_type_name(int type)
 #if TAG_MAJOR_VERSION == 34
     case MISC_XOMS_CHESSBOARD:           return "removed chess piece";
 #endif
-    case MISC_TIN_OF_TREMORSTONES:      return "tin of tremorstones";
+    case MISC_TIN_OF_TREMORSTONES:       return "tin of tremorstones";
 
     default:
         return "buggy miscellaneous item";
