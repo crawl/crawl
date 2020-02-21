@@ -44,6 +44,8 @@ ENDMAP
 NAME:    elethiomel_arrival_infinity_welcomes_careful_drivers
 TAGS:    arrival no_rotate
 ORIENT:  northwest
+KMASK:   a = no_monster_gen
+SUBST:   a : .
 SUBST:   ' : . x ':40, '=x.
 SUBST:   c : cxxx
 MAP
@@ -51,11 +53,11 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxx....xxxxxxxxxxxxxxx....xx..xxx.''xxxxxx
 xxxxx''........xx...''.........''...'..xx...xx
 xxx'....ccccc...xxx.....ccccc......'......x..@
-x....cccc...cccc.....cccc...cccc.......''..xxx
-x..ccc.........ccc+ccc.........ccc....''..xxxx
-x'.c......{......+.+......T......+.........xxx
-x'.ccc.........ccc+ccc.........ccc...''...xxxx
-x....cccc...cccc.....cccc...cccc......'..'.xxx
+x....ccccaaacccc.....ccccaaacccc.......''..xxx
+x..cccaaaaaaaaaccc+cccaaaaaaaaaccc....''..xxxx
+x'.caaaaaa{aaaaaa+a+aaaaaaTaaaaaa+.........xxx
+x'.cccaaaaaaaaaccc+cccaaaaaaaaaccc...''...xxxx
+x....ccccaaacccc.....ccccaaacccc......'..'.xxx
 x.......ccccc......'....ccccc......'.....xxxxx
 x'................'..xx........'....'....xxxxx
 x.''..xxx...''.....'..xx....'''..''.xxx''.xxxx
@@ -215,38 +217,6 @@ xxxxxxxxxxxxxxxxxxxxxxx@x
 ENDMAP
 
 ##############################################################################
-# 30x25
-NAME:   erik_arrival_gehennom
-TAGS:   arrival no_monster_gen no_rotate
-ORIENT: float
-ITEM:   stone
-MONS:   rat, goblin, kobold, ooze
-MAP
-xxxxxxxxxxx@xxxxxxxxxxxxxxxxxx
-x.........l.l................x
-x.....lllll.lllllllllllll....x
-x.....l....1............l....x
-x.....l.cc+ccccccccccc..l....x
-x.....l.cc..........cc..l....x
-x.....l.ccc.........cc..l....x
-x.....ll.cc.....2.3.cc.ll....x
-x.....l..cccccccc.cccc..l....x
-x.....l..cccccccc+cccc..l....x
-x.....ll..cc......cc...ll....x
-x.....l...ccd{....cc.4..l....x
-x.....l...cc......cc....l....x
-x.....ll..cccccccccc...ll....x
-x.....lll.cccccccccc.llll....x
-x.....lll............llll....x
-x.....lllll..4....lllllll....x
-x.....llllll....lllllll......x
-x.....lllllllllllll..........x
-x.........lllllll............x
-x>..........................>x
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-ENDMAP
-
-##############################################################################
 # 29x23
 # Morbid curiosity
 # Monsters are easier. Made it harder for them to get out.
@@ -332,20 +302,20 @@ FTILE:  .t1 = floor_moss
 KMASK:  Ww = no_monster_gen
 MAP
 ttttttttttttttttttttttttttttttttttttttttttt
-tttttttttttt1ttttttwwtttttttttttttttttttttt
-tttt...1ttttt..tttwwwttt.tttttttt....ttttt
+ttttttttt1.t1ttttttwwtttttttttttttttttttttt
+tttt...1..t....tttwwwttt.tttttttt....ttttt
 ttt..{..ttttt.t.tttwwwt...tttt.....t...tt
 tt......tttttt.ttttttwww...t.....ttttt..
 tttt..t.tttttt.ttttttttwww...ttttttttt..
 ttttt..tttttt.ttttttttttwwwWttttttttttt..
 ttttt.tttttt.tttttttttttttwWWtttttttttt.
-tttt..tttttt..tttttttttttt..wwwtttttt..
-tttt.ttttttttt..tttttttt...tttttt.....
-tttt.ttttttttttt.ttttt...tttttt.....
-tttt.tttttttttttt.ttt.tttttttt.....
-ttttt..ttttttttttt...tttttttt.....
-ttttttt..ttttt....tttttttttt.....
-ttttttttt.....ttttttttttttttt...@
+tttt..tttttt..tttttttttttt..wWwtttttt..
+tttt.ttttttttt..tttttttt...ttWttt.....
+tttt.ttttttttttt.ttttt...ttt.tt.....
+tttt.tttttttttttt.ttt.tttt...tt.....
+ttttt..ttttttttttt...ttttt.ttt....
+ttttttt..ttttt....tttttttt.t.....
+ttttttttt.....ttttttttttttt.t...@
 ttttttttttt1ttttttttttttttt...
 tttttttttttttttttttttttt....
 tttttttttttttttttttttt....
@@ -468,6 +438,8 @@ ENDMAP
 NAME:    arrival_zaba_pyramid
 TAGS:    arrival
 ORIENT:  float
+KMASK:   a = no_monster_gen
+SUBST:   a : .
 SHUFFLE: ([{>
 SUBST:   ([ = d
 ITEM:    skeleton
@@ -478,8 +450,8 @@ MAP
 .c....c...c....c...c....c...c....c.
 .c.(..c...c.{..c...c..[.c...c..>.c.
 .c....cc+cc....cc+cc....cc+cc....c.
-.cc+ccc...cc+ccc...ccc+cc...ccc+cc.
-..!...+...+....+...+....+...+...!..
+.cc+cccaaacc+cccaaaccc+ccaaaccc+cc.
+..!aaa+aaa+aaaa+aaa+aaaa+aaa+aaa!..
 ..!!??!???!????!?.?!????!???!??!!..
  ..!?.??.???.????.????.???.??.?!..
   .!!?..??..???.....???..??..?!!.
@@ -553,12 +525,12 @@ MAP
    ..WWYYYyyywwwwwwyYW....xxxxxyYYW..
   ..WYYyyywwwwwwwwyYW....xx...xxyyYW..
   .WYyywwwwwwwwwwwyYW....x.....xwwyYW.
- ..WYywwwwwwwwwwyyyYW....+..(..xwwyYW.
+ ..WYywwwwwwwwwwyyyYW....+..(>.xwwyYW.
  .WYywwwwwwwwyyyYYYW.....x.....xwyYW..
  .WYywwxxxxxyYYYWWW......xx...xxwyYW.
 ..WYywxx...xxWWW........WWxxxxxwwyYW.
 .WYywwx.....x.........WWYYYywwwwwyYW.
-.WYywwx..{..+........WYYyyywwwwwyYW..
+.WYywwx.>{..+........WYYyyywwwwwyYW..
 .WYywwx.....x.WWW....WYywwwwwwwwyYW.
 ..WYywxx...xxWYYYW...WYywwwwwwwwyYW.
  .WYywwxxxxxYYyyYW....WYywwwwwwwyYW.
@@ -567,7 +539,7 @@ MAP
  ..WYywwwwwwwwwwwxx...xxywwwwwyYW.
   .WYywwwwwwwwwwwx.....xwwwwwwyYW..
   ..WYywwwwwwwwwwx..[..xwwwwwwwyYW.
-   ..WYywwwwwwwwwx.....xwwwwwwwyYW..
+   ..WYywwwwwwwwwx..>..xwwwwwwwyYW..
     ..WYyywwwwwwwxx...xxwwwwwwwwyYW.
      ..WYYyyywwwwwxxxxxwwwwwwwwyYW..
       ..WWYYYyyyywwwwwyyyywwwyyYW..
