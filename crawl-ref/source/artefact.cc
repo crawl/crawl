@@ -561,8 +561,9 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item,
             // and obv we shouldn't generate contradictory props
         case ARTP_PREVENT_TELEPORTATION:
             return !extant_props[ARTP_BLINK]
-                   && !extant_props[ARTP_CAUSE_TELEPORTATION];
-            // no contradictory props
+                   && !extant_props[ARTP_CAUSE_TELEPORTATION]
+                   && item_class == OBJ_ARMOUR;
+            // armour only, and no contradictory props
         case ARTP_BLINK:
             return !extant_props[ARTP_PREVENT_TELEPORTATION];
             // no contradictory props
