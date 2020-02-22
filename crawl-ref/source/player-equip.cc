@@ -436,13 +436,6 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
     {
         set_ident_flags(item, ISFLAG_IDENT_MASK);
         set_ident_type(OBJ_STAVES, item.sub_type, true);
-
-        if (item.sub_type == STAFF_POWER)
-        {
-            canned_msg(MSG_MANA_INCREASE);
-            calc_mp();
-        }
-
         _wield_cursed(item, known_cursed, unmeld);
         break;
     }
@@ -743,11 +736,6 @@ static void _unequip_weapon_effect(item_def& real_item, bool showMsgs,
                 end_weapon_brand(real_item, true);
             }
         }
-    }
-    else if (item.is_type(OBJ_STAVES, STAFF_POWER))
-    {
-        calc_mp();
-        canned_msg(MSG_MANA_DECREASE);
     }
 
     if (is_artefact(item))

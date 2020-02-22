@@ -852,10 +852,6 @@ hende mod konsekvenserne af gift. Hvis brugeren er kyndig i både vækkelser og
 giftmagi, vil staven også forgifte dem, den rammer – selv hvis ofrene
 sædvanligvis er modstandsdygtige.
 %%%%
-staff of power
-
-Denne stav øger brugerens reservoir af magisk energi.
-%%%%
 staff of summoning
 
 Denne stav øger brugerens hidkaldelsers kraft og beskytter mod hidkaldte

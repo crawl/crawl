@@ -1068,10 +1068,6 @@ protects them from the effects of poison. If the wielder is skilled in
 Evocations and Poison Magic, they can poison creatures struck by it — even if
 the victims are normally resistant.
 %%%%
-staff of power
-
-A staff that provides an increased reservoir of magical power to its wielder.
-%%%%
 staff of summoning
 
 A staff that increases the power of summonings cast by its wielder.

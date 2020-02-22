@@ -2845,10 +2845,6 @@ staff of poison
 
 <staff>
 %%%%
-staff of power
-
-<staff>
-%%%%
 staff of summoning
 
 <staff>

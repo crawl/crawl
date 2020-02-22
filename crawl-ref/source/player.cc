@@ -3913,7 +3913,7 @@ int get_real_mp(bool include_items)
     enp += highest_skill + min(8 * scale, min(highest_skill, scaled_xl)) / 2;
 
     // Analogous to ROBUST/FRAIL
-    enp *= 100  + (you.get_mutation_level(MUT_HIGH_MAGIC) * 10)
+    enp *= 100 + (you.get_mutation_level(MUT_HIGH_MAGIC) * 10)
                + (you.attribute[ATTR_DIVINE_VIGOUR] * 5)
                - (you.get_mutation_level(MUT_LOW_MAGIC) * 10);
     enp /= 100 * scale;
@@ -3926,11 +3926,8 @@ int get_real_mp(bool include_items)
     // Now applied after scaling so that power items are more useful -- bwr
     if (include_items)
     {
-        enp +=  9 * you.wearing(EQ_RINGS, RING_MAGICAL_POWER);
-        enp +=      you.scan_artefacts(ARTP_MAGICAL_POWER);
-
-        if (you.wearing(EQ_STAFF, STAFF_POWER))
-            enp += 15;
+        enp += 9 * you.wearing(EQ_RINGS, RING_MAGICAL_POWER);
+        enp +=     you.scan_artefacts(ARTP_MAGICAL_POWER);
     }
 
     if (include_items && you.wearing_ego(EQ_WEAPON, SPWPN_ANTIMAGIC))

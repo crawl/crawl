@@ -936,6 +936,7 @@ staff09
 
 # These must be in the same order as the enum in item-prop-enum.h!
 i-staff_wizardry STAFF_WIZARDRY STAFF_ID_FIRST
+# Remove power when TAG_MAJOR_VERSION > 34
 i-staff_power STAFF_POWER
 i-staff_fire STAFF_FIRE
 i-staff_cold STAFF_COLD

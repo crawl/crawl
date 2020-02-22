@@ -1547,10 +1547,9 @@ static void _generate_staff_item(item_def& item, bool allow_uniques,
         }
         while (item_type_removed(OBJ_STAVES, item.sub_type));
 
-        // staves of energy are 25% less common, wizardry/power
-        // are more common
+        // staves of energy are 25% less common, wizardry is more common
         if (item.sub_type == STAFF_ENERGY && one_chance_in(4))
-            item.sub_type = random_choose(STAFF_WIZARDRY, STAFF_POWER);
+            item.sub_type = STAFF_WIZARDRY;
     }
     else
         item.sub_type = force_type;
