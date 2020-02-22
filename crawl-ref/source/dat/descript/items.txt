@@ -1067,8 +1067,8 @@ staff of poison
 
 A staff that increases the power of poisoning spells cast by its wielder, and
 protects them from the effects of poison. If the wielder is skilled in
-Evocations and Poison Magic, they can poison creatures struck by it — even if
-the victims are normally resistant.
+Evocations and Poison Magic, they can inflict poison damage on creatures struck
+by it.
 %%%%
 staff of summoning
 

@@ -2217,15 +2217,23 @@ bool melee_attack::apply_staff_damage()
         break;
 
     case STAFF_POISON:
-    {
-        if (random2(300) >= attacker->skill(SK_EVOCATIONS, 20) + attacker->skill(SK_POISON_MAGIC, 10))
-            return true;
+        special_damage =
+            resist_adjust_damage(defender,
+                                 BEAM_POISON,
+                                 staff_damage(SK_POISON_MAGIC));
 
-        // Base chance at 50% -- like mundane weapons.
-        if (x_chance_in_y(80 + attacker->skill(SK_POISON_MAGIC, 10), 160))
-            defender->poison(attacker, 2);
+        if (special_damage)
+        {
+            special_damage_message =
+                make_stringf(
+                    "%s envenom%s %s%s",
+                    attacker->name(DESC_THE).c_str(),
+                    attacker->is_player() ? "" : "s",
+                    defender->name(DESC_THE).c_str(),
+                    attack_strength_punctuation(special_damage).c_str());
+            special_damage_flavour = BEAM_POISON;
+        }
         break;
-    }
 
     case STAFF_DEATH:
         special_damage =
@@ -2271,7 +2279,13 @@ bool melee_attack::apply_staff_damage()
 
         inflict_damage(special_damage, special_damage_flavour);
         if (special_damage > 0)
+        {
             defender->expose_to_element(special_damage_flavour, 2);
+            // XXX: this is messy, but poisoning from the staff of poison
+            // should happen after damage.
+            if (defender->alive() && special_damage_flavour == BEAM_POISON)
+                defender->poison(attacker, 2);
+        }
     }
 
     return true;
