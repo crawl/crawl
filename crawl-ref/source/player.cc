@@ -4038,8 +4038,10 @@ void contaminate_player(int change, bool controlled, bool msg)
     bool was_glowing = player_severe_contamination();
     int new_level  = 0;
 
+#if TAG_MAJOR_VERSION == 34
     if (change > 0 && player_equip_unrand(UNRAND_ETHERIC_CAGE))
         change *= 2;
+#endif
 
     you.magic_contamination = max(0, min(250000,
                                          you.magic_contamination + change));

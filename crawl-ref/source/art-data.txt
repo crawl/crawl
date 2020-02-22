@@ -1264,6 +1264,7 @@ PLUS:    7
 BRAND:   SPWPN_PROTECTION
 FB_BRAND: SPWPN_VORPAL
 
+# TAG_MAJOR_VERSION == 34
 ENUM:    ETHERIC_CAGE
 NAME:    Maxwell's etheric cage
 OBJ:     OBJ_ARMOUR/ARM_HELMET
@@ -1273,7 +1274,7 @@ TILE_EQ: etheric_cage
 INSCRIP: RegenMP+
 PLUS:    +0
 MP:      +4
-BOOL:    mutate, elec, chaotic
+BOOL:    mutate, elec, chaotic, nogen
 VALUE:   400
 
 # TAG_MAJOR_VERSION == 34

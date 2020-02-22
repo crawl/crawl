@@ -1287,6 +1287,7 @@ static void _FENCERS_equip(item_def */*item*/, bool *show_msgs, bool /*unmeld*/)
     _equip_mpr(show_msgs, "En garde!");
 }
 
+#if TAG_MAJOR_VERSION == 34
 ///////////////////////////////////////////////////
 
 static void _ETHERIC_CAGE_equip(item_def */*item*/, bool *show_msgs,
@@ -1308,7 +1309,6 @@ static void _ETHERIC_CAGE_world_reacts(item_def */*item*/)
 
 ///////////////////////////////////////////////////
 
-#if TAG_MAJOR_VERSION == 34
 static void _ETERNAL_TORMENT_equip(item_def */*item*/, bool */*show_msgs*/,
                                    bool /*unmeld*/)
 {
