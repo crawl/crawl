@@ -48,8 +48,7 @@ as a reduction in their metabolic cost.
 %%%%
 Might status
 
-You are unnaturally strong. This provides bonuses to your strength and damage
-in physical combat.
+You are unnaturally mighty, doing significantly more damage in physical combat.
 %%%%
 Regen status
 

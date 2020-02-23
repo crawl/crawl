@@ -220,9 +220,7 @@ static const duration_def duration_data[] =
       LIGHTBLUE, "Might",
       "mighty", "might",
       "You are mighty.", D_DISPELLABLE,
-      {{ "You feel a little less mighty now.", []() {
-          notify_stat_change(STAT_STR, -5, true);
-      }}}},
+      {{ "You feel a little less mighty now." }}},
     { DUR_PARALYSIS,
       RED, "Para",
       "paralysed", "paralysis",

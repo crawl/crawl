@@ -325,8 +325,6 @@ public:
         mprf(MSGCH_DURATION, "You feel %s all of a sudden.",
              were_mighty ? "mightier" : "very mighty");
         you.increase_duration(DUR_MIGHT, 35 + random2(pow), 80);
-        if (!were_mighty)
-            notify_stat_change(STAT_STR, 5, true);
         return true;
     }
 };

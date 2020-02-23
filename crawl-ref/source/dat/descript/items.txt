@@ -722,8 +722,7 @@ A valuable potion which grants an infusion of magical energy.
 %%%%
 potion of might
 
-A potion which greatly increases the strength and physical power of one who
-drinks it.
+A potion which greatly increases the power of the drinker's melee attacks.
 %%%%
 potion of mutation
 
