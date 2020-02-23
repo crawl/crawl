@@ -75,7 +75,6 @@ static const mon_spellbook mspell_list[] =
        { SPELL_LIGHTNING_BOLT, 11, MON_SPELL_WIZARD },
        { SPELL_POISON_ARROW, 11, MON_SPELL_WIZARD },
        { SPELL_IRON_SHOT, 11, MON_SPELL_WIZARD },
-       { SPELL_LEHUDIBS_CRYSTAL_SPEAR, 11, MON_SPELL_WIZARD },
        { SPELL_BLINK, 22, MON_SPELL_WIZARD },
       }
     },
