@@ -153,7 +153,6 @@ const char* card_name(card_type card)
     switch (card)
     {
     case CARD_VELOCITY:        return "Velocity";
-    case CARD_EXILE:           return "Exile";
     case CARD_ELIXIR:          return "the Elixir";
     case CARD_STAIRS:          return "the Stairs";
     case CARD_TOMB:            return "the Tomb";
