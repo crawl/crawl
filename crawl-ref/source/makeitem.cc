@@ -1381,8 +1381,7 @@ static void _generate_potion_item(item_def& item, int force_type,
         item.flags |= ISFLAG_NO_PICKUP;
 }
 
-static void _generate_scroll_item(item_def& item, int force_type,
-                                  int item_level, int agent)
+static void _generate_scroll_item(item_def& item, int force_type, int agent)
 {
     // determine sub_type:
     if (force_type != OBJ_RANDOM)
@@ -1974,7 +1973,7 @@ int items(bool allow_uniques,
         break;
 
     case OBJ_SCROLLS:
-        _generate_scroll_item(item, force_type, item_level, agent);
+        _generate_scroll_item(item, force_type, agent);
         break;
 
     case OBJ_JEWELLERY:
