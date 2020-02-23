@@ -69,7 +69,7 @@ end
 }}
 
 #### Portal entry vaults.
-default-depth: D:4-8
+default-depth: D:11-
 
 NAME:   enter_ossuary_1
 TAGS:   transparent

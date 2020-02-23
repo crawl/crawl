@@ -1325,12 +1325,6 @@ static void _generic_level_reset()
 // portals.
 static const vector<branch_type> portal_generation_order =
 {
-    BRANCH_SEWER,
-    BRANCH_OSSUARY,
-    BRANCH_ICE_CAVE,
-    BRANCH_VOLCANO,
-    BRANCH_BAILEY,
-    BRANCH_GAUNTLET,
 #if TAG_MAJOR_VERSION == 34
     BRANCH_LABYRINTH,
 #endif

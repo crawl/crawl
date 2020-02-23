@@ -63,7 +63,7 @@ end
 
 # Basic sewer entries ##########################################
 # NOTE: See comments above regarding KMONS for the 1 glyph in these vaults.
-default-depth: D:3-6
+default-depth: D:11-
 
 NAME:   portal_sewer_entry_a
 : sewer_portal(_G)
