@@ -132,8 +132,7 @@ static bool _is_boring_item(int type, int sub_type)
 
 static weapon_type _determine_weapon_subtype(int item_level)
 {
-    if (item_level > 6 && one_chance_in(30)
-        && x_chance_in_y(10 + item_level, 100))
+    if (x_chance_in_y(13 + item_level, 100))
     {
         return random_choose(WPN_LAJATANG,
                              WPN_FUSTIBALUS,
@@ -147,7 +146,7 @@ static weapon_type _determine_weapon_subtype(int item_level)
                              WPN_QUICK_BLADE,
                              WPN_TRIPLE_SWORD);
     }
-    else if (x_chance_in_y(item_level, 20))
+    else if (x_chance_in_y(4 + item_level, 24))
     {
         // Pick a weapon based on rarity.
         while (true)
@@ -158,7 +157,7 @@ static weapon_type _determine_weapon_subtype(int item_level)
                 return static_cast<weapon_type>(wpntype);
         }
     }
-    else if (x_chance_in_y(item_level, item_level+7))
+    else if (x_chance_in_y(2 + item_level, 15 + item_level))
     {
         return random_choose(WPN_QUARTERSTAFF,
                              WPN_FALCHION,
@@ -174,8 +173,7 @@ static weapon_type _determine_weapon_subtype(int item_level)
                              WPN_SPEAR,
                              WPN_HAND_AXE,
                              WPN_MACE,
-                             // Not worth _weighted for one doubled type.
-                             WPN_DAGGER, WPN_DAGGER,
+                             WPN_DAGGER,
                              WPN_CLUB,
                              WPN_WHIP,
                              WPN_SHORT_SWORD);
