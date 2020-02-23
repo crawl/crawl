@@ -447,9 +447,6 @@ static int _dex_modifier(bool innate_only)
 
     if (!innate_only)
     {
-        if (you.duration[DUR_AGILITY])
-            result += 5;
-
         if (you.duration[DUR_DIVINE_STAMINA])
             result += you.attribute[ATTR_DIVINE_STAMINA];
 

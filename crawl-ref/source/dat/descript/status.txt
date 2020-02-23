@@ -41,8 +41,7 @@ careful what you are above when that happens!
 %%%%
 Agi status
 
-You are unnaturally agile. This provides bonuses to your dexterity, evasion,
-and stealth.
+You are unnaturally agile, and gain a bonus to your evasion.
 %%%%
 Brill status
 

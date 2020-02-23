@@ -3464,7 +3464,7 @@ int monster::evasion(ev_ignore_type evit, const actor* /*act*/) const
     }
 
     if (has_ench(ENCH_AGILE))
-        ev += 5;
+        ev += AGILITY_BONUS;
 
     if (evit & ev_ignore::helpless)
         return max(ev, 0);

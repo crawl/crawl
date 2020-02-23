@@ -132,7 +132,7 @@ static const duration_def duration_data[] =
       "agile", "agility",
       "You are agile.", D_DISPELLABLE,
       {{ "You feel a little less agile now.", []() {
-          notify_stat_change(STAT_DEX, -5, true);
+          you.redraw_evasion = true;
       }}}},
     { DUR_BERSERK,
       BLUE, "Berserk",
