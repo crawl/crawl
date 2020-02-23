@@ -19,7 +19,9 @@ Trying to 'streamline' the game
 - [ ] to make orb run easier, nerf or remove panlords
 - [ ] to make orb run easier, map other enemies to easier ones
 - [ ] end the game when the player exits the realm of zot with the orb. This is to avoid players spending 10 minutes predigging tunnels in a now 25 minute game.
-- [ ] zot traps no longer cast into the abyss
+- [ ] remove abyss access - IN PROGRESS
+- [ ] remove abyss access via god abilty
+- [ ] remove abyss access via Zot trap
 - [ ] bring back and rebalance all of the former zot enemies to give zot its flavor back
 
 ## Extended changes
