@@ -1908,9 +1908,10 @@ int items(bool allow_uniques,
         // Total weight: 1960
         item.base_type = random_choose_weighted(
                                     10, OBJ_STAVES,
-                                    30, OBJ_BOOKS,
-                                    50, OBJ_JEWELLERY,
-                                    70, OBJ_WANDS,
+                                    10, OBJ_MISCELLANY,
+                                    20, OBJ_WANDS,
+                                    60, OBJ_BOOKS,
+                                    70, OBJ_JEWELLERY,
                                    140, OBJ_FOOD,
                                    212, OBJ_ARMOUR,
                                    212, OBJ_WEAPONS,
@@ -1919,18 +1920,6 @@ int items(bool allow_uniques,
                                    320, OBJ_SCROLLS,
                                    440, OBJ_GOLD);
 
-        // misc items placement wholly dependent upon current depth {dlb}:
-        if (item_level > 7 && x_chance_in_y(21 + item_level, 5000))
-            item.base_type = OBJ_MISCELLANY;
-
-        if (item_level < 7
-            && (item.base_type == OBJ_BOOKS
-                || item.base_type == OBJ_STAVES
-                || item.base_type == OBJ_WANDS)
-            && random2(7) >= item_level)
-        {
-            item.base_type = random_choose(OBJ_POTIONS, OBJ_SCROLLS);
-        }
     }
 
     ASSERT(force_type == OBJ_RANDOM
