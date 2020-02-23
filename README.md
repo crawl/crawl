@@ -64,7 +64,7 @@ To make Zot easier, I am going to change the following monsters to be weaker.
 | v1   | DRACONIAN_MONK        | MONS_DRACONIAN_MONK        | MONS_ORC_WARRIOR      |
 | v1   | DRACONIAN_SHIFTER     | MONS_DRACONIAN_SHIFTER     | MONS_ORC_SORCERER     |
 | v1   | DRACONIAN_ANNIHILATOR | MONS_DRACONIAN_ANNIHILATOR | MONS_DEEP_ELF_MAGE    |
-|      | DRACONIAN_KNIGHT      | MONS_DRACONIAN_KNIGHT      | MONS_ORC_KNIGHT       |
+| v1   | DRACONIAN_KNIGHT      | MONS_DRACONIAN_KNIGHT      | MONS_ORC_KNIGHT       |
 |      | DRACONIAN_SCORCHER    | MONS_DRACONIAN_SCORCHER    | MONS_ORC_SORCERER     |
 |      | KILLER_KLOWN          | MONS_KILLER_KLOWN          | MONS_RAKSHASA         |
 |      | DEATH_COB             | MONS_DEATH_COB             | MONS_HUNGRY_GHOST     |

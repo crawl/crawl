@@ -639,7 +639,6 @@ static const mon_spellbook mspell_list[] =
        { SPELL_BOLT_OF_COLD, 13, MON_SPELL_WIZARD },
        { SPELL_OZOCUBUS_ARMOUR, 13, MON_SPELL_WIZARD },
        { SPELL_HASTE, 13, MON_SPELL_WIZARD },
-       { SPELL_INVISIBILITY, 13, MON_SPELL_WIZARD },
       }
     },
 
