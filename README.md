@@ -9,7 +9,8 @@ Trying to 'streamline' the game
 - [x] remove lair, orc, vaults, depths
 - [x] shorten dungeon to 10 levels
 - [x] temple always appears on level 2
-- [ ] remove portal branches besides bazaar
+- [x] remove portal branches besides bazaar
+- [ ] actually remove depths
 - [ ] remove drop restrictions for D1 to D4 to avoid too many 'boring' floors
 - [ ] zot traps no longer cast into the abyss
 - [ ] map zot enemies to dungeon enemies in random gen

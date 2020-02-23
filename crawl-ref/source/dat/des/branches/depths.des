@@ -15,7 +15,7 @@
 {{
 function depths_entry(e)
    e.tags("depths_entry uniq_depths_entry chance_depths_entry no_monster_gen")
-   e.place("D:$")
+   e.place("Lair")
    e.weight("20")
    e.kfeat("O = enter_depths")
    e.orient("float")
