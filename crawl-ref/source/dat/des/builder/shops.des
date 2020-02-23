@@ -62,7 +62,7 @@ end
 # Gozag code uses it to find out where shops can normally place.
 NAME: serial_shops
 TAGS: allow_dup extra luniq
-DEPTH: D:4-, Depths, Orc, Elf, Shoals, Snake, Vaults
+DEPTH: D:1-, Depths, Orc, Elf, Shoals, Snake, Vaults
 CHANCE: 20% (D)
 CHANCE: 20% (Depths)
 CHANCE: 30% (Orc)
@@ -254,7 +254,7 @@ ENDMAP
 # shops.
 NAME:  kennysheep_mini
 TAGS:  shop temple_overflow_generic_1
-DEPTH: D:4-, Depths, !D:$, !Depths:$
+DEPTH: D:1-, Depths, !D:$, !Depths:$
 : ks_random_setup(_G)
 : ks_shop_vault(_G, '{}CC')
 MAP
@@ -265,7 +265,7 @@ ENDMAP
 
 NAME:  kennysheep_mini_moat
 TAGS:  shop temple_overflow_generic_1
-DEPTH: D:4-, Depths, !D:$, !Depths:$
+DEPTH: D:1-, Depths, !D:$, !Depths:$
 : ks_random_setup(_G)
 SUBST: . : @
 : ks_shop_vault(_G, '{}CC')
@@ -279,7 +279,7 @@ ENDMAP
 
 NAME:  kennysheep_little_box
 TAGS:  shop temple_overflow_generic_1
-DEPTH: D:4-, Depths, !D:$, !Depths:$
+DEPTH: D:1-, Depths, !D:$, !Depths:$
 : ks_random_setup(_G)
 : ks_shop_vault(_G, '{}C....')
 MAP
@@ -406,7 +406,7 @@ ENDMAP
 # etc.
 NAME: nicolae_good_shop
 WEIGHT: 2
-DEPTH: D:6-, Depths
+DEPTH: D:1-, Depths
 TAGS: no_monster_gen no_trap_gen transparent
 SHUFFLE: _s
 KFEAT: s = general shop type:Hallowed suffix:Reliquary ; \
@@ -431,14 +431,9 @@ ENDMAP
 #####################################################
 # All bardings, all the time.
 NAME: nicolae_barding_shop
-DEPTH: D:8-, Depths, Snake, !Snake:$
+DEPTH: D:1-, Depths, Snake, !Snake:$
 WEIGHT: 1
-TAGS: transparent
-: if you.in_branch("Snake") then
-KMONS: s = naga w:50 / naga warrior
-: else
-KMONS: s = centaur w:50 / centaur warrior
-: end
+TAGS: no_monster_gen transparent
 KFEAT: s = armour shop type:Specialty suffix:Armours count:6 use_all ; \
    naga barding | naga barding | naga barding good_item | \
    centaur barding | centaur barding | centaur barding good_item
@@ -455,7 +450,7 @@ ENDMAP
 #####################################################
 # Sells conjurations-heavy books, destructive wands, etc.
 NAME: nicolae_blasting_shop
-DEPTH: D:8-, Depths
+DEPTH: D:1-, Depths
 TAGS: no_monster_gen no_item_gen transparent extra
 MARKER: s = lua:fog_machine { cloud_type = "flame", \
              pow_min = 3, pow_max = 5, delay_min = 50, delay_max = 90, \
@@ -485,7 +480,7 @@ ENDMAP
 # associated with one of each of the four elemental schools.
 NAME: nicolae_elemental_shop
 TAGS: no_monster_gen no_item_gen no_pool_fixup transparent extra
-DEPTH: D:4-, Depths
+DEPTH: D:1-, Depths
 SHUFFLE: AB
 NSUBST: A = a / l / w / x
 SUBST: B = .
@@ -541,7 +536,7 @@ ENDMAP
 # Why not take a chance on an unidentified artefact?
 NAME: nicolae_antique_artefacts
 TAGS: transparent extra
-DEPTH: D:10-, Depths
+DEPTH: D:1-, Depths
 WEIGHT: 1
 SHUFFLE: -m
 SUBST: - = .
@@ -560,7 +555,7 @@ ENDMAP
 
 NAME: nicolae_shop_scaring_up_business
 TAGS: transparent
-DEPTH: D:7-
+DEPTH: D:2-
 WEIGHT: 1
 KFEAT: O = food shop
 KMONS: O = patrolling hungry ghost
@@ -572,7 +567,7 @@ ENDMAP
 
 # Get away from it all.
 NAME: nicolae_island_escapes
-DEPTH: D:7-, !D:$, Depths, !Depths:$, Shoals, !Shoals:$, Swamp, !Swamp:$
+DEPTH: D:3-, !D:$, Depths, !Depths:$, Shoals, !Shoals:$, Swamp, !Swamp:$
 TAGS: no_item_gen no_monster_gen water_ok no_tide no_pool_fixup
 WEIGHT: 5
 SHUFFLE: Aa/Bb
@@ -598,7 +593,7 @@ ENDMAP
 # Eat the purple.
 NAME: nicolae_transmutations_shop
 TAGS: transparent no_item_gen no_monster_gen extra
-DEPTH: D:8-, Depths, Zot
+DEPTH: D:4-, Depths, Zot
 COLOUR: m = magenta
 TILE: m = dngn_transparent_wall_magenta
 KFEAT: S = general shop type:Changing suffix:Room count:7 ; \
@@ -621,7 +616,7 @@ MAP
 ENDMAP
 
 NAME:   doesnt_shop_hydraphobe
-DEPTH:  D:5-11
+DEPTH:  D:5-10
 WEIGHT: 5
 TAGS:   transparent no_pool_fixup
 KPROP:  -1wP = no_tele_into
