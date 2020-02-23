@@ -1420,13 +1420,13 @@ static void _generate_scroll_item(item_def& item, int force_type,
                  22, (crawl_state.game_is_sprint() ? NUM_SCROLLS : SCR_NOISE),
                  22, SCR_RANDOM_USELESSNESS,
                  // Higher-level scrolls.
-                 27, (depth_mod < 4 ? NUM_SCROLLS : SCR_VULNERABILITY),
-                 17, (depth_mod < 4 ? NUM_SCROLLS : SCR_SUMMONING),
-                 15, (depth_mod < 4 ? NUM_SCROLLS : SCR_ACQUIREMENT),
-                 15, (depth_mod < 4 ? NUM_SCROLLS : SCR_SILENCE),
-                 15, (depth_mod < 4 ? NUM_SCROLLS : SCR_BRAND_WEAPON),
-                 15, (depth_mod < 4 ? NUM_SCROLLS : SCR_TORMENT),
-                 15, (depth_mod < 4 ? NUM_SCROLLS : SCR_HOLY_WORD));
+                 27, SCR_VULNERABILITY,
+                 17, SCR_SUMMONING,
+                 15, SCR_ACQUIREMENT,
+                 15, SCR_SILENCE,
+                 15, SCR_BRAND_WEAPON,
+                 15, SCR_TORMENT,
+                 15, SCR_HOLY_WORD);
         }
         while (item.sub_type == NUM_SCROLLS
                || agent == GOD_XOM
