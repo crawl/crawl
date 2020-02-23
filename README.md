@@ -85,3 +85,4 @@ Good monsters to compare the above to?
 ## References
 
 [DCSS README](https://github.com/crawl/crawl)
+[Dungeon Crawl Short Soup](https://github.com/dcandido/crawl)
