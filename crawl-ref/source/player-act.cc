@@ -738,10 +738,8 @@ bool player::go_berserk(bool intentional, bool potion)
     const int berserk_duration = (20 + random2avg(19,2)) / 2;
     you.increase_duration(DUR_BERSERK, berserk_duration);
 
-    //Apply Berserk's +50% Current/Max HP
+    // Apply Berserk's +50% Current/Max HP.
     calc_hp(true, false);
-
-    notify_stat_change(STAT_STR, 5, true);
 
     you.berserk_penalty = 0;
 

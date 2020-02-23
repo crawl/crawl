@@ -8295,8 +8295,6 @@ void player_end_berserk()
     // slightly longer.
     you.increase_duration(DUR_BERSERK_COOLDOWN, dur * 2);
 
-    notify_stat_change(STAT_STR, -5, true);
-
     // Don't trigger too many hints mode messages.
     const bool hints_slow = Hints.hints_events[HINT_YOU_ENCHANTED];
     Hints.hints_events[HINT_YOU_ENCHANTED] = false;

@@ -381,9 +381,6 @@ static int _strength_modifier(bool innate_only)
 
     if (!innate_only)
     {
-        if (you.duration[DUR_BERSERK])
-            result += 5;
-
         if (you.duration[DUR_DIVINE_STAMINA])
             result += you.attribute[ATTR_DIVINE_STAMINA];
 

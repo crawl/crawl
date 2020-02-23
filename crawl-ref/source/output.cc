@@ -816,11 +816,8 @@ static short _get_stat_colour(stat_type stat)
             return entry.second;
 
     // Stat is magically increased.
-    if (you.duration[DUR_DIVINE_STAMINA]
-        || stat == STAT_STR && you.duration[DUR_BERSERK])
-    {
+    if (you.duration[DUR_DIVINE_STAMINA])
         return LIGHTBLUE;  // no end of effect warning
-    }
 
     // Stat is degenerated.
     if (you.stat_loss[stat] > 0)
