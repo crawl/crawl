@@ -267,26 +267,11 @@ void give_items_skills(const newgame_def& ng)
             you.skills[SK_ARMOUR]++;
         break;
     }
-    case JOB_ABYSSAL_KNIGHT:
-        you.religion = GOD_LUGONU;
-        if (!crawl_state.game_is_sprint())
-            you.chapter = CHAPTER_POCKET_ABYSS;
-        you.piety = 38;
-
-        if (species_apt(SK_ARMOUR) < species_apt(SK_DODGING))
-            you.skills[SK_DODGING]++;
-        else
-            you.skills[SK_ARMOUR]++;
-
-        break;
-
     default:
         break;
     }
 
-    if (you.char_class == JOB_ABYSSAL_KNIGHT)
-        newgame_make_item(OBJ_WEAPONS, ng.weapon, 1, +1);
-    else if (you.char_class == JOB_CHAOS_KNIGHT)
+    if (you.char_class == JOB_CHAOS_KNIGHT)
         newgame_make_item(OBJ_WEAPONS, ng.weapon, 1, 0, SPWPN_CHAOS);
     else if (job_gets_ranged_weapons(you.char_class))
         _give_ranged_weapon(ng.weapon, you.char_class == JOB_HUNTER ? 1 : 0);
