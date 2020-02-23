@@ -71,7 +71,7 @@ To make Zot easier, I am going to change the following monsters to be weaker.
 | v1   | CURSE_TOE             | MONS_CURSE_TOE             | MONS_EYE_OF_DRAINING  |
 | v1   | TENTACLED_MONSTROSITY | MONS_TENTACLED_MONSTROSITY | MONS_UGLY_THING       |
 | v1   | ELECTRIC_GOLEM        | MONS_ELECTRIC_GOLEM        | MONS_OGRE_MAGE        |
-|      | ORB_OF_FIRE           | MONS_ORB_OF_FIRE           | MONS_EFREET           |
+| v1   | ORB_OF_FIRE           | MONS_ORB_OF_FIRE           | MONS_EFREET           |
 
 Good monsters to compare the above to?
 
