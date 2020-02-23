@@ -545,17 +545,8 @@ bool MiscastEffect::_sleep(int dur)
 
 bool MiscastEffect::_send_to_abyss()
 {
-    // The Abyss depth check is duplicated here (and the banishment forced if
-    // successful), in order to degrade to Malign Gateway in the Abyss instead
-    // of doing nothing.
-    if ((player_in_branch(BRANCH_ABYSS)
-         && x_chance_in_y(you.depth, brdepth[BRANCH_ABYSS]))
-        || special_source.source == miscast_source::hell_effect)
-    {
-        return _malign_gateway();
-    }
-    target->banish(act_source, cause, target->get_experience_level(), true);
-    return true;
+    // malign gateway instead
+    return _malign_gateway(true);
 }
 
 // XXX: Mostly duplicated from cast_malign_gateway.

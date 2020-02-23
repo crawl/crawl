@@ -426,8 +426,7 @@ void banished(const string &who, const int power)
         "was cast into the Abyss!" + _who_banished(who), "parent");
 
     // Xom just might decide to interfere.
-    if (you_worship(GOD_XOM) && who != "Xom" && who != "wizard command"
-        && who != "a distortion unwield")
+    if (you_worship(GOD_XOM) && who != "Xom" && who != "wizard command")
     {
         xom_maybe_reverts_banishment(false, false);
     }

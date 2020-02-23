@@ -1,10 +1,12 @@
 # Coffee Crawl fork
 
-Coffee crawl is the first ten floors of crawl, then one floor of Zot.
+Crawl is won by lair. Therefor, coffee crawl is the first ten floors of crawl, then one floor of Zot.
+
+The goal of this game is to make a 15-30 minute crawl.
 
 ## Upcoming changes
 
-Trying to 'streamline' the game
+Core changes 
 
 - [x] remove lair, orc, vaults, depths
 - [x] shorten dungeon to 10 levels
@@ -13,15 +15,19 @@ Trying to 'streamline' the game
 - [x] actually remove depths
 - [x] remove drop restrictions for D1 to D4 to avoid too many 'boring' floors
 - [x] remove things like adders from D:10 since the game is almost over by D:10
-- [x] map zot enemies to dungeon enemies in random gen
-- [ ] nerf zot orb guardians because I don't want to remove them
-- [ ] nerf orbs of fire because I don't want to remove them
-- [ ] to make orb run easier, nerf or remove panlords
-- [ ] to make orb run easier, map other enemies to easier ones
-- [ ] end the game when the player exits the realm of zot with the orb. This is to avoid players spending 10 minutes predigging tunnels in a now 25 minute game.
-- [ ] remove abyss access - IN PROGRESS
+- [x] map zot enemies to dungeon enemies in random gen (for now)
+- [ ] revert mapping zot enemies to dungeon enemies
+- [ ] rebalance zot enemies for a 10 level crawl
+- [x] remove abyss access via banish
+- [x] remove abyss access via distortion weapons
+- [x] remove abyss access via starting role
 - [ ] remove abyss access via god abilty
-- [ ] remove abyss access via Zot trap
+- [x] remove abyss access via distortion unwielding, replace with maligned_gateway
+- [x] remove abyss access via Zot trap, replace with maligned_gateway
+- [x] remove abyss access via miscast, replace with maligned_gateway
+- [ ] to make orb run easier, nerf or remove panlords
+- [ ] to make orb run easier, nerf orb run enemies to easier ones
+- [ ] end the game when the player exits the realm of zot with the orb. This is to avoid players spending 10 minutes predigging tunnels in a now 25 minute game.
 - [ ] bring back and rebalance all of the former zot enemies to give zot its flavor back
 
 ## Extended changes
@@ -43,6 +49,39 @@ Changes I would like to try which are probably bad ideas.
 - [ ] remove all spells above level 6 probably. bad idea because i don't know they aren't still interesting yet
 - [ ] rebalance skillcap. bad idea because then i have to rebalance everything
 - [ ] either flat increase piety gain or decrease piety cap. bad idea because i don't know if there are balance issues yet
+
+## Monster changes
+
+To make Zot easier, I was going to change the following monsters to be weaker.
+
+| Done | Monster               | Monster Enum               | Change |
+| ---- | --------------------- | -------------------------- | ------ |
+|      | MOTH_OF_WRATH         | MONS_MOTH_OF_WRATH         |        |
+|      | GHOST_MOTH            | MONS_GHOST_MOTH            |        |
+|      | BLACK_DRACONIAN       | MONS_BLACK_DRACONIAN       |        |
+|      | YELLOW_DRACONIAN      | MONS_YELLOW_DRACONIAN      |        |
+|      | GREEN_DRACONIAN       | MONS_GREEN_DRACONIAN       |        |
+|      | PURPLE_DRACONIAN      | MONS_PURPLE_DRACONIAN      |        |
+|      | RED_DRACONIAN         | MONS_RED_DRACONIAN         |        |
+|      | WHITE_DRACONIAN       | MONS_WHITE_DRACONIAN       |        |
+|      | DRACONIAN_STORMCALLER | MONS_DRACONIAN_STORMCALLER |        |
+|      | DRACONIAN_MONK        | MONS_DRACONIAN_MONK        |        |
+|      | DRACONIAN_SHIFTER     | MONS_DRACONIAN_SHIFTER     |        |
+|      | DRACONIAN_ANNIHILATOR | MONS_DRACONIAN_ANNIHILATOR |        |
+|      | DRACONIAN_KNIGHT      | MONS_DRACONIAN_KNIGHT      |        |
+|      | DRACONIAN_SCORCHER    | MONS_DRACONIAN_SCORCHER    |        |
+|      | QUICKSILVER_DRAGON    | MONS_QUICKSILVER_DRAGON    |        |
+|      | SHADOW_DRAGON         | MONS_SHADOW_DRAGON         |        |
+|      | STORM_DRAGON          | MONS_STORM_DRAGON          |        |
+|      | GOLDEN_DRAGON         | MONS_GOLDEN_DRAGON         |        |
+|      | KILLER_KLOWN          | MONS_KILLER_KLOWN          |        |
+|      | DEATH_COB             | MONS_DEATH_COB             |        |
+|      | CURSE_TOE             | MONS_CURSE_TOE             |        |
+|      | TENTACLED_MONSTROSITY | MONS_TENTACLED_MONSTROSITY |        |
+|      | ELECTRIC_GOLEM        | MONS_ELECTRIC_GOLEM        |        |
+|      | ORB_OF_FIRE           | MONS_ORB_OF_FIRE           |        |
+
+Good monsters to compare the above to?
 
 ## References
 
