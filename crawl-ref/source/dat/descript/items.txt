@@ -737,7 +737,9 @@ fire, cold, electricity, poison, and acid.
 %%%%
 potion of stabbing
 
-A potion which makes the drinker better at attacking unaware enemies.
+A potion which makes the drinker better at attacking unaware enemies, giving
+attacks against distracted, confused or otherwise unaware creatures a chance to
+deal increased damage as if the target were completely helpless.
 %%%%
 quad damage
 
