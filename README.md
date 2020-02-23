@@ -68,7 +68,7 @@ To make Zot easier, I am going to change the following monsters to be weaker.
 | v1   | DRACONIAN_SCORCHER    | MONS_DRACONIAN_SCORCHER    | MONS_ORC_SORCERER     |
 | v1   | KILLER_KLOWN          | MONS_KILLER_KLOWN          | MONS_RAKSHASA         |
 | v1   | DEATH_COB             | MONS_DEATH_COB             | MONS_HUNGRY_GHOST     |
-|      | CURSE_TOE             | MONS_CURSE_TOE             | MONS_EYE_OF_DRAINING  |
+| v1   | CURSE_TOE             | MONS_CURSE_TOE             | MONS_EYE_OF_DRAINING  |
 |      | TENTACLED_MONSTROSITY | MONS_TENTACLED_MONSTROSITY | MONS_UGLY_THING       |
 |      | ELECTRIC_GOLEM        | MONS_ELECTRIC_GOLEM        | MONS_OGRE_MAGE        |
 |      | ORB_OF_FIRE           | MONS_ORB_OF_FIRE           | MONS_EFREET           |
