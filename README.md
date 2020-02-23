@@ -13,7 +13,7 @@ Trying to 'streamline' the game
 - [x] actually remove depths
 - [x] remove drop restrictions for D1 to D4 to avoid too many 'boring' floors
 - [x] remove things like adders from D:10 since the game is almost over by D:10
-- [ ] map zot enemies to dungeon enemies in random gen
+- [x] map zot enemies to dungeon enemies in random gen
 - [ ] nerf zot orb guardians because I don't want to remove them
 - [ ] nerf orbs of fire because I don't want to remove them
 - [ ] to make orb run easier, nerf or remove panlords
