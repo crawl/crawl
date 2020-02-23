@@ -1415,7 +1415,7 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
         beam.name         = "damnation";
         beam.aux_source   = "damnation";
         beam.colour       = LIGHTRED;
-        beam.damage       = dice_def(3, 20);
+        beam.damage       = dice_def(3, 16);
         beam.hit          = 24;
         beam.flavour      = BEAM_DAMNATION;
         beam.pierce       = true; // needed?
