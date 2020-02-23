@@ -1,4 +1,6 @@
-[![Build Status](https://travis-ci.org/crawl/crawl.svg?branch=master)](https://travis-ci.org/crawl/crawl)
+# Coffee Crawl fork
+
+Coffee crawl is the first ten floors of crawl, then one floor of Zot.
 
 # Dungeon Crawl Stone Soup
 
