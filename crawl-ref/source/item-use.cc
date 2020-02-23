@@ -3197,12 +3197,8 @@ void read_scroll(item_def& scroll)
         bool had_effect = false;
         for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
         {
-            // Don't leak information about Mara and rakshasa clones.
-            if (mons_immune_magic(**mi)
-                || mi->is_summoned() && !mi->is_illusion())
-            {
+            if (mons_immune_magic(**mi))
                 continue;
-            }
 
             if (mi->add_ench(mon_enchant(ENCH_INNER_FLAME, 0, &you)))
                 had_effect = true;
