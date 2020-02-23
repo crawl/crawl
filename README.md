@@ -72,8 +72,10 @@ To make Zot easier, I am going to change the following monsters to be weaker.
 | v1   | TENTACLED_MONSTROSITY | MONS_TENTACLED_MONSTROSITY | MONS_UGLY_THING       |
 | v1   | ELECTRIC_GOLEM        | MONS_ELECTRIC_GOLEM        | MONS_OGRE_MAGE        |
 | v1   | ORB_OF_FIRE           | MONS_ORB_OF_FIRE           | MONS_EFREET           |
-
-Good monsters to compare the above to?
+| v1   | QUICKSILVER_DRAGON    | MONS_QUICKSILVER_DRAGON    | MONS_SWAMP_DRAGON     |
+| v1   | SHADOW_DRAGON         | MONS_SHADOW_DRAGON         | MONS_SWAMP_DRAGON     |
+| v1   | STORM_DRAGON          | MONS_STORM_DRAGON          | MONS_SWAMP_DRAGON     |
+| v1   | GOLDEN_DRAGON         | MONS_GOLDEN_DRAGON         | MONS_SWAMP_DRAGON     |
 
 ## References
 
