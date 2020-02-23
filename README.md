@@ -45,9 +45,7 @@ Changes I would like to try, ala hellcrawl.
 Changes I would like to try which are probably bad ideas.
 
 - [ ] give every enemy in the game the briar patch ability thorn hunters have to prevent luring
-- [ ] remove all spells above level 6 probably. bad idea because i don't know they aren't still interesting yet
-- [ ] rebalance skillcap. bad idea because then i have to rebalance everything
-- [ ] either flat increase piety gain or decrease piety cap. bad idea because i don't know if there are balance issues yet
+- [ ] either flat increase piety gain or decrease piety cap
 
 ## Monster changes
 
