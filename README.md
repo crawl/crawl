@@ -6,7 +6,7 @@ The goal of this game is to make a 15-30 minute crawl.
 
 ## Upcoming changes
 
-Core changes 
+Core changes
 
 - [x] remove lair, orc, vaults, depths
 - [x] shorten dungeon to 10 levels
@@ -51,32 +51,27 @@ Changes I would like to try which are probably bad ideas.
 
 To make Zot easier, I am going to change the following monsters to be weaker.
 
-| Done | Monster               | Monster Enum               | Change |
-| ---- | --------------------- | -------------------------- | ------ |
-|      | MOTH_OF_WRATH         | MONS_MOTH_OF_WRATH         |        |
-|      | GHOST_MOTH            | MONS_GHOST_MOTH            |        |
-|      | BLACK_DRACONIAN       | MONS_BLACK_DRACONIAN       |        |
-|      | YELLOW_DRACONIAN      | MONS_YELLOW_DRACONIAN      |        |
-|      | GREEN_DRACONIAN       | MONS_GREEN_DRACONIAN       |        |
-|      | PURPLE_DRACONIAN      | MONS_PURPLE_DRACONIAN      |        |
-|      | RED_DRACONIAN         | MONS_RED_DRACONIAN         |        |
-|      | WHITE_DRACONIAN       | MONS_WHITE_DRACONIAN       |        |
-|      | DRACONIAN_STORMCALLER | MONS_DRACONIAN_STORMCALLER |        |
-|      | DRACONIAN_MONK        | MONS_DRACONIAN_MONK        |        |
-|      | DRACONIAN_SHIFTER     | MONS_DRACONIAN_SHIFTER     |        |
-|      | DRACONIAN_ANNIHILATOR | MONS_DRACONIAN_ANNIHILATOR |        |
-|      | DRACONIAN_KNIGHT      | MONS_DRACONIAN_KNIGHT      |        |
-|      | DRACONIAN_SCORCHER    | MONS_DRACONIAN_SCORCHER    |        |
-|      | QUICKSILVER_DRAGON    | MONS_QUICKSILVER_DRAGON    |        |
-|      | SHADOW_DRAGON         | MONS_SHADOW_DRAGON         |        |
-|      | STORM_DRAGON          | MONS_STORM_DRAGON          |        |
-|      | GOLDEN_DRAGON         | MONS_GOLDEN_DRAGON         |        |
-|      | KILLER_KLOWN          | MONS_KILLER_KLOWN          |        |
-|      | DEATH_COB             | MONS_DEATH_COB             |        |
-|      | CURSE_TOE             | MONS_CURSE_TOE             |        |
-|      | TENTACLED_MONSTROSITY | MONS_TENTACLED_MONSTROSITY |        |
-|      | ELECTRIC_GOLEM        | MONS_ELECTRIC_GOLEM        |        |
-|      | ORB_OF_FIRE           | MONS_ORB_OF_FIRE           |        |
+| Done | Monster               | Monster Enum               | Comparable         | Change |
+| ---- | --------------------- | -------------------------- | ------------------ | ------ |
+|      | MOTH_OF_WRATH         | MONS_MOTH_OF_WRATH         |                    |        |
+|      | BLACK_DRACONIAN       | MONS_BLACK_DRACONIAN       | MONS_TENGU_WARRIOR |        |
+|      | YELLOW_DRACONIAN      | MONS_YELLOW_DRACONIAN      |                    |        |
+|      | GREEN_DRACONIAN       | MONS_GREEN_DRACONIAN       |                    |        |
+|      | PURPLE_DRACONIAN      | MONS_PURPLE_DRACONIAN      |                    |        |
+|      | RED_DRACONIAN         | MONS_RED_DRACONIAN         |                    |        |
+|      | WHITE_DRACONIAN       | MONS_WHITE_DRACONIAN       |                    |        |
+|      | DRACONIAN_STORMCALLER | MONS_DRACONIAN_STORMCALLER |                    |        |
+|      | DRACONIAN_MONK        | MONS_DRACONIAN_MONK        |                    |        |
+|      | DRACONIAN_SHIFTER     | MONS_DRACONIAN_SHIFTER     |                    |        |
+|      | DRACONIAN_ANNIHILATOR | MONS_DRACONIAN_ANNIHILATOR |                    |        |
+|      | DRACONIAN_KNIGHT      | MONS_DRACONIAN_KNIGHT      |                    |        |
+|      | DRACONIAN_SCORCHER    | MONS_DRACONIAN_SCORCHER    |                    |        |
+|      | KILLER_KLOWN          | MONS_KILLER_KLOWN          |                    |        |
+|      | DEATH_COB             | MONS_DEATH_COB             |                    |        |
+|      | CURSE_TOE             | MONS_CURSE_TOE             |                    |        |
+|      | TENTACLED_MONSTROSITY | MONS_TENTACLED_MONSTROSITY |                    |        |
+|      | ELECTRIC_GOLEM        | MONS_ELECTRIC_GOLEM        |                    |        |
+|      | ORB_OF_FIRE           | MONS_ORB_OF_FIRE           | MONS_EFREET        |        |
 
 Good monsters to compare the above to?
 
