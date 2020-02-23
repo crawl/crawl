@@ -10,7 +10,7 @@ Trying to 'streamline' the game
 - [x] shorten dungeon to 10 levels
 - [x] temple always appears on level 2
 - [x] remove portal branches besides bazaar
-- [ ] actually remove depths
+- [x] actually remove depths
 - [ ] remove drop restrictions for D1 to D4 to avoid too many 'boring' floors
 - [ ] zot traps no longer cast into the abyss
 - [ ] map zot enemies to dungeon enemies in random gen
@@ -20,6 +20,7 @@ Trying to 'streamline' the game
 - [ ] to make orb run easier, nerf or remove panlords
 - [ ] to make orb run easier, map other enemies to easier ones
 - [ ] end the game when the player exits the realm of zot with the orb. This is to avoid players spending 10 minutes predigging tunnels in a now 25 minute game.
+- [ ] remove things like adders from D:10 since this is now the end of the game
 
 ## Extended changes
 
