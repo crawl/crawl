@@ -1,5 +1,6 @@
 #include "colour.h"
-
+// By setting MINDEPTH and MAXDEPTH to 100, we'll never see these floors
+const int REMOVED=100
 // The order of these entries must match the order of the branch-type enum.
 const Branch branches[NUM_BRANCHES] =
 {
@@ -12,7 +13,7 @@ const Branch branches[NUM_BRANCHES] =
     //  floor colour, rock colour
     //  travel shortcut, runes, ambient noise level
 
-    { BRANCH_DUNGEON, NUM_BRANCHES, 0, 0, 15, 0,
+    { BRANCH_DUNGEON, NUM_BRANCHES, 0, 0, 10, 0,
       brflag::none,
       NUM_FEATURES, DNGN_EXIT_DUNGEON, NUM_FEATURES,
       "Dungeon", "the Dungeon", "D",
@@ -20,7 +21,7 @@ const Branch branches[NUM_BRANCHES] =
       LIGHTGREY, BROWN,
       'D', {}, branch_noise::normal },
 
-    { BRANCH_TEMPLE, BRANCH_DUNGEON, 4, 7, 1, 5,
+    { BRANCH_TEMPLE, BRANCH_DUNGEON, 2, 2, 1, 5,
       brflag::no_items,
       DNGN_ENTER_TEMPLE, DNGN_EXIT_TEMPLE, NUM_FEATURES,
       "Temple", "the Ecumenical Temple", "Temple",
@@ -28,7 +29,7 @@ const Branch branches[NUM_BRANCHES] =
       LIGHTGREY, BROWN,
       'T', {}, branch_noise::normal },
 
-    { BRANCH_ORC, BRANCH_DUNGEON, 9, 12, 2, 10,
+    { BRANCH_ORC, BRANCH_DUNGEON, REMOVED, REMOVED, 2, 10,
       brflag::spotty,
       DNGN_ENTER_ORC, DNGN_EXIT_ORC, NUM_FEATURES,
       "Orcish Mines", "the Orcish Mines", "Orc",
@@ -54,7 +55,7 @@ const Branch branches[NUM_BRANCHES] =
       'K', {}, branch_noise::normal },
 #endif
 
-    { BRANCH_LAIR, BRANCH_DUNGEON, 8, 11, 6, 10,
+    { BRANCH_LAIR, BRANCH_DUNGEON, REMOVED, REMOVED, 6, 10,
       brflag::none,
       DNGN_ENTER_LAIR, DNGN_EXIT_LAIR, NUM_FEATURES,
       "Lair", "the Lair of Beasts", "Lair",
@@ -102,7 +103,7 @@ const Branch branches[NUM_BRANCHES] =
       GREEN, BROWN,
       'M', { RUNE_SLIME }, branch_noise::quiet },
 
-    { BRANCH_VAULTS, BRANCH_DUNGEON, 13, 14, 5, 19,
+    { BRANCH_VAULTS, BRANCH_DUNGEON, REMOVED, REMOVED, 5, 19,
       brflag::dangerous_end,
       DNGN_ENTER_VAULTS, DNGN_EXIT_VAULTS, NUM_FEATURES,
       "Vaults", "the Vaults", "Vaults",
@@ -137,7 +138,7 @@ const Branch branches[NUM_BRANCHES] =
       'W', { RUNE_TOMB }, branch_noise::quiet },
 #if TAG_MAJOR_VERSION > 34
 
-    { BRANCH_DEPTHS, BRANCH_DUNGEON, 15, 15, 5, 22,
+    { BRANCH_DEPTHS, BRANCH_DUNGEON, 10, 10, 1, 22,
       brflag::none,
       DNGN_ENTER_DEPTHS, DNGN_EXIT_DEPTHS, NUM_FEATURES,
       "Depths", "the Depths", "Depths",
@@ -186,7 +187,7 @@ const Branch branches[NUM_BRANCHES] =
       MAGENTA, MAGENTA,
       'Y', { RUNE_TARTARUS }, branch_noise::normal },
 
-    { BRANCH_ZOT, BRANCH_DEPTHS, 5, 5, 5, 27,
+    { BRANCH_ZOT, BRANCH_DUNGEON, 10, 10, 1, 27,
       brflag::dangerous_end,
       DNGN_ENTER_ZOT, DNGN_EXIT_ZOT, NUM_FEATURES,
       "Zot", "the Realm of Zot", "Zot",
