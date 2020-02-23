@@ -16,19 +16,18 @@ Core changes
 - [x] remove drop restrictions for D1 to D4 to avoid too many 'boring' floors
 - [x] remove things like adders from D:10 since the game is almost over by D:10
 - [x] map zot enemies to dungeon enemies in random gen (for now)
-- [ ] revert mapping zot enemies to dungeon enemies
-- [ ] rebalance zot enemies for a 10 level crawl
 - [x] remove abyss access via banish
 - [x] remove abyss access via distortion weapons
 - [x] remove abyss access via starting role
-- [ ] remove abyss access via god abilty
+- [x] remove abyss access via god abilty
 - [x] remove abyss access via distortion unwielding, replace with maligned_gateway
 - [x] remove abyss access via Zot trap, replace with maligned_gateway
 - [x] remove abyss access via miscast, replace with maligned_gateway
+- [ ] revert mapping zot enemies to dungeon enemies
+- [ ] rebalance zot enemies for a 10 level crawl
 - [ ] to make orb run easier, nerf or remove panlords
 - [ ] to make orb run easier, nerf orb run enemies to easier ones
 - [ ] end the game when the player exits the realm of zot with the orb. This is to avoid players spending 10 minutes predigging tunnels in a now 25 minute game.
-- [ ] bring back and rebalance all of the former zot enemies to give zot its flavor back
 
 ## Extended changes
 
@@ -52,7 +51,7 @@ Changes I would like to try which are probably bad ideas.
 
 ## Monster changes
 
-To make Zot easier, I was going to change the following monsters to be weaker.
+To make Zot easier, I am going to change the following monsters to be weaker.
 
 | Done | Monster               | Monster Enum               | Change |
 | ---- | --------------------- | -------------------------- | ------ |

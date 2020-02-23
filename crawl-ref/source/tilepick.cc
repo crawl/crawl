@@ -3514,9 +3514,7 @@ tileidx_t tileidx_ability(const ability_type ability)
     case ABIL_LUGONU_BANISH:
         return TILEG_ABILITY_LUGONU_BANISH;
     case ABIL_LUGONU_CORRUPT:
-        return TILEG_ABILITY_LUGONU_CORRUPT;
-    case ABIL_LUGONU_ABYSS_ENTER:
-        return TILEG_ABILITY_LUGONU_ENTER_ABYSS;
+        return TILEG_ABILITY_LUGONU_CORRUPT;;
     case ABIL_LUGONU_BLESS_WEAPON:
         return TILEG_ABILITY_LUGONU_BLESS_WEAPON;
     // Nemelex

@@ -226,7 +226,6 @@ const vector<god_power> god_powers[NUM_GODS] =
       { 2, ABIL_LUGONU_BEND_SPACE, "bend space around yourself" },
       { 3, ABIL_LUGONU_BANISH, "banish your foes" },
       { 4, ABIL_LUGONU_CORRUPT, "corrupt the fabric of space" },
-      { 5, ABIL_LUGONU_ABYSS_ENTER, "gate yourself to the Abyss" },
       { 7, ABIL_LUGONU_BLESS_WEAPON,
            "Lugonu will corrupt your weapon with distortion... once.",
            "Lugonu is no longer ready to corrupt your weapon." },

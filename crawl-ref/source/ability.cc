@@ -990,7 +990,7 @@ ability_type fixup_ability(ability_type ability)
         else
             return ability;
 
-    case ABIL_LUGONU_ABYSS_EXIT:]
+    case ABIL_LUGONU_ABYSS_EXIT:
         if (brdepth[BRANCH_ABYSS] == -1)
             return ABIL_NON_ABILITY;
         else
