@@ -208,7 +208,7 @@ static const mon_spellbook mspell_list[] =
     {  MST_DEEP_ELF_SORCERER,
       {
        { SPELL_CORROSIVE_BOLT, 18, MON_SPELL_WIZARD },
-       { SPELL_BANISHMENT, 11, MON_SPELL_WIZARD },
+       { SPELL_SMITING, 11, MON_SPELL_WIZARD },
        { SPELL_HASTE, 22, MON_SPELL_WIZARD },
        { SPELL_HURL_DAMNATION, 11, MON_SPELL_WIZARD },
       }
@@ -228,7 +228,7 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_SUMMON_DEMON, 24, MON_SPELL_WIZARD },
        { SPELL_SUMMON_GREATER_DEMON, 24, MON_SPELL_WIZARD },
-       { SPELL_BANISHMENT, 12, MON_SPELL_WIZARD },
+       { SPELL_SMITING, 12, MON_SPELL_WIZARD },
       }
     },
 
@@ -510,7 +510,7 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_STONE_ARROW, 14, MON_SPELL_WIZARD },
        { SPELL_LIGHTNING_BOLT, 12, MON_SPELL_WIZARD },
-       { SPELL_BANISHMENT, 10, MON_SPELL_WIZARD },
+       { SPELL_SMITING, 10, MON_SPELL_WIZARD },
        { SPELL_INVISIBILITY, 14, MON_SPELL_WIZARD },
       }
     },
@@ -1066,7 +1066,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_BOLT_OF_DRAINING, 12, MON_SPELL_WIZARD },
        { SPELL_POISON_ARROW, 12, MON_SPELL_WIZARD },
        { SPELL_HAUNT, 12, MON_SPELL_WIZARD },
-       { SPELL_BANISHMENT, 12, MON_SPELL_WIZARD },
+       { SPELL_SMITING, 12, MON_SPELL_WIZARD },
        { SPELL_HASTE, 12, MON_SPELL_WIZARD },
       }
     },
@@ -2110,7 +2110,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_STING, 10, MON_SPELL_WIZARD },
        { SPELL_STONE_ARROW, 10, MON_SPELL_WIZARD },
        { SPELL_LIGHTNING_BOLT, 10, MON_SPELL_WIZARD },
-       { SPELL_BANISHMENT, 10, MON_SPELL_WIZARD },
+       { SPELL_SMITING, 10, MON_SPELL_WIZARD },
        { SPELL_BLINK, 10, MON_SPELL_WIZARD },
       }
     },

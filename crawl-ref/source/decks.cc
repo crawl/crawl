@@ -72,7 +72,6 @@ typedef map<card_type, int> deck_archetype;
 deck_archetype deck_of_escape =
 {
     { CARD_TOMB,       5 },
-    { CARD_EXILE,      1 },
     { CARD_ELIXIR,     5 },
     { CARD_CLOUD,      5 },
     { CARD_VELOCITY,   5 },
@@ -992,37 +991,6 @@ static void _velocity_card(int power)
     }
 }
 
-static void _exile_card(int power)
-{
-    if (player_in_branch(BRANCH_ABYSS))
-    {
-        canned_msg(MSG_NOTHING_HAPPENS);
-        return;
-    }
-
-    // Calculate how many extra banishments you get.
-    const int power_level = _get_power_level(power);
-    int extra_targets = power_level + random2(1 + power_level);
-
-    for (int i = 0; i < 1 + extra_targets; ++i)
-    {
-        // Pick a random monster nearby to banish (or yourself).
-        monster* mon_to_banish = choose_random_nearby_monster(1);
-
-        // Bonus banishments only banish monsters.
-        if (i != 0 && !mon_to_banish)
-            continue;
-
-        if (!mon_to_banish) // Banish yourself!
-        {
-            banished("drawing a card");
-            break;              // Don't banish anything else.
-        }
-        else
-            mon_to_banish->banish(&you);
-    }
-}
-
 static void _shaft_card(int power)
 {
     const int power_level = _get_power_level(power);
@@ -1742,7 +1710,6 @@ void card_effect(card_type which_card,
     switch (which_card)
     {
     case CARD_VELOCITY:         _velocity_card(power); break;
-    case CARD_EXILE:            _exile_card(power); break;
     case CARD_ELIXIR:           _elixir_card(power); break;
     case CARD_STAIRS:           _stairs_card(power); break;
     case CARD_SHAFT:            _shaft_card(power); break;

@@ -24,17 +24,6 @@ struct job_def
 static const map<job_type, job_def> job_data =
 {
 
-{ JOB_ABYSSAL_KNIGHT, {
-    "AK", "Abyssal Knight",
-    4, 4, 4,
-    { SP_HILL_ORC, SP_SPRIGGAN, SP_TROLL, SP_MERFOLK, SP_BASE_DRACONIAN,
-      SP_DEMONSPAWN, },
-    { "leather armour" },
-    WCHOICE_PLAIN,
-    { { SK_FIGHTING, 3 }, { SK_ARMOUR, 1 }, { SK_DODGING, 1 },
-      { SK_INVOCATIONS, 2 }, { SK_WEAPON, 2 }, },
-} },
-
 { JOB_AIR_ELEMENTALIST, {
     "AE", "Air Elementalist",
     0, 7, 5,

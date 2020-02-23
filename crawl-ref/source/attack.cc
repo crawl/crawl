@@ -455,7 +455,6 @@ bool attack::distortion_affects_defender()
     {
         SMALL_DMG,
         BIG_DMG,
-        BANISH,
         BLINK,
         TELE_INSTANT,
         TELE_DELAYED,
@@ -464,8 +463,7 @@ bool attack::distortion_affects_defender()
 
     const disto_effect choice = random_choose_weighted(33, SMALL_DMG,
                                                        22, BIG_DMG,
-                                                       5,  BANISH,
-                                                       15, BLINK,
+                                                       20, BLINK,
                                                        10, TELE_INSTANT,
                                                        10, TELE_DELAYED,
                                                        5,  NONE);
@@ -495,12 +493,6 @@ bool attack::distortion_affects_defender()
         if (!defender->no_tele(true, false))
             blink_fineff::schedule(defender);
         break;
-    case BANISH:
-        if (defender_visible)
-            obvious_effect = true;
-        defender->banish(attacker, attacker->name(DESC_PLAIN, true),
-                         attacker->get_experience_level());
-        return true;
     case TELE_INSTANT:
     case TELE_DELAYED:
         if (defender_visible)
