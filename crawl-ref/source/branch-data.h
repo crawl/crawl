@@ -1,6 +1,6 @@
 #include "colour.h"
 // By setting MINDEPTH and MAXDEPTH to 100, we'll never see these floors
-const int REMOVED=100
+const int REMOVED = 100;
 // The order of these entries must match the order of the branch-type enum.
 const Branch branches[NUM_BRANCHES] =
 {
