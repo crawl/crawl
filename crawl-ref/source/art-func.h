@@ -287,9 +287,6 @@ static bool _OLGREB_evoke(item_def */*item*/, bool* did_work, bool* unevokable)
         return false;
     }
 
-    if (x_chance_in_y(you.skill(SK_EVOCATIONS, 100) + 100, 2000))
-        your_spells(SPELL_VENOM_BOLT, power, false);
-
     dec_mp(4);
     make_hungry(50, false, true);
     practise_evoking(1);
@@ -298,12 +295,35 @@ static bool _OLGREB_evoke(item_def */*item*/, bool* did_work, bool* unevokable)
     return false;
 }
 
+// Based on melee_attack::staff_damage(), but using only evocations skill.
+static int _calc_olgreb_damage(actor* attacker, actor* defender)
+{
+    int base_dam = 0;
+    if (x_chance_in_y(attacker->skill(SK_EVOCATIONS, 100), 1000))
+        base_dam = random2(attacker->skill(SK_EVOCATIONS, 150) / 80);
+
+    return resist_adjust_damage(defender, BEAM_POISON_ARROW, base_dam);
+}
+
+
 static void _OLGREB_melee_effects(item_def* /*weapon*/, actor* attacker,
-                                  actor* defender, bool /*mondied*/,
+                                  actor* defender, bool mondied,
                                   int /*dam*/)
 {
-    if (defender->alive())
-        defender->poison(attacker, 2);
+    const int bonus_dam = _calc_olgreb_damage(attacker, defender);
+
+    if (!mondied && bonus_dam)
+    {
+        mprf("%s %s %s%s",
+             attacker->name(DESC_THE).c_str(),
+             attacker->conj_verb("envenom").c_str(),
+             defender->name(DESC_THE).c_str(),
+             attack_strength_punctuation(bonus_dam).c_str());
+
+        defender->hurt(attacker, bonus_dam);
+        if (defender->alive())
+            defender->poison(attacker, 2, true);
+    }
 }
 
 ////////////////////////////////////////////////////
