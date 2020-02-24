@@ -230,4 +230,4 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           file: ./coverage.info
           flags: catch2
-          fail_ci_if_error: true
+          fail_ci_if_error: false
