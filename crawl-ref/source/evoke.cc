@@ -634,18 +634,6 @@ static bool _make_zig(item_def &zig)
     return true;
 }
 
-static int _num_evoker_elementals(int surge)
-{
-    int n = 1;
-    const int adjusted_power =
-        player_adjust_evoc_power(you.skill(SK_EVOCATIONS, 10), surge);
-    if (adjusted_power + random2(70) > 110)
-        ++n;
-    if (adjusted_power + random2(70) > 170)
-        ++n;
-    return n;
-}
-
 struct dist_sorter
 {
     coord_def pos;
@@ -893,6 +881,12 @@ void wind_blast(actor* agent, int pow, coord_def target, bool card)
 
 static bool _phial_of_floods()
 {
+    if (you.confused())
+    {
+        canned_msg(MSG_TOO_CONFUSED);
+        return false;
+    }
+
     dist target;
     bolt beam;
 
@@ -914,7 +908,6 @@ static bool _phial_of_floods()
     if (spell_direction(target, beam, &args)
         && player_tracer(ZAP_PRIMAL_WAVE, base_pow, beam))
     {
-
 #if TAG_MAJOR_VERSION == 34
         const int surge = pakellas_surge_devices();
         surge_power(you.spec_evoke() + surge);
@@ -927,7 +920,6 @@ static bool _phial_of_floods()
 
         beam.fire();
 
-        vector<coord_def> elementals;
         // Flood the endpoint
         coord_def center = beam.path_taken.back();
         const int rnd_factor = random2(7);
@@ -944,33 +936,19 @@ static bool _phial_of_floods()
                 && cell_see_cell(center, *di, LOS_NO_TRANS))
             {
                 num--;
-                temp_change_terrain(*di, DNGN_SHALLOW_WATER,
-                                    random_range(dur*2, dur*3) - (di.radius()*20),
+                int time = random_range(dur * 2, dur * 3) - (di.radius() * 20);
+                temp_change_terrain(*di, DNGN_SHALLOW_WATER, time,
                                     TERRAIN_CHANGE_FLOOD);
-                elementals.push_back(*di);
+
+                monster* mons = monster_at(*di);
+                if (mons && !mons->res_water_drowning())
+                {
+                    simple_monster_message(*mons, " is engulfed in water.");
+                    mons->add_ench(mon_enchant(ENCH_WATERLOGGED, 0, &you,
+                                               time));
+                }
             }
         }
-
-        int num_elementals = _num_evoker_elementals(surge);
-
-        bool created = false;
-        num = min(num_elementals,
-                  min((int)elementals.size(), (int)elementals.size() / 5 + 1));
-        beh_type attitude = BEH_FRIENDLY;
-        if (player_will_anger_monster(MONS_WATER_ELEMENTAL))
-            attitude = BEH_HOSTILE;
-        for (int n = 0; n < num; ++n)
-        {
-            mgen_data mg (MONS_WATER_ELEMENTAL, attitude, elementals[n], 0,
-                          MG_FORCE_BEH | MG_FORCE_PLACE);
-            mg.set_summoned(&you, 3, SPELL_NO_SPELL);
-            mg.hd = player_adjust_evoc_power(
-                        6 + you.skill_rdiv(SK_EVOCATIONS, 2, 15), surge);
-            if (create_monster(mg))
-                created = true;
-        }
-        if (created)
-            mpr("The water rises up and takes form.");
 
         return true;
     }

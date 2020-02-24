@@ -627,8 +627,10 @@ weaker than the creature it mirrors.
 phial of floods
 
 An enchanted vessel brimming over with elemental water. Removing the stopper
-unleashes a torrent of water from the phial and sets free the water elementals
-that dwell within it.
+unleashes a torrent of water from the phial, dealing damage to the target and
+flooding the nearby area. Any creatures within the flooded area are also
+engulfed in water, silencing them temporarily. The strength of the torrent and
+the duration of the flooding are increased with Evocations skill.
 %%%%
 plate armour
 

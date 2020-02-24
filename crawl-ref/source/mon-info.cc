@@ -109,7 +109,8 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_STILL_WINDS,     MB_STILL_WINDS },
     { ENCH_SLOWLY_DYING,    MB_SLOWLY_DYING },
     { ENCH_WHIRLWIND_PINNED, MB_PINNED },
-    { ENCH_VILE_CLUTCH, MB_VILE_CLUTCH},
+    { ENCH_VILE_CLUTCH,     MB_VILE_CLUTCH },
+    { ENCH_WATERLOGGED,     MB_WATERLOGGED },
 };
 
 static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
@@ -1545,6 +1546,8 @@ vector<string> monster_info::attributes() const
         v.emplace_back("stilling the winds");
     if (is(MB_VILE_CLUTCH))
         v.emplace_back("constricted by zombie hands");
+    if (is(MB_WATERLOGGED))
+        v.emplace_back("waterlogged");
     return v;
 }
 

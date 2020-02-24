@@ -686,7 +686,8 @@ bool monster::is_silenced() const
 {
     return silenced(pos())
             || has_ench(ENCH_MUTE)
-            || has_ench(ENCH_WATER_HOLD)
+            || (has_ench(ENCH_WATER_HOLD)
+                || has_ench(ENCH_WATERLOGGED))
                && !res_water_drowning();
 }
 
