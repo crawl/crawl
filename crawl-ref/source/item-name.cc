@@ -2470,6 +2470,7 @@ void check_item_knowledge(bool unknown_items)
         for (int i = 0; i < NUM_MISCELLANY; i++)
         {
             if (i == MISC_HORN_OF_GERYON
+                || i == MISC_ZIGGURAT
 #if TAG_MAJOR_VERSION == 34
                 || is_deck_type(i)
                 || i == MISC_BUGGY_EBONY_CASKET

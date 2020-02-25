@@ -5,6 +5,9 @@ ae := autopickup_exceptions
 # Autopickup runes by default.
 ae = <rune of Zot
 
+# Make it harder to miss out on zigfigs.
+ae = <figurine of a ziggurat
+
 ### exclusions ###
 
 # Exclude items useless in general or for your current character (such as
