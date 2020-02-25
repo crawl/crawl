@@ -977,7 +977,7 @@ void update_acrobat_status();
 bool is_effectively_light_armour(const item_def *item);
 bool player_effectively_in_light_armour();
 
-int player_energy();
+bool hungerless_spells();
 
 int player_shield_racial_factor();
 int player_armour_shield_spell_penalty();

@@ -670,7 +670,7 @@ A potion containing the essence of life.
 %%%%
 potion of brilliance
 
-A potion which increases the power of the drinker's spells and decreases their
+A potion which increases the power of the drinker's spells and removes their
 metabolic cost.
 %%%%
 potion of cancellation

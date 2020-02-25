@@ -1809,14 +1809,9 @@ int player_spec_poison()
     return sp;
 }
 
-int player_energy()
+bool hungerless_spells()
 {
-    int pe = 0;
-
-    // Staves
-    pe += you.wearing(EQ_STAFF, STAFF_ENERGY);
-
-    return pe;
+    return you.wearing(EQ_STAFF, STAFF_ENERGY) || you.duration[DUR_BRILLIANCE];
 }
 
 // If temp is set to false, temporary sources of resistance won't be

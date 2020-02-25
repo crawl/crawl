@@ -401,7 +401,7 @@ bool del_spell_from_memory(spell_type spell)
 
 int spell_hunger(spell_type which_spell)
 {
-    if (player_energy())
+    if (hungerless_spells())
         return 0;
 
     const int level = spell_difficulty(which_spell);
