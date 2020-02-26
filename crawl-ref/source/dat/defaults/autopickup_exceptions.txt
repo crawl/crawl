@@ -6,7 +6,7 @@ ae := autopickup_exceptions
 ae = <rune of Zot
 
 # Make it harder to miss out on zigfigs.
-ae = <figurine of a ziggurat
+ae += <figurine of a ziggurat
 
 ### exclusions ###
 
