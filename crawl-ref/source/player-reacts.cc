@@ -902,7 +902,7 @@ static void _update_equipment_attunement_by_health()
     }
 
     string eq_str;
-    switch(eq_list.size())
+    switch (eq_list.size())
     {
     case 0:
         return;
