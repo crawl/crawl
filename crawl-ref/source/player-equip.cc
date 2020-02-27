@@ -15,6 +15,7 @@
 #include "god-item.h"
 #include "god-passive.h"
 #include "hints.h"
+#include "invent.h"
 #include "item-name.h"
 #include "item-prop.h"
 #include "item-status-flag-type.h"
@@ -237,9 +238,8 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld,
                                                   : MSG_MANA_DECREASE);
     }
 
-    // Regen is only an artp on armour; if it's an intrinsic property too, don't
-    // print messages etc. twice
     if (proprt[ARTP_REGENERATION] && !unmeld
+        // If regen is an intrinsic property too, don't double print messages
         && !armour_type_prop(item.sub_type, ARMF_REGENERATION))
     {
         _equip_regeneration_item(item);
@@ -372,6 +372,9 @@ static void _unequip_artefact_effect(item_def &item,
 
     if (proprt[ARTP_SEE_INVISIBLE])
         _mark_unseen_monsters();
+
+    if (proprt[ARTP_REGENERATION])
+        _deactivate_regeneration_item(item, meld);
 
     if (is_unrandom_artefact(item))
     {
@@ -1159,45 +1162,51 @@ static void _remove_amulet_of_harm()
 
 static void _equip_regeneration_item(const item_def &item)
 {
-    string prop_key;
-    string msg = "The ";
+    equipment_type eq_slot = item_equip_slot(item);
     // currently regen is only on the amulet and armour
-    msg += item.base_type == OBJ_JEWELLERY
-        ? (prop_key = "regen_amulet_active", "amulet ")
-        : (prop_key = "regen_armour_active", "armour ");
+    bool plural = eq_slot == EQ_GLOVES || eq_slot == EQ_BOOTS;
+    string item_name = eq_slot == EQ_AMULET ? "amulet"
+                                            : eq_slot == EQ_BODY_ARMOUR
+                                            ? "armour"
+                                            : item_slot_name(eq_slot);
 
-    if (you.get_mutation_level(MUT_NO_REGENERATION) > 0)
-        msg += "feels cold and inert.";
-    else if (you.hp == you.hp_max)
+    if (you.get_mutation_level(MUT_NO_REGENERATION))
     {
-        you.props[prop_key] = 1;
-        msg += "throbs as it attunes itself to your uninjured body.";
+        mprf("The %s feel%s cold and inert.", item_name.c_str(),
+             plural ? "" : "s");
+        return;
     }
-    else
+    if (you.hp == you.hp_max)
     {
-        you.props[prop_key] = 0;
-        msg += "cannot attune itself to your injured body.";
+        mprf("The %s throb%s to your uninjured body.", item_name.c_str(),
+             plural ? " as they attune themselves" : "s as it attunes itself");
+        you.activated.set(eq_slot);
+        return;
     }
-    mpr(msg);
+    mprf("The %s cannot attune %s to your injured body.", item_name.c_str(),
+         plural ? "themselves" : "itself");
+    you.activated.set(eq_slot, false);
+    return;
 }
 
 static void _equip_amulet_of_the_acrobat()
 {
     if (you.hp == you.hp_max)
     {
-        you.props[ACROBAT_AMULET_ACTIVE] = 1;
+        you.activated.set(EQ_AMULET);
         mpr("You feel ready to tumble and roll out of harm's way.");
     }
     else
     {
+        you.activated.set(EQ_AMULET, false);
         mpr("Your injuries prevent the amulet from attuning itself.");
-        you.props[ACROBAT_AMULET_ACTIVE] = 0;
     }
 }
 
 bool acrobat_boost_active()
 {
-    return you.props[ACROBAT_AMULET_ACTIVE].get_int() == 1
+    return you.activated[EQ_AMULET]
+           && you.wearing(EQ_AMULET, AMU_ACROBAT)
            && you.duration[DUR_ACROBAT]
            && (!you.caught())
            && (!you.is_constricted());
@@ -1382,11 +1391,7 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
 static void _deactivate_regeneration_item(const item_def &item, bool meld)
 {
     if (!meld)
-    {
-        string prop_key = item.base_type == OBJ_JEWELLERY ? REGEN_AMULET_ACTIVE
-            : REGEN_ARMOUR_ACTIVE;
-        you.props[prop_key] = 0;
-    }
+        you.activated.set(get_item_slot(item), false);
 }
 
 static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld,
@@ -1411,6 +1416,11 @@ static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld,
 
     case AMU_REGENERATION:
         _deactivate_regeneration_item(item, meld);
+        break;
+
+    case AMU_ACROBAT:
+        if (!meld)
+            you.activated.set(EQ_AMULET, false);
         break;
 
     case RING_SEE_INVISIBLE:
