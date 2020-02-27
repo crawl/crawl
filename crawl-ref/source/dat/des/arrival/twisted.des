@@ -151,8 +151,6 @@ ENDMAP
 NAME:    shiori_arrival_whats_in_store_for_you
 TAGS:    arrival no_monster_gen no_pool_fixup no_trap_gen
 ORIENT:  west
-SHUFFLE: +@/AB ,  AB/CD
-SUBST:   A=+ , B=@ , C=c , D=c
 KPROP:   M = no_tele_into
 NSUBST:  M = 2=E / * = M E:2
 KFEAT:   E = permanent known teleport trap
@@ -197,8 +195,8 @@ xxxxxcc......cncncnc.......nMcc+cc
 xxxxxc{..............cncnc.cnc...ccc
 xxxxxcc..........cncncMcMn.....>.nMc
 xxxxxcccncncncncncMcMcccccncnc...ccc
-xxxxxxccMcMcMcMcMcccccxxxcMcMccAcc
-xxxxxxxcccccccccccxxxxxxxccccccBc
+xxxxxxccMcMcMcMcMcccccxxxcMcMcc+cc
+xxxxxxxcccccccccccxxxxxxxcccccc@c
       xxxxxxxxxxxxx     xxxxxx
 ENDMAP
 
@@ -274,8 +272,8 @@ ORIENT:  float
 SHUFFLE: C{! / B(' / V["
 SUBST:   ([ = x
 SUBST:   C=., !=@
-SHUFFLE: B(' / zzz, V[" / yyy
-SUBST:   z=x, y=x, B=., '=+, V=., "=+
+SHUFFLE: B' / xx, V" / xx
+SUBST:   B=., '=+, V=., "=+
 NSUBST:  . = 1:d / *:.
 ITEM:    stone
 MAP
@@ -285,35 +283,35 @@ xxxxxCCxxxxxxxCCxxx.....
 xxxxCxxxVVVVxxxxCxx.....
 xxxCxxVVxxxxVVxxxCx.....
 xxCxxVxxxBBxxxVxxCxxxxx'
-xxCxVxxxBxx(xxxVxxCxxxBx
+!xCxVxxxBxx(xxxVxxCxxxBx
 xCxxVxxBxxxxbxxVxxCxxxBx
 xCxxVxBxx{cvxxVxxxCxxxBx
 xCxVxxBxCxxx[VxxxCxxxBxx
 xCxVxxBxxCCxxxxCCxxxBxxx
 xCxVxxxBxxxCCCCxxxBBxxxx
-xCxxVxxxBBxxxxxxBBxxxxxx
+xCxxVxxxBBxxxxxxBBxx'xxx
 !xxxxVxxxxBBBBBBxxx.....
 xxxxxxVVVxxxxxxxxV".....
 xxxxxxxxxVVVVVVVVxx.....
-xxxxxxxxxxxxxxxxxxx....@
+xxxxxxxx"xxxxxxxxxx....@
 ENDMAP
 
 ##############################################################################
 NAME:    dpeg_arrival_connections
 TAGS:    arrival no_tele_into
 ORIENT:  float
-SHUFFLE: {1/[2/(3/]4, Aa/Bb/Cc/Dd/Ee
+SHUFFLE: {1F/[2G/(3H/]4I, Aa/Bb/Cc/Dd/Ee
 SUBST:   ([ = .
-SUBST:   A=+, a=...>, BCDEbcde=x
-SUBST:   1=@, 2:2., 3:33., 4:444., 234:x
+SUBST:   A=+, a=...>, BCDEbcde=x, GHI=.
+SUBST:   1=@, F=>, 2:2., 3:33., 4:444., 234:x
 MAP
 22222222xxxxx333
 2[......BeeeD..3
-2.......EbbdE..3
+2.G.....EbbdE..3
 xAxxECxDxxdbB.(3
-xxAxxecxddxaA..3
-x...EcddxDAxxCxx
-x.{.DdcbB......4
+xxAxxecxddxaAH.3
+x..FEcddxDAxxCxx
+x.{.DdcbB.I....4
 x...Bbbcx..]...4
 x...CccxC......4
 x111xxxxx4444444
@@ -324,14 +322,13 @@ ENDMAP
 NAME:    shiori_arrival_maze
 ORIENT:  float
 TAGS:    arrival no_monster_gen
-SHUFFLE: [{(
 NSUBST:  A= 2= + / 2= +x / *= x
 NSUBST:  B= 2= + / 2= +x / *= x
 NSUBST:  C= 2= + / *= +x
 SUBST:   @ = @+
 MAP
 xxx@xxx@xxx@xxx
-x.....B0B.....x
+@.....B0B.....@
 xCx.xAxxxAx.xCx
 @.x.A.....A.x.@
 x.x.x.....x.x.x
@@ -339,7 +336,7 @@ x.xBx..>..xBx.x
 x.x.x..{..x.x.x
 @.x.A.....A.x.@
 xCx.xAxxxAx.xCx
-x.....B0B.....x
+@.....B0B.....@
 xxx@xxx@xxx@xxx
 ENDMAP
 
@@ -356,18 +353,18 @@ SUBVAULT: _ : cave_to_hall_subvault / cave_to_temple_subvault w:5
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxx
 xCCCCCCCCCCCCCCCCCCCCCCCCCxxxxxxxxxxxxxxx
-xC[!.!C...CC.??...C?....................x
-xC..CCC.CC.?C...C.?..C....C.............x
+xC[!..C...CC.??...C?....................x
+xC..CC..CC.?C...C.?..C....C.............x
 xC!C..C..C.C..?..C..?C.?.C____________..x
 xC..CC!C.CC..C?.CC.......?____________..x
 xC.CC...C.C..C..??..C..?C.____________..x
 xC!.C.CCC.?C.?.C..CC...C..____________..x
-xCCC.CCC.C.C..C...?..C....____________..x
+xCC..CCC.C.C..C...?..C....____________..x
 xC{CCC..CC.CC......CC.....____________..@
 xC.C...C.CC.C..?C.........____________..x
 xC!.CCCCCC.C...C..C?.CC...____________..x
 xCCCC.C...C..C...C...?....____________..x
-xC!!C!.CCC.C?....?.C...?..____________..x
+xC!!.!.CCC.C?....?.C...?..____________..x
 xC..C!.C.C...C?...CC?...CC____________..x
 xCC..CC.?C.CC....C....C...C._________...x
 xC(.C..C.CC...C?.....??.................x
@@ -521,6 +518,7 @@ FTILE:   PQ = floor_mud
 COLOUR:  PQ = brown
 SUBST:   P = P n:1
 SUBST:   X : c.
+NSUBST:  > : 1:> / *:.
 KMASK:   EFHLW = no_item_gen
 MAP
           ...
@@ -533,9 +531,9 @@ MAP
  ccHHccccc...cccccLLcc
  cHwHHccccc+cccccLLlLc
  cHwwHnccX...XccnLllLc
-.nwwwHnJc.....cNnLllln.
-.nwWwwn.+..{..+.nllKln.
-.nwwwHnJc.....cNnLllln.
+.nwwwHnJc..>..cNnLllln.
+.nwWwwn.+.>{>.+.nllKln.
+.nwwwHnJc..>..cNnLllln.
  cHwwHnccX...XccnLllLc
  cHwHHccccc+cccccLLlLc
  ccHHcccccG.GcccccLLcc
@@ -780,7 +778,6 @@ MONS:    plant, toadstool
 SUBST:   G : G:20 H:20 T:5 V:5 1:5 2:5 t:5 A:1 B:1 C:1
 SUBST:   c : c:40 x:35 v:15 b:10
 : elseif crawl.coinflip() then
-KFEAT:   3456 : W
 SUBST:   . = W
 SUBST:   ' = W.
 SUBST:   G : 2:15 G:10 H:5 1:5 A:1 B:1 C:1
@@ -806,12 +803,12 @@ MAP
     cc.......cc
    cc.ccccccc.cc
   cc.cc.....cc.cc
-  c.cc.ccccc.cc.c
+  c.cc.cccc..cc.c
   c.c.cc...cc.c.c
  cc.c.c.cc.Gc.c.cc
  cG.c.c.cG.cc.c.Gc
  cc.c.c.cc....c.cc
-  c.c.cc.ccccGc.c
+  c.c.cc..cccGc.c
   c'cc.cc...ccc.c
   cc'cc.cccc...cc
    cc'cc...ccGcc
@@ -882,18 +879,18 @@ SUBST:   ([ = .
 MAP
     XXXXXXXXXXXXXXXXXXXXXXXXXXXX
  XXXXxxxxxxxxxxxxxxxxxxxx"xxxxxx
- Xxxxxxxxxxxxx"xxxxxxxxx"x"xxxxxxx
- Xxxxxx"xxxxx"x"xxxxxxx"Jxx"xxxxxxx
-XXxx[x"x"xxx"Jxx"xxxxx"GHIxx"xxxxxx
-XXxxx"Jxx"x"GHIxx"xxx"xx.xxxx"xxxxx
+ Xxxxxxxxxxxxx"xxxxxxxxx"x"xxxxxxx&
+ Xxxxxx"xxxxx"x"xxxxxxx"Jxx"xxxxx"x
+XXxx[x"x"xxx"Jxx"xxxxx"GHIxx"xxx"xx
+XXxxx"Jxx"x"GHIxx"xxx"xx.xxxx"x"xxx
 XxxxxGHIxx"xx.xxxx"x"xx.x.xxxx"xxx&
 Xxxxxx.xxxxx.x.xxxx"xx.xxx.xxxx"x"x
 Xxx{x.x.xxx.xxx.xxxxx.xxxxx.xxxx"xx
 Xxxx.xxx.x.xxxxx.xxx.xxxxxxx.xxxxx@
 XxxGHIxxx.xx'xxxx.x.xxxxXxxxx.xxx.@
 XxxxJxx'GHI'x'xxxx.xxxxXXXxxxx.x.xx
-Xxxxxx(x'J'xxx'xxG+IxxXX XXxxxx.xxx
-XXxxxxxxx'xxxxx'x'JxxXX   XXxxGHIxx
+Xxxxxx(x'J'xxx'xxG+IxxXX XXxxxx.x.x
+XXxxxxxxx'xxxxx'x'JxxXX   XXxxGHIx@
  XXXxxxxxxxxxxxx'xxxxXX    XxxxJxxx
    XXXXxxxxXXXxxxxxxXX     Xxxxxxxx
       XXXXXX XXXXXXXXX     XXxxxxx
