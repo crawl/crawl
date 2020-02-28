@@ -228,24 +228,6 @@ MAP
    ...........
 ENDMAP
 
-###############################################################
-# Player is usually encouraged to go towards the dangerous door with the
-# bait. The monster is slow, and there's room to escape and close the door.
-NAME:    evilmike_arrival_run_for_it
-TAGS:    arrival no_monster_gen
-ORIENT:  float
-: if crawl.one_chance_in(4) then
-SHUFFLE: d'
-: end
-SUBST:   '=.
-MONS:    worm
-ITEM:    stone
-MAP
-xxxxxxxxxxxxxxxxx
-x%1.+d....{...>'+
-xxxxxxxxxxxxxxxxx
-ENDMAP
-
 ##############################################################
 NAME:    minmay_arrival_checkered_box
 TAGS:    arrival
