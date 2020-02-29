@@ -22,47 +22,52 @@ w:7
 %%%%
 _power_name_
 
-Power
-
-Might
-
-Wondrous Power
-
-Invincibility
-
-Glory
-
-Success
-
-Triumph
-
-Domination
+Big Damage
 
 Dominance
 
-Victory
+Domination
 
-Intimidation
+Glory
 
 Grandeur
 
-Mastery
+Hubris
 
-Superiority
+Intimidation
+
+Invincibility
 
 Magnificence
 
-Hubris
+Mastery
 
-Big Damage
+Might
+
+Power
+
+Success
+
+Superiority
+
+Triumph
+
+Victory
+
+Wondrous Power
+
 %%%%
 _conflict_name_
 
+Brawling
+
 Conflict
 
-Tension
+Contention
 
 Discord
+
+Dissent
 
 Division
 
@@ -70,15 +75,12 @@ Doubt
 
 Internal Strife
 
-Contention
-
-Dissent
+Melee
 
 Resumed Hostilities
 
-Brawling
+Tension
 
-Melee
 %%%%
 _anger_name_
 
@@ -92,17 +94,11 @@ _anger_quality_
 
 Anger
 
-Fury
-
-Righteous Anger
-
-Righteous Fury
-
-Wrath
-
 Brutal Revenge
 
-Vengeance
+Disproportionate Response
+
+Fury
 
 Hatred
 
@@ -110,9 +106,16 @@ Indignation
 
 Outrage
 
+Righteous Anger
+
+Righteous Fury
+
 Scorn
 
-Disproportionate Response
+Vengeance
+
+Wrath
+
 %%%%
 _anger_possessive_
 
@@ -126,62 +129,60 @@ Battle
 
 Crusades
 
-War
-
 Eternal War
 
-the Eternal Warrior
-
-the Onslaught
-
-Skirmishing
-
-the Endless March
+Iconoclasm
 
 Plunder
 
 Ravage
 
-Iconoclasm
-
 Regicide
 
-the Warrior
+Skirmishing
+
+War
 
 the Doomed Warrior
 
+the Endless March
+
+the Eternal Warrior
+
+the Onslaught
+
 the Pyrrhic Victory
 
+the Warrior
+
 #killing
+Blood
+
 Blood-Lust
 
 Callousness
-
-Joyful Slaughter
-
-Wounding
-
-Blood
 
 Diet Blood
 
 Fear
 
+Joyful Slaughter
+
 Massacring
 
+Wounding
+
 # Don't use "Pain", it's easily confused with the brand
-Insufficient Pleasure
 
 Agony
 
-Trauma
-
 Hacking and Slashing
 
-# related to cutting
-Truncation
+Insufficient Pleasure
 
-Severance
+Trauma
+
+# related to cutting
 
 Dullness
 
@@ -189,10 +190,14 @@ Precise Incision
 
 Laceration
 
-#collateral effects
-Mourning
+Severance
 
+Truncation
+
+#collateral effects
 Death's Door
+
+Mourning
 
 the Grave
 %%%%
@@ -200,67 +205,69 @@ the Grave
 death_or_doom
 
 # death
+Bloody Death
+
+Certain Death
+
 Death
 
-Bloody Death
+Exquisite Death
+
+Imminent Death
+
+Instant Death
+
+Pain and Death
 
 Painful Death
 
 Quick Death
 
-Instant Death
-
-Imminent Death
+Slow Death
 
 Sudden Death
 
-Slow Death
-
-Certain Death
-
 Uncertain Death
-
-Exquisite Death
-
-Pain and Death
 
 Untimely Demise
 
 # doom
-Doom
-
-Premature Burial
-
-Peril
-
-Execution
-
 Destruction
 
 Disembowelment
 
+Doom
+
 Evisceration
+
+Execution
 
 Extermination
 
 Extinguishment
 
+Peril
+
+Premature Burial
+
 # pain and misery
-Infinite Pain
+
+Anguish
 
 Dismemberment
-
-Terror
-
-Misery
-
-Woe
 
 Excruciating Pain
 
 Exquisite Torment
 
-Anguish
+Infinite Pain
+
+Misery
+
+Terror
+
+Woe
+
 %%%%
 _strategy_or_justice_
 
@@ -280,157 +287,161 @@ Defence
 
 Defence by Offence
 
-Offence
-
-Reinforcement
-
 Expedience
+
+Guile
+
+Offence
 
 Optimality
 
 Overwhelming Force
 
-Subterfuge
+Reinforcement
 
 Strategic Superiority
 
-Guile
+Subterfuge
+
 %%%%
 _valour_name_
 
-Honour
-
-Integrity
-
-Responsibility
-
-Watchfulness
-
-Duty
-
-Prudence
-
-Valour
-
-Resourcefulness
-
 Action
 
-Purpose
-
-Fortitude
-
-Defiance
-
-Valiance
+Conscience
 
 Courage
 
+Defiance
+
+Duty
+
 Eternal Vigilance
 
+Fortitude
+
 Gallantry
+
+Honour
+
+Indomitability
+
+Integrity
+
+Prudence
+
+Purpose
+
+Resourcefulness
+
+Responsibility
 
 Tenacity
 
 True Grit
 
-Indomitability
+Valiance
 
-Conscience
+Valour
+
+Watchfulness
+
 %%%%
 _justice_name_
 
-Tender Mercy
-
-Cruel Justice
-
-Punishment
-
-Innocence
-
-Guilt
-
-Tortfeasance
-
-Extenuating Circumstances
-
 Absolution
 
-Exoneration
-
-False Accusations
-
-Wrongful Imprisonment
-
-Corporal Punishment
-
-Capital Punishment
-
-Forgiveness
-
-Trial by Ordeal
+Accidental Termination
 
 Blind Justice
 
+Capital Punishment
+
+Corporal Punishment
+
+Cruel Justice
+
+Exoneration
+
+Extenuating Circumstances
+
+False Accusations
+
+Forgiveness
+
+Guilt
+
+Innocence
+
 Judgement
 
-Accidental Termination
+Punishment
+
+Tender Mercy
+
+Tortfeasance
+
+Trial by Ordeal
+
+Wrongful Imprisonment
+
 %%%%
 _diviner_name_
 
 Augurer
 
-Water Diviner
-
-Soothsayer
-
-Seeker
-
-Visionary
+Fortune-Teller
 
 Oracle
 
-Fortune-Teller
+Seeker
+
+Seer
+
+Soothsayer
 
 Sybil
 
-Seer
+Visionary
+
+Water Diviner
+
 %%%%
 _people_name_
 
-King
-
-Queen
-
-Jester
-
-Fool
-
 Ancients
-
-Saviour
-
-Messenger
-
-Genius
 
 Coward
 
-Philosopher
+Enemy
+
+Fool
+
+Genius
 
 Hero
 
-Traitor
+Jester
 
-Enemy
-
-Priest
+King
 
 Madman
 
-Scavenger
+Messenger
 
 Pariah
+
+Philosopher
+
+Priest
+
+Queen
+
+Saviour
+
+Scavenger
+
+Traitor
 
 w:15
 @_diviner_name_@
@@ -438,53 +449,51 @@ w:15
 _weapon_animal_
 
 # insects
-Pill Bug
-
-Butterfly
-
-Wasp
-
-Moth
-
-Mosquito
-
-Gnat
 
 Blowfly
+
+Butterfly
 
 Dragonfly
 
 Firefly
 
+Gnat
+
+Mosquito
+
+Moth
+
+Pill Bug
+
+Wasp
+
 # arachnids
-Spider
 
 Scorpion
 
+Spider
+
 # amphibians and reptiles
+
+Asp
+
 Rattle-Snake
 
 Viper
 
-Asp
-
 # fish
-Shark
-
-Lamprey
+Big Fish
 
 Eel
 
+Lamprey
+
 Salmon
 
-Big Fish
+Shark
 
 # birds
-Penguin
-
-Puffin
-
-Fulmar
 
 Dove
 
@@ -492,22 +501,21 @@ Hawk
 
 Hummingbird
 
+Fulmar
+
 Owl
+
+Penguin
+
+Puffin
+
+Shrike
 
 Stork
 
 Vulture
 
-Shrike
-
 # mammals
-w:5
-Weasel
-
-Goat
-
-Whale
-
 Ass
 
 Badger
@@ -518,12 +526,19 @@ Boar
 
 Fox
 
+Goat
+
 Rat
 
 w:5
 Stoat
 
 Tiger
+
+w:5
+Weasel
+
+Whale
 
 Wolf
 %%%%
@@ -532,8 +547,6 @@ _plant_name_
 
 #plants
 Eggplant
-
-Turnip
 
 Chickpea
 
@@ -547,64 +560,44 @@ Shallot
 
 Tomato
 
+Turnip
+
 # er...aren't whelks gastropods?
 Whelk
 
 #fungus and similar
-Mushroom
 
 w:5
 Magic Mushroom
 
-Toadstool
+Mushroom
 
 Puffball
 
 Slime-mould
+
+Toadstool
 %%%%
-_evil_stuff_
-
-Hell's Wrath
-
-the Undead
+_evil_stuff_Abomination
+Abuse
 
 Ancient Evil
 
-Evil
-
-the Beast
-
-Shrieking Terror
-
-the Lurker
-
-the Crawling Thing
-
-the Thing
-
-Abomination
-
-Mutilation
-
-Deformation
-
-Infection
-
 Corruption
-
-Demonkind
-
-Abuse
-
-the Dead
 
 Defilement
 
-the Evil Eye
+Deformation
 
-the Ghost
+Demonkind
 
-the Living Dead
+Evil
+
+Hell's Wrath
+
+Infection
+
+Mutilation
 
 Nightmares
 
@@ -612,19 +605,38 @@ Perversion
 
 Putrescence
 
+Shrieking Terror
+
+the Beast
+
+the Crawling Thing
+
+the Dead
+
+the Evil Eye
+
+the Ghost
+
+the Living Dead
+
+the Lurker
+
 the Reaper
 
 the Spectre
+
+the Thing
+
+the Undead
 
 the Unliving
 
 the Unspeakable One
 
 the Wraith
+
 %%%%
 _catastrophe_name_
-
-the Inferno
 
 Earthquakes
 
@@ -636,65 +648,48 @@ Floods
 
 Ruination
 
+the Inferno
+
 # Apocalyptic events
-the Apocalypse
-
-Armageddon
-
-World's End
-
-Ragnarok
-
-Fimbulwinter
 
 Annihilation
 
-the End of Times
+Armageddon
+
+Fimbulwinter
+
+Ragnarok
 
 World Downfall
 
+World's End
+
+the Apocalypse
+
+the End of Times
+
 # the Apocalyptic Riders (except Death)
+Famine
+
 Pestilence
 
 Plague
-
-Famine
 
 War
 %%%%
 _chaos_name_
 
-Chaos
-
-Chance
-
-Mayhem
-
-Havoc
-
-Turmoil
-
-Calamity
+Ambiguity
 
 Arbitration
 
-the Extremes
+Calamity
 
-Disorder
-
-Disaster
-
-Imbalance
-
-Disharmony
-
-Ambiguity
+Chance
 
 Change
 
-Extremism
-
-Impermanence
+Chaos
 
 Constant Reorganisation
 
@@ -702,75 +697,97 @@ Contradiction
 
 Disarray
 
+Disaster
+
+Disharmony
+
 Disintegration
+
+Disorder
 
 Dissolution
 
 Distraction
 
+Extremism
+
 Forced Transition
 
-the Fray
+Havoc
+
+Imbalance
+
+Impermanence
+
+Incongruity
+
+Mayhem
 
 Revolt
 
 Tumult
 
+Turmoil
+
 Upheaval
 
-Incongruity
+the Extremes
+
+the Fray
+
 %%%%
 _balance_or_order_
 
-the Middle
-
-the Median
-
-Departure
+Accord
 
 Arrival
 
 Ascent
 
-Descent
-
-Symmetry
+Balance
 
 Bodily Harmony
 
-Moderation
-
-Eternal Harmony
-
-Peace
-
-Equivalence
-
-Balance
-
-Harmony
-
-Fragile Peace
-
 Circularity
 
-Linearity
-
-Law
-
-Accord
-
 Conformity
+
+Departure
+
+Descent
 
 Due Proportion
 
 Equilibrium
 
+Equivalence
+
+Eternal Harmony
+
+Fragile Peace
+
+Harmony
+
+Law
+
+Linearity
+
+Moderation
+
+Peace
+
+Propriety
+
+Symmetry
+
 the Establishment
 
 the Final Decision
 
-Propriety
+the Median
+
+the Middle
+
 %%%%
 _economics_or_politics_
 
@@ -818,109 +835,90 @@ Valuable Assets
 Welfare
 
 # politics
-the Imperium
+Attainder
 
-Greatest Utility
-
-the Revolution
-
-Defenestration
-
-the People
-
-the Little People
-
-Wealth
-
-Poverty
-
-Reapportionment
+Breach
 
 Checks and Balances
 
-the Common Good
-
 Conservatism
+
+Defenestration
+
+Fee Simple
+
+Freehold
+
+Fundamental Breach
+
+Governance
+
+Greatest Utility
+
+Impeachment
+
+Mandamus
+
+Popular Demand
+
+Poverty
+
+Radicalism
+
+Reapportionment
+
+Royalism
+
+Sequestration
+
+Termination
+
+Wealth
+
+the Common Good
 
 the Dark Horse
 
 the Demagogue
 
-Governance
+the Imperium
 
 the Lame Duck
 
 the Lesser Evil
 
-Popular Demand
+the Little People
 
-Radicalism
+the People
 
-Royalism
+the Revolution
 
 the Silent Majority
 
-Impeachment
-
-Freehold
-
-Attainder
-
-Fee Simple
-
-Mandamus
-
-Breach
-
-Fundamental Breach
-
-Termination
-
-Sequestration
 %%%%
 _place_name_
 
-the World
+Beyond
 
-the Sea
-
-the Forest
-
-the Trees
-
-the Volcano
-
-the Equator
-
-the Poles
-
-the Old World
-
-the New World
+Distant Shores
 
 Distant Worlds
 
-the Unseen Realm
-
-the Spheres
+Parts Unknown
 
 Proximity
 
-the Wilderness
-
-the Maze
-
-the Pit
-
-the Eternal Void
-
-Beyond
+Somewhere Else
 
 the Blessed Realm
 
 the Desert
 
-Distant Shores
+the Equator
+
+the Eternal Void
+
+the Forest
 
 the Hidden Vale
 
@@ -930,55 +928,70 @@ the Known World
 
 the Land of Plenty
 
+the Maze
+
+the New World
+
+the Old World
+
 the Other Side
 
-Parts Unknown
+the Pit
 
-Somewhere Else
+the Poles
+
+the Sea
 
 the Shore
 
+the Spheres
+
+the Trees
+
 the Tundras
+
+the Unseen Realm
 
 the Valley
 
 the Valley of Death
 
+the Volcano
+
 the Wasteland
+
+the Wilderness
+
+the World
+
 %%%%
 _discomfort_weapon_
-
-Unpleasantness
-
-Discomfort
-
-Disgust
-
-Frustration
-
-Chagrin
-
-Dismay
-
-Desperation
-
-Shame
-
-Embarrassment
 
 Annoyance
 
 Anxiety
 
-Urgency
-
 Awkwardness
+
+Chagrin
+
+Desperation
+
+Discomfort
+
+Disgust
+
+Dismay
 
 Dissatisfaction
 
-Foul Odors
+Embarrassment
 
 Flawed Execution
+
+Foul Odors
+
+Frustration
 
 Gloom
 
@@ -988,35 +1001,42 @@ Irritation
 
 Malaise
 
+Shame
+
 Stickiness
 
 Uncomfortable Rashes
+
+Unpleasantness
+
+Urgency
+
 %%%%
 _mental_illness_weapon_
 
-Psychosis
-
-Neurosis
-
-Fixation
-
-Megalomania
+Compulsion
 
 Egomania
 
-Obsession
-
-Compulsion
+Exhibitionism
 
 Fatigue
 
-Exhibitionism
+Fixation
 
 Insomnia
+
+Megalomania
+
+Neurosis
+
+Obsession
 
 Oenomania
 
 Perfectionism
+
+Psychosis
 
 Pyromania
 
@@ -1032,61 +1052,21 @@ _philosophy_or_science_
 %%%%
 _philosophy_name_
 
-Monotheism
-
-Henotheism
-
-Polytheism
-
-Atheism
-
-Autotheism
-
-Pantheism
-
-Panentheism
-
-Agnosticism
-
-Existentialism
-
-Relativism
-
 Absolutism
 
 Abstinence
 
-Hedonism
-
-Orthodoxy
-
-Heresy
-
-Free Expression
-
-the Ego
-
-Optimism
-
-Pessimism
-
-Serendipity
-
-Limitation
-
-Levity
-
-Nihilism
-
-Pragmatism
-
-Idealism
-
 Activism
+
+Agnosticism
 
 Altruism
 
 Anarchy
+
+Atheism
+
+Autotheism
 
 Dogma
 
@@ -1096,65 +1076,78 @@ Elitism
 
 Ethics
 
+Existentialism
+
 Fallacy
 
 Fanaticism
 
+Free Expression
+
 Free Will
+
+Hedonism
+
+Henotheism
+
+Heresy
+
+Idealism
+
+Levity
 
 Liberalism
 
+Limitation
+
+Monotheism
+
 Morality
-
-Mysticism
-
-Rationality
 
 Mutualism
 
+Mysticism
+
+Nihilism
+
+Optimism
+
+Orthodoxy
+
+Panentheism
+
+Pantheism
+
+Pessimism
+
+Polytheism
+
+Pragmatism
+
+Rationality
+
+Relativism
+
+Serendipity
+
 Syndicalism
+
+the Ego
+
 %%%%
 _science_name_
 
-Reason
-
-Unreason
-
-Calculation
-
-Instinct
-
-Intuition
-
-Circular Logic
-
-Context
+Analysis
 
 Articulation
 
-the Mind
+Calculation
 
-the Nexus
-
-the Beginning
-
-the End
-
-Analysis
-
-Infinity
-
-Quantum Leap
-
-Gravity
-
-Rotation
-
-the Big Bang
-
-the Boiling Point
+Circular Logic
 
 Classification
+
+Context
 
 Evolution
 
@@ -1162,34 +1155,53 @@ Experimentation
 
 Focus
 
+Gravity
+
 Inference
+
+Infinity
 
 Inquiry
 
-Objectivity
+Instinct
 
-Subjectivity
+Intuition
+
+Objectivity
 
 Patterns
 
+Quantum Leap
+
+Reason
+
+Rotation
+
+Subjectivity
+
 Theory
+
+Unreason
+
+the Beginning
+
+the Big Bang
+
+the Boiling Point
+
+the End
+
+the Mind
+
+the Nexus
+
 %%%%
 _item_name_
 
 # items
-Orb
-
-Egg
-
-Globe
-
-Candle
-
 Candelabrum
 
-Key
-
-Ring
+Candle
 
 Chain
 
@@ -1197,15 +1209,25 @@ Coin
 
 Cup
 
+Egg
+
 Feather
 
 Girdle
 
+Globe
+
 Horn
+
+Key
+
+Orb
 
 Pillar
 
 Purse
+
+Ring
 
 Scroll
 
@@ -1224,11 +1246,7 @@ Wheel
 Yoke
 
 # body parts
-Heart
-
 Brain
-
-Tooth
 
 Foot
 
@@ -1236,52 +1254,53 @@ Hand
 
 Head
 
+Heart
+
+Kidney
+
 Mouth
 
 Throat
 
-Kidney
+Tooth
+
 %%%%
 _magic_name_
 
-the Magi
-
-the Warrior-Mage
-
 the Hierophant
 
+the Magi
+
 the Sage
+
+the Warrior-Mage
 %%%%
 # substances
 _substance_name_
 
-Bread
-
-Sulphur
-
-Crystal
-
-Bloodstone
-
-Oozing Pus
-
 Ash
-
-Slime
 
 Bile
 
+Bloodstone
+
 Bodily Humours
+
+Bread
+
+Cheese
 
 Cobwebs
 
-Cheese
+Crystal
 
 Dried Tears
 
 Dung
 
 Ointment
+
+Oozing Pus
 
 Paper
 
@@ -1293,125 +1312,131 @@ Saltpetre
 
 Sharkskin
 
+Slime
+
+Sulphur
+
 Terra Cotta
 
 # these don't really fit
-Mana
+Dust
 
-Yeast
+Mana
 
 Spores
 
-Dust
+Yeast
+
 %%%%
 # non-groupables
 other_weapon_name
 
-the Omega Point
+Broken Luck
 
-Crawling
+Butchery
+
+Checkmate
 
 Conversion
 
-Prescription
-
-the Open Hand
-
-Spontaneous Combustion
-
-Res Nullius
-
-Terra Nullius
+Crawling
 
 Desertification
 
-the Spinneret
+Doors
+
+Entrepreneurial Spirit
+
+False Hope
+
+Gin and Tonic
 
 Grontol
 
-the Two Names
+Hard Scrabble
+
+Interdependent Arising
+
+Irrepressible Laughter
 
 No Interval
 
-Interdependent Arising
+Prescription
+
+Red Wine
+
+Res Nullius
+
+Spontaneous Combustion
+
+Terra Nullius
+
+Traps
+
+Undoing
+
+Vodka
 
 the Blind Eye
 
 the Briny Deep
 
-Broken Luck
-
-Entrepreneurial Spirit
-
-the Vendetta
-
 the Empty Page
 
 the Final Chapter
 
-Hard Scrabble
+the Omega Point
 
-Red Wine
-
-Vodka
-
-Gin and Tonic
-
-Undoing
-
-the Unkillable
-
-Checkmate
-
-Traps
-
-Doors
-
-Butchery
-
-the Real Monster
-
-False Hope
+the Open Hand
 
 the Pharaoh's Fist
 
-Irrepressible Laughter
+the Real Monster
+
+the Spinneret
+
+the Two Names
+
+the Unkillable
+
+the Vendetta
+
 %%%%
 # single word monster names, to allow for combinations like <Monster>slayer
 short_monster_name_
-
-Dragon
-
-Hydra
-
-Ogre
-
-Spider
-
-Newt
-
-Giant
-
-Beetle
-
-Jelly
-
-w:1
-Testudine
-
-w:1
-Lacertilian
 
 w:1
 Acarine
 
 Beast
 
+Beetle
+
 Demon
+
+Dragon
+
+Giant
 
 Goblin
 
+Hydra
+
 Imp
+
+Jelly
+
+w:1
+Lacertilian
+
+Newt
+
+Ogre
+
+Spider
+
+w:1
+Testudine
 %%%%
 _monster_name_
 
@@ -1436,21 +1461,23 @@ killer_name
 
 's Bane
 
+'s Curse
+
 's Death
 
 's Doom
 
 's Foe
 
-'s Regret
-
-'s Curse
-
 's Peril
+
+'s Regret
 %%%%
 _long_killer_name_
 
 's Death Toll
+
+'s Demise
 
 's Funeral
 
@@ -1458,148 +1485,146 @@ _long_killer_name_
 
 's Undoing
 
-'s Demise
-
 w:1
 's Looming Annihilation
 %%%%
 _real_weapon_name_
 
+Arbiter
+
+Arcanum
+
+Banisher
+
+Concordance
+
+Conservator
+
+Death Rattle
+
+Dragon's Tongue
+
+Earthworm
+
+Embalmer
+
+Eviscerator
+
+Grim
+
 Grim Tooth
 
-w:5
-Widowmaker
+Hell-Harrower
+
+Hellblazer
+
+Leviticus
+
+Lifebane
+
+Murmur
+
+Pendulum
+
+Sarcophage
+
+Tormentor
+
+Transmigrator
+
+Trog's @_anger_quality_@
+
+Ultimatum
+
+Undertaker
 
 w:5
 Widowermaker
 
-Lifebane
-
-Conservator
-
-Banisher
-
-Tormentor
-
-Pendulum
-
-Murmur
-
-Sarcophage
-
-Concordance
-
-Dragon's Tongue
-
-Arbiter
-
-Death Rattle
-
-Arcanum
-
-Transmigrator
-
-Ultimatum
-
-Earthworm
+w:5
+Widowmaker
 
 Worm
 
 Worm's Wrath
-
-Leviticus
-
-Grim
-
-Eviscerator
-
-Undertaker
-
-Embalmer
-
-Trog's @_anger_quality_@
-
-Hellblazer
-
-Hell-Harrower
 
 # Sigmund's sword
 Gram
 %%%%
 _joke_weapon_name_
 
-Secret Weapon
-
-With Two Names
-
-Thing
-
-Mud Pie of Death
-
-Xom's @_xom_esteem_@
-
-String
-
-Stringbean
-
-Blob
-
-Globulus
-
-Hulk
-
-Raisin
-
-Starlight
-
-Giant's Toothpick
+Aubergine
 
 Backscratcher
 
+Bingo
+
+Blob
+
 Brush
 
-Grom
-
-Grum
-
-Rummage
-
-Omelette
-
-Egg
-
-Aubergine
-
-Z
-
-X
-
-Q
-
-Ox
-
-Tattletale
-
-Fish
-
 Bung
-
-Bingo
 
 Cookie Cutter
 
 ETAOIN SHRDLU
 
+Egg
+
+Fish
+
+Giant's Toothpick
+
+Globulus
+
+Grom
+
+Grum
+
+Hulk
+
 Lorem Ipsum
+
+Mud Pie of Death
 
 No More Talking
 
-# These three are from old Crawl code.
-Plojy
+Omelette
 
+Ox
+
+Q
+
+Raisin
+
+Rummage
+
+Secret Weapon
+
+Starlight
+
+String
+
+Stringbean
+
+Tattletale
+
+Thing
+
+With Two Names
+
+X
+
+Xom's @_xom_esteem_@
+
+Z
+
+# These three are from old Crawl code.
 Glorpo
 
 Loopy
+
+Plojy
 %%%%
 _plain_weapon_name_
 
