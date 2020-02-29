@@ -476,13 +476,13 @@ static const ability_def Ability_List[] =
 
     // Nemelex
     { ABIL_NEMELEX_DRAW_DESTRUCTION, "Draw Destruction",
-      0, 0, 0, 0, {}, abflag::card },
+      0, 0, 0, 0, {fail_basis::invo}, abflag::card },
     { ABIL_NEMELEX_DRAW_ESCAPE, "Draw Escape",
-      0, 0, 0, 0, {}, abflag::card },
+      0, 0, 0, 0, {fail_basis::invo}, abflag::card },
     { ABIL_NEMELEX_DRAW_SUMMONING, "Draw Summoning",
-      0, 0, 0, 0, {}, abflag::card },
+      0, 0, 0, 0, {fail_basis::invo}, abflag::card },
     { ABIL_NEMELEX_DRAW_STACK, "Draw Stack",
-      0, 0, 0, 0, {}, abflag::card },
+      0, 0, 0, 0, {fail_basis::invo}, abflag::card },
     { ABIL_NEMELEX_TRIPLE_DRAW, "Triple Draw",
       2, 0, 0, 6, {fail_basis::invo, 60, 5, 20}, abflag::none },
     { ABIL_NEMELEX_DEAL_FOUR, "Deal Four",
@@ -3842,6 +3842,14 @@ vector<ability_type> get_god_abilities(bool ignore_silence, bool ignore_piety,
             abilities.push_back(static_cast<ability_type>(anc_type));
         }
     }
+    if (you.transfer_skill_points > 0)
+        abilities.push_back(ABIL_ASHENZARI_END_TRANSFER);
+    if (silenced(you.pos()) && you_worship(GOD_WU_JIAN) && piety_rank() >= 2)
+        abilities.push_back(ABIL_WU_JIAN_WALLJUMP);
+
+    if (!ignore_silence && silenced(you.pos()))
+        return abilities;
+    // Remaining abilities are unusable if silenced.
     if (you_worship(GOD_NEMELEX_XOBEH))
     {
         for (int deck = ABIL_NEMELEX_FIRST_DECK;
@@ -3853,14 +3861,7 @@ vector<ability_type> get_god_abilities(bool ignore_silence, bool ignore_piety,
         if (!you.props[NEMELEX_STACK_KEY].get_vector().empty())
             abilities.push_back(ABIL_NEMELEX_DRAW_STACK);
     }
-    if (you.transfer_skill_points > 0)
-        abilities.push_back(ABIL_ASHENZARI_END_TRANSFER);
-    if (silenced(you.pos()) && you_worship(GOD_WU_JIAN) && piety_rank() >= 2)
-        abilities.push_back(ABIL_WU_JIAN_WALLJUMP);
 
-    if (!ignore_silence && silenced(you.pos()))
-        return abilities;
-    // Remaining abilities are unusable if silenced.
     for (const auto& power : get_god_powers(you.religion))
     {
         if (god_power_usable(power, ignore_piety, ignore_penance))
