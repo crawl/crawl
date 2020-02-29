@@ -66,9 +66,6 @@ public:
 
     bool isMe() const;
 
-    // modify target as if the player is confused.
-    void confusion_fuzz(int range = 6);
-
     bool isValid;       // valid target chosen?
     bool isTarget;      // target (true), or direction (false)?
     bool isEndpoint;    // Does the player want the attack to stop at target?

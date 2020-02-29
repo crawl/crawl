@@ -1507,6 +1507,12 @@ static coord_def _get_tremorstone_target(coord_def center)
  */
 static spret _tremorstone()
 {
+    if (you.confused())
+    {
+        canned_msg(MSG_TOO_CONFUSED);
+        return spret::abort;
+    }
+
     dist target;
     bolt beam;
 

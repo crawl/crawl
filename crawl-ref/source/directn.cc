@@ -181,15 +181,6 @@ bool dist::isMe() const
                || (target.origin() && delta.origin()));
 }
 
-void dist::confusion_fuzz(int range)
-{
-    target   = you.pos();
-    target.x += random_range(-range, range);
-    target.y += random_range(-range, range);
-
-    choseRay = false;
-}
-
 bool direction_chooser::choose_compass()
 {
     // Reinitialize moves.
