@@ -1020,14 +1020,19 @@ static bool _lamp_of_fire()
     bolt base_beam;
     dist target;
     direction_chooser_args args;
+
+    if (you.confused())
+    {
+        canned_msg(MSG_TOO_CONFUSED);
+        return false;
+    }
+
     args.restricts = DIR_TARGET;
     args.mode = TARG_HOSTILE;
     args.top_prompt = "Aim the lamp in which direction?";
     args.self = confirm_prompt_type::cancel;
     if (spell_direction(target, base_beam, &args))
     {
-        if (you.confused())
-            target.confusion_fuzz();
 
 #if TAG_MAJOR_VERSION == 34
         const int surge = pakellas_surge_devices();
@@ -1319,6 +1324,12 @@ static bool _phial_of_floods()
     dist target;
     bolt beam;
 
+    if (you.confused())
+    {
+        canned_msg(MSG_TOO_CONFUSED);
+        return false;
+    }
+
     const int base_pow = 10 + you.skill(SK_EVOCATIONS, 4); // placeholder?
     zappy(ZAP_PRIMAL_WAVE, base_pow, false, beam);
     beam.range = LOS_RADIUS;
@@ -1327,14 +1338,10 @@ static bool _phial_of_floods()
     direction_chooser_args args;
     args.mode = TARG_HOSTILE;
     args.top_prompt = "Aim the phial where?";
+
     if (spell_direction(target, beam, &args)
         && player_tracer(ZAP_PRIMAL_WAVE, base_pow, beam))
     {
-        if (you.confused())
-        {
-            target.confusion_fuzz();
-            beam.set_target(target);
-        }
 
 #if TAG_MAJOR_VERSION == 34
         const int surge = pakellas_surge_devices();
