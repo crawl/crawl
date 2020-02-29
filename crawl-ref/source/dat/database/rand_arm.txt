@@ -18,17 +18,17 @@ _armour_animal_
 Amoeba
 
 # insects
+Ant
+
 Butterfly
 
 Cicada
 
+Cockroach
+
 Cricket
 
 Ladybird
-
-Ant
-
-Cockroach
 
 Locust
 
@@ -39,36 +39,32 @@ Mantidfly
 Tick
 
 # invertebrates
-Slug
-
-Snail
-
-Gastropod
-
-Trilobite
-
 Centipede
 
 Cuttlefish
 
+Gastropod
+
+Slug
+
+Snail
+
+Trilobite
+
 Worm
 
 # arachnids and clams
-Tarantula
+Barnacle
 
 Clam
-
-Barnacle
 
 Lobster
 
 Quahog
 
+Tarantula
+
 # amphibians and reptiles
-Tortoise
-
-Turtle
-
 Frog
 
 Komodo Dragon
@@ -78,6 +74,10 @@ Lizard
 Salamander
 
 Serpent
+
+Tortoise
+
+Turtle
 
 # fish
 Barracuda
@@ -101,41 +101,29 @@ Tuna
 # birds
 Albatross
 
-Turtledove
-
-Nightingale
-
-Meadowlark
-
 Eagle
 
 Falcon
 
 Heron
 
+Meadowlark
+
+Nightingale
+
 Raven
-
-Sparrow
-
-Swan
 
 Robin
 
 Shrike
 
+Sparrow
+
+Swan
+
+Turtledove
+
 # mammals
-Hare
-
-Kangaroo
-
-Elephant
-
-Zebra
-
-Hippo
-
-Monkey
-
 Bull
 
 Camelopard
@@ -146,20 +134,32 @@ Dolphin
 
 Echidna
 
+Elephant
+
+Hare
+
 Hart
+
+Hippo
+
+Kangaroo
 
 Lion
 
-Stallion
-
-Stag
+Monkey
 
 Okapi
 
-# not strictly an animal... :)
-Monkey's Uncle
+Stag
 
+Stallion
+
+Zebra
+
+# not strictly an animal... :)
 Circus Animal
+
+Monkey's Uncle
 
 #classical mythical animals
 Cockatrice
@@ -171,50 +171,49 @@ Griffon
 Kraken
 
 # modern mythical animals
+Chupacabra
+
 Dropbear
 
 Jackalope
 
 Wild Haggis
 
-Chupacabra
-
 Yeti
 
 %%%%
 _flower_name_
-
-Lilacs
-
 Daffodils
-
-the Rose
-
-the Garden
 
 Daisies
 
-the Thistle
+Lilacs
 
 Tulips
+
+the Garden
 
 the Lily
 
 the Lotus Blossom
+
+the Rose
+
+the Thistle
+
 %%%%
 # non-Crawl critters
 _critter_name_
+Alphagorgon
 
 Slorg
 
-Alphagorgon
-
 # from the crawl.akrasiac.org patch.
-Hot Ocelot
-
 Eight Boll Weevils
 
 Grue
+
+Hot Ocelot
 
 Jabberwock
 
@@ -226,138 +225,137 @@ Wumpus
 _discomfort_and_inaction_
 
 # discomfort
-Minor Irritation
+Bad Feelings
 
 Bitterness
-
-Negation
-
-Failure
-
-Servitude
-
-Submission
-
-Insecurity
-
-Vexation
 
 Disappointment
 
 Entitlement
 
-Bad Feelings
+Failure
+
+Insecurity
+
+Minor Irritation
+
+Negation
+
+Servitude
+
+Submission
+
+Vexation
 
 # inaction
-Lifelessness
+Apathy
 
 Boredom
 
 Ennui
 
-Restlessness
-
-Omission
-
-Negligence
-
 Inaction
 
-Oblivion
+Lethargy
 
-the Doldrums
+Lifelessness
 
 Listlessness
 
-Apathy
+Negligence
 
-Lethargy
+Oblivion
+
+Omission
+
+Restlessness
+
+the Doldrums
+
 %%%%
 _mental_illness_armour_
-
-Paranoia
-
-Claustrophobia
-
 Agoraphobia
-
-Dyspraxia
-
-Mental Paralysis
 
 Catatonia
 
+Claustrophobia
+
 Depression
+
+Dyspraxia
 
 Hysteria
 
 Kleptomania
 
-Melancholy
-
 Masochism
 
+Melancholy
+
+Mental Paralysis
+
 Narcissism
+
+Paranoia
+
 %%%%
 _good_or_divine_
 
 # good things
-the Good
+Amelioration
 
-the Leaf
+Awe
 
-Leaves
-
-Music
+Beauty
 
 Birdsong
 
 Brilliance
 
-Satisfaction
-
-Fun
-
-Joy
-
-Happiness
-
-Wonder
-
-Surprise
-
-Curiosity
+Contentment
 
 Creativity
 
-Beauty
-
-Life
-
-Liberty
+Curiosity
 
 Freedom
 
-Amelioration
+Fun
 
-Awe
+Happiness
 
-Contentment
-
-Mirth
-
-Tender Moments
-
-Lucidity
+Joy
 
 Knowledge
 
+Leaves
+
+Liberty
+
+Life
+
+Lucidity
+
+Mirth
+
+Music
+
 New Discoveries
+
+Satisfaction
+
+Surprise
+
+Tender Moments
+
+Wonder
+
+the Good
+
+the Leaf
 
 # divine events
 Divine Compulsion
-
-the Invisible Hand
 
 Divine Intervention
 
@@ -367,460 +365,462 @@ Miracles
 
 Salvation
 
+the Invisible Hand
+
 the Will of the Gods
+
 %%%%
 # in contrast to "_wacky_armour_name_" these do have some
 # connection to armour and protection
 _armour_name_shielding_
-
-Shielding
-
-Impermeability
-
-Defence
+Complete Protection
 
 Death's Door
 
-the Gate
-
-the Saviour
-
-the Untouchables
-
-the Armoured One
-
-the Unbroken
+Defence
 
 Exclusion
 
-Repulsion
+Fortification
+
+Impermeability
 
 Inviolability
 
 Refuge
 
+Repulsion
+
+Shielding
+
+the Armoured One
+
 the Bulwark
+
+the Gate
+
+the Saviour
+
+the Unbroken
+
+the Untouchables
 
 the Ward
 
-Fortification
-
-Complete Protection
 %%%%
 # other armour properties (beside protection)
 _armour_property_name_
-
-Supple Strength
-
 Death Resistance
-
-Grace
-
-Weightlessness
-
-Shadows and Fog
 
 Disguise
 
+Fashionability
+
+Grace
+
+Gravitas
+
+Impressiveness
+
 Least Resistance
+
+Polish
 
 Protective Custody
 
 Resilience
 
-Fashionability
-
-Impressiveness
-
-Gravitas
-
 Resonance
 
-Polish
+Shadows and Fog
+
+Supple Strength
+
+Weightlessness
+
 %%%%
 _wacky_armour_name_
-
-the Onion
-
-Vlad
-
-the Eternal Fruit
-
-Plasticity
-
-Baldness
-
-Terror
-
-Good Intentions
-
 Absence
-
-the Arcane
 
 Anaesthesia
 
-the Armadillo
-
-Weirdness
-
-Pathos
-
-Loss
-
-Hedging
-
-Indemnity
-
-Untold Secrets
-
-the Earth
-
-Limited Liability
-
-Incorporation
-
-Mezcal
-
-Hadjma
-
-Hairiness
-
-Space
-
-the Vacuum
+Baldness
 
 Compression
 
 Decompression
 
-the Loofah
-
-Love and Death
-
-Indecent Exposure
-
-the Road Less Travelled
-
-the Blind Marksman
-
-Too Many Cooks
-
-Thrice Damned Blessings
+Dramatic Exits
 
 Duck's Teeth
 
 Forking Paths
 
-the Pink Corner
+Good Intentions
+
+Hadjma
+
+Hairiness
+
+Hedging
+
+Incorporation
+
+Indecent Exposure
+
+Indemnity
+
+Limited Liability
+
+Loss
+
+Love and Death
+
+Mezcal
+
+Pathos
 
 Philately
 
-Precision Catastrophes
+Plasticity
 
 Poor Excuses
 
-Dramatic Exits
+Precision Catastrophes
+
+Space
+
+Terror
+
+Thrice Damned Blessings
+
+Too Many Cooks
+
+Untold Secrets
+
+Vlad
+
+Weirdness
+
+the Arcane
+
+the Armadillo
+
+the Blind Marksman
+
+the Earth
+
+the Eternal Fruit
+
+the Loofah
+
+the Onion
+
+the Pink Corner
+
+the Road Less Travelled
 
 the True Pharaoh
 
 the Unemployed Unperson
 
+the Vacuum
+
 %%%%
 # Lemuel's suggestions
 _celestial_bodies_
-
-Sun
-
-Moon
-
-Stars
-
-Planets
-
-Pleiades
-
-Morning Star
-
-Evening Star
+w:5
+Blue Moon
 
 Comet
 
 Constellations
 
-w:5
-Midnight Sun
-
-w:5
-Blue Moon
+Evening Star
 
 w:5
 Harvest Moon
+
+w:5
+Midnight Sun
+
+Moon
+
+Morning Star
+
+Planets
+
+Pleiades
+
+Stars
+
+Sun
 
 # astrological
 Black Moon
 %%%%
 _instrument_name_
-
-the Fiddle
-
-the Fife
+Chimes
 
 Pan-Flutes
 
 Trumpets
 
-the Kettle-Drum
-
 the Accordion
 
 the Bagpipe
 
-the Lute
-
 the Bells
 
-Chimes
+the Fiddle
+
+the Fife
 
 the Flute
 
-the Harp
-
 the Gusle
 
+the Harp
+
+the Kettle-Drum
+
+the Lute
+
 the Trombone
+
 %%%%
 _evil_being_
-
-Tempters
-
-the Tormentor
-
-Vampiric Thralls
-
-the Lich-sworn
-
-the Devil
-
 Demons
-
-Lesser Demons
 
 Greater Demons
 
-the Iron Devil
+Lesser Demons
+
+Tempters
+
+Vampiric Thralls
+
+w:5
+the Archfiend
+
+the Demon Prince
+
+the Devil
 
 the Devil's Advocate
 
 the Devil's Team
 
-the Demon Prince
-
 the Evil One
-
-the Furies
-
-the Prince of Darkness
 
 the Fiend
 
-w:5
-the Archfiend
-
-the Little Devil
+the Furies
 
 the Imp
 
+the Iron Devil
+
+the Lich-sworn
+
+the Little Devil
+
+the Prince of Darkness
+
+the Tormentor
+
 the Villain
+
 %%%%
 _weather_name_
-
-the First Snow
+Blue Skies
 
 Boiling Hail
 
+Chill Winds
+
+Cloud Cover
+
 Perpetual Drought
-
-the Thunderstorm
-
-the Hurricane
-
-Blue Skies
 
 Pleasant Breezes
 
-the Blizzard
-
-Chill Winds
-
 Spring Thaw
 
-Cloud Cover
+the Blizzard
+
+the First Snow
+
+the Hurricane
+
+the Thunderstorm
+
 %%%%
 _profession_name_
-
-Guilds
-
-Guild-Master
-
 Apprentice
-
-Blacksmith
-
-Carpenter
-
-Wheelwright
-
-Cooper
-
-Fisher
-
-Hunter
-
-Ditch-Digger
-
-Guardian
-
-Beekeeper
-
-Gardener
-
-Soldier
-
-Farrier
-
-Engineer
 
 Barber Surgeon
 
-Journeyman
-
-Scribe
-
 Bard
 
-Undertaker
+Beekeeper
 
 Beggar
 
-Merchant
-
-Sailor
-
-Gravedigger
-
-Pirate
+Blacksmith
 
 Buccaneer
 
-Moneychanger
+Carpenter
 
-Thinker
+Cooper
+
+Ditch-Digger
+
+Engineer
+
+Farrier
+
+Fisher
+
+Gardener
+
+Gravedigger
+
+Guardian
+
+Guild-Master
+
+Guilds
+
+Hunter
+
+Journeyman
 
 Learner
 
-Teacher
+Merchant
+
+Moneychanger
 
 Monk
+
+Pirate
+
+Sailor
+
+Scribe
+
+Soldier
+
+Teacher
+
+Thinker
+
+Undertaker
+
+Wheelwright
 
 %%%%
 # something for Xom
 _game_name_
 
 # general games
+Dice, Bag, and Bottle
+
 Fun and Games
-
-the Great Game
-
-the Game Afoot
 
 Parlour Games
 
+the Game Afoot
+
 the Game of Kings
 
-Dice, Bag, and Bottle
+the Great Game
 
 # children's games
-Peek-a-Boo
+Follow the Leader
 
 Hide-and-Seek
 
-Leapfrog
-
 Hopscotch
 
-Follow the Leader
-
-the King of the Hill
+Leapfrog
 
 Mumblety Peg
 
-# board games etc.
-the Game of Life
+Peek-a-Boo
 
+the King of the Hill
+
+# board games etc.
 Card Tricks
 
 Hangman
 
-the Dice
-
 Jigsaw
-
-Whack-A-Mole
-
-Snakes and Ladders
 
 Marbles
 
 Noughts and Crosses
+
+Snakes and Ladders
+
+Whack-A-Mole
+
+the Dice
+
+the Game of Life
+
 %%%%
 _politics_name_armour_
+Coronation
 
-the King
-
-the Queen
-
-Royalty
+Democracy
 
 Nobility
 
-the Republic
+Royalty
 
-the Empire
-
-Coronation
-
-the Commoners
-
-the Peasants
-
-the Townfolk
-
-the City
-
-the Country
-
-the Suburbs
-
-the Mutiny
-
-the Crown
-
-the Duke
-
-the Duchess
-
-the Doge
+Sovereignty
 
 the Ban
 
+the Burgomaster
+
+the Cast Vote
+
 the Castellan
+
+the City
+
+the Commoners
+
+the Country
+
+the Crown
+
+the Doge
+
+the Duchess
+
+the Duke
+
+the Empire
+
+the Failed Coup
+
+the Greedy
+
+the King
 
 the Komtur
 
-the Voivode
+the Mutiny
 
-the Rabble
+the Oligarchy
+
+the Peasants
 
 the Prince
 
@@ -828,109 +828,108 @@ the Princeling
 
 the Princess
 
-the Oligarchy
+the Queen
 
-the Cast Vote
+the Rabble
 
-the Burgomaster
+the Republic
 
-the Failed Coup
+the Suburbs
 
-Sovereignty
+the Townfolk
 
-the Greedy
-
-Democracy
+the Voivode
 
 %%%%
 _other_armour_name_
 
 #unpleasantness
+Filth
+
 w:5
 Grot
 
 w:5
 Grottiness
 
-Filth
-
 Slovenliness
 
 # magic
-Magic
-
-Sorcery
+Bedevilment
 
 Broken Taboos
 
-Bedevilment
+Gestures
+
+Magic
 
 Muttered Phrases
 
-the Arcane
+Sorcery
 
 Words of Power
 
-Gestures
+the Arcane
 
 # other
 Crawling
 
-the Orb
+Disaster
 
-the Orb Guardian
+Dogmatism
 
-the Storm King
+Feasting
+
+Going Fast
+
+Happy Babbling
+
+Hedge Wizardry
+
+Imperfection
+
+Inevitability
+
+Insatiable Hunger
+
+Insurance
+
+Misanthropy
+
+Perfidy
+
+Time Monsters
+
+Trial and Error
+
+Unambiguity
+
+Undesirable Species
+
+Wasted Space
+
+Wrong Decisions
 
 the @_card_@ of @_suit_@
 
 the Hanged Man
 
-Hedge Wizardry
-
-Feasting
-
-Insatiable Hunger
-
-Imperfection
-
-Trial and Error
-
-Disaster
-
-Wrong Decisions
-
-Unambiguity
-
 the Lost Path
-
-Misanthropy
-
-Wasted Space
-
-the Other World
-
-Inevitability
-
-Perfidy
-
-Dogmatism
-
-Happy Babbling
-
-the Slightly Bent
 
 the Moon Troll
 
-Time Monsters
+the Orb
+
+the Orb Guardian
+
+the Other World
 
 the Sacrificial Victim
 
-Undesirable Species
+the Slightly Bent
 
-Going Fast
+the Storm King
 
-Insurance
 %%%%
 _card_
 
@@ -968,22 +967,22 @@ Cups
 
 Pentacles
 
-Wands
-
 Swords
+
+Wands
 %%%%
 # "something" rather than of Something
 _plain_armour_name_
+Damnable Contraption
+
+Earthly Heaven
 
 Forget-Me-Not
 
 Hero's Friend
 
+Put-Me-On
+
 Trusted Companion
 
-Damnable Contraption
-
-Earthly Heaven
-
-Put-Me-On
 %%%%

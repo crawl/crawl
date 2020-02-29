@@ -18,11 +18,11 @@
 ######################################################
 _jewellery_animal_
 
+Death Scarab
+
 Firefly
 
 Scarab
-
-Death Scarab
 
 w:5
 Magpie
@@ -32,11 +32,17 @@ Raven
 %%%%
 _jewellery_special_name_
 
+Attitude
+
 Disaster
 
 Ephemeral Luck
 
-Wishful Thinking
+False Pretenses
+
+Finality
+
+Lady Luck
 
 Moodiness
 
@@ -44,36 +50,30 @@ Reimbursement
 
 the Tempest
 
-Finality
-
-Attitude
-
-Lady Luck
-
 Temptation
 
-False Pretenses
+Wishful Thinking
 
 # FIXME: should appear on amulets only
 Yendor
 %%%%
 _suspicion_name_
 
-Secrets
-
-Suspicion
-
-Mistrust
-
-Jealousy
+Doubts
 
 Incredulity
 
-Doubts
+Jealousy
+
+Mistrust
+
+Scepticism
+
+Secrets
 
 Suspected Treachery
 
-Scepticism
+Suspicion
 
 Trepidation
 
@@ -87,36 +87,36 @@ w:20
 divine_esteem
 
 # good
+Approval
+
+Benevolence
+
+Delight
+
 Esteem
 
 Favour
 
+Generosity
+
 Hope
-
-Regard
-
-Approval
-
-Delight
 
 Pride
 
-Generosity
+Regard
 
 Supremacy
-
-Benevolence
 
 Whim
 
 # bad
-Displeasure
-
-Envy
-
 Castigation
 
 Condemnation
+
+Displeasure
+
+Envy
 
 Reproof
 
@@ -128,48 +128,57 @@ _xom_esteem_
 # chosen 20% of the time
 w:40
 @divine_esteem@
-
-Entertainment
-
-Best Wishes
+Absentmindedness
 
 Amusement
 
-Ringing Laughter
-
 Bemusement
 
-Passing Interest
-
-Full Attention
-
-Whimsicality
+Best Wishes
 
 Capriciousness
 
-Sleight of Hands
-
-Flight of Fancy
-
-Absentmindedness
-
-Malicious Joy
+Entertainment
 
 Fair Game
 
-Wantonness
+Flight of Fancy
+
+Full Attention
+
+Malicious Joy
+
+Passing Interest
 
 Recklessness
+
+Ringing Laughter
+
+Sleight of Hands
+
+Wantonness
+
+Whimsicality
+
 %%%%
 _time_name_
+Autumn
+
+Dawn
 
 Day
 
+Eternal Night
+
+Eternity
+
 Midnight
 
-Twilight
+Midsummer
 
-Dawn
+Midwinter
+
+Noon
 
 w:5
 Spring
@@ -183,41 +192,32 @@ Summer
 w:5
 Summertime
 
-Autumn
+Tomorrow
+
+Twilight
 
 Winter
 
-Midsummer
-
-Midwinter
-
-the Solstice
-
-the Harvest
-
-Eternal Night
-
-Eternity
-
-Noon
-
-the Present
-
-the Morning
-
-the Evening
-
-the Equinox
-
-the Everdark
+Yesterday
 
 the Distant Future
 
+the Equinox
+
+the Evening
+
+the Everdark
+
+the Harvest
+
+the Morning
+
 the Past
 
-Yesterday
+the Present
 
-Tomorrow
+the Solstice
+
 %%%%
 _sky_colour_name_
 
@@ -234,32 +234,31 @@ Purple
 Red
 %%%%
 _sky_or_light_
-
-the Sun
-
-the Moon
-
-Light
-
 Darkness
 
 Dim Light
 
-the Shining Light
-
-Sunlight
+Light
 
 Starshine
 
-the Sky
+Sunlight
+
+the Endless Expanse
 
 the Gloaming
 
 the Heavens
 
+the Moon
+
+the Shining Light
+
 the Skies Above
 
-the Endless Expanse
+the Sky
+
+the Sun
 
 the @_sky_colour_name_@ Skies
 %%%%
@@ -273,98 +272,101 @@ w:5
 @_vice_name_@
 %%%%
 _virtue_name_
-
-Virtue
-
-Truth
-
-Honesty
-
 Benevolence
 
+Charity
+
+Compassion
+
 Devotion
+
+Discretion
+
+Generosity
 
 Generosity
 
 Grace
 
-Temperance
+Honesty
 
 Hospitality
 
-Charity
-
-Patience
+Kindness
 
 Modesty
 
-Discretion
+Patience
 
-Wisdom
-
-Wariness
+Temperance
 
 Thoughtfulness
 
-Kindness
-
-Generosity
-
-Compassion
+Truth
 
 Understanding
+
+Virtue
+
+Wariness
+
+Wisdom
+
 %%%%
 _vice_name_
 
 # some of the deadly sins
+Gluttony
+
+Greed
+
+Pride
+
 Sloth
 
 Vanity
 
-Gluttony
-
-Pride
-
-Greed
-
 # general immorality
-Sin
-
-the Original Sin
-
-Lies
-
-Dishonesty
+Amorality
 
 Cowardice
 
+Dishonesty
+
 Dishonour
-
-Impatience
-
-Immorality
-
-Amorality
-
-Untruth
-
-Spite
-
-Youthful Indiscretion
 
 Foolhardiness
 
-Recklessness
+Immorality
+
+Impatience
+
+Lies
+
+Moral Flaws
 
 Past Mistakes
 
-Moral Flaws
+Recklessness
+
+Sin
+
+Spite
+
+Untruth
+
+Youthful Indiscretion
+
+the Original Sin
+
 %%%%
 _destiny_name_
 
 Causality
 
 Destiny
+
+Doom
 
 Fate
 
@@ -373,8 +375,6 @@ Karma
 Kismet
 
 Wyrd
-
-Doom
 
 %%%%
 _number_or_qualifier_
@@ -435,18 +435,44 @@ a Billion
 # vague numbers
 the
 
-the Many
+the Assorted
 
 the Countless
 
-the Assorted
-
 the Manifold
+
+the Many
 
 the Several
 
 # other qualifiers
-the Lost
+the Aged
+
+the Ageless
+
+the Ancient
+
+the Battered
+
+the Bouncing
+
+the Bruised
+
+the Crushed
+
+the Curious
+
+the Disturbing
+
+the Endless
+
+the Exiled
+
+the Final
+
+the First
+
+the Foremost
 
 the Forgotten
 
@@ -454,181 +480,154 @@ the Forsaken
 
 the Hidden
 
+the Illusory
+
+the Immovable
+
+the Inquisitive
+
+the Insatiable
+
+the Invisible
+
+the Jolly
+
 the Last
 
 the Lonely
 
-the Jolly
-
-the Ancient
-
-the Exiled
-
-the Illusory
-
-the Pure
-
-the Peculiar
-
-the Special
-
-the First
-
-the Neverending
-
-the Endless
+the Lost
 
 the Lumpy
 
-the Disturbing
-
-the Secret
-
-the Wary
-
-the Crushed
-
-the Battered
-
-the Bruised
-
-the Unstoppable
-
-the Immovable
-
-the Foremost
-
-the Curious
-
-the Insatiable
-
-the Bouncing
-
-the Thirsty
-
-the Tired
-
-the Ageless
-
-the Aged
-
-the Inquisitive
-
-the Thoughtful
-
-the Well-Known
-
-the Sneaky
-
-the Final
-
 the Modern
+
+the Neverending
+
+the Peculiar
 
 the Postmodern
 
-the Invisible
+the Pure
+
+the Secret
+
+the Sneaky
+
+the Special
+
+the Thirsty
+
+the Thoughtful
+
+the Tired
+
+the Unstoppable
 
 the Vanishing
 
+the Wary
+
+the Well-Known
+
 %%%%
 _thing_names_
-
-Suns
-
-Moons
-
-Stars
-
-Planets
-
-Hells
-
-Lives
-
-Deaths
-
-Curses
-
-Blessings
-
-Gods
-
-Spirits
-
-Ghosts
-
-Demons
-
-Wars
-
-Mice
-
-Eyes
-
-Nights
-
-Orbs
-
-Runes
-
-Seas
-
-Places
-
-Realms
-
-Wishes
-
-Wonders
+Allies
 
 Beds
 
 Beggars
 
+Blessings
+
 Cities
-
-Dances
-
-Lies
-
-Ships
-
-Songs
-
-Souls
-
-Tales
-
-Friends
-
-Allies
-
-People
-
-Lovers
-
-Dreams
-
-Scars
 
 Coins
 
 Continents
 
+Curses
+
+Dances
+
+Deaths
+
+Demons
+
+Dreams
+
+Emperors
+
+Eyes
+
+Friends
+
+Ghosts
+
+Gods
+
+Hells
+
+Lies
+
+Lives
+
+Lovers
+
+Mice
+
+Moons
+
+Nights
+
+Orbs
+
+People
+
+Places
+
+Planets
+
 Princes
 
 Queens
 
-Emperors
+Realms
 
-Yaks
+Runes
+
+Scars
+
+Seas
+
+Ships
 
 Shrikes
 
-Stories
+Songs
 
-Tables
+Souls
+
+Spirits
 
 w:5
 Spreadsheets
+
+Stars
+
+Stories
+
+Suns
+
+Tables
+
+Tales
+
+Wars
+
+Wishes
+
+Wonders
+
+Yaks
 %%%%
