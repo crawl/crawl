@@ -320,6 +320,8 @@ Gluttony
 
 Greed
 
+Lust
+
 Pride
 
 Sloth
@@ -577,6 +579,8 @@ Lovers
 Mice
 
 Moons
+
+Nightmares
 
 Nights
 

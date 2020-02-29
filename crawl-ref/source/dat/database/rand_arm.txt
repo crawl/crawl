@@ -260,8 +260,6 @@ Lethargy
 
 Lifelessness
 
-Listlessness
-
 Negligence
 
 Oblivion
@@ -401,6 +399,8 @@ the Gate
 
 the Saviour
 
+the Stone Wall
+
 the Unbroken
 
 the Untouchables
@@ -425,6 +425,8 @@ Impressiveness
 Least Resistance
 
 Polish
+
+Privacy
 
 Protective Custody
 
@@ -464,6 +466,8 @@ Hairiness
 
 Hedging
 
+Hubris
+
 Incorporation
 
 Indecent Exposure
@@ -477,6 +481,8 @@ Loss
 Love and Death
 
 Mezcal
+
+Old and Reckless
 
 Pathos
 
@@ -547,6 +553,8 @@ Midnight Sun
 Moon
 
 Morning Star
+
+Northern Lights
 
 Planets
 
@@ -641,9 +649,19 @@ Chill Winds
 
 Cloud Cover
 
+Dust Devil
+
+Howling Wind
+
+Lightning Storm
+
 Perpetual Drought
 
 Pleasant Breezes
+
+Quiet Fog
+
+Soft Rains
 
 Spring Thaw
 
@@ -659,6 +677,10 @@ the Thunderstorm
 _profession_name_
 Apprentice
 
+Apothecary
+
+Baker
+
 Barber Surgeon
 
 Bard
@@ -671,7 +693,15 @@ Blacksmith
 
 Buccaneer
 
+Butcher
+
+Candlemaker
+
 Carpenter
+
+Cartwright
+
+Cobler
 
 Cooper
 
@@ -679,11 +709,19 @@ Ditch-Digger
 
 Engineer
 
+Farmer
+
 Farrier
 
 Fisher
 
+Fletcher
+
+Furrier
+
 Gardener
+
+Goldsmith
 
 Gravedigger
 
@@ -701,23 +739,39 @@ Learner
 
 Merchant
 
+Miller
+
+Minstrel
+
 Moneychanger
 
 Monk
 
 Pirate
 
+Playwright
+
 Sailor
 
 Scribe
 
+Silversmith
+
 Soldier
+
+Stonemason
+
+Tanner
 
 Teacher
 
 Thinker
 
 Undertaker
+
+Watchman
+
+Weaver
 
 Wheelwright
 

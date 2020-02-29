@@ -792,14 +792,6 @@ the Middle
 _economics_or_politics_
 
 # economics
-Inflation
-
-Deflation
-
-Supply
-
-Demand
-
 Amortisation
 
 Animal Spirits
@@ -814,6 +806,10 @@ Currency
 
 Debt
 
+Deflation
+
+Demand
+
 Dividends
 
 Exchange
@@ -822,11 +818,15 @@ Growth
 
 Income
 
+Inflation
+
 Luxury
 
 Profit
 
 Risk Management
+
+Supply
 
 Taxation
 
@@ -1064,9 +1064,13 @@ Altruism
 
 Anarchy
 
+Asceticism
+
 Atheism
 
 Autotheism
+
+Cynicism
 
 Dogma
 
@@ -1129,6 +1133,12 @@ Rationality
 Relativism
 
 Serendipity
+
+Skepticism
+
+Sophism
+
+Stoicism
 
 Syndicalism
 
