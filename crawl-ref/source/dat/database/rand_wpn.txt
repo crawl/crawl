@@ -462,7 +462,7 @@ Spider
 Scorpion
 
 # amphibians and reptiles
-Rattle-Snake
+Rattlesnake
 
 Viper
 

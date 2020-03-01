@@ -127,7 +127,7 @@ M       memorise
 ^L      fight east
 ^Z      suspend to shell
 ^X      view visible things
-^C      clear rembered monsters/items from map
+^C      clear remembered monsters/items from map
 ^V      nothing
 ^B      fight southwest
 ^N      fight southeast
