@@ -1472,6 +1472,13 @@ int player_res_cold(bool calc_unid, bool temp, bool items)
 
 bool player::res_corr(bool calc_unid, bool items) const
 {
+    // dragonskin cloak: 0.5 to draconic resistances
+    if (items && calc_unid
+        && player_equip_unrand(UNRAND_DRAGONSKIN) && coinflip())
+    {
+        return true;
+    }
+
     if (have_passive(passive_t::resist_corrosion))
         return true;
 
@@ -1667,13 +1674,6 @@ int player_res_poison(bool calc_unid, bool temp, bool items)
 int player_res_sticky_flame(bool calc_unid, bool /*temp*/, bool items)
 {
     int rsf = 0;
-
-    // dragonskin cloak: 0.5 to draconic resistances
-    if (items && calc_unid
-        && player_equip_unrand(UNRAND_DRAGONSKIN) && coinflip())
-    {
-        rsf++;
-    }
 
     if (get_form()->res_sticky_flame())
         rsf++;

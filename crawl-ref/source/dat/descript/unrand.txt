@@ -533,7 +533,9 @@ A wooden cudgel, loaded with more than just lead.
 dragonskin cloak
 
 An opalescent cloak gleaming with the colours of all kinds of dragons. It
-protects its wearer from most elemental attacks, although somewhat unreliably.
+imbues the wearer with draconic resistances (although somewhat unreliably),
+providing a chance to resist fire, cold, poison, electricity, acid, and
+negative energy.
 %%%%
 ring of the Octopus King
 
