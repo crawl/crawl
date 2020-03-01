@@ -485,8 +485,8 @@ be damaged by sharp thorns. Invocations skill increases the briars' health.
 %%%%
 Grow Ballistomycete ability
 
-Grow a short-lived ballistomycete at the location you choose. A Ballistomycete
-occasionally release spores that quickly seek out foes and violently explode,
+Grow a short-lived ballistomycete at the location you choose. A ballistomycete
+occasionally releases spores that quickly seek out foes and violently explode,
 damaging and confusing all living things caught in the blast.
 
 Invocations skill increases the health and duration of the ballistomycete as
