@@ -5899,3 +5899,18 @@ spret wu_jian_wall_jump_ability()
     remove_ice_armour_movement();
     return spret::success;
 }
+
+void wu_jian_heavenly_storm()
+{
+    mprf(MSGCH_GOD, "The air is filled with shimmering golden clouds!");
+    wu_jian_sifu_message(" says: The storm will not cease as long as you "
+                         "keep fighting, disciple!");
+
+    for (radius_iterator ai(you.pos(), 2, C_SQUARE, LOS_SOLID); ai; ++ai)
+        if (!cell_is_solid(*ai))
+            place_cloud(CLOUD_GOLD_DUST, *ai, 5 + random2(5), &you);
+
+    you.set_duration(DUR_HEAVENLY_STORM, random_range(2, 3));
+    you.props[WU_JIAN_HEAVENLY_STORM_KEY] = WU_JIAN_HEAVENLY_STORM_INITIAL;
+    invalidate_agrid(true);
+}

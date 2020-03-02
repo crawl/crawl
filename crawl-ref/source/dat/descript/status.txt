@@ -703,13 +703,16 @@ including recasting the spell, will end it.
 Lash status
 
 You are moving at supernatural speed, causing movement actions to become
-instant. Any martial attacks made while moving in this way are increased in
-effectiveness.
+instant. Any martial attacks made while moving in this way deal increased
+damage and never miss.
 %%%%
-Hevn status
+Storm status
 
-Heavenly clouds are boosting your damage and precision. Performing martial
-attacks against multiple enemies prevents the storm from settling.
+You are surrounded by a storm of heavenly clouds. While the storm rages, your
+combat accuracy and damage are substantially increased, and striking enemies
+with martial attacks increases this bonus. The storm weakens over time and
+fades away once the bonus reaches zero. The heavenly clouds prevent
+invisibility, and obscure the vision of those outside the storm.
 %%%%
 SlowM status
 

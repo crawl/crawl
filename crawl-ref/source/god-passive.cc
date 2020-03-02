@@ -6,6 +6,7 @@
 #include <cmath>
 
 #include "act-iter.h"
+#include "areas.h"
 #include "artefact.h"
 #include "art-enum.h"
 #include "branch.h"
@@ -1559,40 +1560,40 @@ static void _wu_jian_trigger_serpents_lash(const coord_def& old_pos,
         check_place_cloud(CLOUD_DUST, old_pos, 2 + random2(3) , &you, 1, -1);
 }
 
-void wu_jian_heaven_tick()
+static void _wu_jian_increment_heavenly_storm()
 {
-    if (you.attribute[ATTR_HEAVENLY_STORM] == 0)
-        return;
-
-    // TODO: this is still ridiculous. REWRITEME!
-    if (you.attribute[ATTR_HEAVENLY_STORM] <= 10)
-        you.attribute[ATTR_HEAVENLY_STORM] -= 1;
-    else if (you.attribute[ATTR_HEAVENLY_STORM] <= 15)
-        you.attribute[ATTR_HEAVENLY_STORM] -= 2;
-    else if (you.attribute[ATTR_HEAVENLY_STORM] <= 20)
-        you.attribute[ATTR_HEAVENLY_STORM] -= 3;
-    else if (you.attribute[ATTR_HEAVENLY_STORM] <= 30)
-        you.attribute[ATTR_HEAVENLY_STORM] -= 5;
-    else
-        you.attribute[ATTR_HEAVENLY_STORM] -= 10;
-
-    for (radius_iterator ai(you.pos(), 2, C_SQUARE, LOS_SOLID); ai; ++ai)
-    {
-        if (!cell_is_solid(*ai))
-            place_cloud(CLOUD_GOLD_DUST, *ai, 5 + random2(5), &you);
-    }
-
-    noisy(15, you.pos());
-
-    if (you.attribute[ATTR_HEAVENLY_STORM] == 0)
-        end_heavenly_storm();
-    else
-        you.duration[DUR_HEAVENLY_STORM] = WU_JIAN_HEAVEN_TICK_TIME;
+    int storm = you.props[WU_JIAN_HEAVENLY_STORM_KEY].get_int();
+    if (storm < WU_JIAN_HEAVENLY_STORM_MAX)
+        you.props[WU_JIAN_HEAVENLY_STORM_KEY].get_int()++;
 }
 
-void end_heavenly_storm()
+void wu_jian_heaven_tick()
 {
-    you.attribute[ATTR_HEAVENLY_STORM] = 0;
+    for (radius_iterator ai(you.pos(), 2, C_SQUARE, LOS_SOLID); ai; ++ai)
+        if (!cell_is_solid(*ai))
+            place_cloud(CLOUD_GOLD_DUST, *ai, 5 + random2(5), &you);
+
+    noisy(15, you.pos());
+}
+
+void wu_jian_decrement_heavenly_storm()
+{
+    int storm = you.props[WU_JIAN_HEAVENLY_STORM_KEY].get_int();
+
+    if (storm > 1)
+    {
+        you.props[WU_JIAN_HEAVENLY_STORM_KEY].get_int()--;
+        you.set_duration(DUR_HEAVENLY_STORM, random_range(2, 3));
+    }
+    else
+        wu_jian_end_heavenly_storm();
+}
+
+void wu_jian_end_heavenly_storm()
+{
+    you.props.erase(WU_JIAN_HEAVENLY_STORM_KEY);
+    you.duration[DUR_HEAVENLY_STORM] = 0;
+    invalidate_agrid(true);
     mprf(MSGCH_GOD, "The heavenly storm settles.");
 }
 
@@ -1647,8 +1648,8 @@ static bool _wu_jian_lunge(const coord_def& old_pos)
     if (!mons || !_can_attack_martial(mons) || !mons->alive())
         return false;
 
-    if (you.attribute[ATTR_HEAVENLY_STORM] > 0)
-        you.attribute[ATTR_HEAVENLY_STORM] += 2;
+    if (you.props.exists(WU_JIAN_HEAVENLY_STORM_KEY))
+        _wu_jian_increment_heavenly_storm();
 
     you.apply_berserk_penalty = false;
 
@@ -1713,8 +1714,8 @@ static bool _wu_jian_whirlwind(const coord_def& old_pos)
         if (!mons->alive())
             continue;
 
-        if (you.attribute[ATTR_HEAVENLY_STORM] > 0)
-            you.attribute[ATTR_HEAVENLY_STORM] += 2;
+        if (you.props.exists(WU_JIAN_HEAVENLY_STORM_KEY))
+            _wu_jian_increment_heavenly_storm();
 
         // Pin has a longer duration than one player turn, but gets cleared
         // before its duration expires by wu_jian_end_of_turn_effects. This is
@@ -1794,8 +1795,8 @@ void wu_jian_wall_jump_effects()
         if (!target->alive())
             continue;
 
-        if (you.attribute[ATTR_HEAVENLY_STORM] > 0)
-            you.attribute[ATTR_HEAVENLY_STORM] += 2;
+        if (you.props.exists(WU_JIAN_HEAVENLY_STORM_KEY))
+            _wu_jian_increment_heavenly_storm();
 
         you.apply_berserk_penalty = false;
 

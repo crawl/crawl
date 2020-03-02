@@ -3198,20 +3198,13 @@ static spret _do_ability(const ability_def& abil, bool fail)
         return spret::success;
 
     case ABIL_WU_JIAN_HEAVENLY_STORM:
-        fail_check();
-        mprf(MSGCH_GOD, "The air is filled with shimmering golden clouds!");
-        wu_jian_sifu_message(" says: The storm will not cease as long as you "
-                             "keep fighting, disciple!");
-
-        for (radius_iterator ai(you.pos(), 2, C_SQUARE, LOS_SOLID); ai; ++ai)
+        if (you.props.exists(WU_JIAN_HEAVENLY_STORM_KEY))
         {
-            if (!cell_is_solid(*ai))
-                place_cloud(CLOUD_GOLD_DUST, *ai, 5 + random2(5), &you);
+            mpr("You are already engulfed in a heavenly storm!");
+            return spret::abort;
         }
-
-        you.attribute[ATTR_HEAVENLY_STORM] = 12;
-        you.duration[DUR_HEAVENLY_STORM] = WU_JIAN_HEAVEN_TICK_TIME;
-        invalidate_agrid(true);
+        fail_check();
+        wu_jian_heavenly_storm();
         break;
 
     case ABIL_WU_JIAN_WALLJUMP:

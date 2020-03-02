@@ -605,8 +605,6 @@ static const duration_def duration_data[] =
     { DUR_BRAINLESS, 0, "", "", "brainless", "", D_NO_FLAGS },
     { DUR_CLUMSY, 0, "", "", "clumsy", "", D_NO_FLAGS },
     { DUR_ANCESTOR_DELAY, 0, "", "", "ancestor delay", "", D_NO_FLAGS, {{""}}},
-    { DUR_HEAVENLY_STORM, 0, "", "", "", "", D_NO_FLAGS,
-      {{ "",  wu_jian_heaven_tick }}},
     { DUR_GRASPING_ROOTS, 0, "", "grasped by roots", "grasping roots",
       "You are constricted by grasping roots.", D_NO_FLAGS},
     { DUR_SHAFT_IMMUNITY, 0, "", "", "shaft immunity", "", D_NO_FLAGS, {{""}}},
@@ -618,6 +616,10 @@ static const duration_def duration_data[] =
     { DUR_FROZEN_RAMPARTS, LIGHTBLUE, "Ramparts", "frozen ramparts",
         "frozen ramparts", "You have covered nearby walls with an icy ambush.",
         D_DISPELLABLE},
+    { DUR_HEAVENLY_STORM, 0, "", "heavenly storm", "",
+      "Heavenly clouds are increasing your accuracy and damage.", D_NO_FLAGS,
+      {{ "", wu_jian_decrement_heavenly_storm }}},
+
 
 #if TAG_MAJOR_VERSION == 34
     // And removed ones

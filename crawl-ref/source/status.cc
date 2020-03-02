@@ -429,15 +429,12 @@ bool fill_status_info(int status, status_info& inf)
         break;
 
     case STATUS_HEAVENLY_STORM:
-        if (you.attribute[ATTR_HEAVENLY_STORM] > 0)
+        if (you.props.exists(WU_JIAN_HEAVENLY_STORM_KEY))
         {
             inf.light_colour = WHITE;
             inf.light_text
-               = make_stringf("Storm (%u)",
-                              you.attribute[ATTR_HEAVENLY_STORM]);
-            inf.short_text = "heavenly storm";
-            inf.long_text = "Heavenly clouds are increasing your damage and "
-                             "accuracy.";
+                = make_stringf("Storm (%d)",
+                               you.props[WU_JIAN_HEAVENLY_STORM_KEY].get_int());
         }
         break;
 

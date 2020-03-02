@@ -176,8 +176,6 @@ const int INVALID_ABSDEPTH = -1000;
 
 const int UNUSABLE_SKILL = -99;
 
-const int WU_JIAN_HEAVEN_TICK_TIME = 10;
-
 //#define DEBUG_MIMIC
 #ifdef DEBUG_MIMIC
   #define FEATURE_MIMIC_CHANCE 1

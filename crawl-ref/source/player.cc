@@ -3530,7 +3530,8 @@ int slaying_bonus(bool ranged)
     if (you.duration[DUR_HORROR])
         ret -= you.props[HORROR_PENALTY_KEY].get_int();
 
-    ret += you.attribute[ATTR_HEAVENLY_STORM];
+    if (you.props.exists(WU_JIAN_HEAVENLY_STORM_KEY))
+        ret += you.props[WU_JIAN_HEAVENLY_STORM_KEY].get_int();
 
     return ret;
 }
@@ -4756,8 +4757,8 @@ bool invis_allowed(bool quiet, string *fail_reason)
 
     if (you.haloed() && you.halo_radius() != -1)
     {
-        bool divine = you.attribute[ATTR_HEAVENLY_STORM] > 0 ||
-                you.religion == GOD_SHINING_ONE;
+        bool divine = you.props.exists(WU_JIAN_HEAVENLY_STORM_KEY)
+                      || you.religion == GOD_SHINING_ONE;
         bool weapon = player_equip_unrand(UNRAND_EOS);
         string reason;
 
