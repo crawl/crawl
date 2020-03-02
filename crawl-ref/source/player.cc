@@ -1671,17 +1671,9 @@ int player_res_poison(bool calc_unid, bool temp, bool items)
     return rp;
 }
 
-int player_res_sticky_flame(bool calc_unid, bool /*temp*/, bool items)
+int player_res_sticky_flame()
 {
-    int rsf = 0;
-
-    if (get_form()->res_sticky_flame())
-        rsf++;
-
-    if (rsf > 1)
-        rsf = 1;
-
-    return rsf;
+    return get_form()->res_sticky_flame();
 }
 
 int player_spec_death()

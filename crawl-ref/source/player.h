@@ -1017,8 +1017,7 @@ int player_res_electricity(bool calc_unid = true, bool temp = true,
 
 int player_res_fire(bool calc_unid = true, bool temp = true,
                     bool items = true);
-int player_res_sticky_flame(bool calc_unid = true, bool temp = true,
-                            bool items = true);
+int player_res_sticky_flame();
 int player_res_steam(bool calc_unid = true, bool temp = true,
                      bool items = true);
 
