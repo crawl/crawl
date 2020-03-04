@@ -5,11 +5,29 @@ import os
 import subprocess
 import sys
 import shutil
+import time
+from typing import Dict, List
 
 
-def run(cmd):
-    print("%s: Running '%s'..." % (sys.argv[0], " ".join(cmd)), file=sys.stderr)
-    subprocess.check_call(cmd)
+def run(cmd: List[str], max_retries: int = 1) -> None:
+    attempt = 1
+    while True:
+        print("%s: Running '%s'..." % (sys.argv[0], " ".join(cmd)), file=sys.stderr)
+        try:
+            subprocess.check_call(cmd)
+        except Exception as e:
+            print(
+                "%s: Command failed (%e) (attempt %s of %s)"
+                % (sys.argv[0], e, attempt, max_retries),
+                file=sys.stderr,
+            )
+            attempt += 1
+            if attempt > max_retries:
+                raise
+            else:
+                time.sleep(5)
+        else:
+            return
 
 
 def build_opts(string):
