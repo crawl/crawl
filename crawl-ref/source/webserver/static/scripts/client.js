@@ -396,7 +396,6 @@ function (exports, $, key_conversion, chat, comm) {
             $("#reg_link").hide();
             $("#forgot_link").hide();
             $("#login_message").html("Logging in...");
-            $("#remember_me").attr("checked", true);
             send_message("token_login", {
                 cookie: get_login_cookie()
             });
@@ -447,30 +446,12 @@ function (exports, $, key_conversion, chat, comm) {
         $("#chat_input").show();
         $("#chat_login_text").hide();
 
-        if ($("#remember_me").attr("checked"))
-        {
-            send_message("set_login_cookie");
-        }
+        send_message("set_login_cookie");
 
         if (!watching)
         {
             current_hash = null;
             hash_changed();
-        }
-    }
-
-    function remember_me_click()
-    {
-        if ($("#remember_me").attr("checked"))
-        {
-            send_message("set_login_cookie");
-        }
-        else if (get_login_cookie())
-        {
-            send_message("forget_login_cookie", {
-                cookie: get_login_cookie()
-            });
-            set_login_cookie(null);
         }
     }
 
@@ -1343,7 +1324,6 @@ function (exports, $, key_conversion, chat, comm) {
         $(".hide_dialog").click(hide_dialog);
 
         $("#login_form").bind("submit", login);
-        $("#remember_me").bind("click", remember_me_click);
         $("#logout_link").bind("click", logout);
         $("#chat_login_link").bind("click", chat_login);
 
