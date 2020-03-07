@@ -1,18 +1,21 @@
 import crypt
-import sqlite3
-import re
-import os.path
-import logging
-import random
 import hashlib
-
+import logging
+import os.path
+import random
+import re
+import sqlite3
 from base64 import urlsafe_b64encode
 
 import config
-from config import (max_passwd_length, nick_regex, password_db,
-                    crypt_algorithm, crypt_salt_length)
+from config import crypt_algorithm
+from config import crypt_salt_length
+from config import max_passwd_length
+from config import nick_regex
+from config import password_db
+from util import send_email
+from util import validate_email_address
 
-from util import (send_email, validate_email_address)
 
 def setup_settings_path():
     global settings_db
@@ -22,7 +25,9 @@ def setup_settings_path():
     except:
         settings_db = os.path.join(os.path.dirname(password_db), "user_settings.db3")
 
+
 setup_settings_path()
+
 
 def ensure_settings_db_exists():
     if os.path.exists(settings_db):
@@ -42,6 +47,7 @@ def ensure_settings_db_exists():
         if conn:
             conn.close()
 
+
 def get_mutelist(username):
     # TODO: based on userdb; why doesn't this just keep the database open?
     # I think sqlite can handle that...
@@ -57,8 +63,11 @@ def get_mutelist(username):
         else:
             return result[0]
     finally:
-        if c: c.close()
-        if conn: conn.close()
+        if c:
+            c.close()
+        if conn:
+            conn.close()
+
 
 def set_mutelist(username, mutelist):
     # TODO: based on userdb; why doesn't this just keep the database open?
@@ -81,21 +90,26 @@ def set_mutelist(username, mutelist):
         if conn:
             conn.close()
 
+
 # from dgamelaunch.h
-DGLACCT_ADMIN       = 1
-DGLACCT_LOGIN_LOCK  = 2
+DGLACCT_ADMIN = 1
+DGLACCT_LOGIN_LOCK = 2
 DGLACCT_PASSWD_LOCK = 4
-DGLACCT_EMAIL_LOCK  = 8
+DGLACCT_EMAIL_LOCK = 8
+
 
 def dgl_is_admin(flags):
     return bool(flags & DGLACCT_ADMIN)
+
 
 def dgl_is_banned(flags):
     return bool(flags & DGLACCT_LOGIN_LOCK)
 
 # TODO: something with other lock flags?
 
-def get_user_info(username): # Returns user data in a tuple (userid, email)
+
+def get_user_info(username):
+    """Returns user data in a tuple (userid, email)."""
     try:
         conn = sqlite3.connect(password_db)
         c = conn.cursor()
@@ -108,10 +122,14 @@ def get_user_info(username): # Returns user data in a tuple (userid, email)
         else:
             return result[0], result[1], result[2]
     finally:
-        if c: c.close()
-        if conn: conn.close()
+        if c:
+            c.close()
+        if conn:
+            conn.close()
 
-def user_passwd_match(username, passwd): # Returns the correctly cased username.
+
+def user_passwd_match(username, passwd):
+    """Returns the correctly cased username."""
     try:
         passwd = passwd[0:max_passwd_length]
     except:
@@ -129,11 +147,15 @@ def user_passwd_match(username, passwd): # Returns the correctly cased username.
         elif crypt.crypt(passwd, result[1]) == result[1]:
             return result[0]
     finally:
-        if c: c.close()
-        if conn: conn.close()
+        if c:
+            c.close()
+        if conn:
+            conn.close()
+
 
 def ensure_user_db_exists():
-    if os.path.exists(password_db): return
+    if os.path.exists(password_db):
+        return
     logging.warn("User database didn't exist; creating it now.")
     c = None
     conn = None
@@ -145,13 +167,16 @@ def ensure_user_db_exists():
                   " password text, flags integer);")
         c.execute(schema)
         schema = ("CREATE TABLE recovery_tokens (token text primary key,"
-                   " token_time text, user_id integer not null,"
-                   " foreign key(user_id) references dglusers(id));")
+                  " token_time text, user_id integer not null,"
+                  " foreign key(user_id) references dglusers(id));")
         c.execute(schema)
         conn.commit()
     finally:
-        if c: c.close()
-        if conn: conn.close()
+        if c:
+            c.close()
+        if conn:
+            conn.close()
+
 
 # automatically upgrades database
 def upgrade_user_db():
@@ -170,13 +195,18 @@ def upgrade_user_db():
             c.execute(schema)
             conn.commit()
     finally:
-        if c: c.close()
-        if conn: conn.close()
+        if c:
+            c.close()
+        if conn:
+            conn.close()
 
-saltchars = "./0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+
+_SALTCHARS = "./0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+
 
 def make_salt(saltlen):
-    return ''.join(random.choice(saltchars) for x in range(0,saltlen))
+    return ''.join(random.choice(_SALTCHARS) for x in range(0, saltlen))
+
 
 def encrypt_pw(passwd):
     passwd = passwd[0:max_passwd_length]
@@ -188,13 +218,17 @@ def encrypt_pw(passwd):
         salt = make_salt(2)
     return crypt.crypt(passwd, salt)
 
-def register_user(username, passwd, email): # Returns an error message or None
-    if passwd == "": return "The password can't be empty!"
-    if email: # validate the email only if it is provided
+
+def register_user(username, passwd, email):  # Returns an error message or None
+    if passwd == "":
+        return "The password can't be empty!"
+    if email:  # validate the email only if it is provided
         result = validate_email_address(email)
-        if result: return result
+        if result:
+            return result
     username = username.strip()
-    if not re.match(nick_regex, username): return "Invalid username!"
+    if not re.match(nick_regex, username):
+        return "Invalid username!"
 
     crypted_pw = encrypt_pw(passwd)
 
@@ -205,7 +239,8 @@ def register_user(username, passwd, email): # Returns an error message or None
                   (username,))
         result = c.fetchone()
 
-        if result: return "User already exists!"
+        if result:
+            return "User already exists!"
 
         c.execute("insert into dglusers(username, email, password, flags, env) values (?,?,?,0,'')",
                   (username, email, crypted_pw))
@@ -214,12 +249,16 @@ def register_user(username, passwd, email): # Returns an error message or None
 
         return None
     finally:
-        if c: c.close()
-        if conn: conn.close()
+        if c:
+            c.close()
+        if conn:
+            conn.close()
 
-def change_email(user_id, email): # Returns an error message or None
+
+def change_email(user_id, email):  # Returns an error message or None
     result = validate_email_address(email)
-    if result: return result
+    if result:
+        return result
 
     try:
         conn = sqlite3.connect(password_db)
@@ -231,10 +270,14 @@ def change_email(user_id, email): # Returns an error message or None
 
         return None
     finally:
-        if c: c.close()
-        if conn: conn.close()
+        if c:
+            c.close()
+        if conn:
+            conn.close()
 
-def find_recovery_token(token): # Returns tuple (userid, username, error)
+
+def find_recovery_token(token):
+    # Returns tuple (userid, username, error)
     token_hash_obj = hashlib.sha256(token)
     token_hash = token_hash_obj.hexdigest()
 
@@ -261,11 +304,16 @@ collate rtrim
             else:
                 return userid, username, None
     finally:
-        if c: c.close()
-        if conn: conn.close()
+        if c:
+            c.close()
+        if conn:
+            conn.close()
 
-def update_user_password_from_token(token, passwd): # Returns a tuple where item 1 is the username that was found for the given token, and item 2 is an error message or None
-    if passwd == "": return None, "The password can't be empty!"
+
+def update_user_password_from_token(token, passwd):
+    # Returns a tuple where item 1 is the username that was found for the given token, and item 2 is an error message or None
+    if passwd == "":
+        return None, "The password can't be empty!"
     crypted_pw = encrypt_pw(passwd)
 
     userid, username, token_error = find_recovery_token(token)
@@ -275,20 +323,25 @@ def update_user_password_from_token(token, passwd): # Returns a tuple where item
             conn = sqlite3.connect(password_db)
             c = conn.cursor()
             c.execute("update dglusers set password=? where id=?",
-                    (crypted_pw, userid))
+                      (crypted_pw, userid))
             c.execute("delete from recovery_tokens where user_id=?",
-                    (userid,))
+                      (userid,))
             conn.commit()
         finally:
-            if c: c.close()
-            if conn: conn.close()
+            if c:
+                c.close()
+            if conn:
+                conn.close()
 
     return username, token_error
 
-def send_forgot_password(email): # Returns a tuple where item 1 is a truthy value when an email was sent, and item 2 is an error message or None
-    if not email: return False, "Email address can't be empty"
+
+def send_forgot_password(email):  # Returns a tuple where item 1 is a truthy value when an email was sent, and item 2 is an error message or None
+    if not email:
+        return False, "Email address can't be empty"
     email_error = validate_email_address(email)
-    if email_error: return False, email_error
+    if email_error:
+        return False, email_error
 
     try:
         # lookup user-provided email
@@ -336,12 +389,14 @@ If you did not ask to reset your password, feel free to ignore this email.
 </html>"""
 
             send_email(email, 'Request to reset your password',
-                        msg_body_plaintext, msg_body_html)
+                       msg_body_plaintext, msg_body_html)
 
             return True, None
 
         # email was not found, do nothing
         return False, None
     finally:
-        if c: c.close()
-        if conn: conn.close()
+        if c:
+            c.close()
+        if conn:
+            conn.close()
