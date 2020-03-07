@@ -1847,8 +1847,12 @@ static string _describe_armour(const item_def &item, bool verbose)
 
     }
 
-    if (item_ident(item, ISFLAG_KNOW_PLUSES) && !is_shield(item))
+    if (can_wear_armour(item, false, true)
+        && item_ident(item, ISFLAG_KNOW_PLUSES)
+        && !is_shield(item))
+    {
         description += _armour_ac_change(item);
+    }
 
     return description;
 }
