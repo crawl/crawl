@@ -1631,11 +1631,10 @@ static string _armour_ac_change(const item_def &item)
 {
     string description;
 
-    if (!_you_are_wearing_item(item)){
+    if (!_you_are_wearing_item(item))
         description = _armour_ac_sub_change_description(item);
-    }else{
+    else
         description = _armour_ac_remove_change_description(item);
-    }
 
     return description;
 }
