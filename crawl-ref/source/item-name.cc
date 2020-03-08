@@ -609,11 +609,9 @@ static const char* _wand_type_name(int wandtype)
     switch (wandtype)
     {
     case WAND_FLAME:           return "flame";
-    case WAND_PARALYSIS:       return "paralysis";
     case WAND_DIGGING:         return "digging";
     case WAND_ICEBLAST:        return "iceblast";
     case WAND_POLYMORPH:       return "polymorph";
-    case WAND_ENSLAVEMENT:     return "enslavement";
     case WAND_ACID:            return "acid";
     case WAND_RANDOM_EFFECTS:  return "random effects";
     case WAND_DISINTEGRATION:  return "disintegration";
@@ -3417,9 +3415,6 @@ bool is_useless_item(const item_def &item, bool temp)
 #endif
         if (!item_type_known(item))
             return false;
-
-        if (item.sub_type == WAND_ENSLAVEMENT)
-            return you.get_mutation_level(MUT_NO_LOVE);
 
         if (item.sub_type == WAND_CLOUDS)
             return temp && (env.level_state & LSTATE_STILL_WINDS);

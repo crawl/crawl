@@ -1230,12 +1230,9 @@ static int _pakellas_low_wand()
 static int _pakellas_high_wand()
 {
     vector<int> high_wands = {
-        WAND_PARALYSIS,
         WAND_ICEBLAST,
         WAND_ACID,
     };
-    if (!you.get_mutation_level(MUT_NO_LOVE))
-        high_wands.emplace_back(WAND_ENSLAVEMENT);
 
     return _preferably_unseen_item(high_wands, _seen_wand);
 }

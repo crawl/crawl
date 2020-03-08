@@ -1039,10 +1039,6 @@ Un instrument magique qui désagrège la structure physique de n'importe quoi, �
 l’exception notable des murs les plus durs – cela inclue les statues rigides,
 bref tout ce qui n'est pas de chair.
 %%%%
-wand of enslavement
-
-Un instrument magique qui provoque une servitude aveugle chez une créature.
-%%%%
 wand of fire
 
 Un instrument magique qui tire de puissants missiles de feu.

@@ -185,7 +185,7 @@ FTILE:   c = wall_vines
 KFEAT:   S = general shop use_all ; \
              ring of flight mundane not_cursed | potion of curing | \
              potion of heal wounds | potion of heal wounds q:2 | \
-             potion of might | wand of paralysis | ring mail | \
+             potion of might | wand of iceblast | ring mail | \
              buckler ego:none | ring of slaying | scroll of enchant weapon
 ITEM:    gold q:40
 ITEM:    gold q:220

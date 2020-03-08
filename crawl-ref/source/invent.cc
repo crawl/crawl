@@ -2057,7 +2057,7 @@ bool item_is_wieldable(const item_def &item)
 static bool _item_ally_only(const item_def &item)
 {
     if (item.base_type == OBJ_WANDS)
-        return item.sub_type == WAND_ENSLAVEMENT;
+        return true;
     else if (item.base_type == OBJ_MISCELLANY)
     {
         switch (item.sub_type)

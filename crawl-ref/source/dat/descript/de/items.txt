@@ -764,10 +764,6 @@ wand of disintegration
 Ein magisches Gerät, das die physische Struktur von irgendetwas außer den
 härtesten Wänden — sogar starre Bildsäulen ganz zu schweigen vom Fleisch stört.
 %%%%
-wand of enslavement
-
-Ein magisches Gerät welches in einer Kreatur sklavischen Gehorsam verursacht.
-%%%%
 wand of fire
 
 Ein magisches Gerät welches großartige Bolzen aus Flammen wirft.

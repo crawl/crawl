@@ -733,10 +733,6 @@ Magiczny przedmiot który potrafi rozbić strukturę przedmiotów na kawałki.
 Działa zarówno na istoty (żywe czy martwe), jak i na statuy, ściany, itp.
 Wzmocniony kamień jest zbyt mocny aby dać się rozbić w ten sposób.
 %%%%
-wand of enslavement
-
-Magiczny przedmiot który powoduje ślepe posłuszeństwo wśród żywych istot.
-%%%%
 wand of fire
 
 Magiczny przedmiot który strzela wielkimi strugami ognia.

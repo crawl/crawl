@@ -538,7 +538,7 @@ i-slowing WAND_REMOVEME9
 i-hasting WAND_REMOVEME7
 i-flame WAND_REMOVEME2
 i-heal_wounds WAND_REMOVEME6
-i-paralysis WAND_PARALYSIS
+i-paralysis WAND_REMOVEME13
 i-flame WAND_REMOVEME3
 i-flame WAND_REMOVEME4
 i-confusion WAND_REMOVEME10
@@ -548,7 +548,7 @@ i-iceblast WAND_ICEBLAST
 i-teleportation WAND_REMOVEME8
 i-lightning WAND_REMOVEME11
 i-polymorph WAND_POLYMORPH
-i-enslavement WAND_ENSLAVEMENT
+i-enslavement WAND_REMOVEME12
 i-acid WAND_ACID
 i-random_effects WAND_RANDOM_EFFECTS
 i-disintegration WAND_DISINTEGRATION
