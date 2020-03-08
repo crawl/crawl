@@ -765,26 +765,25 @@ ENDMAP
 NAME:   minmay_expanding_circles
 ORIENT: southeast
 DEPTH:  D:12-, !D:$, Depths
-KMONS:  01 = 0
+KMONS:  0 = 0
 KMONS:  8 = 8
-KMONS:  92 = 9
-KITEM:  01 = %
-KITEM:  8 = |
-KITEM:  92 = *
+KMONS:  9 = 9
+KITEM:  0 = % / nothing w:20
+KITEM:  8 = | / nothing
+KITEM:  9 = * / nothing
 SUBST:  c : cv
-KPROP:  .089 = no_tele_into
 MAP
 @cccccccccccccccccx
-c+''ccccccccccccccx
-c'''1cccccccccccccx
-c'''2cccccccccccccx
-cc12mmccccccccccccx
-ccccmm...cccccccccx
+c+..ccccccccccccccx
+c...0cccccccccccccx
+c...9cccccccccccccx
+cc09.mccccccccccccx
+ccccm=...cccccccccx
 ccccc....0ccccccccx
 ccccc...09ccccccccx
 ccccc..098ccccccccx
-cccccc098mmcccccccx
-cccccccccmm....cccx
+cccccc098.mcccccccx
+cccccccccm=....cccx
 cccccccccc.....0ccx
 cccccccccc....09ccx
 cccccccccc...098ccx
@@ -1028,12 +1027,11 @@ MONS:   deep elf sorcerer / deep elf annihilator / lich / ancient lich w:5
 ITEM:   any book / any jewellery / any wand / any misc w:3 / \
         any magical staff w:3 / any randart weapon w:3 / \
         any randart armour w:3
-: if you.absdepth() > 18 then
+: if you.in_branch("Depths") then
 NSUBST: 2 = 2:2 / 2 = 21 / *:1
 : else
 SUBST:  2 = 1
 : end
-KPROP:  d = no_tele_into
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -1042,17 +1040,17 @@ x...................................................................x
 xx........x....xx......xx2..................xx.........xx..........xx
 x........xx....xxx......xxxxxx.............xx..........xxx..........x
 xx......2xx....xxxx......xxxx............2xxx...........xxx2..xxxx.xx
-x.....xxxxx.....xxxx......x2...........xxmxx.........xx..xxmxxxxxx..x
+x.....xxxxx.....xxxx......x2...........xx.xx.........xx..xx.xxxxxx..x
 xx...xxxxxx2....xxxx.....xx..........xxxxdm2........xxx..2mdmxxx...xx
 x.........xx.....xxxx1...xx............2mxxx........xxx...xxx2......x
-xx.........x.....xxxxmx1..................xxx......xxxx...xx.......xx
-x..xx............1xxxmxxxxxxxx.............xx......xxx...xxx........x
+xx.........x.....xxxx.x1..................xxx......xxxx...xx.......xx
+x..xx............1xxx.xxxxxxxx.............xx......xxx...xxx........x
 xx..xxx......xxx..mmdxxxxxxxxxx........xx...x.....xxxx...xxx.......xx
 x....xxxx1xxxxx..1xxxmxxxxxxxx.......xxxx.........xxxx...xx.........x
-xx....xxxmxxxx...xxxxmx1............xxxx.........xxxxx...xx........xx
+xx....xxx.xxxx...xxxxmx1............xxxx.........xxxxx...xx........xx
 x......xmdmxx....xxxx1............1xxxx.........1xxxx...............x
-xx.....1xxx1....xxxx.....xxxxxxxxxmxxxx......xxxxmxxx..............xx
-x.......xxx.....xxxx......xxxxxxxxmxxx....xxxxxxxxdmm1..........x...x
+xx.....1xxx1....xxxx.....xxxxxxxxx.xxxx......xxxx.xxx..............xx
+x.......xxx.....xxxx......xxxxxxxx.xxx....xxxxxxxxdmm1..........x...x
 xx......xxx....xxxx....x....xxxxxxdmm1..xxxxxxxxxmxxxx........1xx..xx
 x.......xxx....xxx....xx......1xxmxxx...xxxxxxxxxmxxxxx...xxxxxx....x
 xx......xx.....xx.....xx........1xxxx.....xxx1...1xxxxxx...xxxxx...xx
