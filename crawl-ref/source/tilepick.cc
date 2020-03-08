@@ -1251,6 +1251,7 @@ static tileidx_t _mon_to_zombie_tile(const monster_info &mon)
         { MONS_GOLDEN_DRAGON,           TILEP_MONS_ZOMBIE_GOLDEN_DRAGON },
         { MONS_QUICKSILVER_DRAGON,      TILEP_MONS_ZOMBIE_QUICKSILVER_DRAGON },
         { MONS_LINDWURM,                TILEP_MONS_ZOMBIE_LINDWURM, },
+        { MONS_MELIAI,                  TILEP_MONS_ZOMBIE_MELIAI, },
     };
     // per-genus zombies - use by default
     static const map<monster_type, tileidx_t> genus_tiles = {

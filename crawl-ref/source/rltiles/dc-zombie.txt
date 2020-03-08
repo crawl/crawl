@@ -46,6 +46,7 @@ zombie_elf MONS_ZOMBIE_ELF
 zombie_fawn MONS_ZOMBIE_FAUN
 zombie_guardian_serpent MONS_ZOMBIE_GUARDIAN_SERPENT
 zombie_lindwurm MONS_ZOMBIE_LINDWURM
+zombie_meliai MONS_ZOMBIE_MELIAI
 zombie_merfolk MONS_ZOMBIE_MERFOLK
 zombie_minotaur MONS_ZOMBIE_MINOTAUR
 zombie_salamander MONS_ZOMBIE_SALAMANDER
