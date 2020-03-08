@@ -1746,5 +1746,22 @@ _mon_hex_zap(ZAP_DRAIN_MAGIC, BEAM_DRAIN_MAGIC),
     0
 },
 
+{
+    ZAP_MIGHT,
+    "",
+    100,
+    nullptr,
+    nullptr,
+    nullptr,
+    nullptr,
+    BLACK,
+    true,
+    BEAM_MIGHT,
+    NUM_DCHAR_TYPES,
+    false,
+    false,
+    0
+},
+
 
 };

@@ -109,8 +109,6 @@ bool is_potentially_evil_item(const item_def& item, bool calc_unid)
             return true;
         }
         break;
-    case OBJ_WANDS:
-        return item.sub_type == WAND_RANDOM_EFFECTS;
     case OBJ_MISCELLANY:
         return item.sub_type == MISC_CONDENSER_VANE;
     default:
@@ -215,7 +213,8 @@ bool is_chaotic_item(const item_def& item, bool calc_unid)
         }
         break;
     case OBJ_WANDS:
-        retval = (item.sub_type == WAND_POLYMORPH);
+        retval = (item.sub_type == WAND_POLYMORPH
+                  || item.sub_type == WAND_RANDOM_EFFECTS);
         break;
     case OBJ_POTIONS:
         retval = (item.sub_type == POT_MUTATION

@@ -1139,7 +1139,9 @@ form. It is especially effective against shape-changing creatures.
 %%%%
 wand of random effects
 
-A magical device which can produce a variety of effects.
+A magical device which can produce a variety of enchanting effects. Its target
+is randomly afflicted with one of the following: haste, invisibility, might,
+corona, slow, paralyse, confuse, malmutate, petrify, or sleep.
 %%%%
 war axe
 
