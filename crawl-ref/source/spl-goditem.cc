@@ -1358,19 +1358,14 @@ spret cast_random_effects(int pow, bolt& beam, bool fail)
     fail_check();
 
     // Extremely arbitrary list of possible effects.
-    zap_type zap = random_choose(ZAP_THROW_FLAME,
-                                 ZAP_THROW_FROST,
-                                 ZAP_SLOW,
+    zap_type zap = random_choose(ZAP_SLOW,
                                  ZAP_HASTE,
                                  ZAP_PARALYSE,
                                  ZAP_CONFUSE,
                                  ZAP_TELEPORT_OTHER,
                                  ZAP_INVISIBILITY,
-                                 ZAP_ICEBLAST,
-                                 ZAP_FIREBALL,
-                                 ZAP_BOLT_OF_DRAINING,
-                                 ZAP_VENOM_BOLT,
-                                 ZAP_MALMUTATE);
+                                 ZAP_MALMUTATE,
+                                 ZAP_ENSLAVEMENT);
     beam.origin_spell = SPELL_NO_SPELL; // let zapping reset this
 
     zapping(zap, pow, beam, false);
