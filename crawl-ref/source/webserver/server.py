@@ -121,7 +121,8 @@ def signal_handler(signum, frame):
 def bind_server():
     settings = {
         "static_path": static_path,
-        "template_loader": DynamicTemplateLoader.get(template_path)
+        "template_loader": DynamicTemplateLoader.get(template_path),
+        "debug": bool(getattr(config, 'development_mode', False)),
         }
 
     if hasattr(config, "no_cache") and config.no_cache:

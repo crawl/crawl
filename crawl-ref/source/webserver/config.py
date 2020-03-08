@@ -220,7 +220,10 @@ daemon = False # If true, the server will detach from the session after startup
 player_url = None
 
 # Only for development:
+# This is insecure; do not set development_mode = True in production!
+development_mode = False
+
 # Disable caching of static files which are not part of game data.
-no_cache = False
+no_cache = development_mode
 # Automatically log in all users with the username given here.
 autologin = None
