@@ -13,6 +13,7 @@ import codecs
 import random
 import zlib
 
+import auth
 import config
 import checkoutput
 import userdb
@@ -26,7 +27,6 @@ except:
 sockets = set() # type: Set[CrawlWebSocket]
 current_id = 0
 shutting_down = False
-login_tokens = {} # type: Dict[Tuple[str,str],datetime.datetime]
 rand = random.SystemRandom()
 
 def shutdown():
@@ -67,16 +67,6 @@ def write_dgl_status_file():
         logging.warning("Could not write dgl status file: %s", e)
     finally:
         if f: f.close()
-
-def purge_login_tokens():
-    for token in list(login_tokens):
-        if datetime.datetime.now() > login_tokens[token]:
-            del login_tokens[token]
-
-def purge_login_tokens_timeout():
-    purge_login_tokens()
-    IOLoop.current().add_timeout(time.time() + 60 * 60 * 1000,
-                                 purge_login_tokens_timeout)
 
 def status_file_timeout():
     write_dgl_status_file()
@@ -464,13 +454,9 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.send_message("login_fail")
 
     def token_login(self, cookie):
-        username, _, token = cookie.partition(' ')
-        try:
-            token = int(token)
-        except ValueError:
-            token = None
-        if (token, username) in login_tokens:
-            del login_tokens[(token, username)]
+        username, ok = auth.check_login_cookie(cookie)
+        if ok:
+            auth.forget_login_cookie(cookie)
             self.logger.info("User %s logging in (via token).", username)
             self.do_login(username)
         else:
@@ -478,25 +464,14 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.send_message("login_fail")
 
     def set_login_cookie(self):
-        if self.username is None: return
-        token = rand.getrandbits(128)
-        expires = datetime.datetime.now() + datetime.timedelta(config.login_token_lifetime)
-        login_tokens[(token, self.username)] = expires
-        cookie = self.username + " " + str(token)
+        if self.username is None:
+            return
+        cookie = auth.log_in_as_user(self, self.username)
         self.send_message("login_cookie", cookie = cookie,
                           expires = config.login_token_lifetime)
 
     def forget_login_cookie(self, cookie):
-        try:
-            username, _, token = cookie.partition(' ')
-            try:
-                token = int(token)
-            except ValueError:
-                token = None
-            if (token, username) in login_tokens:
-                del login_tokens[(token, username)]
-        except ValueError:
-            return
+        auth.forget_login_cookie(cookie)
 
     def restore_mutelist(self):
         if not self.username:

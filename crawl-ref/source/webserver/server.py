@@ -16,6 +16,7 @@ from ws_handler import *
 from game_data_handler import GameDataHandler
 import process_handler
 import userdb
+import auth
 
 class MainHandler(tornado.web.RequestHandler):
     def get(self):
@@ -304,7 +305,7 @@ if __name__ == "__main__":
 
     if dgl_mode:
         status_file_timeout()
-        purge_login_tokens_timeout()
+        auth.purge_login_tokens_timeout()
         start_reading_milestones()
 
         if watch_socket_dirs:
