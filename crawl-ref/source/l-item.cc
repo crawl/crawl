@@ -1527,6 +1527,30 @@ static int l_item_shopping_list(lua_State *ls)
     return 1;
 }
 
+/*** See the items offered by acquirement.
+ * Only works when the acquirement menu is active.
+ * @treturn array|nil An array of @{Item} objects or nil if not acquiring.
+ * @function shop_inventory
+ */
+static int l_item_acquirement_items(lua_State *ls)
+{
+    if (!you.props.exists(ACQUIRE_ITEMS_KEY))
+        return 0;
+
+    auto &acq_items = you.props[ACQUIRE_ITEMS_KEY].get_vector();
+
+    lua_newtable(ls);
+
+    int index = 0;
+    for (const item_def &item : acq_items)
+    {
+        _clua_push_item_temp(ls, item);
+        lua_rawseti(ls, -2, ++index);
+    }
+
+    return 1;
+}
+
 struct ItemAccessor
 {
     const char *attribute;
@@ -1627,6 +1651,7 @@ static const struct luaL_reg item_lib[] =
     { "get_items_at",      l_item_get_items_at },
     { "shop_inventory",    l_item_shop_inventory },
     { "shopping_list",     l_item_shopping_list },
+    { "acquirement_items", l_item_acquirement_items },
     { nullptr, nullptr },
 };
 

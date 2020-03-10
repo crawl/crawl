@@ -1628,6 +1628,17 @@ void AcquireMenu::update_help()
                                    : "examine item")));
 }
 
+static void _create_acquirement_item(item_def &item)
+{
+    if (is_unrandom_artefact(item))
+        set_unique_item_status(item, UNIQ_EXISTS);
+
+    if (copy_item_to_grid(item, you.pos()))
+        canned_msg(MSG_SOMETHING_APPEARS);
+    else
+        canned_msg(MSG_NOTHING_HAPPENS);
+}
+
 bool AcquireMenu::acquire_selected()
 {
     vector<MenuEntry*> selected = selected_entries();
@@ -1655,14 +1666,8 @@ bool AcquireMenu::acquire_selected()
     }
 
     item_def &acq_item = *static_cast<item_def*>(entry.data);
+    _create_acquirement_item(acq_item);
 
-    if (is_unrandom_artefact(acq_item))
-        set_unique_item_status(acq_item, UNIQ_EXISTS);
-
-    if (copy_item_to_grid(acq_item, you.pos()))
-        canned_msg(MSG_SOMETHING_APPEARS);
-    else
-        canned_msg(MSG_NOTHING_HAPPENS);
     acq_items.clear();
     return false;
 }
@@ -1794,6 +1799,23 @@ bool acquirement_menu()
         _make_acquirement_items();
 
     auto &acq_items = you.props[ACQUIRE_ITEMS_KEY].get_vector();
+
+#ifdef CLUA_BINDINGS
+    int index = 0;
+    if (!clua.callfn("c_choose_acquirement", ">d", &index))
+    {
+        if (!clua.error.empty())
+            mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
+    }
+    else if (index >= 1 && index <= acq_items.size())
+    {
+        _create_acquirement_item(acq_items[index - 1]);
+
+        acq_items.clear();
+        you.props.erase(ACQUIRE_ITEMS_KEY);
+        return true;
+    }
+#endif
 
     AcquireMenu acq_menu(acq_items);
     acq_menu.show();
