@@ -2383,10 +2383,11 @@ void ice_wall_damage(monster &mons, int delay)
          you.can_see(mons) ? mons.name(DESC_THE).c_str() : "something");
 
     const int pow = calc_spell_power(SPELL_FROZEN_RAMPARTS, true);
-    int dam = div_rand_round(delay * roll_dice(1, 2 + div_rand_round(pow, 4)),
-                BASELINE_DELAY);
+    int dam = roll_dice(1, 2 + div_rand_round(pow, 4));
 
     dam = mons.apply_ac(dam);
+
+    dam = div_rand_round(delay * dam, BASELINE_DELAY);
 
     bolt beam;
     beam.flavour = BEAM_ICE;
