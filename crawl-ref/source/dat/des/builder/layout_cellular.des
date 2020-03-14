@@ -104,13 +104,14 @@
 #       not overlap properly. Some other render modes would be
 #       good.
 #
-# TODO: This layout is sometimes very slow (several seconds) to
-#       generate.  If this can be fixed, add it in at weights
-#       2 (Lair), 5 (Zot), 10 (Pan)
+# TODO: A lower minimum value for the non-Dis minimum size in
+#       grid_opts would be ideal, but this causes a noticeable
+#       delay when the level is generated. Can this be optimized
+#       to remove that delay?
 #
 NAME:   layout_cellular_growth
 DEPTH:  Lair, Zot, Pan
-WEIGHT: 0
+WEIGHT: 2 (Lair), 5 (Zot), 10 (Pan)
 ORIENT: encompass
 TAGS:   overwritable layout allow_dup unrand layout_type_passages
 {{
@@ -125,7 +126,7 @@ TAGS:   overwritable layout allow_dup unrand layout_type_passages
     maximum_size = crawl.random_range(5,8),
     -- TODO: Having a minimum size of 1 looks great but is really slow until the
     -- border counting is optimised, it also requires a higher number of seeds/iters than normal
-    minimum_size = doors and crawl.random_range(4,5) or crawl.random_range(2,4),
+    minimum_size = doors and crawl.random_range(4,5) or crawl.random_range(3,4),
     subdivide_initial_chance = 90,
     subdivide_level_multiplier = .9,
   }
