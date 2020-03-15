@@ -1,4 +1,4 @@
-import tornado.web
+import tornado, tornado.web
 import os.path
 
 import config
@@ -10,7 +10,12 @@ except:
 
 class GameDataHandler(tornado.web.StaticFileHandler):
     def initialize(self):
-        super(GameDataHandler, self).initialize("/")
+        if int(tornado.version[0]) < 3:
+            # ugly extreme backward compatibility hack; can hopefull be removed
+            # once tornado 2.4 is out of the picture.
+            super(GameDataHandler, self).initialize(".")
+        else:
+            super(GameDataHandler, self).initialize("/")
 
     def parse_url_path(self, url_path):
         # the path should already match "([0-9a-f]*\/.*)", from server.py

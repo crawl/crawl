@@ -125,7 +125,15 @@ def stop_everything():
 
 def signal_handler(signum, frame):
     logging.info("Received signal %i, shutting down.", signum)
-    IOLoop.current().add_callback_from_signal(stop_everything)
+    try:
+        IOLoop.current().add_callback_from_signal(stop_everything)
+    except AttributeError:
+        # This is for compatibility with ancient versions < Tornado 3. It
+        # probably won't shutdown correctly and is *definitely* incorrect for
+        # modern versions of Tornado; but this is how it was done on the
+        # original implementation of webtiles + Tornado 2.4 that was in use
+        # through about 2020. 
+        stop_everything()
 
 def bind_server():
     settings = {
@@ -235,6 +243,24 @@ def check_config():
         success = False
     return success
 
+def monkeypatch_tornado24():
+    # extremely ugly compatibility hack, to ease transition for servers running
+    # the ancient patched tornado 2.4.
+    IOLoop.current = staticmethod(IOLoop.instance)
+
+def ensure_tornado_current():
+    try:
+        tornado.ioloop.IOLoop.current()
+    except AttributeError:
+        monkeypatch_tornado24()
+        try:
+            tornado.ioloop.IOLoop.current()
+            logging.error(
+                "You are running a deprecated version of tornado; please update"
+                " to at least version 4.")
+        except:
+            raise
+
 if __name__ == "__main__":
     if chroot:
         os.chroot(chroot)
@@ -257,6 +283,7 @@ if __name__ == "__main__":
     write_pidfile()
 
     servers = bind_server()
+    ensure_tornado_current()
 
     shed_privileges()
 
