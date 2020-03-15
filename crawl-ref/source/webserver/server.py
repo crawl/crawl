@@ -164,19 +164,16 @@ def bind_server():
         try:
             return tornado.httpserver.HTTPServer(application, **kwargs)
         except TypeError:
-            try:
-                # Ugly backwards-compatibility hack. Removable once Tornado 3
-                # is out of the picture (if ever)
-                del kwargs["idle_connection_timeout"]
-                server = tornado.httpserver.HTTPServer(application, **kwargs)
-                logging.error(
-                        "Server configuration sets `idle_connection_timeout` "
-                        "but this is not available in your version of "
-                        "Tornado. Please upgrade to at least Tornado 4 for "
-                        "this to work.""")
-                return server
-            except:
-                raise # something went wrong other than idle_connection_timeout
+            # Ugly backwards-compatibility hack. Removable once Tornado 3
+            # is out of the picture (if ever)
+            del kwargs["idle_connection_timeout"]
+            server = tornado.httpserver.HTTPServer(application, **kwargs)
+            logging.error(
+                    "Server configuration sets `idle_connection_timeout` "
+                    "but this is not available in your version of "
+                    "Tornado. Please upgrade to at least Tornado 4 for "
+                    "this to work.""")
+            return server
 
     if bind_nonsecure:
         server = server_wrap(**kwargs)
@@ -253,13 +250,10 @@ def ensure_tornado_current():
         tornado.ioloop.IOLoop.current()
     except AttributeError:
         monkeypatch_tornado24()
-        try:
-            tornado.ioloop.IOLoop.current()
-            logging.error(
-                "You are running a deprecated version of tornado; please update"
-                " to at least version 4.")
-        except:
-            raise
+        tornado.ioloop.IOLoop.current()
+        logging.error(
+            "You are running a deprecated version of tornado; please update"
+            " to at least version 4.")
 
 if __name__ == "__main__":
     if chroot:

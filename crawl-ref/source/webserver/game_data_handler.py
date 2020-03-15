@@ -10,8 +10,8 @@ except:
 
 class GameDataHandler(tornado.web.StaticFileHandler):
     def initialize(self):
-        if int(tornado.version[0]) < 3:
-            # ugly extreme backward compatibility hack; can hopefull be removed
+        if tornado.version_info[0] < 3:
+            # ugly extreme backward compatibility hack; can hopefully be removed
             # once tornado 2.4 is out of the picture.
             super(GameDataHandler, self).initialize(".")
         else:
