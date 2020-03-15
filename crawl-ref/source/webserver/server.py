@@ -146,13 +146,33 @@ def bind_server():
     kwargs = {}
     if http_connection_timeout is not None:
         kwargs["idle_connection_timeout"] = http_connection_timeout
+
     if getattr(config, "http_xheaders", False):
         kwargs["xheaders"] = http_xheaders
 
     servers = []
 
+    def server_wrap(**kwargs):
+        try:
+            return tornado.httpserver.HTTPServer(application, **kwargs)
+        except TypeError:
+            try:
+                # Ugly backwards-compatibility hack. Removable once Tornado 3
+                # is out of the picture (if ever)
+                del kwargs["idle_connection_timeout"]
+                server = tornado.httpserver.HTTPServer(application, **kwargs)
+                logging.error(
+                        "Server configuration sets `idle_connection_timeout` "
+                        "but this is not available in your version of "
+                        "Tornado. Please upgrade to at least Tornado 4 for "
+                        "this to work.""")
+                return server
+            except:
+                raise # something went wrong other than idle_connection_timeout
+
     if bind_nonsecure:
-        server = tornado.httpserver.HTTPServer(application, **kwargs)
+        server = server_wrap(**kwargs)
+
         try:
             listens = bind_pairs
         except NameError:
@@ -163,8 +183,8 @@ def bind_server():
         servers.append(server)
     if ssl_options:
         # TODO: allow different ssl_options per bind pair
-        server = tornado.httpserver.HTTPServer(application,
-                                               ssl_options = ssl_options, **kwargs)
+        server = server_wrap(ssl_options=ssl_options, **kwargs)
+
         try:
             listens = ssl_bind_pairs
         except NameError:
