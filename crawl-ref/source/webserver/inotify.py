@@ -4,6 +4,7 @@ import os, os.path
 import errno
 import sys
 import tornado.ioloop
+from tornado.ioloop import IOLoop
 import tornado.platform.posix
 
 # The below class is from pyinotify, released under the MIT license
