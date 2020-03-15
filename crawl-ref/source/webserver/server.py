@@ -132,7 +132,7 @@ def signal_handler(signum, frame):
         # probably won't shutdown correctly and is *definitely* incorrect for
         # modern versions of Tornado; but this is how it was done on the
         # original implementation of webtiles + Tornado 2.4 that was in use
-        # through about 2020. 
+        # through about 2020.
         stop_everything()
 
 def bind_server():
