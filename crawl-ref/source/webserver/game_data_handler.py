@@ -10,7 +10,7 @@ except:
 
 class GameDataHandler(tornado.web.StaticFileHandler):
     def initialize(self):
-        super(GameDataHandler, self).initialize(".")
+        super(GameDataHandler, self).initialize("/")
 
     def parse_url_path(self, url_path):
         # the path should already match "([0-9a-f]*\/.*)", from server.py
