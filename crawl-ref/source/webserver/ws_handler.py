@@ -263,15 +263,11 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
     def send_announcement(self, text):
         # TODO: something in lobby?
         if not self.is_in_lobby():
-            logging.info("sending announcemnt")
             # show in chat window
             self.send_message("server_announcement", text=text)
             # show in player message window
             if self.is_running():
                 self.process.handle_announcement(text)
-        else:
-            logging.info("skipping announcemnt")
-
 
     def send_game_links(self):
         # Rerender Banner
