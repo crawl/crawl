@@ -14,6 +14,7 @@ class GameDataHandler(tornado.web.StaticFileHandler):
             # ugly extreme backward compatibility hack; can hopefully be removed
             # once tornado 2.4 is out of the picture.
             super(GameDataHandler, self).initialize(".")
+            self.root = "/" # just override the superclass for these old versions...
         else:
             super(GameDataHandler, self).initialize("/")
 

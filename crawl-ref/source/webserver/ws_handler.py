@@ -523,7 +523,6 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 if returncode != 1:
                     self.logger.warning("Error while getting JSON options!")
                 return
-            logging.info("data is %s" % data)
             self.append_message('{"msg":"options","watcher":true,"options":'
                                 + data + '}')
 
