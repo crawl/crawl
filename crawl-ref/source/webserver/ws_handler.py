@@ -428,7 +428,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             return
         if self.is_admin():
             self.add_admin_handlers()
-        self.queue_message("login_success", username = username, admin=True)#self.is_admin())
+        self.queue_message("login_success", username=username,
+                           admin=self.is_admin())
         if self.watched_game:
             self.watched_game.update_watcher_description()
         else:
