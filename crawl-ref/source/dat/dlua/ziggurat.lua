@@ -379,18 +379,6 @@ end), { weight = 2 }))
 mset(with_props(spec_fn(function ()
   local d = 20 + you.zigs_completed() * 2
   local e = 20 + you.zigs_completed() * 3
-  local f = 20 + you.zigs_completed() * 4
-  return "spectral thing w:20 / shadow wraith w:20 / " ..
-         "eidolon w:" .. d - 10 .. " / deep elf death mage w:" .. d - 10 .. " / " ..
-         "soul eater w:" .. d .. " / death knight w:" .. d - 10 .. " / " ..
-         "shadow dragon w:" .. e .. " / revenant w:" .. e - 10 .. " / " ..
-         "black sun w:" .. e .. " / profane servitor w:" .. e - 10 .. " / " ..
-         "tzitzimitl w:" .. f
-end), { weight = 2 }))
-
-mset(with_props(spec_fn(function ()
-  local d = 20 + you.zigs_completed() * 2
-  local e = 20 + you.zigs_completed() * 3
   return "ophan w:20 / apis w:20 / cherub w:20 / angel w:20 / " ..
          "daeva w:" .. d ..  " / pearl dragon w:" .. e
 end), { weight = 2 }))
@@ -405,6 +393,16 @@ mset(spec_fn(function ()
          "killer klown w:8 / " ..
          "greater demon w:2 / pandemonium lord w:" .. f
 end))
+
+mset(with_props(spec_fn(function ()
+  local d = math.max(2, math.floor((32 - you.depth()) / 5))
+  local e = math.min(8, math.floor((you.depth()) / 5) + 4)
+  local f = math.max(1, you.depth() + you.zigs_completed() - 5)
+  return "soul eater w:" .. d .. " / phantasmal warrior w:" .. d .. " / " ..
+         "deep elf death mage w:2 / shadow dragon w:4 / ghost crab w:4 / " ..
+         "eidolon w:" .. e .. " / revenant w:" .. e .. " / black sun w:4 / " ..
+         "curse skull w:4 / curse toe w:2 / player ghost w:" .. f
+end), { weight = 2 }))
 
 mset(with_props(spec_fn(function ()
   local d = 20 + you.zigs_completed() * 3
