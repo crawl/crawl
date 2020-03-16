@@ -81,18 +81,32 @@ def set_mutelist(username, mutelist):
         if conn:
             conn.close()
 
+# from dgamelaunch.h
+DGLACCT_ADMIN       = 1
+DGLACCT_LOGIN_LOCK  = 2
+DGLACCT_PASSWD_LOCK = 4
+DGLACCT_EMAIL_LOCK  = 8
+
+def dgl_is_admin(flags):
+    return bool(flags & DGLACCT_ADMIN)
+
+def dgl_is_banned(flags):
+    return bool(flags & DGLACCT_LOGIN_LOCK)
+
+# TODO: something with other lock flags?
+
 def get_user_info(username): # Returns user data in a tuple (userid, email)
     try:
         conn = sqlite3.connect(password_db)
         c = conn.cursor()
-        c.execute("select id,email from dglusers where username=? collate nocase",
+        c.execute("select id,email,flags from dglusers where username=? collate nocase",
                   (username,))
         result = c.fetchone()
 
         if result is None:
             return None
         else:
-            return result[0], result[1]
+            return result[0], result[1], result[2]
     finally:
         if c: c.close()
         if conn: conn.close()

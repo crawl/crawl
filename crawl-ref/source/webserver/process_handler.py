@@ -849,6 +849,13 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
                         "content": "%s: %s" % (username, text)
                         }))
 
+    def handle_announcement(self, text):
+        if self.conn and self.conn.open:
+            self.conn.send_message(json_encode({
+                        "msg": "server_announcement",
+                        "content": text
+                        }))
+
     def _on_process_output(self, line): # type: (str) -> None
         self.check_where()
 

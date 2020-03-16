@@ -48,6 +48,9 @@ def remove_in_lobbys(process):
         if socket.is_in_lobby():
             socket.send_message("lobby_remove", id=process.id)
 
+def global_announce(text):
+    for socket in list(sockets):
+        socket.send_announcement(text)
 
 def write_dgl_status_file():
     f = None
@@ -160,9 +163,27 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             "forgot_password": self.forgot_password,
             "reset_password": self.reset_password,
             "go_lobby": self.go_lobby,
+            "go_admin": self.go_admin,
             "get_rc": self.get_rc,
             "set_rc": self.set_rc,
             }
+
+        self.admin_handlers = {
+            "admin_announce": self.admin_announce,
+        }
+
+    def add_admin_handlers(self):
+        self.message_handlers.update(self.admin_handlers)
+
+    def clear_admin_handlers(self):
+        for k in self.admin_handlers.keys():
+            if k in self.message_handlers:
+                del self.message_handlers[k]
+
+    def admin_announce(self, text):
+        global_announce(text)
+        self.logger.info("User '%s' sent serverwide announcement: %s", self.username, text)
+        self.send_message("admin_log", text="Announcement made ('" + text + "')")
 
     client_closed = property(lambda self: (not self.ws_connection) or self.ws_connection.client_terminated)
 
@@ -238,6 +259,19 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         for process in list(processes.values()):
             self.queue_message("lobby_entry", **process.lobby_entry())
         self.send_message("lobby_complete")
+
+    def send_announcement(self, text):
+        # TODO: something in lobby?
+        if not self.is_in_lobby():
+            logging.info("sending announcemnt")
+            # show in chat window
+            self.send_message("server_announcement", text=text)
+            # show in player message window
+            if self.is_running():
+                self.process.handle_announcement(text)
+        else:
+            logging.info("skipping announcemnt")
+
 
     def send_game_links(self):
         # Rerender Banner
@@ -383,7 +417,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
     def do_login(self, username):
         self.username = username
-        self.user_id, self.user_email = userdb.get_user_info(username)
+        self.user_id, self.user_email, self.user_flags = userdb.get_user_info(username)
         self.logger.extra["username"] = username
         if not self.init_user():
             msg = ("Could not initialize your rc and morgue!<br>" +
@@ -393,9 +427,12 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.logger.warning("User initialization returned an error for user %s!",
                                 self.username)
             self.username = None
+            self.clear_admin_handlers()
             self.close()
             return
-        self.queue_message("login_success", username = username)
+        if self.is_admin():
+            self.add_admin_handlers()
+        self.queue_message("login_success", username = username, admin=True)#self.is_admin())
         if self.watched_game:
             self.watched_game.update_watcher_description()
         else:
@@ -469,6 +506,9 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         db_string = " ".join(muted).strip()
         userdb.set_mutelist(self.username, db_string)
 
+    def is_admin(self):
+        return self.username is not None and userdb.dgl_is_admin(self.user_flags)
+
     def pong(self):
         self.received_pong = True
 
@@ -487,6 +527,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 if returncode != 1:
                     self.logger.warning("Error while getting JSON options!")
                 return
+            logging.info("data is %s" % data)
             self.append_message('{"msg":"options","watcher":true,"options":'
                                 + data + '}')
 
@@ -523,7 +564,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 if self.watched_game == process:
                     return
                 self.stop_watching()
-            self.logger.info("%s started watching %s (P%s).",
+            self.logger.info("%s started watching %s (%s).",
                                 self.username and self.username or "[Anon]",
                                 process.username, process.id)
 
@@ -570,7 +611,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             return
         error = userdb.change_email(self.user_id, email)
         if error is None:
-            self.user_id, self.user_email = userdb.get_user_info(self.username)
+            self.user_id, self.user_email, self.user_flags = userdb.get_user_info(self.username)
             self.logger.info("User %s changed email to %s.", self.username, email if email else "null")
             self.send_message("change_email_done", email = email)
         else:
@@ -622,6 +663,10 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         else:
             self.send_message("go_lobby")
 
+    def go_admin(self):
+        self.go_lobby()
+        self.send_message("go_admin")
+
     def get_rc(self, game_id):
         if game_id not in config.games: return
         with open(self.rcfile_path(game_id), 'r') as f:
@@ -646,7 +691,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             elif self.process:
                 self.process.handle_input(message)
             elif not self.watched_game:
-                self.logger.warning("Didn't know how to handle msg: %s",
+                self.logger.warning("Didn't know how to handle msg (user %s): %s",
+                                    self.username and self.username or "[Anon]",
                                     obj["msg"])
         except Exception:
             self.logger.warning("Error while handling JSON message!",

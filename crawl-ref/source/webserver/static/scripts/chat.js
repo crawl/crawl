@@ -37,6 +37,11 @@ define(["jquery", "comm", "linkify"], function ($, comm, linkify) {
         $(document).trigger("chat_message", [data.content]);
     }
 
+    function show_in_chat(text)
+    {
+        receive_message({"content": text});
+    }
+
     function handle_dump(data)
     {
         var msg = $("<span>").addClass("chat_msg chat_automated")
@@ -226,5 +231,6 @@ define(["jquery", "comm", "linkify"], function ($, comm, linkify) {
         clear: clear,
         focus: focus,
         reset_visibility: reset_visibility,
+        show_in_chat: show_in_chat,
     }
 });

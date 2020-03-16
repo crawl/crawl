@@ -406,6 +406,12 @@ function (exports, $, key_conversion, chat, comm) {
     }
 
     var current_user;
+
+    // keep in mind that client-side, you can't rely on this variable being
+    // real. All admin actions needed to be validated on the server. Here it
+    // is only for whether to show the UI at all.
+    var admin_user = false;
+
     function login()
     {
         $("#login_form").hide();
@@ -427,6 +433,8 @@ function (exports, $, key_conversion, chat, comm) {
         $("#login_form").show();
         $("#reg_link").show();
         $("#forgot_link").show();
+        current_user = null;
+        admin_user = false;
     }
 
     function logged_in(data)
@@ -435,6 +443,7 @@ function (exports, $, key_conversion, chat, comm) {
         hide_prompt();
         $("#login_message").html("Logged in as " + username);
         current_user = username;
+        admin_user = data.admin;
         hide_dialog();
         $("#login_form").hide();
         $("#reg_link").hide();
@@ -445,6 +454,10 @@ function (exports, $, key_conversion, chat, comm) {
         chat.reset_visibility(true);
         $("#chat_input").show();
         $("#chat_login_text").hide();
+        if (admin_user)
+            $("#admin_panel_button").show();
+        else
+            $("#admin_panel_button").hide();
 
         send_message("set_login_cookie");
 
@@ -477,7 +490,41 @@ function (exports, $, key_conversion, chat, comm) {
             });
             set_login_cookie(null);
         }
+        current_user = null;
+        admin_user = false;
+        $("#admin_panel_button").hide();
+        $("#admin_panel").hide();
         location.reload();
+    }
+
+    function toggle_admin_panel()
+    {
+        if (admin_user)
+            $("#admin_panel").toggle();
+    }
+
+    function admin_announce()
+    {
+        var text = $("#announcement_text").val();
+        if (text.length > 0)
+        {
+            send_message("admin_announce", {text: text});
+            $("#announcement_text").val('');
+        }
+    }
+
+    function admin_log(data)
+    {
+        var text = data.text;
+        $("#admin_panel_log").append(
+            '<div><span>' + text + "</span></div>");
+    }
+
+    function server_announcement(data)
+    {
+        var text = '<span class="fg5">Serverwide announcement: </span><span>'
+            + data.text + '</span>';
+        chat.show_in_chat(text);
     }
 
     function show_dialog(id)
@@ -866,6 +913,11 @@ function (exports, $, key_conversion, chat, comm) {
         {
             show_dialog("#reset_pw");
         }
+    }
+
+    function go_admin()
+    {
+        $("#admin_panel").show();
     }
 
     function login_required(data)
@@ -1277,9 +1329,11 @@ function (exports, $, key_conversion, chat, comm) {
         "lobby_complete": lobby_complete,
 
         "go_lobby": go_lobby,
+        "go_admin": go_admin,
         "login_required": login_required,
         "game_started": crawl_started,
         "game_ended": crawl_ended,
+        "server_announcement": server_announcement,
 
         "login_success": logged_in,
         "login_fail": login_failed,
@@ -1291,6 +1345,8 @@ function (exports, $, key_conversion, chat, comm) {
         "forgot_password_fail": forgot_password_failed,
         "forgot_password_done": forgot_password_done,
         "reset_password_fail": reset_password_failed,
+
+        "admin_log": admin_log,
 
         "watching_started": watching_started,
 
@@ -1353,6 +1409,9 @@ function (exports, $, key_conversion, chat, comm) {
 
         $("#force_terminate_no").click(force_terminate_no);
         $("#force_terminate_yes").click(force_terminate_yes);
+
+        $("#admin_panel_button").click(toggle_admin_panel);
+        $("#announcement_submit").click(admin_announce);
 
         do_layout();
 

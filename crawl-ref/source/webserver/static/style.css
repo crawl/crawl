@@ -126,6 +126,20 @@ body {
     position: relative;
 }
 
+#admin_panel {
+    border: 1px solid lightgray;
+    padding: 10px;
+}
+
+#admin_panel_button {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+#admin_panel #announcement_text {
+    width: 60%;
+}
+
 .floating_dialog {
     position: absolute;
     left: 50px;
