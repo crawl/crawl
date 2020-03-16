@@ -2,7 +2,7 @@ import os
 import subprocess
 import errno
 import fcntl
-import tornado.ioloop
+import tornado, tornado.ioloop
 from tornado.ioloop import IOLoop
 
 BUFSIZ = 1024
@@ -35,7 +35,7 @@ def check_output(call, callback):
 
             if buf:
                 data.append(buf)
-            callback("".join(data), p.returncode)
+            callback(tornado.escape.to_unicode(b"".join(data)), p.returncode)
 
     def _handle_read(fd, events):
         if events & IOLoop.READ:
