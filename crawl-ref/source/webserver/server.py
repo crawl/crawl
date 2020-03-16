@@ -218,7 +218,16 @@ def init_logging(logging_config):
     level = logging_config.get("level")
     if level is not None:
         logging.getLogger().setLevel(level)
-    logging.getLogger().addFilter(TornadoFilter())
+    try:
+        # hide regular successful access messages, e.g. `200 GET` messages
+        # messages. 404s are still shown. TODO: would there be demand for
+        # sending this to its own file in a configurable way?
+        logging.getLogger("tornado.access").setLevel(logging.WARNING)
+    except:
+        # the tornado version is ancient enough that it doesn't have its own
+        # logging streams; this filter suppresses any logging done from the
+        # `web` module.
+        logging.getLogger().addFilter(TornadoFilter())
     logging.addLevelName(logging.DEBUG, "DEBG")
     logging.addLevelName(logging.WARNING, "WARN")
 
