@@ -295,7 +295,7 @@ if __name__ == "__main__":
         userdb.upgrade_user_db()
     userdb.ensure_settings_db_exists()
     try:
-        IOLoop.current().set_blocking_log_threshold(0.5)
+        IOLoop.current().set_blocking_log_threshold(0.5) # type: ignore
         logging.info("Blocking call timeout: 500ms.")
     except:
         # this is the new normal; still not sure of a way to deal with this.
