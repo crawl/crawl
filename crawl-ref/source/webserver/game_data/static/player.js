@@ -6,17 +6,17 @@ function ($, comm, enums, map_knowledge, messages, options) {
     var player = {}, last_time;
 
     var stat_boosters = {
-        "str": "vitalised|mighty|berserking",
-        "int": "vitalised|brilliant",
-        "dex": "vitalised|agile",
+        "str": "vitalised",
+        "int": "vitalised",
+        "dex": "vitalised",
         "hp": "divinely vigorous|berserking",
         "mp": "divinely vigorous"
     };
 
     var defense_boosters = {
-        "ac": "icy armour|protected from physical damage|sanguine armour|corpse armour|protection aura",
+        "ac": "icy armour|protected from physical damage|sanguine armour|protection aura",
         "ev": "agile|acrobat",
-        "sh": "divine shield|corpse armour",
+        "sh": "divine shield",
     }
 
     /**
