@@ -166,21 +166,12 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             "go_admin": self.go_admin,
             "get_rc": self.get_rc,
             "set_rc": self.set_rc,
+            "admin_announce": self.admin_announce,
             }
 
-        self.admin_handlers = {
-            "admin_announce": self.admin_announce,
-        }
-
-    def add_admin_handlers(self):
-        self.message_handlers.update(self.admin_handlers)
-
-    def clear_admin_handlers(self):
-        for k in self.admin_handlers.keys():
-            if k in self.message_handlers:
-                del self.message_handlers[k]
-
     def admin_announce(self, text):
+        if not self.is_admin():
+            return
         global_announce(text)
         self.logger.info("User '%s' sent serverwide announcement: %s", self.username, text)
         self.send_message("admin_log", text="Announcement made ('" + text + "')")
@@ -423,11 +414,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.logger.warning("User initialization returned an error for user %s!",
                                 self.username)
             self.username = None
-            self.clear_admin_handlers()
             self.close()
             return
-        if self.is_admin():
-            self.add_admin_handlers()
         self.queue_message("login_success", username=username,
                            admin=self.is_admin())
         if self.watched_game:
