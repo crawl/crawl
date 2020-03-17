@@ -114,6 +114,16 @@ def handle_new_milestone(line):
     game = find_running_game(data.get("name"), data.get("start"))
     if game: game.log_milestone(data)
 
+# decorator for admin calls
+def admin_required(f):
+    def wrapper(self, *args, **kwargs):
+        if not self.is_admin():
+            logging.error("Non-admin user '%s' attempted admin function '%s'" %
+                (self.username and self.username or "[Anon]", f.__name__))
+            return
+        return f(self, *args, **kwargs)
+    return wrapper
+
 class CrawlWebSocket(tornado.websocket.WebSocketHandler):
     def __init__(self, app, req, **kwargs):
         tornado.websocket.WebSocketHandler.__init__(self, app, req, **kwargs)
@@ -169,9 +179,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             "admin_announce": self.admin_announce,
             }
 
+    @admin_required
     def admin_announce(self, text):
-        if not self.is_admin():
-            return
         global_announce(text)
         self.logger.info("User '%s' sent serverwide announcement: %s", self.username, text)
         self.send_message("admin_log", text="Announcement made ('" + text + "')")
