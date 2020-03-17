@@ -86,6 +86,9 @@ class CrawlProcessHandlerBase(object):
     def __init__(self, game_params, username, logger):
         self.game_params = game_params
         self.username = username
+        # If you get exceptions triggered by using this logger, it's probably
+        # a python 3.5 bug for which there is no workaround (beyond using
+        # python 3.7) currently. Issue is: https://bugs.python.org/issue31457
         self.logger = logging.LoggerAdapter(logger, {})
         self.logger.process = self._process_log_msg
         self.queue_messages = False
