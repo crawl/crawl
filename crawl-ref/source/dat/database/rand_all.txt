@@ -67,6 +67,8 @@ Jealousy
 
 Mistrust
 
+Paranoia
+
 Scepticism
 
 Secrets
@@ -97,13 +99,23 @@ Esteem
 
 Favour
 
+w:5
+Felicitations
+
 Generosity
 
+Grace
+
 Hope
+
+Inspiration
 
 Pride
 
 Regard
+
+w:5
+Respect
 
 Supremacy
 
