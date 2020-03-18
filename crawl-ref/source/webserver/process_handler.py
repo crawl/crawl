@@ -86,11 +86,20 @@ class CrawlProcessHandlerBase(object):
     def __init__(self, game_params, username, logger):
         self.game_params = game_params
         self.username = username
-        # If you get exceptions triggered by using this logger, it's probably
-        # a python 3.5 bug for which there is no workaround (beyond using
-        # python 3.7) currently. Issue is: https://bugs.python.org/issue31457
         self.logger = logging.LoggerAdapter(logger, {})
-        self.logger.process = self._process_log_msg
+        try:
+            self.logger.manager
+            self.logger.process = self._process_log_msg
+        except AttributeError:
+            # This is a workaround for a python 3.5 bug with chained
+            # LoggerAdapters, where delegation is not handled properly (e.g.
+            # manager isn't set, _log isn't available, etc.). This simple fix
+            # only handles two levels of chaining. The general fix is to
+            # upgrade to python 3.7.
+            # Issue: https://bugs.python.org/issue31457
+            self.logger = logging.LoggerAdapter(logger.logger, {})
+            self.logger.process = lambda m,k: logger.process(*self._process_log_msg(m, k))
+
         self.queue_messages = False
 
         self.process = None
