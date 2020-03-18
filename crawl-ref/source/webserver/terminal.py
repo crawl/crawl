@@ -140,7 +140,7 @@ class TerminalRecorder(object):
                 if line[-1] == b"\r": line = line[:-1]
 
                 if self.output_callback:
-                    self.output_callback(line)
+                    self.output_callback(to_unicode(line))
 
             pos = self.output_buffer.find(b"\n")
 
