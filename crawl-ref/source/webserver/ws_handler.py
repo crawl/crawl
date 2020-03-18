@@ -388,11 +388,26 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             # The last crawl process has ended, now we can go
             IOLoop.current().stop()
 
-    def init_user(self):
+    def init_user(self, callback):
+        # this would be more cleanly implemented with wait_for_exit, but I
+        # can't get code for that to work in a way that supports all currently
+        # in-use versions. TODO: clean up once old Tornado versions are out of
+        # the picture.
         with open("/dev/null", "w") as f:
-            result = subprocess.call([config.init_player_program, self.username],
-                                     stdout = f, stderr = subprocess.STDOUT)
-            return result == 0
+            if tornado.version_info[0] < 3:
+                # before tornado 3, an async approach would have to be done
+                # differently, and given that we're deprecating tornado 2.4
+                # it doesn't seem worth implementing right now. Just stick with
+                # the old synchronous approach for backwards compatibility.
+                p = subprocess.Popen([config.init_player_program, self.username],
+                                         stdout = f, stderr = subprocess.STDOUT)
+                callback(p.wait())
+            else:
+                # TODO: do we need to care about the streams at all here?
+                p = tornado.process.Subprocess(
+                        [config.init_player_program, self.username],
+                        stdout = f, stderr = subprocess.STDOUT)
+                p.set_exit_callback(callback)
 
     def stop_watching(self):
         if self.watched_game:
@@ -415,27 +430,33 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         self.username = username
         self.user_id, self.user_email, self.user_flags = userdb.get_user_info(username)
         self.logger.extra["username"] = username
-        if not self.init_user():
-            msg = ("Could not initialize your rc and morgue!<br>" +
-                   "This probably means there is something wrong " +
-                   "with the server configuration.")
-            self.send_message("close", reason = msg)
-            self.logger.warning("User initialization returned an error for user %s!",
-                                self.username)
-            self.username = None
-            self.close()
-            return
-        self.queue_message("login_success", username=username,
-                           admin=self.is_admin())
-        if self.watched_game:
-            self.watched_game.update_watcher_description()
-        else:
-            self.send_game_links()
+
+        def login_callback(result):
+            success = result == 0
+            if not success:
+                msg = ("Could not initialize your rc and morgue!<br>" +
+                       "This probably means there is something wrong " +
+                       "with the server configuration.")
+                self.send_message("close", reason = msg)
+                self.logger.warning("User initialization returned an error for user %s!",
+                                    self.username)
+                self.username = None
+                self.close()
+                return
+
+            self.queue_message("login_success", username=username,
+                               admin=self.is_admin())
+            if self.watched_game:
+                self.watched_game.update_watcher_description()
+            else:
+                self.send_game_links()
+
+        self.init_user(login_callback)
 
     def login(self, username, password):
         real_username = userdb.user_passwd_match(username, password)
         if real_username:
-            self.logger.info("User %s logged in from %s.",
+            self.logger.info("User %s logging in from %s.",
                                         real_username, self.request.remote_ip)
             self.do_login(real_username)
         else:
@@ -450,7 +471,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             token = None
         if (token, username) in login_tokens:
             del login_tokens[(token, username)]
-            self.logger.info("User %s logged in (via token).", username)
+            self.logger.info("User %s logging in (via token).", username)
             self.do_login(username)
         else:
             self.logger.warning("Wrong login token for user %s.", username)
