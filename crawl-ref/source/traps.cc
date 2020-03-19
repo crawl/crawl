@@ -1326,7 +1326,7 @@ void do_trap_effects()
 {
     // Try to shaft, teleport, or alarm the player.
 
-    // We figure out which possibilites are allowed before picking which happens
+    // We figure out which possibilities are allowed before picking which happens
     // so that the overall chance of being trapped doesn't depend on which
     // possibilities are allowed.
 
@@ -1350,7 +1350,7 @@ void do_trap_effects()
         case TRAP_ALARM:
             // Alarm effect alarms are always noisy, even if the player is
             // silenced, to avoid "travel only while silenced" behavior.
-            // XXX: improve messaging to make it clear theres a wail outside of the
+            // XXX: improve messaging to make it clear there's a wail outside of the
             // player's silence
             mprf("You set off the alarm!");
             fake_noisy(40, you.pos());
