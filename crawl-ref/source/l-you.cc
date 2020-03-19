@@ -949,7 +949,7 @@ LUAFN(you_mutation)
     string mutname = luaL_checkstring(ls, 1);
     mutation_type mut = mutation_from_name(mutname, false);
     if (mut != NUM_MUTATIONS)
-        PLUARET(integer, you.get_base_mutation_level(mut, true, true, true)); // includes innate, temp mutations. I'm not sure if this is what was intended but this was the old behavior.
+        PLUARET(integer, you.get_base_mutation_level(mut, true, true, true)); // includes innate, temp mutations. I'm not sure if this is what was intended but this was the old behaviour.
 
     string err = make_stringf("No such mutation: '%s'.", mutname.c_str());
     return luaL_argerror(ls, 1, err.c_str());

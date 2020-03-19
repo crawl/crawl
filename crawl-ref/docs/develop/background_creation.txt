@@ -79,8 +79,8 @@ herd-watcher:
     } },
 
 That looks like what I expect a shepherd to look like: lightly armed, lightly
-armored, and just a speck of potential. Other bits of code will ensure any
-weapons and armor are automatically equipped at creation (but not staves or
+armoured, and just a speck of potential. Other bits of code will ensure any
+weapons and armour are automatically equipped at creation (but not staves or
 other equippables!).
 
 If you skip one of the above steps, you'll hit an ASSERT error after running

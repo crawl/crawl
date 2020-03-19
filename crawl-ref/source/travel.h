@@ -267,7 +267,7 @@ public:
     dungeon_feature_type grid; // Grid feature of the stair.
     level_pos destination;  // The level and the position on the level this
                             // stair leads to. This may be a guess.
-    int       distance;     // The distance traveled to reach this stair.
+    int       distance;     // The distance travelled to reach this stair.
     bool      guessed_pos;  // true if we're not sure that 'destination' is
                             // correct.
     stair_type type;
@@ -614,7 +614,7 @@ protected:
     // How many points we'll consider next iteration.
     int next_iter_points;
 
-    // How far we've traveled from (start_x, start_y), in moves (a diagonal move
+    // How far we've travelled from (start_x, start_y), in moves (a diagonal move
     // is no longer than an orthogonal move).
     int traveled_distance;
 

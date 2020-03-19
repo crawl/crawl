@@ -542,7 +542,7 @@ void trap_def::trigger(actor& triggerer)
     case TRAP_ALARM:
         // Alarms always mark the player, but not through glass
         // The trap gets destroyed to prevent the player from abusing an alarm
-        // trap found in favorable terrain.
+        // trap found in favourable terrain.
         if (!you.see_cell_no_trans(pos))
             break;
         trap_destroyed = true;
@@ -1349,7 +1349,7 @@ void do_trap_effects()
 
         case TRAP_ALARM:
             // Alarm effect alarms are always noisy, even if the player is
-            // silenced, to avoid "travel only while silenced" behavior.
+            // silenced, to avoid "travel only while silenced" behaviour.
             // XXX: improve messaging to make it clear there's a wail outside of the
             // player's silence
             mprf("You set off the alarm!");

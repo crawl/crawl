@@ -1177,15 +1177,15 @@ void noise_grid::apply_noise_effects(const coord_def &pos,
 //  - If the cells cannot see each other, calculate a noise source as follows:
 //
 //    Calculate a noise centroid between the noise source and the observer,
-//    weighted to the noise source if the noise has traveled in a straight line,
+//    weighted to the noise source if the noise has travelled in a straight line,
 //    weighted toward the observer the more the noise has deviated from a
 //    straight line.
 //
-//    Fuzz the centroid by the extra distance the noise has traveled over
+//    Fuzz the centroid by the extra distance the noise has travelled over
 //    the straight line distance. This is where the observer will think the
 //    noise originated.
 //
-//    Thus, if the noise has traveled in a straight line, the observer
+//    Thus, if the noise has travelled in a straight line, the observer
 //    will know the exact origin, 100% of the time, even if the
 //    observer is all the way across the level.
 coord_def noise_grid::noise_perceived_position(actor *act,
@@ -1385,7 +1385,7 @@ static void _actor_apply_noise(actor *act,
         // linear from p(0) = 100 to p(R) = 10. This replaces a version that
         // was 100% from 0 to 3, and 0% outward.
         //
-        // behavior around the old breakpoint for R=8: p(3) = 66, p(4) = 55.
+        // behaviour around the old breakpoint for R=8: p(3) = 66, p(4) = 55.
 
         const int player_distance = grid_distance(apparent_source, you.pos());
         const int alert_prob = max(player_distance * -90 / LOS_RADIUS + 100, 0);

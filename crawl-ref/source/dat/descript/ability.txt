@@ -653,7 +653,7 @@ increases with your piety and experience level.
 Apocalypse ability
 
 Reveals Ru's truth to your enemies, dealing severe damage to all enemies in
-your line of sight. Affected creatures may be paralyzed, slowed or have their
+your line of sight. Affected creatures may be paralysed, slowed or have their
 magic drained. The damage dealt increases with your piety and experience level.
 %%%%
 Sacrifice Purity ability

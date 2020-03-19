@@ -1658,7 +1658,7 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
         beam.pierce   = true;
         break;
 
-    // Special behavior handled in _mons_upheaval
+    // Special behaviour handled in _mons_upheaval
     // Hack so beam.cc allows us to correctly use that function
     case SPELL_UPHEAVAL:
         beam.flavour     = BEAM_RANDOM;

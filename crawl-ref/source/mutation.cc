@@ -2658,14 +2658,14 @@ int player::how_mutated(bool innate, bool levels, bool temp) const
 // Return whether current tension is balanced
 static bool _balance_demonic_guardian()
 {
-    // if tension is unfavorably high, perhaps another guardian should spawn
+    // if tension is unfavourably high, perhaps another guardian should spawn
     const int mutlevel = you.get_mutation_level(MUT_DEMONIC_GUARDIAN);
     const int tension = get_tension(GOD_NO_GOD);
     return tension*3/4 <= mutlevel*6 + random2(mutlevel*mutlevel*2);
 }
 
 // Primary function to handle and balance demonic guardians, if the tension
-// is unfavorably high and a guardian was not recently spawned, a new guardian
+// is unfavourably high and a guardian was not recently spawned, a new guardian
 // will be made, if tension is below a threshold (determined by the mutations
 // level and a bit of randomness), guardians may be dismissed in
 // _balance_demonic_guardian()

@@ -1013,7 +1013,7 @@ void shoals_apply_tides(int turns_elapsed, bool force)
         return;
     }
 
-    // isolate from main levelgen rng if called from there; the behavior of
+    // isolate from main levelgen rng if called from there; the behaviour of
     // this function is dependent on global state (tide direction, etc) that
     // may impact the number of rolls depending on when the player changes
     // shoals levels, so doing this with the levelgen rng has downstream

@@ -48,7 +48,7 @@ Optional:
 ====
 
 Implementation now becomes more complicated. Edit these files for
-any special abilities, spells, or unique behavior that the monster will have.
+any special abilities, spells, or unique behaviour that the monster will have.
 
 
 - /source/mon-cast.cc

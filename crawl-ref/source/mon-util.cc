@@ -2532,7 +2532,7 @@ monster_type random_demonspawn_job()
                                 MONS_LAST_NONBASE_DEMONSPAWN);
 }
 
-// Note: For consistent behavior in player_will_anger_monster(), all
+// Note: For consistent behaviour in player_will_anger_monster(), all
 // spellbooks a given monster can get here should produce the same
 // return values in the following:
 //

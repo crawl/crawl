@@ -685,7 +685,7 @@ Maxwell's thermic engine
 
 A strange sword, one blade blistering hot and the other icy cold. When it hits
 its target the thermal gradient increases. What causes this effect is unknown
-but it is rumored that otherworldly forces are involved.
+but it is rumoured that otherworldly forces are involved.
 %%%%
 demon trident "Rift"
 
@@ -696,7 +696,7 @@ teleports its attack directly to its victim.
 staff of Battle
 
 A staff encased in vividly coloured scales, wrought by a long-forgotten wizard.
-It was the mage Iskenderun's favorite playtoy. The staff increases the power of
+It was the mage Iskenderun's favourite playtoy. The staff increases the power of
 its wielder's conjurations. When danger looms, it conjures a battlesphere, the
 strength of which depends on the wielder's skill with Charms and Conjurations.
 %%%%

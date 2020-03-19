@@ -27,7 +27,7 @@ possibly including the user.
 %%%%
 the Shaft card
 
-The card depicts a traveler plummeting into a chasm that has opened beneath
+The card depicts a traveller plummeting into a chasm that has opened beneath
 them.
 
 Drawing this card will create a shaft beneath the user, and possibly beneath

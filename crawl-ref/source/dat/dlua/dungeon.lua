@@ -705,7 +705,7 @@ dgn.loot_potions = [[
     w:2   potion of experience
     ]]
 
--- Some definitions for all types of auxiliary armor.
+-- Some definitions for all types of auxiliary armour.
 dgn.aux_armour = "cloak / scarf / helmet / hat / pair of gloves " ..
     "/ pair of boots"
 

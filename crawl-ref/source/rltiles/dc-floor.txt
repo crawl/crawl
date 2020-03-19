@@ -36,8 +36,8 @@ grey_dirt_b_7
 # Multiple tile definitions are STATIC, that is they may change between
 # saves but are otherwise fixed.
 
-# The colorized versions of FLOOR_PEBBLE were made from
-# pebble_gray*.png, by colorizing the non-border color
+# The colourised versions of FLOOR_PEBBLE were made from
+# pebble_gray*.png, by colourising the non-border colour
 # with hues from 28 to 37, sat 54 to 68, lum 7 to 18 in GIMP.
 %desat 31
 %desat 32

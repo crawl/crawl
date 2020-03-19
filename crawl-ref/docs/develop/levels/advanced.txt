@@ -705,7 +705,7 @@ Special dungeon-related Lua marker properties
 There are several properties a Lua marker can have which will affect the
 dungeon cell which they are on:
 
-* connected_exclude: Consider the cell to be separate from neighboring
+* connected_exclude: Consider the cell to be separate from neighbouring
       cells with identical or similar features. Currently only useful
       for preventing adjacent doors from grouping together into a gate,
       forcing them to open and close as separate doors. See the Evil

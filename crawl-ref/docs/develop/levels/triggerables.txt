@@ -157,7 +157,7 @@ This is repeated until all of the triggerers have been removed, or the player
 leaves the level.
 
 [1]: "Turns" are a misnomer. The countdown operates off the value of ev:ticks(),
-     a value which may be, but is not always, "10" for every turn. In practice,
+     a value which may be, but is not always, "10" for every turn. In practise,
      for randomised functions, you can times your values by 10 to roughly get
      a "turns" value: therefore, "50" ~= every 5 turns, "200" ~= every 20 turns.
 

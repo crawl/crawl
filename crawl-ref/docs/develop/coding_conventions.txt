@@ -390,7 +390,7 @@ Not this:
   #endif
 
 The reason for this is that it's common for such debug flags to be left
-undefined, leading to the #if statement having an undefined behavior. Most sane
+undefined, leading to the #if statement having an undefined behaviour. Most sane
 compilers will give undefined macros a value of '0' during such #if
 comparisons, but some compilers throw errors. So, play it safe. Use #ifdef.
 
@@ -406,7 +406,7 @@ Another thing to watch for with such flags is this sort of thing:
   #endif
 
 The #elif statement should read '#elif defined(SOME_OTHER_FLAG)'. If the
-macro was undefined, this would lead to the same undefined behavior noted
+macro was undefined, this would lead to the same undefined behaviour noted
 above. If it was defined as above, the #elif would not function as expected.
 
 G) Spaces around parenthesis

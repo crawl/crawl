@@ -2299,7 +2299,7 @@ these in the dump or morgue files. Below are options for tweaking this behaviour
 The following events are logged:
         - Gaining or losing a level
         - Entering a dungeon level for the first time
-        - Memorizing a spell of higher level than any learned before
+        - Memorising a spell of higher level than any learned before
         - Becoming a worshipper of a god
         - Abandoning a god
         - Being put under penance and being forgiven

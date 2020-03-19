@@ -1259,7 +1259,7 @@ int player_hunger_rate()
 
 /**
  * How many spell levels does the player have total, including those used up
- * by memorized spells?
+ * by memorised spells?
  */
 int player_total_spell_levels()
 {
@@ -1268,7 +1268,7 @@ int player_total_spell_levels()
 
 /**
  * How many spell levels does the player currently have available for
- * memorizing new spells?
+ * memorising new spells?
  */
 int player_spell_levels()
 {
@@ -2133,7 +2133,7 @@ static int _player_scale_evasion(int prescaled_ev, const int scale)
 }
 
 /**
- * What is the player's bonus to EV from dodging when not paralyzed, after
+ * What is the player's bonus to EV from dodging when not paralysed, after
  * accounting for size & body armour penalties?
  *
  * First, calculate base dodge bonus (linear with dodging * stepdowned dex),
@@ -2733,7 +2733,7 @@ int xp_to_level_diff(int xp, int scale)
                 + (adjusted_xp - (int) exp_needed(adjusted_level)) * scale /
                     ((int) exp_needed(adjusted_level + 1)
                                     - (int) exp_needed(adjusted_level));
-        // TODO: this would be more usable with better rounding behavior
+        // TODO: this would be more usable with better rounding behaviour
         return adjusted_level_scaled - cur_level_scaled;
     } else
         return adjusted_level - projected_level;
@@ -4214,7 +4214,7 @@ int get_player_poisoning()
 
 // The amount of aut needed for poison to end if
 // you.duration[DUR_POISONING] == dur, assuming no Chei/DD shenanigans.
-// This function gives the following behavior:
+// This function gives the following behaviour:
 // * 1/15 of current poison is removed every 10 aut normally
 // * but speed of poison is capped between 0.025 and 1.000 HP/aut
 static double _poison_dur_to_aut(double dur)
@@ -5911,7 +5911,7 @@ vector<mutation_ac_changes> all_mutation_ac_changes = {
     ,mutation_ac_changes(MUT_SHAGGY_FUR,             mutation_activity_type::PARTIAL, ONE_TWO_THREE)
     ,mutation_ac_changes(MUT_PHYSICAL_VULNERABILITY, mutation_activity_type::PARTIAL, {-5,-10,-15})
     // Scale mutations are more easily disabled (forms etc.). This appears to be for flavour reasons.
-    // Preserved behavior from before mutation ac was turned to data.
+    // Preserved behaviour from before mutation ac was turned to data.
     ,mutation_ac_changes(MUT_IRIDESCENT_SCALES,      mutation_activity_type::FULL,    {2, 4, 6})
     ,mutation_ac_changes(MUT_RUGGED_BROWN_SCALES,    mutation_activity_type::FULL,    ONE_TWO_THREE)
     ,mutation_ac_changes(MUT_ICY_BLUE_SCALES,        mutation_activity_type::FULL,    TWO_THREE_FOUR)

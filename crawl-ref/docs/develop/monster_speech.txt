@@ -242,7 +242,7 @@ that, for example, fleeing uniques won't output their normal menacing
 speech but rather the default speech defined for fleeing humanoids in
 general.
 
-In practice this means that database keys starting with "default" are
+In practise this means that database keys starting with "default" are
 the fallback solution if the exact look-up has failed. As such, the
 messages should be generic enough to allow for all the possibly
 skipped prefixes, or else those cases should be caught earlier, e.g.

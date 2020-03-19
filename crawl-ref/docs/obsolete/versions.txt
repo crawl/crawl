@@ -38,7 +38,7 @@ First DevTeam Release: 3.40 [23.02.2000]
      * Stealth is now much more effective (try playing thieves again!);
      * Resistances to electricity and poison no longer absolute;
      * Disarming traps may now trigger them;
-     * Armor and evasion skills are more effective;
+     * Armour and evasion skills are more effective;
      * Great and triple swords now treated as long swords for purposes of
        skill (Great Swords skill removed); and
      * Berserk mode made more interesting:
@@ -81,7 +81,7 @@ First DevTeam Release: 3.40 [23.02.2000]
      * Hand-and-a-half weapons added -- bonus if no shield wielded;
      * Added weapons of reaching, permitting attacks two squares over;
      * Cekugob no longer confers resistances to fire and cold;
-     * Worn cloaks no longer prevent donning/removal of body armor;
+     * Worn cloaks no longer prevent donning/removal of body armour;
      * Amulet of maintain speed now the amulet of resist slowness; and
      * New weapon types: knife, axe, broad axe, spiked flail, great
        flail, great mace, trident, demon trident.
@@ -244,7 +244,7 @@ Linley's Last: 3.30 [30.03.1999]
      * Considerable balance changes;
      * New dungeon formations;
      * The 'V' command now gives more specific information for weapons
-       and armor;
+       and armour;
      * 'Target previous monster' function is now a bit easier to use;
      * You can now command your servants to attack ('!' command); and
      * Bugs fixed.

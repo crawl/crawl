@@ -270,7 +270,7 @@ end
 
 function explorer.describe_mons(mons)
     local mi = mons.get_info()
-    -- TODO: weird distribution of labor between mons and moninfo, can this be
+    -- TODO: weird distribution of labour between mons and moninfo, can this be
     -- cleaned up?
     -- TODO: does it make sense to use the same item notability function here?
     local feats = util.map(function (i) return "item:" .. i.name() end,

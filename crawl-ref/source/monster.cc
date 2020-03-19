@@ -4505,7 +4505,7 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
            did_hurt_conduct(DID_HURT_FOE, *this, amount);
         }
 
-        // Handle pain bond behavior here. Is technically passive damage.
+        // Handle pain bond behaviour here. Is technically passive damage.
         // radiate_pain_bond may do additional damage by recursively looping
         // back to the original trigger.
         if (has_ench(ENCH_PAIN_BOND) && flavour != BEAM_SHARED_PAIN)

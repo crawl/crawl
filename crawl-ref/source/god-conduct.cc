@@ -559,7 +559,7 @@ struct like_response
         if (message)
             simple_god_message(message);
 
-        // this is all very strange, but replicates legacy behavior.
+        // this is all very strange, but replicates legacy behaviour.
         // See the comment on piety_bonus above.
         int denom = piety_denom_bonus + level;
         if (xl_denom)

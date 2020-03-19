@@ -2188,7 +2188,7 @@ static const map<band_type, vector<member_possibilites>> band_membership = {
     { BAND_KOBOLD_DEMONOLOGIST, {{{MONS_KOBOLD, 4},
                                   {MONS_BIG_KOBOLD, 2},
                                   {MONS_KOBOLD_DEMONOLOGIST, 1}}}},
-    // Favor tougher naga suited to melee, compared to normal naga bands
+    // Favour tougher naga suited to melee, compared to normal naga bands
     { BAND_GUARDIAN_SERPENT,    {{{MONS_NAGA_MAGE, 5}, {MONS_NAGA_WARRIOR, 10}},
 
                                  {{MONS_NAGA_MAGE, 5}, {MONS_NAGA_WARRIOR, 10},

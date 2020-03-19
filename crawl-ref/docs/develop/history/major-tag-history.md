@@ -14,7 +14,7 @@
 | 1         | Nov 2011 | (0.11b)          | save compat for branch `portal_branches` | [7b91fc81](https://github.com/crawl/crawl/commit/7b91fc814655) (branch)
 | 32        | Jan 2011 | 0.8a           | save compat? | [52b7544e](https://github.com/crawl/crawl/commit/52b7544e8eed3aee8228fbdfe939f11e1bab61aa)
 |31         | Nov 2010 | 0.8a           | revert | [d509b89e](https://github.com/crawl/crawl/commit/d509b89e63a49cb4e48bac031cda2d785bd968a0)
-| 32        | Nov 2010 | 0.8a           | change in rune behavior | [3a1f4483](https://github.com/crawl/crawl/commit/3a1f44834a77762edbbf7740f324bdd48e13b52d)
+| 32        | Nov 2010 | 0.8a           | change in rune behaviour | [3a1f4483](https://github.com/crawl/crawl/commit/3a1f44834a77762edbbf7740f324bdd48e13b52d)
 | 31        | Sep 2010 | 0.8a           | save compat | [98cba813](https://github.com/crawl/crawl/commit/98cba81361fe4c7d0564e021d10dc6c99a6b0379)
 | 30        | Sep 2010 | 0.8a           | save compat | [a087ed69](https://github.com/crawl/crawl/commit/a087ed692319114f86589f392593ae50d704d48d)
 | 29        | Jul 2010 | 0.8a           | map layers | [af76f809](https://github.com/crawl/crawl/commit/af76f809d3f1679210469c3b194f1b06dc85536b)
