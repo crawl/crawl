@@ -268,7 +268,7 @@ Plants and fungi will not attack Fedhas' worshippers without provocation.
 Worshippers may walk through plants or fungi, and even fire missiles or spells
 through them without causing harm. Fedhas grants powers to temporarily grow a
 menagerie of plant allies whose strength and duration increase with Invocations
-skill. Worshipers may grow a protective wall of briar patches as well as
+skill. Worshippers may grow a protective wall of briar patches as well as
 ballistomycetes that fire damaging spores whose explosions confuse living
 creatures. Devout followers can overgrow a stretch of solid terrain with a
 cluster of plant allies or even summon a mighty oklob plant.
@@ -392,10 +392,10 @@ Ru's sacrificants increases in strength with more piety from more sacrifices.
 Sif Muna powers
 
 Sif Muna grants followers the ability to rapidly restore their magical energy,
-and to forget spells at will, so as to learn new ones. Worshipers can call upon
-the Loreminder to help cast any spell they've discovered, even if it's well
-beyond their current magical training. Over time, devout followers will receive
-spellbooks containing a vast range of spells.
+and to forget spells at will, so as to learn new ones. Worshippers can call
+upon the Loreminder to help cast any spell they've discovered, even if it's
+well beyond their current magical training. Over time, devout followers will
+receive spellbooks containing a vast range of spells.
 %%%%
 the Shining One powers
 
