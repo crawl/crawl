@@ -342,4 +342,7 @@ bool shoot_through_monster(const bolt& beam, const monster* victim);
 
 int omnireflect_chance_denom(int SH);
 
+void glaciate_freeze(monster* mon, killer_type englaciator,
+                             int kindex);
+
 bolt setup_targetting_beam(const monster &mons);

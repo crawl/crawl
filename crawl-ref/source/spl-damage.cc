@@ -3400,3 +3400,62 @@ spret cast_frozen_ramparts(int pow, bool fail)
                                                      80 + pow * 3 / 2);
     return spret::success;
 }
+
+//returns the closest target to the player
+static monster* _closest_target_in_range(int radius)
+{
+    for (distance_iterator di(you.pos(), true, true, radius); di; ++di)
+    {
+        monster *mon = monster_at(*di);
+        if (mon
+            && you.see_cell_no_trans(mon->pos())
+            && !mon->wont_attack()
+            && !mons_is_firewood(*mon)
+            && !mons_is_tentacle_or_tentacle_segment(mon->type))
+        {
+            return mon;
+        }
+    }
+
+    return nullptr;
+}
+
+spret cast_absolute_zero(int pow, bool fail, bool tracer)
+{
+    monster* mon = _closest_target_in_range(LOS_RADIUS);
+
+    if (tracer)
+    {
+        if (!mon)
+            return spret::abort;
+        else
+            return spret::success;
+    }
+
+    coord_def pos = mon->pos();
+
+    if (stop_attack_prompt(mon, false, pos))
+        return spret::abort;
+
+    fail_check();
+
+    if (!mon)
+    {
+        //this shouldn't happen, but nevertheless
+        canned_msg(MSG_NOTHING_HAPPENS);
+    }
+    else
+    {
+        mprf("You chill %s to absolute zero!", mon->name(DESC_THE).c_str());
+
+        god_conduct_trigger conducts[3];
+        set_attack_conducts(conducts, *mon, you.can_see(*mon));
+
+        glaciate_freeze(mon, KILL_YOU, actor_to_death_source(&you));
+
+        // extremely loud at low power, zero noise at max power
+        noisy(40 - div_rand_round(pow,5), pos);
+    }
+
+    return spret::success;
+}
