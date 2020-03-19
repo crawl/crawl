@@ -277,7 +277,7 @@ private:
 
     bool unrestricted;
 public:
-    // TODO: fix the weird behavior that led to this hack
+    // TODO: fix the weird behaviour that led to this hack
     bool needs_path;            // Determine a ray while we're at it?
 };
 

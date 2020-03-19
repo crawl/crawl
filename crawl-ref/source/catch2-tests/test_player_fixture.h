@@ -13,12 +13,12 @@ class MockPlayerYouTestsFixture {
 void destroy_items_in_player_inventory();
 /* I'm sure there's a name for this, but remember that if you want to
  * refactor some monster method, you can create a copy of it so that you
- * can test your new, refactored version has the same behavior as the
+ * can test your new, refactored version has the same behaviour as the
  * old, spaghetti version.
  *
  * Here is an example. I copied player::base_ac to player::new_base_ac.
  * Then I was able to refactor player::new_base_ac, confident I was
- * preserving behavior. My final change was to rename new_base_ac to
+ * preserving behaviour. My final change was to rename new_base_ac to
  * base_ac, delete the old base_ac function, and delete the new_base_ac
  * function header.
  */

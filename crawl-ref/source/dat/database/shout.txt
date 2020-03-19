@@ -14,9 +14,9 @@
 __BUGGY
 
 # This line should never get displayed to the user, even if
-# monster_shout() in shout.cc detects buggy behavior,
+# monster_shout() in shout.cc detects buggy behaviour,
 # so showing this line would itself be a bug.
-SOUND:You hear doubly buggy behavior!
+SOUND:You hear doubly buggy behaviour!
 %%%%
 __SHOUT
 

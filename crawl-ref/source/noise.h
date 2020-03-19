@@ -4,7 +4,7 @@
 
 // [ds] The old noise system was pretty simple: noise level (loudness) ==
 // distance covered. Since the new system considers terrain when propagating
-// sound, using the same noise attenuation of 1 unit per square traveled would
+// sound, using the same noise attenuation of 1 unit per square travelled would
 // mean greatly reduced sound propagation on average.
 //
 // To compensate for sound being blocked by walls and doors, I've lowered the

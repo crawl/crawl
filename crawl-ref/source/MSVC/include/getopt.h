@@ -133,14 +133,14 @@ struct option
    takes an argument, to be placed in `optarg'.
 
    If a letter in OPTS is followed by two colons, its argument is
-   optional. This behavior is specific to the GNU `getopt'.
+   optional. This behaviour is specific to the GNU `getopt'.
 
    The argument `--' causes premature termination of argument
    scanning, explicitly telling `getopt' that there are no more
    options.
 
    If OPTS begins with `--', then non-option arguments are treated as
-   arguments to the option '\0'. This behavior is specific to the GNU
+   arguments to the option '\0'. This behaviour is specific to the GNU
    `getopt'.  */
 
 #if (defined __STDC__ && __STDC__) || defined __cplusplus

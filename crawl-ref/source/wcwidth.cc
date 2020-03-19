@@ -13,7 +13,7 @@
  * the cursor by how many cell positions. No established formal
  * standards exist at present on which Unicode character shall occupy
  * how many cell positions on character terminals. These routines are
- * a first attempt of defining such behavior based on simple rules
+ * a first attempt of defining such behaviour based on simple rules
  * applied to data provided by the Unicode Consortium.
  *
  * For some graphical characters, the Unicode standard explicitly
@@ -43,7 +43,7 @@
  * decision which Not East Asian (Neutral) characters should be
  * represented by double-width glyphs cannot yet be answered by
  * applying a simple rule from the Unicode database content. Setting
- * up a proper standard for the behavior of UTF-8 character terminals
+ * up a proper standard for the behaviour of UTF-8 character terminals
  * will require a careful analysis not only of each Unicode character,
  * but also of each presentation form, something the author of these
  * routines has avoided to do so far.

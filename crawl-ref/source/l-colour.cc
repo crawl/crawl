@@ -55,7 +55,7 @@ int lua_element_colour_calc::get(const coord_def& loc, bool non_random)
  */
 /***
  * This function is not a member of the module, but documents the expected
- * behavior of the second argument to add_colour.
+ * behaviour of the second argument to add_colour.
  * @within dlua
  * @tparam int rand random number between 0 and 119
  * @tparam int x

@@ -197,7 +197,7 @@ bool monster::gain_exp(int exp, int max_levels_to_gain)
                       + mexplevs[get_experience_level() + 1]) / 2;
     }
 
-    // If the monster has leveled up to a monster that will be angered
+    // If the monster has levelled up to a monster that will be angered
     // by the player, handle it properly.
     player_angers_monster(this);
 

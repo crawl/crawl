@@ -179,7 +179,7 @@ Branches, Environment
 ---------------------
 * Incremental pregeneration:
   - This mode generates the dungeon in a stable order for all games regardless
-    of the path taken by the player, meaning that the behavior of seeds for
+    of the path taken by the player, meaning that the behaviour of seeds for
     online and offline games should now be the same.
   - Games using the same seed will see the same dungeon if they are
     incrementally pregenerated without requiring the long initial generation
@@ -412,11 +412,11 @@ Branches, Environment
 
 Character
 ---------
-* The player can no longer be put to sleep when paralyzed or petrified.
+* The player can no longer be put to sleep when paralysed or petrified.
 * Tengu Permanent Flight becomes immediately available at XL 5.
 * Tengu EV bonuses are no longer applied to +EV from equipment.
 * Wanderer starting spell libraries are announced along with equipment.
-* Wanderers that start with exactly one level 1 spell start with it memorized.
+* Wanderers that start with exactly one level 1 spell start with it memorised.
 
 Gods
 ----
@@ -467,7 +467,7 @@ Interface
   - Nemelex Xobeh displays deck information.
   - Wu Jian displays information about martial attacks.
 * The Hepliakqana ancestor reaching full health interrupts resting. The exact
-  behavior of this interrupt can be configured by rest_wait_ancestor.
+  behaviour of this interrupt can be configured by rest_wait_ancestor.
 * The new display_chars cloud_weak, cloud_fading, and cloud_terminal indicate
   remaining cloud duration in console.
 * WebTiles users can use a "Forgot Password" link to reset their password
@@ -646,7 +646,7 @@ Spells
 ------
 * Spell Library:
   - Spells from books are automatically added to a global library upon pickup.
-  - Library spells can be memorized from anywhere through the 'M' screen.
+  - Library spells can be memorised from anywhere through the 'M' screen.
   - Spellbooks are destroyed after their spells are added to the library.
   - Vehumet won't offer you a spell you already have in your library.
 * Borgnjor's Vile Clutch constriction damage is reduced by 25% and the spell
@@ -750,7 +750,7 @@ Interface
 * Water species except for merfolk autoexplore/travel through shallow water.
 * Diagonal shift-running now stops properly at doors.
 * Draconian players now show their hat tiles in Tiles/WebTiles.
-* New 'tc_forbidden' RC option to set color of squares forbidden by travel.
+* New 'tc_forbidden' RC option to set colour of squares forbidden by travel.
 * New xp_by_level morgue table to track XP sources on a per-level basis.
 * New -force-map objstat/mapstat option to always place a given map on each
   level.
@@ -885,8 +885,8 @@ Interface
   and "advanced" categories.
 * Noise from the last turn is displayed in the top-right, replacing gold.
   (Gold can still be seen with % and $.)
-* Terminal colors now work properly on a wider range of terminals by default.
-  However, as a consequence the default background map color is dark blue.
+* Terminal colours now work properly on a wider range of terminals by default.
+  However, as a consequence the default background map colour is dark blue.
   To get dark grey, depending on your terminal you can set
   `bold_brightens_foreground=true` or `allow_extended_colours=true` in
   your rc file.
@@ -1144,7 +1144,7 @@ Gods
 Interface
 ---------
 * Most targeters will be more intelligent when trying to maximize enemies hit.
-* In tiles, monster attitude is indicated with colored auras instead of icons.
+* In tiles, monster attitude is indicated with coloured auras instead of icons.
 * The (p)rayer command is gone; pray at altars with > or <, as with shops.
 * Descriptions of monsters with multiple spellsets show which spells you've
   seen them cast.
@@ -1444,7 +1444,7 @@ Monsters
   allies in their view, making them cast spells more frequently and with more
   spell power.
 * Hell hogs now have Fireball, replacing Sticky Flame.
-* Giant eyeballs are now normal speed, but must stare thrice to paralyze.
+* Giant eyeballs are now normal speed, but must stare thrice to paralyse.
 * Maurice can now steal from the floor as well as your inventory.
 * Natasha no longer becomes weaker upon revival.
 * Death cobs now drain speed, rather than causing hunger.
@@ -1463,7 +1463,7 @@ Monsters
 
 Spells
 ------
-* New spell: Yara's Violent Unravelling (L5 Hexes/Transumations). Dispels
+* New spell: Yara's Violent Unravelling (L5 Hexes/Transmutations). Dispels
   all cancellable effects on the target and, if any were dispelled, causes
   a damaging explosion of mutagenic energy around the victim.
 * Hydra Form now has a fixed number of heads.
@@ -1580,7 +1580,7 @@ Character
 * Clawed attacks no longer have bleeding-over-time damage effects.
 * There's now a distinct hunger state of Fainting and appropriate warning
   messages for when the player is so low on nutrition that they might become
-  paralyzed.
+  paralysed.
 * The Breathe Flames and Spit Poison mutations are now mutually exclusive.
 * Demonspawn can shoot through their own demonic guardians.
 * Ability scores now cap at 125, up from 72.
@@ -1599,8 +1599,8 @@ Gods
 ----
 * Gozag:
   - The fee for entry has been reduced, especially early on.
-  - Gold distraction is now an effect centered on the player that's refreshed
-    whenever they find (make) new corpse-gold, rather than being centered on
+  - Gold distraction is now an effect centred on the player that's refreshed
+    whenever they find (make) new corpse-gold, rather than being centred on
     the gold piles themselves.
   - The cost of Potion Petition is more variable and higher initially, but no
     longer increases with use.
@@ -1901,7 +1901,7 @@ Character
 * Vampires now bottle blood with 'c', and can do so from the first level.
 * Butchering/bottling now only takes a single turn.
 * Wanderers now receive a randart spellbook instead of starting with a Level 1
-  spell memorized.
+  spell memorised.
 * Wanderers can start with one elemental evoker or a box of beasts instead of
   a wand.
 * Wanderer starting equipment is noted in the game log.
@@ -2224,7 +2224,7 @@ Stone Soup 0.15.2 (20141018)
 * Always weight formicid weapon acquirement towards two-handed weapons.
 * Allow in-game updates to the mon_glyph option to change the glyph.
 * Allow the option syntax of mon_glyph = <mon1>:<mon2> in order to set the
-  color/glyph of one monster using the base values of another monster.
+  colour/glyph of one monster using the base values of another monster.
 * In tiles, the tile_player_tile option allows you to specify an arbitrary
   monster tile to display for your character. The options tile_weapon_offsets
   and tile_shield_offsets can be used to adjust the player weapon and shield
@@ -3533,7 +3533,7 @@ Spells
 * Conjurers have a new book with non-elemental spells (including the new
   conjurations).
 * Spell memorisation failure is no more. As long as the failure chance is
-  not 100%, the spell can be memorized. There is a warning prompt if the
+  not 100%, the spell can be memorised. There is a warning prompt if the
   chance of a miscast is high.
 * Some spellbooks have been reorganized.
 * Condensation Shield's SH bonus no longer cares about Shields skill or
@@ -4733,7 +4733,7 @@ Monsters
 * Make skeletal warriors obey silence.
 * Greatly improve cacodemons.
 * Hungry ghost attack takes 25% of your nutrition.
-* Prevent confused giant eyeballs from paralyzing.
+* Prevent confused giant eyeballs from paralysing.
 * Make aquatic monsters chase instead of submerging if they can.
 * Friendly monsters told to 'wait here' don't follow through stairs.
 * Merged slimes split on polymorph.
@@ -5805,7 +5805,7 @@ Stone Soup 0.4.2 (20080729)
 
 Disclaimer: These are merely the highlights, not an exhaustive list of changes.
 
-* Fixed defunct spell slot cap (and crash) with Selective Amnesia memorized.
+* Fixed defunct spell slot cap (and crash) with Selective Amnesia memorised.
 * Fixed the game crashing if PlaceInfo somehow ends up buggy.
 * Fixed runaway skill training.
 * Fixed vampire draining not destroying small corpses.

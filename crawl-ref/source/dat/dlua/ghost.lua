@@ -358,7 +358,7 @@ ghost_knight_weap = {
 
 -- Randomized weapon sets for ghost vault monsters. Many are based on the sets
 -- mon-gear.cc, but some have more variety (e.g. ogre) and some are more
--- favorable for the better weapon types.
+-- favourable for the better weapon types.
 ghost_monster_weapons = {
     ["kobold"] =      {["dagger"] = 5, ["short sword"] = 10, ["rapier"] = 5,
                        ["whip"] = 10},

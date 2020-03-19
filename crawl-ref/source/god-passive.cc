@@ -1874,7 +1874,7 @@ static int _check_for_uskayaw_targets(coord_def where)
 }
 
 /**
- * Paralyze the monster in this cell, assuming one exists.
+ * Paralyse the monster in this cell, assuming one exists.
  *
  * Duration increases with invocations and experience level, and decreases
  * with target HD. The duration is pretty low, maxing out at 40 AUT.

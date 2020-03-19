@@ -2870,7 +2870,7 @@ bool describe_item(item_def &item, function<void (string&)> fixup_desc)
         return _do_action(item, actions, lastch);
     else if (item.has_spells())
     {
-        // only continue the inventory loop if we didn't start memorizing a
+        // only continue the inventory loop if we didn't start memorising a
         // spell & didn't destroy the item for amnesia.
         return !already_learning_spell();
     }
@@ -3171,7 +3171,7 @@ static bool _get_spell_description(const spell_type spell,
     else
         description += player_spell_desc(spell);
 
-    // Don't allow memorization after death.
+    // Don't allow memorisation after death.
     // (In the post-game inventory screen.)
     if (crawl_state.player_is_dead())
         return false;
@@ -3250,7 +3250,7 @@ void get_spell_desc(const spell_type spell, describe_info &inf)
 
 /**
  * Examine a given spell. List its description and details, and handle
- * memorizing the spell in question, if the player is able & chooses to do so.
+ * memorising the spell in question, if the player is able & chooses to do so.
  *
  * @param spelled   The spell in question.
  * @param mon_owner If this spell is being examined from a monster's

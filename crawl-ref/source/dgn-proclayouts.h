@@ -34,7 +34,7 @@ class ProceduralSample
         // depth 1000, it will get checked at depth 1000. Then it will get
         // pushed back into the terrain queue with the new depth estimate.
         // If you overestimate the time between shifts, this will introduce
-        // bad behavior when a game is loaded. [bh]
+        // bad behaviour when a game is loaded. [bh]
         uint32_t cp;
         map_mask_type m;
 };

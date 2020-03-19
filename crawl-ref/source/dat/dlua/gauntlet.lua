@@ -27,7 +27,7 @@ function gauntlet_arena_custom_extra_items(nsubst)
     gauntlet_arena_extra_items_nsubst = nsubst
 end
 
--- Set the extra item placement in arenas to the default behavior. See
+-- Set the extra item placement in arenas to the default behaviour. See
 -- gauntlet_arena_item_setup() for details on this default.
 function gauntlet_arena_default_extra_items()
     gauntlet_arena_extra_items_nsubst = nil

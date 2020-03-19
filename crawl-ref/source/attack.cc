@@ -1778,7 +1778,7 @@ int attack::player_stab(int damage)
 
 /* Check for stab and prepare combat for stab-values
  *
- * Grant an automatic stab if paralyzed or sleeping (with highest damage value)
+ * Grant an automatic stab if paralysed or sleeping (with highest damage value)
  * stab_bonus is used as the divisor in damage calculations, so lower values
  * will yield higher damage. Normal stab chance is (stab_skill + dex + 1 / roll)
  * This averages out to about 1/3 chance for a non extended-endgame stabber.

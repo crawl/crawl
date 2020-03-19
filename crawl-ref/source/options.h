@@ -201,7 +201,7 @@ public:
     bool        view_lock_x;
     bool        view_lock_y;
 
-    // For an unlocked viewport, this will center the viewport when scrolling.
+    // For an unlocked viewport, this will centre the viewport when scrolling.
     bool        center_on_scroll;
 
     // If symmetric_scroll is set, for diagonal moves, if the view
@@ -352,7 +352,7 @@ public:
     vector<text_pattern> auto_exclude; // Automatically set an exclusion
                                        // around certain monsters.
 
-    unsigned    evil_colour; // Colour for things player's god dissapproves
+    unsigned    evil_colour; // Colour for things player's god disapproves
 
     unsigned    remembered_monster_colour;  // Colour of remembered monsters
     unsigned    detected_monster_colour;    // Colour of detected monsters
@@ -381,7 +381,7 @@ public:
     // How much more eager greedy-explore is for items than to explore.
     int         explore_item_greed;
 
-    // How much autoexplore favors visiting squares next to walls.
+    // How much autoexplore favours visiting squares next to walls.
     int         explore_wall_bias;
 
     // Wait for rest wait percent HP and MP before exploring.
@@ -420,7 +420,7 @@ public:
                                     // CL options would bring up the startup
                                     // menu.
     bool        restart_after_save; // .. or on save
-    bool        newgame_after_quit; // override the restart_after_game behavior
+    bool        newgame_after_quit; // override the restart_after_game behaviour
                                     // to always start a new game on quit.
 
     bool        name_bypasses_menu; // should the menu be skipped if there is

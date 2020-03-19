@@ -329,7 +329,7 @@ public:
     {
     }
 
-    // Wrapper functions which handle common behavior
+    // Wrapper functions which handle common behaviour
     // - margins
     // - caching
     void render();

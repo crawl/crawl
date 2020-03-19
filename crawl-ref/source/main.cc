@@ -873,7 +873,7 @@ static void _center_cursor()
 }
 
 // We have to refresh the SH display if the player's incapacitated state
-// changes (getting confused/paralyzed/etc. sets SH to 0, recovering
+// changes (getting confused/paralysed/etc. sets SH to 0, recovering
 // from the condition sets SH back to normal).
 struct disable_check
 {
