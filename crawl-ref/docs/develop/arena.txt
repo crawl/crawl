@@ -131,7 +131,7 @@ place. This will cause rare monsters to be generated a lot more often.
 A.4  Speeding up the arena
 ==========================
 
-You can speed up the arena by reducing the delay in miliseconds between turns.
+You can speed up the arena by reducing the delay in milliseconds between turns.
 You can do this on the command line with "delay:":
 
     crawl -arena "delay:0 random v random"

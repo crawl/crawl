@@ -3578,7 +3578,7 @@ int melee_attack::calc_damage()
  * should be ambigufied and moved to the actor class
  * Should life protection protect from this?
  *
- * Should eventually remove in favor of player/monster symmetry
+ * Should eventually remove in favour of player/monster symmetry
  *
  * Called when stabbing and for bite attacks.
  *

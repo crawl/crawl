@@ -1268,7 +1268,7 @@ public:
     template <typename TagIterator>
     bool has_all_tags(TagIterator begin, TagIterator end) const
     {
-        if (tags.empty() || begin == end) // legacy behavior for empty case
+        if (tags.empty() || begin == end) // legacy behaviour for empty case
             return false;
         for ( ; begin != end; ++begin)
             if (!has_tag(*begin))

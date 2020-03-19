@@ -792,7 +792,7 @@ static void _add_formatted_keyhelp(column_composer &cols)
                          { CMD_USE_ABILITY });
     _add_command(cols, 0, CMD_CAST_SPELL, "cast spell, abort without targets", 2);
     _add_command(cols, 0, CMD_FORCE_CAST_SPELL, "cast spell, no matter what", 2);
-    _add_command(cols, 0, CMD_DISPLAY_SPELLS, "list all memorized spells", 2);
+    _add_command(cols, 0, CMD_DISPLAY_SPELLS, "list all memorised spells", 2);
     _add_command(cols, 0, CMD_MEMORISE_SPELL, "Memorise a spell from your library", 2);
 
     _add_insert_commands(cols, 0, 2, CMD_SHOUT,

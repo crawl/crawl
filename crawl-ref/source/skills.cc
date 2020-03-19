@@ -1578,7 +1578,7 @@ skill_type str_to_skill(const string &skill)
  */
 skill_type str_to_skill_safe(const string &skill)
 {
-    // legacy behavior -- ensure that a valid skill is returned.
+    // legacy behaviour -- ensure that a valid skill is returned.
     skill_type sk = str_to_skill(skill);
     if (sk == SK_NONE)
         return SK_FIGHTING;

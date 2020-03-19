@@ -51,7 +51,7 @@ function wrathful_weapon(class, quality)
                 ["electrocution"] = 5, ["vampirism"] = 5, ["holy_wrath"] = 5,
                 ["draining"] = 5, ["distortion"] = 5, ["speed"] = 2}
     elseif quality == "randart" then
-        -- Allow chaos and make weights more favorable for better brands.
+        -- Allow chaos and make weights more favourable for better brands.
         egos = {["antimagic"] = 25, ["vorpal"] = 10, ["freezing"] = 10,
                 ["flaming"] = 10, ["vampirism"] = 10, ["draining"] = 10,
                 ["electrocution"] = 10, ["protection"] = 5, ["venom"] = 5,

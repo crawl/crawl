@@ -345,7 +345,7 @@ bool player_can_memorise(const item_def &book)
 }
 
 /**
- * Populate the given list with all spells the player can currently memorize,
+ * Populate the given list with all spells the player can currently memorise,
  * from library or Vehumet. Does not filter by currently known spells, spell
  * levels, etc.
  *

@@ -1259,7 +1259,7 @@ int player_hunger_rate()
 
 /**
  * How many spell levels does the player have total, including those used up
- * by memorized spells?
+ * by memorised spells?
  */
 int player_total_spell_levels()
 {
@@ -1268,7 +1268,7 @@ int player_total_spell_levels()
 
 /**
  * How many spell levels does the player currently have available for
- * memorizing new spells?
+ * memorising new spells?
  */
 int player_spell_levels()
 {

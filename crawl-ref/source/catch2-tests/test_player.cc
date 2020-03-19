@@ -7,9 +7,9 @@
 #include "test_player_fixture.h"
 
 // Some of these a characterization tests which should be justifiably
-// removed if the behavior ever changes. Left in for now because it
+// removed if the behaviour ever changes. Left in for now because it
 // should be easy to tell the difference between a intentional change of
-// the behavior being tested and accidentally changing said behavior.
+// the behaviour being tested and accidentally changing said behaviour.
 //
 TEST_CASE_METHOD(MockPlayerYouTestsFixture,
           "Test MockPlayerYouTestsFixture", "[single-file]" ) {

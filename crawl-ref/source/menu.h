@@ -845,8 +845,8 @@ protected:
 
 /**
  * Highlighter object.
- * TILES: It will create a colored rectangle around the currently active item.
- * CONSOLE: It will muck with the Item background color, setting it to highlight
+ * TILES: It will create a coloured rectangle around the currently active item.
+ * CONSOLE: It will muck with the Item background colour, setting it to highlight
  *          colour, reverting the change when active changes.
  */
 class BoxMenuHighlighter : public MenuObject

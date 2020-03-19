@@ -6,7 +6,7 @@
 -- This uses the "very incomplete client monster and view bindings" from
 -- autofight.lua, and "is currently very primitive."
 --
--- The behavior with target selection is kind of quirky, especially with
+-- The behaviour with target selection is kind of quirky, especially with
 -- short range spells and dangerous monsters out of range.
 ---------------------------------------------------------------------------
 

@@ -606,7 +606,7 @@ bool can_cast_spells(bool quiet, bool exegesis)
         return false;
     }
 
-    // Check that we have a spell memorized. Divine Exegesis does not need this
+    // Check that we have a spell memorised. Divine Exegesis does not need this
     // condition, but we can't just check you.divine_exegesis in all cases, as
     // it may not be set yet. Check a passed parameter instead.
     if (!exegesis && !you.spell_no)

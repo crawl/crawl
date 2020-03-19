@@ -3783,7 +3783,7 @@ Items
 * Weapons may corrode upon stabbing a jelly.
 * Ambrosia gives more mp, but only as you digest it.
 * Raw troll hides grant regeneration.
-* Jewelry auto-ids when it shows an obvious effect.
+* Jewellery auto-ids when it shows an obvious effect.
 * Ankuses, scrolls of detect curse, amulets of controlled flight, and rods of
   smiting are no more.
 * Rods of striking are better.
