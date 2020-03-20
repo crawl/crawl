@@ -7415,25 +7415,25 @@ ENDMAP
 
 # No, John. You are the door vault
 NAME:   reverse_door_vault
-DEPTH:  Depths, !Depths:1
+DEPTH:  Depths:2-
 WEIGHT: 4
-MARKER: + = lua: props_marker { connected_exclude="true" }
-MARKER: a = lua: props_marker { stop_explore="strange structure made of doors" }
-KFEAT:  a = runed_door
+KMONS:  1 = 8
+KMONS:  2 = 9
+: door_vault_setup(_G)
 MAP
 xxxxxxxxxxxxxx
-x8.*.8..8.9.8x
+x1...1..1.2.1x
 x.++++++++++.x
-x9++++++++++*x
+x2++++++++++.x
 x.++aaaaaa++.x
-x8++a....a++8x
+x1++a....a++1x
 x.++a.(..a++.x
 x.++a....a++.x
-x8++a....a++8x
+x1++a....a++1x
 x.++aaaaaa++.x
-x*++++++++++9x
+x.++++++++++2x
 x.++++++++++.x
-x8.9.8..8.*.8x
+x1.2.1..1...1x
 xxxxxxxxxxxxxx
 ENDMAP
 
