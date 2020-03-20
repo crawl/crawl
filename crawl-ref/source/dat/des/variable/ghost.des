@@ -1780,8 +1780,7 @@ cccnn===nnccc
 ENDMAP
 
 NAME:    gammafunk_ghost_crypt
-DEPTH:   D:15, Crypt, Depths, Zot
-WEIGHT:  5 (D:15)
+DEPTH:   D:13-, Crypt, Depths, Zot
 : item(dgn.loot_scrolls .. " / " .. dgn.loot_potions)
 # Always place one randart aux, one randart jewel, and one nice book, each
 # using the possible ghost locations.
