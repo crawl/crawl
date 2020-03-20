@@ -713,6 +713,15 @@ bool cast_a_spell(bool check_range, spell_type spell)
                     }
                 }
 
+                // We allow setting last cast spell by Divine Exegesis, but we
+                // don't allow recasting it with the UI unless we actually have
+                // the spell memorized.
+                if (you.last_cast_spell != SPELL_NO_SPELL
+                    && !you.has_spell(you.last_cast_spell))
+                {
+                    you.last_cast_spell = SPELL_NO_SPELL;
+                }
+
                 if (you.last_cast_spell == SPELL_NO_SPELL
                     || !Options.enable_recast_spell)
                 {
