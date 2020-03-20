@@ -578,7 +578,10 @@ Slime-mould
 
 Toadstool
 %%%%
-_evil_stuff_Abomination
+_evil_stuff_
+
+Abomination
+
 Abuse
 
 Ancient Evil
