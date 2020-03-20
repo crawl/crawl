@@ -690,23 +690,50 @@ www!!!?ww.
 ....!!w...
 ENDMAP
 
-# Not Minivault 9 (or, elephant zoo)
-NAME:   not_door_vault_due
-TAGS:   allow_dup
-WEIGHT: 1
-DEPTH:  Depths, Elf:$
-MONS:   elephant, dire elephant, hellephant
-MARKER: + = lua: props_marker { connected_exclude="true" }
-MARKER: a = lua: props_marker { stop_explore="strange structure made of doors" }
-KFEAT:  a = runed_door
+# Not Minivault 9 (or, hellephant zoo)
+NAME:    not_door_vault_due
+TAGS:    allow_dup luniq
+DEPTH:   D:13-, Elf, Crypt, Depths, Zot, Dis, Geh
+WEIGHT:  4
+# Hellish beasts for Dungeon
+: if you.in_branch("D") then
+KMONS:   1 = hell hound
+KMONS:   2 = hell hog
+NSUBST:  2 = 2=2 / 2223 / 3
+# Elf and Zot have a sort of "chaos zoo"
+: elseif you.in_branch("Elf") then
+KMONS:   1 = very ugly thing / apocalypse crab w:3 / shapeshifter hd:12 / \
+             glowing shapeshifter
+NSUBST:  2 = 2=1 / 13 / 3
+# Remaining non-Zot branches hell knights, balrugs and hellions, and multiple
+# hellephants.
+: elseif you.in_branch("Crypt") then
+KMONS:   1 = hell knight
+KMONS:   2 = hellion / balrug
+NSUBST:  2 = 2 / 2=23 / 3, 1 = 2=12 / 1
+: elseif you.in_branch("Depths") then
+KMONS:   1 = hell knight
+KMONS:   2 = hellion / balrug
+NSUBST:  2 = 3=23 / 3, 1 = 2 / 3=12 / 1
+: elseif you.in_branch("Zot") then
+KMONS:   1 = very ugly thing / apocalypse crab w:5 / shapeshifter hd:14 / \
+             glowing shapeshifter / killer klown
+KMONS:   2 = killer klown
+NSUBST:  2 = 2=23 / 3
+: elseif you.in_branch("Geh") or you.in_branch("Dis") then
+KMONS:   1 = hell knight / hellion / balrug
+SUBST:   2 = 3
+: end
+KMONS:   3 = hellephant
+: door_vault_setup(_G)
 MAP
 aaaaaaaaaa
 a++++++++a
 a++++++++a
-a++1112++a
-a++1321++a
+a++1111++a
 a++1221++a
-a++2111++a
+a++1221++a
+a++1111++a
 a++++++++a
 a++++++++a
 aaaaaaaaaa

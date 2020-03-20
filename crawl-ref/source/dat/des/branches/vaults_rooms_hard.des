@@ -1344,3 +1344,29 @@ MAP
 ..............
 ..............
 ENDMAP
+
+# Not Minivault 9 (or, hellephant zoo)
+NAME:   vaults_not_door_vault_due
+TAGS:   vaults_hard
+WEIGHT: 5
+KMONS:  1 = hell knight
+KMONS:  2 = hellion / balrug
+KMONS:  3 = hellephant
+NSUBST: 2 = 2=1 / 23 / 3
+: door_vault_setup(_G)
+MAP
+..............
+..............
+..aaaaaaaaaa..
+..a++++++++a..
+..a++++++++a..
+..a++1111++a..
+..a++1221++a..
+..a++1221++a..
+..a++1111++a..
+..a++++++++a..
+..a++++++++a..
+..aaaaaaaaaa..
+..............
+..............
+ENDMAP
