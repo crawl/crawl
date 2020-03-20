@@ -214,7 +214,7 @@ tileidx_t tileidx_feature_base(dungeon_feature_type feat)
     case DNGN_OPEN_CLEAR_DOOR:
         return TILE_DNGN_OPEN_CLEAR_DOOR;
     case DNGN_TRAP_MECHANICAL:
-        return TILE_DNGN_TRAP_ARROW;
+        return TILE_DNGN_TRAP_MECH_UNKN;
     case DNGN_TRAP_DISPERSAL:
         return TILE_DNGN_TRAP_DISPERSAL;
     case DNGN_TRAP_TELEPORT:
