@@ -142,18 +142,31 @@ end
 -- auxiliary armour item, or a jewellery item. The latter two can be good_item
 -- and then randart with increasing depth.
 --
--- This function is mostly used by the more challenging ghost vaults that place
--- many additional monsters as a way to make attempting the vault more
--- worthwhile.
-function ghost_good_loot(e)
-    -- Possible loot items.
-    jewellery = "any jewellery"
-    good_jewellery = "any jewellery good_item"
-    randart_jewellery = "any jewellery randart"
-    aux = dgn.aux_armour
+-- This function is used by the more challenging ghost vaults that place many
+-- additional monsters as a way to make attempting the vault more worthwhile.
+--
+-- @tparam table e environment
+-- @tparam string kglyphs If nil, use 'd' and 'e' item slots. Otherwise, define
+--                        KITEMs on the two characters supplied in kglyphs.
+function ghost_good_loot(e, kglyphs)
 
-    first_item = true
-    second_item = false
+    local item1fn, item2fn
+    if kglyphs == nil then
+        item1fn = e.item
+        item2fn = e.item
+    else
+        item1fn = function(def) e.kitem(kglyphs:sub(1, 1) .. " = " .. def) end
+        item2fn = function(def) e.kitem(kglyphs:sub(2, 2) .. " = " .. def) end
+    end
+
+    -- Possible loot items.
+    local jewellery = "any jewellery"
+    local good_jewellery = "any jewellery good_item"
+    local randart_jewellery = "any jewellery randart"
+    local aux = dgn.aux_armour
+
+    local first_item = true
+    local second_item = false
     if you.in_branch("D") then
         if you.depth() < 9 then
             first_item = false
@@ -222,27 +235,29 @@ function ghost_good_loot(e)
     end
 
     -- Define loot tables of potential item defs.
-    first_loot = { {name = "scrolls", def = dgn.loot_scrolls, weight = 20},
+    local first_loot = {
+                   {name = "scrolls", def = dgn.loot_scrolls, weight = 20},
                    {name = "potions", def = dgn.loot_potions, weight = 20},
                    {name = "aux", def = aux, weight = 10},
                    {name = "jewellery", def = jewellery, weight = 10},
                    {name = "manual", def = "any manual", weight = 5} }
-    second_loot = { {name = "scrolls", def = dgn.loot_scrolls, weight = 10},
+    local second_loot = {
+                    {name = "scrolls", def = dgn.loot_scrolls, weight = 10},
                     {name = "potions", def = dgn.loot_potions, weight = 10} }
 
     -- If we're upgrading the first item , choose a class, define the item
     -- slot, otherwise the slot becomes the usual '|*' definition.
     if first_item then
         chosen = util.random_weighted_from("weight", first_loot)
-        e.item(chosen["def"])
+        item1fn(chosen["def"])
     else
-        e.item("superb_item / star_item")
+        item1fn("superb_item / star_item")
     end
     if second_item then
         chosen = util.random_weighted_from("weight", second_loot)
-        e.item(chosen["def"])
+        item2fn(chosen["def"])
     else
-        e.item("superb_item / star_item")
+        item2fn("superb_item / star_item")
     end
 end
 

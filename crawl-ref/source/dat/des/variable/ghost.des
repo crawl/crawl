@@ -19,6 +19,7 @@
 ###############################################################################
 
 : crawl_require("dlua/ghost.lua")
+: crawl_require("dlua/vault.lua")
 
 {{
 -- Set up the non-flaming edged weapon "left" by the ghost in
@@ -437,6 +438,31 @@ c''P'c''cc
 cc'''''''c
 ccnn==nncc
   ..@@..
+ENDMAP
+
+NAME:   gammafunk_ghost_door_vault
+DEPTH:  D:13-, Depths, Elf, Crypt, Zot
+WEIGHT: 2
+ORIENT: float
+: ghost_good_loot(_G, "45")
+KMONS:  1 = 9
+KMONS:  2 = 8
+KMONS:  345 = player_ghost
+# Ghosts on 4 and 5 will get upgraded loot.
+NSUBST: 3 = 4 / 5 / 3, 1 = 5=23 / 3 / 1
+: door_vault_setup(_G)
+: ghost_setup(_G)
+MAP
+aaaaaaaaaa
+a++++++++a
+a++++++++a
+a++1111++a
+a++1331++a
+a++1331++a
+a++1111++a
+a++++++++a
+a++++++++a
+aaaaaaaaaa
 ENDMAP
 
 ###############################################################################

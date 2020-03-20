@@ -14,6 +14,7 @@
 ################################################################################
 
 : crawl_require("dlua/ghost.lua")
+: crawl_require("dlua/vault.lua")
 
 NAME:   advil_vaults_ghost_guards
 KITEM:  12 = superb_item / star_item
@@ -446,4 +447,31 @@ x-------x
 xnn===nnx
 .........
 .........
+ENDMAP
+
+NAME:   gammafunk_vaults_ghost_door_vault
+WEIGHT: 2
+: ghost_good_loot(_G, "45")
+KMONS:  1 = 9
+KMONS:  2 = 8
+KMONS:  345 = player_ghost
+# Ghosts on 4 and 5 will get upgraded loot.
+NSUBST: 3 = 4 / 5 / 3, 1 = 5=23 / 3 / 1
+: door_vault_setup(_G)
+: vaults_ghost_setup(_G)
+MAP
+..............
+..............
+..aaaaaaaaaa..
+..a++++++++a..
+..a++++++++a..
+..a++1111++a..
+..a++1331++a..
+..a++1331++a..
+..a++1111++a..
+..a++++++++a..
+..a++++++++a..
+..aaaaaaaaaa..
+..............
+..............
 ENDMAP
