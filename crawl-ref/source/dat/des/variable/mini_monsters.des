@@ -25,8 +25,8 @@
 
 : crawl_require('dlua/vault.lua')
 
-# Functionality for some Grunt vaults.
 {{
+-- Functionality for some Grunt vaults.
 function grunt_ministairs_setup(e, hatches)
   if you.in_branch("Crypt") or you.in_branch("Zot") then
     e.shuffle("GT")
@@ -50,9 +50,7 @@ function grunt_ministairs_setup(e, hatches)
   e.nsubst(". = 2 = 0:19 .:1 / *:.")
   e.kmons("0 = 0 band")
 end
-}}
 
-{{
 function random_stair(e, symbol)
   local valid;
   if you.depth() > 1 then
@@ -7342,56 +7340,49 @@ x.c.c.c.c.c.
 ENDMAP
 
 # Evil zoo
-#
-# The marker affects find_connected_range() so that each door opens and
-# closes separately rather than all of them joining together into a huge
-# gate that opens all at once.
 NAME:   door_vault
-TAGS:   allow_dup
-WEIGHT: 1 (Vaults), 10
-DEPTH:  D:$, Depths, Elf, Vaults, Crypt, Dis, Geh, Tar, Coc, Zot
-MARKER: + = lua: props_marker { connected_exclude="true" }
-MARKER: a = lua: props_marker { stop_explore="strange structure made of doors" }
-KFEAT:  a = runed_door
-# Pick interesting monsters for dungeon branches. Vaults and D get normal OOD.
+TAGS:   allow_dup luniq
+DEPTH:  D:13-, Elf, Crypt, Depths, Zot, Dis, Geh, Tar, Coc
+# Pick interesting monsters for dungeon branches.
 : if you.in_branch("Elf") then
-KMONS:  8 = deep elf annihilator / deep elf blademaster / deep elf master archer / \
-            deep elf sorcerer / deep elf death mage / deep elf demonologist / \
-            deep elf high priest / w:20 place:Elf:$
+KMONS:  1 = dancing weapon / deep elf annihilator / deep elf blademaster / \
+            deep elf master archer / deep elf sorcerer / \
+            deep elf death mage / deep elf demonologist / \
+            deep elf high priest / place:Elf:$ w:27
 : elseif you.in_branch("Crypt") then
-KMONS:  8 = bone dragon / lich / ancient lich / vampire knight / w:5 revenant / \
-            ancient champion / w:5 eidolon / w:20 reaper / soul eater / w:30 place:Crypt:$
+KMONS:  1 = reaper / ancient champion / vampire knight / flayed ghost / \
+            eidolon / revenant / ancient lich w:15 / curse skull w:15 / \
+            place:Crypt:$ w:30
 : elseif you.in_branch("Dis") then
-KMONS:  8 = w:5 tzitzimitl / w:5 ice fiend / w:5 brimstone fiend / hell sentinel / \
-            iron dragon / tormentor / iron golem / place:Dis
+KMONS:  1 = tormentor / hellion / shadow demon / tzitzimitl / \
+            ice fiend / brimstone fiend / hell sentinel w:15 / \
+            iron giant w:15 / place:Dis:$ w:30
 : elseif you.in_branch("Geh") then
-KMONS:  8 = brimstone fiend / w:5 hell sentinel / hellion / balrug / \
-            fire giant / place:Geh
+KMONS:  1 = tormentor / hellion / balrug / brimstone fiend w:15 / \
+            hell sentinel / ancient lich / place:Geh:$ w:20
 : elseif you.in_branch("Tar") then
-KMONS:  8 = w:15 tzitzimitl / reaper / w:5 soul eater / shadow dragon / lich / \
-            ancient lich / w:5 revenant / w:15 place:Tar
+KMONS:  1 = doom hound w:15 / death drake / bone dragon / tormentor / \
+            shadow demon / tzitzimitl w:15 / ancient lich / place:Tar:$ w:27
 : elseif you.in_branch("Coc") then
-KMONS:  8 = w:15 blizzard demon / frost giant / w:5 titan / w:15 ice fiend / \
-            w:5 simulacrum / place:Coc
+KMONS:  1 = shard shrike w:15 / titan / blizzard demon / tormentor / \
+            ice fiend w:15 / ancient lich / place:Coc:$ w:24
 : elseif you.in_branch("Zot") then
-KMONS:  8 = w:35 nonbase draconian / orb of fire / electric golem / killer klown / \
-            death cob / w:5 curse toe / w:5 ancient lich
-: end
-: if you.in_branch("Geh") or you.in_branch("Tar")
-:  or you.in_branch("Coc") or you.in_branch("Dis") then
-KFEAT:  9 = >
+KMONS:  1 = nonbase draconian / orb of fire / electric golem / \
+            killer klown /  ancient lich / curse toe / place:Zot:$ w:20
+# Dungeon and Depths get 8 spawns.
 : else
-KITEM:  9 = *
+KMONS:  1 = 8
 : end
-KMONS:  9 = 9
+KMONS:  2 = 9
+: door_vault_setup(_G)
 MAP
 aaaaaaaaaa
 a++++++++a
 a++++++++a
-a++8888++a
-a++8998++a
-a++8998++a
-a++8888++a
+a++1111++a
+a++1221++a
+a++1221++a
+a++1111++a
 a++++++++a
 a++++++++a
 aaaaaaaaaa

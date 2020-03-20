@@ -23,6 +23,7 @@
 #
 ################################################################################
 
+: crawl_require('dlua/vault.lua')
 
 #
 #  st_box_setup
@@ -1320,4 +1321,26 @@ vv.cc|...|cc.vv
   vv.......vv
    vvv999vvv
      vv.vv
+ENDMAP
+
+NAME:   vaults_door_vault
+TAGS:   vaults_hard
+KMONS:  1 = 8
+KMONS:  2 = 9
+: door_vault_setup(_G)
+MAP
+..............
+..............
+..aaaaaaaaaa..
+..a++++++++a..
+..a++++++++a..
+..a++1111++a..
+..a++1221++a..
+..a++1221++a..
+..a++1111++a..
+..a++++++++a..
+..a++++++++a..
+..aaaaaaaaaa..
+..............
+..............
 ENDMAP
