@@ -184,19 +184,17 @@ ENDMAP
 # Not Minivault 9 (by Mu.)
 NAME:   not_door_vault_mu
 TAGS:   extra allow_dup luniq
+DEPTH:  D:13-, Elf, Crypt, Depths, Zot, Dis, Geh, Tar, Coc
 WEIGHT: 1
-DEPTH:  Depths, Elf
-MONS:   butterfly
-MARKER: + = lua: props_marker { connected_exclude="true" }
-MARKER: Y = lua: props_marker { stop_explore="strange structure made of doors" }
-KFEAT:  a = runed_door
+KMONS:  12 = butterfly
+: door_vault_setup(_G)
 MAP
 aaaaaaaaaa
 a++++++++a
 a++++++++a
 a++1111++a
-a++1111++a
-a++1111++a
+a++1221++a
+a++1221++a
 a++1111++a
 a++++++++a
 a++++++++a
