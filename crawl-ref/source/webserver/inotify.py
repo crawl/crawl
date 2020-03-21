@@ -92,7 +92,7 @@ class DirectoryWatcher(object):
 
     def watch(self, path, handler):  # type: (str, Callable[[str, int], Any]) -> None
         if self.enabled:
-            w = self.inotify._inotify_add_watch(self.fd, path,
+            w = self.inotify._inotify_add_watch(self.fd, path.encode('utf-8'),
                                                 DirectoryWatcher.CREATE |
                                                 DirectoryWatcher.DELETE)
             self.handlers[w] = handler
@@ -112,8 +112,7 @@ class DirectoryWatcher(object):
                 (mask, cookie, l) = struct.unpack_from("=III", data, i)
                 i += 3*4
                 (name,) = struct.unpack_from("%ds" % l, data, i)
-                while name[-1] == "\x00":
-                    name = name[:-1]
+                name = name.rstrip(b"\x00").decode('utf-8')
                 i += l
                 self.handlers[w](os.path.join(self.paths[w], name), mask)
         except OSError as e:

@@ -455,7 +455,7 @@ class CrawlProcessHandlerBase(object):
     def _send_client(self, watcher):
         h = hashlib.sha1(utf8(os.path.abspath(self.client_path)))
         if self.crawl_version:
-            h.update(self.crawl_version)
+            h.update(utf8(self.crawl_version))
         v = h.hexdigest()
         GameDataHandler.add_version(v,
                                     os.path.join(self.client_path, "static"))
