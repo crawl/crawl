@@ -64,8 +64,9 @@ def daemonize():
     except OSError as e:
         err_exit("Fork #2 failed! (%s)" % e.strerror)
 
-    with open("/dev/null", "rw") as f:
+    with open("/dev/null", "r") as f:
         os.dup2(f.fileno(), sys.stdin.fileno())
+    with open("/dev/null", "w") as f:
         os.dup2(f.fileno(), sys.stdout.fileno())
         os.dup2(f.fileno(), sys.stderr.fileno())
 
