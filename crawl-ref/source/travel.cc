@@ -222,7 +222,7 @@ static inline int _feature_traverse_cost(dungeon_feature_type feature)
     {
         return 2;
     }
-    else if (feat_is_trap(feature))
+    else if (feat_is_trap(feature) && feature != DNGN_TRAP_SHAFT)
         return 3;
 
     return 1;
@@ -270,6 +270,10 @@ bool feat_is_traversable_now(dungeon_feature_type grid, bool try_fallback)
         {
             return true;
         }
+
+        // The player can safely walk over shafts.
+        if (grid == DNGN_TRAP_SHAFT)
+            return true;
 
         // Permanently flying players can cross most hostile terrain.
         if (grid == DNGN_DEEP_WATER || grid == DNGN_LAVA)
