@@ -81,13 +81,13 @@ def write_pidfile():
         try:
             os.kill(pid, 0)
         except OSError as why:
-            if why[0] == errno.ESRCH:
+            if why.errno == errno.ESRCH:
                 # The pid doesn't exist.
                 logging.warn("Removing stale pidfile %s" % pidfile)
                 os.remove(pidfile)
             else:
                 err_exit("Can't check status of PID %s from pidfile %s: %s" %
-                         (pid, pidfile, why[1]))
+                         (pid, pidfile, why.strerror))
         else:
             err_exit("Another Webtiles server is running, PID %s\n" % pid)
 
