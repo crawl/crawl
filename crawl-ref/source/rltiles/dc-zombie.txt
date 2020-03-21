@@ -45,6 +45,7 @@ zombie_lernaean_hydra10
 zombie_elf MONS_ZOMBIE_ELF
 zombie_fawn MONS_ZOMBIE_FAUN
 zombie_guardian_serpent MONS_ZOMBIE_GUARDIAN_SERPENT
+zombie_hornet MONS_ZOMBIE_HORNET
 zombie_lindwurm MONS_ZOMBIE_LINDWURM
 zombie_meliai MONS_ZOMBIE_MELIAI
 zombie_merfolk MONS_ZOMBIE_MERFOLK
