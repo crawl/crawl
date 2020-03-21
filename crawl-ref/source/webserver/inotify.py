@@ -7,10 +7,15 @@ import tornado.ioloop
 from tornado.ioloop import IOLoop
 import tornado.platform.posix
 
+try:
+    from typing import Any, Callable, Dict
+except ImportError:
+    pass
+
 # The below class is from pyinotify, released under the MIT license
 # Copyright (c) 2010 Sebastien Martini <seb@dbzteam.org>
 class _CtypesLibcINotifyWrapper():
-    def __init__(self):
+    def __init__(self):  # type: () -> None
         self._libc = None
         self._get_errno_func = None
 
@@ -54,16 +59,17 @@ class _CtypesLibcINotifyWrapper():
             return self._get_errno_func()
         return None
 
-    def _inotify_init(self):
+    def _inotify_init(self):  # type: () -> int
         assert self._libc is not None
         return self._libc.inotify_init()
 
     def _inotify_add_watch(self, fd, pathname, mask):
+        # type: (int, bytes, int) -> int
         assert self._libc is not None
-        pathname = ctypes.create_string_buffer(pathname)
-        return self._libc.inotify_add_watch(fd, pathname, mask)
+        pathname_buf = ctypes.create_string_buffer(pathname)
+        return self._libc.inotify_add_watch(fd, pathname_buf, mask)
 
-    def _inotify_rm_watch(self, fd, wd):
+    def _inotify_rm_watch(self, fd, wd):  # type: (int, int) -> int
         assert self._libc is not None
         return self._libc.inotify_rm_watch(fd, wd)
 
@@ -71,7 +77,7 @@ class DirectoryWatcher(object):
     CREATE = 0x100 # IN_CREATE
     DELETE = 0x200 # IN_DELETE
 
-    def __init__(self):
+    def __init__(self):  # type: () -> None
         self.inotify = _CtypesLibcINotifyWrapper()
         self.enabled = self.inotify.init()
         if self.enabled:
@@ -80,11 +86,11 @@ class DirectoryWatcher(object):
             tornado.platform.posix.set_close_exec(self.fd)
             IOLoop.current().add_handler(self.fd, self._handle_read,
                                          IOLoop.ERROR | IOLoop.READ)
-        self.handlers = dict()
-        self.paths = dict()
+        self.handlers = dict() # type: Dict[int, Callable[[str, int], Any]]
+        self.paths = dict()  # type: Dict[int, str]
         self.buffer = bytes()
 
-    def watch(self, path, handler):
+    def watch(self, path, handler):  # type: (str, Callable[[str, int], Any]) -> None
         if self.enabled:
             w = self.inotify._inotify_add_watch(self.fd, path,
                                                 DirectoryWatcher.CREATE |
