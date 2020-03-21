@@ -3357,14 +3357,21 @@ bool is_useless_item(const item_def &item, bool temp)
         if (is_artefact(item))
             return false;
 
-        if (item.sub_type == ARM_SCARF
-            && item_type_known(item)
-            && (get_armour_ego_type(item) == SPARM_SPIRIT_SHIELD
-                && you.spirit_shield(false, false)
-                || get_armour_ego_type(item) == SPARM_CLOUD_IMMUNE
-                   && have_passive(passive_t::cloud_immunity)))
+        if (item.sub_type == ARM_SCARF && item_type_known(item))
         {
-            return true;
+            special_armour_type ego = get_armour_ego_type(item);
+            switch (ego)
+            {
+            case SPARM_SPIRIT_SHIELD:
+                return you.spirit_shield(false, false);
+            case SPARM_CLOUD_IMMUNE:
+                return have_passive(passive_t::cloud_immunity);
+            case SPARM_REPULSION:
+                return temp && have_passive(passive_t::upgraded_storm_shield)
+                       || you.get_mutation_level(MUT_DISTORTION_FIELD) == 3;
+            default:
+                return false;
+            }
         }
         return false;
 
