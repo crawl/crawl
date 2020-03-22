@@ -1,3 +1,15 @@
+Stone Soup 0.24.1 (20200322)
+--------------------------------
+
+Bugfix Release
+--------------
+* A remote code execution vulnerability has been patched.
+* The UI has received some bug fixes and improvements.
+* Pinned monsters can no longer trample.
+* Some vaults have been tweaked.
+* Fedhas protection is now extended to piercing attacks done by all allies.
+* Fedhas summons' duration is now correctly capped.
+
 Stone Soup 0.24 (20191024)
 --------------------------------
 
