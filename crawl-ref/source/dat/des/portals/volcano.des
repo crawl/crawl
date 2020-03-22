@@ -1010,7 +1010,6 @@ NAME:    vts_chambers
 TAGS:    volcano_tomb_subvault no_item_gen no_monster_gen no_rotate no_hmirror
 TAGS:    no_vmirror unrand
 #        Traps and doors.
-KFEAT:   ! = known alarm trap
 MONS:    gargoyle w:99 / toenail golem w:1
 MONS:    troll skeleton / spriggan skeleton / naga skeleton
 MONS:    alligator skeleton / harpy skeleton / anaconda skeleton
@@ -1035,7 +1034,7 @@ cc1.........3....$X$$$vxxx
 cc1.........3....$v.5.vxxx
 xccc......ccccc..$X...vxxx
 xxxcc.cc.ccddecccvvvv+vxxx
-xxxxc3cc3c1eeg+!.+4Y..vvvx
+xxxxc3cc3c1eeg+^.+4Y..vvvx
 xxccc.cc.cccccccYvvv..+1vx
 xxc...cc...c...c..3v+vvvvx
 xxc...cc...c...+.5.vffvxxx
@@ -1124,13 +1123,12 @@ NAME:       volcano_village
 TAGS:       no_item_gen no_monster_gen
 ORIENT:     encompass
 WEIGHT:     20
-SUBST:      S = lw, W = wW`, L = ll`, R = lx
-SHUFFLE:    MIN
-NSUBST:     I = 4:. / * = $def, MN = 1:123
-NSUBST:     M = 3:1 / 2:2 / 3 = $def / *:.
-NSUBST:     N = 2:1 / 1:2 / 1 = $def / *:.
-SUBST:      . = .:99 ':1
-KFEAT:      ' = known alarm trap
+SUBST:      p = lw, W = wW`, q = ll`, r = lx
+SHUFFLE:    JK / LM / NO
+NSUBST:     J = 4=. / $def
+NSUBST:     L = 3=1 / 12. / 2=2 / 3=$def / .
+NSUBST:     N = 2=1 / 12. / 1=2 / 1=$def / .
+SUBST:      K = ^, MO = ., . = .:99 ^:1
 KPROP:      ` = no_tele_into
 :           fiery_guardians(_G, true, true)
 :           volcano_setup(_G)
@@ -1146,23 +1144,23 @@ xwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwx
 xwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwx
 xwwwwwwwwWwWwWwWwWwWwWwWwWwWwWwWwWwwwwwwwwx
 xwwwwwwwWWWWWWWWWWWWWWWWWWWWWWWWWWWwwwwwwwx
-xwwwwwwx...........................xxwwwwwx
+xwwwwwwx....MMM.............OOO....xxwwwwwx
 xwwwxxxx...xx+xx...xxxxx...xx+xx...'xxwwwwx
-xwwxx.xx..xxMMMxx.xxIIIxx.xxNNNxx..x+xxxwwx
-xSSx.x.x..xMMMMMx.xIIIIIx.xNNNNNx..x.xAxSSx
-xSSx<x.x..xMMMMMx.xIIIIIx.xNNNNNx..x.x<xSSx
-xlRxxx+x..xxMMMxx.xxIIIxx.xxNNNxx..xx.xxRlx
-xRlllxx....xxxxx...xx+xx...xxxxx...xxxxllRx
-xlRlllxx...........................xllllRlx
-xRllllllLLLLLLLLLLLLLLLLLLLLLLLLLLLllllllRx
-xlRllllllLlLlLlLlLlLlLlLlLlLlLlLlLllllllRlx
-xRlllVllllllllllllllllllllllllllllllVllllRx
-xlRlllllllllllVllllllVllllllllVlllllllllRlx
-xRlRlllllllllllllllllllllllllllllllllllRlRx
-xRlllRlllRlllRlllRlllRlllRlllRlllRlllRlllRx
-xlRlRlRlRlRlRlRlRlRlRlRlRlRlRlRlRlRlRlRlRlx
-xRlRlRlRlRlRlRlRlRlRlRlRlRlRlRlRlRlRlRlRlRx
-xRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRx
+xwwxx.xx..xxLLLxx.xxJJJxx.xxNNNxx..x+xxxwwx
+xppx.x.x..xLLLLLx.xJJJJJx.xNNNNNx..x'xAxppx
+xppx<x.x..xLLLLLx.xJJJJJx.xNNNNNx..x'x<xppx
+xlrxxx+x..xxLLLxx.xxJJJxx.xxNNNxx..xx'xxrlx
+xrlllxx....xxxxx...xx+xx...xxxxx...xxxxllrx
+xlrlllxx............KKK............xllllrlx
+xrllllllqqqqqqqqqqqqqqqqqqqqqqqqqqqllllllrx
+xlrllllllqlqlqlqlqlqlqlqlqlqlqlqlqllllllrlx
+xrlllVllllllllllllllllllllllllllllllVllllrx
+xlrlllllllllllVllllllVllllllllVlllllllllrlx
+xrlrlllllllllllllllllllllllllllllllllllrlrx
+xrlllrlllrlllrlllrlllrlllrlllrlllrlllrlllrx
+xlrlrlrlrlrlrlrlrlrlrlrlrlrlrlrlrlrlrlrlrlx
+xrlrlrlrlrlrlrlrlrlrlrlrlrlrlrlrlrlrlrlrlrx
+xrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 ###############################################################################
