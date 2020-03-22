@@ -10,8 +10,8 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
 try:
-    from typing import Dict
-except:
+    from typing import Dict, Optional
+except ImportError:
     pass
 
 import config
@@ -97,6 +97,7 @@ def parse_where_data(data):
     return where
 
 def send_email(to_address, subject, body_plaintext, body_html):
+    # type: (str, str, str, str) -> None
     if not to_address:
         return
 
@@ -133,7 +134,8 @@ def send_email(to_address, subject, body_plaintext, body_html):
         # end connection
         if email_server: email_server.quit()
 
-def validate_email_address(address): # Returns an error string describing the problem, or None
+def validate_email_address(address):  # type: (str) -> Optional[str]
+    # Returns an error string describing the problem, or None
     if not address: return None
     if " " in address: return "Email address can't contain a space"
     if "@" not in address: return "Expected email address to contain the @ symbol"

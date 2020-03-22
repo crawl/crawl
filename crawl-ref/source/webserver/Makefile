@@ -1,5 +1,5 @@
 lint:
-	flake8 *.py
+	flake8 --mypy-config=mypy.ini *.py
 
 
 format:
