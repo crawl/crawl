@@ -984,6 +984,8 @@ static tileidx_t _zombie_tile_to_spectral(const tileidx_t z_tile)
     case TILEP_MONS_ZOMBIE_HARPY:
         return TILEP_MONS_SPECTRAL_BAT;
     case TILEP_MONS_ZOMBIE_BEE:
+    case TILEP_MONS_ZOMBIE_MELIAI:
+    case TILEP_MONS_ZOMBIE_HORNET:
         return TILEP_MONS_SPECTRAL_BEE;
     case TILEP_MONS_ZOMBIE_BEETLE:
     case TILEP_MONS_ZOMBIE_ROACH:
@@ -1074,6 +1076,8 @@ static tileidx_t _zombie_tile_to_simulacrum(const tileidx_t z_tile)
     case TILEP_MONS_ZOMBIE_HARPY:
         return TILEP_MONS_SIMULACRUM_BAT;
     case TILEP_MONS_ZOMBIE_BEE:
+    case TILEP_MONS_ZOMBIE_MELIAI:
+    case TILEP_MONS_ZOMBIE_HORNET:
         return TILEP_MONS_SIMULACRUM_BEE;
     case TILEP_MONS_ZOMBIE_BEETLE:
     case TILEP_MONS_ZOMBIE_ROACH:
