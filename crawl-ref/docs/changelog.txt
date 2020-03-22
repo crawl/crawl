@@ -1,3 +1,10 @@
+Stone Soup 0.17.3 (20200322)
+--------------------------------
+
+Bugfix Release
+--------------
+* A remote code execution vulnerability has been patched.
+
 Stone Soup 0.17.1 (20151210)
 ----------------------------
 * Fix insect monsters never berserking. This bug prevented queen bees from
