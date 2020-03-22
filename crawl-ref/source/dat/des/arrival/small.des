@@ -93,15 +93,15 @@ MAP
 .ccc.ccc.ccc.ccc.
 .c{c.c{c.c{c.c{c.
 .c.ccc.c.c.ccc.c.
-.c.....c.c.....c.
+.c..>..c.c..>..c.
 .ccc.ccc.ccc.ccc.
 ...c.c.....c.c...
 .ccc.ccccccc.ccc.
-.c.............c.
+.c......>......c.
 .c.ccccc.ccccc.c.
 .c{c..{c.c{..c{c.
 .ccc.ccc.ccc.ccc.
-.....c.....c.....
+....>c.....c>....
 .ccc.ccc.ccc.ccc.
 .c.c..{c.c{..c.c.
 .c.ccccc.ccccc.c.
@@ -121,11 +121,11 @@ MAP
     xxx........x
     xxx........x
 xxxxxxx........x
-xxxxxxx........x
-xxxxxxx........x
+xxxxxxx...GG...x
+xxxxxxx...GG...x
 x.....W........x
 x.....W........x
-x.....W........x
+x..G..W........x
 x.....xxxxxXXXXx
 x.....x{+.x
 xxxxVVxxx+x
@@ -204,7 +204,7 @@ ENDMAP
 NAME:   evilmike_arrival_rings
 TAGS:   arrival no_monster_gen no_pool_fixup
 ORIENT: float
-NSUBST: s = 1:+ / *:x, p = 1:+ / *:x, q = 1:+ / *:x, r = 1:+ / *:x
+NSUBST: s = 1:+ / *:x, p = 1:+ / *:x, q = 1:+ / *:x, r = 2:+ / *:x
 NSUBST: _ = 1:w / *:., ' = 1:w / *:., ` = 1:w / 1:d / *:.
 SUBST:  w:wlxm, x:xccv, +=+++.
 ITEM:   stone
@@ -310,11 +310,11 @@ SUBST:   ( = G
 MAP
 xxxxxxx+xxxxxxx
 xxxxx.....xxxxx
-x...x.....x...x
+x...m.....m...x
 x.{.+..T..+.[.x
-x...x.....x...x
+x...m.....m...x
 xxxxx.....xxxxx
-xxxxxxx+xxxxxxx
+xxxxxxm+mxxxxxx
 xxxxxx...xxxxxx
    xxx.(.xxx
    xxx...xxx
@@ -357,18 +357,19 @@ TAGS:    arrival
 ORIENT:  float
 NSUBST:  A = 1:+ / 1=c+ / *:c
 NSUBST:  B = 1:+ / *:c
+SUBST:   C = .
 SHUFFLE: >TVGl
-KMASK:   Tl = no_monster_gen
+KMASK:   TlC = no_monster_gen
 MAP
 ...........
 ...........
-..cAAAAAc..
-..Ac...cA..
-..A.BBB.A..
-..A.B>B.A..
-..A.BBB.A..
-..Ac...cA..
-..cAAAAAc..
+..cnAAAnc..
+..ncCCCcn..
+..ACBBBCA..
+..ACB>BCA..
+..ACBBBCA..
+..ncCCCcn..
+..cnAAAnc..
 .{.........
 ...........
 ENDMAP
@@ -425,7 +426,7 @@ MAP
 .ccccccccc.
 .Gc..{..cG.
 .cc.....cc.
-.Gc..T..cG.
+..+..T..+..
 .cc.....cc.
 .Gc.....cG.
 .cccc+cccc.
@@ -505,7 +506,7 @@ xxxxxxxxxxxxxx.xx
 x...xxx...xxx...x
 x.?.....?.....?.x
 x...xxx...xxx...x
-xxxxxxxxxxxxxxxxx
+xx+xxxxxxxxxxxxxx
 ENDMAP
 
 ##############################################################
@@ -514,33 +515,33 @@ TAGS:   arrival no_monster_gen
 WEIGHT: 8
 ORIENT: float
 : if crawl.one_chance_in(4) then
-SUBST:  ABCDEFGH = +
-SUBST:  abcdefgh = x
+SUBST:  ABCDEFHI = +
+SUBST:  abcdefhi = x
 : else
-SUBST:  a=A, b=B, c=C, d=D, e=E, f=F, g=G, h=H
+SUBST:  a=A, b=B, c=C, d=D, e=E, f=F, h=H, i=I
 NSUBST: A = 1:+ / *:X , B = 1:+ / *:X , C = 1:+ / *:X , D = 1:+ / *:X
-NSUBST: E = 1:+ / *:X , F = 1:+ / *:X , G = 1:+ / *:X , H = 1:+ / *:X
+NSUBST: E = 1:+ / *:X , F = 1:+ / *:X , H = 1:+ / *:X , I = 1:+ / *:X
 SUBST:  X:Xxxx+, X=xx+
 : end
 MAP
 xxxxxxxxxxx
-x.........H
-x.........h
-x.........h
+x.........I
+x.G.......i
+x.........i
 x...xxxxxxxxxxxxxx
 x...x.....D......x
-x...x.....d......x
+x...x.G...d....G.x
 x...x.....d......x
 x...x...xxxxxx...x
 x...x...x{+..x...x
-xGggxCccxxx..x...x
+xHhhxCccxxx..x...x
 x...x....xxaAxeeEx
 x...x....b...x...x
 x...x....b...x...x
 x...x....B...x...x
 x...xxxxxxxxxx...x
 x........f.......x
-x........f.......x
+x.G......f.....G.x
 x........F.......x
 xxxxxxxxxxxxxxxxxx
 ENDMAP
@@ -554,22 +555,23 @@ xxxxxxxxxxx
 x.........+
 x.xxxxxxxxx
 x.x.......+
-x.x.xxxxxxxxxxxxxx
-x.x.x.....+......x
-x.x.x.xxxxxxxxxx.x
-x.x.x.x...+....x.x
-x.x.x.x.xxxxxx.x.x
-x.x.x.x.x{+..x.x.x
-x+x+x+x+xxx..x.x.x
-x.x.x.x.xxxx+x+x+x
-x.x.x.x..+}x.x.x.x
-x.x.x.xxxxxx.x.x.x
-x.x.x....+...x.x.x
-x.x.xxxxxxxxxx.x.x
-x.x......+.....x.x
-x.xxxxxxxxxxxxxx.x
-x........+.......x
-xxxxxxxxxxxxxxxxxx
+x.x.xxxxxxxxxxxxxxx
+x.x.x.....+.......x
+x.x.x.xxxxxxxxxxx.x
+x.x.x.x...+.....x.x
+x.x.x.x.xxxxxxx.x.x
+x.x.x.x.x{+...x.x.x
+x+x+x+x+xxx.G.x.x.x
+x.x.x.x...x...x.x.x
+x.x.x.x.G.xxx+x+x+x
+x.x.x.x...+}x.x.x.x
+x.x.x.xxxxxxx.x.x.x
+x.x.x.....+...x.x.x
+x.x.xxxxxxxxxxx.x.x
+x.x.......+.....x.x
+x.xxxxxxxxxxxxxxx.x
+x.........+.......x
+xxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 
@@ -585,8 +587,8 @@ MAP
   x.....xxx.....x
  xx.....xxx.....xx
  x.....xxxxx.....x
- x.....xxxxx.....x
- x.....xxxxx.....x
+ x..x..xxxxx..x..x
+ x..x..xxxxx..x..x
  x.....xxxxx.....x
  xx.....xxx.....xx
   x.....xxx.....x
@@ -597,25 +599,25 @@ ENDMAP
 
 ##############################################################################
 NAME:    erik_arrival_orb_chamber
-TAGS:    arrival no_rotate
+TAGS:    arrival no_rotate no_monster_gen
 ORIENT:  float
 ITEM:    q:1 stone
-MONS:    rat
-NSUBST:  { = 1:{ / *:.
+TILE:    G = dngn_statue_orb_guardian
+: set_feature_name("granite_statue", "statue of a hideous four-limbed creature")
 MAP
-  ........@........
-  ........{........
-...xxxxxxxxxxxxxxx...
-...xxxx...1...xxxx...
-...xxx..1...1..xxx...
-...xx1.........1xx...
-@{x....1..d..1....x{@
-...xx1.........1xx...
-...xxx..1...1..xxx...
-...xxxx...1...xxxx...
-...xxxxxxxxxxxxxxx...
-  ........{........
-  ........@........
+xxxxxxxxxxxxxxxxxxx
+..xxxxxxxxxxxxxxx..
+...xxxxxxxxxxxxx...
+...xxx...G...xxx...
+...xx..G.{.G..xx...
+...xG.........Gx...
+......G..d..G......
+...xG.........Gx...
+...xx..G...G..xx...
+...xxx...G...xxx...
+...xxxxxxxxxxxxx...
+..xxxxxxxxxxxxxxx..
+xxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 ##############################################################################
@@ -639,9 +641,9 @@ xxxxxxllllllllll....
 xxxxxxllllllllll....
 xxxxxxllllllllll....
 xxxxxxlllllllll?....
-xxxxxxlllllllll.....
-xxxxxxllllllll?.....
-xxxxxxl?ll?ll?.....{
+xxxxxxlllllllll..cc.
+xxxxxxllllllll...c{.
+xxxxxxl?ll?ll?......
 xxxxxxll.??....
 xxxxxxl.........
 ENDMAP
@@ -666,9 +668,9 @@ xxxxxxwwwwwwwwwwww..
 xxxxxxwwwwwwwwwww...
 xxxxxxwwwwwwwwwww...
 xxxxxxwwwwwwwwww....
-xxxxxxwwwwwwwwww....
-xxxxxxwwwwwwwww.....
-xxxxxxwwwwwwww.....{
+xxxxxxwwwwwwwwww.cc.
+xxxxxxwwwwwwwwW..c{.
+xxxxxxwwwwwwww......
 xxxxxxwwwwww.....
 xxxxxxw..........
 ENDMAP
@@ -740,29 +742,6 @@ xxxxxxxxxx+xxxxx+xxxxxxxxxx
 ENDMAP
 
 ##############################################################################
-NAME:   dpeg_arrival_chase
-TAGS:   arrival no_monster_gen no_pool_fixup no_rotate
-MONS:   kobold, hobgoblin / goblin / bat
-ITEM:   stone
-ORIENT: float
-SUBST:  w : w l:1
-MAP
-xxxxxxxxxxxxx..........@
-xxxxxwwwwwwww2..........
-xxxxxxxxwwwwwww........x
-xxxxx.......wwww..wwwwwx
-xxww...{.......wwwwwwwwx
-xwwww...........wwww...x
-xwwwwww.................
-xwwwwwwwwwwwwwww.......@
-x1wwwwwwwwwwwwwwww......
-x1d1...wwwwwwwwwwwwwww.x
-x1d1...........wwwwwwwwx
-x>...................wwx
-xxxxxxxxxxxxxxxxxxxxxxxx
-ENDMAP
-
-##############################################################################
 NAME:    dpeg_arrival_rooms_b
 TAGS:    arrival no_monster_gen
 ORIENT:  float
@@ -774,8 +753,8 @@ xxxxxxxxxxxxxxx
 xcccccccx.....x
 xc.....cx..G..x
 xc..{..cx.....x
-xc.....cxxxx+xx
-xc.....cx......
+xc..c..cxxxx+xx
+xc..c..cx......
 xc.....+......@
 xcccccccx......
 xxxxxxxxx..@...
@@ -783,7 +762,7 @@ ENDMAP
 
 ##############################################################################
 NAME:    dpeg_arrival_rooms_c
-TAGS:    arrival no_monster_gen
+TAGS:    arrival no_monster_gen no_pool_fixup
 ORIENT:  float
 SHUFFLE: cvb
 MAP
@@ -805,20 +784,15 @@ ENDMAP
 #############################################################################
 NAME:    dpeg_arrival_shrine
 TAGS:    arrival no_monster_gen no_pool_fixup no_rotate
-: if crawl.coinflip() then
-SUBST:   A=@, B=., C=x, D=l
-: else
-SUBST:   A=x, B=l, C=@, D=.
-: end
 SHUFFLE: lw
 ORIENT:  float
 MAP
-xxxxxxxxCxxxxxxxx
-xlllllllDlllllllx
+xxxxxxxx@xxxxxxxx
+xlllllll.lllllllx
 xlllll.....lllllx
 xll....WWW....llx
 xl...WWW.WWW...lx
-AB..WWW.{..WW..lx
+@...WWW.{..WW..lx
 xl...WWW.WWW...lx
 xll....WWW....llx
 xlllll.....lllllx
@@ -854,7 +828,7 @@ ENDMAP
 
 ##############################################################################
 NAME:    dpeg_arrival_stone_temple_mockup
-TAGS:    arrival no_monster_gen no_rotate
+TAGS:    arrival no_monster_gen no_rotate no_pool_fixup
 ORIENT:  float
 SHUFFLE: cxxx
 NSUBST:  . = 1:d / *:.
@@ -888,7 +862,7 @@ ITEM:    stone
 SUBST:   T = TVVVV
 MAP
          ccccc
-        cc...cc
+        cc.>.cc
        cc..{..cc
       cc.......cc
      cc..T...T..cc
@@ -942,7 +916,7 @@ ITEM:    stone
 SUBST:   T = TVVVV
 MAP
    ccccccccccccccccc
-  cc.ccccccccccccc.cc
+  cc>ccccccccccccc>cc
  cc....ccccccccc....cc
 cc..T....ccccc....T..cc
 c.....T....c....T.....c
@@ -1107,7 +1081,7 @@ x.m.x........m.X.m
 m.X.m.xmxmxx.x.m.x
 x.m.x.m....x.m.x.m
 m.x.m.x.mx.m.X.m.x
-x.m.X.m..m.x.m.x.m
+x.m.X.m....x.m.x.m
 m.x.m.x.{x.m.x.m.x
 x.m.x.xmxx.x.m.x.m
 m.X.m......m.x.m.x
@@ -1134,7 +1108,7 @@ MAP
 ....cc...................cc...
 .........................cc...
 ..............................
-..cc..........................
+..cc...........>..............
 ..cc...........{..........cc..
 ..........................cc..
 ..............................
@@ -1196,18 +1170,17 @@ NAME:    dpeg_arrival_simpleton_b
 TAGS:    arrival
 ORIENT:  float
 ITEM:    nothing, nothing
-SHUFFLE: a+, TVG
+SHUFFLE: TVG
 SUBST:   c:cxx
-SUBST:   a = x
 KMASK:   T = no_monster_gen
 MAP
 xx@...@xxxxxxxx
 xx+xxx+xxxxxxxx
 x.......x......
-x.......a..)..@
+x.......+..)..@
 x.T.G.T.x......
-x.......xxxaxxx
-x.......xccaccx
+x.......xxx+xxx
+x.......xcc+ccx
 xxxxxxxxxc...cx
 xccccccccc.{.cx
 @........+...cx
@@ -1253,7 +1226,7 @@ x'A'x'B'x'C'x'D'x
 x'.'x'.'x'.'x'.'x
 xx+xxx+xxx+xxx+xx
 x'..............x
-x'..............+
+x'.....xx.......+
 x'..............x
 xx+xxx+xxx+xxx+xx
 x'.'x'.'x'.'x'.'x
@@ -1287,9 +1260,8 @@ ENDMAP
 ##############################################################################
 NAME:    dpeg_arrival_ratfight
 TAGS:    arrival
-MONS:    rat, goblin, bat
+MONS:    rat
 ORIENT:  float
-SUBST:   X = x+
 MAP
 xxxxxxxxxxxx..@
 xx.1.%1xxxxx...
@@ -1297,7 +1269,7 @@ x%.1.....xxx...
 x1........xx...
 xxx...xx..xx...
 xxxxxxxxx.1x...
-xxxxxxxxxx+xXxx
+xxxxxxxxxx+x+xx
 ....xxxxxx....x
 ....xxxxxx.{..x
 @...xxxxxxxx@xx
@@ -1311,10 +1283,10 @@ SHUFFLE: +'
 SUBST:   ' : x + ':40, '=x+
 MAP
 xxxxxxx.@.xxxxxxx
-x.....x...x.....x
+x.....+...x.....x
 x..(..'...+.....x
 x.....xx.xx.....x
-xxx+xxxx.xxxx'xxx
+xxx+'xxx.xxxx'xxx
 @....xx...xx....@
 .....xx...xx.....
 xxx+xxxx.xxxx+xxx
@@ -1347,7 +1319,7 @@ ORIENT: float
 SUBST:  T = TV, ? = wW, > = >d
 ITEM:   stone
 MAP
-xxx@xxx@xxx@xxx
+xxx+xxx+xxx+xxx
 x.............x
 x.G.TTT>TTT.G.x
 x.............x
@@ -1384,8 +1356,8 @@ xxx
 x{xx          xxxxx
 x..xxxxxxxxxxxx[x?x
 xx.?xxxxx(xxxx?...x
-x?..xxxx..xxxx???.x
-x..?x?..?xxxx?x??.x
+x?..xxxx..xxxx.??.x
+x..?.?..?xxxx.x??.x
 x.?xx..xxxxx?.....x
 x.?xx.?xxxx?x.x???x
 xx..?.xxxx??..xxxxx
@@ -1439,7 +1411,7 @@ ENDMAP
 NAME:    lemuel_arrival_broad_hall
 TAGS:    arrival no_monster_gen
 ORIENT:  float
-SUBST:   ? : xxcvG.
+SUBST:   ? : xxcvG
 MAP
 xxxxxxxxxxx
 x....(....x
@@ -1469,8 +1441,8 @@ xxxxxxxxxxx
 x....{....x
 x.........x
 x.........x
-x.........x
-x.........x
+x.b.....b.x
+x.b.....b.x
 x.........x
 x.........x
 x.........x
@@ -1486,8 +1458,8 @@ SUBST:   b : bcvxxx
 MAP
 xxxxxxxxxxx
 x....{....x
-x.........x
-x.........x
+x.b.....b.x
+x.b.....b.x
 x.........x
 xb+bb+bb+bx
 x....@....x
@@ -1534,8 +1506,8 @@ MAP
 xxwwwwwwwxxx
 xwwwwwwwwwwx
 xwwww'wwwwwx
-xwww....'wwx
-xww......'wx
+xwwwW...'wwx
+xwwWww...'wx
 x'.......'wx
 x....{..'wwx
 .........wwx
@@ -1559,49 +1531,15 @@ MAP
 xx...xx.x+x
 x..{..+xx.xx
 xx...xxx...xx
-xxx.xxx.....xx
-xxxCxx...(...W
-xxx.xxx.....xx
+xxx+xxx.....xx
+xxx.+....(...W
+xxx+xxx.....xx
 xx...xxx...xx
 x..[..+xx.xx
 xx...xx.x+x
  xx.xxxx.xx
   xxxxxxxx
 ENDMAP
-
-##############################################################################
-###############################################################################
-# Sounds of Crawl: the *ZOT*
-NAME:    evilmike_arrival_sounds_zot
-TAGS:    arrival no_monster_gen
-ORIENT:  float
-WEIGHT:  1
-KPROP:   >'Z1 = no_tele_into
-KFEAT:   Z = zot trap
-SHUFFLE: vXc
-NSUBST:  { = 1:{ / *:.
-MONS:    generate_awake ooze
-MAP
-     v..@..v
-    vvv...vvv
-   vvvvv{vvvvv
-  vvvvvvvvvvvvv
- vvvvvvvvvvvvvvv
-vvvvvvvvvvvvvvvvv
-.vvvvv>''''vvvvv.
-..vvvv'''''vvvv..
-@.{vvv''Z''vvv{.@
-..vvvv'''''vvvv..
-.vvvvv''1''vvvvv.
-vvvvvvvvvvvvvvvvv
- vvvvvvvvvvvvvvv
-  vvvvvvvvvvvvv
-   vvvvv{vvvvv
-    vvv...vvv
-     v..@..v
-ENDMAP
-
-
 
 ##############################################################################
 NAME:    dpeg_arrival_arbitrary_a
@@ -1624,9 +1562,9 @@ xx'......''xxxxxxxxx.
 x'.....'xxxxxxxxxxx..
 x...''xxxxxxxxxxxxx.@
 x.'xxxxxxxxxxxxxx....
-x..'xxxxxx''.'x..'xxx
+x..'xxxxxx'..'x..'xxx
 x'...'''x'.xx..'xxxxx
-x'..........xxxxxxxxx
+x'...........xxxxxxxx
 xx'..{.xxx'....''xxxx
  xx'....xxxx''...''xx
   xxxx'''x xxx''...'x
@@ -1696,8 +1634,8 @@ x'.?www?.?.?www?.xx...2x.'
 x'?www?.??w.wwww?...?.xx.@
 xx.???.?wwww.www.?ww..x..'
 xxx'..?wwww??.wwwww?.xx.xx
-''xx..?www?.{.?www?.xx.xxx
-@..xx?wwwww???wwwww?..xx'x
+''xxx.?www?.{.?www?.xx.xxx
+@..x.?wwwww???wwwww?..xx'x
 ..xx..?wwwww.wwwww?..x..xx
 x'.xxx.??wwww.ww.??...xxxx
 xx..x....??www.??...xxxx'x
@@ -1722,7 +1660,7 @@ xwww??....w.www??...'x'..'.
 xww??...?ww.w.ww.?..xx.....
 xw?....?ww{www..w.?..'.....
 xw?.{.?wwwwwwwww......'...@
-xw?....ww{wwww..w....'x.'..
+xw?....wW{wwww..w....'x.'..
 xww??...?wwww?.ww?....x.''.
 xwww??.....?wwww...x..'....
 xwwwwww??....???..'x....xx'
@@ -1732,7 +1670,7 @@ ENDMAP
 
 ##############################################################################
 NAME:   dpeg_arrival_erosion
-TAGS:   arrival
+TAGS:   arrival no_monster_gen
 ORIENT: float
 SUBST:  '=cx., "=+.x, c:xxc
 MAP
@@ -1772,7 +1710,6 @@ ENDMAP
 NAME:    dpeg_arrival_round_a
 TAGS:    arrival
 ORIENT:  float
-SHUFFLE: {[(
 # Equal chance of passable, blocked at ?, blocked at A, and blocked at a.
 # Blocking the path at two points would create a disconnected bubble.
 : local r = crawl.random2(4)
@@ -1817,7 +1754,6 @@ ENDMAP
 NAME:    dpeg_arrival_round_b
 TAGS:    arrival
 ORIENT:  float
-SHUFFLE: {[(
 SUBST:   ' : . x ':40, '=x.
 NSUBST:  { = 1:{ / *:.
 MAP
@@ -1864,8 +1800,7 @@ ENDMAP
 NAME:    dpeg_arrival_short_road
 TAGS:    arrival
 ORIENT:  float
-SHUFFLE: XY
-SUBST:   X=+, Y=x, %=%.
+SUBST:   %=%.
 NSUBST:  { = 1:{ / *:.
 MAP
 xxxxxx@.xxx
@@ -1873,8 +1808,8 @@ x{.xx..xxxx
 x..x...+..x
 x..x..xx.{x
 x..+..xx..x
-xXxx..xxxxx
-x%Y..xxxxxx
+x+xx..xxxxx
+x%+..xxxxxx
 xxx..x...{x
 xx...+....x
 xx.@xxxxxxx
@@ -1885,7 +1820,8 @@ NAME:    dpeg_arrival_court
 TAGS:    arrival
 ORIENT:  float
 SHUFFLE: TVG
-KMASK:   T = no_monster_gen
+KMASK:   TA = no_monster_gen
+SUBST:   A=.
 NSUBST:  { = 1:{ / *:.
 MAP
 xxxxx.@.xxxxx
@@ -1894,9 +1830,9 @@ x.xxx...xxx.x
 x.x.......x.x
 x.x.T.x.T.x.x
 x.....x.....x
-x....xxx....x
-xxxx..x..xxxx
-x..+.....+..x
+x...AxxxA...x
+xxxxAAxAAxxxx
+x..+AAAAA+..x
 x{.xxx+xxx..x
 x..x{....x.{x
 xxxxxxxxxxxxx
@@ -1917,7 +1853,7 @@ MAP
 xxxxxx..xD.xxx.xx.xx.xxxxx
 x..Cx.x.x.xxx'xxxx.x'x....
 x....xx'X.'xx'Dx..xx.x.cx.
-x{.xxxXxx.x'x...'xxxx..xx@
+x{.xxxXx..x'x...'xxxx..xx@
 x....xxX'CX'x.xCXx..xX.cx.
 x..Dx...xx.XXx'''.Xx.x....
 xxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -2124,7 +2060,7 @@ xEx.x.x.xxxxx.xFx
 x...x.c...1dx...x
 xxxxxCxxxxxxxx.xx
 x...............x
-x.xxxxxx.xxxxxx.x
+x.xx.xxx.xx.xxx.x
 x.....{x{x{.....x
 xxxxxxxxxxxxxxxxx
 ENDMAP
@@ -2149,7 +2085,7 @@ x.x.x.x.xxxxxAx.x
 x...x.x...1dx...x
 xxxxx.xxxxxxxx.xx
 x...............x
-x.xxxxxX.Xxxxxx.x
+x.xx.xxX.Xxx.xx.x
 x.....{x{x{.....x
 xxxxxxxxxxxxxxxxx
 ENDMAP
@@ -2168,8 +2104,8 @@ xxxx.x.x.x.x.x.x.xxxx
 x?+.......{.......+?x
 xxxx.x.x.x.x.x.x.xxxx
 xxxx+x+x+x+x+x+x+xxxx
-xxxx?x?x?x?x?x?x?xxxx
-xxxxxxxxxxxxxxxxxxxxx
+xxxx?x?x?x.x?x?x?xxxx
+xxxxxxxxxx@xxxxxxxxxx
 ENDMAP
 
 #############################
@@ -2177,16 +2113,16 @@ NAME:    onia_arrival_handbag
 TAGS:    arrival
 ORIENT:  float
 MONS:    w:30 rat / ooze / ball python
-SHUFFLE: {[, [<(
-SUBST:   (=.,[=.
+SHUFFLE: {[
+SUBST:   [=.
 MAP
 .......@........
 .xx..xx>x{x..xx.
-.....xxxxxx.....
+.....xxx.xx.....
 .xx1xxxxxxxx1xx.
-.(xxxxxxxxxxxx<.
+.>xxxxxxxxxxxx>.
 .xx1xxxxxxxx1xx.
-.....xxxxxx.....
+.....xx.xxx.....
 .xx..x[x>xx..xx.
 .......@........
 ENDMAP
@@ -2301,7 +2237,7 @@ xxxxxxxxxx""xxxxxxxxxxxxxxx?...?xx
 xxxxxxxxx""""xxxxxxxxxxx?.......?x
 xxxxxxx""""""""xxxx?............?x
 xxxxxx""""""....??.............'xx
-xxxxx""".....................''xxx
+xxxxx"""................x....''xxx
 xG..x....................'''''xxxx
 @.......?..........??.''''''xxxxxx
 xG.%x..xxx?.......xxxxx''''xxxxxxx
@@ -2441,6 +2377,8 @@ MONS:    swamp drake / hydra / wyvern / rime drake
 MONS:    polar bear / black bear
 MONS:    black mamba / water moccasin / anaconda / salamander
 : end
+KMASK:   ' = no_monster_gen
+SUBST:   ' = .
 MAP
 xxxxxxxx@xxxxxxxx
 xxxxxx.G.G.xxxxxx
@@ -2450,9 +2388,9 @@ x.G..ccccccc..G.x
 x....c12345c....x
 x.G..cnnnnnc..G.x
 x...............x
-xxx.............x
-xxxxxxxxxxxx....x
-xxxxx{........xxx
+xxx...........''x
+xxxxxxxxxxxx''''x
+xxxxx{......''xxx
 xxxxxxxxxxxxxxxxx
 ENDMAP
 
@@ -2482,7 +2420,7 @@ x'''''''''''''''x
 x'''''''''''''''x
 xxxxmmmmmmmmmxxxx
 """""""""""""""""
-@"""""""{"""""""@
+@""mm"""{"""mm""@
 """""""""""""""""
 ENDMAP
 
@@ -2707,7 +2645,7 @@ ORIENT:  float
 NSUBST:  A = 3:+ / x
 NSUBST:  B = 1:+ / "
 NSUBST:  C = 11:+ / x
-NSUBST:  D = 1:+ / "
+NSUBST:  D = 3:+ / "
 SUBST:   " = xxxxxxxxxxxxxxxxx+
 SUBST:   ! = ....V
 SUBST:   x : cxxx
@@ -2769,11 +2707,11 @@ SHUFFLE: rz
 : if crawl.one_chance_in(4) then
 SUBST:   w : x, u : x, z : @
 : else
-SUBST:   z : x, u : w
+SUBST:   u : w
 NSUBST:  w = @ / w
+NSUBST:  z = 1:@ / *:x
 SUBST:   w : wwwwwwtt.
 : end
-SUBST:   r : x
 NSUBST:  y = { / .....> / .
 KMASK:   W = no_monster_gen
 MONS:    anaconda / death yak / black mamba / elephant / hydra
@@ -2784,7 +2722,7 @@ xtttyytttx
 xt1tyyt1tx
 xcnc..cncx
 x..c++c..x
-r........z
+z........z
 xuwwwwwwux
 ENDMAP
 
@@ -2805,7 +2743,7 @@ xXXxxxxxxxxx
 x..........x
 x..cyyycL.Lx
 x.Rc...cLGLx
-x.Rc...cLLLx
+x.Rc.t.cLLLx
 xGRc...cxxxx
 xxccrrccccx
  pcm..c{{cx
@@ -2824,25 +2762,25 @@ SUBST:  + = ++. , t = tttW1, W : WWW.
 MONS:   plant / bush
 MAP
  ccccccccc
- ccc{{{cccX
- 'tcc.cct'X
- WWtc+ctWWX
-@WWWWWWWWWX
- WWtc+ctWWX
- 'tcc.cct'X
- ccc{{{cccX
+ ccc{{{ccc
+ 'tcc.cct'
+ WWtc+ctWW
+@WWWWWWWWW@
+ WWtc+ctWW
+ 'tcc.cct'
+ ccc{{{ccc
  ccccccccc
 ENDMAP
 
 ##############################################################################
 NAME:    sevenhm_arrival_forest_fort_small_5
-TAGS:    arrival no_pool_fixup
+TAGS:    arrival no_pool_fixup no_monster_gen
 ORIENT:  float
 : if crawl.one_chance_in(4) then
 SUBST:   o = {
-SUBST:   X : x , Y : @ , p : .
+SUBST:   X : x, Y : @, p : ., Z: x
 : else
-NSUBST:  X = @ / @@xx.
+NSUBST:  X = @ / @@xx., Z = @ / @@xx.
 SUBST:   Y = x .:1 , o : . , p : [
 : end
 NSUBST:  { = { / . , r = + / +c
@@ -2859,13 +2797,13 @@ SHUFFLE: ({[
 MAP
    xxxxxxxxxxxxx
   xxtttWWWWttttxx
-  xttWWWHHWWWWttxx
-xxYWWWWJJJJWWWWWtxxx
+ YxttWWWHHWWWWttxY
+xxYWWWWJJJJWWWWWYxxx
 xtttWWWWKKWWWWWccccx
 xtt....WWWW.cccc.{cx
 xt...cNNc...np+..{cx
-x...cc{{cc..ccc..{cx
-x...z...{c..+....{cx
+Z...cc{{cc..ccc..{cx
+Z...z...{c..+....{cx
 xt..cc...c..cccccccx
 xt..tccc+c.....ttttx
 xxx..ttc.ctt......tx
@@ -2896,7 +2834,7 @@ MAP
 xxxxxxccccccxxxxxx
 xcccccc{{{{ccccccx
 xc>zll=....=llC>cx
-xcccccc....ccccccx
+xcccccc.GG.ccccccx
  .ttttc....ctt..
   ....crRRrct.
      .........
@@ -2921,7 +2859,7 @@ xWWvWW#WvWWx
 xWWWWWWWWWWx
 xWWWWWWWWWWx
 xxxmmxxxmmxx
-@+....{....x
+@+....{...+@
 xxxmmxxxmmxx
 xWWWWWWWWWWx
 xWWWWWWWWWWx
@@ -2946,8 +2884,8 @@ xw1.G..{..G.1wx
 xwww.......wwwx
 xxww1..G..1wwxx
 .xxwww.1.wwwxx.
-..xxwwwwwwwxx..
-@..xxxxxxxxx..@
+..xxwwW.Wwwxx..
+@..xxxG+Gxxx..@
 ENDMAP
 
 ##############################################################################
@@ -3012,7 +2950,7 @@ xwwwwwwpppppwwppp..w...x
 xwwwwwwwpwpwwwwppwwwwp.x
 xwwwwwwwwwwwwwwwwww..w.+
 xw.wwwwwwwwwwwwwww.....+
-xp..w..wwwww..www..p...x
+xp..w..wwwww..www..p.t.x
 x.xp.px.w.w.xx.w.xxx...x
 x{xxxxxx.p.xxxx.xxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxx
@@ -3065,9 +3003,12 @@ ENDMAP
 NAME: nicolae_arrival_washed_ashore
 ORIENT: northwest
 TAGS: arrival no_monster_gen no_pool_fixup
+NSUBST: b = 4:G, *:b
 SUBST: B = bb., S = bWW, Z = WWw
 COLOUR: b : brown
-FTILE: b{ = floor_sand
+FTILE: b{G = floor_sand
+TILE:  G = dngn_crumbled_column
+:set_feature_name("granite_statue", "broken wreckage")
 KFEAT: O = open_sea
 KFEAT: b = .
 MAP
@@ -3097,7 +3038,7 @@ ENDMAP
 
 ##############################################################
 NAME:    minmay_arrival_shattered_statue
-TAGS:    arrival
+TAGS:    arrival no_monster_gen
 ORIENT:  float
 ITEM:    stone q:4 / stone q:2 / nothing
 ITEM:    stone q:3 w:5 / stone q:1 / nothing
@@ -3395,7 +3336,7 @@ MAP
 ...????{????...
 ...?2?????2?...
 ...?????????...
-....?2???2?....
+....?2???2?t...
 .....??2??.....
  .............
   ...........
