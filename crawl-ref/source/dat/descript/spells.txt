@@ -632,10 +632,9 @@ Conjures up a large cloud of lethally cold vapour.
 %%%%
 Frozen Ramparts spell
 
-Encases surrounding walls with a myriad of enchanted icicles for a short time.
-The icicles release explosively when a victim wanders nearby, damaging and
-encasing them in a frozen shroud that impedes movement. The caster and any
-allies can safely wander near these walls.
+Encases surrounding walls enchanted ice for a short time. Victims that wander
+near the icy walls will be frozen, but the caster and any allies can pass
+safely.
 %%%%
 Fulminant Prism spell
 

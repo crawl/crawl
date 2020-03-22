@@ -12,6 +12,7 @@
 #include <sstream>
 
 #include "areas.h"
+#include "attack.h"
 #include "branch.h"
 #include "cloud.h"
 #include "coord.h"
@@ -2378,29 +2379,24 @@ void ice_wall_damage(monster &mons, int delay)
     if (!walls)
         return;
 
-    mprf((walls > 1) ? "The walls release a blast of icicles at %s!"
-                     : "The wall releases a blast of icicles at %s!",
-         you.can_see(mons) ? mons.name(DESC_THE).c_str() : "something");
-
     const int pow = calc_spell_power(SPELL_FROZEN_RAMPARTS, true);
-    int dam = div_rand_round(delay * roll_dice(1, 2 + div_rand_round(pow, 4)),
-                BASELINE_DELAY);
-
-    dam = mons.apply_ac(dam);
+    const int orig_dam = div_rand_round(
+            delay * roll_dice(1, 2 + div_rand_round(pow, 4)), BASELINE_DELAY);
 
     bolt beam;
-    beam.flavour = BEAM_ICE;
+    beam.flavour = BEAM_COLD;
     beam.thrower = KILL_YOU;
-    dam = mons_adjust_flavoured(&mons, beam, dam);
+    int dam = mons_adjust_flavoured(&mons, beam, orig_dam);
+    mprf("The wall freezes %s%s%s",
+         you.can_see(mons) ? mons.name(DESC_THE).c_str() : "something",
+         dam ? "" : " but do no damage",
+         attack_strength_punctuation(dam).c_str());
 
     if (dam > 0)
     {
-        mons.hurt(&you, dam, BEAM_ICE);
+        mons.hurt(&you, dam, BEAM_COLD);
 
-        if (mons.alive() && !mons.has_ench(ENCH_FROZEN))
-        {
-            simple_monster_message(mons, " is encased in ice.");
-            mons.add_ench(ENCH_FROZEN);
-        }
+        if (mons.alive())
+            mons.expose_to_element(BEAM_COLD, orig_dam);
     }
 }
