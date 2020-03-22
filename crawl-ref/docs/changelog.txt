@@ -1,3 +1,10 @@
+Stone Soup 0.10.5 (20200322)
+--------------------------------
+
+Bugfix Release
+--------------
+* A remote code execution vulnerability has been patched.
+
 Stone Soup 0.10.3 (20120614)
 ----------------------------
 * Crash fixes.
