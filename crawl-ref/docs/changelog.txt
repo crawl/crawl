@@ -1,3 +1,10 @@
+Stone Soup 0.16.3 (20200322)
+--------------------------------
+
+Bugfix Release
+--------------
+* A remote code execution vulnerability has been patched.
+
 Stone Soup 0.16.2 (20150811)
 --------------------------------------------
 * Give FeEE players stones at game start.
