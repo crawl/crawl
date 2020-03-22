@@ -193,6 +193,7 @@ statue_demonic_bust
 %syn DNGN_STATUE_DEMONIC_BUST
 statue_twins
 statue_orb_guardian
+%syn DNGN_STATUE_ORB_GUARDIAN
 statue_sword
 statue_axe
 %syn DNGN_STATUE_AXE
