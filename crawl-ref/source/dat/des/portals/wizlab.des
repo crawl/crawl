@@ -1246,9 +1246,9 @@ MARKER:     ' = lua:props_marker {veto_dig="veto", \
                                   veto_shatter="veto" }
 MARKER:     c = lua:props_marker {veto_dig="veto", \
                                   veto_shatter="veto" }
-MARKER:     t = lua:props_marker {veto_dig="veto", \
-                                  veto_shatter="veto", \
-                                  veto_fire="veto" }
+MARKER:     t = lua:props_marker {veto_shatter="veto", \
+                                  veto_fire="veto", \
+                                  veto_tornado="veto" }
 :           wizlab_setup(_G)
 :           set_border_fill_type("tree")
 :           set_random_mon_list([[shadow w:6 / flayed ghost w:2 / hungry ghost w:2 / ]]
