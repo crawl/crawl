@@ -1225,6 +1225,8 @@ SUBVAULT: h : gauntlet_arena_second
 SUBVAULT: i : gauntlet_arena_second
 SUBVAULT: j : gauntlet_arena_second
 SUBVAULT: y : gauntlet_exit
+# Just in case we ever add lava felids, prevent their revival in closets.
+KPROP:    lG = no_tele_into
 : gauntlet_appearance(_G)
 MAP
                ccc ccc ccccccccccccc ccc ccc
@@ -1247,15 +1249,15 @@ MAP
 cccl.....nnnnnnn.nnnnnnn....lGl....nnnnnnn.nnnnnnn.....lccc
 cGn......nJ...........Ln.....l.....nN...........Pn......nGc
 ccc..nnnnnnnnnnnnnnnnnnnnnnn...nnnnnnnnnnnnnnnnnnnnnnn..ccc
-  c..eeeeeeeeeee.fffffffffff...ggggggggggg.hhhhhhhhhhh..c
-ccc..eeeeeeeeeee.fffffffffff...ggggggggggg.hhhhhhhhhhh..ccc
-cGn..eeeeeeeeeee.fffffffffff...ggggggggggg.hhhhhhhhhhh..nGc
-ccc..eeeeeeeeeee.fffffffffff...ggggggggggg.hhhhhhhhhhh..ccc
-  c..eeeeeeeeeee.fffffffffff...ggggggggggg.hhhhhhhhhhh..c
-ccc..eeeeeeeeeee.fffffffffff...ggggggggggg.hhhhhhhhhhh..ccc
-cGn..neeeeeeeeen.nfffffffffn...ngggggggggn.nhhhhhhhhhn..nGc
-ccc..neeeeeeeeen.nfffffffffn...ngggggggggn.nhhhhhhhhhn..ccc
-  c..neeeeeeeeen.nfffffffffn...ngggggggggn.nhhhhhhhhhn..c
+  c..eeeeeeeeeeelfffffffffff...ggggggggggglhhhhhhhhhhh..c
+ccc..eeeeeeeeeeelfffffffffff...ggggggggggglhhhhhhhhhhh..ccc
+cGn..eeeeeeeeeeelfffffffffff...ggggggggggglhhhhhhhhhhh..nGc
+ccc..eeeeeeeeeeelfffffffffff...ggggggggggglhhhhhhhhhhh..ccc
+  c..eeeeeeeeeeeGfffffffffff...gggggggggggGhhhhhhhhhhh..c
+ccc..eeeeeeeeeeelfffffffffff...ggggggggggglhhhhhhhhhhh..ccc
+cGn..neeeeeeeeenlnfffffffffn...ngggggggggnlnhhhhhhhhhn..nGc
+ccc..neeeeeeeeenlnfffffffffn...ngggggggggnlnhhhhhhhhhn..ccc
+  c..neeeeeeeeenlnfffffffffn...ngggggggggnlnhhhhhhhhhn..c
 ccc..nnnnnnnnnnnnnnnnnnnnnnn...nnnnnnnnnnnnnnnnnnnnnnn..ccc
 cGn......nK...........Mn.....l.....nO...........Qn......nGc
 cccl.....nnnnnnn.nnnnnnn....lGl....nnnnnnn.nnnnnnn.....lccc
@@ -1467,6 +1469,8 @@ SUBVAULT: i : gauntlet_arena_second
 SUBVAULT: j : gauntlet_arena_second
 SUBVAULT: k : gauntlet_arena_second
 SUBVAULT: y : gauntlet_exit
+# Just in case we ever add lava felids, prevent their revival in closets.
+KPROP:    lG = no_tele_into
 : gauntlet_appearance(_G)
 MAP
                                      ccccc
