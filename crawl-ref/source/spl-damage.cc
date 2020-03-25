@@ -3422,7 +3422,8 @@ static monster* _closest_target_in_range(int radius)
 
 spret cast_absolute_zero(int pow, bool fail, bool tracer)
 {
-    monster* mon = _closest_target_in_range(LOS_RADIUS);
+    monster* const mon = _closest_target_in_range(
+            spell_range(SPELL_ABSOLUTE_ZERO, pow));
 
     if (tracer)
     {
@@ -3447,10 +3448,10 @@ spret cast_absolute_zero(int pow, bool fail, bool tracer)
         god_conduct_trigger conducts[3];
         set_attack_conducts(conducts, *mon, you.can_see(*mon));
 
+        const coord_def pos = mon->pos();
         glaciate_freeze(mon, KILL_YOU, actor_to_death_source(&you));
 
-        // extremely loud at low power, zero noise at max power
-        noisy(40 - div_rand_round(pow,5), pos);
+        noisy(spell_effect_noise(SPELL_ABSOLUTE_ZERO), pos, you.mid);
     }
 
     return spret::success;

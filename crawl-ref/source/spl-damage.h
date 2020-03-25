@@ -71,6 +71,7 @@ spret cast_scattershot(const actor *caster, int pow, const coord_def &pos,
 spret cast_ignition(const actor *caster, int pow, bool fail);
 
 spret cast_starburst(int pow, bool fail, bool tracer=false);
+
 void foxfire_attack(const monster *foxfire, const actor *target);
 
 spret cast_hailstorm(int pow, bool fail, bool tracer=false);
@@ -80,4 +81,5 @@ spret cast_imb(int pow, bool fail);
 void actor_apply_toxic_bog(actor *act);
 
 spret cast_frozen_ramparts(int pow, bool fail);
+
 spret cast_absolute_zero(int pow, bool fail, bool tracer = false);

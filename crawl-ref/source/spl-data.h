@@ -4111,8 +4111,8 @@ static const struct spell_desc spelldata[] =
     spflag::no_ghost,
     9,
     200,
-    LOS_RADIUS, LOS_RADIUS,
-    4, 0, // special-cased in cast_absolute_zero
+    1, LOS_RADIUS,
+    9, 25,
     TILEG_ICE_STORM,
 },
 
