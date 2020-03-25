@@ -3387,14 +3387,15 @@ spret cast_frozen_ramparts(int pow, bool fail)
     fail_check();
 
     for (auto wall : walls)
+    {
+        noisy(spell_effect_noise(SPELL_FROZEN_RAMPARTS), wall);
         env.pgrid(wall) |= FPROP_ICY;
+    }
 
     env.level_state |= LSTATE_ICY_WALL;
     you.props[FROZEN_RAMPARTS_KEY] = you.pos();
 
-    mpr("The walls around you are covered in icicles.");
-    noisy(spell_effect_noise(SPELL_FROZEN_RAMPARTS), you.pos());
-
+    mpr("The walls around you are covered in ice.");
     you.duration[DUR_FROZEN_RAMPARTS] = random_range(40 + pow,
                                                      80 + pow * 3 / 2);
     return spret::success;
