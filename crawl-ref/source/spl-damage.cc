@@ -3441,6 +3441,9 @@ spret cast_absolute_zero(int pow, bool fail, bool tracer)
         canned_msg(MSG_NOTHING_HAPPENS);
     else
     {
+        targeter_radius hitfunc(&you, LOS_NO_TRANS);
+        flash_view_delay(UA_PLAYER, LIGHTCYAN, 100, &hitfunc);
+
         mprf("You chill %s to absolute zero!",
              you.can_see(*mon) ? mon->name(DESC_THE).c_str() : "something");
 
