@@ -978,7 +978,6 @@ int spell_range(spell_type spell, int pow, bool allow_bonus)
         && vehumet_supports_spell(spell)
         && have_passive(passive_t::spells_range)
         && maxrange > 1
-        && spell != SPELL_GLACIATE
         && spell != SPELL_THUNDERBOLT) // lightning rod only
     {
         maxrange++;

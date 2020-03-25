@@ -3432,21 +3432,17 @@ spret cast_absolute_zero(int pow, bool fail, bool tracer)
             return spret::success;
     }
 
-    coord_def pos = mon->pos();
-
-    if (stop_attack_prompt(mon, false, pos))
+    if (mon && you.can_see(*mon) && stop_attack_prompt(mon, false, mon->pos()))
         return spret::abort;
 
     fail_check();
 
     if (!mon)
-    {
-        //this shouldn't happen, but nevertheless
         canned_msg(MSG_NOTHING_HAPPENS);
-    }
     else
     {
-        mprf("You chill %s to absolute zero!", mon->name(DESC_THE).c_str());
+        mprf("You chill %s to absolute zero!",
+             you.can_see(*mon) ? mon->name(DESC_THE).c_str() : "something");
 
         god_conduct_trigger conducts[3];
         set_attack_conducts(conducts, *mon, you.can_see(*mon));
