@@ -899,6 +899,9 @@ int count_adjacent_icy_walls(const coord_def &pos)
 
 void feat_splash_noise(dungeon_feature_type feat)
 {
+    if (crawl_state.generating_level)
+        return;
+
     switch (feat)
     {
     case DNGN_SHALLOW_WATER:
