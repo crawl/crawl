@@ -103,7 +103,6 @@ enum makename_type
     MNAME_JIYVA, /// No spaces, starts with J, Plog -> Jiyva
 };
 
-void check_item_knowledge(bool unknown_items = false);
 void display_runes();
 
 string quant_name(const item_def &item, int quant,

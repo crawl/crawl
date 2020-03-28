@@ -84,6 +84,7 @@
 #include "items.h"
 #include "item-use.h"
 #include "jobs.h"
+#include "known-items.h"
 #include "level-state-type.h"
 #include "libutil.h"
 #include "luaterp.h"

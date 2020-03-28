@@ -28,6 +28,7 @@
 #include "item-use.h"
 #include "item-prop.h"
 #include "item-status-flag-type.h"
+#include "known-items.h"
 #include "libutil.h"
 #include "macro.h"
 #include "message.h"

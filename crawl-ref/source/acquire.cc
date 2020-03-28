@@ -30,6 +30,7 @@
 #include "items.h"
 #include "item-use.h"
 #include "invent.h"
+#include "known-items.h"
 #include "libutil.h"
 #include "macro.h"
 #include "message.h"

@@ -34,6 +34,7 @@
 #include "item-prop.h"
 #include "item-status-flag-type.h"
 #include "items.h"
+#include "known-items.h"
 #include "level-state-type.h"
 #include "libutil.h"
 #include "macro.h"
