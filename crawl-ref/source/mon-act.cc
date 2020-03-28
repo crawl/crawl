@@ -2227,7 +2227,8 @@ static void _torpor_snail_slow(monster* mons)
     {
         monster *m = *ri;
         if (m && !mons_aligned(mons, m) && !m->stasis()
-            && !m->is_stationary() && !is_sanctuary(m->pos()))
+            && !mons_is_conjured(m->type) && !m->is_stationary()
+            && !is_sanctuary(m->pos()))
         {
             m->add_ench(mon_enchant(ENCH_SLOW, 0, mons, 1));
             m->props[TORPOR_SLOWED_KEY] = true;
