@@ -2012,14 +2012,18 @@ bool simple_monster_message(const monster& mons, const char *event,
     return false;
 }
 
+string god_speaker(god_type which_deity)
+{
+    if (which_deity == GOD_WU_JIAN)
+       return "The Council";
+    else
+       return uppercase_first(god_name(which_deity));
+}
+
 // yet another wrapper for mpr() {dlb}:
 void simple_god_message(const char *event, god_type which_deity)
 {
-    string msg;
-    if (which_deity == GOD_WU_JIAN)
-       msg = uppercase_first(string("The Council") + event);
-    else
-       msg = uppercase_first(god_name(which_deity)) + event;
+    string msg = god_speaker(which_deity) + event;
 
     god_speaks(which_deity, msg.c_str());
 }
