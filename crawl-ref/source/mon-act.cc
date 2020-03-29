@@ -2273,7 +2273,7 @@ static void _post_monster_move(monster* mons)
                 if (grd(*ai) != DNGN_SHALLOW_WATER && grd(*ai) != DNGN_FLOOR
                     && you.see_cell(*ai))
                 {
-                    mprf("%s watery aura covers %s",
+                    mprf("%s watery aura covers %s.",
                          apostrophise(mons->name(DESC_THE)).c_str(),
                          feature_description_at(*ai, false, DESC_THE).c_str());
                 }

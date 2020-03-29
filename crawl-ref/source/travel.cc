@@ -4526,6 +4526,7 @@ string explore_discoveries::cleaned_feature_description(
     const coord_def &pos) const
 {
     string s = lowercase_first(feature_description_at(pos));
+    // TODO: can feature_description_at()'s return value still end in '.'?
     if (s.length() && s[s.length() - 1] == '.')
         s.erase(s.length() - 1);
     if (starts_with(s, "a "))
@@ -4656,7 +4657,7 @@ void explore_discoveries::found_feature(const coord_def &pos,
         if (!feat_stop.empty())
         {
             string desc = lowercase_first(feature_description_at(pos));
-            marked_feats.push_back(desc);
+            marked_feats.push_back(desc + ".");
             return;
         }
     }

@@ -987,7 +987,7 @@ void actor::collide(coord_def newpos, const actor *agent, int pow)
             mprf("%s %s into %s!",
                  name(DESC_THE).c_str(), conj_verb("slam").c_str(),
                  env.map_knowledge(newpos).known()
-                 ? feature_description_at(newpos, false, DESC_THE, false)
+                 ? feature_description_at(newpos, false, DESC_THE)
                        .c_str()
                  : "something");
         }
@@ -1008,8 +1008,7 @@ void actor::collide(coord_def newpos, const actor *agent, int pow)
     if (!fedhas_prot)
     {
         hurt(agent, apply_ac(damage.roll()), BEAM_MISSILE,
-             KILLED_BY_COLLISION, "",
-             feature_description_at(newpos, false, DESC_A, false));
+             KILLED_BY_COLLISION, "", feature_description_at(newpos));
     }
 }
 

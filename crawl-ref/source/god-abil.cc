@@ -5702,7 +5702,7 @@ bool wu_jian_can_wall_jump(const coord_def& target, string &error_ret)
         if (!feat_can_wall_jump_against(grd(target)))
         {
             error_ret = string("You cannot wall jump against ") +
-                feature_description_at(target, false, DESC_THE, true);
+                feature_description_at(target, false, DESC_THE) + ".";
         }
         else
             error_ret = "";
@@ -5776,7 +5776,7 @@ bool wu_jian_do_wall_jump(coord_def targ, bool ability)
         {
             mprf(MSGCH_PLAIN, "You take your %s off %s.",
                  you.foot_name(true).c_str(),
-                 feature_description_at(targ, false, DESC_THE, false).c_str());
+                 feature_description_at(targ, false, DESC_THE).c_str());
             you.attribute[ATTR_WALL_JUMP_READY] = 0;
         }
         return false;
@@ -5790,7 +5790,7 @@ bool wu_jian_do_wall_jump(coord_def targ, bool ability)
         mprf(MSGCH_PLAIN,
              "You put your %s on %s. Move against it again to jump.",
              you.foot_name(true).c_str(),
-             feature_description_at(targ, false, DESC_THE, false).c_str());
+             feature_description_at(targ, false, DESC_THE).c_str());
         you.attribute[ATTR_WALL_JUMP_READY] = 1;
         return false;
     }

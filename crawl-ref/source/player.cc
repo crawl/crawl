@@ -110,7 +110,7 @@ static void _moveto_maybe_repel_stairs()
     if (x_chance_in_y(pct, 100))
     {
         const string stair_str = feature_description_at(you.pos(), false,
-                                                        DESC_THE, false);
+                                                        DESC_THE);
         const string prep = feat_preposition(new_grid, true, &you);
 
         if (slide_feature_over(you.pos()))
@@ -206,8 +206,7 @@ bool check_moveto_trap(const coord_def& p, const string &move_verb,
                               (trap->type == TRAP_ALARM
                                || trap->type == TRAP_PLATE) ? "onto"
                               : "into",
-                              feature_description_at(p, false, DESC_BASENAME,
-                                                     false).c_str());
+                              feature_description_at(p, false, DESC_BASENAME).c_str());
         if (!yesno(prompt.c_str(), true, 'n'))
         {
             canned_msg(MSG_OK);

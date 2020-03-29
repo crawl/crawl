@@ -1456,8 +1456,7 @@ void fixup_misplaced_items()
 
             mprf(MSGCH_ERROR, "Item %s buggily placed in feature %s at (%d, %d).",
                  item.name(DESC_PLAIN).c_str(),
-                 feature_description_at(item.pos, false, DESC_PLAIN,
-                                        false).c_str(),
+                 feature_description_at(item.pos, false, DESC_PLAIN).c_str(),
                  item.pos.x, item.pos.y);
         }
         else

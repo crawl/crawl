@@ -1903,7 +1903,7 @@ static void _xom_pseudo_miscast(int /*sever*/)
         && !feat_is_open_door(feat) && feat != DNGN_ABANDONED_SHOP)
     {
         const string feat_name = feature_description_at(you.pos(), false,
-                                                        DESC_THE, false);
+                                                        DESC_THE);
 
         if (you.airborne())
         {
@@ -2439,7 +2439,7 @@ bool move_stair(coord_def stair_pos, bool away, bool allow_under)
 
     ASSERT(stair_pos != ray.pos());
 
-    string stair_str = feature_description_at(stair_pos, false, DESC_THE, false);
+    string stair_str = feature_description_at(stair_pos, false, DESC_THE);
 
     mprf("%s slides %s you!", stair_str.c_str(),
          away ? "away from" : "towards");

@@ -1934,7 +1934,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
                 && feat_stair_direction(stair_taken) != CMD_NO_CMD)
             {
                 string stair_str = feature_description_at(you.pos(), false,
-                                                          DESC_THE, false);
+                                                          DESC_THE);
                 string verb = stair_climb_verb(feat);
 
                 if (coinflip()

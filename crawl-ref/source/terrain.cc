@@ -1281,8 +1281,7 @@ static void _announce_swap_real(coord_def orig_pos, coord_def dest_pos)
 
     const string orig_name =
         feature_description_at(dest_pos, false,
-                            you.see_cell(orig_pos) ? DESC_THE : DESC_A,
-                            false);
+                            you.see_cell(orig_pos) ? DESC_THE : DESC_A);
 
     string prep = feat_preposition(orig_feat, false);
 

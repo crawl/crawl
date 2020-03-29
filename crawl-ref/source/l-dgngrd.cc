@@ -75,7 +75,8 @@ static int dgn_feature_desc_at(lua_State *ls)
     const bool need_stop = lua_isboolean(ls, 4)? lua_toboolean(ls, 4) : false;
     const string s = feature_description_at(coord_def(luaL_safe_checkint(ls, 1),
                                                       luaL_safe_checkint(ls, 2)),
-                                            false, dtype, need_stop);
+                                            false, dtype)
+        + (need_stop ? "." : "");
     lua_pushstring(ls, s.c_str());
     return 1;
 }

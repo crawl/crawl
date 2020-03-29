@@ -936,8 +936,7 @@ void bolt::affect_wall()
         {
             const string prompt =
                 make_stringf("Are you sure you want to burn %s?",
-                             feature_description_at(pos(), false, DESC_THE,
-                                                    false).c_str());
+                             feature_description_at(pos(), false, DESC_THE).c_str());
 
             if (yesno(prompt.c_str(), false, 'n'))
                 dont_stop_trees = true;
@@ -1166,12 +1165,12 @@ void bolt::do_fire()
             else
             {
                 prompt += "the targeted "
-                        + feature_description_at(target, false, DESC_PLAIN, false);
+                        + feature_description_at(target, false, DESC_PLAIN);
             }
 
             prompt += " is blocked by "
                     + (feat_is_solid(feat) ?
-                        feature_description_at(pos(), false, DESC_A, false) :
+                        feature_description_at(pos(), false, DESC_A) :
                         monster_at(pos())->name(DESC_A));
 
             prompt += ". Continue anyway?";

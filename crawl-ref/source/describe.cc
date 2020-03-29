@@ -2286,7 +2286,7 @@ void get_feature_desc(const coord_def &pos, describe_info &inf, bool include_ext
 {
     dungeon_feature_type feat = env.map_knowledge(pos).feat();
 
-    string desc      = feature_description_at(pos, false, DESC_A, false);
+    string desc      = feature_description_at(pos, false, DESC_A);
     string db_name   = feat == DNGN_ENTER_SHOP ? "a shop" : desc;
     strip_suffix(db_name, " (summoned)");
     string long_desc = getLongDescription(db_name);
