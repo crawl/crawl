@@ -9,7 +9,7 @@
 #include "command-type.h"
 #include "game-type.h"
 #include "trap-type.h"
-#include "tiledef_defines.h"
+#include "rltiles/tiledef_defines.h"
 #include "job-type.h"
 #include "species-type.h"
 

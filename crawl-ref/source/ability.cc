@@ -80,7 +80,7 @@
 #include "view.h"
 
 #ifdef USE_TILE
-# include "tiledef-icons.h"
+# include "rltiles/tiledef-icons.h"
 #endif
 
 enum class abflag

@@ -935,11 +935,11 @@ HEADER_END
  **********************************************************************/
 
 #include "AppHdr.h"
-#include "tiledef-unrand.h"
+#include "rltiles/tiledef-unrand.h"
 
 #include "art-enum.h"
-#include "tiledef-main.h"
-#include "tiledef-player.h"
+#include "rltiles/tiledef-main.h"
+#include "rltiles/tiledef-player.h"
 
 int unrandart_to_tile(int unrand)
 {

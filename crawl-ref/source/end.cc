@@ -35,7 +35,7 @@
 #include "view.h"
 #include "xom.h"
 #include "ui.h"
-#include "tiledef-feat.h"
+#include "rltiles/tiledef-feat.h"
 
 #ifdef __ANDROID__
 #include <android/log.h>

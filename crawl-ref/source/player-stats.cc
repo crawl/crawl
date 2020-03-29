@@ -26,7 +26,7 @@
 #include "state.h"
 #include "stringutil.h"
 #ifdef TOUCH_UI
-#include "tiledef-gui.h"
+#include "rltiles/tiledef-gui.h"
 #include "tilepick.h"
 #endif
 #include "transform.h"

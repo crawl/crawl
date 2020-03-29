@@ -133,7 +133,7 @@
 #include "terrain.h"
 #include "throw.h"
 #ifdef USE_TILE
- #include "tiledef-dngn.h"
+ #include "rltiles/tiledef-dngn.h"
  #include "tilepick.h"
 #endif
 #include "timed-effects.h"

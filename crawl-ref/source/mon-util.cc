@@ -60,7 +60,7 @@
 #include "state.h"
 #include "stringutil.h"
 #include "terrain.h"
-#include "tiledef-player.h"
+#include "rltiles/tiledef-player.h"
 #include "tilepick.h"
 #include "tileview.h"
 #include "timed-effects.h"

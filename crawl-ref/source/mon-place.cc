@@ -48,7 +48,7 @@
 #include "stringutil.h"
 #include "terrain.h"
 #ifdef USE_TILE
- #include "tiledef-player.h"
+ #include "rltiles/tiledef-player.h"
 #endif
 #include "tilepick.h"
 #include "traps.h"

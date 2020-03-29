@@ -16,7 +16,7 @@
 #include "religion.h"
 #include "spl-cast.h"
 #include "stringutil.h"
-#include "tiledef-icons.h"
+#include "rltiles/tiledef-icons.h"
 #include "tilepick.h"
 #include "tiles-build-specific.h"
 

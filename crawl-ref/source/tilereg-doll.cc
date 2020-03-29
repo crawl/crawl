@@ -8,7 +8,7 @@
 #include "player.h"
 #include "state.h"
 #include "stringutil.h"
-#include "tiledef-player.h"
+#include "rltiles/tiledef-player.h"
 #include "tilefont.h"
 #include "tilepick-p.h"
 #include "ui.h"

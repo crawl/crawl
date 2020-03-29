@@ -36,10 +36,10 @@
 #ifdef USE_TILE
  #include "tile-flags.h"
  #include "tile-player-flag-cut.h"
- #include "tiledef-dngn.h"
- #include "tiledef-icons.h"
- #include "tiledef-main.h"
- #include "tiledef-player.h"
+ #include "rltiles/tiledef-dngn.h"
+ #include "rltiles/tiledef-icons.h"
+ #include "rltiles/tiledef-main.h"
+ #include "rltiles/tiledef-player.h"
 #endif
 #ifdef USE_TILE_LOCAL
  #include "tilefont.h"

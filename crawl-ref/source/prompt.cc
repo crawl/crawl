@@ -17,7 +17,7 @@
 #include "state.h"
 #include "stringutil.h"
 #ifdef USE_TILE
-#include "tiledef-gui.h"
+#include "rltiles/tiledef-gui.h"
 #endif
 #include "viewchar.h"
 #include "ui.h"

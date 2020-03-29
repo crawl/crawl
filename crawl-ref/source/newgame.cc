@@ -36,8 +36,8 @@
 #include "tilepick.h"
 #include "tilepick-p.h"
 #include "tilefont.h"
-#include "tiledef-main.h"
-#include "tiledef-feat.h"
+#include "rltiles/tiledef-main.h"
+#include "rltiles/tiledef-feat.h"
 #endif
 #include "version.h"
 #include "ui.h"

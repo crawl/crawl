@@ -76,8 +76,8 @@
 #include "stringutil.h"
 #include "syscalls.h"
 #include "terrain.h"
-#include "tiledef-dngn.h"
-#include "tiledef-player.h"
+#include "rltiles/tiledef-dngn.h"
+#include "rltiles/tiledef-player.h"
 #include "tilepick.h"
 #include "tileview.h"
 #ifdef USE_TILE

@@ -67,10 +67,10 @@
 #include "terrain.h"
 #ifdef USE_TILE_LOCAL
  #include "tilereg-crt.h"
- #include "tiledef-dngn.h"
+ #include "rltiles/tiledef-dngn.h"
 #endif
 #ifdef USE_TILE
- #include "tiledef-feat.h"
+ #include "rltiles/tiledef-feat.h"
  #include "tilepick.h"
  #include "tileview.h"
  #include "tile-flags.h"

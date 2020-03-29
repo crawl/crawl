@@ -50,7 +50,7 @@
 #include "stairs.h"
 #include "stringutil.h"
 #include "terrain.h"
-#include "tiledef-dngn.h"
+#include "rltiles/tiledef-dngn.h"
 #include "tileview.h"
 #include "timed-effects.h"
 #include "traps.h"

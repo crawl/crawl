@@ -69,7 +69,7 @@
 #include "teleport.h"
 #include "terrain.h"
 #ifdef USE_TILE
-#include "tiledef-dngn.h"
+#include "rltiles/tiledef-dngn.h"
 #endif
 #include "timed-effects.h"
 #include "traps.h"

@@ -35,7 +35,7 @@
 #include "status.h"
 #include "stringutil.h"
 #include "terrain.h"
-#include "tiledef-dngn.h"
+#include "rltiles/tiledef-dngn.h"
 #include "traps.h"
 #include "viewchar.h"
 

@@ -36,7 +36,7 @@
 #include "state.h"
 #include "stringutil.h"
 #include "terrain.h"
-#include "tiledef-main.h"
+#include "rltiles/tiledef-main.h"
 #include "unwind.h"
 
 cloud_struct* cloud_at(coord_def pos)

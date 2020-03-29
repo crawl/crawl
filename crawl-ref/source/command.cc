@@ -39,7 +39,7 @@
 using namespace ui;
 
 #ifdef USE_TILE
- #include "tiledef-gui.h"
+ #include "rltiles/tiledef-gui.h"
 #endif
 
 static const char *features[] =

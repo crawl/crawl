@@ -21,7 +21,7 @@
 #include "mon-place.h"
 #include "state.h"
 #include "terrain.h"
-#include "tiledef-main.h"
+#include "rltiles/tiledef-main.h"
 #ifdef USE_TILE
  #include "tileview.h"
 #endif

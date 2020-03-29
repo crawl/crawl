@@ -38,7 +38,7 @@
 #include "shop-type.h"
 #include "cloud-type.h"
 #include "store.h"
-#include "tiledef_defines.h"
+#include "rltiles/tiledef_defines.h"
 
 struct tile_flavour
 {

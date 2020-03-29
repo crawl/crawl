@@ -15,8 +15,8 @@
 #include "spl-util.h"
 #include "stringutil.h"
 #include "tile-inventory-flags.h"
-#include "tiledef-icons.h"
-#include "tiledef-main.h"
+#include "rltiles/tiledef-icons.h"
+#include "rltiles/tiledef-main.h"
 #include "tilepick.h"
 #include "tiles-build-specific.h"
 

@@ -69,7 +69,7 @@
 #include "wizard-option-type.h"
 #ifdef USE_TILE
 #include "tilepick.h"
-#include "tiledef-player.h"
+#include "rltiles/tiledef-player.h"
 #endif
 #include "tiles-build-specific.h"
 

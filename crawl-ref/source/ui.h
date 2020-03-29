@@ -10,7 +10,7 @@
 #include "format.h"
 #include "KeymapContext.h"
 #include "state.h"
-#include "tiledef-gui.h"
+#include "rltiles/tiledef-gui.h"
 #include "tilefont.h"
 #include "unwind.h"
 #include "cio.h"

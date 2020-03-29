@@ -18,7 +18,7 @@
 #ifdef USE_TILE_LOCAL
  #include "tilebuf.h"
 #endif
-#include "tiledef-player.h"
+#include "rltiles/tiledef-player.h"
 #include "tilemcache.h"
 #include "tilepick.h"
 #include "tilepick-p.h"

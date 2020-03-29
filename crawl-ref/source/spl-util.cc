@@ -37,7 +37,7 @@
 #include "stringutil.h"
 #include "target.h"
 #include "terrain.h"
-#include "tiledef-gui.h"    // spell tiles
+#include "rltiles/tiledef-gui.h"    // spell tiles
 #include "tiles-build-specific.h"
 #include "transform.h"
 

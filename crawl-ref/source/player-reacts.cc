@@ -88,7 +88,7 @@
 #include "stringutil.h"
 #include "terrain.h"
 #ifdef USE_TILE
-#include "tiledef-dngn.h"
+#include "rltiles/tiledef-dngn.h"
 #include "tilepick.h"
 #endif
 #include "transform.h"

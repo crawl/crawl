@@ -63,7 +63,7 @@
 #include "stairs.h"
 #include "state.h"
 #include "stringutil.h"
-#include "tiledef-dngn.h"
+#include "rltiles/tiledef-dngn.h"
 #include "tilepick.h"
 #include "tileview.h"
 #include "timed-effects.h"

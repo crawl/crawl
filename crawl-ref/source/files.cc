@@ -73,7 +73,7 @@
 #include "terrain.h"
 #ifdef USE_TILE
  // TODO -- dolls
- #include "tiledef-player.h"
+ #include "rltiles/tiledef-player.h"
  #include "tilepick-p.h"
 #endif
 #include "tileview.h"

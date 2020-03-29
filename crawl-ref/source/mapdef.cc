@@ -43,8 +43,8 @@
 #include "spl-util.h"
 #include "stringutil.h"
 #include "terrain.h"
-#include "tiledef-dngn.h"
-#include "tiledef-player.h"
+#include "rltiles/tiledef-dngn.h"
+#include "rltiles/tiledef-player.h"
 
 #ifdef DEBUG_TAG_PROFILING
 static map<string,int> _tag_profile;
