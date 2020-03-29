@@ -396,15 +396,9 @@ string apply_description(description_level_type desc, const string &name,
     }
 }
 
-string thing_do_grammar(description_level_type dtype, bool add_stop,
+string thing_do_grammar(description_level_type dtype,
                         bool force_article, string desc)
 {
-    if (add_stop && !ends_with(desc, ".") && !ends_with(desc, "!")
-        && !ends_with(desc, "?"))
-    {
-        desc += ".";
-    }
-
     // Avoid double articles.
     if (starts_with(desc, "the ") || starts_with(desc, "The ")
         || starts_with(desc, "a ") || starts_with(desc, "A ")

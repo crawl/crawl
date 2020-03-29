@@ -2844,7 +2844,7 @@ string feature_description(dungeon_feature_type grid, trap_type trap,
     if (grid == DNGN_FLOOR && dtype == DESC_A)
         dtype = DESC_THE;
 
-    return thing_do_grammar(dtype, false, feat_is_trap(grid), desc);
+    return thing_do_grammar(dtype, feat_is_trap(grid), desc);
 }
 
 string raw_feature_description(const coord_def &where)
@@ -2901,7 +2901,7 @@ string feature_description_at(const coord_def& where, bool covering,
     {
         marker_desc += covering_description;
 
-        return thing_do_grammar(dtype, false, false, marker_desc);
+        return thing_do_grammar(dtype, false, marker_desc);
     }
 
     if (feat_is_door(grid))
@@ -2964,7 +2964,7 @@ string feature_description_at(const coord_def& where, bool covering,
 
         desc += covering_description;
 
-        return thing_do_grammar(dtype, false, false, desc);
+        return thing_do_grammar(dtype, false, desc);
     }
 
     switch (grid)
@@ -2972,7 +2972,7 @@ string feature_description_at(const coord_def& where, bool covering,
     case DNGN_TRAP_MECHANICAL:
         return feature_description(grid, trap, covering_description, dtype);
     case DNGN_ABANDONED_SHOP:
-        return thing_do_grammar(dtype, false, false, "an abandoned shop");
+        return thing_do_grammar(dtype, false, "an abandoned shop");
 
     case DNGN_ENTER_SHOP:
         return shop_name(*shop_at(where));
@@ -2981,7 +2981,7 @@ string feature_description_at(const coord_def& where, bool covering,
     case DNGN_ENTER_PORTAL_VAULT:
         // Should have been handled at the top of the function.
         return thing_do_grammar(
-                   dtype, false, false,
+                   dtype, false,
                    "UNAMED PORTAL VAULT ENTRY");
 #endif
 
@@ -2995,7 +2995,7 @@ string feature_description_at(const coord_def& where, bool covering,
         if (is_temp_terrain(where))
             desc += " (summoned)";
         desc += covering_description;
-        return thing_do_grammar(dtype, false, false, desc);
+        return thing_do_grammar(dtype, false, desc);
     }
 
     case DNGN_FLOOR:
@@ -3006,7 +3006,7 @@ string feature_description_at(const coord_def& where, bool covering,
         const string featdesc = grid == grd(where)
                               ? raw_feature_description(where)
                               : _base_feature_desc(grid, trap);
-        return thing_do_grammar(dtype, false, feat_is_trap(grid),
+        return thing_do_grammar(dtype, feat_is_trap(grid),
                                 featdesc + covering_description);
     }
 }
