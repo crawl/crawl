@@ -396,8 +396,7 @@ string apply_description(description_level_type desc, const string &name,
     }
 }
 
-string thing_do_grammar(description_level_type dtype,
-                        bool force_article, string desc)
+string thing_do_grammar(description_level_type dtype, string desc)
 {
     // Avoid double articles.
     if (starts_with(desc, "the ") || starts_with(desc, "The ")
@@ -409,7 +408,7 @@ string thing_do_grammar(description_level_type dtype,
             dtype = DESC_PLAIN;
     }
 
-    if (dtype == DESC_PLAIN || (!force_article && isupper(desc[0])))
+    if (dtype == DESC_PLAIN || isupper(desc[0]))
         return desc;
 
     switch (dtype)

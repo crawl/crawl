@@ -916,7 +916,7 @@ static int _crawl_grammar(lua_State *ls)
     description_level_type ndesc = DESC_PLAIN;
     if (lua_isstring(ls, 2))
         ndesc = description_type_by_name(lua_tostring(ls, 2));
-    PLUARET(string, thing_do_grammar(ndesc, false, luaL_checkstring(ls, 1)).c_str()); }
+    PLUARET(string, thing_do_grammar(ndesc, luaL_checkstring(ls, 1)).c_str()); }
 
 /*** Correctly attach the article 'a'.
  * @tparam string s

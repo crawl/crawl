@@ -35,8 +35,7 @@ string article_a(const string &name, bool lowercase = true);
 string apply_description(description_level_type desc, const string &name,
                          int quantity = 1, bool num_in_words = false);
 
-string thing_do_grammar(description_level_type dtype,
-                        bool force_article, string desc);
+string thing_do_grammar(description_level_type dtype, string desc);
 
 string get_desc_quantity(const int quant, const int total,
                          string whose = "your");
