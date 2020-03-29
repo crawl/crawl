@@ -6991,8 +6991,7 @@ static void _speech_fill_target(string& targ_prep, string& target,
                 if (grd(pbolt.target) != DNGN_FLOOR)
                 {
                     target = feature_description(grd(pbolt.target),
-                                                 NUM_TRAPS, "", DESC_THE,
-                                                 false);
+                                                 NUM_TRAPS, "", DESC_THE);
                 }
                 else
                     target = "thin air";

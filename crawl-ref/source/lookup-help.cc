@@ -527,10 +527,7 @@ static void _recap_feat_keys(vector<string> &keys)
         if (type == DNGN_ENTER_SHOP)
             keys[i] = "A shop";
         else
-        {
-            keys[i] = feature_description(type, NUM_TRAPS, "", DESC_A,
-                                          false);
-        }
+            keys[i] = feature_description(type, NUM_TRAPS, "", DESC_A);
     }
 }
 

@@ -310,8 +310,7 @@ string raw_feature_description(const coord_def& where);
 string feature_description(dungeon_feature_type grid,
                            trap_type trap = NUM_TRAPS,
                            const string & cover_desc = "",
-                           description_level_type dtype = DESC_A,
-                           bool add_stop = true);
+                           description_level_type dtype = DESC_A);
 
 vector<dungeon_feature_type> features_by_desc(const base_pattern &pattern);
 

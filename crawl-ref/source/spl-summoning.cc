@@ -3529,8 +3529,7 @@ bool fedhas_wall_of_briars()
 static void _overgrow_wall(const coord_def &pos)
 {
     const dungeon_feature_type feat = grd(pos);
-    const string what = feature_description(feat, NUM_TRAPS, "", DESC_THE,
-            false);
+    const string what = feature_description(feat, NUM_TRAPS, "", DESC_THE);
 
     if (monster_at(pos))
     {

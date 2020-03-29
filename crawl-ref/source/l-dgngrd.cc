@@ -61,7 +61,8 @@ static int dgn_feature_desc(lua_State *ls)
         static_cast<description_level_type>(luaL_safe_checkint(ls, 2)) :
             description_type_by_name(lua_tostring(ls, 2));
     const bool need_stop = lua_isboolean(ls, 3)? lua_toboolean(ls, 3) : false;
-    const string s = feature_description(feat, NUM_TRAPS, "", dtype, need_stop);
+    const string s = feature_description(feat, NUM_TRAPS, "", dtype)
+        + (need_stop ? "." : "");
     lua_pushstring(ls, s.c_str());
     return 1;
 }

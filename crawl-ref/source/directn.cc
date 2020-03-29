@@ -2760,7 +2760,7 @@ static void _describe_oos_feature(const coord_def& where)
     if (!env.map_knowledge(where).seen())
         return;
 
-    string desc = feature_description(env.map_knowledge(where).feat());
+    string desc = feature_description(env.map_knowledge(where).feat()) + ".";
 
     if (!desc.empty())
         mprf(MSGCH_EXAMINE_FILTER, "[%s]", desc.c_str());
@@ -2776,9 +2776,7 @@ vector<dungeon_feature_type> features_by_desc(const base_pattern &pattern)
         for (int i = 0; i < NUM_FEATURES; ++i)
         {
             string fdesc =
-                feature_description(static_cast<dungeon_feature_type>(i));
-            if (fdesc.empty())
-                continue;
+                feature_description(static_cast<dungeon_feature_type>(i)) + ".";
 
             if (pattern.matches(fdesc))
                 features.push_back(dungeon_feature_type(i));
@@ -2838,7 +2836,7 @@ static string _base_feature_desc(dungeon_feature_type grid, trap_type trap)
 
 string feature_description(dungeon_feature_type grid, trap_type trap,
                            const string & cover_desc,
-                           description_level_type dtype, bool add_stop)
+                           description_level_type dtype)
 {
     string desc = _base_feature_desc(grid, trap);
     desc += cover_desc;
@@ -2846,7 +2844,7 @@ string feature_description(dungeon_feature_type grid, trap_type trap,
     if (grid == DNGN_FLOOR && dtype == DESC_A)
         dtype = DESC_THE;
 
-    return thing_do_grammar(dtype, add_stop, feat_is_trap(grid), desc);
+    return thing_do_grammar(dtype, false, feat_is_trap(grid), desc);
 }
 
 string raw_feature_description(const coord_def &where)
@@ -2972,8 +2970,7 @@ string feature_description_at(const coord_def& where, bool covering,
     switch (grid)
     {
     case DNGN_TRAP_MECHANICAL:
-        return feature_description(grid, trap, covering_description, dtype,
-                                   false);
+        return feature_description(grid, trap, covering_description, dtype);
     case DNGN_ABANDONED_SHOP:
         return thing_do_grammar(dtype, false, false, "an abandoned shop");
 
@@ -3181,7 +3178,7 @@ static vector<string> _get_monster_desc_vector(const monster_info& mi)
     {
         descs.push_back("fire blocked by " // FIXME, renamed features
                         + feature_description(mi.fire_blocker, NUM_TRAPS, "",
-                                              DESC_A, false));
+                                              DESC_A));
     }
 
     return descs;
@@ -3304,7 +3301,7 @@ static string _get_monster_desc(const monster_info& mi)
                 + " is blocked by " // FIXME: renamed features
                 + feature_description(mi.fire_blocker, NUM_TRAPS, "",
                                       DESC_A)
-                + "\n";
+                + ".\n";
     }
 
     text += _mon_enchantments_string(mi);

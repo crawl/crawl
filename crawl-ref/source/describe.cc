@@ -2486,7 +2486,7 @@ void describe_feature_wide(const coord_def& pos)
 void describe_feature_type(dungeon_feature_type feat)
 {
     describe_info inf;
-    string name = feature_description(feat, NUM_TRAPS, "", DESC_A, false);
+    string name = feature_description(feat, NUM_TRAPS, "", DESC_A);
     string title = uppercase_first(name);
     if (!ends_with(title, ".") && !ends_with(title, "!") && !ends_with(title, "?"))
         title += ".";

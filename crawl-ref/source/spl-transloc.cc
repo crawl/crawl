@@ -1136,7 +1136,7 @@ spret cast_gravitas(int pow, const coord_def& where, bool fail)
          mons                      ? mons->name(DESC_THE).c_str() :
          feat_is_solid(grd(where)) ? feature_description(grd(where),
                                                          NUM_TRAPS, "",
-                                                         DESC_THE, false)
+                                                         DESC_THE)
                                                          .c_str()
                                    : "empty space");
     fatal_attraction(where, &you, pow);
