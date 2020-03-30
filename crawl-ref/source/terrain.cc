@@ -32,6 +32,7 @@
 #include "libutil.h"
 #include "mapmark.h"
 #include "message.h"
+#include "mon-behv.h"
 #include "mon-place.h"
 #include "mon-poly.h"
 #include "mon-util.h"
@@ -2399,6 +2400,9 @@ void ice_wall_damage(monster &mons, int delay)
         mons.hurt(&you, dam, BEAM_COLD);
 
         if (mons.alive())
+        {
+            behaviour_event(&mons, ME_WHACK, &you);
             mons.expose_to_element(BEAM_COLD, orig_dam);
+        }
     }
 }
