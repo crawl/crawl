@@ -2384,7 +2384,7 @@ void ice_wall_damage(monster &mons, int delay)
 
     const int pow = calc_spell_power(SPELL_FROZEN_RAMPARTS, true);
     const int orig_dam = div_rand_round(
-            delay * roll_dice(1, 2 + div_rand_round(pow, 4)), BASELINE_DELAY);
+            delay * roll_dice(1, 2 + div_rand_round(pow, 5)), BASELINE_DELAY);
 
     bolt beam;
     beam.flavour = BEAM_COLD;
