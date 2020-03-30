@@ -1106,7 +1106,7 @@ static void _update_level_state()
             // FPROP_ICY from walls in some cases, so we detect invalid walls
             // and remove the flag.
             if (have_ramparts
-                && ramparts_pos.distance_from(*ri) <= FROZEN_RAMPARTS_RADIUS
+                && ramparts_pos.distance_from(*ri) <= 3
                 && cell_see_cell(*ri, ramparts_pos, LOS_NO_TRANS))
             {
 #endif

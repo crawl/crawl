@@ -3366,8 +3366,8 @@ void actor_apply_toxic_bog(actor * act)
 spret cast_frozen_ramparts(int pow, bool fail)
 {
     vector<coord_def> walls;
-    for (distance_iterator di(you.pos(), false, false, FROZEN_RAMPARTS_RADIUS);
-            di; ++di)
+    for (distance_iterator di(you.pos(), false, false,
+                spell_range(SPELL_FROZEN_RAMPARTS, -1, false)); di; ++di)
     {
         const auto feat = grd(*di);
         if (you.see_cell(*di)

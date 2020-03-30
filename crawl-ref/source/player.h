@@ -61,8 +61,6 @@
 
 #define SEVERE_CONTAM_LEVEL 3
 
-#define FROZEN_RAMPARTS_RADIUS 3
-
 /// Maximum stat value
 static const int MAX_STAT_VALUE = 125;
 /// The standard unit of regen; one level in artifact inscriptions
