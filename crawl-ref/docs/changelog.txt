@@ -1,4 +1,4 @@
-Stone Soup 0.25 (through 0.25-a0-544-gee0576305d)
+Stone Soup 0.25 (through 0.25-a0-696-g42a9e46d90)
 -------------------------------------------------
 
 Highlights
@@ -12,25 +12,32 @@ Branches, Environment
 * Boris can now spawn after the player picks up the Orb of Zot.
 * Forest fires and the Tornado spell can no longer destroy temporary trees
   made by Summon Forest.
+* D:1 Level spawns can no longer generate within LOS distance of the player's
+  starting position.
+* Many arrival vaults have been reworked to allow better player tactics.
 * A new Swamp ending themed as a conflict between Yred and Fedhas that
   includes an undead version of the Lernaean Hydra.
+* Ziggurats now have level set featuring many player ghosts.
 
 Character
 ---------
 * Monsters summoned by the player now dismiss when they become hostile.
 * Players can now renounce their religion while silenced.
+* All Evocable items can no longer be used by the player while confused.
 
 Gods
 ----
 * Trog no longer gifts ranged weapons nor ammunition, gifting only melee
   weapons. These weapons can only have egos of plain, vorpal, flaming, and
   anti-magic.
+* Trog now hates use of all magical staves and pain weapons.
 * Elyvilon's Divine Protection now always protects exactly at 5* piety instead
   of protecting at a value between 5* and 6*.
 * Fedhas now protects plant allies from collisions and from ranged attacks by
   other allies.
 * God conducts for harming allies now apply to spells and items that place
   harmful clouds.
+* Nemelex abilities can no longer be used while silenced.
 
 Items
 -----
@@ -43,13 +50,17 @@ Items
   - The Miscellaneous category for evocable items is no longer available.
 * New Potion of Stabbing that gives a 50% chance to upgrade weak stabs (e.g.
   distracted monsters) to strong ones (e.g. sleeping monsters).
-* Tremorstone, a new single use evocable. When used, it creates two radius 2
-  explosions at range 3 that are triple-affected by AC (like LRD), but the
-  explosions are randomly skewed and may hit the user. Most useful for players
-  with good armour.
+* Tin of Tremorstones, a new multiuse evocable. When used, it creates two
+  radius 2 explosions at range 3 that are triple-affected by AC (like LRD), but
+  the explosions are randomly skewed and may hit the user. Most useful for
+  players with good armour.
 * The chaos brand now has might and agility effects, no longer causes miscast
   effects, and its cloning effect can create friendly and neutral monsters.
+* Potions of Brilliance now only provide a stronger universal spell enhancer
+  and remove spell hunger. They no longer provide an Int bonus nor wizardry.
+* Potions of Might no longer provide a bonus to strength.
 * Scrolls of Magic Mapping now reveal any floor traps on the level.
+* The -Tele property no longer appears on artefact weapons and jewellery.
 * Ordinary shields have been renamed to kite shields and large shields have
   been renamed to tower shields. This helps make equipment descriptions less
   ambiguous.
@@ -66,9 +77,20 @@ Items
   - The Elemental Staff now acts as an enhancer for all elemental schools,
     with enhancement applying independently for each school.
   - Warlock's Mirror can now reflect piercing ranged weapons.
-  - The Staff of Olgreb now grants poison immunity to monsters wielding it.
+  - The Staff of Olgreb now has a chance to deal poison-arrow flavored damage
+    on hit, based on evocations skill. It no longer has an additional chance to
+    cast Venom Bolt on top of casting OTR when evoked. It now grants poison
+    immunity to monsters wielding it.
+  - The Dragonskin Cloak now provides rCorr instead of sticky flame
+    resistance.
   - Bloodbane has been removed, having been merged into Leech.
-* Potions of agility are removed.
+  - Maxwell's Etheric Cage has been removed.
+* Phial of floods now applies a silencing "waterlogged" debuff to all monsters
+  in the flooded area and no longer summons water elementals.
+* Staves of poison now do resistable poison damage on hit like other staves
+  instead of just having a chance to poison.
+* Removed: potion of agility, staff of power, crystal ball of energy, sack of
+  spiders, lamp of fire, fan of gales.
 
 Monsters
 --------
@@ -107,17 +129,19 @@ Spells
     + Borgnjor's Vile Clutch now is a range 6 always-penetrating beam instead
       of a smite-targeted 3x3 explosion.
   - Ice spells are diffuse and subtle:
-    + New L3 Ice spell Frozen Ramparts that makes all walls within radius 3
-      become covered in icicles that release when a monster walks nearby. The
-      icicles do light damage that checks AC but is only partly resistable.
-      Affected monsters additionally receive a "frozen" debuff that slows
-      their movement by 4 aut for a few turns.
+    + New L3 Ice spell Frozen Ramparts that makes all walls within radius 2
+      become covered in ice, damaging monsters that walk by. Damage bypasses AC
+      and slows cold-blooded animals.
     + New L4 Conjurations/Ice spell Hailstorm that fires a ring of ice beams
       from radius 2 to radius 3, not affecting radius 1 squares. Monsters with
       rC+++ such as ice beasts are immune to this effect.
     + Ozocubu's Refrigeration does 33% more damage on-average and no longer
       harms the caster.
-    + Removed spells: Throw Frost, Throw Icicle, Bolt of Cold.
+    + New L9 Ice spell Absolute Zero that instantly freezes to death the
+      closest monster in range, leaving an ice block. A random closest monster
+      is chosen as the target when there are ties. The spell range increases
+      with spellpower, up to range 7.
+    + Removed spells: Throw Frost, Throw Icicle, Bolt of Cold, Glaciate.
     + As a result of these changes, Ice Elementalists no longer put starting
       skill in Conjurations.
   - Conjurations are pure magic with good accuracy in some way:
@@ -158,10 +182,13 @@ Spells
   Ledas' Liquefaction.
 * Firestorm and Ignition now can burn trees, and Fireball burns trees in all
   squares of its explosion.
+* Call Imp no longer bases the type of imp summoned on spellpower.
 * The Confuse spell has been removed.
 
 Development
 -----------
+* The WebTiles server has seen a major overhaul and now supports python 3 as
+  well as Tornado 5+.
 * The catch2 testing framework is now integrated into the project and is
   enabled in our Travis CI testing.
 
