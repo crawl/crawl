@@ -43,9 +43,9 @@ staff of Olgreb
 
 A staff which was once wielded by the mighty wizard Olgreb. It increases the
 power of its wielder's poison magic, grants immunity to poison, and can be
-evoked to activate its own venomous spells with strength depending on
-Evocations skill. If the wielder is skilled in Evocations, they can inflict
-poison damage on those struck by it, even piercing through poison resistance.
+evoked to radiate toxic energy with strength depending on Evocations skill.
+If the wielder is skilled in Evocations, they can inflict poison damage on
+those struck by it, even piercing through poison resistance.
 %%%%
 staff of Wucad Mu
 
