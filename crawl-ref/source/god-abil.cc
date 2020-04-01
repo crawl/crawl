@@ -1454,7 +1454,8 @@ bool vehumet_supports_spell(spell_type spell)
         || spell == SPELL_VIOLENT_UNRAVELLING
         || spell == SPELL_INNER_FLAME
         || spell == SPELL_IGNITION
-        || spell == SPELL_FROZEN_RAMPARTS)
+        || spell == SPELL_FROZEN_RAMPARTS
+        || spell == SPELL_ABSOLUTE_ZERO)
     {
         return true;
     }
