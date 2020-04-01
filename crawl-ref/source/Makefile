@@ -1009,9 +1009,8 @@ ifndef NO_PKGCONFIG
   NC_CFLAGS := $(subst -I,-isystem ,$(shell $(PKGCONFIG) --cflags $(NCURSESLIB) 2>/dev/null || echo "$(NC_CFLAGS)"))
 endif
 
-CFOTHERS_L += $(NC_CFLAGS)
-
 ifndef TILES
+CFOTHERS_L += $(NC_CFLAGS)
 LIBS += $(NC_LIBS)
 endif
 
