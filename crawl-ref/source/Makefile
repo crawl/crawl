@@ -601,20 +601,14 @@ ifndef LUA_PACKAGE
     ifneq ($(USE_LUAJIT),)
       ifeq ($(shell $(PKGCONFIG) luajit --exists || echo no),)
         LUA_PACKAGE = luajit
-      else
-        BUILD_LUA = yes
       endif
     else
       ifneq ($(shell $(PKGCONFIG) lua5.1 --exists || echo no),)
         ifneq ($(shell $(PKGCONFIG) lua-5.1 --exists || echo no),)
           ifneq ($(shell $(PKGCONFIG) lua51 --exists || echo no),)
-            ifneq ($(shell $(PKGCONFIG) lua --exists || echo no),)
-              BUILD_LUA = yes
-            else
+            ifeq ($(shell $(PKGCONFIG) lua --exists || echo no),)
               ifeq ($(shell $(PKGCONFIG) lua --modversion | head -c 3),5.1)
                 LUA_PACKAGE = lua
-              else
-                BUILD_LUA = yes
               endif
             endif
           else
@@ -629,6 +623,10 @@ ifndef LUA_PACKAGE
     endif
   endif
 endif
+ifndef LUA_PACKAGE
+  BUILD_LUA = yes
+endif
+
 ifndef BUILD_LUA
   ifndef LUA_PACKAGE
     LUA_PACKAGE = lua5.1
