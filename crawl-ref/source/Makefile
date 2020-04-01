@@ -220,7 +220,6 @@ ifdef msys
 	GAME = crawl.exe
 	bin_prefix = .
 	WIN32 = Yes
-	NO_RDYNAMIC = YesPlease
 	NO_NCURSES = YesPlease
 	NEED_LIBW32C = YesPlease
 	BUILD_PCRE = YesPlease
@@ -261,12 +260,8 @@ ifeq ($(uname_S),Darwin)
 		COPY_FONTS = yes
 	endif
 endif
-ifdef USE_ICC
-	NO_RDYNAMIC := YesPlease
-endif
 ifneq (,$(findstring CYGWIN,$(uname_S)))
 	GAME = crawl.exe
-	NO_RDYNAMIC = YesPlease
 	BUILD_PCRE = YesPlease
 	# newlib doesn't provide Posix functions with c++11
 	STDFLAG = -std=gnu++11
@@ -382,12 +377,6 @@ OBJECTS += libw32c.o
 else
 OBJECTS += libunix.o
 endif
-endif
-
-# To get stack trace symbols.
-# Note that MinGW doesn't support -rdynamic.
-ifndef NO_RDYNAMIC
-LDFLAGS += -rdynamic
 endif
 
 ifdef USE_MERGE_BASE
@@ -563,6 +552,12 @@ ifdef LTO
   else
     CFOPTIMIZE += -flto
   endif
+endif
+
+# To get stack trace symbols.
+# Note that Msys, MinGW, ICC, and Cygwin don't support -rdynamic.
+ifeq (,$(shell echo 'int main(){return 1;}'|$(GXX) -x c++ - -o /dev/null -rdynamic 2>&1))
+  LDFLAGS += -rdynamic
 endif
 
 # Okay, we have to assume we're on something else that
