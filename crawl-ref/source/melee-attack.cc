@@ -2255,7 +2255,9 @@ bool melee_attack::apply_staff_damage()
         break;
 
     case STAFF_SUMMONING:
+#if TAG_MAJOR_VERSION == 34
     case STAFF_POWER:
+#endif
     case STAFF_CONJURATION:
 #if TAG_MAJOR_VERSION == 34
     case STAFF_ENCHANTMENT:
