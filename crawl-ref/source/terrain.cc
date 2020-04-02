@@ -1687,13 +1687,10 @@ dungeon_feature_type feat_by_desc(string desc)
 {
     lowercase(desc);
 
-    if (desc[desc.size() - 1] != '.')
-        desc += ".";
-
 #if TAG_MAJOR_VERSION == 34
     // hard-coded because all the dry fountain variants match this description,
     // and they have a lower enum value, so the first is incorrectly returned
-    if (desc == "a dry fountain.")
+    if (desc == "a dry fountain")
         return DNGN_DRY_FOUNTAIN;
 #endif
 
