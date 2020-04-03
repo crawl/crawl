@@ -32,7 +32,7 @@ class TerminalRecorder(object):
         """
         self.command = command
         if filename:
-            self.ttyrec = open(filename, "wb", 0)
+            self.ttyrec = open(filename, "wb", 0) # type: Optional[BinaryIO]
         else:
             self.ttyrec = None
         self.id = id
