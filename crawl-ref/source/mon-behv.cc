@@ -970,29 +970,25 @@ void set_nearest_monster_foe(monster* mon, bool near_player)
 
     while (true)
     {
-        for (int k = 1; k <= LOS_RADIUS; ++k)
+        for (auto di = distance_iterator(center, true, true,
+                                         second_pass ? you.current_vision :
+                                         LOS_DEFAULT_RANGE);
+             di; ++di)
         {
-            monster_pos.clear();
-            for (int i = -k; i <= k; ++i)
-                for (int j = -k; j <= k; (abs(i) == k ? j++ : j += 2*k))
-                {
-                    const coord_def p = center + coord_def(i, j);
-
-                    if (near_player && !you.see_cell(p))
-                        continue;
-
-                    if (_mons_check_foe(mon, p, friendly, neutral, second_pass))
-                        monster_pos.push_back(p);
-                }
-            if (monster_pos.empty())
+            if (!cell_see_cell(center, *di, LOS_NO_TRANS)
+                || (near_player && !you.see_cell(*di)))
+            {
                 continue;
+            }
 
-            const coord_def mpos = monster_pos[random2(monster_pos.size())];
-            if (mpos == you.pos())
-                mon->foe = MHITYOU;
-            else
-                mon->foe = env.mgrid(mpos);
-            return;
+            if (_mons_check_foe(mon, *di, friendly, neutral, second_pass))
+            {
+                if (*di == you.pos())
+                    mon->foe = MHITYOU;
+                else
+                    mon->foe = env.mgrid(*di);
+                return;
+            }
         }
 
         // If we're selecting a new summon's autofoe and we were unable to
