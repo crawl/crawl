@@ -55,9 +55,6 @@ def check_login_cookie(cookie):
 
 
 def forget_login_cookie(cookie):
-    try:
-        username, token = _parse_login_cookie(cookie)
-        if (token, username) in login_tokens:
-            del login_tokens[(token, username)]
-    except ValueError:
-        return
+    username, token = _parse_login_cookie(cookie)
+    if (token, username) in login_tokens:
+        del login_tokens[(token, username)]
