@@ -1181,7 +1181,9 @@ function (exports, $, key_conversion, chat, comm) {
     {
         $("#play_now").html(data.content);
         $("#play_now .edit_rc_link").click(function (ev) {
-            var id = $(this).data("game_id");
+            // $(this).data("game_id") will return a number for values like
+            // "0.24", so explicitly coerce to string.
+            var id = $(this).data("game_id").toString();
             edit_rc(id);
         });
     }
