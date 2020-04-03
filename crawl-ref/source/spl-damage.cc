@@ -783,7 +783,8 @@ spret vampiric_drain(int pow, monster* mons, bool fail)
 
     if (hp_gain && !you.duration[DUR_DEATHS_DOOR])
     {
-        mpr("You feel life coursing into your body.");
+        mprf("You feel life coursing into your body%s",
+             attack_strength_punctuation(hp_gain).c_str());
         inc_hp(hp_gain);
     }
 
