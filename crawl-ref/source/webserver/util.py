@@ -143,3 +143,15 @@ def validate_email_address(address):  # type: (str) -> Optional[str]
     if not re.match(r"[^@]+@[^@]+\.[^@]+", address): return "Invalid email address"
     if len(address) >= 80: return "Email address can't be more than 80 characters"
     return None
+
+
+def humanise_bytes(num):  # type: (int) -> str
+    """Convert raw bytes into human-friendly measure."""
+    # TODO: Replace with pypi/humanize when we remove python 2 support.
+    units = ["kilobytes", "megabytes", "gigabytes"]
+    for index, unit in reversed(list(enumerate(units))):
+        index += 1
+        n = float(num) / 1024**index
+        if n > 1:
+            return "{} {}".format(round(n, 1), unit)
+    return "{} bytes".format(num)
