@@ -52,6 +52,33 @@ class Test_log_in_as_user:
 
         assert lifetime == datetime.timedelta(42)
 
+    def test_returning_user_can_log_in_automatically(self):
+        stub_request = mock.Mock()
+        username = 'user'
+
+        cookie = auth.log_in_as_user(stub_request, username)
+
+        assert auth.check_login_cookie(cookie) == (username, True)
+
+    def test_log_out_removes_token(self):
+        stub_request = mock.Mock()
+
+        cookie = auth.log_in_as_user(stub_request, 'user')
+        num_tokens = len(auth.login_tokens)
+        auth.forget_login_cookie(cookie)
+
+        assert len(auth.login_tokens) == num_tokens - 1
+
+    def test_repeated_log_out_is_idempotent(self):
+        stub_request = mock.Mock()
+
+        cookie = auth.log_in_as_user(stub_request, 'user')
+        auth.forget_login_cookie(cookie)
+        login_tokens = auth.login_tokens
+        auth.forget_login_cookie(cookie)  # Repeat call should do nothing
+
+        assert login_tokens == auth.login_tokens
+
 
 class Test__parse_login_cookie:
 
