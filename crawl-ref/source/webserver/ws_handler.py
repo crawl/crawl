@@ -21,6 +21,7 @@ import auth
 import checkoutput
 import config
 import userdb
+import util
 from util import *
 
 try:
@@ -799,6 +800,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             comp_ratio = "N/A"
         else:
             comp_ratio = 100 - 100 * (self.compressed_bytes_sent + self.uncompressed_bytes_sent) / self.total_message_bytes
+            comp_ratio = round(comp_ratio, 2)
 
-        self.logger.info("Socket closed. (%s bytes sent, compression ratio %s%%)",
-                         self.total_message_bytes, comp_ratio)
+        self.logger.info("Socket closed. (%s sent, compression ratio %s%%)",
+                         util.humanise_bytes(self.total_message_bytes), comp_ratio)
