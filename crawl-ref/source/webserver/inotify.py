@@ -1,11 +1,14 @@
-import struct
-import ctypes, ctypes.util
-import os, os.path
+import ctypes
+import ctypes.util
 import errno
+import os
+import os.path
+import struct
 import sys
+
 import tornado.ioloop
-from tornado.ioloop import IOLoop
 import tornado.platform.posix
+from tornado.ioloop import IOLoop
 
 try:
     from typing import Any, Callable, Dict

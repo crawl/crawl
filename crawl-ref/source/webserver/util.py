@@ -1,20 +1,21 @@
-import re
 import logging
-import tornado.template
-import tornado.ioloop
 import os.path
-import time
+import re
 import smtplib
-
-from email.mime.text import MIMEText
+import time
 from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+
+import tornado.ioloop
+import tornado.template
+
+import config
 
 try:
     from typing import Dict, Optional
 except ImportError:
     pass
 
-import config
 
 class TornadoFilter(logging.Filter):
     def filter(self, record):

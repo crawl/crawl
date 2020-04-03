@@ -1,21 +1,25 @@
-from tornado.escape import json_encode, json_decode, utf8, to_unicode
-import tornado.websocket
-import tornado.ioloop
-from tornado.ioloop import IOLoop
-import tornado.template
-
-import os
-import subprocess
-import logging
-import signal
-import time, datetime
 import codecs
+import datetime
+import logging
+import os
 import random
+import signal
+import subprocess
+import time
 import zlib
 
+import tornado.ioloop
+import tornado.template
+import tornado.websocket
+from tornado.escape import json_decode
+from tornado.escape import json_encode
+from tornado.escape import to_unicode
+from tornado.escape import utf8
+from tornado.ioloop import IOLoop
+
 import auth
-import config
 import checkoutput
+import config
 import userdb
 from util import *
 
