@@ -15,6 +15,7 @@ import tornado.web
 from tornado.ioloop import IOLoop
 
 import auth
+import load_games
 import process_handler
 import userdb
 from config import *
@@ -271,11 +272,32 @@ def ensure_tornado_current():
             "You are running a deprecated version of tornado; please update"
             " to at least version 4.")
 
+
+def _do_load_games():
+    config.games = load_games.load_games(config.games)
+
+
+def usr1_handler(signum, frame):
+    assert signum == signal.SIGUSR1
+    logging.info("Received USR1, reloading config.")
+    try:
+        IOLoop.current().add_callback_from_signal(_do_load_games)
+    except AttributeError:
+        # This is for compatibility with ancient versions < Tornado 3.
+        try:
+            _do_load_games()
+        except Exception:
+            logging.exception("Failed to update games after USR1 signal.")
+    except Exception:
+        logging.exception("Failed to update games after USR1 signal.")
+
 if __name__ == "__main__":
     if chroot:
         os.chroot(chroot)
 
     init_logging(logging_config)
+
+    _do_load_games()
 
     if not check_config():
         err_exit("Errors in config. Exiting.")
@@ -301,6 +323,9 @@ if __name__ == "__main__":
         userdb.ensure_user_db_exists()
         userdb.upgrade_user_db()
     userdb.ensure_settings_db_exists()
+
+    signal.signal(signal.SIGUSR1, usr1_handler)
+
     try:
         IOLoop.current().set_blocking_log_threshold(0.5) # type: ignore
         logging.info("Blocking call timeout: 500ms.")

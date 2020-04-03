@@ -90,16 +90,44 @@ def find_running_game(charname, start):
             return process
     return None
 
+
+def _milestone_files():
+    # First we collect all milestone files explicitly specified in the config.
+    files = set()
+
+    top_level_milestones = getattr(config, 'milestone_file', None)
+    if top_level_milestones is not None:
+        if not isinstance(top_level_milestones, list):
+            top_level_milestones = [top_level_milestones]
+        files.update(top_level_milestones)
+
+    for game_config in config.games.values():
+        milestone_file = game_config.get('milestone_file')
+        if milestone_file is None and 'dir_path' in game_config:
+            # milestone appears in this dir by default
+            milestone_file = os.path.join(game_config['dir_path'], 'milestones')
+        if milestone_file is not None:
+            files.add(milestone_file)
+
+    # Then, make sure for every milestone we have the -seeded and non-seeded
+    # variant.
+    new_files = set()
+    for f in files:
+        if f.endswith('-seeded'):
+            new_files.add(f[:-7])
+        else:
+            new_files.add(f + '-seeded')
+    files.update(new_files)
+
+    # Finally, drop any files that don't exist
+    files = [f for f in files if os.path.isfile(f)]
+
+    return files
+
 milestone_file_tailers = []
 def start_reading_milestones():
-    if config.milestone_file is None: return
-
-    if isinstance(config.milestone_file, str):
-        files = [config.milestone_file]
-    else:
-        files = config.milestone_file
-
-    for f in files:
+    milestone_files = _milestone_files()
+    for f in milestone_files:
         milestone_file_tailers.append(FileTailer(f, handle_new_milestone))
 
 def handle_new_milestone(line):

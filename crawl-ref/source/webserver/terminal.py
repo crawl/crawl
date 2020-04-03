@@ -15,7 +15,21 @@ from tornado.ioloop import IOLoop
 BUFSIZ = 2048
 
 class TerminalRecorder(object):
-    def __init__(self, command, filename, id_header, logger, termsize):
+    def __init__(self,
+                 command, # type: List[str]
+                 filename,
+                 id_header,
+                 logger,
+                 termsize,
+                 env_vars, # type: Dict[str, str]
+                 game_cwd, # type: Optional[str]
+                 ):
+        """
+        Args:
+            command: argv of command to run, eg [cmd, args, ...]
+            env_vars: dictionary of environment variables to set. The variables
+                COLUMNS, LINES, and TERM cannot be overriden.
+        """
         self.command = command
         if filename:
             self.ttyrec = open(filename, "wb", 0)
@@ -25,6 +39,8 @@ class TerminalRecorder(object):
         self.returncode = None
         self.output_buffer = b""
         self.termsize = termsize
+        self.env_vars = env_vars
+        self.game_cwd = game_cwd
 
         self.pid = None
         self.child_fd = None
@@ -73,9 +89,12 @@ class TerminalRecorder(object):
 
             # And exec
             env            = dict(os.environ)
+            env.update(self.env_vars)
             env["COLUMNS"] = str(cols)
             env["LINES"]   = str(lines)
             env["TERM"]    = "linux"
+            if self.game_cwd:
+                os.chdir(self.game_cwd)
             try:
                 os.execvpe(self.command[0], self.command, env)
             except OSError:
