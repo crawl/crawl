@@ -40,7 +40,7 @@ def log_in_as_user(request, username):
 
 
 def _parse_login_cookie(cookie):
-    username, _, token = cookie.partition(' ')
+    username, _, token = cookie.partition('%20')
     try:
         token = int(token)
     except ValueError:

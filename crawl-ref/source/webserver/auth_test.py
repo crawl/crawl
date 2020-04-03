@@ -70,7 +70,7 @@ class Test__parse_login_cookie:
         assert token is None
 
     @pytest.mark.parametrize("cookie", [
-        "abc 123",
+        "abc%20123",
     ])
     def test_returns_username_and_token(self, cookie):
         username, token = auth._parse_login_cookie(cookie)
