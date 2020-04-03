@@ -759,7 +759,7 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
 
             self.connect(self.socketpath, True)
 
-            self.logger.info("Crawl FDs: fd%s, fd%s.",
+            self.logger.debug("Crawl FDs: fd%s, fd%s.",
                              self.process.child_fd,
                              self.process.errpipe_read)
 
@@ -814,7 +814,7 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
                  clrscr)
 
     def _on_process_end(self):
-        self.logger.info("Crawl terminated.")
+        self.logger.debug("Crawl PID %s terminated.", self.process.pid)
 
         self.remove_inprogress_lock()
 
