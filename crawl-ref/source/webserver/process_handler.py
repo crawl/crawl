@@ -1,21 +1,33 @@
-import os, os.path, errno, fcntl
-import subprocess
-import datetime, time
+import datetime
+import errno
+import fcntl
 import hashlib
 import logging
+import os
+import os.path
 import re
+import subprocess
+import time
+
+from tornado.escape import json_decode
+from tornado.escape import json_encode
+from tornado.escape import to_unicode
+from tornado.escape import utf8
+from tornado.escape import xhtml_escape
+from tornado.ioloop import IOLoop
+from tornado.ioloop import PeriodicCallback
 
 import config
-
-from tornado.escape import json_decode, json_encode, xhtml_escape, utf8, to_unicode
-from tornado.ioloop import PeriodicCallback, IOLoop
-
-from terminal import TerminalRecorder
 from connection import WebtilesSocketConnection
-from util import DynamicTemplateLoader, dgl_format_str, parse_where_data
 from game_data_handler import GameDataHandler
-from ws_handler import update_all_lobbys, remove_in_lobbys, CrawlWebSocket
 from inotify import DirectoryWatcher
+from terminal import TerminalRecorder
+from util import DynamicTemplateLoader
+from util import dgl_format_str
+from util import parse_where_data
+from ws_handler import CrawlWebSocket
+from ws_handler import remove_in_lobbys
+from ws_handler import update_all_lobbys
 
 try:
     from typing import Dict, Set, Tuple, Any

@@ -15,6 +15,7 @@
 # not raising an exception). `hasattr` is also safe.
 
 import logging
+
 try:
     from collections import OrderedDict
 except ImportError:

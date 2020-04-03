@@ -1,22 +1,27 @@
 #!/usr/bin/env python
 from __future__ import absolute_import
-import os, os.path, errno, sys
+
+import errno
+import logging
+import logging.handlers
+import os
+import os.path
+import sys
 
 import tornado.httpserver
 import tornado.ioloop
-from tornado.ioloop import IOLoop
-import tornado.web
 import tornado.template
+import tornado.web
+from tornado.ioloop import IOLoop
 
-import logging, logging.handlers
-
-from config import *
-from util import *
-from ws_handler import *
-from game_data_handler import GameDataHandler
+import auth
 import process_handler
 import userdb
-import auth
+from config import *
+from game_data_handler import GameDataHandler
+from util import *
+from ws_handler import *
+
 
 class MainHandler(tornado.web.RequestHandler):
     def get(self):

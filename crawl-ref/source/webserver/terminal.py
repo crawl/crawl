@@ -1,15 +1,16 @@
-import pty
-import termios
-import os
 import fcntl
-import struct
+import os
+import pty
 import resource
 import signal
+import struct
 import sys
+import termios
 import time
+
 import tornado.ioloop
-from tornado.ioloop import IOLoop
 from tornado.escape import to_unicode
+from tornado.ioloop import IOLoop
 
 BUFSIZ = 2048
 

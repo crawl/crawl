@@ -1,8 +1,10 @@
-import os
-import subprocess
 import errno
 import fcntl
-import tornado, tornado.ioloop
+import os
+import subprocess
+
+import tornado
+import tornado.ioloop
 from tornado.ioloop import IOLoop
 
 BUFSIZ = 1024
