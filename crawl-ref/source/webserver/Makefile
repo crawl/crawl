@@ -3,7 +3,7 @@ lint:
 
 
 format:
-	isort -rc .
+	isort --check-only --recursive .
 
 
 .PHONY: lint format
