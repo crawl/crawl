@@ -662,8 +662,13 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
     def get_rc(self, game_id):
         if game_id not in config.games: return
-        with open(self.rcfile_path(game_id), 'r') as f:
-            contents = f.read()
+        path = self.rcfile_path(game_id)
+        try:
+            with open(path, 'r') as f:
+                contents = f.read()
+        # Handle RC file not existing. IOError for py2, OSError for py3
+        except (OSError, IOError):
+            contents = ''
         self.send_message("rcfile_contents", contents = contents)
 
     def set_rc(self, game_id, contents):
