@@ -9036,20 +9036,21 @@ MAP
   ...........
 ENDMAP
 
-NAME: gammafunk_its_a_trap
-TAGS: no_monster_gen no_trap_gen no_tele_into
-DEPTH: Crypt, D:$, Depths, Elf, Shoals, Spider, Snake, Swamp, Zot
-ORIENT: float
-KMASK: ^ = no_item_gen
-ITEM: any randart jewellery
+NAME:    gammafunk_its_a_trap
+TAGS:    no_monster_gen no_trap_gen no_tele_into
+DEPTH:   Crypt, D:$, Depths, Elf, Shoals, Spider, Snake, Swamp, Zot
+ORIENT:  float
+KMASK:   ^ = no_item_gen
+: item(dgn.loot_scrolls .. " / " .. dgn.loot_potions)
+ITEM:    any randart jewellery
 SHUFFLE: FGHI / JKLM
-NSUBST: D = ^ / ., E = ^ / ., I = . / "
-SUBST: FGH = ., JKLM = ", ' = ^., " = ^^.
-KFEAT: ^ = known zot trap
-MARKER: P = lua:transp_loc("its_a_trap_entry")
-MARKER: Q = lua:transp_dest_loc("its_a_trap_entry")
-MARKER: R = lua:transp_loc("its_a_trap_exit")
-MARKER: S = lua:transp_dest_loc("its_a_trap_exit")
+NSUBST:  D = ^ / ., E = ^ / ., I = . / "
+SUBST:   FGH = ., JKLM = ", ' = ^., " = ^^., d = dd$
+KFEAT:   ^ = known zot trap
+MARKER:  P = lua:transp_loc("its_a_trap_entry")
+MARKER:  Q = lua:transp_dest_loc("its_a_trap_entry")
+MARKER:  R = lua:transp_loc("its_a_trap_exit")
+MARKER:  S = lua:transp_dest_loc("its_a_trap_exit")
 MAP
        cccccccccc
       cccccccccccc
@@ -9057,13 +9058,13 @@ MAP
   ccccccccDcc^ccccccccccc
   ccccccc.D....cccccccccc
   cccccc".c.ccc..cccccccc
-  ccc.''."c"I.0'".cd^$ccc
+  ccc.''."c"I.0'".ce^dccc
   ccc''.c"GHc.9'".c'*'nnn
-..nnn^..cFc"I.0'"^+|^$nnn..
+..nnn^..cFc"I.0'"^+|^dnnn..
 @PnnnQ.^."""c.8'""c'*RnnnS@
-..nnn^..cJc"M.0'"^+|^$nnn..
+..nnn^..cJc"M.0'"^+|^dnnn..
   ccc''.c"KLc.9'".c'*'nnn
-  ccc.''."c"M.0'".c|^dccc
+  ccc.''."c"M.0'".c|^eccc
   cccccc".c.ccc..cccccccc
   ccccccc.E....cccccccccc
   ccccccccEcc^ccccccccccc
