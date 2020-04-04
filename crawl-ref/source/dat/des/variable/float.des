@@ -9073,42 +9073,47 @@ MAP
        cccccccccc
 ENDMAP
 
-NAME: gammafunk_dig_for_victory
-TAGS: no_monster_gen no_item_gen no_trap_gen
-# Must not place on a branch end so it can place downhatch
-DEPTH: Crypt, !Crypt:$, D:13-, !D:$, Depths, !Depths:$, Pan, Zot, !Zot:$
+NAME:   gammafunk_dig_for_victory
+TAGS:   no_monster_gen no_trap_gen
+# This must not place on a branch end so it can place a downhatch.
+DEPTH:  Crypt, !Crypt:$, D:13-, !D:$, Depths, !Depths:$, Pan, Zot, !Zot:$
 ORIENT: float
-KPROP: 1DEFHJKR|*$em = no_tele_into
-ITEM: wand of digging ident:all, any randart jewellery
+KPROP:  1DEFHJR|*$efm = no_tele_into
+{{
+-- Guarantee at least 5 charges, and on-average give 50% more than usual.
+item("wand of digging plus:" .. tostring(5 + crawl.random2(6)) ..
+     "ident:all")
+item(dgn.loot_scrolls .. " / " .. dgn.loot_potions)
+}}
+ITEM:   any randart jewellery
 # Do these substs now so they can be cleaned up by branch.
-NSUBST: D = 1:8 / 2:9 / 0, F = 1:8 / 2:9 / 0, J = 1:8 / 2:9 / 0, e = 2:e / |
-SUBST:  E = 89..
+NSUBST: D = 8 / 2=9 / 0, F = 8 / 2=9 / 0, J = 8 / 2=9 / 0, f = 2=f / |
+SUBST:  E = 89.., e = ee$
 : if you.in_branch("D") or you.in_branch("Depths") then
-KMONS: 1H = deep troll earth mage
-COLOUR: n = lightblue
-COLOUR: c = blue
-TILE:   n = dngn_transparent_stone_blue
+KMONS:  1H = deep troll earth mage
+COLOUR: p = blue
+TILE:   p = dngn_transparent_stone_blue
 : else
-KMONS: 1HK = cacodemon
+KMONS:  1HK = cacodemon
 :   if you.in_branch("Crypt") then
-KMONS: 2 = ancient lich
+KMONS:  2 = ancient lich
 NSUBST: 8 = 2 / 8
 :   elseif you.in_branch("Pandemonium") then
 # 8 and 9 spawns aren't a thing in Pan, so replace these with scary things.
-KMONS: 2 = greater demon / nonbase demonspawn
-KMONS: 3 = executioner / brimstone fiend / ice fiend / tzitzimitl \
+KMONS:  2 = greater demon / nonbase demonspawn
+KMONS:  3 = executioner / brimstone fiend / ice fiend / tzitzimitl \
            / hell sentinel
-SUBST: 8 = 39, 9 = 02, H = K
+SUBST:  8 = 39, 9 = 02, H = K
 :   elseif you.in_branch("Zot") then
-KMONS: 2 = ancient lich / orb of fire / curse toe
-SUBST: 8 = 28
+KMONS:  2 = ancient lich / orb of fire / curse toe
+SUBST:  8 = 28
 :   end
-COLOUR: n = yellow
-COLOUR: c = brown
-TILE:   n = dngn_transparent_stone_yellow
+COLOUR: p = yellow
+TILE:   p = dngn_transparent_stone_yellow
 : end
-KFEAT: H = >
-KFEAT: K = {
+KFEAT:  H = >
+KFEAT:  K = {
+KFEAT:  p = n
 MARKER: P = lua:transp_loc("dig_for_victory_entry")
 MARKER: Q = lua:transp_dest_loc("dig_for_victory_entry")
 MARKER: R = lua:transp_loc("dig_for_victory_exit")
@@ -9117,19 +9122,19 @@ MAP
        cccccccccccccccc
        cccccccccccccccc
        cccccccccccccccc
-       ccn1mmDDDEEmmmcc
-  ccccccnnnnmDDDEmmmmccccccc
-  c.....mmmmmmmmmmmmmnem*mec
+       ccp1mmDDDEEmmmcc
+  ccccccppppmDDDEmmmmccccccc
+  c.....mmmmmmmmmmmmmnfm*mfc
   c.....mmmmmmmmmmmmmmmmmmmn
-  c.....mmmmmmmmmmmmmn*m$m$n
+  c.....mmmmmmmmmmmmmn*memen
  .n.....mmmmmmmmmmJJmmmmmmmn.
 @PnQ.d.........mmmHJmn|mRm|nS@
  .n.....mmmmmmmmmmJJmmmmmmmn.
-  c.....mmmmmmmmmmmmmn*m$m$n
+  c.....mmmmmmmmmmmmmn*memen
   c.....mmmmmmmmmmmmmmmmmmmn
-  c.....mmmmmmmmmmmmmnem*mec
-  ccccccnnnnmFFFEmmmmccccccc
-       ccn1mmFFFEEmmmcc
+  c.....mmmmmmmmmmmmmnfm*mfc
+  ccccccppppmFFFEmmmmccccccc
+       ccp1mmFFFEEmmmcc
        cccccccccccccccc
        cccccccccccccccc
        cccccccccccccccc
