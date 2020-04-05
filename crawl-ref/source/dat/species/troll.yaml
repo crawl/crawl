@@ -10,7 +10,7 @@ aptitudes:
   mp_mod: -1
   mr: 3
   fighting: -2
-  short_blades: -2
+  short_blades: 3
   long_blades: -2
   axes: -2
   maces_and_flails: -1
