@@ -415,9 +415,11 @@ static bool _cheibriados_retribution()
     return true;
 }
 
-static void _spell_retribution(monster* avatar, spell_type spell, god_type god)
+static void _spell_retribution(monster* avatar, spell_type spell, god_type god,
+                               const char* message = nullptr)
 {
-    simple_god_message(" rains destruction down upon you!", god);
+    simple_god_message(message ? message : " rains destruction down upon you!",
+                       god);
     bolt beam;
     beam.source = you.pos();
     beam.target = you.pos();
@@ -788,9 +790,6 @@ static bool _trog_retribution()
         switch (random2(6))
         {
         case 0:
-            you.rot(nullptr, 3 + random2(3));
-            break;
-
         case 1:
         case 2:
             lose_stat(STAT_STR, 1 + random2(you.strength() / 5));
@@ -818,14 +817,21 @@ static bool _trog_retribution()
     }
     else
     {
-        //jmf: returned Trog's old Fire damage
-        // -- actually, this function partially exists to remove that,
-        //    we'll leave this effect in, but we'll remove the wild
-        //    fire magic. -- bwr
-        mprf(MSGCH_WARN, "You feel Trog's fiery rage upon you!");
-        MiscastEffect(&you, nullptr, {miscast_source::god, god}, spschool::fire,
-                      8 + you.experience_level, random2avg(98, 3),
-                      _god_wrath_name(god));
+        // A fireball is magic when used by a mortal but just a manifestation
+        // of pure rage when used by a god. --ebering
+
+        monster* avatar = get_avatar(god);
+        // can't be const because mons_cast() doesn't accept const monster*
+
+        if (avatar == nullptr)
+        {
+            simple_god_message(" has no time to deal with you just now.", god);
+            return false; // not a very dazzling divine experience...
+        }
+
+        _spell_retribution(avatar, SPELL_FIREBALL,
+                           god, " hurls firey rage upon you!");
+        _reset_avatar(*avatar);
     }
 
     return true;
