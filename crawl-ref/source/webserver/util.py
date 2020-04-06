@@ -1,3 +1,4 @@
+import errno
 import logging
 import os.path
 import re
@@ -12,62 +13,72 @@ import tornado.template
 import config
 
 try:
-    from typing import Dict, Optional
+    from typing import Any, Callable, Dict, Optional
+    from typing.IO import TextIO
 except ImportError:
     pass
 
 
 class TornadoFilter(logging.Filter):
-    def filter(self, record):
+    def filter(self, record):  # noqa A003: ignore shadowing builtin
         if record.module == "web" and record.levelno <= logging.INFO:
             return False
         return True
 
-class DynamicTemplateLoader(tornado.template.Loader):
-    def __init__(self, root_dir):
+
+class DynamicTemplateLoader(tornado.template.Loader):  # type: ignore
+    def __init__(self, root_dir):  # type: (str) -> None
         tornado.template.Loader.__init__(self, root_dir)
 
     def load(self, name, parent_path=None):
-        name = self.resolve_path(name, parent_path=parent_path)
+        # type: (str, Optional[str]) -> tornado.template.Template
+        name = self.resolve_path(name, parent_path=parent_path)  # type: ignore
         if name in self.templates:
             template = self.templates[name]
             path = os.path.join(self.root, name)
-            if os.path.getmtime(path) > template.load_time:
+            if os.path.getmtime(path) > template.load_time:  # type: ignore
                 del self.templates[name]
             else:
                 return template
 
-        template = super(DynamicTemplateLoader, self).load(name, parent_path)
-        template.load_time = time.time()
+        parent_cls = super(DynamicTemplateLoader, self)
+        template = parent_cls.load(name, parent_path)  # type: ignore
+        template.load_time = time.time()  # type: ignore
         return template
 
-    _instances = {} # type: Dict[str, DynamicTemplateLoader]
+    _instances = {}  # type: Dict[str, DynamicTemplateLoader]
 
     @classmethod
-    def get(cls, path):
+    def get(cls, path):  # type: (str) -> DynamicTemplateLoader
         if path in cls._instances:
             return cls._instances[path]
         else:
-            l = DynamicTemplateLoader(path)
-            cls._instances[path] = l
-            return l
+            loader = DynamicTemplateLoader(path)
+            cls._instances[path] = loader
+            return loader
+
 
 class FileTailer(object):
-    def __init__(self, filename, callback, interval_ms = 1000):
-        self.file = None
+    def __init__(self, filename, callback, interval_ms=1000):
+        # type: (str, Callable[[str], Any], int) -> None
+        self.file = None  # type: Optional[TextIO]
         self.filename = filename
         self.callback = callback
         self.scheduler = tornado.ioloop.PeriodicCallback(self.check,
                                                          interval_ms)
         self.scheduler.start()
 
-    def check(self):
+    def check(self):  # type: () -> None
         if self.file is None:
-            if os.path.exists(self.filename):
+            try:
                 self.file = open(self.filename, "r")
-                self.file.seek(os.path.getsize(self.filename))
-            else:
-                return
+            except (IOError, OSError) as e:  # noqa
+                if e.errno == errno.ENOENT:
+                    return
+                else:
+                    raise
+
+            self.file.seek(os.path.getsize(self.filename))
 
         while True:
             pos = self.file.tell()
@@ -78,33 +89,37 @@ class FileTailer(object):
                 self.file.seek(pos)
                 return
 
-    def stop(self):
+    def stop(self):  # type: () -> None
         self.scheduler.stop()
 
-def dgl_format_str(s, username, game_params):
+
+def dgl_format_str(s, username, game_params):  # type: (str, str, Any) -> str
     s = s.replace("%n", username)
 
     return s
 
-where_entry_regex = re.compile("(?<=[^:]):(?=[^:])")
 
-def parse_where_data(data):
+_WHERE_ENTRY_REGEX = re.compile("(?<=[^:]):(?=[^:])")
+
+
+def parse_where_data(data):  # type: (str) -> Dict[str, str]
     where = {}
 
-    for entry in where_entry_regex.split(data):
-        if entry.strip() == "": continue
+    for entry in _WHERE_ENTRY_REGEX.split(data):
+        if not entry.strip():
+            continue
         field, _, value = entry.partition("=")
         where[field.strip()] = value.strip().replace("::", ":")
     return where
+
 
 def send_email(to_address, subject, body_plaintext, body_html):
     # type: (str, str, str, str) -> None
     if not to_address:
         return
 
-    logging.info("Sending email to '%s' with subject '%s'" %
-                                                (to_address, subject))
-    email_server = None
+    logging.info("Sending email to %r with subject %r", to_address, subject)
+    email_server = None  # type: Optional[smtplib.SMTP]
     try:
         # establish connection
         # TODO: this should not be a blocking call at all...
@@ -133,15 +148,22 @@ def send_email(to_address, subject, body_plaintext, body_html):
         email_server.sendmail(config.smtp_from_addr, to_address, msg.as_string())
     finally:
         # end connection
-        if email_server: email_server.quit()
+        if email_server:
+            email_server.quit()
+
 
 def validate_email_address(address):  # type: (str) -> Optional[str]
-    # Returns an error string describing the problem, or None
-    if not address: return None
-    if " " in address: return "Email address can't contain a space"
-    if "@" not in address: return "Expected email address to contain the @ symbol"
-    if not re.match(r"[^@]+@[^@]+\.[^@]+", address): return "Invalid email address"
-    if len(address) >= 80: return "Email address can't be more than 80 characters"
+    """Validates an email, returning an error string or None"""
+    if not address:
+        return None
+    if " " in address:
+        return "Email address can't contain a space"
+    if "@" not in address:
+        return "Expected email address to contain the @ symbol"
+    if not re.match(r"[^@]+@[^@]+\.[^@]+", address):
+        return "Invalid email address"
+    if len(address) >= 80:
+        return "Email address can't be more than 80 characters"
     return None
 
 
