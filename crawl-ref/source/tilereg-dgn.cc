@@ -590,7 +590,7 @@ static bool _cast_spell_on_target(actor* target)
     int item_slot = -1;
     if (spell == SPELL_EVAPORATE)
     {
-        const int pot = prompt_invent_item("Throw which potion?", MT_INVLIST,
+        const int pot = prompt_invent_item("Throw which potion?", menu_type::invlist,
             OBJ_POTIONS);
 
         if (prompt_failed(pot))
