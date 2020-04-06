@@ -1003,7 +1003,7 @@ static bool _sif_muna_retribution()
 /**
  * Perform translocation-flavored Lugonu retribution.
  *
- * 50% chance of tloc miscasts; failing that, 50% chance of teleports/blinks.
+ * 25% banishment; 50% teleport near monsters.
  */
 static void _lugonu_transloc_retribution()
 {
@@ -1011,19 +1011,14 @@ static void _lugonu_transloc_retribution()
 
     if (coinflip())
     {
-        simple_god_message("'s wrath finds you!", god);
-        MiscastEffect(&you, nullptr, {miscast_source::god, god},
-                      spschool::translocation, 9, 90, "Lugonu's touch");
+        // Give extra opportunities for embarrassing teleports.
+        simple_god_message("'s wrath scatters you!", god);
+        you_teleport_now(false, true, "Space warps around you!");
     }
     else if (coinflip())
     {
-        // Give extra opportunities for embarrassing teleports.
-        simple_god_message("'s wrath finds you!", god);
-        mpr("Space warps around you!");
-        if (!one_chance_in(3))
-            you_teleport_now();
-        else
-            uncontrolled_blink();
+        simple_god_message(" draws you home!", god);
+        you.banish(nullptr, "Lugonu's touch", you.get_experience_level(), true);
     }
 }
 
