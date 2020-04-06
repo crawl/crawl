@@ -853,6 +853,12 @@ Major Destruction spell
 
 <Major Destruction ability>
 %%%%
+Fulsome Distillation spell
+
+This spell extracts the vile and poisonous essences from a corpse. You probably
+don't want to drink the results. The type of potion produced corresponds
+roughly to the effects of eating said corpse.
+%%%%
 Major Healing spell
 
 Heals a large amount of damage to the caster's body.

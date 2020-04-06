@@ -348,8 +348,8 @@ static std::vector<int> _get_evaporate_result(int potion)
         break;
 
     case POT_DEGENERATION:
-        beams.push_back(BEAM_POTION_POISON);
-        beams.push_back(BEAM_POTION_MIASMA);
+        beams.push_back(BEAM_MEPHITIC);
+        //beams.push_back(BEAM_POTION_MIASMA);
         break;
 
     case POT_DECAY:
@@ -478,10 +478,7 @@ spret cast_evaporate(int pow, bolt& beem, int pot_idx, bool fail)
         break;
 
     case POT_DEGENERATION:
-        beem.effect_known = false;
-        beem.flavour = (coinflip() ? BEAM_POTION_POISON : BEAM_POTION_MIASMA);
-        tracer_flavour = BEAM_MIASMA;
-        beem.ench_power *= 2;
+        tracer_flavour = beem.flavour = BEAM_MEPHITIC;
         break;
 
     case POT_DECAY:

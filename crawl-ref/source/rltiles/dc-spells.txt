@@ -102,6 +102,7 @@ symbol_of_torment SYMBOL_OF_TORMENT
 vampiric_draining VAMPIRIC_DRAINING
 infestation INFESTATION
 borgnjors_vile_clutch BORGNJORS_VILE_CLUTCH
+fulsome_distillation FULSOME_DISTILLATION
 
 %sdir gui/spells/poison
 alistairs_intoxication ALISTAIRS_INTOXICATION

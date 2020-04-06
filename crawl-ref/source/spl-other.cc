@@ -16,6 +16,7 @@
 #include "libutil.h"
 #include "message.h"
 #include "misc.h"
+#include "makeitem.h"
 #include "mon-place.h"
 #include "mon-util.h"
 #include "place.h"
@@ -24,6 +25,9 @@
 #include "religion.h"
 #include "spl-util.h"
 #include "terrain.h"
+#include "god-conduct.h"
+#include "items.h"
+#include "item-name.h"
 
 spret cast_sublimation_of_blood(int pow, bool fail)
 {
@@ -462,6 +466,161 @@ spret cast_intoxicate(int pow, bool fail)
 
     return spret::success;
 }
+
+// The intent of this spell isn't to produce helpful potions
+// for drinking, but rather to provide ammo for the Evaporate
+// spell out of corpses, thus potentially making it useful.
+// Producing helpful potions would break game balance here...
+// and producing more than one potion from a corpse, or not
+// using up the corpse might also lead to game balance problems. - bwr
+spret cast_fulsome_distillation(int pow, bool check_range, bool fail)
+{
+    //int num_corpses = 0;
+    //item_def* corpse = corpse_at(you.pos(), &num_corpses);
+    //if (num_corpses && you.flight_mode() == FL_LEVITATE)
+    //    num_corpses = -1;
+    bool found = false;
+    int co = -1;
+    for (stack_iterator si(you.pos(), true); si; ++si)
+    {
+        if (si->is_type(OBJ_CORPSES, CORPSE_BODY))
+        {
+            found = true;
+            co = si->index();
+        }
+    }
+
+    if (!found)
+    {
+        mpr("There is nothing here that can be fulsome distillation!");
+        return spret::abort;
+    }
+    item_def& corpse = mitm[co];
+
+    // If there is only one corpse, distill it; otherwise, ask the player
+    // which corpse to use.
+    /*switch (num_corpses)
+    {
+    case 0: case -1:
+        // Allow using Z to victory dance fulsome.
+        if (!check_range)
+        {
+            fail_check();
+            mpr("The spell fizzles.");
+            return spret::success;
+        }
+
+        if (num_corpses == -1)
+            mpr("You can't reach the corpse!");
+        else
+            mpr("There aren't any corpses here.");
+        return spret::abort;
+    case 1:
+        // Use the only corpse available without prompting.
+        break;
+    default:
+        // Search items at the player's location for corpses.
+        // The last corpse detected earlier is irrelevant.
+        corpse = NULL;
+        for (stack_iterator si(you.pos(), true); si; ++si)
+        {
+            if (item_is_corpse(*si))
+            {
+                const std::string corpsedesc =
+                    get_menu_colour_prefix_tags(*si, DESC_THE);
+                const std::string prompt =
+                    make_stringf("Distill a potion from %s?",
+                        corpsedesc.c_str());
+
+                if (yesno(prompt.c_str(), true, 0, false))
+                {
+                    corpse = &*si;
+                    break;
+                }
+            }
+        }
+    }
+    */
+
+    fail_check();
+
+    potion_type pot_type = POT_WATER;
+
+    switch (mons_corpse_effect(corpse.mon_type))
+    {
+    case CE_CLEAN:
+        mpr("Cannot draw potions from this Corpse.");
+        return spret::abort;
+        break;
+    case CE_NOXIOUS:
+        pot_type = random2(4) < 3 ? POT_DEGENERATION : POT_POISON;
+        break;
+    case CE_NOCORPSE:       // shouldn't occur
+    default:
+        break;
+    }
+
+    switch (corpse.mon_type)
+    {
+    case MONS_WASP:
+        pot_type = POT_SLOWING;
+        break;
+    default:
+        break;
+    }
+
+    struct monsterentry* smc = get_monster_data(corpse.mon_type);
+
+    for (int nattk = 0; nattk < 4; ++nattk)
+    {
+        if (smc->attack[nattk].flavour == AF_POISON_MEDIUM
+            || smc->attack[nattk].flavour == AF_POISON_STRONG
+            || smc->attack[nattk].flavour == AF_POISON_STR
+            || smc->attack[nattk].flavour == AF_POISON_INT
+            || smc->attack[nattk].flavour == AF_POISON_DEX
+            || smc->attack[nattk].flavour == AF_POISON_STAT)
+        {
+            pot_type = POT_STRONG_POISON;
+        }
+    }
+
+    const bool was_orc = (mons_genus(corpse.mon_type) == MONS_ORC);
+    const bool was_holy = (mons_class_holiness(corpse.mon_type) == MH_HOLY);
+
+    // We borrow the corpse's object to make our potion.
+    corpse.base_type = OBJ_POTIONS;
+    corpse.sub_type = pot_type;
+    corpse.quantity = 1;
+    corpse.plus = 0;
+    corpse.plus2 = 0;
+    corpse.flags = 0;
+    corpse.inscription.clear();
+    item_colour(corpse); // sets special as well
+
+    // Always identify said potion.
+    set_ident_type(corpse, true);
+
+    mprf("You extract %s from the corpse.",
+        corpse.name(DESC_A).c_str());
+
+    // Try to move the potion to the player (for convenience);
+    // they probably won't autopickup bad potions.
+    // Treats potion as though it was being picked up manually (0005916).
+    std::map<int, int> tmp_l_p = you.last_pickup;
+    you.last_pickup.clear();
+
+
+    if (you.last_pickup.empty())
+        you.last_pickup = tmp_l_p;
+
+    if (was_orc)
+        did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2);
+    if (was_holy)
+        did_god_conduct(DID_DESECRATE_HOLY_REMAINS, 2);
+
+    return spret::success;
+}
+
 
 spret cast_darkness(int pow, bool fail)
 {
