@@ -22,15 +22,17 @@
 #include "item-use.h"
 #include "libutil.h"
 #include "macro.h" // command_to_string
+#include "monster.h"
 #include "message.h"
 #include "nearby-danger.h"
 #include "notes.h"
 #include "player-stats.h"
 #include "religion.h"
 #include "shopping.h"
-#include "spl-miscast.h"
 #include "spl-summoning.h"
+#include "spl-transloc.h"
 #include "spl-wpnench.h"
+#include "stringutil.h"
 #include "xom.h"
 
 static void _mark_unseen_monsters();
@@ -687,34 +689,9 @@ static void _unequip_weapon_effect(item_def& real_item, bool showMsgs,
                 break;
 
             case SPWPN_DISTORTION:
-                // Removing the translocations skill reduction of effect,
-                // it might seem sensible, but this brand is supposed
-                // to be dangerous because it does large bonus damage,
-                // as well as free teleport other side effects, and
-                // even with the miscast effects you can rely on the
-                // occasional spatial bonus to mow down some opponents.
-                // It's far too powerful without a real risk, especially
-                // if it's to be allowed as a player spell. -- bwr
-
-                // int effect = 9 -
-                //        random2avg(you.skills[SK_TRANSLOCATIONS] * 2, 2);
-
                 if (!meld)
-                {
-                    if (have_passive(passive_t::safe_distortion))
-                    {
-                        simple_god_message(" absorbs the residual spatial "
-                                           "distortion as you unwield your "
-                                           "weapon.");
-                        break;
-                    }
-                    // Makes no sense to discourage unwielding a temporarily
-                    // branded weapon since you can wait it out. This also
-                    // fixes problems with unwield prompts (mantis #793).
-                    MiscastEffect(&you, nullptr, {miscast_source::wield},
-                                  spschool::translocation, 9, 90,
-                                  "a distortion unwield");
-                }
+                    unwield_distortion();
+
                 break;
 
             case SPWPN_ANTIMAGIC:
@@ -1460,5 +1437,38 @@ static void _mark_unseen_monsters()
             (*mi)->unseen_pos = (*mi)->pos();
         }
 
+    }
+}
+
+// This brand is supposed to be dangerous because it does large
+// bonus damage, as well as banishment and other side effects,
+// and you can rely on the occasional spatial bonus to mow down
+// some opponents. It's far too powerful without a real risk.
+// -- bwr [ed: ebering]
+void unwield_distortion(bool brand)
+{
+    if (have_passive(passive_t::safe_distortion))
+    {
+        simple_god_message(make_stringf(" absorbs the residual spatial "
+                           "distortion as you %s your "
+                           "weapon.", brand ? "rebrand" : "unwield").c_str());
+        return;
+    }
+    // Makes no sense to discourage unwielding a temporarily
+    // branded weapon since you can wait it out. This also
+    // fixes problems with unwield prompts (mantis #793).
+    if (coinflip())
+        you_teleport_now(false, true, "Space warps around you!");
+    else if (coinflip())
+    {
+        you.banish(nullptr,
+                   make_stringf("%sing a weapon of distortion",
+                                brand ? "rebrand" : "unwield").c_str(),
+                   you.get_experience_level(), true);
+    }
+    else
+    {
+        mpr("Space warps into you!");
+        contaminate_player(random2avg(18000, 3), true);
     }
 }
