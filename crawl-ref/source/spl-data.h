@@ -4111,8 +4111,8 @@ static const struct spell_desc spelldata[] =
     spflag::no_ghost,
     9,
     200,
-    1, LOS_RADIUS,
-    9, 25,
+    5, 5,
+    9, 40,  // 40 noise at 0 spellpower
     TILEG_ICE_STORM,
 },
 

@@ -71,7 +71,7 @@ int spell_difficulty(spell_type which_spell);
 int spell_power_cap(spell_type spell);
 int spell_range(spell_type spell, int pow, bool allow_bonus = true);
 int spell_noise(spell_type spell);
-int spell_effect_noise(spell_type spell);
+int spell_effect_noise(spell_type spell, bool random = true);
 
 const char *get_spell_target_prompt(spell_type which_spell);
 tileidx_t get_spell_tile(spell_type which_spell);

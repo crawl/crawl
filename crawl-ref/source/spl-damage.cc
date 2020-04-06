@@ -3453,7 +3453,6 @@ spret cast_absolute_zero(int pow, bool fail, bool tracer)
 
         const coord_def pos = mon->pos();
         glaciate_freeze(mon, KILL_YOU, actor_to_death_source(&you));
-
         noisy(spell_effect_noise(SPELL_ABSOLUTE_ZERO), pos, you.mid);
     }
 
