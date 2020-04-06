@@ -22,6 +22,7 @@
 #include "english.h"
 #include "env.h"
 #include "fight.h"
+#include "fineff.h"
 #include "food.h"
 #include "fprop.h"
 #include "god-conduct.h"
@@ -3445,11 +3446,21 @@ spret cast_absolute_zero(int pow, bool fail, bool tracer)
         targeter_radius hitfunc(&you, LOS_NO_TRANS);
         flash_view_delay(UA_PLAYER, LIGHTCYAN, 100, &hitfunc);
 
-        mprf("You chill %s to absolute zero!",
-             you.can_see(*mon) ? mon->name(DESC_THE).c_str() : "something");
-
         god_conduct_trigger conducts[3];
         set_attack_conducts(conducts, *mon, you.can_see(*mon));
+
+        if (mon->type == MONS_ROYAL_JELLY && !mon->is_summoned())
+        {
+            // need to do this here, because react_to_damage is never called
+            mprf("A cloud of jellies burst out of %s as it chills to"
+                 " absolute zero!", mon->name(DESC_THE, false).c_str());
+            trj_spawn_fineff::schedule(&you, mon, mon->pos(), mon->hit_points);
+        }
+        else
+        {
+            mprf("You chill %s to absolute zero!",
+                 you.can_see(*mon) ? mon->name(DESC_THE).c_str() : "something");
+        }
 
         const coord_def pos = mon->pos();
         glaciate_freeze(mon, KILL_YOU, actor_to_death_source(&you));
