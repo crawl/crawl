@@ -371,22 +371,18 @@ static bool _cheibriados_retribution()
 
     switch (wrath_type)
     {
-    // Very high tension wrath
+    // Very high tension wrath.
+    // Add noise then start sleeping and slow the player with 2/3 chance.
     case 4:
-        simple_god_message(" adjusts the clock.", god);
-        MiscastEffect(&you, nullptr, {miscast_source::god, god},
-                      spschool::random,
-                      5 + div_rand_round(you.experience_level, 9),
-                      random2avg(88, 3), _god_wrath_name(god));
-        if (one_chance_in(3))
-            break;
-        else
-            dec_penance(god, 1); // and fall-through.
+        simple_god_message(" strikes the hour.", god);
+        noisy(40, you.pos());
+        dec_penance(god, 1); // and fall-through.
     // High tension wrath
+    // Sleep the player and slow the player with 50% chance.
     case 3:
         mpr("You lose track of time.");
         you.put_to_sleep(nullptr, 30 + random2(20));
-        if (coinflip())
+        if (one_chance_in(wrath_type - 1))
             break;
         else
             dec_penance(god, 1); // and fall-through.
@@ -398,14 +394,11 @@ static bool _cheibriados_retribution()
             slow_player(100);
         }
         break;
-    // Low/no tension
+    // Low/no tension; lose stats.
     case 1:
     case 0:
         mpr("Time shudders.");
-        MiscastEffect(&you, nullptr, {miscast_source::god, god},
-                      spschool::random,
-                      5 + div_rand_round(you.experience_level, 9),
-                      random2avg(88, 3), _god_wrath_name(god));
+        lose_stat(STAT_RANDOM, 1 + random2avg(5, 2));
         break;
 
     default:
