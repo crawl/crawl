@@ -321,6 +321,51 @@ static int _actual_spread_rate(cloud_type type, int spread_rate)
     }
 }
 
+cloud_type beam2cloud(beam_type flavour)
+{
+    switch (flavour)
+    {
+    default:
+    case BEAM_NONE:
+        return CLOUD_NONE;
+    case BEAM_FIRE:
+    case BEAM_POTION_FIRE:
+        return CLOUD_FIRE;
+    case BEAM_MEPHITIC:
+        return CLOUD_MEPHITIC;
+    case BEAM_COLD:
+    case BEAM_POTION_COLD:
+        return CLOUD_COLD;
+    case BEAM_POISON:
+    case BEAM_POTION_POISON:
+        return CLOUD_POISON;
+    case BEAM_POTION_BLACK_SMOKE:
+        return CLOUD_BLACK_SMOKE;
+    case BEAM_POTION_GREY_SMOKE:
+        return CLOUD_GREY_SMOKE;
+    case BEAM_POTION_BLUE_SMOKE:
+        return CLOUD_BLUE_SMOKE;
+    case BEAM_POTION_PURPLE_SMOKE:
+        return CLOUD_PURPLE_SMOKE;
+    case BEAM_STEAM:
+    case BEAM_POTION_STEAM:
+        return CLOUD_STEAM;
+    case BEAM_MIASMA:
+    case BEAM_POTION_MIASMA:
+        return CLOUD_MIASMA;
+    case BEAM_CHAOS:
+        return CLOUD_CHAOS;
+    case BEAM_POTION_RAIN:
+        return CLOUD_RAIN;
+    case BEAM_POTION_MUTAGENIC:
+        return CLOUD_MUTAGENIC;
+    case BEAM_RANDOM:
+        return CLOUD_RANDOM;
+    case BEAM_PETRIFYING_CLOUD:
+        return CLOUD_PETRIFY;
+    }
+}
+
 static beam_type _cloud2beam(cloud_type flavour)
 {
     if (flavour == CLOUD_RANDOM)

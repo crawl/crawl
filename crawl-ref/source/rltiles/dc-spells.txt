@@ -66,6 +66,7 @@ sticky_flame STICKY_FLAME
 throw_flame THROW_FLAME
 inner_flame INNER_FLAME
 ignition IGNITION
+evaporate EVAPORATE
 
 %sdir gui/spells/ice
 bolt_of_cold BOLT_OF_COLD

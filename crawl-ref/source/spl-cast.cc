@@ -36,6 +36,7 @@
 #include "item-prop.h"
 #include "item-status-flag-type.h"
 #include "item-use.h"
+#include "invent.h"
 #include "libutil.h"
 #include "macro.h"
 #include "menu.h"
@@ -1030,8 +1031,28 @@ static void _try_monster_cast(spell_type spell, int /*powc*/,
 }
 #endif // WIZARD
 
+static int _setup_evaporate_cast()
+{
+    int rc = prompt_invent_item("Throw which potion?", menu_type::invlist, OBJ_POTIONS);
+
+    if (prompt_failed(rc))
+        rc = -1;
+    else if (you.inv[rc].base_type != OBJ_POTIONS)
+    {
+        mpr("This spell works only on potions!");
+        rc = -1;
+    }
+    else
+    {
+        mprf(MSGCH_PROMPT, "Where do you want to aim %s?",
+            you.inv[rc].name(DESC_YOUR).c_str());
+    }
+    return rc;
+}
+
+
 static spret _do_cast(spell_type spell, int powc, const dist& spd,
-                           bolt& beam, god_type god, bool fail);
+                           bolt& beam, god_type god, int potion, bool fail);
 
 /**
  * Should this spell be aborted before casting properly starts, either because
@@ -1084,6 +1105,14 @@ static bool _spellcasting_aborted(spell_type spell, bool fake_spell)
         }
     }
 
+    //if (check_range_usability
+    //    && spell == SPELL_FULSOME_DISTILLATION
+    //    && !corpse_at(you.pos()))
+    //{
+    //   mpr("There aren't any corpses here.");
+    //   return true;
+    //}
+
     const int severity = fail_severity(spell);
     const string failure_rate = spell_failure_rate_string(spell);
     if (Options.fail_severity_to_confirm > 0
@@ -1129,6 +1158,7 @@ static unique_ptr<targeter> _spell_targeter(spell_type spell, int pow,
     case SPELL_HURL_DAMNATION:
         return make_unique<targeter_beam>(&you, range, ZAP_DAMNATION, pow,
                                           1, 1);
+    case SPELL_EVAPORATE:
     case SPELL_MEPHITIC_CLOUD:
         return make_unique<targeter_beam>(&you, range, ZAP_MEPHITIC, pow,
                                           pow >= 100 ? 1 : 0, 1);
@@ -1304,6 +1334,8 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
 
     ASSERT(wiz_cast || !(flags & spflag::testing));
 
+    int potion = -1;
+
     if (!powc)
         powc = calc_spell_power(spell, true);
 
@@ -1325,7 +1357,13 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
                                               DIR_NONE;
 
         const char *prompt = get_spell_target_prompt(spell);
-        if (dir == DIR_DIR)
+        if (spell == SPELL_EVAPORATE)
+        {
+            potion = _setup_evaporate_cast();
+            if (potion == -1)
+                return spret::abort;
+        }
+        else if (dir == DIR_DIR)
             mprf(MSGCH_PROMPT, "%s", prompt ? prompt : "Which direction?");
 
         const bool needs_path = !testbits(flags, spflag::target)
@@ -1494,7 +1532,7 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
 
     const bool old_target = actor_at(beam.target);
 
-    spret cast_result = _do_cast(spell, powc, spd, beam, god, fail);
+    spret cast_result = _do_cast(spell, powc, spd, beam, god, potion, fail);
 
     switch (cast_result)
     {
@@ -1577,7 +1615,7 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
 // Returns spret::success, spret::abort, spret::fail
 // or spret::none (not a player spell).
 static spret _do_cast(spell_type spell, int powc, const dist& spd,
-                           bolt& beam, god_type god, bool fail)
+                           bolt& beam, god_type god, int potion, bool fail)
 {
     const coord_def target = spd.isTarget ? beam.target : you.pos() + spd.delta;
     if (spell == SPELL_FREEZE || spell == SPELL_VAMPIRIC_DRAINING)
@@ -1605,6 +1643,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_HOLY_BREATH:
     case SPELL_FREEZING_CLOUD:
         return cast_big_c(powc, spell, &you, beam, fail);
+
+    case SPELL_EVAPORATE:
+        return cast_evaporate(powc, beam, potion, fail);
 
     case SPELL_FIRE_STORM:
         return cast_fire_storm(powc, beam, fail);
@@ -2256,7 +2297,6 @@ const set<spell_type> removed_spells =
     SPELL_CONDENSATION_SHIELD,
     SPELL_CONTROL_TELEPORT,
     SPELL_DEMONIC_HORDE,
-    SPELL_EVAPORATE,
     SPELL_FIRE_BRAND,
     SPELL_FORCEFUL_DISMISSAL,
     SPELL_FREEZING_AURA,
