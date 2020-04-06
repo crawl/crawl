@@ -5235,8 +5235,7 @@ bool mons_is_avatar(monster_type mc)
 
 bool mons_is_player_shadow(const monster& mon)
 {
-    return mon.type == MONS_PLAYER_SHADOW
-           && mon.mname.empty();
+    return mon.type == MONS_PLAYER_SHADOW;
 }
 
 bool mons_has_attacks(const monster& mon)

@@ -1308,17 +1308,28 @@ static bool _jiyva_retribution()
 
 /**
  * Let Fedhas call down the enmity of nature upon the player!
+ * Equal chance corrosive bolt, primal wave (a throwback to rain),
+ * or thorn volley
  */
-static void _fedhas_elemental_miscast()
+static void _fedhas_nature_retribution()
 {
     const god_type god = GOD_FEDHAS;
-    simple_god_message(" invokes the elements against you.", god);
 
-    const spschool stype = random_choose(spschool::ice, spschool::fire,
-                                         spschool::earth, spschool::air);
-    MiscastEffect(&you, nullptr, {miscast_source::god, god}, stype,
-                  5 + you.experience_level, random2avg(88, 3),
-                  _god_wrath_name(god));
+    monster* avatar = get_avatar(god);
+    // can't be const because mons_cast() doesn't accept const monster*
+
+    if (avatar == nullptr)
+    {
+        simple_god_message(" has no time to deal with you just now.", god);
+        return;
+    }
+
+    spell_type spell = random_choose(SPELL_CORROSIVE_BOLT,
+                                     SPELL_PRIMAL_WAVE,
+                                     SPELL_THORN_VOLLEY);
+
+    _spell_retribution(avatar, spell, god, " invokes nature against you.");
+    _reset_avatar(*avatar);
 }
 
 // Collect lists of points that are within LOS (under the given env map),
@@ -1728,7 +1739,7 @@ static int _fedhas_corpse_spores(beh_type attitude)
 /**
  * Call down the wrath of Fedhas upon the player!
  *
- * Plants and elemental miscasts.
+ * Plants and plant/nature themed attacks.
  *
  * @return Whether to take further divine wrath actions afterward.
  */
@@ -1753,7 +1764,7 @@ static bool _fedhas_retribution()
 
     case 1:
     default:
-        _fedhas_elemental_miscast();
+        _fedhas_nature_retribution();
         return true;
 
     case 2:
