@@ -271,8 +271,12 @@ bool feat_is_traversable_now(dungeon_feature_type grid, bool try_fallback)
             return true;
         }
 
+        // lava-walkers get lava
+        if (grid == DNGN_LAVA && have_passive(passive_t::lava_walk))
+
         // The player can safely walk over shafts.
         if (grid == DNGN_TRAP_SHAFT)
+
             return true;
 
         // Permanently flying players can cross most hostile terrain.

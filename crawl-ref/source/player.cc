@@ -501,6 +501,8 @@ void moveto_location_effects(dungeon_feature_type old_feat,
         }
         else if (you.props.exists(TEMP_WATERWALK_KEY))
             you.props.erase(TEMP_WATERWALK_KEY);
+        else if (you.props.exists(TEMP_LAVAWALK_KEY))
+            you.props.erase(TEMP_LAVAWALK_KEY);
     }
 
     id_floor_items();
@@ -573,7 +575,7 @@ bool is_feat_dangerous(dungeon_feature_type grid, bool permanently,
         return false;
     }
     else if (grid == DNGN_DEEP_WATER && !player_likes_water(permanently)
-             || grid == DNGN_LAVA)
+             || grid == DNGN_LAVA && !player_likes_lava(permanently))
     {
         return true;
     }
@@ -608,11 +610,20 @@ bool player_in_connected_branch()
     return is_connected_branch(you.where_are_you);
 }
 
+//TODO note I've fixed a bug here in a commit that's primarily doing something
+//else, the fix makes sure this function returns True for merfolk always,
+//as I think it was supposed to. This could cause problems, which is why I'm leaving
+//a comment. Change made in April 2019. -- petercordia
 bool player_likes_water(bool permanently)
 {
-    return !permanently && you.can_water_walk()
-           || (species_likes_water(you.species) || !permanently)
-               && form_likes_water();
+    return species_likes_water(you.species)
+           || !permanently && you.can_water_walk()
+           || !permanently && form_likes_water();
+}
+
+bool player_likes_lava(bool permanently)
+{
+    return !permanently && you.can_lava_walk();
 }
 
 /**
@@ -5371,6 +5382,12 @@ bool player::can_water_walk() const
 {
     return have_passive(passive_t::water_walk)
            || you.props.exists(TEMP_WATERWALK_KEY);
+}
+
+bool player::can_lava_walk() const
+{
+    return have_passive(passive_t::lava_walk)
+           || you.props.exists(TEMP_LAVAWALK_KEY);
 }
 
 int player::visible_igrd(const coord_def &where) const

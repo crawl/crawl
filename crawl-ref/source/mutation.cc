@@ -715,6 +715,14 @@ string describe_mutations(bool drop_title)
                   "</lightgreen>";
     }
 
+    if (have_passive(passive_t::lava_walk))
+        result += "<green>You can walk on water.</green>\n";
+    else if (you.can_lava_walk())
+    {
+        result += "<lightgreen>You can walk on water until reaching land."
+                  "</lightgreen>";
+    }
+
     if (have_passive(passive_t::frail)
         || player_under_penance(GOD_HEPLIAKLQANA))
     {

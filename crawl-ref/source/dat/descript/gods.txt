@@ -375,8 +375,8 @@ blocks attacks, and (for the particularly devout) deflects incoming
 projectiles. Qazlal allows followers to incite nature against their foes,
 causing a localised natural disturbance or, for particularly devout followers,
 a more widespread disaster. Followers of Qazlal eventually gain temporary
-resistances after taking damage, and can give life to clouds, turning them into
-allied elementals.
+resistances after taking damage, learn to walk on lava, and can give life to
+clouds, turning them into allied elementals.
 %%%%
 Ru powers
 

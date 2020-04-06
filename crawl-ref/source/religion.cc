@@ -321,6 +321,7 @@ const vector<god_power> god_powers[NUM_GODS] =
            "You are surrounded by a storm." },
       { 2, ABIL_QAZLAL_UPHEAVAL, "call upon nature to destroy your foes" },
       { 3, ABIL_QAZLAL_ELEMENTAL_FORCE, "give life to nearby clouds" },
+      { 3, "walk on lava" },
       { 4, "The storm surrounding you is now powerful enough to repel missiles.",
            "The storm surrounding you is now too weak to repel missiles.",
            "The storm surrounding you is powerful enough to repel missiles." },
@@ -709,6 +710,19 @@ static void _grant_temporary_waterwalk()
     you.props[TEMP_WATERWALK_KEY] = true;
 }
 
+// TODO: I copied this from _need_water_walking, and that one also has a TODO
+static bool _need_lava_walking()
+{
+    return you.ground_level()
+           && grd(you.pos()) == DNGN_LAVA;
+}
+
+static void _grant_temporary_lavawalk()
+{
+    mprf("Your lava-walking will last only until you reach solid ground.");
+    you.props[TEMP_LAVAWALK_KEY] = true;
+}
+
 bool jiyva_is_dead()
 {
     return you.royal_jelly_dead
@@ -760,6 +774,12 @@ static void _inc_penance(god_type god, int val)
             && _need_water_walking() && !have_passive(passive_t::water_walk))
         {
             _grant_temporary_waterwalk();
+        }
+
+        if (will_have_passive(passive_t::lava_walk)
+            && _need_lava_walking() && !have_passive(passive_t::lava_walk))
+        {
+            _grant_temporary_lavawalk();
         }
 
         if (will_have_passive(passive_t::stat_boost))
@@ -2581,6 +2601,11 @@ void lose_piety(int pgn)
     {
         _grant_temporary_waterwalk();
     }
+    if (will_have_passive(passive_t::lava_walk) && _need_lava_walking()
+        && !have_passive(passive_t::lava_walk))
+    {
+        _grant_temporary_lavawalk();
+    }
     if (will_have_passive(passive_t::stat_boost)
         && chei_stat_boost(old_piety) > chei_stat_boost())
     {
@@ -2704,6 +2729,7 @@ void excommunication(bool voluntary, god_type new_god)
     const bool had_halo       = have_passive(passive_t::halo);
     const bool had_umbra      = have_passive(passive_t::umbra);
     const bool had_water_walk = have_passive(passive_t::water_walk);
+    const bool had_lava_walk  = have_passive(passive_t::lava_walk);
     const bool had_stat_boost = have_passive(passive_t::stat_boost);
     const int  old_piety      = you.piety;
 
@@ -2777,6 +2803,8 @@ void excommunication(bool voluntary, god_type new_god)
     // You might have lost water walking at a bad time...
     if (had_water_walk && _need_water_walking())
         _grant_temporary_waterwalk();
+    if (had_lava_walk && _need_lava_walking())
+        _grant_temporary_lavawalk();
     if (had_stat_boost)
     {
         redraw_screen();

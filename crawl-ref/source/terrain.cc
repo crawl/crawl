@@ -1639,6 +1639,9 @@ void fall_into_a_pool(dungeon_feature_type terrain)
         }
     }
 
+    if (terrain == DNGN_LAVA && you.can_lava_walk())
+        return;
+
     mprf("You fall into the %s!",
          (terrain == DNGN_LAVA)       ? "lava" :
          (terrain == DNGN_DEEP_WATER) ? "water"

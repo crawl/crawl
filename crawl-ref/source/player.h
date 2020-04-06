@@ -49,6 +49,7 @@
 #define ACROBAT_AMULET_ACTIVE "acrobat_amulet_active"
 #define SAP_MAGIC_KEY "sap_magic_amount"
 #define TEMP_WATERWALK_KEY "temp_waterwalk"
+#define TEMP_LAVAWALK_KEY "temp_lavawalk"
 #define EMERGENCY_FLIGHT_KEY "emergency_flight"
 #define PARALYSED_BY_KEY "paralysed_by"
 #define PETRIFIED_BY_KEY "petrified_by"
@@ -504,6 +505,7 @@ public:
     bool in_liquid() const;
     bool can_swim(bool permanently = false) const;
     bool can_water_walk() const;
+    bool can_lava_walk() const;
     int visible_igrd(const coord_def&) const;
     bool is_banished() const override;
     bool is_sufficiently_rested() const; // Up to rest_wait_percent HP and MP.
@@ -1009,6 +1011,7 @@ bool player_kiku_res_torment();
 
 bool player_likes_chunks(bool permanently = false);
 bool player_likes_water(bool permanently = false);
+bool player_likes_lava(bool permanently = false);
 
 int player_res_electricity(bool calc_unid = true, bool temp = true,
                            bool items = true);

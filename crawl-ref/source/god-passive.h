@@ -219,6 +219,9 @@ enum class passive_t
     /// You generate elemental clouds to protect you
     storm_shield,
 
+    /// You can walk on lava.
+    lava_walk,
+
     /// Chances to be struck by projectiles are reduced
     upgraded_storm_shield,
 
