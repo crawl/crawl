@@ -151,7 +151,7 @@ def humanise_bytes(num):  # type: (int) -> str
     units = ["kilobytes", "megabytes", "gigabytes"]
     for index, unit in reversed(list(enumerate(units))):
         index += 1
-        n = float(num) / 1024**index
+        n = float(num) / 1000**index
         if n > 1:
             return "{} {}".format(round(n, 1), unit)
     return "{} bytes".format(num)

@@ -25,9 +25,9 @@ class Test_humanise_bytes:
     @pytest.mark.parametrize("num, expected", [
         (1, "1 bytes"),
         (1000, "1000 bytes"),
-        (1000000, "976.6 kilobytes"),
-        (1000000000, "953.7 megabytes"),
-        (1000000000000, "931.3 gigabytes"),
+        (1000000, "1000.0 kilobytes"),
+        (1000000000, "1000.0 megabytes"),
+        (1000000000000, "1000.0 gigabytes"),
     ])
     def test_humanise_bytes(self, num, expected):
         assert util.humanise_bytes(num) == expected
