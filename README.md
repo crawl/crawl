@@ -1,4 +1,4 @@
-# 다운로드
+# Dungeon Crawl Stone Soup Korea Fork
 
 [Dungeon Crawl Stone Soup](https://github.com/crawl/crawl/)의 포크
 
@@ -24,6 +24,12 @@
 * 빌드 방법
   * 다음 [링크](https://github.com/kimjoy2002/crawl/blob/master/crawl-ref/INSTALL.txt)를 참조 
   * 시간되면 해석할 예정...
+  
+# ChangeLog
+  
+  [Link](https://github.com/kimjoy2002/crawl/blob/master/CHANGELOG.md)
+  
+# 다운로드
 
 * 웹타일주소
   *  http://joy1999.codns.com:8081/
