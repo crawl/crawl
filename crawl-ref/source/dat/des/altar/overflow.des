@@ -109,61 +109,70 @@ end
 
 function species_mock(e)
   if you.race() == "Barachi" then
-    e.kmons("1 = bullfrog")
+    return "bullfrog"
   elseif you.race() == "Gnoll" then
-    e.kmons("1 = jackal")
+    return "jackal"
   elseif you.race() == "Centaur" then
-    e.kmons("1 = dart slug")
+    return "dart slug"
   elseif you.race() == "Demigod" then
-    e.kmons("1 = titan simulacrum")
+    return "titan simulacrum"
   elseif you.race() == "Demonspawn" then
-    e.kmons("1 = hell beast")
+    return "hell beast"
   elseif you.race():find("Draconian") then
-    e.kmons("1 = wyvern")
+    return "wyvern"
   elseif you.race() == "Deep Dwarf" then
-    e.kmons("1 = deep dwarf zombie")
+    return "deep dwarf zombie"
   elseif you.race() == "Deep Elf" then
-    e.kmons("1 = insubstantial wisp")
+    return "insubstantial wisp"
   elseif you.race() == "Halfling" then
-    e.kmons("1 = hobgoblin ; mundane hunting sling")
+    return "hobgoblin ; mundane hunting sling"
   elseif you.race() == "Hill Orc" then
-    e.kmons("1 = goblin ; mundane hand axe . mundane ring mail")
+    return "goblin ; mundane hand axe . mundane ring mail"
   elseif you.race() == "Human" then
-    e.kmons("1 = killer klown")
+    return "killer klown"
   elseif you.race() == "Felid" then
-    e.kmons("1 = sphinx zombie")
+    return "sphinx zombie"
   elseif you.race() == "Formicid" then
-    e.kmons("1 = soldier ant")
+    return "soldier ant"
   elseif you.race() == "Gargoyle" then
-    e.kmons("1 = earth elemental")
+    return "earth elemental"
   elseif you.race() == "Ghoul" then
-    e.kmons("1 = death ooze")
+    return "death ooze"
   elseif you.race() == "Kobold" then
-    e.kmons("1 = boggart")
+    return "boggart"
   elseif you.race() == "Merfolk" then
-    e.kmons("1 = bullfrog")
+    return "bullfrog"
   elseif you.race() == "Minotaur" then
-    e.kmons("1 = yak")
+    return "yak"
   elseif you.race() == "Mummy" then
-    e.kmons("1 = human zombie")
+    return "human zombie"
   elseif you.race() == "Naga" then
-    e.kmons("1 = torpor snail")
+    return "torpor snail"
   elseif you.race() == "Octopode" then
-    e.kmons("1 = tentacled monstrosity")
+    return "tentacled monstrosity"
   elseif you.race() == "Ogre" then
-    e.kmons("1 = ettin skeleton")
+    return "ettin skeleton"
   elseif you.race() == "Spriggan" then
-    e.kmons("1 = unseen horror")
+    return "unseen horror"
   elseif you.race() == "Tengu" then
-    e.kmons("1 = caustic shrike")
+    return "caustic shrike"
   elseif you.race() == "Troll" then
-    e.kmons("1 = hungry ghost")
+    return "hungry ghost"
   elseif you.race() == "Vampire" then
-    e.kmons("1 = tyrant leech")
+    return "tyrant leech"
   elseif you.race() == "Vine Stalker" then
-    e.kmons("1 = thorn hunter")
+    return "thorn hunter"
   else
-    e.kmons("1 = spectral ugly thing")
+    return "spectral ugly thing"
+  end
+end
+
+function callback.do_species_mock(data, triggerable, triggerer, marker, ev)
+  if data.seen then return else data.seen = true end
+  local positions = dgn.find_marker_positions_by_prop("mock_location", 1)
+  for i, pos in ipairs(positions) do
+    local x, y = pos:xy()
+    dgn.create_monster(x, y, "generate_awake " .. species_mock())
   end
 end
 }}
@@ -3333,7 +3342,19 @@ ENDMAP
 NAME:    regret_index_temple_of_mockery
 TAGS:    temple_overflow_2 temple_overflow_xom temple_overflow_hepliaklqana
 DEPTH:   D:2-9
-: species_mock(_G)
+# we place the monster on demand via a marker rather than in the builder because
+# the dependency on the player species otherwise can affect seed stability
+{{
+    local los_marker = TriggerableFunction:new {
+      func="callback.do_species_mock",
+      repeated=true,
+      props = {mock_location=1}
+    }
+    los_marker:add_triggerer(DgnTriggerer:new {
+      type="player_los"})
+
+    lua_marker('1', los_marker)
+}}
 KMONS:   2 = spectral ugly thing
 KFEAT:   A = altar_xom
 KFEAT:   B = altar_hepliaklqana
@@ -3343,6 +3364,7 @@ KPROP:   12' = no_tele_into
 KMASK:   12' = no_item_gen
 KMASK:   12' = no_trap_gen
 KMASK:   ' = no_monster_gen
+# TODO: this fog machine doesn't do much, is it supposed to spread?
 MARKER:  2 = lua:fog_machine { cloud_type = "thin mist", \
              pow_min = 100, pow_max = 100, delay = 1, \
              size = 1, walk_dist = 0, start_clouds = 1 }
