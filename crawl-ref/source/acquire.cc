@@ -691,6 +691,8 @@ static int _acquirement_wand_subtype(bool /*divine*/, int & /*quantity*/)
     vector<pair<wand_type, int>> weights = {
         { WAND_SCATTERSHOT,     25 },
         { WAND_CLOUDS,          25 },
+		// normally 20
+        { WAND_TELEPORTATION,   _tele_wand_weight() },
         { WAND_ACID,            18 },
         { WAND_ICEBLAST,        18 },
         { WAND_ENSLAVEMENT,     you.get_mutation_level(MUT_NO_LOVE) ? 0 : 8 },
@@ -710,6 +712,13 @@ static int _acquirement_wand_subtype(bool /*divine*/, int & /*quantity*/)
     const wand_type* wand = random_choose_weighted(weights);
     ASSERT(wand);
     return *wand;
+}
+
+static int _tele_wand_weight()
+{
+    if ( you.species == SP_FORMICID || crawl_state.game_is_sprint() )
+        return 1; // do not need wand of teleportation
+    return 20; // previous 15. 
 }
 
 static int _acquirement_book_subtype(bool /*divine*/, int & /*quantity*/)
