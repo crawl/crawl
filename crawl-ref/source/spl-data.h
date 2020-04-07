@@ -828,7 +828,6 @@ static const struct spell_desc spelldata[] =
     TILEG_DISPEL_UNDEAD,
 },
 
-#if TAG_MAJOR_VERSION == 34
 {
     SPELL_FULSOME_DISTILLATION, "Fulsome Distillation",
     spschool::transmutation | spschool::necromancy,
@@ -837,9 +836,8 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     1, 0,
-    TILEG_ERROR,
+    TILEG_FULSOME_DISTILLATION,
 },
-#endif
 
 {
     SPELL_POISON_ARROW, "Poison Arrow",
@@ -1544,23 +1542,10 @@ static const struct spell_desc spelldata[] =
         | spflag::needs_tracer | spflag::cloud,
      2,   // XXX: level 2 or 3, what should it be now? -- bwr
      50,
-     6, 6,
+     5, 5,
      0, 0,
-     TILEG_ALISTAIRS_INTOXICATION
+     TILEG_EVAPORATE
 },
-
-#if TAG_MAJOR_VERSION == 34
-{
-    SPELL_EVAPORATE, "Evaporate",
-    spschool::fire | spschool::transmutation,
-    spflag::dir_or_target | spflag::area,
-    2,
-    50,
-    5, 5,
-    2, 0,
-    TILEG_ERROR,
-},
-#endif
 
 {
     SPELL_LRD, "Lee's Rapid Deconstruction",
