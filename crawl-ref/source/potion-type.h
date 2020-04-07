@@ -14,8 +14,8 @@ enum potion_type
     POT_GAIN_INTELLIGENCE,
 #endif
     POT_FLIGHT,
-#if TAG_MAJOR_VERSION == 34
     POT_POISON,
+#if TAG_MAJOR_VERSION == 34
     POT_SLOWING,
 #endif
     POT_CANCELLATION,
@@ -27,8 +27,8 @@ enum potion_type
     POT_DEGENERATION,
 #if TAG_MAJOR_VERSION == 34
     POT_DECAY,
-    POT_WATER,
 #endif
+    POT_WATER,
     POT_EXPERIENCE,
     POT_MAGIC,
 #if TAG_MAJOR_VERSION == 34

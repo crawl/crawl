@@ -25,9 +25,6 @@ str: 10
 int: 8
 dex: 6
 levelup_stat_frequency: 4
-mutations:
-  1:
-    MUT_COLD_BLOODED: 1
 recommended_jobs:
   - JOB_BERSERKER
   - JOB_TRANSMUTER

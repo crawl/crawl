@@ -1297,8 +1297,8 @@ static const PotionEffect* potion_effects[] =
     &PotionGainIntelligence::instance(),
 #endif
     &PotionFlight::instance(),
-#if TAG_MAJOR_VERSION == 34
     &PotionPoison::instance(),
+#if TAG_MAJOR_VERSION == 34
     &PotionSlowing::instance(),
 #endif
     &PotionCancellation::instance(),
@@ -1310,8 +1310,8 @@ static const PotionEffect* potion_effects[] =
     &PotionDegeneration::instance(),
 #if TAG_MAJOR_VERSION == 34
     &PotionDecay::instance(),
-    &PotionWater::instance(),
 #endif
+    &PotionWater::instance(),
     &PotionExperience::instance(),
     &PotionMagic::instance(),
 #if TAG_MAJOR_VERSION == 34

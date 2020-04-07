@@ -507,8 +507,8 @@ unsigned int item_value(item_def item, bool ident)
                 valued += 30;
                 break;
 
-#if TAG_MAJOR_VERSION == 34
             case POT_POISON:
+#if TAG_MAJOR_VERSION == 34
             case POT_STRONG_POISON:
             case POT_PORRIDGE:
             case POT_SLOWING:
@@ -524,6 +524,9 @@ unsigned int item_value(item_def item, bool ident)
                 valued += 5;
                 break;
 #endif
+            case POT_WATER:
+                valued++;
+                break;
             }
         }
         break;
@@ -828,9 +831,10 @@ bool is_worthless_consumable(const item_def &item)
         case POT_BLOOD_COAGULATED:
         case POT_SLOWING:
         case POT_DECAY:
-        case POT_POISON:
 #endif
+        case POT_POISON:
         case POT_DEGENERATION:
+        case POT_WATER:
             return true;
         default:
             return false;
