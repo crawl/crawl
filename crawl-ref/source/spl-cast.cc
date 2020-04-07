@@ -1431,8 +1431,8 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
         }
 
         if (spd.isMe() 
-				&& ( spell == SPELL_INVISIBILITY && !invis_allowed() ) 
-					|| spell == SPELL_HASTE && !you.stasis() )
+                && ( spell == SPELL_INVISIBILITY && !invis_allowed() ) 
+                    || spell == SPELL_HASTE && !you.stasis() )
             return spret::abort;
     }
 
