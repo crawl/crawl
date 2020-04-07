@@ -3332,6 +3332,7 @@ void bolt::affect_player_enchantment(bool resistible)
     case BEAM_HASTE:
         haste_player(40 + random2(ench_power));
         did_god_conduct(DID_HASTY, 10, blame_player);
+        contaminate_player(1000, blame_player);
         obvious_effect = true;
         nasty = false;
         nice  = true;
