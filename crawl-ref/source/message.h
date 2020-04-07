@@ -118,9 +118,12 @@ class no_messages
 public:
     no_messages();
     no_messages(bool really_suppress);
+    no_messages(msg_channel_type _channel);
     ~no_messages();
 private:
     bool msuppressed;
+    msg_channel_type channel;
+    msg_colour_type prev_colour;
 };
 
 void webtiles_send_messages(); // does nothing unless USE_TILE_WEB is defined

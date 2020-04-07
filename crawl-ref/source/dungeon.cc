@@ -247,6 +247,12 @@ set<string> &get_uniq_map_names()
  *********************************************************************/
 bool builder(bool enable_random_maps)
 {
+#ifndef DEBUG_FULL_DUNGEON_SPAM
+    // hide builder debug spam by default -- this is still collected by a tee
+    // and accessible via &ctrl-l without this #define.
+    no_messages quiet(MSGCH_DIAGNOSTICS);
+#endif
+
     // Re-check whether we're in a valid place, it leads to obscure errors
     // otherwise.
     ASSERT_RANGE(you.where_are_you, 0, NUM_BRANCHES);

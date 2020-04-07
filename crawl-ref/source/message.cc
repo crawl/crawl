@@ -951,7 +951,8 @@ static FILE* _msg_dump_file = nullptr;
 static bool suppress_messages = false;
 static msg_colour_type prepare_message(const string& imsg,
                                        msg_channel_type channel,
-                                       int param);
+                                       int param,
+                                       bool allow_suppress=true);
 
 static unordered_set<message_tee *> current_message_tees;
 
@@ -996,21 +997,41 @@ static void _append_to_tees(const string &s, msg_channel_type ch)
         tee->append(s, ch);
 }
 
-no_messages::no_messages() : msuppressed(suppress_messages)
+no_messages::no_messages()
+    : msuppressed(suppress_messages),
+      channel(NUM_MESSAGE_CHANNELS),
+      prev_colour(MSGCOL_NONE)
 {
     suppress_messages = true;
 }
 
 // Push useful RAII conditional logic into a constructor
 // Won't override an outer suppressing no_messages
-no_messages::no_messages(bool really_suppress) : msuppressed(suppress_messages)
+no_messages::no_messages(bool really_suppress)
+    : msuppressed(suppress_messages),
+      channel(NUM_MESSAGE_CHANNELS),
+      prev_colour(MSGCOL_NONE)
 {
     suppress_messages = suppress_messages || really_suppress;
+}
+
+// Mute just one channel. Mainly useful for hiding debug spam in various
+// circumstances.
+no_messages::no_messages(msg_channel_type _channel)
+    : msuppressed(suppress_messages),
+      channel(_channel),
+      prev_colour(Options.channels[channel])
+{
+    // don't change global suppress_messages for this case
+    ASSERT(channel < NUM_MESSAGE_CHANNELS);
+    Options.channels[channel] = MSGCOL_MUTED;
 }
 
 no_messages::~no_messages()
 {
     suppress_messages = msuppressed;
+    if (channel < NUM_MESSAGE_CHANNELS)
+        Options.channels[channel] = prev_colour;
 }
 
 msg_colour_type msg_colour(int col)
@@ -1449,7 +1470,15 @@ static void _mpr(string text, msg_channel_type channel, int param, bool nojoin,
     if (channel == MSGCH_DIAGNOSTICS || channel == MSGCH_ERROR)
         cap = false;
 
+    // if the message would be muted, handle any tees before bailing. The
+    // actual color for MSGCOL_MUTED ends up as darkgrey in any tees.
     msg_colour_type colour = prepare_message(text, channel, param);
+
+    string col = colour_to_str(colour_msg(colour));
+    text = "<" + col + ">" + text + "</" + col + ">"; // XXX
+
+    if (current_message_tees.size())
+        _append_to_tees(text + "\n", channel);
 
     if (colour == MSGCOL_MUTED && crawl_state.io_inited)
     {
@@ -1464,11 +1493,6 @@ static void _mpr(string text, msg_channel_type channel, int param, bool nojoin,
 
     // Must do this before converting to formatted string and back;
     // that doesn't preserve close tags!
-    string col = colour_to_str(colour_msg(colour));
-    text = "<" + col + ">" + text + "</" + col + ">"; // XXX
-
-    if (current_message_tees.size())
-        _append_to_tees(text + "\n", channel);
 
     formatted_string fs = formatted_string::parse_string(text);
 
@@ -1698,9 +1722,10 @@ static bool channel_message_history(msg_channel_type channel)
 // the message should be suppressed.
 static msg_colour_type prepare_message(const string& imsg,
                                        msg_channel_type channel,
-                                       int param)
+                                       int param,
+                                       bool allow_suppress)
 {
-    if (suppress_messages)
+    if (allow_suppress && suppress_messages)
         return MSGCOL_MUTED;
 
     if (you.num_turns > 0 && silenced(you.pos())
