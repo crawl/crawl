@@ -3098,8 +3098,8 @@ bool is_emergency_item(const item_def &item)
 
     switch (item.base_type)
     {
-    case BOJ_WANDS:
-        switch (item.sum_type)
+    case OBJ_WANDS:
+        switch (item.sub_type)
         {
         case WAND_TELEPORTATION:
             return you.species != SP_FORMICID;
