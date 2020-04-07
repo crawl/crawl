@@ -1,3 +1,8 @@
+# Survey
+
+* 각종 결정 사항들 투표 함 (일주일 정도 투표하고 결정함)
+  1. 추출,증산 아이콘 결정하기(4.7) - https://forms.gle/E2sbCbVBws3crrqeA
+
 # Dungeon Crawl Stone Soup Korea Fork
 
 [Dungeon Crawl Stone Soup](https://github.com/crawl/crawl/)의 포크
