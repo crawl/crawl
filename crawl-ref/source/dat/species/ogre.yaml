@@ -12,7 +12,7 @@ aptitudes:
   fighting: 3
   short_blades: -1
   long_blades: -1
-  maces_and_flails: -1
+  maces_and_flails: 3
   slings: -3
   bows: -3
   crossbows: -3

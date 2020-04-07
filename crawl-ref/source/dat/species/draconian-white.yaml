@@ -31,10 +31,10 @@ int: 8
 dex: 6
 levelup_stat_frequency: 4
 mutations:
-  1:
-    MUT_COLD_BLOODED: 1
   7:
     MUT_COLD_RESISTANCE: 1
+  14:
+    MUT_BIG_WINGS: 1
 fake_mutations:
   - long: You can breathe waves of freezing cold.
     short: breathe frost
