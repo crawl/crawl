@@ -803,7 +803,7 @@ i-regeneration AMU_REGENERATION AMU_ID_LAST
 
 ####################OBJ_POTIONS
 %sdir item/potion
-unknown POTION_OFFSET UNSEEN_POTION
+clear POTION_OFFSET UNSEEN_POTION
 brilliant_blue
 black
 silver
@@ -852,7 +852,7 @@ i-porridge POT_PORRIDGE
 i-degeneration POT_DEGENERATION
 # please remove these 2 when TAG_MAJOR_VERSION is bumped
 i-decay POT_REMOVEME5
-i-confusion POT_REMOVE_ME
+i-water POT_WATER
 i-experience POT_EXPERIENCE
 i-magic POT_MAGIC
 # remove these 2 when TAG_MAJOR_VERSION is bumped

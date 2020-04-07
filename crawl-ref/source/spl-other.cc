@@ -473,7 +473,7 @@ spret cast_intoxicate(int pow, bool fail)
 // Producing helpful potions would break game balance here...
 // and producing more than one potion from a corpse, or not
 // using up the corpse might also lead to game balance problems. - bwr
-spret cast_fulsome_distillation(int pow, bool check_range, bool fail)
+spret cast_fulsome_distillation(bool fail)
 {
     //int num_corpses = 0;
     //item_def* corpse = corpse_at(you.pos(), &num_corpses);
@@ -549,8 +549,7 @@ spret cast_fulsome_distillation(int pow, bool check_range, bool fail)
     switch (mons_corpse_effect(corpse.mon_type))
     {
     case CE_CLEAN:
-        mpr("Cannot draw potions from this Corpse.");
-        return spret::abort;
+        pot_type = POT_WATER;
         break;
     case CE_NOXIOUS:
         pot_type = random2(4) < 3 ? POT_DEGENERATION : POT_POISON;

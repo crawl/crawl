@@ -736,6 +736,18 @@ potion of haste
 
 An enchanted beverage which speeds the actions of anyone who drinks it.
 %%%%
+potion of poison
+
+A nasty poisonous liquid.
+%%%%
+potion of strong poison
+
+A terribly venomous potion.
+%%%%
+potion of water
+
+A unique substance, vital for the existence of most life.
+%%%%
 quad damage
 
 A mysterious item resembling a rune of some kind. Once evoked, it will make the

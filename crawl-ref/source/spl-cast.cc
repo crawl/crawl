@@ -841,7 +841,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
     dec_mp(cost, true);
 
     const spret cast_result = your_spells(spell, 0, !you.divine_exegesis,
-                                          nullptr, check_range);
+                                          nullptr);
     if (cast_result == spret::abort)
     {
         crawl_state.zero_turns_taken();
@@ -1052,7 +1052,7 @@ static int _setup_evaporate_cast()
 
 
 static spret _do_cast(spell_type spell, int powc, const dist& spd,
-                           bolt& beam, god_type god, int potion, bool check_range, bool fail);
+                           bolt& beam, god_type god, int potion, bool fail);
 
 /**
  * Should this spell be aborted before casting properly starts, either because
@@ -1064,7 +1064,7 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
  *                      false if it is a spell being cast normally.
  * @return              Whether the spellcasting should be aborted.
  */
-static bool _spellcasting_aborted(spell_type spell, bool check_range, bool fake_spell)
+static bool _spellcasting_aborted(spell_type spell, bool fake_spell)
 {
     string msg;
 
@@ -1313,7 +1313,7 @@ vector<string> desc_success_chance(const monster_info& mi, int pow, bool evoked,
  * the casting.
  **/
 spret your_spells(spell_type spell, int powc, bool allow_fail,
-                       const item_def* const evoked_item, bool check_range)
+                       const item_def* const evoked_item)
 {
     ASSERT(!crawl_state.game_is_arena());
     ASSERT(!evoked_item || evoked_item->base_type == OBJ_WANDS);
@@ -1326,7 +1326,7 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
 
     // [dshaligram] Any action that depends on the spellcasting attempt to have
     // succeeded must be performed after the switch.
-    if (!wiz_cast && _spellcasting_aborted(spell, check_range, !allow_fail))
+    if (!wiz_cast && _spellcasting_aborted(spell, !allow_fail))
         return spret::abort;
 
     const spell_flags flags = get_spell_flags(spell);
@@ -1531,7 +1531,7 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
 
     const bool old_target = actor_at(beam.target);
 
-    spret cast_result = _do_cast(spell, powc, spd, beam, god, potion, check_range, fail);
+    spret cast_result = _do_cast(spell, powc, spd, beam, god, potion, fail);
 
     switch (cast_result)
     {
@@ -1614,7 +1614,7 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
 // Returns spret::success, spret::abort, spret::fail
 // or spret::none (not a player spell).
 static spret _do_cast(spell_type spell, int powc, const dist& spd,
-                           bolt& beam, god_type god, int potion ,bool check_range , bool fail)
+                           bolt& beam, god_type god, int potion, bool fail)
 {
     const coord_def target = spd.isTarget ? beam.target : you.pos() + spd.delta;
     if (spell == SPELL_FREEZE || spell == SPELL_VAMPIRIC_DRAINING)
@@ -1919,7 +1919,7 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
         return cast_corpse_rot(fail);
 
     case SPELL_FULSOME_DISTILLATION:
-        return cast_fulsome_distillation(powc, check_range, fail);
+        return cast_fulsome_distillation(fail);
 
     case SPELL_GOLUBRIAS_PASSAGE:
         return cast_golubrias_passage(beam.target, fail);
