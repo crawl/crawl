@@ -3837,6 +3837,10 @@ string item_prefix(const item_def &item, bool temp)
 
     case OBJ_ARMOUR:
     case OBJ_JEWELLERY:
+        if (is_unrandom_artefact(item))
+            prefixes.push_back("fixed_artefact");
+        if (is_random_artefact(item))
+            prefixes.push_back("random_artefact");
         if (is_artefact(item))
             prefixes.push_back("artefact");
         // fall through
