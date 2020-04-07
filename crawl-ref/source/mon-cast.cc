@@ -1267,6 +1267,28 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
         // ones with ranges too small are fixed in setup_mons_cast
         real_spell = _legendary_destruction_spell();
     }
+    else if (spell_cast == SPELL_EVAPORATE)
+    {
+        int cloud = random2(5);
+        switch (cloud)
+        {
+        case 0:
+            real_spell = SPELL_MEPHITIC_CLOUD;
+            break;
+        case 1:
+            real_spell = SPELL_MIASMA_CLOUD;
+            break;
+        case 2:
+            real_spell = SPELL_POISON_CLOUD;
+            break;
+        case 3:
+            real_spell = SPELL_FIRE_CLOUD;
+            break;
+        default:
+            real_spell = SPELL_STEAM_CLOUD;
+            break;
+        }
+    }
     else if (spell_is_soh_breath(spell_cast))
     {
         // this will be fixed up later in mons_cast
@@ -1420,14 +1442,53 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
         break;
 
     case SPELL_MEPHITIC_CLOUD:
-        beam.name     = "stinking cloud";
+        if (spell_cast == SPELL_EVAPORATE)
+            beam.name = "potion";
+        else
+            beam.name = "stinking cloud";
         beam.damage   = dice_def(1, 0);
         beam.colour   = GREEN;
         beam.flavour  = BEAM_MEPHITIC;
         beam.hit      = 14 + power / 30;
         beam.is_explosion = true;
         break;
-
+    case SPELL_STEAM_CLOUD:
+        if (spell_cast == SPELL_EVAPORATE)
+            beam.name = "potion";
+        else
+            beam.name = "cloud of steam";
+        beam.name = "cloud of steam";
+        beam.damage = dice_def(1, 0);
+        beam.colour = LIGHTGREY;
+        beam.flavour = BEAM_POTION_STEAM;
+        beam.hit = 14 + power / 30;
+        beam.ench_power = power;
+        beam.is_explosion = true;
+        break;
+    case SPELL_FIRE_CLOUD:
+        if (spell_cast == SPELL_EVAPORATE)
+            beam.name = "potion";
+        else
+            beam.name = "cloud of fire";
+        beam.damage = dice_def(1, 0);
+        beam.colour = RED;
+        beam.flavour = BEAM_POTION_FIRE;
+        beam.hit = 14 + power / 30;
+        beam.ench_power = power;
+        beam.is_explosion = true;
+        break;
+    case SPELL_MIASMA_CLOUD:
+        if (spell_cast == SPELL_EVAPORATE)
+            beam.name = "potion";
+        else
+            beam.name = "foul vapour";
+        beam.damage = dice_def(1, 0);
+        beam.colour = DARKGREY;
+        beam.flavour = BEAM_POTION_MIASMA;
+        beam.hit = 14 + power / 30;
+        beam.ench_power = power;
+        beam.is_explosion = true;
+        break;
     case SPELL_MIASMA_BREATH:      // death drake
         beam.name     = "foul vapour";
         beam.damage   = dice_def(3, 5 + power / 24);
@@ -1654,7 +1715,10 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
         break;
 
     case SPELL_FLAMING_CLOUD:
-        beam.name         = "blast of flame";
+        if (spell_cast == SPELL_EVAPORATE)
+            beam.name = "potion";
+        else
+            beam.name         = "blast of flame";
         beam.aux_source   = "blast of fiery breath";
         beam.short_name   = "flames";
         beam.damage       = dice_def(1, 3 * mons->get_hit_dice() / 2);

@@ -1537,6 +1537,18 @@ static const struct spell_desc spelldata[] =
     TILEG_ALISTAIRS_INTOXICATION,
 },
 
+{
+    SPELL_EVAPORATE, "Evaporate",
+     spschool::fire | spschool::transmutation,
+    spflag::dir_or_target | spflag::area
+        | spflag::needs_tracer | spflag::cloud,
+     2,   // XXX: level 2 or 3, what should it be now? -- bwr
+     50,
+     6, 6,
+     0, 0,
+     TILEG_ALISTAIRS_INTOXICATION
+},
+
 #if TAG_MAJOR_VERSION == 34
 {
     SPELL_EVAPORATE, "Evaporate",

@@ -66,6 +66,7 @@ sticky_flame STICKY_FLAME
 throw_flame THROW_FLAME
 inner_flame INNER_FLAME
 ignition IGNITION
+evaporate EVAPORATE
 
 %sdir gui/spells/ice
 bolt_of_cold BOLT_OF_COLD
@@ -101,6 +102,7 @@ symbol_of_torment SYMBOL_OF_TORMENT
 vampiric_draining VAMPIRIC_DRAINING
 infestation INFESTATION
 borgnjors_vile_clutch BORGNJORS_VILE_CLUTCH
+fulsome_distillation FULSOME_DISTILLATION
 
 %sdir gui/spells/poison
 alistairs_intoxication ALISTAIRS_INTOXICATION

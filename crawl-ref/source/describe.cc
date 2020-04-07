@@ -63,6 +63,7 @@
 #include "skills.h"
 #include "species.h"
 #include "spl-book.h"
+#include "spl-clouds.h"
 #include "spl-summoning.h"
 #include "spl-util.h"
 #include "spl-wpnench.h"
@@ -2080,7 +2081,13 @@ string get_item_description(const item_def &item, bool verbose,
             }
         }
 #endif
-
+        if (item_type_known(item) && you.has_spell(SPELL_EVAPORATE))
+        {
+            description << "\nEvaporating this potion will create clouds of "
+                << get_evaporate_result_list(item.sub_type)
+                << ".";
+        }
+        break;
     case OBJ_SCROLLS:
     case OBJ_ORBS:
     case OBJ_GOLD:

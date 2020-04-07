@@ -97,6 +97,7 @@ static spell_type search_order_misc[] =
     SPELL_POLYMORPH,
     SPELL_FORCE_LANCE,
     SPELL_SLOW,
+    SPELL_EVAPORATE, // replaced with Mephitic Cloud, though at lower priority
 };
 
 ghost_demon::ghost_demon()
@@ -655,6 +656,8 @@ spell_type ghost_demon::translate_spell(spell_type spell) const
         return SPELL_SUMMON_DRAGON;
     case SPELL_SWIFTNESS:
         return SPELL_SPRINT;
+    case SPELL_EVAPORATE:
+        return SPELL_MEPHITIC_CLOUD;
     default:
         break;
     }

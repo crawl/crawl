@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include <beam-type.h>
+
 enum cloud_tile_variation
 {
     CTVARY_NONE,     ///< fixed tile (or special case)
@@ -53,6 +55,7 @@ coord_def get_cloud_originator(const coord_def& pos);
 bool is_damaging_cloud(cloud_type type, bool temp = false, bool yours = false);
 bool is_harmless_cloud(cloud_type type);
 bool is_opaque_cloud(cloud_type ctype);
+cloud_type beam2cloud(beam_type flavour);
 string cloud_type_name(cloud_type type, bool terse = true);
 cloud_type random_smoke_type();
 cloud_type cloud_name_to_type(const string &name);

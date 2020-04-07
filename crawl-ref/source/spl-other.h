@@ -41,4 +41,5 @@ void end_recall();
 
 spret cast_passwall(const coord_def& delta, int pow, bool fail);
 spret cast_intoxicate(int pow, bool fail);
+spret cast_fulsome_distillation(int pow, bool check_range, bool fail);
 spret cast_darkness(int pow, bool fail);
