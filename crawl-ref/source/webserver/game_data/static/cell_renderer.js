@@ -832,6 +832,17 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
                 this.draw_icon(icons.POISON, x, y, -status_shift, 0);
                 status_shift += 5;
             }
+            else if (fg.MORE_POISON)
+            {
+                this.draw_icon(icons.MORE_POISON, x, y, -status_shift, 0);
+                status_shift += 5;
+            }
+            else if (fg.MAX_POISON)
+            {
+                this.draw_icon(icons.MAX_POISON, x, y, -status_shift, 0);
+                status_shift += 5;
+            }
+
             if (fg.STICKY_FLAME)
             {
                 this.draw_icon(icons.STICKY_FLAME, x, y, -status_shift, 0);
