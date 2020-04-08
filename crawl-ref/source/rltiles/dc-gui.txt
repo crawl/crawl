@@ -320,6 +320,11 @@ base/octopode1 SP_RECOMMENDED_OCTOPODE
 %compose hair/short_black
 %finish SP_RECOMMENDED_OGRE
 %start
+%compose base/ogre_m
+%compose body/animal_skin
+%compose hair/short_black
+%finish SP_RECOMMENDED_TWO_HEADED_OGRE
+%start
 %compose base/orc_f
 %compose body/animal_skin
 %finish SP_RECOMMENDED_HILL_ORC
@@ -373,6 +378,7 @@ enum:SP_RECOMMENDED_MUMMY SP_MUMMY
 enum:SP_RECOMMENDED_NAGA SP_NAGA
 enum:SP_RECOMMENDED_OCTOPODE SP_OCTOPODE
 enum:SP_RECOMMENDED_OGRE SP_OGRE
+enum:SP_RECOMMENDED_TWO_HEADED_OGRE SP_TWO_HEADED_OGRE
 enum:SP_RECOMMENDED_HILL_ORC SP_HILL_ORC
 enum:SP_RECOMMENDED_SPRIGGAN SP_SPRIGGAN
 enum:SP_RECOMMENDED_TENGU SP_TENGU
