@@ -982,13 +982,10 @@ int mummy_curse_power(monster_type type)
     switch (type)
     {
         case MONS_GUARDIAN_MUMMY:
-            return 3;
         case MONS_MUMMY_PRIEST:
-            return 8;
         case MONS_GREATER_MUMMY:
-            return 11;
         case MONS_KHUFU:
-            return 15;
+            return mons_class_hit_dice(type);
         default:
             return 0;
     }
