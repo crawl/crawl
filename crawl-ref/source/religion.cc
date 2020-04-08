@@ -3521,6 +3521,15 @@ static void _join_hepliaklqana()
                                     mg.mname.c_str()).c_str());
 }
 
+/// Setup when joining the peaceful Elyvilon.
+static void _join_elyvilon()
+{
+    if (!perma_mutate(MUT_XP_ON_SIGHT, 1, "Ru sacrifice"))
+        //It's called a Ru sacrifice because it is formated the same way.
+        //Ru sacrifices could be renamed God sacrifices.
+        perma_mutate(MUT_XP_ON_SIGHT, 1, "Ru sacrifice");
+}
+
 /// Setup when joining the gelatinous groupies of Jiyva.
 static void _join_jiyva()
 {
@@ -3604,6 +3613,7 @@ static const map<god_type, function<void ()>> on_join = {
     { GOD_GOZAG, _join_gozag },
     { GOD_JIYVA, _join_jiyva },
     { GOD_HEPLIAKLQANA, _join_hepliaklqana },
+    { GOD_ELYVILON, _join_elyvilon },
     { GOD_LUGONU, []() {
         if (you.worshipped[GOD_LUGONU] == 0)
             gain_piety(20, 1, false);  // allow instant access to first power
@@ -3824,8 +3834,8 @@ bool god_likes_your_god(god_type god, god_type your_god)
 
 bool god_hates_your_god(god_type god, god_type your_god)
 {
-    // Ru doesn't care.
-    if (god == GOD_RU)
+    // Ru doesn't care. Ely has no wrath.
+    if (god == GOD_RU || god == GOD_ELYVILON)
         return false;
 
     // Gods do not hate themselves.

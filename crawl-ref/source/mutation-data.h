@@ -1903,6 +1903,14 @@ static const mutation_def mut_data[] =
     "Your ability to control magic is less disrupted."},
 },
 
+{ MUT_XP_ON_SIGHT, 0, 1, mutflag::bad, false,
+  "xp on sight",
+
+  {"You gain xp for seeing monsters, rather than killing them.", "", ""},
+  {"You can no longer gain xp from killing.", "", ""},
+  {"You can once more gain xp from killing.", "", ""},
+},
+
 { MUT_MP_WANDS, 7, 1, mutflag::good, false,
   "MP-powered wands",
 

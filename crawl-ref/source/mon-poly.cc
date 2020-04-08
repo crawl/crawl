@@ -742,6 +742,12 @@ void seen_monster(monster* mons)
     // First time we've seen this particular monster.
     mons->flags |= MF_SEEN;
 
+    // half XP for thosw with the mutation
+    if (you.get_mutation_level(MUT_XP_ON_SIGHT)
+            && !mons->is_summoned()
+            && !testbits(mons->flags, MF_NO_REWARD))
+        gain_exp((exper_value(*mons) + 1) / 2);
+
     if (crawl_state.game_is_hints())
         hints_monster_seen(*mons);
 

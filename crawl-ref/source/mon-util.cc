@@ -3639,16 +3639,8 @@ void mons_pacify(monster& mon, mon_attitude_type att, bool no_xp)
     // Make the monster permanently neutral.
     mon.attitude = att;
     mon.flags |= MF_WAS_NEUTRAL;
-
-    if (!testbits(mon.flags, MF_PACIFIED) // Don't allow repeatedly pacifying.
-        && !no_xp
-        && !mon.is_summoned()
-        && !testbits(mon.flags, MF_NO_REWARD))
-    {
-        // Give the player half of the monster's XP.
-        gain_exp((exper_value(mon) + 1) / 2);
-    }
     mon.flags |= MF_PACIFIED;
+    // No xp because followers of Ely all have the XP_ON_SIGHT mutation.
 
     if (mon.type == MONS_GERYON)
     {
