@@ -545,7 +545,7 @@ i-confusion WAND_REMOVEME10
 i-flame WAND_REMOVEME5
 i-digging WAND_DIGGING
 i-iceblast WAND_ICEBLAST
-i-teleportation WAND_REMOVEME8
+i-teleportation WAND_TELEPORTATION
 i-lightning WAND_REMOVEME11
 i-polymorph WAND_POLYMORPH
 i-enslavement WAND_ENSLAVEMENT
