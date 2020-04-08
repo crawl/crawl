@@ -39,7 +39,6 @@
 #include "random-var.h"
 #include "religion.h"
 #include "shopping.h"
-#include "spl-miscast.h"
 #include "spl-summoning.h"
 #include "state.h"
 #include "stringutil.h"

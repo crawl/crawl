@@ -717,10 +717,6 @@ bool ranged_attack::apply_missile_brand()
         mpr(special_damage_message);
 
         special_damage_message.clear();
-        // Don't do message-only miscasts along with a special
-        // damage message.
-        if (miscast_level == 0)
-            miscast_level = -1;
     }
 
     if (special_damage > 0)

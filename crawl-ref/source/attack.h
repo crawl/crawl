@@ -84,12 +84,6 @@ public:
 
     item_def        *defender_shield;
 
-    // Miscast to cause after special damage is done. If miscast_level == 0
-    // the miscast is discarded if special_damage_message isn't empty.
-    int       miscast_level;
-    spschool  miscast_type;
-    actor*    miscast_target;
-
     bool      fake_chaos_attack;
 
     bool simu;
@@ -163,7 +157,6 @@ protected:
     void pain_affects_defender();
     void chaos_affects_defender();
     brand_type random_chaos_brand();
-    void do_miscast();
     void drain_defender();
     void drain_defender_speed();
 

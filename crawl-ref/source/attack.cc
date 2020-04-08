@@ -36,7 +36,6 @@
 #include "nearby-danger.h"
 #include "pronoun-type.h"
 #include "religion.h"
-#include "spl-miscast.h"
 #include "spl-util.h"
 #include "state.h"
 #include "stepdown.h"
@@ -62,8 +61,7 @@ attack::attack(actor *attk, actor *defn, actor *blame)
       attacker_to_hit_penalty(0), attack_verb("bug"), verb_degree(),
       no_damage_message(), special_damage_message(), aux_attack(), aux_verb(),
       attacker_armour_tohit_penalty(0), attacker_shield_tohit_penalty(0),
-      defender_shield(nullptr), miscast_level(-1), miscast_type(spschool::none),
-      miscast_target(nullptr), fake_chaos_attack(false), simu(false),
+      defender_shield(nullptr), fake_chaos_attack(false), simu(false),
       aux_source(""), kill_type(KILLED_BY_MONSTER)
 {
     // No effective code should execute, we'll call init_attack again from
@@ -822,64 +820,6 @@ attack_flavour attack::random_chaos_attack_flavour()
     return *random_choose_weighted(weights);
 }
 
-void attack::do_miscast()
-{
-    if (miscast_level == -1)
-        return;
-
-    ASSERT(miscast_target != nullptr);
-    ASSERT_RANGE(miscast_level, 0, 4);
-    ASSERT(count_bits(static_cast<uint64_t>(miscast_type)) == 1);
-
-    if (!miscast_target->alive())
-        return;
-
-    if (miscast_target->is_player() && you.banished)
-        return;
-
-    const bool chaos_brand =
-        using_weapon() && get_weapon_brand(*weapon) == SPWPN_CHAOS;
-
-    // If the miscast is happening on the attacker's side and is due to
-    // a chaos weapon then make smoke/sand/etc pour out of the weapon
-    // instead of the attacker's hands.
-    string hand_str;
-
-    string cause = atk_name(DESC_THE);
-
-    const int ignore_mask = ISFLAG_KNOW_CURSE | ISFLAG_KNOW_PLUSES;
-
-    if (attacker->is_player())
-    {
-        if (chaos_brand)
-        {
-            cause = "a chaos effect from ";
-            // Ignore a lot of item flags to make cause as short as possible,
-            // so it will (hopefully) fit onto a single line in the death
-            // cause screen.
-            cause += wep_name(DESC_YOUR, ignore_mask | ISFLAG_COSMETIC_MASK);
-
-            if (miscast_target == attacker)
-                hand_str = wep_name(DESC_PLAIN, ignore_mask);
-        }
-    }
-    else
-    {
-        if (chaos_brand && miscast_target == attacker
-            && you.can_see(*attacker))
-        {
-            hand_str = wep_name(DESC_PLAIN, ignore_mask);
-        }
-    }
-
-    MiscastEffect(miscast_target, attacker, {miscast_source::melee},
-                  (spschool) miscast_type, miscast_level, cause,
-                  nothing_happens::NEVER, 0, hand_str, false);
-
-    // Don't do miscast twice for one attack.
-    miscast_level = -1;
-}
-
 void attack::drain_defender()
 {
     if (defender->is_monster() && coinflip())
@@ -1633,14 +1573,6 @@ bool attack::apply_damage_brand(const char *what)
 
     if (damage_brand == SPWPN_CHAOS)
     {
-        if (brand != SPWPN_CHAOS && !ret
-            && miscast_level == -1 && one_chance_in(20))
-        {
-            miscast_level  = 0;
-            miscast_type   = spschool::random;
-            miscast_target = random_choose(attacker, defender);
-        }
-
         if (responsible->is_player())
             did_god_conduct(DID_CHAOS, 2 + random2(3), brand_was_known);
     }
@@ -1653,10 +1585,6 @@ bool attack::apply_damage_brand(const char *what)
         mpr(special_damage_message);
 
         special_damage_message.clear();
-        // Don't do message-only miscasts along with a special
-        // damage message.
-        if (miscast_level == 0)
-            miscast_level = -1;
     }
 
     // Preserve Nessos's brand stacking in a hacky way -- but to be fair, it
