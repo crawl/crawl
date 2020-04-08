@@ -610,9 +610,9 @@ bool player_in_connected_branch()
 
 bool player_likes_water(bool permanently)
 {
-    return !permanently && you.can_water_walk()
-           || (species_likes_water(you.species) || !permanently)
-               && form_likes_water();
+    return species_likes_water(you.species)
+           || !permanently && you.can_water_walk()
+           || !permanently && form_likes_water();
 }
 
 /**
