@@ -212,7 +212,7 @@ define(function () {
         mask        : [0x00800000, 0x10000000],
         POISON      : [0x00800000, 0],
         MORE_POISON : [0, 0x10000000],
-        MAX_POISON  : [0x0080000, 0x10000000]
+        MAX_POISON  : [0x00800000, 0x10000000]
     });
 
     // MDAM has 5 possibilities, so uses 3 bits.
