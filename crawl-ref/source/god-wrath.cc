@@ -723,11 +723,18 @@ static bool _yredelemnul_retribution()
     }
     else
     {
-        simple_god_message("'s anger turns toward you for a moment.", god);
-        MiscastEffect(&you, nullptr, {miscast_source::god, god},
-                      spschool::necromancy,
-                      2 + div_rand_round(you.experience_level, 9),
-                      random2avg(88, 3), _god_wrath_name(god));
+        monster* avatar = get_avatar(god);
+        // can't be const because mons_cast() doesn't accept const monster*
+
+        if (avatar == nullptr)
+        {
+            simple_god_message(" has no time to deal with you just now.", god);
+            return false;
+        }
+
+        _spell_retribution(avatar, SPELL_BOLT_OF_DRAINING, god,
+                           "'s anger turns toward you for a moment.");
+        _reset_avatar(*avatar);
     }
 
     return true;
