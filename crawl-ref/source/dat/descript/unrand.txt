@@ -62,8 +62,7 @@ restores a greater portion of life to its user than other vampiric weapons.
 scythe of Curses
 
 A scythe surrounded by an ominous aura of dread. It carries a terrible and
-highly irritating curse, which it busily inflicts on both the wielder and their
-enemies.
+ancient curse, which it busily inflicts on both the wielder and their enemies.
 %%%%
 sceptre of Torment
 
