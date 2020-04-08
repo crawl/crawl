@@ -136,16 +136,30 @@ static void _assert_valid_slot(equipment_type eq, equipment_type slot)
 #ifdef ASSERTS
     if (eq == slot)
         return;
-    ASSERT(eq == EQ_RINGS); // all other slots are unique
-    equipment_type r1 = EQ_LEFT_RING, r2 = EQ_RIGHT_RING;
-    if (you.species == SP_OCTOPODE)
-        r1 = EQ_RING_ONE, r2 = EQ_RING_EIGHT;
-    if (slot >= r1 && slot <= r2)
-        return;
-    if (const item_def* amu = you.slot_item(EQ_AMULET, true))
-        if (is_unrandom_artefact(*amu, UNRAND_FINGER_AMULET) && slot == EQ_RING_AMULET)
+    ASSERT(eq == EQ_RINGS || eq == EQ_AMULETS); // all other slots are unique
+    if (eq == EQ_RINGS) {
+        equipment_type r1 = EQ_LEFT_RING, r2 = EQ_RIGHT_RING;
+        if (you.species == SP_OCTOPODE)
+            r1 = EQ_RING_ONE, r2 = EQ_RING_EIGHT;
+        if (slot >= r1 && slot <= r2)
             return;
-    die("ring on invalid slot %d", slot);
+
+        if (const item_def * amu = you.slot_item(EQ_AMULET, true))
+            if (is_unrandom_artefact(*amu, UNRAND_FINGER_AMULET) && slot == EQ_RING_AMULET)
+                return;
+        die("ring on invalid slot %d", slot);
+    }
+    else if(eq == EQ_AMULETS) {
+        if (you.species == SP_TWO_HEADED_OGRE) {
+            if (slot >= EQ_AMULET_LEFT && slot <= EQ_AMULET_RIGHT) {
+                return;
+            }
+        }
+        else if (slot == EQ_AMULET) {
+            return;
+        }
+        die("amulet on invalid slot %d", slot);
+    }
 #endif
 }
 

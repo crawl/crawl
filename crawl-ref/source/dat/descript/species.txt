@@ -131,3 +131,7 @@ Vine Stalker
 Frail symbionts, Vine Stalkers cannot regain health from potions.
 Their magical reserves absorb damage, and they pack a magic-restoring bite.
 %%%%
+Two Headed Ogre
+
+two weapon(TODO), two amulet
+%%%%

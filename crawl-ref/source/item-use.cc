@@ -1389,10 +1389,27 @@ static vector<equipment_type> _current_ring_types()
     return ret;
 }
 
+
+static vector<equipment_type> _current_amulet_types()
+{
+    vector<equipment_type> ret;
+    if (you.species == SP_TWO_HEADED_OGRE)
+    {
+        ret.push_back(EQ_AMULET_LEFT);
+        ret.push_back(EQ_AMULET_RIGHT);
+    }
+    else
+    {
+        ret.push_back(EQ_AMULET);
+    }
+    return ret;
+}
+
 static vector<equipment_type> _current_jewellery_types()
 {
     vector<equipment_type> ret = _current_ring_types();
-    ret.push_back(EQ_AMULET);
+    vector<equipment_type> amulet_ret = _current_amulet_types();
+    ret.insert(ret.begin(), amulet_ret.begin(), amulet_ret.end());
     return ret;
 }
 
@@ -1416,16 +1433,27 @@ static char _ring_slot_key(equipment_type slot)
     }
 }
 
-static int _prompt_ring_to_remove()
+static char _amulet_slot_key(equipment_type slot)
 {
-    const vector<equipment_type> ring_types = _current_ring_types();
-    vector<char> slot_chars;
-    vector<item_def*> rings;
-    for (auto eq : ring_types)
+    switch (slot)
     {
-        rings.push_back(you.slot_item(eq, true));
-        ASSERT(rings.back());
-        slot_chars.push_back(index_to_letter(rings.back()->link));
+    case EQ_AMULET_LEFT:      return '<';
+    case EQ_AMULET_RIGHT:     return '>';
+    default:
+        die("Invalid amulet slot");
+    }
+}
+
+static int _prompt_jewellry_to_remove(bool is_ring)
+{
+    const vector<equipment_type> jew_types = is_ring?_current_ring_types(): _current_amulet_types();
+    vector<char> slot_chars;
+    vector<item_def*> jews;
+    for (auto eq : jew_types)
+    {
+        jews.push_back(you.slot_item(eq, true));
+        ASSERT(jews.back());
+        slot_chars.push_back(index_to_letter(jews.back()->link));
     }
 
     if (slot_chars.size() + 2 > msgwin_lines() || ui::has_layout())
@@ -1437,20 +1465,21 @@ static int _prompt_ring_to_remove()
     clear_messages();
 
     mprf(MSGCH_PROMPT,
-         "You're wearing all the rings you can. Remove which one?");
+         "You're wearing all the %s you can. Remove which one?",
+         is_ring ? "rings" : "amulets");
     mprf(MSGCH_PROMPT, "(<w>?</w> for menu, <w>Esc</w> to cancel)");
 
     // FIXME: Needs TOUCH_UI version
 
-    for (size_t i = 0; i < rings.size(); i++)
+    for (size_t i = 0; i < jews.size(); i++)
     {
         string m = "<w>";
-        const char key = _ring_slot_key(ring_types[i]);
+        const char key = is_ring ? _ring_slot_key(jew_types[i]) : _amulet_slot_key(jew_types[i]);
         m += key;
         if (key == '<')
             m += '<';
 
-        m += "</w> or " + rings[i]->name(DESC_INVENTORY);
+        m += "</w> or " + jews[i]->name(DESC_INVENTORY);
         mprf_nocap("%s", m.c_str());
     }
     flush_prev_message();
@@ -1468,9 +1497,9 @@ static int _prompt_ring_to_remove()
         for (size_t i = 0; i < slot_chars.size(); i++)
         {
             if (c == slot_chars[i]
-                || c == _ring_slot_key(ring_types[i]))
+                || c == (is_ring ? _ring_slot_key(jew_types[i]) : _amulet_slot_key(jew_types[i])))
             {
-                eqslot = ring_types[i];
+                eqslot = jew_types[i];
                 c = ' ';
                 break;
             }
@@ -1627,11 +1656,10 @@ bool safe_to_remove(const item_def &item, bool quiet)
 // EQ_LEFT_RING and EQ_RIGHT_RING are both occupied, and item is not
 // in one of those slots.
 //
-// Does not do amulets.
-static bool _swap_rings(const item_def& to_puton)
+static bool _swap_jewellrys(const item_def& to_puton, bool is_ring)
 {
-    vector<equipment_type> ring_types = _current_ring_types();
-    const int num_rings = ring_types.size();
+    vector<equipment_type> jew_types = is_ring ? _current_ring_types() : _current_amulet_types();
+    const int num_jews = jew_types.size();
     int unwanted = 0;
     int last_inscribed = 0;
     int cursed = 0;
@@ -1639,29 +1667,29 @@ static bool _swap_rings(const item_def& to_puton)
     int melded = 0; // Both melded rings and unavailable slots.
     int available = 0;
     bool all_same = true;
-    item_def* first_ring = nullptr;
-    for (auto eq : ring_types)
+    item_def* first_jew = nullptr;
+    for (auto eq : jew_types)
     {
-        item_def* ring = you.slot_item(eq, true);
+        item_def* jewellry = you.slot_item(eq, true);
         if (!you_can_wear(eq, true) || you.melded[eq])
             melded++;
-        else if (ring != nullptr)
+        else if (jewellry != nullptr)
         {
-            if (first_ring == nullptr)
-                first_ring = ring;
+            if (first_jew == nullptr)
+                first_jew = jewellry;
             else if (all_same)
             {
-                if (ring->sub_type != first_ring->sub_type
-                    || ring->plus  != first_ring->plus
-                    || is_artefact(*ring) || is_artefact(*first_ring))
+                if (jewellry->sub_type != first_jew->sub_type
+                    || jewellry->plus  != first_jew->plus
+                    || is_artefact(*jewellry) || is_artefact(*first_jew))
                 {
                     all_same = false;
                 }
             }
 
-            if (ring->cursed())
+            if (jewellry->cursed())
                 cursed++;
-            else if (strstr(ring->inscription.c_str(), "=R"))
+            else if (strstr(jewellry->inscription.c_str(), "=R"))
             {
                 inscribed++;
                 last_inscribed = you.equip[eq];
@@ -1682,7 +1710,7 @@ static bool _swap_rings(const item_def& to_puton)
     }
 
     // We can't put a ring on, because we're wearing all cursed ones.
-    if (melded == num_rings)
+    if (melded == num_jews)
     {
         // Shouldn't happen, because hogs and bats can't put on jewellery at
         // all and thus won't get this far.
@@ -1691,15 +1719,16 @@ static bool _swap_rings(const item_def& to_puton)
     }
     else if (available == 0)
     {
-        mprf("You're already wearing %s cursed ring%s!%s",
+        mprf("You're already wearing %s cursed %s%s!%s",
              number_in_words(cursed).c_str(),
+             is_ring ? "ring" : "amulet",
              (cursed == 1 ? "" : "s"),
              (cursed > 2 ? " Isn't that enough for you?" : ""));
         return false;
     }
-    // The simple case - only one available ring.
+    // The simple case - only one available jewellry.
     // If the jewellery_prompt option is true, always allow choosing the
-    // ring slot (even if we still have empty slots).
+    // jewellry slot (even if we still have empty slots).
     else if (available == 1 && !Options.jewellery_prompt)
     {
         if (!remove_ring(unwanted, false))
@@ -1711,16 +1740,24 @@ static bool _swap_rings(const item_def& to_puton)
     {
         // Don't prompt if all the rings are the same.
         if (!all_same || Options.jewellery_prompt)
-            unwanted = _prompt_ring_to_remove();
+            unwanted = _prompt_jewellry_to_remove(is_ring);
 
         if (unwanted == EQ_NONE)
         {
             // do this here rather than in remove_ring so that the custom
             // message is visible.
-            unwanted = prompt_invent_item(
+            if (is_ring) {
+                unwanted = prompt_invent_item(
                     "You're wearing all the rings you can. Remove which one?",
                     menu_type::invlist, OSEL_UNCURSED_WORN_RINGS, OPER_REMOVE,
                     invprompt_flag::no_warning | invprompt_flag::hide_known);
+            }
+            else {
+                unwanted = prompt_invent_item(
+                    "You're wearing all the amulets you can. Remove which one?",
+                    menu_type::invlist, OSEL_UNCURSED_WORN_AMULETS, OPER_REMOVE,
+                    invprompt_flag::no_warning | invprompt_flag::hide_known);
+            }
         }
 
         // Cancelled:
@@ -1796,12 +1833,68 @@ static equipment_type _choose_ring_slot()
     return eqslot;
 }
 
+static equipment_type _choose_amulet_slot()
+{
+    ASSERT(you.species == SP_TWO_HEADED_OGRE);
+
+    clear_messages();
+
+    mprf(MSGCH_PROMPT,
+        "Put amulet on which %s? (<w>Esc</w> to cancel)", you.hand_name(false).c_str());
+
+    const vector<equipment_type> slots = _current_amulet_types();
+    for (auto eq : slots)
+    {
+        string msg = "<w>";
+        const char key = _amulet_slot_key(eq);
+        msg += key;
+        if (key == '<')
+            msg += '<';
+
+        item_def* amulet = you.slot_item(eq, true);
+        if (amulet)
+            msg += "</w> or " + amulet->name(DESC_INVENTORY);
+        else
+            msg += "</w> - no amulet";
+
+        if (eq == EQ_AMULET_LEFT)
+            msg += " (left)";
+        else if (eq == EQ_AMULET_RIGHT)
+            msg += " (right)";
+        mprf_nocap("%s", msg.c_str());
+    }
+    flush_prev_message();
+
+    equipment_type eqslot = EQ_NONE;
+    mouse_control mc(MOUSE_MODE_PROMPT);
+    int c;
+    do
+    {
+        c = getchm();
+        for (auto eq : slots)
+        {
+            if (c == _amulet_slot_key(eq)
+                || (you.slot_item(eq, true)
+                    && c == index_to_letter(you.slot_item(eq, true)->link)))
+            {
+                eqslot = eq;
+                c = ' ';
+                break;
+            }
+        }
+    } while (!key_is_escape(c) && c != ' ');
+
+    clear_messages();
+
+    return eqslot;
+}
+
 // Is it possible to put on the given item in a jewellery slot?
 // Preconditions:
 // - item is not already equipped in a jewellery slot
 static bool _can_puton_jewellery(const item_def &item)
 {
-    // TODO: between this function, _puton_item, _swap_rings, and remove_ring,
+    // TODO: between this function, _puton_item, _swap_jewellerys, and remove_ring,
     // there's a bit of duplicated work, and sep. of concerns not clear
     if (&item == you.weapon())
     {
@@ -1817,7 +1910,7 @@ static bool _can_puton_jewellery(const item_def &item)
 
     const bool is_amulet = jewellery_is_amulet(item);
 
-    if (is_amulet && !you_can_wear(EQ_AMULET, true)
+    if (is_amulet && !you_can_wear(EQ_AMULETS, true)
         || !is_amulet && !you_can_wear(EQ_RINGS, true))
     {
         mpr("You can't wear that in your present form.");
@@ -1827,15 +1920,44 @@ static bool _can_puton_jewellery(const item_def &item)
     // Make sure there's at least one slot where we could equip this item
     if (is_amulet)
     {
-        int existing = you.equip[EQ_AMULET];
-        if (existing != -1 && you.inv[existing].cursed())
-        {
-            mprf("%s is stuck to you!",
-                 you.inv[existing].name(DESC_YOUR).c_str());
+        if (you.species == SP_TWO_HEADED_OGRE) {
+            const vector<equipment_type> slots = _current_amulet_types();
+            int melded = 0;
+            int cursed = 0;
+            for (auto eq : slots)
+            {
+                if (!you_can_wear(eq, true) || you.melded[eq])
+                {
+                    melded++;
+                    continue;
+                }
+                int existing = you.equip[eq];
+                if (existing != -1 && you.inv[existing].cursed())
+                    cursed++;
+                else
+                    // We found an available slot. We're done.
+                    return true;
+            }
+            if (melded == (int)slots.size())
+                mpr("You can't wear that in your present form.");
+            else
+                mprf("You're already wearing %s cursed amulet%s!%s",
+                    number_in_words(cursed).c_str(),
+                    (cursed == 1 ? "" : "s"),
+                    (cursed > 2 ? " Isn't that enough for you?" : ""));
             return false;
         }
-        else
-            return true;
+        else {
+            int existing = you.equip[EQ_AMULET];
+            if (existing != -1 && you.inv[existing].cursed())
+            {
+                mprf("%s is stuck to you!",
+                    you.inv[existing].name(DESC_YOUR).c_str());
+                return false;
+            }
+            else
+                return true;
+        }
     }
     // The ring case is a bit more complicated
     else
@@ -1870,13 +1992,15 @@ static bool _can_puton_jewellery(const item_def &item)
 }
 
 // Put on a particular ring or amulet
-static bool _puton_item(const item_def &item, bool prompt_slot,
-                        bool check_for_inscriptions)
+static bool _puton_item(const item_def& item, bool prompt_slot,
+    bool check_for_inscriptions)
 {
     vector<equipment_type> current_jewellery = _current_ring_types();
-    current_jewellery.push_back(EQ_AMULET);
+    vector<equipment_type> current_amulet = _current_amulet_types();
+    current_jewellery.insert(current_jewellery.end(), current_amulet.begin(), current_amulet.end());
 
     for (auto eq : current_jewellery)
+    {
         if (&item == you.slot_item(eq, true))
         {
             // "Putting on" an equipped item means taking it off.
@@ -1890,6 +2014,7 @@ static bool _puton_item(const item_def &item, bool prompt_slot,
                 return false;
             }
         }
+    }
 
     if (!_can_puton_jewellery(item))
         return false;
@@ -1907,6 +2032,7 @@ static bool _puton_item(const item_def &item, bool prompt_slot,
     const bool is_amulet = jewellery_is_amulet(item);
 
     const vector<equipment_type> ring_types = _current_ring_types();
+    const vector<equipment_type> amulet_types = _current_amulet_types();
 
     if (!is_amulet)     // i.e. it's a ring
     {
@@ -1923,23 +2049,42 @@ static bool _puton_item(const item_def &item, bool prompt_slot,
 
         // No unused ring slots. Swap out a worn ring for the new one.
         if (need_swap)
-            return _swap_rings(item);
+            return _swap_jewellrys(item, true);
     }
-    else if (you.slot_item(EQ_AMULET, true))
+    else
     {
-        // Remove the previous one.
-        if (!remove_ring(you.equip[EQ_AMULET], true))
-            return false;
+        if (you.species == SP_TWO_HEADED_OGRE) {
+            // Check whether there are any unused ring slots
+            bool need_swap = true;
+            for (auto eq : amulet_types)
+            {
+                if (!you.slot_item(eq, true))
+                {
+                    need_swap = false;
+                    break;
+                }
+            }
 
-        // Check for stat loss.
-        if (!_safe_to_remove_or_wear(item, false))
-            return false;
+            // No unused ring slots. Swap out a worn ring for the new one.
+            if (need_swap)
+                return _swap_jewellrys(item, false);
+        }
+        else if (you.slot_item(EQ_AMULET, true))
+        {
+            // Remove the previous one.
+            if (!remove_ring(you.equip[EQ_AMULET], true))
+                return false;
 
-        // Put on the new amulet.
-        start_delay<JewelleryOnDelay>(1, item);
+            // Check for stat loss.
+            if (!_safe_to_remove_or_wear(item, false))
+                return false;
 
-        // Assume it's going to succeed.
-        return true;
+            // Put on the new amulet.
+            start_delay<JewelleryOnDelay>(1, item);
+
+            // Assume it's going to succeed.
+            return true;
+        }
     }
     // At this point, we know there's an empty slot for the ring/amulet we're
     // trying to equip.
@@ -1950,8 +2095,44 @@ static bool _puton_item(const item_def &item, bool prompt_slot,
 
     equipment_type hand_used = EQ_NONE;
 
-    if (is_amulet)
-        hand_used = EQ_AMULET;
+    if (is_amulet) {
+        if (you.species == SP_TWO_HEADED_OGRE) {
+            if (prompt_slot)
+            {
+                // Prompt for a slot, even if we have empty ring slots.
+                hand_used = _choose_amulet_slot();
+
+                if (hand_used == EQ_NONE)
+                {
+                    canned_msg(MSG_OK);
+                    return false;
+                }
+                // Allow swapping out a ring.
+                else if (you.slot_item(hand_used, true))
+                {
+                    if (!remove_ring(you.equip[hand_used], false))
+                        return false;
+
+                    start_delay<JewelleryOnDelay>(1, item);
+                    return true;
+                }
+            }
+            else
+            {
+                for (auto eq : amulet_types)
+                {
+                    if (!you.slot_item(eq, true))
+                    {
+                        hand_used = eq;
+                        break;
+                    }
+                }
+            }
+        }
+        else {
+            hand_used = EQ_AMULET;
+        }
+    }
     else if (prompt_slot)
     {
         // Prompt for a slot, even if we have empty ring slots.
@@ -2132,7 +2313,7 @@ bool remove_ring(int slot, bool announce)
         mpr("You can't take that off while it's melded.");
         return false;
     }
-    else if (hand_used == EQ_AMULET
+    else if ((hand_used == EQ_AMULET || hand_used == EQ_AMULET_LEFT || hand_used == EQ_AMULET_RIGHT)
         && you.equip[EQ_RING_AMULET] != -1)
     {
         // This can be removed in the future if more ring amulets are added.
@@ -2575,7 +2756,9 @@ static bool _identify(bool alreadyknown, const string &pre_msg, int &link)
             you.wield_change = true;
 
         if (item.is_type(OBJ_JEWELLERY, AMU_INACCURACY)
-            && item.link == you.equip[EQ_AMULET]
+            && (item.link == you.equip[EQ_AMULET]
+                || item.link == you.equip[EQ_AMULET_LEFT]
+                || item.link == you.equip[EQ_AMULET_RIGHT])
             && !item_known_cursed(item))
         {
             learned_something_new(HINT_INACCURACY);

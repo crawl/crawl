@@ -481,6 +481,7 @@ int monster::wearing(equipment_type slot, int sub_type, bool calc_unid) const
         break;
 
     case EQ_AMULET:
+    case EQ_AMULETS:
     case EQ_AMULET_PLUS:
     case EQ_RINGS:
     case EQ_RINGS_PLUS:
@@ -556,6 +557,7 @@ int monster::wearing_ego(equipment_type slot, int special, bool calc_unid) const
         break;
 
     case EQ_AMULET:
+    case EQ_AMULETS:
     case EQ_STAFF:
     case EQ_RINGS:
     case EQ_RINGS_PLUS:
@@ -4191,6 +4193,7 @@ mon_inv_type equip_slot_to_mslot(equipment_type eq)
     case EQ_BODY_ARMOUR: return MSLOT_ARMOUR;
     case EQ_SHIELD:      return MSLOT_SHIELD;
     case EQ_RINGS:
+    case EQ_AMULETS:
     case EQ_AMULET:      return MSLOT_JEWELLERY;
     default: return NUM_MONSTER_SLOTS;
     }

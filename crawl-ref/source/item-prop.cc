@@ -2818,7 +2818,7 @@ equipment_type get_item_slot(object_class_type type, int sub_type)
         return get_armour_slot(static_cast<armour_type>(sub_type));
 
     case OBJ_JEWELLERY:
-        return jewellery_is_amulet(sub_type) ? EQ_AMULET : EQ_RINGS;
+        return jewellery_is_amulet(sub_type) ? EQ_AMULETS : EQ_RINGS;
 
     default:
         break;
