@@ -316,10 +316,10 @@ Kikubaaqudgha powers
 
 Kikubaaqudgha will send corpses to followers, and enhance servants' necromantic
 prowess with gifts of spellbooks. Kikubaaqudgha will protect followers from the
-effects of necromantic miscasts, and may even shield them from unholy torment.
-Especially fervent followers may invoke torment themselves by sacrificing a
-cadaver, and Kikubaaqudgha will eventually allow followers to either receive
-the Necronomicon, or to have their weapon imbued with pain.
+effects of necromantic miscasts, death curses, and may even shield them from
+unholy torment. Especially fervent followers may invoke torment themselves by
+sacrificing a cadaver, and Kikubaaqudgha will eventually allow followers to
+either receive the Necronomicon, or to have their weapon imbued with pain.
 %%%%
 Lugonu powers
 

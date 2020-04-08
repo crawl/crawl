@@ -18,6 +18,7 @@
 #include "cleansing-flame-source-type.h"
 #include "coordit.h"
 #include "database.h"
+#include "death-curse.h"
 #include "decks.h"
 #include "env.h"
 #include "food.h"
@@ -44,7 +45,6 @@
 #include "shout.h"
 #include "spl-clouds.h"
 #include "spl-goditem.h"
-#include "spl-miscast.h"
 #include "spl-selfench.h"
 #include "spl-summoning.h"
 #include "spl-transloc.h"
@@ -650,30 +650,26 @@ static bool _kikubaaqudgha_retribution()
 
     if (x_chance_in_y(you.experience_level, 27))
     {
-        // torment, or 3 necromancy miscasts
+        // torment, or 3 death curses of maximum power
         if (!player_res_torment(false))
             torment(nullptr, TORMENT_KIKUBAAQUDGHA, you.pos());
         else
         {
             for (int i = 0; i < 3; ++i)
             {
-                MiscastEffect(&you, nullptr, {miscast_source::god, god},
-                              spschool::necromancy,
-                              2 + div_rand_round(you.experience_level, 9),
-                              random2avg(88, 3), _god_wrath_name(god));
+                death_curse(you, nullptr,
+                            _god_wrath_name(god), you.experience_level);
             }
         }
     }
     else if (random2(you.experience_level) >= 4)
     {
-        // necromancy miscast, 25% chance of additional miscast
-        const int num_miscasts = one_chance_in(4) ? 2 : 1;
-        for (int i = 0; i < num_miscasts; i++)
+        // death curse, 25% chance of additional curse
+        const int num_curses = one_chance_in(4) ? 2 : 1;
+        for (int i = 0; i < num_curses; i++)
         {
-            MiscastEffect(&you, nullptr, {miscast_source::god, god},
-                          spschool::necromancy,
-                          2 + div_rand_round(you.experience_level, 9),
-                          random2avg(88, 3), _god_wrath_name(god));
+                death_curse(you, nullptr,
+                            _god_wrath_name(god), you.experience_level);
         }
     }
 
