@@ -442,6 +442,8 @@ static bool _is_appropriate_evokable(const item_def& item,
         return true;
 
     spell_type spell = spell_in_wand(static_cast<wand_type>(item.sub_type));
+    if ( spell == SPELL_TELEPORT_OTHER && target->is_player() )
+        spell = SPELL_TELEPORT_SELF;
 
     return _is_appropriate_spell(spell, target);
 }

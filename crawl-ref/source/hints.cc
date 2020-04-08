@@ -841,6 +841,7 @@ static bool _advise_use_wand()
         case WAND_DISINTEGRATION:
         case WAND_CLOUDS:
         case WAND_SCATTERSHOT:
+        case WAND_TELEPORTATION:
             return true;
         }
     }

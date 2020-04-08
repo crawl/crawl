@@ -1137,6 +1137,20 @@ static bool _handle_wand(monster& mons)
         // disintegration beams can do large amounts of damage.
         beem.damage.size = beem.damage.size * 2 / 3;
 
+    case WAND_TELEPORTATION:
+        if (mons.hit_points <= mons.max_hit_points / 2 || mons.caught())
+        {
+            if (!mons.has_ench(ENCH_TP) && !one_chance_in(20))
+            {
+                beem.target = mons.pos();
+                should_fire = mons_should_fire(beem);
+                break; //maybe zap to monster
+            }
+            // maybe zap to player(affected default)
+        }
+        else
+            break;
+
         // Intentional fallthrough
     default:
         fire_tracer(&mons, beem);

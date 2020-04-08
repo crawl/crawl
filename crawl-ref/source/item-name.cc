@@ -661,6 +661,7 @@ static const char* _wand_type_name(int wandtype)
     case WAND_DISINTEGRATION:  return "disintegration";
     case WAND_CLOUDS:          return "clouds";
     case WAND_SCATTERSHOT:     return "scattershot";
+    case WAND_TELEPORTATION:   return "teleportation";
     default:                   return item_type_removed(OBJ_WANDS, wandtype)
                                     ? "removedness"
                                     : "bugginess";
@@ -3097,6 +3098,14 @@ bool is_emergency_item(const item_def &item)
 
     switch (item.base_type)
     {
+    case OBJ_WANDS:
+        switch (item.sub_type)
+        {
+        case WAND_TELEPORTATION:
+            return you.species != SP_FORMICID;
+        default:
+            return false;
+        }
     case OBJ_SCROLLS:
         switch (item.sub_type)
         {
@@ -3478,6 +3487,9 @@ bool is_useless_item(const item_def &item, bool temp)
 
         if (item.sub_type == WAND_CLOUDS)
             return temp && (env.level_state & LSTATE_STILL_WINDS);
+
+        if (item.sub_type == WAND_TELEPORTATION)
+            return you.species == SP_FORMICID;
 
         return false;
 

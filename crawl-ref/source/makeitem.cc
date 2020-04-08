@@ -1266,7 +1266,8 @@ static int _random_wand_subtype()
                                   6, WAND_DIGGING,
                                   5, WAND_ENSLAVEMENT,
                                   3, WAND_CLOUDS,
-                                  3, WAND_SCATTERSHOT);
+                                  3, WAND_SCATTERSHOT,
+                                  2, WAND_TELEPORTATION); // previous 3
 }
 
 /**

@@ -1180,6 +1180,11 @@ troll leather armour
 The stiff and knobbly skin of a troll. It magically regenerates its wearer's
 flesh.
 %%%%
+wand of teleportation
+
+A magical device which causes a creature to be randomly translocated after a
+short delay.
+%%%%
 wand of acid
 
 A magical device which throws bolts of corrosive acid.

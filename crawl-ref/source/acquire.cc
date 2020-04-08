@@ -677,6 +677,13 @@ static int _acquirement_misc_subtype(bool /*divine*/, int & /*quantity*/)
     return choice ? *choice : MISC_CRYSTAL_BALL_OF_ENERGY;
 }
 
+static int _tele_wand_weight()
+{
+    if ( you.species == SP_FORMICID || crawl_state.game_is_sprint() )
+        return 1; // do not need wand of teleportation
+    return 20; // previous 15. 
+}
+
 /**
  * Choose a random type of wand to be generated via acquirement or god gifts.
  *
@@ -691,6 +698,8 @@ static int _acquirement_wand_subtype(bool /*divine*/, int & /*quantity*/)
     vector<pair<wand_type, int>> weights = {
         { WAND_SCATTERSHOT,     25 },
         { WAND_CLOUDS,          25 },
+		// normally 20
+        { WAND_TELEPORTATION,   _tele_wand_weight() },
         { WAND_ACID,            18 },
         { WAND_ICEBLAST,        18 },
         { WAND_ENSLAVEMENT,     you.get_mutation_level(MUT_NO_LOVE) ? 0 : 8 },
