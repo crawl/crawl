@@ -149,6 +149,20 @@ void tile::corpsify()
     corpsify(32, 32, separate_x, separate_y, red_blood);
 }
 
+void tile::reverse()
+{
+    tile orig(*this);
+    for (int y = 0; y < m_height; y++)
+    {
+        for (int x = 0; x < m_width; x++)
+        {
+            tile_colour& mapped = orig.get_pixel(m_width-x-1, y);
+            get_pixel(x, y) = mapped;
+        }
+    }
+}
+
+
 static int _corpse_cut_height(int x, int width, int height)
 {
     unsigned int cy = height / 2 + 2;

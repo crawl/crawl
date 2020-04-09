@@ -60,6 +60,9 @@ public:
     void corpsify(int corpse_width, int corpse_height,
                   int cut_separate, int cut_height, const tile_colour &wound);
 
+
+    void reverse();
+
     void copy(const tile &img);
     bool compose(const tile &img);
     bool texture(const tile &img);

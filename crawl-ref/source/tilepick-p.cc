@@ -30,7 +30,7 @@ static tileidx_t _mon_mod(tileidx_t tile, int offset)
     return tile + offset % count;
 }
 
-tileidx_t tilep_equ_weapon(const item_def &item)
+tileidx_t tilep_equ_weapon(const item_def &item, bool hand2)
 {
     if (item.props.exists("worn_tile"))
         return item.props["worn_tile"].get_short();
@@ -52,22 +52,22 @@ tileidx_t tilep_equ_weapon(const item_def &item)
         switch (item.sub_type)
         {
 #if TAG_MAJOR_VERSION == 34
-        case MISC_BOTTLED_EFREET:             return TILEP_HAND1_BOTTLE;
+        case MISC_BOTTLED_EFREET:             return !hand2 ? TILEP_HAND1_BOTTLE : TILEP_HAND1_BOTTLE_REV;
 #endif
-        case MISC_FAN_OF_GALES:               return TILEP_HAND1_FAN;
+        case MISC_FAN_OF_GALES:               return !hand2 ? TILEP_HAND1_FAN : TILEP_HAND1_BOTTLE_REV;
 #if TAG_MAJOR_VERSION == 34
-        case MISC_STONE_OF_TREMORS:           return TILEP_HAND1_STONE;
+        case MISC_STONE_OF_TREMORS:           return !hand2 ? TILEP_HAND1_STONE : TILEP_HAND1_BOTTLE_REV;
 #endif
         case MISC_LIGHTNING_ROD:              return 0;
 
-        case MISC_CRYSTAL_BALL_OF_ENERGY:     return TILEP_HAND1_CRYSTAL;
+        case MISC_CRYSTAL_BALL_OF_ENERGY:     return !hand2 ? TILEP_HAND1_CRYSTAL : TILEP_HAND1_BOTTLE_REV;
 
-        case MISC_LAMP_OF_FIRE:               return TILEP_HAND1_LANTERN;
+        case MISC_LAMP_OF_FIRE:               return !hand2 ? TILEP_HAND1_LANTERN : TILEP_HAND1_BOTTLE_REV;
 #if TAG_MAJOR_VERSION == 34
-        case MISC_BUGGY_LANTERN_OF_SHADOWS:   return TILEP_HAND1_BONE_LANTERN;
+        case MISC_BUGGY_LANTERN_OF_SHADOWS:   return !hand2 ? TILEP_HAND1_BONE_LANTERN : TILEP_HAND1_BOTTLE_REV;
 #endif
-        case MISC_HORN_OF_GERYON:             return TILEP_HAND1_HORN;
-        case MISC_BOX_OF_BEASTS:              return TILEP_HAND1_BOX;
+        case MISC_HORN_OF_GERYON:             return !hand2 ? TILEP_HAND1_HORN : TILEP_HAND1_BOTTLE_REV;
+        case MISC_BOX_OF_BEASTS:              return !hand2 ? TILEP_HAND1_BOX : TILEP_HAND1_BOTTLE_REV;
 
 #if TAG_MAJOR_VERSION == 34
         case MISC_DECK_OF_ESCAPE:
@@ -91,7 +91,7 @@ tileidx_t tilep_equ_weapon(const item_def &item)
     {
         const tileidx_t tile = unrandart_to_doll_tile(find_unrandart_index(item));
         if (tile)
-            return tile;
+            return  !hand2 ? tile : (tileidx_t) (tile-1);
     }
 
     tileidx_t tile = 0;
@@ -100,161 +100,161 @@ tileidx_t tilep_equ_weapon(const item_def &item)
     {
     // Blunt
     case WPN_CLUB:
-        tile = TILEP_HAND1_CLUB_SLANT;
+        tile = !hand2 ? TILEP_HAND1_CLUB_SLANT : TILEP_HAND1_CLUB_SLANT_REV;
         break;
     case WPN_MACE:
-        tile = TILEP_HAND1_MACE;
+        tile = !hand2 ? TILEP_HAND1_MACE : TILEP_HAND1_MACE_REV;
         break;
     case WPN_GREAT_MACE:
-        tile = TILEP_HAND1_GREAT_MACE;
+        tile = !hand2 ? TILEP_HAND1_GREAT_MACE : TILEP_HAND1_GREAT_MACE_REV;
         break;
     case WPN_FLAIL:
-        tile = TILEP_HAND1_FLAIL;
+        tile = !hand2 ? TILEP_HAND1_FLAIL : TILEP_HAND1_FLAIL_REV;
         break;
     case WPN_DIRE_FLAIL:
-        tile = TILEP_HAND1_GREAT_FLAIL;
+        tile = !hand2 ? TILEP_HAND1_GREAT_FLAIL : TILEP_HAND1_GREAT_FLAIL_REV;
         break;
     case WPN_MORNINGSTAR:
-        tile = TILEP_HAND1_MORNINGSTAR;
+        tile = !hand2 ? TILEP_HAND1_MORNINGSTAR : TILEP_HAND1_MORNINGSTAR_REV;
         break;
     case WPN_EVENINGSTAR:
-        tile = TILEP_HAND1_EVENINGSTAR;
+        tile = !hand2 ? TILEP_HAND1_EVENINGSTAR : TILEP_HAND1_EVENINGSTAR_REV;
         break;
     case WPN_GIANT_CLUB:
-        tile = TILEP_HAND1_GIANT_CLUB_PLAIN;
+        tile = !hand2 ? TILEP_HAND1_GIANT_CLUB_PLAIN : TILEP_HAND1_GIANT_CLUB_PLAIN_REV;
         break;
     case WPN_GIANT_SPIKED_CLUB:
-        tile = TILEP_HAND1_GIANT_CLUB_SPIKE_SLANT;
+        tile = !hand2 ? TILEP_HAND1_GIANT_CLUB_SPIKE_SLANT : TILEP_HAND1_GIANT_CLUB_SPIKE_SLANT_REV;
         break;
     case WPN_WHIP:
-        tile = TILEP_HAND1_WHIP;
+        tile = !hand2 ? TILEP_HAND1_WHIP : TILEP_HAND1_WHIP_REV;
         break;
     case WPN_DEMON_WHIP:
-        tile = TILEP_HAND1_BLACK_WHIP;
+        tile = !hand2 ? TILEP_HAND1_BLACK_WHIP : TILEP_HAND1_BLACK_WHIP_REV;
         break;
     case WPN_SACRED_SCOURGE:
-        tile = TILEP_HAND1_SACRED_SCOURGE;
+        tile = !hand2 ? TILEP_HAND1_SACRED_SCOURGE : TILEP_HAND1_SACRED_SCOURGE_REV;
         break;
 
     // Edge
     case WPN_DAGGER:
-        tile = TILEP_HAND1_DAGGER_SLANT;
+        tile = !hand2 ? TILEP_HAND1_DAGGER_SLANT : TILEP_HAND1_DAGGER_SLANT_REV;
         break;
     case WPN_SHORT_SWORD:
-        tile = TILEP_HAND1_SHORT_SWORD_SLANT;
+        tile = !hand2 ? TILEP_HAND1_SHORT_SWORD_SLANT : TILEP_HAND1_SHORT_SWORD_SLANT_REV;
         break;
     case WPN_LONG_SWORD:
-        tile = TILEP_HAND1_LONG_SWORD_SLANT;
+        tile = !hand2 ? TILEP_HAND1_LONG_SWORD_SLANT : TILEP_HAND1_LONG_SWORD_SLANT_REV;
         break;
     case WPN_GREAT_SWORD:
-        tile = TILEP_HAND1_GREAT_SWORD_SLANT;
+        tile = !hand2 ? TILEP_HAND1_GREAT_SWORD_SLANT : TILEP_HAND1_GREAT_SWORD_SLANT_REV;
         break;
     case WPN_SCIMITAR:
-        tile = TILEP_HAND1_SCIMITAR;
+        tile = !hand2 ? TILEP_HAND1_SCIMITAR : TILEP_HAND1_SCIMITAR_REV;
         break;
     case WPN_FALCHION:
-        tile = TILEP_HAND1_FALCHION;
+        tile = !hand2 ? TILEP_HAND1_FALCHION : TILEP_HAND1_FALCHION_REV;
         break;
     case WPN_RAPIER:
-        tile = TILEP_HAND1_RAPIER;
+        tile = !hand2 ? TILEP_HAND1_RAPIER : TILEP_HAND1_RAPIER_REV;
         break;
     case WPN_DEMON_BLADE:
-        tile = TILEP_HAND1_DEMON_BLADE;
+        tile = !hand2 ? TILEP_HAND1_DEMON_BLADE : TILEP_HAND1_DEMON_BLADE_REV;
         break;
     case WPN_QUICK_BLADE:
-        tile = TILEP_HAND1_DAGGER;
+        tile = !hand2 ? TILEP_HAND1_DAGGER : TILEP_HAND1_DAGGER_REV;
         break;
     case WPN_DOUBLE_SWORD:
-        tile = TILEP_HAND1_DOUBLE_SWORD;
+        tile = !hand2 ? TILEP_HAND1_DOUBLE_SWORD : TILEP_HAND1_DOUBLE_SWORD_REV;
         break;
     case WPN_TRIPLE_SWORD:
-        tile = TILEP_HAND1_TRIPLE_SWORD;
+        tile = !hand2 ? TILEP_HAND1_TRIPLE_SWORD : TILEP_HAND1_TRIPLE_SWORD_REV;
         break;
     case WPN_EUDEMON_BLADE:
-        tile = TILEP_HAND1_BLESSED_BLADE;
+        tile = !hand2 ? TILEP_HAND1_BLESSED_BLADE : TILEP_HAND1_BLESSED_BLADE_REV;
         break;
 
     // Axe
     case WPN_HAND_AXE:
-        tile = TILEP_HAND1_HAND_AXE;
+        tile = !hand2 ? TILEP_HAND1_HAND_AXE : TILEP_HAND1_HAND_AXE_REV;
         break;
     case WPN_BATTLEAXE:
-        tile = TILEP_HAND1_BATTLEAXE;
+        tile = !hand2 ? TILEP_HAND1_BATTLEAXE : TILEP_HAND1_BATTLEAXE_REV;
         break;
     case WPN_BROAD_AXE:
-        tile = TILEP_HAND1_BROAD_AXE;
+        tile = !hand2 ? TILEP_HAND1_BROAD_AXE : TILEP_HAND1_BROAD_AXE_REV;
         break;
     case WPN_WAR_AXE:
-        tile = TILEP_HAND1_WAR_AXE;
+        tile = !hand2 ? TILEP_HAND1_WAR_AXE : TILEP_HAND1_WAR_AXE_REV;
         break;
     case WPN_EXECUTIONERS_AXE:
-        tile = TILEP_HAND1_EXECUTIONERS_AXE;
+        tile = !hand2 ? TILEP_HAND1_EXECUTIONERS_AXE : TILEP_HAND1_EXECUTIONERS_AXE_REV;
         break;
     case WPN_BARDICHE:
-        tile = TILEP_HAND1_GLAIVE3;
+        tile = !hand2 ? TILEP_HAND1_GLAIVE3 : TILEP_HAND1_GLAIVE3_REV;
         break;
 
     // Pole
     case WPN_SPEAR:
-        tile = TILEP_HAND1_SPEAR;
+        tile = !hand2 ? TILEP_HAND1_SPEAR : TILEP_HAND1_SPEAR_REV;
         break;
     case WPN_HALBERD:
-        tile = TILEP_HAND1_HALBERD;
+        tile = !hand2 ? TILEP_HAND1_HALBERD : TILEP_HAND1_HALBERD_REV;
         break;
     case WPN_GLAIVE:
-        tile = TILEP_HAND1_GLAIVE;
+        tile = !hand2 ? TILEP_HAND1_GLAIVE : TILEP_HAND1_GLAIVE_REV;
         break;
 #if TAG_MAJOR_VERSION == 34
     case WPN_STAFF:
-        tile = TILEP_HAND1_STAFF;
+        tile = !hand2 ? TILEP_HAND1_STAFF : TILEP_HAND1_STAFF_REV;
         break;
 #endif
     case WPN_QUARTERSTAFF:
-        tile = TILEP_HAND1_QUARTERSTAFF1;
+        tile = !hand2 ? TILEP_HAND1_QUARTERSTAFF1 : TILEP_HAND1_QUARTERSTAFF1_REV;
         break;
     case WPN_LAJATANG:
-        tile = TILEP_HAND1_LAJATANG;
+        tile = !hand2 ? TILEP_HAND1_LAJATANG : TILEP_HAND1_LAJATANG_REV;
         break;
 
     case WPN_SCYTHE:
-        tile = TILEP_HAND1_SCYTHE;
+        tile = !hand2 ? TILEP_HAND1_SCYTHE : TILEP_HAND1_SCYTHE_REV;
         break;
     case WPN_TRIDENT:
-        tile = TILEP_HAND1_TRIDENT2;
+        tile = !hand2 ? TILEP_HAND1_TRIDENT2 : TILEP_HAND1_TRIDENT2_REV;
         break;
     case WPN_DEMON_TRIDENT:
-        tile = TILEP_HAND1_DEMON_TRIDENT;
+        tile = !hand2 ? TILEP_HAND1_DEMON_TRIDENT : TILEP_HAND1_DEMON_TRIDENT_REV;
         break;
     case WPN_TRISHULA:
-        tile = TILEP_HAND1_TRISHULA;
+        tile = !hand2 ? TILEP_HAND1_TRISHULA : TILEP_HAND1_TRISHULA_REV;
         break;
 
     // Ranged
     case WPN_HUNTING_SLING:
-        tile = TILEP_HAND1_HUNTING_SLING;
+        tile = !hand2 ? TILEP_HAND1_HUNTING_SLING : TILEP_HAND1_HUNTING_SLING_REV;
         break;
     case WPN_FUSTIBALUS:
-        tile = TILEP_HAND1_FUSTIBALUS;
+        tile = !hand2 ? TILEP_HAND1_FUSTIBALUS : TILEP_HAND1_FUSTIBALUS_REV;
         break;
     case WPN_SHORTBOW:
-        tile = TILEP_HAND1_BOW2;
+        tile = !hand2 ? TILEP_HAND1_BOW2 : TILEP_HAND1_BOW2_REV;
         break;
     case WPN_HAND_CROSSBOW:
-        tile = TILEP_HAND1_HAND_CROSSBOW;
+        tile = !hand2 ? TILEP_HAND1_HAND_CROSSBOW : TILEP_HAND1_HAND_CROSSBOW_REV;
         break;
     case WPN_ARBALEST:
-        tile = TILEP_HAND1_ARBALEST;
+        tile = !hand2 ? TILEP_HAND1_ARBALEST : TILEP_HAND1_ARBALEST_REV;
         break;
     case WPN_TRIPLE_CROSSBOW:
-        tile = TILEP_HAND1_TRIPLE_CROSSBOW;
+        tile = !hand2 ? TILEP_HAND1_TRIPLE_CROSSBOW : TILEP_HAND1_TRIPLE_CROSSBOW_REV;
         break;
 #if TAG_MAJOR_VERSION == 34
     case WPN_BLOWGUN:
-        tile = TILEP_HAND1_BLOWGUN;
+        tile = !hand2 ? TILEP_HAND1_BLOWGUN : TILEP_HAND1_BLOWGUN_REV;
         break;
 #endif
     case WPN_LONGBOW:
-        tile = TILEP_HAND1_BOW3;
+        tile = !hand2 ? TILEP_HAND1_BOW3 : TILEP_HAND1_BOW3_REV;
         break;
 
     default: tile = 0;

@@ -806,6 +806,21 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
         if (m_rim && !m_corpsify)
             img.add_rim(tile_colour::black);
 
+
+        if (m_parts_ctg == "HAND1" && m_args.size() > 1) {
+            //use dual weapon
+            std::string temp;
+            if (m_args.size() > 1) {
+                temp += m_args[1];
+                temp += "_REV";
+            }
+            tile rev_img;
+            rev_img.copy(img);
+            rev_img.reverse();
+            add_image(rev_img, m_args.size() > 1 ? temp.c_str() : nullptr, true);
+        }
+
+
         // Push tile onto tile page.
         add_image(img, m_args.size() > 1 ? m_args[1] : nullptr);
 
@@ -814,12 +829,22 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
             // Add enums for additional values.
             m_page.add_synonym(m_args[1], m_args[i]);
         }
+
+        if (m_parts_ctg == "HAND1" && m_args.size() ==0) {
+            //use dual weapon
+            tile rev_img;
+            rev_img.copy(img);
+            rev_img.reverse();
+            add_image(rev_img, nullptr, true);
+        }
+
+
     }
 
     return true;
 }
 
-void tile_list_processor::add_image(tile &img, const char *enumname)
+void tile_list_processor::add_image(tile &img, const char *enumname, bool reverse)
 {
     tile *new_img = new tile(img, enumname, m_parts_ctg.c_str());
     new_img->set_shrink(m_shrink);
