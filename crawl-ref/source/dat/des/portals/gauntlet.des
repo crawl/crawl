@@ -1689,6 +1689,74 @@ ccwcccwcccwcccwccc...........cccwcccwcccwcccwcc
                vvvvvvvvvvvvvvvvv
 ENDMAP
 
+NAME:   gammafunk_gauntlet_77_escape_option
+ORIENT: encompass
+TAGS:   no_item_gen no_monster_gen no_trap_gen no_pool_fixup
+: gauntlet_setup(_G, "DFJLN", "EHKMO")
+# 1.5 items on-average for tier 1 difficulty
+: gauntlet_arena_custom_extra_items("fg**||...... / .")
+SUBVAULT: a : gauntlet_arena_77_first
+SUBVAULT: p : gauntlet_arena_77_first
+# 50% chance for middle arena to be tier 2 difficulty.
+ : if crawl.coinflip() then
+SUBVAULT: q : gauntlet_arena_77_first
+: gauntlet_arena_set_tier(2)
+# 2 items for tier 2 difficulty
+: gauntlet_arena_custom_extra_items("fg|* / .")
+: else
+: gauntlet_arena_set_tier(2)
+: gauntlet_arena_custom_extra_items("fg|* / .")
+SUBVAULT: q : gauntlet_arena_77_second
+: end
+SUBVAULT: r : gauntlet_arena_77_second
+SUBVAULT: s : gauntlet_arena_77_second
+SUBVAULT: y : gauntlet_exit
+MARKER:   P = lua:transp_loc("escape_option_1")
+MARKER:   Q = lua:transp_dest_loc("escape_option_1")
+MARKER:   R = lua:transp_loc("escape_option_2")
+MARKER:   S = lua:transp_dest_loc("escape_option_2")
+MARKER:   Z = lua:transp_loc("escape_option_3")
+MARKER:   - = lua:transp_dest_loc("escape_option_3")
+MARKER:   u = lua:transp_loc("escape_option_4")
+MARKER:   z = lua:transp_dest_loc("escape_option_4")
+: gauntlet_appearance(_G)
+MAP
+ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+ccwcccwcccwcccwcccwcccwcccwcccwcccwcccwcccwcccwcccwcccwcccwcccwcccwcc
+cwwwcwwwcwwwcwwwcwwwcwwwcwwwcwwwcwwwcwwwcwwwcwwwcwwwcwwwcwwwcwwwcwwwc
+ccw...............................................................wcc
+ccc...naaaaannn...npppppnnn...nqqqqqnnn...nrrrrrnnn...nsssssnnn...ccc
+ccw...naaaaaaan.G.npppppppn.G.nqqqqqqqn.G.nrrrrrrrn.G.nsssssssn...wcc
+cwwA..naaaaaaan...npppppppn...nqqqqqqqn...nrrrrrrrn...nsssssssn...wwc
+ccw...naaaaaaannnnnpppppppnnnnnqqqqqqqnnnnnrrrrrrrnnnnnsssssssn...wcc
+ccc..DnaaaaaaanE.FnpppppppnH.JnqqqqqqqnK.LnrrrrrrrnM.Nnsssssssn...ccc
+ccw...naaaaaaan...npppppppn...nqqqqqqqn...nrrrrrrrn...nsssssssn...wcc
+cww<..naaaaaaan...npppppppn...nqqqqqqqn...nrrrrrrrn...nsssssssn...wwc
+ccw...naaaaaaanGPGnpppppppnGRGnqqqqqqqnGZGnrrrrrrrnGuGnsssssssn...wcc
+ccc...naaaaannnnnnnpppppnnnnnnnqqqqqnnnnnnnrrrrrnnnnnnnsssssnnn...ccc
+ccw...............................................................wcc
+cwwwcwwwcwwwcwwwcwwwcwwwc...GUG..G<G..GUG...cwwwcwwwcwwwcwwwcwwwcwwwc
+ccwcccwcccwcccwcccwcccwccc.................cccwcccwcccwcccwcccwcccwcc
+cccccccccccccccccccccccccvvnnnnnnnnnnnnnnnvvccccccccccccccccccccccccc
+                        vvw...............wvv
+                       vvww..GQGSG-GzGOG..wwvv
+                        vvw...............wvv
+                        vvvyyyyyyyyyyyyyyyvvv
+                          vyyyyyyyyyyyyyyyv
+                          vyyyyyyyyyyyyyyyv
+                          vyyyyyyyyyyyyyyyv
+                          vyyyyyyyyyyyyyyyv
+                          vyyyyyyyyyyyyyyyv
+                          vyyyyyyyyyyyyyyyv
+                          vyyyyyyyyyyyyyyyv
+                          vyyyyyyyyyyyyyyyv
+                          vyyyyyyyyyyyyyyyv
+                          vvyyyyyyyyyyyyyvv
+                          vvyyyyyyyyyyyyyvv
+                          vvyyyyyyyyyyyyyvv
+                          vvvvvvvvvvvvvvvvv
+ENDMAP
+
 ################################################################################
 # Main vaults with multiple arena shapes. Denoted by a lava pattern along the
 # walls, and no fountains.
