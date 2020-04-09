@@ -5854,14 +5854,14 @@ vector<item_def> player::get_armour_items() const
 vector<item_def> player::get_armour_items_one_sub(item_def sub) const
 {
 
-    vector<item_dev> armour_items = get_armour_items_one_removal(sub);
+    vector<item_def> armour_items = get_armour_items_one_removal(sub);
 
     armour_items.push_back(sub);
 
     return armour_items:
 }
 
-vector<item_dev> player::get_armour_items_one_removal(item_def remove) const
+vector<item_def> player::get_armour_items_one_removal(item_def remove) const
 {
     vector<item_def> armour_items;
 
