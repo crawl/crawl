@@ -900,12 +900,30 @@ public:
 
     bool clear_far_engulf() override;
 
+    int armour_class_with_one_sub(item_def sub) const;
+
+    int armour_class_with_one_removal(item_def sub) const;
+
 protected:
     void _removed_beholder(bool quiet = false);
     bool _possible_beholder(const monster* mon) const;
 
     void _removed_fearmonger(bool quiet = false);
     bool _possible_fearmonger(const monster* mon) const;
+
+private:
+    int ac_changes_from_mutations() const;
+    vector<item_def> get_armour_items() const;
+    int scan_artefact(artefact_prop_type which_property,
+                      bool calc_unid,
+                      item_def item) const;
+    vector<item_def> get_armour_items_one_sub(item_def sub) const;
+    vector<item_def> get_armour_items_one_removal(item_def sub) const;
+    int base_ac_with_specific_items(int scale,
+                                    vector<item_def> armour_items) const;
+    int armour_class_with_specific_items(
+                                vector<item_def> items) const;
+
 };
 COMPILE_CHECK((int) SP_UNKNOWN_BRAND < 8*sizeof(you.seen_weapon[0]));
 COMPILE_CHECK((int) SP_UNKNOWN_BRAND < 8*sizeof(you.seen_armour[0]));

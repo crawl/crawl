@@ -1562,11 +1562,95 @@ static string _warlock_mirror_reflect_desc()
            "effects.";
 }
 
+static string _describe_point_change(int points)
+{
+    string point_diff_description;
+
+    point_diff_description += make_stringf("%s by %d",
+                                           points > 0 ? "increase" : "decrease",
+                                           abs(points));
+
+    return point_diff_description;
+}
+
+static string _describe_point_diff(int original,
+                                   int changed)
+{
+    string description;
+
+    int difference = changed - original;
+
+    if (difference == 0)
+        return "remain unchanged.";
+
+    description += _describe_point_change(difference);
+    description += " (";
+    description += to_string(original);
+    description += " -> ";
+    description += to_string(changed);
+    description += ").";
+
+    return description;
+}
+
+static string _armour_ac_sub_change_description(const item_def &item)
+{
+    string description;
+
+    description.reserve(100);
+
+
+    description += "\n\nIf you switch to wearing this armour,"
+                        " your AC will ";
+
+    int you_ac_with_this_item =
+                 you.armour_class_with_one_sub(item);
+
+    description += _describe_point_diff(you.armour_class(),
+                                        you_ac_with_this_item);
+
+    return description;
+}
+
+static string _armour_ac_remove_change_description(const item_def &item)
+{
+    string description;
+
+    description += "\n\nIf you remove this armour,"
+                        " your AC will ";
+
+    int you_ac_without_item =
+                 you.armour_class_with_one_removal(item);
+
+    description += _describe_point_diff(you.armour_class(),
+                                        you_ac_without_item);
+
+    return description;
+}
+
+static bool _you_are_wearing_item(const item_def &item)
+{
+    return get_equip_slot(&item) != EQ_NONE;
+}
+
+static string _armour_ac_change(const item_def &item)
+{
+    string description;
+
+    if (!_you_are_wearing_item(item)){
+        description = _armour_ac_sub_change_description(item);
+    }else{
+        description = _armour_ac_remove_change_description(item);
+    }
+
+    return description;
+}
+
 static string _describe_armour(const item_def &item, bool verbose)
 {
     string description;
 
-    description.reserve(200);
+    description.reserve(300);
 
     if (verbose)
     {
@@ -1618,14 +1702,6 @@ static string _describe_armour(const item_def &item, bool verbose)
             {
                 description += "       Evasion: "
                             + to_string(evp / 30);
-            }
-
-            // only display player-relevant info if the player exists
-            if (crawl_state.need_save && get_armour_slot(item) == EQ_BODY_ARMOUR)
-            {
-                description += make_stringf("\nWearing mundane armour of this type "
-                                            "will give the following: %d AC",
-                                             you.base_ac_from(item, 100) / 100);
             }
         }
     }
@@ -1766,6 +1842,16 @@ static string _describe_armour(const item_def &item, bool verbose)
         }
         else
             description += "\n\nIt cannot be enchanted further.";
+
+    }
+
+    // Only displayed if the player exists (not for item lookup from the menu).
+    if (crawl_state.need_save
+        && can_wear_armour(item, false, true)
+        && item_ident(item, ISFLAG_KNOW_PLUSES)
+        && !is_shield(item))
+    {
+        description += _armour_ac_change(item);
     }
 
     return description;
