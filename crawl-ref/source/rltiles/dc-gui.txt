@@ -320,7 +320,7 @@ base/octopode1 SP_RECOMMENDED_OCTOPODE
 %compose hair/short_black
 %finish SP_RECOMMENDED_OGRE
 %start
-%compose base/ogre_m
+%compose base/two_headed_ogre_m
 %compose body/animal_skin
 %compose hair/short_black
 %finish SP_RECOMMENDED_TWO_HEADED_OGRE
