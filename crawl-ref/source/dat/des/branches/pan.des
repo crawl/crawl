@@ -208,7 +208,7 @@ function pan_entry_vault_contents(e, glyph)
     end
 end
 
-function pan_declare_demonic_rune(e)
+function pan_declare_demonic_rune()
   crawl.mpr("The tension of great conflict fills the air!", "warning")
   crawl.mpr("The demonic rune of Zot may be found here.")
 end
@@ -2513,14 +2513,13 @@ ENDMAP
 #    these relatively large floating vaults (and die_on_error, aside
 #    from being insufficient, shows player-visible error messages) -
 #    some validator check is needed for the concept to work.
-#  * pan_declare_demonic_rune produces messages every time the level
-#    is rebuilt due to connectivity failures, and should also use
-#    the same validator check.
 NAME:   pan_demonic_rune_highlights
 ORIENT: float
 WEIGHT: 0
 : pan_highlights_setup(_G)
-: pan_declare_demonic_rune(_G)
+epilogue{{
+  pan_declare_demonic_rune()
+}}
 
 # Concept inherited from lemuel_draining_boxes.
 NAME:   regret_index_pan_draining_boxed
@@ -3925,10 +3924,11 @@ NAME:   evilmike_holy_pan
 TAGS:   no_pool_fixup
 ORIENT: encompass
 NSUBST: . = > / .
+# There's a somewhat iffy interaction with pregen here. As long as only one
+# pan level is ever pregenerated, it should be basically fine.
 : if you.have_rune("demonic") then
 KFEAT:  O = exit_pandemonium
 : else
-: pan_declare_demonic_rune(_G)
 KITEM:  O = demonic rune of Zot
 : end
 ITEM:   w:5 any / potion of curing
@@ -3967,6 +3967,11 @@ SUBST:  D& = +, '"- = ., H = G, C = c
 : set_feature_name("granite_statue", "golden statue")
 : set_feature_name("metal_wall", "silver wall")
 : set_random_mon_list("angel w:20 / cherub / ophan / daeva / apis w:20")
+epilogue{{
+if not you.have_rune("demonic") then
+  pan_declare_demonic_rune()
+end
+}}
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxCCCCCxxxxxxxxxxxxwwwwxxxxxxxxxwwwxxxwwwxxxxxxCCCCCCCCCCCCCCCCCxxxxxxxxxxx
