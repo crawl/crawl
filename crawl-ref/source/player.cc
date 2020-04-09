@@ -5876,7 +5876,7 @@ vector<item_def> player::get_armour_items_one_removal(item_def remove) const
 
         const item_def& item = inv[equip[eq]];
 
-        armour_items.items.push_back(item);
+        armour_items.push_back(item);
     }
 
     return armour_items;
