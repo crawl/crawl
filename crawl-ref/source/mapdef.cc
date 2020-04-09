@@ -2264,6 +2264,21 @@ void map_def::reinit()
     update_cached_tags();
 }
 
+void map_def::reload_epilogue()
+{
+    // reload the epilogue from the current .des cache; this is because it
+    // isn't serialized but with pregen orderings could need to be run after
+    // vaults have been generated, saved, and reloaded. This can be a tricky
+    // situation in save-compat terms, but is exactly the same as how lua code
+    // triggered by markers is currently handled.
+    const map_def *cache_version = find_map_by_name(name);
+    if (cache_version)
+        epilogue = cache_version->epilogue;
+    // for save compat reasons, fail silently if the map is no longer around.
+    // Probably shouldn't do anything really crucial in the epilogue that you
+    // aren't prepared to deal with save compat for somehow...
+}
+
 bool map_def::map_already_used() const
 {
     return get_uniq_map_names().count(name)
@@ -2428,7 +2443,8 @@ void map_def::strip()
     main.clear();
     validate.clear();
     veto.clear();
-    epilogue.clear();
+    // don't clear epilogues: this may still be needed when reloading a vault
+    // on a level that the player hasn't visited yet.
     feat_renames.clear();
 }
 
