@@ -44,7 +44,7 @@
 
 static const int EQF_NONE = 0;
 // "hand" slots (not rings)
-static const int EQF_HANDS = SLOTF(EQ_WEAPON) | SLOTF(EQ_SHIELD)
+static const int EQF_HANDS = SLOTF(EQ_WEAPON) | SLOTF(EQ_SECOND_WEAPON) | SLOTF(EQ_SHIELD)
                              | SLOTF(EQ_GLOVES);
 // core body slots (statue form)
 static const int EQF_STATUE = SLOTF(EQ_GLOVES) | SLOTF(EQ_BOOTS)

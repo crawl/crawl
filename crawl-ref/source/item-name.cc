@@ -259,6 +259,7 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
                 switch (eq)
                 {
                 case EQ_WEAPON:
+                case EQ_SECOND_WEAPON:
                     if (is_weapon(*this))
                         buff << " (weapon)";
                     else if (you.species == SP_FELID)

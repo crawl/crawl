@@ -6,6 +6,7 @@ enum equipment_type
 
     EQ_WEAPON,
     EQ_FIRST_EQUIP = EQ_WEAPON,
+    EQ_SECOND_WEAPON,
     EQ_CLOAK,
     EQ_HELMET,
     EQ_GLOVES,

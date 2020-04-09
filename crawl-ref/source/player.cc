@@ -701,6 +701,8 @@ maybe_bool you_can_wear(equipment_type eq, bool temp)
         return you.species == SP_FELID ? MB_FALSE :
                you.body_size(PSIZE_TORSO, !temp) < SIZE_MEDIUM ? MB_MAYBE :
                                          MB_TRUE;
+    case EQ_SECOND_WEAPON:
+        return you.species == SP_TWO_HEADED_OGRE ? MB_TRUE : MB_FALSE;
 
     // You can always wear at least one ring (forms were already handled).
     case EQ_RINGS:
@@ -836,6 +838,7 @@ int player::wearing(equipment_type slot, int sub_type, bool calc_unid) const
     switch (slot)
     {
     case EQ_WEAPON:
+    case EQ_SECOND_WEAPON:
         // Hands can have more than just weapons.
         if (weapon() && weapon()->is_type(OBJ_WEAPONS, sub_type))
             ret++;
@@ -917,6 +920,7 @@ int player::wearing_ego(equipment_type slot, int special, bool calc_unid) const
     switch (slot)
     {
     case EQ_WEAPON:
+    case EQ_SECOND_WEAPON:
         // Hands can have more than just weapons.
         if ((item = slot_item(EQ_WEAPON))
             && item->base_type == OBJ_WEAPONS
@@ -979,6 +983,7 @@ bool player_equip_unrand(int unrand_index)
     switch (slot)
     {
     case EQ_WEAPON:
+    case EQ_SECOND_WEAPON:
         // Hands can have more than just weapons.
         if ((item = you.slot_item(slot))
             && item->base_type == OBJ_WEAPONS
@@ -3583,7 +3588,7 @@ int player::scan_artefacts(artefact_prop_type which_property,
 
 
         // Only weapons give their effects when in our hands.
-        if (i == EQ_WEAPON && item.base_type != OBJ_WEAPONS)
+        if ((i == EQ_WEAPON || i == EQ_SECOND_WEAPON) && item.base_type != OBJ_WEAPONS)
             continue;
 
         int val = scan_artefact(which_property, calc_unid, item);
@@ -3958,7 +3963,7 @@ int get_real_mp(bool include_items)
             enp += 15;
     }
 
-    if (include_items && you.wearing_ego(EQ_WEAPON, SPWPN_ANTIMAGIC))
+    if (include_items && (you.wearing_ego(EQ_WEAPON, SPWPN_ANTIMAGIC) || you.wearing_ego(EQ_SECOND_WEAPON, SPWPN_ANTIMAGIC)))
         enp /= 3;
 
     enp = max(enp, 0);
