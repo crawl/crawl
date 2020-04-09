@@ -328,6 +328,14 @@ item_def *player::weapon(int /* which_attack */) const
     return slot_item(EQ_WEAPON, false);
 }
 
+item_def *player::second_weapon(int /* which_attack */) const
+{
+    if (melded[EQ_SECOND_WEAPON])
+        return nullptr;
+
+    return slot_item(EQ_SECOND_WEAPON, false);
+}
+
 // Give hands required to wield weapon.
 hands_reqd_type player::hands_reqd(const item_def &item, bool base) const
 {

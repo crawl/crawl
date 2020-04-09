@@ -136,7 +136,12 @@ static void _assert_valid_slot(equipment_type eq, equipment_type slot)
 #ifdef ASSERTS
     if (eq == slot)
         return;
-    ASSERT(eq == EQ_RINGS || eq == EQ_AMULETS); // all other slots are unique
+    ASSERT(eq == EQ_WEAPON || eq == EQ_RINGS || eq == EQ_AMULETS); // all other slots are unique
+    if (eq == EQ_WEAPON) {
+        if(slot != EQ_SECOND_WEAPON) {
+            die("weapon on invalid slot %d", slot);
+        }
+    }
     if (eq == EQ_RINGS) {
         equipment_type r1 = EQ_LEFT_RING, r2 = EQ_RIGHT_RING;
         if (you.species == SP_OCTOPODE)
@@ -168,7 +173,8 @@ void equip_effect(equipment_type slot, int item_slot, bool unmeld, bool msg)
     item_def& item = you.inv[item_slot];
     equipment_type eq = get_item_slot(item);
 
-    if (slot == EQ_WEAPON && eq != EQ_WEAPON)
+    if ((slot == EQ_WEAPON && eq != EQ_WEAPON) || 
+        (slot == EQ_SECOND_WEAPON && eq != EQ_WEAPON))
         return;
 
     _assert_valid_slot(eq, slot);
@@ -178,7 +184,7 @@ void equip_effect(equipment_type slot, int item_slot, bool unmeld, bool msg)
 
     const interrupt_block block_unmeld_interrupts(unmeld);
 
-    if (slot == EQ_WEAPON)
+    if (slot == EQ_WEAPON || slot == EQ_SECOND_WEAPON)
         _equip_weapon_effect(item, msg, unmeld);
     else if (slot >= EQ_CLOAK && slot <= EQ_BODY_ARMOUR)
         _equip_armour_effect(item, unmeld, slot);
@@ -191,14 +197,15 @@ void unequip_effect(equipment_type slot, int item_slot, bool meld, bool msg)
     item_def& item = you.inv[item_slot];
     equipment_type eq = get_item_slot(item);
 
-    if (slot == EQ_WEAPON && eq != EQ_WEAPON)
+    if ((slot == EQ_WEAPON && eq != EQ_WEAPON) || 
+        (slot == EQ_SECOND_WEAPON && eq != EQ_WEAPON))
         return;
 
     _assert_valid_slot(eq, slot);
 
     const interrupt_block block_meld_interrupts(meld);
 
-    if (slot == EQ_WEAPON)
+    if (slot == EQ_WEAPON || slot == EQ_SECOND_WEAPON)
         _unequip_weapon_effect(item, msg, meld);
     else if (slot >= EQ_CLOAK && slot <= EQ_BODY_ARMOUR)
         _unequip_armour_effect(item, meld, slot);

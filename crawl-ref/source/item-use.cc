@@ -396,6 +396,8 @@ bool can_wield(const item_def *weapon, bool say_reason,
                bool ignore_temporary_disability, bool unwield, bool only_known)
 {
 #define SAY(x) {if (say_reason) { x; }}
+    bool isDualWeapon = (you.species == SP_TWO_HEADED_OGRE);
+
     if (you.melded[EQ_WEAPON] && unwield)
     {
         SAY(mpr("Your weapon is melded into your body!"));
@@ -411,9 +413,15 @@ bool can_wield(const item_def *weapon, bool say_reason,
     if (!ignore_temporary_disability
         && you.weapon()
         && is_weapon(*you.weapon())
-        && you.weapon()->cursed())
+        && you.weapon()->cursed()
+        && (!isDualWeapon
+        || (you.second_weapon()
+        && is_weapon(*you.second_weapon())
+        && you.second_weapon()->cursed()
+        )))
     {
-        SAY(mprf("You can't unwield your weapon%s!",
+        SAY(mprf("You can't unwield your weapon%s%s!",
+                 !isDualWeapon ? "" : "s",
                  !unwield ? " to draw a new one" : ""));
         return false;
     }
@@ -492,6 +500,7 @@ bool can_wield(const item_def *weapon, bool say_reason,
 
 #undef SAY
 }
+
 
 /**
  * Helper function for wield_weapon, wear_armour, and puton_ring
@@ -573,6 +582,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
                   bool show_unwield_msg, bool show_wield_msg,
                   bool adjust_time_taken)
 {
+    bool isDualWeapon = (you.species == SP_TWO_HEADED_OGRE);
     // Abort immediately if there's some condition that could prevent wielding
     // weapons.
     if (!can_wield(nullptr, true, false, slot == SLOT_BARE_HANDS))
@@ -626,7 +636,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
             to_wield = nullptr;
     }
 
-    if (to_wield && to_wield == you.weapon())
+    if (to_wield && (to_wield == you.weapon() || to_wield == you.second_weapon()))
     {
         if (Options.equip_unequip)
             to_wield = nullptr;
@@ -642,7 +652,13 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
 
     if (!to_wield)
     {
-        if (const item_def* wpn = you.weapon())
+        const item_def* wpn = you.weapon();
+        if(isDualWeapon && you.second_weapon()) {
+            //TODO choose unwield weapon slot
+            wpn = you.second_weapon();
+        }
+
+        if (wpn)
         {
             bool penance = false;
             // Can we safely unwield this item?
@@ -722,8 +738,22 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
         return false;
     }
 
+
+    if(isDualWeapon) 
+    {
+        if(you.weapon() && you.second_weapon()) {
+            // TODO Choose and Unwield old weapon.
+            if (unwield_item(show_weff_messages))
+            {
+                // Enable skills so they can be re-disabled later
+                update_can_currently_train();
+            }
+            else
+                return false;
+        }
+    } 
     // Unwield any old weapon.
-    if (you.weapon())
+    else if (you.weapon())
     {
         if (unwield_item(show_weff_messages))
         {
@@ -745,8 +775,16 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
     // thing actually in the player's inventory), that is, in the case where the
     // player chose something from the floor. So use item_slot from here on.
 
-    // Go ahead and wield the weapon.
-    equip_item(EQ_WEAPON, item_slot, show_weff_messages);
+    if(isDualWeapon) {
+        if(!you.weapon()) {
+            equip_item(EQ_WEAPON, item_slot, show_weff_messages);
+        } else {
+            equip_item(EQ_SECOND_WEAPON, item_slot, show_weff_messages);
+        }
+    } else{
+        // Go ahead and wield the weapon.
+        equip_item(EQ_WEAPON, item_slot, show_weff_messages);
+    }
 
     if (show_wield_msg)
     {
