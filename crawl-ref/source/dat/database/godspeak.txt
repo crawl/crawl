@@ -77,50 +77,6 @@ Xom alters the dungeon around you.
 ##################
 # Xom nastiness
 ##################
-# miscast strength 0, mostly harmless
-Xom zero miscast effect
-
-Xom almost notices you.
-
-Xom's attention almost turns to you for a moment.
-
-Xom's power almost touches on you for a moment.
-
-You almost hear Xom's maniacal laughter.
-%%%%
-# miscast strength random2(2), harmless/annoying
-Xom minor miscast effect
-
-Xom notices you.
-
-Xom's attention turns to you for a moment.
-
-Xom's power touches on you for a moment.
-
-You hear Xom's maniacal laughter.
-%%%%
-# miscast strength random2(3), mostly annoying
-Xom medium miscast effect
-
-@Xom minor miscast effect@
-%%%%
-# miscast strength random2(4), up to really nasty
-Xom major miscast effect
-
-"Try this."
-
-Xom's attention turns to you.
-
-Xom's power touches on you.
-
-Xom giggles.
-
-w:1
-"This scratches an itch."
-
-w:1
-"Running a series of toy crash tests now."
-%%%%
 Xom rearrange the pieces
 
 Xom decides to rearrange the pieces.
