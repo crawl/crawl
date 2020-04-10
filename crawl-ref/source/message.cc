@@ -1912,7 +1912,19 @@ void canned_msg(canned_message_type which_message)
         {
             const char* when =
             (which_message == MSG_EMPTY_HANDED_ALREADY ? "already" : "now");
-            if (you.species == SP_FELID)
+            if (you.species == SP_TWO_HEADED_OGRE)
+            {
+                if (!you.weapon() && you.second_weapon()) {
+                    mprf("You are first hand is %s empty.", when);
+                }
+                else if (you.weapon() && !you.second_weapon()) {
+                    mprf("You are second hand is %s empty.", when);
+                }
+                else if (!you.weapon() && !you.second_weapon()) {
+                    mprf("You are %s both empty-handed.", when);
+                }
+            }
+            else if (you.species == SP_FELID)
                 mprf("Your mouth is %s empty.", when);
             else if (you.has_usable_claws(true))
                 mprf("You are %s empty-clawed.", when);

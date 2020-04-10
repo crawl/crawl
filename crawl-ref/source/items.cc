@@ -412,7 +412,7 @@ bool dec_inv_item_quantity(int obj, int amount)
 {
     bool ret = false;
 
-    if (you.equip[EQ_WEAPON] == obj)
+    if (you.equip[EQ_WEAPON] == obj || you.equip[EQ_SECOND_WEAPON] == obj)
         you.wield_change = true;
 
     you.m_quiver.on_inv_quantity_changed(obj, amount);
@@ -423,9 +423,9 @@ bool dec_inv_item_quantity(int obj, int amount)
         {
             if (you.equip[i] == obj)
             {
-                if (i == EQ_WEAPON)
+                if (i == EQ_WEAPON || i == EQ_SECOND_WEAPON)
                 {
-                    unwield_item();
+                    unwield_item(true, (equipment_type) i);
                     canned_msg(MSG_EMPTY_HANDED_NOW);
                 }
                 you.equip[i] = -1;

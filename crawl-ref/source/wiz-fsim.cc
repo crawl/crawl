@@ -234,7 +234,7 @@ static bool _fsim_kit_equip(const string &kit, string &error)
         }
     }
     else if (you.weapon())
-        unwield_item(false);
+        unwield_item(false, EQ_WEAPON);
 
     you.wield_change = true;
 

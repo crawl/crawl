@@ -555,6 +555,90 @@ static int _move_item_from_floor_to_inv(const item_def &to_get)
     return -1;
 }
 
+static char _weapon_slot_key(equipment_type slot)
+{
+    switch (slot)
+    {
+    case EQ_WEAPON:      return '<';
+    case EQ_SECOND_WEAPON:     return '>';
+    default:
+        die("Invalid weapon slot");
+    }
+}
+
+static vector<equipment_type> _current_weapon_types()
+{
+    vector<equipment_type> ret;
+    if (you.species == SP_TWO_HEADED_OGRE)
+    {
+        ret.push_back(EQ_WEAPON);
+        ret.push_back(EQ_SECOND_WEAPON);
+    }
+    else
+    {
+        ret.push_back(EQ_WEAPON);
+    }
+    return ret;
+}
+
+static equipment_type _choose_weapon_slot()
+{
+    ASSERT(you.species == SP_TWO_HEADED_OGRE);
+
+    clear_messages();
+
+    mprf(MSGCH_PROMPT,
+        "Wield weapon on which %s? (<w>Esc</w> to cancel)", you.hand_name(false).c_str());
+
+    const vector<equipment_type> slots = _current_weapon_types();
+    for (auto eq : slots)
+    {
+        string msg = "<w>";
+        const char key = _weapon_slot_key(eq);
+        msg += key;
+        if (key == '<')
+            msg += '<';
+
+        item_def* amulet = you.slot_item(eq, true);
+        if (amulet)
+            msg += "</w> or " + amulet->name(DESC_INVENTORY);
+        else
+            msg += "</w> - no weapon";
+
+        if (eq == EQ_WEAPON)
+            msg += " (first)";
+        else if (eq == EQ_SECOND_WEAPON)
+            msg += " (second)";
+        mprf_nocap("%s", msg.c_str());
+    }
+    flush_prev_message();
+
+    equipment_type eqslot = EQ_NONE;
+    mouse_control mc(MOUSE_MODE_PROMPT);
+    int c;
+    do
+    {
+        c = getchm();
+        for (auto eq : slots)
+        {
+            if (c == _weapon_slot_key(eq)
+                || (you.slot_item(eq, true)
+                    && c == index_to_letter(you.slot_item(eq, true)->link)))
+            {
+                eqslot = eq;
+                c = ' ';
+                break;
+            }
+        }
+    } while (!key_is_escape(c) && c != ' ');
+
+    clear_messages();
+
+    return eqslot;
+}
+
+
+
 /**
  * Helper function for wield_weapon, wear_armour, and puton_ring
  * @param  item  item on floor (where the player is standing) or in inventory
@@ -580,7 +664,7 @@ static int _get_item_slot_maybe_with_move(const item_def &item)
  */
 bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
                   bool show_unwield_msg, bool show_wield_msg,
-                  bool adjust_time_taken)
+                  bool adjust_time_taken, bool second_weapon)
 {
     bool isDualWeapon = (you.species == SP_TWO_HEADED_OGRE);
     // Abort immediately if there's some condition that could prevent wielding
@@ -593,10 +677,19 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
 
     if (auto_wield)
     {
-        if (to_wield == you.weapon()
-            || you.equip[EQ_WEAPON] == -1 && !item_is_wieldable(*to_wield))
-        {
-            to_wield = &you.inv[1];      // backup is 'b'
+        if (!second_weapon) {
+            if (to_wield == you.weapon()
+                || you.equip[EQ_WEAPON] == -1 && !item_is_wieldable(*to_wield))
+            {
+                to_wield = &you.inv[1];      // backup is 'b'
+            }
+        }
+        else {
+            if (to_wield == you.second_weapon()
+                || you.equip[EQ_SECOND_WEAPON] == -1 && !item_is_wieldable(*to_wield))
+            {
+                to_wield = &you.inv[1];      // backup is 'b'
+            }
         }
 
         if (slot != -1)         // allow external override
@@ -653,9 +746,25 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
     if (!to_wield)
     {
         const item_def* wpn = you.weapon();
-        if(isDualWeapon && you.second_weapon()) {
-            //TODO choose unwield weapon slot
-            wpn = you.second_weapon();
+        if (isDualWeapon && you.second_weapon()) {
+            if (!wpn) {
+                wpn = you.second_weapon();
+            }
+            else {
+                if (auto_wield) {
+                    wpn = !second_weapon ? you.weapon() : you.second_weapon();
+                }
+                else {
+                    auto choosed_wpn = _choose_weapon_slot();
+
+                    if (choosed_wpn == EQ_NONE)
+                    {
+                        canned_msg(MSG_OK);
+                        return false;
+                    }
+                    wpn = you.slot_item(choosed_wpn, true);
+                }
+            }
         }
 
         if (wpn)
@@ -680,7 +789,8 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
             if (!_safe_to_remove_or_wear(*wpn, true))
                 return false;
 
-            if (!unwield_item(show_weff_messages))
+            if (!unwield_item(show_weff_messages, 
+                wpn == you.weapon() ? EQ_WEAPON : EQ_SECOND_WEAPON))
                 return false;
 
             if (show_unwield_msg)
@@ -742,8 +852,20 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
     if(isDualWeapon) 
     {
         if(you.weapon() && you.second_weapon()) {
+
+            auto choosed_wpn = !second_weapon ? EQ_WEAPON : EQ_SECOND_WEAPON;
+            if (!auto_wield) {
+                choosed_wpn = _choose_weapon_slot();
+
+                if (choosed_wpn == EQ_NONE)
+                {
+                    canned_msg(MSG_OK);
+                    return false;
+                }
+            }
+
             // TODO Choose and Unwield old weapon.
-            if (unwield_item(show_weff_messages))
+            if (unwield_item(show_weff_messages, choosed_wpn))
             {
                 // Enable skills so they can be re-disabled later
                 update_can_currently_train();
@@ -755,7 +877,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
     // Unwield any old weapon.
     else if (you.weapon())
     {
-        if (unwield_item(show_weff_messages))
+        if (unwield_item(show_weff_messages, EQ_WEAPON))
         {
             // Enable skills so they can be re-disabled later
             update_can_currently_train();

@@ -18,6 +18,6 @@ void lose_permafly_source();
 void equip_effect(equipment_type slot, int item_slot, bool unmeld, bool msg);
 void unequip_effect(equipment_type slot, int item_slot, bool meld, bool msg);
 
-bool unwield_item(bool showMsgs = true);
+bool unwield_item(bool showMsgs/* = true*/, equipment_type slot);
 
 bool acrobat_boost_active();

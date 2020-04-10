@@ -895,14 +895,14 @@ static void _print_stats_ev(int x, int y)
  *
  * @return     A colour enum for the player's weapon.
  */
-static int _wpn_name_colour()
+static int _wpn_name_colour(bool second)
 {
     if (you.duration[DUR_CORROSION])
         return RED;
 
-    if (you.weapon())
+    if (!second ? you.weapon() : you.second_weapon())
     {
-        const item_def& wpn = *you.weapon();
+        const item_def& wpn = !second? *you.weapon() : *you.second_weapon();
 
         const string prefix = item_prefix(wpn);
         const int prefcol = menu_colour(wpn.name(DESC_INVENTORY), prefix, "stats");
@@ -919,12 +919,12 @@ static int _wpn_name_colour()
  *
  * @param y     The y-coordinate to print the description at.
  */
-static void _print_stats_wp(int y)
+static void _print_stats_wp(int y, bool second)
 {
     string text;
-    if (you.weapon())
+    if (!second ? you.weapon() : you.second_weapon())
     {
-        item_def wpn = *you.weapon(); // copy
+        item_def wpn = !second ? *you.weapon() : *you.second_weapon(); // copy
 
         if (you.duration[DUR_CORROSION] && wpn.base_type == OBJ_WEAPONS)
             wpn.plus -= 4 * you.props["corrosion_amount"].get_int();
@@ -936,11 +936,11 @@ static void _print_stats_wp(int y)
 
     CGOTOXY(1, y, GOTO_STAT);
     textcolour(HUD_CAPTION_COLOUR);
-    const char slot_letter = you.weapon() ? index_to_letter(you.weapon()->link)
+    const char slot_letter =  (!second ? you.weapon() : you.second_weapon()) ? index_to_letter(!second ? you.weapon()->link : you.second_weapon()->link)
                                           : '-';
     const string slot_name = make_stringf("%c) ", slot_letter);
     CPRINTF("%s", slot_name.c_str());
-    textcolour(_wpn_name_colour());
+    textcolour(_wpn_name_colour(second));
     const int max_name_width = crawl_view.hudsz.x - slot_name.size();
     CPRINTF("%s", chop_string(text, max_name_width).c_str());
     textcolour(LIGHTGREY);
@@ -1396,7 +1396,11 @@ void print_stats()
         // Also, it's a little bogus to change simulation state in
         // render code. We should find a better place for this.
         you.m_quiver.on_weapon_changed();
-        _print_stats_wp(9 + yhack);
+        _print_stats_wp(9 + yhack, false);
+        if (you.species == SP_TWO_HEADED_OGRE) {
+            yhack++;
+            _print_stats_wp(9 + yhack, true);
+        }
     }
     you.wield_change  = false;
 

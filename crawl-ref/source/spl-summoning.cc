@@ -864,7 +864,7 @@ static void _animate_weapon(int pow, actor* target)
     mprf("%s dances into the air!",
          _get_item_desc(wpn, target_is_player).c_str());
     if (target_is_player)
-        unwield_item();
+        unwield_item(true, EQ_WEAPON);
     else
     {
         monster * const montarget = target->as_monster();

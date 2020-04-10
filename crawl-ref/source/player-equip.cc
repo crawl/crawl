@@ -1462,19 +1462,21 @@ static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld,
     calc_mp();
 }
 
-bool unwield_item(bool showMsgs)
+bool unwield_item(bool showMsgs, equipment_type slot)
 {
-    if (!you.weapon())
+    if ((slot == EQ_WEAPON && !you.weapon()) ||
+        (slot == EQ_SECOND_WEAPON && !you.second_weapon()) 
+        || (slot != EQ_WEAPON && slot != EQ_SECOND_WEAPON))
         return false;
 
-    item_def& item = *you.weapon();
+    item_def& item = slot == EQ_WEAPON ? *you.weapon() : *you.second_weapon();
 
-    const bool is_weapon = get_item_slot(item) == EQ_WEAPON;
+    const bool is_weapon = get_item_slot(item) == slot;
 
     if (is_weapon && !safe_to_remove(item))
         return false;
 
-    unequip_item(EQ_WEAPON, showMsgs);
+    unequip_item(slot, showMsgs);
 
     you.wield_change     = true;
     you.redraw_quiver    = true;

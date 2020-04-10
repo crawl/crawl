@@ -325,6 +325,7 @@ enum command_type
     CMD_MIN_SYNTHETIC = CMD_DISABLE_MORE,
     CMD_ENABLE_MORE,
     CMD_UNWIELD_WEAPON,
+    CMD_UNWIELD_SECOND_WEAPON,
 
     // [ds] Silently ignored, requests another round of input.
     CMD_NEXT_CMD,

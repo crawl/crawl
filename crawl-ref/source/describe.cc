@@ -2529,6 +2529,8 @@ static vector<command_type> _allowed_actions(const item_def& item)
     actions.push_back(CMD_ADJUST_INVENTORY);
     if (item_equip_slot(item) == EQ_WEAPON)
         actions.push_back(CMD_UNWIELD_WEAPON);
+    if (item_equip_slot(item) == EQ_SECOND_WEAPON)
+        actions.push_back(CMD_UNWIELD_SECOND_WEAPON);
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
@@ -2602,6 +2604,7 @@ static string _actions_desc(const vector<command_type>& actions, const item_def&
     {
         { CMD_WIELD_WEAPON, "(w)ield" },
         { CMD_UNWIELD_WEAPON, "(u)nwield" },
+        { CMD_UNWIELD_SECOND_WEAPON, "(u)nwield" },
         { CMD_QUIVER_ITEM, "(q)uiver" },
         { CMD_WEAR_ARMOUR, "(w)ear" },
         { CMD_REMOVE_ARMOUR, "(t)ake off" },
@@ -2634,6 +2637,7 @@ static command_type _get_action(int key, vector<command_type> actions)
     {
         { CMD_WIELD_WEAPON,     'w' },
         { CMD_UNWIELD_WEAPON,   'u' },
+        { CMD_UNWIELD_SECOND_WEAPON,   'u' },
         { CMD_QUIVER_ITEM,      'q' },
         { CMD_WEAR_ARMOUR,      'w' },
         { CMD_REMOVE_ARMOUR,    't' },
@@ -2679,6 +2683,7 @@ static bool _do_action(item_def &item, const vector<command_type>& actions, int 
     {
     case CMD_WIELD_WEAPON:     wield_weapon(true, slot);            break;
     case CMD_UNWIELD_WEAPON:   wield_weapon(true, SLOT_BARE_HANDS); break;
+    case CMD_UNWIELD_SECOND_WEAPON:   wield_weapon(true, SLOT_BARE_HANDS, true, true, true, true, true); break;
     case CMD_QUIVER_ITEM:      quiver_item(slot);                   break;
     case CMD_WEAR_ARMOUR:      wear_armour(slot);                   break;
     case CMD_REMOVE_ARMOUR:    takeoff_armour(slot);                break;

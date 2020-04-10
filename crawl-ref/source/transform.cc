@@ -1171,9 +1171,9 @@ static void _remove_equipment(const set<equipment_type>& removed,
 
         if (unequip)
         {
-            if (e == EQ_WEAPON)
+            if (e == EQ_WEAPON || e == EQ_SECOND_WEAPON)
             {
-                unwield_item(!you.berserk());
+                unwield_item(!you.berserk(), e);
                 canned_msg(MSG_EMPTY_HANDED_NOW);
             }
             else
