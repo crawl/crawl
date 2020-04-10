@@ -1904,3 +1904,83 @@ cc...............clcnnnnnnnclc...............cc
                vvyyyyyyyyyyyyyvv
                vvvvvvvvvvvvvvvvv
 ENDMAP
+
+NAME:   gammafunk_gauntlet_mixed_choke_point
+ORIENT: encompass
+TAGS:   no_item_gen no_monster_gen no_trap_gen
+: gauntlet_setup(_G, "DFJLNPR", "EHKMOQS")
+SUBVAULT: a : gauntlet_arena_77_first
+SUBVAULT: p : gauntlet_arena_77_first
+SUBVAULT: q : gauntlet_arena_77_first
+: if crawl.coinflip() then
+:   gauntlet_arena_set_tier(2)
+SUBVAULT: r : gauntlet_arena_second
+: else
+SUBVAULT: r : gauntlet_arena_first
+:   gauntlet_arena_set_tier(2)
+: end
+SUBVAULT: s : gauntlet_arena_77_second
+SUBVAULT: u : gauntlet_arena_77_second
+SUBVAULT: z : gauntlet_arena_77_second
+SUBVAULT: y : gauntlet_exit
+: gauntlet_appearance(_G)
+MAP
+            ccccccccccccc
+  ccccccccccclclclclclclccccccccccc
+ccclclclclclc...........clclclclclccc
+cl.............A..G..<.............lc
+cc......D.........F.........J......cc
+cl..nnnnnnnnn.nnnnnnnnn.nnnnnnnnn..lc
+cc..aaaaaaaaa.ppppppppp.qqqqqqqqq..cc
+cl..aaaaaaaaa.ppppppppp.qqqqqqqqq..lc
+cc..aaaaaaaaa.ppppppppp.qqqqqqqqq..cc
+cl..aaaaaaaaa.ppppppppp.qqqqqqqqq..lc
+cc..aaaaaaaaa.ppppppppp.qqqqqqqqq..cc
+cl..naaaaaaan.npppppppn.nqqqqqqqn..lc
+cc..naaaaaaan.npppppppn.nqqqqqqqn..cc
+cl..nnnnnnnnnnnnnnnnnnnnnnnnnnnnn..lc
+ccc...n.E.........H.........K.n...ccc
+ cl...n...........L...........n...lc
+ ccc..nnnnnnnnnnnnnnnnnnnnnnnnn..ccc
+  cl.........rrrrrrrrrrr.........lc
+  ccc........rrrrrrrrrrr........ccc
+    clclclc..rrrrrrrrrrr..clclclc
+    ccccccc..rrrrrrrrrrr..ccccccc
+         cl..rrrrrrrrrrr..lc
+    ccccccc..rrrrrrrrrrr..ccccccc
+    clclclc..nrrrrrrrrrn..clclclc
+  ccc........nrrrrrrrrrn........ccc
+  cl.........nrrrrrrrrrn.........lc
+ ccc..nnnnnnnnnnnnnnnnnnnnnnnnn..ccc
+ cl...n...........M...........n...lc.
+ccc...n.N.........P.........R.n...ccc
+cl..nnnnnnnnnnnnnnnnnnnnnnnnnnnnn..lc
+cc..sssssssss.uuuuuuuuu.zzzzzzzzz..cc
+cl..sssssssss.uuuuuuuuu.zzzzzzzzz..lc
+cc..sssssssss.uuuuuuuuu.zzzzzzzzz..cc
+cl..sssssssss.uuuuuuuuu.zzzzzzzzz..lc
+cc..sssssssss.uuuuuuuuu.zzzzzzzzz..cc
+cl..nsssssssn.nuuuuuuun.nzzzzzzzn..lc
+cc..nsssssssn.nuuuuuuun.nzzzzzzzn..cc
+cl..nnnnnnnnn.nnnnnnnnn.nnnnnnnnn..lc
+cc.................................cc
+cl..............G.<.G..............lc
+ccclclclclclccnnnnnnnnncclclclclclccc
+ cccccccccccvv.........vvcccccccccc
+           vv...O.Q.S...vv
+          vv.............vv
+          vyyyyyyyyyyyyyyyv
+          vyyyyyyyyyyyyyyyv
+          vyyyyyyyyyyyyyyyv
+          vyyyyyyyyyyyyyyyv
+          vyyyyyyyyyyyyyyyv
+          vyyyyyyyyyyyyyyyv
+          vyyyyyyyyyyyyyyyv
+          vyyyyyyyyyyyyyyyv
+          vyyyyyyyyyyyyyyyv
+          vyyyyyyyyyyyyyyyv
+          vvyyyyyyyyyyyyyvv
+          vvyyyyyyyyyyyyyvv
+          vvyyyyyyyyyyyyyvv
+          vvvvvvvvvvvvvvvvv
+ENDMAP
