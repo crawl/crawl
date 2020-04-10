@@ -563,6 +563,12 @@ move_again:
                         item_def *amulet = victim->slot_item(EQ_AMULET);
                         if (amulet)
                             ident_reflector(amulet);
+                        else {
+                            if (victim->slot_item(EQ_AMULET_LEFT))
+                                ident_reflector(victim->slot_item(EQ_AMULET_LEFT));
+                            else if (victim->slot_item(EQ_AMULET_RIGHT))
+                                ident_reflector(victim->slot_item(EQ_AMULET_RIGHT));
+                        }
                     }
                 }
                 else

@@ -130,7 +130,7 @@ public:
 
     shared_ptr<Widget>& target() { return m_target; }
     shared_ptr<Widget> target() const { return m_target; }
-    void set_target(shared_ptr<Widget> target) { m_target = move(target); }
+    void set_target(shared_ptr<Widget> target_) { m_target = move(target_); }
 
 protected:
     Type m_type;
@@ -991,11 +991,11 @@ public:
         return m_checked;
     };
 
-    void set_checked(bool checked)
+    void set_checked(bool checked_)
     {
-        if (m_checked == checked)
+        if (m_checked == checked_)
             return;
-        m_checked = checked;
+        m_checked = checked_;
 #ifdef USE_TILE_WEB
         sync_state_changed();
 #endif

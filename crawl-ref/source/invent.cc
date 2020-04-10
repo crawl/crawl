@@ -520,6 +520,8 @@ string no_selectables_message(int item_selector)
         return "You don't have any cursable items.";
     case OSEL_UNCURSED_WORN_RINGS:
         return "You aren't wearing any uncursed rings.";
+    case OSEL_UNCURSED_WORN_AMULETS:
+        return "You aren't wearing any uncursed amulets.";
     }
 
     return "You aren't carrying any such object.";
@@ -1148,7 +1150,9 @@ bool item_is_selected(const item_def &i, int selector)
     case OSEL_UNCURSED_WORN_RINGS:
         return !i.cursed() && item_is_equipped(i) && itype == OBJ_JEWELLERY
             && !jewellery_is_amulet(i);
-
+    case OSEL_UNCURSED_WORN_AMULETS:
+        return !i.cursed() && item_is_equipped(i) && itype == OBJ_JEWELLERY
+            && jewellery_is_amulet(i);
     default:
         return false;
     }
@@ -1559,15 +1563,21 @@ bool check_old_item_warning(const item_def& item,
 
         if (jewellery_is_amulet(item))
         {
-            int equip = you.equip[EQ_AMULET];
-            if (equip == -1 || item.link == equip)
+            if (you.species == SP_TWO_HEADED_OGRE) {
+                // ogre handled in prompt_ring_to_remove
                 return true;
+            }
+            else {
+                int equip = you.equip[EQ_AMULET];
+                if (equip == -1 || item.link == equip)
+                    return true;
 
-            old_item = you.inv[equip];
-            if (!needs_handle_warning(old_item, OPER_TAKEOFF, penance))
-                return true;
+                old_item = you.inv[equip];
+                if (!needs_handle_warning(old_item, OPER_TAKEOFF, penance))
+                    return true;
 
-            prompt += "Really remove ";
+                prompt += "Really remove ";
+            }
         }
         else // rings handled in prompt_ring_to_remove
             return true;
@@ -1798,9 +1808,19 @@ bool check_warning_inscriptions(const item_def& item,
 
             if (jewellery_is_amulet(item))
             {
-                int equip = you.equip[EQ_AMULET];
-                if (equip != -1 && item.link == equip)
-                    return check_old_item_warning(item, oper);
+                if (you.species == SP_TWO_HEADED_OGRE) {
+                    for (int slots = EQ_AMULET_LEFT; slots <= EQ_AMULET_RIGHT; ++slots)
+                    {
+                        int equip = you.equip[slots];
+                        if (equip != -1 && item.link == equip)
+                            return check_old_item_warning(item, oper);
+                    }
+                }
+                else {
+                    int equip = you.equip[EQ_AMULET];
+                    if (equip != -1 && item.link == equip)
+                        return check_old_item_warning(item, oper);
+                }
             }
             else
             {

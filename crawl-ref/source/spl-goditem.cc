@@ -778,7 +778,7 @@ bool curse_item(bool armour, const string &pre_msg)
     if (armour)
         min_type = EQ_MIN_ARMOUR, max_type = EQ_MAX_ARMOUR;
     else
-        min_type = EQ_LEFT_RING, max_type = EQ_RING_AMULET;
+        min_type = EQ_LEFT_RING, max_type = EQ_AMULET_RIGHT;
     for (int i = min_type; i <= max_type; i++)
     {
         if (you.equip[i] != -1 && !you.inv[you.equip[i]].cursed())

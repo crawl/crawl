@@ -1,0 +1,61 @@
+enum: SP_TWO_HEADED_OGRE
+monster: MONS_TWO_HEADED_OGRE
+name: Two Headed Ogre
+adjective: Ogreish
+difficulty: Intermediate
+difficulty_priority: 20
+aptitudes:
+  xp: 0
+  hp: 3
+  mp_mod: 0
+  mr: 4
+  fighting: 3
+  short_blades: -1
+  long_blades: -1
+  maces_and_flails: 3
+  slings: -3
+  bows: -3
+  crossbows: -3
+  armour: -2
+  dodging: -1
+  stealth: -2
+  shields: -1
+  unarmed_combat: -1
+  spellcasting: -1
+  conjurations: -2
+  hexes: -2
+  charms: -2
+  summoning: -2
+  necromancy: -2
+  translocations: -2
+  transmutations: -2
+  fire_magic: -2
+  ice_magic: -2
+  air_magic: -2
+  earth_magic: -1
+  poison_magic: -2
+  invocations: 2
+  evocations: -2
+size: large
+str: 13
+int: 7
+dex: 4
+levelup_stat_frequency: 3
+levelup_stats:
+  - str
+mutations:
+  1:
+    MUT_TOUGH_SKIN: 1
+fake_mutations:
+  - long: You can wield two weapons
+    short: dual wield
+  - long: You can wield two amulets
+    short: two head
+recommended_jobs:
+  - JOB_HUNTER
+  - JOB_BERSERKER
+recommended_weapons:
+  - SK_MACES_FLAILS
+  - SK_POLEARMS
+  - SK_STAVES
+  - SK_AXES

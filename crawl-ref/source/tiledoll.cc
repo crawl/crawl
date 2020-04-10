@@ -368,6 +368,8 @@ void fill_doll_equipment(dolls_data &result)
     if (result.parts[TILEP_PART_HAND2] == TILEP_SHOW_EQUIP)
     {
         const int item = you.melded[EQ_SHIELD] ? -1 : you.equip[EQ_SHIELD];
+        const int weapon_item = you.melded[EQ_SECOND_WEAPON] ? -1 : you.equip[EQ_SECOND_WEAPON];
+
         if (you.form == transformation::blade_hands)
         {
             if (is_player_tile(result.parts[TILEP_PART_BASE], TILEP_BASE_OCTOPODE))
@@ -377,10 +379,12 @@ void fill_doll_equipment(dolls_data &result)
                 result.parts[TILEP_PART_HAND2] = TILEP_HAND1_BLADEHAND_FE;
             else result.parts[TILEP_PART_HAND2] = TILEP_HAND1_BLADEHAND;
         }
-        else if (item == -1)
+        else if (item == -1 && weapon_item == -1)
             result.parts[TILEP_PART_HAND2] = 0;
-        else
+        else if (item != -1) 
             result.parts[TILEP_PART_HAND2] = tilep_equ_shield(you.inv[item]);
+        else if (weapon_item != -1)
+            result.parts[TILEP_PART_HAND2] = tilep_equ_weapon(you.inv[weapon_item], true);
     }
     // Body armour.
     if (result.parts[TILEP_PART_BODY] == TILEP_SHOW_EQUIP)

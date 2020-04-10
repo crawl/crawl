@@ -701,13 +701,19 @@ maybe_bool you_can_wear(equipment_type eq, bool temp)
         return you.species == SP_FELID ? MB_FALSE :
                you.body_size(PSIZE_TORSO, !temp) < SIZE_MEDIUM ? MB_MAYBE :
                                          MB_TRUE;
+    case EQ_SECOND_WEAPON:
+        return you.species == SP_TWO_HEADED_OGRE ? MB_TRUE : MB_FALSE;
 
     // You can always wear at least one ring (forms were already handled).
     case EQ_RINGS:
     case EQ_ALL_ARMOUR:
-    case EQ_AMULET:
+    case EQ_AMULETS:
         return MB_TRUE;
-
+    case EQ_AMULET:
+        return you.species != SP_TWO_HEADED_OGRE ? MB_TRUE : MB_FALSE;
+    case EQ_AMULET_LEFT:
+    case EQ_AMULET_RIGHT:
+        return you.species != SP_TWO_HEADED_OGRE ? MB_FALSE : MB_TRUE;
     case EQ_RING_AMULET:
         return player_equip_unrand(UNRAND_FINGER_AMULET) ? MB_TRUE : MB_FALSE;
 
@@ -832,6 +838,7 @@ int player::wearing(equipment_type slot, int sub_type, bool calc_unid) const
     switch (slot)
     {
     case EQ_WEAPON:
+    case EQ_SECOND_WEAPON:
         // Hands can have more than just weapons.
         if (weapon() && weapon()->is_type(OBJ_WEAPONS, sub_type))
             ret++;
@@ -848,21 +855,27 @@ int player::wearing(equipment_type slot, int sub_type, bool calc_unid) const
         break;
 
     case EQ_AMULET:
+    case EQ_AMULETS:
     case EQ_AMULET_PLUS:
-        if ((item = slot_item(static_cast<equipment_type>(EQ_AMULET)))
-            && item->sub_type == sub_type
-            && (calc_unid
-                || item_type_known(*item)))
+        for (int slots = EQ_FIRST_JEWELLERY; slots <= EQ_LAST_JEWELLERY; slots++)
         {
-            ret += (slot == EQ_AMULET_PLUS ? item->plus : 1);
+            if (slots != EQ_AMULET && slots != EQ_AMULET_LEFT && slots != EQ_AMULET_RIGHT)
+                continue;
+
+            if ((item = slot_item(static_cast<equipment_type>(slots)))
+                && item->sub_type == sub_type
+                && (calc_unid
+                    || item_type_known(*item)))
+            {
+                ret += (slot == EQ_AMULET_PLUS ? item->plus : 1);
+            }
         }
         break;
-
     case EQ_RINGS:
     case EQ_RINGS_PLUS:
         for (int slots = EQ_FIRST_JEWELLERY; slots <= EQ_LAST_JEWELLERY; slots++)
         {
-            if (slots == EQ_AMULET)
+            if (slots == EQ_AMULET || slots == EQ_AMULET_LEFT || slots == EQ_AMULET_RIGHT)
                 continue;
 
             if ((item = slot_item(static_cast<equipment_type>(slots)))
@@ -907,6 +920,7 @@ int player::wearing_ego(equipment_type slot, int special, bool calc_unid) const
     switch (slot)
     {
     case EQ_WEAPON:
+    case EQ_SECOND_WEAPON:
         // Hands can have more than just weapons.
         if ((item = slot_item(EQ_WEAPON))
             && item->base_type == OBJ_WEAPONS
@@ -919,6 +933,7 @@ int player::wearing_ego(equipment_type slot, int special, bool calc_unid) const
     case EQ_LEFT_RING:
     case EQ_RIGHT_RING:
     case EQ_AMULET:
+    case EQ_AMULETS:
     case EQ_STAFF:
     case EQ_RINGS:
     case EQ_RINGS_PLUS:
@@ -968,6 +983,7 @@ bool player_equip_unrand(int unrand_index)
     switch (slot)
     {
     case EQ_WEAPON:
+    case EQ_SECOND_WEAPON:
         // Hands can have more than just weapons.
         if ((item = you.slot_item(slot))
             && item->base_type == OBJ_WEAPONS
@@ -977,11 +993,25 @@ bool player_equip_unrand(int unrand_index)
             return true;
         }
         break;
+    case EQ_AMULETS:
+        for (int slots = EQ_FIRST_JEWELLERY; slots <= EQ_LAST_JEWELLERY; ++slots)
+        {
+            if (slots != EQ_AMULET && slots != EQ_AMULET_LEFT && slots != EQ_AMULET_RIGHT)
+                continue;
+
+            if ((item = you.slot_item(static_cast<equipment_type>(slots)))
+                && is_unrandom_artefact(*item)
+                && item->unrand_idx == unrand_index)
+            {
+                return true;
+            }
+        }
+        break;
 
     case EQ_RINGS:
         for (int slots = EQ_FIRST_JEWELLERY; slots <= EQ_LAST_JEWELLERY; ++slots)
         {
-            if (slots == EQ_AMULET)
+            if (slots == EQ_AMULET || slots == EQ_AMULET_LEFT || slots == EQ_AMULET_RIGHT)
                 continue;
 
             if ((item = you.slot_item(static_cast<equipment_type>(slots)))
@@ -1067,7 +1097,7 @@ static int _player_bonus_regen()
 
     // Jewellery.
     if (you.props[REGEN_AMULET_ACTIVE].get_int() == 1)
-        rr += REGEN_PIP * you.wearing(EQ_AMULET, AMU_REGENERATION);
+        rr += REGEN_PIP * you.wearing(EQ_AMULETS, AMU_REGENERATION);
 
     // Artefacts
     rr += REGEN_PIP * you.scan_artefacts(ARTP_REGENERATION);
@@ -1161,7 +1191,7 @@ void update_amulet_attunement_by_health()
 {
     // amulet of regeneration
     // You must be wearing the amulet and able to regenerate to get benefits.
-    if (you.wearing(EQ_AMULET, AMU_REGENERATION)
+    if (you.wearing(EQ_AMULETS, AMU_REGENERATION)
         && you.get_mutation_level(MUT_NO_REGENERATION) == 0)
     {
         // If you hit max HP, turn on the amulet.
@@ -1177,7 +1207,7 @@ void update_amulet_attunement_by_health()
         you.props[REGEN_AMULET_ACTIVE] = 0;
 
     // amulet of the acrobat
-    if (you.wearing(EQ_AMULET, AMU_ACROBAT))
+    if (you.wearing(EQ_AMULETS, AMU_ACROBAT))
     {
         if (you.hp == you.hp_max
             && you.props[ACROBAT_AMULET_ACTIVE].get_int() == 0)
@@ -1195,7 +1225,7 @@ void update_amulet_attunement_by_health()
 // begins to function.
 void update_mana_regen_amulet_attunement()
 {
-    if (you.wearing(EQ_AMULET, AMU_MANA_REGENERATION)
+    if (you.wearing(EQ_AMULETS, AMU_MANA_REGENERATION)
         && player_regenerates_mp())
     {
         if (you.magic_points == you.max_magic_points
@@ -3558,7 +3588,7 @@ int player::scan_artefacts(artefact_prop_type which_property,
 
 
         // Only weapons give their effects when in our hands.
-        if (i == EQ_WEAPON && item.base_type != OBJ_WEAPONS)
+        if ((i == EQ_WEAPON || i == EQ_SECOND_WEAPON) && item.base_type != OBJ_WEAPONS)
             continue;
 
         int val = scan_artefact(which_property, calc_unid, item);
@@ -3933,7 +3963,7 @@ int get_real_mp(bool include_items)
             enp += 15;
     }
 
-    if (include_items && you.wearing_ego(EQ_WEAPON, SPWPN_ANTIMAGIC))
+    if (include_items && (you.wearing_ego(EQ_WEAPON, SPWPN_ANTIMAGIC) || you.wearing_ego(EQ_SECOND_WEAPON, SPWPN_ANTIMAGIC)))
         enp /= 3;
 
     enp = max(enp, 0);
@@ -8133,7 +8163,7 @@ string player::hands_act(const string &plural_verb,
 int player::inaccuracy() const
 {
     int degree = 0;
-    if (wearing(EQ_AMULET, AMU_INACCURACY))
+    if (wearing(EQ_AMULETS, AMU_INACCURACY))
         degree++;
     if (get_mutation_level(MUT_MISSING_EYE))
         degree++;

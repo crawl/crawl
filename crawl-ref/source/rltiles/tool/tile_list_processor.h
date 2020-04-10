@@ -19,7 +19,7 @@ protected:
     bool load_image_from_tile(tile &img, string filename);
     bool load_image(tile &img, const char *filename, bool background = false);
     bool process_line(char *read_line, const char *list_file, int line);
-    void add_image(tile &img, const char *enumname);
+    void add_image(tile &img, const char *enumname, bool reverse = false);
     void recolour(tile &img);
 
     void add_abstracts(

@@ -6,6 +6,7 @@ enum equipment_type
 
     EQ_WEAPON,
     EQ_FIRST_EQUIP = EQ_WEAPON,
+    EQ_SECOND_WEAPON,
     EQ_CLOAK,
     EQ_HELMET,
     EQ_GLOVES,
@@ -27,7 +28,10 @@ enum equipment_type
     EQ_RING_EIGHT,
     // Finger amulet provides an extra ring slot
     EQ_RING_AMULET,
-    EQ_LAST_JEWELLERY = EQ_RING_AMULET,
+    // Two head orge can wield two amulet
+    EQ_AMULET_LEFT,
+    EQ_AMULET_RIGHT,
+    EQ_LAST_JEWELLERY = EQ_AMULET_RIGHT,
     NUM_EQUIP,
 
     EQ_MIN_ARMOUR = EQ_CLOAK,
@@ -41,5 +45,6 @@ enum equipment_type
     EQ_RINGS_PLUS2,                    // check both rings and sum plus2
 #endif
     EQ_ALL_ARMOUR,                     // check all armour types
+    EQ_AMULETS,                        // check all amulet
     EQ_AMULET_PLUS,                    // check amulet for pluses.
 };

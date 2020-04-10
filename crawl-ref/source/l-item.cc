@@ -539,7 +539,7 @@ IDEF(equip_type)
     else if (item->base_type == OBJ_ARMOUR)
         eq = get_armour_slot(*item);
     else if (item->base_type == OBJ_JEWELLERY)
-        eq = item->sub_type >= AMU_RAGE ? EQ_AMULET : EQ_RINGS;
+        eq = item->sub_type >= AMU_RAGE ? EQ_AMULETS : EQ_RINGS;
 
     if (eq != EQ_NONE)
     {

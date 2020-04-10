@@ -48,6 +48,7 @@ enum object_selector
     OSEL_DIVINE_RECHARGE         = -18,
 #endif
     OSEL_UNCURSED_WORN_RINGS     = -19,
+    OSEL_UNCURSED_WORN_AMULETS = -20,
 };
 
 /// Behaviour flags for prompt_invent_item().

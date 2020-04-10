@@ -199,6 +199,12 @@ bool ranged_attack::handle_phase_blocked()
                 item_def *amulet = defender->slot_item(EQ_AMULET, false);
                 if (amulet)
                    ident_reflector(amulet);
+                else {
+                    if (defender->slot_item(EQ_AMULET_LEFT, false))
+                        ident_reflector(defender->slot_item(EQ_AMULET_LEFT, false));
+                    if (defender->slot_item(EQ_AMULET_RIGHT, false))
+                        ident_reflector(defender->slot_item(EQ_AMULET_RIGHT, false));
+                }
             }
         }
         else

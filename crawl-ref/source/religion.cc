@@ -3142,8 +3142,13 @@ static void _god_welcome_handle_gear()
 {
     // Check for amulets of faith.
     item_def *amulet = you.slot_item(EQ_AMULET, false);
-    if (amulet && amulet->sub_type == AMU_FAITH && !is_useless_item(*amulet))
+    item_def *amulet_left = you.slot_item(EQ_AMULET_LEFT, false);
+    item_def *amulet_right = you.slot_item(EQ_AMULET_RIGHT, false);
+    if ((amulet && amulet->sub_type == AMU_FAITH && !is_useless_item(*amulet)) ||
+        (amulet_left && amulet_left->sub_type == AMU_FAITH && !is_useless_item(*amulet_left)) ||
+        (amulet_right && amulet_right->sub_type == AMU_FAITH && !is_useless_item(*amulet_right)))
     {
+        //TODO double boost for two headed orge
         mprf(MSGCH_GOD, "Your amulet flashes!");
         flash_view_delay(UA_PLAYER, god_colour(you.religion), 300);
     }

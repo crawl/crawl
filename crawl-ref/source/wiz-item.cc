@@ -1028,7 +1028,7 @@ static void _debug_acquirement_stats(FILE *ostat)
         EQ_GLOVES, EQ_BOOTS, EQ_AMULET, EQ_RIGHT_RING, EQ_LEFT_RING,
         EQ_RING_ONE, EQ_RING_TWO, EQ_RING_THREE, EQ_RING_FOUR,
         EQ_RING_FIVE, EQ_RING_SIX, EQ_RING_SEVEN, EQ_RING_EIGHT,
-        EQ_RING_AMULET
+        EQ_RING_AMULET, EQ_AMULET_LEFT, EQ_AMULET_RIGHT
     };
 
     bool naked = true;

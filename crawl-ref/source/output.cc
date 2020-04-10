@@ -572,11 +572,12 @@ static int _count_digits(int val)
 
 static const equipment_type e_order[] =
 {
-    EQ_WEAPON, EQ_SHIELD, EQ_BODY_ARMOUR, EQ_HELMET, EQ_CLOAK,
-    EQ_GLOVES, EQ_BOOTS, EQ_AMULET, EQ_LEFT_RING, EQ_RIGHT_RING,
+    EQ_WEAPON, EQ_SECOND_WEAPON, EQ_SHIELD, EQ_BODY_ARMOUR, EQ_HELMET, EQ_CLOAK,
+    EQ_GLOVES, EQ_BOOTS, EQ_AMULET, EQ_AMULET_LEFT, EQ_AMULET_RIGHT,
+    EQ_LEFT_RING, EQ_RIGHT_RING,
     EQ_RING_ONE, EQ_RING_TWO, EQ_RING_THREE, EQ_RING_FOUR,
     EQ_RING_FIVE, EQ_RING_SIX, EQ_RING_SEVEN, EQ_RING_EIGHT,
-    EQ_RING_AMULET,
+    EQ_RING_AMULET, 
 };
 
 static void _print_stats_equip(int x, int y)
@@ -1842,21 +1843,32 @@ static string _itosym(int level, int max = 1)
 
 static const char *s_equip_slot_names[] =
 {
-    "Weapon", "Cloak",  "Helmet", "Gloves", "Boots",
+    "Weapon", "Second Weapon", "Cloak",  "Helmet", "Gloves", "Boots",
     "Shield", "Armour", "Left Ring", "Right Ring", "Amulet",
     "First Ring", "Second Ring", "Third Ring", "Fourth Ring",
     "Fifth Ring", "Sixth Ring", "Seventh Ring", "Eighth Ring",
-    "Amulet Ring"
+    "Amulet Ring", "Left Amulet", "Right Amulet"
 };
 
 const char *equip_slot_to_name(int equip)
 {
     COMPILE_CHECK(ARRAYSZ(s_equip_slot_names) == NUM_EQUIP);
 
+    if (equip == EQ_SECOND_WEAPON) {
+        return "Weapon";
+    }
+
     if (equip == EQ_RINGS
-        || equip >= EQ_FIRST_JEWELLERY && equip <= EQ_LAST_JEWELLERY && equip != EQ_AMULET)
+        || equip >= EQ_FIRST_JEWELLERY && equip <= EQ_LAST_JEWELLERY && 
+        (equip != EQ_AMULET && equip != EQ_AMULET_LEFT && equip != EQ_AMULET_RIGHT))
     {
         return "Ring";
+    }
+
+    if (equip == EQ_AMULETS ||
+        equip == EQ_AMULET || equip == EQ_AMULET_LEFT || equip == EQ_AMULET_RIGHT)
+    {
+        return "Amulet";
     }
 
     if (equip == EQ_BOOTS
@@ -1960,7 +1972,29 @@ static void _print_overview_screen_equip(column_composer& cols,
             continue;
         }
 
-        if (eqslot == EQ_RING_AMULET && !you_can_wear(eqslot))
+        if (you.species != SP_TWO_HEADED_OGRE
+            && eqslot >= EQ_AMULET_LEFT && eqslot <= EQ_AMULET_RIGHT)
+        {
+            continue;
+        }
+        
+        if(you.species == SP_TWO_HEADED_OGRE &&
+            eqslot == EQ_AMULET)
+        {
+            continue;
+        }
+
+        if (you.species == SP_TWO_HEADED_OGRE && eqslot == EQ_SHIELD)
+        {
+            continue;
+        }
+
+        if (you.species != SP_TWO_HEADED_OGRE && eqslot == EQ_SECOND_WEAPON)
+        {
+            continue;
+        }
+
+        if (eqslot == EQ_RING_AMULET  && !you_can_wear(eqslot))
             continue;
 
         const string slot_name_lwr = lowercase_string(equip_slot_to_name(eqslot));
@@ -1992,12 +2026,12 @@ static void _print_overview_screen_equip(column_composer& cols,
                      colname.c_str());
             equip_chars.push_back(equip_char);
         }
-        else if (eqslot == EQ_WEAPON
+        else if ((eqslot == EQ_WEAPON || eqslot == EQ_SECOND_WEAPON )
                  && you.skill(SK_UNARMED_COMBAT))
         {
             str = "  - Unarmed";
         }
-        else if (eqslot == EQ_WEAPON
+        else if ((eqslot == EQ_WEAPON || eqslot == EQ_SECOND_WEAPON )
                  && you.form == transformation::blade_hands)
         {
             const bool plural = !you.get_mutation_level(MUT_MISSING_HAND);
@@ -2612,7 +2646,7 @@ string mutation_overview()
     }
 
     // a bit more stuff
-    if (you.species == SP_OGRE || you.species == SP_TROLL
+    if (you.species == SP_TWO_HEADED_OGRE || you.species == SP_OGRE || you.species == SP_TROLL
         || species_is_draconian(you.species) || you.species == SP_SPRIGGAN)
     {
         mutations.emplace_back("unfitting armour");

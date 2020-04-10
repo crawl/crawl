@@ -654,6 +654,7 @@ public:
                        vector<item_def> *matches = nullptr) const override;
 
     item_def *weapon(int which_attack = -1) const override;
+    item_def *second_weapon(int which_attack = -1) const;
     item_def *shield() const override;
 
     hands_reqd_type hands_reqd(const item_def &item,

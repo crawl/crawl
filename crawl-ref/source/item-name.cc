@@ -259,6 +259,7 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
                 switch (eq)
                 {
                 case EQ_WEAPON:
+                case EQ_SECOND_WEAPON:
                     if (is_weapon(*this))
                         buff << " (weapon)";
                     else if (you.species == SP_FELID)
@@ -301,6 +302,12 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
                     break;
                 case EQ_RING_AMULET:
                     buff << " (on amulet)";
+                    break;
+                case EQ_AMULET_LEFT:
+                    buff << " (around left neck)";
+                    break;
+                case EQ_AMULET_RIGHT:
+                    buff << " (around right neck)";
                     break;
                 default:
                     die("Item in an invalid slot");

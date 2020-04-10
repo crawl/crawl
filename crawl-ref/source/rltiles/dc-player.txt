@@ -75,6 +75,8 @@ naga_red_f
 naga_red_m
 ogre_m OGRE
 ogre_f
+two_headed_ogre_m TWO_HEADED_OGRE
+two_headed_ogre_f
 troll_f TROLL
 troll_m
 octopode1 OCTOPODE
