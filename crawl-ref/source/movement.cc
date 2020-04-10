@@ -164,17 +164,6 @@ void apply_barbs_damage()
     }
 }
 
-void remove_ice_armour_movement()
-{
-    if (you.duration[DUR_ICY_ARMOUR])
-    {
-        mprf(MSGCH_DURATION, "Your icy armour cracks and falls away as "
-                             "you move.");
-        you.duration[DUR_ICY_ARMOUR] = 0;
-        you.redraw_armour_class = true;
-    }
-}
-
 bool cancel_confused_move(bool stationary)
 {
     dungeon_feature_type dangerous = DNGN_FLOOR;
