@@ -2222,8 +2222,6 @@ void world_reacts()
     if (!crawl_state.game_is_arena())
         player_reacts_to_monsters();
 
-    wu_jian_end_of_turn_effects();
-
     add_auto_excludes();
 
     viewwindow();

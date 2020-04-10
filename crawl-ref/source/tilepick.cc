@@ -1930,8 +1930,6 @@ tileidx_t tileidx_monster(const monster_info& mons)
         ch |= TILE_FLAG_CORRODED;
     if (mons.is(MB_SWIFT))
         ch |= TILE_FLAG_SWIFT;
-    if (mons.is(MB_PINNED))
-        ch |= TILE_FLAG_PINNED;
     if (mons.is(MB_VILE_CLUTCH))
         ch |= TILE_FLAG_VILE_CLUTCH;
     if (mons.is(MB_POSSESSABLE))

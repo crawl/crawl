@@ -58,7 +58,6 @@ bound_soul BOUND_SOUL
 infested INFESTED
 corroded CORRODED
 swift SWIFT
-pinned PINNED
 vile_clutch VILE_CLUTCH
 possessable POSSESSABLE
 

@@ -176,7 +176,9 @@ enum monster_info_flags
     MB_NO_REWARD,
     MB_STILL_WINDS,
     MB_SLOWLY_DYING,
+#if TAG_MAJOR_VERSION == 34
     MB_PINNED,
+#endif
     MB_VILE_CLUTCH,
     MB_HIGHLIGHTED_SUMMONER,
     MB_WATERLOGGED,

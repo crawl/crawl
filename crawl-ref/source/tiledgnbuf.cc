@@ -580,11 +580,6 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
         m_buf_icons.add(TILEI_SWIFT, x, y, -status_shift, 0);
         status_shift += 6;
     }
-    if (fg & TILE_FLAG_PINNED)
-    {
-        m_buf_icons.add(TILEI_PINNED, x, y, -status_shift, 0);
-        status_shift += 6;
-    }
     if (fg & TILE_FLAG_RECALL)
     {
         m_buf_icons.add(TILEI_RECALL, x, y, -status_shift, 0);
