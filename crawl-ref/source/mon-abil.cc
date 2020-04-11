@@ -43,7 +43,6 @@
 #include "random.h"
 #include "religion.h"
 #include "spl-damage.h"
-#include "spl-miscast.h"
 #include "spl-util.h"
 #include "state.h"
 #include "stringutil.h"

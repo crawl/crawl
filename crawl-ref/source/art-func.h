@@ -34,6 +34,7 @@
 #include "god-conduct.h"   // did_god_conduct
 #include "god-passive.h"   // passive_t::want_curses
 #include "mgen-data.h"     // For Sceptre of Asmodeus evoke
+#include "monster.h"
 #include "mon-death.h"     // For demon axe's SAME_ATTITUDE
 #include "mon-place.h"     // For Sceptre of Asmodeus evoke
 #include "nearby-danger.h" // For Zhor
@@ -43,7 +44,7 @@
 #include "spl-cast.h"      // For evokes
 #include "spl-damage.h"    // For the Singing Sword.
 #include "spl-goditem.h"   // For Sceptre of Torment tormenting
-#include "spl-miscast.h"   // For Staff of Wucad Mu and Scythe of Curses miscasts
+#include "spl-miscast.h"   // For Spellbinder and plutonium sword miscasts
 #include "spl-monench.h"   // For Zhor's aura
 #include "spl-summoning.h" // For Zonguldrok animating dead
 #include "terrain.h"       // For storm bow
@@ -869,20 +870,18 @@ static void _NIGHT_unequip(item_def */*item*/, bool *show_msgs)
 
 static void _PLUTONIUM_SWORD_melee_effects(item_def* /*weapon*/,
                                            actor* attacker, actor* defender,
-                                           bool mondied, int /*dam*/)
+                                           bool mondied, int dam)
 {
-    if (!mondied && one_chance_in(5)
-        && (!defender->is_monster()
-             || !mons_immune_magic(*defender->as_monster())))
+    if (!mondied && one_chance_in(5) && defender->can_mutate())
     {
         mpr("Mutagenic energy flows through the plutonium sword!");
-        const int pow = random2(9);
-        MiscastEffect(defender, attacker, {miscast_source::melee},
-                      spschool::transmutation, pow, random2(70),
-                      "the plutonium sword", nothing_happens::NEVER);
 
         if (attacker->is_player())
             did_god_conduct(DID_CHAOS, 3);
+
+        miscast_effect(*defender, attacker, {miscast_source::melee},
+                       spschool::transmutation, 5, random2(dam),
+                       "the plutonium sword");
     }
 }
 
@@ -1061,16 +1060,15 @@ static void _ARC_BLADE_melee_effects(item_def* /*weapon*/, actor* attacker,
 
 static void _SPELLBINDER_melee_effects(item_def* /*weapon*/, actor* attacker,
                                        actor* defender, bool mondied,
-                                       int /*dam*/)
+                                       int dam)
 {
     // Only cause miscasts if the target has magic to disrupt.
     if (defender->antimagic_susceptible()
         && !mondied)
     {
-        const int pow = random2(9);
-        MiscastEffect(defender, attacker, {miscast_source::melee},
-                      spschool::random, pow, random2(70),
-                      "the demon whip \"Spellbinder\"", nothing_happens::NEVER);
+        miscast_effect(*defender, attacker, {miscast_source::melee},
+                       spschool::random, random_range(1, 9), dam,
+                       "the demon whip \"Spellbinder\"");
     }
 }
 

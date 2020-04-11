@@ -62,7 +62,6 @@
 #include "shopping.h"
 #include "skills.h"
 #include "spl-book.h"
-#include "spl-miscast.h"
 #include "sprint.h"
 #include "state.h"
 #include "stringutil.h"

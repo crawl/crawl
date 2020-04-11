@@ -123,8 +123,7 @@ bool melee_attack::handle_phase_attempted()
         }
         else if (weapon &&
                 (is_unrandom_artefact(*weapon, UNRAND_SINGING_SWORD)
-                 || is_unrandom_artefact(*weapon, UNRAND_VARIABILITY)
-                 || is_unrandom_artefact(*weapon, UNRAND_SPELLBINDER))
+                 || is_unrandom_artefact(*weapon, UNRAND_VARIABILITY))
                  && you.can_see(*defender))
         {
             targeter_radius hitfunc(&you, LOS_NO_TRANS);

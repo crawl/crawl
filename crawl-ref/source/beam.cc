@@ -4786,15 +4786,8 @@ void bolt::affect_monster(monster* mon)
     // up a group of 8 plants and get placed under penance until the end of
     // time otherwise. I'd prefer to do this elsewhere but the beam information
     // goes out of scope.
-    //
-    // Also exempting miscast explosions from this conduct -cao
-    if (you_worship(GOD_FEDHAS)
-        && (flavour == BEAM_SPORE
-            || source_id == MID_PLAYER
-               && aux_source.find("your miscasting") != string::npos))
-    {
+    if (you_worship(GOD_FEDHAS) && flavour == BEAM_SPORE)
         conducts[0].set();
-    }
 
     if (!is_explosion && !noise_generated)
     {

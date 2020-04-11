@@ -1658,17 +1658,22 @@ static void _wild_magic_card(int power)
         if (x_chance_in_y((power_level + 1) * 5 + random2(5),
                            mons->get_hit_dice()))
         {
+            // skip summoning and tlocs, only destructive forces
             spschool type = random_choose(spschool::conjuration,
                                           spschool::fire,
                                           spschool::ice,
                                           spschool::earth,
                                           spschool::air,
-                                          spschool::poison);
+                                          spschool::poison,
+                                          spschool::transmutation,
+                                          spschool::charms,
+                                          spschool::hexes,
+                                          spschool::necromancy);
 
-            MiscastEffect(mons, actor_by_mid(MID_YOU_FAULTLESS),
-                          {miscast_source::deck}, type,
-                          random2(power/15) + 5, random2(power),
-                          "a card of wild magic");
+            miscast_effect(*mons, &you,
+                           {miscast_source::deck}, type,
+                           3 * (power_level + 1), random2(70),
+                           "a card of wild magic");
 
             num_affected++;
         }
