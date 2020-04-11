@@ -6,12 +6,18 @@
 
 ## [Unreleased]
 ### Added
+- 새로운 종족 쌍두 오우거 추가. 2개의 무기와 2개의 목걸이를 낄 수 있음. 그러나 방패를 낄 수 없음
+  - Added two-headed ogre(playable). Can wear 2 weapons and 2 amulets. But you can't wear a shield
+  
 - 독물의 추출, 증산 추가
   - Added Fulsome Distillation, Evaporate spell
+  
 - 독물의 추출을 위한 나쁜 포션(독, 맹독, 맹물)추가. 추출에서만 나오는 포션이며 자연 드랍되면 버그임
   - Added bad potions (poison, strong poison, water) for Evaporate. only create by Fulsome Distillation
+  
 - 가속 마법 복구
   - rollback Haste
+  
 - 새로운 메인 타이틀 이미지 추가 (logal-image)
   - Add new title artwork (logal-image)
 
@@ -27,14 +33,30 @@
 
 - 메뉴 컬러링을 위한 태그(fixed_artefact, random_artefact) 추가. 픽다트의 기본 색깔을 노란색으로 변경
   - Added Menu/colouring Prefixes(fixed_artefact, random_artefact). Changed the default color of the fixed artefact to yellow
+  
+- 오조크브의 갑옷은 이제 움직여도 풀리지않음
+  - Ozocubu's armor no longer looses when moved
+
 
 ### Removed
+
 
 ### 0.25 Featrue
 - 갑옷 장착시 AC를 보여주는 인터페이스 추가
   - Improve armour AC change descriptions
+  
 - 독 중첩단계에 따른 타일 이펙트 추가
   - can see poison level mons and player
+  
+- 에어스트라이크는 주변의 빈공간의 수만큼 데미지가 증가됨
+  - Airstrike damage now scales so it's greater the more unoccupied squares there are surrounding the target.
 
-
+- 오조크브의 냉장고의 데미지 33%증가되고 시전자에게 데미지를 주지않음
+  - Ozocubu's Refrigeration does 33% more damage on-average and no longer harms the caster
+  
+- 베놈 메이지의 기본책인 The Young Poisoner's Handbook은 이제 이그나이트 포이즌을 들고 시작함
+  - The Young Poisoner's Handbook now contains Ignite Poison.
+  
+  
+  
 [Unreleased]: https://github.com/kimjoy2002/crawl/compare/0.24.1...HEAD
