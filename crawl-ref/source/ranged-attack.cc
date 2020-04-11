@@ -80,7 +80,7 @@ int ranged_attack::calc_to_hit(bool random)
     }
 
     int hit = orig_to_hit;
-    if (defender->missile_deflection())
+    if (defender->missile_repulsion())
     {
         if (random)
             hit = random2(hit);
@@ -218,16 +218,16 @@ bool ranged_attack::handle_phase_dodged()
     const int orig_ev_margin =
         test_hit(orig_to_hit, ev, !attacker->is_player());
 
-    if (defender->missile_deflection() && orig_ev_margin >= 0)
+    if (defender->missile_repulsion() && orig_ev_margin >= 0)
     {
         if (needs_message && defender_visible)
         {
             mprf("%s is repelled.", projectile->name(DESC_THE).c_str());
-            defender->ablate_deflection();
+            defender->ablate_repulsion();
         }
 
         if (defender->is_player())
-            count_action(CACT_DODGE, DODGE_DEFLECT);
+            count_action(CACT_DODGE, DODGE_REPEL);
 
         return true;
     }

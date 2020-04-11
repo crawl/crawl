@@ -2731,17 +2731,17 @@ bool bolt::fuzz_invis_tracer()
 // very kind to the player, but it should be fairer to monsters than
 // 4.0.
 static bool _test_beam_hit(int attack, int defence, bool pierce,
-                           bool defl, defer_rand &r)
+                           bool repel, defer_rand &r)
 {
     if (attack == AUTOMATIC_HIT)
         return true;
 
     if (pierce)
     {
-        if (defl && attack >= 2) // don't increase acc of 0
+        if (repel && attack >= 2) // don't increase acc of 0
             attack = r[0].random_range((attack + 1) / 2 + 1, attack);
     }
-    else if (defl)
+    else if (repel)
         attack = r[0].random2(attack);
 
     dprf(DIAG_BEAM, "Beam attack: %d, defence: %d", attack, defence);
@@ -3060,17 +3060,17 @@ bool bolt::misses_player()
 
     defer_rand r;
 
-    bool defl = you.missile_deflection();
+    bool repel = you.missile_repulsion();
 
     if (!_test_beam_hit(real_tohit, dodge, pierce, 0, r))
     {
         mprf("The %s misses you.", name.c_str());
         count_action(CACT_DODGE, DODGE_EVASION);
     }
-    else if (defl && !_test_beam_hit(real_tohit, dodge, pierce, defl, r))
+    else if (repel && !_test_beam_hit(real_tohit, dodge, pierce, repel, r))
     {
         mprf("The %s is repelled.", name.c_str());
-        count_action(CACT_DODGE, DODGE_DEFLECT);
+        count_action(CACT_DODGE, DODGE_REPEL);
     }
     else
         return false;
@@ -4744,14 +4744,14 @@ void bolt::affect_monster(monster* mon)
 
     defer_rand r;
     int rand_ev = random2(mon->evasion());
-    int defl = mon->missile_deflection();
+    bool repel = mon->missile_repulsion();
 
     // FIXME: We're randomising mon->evasion, which is further
     // randomised inside test_beam_hit. This is so we stay close to the
     // 4.0 to-hit system (which had very little love for monsters).
-    if (!engulfs && !_test_beam_hit(beam_hit, rand_ev, pierce, defl, r))
+    if (!engulfs && !_test_beam_hit(beam_hit, rand_ev, pierce, repel, r))
     {
-        const bool deflected = _test_beam_hit(beam_hit, rand_ev, pierce, 0, r);
+        const bool repelled = _test_beam_hit(beam_hit, rand_ev, pierce, 0, r);
         // If the PLAYER cannot see the monster, don't tell them anything!
         if (mon->observable() && name != "burst of metal fragments")
         {
@@ -4768,8 +4768,8 @@ void bolt::affect_monster(monster* mon)
                             << mon->name(DESC_THE) << '.' << endl;
             }
         }
-        if (deflected)
-            mon->ablate_deflection();
+        if (repelled)
+            mon->ablate_repulsion();
         return;
     }
 
