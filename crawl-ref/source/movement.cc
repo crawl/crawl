@@ -164,17 +164,6 @@ void apply_barbs_damage()
     }
 }
 
-void remove_ice_armour_movement()
-{
-    if (you.duration[DUR_ICY_ARMOUR])
-    {
-        mprf(MSGCH_DURATION, "Your icy armour cracks and falls away as "
-                             "you move.");
-        you.duration[DUR_ICY_ARMOUR] = 0;
-        you.redraw_armour_class = true;
-    }
-}
-
 bool cancel_confused_move(bool stationary)
 {
     dungeon_feature_type dangerous = DNGN_FLOOR;
@@ -775,7 +764,6 @@ void move_player_action(coord_def move)
             targ_monst->apply_location_effects(targ);
 
         apply_barbs_damage();
-        remove_ice_armour_movement();
 
         if (you_are_delayed() && current_delay()->is_run())
             env.travel_trail.push_back(you.pos());
