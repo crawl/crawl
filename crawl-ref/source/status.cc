@@ -1012,19 +1012,7 @@ static void _describe_terrain(status_info& inf)
 
 static void _describe_missiles(status_info& inf)
 {
-    const int level = you.missile_deflection();
-    if (!level)
-        return;
-
-    if (level > 1)
-    {
-        bool perm = false;
-        inf.light_colour = perm ? WHITE : LIGHTMAGENTA;
-        inf.light_text   = "DMsl";
-        inf.short_text   = "deflect missiles";
-        inf.long_text    = "You deflect missiles.";
-    }
-    else
+    if (you.missile_deflection())
     {
         inf.light_colour = WHITE;
         inf.light_text   = "RMsl";

@@ -275,7 +275,7 @@ public:
     virtual int shield_block_penalty() const = 0;
     virtual int shield_bypass_ability(int tohit) const = 0;
     virtual void shield_block_succeeded(actor *foe);
-    virtual int missile_deflection() const = 0; // 1 = RMsl, 2 = DMsl
+    virtual bool missile_deflection() const = 0;
     virtual void ablate_deflection()
     {
     }

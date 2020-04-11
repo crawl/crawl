@@ -512,7 +512,7 @@ public:
     int     shield_block_penalty() const override;
     void    shield_block_succeeded(actor *foe) override;
     int     shield_bypass_ability(int tohit) const override;
-    int     missile_deflection() const override;
+    bool    missile_deflection() const override;
     void    ablate_deflection() override;
 
     // Combat-related class methods

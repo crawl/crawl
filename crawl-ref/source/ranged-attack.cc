@@ -80,13 +80,12 @@ int ranged_attack::calc_to_hit(bool random)
     }
 
     int hit = orig_to_hit;
-    const int defl = defender->missile_deflection();
-    if (defl)
+    if (defender->missile_deflection())
     {
         if (random)
-            hit = random2(hit / defl);
+            hit = random2(hit);
         else
-            hit = (hit - 1) / (2 * defl);
+            hit = (hit - 1) / 2;
     }
 
     return hit;
@@ -223,16 +222,7 @@ bool ranged_attack::handle_phase_dodged()
     {
         if (needs_message && defender_visible)
         {
-            if (defender->missile_deflection() >= 2)
-            {
-                mprf("%s %s %s!",
-                     defender->name(DESC_THE).c_str(),
-                     defender->conj_verb("deflect").c_str(),
-                     projectile->name(DESC_THE).c_str());
-            }
-            else
-                mprf("%s is repelled.", projectile->name(DESC_THE).c_str());
-
+            mprf("%s is repelled.", projectile->name(DESC_THE).c_str());
             defender->ablate_deflection();
         }
 

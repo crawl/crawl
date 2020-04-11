@@ -2731,20 +2731,18 @@ bool bolt::fuzz_invis_tracer()
 // very kind to the player, but it should be fairer to monsters than
 // 4.0.
 static bool _test_beam_hit(int attack, int defence, bool pierce,
-                           int defl, defer_rand &r)
+                           bool defl, defer_rand &r)
 {
     if (attack == AUTOMATIC_HIT)
         return true;
 
     if (pierce)
     {
-        if (defl > 1)
-            attack = r[0].random2(attack * 2) / 3;
-        else if (defl && attack >= 2) // don't increase acc of 0
+        if (defl && attack >= 2) // don't increase acc of 0
             attack = r[0].random_range((attack + 1) / 2 + 1, attack);
     }
     else if (defl)
-        attack = r[0].random2(attack / defl);
+        attack = r[0].random2(attack);
 
     dprf(DIAG_BEAM, "Beam attack: %d, defence: %d", attack, defence);
 
@@ -3062,7 +3060,7 @@ bool bolt::misses_player()
 
     defer_rand r;
 
-    int defl = you.missile_deflection();
+    bool defl = you.missile_deflection();
 
     if (!_test_beam_hit(real_tohit, dodge, pierce, 0, r))
     {
@@ -3071,10 +3069,7 @@ bool bolt::misses_player()
     }
     else if (defl && !_test_beam_hit(real_tohit, dodge, pierce, defl, r))
     {
-        // active voice to imply stronger effect
-        mprf(defl == 1 ? "The %s is repelled." : "You deflect the %s!",
-             name.c_str());
-        you.ablate_deflection();
+        mprf("The %s is repelled.", name.c_str());
         count_action(CACT_DODGE, DODGE_DEFLECT);
     }
     else
@@ -4763,9 +4758,8 @@ void bolt::affect_monster(monster* mon)
             // if it would have hit otherwise...
             if (_test_beam_hit(beam_hit, rand_ev, pierce, 0, r))
             {
-                string deflects = (defl == 2) ? "deflects" : "repels";
                 msg::stream << mon->name(DESC_THE) << " "
-                            << deflects << " the " << name
+                            << "repels the " << name
                             << '!' << endl;
             }
             else
