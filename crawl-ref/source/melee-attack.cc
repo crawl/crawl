@@ -685,7 +685,7 @@ static void _hydra_devour(monster &victim)
 
 void melee_attack::mace_flail_knockback()
 {
-    if (defender->is_stationary())
+    if (defender->is_stationary() || defender->is_summoned())
         return; // don't even print a message
 
     //const int size_diff =

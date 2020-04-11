@@ -1119,6 +1119,8 @@ _init_equipment_removal(transformation form)
     set<equipment_type> result;
     if (!form_can_wield(form) && you.weapon() || you.melded[EQ_WEAPON])
         result.insert(EQ_WEAPON);
+    if (!form_can_wield(form) && you.second_weapon() || you.melded[EQ_SECOND_WEAPON])
+        result.insert(EQ_SECOND_WEAPON);
 
     // Liches can't wield holy weapons.
     if (form == transformation::lich && you.weapon()
@@ -1126,10 +1128,15 @@ _init_equipment_removal(transformation form)
     {
         result.insert(EQ_WEAPON);
     }
+    if (form == transformation::lich && you.second_weapon()
+        && is_holy_item(*you.second_weapon()))
+    {
+        result.insert(EQ_SECOND_WEAPON);
+    }
 
     for (int i = EQ_FIRST_EQUIP; i < NUM_EQUIP; ++i)
     {
-        if (i == EQ_WEAPON)
+        if (i == EQ_WEAPON || i == EQ_SECOND_WEAPON)
             continue;
         const equipment_type eq = static_cast<equipment_type>(i);
         const item_def *pitem = you.slot_item(eq, true);
@@ -1156,7 +1163,7 @@ static void _remove_equipment(const set<equipment_type>& removed,
             continue;
 
         bool unequip = !meld;
-        if (!unequip && e == EQ_WEAPON)
+        if (!unequip && (e == EQ_WEAPON || e == EQ_SECOND_WEAPON))
         {
             if (form_can_wield(form))
                 unequip = true;
