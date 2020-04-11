@@ -1040,7 +1040,7 @@ static const char* _book_type_name(int booktype)
     case BOOK_FIRE:                   return "Fire";
     case BOOK_ICE:                    return "Ice";
     case BOOK_SPATIAL_TRANSLOCATIONS: return "Spatial Translocations";
-    case BOOK_ENCHANTMENTS:           return "Enchantments";
+    case BOOK_HEXES:                  return "Hexes";
     case BOOK_TEMPESTS:               return "the Tempests";
     case BOOK_DEATH:                  return "Death";
     case BOOK_MISFORTUNE:             return "Misfortune";

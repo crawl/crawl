@@ -69,7 +69,7 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_GOLUBRIAS_PASSAGE,
 },
 
-{   // Book of Enchantments
+{   // Book of Hexes
     SPELL_CAUSE_FEAR,
     SPELL_VIOLENT_UNRAVELLING,
     SPELL_SILENCE,

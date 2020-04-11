@@ -167,11 +167,6 @@ book of dreams
 The somniloquent utterings of a famed mystic, using uniquely bizarre imagery
 and cryptic digressions to describe spells drawn from the mystic's visions.
 %%%%
-book of enchantments
-
-A spellbook containing an assortment of powerful Hexes, which sparkles and
-shimmers as the pages are flipped.
-%%%%
 book of fire
 
 A book containing advanced spells in the elemental school of Fire, stolen from
@@ -198,6 +193,11 @@ of Ice.
 book of geomancy
 
 A book containing basic spells involving the element of Earth.
+%%%%
+book of hexes
+
+A spellbook containing an assortment of powerful Hexes, which sparkles and
+shimmers as the pages are flipped.
 %%%%
 book of ice
 

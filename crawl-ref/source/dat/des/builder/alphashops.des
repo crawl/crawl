@@ -84,7 +84,7 @@
        "ring of dexterity", "manual of dodging", "wand of disintegration",
        "staff of death", "wand of digging", "dart" }
 
-      elseif s == "E" then i = { "book of enchantments", "manual of evocations",
+      elseif s == "E" then i = { "book of hexes", "manual of evocations",
        "eveningstar", "ring of evasion", "executioner's axe",
        "potion of experience q:1", "scroll of enchant armour", "staff of earth",
        "wand of enslavement", "book of the earth", "scroll of enchant weapon",

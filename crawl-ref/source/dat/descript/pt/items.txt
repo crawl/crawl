@@ -62,10 +62,6 @@ book of dreams
 
 Um livro translúcido; a luz reflete de forma estranha na sua superfície.
 %%%%
-book of enchantments
-
-Um livro de magia.
-%%%%
 book of fixed level
 
 Um livro de magias.
@@ -73,6 +69,10 @@ Um livro de magias.
 book of fixed theme
 
 Um livro de magias.
+%%%%
+book of hexes
+
+Um livro de magia.
 %%%%
 book of maledictions
 

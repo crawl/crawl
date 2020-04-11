@@ -99,15 +99,15 @@ book of dreams
 
 Przejrzysta książka. Promienie światła dziwnie grają na jej powierzchni.
 %%%%
-book of enchantments
-
-Księga czarów.
-%%%%
 book of fixed level
 
 Księga czarów.
 %%%%
 book of fixed theme
+
+Księga czarów.
+%%%%
+book of hexes
 
 Księga czarów.
 %%%%
