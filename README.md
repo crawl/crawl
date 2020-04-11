@@ -2,6 +2,8 @@
 
 * 각종 결정 사항들 투표 함 (일주일 정도 투표하고 결정함)
   1. 추출,증산 아이콘 결정하기(4.7) - https://forms.gle/E2sbCbVBws3crrqeA
+  2. 구덩이 함정을 어캐 할까? (4.12) - https://forms.gle/BKQReT6b4kEEHE9n9
+
 
 # Design goals
 
