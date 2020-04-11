@@ -1012,7 +1012,7 @@ static void _describe_terrain(status_info& inf)
 
 static void _describe_missiles(status_info& inf)
 {
-    if (you.missile_deflection())
+    if (you.missile_repulsion())
     {
         inf.light_colour = WHITE;
         inf.light_text   = "RMsl";

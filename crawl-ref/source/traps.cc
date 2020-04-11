@@ -1167,7 +1167,7 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
     int trap_hit = 20 + (to_hit_bonus()*2);
     trap_hit *= random2(200);
     trap_hit /= 100;
-    if (act.missile_deflection())
+    if (act.missile_repulsion())
         trap_hit = random2(trap_hit);
 
     const int con_block = random2(20 + act.shield_block_penalty());

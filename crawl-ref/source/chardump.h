@@ -62,7 +62,7 @@ enum evoc_type
 enum dodge_type    // subtype for counted actions
 {
     DODGE_EVASION,
-    DODGE_DEFLECT,
+    DODGE_REPEL,
     NUM_DODGES
 };
 

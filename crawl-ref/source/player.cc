@@ -5611,7 +5611,7 @@ void player::shield_block_succeeded(actor *foe)
         count_action(CACT_BLOCK, -1, BLOCK_OTHER); // non-shield block
 }
 
-bool player::missile_deflection() const
+bool player::missile_repulsion() const
 {
     return get_mutation_level(MUT_DISTORTION_FIELD) == 3
         || you.wearing_ego(EQ_ALL_ARMOUR, SPARM_REPULSION)

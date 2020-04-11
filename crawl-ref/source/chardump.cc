@@ -1305,8 +1305,8 @@ static string _describe_action_subtype(caction_type type, int compound_subtype)
         {
         case DODGE_EVASION:
             return "Dodged";
-        case DODGE_DEFLECT:
-            return "Deflected";
+        case DODGE_REPEL:
+            return "Repelled";
         default:
             return "Error";
         }
