@@ -26,17 +26,19 @@
 #include "items.h"
 #include "libutil.h"
 #include "mapmark.h"
+#include "mon-cast.h" // recall for zot traps
 #include "mon-enum.h"
 #include "mon-tentacle.h"
 #include "mon-util.h"
 #include "message.h"
 #include "mon-place.h"
 #include "nearby-danger.h"
+#include "player-stats.h" // lose_stat for zot traps
 #include "random.h"
 #include "religion.h"
 #include "shout.h"
-#include "spl-miscast.h"
 #include "spl-transloc.h"
+#include "spl-summoning.h"
 #include "stash.h"
 #include "state.h"
 #include "stringutil.h"
@@ -438,6 +440,49 @@ static passage_type _find_other_passage_side(coord_def& to)
     return passage_type::free;
 }
 
+// Table of possible Zot trap effects as pairs with weights.
+// 2/3 are "evil magic", 1/3 are "summons"
+static const vector<pair<function<void ()>, int>> zot_effects = {
+    { [] { lose_stat(STAT_RANDOM, 1 + random2avg(5, 2)); }, 4 },
+    { [] { contaminate_player(7000 + random2avg(13000, 2), false); }, 4 },
+    { [] { you.paralyse(nullptr, 2 + random2(4), "a Zot trap"); }, 1 },
+    { [] { dec_mp(you.magic_points); canned_msg(MSG_MAGIC_DRAIN); }, 2 },
+    { [] { you.petrify(nullptr); }, 1 },
+    { [] { you.increase_duration(DUR_LOWERED_MR, random2(20), 20,
+                "You feel susceptible to magic."); }, 4 },
+    { [] { mons_word_of_recall(nullptr, 2 + random2(3)); }, 3 },
+    { [] {
+              mgen_data mg = mgen_data::hostile_at(RANDOM_DEMON_GREATER,
+                                                   true, you.pos());
+              mg.set_summoned(nullptr, 0, SPELL_NO_SPELL, GOD_NO_GOD);
+              mg.set_non_actor_summoner("a Zot trap");
+              mg.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
+              if (create_monster(mg))
+                  mpr("You sense a hostile presence.");
+         }, 3 },
+    { [] {
+             coord_def pt = find_gateway_location(&you);
+             if (pt != coord_def(0, 0))
+                 create_malign_gateway(pt, BEH_HOSTILE, "a Zot trap", 150);
+         }, 1 },
+    { [] {
+              mgen_data mg = mgen_data::hostile_at(MONS_TWISTER,
+                                                   false, you.pos());
+              mg.set_summoned(nullptr, 2, SPELL_NO_SPELL, GOD_NO_GOD);
+              mg.set_non_actor_summoner("a Zot trap");
+              mg.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
+              if (create_monster(mg))
+                  mpr("A huge vortex of air appears!");
+         }, 1 },
+};
+
+// Zot traps only target the player. This rolls their effect.
+static void _zot_trap()
+{
+    mpr("The power of Zot is invoked against you!");
+    (*random_choose_weighted(zot_effects))();
+}
+
 void trap_def::trigger(actor& triggerer)
 {
     const bool you_trigger = triggerer.is_player();
@@ -732,40 +777,20 @@ void trap_def::trigger(actor& triggerer)
         if (you_trigger)
         {
             mpr("You enter the Zot trap.");
-
-            MiscastEffect(&you, nullptr, {miscast_source::zot_trap},
-                          spschool::random, 3, name(DESC_A));
+            _zot_trap();
         }
         else if (m)
         {
             // Zot traps are out to get *the player*! Hostile monsters
-            // benefit and friendly monsters suffer. Such is life.
-
-            // The old code rehid the trap, but that's pure interface screw
-            // in 99% of cases - a player can just watch who stepped where
-            // and mark the trap on an external paper map. Not good.
-
-            actor* targ = nullptr;
-            if (you.see_cell_no_trans(pos))
-            {
-                if (m->wont_attack() || crawl_state.game_is_arena())
-                    targ = m;
-                else if (one_chance_in(5))
-                    targ = &you;
-            }
+            // benefit and friendly monsters bring effects down on
+            // the player. Such is life.
 
             // Give the player a chance to figure out what happened
-            // to their friend.
-            if (player_can_hear(pos) && !targ)
+            if (player_can_hear(pos))
                 mprf(MSGCH_SOUND, "You hear a loud \"Zot\"!");
 
-            if (targ)
-            {
-                mprf("The power of Zot is invoked against %s!",
-                     targ->name(DESC_THE).c_str());
-                MiscastEffect(targ, nullptr, {miscast_source::zot_trap},
-                              spschool::random, 3, "the power of Zot");
-            }
+            if (you.see_cell_no_trans(pos) && one_chance_in(5))
+                _zot_trap();
         }
         break;
 
