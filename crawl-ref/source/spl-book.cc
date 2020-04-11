@@ -178,7 +178,7 @@ int book_rarity(book_type which_book)
     case BOOK_POWER:
         return 6;
 
-    case BOOK_ENCHANTMENTS:
+    case BOOK_HEXES:
     case BOOK_PARTY_TRICKS:
         return 7;
 
