@@ -354,6 +354,17 @@ void attack::init_attack(skill_type unarmed_skill, int attack_number)
     ASSERT(attacker);
     weapon          = attacker->weapon(attack_number);
 
+    if (attacker->is_player()) {
+        if (you.species == SP_TWO_HEADED_OGRE) {
+            if (attack_number == 0) {
+                weapon = you.weapon();
+            }
+            else if (attack_number == 1) {
+                weapon = you.second_weapon();
+            }
+        }
+    }
+
     wpn_skill       = weapon ? item_attack_skill(*weapon) : unarmed_skill;
     if (attacker->is_player() && you.form_uses_xl())
         wpn_skill = SK_FIGHTING; // for stabbing, mostly

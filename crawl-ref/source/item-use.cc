@@ -851,10 +851,39 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
 
     if(isDualWeapon) 
     {
-        if(you.weapon() && you.second_weapon()) {
+        if ((you.weapon() && you.hands_reqd(*you.weapon()) == HANDS_TWO)
+            ||
+            you.hands_reqd(new_wpn) == HANDS_TWO)
+        {
+            //if two handed weapon(maybe range weapon) you should unwield weapon all
+            if (you.weapon()) {
+                if (unwield_item(show_weff_messages, EQ_WEAPON))
+                {
+                    // Enable skills so they can be re-disabled later
+                    update_can_currently_train();
+                }
+                else
+                    return false;
+            }
+            if (you.second_weapon()) {
+                if (unwield_item(show_weff_messages, EQ_SECOND_WEAPON))
+                {
+                    // Enable skills so they can be re-disabled later
+                    update_can_currently_train();
+                }
+                else
+                    return false;
+            }
+        }
+        else if((you.weapon() && you.second_weapon()) ||
+            (is_range_weapon(new_wpn) && you.weapon())) 
+        {
 
             auto choosed_wpn = !second_weapon ? EQ_WEAPON : EQ_SECOND_WEAPON;
-            if (!auto_wield) {
+            if (is_range_weapon(new_wpn)) {
+                choosed_wpn = EQ_WEAPON;
+            }
+            else if (!auto_wield) {
                 choosed_wpn = _choose_weapon_slot();
 
                 if (choosed_wpn == EQ_NONE)
@@ -1013,6 +1042,13 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
     const equipment_type slot = get_armour_slot(item);
 
     if (you.species == SP_OCTOPODE && slot != EQ_HELMET && slot != EQ_SHIELD)
+    {
+        if (verbose)
+            mpr("You can't wear that!");
+        return false;
+    }
+
+    if (you.species == SP_TWO_HEADED_OGRE && slot == EQ_SHIELD)
     {
         if (verbose)
             mpr("You can't wear that!");

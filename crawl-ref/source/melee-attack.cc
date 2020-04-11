@@ -73,7 +73,7 @@ melee_attack::melee_attack(actor *attk, actor *defn,
     ::attack(attk, defn),
 
     attack_number(attack_num), effective_attack_number(effective_attack_num),
-    cleaving(is_cleaving), is_riposte(false),
+    cleaving(is_cleaving), is_riposte(false), is_double_attack(false),
     wu_jian_attack(WU_JIAN_ATTACK_NONE),
     wu_jian_number_of_targets(1)
 {
@@ -192,7 +192,8 @@ bool melee_attack::handle_phase_attempted()
     {
         // Set delay now that we know the attack won't be cancelled.
         if (!is_riposte
-             && (wu_jian_attack == WU_JIAN_ATTACK_NONE))
+             && (wu_jian_attack == WU_JIAN_ATTACK_NONE)
+             && !is_double_attack)
         {
             you.time_taken = you.attack_delay().roll();
         }
@@ -340,18 +341,27 @@ bool melee_attack::handle_phase_dodged()
 
         if (defender->is_player())
         {
-            const bool using_lbl = defender->weapon()
-                && item_attack_skill(*defender->weapon()) == SK_LONG_BLADES;
-            const bool using_fencers
-                = player_equip_unrand(UNRAND_FENCERS);
-            const int chance = using_lbl + using_fencers;
+            for (int i = 0; i < ((you.species == SP_TWO_HEADED_OGRE) ? 2 : 1); i++) {
+                bool using_lbl = false;
+                if(i == 0) {
+                    using_lbl = defender->weapon()
+                        && item_attack_skill(*defender->weapon()) == SK_LONG_BLADES;
+                }
+                else {
+                    using_lbl = you.second_weapon()
+                        && item_attack_skill(*you.second_weapon()) == SK_LONG_BLADES;
+                }
+               
+                const bool using_fencers = player_equip_unrand(UNRAND_FENCERS);
+                const int chance = using_lbl + using_fencers;
 
-            if (x_chance_in_y(chance, 3) && !is_riposte) // no ping-pong!
-                riposte();
+                if (x_chance_in_y(chance, 3) && !is_riposte) // no ping-pong!
+                    riposte(i == 0);
 
-            // Retaliations can kill!
-            if (!attacker->alive())
-                return false;
+                // Retaliations can kill!
+                if (!attacker->alive())
+                    return false;
+            }
         }
     }
 
@@ -1944,7 +1954,7 @@ void melee_attack::handle_noise(const coord_def & pos)
 bool melee_attack::consider_decapitation(int dam, int damage_type)
 {
     const int dam_type = (damage_type != -1) ? damage_type :
-                                               attacker->damage_type();
+                                               attacker->damage_type(attack_number);
     if (!attack_chops_heads(dam, dam_type))
         return false;
 
@@ -1961,7 +1971,7 @@ bool melee_attack::consider_decapitation(int dam, int damage_type)
     const int limit = defender->type == MONS_LERNAEAN_HYDRA ? 27
                                                             : MAX_HYDRA_HEADS;
 
-    if (attacker->damage_brand() == SPWPN_FLAMING)
+    if (attacker->damage_brand(attack_number) == SPWPN_FLAMING)
     {
         if (defender_visible)
             mpr("The flame cauterises the wound!");
@@ -3304,14 +3314,14 @@ void melee_attack::do_minotaur_retaliation()
  * XXX: might be wrong for deep elf blademasters with a long blade in only
  * one hand
  */
-void melee_attack::riposte()
+void melee_attack::riposte(bool first)
 {
     if (you.see_cell(defender->pos()))
     {
         mprf("%s riposte%s.", defender->name(DESC_THE).c_str(),
              defender->is_player() ? "" : "s");
     }
-    melee_attack attck(defender, attacker, 0, effective_attack_number + 1);
+    melee_attack attck(defender, attacker, first?0:1, effective_attack_number + 1);
     attck.is_riposte = true;
     attck.attack();
 }

@@ -94,6 +94,13 @@ static bool _autoswitch_to_melee()
     return wield_weapon(true, item_slot);
 }
 
+static bool _in_melee_range(actor* target)
+{
+    const int dist = (you.pos() - target->pos()).rdist();
+    return dist <= you.reach_range();
+}
+
+
 /**
  * Handle melee combat between attacker and defender.
  *
@@ -111,7 +118,7 @@ static bool _autoswitch_to_melee()
  *
  * @return Whether the attack took time (i.e. wasn't cancelled).
  */
-bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
+bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu, int second_attack)
 {
     ASSERT(attacker); // XXX: change to actor &attacker
     ASSERT(defender); // XXX: change to actor &defender
@@ -146,20 +153,50 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
         }
 
         if (!simu && Options.auto_switch
-            && you.weapon()
+            && (you.weapon() || you.second_weapon())
             && _autoswitch_to_melee())
         {
             return true; // Is this right? We did take time, but we didn't melee
         }
 
-        melee_attack attk(&you, defender);
+        bool dual_handed_ = false;
+        int attack_num = 0;
+        if (second_attack >= 0) {
+            attack_num = second_attack;
+        }
+        else if (you.species == SP_TWO_HEADED_OGRE)
+        {
+            if (you.second_weapon())
+            {
+                if (you.weapon())
+                {
+                    if (is_range_weapon(*you.weapon()) ) {
+                        attack_num = 1;
+                    }
+                    else {
+                        dual_handed_ = true;
+                        attack_num = coinflip() ? 0 : 1;
+                    }
+                }
+                else {
+                    attack_num = 1;
+                }
+            }
+        }
+
+
+        melee_attack attk(&you, defender, attack_num);
+        if (second_attack != -1) {
+            attk.is_double_attack = true;
+        }
+
 
         if (simu)
             attk.simu = true;
 
         // We're trying to hit a monster, break out of travel/explore now.
         interrupt_activity(activity_interrupt::hit_monster,
-                           defender->as_monster());
+            defender->as_monster());
 
         // Check if the player is fighting with something unsuitable,
         // or someone unsuitable.
@@ -187,6 +224,16 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
 
         if (!simu && will_have_passive(passive_t::shadow_attacks))
             dithmenos_shadow_melee(defender);
+
+        if (second_attack == -1
+            && dual_handed_
+            && coinflip()) {
+            if (defender && defender->alive() && _in_melee_range(defender))
+            {
+                mprf("double attack!");
+                fight_melee(&you, defender, nullptr, simu, attack_num?0:1);
+            }
+        }
 
         return true;
     }
@@ -699,7 +746,18 @@ void get_cleave_targets(const actor &attacker, const coord_def& def,
     if (actor_at(def))
         targets.push_back(actor_at(def));
 
-    const item_def* weap = attacker.weapon(which_attack);
+    item_def* weap = attacker.weapon(which_attack);
+    if (attacker.is_player())
+    {
+        if (you.species == SP_TWO_HEADED_OGRE)
+        {
+            //SECOND WEAPON
+            if (which_attack == 1)
+            {
+                weap = you.second_weapon();
+            }
+        }
+    }
 
     if (weap && item_attack_skill(*weap) == SK_AXES
             || attacker.is_player()

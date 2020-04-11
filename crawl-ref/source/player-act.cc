@@ -185,9 +185,9 @@ size_type player::body_size(size_part_type psize, bool base) const
     }
 }
 
-int player::damage_type(int)
+int player::damage_type(int attack_number)
 {
-    if (const item_def* wp = weapon())
+    if (const item_def* wp = (attack_number == 1? second_weapon() : weapon()))
         return get_vorpal_type(*wp);
     else if (form == transformation::blade_hands)
         return DVORP_SLICING;
@@ -202,14 +202,14 @@ int player::damage_type(int)
 /**
  * What weapon brand does the player attack with in melee?
  */
-brand_type player::damage_brand(int)
+brand_type player::damage_brand(int which_attack)
 {
     // confusing touch always overrides
     if (duration[DUR_CONFUSING_TOUCH])
         return SPWPN_CONFUSE;
 
-    const int wpn = equip[EQ_WEAPON];
-    if (wpn != -1 && !melded[EQ_WEAPON])
+    const int wpn = equip[which_attack ==0? EQ_WEAPON : EQ_SECOND_WEAPON];
+    if (wpn != -1 && !melded[which_attack == 0 ? EQ_WEAPON : EQ_SECOND_WEAPON])
     {
         if (is_range_weapon(inv[wpn]))
             return SPWPN_NORMAL; // XXX: check !is_melee_weapon instead?
@@ -234,77 +234,109 @@ brand_type player::damage_brand(int)
  */
 random_var player::attack_delay(const item_def *projectile, bool rescale) const
 {
-    const item_def* weap = weapon();
-    random_var attk_delay(15);
-    // a semi-arbitrary multiplier, to minimize loss of precision from integer
-    // math.
-    const int DELAY_SCALE = 20;
-    const int base_shield_penalty = adjusted_shield_penalty(DELAY_SCALE);
+    random_var prev_delay(15);
+    bool dual_weapon = false;
+    bool doing_secondweapon = false;
+    if (you.species == SP_TWO_HEADED_OGRE) {
+        if (weapon() && second_weapon()) {
+            dual_weapon = true;
+        }
+        else if(!weapon() && second_weapon())  {
+            doing_secondweapon = true;
+        }
+    }
 
-    if (projectile && is_launched(this, weap, *projectile) == launch_retval::THROWN)
-    {
-        // Thrown weapons use 10 + projectile damage to determine base delay.
-        const skill_type wpn_skill = SK_THROWING;
-        const int projectile_delay = 10 + property(*projectile, PWPN_DAMAGE) / 2;
-        attk_delay = random_var(projectile_delay);
-        attk_delay -= div_rand_round(random_var(you.skill(wpn_skill, 10)),
-                                     DELAY_SCALE);
+    for (int i = 0; i < (dual_weapon ? 2 : 1); i++) {
+        const item_def* weap = !doing_secondweapon ? weapon() : second_weapon();
+        random_var attk_delay(15);
+        // a semi-arbitrary multiplier, to minimize loss of precision from integer
+        // math.
+        const int DELAY_SCALE = 20;
+        const int base_shield_penalty = adjusted_shield_penalty(DELAY_SCALE);
 
-        // apply minimum to weapon skill modification
-        attk_delay = rv::max(attk_delay,
+        if (projectile && is_launched(this, weap, *projectile) == launch_retval::THROWN)
+        {
+            // Thrown weapons use 10 + projectile damage to determine base delay.
+            const skill_type wpn_skill = SK_THROWING;
+            const int projectile_delay = 10 + property(*projectile, PWPN_DAMAGE) / 2;
+            attk_delay = random_var(projectile_delay);
+            attk_delay -= div_rand_round(random_var(you.skill(wpn_skill, 10)),
+                DELAY_SCALE);
+
+            // apply minimum to weapon skill modification
+            attk_delay = rv::max(attk_delay,
                 random_var(FASTEST_PLAYER_THROWING_SPEED));
-    }
-    else if (!projectile && !weap)
-    {
-        int sk = form_uses_xl() ? experience_level * 10 :
-                                  skill(SK_UNARMED_COMBAT, 10);
-        attk_delay = random_var(10) - div_rand_round(random_var(sk), 27*2);
-    }
-    else if (weap &&
-             (projectile ? projectile->launched_by(*weap)
-                         : is_melee_weapon(*weap)))
-    {
-        const skill_type wpn_skill = item_attack_skill(*weap);
-        // Cap skill contribution to mindelay skill, so that rounding
-        // doesn't make speed brand benefit from higher skill.
-        const int wpn_sklev = min(you.skill(wpn_skill, 10),
-                                  10 * weapon_min_delay_skill(*weap));
+        }
+        else if (!projectile && !weap)
+        {
+            int sk = form_uses_xl() ? experience_level * 10 :
+                skill(SK_UNARMED_COMBAT, 10);
+            attk_delay = random_var(10) - div_rand_round(random_var(sk), 27 * 2);
+        }
+        else if (weap &&
+            (projectile ? projectile->launched_by(*weap)
+                : is_melee_weapon(*weap)))
+        {
+            const skill_type wpn_skill = item_attack_skill(*weap);
+            // Cap skill contribution to mindelay skill, so that rounding
+            // doesn't make speed brand benefit from higher skill.
+            const int wpn_sklev = min(you.skill(wpn_skill, 10),
+                10 * weapon_min_delay_skill(*weap));
 
-        attk_delay = random_var(property(*weap, PWPN_SPEED));
-        attk_delay -= div_rand_round(random_var(wpn_sklev), DELAY_SCALE);
-        if (get_weapon_brand(*weap) == SPWPN_SPEED)
-            attk_delay = div_rand_round(attk_delay * 2, 3);
+            attk_delay = random_var(property(*weap, PWPN_SPEED));
+            attk_delay -= div_rand_round(random_var(wpn_sklev), DELAY_SCALE);
+            if (get_weapon_brand(*weap) == SPWPN_SPEED)
+                attk_delay = div_rand_round(attk_delay * 2, 3);
+        }
+
+        // At the moment it never gets this low anyway.
+        attk_delay = rv::max(attk_delay, random_var(3));
+
+        if (base_shield_penalty)
+        {
+            // Calculate this separately to avoid overflowing the weights in
+            // the random_var.
+            random_var shield_penalty =
+                div_rand_round(rv::min(rv::roll_dice(1, base_shield_penalty),
+                    rv::roll_dice(1, base_shield_penalty)),
+                    DELAY_SCALE);
+            attk_delay += shield_penalty;
+        }
+
+        if (you.duration[DUR_FINESSE])
+        {
+            ASSERT(!you.duration[DUR_BERSERK]);
+            // Finesse shouldn't stack with Haste, so we make this attack take
+            // longer so when Haste speeds it up, only Finesse will apply.
+            if (you.duration[DUR_HASTE] && rescale)
+                attk_delay = haste_mul(attk_delay);
+            attk_delay = div_rand_round(attk_delay, 2);
+        }
+
+        if (!dual_weapon) {
+
+            // TODO: does this really have to depend on `you.time_taken`?  In basic
+            // cases at least, `you.time_taken` is just `player_speed()`. See
+            // `_prep_input`.
+            return rv::max(div_rand_round(attk_delay * you.time_taken, BASELINE_DELAY),
+                random_var(2));
+        }
+        else {
+            if (i == 0) {
+                prev_delay = attk_delay;
+                doing_secondweapon = true;
+            }
+            else {
+                if (prev_delay.expected() < attk_delay.expected()) {
+                    prev_delay = attk_delay;
+                }
+                return rv::max(div_rand_round(prev_delay * you.time_taken, BASELINE_DELAY),
+                    random_var(2));
+            }
+        }
     }
-
-    // At the moment it never gets this low anyway.
-    attk_delay = rv::max(attk_delay, random_var(3));
-
-    if (base_shield_penalty)
-    {
-        // Calculate this separately to avoid overflowing the weights in
-        // the random_var.
-        random_var shield_penalty =
-            div_rand_round(rv::min(rv::roll_dice(1, base_shield_penalty),
-                                   rv::roll_dice(1, base_shield_penalty)),
-                           DELAY_SCALE);
-        attk_delay += shield_penalty;
-    }
-
-    if (you.duration[DUR_FINESSE])
-    {
-        ASSERT(!you.duration[DUR_BERSERK]);
-        // Finesse shouldn't stack with Haste, so we make this attack take
-        // longer so when Haste speeds it up, only Finesse will apply.
-        if (you.duration[DUR_HASTE] && rescale)
-            attk_delay = haste_mul(attk_delay);
-        attk_delay = div_rand_round(attk_delay, 2);
-    }
-
-    // TODO: does this really have to depend on `you.time_taken`?  In basic
-    // cases at least, `you.time_taken` is just `player_speed()`. See
-    // `_prep_input`.
-    return rv::max(div_rand_round(attk_delay * you.time_taken, BASELINE_DELAY),
-                   random_var(2));
+    return rv::max(div_rand_round(prev_delay * you.time_taken, BASELINE_DELAY),
+        random_var(2));
 }
 
 // Returns the item in the given equipment slot, nullptr if the slot is empty.
