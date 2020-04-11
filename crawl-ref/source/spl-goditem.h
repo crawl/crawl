@@ -38,7 +38,6 @@ const enchant_type dispellable_enchantments[] =
     ENCH_SHROUD,
     ENCH_SAP_MAGIC,
     ENCH_REPEL_MISSILES,
-    ENCH_DEFLECT_MISSILES,
     ENCH_RESISTANCE,
     ENCH_HEXED,
     ENCH_PAIN_BOND,

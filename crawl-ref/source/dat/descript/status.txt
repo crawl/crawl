@@ -59,11 +59,6 @@ RMsl status
 
 You repel missiles, improving your chance to evade them.
 %%%%
-DMsl status
-
-You deflect missiles, greatly improving your chance to evade them. This effect
-has a chance to expire with every projectile it deflects.
-%%%%
 Touch status
 
 Your attacks deal no damage, but have a chance of confusing monsters that they

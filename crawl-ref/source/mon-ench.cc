@@ -935,11 +935,6 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             simple_monster_message(*this, " is no longer repelling missiles.");
         break;
 
-    case ENCH_DEFLECT_MISSILES:
-        if (!quiet)
-            simple_monster_message(*this, " is no longer deflecting missiles.");
-        break;
-
     case ENCH_RESISTANCE:
         if (!quiet)
             simple_monster_message(*this, " is no longer unusually resistant.");
@@ -2032,8 +2027,8 @@ static const char *enchant_names[] =
 #endif
     "sap magic", "shroud", "phantom_mirror", "bribed", "permabribed",
     "corrosion", "gold_lust", "drained", "repel missiles",
-    "deflect missiles",
 #if TAG_MAJOR_VERSION == 34
+    "deflect missiles",
     "negative_vuln", "condensation_shield",
 #endif
     "resistant", "hexed", "corpse_armour",

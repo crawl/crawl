@@ -988,7 +988,7 @@ MONS:     (list of monsters)
           Setting enchantments:
           ---------------------
           You may give a monster any number of enchantments. It may
-          start hasted, blind, have permanent DMsl, etc. The syntax is
+          start hasted, blind, have permanent RMsl, etc. The syntax is
           "ench:<name>:<degree>:<duration>" or "perm_ench:<name>:<degree>".
           The <degree> and <duration> fields may be omitted. Note that
           the enchantment will start the moment the monster is created and

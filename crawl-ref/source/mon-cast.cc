@@ -1864,7 +1864,9 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_SIREN_SONG:
     case SPELL_AVATAR_SONG:
     case SPELL_REPEL_MISSILES:
+#if TAG_MAJOR_VERSION == 34
     case SPELL_DEFLECT_MISSILES:
+#endif
     case SPELL_SUMMON_SCARABS:
 #if TAG_MAJOR_VERSION == 34
     case SPELL_HUNTING_CRY:
@@ -6645,11 +6647,6 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         mons->add_ench(mon_enchant(ENCH_REPEL_MISSILES));
         return;
 
-    case SPELL_DEFLECT_MISSILES:
-        simple_monster_message(*mons, " begins deflecting missiles!");
-        mons->add_ench(mon_enchant(ENCH_DEFLECT_MISSILES));
-        return;
-
     case SPELL_SUMMON_SCARABS:
     {
         const int num_scarabs = 1 + random2(mons->spell_hd(spell_cast) / 5 + 1);
@@ -7939,9 +7936,6 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
     case SPELL_REPEL_MISSILES:
         return mon->has_ench(ENCH_REPEL_MISSILES);
 
-    case SPELL_DEFLECT_MISSILES:
-        return mon->has_ench(ENCH_DEFLECT_MISSILES);
-
     case SPELL_CONFUSION_GAZE:
         return !foe || !mon->can_see(*foe);
 
@@ -8031,6 +8025,7 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
     case SPELL_CONTROL_UNDEAD:
     case SPELL_DAZZLING_FLASH:
     case SPELL_REGENERATION:
+    case SPELL_DEFLECT_MISSILES:
 #endif
     case SPELL_NO_SPELL:
         return true;

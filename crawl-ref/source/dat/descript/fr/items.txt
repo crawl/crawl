@@ -212,13 +212,6 @@ valoir que les sorts ne sont fonctionnellement pas différents de ceux déjà
 connus, mais le livre reste populaire pour l'extraordinaire bizarrerie de son
 imagerie et pour ses digressions cryptiques.
 %%%%
-book of enchantments
-
-Un livre contenant un assortiment de Malédictions et de Charmes magiques qui
-crépitent et chatoient lorsque les pages sont tournées; Le titre quelque peu
-anachronique reflète une plus ancienne et incomplète compréhension de ces deux
-écoles de magie.
-%%%%
 book of envenomations
 
 Un livre de sorts qui brille d'une lumière verte. La première édition de ce

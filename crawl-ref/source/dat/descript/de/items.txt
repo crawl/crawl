@@ -130,13 +130,6 @@ Zaubersprüche funktionell nicht anders als Einsen sind, die schon bekannt sind,
 aber das Buch bleibt für seine einzig bizarre Bilder und kryptische
 Abschweifungen interessant.
 %%%%
-book of enchantments
-
-Ein Zauberbuch, das ein Sortiment von magischen Flüchen und Zaubern enthält,
-die Funkeln und Schimmer als die Seiten zugeworfen wird. Der wunderlich
-unzeitgemäße Titel reflektiert ein früheres, unvollständigeres geheimnisvolles
-Verständnis dieser zwei Schulen von Zauberei.
-%%%%
 book of fixed level
 
 Ein Buch mit Zaubersprüchen.

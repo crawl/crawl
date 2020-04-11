@@ -377,15 +377,6 @@ struct player_debuff_effects
  */
 static void _dispellable_player_buffs(player_debuff_effects &buffs)
 {
-    // attributes
-    static const attribute_type dispellable_attributes[] = {
-        ATTR_DEFLECT_MISSILES,
-    };
-
-    for (auto attribute : dispellable_attributes)
-        if (you.attribute[attribute])
-            buffs.attributes.push_back(attribute);
-
     // durations
     for (unsigned int i = 0; i < NUM_DURATIONS; ++i)
     {

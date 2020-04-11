@@ -233,13 +233,6 @@ Debugging Ray spell
 
 Un rayon provoquant des dégâts massif (1500 pv) et qui touche toujours.
 %%%%
-Deflect Missiles spell
-
-Ce sort protège le sorcier de toutes attaques par projectiles, en les rendant
-plus facile à esquiver. Ce sort est extrêmement efficace contre les attaques
-mono-cible et pénétrantes. Chaque fois qu'un projectile est dévié, le sort
-risque d'expirer avec des chances plus faibles à haute puissance.
-%%%%
 Dig spell
 
 Ce sort forme des tunnels au travers la pierre brute.

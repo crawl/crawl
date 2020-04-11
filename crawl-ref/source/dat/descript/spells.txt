@@ -406,13 +406,6 @@ Debugging Ray spell
 
 Fires a ray which does massive damage (1500 hp) and always hits.
 %%%%
-Deflect Missiles spell
-
-Protects the caster from all kinds of projectile attacks, making them
-significantly easier to dodge. It is highly effective against both
-single-target and penetrating attacks. Each time a missile is deflected the
-spell has a chance of expiring, with a lower chance of expiry at high power.
-%%%%
 Dig spell
 
 Digs a tunnel through unworked rock.

@@ -1818,10 +1818,6 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_NECROMUTATION:
         return cast_transform(powc, transformation::lich, fail);
 
-    // General enhancement.
-    case SPELL_DEFLECT_MISSILES:
-        return deflection(powc, fail);
-
     case SPELL_SWIFTNESS:
         return cast_swiftness(powc, fail);
 
@@ -2336,6 +2332,7 @@ const set<spell_type> removed_spells =
     SPELL_CIGOTUVIS_EMBRACE,
     SPELL_DELAYED_FIREBALL,
     SPELL_REGENERATION,
+    SPELL_DEFLECT_MISSILES,
 #endif
 };
 

@@ -341,27 +341,6 @@ bool add_spell_to_memory(spell_type spell)
     return true;
 }
 
-static void _remove_spell_attributes(spell_type spell)
-{
-    switch (spell)
-    {
-    case SPELL_DEFLECT_MISSILES:
-        if (you.attribute[ATTR_DEFLECT_MISSILES])
-        {
-            const int orig_defl = you.missile_deflection();
-            you.attribute[ATTR_DEFLECT_MISSILES] = 0;
-            mprf(MSGCH_DURATION, "You feel %s from missiles.",
-                                 you.missile_deflection() < orig_defl
-                                 ? "less protected"
-                                 : "your spell is no longer protecting you");
-        }
-        break;
-    default:
-        break;
-    }
-    return;
-}
-
 bool del_spell_from_memory_by_slot(int slot)
 {
     ASSERT_RANGE(slot, 0, MAX_KNOWN_SPELLS);
@@ -372,7 +351,6 @@ bool del_spell_from_memory_by_slot(int slot)
     spell_skills(you.spells[slot], you.stop_train);
 
     mprf("Your memory of %s unravels.", spell_title(you.spells[slot]));
-    _remove_spell_attributes(you.spells[slot]);
 
     you.spells[slot] = SPELL_NO_SPELL;
 
@@ -1174,11 +1152,6 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         // mere corona is not enough, but divine light blocks it completely
         if (temp && (you.haloed() || !prevent && have_passive(passive_t::halo)))
             return "darkness is useless against divine light.";
-        break;
-
-    case SPELL_DEFLECT_MISSILES:
-        if (temp && you.attribute[ATTR_DEFLECT_MISSILES])
-            return "you're already deflecting missiles.";
         break;
 
     case SPELL_STATUE_FORM:

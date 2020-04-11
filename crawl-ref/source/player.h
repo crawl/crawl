@@ -834,7 +834,6 @@ public:
     int shield_bypass_ability(int tohit) const override;
     void shield_block_succeeded(actor *foe) override;
     int missile_deflection() const override;
-    void ablate_deflection() override;
 
     // Combat-related adjusted penalty calculation methods
     int unadjusted_body_armour_penalty() const override;
