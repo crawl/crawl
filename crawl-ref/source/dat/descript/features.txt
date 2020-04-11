@@ -1047,9 +1047,12 @@ to the caster.
 ########################################################################
 ### Other effects
 ########################################################################
-icicle covered
+ice covered
 
-This wall bristles with sharp icicles that will release explosively when a foe
-wanders nearby. The shards damage and encase the victim in a frozen shroud that
-impedes movement.
+This wall is covered in magical ice that freezes victims who wander nearby.
+This damage bypasses any armour the target may have, and will slow cold-blooded
+creatures. Each victim is only ever affected by one icy wall at a time.
+
+The creator of this icy covering and any of their allies can walk safely past
+this wall.
 %%%%

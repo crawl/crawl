@@ -2884,7 +2884,7 @@ string feature_description_at(const coord_def& where, bool covering,
     string covering_description = "";
 
     if (covering && you.see_cell(where) && is_icecovered(where))
-        covering_description = ", covered with icicles";
+        covering_description = ", covered with ice";
 
     if (covering && you.see_cell(where) && is_bloodcovered(where))
     {

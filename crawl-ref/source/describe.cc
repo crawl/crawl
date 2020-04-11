@@ -2248,8 +2248,8 @@ static vector<pair<string,string>> _get_feature_extra_descs(const coord_def &pos
     dungeon_feature_type feat = env.map_knowledge(pos).feat();
     if (feat_is_wall(feat) && env.map_knowledge(pos).flags & MAP_ICY)
     {
-        ret.emplace_back(pair<string,string>("A covering of icicles.",
-                    getLongDescription("icicle covered")));
+        ret.emplace_back(pair<string,string>("A covering of ice.",
+                    getLongDescription("ice covered")));
     }
     else if (!feat_is_solid(feat))
     {
