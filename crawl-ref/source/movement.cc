@@ -764,7 +764,6 @@ void move_player_action(coord_def move)
             targ_monst->apply_location_effects(targ);
 
         apply_barbs_damage();
-        //remove_ice_armour_movement();
 
         if (you_are_delayed() && current_delay()->is_run())
             env.travel_trail.push_back(you.pos());
