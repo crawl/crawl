@@ -630,9 +630,6 @@ void floor_transition(dungeon_feature_type how,
 
     if (!forced)
     {
-        // DONT Break ice armour
-        //remove_ice_armour_movement();
-
         // Check for barbs and apply
         apply_barbs_damage();
     }
