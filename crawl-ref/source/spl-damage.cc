@@ -3367,20 +3367,17 @@ void actor_apply_toxic_bog(actor * act)
 */
 spret cast_frozen_ramparts(int pow, bool fail)
 {
-    vector<coord_def> walls;
-    for (distance_iterator di(you.pos(), false, false,
-                spell_range(SPELL_FROZEN_RAMPARTS, -1, false)); di; ++di)
+    vector<coord_def> wall_locs;
+    for (radius_iterator ri(you.pos(),
+                spell_range(SPELL_FROZEN_RAMPARTS, -1, false), C_SQUARE,
+                LOS_NO_TRANS, true); ri; ++ri)
     {
-        const auto feat = grd(*di);
-        if (you.see_cell(*di)
-            && feat_is_wall(feat)
-            && !feat_is_permarock(feat))
-        {
-            walls.push_back(*di);
-        }
+        const auto feat = grd(*ri);
+        if (feat_is_wall(feat))
+            wall_locs.push_back(*ri);
     }
 
-    if (walls.empty())
+    if (wall_locs.empty())
     {
         mpr("There are no walls around you to affect.");
         return spret::abort;
@@ -3388,10 +3385,11 @@ spret cast_frozen_ramparts(int pow, bool fail)
 
     fail_check();
 
-    for (auto wall : walls)
+    for (auto pos: wall_locs)
     {
-        noisy(spell_effect_noise(SPELL_FROZEN_RAMPARTS), wall);
-        env.pgrid(wall) |= FPROP_ICY;
+        if (in_bounds(pos))
+            noisy(spell_effect_noise(SPELL_FROZEN_RAMPARTS), pos);
+        env.pgrid(pos) |= FPROP_ICY;
     }
 
     env.level_state |= LSTATE_ICY_WALL;
