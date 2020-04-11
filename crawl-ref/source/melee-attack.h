@@ -71,6 +71,7 @@ private:
     /* Attack effects */
     void check_autoberserk();
     bool check_unrand_effects() override;
+    void mace_flail_knockback();
 
     void rot_defender(int amount);
 

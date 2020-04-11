@@ -683,6 +683,107 @@ static void _hydra_devour(monster &victim)
     victim.props[NEVER_CORPSE_KEY] = true;
 }
 
+void melee_attack::mace_flail_knockback()
+{
+    if (defender->is_stationary())
+        return; // don't even print a message
+
+    //const int size_diff =
+    //    attacker->body_size(PSIZE_BODY) - defender->body_size(PSIZE_BODY);
+
+    const int distance = random_range(1, property(*weapon, PWPN_DAMAGE)/5);/* skill level*/;
+
+    const int roll = property(*weapon, PWPN_DAMAGE) + 5;
+    const int weight = max_corpse_chunks(defender->is_monster() ? defender->type :
+        player_species_to_mons_species(you.species));
+
+
+
+    const coord_def old_pos = defender->pos();
+    const coord_def dif = defender->pos() - attacker->pos();
+
+    //const coord_def new_pos = old_pos + old_pos - attacker.pos();
+
+
+    //mprf("%s smashing %s!", attacker->name(DESC_THE).c_str(), defender->name(DESC_THE).c_str());
+
+    actor* hitting_actor = nullptr;
+    coord_def new_pos = old_pos;
+    for (int dist_travelled = 0; dist_travelled < distance; dist_travelled++)
+    {
+        if (x_chance_in_y(weight, roll))
+            continue;
+        
+        new_pos += dif;
+        if (cell_is_solid(new_pos)
+            || !defender->can_pass_through(new_pos)
+            || !defender->is_habitable(new_pos))
+        {
+            new_pos -= dif;
+            break;
+        }
+        else if(hitting_actor = actor_at(new_pos)) {
+            defender->move_to_pos(new_pos);
+            break;
+        }
+        defender->move_to_pos(new_pos);
+    }
+
+    if (new_pos == old_pos)
+        return;
+
+    if (you.can_see(*defender))
+    {
+        mprf("%s %s knocked back by the %s.",
+            defender->name(DESC_THE).c_str(),
+            defender->conj_verb("are").c_str(),
+            attacker->name(DESC_THE).c_str());
+    }
+
+    if (hitting_actor) {
+        if (hitting_actor && hitting_actor->alive())
+        {
+            if (hitting_actor->is_monster())
+                behaviour_event(hitting_actor->as_monster(), ME_WHACK, attacker);
+            if (you.can_see(*hitting_actor))
+            {
+                mprf("%s %s with %s!",
+                    hitting_actor->name(DESC_THE).c_str(),
+                    hitting_actor->conj_verb("collide").c_str(),
+                    defender->name(DESC_THE).c_str());
+            }
+            const string thisname = defender->name(DESC_A, true);
+            const string othername = hitting_actor->name(DESC_A, true);
+            hitting_actor->hurt(attacker, hitting_actor->apply_ac(damage_done),
+                BEAM_MISSILE, KILLED_BY_COLLISION, othername, thisname);
+
+        }
+    }
+
+
+    if (defender->can_bleed()
+        && !defender->is_summoned()
+        && !defender->submerged()
+        && in_bounds(defender->pos())
+        && !simu)
+    {
+        int blood = damage_done / 2;
+        if (blood)
+            blood_fineff::schedule(defender, defender->pos(), blood);
+    }
+
+
+    //if (defender->pos() != new_pos)
+    //    defender->collide(new_pos, agent(), 50);
+
+    //act->apply_location_effects(oldpos, killer(), actor_to_death_source(agent()));
+
+
+    return;
+}
+
+
+
 /**
  * Possibly devour the defender whole.
  *
@@ -747,6 +848,10 @@ bool melee_attack::handle_phase_killed()
         && defender->type != MONS_NO_MONSTER) // already reset
     {
         _hydra_consider_devouring(*defender->as_monster());
+    }
+
+    if (weapon && item_attack_skill(*weapon) == SK_MACES_FLAILS) {
+        mace_flail_knockback();
     }
 
     // Wyrmbane needs to be notified of deaths, including ones due to aux
