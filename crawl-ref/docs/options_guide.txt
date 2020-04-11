@@ -1205,9 +1205,9 @@ spell_slot ^= <regex>:<list of spell letters>
         Examples:
         * if you want Apportation to be placed on A:
             spell_slot ^= Apportation:A
-        * if you want Deflect Missiles to be placed on r normally or R if
+        * if you want Ozocubu's Armour to be placed on r normally or R if
           r is unavailable:
-            spell_slot ^= Deflect:rR
+            spell_slot ^= Ozocubu's Armour:rR
         * if you want the first "Bolt" spell to be placed on a, even if
           there is already a non-bolt spell there:
             spell_slot ^= Bolt:+a

@@ -115,13 +115,6 @@ käytännössä eroa mitenkään jo aiemmin tunnetuista loitsuista, mutta kirja 
 edelleen suosiossa sen ainutlaatuisen eriskummallisen kuvaston ja kryptisten
 poikkeamien takia.
 %%%%
-book of enchantments
-
-Tämä kirja sisältää valikoiman Manipulaatioita ja Lumouksia, ja sen sivut
-kimaltelevat ja hohtavat käännettäessä. Epätavallisen aikaan sopimaton otsikko
-kuvastaa aikaisempaa, epätäydellisempää ymmärrystä näistä kahdesta magian
-koulukunnasta.
-%%%%
 book of fixed level
 
 Taikoja sisältävä kirja.

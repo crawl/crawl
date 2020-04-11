@@ -129,13 +129,6 @@ mener, at besværgelserne ikke funktionelt adskiller sig fra allerede kendte
 udgaver, men bogen er fortsat populær for sit bizarre billedsprog og sine
 kryptiske sidebemærkninger.
 %%%%
-book of enchantments
-
-En grimoire, der indeholder et sortiment af magiske forbandelser og
-fortryllelser, som glimter og glitrer, når man bladrer i den. Den bedårende
-anakronistiske titel afspejler en tidligere, mere ufuldstændig forståelse af
-disse to magiske skoler.
-%%%%
 book of fixed level
 
 En bog med magiske besværgelser.

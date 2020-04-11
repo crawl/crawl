@@ -3174,9 +3174,7 @@ int monster::shield_bypass_ability(int) const
 
 int monster::missile_deflection() const
 {
-    if (has_ench(ENCH_DEFLECT_MISSILES))
-        return 2;
-    else if (has_ench(ENCH_REPEL_MISSILES) || scan_artefacts(ARTP_RMSL))
+    if (has_ench(ENCH_REPEL_MISSILES) || scan_artefacts(ARTP_RMSL))
         return 1;
     else
         return 0;
@@ -3184,13 +3182,7 @@ int monster::missile_deflection() const
 
 void monster::ablate_deflection()
 {
-    // TODO: deduplicate this code
-    if (has_ench(ENCH_DEFLECT_MISSILES))
-    {
-        if (one_chance_in(2 + spell_hd()))
-            del_ench(ENCH_DEFLECT_MISSILES);
-    }
-    else if (has_ench(ENCH_REPEL_MISSILES))
+    if (has_ench(ENCH_REPEL_MISSILES))
     {
         if (one_chance_in(2 + spell_hd()))
             del_ench(ENCH_REPEL_MISSILES);

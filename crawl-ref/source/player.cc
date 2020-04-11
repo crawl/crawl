@@ -5613,9 +5613,6 @@ void player::shield_block_succeeded(actor *foe)
 
 int player::missile_deflection() const
 {
-    if (attribute[ATTR_DEFLECT_MISSILES])
-        return 2;
-
     if (get_mutation_level(MUT_DISTORTION_FIELD) == 3
         || you.wearing_ego(EQ_ALL_ARMOUR, SPARM_REPULSION)
         || scan_artefacts(ARTP_RMSL, true)
@@ -5625,19 +5622,6 @@ int player::missile_deflection() const
     }
 
     return 0;
-}
-
-void player::ablate_deflection()
-{
-    if (attribute[ATTR_DEFLECT_MISSILES])
-    {
-        const int power = calc_spell_power(SPELL_DEFLECT_MISSILES, true);
-        if (one_chance_in(2 + power / 8))
-        {
-            attribute[ATTR_DEFLECT_MISSILES] = 0;
-            mprf(MSGCH_DURATION, "You feel less protected from missiles.");
-        }
-    }
 }
 
 /**

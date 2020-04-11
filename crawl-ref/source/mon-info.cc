@@ -96,7 +96,6 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_SHROUD,          MB_SHROUD },
     { ENCH_CORROSION,       MB_CORROSION },
     { ENCH_REPEL_MISSILES,  MB_REPEL_MSL },
-    { ENCH_DEFLECT_MISSILES, MB_DEFLECT_MSL },
     { ENCH_RESISTANCE,      MB_RESISTANCE },
     { ENCH_HEXED,           MB_HEXED },
     { ENCH_BRILLIANCE_AURA, MB_BRILLIANCE_AURA },
@@ -1432,8 +1431,6 @@ vector<string> monster_info::attributes() const
         v.emplace_back("paralysed");
     if (is(MB_REPEL_MSL))
         v.emplace_back("repelling missiles");
-    if (is(MB_DEFLECT_MSL))
-        v.emplace_back("deflecting missiles");
     if (is(MB_FEAR_INSPIRING))
         v.emplace_back("inspiring fear");
     if (is(MB_BREATH_WEAPON))

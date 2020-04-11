@@ -1270,6 +1270,7 @@ static const struct spell_desc spelldata[] =
     TILEG_SYMBOL_OF_TORMENT,
 },
 
+#if TAG_MAJOR_VERSION == 34
 {
     SPELL_DEFLECT_MISSILES, "Deflect Missiles",
     spschool::charms | spschool::air,
@@ -1278,8 +1279,9 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     3, 0,
-    TILEG_DEFLECT_MISSILES,
+    TILEG_ERROR,
 },
+#endif
 
 {
     SPELL_THROW_ICICLE, "Throw Icicle",
