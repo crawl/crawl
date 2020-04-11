@@ -18,6 +18,9 @@
 - 가속 마법 복구
   - rollback Haste
   
+- 둔기 특성화. 이제 둔기로 적을 죽일때마다 시체를 넉백시킬 수 있고 넉백된 시체는 적에게 데미지를 줌
+  - add mace&flail ability. Now every time you kill an enemy with a mace&flail weapon, you can knock back the corpse, and the knocked back corpse deals damage to the enemy
+  
 - 새로운 메인 타이틀 이미지 추가 (logal-image)
   - Add new title artwork (logal-image)
 
