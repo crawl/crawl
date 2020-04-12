@@ -1,0 +1,15 @@
+[Unit]
+Description=DCSS Webtiles Server
+After=syslog.target network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/path/to/crawl/crawl-ref/source/webserver
+ExecStart=/path/to/crawl/crawl-ref/source/webserver/venv/bin/python server.py
+Restart=on-abort
+PIDFile=/tmp/dcss-webtiles-server.pid
+# Only send SIGTERM to the webtiles server, not all DCSS games
+KillMode=mixed
+
+[Install]
+WantedBy=multi-user.target
