@@ -1958,7 +1958,7 @@ static int _tetrahedral_number(int n)
 // the probability that random2avg(100,3) < raw_fail.
 // Should probably use more constants, though I doubt the spell
 // success algorithms will really change *that* much.
-// Called only by failure_rate_to_int and get_miscast_chance.
+// Called only by failure_rate_to_int and _chance_of_fail_level
 static double _get_true_fail_rate(int raw_fail)
 {
     // Need 3*random2avg(100,3) = random2(101) + random2(101) + random2(100)
@@ -1994,28 +1994,76 @@ static double _get_true_fail_rate(int raw_fail)
     return double(outcomes - _tetrahedral_number(300 - target)) / outcomes;
 }
 
+// Compute the chance raw_fail - spfl = fail for positive values of fail
+// This uses _get_true_fail_rate, which calculates the probability that
+// spfl < target.
+static double _chance_of_fail_level(int raw_fail, int fail)
+{
+    const int target = raw_fail - fail ;
+
+    if (target < 0)
+        return 0.0;
+
+    // the chance that spfl < target + 1 minus the chance spfl < target
+    return _get_true_fail_rate(target + 1) - _get_true_fail_rate(target);
+}
+
+
 /**
- * Compute the chance of getting a miscast effect of a given severity or higher.
+ * Compute the maximum severity of a miscast to report tier
  * @param spell     The spell to be checked.
- * @param severity  Check the chance of getting a miscast this severe or higher.
- * @return          The chance of this kind of miscast.
+ * @param tier      The miscast tier
+ *
+ * Tiers are defined by the relation between the expected miscast damage
+ * (given a miscast occurs):
+ *
+ * - safe, Edam <= 5% mhp
+ * - slightly dangerous, Edam <= 15% mhp
+ * - quite dangerous, Edam <= 25% mhp
+ * - extremely dangerous, larger Edam
+ *
+ * The miscast code uses
+ *     dam = div_rand_round(roll_dice(level, level * fail), 10)
+ * Here we compute the expected value of dam * 10 and compare to 10 * max hp
  */
-double get_miscast_chance(spell_type spell, int severity)
+
+const double fail_hp_fraction[] =
+{
+    .05,
+    .15,
+    .25,
+    .5,
+};
+
+int fail_severity(spell_type spell)
 {
     int raw_fail = raw_spell_fail(spell);
     int level = spell_difficulty(spell);
-    if (severity <= 0)
-        return _get_true_fail_rate(raw_fail);
-    double C = 70000.0 / (150 * level * (10 + level));
-    double chance = 0.0;
-    int k = severity + 1;
-    while ((C * k) <= raw_fail)
+
+    // Impossible to get a damaging miscast
+    if (level * level * raw_fail <= 100)
+        return 0;
+
+    double total_miscast_chance = 0.0;
+    double total_weighted_scaled_damage = 0.0;
+
+    for (int f = 1; f <= raw_fail; ++f)
     {
-        chance += _get_true_fail_rate((int) (raw_fail + 1 - (C * k)))
-            * severity / (k * (k - 1));
-        k++;
+        double chance = _chance_of_fail_level(raw_fail, f);
+        total_miscast_chance += chance;
+        // Account for small effect cutoff
+        if (level * level * f > 100)
+            total_weighted_scaled_damage += chance * (level * level * f) / 2.0;
     }
-    return chance;
+
+    double expected_damage =
+        total_weighted_scaled_damage / total_miscast_chance;
+
+    for (int i = 0; i < 4; ++i)
+        if (expected_damage / (10 * get_real_hp(true)) <= fail_hp_fraction[i])
+            return i;
+
+    return 4;
 }
 
 const char *fail_severity_adjs[] =
@@ -2023,19 +2071,10 @@ const char *fail_severity_adjs[] =
     "safe",
     "slightly dangerous",
     "quite dangerous",
-    "very dangerous",
+    "extremely dangerous",
+    "potentially lethal",
 };
 COMPILE_CHECK(ARRAYSZ(fail_severity_adjs) > 3);
-
-int fail_severity(spell_type spell)
-{
-    const double chance = get_miscast_chance(spell);
-
-    return (chance < 0.001) ? 0 :
-           (chance < 0.005) ? 1 :
-           (chance < 0.025) ? 2
-                            : 3;
-}
 
 // Chooses a colour for the failure rate display for a spell. The colour is
 // based on the chance of getting a severity >= 2 miscast.
@@ -2044,8 +2083,9 @@ int failure_rate_colour(spell_type spell)
     const int severity = fail_severity(spell);
     return severity == 0 ? LIGHTGREY :
            severity == 1 ? YELLOW :
-           severity == 2 ? LIGHTRED
-                         : RED;
+           severity == 2 ? LIGHTRED :
+           severity == 3 ? RED
+                         : MAGENTA;
 }
 
 //Converts the raw failure rate into a number to be displayed.
