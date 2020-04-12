@@ -685,8 +685,14 @@ static void _hydra_devour(monster &victim)
 
 void melee_attack::mace_flail_knockback()
 {
+    if (defender->type == MONS_NO_MONSTER)
+        return;
     if (defender->is_stationary() || defender->is_summoned())
         return; // don't even print a message
+    const int dist_ = (defender->pos() - defender->pos()).rdist();
+    if (dist_ > defender->reach_range()) {
+        return;
+    }
 
     //const int size_diff =
     //    attacker->body_size(PSIZE_BODY) - defender->body_size(PSIZE_BODY);
