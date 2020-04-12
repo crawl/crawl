@@ -12,8 +12,11 @@
 #include "fight.h"
 #include "god-passive.h"
 #include "message.h"
+#include "mgen-data.h"
 #include "monster.h"
+#include "monster-type.h"
 #include "mon-death.h"
+#include "mon-place.h"
 #include "religion.h"
 #include "shout.h"
 #include "spl-goditem.h"
@@ -238,19 +241,57 @@ static const map<spschool, miscast_datum> miscast_effects = {
                 "Distant voices call out in your mind",
                 "Something forms from out of thin air",
                 "A chorus of moans calls out in your mind",
-                "Desperate hands claw out from thin air",
+                "Desperate hands claw out at you",
             },
             {
-                "Shadowy shapes form in the air around @the_monster@, then vanish",
                 "Desperate hands claw out at @the_monster@",
             },
             {
                 "Desperate hands claw out at random",
             },
-            [] (actor& /*target*/, actor* /*source*/,
-                miscast_source_info /*mc_info*/,
-                int /*dam*/, string /*cause*/) {
-                // TODO
+            [] (actor& target, actor* source,
+                miscast_source_info mc_info,
+                int dam, string cause) {
+
+                mgen_data data = mgen_data::hostile_at(MONS_NAMELESS, true,
+                                                       target.pos());
+                data.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
+
+                // only give durable summons for true miscasts
+                int abj_dur = mc_info.source == miscast_source::spell ? 0 : 4;
+                data.set_summoned(source, abj_dur, SPELL_NO_SPELL, mc_info.god);
+                data.set_non_actor_summoner(cause);
+                if (abj_dur > 0)
+                    data.summon_type = MON_SUMM_MISCAST;
+
+                data.foe = target.mindex();
+                data.hd = min(27, max(div_rand_round(2 * dam, 3), 1));
+
+                if (target.is_monster())
+                {
+                    monster* mon_target = target.as_monster();
+
+                    switch (mon_target->temp_attitude())
+                    {
+                        case ATT_FRIENDLY:
+                            data.behaviour = BEH_HOSTILE;
+                            break;
+                        case ATT_HOSTILE:
+                            data.behaviour = BEH_FRIENDLY;
+                            break;
+                        case ATT_GOOD_NEUTRAL:
+                        case ATT_NEUTRAL:
+                        case ATT_STRICT_NEUTRAL:
+                            data.behaviour = BEH_NEUTRAL;
+                        break;
+                    }
+                }
+
+                const monster* mons = create_monster(data, false);
+
+                if (!mons)
+                    canned_msg(MSG_NOTHING_HAPPENS);
+
                 return;
             },
         },
