@@ -2063,12 +2063,8 @@ static void _save_game_exit()
     clua.save_persist();
 
     // Prompt for saving macros.
-    if (crawl_state.unsaved_macros
-        && !crawl_state.seen_hups
-        && yesno("Save macros?", true, 'n'))
-    {
+    if (crawl_state.unsaved_macros)
         macro_save();
-    }
 
     // Must be exiting -- save level & goodbye!
     if (!you.entering_level)

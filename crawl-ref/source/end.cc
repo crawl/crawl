@@ -456,8 +456,7 @@ NORETURN void end_game(scorefile_entry &se)
 
     clua.save_persist();
 
-    // Prompt for saving macros.
-    if (crawl_state.unsaved_macros && yesno("Save macros?", true, 'n'))
+    if (crawl_state.unsaved_macros)
         macro_save();
 
     auto title_hbox = make_shared<Box>(Widget::HORZ);
