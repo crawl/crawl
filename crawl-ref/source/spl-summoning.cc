@@ -1306,38 +1306,51 @@ coord_def find_gateway_location(actor* caster)
     return points[random2(points.size())];
 }
 
+void create_malign_gateway(coord_def point, beh_type beh, string cause,
+                           int pow, god_type god, bool is_player)
+{
+    const int malign_gateway_duration = BASELINE_DELAY * (random2(3) + 2);
+    env.markers.add(new map_malign_gateway_marker(point,
+                            malign_gateway_duration,
+                            is_player,
+                            is_player ? "" : cause,
+                            beh,
+                            god,
+                            pow));
+    env.markers.clear_need_activate();
+    env.grid(point) = DNGN_MALIGN_GATEWAY;
+    set_terrain_changed(point);
+
+    noisy(spell_effect_noise(SPELL_MALIGN_GATEWAY), point);
+    mprf(MSGCH_WARN, "The dungeon shakes, a horrible noise fills the air, "
+                     "and a portal to some otherworldly place is opened!");
+}
+
 spret cast_malign_gateway(actor * caster, int pow, god_type god, bool fail)
 {
     coord_def point = find_gateway_location(caster);
-    bool success = (point != coord_def(0, 0));
+    bool success = point != coord_def(0, 0);
 
-    bool is_player = (caster->is_player());
+    bool is_player = caster->is_player();
 
     if (success)
     {
         fail_check();
 
-        const int malign_gateway_duration = BASELINE_DELAY * (random2(3) + 2);
-        env.markers.add(new map_malign_gateway_marker(point,
-                                malign_gateway_duration,
-                                is_player,
-                                is_player ? ""
-                                    : caster->as_monster()->full_name(DESC_A),
-                                is_player ? BEH_FRIENDLY
-                                    : attitude_creation_behavior(
-                                      caster->as_monster()->attitude),
-                                god,
-                                pow));
-        env.markers.clear_need_activate();
-        env.grid(point) = DNGN_MALIGN_GATEWAY;
-        set_terrain_changed(point);
-
-        noisy(spell_effect_noise(SPELL_MALIGN_GATEWAY), point);
-        mprf(MSGCH_WARN, "The dungeon shakes, a horrible noise fills the air, "
-                         "and a portal to some otherworldly place is opened!");
+        create_malign_gateway(
+            point,
+            is_player ? BEH_FRIENDLY
+                      : attitude_creation_behavior(
+                          caster->as_monster()->attitude),
+            is_player ? ""
+                      : caster->as_monster()->full_name(DESC_A),
+            pow,
+            god,
+            is_player);
 
         return spret::success;
     }
+
     // We don't care if monsters fail to cast it.
     if (is_player)
         mpr("A gateway cannot be opened in this cramped space!");

@@ -59,6 +59,9 @@ spret cast_shadow_creatures(int st = SPELL_SHADOW_CREATURES,
                                  bool fail = false);
 spret cast_summon_horrible_things(int pow, god_type god, bool fail);
 bool can_cast_malign_gateway();
+void create_malign_gateway(coord_def point, beh_type beh, string cause,
+                           int pow, god_type god = GOD_NO_GOD,
+                           bool is_player = false);
 spret cast_malign_gateway(actor* caster, int pow,
                                god_type god = GOD_NO_GOD, bool fail = false);
 coord_def find_gateway_location(actor* caster);
