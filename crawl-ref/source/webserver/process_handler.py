@@ -487,7 +487,7 @@ class CrawlProcessHandlerBase(object):
     def kill(self):
         if self.process:
             self.logger.info("Killing crawl process after SIGHUP did nothing.")
-            self.process.send_signal(subprocess.signal.SIGTERM)
+            self.process.send_signal(subprocess.signal.SIGABRT)
             self.kill_timeout = None
 
     interesting_info = ("xl", "char", "place", "god", "title")
@@ -660,7 +660,7 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
         if signal == subprocess.signal.SIGHUP:
             self.logger.info("Purging stale lock at %s, pid %s.",
                              self._stale_lockfile, self._stale_pid)
-        elif signal == subprocess.signal.SIGTERM:
+        elif signal == subprocess.signal.SIGABRT:
             self.logger.warning("Terminating pid %s forcefully!",
                                 self._stale_pid)
         try:
@@ -680,7 +680,7 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
                 self.handle_process_end()
                 return
         else:
-            if signal == subprocess.signal.SIGTERM:
+            if signal == subprocess.signal.SIGABRT:
                 self._purge_stale_lock()
             else:
                 if signal == subprocess.signal.SIGHUP:
@@ -703,7 +703,7 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
 
     def _do_force_terminate(self, answer):
         if answer:
-            self._kill_stale_process(subprocess.signal.SIGTERM)
+            self._kill_stale_process(subprocess.signal.SIGABRT)
         else:
             self.handle_process_end()
 
