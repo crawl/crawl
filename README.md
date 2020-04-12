@@ -48,17 +48,25 @@
   
   [Link](https://github.com/kimjoy2002/crawl/blob/master/CHANGELOG.md)
   
-# 다운로드
+# 웹타일
 
 * 웹타일주소
   *  http://joy1999.codns.com:8081/
-  * 매일 밤 업데이트 (자동화 예정)
+  * 매일 밤 새벽3시 자동 업데이트
   * 주의) 기본적으로 서버용 컴퓨터가 아니라서 느림. 플레이용이 아닌 테스트용도로만 사용하세요
+
+# 다운로드
+
+* [![Build Status](http://joy1999.codns.com:8080/buildStatus/icon?job=crawl%2Fcrawl)](http://joy1999.codns.com:8080/job/crawl/job/crawl/)
 
 * 타일판 다운로드
   * http://joy1999.codns.com:8999/download/stone_soup-0.24.1-tiles-win32.zip
-  * 최신 바이너리를 주기적으로 링크할 예정 (자동화 예정)
+  * 매일 밤 새벽3시 자동 업데이트
 
 * 콘솔판 다운로드
   * http://joy1999.codns.com:8999/download/stone_soup-0.24.1-win32.zip
-  * 최신 바이너리를 주기적으로 링크할 예정 (자동화 예정)
+  * 매일 밤 새벽3시 자동 업데이트
+  
+* 이전 다운로드 파일들
+  * http://joy1999.codns.com:8999/download/crawl/
+  * 매일 자동빌드된 파일들이 올라감 너무 오래되면 삭제
