@@ -645,10 +645,7 @@ void init_signals()
     // shut down only when the actual window is closed.
     signal(SIGHUP, SIG_IGN);
 # else
-    // Graceful shutdown when we get SIGHUP (from dgamelaunch) or SIGTERM
-    // (from webtiles server or task managers).
     signal(SIGHUP, handle_hangup);
-    signal(SIGTERM, handle_hangup);
 # endif
 #endif
 
