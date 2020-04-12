@@ -1716,6 +1716,12 @@ nagaraja
 A magnificent example of the naga. It is an expert at both martial and magical
 arts.
 %%%%
+nameless horror
+
+A malign force from the space between planes. It is hostile to the magic forces
+that removed it from its home. These horrors are often the result of mistaken
+summoning spells and have slain many aspiring wizards.
+%%%%
 necromancer
 
 An evil wizard who is devoted to the practice of death magic, the mastery of

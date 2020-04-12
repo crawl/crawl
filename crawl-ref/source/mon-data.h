@@ -4660,6 +4660,20 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake", TILEP_MONS_ADDER)
     {TILEP_MONS_STARCURSED_MASS}, TILE_ERROR
 },
 
+// Summoning miscast, monster is scaled based on miscast strength
+{
+    MONS_NAMELESS, 'X', CYAN, "nameless horror",
+    M_SEE_INVIS | M_NO_POLY_TO | M_HYBRID | M_NO_GEN_DERIVED,
+    MR_NO_FLAGS,
+    11, MONS_NAMELESS, MONS_NAMELESS, MH_NONLIVING, MAG_IMMUNE,
+    { {AT_HIT, AF_ANTIMAGIC, 30}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    15, 1200,
+    10, 2, MST_NAMELESS, CE_NOCORPSE, S_SILENT,
+    I_BRAINLESS, HT_LAND, 10, DEFAULT_ENERGY,
+    MONUSE_NOTHING, SIZE_GIANT, MON_SHAPE_MISC,
+    {TILEP_MONS_PROGRAM_BUG}, TILE_ERROR
+},
+
 // yaks, sheep, elephants, and other beasts ('Y')
 {
     MONS_DREAM_SHEEP, 'Y', CYAN, "dream sheep",

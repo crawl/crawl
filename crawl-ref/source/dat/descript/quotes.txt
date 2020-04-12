@@ -1947,6 +1947,15 @@ naga warrior
 
 <naga>
 %%%%
+nameless horror
+
+“Then the sallow oval between Ged's arms grew bright. It widened and spread, a
+rent in the darkness of the earth and night, a ripping open of the fabric of
+the world. Through it blazed a terrible brightness. And through that bright
+misshapen breach clambered something like a clot of black shadow, quick and
+hideous, and it leaped straight out at Ged's face.”
+    -Ursula K. Le Guin, _A Wizard Of Earthsea_. 1968.
+%%%%
 needle
 
 “I pray that, risen from the dead,
