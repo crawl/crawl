@@ -740,6 +740,9 @@ namespace arena
             if (mon->type == MONS_TEST_SPAWNER)
                 continue;
 
+            if (!mon->alive())
+                continue;
+
             miscast_effect(**mon, *mon, {miscast_source::wizard},
                            spschool::random, random_range(1, 9),
                            random_range(1, 100), "arena miscast");
