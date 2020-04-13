@@ -548,6 +548,12 @@ Entropic Weave spell
 
 Corrodes the target, with no direct line of fire required.
 %%%%
+Eringya's Rootspike spell
+
+This spell sharpens a poisonous root plant. The sharpness of the roots can 
+effectively inflict damage to enemies protected from poison. The root plant
+extends from your feet, so the more skilled you are, the more it can rise.
+%%%%
 Excruciating Wounds spell
 
 Temporarily infuses the weapon held by the caster with the essence of pain

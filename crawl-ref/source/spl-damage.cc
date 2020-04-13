@@ -3071,3 +3071,50 @@ spret cast_borgnjors_vile_clutch(int pow, bolt &beam, bool fail)
 
     return spret::success;
 }
+
+
+
+spret cast_eringyas_rootspike(int splpow, const dist& beam, bool fail)
+{
+    if (cell_is_solid(beam.target))
+    {
+        canned_msg(MSG_UNTHINKING_ACT);
+        return spret::abort;
+    }
+
+    monster* mons = monster_at(beam.target);
+    if (!mons || mons->submerged())
+    {
+        fail_check();
+        canned_msg(MSG_SPELL_FIZZLES);
+        return spret::success; // still losing a turn
+    }
+
+    if (stop_attack_prompt(mons, false, you.pos()))
+        return spret::abort;
+    fail_check();
+
+    god_conduct_trigger conducts[3];
+    set_attack_conducts(conducts, *mons, you.can_see(*mons));
+
+    noisy(spell_effect_noise(SPELL_ERINGYAS_ROOTSPIKE), beam.target);
+
+    int damage = 9 + random2(3 + div_rand_round(splpow, 4));
+
+    bolt pbeam;
+    pbeam.flavour = BEAM_POISON_ERINYA;
+    damage = mons_adjust_flavoured(mons, pbeam, damage);
+    
+    if (you.can_see(*mons))
+    {
+        mprf("Poisonous roots encircled %s%s%s",
+            mons->name(DESC_THE).c_str(),
+            damage ? "" : " but does no damage",
+            attack_strength_punctuation(damage).c_str());
+    }
+
+    mons->hurt(&you, damage, BEAM_POISON_ERINYA);
+
+
+    return spret::success;
+}

@@ -1457,6 +1457,22 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
 
         break;
 
+    case BEAM_POISON_ERINYA:
+        hurted = resist_adjust_damage(mons, pbolt.flavour, hurted);
+        if (hurted < original)
+        {
+            if (doFlavouredEffects)
+            {
+                simple_monster_message(*mons, " partially resists.");
+
+                poison_monster(mons, pbolt.agent(), 1, true);
+            }
+        }
+        else if (doFlavouredEffects)
+            poison_monster(mons, pbolt.agent(), 2, true);
+
+        break;
+
     case BEAM_NEG:
         if (mons->res_negative_energy() == 3)
         {
@@ -6556,6 +6572,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_MIASMA:                return "miasma";
     case BEAM_SPORE:                 return "spores";
     case BEAM_POISON_ARROW:          return "poison arrow";
+    case BEAM_POISON_ERINYA:         return "poisonous root";
     case BEAM_DAMNATION:             return "damnation";
     case BEAM_STICKY_FLAME:          return "sticky fire";
     case BEAM_STEAM:                 return "steam";

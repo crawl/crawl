@@ -4021,6 +4021,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_ERINGYAS_ROOTSPIKE, "Eringya's Rootspike",
+    spschool::poison | spschool::conjuration,
+    spflag::target | spflag::not_self,
+    5,
+    200,
+    2, 5,
+    2, 4,
+    TILEG_AIRSTRIKE,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     spschool::none,
     spflag::testing,
