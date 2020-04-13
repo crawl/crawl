@@ -1608,7 +1608,7 @@ bool AcquireMenu::acquire_selected()
 
     if (!yesno(nullptr, true, 'n', false, false, true))
     {
-        entry.select();
+        deselect_all();
         more = old_more;
         update_more();
         return true;
