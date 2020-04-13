@@ -184,6 +184,10 @@ uname_V := $(shell sh -c 'uname -v 2>/dev/null || echo not')
 HOST := $(shell sh -c 'cc -dumpmachine || echo unknown')
 ARCH := $(HOST)
 
+ifndef WINARCH
+WINARCH = win32
+endif
+
 ifdef CROSSHOST
 	ARCH := $(CROSSHOST)
 	ifneq (,$(shell which $(ARCH)-pkg-config 2>/dev/null))
@@ -1792,19 +1796,16 @@ package-windows-zips:
 ifneq ($(GAME),crawl.exe)
 	@echo "This is only for Windows; please specify CROSSHOST.";false
 endif
-	if $(GXX) -dumpmachine|grep -q x86_64; \
-	  then WINARCH=win64; else WINARCH=win32; fi; \
-	echo "WINARCH=$$WINARCH"
 	+$(MAKE) clean
 	+$(MAKE) TILES=y DESTDIR=build-win/stone_soup-tiles-$(MAJOR_VERSION) FORCE_SSE=y install
 	cp -p $(ZIP_DOCS) build-win/stone_soup-tiles-$(MAJOR_VERSION)/
-	cd build-win && zip -9r ../stone_soup-$(SRC_VERSION)-tiles-$$WINARCH.zip *
+	cd build-win && zip -9r ../stone_soup-$(SRC_VERSION)-tiles-$(WINARCH).zip *
 	rm -rf build-win
 	+$(MAKE) DESTDIR=build-win/stone_soup-$(MAJOR_VERSION) FORCE_SSE=y install
 	cp -p $(ZIP_DOCS) build-win/stone_soup-$(MAJOR_VERSION)/
-	cd build-win && zip -9r ../stone_soup-$(SRC_VERSION)-$$WINARCH.zip *
+	cd build-win && zip -9r ../stone_soup-$(SRC_VERSION)-$(WINARCH).zip *
 	rm -rf build-win
-	if which advzip >/dev/null;then advzip -z4 stone_soup-$(SRC_VERSION)*-$$WINARCH.zip;fi
+	if which advzip >/dev/null;then advzip -z4 stone_soup-$(SRC_VERSION)*-$(WINARCH).zip;fi
 
 #############################################################################
 # Building Mac app bundles
