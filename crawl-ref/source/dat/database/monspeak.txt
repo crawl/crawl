@@ -3412,8 +3412,6 @@ w:50
 @The_monster@ says, "Are you still afraid of the dark?"
 
 @The_monster@ says, "Careful; you might trip over your own shadow."
-
-@The_monster@ holds up a torch and says, "I bet you miss these."
 %%%%
 Gozag Donald
 
