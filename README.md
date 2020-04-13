@@ -60,11 +60,13 @@
 * [![Build Status](http://joy1999.codns.com:8080/buildStatus/icon?job=crawl%2Fcrawl)](http://joy1999.codns.com:8080/job/crawl/job/crawl/)
 
 * 타일판 다운로드
-  * http://joy1999.codns.com:8999/download/stone_soup-0.24.1-tiles-win32.zip
+  * http://joy1999.codns.com:8999/download/stone_soup-0.24.1-tiles-win64.zip - 64비트
+  * http://joy1999.codns.com:8999/download/stone_soup-0.24.1-tiles-win32.zip - 32비트
   * 매일 밤 새벽3시 자동 업데이트
 
 * 콘솔판 다운로드
-  * http://joy1999.codns.com:8999/download/stone_soup-0.24.1-win32.zip
+  * http://joy1999.codns.com:8999/download/stone_soup-0.24.1-win64.zip - 64비트
+  * http://joy1999.codns.com:8999/download/stone_soup-0.24.1-win32.zip - 32비트
   * 매일 밤 새벽3시 자동 업데이트
   
 * 이전 다운로드 파일들
