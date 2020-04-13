@@ -2068,7 +2068,7 @@ item_def *auto_assign_item_slot(item_def& item)
         }
         if (newslot != -1 && newslot != item.link)
         {
-            swap_inv_slots(item.link, newslot, true);
+            swap_inv_slots(item.link, newslot, you.num_turns);
             return &you.inv[newslot];
         }
     }
