@@ -3438,27 +3438,33 @@ ENDMAP
 NAME:    riverfiend_overflow_shadow_ancestor
 TAGS:    temple_overflow_2
 TAGS:    temple_overflow_hepliaklqana temple_overflow_dithmenos
-TAGS:    no_monster_gen patrolling generate_awake no_item_gen
-TAGS:    no_trap_gen
-DEPTH:   D:2-9
-KMONS:   b=ancestor
-KMONS:   a=shadow
-KFEAT:   A=altar_hepliaklqana
-KFEAT:   B=altar_dithmenos
-MARKER: a = lua:fog_machine { cloud_type = "thin mist", pow_min = 100, pow_max = 100, \
-                             delay = 100, size = 1, start_clouds = 1 }
-MARKER:	b = lua:fog_machine { cloud_type = "black smoke", pow_min = 100, pow_max = 100, \
-                             delay = 100, size = 1, start_clouds = 1 }
-KPROP:	ab = no_tele_into
+KMONS:   a = ancestor
+KMONS:   b = shadow
+KFEAT:   A = altar_hepliaklqana
+KFEAT:   B = altar_dithmenos
+KFEAT:   , = .
+KFEAT:   de = stone_wall
+MARKER:  a = lua:fog_machine { cloud_type = "thin mist", pow_min = 100, pow_max = 100, \
+                             delay = 100, size = 1, start_clouds = 1 , spread_rate = 50 }
+MARKER:	 b = lua:fog_machine { cloud_type = "black smoke", pow_min = 100, pow_max = 100, \
+                             delay = 100, size = 1, start_clouds = 1 , spread_rate = 50 }
+KPROP:	 ab, = no_tele_into
+KPROP:   ab, = no_item_gen
+KMASK:   ab, = no_monster_gen
+TILE:    d = wall_stone_smooth
+TILE:    e = wall_stone_dark
 MAP
-ccccccccc
-c.A.n.B.c
-c.nnnnn.c
-c.nanbn.c
-c.nnnnn.c
-c.......c
-cccc+cccc
+   dcccc
+ ddd...cee
+dd,n....nee
+d,an....n,ee
+d,,nA..Bnb,e
+dd,n....n,,e
+ ddd....n,ee
+   dc..ceee
+    c@@c
 ENDMAP
+
 ### Variable overflow altars ##################################################
 
 # To make an overflow temple for N altars, give it the tag
