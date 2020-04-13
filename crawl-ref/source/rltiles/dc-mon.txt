@@ -390,6 +390,7 @@ abomination_large7
 abomination_large8
 abomination_large9
 tentacled_monstrosity MONS_TENTACLED_MONSTROSITY
+nameless_horror MONS_NAMELESS_HORROR
 %sdir mon/vault
 cigotuvis_monster MONS_CIGOTUVIS_MONSTER
 
