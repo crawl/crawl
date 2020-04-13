@@ -3435,6 +3435,33 @@ MAP
  ...............
 ENDMAP
 
+#Hep and Dith chose the same way to attract worshippers
+NAME:   riverfiend_overflow_shadow_ancestor
+TAGS:   temple_overflow_2
+TAGS:   temple_overflow_hepliaklqana temple_overflow_dithmenos
+KPROP:  12- = no_tele_into
+KMASK:  12- = no_item_gen
+KMASK:  12- = no_monster_gen
+MONS:   ancestor, shadow
+KFEAT:  A = altar_hepliaklqana
+KFEAT:  B = altar_dithmenos
+KFEAT:  DE = stone_wall
+MARKER: 1 = lua:fog_machine { cloud_type = "thin mist", pow_min = 100, pow_max = 100, \
+                            delay = 100, size = 1, start_clouds = 1 , spread_rate = 50 }
+MARKER: 2 = lua:fog_machine { cloud_type = "black smoke", pow_min = 100, pow_max = 100, \
+                            delay = 100, size = 1, start_clouds = 1 , spread_rate = 50 }
+TILE:   D = wall_stone_smooth
+TILE:   E = wall_stone_dark
+MAP
+   ccccc
+ DDD...cEE
+DD-n....nEE
+D-1n....n-EE
+D--nA..Bn2-E
+DD-n....n--E
+ DDD....n-EE
+   cc@@cEEE
+ENDMAP
 
 ### Variable overflow altars ##################################################
 
