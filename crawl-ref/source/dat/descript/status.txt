@@ -729,6 +729,7 @@ You receive spellcasting and slaying bonuses that scale with your health.
 Beogh status
 
 You can swear fealty to Beogh, the god of cave orcs, through a nearby priest.
+To do so, press <white>Y</white> on the <white>a</white>bility menu.
 %%%%
 Bloodless status
 
