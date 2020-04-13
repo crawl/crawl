@@ -879,9 +879,14 @@ static void _PLUTONIUM_SWORD_melee_effects(item_def* /*weapon*/,
         if (attacker->is_player())
             did_god_conduct(DID_CHAOS, 3);
 
-        miscast_effect(*defender, attacker, {miscast_source::melee},
-                       spschool::transmutation, 5, random2(dam),
-                       "the plutonium sword");
+        if (one_chance_in(10))
+            defender->polymorph(0); // Low duration if applied to the player.
+        else
+        {
+            miscast_effect(*defender, attacker, {miscast_source::melee},
+                           spschool::transmutation, 5, random2(dam),
+                           "the plutonium sword");
+        }
     }
 }
 
