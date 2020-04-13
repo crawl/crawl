@@ -4465,7 +4465,8 @@ void setup_breath_timeout(monster* mons)
 
     dprf("breath timeout: %d", timeout);
 
-    mon_enchant breath_timeout = mon_enchant(ENCH_BREATH_WEAPON, 1, mons, timeout*10);
+    mon_enchant breath_timeout = mon_enchant(ENCH_BREATH_WEAPON, 1, mons,
+                                             timeout * BASELINE_DELAY);
     mons->add_ench(breath_timeout);
 }
 
