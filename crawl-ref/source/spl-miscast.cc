@@ -99,11 +99,17 @@ static void _ouch(actor& target, actor * source, miscast_source_info mc_info, in
         monster* mon_target = target.as_monster();
 
         dam = mons_adjust_flavoured(mon_target, beem, dam, true);
-        mon_target->hurt(source, dam, beem.flavour, KILLED_BY_BEAM,
-                         "", "", false);
+        // TODO: is attribution correct if the monster is killed in
+        // mons_adjust_flavoured? A possible case is when flavour is
+        // BEAM_NEG
+        if (mon_target->alive())
+        {
+            mon_target->hurt(source, dam, beem.flavour, KILLED_BY_BEAM,
+                             "", "", false);
 
-        if (!mon_target->alive())
-            monster_die(*mon_target, kt, actor_to_death_source(source));
+            if (!mon_target->alive())
+                monster_die(*mon_target, kt, actor_to_death_source(source));
+        }
     }
     else
     {
