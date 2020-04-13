@@ -3434,7 +3434,31 @@ MAP
  .nnnnnnnnnnnnn.
  ...............
 ENDMAP
-
+#Hep and Dith chose the same way to attract worshippers
+NAME:    riverfiend_overflow_shadow_ancestor
+TAGS:    temple_overflow_2
+TAGS:    temple_overflow_hepliaklqana temple_overflow_dithmenos
+TAGS:    no_monster_gen patrolling generate_awake no_item_gen
+TAGS:    no_trap_gen
+DEPTH:   D:2-9
+KMONS:   b=ancestor
+KMONS:   a=shadow
+KFEAT:   A=altar_hepliaklqana
+KFEAT:   B=altar_dithmenos
+MARKER: a = lua:fog_machine { cloud_type = "thin mist", pow_min = 100, pow_max = 100, \
+                             delay = 100, size = 1, start_clouds = 1 }
+MARKER:	b = lua:fog_machine { cloud_type = "black smoke", pow_min = 100, pow_max = 100, \
+                             delay = 100, size = 1, start_clouds = 1 }
+KPROP:	ab = no_tele_into
+MAP
+ccccccccc
+c.A.n.B.c
+c.nnnnn.c
+c.nanbn.c
+c.nnnnn.c
+c.......c
+cccc+cccc
+ENDMAP
 
 ### Variable overflow altars ##################################################
 
