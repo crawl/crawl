@@ -27,6 +27,7 @@ dex: 6
 levelup_stat_frequency: 4
 mutations:
   1:
+    MUT_COLD_BLOODED: 1
     MUT_DEFORMED: 1
 recommended_jobs:
   - JOB_BERSERKER
