@@ -1,3 +1,8 @@
 .cquery_cache/
 .DS_Store
 README.md
+
+.idea
+*.iws
+*.iml
+*.ipr

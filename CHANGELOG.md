@@ -40,6 +40,16 @@
 - 오조크브의 갑옷은 이제 움직여도 풀리지않음
   - Ozocubu's armor no longer looses when moved
 
+- 드라코들은 이제 아래 종류의 갑옷을 입을 수 있음. All dracos can wear armour listed below
+  - 로브 Robe
+  - 가죽 갑옷 Leather armour
+  - 트롤 가죽 갑옷 Troll leather armour
+  - 모든 종류의 용 비늘 갑옷 all kinds of dragon scale
+
+- 드라코들은 갑옷술을 수련 할 수 있음. All draco can train armour skill.
+  - 적성은 -3. Aptitude is -3.
+
+- 드라코들은 시작할 때 뒤틀린 몸 변이를 가짐. All draco have deform mutation at start.
 
 ### Removed
 

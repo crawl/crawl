@@ -17,7 +17,7 @@ aptitudes:
   bows: -1
   crossbows: -1
   throwing: -1
-  armour: False
+  armour: -3
   dodging: -1
   spellcasting: -1
   hexes: -1

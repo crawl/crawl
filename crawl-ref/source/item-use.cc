@@ -1057,12 +1057,16 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
 
     if (species_is_draconian(you.species) && slot == EQ_BODY_ARMOUR)
     {
-        if (verbose)
+        if (sub_type == ARM_RING_MAIL || sub_type == ARM_SCALE_MAIL || sub_type == ARM_CHAIN_MAIL
+        || sub_type == ARM_PLATE_ARMOUR || sub_type == ARM_CRYSTAL_PLATE_ARMOUR )
         {
-            mprf("Your wings%s won't fit in that.", you.has_mutation(MUT_BIG_WINGS)
-                 ? "" : ", even vestigial as they are,");
+            if (verbose)
+            {
+                mprf("Your wings%s won't fit in that.", you.has_mutation(MUT_BIG_WINGS)
+                                                        ? "" : ", even vestigial as they are,");
+            }
+            return false;
         }
-        return false;
     }
 
     if (sub_type == ARM_NAGA_BARDING || sub_type == ARM_CENTAUR_BARDING)
