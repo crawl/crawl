@@ -15,7 +15,7 @@ aptitudes:
   bows: -1
   crossbows: -1
   throwing: -1
-  armour: False
+  armour: -3
   dodging: -1
   spellcasting: -1
   hexes: -1
@@ -25,6 +25,9 @@ str: 10
 int: 8
 dex: 6
 levelup_stat_frequency: 4
+mutations:
+  1:
+    MUT_DEFORMED: 1
 recommended_jobs:
   - JOB_BERSERKER
   - JOB_TRANSMUTER
