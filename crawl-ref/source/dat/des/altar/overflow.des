@@ -3448,7 +3448,7 @@ MARKER: a = lua:fog_machine { cloud_type = "thin mist", pow_min = 100, pow_max =
                             delay = 100, size = 1, start_clouds = 1 , spread_rate = 50 }
 MARKER: b = lua:fog_machine { cloud_type = "black smoke", pow_min = 100, pow_max = 100, \
                             delay = 100, size = 1, start_clouds = 1 , spread_rate = 50 }
-KPROP:	ab- = no_tele_into
+KPROP:  ab- = no_tele_into
 KMASK:  ab- = no_item_gen
 KMASK:  ab- = no_monster_gen
 TILE:   d = wall_stone_smooth
