@@ -31,6 +31,8 @@ int: 8
 dex: 6
 levelup_stat_frequency: 4
 mutations:
+  1:
+    MUT_COLD_BLOODED: 1
   7:
     MUT_HEAT_RESISTANCE: 1
   14:
