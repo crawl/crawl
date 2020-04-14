@@ -310,6 +310,54 @@ bool targeter_unravelling::set_aim(coord_def a)
     return true;
 }
 
+
+targeter_olgrebs_last_mercy::targeter_olgrebs_last_mercy(const actor* act, int r, int pow)
+    : targeter_beam(act, r, ZAP_UNRAVELLING, pow, 1, 1)
+{
+}
+
+bool targeter_olgrebs_last_mercy::set_aim(coord_def a)
+{
+    if (!targeter::set_aim(a))
+        return false;
+
+    bolt tempbeam = beam;
+
+    tempbeam.target = aim;
+    tempbeam.path_taken.clear();
+    tempbeam.fire();
+    path_taken = tempbeam.path_taken;
+
+    bolt explosion_beam = beam;
+    set_explosion_target(beam);
+
+    bool poisoned = false;
+
+
+    //if (you.pos() == beam.target)
+    //{
+    //    poisoned = you.duration[DUR_POISONING] > 0;
+    //}
+    //else
+    {
+        monster* mon = monster_at(beam.target);
+        if (invalid_monster(mon) || mon == agent)
+            return false;
+        const mon_enchant ench = mon->get_ench(ENCH_POISON);
+        poisoned = ench.ench == ENCH_NONE ? false : true;
+    }
+
+    if (poisoned)
+        min_expl_rad = 1;
+    else
+        min_expl_rad = 0;
+
+    set_explosion_aim(beam);
+
+    return true;
+}
+
+
 targeter_imb::targeter_imb(const actor *act, int pow, int r) :
                targeter_beam(act, r, ZAP_ISKENDERUNS_MYSTIC_BLAST, pow, 0, 0)
 {

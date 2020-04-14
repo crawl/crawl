@@ -72,6 +72,13 @@ public:
     bool set_aim(coord_def a) override;
 };
 
+class targeter_olgrebs_last_mercy : public targeter_beam
+{
+public:
+    targeter_olgrebs_last_mercy(const actor* act, int range, int pow);
+    bool set_aim(coord_def a) override;
+};
+
 class targeter_imb : public targeter_beam
 {
 public:

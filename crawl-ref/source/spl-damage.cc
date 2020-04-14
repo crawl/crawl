@@ -3118,3 +3118,60 @@ spret cast_eringyas_rootspike(int splpow, const dist& beam, bool fail)
 
     return spret::success;
 }
+spret cast_olgrebs_last_mercy(int pow, const dist& dist, bool fail)
+{
+    monster* mon = monster_at(dist.target);
+    if (!mon || !mon->alive())
+        return spret::abort;
+
+    fail_check();
+
+    const mon_enchant ench = mon->get_ench(ENCH_POISON);
+    const int pois_str = ench.ench == ENCH_NONE ? 0 : ench.degree;
+    if (pois_str == 0) {
+        canned_msg(MSG_SPELL_FIZZLES);
+        return spret::success;
+    }
+    
+    // poison currently does roughly 6 damage per degree (over its duration)
+    // do roughly 3x to 4x that much, scaling with spellpower
+    const dice_def dam_dice(pois_str * 3, 12 + div_rand_round(pow * 6, 100));
+
+    bolt mbeam;
+    mbeam.flavour = BEAM_MMISSILE;
+    const int base_dam = dam_dice.roll();
+    const int damage = mons_adjust_flavoured(mon, mbeam, base_dam, false);
+
+    const int max_hp = mon->max_hit_points;
+    mon->hurt(&you, damage);
+
+    if (mon->alive())
+    {
+        behaviour_event(mon, ME_WHACK, &you);
+
+        // Monster survived, remove any poison.
+        mon->del_ench(ENCH_POISON, true); // suppress spam
+        print_wounds(*mon);
+    }
+    else {
+        bolt beam;
+        beam.name = "burst of toxic";
+        beam.flavour = BEAM_MMISSILE;
+        beam.set_agent(&you);
+        beam.colour = LIGHTGREEN;
+        beam.glyph = dchar_glyph(DCHAR_EXPLOSION);
+        beam.range = 1;
+        beam.ex_size = 1;
+        beam.is_explosion = true;
+        beam.damage = calc_dice(4, div_rand_round(max_hp,2));
+        //beam.explode_delay = beam.explode_delay * 3 / 2;
+        beam.source = dist.target;
+        beam.target = dist.target;
+        beam.hit = AUTOMATIC_HIT;
+        beam.loudness = spell_effect_noise(SPELL_OLGREBS_LAST_MERCY);
+        beam.explode(true);
+    }
+
+    return spret::success;
+
+}

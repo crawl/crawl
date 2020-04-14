@@ -956,6 +956,12 @@ Noxious Cloud spell
 
 Creates a large cloud of noxious fumes, which may cause confusion.
 %%%%
+Olgreb's Last Mercy spell
+
+This spell sharpens a poisonous root plant. The sharpness of the roots can 
+effectively inflict damage to enemies protected from poison. The root plant
+extends from your feet, so the more skilled you are, the more it can rise.
+%%%%
 Olgreb's Toxic Radiance spell
 
 Causes the caster to radiate toxic energy, continuously inflicting poison on

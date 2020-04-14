@@ -3336,7 +3336,7 @@ void bolt::affect_player_enchantment(bool resistible)
     case BEAM_UNRAVELLED_MAGIC:
         mpr("Strange energies course through your body.");
         you.malmutate(aux_source.empty() ? get_source_name() :
-                      (get_source_name() + "/" + aux_source));
+            (get_source_name() + "/" + aux_source));
         obvious_effect = true;
         break;
 
@@ -3351,21 +3351,21 @@ void bolt::affect_player_enchantment(bool resistible)
         contaminate_player(1000, blame_player);
         obvious_effect = true;
         nasty = false;
-        nice  = true;
+        nice = true;
         break;
 
     case BEAM_HEALING:
         potionlike_effect(POT_HEAL_WOUNDS, ench_power, true);
         obvious_effect = true;
         nasty = false;
-        nice  = true;
+        nice = true;
         break;
 
     case BEAM_MIGHT:
         potionlike_effect(POT_MIGHT, ench_power);
         obvious_effect = true;
         nasty = false;
-        nice  = true;
+        nice = true;
         break;
 
     case BEAM_INVISIBILITY:
@@ -3374,7 +3374,7 @@ void bolt::affect_player_enchantment(bool resistible)
         contaminate_player(1000 + random2(1000), blame_player);
         obvious_effect = true;
         nasty = false;
-        nice  = true;
+        nice = true;
         break;
 
     case BEAM_PARALYSIS:
@@ -3430,7 +3430,7 @@ void bolt::affect_player_enchantment(bool resistible)
             break;
         }
         you.banish(agent(), get_source_name(),
-                   agent()->get_experience_level());
+            agent()->get_experience_level());
         obvious_effect = true;
         break;
 
@@ -3512,7 +3512,7 @@ void bolt::affect_player_enchantment(bool resistible)
 
     case BEAM_DIMENSION_ANCHOR:
         mprf("You feel %sfirmly anchored in space.",
-             you.duration[DUR_DIMENSION_ANCHOR] ? "more " : "");
+            you.duration[DUR_DIMENSION_ANCHOR] ? "more " : "");
         you.increase_duration(DUR_DIMENSION_ANCHOR, 12 + random2(15), 50);
         if (you.duration[DUR_TELEPORT])
         {
@@ -3560,7 +3560,7 @@ void bolt::affect_player_enchantment(bool resistible)
         potionlike_effect(POT_AGILITY, ench_power);
         obvious_effect = true;
         nasty = false;
-        nice  = true;
+        nice = true;
         break;
 
     case BEAM_SAP_MAGIC:
@@ -3570,7 +3570,7 @@ void bolt::affect_player_enchantment(bool resistible)
             break;
         }
         mprf(MSGCH_WARN, "Your magic feels %stainted.",
-             you.duration[DUR_SAP_MAGIC] ? "more " : "");
+            you.duration[DUR_SAP_MAGIC] ? "more " : "");
         you.increase_duration(DUR_SAP_MAGIC, random_range(20, 30), 50);
         break;
 
@@ -3582,7 +3582,7 @@ void bolt::affect_player_enchantment(bool resistible)
         mprf(MSGCH_WARN, "You feel your power leaking away.");
         dec_mp(amount);
         if (agent() && (agent()->type == MONS_EYE_OF_DRAINING
-                        || agent()->type == MONS_GHOST_MOTH))
+            || agent()->type == MONS_GHOST_MOTH))
         {
             agent()->heal(amount);
         }
@@ -3599,7 +3599,7 @@ void bolt::affect_player_enchantment(bool resistible)
         potionlike_effect(POT_RESISTANCE, min(ench_power, 200));
         obvious_effect = true;
         nasty = false;
-        nice  = true;
+        nice = true;
         break;
 
     case BEAM_UNRAVELLING:

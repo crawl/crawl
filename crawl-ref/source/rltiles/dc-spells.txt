@@ -114,6 +114,7 @@ spider_form SPIDER_FORM
 sting STING
 venom_bolt VENOM_BOLT
 poisonous_vapours POISONOUS_VAPOURS
+olgrebs_last_mercy OLGREBS_LAST_MERCY
 
 %sdir gui/spells/summoning
 mass_abjuration MASS_ABJURATION
