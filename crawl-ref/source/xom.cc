@@ -2513,7 +2513,7 @@ static void _xom_summon_hostiles(int sever)
         // Limit number of demons by experience level.
         if (!you.penance[GOD_XOM])
         {
-            const int maxdemons = (you.experience_level / 2);
+            const int maxdemons = ((you.experience_level / 2) + 1);
             if (numdemons > maxdemons)
                 numdemons = maxdemons;
         }
