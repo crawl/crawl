@@ -33,7 +33,7 @@ if ($ENV{CATCH2_TESTS}) {
 }
 
 if ($ENV{CROSSCOMPILE}) {
-    try("make CROSSHOST=i686-w64-mingw32 package-windows");
+    try("make CROSSHOST=i686-w64-mingw32 package-windows-installer");
     exit 0;
 }
 

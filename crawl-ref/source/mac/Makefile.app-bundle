@@ -26,6 +26,8 @@ BUNDLE_NAME := Dungeon\ Crawl\ Stone\ Soup\ -\ Console
 EXECUTABLE_PATH := crawl
 ifdef RELEASE
 ZIP_QUALIFIER := -console
+else
+ZIP_QUALIFIER := _console
 endif
 endif
 
@@ -66,7 +68,10 @@ assemble-app-bundle: create-bundle-directory copy-executable copy-resources \
 zip-app-bundle:
 	rm -f $(ZIPPED_APP_DIR)/$(ZIP_NAME)
 	cd $(STAGING_DIR) && \
-		zip -r $(ZIPPED_APP_DIR)/$(ZIP_NAME) $(BUNDLE_NAME).app
+		zip -9r $(ZIPPED_APP_DIR)/$(ZIP_NAME) $(BUNDLE_NAME).app
+	cd $(STAGING_DIR) && \
+		if which advzip >/dev/null;then advzip -z3 $(ZIPPED_APP_DIR)/$(ZIP_NAME);fi
+	ln -sf $(ZIPPED_APP_DIR)/$(ZIP_NAME) $(ZIPPED_APP_DIR)/latest.zip
 
 create-bundle-directory: $(BUNDLE_DIRNAME)
 

@@ -55,6 +55,7 @@ def _packages_to_install(args: argparse.Namespace) -> Set[str]:
         "pkg-config",
         "python-yaml",
         "ccache",
+        "advancecomp",  # used to compress release zips and png sprite sheets
     }
     if "TILES" in args.build_opts or "WEBTILES" in args.build_opts:
         packages.update(
@@ -71,6 +72,7 @@ def _packages_to_install(args: argparse.Namespace) -> Set[str]:
         packages.add("lcov")
     if args.crosscompile:
         packages.add("mingw-w64")
+        packages.add("nsis")  # makensis used to build Windows installer
     if args.compiler == "clang":
         # dependencies for llvm.sh
         packages.update(["lsb-release", "wget", "software-properties-common"])
