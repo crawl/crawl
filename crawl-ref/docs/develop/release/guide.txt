@@ -112,11 +112,15 @@ for those the list begins with step 3.
    cross-compilation difficult. Adding the make option LTO=y will enable
    long-term optimization, but this can fail under cross-compilation.
 
-   The Makefile targets are "package-windows" and "package-windows-zips" for
-   the installer and stand-alone zips respectively. Unless you're on msys, you
-   need to specify CROSSHOST as well:
+   The Makefile targets are:
 
-   make CROSSHOST=i686-w64-mingw32 package-windows
+   * package-windows-installer
+   * package-windows-tiles
+   * package-windows-console
+
+   Unless you're on msys, you need to specify CROSSHOST as well:
+
+   make CROSSHOST=i686-w64-mingw32 package-windows-installer
 
    It's ideal to test the windows packages (both Tiles and console) under wine
    at the very least, assuming you've cross-compiled, and testing under a
