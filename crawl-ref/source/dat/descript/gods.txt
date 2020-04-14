@@ -658,8 +658,8 @@ Wu Jian extra
   .......       .......
 
   .......       ...<lightred>@</lightred>... (*) <lightred>Whirlwind</lightred>: Move between two tiles adjacent to
-  ...<lightred>@</lightred>O..  -->  ....O.. an enemy to strike them lightly. The dizzying
-  .......       ....... motion pins monsters in place for one action.
+  ...<lightred>@</lightred>O..  -->  ....O.. an enemy to strike them lightly. Multiple adjacent
+  .......       ....... foes can be attacked simultaneously this way.
 
   ..#....       ..#.... (**) <lightred>Wall Jump</lightred>: Vault off a nearby wall and
   ..#<lightred>@</lightred>O..  -->  ..#.O<lightred>@</lightred>. strike enemies adjacent to the landing spot. Vaulting
