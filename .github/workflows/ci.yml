@@ -118,7 +118,7 @@ jobs:
         run: |
           ccache -s
           ls -l /usr/local/opt/ccache/libexec
-      - run: make -j$(nproc)
+      - run: make -j$(sysctl -n hw.ncpu)
         working-directory: crawl-ref/source
       - name: Print ccache stats
         run: ccache -s
