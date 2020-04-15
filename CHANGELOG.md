@@ -14,7 +14,16 @@
   
 - 독물의 추출을 위한 나쁜 포션(독, 맹독, 맹물)추가. 추출에서만 나오는 포션이며 자연 드랍되면 버그임
   - Added bad potions (poison, strong poison, water) for Evaporate. only create by Fulsome Distillation
+
+- 5레벨 독/파괴 마법, 에링야의 뿌리송곳 추가. 2~5의 거리를 지니는 스마이트형 물리복합 마법
+  - Added Eringya's Rootspike, level 5 posion/conjuraion spell. 2~5 range smite-targeting spell. partially ignores poison resistance
   
+- 7레벨 독 마법, 올그레브의 마지막 자비 추가. 시야안의 적을 선택하여 독중첩만큼 데미지를 주고 사망시 3X3범위의 무속성 폭발이 발생 
+  - Added Olgreb's Last Mercy, level 7 posion spell. Choosing an enemy in the LOS, dealing damage equal to the amount of poison, and causes a 3X3 irresistible explosion upon death
+  
+- 5레벨 독/참 마법, 독선 추가. 지속시간동안 적을 근접공격시 맞은 적의 독저항을 중첩하여 깎을 수 있음
+  - Added Poison Gland, level 5 posion/charm spell. For the duration, melee attack makes a attacked creature more vulnerable to poison
+
 - 가속 마법 복구
   - rollback Haste
   
@@ -28,11 +37,14 @@
 - 오우거 둔기적성 +3으로 변경 (기존 -1)
   - Ogre Maces & Flails aptitude changed to +3 (prev -1)
 
-- 드라코들은 이제 냉혈 변이를 가지지않음
-  - All dracos are no longer cold blooded
+- 드라코는 이제 로브, 짐승가죽, 가죽갑옷, 트롤가죽갑옷, 용갑옷을 입을 수 있음
+  - Draconian can wear robe, animal skin, leather armour, troll leather armour, all kinds of dragon scales
 
-- 회색을 제외한 드라코 전원 14레벨에 영구 비행 변이를 얻도록 변경
-  - All dracos will gain big wing mutation at xl 14 except grey
+- 드라코는 이제 뒤틀린 몸 변이를 가짐
+  - Draconian get deformed mutation
+
+- 드라코 전원 14레벨에 영구 비행 변이를 얻도록 변경
+  - All dracos will gain big wing mutation at xl 14
 
 - 메뉴 컬러링을 위한 태그(fixed_artefact, random_artefact) 추가. 픽다트의 기본 색깔을 노란색으로 변경
   - Added Menu/colouring Prefixes(fixed_artefact, random_artefact). Changed the default color of the fixed artefact to yellow
