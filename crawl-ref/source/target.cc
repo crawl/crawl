@@ -311,8 +311,8 @@ bool targeter_unravelling::set_aim(coord_def a)
 }
 
 
-targeter_olgrebs_last_mercy::targeter_olgrebs_last_mercy(const actor* act, int r, int pow)
-    : targeter_beam(act, r, ZAP_UNRAVELLING, pow, 1, 1)
+targeter_olgrebs_last_mercy::targeter_olgrebs_last_mercy()
+    : targeter_smite(&you, LOS_RADIUS, 1, 1, false, nullptr) //targeter_beam(act, r, ZAP_UNRAVELLING, pow, 1, 1)
 {
 }
 
@@ -321,18 +321,7 @@ bool targeter_olgrebs_last_mercy::set_aim(coord_def a)
     if (!targeter::set_aim(a))
         return false;
 
-    bolt tempbeam = beam;
-
-    tempbeam.target = aim;
-    tempbeam.path_taken.clear();
-    tempbeam.fire();
-    path_taken = tempbeam.path_taken;
-
-    bolt explosion_beam = beam;
-    set_explosion_target(beam);
-
     bool poisoned = false;
-
 
     //if (you.pos() == beam.target)
     //{
@@ -340,19 +329,31 @@ bool targeter_olgrebs_last_mercy::set_aim(coord_def a)
     //}
     //else
     {
-        monster* mon = monster_at(beam.target);
+        monster* mon = monster_at(a);
         if (invalid_monster(mon) || mon == agent)
             return false;
         const mon_enchant ench = mon->get_ench(ENCH_POISON);
         poisoned = ench.ench == ENCH_NONE ? false : true;
+        //tempbeam.target = a;
     }
 
-    if (poisoned)
-        min_expl_rad = 1;
-    else
-        min_expl_rad = 0;
-
-    set_explosion_aim(beam);
+    if (poisoned) {
+        exp_range_min = 1;
+        exp_range_max = 1;
+    }
+    else {
+        exp_range_min = 0;
+        exp_range_max = 0;
+    }
+    bolt beam;
+    beam.target = a;
+    beam.use_target_as_pos = true;
+    exp_map_min.init(INT_MAX);
+    beam.determine_affected_cells(exp_map_min, coord_def(), 0,
+        exp_range_min, false, false);
+    exp_map_max.init(INT_MAX);
+    beam.determine_affected_cells(exp_map_max, coord_def(), 0,
+        exp_range_max, false, false);
 
     return true;
 }

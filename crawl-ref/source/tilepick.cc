@@ -2998,7 +2998,9 @@ tileidx_t tileidx_bolt(const bolt &bolt)
         break;
 
     case LIGHTGREEN:
-        if (bolt.name == "poison arrow")
+        if (bolt.name == "poisonous roots")
+            return TILE_POISONOUS_ROOTS;
+        else if (bolt.name == "poison arrow")
             return TILE_BOLT_POISON_ARROW + dir;
         break;
 

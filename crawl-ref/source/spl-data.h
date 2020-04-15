@@ -4028,13 +4028,13 @@ static const struct spell_desc spelldata[] =
     200,
     2, 5,
     2, 4,
-    TILEG_AIRSTRIKE,
+    TILEG_ERINGYAS_ROOTSPIKE,
 },
 
 {
     SPELL_OLGREBS_LAST_MERCY, "Olgreb's Last Mercy",
     spschool::poison,
-    spflag::dir_or_target | spflag::not_self,
+    spflag::target | spflag::not_self,
     7,
     200,
     LOS_RADIUS, LOS_RADIUS,

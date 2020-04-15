@@ -3102,9 +3102,16 @@ spret cast_eringyas_rootspike(int splpow, const dist& beam, bool fail)
     int damage = 9 + random2(3 + div_rand_round(splpow, 4));
 
     bolt pbeam;
+    pbeam.name = "poisonous roots";
     pbeam.flavour = BEAM_POISON_ERINYA;
+    pbeam.glyph = dchar_glyph(DCHAR_FIRED_ZAP);
+    pbeam.colour = LIGHTGREEN;
+#ifdef USE_TILE
+    pbeam.tile_beam = -1;
+#endif
+    pbeam.draw_delay = 0;
     damage = mons_adjust_flavoured(mons, pbeam, damage);
-    
+
     if (you.can_see(*mons))
     {
         mprf("Poisonous roots encircled %s%s%s",
@@ -3112,7 +3119,10 @@ spret cast_eringyas_rootspike(int splpow, const dist& beam, bool fail)
             damage ? "" : " but does no damage",
             attack_strength_punctuation(damage).c_str());
     }
-
+    
+    pbeam.draw(beam.target);
+    scaled_delay(200);
+    pbeam.glyph = 0; // FIXME: a hack to avoid "appears out of thin air"
     mons->hurt(&you, damage, BEAM_POISON_ERINYA);
 
 
@@ -3128,6 +3138,7 @@ spret cast_olgrebs_last_mercy(int pow, const dist& dist, bool fail)
 
     const mon_enchant ench = mon->get_ench(ENCH_POISON);
     const int pois_str = ench.ench == ENCH_NONE ? 0 : ench.degree;
+
     if (pois_str == 0) {
         canned_msg(MSG_SPELL_FIZZLES);
         return spret::success;
@@ -3139,14 +3150,34 @@ spret cast_olgrebs_last_mercy(int pow, const dist& dist, bool fail)
 
     bolt mbeam;
     mbeam.flavour = BEAM_MMISSILE;
+    mbeam.glyph = dchar_glyph(DCHAR_FIRED_ZAP);
+    mbeam.colour = LIGHTGREEN;
+#ifdef USE_TILE
+    mbeam.tile_beam = -1;
+#endif
+    mbeam.draw_delay = 0;
     const int base_dam = dam_dice.roll();
     const int damage = mons_adjust_flavoured(mon, mbeam, base_dam, false);
 
     const int max_hp = mon->max_hit_points;
+    mbeam.draw(dist.target);
+    scaled_delay(200);
+    mbeam.glyph = 0; // FIXME: a hack to avoid "appears out of thin air"
+
     mon->hurt(&you, damage);
+
+    if (you.can_see(*mon))
+    {
+        mprf("Poison explode in the %s's body%s%s",
+            mon->name(DESC_THE).c_str(),
+            damage ? "" : " but does no damage",
+            attack_strength_punctuation(damage).c_str());
+    }
 
     if (mon->alive())
     {
+
+
         behaviour_event(mon, ME_WHACK, &you);
 
         // Monster survived, remove any poison.
