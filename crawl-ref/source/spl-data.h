@@ -4043,6 +4043,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_POISON_GLAND, "Poison Gland",
+    spschool::poison | spschool::charms,
+    spflag::helpful,
+    5,
+    200,
+    -1, -1,
+    4, 0,
+    TILEG_POISON_GLAND,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     spschool::none,
     spflag::testing,

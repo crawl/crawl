@@ -522,6 +522,26 @@ bool melee_attack::handle_phase_hit()
 
     if (damage_done > 0)
         apply_black_mark_effects();
+    
+    if (defender->alive() && attacker->is_player() && you.duration[DUR_POISON_GLAND])
+    {
+        if (defender->is_monster()) {
+            monster* mon = defender->as_monster();
+            if (mon->has_ench(ENCH_POISON_VULN)) {
+                int prev_deg = mon->get_ench(ENCH_POISON_VULN).degree;
+                if (mon->add_ench(mon_enchant(ENCH_POISON_VULN, prev_deg + 1, &you,
+                    random_range(20, 30) * BASELINE_DELAY))) {
+                    simple_monster_message(*mon, " grows more vulnerable to poison.");
+                }
+            }
+            else {
+                if (mon->add_ench(mon_enchant(ENCH_POISON_VULN, 0, &you,
+                    random_range(20, 30) * BASELINE_DELAY))) {
+                    simple_monster_message(*mon, " is vulnerable to poison.");
+                }
+            }
+        }
+    }
 
     if (attacker->is_player())
     {

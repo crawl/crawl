@@ -4005,6 +4005,15 @@ static string _monster_stat_description(const monster_info& mi)
     {
         int level = get_resist(resist, rflags);
 
+        if (rflags == MR_RES_POISON) {
+            if (!mi.pos.origin() && monster_at(mi.pos)) {
+                monster* m = monster_at(mi.pos);
+                if (m->has_ench(ENCH_POISON_VULN)) {
+                    level -= m->get_ench(ENCH_POISON_VULN).degree + 1;
+                }
+            }
+        }
+
         if (level != 0)
         {
             const char* attackname = _get_resist_name(rflags);

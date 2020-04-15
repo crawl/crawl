@@ -3860,11 +3860,14 @@ int monster::res_poison(bool temp) const
 {
     int u = get_mons_resist(*this, MR_RES_POISON);
 
-    if (temp && has_ench(ENCH_POISON_VULN))
-        u--;
-
-    if (u > 0)
+    if (u > 0) {
+        if (temp && has_ench(ENCH_POISON_VULN)) {
+            u -= get_ench(ENCH_POISON_VULN).degree + 1;
+        }
+        if (u < 0)
+            u = -1;
         return u;
+    }
 
     if (mons_itemuse(*this) >= MONUSE_STARTING_EQUIPMENT)
     {
@@ -3894,7 +3897,15 @@ int monster::res_poison(bool temp) const
     // Monsters can have multiple innate levels of poison resistance, but
     // like players, equipment doesn't stack.
     if (u > 0)
-        return 1;
+        u = 1;
+
+    if (temp && has_ench(ENCH_POISON_VULN)) {
+        u -= get_ench(ENCH_POISON_VULN).degree + 1;
+    }
+
+    if (u < 0)
+        u = -1;
+
     return u;
 }
 

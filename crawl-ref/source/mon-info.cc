@@ -91,7 +91,6 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_TORNADO,         MB_TORNADO },
     { ENCH_TORNADO_COOLDOWN, MB_TORNADO_COOLDOWN },
     { ENCH_BARBS,           MB_BARBS },
-    { ENCH_POISON_VULN,     MB_POISON_VULN },
     { ENCH_ICEMAIL,         MB_ICEMAIL },
     { ENCH_AGILE,           MB_AGILE },
     { ENCH_FROZEN,          MB_FROZEN },
@@ -166,6 +165,13 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
             return MB_MORE_POISONED;
         else
             return MB_MAX_POISONED;
+    case ENCH_POISON_VULN:
+    {
+        if (mons.get_ench(ench).degree == 0)
+            return MB_POISON_VULN;
+        else
+            return MB_MORE_POISON_VULN;
+    }
     default:
         return NUM_MB_FLAGS;
     }
@@ -1406,9 +1412,9 @@ vector<string> monster_info::attributes() const
     if (is(MB_POISONED))
         v.emplace_back("poisoned");
     else if (is(MB_MORE_POISONED))
-        v.emplace_back("very poisend");
+        v.emplace_back("very poisoned");
     else if (is(MB_MAX_POISONED))
-        v.emplace_back("extremely poisend");
+        v.emplace_back("extremely poisoned");
 
     if (is(MB_SICK))
         v.emplace_back("sick");
@@ -1451,7 +1457,7 @@ vector<string> monster_info::attributes() const
     if (is(MB_BREATH_WEAPON))
     {
         v.push_back(string("catching ")
-                    + pronoun(PRONOUN_POSSESSIVE) + " breath");
+            + pronoun(PRONOUN_POSSESSIVE) + " breath");
     }
     if (is(MB_DAZED))
         v.emplace_back("dazed");
@@ -1501,6 +1507,8 @@ vector<string> monster_info::attributes() const
     if (is(MB_BARBS))
         v.emplace_back("skewered by barbs");
     if (is(MB_POISON_VULN))
+        v.emplace_back("vulnerable to poison");
+    if (is(MB_MORE_POISON_VULN))
         v.emplace_back("more vulnerable to poison");
     if (is(MB_ICEMAIL))
         v.emplace_back("surrounded by an icy envelope");

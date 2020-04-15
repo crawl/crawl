@@ -611,6 +611,9 @@ static const duration_def duration_data[] =
     { DUR_GRASPING_ROOTS, 0, "", "grasped by roots", "grasping roots",
       "You are constricted by grasping roots.", D_NO_FLAGS},
     { DUR_SHAFT_IMMUNITY, 0, "", "", "shaft immunity", "", D_NO_FLAGS, {{""}}},
+    { DUR_POISON_GLAND, GREEN, "gland", "poison gland", "poison gland", "" , D_DISPELLABLE | D_EXPIRES,
+      {{ "Your weapon no longer secretes poison glands." },
+      { "The poison gland of your weapon is running out." }}, 10 },
 
 #if TAG_MAJOR_VERSION == 34
     // And removed ones

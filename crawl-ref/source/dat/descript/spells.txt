@@ -1057,6 +1057,12 @@ Poisonous Cloud spell
 
 Conjures forth a great cloud of lethal gases.
 %%%%
+Poison Gland spell
+
+A spell that instills a deadly poison gland against a caster's melee 
+attack. When a melee attack hits, the poison gland infiltrates
+into the wound, cutting off the target's poison resistance little by little.
+%%%%
 Poisonous Vapours spell
 
 Turns the air around a targeted creature poisonous. Exceedingly little poison

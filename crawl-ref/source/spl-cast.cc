@@ -1214,7 +1214,7 @@ static unique_ptr<targeter> _spell_targeter(spell_type spell, int pow,
     case SPELL_DIG:
         return make_unique<targeter_dig>(range);
     case SPELL_OLGREBS_LAST_MERCY:
-        return make_unique<targeter_olgrebs_last_mercy>();
+        return make_unique<targeter_olgrebs_last_mercy>();        
     default:
         break;
     }
@@ -1960,6 +1960,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
 
     case SPELL_OLGREBS_LAST_MERCY:
         return cast_olgrebs_last_mercy(powc, spd, fail);
+
+    case SPELL_POISON_GLAND:
+        return cast_poison_gland(powc, fail);
 
     // non-player spells that have a zap, but that shouldn't be called (e.g
     // because they will crash as a player zap).

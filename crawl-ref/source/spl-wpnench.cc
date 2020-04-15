@@ -137,3 +137,15 @@ spret cast_confusing_touch(int power, bool fail)
 
     return spret::success;
 }
+
+spret cast_poison_gland(int power, bool fail)
+{
+    fail_check();
+    if (!you.duration[DUR_POISON_GLAND])
+        mpr("Your weapon begins to release the poison glands.");
+    else
+        mpr("You extend your poison gland duration.");
+
+    you.increase_duration(DUR_POISON_GLAND, 10 + roll_dice(2, power/2), 100);
+    return spret::success;
+}
