@@ -305,6 +305,10 @@ void give_items_skills(const newgame_def& ng)
         you.skills[SK_THROWING] = 0;
         you.skills[SK_SHIELDS] = 0;
     }
+    if (you.species == SP_TWO_HEADED_OGRE)
+    {
+        you.skills[SK_SHIELDS] = 0;
+    }
 
     if (!you_worship(GOD_NO_GOD))
     {
