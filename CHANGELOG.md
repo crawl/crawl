@@ -37,15 +37,6 @@
 - 오우거 둔기적성 +3으로 변경 (기존 -1)
   - Ogre Maces & Flails aptitude changed to +3 (prev -1)
 
-- 드라코는 이제 로브, 짐승가죽, 가죽갑옷, 트롤가죽갑옷, 용갑옷을 입을 수 있음
-  - Draconian can wear robe, animal skin, leather armour, troll leather armour, all kinds of dragon scales
-
-- 드라코는 이제 뒤틀린 몸 변이를 가짐
-  - Draconian get deformed mutation
-
-- 드라코 전원 14레벨에 영구 비행 변이를 얻도록 변경
-  - All dracos will gain big wing mutation at xl 14
-
 - 메뉴 컬러링을 위한 태그(fixed_artefact, random_artefact) 추가. 픽다트의 기본 색깔을 노란색으로 변경
   - Added Menu/colouring Prefixes(fixed_artefact, random_artefact). Changed the default color of the fixed artefact to yellow
   
@@ -62,6 +53,9 @@
   - 적성은 -3. Aptitude is -3.
 
 - 드라코들은 시작할 때 뒤틀린 몸 변이를 가짐. All draco have deform mutation at start.
+
+- 드라코 전원 14레벨에 영구 비행 변이를 얻도록 변경
+  - All dracos will gain big wing mutation at xl 14
 
 ### Removed
 
