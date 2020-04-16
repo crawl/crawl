@@ -28,7 +28,7 @@ void clear_trapping_net();
 void check_net_will_hold_monster(monster* mon);
 vector<coord_def> find_golubria_on_level();
 
-dungeon_feature_type trap_category(trap_type type);
+dungeon_feature_type trap_feature(trap_type type) IMMUTABLE;
 
 void destroy_trap(const coord_def& pos);
 trap_def* trap_at(const coord_def& where);

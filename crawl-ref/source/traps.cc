@@ -116,7 +116,7 @@ void trap_def::prepare_ammo(int charges)
 
 void trap_def::reveal()
 {
-    grd(pos) = category();
+    grd(pos) = feature();
 }
 
 string trap_def::name(description_level_type desc) const
@@ -154,7 +154,7 @@ bool trap_def::is_safe(actor* act) const
 
     // TODO: For now, just assume they're safe; they don't damage outright,
     // and the messages get old very quickly
-    if (category() == DNGN_TRAP_WEB) // && act->is_web_immune()
+    if (type == TRAP_WEB) // && act->is_web_immune()
         return true;
 
 #if TAG_MAJOR_VERSION == 34
@@ -515,7 +515,7 @@ void trap_def::trigger(actor& triggerer)
 
     // Tentacles aren't real monsters, and shouldn't invoke magic traps.
     if (m && mons_is_tentacle_or_tentacle_segment(m->type)
-        && category() != DNGN_TRAP_MECHANICAL)
+        && feature() != DNGN_TRAP_MECHANICAL)
     {
         return;
     }
@@ -1239,13 +1239,12 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
     ammo_qty--;
 }
 
-// returns appropriate trap symbol
-dungeon_feature_type trap_def::category() const
+dungeon_feature_type trap_def::feature() const
 {
-    return trap_category(type);
+    return trap_feature(type);
 }
 
-dungeon_feature_type trap_category(trap_type type)
+dungeon_feature_type trap_feature(trap_type type)
 {
     switch (type)
     {

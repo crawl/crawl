@@ -3275,7 +3275,7 @@ static void _place_traps()
         }
 
         ts.type = type;
-        grd(ts.pos) = ts.category();
+        grd(ts.pos) = ts.feature();
         ts.prepare_ammo();
         env.trap[ts.pos] = ts;
         dprf("placed a %s trap", trap_name(type).c_str());
@@ -5057,7 +5057,7 @@ dungeon_feature_type map_feature_at(map_def *map, const coord_def &c,
             if (f.trap->tr_type >= NUM_TRAPS)
                 return DNGN_FLOOR;
             else
-                return trap_category(static_cast<trap_type>(f.trap->tr_type));
+                return trap_feature(f.trap->tr_type);
         }
         else if (f.feat >= 0)
             return static_cast<dungeon_feature_type>(f.feat);
@@ -5999,7 +5999,7 @@ static void _place_specific_trap(const coord_def& where, trap_spec* spec,
     trap_def t;
     t.type = spec_type;
     t.pos = where;
-    grd(where) = trap_category(spec_type);
+    grd(where) = trap_feature(spec_type);
     t.prepare_ammo(charges);
     env.trap[where] = t;
     dprf("placed a %s trap", trap_name(spec_type).c_str());
@@ -6961,7 +6961,7 @@ static dungeon_feature_type _vault_inspect_mapspec(vault_placement &place,
     dungeon_feature_type found = NUM_FEATURES;
     const feature_spec f = mapsp.get_feat();
     if (f.trap)
-        found = trap_category(f.trap->tr_type);
+        found = trap_feature(f.trap->tr_type);
     else if (f.feat >= 0)
         found = static_cast<dungeon_feature_type>(f.feat);
     else if (f.glyph >= 0)

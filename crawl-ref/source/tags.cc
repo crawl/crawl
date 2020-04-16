@@ -6209,7 +6209,7 @@ static void tag_read_level_items(reader &th)
         if (th.getMinorVersion() == TAG_MINOR_0_11 && trap.type >= TRAP_TELEPORT)
             trap.type = (trap_type)(trap.type - 1);
         if (th.getMinorVersion() < TAG_MINOR_REVEAL_TRAPS)
-            grd(trap.pos) = trap.category();
+            grd(trap.pos) = trap.feature();
         if (th.getMinorVersion() < TAG_MINOR_TRAPS_DETERM
             || th.getMinorVersion() == TAG_MINOR_0_11)
         {
