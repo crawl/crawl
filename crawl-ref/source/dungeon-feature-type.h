@@ -71,6 +71,9 @@ enum dungeon_feature_type
     DNGN_TRAP_MECHANICAL,
 #endif
     DNGN_TRAP_TELEPORT,
+#if TAG_MAJOR_VERSION > 34
+    DNGN_TRAP_TELEPORT_PERMANENT,
+#endif
     DNGN_TRAP_SHAFT,
     DNGN_TRAP_WEB,
 #if TAG_MAJOR_VERSION > 34
@@ -309,6 +312,7 @@ enum dungeon_feature_type
     DNGN_TRAP_BOLT,
     DNGN_TRAP_NET,
     DNGN_TRAP_PLATE,
+    DNGN_TRAP_TELEPORT_PERMANENT,
 #endif
 
     NUM_FEATURES

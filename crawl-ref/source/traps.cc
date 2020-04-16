@@ -1276,8 +1276,9 @@ dungeon_feature_type trap_feature(trap_type type)
     case TRAP_DISPERSAL:
         return DNGN_TRAP_DISPERSAL;
     case TRAP_TELEPORT:
-    case TRAP_TELEPORT_PERMANENT:
         return DNGN_TRAP_TELEPORT;
+    case TRAP_TELEPORT_PERMANENT:
+        return DNGN_TRAP_TELEPORT_PERMANENT;
     case TRAP_ALARM:
         return DNGN_TRAP_ALARM;
     case TRAP_ZOT:

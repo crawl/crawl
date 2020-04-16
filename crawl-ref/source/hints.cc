@@ -3533,6 +3533,7 @@ static void _hints_describe_feature(int x, int y, ostringstream& ostr)
         break;
 
     case DNGN_TRAP_TELEPORT:
+    case DNGN_TRAP_TELEPORT_PERMANENT:
     case DNGN_TRAP_ALARM:
     case DNGN_TRAP_ZOT:
 #if TAG_MAJOR_VERSION == 34

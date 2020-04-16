@@ -273,6 +273,7 @@ TRAP(DNGN_TRAP_NET, "net trap", "trap_mechanical", LIGHTCYAN),
 TRAP(DNGN_TRAP_PLATE, "pressure plate", "trap_mechanical", LIGHTCYAN),
 TRAP(DNGN_TRAP_DISPERSAL, "dispersal trap", "trap_dispersal", MAGENTA),
 TRAP(DNGN_TRAP_TELEPORT, "teleport trap", "trap_teleport", LIGHTBLUE),
+TRAP(DNGN_TRAP_TELEPORT_PERMANENT, "permanent teleport trap", "trap_teleport_permanent", LIGHTBLUE),
 #if TAG_MAJOR_VERSION == 34
 TRAP(DNGN_TRAP_SHADOW, "shadow trap", "trap_shadow", BLUE),
 TRAP(DNGN_TRAP_SHADOW_DORMANT, "dormant shadow trap", "trap_shadow_dormant", BLUE),

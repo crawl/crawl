@@ -235,6 +235,8 @@ tileidx_t tileidx_feature_base(dungeon_feature_type feat)
         return TILE_DNGN_TRAP_DISPERSAL;
     case DNGN_TRAP_TELEPORT:
         return TILE_DNGN_TRAP_TELEPORT;
+    case DNGN_TRAP_TELEPORT_PERMANENT:
+        return TILE_DNGN_TRAP_TELEPORT_PERMANENT;
     case DNGN_TRAP_ALARM:
         return TILE_DNGN_TRAP_ALARM;
     case DNGN_TRAP_ZOT:
@@ -574,9 +576,9 @@ tileidx_t tileidx_feature(const coord_def &gc)
 #if TAG_MAJOR_VERSION == 34
     // New trap-type-specific features are handled in default case.
     case DNGN_TRAP_MECHANICAL:
-#endif
     case DNGN_TRAP_TELEPORT:
         return tileidx_trap(env.map_knowledge(gc).trap());
+#endif
 
     case DNGN_TRAP_WEB:
     {
