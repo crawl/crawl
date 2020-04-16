@@ -781,6 +781,12 @@ void ArmourOnDelay::finish()
         {
             remove_ice_armour();
         }
+		
+		if (you.attribute[ATTR_REPEL_MISSILES] != 0
+			&& !is_effectively_light_armour(&armour))
+		{
+            remove_missile_prot();
+        }	
     }
 
     equip_item(eq_slot, armour.link);

@@ -958,9 +958,9 @@ Creates a large cloud of noxious fumes, which may cause confusion.
 %%%%
 Olgreb's Last Mercy spell
 
-This spell sharpens a poisonous root plant. The sharpness of the roots can 
-effectively inflict damage to enemies protected from poison. The root plant
-extends from your feet, so the more skilled you are, the more it can rise.
+Made by the arch-venomancer Olgreb in the last years, this spell reacts strongly
+toxins in the poisoned being. If the target survives, all toxins remove, but if
+target dies, its body explodes and sweeps nearby area.
 %%%%
 Olgreb's Toxic Radiance spell
 
@@ -1108,7 +1108,9 @@ Repel Missiles spell
 Reduces the chance of projectile attacks striking the caster, making them
 easier to dodge. Single-target attacks are much easier to repel than
 penetrating attacks. Each time a missile is repelled the spell has a chance of
-expiring, with a lower chance of expiry at high power.
+expiring, with a lower chance of expiry at high power. The spell will not
+function for casters already wearing heavy armour (any body armour with an
+encumbrance rating of 5 or more).
 %%%%
 Resonance Strike spell
 
