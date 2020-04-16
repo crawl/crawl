@@ -2028,7 +2028,7 @@ void untransform(bool skip_move)
 	 if (you.attribute[ATTR_REPEL_MISSILES] != 0
         && !player_effectively_in_light_armour())
     {
-        you.attribute[ATTR_REPEL_MISSILES] = 0
+        you.attribute[ATTR_REPEL_MISSILES] = 0;
 
         const item_def *armour = you.slot_item(EQ_BODY_ARMOUR, false);
         mprf(MSGCH_DURATION, "%s fades away your repeling wind.",

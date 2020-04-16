@@ -13,7 +13,7 @@ int harvest_corpses(const actor &harvester,
 spret corpse_armour(int pow, bool fail);
 
 void remove_missile_prot();
-spret_type missile_prot(int pow, bool fail);
+spret missile_prot(int pow, bool fail);
 spret deflection(int pow, bool fail);
 
 spret cast_regen(int pow, bool fail);

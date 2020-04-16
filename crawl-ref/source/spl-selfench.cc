@@ -74,13 +74,13 @@ spret ice_armour(int pow, bool fail)
     return spret::success;
 }
 
-void remove_missile_prot
+void remove_missile_prot()
 {
     mprf(MSGCH_DURATION, "Your repeling wind fades away.");
     you.attribute[ATTR_REPEL_MISSILES] = 0;
 }
 
-spret_type missile_prot(int pow, bool fail)
+spret missile_prot(int pow, bool fail)
 {
     fail_check();
     you.attribute[ATTR_REPEL_MISSILES] = 1;
