@@ -4103,7 +4103,7 @@ static const struct spell_desc spelldata[] =
     50,
     2, 2,
     3, 8,
-    TILEG_FREEZE,
+    TILEG_FROZEN_RAMPARTS,
 },
 
 {
