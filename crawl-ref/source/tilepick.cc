@@ -213,8 +213,24 @@ tileidx_t tileidx_feature_base(dungeon_feature_type feat)
         return TILE_DNGN_OPEN_DOOR;
     case DNGN_OPEN_CLEAR_DOOR:
         return TILE_DNGN_OPEN_CLEAR_DOOR;
+#if TAG_MAJOR_VERSION == 34
     case DNGN_TRAP_MECHANICAL:
         return TILE_DNGN_TRAP_ARROW;
+#endif
+    case DNGN_TRAP_ARROW:
+        return TILE_DNGN_TRAP_ARROW;
+    case DNGN_TRAP_SPEAR:
+        return TILE_DNGN_TRAP_SPEAR;
+    case DNGN_TRAP_BLADE:
+        return TILE_DNGN_TRAP_BLADE;
+    case DNGN_TRAP_DART:
+        return TILE_DNGN_TRAP_DART;
+    case DNGN_TRAP_BOLT:
+        return TILE_DNGN_TRAP_BOLT;
+    case DNGN_TRAP_NET:
+        return TILE_DNGN_TRAP_NET;
+    case DNGN_TRAP_PLATE:
+        return TILE_DNGN_TRAP_PLATE;
     case DNGN_TRAP_DISPERSAL:
         return TILE_DNGN_TRAP_DISPERSAL;
     case DNGN_TRAP_TELEPORT:
@@ -555,7 +571,10 @@ tileidx_t tileidx_feature(const coord_def &gc)
         return tileidx_feature_base(feat);
     }
 
+#if TAG_MAJOR_VERSION == 34
+    // New trap-type-specific features are handled in default case.
     case DNGN_TRAP_MECHANICAL:
+#endif
     case DNGN_TRAP_TELEPORT:
         return tileidx_trap(env.map_knowledge(gc).trap());
 

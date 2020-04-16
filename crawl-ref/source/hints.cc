@@ -3535,7 +3535,16 @@ static void _hints_describe_feature(int x, int y, ostringstream& ostr)
     case DNGN_TRAP_TELEPORT:
     case DNGN_TRAP_ALARM:
     case DNGN_TRAP_ZOT:
+#if TAG_MAJOR_VERSION == 34
     case DNGN_TRAP_MECHANICAL:
+#endif
+    case DNGN_TRAP_ARROW:
+    case DNGN_TRAP_SPEAR:
+    case DNGN_TRAP_BLADE:
+    case DNGN_TRAP_DART:
+    case DNGN_TRAP_BOLT:
+    case DNGN_TRAP_NET:
+    case DNGN_TRAP_PLATE:
         ostr << "These nasty constructions can cause a range of "
                 "unpleasant effects. You won't be able to avoid "
                 "tripping traps by flying over them; their magic "

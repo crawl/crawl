@@ -4715,7 +4715,7 @@ bool monster::is_trap_safe(const coord_def& where, bool just_check) const
 
     // Hostile monsters are not afraid of non-mechanical traps.
     // But, in the arena Zot traps affect all monsters.
-    if (trap.feature() != DNGN_TRAP_MECHANICAL)
+    if (!trap.is_mechanical())
         return !crawl_state.game_is_arena() || trap.type != TRAP_ZOT;
 
     // Net traps always target the player, let's use them!

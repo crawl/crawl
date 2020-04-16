@@ -515,7 +515,7 @@ void trap_def::trigger(actor& triggerer)
 
     // Tentacles aren't real monsters, and shouldn't invoke magic traps.
     if (m && mons_is_tentacle_or_tentacle_segment(m->type)
-        && feature() != DNGN_TRAP_MECHANICAL)
+        && !is_mechanical())
     {
         return;
     }
@@ -1239,6 +1239,27 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
     ammo_qty--;
 }
 
+bool trap_def::is_mechanical() const
+{
+    switch (type)
+    {
+    case TRAP_ARROW:
+    case TRAP_SPEAR:
+    case TRAP_BLADE:
+    case TRAP_DART:
+    case TRAP_BOLT:
+    case TRAP_NET:
+    case TRAP_PLATE:
+#if TAG_MAJOR_VERSION == 34
+    case TRAP_NEEDLE:
+    case TRAP_GAS:
+#endif
+        return true;
+    default:
+        return false;
+    }
+}
+
 dungeon_feature_type trap_def::feature() const
 {
     return trap_feature(type);
@@ -1271,16 +1292,24 @@ dungeon_feature_type trap_feature(trap_type type)
 #endif
 
     case TRAP_ARROW:
+        return DNGN_TRAP_ARROW;
     case TRAP_SPEAR:
+        return DNGN_TRAP_SPEAR;
     case TRAP_BLADE:
+        return DNGN_TRAP_BLADE;
     case TRAP_DART:
+        return DNGN_TRAP_DART;
     case TRAP_BOLT:
+        return DNGN_TRAP_BOLT;
     case TRAP_NET:
+        return DNGN_TRAP_NET;
+    case TRAP_PLATE:
+        return DNGN_TRAP_PLATE;
+
 #if TAG_MAJOR_VERSION == 34
     case TRAP_NEEDLE:
     case TRAP_GAS:
 #endif
-    case TRAP_PLATE:
         return DNGN_TRAP_MECHANICAL;
 
     default:

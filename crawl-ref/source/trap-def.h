@@ -13,6 +13,7 @@ struct trap_def
     /// How difficult the trap is to detect
     uint8_t   skill_rnd;
 
+    bool is_mechanical() const;
     dungeon_feature_type feature() const;
     string name(description_level_type desc = DESC_PLAIN) const;
     bool is_bad_for_player() const;

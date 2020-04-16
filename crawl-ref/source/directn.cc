@@ -2966,7 +2966,16 @@ string feature_description_at(const coord_def& where, bool covering,
 
     switch (grid)
     {
+#if TAG_MAJOR_VERSION == 34
     case DNGN_TRAP_MECHANICAL:
+#endif
+    case DNGN_TRAP_ARROW:
+    case DNGN_TRAP_SPEAR:
+    case DNGN_TRAP_BLADE:
+    case DNGN_TRAP_DART:
+    case DNGN_TRAP_BOLT:
+    case DNGN_TRAP_NET:
+    case DNGN_TRAP_PLATE:
         return feature_description(grid, trap, covering_description, dtype);
     case DNGN_ABANDONED_SHOP:
         return thing_do_grammar(dtype, "an abandoned shop");
