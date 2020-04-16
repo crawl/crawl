@@ -40,7 +40,7 @@
     floraline (crawl.kelbi.org)
     Namanix (crawl.xtahua.com)
   and past:
-    Aleksil, Jan Anders Bremer (crawl.lantea.net)
+    Jan Anders Bremer (crawl.lantea.net)
     joosa (rl.heh.fi)
     Medar, Zkyp (crawl.xtahua.com)
     Aleksi Miikkael Luukkonen (crawl.lantea.net)
