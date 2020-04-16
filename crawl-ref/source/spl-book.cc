@@ -219,6 +219,7 @@ int book_rarity(book_type which_book)
     case BOOK_ANNIHILATIONS:
     case BOOK_GRAND_GRIMOIRE:
     case BOOK_NECRONOMICON:  // Kikubaaqudgha special
+    case BOOK_THE_MEMOIRS_OF_THE_VIRTUOSO:
     case BOOK_MANUAL:
         return 20;
 
@@ -231,7 +232,7 @@ static uint8_t _lowest_rarity[NUM_SPELLS];
 
 static const set<book_type> rare_books =
 {
-    BOOK_ANNIHILATIONS, BOOK_GRAND_GRIMOIRE, BOOK_NECRONOMICON,
+    BOOK_ANNIHILATIONS, BOOK_GRAND_GRIMOIRE, BOOK_NECRONOMICON, BOOK_THE_MEMOIRS_OF_THE_VIRTUOSO
 };
 
 bool is_rare_book(book_type type)

@@ -1122,6 +1122,7 @@ static const char* _book_type_name(int booktype)
     case BOOK_DREAMS:                 return "Dreams";
     case BOOK_ALCHEMY:                return "Alchemy";
     case BOOK_BEASTS:                 return "Beasts";
+    case BOOK_THE_MEMOIRS_OF_THE_VIRTUOSO:  return "Virtuoso";
     case BOOK_RANDART_LEVEL:          return "Fixed Level";
     case BOOK_RANDART_THEME:          return "Fixed Theme";
     default:                          return "Bugginess";
@@ -1242,6 +1243,8 @@ string sub_type_string(const item_def &item, bool known)
         else if (sub_type == BOOK_AKASHIC_RECORD)
             return "Akashic Record";
 #endif
+        else if (sub_type == BOOK_THE_MEMOIRS_OF_THE_VIRTUOSO)
+            return "The Memoirs of the Virtuoso";
 
         return string("book of ") + _book_type_name(sub_type);
     }

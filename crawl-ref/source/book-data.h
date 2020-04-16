@@ -77,6 +77,7 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_CAUSE_FEAR,
     SPELL_VIOLENT_UNRAVELLING,
     SPELL_SILENCE,
+    SPELL_POISON_GLAND,
     SPELL_DEFLECT_MISSILES,
     SPELL_HASTE,
     SPELL_DISCORD,
@@ -88,8 +89,6 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_MEPHITIC_CLOUD,
     SPELL_IGNITE_POISON,
     SPELL_OLGREBS_TOXIC_RADIANCE,
-    SPELL_POISON_GLAND,
-    SPELL_ERINGYAS_ROOTSPIKE, //Temp..
     SPELL_VENOM_BOLT,
 },
 
@@ -272,6 +271,7 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of Power
     SPELL_BATTLESPHERE,
     SPELL_VENOM_BOLT,
+    SPELL_ERINGYAS_ROOTSPIKE,
     SPELL_BOLT_OF_MAGMA,
     SPELL_IRON_SHOT,
     SPELL_IOOD,
@@ -343,7 +343,6 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_PETRIFY,
     SPELL_INTOXICATE,
     SPELL_IRRADIATE,
-    SPELL_OLGREBS_LAST_MERCY,
 },
 
 {   // Book of Beasts
@@ -377,6 +376,11 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_NECROMUTATION,
 },
 
+{   // The Memoirs of the virtuoso
+    SPELL_POISON_GLAND,
+    SPELL_ERINGYAS_ROOTSPIKE,
+    SPELL_OLGREBS_LAST_MERCY,
+}
 };
 
 COMPILE_CHECK(ARRAYSZ(spellbook_templates) == 1 + MAX_FIXED_BOOK);

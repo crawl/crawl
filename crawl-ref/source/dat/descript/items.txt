@@ -1145,6 +1145,13 @@ swamp dragon scales
 
 The scales of a swamp dragon. It confers resistance to poison on its wearer.
 %%%%
+the memoirs of the virtuoso
+
+The legendary poisoner, Olgreb has reached the end as archmage. Here is the
+journey he took in search of the ultimate poison spell he called 'the spell'.
+In the last chapter, Olgreb rests with the testament to complete the school of
+poison magic, by casting to himself 'the spell' he finally found.
+%%%%
 throwing net
 
 A mesh of ropes knotted together with weights around the edge, used to entangle
