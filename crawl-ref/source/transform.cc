@@ -2023,6 +2023,17 @@ void untransform(bool skip_move)
         mprf(MSGCH_DURATION, "%s cracks your icy armour.",
              armour->name(DESC_YOUR).c_str());
     }
+	
+	// ...And new Repel Missle spell
+	 if (you.attribute[ATTR_REPEL_MISSILES] != 0
+        && !player_effectively_in_light_armour())
+    {
+        you.attribute[ATTR_REPEL_MISSILES] = 0
+
+        const item_def *armour = you.slot_item(EQ_BODY_ARMOUR, false);
+        mprf(MSGCH_DURATION, "%s fades away your repeling wind.",
+             armour->name(DESC_YOUR).c_str());
+    }
 
     if (you.hp <= 0)
     {
