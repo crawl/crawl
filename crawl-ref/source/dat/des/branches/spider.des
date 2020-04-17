@@ -843,20 +843,18 @@ TAGS:   no_monster_gen patrolling no_trap_gen
 MONS:   crimson imp w:50 / white imp w:25 / shadow imp w:15 / \
         iron imp w:10 / nothing w:50
 MONS:   demonic crawler
-KPROP:  d' = no_tele_into
-SUBST:  d = c
-NSUBST: c = 6:2 / *:.
+NSUBST: 2 = 6:2 / *:.
 MAP
     xxxxx
   xxxxxxxxx
-  xxdl..ldxx
-  xlll.cl'dx
- xxlc...ldxx
+  xx22l..lxx
+  xlll.2l.2x
+ xxl2...l2xx
  xx..l1.lxxx
- xxc.ll.xxxx
- xxl...cxxx..
-  xxcl..lxx...
-  xxxc....l...
+ xx2.ll.xxxx
+ xxl...2xxx..
+  xx2l..lxx...
+  xxx2....l...
    xxxxl......
      xxxxlllx
        xxxxx
