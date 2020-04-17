@@ -3806,7 +3806,10 @@ static void _builder_monsters()
         // On D:1, we want monsters out of LOS distance from the player's
         // starting position, and we don't generate them awake.
         if (env.absdepth0 == 0)
+        {
             mg.proximity = PROX_AWAY_FROM_DUNGEON_ENTRANCE;
+            mg.behaviour = BEH_SLEEP;
+        }
         // Chance to generate the monster awake, but away from level stairs.
         else if (player_in_connected_branch()
                  && env.absdepth0 > 0
