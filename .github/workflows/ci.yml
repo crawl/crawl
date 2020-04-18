@@ -47,18 +47,9 @@ jobs:
             build_opts: WEBTILES=1
     steps:
       - uses: actions/checkout@v2
-      - name: Set version
-        run: |
-          ref="${{ github.ref }}"
-          if [[ $ref = refs/tags/*.*.* ]] ; then
-            ver="${ref##refs/tags/}"
-            echo This is a release build, setting version ${ver}.
-          else
-            ver="1.0.0"
-            echo This is not a release build, setting a fake version 1.0.0.
-          fi
-          echo "$ver" > util/release_ver
-        working-directory: crawl-ref/source
+        with:
+          fetch-depth: 0 # all history
+      - run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
       - name: Install dependencies
         run: ./deps.py --compiler ${{ matrix.compiler }} --build-opts "${{ matrix.build_opts }}"
         working-directory: .github/workflows
@@ -111,24 +102,15 @@ jobs:
             build_opts: TILES=y
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0 # all history
+      - run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
       - name: Checkout submodules
         shell: bash
         run: |
           auth_header="$(git config --local --get http.https://github.com/.extraheader)"
           git submodule sync --recursive
           git -c "http.extraheader=$auth_header" -c protocol.version=2 submodule update --init --force --recursive --depth=1
-      - name: Set version
-        run: |
-          ref="${{ github.ref }}"
-          if [[ $ref = refs/tags/*.*.* ]] ; then
-            ver="${ref##refs/tags/}"
-            echo This is a release build, setting version ${ver}.
-          else
-            ver="1.0.0"
-            echo This is not a release build, setting a fake version 1.0.0.
-          fi
-          echo "$ver" > util/release_ver
-        working-directory: crawl-ref/source
       - name: Install Dependencies
         run: |
           brew install ccache
@@ -185,24 +167,15 @@ jobs:
           - installer
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0 # all history
+      - run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
       - name: Checkout submodules (for crosscompile)
         shell: bash
         run: |
           auth_header="$(git config --local --get http.https://github.com/.extraheader)"
           git submodule sync --recursive
           git -c "http.extraheader=$auth_header" -c protocol.version=2 submodule update --init --force --recursive --depth=1
-      - name: Set version
-        run: |
-          ref="${{ github.ref }}"
-          if [[ $ref = refs/tags/*.*.* ]] ; then
-            ver="${ref##refs/tags/}"
-            echo This is a release build, setting version ${ver}.
-          else
-            ver="1.0.0"
-            echo This is not a release build, setting a fake version 1.0.0.
-          fi
-          echo "$ver" > util/release_ver
-        working-directory: crawl-ref/source
       - name: Install dependencies
         run: ./deps.py --crosscompile
         working-directory: .github/workflows
@@ -266,18 +239,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Set version
-        run: |
-          ref="${{ github.ref }}"
-          if [[ $ref = refs/tags/*.*.* ]] ; then
-            ver="${ref##refs/tags/}"
-            echo This is a release build, setting version ${ver}.
-          else
-            ver="1.0.0"
-            echo This is not a release build, setting a fake version 1.0.0.
-          fi
-          echo "$ver" > util/release_ver
-        working-directory: crawl-ref/source
+        with:
+          fetch-depth: 0 # all history
+      - run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
       - name: Install dependencies
         run: ./deps.py --coverage
         working-directory: .github/workflows
