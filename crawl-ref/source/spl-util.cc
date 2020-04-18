@@ -1121,7 +1121,6 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
     switch (spell)
     {
     case SPELL_BLINK:
-    case SPELL_CONTROLLED_BLINK:
         // XXX: this is a little redundant with you_no_tele_reason()
         // but trying to sort out temp and so on is a mess
         if (you.species == SP_FORMICID)
