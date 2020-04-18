@@ -107,6 +107,7 @@ spret your_spells(spell_type spell, int powc = 0, bool allow_fail = true,
 
 extern const char *fail_severity_adjs[];
 
+double expected_miscast_damage(spell_type spell);
 int fail_severity(spell_type spell);
 int failure_rate_colour(spell_type spell);
 int failure_rate_to_int(int fail);

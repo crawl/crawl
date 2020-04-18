@@ -2008,25 +2008,6 @@ static double _chance_of_fail_level(int raw_fail, int fail)
     return _get_true_fail_rate(target + 1) - _get_true_fail_rate(target);
 }
 
-
-/**
- * Compute the maximum severity of a miscast to report tier
- * @param spell     The spell to be checked.
- * @param tier      The miscast tier
- *
- * Tiers are defined by the relation between the expected miscast damage
- * (given a miscast occurs):
- *
- * - safe, Edam <= 5% mhp
- * - slightly dangerous, Edam <= 15% mhp
- * - quite dangerous, Edam <= 25% mhp
- * - extremely dangerous, larger Edam
- *
- * The miscast code uses
- *     dam = div_rand_round(roll_dice(level, level * fail), 10)
- * Here we compute the expected value of dam * 10 and compare to 10 * max hp
- */
-
 const double fail_hp_fraction[] =
 {
     .05,
@@ -2035,7 +2016,7 @@ const double fail_hp_fraction[] =
     .5,
 };
 
-int fail_severity(spell_type spell)
+double expected_miscast_damage(spell_type spell)
 {
     int raw_fail = raw_spell_fail(spell);
     int level = spell_difficulty(spell);
@@ -2056,8 +2037,37 @@ int fail_severity(spell_type spell)
             total_weighted_scaled_damage += chance * (level * level * f) / 2.0;
     }
 
-    double expected_damage =
-        total_weighted_scaled_damage / total_miscast_chance;
+    return total_weighted_scaled_damage / total_miscast_chance;
+}
+
+
+/**
+ * Compute the tier of expected severity of a miscast
+ * @param spell     The spell to be checked.
+ *
+ * Tiers are defined by the relation between the expected miscast damage
+ * (given a miscast occurs):
+ *
+ * - safe, no chance of dangerous effect
+ * - slightly dangerous, Edam <= 5% mhp
+ * - dangerous, Edam <= 15% mhp
+ * - quite dangerous, Edam <= 25% mhp
+ * - extremely dangerous, larger Edam
+ *
+ * The miscast code uses
+ *     dam = div_rand_round(roll_dice(level, level * fail), 30)
+ * Here we compute the expected value of dam * 30 and compare to 30 * max hp
+ */
+int fail_severity(spell_type spell)
+{
+    int raw_fail = raw_spell_fail(spell);
+    int level = spell_difficulty(spell);
+
+    // Impossible to get a damaging miscast
+    if (level * level * raw_fail <= 150)
+        return 0;
+
+    double expected_damage = expected_miscast_damage(spell);
 
     for (int i = 0; i < 4; ++i)
         if (expected_damage / (MISCAST_DIVISOR * get_real_hp(true)) <= fail_hp_fraction[i])
