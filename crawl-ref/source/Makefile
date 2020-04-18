@@ -1838,6 +1838,7 @@ endif
 	if $(GXX) -dumpmachine|grep -q x86_64; \
 	  then WINARCH=win64; else WINARCH=win32; fi; \
 	makensis -NOCD -DVERSION=$(SRC_VERSION) -DWINARCH="$$WINARCH" util/crawl.nsi
+	rm -rf build-win
 
 build-windows:
 ifneq ($(GAME),crawl.exe)
