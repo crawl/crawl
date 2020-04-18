@@ -83,7 +83,7 @@ static void _random_hell_miscast()
                                  1, spschool::hexes);
 
     miscast_effect(you, nullptr, {miscast_source::hell_effect}, which_miscast,
-                   5, random2avg(97, 3), "the effects of Hell");
+                   5, random2avg(40, 3), "the effects of Hell");
 }
 
 /// The thematically appropriate hell effects for a given hell branch.
@@ -148,7 +148,7 @@ static void _themed_hell_summon_or_miscast()
     else
     {
         miscast_effect(you, nullptr, {miscast_source::hell_effect},
-                      spec->miscast_type, 5, random2avg(97, 3),
+                      spec->miscast_type, 5, random2avg(40, 3),
                       "the effects of Hell");
     }
 }
