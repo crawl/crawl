@@ -600,30 +600,29 @@ spret palentonga_charge(bool fail)
 }
 
 /**
- * Attempt to blink the player to a nearby tile of their choosing.
+ * Attempt to blink the player to a nearby tile of their choosing. Doesn't
+ * handle you.no_tele().
  *
- * @param fail          Whether this came from a miscast spell (& should
- *                      therefore fail after selecting a target)
  * @param safe_cancel   Whether it's OK to let the player cancel the control
  *                      of the blink (or whether there should be a prompt -
  *                      for e.g. ?blink with blurryvis)
  * @return              Whether the blink succeeded, aborted, or was miscast.
  */
-spret controlled_blink(bool fail, bool safe_cancel)
+spret controlled_blink(bool safe_cancel)
 {
+    if (crawl_state.is_repeating_cmd())
+    {
+        crawl_state.cant_cmd_repeat("You can't repeat controlled blinks.");
+        crawl_state.cancel_cmd_again();
+        crawl_state.cancel_cmd_repeat();
+        return spret::abort;
+    }
+
     coord_def target;
     targeter_smite tgt(&you, LOS_RADIUS);
     tgt.obeys_mesmerise = true;
     if (!_find_cblink_target(target, safe_cancel, "blink", &tgt))
         return spret::abort;
-
-    fail_check();
-
-    if (you.no_tele(true, true, true))
-    {
-        canned_msg(MSG_STRANGE_STASIS);
-        return spret::success; // of a sort
-    }
 
     if (!you.attempt_escape(2))
         return spret::success; // of a sort
@@ -663,45 +662,6 @@ spret cast_blink(bool fail)
     fail_check();
     uncontrolled_blink();
     return spret::success;
-}
-
-/**
- * Cast the player spell Controlled Blink.
- *
- * @param fail    Whether the player miscast the spell.
- * @param safe    Whether it's safe to abort (not e.g. unknown ?blink)
- * @return        Whether the spell was successfully cast, aborted, or miscast.
- */
-spret cast_controlled_blink(bool fail, bool safe)
-{
-    // don't prompt if it's useless
-    if (you.no_tele(true, true, true))
-    {
-        canned_msg(MSG_STRANGE_STASIS);
-        return spret::abort;
-    }
-
-    if (crawl_state.is_repeating_cmd())
-    {
-        crawl_state.cant_cmd_repeat("You can't repeat controlled blinks.");
-        crawl_state.cancel_cmd_again();
-        crawl_state.cancel_cmd_repeat();
-        return spret::abort;
-    }
-
-    if (orb_limits_translocation())
-    {
-        if (!yesno("Your blink will be uncontrolled - continue anyway?",
-                   false, 'n'))
-        {
-            return spret::abort;
-        }
-
-        mprf(MSGCH_ORB, "The Orb prevents control of your translocation!");
-        return cast_blink(fail);
-    }
-
-    return controlled_blink(fail, safe);
 }
 
 void you_teleport()
