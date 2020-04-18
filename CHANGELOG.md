@@ -24,6 +24,12 @@
 - 5레벨 독/참 마법, 독선 추가. 지속시간동안 적을 근접공격시 맞은 적의 독저항을 중첩하여 깎을 수 있음
   - Added Poison Gland, level 5 posion/charm spell. For the duration, melee attack makes a attacked creature more vulnerable to poison
 
+- 독마법 최종티어 책인 거장의 회고록 추가
+  - Added The Memoirs of the Virtuoso, the highest level Poison book
+  
+- 가방 아이템 추가. 아이템을 자유롭게 넣고 뺄 수 있는 유틸리티 아이템임
+  - Added bag. Miscellany that provide additional storage space
+
 - 가속 마법 복구
   - rollback Haste
   
