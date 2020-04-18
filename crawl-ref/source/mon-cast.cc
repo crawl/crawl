@@ -1769,7 +1769,6 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
 #endif
     case SPELL_CREATE_TENTACLES:
     case SPELL_BLINK:
-    case SPELL_CONTROLLED_BLINK:
     case SPELL_BLINK_RANGE:
     case SPELL_BLINK_AWAY:
     case SPELL_BLINK_CLOSE:
@@ -3960,7 +3959,7 @@ bool handle_mon_spell(monster* mons)
         setup_breath_timeout(mons);
 
     // FINALLY! determine primary spell effects {dlb}:
-    if (spell_cast == SPELL_BLINK || spell_cast == SPELL_CONTROLLED_BLINK)
+    if (spell_cast == SPELL_BLINK)
     {
         // Why only cast blink if nearby? {dlb}
         if (mons->can_see(you))
@@ -7468,7 +7467,6 @@ static ai_action::goodness _monster_spell_goodness(monster* mon, mon_spell_slot 
             return ai_action::bad();
         // intentional fall-through
     case SPELL_BLINK:
-    case SPELL_CONTROLLED_BLINK:
     case SPELL_BLINK_RANGE:
     case SPELL_BLINK_AWAY:
         if (mon->no_tele(true, false))
