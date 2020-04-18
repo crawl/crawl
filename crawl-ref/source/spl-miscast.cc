@@ -605,7 +605,7 @@ void miscast_effect(spell_type spell, int fail)
     contaminate_player(cont_points, true);
 
     // No evil effects other than contam for minor miscasts
-    if (nastiness <= 350)
+    if (nastiness <= MISCAST_THRESHOLD + 250)
     {
         canned_msg(MSG_NOTHING_HAPPENS);
         return;
@@ -652,7 +652,7 @@ void miscast_effect(actor& target, actor* source, miscast_source_info mc_info,
 
     miscast_datum effect =  miscast_effects.find(school)->second;
 
-    int dam = div_rand_round(roll_dice(level, level * fail), 10);
+    int dam = div_rand_round(roll_dice(level, level * fail), MISCAST_DIVISOR);
 
     if (effect.flavour == BEAM_NONE)
     {

@@ -2041,8 +2041,8 @@ int fail_severity(spell_type spell)
     int level = spell_difficulty(spell);
 
     // Impossible to get a damaging miscast
-    if (level * level * raw_fail <= 100)
-        return 0;
+    if (level * level * raw_fail <= MISCAST_THRESHOLD)
+        return 0.0;
 
     double total_miscast_chance = 0.0;
     double total_weighted_scaled_damage = 0.0;
@@ -2052,7 +2052,7 @@ int fail_severity(spell_type spell)
         double chance = _chance_of_fail_level(raw_fail, f);
         total_miscast_chance += chance;
         // Account for small effect cutoff
-        if (level * level * f > 100)
+        if (level * level * f > MISCAST_THRESHOLD)
             total_weighted_scaled_damage += chance * (level * level * f) / 2.0;
     }
 
@@ -2060,16 +2060,17 @@ int fail_severity(spell_type spell)
         total_weighted_scaled_damage / total_miscast_chance;
 
     for (int i = 0; i < 4; ++i)
-        if (expected_damage / (10 * get_real_hp(true)) <= fail_hp_fraction[i])
-            return i;
+        if (expected_damage / (MISCAST_DIVISOR * get_real_hp(true)) <= fail_hp_fraction[i])
+            return i + 1;
 
-    return 4;
+    return 5;
 }
 
 const char *fail_severity_adjs[] =
 {
     "safe",
-    "slightly dangerous",
+    "mildly dangerous",
+    "dangerous",
     "quite dangerous",
     "extremely dangerous",
     "potentially lethal",
@@ -2082,9 +2083,10 @@ int failure_rate_colour(spell_type spell)
 {
     const int severity = fail_severity(spell);
     return severity == 0 ? LIGHTGREY :
-           severity == 1 ? YELLOW :
-           severity == 2 ? LIGHTRED :
-           severity == 3 ? RED
+           severity == 1 ? WHITE :
+           severity == 2 ? YELLOW :
+           severity == 3 ? LIGHTRED :
+           severity == 4 ? RED
                          : MAGENTA;
 }
 
