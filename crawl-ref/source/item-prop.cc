@@ -2788,6 +2788,9 @@ bool item_is_jelly_edible(const item_def &item)
     if (item.base_type == OBJ_MISCELLANY && item.sub_type == MISC_ZIGGURAT)
         return false;
 
+    if (item.base_type == OBJ_MISCELLANY && item.sub_type == MISC_BAG)
+        return false;
+
     // Don't eat mimics.
     if (item.flags & ISFLAG_MIMIC)
         return false;

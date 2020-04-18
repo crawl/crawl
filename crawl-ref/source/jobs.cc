@@ -120,6 +120,8 @@ void give_job_equipment(job_type job)
         newgame_make_item(spec.base_type, spec.sub_type, max(spec.qty, 1),
                           plus, spec.ego);
     }
+
+    newgame_make_item(OBJ_MISCELLANY, MISC_BAG);
 }
 
 // Must be called after equipment is given for weapon skill to be given.

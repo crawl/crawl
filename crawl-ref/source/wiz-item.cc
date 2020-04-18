@@ -18,6 +18,7 @@
 #include "decks.h"
 #include "dbg-util.h"
 #include "env.h"
+#include "evoke.h"
 #include "god-passive.h"
 #include "invent.h"
 #include "item-prop.h"
@@ -773,6 +774,24 @@ void wizard_unidentify_pack()
     for (auto &item : you.inv)
         if (item.defined())
             _forget_item(item);
+
+    //bag check
+    for (auto& item : you.inv) {
+        if (item.base_type == OBJ_MISCELLANY &&
+            item.sub_type == MISC_BAG) {
+            if (item.props.exists(BAG_PROPS_KEY)) {
+                CrawlVector& bagVector = item.props[BAG_PROPS_KEY].get_vector();
+                for (auto bagitem : bagVector) {
+                    bool item_undefined = (bagitem.get_flags() & SFLAG_UNSET ||
+                        bagitem.get_item().defined() == false);
+                    if (!item_undefined) {
+                        _forget_item(bagitem.get_item());
+                    }
+                }
+            }
+        }
+    }
+
 
     you.wield_change  = true;
     you.redraw_quiver = true;

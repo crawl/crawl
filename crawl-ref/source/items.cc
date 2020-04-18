@@ -127,8 +127,6 @@ static void _autoinscribe_item(item_def& item);
 static void _autoinscribe_floor_items();
 static void _autoinscribe_inventory();
 static void _multidrop(vector<SelItem> tmp_items);
-static bool _merge_items_into_inv(item_def &it, int quant_got,
-                                  int &inv_slot, bool quiet);
 
 static bool will_autopickup   = false;
 static bool will_autoinscribe = false;
@@ -1756,7 +1754,7 @@ static bool _put_item_in_inv(item_def& it, int quant_got, bool quiet, bool& put_
 
     // attempt to put the item into your inventory.
     int inv_slot;
-    if (_merge_items_into_inv(it, quant_got, inv_slot, quiet))
+    if (merge_items_into_inv(it, quant_got, inv_slot, quiet))
     {
         put_in_inv = true;
         // if you succeeded, actually reduce the number in the original stack
@@ -2158,7 +2156,7 @@ static int _place_item_in_free_slot(item_def &it, int quant_got,
  *              item pickup failure) aren't printed.
  * @return Whether something was successfully picked up.
  */
-static bool _merge_items_into_inv(item_def &it, int quant_got,
+bool merge_items_into_inv(item_def &it, int quant_got,
                                   int &inv_slot, bool quiet)
 {
     inv_slot = -1;
@@ -2566,6 +2564,13 @@ bool drop_item(int item_dropped, int quant_drop)
         return false;
     }
 
+    if (item_dropped == you.equip[EQ_SECOND_WEAPON]
+        && item.base_type == OBJ_WEAPONS && item.cursed())
+    {
+        mprf("%s is stuck to you!", item.name(DESC_THE).c_str());
+        return false;
+    }
+
     for (int i = EQ_MIN_ARMOUR; i <= EQ_MAX_ARMOUR; i++)
     {
         if (item_dropped == you.equip[i] && you.equip[i] != -1)
@@ -2598,6 +2603,14 @@ bool drop_item(int item_dropped, int quant_drop)
             return false;
         // May have been destroyed by removal. Returning true because we took
         // time to swap away.
+        else if (!item.defined())
+            return true;
+    }
+
+    if (item_dropped == you.equip[EQ_SECOND_WEAPON] && quant_drop >= item.quantity)
+    {
+        if (!wield_weapon(true, SLOT_BARE_HANDS, true, true, true, false, true))
+            return false;
         else if (!item.defined())
             return true;
     }
@@ -3972,6 +3985,8 @@ colour_t item_def::miscellany_colour() const
             return ETC_DARK;
         case MISC_ZIGGURAT:
             return _zigfig_colour();
+        case MISC_BAG:
+            return BROWN;
         default:
             return LIGHTGREEN;
     }

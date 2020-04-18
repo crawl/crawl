@@ -66,9 +66,26 @@ static string _random_consonant_set(size_t seed);
 
 static void _maybe_identify_pack_item()
 {
-    for (auto &item : you.inv)
-        if (item.defined() && !get_ident_type(item))
-            maybe_identify_base_type(item);
+    for (auto& item : you.inv) {
+        if (item.defined()) {
+            if (!get_ident_type(item)) {
+                maybe_identify_base_type(item);
+            }
+            if (item.base_type == OBJ_MISCELLANY &&
+                item.sub_type == MISC_BAG) {
+                if (item.props.exists(BAG_PROPS_KEY)) {
+                    CrawlVector& bagVector = item.props[BAG_PROPS_KEY].get_vector();
+                    for (auto bagitem : bagVector) {
+                        bool item_undefined = (bagitem.get_flags() & SFLAG_UNSET ||
+                            bagitem.get_item().defined() == false);
+                        if (!item_undefined && !get_ident_type(bagitem.get_item())) {
+                            maybe_identify_base_type(bagitem);
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 // quant_name is useful since it prints out a different number of items
@@ -1041,6 +1058,7 @@ static string misc_type_name(int type)
 #if TAG_MAJOR_VERSION == 34
     case MISC_XOMS_CHESSBOARD:           return "removed chess piece";
 #endif
+    case MISC_BAG:                       return "bag";
 
     default:
         return "buggy miscellaneous item";

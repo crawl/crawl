@@ -2561,6 +2561,9 @@ static tileidx_t _tileidx_misc(const item_def &item)
 
     case MISC_QUAD_DAMAGE:
         return TILE_MISC_QUAD_DAMAGE;
+
+    case MISC_BAG:
+        return TILE_MISC_BAG;
     }
 
     return TILE_ERROR;

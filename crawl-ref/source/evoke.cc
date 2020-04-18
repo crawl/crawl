@@ -37,6 +37,7 @@
 #include "item-use.h"
 #include "libutil.h"
 #include "losglobal.h"
+#include "macro.h"
 #include "mapmark.h"
 #include "melee-attack.h"
 #include "message.h"
@@ -48,6 +49,7 @@
 #include "mon-place.h"
 #include "mutant-beast.h"
 #include "nearby-danger.h"
+#include "output.h"
 #include "place.h"
 #include "player.h"
 #include "player-stats.h"
@@ -74,6 +76,8 @@
 #include "viewchar.h"
 #include "view.h"
 #include "xom.h"
+
+
 
 static bool _reaching_weapon_attack(const item_def& wpn)
 {
@@ -1485,6 +1489,287 @@ static spret _phantom_mirror()
     return spret::success;
 }
 
+static string _put_menu_titlefn(const Menu*, const string&)
+{
+    string prompt_base = "Put what?                               ";
+    return prompt_base + slot_description();
+}
+
+static string _get_menu_titlefn(const Menu*, const string& slot_des)
+{
+    string prompt_base = "Take what?                               ";
+    return prompt_base + slot_des;
+}
+
+//리턴이 false면 가방에 넣는 작업을 멈춤
+static bool _put_item(int bag_slot, int item_dropped, int quant_drop, bool message)
+{
+    item_def& item = you.inv[item_dropped];
+
+    if (quant_drop < 0 || quant_drop > item.quantity)
+        quant_drop = item.quantity;
+
+    if (item.base_type == OBJ_FOOD && item.sub_type == FOOD_CHUNK)
+    {
+        if (message) {
+            mprf("Unable to put the rotting food.");
+        }
+        return false;
+    }
+    if (item.base_type == OBJ_MISCELLANY && item.sub_type == MISC_BAG)
+    {
+        if (message) {
+            canned_msg(MSG_UNTHINKING_ACT);
+        }
+        return false;
+    }
+
+
+    //시체 고기도 못넣게 하기
+
+    if (item_dropped == you.equip[EQ_LEFT_RING]
+        || item_dropped == you.equip[EQ_RIGHT_RING]
+        || item_dropped == you.equip[EQ_AMULET]
+        || item_dropped == you.equip[EQ_RING_ONE]
+        || item_dropped == you.equip[EQ_RING_TWO]
+        || item_dropped == you.equip[EQ_RING_THREE]
+        || item_dropped == you.equip[EQ_RING_FOUR]
+        || item_dropped == you.equip[EQ_RING_FIVE]
+        || item_dropped == you.equip[EQ_RING_SIX]
+        || item_dropped == you.equip[EQ_RING_SEVEN]
+        || item_dropped == you.equip[EQ_RING_EIGHT]
+        || item_dropped == you.equip[EQ_RING_AMULET]
+        || item_dropped == you.equip[EQ_AMULET_LEFT]
+        || item_dropped == you.equip[EQ_AMULET_RIGHT]
+        || item_dropped == you.equip[EQ_WEAPON]
+        || item_dropped == you.equip[EQ_SECOND_WEAPON])
+    {
+        if (message) {
+            mprf("Unable to put the equipped item.");
+        }
+        return false;
+    }
+
+    for (int i = EQ_MIN_ARMOUR; i <= EQ_MAX_ARMOUR; i++)
+    {
+        if (item_dropped == you.equip[i] && you.equip[i] != -1)
+        {
+            return false;
+        }
+    }
+    ASSERT(item.defined());
+
+    if (message) {
+        mprf("You put the %s in the bag", quant_name(item, quant_drop, DESC_A).c_str());
+    }
+
+    item_def& bag = you.inv[bag_slot];
+
+    if (!bag.props.exists(BAG_PROPS_KEY))
+    {
+        bag.props[BAG_PROPS_KEY].new_vector(SV_ITEM).resize(ENDOFPACK);
+        CrawlVector& rap = bag.props[BAG_PROPS_KEY].get_vector();
+        rap.set_max_size(ENDOFPACK);
+    }
+
+    int emptySlot = -1;
+    bool merged = false;
+    CrawlVector& bagVector = bag.props[BAG_PROPS_KEY].get_vector();
+    //빈 곳을 찾음
+    for (int i = 0; i < ENDOFPACK; i++) 
+    {
+        bool item_undefined = (bagVector[i].get_flags() & SFLAG_UNSET ||
+            bagVector[i].get_item().defined() == false);
+        if (item_undefined && emptySlot == -1)
+        {
+            emptySlot = i;
+            continue;
+        }
+
+        if (!item_undefined && items_stack(item, (bagVector[i].get_item())))
+        {
+            //동일한 아이템 머지
+            item_def copy = item;
+            merge_item_stacks(copy, (bagVector[i].get_item()), quant_drop);
+            bagVector[i].get_item().quantity += quant_drop;
+            merged = true;
+            break;
+        }
+    }
+
+    if (emptySlot == -1 && merged == false)
+    {
+        //가방이 넘치면 항상 메시지
+        mprf("bag is full!");
+        return false;
+    }
+    if (merged == false) {
+        bag.props[BAG_PROPS_KEY].get_vector()[emptySlot].get_item() = item;
+        bag.props[BAG_PROPS_KEY].get_vector()[emptySlot].get_item().quantity = quant_drop;
+        bag.props[BAG_PROPS_KEY].get_vector()[emptySlot].get_item().link = emptySlot;
+    }
+    dec_inv_item_quantity(item_dropped, quant_drop);
+    return true;
+}
+
+
+static bool _get_item(int bag_slot, int item_taken, int quant_taken, bool message)
+{
+    item_def& bag = you.inv[bag_slot];
+    ASSERT(bag.defined());
+    ASSERT(bag.props.exists(BAG_PROPS_KEY));
+
+    CrawlVector& bagVector = bag.props[BAG_PROPS_KEY].get_vector();
+
+    item_def& item = bagVector[item_taken].get_item();
+
+    if (quant_taken < 0 || quant_taken > item.quantity)
+        quant_taken = item.quantity;
+
+    int inv_slot;
+    if (merge_items_into_inv(item, quant_taken, inv_slot, false)) {
+        item.quantity -= quant_taken;
+        if (item.quantity == 0)
+            item.base_type = OBJ_UNASSIGNED;
+    }
+    else {
+        if (message) {
+            mprf("your inventory is full!");
+        }
+        return false;
+    }
+    return true;
+}
+
+static spret _put_bag(int slot)
+{
+    InvMenu bag_menu(MF_MULTISELECT | MF_ALLOW_FILTER);
+    {
+        bag_menu.set_title(new MenuEntry("Choose the item you want to put", MEL_TITLE));
+    }
+    bag_menu.set_tag("bag");
+    bag_menu.menu_action = Menu::ACT_EXECUTE;
+    bag_menu.set_type(menu_type::invlist);
+    bag_menu.set_title_annotator(_put_menu_titlefn);
+    bag_menu.menu_action = InvMenu::ACT_EXECUTE;
+
+    bag_menu.load_inv_items(OSEL_BAG, slot);
+    bag_menu.set_type(menu_type::invlist);
+
+    bag_menu.show(true);
+    if (!crawl_state.doing_prev_cmd_again)
+        redraw_screen();
+
+    bool success_put = false;
+    bool multiple_item = bag_menu.get_selitems().size() > 1;
+    for (auto sel_item : bag_menu.get_selitems()) {
+        if (!_put_item(slot, letter_to_index(sel_item.slot), sel_item.quantity, multiple_item ? false : true)) {
+            break;
+        }
+        else {
+            success_put = true;
+        }
+    }
+    if (success_put && multiple_item) {
+        mprf("You put the multiple items in the bag");
+    }
+
+    return spret::abort;
+}
+
+static MenuEntry* bag_item_mangle(MenuEntry* me)
+{
+    unique_ptr<InvEntry> ie(dynamic_cast<InvEntry*>(me));
+    BagEntry* newme = new BagEntry(ie.get());
+    return newme;
+}
+
+
+static spret _get_bag(int slot)
+{
+    InvMenu bag_menu(MF_MULTISELECT | MF_ALLOW_FILTER);
+    {
+        bag_menu.set_title(new MenuEntry("Choose the item you want to take", MEL_TITLE));
+    }
+    bag_menu.set_tag("bag");
+    bag_menu.menu_action = Menu::ACT_EXECUTE;
+    bag_menu.set_type(menu_type::invlist);
+    bag_menu.set_title_annotator(_get_menu_titlefn);
+    bag_menu.menu_action = InvMenu::ACT_EXECUTE;
+
+    item_def& bag = you.inv[slot];
+    if (bag.props.exists(BAG_PROPS_KEY))
+    {
+        //가방용 인벤토리
+        {
+            vector<const item_def*> tobeshown;
+
+            int itemnum_in_bag = 0;
+            CrawlVector& bagVector = bag.props[BAG_PROPS_KEY].get_vector();
+            for (const auto& item : bagVector)
+            {
+                if (!(item.get_flags() & SFLAG_UNSET) && item.get_item().defined())
+                {
+                    tobeshown.push_back(&(item.get_item()));
+                    itemnum_in_bag++;
+                }
+            }
+
+            bag_menu.load_items(tobeshown, bag_item_mangle);
+            string slot_des = make_stringf("%d/%d slots", itemnum_in_bag, ENDOFPACK);
+            bag_menu.set_title(slot_des);
+        }
+    }
+    else {
+        string slot_des = make_stringf("%d/%d slots", 0, ENDOFPACK);
+        bag_menu.set_title(slot_des);
+    }
+
+    bag_menu.set_type(menu_type::invlist);
+
+    bag_menu.show(true);
+    if (!crawl_state.doing_prev_cmd_again)
+        redraw_screen();
+
+    for (auto sel_item : bag_menu.get_selitems()) {
+        if (!_get_item(slot, letter_to_index(sel_item.slot), sel_item.quantity, true)) {
+            break;
+        }
+    }
+
+    return spret::abort;
+}
+
+static spret _open_bag(int slot)
+{
+    clear_messages();
+
+    mprf(MSGCH_PROMPT, "What do you want to do, (<w>p</w>)ut it in or (<w>t</w>)ake it out? (<w>Esc</w> to cancel)");
+
+    flush_prev_message();
+
+    mouse_control mc(MOUSE_MODE_PROMPT);
+    int c;
+    do
+    {
+        c = getchm();
+        switch (c) {
+        case 'p':
+        case 'P':
+            clear_messages();
+            return _put_bag(slot);
+        case 't':
+        case 'T':
+            clear_messages();
+            return _get_bag(slot);
+        }
+    } while (!key_is_escape(c) && c != ' ');
+
+    canned_msg(MSG_OK);
+    clear_messages();
+    return spret::abort;
+}
+
 bool evoke_check(int slot, bool quiet)
 {
     const bool reaching = slot != -1 && slot == you.equip[EQ_WEAPON]
@@ -1778,6 +2063,18 @@ bool evoke_item(int slot)
         case MISC_ZIGGURAT:
             // Don't set did_work to false, _make_zig handles the message.
             unevokable = !_make_zig(item);
+            break;
+
+        case MISC_BAG:
+            switch (_open_bag(slot))
+            {
+            default:
+            case spret::abort:
+                return false;
+
+            case spret::success:
+                break;
+            }
             break;
 
         default:

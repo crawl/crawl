@@ -20,6 +20,7 @@
 #include "describe.h"
 #include "english.h"
 #include "env.h"
+#include "evoke.h"
 #include "food.h"
 #include "god-item.h"
 #include "god-passive.h"
@@ -522,6 +523,8 @@ string no_selectables_message(int item_selector)
         return "You aren't wearing any uncursed rings.";
     case OSEL_UNCURSED_WORN_AMULETS:
         return "You aren't wearing any uncursed amulets.";
+    case OSEL_BAG:
+        return "You aren't carrying any items to put in bag.";
     }
 
     return "You aren't carrying any such object.";
@@ -636,6 +639,15 @@ bool InvEntry::get_tiles(vector<tile_def>& tileset) const
 #else
 bool InvEntry::get_tiles(vector<tile_def>& /*tileset*/) const { return false; }
 #endif
+
+
+BagEntry::BagEntry(InvEntry* inv) : InvEntry(*inv->item) {
+    text = inv->item->name(DESC_A, false);
+
+
+}
+
+
 
 bool InvMenu::is_selectable(int index) const
 {
@@ -1153,6 +1165,9 @@ bool item_is_selected(const item_def &i, int selector)
     case OSEL_UNCURSED_WORN_AMULETS:
         return !i.cursed() && item_is_equipped(i) && itype == OBJ_JEWELLERY
             && jewellery_is_amulet(i);
+    case OSEL_BAG:
+        return !item_is_equipped(i) && (itype != OBJ_FOOD || i.sub_type != FOOD_CHUNK)
+            && (itype != OBJ_MISCELLANY || i.sub_type != MISC_BAG);
     default:
         return false;
     }
@@ -2103,13 +2118,14 @@ static bool _item_ally_only(const item_def &item)
  * Return whether an item can be evoked.
  *
  * @param item      The item to check
- * @param reach     Do weapons of reaching count?
+ * @param unskilled Do items that don't use Evocations skill (weapons of
+ *                  reaching and tremorstones) count?
  * @param known     When set, return true for items of unknown type which
  *                  might be evokable.
  * @param msg       Whether we need to print a message.
  * @param equip     When false, ignore wield and meld requirements.
  */
-bool item_is_evokable(const item_def &item, bool reach, bool known,
+bool item_is_evokable(const item_def &item, bool unskilled, bool known,
                       bool msg, bool equip)
 {
     const string error = item_is_melded(item)
@@ -2171,10 +2187,10 @@ bool item_is_evokable(const item_def &item, bool reach, bool known,
         return true;
 
     case OBJ_WEAPONS:
-        if ((!wielded || !reach) && !msg)
+        if ((!wielded || !unskilled) && !msg)
             return false;
 
-        if (reach && weapon_reach(item) > REACH_NONE && item_type_known(item))
+        if (unskilled && weapon_reach(item) > REACH_NONE && item_type_known(item))
         {
             if (!wielded)
             {
@@ -2206,16 +2222,18 @@ bool item_is_evokable(const item_def &item, bool reach, bool known,
             mpr("That item cannot be evoked!");
         return false;
 
-#if TAG_MAJOR_VERSION == 34
     case OBJ_MISCELLANY:
+#if TAG_MAJOR_VERSION == 34
         if (item.sub_type != MISC_BUGGY_LANTERN_OF_SHADOWS
             && item.sub_type != MISC_BUGGY_EBONY_CASKET
             )
         {
-            return true;
-        }
 #endif
+            return unskilled || item.sub_type != MISC_BAG;
+#if TAG_MAJOR_VERSION == 34
+        }
         // removed items fallthrough to failure
+#endif
 
     default:
         if (msg)
@@ -2252,6 +2270,23 @@ void identify_inventory()
         {
             set_ident_type(item, true);
             set_ident_flags(item, ISFLAG_IDENT_MASK);
+        }
+    }
+    //bag check
+    for (auto& item : you.inv) {
+        if (item.base_type == OBJ_MISCELLANY &&
+            item.sub_type == MISC_BAG) {
+            if (item.props.exists(BAG_PROPS_KEY)) {
+                CrawlVector& bagVector = item.props[BAG_PROPS_KEY].get_vector();
+                for (auto bagitem : bagVector) {
+                    bool item_undefined = (bagitem.get_flags() & SFLAG_UNSET ||
+                        bagitem.get_item().defined() == false);
+                    if (!item_undefined && !get_ident_type(bagitem.get_item())) {
+                        set_ident_type(bagitem, true);
+                        set_ident_flags(bagitem, ISFLAG_IDENT_MASK);
+                    }
+                }
+            }
         }
     }
 }

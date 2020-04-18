@@ -49,6 +49,7 @@ enum object_selector
 #endif
     OSEL_UNCURSED_WORN_RINGS     = -19,
     OSEL_UNCURSED_WORN_AMULETS = -20,
+    OSEL_BAG = -21
 };
 
 /// Behaviour flags for prompt_invent_item().
@@ -153,6 +154,14 @@ private:
     void add_class_hotkeys(const item_def &i);
     bool _has_star;
 };
+
+
+class BagEntry : public InvEntry
+{
+public:
+    BagEntry(InvEntry* inv);
+};
+
 
 class InvMenu : public Menu
 {

@@ -1007,6 +1007,7 @@ misc_sack MISC_SACK_OF_SPIDERS
 misc_phantom_mirror MISC_PHANTOM_MIRROR
 misc_zigfig MISC_ZIGGURAT
 misc_quad MISC_QUAD_DAMAGE
+misc_bag MISC_BAG
 %sdir item/misc/runes
 generic MISC_RUNE_OF_ZOT
 rune_tartarus RUNE_TARTARUS
