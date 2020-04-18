@@ -1814,6 +1814,8 @@ void unrand_reacts()
 {
     item_def*  weapon     = you.weapon();
     const int  old_plus   = weapon ? weapon->plus : 0;
+    item_def* weapon2 = you.second_weapon();
+    const int  old_plus2 = weapon2 ? weapon2->plus : 0;
 
     for (int i = 0; i < NUM_EQUIP; i++)
     {
@@ -1827,6 +1829,8 @@ void unrand_reacts()
     }
 
     if (weapon && (old_plus != weapon->plus))
+        you.wield_change = true;
+    if (weapon2 && (old_plus2 != weapon2->plus))
         you.wield_change = true;
 }
 
