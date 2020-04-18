@@ -637,8 +637,6 @@ spret controlled_blink(bool safe_cancel)
 
     _place_tloc_cloud(you.pos());
     move_player_to_grid(target, false);
-    // Controlling teleport contaminates the player. -- bwr
-    contaminate_player(750 + random2(500), true);
 
     crawl_state.cancel_cmd_again();
     crawl_state.cancel_cmd_repeat();
