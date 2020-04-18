@@ -186,7 +186,7 @@ makefile.dep
 /source/debian/files
 
 # Windows packaging
-/source/crawl-win
+/source/stone_soup
 
 # Windows thumbnail files
 Thumbs.db
