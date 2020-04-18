@@ -306,28 +306,6 @@ LIBLUA := contrib/install/$(ARCH)/lib/liblua.a
 endif
 LIBZ := contrib/install/$(ARCH)/lib/libz.a
 
-ifndef CROSSHOST
-	# FreeBSD keeps all of its userland includes in /usr/local so
-	# look there
-	ifeq ($(uname_S),FreeBSD)
-		SQLITE_INCLUDE_DIR := /usr/local/include
-	else
-		SQLITE_INCLUDE_DIR := /usr/include
-	endif
-else
-	# This is totally wrong, works only with some old-style setups, and
-	# on some architectures of Debian/new FHS multiarch -- excluding, for
-	# example, i386.  Fortunately, i386 is rarely cross-compiled to.
-	# There's no support for /usr/local/ too, without thorough handholding.
-	# It's still an improvement over Crawl 0.8 which had no cross-compiling
-	# to non-win32 at all.
-	#
-	# Needs to be replaced by compile checks.  Guessing the paths is fragile,
-	# while the compiler knows them already.
-	SQLITE_INCLUDE_DIR := /usr/$(ARCH)/include
-endif
-SQLITE_LIB := -lsqlite3
-
 #
 # Set up the TILES variant
 #
@@ -641,14 +619,17 @@ DEFINES_L += -DUSE_LUAJIT
 endif
 
 ifndef BUILD_SQLITE
-  ifeq ($(shell grep -q sqlite3_prepare $(SQLITE_INCLUDE_DIR)/sqlite3.h 2>/dev/null && echo yes),yes)
-    # INCLUDES_L += -isystem $(SQLITE_INCLUDE_DIR)
-    LIBS += $(SQLITE_LIB)
-    ifneq ($(shell grep -q sqlite3_prepare_v2 $(SQLITE_INCLUDE_DIR)/sqlite3.h 2>/dev/null && echo yes),yes)
-      DEFINES_L += -DANCIENT_SQLITE
-    endif
-  else
+  ifdef NO_PKGCONFIG
     BUILD_SQLITE = yes
+  endif
+endif
+ifndef BUILD_SQLITE
+ ifneq ($(shell $(PKGCONFIG) sqlite3 --exists || echo no),)
+   BUILD_SQLITE = yes
+ else
+   INCLUDES_L += $(shell $(PKGCONFIG) sqlite3 --cflags-only-I | sed -e 's/-I/-isystem /')
+   CFLAGS_L += $(shell $(PKGCONFIG) sqlite3 --cflags-only-other)
+   LIBS += $(shell $(PKGCONFIG) sqlite3 --libs)
   endif
 endif
 
