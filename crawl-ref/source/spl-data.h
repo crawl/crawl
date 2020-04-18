@@ -248,6 +248,7 @@ static const struct spell_desc spelldata[] =
     TILEG_THROW_FROST,
 },
 
+#if TAG_MAJOR_VERSION == 34
 {
     SPELL_CONTROLLED_BLINK, "Controlled Blink",
     spschool::translocation,
@@ -257,8 +258,9 @@ static const struct spell_desc spelldata[] =
     -1, -1,
     2, 0, // Not noisier than Blink, to keep this spell relevant
           // for stabbers. [rob]
-    TILEG_CONTROLLED_BLINK,
+    TILEG_ERROR,
 },
+#endif
 
 {
     SPELL_DISJUNCTION, "Disjunction",

@@ -323,12 +323,6 @@ a moment to begin burning with vigor and in its fragile initial state is easily
 smothered by either the caster or a wandering monster. Re-casting the spell
 will bring the fire fully to life, but will burn the caster.
 %%%%
-Controlled Blink spell
-
-Translocates the caster a short distance, with precise control. Be wary that
-controlled translocations will cause the subject to become contaminated with
-magical energy.
-%%%%
 Corona spell
 
 Causes a halo of glowing light to surround and effectively outline a creature.

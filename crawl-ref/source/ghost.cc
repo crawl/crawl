@@ -787,8 +787,10 @@ spell_type ghost_demon::translate_spell(spell_type spell) const
 {
     switch (spell)
     {
+#if TAG_MAJOR_VERSION == 34
     case SPELL_CONTROLLED_BLINK:
         return SPELL_BLINK;        // approximate
+#endif
     case SPELL_DRAGON_CALL:
         return SPELL_SUMMON_DRAGON;
     case SPELL_SWIFTNESS:
