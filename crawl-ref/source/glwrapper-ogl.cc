@@ -14,7 +14,7 @@
 #   include <SDL.h>
 #  else
 #   include <SDL2/SDL.h>
-#   include <SDL_gles.h>
+#   include <SDL2/SDL_gles.h>
 #  endif
 #  include <GLES/gl.h>
 # else
@@ -22,7 +22,7 @@
 #   include <SDL.h>
 #   include <GLES/gl.h>
 #  else
-#   include <SDL_opengl.h>
+#   include <SDL2/SDL_opengl.h>
 #   if defined(__MACOSX__)
 #    include <OpenGL/glu.h>
 #   else

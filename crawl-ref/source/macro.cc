@@ -32,7 +32,7 @@
 #include <vector>
 
 #ifdef USE_TILE_LOCAL
-#include <SDL_keycode.h>
+#include <SDL2/SDL_keycode.h>
 #endif
 
 #include "cio.h"

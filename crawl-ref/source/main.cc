@@ -224,7 +224,7 @@ static void _startup_asserts()
 //  to new_game and then input.
 //
 #ifdef USE_SDL
-# include <SDL_main.h>
+# include <SDL2/SDL_main.h>
 # if defined(__GNUC__) && !defined(__clang__)
 // SDL plays nasty tricks with main() (actually, _SDL_main()), which for
 // Windows builds somehow fail with -fwhole-program. Thus, exempt SDL_main()
