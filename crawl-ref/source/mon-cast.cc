@@ -3747,6 +3747,22 @@ static bool _should_cast_spell(const monster &mons, spell_type spell,
         return false;
     }
 
+    // Don't use blinking spells in sight of a trap the player can see if we're
+    // allied with the player; this might do more harm than good to the player
+    // restrict to the ones the player can see to avoid an information leak
+    if (mons_aligned(&mons, &you)
+        && (spell == SPELL_BLINK || spell == SPELL_BLINK_OTHER
+            || spell == SPELL_BLINK_OTHER_CLOSE || spell == SPELL_BLINK_CLOSE
+            || spell == SPELL_BLINK_RANGE || spell == SPELL_BLINK_AWAY
+            || spell == SPELL_BLINK_ALLIES_ENCIRCLE || spell == SPELL_BLINKBOLT
+            || spell == SPELL_BLINK_ALLIES_AWAY))
+    {
+        for (auto ri = radius_iterator(mons.pos(), LOS_NO_TRANS); ri; ++ri)
+            if (feat_is_trap(grd(*ri)) && you.see_cell(*ri))
+                return false;
+    }
+
+
     if (mons.foe == MHITYOU || mons.foe == MHITNOT)
     {
         // XXX: Note the crude hack so that monsters can
