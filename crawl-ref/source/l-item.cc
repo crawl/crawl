@@ -1048,10 +1048,15 @@ static int l_item_do_dec_quantity(lua_State *ls)
 
     bool destroyed = false;
 
-    if (in_inventory(*item))
+    if (in_inventory(*item)) {
         destroyed = dec_inv_item_quantity(item->link, quantity);
-    else
+    }
+    else if (in_bag(*item)) {
+        //NOT IMPLEMENT
+    }
+    else {
         destroyed = dec_mitm_item_quantity(item->index(), quantity);
+    }
 
     lua_pushboolean(ls, destroyed);
     return 1;
@@ -1074,10 +1079,15 @@ static int l_item_do_inc_quantity(lua_State *ls)
     // The quantity to increase by.
     int quantity = luaL_safe_checkint(ls, 1);
 
-    if (in_inventory(*item))
+    if (in_inventory(*item)) {
         inc_inv_item_quantity(item->link, quantity);
-    else
+    }
+    else if (in_bag(*item)) {
+        //NOT IMPLEMENT
+    }
+    else {
         inc_mitm_item_quantity(item->index(), quantity);
+    }
 
     return 0;
 }

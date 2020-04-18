@@ -266,6 +266,76 @@ static string _weird_sound()
     return getMiscString("sound_name");
 }
 
+static MenuEntry* bag_item_mangle(MenuEntry* me)
+{
+    unique_ptr<InvEntry> ie(dynamic_cast<InvEntry*>(me));
+    BagEntry* newme = new BagEntry(ie.get());
+    return newme;
+}
+
+static int _use_an_item_beg(item_def& bag, item_def*& target, int item_type, const char* prompt)
+{
+    bool choice_made = false;
+    InvMenu bag_menu(MF_SINGLESELECT | MF_ALLOW_FILTER);
+    {
+        bag_menu.set_title(new MenuEntry("Choose the item you want to take", MEL_TITLE));
+    }
+    bag_menu.set_tag("bag");
+    bag_menu.menu_action = Menu::ACT_EXECUTE;
+    bag_menu.set_type(menu_type::invlist);
+    bag_menu.menu_action = InvMenu::ACT_EXECUTE;
+
+    if (bag.props.exists(BAG_PROPS_KEY))
+    {
+        //가방용 인벤토리
+        {
+            vector<const item_def*> tobeshown;
+
+            int itemnum_in_bag = 0;
+            CrawlVector& bagVector = bag.props[BAG_PROPS_KEY].get_vector();
+            for (const auto& item : bagVector)
+            {
+                if (!(item.get_flags() & SFLAG_UNSET) && item.get_item().defined())
+                {
+                    if (item.get_item().base_type == item_type) {
+                        tobeshown.push_back(&(item.get_item()));
+                        itemnum_in_bag++;
+                    }
+                }
+            }
+
+            bag_menu.load_items(tobeshown, bag_item_mangle);
+            bag_menu.set_title(prompt);
+        }
+    }
+    else {
+        bag_menu.set_title(prompt);
+    }
+
+    bag_menu.set_type(menu_type::invlist);
+
+    vector<MenuEntry*> sel = bag_menu.show(true);
+
+    item_def* tmp_tgt = nullptr;
+    if (!sel.empty())
+    {
+        ASSERT(sel.size() == 1);
+        choice_made = true;
+        auto ie = dynamic_cast<InvEntry*>(sel[0]);
+        tmp_tgt = const_cast<item_def*>(ie->item);
+    }
+    else {
+        return false;
+    }
+    if (choice_made)
+        target = tmp_tgt;
+
+    ASSERT(!choice_made || target || item_type == OSEL_WIELD);
+    return choice_made;
+}
+
+
+
 /**
  * Prompt use of an item from either player inventory or the floor.
  *
@@ -361,6 +431,18 @@ bool use_an_item(item_def *&target, int item_type, operation_types oper,
         }
 
         redraw_screen();
+        // drink and scroll can used in the bag
+        if (tmp_tgt && (item_type == OBJ_POTIONS || item_type == OBJ_SCROLLS))
+        {
+            if (tmp_tgt->base_type == OBJ_MISCELLANY && tmp_tgt->sub_type == MISC_BAG) {
+                if (_use_an_item_beg(*tmp_tgt, target, item_type, prompt)) {
+                    return true;
+                }
+                else {
+                    choice_made = false;
+                }
+            }
+        }
         // For weapons, armour, and jewellery this is handled in wield_weapon,
         // wear_armour, and _puton_item after selection
         if (item_type != OSEL_WIELD && item_type != OBJ_ARMOUR
@@ -2672,8 +2754,17 @@ void drink(item_def* potion)
         dec_inv_item_quantity(potion->link, 1);
         auto_assign_item_slot(*potion);
     }
-    else
+    else if (in_bag(*potion))
+    {
+        potion->quantity--;
+        if (potion->quantity == 0) {
+            potion->base_type = OBJ_UNASSIGNED;
+            potion->props.clear();
+        }
+    }
+    else {
         dec_mitm_item_quantity(potion->index(), 1);
+    }
     count_action(CACT_USE, OBJ_POTIONS);
     you.turn_is_over = true;
 
@@ -2747,7 +2838,7 @@ static void _rebrand_weapon(item_def& wpn)
 
 static string _item_name(item_def &item)
 {
-    return item.name(in_inventory(item) ? DESC_YOUR : DESC_THE);
+    return item.name((in_inventory(item) || in_bag(item)) ? DESC_YOUR : DESC_THE);
 }
 
 static void _brand_weapon(item_def &wpn)
@@ -3755,8 +3846,18 @@ void read_scroll(item_def& scroll)
     {
         if (in_inventory(scroll))
             dec_inv_item_quantity(link, 1);
+        else if (in_bag(scroll))
+        {
+            scroll.quantity--;
+            if (scroll.quantity == 0) {
+                scroll.base_type = OBJ_UNASSIGNED;
+                scroll.props.clear();
+            }
+        }
         else
+        {
             dec_mitm_item_quantity(scroll.index(), 1);
+        }
         count_action(CACT_USE, OBJ_SCROLLS);
     }
 

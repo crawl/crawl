@@ -171,7 +171,7 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
 
     if (descrip == DESC_INVENTORY_EQUIP || descrip == DESC_INVENTORY)
     {
-        if (in_inventory(*this)) // actually in inventory
+        if (in_inventory(*this) || in_bag(*this)) // actually in inventory
         {
             buff << index_to_letter(link);
             if (terse)
@@ -2163,7 +2163,7 @@ bool set_ident_type(item_def &item, bool identify)
     if (!set_ident_type(item.base_type, item.sub_type, identify))
         return false;
 
-    if (in_inventory(item))
+    if (in_inventory(item) || in_bag(item))
     {
         shopping_list.cull_identical_items(item);
         if (identify)

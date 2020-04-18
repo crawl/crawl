@@ -1038,7 +1038,7 @@ void set_ident_flags(item_def &item, iflags_t flags)
         item.flags |= flags;
         request_autoinscribe();
 
-        if (in_inventory(item))
+        if (in_inventory(item) || in_bag(item))
         {
             shopping_list.cull_identical_items(item);
             item_skills(item, you.start_train);

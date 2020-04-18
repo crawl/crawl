@@ -92,7 +92,7 @@ InvEntry::InvEntry(const item_def &i)
                                     : "nobody"); // buggy net, but don't crash
     }
 
-    if (i.base_type != OBJ_GOLD && in_inventory(i))
+    if (i.base_type != OBJ_GOLD && (in_inventory(i) || in_bag(i)))
         add_hotkey(index_to_letter(i.link));
     else
         add_hotkey(' ');        // dummy hotkey
@@ -572,6 +572,23 @@ bool get_tiles_for_item(const item_def &item, vector<tile_def>& tileset, bool sh
         if (eq != EQ_NONE && you.melded[eq])
             tileset.emplace_back(TILEI_MESH, TEX_ICONS);
     }
+    else if (in_bag(item)) {
+        const equipment_type eq = item_equip_slot(item);
+        if (eq != EQ_NONE)
+        {
+            if (item_known_cursed(item))
+                tileset.emplace_back(TILE_ITEM_SLOT_EQUIP_CURSED, TEX_DEFAULT);
+            else
+                tileset.emplace_back(TILE_ITEM_SLOT_EQUIP, TEX_DEFAULT);
+        }
+        else if (item_known_cursed(item))
+            tileset.emplace_back(TILE_ITEM_SLOT_CURSED, TEX_DEFAULT);
+
+        tileidx_t base_item = tileidx_known_base_item(idx);
+        if (base_item)
+            tileset.emplace_back(base_item, TEX_DEFAULT);
+        tileset.emplace_back(idx, TEX_DEFAULT);
+    } 
     else
     {
         // Do we want to display the floor type or is that too distracting?
@@ -989,6 +1006,11 @@ bool in_inventory(const item_def &i)
     return i.pos == ITEM_IN_INVENTORY;
 }
 
+bool in_bag(const item_def& i)
+{
+    return i.pos == ITEM_IN_BAG;
+}
+
 const char *item_class_name(int type, bool terse)
 {
     if (terse)
@@ -1114,7 +1136,8 @@ bool item_is_selected(const item_def &i, int selector)
 
     case OBJ_SCROLLS:
         return itype == OBJ_SCROLLS
-               || (itype == OBJ_BOOKS && i.sub_type != BOOK_MANUAL);
+               || (itype == OBJ_BOOKS && i.sub_type != BOOK_MANUAL)
+             || (itype == OBJ_MISCELLANY && i.sub_type == MISC_BAG);
 
     case OSEL_EVOKABLE:
         return item_is_evokable(i, true, true);
@@ -1168,6 +1191,8 @@ bool item_is_selected(const item_def &i, int selector)
     case OSEL_BAG:
         return !item_is_equipped(i) && (itype != OBJ_FOOD || i.sub_type != FOOD_CHUNK)
             && (itype != OBJ_MISCELLANY || i.sub_type != MISC_BAG);
+    case OBJ_POTIONS:
+        return (itype == OBJ_MISCELLANY && i.sub_type == MISC_BAG); //in the bag
     default:
         return false;
     }
@@ -1859,7 +1884,7 @@ bool check_warning_inscriptions(const item_def& item,
 
         // XXX: duplicates a check in delay.cc:_finish_delay()
         string prompt = "Really " + _operation_verb(oper) + " ";
-        prompt += (in_inventory(item) ? item.name(DESC_INVENTORY)
+        prompt += ((in_inventory(item) || in_bag(item)) ? item.name(DESC_INVENTORY)
                                       : item.name(DESC_A));
         if (needs_notele_warning(item, oper)
             && item_ident(item, ISFLAG_KNOW_TYPE))
@@ -2019,7 +2044,7 @@ int prompt_invent_item(const char *prompt,
         {
             // scan for our item
             item_def *item = digit_inscription_to_item(keyin, oper);
-            if (item && in_inventory(*item))
+            if (item && (in_inventory(*item) || in_bag(*item)))
             {
                 ret = item->link;
                 if (!do_warning || check_warning_inscriptions(*item, oper))

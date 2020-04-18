@@ -252,6 +252,7 @@ vector<SelItem> prompt_drop_items(const vector<SelItem> &preselected_items);
 void display_inventory();
 
 bool in_inventory(const item_def &i);
+bool in_bag(const item_def& i);
 void identify_inventory();
 
 const char *item_class_name(int type, bool terse = false);

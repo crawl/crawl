@@ -1607,6 +1607,7 @@ static bool _put_item(int bag_slot, int item_dropped, int quant_drop, bool messa
         bag.props[BAG_PROPS_KEY].get_vector()[emptySlot].get_item() = item;
         bag.props[BAG_PROPS_KEY].get_vector()[emptySlot].get_item().quantity = quant_drop;
         bag.props[BAG_PROPS_KEY].get_vector()[emptySlot].get_item().link = emptySlot;
+        bag.props[BAG_PROPS_KEY].get_vector()[emptySlot].get_item().pos = ITEM_IN_BAG;        
     }
     dec_inv_item_quantity(item_dropped, quant_drop);
     return true;
@@ -1629,8 +1630,10 @@ static bool _get_item(int bag_slot, int item_taken, int quant_taken, bool messag
     int inv_slot;
     if (merge_items_into_inv(item, quant_taken, inv_slot, false)) {
         item.quantity -= quant_taken;
-        if (item.quantity == 0)
+        if (item.quantity == 0) {
             item.base_type = OBJ_UNASSIGNED;
+            item.props.clear();
+        }
     }
     else {
         if (message) {
