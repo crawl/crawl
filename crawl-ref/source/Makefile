@@ -243,9 +243,6 @@ ifeq ($(uname_S),Darwin)
 	STRIP := strip -x
 	NEED_APPKIT = YesPlease
 	LIBNCURSES_IS_UNICODE = Yes
-	NO_PKGCONFIG = Yes
-	BUILD_SQLITE = YesPlease
-	BUILD_ZLIB = YesPlease
 	ifdef TILES
 		EXTRA_LIBS += -framework AppKit -framework AudioUnit -framework CoreAudio -framework ForceFeedback -framework Carbon -framework IOKit -framework OpenGL -framework AudioToolbox -framework CoreVideo contrib/install/$(ARCH)/lib/libSDL2main.a
 		BUILD_FREETYPE = YesPlease
