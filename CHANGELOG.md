@@ -33,6 +33,9 @@
 - 가속 마법 복구
   - rollback Haste
   
+- 레펠 미사일 복구. 이제 경갑을 입어야 사용할 수 있음
+  - Added and rework repel missle. now, need to wear light armor to cast RMsl
+  
 - 둔기 특성화. 이제 둔기로 적을 죽일때마다 시체를 넉백시킬 수 있고 넉백된 시체는 적에게 데미지를 줌
   - add mace&flail ability. Now every time you kill an enemy with a mace&flail weapon, you can knock back the corpse, and the knocked back corpse deals damage to the enemy
   
