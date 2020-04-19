@@ -2046,7 +2046,7 @@ void process_command(command_type cmd, command_type prev_cmd)
         // Travel commands.
     case CMD_FIX_WAYPOINT:      travel_cache.add_waypoint(); break;
     case CMD_INTERLEVEL_TRAVEL: do_interlevel_travel();      break;
-    case CMD_ANNOTATE_LEVEL:    annotate_level();            break;
+    case CMD_ANNOTATE_LEVEL:    do_annotate();               break;
     case CMD_EXPLORE:           do_explore_cmd();            break;
 
         // Mouse commands.

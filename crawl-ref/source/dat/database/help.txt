@@ -235,6 +235,17 @@ interlevel-travel.altar.prompt
 
  <w>Enter</w>  : Repeat last interlevel travel.
 %%%%
+annotate.prompt
+
+<h>Annotate (select level):
+ <w>Enter</w> or <w>.</w> : Annotate current level.
+ any <w>letter</w> : Annotate a level in the branch corresponding to the letter.
+ <w><<</w>          : Annotate the level upstairs.
+ <w>></w>          : Annotate the level downstairs.
+ <w>Ctrl-P</w>     : Annotate a level in the branch above this one.
+ <w>!</w>          : Show list of dungeon branches.
+
+%%%%
 skill-menu
 
                         <h>Skill management</h>

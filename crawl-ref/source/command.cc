@@ -550,6 +550,11 @@ void show_interlevel_travel_altar_help()
     show_specific_help("interlevel-travel.altar.prompt");
 }
 
+void show_annotate_help()
+{
+    show_specific_help("annotate.prompt");
+}
+
 void show_stash_search_help()
 {
     show_specific_help("stash-search.prompt");
