@@ -37,8 +37,8 @@ string get_level_annotation(level_id li = level_id::current(),
 
 bool level_annotation_has(string str, level_id li = level_id::current());
 
-void annotate_level();
-void do_annotate(level_id& li);
+void annotate_level(level_id li);
+void do_annotate();
 void clear_level_annotations(level_id li);
 
 class writer;
