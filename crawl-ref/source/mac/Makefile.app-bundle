@@ -15,27 +15,15 @@ APP_NAME := Dungeon Crawl Stone Soup
 ifneq (,$(findstring tiles,$(MAKECMDGOALS)))
 BUNDLE_NAME := Dungeon\ Crawl\ Stone\ Soup\ -\ Tiles
 TILE_APP := y
-ifdef RELEASE
 ZIP_QUALIFIER := -tiles
-else
-ZIP_QUALIFIER := _tiles
-endif
 EXECUTABLE_PATH := $(CRAWL_SRC)/crawl
 else
 BUNDLE_NAME := Dungeon\ Crawl\ Stone\ Soup\ -\ Console
 EXECUTABLE_PATH := crawl
-ifdef RELEASE
 ZIP_QUALIFIER := -console
-else
-ZIP_QUALIFIER := _console
-endif
 endif
 
-ifdef RELEASE
 ZIP_NAME = stone_soup-$(SRC_VERSION)$(ZIP_QUALIFIER)-macosx.zip
-else
-ZIP_NAME = crawl$(ZIP_QUALIFIER)_osx-$(SRC_VERSION).zip
-endif
 
 STAGING_DIR := $(CRAWL_SRC)/build/app-bundle-stage
 ZIPPED_APP_DIR := $(CRAWL_SRC)/mac-app-zips
