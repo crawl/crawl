@@ -1822,7 +1822,7 @@ package-tarball-nodeps: source
 	cd build && tar cfJ ../../../$(SRC_PKG_TAR_NODEPS) --exclude contrib --exclude simplebar.js $(PKG_SRC_DIR)
 
 package-source: package-tarball-deps package-zipball-deps package-tarball-nodeps
-	rm -rf build
+	$(RM) -r build-win
 
 removeold:
 	if [ -f ../../$(SRC_PKG_TAR) ]; then $(RM) ../../$(SRC_PKG_TAR); fi
@@ -1839,7 +1839,7 @@ ifneq (x$(SRC_VERSION),x$(shell cat build-win/version.txt 2>/dev/null))
 endif
 	makensis -NOCD -DVERSION=$(SRC_VERSION) -DWINARCH="$(WINARCH)" util/crawl.nsi
 	ln -sf "stone_soup-$(SRC_VERSION)-$(WINARCH)-installer.exe" "stone_soup-latest-$(WINARCH)-installer.exe"
-	rm -rf build-win
+	$(RM) -r build-win
 
 build-windows:
 ifneq ($(GAME),crawl.exe)
@@ -1858,21 +1858,27 @@ package-windows-tiles:
 ifneq ($(GAME),crawl.exe)
 	@echo "This is only for Windows; please specify CROSSHOST.";false
 endif
+	+$(MAKE) clean
 	+$(MAKE) TILES=y DESTDIR=build-win/stone_soup-tiles-$(MAJOR_VERSION) FORCE_SSE=y install
 	cp -p $(ZIP_DOCS) build-win/stone_soup-tiles-$(MAJOR_VERSION)/
 	cd build-win && zip -9r ../stone_soup-$(SRC_VERSION)-tiles-win32.zip *
 	if which advzip >/dev/null;then advzip -z3 stone_soup-$(SRC_VERSION)-tiles-win32.zip;fi
 	ln -sf stone_soup-$(SRC_VERSION)-tiles-win32.zip stone_soup-latest-tiles-win32.zip
+	$(RM) -r build-win
 
 package-windows-console:
 ifneq ($(GAME),crawl.exe)
 	@echo "This is only for Windows; please specify CROSSHOST.";false
 endif
+	+$(MAKE) clean
 	+$(MAKE) DESTDIR=build-win/stone_soup-console-$(MAJOR_VERSION) FORCE_SSE=y install
 	cp -p $(ZIP_DOCS) build-win/stone_soup-console-$(MAJOR_VERSION)/
 	cd build-win && zip -9r ../stone_soup-$(SRC_VERSION)-console-win32.zip *
 	if which advzip >/dev/null;then advzip -z3 stone_soup-$(SRC_VERSION)-console-win32.zip;fi
 	ln -sf stone_soup-$(SRC_VERSION)-console-win32.zip stone_soup-latest-console-win32.zip
+	$(RM) -r build-win
+
+package-windows-zips: package-windows-tiles package-windows-console
 
 #############################################################################
 # Building Mac app bundles

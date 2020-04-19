@@ -271,7 +271,7 @@ from within the MSYS2 Shell.
 
     ```sh
     # installer
-    make package-windows
+    make package-windows-installer
     # zips
     make package-windows-zips
     ```
