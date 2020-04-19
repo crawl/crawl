@@ -3194,7 +3194,7 @@ spret cast_olgrebs_last_mercy(int pow, const dist& dist, bool fail)
         beam.range = 1;
         beam.ex_size = 1;
         beam.is_explosion = true;
-        beam.damage = calc_dice(4, div_rand_round(max_hp,2) + 3 + div_rand_round(pow, 40));
+        beam.damage = calc_dice(4, max_hp * 2 + 6 + div_rand_round(pow, 40));
         //beam.explode_delay = beam.explode_delay * 3 / 2;
         beam.source = dist.target;
         beam.target = dist.target;
