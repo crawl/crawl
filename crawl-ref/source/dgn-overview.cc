@@ -13,6 +13,7 @@
 #include <cstring>
 
 #include "branch.h"
+#include "command.h"
 #include "describe.h"
 #include "env.h"
 #include "feature.h"
@@ -29,6 +30,21 @@
 #include "terrain.h"
 #include "travel.h"
 #include "unicode.h"
+
+enum AnnotationPossibilities
+{
+    // Annotate the dungeon floor the player character is currently on
+    ID_HERE     = -100,
+
+    // Annotate one level up
+    ID_UP       = -99,
+
+    // Annotate one level down
+    ID_DOWN     = -101,
+
+    // Cancel the whole thing
+    ID_CANCEL   = -102,
+};
 
 typedef map<branch_type, set<level_id> > stair_map_type;
 typedef map<level_pos, shop_type> shop_map_type;
@@ -670,7 +686,7 @@ static void _process_command(const char keypress)
                 mpr("Sorry, you haven't seen any shop yet.");
             return;
         case '!':
-            annotate_level();
+            do_annotate();
             return;
         default:
             return;
@@ -985,54 +1001,6 @@ bool level_annotation_has(string find, level_id li)
     return str.find(find) != string::npos;
 }
 
-void annotate_level()
-{
-    level_id li  = level_id::current();
-    level_id li2 = level_id::current();
-
-    if (feat_is_stair(grd(you.pos())))
-    {
-        li2 = level_id::get_next_level_id(you.pos());
-
-        if (li2.depth <= 0)
-            li2 = level_id::current();
-    }
-
-    if (li2 != level_id::current())
-    {
-        if (yesno("Annotate level on other end of current stairs?", true, 'n'))
-            li = li2;
-    }
-
-    do_annotate(li);
-}
-
-void do_annotate(level_id& li)
-{
-    string old = get_level_annotation(li, true, true);
-    if (!old.empty())
-    {
-        mprf(MSGCH_PROMPT, "Current level annotation: <lightgrey>%s</lightgrey>",
-             old.c_str());
-    }
-
-    const string prompt = "New annotation for " + li.describe()
-                          + " (include '!' for warning): ";
-
-    char buf[77];
-    if (msgwin_get_line_autohist(prompt, buf, sizeof(buf), old))
-        canned_msg(MSG_OK);
-    else if (old == buf)
-        canned_msg(MSG_OK);
-    else if (*buf)
-        level_annotations[li] = buf;
-    else
-    {
-        mpr("Cleared annotation.");
-        level_annotations.erase(li);
-    }
-}
-
 void clear_level_annotations(level_id li)
 {
     level_annotations.erase(li);
@@ -1092,4 +1060,159 @@ bool connected_branch_can_exist(branch_type br)
     }
 
     return true;
+}
+
+static int _prompt_annotate_branch(level_id lid)
+{
+    // these 3 lines make a vector containing all shown branches.
+    // the current implementation shows all known branches.
+
+    // XXX I'd be grateful if someone could refactor this into something that's
+    // not black magic. The functionality doesn't have the be the exact same,
+    // so long as the list is of reasonable length.
+    vector<branch_type> brs;
+    for (branch_iterator it; it; ++it)
+        if (is_known_branch_id((**it).id))
+            brs.push_back(it->id);
+
+
+    // Make the little overview
+    // (D) Dungeon        (T) Temple         (L) Lair           etc.
+    // at most 4 branches on 1 line
+    clear_messages();
+    int linec = 0;
+    string line;
+    for (branch_type br : brs)
+    {
+        if (linec == 4)
+        {
+            linec = 0;
+            mpr(line);
+            line = "";
+        }
+        line += make_stringf("(%c) %-14s ",
+                             branches[br].travel_shortcut,
+                             branches[br].shortname);
+        ++linec;
+    }
+    if (!line.empty())
+        mpr(line);
+
+    mprf(MSGCH_PROMPT, "Annotate which branch? (. - %s, ? -help)",
+        lid.describe(false, true).c_str());
+
+    while (true)
+    {
+        int keyin = get_ch();
+        switch (keyin)
+        {
+        CASE_ESCAPE
+            return ID_CANCEL;
+        case '?':
+            show_annotate_help();
+            //update_screen(); // could possibly be necessary for some builds?
+            break;
+        case '\n': case '\r': case '.':
+            return ID_HERE;
+        case '<':
+            return ID_UP;
+        case '>':
+            return ID_DOWN;
+        case CONTROL('P'):
+            {
+                const branch_type parent = parent_branch(lid.branch);
+                if (parent < NUM_BRANCHES)
+                    return parent;
+            }
+            break;
+        default:
+            // Is this a branch hotkey?
+            for (branch_type br : brs)
+            {
+                if (toupper_safe(keyin) == branches[br].travel_shortcut)
+                    return br;
+            }
+            // Otherwise cancel
+            return ID_CANCEL;
+        }
+    }
+}
+
+void do_annotate()
+{
+    level_id lid  = level_id::current();
+    const int branch = _prompt_annotate_branch(lid);
+
+    if (branch == ID_CANCEL)
+    {
+        canned_msg(MSG_OK);
+        return;
+    }
+
+    if (branch == ID_HERE)
+    {
+        annotate_level(lid);
+        return;
+    }
+
+    if (branch == ID_UP)
+    {
+        lid = find_up_level(lid);
+        annotate_level(lid);
+        return;
+    }
+
+    if (branch == ID_DOWN)
+    {
+        lid = find_down_level(lid);
+        annotate_level(lid);
+        return;
+    }
+
+    int depth;
+    int max_depth = branches[branch].numlevels;
+    // Handle one-level branches by not prompting.
+    if (max_depth==1)
+        depth = 1;
+    else
+    {
+        clear_messages();
+        const string prompt = make_stringf ("What level of %s?", branches[branch].longname);
+        depth = prompt_for_quantity(prompt.c_str());
+    }
+    if (depth > 0 && depth <= max_depth)
+    {
+        branch_type br = branch_type(branch);
+        annotate_level(level_id(br, depth));
+    }
+    else
+    {
+        mpr("That's not a valid depth.");
+    }
+}
+
+void annotate_level(level_id li)
+{
+    const string old = get_level_annotation(li, true, true);
+    if (!old.empty())
+    {
+        mprf(MSGCH_PROMPT, "Current level annotation: <lightgrey>%s</lightgrey>",
+             old.c_str());
+    }
+
+    const string prompt = "New annotation for " + li.describe()
+                          + " (include '!' for warning): ";
+
+    char buf[77];
+    if (msgwin_get_line_autohist(prompt, buf, sizeof(buf), old))
+        canned_msg(MSG_OK);
+    else if (old == buf)
+        canned_msg(MSG_OK);
+    else if (*buf)
+        level_annotations[li] = string(buf);
+    else
+    {
+        mpr("Cleared annotation.");
+        level_annotations.erase(li);
+    }
 }
