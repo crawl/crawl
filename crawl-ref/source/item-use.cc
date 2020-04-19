@@ -3323,6 +3323,10 @@ string cannot_read_item_reason(const item_def &item)
     if (you.duration[DUR_NO_SCROLLS])
         return "You cannot read scrolls in your current state!";
 
+    // Prevent hot lava orcs reading scrolls
+    if (you.species == SP_LAVA_ORC && temperature_effect(LORC_NO_SCROLLS))
+        return "You'd burn any scroll you tried to read!";\
+
     // don't waste the player's time reading known scrolls in situations where
     // they'd be useless
 

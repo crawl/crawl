@@ -579,9 +579,20 @@ public:
     string get_untransform_message() const override
     {
         // This only handles lava orcs going statue -> stoneskin.
-        if (you.species == SP_GARGOYLE)
+        // This also isn't actually used because Stoneskin doesn't exist,
+        // but I'll leave it here anyway in case it does get re-added.
+        if (you.species == SP_LAVA_ORC && temperature_effect(LORC_STONESKIN)
+            || you.species == SP_GARGOYLE)
+        {
             return "You revert to a slightly less stony form.";
-        return "You revert to your normal fleshy form.";
+        }
+
+        if (you.species != SP_LAVA_ORC)
+        {
+            return "You revert to your normal fleshy form.";
+        }
+
+        return Form::get_untransform_message();
     }
 
     /**
@@ -612,7 +623,10 @@ public:
      */
     string get_untransform_message() const override
     {
-        return "You warm up again.";
+        if (you.species == SP_LAVA_ORC && !temperature_effect(LORC_STONESKIN))
+            return "Your icy form melts away into molten rock.";
+        else
+            return "You warm up again.";
     }
 
     /**
@@ -1088,6 +1102,16 @@ bool form_likes_water(transformation form)
     return form_can_swim(form);
 }
 
+bool form_likes_lava(transformation form)
+{
+    // Lava orcs can only swim in non-phys-change forms.
+    // However, ice beast & statue form will melt back to lava, so they're OK
+    return you.species == SP_LAVA_ORC
+        && (!form_changed_physiology(form)
+            || form == transformation::ice_beast
+            || form == transformation::statue);
+}
+
 // Used to mark transformations which override species intrinsics.
 bool form_changed_physiology(transformation form)
 {
@@ -1376,7 +1400,7 @@ bool feat_dangerous_for_form(transformation which_trans,
         return false;
 
     if (feat == DNGN_LAVA)
-        return true;
+        return !form_likes_lava(which_trans);
 
     if (feat == DNGN_DEEP_WATER)
         return !you.can_water_walk() && !form_likes_water(which_trans);
@@ -1673,6 +1697,13 @@ bool transform(int pow, transformation which_trans, bool involuntary,
              && you.duration[DUR_DEATHS_DOOR])
     {
         msg = "You cannot become a lich while in death's door.";
+        success = false;
+    }
+    else if (you.species == SP_LAVA_ORC && !temperature_effect(LORC_STONESKIN)
+        && (which_trans == transformation::ice_beast
+            || which_trans == transformation::statue))
+    {
+        msg = "Your temperature is too high to benefit from that spell.";
         success = false;
     }
 

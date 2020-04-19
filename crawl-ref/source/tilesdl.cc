@@ -850,7 +850,7 @@ int TilesFramework::getch_ck()
 
 static const int map_margin      = 2;
 static const int map_stat_margin = 4;
-static const int min_stat_height = 12;
+static const int min_stat_height = 13;
 static const int min_inv_height  = 4;
 static const int max_inv_height  = 6;
 static const int max_mon_height  = 3;
@@ -1311,6 +1311,10 @@ void TilesFramework::layout_statcol()
         m_region_tab->resize(m_region_tab->mx+1, min_inv_height);
         m_region_tab->place(m_stat_col, m_windowsz.y - m_region_tab->wy);
         m_statcol_bottom = m_region_tab->sy - m_tab_margin;
+
+        // Lava orc temperature bar
+        if (you.species == SP_LAVA_ORC)
+            ++crawl_view.hudsz.y;
 
         m_region_stat->resize(m_region_stat->mx, min_stat_height);
         m_statcol_top += m_region_stat->dy;

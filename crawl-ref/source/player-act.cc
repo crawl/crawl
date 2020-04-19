@@ -788,6 +788,13 @@ bool player::go_berserk(bool intentional, bool potion)
 
     you.redraw_quiver = true; // Account for no firing.
 
+    if (you.species == SP_LAVA_ORC)
+    {
+        mpr("You burn with rage!");
+        // This will get sqrt'd later, so.
+        you.temperature = TEMP_MAX;
+    }
+
     if (player_equip_unrand(UNRAND_ZEALOT_SWORD))
         for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
             if (mi->friendly())

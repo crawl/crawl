@@ -11,9 +11,7 @@ enum class area_centre_type
     umbra,
     quad,
     disjunction,
-#if TAG_MAJOR_VERSION == 34
     hot,
-#endif
 };
 
 void invalidate_agrid(bool recheck_new = false);

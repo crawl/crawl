@@ -131,11 +131,12 @@ void TextRegion::clear_to_end_of_line()
     int col = text_col;
     int adrs = cy * mx;
 
-    ASSERT(adrs + mx - 1 < mx * my);
-    for (int i = cx; i < mx; i++)
-    {
-        cbuf[adrs+i] = ' ';
-        abuf[adrs+i] = col;
+    if (adrs + mx - 1 < mx * my) { // FIXME
+        for (int i = cx; i < mx; i++)
+        {
+            cbuf[adrs + i] = ' ';
+            abuf[adrs + i] = col;
+        }
     }
 }
 

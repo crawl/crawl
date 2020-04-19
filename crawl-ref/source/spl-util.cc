@@ -1121,6 +1121,25 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
     if (!fake_spell && cannot_use_schools(get_spell_disciplines(spell)))
         return "you cannot use spells of this school.";
 
+    //TODO: Move Lava Orc uselessness reasons into the switch/case
+
+    if (you.species == SP_LAVA_ORC)
+    {
+        if (spell == SPELL_OZOCUBUS_ARMOUR)
+            return "your stony body would shatter the ice.";
+        if (temp && !temperature_effect(LORC_STONESKIN))
+        {
+            switch (spell)
+            {
+            case SPELL_STATUE_FORM:
+            case SPELL_ICE_FORM:
+                return "you're too hot.";
+            default:
+                break;
+            }
+        }
+    }
+
     switch (spell)
     {
     case SPELL_BLINK:

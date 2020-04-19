@@ -40,6 +40,7 @@ enum class areaprop
     quad          = (1 << 8),
     disjunction   = (1 << 9),
     soul_aura     = (1 << 10),
+    hot = (1 << 11),
 };
 DEF_BITFIELD(areaprops, areaprop);
 
@@ -83,7 +84,8 @@ void areas_actor_moved(const actor* act, const coord_def& oldpos)
     if (act->alive() &&
         (you.entering_level
          || act->halo_radius() > -1 || act->silence_radius() > -1
-         || act->liquefying_radius() > -1 || act->umbra_radius() > -1))
+         || act->liquefying_radius() > -1 || act->umbra_radius() > -1
+         || act->heat_radius() > -1))
     {
         // Not necessarily new, but certainly potentially interesting.
         invalidate_agrid(true);
@@ -134,6 +136,14 @@ static void _actor_areas(actor *a)
 
         for (radius_iterator ri(a->pos(), r, C_SQUARE, LOS_DEFAULT); ri; ++ri)
             _set_agrid_flag(*ri, areaprop::umbra);
+        no_areas = false;
+    }
+    if ((r = a->heat_radius()) >= 0)
+    {
+        _agrid_centres.emplace_back(area_centre_type::hot, a->pos(), r);
+
+        for (radius_iterator ri(a->pos(), r, C_SQUARE, LOS_NO_TRANS); ri; ++ri)
+            _set_agrid_flag(*ri, areaprop::hot);
         no_areas = false;
     }
 }
@@ -214,6 +224,8 @@ static area_centre_type _get_first_area(const coord_def& f)
         return area_centre_type::sanctuary;
     if (a & areaprop::silence)
         return area_centre_type::silence;
+    if (a & areaprop::hot)
+        return area_centre_type::hot;
     if (a & areaprop::halo)
         return area_centre_type::halo;
     if (a & areaprop::umbra)
@@ -720,4 +732,33 @@ int monster::umbra_radius() const
     default:
         return -1;
     }
+}
+
+/////////////
+// Heat aura (lava orcs).
+ // Player radius
+int player::heat_radius() const
+{
+    if (species != SP_LAVA_ORC)
+        return -1;
+    if (!temperature_effect(LORC_HEAT_AURA))
+        return -1;
+    return 1; // Surrounds you to radius of 1.
+}
+// Stub for monster radius
+int monster::heat_radius() const
+{
+    return -1;
+}
+bool heated(const coord_def& p)
+{
+    if (!map_bounds(p))
+        return false;
+    if (!_agrid_valid)
+        _update_agrid();
+    return _check_agrid_flag(p, areaprop::hot);
+}
+bool actor::heated() const
+{
+    return ::heated(pos());
 }

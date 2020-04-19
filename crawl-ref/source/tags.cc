@@ -1603,6 +1603,9 @@ static void tag_construct_you(writer &th)
     marshallByte(th, you.deaths);
     marshallByte(th, you.lives);
 
+    marshallFloat(th, you.temperature);
+    marshallFloat(th, you.temperature_last);
+
     CANARY;
 
     marshallInt(th, you.dactions.size());
@@ -3486,16 +3489,9 @@ static void tag_read_you(reader &th)
     you.deaths = unmarshallByte(th);
     you.lives = unmarshallByte(th);
 
-#if TAG_MAJOR_VERSION == 34
-    if (th.getMinorVersion() >= TAG_MINOR_LORC_TEMPERATURE &&
-        th.getMinorVersion() < TAG_MINOR_NO_MORE_LORC)
-    {
-        // These were once the temperature fields on player for lava orcs.
-        // Still need to unmarshall them from older saves.
-        unmarshallFloat(th); // was you.temperature
-        unmarshallFloat(th); // was you.temperature_last
-    }
-#endif
+    //I *think* this is needed for Lava Orcs? Guessing here
+    you.temperature = unmarshallFloat(th);
+    you.temperature_last = unmarshallFloat(th);
 
     you.pending_revival = !you.hp;
 

@@ -203,6 +203,9 @@ public:
     int lives;
     int deaths;
 
+    float temperature; // For lava orcs.
+    float temperature_last;
+
     FixedVector<uint8_t, NUM_SKILLS> skills; ///< skill level
     FixedVector<training_status, NUM_SKILLS> train; ///< see enum def
     FixedVector<training_status, NUM_SKILLS> train_alt; ///< config of other mode
@@ -421,6 +424,7 @@ public:
     bool redraw_title;
     bool redraw_hit_points;
     bool redraw_magic_points;
+    bool redraw_temperature;
     FixedVector<bool, NUM_STATS> redraw_stats;
     bool redraw_experience;
     bool redraw_armour_class;
@@ -499,6 +503,7 @@ public:
     int max_dex() const;
 
     bool in_water() const;
+    bool in_lava() const;
     bool in_liquid() const;
     bool can_swim(bool permanently = false) const;
     bool can_water_walk() const;
@@ -797,6 +802,7 @@ public:
     int silence_radius() const override;
     int liquefying_radius() const override;
     int umbra_radius() const override;
+    int heat_radius() const override;
     bool petrifying() const override;
     bool petrified() const override;
     bool liquefied_ground() const override;
@@ -1010,6 +1016,7 @@ bool player_kiku_res_torment();
 
 bool player_likes_chunks(bool permanently = false);
 bool player_likes_water(bool permanently = false);
+bool player_likes_lava(bool permanently = false);
 
 int player_res_electricity(bool calc_unid = true, bool temp = true,
                            bool items = true);
@@ -1174,3 +1181,40 @@ bool need_expiration_warning(coord_def p = you.pos());
 
 bool player_has_orb();
 bool player_on_orb_run();
+
+enum temperature_level
+{
+    TEMP_MIN = 1, // Minimum (and starting) temperature. Not any warmer than bare rock.
+    TEMP_COLD = 3,
+    TEMP_COOL = 5,
+    TEMP_ROOM = 7,
+    TEMP_WARM = 9, // Warmer than most creatures.
+    TEMP_HOT = 11,
+    TEMP_FIRE = 13, // Hot enough to ignite paper around you.
+    TEMP_MAX = 15, // Maximum temperature. As hot as lava!
+};
+enum temperature_effect
+{
+    LORC_LAVA_BOOST,
+    LORC_FIRE_BOOST,
+    LORC_STONESKIN,
+    LORC_COLD_VULN,
+    LORC_PASSIVE_HEAT,
+    LORC_HEAT_AURA,
+    LORC_NO_SCROLLS,
+    LORC_FIRE_RES_I,
+    LORC_FIRE_RES_II,
+    LORC_FIRE_RES_III,
+};
+int temperature();
+int temperature_last();
+void temperature_check();
+void temperature_increment(float degree);
+void temperature_decrement(float degree);
+void temperature_changed(float change);
+void temperature_decay();
+bool temperature_tier(int which);
+bool temperature_effect(int which);
+int temperature_colour(int temp);
+string temperature_string(int temp);
+string temperature_text(int temp);

@@ -125,6 +125,11 @@ bool species_likes_water(species_type species)
            || get_species_def(species).habitat == HT_AMPHIBIOUS;
 }
 
+bool species_likes_lava(species_type species)
+{
+    return get_species_def(species).habitat == HT_AMPHIBIOUS_LAVA;
+}
+
 bool species_can_throw_large_rocks(species_type species)
 {
     return species_size(species) >= SIZE_LARGE;

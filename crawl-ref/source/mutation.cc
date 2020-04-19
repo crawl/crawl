@@ -773,6 +773,16 @@ static int _vampire_bloodlessness()
     return you.vampire_alive ? 1 : 2;
 }
 
+static const string _lava_orc_Ascreen_footer = (
+#ifndef USE_TILE_LOCAL
+    "Press '<w>!</w>'"
+#else
+    "<w>Right-click</w>"
+#endif
+    " to toggle between mutations and properties depending on your\n"
+    "temperature.\n");
+
+
 static string _display_vampire_attributes()
 {
     ASSERT(you.species == SP_VAMPIRE);
@@ -829,6 +839,74 @@ static string _display_vampire_attributes()
     return result;
 }
 
+
+
+static string _display_temperature()
+{
+    ASSERT(you.species == SP_LAVA_ORC);
+    string result;
+    string title = "Temperature Effects";
+    // center title
+    int offset = 39 - strwidth(title) / 2;
+    if (offset < 0) offset = 0;
+    result += string(offset, ' ');
+    result += "<white>";
+    result += title;
+    result += "</white>\n\n";
+    const int lines = TEMP_MAX + 1; // 15 lines plus one for off-by-one.
+    string column[lines];
+    for (int t = 1; t <= TEMP_MAX; t++)  // lines
+    {
+        string text;
+        ostringstream ostr;
+        string colourname = temperature_string(t);
+#define F(x) stringize_glyph(dchar_glyph(DCHAR_FRAME_##x))
+        if (t == TEMP_MAX)
+            text = "  " + F(TL) + F(HORIZ) + "MAX" + F(HORIZ) + F(HORIZ) + F(TR);
+        else if (t == TEMP_MIN)
+            text = "  " + F(BL) + F(HORIZ) + F(HORIZ) + "MIN" + F(HORIZ) + F(BR);
+        else if (temperature() < t)
+            text = "  " + F(VERT) + "      " + F(VERT);
+        else if (temperature() == t)
+            text = "  " + F(VERT) + "~~~~~~" + F(VERT);
+        else
+            text = "  " + F(VERT) + "######" + F(VERT);
+        text += "    ";
+#undef F
+        ostr << '<' << colourname << '>' << text
+            << "</" << colourname << '>';
+        colourname = (temperature() >= t) ? "lightred" : "darkgrey";
+        text = temperature_text(t);
+        ostr << '<' << colourname << '>' << text
+            << "</" << colourname << '>';
+        column[t] = ostr.str();
+    }
+    for (int y = TEMP_MAX; y >= TEMP_MIN; y--)  // lines
+    {
+        result += column[y];
+        result += "\n";
+    }
+    result += "\n";
+    result += "You get hot in tense situations, when berserking, or when you enter lava. You \ncool down when your rage ends or when you enter water.";
+    result += "\n";
+    result += "\n";
+    result += _lava_orc_Ascreen_footer;
+    trim_string_right(result);
+
+    return result;
+   // formatted_scroller temp_menu;
+   // temp_menu.add_text(result);
+   // temp_menu.show();
+    //if (temp_menu.get_lastch() == '!'
+    //    || temp_menu.get_lastch() == CK_MOUSE_CMD)
+    //{
+    //    display_mutations();
+    //}
+}
+
+
+
+
 void display_mutations()
 {
     string mutation_s = describe_mutations(true);
@@ -840,6 +918,14 @@ void display_mutations()
         extra += "<darkgrey>(())</darkgrey>: Completely suppressed.\n";
     if (_num_transient)
         extra += "<magenta>[]</magenta>   : Transient mutations.";
+
+    if (you.species == SP_LAVA_ORC)
+    {
+        if (!extra.empty())
+            extra += "\n";
+        extra += _lava_orc_Ascreen_footer;
+    }
+
 
     if (!extra.empty())
     {
@@ -860,8 +946,13 @@ void display_mutations()
 
     auto switcher = make_shared<Switcher>();
 
-    const string vamp_s = you.species == SP_VAMPIRE ?_display_vampire_attributes() : "N/A";
-    const string descs[3] =  { mutation_s, vamp_s };
+    string plus_s = "N/A";
+    if (you.species == SP_VAMPIRE)
+        plus_s = _display_vampire_attributes();
+    else if (you.species == SP_LAVA_ORC)
+        plus_s = _display_temperature();
+
+    const string descs[3] =  { mutation_s, plus_s };
     for (int i = 0; i < 2; i++)
     {
         auto scroller = make_shared<Scroller>();
@@ -924,6 +1015,7 @@ void display_mutations()
 #ifdef USE_TILE_WEB
     tiles.pop_ui_layout();
 #endif
+
 }
 
 static int _calc_mutation_amusement_value(mutation_type which_mutation)

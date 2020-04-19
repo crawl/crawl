@@ -326,7 +326,7 @@ public:
                && you.num_turns >= m_request_redraw_after;
     }
 
-    void draw(int ox, int oy, int val, int max_val, int sub_val = 0)
+    void draw(int ox, int oy, int val, int max_val, bool temp = false, int sub_val = 0)
     {
         ASSERT(val <= max_val);
         if (max_val <= 0)
@@ -334,6 +334,7 @@ public:
             m_old_disp = -1;
             return;
         }
+        const colour_t temp_colour = temperature_colour(temperature());
         const int width = (horiz_bar_width != -1) ?
                                   horiz_bar_width :
                                   crawl_view.hudsz.x - (ox - 1);
@@ -356,7 +357,7 @@ public:
             textcolour(BLACK + m_empty * 16);
 
             if (cx < disp)
-                textcolour(BLACK + m_default * 16);
+                textcolour(BLACK + (temp) ? temp_colour * 16 : m_default * 16);
             else if (cx < sub_disp)
                 textcolour(BLACK + YELLOW * 16);
             else if (old_disp >= sub_disp && cx < old_disp)
@@ -365,7 +366,7 @@ public:
 #else
             if (cx < disp && cx < old_disp)
             {
-                textcolour(m_default);
+                textcolour((temp) ? temp_colour : m_default);
                 putwch('=');
             }
             else if (cx < disp)
@@ -469,6 +470,8 @@ static colour_bar MP_Bar(BLUE, BLUE, LIGHTBLUE, DARKGREY);
 static colour_bar MP_Bar(LIGHTBLUE, BLUE, MAGENTA, DARKGREY);
 #endif
 
+colour_bar Temp_Bar(RED, LIGHTRED, LIGHTBLUE, DARKGREY);
+
 #ifdef USE_TILE_LOCAL
 static colour_bar Noise_Bar(WHITE, LIGHTGREY, LIGHTGREY, DARKGREY);
 #else
@@ -543,7 +546,8 @@ void update_turn_count()
         return;
     }
 
-    CGOTOXY(19+6, 9, GOTO_STAT);
+    const int yhack = 0 + (you.species == SP_LAVA_ORC);
+    CGOTOXY(19 + 6, 9 + yhack, GOTO_STAT);
 
     // Show the turn count starting from 1. You can still quit on turn 0.
     textcolour(HUD_VALUE_COLOUR);
@@ -569,6 +573,15 @@ static int _count_digits(int val)
         return 2;
     return 1;
 }
+
+static void _print_stats_temperature(int x, int y)
+{
+    cgotoxy(x, y, GOTO_STAT);
+    textcolour(HUD_CAPTION_COLOUR);
+    cprintf("Temperature: ");
+    Temp_Bar.draw(19, y, temperature(), TEMP_MAX, true);
+}
+
 
 static const equipment_type e_order[] =
 {
@@ -805,7 +818,7 @@ static void _print_stats_hp(int x, int y)
         HP_Bar.vdraw(2, 10, you.hp, you.hp_max);
     else
 #endif
-        HP_Bar.draw(19, y, you.hp, you.hp_max, you.hp - max(0, poison_survival()));
+        HP_Bar.draw(19, y, you.hp, you.hp_max, false, you.hp - max(0, poison_survival()));
 }
 
 static short _get_stat_colour(stat_type stat)
@@ -1124,6 +1137,7 @@ static void _print_status_lights(int y)
         }
         else
         {
+            //?
             clear_to_end_of_line();
             ++line_cur;
             // Careful not to trip the )#(*$ CGOTOXY ASSERT
@@ -1290,8 +1304,11 @@ static void _redraw_title()
 
 void print_stats()
 {
-    int ac_pos = 5;
-    int ev_pos = ac_pos + 1;
+    int temp = (you.species == SP_LAVA_ORC) ? 1 : 0;
+    int temp_pos = 5;
+    int ac_pos = temp_pos + temp;
+    int ev_pos = temp_pos + temp + 1;
+
 
     cursor_control coff(false);
     textcolour(LIGHTGREY);
@@ -1307,6 +1324,8 @@ void print_stats()
         you.redraw_hit_points = true;
     if (MP_Bar.wants_redraw())
         you.redraw_magic_points = true;
+    if (Temp_Bar.wants_redraw() && you.species == SP_LAVA_ORC)
+        you.redraw_temperature = true;
 
     // Poison display depends on regen rate, so should be redrawn every turn.
     if (you.duration[DUR_POISONING])
@@ -1334,6 +1353,11 @@ void print_stats()
         you.redraw_magic_points = false;
         _print_stats_mp(1, 4);
     }
+    if (you.redraw_temperature)
+    {
+        you.redraw_temperature = false;
+        _print_stats_temperature(1, temp_pos);
+    }
 
     if (you.redraw_armour_class)
     {
@@ -1348,12 +1372,12 @@ void print_stats()
 
     for (int i = 0; i < NUM_STATS; ++i)
         if (you.redraw_stats[i])
-            _print_stat(static_cast<stat_type>(i), 19, 5 + i);
+            _print_stat(static_cast<stat_type>(i), 19, 5 + i + temp);
     you.redraw_stats.init(false);
 
     if (you.redraw_experience)
     {
-        CGOTOXY(1, 8, GOTO_STAT);
+        CGOTOXY(1, 8 + temp, GOTO_STAT);
         textcolour(Options.status_caption_colour);
         CPRINTF("XL: ");
         textcolour(HUD_VALUE_COLOUR);
@@ -1370,7 +1394,7 @@ void print_stats()
         you.redraw_experience = false;
     }
 
-    int yhack = 0;
+    int yhack = temp;
 
     // Line 9 is Noise and Turns
 #ifdef USE_TILE_LOCAL
@@ -1457,6 +1481,8 @@ static string _level_description_string_hud()
 void print_stats_level()
 {
     int ypos = 8;
+    if (you.species == SP_LAVA_ORC)
+        ypos++;
     cgotoxy(19, ypos, GOTO_STAT);
     textcolour(HUD_CAPTION_COLOUR);
     CPRINTF("Place: ");
@@ -1466,6 +1492,7 @@ void print_stats_level()
     CPRINTF("(%d) ", env.absdepth0 + 1);
 #endif
     CPRINTF("%s", _level_description_string_hud().c_str());
+
     clear_to_end_of_line();
 }
 
@@ -1475,12 +1502,13 @@ void draw_border()
     clrscr();
 
     textcolour(Options.status_caption_colour);
+    int temp = (you.species == SP_LAVA_ORC) ? 1 : 0;
 
 //    int hp_pos = 3;
     int mp_pos = 4;
-    int ac_pos = 5;
-    int ev_pos = 6;
-    int sh_pos = 7;
+    int ac_pos = 5 + temp;
+    int ev_pos = 6 + temp;
+    int sh_pos = 7 + temp;
     int str_pos = ac_pos;
     int int_pos = ev_pos;
     int dex_pos = sh_pos;
@@ -1495,7 +1523,8 @@ void draw_border()
     CGOTOXY(19, int_pos, GOTO_STAT); CPRINTF("Int:");
     CGOTOXY(19, dex_pos, GOTO_STAT); CPRINTF("Dex:");
 
-    CGOTOXY(19, 9, GOTO_STAT);
+    int yhack = temp;
+    CGOTOXY(19, 9 + temp, GOTO_STAT);
     CPRINTF(Options.show_game_time ? "Time:" : "Turn:");
     // Line 8 is exp pool, Level
 }
@@ -1511,6 +1540,8 @@ void redraw_console_sidebar()
     you.redraw_title        = true;
     you.redraw_hit_points   = true;
     you.redraw_magic_points = true;
+    if (you.species == SP_LAVA_ORC)
+        you.redraw_temperature = true;
     you.redraw_stats.init(true);
     you.redraw_armour_class  = true;
     you.redraw_evasion       = true;

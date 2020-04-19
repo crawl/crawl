@@ -50,7 +50,6 @@ enum species_type
     SP_FELID,
     SP_OCTOPODE,
     SP_DJINNI,
-    SP_LAVA_ORC,
     SP_GARGOYLE,
     SP_FORMICID,
     SP_VINE_STALKER,

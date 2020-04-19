@@ -70,6 +70,12 @@ function ($, comm, enums, map_knowledge, messages, options) {
         $("#stats_" + name + "_bar_" + (increase ? "decrease" : "increase"))
             .css("width", 0);
     }
+	
+    function update_bar_heat()
+    {
+        player.heat_max = 15; // Value of TEMP_MAX
+        update_bar("heat");
+    }
 
     function update_bar_noise()
     {
@@ -328,6 +334,8 @@ function ($, comm, enums, map_knowledge, messages, options) {
     {
         $("#stats_titleline").text(player.name + " " + player.title);
         $("#stats_wizmode").text(player.wizard ? "*WIZARD*" : "");
+		
+        var do_temperature = false;
 
         // Setup species
         // TODO: Move to a proper initialisation task
@@ -377,6 +385,11 @@ function ($, comm, enums, map_knowledge, messages, options) {
 
         $("#stats_hpline > .stats_caption").text(
             (player.real_hp_max != player.hp_max) ? "HP:" : "Health:");
+			
+        if (player.species == "Lava Orc")
+        {
+            do_temperature = true;
+        }
 
         if (player.real_hp_max != player.hp_max)
             $("#stats_real_hp_max").text("(" + player.real_hp_max + ")");
@@ -392,6 +405,8 @@ function ($, comm, enums, map_knowledge, messages, options) {
         percentage_color("mp");
         update_bar("hp");
         update_bar("mp");
+        if (do_temperature)
+            update_bar_heat();
 
         update_defense("ac");
         update_defense("ev");
@@ -518,6 +533,7 @@ function ($, comm, enums, map_knowledge, messages, options) {
                 wizard: 0,
                 depth: 0, place: "",
                 contam: 0,
+                heat: 0,
                 noise: 0,
                 adjusted_noise: 0
             });

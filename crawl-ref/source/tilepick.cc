@@ -3816,6 +3816,8 @@ static tileidx_t _tileidx_player_species_base(const species_type species)
             return TILEG_SP_DEEP_ELF;
         case SP_HALFLING:
             return TILEG_SP_HALFLING;
+        case SP_LAVA_ORC:
+            return TILEG_SP_LAVA_ORC;
         case SP_HILL_ORC:
             return TILEG_SP_HILL_ORC;
         case SP_KOBOLD:

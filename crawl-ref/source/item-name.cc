@@ -3461,6 +3461,8 @@ bool is_useless_item(const item_def &item, bool temp)
         return false;
 
     case OBJ_SCROLLS:
+        if (you.species == SP_LAVA_ORC && temperature_effect(LORC_NO_SCROLLS))
+            return true;
         if (temp && silenced(you.pos()))
             return true; // can't use scrolls while silenced
 

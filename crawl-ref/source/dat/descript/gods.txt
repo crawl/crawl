@@ -231,7 +231,11 @@ Followers of Beogh can smite their foes, and will even gain orcish followers of
 their own, who may be blessed by Beogh in battle and can be recalled as needed.
 Eventually, followers will gain the power to walk on water. Beogh will
 sometimes directly intervene to save a follower's life, and the chosen of
-Beogh will eventually be able to resurrect other fallen orcs.
+Beogh will eventually be able to resurrect other fallen orcs. {{
+    if you.race() == "Lava Orc" then
+        return "Beogh suppresses the heat aura of Lava Orc followers."
+    end
+}}
 %%%%
 Cheibriados powers
 

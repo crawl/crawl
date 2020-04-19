@@ -17,24 +17,6 @@
     nullptr
 } },
 
-{ SP_LAVA_ORC, {
-    "LO",
-    "Lava Orc", "Orcish", "Orc",
-    SPF_ORCISH | SPF_NO_HAIR,
-    -1, 1, 0, 3,
-    MONS_LAVA_ORC,
-    HT_AMPHIBIOUS_LAVA, US_ALIVE, SIZE_MEDIUM,
-    10, 8, 6, // 24
-    { STAT_INT, STAT_DEX }, 5,
-    {},
-    {},
-    {},
-    {}, // not a starting race
-    {}, // not a starting race
-    nullptr,
-    nullptr
-} },
-
 { SP_DJINNI, {
     "Dj",
     "Djinni", "Djinn", nullptr,

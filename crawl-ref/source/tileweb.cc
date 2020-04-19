@@ -928,6 +928,9 @@ void TilesFramework::_send_player(bool force_full)
     _update_int(force_full, c.poison_survival, max(0, poison_survival()),
                 "poison_survival");
 
+    if (you.species == SP_LAVA_ORC)
+        _update_int(force_full, c.heat, temperature(), "heat");
+
     _update_int(force_full, c.armour_class, you.armour_class(), "ac");
     _update_int(force_full, c.evasion, you.evasion(), "ev");
     _update_int(force_full, c.shield_class, player_displayed_shield_class(),
@@ -1389,6 +1392,9 @@ void TilesFramework::_send_cell(const coord_def &gc,
 
         if (next_pc.travel_trail != current_pc.travel_trail)
             json_write_int("travel_trail", next_pc.travel_trail);
+
+        if (next_pc.heat_aura != current_pc.heat_aura)
+            json_write_int("heat_aura", next_pc.heat_aura);
 
         if (_needs_flavour(next_pc) &&
             (next_pc.flv.floor != current_pc.flv.floor

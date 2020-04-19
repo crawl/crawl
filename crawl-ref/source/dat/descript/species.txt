@@ -81,6 +81,11 @@ Kobold
 
 Kobolds are small, mischievous and a little fragile, but multi-talented.
 %%%%
+Lava Orc
+
+These masters of earth and fire magic come from deep below the Dungeon. Their
+abilities change with their temperature.
+%%%%
 Merfolk
 
 Half fish, half human, Merfolk are citizens of both water and land. They are
