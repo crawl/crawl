@@ -773,14 +773,27 @@ static int _vampire_bloodlessness()
     return you.vampire_alive ? 1 : 2;
 }
 
-static const string _lava_orc_Ascreen_footer = (
-#ifndef USE_TILE_LOCAL
-    "Press '<w>!</w>'"
-#else
-    "<w>Right-click</w>"
+
+static formatted_string _lava_orc_Ascreen_footer(bool first_page)
+{
+    const char *text = first_page ? "<w>Mutations</w>|Temperature"
+                                  : "Mutations|<w>Temperature</w>";
+    const string fmt = make_stringf("[<w>!</w>/<w>^</w>"
+#ifdef USE_TILE_LOCAL
+            "|<w>Right-click</w>"
 #endif
-    " to toggle between mutations and properties depending on your\n"
-    "temperature.\n");
+            "]: %s", text);
+    return formatted_string::parse_string(fmt);
+}
+
+// static const string _lava_orc_Ascreen_footer = (
+// #ifndef USE_TILE_LOCAL
+//     "Press '<w>!</w>'"
+// #else
+//     "<w>Right-click</w>"
+// #endif
+//     " to toggle between mutations and properties depending on your\n"
+//     "temperature.\n");
 
 
 static string _display_vampire_attributes()
@@ -888,9 +901,6 @@ static string _display_temperature()
     }
     result += "\n";
     result += "You get hot in tense situations, when berserking, or when you enter lava. You \ncool down when your rage ends or when you enter water.";
-    result += "\n";
-    result += "\n";
-    result += _lava_orc_Ascreen_footer;
     trim_string_right(result);
 
     return result;
@@ -919,12 +929,12 @@ void display_mutations()
     if (_num_transient)
         extra += "<magenta>[]</magenta>   : Transient mutations.";
 
-    if (you.species == SP_LAVA_ORC)
-    {
-        if (!extra.empty())
-            extra += "\n";
-        extra += _lava_orc_Ascreen_footer;
-    }
+    // if (you.species == SP_LAVA_ORC)
+    // {
+    //     if (!extra.empty())
+    //         extra += "\n";
+    //     extra += _lava_orc_Ascreen_footer;
+    // }
 
 
     if (!extra.empty())
@@ -973,10 +983,10 @@ void display_mutations()
 #endif
     vbox->add_child(switcher);
 
-    auto bottom = make_shared<Text>(_vampire_Ascreen_footer(true));
+    auto bottom = make_shared<Text>(you.species == SP_LAVA_ORC?_lava_orc_Ascreen_footer(true):_vampire_Ascreen_footer(true));
     bottom->set_margin_for_sdl(20, 0, 0, 0);
     bottom->set_margin_for_crt(1, 0, 0, 0);
-    if (you.species == SP_VAMPIRE)
+    if (you.species == SP_VAMPIRE || you.species == SP_LAVA_ORC)
         vbox->add_child(bottom);
 
     auto popup = make_shared<ui::Popup>(vbox);
@@ -997,7 +1007,23 @@ void display_mutations()
             tiles.json_write_int("pane", c);
             tiles.ui_state_change("mutations", 0);
 #endif
-        } else
+        } else if(you.species == SP_LAVA_ORC && (lastch == '!' || lastch == CK_MOUSE_CMD || lastch == '^')) {
+
+            int& c = switcher->current();
+
+            bottom->set_text(_lava_orc_Ascreen_footer(c));
+
+            c = 1 - c;
+#ifdef USE_TILE_WEB
+            tiles.json_open_object();
+            tiles.json_write_int("pane", c);
+            tiles.ui_state_change("mutations", 0);
+#endif
+        }
+        
+        
+        
+         else
             done = !switcher->current_widget()->on_event(ev);
         return true;
     });
