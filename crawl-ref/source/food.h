@@ -61,7 +61,7 @@ bool prompt_eat_item(int slot = -1);
 int you_max_hunger();
 int you_min_hunger();
 bool apply_starvation_penalties();
-bool you_foodless(bool temp = true);
+bool you_foodless(bool temp = true, bool can_eat = false);
 
 void handle_starvation();
 int hunger_bars(const int hunger);

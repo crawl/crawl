@@ -234,6 +234,8 @@ static void _handle_magic_contamination()
     //If not invisible, normal dissipation
     else
         added_contamination -= 25;
+    if (you.duration[DUR_REGENERATION] && you.species == SP_DJINNI)
+        added_contamination += 20;
 
     // The Orb halves dissipation (well a bit more, I had to round it),
     // but won't cause glow on its own -- otherwise it'd spam the player
@@ -277,7 +279,9 @@ static void _magic_contamination_effects()
         beam.explode();
     }
 
-    const mutation_permanence_class mutclass = MUTCLASS_NORMAL;
+    const mutation_permanence_class mutclass = you.species == SP_DJINNI
+        ? MUTCLASS_TEMPORARY
+        : MUTCLASS_NORMAL;
 
     // We want to warp the player, not do good stuff!
     mutate(one_chance_in(5) ? RANDOM_MUTATION : RANDOM_BAD_MUTATION,

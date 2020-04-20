@@ -764,32 +764,48 @@ const string make_cost_description(ability_type ability)
 {
     const ability_def& abil = get_ability_def(ability);
     string ret;
-    if (abil.mp_cost)
-        ret += make_stringf(", %d MP", abil.mp_cost);
+    int ep = 0;
 
-    if (abil.flags & abflag::variable_mp)
-        ret += ", MP";
 
-    if (ability == ABIL_HEAL_WOUNDS)
-        ret += make_stringf(", Permanent MP (%d left)", get_real_mp(false));
-
-    if (ability == ABIL_TRAN_BAT)
+    if (you.species == SP_DJINNI)
     {
-        ret += make_stringf(", Stat Drain (%d each)",
-                            VAMPIRE_BAT_FORM_STAT_DRAIN);
+        if (abil.mp_cost)
+            //TODO: Cannot reach player.cc to read DJ_MP_RATE so hard coding
+            //it here as "2". Fix this to not be a lazy hack.
+            ep += abil.mp_cost * 2;
+        if (abil.hp_cost || ep)
+            ret += make_stringf(", %d EP", abil.hp_cost.cost(you.hp_max));
+    }
+    else
+    {
+        if (abil.mp_cost)
+            ret += make_stringf(", %d MP", abil.mp_cost);
+        if (ability == ABIL_TRAN_BAT)
+        {
+            ret += make_stringf(", Stat Drain (%d each)",
+                                VAMPIRE_BAT_FORM_STAT_DRAIN);
+        }
+
+        if (ability == ABIL_REVIVIFY)
+            ret += ", Frailty";
+        if (abil.flags & abflag::variable_mp)
+            ret += ", MP";
+
+        if (ability == ABIL_HEAL_WOUNDS)
+            ret += ", Permanent MP";
+
+        if (abil.hp_cost)
+            ret += make_stringf(", %d HP", abil.hp_cost.cost(you.hp_max));
     }
 
-    if (ability == ABIL_REVIVIFY)
-        ret += ", Frailty";
-
-    if (abil.hp_cost)
-        ret += make_stringf(", %d HP", abil.hp_cost.cost(you.hp_max));
-
-    if (abil.food_cost && !you_foodless()
+    if (abil.food_cost && !you_foodless(true, true)
         && (you.undead_state() != US_SEMI_UNDEAD
             || you.hunger_state > HS_STARVING))
     {
-        ret += ", Hunger"; // randomised and exact amount hidden from player
+        if (you.species == SP_DJINNI)
+            ret += ", Glow";
+        else
+            ret += ", Hunger"; // randomised and exact amount hidden from player    
     }
 
     if (abil.piety_cost || abil.flags & abflag::piety)
@@ -885,12 +901,21 @@ static const string _detailed_cost_description(ability_type ability)
         ret << abil.hp_cost.cost(you.hp_max);
     }
 
-    if (abil.food_cost && !you_foodless()
+    if (abil.food_cost && !you_foodless(true, true)
         && (you.undead_state() != US_SEMI_UNDEAD
             || you.hunger_state > HS_STARVING))
     {
         have_cost = true;
-        ret << "\nHunger : ";
+
+        if (you.species == SP_DJINNI)
+        {
+            ret << "\nGlow   : ";
+        }
+        else
+        {
+            ret << "\nHunger : ";
+        }
+
         ret << hunger_cost_string(abil.food_cost + abil.food_cost / 2);
     }
 
@@ -2683,9 +2708,17 @@ static spret _do_ability(const ability_def& abil, bool fail)
         fail_check();
         int pow = 0;
         if (abil.ability == ABIL_ELYVILON_LESSER_HEALING)
+        {
             pow = 3 + you.skill_rdiv(SK_INVOCATIONS, 1, 6);
+        }
         else
+        {
             pow = 10 + you.skill_rdiv(SK_INVOCATIONS, 1, 3);
+        }
+        if (you.species == SP_DJINNI)
+        {
+            pow /= 2;
+        }
         pow = min(50, pow);
         const int healed = pow + roll_dice(2, pow) - 2;
         mpr("You are healed.");
@@ -3523,7 +3556,7 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
             _add_talent(talents, ABIL_EXSANGUINATE, check_confused);
     }
 
-    if (you.racial_permanent_flight() && !you.attribute[ATTR_PERM_FLIGHT])
+    if (you.racial_permanent_flight() && !you.attribute[ATTR_PERM_FLIGHT] || you.species != SP_DJINNI)
     {
         // Tengu can fly starting at XL 5
         // Black draconians and gargoyles get permaflight at XL 14, but they

@@ -287,7 +287,7 @@ static int _use_an_item_beg(item_def& bag, item_def*& target, int item_type, con
 
     if (bag.props.exists(BAG_PROPS_KEY))
     {
-        //°¡¹æ¿ë ÀÎº¥Åä¸®
+        //ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Îºï¿½ï¿½ä¸®
         {
             vector<const item_def*> tobeshown;
 
@@ -551,6 +551,18 @@ bool can_wield(const item_def *weapon, bool say_reason,
         if (say_reason)
         {
             mpr("This weapon is holy and will not allow you to wield it.");
+            id_brand = true;
+        }
+        else
+            return false;
+    }
+    else if (you.species == SP_DJINNI
+             && get_weapon_brand(*weapon) == SPWPN_ANTIMAGIC
+             && (item_type_known(*weapon) || !only_known))
+    {
+        if (say_reason)
+        {
+            mpr("As you grasp it, you feel your magic disrupted. Quickly, you stop.");
             id_brand = true;
         }
         else
@@ -1328,7 +1340,8 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
             return false;
         }
 
-        if (you.species == SP_NAGA)
+        if (you.species == SP_NAGA
+            || you.species == SP_DJINNI)
         {
             if (verbose)
                 mpr("You have no legs!");
@@ -2673,7 +2686,7 @@ void prompt_inscribe_item()
 
 void drink(item_def* potion)
 {
-    if (you_foodless() && you.species != SP_VAMPIRE)
+    if (you_foodless(true, true) && you.species != SP_VAMPIRE)
     {
         mpr("You can't drink.");
         return;

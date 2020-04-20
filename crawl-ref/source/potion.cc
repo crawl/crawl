@@ -236,6 +236,12 @@ public:
 
     bool effect(bool=true, int pow = 40, bool=true) const override
     {
+        // Allow repairing rot, disallow going through Death's Door.
+        if (you.species == SP_DJINNI
+            && PotionHealWounds::instance().can_quaff())
+        {
+            return PotionHealWounds::instance().effect(pow);
+        }
         if (you.species == SP_VAMPIRE)
         {
             mpr("Yummy - fresh blood!");
@@ -619,7 +625,12 @@ public:
     }
 
     bool can_quaff(string *reason = nullptr) const override
-    {
+    {       
+        if (you.species == SP_DJINNI)
+        {
+            return PotionHealWounds::instance().can_quaff(reason);
+        }
+
         if (you.magic_points == you.max_magic_points)
         {
             if (reason)

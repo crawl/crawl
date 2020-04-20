@@ -288,6 +288,12 @@ static bool _evoke_horn_of_geryon()
 
 static bool _check_crystal_ball()
 {
+    if (you.species == SP_DJINNI)
+    {
+        mpr("You can only see your reflection. ");
+        return false;
+    }
+
     if (you.confused())
     {
         canned_msg(MSG_TOO_CONFUSED);
@@ -1501,7 +1507,7 @@ static string _get_menu_titlefn(const Menu*, const string& slot_des)
     return prompt_base + slot_des;
 }
 
-//¸®ÅÏÀÌ false¸é °¡¹æ¿¡ ³Ö´Â ÀÛ¾÷À» ¸ØÃã
+//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ falseï¿½ï¿½ ï¿½ï¿½ï¿½æ¿¡ ï¿½Ö´ï¿½ ï¿½Û¾ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 static bool _put_item(int bag_slot, int item_dropped, int quant_drop, bool message)
 {
     item_def& item = you.inv[item_dropped];
@@ -1525,7 +1531,7 @@ static bool _put_item(int bag_slot, int item_dropped, int quant_drop, bool messa
     }
 
 
-    //½ÃÃ¼ °í±âµµ ¸ø³Ö°Ô ÇÏ±â
+    //ï¿½ï¿½Ã¼ ï¿½ï¿½ï¿½âµµ ï¿½ï¿½ï¿½Ö°ï¿½ ï¿½Ï±ï¿½
 
     if (item_dropped == you.equip[EQ_LEFT_RING]
         || item_dropped == you.equip[EQ_RIGHT_RING]
@@ -1575,7 +1581,7 @@ static bool _put_item(int bag_slot, int item_dropped, int quant_drop, bool messa
     int emptySlot = -1;
     bool merged = false;
     CrawlVector& bagVector = bag.props[BAG_PROPS_KEY].get_vector();
-    //ºó °÷À» Ã£À½
+    //ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Ã£ï¿½ï¿½
     for (int i = 0; i < ENDOFPACK; i++) 
     {
         bool item_undefined = (bagVector[i].get_flags() & SFLAG_UNSET ||
@@ -1588,7 +1594,7 @@ static bool _put_item(int bag_slot, int item_dropped, int quant_drop, bool messa
 
         if (!item_undefined && items_stack(item, (bagVector[i].get_item())))
         {
-            //µ¿ÀÏÇÑ ¾ÆÀÌÅÛ ¸ÓÁö
+            //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             item_def copy = item;
             merge_item_stacks(copy, (bagVector[i].get_item()), quant_drop);
             bagVector[i].get_item().quantity += quant_drop;
@@ -1599,7 +1605,7 @@ static bool _put_item(int bag_slot, int item_dropped, int quant_drop, bool messa
 
     if (emptySlot == -1 && merged == false)
     {
-        //°¡¹æÀÌ ³ÑÄ¡¸é Ç×»ó ¸Þ½ÃÁö
+        //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½×»ï¿½ ï¿½Þ½ï¿½ï¿½ï¿½
         mprf("bag is full!");
         return false;
     }
@@ -1703,7 +1709,7 @@ static spret _get_bag(int slot)
     item_def& bag = you.inv[slot];
     if (bag.props.exists(BAG_PROPS_KEY))
     {
-        //°¡¹æ¿ë ÀÎº¥Åä¸®
+        //ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Îºï¿½ï¿½ä¸®
         {
             vector<const item_def*> tobeshown;
 
@@ -1883,6 +1889,11 @@ bool evoke_item(int slot)
         else if (you.magic_points >= you.max_magic_points)
         {
             canned_msg(MSG_FULL_MAGIC);
+            return false;
+        }
+        else if (you.species == SP_DJINNI)
+        {
+            mpr("The staff remains inert.");
             return false;
         }
         else if (x_chance_in_y(apply_enhancement(

@@ -181,11 +181,12 @@ int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
     ToggleableMenu spell_menu(MF_SINGLESELECT | MF_ANYPRINTABLE
             | MF_NO_WRAP_ROWS | MF_ALWAYS_SHOW_MORE | MF_ALLOW_FORMATTING);
     string titlestring = make_stringf("%-25.25s", title.c_str());
+    string hungerstring = you.species == SP_DJINNI ? "Glow  " : "Hunger ";
     {
         ToggleableMenuEntry* me =
             new ToggleableMenuEntry(
                 titlestring + "         Type                          Failure  Level",
-                titlestring + "         Power        Range    Hunger  Noise         ",
+                titlestring + "         Power        Range    " + hungerstring + "  Noise         ",
                 MEL_TITLE);
         spell_menu.set_title(me, true, true);
     }
@@ -352,6 +353,19 @@ int raw_spell_fail(spell_type spell)
     ASSERT_RANGE(spell_level, 0, (int) ARRAYSZ(difficulty_by_level));
     chance += difficulty_by_level[spell_level]; // between 0 and 330
 
+    // Only apply this penalty to Dj because other species lose nutrition
+    // rather than gaining contamination when casting spells.
+    // Also, this penalty gives fairly precise information about contam
+    // level, and only Dj already has such information (on the contam bar).
+    // Other species would have to check their failure rates all the time
+    // when at yellow glow.
+    if (you.species == SP_DJINNI)
+    {
+        int64_t contam = you.magic_contamination;
+        // Just +25 on the edge of yellow glow, +200 in the middle of yellow,
+        // forget casting when in orange.
+        chance += contam * contam * contam / 5000000000LL;
+    }
     // This polynomial is a smoother approximation of a breakpoint-based
     // calculation that originates pre-DCSS, mapping `chance` at this point to
     // values from around 0 to around 45. (see
@@ -863,7 +877,19 @@ bool cast_a_spell(bool check_range, spell_type spell)
         count_action(CACT_CAST, spell);
     }
 
-    flush_mp();
+    // Nasty special cases.
+    if (you.species == SP_DJINNI && cast_result == spret::success
+        && (spell == SPELL_BORGNJORS_REVIVIFICATION
+         || spell == SPELL_SUBLIMATION_OF_BLOOD && you.hp == you.hp_max))
+    {
+        // These spells have replenished essence to full.
+        inc_mp(cost, true);
+    }
+    else // Redraw MP
+    {
+        flush_mp();
+    }
+
 
     if (!staff_energy && you.undead_state() != US_UNDEAD)
     {
@@ -1469,7 +1495,6 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
                                       : GOD_NO_GOD;
 
     int fail = 0;
-#if TAG_MAJOR_VERSION == 34
     bool antimagic = false; // lost time but no other penalty
 
     if (allow_fail && you.duration[DUR_ANTIMAGIC]
@@ -1478,9 +1503,7 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
         mpr("You fail to access your magic.");
         fail = antimagic = true;
     }
-    else
-#endif
-    if (evoked_item && evoked_item->charges == 0)
+    else if (evoked_item && evoked_item->charges == 0)
         return spret::fail;
     else if (allow_fail)
     {
@@ -1565,10 +1588,8 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
     }
     case spret::fail:
     {
-#if TAG_MAJOR_VERSION == 34
         if (antimagic)
             return spret::fail;
-#endif
 
         mprf("You miscast %s.", spell_title(spell));
         flush_input_buffer(FLUSH_ON_FAILURE);

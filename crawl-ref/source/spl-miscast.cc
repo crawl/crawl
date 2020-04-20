@@ -1165,8 +1165,11 @@ void MiscastEffect::_charms(int severity)
                 if (target->is_player())
                 {
                     debuff_player();
-                    if (you.magic_points > 0)
-                        dec_mp(4 + random2(3));
+                    if (you.magic_points > 0
+                        || you.species == SP_DJINNI)
+                    {
+                        drain_mp(4 + random2(3));
+                    }
                 }
                 else if (target->is_monster())
                 {
@@ -2313,7 +2316,7 @@ void MiscastEffect::_ice(int severity)
             mon_msg = "Heat is drained from @the_monster@.";
             if (_ouch(5 + random2(6) + random2(7), BEAM_COLD) && target->alive())
                 target->expose_to_element(BEAM_COLD, 4);
-            if (target->is_player() && !you_foodless())
+            if (target->is_player() && !you_foodless(true, false))
                 you.increase_duration(DUR_NO_POTIONS, 10 + random2(11), 50);
             break;
 

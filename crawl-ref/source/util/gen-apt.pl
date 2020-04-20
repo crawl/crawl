@@ -127,7 +127,6 @@ sub aptitude_table
         next if $sp eq 'Mottled Draconian';
         next if $sp eq 'High Elf';
         next if $sp eq 'Sludge Elf';
-        next if $sp eq 'Djinni';
 
         my $line = '';
         $line .= fix_draco_species($sp, \$seen_draconian_length);

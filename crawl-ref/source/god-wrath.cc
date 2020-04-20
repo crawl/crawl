@@ -980,9 +980,9 @@ static bool _sif_muna_retribution()
     case 6:
     case 7:
     case 8:
-        if (you.magic_points > 0)
+        if (you.magic_points > 0 || you.species == SP_DJINNI)
         {
-            dec_mp(you.magic_points);
+            drain_mp(100);
             canned_msg(MSG_MAGIC_DRAIN);
         }
         break;

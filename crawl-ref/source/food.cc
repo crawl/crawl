@@ -52,6 +52,14 @@ void make_hungry(int hunger_amount, bool suppress_msg,
     if (crawl_state.disables[DIS_HUNGER])
         return;
 
+    if (you.species == SP_DJINNI)
+    {
+        if (!magic)
+            return;
+         contaminate_player(hunger_amount * 4 / 3, true);
+        return;
+    }
+
     if (you_foodless())
         return;
 
@@ -117,10 +125,19 @@ void set_hunger(int new_hunger_level, bool suppress_msg)
         lessen_hunger(hunger_difference, suppress_msg);
 }
 
-bool you_foodless(bool temp)
+
+/**
+ * Check to see if the player is foodless (doesn't eat or drink)
+ *
+ * @param temp          Is the state of being foodless temporary?
+ * @param can_eat       Bypass foodless restriction (for Djinni only).
+ *
+ */
+bool you_foodless(bool temp, bool can_eat)
 {
     return you.undead_state(temp) == US_UNDEAD
-        || you.undead_state(temp) == US_SEMI_UNDEAD;
+        || you.undead_state(temp) == US_SEMI_UNDEAD
+        || (you.species == SP_DJINNI && !can_eat);
 }
 
 bool prompt_eat_item(int slot)
@@ -146,7 +163,7 @@ bool prompt_eat_item(int slot)
 static bool _eat_check(bool check_hunger = true, bool silent = false,
                                                             bool temp = true)
 {
-    if (you_foodless(temp))
+    if (you_foodless(temp, true))
     {
         if (!silent)
         {
@@ -664,7 +681,7 @@ bool is_noxious(const item_def &food)
 bool is_inedible(const item_def &item, bool temp)
 {
     // Mummies and liches don't eat.
-    if (you_foodless(temp))
+    if (you_foodless(temp, true))
         return true;
 
     if (item.base_type == OBJ_FOOD // XXX: removeme?
@@ -694,7 +711,7 @@ bool is_inedible(const item_def &item, bool temp)
 bool is_preferred_food(const item_def &food)
 {
     // Mummies, vampirees, and liches don't eat.
-    if (you_foodless())
+    if (you_foodless(true, true))
         return false;
 
     if (you.species == SP_GHOUL)
@@ -702,7 +719,8 @@ bool is_preferred_food(const item_def &food)
 
 #if TAG_MAJOR_VERSION == 34
     if (food.is_type(OBJ_POTIONS, POT_PORRIDGE)
-        && item_type_known(food))
+        && item_type_known(food)
+        && you.species != SP_DJINNI)
     {
         return you.get_mutation_level(MUT_CARNIVOROUS) == 0;
     }
@@ -933,7 +951,7 @@ int hunger_bars(const int hunger)
 
 string hunger_cost_string(const int hunger)
 {
-    if (you_foodless())
+    if (you_foodless(true, true))
         return "N/A";
 
 #ifdef WIZARD

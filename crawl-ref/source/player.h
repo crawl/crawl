@@ -1092,6 +1092,7 @@ void calc_mp();
 
 void dec_hp(int hp_loss, bool fatal, const char *aux = nullptr);
 void dec_mp(int mp_loss, bool silent = false);
+void drain_mp(int mp_loss);
 
 void inc_mp(int mp_gain, bool silent = false);
 void inc_hp(int hp_gain);

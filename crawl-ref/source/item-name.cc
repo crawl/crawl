@@ -3409,6 +3409,11 @@ bool is_useless_item(const item_def &item, bool temp)
             return true;
         }
 
+        if (you.species == SP_DJINNI && get_weapon_brand(item) == SPWPN_ANTIMAGIC)
+        {
+            return true;
+        }
+
         return false;
 
     case OBJ_MISSILES:
@@ -3619,6 +3624,7 @@ bool is_useless_item(const item_def &item, bool temp)
             return player_likes_chunks(true)
                    || you.get_mutation_level(MUT_GOURMAND) > 0
                    || you.get_mutation_level(MUT_HERBIVOROUS) > 0
+                   || you.species == SP_DJINNI
                    || you.undead_state(temp);
 
         case AMU_FAITH:
@@ -3627,7 +3633,8 @@ bool is_useless_item(const item_def &item, bool temp)
                     || (you_worship(GOD_RU) && you.piety == piety_breakpoint(5));
 
         case AMU_GUARDIAN_SPIRIT:
-            return you.spirit_shield(false, false);
+            return you.species == SP_DJINNI ||
+                you.spirit_shield(false, false);
 
         case RING_LIFE_PROTECTION:
             return player_prot_life(false, temp, false) == 3;
@@ -3665,6 +3672,9 @@ bool is_useless_item(const item_def &item, bool temp)
         case RING_STEALTH:
             return you.get_mutation_level(MUT_NO_STEALTH);
 
+        case RING_PROTECTION_FROM_FIRE:
+            return you.species == SP_DJINNI;
+
         default:
             return false;
         }
@@ -3700,6 +3710,12 @@ bool is_useless_item(const item_def &item, bool temp)
         if (item.sub_type == NUM_FOODS)
             break;
 
+        if (you.species == SP_DJINNI && item.sub_type == FOOD_CHUNK
+               /* && mons_corpse_effect(item.mon_type) == CE_MUTAGEN*/)
+        {
+            return false;
+        }
+
         if (!is_inedible(item))
             return false;
 
@@ -3720,6 +3736,14 @@ bool is_useless_item(const item_def &item, bool temp)
     case OBJ_CORPSES:
         if (item.sub_type != CORPSE_SKELETON && !you_foodless())
             return false;
+            
+        if (item.sub_type == CORPSE_BODY && you.species == SP_DJINNI
+            /*&& mons_corpse_effect(item.mon_type) == CE_MUTAGEN*/
+            && !is_inedible(item))
+        {
+            return false;
+        }
+
 
         if (you.has_spell(SPELL_ANIMATE_DEAD)
             || you.has_spell(SPELL_ANIMATE_SKELETON)

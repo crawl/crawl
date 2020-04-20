@@ -3858,6 +3858,8 @@ static tileidx_t _tileidx_player_species_base(const species_type species)
             return TILEG_SP_FELID;
         case SP_OCTOPODE:
             return TILEG_SP_OCTOPODE;
+        case SP_DJINNI:
+            return TILEG_SP_DJINNI;
         case SP_GARGOYLE:
             return TILEG_SP_GARGOYLE;
         case SP_FORMICID:

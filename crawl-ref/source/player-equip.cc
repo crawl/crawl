@@ -803,7 +803,7 @@ static void _unequip_weapon_effect(item_def& real_item, bool showMsgs, bool meld
 
 static void _spirit_shield_message(bool unmeld)
 {
-    if (!unmeld && you.spirit_shield() < 2)
+    if (!unmeld && you.spirit_shield() < 2 && you.species != SP_DJINNI)
     {
         dec_mp(you.magic_points);
         mpr("You feel your power drawn to a protective spirit.");
@@ -816,10 +816,15 @@ static void _spirit_shield_message(bool unmeld)
         }
 #endif
     }
-    else if (!unmeld && you.get_mutation_level(MUT_MANA_SHIELD))
+    else if (!unmeld && (you.get_mutation_level(MUT_MANA_SHIELD) 
+                || you.species == SP_DJINNI))
+    {
         mpr("You feel the presence of a powerless spirit.");
+    }
     else if (!you.get_mutation_level(MUT_MANA_SHIELD))
+    {
         mpr("You feel spirits watching over you.");
+    }
 }
 
 static void _equip_armour_effect(item_def& arm, bool unmeld,

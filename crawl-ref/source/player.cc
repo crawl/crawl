@@ -88,6 +88,8 @@
 #include "wizard-option-type.h"
 #include "xom.h"
 
+const int DJ_MP_RATE = 2;
+
 static void _moveto_maybe_repel_stairs()
 {
     const dungeon_feature_type new_grid = env.grid(you.pos());
@@ -820,6 +822,7 @@ bool player_has_feet(bool temp, bool include_mutations)
     if (you.species == SP_NAGA
         || you.species == SP_FELID
         || you.species == SP_OCTOPODE
+        || you.species == SP_DJINNI
         || you.fishtail && temp)
     {
         return false;
@@ -1191,6 +1194,14 @@ int player_regen()
     if (you.species == SP_VAMPIRE && you.vampire_alive)
             rr += 20;
 
+    // Compared to other races, a starting djinni would have regen of 4 (hp)
+    // plus 17 (mp). So let's compensate them early; they can stand getting
+    // shafted on the total regen rates later on.
+    if (you.species == SP_DJINNI && you.hp_max < 100)
+    {
+        rr += (100 - you.hp_max) / 6;
+    }
+
     if (you.duration[DUR_COLLAPSE])
         rr /= 4;
 
@@ -1358,6 +1369,9 @@ int player_res_fire(bool calc_unid, bool temp, bool items)
 {
     int rf = 0;
 
+    if (you.species == SP_DJINNI)
+        return 4; // full immunity
+
     if (items)
     {
         // rings of fire resistance/fire
@@ -1509,6 +1523,10 @@ int player_res_cold(bool calc_unid, bool temp, bool items)
     }
 
     if (you.species == SP_LAVA_ORC && temperature_effect(LORC_COLD_VULN))
+        rc--;
+
+    // species:
+    if (you.species == SP_DJINNI)
         rc--;
 
     // mutations:
@@ -2732,9 +2750,19 @@ static void _gain_and_note_hp_mp()
     const int note_maxmp = get_real_mp(false);
 
     char buf[200];
-    sprintf(buf, "HP: %d/%d MP: %d/%d",
-            min(you.hp, note_maxhp), note_maxhp,
-            min(you.magic_points, note_maxmp), note_maxmp);
+if (you.species == SP_DJINNI)
+    {
+        // Djinn don't HP/MP
+        sprintf(buf, "EP: %d/%d",
+                min(you.hp, note_maxhp + note_maxmp),
+                note_maxhp + note_maxmp);
+    }
+    else
+    {
+        sprintf(buf, "HP: %d/%d MP: %d/%d",
+                min(you.hp, note_maxhp), note_maxhp,
+                min(you.magic_points, note_maxmp), note_maxmp);
+    }
     take_note(Note(NOTE_XP_LEVEL_CHANGE, you.experience_level, 0, buf));
 }
 
@@ -2750,6 +2778,10 @@ void calc_hp(bool scale, bool set)
 
     you.hp_max = get_real_hp(true, true);
 
+    if (you.species == SP_DJINNI)
+    {
+        you.hp_max += get_real_mp(true);
+    }
     if (scale)
     {
         int hp = you.hp * 100 + you.hit_points_regeneration;
@@ -3683,6 +3715,11 @@ void dec_hp(int hp_loss, bool fatal, const char *aux)
 
 void calc_mp()
 {
+    if (you.species == SP_DJINNI)
+    {
+        you.magic_points = you.max_magic_points = 0;
+        return calc_hp();
+    }
     you.max_magic_points = get_real_mp(true);
     you.magic_points = min(you.magic_points, you.max_magic_points);
     you.redraw_magic_points = true;
@@ -3707,12 +3744,29 @@ void dec_mp(int mp_loss, bool silent)
 
     if (mp_loss < 1)
         return;
+    if (you.species == SP_DJINNI)
+        return dec_hp(mp_loss * DJ_MP_RATE, false);
 
     you.magic_points -= mp_loss;
 
     you.magic_points = max(0, you.magic_points);
     if (!silent)
         flush_mp();
+}
+
+void drain_mp(int loss)
+{
+    if (you.species == SP_DJINNI)
+    {
+         if (loss <= 0)
+            return;
+         you.duration[DUR_ANTIMAGIC] = min(you.duration[DUR_ANTIMAGIC] + loss * 3,
+                                           1000); // so it goes away after one '5'
+    }
+    else
+    {
+        return dec_mp(loss);
+    }
 }
 
 bool enough_hp(int minimum, bool suppress_msg, bool abort_macros)
@@ -3751,6 +3805,11 @@ bool enough_hp(int minimum, bool suppress_msg, bool abort_macros)
 
 bool enough_mp(int minimum, bool suppress_msg, bool abort_macros)
 {
+  
+    if (you.species == SP_DJINNI)
+    {
+        return enough_hp(minimum * DJ_MP_RATE, suppress_msg);
+    }
     ASSERT(!crawl_state.game_is_arena());
 
     if (you.magic_points < minimum)
@@ -3787,6 +3846,10 @@ void inc_mp(int mp_gain, bool silent)
 {
     ASSERT(!crawl_state.game_is_arena());
 
+    if (you.species == SP_DJINNI)
+    {
+        return inc_hp(mp_gain * DJ_MP_RATE);
+    }
     if (mp_gain < 1 || you.magic_points >= you.max_magic_points)
         return;
 
@@ -5383,6 +5446,7 @@ bool player::airborne() const
         return false;
 
     if (duration[DUR_FLIGHT]
+        || you.species == SP_DJINNI
         || you.props[EMERGENCY_FLIGHT_KEY].get_bool()
         || attribute[ATTR_PERM_FLIGHT]
         || get_form()->enables_flight())
@@ -6319,6 +6383,12 @@ int player::res_water_drowning() const
     {
         rw++;
     }
+    // A fiery lich/hot statue suffers from quenching but not drowning, so
+    // neutral resistance sounds ok.
+    if (species == SP_DJINNI)
+    {
+        rw--;
+    }
 
     return rw;
 }
@@ -6577,13 +6647,15 @@ bool player::cancellable_flight() const
 
 bool player::permanent_flight() const
 {
-    return attribute[ATTR_PERM_FLIGHT];
+    return attribute[ATTR_PERM_FLIGHT]
+        || species == SP_DJINNI;
 }
 
 bool player::racial_permanent_flight() const
 {
     return get_mutation_level(MUT_TENGU_FLIGHT)
-        || get_mutation_level(MUT_BIG_WINGS);
+        || get_mutation_level(MUT_BIG_WINGS)
+        || species == SP_DJINNI;
 }
 
 bool player::tengu_flight() const
@@ -7244,9 +7316,9 @@ bool player::can_bleed(bool allow_tran) const
     // XXX: Lich and statue forms are still caught by the holiness checks below.
     if (allow_tran && !form_can_bleed(form))
         return false;
-
-    if (is_lifeless_undead() || is_nonliving())
-    {   // demonspawn and demigods have a mere drop of taint
+    if (is_lifeless_undead() || is_nonliving() || species == SP_DJINNI)
+    {   // demonspawn and prometheans have a mere drop of taint, djinni
+        // are made of fire
         return false;
     }
 

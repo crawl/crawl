@@ -1331,6 +1331,13 @@ bool physiology_mutation_conflict(mutation_type mutat)
     if (_is_covering(mutat) && _body_covered() >= 3)
         return true;
 
+    // Djinni are made of fire, so their fire resistance cannot be modified
+    if (you.species == SP_DJINNI && (mutat == MUT_HEAT_RESISTANCE ||
+        mutat == MUT_HEAT_VULNERABILITY))
+    {
+        return true;
+    }
+
     // Only Nagas and Draconians can get this one.
     if (you.species != SP_NAGA && !species_is_draconian(you.species)
         && mutat == MUT_STINGER)

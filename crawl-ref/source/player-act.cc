@@ -586,6 +586,11 @@ static string _foot_name_singular(bool *can_plural)
         *can_plural = false;
         return "tail";
     }
+    if (you.species == SP_DJINNI)
+    {
+        *can_plural = false;
+        return "underside";
+    }
 
     return "foot";
 }

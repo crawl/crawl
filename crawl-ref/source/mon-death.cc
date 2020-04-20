@@ -2129,6 +2129,10 @@ item_def* monster_die(monster& mons, killer_type killer,
                         mp_heal = random2(2 + mons.get_experience_level() / 6);
 #endif
                 }
+                if (you.species == SP_DJINNI)
+                {
+                    hp_heal = max(hp_heal, mp_heal * 2), mp_heal = 0;
+                }
 
                 if (hp_heal && you.hp < you.hp_max
                     && !you.duration[DUR_DEATHS_DOOR])

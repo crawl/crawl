@@ -3038,6 +3038,10 @@ bool bolt::harmless_to_player() const
     case BEAM_COLD:
         return is_big_cloud() && you.has_mutation(MUT_FREEZING_CLOUD_IMMUNITY);
 
+    case BEAM_FIRE:
+    case BEAM_STICKY_FLAME:
+        return you.species == SP_DJINNI;
+
     case BEAM_VIRULENCE:
         return player_res_poison(false) >= 3;
 
@@ -3576,11 +3580,21 @@ void bolt::affect_player_enchantment(bool resistible)
 
     case BEAM_DRAIN_MAGIC:
     {
-        int amount = min(you.magic_points, random2avg(ench_power / 8, 3));
+        int amount = 0;
+        //Special casing for Djinni so they don't get infini-drained to death
+        if (you.species != SP_DJINNI)
+        {
+            amount = min(you.magic_points, random2avg(ench_power / 8, 3));
+        }
+        else
+        {
+            amount = (5 + random2avg(ench_power / 8, 3)) * (you.hp_max - you.duration[DUR_ANTIMAGIC] / 3)
+                        / you.hp_max;
+        }
         if (!amount)
             break;
         mprf(MSGCH_WARN, "You feel your power leaking away.");
-        dec_mp(amount);
+        drain_mp(amount);
         if (agent() && (agent()->type == MONS_EYE_OF_DRAINING
             || agent()->type == MONS_GHOST_MOTH))
         {

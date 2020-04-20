@@ -644,6 +644,8 @@ tileidx_t tilep_species_to_base_tile(int sp, int level)
         return TILEP_BASE_FELID;
     case SP_OCTOPODE:
         return TILEP_BASE_OCTOPODE;
+    case SP_DJINNI:
+        return TILEP_BASE_DJINNI;
     case SP_FORMICID:
         return TILEP_BASE_FORMICID;
     case SP_VINE_STALKER:
@@ -743,6 +745,9 @@ void tilep_race_default(int sp, int level, dolls_data *doll)
         case SP_GARGOYLE:
         case SP_VINE_STALKER:
             hair = 0;
+            break;
+        case SP_DJINNI:
+            hair = TILEP_HAIR_DJINN2;
             break;
         case SP_LAVA_ORC:
             // This should respect the player's choice of base tile, if possible.
@@ -1037,6 +1042,13 @@ void tilep_calc_flags(const dolls_data &doll, int flag[])
         flag[TILEP_PART_BOOTS]  = TILEP_FLAG_HIDE;
         flag[TILEP_PART_LEG]    = TILEP_FLAG_HIDE;
         flag[TILEP_PART_SHADOW] = TILEP_FLAG_HIDE;
+    }
+    else if (is_player_tile(doll.parts[TILEP_PART_BASE], TILEP_BASE_DJINNI))
+    {
+        flag[TILEP_PART_BOOTS]  = TILEP_FLAG_HIDE;
+        flag[TILEP_PART_LEG]    = TILEP_FLAG_HIDE;
+        flag[TILEP_PART_SHADOW] = TILEP_FLAG_HIDE;
+        flag[TILEP_PART_BODY]   = TILEP_FLAG_CUT_NAGA; // Do they need their own flag?
     }
     else if (doll.parts[TILEP_PART_BASE] >= TILEP_BASE_DRACONIAN_FIRST
              && doll.parts[TILEP_PART_BASE] <= TILEP_BASE_DRACONIAN_LAST)
