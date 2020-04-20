@@ -2386,6 +2386,8 @@ void describe_feature_wide(const coord_def& pos)
             f.tile = tile_def(TILE_UMBRA, TEX_FEAT);
         else if  (desc.first == "Liquefied ground.")
             f.tile = tile_def(TILE_LIQUEFACTION, TEX_FLOOR);
+        else if (desc.first == "A covering of ice.")
+            f.tile = tile_def(TILE_FLOOR_ICY, TEX_FLOOR);
         else
             f.tile = tile_def(env.tile_bk_cloud(pos) & ~TILE_FLAG_FLYING, TEX_DEFAULT);
 #endif
