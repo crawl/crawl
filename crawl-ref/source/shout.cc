@@ -756,7 +756,7 @@ void yell(const actor* mon)
     {
         mprf(MSGCH_SOUND, "You %s%s!",
              shout_verb.c_str(),
-             you.berserk() ? " wildly" : " for attention");
+             you.berserk() ? " wildly" : (you.species == SP_TWO_HEADED_OGRE? " in stereo" : " for attention"));
     }
 
     noisy(noise_level, you.pos());
