@@ -1421,16 +1421,16 @@ void print_stats()
         // render code. We should find a better place for this.
         you.m_quiver.on_weapon_changed();
         _print_stats_wp(9 + yhack, false);
-        /* display max_y is const????
+        /* display max_y is const???? */
         if (you.species == SP_TWO_HEADED_OGRE) {
             yhack++;
             _print_stats_wp(9 + yhack, true);
-        }*/
+        }
     }
-    /*else {
+    else {
         if (you.species == SP_TWO_HEADED_OGRE) 
             yhack++;
-    }*/
+    }
 
 
 
