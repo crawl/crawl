@@ -2,8 +2,7 @@
 
 * 각종 결정 사항들 투표 함 (일주일 정도 투표하고 결정함)
   1. 추출,증산 아이콘 결정하기(4.7) - 투표 완료
-  2. 구덩이 함정을 어캐 할까? (4.12) - https://forms.gle/BKQReT6b4kEEHE9n9
-
+  2. 구덩이 함정을 어캐 할까? (4.12) -투표 완료 (불합리함만 제거-14표(70%), 현상유지-6표(30%), 아예 삭제-0표(0%)
 
 # Design goals
 
@@ -40,10 +39,19 @@
      * 코딩을 할 줄 몰라도 위에 Issues 메뉴에서 아이디어 제공, 혹은 버그 제보로 참여가능
      
 
-* 빌드 방법
-  * 다음 [링크](https://github.com/kimjoy2002/crawl/blob/master/crawl-ref/INSTALL.txt)를 참조 
-  * 시간되면 해석할 예정...
-  
+# How to Build
+  * 원본영어 판은 [링크](https://github.com/kimjoy2002/crawl/blob/master/crawl-ref/INSTALL.txt)를 참조 
+  * 한글 해석 [링크](https://gall.dcinside.com/board/view/?id=rlike&no=261405)
+    * [링크](https://github.com/kimjoy2002/crawl/issues/18) <- 빌드시 문제 발생하면 참조하기
+
+# Develop Guide
+  * 직업 만들기 [영어원문](https://github.com/kimjoy2002/crawl/blob/master/crawl-ref/docs/develop/background_creation.txt)
+  * 신 만들기 [영어원문](https://github.com/kimjoy2002/crawl/blob/master/crawl-ref/docs/develop/god_creation.txt)
+  * 몬스터만들기 [영어원문](https://github.com/kimjoy2002/crawl/blob/master/crawl-ref/docs/develop/monster_creation.txt)
+  * 변이 만들기 [영어원문](https://github.com/kimjoy2002/crawl/blob/master/crawl-ref/docs/develop/mutation_creation.txt)
+  * 종족 만들기 [영어원문](https://github.com/kimjoy2002/crawl/blob/master/crawl-ref/docs/develop/species_creation.md)
+  * 마법 만들기 [한글원문](https://gall.dcinside.com/board/view/?id=rlike&no=318987)
+
 # ChangeLog
   
   [Link](https://github.com/kimjoy2002/crawl/blob/master/CHANGELOG.md)
