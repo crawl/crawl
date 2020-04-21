@@ -3959,9 +3959,9 @@ colour_t item_def::miscellany_colour() const
 #endif
         case MISC_HORN_OF_GERYON:
             return LIGHTRED;
+#if TAG_MAJOR_VERSION == 34
         case MISC_LAMP_OF_FIRE:
             return YELLOW;
-#if TAG_MAJOR_VERSION == 34
         case MISC_SACK_OF_SPIDERS:
             return WHITE;
         case MISC_BUGGY_LANTERN_OF_SHADOWS:
@@ -4438,6 +4438,7 @@ bool get_item_by_name(item_def *item, const char* specs,
 
     case OBJ_POTIONS:
         item->quantity = 12;
+#if TAG_MAJOR_VERSION == 34
         if (is_blood_potion(*item))
         {
             const char* prompt;
@@ -4449,6 +4450,7 @@ bool get_item_by_name(item_def *item, const char* specs,
                 age = -1;
             init_perishable_stack(*item, age);
         }
+#endif
         break;
 
     case OBJ_FOOD:

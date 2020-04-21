@@ -477,8 +477,8 @@ enum special_missile_type // to separate from weapons in general {dlb}
     SPMSL_PENETRATION,
 #endif
     SPMSL_DISPERSAL,
+    SPMSL_EXPLODING,                   // Only used by Damnation crossbow
 #if TAG_MAJOR_VERSION == 34
-    SPMSL_EXPLODING,
     SPMSL_STEEL,
 #endif
     SPMSL_SILVER,
@@ -489,8 +489,8 @@ enum special_missile_type // to separate from weapons in general {dlb}
     SPMSL_CONFUSION,
     SPMSL_SICKNESS,
 #endif
-    SPMSL_FRENZY,
-    SPMSL_BLINDING,
+    SPMSL_FRENZY,                      // Datura
+    SPMSL_BLINDING,                    // Atropa
     NUM_REAL_SPECIAL_MISSILES,
     NUM_SPECIAL_MISSILES = NUM_REAL_SPECIAL_MISSILES,
 };

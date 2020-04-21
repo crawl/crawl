@@ -1444,8 +1444,12 @@ static void _give_ammo(monster* mon, int level, bool mons_summoned)
 
         case MONS_CHUCK:
             weap_type  = MI_LARGE_ROCK;
+#if TAG_MAJOR_VERSION == 34
             brand = SPMSL_RETURNING;
             qty = 2;
+#else
+            qty = 8;
+#endif
             break;
 
         case MONS_POLYPHEMUS:

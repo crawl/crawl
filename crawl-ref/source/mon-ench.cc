@@ -1964,8 +1964,9 @@ static const char *enchant_names[] =
 #if TAG_MAJOR_VERSION == 34
     "eat_items",
 #endif
-    "aquatic_land", "spore_production",
+    "aquatic_land",
 #if TAG_MAJOR_VERSION == 34
+    "spore_production",
     "slouch",
 #endif
     "swift", "tide",
@@ -2031,8 +2032,9 @@ static const char *enchant_names[] =
     "deflect missiles",
     "negative_vuln", "condensation_shield",
 #endif
-    "resistant", "hexed", "corpse_armour",
+    "resistant", "hexed",
 #if TAG_MAJOR_VERSION == 34
+    "corpse_armour",
     "chanting_fire_storm", "chanting_word_of_entropy",
 #endif
     "aura_of_brilliance", "empowered_spells", "gozag_incite", "pain_bond",
