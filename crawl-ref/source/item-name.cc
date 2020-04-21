@@ -2685,12 +2685,9 @@ bool is_good_item(const item_def &item)
  * Is an item strictly harmful?
  *
  * @param item The item being queried.
- * @param temp Should temporary conditions such as transformations and
- *             vampire hunger levels be taken into account?  Religion (but
- *             not its absence) is considered to be permanent here.
  * @return True if the item is known to have only harmful effects.
  */
-bool is_bad_item(const item_def &item, bool temp)
+bool is_bad_item(const item_def &item)
 {
     if (!item_type_known(item))
         return false;
@@ -2934,7 +2931,7 @@ bool is_useless_item(const item_def &item, bool temp)
             return false;
 
         // A bad item is always useless.
-        if (is_bad_item(item, temp))
+        if (is_bad_item(item))
             return true;
 
         switch (item.sub_type)
@@ -2994,7 +2991,7 @@ bool is_useless_item(const item_def &item, bool temp)
             return false;
 
         // A bad item is always useless.
-        if (is_bad_item(item, temp))
+        if (is_bad_item(item))
             return true;
 
         switch (item.sub_type)
@@ -3031,7 +3028,7 @@ bool is_useless_item(const item_def &item, bool temp)
         if (is_artefact(item))
             return false;
 
-        if (is_bad_item(item, temp))
+        if (is_bad_item(item))
             return true;
 
         switch (item.sub_type)
@@ -3086,7 +3083,7 @@ bool is_useless_item(const item_def &item, bool temp)
             return you_worship(GOD_TROG);
 
         case RING_TELEPORTATION:
-            return !is_bad_item(item, temp);
+            return !is_bad_item(item);
 
         case RING_FLIGHT:
             return you.permanent_flight()
@@ -3247,7 +3244,7 @@ string item_prefix(const item_def &item, bool temp)
         prefixes.push_back("good_item");
     if (is_dangerous_item(item, temp))
         prefixes.push_back("dangerous_item");
-    if (is_bad_item(item, temp))
+    if (is_bad_item(item))
         prefixes.push_back("bad_item");
     if (is_useless_item(item, temp))
         prefixes.push_back("useless_item");
