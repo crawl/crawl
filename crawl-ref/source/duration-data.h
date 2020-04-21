@@ -354,6 +354,13 @@ static const duration_def duration_data[] =
       "You emit darkness.", D_DISPELLABLE | D_EXPIRES,
       {{ "The ambient light returns to normal.", update_vision_range },
          { "The darkness around you begins to abate.", 1 }}, 6},
+    { DUR_WALL_MELTING,
+      BROWN, "Wall",
+      "wall camouflage", "",
+      "You melted into the wall.", D_EXPIRES,
+      {{ "Your camouflage fades away.", []() {
+          end_of_wall_melting();
+      } }}},
     { DUR_SHROUD_OF_GOLUBRIA,
       BLUE, "Shroud",
       "shrouded", "",

@@ -532,7 +532,7 @@ void move_player_to_grid(const coord_def& p, bool stepped)
         (from_above) ? DNGN_FLOOR : grd(old_pos);
 
     // Really must be clear.
-    ASSERT(you.can_pass_through_feat(grd(p)));
+    ASSERT(you.can_pass_through_feat(grd(p)) || is_able_into_wall());
 
     // Better not be an unsubmerged monster either.
     ASSERT(!monster_at(p) || monster_at(p)->submerged()
@@ -4985,6 +4985,13 @@ void enable_emergency_flight()
     you.props[EMERGENCY_FLIGHT_KEY] = true;
 }
 
+void enable_emergency_wall()
+{
+    mprf("You can't survive in this terrain!");
+    you.props[EMERGENCY_WALL_KEY] = true;
+}
+
+
 /**
  * Handle the player's flight ending. Apply emergency flight if needed.
  *
@@ -7229,8 +7236,10 @@ bool player::visible_to(const actor *looker) const
     if (crawl_state.game_is_arena())
         return false;
 
-    const bool invis_to = invisible() && !looker->can_see_invisible()
-                          && !in_water();
+    const bool invis_to = (invisible() && !looker->can_see_invisible()
+        && !in_water()) ||
+        (looker->asleep() && you.duration[DUR_WALL_MELTING]);
+
     if (this == looker)
         return !invis_to;
 

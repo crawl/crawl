@@ -701,7 +701,15 @@ bool fill_status_info(int status, status_info& inf)
             inf.light_text = "-Clouds";
         }
         break;
-
+    case STATUS_WALL_DAMAGE:
+    {
+        if (you.props[EMERGENCY_WALL_KEY].get_bool()) {
+            inf.light_colour = RED;
+            inf.short_text = "stuck in the wall";
+            inf.long_text = "You are stuck in the wall!";
+            inf.light_text = "-WALL";
+        }
+    }
     default:
         if (!found)
         {

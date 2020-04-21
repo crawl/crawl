@@ -842,6 +842,16 @@ static void _decrement_durations()
         _try_to_respawn_ancestor();
     }
 
+
+    if (you.duration[DUR_WALL_MELTING])
+    {
+        if (!cell_is_solid(you.pos()))
+        {
+            you.duration[DUR_WALL_MELTING] = 0;
+        }
+    }
+
+
     const bool sanguine_armour_is_valid = sanguine_armour_valid();
     if (sanguine_armour_is_valid)
         activate_sanguine_armour();
@@ -899,6 +909,47 @@ static void _handle_emergency_flight()
         const int drain = div_rand_round(15 * you.time_taken, BASELINE_DELAY);
         drain_player(drain, true, true);
     }
+}
+
+static void _handle_emergency_wall()
+{
+    ASSERT(you.props[EMERGENCY_WALL_KEY].get_bool());
+
+    if (!cell_is_solid(you.pos()))
+    {
+        mpr("You came out of the wall.");
+        you.props.erase(EMERGENCY_WALL_KEY);
+    }
+    else
+    {
+        const int drain = div_rand_round(15 * you.time_taken, BASELINE_DELAY);
+        drain_player(drain, true, true);
+    }
+}
+
+
+void end_of_wall_melting()
+{
+    std::vector<coord_def> vec;
+    for (adjacent_iterator ai(you.pos()); ai; ++ai)
+    {
+        if (!cell_is_solid(*ai) && !monster_at(*ai)) {
+            vec.push_back(*ai);
+            break;
+        }
+    }
+    if (vec.size() > 0) {
+        you.move_to_pos(vec[random2(vec.size())]);
+    }
+    if (cell_is_solid(you.pos()))
+    {
+        enable_emergency_wall();
+    }
+}
+
+bool is_able_into_wall()
+{
+    return (you.duration[DUR_WALL_MELTING] || you.props[EMERGENCY_WALL_KEY].get_bool());
 }
 
 // cjo: Handles player hp and mp regeneration. If the counter
@@ -1070,6 +1121,9 @@ void player_reacts()
 
     if (you.props[EMERGENCY_FLIGHT_KEY].get_bool())
         _handle_emergency_flight();
+
+    if (you.props[EMERGENCY_WALL_KEY].get_bool())
+        _handle_emergency_wall();
 }
 
 void extract_manticore_spikes(const char* endmsg)

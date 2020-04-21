@@ -50,6 +50,7 @@
 #define SAP_MAGIC_KEY "sap_magic_amount"
 #define TEMP_WATERWALK_KEY "temp_waterwalk"
 #define EMERGENCY_FLIGHT_KEY "emergency_flight"
+#define EMERGENCY_WALL_KEY "emergency_wall"
 #define PARALYSED_BY_KEY "paralysed_by"
 #define PETRIFIED_BY_KEY "petrified_by"
 
@@ -1173,6 +1174,9 @@ void handle_player_drowning(int delay);
 bool is_feat_dangerous(dungeon_feature_type feat, bool permanently = false,
                        bool ignore_flight = false);
 void enable_emergency_flight();
+void enable_emergency_wall();
+void end_of_wall_melting();
+bool is_able_into_wall();
 
 int count_worn_ego(int which_ego);
 bool need_expiration_warning(duration_type dur, dungeon_feature_type feat);

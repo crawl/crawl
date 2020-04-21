@@ -457,6 +457,7 @@ void move_player_action(coord_def move)
     int additional_time_taken = 0; // Extra time independent of movement speed
 
     ASSERT(!in_bounds(you.pos()) || !cell_is_solid(you.pos())
+        || (is_able_into_wall() && feat_is_diggable(grd(you.pos())))
            || you.wizmode_teleported_into_rock);
 
     if (you.attribute[ATTR_HELD])
@@ -590,6 +591,23 @@ void move_player_action(coord_def move)
                 mpr("You retract your mandibles.");
         }
     }
+
+    if (is_able_into_wall()) {
+        if (feat_is_diggable(grd(targ))) {
+            bool success = false;
+            for (adjacent_iterator ai(targ); ai; ++ai)
+            {
+                if (!cell_is_solid(*ai)) {
+                    success = true;
+                    break;
+                }
+            }
+            if (success == true) {
+                targ_pass = true;
+            }
+        }
+    }
+
 
     // You can swap places with a friendly or good neutral monster if
     // you're not confused, or even with hostiles if both of you are inside

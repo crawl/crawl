@@ -28,6 +28,7 @@
 #include "god-conduct.h"
 #include "items.h"
 #include "item-name.h"
+#include "coordit.h"
 
 spret cast_sublimation_of_blood(int pow, bool fail)
 {
@@ -630,6 +631,37 @@ spret cast_darkness(int pow, bool fail)
         mprf(MSGCH_DURATION, "It gets dark.");
     you.increase_duration(DUR_DARKNESS, 15 + random2(1 + pow/3), 100);
     update_vision_range();
+
+    return spret::success;
+}
+
+spret cast_wall_melting(int pow, bool fail)
+{
+    fail_check();
+
+    if (!feat_is_solid(grd(you.pos()))) {
+        std::vector<coord_def> vec;
+        for (adjacent_iterator ai(you.pos()); ai; ++ai)
+        {
+            if (feat_is_diggable(grd(*ai)) && !monster_at(*ai)) {
+                vec.push_back(*ai);
+                break;
+            }
+        }
+        if (vec.size() > 0) {
+            you.move_to_pos(vec[random2(vec.size())]);
+        }
+        else {
+            mprf("There are no walls around!");
+            return spret::abort;
+        }
+    }
+
+    if (you.duration[DUR_WALL_MELTING])
+        mprf(MSGCH_DURATION, "you are more in harmony with the wall.");
+    else
+        mprf(MSGCH_DURATION, "you are in harmony with the wall.");
+    you.increase_duration(DUR_WALL_MELTING, 10 + random2(1 + pow / 10), 30);
 
     return spret::success;
 }
