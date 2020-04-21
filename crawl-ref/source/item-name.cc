@@ -2695,20 +2695,11 @@ bool is_good_item(const item_def &item)
             return false;
         switch (item.sub_type)
         {
-#if TAG_MAJOR_VERSION == 34
-        case POT_CURE_MUTATION:
-        case POT_GAIN_STRENGTH:
-        case POT_GAIN_INTELLIGENCE:
-        case POT_GAIN_DEXTERITY:
-#endif
         case POT_EXPERIENCE:
             return true;
-#if TAG_MAJOR_VERSION == 34
-        case POT_BENEFICIAL_MUTATION:
-            return you.species != SP_GHOUL; // Mummies are already handled
-#endif
         default:
             return false;
+        CASE_REMOVED_POTIONS(item.sub_type)
         }
     default:
         return false;
@@ -3049,14 +3040,6 @@ bool is_useless_item(const item_def &item, bool temp)
             return !you.can_go_berserk(true, true, true, nullptr, temp);
         case POT_HASTE:
             return you.stasis();
-
-#if TAG_MAJOR_VERSION == 34
-        case POT_CURE_MUTATION:
-        case POT_BENEFICIAL_MUTATION:
-        case POT_GAIN_STRENGTH:
-        case POT_GAIN_INTELLIGENCE:
-        case POT_GAIN_DEXTERITY:
-#endif
         case POT_MUTATION:
             return !you.can_safely_mutate(temp);
 
@@ -3068,27 +3051,11 @@ bool is_useless_item(const item_def &item, bool temp)
         case POT_FLIGHT:
             return you.permanent_flight()
                    || you.racial_permanent_flight();
-
-#if TAG_MAJOR_VERSION == 34
-        case POT_PORRIDGE:
-            return you.species == SP_VAMPIRE
-                    || you.get_mutation_level(MUT_CARNIVOROUS) > 0;
-        case POT_BLOOD_COAGULATED:
-        case POT_BLOOD:
-            return you.species != SP_VAMPIRE;
-        case POT_DECAY:
-            return you.res_rotting(temp) > 0;
-        case POT_STRONG_POISON:
-        case POT_POISON:
-            // If you're poison resistant, poison is only useless.
-            return !is_bad_item(item, temp);
-        case POT_SLOWING:
-            return you.species == SP_FORMICID;
-#endif
         case POT_HEAL_WOUNDS:
             return !you.can_potion_heal();
         case POT_INVISIBILITY:
             return _invisibility_is_useless(temp);
+        CASE_REMOVED_POTIONS(item.sub_type)
         }
 
         return false;
