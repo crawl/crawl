@@ -3353,12 +3353,14 @@ string item_prefix(const item_def &item, bool temp)
         break;
 
     case OBJ_POTIONS:
+#if TAG_MAJOR_VERSION == 34
         if (is_good_god(you.religion) && item_type_known(item)
             && is_blood_potion(item))
         {
             prefixes.push_back("evil_eating");
             prefixes.push_back("forbidden");
         }
+#endif
         if (is_preferred_food(item))
         {
             prefixes.push_back("preferred");

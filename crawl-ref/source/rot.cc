@@ -55,7 +55,11 @@ static bool _is_chunk(const item_def &item)
  */
 bool is_perishable_stack(const item_def &item)
 {
-    return _is_chunk(item) || is_blood_potion(item);
+    return _is_chunk(item)
+#if TAG_MAJOR_VERSION == 34
+        || is_blood_potion(item)
+#endif
+        ;
 }
 
 /**
@@ -88,8 +92,10 @@ static void _update_freshness(item_def &stack)
  */
 static int _get_initial_stack_longevity(const item_def &stack)
 {
+#if TAG_MAJOR_VERSION == 34
     if (is_blood_potion(stack))
         return FRESHEST_BLOOD;
+#endif
 
     ASSERT(_is_chunk(stack));
     if (stack.freshness) // legacy chunk
@@ -110,7 +116,13 @@ static int _get_initial_stack_longevity(const item_def &stack)
  */
 void init_perishable_stack(item_def &stack, int age)
 {
-    ASSERT(is_blood_potion(stack) || _is_chunk(stack));
+#if TAG_MAJOR_VERSION == 34
+    ASSERT(
+        is_blood_potion(stack) ||
+        _is_chunk(stack));
+#else
+    ASSERT(_is_chunk(stack));
+#endif
 
     CrawlHashTable &props = stack.props;
     const bool never_decay = props.exists(CORPSE_NEVER_DECAYS)
@@ -374,8 +386,10 @@ void rot_inventory_food(int /*time_delta*/)
 
         if (is_chunk)
             num_chunks += item.quantity;
+#if TAG_MAJOR_VERSION == 34
         else
             ASSERT(is_blood_potion(item));
+#endif
 
         const int rotted_away_count = _rot_stack(item, i, true);
         if (is_chunk)

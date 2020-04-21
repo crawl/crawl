@@ -1310,8 +1310,8 @@ dungeon_feature_type trap_feature(trap_type type)
 #if TAG_MAJOR_VERSION == 34
     case TRAP_NEEDLE:
     case TRAP_GAS:
-#endif
         return DNGN_TRAP_MECHANICAL;
+#endif
 
     default:
         die("placeholder trap type %d used", type);

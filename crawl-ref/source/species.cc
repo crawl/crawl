@@ -516,9 +516,11 @@ species_type random_draconian_colour()
   species_type species;
   do {
       species =
-          static_cast<species_type>(random_range(SP_FIRST_NONBASE_DRACONIAN,
-                                                 SP_LAST_NONBASE_DRACONIAN));
-  } while (species_is_removed(species));
+          static_cast<species_type>(random_range(0,
+                                                 NUM_SPECIES - 1));
+  } while (!species_is_draconian(species)
+           || species_is_removed(species)
+           || species == SP_BASE_DRACONIAN);
   return species;
 }
 

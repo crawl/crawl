@@ -159,8 +159,10 @@ bool is_evil_item(const item_def& item, bool calc_unid)
 
     switch (item.base_type)
     {
+#if TAG_MAJOR_VERSION == 34
     case OBJ_POTIONS:
         return is_blood_potion(item);
+#endif
     case OBJ_SCROLLS:
         return item.sub_type == SCR_TORMENT;
     case OBJ_STAVES:

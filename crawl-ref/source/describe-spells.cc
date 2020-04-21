@@ -656,8 +656,12 @@ static void _write_book(const spellbook_contents &book,
                         make_stringf("%d%%", hex_chance(spell, hd)));
         }
 
+#if TAG_MAJOR_VERSION == 34
         string schools = (source_item && source_item->base_type == OBJ_RODS) ?
                 "Evocations" : _spell_schools(spell);
+#else
+        string schools = _spell_schools(spell);
+#endif
         tiles.json_write_string("schools", schools);
         tiles.json_write_int("level", spell_difficulty(spell));
         tiles.json_close_object();

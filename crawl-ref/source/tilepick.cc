@@ -1304,7 +1304,9 @@ static tileidx_t _mon_to_zombie_tile(const monster_info &mon)
         { MONS_CRAB,                    TILEP_MONS_ZOMBIE_CRAB },
         { MONS_SNAPPING_TURTLE,         TILEP_MONS_ZOMBIE_TURTLE },
         { MONS_WORM,                    TILEP_MONS_ZOMBIE_WORM },
+#if TAG_MAJOR_VERSION == 34
         { MONS_BEETLE,                  TILEP_MONS_ZOMBIE_BEETLE },
+#endif
         { MONS_GIANT_COCKROACH,         TILEP_MONS_ZOMBIE_ROACH },
         { MONS_SCORPION,                TILEP_MONS_ZOMBIE_SCORPION },
         { MONS_KRAKEN,                  TILEP_MONS_ZOMBIE_KRAKEN },
@@ -2238,7 +2240,9 @@ static tileidx_t _tileidx_missile_base(const item_def &item)
         {
         default:             return TILE_MI_ARROW + 1;
         case 0:              return TILE_MI_ARROW;
+#if TAG_MAJOR_VERSION == 34
         case SPMSL_STEEL:    return TILE_MI_ARROW_STEEL;
+#endif
         case SPMSL_SILVER:   return TILE_MI_ARROW_SILVER;
         }
 
@@ -2247,7 +2251,9 @@ static tileidx_t _tileidx_missile_base(const item_def &item)
         {
         default:             return TILE_MI_BOLT + 1;
         case 0:              return TILE_MI_BOLT;
+#if TAG_MAJOR_VERSION == 34
         case SPMSL_STEEL:    return TILE_MI_BOLT_STEEL;
+#endif
         case SPMSL_SILVER:   return TILE_MI_BOLT_SILVER;
         }
 
@@ -2256,7 +2262,9 @@ static tileidx_t _tileidx_missile_base(const item_def &item)
         {
         default:             return TILE_MI_SLING_BULLET + 1;
         case 0:              return TILE_MI_SLING_BULLET;
+#if TAG_MAJOR_VERSION == 34
         case SPMSL_STEEL:    return TILE_MI_SLING_BULLET_STEEL;
+#endif
         case SPMSL_SILVER:   return TILE_MI_SLING_BULLET_SILVER;
         }
 
@@ -2265,7 +2273,9 @@ static tileidx_t _tileidx_missile_base(const item_def &item)
         {
         default:             return TILE_MI_JAVELIN + 1;
         case 0:              return TILE_MI_JAVELIN;
+#if TAG_MAJOR_VERSION == 34
         case SPMSL_STEEL:    return TILE_MI_JAVELIN_STEEL;
+#endif
         case SPMSL_SILVER:   return TILE_MI_JAVELIN_SILVER;
         }
     }
@@ -2835,9 +2845,11 @@ tileidx_t tileidx_item_throw(const item_def &item, int dx, int dy)
                 default:
                     ch = TILE_MI_SLING_BULLET0;
                     break;
+#if TAG_MAJOR_VERSION == 34
                 case SPMSL_STEEL:
                     ch = TILE_MI_SLING_BULLET_STEEL0;
                     break;
+#endif
                 case SPMSL_SILVER:
                     ch = TILE_MI_SLING_BULLET_SILVER0;
                     break;
@@ -3952,12 +3964,16 @@ tileidx_t tileidx_known_brand(const item_def &item)
             return TILE_BRAND_POISONED;
         case SPMSL_CURARE:
             return TILE_BRAND_CURARE;
+#if TAG_MAJOR_VERSION == 34
         case SPMSL_RETURNING:
             return TILE_BRAND_RETURNING;
+#endif
         case SPMSL_CHAOS:
             return TILE_BRAND_CHAOS;
+#if TAG_MAJOR_VERSION == 34
         case SPMSL_PENETRATION:
             return TILE_BRAND_PENETRATION;
+#endif
         case SPMSL_DISPERSAL:
             return TILE_BRAND_DISPERSAL;
         case SPMSL_EXPLODING:
