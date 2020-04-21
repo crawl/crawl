@@ -380,6 +380,14 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_POISON_GLAND,
     SPELL_ERINGYAS_ROOTSPIKE,
     SPELL_OLGREBS_LAST_MERCY,
+},
+    
+{   // Book of Stalking
+    SPELL_FULSOME_DISTILLATION,
+    SPELL_EVAPORATE,
+    SPELL_PASSWALL,
+    SPELL_PETRIFY,
+    SPELL_WALL_MELTING
 }
 };
 

@@ -179,6 +179,7 @@ int book_rarity(book_type which_book)
     case BOOK_YOUNG_POISONERS:
     case BOOK_BATTLE:
     case BOOK_DEBILITATION:
+    case BOOK_STALKING:
         return 5;
 
     case BOOK_CLOUDS:

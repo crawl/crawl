@@ -184,6 +184,16 @@ static const map<job_type, job_def> job_data =
       { SK_DODGING, 2 }, { SK_STEALTH, 2 }, },
 } },
 
+{ JOB_STALKER, {
+    "St", "Stalker",
+    2, 4, 6,
+    { SP_SPRIGGAN, SP_VAMPIRE, SP_MERFOLK, SP_HUMAN, },
+    { "dagger plus:2", "robe", "cloak", "book of stalking", "potion of degeneration q:2" },
+    WCHOICE_NONE,
+    {{ SK_FIGHTING, 1 }, { SK_DODGING, 2 }, { SK_SPELLCASTING, 2 },
+     { SK_TRANSMUTATIONS, 3 }, { SK_STEALTH, 3 }, },
+} },
+
 { JOB_MONK, {
     "Mo", "Monk",
     3, 2, 7,
@@ -319,13 +329,5 @@ static const map<job_type, job_def> job_data =
     { },
 } },
 
-{ JOB_STALKER, {
-    "St", "Stalker",
-    0, 0, 0,
-    { },
-    { },
-    WCHOICE_NONE,
-    { },
-} },
 #endif
 };

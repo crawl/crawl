@@ -59,6 +59,7 @@ recommended_jobs:
   - JOB_NECROMANCER
   - JOB_EARTH_ELEMENTALIST
   - JOB_ICE_ELEMENTALIST
+  - JOB_STALKER
 recommended_weapons:
   - SK_SHORT_BLADES
   - SK_AXES

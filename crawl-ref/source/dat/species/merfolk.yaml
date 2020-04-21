@@ -56,6 +56,7 @@ recommended_jobs:
   - JOB_SUMMONER
   - JOB_ICE_ELEMENTALIST
   - JOB_VENOM_MAGE
+  - JOB_STALKER
 recommended_weapons:
   - SK_POLEARMS
   - SK_LONG_BLADES

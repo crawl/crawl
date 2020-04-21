@@ -25,8 +25,8 @@ enum job_type
     JOB_TRANSMUTER,
 #if TAG_MAJOR_VERSION == 34
     JOB_HEALER,
-    JOB_STALKER,
 #endif
+    JOB_STALKER,
     JOB_MONK,
     JOB_WARPER,
     JOB_WANDERER,
