@@ -791,17 +791,11 @@ bool is_worthless_consumable(const item_def &item)
         switch (item.sub_type)
         {
         // Blood potions are worthless because they are easy to make.
-#if TAG_MAJOR_VERSION == 34
-        case POT_BLOOD:
-        case POT_BLOOD_COAGULATED:
-        case POT_SLOWING:
-        case POT_DECAY:
-        case POT_POISON:
-#endif
         case POT_DEGENERATION:
             return true;
         default:
             return false;
+        CASE_REMOVED_POTIONS(item.sub_type)
         }
     case OBJ_SCROLLS:
         switch (item.sub_type)

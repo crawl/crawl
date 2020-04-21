@@ -2241,16 +2241,6 @@ bool is_real_food(food_type food)
 {
     return food < NUM_FOODS && Food_index[food] < Food_index[FOOD_UNUSED];
 }
-
-bool is_blood_potion(const item_def &item)
-{
-    if (item.base_type != OBJ_POTIONS)
-        return false;
-
-    return item.sub_type == POT_BLOOD
-           || item.sub_type == POT_BLOOD_COAGULATED
-            ;
-}
 #endif
 
 bool food_is_meaty(int food_type)

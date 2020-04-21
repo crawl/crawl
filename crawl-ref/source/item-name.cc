@@ -656,45 +656,20 @@ const char* potion_type_name(int potiontype)
     case POT_MIGHT:             return "might";
     case POT_STABBING:          return "stabbing";
     case POT_BRILLIANCE:        return "brilliance";
-#if TAG_MAJOR_VERSION == 34
-    case POT_GAIN_STRENGTH:     return "gain strength";
-    case POT_GAIN_DEXTERITY:    return "gain dexterity";
-    case POT_GAIN_INTELLIGENCE: return "gain intelligence";
-    case POT_STRONG_POISON:     return "strong poison";
-    case POT_PORRIDGE:          return "porridge";
-    case POT_SLOWING:           return "slowing";
-#endif
     case POT_FLIGHT:            return "flight";
-#if TAG_MAJOR_VERSION == 34
-    case POT_POISON:            return "poison";
-#endif
     case POT_CANCELLATION:      return "cancellation";
     case POT_AMBROSIA:          return "ambrosia";
     case POT_INVISIBILITY:      return "invisibility";
     case POT_DEGENERATION:      return "degeneration";
-#if TAG_MAJOR_VERSION == 34
-    case POT_DECAY:             return "decay";
-#endif
     case POT_EXPERIENCE:        return "experience";
     case POT_MAGIC:             return "magic";
-#if TAG_MAJOR_VERSION == 34
-    case POT_RESTORE_ABILITIES: return "restore abilities";
-#endif
     case POT_BERSERK_RAGE:      return "berserk rage";
-#if TAG_MAJOR_VERSION == 34
-    case POT_CURE_MUTATION:     return "cure mutation";
-#endif
     case POT_MUTATION:          return "mutation";
-#if TAG_MAJOR_VERSION == 34
-    case POT_BLOOD:             return "blood";
-    case POT_BLOOD_COAGULATED:  return "coagulated blood";
-#endif
     case POT_RESISTANCE:        return "resistance";
     case POT_LIGNIFY:           return "lignification";
-#if TAG_MAJOR_VERSION == 34
-    case POT_BENEFICIAL_MUTATION: return "beneficial mutation";
-#endif
-    default:                    return "bugginess";
+
+    default:
+    CASE_REMOVED_POTIONS(potiontype);
     }
 }
 
@@ -2745,23 +2720,11 @@ bool is_bad_item(const item_def &item, bool temp)
 
         switch (item.sub_type)
         {
-#if TAG_MAJOR_VERSION == 34
-        case POT_SLOWING:
-            return !you.stasis();
-#endif
         case POT_DEGENERATION:
             return true;
-#if TAG_MAJOR_VERSION == 34
-        case POT_DECAY:
-            return you.res_rotting(temp) <= 0;
-        case POT_STRONG_POISON:
-        case POT_POISON:
-            // Poison is not that bad if you're poison resistant.
-            return player_res_poison(false) <= 0
-                   || !temp && you.species == SP_VAMPIRE;
-#endif
         default:
             return false;
+        CASE_REMOVED_POTIONS(item.sub_type);
         }
     case OBJ_JEWELLERY:
         // Potentially useful. TODO: check the properties.

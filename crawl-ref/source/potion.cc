@@ -214,64 +214,6 @@ public:
     }
 };
 
-#if TAG_MAJOR_VERSION == 34
-/**
- * Return a message for the player drinking blood when a non-vampire.
- */
-static string _blood_flavour_message()
-{
-    if (you.get_mutation_level(MUT_HERBIVOROUS) == 0 && player_likes_chunks())
-        return "This tastes like blood.";
-    return "Yuck - this tastes like blood.";
-}
-
-class PotionBlood : public PotionEffect
-{
-private:
-    PotionBlood() : PotionEffect(POT_BLOOD) { }
-    DISALLOW_COPY_AND_ASSIGN(PotionBlood);
-public:
-    static const PotionBlood &instance()
-    {
-        static PotionBlood inst; return inst;
-    }
-
-    bool effect(bool=true, int pow = 40, bool=true) const override
-    {
-        if (you.species == SP_VAMPIRE)
-        {
-            mpr("Yummy - fresh blood!");
-            lessen_hunger(pow, true);
-        }
-        else
-            mpr(_blood_flavour_message());
-            // no actual effect, just 'flavour' ha ha ha
-        return true;
-    }
-
-    bool can_quaff(string *reason = nullptr) const override
-    {
-        if (you.hunger_state == HS_ENGORGED)
-        {
-            if (reason)
-                *reason = "You are much too full right now.";
-            return false;
-        }
-        return true;
-    }
-
-    bool quaff(bool was_known) const override
-    {
-        if (was_known && !check_known_quaff())
-            return false;
-
-        effect(was_known, 1000);
-        return true;
-    }
-};
-#endif
-
-
 class PotionHaste : public PotionEffect
 {
 private:
@@ -407,35 +349,6 @@ public:
         return you.airborne();
     }
 };
-
-#if TAG_MAJOR_VERSION == 34
-class PotionPoison : public PotionEffect
-{
-private:
-    PotionPoison() : PotionEffect(POT_POISON) { }
-    DISALLOW_COPY_AND_ASSIGN(PotionPoison);
-public:
-    static const PotionPoison &instance()
-    {
-        static PotionPoison inst; return inst;
-    }
-
-    bool effect(bool=true, int=40, bool=true) const override
-    {
-        mprf(MSGCH_WARN, "That liquid tasted very nasty...");
-        return poison_player(10 + random2avg(15, 2), "", "a potion of poison");
-    }
-
-    bool quaff(bool was_known) const override
-    {
-        if (player_res_poison() >= 1)
-            mpr("You feel slightly nauseous.");
-        else if (effect(was_known))
-            xom_is_stimulated(100 / _xom_factor(was_known));
-        return true;
-    }
-};
-#endif
 
 class PotionCancellation : public PotionEffect
 {

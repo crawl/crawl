@@ -697,14 +697,6 @@ bool is_preferred_food(const item_def &food)
     if (you.species == SP_GHOUL)
         return food.is_type(OBJ_FOOD, FOOD_CHUNK);
 
-#if TAG_MAJOR_VERSION == 34
-    if (food.is_type(OBJ_POTIONS, POT_PORRIDGE)
-        && item_type_known(food))
-    {
-        return you.get_mutation_level(MUT_CARNIVOROUS) == 0;
-    }
-#endif
-
     return false;
 }
 
