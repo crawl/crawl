@@ -32,10 +32,6 @@ static void _compare_stack_quantity(item_def &stack);
 
 static void _print_chunk_messages(int num_chunks, int num_chunks_gone);
 
-static void _potion_stack_changed_message(string item_name, int num_changed,
-                                          int remainder);
-
-
 /** * Checks if a given item is a stack of chunks.
  *
  * @param item  The stack to check.
@@ -55,11 +51,7 @@ static bool _is_chunk(const item_def &item)
  */
 bool is_perishable_stack(const item_def &item)
 {
-    return _is_chunk(item)
-#if TAG_MAJOR_VERSION == 34
-        || is_blood_potion(item)
-#endif
-        ;
+    return _is_chunk(item);
 }
 
 /**
@@ -92,11 +84,6 @@ static void _update_freshness(item_def &stack)
  */
 static int _get_initial_stack_longevity(const item_def &stack)
 {
-#if TAG_MAJOR_VERSION == 34
-    if (is_blood_potion(stack))
-        return FRESHEST_BLOOD;
-#endif
-
     ASSERT(_is_chunk(stack));
     if (stack.freshness) // legacy chunk
         return stack.freshness * ROT_TIME_FACTOR;
@@ -116,13 +103,7 @@ static int _get_initial_stack_longevity(const item_def &stack)
  */
 void init_perishable_stack(item_def &stack, int age)
 {
-#if TAG_MAJOR_VERSION == 34
-    ASSERT(
-        is_blood_potion(stack) ||
-        _is_chunk(stack));
-#else
     ASSERT(_is_chunk(stack));
-#endif
 
     CrawlHashTable &props = stack.props;
     const bool never_decay = props.exists(CORPSE_NEVER_DECAYS)
@@ -380,25 +361,14 @@ void rot_inventory_food(int /*time_delta*/)
         }
 #endif
 
-        const int initial_quantity = item.quantity;
         const string item_name = item.name(DESC_PLAIN, false);
         const bool is_chunk = _is_chunk(item);
 
-        if (is_chunk)
-            num_chunks += item.quantity;
-#if TAG_MAJOR_VERSION == 34
-        else
-            ASSERT(is_blood_potion(item));
-#endif
+        ASSERT(is_chunk);
+        num_chunks += item.quantity;
 
         const int rotted_away_count = _rot_stack(item, i, true);
-        if (is_chunk)
-            num_chunks_gone += rotted_away_count;
-        else if (rotted_away_count)
-        {
-            _potion_stack_changed_message(item_name, rotted_away_count,
-                                          initial_quantity);
-        }
+        num_chunks_gone += rotted_away_count;
     }
 
     _print_chunk_messages(num_chunks, num_chunks_gone);
@@ -413,18 +383,6 @@ static void _print_chunk_messages(int num_chunks, int num_chunks_gone)
              "%s of the chunks of flesh in your inventory have rotted away.",
              num_chunks_gone == num_chunks ? "All" : "Some");
     }
-}
-
-// Prints messages for blood potions coagulating or rotting in inventory.
-static void _potion_stack_changed_message(string item_name, int num_changed,
-                                          int initial_quantity)
-{
-    ASSERT(num_changed > 0);
-
-    mprf(MSGCH_ROTTEN_MEAT, "%s %s rot%s away.",
-         get_desc_quantity(num_changed, initial_quantity).c_str(),
-         item_name.c_str(),
-         num_changed == 1 ? "s" : "");
 }
 
 // Removes the oldest timer of a stack of blood potions.

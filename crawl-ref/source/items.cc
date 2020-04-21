@@ -4438,19 +4438,6 @@ bool get_item_by_name(item_def *item, const char* specs,
 
     case OBJ_POTIONS:
         item->quantity = 12;
-#if TAG_MAJOR_VERSION == 34
-        if (is_blood_potion(*item))
-        {
-            const char* prompt;
-            prompt = "# turns away from rotting? "
-                     "[ENTER for fully fresh] ";
-            int age = prompt_for_int(prompt, false);
-
-            if (age <= 0)
-                age = -1;
-            init_perishable_stack(*item, age);
-        }
-#endif
         break;
 
     case OBJ_FOOD:
