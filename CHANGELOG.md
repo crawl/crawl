@@ -33,6 +33,9 @@
 - 가속 마법 복구
   - rollback Haste
   
+- 라바 오크, 지니 복구
+  - rollback Lava orc, Djinni
+  
 - 레펠 미사일 복구. 이제 경갑을 입어야 사용할 수 있음
   - Added and rework repel missle. now, need to wear light armor to cast RMsl
   
@@ -65,6 +68,9 @@
 
 - 드라코 전원 14레벨에 영구 비행 변이를 얻도록 변경
   - All dracos will gain big wing mutation at xl 14
+
+- 저주받은 해골 타일 변경 (kormed)
+  - A new curse skull tile (kormed)
 
 ### Removed
 
