@@ -58,4 +58,6 @@ recommended_jobs:
   - JOB_HUNTER
   - JOB_BERSERKER
   - JOB_ABYSSAL_KNIGHT
+# start TAG_MAJOR_VERSION == 34
 create_enum: false
+# end TAG_MAJOR_VERSION

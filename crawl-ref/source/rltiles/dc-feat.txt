@@ -227,8 +227,9 @@ gravestone_writing1
 gravestone_writing2
 gravestone_ornate DNGN_GRAVESTONE_ORNATE
 
-# Remove this entry when TAG_MAJOR_VERSION == 34 is false.
+# start TAG_MAJOR_VERSION == 34
 teleporter_ice_cave DNGN_TELEPORTER_ICE_CAVE
+# end TAG_MAJOR_VERSION
 
 ## golden statues for the holy Pan level
 golden_statue_1 DNGN_GOLDEN_STATUE

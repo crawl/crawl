@@ -26,10 +26,11 @@ function abyss_entry(e, glyph)
   e.depth_chance("Depths:1-3", 3333)
   e.depth_chance("Depths:4",   10000)
   e.depth_chance("Depths:5-",  3333)
--- D:21-27 entries for save compat, remove when TAG_MAJOR_VERSION > 34
+-- start TAG_MAJOR_VERSION == 34
   e.depth_chance("D:21-24", 3333)
   e.depth_chance("D:25",    10000)
   e.depth_chance("D:26-",   3333)
+-- end TAG_MAJOR_VERSION
   e.kfeat(glyph .. ' = enter_abyss')
 end
 }}

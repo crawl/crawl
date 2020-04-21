@@ -560,11 +560,12 @@ sniper SNIPER
 crossbow_fire FIERY_DEVIL
 zephyr ZEPHYR
 sceptre_of_torment SCEPTRE_OF_TORMENT
-## Remove these unrand entries when TAG_MAJOR_VERSION > 34
+# start TAG_MAJOR_VERSION == 34
 botono BOTONO
 chilly_death CHILLY_DEATH
 crystal_spear CRYSTAL_SPEAR
 flaming_death FLAMING_DEATH
+# end TAG_MAJOR_VERSION
 
 %sdir player/hand1
 # blades
@@ -711,8 +712,8 @@ staff_ring_blue STAFF_RING_BLUE
 staff_mummy STAFF_MUMMY
 staff_fork STAFF_FORK
 
+# start TAG_MAJOR_VERSION == 34
 ## rods
-# Remove when TAG_MAJOR_VERSION > 34
 # These 10 rods correspond to the same order as item/rod/
 rod_ruby ROD_FIRST
 rod_brown
@@ -724,6 +725,7 @@ rod_moon
 rod_magenta
 rod_forked
 rod_aries
+# end TAG_MAJOR_VERSION
 
 ## axes
 axe_small AXE_SMALL

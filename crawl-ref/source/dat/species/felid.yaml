@@ -76,5 +76,8 @@ recommended_jobs:
   - JOB_VENOM_MAGE
 recommended_weapons:
   - SK_UNARMED_COMBAT
+# start TAG_MAJOR_VERSION == 34
 create_enum: false
+# end TAG_MAJOR_VERSION
+
 altar_action: sit before

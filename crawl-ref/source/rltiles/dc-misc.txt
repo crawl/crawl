@@ -165,8 +165,9 @@ cloud_grey_smoke CLOUD_MIST
 # ink spurts
 dngn/water/ink_full CLOUD_INK
 
-# TAG_MAJOR_VERSION == 34
+# start TAG_MAJOR_VERSION == 34
 cloud_gloom CLOUD_GLOOM
+# end TAG_MAJOR_VERSION
 
 cloud_chaos1 CLOUD_CHAOS
 cloud_chaos2

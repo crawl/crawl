@@ -65,4 +65,6 @@ recommended_jobs:
 recommended_weapons:
   - SK_MACES_FLAILS
   - SK_UNARMED_COMBAT
+# start TAG_MAJOR_VERSION == 34
 create_enum: false
+# end TAG_MAJOR_VERSION

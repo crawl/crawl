@@ -40,8 +40,6 @@ function tomb_guardian_set(e, include_nothing)
   if dgn.persist.tomb_guardian_sets == nil then
     dgn.persist.tomb_guardian_sets = { 0, 0, 0, 0, 0, 0 }
   end
-  -- HACK: for save compat, double up the monster sets
-  -- Remove when TAG_MAJOR_VERSION > 34!
   local sets =
     {
       "ushabti w:119 / guardian mummy w:79 / mummy w:28 / " ..
@@ -50,12 +48,15 @@ function tomb_guardian_set(e, include_nothing)
           "skeletal warrior w:8 / ancient champion w:8 / bennu w:8",
       "guardian mummy w:98 / mummy w:18 / skeletal warrior w:38  / " ..
           "ancient champion w:28 / bennu w:28",
+-- start TAG_MAJOR_VERSION == 34
+      -- HACK: for save compat, double up the monster sets
       "ushabti w:119 / guardian mummy w:79 / mummy w:28 / " ..
           "skeletal warrior w:8 / ancient champion w:8 / bennu w:8",
       "guardian mummy w:119 / death scarab band w:79 / mummy w:28 / " ..
           "skeletal warrior w:8 / ancient champion w:8 / bennu w:8",
       "guardian mummy w:98 / mummy w:18 / skeletal warrior w:38  / " ..
           "ancient champion w:28 / bennu w:28",
+-- end TAG_MAJOR_VERSION
     }
   local nothing = " / nothing w:248"
   local which_set = 0
@@ -1235,7 +1236,7 @@ cccccccc+cccc................cccc+ccccccc
              ................
 ENDMAP
 
-# Remove all below when TAG_MAJOR > 35
+# start TAG_MAJOR_VERSION == 34
 
 ##############################################################################
 # <<5>> Tomb save compat vaults.
@@ -1428,3 +1429,5 @@ ccccccc............................cccccc
 cccccccc+ccc..................ccc+ccccccc
              ................
 ENDMAP
+
+# end TAG_MAJOR_VERSION

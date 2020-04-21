@@ -60,4 +60,6 @@ recommended_weapons:
   - SK_SHORT_BLADES
   - SK_STAVES
   - SK_BOWS
+# start TAG_MAJOR_VERSION == 34
 create_enum: false
+# end TAG_MAJOR_VERSION

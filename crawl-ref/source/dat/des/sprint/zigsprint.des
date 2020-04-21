@@ -32,7 +32,7 @@
 ###############################################################################
 
 {{
--- Remove this code when TAG_MAJOR > 34
+-- start TAG_MAJOR_VERSION == 34
 function callback.zig_tele(data, triggerable, triggerer, marker, ev)
   local position = dgn.point(marker:pos())
   my_slaves = dgn.find_marker_positions_by_prop("teleport_spot",
@@ -46,6 +46,7 @@ function callback.zig_tele(data, triggerable, triggerer, marker, ev)
 --                       " of Ziggurat Sprint.", "")
   end
 end
+-- end TAG_MAJOR_VERSION
 
 function callback.zig_message(data, triggerable, triggerer, marker, ev)
   if data.arena_number > 1 then
