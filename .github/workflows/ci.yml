@@ -20,7 +20,7 @@ jobs:
         run: util/checkwhite -n
         working-directory: crawl-ref/source
   build_linux:
-    name: Linux ${{ matrix.compiler }} ${{ matrix.build_opts }} ${{ matrix.debug }}
+    name: Linux ${{ matrix.compiler }} ${{ matrix.build_opts }} ${{ matrix.debug }} tag_upgrade=${{ matrix.tag_upgrade }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -35,6 +35,8 @@ jobs:
         debug:
           - ""
           - FULLDEBUG=1
+        tag_upgrade:
+          - false
         exclude:
           # Limit Clang jobs:
           # 1. Only build fulldebug
@@ -45,6 +47,19 @@ jobs:
             build_opts: WEBTILES=1 USE_DGAMELAUNCH=1
           - compiler: clang
             build_opts: WEBTILES=1
+        include:
+          - compiler: gcc
+            build_opts: ""
+            debug: FULLDEBUG=1
+            tag_upgrade: true
+          - compiler: gcc
+            build_opts: WEBTILES=1 USE_DGAMELAUNCH=1
+            debug: FULLDEBUG=1
+            tag_upgrade: true
+          - compiler: gcc
+            build_opts: TILES=1
+            debug: FULLDEBUG=1
+            tag_upgrade: true
     steps:
       - uses: actions/checkout@v2
         with:
@@ -59,10 +74,12 @@ jobs:
         uses: actions/cache@v1
         with:
           path: $HOME/.ccache
-          key: ccache-linux-${{ matrix.compiler }}-${{ matrix.build_opts }}-${{ matrix.debug }}
+          key: ccache-linux-${{ matrix.compiler }}-${{ matrix.tag_upgrade }}-${{ matrix.build_opts }}-${{ matrix.debug }}
           restore-keys: |
-            ccache-linux-${{ matrix.compiler }}-${{ matrix.build_opts }}-${{ matrix.debug }}
-            ccache-linux-${{ matrix.compiler }}-${{ matrix.build_opts }}-
+            ccache-linux-${{ matrix.compiler }}-${{ matrix.tag_upgrade }}-${{ matrix.build_opts }}-${{ matrix.debug }}
+            ccache-linux-${{ matrix.compiler }}-${{ matrix.tag_upgrade }}-${{ matrix.build_opts }}-${{ matrix.debug }}
+            ccache-linux-${{ matrix.compiler }}-${{ matrix.tag_upgrade }}-${{ matrix.build_opts }}-
+            ccache-linux-${{ matrix.compiler }}-${{ matrix.tag_upgrade }}-
             ccache-linux-${{ matrix.compiler }}-
       # ccache uses ~110mb to store the output from a single crawl compile
       # (including submodules) (when compressed)
@@ -79,6 +96,17 @@ jobs:
         run: |
           ccache -s
           ls -l /usr/lib/ccache
+      - name: Run tag upgrade scripts
+        if: matrix.tag_upgrade == true
+        run: |
+          if ! grep -q '#define TAG_MAJOR_VERSION 34' tag-version.h ; then
+            echo "::error ::CI job for TAG_MAJOR_VERSION testing needs to be updated for new major tag"
+            exit 1
+          fi
+          sed -i'' -e 's/^#define TAG_MAJOR_VERSION 34$/#define TAG_MAJOR_VERSION 35/' tag-version.h
+          util/tag-major-upgrade -t 35
+          util/tag-35-upgrade.py
+        working-directory: crawl-ref/source
       - run: make -j$(nproc) ${{ matrix.build_opts }} ${{ matrix.debug }}
         working-directory: crawl-ref/source
       - name: Print ccache stats
