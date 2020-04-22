@@ -173,6 +173,13 @@ static bool _eat_check(bool check_hunger = true, bool silent = false,
         return false;
     }
 
+    if (is_able_into_wall())
+    {
+        if (!silent)
+            mpr("In this state, you cannot do this");
+        return false;
+    }
+
     if (!check_hunger)
         return true;
 

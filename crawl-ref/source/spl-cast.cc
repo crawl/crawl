@@ -621,7 +621,12 @@ bool can_cast_spells(bool quiet)
             mpr("You lack the mental capacity to cast spells.");
         return false;
     }
-
+    if (is_able_into_wall())
+    {
+        if (!quiet)
+            mpr("In this state, you cannot do this");
+        return false;
+    }
     // Randart weapons.
     if (you.no_cast())
     {
@@ -1245,7 +1250,7 @@ static unique_ptr<targeter> _spell_targeter(spell_type spell, int pow,
     case SPELL_DIG:
         return make_unique<targeter_dig>(range);
     case SPELL_OLGREBS_LAST_MERCY:
-        return make_unique<targeter_olgrebs_last_mercy>();        
+        return make_unique<targeter_olgrebs_last_mercy>();
     default:
         break;
     }
@@ -1994,7 +1999,7 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
         return cast_poison_gland(powc, fail);
 
     case SPELL_WALL_MELTING:
-        return cast_wall_melting(powc, fail);
+        return cast_wall_melting(target, powc, fail);
 
     // non-player spells that have a zap, but that shouldn't be called (e.g
     // because they will crash as a player zap).

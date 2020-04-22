@@ -416,7 +416,11 @@ void zap_wand(int slot)
         canned_msg(MSG_TOO_CONFUSED);
         return;
     }
-
+    if (is_able_into_wall())
+    {
+        mpr("In this state, you cannot do this");
+        return;
+    }
     if (you.berserk())
     {
         canned_msg(MSG_TOO_BERSERK);
@@ -1784,7 +1788,11 @@ bool evoke_check(int slot, bool quiet)
     const bool reaching = slot != -1 && slot == you.equip[EQ_WEAPON]
                           && !you.melded[EQ_WEAPON]
                           && weapon_reach(*you.weapon()) > REACH_NONE;
-
+    if (is_able_into_wall())
+    {
+        mpr("In this state, you cannot do this");
+        return false;
+    }
     if (you.berserk() && !reaching)
     {
         if (!quiet)

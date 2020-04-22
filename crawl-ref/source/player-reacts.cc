@@ -922,8 +922,7 @@ static void _handle_emergency_wall()
     }
     else
     {
-        const int drain = div_rand_round(15 * you.time_taken, BASELINE_DELAY);
-        drain_player(drain, true, true);
+        you.hurt(nullptr, div_rand_round(you.hp_max * you.time_taken, 10* BASELINE_DELAY), BEAM_MISSILE, KILLED_BY_PETRIFICATION);
     }
 }
 
@@ -935,7 +934,6 @@ void end_of_wall_melting()
     {
         if (!cell_is_solid(*ai) && !monster_at(*ai)) {
             vec.push_back(*ai);
-            break;
         }
     }
     if (vec.size() > 0) {

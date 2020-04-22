@@ -635,7 +635,7 @@ spret cast_darkness(int pow, bool fail)
     return spret::success;
 }
 
-spret cast_wall_melting(int pow, bool fail)
+spret cast_wall_melting(const coord_def&, int pow, bool fail)
 {
     fail_check();
 
@@ -645,7 +645,6 @@ spret cast_wall_melting(int pow, bool fail)
         {
             if (feat_is_diggable(grd(*ai)) && !monster_at(*ai)) {
                 vec.push_back(*ai);
-                break;
             }
         }
         if (vec.size() > 0) {
@@ -661,7 +660,8 @@ spret cast_wall_melting(int pow, bool fail)
         mprf(MSGCH_DURATION, "you are more in harmony with the wall.");
     else
         mprf(MSGCH_DURATION, "you are in harmony with the wall.");
-    you.increase_duration(DUR_WALL_MELTING, 10 + random2(1 + pow / 10), 30);
+    you.increase_duration(DUR_WALL_MELTING, 20 + random2(1 + pow / 5), 100);
+    you.props.erase(EMERGENCY_WALL_KEY);
 
     return spret::success;
 }

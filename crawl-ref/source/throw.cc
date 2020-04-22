@@ -484,6 +484,12 @@ bool fire_warn_if_impossible(bool silent)
             return true;
         }
         // Else shooting is possible.
+    }    
+    if (is_able_into_wall())
+    {
+        if (!silent)
+            mpr("In this state, you cannot do this");
+        return false;
     }
     if (you.berserk())
     {
@@ -559,6 +565,12 @@ bool is_pproj_active()
 // If item passed, it will be put into the quiver.
 void fire_thing(int item)
 {
+    if (is_able_into_wall())
+    {
+        mpr("In this state, you cannot do this");
+        return;
+    }
+
 #ifdef USE_SOUND
     parse_sound(FIRE_PROMPT_SOUND);
 #endif

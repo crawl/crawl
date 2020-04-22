@@ -2650,6 +2650,11 @@ bool drop_item(int item_dropped, int quant_drop)
 
 void drop_last()
 {
+    if (is_able_into_wall())
+    {
+        mpr("In this state, you cannot do this");
+        return;
+    }
     vector<SelItem> items_to_drop;
 
     for (const auto &entry : you.last_pickup)
@@ -2773,6 +2778,11 @@ static void _disable_autopickup_for_starred_items(vector<SelItem> &items)
  */
 void drop()
 {
+    if (is_able_into_wall())
+    {
+        mpr("In this state, you cannot do this");
+        return;
+    }
     if (inv_count() < 1 && you.gold == 0)
     {
         canned_msg(MSG_NOTHING_CARRIED);

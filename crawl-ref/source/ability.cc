@@ -1242,6 +1242,11 @@ void no_ability_msg()
 
 bool activate_ability()
 {
+    if (is_able_into_wall())
+    {
+        mpr("In this state, you cannot do this");
+        return false;
+    }
     vector<talent> talents = your_talents(false);
 
     if (talents.empty())

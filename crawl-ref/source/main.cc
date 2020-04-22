@@ -1577,7 +1577,6 @@ static void _do_remove_armour()
         mpr("You can't remove your fur, sorry.");
         return;
     }
-
     if (!form_can_wear())
     {
         mpr("You can't wear or remove anything in your present form.");

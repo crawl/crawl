@@ -883,6 +883,11 @@ bool can_learn_spell(bool silent)
 
 bool learn_spell()
 {
+    if (is_able_into_wall())
+    {
+        mpr("In this state, you cannot do this");
+        return false;
+    }
     spell_list spells(_get_spell_list());
     if (spells.empty())
         return false;

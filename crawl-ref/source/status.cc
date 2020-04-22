@@ -710,6 +710,7 @@ bool fill_status_info(int status, status_info& inf)
             inf.light_text = "-WALL";
         }
     }
+    break;
     default:
         if (!found)
         {

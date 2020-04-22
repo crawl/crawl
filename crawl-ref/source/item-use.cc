@@ -2691,7 +2691,11 @@ void drink(item_def* potion)
         mpr("You can't drink.");
         return;
     }
-
+    if (is_able_into_wall())
+    {
+        mpr("In this state, you cannot do this");
+        return;
+    }
     if (you.berserk())
     {
         canned_msg(MSG_TOO_BERSERK);
@@ -3281,7 +3285,11 @@ bool player_can_read()
         canned_msg(MSG_TOO_BERSERK);
         return false;
     }
-
+    if (is_able_into_wall())
+    {
+        mpr("In this state, you cannot do this");
+        return false;
+    }
     if (you.confused())
     {
         canned_msg(MSG_TOO_CONFUSED);

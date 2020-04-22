@@ -130,6 +130,11 @@ void butchery(item_def* specific_corpse)
         mprf("Sorry, you're a herbivore.");
         return;
     }
+    if (is_able_into_wall())
+    {
+        mpr("In this state, you cannot do this");
+        return;
+    }
 
     vector<item_def *> edible_corpses;
 
