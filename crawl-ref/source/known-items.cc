@@ -289,15 +289,12 @@ void check_item_knowledge(bool unknown_items)
         object_class_type i = (object_class_type)ii;
         if (!item_type_has_ids(i))
             continue;
-        for (int j = 0; j < get_max_subtype(i); j++)
+        for (const auto j : all_item_subtypes(i))
         {
             if (i == OBJ_JEWELLERY && j >= NUM_RINGS && j < AMU_FIRST_AMULET)
                 continue;
 
             if (i == OBJ_BOOKS && (j > MAX_FIXED_BOOK || !unknown_items))
-                continue;
-
-            if (item_type_removed(i, j))
                 continue;
 
             if (you.type_ids[i][j] != unknown_items) // logical xor

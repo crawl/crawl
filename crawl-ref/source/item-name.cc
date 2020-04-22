@@ -3438,10 +3438,9 @@ void init_item_name_cache()
 
     for (int i = 0; i < NUM_OBJECT_CLASSES; i++)
     {
-        object_class_type base_type = static_cast<object_class_type>(i);
-        const int num_sub_types = get_max_subtype(base_type);
+        const object_class_type base_type = static_cast<object_class_type>(i);
 
-        for (int sub_type = 0; sub_type < num_sub_types; sub_type++)
+        for (const auto sub_type : all_item_subtypes(base_type))
         {
             if (base_type == OBJ_BOOKS)
             {

@@ -8,6 +8,7 @@
 #include "equipment-type.h"
 #include "god-type.h"
 #include "mon-inv-type.h"
+#include "item-prop.h"
 
 // Ways to get items, other than finding them on the ground or looting them
 // from slain monsters.
@@ -211,3 +212,15 @@ private:
     monster& mon;
     mon_inv_type type;
 };
+
+/** All non-removed item subtypes for the specified base type */
+static inline vector<int> all_item_subtypes(object_class_type base)
+{
+    vector<int> subtypes;
+    for (int i = 0; i < get_max_subtype(base); ++i)
+    {
+        if (!item_type_removed(base, i))
+            subtypes.push_back(i);
+    }
+    return subtypes;
+}

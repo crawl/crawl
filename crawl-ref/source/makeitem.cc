@@ -1571,7 +1571,9 @@ static void _generate_rune_item(item_def& item, int force_type)
         for (int i = 0; i < NUM_RUNE_TYPES; i++)
             if (!item_type_removed(OBJ_RUNES, i) && !you.runes[i]
                 && i != RUNE_ELF && i != RUNE_FOREST)
+            {
                 possibles.push_back(i);
+            }
 
         item.sub_type = possibles.empty()
                       ? RUNE_DEMONIC

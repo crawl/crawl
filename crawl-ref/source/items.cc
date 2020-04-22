@@ -4282,7 +4282,7 @@ bool get_item_by_name(item_def *item, const char* specs,
         type_wanted = -1;
         size_t best_index  = 10000;
 
-        for (int i = 0; i < get_max_subtype(item->base_type); ++i)
+        for (const auto i : all_item_subtypes(item->base_type))
         {
             item->sub_type = i;
             size_t pos = lowercase_string(item->name(DESC_PLAIN)).find(specs);
@@ -4504,7 +4504,7 @@ bool get_item_by_exact_name(item_def &item, const char* name)
 
         if (!item.sub_type)
         {
-            for (int j = 0; j < get_max_subtype(item.base_type); ++j)
+            for (const auto j : all_item_subtypes(item.base_type))
             {
                 item.sub_type = j;
                 if (lowercase_string(item.name(DESC_DBNAME)) == name_lc)
