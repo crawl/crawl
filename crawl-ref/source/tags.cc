@@ -2420,6 +2420,44 @@ void unmarshall_vehumet_spells(reader &th, set<spell_type>& old_gifts,
 #endif
 }
 
+FixedVector<spell_type, MAX_KNOWN_SPELLS> unmarshall_player_spells(reader &th)
+{
+    FixedVector<spell_type, MAX_KNOWN_SPELLS> spells(SPELL_NO_SPELL);
+
+    const auto count = unmarshallUByte(th);
+    ASSERT(count >= 0);
+
+    for (int i = 0; i < count && i < MAX_KNOWN_SPELLS; ++i)
+    {
+        spells[i] = unmarshallSpellType(th);
+#if TAG_MAJOR_VERSION == 34
+        spells[i] = _fixup_positional_player_spell(spells[i]);
+#endif
+    }
+
+    for (int i = MAX_KNOWN_SPELLS; i < count; ++i)
+        unmarshallSpellType(th);
+
+    return spells;
+}
+
+FixedVector<int, 52> unmarshall_player_spell_letter_table(reader &th)
+{
+    FixedVector<int, 52> spell_letter_table;
+
+    const auto count = unmarshallByte(th);
+    ASSERT(count == (int)spell_letter_table.size());
+
+    for (int i = 0; i < count; i++)
+    {
+        int s = unmarshallByte(th);
+        ASSERT_RANGE(s, -1, MAX_KNOWN_SPELLS);
+        spell_letter_table[i] = s;
+    }
+
+    return spell_letter_table;
+}
+
 static void tag_read_you(reader &th)
 {
     int count;
@@ -2666,37 +2704,11 @@ static void tag_read_you(reader &th)
         }
     }
 #endif
-    // how many spells?
-    you.spell_no = 0;
-    count = unmarshallUByte(th);
-    ASSERT(count >= 0);
-    for (int i = 0; i < count && i < MAX_KNOWN_SPELLS; ++i)
-    {
-        you.spells[i] = unmarshallSpellType(th);
-#if TAG_MAJOR_VERSION == 34
-        you.spells[i] = _fixup_positional_player_spell(you.spells[i]);
-#endif
-        if (you.spells[i] != SPELL_NO_SPELL)
-            you.spell_no++;
-    }
-    for (int i = MAX_KNOWN_SPELLS; i < count; ++i)
-    {
-#if TAG_MAJOR_VERSION == 34
-        if (th.getMinorVersion() < TAG_MINOR_SHORT_SPELL_TYPE)
-            unmarshallUByte(th);
-        else
-#endif
-            unmarshallShort(th);
-    }
 
-    count = unmarshallByte(th);
-    ASSERT(count == (int)you.spell_letter_table.size());
-    for (int i = 0; i < count; i++)
-    {
-        int s = unmarshallByte(th);
-        ASSERT_RANGE(s, -1, MAX_KNOWN_SPELLS);
-        you.spell_letter_table[i] = s;
-    }
+    you.spells = unmarshall_player_spells(th);
+    you.spell_letter_table = unmarshall_player_spell_letter_table(th);
+    you.spell_no = count_if(begin(you.spells), end(you.spells),
+            [](const spell_type spell) { return spell != SPELL_NO_SPELL; });
 
     count = unmarshallByte(th);
     ASSERT(count == (int)you.ability_letter_table.size());
