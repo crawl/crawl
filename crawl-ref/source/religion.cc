@@ -981,17 +981,16 @@ int yred_random_servants(unsigned int threshold, bool force_hostile)
     return created;
 }
 
-static bool _need_missile_gift(bool forced)
+static bool _want_missile_gift()
 {
     skill_type sk = best_skill(SK_SLINGS, SK_THROWING);
     // Default to throwing if all missile skills are at zero.
     if (you.skills[sk] == 0)
         sk = SK_THROWING;
-    return forced
-           || (you.piety >= piety_breakpoint(2)
-               && random2(you.piety) > 70
-               && one_chance_in(8)
-               && x_chance_in_y(1 + you.skills[sk], 12));
+    return you.piety >= piety_breakpoint(2)
+           && random2(you.piety) > 70
+           && one_chance_in(8)
+           && x_chance_in_y(1 + you.skills[sk], 12);
 }
 
 static bool _give_nemelex_gift(bool forced = false)
@@ -1359,25 +1358,27 @@ static bool _give_trog_oka_gift(bool forced)
     if (you.species == SP_FELID)
         return false;
 
-    const bool need_missiles = you_worship(GOD_OKAWARU)
-                               && _need_missile_gift(forced);
+    const bool want_equipment = forced
+                                || (you.piety >= piety_breakpoint(4)
+                                    && random2(you.piety) > 120
+                                    && one_chance_in(4));
+    // Oka can gift missiles, but if equipment is successful, we choose
+    // equipment unless the gift was forced by wizard mode. In that case,
+    // missiles, weapons, and armour all get equal weight below.
+    const bool want_missiles = you_worship(GOD_OKAWARU)
+                               && (forced
+                                   || !want_equipment && _want_missile_gift());
     object_class_type gift_type;
 
-    if (you_worship(GOD_TROG) && (forced || you.piety >= piety_breakpoint(4)))
-            gift_type = OBJ_WEAPONS;
-    else if (forced)
-        gift_type = random_choose_weighted(
-            1, OBJ_WEAPONS,
-            1, OBJ_ARMOUR,
-            need_missiles ? 1 : 0, OBJ_MISSILES);
-    else if (you.piety >= piety_breakpoint(4)
-             && random2(you.piety) > 120
-             && one_chance_in(4))
+    if (you_worship(GOD_TROG) && want_equipment)
+        gift_type = OBJ_WEAPONS;
+    else if (you_worship(GOD_OKAWARU) && (want_equipment || want_missiles))
     {
-        gift_type = coinflip() ? OBJ_WEAPONS : OBJ_ARMOUR;
+        gift_type = random_choose_weighted(
+                want_equipment, OBJ_WEAPONS,
+                want_equipment, OBJ_ARMOUR,
+                want_missiles,  OBJ_MISSILES);
     }
-    else if (need_missiles)
-        gift_type = OBJ_MISSILES;
     else
         return false;
 
