@@ -2391,17 +2391,29 @@ void unmarshall_vehumet_spells(reader &th, set<spell_type>& old_gifts,
 #endif
         const auto num_old_gifts = unmarshallUByte(th);
         for (int i = 0; i < num_old_gifts; ++i)
-            old_gifts.insert(unmarshallSpellType(th));
+        {
+            const auto spell = unmarshallSpellType(th);
+            if (!spell_removed(spell))
+                old_gifts.insert(spell);
+        }
 
 #if TAG_MAJOR_VERSION == 34
         if (th.getMinorVersion() < TAG_MINOR_VEHUMET_MULTI_GIFTS)
-            gifts.insert(unmarshallSpellType(th));
+        {
+            const auto spell = unmarshallSpellType(th);
+            if (!spell_removed(spell))
+                gifts.insert(spell);
+        }
         else
         {
 #endif
             const auto num_gifts = unmarshallUByte(th);
             for (int i = 0; i < num_gifts; ++i)
-                gifts.insert(unmarshallSpellType(th));
+            {
+                const auto spell = unmarshallSpellType(th);
+                if (!spell_removed(spell))
+                    gifts.insert(spell);
+            }
 #if TAG_MAJOR_VERSION == 34
         }
     }
