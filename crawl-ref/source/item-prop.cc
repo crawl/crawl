@@ -795,9 +795,6 @@ const set<pair<object_class_type, int> > removed_items =
     { OBJ_FOOD,      FOOD_UNUSED },
     { OBJ_FOOD,      FOOD_FRUIT },
 #endif
-    // Outside the #if because we probably won't remove these.
-    { OBJ_RUNES,     RUNE_ELF },
-    { OBJ_RUNES,     RUNE_FOREST },
     { OBJ_JEWELLERY, AMU_NOTHING }, // These should only spawn as uniques
 };
 
