@@ -2381,6 +2381,33 @@ static void _fixup_library_spells(FixedBitVector<NUM_SPELLS>& lib)
 }
 #endif
 
+void unmarshall_vehumet_spells(reader &th, set<spell_type>& old_gifts,
+        set<spell_type>& gifts)
+{
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() >= TAG_MINOR_VEHUMET_SPELL_GIFT
+        && th.getMinorVersion() != TAG_MINOR_0_11)
+    {
+#endif
+        const auto num_old_gifts = unmarshallUByte(th);
+        for (int i = 0; i < num_old_gifts; ++i)
+            old_gifts.insert(unmarshallSpellType(th));
+
+#if TAG_MAJOR_VERSION == 34
+        if (th.getMinorVersion() < TAG_MINOR_VEHUMET_MULTI_GIFTS)
+            gifts.insert(unmarshallSpellType(th));
+        else
+        {
+#endif
+            const auto num_gifts = unmarshallUByte(th);
+            for (int i = 0; i < num_gifts; ++i)
+                gifts.insert(unmarshallSpellType(th));
+#if TAG_MAJOR_VERSION == 34
+        }
+    }
+#endif
+}
+
 static void tag_read_you(reader &th)
 {
     int count;
@@ -2731,28 +2758,7 @@ static void tag_read_you(reader &th)
         you.ability_letter_table[i] = static_cast<ability_type>(a);
     }
 
-#if TAG_MAJOR_VERSION == 34
-    if (th.getMinorVersion() >= TAG_MINOR_VEHUMET_SPELL_GIFT
-        && th.getMinorVersion() != TAG_MINOR_0_11)
-    {
-#endif
-        count = unmarshallUByte(th);
-        for (int i = 0; i < count; ++i)
-            you.old_vehumet_gifts.insert(unmarshallSpellType(th));
-
-#if TAG_MAJOR_VERSION == 34
-        if (th.getMinorVersion() < TAG_MINOR_VEHUMET_MULTI_GIFTS)
-            you.vehumet_gifts.insert(unmarshallSpellType(th));
-        else
-        {
-#endif
-            count = unmarshallUByte(th);
-            for (int i = 0; i < count; ++i)
-                you.vehumet_gifts.insert(unmarshallSpellType(th));
-#if TAG_MAJOR_VERSION == 34
-        }
-    }
-#endif
+    unmarshall_vehumet_spells(th, you.old_vehumet_gifts, you.vehumet_gifts);
     EAT_CANARY;
 
     // how many skills?
