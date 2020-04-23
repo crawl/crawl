@@ -950,6 +950,15 @@ bool is_able_into_wall()
     return (you.duration[DUR_WALL_MELTING] || you.props[EMERGENCY_WALL_KEY].get_bool());
 }
 
+bool is_near_the_wall() {
+    for (adjacent_iterator ai(you.pos()); ai; ++ai)
+    {
+        if (cell_is_solid(*ai)) {
+            return true;
+        }
+    }
+    return false;
+}
 // cjo: Handles player hp and mp regeneration. If the counter
 // you.hit_points_regeneration is over 100, a loop restores 1 hp and decreases
 // the counter by 100 (so you can regen more than 1 hp per turn). If the counter

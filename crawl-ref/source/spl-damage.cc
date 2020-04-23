@@ -2825,6 +2825,14 @@ void end_searing_ray()
     you.props.erase("searing_ray_aimed_at_spot");
 }
 
+void end_wall_invisible()
+{
+    if (you.props[WALL_INVISIBLE_KEY].get_bool()) {
+        mpr("The assimilate with the wall has been temporarily fading.");
+        you.props.erase(WALL_INVISIBLE_KEY);
+    }
+}
+
 /**
  * Can a casting of Glaciate by the player injure the given creature?
  *

@@ -203,5 +203,6 @@ enum duration_type
     DUR_ACROBAT,
     DUR_SHAFT_IMMUNITY,
     DUR_POISON_GLAND,
+    DUR_WALL_MELTING2,
     NUM_DURATIONS
 };

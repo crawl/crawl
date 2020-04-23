@@ -4065,6 +4065,18 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_WALL_MELTING_2, "Wall Camouflage 2",
+    spschool::transmutation | spschool::earth,
+    spflag::not_self | spflag::utility,
+    6,
+    200,
+    -1, -1,
+    4, 0,
+    TILEG_PASSWALL,
+},
+
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     spschool::none,
     spflag::testing,

@@ -14,6 +14,7 @@
 #include "food.h"
 #include "god-companions.h"
 #include "libutil.h"
+#include "macro.h"
 #include "message.h"
 #include "misc.h"
 #include "makeitem.h"
@@ -662,6 +663,25 @@ spret cast_wall_melting(const coord_def&, int pow, bool fail)
         mprf(MSGCH_DURATION, "you are in harmony with the wall.");
     you.increase_duration(DUR_WALL_MELTING, 20 + random2(1 + pow / 5), 100);
     you.props.erase(EMERGENCY_WALL_KEY);
+
+    return spret::success;
+}
+
+
+spret cast_wall_melting2(const coord_def&, int pow, bool fail)
+{
+    fail_check();
+
+    if (you.duration[DUR_WALL_MELTING2])
+        mprf(MSGCH_DURATION, "you are more in harmony with the wall.");
+    else
+        mprf(MSGCH_DURATION, "you are in harmony with the wall.");
+
+    string msg = "(Press <w>%</w> near the wall to be invisible.)";
+    insert_commands(msg, { CMD_WAIT });
+    mpr(msg);
+    you.increase_duration(DUR_WALL_MELTING2, 20 + random2(1 + pow / 5), 100);
+    you.props.erase(WALL_INVISIBLE_KEY);
 
     return spret::success;
 }

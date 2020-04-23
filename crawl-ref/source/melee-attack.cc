@@ -909,6 +909,9 @@ bool melee_attack::handle_phase_end()
         mons_do_eyeball_confusion();
         mons_do_tendril_disarm();
     }
+    if (attacker->is_player()) {
+        end_wall_invisible();
+    }
 
     return attack::handle_phase_end();
 }

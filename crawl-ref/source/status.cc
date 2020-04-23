@@ -448,6 +448,12 @@ bool fill_status_info(int status, status_info& inf)
                            you.props[SONG_OF_SLAYING_KEY].get_int());
         break;
 
+    case DUR_WALL_MELTING2:
+        if (you.duration[DUR_WALL_MELTING2] > 0)
+        {
+            inf.light_colour = you.props[WALL_INVISIBLE_KEY].get_bool()? BROWN : LIGHTGREY;
+        }
+        break;
     case STATUS_BEOGH:
         if (env.level_state & LSTATE_BEOGH && can_convert_to_beogh())
         {

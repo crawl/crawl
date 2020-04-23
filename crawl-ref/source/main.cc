@@ -208,6 +208,7 @@ NORETURN static void _launch_game();
 
 static void _do_berserk_no_combat_penalty();
 static void _do_searing_ray();
+static void _wall_invisible();
 static void _input();
 
 static void _safe_move_player(coord_def move);
@@ -1181,6 +1182,7 @@ static void _input()
             _do_berserk_no_combat_penalty();
 
         _do_searing_ray();
+        _wall_invisible();
 
         world_reacts();
     }
@@ -2492,6 +2494,48 @@ static void _do_searing_ray()
     else
         end_searing_ray();
 }
+
+// Fire the next searing ray stage if we have taken no other action this turn,
+// otherwise cancel
+static void _wall_invisible()
+{
+    if (you.duration[DUR_WALL_MELTING2]) {
+
+        if (you.props[WALL_INVISIBLE_KEY].get_bool() == false) {
+
+            if (crawl_state.prev_cmd == CMD_WAIT && is_near_the_wall()) {
+                mpr("You assimilate with the wall.");
+                you.props[WALL_INVISIBLE_KEY] = true;
+            }
+        }
+        else {
+            switch (crawl_state.prev_cmd) {
+            case CMD_BUTCHER:
+            case CMD_CAST_SPELL:
+            case CMD_EAT:
+            case CMD_FIRE:
+            case CMD_FORCE_CAST_SPELL:
+            case CMD_QUAFF:
+            case CMD_READ:
+            case CMD_SHOUT:
+            case CMD_THROW_ITEM_NO_QUIVER:
+            case CMD_ZAP_WAND:
+            case CMD_EVOKE:
+            case CMD_EVOKE_WIELDED:
+            case CMD_FORCE_EVOKE_WIELDED:
+            case CMD_USE_ABILITY:
+                end_wall_invisible();
+                break;
+            default:
+                if (!is_near_the_wall()) {
+                    end_wall_invisible();
+                }
+                break;
+            }
+        }
+    }
+}
+
 
 static void _safe_move_player(coord_def move)
 {

@@ -44,3 +44,4 @@ spret cast_intoxicate(int pow, bool fail);
 spret cast_fulsome_distillation(bool fail);
 spret cast_darkness(int pow, bool fail);
 spret cast_wall_melting(const coord_def& delta, int pow, bool fail);
+spret cast_wall_melting2(const coord_def& delta, int pow, bool fail);

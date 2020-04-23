@@ -7238,7 +7238,8 @@ bool player::visible_to(const actor *looker) const
 
     const bool invis_to = (invisible() && !looker->can_see_invisible()
         && !in_water()) ||
-        (looker->asleep() && you.duration[DUR_WALL_MELTING]);
+        (looker->asleep() && you.duration[DUR_WALL_MELTING]) ||
+        (you.duration[DUR_WALL_MELTING2] > 0 && you.props[WALL_INVISIBLE_KEY].get_bool());
 
     if (this == looker)
         return !invis_to;

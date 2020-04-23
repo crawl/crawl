@@ -1420,6 +1420,7 @@ bool spell_no_hostile_in_range(spell_type spell)
     // on spell-power.
     case SPELL_FIRE_STORM:
     case SPELL_WALL_MELTING:
+    case SPELL_WALL_MELTING_2:
         return false;
 
     case SPELL_CHAIN_LIGHTNING:

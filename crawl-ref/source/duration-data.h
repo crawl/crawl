@@ -4,6 +4,7 @@
 
 #include "god-passive.h"
 
+
 static void _end_weapon_brand()
 {
     you.duration[DUR_EXCRUCIATING_WOUNDS] = 1;
@@ -360,7 +361,14 @@ static const duration_def duration_data[] =
       "You melted into the wall.", D_EXPIRES,
       {{ "Your camouflage fades away.", []() {
           end_of_wall_melting();
-      } }}},
+      } }}, 6 },
+    { DUR_WALL_MELTING2,
+      BROWN, "Wall",
+      "wall camouflage", "",
+      "You melted into the wall.", D_EXPIRES,
+      {{ "Your camouflage fades away.", []() {
+          end_wall_invisible();
+      } }}, 6},
     { DUR_SHROUD_OF_GOLUBRIA,
       BLUE, "Shroud",
       "shrouded", "",
