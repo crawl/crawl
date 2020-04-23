@@ -2433,6 +2433,8 @@ FixedVector<spell_type, MAX_KNOWN_SPELLS> unmarshall_player_spells(reader &th)
 #if TAG_MAJOR_VERSION == 34
         spells[i] = _fixup_positional_player_spell(spells[i]);
 #endif
+        if (spell_removed(spells[i]))
+            spells[i] = SPELL_NO_SPELL;
     }
 
     for (int i = MAX_KNOWN_SPELLS; i < count; ++i)
@@ -2456,6 +2458,13 @@ FixedVector<int, 52> unmarshall_player_spell_letter_table(reader &th)
     }
 
     return spell_letter_table;
+}
+
+
+void remove_removed_library_spells(FixedBitVector<NUM_SPELLS>& lib)
+{
+    for (int i = 0; i < NUM_SPELLS; ++i)
+        lib.set(i, lib[i] && !spell_removed(static_cast<spell_type>(i)));
 }
 
 static void tag_read_you(reader &th)
@@ -2704,6 +2713,9 @@ static void tag_read_you(reader &th)
         }
     }
 #endif
+
+    remove_removed_library_spells(you.spell_library);
+    remove_removed_library_spells(you.hidden_spells);
 
     you.spells = unmarshall_player_spells(th);
     you.spell_letter_table = unmarshall_player_spell_letter_table(th);
