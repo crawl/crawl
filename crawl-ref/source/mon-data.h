@@ -279,6 +279,11 @@ static monsterentry mondata[] =
     AXED_MON(MONS_HILL_GIANT)
     AXED_MON(MONS_BULTUNGIN)
     AXED_MON(MONS_HYPERACTIVE_BALLISTOMYCETE)
+    AXED_MON(MONS_HOMUNCULUS)
+    AXED_MON(MONS_SOUPLING)
+    AXED_MON(MONS_BLESSED_TOE)
+    AXED_MON(MONS_LAVA_ORC)
+    AXED_MON(MONS_MONSTROUS_FEATURE_MIMIC)
 #endif
 
 // Used for genus monsters (which are used for grouping monsters by how they

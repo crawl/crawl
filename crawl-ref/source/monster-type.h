@@ -100,7 +100,9 @@ enum monster_type                      // menv[].type
     MONS_BARACHI,
     MONS_BEAR,                  // genus
 #endif
+#if TAG_MAJOR_VERSION == 34
     MONS_GRIZZLY_BEAR,
+#endif
     MONS_POLAR_BEAR,
     MONS_BLACK_BEAR,
     MONS_WORM,
@@ -339,7 +341,9 @@ enum monster_type                      // menv[].type
 #endif
     MONS_BALLISTOMYCETE_SPORE,
     MONS_BALLISTOMYCETE,
+#if TAG_MAJOR_VERSION == 34
     MONS_HYPERACTIVE_BALLISTOMYCETE,
+#endif
 
     MONS_GOBLIN,
     MONS_HOBGOBLIN,
