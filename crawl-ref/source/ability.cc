@@ -3262,6 +3262,10 @@ static spret _do_ability(const ability_def& abil, bool fail)
         return wu_jian_wall_jump_ability();
 
     case ABIL_RENOUNCE_RELIGION:
+        if (you.species == SP_ANGEL) {
+            mpr("You cannot abandon your faith.");
+            return spret::abort;
+        }
         fail_check();
         if (yesno("Really renounce your faith, foregoing its fabulous benefits?",
                   false, 'n')

@@ -4,6 +4,7 @@
 #include "item-prop-enum.h"
 #include "job-type.h"
 #include "species-type.h"
+#include "god-type.h"
 
 // Either a character definition, with real species, job, and
 // weapon, book, wand as appropriate.
@@ -26,12 +27,14 @@ struct newgame_def
     vector<species_type> allowed_species;
     vector<job_type> allowed_jobs;
     vector<weapon_type> allowed_weapons;
+    vector<god_type> allowed_gods;
 
     species_type species;
     job_type job;
 
     weapon_type weapon;
 
+    god_type god;
     // Only relevant for character choice, where the entire
     // character was randomly picked in one step.
     // If this is true, the species field encodes whether

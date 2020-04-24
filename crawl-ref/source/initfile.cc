@@ -60,6 +60,7 @@
 #include "state.h"
 #include "stringutil.h"
 #include "syscalls.h"
+#include "religion.h"
 #include "tags.h"
 #include "throw.h"
 #include "travel.h"
@@ -1696,6 +1697,8 @@ newgame_def read_startup_prefs()
         temp.game.job = temp.game.allowed_jobs[0];
     if (!temp.game.allowed_weapons.empty())
         temp.game.weapon = temp.game.allowed_weapons[0];
+    if (!temp.game.allowed_gods.empty())
+        temp.game.god = temp.game.allowed_gods[0];
     if (!Options.seed_from_rc)
         Options.seed = temp.seed_from_rc;
     if (!Options.remember_name)
@@ -1720,6 +1723,8 @@ static void write_newgame_options(const newgame_def& prefs, FILE *f)
         fprintf(f, "background = %s\n", _job_to_str(prefs.job).c_str());
     if (prefs.weapon != WPN_UNKNOWN)
         fprintf(f, "weapon = %s\n", _weapon_to_str(prefs.weapon).c_str());
+    if (prefs.god != GOD_NO_GOD)
+        fprintf(f, "god = %s\n", god_name(prefs.god).c_str());
     if (prefs.seed != 0)
         fprintf(f, "game_seed = %" PRIu64 "\n", prefs.seed);
     fprintf(f, "fully_random = %s\n", prefs.fully_random ? "yes" : "no");
@@ -2829,6 +2834,7 @@ void game_options::read_option_line(const string &str, bool runscript)
         game.allowed_species.clear();
         game.allowed_jobs.clear();
         game.allowed_weapons.clear();
+        game.allowed_gods.clear();
         NEWGAME_OPTION(game.allowed_combos, string, string);
     }
     else if (key == "fully_random")

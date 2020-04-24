@@ -125,6 +125,12 @@ void try_god_conversion(god_type god)
         return;
     }
 
+    if (you.species == SP_ANGEL)
+    {
+        mpr("You cannot abandon your faith.");
+        return;
+    }
+
     if (god == GOD_ECUMENICAL)
     {
         _pray_ecumenical_altar();

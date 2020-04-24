@@ -557,6 +557,10 @@ int player::halo_radius() const
                                                     / piety_breakpoint(5);
     }
 
+    if (you.species == SP_ANGEL && you.get_experience_level() >= 9) {
+        size = max(size, you.get_experience_level()/9);
+    }
+
     if (player_equip_unrand(UNRAND_EOS))
         size = max(size, 3);
     else if (you.attribute[ATTR_HEAVENLY_STORM] > 0)

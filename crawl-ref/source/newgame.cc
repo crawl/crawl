@@ -27,10 +27,12 @@
 #include "ng-restr.h"
 #include "options.h"
 #include "prompt.h"
+#include "religion.h"
 #include "skills.h"
 #include "species-groups.h"
 #include "state.h"
 #include "stringutil.h"
+#include "terrain.h"
 #ifdef USE_TILE
 #include "tilereg-crt.h"
 #include "tilepick.h"
@@ -49,6 +51,7 @@ static void _choose_gamemode_map(newgame_def& ng, newgame_def& ng_choice,
                                  const newgame_def& defaults);
 static bool _choose_weapon(newgame_def& ng, newgame_def& ng_choice,
                           const newgame_def& defaults);
+static bool _choose_god(newgame_def& ng, newgame_def& ng_choice);
 
 #ifdef USE_TILE_LOCAL
 #  define STARTUP_HIGHLIGHT_NORMAL LIGHTGRAY
@@ -70,7 +73,7 @@ newgame_def::newgame_def()
     : name(), type(GAME_TYPE_NORMAL),
       seed(0), pregenerate(false),
       species(SP_UNKNOWN), job(JOB_UNKNOWN),
-      weapon(WPN_UNKNOWN),
+      weapon(WPN_UNKNOWN), god(GOD_NO_GOD),
       fully_random(false)
 {
 }
@@ -80,6 +83,7 @@ void newgame_def::clear_character()
     species  = SP_UNKNOWN;
     job      = JOB_UNKNOWN;
     weapon   = WPN_UNKNOWN;
+    god = GOD_NO_GOD;
 }
 
 enum MenuOptions
@@ -185,6 +189,7 @@ void choose_tutorial_character(newgame_def& ng_choice)
     ng_choice.species = SP_HUMAN;
     ng_choice.job = JOB_FIGHTER;
     ng_choice.weapon = WPN_FLAIL;
+    ng_choice.god = GOD_NO_GOD;
 }
 
 static void _resolve_species(newgame_def& ng, const newgame_def& ng_choice)
@@ -467,6 +472,7 @@ static void _choose_char(newgame_def& ng, newgame_def& choice,
             choice.species = SP_UNKNOWN;
             choice.job = JOB_UNKNOWN;
             choice.weapon = WPN_UNKNOWN;
+            choice.god = GOD_NO_GOD;
             string combo =
                 choice.allowed_combos[random2(choice.allowed_combos.size())];
 
@@ -545,8 +551,11 @@ static void _choose_char(newgame_def& ng, newgame_def& choice,
 
         if (_choose_weapon(ng, choice, defaults))
         {
-            // We're done!
-            return;
+            if (_choose_god(ng, choice))
+            {
+                // We're done!
+                return;
+            }
         }
 
         // Else choose again, name and type stays same.
@@ -1686,6 +1695,103 @@ static weapon_type _fixup_weapon(weapon_type wp,
     return WPN_UNKNOWN;
 }
 
+
+static void _construct_religion_menu(const newgame_def&,
+    const vector<god_type>& gods,
+    shared_ptr<OuterMenu>& main_items,
+    shared_ptr<OuterMenu>& sub_items)
+{
+    struct god_menu_item {
+        god_type gods;
+        string label;
+        tileidx_t tile;
+        god_menu_item(god_type _gods, string _label, tileidx_t _tile)
+            : gods(move(_gods)), label(move(_label)), tile(move(_tile)) {};
+        god_menu_item(god_type _gods, string _label)
+            : gods(move(_gods)), label(move(_label)), tile(0) {};
+    };
+    vector<god_menu_item> choices;
+
+    for (unsigned int i = 0; i < gods.size(); ++i)
+    {
+        god_type g_type = gods[i];
+        string text = god_name(g_type, true);
+
+#ifdef USE_TILE
+        dungeon_feature_type g_tile = altar_for_god(g_type);
+#endif
+
+        choices.emplace_back(g_type, text
+#ifdef USE_TILE
+            , tileidx_feature_base(g_tile)
+#endif
+        );
+    }
+
+    int max_text_width = 0;
+    for (const auto& choice : choices)
+        max_text_width = max(max_text_width, strwidth(choice.label));
+
+    for (unsigned int i = 0; i < gods.size(); ++i)
+    {
+        const auto& choice = choices[i];
+
+        auto hbox = make_shared<Box>(Box::HORZ);
+        hbox->set_cross_alignment(Widget::Align::CENTER);
+        hbox->set_margin_for_sdl(2, 10, 2, 2);
+
+        
+#ifdef USE_TILE
+        auto tile_stack = make_shared<Stack>();
+        tile_stack->set_margin_for_sdl(0, 6, 0, 0);
+        tile_stack->flex_grow = 0;
+        hbox->add_child(tile_stack);
+
+        tile_stack->add_child(make_shared<Image>(
+            tile_def(choice.tile, TEX_FEAT)));
+#endif
+
+        auto label = make_shared<Text>();
+        hbox->add_child(label);
+
+        const char letter = 'a' + i;
+
+        string text = make_stringf(" %c - %s", letter,
+            chop_string(choice.label, max_text_width, true).c_str()
+        );
+
+        god_type g_type = gods[i];
+
+        label->set_text(formatted_string(text, WHITE));
+        hbox->set_main_alignment(Widget::Align::STRETCH);
+        /*string apt_text = make_stringf("(%+d apt)",
+            species_apt(choice.skill, ng.species));
+        auto suffix = make_shared<Text>(formatted_string(apt_text, fg));
+        hbox->add_child(suffix);*/
+
+        auto btn = make_shared<MenuButton>();
+        btn->set_child(move(hbox));
+        btn->id = g_type;
+        btn->hotkey = letter;
+        btn->highlight_colour = STARTUP_HIGHLIGHT_GOOD;
+
+        //if (wpn_type == defweapon || (defweapon == WPN_UNKNOWN && i == 0))
+        //    main_items->set_initial_focus(btn.get());
+        main_items->add_button(move(btn), 0, i);
+    }
+
+    _add_menu_sub_item(sub_items, 0, 0, "? - Help",
+        "Opens the help screen", '?', M_HELP);
+    _add_menu_sub_item(sub_items, 1, 0, "* - Random god",
+        "Picks a random god", '*', GOD_RANDOM);
+    _add_menu_sub_item(sub_items, 1, 1, "Bksp - Return to character menu",
+        "Lets you return back to Character choice menu", CK_BKSP, M_ABORT);
+
+}
+
+
+
+
 static void _construct_weapon_menu(const newgame_def& ng,
                                    const weapon_type& defweapon,
                                    const vector<weapon_choice>& weapons,
@@ -1863,6 +1969,113 @@ static void _construct_weapon_menu(const newgame_def& ng,
                 "Select your old weapon", '\t', M_DEFAULT_CHOICE);
     }
 }
+
+
+
+static bool _prompt_religion(const newgame_def& ng, newgame_def& ng_choice,
+    const vector<god_type>& gods)
+{
+    auto title_hbox = make_shared<Box>(Widget::HORZ);
+#ifdef USE_TILE
+    dolls_data doll;
+    fill_doll_for_newgame(doll, ng);
+#ifdef USE_TILE_LOCAL
+    auto tile = make_shared<ui::PlayerDoll>(doll);
+    tile->set_margin_for_sdl(0, 10, 0, 0);
+    title_hbox->add_child(move(tile));
+#endif
+#endif
+    auto title = make_shared<Text>(formatted_string(_welcome(ng), BROWN));
+    title_hbox->add_child(title);
+    title_hbox->set_cross_alignment(Widget::CENTER);
+    title_hbox->set_margin_for_sdl(0, 0, 20, 0);
+    title_hbox->set_margin_for_crt(0, 0, 1, 0);
+
+    auto vbox = make_shared<Box>(Box::VERT);
+    vbox->set_cross_alignment(Widget::Align::STRETCH);
+    vbox->add_child(title_hbox);
+    auto prompt = make_shared<Text>(formatted_string("You have a choice of religion.", CYAN));
+    vbox->add_child(prompt);
+
+    auto main_items = make_shared<OuterMenu>(true, 1, gods.size());
+    main_items->menu_id = "weapon-main";
+    main_items->set_margin_for_sdl(15, 0);
+    main_items->set_margin_for_crt(1, 0);
+    vbox->add_child(main_items);
+
+    auto sub_items = make_shared<OuterMenu>(false, 2, 3);
+    sub_items->menu_id = "weapon-sub";
+    vbox->add_child(sub_items);
+
+    main_items->linked_menus[2] = sub_items;
+    sub_items->linked_menus[0] = main_items;
+
+    _construct_religion_menu(ng, gods, main_items, sub_items);
+
+    bool done = false, ret = false;
+
+    vbox->on_activate_event([&](const ActivateEvent& event) {
+        const auto button = static_pointer_cast<MenuButton>(event.target());
+        const auto id = button->id;
+        switch (id)
+        {
+        case M_ABORT:
+            ret = false;
+            return done = true;
+        case M_HELP:
+            show_help('?');
+            return true;
+        case GOD_RANDOM:
+            ng_choice.god = GOD_RANDOM;
+            break;
+        default:
+            ng_choice.god = static_cast<god_type> (id);
+            break;
+        }
+        return ret = done = true;
+        });
+
+    auto popup = make_shared<ui::Popup>(vbox);
+    popup->on_hotkey_event([&](const KeyEvent& ev) {
+        switch (ev.key())
+        {
+        case 'X':
+        case CONTROL('Q'):
+#ifdef USE_TILE_WEB
+            tiles.send_exit_reason("cancel");
+#endif
+            end(0);
+            break;
+        case ' ':
+            CASE_ESCAPE
+        case CK_MOUSE_CMD:
+            ret = false;
+            return done = true;
+        default:
+            break;
+        }
+
+        return false;
+        });
+
+#ifdef USE_TILE_WEB
+    tiles.json_open_object();
+    tiles.json_write_string("title", title->get_text().to_colour_string());
+    tiles.json_write_string("prompt", prompt->get_text().to_colour_string());
+    main_items->serialize("main-items");
+    sub_items->serialize("sub-items");
+    tiles.send_doll(doll, false, false);
+    tiles.push_ui_layout("newgame-choice", 1);
+#endif
+    ui::run_layout(move(popup), done);
+#ifdef USE_TILE_WEB
+    tiles.pop_ui_layout();
+#endif
+
+    return ret;
+}
+
+
 
 /**
  * Returns false if user escapes
@@ -2124,6 +2337,43 @@ static bool _choose_weapon(newgame_def& ng, newgame_def& ng_choice,
 
     return true;
 }
+
+
+static bool _choose_god(newgame_def& ng, newgame_def& ng_choice)
+{
+    if (ng.species != SP_ANGEL)
+        return true;
+
+    vector<god_type> gods;
+
+    gods.push_back(GOD_ELYVILON);
+    gods.push_back(GOD_SHINING_ONE);
+    gods.push_back(GOD_ZIN);
+
+
+    ASSERT(!gods.empty());
+    if (gods.size() == 1)
+    {
+        //ng. = ng_choice.weapon = weapons[0].first;
+        return true;
+    }
+
+    if (!_prompt_religion(ng, ng_choice, gods))
+        return false;
+
+    switch (ng_choice.god)
+    {
+    case GOD_RANDOM:
+        ng.god = gods[random2(gods.size())];
+        break;
+    default:
+        ng.god = ng_choice.god;
+        break;
+    }
+
+    return true;
+}
+
 
 #ifdef USE_TILE
 static tile_def tile_for_map_name(string name)

@@ -310,6 +310,17 @@ void give_items_skills(const newgame_def& ng)
         you.skills[SK_SHIELDS] = 0;
     }
 
+    if (you.species == SP_ANGEL)
+    {
+        you.skills[SK_STEALTH] = 0;
+        you.skills[SK_HEXES] = 0;
+        you.skills[SK_CHARMS] = 0;
+        you.skills[SK_SUMMONINGS] = 0;
+        you.skills[SK_NECROMANCY] = 0;
+        you.skills[SK_TRANSMUTATIONS] = 0;
+        you.skills[SK_POISON_MAGIC] = 0;
+    }
+
     if (!you_worship(GOD_NO_GOD))
     {
         you.worshipped[you.religion] = 1;
@@ -473,6 +484,11 @@ static void _setup_generic(const newgame_def& ng)
 
     // This function depends on stats and mutations being finalised.
     give_items_skills(ng);
+
+    if (ng.god != GOD_NO_GOD) {
+        you.religion = ng.god;
+        you.piety = 35;
+    }
 
     roll_demonspawn_mutations();
 

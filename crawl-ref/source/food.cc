@@ -130,13 +130,14 @@ void set_hunger(int new_hunger_level, bool suppress_msg)
  * Check to see if the player is foodless (doesn't eat or drink)
  *
  * @param temp          Is the state of being foodless temporary?
- * @param can_eat       Bypass foodless restriction (for Djinni only).
+ * @param can_eat       Bypass foodless restriction.
  *
  */
 bool you_foodless(bool temp, bool can_eat)
 {
     return you.undead_state(temp) == US_UNDEAD
         || you.undead_state(temp) == US_SEMI_UNDEAD
+        || (you.species == SP_ANGEL && !can_eat)
         || (you.species == SP_DJINNI && !can_eat);
 }
 

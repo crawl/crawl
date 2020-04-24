@@ -2261,6 +2261,10 @@ void dock_piety(int piety_loss, int penance)
         lose_piety(piety_loss);
     }
 
+    if (you.species == SP_ANGEL && you.piety < 1) {
+        you.piety = 1;
+    }
+
     if (you.piety < 1)
         excommunication();
     else if (penance)       // only if still in religion
@@ -4136,7 +4140,9 @@ void handle_god_time(int /*time_delta*/)
             return;
 
         }
-
+        if (you.species == SP_ANGEL && you.piety < 1) {
+            you.piety = 1;
+        }
         if (you.piety < 1)
             excommunication();
     }

@@ -1,0 +1,68 @@
+enum: SP_ANGEL
+monster: MONS_ANGEL
+name: Angel
+short_name: "AG"
+difficulty: Advanced
+difficulty_priority: 20
+aptitudes:
+  xp: 1
+  hp: 0
+  mp_mod: 0
+  mr: 6
+  short_blades: -3
+  long_blades: 4
+  axes: 1
+  maces_and_flails: 1
+  polearms: 1
+  staves: -1
+  slings: 2
+  bows: 2
+  crossbows: -1
+  throwing: -1
+  armour: 2
+  dodging: -1
+  stealth: false
+  shields: 2
+  unarmed_combat: 1
+  spellcasting: -1
+  conjurations: -4
+  hexes: false
+  charms: false
+  summoning: false
+  necromancy: false
+  translocations: -2
+  transmutations: false
+  fire_magic: 2
+  ice_magic: -4
+  air_magic: -4
+  earth_magic: -4
+  poison_magic: false
+  invocations: 1
+  evocations: -2
+str: 11
+int: 7
+dex: 9
+levelup_stat_frequency: 5
+mutations:
+  1:
+    MUT_NEGATIVE_ENERGY_RESISTANCE: 3
+    MUT_POISON_RESISTANCE: 1
+    MUT_ROT_IMMUNITY: 1
+    MUT_MUTATION_RESISTANCE: 3
+  5:
+    MUT_ACUTE_VISION: 1
+  10:
+    MUT_TENGU_FLIGHT: 1
+fake_mutations:
+  - long: You have a halo.
+    short: halo
+  - long: You do not eat.
+    short: no food
+  - long: You can not abandon your faith.
+    short: faithfulness
+  - long: When you get contamination, you also get a drain.
+recommended_jobs:
+  - JOB_FIGHTER
+  - JOB_GLADIATOR
+  - JOB_HUNTER
+  - JOB_FIRE_ELEMENTALIST

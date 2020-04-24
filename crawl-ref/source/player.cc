@@ -4189,6 +4189,10 @@ void contaminate_player(int change, bool controlled, bool msg)
 
     if (new_level > old_level)
     {
+        if (you.species == SP_ANGEL) {
+            const int drain = 15 * (new_level - old_level);
+            drain_player(drain, msg, true);
+        }
         if (msg)
         {
             mprf(player_severe_contamination() ? MSGCH_WARN : MSGCH_PLAIN,
@@ -6306,6 +6310,9 @@ mon_holy_type player::holiness(bool temp) const
     {
         holi |= MH_EVIL;
     }
+
+    if (species == SP_ANGEL)
+        holi |= MH_HOLY;
 
     // possible XXX: Monsters get evil/unholy bits set on spell selection
     //  should players?
