@@ -2336,7 +2336,6 @@ const set<spell_type> removed_spells =
     SPELL_SURE_BLADE,
     SPELL_FLY,
     SPELL_STONESKIN,
-    SPELL_SUMMON_SWARM,
     SPELL_PHASE_SHIFT,
     SPELL_MASS_CONFUSION,
     SPELL_CURE_POISON,

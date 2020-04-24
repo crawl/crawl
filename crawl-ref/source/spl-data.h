@@ -578,7 +578,6 @@ static const struct spell_desc spelldata[] =
     TILEG_ISKENDERUNS_MYSTIC_BLAST,
 },
 
-#if TAG_MAJOR_VERSION == 34
 {
     SPELL_SUMMON_SWARM, "Summon Swarm",
     spschool::summoning,
@@ -589,7 +588,6 @@ static const struct spell_desc spelldata[] =
     4, 0,
     TILEG_ERROR,
 },
-#endif
 
 {
     SPELL_SUMMON_HORRIBLE_THINGS, "Summon Horrible Things",

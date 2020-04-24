@@ -1754,8 +1754,8 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_SUMMON_MINOR_DEMON:
 #if TAG_MAJOR_VERSION == 34
     case SPELL_SUMMON_SCORPIONS:
-    case SPELL_SUMMON_SWARM:
 #endif
+    case SPELL_SUMMON_SWARM:
     case SPELL_SUMMON_UFETUBUS:
     case SPELL_SUMMON_HELL_BEAST:  // Geryon
     case SPELL_SUMMON_UNDEAD:
@@ -8017,12 +8017,12 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
     case SPELL_CHAOS_BREATH:
         return no_clouds;
 
+    case SPELL_SUMMON_SWARM:
 #if TAG_MAJOR_VERSION == 34
     case SPELL_SUMMON_TWISTER:
     case SPELL_SHAFT_SELF:
     case SPELL_MISLEAD:
     case SPELL_SUMMON_SCORPIONS:
-    case SPELL_SUMMON_SWARM:
     case SPELL_SUMMON_ELEMENTAL:
     case SPELL_EPHEMERAL_INFUSION:
     case SPELL_SINGULARITY:
