@@ -95,6 +95,7 @@ static int  _mons_cause_fear(monster* mons, bool actual = true);
 static int  _mons_mass_confuse(monster* mons, bool actual = true);
 static coord_def _mons_fragment_target(const monster &mons);
 static coord_def _mons_conjure_flame_pos(const monster &mon);
+static coord_def _mons_singularity_pos(const monster &mon);
 static coord_def _mons_awaken_earth_target(const monster& mon);
 static void _maybe_throw_ally(const monster &mons);
 static void _siren_sing(monster* mons, bool avatar);
@@ -403,6 +404,18 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             }
         },
         _target_beam_setup(_mons_conjure_flame_pos),
+        MSPELL_LOGIC_NONE, 6
+    } },
+    { SPELL_SINGULARITY, {
+        _always_worthwhile,
+        [](monster &caster, mon_spell_slot slot, bolt& pbolt) {
+            const int splpow = mons_spellpower(caster, slot.spell);
+            if (in_bounds(pbolt.target))
+                cast_singularity(&caster, splpow, pbolt.target, false);
+            else if (you.can_see(caster))
+                canned_msg(MSG_NOTHING_HAPPENS);
+        },
+        _target_beam_setup(_mons_singularity_pos),
         MSPELL_LOGIC_NONE, 6
     } },
     { SPELL_AWAKEN_EARTH, {
@@ -1090,6 +1103,7 @@ static int _mons_power_hd_factor(spell_type spell)
         case SPELL_SPECTRAL_WEAPON:
         case SPELL_IGNITE_POISON:
         case SPELL_IOOD:
+        case SPELL_SINGULARITY:
             return 6;
 
         case SPELL_SUMMON_DRAGON:
@@ -3447,6 +3461,54 @@ static bool _spray_tracer(monster *caster, int pow, bolt parent_beam, spell_type
     }
 
     return mons_should_fire(beam);
+}
+
+/**
+ * Pick a target for conjuring a singularity.
+ * Since a singularity can't harm its caster, this should always
+ * give a valid target if it can see any enemies.
+ *
+ * @param[in] mon The monster casting this.
+ * @returns The best position for creating a singularity.
+ */
+static coord_def _mons_singularity_pos(const monster &mons)
+{
+    const monster *mon = &mons; // TODO: rewriteme
+    const int pow = mons_spellpower(*mon, SPELL_SINGULARITY);
+    const int rad = gravitas_range(pow);
+    int max_strength = 0, max_count = 0;
+    coord_def retval;
+
+    for (distance_iterator di(mon->pos(), true, true, LOS_RADIUS); di; ++di)
+    {
+        int strength = 0;
+
+        if (cell_is_solid(*di) || actor_at(*di))
+            continue;
+        for (radius_iterator ri(*di, rad, C_SQUARE, LOS_NO_TRANS); ri; ++ri)
+        {
+            actor* victim = actor_at(*ri);
+            if (!victim
+                || !mon->can_see(*victim)
+                || mons_aligned(mon, victim))
+            {
+                continue;
+            }
+            strength += ((pow / 10) + 1) / (4 + grid_distance(*di, *ri));
+        }
+        if (strength == 0)
+            continue;
+        if (strength > max_strength
+            || (strength == max_strength && one_chance_in(++max_count)))
+        {
+            if (strength > max_strength)
+                max_count = 1;
+            max_strength = strength;
+            retval = *di;
+        }
+    }
+
+    return retval;
 }
 
 /**
@@ -6891,6 +6953,14 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     case SPELL_GRAVITAS:
         fatal_attraction(foe->pos(), mons, splpow);
         return;
+    case SPELL_SINGULARITY:
+    {
+        if (in_bounds(pbolt.target))
+           cast_singularity(mons, splpow, pbolt.target, false);
+        else if (you.can_see(*mons))
+            canned_msg(MSG_NOTHING_HAPPENS);
+        return;
+    }
 
     case SPELL_ENTROPIC_WEAVE:
         foe->corrode_equipment("the entropic weave");
@@ -8218,6 +8288,19 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
                 return false;
         return true;
 
+    case SPELL_SINGULARITY:
+    {
+        if (!foe)
+            return true;
+
+        // If the foe is in range of an existing singularity of our monster,
+        // don't cast.
+        for (monster_near_iterator mi(foe->pos(), LOS_NO_TRANS); mi; ++mi)
+            if (mi->type == MONS_SINGULARITY && mi->summoner == mon->mid)
+                return grid_distance(foe->pos(), mi->pos()) * grid_distance(foe->pos(), mi->pos()) <= mi->get_hit_dice();
+        return false;
+    }
+
     case SPELL_CORPSE_ROT:
     case SPELL_POISONOUS_CLOUD:
     case SPELL_FREEZING_CLOUD:
@@ -8236,7 +8319,6 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
     case SPELL_SUMMON_SWARM:
     case SPELL_SUMMON_ELEMENTAL:
     case SPELL_EPHEMERAL_INFUSION:
-    case SPELL_SINGULARITY:
     case SPELL_GRAND_AVATAR:
     case SPELL_INNER_FLAME:
     case SPELL_ANIMATE_DEAD:

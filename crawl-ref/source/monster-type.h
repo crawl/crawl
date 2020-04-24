@@ -844,6 +844,7 @@ enum monster_type                      // menv[].type
     MONS_FULMINANT_PRISM,
     MONS_BATTLESPHERE,
 #endif
+    MONS_SINGULARITY,
     MONS_PILLAR_OF_SALT,
 #if TAG_MAJOR_VERSION > 34
     MONS_BLOCK_OF_ICE,
@@ -1016,7 +1017,6 @@ enum monster_type                      // menv[].type
     MONS_ROBIN,
 
     MONS_SHARD_SHRIKE,
-    MONS_SINGULARITY,
     MONS_SALAMANDER_STORMCALLER,
     MONS_ENTROPY_WEAVER,
     MONS_MOON_TROLL,

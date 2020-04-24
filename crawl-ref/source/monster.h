@@ -91,6 +91,7 @@ public:
         mid_t tentacle_connect;///< mid of monster this tentacle is
                                //   connected to: for segments, this is the
                                //   tentacle; for tentacles, the head.
+        int countdown;         ///< Actions till singularity dies.
     };
     int           colour;
     mid_t         summoner;

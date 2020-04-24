@@ -1022,10 +1022,103 @@ spret cast_dispersal(int pow, bool fail)
     return spret::success;
 }
 
-int gravitas_range(int pow)
+int gravitas_range(int pow, int strength)
 {
-    return pow >= 80 ? 3 : 2;
+    return max(0, min(LOS_RADIUS, (int)isqrt((pow/10 + 1) / strength)));
 }
+
+spret cast_singularity(actor* agent, int pow, const coord_def& where,
+                            bool fail)
+{
+    if (cell_is_solid(where))
+    {
+        if (agent->is_player())
+            mpr("You can't place that within a solid object!");
+        return spret::abort;
+    }
+
+    actor* victim = actor_at(where);
+    if (victim)
+    {
+        if (you.can_see(*victim))
+        {
+            if (agent->is_player())
+                mpr("You can't place the singularity on a creature.");
+            return spret::abort;
+        }
+
+        fail_check();
+
+        if (agent->is_player())
+            canned_msg(MSG_GHOSTLY_OUTLINE);
+        else if (you.can_see(*victim))
+        {
+            mprf("%s %s for a moment.",
+                 victim->name(DESC_THE).c_str(),
+                 victim->conj_verb("distort").c_str());
+        }
+        return spret::success;
+    }
+
+    fail_check();
+
+    for (monster_iterator mi; mi; ++mi)
+        if (mi->type == MONS_SINGULARITY && mi->summoner == agent->mid)
+        {
+            simple_monster_message(**mi, " implodes!");
+            monster_die(**mi, KILL_RESET, NON_MONSTER);
+        }
+
+/*    monster* singularity = create_monster(
+                                mgen_data(MONS_SINGULARITY,
+                                          agent->is_player()
+                                          ? BEH_FRIENDLY
+                                          : SAME_ATTITUDE(agent->as_monster()),
+                                          agent,
+                                          // It's summoned, but it uses
+                                          // its own mechanic to time out.
+                                          0, SPELL_SINGULARITY,
+                                          where, MHITNOT, MG_FORCE_PLACE,
+                                          GOD_NO_GOD, MONS_NO_MONSTER,
+                                          pow / 20, COLOUR_INHERIT,
+                                          PROX_ANYWHERE,
+                                          level_id::current(),
+                                          (pow / 10) + 1));*/
+
+    mgen_data data(MONS_SINGULARITY,  agent->is_player()
+                                ? BEH_FRIENDLY
+                                : SAME_ATTITUDE(agent->as_monster()),
+                                where,
+                                MHITNOT,
+                                MG_FORCE_PLACE,
+                                GOD_NO_GOD);
+    // It's summoned, but it uses
+    // its own mechanic to time out.
+    data.set_summoned(agent, 0, SPELL_SINGULARITY, GOD_NO_GOD);
+    data.summon_type = SPELL_SINGULARITY;
+    data.set_prox(PROX_ANYWHERE);
+    data.hd = (pow / 10) + 1;
+
+    monster* singularity = create_monster(data);
+
+    if (singularity)
+    {
+        singularity->countdown = pow / 20;
+        if (you.can_see(*singularity))
+        {
+            const bool friendly = singularity->wont_attack();
+            mprf("Space collapses on itself with a %s crunch%s",
+                 friendly ? "satisfying" : "horrifying",
+                 friendly ? "." : "!");
+        }
+        invalidate_agrid(true);
+    }
+    else
+        canned_msg(MSG_NOTHING_HAPPENS);
+
+    return spret::success;
+}
+
 
 
 #define GRAVITY "by gravitational forces"
@@ -1063,8 +1156,11 @@ static void _attract_actor(const actor* agent, actor* victim,
         }
         else if (actor* act_at_space = actor_at(newpos))
         {
-            if (victim != act_at_space)
+            if (victim != act_at_space
+                && act_at_space->type != MONS_SINGULARITY)
+            {
                 victim->collide(newpos, agent, pow);
+            }
             break;
         }
         else if (!victim->is_habitable(newpos))
@@ -1086,6 +1182,62 @@ static void _attract_actor(const actor* agent, actor* victim,
         victim->apply_location_effects(starting_pos);
         if (victim->is_monster())
             mons_relocated(victim->as_monster());
+    }
+}
+
+void singularity_pull(const monster *singularity)
+{
+    actor *agent = actor_by_mid(singularity->summoner);
+
+    for (actor_near_iterator ai(singularity->pos(), LOS_NO_TRANS); ai; ++ai)
+    {
+        if (*ai == singularity
+            || agent && mons_aligned(*ai, agent))
+        {
+            continue;
+        }
+
+        if (is_sanctuary(ai->pos()))
+            continue;
+
+        const int range = (singularity->pos() - ai->pos()).rdist();
+        const int strength =
+            min(4, (singularity->get_hit_dice()) / (range*range));
+        if (strength <= 0)
+            continue;
+
+        static const char *messages[] =
+        {
+            "%s pulls at %s.",
+            "%s crushes %s!",
+            "%s violently warps %s!",
+            "%s twists %s apart!",
+        };
+
+        if (ai->is_monster())
+            behaviour_event(ai->as_monster(), ME_ANNOY, singularity);
+
+        if (you.can_see(**ai))
+        {
+            // Note that we don't care if you see the singularity if
+            // you can see its impact on the monster; "Something
+            // violently warps Sigmund!" is perfectly acceptable,
+            // after all.
+            mprf(messages[strength - 1],
+                 singularity->name(DESC_THE).c_str(),
+                 ai->name(DESC_THE).c_str());
+        }
+        ai->hurt(singularity, roll_dice(strength, 12), BEAM_MMISSILE,
+                 KILLED_BY_BEAM, "", GRAVITY);
+
+        if (agent->is_player() && is_sanctuary(you.pos()))
+            remove_sanctuary(true);
+
+        if (ai->alive() && !ai->is_stationary())
+        {
+            _attract_actor(singularity, *ai, singularity->pos(),
+                          10 * singularity->get_hit_dice(), strength);
+        }
     }
 }
 

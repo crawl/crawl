@@ -1131,6 +1131,7 @@ static const char* _book_type_name(int booktype)
 #if TAG_MAJOR_VERSION == 34
     case BOOK_WIZARDRY:               return "Wizardry";
 #endif
+    case BOOK_AKASHIC_RECORD:         return "Akashic Record";
     case BOOK_POWER:                  return "Power";
     case BOOK_CANTRIPS:               return "Cantrips";
     case BOOK_PARTY_TRICKS:           return "Party Tricks";
@@ -1258,10 +1259,8 @@ string sub_type_string(const item_def &item, bool known)
             return "Young Poisoner's Handbook";
         else if (sub_type == BOOK_FEN)
             return "Fen Folio";
-#if TAG_MAJOR_VERSION == 34
         else if (sub_type == BOOK_AKASHIC_RECORD)
             return "Akashic Record";
-#endif
         else if (sub_type == BOOK_THE_MEMOIRS_OF_THE_VIRTUOSO)
             return "The Memoirs of the Virtuoso";
 

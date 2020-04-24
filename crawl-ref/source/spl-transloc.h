@@ -25,9 +25,11 @@ spret cast_apportation(int pow, bolt& beam, bool fail);
 spret cast_golubrias_passage(const coord_def& where, bool fail);
 
 spret cast_dispersal(int pow, bool fail);
+spret cast_singularity(actor* agent, int pow, const coord_def& where, bool fail);
 
-int gravitas_range(int pow);
+int gravitas_range(int pow, int strength = 1);
 bool fatal_attraction(const coord_def& pos, const actor *agent, int pow);
+void singularity_pull(const monster *singularity);
 spret cast_gravitas(int pow, const coord_def& where, bool fail);
 
 bool beckon(actor &beckoned, const bolt &path);
