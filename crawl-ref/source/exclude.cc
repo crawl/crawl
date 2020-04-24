@@ -59,8 +59,7 @@ static bool _need_auto_exclude(const monster* mon, bool sleepy = false)
     {
         if (pat.matches(name)
             && _mon_needs_auto_exclude(mon, sleepy)
-            && (mon->attitude == ATT_HOSTILE
-                || mon->type == MONS_HYPERACTIVE_BALLISTOMYCETE))
+            && (mon->attitude == ATT_HOSTILE))
         {
             return true;
         }
@@ -100,9 +99,6 @@ void add_auto_excludes()
         if (_need_auto_exclude(mon) && !is_exclude_root(*ri))
         {
             int radius = _get_full_exclusion_radius();
-            if (mon->type == MONS_HYPERACTIVE_BALLISTOMYCETE)
-                radius = 2;
-
             set_exclude(*ri, radius, true);
             mons.emplace_back(mon);
         }

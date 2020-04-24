@@ -1192,8 +1192,6 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         // simultaneous die-offs of mushroom rings.
         mon->add_ench(ENCH_SLOWLY_DYING);
     }
-    else if (mg.cls == MONS_HYPERACTIVE_BALLISTOMYCETE)
-        mon->add_ench(ENCH_EXPLODING);
     else if (mons_is_demonspawn(mon->type)
              && draco_or_demonspawn_subspecies(*mon) == MONS_GELID_DEMONSPAWN)
     {
@@ -1433,10 +1431,6 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         mon->set_ghost(ghost);
         mon->uglything_init();
     }
-#if TAG_MAJOR_VERSION == 34
-    else if (mon->type == MONS_LABORATORY_RAT)
-        mon->type = MONS_RAT;
-#endif
     else if (mons_class_is_animated_weapon(mon->type))
     {
         ghost_demon ghost;

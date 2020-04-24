@@ -1150,12 +1150,8 @@ int main(int argc, char* argv[])
         mons_check_flag(mon.is_unbreathing(), monsterflags, "unbreathing");
 
         string spell_string = construct_spells(spell_lists, damages);
-        if (shapeshifter || mon.type == MONS_PANDEMONIUM_LORD
-            || mon.type == MONS_CHIMERA
-                   && (mon.base_monster == MONS_PANDEMONIUM_LORD))
-        {
+        if (shapeshifter || mon.type == MONS_PANDEMONIUM_LORD)
             spell_string = "(random)";
-        }
 
         mons_check_flag(vault_monster, monsterflags, colour(BROWN, "vault"));
 

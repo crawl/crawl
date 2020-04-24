@@ -1418,11 +1418,7 @@ bool mons_can_shout(monster_type mc)
 
 bool mons_is_ghost_demon(monster_type mc)
 {
-    return mons_class_flag(mc, M_GHOST_DEMON)
-#if TAG_MAJOR_VERSION == 34
-           || mc == MONS_CHIMERA;
-#endif
-           ;
+    return mons_class_flag(mc, M_GHOST_DEMON);
 }
 
 bool mons_is_pghost(monster_type mc)
@@ -4958,11 +4954,8 @@ void debug_mondata()
 
         if (md->speed < 0)
             fails += make_stringf("%s has 0 speed\n", name);
-        else if (md->speed == 0 && !mons_class_is_firewood(mc)
-            && mc != MONS_HYPERACTIVE_BALLISTOMYCETE)
-        {
+        else if (md->speed == 0 && !mons_class_is_firewood(mc))
             fails += make_stringf("%s has 0 speed\n", name);
-        }
 
         const bool male = mons_class_flag(mc, M_MALE);
         const bool female = mons_class_flag(mc, M_FEMALE);
