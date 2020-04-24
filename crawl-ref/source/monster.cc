@@ -5124,6 +5124,9 @@ bool monster::can_go_frenzy() const
     if (!mons_has_attacks(*this))
         return false;
 
+    if (mons_is_hepliaklqana_ancestor(type))
+        return false;
+
     return true;
 }
 
