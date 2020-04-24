@@ -49,16 +49,12 @@ menu += yellow:.*emergency_item.*
 
 # Good items
 menu += cyan:.*good_item.*
-menu += cyan:.*misc.*[lL]antern
 
 # Dangerous (but still useful) items
 menu += $dangerous:.*dangerous_item.*
 
 # Defaults for normal items
 menu += lightblue:unidentified.*(potion|scroll|wand|jewellery|magical staff)
-# : if you.god() == "Nemelex Xobeh" then
-#     menu += lightblue:deck of cards
-# : end
 menu += green:uncursed
 
 
