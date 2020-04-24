@@ -12,6 +12,7 @@ inv += $inedible:.*useless_item.*carrion.*
 # will be overridden by "useless" and "inedible".
 inv += $forbidden:.*forbidden.*(chunk|corpse)
 
+# Ghouls prefer chunks to rations.
 inv += $preferred:.*preferred.*
 
 inv += $inedible:.*inedible.*

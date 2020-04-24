@@ -690,10 +690,6 @@ bool is_inedible(const item_def &item, bool temp)
 // still be edible or even delicious.
 bool is_preferred_food(const item_def &food)
 {
-    // Mummies, vampirees, and liches don't eat.
-    if (you_foodless())
-        return false;
-
     if (you.species == SP_GHOUL)
         return food.is_type(OBJ_FOOD, FOOD_CHUNK);
 
