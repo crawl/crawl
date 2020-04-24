@@ -3281,14 +3281,6 @@ string item_prefix(const item_def &item, bool temp)
             prefixes.push_back("inedible");
         break;
 
-    case OBJ_POTIONS:
-        if (is_preferred_food(item))
-        {
-            prefixes.push_back("preferred");
-            prefixes.push_back("food");
-        }
-        break;
-
     case OBJ_STAVES:
     case OBJ_WEAPONS:
         if (is_range_weapon(item))

@@ -1664,8 +1664,8 @@ menu_colour ^= <match>:<colour>:<regex>, <colour>:<regex>, ...
         The following apply only to items of certain base types, whether
         identified or not:
            inedible        (You cannot eat this, or get no nutrition from it.)
-           preferred       (The food type your character prefers, for example
-                            for herbivores/carnivores.)
+           preferred       (The food type your character prefers. For example,
+                            Ghouls prefer chunks to rations.)
            poisonous       (Chunks/corpses that are poisonous.)
            mutagenic       (Chunks/corpses that are mutagenic.)
            contaminated    (Chunks/corpses that give reduced nutrition.)
