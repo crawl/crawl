@@ -9,6 +9,9 @@
 - 새로운 종족 쌍두 오우거 추가. 2개의 무기와 2개의 목걸이를 낄 수 있음. 그러나 방패를 낄 수 없음
   - Added two-headed ogre(playable). Can wear 2 weapons and 2 amulets. But you can't wear a shield
   
+- 새로운 종족 천사 추가. 세 선신 중 하나를 믿고 시작함
+  - Added angel(playable). A holy species who starts by believing in one of the three good gods
+  
 - 독물의 추출, 증산 추가
   - Added Fulsome Distillation, Evaporate spell
   
@@ -33,6 +36,12 @@
 - 가속 마법 복구
   - rollback Haste
   
+- 특이점과 아카식 레코드 마법책 복구
+  - rollback singularity and akashic record
+  
+- 스토커 복구. 벽과 융합하는 새로운 마법 준비중
+  - rollback stalker. with magic of transforming into a wall
+
 - 라바 오크, 지니 복구
   - rollback Lava orc, Djinni
   
