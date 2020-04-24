@@ -455,21 +455,7 @@ int spell_difficulty(spell_type which_spell)
 
 int spell_levels_required(spell_type which_spell)
 {
-    int levels = spell_difficulty(which_spell);
-#if TAG_MAJOR_VERSION == 34
-    if (which_spell == SPELL_DELAYED_FIREBALL
-        && you.has_spell(SPELL_FIREBALL))
-    {
-        levels -= spell_difficulty(SPELL_FIREBALL);
-    }
-    else if (which_spell == SPELL_FIREBALL
-            && you.has_spell(SPELL_DELAYED_FIREBALL))
-    {
-        levels = 0;
-    }
-#endif
-
-    return levels;
+    return spell_difficulty(which_spell);
 }
 
 spell_flags get_spell_flags(spell_type which_spell)
