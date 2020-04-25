@@ -319,6 +319,14 @@ private:
     unique_ptr<passwall_path> cur_path;
 };
 
+class targeter_wallmelting : public targeter_smite
+{
+public:
+    targeter_wallmelting(const actor* act, int range);
+    bool set_aim(coord_def a) override;
+    bool valid_aim(coord_def a) override;
+};
+
 class targeter_dig : public targeter_beam
 {
 public:

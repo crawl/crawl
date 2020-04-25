@@ -609,6 +609,47 @@ bool targeter_passwall::affects_monster(const monster_info& /*mon*/)
     return false;
 }
 
+targeter_wallmelting::targeter_wallmelting(const actor* act_, int range_) :
+    targeter_smite(act_, range_, 0, 0, 1)
+{
+}
+
+bool targeter_wallmelting::valid_aim(coord_def a)
+{
+    if (a != origin && !cell_see_cell(origin, a, LOS_NO_TRANS))
+    {
+        // Scrying/glass/tree/grate.
+        if (agent && agent->see_cell(a))
+            return notify_fail("There's something in the way.");
+        return notify_fail("You cannot see that place.");
+    }
+    if ((origin - a).rdist() > range)
+        return notify_fail("Out of range.");
+    if (cell_is_solid(a))
+        return true;
+    return notify_fail("only able to wall.");
+}
+
+bool targeter_wallmelting::set_aim(coord_def a)
+{
+    if (!targeter::set_aim(a))
+        return false;
+
+    if (exp_range_max > 0)
+    {
+        bolt beam;
+        beam.target = a;
+        beam.use_target_as_pos = true;
+        exp_map_min.init(INT_MAX);
+        beam.determine_affected_cells(exp_map_min, coord_def(), 0,
+            exp_range_min, true, true);
+        exp_map_max.init(INT_MAX);
+        beam.determine_affected_cells(exp_map_max, coord_def(), 0,
+            exp_range_max, true, true);
+    }
+    return true;
+}
+
 targeter_dig::targeter_dig(int max_range) :
     targeter_beam(&you, max_range, ZAP_DIG, 0, 0, 0)
 {

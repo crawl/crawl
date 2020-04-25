@@ -1256,6 +1256,8 @@ static unique_ptr<targeter> _spell_targeter(spell_type spell, int pow,
         return make_unique<targeter_dig>(range);
     case SPELL_OLGREBS_LAST_MERCY:
         return make_unique<targeter_olgrebs_last_mercy>();
+    case SPELL_WALL_MELTING:
+        return make_unique<targeter_wallmelting>(&you, range);
     default:
         break;
     }

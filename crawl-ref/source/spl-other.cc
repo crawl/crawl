@@ -636,25 +636,16 @@ spret cast_darkness(int pow, bool fail)
     return spret::success;
 }
 
-spret cast_wall_melting(const coord_def&, int pow, bool fail)
+spret cast_wall_melting(const coord_def& pos, int pow, bool fail)
 {
     fail_check();
 
-    if (!feat_is_solid(grd(you.pos()))) {
-        std::vector<coord_def> vec;
-        for (adjacent_iterator ai(you.pos()); ai; ++ai)
-        {
-            if (feat_is_diggable(grd(*ai)) && !monster_at(*ai)) {
-                vec.push_back(*ai);
-            }
-        }
-        if (vec.size() > 0) {
-            you.move_to_pos(vec[random2(vec.size())]);
-        }
-        else {
-            mprf("There are no walls around!");
-            return spret::abort;
-        }
+    if (feat_is_diggable(grd(pos)) && !monster_at(pos)) {
+            you.move_to_pos(pos);
+    }
+    else {
+        mprf("You can only assimilate on diggable walls.");
+        return spret::abort;
     }
 
     if (you.duration[DUR_WALL_MELTING])

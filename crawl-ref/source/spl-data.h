@@ -4054,10 +4054,10 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_WALL_MELTING, "Wall Camouflage",
     spschool::transmutation | spschool::earth,
-    spflag::not_self | spflag::utility,
+    spflag::target | spflag::not_self | spflag::utility,
     5,
     200,
-    -1, -1,
+    1, 1,
     4, 0,
     TILEG_PASSWALL,
 },
