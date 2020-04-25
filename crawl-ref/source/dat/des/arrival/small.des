@@ -625,8 +625,7 @@ ENDMAP
 NAME:    dpeg_arrival_lava_altar
 TAGS:    arrival no_monster_gen
 ORIENT:  northwest
-SHUFFLE: Cc, {Y
-SUBST:   ?=l. , Y=.
+SUBST:   ?=l.
 WEIGHT:  6
 MAP
 xxxxxxxxxxxxxxxxxxxxxx
@@ -653,8 +652,6 @@ NAME:    dpeg_arrival_water_altar
 TAGS:    arrival no_monster_gen
 ORIENT:  northwest
 WEIGHT:  4
-SHUFFLE: Cc, {Y
-SUBST:   Y=.
 MAP
 xxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxx
