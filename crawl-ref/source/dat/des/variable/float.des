@@ -9023,7 +9023,8 @@ TAGS: no_monster_gen no_item_gen no_trap_gen
 # Must not place on a branch end so it can place downhatch
 DEPTH: Crypt, !Crypt:$, D:13-, !D:$, Depths, !Depths:$, Pan, Zot, !Zot:$
 ORIENT: float
-KPROP: 1DEFHJKR|*$em = no_tele_into
+# DTEM can use LRD, so include stone tiles in no_tele_into to be safe
+KPROP: 1DEFHJKR|*$ecmn = no_tele_into
 ITEM: wand of digging ident:all, any randart jewellery
 # Do these substs now so they can be cleaned up by branch.
 NSUBST: D = 1:8 / 2:9 / 0, F = 1:8 / 2:9 / 0, J = 1:8 / 2:9 / 0, e = 2:e / |

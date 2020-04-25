@@ -1930,7 +1930,7 @@ spret cast_discharge(int pow, const actor &agent, bool fail, bool prompt)
 
 bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
                               const coord_def target, bool quiet,
-                              const char **what, bool &hole)
+                              const char **what, bool &should_destroy_wall, bool &hole)
 {
     beam.flavour     = BEAM_FRAG;
     beam.glyph       = dchar_glyph(DCHAR_FIRED_BURST);
@@ -2099,6 +2099,19 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
 
         beam.name       = "blast of rock fragments";
         beam.damage.num = 3;
+
+        if (grid == DNGN_ORCISH_IDOL
+            || grid == DNGN_GRANITE_STATUE
+            || pow >= 35 && (grid == DNGN_ROCK_WALL
+                || grid == DNGN_SLIMY_WALL
+                || grid == DNGN_CLEAR_ROCK_WALL)
+            && one_chance_in(3)
+            || pow >= 50 && (grid == DNGN_STONE_WALL
+                || grid == DNGN_CLEAR_STONE_WALL)
+            && one_chance_in(10))
+        {
+            should_destroy_wall = true;
+        }
         break;
 
     // Metal -- small but nasty explosion
@@ -2111,6 +2124,11 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
             *what = "iron grate";
         beam.name       = "blast of metal fragments";
         beam.damage.num = 4;
+        if (pow >= 75 && one_chance_in(20)
+            || grid == DNGN_GRATE)
+        {
+            should_destroy_wall = true;
+        }
         break;
 
     // Crystal
@@ -2120,6 +2138,8 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
         beam.ex_size    = 2;
         beam.name       = "blast of crystal shards";
         beam.damage.num = 4;
+        if (one_chance_in(3))
+            should_destroy_wall = true;
         break;
 
     // Stone arches and doors
@@ -2133,6 +2153,7 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
     case DNGN_SEALED_CLEAR_DOOR:
         if (what)
             *what = "stone door frame";
+        should_destroy_wall = true;
         // fall-through
     case DNGN_STONE_ARCH:
         if (what && *what == nullptr)
@@ -2140,6 +2161,8 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
         hole            = false;  // to hit monsters standing on doors
         beam.name       = "blast of rock fragments";
         beam.damage.num = 3;
+
+
         break;
 
     default:
@@ -2166,13 +2189,15 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
 spret cast_fragmentation(int pow, const actor *caster,
                               const coord_def target, bool fail)
 {
+    bool should_destroy_wall = false;
     bool hole                = true;
     const char *what         = nullptr;
 
     bolt beam;
 
+    // should_destroy_wall is an output argument.
     if (!setup_fragmentation_beam(beam, pow, caster, target, false, &what,
-                hole))
+        should_destroy_wall, hole))
     {
         return spret::abort;
     }
@@ -2182,7 +2207,7 @@ spret cast_fragmentation(int pow, const actor *caster,
         bolt tempbeam;
         bool temp;
         setup_fragmentation_beam(tempbeam, pow, caster, target, true, nullptr,
-                                 temp);
+                                 temp, temp);
         tempbeam.is_tracer = true;
         tempbeam.explode(false);
         if (tempbeam.beam_cancelled)
@@ -2198,6 +2223,8 @@ spret cast_fragmentation(int pow, const actor *caster,
     {
         if (you.see_cell(target))
             mprf("The %s shatters!", what);
+        if (should_destroy_wall)
+            destroy_wall(target);
     }
     else if (target == you.pos()) // You explode.
     {
