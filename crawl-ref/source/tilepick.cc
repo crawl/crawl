@@ -3874,6 +3874,8 @@ static tileidx_t _tileidx_player_species_base(const species_type species)
             return TILEG_SP_GNOLL;
         case SP_ANGEL:
             return TILEG_SP_ANGEL;
+        case SP_MANTIS:
+            return TILEG_SP_MANTIS;
         default:
             return TILEP_ERROR;
     }

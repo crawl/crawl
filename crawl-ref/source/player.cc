@@ -2068,6 +2068,11 @@ int player_speed()
     else if (you.duration[DUR_HASTE])
         ps = haste_div(ps);
 
+    if (you.duration[DUR_COWARD]) {
+        ps *= 12;
+        ps /= 10;
+    }
+
     if (you.form == transformation::statue || you.duration[DUR_PETRIFYING])
     {
         ps *= 15;

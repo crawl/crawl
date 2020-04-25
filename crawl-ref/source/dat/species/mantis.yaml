@@ -1,0 +1,63 @@
+enum: SP_MANTIS
+monster: MONS_HUMAN
+name: Mantis
+short_name: "MT"
+difficulty: Simple
+difficulty_priority: 90
+aptitudes:
+  xp: -1
+  hp: -1
+  mp_mod: -1
+  mr: 3
+  fighting: 2
+  short_blades: -1
+  long_blades: -3
+  axes: -3
+  maces_and_flails: -3
+  polearms: 0
+  staves: -2
+  slings: 2
+  bows: -3
+  crossbows: -3
+  throwing: 0
+  armour: -2
+  dodging: 2
+  stealth: 4
+  shields: -2
+  unarmed_combat: 3
+  spellcasting: -2
+  conjurations: -2
+  hexes: 0
+  charms: -2
+  summoning: -2
+  necromancy: -2
+  translocations: 0
+  transmutations: -3
+  fire_magic: -2
+  ice_magic: -2
+  air_magic: -1
+  earth_magic: -3
+  poison_magic: 3
+  invocations: -1
+  evocations: 0
+str: 9
+int: 5
+dex: 10
+levelup_stat_frequency: 5
+mutations:
+  1:
+    MUT_TOUGH_SKIN: 1
+    MUT_CLAWS: 3
+  9:
+    MUT_TENGU_FLIGHT: 1
+fake_mutations:
+  - long: You instinctive leap towards the enemy.
+    short: leap attack
+recommended_jobs:
+  - JOB_FIGHTER
+  - JOB_BERSERKER
+  - JOB_GLADIATOR
+  - JOB_ENCHANTER
+  - JOB_ASSASSIN
+  - JOB_WARPER
+  - JOB_VENOM_MAGE

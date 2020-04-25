@@ -368,7 +368,12 @@ static const duration_def duration_data[] =
       "You melted into the wall.", D_EXPIRES,
       {{ "Your camouflage fades away.", []() {
           end_wall_invisible();
-      } }}, 6},
+      } }}, 6}, 
+    { DUR_COWARD,
+      RED, "Coward",
+      "coward", "",
+      "", D_NO_FLAGS,
+      {{ "", }}},
     { DUR_SHROUD_OF_GOLUBRIA,
       BLUE, "Shroud",
       "shrouded", "",

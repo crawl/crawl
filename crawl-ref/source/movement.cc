@@ -7,6 +7,8 @@
 #include <cstring>
 #include <string>
 #include <sstream>
+#include <map>
+#include <iterator>
 
 #include "AppHdr.h"
 
@@ -29,8 +31,10 @@
 #include "god-passive.h"
 #include "items.h"
 #include "message.h"
+#include "melee-attack.h"
 #include "mon-act.h"
 #include "mon-place.h"
+#include "mon-tentacle.h"
 #include "mon-util.h"
 #include "player.h"
 #include "player-reacts.h"
@@ -44,6 +48,7 @@
 #include "traps.h"
 #include "travel.h"
 #include "transform.h"
+#include "unwind.h"
 #include "xom.h" // XOM_CLOUD_TRAIL_TYPE_KEY
 
 // Swap monster to this location. Player is swapped elsewhere.
@@ -127,6 +132,134 @@ static void _entered_malign_portal(actor* act)
     act->hurt(nullptr, roll_dice(2, 4), BEAM_MISSILE, KILLED_BY_WILD_MAGIC,
               "", "entering a malign gateway");
 }
+
+static monster* _mantis_leap_attack(coord_def& new_pos)
+{
+    int can_jump_range = you.airborne() ? 6 : 4;
+    bool mon_exist = false;
+    bool coward = true;
+
+    if (you.duration[DUR_COWARD]) {
+        return nullptr;
+    }
+
+    map<monster*, coord_def> vaild_mon;
+    for (distance_iterator di(you.pos(), true, true, LOS_RADIUS); di; ++di)
+    {
+        monster* mon = monster_at(*di);
+        if (mon
+            && mon->alive()
+            && you.see_cell_no_trans(mon->pos())
+            && !mon->wont_attack()
+            && !mons_is_firewood(*mon)
+            && !mons_is_tentacle_or_tentacle_segment(mon->type))
+        {
+            mon_exist = true;
+            bolt tempbeam;
+            tempbeam.source = you.pos();
+            tempbeam.target = *di;
+            tempbeam.range = LOS_RADIUS;
+            tempbeam.is_tracer = true;
+            tempbeam.fire();
+
+            bool first = true;
+            bool vaild = false;
+            int range_ = 1;
+            coord_def jumping_pos;
+            for (auto iter : tempbeam.path_taken)  {
+                if (!first && iter == mon->pos()) {
+                    vaild = true;
+                    break;
+                }
+                jumping_pos = iter;
+                if (monster_at(iter)) {
+                    vaild = false;
+                    break;
+                }
+
+                if (first) {
+                    for (int _x = -1; _x <= 1; _x++) {
+                        for (int _y = -1; _y <= 1; _y++) {
+                            if (_x == 0 || _y == 0) {
+                                if (new_pos == (iter + coord_def(_x, _y))) {
+                                    first = false;
+                                    coward = false;
+                                    _x = 2;
+                                    _y = 2;
+                                }
+                            }
+                        }
+                    }
+                    if (first)
+                        break;
+                }
+                range_++;
+                if (range_ > can_jump_range) {
+                    break;
+                }
+            }
+            if (vaild) {
+                vaild_mon.insert(pair<monster*, coord_def>(mon, jumping_pos));
+            }
+        }
+    }
+
+    if (!vaild_mon.empty()) {
+        map<monster*, coord_def>::iterator item = vaild_mon.begin();
+        advance(item, random2(vaild_mon.size()));
+        new_pos = item->second;
+        return item->first;
+    }
+    else {
+        if (mon_exist && coward) {
+            you.increase_duration(DUR_COWARD, 10, 10);
+        }
+    }
+    return nullptr;
+
+}
+
+static int _mantis_number_of_attacks()
+{
+    const int move_delay = player_movement_speed() * player_speed();
+
+    int attack_delay;
+    {
+        unwind_var<int> reset_speed(you.time_taken, player_speed());
+        attack_delay = you.attack_delay().roll();
+    }
+    return div_rand_round(move_delay, attack_delay * BASELINE_DELAY);
+}
+
+static bool _mantis_leap_attack_doing(monster* mons)
+{
+    if (!mons->alive())
+        return false;
+    const int number_of_attacks = _mantis_number_of_attacks();
+    if (number_of_attacks == 0)
+    {
+        mprf("You leap at %s, but your attack speed is too slow for a blow "
+            "to land.", mons->name(DESC_THE).c_str());
+        return false;
+    }
+    else
+    {
+        mprf("You leap at %s%s.",
+            mons->name(DESC_THE).c_str(),
+            number_of_attacks > 1 ? ", in a flurry of attacks" : "");
+    }
+
+    for (int i = 0; i < number_of_attacks; i++)
+    {
+        if (!mons->alive())
+            break;
+        melee_attack leap(&you, mons);
+        //lunge.wu_jian_attack = WU_JIAN_ATTACK_LUNGE;
+        leap.attack();
+    }
+    return true;
+}
+
 
 bool cancel_barbed_move()
 {
@@ -525,7 +658,7 @@ void move_player_action(coord_def move)
         }
     }
 
-    const coord_def targ = you.pos() + move;
+    coord_def targ = you.pos() + move;
     string wall_jump_err;
     // Don't allow wall jump against close doors via movement -- need to use
     // the ability. Also, if moving into a closed door, don't call
@@ -689,6 +822,7 @@ void move_player_action(coord_def move)
         }
     }
 
+    monster* mantis_attack_target_mon = nullptr;
     const bool running = you_are_delayed() && current_delay()->is_run();
 
     if (!attacking && (targ_pass || can_wall_jump)
@@ -763,6 +897,14 @@ void move_player_action(coord_def move)
         you.stop_directly_constricting_all(true);
         if (you.is_directly_constricted())
             you.stop_being_constricted();
+
+
+        if (you.species == SP_MANTIS && !attacking)
+        {
+            //jump
+            mantis_attack_target_mon = _mantis_leap_attack(targ);
+        }
+
 
         // Don't trigger traps when confusion causes no move.
         if (you.pos() != targ && targ_pass)
@@ -889,13 +1031,17 @@ void move_player_action(coord_def move)
     }
 
     bool did_wu_jian_attack = false;
-    if (you_worship(GOD_WU_JIAN) && !attacking)
+    if (!mantis_attack_target_mon && you_worship(GOD_WU_JIAN) && !attacking)
     {
         did_wu_jian_attack = wu_jian_post_move_effects(did_wall_jump,
                                                        initial_position);
     }
 
+    if (mantis_attack_target_mon != nullptr) {
+        _mantis_leap_attack_doing(mantis_attack_target_mon);
+    }
+
     // If you actually moved you are eligible for amulet of the acrobat.
-    if (!attacking && moving && !did_wu_jian_attack && !did_wall_jump)
+    if (!attacking && moving && !did_wu_jian_attack && !did_wall_jump && !mantis_attack_target_mon)
         update_acrobat_status();
 }

@@ -204,5 +204,6 @@ enum duration_type
     DUR_SHAFT_IMMUNITY,
     DUR_POISON_GLAND,
     DUR_WALL_MELTING2,
+    DUR_COWARD,
     NUM_DURATIONS
 };
