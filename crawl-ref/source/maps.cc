@@ -1235,8 +1235,8 @@ static bool verify_file_version(const string &file, time_t mtime)
     try
     {
         reader inf(fp);
-        const uint8_t major = unmarshallUByte(inf);
-        const uint8_t minor = unmarshallUByte(inf);
+        const auto version = get_save_version(inf);
+        const auto major = version.major, minor = version.minor;
         const int8_t word = unmarshallByte(inf);
         const int64_t t = unmarshallSigned(inf);
         fclose(fp);
@@ -1269,8 +1269,8 @@ static bool _load_map_index(const string& cache, const string &base,
     if (FILE *fp = fopen_u((base + ".lux").c_str(), "rb"))
     {
         reader inf(fp, TAG_MINOR_VERSION);
-        uint8_t major = unmarshallUByte(inf);
-        uint8_t minor = unmarshallUByte(inf);
+        const auto version = get_save_version(inf);
+        const auto major = version.major, minor = version.minor;
         int8_t word = unmarshallByte(inf);
         int64_t t = unmarshallSigned(inf);
         if (major != TAG_MAJOR_VERSION || minor > TAG_MINOR_VERSION
@@ -1291,8 +1291,8 @@ static bool _load_map_index(const string& cache, const string &base,
 
     reader inf(fp, TAG_MINOR_VERSION);
     // Re-check version, might have been modified in the meantime.
-    uint8_t major = unmarshallUByte(inf);
-    uint8_t minor = unmarshallUByte(inf);
+    const auto version = get_save_version(inf);
+    const auto major = version.major, minor = version.minor;
     int8_t word = unmarshallByte(inf);
     int64_t t = unmarshallSigned(inf);
     if (major != TAG_MAJOR_VERSION || minor > TAG_MINOR_VERSION
@@ -1358,8 +1358,7 @@ static void _write_map_prelude(const string &filebase, time_t mtime)
 
     FILE *fp = fopen_u(luafile.c_str(), "wb");
     writer outf(luafile, fp);
-    marshallUByte(outf, TAG_MAJOR_VERSION);
-    marshallUByte(outf, TAG_MINOR_VERSION);
+    write_save_version(outf, save_version::current());
     marshallByte(outf, WORD_LEN);
     marshallSigned(outf, mtime);
     lc_global_prelude.write(outf);
@@ -1375,8 +1374,7 @@ static void _write_map_full(const string &filebase, size_t vs, size_t ve,
         end(1, true, "Unable to open %s for writing", cfile.c_str());
 
     writer outf(cfile, fp);
-    marshallUByte(outf, TAG_MAJOR_VERSION);
-    marshallUByte(outf, TAG_MINOR_VERSION);
+    write_save_version(outf, save_version::current());
     marshallByte(outf, WORD_LEN);
     marshallSigned(outf, mtime);
     for (size_t i = vs; i < ve; ++i)
@@ -1393,8 +1391,7 @@ static void _write_map_index(const string &filebase, size_t vs, size_t ve,
         end(1, true, "Unable to open %s for writing", cfile.c_str());
 
     writer outf(cfile, fp);
-    marshallUByte(outf, TAG_MAJOR_VERSION);
-    marshallUByte(outf, TAG_MINOR_VERSION);
+    write_save_version(outf, save_version::current());
     marshallByte(outf, WORD_LEN);
     marshallSigned(outf, mtime);
     marshallShort(outf, ve > vs? ve - vs : 0);

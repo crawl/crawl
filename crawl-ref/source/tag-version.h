@@ -246,9 +246,6 @@ enum tag_minor_version
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
 };
 
-// Marshalled as a byte in several places.
-COMPILE_CHECK(TAG_MINOR_VERSION <= 0xff);
-
 // tags that affect loading bones files. If you do save compat that affects
 // ghosts, these must be updated in addition to the enum above.
 const set<int> bones_minor_tags =

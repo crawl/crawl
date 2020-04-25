@@ -4156,9 +4156,7 @@ bool TravelCache::is_known_branch(uint8_t branch) const
 
 void TravelCache::save(writer& outf) const
 {
-    // Travel cache version information
-    marshallUByte(outf, TAG_MAJOR_VERSION);
-    marshallUByte(outf, TAG_MINOR_VERSION);
+    write_save_version(outf, save_version::current());
 
     // Write level count.
     marshallShort(outf, levels.size());
@@ -4178,8 +4176,8 @@ void TravelCache::load(reader& inf, int minorVersion)
     levels.clear();
 
     // Check version. If not compatible, we just ignore the file altogether.
-    int major = unmarshallUByte(inf),
-        minor = unmarshallUByte(inf);
+    const auto version = get_save_version(inf);
+    const auto major = version.major, minor = version.minor;
     if (major != TAG_MAJOR_VERSION || minor > TAG_MINOR_VERSION)
         return;
 

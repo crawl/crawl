@@ -828,9 +828,7 @@ string get_prefs_filename()
 void write_ghost_version(writer &outf)
 {
     // this may be distinct from the current save version
-    auto bones_version = save_version::current_bones();
-    marshallUByte(outf, bones_version.major);
-    marshallUByte(outf, bones_version.minor);
+    write_save_version(outf, save_version::current_bones());
 
     // extended_version just pads the version out to four 32-bit words.
     // This makes the bones file compatible with Hearse with no extra
@@ -853,10 +851,7 @@ static void _write_tagged_chunk(const string &chunkname, tag_type tag)
 {
     writer outf(you.save, chunkname);
 
-    // write version
-    marshallUByte(outf, TAG_MAJOR_VERSION);
-    marshallUByte(outf, TAG_MINOR_VERSION);
-
+    write_save_version(outf, save_version::current());
     tag_write(tag, outf);
 }
 
@@ -2880,18 +2875,32 @@ level_excursion::~level_excursion()
 
 save_version get_save_version(reader &file)
 {
-    // Read first two bytes.
-    uint8_t buf[2];
+    int major, minor;
     try
     {
-        file.read(buf, 2);
+        major = unmarshallUByte(file);
+        minor = unmarshallUByte(file);
+        if (minor == UINT8_MAX)
+            minor = unmarshallInt(file);
     }
     catch (short_read_exception& E)
     {
         // Empty file?
         return save_version(-1, -1);
     }
-    return save_version(buf[0], buf[1]);
+    return save_version(major, minor);
+}
+
+void write_save_version(writer &outf, save_version version)
+{
+    marshallUByte(outf, version.major);
+    if (version.minor < UINT8_MAX)
+        marshallUByte(outf, version.minor);
+    else
+    {
+        marshallUByte(outf, UINT8_MAX);
+        marshallInt(outf, version.minor);
+    }
 }
 
 static bool _convert_obsolete_species()
@@ -2950,9 +2959,9 @@ static bool _read_char_chunk(package *save)
 
     try
     {
-        uint8_t format, major, minor;
-        inf.read(&major, 1);
-        inf.read(&minor, 1);
+        const auto version = get_save_version(inf);
+        const auto major = version.major, minor = version.minor;
+        uint8_t format;
 
         unsigned int len = unmarshallInt(inf);
         if (len > 1024) // something is fishy

@@ -61,9 +61,8 @@ bool KillMaster::empty() const
 
 void KillMaster::save(writer& outf) const
 {
-    // Write the version of the kills file
-    marshallByte(outf, KILLS_MAJOR_VERSION);
-    marshallByte(outf, KILLS_MINOR_VERSION);
+    const auto version = save_version(KILLS_MAJOR_VERSION, KILLS_MINOR_VERSION);
+    write_save_version(outf, version);
 
     for (int i = 0; i < KC_NCATEGORIES; ++i)
         categorized_kills[i].save(outf);
@@ -71,8 +70,9 @@ void KillMaster::save(writer& outf) const
 
 void KillMaster::load(reader& inf)
 {
-    int major = unmarshallByte(inf),
-        minor = unmarshallByte(inf);
+    const auto version = get_save_version(inf);
+    const auto major = version.major, minor = version.minor;
+
     if (major != KILLS_MAJOR_VERSION
         || (minor != KILLS_MINOR_VERSION && minor > 0))
     {
