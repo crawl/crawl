@@ -5328,10 +5328,13 @@ void update_monster_symbol(monster_type mtype, cglyph_t md)
         monster_symbols[mtype].colour = md.col;
 }
 
-void normalize_spell_freq(monster_spells &spells, int hd)
+int spell_freq_for_hd(int hd)
 {
-    const unsigned int total_freq = (hd + 50);
+    return hd + 50;
+}
 
+void normalize_spell_freq(monster_spells &spells, int total_freq)
+{
     // Not using std::accumulate because slot.freq is only a uint8_t.
     unsigned int total_given_freq = 0;
     for (const auto &slot : spells)

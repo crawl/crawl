@@ -7112,37 +7112,14 @@ static const int NUM_MONSTER_SPELL_SLOTS = 6;
 
 static void _fixup_spells(monster_spells &spells, int hd)
 {
-    unsigned count = 0;
-    for (size_t i = 0; i < spells.size(); i++)
-    {
-        if (spells[i].spell == SPELL_NO_SPELL)
-            continue;
+    for (auto& slot : spells)
+        slot.flags |= MON_SPELL_WIZARD;
 
-        count++;
-
-        spells[i].flags |= MON_SPELL_WIZARD;
-
-        if (i == NUM_MONSTER_SPELL_SLOTS - 1)
-            spells[i].flags |= MON_SPELL_EMERGENCY;
-    }
-
-    if (!count)
-    {
-        spells.clear();
-        return;
-    }
-
-    erase_if(spells, [](const mon_spell_slot &t) {
-        return t.spell == SPELL_NO_SPELL;
-    });
-
-    if (!spells.size())
-        return;
+    if (spells.size() >= NUM_MONSTER_SPELL_SLOTS)
+        spells[NUM_MONSTER_SPELL_SLOTS-1].flags |= MON_SPELL_EMERGENCY;
 
     for (auto& slot : spells)
         slot.freq = (hd + 50) / spells.size();
-
-    normalize_spell_freq(spells, hd);
 }
 #endif
 
@@ -7198,14 +7175,30 @@ static void unmarshallSpells(reader &th, monster_spells &spells
             }
         }
 #endif
+
+        if (spell_removed(spells[j].spell))
+            spells[j].spell = SPELL_NO_SPELL;
     }
+
+    int total_given_freq = 0;
+    for (const auto &slot : spells)
+        total_given_freq += slot.freq;
+
+    erase_if(spells, [](const mon_spell_slot &t) {
+        return t.spell == SPELL_NO_SPELL;
+    });
 
 #if TAG_MAJOR_VERSION == 34
     // This will turn all old spells into wizard spells, which
     // isn't right but is the simplest way to do this.
     if (th.getMinorVersion() < TAG_MINOR_MONSTER_SPELL_SLOTS)
+    {
         _fixup_spells(spells, hd);
+        total_given_freq = spell_freq_for_hd(hd);  // would be zero otherwise
+    }
 #endif
+
+    normalize_spell_freq(spells, total_given_freq);
 }
 
 static void marshallGhost(writer &th, const ghost_demon &ghost)

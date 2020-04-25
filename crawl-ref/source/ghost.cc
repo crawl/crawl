@@ -259,7 +259,7 @@ void ghost_demon::init_pandemonium_lord()
         if (coinflip())
             ADD_SPELL(random_choose(SPELL_SUMMON_DEMON, SPELL_SUMMON_GREATER_DEMON));
 
-        normalize_spell_freq(spells, xl);
+        normalize_spell_freq(spells, spell_freq_for_hd(xl));
     }
 
     colour = one_chance_in(10) ? colour_t{ETC_RANDOM} : random_monster_colour();
@@ -635,7 +635,7 @@ void ghost_demon::add_spells()
         }
     }
 
-    normalize_spell_freq(spells, xl);
+    normalize_spell_freq(spells, spell_freq_for_hd(xl));
 }
 
 bool ghost_demon::has_spells() const
