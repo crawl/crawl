@@ -452,8 +452,6 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             else
                 attitude = ATT_HOSTILE;
         }
-        else
-            attitude = static_cast<mon_attitude_type>(props["old_attitude"].get_short());
         mons_att_changed(this);
         break;
 

@@ -6787,6 +6787,15 @@ void unmarshallMonster(reader &th, monster& m)
         m.props[BEOGH_RANGE_WPN_GIFT_KEY] = true;
     }
 
+    // fixup for versions of frenzy that involved a permanent attitude change,
+    // with the original attitude stored in a prop.
+    if (m.props.exists("old_attitude"))
+    {
+        m.attitude = static_cast<mon_attitude_type>(
+                                        m.props["old_attitude"].get_short());
+        m.props.erase("old_attitude");
+    }
+
     if (th.getMinorVersion() < TAG_MINOR_LEVEL_XP_VAULTS
         && m.props.exists("map"))
     {

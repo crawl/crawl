@@ -228,6 +228,9 @@ void monster::ensure_has_client_id()
 
 mon_attitude_type monster::temp_attitude() const
 {
+    if (has_ench(ENCH_INSANE))
+        return ATT_NEUTRAL;
+
     if (has_ench(ENCH_HEXED))
     {
         actor *agent = monster_by_mid(get_ench(ENCH_HEXED).source);
@@ -2756,10 +2759,6 @@ bool monster::go_frenzy(actor *source)
 
     const int duration = 16 + random2avg(13, 2);
 
-    // store the attitude for later retrieval
-    props["old_attitude"] = short(attitude);
-
-    attitude = ATT_NEUTRAL;
     add_ench(mon_enchant(ENCH_INSANE, 0, source, duration * BASELINE_DELAY));
     if (holiness() & MH_NATURAL)
     {
