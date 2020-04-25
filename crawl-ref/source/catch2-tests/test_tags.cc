@@ -8,6 +8,11 @@ void unmarshall_vehumet_spells(reader &th, set<spell_type>& old_gifts,
         set<spell_type>& gifts);
 FixedVector<spell_type, MAX_KNOWN_SPELLS> unmarshall_player_spells(reader &th);
 void remove_removed_library_spells(FixedBitVector<NUM_SPELLS>& lib);
+void unmarshallSpells(reader &th, monster_spells &spells
+#if TAG_MAJOR_VERSION == 34
+                             , unsigned hd
+#endif
+                            );
 
 TEST_CASE( "Vehumet gifts can be decoded", "[single-file]" ) {
 
@@ -147,5 +152,44 @@ TEST_CASE( "Removed spells remover can filter spell library", "[single-file]" ) 
         remove_removed_library_spells(library);
 
         REQUIRE(library[SPELL_MAGIC_DART] == false);
+    }
+}
+
+TEST_CASE( "Monster spell unmarshalling can remove removed spells", "[single-file]" ) {
+
+    SECTION ("removed spells are removed from the spell list") {
+        vector<unsigned char> input = {
+            0x01, // count
+            0x00, 0x07, // SPELL_STRIKING
+            0x01, // frequency
+            0x00, 0x10, // MON_SPELL_WIZARD
+        };
+        auto r = reader(input);
+        r.setMinorVersion(TAG_MINOR_TRACK_REGEN_ITEMS);
+        const auto hd = 30;
+
+        monster_spells spells;
+        unmarshallSpells(r, spells, hd);
+
+        REQUIRE(spells.empty());
+        REQUIRE(r.valid() == false);
+    }
+
+    SECTION ("non-removed spells are not removed from the spell list") {
+        vector<unsigned char> input = {
+            0x01, // count
+            0x00, 0x03, // SPELL_MAGIC_DART
+            0x01, // frequency
+            0x00, 0x10, // MON_SPELL_WIZARD
+        };
+        auto r = reader(input);
+        r.setMinorVersion(TAG_MINOR_TRACK_REGEN_ITEMS);
+        const auto hd = 30;
+
+        monster_spells spells;
+        unmarshallSpells(r, spells, hd);
+
+        REQUIRE(spells.size() == 1);
+        REQUIRE(r.valid() == false);
     }
 }
