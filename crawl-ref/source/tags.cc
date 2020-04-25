@@ -7186,8 +7186,8 @@ void unmarshallSpells(reader &th, monster_spells &spells
         if (th.getMinorVersion() >= TAG_MINOR_MONSTER_SPELL_SLOTS)
         {
 #endif
-        spells[j].freq = unmarshallByte(th);
-        spells[j].flags.flags = unmarshallShort(th);
+            spells[j].freq = unmarshallByte(th);
+            spells[j].flags.flags = unmarshallShort(th);
 #if TAG_MAJOR_VERSION == 34
             if (th.getMinorVersion() < TAG_MINOR_DEMONIC_SPELLS)
             {
