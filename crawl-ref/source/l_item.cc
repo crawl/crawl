@@ -38,10 +38,16 @@
 struct item_wrapper
 {
     item_def *item;
-    bool temp; // Does item need to be freed when the wrapper is GCed?
+    bool temp; // whether `item` is being memory managed by this object or
+               // elsewhere; if true, will be deleted on gc.
     int turn;
 
-    bool valid() const { return turn == you.num_turns; }
+    bool valid(lua_State *ls) const
+    {
+        // TODO: under what circumstances will dlua actually need to deal with
+        // wrapped items that were created on a different turn?
+        return item && (!CLua::get_vm(ls).managed_vm || turn == you.num_turns);
+    }
 };
 
 void clua_push_item(lua_State *ls, item_def *item)
@@ -66,7 +72,7 @@ item_def *clua_get_item(lua_State *ls, int ndx)
 {
     item_wrapper *iwrap =
         clua_get_userdata<item_wrapper>(ls, ITEM_METATABLE, ndx);
-    if (CLua::get_vm(ls).managed_vm && !iwrap->valid())
+    if (!iwrap->valid(ls))
         luaL_error(ls, "Invalid item");
     return iwrap->item;
 }
@@ -1191,8 +1197,11 @@ static const struct luaL_reg item_lib[] =
 static int _delete_wrapped_item(lua_State *ls)
 {
     item_wrapper *iw = static_cast<item_wrapper*>(lua_touserdata(ls, 1));
-    if (iw && iw->temp)
+    if (iw && iw->temp && iw->item)
+    {
         delete iw->item;
+        iw->item = nullptr;
+    }
     return 0;
 }
 
