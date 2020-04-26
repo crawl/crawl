@@ -30,7 +30,9 @@ void lua_push_moninf(lua_State *ls, monster_info *mi)
 
 #define MONINF(ls, n, var) \
     monster_info *var = *(monster_info **) \
-        luaL_checkudata(ls, n, MONINF_METATABLE)
+        luaL_checkudata(ls, n, MONINF_METATABLE); \
+    if (!var) \
+        return 0
 
 #define MIRET1(type, field, cfield) \
     static int moninf_get_##field(lua_State *ls) \
