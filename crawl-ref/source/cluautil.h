@@ -84,6 +84,10 @@ static inline T *clua_get_userdata(lua_State *ls, const char *mt, int ndx = 1)
     return static_cast<T*>(luaL_checkudata(ls, ndx, mt));
 }
 
+// Use for cases where the userdata is simply a pointer and is guaranteed
+// to be created by `new`. For a more complex pattern, see _delete_wrapped_item
+// in l-item.cc. The pattern instantiate here requires checking the pointer
+// for validity...
 template <class T>
 static int lua_object_gc(lua_State *ls)
 {
@@ -96,6 +100,21 @@ static int lua_object_gc(lua_State *ls)
     return 0;
 }
 
+// allocate space for an object of type T via lua. Any memory allocated this
+// way will be garbage-collected by lua. There are basically two patterns:
+// (i) T is a pointer (call it `*S`), so the type signature of this ends up as
+//     **S. In that case, the memory management is probably handled on the c++
+//     side, perhaps by creating a new object when instantiating this userdef.
+// (ii) T is a wrapper struct, for example `item_wrapper` in l-item.cc. In this
+//      case the memory management may be a bit more complicated, but the
+//      wrapper object will still usually have a pointer to a c++ object, and
+//      may still need a gc function.
+//
+// If a `delete` is needed on cleanup, bind an appropriate function to the __gc
+// metamethod. For example, case (i) can usually use `lua_object_gc` above.
+// Be aware that this method is callable directly from the lua side in addition
+// to being automatically triggered -- so you need to be careful with your
+// pointers!
 template <class T> T *clua_new_userdata(
         lua_State *ls, const char *mt)
 {
@@ -179,15 +198,29 @@ dungeon_feature_type f = check_lua_feature(ls, pos)
         luaL_error(ls, "Expected branch name");
 
 #define MAP(ls, n, var) \
-map_def *var = *(map_def **) luaL_checkudata(ls, n, MAP_METATABLE)
-#define LINES(ls, n, var) \
-map_lines &var = (*(map_def **) luaL_checkudata(ls, n, MAP_METATABLE))->map
+map_def *var = *(map_def **) luaL_checkudata(ls, n, MAP_METATABLE); \
+if (!var) \
+    return 0
+
+// TODO: ugh
+#define LINES(ls, n, map_var, lines_var) \
+MAP(ls, n, map_var); \
+map_lines &lines_var = map_var->map
+
 #define DEVENT(ls, n, var) \
-dgn_event *var = *(dgn_event **) luaL_checkudata(ls, n, DEVENT_METATABLE)
+dgn_event *var = *(dgn_event **) luaL_checkudata(ls, n, DEVENT_METATABLE); \
+if (!var) \
+    return 0
+
 #define MAPMARKER(ls, n, var) \
-map_marker *var = *(map_marker **) luaL_checkudata(ls, n, MAPMARK_METATABLE)
+map_marker *var = *(map_marker **) luaL_checkudata(ls, n, MAPMARK_METATABLE); \
+if (!var) \
+    return 0
+
 #define LUA_ITEM(ls, name, n) \
-item_def *item = *(item_def **) luaL_checkudata(ls, n, ITEM_METATABLE)
+item_def *name = *(item_def **) luaL_checkudata(ls, n, ITEM_METATABLE); \
+if (!name) \
+    return 0
 
 template <typename list, typename lpush>
 static int clua_gentable(lua_State *ls, const list &strings, lpush push)
