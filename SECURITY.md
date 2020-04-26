@@ -30,3 +30,7 @@ via an IRC private message), or sending an email to [security@dcss.io] with a
 subject line including the phrase `dcss security report`. Currently this email
 forwards to @rawlins / advil, who will send an acknowledgement and report the
 issue to the devteam more generally.
+
+If you have access (devteam and server owners) you can directly report a
+security issue in private by opening an issue in the https://github.com/crawl/dcss-security
+repository.
