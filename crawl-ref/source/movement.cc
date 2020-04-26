@@ -141,6 +141,7 @@ static bool _can_leap_target(monster* mon)
         && you.see_cell_no_trans(mon->pos())
         && !mon->wont_attack()
         && !mons_is_firewood(*mon)
+        && mon->type != MONS_BUTTERFLY
         && !mons_is_tentacle_or_tentacle_segment(mon->type));
 }
 
@@ -1085,7 +1086,7 @@ void move_player_action(coord_def move)
     if (player_in_branch(BRANCH_ABYSS))
         maybe_shift_abyss_around_player();
 
-    you.apply_berserk_penalty = !attacking;
+    you.apply_berserk_penalty = !attacking && mantis_attack_target_mon == nullptr;
 
     if (!attacking && you_worship(GOD_CHEIBRIADOS) && one_chance_in(10)
         && you.run())
