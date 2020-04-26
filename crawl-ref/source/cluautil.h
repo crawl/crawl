@@ -88,8 +88,11 @@ template <class T>
 static int lua_object_gc(lua_State *ls)
 {
     T **pptr = static_cast<T**>(lua_touserdata(ls, 1));
-    if (pptr)
+    if (pptr && *pptr)
+    {
         delete *pptr;
+        *pptr = nullptr;
+    }
     return 0;
 }
 
