@@ -87,7 +87,7 @@ static int lua_object_gc(lua_State *ls)
     if (pptr && *pptr)
     {
         delete *pptr;
-        *pptr = nullptr;
+        *pptr = NULL;
     }
     return 0;
 }

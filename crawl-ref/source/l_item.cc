@@ -1118,7 +1118,7 @@ static int _delete_wrapped_item(lua_State *ls)
     if (iw && iw->temp && iw->item)
     {
         delete iw->item;
-        iw->item = nullptr;
+        iw->item = NULL;
     }
     return 0;
 }
