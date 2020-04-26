@@ -161,6 +161,7 @@ beastly_appendage BEASTLY_APPENDAGE
 irradiate IRRADIATE
 hydra_form HYDRA_FORM
 dragon_form DRAGON_FORM
+wall_camoflage WALL_CAMOFLAGE
 
 # item-based spells
 %sdir gui/spells/misc
