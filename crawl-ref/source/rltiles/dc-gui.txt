@@ -365,7 +365,7 @@ base/octopode1 SP_RECOMMENDED_OCTOPODE
 %compose base/angel
 %finish SP_RECOMMENDED_ANGEL
 %start
-%compose base/human_f
+%compose base/mantis
 %compose body/animal_skin
 %finish SP_RECOMMENDED_MANTIS
 %syn LAST_RECOMMENDED_SPECIES

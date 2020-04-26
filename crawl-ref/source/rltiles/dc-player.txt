@@ -92,7 +92,7 @@ formicid FORMICID
 vine_stalker_f VINE_STALKER
 vine_stalker_m
 angel ANGEL
-human_m MANTIS
+mantis MANTIS
 
 # draconians
 draconian_f DRACONIAN DRACONIAN_FIRST
