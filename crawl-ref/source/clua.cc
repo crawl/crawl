@@ -663,7 +663,7 @@ bool CLua::callfn(const char *fn, int nargs, int nret)
 
 static int lua_loadstring(lua_State *ls)
 {
-    const auto lua = luaL_checkstring(ls, 1);
+    const char *lua = luaL_checkstring(ls, 1);
     if (lua[0] == 0x1b)
         abort();
     lua_settop(ls, 0);
