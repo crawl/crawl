@@ -31,9 +31,8 @@
 #define MAP_UMBRAED        0x1000000
 #define MAP_QUAD_HALOED    0X4000000
 #define MAP_DISJUNCT       0X8000000
-#if TAG_MAJOR_VERSION == 34
 #define MAP_HOT           0x10000000
-#endif
+#define MAP_LEAP          0x20000000
 
 struct cloud_info
 {

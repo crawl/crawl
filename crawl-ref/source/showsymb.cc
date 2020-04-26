@@ -105,7 +105,9 @@ static unsigned short _cell_feat_show_colour(const map_cell& cell,
 
     if (feat == DNGN_FLOOR)
     {
-        if (cell.flags & MAP_LIQUEFIED)
+        if (cell.flags & MAP_LEAP)
+            colour = ETC_LEAP;
+        else if (cell.flags & MAP_LIQUEFIED)
             colour = ETC_LIQUEFIED;
         else if (cell.flags & MAP_DISJUNCT)
             colour = ETC_DISJUNCTION;

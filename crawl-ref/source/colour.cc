@@ -627,6 +627,14 @@ void init_element_colours()
                               {40, YELLOW},
                               {10, WHITE},
                             }));
+
+
+    add_element_colour(new random_element_colour_calc(
+        ETC_LEAP, "leap point", 
+        { {60,  MAGENTA},
+          {60,  RED},
+        }));
+    
     // redefined by Lua later
     add_element_colour(new element_colour_calc(
                             ETC_DISCO, "disco", _etc_random

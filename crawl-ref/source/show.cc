@@ -143,6 +143,9 @@ static void _update_feat_at(const coord_def &gp)
     if (heated(gp))
         env.map_knowledge(gp).flags |= MAP_HOT;
 
+    if (leaped(gp))
+        env.map_knowledge(gp).flags |= MAP_LEAP;
+
     if (is_sanctuary(gp))
     {
         if (testbits(env.pgrid(gp), FPROP_SANCTUARY_1))

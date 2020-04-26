@@ -5,6 +5,7 @@
 
 #pragma once
 
+bool mantis_leap_point(set<coord_def>& set_);
 bool cancel_barbed_move();
 void apply_barbs_damage();
 bool cancel_confused_move(bool stationary);

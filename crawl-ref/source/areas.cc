@@ -21,6 +21,7 @@
 #include "losglobal.h"
 #include "message.h"
 #include "mon-behv.h"
+#include "movement.h"
 #include "religion.h"
 #include "stepdown.h"
 #include "terrain.h"
@@ -42,6 +43,7 @@ enum class areaprop
     disjunction   = (1 << 9),
     soul_aura     = (1 << 10),
     hot = (1 << 11),
+    leap = (1 << 12)
 };
 DEF_BITFIELD(areaprops, areaprop);
 
@@ -221,10 +223,35 @@ static void _update_agrid()
         no_areas = false;
     }
 
+    if (you.species == SP_MANTIS)
+    {
+        const int r = 1;
+        _agrid_centres.emplace_back(area_centre_type::leap, you.pos(), r);
+
+        set<coord_def> leap_points;
+        mantis_leap_point(leap_points);
+
+        for (radius_iterator ri(you.pos(), r, C_SQUARE);
+            ri; ++ri)
+        {
+            if (cell_see_cell(you.pos(), *ri, LOS_DEFAULT) &&
+                you.pos() != *ri &&
+                !cell_is_solid(*ri) &&
+                leap_points.find(*ri) != leap_points.end()) {
+                _set_agrid_flag(*ri, areaprop::leap);
+            }
+        }
+        no_areas = false;
+    }
+
+
     // TODO: update sanctuary here.
 
     _agrid_valid = true;
 }
+
+
+
 
 static area_centre_type _get_first_area(const coord_def& f)
 {
@@ -776,4 +803,12 @@ bool heated(const coord_def& p)
 bool actor::heated() const
 {
     return ::heated(pos());
+}
+bool leaped(const coord_def& p)
+{
+    if (!map_bounds(p))
+        return false;
+    if (!_agrid_valid)
+        _update_agrid();
+    return _check_agrid_flag(p, areaprop::leap);
 }

@@ -133,6 +133,18 @@ static void _entered_malign_portal(actor* act)
               "", "entering a malign gateway");
 }
 
+
+static bool _can_leap_target(monster* mon)
+{
+    return (mon
+        && mon->alive()
+        && you.see_cell_no_trans(mon->pos())
+        && !mon->wont_attack()
+        && !mons_is_firewood(*mon)
+        && !mons_is_tentacle_or_tentacle_segment(mon->type));
+}
+
+
 static monster* _mantis_leap_attack(coord_def& new_pos)
 {
     int can_jump_range = you.airborne() ? 6 : 4;
@@ -147,12 +159,7 @@ static monster* _mantis_leap_attack(coord_def& new_pos)
     for (distance_iterator di(you.pos(), true, true, LOS_RADIUS); di; ++di)
     {
         monster* mon = monster_at(*di);
-        if (mon
-            && mon->alive()
-            && you.see_cell_no_trans(mon->pos())
-            && !mon->wont_attack()
-            && !mons_is_firewood(*mon)
-            && !mons_is_tentacle_or_tentacle_segment(mon->type))
+        if (_can_leap_target(mon))
         {
             mon_exist = true;
             bolt tempbeam;
@@ -260,6 +267,62 @@ static bool _mantis_leap_attack_doing(monster* mons)
     return true;
 }
 
+bool mantis_leap_point(set<coord_def>& set_)
+{
+    int radius_ = you.airborne() ? 6 : 4;
+    if (you.duration[DUR_COWARD]) {
+        return false;
+    }
+    for (distance_iterator di(you.pos(), true, true, radius_); di; ++di)
+    {
+        monster* mon = monster_at(*di);
+        if (_can_leap_target(mon))
+        {
+            bolt tempbeam;
+            tempbeam.source = you.pos();
+            tempbeam.target = *di;
+            tempbeam.range = radius_;
+            tempbeam.is_tracer = true;
+            tempbeam.fire();
+
+            bool first = true;
+            bool vaild = false;
+            int range_ = 1;
+            set<coord_def> leap_point;
+            for (auto iter : tempbeam.path_taken) {
+                if (!first && iter == mon->pos()) {
+                    vaild = true;
+                    break;
+                }
+                if (monster_at(iter)) {
+                    vaild = false;
+                    break;
+                }
+
+                if (first) {
+                    for (int _x = -1; _x <= 1; _x++) {
+                        for (int _y = -1; _y <= 1; _y++) {
+                            if (_x == 0 || _y == 0) {
+                                first = false;
+                                leap_point.insert(iter  + coord_def(_x,_y));
+                            }
+                        }
+                    }
+                    if (first)
+                        break;
+                }
+                range_++;
+                if (range_ > radius_) {
+                    break;
+                }
+            }
+            if (vaild) {
+                set_.insert(leap_point.begin(), leap_point.end());
+            }
+        }
+    }
+    return true;
+}
 
 bool cancel_barbed_move()
 {

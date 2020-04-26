@@ -2240,6 +2240,9 @@ void world_reacts()
     if (!crawl_state.game_is_arena())
         player_reacts_to_monsters();
 
+    if (you.species == SP_MANTIS)
+        invalidate_agrid(true);
+
     wu_jian_end_of_turn_effects();
 
     add_auto_excludes();
