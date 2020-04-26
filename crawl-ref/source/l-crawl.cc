@@ -595,8 +595,11 @@ static int crawl_regex_find(lua_State *ls)
 {
     text_pattern **pattern =
             clua_get_userdata< text_pattern* >(ls, REGEX_METATABLE);
-    if (!pattern)
+    if (!pattern || !*pattern)
+    {
+        luaL_argerror(ls, 1, "Invalid regex object");
         return 0;
+    }
 
     const char *text = luaL_checkstring(ls, -1);
     if (!text)
@@ -612,7 +615,15 @@ static int crawl_regex_equals(lua_State *ls)
             clua_get_userdata< text_pattern* >(ls, REGEX_METATABLE);
     text_pattern **arg =
             clua_get_userdata< text_pattern* >(ls, REGEX_METATABLE, 2);
-    lua_pushboolean(ls, pattern && arg && **pattern == **arg);
+
+    if (!pattern || !*pattern || !arg || !*arg)
+    {
+        // TODO: explain which one
+        luaL_error(ls, "Invalid regex object");
+        return 0;
+    }
+
+    lua_pushboolean(ls, **pattern == **arg);
     return 1;
 }
 
@@ -644,8 +655,11 @@ static int crawl_messf_matches(lua_State *ls)
 {
     message_filter **mf =
             clua_get_userdata< message_filter* >(ls, MESSF_METATABLE);
-    if (!mf)
+    if (!mf || !*mf)
+    {
+        luaL_argerror(ls, 1, "Invalid message filter object");
         return 0;
+    }
 
     const char *pattern = luaL_checkstring(ls, 2);
     int ch = luaL_checkint(ls, 3);
@@ -664,7 +678,13 @@ static int crawl_messf_equals(lua_State *ls)
             clua_get_userdata< message_filter* >(ls, MESSF_METATABLE);
     message_filter **arg =
             clua_get_userdata< message_filter* >(ls, MESSF_METATABLE, 2);
-    lua_pushboolean(ls, mf && arg && **mf == **arg);
+    if (!mf || !*mf || !arg || !*arg)
+    {
+        // TODO: explain which one
+        luaL_error(ls, "Invalid message filter object");
+        return 0;
+    }
+    lua_pushboolean(ls, **mf == **arg);
     return 1;
 }
 
