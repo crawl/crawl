@@ -317,6 +317,19 @@ LUARET1(you_shrouded, boolean, you.duration[DUR_SHROUD_OF_GOLUBRIA])
  * @function swift
  */
 LUARET1(you_swift, number, you.duration[DUR_SWIFTNESS] ? ((you.attribute[ATTR_SWIFTNESS] >= 0) ? 1 : -1) : 0)
+/*** What was the loudest noise you heard in the last turn?
+ * Returns a number from [0, 1000], representing the current noise bar.
+ * If the player's coordinates are silenced, return 0.
+ *
+ * Noise bar colour breakpoints, listed here for clua api convenience:
+ * LIGHTGREY <= 333 , YELLOW <= 666 , RED < 1000 , else LIGHTMAGENTA
+ * Each colour breakpoint aims to approximate 1 additional los radius of noise.
+ *
+ * @treturn int noise value
+ * @function noise_perception
+ */
+LUARET1(you_noise_perception, number, silenced(you.pos())
+                                      ? 0 : you.get_noise_perception(true))
 /*** Are you paralysed?
  * @treturn boolean
  * @function paralysed
@@ -1202,6 +1215,7 @@ static const struct luaL_reg you_clib[] =
     { "transform",    you_transform },
     { "berserk",      you_berserk },
     { "confused",     you_confused },
+    { "noise_perception", you_noise_perception },
     { "paralysed",    you_paralysed },
     { "shrouded",     you_shrouded },
     { "swift",        you_swift },
