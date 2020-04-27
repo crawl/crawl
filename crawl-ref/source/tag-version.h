@@ -280,6 +280,15 @@ struct save_version
         return save_version(TAG_MAJOR_VERSION, *bones_minor_tags.crbegin());
     }
 
+    static save_version minimum_supported()
+    {
+#if TAG_MAJOR_VERSION == 34
+        return save_version(33, 17);
+#else
+        return save_version(TAG_MAJOR_VERSION, 0);
+#endif
+    }
+
     bool valid() const
     {
         return major > 0 && minor > -1;
@@ -332,12 +341,7 @@ struct save_version
 
     bool is_ancient() const
     {
-        return valid() &&
-#if TAG_MAJOR_VERSION == 34
-            (major < 33 && minor < 17);
-#else
-            major < TAG_MAJOR_VERSION;
-#endif
+        return valid() && *this < minimum_supported();
     }
 
     bool is_compatible() const

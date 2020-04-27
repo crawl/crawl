@@ -3015,28 +3015,32 @@ static bool _tagged_chunk_version_compatible(reader &inf, string* reason)
 
     if (!version.is_compatible())
     {
-        const save_version current = save_version::current();
         if (version.is_ancient())
         {
-            if (Version::ReleaseType)
-            {
-                *reason = (CRAWL " " + string(Version::Short) + " is not compatible with "
-                           "save files from older versions. You can continue your "
-                           "game with the appropriate older version, or you can "
-                           "delete it and start a new game.");
-            }
-            else
-            {
-                *reason = make_stringf("Major version mismatch: %d (want %d).",
-                                       version.major, current.major);
-            }
+            const auto min_supported = save_version::minimum_supported();
+            *reason = make_stringf("This save is from an older version.\n"
+                    "\n"
+                    CRAWL " %s is not compatible with save files this old. You can:\n"
+                    " • continue your game with an older version of " CRAWL "\n"
+                    " • delete it and start a new game\n"
+                    "\n"
+                    "This save's version: (%d.%d) (must be >= %d.%d)",
+                    Version::Short,
+                    version.major, version.minor,
+                    min_supported.major, min_supported.minor);
         }
         else if (version.is_future())
         {
-            *reason = make_stringf("Version mismatch: %d.%d (want <= %d.%d). "
-                               "The save is from a newer version.",
-                               version.major, version.minor,
-                               current.major, current.minor);
+            const auto current = save_version::current();
+            *reason = make_stringf("This save is from a newer version.\n"
+                    "\n"
+                    CRAWL " cannot load saves from newer versions. You can:\n"
+                    " • continue your game with a newer version of " CRAWL "\n"
+                    " • delete it and start a new game\n"
+                    "\n"
+                    "This save's version: (%d.%d) (must be <= %d.%d)",
+                    version.major, version.minor,
+                    current.major, current.minor);
         }
         return false;
     }
