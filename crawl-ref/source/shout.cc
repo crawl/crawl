@@ -317,7 +317,11 @@ bool check_awaken(monster* mons, int stealth)
         }
     }
 
-    if (mons_perc < 4)
+    if (mons->asleep() && you.duration[DUR_WALL_MELTING])
+    {
+        mons_perc = -1;
+    }
+    else if (mons_perc < 4)
         mons_perc = 4;
 
     if (x_chance_in_y(mons_perc + 1, stealth))
