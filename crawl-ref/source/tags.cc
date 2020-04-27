@@ -2729,7 +2729,6 @@ static void tag_read_you(reader &th)
         you.duration[j] = unmarshallInt(th);
     for (int j = NUM_DURATIONS; j < count; ++j)
         unmarshallInt(th);
-#if TAG_MAJOR_VERSION == 34
     if (you.species == SP_LAVA_ORC)
         you.duration[DUR_MAGIC_ARMOUR] = 0;
 
@@ -2740,7 +2739,6 @@ static void tag_read_you(reader &th)
     }
 
     you.duration[DUR_JELLY_PRAYER] = 0;
-#endif
 
     // how many attributes?
     count = unmarshallUByte(th);
@@ -2762,10 +2760,8 @@ static void tag_read_you(reader &th)
 #endif
         you.attribute[j] = unmarshallInt(th);
     }
-#if TAG_MAJOR_VERSION == 34
     if (count == ATTR_PAKELLAS_EXTRA_MP && you_worship(GOD_PAKELLAS))
         you.attribute[ATTR_PAKELLAS_EXTRA_MP] = POT_MAGIC_MP;
-#endif
     for (int j = count; j < NUM_ATTRIBUTES; ++j)
         you.attribute[j] = 0;
     for (int j = NUM_ATTRIBUTES; j < count; ++j)
@@ -3405,7 +3401,6 @@ static void tag_read_you(reader &th)
         you.exp_docked[i] = unmarshallInt(th);
     for (int i = 0; i < count; i++)
         you.exp_docked_total[i] = unmarshallInt(th);
-#if TAG_MAJOR_VERSION == 34
     }
     if (th.getMinorVersion() < TAG_MINOR_PAKELLAS_WRATH
         && player_under_penance(GOD_PAKELLAS))
@@ -3421,8 +3416,6 @@ static void tag_read_you(reader &th)
                                   - exp_needed(min<int>(you.max_level, 27));
         you.exp_docked_total[GOD_ELYVILON] = you.exp_docked[GOD_ELYVILON];
     }
-
-#endif
 
     // elapsed time
     you.elapsed_time   = unmarshallInt(th);

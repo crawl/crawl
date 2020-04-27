@@ -426,7 +426,6 @@ static peeve_map divine_peeves[] =
     peeve_map(),
     // GOD_RU,
     peeve_map(),
-#if TAG_MAJOR_VERSION == 34
     // GOD_PAKELLAS
     {
         { DID_CHANNEL, {
@@ -434,7 +433,6 @@ static peeve_map divine_peeves[] =
             1, 1,
         } },
     },
-#endif
     // GOD_USKAYAW,
     peeve_map(),
     // GOD_HEPLIAKLQANA,

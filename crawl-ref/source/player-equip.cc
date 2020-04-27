@@ -433,10 +433,8 @@ static void _equip_use_warning(const item_def& item)
         mpr("You really shouldn't be using a hasty item like this.");
     else if (is_wizardly_item(item) && you_worship(GOD_TROG))
         mpr("You really shouldn't be using a wizardly item like this.");
-#if TAG_MAJOR_VERSION == 34
     else if (is_channeling_item(item) && you_worship(GOD_PAKELLAS))
         mpr("You really shouldn't be trying to channel magic like this.");
-#endif
 }
 
 static void _wield_cursed(item_def& item, bool known_cursed, bool unmeld)
@@ -807,14 +805,12 @@ static void _spirit_shield_message(bool unmeld)
     {
         dec_mp(you.magic_points);
         mpr("You feel your power drawn to a protective spirit.");
-#if TAG_MAJOR_VERSION == 34
         if (you.species == SP_DEEP_DWARF
             && !(have_passive(passive_t::no_mp_regen)
                  || player_under_penance(GOD_PAKELLAS)))
         {
             mpr("Now linked to your health, your magic stops regenerating.");
         }
-#endif
     }
     else if (!unmeld && (you.get_mutation_level(MUT_MANA_SHIELD) 
                 || you.species == SP_DJINNI))

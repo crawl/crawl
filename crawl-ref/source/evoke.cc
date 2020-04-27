@@ -433,14 +433,12 @@ void zap_wand(int slot)
         return;
     }
 
-#if TAG_MAJOR_VERSION == 34
     if (player_under_penance(GOD_PAKELLAS))
     {
         simple_god_message("'s wrath prevents you from evoking devices!",
                            GOD_PAKELLAS);
         return;
     }
-#endif
 
     const int mp_cost = wand_mp_cost();
 
@@ -1930,14 +1928,12 @@ bool evoke_item(int slot)
                 mpr("You cannot evoke magical items.");
                 return false;
             }
-#if TAG_MAJOR_VERSION == 34
             if (player_under_penance(GOD_PAKELLAS))
             {
                 simple_god_message("'s wrath prevents you from evoking "
                                    "devices!", GOD_PAKELLAS);
                 return false;
             }
-#endif
         }
 
         switch (item.sub_type)

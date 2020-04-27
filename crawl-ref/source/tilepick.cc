@@ -3628,12 +3628,10 @@ tileidx_t tileidx_ability(const ability_type ability)
     case ABIL_RU_REJECT_SACRIFICES:
         return TILEG_ABILITY_RU_REJECT_SACRIFICES;
     // Pakellas
-#if TAG_MAJOR_VERSION == 34
     case ABIL_PAKELLAS_DEVICE_SURGE:
         return TILEG_ABILITY_PAKELLAS_DEVICE_SURGE;
     case ABIL_PAKELLAS_QUICK_CHARGE:
         return TILEG_ABILITY_PAKELLAS_QUICK_CHARGE;
-#endif
     // Hepliaklqana
     case ABIL_HEPLIAKLQANA_RECALL:
         return TILEG_ABILITY_HEP_RECALL;

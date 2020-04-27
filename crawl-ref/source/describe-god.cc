@@ -968,7 +968,6 @@ static formatted_string _describe_god_powers(god_type which_god)
         desc.cprintf("Your life essence is reduced. (-10%% HP)\n");
         break;
 
-#if TAG_MAJOR_VERSION == 34
     case GOD_PAKELLAS:
     {
         have_any = true;
@@ -989,7 +988,6 @@ static formatted_string _describe_god_powers(god_type which_god)
         }
         break;
     }
-#endif
 
     case GOD_LUGONU:
         have_any = true;

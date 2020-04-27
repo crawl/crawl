@@ -1214,7 +1214,6 @@ static string _why_reject(const item_def &item, int agent)
         return "Destroying sif-gifted rarebook!";
     }
 
-#if TAG_MAJOR_VERSION == 34
     // The crystal ball case should be handled elsewhere, but just in
     // case, it's also handled here.
     if (agent == GOD_PAKELLAS)
@@ -1225,7 +1224,6 @@ static string _why_reject(const item_def &item, int agent)
             return "Destroying CBoE that Pakellas hates!";
         }
     }
-#endif
 
     return ""; // all OK
 }
@@ -1238,9 +1236,7 @@ int acquirement_create_item(object_class_type class_wanted,
 
     const bool divine = (agent == GOD_OKAWARU || agent == GOD_XOM
                          || agent == GOD_TROG
-#if TAG_MAJOR_VERSION == 34
                          || agent == GOD_PAKELLAS
-#endif
                         );
     int thing_created = NON_ITEM;
     int quant = 1;

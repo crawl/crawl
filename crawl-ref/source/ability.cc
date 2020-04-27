@@ -188,11 +188,8 @@ skill_type invo_skill(god_type god)
     {
         case GOD_KIKUBAAQUDGHA:
             return SK_NECROMANCY;
-
-#if TAG_MAJOR_VERSION == 34
         case GOD_PAKELLAS:
             return SK_EVOCATIONS;
-#endif
         case GOD_ASHENZARI:
         case GOD_JIYVA:
         case GOD_GOZAG:
@@ -610,12 +607,10 @@ static const ability_def Ability_List[] =
     { ABIL_QAZLAL_DISASTER_AREA, "Disaster Area",
       7, 0, 0, 10, {fail_basis::invo, 70, 4, 25}, abflag::none },
 
-#if TAG_MAJOR_VERSION == 34
     // Pakellas
     { ABIL_PAKELLAS_DEVICE_SURGE, "Device Surge",
       0, 0, 0, generic_cost::fixed(1),
       {fail_basis::invo, 40, 5, 20}, abflag::variable_mp | abflag::instant },
-#endif
 
     // Uskayaw
     { ABIL_USKAYAW_STOMP, "Stomp",
@@ -3171,7 +3166,6 @@ static spret _do_ability(const ability_def& abil, bool fail)
         you.increase_duration(DUR_EXHAUSTED, 30 + random2(20));
         break;
 
-#if TAG_MAJOR_VERSION == 34
     case ABIL_PAKELLAS_DEVICE_SURGE:
     {
         fail_check();
@@ -3181,7 +3175,6 @@ static spret _do_ability(const ability_def& abil, bool fail)
                               random2avg(you.piety / 4, 2) + 3, 100);
         break;
     }
-#endif
 
     case ABIL_USKAYAW_STOMP:
         fail_check();

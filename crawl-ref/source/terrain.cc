@@ -541,9 +541,7 @@ static const pair<god_type, dungeon_feature_type> _god_altars[] =
     { GOD_GOZAG, DNGN_ALTAR_GOZAG },
     { GOD_QAZLAL, DNGN_ALTAR_QAZLAL },
     { GOD_RU, DNGN_ALTAR_RU },
-#if TAG_MAJOR_VERSION == 34
     { GOD_PAKELLAS, DNGN_ALTAR_PAKELLAS },
-#endif
     { GOD_USKAYAW, DNGN_ALTAR_USKAYAW },
     { GOD_HEPLIAKLQANA, DNGN_ALTAR_HEPLIAKLQANA },
     { GOD_WU_JIAN, DNGN_ALTAR_WU_JIAN },
