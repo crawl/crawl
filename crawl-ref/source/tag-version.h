@@ -24,8 +24,12 @@ COMPILE_CHECK(TAG_MAJOR_VERSION < 256);
 // Minor version will be reset to zero when major version changes.
 enum tag_minor_version
 {
-    TAG_MINOR_INVALID         = -1,
-    TAG_MINOR_RESET           = 0, // Minor tags were reset
+    // When removing support for old minors, increment TAG_MINOR_INVALID for
+    // each minor version removed, so that enum values for newer minors do not
+    // change value (which would probably be disastrous). There's a test case
+    // in test_tag-version.h that will do some sanity checks for this.
+    TAG_MINOR_INVALID = -1,
+    TAG_MINOR_RESET,               // Minor tags were reset
 #if TAG_MAJOR_VERSION == 34
     TAG_MINOR_BRANCHES_LEFT,       // Note the first time branches are left
     TAG_MINOR_VAULT_LIST,          // Don't try to store you.vault_list as prop
@@ -318,7 +322,7 @@ struct save_version
     static save_version minimum_supported()
     {
 #if TAG_MAJOR_VERSION == 34
-        return save_version(33, 17);
+        return save_version(TAG_MAJOR_VERSION, TAG_MINOR_INVALID + 1);
 #else
         return save_version(TAG_MAJOR_VERSION, 0);
 #endif
