@@ -244,15 +244,19 @@ static bool _mantis_leap_attack_doing(monster* mons)
     if (!mons->alive())
         return false;
     const int number_of_attacks = _mantis_number_of_attacks();
+
+    bool lunge = you_worship(GOD_WU_JIAN) && have_passive(passive_t::wu_jian_lunge);
+
     if (number_of_attacks == 0)
     {
-        mprf("You leap at %s, but your attack speed is too slow for a blow "
-            "to land.", mons->name(DESC_THE).c_str());
+        mprf("You %s at %s, but your attack speed is too slow for a blow "
+            "to land.", lunge ? "lunge" : "leap", mons->name(DESC_THE).c_str());
         return false;
     }
     else
     {
-        mprf("You leap at %s%s.",
+        mprf("You %s at %s%s.",
+            lunge ? "lunge" : "leap",
             mons->name(DESC_THE).c_str(),
             number_of_attacks > 1 ? ", in a flurry of attacks" : "");
     }
@@ -262,7 +266,8 @@ static bool _mantis_leap_attack_doing(monster* mons)
         if (!mons->alive())
             break;
         melee_attack leap(&you, mons);
-        //lunge.wu_jian_attack = WU_JIAN_ATTACK_LUNGE;
+        if(lunge)
+            leap.wu_jian_attack = WU_JIAN_ATTACK_LUNGE;
         leap.attack();
     }
     return true;
