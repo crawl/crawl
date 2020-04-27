@@ -8682,6 +8682,7 @@ bool player::immune_to_hex(const spell_type hex) const
     case SPELL_CONFUSION_GAZE:
     case SPELL_MASS_CONFUSION:
         return clarity() || you.duration[DUR_DIVINE_STAMINA] > 0;
+    case SPELL_TELEPORT:
     case SPELL_TELEPORT_OTHER:
     case SPELL_BLINK_OTHER:
     case SPELL_BLINK_OTHER_CLOSE:

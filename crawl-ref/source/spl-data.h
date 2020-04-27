@@ -4073,6 +4073,17 @@ static const struct spell_desc spelldata[] =
     TILEG_WALL_CAMOFLAGE,
 },
 
+{
+    SPELL_TELEPORT, "Teleport",
+    spschool::translocation,
+    spflag::dir_or_target | spflag::escape | spflag::helpful | spflag::utility
+        | spflag::emergency | spflag::needs_tracer | spflag::MR_check,
+    3,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    3, 0,
+    TILEG_TELEPORT_OTHER,
+},
 
 {
     SPELL_NO_SPELL, "nonexistent spell",
