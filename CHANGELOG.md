@@ -45,8 +45,8 @@
 - 스토커 복구. 벽과 융합하는 새로운 마법 준비중
   - rollback stalker. with magic of transforming into a wall
 
-- 라바 오크, 지니 복구
-  - rollback Lava orc, Djinni
+- 라바 오크, 지니, 하이엘프, 마운틴드워프 복구
+  - rollback Lava orc, Djinni, 
   
 - 레펠 미사일 복구. 이제 경갑을 입어야 사용할 수 있음
   - Added and rework repel missle. now, need to wear light armor to cast RMsl
