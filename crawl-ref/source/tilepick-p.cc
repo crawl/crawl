@@ -750,6 +750,11 @@ void tilep_race_default(int sp, int level, dolls_data *doll)
         case SP_VINE_STALKER:
             hair = 0;
             break;
+        case SP_MANTIS:
+            hair = 0;
+            if (you.has_mutation(MUT_TENGU_FLIGHT))
+                wing = TILEP_HELM_WING_MANTIS;
+            break;
         case SP_DJINNI:
             hair = TILEP_HAIR_DJINN2;
             break;

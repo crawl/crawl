@@ -365,6 +365,7 @@ base/octopode1 SP_RECOMMENDED_OCTOPODE
 %finish SP_RECOMMENDED_VINE_STALKER
 %start
 %compose base/angel
+%compose body/animal_skin
 %finish SP_RECOMMENDED_ANGEL
 %start
 %compose base/mantis

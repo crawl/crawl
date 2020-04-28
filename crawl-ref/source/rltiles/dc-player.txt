@@ -1074,6 +1074,7 @@ cat7
 cat8
 cat9
 cat10
+mantis1 WING_MANTIS
 draconian1 HORNS_DRAC
 %sdir player/head
 
