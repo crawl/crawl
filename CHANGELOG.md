@@ -12,6 +12,9 @@
 - 새로운 종족 천사 추가. 세 선신 중 하나를 믿고 시작함
   - Added angel(playable). A holy species who starts by believing in one of the three good gods
   
+- 새로운 종족 멘티스 추가. 적에게 접근할때 자동으로 점프 공격을 함
+  - Added mantis(playable). leap attack automatically when approaching an enemy
+  
 - 독물의 추출, 증산 추가
   - Added Fulsome Distillation, Evaporate spell
   
