@@ -293,7 +293,7 @@ static bool _unfriendly_or_impaired(const monster& mon)
 // monster of the same alignment as the given monster that happens to
 // have a ranged attack. If this is true for the first monster encountered,
 // returns true. Otherwise returns false.
-static bool _ranged_allied_monster_in_dir(monster* mon, coord_def p)
+static bool _ranged_ally_in_dir(monster* mon, coord_def p)
 {
     coord_def pos = mon->pos();
 
@@ -303,7 +303,7 @@ static bool _ranged_allied_monster_in_dir(monster* mon, coord_def p)
         if (!in_bounds(pos))
             break;
 
-        const monster* ally = monster_at(pos);
+        const actor* ally = actor_at(pos);
         if (ally == nullptr)
             continue;
 
@@ -317,7 +317,11 @@ static bool _ranged_allied_monster_in_dir(monster* mon, coord_def p)
                 return false;
             }
 
-            if (mons_has_ranged_attack(*ally))
+            // XXX: Always assumes the player wants a better shot.
+            // This isn't always true.
+            if (ally->is_monster())
+                return mons_has_ranged_attack(*(ally->as_monster()));
+            else if (ally->is_player())
                 return true;
         }
         break;
@@ -613,32 +617,28 @@ static void _handle_movement(monster* mons)
     if ((newpos == you.pos()
            || monster_at(newpos) && mons->foe == mgrd(newpos))
         && mons_intel(*mons) > I_BRAINLESS
-        && coinflip()
+        //&& coinflip()
         && !mons_is_confused(*mons) && !mons->caught()
         && !mons->berserk_or_insane())
     {
         _fill_good_move(mons, &good_move);
         good_move_filled = true;
         // If the monster is moving parallel to the x or y axis, check
+        // if there are other unblocked grids adjacent to the target and
         // whether
         //
-        // a) the neighbouring grids are blocked
-        // b) there are other unblocked grids adjacent to the target
-        // c) there's at least one allied monster waiting behind us.
-        //
-        // (For really smart monsters, also check whether there's a
-        // monster farther back in the corridor that has some kind of
-        // ranged attack.)
+        // a) the neighbouring grids are blocked and an ally is behind us,
+        // or
+        // b) we're intelligent and blocking a ranged attack
         if (mmov.y == 0)
         {
-            if (!good_move[1][0] && !good_move[1][2]
-                && (good_move[mmov.x+1][0] || good_move[mmov.x+1][2])
+            if ((good_move[mmov.x+1][0] || good_move[mmov.x+1][2])
                 && (_allied_monster_at(mons, coord_def(-mmov.x, -1),
                                        coord_def(-mmov.x, 0),
                                        coord_def(-mmov.x, 1))
-                    || !mons->wont_attack()
-                       && _ranged_allied_monster_in_dir(mons,
-                                                        coord_def(-mmov.x, 0))))
+                       && !good_move[1][0] && !good_move[1][2]
+                    || mons_intel(*mons) >= I_HUMAN
+                       && _ranged_ally_in_dir(mons, coord_def(-mmov.x, 0))))
             {
                 if (good_move[mmov.x+1][0])
                     mmov.y = -1;
@@ -648,14 +648,13 @@ static void _handle_movement(monster* mons)
         }
         else if (mmov.x == 0)
         {
-            if (!good_move[0][1] && !good_move[2][1]
-                && (good_move[0][mmov.y+1] || good_move[2][mmov.y+1])
+            if ((good_move[0][mmov.y+1] || good_move[2][mmov.y+1])
                 && (_allied_monster_at(mons, coord_def(-1, -mmov.y),
                                        coord_def(0, -mmov.y),
                                        coord_def(1, -mmov.y))
-                    || !mons->wont_attack()
-                       && _ranged_allied_monster_in_dir(mons,
-                                                        coord_def(0, -mmov.y))))
+                       && !good_move[0][1] && !good_move[2][1]
+                    || mons_intel(*mons) >= I_HUMAN
+                       && _ranged_ally_in_dir(mons, coord_def(0, -mmov.y))))
             {
                 if (good_move[0][mmov.y+1])
                     mmov.x = -1;
@@ -668,23 +667,21 @@ static void _handle_movement(monster* mons)
             if (good_move[mmov.x+1][1])
             {
                 if (!good_move[1][mmov.y+1]
-                    && (_allied_monster_at(mons, coord_def(-mmov.x, -1),
+                       && _allied_monster_at(mons, coord_def(-mmov.x, -1),
                                            coord_def(-mmov.x, 0),
                                            coord_def(-mmov.x, 1))
-                        ||  !mons->wont_attack()
-                           && _ranged_allied_monster_in_dir(mons,
-                                                coord_def(-mmov.x, -mmov.y))))
+                    || mons_intel(*mons) >= I_HUMAN
+                       && _ranged_ally_in_dir(mons, coord_def(-mmov.x, -mmov.y)))
                 {
                     mmov.y = 0;
                 }
             }
             else if (good_move[1][mmov.y+1]
-                     && (_allied_monster_at(mons, coord_def(-1, -mmov.y),
+                     && _allied_monster_at(mons, coord_def(-1, -mmov.y),
                                             coord_def(0, -mmov.y),
                                             coord_def(1, -mmov.y))
-                         || !mons->wont_attack()
-                            && _ranged_allied_monster_in_dir(mons,
-                                                coord_def(-mmov.x, -mmov.y))))
+                         || mons_intel(*mons) >= I_HUMAN
+                            && _ranged_ally_in_dir(mons, coord_def(-mmov.x, -mmov.y)))
             {
                 mmov.x = 0;
             }
