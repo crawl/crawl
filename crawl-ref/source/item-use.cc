@@ -857,6 +857,11 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
                         return false;
                     }
                     wpn = you.slot_item(choosed_wpn, true);
+                    if (wpn->cursed())
+                    {
+                        mpr("you can't unwield your cursed weapon!");
+                        return false;
+                    }
                 }
             }
         }
@@ -985,6 +990,13 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
                     canned_msg(MSG_OK);
                     return false;
                 }
+            }
+
+            auto checkWpn = you.slot_item(choosed_wpn, true);
+            if (checkWpn->cursed())
+            {
+                mpr("you can't unwield your cursed weapon!");
+                return false;
             }
 
             // TODO Choose and Unwield old weapon.
