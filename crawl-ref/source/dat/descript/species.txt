@@ -142,5 +142,18 @@ Their magical reserves absorb damage, and they pack a magic-restoring bite.
 %%%%
 Two Headed Ogre
 
-two weapon(TODO), two amulet
+Two Headed Ogre has two heads and uses dual weapon, also wear two amulet. 
+However, They hate the shield.
+%%%%
+Angel
+
+Holy species who believe in three good gods. They do not abandon faith,
+and They hate evil behavior. They do not need to eat and are resistant 
+to various type.
+%%%%
+Mantis
+
+Insect creature with scythe hands and strong legs. They do leap attack
+automatically when approaching an enemy. Cowardly actions will make them 
+slow.
 %%%%
