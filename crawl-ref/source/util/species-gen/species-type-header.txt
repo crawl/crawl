@@ -14,7 +14,6 @@ enum species_type
  * species definition files in dat/species/.
  */
     SP_HUMAN,
-    SP_HIGH_ELF,
     SP_DEEP_ELF,
     SP_SLUDGE_ELF,
     SP_HALFLING,

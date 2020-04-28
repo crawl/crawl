@@ -371,6 +371,11 @@ base/octopode1 SP_RECOMMENDED_OCTOPODE
 %compose base/mantis
 %compose body/animal_skin
 %finish SP_RECOMMENDED_MANTIS
+%start
+%compose base/deep_elf_m
+%compose body/animal_skin
+%compose hair/elf_yellow
+%finish SP_RECOMMENDED_HIGH_ELF
 %syn LAST_RECOMMENDED_SPECIES
 
 %sdir gui/backgrounds
@@ -407,4 +412,5 @@ enum:SP_RECOMMENDED_VAMPIRE SP_VAMPIRE
 enum:SP_RECOMMENDED_VINE_STALKER SP_VINE_STALKER
 enum:SP_RECOMMENDED_ANGEL SP_ANGEL
 enum:SP_RECOMMENDED_MANTIS SP_MANTIS
+enum:SP_RECOMMENDED_HIGH_ELF SP_HIGH_ELF
 %syn LAST_SPECIES

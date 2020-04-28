@@ -581,8 +581,8 @@ tileidx_t tilep_species_to_base_tile(int sp, int level)
     {
     case SP_HUMAN:
         return TILEP_BASE_HUMAN;
-#if TAG_MAJOR_VERSION == 34
     case SP_HIGH_ELF:
+#if TAG_MAJOR_VERSION == 34
     case SP_SLUDGE_ELF:
 #endif
     case SP_DEEP_ELF:
@@ -692,8 +692,8 @@ void tilep_race_default(int sp, int level, dolls_data *doll)
 
     switch (sp)
     {
-#if TAG_MAJOR_VERSION == 34
         case SP_HIGH_ELF:
+#if TAG_MAJOR_VERSION == 34
         case SP_SLUDGE_ELF:
             hair = TILEP_HAIR_ELF_YELLOW;
             break;
