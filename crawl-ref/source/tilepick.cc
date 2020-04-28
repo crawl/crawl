@@ -3876,6 +3876,8 @@ static tileidx_t _tileidx_player_species_base(const species_type species)
             return TILEG_SP_MANTIS;
         case SP_HIGH_ELF:
             return TILEG_SP_HIGH_ELF;
+        case SP_MOUNTAIN_DWARF:
+            return TILEG_SP_MOUNTAIN_DWARF;
         default:
             return TILEP_ERROR;
     }

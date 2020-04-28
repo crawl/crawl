@@ -93,6 +93,8 @@ vine_stalker_f VINE_STALKER
 vine_stalker_m
 angel ANGEL
 mantis MANTIS
+dwarf_f MOUNTAIN_DWARF
+dwarf_m
 
 # draconians
 draconian_f DRACONIAN DRACONIAN_FIRST

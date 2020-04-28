@@ -162,3 +162,10 @@ Insect creature with scythe hands and strong legs. They do leap attack
 automatically when approaching an enemy. Cowardly actions will make them 
 slow.
 %%%%
+Mountain Dwarf
+
+Mountain Dwarves, as opposed to the subterranean specimen, come from
+cities far above the Dungeon. they are very robust and excellent at
+hand combat.
+%%%%
+

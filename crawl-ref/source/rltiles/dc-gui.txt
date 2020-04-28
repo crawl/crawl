@@ -376,6 +376,12 @@ base/octopode1 SP_RECOMMENDED_OCTOPODE
 %compose body/animal_skin
 %compose hair/elf_yellow
 %finish SP_RECOMMENDED_HIGH_ELF
+%start
+%compose base/dwarf_m
+%compose body/animal_skin
+%compose hair/short_red
+%compose beard/garibaldi_red
+%finish SP_RECOMMENDED_MOUNTAIN_DWARF
 %syn LAST_RECOMMENDED_SPECIES
 
 %sdir gui/backgrounds
@@ -413,4 +419,5 @@ enum:SP_RECOMMENDED_VINE_STALKER SP_VINE_STALKER
 enum:SP_RECOMMENDED_ANGEL SP_ANGEL
 enum:SP_RECOMMENDED_MANTIS SP_MANTIS
 enum:SP_RECOMMENDED_HIGH_ELF SP_HIGH_ELF
+enum:SP_RECOMMENDED_MOUNTAIN_DWARF SP_MOUNTAIN_DWARF
 %syn LAST_SPECIES

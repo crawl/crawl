@@ -1,0 +1,66 @@
+enum: SP_MOUNTAIN_DWARF
+monster: MONS_DEEP_DWARF
+name: "Mountain Dwarf"
+short_name: "MD"
+adjective: "Dwarven"
+genus: "Dwarf"
+difficulty: Simple
+difficulty_priority: 10
+aptitudes:
+  xp: -1
+  hp: 2
+  mp_mod: -1
+  mr: 2
+  fighting: 2
+  short_blades: 1
+  long_blades: 0
+  axes: 2
+  maces_and_flails: 2
+  polearms: -1
+  staves: -1
+  slings: -1
+  bows: -2
+  crossbows: 1
+  throwing: -1
+  armour: 3
+  dodging: -1
+  stealth: -3
+  shields: 2
+  unarmed_combat: 0
+  spellcasting: -3
+  conjurations: -1
+  hexes: -2
+  charms: -2
+  summoning: -2
+  necromancy: -3
+  translocations: -2
+  transmutations: -1
+  fire_magic: 2
+  ice_magic: -2
+  air_magic: -2
+  earth_magic: 2
+  poison_magic: -2
+  invocations: 0
+  evocations: 1
+str: 10
+int: 6
+dex: 8
+levelup_stat_frequency: 4
+levelup_stats:
+  - str
+recommended_jobs:
+  - JOB_FIGHTER
+  - JOB_GLADIATOR
+  - JOB_BERSERKER
+  - JOB_HUNTER
+  - JOB_CHAOS_KNIGHT
+  - JOB_ABYSSAL_KNIGHT
+  - JOB_CONJURER
+  - JOB_FIRE_ELEMENTALIST
+  - JOB_EARTH_ELEMENTALIST
+  - JOB_ABYSSAL_KNIGHT
+recommended_weapons:
+  - SK_SHORT_BLADES
+  - SK_AXES
+  - SK_MACES_FLAILS
+  - SK_CROSSBOWS
