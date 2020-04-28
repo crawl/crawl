@@ -172,14 +172,25 @@ static monster* _mantis_leap_attack(coord_def& new_pos)
 
             bool first = true;
             bool vaild = false;
+            bool can_jump = false;
             int range_ = 1;
             coord_def jumping_pos;
             for (auto iter : tempbeam.path_taken)  {
                 if (!first && iter == mon->pos()) {
-                    vaild = true;
+                    if (!can_jump)
+                        vaild = false;
+                    else
+                        vaild = true;
                     break;
                 }
                 jumping_pos = iter;
+                if (you.can_pass_through(iter) &&
+                    (you.can_swim() && feat_is_water(env.grid(iter))
+                        || you.airborne() || !is_feat_dangerous(env.grid(iter))))
+                    can_jump = true;
+                else
+                    can_jump = false;
+
                 if (monster_at(iter)) {
                     vaild = false;
                     break;
@@ -205,6 +216,7 @@ static monster* _mantis_leap_attack(coord_def& new_pos)
                 if (range_ > can_jump_range) {
                     break;
                 }
+
             }
             if (vaild) {
                 vaild_mon.insert(pair<monster*, coord_def>(mon, jumping_pos));
@@ -293,13 +305,23 @@ bool mantis_leap_point(set<coord_def>& set_)
 
             bool first = true;
             bool vaild = false;
+            bool can_jump = false;
             int range_ = 1;
             set<coord_def> leap_point;
             for (auto iter : tempbeam.path_taken) {
                 if (!first && iter == mon->pos()) {
-                    vaild = true;
+                    if (!can_jump)
+                        vaild = false;
+                    else
+                        vaild = true;
                     break;
                 }
+                if (you.can_pass_through(iter) &&
+                    (you.can_swim() && feat_is_water(env.grid(iter))
+                        || you.airborne() || !is_feat_dangerous(env.grid(iter))))
+                    can_jump = true;
+                else
+                    can_jump = false;
                 if (monster_at(iter)) {
                     vaild = false;
                     break;
