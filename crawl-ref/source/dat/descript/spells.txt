@@ -845,8 +845,9 @@ nearby monsters with physical force, knocking them back if damage is done.
 Leda's Liquefaction spell
 
 Liquefies the ground around the caster, making it difficult to move through.
-Any movement through liquefied ground will be slowed, and attempts to attack
-in melee may fail. The caster is immune to the effects of liquefied ground.
+Any movement through liquefied ground will be slowed, and creatures stuck in
+the liquefied ground will be unable to fly. Attempts to attack the caster
+in melee may fail.
 
 The effect starts out with a radius depending on power, which will then shrink,
 eventually covering only the caster, before it times out.
