@@ -53,6 +53,12 @@ bool actor::ground_level() const
     return !airborne();
 }
 
+bool actor::stand_on_solid_ground() const
+{
+    return ground_level() && feat_has_solid_floor(grd(pos()))
+           && !feat_is_water(grd(pos()));
+}
+
 // Give hands required to wield weapon.
 hands_reqd_type actor::hands_reqd(const item_def &item, bool base) const
 {
