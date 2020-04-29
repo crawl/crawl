@@ -127,7 +127,14 @@ void try_god_conversion(god_type god)
 
     if (you.species == SP_ANGEL)
     {
-        mpr("You cannot abandon your faith.");
+        if (god != you.religion) {
+            mpr("You cannot abandon your faith.");
+        }
+        else {
+            mprf(MSGCH_GOD, "You offer a %sprayer to %s.",
+                you.cannot_speak() ? "silent " : "",
+                god_name(god).c_str());
+        }
         return;
     }
 
