@@ -7023,6 +7023,15 @@ bool player::has_usable_claws(bool allow_tran) const
 {
     return !slot_item(EQ_GLOVES) && has_claws(allow_tran);
 }
+int player::has_sickle_hands(bool allow_tran) const
+{
+    return get_mutation_level(MUT_SICKLE_HANDS, allow_tran);
+}
+
+bool player::has_usable_sickle_hands(bool allow_tran) const
+{
+    return !slot_item(EQ_GLOVES) && has_sickle_hands(allow_tran);
+}
 
 int player::has_talons(bool allow_tran) const
 {

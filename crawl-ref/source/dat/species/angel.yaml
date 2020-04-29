@@ -5,25 +5,25 @@ short_name: "AG"
 difficulty: Advanced
 difficulty_priority: 20
 aptitudes:
-  xp: 1
+  xp: -1
   hp: 0
   mp_mod: 0
-  mr: 6
+  mr: 4
   short_blades: -3
-  long_blades: 4
-  axes: 1
-  maces_and_flails: 1
-  polearms: 1
-  staves: -1
-  slings: 2
-  bows: 2
-  crossbows: -1
-  throwing: -1
-  armour: 2
+  long_blades: 3
+  axes: 0
+  maces_and_flails: 0
+  polearms: 0
+  staves: -2
+  slings: 1
+  bows: 1
+  crossbows: -2
+  throwing: -2
+  armour: 1
   dodging: -1
   stealth: false
-  shields: 2
-  unarmed_combat: 1
+  shields: 1
+  unarmed_combat: 0
   spellcasting: -1
   conjurations: -4
   hexes: false

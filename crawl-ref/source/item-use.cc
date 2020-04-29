@@ -1230,7 +1230,8 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
             return false;
         }
 
-        if (you.get_mutation_level(MUT_CLAWS, !ignore_temporary) >= 3)
+        if (you.get_mutation_level(MUT_CLAWS, !ignore_temporary) >= 3 || 
+            you.get_mutation_level(MUT_SICKLE_HANDS, !ignore_temporary) >= 1)
         {
             if (verbose)
             {
@@ -1331,6 +1332,15 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
             {
                 mprf("You can't wear a glove with your huge claw%s!",
                      you.get_mutation_level(MUT_MISSING_HAND) ? "" : "s");
+            }
+            return false;
+        }
+        if (you.has_sickle_hands(false) >= 1)
+        {
+            if (verbose)
+            {
+                mprf("You can't wear a glove with your sickle-like hand%s!",
+                    you.get_mutation_level(MUT_MISSING_HAND) ? "" : "s");
             }
             return false;
         }

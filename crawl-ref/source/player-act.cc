@@ -668,6 +668,8 @@ string player::unarmed_attack_name() const
         else
             default_name = "Claws";
     }
+    else if (has_usable_sickle_hands(true))
+        default_name = "Sickle hands";
     else if (has_usable_tentacles(true))
         default_name = "Tentacles";
 

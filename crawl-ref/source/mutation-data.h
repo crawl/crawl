@@ -1912,6 +1912,16 @@ static const mutation_def mut_data[] =
   {"You feel resistant to acid.", "",  ""},
   {"You feel less resistant to acid.", "", ""},
 },
+
+{ MUT_SICKLE_HANDS, 0, 1, mutflag::good, true,
+  "slckle hands",
+
+  {"You have sickle-like hands.", "", ""},
+
+  {"Your hands are sharp like a sickle.", "", ""},
+
+  {"Your hands are back.", "", ""},
+},
 };
 
 static const mutation_category_def category_mut_data[] =

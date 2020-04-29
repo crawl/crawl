@@ -47,7 +47,9 @@ levelup_stat_frequency: 5
 mutations:
   1:
     MUT_TOUGH_SKIN: 1
-    MUT_CLAWS: 3
+    MUT_SICKLE_HANDS: 1
+    MUT_ANTENNAE: 3
+    MUT_DEFORMED: 1
   9:
     MUT_TENGU_FLIGHT: 1
 fake_mutations:

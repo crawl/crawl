@@ -148,7 +148,7 @@ static bool _can_leap_target(monster* mon)
 
 static monster* _mantis_leap_attack(coord_def& new_pos)
 {
-    int can_jump_range = you.airborne() ? 6 : 4;
+    int can_jump_range = you.airborne() ? 5 : 4;
     bool mon_exist = false;
     bool coward = true;
 
@@ -287,7 +287,7 @@ static bool _mantis_leap_attack_doing(monster* mons)
 
 bool mantis_leap_point(set<coord_def>& set_)
 {
-    int radius_ = you.airborne() ? 6 : 4;
+    int radius_ = you.airborne() ? 5 : 4;
     if (you.duration[DUR_COWARD]) {
         return false;
     }

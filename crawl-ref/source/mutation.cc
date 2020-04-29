@@ -168,6 +168,7 @@ equipment_type beastly_slot(int mut)
     // Not putting MUT_BEAK here because it doesn't conflict with the other two.
         return EQ_HELMET;
     case MUT_CLAWS:
+    case MUT_SICKLE_HANDS:
         return EQ_GLOVES;
     case MUT_HOOVES:
     case MUT_TALONS:
@@ -1389,6 +1390,12 @@ bool physiology_mutation_conflict(mutation_type mutat)
         return true;
     }
 
+    //mantis has sickle hands
+    if (you.species == SP_MANTIS && mutat == MUT_CLAWS) {
+        return true;
+    }
+
+
     // Merfolk have no feet in the natural form, and we never allow mutations
     // that show up only in a certain transformation.
     if (you.species == SP_MERFOLK
@@ -1811,6 +1818,13 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
             ash_check_bondage();
             break;
 
+        case MUT_SICKLE_HANDS:
+            if (!you.melded[EQ_GLOVES])
+                remove_one_equip(EQ_GLOVES, false, true);
+            // Recheck Ashenzari bondage in case our available slots changed.
+            ash_check_bondage();
+            break;
+
         case MUT_HORNS:
         case MUT_ANTENNAE:
             // Horns & Antennae 3 removes all headgear. Same algorithm as with
@@ -1958,6 +1972,7 @@ static bool _delete_single_mutation_level(mutation_type mutat,
     case MUT_CLAWS:
     case MUT_HOOVES:
     case MUT_TALONS:
+    case MUT_SICKLE_HANDS:
         // Recheck Ashenzari bondage in case our available slots changed.
         ash_check_bondage();
         break;

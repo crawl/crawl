@@ -184,6 +184,9 @@ int attack::calc_to_hit(bool random)
             mhit += (you.get_mutation_level(MUT_CLAWS) > 0
                      && wpn_skill == SK_UNARMED_COMBAT) ? 4 : 2;
 
+            mhit += (you.get_mutation_level(MUT_SICKLE_HANDS) > 0
+                && wpn_skill == SK_UNARMED_COMBAT) ? 2 : 0;
+
             mhit += maybe_random_div(you.skill(wpn_skill, 100), 100,
                                      random);
         }
@@ -1246,6 +1249,9 @@ int attack::calc_base_unarmed_damage()
     if (you.has_usable_claws())
         damage += you.has_claws() * 2;
 
+    if (you.has_usable_sickle_hands())
+        damage += you.has_sickle_hands() * 3;
+
     if (you.form_uses_xl())
         damage += div_rand_round(you.experience_level, 3);
     else
@@ -1759,6 +1765,12 @@ int attack::player_stab_weapon_bonus(int damage)
         int bonus = you.dex() * (stab_skill + 100) / (extra_good ? 500 : 1000);
 
         bonus   = stepdown_value(bonus, 10, 10, 30, 30);
+
+        if (you.get_mutation_level(MUT_SICKLE_HANDS)) {
+            //stepdown for mantis
+            bonus /= 2;
+        }
+
         damage += bonus;
         damage *= 10 + div_rand_round(stab_skill, 100 * stab_bonus);
         damage /= 10;

@@ -46,6 +46,7 @@ levelup_stats:
 mutations:
   1:
     MUT_TOUGH_SKIN: 2
+    MUT_SCREAM: 3
 fake_mutations:
   - long: You can wield two weapons. but, you can't wear a shield
     short: dual wield
