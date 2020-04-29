@@ -850,7 +850,8 @@ the liquefied ground will be unable to fly. Attempts to attack the caster
 in melee may fail.
 
 The effect starts out with a radius depending on power, which will then shrink,
-eventually covering only the caster, before it times out.
+eventually covering only the caster, before it times out. Maintaining the
+connection to the ground slows the caster's movement, even if they are flying.
 %%%%
 Lee's Rapid Deconstruction spell
 

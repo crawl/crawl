@@ -281,7 +281,7 @@ bool fill_status_info(int status, status_info& inf)
 
     case STATUS_LIQUEFIED:
     {
-        if (you.liquefied_ground())
+        if (you.liquefied_ground() || you.duration[DUR_LIQUEFYING])
         {
             inf.light_colour = BROWN;
             inf.light_text   = "SlowM";

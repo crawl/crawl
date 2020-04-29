@@ -5734,7 +5734,7 @@ int monster::action_energy(energy_use_type et) const
     // Floundering monsters get the same penalty as the player, except that
     // players get the penalty on entering water, while monsters get the
     // penalty when leaving it.
-    if (floundering())
+    if (floundering() || has_ench(ENCH_LIQUEFYING))
         move_cost += 6;
 
     // Never reduce the cost to zero
