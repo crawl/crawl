@@ -3558,7 +3558,7 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
             _add_talent(talents, ABIL_EXSANGUINATE, check_confused);
     }
 
-    if (you.racial_permanent_flight() && !you.attribute[ATTR_PERM_FLIGHT] || you.species != SP_DJINNI)
+    if (you.racial_permanent_flight() && !you.attribute[ATTR_PERM_FLIGHT] && you.species != SP_DJINNI)
     {
         // Tengu can fly starting at XL 5
         // Black draconians and gargoyles get permaflight at XL 14, but they
