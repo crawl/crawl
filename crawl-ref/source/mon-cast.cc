@@ -296,7 +296,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
     } },
     { SPELL_LEDAS_LIQUEFACTION, {
         [](const monster &caster) {
-            return caster.stand_on_solid_ground() && !liquefied(caster.pos());
+            return !caster.has_ench(ENCH_LIQUEFYING);
         },
         [](monster &caster, mon_spell_slot, bolt&) {
             if (you.can_see(caster))

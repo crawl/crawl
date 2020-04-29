@@ -350,7 +350,6 @@ public:
     virtual bool is_web_immune() const = 0;
     virtual bool airborne() const = 0;
     virtual bool ground_level() const;
-    virtual bool stand_on_solid_ground() const;
 
     virtual bool paralysed() const = 0;
     virtual bool cannot_move() const = 0;
