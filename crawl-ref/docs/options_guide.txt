@@ -955,7 +955,7 @@ rest_wait_percent = 100
         it will stop resting when this percent of maximum HP or MP is refilled.
         Resting after this point will still rest up to 100%.
 
-explore_auto_rest = false
+explore_auto_rest = true
         If true, auto-explore waits until your HP and MP are both at
         rest_wait_percent before moving.
 
