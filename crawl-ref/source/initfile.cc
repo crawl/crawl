@@ -1048,7 +1048,7 @@ void game_options::reset_options()
     autopickups.set(OBJ_FOOD);
 
     confirm_butcher        = confirm_butcher_type::normal;
-    auto_butcher           = HS_VERY_HUNGRY;
+    auto_butcher           = HS_ENGORGED;
     easy_confirm           = easy_confirm_type::safe;
     allow_self_target      = confirm_prompt_type::prompt;
     skill_focus            = SKM_FOCUS_ON;
