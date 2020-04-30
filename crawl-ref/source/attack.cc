@@ -1766,7 +1766,9 @@ int attack::player_stab_weapon_bonus(int damage)
 
         bonus   = stepdown_value(bonus, 10, 10, 30, 30);
 
-        if (you.get_mutation_level(MUT_SICKLE_HANDS)) {
+        if (you.get_mutation_level(MUT_SICKLE_HANDS) 
+            && !using_weapon()
+            && !player_equip_unrand(UNRAND_BOOTS_ASSASSIN)) {
             //stepdown for mantis
             bonus /= 2;
         }
