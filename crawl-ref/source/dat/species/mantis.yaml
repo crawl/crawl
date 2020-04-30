@@ -63,3 +63,7 @@ recommended_jobs:
   - JOB_ASSASSIN
   - JOB_WARPER
   - JOB_VENOM_MAGE
+recommended_weapons:
+  - SK_POLEARMS
+  - SK_UNARMED_COMBAT
+
