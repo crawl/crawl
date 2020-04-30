@@ -146,6 +146,9 @@ static void _update_feat_at(const coord_def &gp)
     if (leaped(gp))
         env.map_knowledge(gp).flags |= MAP_LEAP;
 
+    if (cowarded(gp))
+        env.map_knowledge(gp).flags |= MAP_COWARD;
+
     if (is_sanctuary(gp))
     {
         if (testbits(env.pgrid(gp), FPROP_SANCTUARY_1))

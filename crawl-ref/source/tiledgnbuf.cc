@@ -336,6 +336,8 @@ void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
                 m_buf_feat.add(TILE_HEAT_AURA + cell.heat_aura - 1, x, y);
             if (cell.leap_point)
                 m_buf_feat.add(TILE_LEAP_ATTACK, x, y);
+            if (cell.coward_point)
+                m_buf_feat.add(TILE_COWARD_ATTACK, x, y);
 
             if (cell.is_silenced)
                 m_buf_feat.add(TILE_SILENCED, x, y);

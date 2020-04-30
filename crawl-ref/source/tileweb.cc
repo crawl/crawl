@@ -1415,6 +1415,9 @@ void TilesFramework::_send_cell(const coord_def &gc,
         if (next_pc.leap_point != current_pc.leap_point)
             json_write_int("leap_point", next_pc.leap_point);
 
+        if (next_pc.coward_point != current_pc.coward_point)
+            json_write_int("coward_point", next_pc.coward_point);
+
         if (_needs_flavour(next_pc) &&
             (next_pc.flv.floor != current_pc.flv.floor
              || next_pc.flv.special != current_pc.flv.special

@@ -43,7 +43,8 @@ enum class areaprop
     disjunction   = (1 << 9),
     soul_aura     = (1 << 10),
     hot = (1 << 11),
-    leap = (1 << 12)
+    leap = (1 << 12),
+    coward = (1 << 13)
 };
 DEF_BITFIELD(areaprops, areaprop);
 
@@ -227,18 +228,25 @@ static void _update_agrid()
     {
         const int r = 1;
         _agrid_centres.emplace_back(area_centre_type::leap, you.pos(), r);
+        _agrid_centres.emplace_back(area_centre_type::coward, you.pos(), r);
 
         set<coord_def> leap_points;
-        mantis_leap_point(leap_points);
+        set<coord_def> coward_points;
+        mantis_leap_point(leap_points, coward_points);
 
         for (radius_iterator ri(you.pos(), r, C_SQUARE);
             ri; ++ri)
         {
             if (cell_see_cell(you.pos(), *ri, LOS_DEFAULT) &&
                 you.pos() != *ri &&
-                !cell_is_solid(*ri) &&
-                leap_points.find(*ri) != leap_points.end()) {
-                _set_agrid_flag(*ri, areaprop::leap);
+                !cell_is_solid(*ri)) {
+
+                if (leap_points.find(*ri) != leap_points.end()) {
+                    _set_agrid_flag(*ri, areaprop::leap);
+                }
+                else if (coward_points.find(*ri) != coward_points.end()) {
+                    _set_agrid_flag(*ri, areaprop::coward);
+                }
             }
         }
         no_areas = false;
@@ -811,4 +819,12 @@ bool leaped(const coord_def& p)
     if (!_agrid_valid)
         _update_agrid();
     return _check_agrid_flag(p, areaprop::leap);
+}
+bool cowarded(const coord_def& p)
+{
+    if (!map_bounds(p))
+        return false;
+    if (!_agrid_valid)
+        _update_agrid();
+    return _check_agrid_flag(p, areaprop::coward);
 }

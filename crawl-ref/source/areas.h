@@ -12,7 +12,8 @@ enum class area_centre_type
     quad,
     disjunction,
     hot,
-    leap
+    leap,
+    coward
 };
 
 void invalidate_agrid(bool recheck_new = false);
@@ -53,3 +54,6 @@ bool heated(const coord_def& p);
 
 // ...or is the point of leap?
 bool leaped(const coord_def& p);
+
+// ...or is the point of coward?
+bool cowarded(const coord_def& p);

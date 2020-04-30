@@ -634,6 +634,12 @@ void init_element_colours()
         { {60,  MAGENTA},
           {60,  RED},
         }));
+
+    add_element_colour(new random_element_colour_calc(
+        ETC_COWARD, "coward point",
+        { {60,  LIGHTRED},
+          {60,  LIGHTMAGENTA},
+        }));
     
     // redefined by Lua later
     add_element_colour(new element_colour_calc(

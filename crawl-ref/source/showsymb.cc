@@ -107,6 +107,8 @@ static unsigned short _cell_feat_show_colour(const map_cell& cell,
     {
         if (cell.flags & MAP_LEAP)
             colour = ETC_LEAP;
+        else if (cell.flags & MAP_COWARD)
+            colour = ETC_COWARD;
         else if (cell.flags & MAP_LIQUEFIED)
             colour = ETC_LIQUEFIED;
         else if (cell.flags & MAP_DISJUNCT)

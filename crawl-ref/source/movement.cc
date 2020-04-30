@@ -285,13 +285,13 @@ static bool _mantis_leap_attack_doing(monster* mons)
     return true;
 }
 
-bool mantis_leap_point(set<coord_def>& set_)
+bool mantis_leap_point(set<coord_def>& set_, set<coord_def>& coward_set_)
 {
     int radius_ = you.airborne() ? 5 : 4;
     if (you.duration[DUR_COWARD]) {
         return false;
     }
-    for (distance_iterator di(you.pos(), true, true, radius_); di; ++di)
+    for (distance_iterator di(you.pos(), true, true, LOS_RADIUS); di; ++di)
     {
         monster* mon = monster_at(*di);
         if (_can_leap_target(mon))
@@ -299,21 +299,27 @@ bool mantis_leap_point(set<coord_def>& set_)
             bolt tempbeam;
             tempbeam.source = you.pos();
             tempbeam.target = *di;
-            tempbeam.range = radius_;
+            tempbeam.range = LOS_RADIUS;
             tempbeam.is_tracer = true;
             tempbeam.fire();
 
             bool first = true;
             bool vaild = false;
             bool can_jump = false;
+            bool in_range = true;
             int range_ = 1;
             set<coord_def> leap_point;
             for (auto iter : tempbeam.path_taken) {
                 if (!first && iter == mon->pos()) {
                     if (!can_jump)
+                    {
                         vaild = false;
+                        in_range = false;
+                    }
                     else
+                    {
                         vaild = true;
+                    }
                     break;
                 }
                 if (you.can_pass_through(iter) &&
@@ -323,6 +329,7 @@ bool mantis_leap_point(set<coord_def>& set_)
                 else
                     can_jump = false;
                 if (monster_at(iter)) {
+                    in_range = false;
                     vaild = false;
                     break;
                 }
@@ -341,11 +348,16 @@ bool mantis_leap_point(set<coord_def>& set_)
                 }
                 range_++;
                 if (range_ > radius_) {
-                    break;
+                    in_range = false;
                 }
             }
             if (vaild) {
-                set_.insert(leap_point.begin(), leap_point.end());
+                if (in_range) {
+                    set_.insert(leap_point.begin(), leap_point.end());
+                }
+                else {
+                    coward_set_.insert(leap_point.begin(), leap_point.end());
+                }
             }
         }
     }
