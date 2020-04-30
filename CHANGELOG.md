@@ -18,8 +18,8 @@
 - 독물의 추출, 증산 추가
   - Added Fulsome Distillation, Evaporate spell
   
-- 독물의 추출을 위한 나쁜 포션(독, 맹독, 맹물)추가. 추출에서만 나오는 포션이며 자연 드랍되면 버그임
-  - Added bad potions (poison, strong poison, water) for Evaporate. only create by Fulsome Distillation
+- 독물의 추출을 위한 나쁜 포션(독, 맹독, 맹물, 불안정 변이)추가. 추출에서만 나오는 포션이며 자연 드랍되면 버그임
+  - Added bad potions (poison, strong poison, water, unstable mutation) for Evaporate. only create by Fulsome Distillation
 
 - 5레벨 독/파괴 마법, 에링야의 뿌리송곳 추가. 2~5의 거리를 지니는 스마이트형 물리복합 마법
   - Added Eringya's Rootspike, level 5 posion/conjuraion spell. 2~5 range smite-targeting spell. partially ignores poison resistance
@@ -54,6 +54,9 @@
 - 둔기 특성화. 이제 둔기로 적을 죽일때마다 시체를 넉백시킬 수 있고 넉백된 시체는 적에게 데미지를 줌
   - add mace&flail ability. Now every time you kill an enemy with a mace&flail weapon, you can knock back the corpse, and the knocked back corpse deals damage to the enemy
   
+- 변이 시체, 고기를 되돌림
+  - rollback mutagenic corpse
+  
 - 새로운 메인 타이틀 이미지 추가 (logal-image)
   - Add new title artwork (logal-image)
 
@@ -80,6 +83,9 @@
 
 - 드라코 전원 14레벨에 영구 비행 변이를 얻도록 변경
   - All dracos will gain big wing mutation at xl 14
+  
+- 이제 던전 5층이 되기전까진 구덩이 함정이 등장하지않음
+  - Shaft traps will not spawn before D:5
 
 - 저주받은 해골 타일 변경 (kormed)
   - A new curse skull tile (kormed)
