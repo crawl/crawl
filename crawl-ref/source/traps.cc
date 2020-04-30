@@ -1292,6 +1292,11 @@ bool is_valid_shaft_level()
 
     const Branch &branch = branches[place.branch];
 
+    if (place.branch == BRANCH_DUNGEON && place.depth <= 4) {
+        //disable shaft trap in early dungeon
+        return false;
+    }
+
     if (branch.branch_flags & brflag::no_shafts)
         return false;
 
