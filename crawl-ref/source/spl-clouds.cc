@@ -375,6 +375,9 @@ static std::vector<int> _get_evaporate_result(int potion)
         beams.push_back(BEAM_POTION_STEAM);
         break;
 
+    case POT_UNSTABLE_MUTATION:
+        beams.push_back(BEAM_POTION_MUTAGENIC);
+        break;
     case POT_MUTATION:
         beams.push_back(BEAM_POTION_MUTAGENIC);
         // deliberate fall-through

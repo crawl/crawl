@@ -90,6 +90,7 @@ bool is_holy_item(const item_def& item, bool calc_unid)
     return retval;
 }
 
+
 bool is_potentially_evil_item(const item_def& item, bool calc_unid)
 {
     if (item.base_type == OBJ_WEAPONS
@@ -226,8 +227,9 @@ bool is_chaotic_item(const item_def& item, bool calc_unid)
         break;
     case OBJ_POTIONS:
         retval = (item.sub_type == POT_MUTATION
-                            && !have_passive(passive_t::cleanse_mut_potions))
-                 || item.sub_type == POT_LIGNIFY;
+                    && !have_passive(passive_t::cleanse_mut_potions))
+                    || item.sub_type == POT_LIGNIFY
+                    || item.sub_type == POT_UNSTABLE_MUTATION;
         break;
     case OBJ_BOOKS:
         retval = _is_book_type(item, is_chaotic_spell);
@@ -400,6 +402,9 @@ vector<conduct_type> item_conducts(const item_def &item)
 
     if (item_is_spellbook(item))
         conducts.push_back(DID_SPELL_MEMORISE);
+
+    if (item.is_type(OBJ_FOOD, FOOD_CHUNK) && is_mutagenic(item))
+        conducts.push_back(DID_DELIBERATE_MUTATING);
 
     if ((item.sub_type == BOOK_MANUAL && item_type_known(item)
         && is_magic_skill((skill_type)item.plus))

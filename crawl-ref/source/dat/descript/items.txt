@@ -755,6 +755,10 @@ potion of strong poison
 
 A terribly venomous potion.
 %%%%
+potion of unstable mutation
+
+A potion which does very strange things to you.
+%%%%
 potion of water
 
 A unique substance, vital for the existence of most life.

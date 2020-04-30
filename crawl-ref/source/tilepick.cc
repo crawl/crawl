@@ -2346,6 +2346,9 @@ static tileidx_t _tileidx_chunk(const item_def &item)
     if (is_inedible(item))
         return TILE_FOOD_CHUNK_INEDIBLE;
 
+    if (is_mutagenic(item))
+        return TILE_FOOD_CHUNK_MUTAGENIC;
+
     if (is_noxious(item))
         return TILE_FOOD_CHUNK_ROTTING;
 
@@ -3972,6 +3975,9 @@ tileidx_t tileidx_corpse_brand(const item_def &item)
         return 0;
 
     // Harmful chunk effects > religious rules > reduced nutrition.
+    if (is_mutagenic(item))
+        return TILE_FOOD_MUTAGENIC;
+
     if (is_noxious(item))
         return TILE_FOOD_ROTTING;
 

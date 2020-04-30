@@ -38,6 +38,7 @@ void lessen_hunger(int statiated_amount, bool suppress_msg, int max = - 1);
 void set_hunger(int new_hunger_level, bool suppress_msg);
 
 bool is_bad_food(const item_def &food);
+bool is_mutagenic(const item_def& food);
 bool is_noxious(const item_def &food);
 bool is_inedible(const item_def &item, bool temp = true);
 bool is_preferred_food(const item_def &food);

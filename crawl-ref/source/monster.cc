@@ -3620,6 +3620,10 @@ int monster::how_unclean(bool check_god) const
     if (has_chaotic_spell() && is_actual_spellcaster())
         uncleanliness++;
 
+    corpse_effect_type ce = mons_corpse_effect(type);
+    if (ce == CE_MUTAGEN && !how_chaotic())
+        uncleanliness++;
+
     // Corporeal undead are a perversion of natural form.
     if (holiness() & MH_UNDEAD && !is_insubstantial())
         uncleanliness++;

@@ -757,9 +757,7 @@ const char* potion_type_name(int potiontype)
 #endif
     case POT_RESISTANCE:        return "resistance";
     case POT_LIGNIFY:           return "lignification";
-#if TAG_MAJOR_VERSION == 34
-    case POT_BENEFICIAL_MUTATION: return "beneficial mutation";
-#endif
+    case POT_UNSTABLE_MUTATION: return "unstable mutation";
     default:                    return "bugginess";
     }
 }
@@ -1837,6 +1835,9 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         case FOOD_CHUNK:
             switch (determine_chunk_effect(*this))
             {
+                case CE_MUTAGEN:
+                    buff << "mutagenic ";
+                    break;
                 case CE_NOXIOUS:
                     buff << "inedible ";
                     break;
@@ -3202,10 +3203,6 @@ bool is_good_item(const item_def &item)
 #endif
         case POT_EXPERIENCE:
             return true;
-#if TAG_MAJOR_VERSION == 34
-        case POT_BENEFICIAL_MUTATION:
-            return you.species != SP_GHOUL; // Mummies are already handled
-#endif
         default:
             return false;
         }
@@ -3342,11 +3339,30 @@ bool is_dangerous_item(const item_def &item, bool temp)
             if (have_passive(passive_t::cleanse_mut_potions))
                 return false;
             // intentional fallthrough
+        case POT_UNSTABLE_MUTATION:
         case POT_LIGNIFY:
             return true;
         default:
             return false;
         }
+
+    case OBJ_FOOD:
+        switch (item.sub_type)
+        {
+        default:
+            break;
+        case FOOD_CHUNK:
+            switch (determine_chunk_effect(item))
+            {
+            case CE_MUTAGEN:
+                return true;
+                break;
+            default:
+                break;
+            }
+            break;
+        }
+        return false;
 
     default:
         return false;
@@ -3554,11 +3570,11 @@ bool is_useless_item(const item_def &item, bool temp)
 
 #if TAG_MAJOR_VERSION == 34
         case POT_CURE_MUTATION:
-        case POT_BENEFICIAL_MUTATION:
         case POT_GAIN_STRENGTH:
         case POT_GAIN_INTELLIGENCE:
         case POT_GAIN_DEXTERITY:
 #endif
+        case POT_UNSTABLE_MUTATION:
         case POT_MUTATION:
             return !you.can_safely_mutate(temp);
 
@@ -3873,6 +3889,8 @@ string item_prefix(const item_def &item, bool temp)
         if (is_forbidden_food(item))
             prefixes.push_back("forbidden");
 
+        if (is_mutagenic(item))
+            prefixes.push_back("mutagenic");
         else if (is_noxious(item))
             prefixes.push_back("inedible");
         break;

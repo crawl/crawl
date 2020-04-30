@@ -46,8 +46,6 @@ enum potion_type
     POT_BLOOD_COAGULATED,
 #endif
     POT_LIGNIFY,
-#if TAG_MAJOR_VERSION == 34
-    POT_BENEFICIAL_MUTATION,
-#endif
+    POT_UNSTABLE_MUTATION,
     NUM_POTIONS
 };

@@ -466,7 +466,6 @@ unsigned int item_value(item_def item, bool ident)
             case POT_GAIN_DEXTERITY:
             case POT_GAIN_INTELLIGENCE:
             case POT_GAIN_STRENGTH:
-            case POT_BENEFICIAL_MUTATION:
                 valued += 350;
                 break;
 
@@ -499,6 +498,7 @@ unsigned int item_value(item_def item, bool ident)
             case POT_MIGHT:
             case POT_AGILITY:
             case POT_BRILLIANCE:
+            case POT_UNSTABLE_MUTATION:
                 valued += 40;
                 break;
 

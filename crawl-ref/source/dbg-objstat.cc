@@ -171,7 +171,7 @@ static const char* missile_brand_field = "BrandNums";
 static const vector<string> monster_fields = {
     "Num", "NumNonVault", "NumVault", "NumMin", "NumMax", "NumSD", "MonsHD",
     "MonsHP", "MonsXP", "TotalXP", "TotalNonVaultXP", "TotalVaultXP",
-    "MonsNumChunks", "TotalNutr", "TotalCarnNutr",
+    "MonsNumChunks", "MonsNumMutChunks","TotalNutr", "TotalCarnNutr",
     "TotalGhoulNutr",
 };
 
@@ -801,6 +801,8 @@ void objstat_record_monster(const monster *mons)
         double chunks = (1 + stepdown_value(max_corpse_chunks(type),
                                             4, 4, 12, 12)) / 2.0;
         _record_monster_stat(lev, mons_ind, "MonsNumChunks", chunks);
+        if (chunk_effect == CE_MUTAGEN)
+            _record_monster_stat(lev, mons_ind, "MonsNumMutChunks", chunks);
 
         if (chunk_effect == CE_CLEAN)
         {
@@ -948,7 +950,8 @@ static void _write_stat(map<string, double> &stats, string field)
              || field == "MonsHD"
              || field == "MonsHP"
              || field == "MonsXP"
-             || field == "MonsNumChunks")
+             || field == "MonsNumChunks"
+             || field == "MonsNumMutChunks")
     {
         value = stats[field] / stats["Num"];
     }

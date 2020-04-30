@@ -1216,16 +1216,16 @@ public:
         return mutated;
     }
 };
-
-class PotionBeneficialMutation : public PotionEffect
+#endif
+class PotionUnstableMutation : public PotionEffect
 {
 private:
-    PotionBeneficialMutation() : PotionEffect(POT_BENEFICIAL_MUTATION) { }
-    DISALLOW_COPY_AND_ASSIGN(PotionBeneficialMutation);
+    PotionUnstableMutation() : PotionEffect(POT_UNSTABLE_MUTATION) { }
+    DISALLOW_COPY_AND_ASSIGN(PotionUnstableMutation);
 public:
-    static const PotionBeneficialMutation &instance()
+    static const PotionUnstableMutation&instance()
     {
-        static PotionBeneficialMutation inst; return inst;
+        static PotionUnstableMutation inst; return inst;
     }
 
     bool can_quaff(string *reason = nullptr) const override
@@ -1235,21 +1235,13 @@ public:
         return true;
     }
 
-    bool effect(bool = true, int = 40, bool=true) const override
+    bool effect(bool = true, int = 40, bool = true) const override
     {
-        const bool mutated = mutate(RANDOM_GOOD_MUTATION,
-                                    "potion of mutation",
-                                    true, false, false, true);
-        if (undead_mutation_rot())
-        {
-            mpr("You feel dead inside.");
-            return mutated;
-        }
+        mpr("You feel extremely strange.");
+        bool mutated = false;
+        for (int i = 0; i < 3; i++)
+            mutated |= mutate(RANDOM_MUTATION, "potion of unstable mutation", false);
 
-        if (mutated)
-            mpr("You feel fantastic!");
-        else
-            mpr("You feel fantastic for a moment.");
         learned_something_new(HINT_YOU_MUTATED);
         return mutated;
     }
@@ -1259,22 +1251,22 @@ public:
         if (was_known && !check_known_quaff())
             return false;
 
-        // Beneficial mutations go rMut, so don't prompt in this case.
-        if (was_known && you_worship(GOD_ZIN)
-            && !yesno("Really drink that potion of mutation?",
-                      false, 'n'))
+        string msg = "Really drink that potion of unstable mutation";
+        msg += you.rmut_from_item() ? " while resistant to mutation?" : "?";
+        if (was_known && (you_worship(GOD_ZIN) || you.rmut_from_item())
+            && !yesno(msg.c_str(), false, 'n'))
         {
             canned_msg(MSG_OK);
             return false;
         }
 
-        effect(was_known);
+        effect();
         // Zin conduct is violated even if you get lucky and don't mutate
         did_god_conduct(DID_DELIBERATE_MUTATING, 10, was_known);
         return true;
     }
 };
-#endif
+
 
 // placeholder 'buggy' potion
 class PotionStale : public PotionEffect
@@ -1340,9 +1332,7 @@ static const PotionEffect* potion_effects[] =
     &PotionBloodCoagulated::instance(),
 #endif
     &PotionLignify::instance(),
-#if TAG_MAJOR_VERSION == 34
-    &PotionBeneficialMutation::instance(),
-#endif
+    &PotionUnstableMutation::instance(),
     &PotionStale::instance()
 };
 

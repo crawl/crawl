@@ -556,6 +556,9 @@ spret cast_fulsome_distillation(bool fail)
     case CE_NOXIOUS:
         pot_type = random2(4) < 3 ? POT_DEGENERATION : POT_POISON;
         break;
+    case CE_MUTAGEN:
+        pot_type = POT_UNSTABLE_MUTATION;
+        break;
     case CE_NOCORPSE:       // shouldn't occur
     default:
         break;

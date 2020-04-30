@@ -588,10 +588,12 @@ bone4
 %rim 1
 chunk FOOD_CHUNK
 %back chunk
+chunk_brands/i-mutation FOOD_CHUNK_MUTAGENIC
 chunk_brands/i-decay FOOD_CHUNK_ROTTING
 chunk_brands/i-forbidden FOOD_CHUNK_FORBIDDEN
 chunk_brands/i-inedible FOOD_CHUNK_INEDIBLE
 %back none
+chunk_brands/i-mutation FOOD_MUTAGENIC
 chunk_brands/i-decay FOOD_ROTTING
 chunk_brands/i-forbidden FOOD_FORBIDDEN
 chunk_brands/i-inedible FOOD_INEDIBLE
@@ -867,8 +869,7 @@ i-resistance POT_RESISTANCE
 i-blood POT_BLOOD
 i-coagulated-blood POT_BLOOD_COAGULATED
 i-lignify POT_LIGNIFY
-# Remove beneficial mutation and update POT_ID_LAST when TAG_MAJOR_VERSION > 34
-i-good-mutation POT_REMOVEME9 POT_ID_LAST
+i-mutation POT_UNSTABLE_MUTAION POT_ID_LAST
 %back none
 %rim 1
 

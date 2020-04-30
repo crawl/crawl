@@ -619,6 +619,12 @@ static void _eat_chunk(item_def& food)
 
     switch (chunk_effect)
     {
+    case CE_MUTAGEN:
+        mpr("This meat tastes really weird.");
+        mutate(RANDOM_MUTATION, "mutagenic meat");
+        did_god_conduct(DID_DELIBERATE_MUTATING, 10);
+        xom_is_stimulated(100);
+        break;
     case CE_CLEAN:
     {
         if (you.species == SP_GHOUL)
@@ -681,7 +687,16 @@ bool eat_item(item_def &food)
 
 bool is_bad_food(const item_def &food)
 {
-    return is_forbidden_food(food) || is_noxious(food);
+    return is_mutagenic(food) || is_forbidden_food(food) || is_noxious(food);
+}
+
+// Returns true if a food item (or corpse) is mutagenic.
+bool is_mutagenic(const item_def& food)
+{
+    if (food.base_type != OBJ_FOOD && food.base_type != OBJ_CORPSES)
+        return false;
+
+    return determine_chunk_effect(food) == CE_MUTAGEN;
 }
 
 // Returns true if a food item (or corpse) is totally inedible.
@@ -784,6 +799,11 @@ bool can_eat(const item_def &food, bool suppress_msg, bool check_hunger,
     if (food.base_type != OBJ_FOOD && food.base_type != OBJ_CORPSES)
         FAIL("That's not food!");
 
+    // special case mutagenic chunks to skip hunger checks, as they don't give
+    // nutrition and player can get hungry by using spells etc. anyway
+    if (is_mutagenic(food))
+        check_hunger = false;
+
     // [ds] These redundant checks are now necessary - Lua might be calling us.
     if (!_eat_check(check_hunger, suppress_msg, temp))
         return false;
@@ -843,6 +863,7 @@ corpse_effect_type determine_chunk_effect(corpse_effect_type chunktype)
     switch (chunktype)
     {
     case CE_NOXIOUS:
+    case CE_MUTAGEN:
         if (you.species == SP_GHOUL)
             chunktype = CE_CLEAN;
         break;
