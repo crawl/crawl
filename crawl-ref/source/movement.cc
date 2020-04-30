@@ -165,6 +165,7 @@ static monster* _mantis_leap_attack(coord_def& new_pos)
             mon_exist = true;
             bolt tempbeam;
             tempbeam.source = you.pos();
+            tempbeam.source_id = MID_PLAYER;
             tempbeam.target = *di;
             tempbeam.range = LOS_RADIUS;
             tempbeam.is_tracer = true;
@@ -298,6 +299,7 @@ bool mantis_leap_point(set<coord_def>& set_, set<coord_def>& coward_set_)
         {
             bolt tempbeam;
             tempbeam.source = you.pos();
+            tempbeam.source_id = MID_PLAYER;
             tempbeam.target = *di;
             tempbeam.range = LOS_RADIUS;
             tempbeam.is_tracer = true;
