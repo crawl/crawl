@@ -21,6 +21,7 @@ struct coord_def;
 struct item_def;
 class monster;
 struct monster_info;
+struct shop_struct;
 struct show_type;
 
 bool is_door_tile(tileidx_t tile);

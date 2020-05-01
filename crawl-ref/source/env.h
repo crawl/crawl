@@ -7,6 +7,7 @@
 #include "fprop.h"
 #include "map-cell.h"
 #include "monster.h"
+#include "shopping.h"
 #include "trap-def.h"
 
 typedef FixedArray<short, GXM, GYM> grid_heightmap;

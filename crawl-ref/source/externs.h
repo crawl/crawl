@@ -359,29 +359,6 @@ struct cloud_struct
     static killer_type   whose_to_killer(kill_category whose);
 };
 
-struct shop_struct
-{
-    coord_def           pos;
-    uint8_t             greed;
-    shop_type           type;
-    uint8_t             level;
-    string              shop_name;
-    string              shop_type_name;
-    string              shop_suffix_name;
-
-    FixedVector<uint8_t, 3> keeper_name;
-
-    vector<item_def> stock;
-#if TAG_MAJOR_VERSION == 34
-    uint8_t num; // used in a save compat hack
-#endif
-
-    shop_struct () : pos(), greed(0), type(SHOP_UNASSIGNED), level(0),
-                     shop_name(""), shop_type_name(""), shop_suffix_name("") { }
-
-    bool defined() const { return type != SHOP_UNASSIGNED; }
-};
-
 /// Exception indicating a bad level_id, level_range, or depth_range.
 struct bad_level_id : public runtime_error
 {
