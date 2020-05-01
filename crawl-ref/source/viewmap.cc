@@ -682,15 +682,6 @@ bool show_map(level_pos &lpos,
 
         bool on_level = false;
 
-        // This is pulled out of tiles.load_dungeon(), because viewwindow()
-        // is now called via other code paths, so overriding the centred
-        // tile for the duration of the load_dungeon() alone is insufficient.
-        unwind_var<coord_def> viewp(crawl_view.viewp);
-        unwind_var<coord_def> vgrdc(crawl_view.vgrdc);
-        unwind_var<coord_def> vlos1(crawl_view.vlos1);
-        unwind_var<coord_def> vlos2(crawl_view.vlos2);
-        crawl_view.calc_vlos();
-
         while (map_alive)
         {
             if (lpos.id != level_id::current())
@@ -789,10 +780,6 @@ bool show_map(level_pos &lpos,
                     first_run = false;
                 }
 #endif
-                // Adjust the centred tile position
-                crawl_view.viewp = lpos.pos - crawl_view.viewhalfsz;
-                crawl_view.vgrdc = lpos.pos;
-                crawl_view.calc_vlos();
                 tiles.load_dungeon(lpos.pos);
 #endif
 #ifndef USE_TILE_LOCAL
