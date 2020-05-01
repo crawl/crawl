@@ -196,15 +196,11 @@ static bool _is_feature_fudged(char32_t glyph, const coord_def& where)
     return false;
 }
 
-static int _find_feature(char32_t glyph, int curs_x, int curs_y,
-                         int start_x, int start_y, int anchor_x, int anchor_y,
-                         int ignore_count, int *move_x, int *move_y)
+vector<coord_def> _search_path_around_point(coord_def centre)
 {
-    int cx = anchor_x,
-        cy = anchor_y;
+    vector<coord_def> points;
 
-    int firstx = -1, firsty = -1;
-    int matchcount = 0;
+    int cx = centre.x, cy = centre.y;
 
     // Find the first occurrence of given glyph, spiralling around (x,y)
     int maxradius = GXM > GYM ? GXM : GYM;
@@ -224,36 +220,14 @@ static int _find_feature(char32_t glyph, int curs_x, int curs_y,
                     dy = temp;
                 }
 
-                int x = cx + dx, y = cy + dy;
-                if (!in_bounds(x, y))
-                    continue;
-                if (_is_feature_fudged(glyph, coord_def(x, y)))
-                {
-                    ++matchcount;
-                    if (!ignore_count--)
-                    {
-                        // We want to cursor to (x,y)
-                        *move_x = x - (start_x + curs_x - 1);
-                        *move_y = y - (start_y + curs_y - 1);
-                        return matchcount;
-                    }
-                    else if (firstx == -1)
-                    {
-                        firstx = x;
-                        firsty = y;
-                    }
-                }
+                const auto x = cx + dx, y = cy + dy;
+
+                if (in_bounds(x, y))
+                    points.emplace_back(x, y);
             }
         }
 
-    // We found something, but ignored it because of an ignorecount
-    if (firstx != -1)
-    {
-        *move_x = firstx - (start_x + curs_x - 1);
-        *move_y = firsty - (start_y + curs_y - 1);
-        return 1;
-    }
-    return 0;
+    return points;
 }
 
 static int _find_feature(const vector<coord_def>& features,
@@ -1160,11 +1134,14 @@ bool show_map(level_pos &lpos, bool travel_mode, bool allow_offlevel)
                 }
                 else
                 {
-                    search_found = _find_feature(getty, curs_x, curs_y,
+                    const auto search_path = _search_path_around_point(
+                            coord_def(anchor_x, anchor_y));
+                    search_found = _find_feature(features, getty,
+                                                 curs_x, curs_y,
                                                  start_x, start_y,
-                                                 anchor_x, anchor_y,
                                                  search_found,
-                                                 &move_x, &move_y);
+                                                 &move_x, &move_y,
+                                                 true);
                 }
                 break;
             }
