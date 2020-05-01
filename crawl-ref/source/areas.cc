@@ -620,7 +620,7 @@ bool liquefied(const coord_def& p, bool check_actual)
     if (!_agrid_valid)
         _update_agrid();
 
-    if (feat_is_water(grd(p)))
+    if (feat_is_water(grd(p)) || feat_is_lava(grd(p)))
         return false;
 
     // "actually" liquefied (ie, check for movement)
