@@ -152,7 +152,7 @@ static monster* _mantis_leap_attack(coord_def& new_pos)
     bool mon_exist = false;
     bool coward = true;
 
-    if (you.pos() == coord_def(0 ,0) ) {
+    if (!in_bounds(you.pos())) {
         return nullptr;
     }
 
@@ -292,7 +292,7 @@ static bool _mantis_leap_attack_doing(monster* mons)
 
 bool mantis_leap_point(set<coord_def>& set_, set<coord_def>& coward_set_)
 {
-    if (you.pos() == coord_def(0, 0)) {
+    if (!in_bounds(you.pos())) {
         return false;
     }
 
