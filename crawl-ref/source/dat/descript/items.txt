@@ -64,7 +64,8 @@ amulet of the acrobat
 
 An amulet that allows the user to tumble and roll to evade the blows of their
 enemies, but only while moving and waiting. While taking other actions the
-amulet conveys no benefits. In order to function, it must first attune itself to the wearer's body at full health.
+amulet conveys no benefits. In order to function, it must first attune itself
+to the wearer's body at full health.
 %%%%
 animal skin
 
@@ -628,9 +629,9 @@ phial of floods
 
 An enchanted vessel brimming over with elemental water. Removing the stopper
 unleashes a torrent of water from the phial, dealing damage to the target and
-flooding the nearby area. Any creatures within the flooded area are also
-engulfed in water, silencing them temporarily. The strength of the torrent and
-the duration of the flooding are increased with Evocations skill.
+flooding the nearby area. Any creatures hit by the wave are also engulfed in
+water, silencing them temporarily. The strength of the torrent and the duration
+of the flooding are increased with Evocations skill.
 %%%%
 plate armour
 
