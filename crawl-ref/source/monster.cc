@@ -5123,6 +5123,13 @@ bool monster::can_go_frenzy() const
     if (!mons_has_attacks(*this))
         return false;
 
+    // These allies have a special loyalty
+    if (mons_is_hepliaklqana_ancestor(type)
+        || testbits(flags, MF_DEMONIC_GUARDIAN))
+    {
+        return false;
+    }
+
     return true;
 }
 

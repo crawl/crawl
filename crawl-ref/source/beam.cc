@@ -5041,6 +5041,12 @@ bool ench_flavour_affects_monster(beam_type flavour, const monster* mon,
         rc = !mons_aligned(&you, mon) && you.can_constrict(mon, false);
         break;
 
+    // These are special allies whose loyalty can't be so easily bent
+    case BEAM_ENSLAVE:
+        rc = !(mons_is_hepliaklqana_ancestor(mon->type)
+               || testbits(mon->flags, MF_DEMONIC_GUARDIAN));
+        break;
+
     default:
         break;
     }
