@@ -923,6 +923,7 @@ deep_elf_master_archer MONS_DEEP_ELF_MASTER_ARCHER
 deep_elf_elementalist1 MONS_DEEP_ELF_ELEMENTALIST
 deep_elf_elementalist2
 deep_elf_elementalist3
+deep_elf_elementalist4
 %sdir mon/vault
 ## From the Cigotuvi wizlab
 deformed_elf MONS_DEFORMED_ELF
