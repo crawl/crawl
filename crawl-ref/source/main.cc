@@ -1624,7 +1624,7 @@ static void _do_display_map()
 #endif
 
     level_pos pos;
-    const bool travel = show_map(pos, true, true, true);
+    const bool travel = show_map(pos, true, true);
 
 #ifdef USE_TILE_LOCAL
     mpr("Returning to the game...");

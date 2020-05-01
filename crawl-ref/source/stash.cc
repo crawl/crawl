@@ -1794,7 +1794,7 @@ bool StashTracker::display_search_results(
         else
         {
             level_pos lp = res->pos;
-            if (show_map(lp, true, true, true))
+            if (show_map(lp, true, true))
             {
                 start_translevel_travel(lp);
                 return false;

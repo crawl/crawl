@@ -599,7 +599,7 @@ static bool _teleport_player(bool wizard_tele, bool teleportitis,
         while (true)
         {
             level_pos lpos;
-            bool chose = show_map(lpos, false, true, false);
+            bool chose = show_map(lpos, false, false);
             pos = lpos.pos;
             redraw_screen();
 

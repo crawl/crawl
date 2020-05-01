@@ -617,8 +617,7 @@ static void _forget_map(bool wizard_forget = false)
 // the player from getting "artificial" location clues by using the
 // map to see how close to the end they are. They'll need to explore
 // to get that. This function is still a mess, though. -- bwr
-bool show_map(level_pos &lpos,
-              bool travel_mode, bool allow_esc, bool allow_offlevel)
+bool show_map(level_pos &lpos, bool travel_mode, bool allow_offlevel)
 {
     bool chose      = false;
 #ifdef USE_TILE_LOCAL
@@ -1248,12 +1247,9 @@ bool show_map(level_pos &lpos,
 #endif
 
             case CMD_MAP_EXIT_MAP:
-                if (allow_esc)
-                {
-                    lpos = level_pos();
-                    map_alive = false;
-                    break;
-                }
+                lpos = level_pos();
+                map_alive = false;
+                break;
 
 #ifdef USE_TILE_LOCAL
             case CMD_NEXT_CMD:
