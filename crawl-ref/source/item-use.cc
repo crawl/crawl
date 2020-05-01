@@ -2706,6 +2706,112 @@ void prompt_inscribe_item()
     inscribe_item(you.inv[item_slot]);
 }
 
+
+static bool _drink_fountain()
+{
+    const dungeon_feature_type feat = grd(you.pos());
+
+    ASSERT(feat >= DNGN_FOUNTAIN_BLUE && feat <= DNGN_DRY_FOUNTAIN);
+
+    if (you.berserk())
+    {
+        canned_msg(MSG_TOO_BERSERK);
+        return true;
+    }
+
+    potion_type fountain_effect = NUM_POTIONS;
+    if (feat == DNGN_DRY_FOUNTAIN)
+        return mpr("This fountain has no liquid!"), false;
+    if (feat == DNGN_FOUNTAIN_BLUE) {
+        mpr("You drink the clean water.");
+        fountain_effect = POT_WATER;
+    }
+    else if (feat == DNGN_FOUNTAIN_BLOOD)
+    {
+        if (!yesno("Drink from the fountain of blood?", true, 'n'))
+            return false;
+
+        mpr("You drink the blood.");
+        fountain_effect = POT_BLOOD;
+    }
+    else
+    {
+        if (!yesno("Drink from the sparkling fountain?", true, 'n'))
+            return false;
+
+        mpr("You drink the sparkling water.");
+
+        fountain_effect =
+            random_choose_weighted(467, NUM_POTIONS,
+                48, POT_DEGENERATION,
+                40, POT_UNSTABLE_MUTATION,
+                40, POT_CURING,
+                40, POT_HEAL_WOUNDS,
+                40, POT_HASTE,
+                40, POT_MIGHT,
+                40, POT_AGILITY,
+                40, POT_BRILLIANCE,
+                27, POT_FLIGHT,
+                27, POT_POISON,
+                27, POT_SLOWING,
+                27, POT_AMBROSIA,
+                27, POT_INVISIBILITY,
+                20, POT_MAGIC,
+                20, POT_RESISTANCE,
+                20, POT_STRONG_POISON,
+                20, POT_BERSERK_RAGE,
+                12, POT_MUTATION);
+    }
+
+    if (fountain_effect != NUM_POTIONS && fountain_effect != POT_BLOOD)
+        xom_is_stimulated(50);
+
+    // Good gods do not punish for bad random effects. However, they do
+    // punish drinking from a fountain of blood.
+
+    get_potion_effect(fountain_effect)->quaff(false);
+    //potion_effect(fountain_effect, 100, nullptr, feat != DNGN_FOUNTAIN_SPARKLING, true);
+
+    bool gone_dry = false;
+    if (feat == DNGN_FOUNTAIN_BLUE)
+    {
+        if (one_chance_in(20))
+            gone_dry = true;
+    }
+    else if (feat == DNGN_FOUNTAIN_BLOOD)
+    {
+        // High chance of drying up, to prevent abuse.
+        if (one_chance_in(3))
+            gone_dry = true;
+    }
+    else   // sparkling fountain
+    {
+        if (one_chance_in(10))
+            gone_dry = true;
+        else if (random2(50) > 40)
+        {
+            // Turn fountain into a normal fountain without any message
+            // but the glyph colour gives it away (lightblue vs. blue).
+            grd(you.pos()) = DNGN_FOUNTAIN_BLUE;
+            set_terrain_changed(you.pos());
+        }
+    }
+
+    if (gone_dry)
+    {
+        mpr("The fountain dries up!");
+
+        grd(you.pos()) = DNGN_DRY_FOUNTAIN;
+        set_terrain_changed(you.pos());
+
+        crawl_state.cancel_cmd_repeat();
+    }
+
+    you.turn_is_over = true;
+    return true;
+}
+
+
 void drink(item_def* potion)
 {
     if (you_foodless(true, true) && you.species != SP_VAMPIRE)
@@ -2718,6 +2824,18 @@ void drink(item_def* potion)
         mpr("In this state, you cannot do this");
         return;
     }
+
+    if (potion == nullptr)
+    {
+        const dungeon_feature_type feat = grd(you.pos());
+        if (feat >= DNGN_FOUNTAIN_BLUE && feat <= DNGN_DRY_FOUNTAIN) {
+            if (_drink_fountain()) {
+                return;
+
+            }
+        }
+    }
+
     if (you.berserk())
     {
         canned_msg(MSG_TOO_BERSERK);
