@@ -159,10 +159,12 @@
     GenericPseudonym
     Ge0ff
     Joshua Gelbard
+    Peter Gerlagh
     Benoît Giannangeli
     Ben Goetter
     Aaron Golden
     Ed Gonzalez
+    Goratrix
     Rob Grant
     John Greenberg
     GreyKnight
@@ -245,6 +247,7 @@
     Naruni
     neofelis
     nicolae
+    nirrattner
     Jonathon Nooner
     NormalPerson7
     Michael Nowack
@@ -280,6 +283,7 @@
     Remsleep
     Chris Rendle-Short
     Ryan Riegel
+    riverfiend
     RjY
     rmcneive
     Andy Roche
