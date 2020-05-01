@@ -567,6 +567,9 @@ bool xp_penance(god_type god)
 
 void dec_penance(god_type god, int val)
 {
+    if (you.species == SP_ANGEL) //NEVER MOLLIFY!
+        return;
+
     if (val <= 0 || you.penance[god] <= 0)
         return;
 
@@ -4015,9 +4018,49 @@ bool god_protects_from_harm()
     return false;
 }
 
-void handle_god_time(int /*time_delta*/)
+static void _handle_angel_time()
 {
     if (you.attribute[ATTR_GOD_WRATH_COUNT] > 0)
+    {
+        const level_id place = level_id::current();
+
+        if (place.branch == BRANCH_DUNGEON
+            && (place.depth <= 4))
+        {
+            you.attribute[ATTR_GOD_WRATH_COUNT] = 0;
+            return;
+        }
+
+        if (env.turns_on_level < 500)
+        {
+            return;
+        }
+
+        int bonus_ = env.turns_on_level / 300;
+        if (x_chance_in_y(min(5 + bonus_, 15), 100))
+        {
+            vector<god_type> angry_gods;
+            // First count the number of gods to whom we owe penance.
+            for (god_iterator it; it; ++it)
+            {
+                if (active_penance(*it))
+                    angry_gods.push_back(*it);
+            }
+            const bool succ = divine_retribution(*random_iterator(angry_gods));
+            ASSERT(succ);
+            you.attribute[ATTR_GOD_WRATH_COUNT] = 0;
+        }
+        you.attribute[ATTR_GOD_WRATH_COUNT]--;
+        you.attribute[ATTR_GOD_WRATH_COUNT] /= 2;
+    }
+}
+
+void handle_god_time(int /*time_delta*/)
+{
+    if (you.species == SP_ANGEL) {
+        _handle_angel_time();
+    }
+    else if (you.attribute[ATTR_GOD_WRATH_COUNT] > 0)
     {
         vector<god_type> angry_gods;
         // First count the number of gods to whom we owe penance.

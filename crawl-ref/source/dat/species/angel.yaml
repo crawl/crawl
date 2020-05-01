@@ -10,22 +10,22 @@ aptitudes:
   mp_mod: 0
   mr: 4
   short_blades: -3
-  long_blades: 3
-  axes: 0
-  maces_and_flails: 0
-  polearms: 0
+  long_blades: 1
+  axes: -2
+  maces_and_flails: 1
+  polearms: 1
   staves: -2
-  slings: 1
-  bows: 1
+  slings: 0
+  bows: 0
   crossbows: -2
   throwing: -2
-  armour: 1
+  armour: 0
   dodging: -1
   stealth: false
-  shields: 1
-  unarmed_combat: 0
-  spellcasting: -1
-  conjurations: -4
+  shields: 0
+  unarmed_combat: -1
+  spellcasting: 0
+  conjurations: -1
   hexes: false
   charms: false
   summoning: false
@@ -37,11 +37,11 @@ aptitudes:
   air_magic: -4
   earth_magic: -4
   poison_magic: false
-  invocations: 1
+  invocations: 3
   evocations: -2
-str: 11
-int: 7
-dex: 9
+str: 10
+int: 10
+dex: 10
 levelup_stat_frequency: 5
 mutations:
   1:
@@ -66,3 +66,9 @@ recommended_jobs:
   - JOB_GLADIATOR
   - JOB_HUNTER
   - JOB_FIRE_ELEMENTALIST
+recommended_weapons:
+  - SK_MACES_FLAILS
+  - SK_LONG_BLADES
+  - SK_POLEARMS
+  - SK_SLINGS
+  - SK_BOWS

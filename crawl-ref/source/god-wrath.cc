@@ -98,6 +98,22 @@ static const char *_god_wrath_adjectives[] =
 };
 COMPILE_CHECK(ARRAYSZ(_god_wrath_adjectives) == NUM_GODS);
 
+
+static int _angel_wrath_stepdown() {
+    if (you.species != SP_ANGEL) {
+        return 0;
+    }
+
+    if (you.experience_level < 9)
+        return 2;
+
+    if (you.experience_level < 15)
+        return 1;
+    return 0;
+}
+
+
+
 /**
  * Return a name associated with the given god's wrath.
  *
@@ -440,6 +456,7 @@ static spell_type _makhleb_destruction_type()
     const int severity = min(random_range(you.experience_level / 14,
                                           you.experience_level / 9),
                              2);
+
     switch (severity)
     {
         case 0:
@@ -609,7 +626,9 @@ static bool _makhleb_summon_servants()
  */
 static bool _makhleb_retribution()
 {
-    if (coinflip())
+    int angel_stepdown = _angel_wrath_stepdown();
+
+    if (coinflip() || angel_stepdown == 2)
         return _makhleb_call_down_destruction();
     else
         return _makhleb_summon_servants();
@@ -642,13 +661,15 @@ static int _count_corpses_in_los(vector<stack_iterator> *positions)
 
 static bool _kikubaaqudgha_retribution()
 {
+    int angel_stepdown = _angel_wrath_stepdown();
+
     // death/necromancy theme
     const god_type god = GOD_KIKUBAAQUDGHA;
 
     god_speaks(god, coinflip() ? "You hear Kikubaaqudgha cackling."
                                : "Kikubaaqudgha's malice focuses upon you.");
 
-    if (!_count_corpses_in_los(nullptr) || random2(you.experience_level) > 4)
+    if ((!_count_corpses_in_los(nullptr) || random2(you.experience_level) > 4) && angel_stepdown <= 1)
     {
         // Either zombies, or corpse rot + skeletons.
         kiku_receive_corpses(you.experience_level * 4);
@@ -662,7 +683,7 @@ static bool _kikubaaqudgha_retribution()
         // torment, or 3 necromancy miscasts
         if (!player_res_torment(false))
             torment(nullptr, TORMENT_KIKUBAAQUDGHA, you.pos());
-        else
+        else if(angel_stepdown <= 1)
         {
             for (int i = 0; i < 3; ++i)
             {
@@ -673,7 +694,7 @@ static bool _kikubaaqudgha_retribution()
             }
         }
     }
-    else if (random2(you.experience_level) >= 4)
+    else if (random2(you.experience_level) >= 4 && angel_stepdown <= 1)
     {
         // necromancy miscast, 25% chance of additional miscast
         const int num_miscasts = one_chance_in(4) ? 2 : 1;
@@ -698,8 +719,9 @@ static bool _yredelemnul_retribution()
 {
     // undead theme
     const god_type god = GOD_YREDELEMNUL;
+    int angel_stepdown = _angel_wrath_stepdown();
 
-    if (coinflip())
+    if (coinflip() && angel_stepdown != 2)
     {
         if (you_worship(god) && coinflip() && yred_slaves_abandon_you())
             ;
@@ -852,39 +874,42 @@ static bool _beogh_retribution()
         int num_created = 0;
         int num_to_create = random_range(1, 2);
 
-        for (int i = 0; i < num_to_create; ++i)
-        {
-            const int wpn_type =
-                random_choose(WPN_CLUB,        WPN_MACE,      WPN_FLAIL,
-                              WPN_MORNINGSTAR, WPN_DAGGER,    WPN_SHORT_SWORD,
-                              WPN_LONG_SWORD,  WPN_SCIMITAR,  WPN_GREAT_SWORD,
-                              WPN_HAND_AXE,    WPN_BATTLEAXE, WPN_SPEAR,
-                              WPN_HALBERD);
-
-            // Now create monster.
-            if (monster *mon =
-                create_monster(_wrath_mon_data(MONS_DANCING_WEAPON, god)))
+        int angel_stepdown = _angel_wrath_stepdown();
+        if (angel_stepdown != 2) {
+            for (int i = 0; i < num_to_create; ++i)
             {
-                ASSERT(mon->weapon() != nullptr);
-                item_def& wpn(*mon->weapon());
+                const int wpn_type =
+                    random_choose(WPN_CLUB, WPN_MACE, WPN_FLAIL,
+                        WPN_MORNINGSTAR, WPN_DAGGER, WPN_SHORT_SWORD,
+                        WPN_LONG_SWORD, WPN_SCIMITAR, WPN_GREAT_SWORD,
+                        WPN_HAND_AXE, WPN_BATTLEAXE, WPN_SPEAR,
+                        WPN_HALBERD);
 
-                set_item_ego_type(wpn, OBJ_WEAPONS, SPWPN_ELECTROCUTION);
+                // Now create monster.
+                if (monster * mon =
+                    create_monster(_wrath_mon_data(MONS_DANCING_WEAPON, god)))
+                {
+                    ASSERT(mon->weapon() != nullptr);
+                    item_def& wpn(*mon->weapon());
 
-                wpn.plus  = random2(3);
-                wpn.sub_type = wpn_type;
+                    set_item_ego_type(wpn, OBJ_WEAPONS, SPWPN_ELECTROCUTION);
 
-                set_ident_flags(wpn, ISFLAG_KNOW_TYPE);
+                    wpn.plus = random2(3);
+                    wpn.sub_type = wpn_type;
 
-                item_colour(wpn);
+                    set_ident_flags(wpn, ISFLAG_KNOW_TYPE);
 
-                ghost_demon newstats;
-                newstats.init_dancing_weapon(wpn,
-                                             you.experience_level * 50 / 9);
+                    item_colour(wpn);
 
-                mon->set_ghost(newstats);
-                mon->ghost_demon_init();
+                    ghost_demon newstats;
+                    newstats.init_dancing_weapon(wpn,
+                        you.experience_level * 50 / 9);
 
-                num_created++;
+                    mon->set_ghost(newstats);
+                    mon->ghost_demon_init();
+
+                    num_created++;
+                }
             }
         }
 
@@ -1007,7 +1032,9 @@ static void _lugonu_transloc_retribution()
 {
     const god_type god = GOD_LUGONU;
 
-    if (coinflip())
+    int angel_stepdown = _angel_wrath_stepdown();
+
+    if (coinflip() && angel_stepdown == 0)
     {
         simple_god_message("'s wrath finds you!", god);
         MiscastEffect(&you, nullptr, {miscast_source::god, god},
@@ -1776,10 +1803,12 @@ static bool _dithmenos_retribution()
 {
     // shadow theme
     const god_type god = GOD_DITHMENOS;
+    int angel_stepdown = _angel_wrath_stepdown();
 
     switch (random2(4))
     {
     case 0:
+    if(angel_stepdown != 2)
     {
         int count = 0;
         int how_many = 3 + random2avg(div_rand_round(you.experience_level, 3),
@@ -1795,7 +1824,9 @@ static bool _dithmenos_retribution()
                            god);
         break;
     }
+    //fall through
     case 1:
+    if (angel_stepdown != 2)
     {
         int count = 0;
         int how_many = 2 + random2avg(div_rand_round(you.experience_level, 4),
@@ -1820,6 +1851,7 @@ static bool _dithmenos_retribution()
                            god);
         break;
     }
+    //fall through
     case 2:
     {
         // This is possibly kind of underwhelming?
@@ -2191,6 +2223,13 @@ static void _god_smites_you(god_type god, const char *message,
 
     for (int i = 0; i < 5; ++i)
         divine_hurt += random2(you.experience_level);
+
+
+    int angel_stepdown = _angel_wrath_stepdown();
+
+    if (angel_stepdown == 2)
+        divine_hurt /= 2;
+
 
     simple_god_message(" smites you!", god);
     ouch(divine_hurt, death_type, MID_NOBODY, aux.c_str());
