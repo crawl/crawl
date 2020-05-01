@@ -94,6 +94,7 @@ bool given_gift(const monster* mons);
 bool beogh_can_gift_items_to(const monster* mons, bool quiet = true);
 bool beogh_gift_item();
 bool beogh_resurrect();
+spret beogh_return_ally(bool fail);
 
 bool yred_injury_mirror();
 bool yred_can_enslave_soul(monster* mon);

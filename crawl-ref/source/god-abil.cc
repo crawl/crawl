@@ -2428,6 +2428,65 @@ void spare_beogh_convert()
     }
 }
 
+
+
+spret beogh_return_ally(bool fail)
+{
+    if (BRANCH_ORC == level_id::current().branch) {
+        mprf("you cannot use this abliity in the orcish mines");
+        return spret::abort;
+    }
+
+    dist spd;
+
+    direction_chooser_args args;
+    args.restricts = DIR_TARGET;
+    args.mode = TARG_FRIEND;
+    args.needs_path = false;
+    args.self = confirm_prompt_type::cancel;
+    args.target_prefix = "Return";
+    //args.get_desc_func = bind(_desc_pacify_chance, placeholders::_1, pow);
+    direction(spd, args);
+
+    if (!spd.isValid)
+        return spret::abort;
+    if (cell_is_solid(spd.target))
+    {
+        canned_msg(MSG_NOTHING_THERE);
+        return spret::abort;
+    }
+
+    monster* mons = monster_at(spd.target);
+
+    if (!mons || !mons->visible_to(&you))
+    {
+        canned_msg(MSG_NOTHING_THERE);
+        return spret::abort;
+    }
+    if (!is_orcish_follower(*mons) || mons_genus(mons->type) != MONS_ORC)
+    {
+        mpr("That's not an orcish ally!");
+        return spret::abort;
+    }
+
+    fail_check();
+
+    mprf("You returned the %s back to the orcish mine.", mons->name(DESC_THE).c_str());
+    level_id lev;
+    lev.branch = BRANCH_ORC;
+    lev.depth = 1;
+
+    place_cloud(CLOUD_TLOC_ENERGY, mons->pos(), 1 + random2(3), mons);
+    mons->set_transit(lev);
+
+
+    // Monster is no longer on this level.
+    mons->destroy_inventory();
+    monster_cleanup(mons);
+
+    return spret::success;
+}
+
 bool dithmenos_shadow_step()
 {
     // You can shadow-step anywhere within your umbra.

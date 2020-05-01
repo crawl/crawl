@@ -471,6 +471,11 @@ Stop Recall ability
 
 Stops recalling your followers.
 %%%%
+Return Orcish Followers ability
+
+Return your orc follower to an orcrish mines. You can recall it later and call
+it back.
+%%%%
 Give Item to Named Follower ability
 
 Gives a weapon or piece of armour to a named orcish follower. An orc can only

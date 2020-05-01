@@ -501,7 +501,9 @@ static const ability_def Ability_List[] =
       0, 0, 0, 0, {fail_basis::invo}, abflag::none },
     { ABIL_BEOGH_RESURRECTION, "Resurrection",
       0, 0, 0, 28, {fail_basis::invo}, abflag::none },
-
+    { ABIL_BEOGH_RETURN_ORCISH_FOLLOWERS, "Return Orcish Followers",
+      2, 0, 0, 0, {fail_basis::invo}, abflag::none },
+          
     // Jiyva
     { ABIL_JIYVA_CALL_JELLY, "Request Jelly",
       2, 0, 0, 1, {fail_basis::invo}, abflag::none },
@@ -2865,6 +2867,13 @@ static spret _do_ability(const ability_def& abil, bool fail)
     case ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS:
         fail_check();
         start_recall(recall_t::beogh);
+        break;
+
+    case ABIL_BEOGH_RETURN_ORCISH_FOLLOWERS:
+        fail_check();
+        {
+            return beogh_return_ally(fail);
+        }
         break;
 
     case ABIL_STOP_RECALL:
