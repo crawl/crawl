@@ -17,6 +17,7 @@
 #include <set>
 #include <stdexcept>
 #include <string>
+#include <sstream>
 #include <vector>
 
 #include "bitary.h"
@@ -251,6 +252,11 @@ struct coord_def
         return *this == coord_def(xi, yi);
     }
 };
+
+inline ostream& operator << ( ostream& ostr, coord_def const& value ) {
+    ostr << "coord_def(" << value.x << ", " << value.y << ")";
+    return ostr;
+}
 
 namespace std {
     template <>
