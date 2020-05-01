@@ -224,6 +224,8 @@ static void _update_agrid()
         no_areas = false;
     }
 
+    _agrid_valid = true;
+
     if (you.species == SP_MANTIS)
     {
         const int r = 1;
@@ -255,7 +257,6 @@ static void _update_agrid()
 
     // TODO: update sanctuary here.
 
-    _agrid_valid = true;
 }
 
 
