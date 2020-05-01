@@ -231,10 +231,9 @@ vector<coord_def> _search_path_around_point(coord_def centre)
 }
 
 static int _find_feature(const vector<coord_def>& features,
-                         char32_t feature, int curs_x, int curs_y,
-                         int start_x, int start_y,
+                         char32_t feature,
                          int ignore_count,
-                         int *move_x, int *move_y,
+                         coord_def &out_pos,
                          bool forward)
 {
     int firstx = -1, firsty = -1, firstmatch = -1;
@@ -247,9 +246,8 @@ static int _find_feature(const vector<coord_def>& features,
             ++matchcount;
             if (forward? !ignore_count-- : --ignore_count == 1)
             {
+                out_pos = coord;
                 // We want to cursor to (x,y)
-                *move_x = coord.x - (start_x + curs_x - 1);
-                *move_y = coord.y - (start_y + curs_y - 1);
                 return matchcount;
             }
             else if (!forward || firstx == -1)
@@ -264,8 +262,7 @@ static int _find_feature(const vector<coord_def>& features,
     // We found something, but ignored it because of an ignorecount
     if (firstx != -1)
     {
-        *move_x = firstx - (start_x + curs_x - 1);
-        *move_y = firsty - (start_y + curs_y - 1);
+        out_pos = coord_def(firstx, firsty);
         return firstmatch;
     }
     return 0;
@@ -491,37 +488,6 @@ static void _draw_title(const coord_def& cpos, const feature_list& feats)
 }
 #endif
 
-class levelview_excursion : public level_excursion
-{
-    bool travel_mode;
-
-public:
-    levelview_excursion(bool tm)
-        : travel_mode(tm) {}
-
-    ~levelview_excursion()
-    {
-        if (!you.on_current_level)
-            go_to(original);
-    }
-
-    // Not virtual!
-    void go_to(const level_id& next)
-    {
-#ifdef USE_TILE
-        tiles.clear_minimap();
-#endif
-        level_excursion::go_to(next);
-        tile_new_level(false);
-
-        if (travel_mode)
-        {
-            travel_init_new_level();
-            travel_cache.update();
-        }
-    }
-};
-
 static level_pos _stair_dest(const coord_def& p, command_type dir)
 {
     if (!in_bounds(p))
@@ -587,13 +553,14 @@ static void _forget_map(bool wizard_forget = false)
     }
 }
 
+map_control_state process_map_command(command_type cmd, const map_control_state &state);
+
 // show_map() now centers the known map along x or y. This prevents
 // the player from getting "artificial" location clues by using the
 // map to see how close to the end they are. They'll need to explore
 // to get that. This function is still a mess, though. -- bwr
 bool show_map(level_pos &lpos, bool travel_mode, bool allow_offlevel)
 {
-    bool chose      = false;
 #ifdef USE_TILE_LOCAL
     bool first_run  = true;
 
@@ -608,688 +575,262 @@ bool show_map(level_pos &lpos, bool travel_mode, bool allow_offlevel)
     tiles_ui_control ui(UI_VIEW_MAP);
 #endif
 
+    levelview_excursion le(travel_mode);
+
+    if (!lpos.id.is_valid() || !allow_offlevel)
+        lpos.id = level_id::current();
+
+    cursor_control ccon(!Options.use_fake_cursor);
+
+    bool new_level = true;
+
+    // Vector to track all features we can travel to, in order of distance.
+    vector<coord_def> features;
+    // List of all interesting features for display in the (console) title.
+    feature_list feats;
+
+    int min_x = INT_MAX, max_x = INT_MIN, min_y = INT_MAX, max_y = INT_MIN;
+    const int num_lines   = _get_number_of_lines_levelmap();
+    const int half_screen = (num_lines - 1) / 2;
+
+    int map_lines = 0;
+
+    // no x scrolling
+    int start_x = -1;
+
+    // y does scroll
+    int start_y;
+
+    int screen_y = -1;
+
+    int curs_x = -1, curs_y = -1;
+
+#ifndef USE_TILE_LOCAL
+    const int top = 2;
+    clrscr();
+#endif
+    textcolour(DARKGREY);
+
+    map_control_state state;
+    state.lpos = lpos;
+    state.scroll_y = 0;
+    state.features = &features;
+    state.feats = &feats;
+    state.excursion = &le;
+    state.allow_offlevel = allow_offlevel;
+    state.travel_mode = travel_mode;
+    state.original = level_id::current();
+    state.map_alive = true;
+    state.redraw_map = true;
+    state.search_anchor = coord_def(-1, -1);
+
+    while (state.map_alive)
     {
-        levelview_excursion le(travel_mode);
-        level_id original(level_id::current());
-
-        if (!lpos.id.is_valid() || !allow_offlevel)
-            lpos.id = level_id::current();
-
-        cursor_control ccon(!Options.use_fake_cursor);
-
-        int move_x = 0, move_y = 0, scroll_y = 0;
-
-        bool new_level = true;
-
-        // Vector to track all features we can travel to, in order of distance.
-        vector<coord_def> features;
-        // List of all interesting features for display in the (console) title.
-        feature_list feats;
-
-        int min_x = INT_MAX, max_x = INT_MIN, min_y = INT_MAX, max_y = INT_MIN;
-        const int num_lines   = _get_number_of_lines_levelmap();
-        const int half_screen = (num_lines - 1) / 2;
-
-        int map_lines = 0;
-
-        // no x scrolling
-        int start_x = -1;
-        const int block_step = Options.level_map_cursor_step;
-
-        // y does scroll
-        int start_y;
-
-        int screen_y = -1;
-
-        int curs_x = -1, curs_y = -1;
-        int search_found = 0, anchor_x = -1, anchor_y = -1;
-
-        bool map_alive  = true;
-        bool redraw_map = true;
-
-#ifndef USE_TILE_LOCAL
-        const int top = 2;
-        clrscr();
-#endif
-        textcolour(DARKGREY);
-
-        bool on_level = false;
-
-        while (map_alive)
+        if (state.lpos.id != level_id::current())
         {
-            if (lpos.id != level_id::current())
-            {
-                le.go_to(lpos.id);
-                new_level = true;
-            }
-
-            if (new_level)
-            {
-                on_level = (level_id::current() == original);
-
-                move_x = 0, move_y = 0, scroll_y = 0;
-
-                // Vector to track all features we can travel to, in
-                // order of distance.
-                if (travel_mode)
-                    _reset_travel_colours(features, on_level);
-
-                feats.init();
-
-                std::pair<coord_def, coord_def> bounds = known_map_bounds();
-                min_x = bounds.first.x;
-                min_y = bounds.first.y;
-                max_x = bounds.second.x;
-                max_y = bounds.second.y;
-
-                map_lines = max_y - min_y + 1;
-
-                start_x = min_x + (max_x - min_x + 1) / 2 - 40;           // no x scrolling
-                start_y = 0;                                              // y does scroll
-
-                if (lpos.id != level_id::current()
-                    || !map_bounds(lpos.pos))
-                {
-                    lpos.id = level_id::current();
-                    if (on_level)
-                        lpos.pos = you.pos();
-                    else
-                    {
-                        lpos.pos.x = min_x + (max_x - min_x + 1) / 2;
-                        lpos.pos.y = min_y + (max_y - min_y + 1) / 2;
-                    }
-                }
-
-                screen_y = lpos.pos.y;
-
-                // If close to top of known map, put min_y on top
-                // else if close to bottom of known map, put max_y on bottom.
-                //
-                // The num_lines comparisons are done to keep things neat, by
-                // keeping things at the top of the screen. By shifting an
-                // additional one in the num_lines > map_lines case, we can
-                // keep the top line clear... which makes things look a whole
-                // lot better for small maps.
-                if (num_lines > map_lines)
-                    screen_y = min_y + half_screen - 1;
-                else if (num_lines == map_lines
-                         || screen_y - half_screen < min_y)
-                {
-                    screen_y = min_y + half_screen;
-                }
-                else if (screen_y + half_screen > max_y)
-                    screen_y = max_y - half_screen;
-
-                curs_x = lpos.pos.x - start_x + 1;
-                curs_y = lpos.pos.y - screen_y + half_screen + 1;
-                search_found = 0, anchor_x = -1, anchor_y = -1;
-
-                redraw_map = true;
-                new_level = false;
-            }
-
-            // If we've received a HUP signal then the user can't choose a
-            // location, so indicate this by returning an invalid position.
-            if (crawl_state.seen_hups)
-            {
-                lpos = level_pos();
-                chose = false;
-            }
-
-            start_y = screen_y - half_screen;
-
-            move_x = move_y = 0;
-
-            if (redraw_map)
-            {
-#ifdef USE_TILE
-                // Note: Tile versions just center on the current cursor
-                // location. It silently ignores everything else going
-                // on in this function.  --Enne
-#ifdef USE_TILE_LOCAL
-                if (first_run)
-                {
-                    tiles.update_tabs();
-                    first_run = false;
-                }
-#endif
-                tiles.load_dungeon(lpos.pos);
-#endif
-#ifndef USE_TILE_LOCAL
-                _draw_title(lpos.pos, feats);
-                _draw_level_map(start_x, start_y, travel_mode, on_level);
-#endif
-            }
-#ifndef USE_TILE_LOCAL
-            cursorxy(curs_x, curs_y + top - 1);
-#endif
-            redraw_map = true;
-
-            c_input_reset(true);
-#ifdef USE_TILE_LOCAL
-            const int key = getchm(KMC_LEVELMAP);
-            command_type cmd = key_to_command(key, KMC_LEVELMAP);
-#else
-            const int key = unmangle_direction_keys(getchm(KMC_LEVELMAP),
-                                                    KMC_LEVELMAP);
-            command_type cmd = key_to_command(key, KMC_LEVELMAP);
-#endif
-            if (cmd < CMD_MIN_OVERMAP || cmd > CMD_MAX_OVERMAP)
-                cmd = CMD_NO_CMD;
-
-            if (key == CK_MOUSE_CLICK)
-            {
-#ifdef USE_TILE_LOCAL
-                const coord_def grdp = tiles.get_cursor();
-                const coord_def delta = grdp - lpos.pos;
-                move_y = delta.y;
-                move_x = delta.x;
-
-                if (move_y == 0 && move_x == 0) // clicked on current position
-                    cmd = CMD_MAP_GOTO_TARGET; // go to current cursor pos
-                else
-                    cmd = CMD_NEXT_CMD; // a dummy command
-#else
-                const c_mouse_event cme = get_mouse_event();
-                const coord_def grdp =
-                    cme.pos + coord_def(start_x - 1, start_y - top);
-
-                if (cme.left_clicked() && in_bounds(grdp))
-                {
-                    lpos       = level_pos(level_id::current(), grdp);
-                    chose      = true;
-                    map_alive  = false;
-                }
-                else if (cme.scroll_up())
-                    scroll_y = -block_step;
-                else if (cme.scroll_down())
-                    scroll_y = block_step;
-                else if (cme.right_clicked())
-                {
-                    const coord_def delta = grdp - lpos.pos;
-                    move_y = delta.y;
-                    move_x = delta.x;
-                }
-#endif
-            }
-
-            if (key == CK_REDRAW)
-            {
-                if (Options.messages_at_top)
-                {
-                    display_message_window();
-                    viewwindow();
-                }
-                else
-                {
-                    viewwindow();
-                    display_message_window();
-                }
-                continue;
-            }
-
-            c_input_reset(false);
-
-            switch (cmd)
-            {
-            case CMD_MAP_HELP:
-                show_levelmap_help();
-                break;
-
-            case CMD_MAP_CLEAR_MAP:
-                clear_map_or_travel_trail();
-                break;
-
-#ifdef WIZARD
-            case CMD_MAP_WIZARD_FORGET:
-                {
-                    // this doesn't seem useful outside of debugging and may
-                    // be buggy in unexpected ways, so wizmode-only. (Though
-                    // it doesn't leak information or anything.)
-                    if (!you.wizard)
-                        break;
-                    if (env.map_forgotten)
-                        _unforget_map();
-                    MapKnowledge *old = new MapKnowledge(env.map_knowledge);
-                    // completely wipe out map
-                    _forget_map(true);
-                    env.map_forgotten.reset(old);
-                    mpr("Level map wiped.");
-                    break;
-                }
-#endif
-
-            case CMD_MAP_FORGET:
-                {
-                    // Merge it with already forgotten data first.
-                    if (env.map_forgotten)
-                        _unforget_map();
-                    MapKnowledge *old = new MapKnowledge(env.map_knowledge);
-                    _forget_map();
-                    env.map_forgotten.reset(old);
-                    mpr("Level map cleared.");
-                }
-                break;
-
-            case CMD_MAP_UNFORGET:
-                if (env.map_forgotten)
-                {
-                    _unforget_map();
-                    env.map_forgotten.reset();
-                    mpr("Remembered map restored.");
-                }
-                else
-                    mpr("No remembered map.");
-                break;
-
-            case CMD_MAP_ADD_WAYPOINT:
-                travel_cache.add_waypoint(lpos.pos.x, lpos.pos.y);
-                // We need to do this all over again so that the user can jump
-                // to the waypoint he just created.
-                _reset_travel_colours(features, on_level);
-                feats.init();
-                break;
-
-                // Cycle the radius of an exclude.
-            case CMD_MAP_EXCLUDE_AREA:
-                if (!is_map_persistent())
-                    break;
-
-                cycle_exclude_radius(lpos.pos);
-
-                _reset_travel_colours(features, on_level);
-                feats.init();
-                break;
-
-            case CMD_MAP_CLEAR_EXCLUDES:
-                clear_excludes();
-                _reset_travel_colours(features, on_level);
-                feats.init();
-                break;
-
-#ifdef WIZARD
-            case CMD_MAP_EXCLUDE_RADIUS:
-                set_exclude(lpos.pos, getchm() - '0');
-
-                _reset_travel_colours(features, on_level);
-                feats.init();
-                break;
-#endif
-
-            case CMD_MAP_MOVE_DOWN_LEFT:
-                move_x = -1;
-                move_y = 1;
-                break;
-
-            case CMD_MAP_MOVE_DOWN:
-                move_y = 1;
-                move_x = 0;
-                break;
-
-            case CMD_MAP_MOVE_UP_RIGHT:
-                move_x = 1;
-                move_y = -1;
-                break;
-
-            case CMD_MAP_MOVE_UP:
-                move_y = -1;
-                move_x = 0;
-                break;
-
-            case CMD_MAP_MOVE_UP_LEFT:
-                move_y = -1;
-                move_x = -1;
-                break;
-
-            case CMD_MAP_MOVE_LEFT:
-                move_x = -1;
-                move_y = 0;
-                break;
-
-            case CMD_MAP_MOVE_DOWN_RIGHT:
-                move_y = 1;
-                move_x = 1;
-                break;
-
-            case CMD_MAP_MOVE_RIGHT:
-                move_x = 1;
-                move_y = 0;
-                break;
-
-            case CMD_MAP_PREV_LEVEL:
-            case CMD_MAP_NEXT_LEVEL:
-            {
-                if (!allow_offlevel)
-                    break;
-
-                const bool up = (cmd == CMD_MAP_PREV_LEVEL);
-                level_pos dest =
-                    _stair_dest(lpos.pos,
-                                up ? CMD_GO_UPSTAIRS : CMD_GO_DOWNSTAIRS);
-
-                if (!dest.id.is_valid())
-                {
-                    dest.id = up ? find_up_level(level_id::current())
-                        : find_down_level(level_id::current());
-                    dest.pos = coord_def(-1, -1);
-                }
-
-                if (dest.id.is_valid() && dest.id != level_id::current()
-                    && you.level_visited(dest.id))
-                {
-                    lpos = dest;
-                }
-                los_changed();
-                continue;
-            }
-
-            case CMD_MAP_GOTO_LEVEL:
-                if (!allow_offlevel)
-                    break;
-
-                {
-                    string name;
-#ifdef USE_TILE_WEB
-                    tiles_ui_control msgwin(UI_NORMAL);
-#endif
-                    const level_pos pos
-                        = prompt_translevel_target(TPF_DEFAULT_OPTIONS, name);
-
-                    if (pos.id.depth < 1
-                        || pos.id.depth > brdepth[pos.id.branch]
-                        || !you.level_visited(pos.id))
-                    {
-                        canned_msg(MSG_OK);
-                        redraw_map = true;
-                        break;
-                    }
-
-                    lpos = pos;
-                }
-                continue;
-
-            case CMD_MAP_JUMP_DOWN_LEFT:
-                move_x = -block_step;
-                move_y = block_step;
-                break;
-
-            case CMD_MAP_JUMP_DOWN:
-                move_y = block_step;
-                move_x = 0;
-                break;
-
-            case CMD_MAP_JUMP_UP_RIGHT:
-                move_x = block_step;
-                move_y = -block_step;
-                break;
-
-            case CMD_MAP_JUMP_UP:
-                move_y = -block_step;
-                move_x = 0;
-                break;
-
-            case CMD_MAP_JUMP_UP_LEFT:
-                move_y = -block_step;
-                move_x = -block_step;
-                break;
-
-            case CMD_MAP_JUMP_LEFT:
-                move_x = -block_step;
-                move_y = 0;
-                break;
-
-            case CMD_MAP_JUMP_DOWN_RIGHT:
-                move_y = block_step;
-                move_x = block_step;
-                break;
-
-            case CMD_MAP_JUMP_RIGHT:
-                move_x = block_step;
-                move_y = 0;
-                break;
-
-            case CMD_MAP_SCROLL_DOWN:
-                move_y = 20;
-                move_x = 0;
-                scroll_y = 20;
-                break;
-
-            case CMD_MAP_SCROLL_UP:
-                move_y = -20;
-                move_x = 0;
-                scroll_y = -20;
-                break;
-
-            case CMD_MAP_FIND_YOU:
-                if (on_level)
-                {
-                    move_x = you.pos().x - lpos.pos.x;
-                    move_y = you.pos().y - lpos.pos.y;
-                }
-                break;
-
-#ifdef USE_TILE
-            case CMD_MAP_ZOOM_IN:
-            case CMD_MAP_ZOOM_OUT:
-                tiles.zoom_dungeon(cmd == CMD_MAP_ZOOM_IN);
-                break;
-#endif
-
-            case CMD_MAP_FIND_UPSTAIR:
-            case CMD_MAP_FIND_DOWNSTAIR:
-            case CMD_MAP_FIND_PORTAL:
-            case CMD_MAP_FIND_TRAP:
-            case CMD_MAP_FIND_ALTAR:
-            case CMD_MAP_FIND_EXCLUDED:
-            case CMD_MAP_FIND_WAYPOINT:
-            case CMD_MAP_FIND_STASH:
-            case CMD_MAP_FIND_STASH_REVERSE:
-            {
-                bool forward = (cmd != CMD_MAP_FIND_STASH_REVERSE);
-
-                char32_t getty;
-                switch (cmd)
-                {
-                case CMD_MAP_FIND_UPSTAIR:
-                    getty = '<';
-                    break;
-                case CMD_MAP_FIND_DOWNSTAIR:
-                    getty = '>';
-                    break;
-                case CMD_MAP_FIND_PORTAL:
-                    getty = '\t';
-                    break;
-                case CMD_MAP_FIND_TRAP:
-                    getty = '^';
-                    break;
-                case CMD_MAP_FIND_ALTAR:
-                    getty = '_';
-                    break;
-                case CMD_MAP_FIND_EXCLUDED:
-                    getty = 'E';
-                    break;
-                case CMD_MAP_FIND_WAYPOINT:
-                    getty = 'W';
-                    break;
-                default:
-                case CMD_MAP_FIND_STASH:
-                case CMD_MAP_FIND_STASH_REVERSE:
-                    getty = 'I';
-                    break;
-                }
-
-                if (anchor_x == -1)
-                {
-                    anchor_x = lpos.pos.x;
-                    anchor_y = lpos.pos.y;
-                }
-                if (travel_mode && !_is_player_defined_feature(getty))
-                {
-                    search_found = _find_feature(features, getty,
-                                                 curs_x, curs_y,
-                                                 start_x, start_y,
-                                                 search_found,
-                                                 &move_x, &move_y,
-                                                 forward);
-                }
-                else
-                {
-                    const auto search_path = _search_path_around_point(
-                            coord_def(anchor_x, anchor_y));
-                    search_found = _find_feature(features, getty,
-                                                 curs_x, curs_y,
-                                                 start_x, start_y,
-                                                 search_found,
-                                                 &move_x, &move_y,
-                                                 true);
-                }
-                break;
-            }
-
-            case CMD_MAP_GOTO_TARGET:
-                if (travel_mode && on_level && lpos.pos == you.pos())
-                {
-                    if (you.travel_x > 0 && you.travel_y > 0)
-                    {
-                        if (you.travel_z == level_id::current())
-                        {
-                            move_x = you.travel_x - lpos.pos.x;
-                            move_y = you.travel_y - lpos.pos.y;
-                        }
-                        else if (allow_offlevel && you.travel_z.is_valid()
-                                        && can_travel_to(you.travel_z)
-                                        && you.level_visited(you.travel_z))
-                        {
-                            // previous travel target is offlevel
-                            lpos = level_pos(you.travel_z,
-                                        coord_def(you.travel_x, you.travel_y));
-                            los_changed();
-                        }
-                    }
-                }
-                else
-                {
-                    chose = true;
-                    map_alive = false;
-                }
-
-                break;
-
-            case CMD_MAP_ANNOTATE_LEVEL:
-                le.go_to(original);
-                redraw_screen();
-                le.go_to(lpos.id);
-
-                if (!is_map_persistent())
-                    mpr("You can't annotate this level.");
-                else
-                {
-#ifdef USE_TILE_WEB
-                    tiles_ui_control msgwin(UI_NORMAL);
-#endif
-                    do_annotate(lpos.id);
-                }
-
-                redraw_map = true;
-                break;
-
-            case CMD_MAP_EXPLORE:
-                if (on_level)
-                {
-                    travel_pathfind tp;
-                    tp.set_floodseed(you.pos(), true);
-
-                    coord_def whereto = tp.pathfind(Options.explore_greedy
-                                                    ? RMODE_EXPLORE_GREEDY
-                                                    : RMODE_EXPLORE);
-                    _reset_travel_colours(features, on_level);
-
-                    if (!whereto.zero())
-                    {
-                        move_x = whereto.x - lpos.pos.x;
-                        move_y = whereto.y - lpos.pos.y;
-                    }
-                }
-                break;
-
-#ifdef WIZARD
-            case CMD_MAP_WIZARD_TELEPORT:
-                if (!you.wizard || !on_level || !in_bounds(lpos.pos))
-                    break;
-                if (cell_is_solid(lpos.pos))
-                    you.wizmode_teleported_into_rock = true;
-                you.moveto(lpos.pos);
-                map_alive = false;
-                break;
-#endif
-
-            case CMD_MAP_EXIT_MAP:
-                lpos = level_pos();
-                map_alive = false;
-                break;
-
-#ifdef USE_TILE_LOCAL
-            case CMD_NEXT_CMD:
-                break; // allow mouse clicks to move cursor without leaving map mode
-#endif
-            case CMD_MAP_DESCRIBE:
-                if (map_bounds(lpos.pos) && env.map_knowledge(lpos.pos).known())
-                {
-                    full_describe_square(lpos.pos, false);
-                    redraw_map = true;
-                }
-                break;
-
-
-            default:
-                if (travel_mode)
-                {
-                    map_alive = false;
-                    break;
-                }
-                redraw_map = false;
-                continue;
-            }
-
-            if (!map_alive)
-                break;
-
-            const coord_def oldp = lpos.pos;
-            lpos.pos.x += move_x;
-            lpos.pos.y += move_y;
-            lpos.pos.x = min(max(lpos.pos.x, min_x), max_x);
-            lpos.pos.y = min(max(lpos.pos.y, min_y), max_y);
-            move_x = lpos.pos.x - oldp.x;
-            move_y = lpos.pos.y - oldp.y;
-#ifndef USE_TILE_LOCAL
-            if (num_lines < map_lines)
-            {
-                // Scrolling only happens when we don't have a large enough
-                // display to show the known map.
-                if (scroll_y != 0)
-                {
-                    const int old_screen_y = screen_y;
-                    screen_y += scroll_y;
-                    if (scroll_y < 0)
-                        screen_y = max(screen_y, min_y + half_screen);
-                    else
-                        screen_y = min(screen_y, max_y - half_screen);
-                    curs_y -= (screen_y - old_screen_y);
-                    scroll_y = 0;
-                }
-                if (curs_y + move_y < 1 || curs_y + move_y > num_lines)
-                {
-                    screen_y += move_y;
-                    curs_y -= move_y;
-                }
-            }
-            start_y = screen_y - half_screen;
-#else
-            (void)scroll_y; // Avoid a compiler warning.
-#endif
-            curs_x += move_x;
-            curs_y += move_y;
+            le.go_to(state.lpos.id);
+            new_level = true;
         }
+
+        if (new_level)
+        {
+            state.on_level = (level_id::current() == state.original);
+
+            state.scroll_y = 0;
+
+            // Vector to track all state.features we can travel to, in
+            // order of distance.
+            if (travel_mode)
+                _reset_travel_colours(*state.features, state.on_level);
+            state.feats->init();
+            state.search_index = 0;
+            state.search_anchor.reset();
+
+            std::pair<coord_def, coord_def> bounds = known_map_bounds();
+            min_x = bounds.first.x;
+            min_y = bounds.first.y;
+            max_x = bounds.second.x;
+            max_y = bounds.second.y;
+
+            map_lines = max_y - min_y + 1;
+
+            start_x = min_x + (max_x - min_x + 1) / 2 - 40;           // no x scrolling
+            start_y = 0;                                              // y does scroll
+
+            // This happens when CMD_MAP_PREV_LEVEL etc. assign dest to lpos,
+            // with a position == (-1, -1).
+            if (!map_bounds(state.lpos.pos))
+            {
+                state.lpos.id = level_id::current();
+                if (state.on_level)
+                    state.lpos.pos = you.pos();
+                else
+                {
+                    state.lpos.pos.x = min_x + (max_x - min_x + 1) / 2;
+                    state.lpos.pos.y = min_y + (max_y - min_y + 1) / 2;
+                }
+            }
+
+            screen_y = state.lpos.pos.y;
+
+            // If close to top of known map, put min_y on top
+            // else if close to bottom of known map, put max_y on bottom.
+            //
+            // The num_lines comparisons are done to keep things neat, by
+            // keeping things at the top of the screen. By shifting an
+            // additional one in the num_lines > map_lines case, we can
+            // keep the top line clear... which makes things look a whole
+            // lot better for small maps.
+            if (num_lines > map_lines)
+                screen_y = min_y + half_screen - 1;
+            else if (num_lines == map_lines || screen_y - half_screen < min_y)
+                screen_y = min_y + half_screen;
+            else if (screen_y + half_screen > max_y)
+                screen_y = max_y - half_screen;
+
+            curs_x = state.lpos.pos.x - start_x + 1;
+            curs_y = state.lpos.pos.y - screen_y + half_screen + 1;
+
+            state.redraw_map = true;
+            new_level = false;
+        }
+
+        // If we've received a HUP signal then the user can't choose a
+        // location, so indicate this by returning an invalid position.
+        if (crawl_state.seen_hups)
+        {
+            state.lpos = level_pos();
+            state.chose = false;
+        }
+
+        start_y = screen_y - half_screen;
+
+        if (state.redraw_map)
+        {
+            // Note: Tile versions just center on the current cursor
+            // location. It silently ignores everything else going
+            // on in this function.  --Enne
+#ifdef USE_TILE_LOCAL
+            if (first_run)
+            {
+                tiles.update_tabs();
+                first_run = false;
+            }
+#endif
+#ifdef USE_TILE
+            tiles.load_dungeon(state.lpos.pos);
+#endif
+#ifndef USE_TILE_LOCAL
+            _draw_title(state.lpos.pos, *state.feats);
+            _draw_level_map(start_x, start_y, state.travel_mode, state.on_level);
+#endif
+        }
+#ifndef USE_TILE_LOCAL
+        cursorxy(curs_x, curs_y + top - 1);
+#endif
+        state.redraw_map = true;
+
+        c_input_reset(true);
+#ifdef USE_TILE_LOCAL
+        const int key = getchm(KMC_LEVELMAP);
+        command_type cmd = key_to_command(key, KMC_LEVELMAP);
+#else
+        const int key = unmangle_direction_keys(getchm(KMC_LEVELMAP),
+                                                KMC_LEVELMAP);
+        command_type cmd = key_to_command(key, KMC_LEVELMAP);
+#endif
+        if (cmd < CMD_MIN_OVERMAP || cmd > CMD_MAX_OVERMAP)
+            cmd = CMD_NO_CMD;
+
+        if (key == CK_MOUSE_CLICK)
+        {
+#ifdef USE_TILE_LOCAL
+            const coord_def grdp = tiles.get_cursor();
+            const coord_def delta = grdp - state.lpos.pos;
+
+            if (delta.zero()) // clicked on current position
+                cmd = CMD_MAP_GOTO_TARGET; // go to current cursor pos
+            else
+                cmd = CMD_NEXT_CMD; // a dummy command
+#else
+            const c_mouse_event cme = get_mouse_event();
+            const coord_def grdp =
+                cme.pos + coord_def(start_x - 1, start_y - top);
+
+            if (cme.left_clicked() && in_bounds(grdp))
+            {
+                state.lpos       = level_pos(level_id::current(), grdp);
+                state.chose      = true;
+                state.map_alive  = false;
+            }
+            else if (cme.scroll_up())
+                state.scroll_y = -Options.level_map_cursor_step;
+            else if (cme.scroll_down())
+                state.scroll_y = Options.level_map_cursor_step;
+#endif
+        }
+
+        if (key == CK_REDRAW)
+        {
+            if (Options.messages_at_top)
+            {
+                display_message_window();
+                viewwindow();
+            }
+            else
+            {
+                viewwindow();
+                display_message_window();
+            }
+            continue;
+        }
+
+        c_input_reset(false);
+
+        const coord_def oldp = state.lpos.pos;
+
+        {
+            const auto next_state = process_map_command(cmd, state);
+            const bool changed_level = next_state.lpos.id != state.lpos.id;
+            state = next_state;
+            if (!state.map_alive)
+                break;
+            if (changed_level)
+                continue;
+        }
+
+        state.lpos.pos.x = min(max(state.lpos.pos.x, min_x), max_x);
+        state.lpos.pos.y = min(max(state.lpos.pos.y, min_y), max_y);
+        const coord_def delta = state.lpos.pos - oldp;
+
+#ifndef USE_TILE_LOCAL
+        if (num_lines < map_lines)
+        {
+            // Scrolling only happens when we don't have a large enough
+            // display to show the known map.
+            if (state.scroll_y != 0)
+            {
+                const int old_screen_y = screen_y;
+                screen_y += state.scroll_y;
+                if (state.scroll_y < 0)
+                    screen_y = max(screen_y, min_y + half_screen);
+                else
+                    screen_y = min(screen_y, max_y - half_screen);
+                curs_y -= (screen_y - old_screen_y);
+                state.scroll_y = 0;
+            }
+            if (curs_y + delta.y < 1 || curs_y + delta.y > num_lines)
+            {
+                screen_y += delta.y;
+                curs_y -= delta.y;
+            }
+        }
+        start_y = screen_y - half_screen;
+#else
+        (void)state.scroll_y; // Avoid a compiler warning.
+#endif
+        curs_x += delta.x;
+        curs_y += delta.y;
     }
 
 #ifdef USE_TILE
@@ -1301,7 +842,406 @@ bool show_map(level_pos &lpos, bool travel_mode, bool allow_offlevel)
     tiles.set_map_display(false);
 #endif
 
-    return chose;
+    if (state.chose)
+        lpos = state.lpos;
+
+    return state.chose;
+}
+
+map_control_state process_map_command(command_type cmd, const map_control_state& prev_state)
+{
+    map_control_state state = prev_state;
+
+    const auto block_step = Options.level_map_cursor_step;
+
+    switch (cmd)
+    {
+    case CMD_MAP_HELP:
+        show_levelmap_help();
+        break;
+
+    case CMD_MAP_CLEAR_MAP:
+        clear_map_or_travel_trail();
+        break;
+
+#ifdef WIZARD
+    case CMD_MAP_WIZARD_FORGET:
+        {
+            // this doesn't seem useful outside of debugging and may
+            // be buggy in unexpected ways, so wizmode-only. (Though
+            // it doesn't leak information or anything.)
+            if (!you.wizard)
+                break;
+            if (env.map_forgotten)
+                _unforget_map();
+            MapKnowledge *old = new MapKnowledge(env.map_knowledge);
+            // completely wipe out map
+            _forget_map(true);
+            env.map_forgotten.reset(old);
+            mpr("Level map wiped.");
+            break;
+        }
+#endif
+
+    case CMD_MAP_FORGET:
+        {
+            // Merge it with already forgotten data first.
+            if (env.map_forgotten)
+                _unforget_map();
+            MapKnowledge *old = new MapKnowledge(env.map_knowledge);
+            _forget_map();
+            env.map_forgotten.reset(old);
+            mpr("Level map cleared.");
+        }
+        break;
+
+    case CMD_MAP_UNFORGET:
+        if (env.map_forgotten)
+        {
+            _unforget_map();
+            env.map_forgotten.reset();
+            mpr("Remembered map restored.");
+        }
+        else
+            mpr("No remembered map.");
+        break;
+
+    case CMD_MAP_ADD_WAYPOINT:
+        travel_cache.add_waypoint(state.lpos.pos.x, state.lpos.pos.y);
+        // We need to do this all over again so that the user can jump
+        // to the waypoint he just created.
+        _reset_travel_colours(*state.features, state.on_level);
+        state.feats->init();
+        break;
+
+        // Cycle the radius of an exclude.
+    case CMD_MAP_EXCLUDE_AREA:
+        if (!is_map_persistent())
+            break;
+
+        cycle_exclude_radius(state.lpos.pos);
+
+        _reset_travel_colours(*state.features, state.on_level);
+        state.feats->init();
+        break;
+
+    case CMD_MAP_CLEAR_EXCLUDES:
+        clear_excludes();
+        _reset_travel_colours(*state.features, state.on_level);
+        state.feats->init();
+        break;
+
+#ifdef WIZARD
+    case CMD_MAP_EXCLUDE_RADIUS:
+        set_exclude(state.lpos.pos, getchm() - '0');
+
+        _reset_travel_colours(*state.features, state.on_level);
+        state.feats->init();
+        break;
+#endif
+
+    case CMD_MAP_MOVE_DOWN_LEFT:
+        state.lpos.pos += coord_def(-1, 1);
+        break;
+
+    case CMD_MAP_MOVE_DOWN:
+        state.lpos.pos += coord_def(0, 1);
+        break;
+
+    case CMD_MAP_MOVE_UP_RIGHT:
+        state.lpos.pos += coord_def(1, -1);
+        break;
+
+    case CMD_MAP_MOVE_UP:
+        state.lpos.pos += coord_def(0, -1);
+        break;
+
+    case CMD_MAP_MOVE_UP_LEFT:
+        state.lpos.pos += coord_def(-1, -1);
+        break;
+
+    case CMD_MAP_MOVE_LEFT:
+        state.lpos.pos += coord_def(-1, 0);
+        break;
+
+    case CMD_MAP_MOVE_DOWN_RIGHT:
+        state.lpos.pos += coord_def(1, 1);
+        break;
+
+    case CMD_MAP_MOVE_RIGHT:
+        state.lpos.pos += coord_def(1, 0);
+        break;
+
+    case CMD_MAP_PREV_LEVEL:
+    case CMD_MAP_NEXT_LEVEL:
+    {
+        if (!state.allow_offlevel)
+            break;
+
+        const bool up = (cmd == CMD_MAP_PREV_LEVEL);
+        level_pos dest =
+            _stair_dest(state.lpos.pos,
+                        up ? CMD_GO_UPSTAIRS : CMD_GO_DOWNSTAIRS);
+
+        if (!dest.id.is_valid())
+        {
+            dest.id = up ? find_up_level(level_id::current())
+                : find_down_level(level_id::current());
+            dest.pos = coord_def(-1, -1);
+        }
+
+        if (dest.id.is_valid() && dest.id != level_id::current()
+            && you.level_visited(dest.id))
+        {
+            state.lpos = dest;
+        }
+        los_changed();
+        break;
+    }
+
+    case CMD_MAP_GOTO_LEVEL:
+        if (!state.allow_offlevel)
+            break;
+
+        {
+            string name;
+#ifdef USE_TILE_WEB
+            tiles_ui_control msgwin(UI_NORMAL);
+#endif
+            const level_pos pos
+                = prompt_translevel_target(TPF_DEFAULT_OPTIONS, name);
+
+            if (pos.id.depth < 1
+                || pos.id.depth > brdepth[pos.id.branch]
+                || !you.level_visited(pos.id))
+            {
+                canned_msg(MSG_OK);
+                state.redraw_map = true;
+                break;
+            }
+
+            state.lpos = pos;
+        }
+        break;
+
+    case CMD_MAP_JUMP_DOWN_LEFT:
+        state.lpos.pos += coord_def(-block_step, block_step);
+        break;
+
+    case CMD_MAP_JUMP_DOWN:
+        state.lpos.pos += coord_def(0, block_step);
+        break;
+
+    case CMD_MAP_JUMP_UP_RIGHT:
+        state.lpos.pos += coord_def(block_step, -block_step);
+        break;
+
+    case CMD_MAP_JUMP_UP:
+        state.lpos.pos += coord_def(0, -block_step);
+        break;
+
+    case CMD_MAP_JUMP_UP_LEFT:
+        state.lpos.pos += coord_def(-block_step, -block_step);
+        break;
+
+    case CMD_MAP_JUMP_LEFT:
+        state.lpos.pos += coord_def(-block_step, 0);
+        break;
+
+    case CMD_MAP_JUMP_DOWN_RIGHT:
+        state.lpos.pos += coord_def(block_step, block_step);
+        break;
+
+    case CMD_MAP_JUMP_RIGHT:
+        state.lpos.pos += coord_def(block_step, 0);
+        break;
+
+    case CMD_MAP_SCROLL_DOWN:
+        state.lpos.pos += coord_def(0, 20);
+        state.scroll_y = 20;
+        break;
+
+    case CMD_MAP_SCROLL_UP:
+        state.lpos.pos += coord_def(0, -20);
+        state.scroll_y = -20;
+        break;
+
+    case CMD_MAP_FIND_YOU:
+        if (state.on_level)
+            state.lpos.pos += you.pos() - state.lpos.pos;
+        break;
+
+#ifdef USE_TILE
+    case CMD_MAP_ZOOM_IN:
+    case CMD_MAP_ZOOM_OUT:
+        tiles.zoom_dungeon(cmd == CMD_MAP_ZOOM_IN);
+        break;
+#endif
+
+    case CMD_MAP_FIND_UPSTAIR:
+    case CMD_MAP_FIND_DOWNSTAIR:
+    case CMD_MAP_FIND_PORTAL:
+    case CMD_MAP_FIND_TRAP:
+    case CMD_MAP_FIND_ALTAR:
+    case CMD_MAP_FIND_EXCLUDED:
+    case CMD_MAP_FIND_WAYPOINT:
+    case CMD_MAP_FIND_STASH:
+    case CMD_MAP_FIND_STASH_REVERSE:
+    {
+        bool forward = (cmd != CMD_MAP_FIND_STASH_REVERSE);
+
+        char32_t getty;
+        switch (cmd)
+        {
+        case CMD_MAP_FIND_UPSTAIR:
+            getty = '<';
+            break;
+        case CMD_MAP_FIND_DOWNSTAIR:
+            getty = '>';
+            break;
+        case CMD_MAP_FIND_PORTAL:
+            getty = '\t';
+            break;
+        case CMD_MAP_FIND_TRAP:
+            getty = '^';
+            break;
+        case CMD_MAP_FIND_ALTAR:
+            getty = '_';
+            break;
+        case CMD_MAP_FIND_EXCLUDED:
+            getty = 'E';
+            break;
+        case CMD_MAP_FIND_WAYPOINT:
+            getty = 'W';
+            break;
+        default:
+        case CMD_MAP_FIND_STASH:
+        case CMD_MAP_FIND_STASH_REVERSE:
+            getty = 'I';
+            break;
+        }
+
+        if (state.search_anchor.zero())
+            state.search_anchor = state.lpos.pos;
+
+        if (state.travel_mode && !_is_player_defined_feature(getty))
+        {
+            state.search_index = _find_feature(*state.features, getty,
+                                            state.search_index,
+                                            state.lpos.pos,
+                                            forward);
+        }
+        else
+        {
+            const auto search_path = _search_path_around_point(state.search_anchor);
+            state.search_index = _find_feature(*state.features, getty,
+                                            state.search_index,
+                                            state.lpos.pos,
+                                            true);
+        }
+        break;
+    }
+
+    case CMD_MAP_GOTO_TARGET:
+        if (state.travel_mode && state.on_level && state.lpos.pos == you.pos())
+        {
+            if (you.travel_x > 0 && you.travel_y > 0)
+            {
+                if (you.travel_z == level_id::current())
+                    state.lpos.pos = coord_def(you.travel_x, you.travel_y);
+                else if (state.allow_offlevel && you.travel_z.is_valid()
+                                && can_travel_to(you.travel_z)
+                                && you.level_visited(you.travel_z))
+                {
+                    // previous travel target is offlevel
+                    state.lpos = level_pos(you.travel_z,
+                                coord_def(you.travel_x, you.travel_y));
+                    los_changed();
+                }
+            }
+        }
+        else
+        {
+            state.chose = true;
+            state.map_alive = false;
+        }
+
+        break;
+
+    case CMD_MAP_ANNOTATE_LEVEL:
+        state.excursion->go_to(state.original);
+        redraw_screen();
+        state.excursion->go_to(state.lpos.id);
+
+        if (!is_map_persistent())
+            mpr("You can't annotate this level.");
+        else
+        {
+#ifdef USE_TILE_WEB
+            tiles_ui_control msgwin(UI_NORMAL);
+#endif
+            do_annotate(state.lpos.id);
+        }
+
+        state.redraw_map = true;
+        break;
+
+    case CMD_MAP_EXPLORE:
+        if (state.on_level)
+        {
+            travel_pathfind tp;
+            tp.set_floodseed(you.pos(), true);
+
+            coord_def whereto = tp.pathfind(Options.explore_greedy
+                                            ? RMODE_EXPLORE_GREEDY
+                                            : RMODE_EXPLORE);
+            _reset_travel_colours(*state.features, state.on_level);
+
+            if (!whereto.zero())
+                state.lpos.pos = whereto;
+        }
+        break;
+
+#ifdef WIZARD
+    case CMD_MAP_WIZARD_TELEPORT:
+        if (!you.wizard || !state.on_level || !in_bounds(state.lpos.pos))
+            break;
+        if (cell_is_solid(state.lpos.pos))
+            you.wizmode_teleported_into_rock = true;
+        you.moveto(state.lpos.pos);
+        state.map_alive = false;
+        break;
+#endif
+
+    case CMD_MAP_EXIT_MAP:
+        state.lpos = level_pos();
+        state.map_alive = false;
+        break;
+
+#ifdef USE_TILE_LOCAL
+    case CMD_NEXT_CMD:
+        break; // allow mouse clicks to move cursor without leaving map mode
+#endif
+    case CMD_MAP_DESCRIBE:
+        if (map_bounds(state.lpos.pos) && env.map_knowledge(state.lpos.pos).known())
+        {
+            full_describe_square(state.lpos.pos, false);
+            state.redraw_map = true;
+        }
+        break;
+
+
+    default:
+        if (state.travel_mode)
+        {
+            state.map_alive = false;
+            break;
+        }
+        state.redraw_map = false;
+        break;
+    }
+
+    return state;
 }
 
 bool emphasise(const coord_def& where)

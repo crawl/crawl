@@ -16,3 +16,34 @@ TEST_CASE( "Test map search path generation works", "[single-file]" ) {
         REQUIRE(search_path.size() == (78*68 - 1));
     }
 }
+
+TEST_CASE( "Test basic key controls work", "[single-file]" ) {
+    map_control_state process_map_command(command_type cmd, const map_control_state &state);
+
+    map_control_state state;
+    state.lpos.pos = coord_def(0, 0);
+
+    SECTION ("Panning the map down works.") {
+        state = process_map_command(CMD_MAP_MOVE_DOWN, state);
+
+        REQUIRE( state.lpos.pos == coord_def(0, 1));
+    }
+
+    SECTION ("Panning the map left works.") {
+        state = process_map_command(CMD_MAP_MOVE_LEFT, state);
+
+        REQUIRE( state.lpos.pos == coord_def(-1, 0));
+    }
+
+    SECTION ("Panning the map right works.") {
+        state = process_map_command(CMD_MAP_MOVE_RIGHT, state);
+
+        REQUIRE( state.lpos.pos == coord_def(1, 0));
+    }
+
+    SECTION ("Panning the map up works.") {
+        state = process_map_command(CMD_MAP_MOVE_UP, state);
+
+        REQUIRE( state.lpos.pos == coord_def(0, -1));
+    }
+}
