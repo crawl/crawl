@@ -632,7 +632,7 @@ void miscast_effect(spell_type spell, int fail)
     miscast_effect(you, nullptr, {miscast_source::spell},
                    school,
                    spell_difficulty(spell),
-                   fail, string("miscasting ") + spell_title(spell));
+                   raw_spell_fail(spell), string("miscasting ") + spell_title(spell));
 }
 
 // Miscasts from other sources (god wrath, spellbinder melee, wild magic card,
@@ -652,7 +652,7 @@ void miscast_effect(actor& target, actor* source, miscast_source_info mc_info,
 
     miscast_datum effect =  miscast_effects.find(school)->second;
 
-    int dam = div_rand_round(roll_dice(level, level * fail), MISCAST_DIVISOR);
+    int dam = div_rand_round(roll_dice(level, fail + level), MISCAST_DIVISOR);
 
     if (effect.flavour == BEAM_NONE)
     {

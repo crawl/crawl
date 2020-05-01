@@ -9,7 +9,7 @@
 #include "spl-util.h"
 
 // scale miscast severity
-const int MISCAST_DIVISOR = 15;
+const int MISCAST_DIVISOR = 9;
 
 // cutoff for getting a miscast
 const int MISCAST_THRESHOLD = 150;

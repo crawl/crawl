@@ -3035,7 +3035,7 @@ static string _miscast_damage_string(spell_type spell)
     if (disciplines & (spschool::charms | spschool::hexes))
         descs.push_back("debuff and slow you");
 
-    int dam = div_round_up(expected_miscast_damage(spell), MISCAST_DIVISOR);
+    int dam = max_miscast_damage(spell);
     vector <string> dam_flavors;
     for (const auto flav : damage_flavor)
         if (disciplines & flav.first)
@@ -3043,7 +3043,7 @@ static string _miscast_damage_string(spell_type spell)
 
     if (!dam_flavors.empty())
     {
-        descs.push_back(make_stringf("deal an average of %d %s damage", dam,
+        descs.push_back(make_stringf("deal up to %d %s damage", dam,
                                      comma_separated_line(dam_flavors.begin(),
                                                          dam_flavors.end(),
                                                          " or ").c_str()));

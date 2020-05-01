@@ -1954,7 +1954,7 @@ static int _tetrahedral_number(int n)
 // the probability that random2avg(100,3) < raw_fail.
 // Should probably use more constants, though I doubt the spell
 // success algorithms will really change *that* much.
-// Called only by failure_rate_to_int and _chance_of_fail_level
+// Called only by failure_rate_to_int
 static double _get_true_fail_rate(int raw_fail)
 {
     // Need 3*random2avg(100,3) = random2(101) + random2(101) + random2(100)
@@ -1990,83 +1990,59 @@ static double _get_true_fail_rate(int raw_fail)
     return double(outcomes - _tetrahedral_number(300 - target)) / outcomes;
 }
 
-// Compute the chance raw_fail - spfl = fail for positive values of fail
-// This uses _get_true_fail_rate, which calculates the probability that
-// spfl < target.
-static double _chance_of_fail_level(int raw_fail, int fail)
-{
-    const int target = raw_fail - fail ;
-
-    if (target < 0)
-        return 0.0;
-
-    // the chance that spfl < target + 1 minus the chance spfl < target
-    return _get_true_fail_rate(target + 1) - _get_true_fail_rate(target);
-}
-
 const double fail_hp_fraction[] =
 {
-    .05,
-    .15,
-    .25,
-    .5,
+    .10,
+    .30,
+    .50,
+    .70,
 };
-
-double expected_miscast_damage(spell_type spell)
+/**
+ * Compute the maximum miscast damage from the given spell
+ *
+ * The miscast code uses
+ *     dam = div_rand_round(roll_dice(level, level * fail), MISCAST_DIVISOR)
+ */
+int max_miscast_damage(spell_type spell)
 {
     int raw_fail = raw_spell_fail(spell);
     int level = spell_difficulty(spell);
 
     // Impossible to get a damaging miscast
     if (level * level * raw_fail <= MISCAST_THRESHOLD)
-        return 0.0;
+        return 0;
 
-    double total_miscast_chance = 0.0;
-    double total_weighted_scaled_damage = 0.0;
-
-    for (int f = 1; f <= raw_fail; ++f)
-    {
-        double chance = _chance_of_fail_level(raw_fail, f);
-        total_miscast_chance += chance;
-        // Account for small effect cutoff
-        if (level * level * f > MISCAST_THRESHOLD)
-            total_weighted_scaled_damage += chance * (level * level * f) / 2.0;
-    }
-
-    return total_weighted_scaled_damage / total_miscast_chance;
+    return div_round_up(level * (raw_fail + level), MISCAST_DIVISOR);
 }
 
 
 /**
- * Compute the tier of expected severity of a miscast
+ * Compute the tier of maximum severity of a miscast
  * @param spell     The spell to be checked.
  *
- * Tiers are defined by the relation between the expected miscast damage
+ * Tiers are defined by the relation between the maximum miscast damage
  * (given a miscast occurs):
  *
  * - safe, no chance of dangerous effect
- * - slightly dangerous, Edam <= 5% mhp
- * - dangerous, Edam <= 15% mhp
- * - quite dangerous, Edam <= 25% mhp
- * - extremely dangerous, larger Edam
- *
- * The miscast code uses
- *     dam = div_rand_round(roll_dice(level, level * fail), 30)
- * Here we compute the expected value of dam * 30 and compare to 30 * max hp
+ * - slightly dangerous, mdam <= 10% mhp
+ * - dangerous, mdam <= 30% mhp
+ * - quite dangerous, mdam <= 50% mhp
+ * - extremely dangerous, mdam <= 70% mhp
+ * - potentially lethal, higher mdam
  */
 int fail_severity(spell_type spell)
 {
-    int raw_fail = raw_spell_fail(spell);
-    int level = spell_difficulty(spell);
+    const int raw_fail = raw_spell_fail(spell);
+    const int level = spell_difficulty(spell);
 
     // Impossible to get a damaging miscast
     if (level * level * raw_fail <= 150)
         return 0;
 
-    double expected_damage = expected_miscast_damage(spell);
+    const int max_damage = max_miscast_damage(spell);
 
     for (int i = 0; i < 4; ++i)
-        if (expected_damage / (MISCAST_DIVISOR * get_real_hp(true)) <= fail_hp_fraction[i])
+        if (max_damage <= fail_hp_fraction[i] * get_real_hp(true))
             return i + 1;
 
     return 5;

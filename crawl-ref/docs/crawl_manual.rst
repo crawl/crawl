@@ -1026,10 +1026,8 @@ a while (resulting in a waste of magic and possibly dangerous side-effects).
 Your chance of failing to cast a spell properly depends on your skills, your
 intelligence, the level of the spell and whether you are wearing heavy armour.
 The chance of miscasting a spell is displayed on the spell screen, and coloured
-based on expected severity (yellow for moderate damage, light red for major
+based on severity (yellow for moderate damage, light red for major
 damage, red for extreme damage, and magenta for potentially lethal damage).
-Wild magic is unpredictable—the consequences of a miscast may be worse than
-expected.
 
 Be careful of magic-using enemies! Some of them can use magic just as well as
 you, if not better, and often use it intelligently.
