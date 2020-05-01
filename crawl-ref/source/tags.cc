@@ -335,8 +335,8 @@ void unmarshallSpells(reader &, monster_spells &
 
 static void marshallMonsterInfo (writer &, const monster_info &);
 static void unmarshallMonsterInfo (reader &, monster_info &mi);
-static void marshallMapCell (writer &, const map_cell &);
-static void unmarshallMapCell (reader &, map_cell& cell);
+void marshallMapCell (writer &, const map_cell &);
+void unmarshallMapCell (reader &, map_cell& cell);
 
 template<typename T, typename T_iter, typename T_marshal>
 static void marshall_iterator(writer &th, T_iter beg, T_iter end,
@@ -5303,13 +5303,13 @@ void marshallMapCell(writer &th, const map_cell &cell)
     switch (flags & MAP_SERIALIZE_FLAGS_MASK)
     {
     case MAP_SERIALIZE_FLAGS_8:
-        marshallByte(th, cell.flags);
+        marshallByte(th, static_cast<int8_t>(cell.flags));
         break;
     case MAP_SERIALIZE_FLAGS_16:
-        marshallShort(th, cell.flags);
+        marshallShort(th, static_cast<int16_t>(cell.flags));
         break;
     case MAP_SERIALIZE_FLAGS_32:
-        marshallInt(th, cell.flags);
+        marshallInt(th, static_cast<int32_t>(cell.flags));
         break;
     }
 
@@ -5354,13 +5354,13 @@ void unmarshallMapCell(reader &th, map_cell& cell)
     switch (flags & MAP_SERIALIZE_FLAGS_MASK)
     {
     case MAP_SERIALIZE_FLAGS_8:
-        cell_flags = unmarshallByte(th);
+        cell_flags = static_cast<uint8_t>(unmarshallByte(th));
         break;
     case MAP_SERIALIZE_FLAGS_16:
-        cell_flags = unmarshallShort(th);
+        cell_flags = static_cast<uint16_t>(unmarshallShort(th));
         break;
     case MAP_SERIALIZE_FLAGS_32:
-        cell_flags = unmarshallInt(th);
+        cell_flags = static_cast<uint32_t>(unmarshallInt(th));
         break;
     }
 

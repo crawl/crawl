@@ -1,7 +1,11 @@
+#include <random>
+
 #include "catch.hpp"
 
 #include "AppHdr.h"
 
+#include "map-cell.h"
+#include "random.h"
 #include "tags.h"
 
 void unmarshall_vehumet_spells(reader &th, set<spell_type>& old_gifts,
@@ -191,5 +195,63 @@ TEST_CASE( "Monster spell unmarshalling can remove removed spells", "[single-fil
 
         REQUIRE(spells.size() == 1);
         REQUIRE(r.valid() == false);
+    }
+}
+
+TEST_CASE( "Basic marshalling/unmarshalling works correctly.", "[single-file]" ) {
+
+    void marshallMapCell (writer &, const map_cell &);
+    void unmarshallMapCell (reader &, map_cell& cell);
+
+    SECTION ("Short integers can be roundtripped.") {
+        rng::subgenerator subgen(0, 0);
+
+        for (auto i = 0; i < 1000; i++)
+        {
+            short number = random_range(INT16_MIN, INT16_MAX);
+
+            vector<unsigned char> buf;
+            auto w = writer(&buf);
+            marshallShort(w, number);
+
+            auto r = reader(buf);
+            const auto roundtrip_number = unmarshallShort(r);
+
+            REQUIRE(number == roundtrip_number);
+            REQUIRE(r.valid() == false);
+        }
+    }
+
+    SECTION ("Map cells can be roundtripped.") {
+        auto roundtrip_map_cell = [](const map_cell cell) {
+            vector<unsigned char> buf;
+            auto w = writer(&buf);
+            marshallMapCell(w, cell);
+
+            auto r = reader(buf);
+            map_cell roundtrip_cell;
+            unmarshallMapCell(r, roundtrip_cell);
+
+            // TODO: Compare other members.
+            REQUIRE(cell.flags == roundtrip_cell.flags);
+            REQUIRE(r.valid() == false);
+        };
+
+        map_cell cell;
+
+        cell.flags = 129;
+        roundtrip_map_cell(cell);
+
+        cell.flags = 32769;
+        roundtrip_map_cell(cell);
+
+        random_device rd;
+        mt19937 generator(rd());
+        uniform_int_distribution<uint32_t> distribution(0, UINT32_MAX);
+        for (auto i = 0; i < 1000; i++)
+        {
+            cell.flags = distribution(generator);
+            roundtrip_map_cell(cell);
+        }
     }
 }
