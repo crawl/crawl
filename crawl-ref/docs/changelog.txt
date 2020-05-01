@@ -1,4 +1,4 @@
-Stone Soup 0.25 (through 0.25-a0-696-g42a9e46d90)
+Stone Soup 0.25 (through 0.25-a0-884-g76b13fe646)
 -------------------------------------------------
 
 Highlights
@@ -18,6 +18,7 @@ Branches, Environment
 * A new Swamp ending themed as a conflict between Yred and Fedhas that
   includes an undead version of the Lernaean Hydra.
 * Ziggurats now have level set featuring many player ghosts.
+* Zot traps have had their effect flowchart simplified and focused.
 
 Character
 ---------
@@ -38,6 +39,28 @@ Gods
 * God conducts for harming allies now apply to spells and items that place
   harmful clouds.
 * Nemelex abilities can no longer be used while silenced.
+* Wu Jian has been tweaked:
+  - Wall jumps are now only activated via the 'a'bility menu.
+  - Whirlwind attacks no longer pin
+  - Heavenly Storm now starts with a slyaing bonus of 5, capped at 15, and
+    increases by 1 for each martial attack.
+* Xom no longer inflicts miscast effects.
+* Xom demon summoning is increased in power.
+* Wrath changes
+  - Trog's "firey rage" is now a fireball, instead of a fire miscast. Trog no
+    longer uses rot as retribution.
+  - Lugonu's "translocation wrath" no longer uses translocations miscast.
+    Instead, the player is either teleported to monsters, banished, or set upon
+    by Abyss summons.
+  - Cheibriados' wrath no longer uses miscasts. At very high tension, in
+    addition to sleeping and slowing the player, Chei makes a lot of noise. At
+    low tension, miscasts are replaced by stat damage.
+  - Fedhas' wrathh no longer uses elemental miscasts. These are replaced by a
+    choice of corrosive bolt, primal wave, or thorn volley.
+  - Yredelemnul's wrath no longer uses necromancy miscasts, in their place Yred
+    fires a bolt of draining.
+  - Kikubaaqudgha's wrath uses death curses in place of necromancy miscasts.
+* Vehumet is less likely to give duplicate gifts.
 
 Items
 -----
@@ -85,10 +108,21 @@ Items
     resistance.
   - Bloodbane has been removed, having been merged into Leech.
   - Maxwell's Etheric Cage has been removed.
+  - The scythe of Curses no longer curses items in inventory, and now applies
+    death curses instead of necromancy miscasts.
+  - The plutonium sword still applies transmutations miscasts, but gains a
+    chance to polymorph the target on hit (since this is no longer a miscast
+    effect for monsters).
 * Phial of floods now applies a silencing "waterlogged" debuff to all monsters
   in the flooded area and no longer summons water elementals.
 * Staves of poison now do resistable poison damage on hit like other staves
   instead of just having a chance to poison.
+* Distortion branded weapons no longer teleport foes.
+* Distortion unwield effects no longer cause a translocations miscast. Instead,
+  they either teleport the player to monsters, banish the player, or cause
+  severe contamination.
+* Regeneration items only activate after attuning to the player at full HP,
+  identical to the amulet.
 * Removed: potion of agility, staff of power, crystal ball of energy, sack of
   spiders, lamp of fire, fan of gales.
 
@@ -102,7 +136,15 @@ Monsters
 * Both Maggie and Margery have a small extra chance of spawning with a
   pre-enchanted Wyrmbane (1 or 2 points of enchantment, respectively).
 * Monsters such as spiders no longer have a clinging ability.
-* Monsters pinned by Wu Jian's Whirlwind can no longer trample the player.
+* Mummy death curses are no longer necromancy miscasts, and instead have their
+  own effect table.
+* New monster: nameless horror. Nameless horrors are produced by summoning
+  miscasts. They are giant, tanky, have an antimagic attack and abjuration as a
+  natural ability.
+* Hepliaklqana ancestors and demonic guardians can no longer be enslaved or
+  frenzied.
+* Summoned monsters can now get the inner flame status, both from the spell and
+  the scroll.
 
 Spells
 ------
@@ -139,8 +181,8 @@ Spells
       harms the caster.
     + New L9 Ice spell Absolute Zero that instantly freezes to death the
       closest monster in range, leaving an ice block. A random closest monster
-      is chosen as the target when there are ties. The spell range increases
-      with spellpower, up to range 7.
+      is chosen as the target when there are ties. The spell is range 5 and
+      very loud, with noise attenuated by power.
     + Removed spells: Throw Frost, Throw Icicle, Bolt of Cold, Glaciate.
     + As a result of these changes, Ice Elementalists no longer put starting
       skill in Conjurations.
@@ -178,12 +220,26 @@ Spells
     + Regeneration and Bolt of Draining are removed.
 * The Young Poisoner's Handbook now contains Ignite Poison.
 * Confusing Touch is now level 3 and checks MR instead of monster hit dice.
-* The player is now immune to the effects of liquefied ground made by casting
-  Ledas' Liquefaction.
+* The player is now immune to the melee-fumblinng effects of liquefied ground
+  made by casting Ledas' Liquefaction. The slow movement applies regardless of
+  flight status and the spell can be used while flying.
 * Firestorm and Ignition now can burn trees, and Fireball burns trees in all
   squares of its explosion.
 * Call Imp no longer bases the type of imp summoned on spellpower.
 * The Confuse spell has been removed.
+* Spell miscast effects have been simplified to give contamination and a single
+  per-school effect, scaling with spell risk and level. The new effects by
+  school are:
+  - Charms and Hexes: debuff and slow.
+  - Summoning: durably summon a nameless horror (new monster).
+  - Translocation: dimension anchor.
+  - Transmutation: polymorph the player, malmutate a monster.
+  - Conjuration: irresistable AC-ignoring damage.
+  - Elemental schools: school flavored damage (Earth uses fragmentation
+    damage).
+* The Deflect Missiles has been removed.
+* Tukima's Dance can no longer be used if the player sacrificed Love.
+* Lesser Beckoning and Teleport Other now turn allies hostile.
 
 Development
 -----------
