@@ -42,7 +42,7 @@ Gods
 * Wu Jian has been tweaked:
   - Wall jumps are now only activated via the 'a'bility menu.
   - Whirlwind attacks no longer pin
-  - Heavenly Storm now starts with a slyaing bonus of 5, capped at 15, and
+  - Heavenly Storm now starts with a slaying bonus of 5, capped at 15, and
     increases by 1 for each martial attack.
 * Xom no longer inflicts miscast effects.
 * Xom demon summoning is increased in power.
@@ -55,7 +55,7 @@ Gods
   - Cheibriados' wrath no longer uses miscasts. At very high tension, in
     addition to sleeping and slowing the player, Chei makes a lot of noise. At
     low tension, miscasts are replaced by stat damage.
-  - Fedhas' wrathh no longer uses elemental miscasts. These are replaced by a
+  - Fedhas' wrath no longer uses elemental miscasts. These are replaced by a
     choice of corrosive bolt, primal wave, or thorn volley.
   - Yredelemnul's wrath no longer uses necromancy miscasts, in their place Yred
     fires a bolt of draining.
@@ -220,8 +220,8 @@ Spells
     + Regeneration and Bolt of Draining are removed.
 * The Young Poisoner's Handbook now contains Ignite Poison.
 * Confusing Touch is now level 3 and checks MR instead of monster hit dice.
-* The player is now immune to the melee-fumblinng effects of liquefied ground
-  made by casting Ledas' Liquefaction. The slow movement applies regardless of
+* The player is now immune to the melee-fumbling effects of liquefied ground
+  made by casting Leda's Liquefaction. The slow movement applies regardless of
   flight status and the spell can be used while flying.
 * Firestorm and Ignition now can burn trees, and Fireball burns trees in all
   squares of its explosion.
@@ -237,7 +237,7 @@ Spells
   - Conjuration: irresistable AC-ignoring damage.
   - Elemental schools: school flavored damage (Earth uses fragmentation
     damage).
-* The Deflect Missiles has been removed.
+* The Deflect Missiles spell has been removed.
 * Tukima's Dance can no longer be used if the player sacrificed Love.
 * Lesser Beckoning and Teleport Other now turn allies hostile.
 
