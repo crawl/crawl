@@ -6,6 +6,7 @@
 #include "coord.h"
 #include "fprop.h"
 #include "map-cell.h"
+#include "mapmark.h"
 #include "monster.h"
 #include "shopping.h"
 #include "trap-def.h"

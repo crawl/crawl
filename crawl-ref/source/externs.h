@@ -784,54 +784,6 @@ struct mon_spell_slot
 
 typedef vector<mon_spell_slot> monster_spells;
 
-class reader;
-class writer;
-class map_markers
-{
-public:
-    map_markers();
-    map_markers(const map_markers &);
-    map_markers &operator = (const map_markers &);
-    ~map_markers();
-
-    bool need_activate() const { return have_inactive_markers; }
-    void clear_need_activate();
-    void init_all();
-    void activate_all(bool verbose = true);
-    void activate_markers_at(coord_def p);
-    void add(map_marker *marker);
-    void remove(map_marker *marker);
-    void remove_markers_at(const coord_def &c, map_marker_type type = MAT_ANY);
-    map_marker *find(const coord_def &c, map_marker_type type = MAT_ANY);
-    map_marker *find(map_marker_type type);
-    void move(const coord_def &from, const coord_def &to);
-    void move_marker(map_marker *marker, const coord_def &to);
-    vector<map_marker*> get_all(map_marker_type type = MAT_ANY);
-    vector<map_marker*> get_all(const string &key, const string &val = "");
-    vector<map_marker*> get_markers_at(const coord_def &c);
-    string property_at(const coord_def &c, map_marker_type type,
-                       const string &key);
-    string property_at(const coord_def &c, map_marker_type type,
-                       const char *key)
-    { return property_at(c, type, string(key)); }
-    void clear();
-
-    void write(writer &) const;
-    void read(reader &);
-
-private:
-    typedef multimap<coord_def, map_marker *> dgn_marker_map;
-    typedef pair<coord_def, map_marker *> dgn_pos_marker;
-
-    void init_from(const map_markers &);
-    void unlink_marker(const map_marker *);
-    void check_empty();
-
-private:
-    dgn_marker_map markers;
-    bool have_inactive_markers;
-};
-
 class InvEntry;
 typedef int (*item_sort_fn)(const InvEntry *a, const InvEntry *b);
 struct item_comparator
