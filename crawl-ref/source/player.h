@@ -620,7 +620,7 @@ public:
 
     int       has_claws(bool allow_tran = true) const override;
     bool      has_usable_claws(bool allow_tran = true) const;
-    int       has_sickle_hands(bool allow_tran = true) const;
+    int       has_sickle_hands(bool allow_tran = true) const override;
     bool      has_usable_sickle_hands(bool allow_tran = true) const;
     int       has_talons(bool allow_tran = true) const;
     bool      has_usable_talons(bool allow_tran = true) const;

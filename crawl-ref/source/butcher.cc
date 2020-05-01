@@ -88,7 +88,11 @@ static string _butcher_menu_title(const Menu *menu, const string &oldt)
 
 static int _corpse_quality(const item_def &item)
 {
-    return 3 * item.freshness;
+    const corpse_effect_type ce = determine_chunk_effect(item);
+    int badness = 3 * item.freshness;
+    if (ce == CE_MUTAGEN)
+        badness += 1000;
+    return badness;
 }
 
 /**

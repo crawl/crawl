@@ -429,6 +429,11 @@ int monster::has_claws(bool /*allow_tran*/) const
     return 0;
 }
 
+int monster::has_sickle_hands(bool /*allow_tran*/) const
+{
+    return 0;
+}
+
 item_def *monster::missiles() const
 {
     return inv[MSLOT_MISSILE] != NON_ITEM ? &mitm[inv[MSLOT_MISSILE]] : nullptr;

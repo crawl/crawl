@@ -110,6 +110,7 @@ public:
     virtual random_var attack_delay(const item_def *projectile = nullptr,
                                     bool rescale = true) const = 0;
     virtual int has_claws(bool allow_tran = true) const = 0;
+    virtual int has_sickle_hands(bool allow_tran = true) const = 0;
     virtual item_def *shield() const = 0;
     virtual item_def *slot_item(equipment_type eq,
                                 bool include_melded=false) const = 0;

@@ -276,6 +276,7 @@ public:
     random_var  attack_delay(const item_def *projectile = nullptr,
                              bool rescale = true) const override;
     int         has_claws(bool allow_tran = true) const override;
+    int         has_sickle_hands(bool allow_tran = true) const override;
 
     int wearing(equipment_type slot, int type, bool calc_unid = true) const
         override;

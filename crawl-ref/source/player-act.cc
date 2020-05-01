@@ -193,6 +193,8 @@ int player::damage_type(int attack_number)
         return DVORP_SLICING;
     else if (has_usable_claws())
         return DVORP_CLAWING;
+    else if (has_usable_sickle_hands())
+        return DVORP_SLICING;
     else if (has_usable_tentacles())
         return DVORP_TENTACLE;
 
