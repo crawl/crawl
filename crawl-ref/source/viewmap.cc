@@ -654,8 +654,8 @@ bool show_map(level_pos &lpos, bool travel_mode, bool allow_offlevel)
 
             map_lines = max_y - min_y + 1;
 
-            start_x = min_x + (max_x - min_x + 1) / 2 - 40;           // no x scrolling
-            start_y = 0;                                              // y does scroll
+            start_x = (min_x + max_x + 1) / 2 - 40;  // no x scrolling.
+            start_y = 0;                             // y does scroll.
 
             // This happens when CMD_MAP_PREV_LEVEL etc. assign dest to lpos,
             // with a position == (-1, -1).
@@ -666,8 +666,8 @@ bool show_map(level_pos &lpos, bool travel_mode, bool allow_offlevel)
                     state.lpos.pos = you.pos();
                 else
                 {
-                    state.lpos.pos.x = min_x + (max_x - min_x + 1) / 2;
-                    state.lpos.pos.y = min_y + (max_y - min_y + 1) / 2;
+                    state.lpos.pos.x = (min_x + max_x + 1) / 2;
+                    state.lpos.pos.y = (min_y + max_y + 1) / 2;
                 }
             }
 
