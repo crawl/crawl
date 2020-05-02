@@ -3511,6 +3511,43 @@ void display_char_status()
              innate_stat(STAT_INT),
              innate_stat(STAT_DEX));
     }
+
+    if(you.species != SP_DEMIGOD)
+    {
+        const species_def& species_data = get_species_def(you.species);
+        string stats;
+        
+        for (auto _stat :  species_data.level_stats) {
+            if (stats.empty() == false)
+                stats += " or ";
+
+            switch (_stat) {
+            case STAT_STR:
+                stats += "Str";
+                break;
+            case STAT_INT:
+                stats += "Int";
+                break;
+            case STAT_DEX:
+                stats += "Dex";
+                break;
+            case STAT_ALL:
+                stats += "All Stat";
+                break;
+            case STAT_RANDOM:
+                stats += "Random Stat";
+                break;
+            default:
+                break;
+            }
+        }
+
+        mprf("You gain %s at every %d level.", stats.c_str(), species_data.how_often);
+    }
+    else {
+        mprf("You can choice stat at every 2 level.");
+
+    }
 }
 
 bool player::clarity(bool calc_unid, bool items) const

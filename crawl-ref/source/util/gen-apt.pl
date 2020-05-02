@@ -144,16 +144,23 @@ sub aptitude_table
             }
 
             my $fmt = "%+3d";
-            $fmt = "%3d" if $skill == 0;
-            if ($skill == -99)
+            if ($abbr eq 'Stat')
             {
-                $skill = '--';
                 $fmt = "%3s";
             }
-            if ($abbr eq 'HP')
+            else 
             {
-                $skill = $skill * 10;
-                $fmt = "%+3d%%";
+                $fmt = "%3d" if $skill == 0;
+                if ($skill == -99)
+                {
+                    $skill = '--';
+                    $fmt = "%3s";
+                }
+                if ($abbr eq 'HP')
+                {
+                    $skill = $skill * 10;
+                    $fmt = "%+3d%%";
+                }
             }
             $line .= sprintf($fmt, $skill);
         }
@@ -260,11 +267,32 @@ sub load_mods
         my $sp = $_;
         $sp =~ s/Base //;
         my ($xp, $hp, $mp, $mr) = $file =~ /$sp.*\n.*\n *(-?\d), (-?\d), (-?\d), (\d),/;
+        my ($stat) = $file =~ /$sp.*\n.*\n.*\n.*\n.*\n.*\n *{.*}, (\d),/;
+        my ($str) = $file =~ /$sp.*\n.*\n.*\n.*\n.*\n.*\n.*STAT_(S)TR.*/;
+        my ($int) = $file =~ /$sp.*\n.*\n.*\n.*\n.*\n.*\n.*STAT_(I)NT.*/;
+        my ($dex) = $file =~ /$sp.*\n.*\n.*\n.*\n.*\n.*\n.*STAT_(D)EX.*/;
+        
+        if(!defined $str){
+            $str = "";
+        }
+        if(!defined $int){
+            $int = "";
+        }
+        if(!defined $dex){
+            $dex = "";
+        }
+        if(!defined $stat){
+            $stat = "---";
+        }
+        else {
+            $stat = "$str$int$dex\/$stat";
+        }
 
         $SPECIES_SKILLS{$_}{"Experience"} = $xp;
         $SPECIES_SKILLS{$_}{"Hit Points"} = $hp;
         $SPECIES_SKILLS{$_}{"Magic Points"} = $mp;
         $SPECIES_SKILLS{$_}{"Magic Resistance"} = $mr;
+        $SPECIES_SKILLS{$_}{"Levelup Stat"} = $stat;
         die "couldn't parse mods for $_" unless defined $xp
                                                 && defined $hp
                                                 && defined $mp
