@@ -1186,9 +1186,7 @@ void do_annotate()
         annotate_level(level_id(br, depth));
     }
     else
-    {
         mpr("That's not a valid depth.");
-    }
 }
 
 void annotate_level(level_id li)
