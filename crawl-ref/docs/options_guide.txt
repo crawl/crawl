@@ -1425,7 +1425,7 @@ clear_messages = false
         between player actions (default is false which will delay the
         clearing of messages until the message space is full).
 
-show_more = true
+show_more = false
         Setting this option to false will cause the game not to prompt
         if more than a window-full of messages are output at once. This
         option has no effect if clear_messages is set. Additionally, it
