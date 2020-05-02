@@ -53,7 +53,6 @@ def _packages_to_install(args: argparse.Namespace) -> Set[str]:
         "libsqlite3-dev",
         "libz-dev",
         "pkg-config",
-        "python3-yaml",
         "ccache",
         "advancecomp",  # used to compress release zips and png sprite sheets
     }
