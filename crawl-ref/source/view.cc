@@ -1154,7 +1154,7 @@ static void _draw_outside_los(screen_cell_t *cell, const coord_def &gc,
 
 #ifdef USE_TILE
     // this is just for out-of-los rays, but I don't see a more efficient way..
-    if (in_bounds(ep))
+    if (in_bounds(gc))
         cell->tile.bg = env.tile_bg(ep);
 
     tileidx_out_of_los(&cell->tile.fg, &cell->tile.bg, &cell->tile.cloud, gc);
