@@ -20,3 +20,9 @@ TEST_CASE("mons_is_removed() returns correct values", "[single-file]" ) {
         REQUIRE(removed == false);
     }
 }
+
+TEST_CASE("can get names for removed monster types", "[single-file]" ) {
+    const auto name = mons_type_name(MONS_BUMBLEBEE, DESC_PLAIN);
+
+    REQUIRE(name == "removed bumblebee");
+}
