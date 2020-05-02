@@ -217,6 +217,13 @@ MIRES1(res_shock, MR_RES_ELEC)
  * @function res_corr
  */
 MIRES1(res_corr, MR_RES_ACID)
+/*** Can the monster currently be frenzied?
+ * Is it possible to affect the monster with the discord spell or a datura
+ * dart?
+ * @treturn boolean
+ * @function can_go_frenzy
+ */
+MIRET1(boolean, can_go_frenzy, can_go_frenzy);
 
 /*** The monster's max HP given in its description.
  * @treturn string describing the max HP (usually "about X").
@@ -733,6 +740,7 @@ static const struct luaL_reg moninf_lib[] =
     MIREG(res_draining),
     MIREG(res_shock),
     MIREG(res_corr),
+    MIREG(can_go_frenzy),
     MIREG(max_hp),
     MIREG(mr),
     MIREG(defeat_mr),
