@@ -1072,7 +1072,7 @@ static int _prompt_annotate_branch(level_id lid)
     // so long as the list is of reasonable length.
     vector<branch_type> brs;
     for (branch_iterator it; it; ++it)
-        if (is_known_branch_id((**it).id))
+        if (is_known_branch_id(it->id))
             brs.push_back(it->id);
 
 
@@ -1177,7 +1177,7 @@ void do_annotate()
     else
     {
         clear_messages();
-        const string prompt = make_stringf ("What level of %s?", branches[branch].longname);
+        const string prompt = make_stringf ("What level of %s? ", branches[branch].longname);
         depth = prompt_for_quantity(prompt.c_str());
     }
     if (depth > 0 && depth <= max_depth)
