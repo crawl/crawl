@@ -72,8 +72,8 @@ jobs:
       - name: Install requirements.txt
         run: |
             python -m pip install --upgrade pip
-            pip install -r webtiles/requirements/dev.py3.txt # use this until we have a repo-wide requirements.txt
-        working-directory: crawl-ref/source/
+            pip install -r webserver/requirements/dev.py3.txt # use this until we have a repo-wide requirements.txt
+        working-directory: crawl-ref/source
       - name: Install dependencies
         run: ./deps.py --compiler ${{ matrix.compiler }} --build-opts "${{ matrix.build_opts }}"
         working-directory: .github/workflows
@@ -219,8 +219,8 @@ jobs:
       - name: Install requirements.txt
         run: |
             python -m pip install --upgrade pip
-            pip install -r webtiles/requirements/dev.py3.txt # use this until we have a repo-wide requirements.txt
-        working-directory: crawl-ref/source/
+            pip install -r webserver/requirements/dev.py3.txt # use this until we have a repo-wide requirements.txt
+        working-directory: crawl-ref/source
       - name: Install dependencies
         run: ./deps.py --crosscompile
         working-directory: .github/workflows
