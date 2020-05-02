@@ -564,6 +564,49 @@ coord_def recentre_map_target(const level_id level, const level_id original)
     return (bounds.first + bounds.second + 1) / 2;
 }
 
+map_view_state get_view_state(const map_control_state& state)
+{
+    map_view_state view;
+
+    const int num_lines = _get_number_of_lines_levelmap();
+    const int half_screen = (num_lines - 1) / 2;
+
+    const auto bounds = known_map_bounds();
+    const auto min_x = bounds.first.x;
+    const auto min_y = bounds.first.y;
+    const auto max_x = bounds.second.x;
+    const auto max_y = bounds.second.y;
+
+    const auto map_lines = max_y - min_y + 1;
+
+    view.start.x = (min_x + max_x + 1) / 2 - 40;  // no x scrolling.
+    view.start.y = 0;                             // y does scroll.
+
+    auto screen_y = state.lpos.pos.y;
+
+    // If close to top of known map, put min_y on top
+    // else if close to bottom of known map, put max_y on bottom.
+    //
+    // The num_lines comparisons are done to keep things neat, by
+    // keeping things at the top of the screen. By shifting an
+    // additional one in the num_lines > map_lines case, we can
+    // keep the top line clear... which makes things look a whole
+    // lot better for small maps.
+    if (num_lines > map_lines)
+        screen_y = min_y + half_screen - 1;
+    else if (num_lines == map_lines || screen_y - half_screen < min_y)
+        screen_y = min_y + half_screen;
+    else if (screen_y + half_screen > max_y)
+        screen_y = max_y - half_screen;
+
+    view.cursor.x = state.lpos.pos.x - view.start.x + 1;
+    view.cursor.y = state.lpos.pos.y - screen_y + half_screen + 1;
+
+    view.start.y = screen_y - half_screen;
+
+    return view;
+}
+
 // show_map() now centers the known map along x or y. This prevents
 // the player from getting "artificial" location clues by using the
 // map to see how close to the end they are. They'll need to explore
@@ -597,22 +640,6 @@ bool show_map(level_pos &lpos, bool travel_mode, bool allow_offlevel)
     vector<coord_def> features;
     // List of all interesting features for display in the (console) title.
     feature_list feats;
-
-    int min_x = INT_MAX, max_x = INT_MIN, min_y = INT_MAX, max_y = INT_MIN;
-    const int num_lines   = _get_number_of_lines_levelmap();
-    const int half_screen = (num_lines - 1) / 2;
-
-    int map_lines = 0;
-
-    // no x scrolling
-    int start_x = -1;
-
-    // y does scroll
-    int start_y;
-
-    int screen_y = -1;
-
-    int curs_x = -1, curs_y = -1;
 
 #ifndef USE_TILE_LOCAL
     const int top = 2;
@@ -663,37 +690,6 @@ bool show_map(level_pos &lpos, bool travel_mode, bool allow_offlevel)
                 state.lpos.id = level_id::current();
             }
 
-            std::pair<coord_def, coord_def> bounds = known_map_bounds();
-            min_x = bounds.first.x;
-            min_y = bounds.first.y;
-            max_x = bounds.second.x;
-            max_y = bounds.second.y;
-
-            map_lines = max_y - min_y + 1;
-
-            start_x = (min_x + max_x + 1) / 2 - 40;  // no x scrolling.
-            start_y = 0;                             // y does scroll.
-
-            screen_y = state.lpos.pos.y;
-
-            // If close to top of known map, put min_y on top
-            // else if close to bottom of known map, put max_y on bottom.
-            //
-            // The num_lines comparisons are done to keep things neat, by
-            // keeping things at the top of the screen. By shifting an
-            // additional one in the num_lines > map_lines case, we can
-            // keep the top line clear... which makes things look a whole
-            // lot better for small maps.
-            if (num_lines > map_lines)
-                screen_y = min_y + half_screen - 1;
-            else if (num_lines == map_lines || screen_y - half_screen < min_y)
-                screen_y = min_y + half_screen;
-            else if (screen_y + half_screen > max_y)
-                screen_y = max_y - half_screen;
-
-            curs_x = state.lpos.pos.x - start_x + 1;
-            curs_y = state.lpos.pos.y - screen_y + half_screen + 1;
-
             state.redraw_map = true;
             new_level = false;
         }
@@ -706,7 +702,9 @@ bool show_map(level_pos &lpos, bool travel_mode, bool allow_offlevel)
             state.chose = false;
         }
 
-        start_y = screen_y - half_screen;
+#ifndef USE_TILE_LOCAL
+        const auto view = get_view_state(state);
+#endif
 
         if (state.redraw_map)
         {
@@ -725,11 +723,11 @@ bool show_map(level_pos &lpos, bool travel_mode, bool allow_offlevel)
 #endif
 #ifndef USE_TILE_LOCAL
             _draw_title(state.lpos.pos, *state.feats);
-            _draw_level_map(start_x, start_y, state.travel_mode, state.on_level);
+            _draw_level_map(view.start.x, view.start.y, state.travel_mode, state.on_level);
 #endif
         }
 #ifndef USE_TILE_LOCAL
-        cursorxy(curs_x, curs_y + top - 1);
+        cursorxy(view.cursor.x, view.cursor.y + top - 1);
 #endif
         state.redraw_map = true;
 
@@ -757,8 +755,7 @@ bool show_map(level_pos &lpos, bool travel_mode, bool allow_offlevel)
                 cmd = CMD_NEXT_CMD; // a dummy command
 #else
             const c_mouse_event cme = get_mouse_event();
-            const coord_def grdp =
-                cme.pos + coord_def(start_x - 1, start_y - top);
+            const coord_def grdp = cme.pos + view.start - coord_def(1, top);
 
             if (cme.left_clicked() && in_bounds(grdp))
             {
@@ -790,8 +787,6 @@ bool show_map(level_pos &lpos, bool travel_mode, bool allow_offlevel)
 
         c_input_reset(false);
 
-        const coord_def oldp = state.lpos.pos;
-
         {
             const auto next_state = process_map_command(cmd, state);
             const bool changed_level = next_state.lpos.id != state.lpos.id;
@@ -802,38 +797,15 @@ bool show_map(level_pos &lpos, bool travel_mode, bool allow_offlevel)
                 continue;
         }
 
-        state.lpos.pos.x = min(max(state.lpos.pos.x, min_x), max_x);
-        state.lpos.pos.y = min(max(state.lpos.pos.y, min_y), max_y);
-        const coord_def delta = state.lpos.pos - oldp;
-
-#ifndef USE_TILE_LOCAL
-        if (num_lines < map_lines)
         {
-            // Scrolling only happens when we don't have a large enough
-            // display to show the known map.
-            if (state.scroll_y != 0)
-            {
-                const int old_screen_y = screen_y;
-                screen_y += state.scroll_y;
-                if (state.scroll_y < 0)
-                    screen_y = max(screen_y, min_y + half_screen);
-                else
-                    screen_y = min(screen_y, max_y - half_screen);
-                curs_y -= (screen_y - old_screen_y);
-                state.scroll_y = 0;
-            }
-            if (curs_y + delta.y < 1 || curs_y + delta.y > num_lines)
-            {
-                screen_y += delta.y;
-                curs_y -= delta.y;
-            }
+            const auto bounds = known_map_bounds();
+            const auto min_x = bounds.first.x;
+            const auto min_y = bounds.first.y;
+            const auto max_x = bounds.second.x;
+            const auto max_y = bounds.second.y;
+            state.lpos.pos.x = min(max(state.lpos.pos.x, min_x), max_x);
+            state.lpos.pos.y = min(max(state.lpos.pos.y, min_y), max_y);
         }
-        start_y = screen_y - half_screen;
-#else
-        (void)state.scroll_y; // Avoid a compiler warning.
-#endif
-        curs_x += delta.x;
-        curs_y += delta.y;
     }
 
 #ifdef USE_TILE

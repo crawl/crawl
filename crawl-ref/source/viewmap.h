@@ -66,6 +66,13 @@ public:
     bool travel_mode;
 };
 
+class map_view_state
+{
+public:
+    coord_def cursor;
+    coord_def start;
+};
+
 struct level_pos;
 bool travel_colour_override(const coord_def& p);
 bool is_feature(char32_t feature, const coord_def& where);
