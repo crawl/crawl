@@ -908,14 +908,6 @@ public:
 
     int armour_class_with_one_removal(item_def sub) const;
 
-protected:
-    void _removed_beholder(bool quiet = false);
-    bool _possible_beholder(const monster* mon) const;
-
-    void _removed_fearmonger(bool quiet = false);
-    bool _possible_fearmonger(const monster* mon) const;
-
-private:
     int ac_changes_from_mutations() const;
     vector<const item_def *> get_armour_items() const;
     vector<const item_def *> get_armour_items_one_sub(const item_def& sub) const;
@@ -924,6 +916,13 @@ private:
                                     vector<const item_def *> armour_items) const;
     int armour_class_with_specific_items(
                                 vector<const item_def *> items) const;
+
+protected:
+    void _removed_beholder(bool quiet = false);
+    bool _possible_beholder(const monster* mon) const;
+
+    void _removed_fearmonger(bool quiet = false);
+    bool _possible_fearmonger(const monster* mon) const;
 
 };
 COMPILE_CHECK((int) SP_UNKNOWN_BRAND < 8*sizeof(you.seen_weapon[0]));

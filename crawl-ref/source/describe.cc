@@ -77,6 +77,7 @@
  #include "tileview.h"
  #include "tile-flags.h"
 #endif
+#include "transform.h"
 #include "unicode.h"
 
 using namespace ui;
@@ -1852,6 +1853,24 @@ static string _describe_armour(const item_def &item, bool verbose)
     return description;
 }
 
+static string _describe_lignify_ac()
+{
+    const Form* tree_form = get_form(transformation::tree);
+    vector<const item_def *> treeform_items;
+
+    for (auto item : you.get_armour_items())
+        if (tree_form->slot_available(get_equip_slot(item)))
+            treeform_items.push_back(item);
+
+    const int treeform_ac =
+        (you.base_ac_with_specific_items(100, treeform_items)
+         - you.racial_ac(true) - you.ac_changes_from_mutations()
+         - get_form()->get_ac_bonus() + tree_form->get_ac_bonus()) / 100;
+
+    return make_stringf("If you quaff this potion your AC will be %d.",
+                        treeform_ac);
+}
+
 static string _describe_jewellery(const item_def &item, bool verbose)
 {
     string description;
@@ -2141,6 +2160,10 @@ string get_item_description(const item_def &item, bool verbose,
         break;
 
     case OBJ_POTIONS:
+        if (item.sub_type == POT_LIGNIFY && verbose)
+            description << "\n\n" + _describe_lignify_ac();
+        break;
+
     case OBJ_SCROLLS:
     case OBJ_ORBS:
     case OBJ_GOLD:
