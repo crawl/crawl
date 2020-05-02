@@ -784,25 +784,11 @@ bool show_map(level_pos &lpos, bool travel_mode, bool allow_offlevel)
 
         c_input_reset(false);
 
-        {
-            const auto next_state = process_map_command(cmd, state);
-            const bool changed_level = next_state.lpos.id != state.lpos.id;
-            state = next_state;
-            if (!state.map_alive)
-                break;
-            if (changed_level)
-                continue;
-        }
-
-        {
-            const auto bounds = known_map_bounds();
-            const auto min_x = bounds.first.x;
-            const auto min_y = bounds.first.y;
-            const auto max_x = bounds.second.x;
-            const auto max_y = bounds.second.y;
-            state.lpos.pos.x = min(max(state.lpos.pos.x, min_x), max_x);
-            state.lpos.pos.y = min(max(state.lpos.pos.y, min_y), max_y);
-        }
+        state = process_map_command(cmd, state);
+        if (!state.map_alive)
+            break;
+        if (map_bounds(state.lpos.pos))
+            state.lpos.pos = state.lpos.pos.clamped(known_map_bounds());
     }
 
 #ifdef USE_TILE

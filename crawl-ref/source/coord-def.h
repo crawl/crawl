@@ -168,6 +168,16 @@ struct coord_def
     {
         return *this == coord_def(xi, yi);
     }
+
+    const coord_def clamped(const coord_def &tl, const coord_def &br) const
+    {
+        return coord_def(min(max(x, tl.x), br.x), min(max(y, tl.y), br.y));
+    }
+
+    const coord_def clamped(const pair<coord_def, coord_def> &bounds) const
+    {
+        return clamped(bounds.first, bounds.second);
+    }
 };
 
 typedef pair<coord_def, int> coord_weight;
