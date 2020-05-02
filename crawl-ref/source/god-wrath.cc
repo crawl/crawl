@@ -859,6 +859,7 @@ static bool _trog_retribution()
 
 static bool _beogh_retribution()
 {
+    int angel_stepdown = _angel_wrath_stepdown();
     // orcish theme
     const god_type god = GOD_BEOGH;
 
@@ -874,7 +875,6 @@ static bool _beogh_retribution()
         int num_created = 0;
         int num_to_create = random_range(1, 2);
 
-        int angel_stepdown = _angel_wrath_stepdown();
         if (angel_stepdown != 2) {
             for (int i = 0; i < num_to_create; ++i)
             {
@@ -930,7 +930,7 @@ static bool _beogh_retribution()
         // else fall through
     default: // send orcs after you (3/8 to 5/8)
     {
-        const int points = you.experience_level + 3
+        int points = you.experience_level + 3
                            + random2(you.experience_level * 3);
 
         if (angel_stepdown == 2)
