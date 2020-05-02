@@ -1200,14 +1200,9 @@ map_control_state process_map_command(command_type cmd, const map_control_state&
         }
         break;
 
-
     default:
-        if (state.travel_mode)
-        {
-            state.map_alive = false;
-            break;
-        }
-        state.redraw_map = false;
+        if (!state.travel_mode)
+            state.redraw_map = false;
         break;
     }
 
