@@ -1164,10 +1164,8 @@ map_control_state process_map_command(command_type cmd, const map_control_state&
 #ifdef USE_TILE_WEB
             tiles_ui_control msgwin(UI_NORMAL);
 #endif
-
             annotate_level(state.lpos.id);
         }
-
 
         state.redraw_map = true;
         break;
