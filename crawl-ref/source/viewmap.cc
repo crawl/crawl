@@ -649,7 +649,6 @@ bool show_map(level_pos &lpos, bool travel_mode, bool allow_offlevel)
 
     map_control_state state;
     state.lpos = lpos;
-    state.scroll_y = 0;
     state.features = &features;
     state.feats = &feats;
     state.excursion = &le;
@@ -671,8 +670,6 @@ bool show_map(level_pos &lpos, bool travel_mode, bool allow_offlevel)
         if (new_level)
         {
             state.on_level = (level_id::current() == state.original);
-
-            state.scroll_y = 0;
 
             // Vector to track all state.features we can travel to, in
             // order of distance.
@@ -764,9 +761,9 @@ bool show_map(level_pos &lpos, bool travel_mode, bool allow_offlevel)
                 state.map_alive  = false;
             }
             else if (cme.scroll_up())
-                state.scroll_y = -Options.level_map_cursor_step;
+                cmd = CMD_MAP_SCROLL_UP;
             else if (cme.scroll_down())
-                state.scroll_y = Options.level_map_cursor_step;
+                cmd = CMD_MAP_SCROLL_DOWN;
 #endif
         }
 
@@ -1033,12 +1030,10 @@ map_control_state process_map_command(command_type cmd, const map_control_state&
 
     case CMD_MAP_SCROLL_DOWN:
         state.lpos.pos += coord_def(0, 20);
-        state.scroll_y = 20;
         break;
 
     case CMD_MAP_SCROLL_UP:
         state.lpos.pos += coord_def(0, -20);
-        state.scroll_y = -20;
         break;
 
     case CMD_MAP_FIND_YOU:

@@ -52,7 +52,6 @@ public:
     bool chose;
 
     level_pos lpos;
-    int scroll_y;
     coord_def search_anchor;
     int search_index;
 
