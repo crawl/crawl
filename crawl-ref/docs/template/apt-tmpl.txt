@@ -48,16 +48,16 @@ HP  - hit points             Thr - Throwing              Fir - Fire Magic
 MP  - magic points           Slg - Slings                Ice - Ice Magic
 Exp - experience             Bws - Bows                  Air - Air Magic
 MR  - magic resistance       Crb - Crossbows             Ear - Earth Magic
-                                                         Poi - Poison Magic
+Stat  - Levelup Stat                                     Poi - Poison Magic
 
 
-                 Arm Ddg Sth Shd     Inv Evo        HP  MP Exp  MR
-----------------------------------------------------------------------
+                 Arm Ddg Sth Shd     Inv Evo        HP  MP Exp  MR  Stat 
+----------------------------------------------------------------------------
 
 
                  Fgt SBl LBl M&F Axs Pla Stv UC    Thr Slg Bws Crb
-----------------------------------------------------------------------
+----------------------------------------------------------------------------
 
 
                  Spc Coj Hex Cha Sum Nec Trl Trm   Fir Ice Air Ear Poi
-----------------------------------------------------------------------
+----------------------------------------------------------------------------
