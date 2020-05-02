@@ -996,8 +996,8 @@ jewellery_prompt = false
 
 easy_confirm = (none | safe | all)
         Make confirmation questions easier to answer:
-           none = force capitals on Y/N questions
-           safe = force only on dangerous questions (default)
+           none = force capitals on Y/N questions and stat increases
+           safe = force only on dangerous questions and stat increases (default)
             all = never force capitals
         WARNING TO PUTTY USERS: If your Putty configuration sets the
         numeric keypad to "NetHack mode", the keypad '7' will be mapped
