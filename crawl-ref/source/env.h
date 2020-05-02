@@ -3,6 +3,7 @@
 #include <set>
 #include <memory> // unique_ptr
 
+#include "cloud.h"
 #include "coord.h"
 #include "fprop.h"
 #include "map-cell.h"

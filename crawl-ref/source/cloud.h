@@ -5,6 +5,40 @@
 
 #pragma once
 
+struct cloud_struct
+{
+    coord_def     pos;
+    cloud_type    type;
+    int           decay;
+    uint8_t       spread_rate;
+    kill_category whose;
+    killer_type   killer;
+    mid_t         source;
+    int           excl_rad;
+
+    cloud_struct() : pos(), type(CLOUD_NONE), decay(0), spread_rate(0),
+                     whose(KC_OTHER), killer(KILL_NONE), excl_rad(-1)
+    {
+    }
+    cloud_struct(coord_def p, cloud_type c, int d, int spread, kill_category kc,
+                 killer_type kt, mid_t src, int excl);
+
+    bool defined() const { return type != CLOUD_NONE; }
+    bool temporary() const { return excl_rad == -1; }
+    int exclusion_radius() const { return excl_rad; }
+
+    actor *agent() const;
+    void set_whose(kill_category _whose);
+    void set_killer(killer_type _killer);
+
+    string cloud_name(bool terse = false) const;
+    void announce_actor_engulfed(const actor *engulfee,
+                                 bool beneficial = false) const;
+
+    static kill_category killer_to_whose(killer_type killer);
+    static killer_type   whose_to_killer(kill_category whose);
+};
+
 enum cloud_tile_variation
 {
     CTVARY_NONE,     ///< fixed tile (or special case)
