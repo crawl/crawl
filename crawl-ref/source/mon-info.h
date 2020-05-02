@@ -224,6 +224,7 @@ struct monster_info_base
     vector<string> constricting_name;
     monster_spells spells;
     mon_attack_def attack[MAX_NUM_ATTACKS];
+    bool can_go_frenzy;
 
     uint32_t client_id;
 };

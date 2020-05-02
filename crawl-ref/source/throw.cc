@@ -291,13 +291,13 @@ vector<string> fire_target_behaviour::get_monster_desc(const monster_info& mi)
             if (brand == SPMSL_FRENZY || brand == SPMSL_BLINDING)
             {
                 int chance = _get_dart_chance(mi.hd);
-                bool immune = false;
+                bool immune = brand == SPMSL_FRENZY && !mi.can_go_frenzy;
                 if (mi.holi & (MH_UNDEAD | MH_NONLIVING))
                     immune = true;
 
                 string verb = brand == SPMSL_FRENZY ? "frenzy" : "blind";
 
-                string chance_string = immune ? "immune to darts" :
+                string chance_string = immune ? "immune" :
                                        make_stringf("chance to %s on hit: %d%%",
                                                     verb.c_str(), chance);
                 descs.emplace_back(chance_string);
