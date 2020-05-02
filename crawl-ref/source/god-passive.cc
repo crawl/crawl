@@ -1903,6 +1903,10 @@ static int _bond_audience(coord_def where)
 
     monster* mons = monster_at(where);
 
+    // Don't pain bond monsters that aren't invested in fighting the player
+    if (mons->wont_attack())
+        return 0;
+
     int power = you.skill(SK_INVOCATIONS, 7) + you.experience_level
                  - mons->get_hit_dice();
     int duration = 20 + random2avg(power, 2);
