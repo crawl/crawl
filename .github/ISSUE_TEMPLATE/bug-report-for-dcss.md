@@ -18,7 +18,7 @@ include your browser and version.*
 
 **DCSS VERSION:**
 *e.g. "0.18", ""0.19-a0-1891-ge1d1fe8". If you can launch the game, you can
-find this information by pressing ?V; the version will be at the top of the
+find this information by pressing ?v; the version will be at the top of the
 screen. If not, check the changelog in the 'docs' directory.*
 
 **DESCRIPTION:**
@@ -40,8 +40,3 @@ then github will accept the upload. (It will not take a .cs file directly.)*
 *If this is an online game, see [these instructions](https://crawl.develz.org/wiki/doku.php?id=mantis:savebackup)
 for more information on how to make a save backup; you can provide the
 resulting link here.*
-
-<!-- Please do not use this to request features, unless you are one of Crawl's
-developers.
-
-Thanks! -->
