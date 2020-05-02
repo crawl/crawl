@@ -161,6 +161,7 @@ static monster* _mantis_leap_attack(coord_def& new_pos)
     }
 
     map<monster*, coord_def> vaild_mon;
+    bool diving_warning = false;
     for (distance_iterator di(you.pos(), true, true, LOS_RADIUS); di; ++di)
     {
         monster* mon = monster_at(*di);
@@ -178,6 +179,7 @@ static monster* _mantis_leap_attack(coord_def& new_pos)
             bool first = true;
             bool vaild = false;
             bool can_jump = false;
+            bool warning = false;
             int range_ = 1;
             coord_def jumping_pos;
             for (auto iter : tempbeam.path_taken)  {
@@ -189,12 +191,18 @@ static monster* _mantis_leap_attack(coord_def& new_pos)
                     break;
                 }
                 jumping_pos = iter;
-                if (you.can_pass_through(iter) &&
-                    (you.can_swim() && feat_is_water(env.grid(iter))
-                        || you.airborne() || !is_feat_dangerous(env.grid(iter))))
+                if (you.can_pass_through(iter))
                     can_jump = true;
                 else
                     can_jump = false;
+                    
+                if (is_feat_dangerous(env.grid(iter))) {
+                    warning = true;
+                }
+                else {
+                    warning = false;
+                }
+
 
                 if (monster_at(iter)) {
                     vaild = false;
@@ -224,12 +232,21 @@ static monster* _mantis_leap_attack(coord_def& new_pos)
 
             }
             if (vaild) {
+                if (warning)
+                    diving_warning = true;
                 vaild_mon.insert(pair<monster*, coord_def>(mon, jumping_pos));
             }
         }
     }
 
     if (!vaild_mon.empty()) {
+        if (diving_warning) {
+            if (!yesno("This action will make you die. Really Do it? (Y/N)", false, 'n')) {
+                mpr("Okay, then.");
+                new_pos = you.pos();
+                return nullptr;
+            }
+        }
         map<monster*, coord_def>::iterator item = vaild_mon.begin();
         advance(item, random2(vaild_mon.size()));
         new_pos = item->second;
@@ -332,9 +349,7 @@ bool mantis_leap_point(set<coord_def>& set_, set<coord_def>& coward_set_)
                     }
                     break;
                 }
-                if (you.can_pass_through(iter) &&
-                    (you.can_swim() && feat_is_water(env.grid(iter))
-                        || you.airborne() || !is_feat_dangerous(env.grid(iter))))
+                if (you.can_pass_through(iter))
                     can_jump = true;
                 else
                     can_jump = false;
@@ -1016,6 +1031,9 @@ void move_player_action(coord_def move)
         {
             //jump
             mantis_attack_target_mon = _mantis_leap_attack(targ);
+            if (you.pos() == targ) {
+                targ_pass = false;
+            }
         }
 
 
