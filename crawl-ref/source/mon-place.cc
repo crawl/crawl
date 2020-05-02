@@ -411,18 +411,6 @@ monster_type pick_random_monster(level_id place,
         return pick_monster(place);
 }
 
-bool can_place_on_trap(monster_type mon_type)
-{
-    if (mons_is_tentacle_segment(mon_type))
-        return true;
-
-    // Things summoned by the player to a specific spot shouldn't protest.
-    if (mon_type == MONS_FULMINANT_PRISM || mon_type == MONS_LIGHTNING_SPIRE)
-        return true;
-
-    return false;
-}
-
 bool drac_colour_incompatible(int drac, int colour)
 {
     return drac == MONS_DRACONIAN_SCORCHER && colour == MONS_WHITE_DRACONIAN;
@@ -619,12 +607,6 @@ static bool _valid_monster_generation_location(const mgen_data &mg,
                 return false;
             }
     }
-
-    // Don't generate monsters on top of teleport traps.
-    // (How did they get there?)
-    const trap_def* ptrap = trap_at(mg_pos);
-    if (ptrap && !can_place_on_trap(mg.cls))
-        return false;
 
     return true;
 }
