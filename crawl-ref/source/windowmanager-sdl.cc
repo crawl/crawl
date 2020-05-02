@@ -936,7 +936,8 @@ static unsigned int _timer_callback(unsigned int ticks, void *param)
     memset(&event, 0, sizeof(event));
     event.type = SDL_USEREVENT;
     event.user.data1 = param;
-    return SDL_PushEvent(&event);
+    SDL_PushEvent(&event);
+    return 0;
 }
 
 unsigned int SDLWrapper::set_timer(unsigned int interval,
