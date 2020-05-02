@@ -287,6 +287,15 @@ jobs:
         with:
           fetch-depth: 0 # all history
       - run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
+      - name: Set up Python 3.7
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.7
+      - name: Install requirements.txt
+        run: |
+            python -m pip install --upgrade pip
+            pip install -r webserver/requirements/dev.py3.txt # use this until we have a repo-wide requirements.txt
+        working-directory: crawl-ref/source
       - name: Install dependencies
         run: ./deps.py --coverage
         working-directory: .github/workflows
