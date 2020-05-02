@@ -555,6 +555,15 @@ static void _forget_map(bool wizard_forget = false)
 
 map_control_state process_map_command(command_type cmd, const map_control_state &state);
 
+coord_def recentre_map_target(const level_id level, const level_id original)
+{
+    if (level == original)
+        return you.pos();
+
+    const auto bounds = known_map_bounds();
+    return (bounds.first + bounds.second + 1) / 2;
+}
+
 // show_map() now centers the known map along x or y. This prevents
 // the player from getting "artificial" location clues by using the
 // map to see how close to the end they are. They'll need to explore
@@ -646,6 +655,14 @@ bool show_map(level_pos &lpos, bool travel_mode, bool allow_offlevel)
             state.search_index = 0;
             state.search_anchor.reset();
 
+            // This happens when CMD_MAP_PREV_LEVEL etc. assign dest to lpos,
+            // with a position == (-1, -1).
+            if (!map_bounds(state.lpos.pos))
+            {
+                state.lpos.pos = recentre_map_target(state.lpos.id, state.original);
+                state.lpos.id = level_id::current();
+            }
+
             std::pair<coord_def, coord_def> bounds = known_map_bounds();
             min_x = bounds.first.x;
             min_y = bounds.first.y;
@@ -656,20 +673,6 @@ bool show_map(level_pos &lpos, bool travel_mode, bool allow_offlevel)
 
             start_x = (min_x + max_x + 1) / 2 - 40;  // no x scrolling.
             start_y = 0;                             // y does scroll.
-
-            // This happens when CMD_MAP_PREV_LEVEL etc. assign dest to lpos,
-            // with a position == (-1, -1).
-            if (!map_bounds(state.lpos.pos))
-            {
-                state.lpos.id = level_id::current();
-                if (state.on_level)
-                    state.lpos.pos = you.pos();
-                else
-                {
-                    state.lpos.pos.x = (min_x + max_x + 1) / 2;
-                    state.lpos.pos.y = (min_y + max_y + 1) / 2;
-                }
-            }
 
             screen_y = state.lpos.pos.y;
 
