@@ -933,6 +933,14 @@ static bool _beogh_retribution()
         const int points = you.experience_level + 3
                            + random2(you.experience_level * 3);
 
+        if (angel_stepdown == 2)
+            points /= 3;
+        else if (angel_stepdown == 1)
+        {
+            points *= 2;
+            points /= 3;
+        }
+
         monster_type punisher;
         // "natural" bands
         if (points >= 30) // min: lvl 7, always: lvl 27
