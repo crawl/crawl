@@ -1010,7 +1010,8 @@ bool mon_special_ability(monster* mons)
         for (monster_near_iterator targ(mons, LOS_NO_TRANS); targ; ++targ)
         {
             if (mons_aligned(mons, *targ) || mons_is_firewood(**targ)
-                || grid_distance(mons->pos(), targ->pos()) > 2)
+                || grid_distance(mons->pos(), targ->pos()) > 2
+                || !you.see_cell(targ->pos()))
             {
                 continue;
             }
@@ -1041,7 +1042,8 @@ bool mon_special_ability(monster* mons)
         for (monster_near_iterator targ(mons, LOS_NO_TRANS); targ; ++targ)
         {
             if (mons_aligned(mons, *targ) || mons_is_firewood(**targ)
-                || grid_distance(mons->pos(), targ->pos()) > 1)
+                || grid_distance(mons->pos(), targ->pos()) > 1
+                || !you.see_cell(targ->pos()))
             {
                 continue;
             }

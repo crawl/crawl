@@ -902,8 +902,8 @@ spret cast_conjure_ball_lightning(int pow, god_type god, bool fail)
 
     const int how_many = min(5, 2 + pow / 100 + random2(pow / 50 + 1));
 
-    mgen_data cbl(MONS_BALL_LIGHTNING, BEH_FRIENDLY, you.pos());
-    cbl.set_summoned(&you, 0, SPELL_CONJURE_BALL_LIGHTNING, god);
+    mgen_data cbl =_pal_data(MONS_BALL_LIGHTNING, 0, god,
+                             SPELL_CONJURE_BALL_LIGHTNING);
     cbl.hd = 5 + div_rand_round(pow, 20);
 
     for (int i = 0; i < how_many; ++i)
@@ -914,7 +914,8 @@ spret cast_conjure_ball_lightning(int pow, god_type god, bool fail)
             ball->add_ench(ENCH_SHORT_LIVED);
 
             // Avoid ball lightnings without targets always moving towards (0,0)
-            set_random_target(ball);
+            if (!(ball->get_foe() && ball->get_foe()->is_monster()))
+                set_random_target(ball);
         }
     }
 
@@ -3678,7 +3679,7 @@ spret cast_foxfire(int pow, god_type god, bool fail)
     for (fair_adjacent_iterator ai(you.pos()); ai; ++ai)
     {
         mgen_data fox(MONS_FOXFIRE, BEH_FRIENDLY,
-                      *ai, MHITNOT, MG_FORCE_PLACE);
+                      *ai, MHITNOT, MG_FORCE_PLACE | MG_AUTOFOE);
         fox.set_summoned(&you, 0, SPELL_FOXFIRE, god);
         fox.hd = pow;
         monster *foxfire;
@@ -3690,7 +3691,9 @@ spret cast_foxfire(int pow, god_type god, bool fail)
             foxfire->add_ench(ENCH_SHORT_LIVED);
             foxfire->steps_remaining = you.current_vision + 2;
 
-            set_random_target(foxfire);
+            // Avoid foxfire without targets always moving towards (0,0)
+            if (!(foxfire->get_foe() && foxfire->get_foe()->is_monster()))
+                set_random_target(foxfire);
         }
 
         if (created == 2)
