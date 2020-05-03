@@ -1712,7 +1712,7 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
         return cast_conjure_ball_lightning(powc, god, fail);
 
     case SPELL_SUMMON_LIGHTNING_SPIRE:
-        return cast_summon_lightning_spire(powc, beam.target, god, fail);
+        return cast_summon_lightning_spire(powc, god, fail);
 
     case SPELL_SUMMON_GUARDIAN_GOLEM:
         return cast_summon_guardian_golem(powc, god, fail);
