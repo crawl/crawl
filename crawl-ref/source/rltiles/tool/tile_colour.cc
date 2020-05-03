@@ -251,12 +251,16 @@ bool write_png(const char *filename, tile_colour *pixels,
     png_structp png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING,
                                                   nullptr, nullptr, nullptr);
     if (!png_ptr)
+    {
+        fclose(fp);
         return false;
+    }
 
     png_infop info_ptr = png_create_info_struct(png_ptr);
     if (!info_ptr)
     {
         png_destroy_write_struct(&png_ptr, (png_infopp)nullptr);
+        fclose(fp);
         return false;
     }
 
