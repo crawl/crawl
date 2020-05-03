@@ -3297,7 +3297,9 @@ static void tag_read_you(reader &th)
             you.penance[i] = max(you.penance[i] - 100, 0);
         }
 #endif
-        ASSERT(you.penance[i] <= MAX_PENANCE);
+        if (you.species != SP_ANGEL) {
+            ASSERT(you.penance[i] <= MAX_PENANCE);
+        }
     }
 
 #if TAG_MAJOR_VERSION == 34

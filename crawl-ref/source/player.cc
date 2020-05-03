@@ -4931,7 +4931,7 @@ bool invis_allowed(bool quiet, string *fail_reason)
         else if (weapon)
             reason = "Your weapon shines too brightly";
         else
-            die("haloed by an unknown source");
+            reason = "Your halo glows too radiantly";
 
         msg = reason + " to become invisible.";
         success = false;
