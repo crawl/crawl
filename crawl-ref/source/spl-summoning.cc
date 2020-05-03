@@ -1275,7 +1275,7 @@ coord_def find_gateway_location(actor* caster)
 void create_malign_gateway(coord_def point, beh_type beh, string cause,
                            int pow, god_type god, bool is_player)
 {
-    const int malign_gateway_duration = BASELINE_DELAY * (random2(3) + 2);
+    const int malign_gateway_duration = BASELINE_DELAY * (random2(2) + 1);
     env.markers.add(new map_malign_gateway_marker(point,
                             malign_gateway_duration,
                             is_player,
