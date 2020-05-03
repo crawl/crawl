@@ -893,7 +893,7 @@ static void _print_stats_hp(int x, int y)
         }
         else
         {
-            HP_Bar.draw(19, y, you.hp, you.hp_max, you.hp - max(0, poison_survival()));
+            HP_Bar.draw(19, y, you.hp, you.hp_max, false, you.hp - max(0, poison_survival()));
         }
     }
 #else
