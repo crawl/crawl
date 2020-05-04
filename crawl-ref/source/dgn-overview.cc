@@ -1065,11 +1065,6 @@ bool connected_branch_can_exist(branch_type br)
 static int _prompt_annotate_branch(level_id lid)
 {
     // these 3 lines make a vector containing all shown branches.
-    // the current implementation shows all known branches.
-
-    // XXX I'd be grateful if someone could refactor this into something that's
-    // not black magic. The functionality doesn't have the be the exact same,
-    // so long as the list is of reasonable length.
     vector<branch_type> brs;
     for (branch_iterator it; it; ++it)
         if (is_known_branch_id(it->id))
@@ -1098,7 +1093,7 @@ static int _prompt_annotate_branch(level_id lid)
     if (!line.empty())
         mpr(line);
 
-    mprf(MSGCH_PROMPT, "Annotate which branch? (. - %s, ? -help)",
+    mprf(MSGCH_PROMPT, "Annotate which branch? (. - %s, ? - help)",
         lid.describe(false, true).c_str());
 
     while (true)
@@ -1110,7 +1105,6 @@ static int _prompt_annotate_branch(level_id lid)
             return ID_CANCEL;
         case '?':
             show_annotate_help();
-            //update_screen(); // could possibly be necessary for some builds?
             break;
         case '\n': case '\r': case '.':
             return ID_HERE;
@@ -1140,7 +1134,7 @@ static int _prompt_annotate_branch(level_id lid)
 
 void do_annotate()
 {
-    level_id lid  = level_id::current();
+    const level_id lid  = level_id::current();
     const int branch = _prompt_annotate_branch(lid);
 
     if (branch == ID_CANCEL)
@@ -1157,22 +1151,20 @@ void do_annotate()
 
     if (branch == ID_UP)
     {
-        lid = find_up_level(lid);
-        annotate_level(lid);
+        annotate_level(find_up_level(lid));
         return;
     }
 
     if (branch == ID_DOWN)
     {
-        lid = find_down_level(lid);
-        annotate_level(lid);
+        annotate_level(find_down_level(lid));
         return;
     }
 
     int depth;
-    int max_depth = branches[branch].numlevels;
+    const int max_depth = branches[branch].numlevels;
     // Handle one-level branches by not prompting.
-    if (max_depth==1)
+    if (max_depth == 1)
         depth = 1;
     else
     {
@@ -1182,7 +1174,7 @@ void do_annotate()
     }
     if (depth > 0 && depth <= max_depth)
     {
-        branch_type br = branch_type(branch);
+        const branch_type br = branch_type(branch);
         annotate_level(level_id(br, depth));
     }
     else
