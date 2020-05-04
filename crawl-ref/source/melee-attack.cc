@@ -770,20 +770,24 @@ void melee_attack::mace_flail_knockback()
     if (hitting_actor) {
         if (hitting_actor && hitting_actor->alive())
         {
-            if (hitting_actor->is_monster())
-                behaviour_event(hitting_actor->as_monster(), ME_WHACK, attacker);
-            if (you.can_see(*hitting_actor))
+            if (!hitting_actor->is_monster() ||
+                (hitting_actor->as_monster()->attitude != ATT_FRIENDLY &&
+                    hitting_actor->as_monster()->attitude != ATT_GOOD_NEUTRAL))
             {
-                mprf("%s %s with %s!",
-                    hitting_actor->name(DESC_THE).c_str(),
-                    hitting_actor->conj_verb("collide").c_str(),
-                    defender->name(DESC_THE).c_str());
+                if (you.can_see(*hitting_actor))
+                {
+                    mprf("%s %s with %s!",
+                        hitting_actor->name(DESC_THE).c_str(),
+                        hitting_actor->conj_verb("collide").c_str(),
+                        defender->name(DESC_THE).c_str());
+                }
+                const string thisname = defender->name(DESC_A, true);
+                const string othername = hitting_actor->name(DESC_A, true);
+                hitting_actor->hurt(attacker, hitting_actor->apply_ac(damage_done),
+                    BEAM_MISSILE, KILLED_BY_COLLISION, othername, thisname);
+                if (hitting_actor->is_monster())
+                    behaviour_event(hitting_actor->as_monster(), ME_WHACK, attacker);
             }
-            const string thisname = defender->name(DESC_A, true);
-            const string othername = hitting_actor->name(DESC_A, true);
-            hitting_actor->hurt(attacker, hitting_actor->apply_ac(damage_done),
-                BEAM_MISSILE, KILLED_BY_COLLISION, othername, thisname);
-
         }
     }
 
