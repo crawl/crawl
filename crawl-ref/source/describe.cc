@@ -4555,7 +4555,7 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
                                 && monster_at(mi.pos)->angered_by_attacks()
                                 && mi.attitude == ATT_FRIENDLY)
         {
-            inf.body << "If angered " << it_o
+            inf.body << "If angered " << it
                                       << " will immediately vanish, yielding ";
         }
         else
