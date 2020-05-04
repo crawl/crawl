@@ -9,8 +9,9 @@
 - 새로운 종족 쌍두 오우거 추가. 2개의 무기와 2개의 목걸이를 낄 수 있음. 그러나 방패를 낄 수 없음
   - Added two-headed ogre(playable). Can wear 2 weapons and 2 amulets. But you can't wear a shield
   
-- 새로운 종족 천사 추가. 세 선신 중 하나를 믿고 시작함
-  - Added angel(playable). A holy species who starts by believing in one of the three good gods
+- 새로운 종족 천사 추가. 세 선신 중 하나를 믿고 시작함. 악신들의 미움을 사서 끊임없는 징벌과 싸운다.
+  - Added angel(playable). A holy species who starts by believing in one of the three good gods.
+    To be hated by evil gods and to fight infinity wrath
   
 - 새로운 종족 멘티스 추가. 적에게 접근할때 자동으로 점프 공격을 함
   - Added mantis(playable). leap attack automatically when approaching an enemy
@@ -30,6 +31,12 @@
 - 5레벨 독/참 마법, 독선 추가. 지속시간동안 적을 근접공격시 맞은 적의 독저항을 중첩하여 깎을 수 있음
   - Added Poison Gland, level 5 posion/charm spell. For the duration, melee attack makes a attacked creature more vulnerable to poison
 
+- 5레벨 변이/대지 마법. 벽 위장. 벽으로 파고들어서 잠자는 적을 깨우지않고 이동, 암살 하는게 가능해진다.  
+   - Added Wall Camoflage, level 5 earth/transmutation spell. Melting into the wall makes it possible to move and stab without waking the sleeping enemy.
+
+- 베오그의 새로운 권능 오크 추종자 되돌리기 추가. 선택한 오크 추종자를 오크 광산으로 즉시 전송한다. 
+   - Added Beogh ability "return Orcish Followers". Immediately send the selected orcish follower to orcrish mines.
+   
 - 독마법 최종티어 책인 거장의 회고록 추가
   - Added The Memoirs of the Virtuoso, the highest level Poison book
   
@@ -39,10 +46,13 @@
 - 가속 마법 복구
   - rollback Haste
   
+- 로드 복구 (iron, clouds, ignition, inaccuracy, shadows)
+  - rollback rod (iron, clouds, ignition, inaccuracy, shadows)
+  
 - 특이점과 아카식 레코드 마법책 복구
   - rollback singularity and akashic record
   
-- 스토커 복구. 벽과 융합하는 새로운 마법 준비중
+- 스토커 복구. 벽과 융합하는 새로운 마법과 함께
   - rollback stalker. with magic of transforming into a wall
 
 - 라바 오크, 지니, 하이엘프, 마운틴드워프 복구
@@ -57,6 +67,9 @@
 - 변이 시체, 고기를 되돌림
   - rollback mutagenic corpse
   
+- 분수를 다시 마실 수 있게 됨
+  - Become able to drink fountain again
+
 - 새로운 메인 타이틀 이미지 추가 (logal-image)
   - Add new title artwork (logal-image)
 
