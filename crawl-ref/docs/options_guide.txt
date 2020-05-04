@@ -16,16 +16,17 @@ The contents of this text are:
 0-e     Aliases and variables.
 1-  Starting Screen.
                 name, remember_name, weapon, species, background, combo,
-                restart_after_game, restart_after_save, name_bypasses_menu,
-                default_manual_training, autopickup_starting_ammo
+                restart_after_game, restart_after_save, newgame_after_quit,
+                name_bypasses_menu, default_manual_training,
+                autopickup_starting_ammo, game_seed, pregen_dungeon
 2-  File System and Sound.
                 crawl_dir, morgue_dir, save_dir, macro_dir, sound, hold_sound,
-                sound_file_path
+                sound_file_path, one_SDL_sound_channel
 3-  Interface.
 3-a     Dropping and Picking up.
                 autopickup, autopickup_exceptions, default_autopickup,
                 pickup_thrown, assign_item_slot, pickup_menu_limit,
-                drop_filter, auto_hide_spells,
+                drop_filter, auto_hide_spells
 3-b     Passive Sightings (detected and remembered entities).
                 detected_monster_colour, detected_item_colour,
                 remembered_monster_colour
@@ -38,24 +39,24 @@ The contents of this text are:
                 view_max_width, view_max_height, view_lock_x,
                 view_lock_y, view_lock, center_on_scroll,
                 symmetric_scroll, scroll_margin_x, scroll_margin_y,
-                scroll_margin
+                scroll_margin, always_show_exclusions
 3-f     Travel and Exploration.
                 travel_delay, explore_delay, rest_delay, travel_avoid_terrain,
                 explore_greedy, explore_stop, explore_stop_pickup_ignore,
                 explore_wall_bias, travel_key_stop,
                 tc_reachable, tc_dangerous, tc_disconnected, tc_excluded,
                 tc_exclude_circle, runrest_ignore_message,
-                runrest_stop_message, runrest_safe_poison,
-                runrest_ignore_monster, rest_wait_both, rest_wait_percent,
-                rest_wait_ancestor, explore_auto_rest, auto_exclude,
-                wall_jump_move, wall_jump_prompt
+                runrest_stop_message, interrupt_<delay>, delay_safe_poison,
+                runrest_ignore_monster, rest_wait_both, rest_wait_ancestor,
+                rest_wait_percent, explore_auto_rest, auto_exclude
 3-g     Command Enhancements.
                 auto_switch, travel_open_doors, easy_unequip, equip_unequip,
                 jewellery_prompt, easy_confirm, simple_targeting,
                 allow_self_target, auto_butcher, auto_butcher_max_chunks,
-                confirm_butcher, easy_eat_chunks, easy_quit_item_prompts,
-                ability_menu, sort_menus, spell_slot, item_slot, ability_slot,
-                autofight_stop, autofight_warning, autofight_hunger_stop,
+                confirm_butcher, easy_eat_chunks, auto_eat_chunks,
+                easy_quit_item_prompts, ability_menu, easy_floor_use,
+                sort_menus, spell_slot, item_slot, ability_slot, autofight_stop,
+                autofight_warning, autofight_hunger_stop,
                 autofight_hunger_stop_undead, autofight_throw,
                 autofight_throw_nomove, autofight_fire_stop, autofight_caught,
                 autofight_wait, autofight_prompt_range, automagic_enable,
@@ -69,10 +70,11 @@ The contents of this text are:
                 show_more, small_more, show_newturn_mark, show_game_time,
                 equip_bar, animate_equip_bar, item_stack_summary_minimum,
                 mlist_min_height, mlist_allow_alternate_layout, msg_min_height,
-                msg_max_height, messages_at_top, skill_focus,
+                msg_max_height, msg_webtiles_height, messages_at_top,
                 msg_condense_repeats, msg_condense_short, show_travel_trail,
-                monster_list_colour, view_delay, force_more_message,
-                flash_screen_message, use_animations, darken_beyond_range
+                skill_focus, default_show_all_skills, monster_list_colour,
+                view_delay, use_animations, darken_beyond_range,
+                force_more_message, flash_screen_message, cloud_status
 3-i     Colours (messages and menus)
                 menu_colour, message_colour
 3-j     Missiles.
@@ -97,19 +99,22 @@ The contents of this text are:
                 tile_item_col, tile_unseen_col, tile_floor_col, tile_wall_col,
                 tile_mapped_floor_col, tile_mapped_wall_col,
                 tile_explore_horizon_col, tile_door_col, tile_downstairs_col,
-                tile_upstairs_col, tile_branchstairs_col, tile_feature_col,
+                tile_upstairs_col, tile_branchstairs_col, tile_portal_col,
                 tile_transporter_col, tile_transporter_landing_col,
-                tile_trap_col, tile_water_col, tile_lava_col, tile_excluded_col,
-                tile_excl_centre_col, tile_update_rate, tile_runrest_rate,
-                tile_key_repeat_delay, tile_tooltip_ms, tile_tag_pref,
-                tile_full_screen, tile_window_width, tile_window_height,
-                tile_map_pixels, tile_cell_pixels, tile_force_overlay,
-                tile_single_column_menus, tile_font_crt_file,
-                tile_font_stat_file, tile_font_msg_file, tile_font_tip_file,
-                tile_font_lbl_file, tile_font_crt_family, tile_font_stat_family,
-                tile_font_msg_family, tile_font_lbl_family, tile_font_crt_size,
-                tile_font_stat_size, tile_font_msg_size, tile_font_tip_size,
-                tile_font_lbl_size, tile_font_ft_light, tile_show_minihealthbar,
+                tile_feature_col, tile_trap_col, tile_water_col,
+                tile_deep_water_col, tile_lava_col, tile_excluded_col,
+                tile_excl_centre_col, tile_window_col, tile_update_rate,
+                tile_runrest_rate, tile_key_repeat_delay, tile_tooltip_ms,
+                tile_tag_pref, tile_window_width, tile_window_height,
+                tile_map_pixels, tile_viewport_scale, tile_map_scale,
+                tile_cell_pixels, tile_filter_scaling, tile_force_overlay,
+                tile_full_screen, tile_single_column_menus,
+                tile_font_crt_file, tile_font_stat_file, tile_font_msg_file,
+                tile_font_tip_file, tile_font_lbl_file, tile_font_crt_family,
+                tile_font_stat_family, tile_font_msg_family,
+                tile_font_lbl_family, tile_font_crt_size, tile_font_stat_size,
+                tile_font_msg_size, tile_font_tip_size, tile_font_lbl_size,
+                tile_font_ft_light, tile_show_minihealthbar,
                 tile_show_minimagicbar, tile_show_demon_tier, tile_water_anim,
                 tile_misc_anim, tile_realtime_anim, tile_show_player_species,
                 tile_show_threat_levels, tile_layout_priority,
@@ -120,9 +125,9 @@ The contents of this text are:
 4-a     Saving.
                 dump_on_save
 4-b     Items and Kills.
-                kill_map, dump_kill_places, dump_kill_breakdowns,
-                dump_item_origins, dump_item_origin_price, dump_message_count,
-                dump_order
+                kill_map, dump_kill_places, dump_item_origins,
+                dump_item_origin_price, dump_message_count, dump_order,
+                dump_kill_breakdowns
 4-c     Notes.
                 user_note_prefix, note_items, note_monsters, note_hp_percent,
                 note_skill_levels, note_all_skill_levels, note_skill_max,
@@ -132,8 +137,9 @@ The contents of this text are:
 5-a     All OS.
                 mouse_input, wiz_mode, explore_mode, char_set, colour,
                 display_char, feature, mon_glyph, item_glyph,
-                use_fake_player_cursor, show_player_species, language,
-                fake_lang, read_persist_options
+                use_fake_player_cursor, show_player_species,
+                use_modifier_prefix_keys, language, fake_lang,
+                read_persist_options
 
 5-b     DOS and Windows.
                 dos_use_background_intensity
@@ -332,18 +338,18 @@ remember_name = true
 weapon += (short sword |...| unarmed | random | viable), <weapon>, ...
         (List option)
         Specifying the weapon option allows you to bypass the weapon
-        selection screen. Tridents, flails, cutlasses, long swords, and war
+        selection screen. Tridents, flails, rapiers, long swords, and war
         axes are restricted to fighters and gladiators, and quarterstaves
         are restricted to gladiators only. The standard weapon prompt will be
         shown if an illegal choice for the selected background is specified.
         The "viable" option makes a random choice from among the "good" weapons
         for the chosen character. Specifying more than one option causes the
         game to randomly select a weapon from the given list. The combo option
-        overrides (and is overriden by) this option.
+        overrides (and is overridden by) this option.
 
 species += (Human |...| Vampire | random | viable), <species>, ...
         (List option)
-        The usual abbreviations (Hu, HE, etc.) work. "viable" will choose a
+        The usual abbreviations (Hu, HO, etc.) work. "viable" will choose a
         viable species for a given background if the background is chosen
         first. Specifying multiple species causes one to be selected at
         random from the given species. The combo option overrides (and is
@@ -364,7 +370,7 @@ combo += (HuFi . short sword | Human Monk | ...), <combo>, ...
         specified, it is prompted for. Combos may be abbreviated or specified
         in full. If multiple combos are specified, one is selected randomly
         from the specified combos. The weapon, species, and background
-        options are overriden by (and override) this option.
+        options are overridden by (and override) this option.
 
 restart_after_game = maybe/true
         When set to true, at the game end, crawl will return to the main menu.
@@ -566,7 +572,7 @@ pickup_menu_limit = 1
         item. If zero, never use the menu. If negative, use the value of
         item_stack_summary_minimum - 1, instead.
 
-        Note that no matter the vaulue of the option, picking up will always
+        Note that no matter the value of the option, picking up will always
         take one turn.
 
 drop_filter += <regex>, <regex>, ...
@@ -737,7 +743,7 @@ symmetric_scroll = true
 
 scroll_margin_x = 2
         How far from the left or right edges scrolling starts. By
-        default, if the PC's circle of line-of-sight is closer than
+        default, if the PC's square of line-of-sight is closer than
         two squares from the edge, the viewport scrolls. If set at
         zero, the viewport scrolls only when the LOS circle reaches
         the viewport edge.
@@ -887,7 +893,7 @@ runrest_stop_message += <regex>, <regex>, ...
         Use these to force messages to interrupt travel and resting, or
         not. These are matched against full message text. To limit a
         substring match to a message channel, prefix the substring with
-        the channel name and a colon (see section 3-l below on Message
+        the channel name and a colon (see section 3-k below on Message
         Channels). For instance, if you want travel to stop when you're
         hit by divine retribution, you could use:
              runrest_stop_message += god:wrath finds you
@@ -1011,7 +1017,7 @@ simple_targeting = false
         while avoiding the player.
 
 allow_self_target = (yes | no | prompt)
-        Allow targeting yourself with risky magic (e.g., the spell Bolt of Fire
+        Allow targeting yourself with risky magic (e.g., the spell Bolt of Magma
         or a wand of paralysis.)
         When set to 'yes', you are a valid target. When set to 'no', you cannot
         target yourself with such spells. When set to 'prompt' (the default),
@@ -1498,7 +1504,7 @@ msg_max_height = 10
         will get the rest.
 
 msg_webtiles_height = -1
-        This will set the height of the messages pane in (only) webtiles,
+        This will set the height of the messages pane in (only) WebTiles,
         scaling the map accordingly. Values less than `msg_min_height` will
         have no impact; in this case the height of the message pane is
         inherited from console (and so will typically be 7). One of these
@@ -1606,7 +1612,7 @@ force_more_message += <regex>, <regex>
         Any message that contains a regex specified here will enforce a
         --More-- prompt, so it can be used to highlight really important
         events. This option ignores the show_more option.
-        The syntax is identical to that of runrest_ignore_message (3-g).
+        The syntax is identical to that of runrest_ignore_message (3-f).
 
 flash_screen_message += <regex>, <regex>
         (List option)
@@ -1670,10 +1676,6 @@ menu_colour ^= <match>:<colour>:<regex>, <colour>:<regex>, ...
            inedible        (You cannot eat this, or get no nutrition from it.)
            preferred       (The food type your character prefers. For example,
                             Ghouls prefer chunks to rations.)
-           poisonous       (Chunks/corpses that are poisonous.)
-           mutagenic       (Chunks/corpses that are mutagenic.)
-           contaminated    (Chunks/corpses that give reduced nutrition.)
-           rot-inducing    (Chunks/corpses that cause rotting.)
 
            equipped        (Equipped items.)
            artefact        (For artefacts, whether identified or not.)
@@ -1682,8 +1684,7 @@ menu_colour ^= <match>:<colour>:<regex>, <colour>:<regex>, ...
 
         When looking for menu_colour matches, these prefixes are prepended to
         the actual item name, e.g. in the form of
-           identified forbidden wand of draining (4)
-           unidentified equipped artefact sparkling ring (left hand)
+           identified forbidden wand of random effects (4)
 
         The same prefixes can also be used for highlighting prompts pertaining
         to items matching the description, or to define autopickup_exceptions.
@@ -1705,7 +1706,7 @@ menu_colour ^= <match>:<colour>:<regex>, <colour>:<regex>, ...
         If you frequently die because you forget to use emergency items,
         try
           menu_colour ^= inventory:cyan:emergency_item
-          menu_colour ^= inventory:lightcyan:wand of (fire|cold|draining)
+          menu_colour ^= inventory:lightcyan:wand of (acid|iceblast)
 
         menu_colour can also be applied to colour the in-game notes (to
         be read with '?:'). The following line will show level ups in
@@ -1788,7 +1789,7 @@ CHANNEL_NAME can currently be one of these:
    monster_damage  = messages telling how damaged a monster is
    monster_target  = messages marking the monster as a target (unused)
    banishment      = messages about banishing and being banished to the Abyss
-   rotten_meat     = messages about chunks/corpses/blood rotting away
+   rotten_meat     = messages about chunks/corpses rotting away
    equipment       = messages indicating worn/wielded equipment
    floor           = messages when looking at or walking over a floor item
    multiturn       = indicates long actions (wearing armour, dissecting etc.)
@@ -1828,8 +1829,8 @@ autoinscribe += <regex>:<inscription>
         inscribed (if autopickup is toggled on).
 
         For example, it can be used to avoid accidentally using charges of
-        important wands, as in
-             autoinscribe += wand of heal wounds:!V
+        potentially dangerous wands, as in
+             autoinscribe += wand of polymorph:!V
 
         The menu colour prefixes (forbidden etc.) can also be used here.
         For example:
@@ -1963,10 +1964,10 @@ level. Using RGB hex codes is also allowed, such as #00ff00 for green.
    tile_item_col                - colour of known or detected items
    tile_unseen_col              - colour of unseen areas (usually stone)
    tile_floor_col               - colour of floor
-   tile_mapped_floor_col        - colour of floor detected via magic mapping
-   tile_explore_horizon_col     - colour of the edge of explored territory
    tile_wall_col                - colour of any wall type
+   tile_mapped_floor_col        - colour of floor detected via magic mapping
    tile_mapped_wall_col         - colour of walls detected via magic mapping
+   tile_explore_horizon_col     - colour of the edge of explored territory
    tile_door_col                - colour of known doors, open or closed
    tile_downstairs_col          - colour of downstairs
    tile_upstairs_col            - colour of upstairs, including branch exits
@@ -2137,7 +2138,6 @@ tile_show_threat_levels = none
         threat level. Valid levels include: trivial, easy, tough, nasty.
         You can specify multiple levels at once.
 
-
 tile_layout_priority = minimap, inventory, command, spell, monster
         (Ordered list option)
         This option allows you to control the order in which elements are
@@ -2205,7 +2205,7 @@ tile_shield_offsets = (<x>,<y> | reset)
 
 tile_web_mouse_control = true
         Whether to enable mouse control for tooltips/cursor interaction on
-        Webtiles. Regardless of the value of the setting, the minimap will
+        WebTiles. Regardless of the value of the setting, the minimap will
         respond to mouse control.
 
 4-  Character Dump.
@@ -2243,12 +2243,12 @@ dump_kill_places = (none | all | single)
         kill places, anything else to the default of showing kill places
         only for single kills
 
-dump_item_origins = artefacts, rods
+dump_item_origins = artefacts
         The game remembers where you find items. If you want this item
         origin memory listed in your dumps, use this option to select
         which items get annotated. Available selectors are:
                 artefacts, ego_arm, ego_weap, jewellery, runes,
-                rods, staves, books, all, none.
+                staves, books, all, none.
         If you use multiple dump_item_origins lines, the last line takes
         effect; all preceding lines are ignored.
 
@@ -2318,7 +2318,7 @@ note_items += <regex>, <regex>, ...
         (List option)
         When an item is identified for the first time, it will be
         noted if its short description matches a regex. E.g.
-             note_items += rod,book,acquirement
+             note_items += book,acquirement
         Artefacts (fixed, unrand, or random) will always be noted when
         identified, regardless of note_items.
 
@@ -2367,7 +2367,7 @@ note_messages += <regex>, <regex>, ...
              note_messages += Your scales start
 
 note_chat_messages = false
-        If set to false, this will disable logging of webtiles chat
+        If set to false, this will disable logging of WebTiles chat
         messages from other players. (This setting only applies on the
         online servers).
 
@@ -2595,7 +2595,7 @@ item_glyph -= <regexp>
         Multiple rules can modify a single item, which is useful if you want
         to change the colour and glyph separately:
             item_glyph += corpse : x625
-            item_glyph += poisonous.* corpse : lightgreen
+            item_glyph += inedible.* corpse : lightgreen
 
         Rules are applied in order, so later rules are higher priority.
 
