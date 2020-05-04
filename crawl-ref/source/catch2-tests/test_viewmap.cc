@@ -46,4 +46,16 @@ TEST_CASE( "Test basic key controls work", "[single-file]" ) {
 
         REQUIRE( state.lpos.pos == coord_def(0, -1));
     }
+
+    SECTION ("Exiting the map with Enter chooses a tile.") {
+        state = process_map_command(CMD_MAP_GOTO_TARGET, state);
+
+        REQUIRE(state.chose == true);
+    }
+
+    SECTION ("Exiting the map with Esc does not choose a tile.") {
+        state = process_map_command(CMD_MAP_EXIT_MAP, state);
+
+        REQUIRE(state.chose == false);
+    }
 }

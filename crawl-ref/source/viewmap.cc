@@ -658,6 +658,7 @@ bool show_map(level_pos &lpos, bool travel_mode, bool allow_offlevel)
     state.map_alive = true;
     state.redraw_map = true;
     state.search_anchor = coord_def(-1, -1);
+    state.chose = false;
 
     while (state.map_alive)
     {
@@ -809,6 +810,8 @@ bool show_map(level_pos &lpos, bool travel_mode, bool allow_offlevel)
 map_control_state process_map_command(command_type cmd, const map_control_state& prev_state)
 {
     map_control_state state = prev_state;
+    state.map_alive = true;
+    state.chose = false;
 
     const auto block_step = Options.level_map_cursor_step;
 
