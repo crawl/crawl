@@ -4543,23 +4543,32 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
         stair_use = true;
     }
 
-    if (mi.is(MB_SUMMONED))
+    if (mi.is(MB_SUMMONED) || mi.is(MB_PERM_SUMMON))
     {
-        inf.body << "\nThis monster has been summoned, and is thus only "
-                    "temporary. Killing " << it_o << " yields no experience, "
-                    "nutrition or items";
-        if (!stair_use)
+        inf.body << "\nThis monster has been summoned"
+                 << (mi.is(MB_SUMMONED) ? ", and is thus only temporary. "
+                                        : " in a durable way. ");
+        // TODO: hacks; convert angered_by_attacks to a monster_info check
+        // (but on the other hand, it is really limiting to not have access
+        // to the monster...)
+        if (!mi.pos.origin() && monster_at(mi.pos)
+                                && monster_at(mi.pos)->angered_by_attacks()
+                                && mi.attitude == ATT_FRIENDLY)
         {
-            inf.body << ", and " << it << " " << is
-                     << " incapable of using stairs";
+            inf.body << "If angered " << it_o
+                                      << " will immediately vanish, yielding ";
         }
+        else
+            inf.body << "Killing " << it_o << " yields ";
+        inf.body << "no experience, nutrition or items";
+
+        if (!stair_use)
+            inf.body << "; " << it << " " << is << " incapable of using stairs";
+
+        if (mi.is(MB_PERM_SUMMON))
+            inf.body << ", and " << it << " cannot be abjured";
+
         inf.body << ".\n";
-    }
-    else if (mi.is(MB_PERM_SUMMON))
-    {
-        inf.body << "\nThis monster has been summoned in a durable way. "
-                    "Killing " << it_o << " yields no experience, nutrition "
-                    "or items, but " << it << " cannot be abjured.\n";
     }
     else if (mi.is(MB_NO_REWARD))
     {
