@@ -1113,6 +1113,8 @@ void player_reacts()
     if (you.duration[DUR_POISONING])
         handle_player_poison(you.time_taken);
 
+    recharge_rods(you.time_taken, false);
+
     // Reveal adjacent mimics.
     for (adjacent_iterator ai(you.pos(), false); ai; ++ai)
         discover_mimic(*ai);

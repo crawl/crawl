@@ -1187,8 +1187,8 @@ int attack::get_weapon_plus()
     if (weapon->base_type == OBJ_STAVES
 #if TAG_MAJOR_VERSION == 34
         || weapon->sub_type == WPN_BLOWGUN
-        || weapon->base_type == OBJ_RODS
 #endif
+        || weapon->base_type == OBJ_RODS
        )
     {
         return 0;

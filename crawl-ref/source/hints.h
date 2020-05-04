@@ -143,9 +143,7 @@ enum hints_event_type
 #endif
     HINT_ANIMATE_CORPSE_SKELETON,
     HINT_SEEN_WEB,
-#if TAG_MAJOR_VERSION == 34
     HINT_SEEN_ROD,
-#endif
     HINT_EVENTS_NUM
 };
 

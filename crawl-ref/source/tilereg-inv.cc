@@ -395,6 +395,7 @@ bool InventoryRegion::update_tip_text(string& tip)
             // first equipable categories
             case OBJ_WEAPONS:
             case OBJ_STAVES:
+            case OBJ_RODS:
                 if (you.species != SP_FELID)
                 {
                     _handle_wield_tip(tmp, cmd);
@@ -614,15 +615,13 @@ static void _fill_item_info(InventoryTile &desc, const item_info &item)
     }
     else if (type == OBJ_WANDS && item.flags & ISFLAG_KNOW_TYPE)
         desc.quantity = item.charges;
+    else if (type == OBJ_RODS && item.flags & ISFLAG_KNOW_PLUSES)
+        desc.quantity = item.charges / ROD_CHARGE_MULT;
     else
         desc.quantity = -1;
 
     if (type == OBJ_WEAPONS || type == OBJ_MISSILES
-        || type == OBJ_ARMOUR
-#if TAG_MAJOR_VERSION == 34
-        || type == OBJ_RODS
-#endif
-       )
+        || type == OBJ_ARMOUR || type == OBJ_RODS)
     {
         desc.special = tileidx_known_brand(item);
     }

@@ -463,7 +463,6 @@ static const struct spell_desc spelldata[] =
     TILEG_LEHUDIBS_CRYSTAL_SPEAR,
 },
 
-#if TAG_MAJOR_VERSION == 34
 {
     SPELL_BOLT_OF_INACCURACY, "Bolt of Inaccuracy",
     spschool::conjuration,
@@ -472,9 +471,8 @@ static const struct spell_desc spelldata[] =
     1000,
     6, 6,
     3, 0,
-    TILEG_ERROR,
+    TILEG_BOLT_OF_INACCURACY,
 },
-#endif
 
 {
     SPELL_TORNADO, "Tornado",
@@ -2996,7 +2994,6 @@ static const struct spell_desc spelldata[] =
     TILEG_ORB_OF_ELECTRICITY,
 },
 
-#if TAG_MAJOR_VERSION == 34
 {
     SPELL_EXPLOSIVE_BOLT, "Explosive Bolt",
     spschool::conjuration | spschool::fire,
@@ -3005,9 +3002,8 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     6, 0,
-    TILEG_ERROR,
+    TILEG_EXPLOSIVE_BOLT,
 },
-#endif
 
 {
     SPELL_FLASH_FREEZE, "Flash Freeze",
@@ -3269,7 +3265,6 @@ static const struct spell_desc spelldata[] =
     TILEG_CLOUD_CONE,
 },
 
-#if TAG_MAJOR_VERSION == 34
 {
     SPELL_WEAVE_SHADOWS, "Weave Shadows",
     spschool::summoning,
@@ -3278,9 +3273,8 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     4, 0,
-    TILEG_ERROR,
+    TILEG_WEAVE_SHADOWS,
 },
-#endif
 
 {
     SPELL_DRAGON_CALL, "Dragon's Call",

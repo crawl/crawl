@@ -138,6 +138,9 @@ const int EXERCISE_QUEUE_SIZE = 100;
 
 const int MIN_HIT_MISS_PERCENTAGE = 5;
 
+// Maximum charge level for rods
+const int MAX_ROD_CHARGE = 17;
+const int ROD_CHARGE_MULT = 100;
 const int LIGHTNING_CHARGE_MULT = 100;
 const int LIGHTNING_MAX_CHARGE = 4;
 

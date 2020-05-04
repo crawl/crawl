@@ -551,6 +551,18 @@ static void _recap_card_keys(vector<string> &keys)
     }
 }
 
+static bool _is_rod_spell(spell_type spell)
+{
+    if (spell == SPELL_NO_SPELL)
+        return false;
+
+    for (int i = 0; i < NUM_RODS; i++)
+        if (spell_in_rod(static_cast<rod_type>(i)) == spell)
+            return true;
+
+    return false;
+}
+
 /**
  * Make a basic, no-frills ?/<foo> menu entry.
  *
@@ -705,6 +717,7 @@ static MenuEntry* _spell_menu_gen(char letter, const string &str, string &key)
         me->add_tile(tile_def(tileidx_spell(spell), TEX_GUI));
 #endif
     me->colour = is_player_spell(spell) ? WHITE
+               : _is_rod_spell(spell) ? LIGHTGREY
                                         : DARKGREY; // monster-only
 
     return me;

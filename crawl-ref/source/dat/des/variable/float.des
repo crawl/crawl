@@ -109,7 +109,7 @@ KITEM:  " = club, quarterstaff, quarterstaff good_item
 : else
 KITEM:  " = club, quarterstaff, quarterstaff
 : end
-KITEM:  ' = club, any magical staff
+KITEM:  ' = club, any magical staff / any rod w:1
 MAP
 xxxxx
 x"']x
@@ -3054,7 +3054,8 @@ TAGS:    transparent patrolling
 DEPTH:   Depths, !Depths:$
 ORIENT:  float
 MONS:    necromancer ; wand of iceblast . \
-         staff of fire w:15 | quarterstaff ego:flaming w:15 . \
+         staff of fire w:15 | quarterstaff ego:flaming w:14 | \
+         rod of ignition w:1 ident:type . \
          robe ego:fire_resistance w:14 | robe ego:cold_resistance w:15 | \
          robe ego:resistance w:1
 MONS:    necromancer ; wand of iceblast . \
@@ -3330,7 +3331,7 @@ MONS:   fire bat
 KMONS:  2 = fire giant / fire dragon
 ITEM:   book of flames / book of fire / manual of fire magic / \
         staff of fire ident:type / ring of fire ident:type / lamp of fire / \
-        fire dragon scales w:5
+        rod of ignition ident:type / fire dragon scales w:5
 KITEM:  2 = firestarter ident:type
 : minmay_elemental_octagon_setup(_G)
 MAP

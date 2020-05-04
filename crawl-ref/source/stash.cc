@@ -183,7 +183,8 @@ bool Stash::are_items_same(const item_def &a, const item_def &b, bool exact)
 {
     const bool same = a.is_type(b.base_type, b.sub_type)
         // Ignore Gozag's gold flag.
-        && (a.plus == b.plus || a.base_type == OBJ_GOLD && !exact)
+        && (a.plus == b.plus || a.base_type == OBJ_GOLD && !exact
+            || a.base_type == OBJ_RODS && !exact)
         && a.plus2 == b.plus2
         && a.special == b.special
         && a.get_colour() == b.get_colour() // ????????

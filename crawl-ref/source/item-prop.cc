@@ -762,12 +762,6 @@ const set<pair<object_class_type, int> > removed_items =
     { OBJ_RODS,      ROD_WARDING },
     { OBJ_RODS,      ROD_DESTRUCTION },
     { OBJ_RODS,      ROD_SWARM },
-    { OBJ_RODS,      ROD_LIGHTNING },
-    { OBJ_RODS,      ROD_IGNITION },
-    { OBJ_RODS,      ROD_CLOUDS },
-    { OBJ_RODS,      ROD_INACCURACY },
-    { OBJ_RODS,      ROD_SHADOWS },
-    { OBJ_RODS,      ROD_IRON },
     { OBJ_SCROLLS,   SCR_ENCHANT_WEAPON_II },
     { OBJ_SCROLLS,   SCR_ENCHANT_WEAPON_III },
     { OBJ_SCROLLS,   SCR_RECHARGING},
@@ -1094,9 +1088,6 @@ static iflags_t _full_ident_mask(const item_def& item)
     case OBJ_ORBS:
     case OBJ_RUNES:
     case OBJ_GOLD:
-#if TAG_MAJOR_VERSION == 34
-    case OBJ_RODS:
-#endif
         flagset = 0;
         break;
     case OBJ_BOOKS:
@@ -1124,6 +1115,7 @@ static iflags_t _full_ident_mask(const item_def& item)
     case OBJ_MISCELLANY:
         flagset = 0;
         break;
+    case OBJ_RODS:
     case OBJ_WEAPONS:
     case OBJ_ARMOUR:
         // All flags necessary for full identification.
@@ -1518,6 +1510,28 @@ bool check_armour_size(const item_def &item, size_type size)
     ASSERT(item.base_type == OBJ_ARMOUR);
 
     return check_armour_size(static_cast<armour_type>(item.sub_type), size);
+}
+bool item_is_rechargeable(const item_def& it, bool hide_charged, bool divine)
+{
+    if (it.base_type == OBJ_WANDS)
+    {
+        return false;
+    }
+    else if (it.base_type == OBJ_RODS)
+    {
+        if (!hide_charged)
+            return true;
+
+        if (item_ident(it, ISFLAG_KNOW_PLUSES))
+        {
+            return !divine && (it.charge_cap < MAX_ROD_CHARGE * ROD_CHARGE_MULT
+                || it.rod_plus < MAX_WPN_ENCHANT)
+                || it.charges < it.charge_cap;
+        }
+        return true;
+
+    }
+    return false;
 }
 
 int wand_charge_value(int type)
@@ -2811,9 +2825,7 @@ equipment_type get_item_slot(object_class_type type, int sub_type)
     {
     case OBJ_WEAPONS:
     case OBJ_STAVES:
-#if TAG_MAJOR_VERSION == 34
     case OBJ_RODS:
-#endif
     case OBJ_MISCELLANY:
         return EQ_WEAPON;
 

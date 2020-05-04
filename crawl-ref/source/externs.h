@@ -539,6 +539,7 @@ struct item_def
         monster_type mon_type:16;   ///< corpse/chunk monster type
         skill_type skill:16;        ///< the skill provided by a manual
         short charges;              ///< # of charges held by a wand, etc
+                                    // for rods, is charge * ROD_CHARGE_MULT
         short net_durability;       ///< damage dealt to a net
         short tithe_state;          ///< tithe state of a stack of gold
     };
@@ -548,6 +549,7 @@ struct item_def
         short plus2;        ///< legacy/generic name for this union
         short net_placed;   ///< is this throwing net trapping something?
         short skill_points; ///< # of skill points a manual gives
+        short charge_cap;   ///< max charges stored by a rod * ROD_CHARGE_MULT
         short stash_freshness; ///< where stash.cc stores corpse freshness
     };
 #pragma pack(pop)
@@ -556,6 +558,7 @@ struct item_def
         // These must all be the same size!
         int special;            ///< legacy/generic name
         int unrand_idx;         ///< unrandart index (for get_unrand_entry)
+        int rod_plus;           ///< rate at which a rod recharges
         uint32_t subtype_rnd;   ///< appearance of un-ID'd items, by subtype.
                                 /// jewellery, scroll, staff, wand, potions
                                 // see comment in item_colour()

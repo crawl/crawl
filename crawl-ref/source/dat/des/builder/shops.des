@@ -386,9 +386,9 @@ SUBST: G : YlG
 :   "type:Sacrilege suffix:Store", "type:Wicked suffix:Wares"})
 : kfeat("s = general shop " .. shopname .. " ; \
 :   any weapon ego:draining w:15 | any weapon ego:pain | \
-:   any weapon ego:vampirism | any weapon ego:chaos w:1 | demon blade w:5 | \
-:   demon trident w:5 | demon whip w:5 | scroll of torment | staff of death | \
-:   book of necromancy | book of death | book of unlife | \
+:   any weapon ego:vampirism | any weapon ego:chaos w:1 | rod of clouds w:3 | \
+:   demon blade w:5 | demon trident w:5 | demon whip w:5 | scroll of torment | \
+:   staff of death | book of necromancy | book of death | book of unlife | \
 :   randbook disc:necromancy w:5 | necronomicon w:1 | grand grimoire w:1 | \
 :   sceptre_of_torment w:1 | scythe_of_curses w:1 | majin-bo w:1 | \
 :   black_knights_horse_barding w:1 | obsidian_axe w:1 | damnation w:1 | \
@@ -453,7 +453,7 @@ MAP
 ENDMAP
 
 #####################################################
-# Sells conjurations-heavy books, destructive wands, etc.
+# Sells conjurations-heavy books, destructive wands and rods, etc.
 NAME: nicolae_blasting_shop
 DEPTH: D:8-, Depths
 TAGS: no_monster_gen no_item_gen transparent extra
@@ -467,6 +467,7 @@ KFEAT: s = general shop type:Demolitions suffix:Depot ; \
    wand of clouds | wand of scattershot | staff of conjuration | \
    wand of acid | fan of gales | lightning rod | lamp of fire | \
    phial of floods | scroll of immolation | book of flames | book of fire | \
+   rod of ignition | iron rod | \
    book of air | manual of conjurations | manual of evocations
 FTILE: ' = floor_rough_red
 COLOUR: ' = red

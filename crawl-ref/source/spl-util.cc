@@ -412,7 +412,7 @@ bool del_spell_from_memory(spell_type spell)
         return del_spell_from_memory_by_slot(i);
 }
 
-int spell_hunger(spell_type which_spell)
+int spell_hunger(spell_type which_spell, bool rod)
 {
     if (player_energy())
         return 0;
@@ -428,7 +428,13 @@ int spell_hunger(spell_type which_spell)
     else
         hunger = (basehunger[0] * level * level) / 4;
 
-    hunger -= you.skill(SK_SPELLCASTING, you.intel());
+    if (rod)
+    {
+        hunger -= you.skill(SK_EVOCATIONS, 10);
+        hunger = max(hunger, level * 5);
+    }
+    else
+        hunger -= you.skill(SK_SPELLCASTING, you.intel());
 
     if (hunger < 0)
         hunger = 0;
@@ -1377,13 +1383,14 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
  * @param default_colour   Colour to be used if the spell is unremarkable.
  * @param transient       If true, check if spell is temporarily useless.
  * @param memcheck        If true, check if spell can be memorised
+ * @param rod_spell       If the spell being evoked from a rod.
  * @return                The colour to highlight the spell.
  */
 int spell_highlight_by_utility(spell_type spell, int default_colour,
-                               bool transient, bool memcheck)
+                               bool transient, bool memcheck, bool rod_spell)
 {
     // If your god hates the spell, that overrides all other concerns.
-    if (god_hates_spell(spell, you.religion)
+    if (god_hates_spell(spell, you.religion, rod_spell)
         || is_good_god(you.religion) && you.spellcasting_unholy())
     {
         return COL_FORBIDDEN;
@@ -1401,9 +1408,9 @@ int spell_highlight_by_utility(spell_type spell, int default_colour,
     return default_colour;
 }
 
-bool spell_no_hostile_in_range(spell_type spell)
+bool spell_no_hostile_in_range(spell_type spell, bool rod)
 {
-    const int range = calc_spell_range(spell, 0);
+    const int range = calc_spell_range(spell, 0, rod);
     const int minRange = get_dist_to_nearest_monster();
 
     switch (spell)
@@ -1491,7 +1498,7 @@ bool spell_no_hostile_in_range(spell_type spell)
     if (zap != NUM_ZAPS)
     {
         beam.thrower = KILL_YOU_MISSILE;
-        zappy(zap, calc_spell_power(spell, true, false, true), false,
+        zappy(zap, calc_spell_power(spell, true, false, true, rod), false,
               beam);
         if (spell == SPELL_EVAPORATE
             || spell == SPELL_MEPHITIC_CLOUD)

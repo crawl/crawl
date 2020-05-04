@@ -798,7 +798,16 @@ unsigned int item_value(item_def item, bool ident)
     case OBJ_STAVES:
         valued = item_type_known(item) ? 250 : 120;
         break;
+    case OBJ_RODS:
+        if (!item_type_known(item))
+            valued = 120;
+        else
+            valued = 250;
 
+        // Both max charges and enchantment.
+        if (item_ident(item, ISFLAG_KNOW_PLUSES))
+            valued += 50 * (item.charge_cap / ROD_CHARGE_MULT + item.rod_plus);
+        break;
     case OBJ_ORBS:
         valued = 250000;
         break;

@@ -4158,6 +4158,7 @@ void tile_item_use(int idx)
     {
         case OBJ_WEAPONS:
         case OBJ_STAVES:
+        case OBJ_RODS:
         case OBJ_MISCELLANY:
         case OBJ_WANDS:
             // Wield any unwielded item of these types.

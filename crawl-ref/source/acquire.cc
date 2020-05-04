@@ -633,6 +633,17 @@ static int _acquirement_staff_subtype(bool /*divine*/, int & /*quantity*/)
     return result;
 }
 
+static int _acquirement_rod_subtype(bool /*divine*/, int& /*quantity*/)
+{
+    int result;
+    do
+    {
+        result = random2(NUM_RODS);
+    } while (you.get_mutation_level(MUT_NO_LOVE) && result == ROD_SHADOWS
+        || item_type_removed(OBJ_RODS, result));
+    return result;
+}
+
 /**
  * Return a miscellaneous evokable item for acquirement.
  * @return   The item type chosen.
@@ -745,9 +756,7 @@ static const acquirement_subtype_finder _subtype_finders[] =
     _acquirement_misc_subtype,
     0, // no corpses
     0, // gold handled elsewhere, and doesn't have subtypes anyway
-#if TAG_MAJOR_VERSION == 34
-    0, // no rods
-#endif
+    _acquirement_rod_subtype,
     0, // no runes either
 };
 
@@ -767,9 +776,14 @@ static int _find_acquirement_subtype(object_class_type &class_wanted,
 
     do
     {
-        // Wands and misc have a common acquirement class.
+        // Wands, rods, and misc have a common acquirement class.
         if (class_wanted == OBJ_MISCELLANY)
-            class_wanted = random_choose(OBJ_WANDS, OBJ_MISCELLANY);
+        {
+            if (one_chance_in(8) && you.species != SP_FELID)
+                class_wanted = OBJ_RODS;
+            else
+                class_wanted = random_choose(OBJ_WANDS, OBJ_MISCELLANY);
+        }
 
         if (_subtype_finders[class_wanted])
             type_wanted = (*_subtype_finders[class_wanted])(divine, quantity);
@@ -1248,7 +1262,7 @@ int acquirement_create_item(object_class_type class_wanted,
             type_wanted = _useless_armour_type();
         else
         {
-            // This may clobber class_wanted (e.g. staves or vampire food)
+            // This may clobber class_wanted (e.g. staves/rods, or vampire food)
             type_wanted = _find_acquirement_subtype(class_wanted, quant,
                                                     divine, agent);
         }
@@ -1496,6 +1510,7 @@ bool acquirement(object_class_type class_wanted, int agent,
         bad_class.set(OBJ_MISSILES);
         bad_class.set(OBJ_ARMOUR);
         bad_class.set(OBJ_STAVES);
+        bad_class.set(OBJ_RODS);
     }
     if (you.get_mutation_level(MUT_NO_ARTIFICE))
         bad_class.set(OBJ_MISCELLANY);

@@ -912,7 +912,7 @@ SUBST:  d = dde
 FTILE:  ' : floor_limestone
 ORIENT: encompass
 TAGS:   no_item_gen no_monster_gen allow_dup
-ITEM:   any misc
+ITEM:   any misc / any rod w:4
 ITEM:   acquire wand w:15 / any misc w:3 / acquire magical staff w:2
 ITEM:   manual of evocations
 : trove.setup_features(_G)

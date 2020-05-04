@@ -44,12 +44,11 @@ enum object_selector
                                         // known-cursed. Unknown-cursed items
                                         // are included, to prevent information
                                         // leakage.
-#if TAG_MAJOR_VERSION == 34
     OSEL_DIVINE_RECHARGE         = -18,
-#endif
     OSEL_UNCURSED_WORN_RINGS     = -19,
-    OSEL_UNCURSED_WORN_AMULETS = -20,
-    OSEL_BAG = -21
+    OSEL_UNCURSED_WORN_AMULETS = -20, 
+    OSEL_BAG = -21,
+    OSEL_SUPERCHARGE = -22
 };
 
 /// Behaviour flags for prompt_invent_item().

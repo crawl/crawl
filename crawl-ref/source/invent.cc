@@ -268,11 +268,9 @@ void get_class_hotkeys(const int type, vector<char> &glyphs)
     case OBJ_STAVES:
         glyphs.push_back('|');
         break;
-#if TAG_MAJOR_VERSION == 34
     case OBJ_RODS:
         glyphs.push_back('\\');
         break;
-#endif
     case OBJ_MISCELLANY:
         glyphs.push_back('}');
         break;
@@ -480,6 +478,9 @@ string no_selectables_message(int item_selector)
     }
     case OSEL_UNIDENT:
         return "You don't have any unidentified items.";
+    case OSEL_DIVINE_RECHARGE:
+    case OSEL_SUPERCHARGE:
+        return "You aren't carrying any rechargeable items.";
     case OSEL_ENCHANTABLE_ARMOUR:
         return "You aren't carrying any armour which can be enchanted further.";
     case OBJ_CORPSES:
@@ -622,11 +623,7 @@ bool get_tiles_for_item(const item_def &item, vector<tile_def>& tileset, bool sh
         }
     }
     if (item.base_type == OBJ_WEAPONS || item.base_type == OBJ_MISSILES
-        || item.base_type == OBJ_ARMOUR
-#if TAG_MAJOR_VERSION == 34
-        || item.base_type == OBJ_RODS
-#endif
-       )
+        || item.base_type == OBJ_ARMOUR || item.base_type == OBJ_RODS)
     {
         tileidx_t brand = tileidx_known_brand(item);
         if (brand)
@@ -840,9 +837,7 @@ FixedVector<int, NUM_OBJECT_CLASSES> inv_order(
     OBJ_MISSILES,
     OBJ_ARMOUR,
     OBJ_STAVES,
-#if TAG_MAJOR_VERSION == 34
     OBJ_RODS,
-#endif
     OBJ_JEWELLERY,
     OBJ_WANDS,
     OBJ_SCROLLS,
@@ -1037,9 +1032,7 @@ const char *item_class_name(int type, bool terse)
         case OBJ_POTIONS:    return "Potions";
         case OBJ_BOOKS:      return "Books";
         case OBJ_STAVES:     return "Magical Staves";
-#if TAG_MAJOR_VERSION == 34
         case OBJ_RODS:       return "Rods";
-#endif
         case OBJ_ORBS:       return "Orbs of Power";
         case OBJ_MISCELLANY: return "Miscellaneous";
         case OBJ_CORPSES:    return "Carrion";
@@ -1139,6 +1132,10 @@ bool item_is_selected(const item_def &i, int selector)
                || (itype == OBJ_BOOKS && i.sub_type != BOOK_MANUAL)
              || (itype == OBJ_MISCELLANY && i.sub_type == MISC_BAG);
 
+    case OSEL_DIVINE_RECHARGE:
+    case OSEL_SUPERCHARGE:
+        return item_is_rechargeable(i, selector != OSEL_SUPERCHARGE,
+            selector == OSEL_DIVINE_RECHARGE);
     case OSEL_EVOKABLE:
         return item_is_evokable(i, true, true);
 
@@ -2113,7 +2110,7 @@ bool prompt_failed(int retval)
 // wielded to be used normally.
 bool item_is_wieldable(const item_def &item)
 {
-    return is_weapon(item) && you.species != SP_FELID;
+    return (is_weapon(item) || item.base_type == OBJ_RODS) && you.species != SP_FELID;
 }
 
 /// Does the item only serve to produce summons or allies?
@@ -2227,7 +2224,14 @@ bool item_is_evokable(const item_def &item, bool unskilled, bool known,
         if (msg)
             mpr("That item cannot be evoked!");
         return false;
-
+    case OBJ_RODS:
+        if (!wielded)
+        {
+            if (msg)
+                mpr(error);
+            return false;
+        }
+        return true;
     case OBJ_STAVES:
         if (known && !item_type_known(item)
             || item.sub_type == STAFF_ENERGY

@@ -515,7 +515,6 @@ enum stave_type
     NUM_STAVES,
 };
 
-#if TAG_MAJOR_VERSION == 34
 enum rod_type
 {
     ROD_LIGHTNING,
@@ -530,7 +529,6 @@ enum rod_type
     ROD_VENOM,
     NUM_RODS,
 };
-#endif
 
 enum weapon_type
 {

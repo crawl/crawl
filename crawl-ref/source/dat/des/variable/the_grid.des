@@ -1681,8 +1681,8 @@ MONS:   wizard / ogre mage / orc sorcerer w:5 / deep elf mage w:5
 MONS:   deep elf mage / orc sorcerer / kobold demonologist w:5
 MONS:   deep elf sorcerer / deep elf annihilator / lich / ancient lich w:5
 ITEM:   any wand / any jewellery / any book / any magical staff
-ITEM:   any randart jewellery / any misc / any weapon good_item w:5 / \
-        any armour good_item w:5
+ITEM:   any randart jewellery / any rod / any misc / \
+        any weapon good_item w:5 / any armour good_item w:5
 : if you.absdepth() < 8 then
 NSUBST: d = 1:d / *:.
 : elseif you.absdepth() < 14 then
@@ -1747,7 +1747,7 @@ ENDMAP
 NAME:   minmay_the_grid_artifice
 TAGS:   the_grid unrand
 DEPTH:  Depths
-ITEM:   any misc
+ITEM:   any rod
 MONS:   crystal guardian
 NSUBST: 1 = 2:1 / 4 = 1. / *:.
 MAP

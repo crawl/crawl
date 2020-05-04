@@ -2330,7 +2330,7 @@ spret cast_thunderbolt(actor *caster, int pow, coord_def aim, bool fail)
     fail_check();
 
     const int juice
-        = (spell_mana(SPELL_THUNDERBOLT) + charges) * LIGHTNING_CHARGE_MULT;
+        = (spell_mana(SPELL_THUNDERBOLT) + charges) * ROD_CHARGE_MULT;
 
     dprf("juice: %d", juice);
 
@@ -2377,7 +2377,7 @@ spret cast_thunderbolt(actor *caster, int pow, coord_def aim, bool fail)
         beam.source = beam.target = entry.first;
         beam.source.x -= sgn(beam.source.x - hitfunc.origin.x);
         beam.source.y -= sgn(beam.source.y - hitfunc.origin.y);
-        beam.damage = dice_def(div_rand_round(juice, LIGHTNING_CHARGE_MULT),
+        beam.damage = dice_def(div_rand_round(juice, ROD_CHARGE_MULT),
                                div_rand_round(30 + pow / 6, arc + 2));
         beam.fire();
     }

@@ -2103,6 +2103,13 @@ static int _place_item_in_free_slot(item_def &it, int quant_got,
         set_ident_flags(item, ISFLAG_KNOW_PLUSES);
     }
 
+    if (item.base_type == OBJ_RODS)
+    {
+        set_ident_type(item, true);
+        set_ident_flags(item, ISFLAG_KNOW_TYPE);
+        set_ident_flags(item, ISFLAG_KNOW_PLUSES);
+    }
+
     maybe_identify_base_type(item);
     if (item.base_type == OBJ_BOOKS)
         set_ident_flags(item, ISFLAG_IDENT_MASK);
@@ -2955,9 +2962,7 @@ static int _autopickup_subtype(const item_def &item)
             return item.sub_type;
         else
             return max_type;
-#if TAG_MAJOR_VERSION == 34
     case OBJ_RODS:
-#endif
     case OBJ_GOLD:
     case OBJ_RUNES:
         return max_type;
@@ -3218,6 +3223,11 @@ static bool _interesting_explore_pickup(const item_def& item)
         // Interesting if we don't have any other edible food.
         return _item_different_than_inv(item, _edible_food);
 
+    case OBJ_RODS:
+        // Rods are always interesting, even if you already have one of
+        // the same type, since each rod has its own mana.
+        return true;
+
     case OBJ_MISCELLANY:
     case OBJ_SCROLLS:
     case OBJ_POTIONS:
@@ -3384,9 +3394,7 @@ int get_max_subtype(object_class_type base_type)
         NUM_MISCELLANY,
         -1,              // corpses     -- handled specially
         1,              // gold         -- handled specially
-#if TAG_MAJOR_VERSION == 34
         NUM_RODS,
-#endif
         NUM_RUNE_TYPES,
     };
     COMPILE_CHECK(ARRAYSZ(max_subtype) == NUM_OBJECT_CLASSES);
@@ -3426,7 +3434,8 @@ bool item_is_melded(const item_def& item)
 
 bool item_def::has_spells() const
 {
-    return item_is_spellbook(*this) && item_type_known(*this);
+    return (item_is_spellbook(*this) || base_type == OBJ_RODS)
+        && item_type_known(*this);
 }
 
 bool item_def::cursed() const
@@ -4076,10 +4085,8 @@ colour_t item_def::get_colour() const
             return LIGHTGREY;
         case OBJ_BOOKS:
             return book_colour();
-#if TAG_MAJOR_VERSION == 34
         case OBJ_RODS:
             return YELLOW;
-#endif
         case OBJ_STAVES:
             return BROWN;
         case OBJ_ORBS:
@@ -4111,10 +4118,7 @@ bool item_type_has_unidentified(object_class_type base_type)
         || base_type == OBJ_BOOKS
         || base_type == OBJ_STAVES
         || base_type == OBJ_MISCELLANY
-#if TAG_MAJOR_VERSION == 34
-        || base_type == OBJ_RODS
-#endif
-        ;
+        || base_type == OBJ_RODS;
 }
 
 // Checks whether the item is actually a good one.
@@ -4458,7 +4462,11 @@ bool get_item_by_name(item_def *item, const char* specs,
     case OBJ_WANDS:
         item->plus = wand_charge_value(item->sub_type);
         break;
-
+    case OBJ_RODS:
+        item->charges = MAX_ROD_CHARGE * ROD_CHARGE_MULT;
+        item->charge_cap = MAX_ROD_CHARGE * ROD_CHARGE_MULT;
+        init_rod_mp(*item);
+        break;
     case OBJ_POTIONS:
         item->quantity = 12;
         if (is_blood_potion(*item))
@@ -4687,11 +4695,20 @@ item_info get_item_info(const item_def& item)
         if (item.sub_type == BOOK_MANUAL && item_type_known(item))
             ii.skill = item.skill; // manual skill
         break;
-#if TAG_MAJOR_VERSION == 34
     case OBJ_RODS:
-        ii.sub_type = NUM_RODS;
+        if (item_type_known(item))
+        {
+            ii.sub_type = item.sub_type;
+            if (item_ident(ii, ISFLAG_KNOW_PLUSES))
+            {
+                ii.rod_plus = item.rod_plus;
+                ii.charges = item.charges;
+                ii.charge_cap = item.charge_cap;
+            }
+        }
+        else
+            ii.sub_type = NUM_RODS;
         break;
-#endif
     case OBJ_STAVES:
         ii.sub_type = item_type_known(item) ? item.sub_type : int{NUM_STAVES};
         ii.subtype_rnd = item.subtype_rnd;
@@ -4770,7 +4787,7 @@ int runes_in_pack()
 object_class_type get_random_item_mimic_type()
 {
    return random_choose(OBJ_GOLD, OBJ_WEAPONS, OBJ_ARMOUR, OBJ_SCROLLS,
-                        OBJ_POTIONS, OBJ_BOOKS, OBJ_STAVES, OBJ_FOOD,
+                        OBJ_POTIONS, OBJ_BOOKS, OBJ_STAVES, OBJ_RODS, OBJ_FOOD,
                         OBJ_MISCELLANY, OBJ_JEWELLERY);
 }
 

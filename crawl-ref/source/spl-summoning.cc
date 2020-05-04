@@ -1555,6 +1555,7 @@ static void _equip_undead(const coord_def &a, const item_def& corpse, monster *m
         // Stupid undead can't use most items.
         if (si->base_type != OBJ_WEAPONS
             && si->base_type != OBJ_STAVES
+            && si->base_type != OBJ_RODS
             && si->base_type != OBJ_ARMOUR
             || is_range_weapon(*si))
         {
@@ -3339,6 +3340,8 @@ static const map<spell_type, summon_cap> summonsdata =
     { SPELL_SUMMON_EXECUTIONERS,        { 3, 1 } },
     { SPELL_AWAKEN_EARTH,               { 9, 2 } },
     { SPELL_GREATER_SERVANT_MAKHLEB,    { 1, 2 } },
+    // Rod specials
+    { SPELL_WEAVE_SHADOWS,              { 4, 2 } },
 };
 
 bool summons_are_capped(spell_type spell)
@@ -3356,6 +3359,7 @@ int summons_limit(spell_type spell)
 static bool _spell_has_variable_cap(spell_type spell)
 {
     return spell == SPELL_SHADOW_CREATURES
+           || spell == SPELL_WEAVE_SHADOWS
            || spell == SPELL_MONSTROUS_MENAGERIE;
 }
 

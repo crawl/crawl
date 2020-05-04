@@ -8,6 +8,7 @@
 void update_level(int elapsedTime);
 monster* update_monster(monster& mon, int turns);
 void handle_time();
+void recharge_rods(int aut, bool floor_only);
 
 void timeout_tombs(int duration);
 

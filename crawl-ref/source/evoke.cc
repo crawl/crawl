@@ -1781,6 +1781,86 @@ static spret _open_bag(int slot)
     return spret::abort;
 }
 
+static bool _rod_spell(item_def& irod, bool check_range)
+{
+    ASSERT(irod.base_type == OBJ_RODS);
+
+    const spell_type spell = spell_in_rod(static_cast<rod_type>(irod.sub_type));
+    int mana = spell_mana(spell) * ROD_CHARGE_MULT;
+    int power = calc_spell_power(spell, false, false, true, 1, true);
+
+    int food = spell_hunger(spell, true);
+
+    if (you.undead_state() == US_UNDEAD)
+        food = 0;
+
+    if (food && (you.hunger_state <= HS_STARVING || you.hunger <= food)
+        && !you.undead_state())
+    {
+        canned_msg(MSG_NO_ENERGY);
+        crawl_state.zero_turns_taken();
+        return false;
+    }
+
+    if (spell == SPELL_THUNDERBOLT && you.props.exists("thunderbolt_last")
+        && you.props["thunderbolt_last"].get_int() + 1 == you.num_turns)
+    {
+        // Starting it up takes 2 mana, continuing any amount up to 5.
+        // You don't get to expend less (other than stopping the zap completely).
+        mana = min(5 * ROD_CHARGE_MULT, (int)irod.plus);
+        // Never allow using less than a whole point of charge.
+        mana = max(mana, ROD_CHARGE_MULT);
+        you.props["thunderbolt_mana"].get_int() = mana;
+    }
+
+    if (irod.plus < mana)
+    {
+        mpr("The rod doesn't have enough magic points.");
+        crawl_state.zero_turns_taken();
+        // Don't lose a turn for trying to evoke without enough MP - that's
+        // needlessly cruel for an honest error.
+        return false;
+    }
+
+    if (check_range && spell_no_hostile_in_range(spell, true))
+    {
+        // Abort if there are no hostiles within range, but flash the range
+        // markers for a short while.
+        mpr("You can't see any susceptible monsters within range! "
+            "(Use <w>V</w> to cast anyway.)");
+
+        if ((Options.use_animations & UA_RANGE) && Options.darken_beyond_range)
+        {
+            targeter_smite range(&you, calc_spell_range(spell, 0, true), 0, 0, true);
+            range_view_annotator show_range(&range);
+            delay(50);
+        }
+        crawl_state.zero_turns_taken();
+        return false;
+    }
+
+    // All checks passed, we can cast the spell.
+    const spret ret = your_spells(spell, power, false, &irod);
+
+    if (ret == spret::abort)
+    {
+        crawl_state.zero_turns_taken();
+        return false;
+    }
+
+    make_hungry(food, true, true);
+    if (ret == spret::success)
+    {
+        irod.plus -= mana;
+        you.wield_change = true;
+        if (item_is_quivered(irod))
+            you.redraw_quiver = true;
+    }
+    you.turn_is_over = true;
+
+    return true;
+}
+
 bool evoke_check(int slot, bool quiet)
 {
     const bool reaching = slot != -1 && slot == you.equip[EQ_WEAPON]
@@ -1802,6 +1882,7 @@ bool evoke_check(int slot, bool quiet)
 
 bool evoke_item(int slot)
 {
+    bool check_range = (slot != -1);
     if (!evoke_check(slot))
         return false;
 
@@ -1871,6 +1952,30 @@ bool evoke_item(int slot)
         }
         else
             unevokable = true;
+        break;
+
+    case OBJ_RODS:
+        ASSERT(wielded);
+
+        if (you.confused())
+        {
+            canned_msg(MSG_TOO_CONFUSED);
+            return false;
+        }
+
+        if (player_under_penance(GOD_PAKELLAS))
+        {
+            simple_god_message("'s wrath prevents you from evoking devices!",
+                GOD_PAKELLAS);
+            return false;
+        }
+
+        if (!_rod_spell(you.inv[slot], check_range))
+            return false;
+
+        did_work = true;  // _rod_spell() handled messages
+        practise_evoking(1);
+        count_action(CACT_EVOKE, EVOC_ROD);
         break;
 
     case OBJ_STAVES:

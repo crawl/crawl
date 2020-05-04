@@ -535,6 +535,10 @@ inedible chunk of flesh
 
 <chunk of flesh>
 %%%%
+iron rod
+
+A rod that allows its wielder to fire powerful blasts of metallic shrapnel.
+%%%%
 javelin
 
 A lightweight spear, designed for throwing. It will pass through the targets it
@@ -900,6 +904,24 @@ robe
 A large, loose-fitting, wide-sleeved outer garment made of light cloth. It
 offers little protection against physical harm, but does not hinder evasion or
 spellcasting.
+%%%%
+rod of clouds
+
+A rod that allows its wielder to blast a cone-shaped area in front of them with
+various destructive clouds, their lethality increasing with Evocations skill.
+%%%%
+rod of ignition
+
+A rod that allows its wielder to launch a fiery bolt of explosive energy.
+%%%%
+rod of inaccuracy
+
+A rod that allows its wielder to fire a powerful but extremely inaccurate bolt
+of power.
+%%%%
+rod of shadows
+
+A rod that weaves creatures from shadows and ethereal matter.
 %%%%
 rune of zot
 

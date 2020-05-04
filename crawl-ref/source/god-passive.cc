@@ -804,8 +804,11 @@ bool god_id_item(item_def& item, bool silent)
             item.props["needs_autopickup"] = true;
         }
 
-        if (is_weapon(item) || item.base_type == OBJ_ARMOUR)
+        if (is_weapon(item) || item.base_type == OBJ_RODS
+            || item.base_type == OBJ_ARMOUR)
+        {
             ided |= ISFLAG_KNOW_PROPERTIES | ISFLAG_KNOW_TYPE;
+        }
 
         if (item.base_type == OBJ_JEWELLERY)
             ided |= ISFLAG_IDENT_MASK;

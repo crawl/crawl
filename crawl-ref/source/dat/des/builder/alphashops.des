@@ -1,7 +1,7 @@
 # A shop (or perhaps really a series of shops) that sells items whose names all
 # start with the same letter.
-# Any initial class description (amulet, book, manual, potion, ring, scroll,
-# staff, wand) or unit of measurement (slice, pair) is ignored when
+# Any initial class description (amulet, book, manual, potion, ring, rod,
+# scroll, staff, wand) or unit of measurement (slice, pair) is ignored when
 # alphabetizing item names of the form "X of (the) Y". This way the shops have
 # more variety between them.
 # Various items, such as carrion, hides, skins, blessed weapons, and zigfigs

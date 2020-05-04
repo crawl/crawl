@@ -62,6 +62,7 @@ enum item_base_type
     ITEM_ARMOUR,
     ITEM_JEWELLERY,
     ITEM_MISCELLANY,
+    ITEM_RODS,
     ITEM_BOOKS,
     ITEM_ARTEBOOKS,
     ITEM_MANUALS,
@@ -152,6 +153,10 @@ static const vector<string> item_fields[NUM_ITEM_BASE_TYPES] = {
     },
     { // ITEM_MISCELLANY
         "Num", "NumMin", "NumMax", "NumSD", "MiscPlus"
+    },
+    { // ITEM_RODS
+        "Num", "NumMin", "NumMax", "NumSD", "NumHeldMons",
+        "RodMana", "RodRecharge", "NumCursed"
     },
     { // ITEM_BOOKS
         "Num", "NumMin", "NumMax", "NumSD"
@@ -244,6 +249,9 @@ static item_base_type _item_base_type(const item_def &item)
     case OBJ_JEWELLERY:
         type = ITEM_JEWELLERY;
         break;
+    case OBJ_RODS:
+        type = ITEM_RODS;
+        break;
     default:
         type = ITEM_IGNORE;
         break;
@@ -288,6 +296,9 @@ static object_class_type _item_orig_base_type(item_base_type base_type)
         break;
     case ITEM_MISCELLANY:
         type = OBJ_MISCELLANY;
+        break;
+    case ITEM_RODS:
+        type = OBJ_RODS;
         break;
     case ITEM_ARTEBOOKS:
     case ITEM_MANUALS:
@@ -588,6 +599,7 @@ static bool _item_track_curse(item_base_type base_type)
     case ITEM_STAVES:
     case ITEM_ARMOUR:
     case ITEM_JEWELLERY:
+    case ITEM_RODS:
         return true;
     default:
         return false;
@@ -635,6 +647,7 @@ static bool _item_track_monster(item_base_type base_type)
     case ITEM_ARMOUR:
     case ITEM_MISSILES:
     case ITEM_JEWELLERY:
+    case ITEM_RODS:
         return true;
     default:
         return false;
@@ -690,6 +703,11 @@ void objstat_record_item(const item_def &item)
         break;
     case ITEM_WANDS:
         all_plus_f = "WandCharges";
+        break;
+    case ITEM_RODS:
+        _record_item_stat(cur_lev, itype, "RodMana",
+            item.charge_cap / ROD_CHARGE_MULT);
+        _record_item_stat(cur_lev, itype, "RodRecharge", item.rod_plus);
         break;
     case ITEM_MISCELLANY:
         all_plus_f = "MiscPlus";
@@ -946,6 +964,8 @@ static void _write_stat(map<string, double> &stats, string field)
     if (field == "PileQuant")
         value = stats["Num"] / stats["NumPiles"];
     else if (field == "WandCharges"
+             || field == "RodMana"
+             || field == "RodRecharge"
              || field == "MiscPlus"
              || field == "MonsHD"
              || field == "MonsHP"

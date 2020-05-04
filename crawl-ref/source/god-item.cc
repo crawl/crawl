@@ -29,19 +29,21 @@
 #include "spl-book.h"
 #include "spl-util.h"
 
-static bool _is_book_type(const item_def& item,
-                          bool (*matches)(spell_type spell))
+static bool _is_bookrod_type(const item_def& item, bool (*matches)(spell_type spell))
 {
     if (!item.defined())
         return false;
 
     // Return false for item_infos of unknown subtype
-    // (== NUM_BOOKS in most cases, OBJ_RANDOM for acquirement)
+    // (== NUM_{BOOKS,RODS} in most cases, OBJ_RANDOM for acquirement)
     if (item.sub_type == get_max_subtype(item.base_type)
         || item.sub_type == OBJ_RANDOM)
     {
         return false;
     }
+
+    if (item.base_type == OBJ_RODS)
+        return matches(spell_in_rod(static_cast<rod_type>(item.sub_type)));
 
     if (!item_is_spellbook(item))
         return false;
@@ -168,8 +170,9 @@ bool is_evil_item(const item_def& item, bool calc_unid)
         return item.sub_type == SCR_TORMENT;
     case OBJ_STAVES:
         return item.sub_type == STAFF_DEATH;
-    case OBJ_BOOKS:
-        return _is_book_type(item, is_evil_spell);
+    case OBJ_BOOKS: 
+    case OBJ_RODS:
+        return _is_bookrod_type(item, is_evil_spell);
     case OBJ_MISCELLANY:
         return item.sub_type == MISC_HORN_OF_GERYON;
     default:
@@ -188,7 +191,7 @@ bool is_unclean_item(const item_def& item, bool calc_unid)
     }
 
     if (item.has_spells() && (item_type_known(item) || calc_unid))
-        return _is_book_type(item, is_unclean_spell);
+        return _is_bookrod_type(item, is_unclean_spell);
 
     return false;
 }
@@ -232,7 +235,8 @@ bool is_chaotic_item(const item_def& item, bool calc_unid)
                     || item.sub_type == POT_UNSTABLE_MUTATION;
         break;
     case OBJ_BOOKS:
-        retval = _is_book_type(item, is_chaotic_spell);
+    case OBJ_RODS:
+        retval = _is_bookrod_type(item, is_chaotic_spell);
         break;
     case OBJ_MISCELLANY:
         retval = (item.sub_type == MISC_BOX_OF_BEASTS);
@@ -307,7 +311,8 @@ bool is_hasty_item(const item_def& item, bool calc_unid)
                   || item.sub_type == POT_BERSERK_RAGE);
         break;
     case OBJ_BOOKS:
-        retval = _is_book_type(item, is_hasty_spell);
+    case OBJ_RODS:
+        retval = _is_bookrod_type(item, is_hasty_spell);
         break;
     default:
         break;

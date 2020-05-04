@@ -166,13 +166,17 @@ wall_camoflage WALL_CAMOFLAGE
 # item-based spells
 %sdir gui/spells/misc
 paralyse PARALYSE
+bolt_inacc BOLT_OF_INACCURACY
 bolt_thunder THUNDERBOLT
+bolt_explosive EXPLOSIVE_BOLT
 cloud_cone CLOUD_CONE
 bolt_random RANDOM_BOLT
 scattershot SCATTERSHOT
 bolt_corrosive CORROSIVE_BOLT
 iceblast ICEBLAST
 bolt_energy ENERGY_BOLT
+%sdir gui/spells/summoning
+summon_shadow_creatures WEAVE_SHADOWS
 
 # spells normally only used by monsters
 %back gui/spells/bg
