@@ -7164,9 +7164,17 @@ bool player::has_usable_offhand() const
         return false;
     if (shield())
         return false;
-
+   
     const item_def* wp = slot_item(EQ_WEAPON);
-    return !wp || hands_reqd(*wp) != HANDS_TWO;
+
+    if (you.species == SP_TWO_HEADED_OGRE) {
+        const item_def* scwp = slot_item(EQ_SECOND_WEAPON);
+        return !wp || !scwp;
+    }
+    else {
+        return !wp || hands_reqd(*wp) != HANDS_TWO;
+    }
+
 }
 
 bool player::has_usable_tentacle() const
