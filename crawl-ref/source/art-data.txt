@@ -270,7 +270,7 @@ TILE:    spwpn_sceptre_of_torment
 TILE_EQ: sceptre_of_torment
 BRAND:   SPWPN_PAIN
 VALUE:   1200
-BOOL:    special, evil
+BOOL:    evil
 
 NAME:    sword of Zonguldrok
 OBJ:     OBJ_WEAPONS/WPN_DOUBLE_SWORD
