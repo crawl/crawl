@@ -5985,3 +5985,101 @@ spret wu_jian_wall_jump_ability()
     apply_barbs_damage();
     return spret::success;
 }
+
+void angel_good_god_help(bool closed_enemy) {
+    if (you.species != SP_ANGEL) {
+        return;
+    }
+
+    if(closed_enemy == false) {
+        return;
+    }
+    
+    int pow = 50; //FIXME ?
+
+    simple_god_message(" helped your crusade.");
+
+    switch (you.religion) {
+    case GOD_ELYVILON:
+        switch (random2(7)) {
+        case 0:
+        case 1:
+        case 2:
+        case 3:
+            pow /= 2;
+            elyvilon_purification();
+            //fail throught
+        case 4:
+        case 5:
+        {
+            pow = 3 + you.skill_rdiv(SK_INVOCATIONS, 1, 6);
+            if (you.species == SP_DJINNI)
+            {
+                pow /= 2;
+            }
+            const int healed = pow + roll_dice(2, pow) - 2;
+            mpr("You are healed.");
+            inc_hp(healed);
+        }
+            break;
+        case 6:
+            elyvilon_divine_vigour();
+            break;
+        }
+        break;
+    case GOD_SHINING_ONE:
+        switch (random2(7)) {
+        case 0:
+        case 1:
+        case 2:
+        case 3:
+            tso_divine_shield();
+            break;
+        case 4:
+        case 5:
+        {
+            targeter_radius hitfunc(&you, LOS_SOLID, 2);
+            cleansing_flame(10, cleansing_flame_source::invocation, you.pos(), &you);
+            break;
+        }
+        case 6:
+            summon_holy_warrior(5, false);
+            break;
+        }
+        break;
+    case GOD_ZIN:
+        switch (random2(7)) {
+        case 0:
+        case 1:
+        case 2:
+        case 3:
+            zin_vitalisation();
+            break;
+        case 4:
+        case 5:
+            for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
+            {
+                if (mons_immune_magic(**mi)
+                    || mons_is_firewood(**mi))
+                {
+                    continue;
+                }
+                int res_margin = mi->check_res_magic(pow);
+                if (res_margin > 0)
+                {
+                    simple_monster_message(**mi,
+                        mi->resist_margin_phrase(res_margin).c_str());
+                    continue;
+                }
+                mi->confuse(&you, 5 + random2(3));
+            }
+            break;
+        case 6:
+            zin_sanctuary();
+            break;
+        }
+        break;
+    default:
+        break;
+    }
+}

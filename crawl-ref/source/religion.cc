@@ -4057,6 +4057,15 @@ static void _handle_angel_time()
             const bool succ = divine_retribution(*random_iterator(angry_gods));
             ASSERT(succ);
             you.attribute[ATTR_GOD_WRATH_COUNT] = 0;
+
+            //Monster Checked
+            vector<monster* > monsters = get_nearby_monsters();
+
+            vector<monster* > visible;
+            copy_if(monsters.begin(), monsters.end(), back_inserter(visible),
+                [](const monster* mon) { return mon->visible_to(&you); });
+
+            angel_good_god_help(visible.size() >= 1);
         }
         you.attribute[ATTR_GOD_WRATH_COUNT]--;
         you.attribute[ATTR_GOD_WRATH_COUNT] /= 2;
