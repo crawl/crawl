@@ -873,9 +873,13 @@ int player::wearing(equipment_type slot, int sub_type, bool calc_unid) const
     switch (slot)
     {
     case EQ_WEAPON:
-    case EQ_SECOND_WEAPON:
         // Hands can have more than just weapons.
         if (weapon() && weapon()->is_type(OBJ_WEAPONS, sub_type))
+            ret++;
+        break;
+    case EQ_SECOND_WEAPON:
+        // Hands can have more than just weapons.
+        if (second_weapon() && second_weapon()->is_type(OBJ_WEAPONS, sub_type))
             ret++;
         break;
 
@@ -884,6 +888,12 @@ int player::wearing(equipment_type slot, int sub_type, bool calc_unid) const
         if (weapon()
             && weapon()->is_type(OBJ_STAVES, sub_type)
             && (calc_unid || item_type_known(*weapon())))
+        {
+            ret++;
+        }
+        if (second_weapon()
+            && second_weapon()->is_type(OBJ_STAVES, sub_type)
+            && (calc_unid || item_type_known(*second_weapon())))
         {
             ret++;
         }
@@ -4118,8 +4128,8 @@ int get_real_mp(bool include_items)
         enp +=  9 * you.wearing(EQ_RINGS, RING_MAGICAL_POWER);
         enp +=      you.scan_artefacts(ARTP_MAGICAL_POWER);
 
-        if (you.wearing(EQ_STAFF, STAFF_POWER))
-            enp += 15;
+        if (int power_ = you.wearing(EQ_STAFF, STAFF_POWER))
+            enp += 15 * power_;
     }
 
     if (include_items && (you.wearing_ego(EQ_WEAPON, SPWPN_ANTIMAGIC) || you.wearing_ego(EQ_SECOND_WEAPON, SPWPN_ANTIMAGIC)))

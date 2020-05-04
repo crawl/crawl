@@ -2198,7 +2198,7 @@ bool item_is_evokable(const item_def &item, bool unskilled, bool known,
         return false;
     }
 
-    const bool wielded = !equip || you.equip[EQ_WEAPON] == item.link
+    const bool wielded = !equip || (you.equip[EQ_WEAPON] == item.link || you.equip[EQ_SECOND_WEAPON] == item.link)
                                    && !item_is_melded(item);
 
     switch (item.base_type)

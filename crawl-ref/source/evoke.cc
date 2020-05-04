@@ -1863,9 +1863,12 @@ static bool _rod_spell(item_def& irod, bool check_range)
 
 bool evoke_check(int slot, bool quiet)
 {
-    const bool reaching = slot != -1 && slot == you.equip[EQ_WEAPON]
+    const bool reaching = slot != -1 && ((slot == you.equip[EQ_WEAPON]
                           && !you.melded[EQ_WEAPON]
-                          && weapon_reach(*you.weapon()) > REACH_NONE;
+                          && weapon_reach(*you.weapon()) > REACH_NONE)
+                    || (slot == you.equip[EQ_SECOND_WEAPON]
+                        && !you.melded[EQ_SECOND_WEAPON]
+                        && weapon_reach(*you.second_weapon()) > REACH_NONE));
     if (is_able_into_wall())
     {
         mpr("In this state, you cannot do this");
@@ -1901,7 +1904,7 @@ bool evoke_item(int slot)
     ASSERT(slot >= 0);
 
 #ifdef ASSERTS // Used only by an assert
-    const bool wielded = (you.equip[EQ_WEAPON] == slot);
+    const bool wielded = (you.equip[EQ_WEAPON] == slot) || (you.equip[EQ_SECOND_WEAPON] == slot);
 #endif /* DEBUG */
 
     item_def& item = you.inv[slot];
@@ -2223,4 +2226,22 @@ bool evoke_item(int slot)
         crawl_state.zero_turns_taken();
 
     return did_work;
+}
+
+bool evoke_auto_item() 
+{
+    int weapon_slot_ = you.equip[EQ_WEAPON];
+    int second_weapon_slot_ = you.equip[EQ_SECOND_WEAPON];
+    // Also handles messages.
+    if (weapon_slot_ != -1 && item_is_evokable(you.inv[weapon_slot_], true, false, false))
+    {
+        return evoke_item(you.equip[EQ_WEAPON]);
+    }
+    else if (second_weapon_slot_ != -1 && item_is_evokable(you.inv[second_weapon_slot_], true, false, false))
+    {
+        return evoke_item(you.equip[EQ_SECOND_WEAPON]);
+    }
+    else {
+        return evoke_item(you.equip[EQ_WEAPON]);
+    }
 }
