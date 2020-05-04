@@ -1654,6 +1654,13 @@ up into the air and tossed around. Only the eye of the storm is a safe place,
 and it follows the caster. After the vortex fades, it cannot be called forth
 again for a short time.
 %%%%
+Wall Camouflage spell
+
+Melts into the wall in a magical way. You can move on the surface of the wall
+for a short time using this magic.While melting into the wall, it becomes 
+possible to approach an enemy sleeping silently. But it's not visually hidden,
+so it's meaningless for an awake enemy.
+%%%%
 Wall of Brambles spell
 
 Causes brambles to rapidly grow nearby. They have almost no structural

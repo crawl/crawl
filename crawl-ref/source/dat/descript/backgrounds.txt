@@ -87,6 +87,11 @@ Skald
 Skalds are melee fighters who can boost themselves in battle with spells from
 the Charms school.
 %%%%
+Stalker
+
+Stalkers are assassins who have studied Transmutations magic, using alchemical
+effects and transformations as a means to kill their victims.
+%%%%
 Summoner
 
 Summoners are able to cast Summon Small Mammal from the start, and begin with
