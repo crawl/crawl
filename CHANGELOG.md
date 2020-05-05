@@ -99,6 +99,9 @@
   
 - 이제 던전 5층이 되기전까진 구덩이 함정이 등장하지않음
   - Shaft traps will not spawn before D:5
+  
+- 트로그의 분노는 이제 처형도끼 베이스에 +rage임. 또한 안티매직 오라를 가짐
+  - Wrath of Trog is now executioner axe with +rage. also has antimagic aura
 
 - 저주받은 해골 타일 변경 (kormed)
   - A new curse skull tile (kormed)
