@@ -43,6 +43,7 @@ void packed_cell::clear()
     heat_aura        = 0;
     leap_point       = 0;
     coward_point     = 0;
+    antimagic_aura   = 0;
 }
 
 bool packed_cell::operator ==(const packed_cell &other) const
@@ -68,6 +69,7 @@ bool packed_cell::operator ==(const packed_cell &other) const
     if (heat_aura != other.heat_aura) return false;
     if (leap_point != other.leap_point) return false;
     if (coward_point != other.coward_point) return false;
+    if (antimagic_aura != other.antimagic_aura) return false;
 
     if (num_dngn_overlay != other.num_dngn_overlay) return false;
     for (int i = 0; i < num_dngn_overlay; ++i)

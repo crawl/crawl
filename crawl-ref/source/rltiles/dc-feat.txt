@@ -690,6 +690,7 @@ mold_glowing4
 effect/silenced SILENCED
 effect/leapattack LEAP_ATTACK
 effect/cowardattack COWARD_ATTACK
+effect/antimagic ANTIMAGIC_AURA
 %shrink 0
 %sdir mon/tentacles/kraken_corners
 kraken_corner_NW KRAKEN_OVERLAY_NW

@@ -680,6 +680,8 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
                         this.draw_dngn(dngn.LEAP_ATTACK, x, y);
                     if (cell.coward_point)
                         this.draw_dngn(dngn.COWARD_ATTACK, x, y);
+                    if (cell.antimagic_aura)
+                        this.draw_dngn(dngn.ANTIMAGIC_AURA, x, y);
                     if (cell.silenced)
                         this.draw_dngn(dngn.SILENCED, x, y);
                     if (cell.halo == enums.HALO_RANGE)

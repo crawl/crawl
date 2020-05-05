@@ -640,7 +640,13 @@ void init_element_colours()
         { {60,  LIGHTRED},
           {60,  LIGHTMAGENTA},
         }));
-    
+
+    add_element_colour(new random_element_colour_calc(
+        ETC_ANTIMAGIC, "antimagic",
+        { {60,  LIGHTGREEN},
+          {60,  LIGHTBLUE},
+        }));
+
     // redefined by Lua later
     add_element_colour(new element_colour_calc(
                             ETC_DISCO, "disco", _etc_random

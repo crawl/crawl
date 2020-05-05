@@ -34,6 +34,7 @@
 #define MAP_HOT           0x10000000
 #define MAP_LEAP          0x20000000
 #define MAP_COWARD        0x40000000
+#define MAP_ANTIMAGIC     0x80000000
 
 struct cloud_info
 {

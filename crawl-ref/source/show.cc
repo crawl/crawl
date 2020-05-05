@@ -149,6 +149,9 @@ static void _update_feat_at(const coord_def &gp)
     if (cowarded(gp))
         env.map_knowledge(gp).flags |= MAP_COWARD;
 
+    if (antimagic_haloed(gp))
+        env.map_knowledge(gp).flags |= MAP_ANTIMAGIC;
+
     if (is_sanctuary(gp))
     {
         if (testbits(env.pgrid(gp), FPROP_SANCTUARY_1))

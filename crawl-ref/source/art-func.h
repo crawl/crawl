@@ -440,12 +440,19 @@ static void _TORMENT_melee_effects(item_def* /*weapon*/, actor* attacker,
 
 static void _TROG_equip(item_def */*item*/, bool *show_msgs, bool /*unmeld*/)
 {
+    invalidate_agrid(true);
     _equip_mpr(show_msgs, "You feel bloodthirsty!");
 }
 
 static void _TROG_unequip(item_def */*item*/, bool *show_msgs)
 {
+    invalidate_agrid(true);
     _equip_mpr(show_msgs, "You feel less violent.");
+}
+
+static void _TROG_world_reacts(item_def*/*item*/)
+{
+    invalidate_agrid(true);
 }
 
 ////////////////////////////////////////////////////

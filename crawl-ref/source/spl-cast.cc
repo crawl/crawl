@@ -393,6 +393,10 @@ int raw_spell_fail(spell_type spell)
     if (you.props.exists(SAP_MAGIC_KEY))
         chance2 += you.props[SAP_MAGIC_KEY].get_int() * 12;
 
+    if (you.antimagic_haloed()) {
+        chance2 += 50;
+    }
+
     chance2 += you.duration[DUR_VERTIGO] ? 7 : 0;
 
     // Apply the effects of Vehumet and items of wizardry.
@@ -2288,7 +2292,7 @@ static string _wizard_spell_power_numeric_string(spell_type spell, bool rod)
     const int cap = spell_power_cap(spell);
     if (cap == 0)
         return "N/A";
-    const int power = min(calc_spell_power(spell, true, false, false, rod), cap);
+    const int power = min(calc_spell_power(spell, true, false, false, 1, rod), cap);
     return make_stringf("%d (%d)", power, cap);
 }
 #endif

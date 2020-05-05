@@ -427,7 +427,9 @@ static bool _mons_can_cast_dig(const monster* mons, bool random)
                                             + mons->get_ench(ENCH_ANTIMAGIC).duration)
                       || (!random
                           && mons->get_ench(ENCH_ANTIMAGIC).duration
-                             >= 4 * BASELINE_DELAY));
+                             >= 4 * BASELINE_DELAY)) 
+                      || (random && mons->antimagic_haloed() && coinflip())
+                      || (!random && mons->antimagic_haloed());
     const auto flags = mons->spell_slot_flags(SPELL_DIG);
     return !(antimagiced && flags & MON_SPELL_ANTIMAGIC_MASK)
             && !(mons->is_silenced() && flags & MON_SPELL_SILENCE_MASK);

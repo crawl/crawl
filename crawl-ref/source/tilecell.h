@@ -43,6 +43,7 @@ struct packed_cell
     uint8_t heat_aura;
     uint8_t leap_point;
     uint8_t coward_point;
+    uint8_t antimagic_aura;
 
     bool operator ==(const packed_cell &other) const;
     bool operator !=(const packed_cell &other) const { return !(*this == other); }
@@ -54,7 +55,8 @@ struct packed_cell
                     awakened_forest(false), orb_glow(0), blood_rotation(0),
                     old_blood(false), travel_trail(0),
                     quad_glow(false), disjunct(false)
-                    , heat_aura(false), leap_point(false), coward_point(false)
+                    , heat_aura(false), leap_point(false), coward_point(false),
+                    antimagic_aura(false)
                     {}
 
     packed_cell(const packed_cell* c) : num_dngn_overlay(c->num_dngn_overlay),
@@ -78,6 +80,7 @@ struct packed_cell
                                         , heat_aura(c->heat_aura)
                                         , leap_point(c->leap_point)
                                         , coward_point(c->coward_point)
+                                        , antimagic_aura(c->antimagic_aura)
                                         {}
 
     void clear();

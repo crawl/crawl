@@ -1863,7 +1863,8 @@ void yred_make_enslaved_soul(monster* mon, bool force_hostile)
 
     if (orig.halo_radius()
         || orig.umbra_radius()
-        || orig.silence_radius())
+        || orig.silence_radius()
+        || orig.antimagic_radius())
     {
         invalidate_agrid();
     }

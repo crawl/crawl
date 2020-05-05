@@ -4284,10 +4284,11 @@ bool handle_mon_spell(monster* mons)
         return false;
 
     // Check for antimagic if casting a spell spell.
-    if (mons->has_ench(ENCH_ANTIMAGIC) && flags & MON_SPELL_ANTIMAGIC_MASK
+    if (flags & MON_SPELL_ANTIMAGIC_MASK && ((mons->has_ench(ENCH_ANTIMAGIC)
         && !x_chance_in_y(4 * BASELINE_DELAY,
                           4 * BASELINE_DELAY
-                          + mons->get_ench(ENCH_ANTIMAGIC).duration))
+                          + mons->get_ench(ENCH_ANTIMAGIC).duration)) ||        
+        (mons->antimagic_haloed() && coinflip())))
     {
         // This may be a bad idea -- if we decide monsters shouldn't
         // lose a turn like players do not, please make this just return.

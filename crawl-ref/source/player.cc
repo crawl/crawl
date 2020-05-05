@@ -1030,7 +1030,14 @@ bool player_equip_unrand(int unrand_index)
     case EQ_WEAPON:
     case EQ_SECOND_WEAPON:
         // Hands can have more than just weapons.
-        if ((item = you.slot_item(slot))
+        if ((item = you.slot_item(EQ_WEAPON))
+            && item->base_type == OBJ_WEAPONS
+            && is_unrandom_artefact(*item)
+            && item->unrand_idx == unrand_index)
+        {
+            return true;
+        }
+        if ((item = you.slot_item(EQ_SECOND_WEAPON))
             && item->base_type == OBJ_WEAPONS
             && is_unrandom_artefact(*item)
             && item->unrand_idx == unrand_index)

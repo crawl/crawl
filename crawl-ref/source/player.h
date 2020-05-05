@@ -807,6 +807,7 @@ public:
     int liquefying_radius() const override;
     int umbra_radius() const override;
     int heat_radius() const override;
+    int antimagic_radius() const override;
     bool petrifying() const override;
     bool petrified() const override;
     bool liquefied_ground() const override;

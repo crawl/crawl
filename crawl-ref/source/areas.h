@@ -13,7 +13,8 @@ enum class area_centre_type
     disjunction,
     hot,
     leap,
-    coward
+    coward,
+    antimagic
 };
 
 void invalidate_agrid(bool recheck_new = false);
@@ -57,3 +58,6 @@ bool leaped(const coord_def& p);
 
 // ...or is the point of coward?
 bool cowarded(const coord_def& p);
+
+// ...or is the point of antimagic?
+bool antimagic_haloed(const coord_def& p);
