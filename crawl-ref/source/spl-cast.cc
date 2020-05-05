@@ -456,38 +456,52 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
                     power += you.skill(spell_type2skill(bit), 200);
             power /= skillcount;
         }
+
         power += you.skill(SK_SPELLCASTING, 50);
-        // Brilliance boosts spell power a bit (equivalent to three
-        // spell school levels).
-        if (!fail_rate_check && you.duration[DUR_BRILLIANCE])
-            power += 600;
 
-        if (apply_intel)
-            power = (power * you.intel()) / 10;
+        if (you.divine_exegesis)
+            power += you.skill(SK_INVOCATIONS, 300);
 
-        // [dshaligram] Enhancers don't affect fail rates any more, only spell
-        // power. Note that this does not affect Vehumet's boost in castability.
-        if (!fail_rate_check)
-            power = apply_enhancement(power, _spell_enhancement(spell));
-        // Wild magic boosts spell power but decreases success rate.
-        if (!fail_rate_check)
+        if (fail_rate_check)
         {
+            // Scale appropriately.
+            // The stepdown performs this step in the else block.
+            power *= scale;
+            power /= 100;
+        }
+        else
+        {
+            // Brilliance boosts spell power a bit (equivalent to three
+            // spell school levels).
+            if (you.duration[DUR_BRILLIANCE])
+                power += 600;
+
+            if (apply_intel)
+                power = (power * you.intel()) / 10;
+
+            // [dshaligram] Enhancers don't affect fail rates any more, only spell
+            // power. Note that this does not affect Vehumet's boost in castability.
+            power = apply_enhancement(power, _spell_enhancement(spell));
+
+            // Wild magic boosts spell power but decreases success rate.
             power *= (10 + 3 * you.get_mutation_level(MUT_WILD_MAGIC));
             power /= (10 + 3 * you.get_mutation_level(MUT_SUBDUED_MAGIC));
-        }
-        // Augmentation boosts spell power at high HP.
-        if (!fail_rate_check)
-        {
-            power *= 10 + 3 * augmentation_amount();
+
+            // Augmentation boosts spell power at high HP.
+            power *= 10 + 4 * augmentation_amount();
             power /= 10;
+
+            // Each level of horror reduces spellpower by 10%
+            if (you.duration[DUR_HORROR])
+            {
+                power *= 10;
+                power /= 10 + (you.props[HORROR_PENALTY_KEY].get_int() * 3) / 2;
+            }
+
+            // at this point, `power` is assumed to be basically in centis.
+            // apply a stepdown, and scale.
+            power = stepdown_spellpower(power, scale);
         }
-        // Each level of horror reduces spellpower
-        if (you.duration[DUR_HORROR] && !fail_rate_check)
-        {
-            power *= 10;
-            power /= 10 + you.props[HORROR_PENALTY_KEY].get_int();
-        }
-        power = stepdown_spellpower(power);
     }
 
     const int cap = spell_power_cap(spell);
@@ -2264,7 +2278,7 @@ static int _spell_power_bars(spell_type spell, bool rod)
     const int cap = spell_power_cap(spell);
     if (cap == 0)
         return -1;
-    const int power = min(calc_spell_power(spell, true, false, false, rod), cap);
+    const int power = min(calc_spell_power(spell, true, false, false, 1, rod), cap);
     return power_to_barcount(power);
 }
 
@@ -2298,7 +2312,7 @@ string spell_power_string(spell_type spell, bool rod)
 int calc_spell_range(spell_type spell, int power, bool allow_bonus, bool rod)
 {
     if (power == 0)
-        power = calc_spell_power(spell, true, false, false, rod);
+        power = calc_spell_power(spell, true, false, false, 1, rod);
     const int range = spell_range(spell, power, allow_bonus);
 
     return range;
