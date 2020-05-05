@@ -219,7 +219,7 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu, int
             *did_hit = attk.did_hit;
 
         // A spectral weapon attacks whenever the player does
-        if (!simu && you.props.exists("spectral_weapon"))
+        if (!simu && second_attack == -1 && you.props.exists("spectral_weapon"))
             trigger_spectral_weapon(&you, defender);
 
         if (!simu && will_have_passive(passive_t::shadow_attacks))
