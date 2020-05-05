@@ -1400,7 +1400,7 @@ ENDMAP
 NAME:   nemelex_spade_bored_becter
 TAGS:   overflow_altar_nemelex_xobeh transparent
 TAGS:   no_rotate no_vmirror no_monster_gen no_item_gen
-DEPTH:  D:2-9
+DEPTH:  D:5-9
 KFEAT:  _ = altar_nemelex_xobeh
 KFEAT:  o = known shaft trap
 NSUBST: ' = 6:o / *:.
@@ -1629,7 +1629,7 @@ ccc@ccc
 ENDMAP
 
 NAME:   grunt_qazlal_sundering
-DEPTH:  D:2-, !D:$
+DEPTH:  D:5-, !D:$
 TAGS:   no_monster_gen no_item_gen no_trap_gen temple_overflow_1
 TAGS:   temple_overflow_qazlal uniq_altar_qazlal
 KFEAT:  _ = altar_qazlal
@@ -2079,7 +2079,7 @@ ENDMAP
 
 NAME:   trog_butcher_becter
 TAGS:   overflow_altar_trog
-DEPTH:  D:2-9, Orc, !Orc:$
+DEPTH:  D:5-9, Orc, !Orc:$
 : if you.absdepth() < 6 then
 MONS:   orc ; hand axe . animal skin
 MONS:   leopard gecko / rat / frilled lizard / quokka
@@ -2281,7 +2281,7 @@ ENDMAP
 ### Xom overflow altars #######################################################
 
 NAME:   tgw_xom
-DEPTH:  D:2-, Depths
+DEPTH:  D:5-, Depths
 TAGS:   no_item_gen no_monster_gen temple_overflow_1 temple_overflow_xom
 TAGS:   uniq_altar_xom
 KFEAT:  _ = altar_xom
@@ -2393,7 +2393,7 @@ MAP
 ENDMAP
 
 NAME:    xom_redecorated
-DEPTH:   D:2-, !D:$
+DEPTH:   D:5-, !D:$
 TAGS:    temple_overflow_1 temple_overflow_xom uniq_altar_xom decor transparent
 SUBST:   x = ccbbbv
 NSUBST:  . = 2:T / .
@@ -3242,7 +3242,7 @@ vv.....vv
 ENDMAP
 
 NAME:   grunt_temple_overflow_forces_of_nature
-DEPTH:  D:2-9
+DEPTH:  D:5-9
 TAGS:   temple_overflow_2 temple_overflow_fedhas temple_overflow_qazlal
 TAGS:   transparent
 MONS:   fungus / plant / bush

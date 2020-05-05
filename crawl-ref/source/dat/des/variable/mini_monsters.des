@@ -2080,7 +2080,7 @@ ENDMAP
 
 NAME:  cheibrodos_gnoll_hut
 TAGS:  no_item_gen no_monster_gen transparent
-DEPTH: D:2-5
+DEPTH: D:5-6
 KMONS: P = bush
 : if you.depth() <= 2 then
 MONS: jackal, gnoll
