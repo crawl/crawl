@@ -37,7 +37,10 @@ religion_file=$(test -e god-type.h && echo god-type.h || echo enum.h)
 echo religions: `process_cmd $religion_file | grep " GOD_" | grep -v -e GOD_RANDOM -e GOD_NAMELESS -e GOD_ECUMENICAL | wc -l`
 
 spell_file=$(test -e spell-type.h && echo spell-type.h || echo enum.h)
-echo spells: `process_cmd $spell_file | grep " SPELL_" |  wc -l`
+echo spells_total: `process_cmd $spell_file | grep " SPELL_" |  wc -l`
+# call this `approx` because I'm pretty sure this flag is not used very
+# consistently.
+echo approx_spells_monster: `process_cmd spl-data.h | grep -e "spflag::monster" -e SPFLAG_MONSTER | wc -l `
 
 # in 0.2 and 0.1, items were in enum.h, and this doesn't handle that
 item_file=$(test -e item-prop-enum.h && echo item-prop-enum.h || test -e itemprop-enum.h && echo itemprop-enum.h || echo itemprop.h)
