@@ -312,13 +312,7 @@ void give_items_skills(const newgame_def& ng)
 
     if (you.species == SP_ANGEL)
     {
-        you.skills[SK_STEALTH] = 0;
-        you.skills[SK_HEXES] = 0;
-        you.skills[SK_CHARMS] = 0;
-        you.skills[SK_SUMMONINGS] = 0;
         you.skills[SK_NECROMANCY] = 0;
-        you.skills[SK_TRANSMUTATIONS] = 0;
-        you.skills[SK_POISON_MAGIC] = 0;
 
         you.penance[GOD_KIKUBAAQUDGHA] = 255;
         you.penance[GOD_MAKHLEB] = 255;

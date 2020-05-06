@@ -43,14 +43,7 @@ static bool _banned_combination(job_type job, species_type species)
             || job == JOB_CHAOS_KNIGHT
             || job == JOB_ABYSSAL_KNIGHT
             || job == JOB_MONK
-            || job == JOB_NECROMANCER
-            || job == JOB_ENCHANTER
-            || job == JOB_SUMMONER
-            || job == JOB_VENOM_MAGE
-            || job == JOB_SKALD
-            || job == JOB_STALKER
-            || job == JOB_TRANSMUTER
-            || job == JOB_ASSASSIN)
+            || job == JOB_NECROMANCER)
         {
             return true;
         }

@@ -21,22 +21,22 @@ aptitudes:
   throwing: -2
   armour: 0
   dodging: -1
-  stealth: false
+  stealth: -4
   shields: 0
   unarmed_combat: -1
   spellcasting: 0
   conjurations: -1
-  hexes: false
-  charms: false
-  summoning: false
+  hexes: -2
+  charms: 0
+  summoning: -2
   necromancy: false
   translocations: -2
-  transmutations: false
+  transmutations: -2
   fire_magic: 2
   ice_magic: -4
   air_magic: -4
   earth_magic: -4
-  poison_magic: false
+  poison_magic: -4
   invocations: 3
   evocations: -2
 str: 10
@@ -61,6 +61,7 @@ fake_mutations:
   - long: You can not abandon your faith.
     short: faithfulness
   - long: When you get contamination, you also get a drain.
+  - long: You are hated by evil gods... forever
 recommended_jobs:
   - JOB_FIGHTER
   - JOB_GLADIATOR
