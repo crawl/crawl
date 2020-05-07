@@ -23,10 +23,12 @@
 #include "state.h"
 #include "stringutil.h"
 #include "unicode.h"
+#include "view.h"
 
 #define NOTES_VERSION_NUMBER 1002
 
 vector<Note> note_list;
+int last_screen_turn = -1;
 
 static bool _is_highest_skill(int skill)
 {
@@ -444,6 +446,7 @@ void Note::save(writer& outf) const
     marshallInt(outf, second);
     marshallString4(outf, name);
     marshallString4(outf, desc);
+    marshallString(outf, screen);
 }
 
 void Note::load(reader& inf)
@@ -460,6 +463,13 @@ void Note::load(reader& inf)
     second = unmarshallInt(inf);
     unmarshallString4(inf, name);
     unmarshallString4(inf, desc);
+#if TAG_MAJOR_VERSION == 34
+    if (inf.getMinorVersion() >= TAG_MINOR_MORGUE_SCREENSHOTS)
+        screen = unmarshallString(inf);
+#else
+    screen = unmarshallString(inf);
+#endif
+
 }
 
 static bool notes_active = false;
@@ -513,5 +523,10 @@ void make_user_note()
         return;
     Note unote(NOTE_USER_NOTE);
     unote.name = buf;
+    // Only one screenshot a turn allowed
+    if (last_screen_turn != unote.turn) {
+        last_screen_turn = unote.turn;
+        unote.screen = screenshot();
+    }
     take_note(unote);
 }

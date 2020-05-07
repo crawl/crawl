@@ -1157,7 +1157,7 @@ void game_options::reset_options()
     dump_order.clear();
     new_dump_fields("header,hiscore,stats,misc,inventory,"
                     "skills,spells,overview,mutations,messages,"
-                    "screenshot,monlist,kills,notes,vaults,"
+                    "screenshot,monlist,kills,notes,screenshots,vaults,"
                     "skill_gains,action_counts");
     // Currently enabled by default for testing in trunk.
     if (Version::ReleaseType == VER_ALPHA)

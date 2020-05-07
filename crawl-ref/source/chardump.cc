@@ -71,6 +71,7 @@ static void _sdump_gold(dump_params &);
 static void _sdump_misc(dump_params &);
 static void _sdump_turns_by_place(dump_params &);
 static void _sdump_notes(dump_params &);
+static void _sdump_screenshots(dump_params &);
 static void _sdump_inventory(dump_params &);
 static void _sdump_skills(dump_params &);
 static void _sdump_spells(dump_params &);
@@ -129,6 +130,7 @@ static dump_section_handler dump_handlers[] =
     { "misc",           _sdump_misc          },
     { "turns_by_place", _sdump_turns_by_place},
     { "notes",          _sdump_notes         },
+    { "screenshots",    _sdump_screenshots   },
     { "inventory",      _sdump_inventory     },
     { "skills",         _sdump_skills        },
     { "spells",         _sdump_spells        },
@@ -631,6 +633,28 @@ static void _sdump_screenshot(dump_params &par)
 {
     par.text += screenshot();
     par.text += "\n\n";
+}
+
+static void _sdump_screenshots(dump_params &par)
+{
+    string &text(par.text);
+    if (note_list.empty())
+        return;
+
+    text += "Illustrated notes\n\n";
+
+    for (const Note &note : note_list)
+    {
+        if (note.hidden() || note.type != NOTE_USER_NOTE || note.screen.length() == 0)
+            continue;
+
+        text += note.screen;
+        text += "\n";
+        text += make_stringf("Turn %d on ", note.turn);
+        text += note.place.describe() + ": ";
+        text += note.name;
+        text += "\n\n";
+    }
 }
 
 static void _sdump_notes(dump_params &par)
