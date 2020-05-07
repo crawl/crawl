@@ -23,6 +23,7 @@
 #include "state.h"
 #include "stringutil.h"
 #include "unicode.h"
+#include "view.h"
 
 #define NOTES_VERSION_NUMBER 1002
 
@@ -444,6 +445,7 @@ void Note::save(writer& outf) const
     marshallInt(outf, second);
     marshallString4(outf, name);
     marshallString4(outf, desc);
+    marshallString(outf, screen);
 }
 
 void Note::load(reader& inf)
@@ -460,6 +462,7 @@ void Note::load(reader& inf)
     second = unmarshallInt(inf);
     unmarshallString4(inf, name);
     unmarshallString4(inf, desc);
+    screen = unmarshallString(inf);
 }
 
 static bool notes_active = false;
@@ -513,5 +516,6 @@ void make_user_note()
         return;
     Note unote(NOTE_USER_NOTE);
     unote.name = buf;
+    unote.screen = screenshot();
     take_note(unote);
 }
