@@ -196,7 +196,7 @@ static bool _is_feature_fudged(char32_t glyph, const coord_def& where)
     return false;
 }
 
-vector<coord_def> _search_path_around_point(coord_def centre)
+static vector<coord_def> _search_path_around_point(coord_def centre)
 {
     vector<coord_def> points;
 
@@ -555,7 +555,8 @@ static void _forget_map(bool wizard_forget = false)
 
 map_control_state process_map_command(command_type cmd, const map_control_state &state);
 
-coord_def recentre_map_target(const level_id level, const level_id original)
+static coord_def _recentre_map_target(const level_id level,
+                                      const level_id original)
 {
     if (level == original)
         return you.pos();
@@ -564,7 +565,7 @@ coord_def recentre_map_target(const level_id level, const level_id original)
     return (bounds.first + bounds.second + 1) / 2;
 }
 
-map_view_state get_view_state(const map_control_state& state)
+static map_view_state _get_view_state(const map_control_state& state)
 {
     map_view_state view;
 
@@ -684,7 +685,8 @@ bool show_map(level_pos &lpos, bool travel_mode, bool allow_offlevel)
             // with a position == (-1, -1).
             if (!map_bounds(state.lpos.pos))
             {
-                state.lpos.pos = recentre_map_target(state.lpos.id, state.original);
+                state.lpos.pos = _recentre_map_target(state.lpos.id,
+                        state.original);
                 state.lpos.id = level_id::current();
             }
 
@@ -701,7 +703,7 @@ bool show_map(level_pos &lpos, bool travel_mode, bool allow_offlevel)
         }
 
 #ifndef USE_TILE_LOCAL
-        const auto view = get_view_state(state);
+        const auto view = _get_view_state(state);
 #endif
 
         if (state.redraw_map)
