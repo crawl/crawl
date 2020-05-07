@@ -79,3 +79,4 @@ bool show_map(level_pos &spec_place,
               bool travel_mode, bool allow_offlevel);
 
 bool emphasise(const coord_def& where);
+vector<coord_def> search_path_around_point(coord_def centre);

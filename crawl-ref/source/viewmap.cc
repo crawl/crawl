@@ -196,7 +196,7 @@ static bool _is_feature_fudged(char32_t glyph, const coord_def& where)
     return false;
 }
 
-static vector<coord_def> _search_path_around_point(coord_def centre)
+vector<coord_def> search_path_around_point(coord_def centre)
 {
     vector<coord_def> points;
 
@@ -1094,7 +1094,8 @@ map_control_state process_map_command(command_type cmd, const map_control_state&
         }
         else
         {
-            const auto search_path = _search_path_around_point(state.search_anchor);
+            const auto search_path =
+                search_path_around_point(state.search_anchor);
             state.search_index = _find_feature(*state.features, getty,
                                             state.search_index,
                                             state.lpos.pos,
