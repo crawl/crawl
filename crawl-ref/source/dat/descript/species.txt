@@ -168,4 +168,9 @@ Mountain Dwarves, as opposed to the subterranean specimen, come from
 cities far above the Dungeon. they are very robust and excellent at
 hand combat.
 %%%%
+Lesser Lich
 
+They're incomplete, so they head to dungeon to be transform true lich.
+Lesser Liches are good at all kinds of magic, especially the necromancy,
+and have excellent mana regenerative ability
+%%%%
