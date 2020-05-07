@@ -1,7 +1,7 @@
 enum: SP_LESSER_LICH
-monster: MONS_LICH
-name: "Lesser Lich"
-short_name: "LL"
+monster: MONS_HUMAN
+name: Lesser Lich
+short_name: LL
 difficulty: Intermediate
 difficulty_priority: 50
 aptitudes:
@@ -28,11 +28,12 @@ aptitudes:
   hexes: 1
   charms: 1
   summoning: -1
-  necromancy: 1
+  necromancy: 4
   translocations: 1
-  transmutations: 1
+  transmutations: 2
   fire_magic: 1
   ice_magic: 1
+  air_magic: 1
   earth_magic: 1
   poison_magic: 1
   invocations: 1
