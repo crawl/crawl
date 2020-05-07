@@ -1343,14 +1343,12 @@ void do_trap_effects()
     vector<trap_type> available_traps = { TRAP_TELEPORT };
     // Don't shaft the player when shafts aren't allowed in the location or when
     //  it would be into a dangerous end.
-    if (is_valid_shaft_effect_level())
+    // No Shafts on the first 4 floors
+    if (is_valid_shaft_effect_level() && env.absdepth > 4)
         available_traps.push_back(TRAP_SHAFT);
     // No alarms on the first 3 floors
     if (env.absdepth0 > 3)
         available_traps.push_back(TRAP_ALARM);
-    // No Shafts on the first 4 floors
-    if (env.absdepth0 > 4)
-        available_traps.push_back(TRAP_SHAFT);
 
     switch (*random_iterator(available_traps))
     {
