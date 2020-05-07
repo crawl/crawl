@@ -985,7 +985,7 @@ void Menu::do_menu()
     });
 #ifdef TOUCH_UI
     auto menu_wrap_click = [this, &done](const MouseEvent& ev) {
-        if (!m_filter && ev.button() == MouseEvent::Buttton::Left)
+        if (!m_filter && ev.button() == MouseEvent::Button::Left)
         {
             done = !process_key(CK_TOUCH_DUMMY);
             return true;
