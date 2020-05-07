@@ -8,16 +8,6 @@
 #include "random.h"
 #include "tags.h"
 
-void unmarshall_vehumet_spells(reader &th, set<spell_type>& old_gifts,
-        set<spell_type>& gifts);
-FixedVector<spell_type, MAX_KNOWN_SPELLS> unmarshall_player_spells(reader &th);
-void remove_removed_library_spells(FixedBitVector<NUM_SPELLS>& lib);
-void unmarshallSpells(reader &th, monster_spells &spells
-#if TAG_MAJOR_VERSION == 34
-                             , unsigned hd
-#endif
-                            );
-
 TEST_CASE( "Vehumet gifts can be decoded", "[single-file]" ) {
 
     SECTION ("spells stored as bytes can be read") {

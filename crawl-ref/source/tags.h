@@ -13,6 +13,8 @@ struct show_type;
 struct monster_info;
 struct map_cell;
 class ghost_demon;
+struct mon_spell_slot;
+typedef vector<mon_spell_slot> monster_spells;
 
 enum tag_type   // used during save/load process to identify data blocks
 {
@@ -162,6 +164,24 @@ static inline void unmarshallSigned(reader& th, T& v)
 {
     v = (T)unmarshallSigned(th);
 }
+
+void marshallMapCell (writer &, const map_cell &);
+void unmarshallMapCell (reader &, map_cell& cell);
+
+FixedVector<spell_type, MAX_KNOWN_SPELLS> unmarshall_player_spells(reader &th);
+
+void unmarshallSpells(reader &, monster_spells &
+#if TAG_MAJOR_VERSION == 34
+                             , unsigned hd
+#endif
+);
+
+void unmarshall_vehumet_spells(reader &th, set<spell_type>& old_gifts,
+        set<spell_type>& gifts);
+
+FixedVector<int, 52> unmarshall_player_spell_letter_table(reader &th);
+
+void remove_removed_library_spells(FixedBitVector<NUM_SPELLS>& lib);
 
 /* ***********************************************************************
  * Tag interface
