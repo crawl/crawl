@@ -1292,11 +1292,6 @@ bool is_valid_shaft_level()
 
     const Branch &branch = branches[place.branch];
 
-    if (place.branch == BRANCH_DUNGEON && place.depth <= 4) {
-        //disable shaft trap in early dungeon
-        return false;
-    }
-
     if (branch.branch_flags & brflag::no_shafts)
         return false;
 
@@ -1353,6 +1348,9 @@ void do_trap_effects()
     // No alarms on the first 3 floors
     if (env.absdepth0 > 3)
         available_traps.push_back(TRAP_ALARM);
+    // No Shafts on the first 4 floors
+    if (env.absdepth0 > 4)
+        available_traps.push_back(TRAP_SHAFT);
 
     switch (*random_iterator(available_traps))
     {
