@@ -1344,7 +1344,7 @@ void do_trap_effects()
     // Don't shaft the player when shafts aren't allowed in the location or when
     //  it would be into a dangerous end.
     // No Shafts on the first 4 floors
-    if (is_valid_shaft_effect_level() && env.absdepth > 4)
+    if (is_valid_shaft_effect_level() && env.absdepth0 > 4)
         available_traps.push_back(TRAP_SHAFT);
     // No alarms on the first 3 floors
     if (env.absdepth0 > 3)
