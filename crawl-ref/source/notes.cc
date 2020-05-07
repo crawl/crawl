@@ -28,6 +28,7 @@
 #define NOTES_VERSION_NUMBER 1002
 
 vector<Note> note_list;
+int last_screen_turn = -1;
 
 static bool _is_highest_skill(int skill)
 {
@@ -517,6 +518,10 @@ void make_user_note()
         return;
     Note unote(NOTE_USER_NOTE);
     unote.name = buf;
-    unote.screen = screenshot();
+    // Only one screenshot a turn allowed
+    if (last_screen_turn != unote.turn) {
+        last_screen_turn = unote.turn;
+        unote.screen = screenshot();
+    }
     take_note(unote);
 }

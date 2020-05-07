@@ -645,7 +645,7 @@ static void _sdump_screenshots(dump_params &par)
 
     for (const Note &note : note_list)
     {
-        if (note.hidden() || note.type != NOTE_USER_NOTE)
+        if (note.hidden() || note.type != NOTE_USER_NOTE || note.screen.length() == 0)
             continue;
 
         text += note.screen;
