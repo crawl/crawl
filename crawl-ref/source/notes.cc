@@ -462,7 +462,8 @@ void Note::load(reader& inf)
     second = unmarshallInt(inf);
     unmarshallString4(inf, name);
     unmarshallString4(inf, desc);
-    screen = unmarshallString(inf);
+    if (inf.getMinorVersion() >= TAG_MINOR_MORGUE_SCREENSHOTS)
+        screen = unmarshallString(inf);
 }
 
 static bool notes_active = false;
