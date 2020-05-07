@@ -223,7 +223,7 @@ MIRES1(res_corr, MR_RES_ACID)
  * @treturn boolean
  * @function can_go_frenzy
  */
-MIRET1(boolean, can_go_frenzy, can_go_frenzy);
+MIRET1(boolean, can_go_frenzy, can_go_frenzy)
 
 /*** The monster's max HP given in its description.
  * @treturn string describing the max HP (usually "about X").
