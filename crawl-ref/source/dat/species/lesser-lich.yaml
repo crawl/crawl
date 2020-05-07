@@ -1,4 +1,4 @@
-enum: SP_Lesser_Lich
+enum: SP_LESSER_LICH
 monster: MONS_LICH
 name: "Lesser Lich"
 short_name: "LL"
