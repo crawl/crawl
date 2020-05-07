@@ -94,6 +94,7 @@ vine_stalker_m
 angel ANGEL
 mantis MANTIS
 dwarf_f MOUNTAIN_DWARF
+lesser_lich LESSER_LICH
 dwarf_m
 
 # draconians
