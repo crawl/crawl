@@ -11,7 +11,7 @@
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <sys/types.h>
-#ifndef TARGET_COMPILER_VC
+#ifdef UNIX
 #include <unistd.h>
 #endif
 

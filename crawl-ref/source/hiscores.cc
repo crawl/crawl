@@ -19,7 +19,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <memory>
-#ifndef TARGET_COMPILER_VC
+#ifdef UNIX
 #include <unistd.h>
 #endif
 

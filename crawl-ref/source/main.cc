@@ -18,7 +18,7 @@
 #include <utility> // pair
 #include <vector>
 #include <fcntl.h>
-#ifdef DGAMELAUNCH
+#ifdef UNIX
 # include <unistd.h>
 #endif
 

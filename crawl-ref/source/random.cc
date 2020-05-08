@@ -4,7 +4,7 @@
 
 #include <cinttypes>
 #include <cmath>
-#ifndef TARGET_COMPILER_VC
+#ifdef UNIX
 # include <unistd.h>
 #else
 # include <process.h>

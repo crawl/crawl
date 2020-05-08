@@ -7,7 +7,9 @@
 #include <cerrno>
 #include <sys/stat.h>
 #include <sys/types.h>
+#ifdef UNIX
 #include <unistd.h>
+#endif
 
 #include "files.h"
 #include "initfile.h"

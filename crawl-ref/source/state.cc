@@ -7,7 +7,7 @@
 
 #include "state.h"
 
-#ifndef TARGET_OS_WINDOWS
+#ifdef UNIX
 #include <unistd.h>
 #endif
 
@@ -62,7 +62,7 @@ game_state::game_state()
 {
     reset_cmd_repeat();
     reset_cmd_again();
-#ifdef TARGET_OS_WINDOWS
+#ifndef UNIX
     no_gdb = "Non-UNIX Platform -> not running gdb.";
 #else
     no_gdb = access(GDB_PATH, 1) ? "gdb not executable." : 0;

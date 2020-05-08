@@ -87,7 +87,7 @@ extern char **NXArgv;
 #ifndef DATA_DIR_PATH
 #include <unistd.h>
 #endif
-#elif defined(TARGET_OS_LINUX) || defined(TARGET_OS_CYGWIN)
+#elif defined(UNIX)
 #include <unistd.h>
 #endif
 
@@ -3953,7 +3953,7 @@ static string _find_executable_path()
         return utf16_to_8(tempPath);
     else
         return "";
-#elif defined (TARGET_OS_LINUX) || defined (TARGET_OS_CYGWIN)
+#elif defined (UNIX)
     char tempPath[2048];
     const ssize_t rsize =
         readlink("/proc/self/exe", tempPath, sizeof(tempPath) - 1);
