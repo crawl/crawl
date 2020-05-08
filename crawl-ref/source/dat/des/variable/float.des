@@ -3271,7 +3271,7 @@ MONS:   two-headed ogre / troll
 KMONS:  2 = stone giant / iron dragon
 ITEM:   book of geomancy / book of the earth / manual of earth magic / \
         staff of earth ident:type / ring of protection ident:type / \
-        wand of scattershot ident:type / crystal plate armour w:5
+        tin of tremorstones / crystal plate armour w:5
 KITEM:  2 = devastator
 : minmay_elemental_octagon_setup(_G)
 MAP
@@ -4320,7 +4320,7 @@ ITEM:   wand of flame
 ITEM:   wand of iceblast / wand of acid
 ITEM:   wand of random effects / wand of disintegration / wand of paralysis \
         / wand of enslavement / wand of polymorph w:5
-ITEM:   wand of clouds / wand of scattershot
+ITEM:   wand of clouds
 MONS: shadow imp, orc priest, kobold demonologist
 MONS: deep elf knight / fire crab / orc high priest / orc sorcerer
 KMONS:  p = plant

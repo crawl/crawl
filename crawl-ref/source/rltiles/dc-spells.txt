@@ -165,7 +165,6 @@ paralyse PARALYSE
 bolt_thunder THUNDERBOLT
 cloud_cone CLOUD_CONE
 bolt_random RANDOM_BOLT
-scattershot SCATTERSHOT
 bolt_corrosive CORROSIVE_BOLT
 iceblast ICEBLAST
 bolt_energy ENERGY_BOLT

@@ -4261,9 +4261,9 @@ void glaciate_freeze(monster* mon, killer_type englaciator,
 
 void bolt::monster_post_hit(monster* mon, int dmg)
 {
-    // Suppress the message for scattershot.
+    // Suppress the message for tremorstones.
     if (YOU_KILL(thrower) && you.see_cell(mon->pos())
-        && name != "burst of metal fragments")
+        && name != "burst of rock shards")
     {
         print_wounds(*mon);
     }

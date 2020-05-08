@@ -1203,11 +1203,6 @@ wand of random effects
 
 A magical device which can produce a variety of effects.
 %%%%
-wand of scattershot
-
-A magical device which fires powerful blasts of metallic shrapnel. Its damage
-is strongly reduced by armour.
-%%%%
 war axe
 
 A military axe with a long haft and a single-bladed head.

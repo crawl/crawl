@@ -64,10 +64,6 @@ spret cast_glaciate(actor *caster, int pow, coord_def aim,
 
 spret cast_random_bolt(int pow, bolt& beam, bool fail = false);
 
-size_t shotgun_beam_count(int pow);
-spret cast_scattershot(const actor *caster, int pow, const coord_def &pos,
-                            bool fail = false);
-
 spret cast_ignition(const actor *caster, int pow, bool fail);
 
 spret cast_starburst(int pow, bool fail, bool tracer=false);

@@ -1134,10 +1134,6 @@ static bool _handle_wand(monster& mons)
     const wand_type kind = (wand_type)wand->sub_type;
     switch (kind)
     {
-    case WAND_SCATTERSHOT:
-        should_fire = scattershot_tracer(&mons, power, beem.target);
-        break;
-
     case WAND_CLOUDS:
         should_fire = mons_should_cloud_cone(&mons, power, beem.target);
         break;

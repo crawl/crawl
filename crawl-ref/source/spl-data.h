@@ -3014,17 +3014,6 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_SCATTERSHOT, "Scattershot",
-    spschool::conjuration | spschool::earth,
-    spflag::dir_or_target | spflag::not_self,
-    6,
-    200,
-    5, 5,
-    6, 0,
-    TILEG_SCATTERSHOT,
-},
-
-{
     SPELL_THROW_ALLY, "Throw Ally",
     spschool::translocation,
     spflag::target | spflag::monster | spflag::not_self,

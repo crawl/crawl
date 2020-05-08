@@ -1064,24 +1064,6 @@ _mon_hex_zap(ZAP_SLEEP, BEAM_SLEEP),
 },
 
 {
-    ZAP_SCATTERSHOT,
-    "burst of metal fragments",
-    200,
-    new calcdice_calculator<9, 8, 3, 8>,
-    new tohit_calculator<7, 1, 15>,
-    nullptr,
-    nullptr,
-    CYAN,
-    false,
-    BEAM_FRAG,
-    DCHAR_FIRED_BOLT,
-    true,
-    false,
-    false,
-    6
-},
-
-{
     ZAP_UNRAVELLING,
     "unravelling",
     200,

@@ -689,8 +689,7 @@ static int _acquirement_wand_subtype(bool /*divine*/, int & /*quantity*/,
 {
     // basic total: 120
     vector<pair<wand_type, int>> weights = {
-        { WAND_SCATTERSHOT,     25 },
-        { WAND_CLOUDS,          25 },
+        { WAND_CLOUDS,          18 },
         { WAND_ACID,            18 },
         { WAND_ICEBLAST,        18 },
         { WAND_ENSLAVEMENT,     you.get_mutation_level(MUT_NO_LOVE) ? 0 : 8 },

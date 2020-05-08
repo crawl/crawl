@@ -55,6 +55,7 @@
 #include "spl-damage.h"
 #include "spl-util.h"
 #include "state.h"
+#include "stepdown.h"
 #include "stringutil.h"
 #include "target.h"
 #include "terrain.h"
@@ -1123,6 +1124,11 @@ static coord_def _fuzz_tremorstone_target(coord_def center)
     return chosen;
 }
 
+static int _tremorstone_count(int pow)
+{
+    return 1 + stepdown((pow - 5) / 3, 5, ROUND_CLOSE);
+}
+
 /**
  * Evokes a tremorstone, blasting something in the general area of a
  * chosen target.
@@ -1146,7 +1152,7 @@ static spret _tremorstone()
     static const int RANGE = RADIUS + SPREAD;
     const int pow = 15 + you.skill(SK_EVOCATIONS, 7) / 2;
     const int adjust_pow = player_adjust_evoc_power(pow);
-    const int num_explosions = shotgun_beam_count(adjust_pow);
+    const int num_explosions = _tremorstone_count(adjust_pow);
 
     beam.source_id  = MID_PLAYER;
     beam.thrower    = KILL_YOU;

@@ -17,7 +17,6 @@ bool is_valid_mon_spell(spell_type spell);
 void aura_of_brilliance(monster* agent);
 
 bool mons_should_cloud_cone(monster* agent, int power, const coord_def pos);
-bool scattershot_tracer(monster *caster, int pow, coord_def aim);
 
 dice_def waterstrike_damage(const monster &caster);
 dice_def resonance_strike_base_damage(const monster &caster);

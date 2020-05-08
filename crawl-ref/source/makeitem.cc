@@ -1270,8 +1270,7 @@ static int _random_wand_subtype()
                                   6, WAND_DISINTEGRATION,
                                   6, WAND_DIGGING,
                                   5, WAND_ENSLAVEMENT,
-                                  3, WAND_CLOUDS,
-                                  3, WAND_SCATTERSHOT);
+                                  5, WAND_CLOUDS);
 }
 
 /**
@@ -1292,7 +1291,6 @@ bool is_high_tier_wand(int type)
     case WAND_ICEBLAST:
     case WAND_DISINTEGRATION:
     case WAND_CLOUDS:
-    case WAND_SCATTERSHOT:
         return true;
     default:
         return false;

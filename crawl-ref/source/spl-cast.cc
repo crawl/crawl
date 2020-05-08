@@ -1160,9 +1160,6 @@ static unique_ptr<targeter> _spell_targeter(spell_type spell, int pow,
     case SPELL_CLOUD_CONE:
         return make_unique<targeter_shotgun>(&you, CLOUD_CONE_BEAM_COUNT,
                                              range, true);
-    case SPELL_SCATTERSHOT:
-        return make_unique<targeter_shotgun>(&you, shotgun_beam_count(pow),
-                                             range);
     case SPELL_GRAVITAS:
         return make_unique<targeter_smite>(&you, range,
                                            gravitas_range(pow),
@@ -1894,9 +1891,6 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
 
     case SPELL_RANDOM_BOLT:
         return cast_random_bolt(powc, beam, fail);
-
-    case SPELL_SCATTERSHOT:
-        return cast_scattershot(&you, powc, target, fail);
 
     case SPELL_RANDOM_EFFECTS:
         return cast_random_effects(powc, beam, fail);
