@@ -646,9 +646,6 @@ void full_describe_view()
 #endif
 
             string str = get_monster_equipment_desc(mi, DESC_FULL, DESC_A, true);
-            if (mi.is(MB_MESMERIZING))
-                str += ", keeping you mesmerised";
-
             if (mi.dam != MDAM_OKAY)
                 str += ", " + mi.damage_desc();
 
@@ -3325,25 +3322,13 @@ string get_monster_equipment_desc(const monster_info& mi,
         if (print_attitude)
         {
             vector<string> attributes;
-            if (mi.is(MB_CHARMED))
-                attributes.emplace_back("charmed");
-            else if (mi.attitude == ATT_FRIENDLY)
+            if (mi.attitude == ATT_FRIENDLY)
                 attributes.emplace_back("friendly");
             else if (mi.attitude == ATT_GOOD_NEUTRAL)
                 attributes.emplace_back("peaceful");
-            else if (mi.is(MB_INSANE))
-                attributes.emplace_back("insane");
-            else if (mi.attitude != ATT_HOSTILE)
+            else if (mi.attitude != ATT_HOSTILE && !mi.is(MB_INSANE))
                 attributes.emplace_back("neutral");
-
-            if (mi.is(MB_SUMMONED))
-                attributes.emplace_back("summoned");
-
-            if (mi.is(MB_PERM_SUMMON))
-                attributes.emplace_back("durably summoned");
-
-            if (mi.is(MB_SUMMONED_CAPPED))
-                attributes.emplace_back("expiring");
+            _append_container(attributes, mi.attributes());
 
             string str = comma_separated_line(attributes.begin(),
                                               attributes.end());
