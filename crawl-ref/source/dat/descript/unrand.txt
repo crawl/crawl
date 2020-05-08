@@ -120,7 +120,8 @@ demon blade "Leech"
 
 An unerringly vampiric blade, forged in Hell by the sacrifice of countless
 tortured souls. It fills its wielder with the rage and suffering of those
-souls, and gorges itself further on drained life force every time it strikes.
+souls, and gorges itself further on drained life force every time it strikes,
+leaving behind a mess of blood and gore.
 %%%%
 # TAG_MAJOR_VERSION == 34
 dagger of Chilly Death
