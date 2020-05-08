@@ -11,7 +11,7 @@
 #include <sys/time.h>
 #include <sys/types.h>
 #include <sys/un.h>
-#ifdef UNIX
+#if defined(UNIX) || defined(TARGET_COMPILER_MINGW)
 #include <unistd.h>
 #endif
 

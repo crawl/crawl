@@ -19,7 +19,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <memory>
-#ifdef UNIX
+#if defined(UNIX) || defined(TARGET_COMPILER_MINGW)
 #include <unistd.h>
 #endif
 
