@@ -18,7 +18,7 @@
 #include <utility> // pair
 #include <vector>
 #include <fcntl.h>
-#ifdef UNIX
+#if defined(UNIX) || defined(TARGET_COMPILER_MINGW)
 # include <unistd.h>
 #endif
 

@@ -4,7 +4,7 @@
 
 #include <cinttypes>
 #include <cmath>
-#ifdef UNIX
+#if defined(UNIX) || defined(TARGET_COMPILER_MINGW)
 # include <unistd.h>
 #else
 # include <process.h>

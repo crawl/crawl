@@ -12,7 +12,7 @@
 #include <cstring>
 #include <sys/param.h>
 #include <sys/types.h>
-#ifdef UNIX
+#if defined(UNIX) || defined(TARGET_COMPILER_MINGW)
 #include <unistd.h>
 #endif
 

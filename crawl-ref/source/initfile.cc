@@ -87,7 +87,7 @@ extern char **NXArgv;
 #ifndef DATA_DIR_PATH
 #include <unistd.h>
 #endif
-#elif defined(UNIX)
+#elif defined(UNIX) || defined(TARGET_COMPILER_MINGW)
 #include <unistd.h>
 #endif
 
