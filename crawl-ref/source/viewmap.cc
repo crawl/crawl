@@ -268,12 +268,12 @@ static int _find_feature(const vector<coord_def>& features,
     return 0;
 }
 
+#ifndef USE_TILE_LOCAL
 static int _get_number_of_lines_levelmap()
 {
     return get_number_of_lines() - 1;
 }
 
-#ifndef USE_TILE_LOCAL
 static void _draw_level_map(int start_x, int start_y, bool travel_mode,
         bool on_level)
 {
@@ -565,6 +565,7 @@ static coord_def _recentre_map_target(const level_id level,
     return (bounds.first + bounds.second + 1) / 2;
 }
 
+#ifndef USE_TILE_LOCAL
 static map_view_state _get_view_state(const map_control_state& state)
 {
     map_view_state view;
@@ -607,6 +608,7 @@ static map_view_state _get_view_state(const map_control_state& state)
 
     return view;
 }
+#endif
 
 // show_map() now centers the known map along x or y. This prevents
 // the player from getting "artificial" location clues by using the
