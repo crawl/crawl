@@ -546,6 +546,23 @@ static string _gen_randlevel_name(int level, god_type god)
     return apostrophised_owner + bookname;
 }
 
+void _set_book_spell_list(item_def &book, vector<spell_type> spells)
+{
+    ASSERT(!spells.empty());
+    sort(begin(spells), end(spells), _compare_spells);
+    spells.resize(RANDBOOK_SIZE, SPELL_NO_SPELL);
+
+    CrawlHashTable &props = book.props;
+    props.erase(SPELL_LIST_KEY);
+    props[SPELL_LIST_KEY].new_vector(SV_INT).resize(RANDBOOK_SIZE);
+
+    CrawlVector &spell_vec = props[SPELL_LIST_KEY].get_vector();
+    spell_vec.set_max_size(RANDBOOK_SIZE);
+
+    for (int i = 0; i < RANDBOOK_SIZE; i++)
+        spell_vec[i].get_int() = spells[i];
+}
+
 /**
  * Turn the given book into a randomly-generated spellbook ("randbook"),
  * containing only spells of a given level.
@@ -637,9 +654,7 @@ bool make_book_level_randart(item_def &book, int level)
     vector<bool> avoid_memorised(spells.size(), !completely_random);
     vector<bool> avoid_seen(spells.size(), !completely_random);
 
-    spell_type chosen_spells[RANDBOOK_SIZE];
-    for (int i = 0; i < RANDBOOK_SIZE; i++)
-        chosen_spells[i] = SPELL_NO_SPELL;
+    vector<spell_type> chosen_spells(RANDBOOK_SIZE, SPELL_NO_SPELL);
 
     int book_pos = 0;
     while (book_pos < num_spells)
@@ -667,20 +682,11 @@ bool make_book_level_randart(item_def &book, int level)
         }
 
         spell_used[spell_pos]     = true;
-        chosen_spells[book_pos++] = spell;
+        chosen_spells.push_back(spell);
+        book_pos++;
     }
-    sort(chosen_spells, chosen_spells + RANDBOOK_SIZE, _compare_spells);
-    ASSERT(chosen_spells[0] != SPELL_NO_SPELL);
 
-    CrawlHashTable &props = book.props;
-    props.erase(SPELL_LIST_KEY);
-    props[SPELL_LIST_KEY].new_vector(SV_INT).resize(RANDBOOK_SIZE);
-
-    CrawlVector &spell_vec = props[SPELL_LIST_KEY].get_vector();
-    spell_vec.set_max_size(RANDBOOK_SIZE);
-
-    for (int i = 0; i < RANDBOOK_SIZE; i++)
-        spell_vec[i].get_int() = chosen_spells[i];
+    _set_book_spell_list(book, chosen_spells);
 
     const string name = _gen_randlevel_name(level, god);
     set_artefact_name(book, replace_name_parts(name, book));
@@ -701,19 +707,7 @@ void init_book_theme_randart(item_def &book, vector<spell_type> spells)
 {
     book.sub_type = BOOK_RANDART_THEME;
     _make_book_randart(book);
-
-    spells.resize(RANDBOOK_SIZE, SPELL_NO_SPELL);
-    sort(spells.begin(), spells.end(), _compare_spells);
-    ASSERT(spells[0] != SPELL_NO_SPELL);
-
-    CrawlHashTable &props = book.props;
-    props.erase(SPELL_LIST_KEY);
-    props[SPELL_LIST_KEY].new_vector(SV_INT).resize(RANDBOOK_SIZE);
-
-    CrawlVector &spell_vec = props[SPELL_LIST_KEY].get_vector();
-    spell_vec.set_max_size(RANDBOOK_SIZE);
-    for (int i = 0; i < RANDBOOK_SIZE; i++)
-        spell_vec[i].get_int() = spells[i];
+    _set_book_spell_list(book, move(spells));
 }
 
 /**
@@ -966,9 +960,7 @@ void make_book_kiku_gift(item_def &book, bool first)
     book.sub_type = BOOK_RANDART_THEME;
     _make_book_randart(book);
 
-    spell_type chosen_spells[RANDBOOK_SIZE];
-    for (int i = 0; i < RANDBOOK_SIZE; i++)
-        chosen_spells[i] = SPELL_NO_SPELL;
+    vector<spell_type> chosen_spells(RANDBOOK_SIZE, SPELL_NO_SPELL);
 
     // Each book should guarantee the player at least one corpse-using
     // spell, to complement Receive Corpses.
@@ -1019,17 +1011,7 @@ void make_book_kiku_gift(item_def &book, bool first)
         chosen_spells[4] = SPELL_DISPEL_UNDEAD;
     }
 
-    sort(chosen_spells, chosen_spells + RANDBOOK_SIZE, _compare_spells);
-
-    CrawlHashTable &props = book.props;
-    props.erase(SPELL_LIST_KEY);
-    props[SPELL_LIST_KEY].new_vector(SV_INT).resize(RANDBOOK_SIZE);
-
-    CrawlVector &spell_vec = props[SPELL_LIST_KEY].get_vector();
-    spell_vec.set_max_size(RANDBOOK_SIZE);
-
-    for (int i = 0; i < RANDBOOK_SIZE; i++)
-        spell_vec[i].get_int() = chosen_spells[i];
+    _set_book_spell_list(book, move(chosen_spells));
 
     string name = "Kikubaaqudgha's ";
     book.props[BOOK_TITLED_KEY].get_bool() = true;
