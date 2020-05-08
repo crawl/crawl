@@ -395,17 +395,10 @@ void clear_monster_list_colours();
 
 void get_monster_info(vector<monster_info>& mons);
 
-struct monster_info_func
-{
-    string singular;
-    string plural;
-    std::function<bool(const monster_info &, bool newconditions)> test;
-};
 void mons_to_string_pane(string& desc, int& desc_colour, bool fullname,
                            const vector<monster_info>& mi, int start,
                            int count);
 void mons_conditions_string(string& desc, const vector<monster_info>& mi,
-                            int start, int count, bool listall);
-vector<monster_info_func> init_monster_info_funcs();
+                            int start, int count, bool equipment);
 
 typedef function<vector<string> (const monster_info& mi)> (desc_filter);
