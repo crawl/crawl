@@ -1608,14 +1608,12 @@ bool CrawlVector::empty() const
     return vec.empty();
 }
 
-CrawlStoreValue& CrawlVector::pop_back()
+void CrawlVector::pop_back()
 {
     ASSERT_VALIDITY();
     ASSERT(!vec.empty());
 
-    CrawlStoreValue& val = vec[vec.size() - 1];
     vec.pop_back();
-    return val;
 }
 
 void CrawlVector::push_back(CrawlStoreValue val)

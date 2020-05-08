@@ -334,7 +334,7 @@ public:
 
     // NOTE: push_back() and insert() have val passed by value rather
     // than by reference so that conversion constructors will work.
-    CrawlStoreValue& pop_back();
+    void             pop_back();
     void             push_back(CrawlStoreValue val);
     void insert(const vec_size index, CrawlStoreValue val);
 
