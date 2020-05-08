@@ -4629,15 +4629,21 @@ void bolt::affect_monster(monster* mon)
     if (flavour == BEAM_MISSILE && item)
     {
         actor *ag = agent(true);
-        // if the agent is now dead, check to see if we can get a usable agent
-        // by factoring in reflections. This case will cause
+        // if the immediate agent is now dead, check to see if we can get a
+        // usable agent by factoring in reflections.
+        // At this point, it is possible that the agent is the dummy monster
+        // associated with YOU_FAULTLESS. This case will cause
         // "INVALID YOU_FAULTLESS" to show up in dprfs and mess up the to-hit,
         // but it otherwise works.
-        // TODO Possibly what should happen is that the thrower's death should
-        // be special-cased as a fineff, but this seemed very tricky to
-        // implement...
+        // TODO: is there a good way of handling the to-hit correctly? (And why
+        // should the to-hit be affected by reflections at all?)
+        // An alternative would be to stop the missile at this point.
         if (!ag)
             ag = agent(false);
+        // if that didn't work, blanket fall back on YOU_FAULTLESS. This covers
+        // a number of other weird penetration cases.
+        if (!ag)
+            ag = &menv[YOU_FAULTLESS];
         ASSERT(ag);
         ranged_attack attk(ag, mon, item, use_target_as_pos, agent());
         attk.attack();
