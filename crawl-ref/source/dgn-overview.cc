@@ -26,6 +26,7 @@
 #include "religion.h"
 #include "scroller.h"
 #include "stairs.h"
+#include "store.h" //for level_id()
 #include "stringutil.h"
 #include "terrain.h"
 #include "travel.h"
@@ -1151,13 +1152,20 @@ void do_annotate()
 
     if (branch == ID_UP)
     {
-        annotate_level(find_up_level(lid));
+        // level_id() is the error vallue of find_up_level(lid)
+        if (find_up_level(lid) == level_id())
+            mpr("There is no level above you.");
+        else
+            annotate_level(find_up_level(lid));
         return;
     }
 
     if (branch == ID_DOWN)
     {
-        annotate_level(find_down_level(lid));
+        if (find_down_level(lid) == lid)
+            mpr("There is no level below you in this branch.");
+        else
+            annotate_level(find_down_level(lid));
         return;
     }
 
@@ -1169,7 +1177,8 @@ void do_annotate()
     else
     {
         clear_messages();
-        const string prompt = make_stringf ("What level of %s? ", branches[branch].longname);
+        const string prompt = make_stringf ("What level of %s? ",
+                    branches[branch].longname);
         depth = prompt_for_quantity(prompt.c_str());
     }
     if (depth > 0 && depth <= max_depth)
