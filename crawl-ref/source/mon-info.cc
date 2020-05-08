@@ -26,6 +26,7 @@
 #include "message.h"
 #include "mon-book.h"
 #include "mon-death.h" // ELVEN_IS_ENERGIZED_KEY
+#include "mon-info-flag-name.h"
 #include "mon-tentacle.h"
 #include "nearby-danger.h"
 #include "options.h"
@@ -1331,169 +1332,16 @@ void monster_info::to_string(int count, string& desc, int& desc_colour,
 vector<string> monster_info::attributes() const
 {
     vector<string> v;
+    for (auto& name : monster_info_flag_names)
+    {
+        if (is(name.flag))
+        {
+            v.push_back(replace_all(name.long_singular,
+                                    "@pronoun_possesive@",
+                                    pronoun(PRONOUN_POSSESSIVE)));
+        }
+    }
 
-    if (is(MB_BERSERK))
-        v.emplace_back("berserk");
-    if (is(MB_HASTED) || is(MB_BERSERK))
-    {
-        if (!is(MB_SLOWED))
-            v.emplace_back("fast");
-        else
-            v.emplace_back("fast+slow");
-    }
-    else if (is(MB_SLOWED))
-        v.emplace_back("slow");
-    if (is(MB_STRONG) || is(MB_BERSERK))
-        v.emplace_back("unusually strong");
-
-    if (is(MB_POISONED))
-        v.emplace_back("poisoned");
-    else if (is(MB_MORE_POISONED))
-        v.emplace_back("very poisoned");
-    else if (is(MB_MAX_POISONED))
-        v.emplace_back("extremely poisoned");
-
-    if (is(MB_SICK))
-        v.emplace_back("sick");
-    if (is(MB_GLOWING))
-        v.emplace_back("softly glowing");
-    if (is(MB_INSANE))
-        v.emplace_back("frenzied and insane");
-    if (is(MB_CONFUSED))
-        v.emplace_back("confused");
-    if (is(MB_INVISIBLE))
-        v.emplace_back("slightly transparent");
-    if (is(MB_CHARMED))
-        v.emplace_back("in your thrall");
-    if (is(MB_BURNING))
-        v.emplace_back("covered in liquid flames");
-    if (is(MB_CAUGHT))
-        v.emplace_back("entangled in a net");
-    if (is(MB_WEBBED))
-        v.emplace_back("entangled in a web");
-    if (is(MB_PETRIFIED))
-        v.emplace_back("petrified");
-    if (is(MB_PETRIFYING))
-        v.emplace_back("slowly petrifying");
-    if (is(MB_VULN_MAGIC))
-        v.emplace_back("susceptible to hostile enchantments");
-    if (is(MB_SWIFT))
-        v.emplace_back("covering ground quickly");
-    if (is(MB_SILENCING))
-        v.emplace_back("radiating silence");
-    if (is(MB_PARALYSED))
-        v.emplace_back("paralysed");
-    if (is(MB_REPEL_MSL))
-        v.emplace_back("repelling missiles");
-    if (is(MB_FEAR_INSPIRING))
-        v.emplace_back("inspiring fear");
-    if (is(MB_BREATH_WEAPON))
-    {
-        v.push_back(string("catching ")
-                    + pronoun(PRONOUN_POSSESSIVE) + " breath");
-    }
-    if (is(MB_DAZED))
-        v.emplace_back("dazed");
-    if (is(MB_MUTE))
-        v.emplace_back("mute");
-    if (is(MB_BLIND))
-        v.emplace_back("blind");
-    if (is(MB_DUMB))
-        v.emplace_back("stupefied");
-    if (is(MB_MAD))
-        v.emplace_back("lost in madness");
-    if (is(MB_REGENERATION))
-        v.emplace_back("regenerating");
-    if (is(MB_RAISED_MR))
-        v.emplace_back("resistant to hostile enchantments");
-    if (is(MB_OZOCUBUS_ARMOUR))
-        v.emplace_back("covered in an icy film");
-    if (is(MB_WRETCHED))
-        v.emplace_back("misshapen and mutated");
-    if (is(MB_WORD_OF_RECALL))
-        v.emplace_back("chanting recall");
-    if (is(MB_INJURY_BOND))
-        v.emplace_back("sheltered from injuries");
-    if (is(MB_WATER_HOLD))
-        v.emplace_back("engulfed in water");
-    if (is(MB_WATER_HOLD_DROWN))
-    {
-        v.emplace_back("engulfed in water");
-        v.emplace_back("unable to breathe");
-    }
-    if (is(MB_FLAYED))
-        v.emplace_back("covered in terrible wounds");
-    if (is(MB_WEAK))
-        v.emplace_back("weak");
-    if (is(MB_DIMENSION_ANCHOR))
-        v.emplace_back("unable to translocate");
-    if (is(MB_TOXIC_RADIANCE))
-        v.emplace_back("radiating toxic energy");
-    if (is(MB_GRASPING_ROOTS))
-        v.emplace_back("constricted by roots");
-    if (is(MB_FIRE_VULN))
-        v.emplace_back("more vulnerable to fire");
-    if (is(MB_TORNADO))
-        v.emplace_back("surrounded by raging winds");
-    if (is(MB_TORNADO_COOLDOWN))
-        v.emplace_back("surrounded by restless winds");
-    if (is(MB_BARBS))
-        v.emplace_back("skewered by barbs");
-    if (is(MB_POISON_VULN))
-        v.emplace_back("more vulnerable to poison");
-    if (is(MB_ICEMAIL))
-        v.emplace_back("surrounded by an icy envelope");
-    if (is(MB_AGILE))
-        v.emplace_back("unusually agile");
-    if (is(MB_FROZEN))
-        v.emplace_back("encased in ice");
-    if (is(MB_BLACK_MARK))
-        v.emplace_back("absorbing vital energies");
-    if (is(MB_SAP_MAGIC))
-        v.emplace_back("magic-sapped");
-    if (is(MB_SHROUD))
-        v.emplace_back("shrouded");
-    if (is(MB_CORROSION))
-        v.emplace_back("covered in acid");
-    if (is(MB_SLOW_MOVEMENT))
-        v.emplace_back("covering ground slowly");
-    if (is(MB_LIGHTLY_DRAINED))
-        v.emplace_back("lightly drained");
-    if (is(MB_HEAVILY_DRAINED))
-        v.emplace_back("heavily drained");
-    if (is(MB_RESISTANCE))
-        v.emplace_back("unusually resistant");
-    if (is(MB_HEXED))
-        v.emplace_back("control wrested from you");
-    if (is(MB_BRILLIANCE_AURA))
-        v.emplace_back("aura of brilliance");
-    if (is(MB_EMPOWERED_SPELLS))
-        v.emplace_back("spells empowered");
-    if (is(MB_READY_TO_HOWL))
-        v.emplace_back("ready to howl");
-    if (is(MB_PARTIALLY_CHARGED))
-        v.emplace_back("partially charged");
-    if (is(MB_FULLY_CHARGED))
-        v.emplace_back("fully charged");
-    if (is(MB_GOZAG_INCITED))
-        v.emplace_back("incited by Gozag");
-    if (is(MB_PAIN_BOND))
-    {
-        v.push_back(string("sharing ")
-                    + pronoun(PRONOUN_POSSESSIVE) + " pain");
-    }
-    if (is(MB_IDEALISED))
-        v.emplace_back("idealised");
-    if (is(MB_BOUND_SOUL))
-        v.emplace_back("bound soul");
-    if (is(MB_INFESTATION))
-        v.emplace_back("infested");
-    if (is(MB_STILL_WINDS))
-        v.emplace_back("stilling the winds");
-    if (is(MB_VILE_CLUTCH))
-        v.emplace_back("constricted by zombie hands");
-    if (is(MB_WATERLOGGED))
-        v.emplace_back("waterlogged");
     return v;
 }
 
@@ -1790,81 +1638,6 @@ void mons_to_string_pane(string& desc, int& desc_colour, bool fullname,
     mons_conditions_string(desc, mi, start, count, true);
 }
 
-static map<monster_info_flags, pair<string, string>> monster_info_flag_names = {
-    { MB_CHARMED, {"charmed", "charmed"} },
-    { MB_HEXED, {"hexed", "hexed"} },
-    { MB_BERSERK, {"berserk", "berserk"} },
-    { MB_HASTED, {"fast", "fast"} },
-    { MB_INNER_FLAME, {"inner flame", "inner flame"} },
-    { MB_MIRROR_DAMAGE, {"reflects damage", "reflect damage"} },
-    { MB_BOUND_SOUL, {"soul bound", "souls bound"} },
-    { MB_STRONG, {"strong", "strong"} },
-    { MB_EMPOWERED_SPELLS, {"empowered", "empowered"} },
-    { MB_FULLY_CHARGED, {"charged", "charged"} },
-    { MB_PARTIALLY_CHARGED, {"charging", "charging"} },
-    { MB_AGILE, {"agile", "agile"} },
-    { MB_SWIFT, {"swift", "swift"} },
-    { MB_STILL_WINDS, {"stilling wind", "stilling wind"} },
-    { MB_READY_TO_HOWL, {"can howl", "can howl"} },
-    { MB_BRILLIANCE_AURA, {"brilliance aura", "brilliance auras"} },
-    { MB_POSSESSABLE, {"possessable", "possessable"} },
-    { MB_INSANE, {"insane", "insane"} },
-    { MB_DUMB, {"stupefied", "stupefied"} },
-    { MB_PARALYSED, {"paralysed", "paralysed"} },
-    { MB_CAUGHT, {"caught", "caught"} },
-    { MB_WEBBED, {"webbed", "webbed"} },
-    { MB_PETRIFIED, {"petrified", "petrified"} },
-#if TAG_MAJOR_VERSION == 34
-    { MB_PINNED, {"pinned", "pinned"} },
-#endif
-    { MB_SUMMONED, {"summoned", "summoned"} },
-    { MB_FEAR_INSPIRING, {"scary", "scary"} },
-    { MB_WORD_OF_RECALL, {"chanting recall", "chanting recall"} },
-    { MB_REPEL_MSL, {"repels missiles", "repel missiles"} },
-    { MB_TOXIC_RADIANCE, {"toxic aura", "toxic auras"} },
-    { MB_BLACK_MARK, {"black mark", "black marks"} },
-    { MB_OZOCUBUS_ARMOUR, {"icy armour", "icy armour"} },
-    { MB_ICEMAIL, {"icemail", "icemail"} },
-    { MB_SHROUD, {"shrouded", "shrouded"} },
-    { MB_RESISTANCE, {"resistant", "resistant"} },
-    { MB_PETRIFYING, {"petrifying", "petrifying"} },
-    { MB_MAD, {"mad", "mad"} },
-    { MB_CONFUSED, {"confused", "confused"} },
-    { MB_FLEEING, {"fleeing", "fleeing"} },
-    { MB_DORMANT, {"dormant", "dormant"} },
-    { MB_SLEEPING, {"asleep", "asleep"} },
-    { MB_UNAWARE, {"unaware", "unaware"} },
-    { MB_DAZED, {"dazed", "dazed"} },
-    { MB_MUTE, {"mute", "mute"} },
-    { MB_BLIND, {"blind", "blind"} },
-    { MB_FROZEN, {"frozen", "frozen"} },
-    { MB_INFESTATION, {"infested", "infested"} },
-    { MB_WANDERING, {"wandering", "wandering"} },
-    { MB_WATER_HOLD_DROWN, {"drowning", "drowning"} },
-    { MB_BURNING, {"burning", "burning"} },
-    { MB_POISONED, {"poisoned", "poisoned"} },
-    { MB_SLOWED, {"slow", "slow"} },
-    { MB_BREATH_WEAPON, {"catching breath", "catching breath"} },
-    { MB_VULN_MAGIC, {"vulnerable", "vulnerable"} },
-    { MB_FIRE_VULN, {"inflammable", "inflammable"} },
-    { MB_POISON_VULN, {"easily poisoned", "easily poisoned"} },
-    { MB_WRETCHED, {"misshapen", "misshapen"} },
-    { MB_CORROSION, {"corroded", "corroded"} },
-    { MB_FLAYED, {"flayed", "flayed"} },
-    { MB_GRASPING_ROOTS, {"rooted", "rooted"} },
-    { MB_VILE_CLUTCH, {"clutched", "clutched"} },
-    { MB_BARBS, {"skewered", "skewered"} },
-    { MB_SICK, {"sick", "sick"} },
-    { MB_WEAK, {"weak", "weak"} },
-    { MB_LIGHTLY_DRAINED, {"drained", "drained"} },
-    { MB_HEAVILY_DRAINED, {"drained", "drained"} },
-    { MB_SAP_MAGIC, {"sapped magic", "sapped magic"} },
-    { MB_GLOWING, {"corona", "coronas"} },
-    { MB_INVISIBLE, {"invisible", "invisible"} },
-    { MB_WATER_HOLD, {"engulfed", "engulfed"} },
-    { MB_IDEALISED, {"idealised", "idealised"} },
-};
-
 static bool _has_polearm(const monster_info& mi)
 {
     if (mi.itemuse() >= MONUSE_STARTING_EQUIPMENT)
@@ -1888,14 +1661,14 @@ static bool _has_launcher(const monster_info& mi)
 }
 
 static string _condition_string(int num, int count,
-                                const pair<string, string> name)
+                                const monster_info_flag_name& name)
 {
     if (1 < num && num < count)
-        return make_stringf("%d %s", num, name.second.c_str());
+        return make_stringf("%d %s", num, name.plural.c_str());
     else if (1 < num)
-        return name.second;
+        return name.plural;
     else
-        return name.first;
+        return name.short_singular;
 }
 
 void mons_conditions_string(string& desc, const vector<monster_info>& mi,
@@ -1905,29 +1678,30 @@ void mons_conditions_string(string& desc, const vector<monster_info>& mi,
 
     if (equipment)
     {
+        int wand_count = 0;
         int polearm_count = 0;
+        int launcher_count = 0;
 
         for (int j = start; j < start + count; ++j)
+        {
             if (_has_polearm(mi[j]))
                 polearm_count++;
+            if (_has_launcher(mi[j]))
+                launcher_count++;
+        }
 
         if (polearm_count)
         {
             conditions.push_back(_condition_string(polearm_count, count,
-                                                   {"polearm", "polearms"}));
+                                                   {MB_UNSAFE, "polearm",
+                                                    "polearm", "polearms"}));
         }
 
-        int launcher_count = 0;
-
-        for (int j = start; j < start+count; ++j)
-        {
-            if (_has_launcher(mi[j]))
-                launcher_count++;
-        }
         if (launcher_count)
         {
             conditions.push_back(_condition_string(launcher_count, count,
-                                                   {"launcher", "launchers"}));
+                                                   {MB_UNSAFE, "launcher",
+                                                    "launcher", "launchers"}));
         }
     }
 
@@ -1936,11 +1710,11 @@ void mons_conditions_string(string& desc, const vector<monster_info>& mi,
         int num = 0;
         for (int j = start; j < start+count; j++)
         {
-            if (mi[j].is(name.first))
+            if (mi[j].is(name.flag))
                 num++;
         }
-        if (num)
-            conditions.push_back(_condition_string(num, count, name.second));
+        if (num && !name.short_singular.empty())
+            conditions.push_back(_condition_string(num, count, name));
     }
 
     if (conditions.empty())
