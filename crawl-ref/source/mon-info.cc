@@ -1660,6 +1660,13 @@ static bool _has_launcher(const monster_info& mi)
         return false;
 }
 
+static bool _has_wand(const monster_info& mi)
+{
+     if (mi.itemuse() >= MONUSE_STARTING_EQUIPMENT)
+         return mi.inv[MSLOT_WAND].get();
+     return false;
+}
+
 static string _condition_string(int num, int count,
                                 const monster_info_flag_name& name)
 {
@@ -1684,10 +1691,19 @@ void mons_conditions_string(string& desc, const vector<monster_info>& mi,
 
         for (int j = start; j < start + count; ++j)
         {
+            if (_has_wand(mi[j]))
+                wand_count++;
             if (_has_polearm(mi[j]))
                 polearm_count++;
             if (_has_launcher(mi[j]))
                 launcher_count++;
+        }
+
+        if (wand_count)
+        {
+            conditions.push_back(_condition_string(wand_count, count,
+                                                   {MB_UNSAFE, "wand",
+                                                    "wand", "with wands"}));
         }
 
         if (polearm_count)
