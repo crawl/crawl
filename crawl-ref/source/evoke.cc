@@ -45,12 +45,14 @@
 #include "place.h"
 #include "player.h"
 #include "player-stats.h"
+#include "prompt.h"
 #include "religion.h"
 #include "shout.h"
 #include "skills.h"
 #include "spl-book.h"
 #include "spl-cast.h"
 #include "spl-clouds.h"
+#include "spl-damage.h"
 #include "spl-util.h"
 #include "state.h"
 #include "stringutil.h"
@@ -1052,12 +1054,66 @@ static spret _phantom_mirror()
 }
 
 /**
+ * Find the cell at range 3 closest to the center of mass of monsters in range,
+ * or a random range 3 cell if there are none.
+ *
+ * @param see_targets a boolean parameter indicating if the user can see any of
+ * the targets
+ * @return The cell in question.
+ */
+static coord_def _find_tremorstone_target(bool& see_targets)
+{
+    coord_def com = {0, 0};
+    see_targets = false;
+    int num = 0;
+
+    for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
+    {
+        if (monster_at(*ri) && !mons_is_firewood(*monster_at(*ri)))
+        {
+            com += *ri;
+            see_targets = see_targets || you.can_see(*monster_at(*ri));
+            ++num;
+        }
+    }
+
+    coord_def target = {0, 0};
+    int distance = LOS_RADIUS * num;
+    int ties = 0;
+
+    for (radius_iterator ri(you.pos(), 3, C_SQUARE, LOS_NO_TRANS, true); ri; ++ri)
+    {
+        if (ri->distance_from(you.pos()) != 3 || cell_is_solid(*ri))
+            continue;
+
+        if (num > 0)
+        {
+            if (com.distance_from((*ri) * num) < distance)
+            {
+                ties = 1;
+                target = *ri;
+                distance = com.distance_from((*ri) * num);
+            }
+            else if (com.distance_from((*ri) * num) == distance
+                     && one_chance_in(++ties))
+            {
+                target = *ri;
+            }
+        }
+        else if (one_chance_in(++ties))
+            target = *ri;
+    }
+
+    return target;
+}
+
+/**
  * Find an adjacent tile for a tremorstone explosion to go off in.
  *
  * @param center    The original target of the stone.
  * @return          The new, final origin of the stone's explosion.
  */
-static coord_def _get_tremorstone_target(coord_def center)
+static coord_def _fuzz_tremorstone_target(coord_def center)
 {
     coord_def chosen = center;
     int seen = 1;
@@ -1082,55 +1138,41 @@ static spret _tremorstone()
         return spret::abort;
     }
 
-    dist target;
+    bool see_target;
     bolt beam;
 
     static const int RADIUS = 2;
     static const int SPREAD = 1;
     static const int RANGE = RADIUS + SPREAD;
+    const int pow = 15 + you.skill(SK_EVOCATIONS, 7) / 2;
+    const int adjust_pow = player_adjust_evoc_power(pow);
+    const int num_explosions = shotgun_beam_count(adjust_pow);
 
     beam.source_id  = MID_PLAYER;
     beam.thrower    = KILL_YOU;
-    zappy(ZAP_TREMORSTONE, 1, false, beam);
+    zappy(ZAP_TREMORSTONE, pow, false, beam);
     beam.range = RANGE;
     beam.ex_size = RADIUS;
+    beam.target = _find_tremorstone_target(see_target);
 
-    direction_chooser_args args;
-    args.mode = TARG_HOSTILE;
-    args.top_prompt = "Throw a tremorstone where?";
-    unique_ptr<targeter> hitfunc =
-        make_unique<targeter_beam>(&you, RANGE, ZAP_TREMORSTONE, 1, 1, 3);
-    args.hitfunc = hitfunc.get();
-    if (!spell_direction(target, beam, &args))
-        return spret::abort;
+    targeter_radius hitfunc(&you, LOS_NO_TRANS);
 
-    if (grid_distance(beam.target, beam.source) > beam.range)
+    if ((!see_target
+        && !yesno("You can't see anything, throw a tremorstone anyway?",
+                 true, 'n'))
+        || stop_attack_prompt(hitfunc, "throw a tremorstone", nullptr))
     {
-        mpr("That is beyond the maximum range.");
         return spret::abort;
     }
-
-    if (cell_is_solid(beam.target))
-    {
-        const char *feat = feat_type_name(grd(beam.target));
-        mprf("There's %s there.", article_a(feat).c_str());
-        return spret::abort;
-    }
-
-    bolt tracer = beam;
-    tracer.is_tracer = true;
-    tracer.ex_size = RADIUS + SPREAD;
-    tracer.explode(false);
-    if (tracer.beam_cancelled)
-        return spret::abort;
 
     mpr("The tremorstone explodes into fragments!");
     const coord_def center = beam.target;
-    for (int i = 0; i < 2; i++)
+
+    for (int i = 0; i < num_explosions; i++)
     {
         bolt explosion = beam;
-        explosion.target = _get_tremorstone_target(center);
-        explosion.explode(i == 1);
+        explosion.target = _fuzz_tremorstone_target(center);
+        explosion.explode(i == num_explosions - 1);
     }
 
     return spret::success;

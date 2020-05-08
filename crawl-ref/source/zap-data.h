@@ -1360,9 +1360,9 @@ _mon_hex_zap(ZAP_DRAIN_MAGIC, BEAM_DRAIN_MAGIC),
 
 {
     ZAP_TREMORSTONE,
-    "shards of rock",
+    "burst of rock shards",
     200,
-    new dicedef_calculator<6, 6, 0, 1>,
+    new dicedef_calculator<6, 6, 1, 20>,
     new tohit_calculator<40>,
     nullptr,
     nullptr,

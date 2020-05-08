@@ -1119,13 +1119,15 @@ speed of an unskilled wearer.
 %%%%
 tin of tremorstones
 
-A set of dormant earth elementals in the form of tiny, very heavy pebbles. When
-thrown, the elementals literally explode with rage at their rest being disturbed.
-Tremorstones usually land slightly off-target, and the user is always at risk of
-being hit. However, armour is extremely effective at repelling the lightweight
-fragments of rock from a tremorstone's explosion, so a well-armoured wielder has
-little to fear. Evocations skill has no effect on tremorstones, and there is a
-one in three chance of accidentally destroying the case when using it.
+A set of dormant, magnetic earth elementals in the form of tiny, very heavy
+pebbles. When released, the elementals are drawn magnetically to the center of
+nearby monsters, where they literally explode with rage at their rest being
+disturbed. Tremorstones usually land slightly off-target, and the user is
+always at risk of being hit. However, armour is extremely effective at
+repelling the lightweight fragments of rock from a tremorstone's explosion, so
+a well-armoured wielder has little to fear. Evocations skill increases the
+number and power of the elementals' explosions. There is a one in three chance
+of accidentally destroying the case when using it.
 %%%%
 trident
 
