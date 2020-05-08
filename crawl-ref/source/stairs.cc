@@ -735,6 +735,7 @@ void floor_transition(dungeon_feature_type how,
     case BRANCH_ABYSS:
         // There are no abyssal stairs that go up, so this whole case is only
         // when going down.
+        you.props.erase(ABYSS_SPAWNED_XP_EXIT_KEY);
         if (old_level.branch == BRANCH_ABYSS)
         {
             mprf(MSGCH_BANISHMENT, "You plunge deeper into the Abyss.");
@@ -755,7 +756,6 @@ void floor_transition(dungeon_feature_type how,
         }
 
         you.props[ABYSS_STAIR_XP_KEY] = EXIT_XP_COST;
-        you.props.erase(ABYSS_SPAWNED_XP_EXIT_KEY);
 
         // Re-entering the Abyss halves accumulated speed.
         you.abyss_speed /= 2;
