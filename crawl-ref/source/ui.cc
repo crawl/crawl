@@ -24,7 +24,7 @@
 # include "tilepick-p.h"
 # include "tile-player-flag-cut.h"
 #else
-# ifdef UNIX
+# if defined(UNIX) || defined(TARGET_COMPILER_MINGW)
 #  include <unistd.h>
 # endif
 # include "output.h"
