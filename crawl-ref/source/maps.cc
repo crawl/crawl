@@ -12,7 +12,7 @@
 #include <cstring>
 #include <sys/param.h>
 #include <sys/types.h>
-#ifndef TARGET_COMPILER_VC
+#ifdef UNIX
 #include <unistd.h>
 #endif
 

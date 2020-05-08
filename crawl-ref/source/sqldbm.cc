@@ -9,7 +9,9 @@
 
 #include <cstring>
 #include <fcntl.h>
+#ifdef UNIX
 #include <unistd.h>
+#endif
 
 #include "end.h"
 #include "syscalls.h"

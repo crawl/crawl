@@ -6,11 +6,14 @@
 
 #include <cerrno>
 #include <cstdarg>
+
 #include <sys/socket.h>
 #include <sys/time.h>
 #include <sys/types.h>
 #include <sys/un.h>
+#ifdef UNIX
 #include <unistd.h>
+#endif
 
 #include "artefact.h"
 #include "branch.h"

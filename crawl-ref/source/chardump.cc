@@ -14,7 +14,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <fcntl.h>
-#if !defined(__IBMCPP__) && !defined(TARGET_COMPILER_VC)
+#ifdef UNIX
 #include <unistd.h>
 #endif
 

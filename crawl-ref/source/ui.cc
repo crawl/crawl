@@ -24,7 +24,9 @@
 # include "tilepick-p.h"
 # include "tile-player-flag-cut.h"
 #else
-# include <unistd.h>
+# ifdef UNIX
+#  include <unistd.h>
+# endif
 # include "output.h"
 # include "stringutil.h"
 # include "view.h"
