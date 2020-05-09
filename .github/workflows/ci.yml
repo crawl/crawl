@@ -445,8 +445,6 @@ jobs:
           if [[ ${#failed_components[@]}]] -gt 0 ]]; then
             function join { local IFS=","; echo "$*"; }
             message="Build failed ${message} (failed: $(join "${failed_components[@]}"))"
-          else
-            message="Build passed ${message}"
           fi
 
           echo "::set-output name=message::${message}"
