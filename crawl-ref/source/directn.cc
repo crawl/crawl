@@ -2002,19 +2002,25 @@ bool direction_chooser::do_main_loop()
 
     case CMD_TARGET_CYCLE_BACK:
         if (!targets_objects())
-        {
             monster_cycle(-1);
-            break;
-        } // else fall-through
-    case CMD_TARGET_OBJ_CYCLE_BACK:    object_cycle(-1);  break;
+        else
+            object_cycle(-1);
+        break;
+
+    case CMD_TARGET_OBJ_CYCLE_BACK:
+        object_cycle(-1);
+        break;
 
     case CMD_TARGET_CYCLE_FORWARD:
         if (!targets_objects())
-        {
             monster_cycle(1);
-            break;
-        } // else fall-through
-    case CMD_TARGET_OBJ_CYCLE_FORWARD: object_cycle(1);  break;
+        else
+            object_cycle(1);
+        break;
+
+    case CMD_TARGET_OBJ_CYCLE_FORWARD:
+        object_cycle(1);
+        break;
 
     case CMD_TARGET_CANCEL:
         loop_done = true;
