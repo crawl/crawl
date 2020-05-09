@@ -260,10 +260,6 @@ private:
     bool have_beam;             // Is the currently stored beam valid?
     coord_def objfind_pos, monsfind_pos; // Cycling memory
 
-    bool valid_shadow_step;     // If shadow-stepping, do we currently have a
-                                // monster target with a valid landing
-                                // position?
-
     // What we need to redraw.
     bool need_viewport_redraw;
     bool need_cursor_redraw;

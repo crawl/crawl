@@ -1111,8 +1111,6 @@ const coord_def& direction_chooser::target() const
 
 void direction_chooser::set_target(const coord_def& new_target)
 {
-    if (restricts == DIR_SHADOW_STEP)
-        valid_shadow_step = hitfunc->has_additional_sites(new_target);
     moves.target = new_target;
 }
 
@@ -1297,8 +1295,12 @@ bool direction_chooser::select(bool allow_out_of_range, bool endpoint)
 {
     const monster* mons = monster_at(target());
 
-    if (restricts == DIR_SHADOW_STEP && !valid_shadow_step)
-        return false;
+    if (restricts == DIR_SHADOW_STEP)
+    {
+        const auto valid_shadow_step = hitfunc->has_additional_sites(target());
+        if (!valid_shadow_step)
+            return false;
+    }
 
     if ((restricts == DIR_LEAP
          || restricts == DIR_SHADOW_STEP
