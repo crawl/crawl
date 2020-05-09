@@ -250,9 +250,7 @@ LUAFN(l_spells_target)
  */
 LUAFN(l_spells_dir)
 {
-    spell_type spell = spell_by_name(luaL_checkstring(ls, 1), false);
-    const spell_flags flags = get_spell_flags(spell);
-    PLUARET(boolean, bool(flags & spflag::dir));
+    PLUARET(boolean, false);
 }
 
 /*** Can this spell target objects?

@@ -183,75 +183,6 @@ bool dist::isMe() const
                || (target.origin() && delta.origin()));
 }
 
-bool direction_chooser::choose_compass()
-{
-    // Reinitialize moves.
-    moves.isValid       = true;
-    moves.isTarget      = false;
-    moves.isCancel      = false;
-    moves.delta.reset();
-
-    mouse_control mc(MOUSE_MODE_TARGET_DIR);
-
-    behaviour->compass = true;
-
-    do
-    {
-        const auto key = targeting_behaviour_get_key();
-        const command_type key_command = behaviour->get_command(key);
-
-        if (handle_signals())
-            return false;
-
-#ifdef USE_TILE
-        if (key_command == CMD_TARGET_MOUSE_MOVE)
-            continue;
-        else if (key_command == CMD_TARGET_MOUSE_SELECT)
-        {
-            const coord_def &gc = tiles.get_cursor();
-            if (gc == NO_CURSOR)
-                continue;
-
-            if (!map_bounds(gc))
-                continue;
-
-            coord_def delta = gc - you.pos();
-            if (delta.rdist() > 1)
-            {
-                tiles.place_cursor(CURSOR_MOUSE, gc);
-                delta = tiles.get_cursor() - you.pos();
-                ASSERT(delta.rdist() <= 1);
-            }
-
-            moves.delta = delta;
-            break;
-        }
-#endif
-
-        if (key_command == CMD_TARGET_SELECT)
-        {
-            moves.delta.reset();
-            break;
-        }
-
-        const int i = _targeting_cmd_to_compass(key_command);
-        if (i != -1)
-            moves.delta = Compass[i];
-        else if (key_command == CMD_TARGET_CANCEL)
-        {
-            moves.isCancel = true;
-            moves.isValid = false;
-        }
-    }
-    while (!moves.isCancel && moves.delta.origin());
-
-#ifdef USE_TILE
-    tiles.place_cursor(CURSOR_MOUSE, NO_CURSOR);
-#endif
-
-    return moves.isValid;
-}
-
 static int _targeting_cmd_to_compass(command_type command)
 {
     switch (command)
@@ -378,8 +309,6 @@ void direction_chooser::print_key_hints() const
         case DIR_LEAP:
             prompt += ", Dir - move target cursor";
             prompt += hint_string;
-            break;
-        case DIR_DIR:
             break;
         }
     }
@@ -2095,9 +2024,6 @@ bool direction_chooser::choose_direction()
     ui::cutoff_point ui_cutoff_point;
 #endif
 
-    if (restricts == DIR_DIR)
-        return choose_compass();
-
     cursor_control ccon(!Options.use_fake_cursor);
     mouse_control mc(needs_path && !just_looking ? MOUSE_MODE_TARGET_PATH
                                                  : MOUSE_MODE_TARGET);
@@ -3689,7 +3615,7 @@ static void _describe_cell(const coord_def& where, bool in_range)
 // targeting_behaviour
 
 targeting_behaviour::targeting_behaviour(bool look_around)
-    : just_looking(look_around), compass(false)
+    : just_looking(look_around)
 {
 }
 

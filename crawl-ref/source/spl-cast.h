@@ -13,9 +13,9 @@ enum class spflag
     dir_or_target      = 0x00000001,      // use DIR_NONE targeting
     target             = 0x00000002,      // use DIR_TARGET targeting
                      //  0x00000004,
-    dir                = 0x00000008,      // use DIR_DIR targeting
-    targeting_mask     = spflag::dir_or_target | spflag::target
-                             | spflag::dir, // used to test for targeting
+                     //  0x00000008,
+                                          // used to test for targeting
+    targeting_mask     = spflag::dir_or_target | spflag::target,
     // TODO: we need a new flag if we want to target corpses too.
     obj                = 0x00000010,      // TARG_MOVABLE_OBJECT used
     helpful            = 0x00000020,      // TARG_FRIEND used
