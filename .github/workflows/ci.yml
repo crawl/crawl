@@ -48,6 +48,7 @@ jobs:
           - compiler: clang
             build_opts: WEBTILES=1
         include:
+          # Jobs for tag_upgrade=true.
           - compiler: gcc
             build_opts: ""
             debug: FULLDEBUG=1
@@ -60,6 +61,10 @@ jobs:
             build_opts: TILES=1
             debug: FULLDEBUG=1
             tag_upgrade: true
+          # Jobs for BUILD_ALL
+          - compiler: gcc
+            build_opts: BUILD_ALL=1
+            debug: ""
     steps:
       - uses: actions/checkout@v2
         with:
