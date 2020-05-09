@@ -1912,28 +1912,11 @@ void direction_chooser::show_help()
     need_all_redraw = true;
 }
 
-// Return false if we should continue looping, true if we're done.
-bool direction_chooser::do_main_loop()
+bool direction_chooser::process_command(command_type command)
 {
-    if (handle_signals())
-        return true;
-
-    // This needs to be done every loop iteration.
-    reinitialize_move_flags();
-
-    const coord_def old_target = target();
-    const auto key = targeting_behaviour_get_key();
-    if (key == CK_REDRAW)
-    {
-        redraw_screen(false);
-        return false;
-    }
-
-    const command_type key_command = behaviour->get_command(key);
-    behaviour->update_top_prompt(&top_prompt);
     bool loop_done = false;
 
-    switch (key_command)
+    switch (command)
     {
     case CMD_TARGET_SHOW_PROMPT: describe_cell(); break;
 
@@ -2028,10 +2011,35 @@ bool direction_chooser::do_main_loop()
 
     default:
         // Some blocks of keys with similar handling.
-        handle_movement_key(key_command, &loop_done);
-        handle_wizard_command(key_command, &loop_done);
+        handle_movement_key(command, &loop_done);
+        handle_wizard_command(command, &loop_done);
         break;
     }
+
+    return loop_done;
+}
+
+// Return false if we should continue looping, true if we're done.
+bool direction_chooser::do_main_loop()
+{
+    if (handle_signals())
+        return true;
+
+    // This needs to be done every loop iteration.
+    reinitialize_move_flags();
+
+    const coord_def old_target = target();
+    const auto key = targeting_behaviour_get_key();
+    if (key == CK_REDRAW)
+    {
+        redraw_screen(false);
+        return false;
+    }
+
+    const command_type key_command = behaviour->get_command(key);
+    behaviour->update_top_prompt(&top_prompt);
+
+    bool loop_done = process_command(key_command);
 
     // Don't allow going out of bounds.
     if (!crawl_view.in_viewport_g(target()))

@@ -126,6 +126,8 @@ private:
     // Return the location where targeting should start.
     coord_def find_default_target() const;
 
+    bool process_command(command_type command);
+
     void handle_mlist_cycle_command(command_type key_command);
     void handle_wizard_command(command_type key_command, bool* loop_done);
     void handle_movement_key(command_type key_command, bool* loop_done);
