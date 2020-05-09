@@ -427,11 +427,9 @@ jobs:
           fi
 
           url="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-          message="for $branch @ $short_sha $url"
-          if [[ ${#failed_components[@]}]] -gt 0 ]]; then
-            function join { local IFS=","; echo "$*"; }
-            message="Build failed ${message} (failed: $(join "${failed_components[@]}"))"
-          fi
+          message="Build failed for $branch @ $short_sha $url"
+          function join { local IFS=","; echo "$*"; }
+          message="${message} (failed: $(join "${failed_components[@]}"))"
 
           echo "::set-output name=message::${message}"
       - uses: rectalogic/notify-irc@v1
