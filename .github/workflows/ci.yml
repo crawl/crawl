@@ -20,7 +20,7 @@ jobs:
         run: util/checkwhite -n
         working-directory: crawl-ref/source
   build_linux:
-    name: Linux ${{ matrix.compiler }} ${{ matrix.build_opts }} ${{ matrix.debug }} tag_upgrade=${{ matrix.tag_upgrade }} build_all=${{ matrix.build_all }}
+    name: Linux ${{ matrix.compiler }} ${{ matrix.build_opts }} ${{ matrix.debug }} tag_upgrade=${{ matrix.tag_upgrade }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -36,8 +36,6 @@ jobs:
           - ""
           - FULLDEBUG=1
         tag_upgrade:
-          - false
-        build_all:
           - false
         exclude:
           # Limit Clang jobs:
@@ -63,23 +61,11 @@ jobs:
             build_opts: TILES=1
             debug: FULLDEBUG=1
             tag_upgrade: true
-          # Jobs for BUILD_ALL
-          - compiler: gcc
-            build_opts: ""
-            debug: ""
-            build_all: true
     steps:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0 # all history
       - run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
-      - name: Checkout submodules
-        if: matrix.build_all == true
-        shell: bash
-        run: |
-          auth_header="$(git config --local --get http.https://github.com/.extraheader)"
-          git submodule sync --recursive
-          git -c "http.extraheader=$auth_header" -c protocol.version=2 submodule update --init --force --recursive --depth=1
       - name: Set up Python 3.7
         uses: actions/setup-python@v1
         with:
