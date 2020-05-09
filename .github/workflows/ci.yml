@@ -402,7 +402,7 @@ jobs:
       - build_mingw64_crosscompile
       - codecov_catch2
       - webserver
-    if: always() && github.event_name == 'push'
+    if: failure() && github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
       - name: Build message
