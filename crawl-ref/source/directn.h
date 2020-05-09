@@ -268,8 +268,6 @@ private:
     bool need_text_redraw;
     bool need_all_redraw;       // All of the above.
 
-    bool show_items_once;       // Should we show items this time?
-
     // Default behaviour, saved across instances.
     static targeting_behaviour stock_behaviour;
 

@@ -421,7 +421,7 @@ void direction_chooser::describe_cell() const
         print_key_hints();
         bool did_cloud = false;
         print_target_description(did_cloud);
-        if (just_looking || (show_items_once && !targets_objects()))
+        if (just_looking)
             print_items_description();
         if (just_looking || show_floor_desc)
         {
@@ -533,8 +533,6 @@ direction_chooser::direction_chooser(dist& moves_,
     need_text_redraw = true;
     need_cursor_redraw = true;
     need_all_redraw = false;
-
-    show_items_once = false;
 }
 
 class view_desc_proc
@@ -1243,7 +1241,6 @@ void direction_chooser::object_cycle(int dir)
                              dir > 0 ? LS_FLIPVH : LS_FLIPHV))
     {
         set_target(objfind_pos);
-        show_items_once = true;
     }
     else
         flush_input_buffer(FLUSH_ON_FAILURE);
@@ -1820,7 +1817,6 @@ void direction_chooser::do_redraws()
         msgwin_clear_temporary();
         describe_cell();
         need_text_redraw = false;
-        show_items_once = false;
     }
 
     if (need_cursor_redraw || Options.use_fake_cursor)
