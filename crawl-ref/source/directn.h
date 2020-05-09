@@ -35,9 +35,7 @@ public:
     targeting_behaviour(bool just_looking = false);
     virtual ~targeting_behaviour();
 
-    // Returns a keystroke for the prompt.
-    virtual int get_key();
-    virtual command_type get_command(int key = -1);
+    virtual command_type get_command(int key);
 
     // Should we force a redraw?
     virtual bool should_redraw() const { return false; }

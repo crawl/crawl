@@ -120,6 +120,8 @@ static void _extend_move_to_edge(dist &moves);
 static vector<string> _get_monster_desc_vector(const monster_info& mi);
 static string _get_monster_desc(const monster_info& mi);
 
+static int targeting_behaviour_get_key();
+
 #ifdef DEBUG_DIAGNOSTICS
 static void _debug_describe_feature_at(const coord_def &where);
 #endif
@@ -195,7 +197,8 @@ bool direction_chooser::choose_compass()
 
     do
     {
-        const command_type key_command = behaviour->get_command();
+        const auto key = targeting_behaviour_get_key();
+        const command_type key_command = behaviour->get_command(key);
 
         if (handle_signals())
             return false;
@@ -1923,7 +1926,7 @@ bool direction_chooser::do_main_loop()
     reinitialize_move_flags();
 
     const coord_def old_target = target();
-    const int key = behaviour->get_key();
+    const auto key = targeting_behaviour_get_key();
     if (key == CK_REDRAW)
     {
         redraw_screen(false);
@@ -3682,7 +3685,7 @@ targeting_behaviour::~targeting_behaviour()
 {
 }
 
-int targeting_behaviour::get_key()
+static int targeting_behaviour_get_key()
 {
     if (!crawl_state.is_replaying_keys())
         flush_input_buffer(FLUSH_BEFORE_COMMAND);
@@ -3695,9 +3698,6 @@ int targeting_behaviour::get_key()
 
 command_type targeting_behaviour::get_command(int key)
 {
-    if (key == -1)
-        key = get_key();
-
     command_type cmd = key_to_command(key, KMC_TARGETING);
     if (cmd >= CMD_MIN_TARGET && cmd < CMD_TARGET_PREV_TARGET)
         return cmd;

@@ -103,7 +103,7 @@ public:
     }
 
     // targeting_behaviour API
-    virtual command_type get_command(int key = -1) override;
+    virtual command_type get_command(int key) override;
     virtual bool should_redraw() const override { return need_redraw; }
     virtual void clear_redraw()        override { need_redraw = false; }
     virtual void update_top_prompt(string* p_top_prompt) override;
@@ -241,9 +241,6 @@ void fire_target_behaviour::display_help()
 
 command_type fire_target_behaviour::get_command(int key)
 {
-    if (key == -1)
-        key = get_key();
-
     if (key == CMD_TARGET_CANCEL)
         chosen_ammo = false;
     else if (!(-key > CMD_NO_CMD && -key < CMD_MIN_SYNTHETIC)
