@@ -1517,7 +1517,6 @@ bool is_stackable_item(const item_def &item)
                 case MISC_SACK_OF_SPIDERS:
 #endif
                 case MISC_BOX_OF_BEASTS:
-                case MISC_TIN_OF_TREMORSTONES:
                     return true;
                 default:
                     break;

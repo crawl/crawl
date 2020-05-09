@@ -5128,6 +5128,13 @@ void unmarshallItem(reader &th, item_def &item)
         item.quantity = 1;
     }
 
+    if (th.getMinorVersion() < TAG_MINOR_UNSTACK_TREMORSTONES
+        && item.base_type == OBJ_MISCELLANY
+        && item.sub_type == MISC_TIN_OF_TREMORSTONES)
+    {
+        item.quantity = 1;
+    }
+
     if (th.getMinorVersion() < TAG_MINOR_NO_NEGATIVE_VULN
         && is_artefact(item)
         && artefact_property(item, ARTP_NEGATIVE_ENERGY))

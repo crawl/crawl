@@ -1453,15 +1453,8 @@ bool evoke_item(int slot)
                     return false;
 
                 case spret::success:
-                    if (one_chance_in(3))
-                    {
-                        mpr("The tin disintegrates.");
-                        ASSERT(in_inventory(item));
-                        dec_inv_item_quantity(item.link, 1);
-                    }
-                    break;
-
                 case spret::fail:
+                    practise_evoking(1);
                     break;
             }
             break;
