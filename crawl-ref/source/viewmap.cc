@@ -611,6 +611,158 @@ static map_view_state _get_view_state(const map_control_state& state)
 }
 #endif
 
+class UIMapView : public ui::Widget
+{
+public:
+    UIMapView(level_pos &lpos, levelview_excursion& le, bool travel_mode, bool allow_offlevel)
+    {
+        m_state.lpos = lpos;
+        m_state.features = &m_features;
+        m_state.feats = &m_feats;
+        m_state.excursion = &le;
+        m_state.allow_offlevel = allow_offlevel;
+        m_state.travel_mode = travel_mode;
+        m_state.original = level_id::current();
+        m_state.map_alive = true;
+        m_state.redraw_map = true;
+        m_state.search_anchor = coord_def(-1, -1);
+        m_state.chose = false;
+    }
+    ~UIMapView() {}
+    void _render() override
+    {
+#ifdef USE_TILE_LOCAL
+        tiles.render_current_regions();
+        glmanager->reset_transform();
+#else
+        redraw_screen(true);
+#endif
+    }
+    void _allocate_region() override
+    {
+        if (m_state.redraw_map)
+        {
+            // Note: Tile versions just center on the current cursor
+            // location. It silently ignores everything else going
+            // on in this function.  --Enne
+#ifdef USE_TILE_LOCAL
+            if (first_run)
+            {
+                tiles.update_tabs();
+                first_run = false;
+            }
+#endif
+#ifdef USE_TILE
+            tiles.load_dungeon(m_state.lpos.pos);
+#endif
+#ifndef USE_TILE_LOCAL
+            _draw_title(m_state.lpos.pos, *m_state.feats);
+            _draw_level_map(view.start.x, view.start.y, m_state.travel_mode, m_state.on_level);
+#endif
+        }
+
+#ifdef USE_TILE_LOCAL
+        tiles.calculate_default_options();
+        tiles.do_layout();
+#endif
+    }
+    bool on_event(const ui::Event& ev) override
+    {
+        if (ev.type() == ui::Event::Type::KeyDown)
+        {
+            auto key = static_cast<const ui::KeyEvent&>(ev).key();
+#ifndef USE_TILE_LOCAL
+            key = unmangle_direction_keys(key, KMC_LEVELMAP);
+#endif
+            command_type cmd = key_to_command(key, KMC_LEVELMAP);
+            if (cmd < CMD_MIN_OVERMAP || cmd > CMD_MAX_OVERMAP)
+                cmd = CMD_NO_CMD;
+            process_command(cmd);
+            if (m_state.redraw_map)
+                _queue_allocation();
+            return true;
+        }
+
+        if (ev.type() == ui::Event::Type::MouseDown)
+            printf("TODO!\n");
+
+        return false;
+    }
+
+    void process_command(command_type cmd)
+    {
+        m_state = process_map_command(cmd, m_state);
+        if (!m_state.map_alive)
+            return;
+        if (map_bounds(m_state.lpos.pos))
+            m_state.lpos.pos = m_state.lpos.pos.clamped(known_map_bounds());
+
+        if (m_state.lpos.id != level_id::current())
+        {
+            m_state.excursion->go_to(m_state.lpos.id);
+            new_level = true;
+        }
+
+#ifndef USE_TILE_LOCAL
+        unwind_bool block_rendering(ui::block_rendering, true);
+#endif
+
+        if (new_level)
+        {
+            m_state.on_level = (level_id::current() == m_state.original);
+
+            // Vector to track all state.features we can travel to, in
+            // order of distance.
+            if (m_state.travel_mode)
+                _reset_travel_colours(*m_state.features, m_state.on_level);
+            m_state.feats->init();
+            m_state.search_index = 0;
+            m_state.search_anchor.reset();
+
+            // This happens when CMD_MAP_PREV_LEVEL etc. assign dest to lpos,
+            // with a position == (-1, -1).
+            if (!map_bounds(m_state.lpos.pos))
+            {
+                m_state.lpos.pos = _recentre_map_target(m_state.lpos.id,
+                        m_state.original);
+                m_state.lpos.id = level_id::current();
+            }
+
+            m_state.redraw_map = true;
+            new_level = false;
+        }
+
+    }
+
+    bool is_alive() const
+    {
+        return m_state.map_alive;
+    }
+
+    bool chose() const
+    {
+        return m_state.chose;
+    }
+
+    level_pos lpos() const
+    {
+        return m_state.lpos;
+    }
+
+private:
+    map_control_state m_state;
+
+    // Vector to track all features we can travel to, in order of distance.
+    vector<coord_def> m_features;
+    // List of all interesting features for display in the (console) title.
+    feature_list m_feats;
+
+    bool new_level = true;
+#ifdef USE_TILE_LOCAL
+    bool first_run  = true;
+#endif
+};
+
 // show_map() now centers the known map along x or y. This prevents
 // the player from getting "artificial" location clues by using the
 // map to see how close to the end they are. They'll need to explore
@@ -644,6 +796,16 @@ bool show_map(level_pos &lpos, bool travel_mode, bool allow_offlevel)
     vector<coord_def> features;
     // List of all interesting features for display in the (console) title.
     feature_list feats;
+
+    auto map_view = make_shared<UIMapView>(lpos, le, travel_mode, allow_offlevel);
+
+    ui::push_layout(map_view);
+    while (map_view->is_alive() && !crawl_state.seen_hups)
+        ui::pump_events();
+    ui::pop_layout();
+
+    lpos = map_view->lpos();
+    return map_view->chose();
 
 #ifndef USE_TILE_LOCAL
     const int top = 2;
