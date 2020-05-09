@@ -636,14 +636,20 @@ void full_describe_view()
             // List monsters in the form
             // (A) An angel (neutral), wielding a glowing long sword
 
-            string prefix = "";
+            ostringstream prefix;
 #ifndef USE_TILE_LOCAL
             cglyph_t g = get_mons_glyph(mi);
             const string col_string = colour_to_str(g.col);
-            prefix = "(<" + col_string + ">"
-                     + (g.ch == '<' ? "<<" : stringize_glyph(g.ch))
-                     + "</" + col_string + ">) ";
+            prefix << "(<" << col_string << ">"
+                     << (g.ch == '<' ? "<<" : stringize_glyph(g.ch))
+                     << "</" << col_string << ">) ";
 #endif
+            if (Options.monster_item_view_coordinates)
+            {
+                const coord_def relpos = mi.pos - you.pos();
+                prefix << "(" << relpos.x << ", " << -relpos.y << ") ";
+            }
+
 
             string str = get_monster_equipment_desc(mi, DESC_FULL, DESC_A, true);
             if (mi.dam != MDAM_OKAY)
@@ -663,7 +669,7 @@ void full_describe_view()
             for (unsigned int j = 0; j < fss.size(); ++j)
             {
                 if (j == 0)
-                    me = new MonsterMenuEntry(prefix + fss[j].tostring(), &mi, hotkey++);
+                    me = new MonsterMenuEntry(prefix.str() + fss[j].tostring(), &mi, hotkey++);
 #ifndef USE_TILE_LOCAL
                 else
                 {
@@ -693,6 +699,7 @@ void full_describe_view()
             // Show glyphs only for ASCII.
             me->set_show_glyph(true);
 #endif
+            me->set_show_coordinates(Options.monster_item_view_coordinates);
             me->tag = "pickup";
             me->hotkeys[0] = hotkey;
             me->quantity = 2; // Hack to make items selectable.
@@ -707,21 +714,25 @@ void full_describe_view()
         desc_menu.add_entry(new MenuEntry("Features", MEL_SUBTITLE));
         for (const coord_def c : list_features)
         {
-            string desc = "";
+            ostringstream desc;
 #ifndef USE_TILE_LOCAL
             cglyph_t g = get_cell_glyph(c, true);
             const string colour_str = colour_to_str(g.col);
-            desc = "(<" + colour_str + ">";
-            desc += stringize_glyph(g.ch);
-            if (g.ch == '<')
-                desc += '<';
+            desc << "(<" << colour_str << ">";
+            desc << (g.ch == '<' ? "<<" : stringize_glyph(g.ch));
 
-            desc += "</" + colour_str +">) ";
+            desc << "</" << colour_str << ">) ";
 #endif
-            desc += feature_description_at(c, false, DESC_A);
+            if (Options.monster_item_view_coordinates)
+            {
+                const coord_def relpos = c - you.pos();
+                desc << "(" << relpos.x << ", " << -relpos.y << ") ";
+            }
+
+            desc << feature_description_at(c, false, DESC_A);
             if (is_unknown_stair(c) || is_unknown_transporter(c))
-                desc += " (not visited)";
-            FeatureMenuEntry *me = new FeatureMenuEntry(desc, c, hotkey);
+                desc << " (not visited)";
+            FeatureMenuEntry *me = new FeatureMenuEntry(desc.str(), c, hotkey);
             me->tag        = "description";
             // Hack to make features selectable.
             me->quantity   = c.x*100 + c.y + 3;

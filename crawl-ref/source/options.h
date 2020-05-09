@@ -191,6 +191,7 @@ public:
     int         msg_max_height;
     int         msg_webtiles_height;
     bool        mlist_allow_alternate_layout;
+    bool        monster_item_view_coordinates;
     bool        messages_at_top;
     bool        msg_condense_repeats;
     bool        msg_condense_short;

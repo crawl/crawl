@@ -106,6 +106,7 @@ class InvEntry : public MenuEntry
 {
 private:
     static bool show_glyph;
+    static bool show_coordinates;
 
     mutable string basename;
     mutable string qualname;
@@ -122,6 +123,7 @@ public:
     InvEntry(const item_def &i);
     string get_text(const bool need_cursor = false) const override;
     void set_show_glyph(bool doshow);
+    void set_show_coordinates(bool doshow);
     static void set_show_cursor(bool doshow);
 
     const string &get_basename() const;

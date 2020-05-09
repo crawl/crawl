@@ -1491,6 +1491,10 @@ mlist_allow_alternate_layout = false
         than using the fixed position below the stat area.
         This option is not supported in the tiles build.
 
+monster_item_view_coordinates = false
+        Display player-centered coordinates in the ^x visible monsters/items
+        view.
+
 msg_min_height = 7
         You can reduce this to give more space to the map display. The
         minimum value is 5. In console, if this value is large enough
