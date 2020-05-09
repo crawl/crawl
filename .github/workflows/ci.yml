@@ -390,3 +390,22 @@ jobs:
     - name: Unit Tests (pytest)
       working-directory: crawl-ref/source/webserver
       run: pytest
+
+  notify_irc_build_failure:
+    needs:
+      - linting
+      - build_linux
+      - build_macos
+      - build_mingw64_crosscompile
+      - codecov_catch2
+      - webserver
+    if: github.event_name == 'push' && ( failure() || cancelled() )
+    runs-on: ubuntu-latest
+    steps:
+      - uses: rectalogic/notify-irc@v1
+        with:
+          channel: "##test-dev"
+          nickname: dcss-ci
+          message: |
+            Build failed for ${{ github.ref }} @ ${{ github.sha }}.
+            View  build: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
