@@ -215,7 +215,6 @@ jobs:
         build_type:
           - tiles
           - console
-          - installer
     steps:
       - uses: actions/checkout@v2
         with:
@@ -268,21 +267,6 @@ jobs:
         working-directory: crawl-ref/source
       - name: Print ccache stats
         run: ccache -s
-      # The zip & installer targets create different sorts of names, so we need
-      # a little shell script magic here.
-      - name: Determine release file names
-        if: github.event.release.tag_name != null
-        id: release-names
-        run: |
-          if [[ ${{ matrix.build_type }} != installer ]] ; then
-            source='crawl-ref/source/stone_soup-latest-${{ matrix.build_type}}-win32.zip'
-            dest='dcss-$tag-win32-${{ matrix.build_type}}.zip'
-          else
-            source='crawl-ref/source/stone_soup-latest-win32-installer.exe'
-            dest='dcss-$tag-win32-installer.exe'
-          fi
-          echo "::set-output name=source::$source"
-          echo "::set-output name=dest::$dest"
       - name: Add build to release
         if: github.event.release.tag_name != null
         # Go back to the upstream action (svenstaro/upload-release-action) once this PR merges:
@@ -291,8 +275,8 @@ jobs:
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           tag: ${{ github.ref }}
-          file: ${{ steps.release-names.outputs.source }}
-          asset_name: ${{ steps.release-names.outputs.dest }}
+          file: "crawl-ref/source/stone_soup-latest-${{ matrix.build_type}}-win32.zip"
+          asset_name: "dcss-$tag-win32-${{ matrix.build_type}}.zip"
 
   codecov_catch2:
     name: Catch2 (GCC/Linux) + Codecov
