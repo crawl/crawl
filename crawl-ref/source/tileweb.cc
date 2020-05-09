@@ -884,6 +884,7 @@ static bool _update_statuses(player_info& c)
 
 player_info::player_info()
 {
+    _state_ever_synced = false;
     for (auto &eq : equip)
         eq = -1;
     position = coord_def(-1, -1);
@@ -900,6 +901,16 @@ player_info::player_info()
 void TilesFramework::_send_player(bool force_full)
 {
     player_info& c = m_current_player_info;
+    if (!c._state_ever_synced)
+    {
+        // force the initial sync to be full: otherwise the _update_blah
+        // functions will incorrectly detect initial values to be ones that
+        // have previously been sent to the client, when they will not have
+        // been. (This is made ever worse by the fact that player_info does
+        // not initialize most of its values...)
+        c._state_ever_synced = true;
+        force_full = true;
+    }
 
     json_open_object();
     json_write_string("msg", "player");

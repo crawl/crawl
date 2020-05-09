@@ -35,6 +35,7 @@ enum WebtilesUIState
 struct player_info
 {
     player_info();
+    bool _state_ever_synced;
 
     string name;
     string job_title;
