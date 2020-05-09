@@ -393,8 +393,8 @@ jobs:
       working-directory: crawl-ref/source/webserver
       run: pytest
 
-  notify_irc_build_failure:
-    name: "Notify ##crawl-dev of build failure"
+  notify_irc:
+    name: "Notify ##crawl-dev of build result"
     needs:
       - linting
       - build_linux
@@ -402,18 +402,56 @@ jobs:
       - build_mingw64_crosscompile
       - codecov_catch2
       - webserver
-    if: github.event_name == 'push' && failure()
+    if: always() && github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
-      - name: Build message parameters
-        id: params
+      - name: Build message
+        id: message
         run: |
           ref="${{ github.ref }}"
+          branch="${ref##refs/heads/}"
           sha="${{ github.sha }}"
-          echo "::set-output name=short_sha::${sha:0:8}"
-          echo "::set-output name=branch::${ref##refs/heads/}"
+          short_sha="${sha:0:8}"
+
+          linting_result="${{ needs.linting.result }}"
+          build_linux_result="${{ needs.build_linux.result }}"
+          build_macos_result="${{ needs.build_macos.result }}"
+          build_mingw64_crosscompile_result="${{ needs.build_mingw64_crosscompile.result }}"
+          codecov_catch2_result="${{ needs.codecov_catch2.result }}"
+          webserver_result="${{ needs.webserver.result }}"
+
+          failed_components=()
+          if [[ $linting_result != success ]]; then
+            failed_components+=('Linting')
+          fi
+          if [[ $build_linux_result != success ]]; then
+            failed_components+=('Linux Build')
+          fi
+          if [[ $build_macos_result != success ]]; then
+            failed_components+=('MacOS Build')
+          fi
+          if [[ $build_mingw64_crosscompile_result != success ]]; then
+            failed_components+=('Linux MingW Build')
+          fi
+          if [[ $codecov_catch2_result != success ]]; then
+            failed_components+=('Catch2/codecov')
+          fi
+          if [[ $webserver_result != success ]]; then
+            failed_components+=('Webtiles Server')
+          fi
+
+          url="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          message="for $branch @ $short_sha $url"
+          if [[ ${#failed_components[@]}]] -gt 0 ]]; then
+            function join { local IFS=","; echo "$*"; }
+            message="Build failed ${message} (failed: $(join "${failed_components[@]}"))"
+          else
+            message="Build passed ${message}"
+          fi
+
+          echo "::set-output name=message::${message}"
       - uses: rectalogic/notify-irc@v1
         with:
           channel: ${{ secrets.IRC_CHANNEL }}
           nickname: dcss-ci
-          message: "Build failed for ${{ steps.params.outputs.branch }} @ ${{ steps.params.outputs.short_sha }} https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          message: ${{ steps.message.outputs.message }}
