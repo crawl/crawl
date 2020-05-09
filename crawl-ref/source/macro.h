@@ -80,6 +80,21 @@ string get_userfunction(int key);
 void add_key_recorder(key_recorder* recorder);
 void remove_key_recorder(key_recorder* recorder);
 
+class key_recorder_raii
+{
+public:
+    key_recorder_raii(key_recorder* recorder) : m_recorder(recorder)
+    {
+        add_key_recorder(m_recorder);
+    }
+    ~key_recorder_raii()
+    {
+        remove_key_recorder(m_recorder);
+    }
+private:
+    key_recorder *m_recorder;
+};
+
 bool is_processing_macro();
 bool has_pending_input();
 
