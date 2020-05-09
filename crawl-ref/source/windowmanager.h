@@ -118,6 +118,7 @@ struct wm_event
     wm_expose_event expose;
     wm_quit_event quit;
     wm_custom_event custom;
+    bool is_synthetic;
 };
 
 #ifdef USE_TILE_LOCAL

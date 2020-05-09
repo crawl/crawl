@@ -169,7 +169,7 @@ static stack<Region> scissor_stack;
 
 struct Widget::slots Widget::slots = {};
 
-Event::Event(Event::Type type) : m_type(type)
+Event::Event(Event::Type type) : m_type(type), m_synthetic(false)
 {
 }
 
@@ -2828,6 +2828,7 @@ bool UIRoot::on_event(wm_event& event)
         case WME_KEYUP:
         {
             auto key_event = KeyEvent(convert_event_type(event), event.key);
+            key_event.m_synthetic = event.is_synthetic;
             return deliver_event(key_event);
         }
         case WME_CUSTOMEVENT:

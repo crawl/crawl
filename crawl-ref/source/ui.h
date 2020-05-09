@@ -127,6 +127,7 @@ public:
     explicit Event(Type type);
 
     Type type() const { return m_type; }
+    bool is_synthetic() const { return m_synthetic; }
 
     shared_ptr<Widget>& target() { return m_target; }
     shared_ptr<Widget> target() const { return m_target; }
@@ -135,6 +136,7 @@ public:
 protected:
     Type m_type;
     shared_ptr<Widget> m_target;
+    bool m_synthetic;
 };
 
 class KeyEvent final : public Event
