@@ -97,7 +97,7 @@ jobs:
       - name: Cache compilation
         uses: actions/cache@v1
         with:
-          path: $HOME/.ccache
+          path: ~/.ccache
           key: ccache-linux-${{ matrix.compiler }}-${{ matrix.tag_upgrade }}-${{ matrix.build_opts }}-${{ matrix.debug }}
           restore-keys: |
             ccache-linux-${{ matrix.compiler }}-${{ matrix.tag_upgrade }}-${{ matrix.build_opts }}-${{ matrix.debug }}
@@ -172,7 +172,7 @@ jobs:
       - name: Cache compilation
         uses: actions/cache@v1
         with:
-          path: $HOME/.ccache
+          path: ~/.ccache
           key: ccache-macos-clang-${{ matrix.build_type }}
           restore-keys: |
             ccache-macos-clang-${{ matrix.build_type }}
@@ -244,7 +244,7 @@ jobs:
       - name: Cache compilation
         uses: actions/cache@v1
         with:
-          path: $HOME/.ccache
+          path: ~/.ccache
           key: ccache-mingw64-${{ matrix.build_type }}
           restore-keys: |
             ccache-mingw64-${{ matrix.build_type }}
@@ -319,7 +319,7 @@ jobs:
       - name: Cache compilation
         uses: actions/cache@v1
         with:
-          path: /home/runner/.ccache
+          path: ~/.ccache
           key: ccache-catch2
           restore-keys: |
             ccache-catch2
