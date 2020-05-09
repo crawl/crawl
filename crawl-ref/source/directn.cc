@@ -337,17 +337,16 @@ bool direction_chooser::targets_enemies() const
 
 void direction_chooser::describe_cell() const
 {
+    print_top_prompt();
+    print_key_hints();
+
     if (!you.see_cell(target()))
     {
-        print_top_prompt();
-        print_key_hints();
         // FIXME: make this better integrated.
         _describe_oos_square(target());
     }
     else
     {
-        print_top_prompt();
-        print_key_hints();
         bool did_cloud = false;
         print_target_description(did_cloud);
         if (just_looking)
