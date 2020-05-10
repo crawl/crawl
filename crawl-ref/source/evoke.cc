@@ -1126,7 +1126,7 @@ static coord_def _fuzz_tremorstone_target(coord_def center)
 
 static int _tremorstone_count(int pow)
 {
-    return 1 + stepdown((pow - 5) / 3, 5, ROUND_CLOSE);
+    return 1 + stepdown((pow - 15) / 3, 3, ROUND_CLOSE);
 }
 
 /**
@@ -1446,6 +1446,11 @@ bool evoke_item(int slot)
             break;
 
         case MISC_TIN_OF_TREMORSTONES:
+            if (!evoker_charges(item.sub_type))
+            {
+                mpr("That is presently inert.");
+                return false;
+            }
             switch (_tremorstone())
             {
                 default:
@@ -1453,6 +1458,9 @@ bool evoke_item(int slot)
                     return false;
 
                 case spret::success:
+                    expend_xp_evoker(item.sub_type);
+                    if (!evoker_charges(item.sub_type))
+                        mpr("The tin is emptied!");
                 case spret::fail:
                     practise_evoking(1);
                     break;
