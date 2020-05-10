@@ -442,7 +442,7 @@ static bool _is_appropriate_evokable(const item_def& item,
 
     spell_type spell = spell_in_wand(static_cast<wand_type>(item.sub_type));
 
-    return _is_appropriate_spell(spell, target);
+    return is_valid_spell(spell) && _is_appropriate_spell(spell, target);
 }
 
 static bool _have_appropriate_evokable(const actor* target)
@@ -1127,6 +1127,7 @@ bool tile_dungeon_tip(const coord_def &gc, string &tip)
                 _add_tip(tip, "[Shift + L-Click] Fire (%)");
                 cmd.push_back(CMD_FIRE);
             }
+            dprf("about to check spell evokable on %s", target->name(DESC_THE).c_str());
 
             tip += _check_spell_evokable(target, cmd);
         }
