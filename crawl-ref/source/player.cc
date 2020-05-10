@@ -6051,7 +6051,7 @@ int player::gdr_perc() const
 
     const item_def *body_armour = slot_item(EQ_BODY_ARMOUR, false);
 
-    int body_base_AC = (species == SP_GARGOYLE ? 5 : 0);
+    int body_base_AC = 0;
     if (body_armour)
         body_base_AC += property(*body_armour, PARM_AC);
 
