@@ -1188,9 +1188,13 @@ string map_markers::property_at(const coord_def &c, map_marker_type type,
 {
     UNUSED(type);
     auto els = markers.equal_range(c);
-    for (auto i = els.first; i != els.second; ++i)
+    for (auto i = els.first; i != els.second;)
     {
-        const string &prop = i->second->property(key);
+        // this ugly sequencing is necessary in case the call to property
+        // removes the marker, invalidating i.
+        auto marker = i->second;
+        i++;
+        const string &prop = marker->property(key);
         if (!prop.empty())
             return prop;
     }
