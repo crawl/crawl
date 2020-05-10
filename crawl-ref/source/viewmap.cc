@@ -792,7 +792,7 @@ bool show_map(level_pos &lpos, bool travel_mode, bool allow_offlevel)
         state = process_map_command(cmd, state);
         if (!state.map_alive)
             break;
-        if (map_bounds(state.lpos.pos))
+        if (!map_bounds(state.lpos.pos))
             state.lpos.pos = state.lpos.pos.clamped(known_map_bounds());
     }
 
