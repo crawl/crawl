@@ -1359,7 +1359,7 @@ command_type key_to_command(int key, KeymapContext context)
 {
     if (CMD_NO_CMD < -key && -key < CMD_MIN_SYNTHETIC)
     {
-        const auto cmd = static_cast<command_type>(key);
+        const auto cmd = static_cast<command_type>(-key);
         const auto cmd_context = context_for_command(cmd);
 
         if (cmd == CMD_NO_CMD)
