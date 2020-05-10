@@ -2069,7 +2069,6 @@ string mon_attack_name(attack_type attack, bool with_object)
     COMPILE_CHECK(ARRAYSZ(attack_types) == NUM_ATTACK_TYPES - AT_FIRST_ATTACK);
 
     const int verb_index = attack - AT_FIRST_ATTACK;
-    dprf("verb index: %d", verb_index);
     ASSERT(verb_index < (int)ARRAYSZ(attack_types));
 
     if (with_object)
