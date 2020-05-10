@@ -1827,7 +1827,8 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
 
         if (is_xp_evoker(*this) && !dbname && !evoker_charges(sub_type))
             buff << " (inert)";
-        else if (!dbname && evoker_max_charges(sub_type) > 1)
+        else if (is_xp_evoker(*this) &&
+                 !dbname && evoker_max_charges(sub_type) > 1)
         {
             buff << " (" << evoker_charges(sub_type) << "/"
                  << evoker_max_charges(sub_type) << ")";

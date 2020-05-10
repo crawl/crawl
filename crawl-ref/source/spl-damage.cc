@@ -55,6 +55,7 @@
 #include "unicode.h"
 #include "viewchar.h"
 #include "view.h"
+#include "xp-evoker-data.h" // for thunderbolt
 
 void setup_fire_storm(const actor *source, int pow, bolt &beam)
 {

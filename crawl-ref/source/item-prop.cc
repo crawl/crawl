@@ -34,6 +34,7 @@
 #include "stringutil.h"
 #include "terrain.h"
 #include "xom.h"
+#include "xp-evoker-data.h"
 
 static iflags_t _full_ident_mask(const item_def& item);
 
@@ -2941,13 +2942,6 @@ void seen_item(const item_def &item)
     }
 }
 
-/// Map of xp evokers to you.props[] xp debt keys.
-static const map<int, const char*> debt_map = {
-    { MISC_PHIAL_OF_FLOODS,     "phial_debt" },
-    { MISC_HORN_OF_GERYON,      "horn_debt" },
-    { MISC_LIGHTNING_ROD,       "rod_debt" },
-};
-
 /**
  * Is the given item an xp-charged evocable? (That is, one that recharges as
  * the player gains xp.)
@@ -2959,7 +2953,8 @@ static const map<int, const char*> debt_map = {
 bool is_xp_evoker(const item_def &item)
 {
     return item.base_type == OBJ_MISCELLANY
-           && map_find(debt_map, item.sub_type);
+           && map_find(xp_evoker_data,
+                       static_cast<misc_item_type>(item.sub_type));
 }
 
 /**
@@ -2972,9 +2967,10 @@ bool is_xp_evoker(const item_def &item)
  */
 int &evoker_debt(int evoker_type)
 {
-    const char* const *prop_name = map_find(debt_map, evoker_type);
-    ASSERT(prop_name);
-    return you.props[*prop_name].get_int();
+    const evoker_data* edata = map_find(xp_evoker_data,
+                                   static_cast<misc_item_type>(evoker_type));
+    ASSERT(edata);
+    return you.props[edata->key].get_int();
 }
 
 /**
@@ -2985,7 +2981,10 @@ int &evoker_debt(int evoker_type)
  */
 int evoker_max_charges(int evoker_type)
 {
-    return evoker_type == MISC_LIGHTNING_ROD ? LIGHTNING_MAX_CHARGE : 1;
+    const evoker_data* edata = map_find(xp_evoker_data,
+                                   static_cast<misc_item_type>(evoker_type));
+    ASSERT(edata);
+    return edata->max_charges;
 }
 
 /**
@@ -2997,9 +2996,10 @@ int evoker_max_charges(int evoker_type)
  */
 int evoker_charge_xp_debt(int evoker_type)
 {
-    return evoker_type == MISC_LIGHTNING_ROD
-        ? XP_EVOKE_LIGHTNING_ROD_DEBT
-        : XP_EVOKE_DEBT;
+    const evoker_data* edata = map_find(xp_evoker_data,
+                                        static_cast<misc_item_type>(evoker_type));
+    ASSERT(edata);
+    return edata->charge_xp_debt;
 }
 
 /**
