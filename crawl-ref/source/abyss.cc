@@ -1754,8 +1754,16 @@ void abyss_teleport()
 
 struct corrupt_env
 {
-    int rock_colour, floor_colour;
-    corrupt_env(): rock_colour(BLACK), floor_colour(BLACK) { }
+    int rock_colour, floor_colour, secondary_floor_colour;
+    corrupt_env()
+        : rock_colour(BLACK), floor_colour(BLACK),
+           secondary_floor_colour(MAGENTA)
+    { }
+
+    int pick_floor_colour() const
+    {
+        return random2(10) < 2 ? secondary_floor_colour : floor_colour;
+    }
 };
 
 static void _place_corruption_seed(const coord_def &pos, int duration)
@@ -1939,23 +1947,55 @@ static bool _is_sealed_square(const coord_def &c)
 static void _corrupt_square_flavor(const corrupt_env &cenv, const coord_def &c)
 {
     dungeon_feature_type feat = grd(c);
+    int floor = cenv.pick_floor_colour();
 
-    if (feat == DNGN_ROCK_WALL)
+    if (feat == DNGN_ROCK_WALL || feat == DNGN_METAL_WALL
+        || feat == DNGN_STONE_WALL || feat == DNGN_TREE)
+    {
         env.grid_colours(c) = cenv.rock_colour;
+    }
     else if (feat == DNGN_FLOOR)
-        env.grid_colours(c) = cenv.floor_colour;
+        env.grid_colours(c) = floor;
 
+    // if you add new features to this, you'll probably need to do some
+    // hand-tweaking in tileview.cc apply_variations.
+    // TODO: these tile assignments here seem to get overridden in
+    // apply_variations, or not used at all...what gives?
     if (feat == DNGN_ROCK_WALL)
     {
         tileidx_t idx = tile_dngn_coloured(TILE_WALL_ABYSS,
-                                           cenv.floor_colour);
+                                           cenv.rock_colour);
         env.tile_flv(c).wall = idx + random2(tile_dngn_count(idx));
     }
     else if (feat == DNGN_FLOOR)
     {
         tileidx_t idx = tile_dngn_coloured(TILE_FLOOR_NERVES,
-                                           cenv.floor_colour);
+                                           floor);
         env.tile_flv(c).floor = idx + random2(tile_dngn_count(idx));
+    }
+    else if (feat == DNGN_STONE_WALL)
+    {
+        // recoloring stone and metal is also impacted heavily by the rolls
+        // in _is_grid_corruptible
+        tileidx_t idx = tile_dngn_coloured(TILE_DNGN_STONE_WALL,
+                                           cenv.rock_colour);
+        env.tile_flv(c).wall = idx + random2(tile_dngn_count(idx));
+    }
+    else if (feat == DNGN_METAL_WALL)
+    {
+        tileidx_t idx = tile_dngn_coloured(TILE_DNGN_METAL_WALL,
+                                           cenv.rock_colour);
+        env.tile_flv(c).wall = idx + random2(tile_dngn_count(idx));
+    }
+    else if (feat == DNGN_TREE)
+    {
+        tileidx_t idx = tile_dngn_coloured(TILE_DNGN_TREE,
+                                           cenv.rock_colour);
+        // trees only have yellow, lightred, red, and darkgray (dead)
+        if (idx == TILE_DNGN_TREE)
+            idx = tile_dngn_coloured(TILE_DNGN_TREE, DARKGREY);
+        env.grid_colours(c) = DARKGREY;
+        env.tile_flv(c).wall = idx + random2(tile_dngn_count(idx));
     }
 }
 
@@ -2042,9 +2082,11 @@ static void _corrupt_level_features(const corrupt_env &cenv)
             max(0, 1000 - (sqr(idistance) - sqr(ground_zero_radius)) * 700 / 45);
 
         // linear function that is at 30% at range 7, 15% at radius 20,
-        // maxed to 1%. Only affects outside of range 7.
+        // maxed to 1%. Only affects outside of range 7. For cells within los
+        // that don't make the regular roll, this also gives them a 50%
+        // chance to get flavor-only corruption.
         const int corrupt_flavor_chance =
-            (idistance <= 7) ? 0 :
+            (idistance <= 7) ? (corrupt_perc_chance + 1000) / 2 :
             max(10, 380 - 150 * idistance / 13);
 
         const int roll = random2(1000);

@@ -1346,9 +1346,20 @@ metal_wall_red7
 metal_wall_red8
 %resetcol
 
+%variation DNGN_METAL_WALL lightblue
+%hue 240 210
+%lum 240 5
+%repeat DNGN_METAL_WALL_BLUE DNGN_METAL_WALL_LIGHTBLUE
+%resetcol
+
 %variation DNGN_METAL_WALL green
 %hue 240 140
 %repeat DNGN_METAL_WALL_BLUE DNGN_METAL_WALL_GREEN
+%resetcol
+
+%variation DNGN_METAL_WALL lightgreen
+%hue 240 180
+%repeat DNGN_METAL_WALL_BLUE DNGN_METAL_WALL_LIGHTGREEN
 %resetcol
 
 %variation DNGN_METAL_WALL cyan
@@ -1356,14 +1367,30 @@ metal_wall_red8
 %repeat DNGN_METAL_WALL_BLUE DNGN_METAL_WALL_CYAN
 %resetcol
 
+%variation DNGN_METAL_WALL lightcyan
+%hue 240 180
+%repeat DNGN_METAL_WALL_BLUE DNGN_METAL_WALL_LIGHTCYAN
+%resetcol
+
 %variation DNGN_METAL_WALL red
 %hue 240 0
 %repeat DNGN_METAL_WALL_BLUE DNGN_METAL_WALL_RED
 %resetcol
 
+%variation DNGN_METAL_WALL lightred
+%hue 240 0
+%lum 240 5
+%repeat DNGN_METAL_WALL_BLUE DNGN_METAL_WALL_LIGHTRED
+%resetcol
+
 %variation DNGN_METAL_WALL magenta
 %hue 240 270
 %repeat DNGN_METAL_WALL_BLUE DNGN_METAL_WALL_MAGENTA
+%resetcol
+
+%variation DNGN_METAL_WALL lightmagenta
+%hue 240 290
+%repeat DNGN_METAL_WALL_BLUE DNGN_METAL_WALL_LIGHTMAGENTA
 %resetcol
 
 %variation DNGN_METAL_WALL brown

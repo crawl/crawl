@@ -1261,6 +1261,7 @@ static int _get_door_offset(tileidx_t base_tile, bool opened, bool runed,
 void apply_variations(const tile_flavour &flv, tileidx_t *bg,
                       const coord_def &gc)
 {
+    // TODO: there's an awful lot of hardcoding going on here...
     tileidx_t orig = (*bg) & TILE_FLAG_MASK;
     tileidx_t flag = (*bg) & (~TILE_FLAG_MASK);
 
@@ -1346,8 +1347,11 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
     else if (orig == TILE_DNGN_STONE_WALL
              || orig == TILE_DNGN_CRYSTAL_WALL
              || orig == TILE_WALL_PERMAROCK
-             || orig == TILE_WALL_PERMAROCK_CLEAR)
+             || orig == TILE_WALL_PERMAROCK_CLEAR
+             || orig == TILE_DNGN_METAL_WALL
+             || orig == TILE_DNGN_TREE)
     {
+        // TODO: recoloring vaults stone walls from corruption?
         *bg = pick_dngn_tile(tile_dngn_coloured(orig, env.grid_colours(gc)),
                              flv.special);
     }
