@@ -1936,6 +1936,29 @@ static bool _is_sealed_square(const coord_def &c)
     return true;
 }
 
+static void _corrupt_square_flavor(const corrupt_env &cenv, const coord_def &c)
+{
+    dungeon_feature_type feat = grd(c);
+
+    if (feat == DNGN_ROCK_WALL)
+        env.grid_colours(c) = cenv.rock_colour;
+    else if (feat == DNGN_FLOOR)
+        env.grid_colours(c) = cenv.floor_colour;
+
+    if (feat == DNGN_ROCK_WALL)
+    {
+        tileidx_t idx = tile_dngn_coloured(TILE_WALL_ABYSS,
+                                           cenv.floor_colour);
+        env.tile_flv(c).wall = idx + random2(tile_dngn_count(idx));
+    }
+    else if (feat == DNGN_FLOOR)
+    {
+        tileidx_t idx = tile_dngn_coloured(TILE_FLOOR_NERVES,
+                                           cenv.floor_colour);
+        env.tile_flv(c).floor = idx + random2(tile_dngn_count(idx));
+    }
+}
+
 static void _corrupt_square(const corrupt_env &cenv, const coord_def &c)
 {
     // Ask dungeon_change_terrain to preserve things that are not altars.
@@ -1993,23 +2016,7 @@ static void _corrupt_square(const corrupt_env &cenv, const coord_def &c)
     }
 
     dungeon_terrain_changed(c, feat, preserve_features, true);
-    if (feat == DNGN_ROCK_WALL)
-        env.grid_colours(c) = cenv.rock_colour;
-    else if (feat == DNGN_FLOOR)
-        env.grid_colours(c) = cenv.floor_colour;
-
-    if (feat == DNGN_ROCK_WALL)
-    {
-        tileidx_t idx = tile_dngn_coloured(TILE_WALL_ABYSS,
-                                           cenv.floor_colour);
-        env.tile_flv(c).wall = idx + random2(tile_dngn_count(idx));
-    }
-    else if (feat == DNGN_FLOOR)
-    {
-        tileidx_t idx = tile_dngn_coloured(TILE_FLOOR_NERVES,
-                                           cenv.floor_colour);
-        env.tile_flv(c).floor = idx + random2(tile_dngn_count(idx));
-    }
+    _corrupt_square_flavor(cenv, c);
 }
 
 static void _corrupt_level_features(const corrupt_env &cenv)
@@ -2031,11 +2038,21 @@ static void _corrupt_level_features(const corrupt_env &cenv)
         // at LOS range (radius 7). Even if the corruption roll is made,
         // the feature still gets a chance to resist if it's a wall.
         const int corrupt_perc_chance =
-            (idistance <= ground_zero_radius) ? 100 :
-            max(1, 100 - (sqr(idistance) - sqr(ground_zero_radius)) * 70 / 45);
+            (idistance <= ground_zero_radius) ? 1000 :
+            max(0, 1000 - (sqr(idistance) - sqr(ground_zero_radius)) * 700 / 45);
 
-        if (random2(100) < corrupt_perc_chance && _is_grid_corruptible(*ri))
+        // linear function that is at 30% at range 7, 15% at radius 20,
+        // maxed to 1%. Only affects outside of range 7.
+        const int corrupt_flavor_chance =
+            (idistance <= 7) ? 0 :
+            max(10, 380 - 150 * idistance / 13);
+
+        const int roll = random2(1000);
+
+        if (roll < corrupt_perc_chance && _is_grid_corruptible(*ri))
             _corrupt_square(cenv, *ri);
+        else if (roll < corrupt_flavor_chance && _is_grid_corruptible(*ri))
+            _corrupt_square_flavor(cenv, *ri);
     }
 }
 
