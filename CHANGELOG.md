@@ -16,6 +16,9 @@
 - 새로운 종족 멘티스 추가. 적에게 접근할때 자동으로 점프 공격을 함
   - Added mantis(playable). leap attack automatically when approaching an enemy
   
+- 새로운 종족 레서리치 추가. 높은 강령 적성, 빠른 마나회복, 27렙때 와일드매직을 얻음
+  - Added Lesser-Lich. high necromancy skill, high mana regen, wild magic when 27 level
+  
 - 독물의 추출, 증산 추가
   - Added Fulsome Distillation, Evaporate spell
   
