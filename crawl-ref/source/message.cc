@@ -7,7 +7,7 @@
 
 #include "message.h"
 
-#include <sstream>
+#include <cstring>
 
 #include "areas.h"
 #include "colour.h"

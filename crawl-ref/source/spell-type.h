@@ -460,5 +460,6 @@ enum spell_type : int
     SPELL_WALL_MELTING,
     SPELL_WALL_MELTING_2,
     SPELL_TELEPORT,
+    SPELL_PAKELLAS_ROD,
     NUM_SPELLS
 };

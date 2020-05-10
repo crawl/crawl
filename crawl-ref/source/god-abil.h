@@ -31,6 +31,14 @@
 #define RU_SACRIFICE_PENALTY_KEY "ru_sacrifice_penalty"
 #define RU_SAC_XP_LEVELS 2
 
+#define AVAILABLE_ROD_UPGRADE_KEY "available_upgrades"
+#define AVAILABLE_UPGRADE_NUM_KEY "upgrade_num"
+#define PAKELLAS_UPGRADE_ON "pakellas_upgrade_on"
+#define PAKELLAS_PROTOTYPE "pakellas_proto_type"
+#define PAKELLAS_UPGRADE_ROD_PROGRESS_KEY "pakellas_progress_to_next_upgrade"
+#define PAKELLAS_UPGRADE_ROD_DELAY_KEY "pakellas_upgrade_delay"
+#define PAKELLAS_UPGRADE_ROD_PENALTY_KEY "pakellas_upgrade_penalty"
+
 const char * const GOZAG_POTIONS_KEY = "gozag_potions%d";
 const char * const GOZAG_PRICE_KEY = "gozag_price%d";
 

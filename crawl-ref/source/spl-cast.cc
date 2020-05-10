@@ -52,6 +52,7 @@
 #include "options.h"
 #include "ouch.h"
 #include "output.h"
+#include "pakellas.h"
 #include "player.h"
 #include "prompt.h"
 #include "religion.h"
@@ -1269,6 +1270,11 @@ static unique_ptr<targeter> _spell_targeter(spell_type spell, int pow,
         return make_unique<targeter_olgrebs_last_mercy>();
     case SPELL_WALL_MELTING:
         return make_unique<targeter_wallmelting>(&you, range);
+    case SPELL_PAKELLAS_ROD:
+    {
+        return make_unique<targeter_beam>(&you, range, ZAP_MAGIC_DART, pow,
+            0, 0);
+    }
     default:
         break;
     }
@@ -2045,6 +2051,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
 
     case SPELL_WALL_MELTING_2:
         return cast_wall_melting2(target, powc, fail);
+
+    case SPELL_PAKELLAS_ROD:
+        return cast_pakellas_bolt(powc, beam, fail);
 
     // non-player spells that have a zap, but that shouldn't be called (e.g
     // because they will crash as a player zap).

@@ -2694,8 +2694,12 @@ tileidx_t tileidx_item(const item_def &item)
                + (subtype_rnd / NDSC_STAVE_PRI) % NDSC_STAVE_SEC;
 
     case OBJ_RODS:
-        return TILE_ROD + item.rnd % tile_main_count(TILE_ROD);
-
+        if (item.sub_type == ROD_PAKELLAS) {
+            return TILE_ROD;
+        }
+        else {
+            return TILE_ROD + item.rnd % tile_main_count(TILE_ROD);
+        }
     case OBJ_CORPSES:
         if (item.sub_type == CORPSE_SKELETON)
             return _tileidx_bone(item);
@@ -3959,8 +3963,13 @@ tileidx_t tileidx_known_brand(const item_def &item)
     }
     else if (item.base_type == OBJ_RODS)
     {
-        // Technically not a brand, but still handled here
-        return TILE_ROD_ID_FIRST + item.sub_type;
+        if (item.sub_type== ROD_PAKELLAS) {
+            return 0;
+        }
+        else {
+            // Technically not a brand, but still handled here
+            return TILE_ROD_ID_FIRST + item.sub_type;
+        }
     }
     return 0;
 }

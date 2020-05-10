@@ -77,3 +77,5 @@ spret cast_ignition(const actor *caster, int pow, bool fail);
 spret cast_borgnjors_vile_clutch(int pow, bolt &beam, bool fail);
 spret cast_eringyas_rootspike(int pow, const dist& beam, bool fail);
 spret cast_olgrebs_last_mercy(int pow, const dist& dist, bool fail);
+
+spret cast_pakellas_bolt(int powc, bolt& beam, bool fail = false);

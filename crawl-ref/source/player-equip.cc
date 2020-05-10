@@ -812,9 +812,7 @@ static void _spirit_shield_message(bool unmeld)
     {
         dec_mp(you.magic_points);
         mpr("You feel your power drawn to a protective spirit.");
-        if (you.species == SP_DEEP_DWARF
-            && !(have_passive(passive_t::no_mp_regen)
-                 || player_under_penance(GOD_PAKELLAS)))
+        if (you.species == SP_DEEP_DWARF)
         {
             mpr("Now linked to your health, your magic stops regenerating.");
         }

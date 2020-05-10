@@ -40,6 +40,7 @@
 #include "mon-tentacle.h"
 #include "mutation.h"
 #include "ouch.h"
+#include "pakellas.h"
 #include "prompt.h"
 #include "religion.h"
 #include "shout.h"
@@ -3240,4 +3241,250 @@ spret cast_olgrebs_last_mercy(int pow, const dist& dist, bool fail)
 
     return spret::success;
 
+}
+
+spret cast_pakellas_bolt(int powc, bolt& beam, bool fail)
+{
+    // Need to use a 'generic' tracer regardless of the actual beam type,
+    // to account for the possibility of both bouncing and irresistible damage
+    // (even though only one of these two ever occurs on the same bolt type).
+    bolt tracer = beam;
+    if (!player_tracer(ZAP_RANDOM_BOLT_TRACER, 200, tracer))
+        return spret::abort;
+
+    fail_check();
+    
+    float multiple = 1.0f;
+
+    bolt pbolt = beam;
+    pbolt.name = "magic bolt";
+    pbolt.thrower = KILL_YOU_MISSILE;
+    pbolt.flavour = BEAM_MMISSILE;
+    pbolt.real_flavour = BEAM_MMISSILE;
+    pbolt.colour = LIGHTMAGENTA;
+    pbolt.glyph = dchar_glyph(DCHAR_FIRED_ZAP);
+
+    if (is_blueprint_exist(BLUEPRINT_ELEMENTAL_FIRE)) {
+        pbolt.name = "fire bolt";
+        pbolt.flavour = BEAM_ROD_FIRE;
+        pbolt.real_flavour = BEAM_ROD_FIRE;
+        pbolt.colour = RED;
+        pbolt.glyph = dchar_glyph(DCHAR_FIRED_ZAP);
+        multiple *= 1.2f;
+    }
+    else if (is_blueprint_exist(BLUEPRINT_ELEMENTAL_COLD)) {
+        pbolt.name = "cold bolt";
+        pbolt.flavour = BEAM_ROD_COLD;
+        pbolt.real_flavour = BEAM_ROD_COLD;
+        pbolt.colour = BLUE; 
+        pbolt.glyph = dchar_glyph(DCHAR_FIRED_ZAP);
+        multiple *= 1.2f;
+    }
+    else if (is_blueprint_exist(BLUEPRINT_ELEMENTAL_ELEC)) {
+        pbolt.name = "electricity bolt";
+        pbolt.flavour = BEAM_ROD_ELEC;
+        pbolt.real_flavour = BEAM_ROD_ELEC;
+        pbolt.colour = YELLOW;
+        pbolt.glyph = dchar_glyph(DCHAR_FIRED_ZAP);
+        multiple *= 1.2f;
+    }
+    else if (is_blueprint_exist(BLUEPRINT_ELEMENTAL_EARTH)) {
+        pbolt.name = "stone bolt";
+        pbolt.colour = BROWN;
+        pbolt.glyph = dchar_glyph(DCHAR_EXPLOSION);
+        multiple *= 1.2f;
+    } else if (is_blueprint_exist(BLUEPRINT_CHAOS)) {
+        pbolt.name = "choas bolt";
+        pbolt.flavour = BEAM_CHAOS;
+        pbolt.real_flavour = BEAM_CHAOS;
+        pbolt.colour = BLUE;
+        pbolt.glyph = dchar_glyph(DCHAR_FIRED_BOLT);
+        multiple *= 1.4f;
+    }
+
+
+    pbolt.hit_func = [&powc, &pbolt, &multiple](monster* mon, bool in_explosion) {
+        if (mon == nullptr)
+            return;
+
+        if (is_blueprint_exist(BLUEPRINT_BOME) && !in_explosion) {
+            return;
+        }
+
+
+        bool resist = 0;
+        if (is_blueprint_exist(BLUEPRINT_DEBUF_SLOW)) {
+            bolt beam_;
+            beam_.flavour = BEAM_SLOW;
+            beam_.ench_power = powc;
+            int unused; // res_margin
+            beam_.try_enchant_monster(mon, unused);
+            if (unused > 0 && (resist == 0 || unused < resist))
+                resist = unused;
+            else
+                resist = -1;
+        }
+
+        if (is_blueprint_exist(BLUEPRINT_STICKY_FLAME)) {
+            mon->add_ench(mon_enchant(ENCH_STICKY_FLAME,
+                min(4, 1 + random2(mon->get_hit_dice()) / 2),
+                &you));
+        }
+
+        if (is_blueprint_exist(BLUEPRINT_CHAIN_LIGHTNING)) {
+            coord_def source, target;
+            source = mon->pos();
+            int min_dist = LOS_DEFAULT_RANGE - 1;
+
+            int dist;
+            int count = 0;
+
+            target.x = -1;
+            target.y = -1;
+
+            for (monster_iterator mi; mi; ++mi)
+            {
+                if (invalid_monster(*mi))
+                    continue;
+
+                // Don't arc to things we cannot hit.
+                if (pbolt.ignores_monster(*mi))
+                    continue;
+
+                dist = grid_distance(source, mi->pos());
+
+                // check for the source of this arc
+                if (!dist)
+                    continue;
+
+                // randomise distance (arcs don't care about a couple of feet)
+                dist += (random2(3) - 1);
+
+                // always ignore targets further than current one
+                if (dist > min_dist)
+                    continue;
+
+                if (!cell_see_cell(source, mi->pos(), LOS_SOLID)
+                    || !cell_see_cell(you.pos(), mi->pos(), LOS_SOLID_SEE))
+                {
+                    continue;
+                }
+
+                // check for actors along the arc path
+                ray_def ray;
+                if (!find_ray(source, mi->pos(), ray, opc_solid))
+                    continue;
+
+                while (ray.advance())
+                    if (actor_at(ray.pos()))
+                        break;
+
+                if (ray.pos() != mi->pos())
+                    continue;
+
+                count++;
+
+                if (dist < min_dist)
+                {
+                    // switch to looking for closer targets (but not always)
+                    if (!one_chance_in(10))
+                    {
+                        min_dist = dist;
+                        target = mi->pos();
+                        count = 0;
+                    }
+                }
+                else if (target.x == -1 || one_chance_in(count))
+                {
+                    // either first target, or new selected target at
+                    // min_dist == dist.
+                    target = mi->pos();
+                }
+            }
+            if (target.x == -1)
+            {
+                return;
+            }
+
+            bolt beam_;
+            beam_.name = "lightning arc";
+            beam_.aux_source = "chain lightning";
+
+
+            beam_.glyph = dchar_glyph(DCHAR_FIRED_ZAP);
+            beam_.flavour = BEAM_ELECTRICITY;
+            beam_.source_id = you.mid;
+            beam_.thrower = KILL_YOU_MISSILE;
+            beam_.range = 8;
+            beam_.hit = AUTOMATIC_HIT;
+            beam_.obvious_effect = true;
+            beam_.pierce = false;       // since we want to stop at our target
+            beam_.is_explosion = false;
+            beam_.is_tracer = false;
+            beam_.origin_spell = SPELL_CHAIN_LIGHTNING;
+            beam_.source = source;
+            beam_.target = target;
+            beam_.colour = LIGHTBLUE;
+            beam_.damage = calc_dice(5, ((6 + powc * 3 / 4)*8/10) * multiple); //80%
+
+            // Be kinder to the caster.
+            if (target == you.pos())
+            {
+                // Reduce damage when the spell arcs to the caster.
+                beam_.damage.num = max(1, beam_.damage.num / 2);
+                beam_.damage.size = max(3, beam_.damage.size / 2);
+            }
+            beam_.fire();
+        }
+
+
+        if (is_blueprint_exist(BLUEPRINT_FROZEN)) {
+            mon->add_ench(mon_enchant(ENCH_FROZEN, 0, &you, 6 + random2(16) * BASELINE_DELAY));
+        }
+
+        if (is_blueprint_exist(BLUEPRINT_DEBUF_BLIND)) {
+            if (mons_can_be_dazzled(mon->type)) {
+                if (x_chance_in_y(95 - mon->get_hit_dice() * 5, 100))
+                {
+                    simple_monster_message(*mon, " is dazzled.");
+                    mon->add_ench(mon_enchant(ENCH_BLIND, 1, &you,
+                        random_range(4, 8) * BASELINE_DELAY));
+                }
+            }
+        }
+
+        if (is_blueprint_exist(BLUEPRINT_DEFORM)) {
+            mon->malmutate("");
+        }
+
+        if (resist > 0) {
+            simple_monster_message(*mon, mon->resist_margin_phrase(resist).c_str());
+        }
+    };
+    
+
+
+    pbolt.obvious_effect = true;
+    pbolt.pierce = is_blueprint_exist(BLUEPRINT_PENTAN) >= 1;
+    pbolt.is_explosion = is_blueprint_exist(BLUEPRINT_BOME) >= 1;
+    if (is_blueprint_exist(BLUEPRINT_BOME)) {
+        pbolt.ex_size = is_blueprint_exist(BLUEPRINT_BOME);
+    }
+    pbolt.range = 5;
+    //pbolt.ench_power = zap_ench_power(z_type, power, is_monster);
+    
+    //pbolt.hit = AUTOMATIC_HIT;
+    pbolt.hit = is_blueprint_exist(BLUEPRINT_PERFECT_SHOT) >= 1 ?
+        AUTOMATIC_HIT : 
+        (10 + powc * 1 / 25);
+    pbolt.hit = max(0, pbolt.hit - 5 * you.inaccuracy());
+
+    pbolt.damage = calc_dice(6, (6 + powc * 3 / 4) * multiple);
+
+    pbolt.origin_spell = SPELL_PAKELLAS_ROD;
+
+    pbolt.loudness = 5 + is_blueprint_exist(BLUEPRINT_BOME);
+
+    pbolt.fire();
+    return spret::success;
 }

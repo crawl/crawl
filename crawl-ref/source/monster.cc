@@ -2838,6 +2838,7 @@ void monster::expose_to_element(beam_type flavour, int strength,
     case BEAM_LAVA:
     case BEAM_STICKY_FLAME:
     case BEAM_STEAM:
+    case BEAM_ROD_FIRE:
         if (has_ench(ENCH_OZOCUBUS_ARMOUR))
         {
             // The 10 here is from expose_player_to_element.

@@ -177,8 +177,8 @@ orb.o \
 ouch.o \
 outer-menu.o \
 output.o \
-package.o \
-pattern.o \
+package.o \pattern.o \
+pakellas.o \
 pcg.o \
 perlin.o \
 place-info.o \

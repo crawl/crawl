@@ -78,7 +78,8 @@
 void maybe_melt_player_enchantments(beam_type flavour, int damage)
 {
     if (flavour == BEAM_FIRE || flavour == BEAM_LAVA
-        || flavour == BEAM_STICKY_FLAME || flavour == BEAM_STEAM)
+        || flavour == BEAM_STICKY_FLAME || flavour == BEAM_STEAM
+        || flavour == BEAM_ROD_FIRE)
     {
         if (you.has_mutation(MUT_ICEMAIL))
         {
@@ -136,6 +137,7 @@ int check_your_resists(int hurted, beam_type flavour, string source,
         break;
 
     case BEAM_FIRE:
+    case BEAM_ROD_FIRE:
         hurted = resist_adjust_damage(&you, flavour, hurted);
         if (hurted < original && doEffects)
             canned_msg(MSG_YOU_RESIST);
@@ -150,6 +152,7 @@ int check_your_resists(int hurted, beam_type flavour, string source,
         break; // sucks to be you (:
 
     case BEAM_COLD:
+    case BEAM_ROD_COLD:
         hurted = resist_adjust_damage(&you, flavour, hurted);
         if (hurted < original && doEffects)
             canned_msg(MSG_YOU_RESIST);
@@ -161,6 +164,7 @@ int check_your_resists(int hurted, beam_type flavour, string source,
         break;
 
     case BEAM_ELECTRICITY:
+    case BEAM_ROD_ELEC:
         hurted = resist_adjust_damage(&you, flavour, hurted);
 
         if (hurted < original && doEffects)

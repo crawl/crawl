@@ -52,6 +52,7 @@
 #include "mon-util.h"
 #include "mutation.h"
 #include "nearby-danger.h"
+#include "pakellas.h"
 #include "player-stats.h"
 #include "potion.h"
 #include "prompt.h"
@@ -1406,6 +1407,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
         break;
 
     case BEAM_ELECTRICITY:
+    case BEAM_ROD_ELEC:
         hurted = resist_adjust_damage(mons, pbolt.flavour, hurted);
         if (!hurted)
         {
@@ -1423,7 +1425,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
                 simple_monster_message(*mons, " is electrocuted!");
         }
         break;
-
+        
     case BEAM_ACID:
     {
         hurted = resist_adjust_damage(mons, pbolt.flavour, hurted);
@@ -1548,6 +1550,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
     }
 
     case BEAM_ICE:
+    case BEAM_ROD_COLD:
         // ice - 40% of damage is cold, other 60% is impact and
         // can't be resisted (except by AC, of course)
         hurted = resist_adjust_damage(mons, pbolt.flavour, hurted);
@@ -1564,6 +1567,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
         break;
 
     case BEAM_LAVA:
+    case BEAM_ROD_FIRE:
         hurted = resist_adjust_damage(mons, pbolt.flavour, hurted);
 
         if (hurted < original)
@@ -2646,7 +2650,7 @@ void bolt::affect_ground()
 
 bool bolt::is_fiery() const
 {
-    return flavour == BEAM_FIRE || flavour == BEAM_LAVA;
+    return flavour == BEAM_FIRE || flavour == BEAM_LAVA || flavour == BEAM_ROD_FIRE;
 }
 
 /// Can this bolt burn trees it hits?
@@ -2702,8 +2706,11 @@ void bolt::affect_place_clouds()
     {
         // fire cancelling cold & vice versa
         if ((cloud->type == CLOUD_COLD
-             && (flavour == BEAM_FIRE || flavour == BEAM_LAVA))
-            || (cloud->type == CLOUD_FIRE && flavour == BEAM_COLD))
+             && (flavour == BEAM_FIRE || flavour == BEAM_LAVA
+                 || flavour == BEAM_ROD_FIRE))
+            || (cloud->type == CLOUD_FIRE && (flavour == BEAM_COLD
+                || flavour == BEAM_ROD_COLD
+                )))
         {
             if (player_can_hear(p))
                 mprf(MSGCH_SOUND, "You hear a sizzling sound!");
@@ -2763,6 +2770,25 @@ void bolt::affect_place_clouds()
 
     if (origin_spell == SPELL_DEATH_RATTLE)
         place_cloud(CLOUD_MIASMA, p, random2(4) + 4, agent());
+
+    if (origin_spell == SPELL_PAKELLAS_ROD)
+    {
+        if (is_blueprint_exist(BLUEPRINT_CLOUD)) {
+            if (is_blueprint_exist(BLUEPRINT_ELEMENTAL_FIRE)) {
+                place_cloud(CLOUD_FIRE, p, 2 + random2(5), agent());
+            }
+            else if (is_blueprint_exist(BLUEPRINT_ELEMENTAL_COLD)) {
+                place_cloud(CLOUD_COLD, p, 2 + random2(5), agent());
+            }
+            else if (is_blueprint_exist(BLUEPRINT_ELEMENTAL_ELEC)) {
+                place_cloud(CLOUD_STORM, p, 2 + random2(5), agent());
+            }
+            else if (is_blueprint_exist(BLUEPRINT_CHAOS)) {
+                place_cloud(CLOUD_CHAOS, p, 2 + random2(5), agent());
+            }
+        }
+    }
+
 }
 
 void bolt::affect_place_explosion_clouds()
@@ -5059,6 +5085,10 @@ void bolt::affect_monster(monster* mon)
     if (!mon->alive())
         return;
 
+    if (hit_func != nullptr) {
+        hit_func(mon, in_explosion_phase);
+    }
+
     // The beam hit.
     if (you.see_cell(mon->pos()))
     {
@@ -5976,6 +6006,10 @@ const map<spell_type, explosion_sfx> spell_explosions = {
         "The ghostly flame explodes!",
         "the shriek of haunting fire",
     } },
+    { SPELL_PAKELLAS_ROD, {
+        "The energy explodes!",
+        "an explosion",
+    } },
 };
 
 // Takes a bolt and refines it for use in the explosion function.
@@ -6689,6 +6723,9 @@ static string _beam_type_name(beam_type type)
     case BEAM_IRRESISTIBLE_CONFUSION:return "confusion";
     case BEAM_INFESTATION:           return "infestation";
     case BEAM_VILE_CLUTCH:           return "vile clutch";
+    case BEAM_ROD_FIRE:              return "fire";
+    case BEAM_ROD_COLD:              return "cold";
+    case BEAM_ROD_ELEC:              return "electricity";
 
     case NUM_BEAMS:                  die("invalid beam type");
     }

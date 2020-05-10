@@ -519,6 +519,11 @@ static inline int get_resistible_fraction(beam_type flavour)
     case BEAM_ICE:
         return 40;
 
+    case BEAM_ROD_FIRE:
+    case BEAM_ROD_COLD:
+    case BEAM_ROD_ELEC:
+        return 50;
+
     case BEAM_LAVA:
         return 55;
 
@@ -539,6 +544,7 @@ static int _beam_to_resist(const actor* defender, beam_type flavour)
     {
         case BEAM_FIRE:
         case BEAM_LAVA:
+        case BEAM_ROD_FIRE:
             return defender->res_fire();
         case BEAM_DAMNATION:
             return defender->res_damnation();
@@ -546,10 +552,12 @@ static int _beam_to_resist(const actor* defender, beam_type flavour)
             return defender->res_steam();
         case BEAM_COLD:
         case BEAM_ICE:
+        case BEAM_ROD_COLD:
             return defender->res_cold();
         case BEAM_WATER:
             return defender->res_water_drowning();
         case BEAM_ELECTRICITY:
+        case BEAM_ROD_ELEC:
             return defender->res_elec();
         case BEAM_NEG:
         case BEAM_PAIN:

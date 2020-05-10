@@ -14,6 +14,7 @@
 #include "ray.h"
 #include "spl-cast.h"
 #include "zap-type.h"
+#include <functional>
 
 #define BEAM_STOP       1000        // all beams stopped by subtracting this
                                     // from remaining range
@@ -153,6 +154,8 @@ struct bolt
 
     int         tile_beam; // only used if USE_TILE is defined
 
+    std::function<void(monster*, bool)> hit_func = nullptr;
+
 private:
     bool can_see_invis = false;
     bool nightvision = false;
@@ -262,9 +265,9 @@ private:
     void handle_stop_attack_prompt(monster* mon);
     bool attempt_block(monster* mon);
     void update_hurt_or_helped(monster* mon);
-    mon_resist_type try_enchant_monster(monster* mon, int &res_margin);
     void enchantment_affect_monster(monster* mon);
 public:
+    mon_resist_type try_enchant_monster(monster* mon, int& res_margin);
     mon_resist_type apply_enchantment_to_monster(monster* mon);
     void apply_beam_conducts();
 private:

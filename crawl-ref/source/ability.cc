@@ -56,6 +56,7 @@
 #include "notes.h"
 #include "options.h"
 #include "output.h"
+#include "pakellas.h"
 #include "player-stats.h"
 #include "potion.h"
 #include "prompt.h"
@@ -613,6 +614,10 @@ static const ability_def Ability_List[] =
     { ABIL_PAKELLAS_DEVICE_SURGE, "Device Surge",
       0, 0, 0, generic_cost::fixed(1),
       {fail_basis::invo, 40, 5, 20}, abflag::variable_mp | abflag::instant },
+    { ABIL_PAKELLAS_PROTOTYPE, "Receive ProtoType",
+      0, 0, 0, 0, {fail_basis::invo}, abflag::none },
+    { ABIL_PAKELLAS_UPGRADE, "Upgrade Rod",
+      0, 0, 0, 0, {fail_basis::invo}, abflag::none },
 
     // Uskayaw
     { ABIL_USKAYAW_STOMP, "Stomp",
@@ -3185,6 +3190,24 @@ static spret _do_ability(const ability_def& abil, bool fail)
         break;
     }
 
+    case ABIL_PAKELLAS_PROTOTYPE:
+        fail_check();
+        if (pakellas_prototype())
+        {
+            canned_msg(MSG_OK);
+            return spret::abort;
+        }
+        break;
+
+    case ABIL_PAKELLAS_UPGRADE:
+        fail_check();
+        if(pakellas_upgrade())
+        {
+            canned_msg(MSG_OK);
+            return spret::abort;
+        }
+        break;
+
     case ABIL_USKAYAW_STOMP:
         fail_check();
         if (!uskayaw_stomp())
@@ -3879,6 +3902,16 @@ vector<ability_type> get_god_abilities(bool ignore_silence, bool ignore_piety,
         }
         if (any_sacrifices)
             abilities.push_back(ABIL_RU_REJECT_SACRIFICES);
+    }
+    if (you_worship(GOD_PAKELLAS)) {
+        ASSERT(you.props.exists(PAKELLAS_UPGRADE_ON));
+
+        if (you.props[PAKELLAS_PROTOTYPE].get_int() == 0) {
+            abilities.push_back(ABIL_PAKELLAS_PROTOTYPE);
+        }
+        else if (you.props[PAKELLAS_UPGRADE_ON].get_vector().size() > 0) {
+            abilities.push_back(ABIL_PAKELLAS_UPGRADE);
+        }
     }
     // XXX: should we check ignore_piety?
     if (you_worship(GOD_HEPLIAKLQANA)

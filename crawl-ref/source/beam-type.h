@@ -31,6 +31,9 @@ enum beam_type                  // bolt::flavour
     BEAM_RANDOM,                  // currently translates into FIRE..ACID
     BEAM_CHAOS,
     BEAM_UNRAVELLED_MAGIC,
+    BEAM_ROD_FIRE,
+    BEAM_ROD_COLD,
+    BEAM_ROD_ELEC,
 
     // Enchantments
     BEAM_SLOW,

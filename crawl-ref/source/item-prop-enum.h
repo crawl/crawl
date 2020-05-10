@@ -527,6 +527,7 @@ enum rod_type
     ROD_SHADOWS,
     ROD_IRON,
     ROD_VENOM,
+    ROD_PAKELLAS, //special rod
     NUM_RODS,
 };
 

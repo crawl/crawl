@@ -28,6 +28,7 @@
 #include "errors.h" // sysfail
 #include "evoke.h"
 #include "food.h"
+#include "god-abil.h"
 #include "god-item.h"
 #include "god-passive.h" // passive_t::want_curses, no_haste
 #include "invent.h"
@@ -42,6 +43,7 @@
 #include "options.h"
 #include "orb-type.h"
 #include "output.h"
+#include "pakellas.h"
 #include "place.h"
 #include "player.h"
 #include "prompt.h"
@@ -119,12 +121,14 @@ static const char* _interesting_origin(const item_def &item)
  */
 static string _item_inscription(const item_def &item)
 {
+    bool pakellas_rod =( item.base_type == OBJ_RODS && item.sub_type == ROD_PAKELLAS);
     vector<string> insparts;
 
     if (const char *orig = _interesting_origin(item))
     {
-        if (Options.show_god_gift == MB_TRUE
-            || Options.show_god_gift == MB_MAYBE && !fully_identified(item))
+        if (!pakellas_rod && (
+            Options.show_god_gift == MB_TRUE
+            || Options.show_god_gift == MB_MAYBE && !fully_identified(item)))
         {
             insparts.push_back(orig);
         }
@@ -135,6 +139,25 @@ static string _item_inscription(const item_def &item)
         const string part = artefact_inscription(item);
         if (!part.empty())
             insparts.push_back(part);
+    }
+
+    if (pakellas_rod && you.props.exists(AVAILABLE_ROD_UPGRADE_KEY)) {
+        CrawlVector& available_upgrade = you.props[AVAILABLE_ROD_UPGRADE_KEY].get_vector();
+        map<string, string> save_abbr;
+        for (auto upgrade : available_upgrade) {
+            const char* abbr = blueprint_list[(pakellas_blueprint_type)upgrade.get_int()].abbr;
+            if (abbr != nullptr) {
+                if (save_abbr.find(abbr) == save_abbr.end()) {
+                    save_abbr.insert(pair<string, string>(abbr, abbr));
+                }
+                else {
+                    save_abbr[abbr].append("+");
+                }
+            }
+        }
+        for (auto abbr : save_abbr) {
+            insparts.push_back(abbr.second);
+        }
     }
 
     if (!item.inscription.empty())
@@ -1209,6 +1232,7 @@ static const char* rod_type_name(int type)
 #if TAG_MAJOR_VERSION == 34
     case ROD_DESTRUCTION:     return "destruction";
 #endif
+    case ROD_PAKELLAS:         return "pakellas";
 
     default: return "bugginess";
     }
@@ -3713,9 +3737,6 @@ bool is_useless_item(const item_def &item, bool temp)
                        && (you.get_mutation_level(MUT_INHIBITED_REGENERATION) > 0
                            || you.species == SP_VAMPIRE)
                        && regeneration_is_inhibited());
-
-        case AMU_MANA_REGENERATION:
-            return you_worship(GOD_PAKELLAS);
 
         case RING_SEE_INVISIBLE:
             return you.innate_sinv();

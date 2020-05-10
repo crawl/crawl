@@ -427,12 +427,7 @@ static peeve_map divine_peeves[] =
     // GOD_RU,
     peeve_map(),
     // GOD_PAKELLAS
-    {
-        { DID_CHANNEL, {
-            "you channel magical energy", true,
-            1, 1,
-        } },
-    },
+    peeve_map(),
     // GOD_USKAYAW,
     peeve_map(),
     // GOD_HEPLIAKLQANA,
@@ -888,7 +883,6 @@ static like_map divine_likes[] =
             }
         } },
     },
-#if TAG_MAJOR_VERSION == 34
     // GOD_PAKELLAS,
     {
         { DID_KILL_LIVING, _on_kill("you kill living beings", MH_NATURAL, false,
@@ -897,6 +891,8 @@ static like_map divine_likes[] =
             {
                 piety *= 4;
                 denom *= 3;
+                ASSERT(you.props.exists(PAKELLAS_UPGRADE_ROD_PROGRESS_KEY));
+                you.props[PAKELLAS_UPGRADE_ROD_PROGRESS_KEY].get_int()++;
             }
         ) },
         { DID_KILL_UNDEAD, KILL_UNDEAD_RESPONSE },
@@ -904,7 +900,6 @@ static like_map divine_likes[] =
         { DID_KILL_HOLY, KILL_HOLY_RESPONSE },
         { DID_KILL_NONLIVING, KILL_NONLIVING_RESPONSE },
     },
-#endif
     // GOD_USKAYAW
     {
         { DID_HURT_FOE, {

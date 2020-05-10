@@ -34,6 +34,7 @@
 #include "state.h"
 #include "status.h"
 #include "stringutil.h"
+#include "pakellas.h"
 #include "transform.h"
 #include "unicode.h"
 #include "unwind.h"
@@ -861,6 +862,11 @@ void wizard_get_god_gift()
     if (you_worship(GOD_RU))
     {
         ru_offer_new_sacrifices();
+        return;
+    }
+    if (you_worship(GOD_PAKELLAS))
+    {
+        pakellas_offer_new_upgrade();
         return;
     }
 

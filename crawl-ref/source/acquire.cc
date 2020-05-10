@@ -640,7 +640,8 @@ static int _acquirement_rod_subtype(bool /*divine*/, int& /*quantity*/)
     {
         result = random2(NUM_RODS);
     } while (you.get_mutation_level(MUT_NO_LOVE) && result == ROD_SHADOWS
-        || item_type_removed(OBJ_RODS, result));
+        || item_type_removed(OBJ_RODS, result)
+        || result == ROD_PAKELLAS);
     return result;
 }
 
@@ -1226,17 +1227,6 @@ static string _why_reject(const item_def &item, int agent)
     {
         ASSERT(item.base_type == OBJ_BOOKS);
         return "Destroying sif-gifted rarebook!";
-    }
-
-    // The crystal ball case should be handled elsewhere, but just in
-    // case, it's also handled here.
-    if (agent == GOD_PAKELLAS)
-    {
-        if (item.base_type == OBJ_MISCELLANY
-            && item.sub_type == MISC_CRYSTAL_BALL_OF_ENERGY)
-        {
-            return "Destroying CBoE that Pakellas hates!";
-        }
     }
 
     return ""; // all OK

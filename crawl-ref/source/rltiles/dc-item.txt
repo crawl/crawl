@@ -961,6 +961,7 @@ rod06
 rod07
 rod08
 rod09
+rod10
 
 # These must be in the same order as the enum in item-prop-enum.h!
 i-rod_lightning ROD_LIGHTNING ROD_ID_FIRST
@@ -972,7 +973,8 @@ i-rod_inaccuracy ROD_INACCURACY
 i-rod_warding ROD_WARDING
 i-rod_shadows ROD_SHADOWS
 i-rod_iron ROD_IRON
-i-rod_venom ROD_VENOM ROD_ID_LAST
+i-rod_venom ROD_VENOM
+i-rod_destruction ROD_PAKELLAS ROD_ID_LAST
 %rim 1
 
 #OBJ_ORBS

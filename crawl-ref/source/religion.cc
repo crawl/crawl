@@ -57,6 +57,7 @@
 #include "nearby-danger.h"
 #include "notes.h"
 #include "output.h"
+#include "pakellas.h"
 #include "player-stats.h"
 #include "prompt.h"
 #include "randbook.h"
@@ -350,7 +351,7 @@ const vector<god_power> god_powers[NUM_GODS] =
 
     // Pakellas
     {
-      { 0, "gain magical power from killing" },
+      { 0, "You can gain Pakellas's experimental rod and upgrade it." },
       { 3, ABIL_PAKELLAS_DEVICE_SURGE,
            "spend magic to empower your devices" },
     },
@@ -648,13 +649,7 @@ void dec_penance(god_type god, int val)
         }
         else
         {
-            if (god == GOD_PAKELLAS)
-            {
-                // Penance just ended w/o worshipping Pakellas;
-                // notify the player that MP regeneration will start again.
-                mprf(MSGCH_GOD, god, "You begin regenerating magic.");
-            }
-            else if (god == GOD_HEPLIAKLQANA)
+            if (god == GOD_HEPLIAKLQANA)
             {
                 calc_hp(); // frailty ends
                 mprf(MSGCH_GOD, god, "Your full life essence returns.");
@@ -2948,8 +2943,6 @@ void excommunication(bool voluntary, god_type new_god)
         break;
 
     case GOD_PAKELLAS:
-        simple_god_message(" continues to block your magic from regenerating.",
-                           old_god);
         if (you.duration[DUR_DEVICE_SURGE])
             you.duration[DUR_DEVICE_SURGE] = 0;
         you.exp_docked[old_god] = exp_needed(min<int>(you.max_level, 27) + 1)
@@ -3271,6 +3264,8 @@ static void _apply_monk_bonus()
     // monks get bonus piety for first god
     if (you_worship(GOD_RU))
         you.props[RU_SACRIFICE_PROGRESS_KEY] = 9999;
+    if (you_worship(GOD_PAKELLAS))
+        you.props[PAKELLAS_UPGRADE_ROD_PROGRESS_KEY] = 9999;
     else if (you_worship(GOD_USKAYAW))  // Gaining piety past this point does nothing
         gain_piety(15, 1, false); // of value with this god and looks weird.
     else
@@ -3391,6 +3386,23 @@ static void _set_initial_god_piety()
             you.props[RU_SACRIFICE_DELAY_KEY] = delay;
         }
         you.props[RU_SACRIFICE_PENALTY_KEY] = 0;
+        break;
+
+    case GOD_PAKELLAS:
+        you.piety = 15; // to prevent near instant excommunication
+        if (you.piety_max[you.religion] < 15)
+            you.piety_max[you.religion] = 15;
+        you.piety_hysteresis = 0;
+        you.gift_timeout = 0;
+
+        you.props[PAKELLAS_UPGRADE_ROD_PROGRESS_KEY] = 0;
+        {
+            int delay = 50;
+            if (crawl_state.game_is_sprint())
+                delay /= SPRINT_MULTIPLIER;
+            you.props[PAKELLAS_UPGRADE_ROD_DELAY_KEY] = delay;
+        }
+        you.props[PAKELLAS_UPGRADE_ROD_PENALTY_KEY] = 0;
         break;
 
     default:
@@ -3560,14 +3572,16 @@ static void _join_zin()
     }
 }
 
-#if TAG_MAJOR_VERSION == 34
 // Setup when becoming an overworked assistant to Pakellas.
 static void _join_pakellas()
 {
-    mprf(MSGCH_GOD, "You stop regenerating magic.");
-    you.attribute[ATTR_PAKELLAS_EXTRA_MP] = POT_MAGIC_MP;
+    if (!you.props.exists(AVAILABLE_ROD_UPGRADE_KEY)) {
+        _make_empty_vec(you.props[AVAILABLE_ROD_UPGRADE_KEY], SV_INT);
+    }
+    _make_empty_vec(you.props[PAKELLAS_UPGRADE_ON], SV_INT);
+    //mprf(MSGCH_GOD, "You stop regenerating magic.");
+    //you.attribute[ATTR_PAKELLAS_EXTRA_MP] = POT_MAGIC_MP;
 }
-#endif
 
 // Setup for joining the easygoing followers of Cheibriados.
 static void _join_cheibriados()
@@ -3927,10 +3941,6 @@ bool god_hates_spell(spell_type spell, god_type god, bool fake_spell)
         if (is_hasty_spell(spell))
             return true;
         break;
-    case GOD_PAKELLAS:
-        if (spell == SPELL_SUBLIMATION_OF_BLOOD)
-            return true;
-        break;
     default:
         break;
     }
@@ -4101,6 +4111,7 @@ void handle_god_time(int /*time_delta*/)
     {
         int delay;
         int sacrifice_count;
+        int upgrade_count;
         switch (you.religion)
         {
         case GOD_TROG:
@@ -4114,7 +4125,6 @@ void handle_god_time(int /*time_delta*/)
         case GOD_KIKUBAAQUDGHA:
         case GOD_VEHUMET:
         case GOD_ZIN:
-        case GOD_PAKELLAS:
         case GOD_JIYVA:
         case GOD_WU_JIAN:
         case GOD_SIF_MUNA:
@@ -4148,6 +4158,26 @@ void handle_god_time(int /*time_delta*/)
               ru_offer_new_sacrifices();
             }
 
+            break;
+
+        case GOD_PAKELLAS:
+            ASSERT(you.props.exists(PAKELLAS_UPGRADE_ROD_PROGRESS_KEY));
+            ASSERT(you.props.exists(PAKELLAS_UPGRADE_ROD_DELAY_KEY));
+            ASSERT(you.props.exists(AVAILABLE_ROD_UPGRADE_KEY));
+            ASSERT(you.props.exists(PAKELLAS_UPGRADE_ON));
+
+            delay = you.props[PAKELLAS_UPGRADE_ROD_DELAY_KEY].get_int();
+            upgrade_count = you.props[AVAILABLE_UPGRADE_NUM_KEY].get_int();
+
+            // 6 is maximum upgrade
+            if (upgrade_count < 6 
+                && you.props[PAKELLAS_UPGRADE_ON].get_vector().size() == 0
+                && you.props[PAKELLAS_UPGRADE_ROD_PROGRESS_KEY].get_int() >= delay)
+            {
+                pakellas_offer_new_upgrade();
+            }
+            if (one_chance_in(17))
+                lose_piety(1);
             break;
 
         case GOD_USKAYAW:

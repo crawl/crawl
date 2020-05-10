@@ -1788,6 +1788,15 @@ static bool _rod_spell(item_def& irod, bool check_range)
     const spell_type spell = spell_in_rod(static_cast<rod_type>(irod.sub_type));
     int mana = spell_mana(spell) * ROD_CHARGE_MULT;
     int power = calc_spell_power(spell, false, false, true, 1, true);
+    if (irod.sub_type == ROD_PAKELLAS) {
+        power = power * 3 / 2; //scale up. max evo = 127
+        if (you.religion == GOD_PAKELLAS) {
+            power += you.piety / 5; //max 40
+        }
+        power += irod.rod_plus * 5; //maybe 30... in +6
+        if (power > 200)
+            power = 200;
+    }
 
     int food = spell_hunger(spell, true);
 

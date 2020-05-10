@@ -4080,6 +4080,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_PAKELLAS_ROD, "Pakellas Rod",
+    spschool::conjuration,
+    spflag::dir_or_target | spflag::needs_tracer,
+    4,
+    200,
+    5, 5,
+    4, 0,
+    TILEG_RANDOM_BOLT,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     spschool::none,
     spflag::testing,

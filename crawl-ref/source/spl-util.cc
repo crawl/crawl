@@ -29,6 +29,7 @@
 #include "options.h"
 #include "orb.h"
 #include "output.h"
+#include "pakellas.h"
 #include "player.h"
 #include "prompt.h"
 #include "religion.h"
@@ -980,6 +981,11 @@ int spell_range(spell_type spell, int pow, bool allow_bonus)
     {
         maxrange++;
         minrange++;
+    }
+    if (spell == SPELL_PAKELLAS_ROD) {
+        int add_range_ = is_blueprint_exist(BLUEPRINT_RANGE);
+        maxrange+= add_range_;
+        minrange+= add_range_;
     }
 
     if (minrange == maxrange)
