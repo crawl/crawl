@@ -576,8 +576,8 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item,
                    && (item_class != OBJ_JEWELLERY
                        || jewellery_is_amulet(item));
         case ARTP_HARM:
-            return item_class != OBJ_JEWELLERY && extant_props[ARTP_DRAIN];
-            // only get harm with *Drain
+            return item_class == OBJ_ARMOUR;
+            // only get harm on delay equipment
         default:
             return true;
     }
@@ -715,7 +715,7 @@ static const artefact_prop_data artp_data[] =
     { "Fragile", ARTP_VAL_BOOL, 25, // ARTP_FRAGILE,
         nullptr, []() { return 1; }, 0, 0 },
     { "SH", ARTP_VAL_ANY, 0, nullptr, nullptr, 0, 0 }, // ARTP_SHIELDING,
-    { "Harm", ARTP_VAL_BOOL, 0, // ARTP_HARM,
+    { "Harm", ARTP_VAL_BOOL, 25, // ARTP_HARM,
         []() {return 1;}, nullptr, 0, 0},
 };
 COMPILE_CHECK(ARRAYSZ(artp_data) == ARTP_NUM_PROPERTIES);
