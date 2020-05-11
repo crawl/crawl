@@ -4964,9 +4964,7 @@ int str_to_ego(object_class_type item_type, string ego_str)
         "resistance",
         "positive_energy",
         "archmagi",
-#if TAG_MAJOR_VERSION == 34
         "preservation",
-#endif
         "reflection",
         "spirit_shield",
         "archery",

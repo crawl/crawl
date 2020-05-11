@@ -2405,7 +2405,8 @@ int get_armour_res_corr(const item_def &arm)
     ASSERT(arm.base_type == OBJ_ARMOUR);
 
     // intrinsic armour abilities
-    return armour_type_prop(arm.sub_type, ARMF_RES_CORR);
+    return get_armour_ego_type(arm) == SPARM_PRESERVATION
+           || armour_type_prop(arm.sub_type, ARMF_RES_CORR);
 }
 
 int get_armour_repel_missiles(const item_def &arm, bool check_artp)
