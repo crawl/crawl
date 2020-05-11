@@ -46,7 +46,7 @@ enum object_selector
                                         // leakage.
     OSEL_DIVINE_RECHARGE         = -18,
     OSEL_UNCURSED_WORN_RINGS     = -19,
-    OSEL_UNCURSED_WORN_AMULETS = -20, 
+    OSEL_UNCURSED_WORN_AMULETS = -20,
     OSEL_BAG = -21,
     OSEL_SUPERCHARGE = -22
 };

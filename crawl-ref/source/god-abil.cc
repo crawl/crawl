@@ -5114,6 +5114,17 @@ int pakellas_surge_devices()
     return severity;
 }
 
+bool pakellas_check_quick_charge(bool quiet)
+{
+    if (!any_items_of_type(OSEL_DIVINE_RECHARGE))
+    {
+        if (!quiet)
+            mpr(no_selectables_message(OSEL_DIVINE_RECHARGE));
+        return false;
+    }
+
+    return true;
+}
 
 
 static bool _mons_stompable(const monster &mons)

@@ -614,6 +614,8 @@ static const ability_def Ability_List[] =
     { ABIL_PAKELLAS_DEVICE_SURGE, "Device Surge",
       0, 0, 0, generic_cost::fixed(1),
       {fail_basis::invo, 40, 5, 20}, abflag::variable_mp | abflag::instant },
+    { ABIL_PAKELLAS_QUICK_CHARGE, "Quick Charge",
+        0, 0, 100, 3, {fail_basis::invo, 40, 5, 20}, abflag::none },
     { ABIL_PAKELLAS_PROTOTYPE, "Receive ProtoType",
       0, 0, 0, 0, {fail_basis::invo}, abflag::none },
     { ABIL_PAKELLAS_UPGRADE, "Upgrade Rod",
@@ -1691,16 +1693,11 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         }
         return true;
 
-#if TAG_MAJOR_VERSION == 34
     case ABIL_PAKELLAS_DEVICE_SURGE:
-        if (you.magic_points == 0)
-        {
-            if (!quiet)
-                mpr("You have no magic power.");
-            return false;
-        }
         return true;
-#endif
+
+    case ABIL_PAKELLAS_QUICK_CHARGE:
+        return pakellas_check_quick_charge(quiet);
 
         // only available while your ancestor is alive.
     case ABIL_HEPLIAKLQANA_IDEALISE:
@@ -3285,6 +3282,17 @@ static spret _do_ability(const ability_def& abil, bool fail)
     case ABIL_WU_JIAN_WALLJUMP:
         fail_check();
         return wu_jian_wall_jump_ability();
+
+    case ABIL_PAKELLAS_QUICK_CHARGE:
+    {
+        fail_check();
+
+        //const int power = random2avg(you.skill(SK_EVOCATIONS, 10), 2);
+
+        if (quick_charge_pakellas() <= 0)
+            return spret::abort;
+        break;
+    }
 
     case ABIL_RENOUNCE_RELIGION:
         if (you.species == SP_ANGEL) {

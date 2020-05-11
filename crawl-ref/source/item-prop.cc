@@ -1534,6 +1534,30 @@ bool item_is_rechargeable(const item_def& it, bool hide_charged, bool divine)
     return false;
 }
 
+bool item_is_quickrechargeable(const item_def& it, bool hide_charged)
+{
+    if (it.base_type == OBJ_MISCELLANY && is_xp_evoker(it))
+    {
+        return true;
+    }
+    else if (it.base_type == OBJ_RODS)
+    {
+        if (!hide_charged)
+            return true;
+
+        if (item_ident(it, ISFLAG_KNOW_PLUSES))
+        {
+            return (it.charge_cap < MAX_ROD_CHARGE * ROD_CHARGE_MULT
+                || it.rod_plus < MAX_WPN_ENCHANT)
+                || it.charges < it.charge_cap;
+        }
+        return true;
+
+    }
+    return false;
+}
+
+
 int wand_charge_value(int type)
 {
     switch (type)

@@ -19,6 +19,7 @@
 #include "item-prop.h"
 #include "item-status-flag-type.h"
 #include "libutil.h"
+#include "invent.h"
 #include "player.h"
 #include "prompt.h"
 #include "sprint.h"
@@ -535,4 +536,81 @@ int is_blueprint_exist(pakellas_blueprint_type blueprint)
         }
     }
     return level;
+}
+
+int quick_charge_pakellas() {
+
+    int item_slot = -1;
+    do
+    {
+        if (item_slot == -1)
+        {
+            item_slot = prompt_invent_item("Charge which item?", menu_type::invlist,
+                OSEL_DIVINE_RECHARGE);
+        }
+
+        if (item_slot == PROMPT_NOTHING)
+            return -1;
+
+        if (item_slot == PROMPT_ABORT)
+        {
+             canned_msg(MSG_OK);
+             return -1;
+        }
+
+        item_def& items_ = you.inv[item_slot];
+
+        if (!item_is_quickrechargeable(items_))
+        {
+            mpr("Choose an item to recharge, or Esc to abort.");
+            more();
+
+            // Try again.
+            item_slot = -1;
+            continue;
+        }
+
+        if (items_.base_type != OBJ_MISCELLANY && items_.base_type != OBJ_RODS)
+            return 0;
+
+        if (items_.base_type == OBJ_RODS)
+        {
+            bool work = false;
+            const string orig_name = items_.name(DESC_YOUR);
+
+            if (items_.charges < items_.charge_cap)
+            {
+                items_.charges = items_.charge_cap;
+                work = true;
+            }
+
+            if (!work) {
+                mprf("%s already fully charged.", orig_name.c_str());
+                return 0;
+            }
+
+            mprf("%s has recharged.", orig_name.c_str());
+        }
+        else if (items_.base_type == OBJ_MISCELLANY) {
+            //not yet
+
+            const string orig_name = items_.name(DESC_YOUR);
+            int& debt = evoker_debt(items_.sub_type);
+            mprf("debt %d.", debt);
+
+            if (debt == 0) {
+                mprf("%s already charged.", orig_name.c_str());
+                return 0;
+            }
+
+            debt = 0;
+
+            mprf("%s has recharged.", orig_name.c_str());
+        }
+
+        you.wield_change = true;
+        return 1;
+    } while (true);
+
+    return 0;
 }

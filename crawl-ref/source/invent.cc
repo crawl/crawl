@@ -1132,10 +1132,12 @@ bool item_is_selected(const item_def &i, int selector)
                || (itype == OBJ_BOOKS && i.sub_type != BOOK_MANUAL)
              || (itype == OBJ_MISCELLANY && i.sub_type == MISC_BAG);
 
-    case OSEL_DIVINE_RECHARGE:
     case OSEL_SUPERCHARGE:
-        return item_is_rechargeable(i, selector != OSEL_SUPERCHARGE,
-            selector == OSEL_DIVINE_RECHARGE);
+        return item_is_rechargeable(i, selector != OSEL_SUPERCHARGE);
+
+    case OSEL_DIVINE_RECHARGE:
+        return item_is_quickrechargeable(i);
+
     case OSEL_EVOKABLE:
         return item_is_evokable(i, true, true);
 

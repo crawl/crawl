@@ -352,6 +352,8 @@ const vector<god_power> god_powers[NUM_GODS] =
     // Pakellas
     {
       { 0, "You can gain Pakellas's experimental rod and upgrade it." },
+      { 1, ABIL_PAKELLAS_QUICK_CHARGE,
+           "recharges a rod and misc" },
       { 3, ABIL_PAKELLAS_DEVICE_SURGE,
            "spend magic to empower your devices" },
     },
