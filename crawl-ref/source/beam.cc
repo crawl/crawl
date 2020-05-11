@@ -2869,7 +2869,7 @@ bool bolt::is_reflectable(const actor &whom) const
         return false;
 
     const item_def *it = whom.shield();
-    return (it && is_shield(*it) && shield_reflects(*it)) || whom.reflection();
+    return it && is_shield(*it) && shield_reflects(*it);
 }
 
 bool bolt::is_big_cloud() const

@@ -272,11 +272,6 @@ bool actor::no_cast(bool calc_unid, bool items) const
     return items && scan_artefacts(ARTP_PREVENT_SPELLCASTING, calc_unid);
 }
 
-bool actor::reflection(bool calc_unid, bool items) const
-{
-    return items && wearing(EQ_AMULET, AMU_REFLECTION, calc_unid);
-}
-
 bool actor::extra_harm(bool calc_unid, bool items) const
 {
     return items &&

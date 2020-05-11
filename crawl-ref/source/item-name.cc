@@ -767,12 +767,12 @@ const char* jewellery_effect_name(int jeweltype, bool terse)
         case AMU_HARM:              return "harm";
         case AMU_CONSERVATION:      return "conservation";
         case AMU_CONTROLLED_FLIGHT: return "controlled flight";
+        case AMU_REFLECTION:        return "reflection";
 #endif
         case AMU_INACCURACY:        return "inaccuracy";
         case AMU_NOTHING:           return "nothing";
         case AMU_GUARDIAN_SPIRIT:   return "guardian spirit";
         case AMU_FAITH:             return "faith";
-        case AMU_REFLECTION:        return "reflection";
         case AMU_REGENERATION:      return "regeneration";
         default: return "buggy jewellery";
         }
@@ -805,7 +805,9 @@ const char* jewellery_effect_name(int jeweltype, bool terse)
         case RING_PROTECTION_FROM_MAGIC: return "MR+";
         case AMU_RAGE:                   return "+Rage";
         case AMU_REGENERATION:           return "Regen";
+#if TAG_MAJOR_VERSION == 34
         case AMU_REFLECTION:             return "Reflect";
+#endif
         case AMU_ACROBAT:                return "Acrobat";
         case AMU_NOTHING:                return "";
         default: return "buggy";

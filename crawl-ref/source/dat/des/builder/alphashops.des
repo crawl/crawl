@@ -142,7 +142,7 @@
       elseif s == "Q" then i = { "quarterstaff", "quicksilver dragon scales",
        "quick blade" }
 
-      elseif s == "R" then i = { "amulet of rage", "amulet of reflection",
+      elseif s == "R" then i = { "amulet of rage",
        "amulet of regeneration", "rapier", "ring of resist corrosion",
        "ration", "potion of resistance", "robe", "ring mail",
        "scroll of random uselessness", "scroll of remove curse",

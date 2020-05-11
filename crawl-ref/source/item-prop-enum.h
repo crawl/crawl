@@ -240,7 +240,9 @@ enum jewellery_type
     AMU_NOTHING,
     AMU_GUARDIAN_SPIRIT,
     AMU_FAITH,
+#if TAG_MAJOR_VERSION == 34
     AMU_REFLECTION,
+#endif
     AMU_REGENERATION,
 
     NUM_JEWELLERY

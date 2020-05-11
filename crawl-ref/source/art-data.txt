@@ -1015,11 +1015,13 @@ TILE:    urand_mage
 INT:     3
 MAGIC:   2
 
+# start TAG_MAJOR_VERSION == 34
 NAME:     brooch of Shielding
-OBJ:      OBJ_JEWELLERY/AMU_REFLECTION
+OBJ:      OBJ_JEWELLERY/AMU_GUARDIAN_SPIRIT
 COLOUR:   ETC_MAGIC
 TILE:     urand_brooch_of_shielding
-PLUS:     +8
+BOOL:     nogen
+# end TAG_MAJOR_VERSION
 
 ENUM:     RCLOUDS
 NAME:     robe of Clouds
