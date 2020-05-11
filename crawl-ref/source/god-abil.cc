@@ -5323,7 +5323,10 @@ spret uskayaw_grand_finale(bool fail)
         throw_monster_bits(*mons); // have some fun while we're at it
     }
 
-    monster_die(*mons, KILL_YOU, NON_MONSTER, false);
+    // throw_monster_bits can cause mons to be killed already, e.g. via pain
+    // bond or dismissing summons
+    if (mons->alive())
+        monster_die(*mons, KILL_YOU, NON_MONSTER, false);
 
     if (!mons->alive())
         move_player_to_grid(beam.target, false);
