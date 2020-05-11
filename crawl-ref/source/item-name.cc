@@ -567,6 +567,7 @@ const char* armour_ego_name(const item_def& item, bool terse)
 #if TAG_MAJOR_VERSION == 34
         case SPARM_CLOUD_IMMUNE:      return "cloud immunity";
 #endif
+        case SPARM_HARM:              return "harm";
         default:                      return "bugginess";
         }
     }
@@ -603,6 +604,7 @@ const char* armour_ego_name(const item_def& item, bool terse)
 #if TAG_MAJOR_VERSION == 34
         case SPARM_CLOUD_IMMUNE:      return "obsolete";
 #endif
+        case SPARM_HARM:              return "harm";
         default:                      return "buggy";
         }
     }

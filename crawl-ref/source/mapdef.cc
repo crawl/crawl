@@ -4975,6 +4975,7 @@ int str_to_ego(object_class_type item_type, string ego_str)
 #if TAG_MAJOR_VERSION == 34
         "cloud_immunity",
 #endif
+        "harm",
         nullptr
     };
     COMPILE_CHECK(ARRAYSZ(armour_egos) == NUM_REAL_SPECIAL_ARMOURS);

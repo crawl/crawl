@@ -1814,6 +1814,10 @@ static string _describe_armour(const item_def &item, bool verbose)
             description += "It does nothing special.";
             break;
 #endif
+
+        case SPARM_HARM:
+            description += "It increases damage dealt and taken.";
+            break;
         }
     }
 

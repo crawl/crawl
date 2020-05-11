@@ -799,7 +799,8 @@ static special_armour_type _generate_armour_type_ego(armour_type type)
     case ARM_SCARF:
         return random_choose_weighted(1, SPARM_RESISTANCE,
                                       1, SPARM_REPULSION,
-                                      1, SPARM_INVISIBILITY);
+                                      1, SPARM_INVISIBILITY,
+                                      1, SPARM_HARM);
 
     case ARM_CLOAK:
         return random_choose(SPARM_POISON_RESISTANCE,
@@ -976,6 +977,7 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
                type == ARM_SCARF || !strict;
 
     case SPARM_REPULSION:
+    case SPARM_HARM:
 #if TAG_MAJOR_VERSION > 34
     case SPARM_INVISIBILITY:
 #endif
