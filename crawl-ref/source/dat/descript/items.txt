@@ -18,13 +18,6 @@ amulet of guardian spirit
 An amulet containing a protective spirit which will cause any damage taken to
 be divided between the wearer's reserves of health and magic.
 %%%%
-amulet of harm
-
-An amulet created to amplify all damage dealt by the wearer. As an unfortunate
-side effect, it also amplifies all damage dealt to the wearer, albeit to a
-lesser degree. When the effects of the amulet are severed by removing it, the
-magical backlash significantly drains the wearer.
-%%%%
 amulet of inaccuracy
 
 An amulet that makes its wearer less accurate in melee combat and when

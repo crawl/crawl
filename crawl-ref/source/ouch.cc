@@ -783,7 +783,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
 
     int drain_amount = 0;
 
-    // Multiply damage if amulet of harm is in play
+    // Multiply damage if scarf of harm is in play
     if (dam != INSTANT_DEATH)
         dam = _apply_extra_harm(dam, source);
 

@@ -4444,7 +4444,7 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
         else if (amount <= 0 && hit_points <= max_hit_points)
             return 0;
 
-        // Apply damage multipliers for amulet of harm
+        // Apply damage multipliers for scarf of harm
         if (amount != INSTANT_DEATH)
         {
             // +30% damage when the opponent has harm

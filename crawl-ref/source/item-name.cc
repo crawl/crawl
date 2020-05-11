@@ -760,11 +760,11 @@ const char* jewellery_effect_name(int jeweltype, bool terse)
         case RING_TELEPORT_CONTROL:      return "teleport control";
 #endif
         case AMU_RAGE:              return "rage";
-        case AMU_HARM:              return "harm";
         case AMU_MANA_REGENERATION: return "magic regeneration";
         case AMU_THE_GOURMAND:      return "gourmand";
         case AMU_ACROBAT:           return "the acrobat";
 #if TAG_MAJOR_VERSION == 34
+        case AMU_HARM:              return "harm";
         case AMU_CONSERVATION:      return "conservation";
         case AMU_CONTROLLED_FLIGHT: return "controlled flight";
 #endif

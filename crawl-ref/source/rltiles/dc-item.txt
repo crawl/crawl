@@ -817,7 +817,9 @@ sun
 %sdir item/amulet
 # These must be in the same order as the enum in item-prop-enum.h!
 i-rage AMU_RAGE AMU_ID_FIRST
+# start TAG_MAJOR_VERSION == 34
 i-harm AMU_HARM
+# end TAG_MAJOR_VERSION
 i-acrobat AMU_ACROBAT
 i-m-regeneration AMU_MANA_REGENERATION
 i-gourmand AMU_THE_GOURMAND
