@@ -33,10 +33,6 @@ amulet of nothing
 
 An amulet with no special properties.
 %%%%
-amulet of rage
-
-An amulet that enables its wearer to attempt to enter a state of berserk rage.
-%%%%
 amulet of regeneration
 
 An amulet that increases the wearer's natural regeneration rate. In order to

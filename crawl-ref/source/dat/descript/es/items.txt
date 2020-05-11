@@ -9,10 +9,6 @@ amulet of inaccuracy
 Este amuleto hace que su portador sea menos preciso en el combate cuerpo a
 cuerpo, y cuando ataque monstruos mediante ataques a distancia o hechizos.
 %%%%
-amulet of rage
-
-Este amuleto permite a su portador entrar en un estado de furia.
-%%%%
 amulet of resist mutation
 
 Este amuleto previene que su portador adquiera mutaciones, aunque no es

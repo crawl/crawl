@@ -9,10 +9,6 @@ amulet of inaccuracy
 Tämä amuletti laskee kantajansa tarkkuutta lähi- ja kaukotaistelussa sekä
 loitsiessa.
 %%%%
-amulet of rage
-
-Tämä amuletti antaa haltijalleen kyvyn siirtyä berserkkiraivon tilaan.
-%%%%
 amulet of resist mutation
 
 Tämä amuletti suojaa käyttäjäänsä muodonmuutoksilta, mutta ei pettämättömästi.

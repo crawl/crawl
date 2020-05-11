@@ -987,14 +987,14 @@ MAGIC:   3
 BOOL:    clarity
 
 NAME:    necklace of Bloodlust
-OBJ:     OBJ_JEWELLERY/AMU_RAGE
+OBJ:     OBJ_JEWELLERY/AMU_NOTHING
 COLOUR:  ETC_BLOOD
 TILE:    urand_bloodlust
 INT:     -3
 MAGIC:   2
 ANGRY:   5
 SLAY:    6
-BOOL:    curse
+BOOL:    curse, berserk
 
 NAME:    ring of Phasing
 OBJ:     OBJ_JEWELLERY/RING_EVASION

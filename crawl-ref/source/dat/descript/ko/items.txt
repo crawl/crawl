@@ -8,10 +8,6 @@ amulet of inaccuracy
 
 이 부적은 착용자의 근접공격, 원거리공격, 마법이 명중할 확률을 낮춘다.
 %%%%
-amulet of rage
-
-이 부적은 착용자가 원할 때 광폭화 상태가 될 수 있는 능력을 준다.
-%%%%
 amulet of resist mutation
 
 이 부적은 착용자를 돌연변이로부터 보호해준다.  하지만 이 보호 효과는 완벽하지

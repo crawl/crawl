@@ -286,8 +286,7 @@ bool actor::rmut_from_item(bool calc_unid) const
 
 bool actor::evokable_berserk(bool calc_unid) const
 {
-    return wearing(EQ_AMULET, AMU_RAGE, calc_unid)
-           || scan_artefacts(ARTP_BERSERK, calc_unid);
+    return scan_artefacts(ARTP_BERSERK, calc_unid);
 }
 
 int actor::evokable_invis(bool calc_unid) const

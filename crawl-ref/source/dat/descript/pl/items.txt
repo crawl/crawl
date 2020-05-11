@@ -9,11 +9,6 @@ amulet of inaccuracy
 Ten amulet mocno utrudnia swemu nosicielowi celowanie — tak w walce wręcz,
 strzelaniu jak i przy rzucaniu czarów.
 %%%%
-amulet of rage
-
-Ten amulet pozwala swemu nosicielowi wprowadzić się w bitewny szał — osławioną
-furię berserkerów.
-%%%%
 amulet of resist mutation
 
 Ten amulet chroni swego nosiciela przed mutacjami, aczkolwiek nie jest

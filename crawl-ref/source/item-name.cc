@@ -759,10 +759,10 @@ const char* jewellery_effect_name(int jeweltype, bool terse)
 #if TAG_MAJOR_VERSION == 34
         case RING_TELEPORT_CONTROL:      return "teleport control";
 #endif
-        case AMU_RAGE:              return "rage";
         case AMU_MANA_REGENERATION: return "magic regeneration";
         case AMU_ACROBAT:           return "the acrobat";
 #if TAG_MAJOR_VERSION == 34
+        case AMU_RAGE:              return "rage";
         case AMU_THE_GOURMAND:      return "gourmand";
         case AMU_HARM:              return "harm";
         case AMU_CONSERVATION:      return "conservation";
@@ -803,9 +803,9 @@ const char* jewellery_effect_name(int jeweltype, bool terse)
         case RING_FLIGHT:                return "+Fly";
         case RING_LIFE_PROTECTION:       return "rN+";
         case RING_PROTECTION_FROM_MAGIC: return "MR+";
-        case AMU_RAGE:                   return "+Rage";
         case AMU_REGENERATION:           return "Regen";
 #if TAG_MAJOR_VERSION == 34
+        case AMU_RAGE:                   return "+Rage";
         case AMU_REFLECTION:             return "Reflect";
 #endif
         case AMU_ACROBAT:                return "Acrobat";
@@ -3030,13 +3030,6 @@ bool is_useless_item(const item_def &item, bool temp)
 
         switch (item.sub_type)
         {
-        case AMU_RAGE:
-            return you.undead_state(temp)
-                   && (you.species != SP_VAMPIRE
-                       || temp && !you.vampire_alive)
-                   || you.species == SP_FORMICID
-                   || you.get_mutation_level(MUT_NO_ARTIFICE);
-
         case RING_RESIST_CORROSION:
             return you.res_corr(false, false);
 

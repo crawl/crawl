@@ -360,7 +360,7 @@ static void _replace_static_tags(string &text)
         dummy.base_type = static_cast<object_class_type>(type);
         dummy.sub_type = 0;
         if (item == "amulet") // yay shared item classes
-            dummy.base_type = OBJ_JEWELLERY, dummy.sub_type = AMU_RAGE;
+            dummy.base_type = OBJ_JEWELLERY, dummy.sub_type = AMU_FAITH;
         item = stringize_glyph(get_item_symbol(show_type(dummy).item));
 
         if (item == "<")

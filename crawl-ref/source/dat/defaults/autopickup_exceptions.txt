@@ -82,7 +82,6 @@ ae += [^n]identified.*spellbook
 :  or itsubtype == "amulet of inaccuracy"
 :  or itsubtype == "amulet of magic regeneration"
 :  or itsubtype == "amulet of nothing"
-:  or itsubtype == "amulet of rage"
 :  or itsubtype == "amulet of regeneration"
 :  or itsubtype == "amulet of the acrobat"
 :  or itsubtype == "ring of flight"

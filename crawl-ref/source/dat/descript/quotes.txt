@@ -820,19 +820,6 @@ amulet of magic regeneration
 
 <amulet>
 %%%%
-amulet of rage
-
-“We there, in strife bewild’ring,
- Split blood enough to swim in:
- We orphaned many children,
- And widowed many women.
- The eagles and the ravens
- We glutted with our foemen;
- The heroes and the cravens,
- The spearmen and the bowmen.”
-    -Thomas Love Peacock, “The War Song of Dinas Vawr”. 1829.
-
-%%%%
 amulet of regeneration
 
 <amulet>

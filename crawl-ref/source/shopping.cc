@@ -621,7 +621,6 @@ unsigned int item_value(item_def item, bool ident)
                 switch (item.sub_type)
                 {
                 case AMU_FAITH:
-                case AMU_RAGE:
                     valued += 400;
                     break;
 

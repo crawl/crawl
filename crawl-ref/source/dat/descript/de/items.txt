@@ -9,11 +9,6 @@ amulet of inaccuracy
 Dieses Amulett macht seinen Träger weniger Zielgenau im Nahkampf und wenn
 dieser Ungeheuer mit Fernkampf oder Zaubern angreift.
 %%%%
-amulet of rage
-
-Dieses Amulett ermöglicht es dem Träger in einen Zustand der Raserei zu
-verfallen.
-%%%%
 amulet of resist mutation
 
 Dieses Amulett schützt den Träger vor Mutationen, allerdings nicht

@@ -740,6 +740,7 @@ const set<pair<object_class_type, int> > removed_items =
     { OBJ_JEWELLERY, AMU_CONSERVATION },
     { OBJ_JEWELLERY, AMU_THE_GOURMAND },
     { OBJ_JEWELLERY, AMU_HARM },
+    { OBJ_JEWELLERY, AMU_RAGE },
     { OBJ_JEWELLERY, AMU_REFLECTION },
     { OBJ_JEWELLERY, RING_REGENERATION },
     { OBJ_JEWELLERY, RING_SUSTAIN_ATTRIBUTES },
@@ -2639,11 +2640,8 @@ bool gives_ability(const item_def &item)
     case OBJ_WEAPONS:
         break;
     case OBJ_JEWELLERY:
-        if (item.sub_type == RING_FLIGHT
-            || item.sub_type == AMU_RAGE)
-        {
+        if (item.sub_type == RING_FLIGHT)
             return true;
-        }
         break;
     case OBJ_ARMOUR:
     {
@@ -2706,7 +2704,7 @@ bool gives_resistance(const item_def &item)
         }
         else
         {
-            if (item.sub_type != AMU_RAGE && item.sub_type != AMU_INACCURACY)
+            if (item.sub_type != AMU_INACCURACY)
                 return true;
         }
         break;

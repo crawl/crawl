@@ -19,11 +19,6 @@ amulet of inaccuracy
 Cette amulette rend le porteur moins précis dans ses attaques de mêlée et
 lorsqu'il vise ses ennemis en tirant ou en lançant des sorts.
 %%%%
-amulet of rage
-
-Cette amulette permet au porteur de tenter d'entrer dans un état de folie
-furieuse.
-%%%%
 amulet of resist corrosion
 
 Cette amulette protège le porteur et son équipement des effets de la corrosion

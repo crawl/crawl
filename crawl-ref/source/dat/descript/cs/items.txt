@@ -4,10 +4,6 @@ amulet of conservation
 Tento amulet chrání některé předměty nositele před úplným zničením, ale ne
 zcela spolehlivě.
 %%%%
-amulet of rage
-
-Tento amulet umožňuje jeho nositeli pokusit se rozzuřit.
-%%%%
 amulet of resist mutation
 
 Tento amulet chrání svého nositele před mutacemi, ale ne zcela spolehlivě.

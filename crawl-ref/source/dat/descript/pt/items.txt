@@ -9,10 +9,6 @@ amulet of inaccuracy
 Este amuleto faz com que o usuário seja menos preciso em combate mano a mano e
 ao lançar ataques a distância e magias em monstros.
 %%%%
-amulet of rage
-
-Este amuleto permite que o usuário tente iniciar um estado de fúria berserk.
-%%%%
 amulet of resist mutation
 
 Este amuleto protege o usuário contra mutações, mas não é infalível.
