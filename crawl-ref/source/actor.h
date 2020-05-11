@@ -321,7 +321,7 @@ public:
     virtual int inaccuracy() const;
     virtual bool antimagic_susceptible() const = 0;
 
-    virtual bool gourmand(bool calc_unid = true, bool items = true) const;
+    virtual bool gourmand(bool, bool) const { return false; }
 
     virtual bool res_corr(bool calc_unid = true, bool items = true) const;
     bool has_notele_item(bool calc_unid = true,

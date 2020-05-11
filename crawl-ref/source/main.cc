@@ -1543,12 +1543,6 @@ static void _experience_check()
                 << " (" << you.num_turns << " turns)"
                 << endl;
 #ifdef DEBUG_DIAGNOSTICS
-    if (you.gourmand())
-    {
-        mprf(MSGCH_DIAGNOSTICS, "Gourmand charge: %d",
-             you.duration[DUR_GOURMAND]);
-    }
-
     mprf(MSGCH_DIAGNOSTICS, "Turns spent on this level: %d",
          env.turns_on_level);
 #endif

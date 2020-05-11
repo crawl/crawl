@@ -444,7 +444,6 @@ static bool _auto_eat()
            && Options.autopickup_on > 0
            && (player_likes_chunks(true)
                || !you.gourmand()
-               || you.duration[DUR_GOURMAND] >= GOURMAND_MAX / 4
                || you.hunger_state < HS_SATIATED);
 }
 

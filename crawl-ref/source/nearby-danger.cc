@@ -469,7 +469,7 @@ void revive()
         you.xray_vision = false;
 
     for (int dur = 0; dur < NUM_DURATIONS; dur++)
-        if (dur != DUR_GOURMAND && dur != DUR_PIETY_POOL)
+        if (dur != DUR_PIETY_POOL)
             you.duration[dur] = 0;
 
     update_vision_range(); // in case you had darkness cast before

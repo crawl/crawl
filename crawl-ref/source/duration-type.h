@@ -64,9 +64,7 @@ enum duration_type
 #if TAG_MAJOR_VERSION == 34
     DUR_CONDENSATION_SHIELD,
     DUR_MAGIC_ARMOUR,
-#endif
     DUR_GOURMAND,
-#if TAG_MAJOR_VERSION == 34
     DUR_BARGAIN,
     DUR_INSULATION,
 #endif

@@ -47,12 +47,6 @@ amulet of regeneration
 An amulet that increases the wearer's natural regeneration rate. In order to
 function, it must first attune itself to the wearer's body at full health.
 %%%%
-amulet of the gourmand
-
-An amulet that allows its wearer to eat fresh raw meat when not hungry, and
-drastically increases nutrition gained from them. These effects on the wearer's
-digestion are cumulative over time and are initially small.
-%%%%
 amulet of the acrobat
 
 An amulet that allows the user to tumble and roll to evade the blows of their

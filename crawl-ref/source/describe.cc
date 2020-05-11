@@ -239,9 +239,9 @@ const char* jewellery_base_ability_string(int subtype)
 #if TAG_MAJOR_VERSION == 34
     case RING_TELEPORT_CONTROL:   return "+cTele";
     case AMU_HARM:                return "Harm";
+    case AMU_THE_GOURMAND:        return "Gourm";
 #endif
     case AMU_MANA_REGENERATION:   return "RegenMP";
-    case AMU_THE_GOURMAND:        return "Gourm";
     case AMU_ACROBAT:             return "Acrobat";
 #if TAG_MAJOR_VERSION == 34
     case AMU_CONSERVATION:        return "Cons";
@@ -484,11 +484,11 @@ static const char* _jewellery_base_ability_description(int subtype)
         return "It can be evoked for teleport control.";
     case AMU_HARM:
         return "It increases damage dealt and taken.";
+    case AMU_THE_GOURMAND:
+        return "It allows you to eat raw meat even when not hungry.";
 #endif
     case AMU_MANA_REGENERATION:
         return "It increases your magic regeneration.";
-    case AMU_THE_GOURMAND:
-        return "It allows you to eat raw meat even when not hungry.";
     case AMU_ACROBAT:
         return "It helps you evade while moving and waiting.";
 #if TAG_MAJOR_VERSION == 34

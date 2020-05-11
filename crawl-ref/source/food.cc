@@ -483,20 +483,10 @@ static const char *_chunk_flavour_phrase(bool likes_chunks)
         phrase = "tastes great!";
     else if (likes_chunks)
         phrase = "tastes great.";
-    else
+    else if (you.gourmand())
     {
-        const int gourmand = you.duration[DUR_GOURMAND];
-        if (gourmand >= GOURMAND_MAX)
-        {
-            phrase = one_chance_in(1000) ? "tastes like chicken!"
-                                         : "tastes great.";
-        }
-        else if (gourmand > GOURMAND_MAX * 75 / 100)
-            phrase = "tastes very good.";
-        else if (gourmand > GOURMAND_MAX * 50 / 100)
-            phrase = "tastes good.";
-        else if (gourmand > GOURMAND_MAX * 25 / 100)
-            phrase = "is not very appetising.";
+        phrase = one_chance_in(1000) ? "tastes like chicken!"
+                                     : "tastes great.";
     }
 
     return phrase;
@@ -519,9 +509,9 @@ static int _apply_herbivore_nutrition_effects(int nutrition)
         return nutrition;
 }
 
-static int _apply_gourmand_nutrition_effects(int nutrition, int gourmand)
+static int _apply_gourmand_nutrition_effects(int nutrition)
 {
-    return nutrition * (gourmand + GOURMAND_NUTRITION_BASE)
+    return nutrition * ((you.gourmand() ? GOURMAND_MAX : 0) + GOURMAND_NUTRITION_BASE)
                      / (GOURMAND_MAX + GOURMAND_NUTRITION_BASE);
 }
 
@@ -535,15 +525,15 @@ static int _chunk_nutrition(bool likes_chunks)
                             : _apply_herbivore_nutrition_effects(nutrition);
     }
 
-    const int gourmand = you.gourmand() ? you.duration[DUR_GOURMAND] : 0;
     const int effective_nutrition =
-        _apply_gourmand_nutrition_effects(nutrition, gourmand);
+        _apply_gourmand_nutrition_effects(nutrition);
 
 #ifdef DEBUG_DIAGNOSTICS
     const int epercent = effective_nutrition * 100 / nutrition;
     mprf(MSGCH_DIAGNOSTICS,
-            "Gourmand factor: %d, chunk base: %d, effective: %d, %%: %d",
-                gourmand, nutrition, effective_nutrition, epercent);
+            "Gourmand: %s, chunk base: %d, effective: %d, %%: %d",
+                you.gourmand() ? "y" : "n", nutrition, effective_nutrition,
+                epercent);
 #endif
 
     return _apply_herbivore_nutrition_effects(effective_nutrition);

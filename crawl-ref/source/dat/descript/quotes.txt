@@ -841,11 +841,6 @@ amulet of nothing
 
 <amulet>
 %%%%
-amulet of the gourmand
-
-“put a knife to thy throat, if thou be a man given to appetite.”
-    -KJV Bible, Proverbs 23:2.
-%%%%
 animal skin
 
 “He killed the noble Mudjokivis.

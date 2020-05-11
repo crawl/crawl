@@ -3351,10 +3351,9 @@ bool player::clarity(bool calc_unid, bool items) const
     return actor::clarity(calc_unid, items);
 }
 
-bool player::gourmand(bool calc_unid, bool items) const
+bool player::gourmand(bool /*calc_unid*/, bool /*items*/) const
 {
-    return you.get_mutation_level(MUT_GOURMAND) > 0
-           || actor::gourmand(calc_unid, items);
+    return you.get_mutation_level(MUT_GOURMAND) > 0;
 }
 
 bool player::stasis() const

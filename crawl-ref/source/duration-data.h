@@ -582,7 +582,6 @@ static const duration_def duration_data[] =
       {{ "", _end_weapon_brand }}},
     { DUR_DEMONIC_GUARDIAN, 0, "", "", "demonic guardian", "", D_NO_FLAGS, {{""}}},
     { DUR_POWERED_BY_DEATH, 0, "", "", "pbd", "", D_NO_FLAGS},
-    { DUR_GOURMAND, 0, "", "", "gourmand", "", D_NO_FLAGS},
         { DUR_REPEL_STAIRS_MOVE, 0, "", "", "repel stairs move", "", D_NO_FLAGS, {{""}}},
     { DUR_REPEL_STAIRS_CLIMB, 0, "", "", "repel stairs climb", "", D_NO_FLAGS, {{""}}},
     { DUR_CLOUD_TRAIL, 0, "", "", "cloud trail", "", D_NO_FLAGS},
@@ -659,5 +658,6 @@ static const duration_def duration_data[] =
     { DUR_WATER_HOLD_IMMUNITY, 0, "", "", "old drowning immunity", "", D_NO_FLAGS, {{""}}},
     { DUR_REGENERATION, 0, "", "", "old regeneration", "", D_NO_FLAGS},
     { DUR_NO_CAST, 0, "", "", "old no cast", "", D_NO_FLAGS},
+    { DUR_GOURMAND, 0, "", "", "old gourmand", "", D_NO_FLAGS},
 #endif
 };

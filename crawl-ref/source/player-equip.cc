@@ -1248,27 +1248,6 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
 
         break;
 
-    case AMU_THE_GOURMAND:
-        if (you_foodless() // Mummy, vampire, or in lichform
-            || you.get_mutation_level(MUT_HERBIVOROUS) > 0) // Spriggan
-        {
-            mpr("After a brief, frighteningly intense craving, "
-                "your appetite remains unchanged.");
-        }
-        else if (you.get_mutation_level(MUT_CARNIVOROUS) > 0  // Fe, Ko, Gh
-                 || you.get_mutation_level(MUT_GOURMAND) > 0) // Troll
-        {
-            mpr("After a brief, strange feeling in your gut, "
-                "your appetite remains unchanged.");
-        }
-        else
-        {
-            mpr("You feel a craving for the dungeon's cuisine.");
-            // What's this supposed to achieve? (jpeg)
-            you.duration[DUR_GOURMAND] = 0;
-        }
-        break;
-
     case AMU_REGENERATION:
         if (!unmeld)
             _equip_regeneration_item(item);
@@ -1401,10 +1380,6 @@ static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld,
 
     case RING_MAGICAL_POWER:
         canned_msg(MSG_MANA_DECREASE);
-        break;
-
-    case AMU_THE_GOURMAND:
-        you.duration[DUR_GOURMAND] = 0;
         break;
 
     case AMU_FAITH:
