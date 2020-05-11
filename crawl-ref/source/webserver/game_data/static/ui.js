@@ -279,7 +279,9 @@ function ($, comm, client, options, focus_trap) {
 
         var $chat = $("#chat");
         $chat[0].focus_trap = focus_trap($chat[0], {
-            escapeDeactivates: true,
+            escapeDeactivates: true, // n.b. this apparently isn't doing
+                                     // anything, over and above escape simply
+                                     // hiding the chat div
             onActivate: function () {
                 $chat.addClass("focus-trap");
                 /* detect chat.js calling hide() via style attribute */
@@ -292,6 +294,9 @@ function ($, comm, client, options, focus_trap) {
                 $chat.removeClass("focus-trap");
             },
             returnFocusOnDeactivate: false,
+            clickOutsideDeactivates: true, // warning: this only seems to work
+                                           // with some slightly weird changes
+                                           // to focus-trap.js...
         }).activate();
     }
 
