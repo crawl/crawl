@@ -18,6 +18,7 @@
 #include "unicode.h"
 #include "libutil.h"
 #include "windowmanager.h"
+#include "ui-scissor.h"
 
 #ifdef USE_TILE_LOCAL
 # include "glwrapper.h"
@@ -150,7 +151,7 @@ protected:
     vector<LayoutInfo> saved_layout_info;
 } ui_root;
 
-static stack<Region> scissor_stack;
+static ScissorStack scissor_stack;
 
 struct Widget::slots Widget::slots = {};
 
@@ -682,8 +683,7 @@ static vector<size_t> _find_highlights(const string& haystack, const string& nee
 void Text::_render()
 {
     Region region = m_region;
-    if (scissor_stack.size() > 0)
-        region = region.aabb_intersect(scissor_stack.top());
+    region = region.aabb_intersect(scissor_stack.top());
     if (region.width <= 0 || region.height <= 0)
         return;
 
@@ -1006,7 +1006,7 @@ void Image::set_tile(tile_def tile)
 void Image::_render()
 {
 #ifdef USE_TILE_LOCAL
-    push_scissor(m_region);
+    scissor_stack.push(m_region);
     TileBuffer tb;
     tb.set_tex(&tiles.get_image_manager()->m_textures[m_tile.tex]);
 
@@ -1016,7 +1016,7 @@ void Image::_render()
 
     tb.draw();
     tb.clear();
-    pop_scissor();
+    scissor_stack.pop();
 #endif
 }
 
@@ -1252,7 +1252,7 @@ void Grid::init_track_info()
 void Grid::_render()
 {
     // Find the visible rows
-    const auto scissor = get_scissor();
+    const auto scissor = scissor_stack.top();
     int row_min = 0, row_max = m_row_info.size()-1, i = 0;
     for (; i < (int)m_row_info.size(); i++)
         if (m_row_info[i].offset+m_row_info[i].size+m_region.y >= scissor.y)
@@ -1432,12 +1432,12 @@ void Scroller::_render()
 {
     if (m_child)
     {
-        push_scissor(m_region);
+        scissor_stack.push(m_region);
         m_child->render();
 #ifdef USE_TILE_LOCAL
         m_shade_buf.draw();
 #endif
-        pop_scissor();
+        scissor_stack.pop();
 #ifdef USE_TILE_LOCAL
         m_scrollbar_buf.draw();
 #endif
@@ -1846,7 +1846,7 @@ void TextEntry::_render()
         m_region.y - static_cast<int>(translate.y),
         m_region.width, m_region.height,
     };
-    push_scissor(scissor_region);
+    scissor_stack.push(scissor_region);
 
     const int text_x = m_region.x - m_hscroll + x_pad;
 
@@ -1854,7 +1854,7 @@ void TextEntry::_render()
     m_font_buf.add(formatted_string(m_text), text_x, text_y);
     m_font_buf.draw();
 
-    pop_scissor();
+    scissor_stack.pop();
 
     if (has_focus)
     {
@@ -2522,7 +2522,7 @@ void UIRoot::render()
     clear_text_region(m_dirty_region, BLACK);
 #endif
 
-    push_scissor(m_region);
+    scissor_stack.push(m_region);
 #ifdef USE_TILE_LOCAL
     int cutoff = cutoff_stack.empty() ? 0 : cutoff_stack.back();
     ASSERT(cutoff <= static_cast<int>(m_root.num_children()));
@@ -2544,7 +2544,7 @@ void UIRoot::render()
         cursor_pos.reset();
     }
 #endif
-    pop_scissor();
+    scissor_stack.pop();
 
 #ifdef USE_TILE_LOCAL
     wm->swap_buffers();
@@ -3021,43 +3021,10 @@ void UIRoot::recv_ui_state_change(const JsonNode *json)
 }
 #endif
 
-void push_scissor(Region scissor)
-{
-    if (scissor_stack.size() > 0)
-        scissor = scissor.aabb_intersect(scissor_stack.top());
-    scissor_stack.push(scissor);
-#ifdef USE_TILE_LOCAL
-    glmanager->set_scissor(scissor.x, scissor.y, scissor.width, scissor.height);
-#endif
-}
-
-void pop_scissor()
-{
-    ASSERT(scissor_stack.size() > 0);
-    scissor_stack.pop();
-#ifdef USE_TILE_LOCAL
-    if (scissor_stack.size() > 0)
-    {
-        Region scissor = scissor_stack.top();
-        glmanager->set_scissor(scissor.x, scissor.y, scissor.width, scissor.height);
-    }
-    else
-        glmanager->reset_scissor();
-#endif
-}
-
-Region get_scissor()
-{
-    if (scissor_stack.size() > 0)
-        return scissor_stack.top();
-    return {0, 0, INT_MAX, INT_MAX};
-}
-
 #ifndef USE_TILE_LOCAL
 static void clear_text_region(Region region, COLOURS bg)
 {
-    if (scissor_stack.size() > 0)
-        region = region.aabb_intersect(scissor_stack.top());
+    region = region.aabb_intersect(scissor_stack.top());
     if (region.width <= 0 || region.height <= 0)
         return;
     textcolour(LIGHTGREY);

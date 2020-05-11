@@ -5,6 +5,7 @@
 #include "AppHdr.h"
 
 #include "ui.h"
+#include "ui-scissor.h"
 
 TEST_CASE( "Test region methods", "[single-file]" ) {
 
@@ -70,4 +71,28 @@ TEST_CASE( "Test region methods", "[single-file]" ) {
 
         REQUIRE(region1.aabb_union(region2) == ui::Region(-1, 0, 42, 46));
     }
+}
+
+TEST_CASE( "Test scissor stack", "[single-file]" ) {
+
+    SECTION ("Test that scissor stack starts out with no scissor") {
+        ui::ScissorStack s;
+
+        REQUIRE(s.top() == ui::Region(0, 0, INT_MAX, INT_MAX));
+    }
+
+#if 0
+    // TODO: this can't work right now, because we don't have a GL manager.
+    // This can be tested if we switch to dependency injection.
+    SECTION ("Test that scissor stack top() returns top region.") {
+        ui::ScissorStack s;
+
+        s.push(ui::Region(0, 0, 3, 3));
+        REQUIRE(s.top() == ui::Region(0, 0, 3, 3));
+        s.push(ui::Region(0, 0, 2, 2));
+        REQUIRE(s.top() == ui::Region(0, 0, 2, 2));
+        s.push(ui::Region(0, 0, 1, 1));
+        REQUIRE(s.top() == ui::Region(0, 0, 1, 1));
+    }
+#endif
 }
