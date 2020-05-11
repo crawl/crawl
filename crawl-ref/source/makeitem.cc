@@ -800,11 +800,10 @@ static special_armour_type _generate_armour_type_ego(armour_type type)
         return random_choose_weighted(1, SPARM_SPIRIT_SHIELD,
                                       1, SPARM_RESISTANCE,
                                       1, SPARM_REPULSION,
-                                      );
+                                      1, SPARM_INVISIBILITY);
 
     case ARM_CLOAK:
         return random_choose(SPARM_POISON_RESISTANCE,
-                             SPARM_INVISIBILITY,
                              SPARM_MAGIC_RESISTANCE);
 
     case ARM_HAT:
@@ -920,9 +919,9 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
         if (type == ARM_PLATE_ARMOUR && !strict)
             return true;
         // deliberate fall-through
-#endif
     case SPARM_INVISIBILITY:
-        return slot == EQ_CLOAK;
+        return (slot == EQ_CLOAK && !strict) || type == ARM_SCARF;
+#endif
 
     case SPARM_REFLECTION:
     case SPARM_PROTECTION:
@@ -973,6 +972,9 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
                type == ARM_SCARF || !strict;
 
     case SPARM_REPULSION:
+#if TAG_MAJOR_VERSION > 34
+    case SPARM_INVISIBILITY:
+#endif
 #if TAG_MAJOR_VERSION == 34
     case SPARM_CLOUD_IMMUNE:
 #endif
