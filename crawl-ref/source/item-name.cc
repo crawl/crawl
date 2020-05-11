@@ -564,7 +564,9 @@ const char* armour_ego_name(const item_def& item, bool terse)
         case SPARM_SPIRIT_SHIELD:     return "spirit shield";
         case SPARM_ARCHERY:           return "archery";
         case SPARM_REPULSION:         return "repulsion";
+#if TAG_MAJOR_VERSION == 34
         case SPARM_CLOUD_IMMUNE:      return "cloud immunity";
+#endif
         default:                      return "bugginess";
         }
     }
@@ -592,13 +594,15 @@ const char* armour_ego_name(const item_def& item, bool terse)
         case SPARM_ARCHMAGI:          return "Archmagi";
 #if TAG_MAJOR_VERSION == 34
         case SPARM_JUMPING:           return "obsolete";
-        case SPARM_PRESERVATION:      return "obsolete";
 #endif
+        case SPARM_PRESERVATION:      return "rCorr";
         case SPARM_REFLECTION:        return "reflect";
         case SPARM_SPIRIT_SHIELD:     return "Spirit";
         case SPARM_ARCHERY:           return "archery";
         case SPARM_REPULSION:         return "repulsion";
-        case SPARM_CLOUD_IMMUNE:      return "cloud immunity";
+#if TAG_MAJOR_VERSION == 34
+        case SPARM_CLOUD_IMMUNE:      return "obsolete";
+#endif
         default:                      return "buggy";
         }
     }
@@ -2914,8 +2918,6 @@ bool is_useless_item(const item_def &item, bool temp)
             {
             case SPARM_SPIRIT_SHIELD:
                 return you.spirit_shield(false, false);
-            case SPARM_CLOUD_IMMUNE:
-                return have_passive(passive_t::cloud_immunity);
             case SPARM_REPULSION:
                 return temp && have_passive(passive_t::upgraded_storm_shield)
                        || you.get_mutation_level(MUT_DISTORTION_FIELD) == 3;

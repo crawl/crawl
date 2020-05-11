@@ -1809,9 +1809,11 @@ static string _describe_armour(const item_def &item, bool verbose)
             description += "It protects its wearer by repelling missiles.";
             break;
 
+#if TAG_MAJOR_VERSION == 34
         case SPARM_CLOUD_IMMUNE:
-            description += "It completely protects its wearer from the effects of clouds.";
+            description += "It does nothing special.";
             break;
+#endif
         }
     }
 

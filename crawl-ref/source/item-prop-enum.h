@@ -453,7 +453,9 @@ enum special_armour_type
     SPARM_JUMPING,
 #endif
     SPARM_REPULSION,
+#if TAG_MAJOR_VERSION == 34
     SPARM_CLOUD_IMMUNE,
+#endif
     NUM_REAL_SPECIAL_ARMOURS,
     NUM_SPECIAL_ARMOURS,
 };
