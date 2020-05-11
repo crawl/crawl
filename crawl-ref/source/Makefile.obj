@@ -317,6 +317,7 @@ catch2-tests/test_player_fixture.o \
 catch2-tests/test_randbook.o \
 catch2-tests/test_species.o \
 catch2-tests/test_tags.o \
+catch2-tests/test_ui.o \
 catch2-tests/test_viewmap.o \
 
 WEBTILES_OBJECTS = \

@@ -62,6 +62,11 @@ public:
             && width == other.width && height == other.height;
     }
 
+    constexpr bool operator != (const Region& other) const
+    {
+        return !(*this == other);
+    }
+
     constexpr bool empty() const
     {
         return width == 0 || height == 0;
@@ -82,8 +87,31 @@ public:
         return _x >= x && _x < ex() && _y >= y && _y < ey();
     }
 
+    Region aabb_intersect(const Region &b) const
+    {
+        const Region& a = *this;
+        Region i = { max(a.x, b.x), max(a.y, b.y), min(a.ex(), b.ex()), min(a.ey(), b.ey()) };
+        i.width -= i.x; i.height -= i.y;
+        return i;
+    }
+
+    Region aabb_union(const Region &b) const
+    {
+        const Region& a = *this;
+        Region i = { min(a.x, b.x), min(a.y, b.y), max(a.ex(), b.ex()), max(a.ey(), b.ey()) };
+        i.width -= i.x; i.height -= i.y;
+        return i;
+    }
+
     int x, y, width, height;
 };
+
+inline ostream& operator << (ostream& ostr, Region const& value)
+{
+    ostr << "Region(x=" << value.x << ", y=" << value.y << ", ";
+    ostr << "w=" << value.width << ", h=" << value.height << ")";
+    return ostr;
+}
 
 class Size
 {

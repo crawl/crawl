@@ -39,20 +39,6 @@
 
 namespace ui {
 
-static Region aabb_intersect(Region a, Region b)
-{
-    Region i = { max(a.x, b.x), max(a.y, b.y), min(a.ex(), b.ex()), min(a.ey(), b.ey()) };
-    i.width -= i.x; i.height -= i.y;
-    return i;
-}
-
-static Region aabb_union(Region a, Region b)
-{
-    Region i = { min(a.x, b.x), min(a.y, b.y), max(a.ex(), b.ex()), max(a.ey(), b.ey()) };
-    i.width -= i.x; i.height -= i.y;
-    return i;
-}
-
 #ifndef USE_TILE_LOCAL
 static void clear_text_region(Region region, COLOURS bg);
 #endif
@@ -101,7 +87,7 @@ public:
         if (m_dirty_region.empty())
             m_dirty_region = r;
         else
-            m_dirty_region = aabb_union(m_dirty_region, r);
+            m_dirty_region = m_dirty_region.aabb_union(r);
         needs_paint = true;
     }
 
@@ -697,7 +683,7 @@ void Text::_render()
 {
     Region region = m_region;
     if (scissor_stack.size() > 0)
-        region = aabb_intersect(region, scissor_stack.top());
+        region = region.aabb_intersect(scissor_stack.top());
     if (region.width <= 0 || region.height <= 0)
         return;
 
@@ -2530,7 +2516,7 @@ void UIRoot::render()
     glmanager->reset_transform();
 #else
     // On console, clear and redraw only the dirty region of the screen
-    m_dirty_region = aabb_intersect(m_dirty_region, m_region);
+    m_dirty_region = m_dirty_region.aabb_intersect(m_region);
     textcolour(LIGHTGREY);
     textbackground(BLACK);
     clear_text_region(m_dirty_region, BLACK);
@@ -3038,7 +3024,7 @@ void UIRoot::recv_ui_state_change(const JsonNode *json)
 void push_scissor(Region scissor)
 {
     if (scissor_stack.size() > 0)
-        scissor = aabb_intersect(scissor, scissor_stack.top());
+        scissor = scissor.aabb_intersect(scissor_stack.top());
     scissor_stack.push(scissor);
 #ifdef USE_TILE_LOCAL
     glmanager->set_scissor(scissor.x, scissor.y, scissor.width, scissor.height);
@@ -3071,7 +3057,7 @@ Region get_scissor()
 static void clear_text_region(Region region, COLOURS bg)
 {
     if (scissor_stack.size() > 0)
-        region = aabb_intersect(region, scissor_stack.top());
+        region = region.aabb_intersect(scissor_stack.top());
     if (region.width <= 0 || region.height <= 0)
         return;
     textcolour(LIGHTGREY);
