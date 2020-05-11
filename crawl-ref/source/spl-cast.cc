@@ -1991,7 +1991,7 @@ const double fail_hp_fraction[] =
  * Compute the maximum miscast damage from the given spell
  *
  * The miscast code uses
- *     dam = div_rand_round(roll_dice(level, level * fail), MISCAST_DIVISOR)
+ *     dam = div_rand_round(roll_dice(level, level + raw_fail), MISCAST_DIVISOR)
  */
 int max_miscast_damage(spell_type spell)
 {
