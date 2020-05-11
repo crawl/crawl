@@ -1,5 +1,7 @@
 #pragma once
 
+#include <unordered_map>
+
 #include "item-prop-enum.h"
 
 // Used in spl-damage.cc for lightning rod damage calculations
@@ -13,7 +15,7 @@ struct evoker_data
     int max_charges;
 };
 
-static const map<misc_item_type, evoker_data> xp_evoker_data = {
+static const unordered_map<misc_item_type, evoker_data> xp_evoker_data = {
     { MISC_PHIAL_OF_FLOODS, { "phial_debt", 10, 1 } },
     { MISC_HORN_OF_GERYON, { "horn_debt", 10, 1 } },
     { MISC_LIGHTNING_ROD,  { "rod_debt", 3, LIGHTNING_MAX_CHARGE } },
