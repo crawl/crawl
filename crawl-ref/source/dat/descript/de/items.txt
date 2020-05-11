@@ -1,33 +1,8 @@
 %%%%
-amulet of conservation
-
-Dieses Amulett bewahrt manche Besitztümer seines Trägers vor vollständiger
-Zerstörung, ist aber nicht unfehlbar.
-%%%%
 amulet of inaccuracy
 
 Dieses Amulett macht seinen Träger weniger Zielgenau im Nahkampf und wenn
 dieser Ungeheuer mit Fernkampf oder Zaubern angreift.
-%%%%
-amulet of resist mutation
-
-Dieses Amulett schützt den Träger vor Mutationen, allerdings nicht
-unweigerlich.
-%%%%
-amulet of stasis
-
-Ein Amulett mit magischen Stationen sorgfältig konstruiert, um magische und
-physiologische Effekte, die sonst zu teleportieren, verlangsamen, Eile oder
-lähmen seines Trägers blockieren würde.
-
-Während das Amulett gegen die meiste verlagerte Magie wirksam ist, verschiebt
-es Ebene wie Verbannung sind über ihre Fähigkeit zu blockieren.
-%%%%
-amulet of warding
-
-Dieses Amulett wehrt einige Angriffe von Kreaturen, die auf magische Weise
-beschwört wurden, ab und macht den Träger resistenter gegenüber Angriffen mit
-negativer Energie.
 %%%%
 animal skin
 

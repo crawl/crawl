@@ -1,31 +1,8 @@
 %%%%
-amulet of conservation
-
-Denne amulet beskytter bærerens ejendele mod ødelæggelse, men er ikke
-ufejlbarlig.
-%%%%
 amulet of inaccuracy
 
 Denne amulet gør bæreren mindre præcis, hvad end det gælder nærkamp eller om at
 ramme uhyrer på afstand eller med besværgelser.
-%%%%
-amulet of resist mutation
-
-Denne amulet beskytter bæreren mod mutationer, men den er ikke ufejlbarlig.
-%%%%
-amulet of stasis
-
-En amulet, som er omhyggeligt konstrueret med magiske værn, som blokerer
-magiske og fysiologiske effekter, der ellers ville have teleporteret, sænket,
-forhastet eller lammet bæreren.
-
-Amuletten virker mod de fleste former for translokativ magi, men planskift som
-forvisning formår den ikke at blokere.
-%%%%
-amulet of warding
-
-Denne amulet afværger angreb fra væsener, der er magisk fremmanet, og gør
-bæreren mere modstandsdygtig over for drænende angreb.
 %%%%
 animal skin
 

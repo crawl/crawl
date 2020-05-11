@@ -1,24 +1,4 @@
 %%%%
-amulet of conservation
-
-Tento amulet chrání některé předměty nositele před úplným zničením, ale ne
-zcela spolehlivě.
-%%%%
-amulet of resist mutation
-
-Tento amulet chrání svého nositele před mutacemi, ale ne zcela spolehlivě.
-%%%%
-amulet of stasis
-
-Pečlivě vyrobený amulter, který pomocí magických ochran blokuje magické a
-fyziologické vlivy, které by jinak nositele teleportovaly, zpomalily, zrychlily
-či paralyzovaly.
-%%%%
-amulet of warding
-
-Tento amulet odráží některé z útoků bytostí, které byly vyvolány pomocí magie,
-a rovněž činí nositele více odolným proti útokům, které vysávají životní sílu.
-%%%%
 apricot
 
 Dužnaté žlutooranžové ovoce, prunus armeniaca.

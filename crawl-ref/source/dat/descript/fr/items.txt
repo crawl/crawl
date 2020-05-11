@@ -1,14 +1,4 @@
 %%%%
-amulet of clarity
-
-Cette amulette protège son porteur contre certaines formes de confusion
-mentale, dont celle d'être enragé contre sa volonté.
-%%%%
-amulet of conservation
-
-Cette amulette protège de la destruction certaines possessions, mais pas de
-manière infaillible.
-%%%%
 amulet of guardian spirit
 
 Cette amulette héberge un esprit protecteur qui divise les dégâts subits par le
@@ -18,32 +8,6 @@ amulet of inaccuracy
 
 Cette amulette rend le porteur moins précis dans ses attaques de mêlée et
 lorsqu'il vise ses ennemis en tirant ou en lançant des sorts.
-%%%%
-amulet of resist corrosion
-
-Cette amulette protège le porteur et son équipement des effets de la corrosion
-causée par des acides, mais pas de manière infaillible.
-%%%%
-amulet of resist mutation
-
-Cette amulette protège son porteur des mutations, mais pas de manière
-infaillible.
-%%%%
-amulet of stasis
-
-Une amulette fabriquée méticuleusement avec des charmes pour bloquer les effets
-magiques et physiologiques qui pourraient autrement téléporter, ralentir,
-accélérer ou paralyser son porteur.
-
-Bien que l'amulette soit efficace contre la plupart des magies translocatives,
-les changements de plan tels que le bannissement sont au delà des ses capacités
-bloquantes.
-%%%%
-amulet of warding
-
-Cette amulette repousse une partie des attaques des créatures qui ont été
-convoquées par magie, et rend également le porteur plus résistant aux attaques
-qui drainent la force vitale.
 %%%%
 animal skin
 

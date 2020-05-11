@@ -1,31 +1,8 @@
 %%%%
-amulet of conservation
-
-Ten amulet ochrania zwoje i eliksiry przed zniszczeniem, niestety nie jest
-niezawodny.
-%%%%
 amulet of inaccuracy
 
 Ten amulet mocno utrudnia swemu nosicielowi celowanie — tak w walce wręcz,
 strzelaniu jak i przy rzucaniu czarów.
-%%%%
-amulet of resist mutation
-
-Ten amulet chroni swego nosiciela przed mutacjami, aczkolwiek nie jest
-niezawodny.
-%%%%
-amulet of stasis
-
-Ten amulet zupełnie blokuje efekty które spowodowałyby teleportację, magiczne
-spowolnienie lub przyspieszenie, łącznie z całkowitym paraliżem. Nie wpływa on
-jednak na środki nie manipulujące czasoprzestrzenią — jak na przykład przemianę
-w kamień. Nie działa on także na przejścia do innych światów, włącznie z
-rzuceniem w Otchłań.
-%%%%
-amulet of warding
-
-Ten amulet odrzuca część ataków magicznie przywołanych istot, a także daje
-trochę ochrony przed zagrożeniami ze strony nekromancji.
 %%%%
 animal skin
 
