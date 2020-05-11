@@ -89,7 +89,7 @@ static const vector<monster_info_flag_name> monster_info_flag_names = {
     { MB_MORE_POISONED, "very poisoned", "very poisoned", "very poisoned"},
     { MB_MAX_POISONED, "extremely poisoned", "extremely poisoned", "extremely poisoned"},
     { MB_SLOWED, "slow", "slow", "slow"},
-    { MB_BREATH_WEAPON, "catching breath", "catching @pronoun_posessive@ breath", "catching breath"},
+    { MB_BREATH_WEAPON, "catching breath", "catching @pronoun_possessive@ breath", "catching breath"},
     { MB_VULN_MAGIC, "vulnerable", "susceptible to hostile enchantments", "vulnerable"},
     { MB_FIRE_VULN, "inflammable", "more vulnerable to fire", "inflammable"},
     { MB_POISON_VULN, "easily poisoned", "more vulnerable to poison", "easily poisoned"},
@@ -108,7 +108,7 @@ static const vector<monster_info_flag_name> monster_info_flag_names = {
     { MB_WATERLOGGED, "waterlogged", "waterlogged", "waterlogged"},
     { MB_DIMENSION_ANCHOR, "anchored", "unable to translocate", "anchored"},
     { MB_SLOW_MOVEMENT, "struggling", "covering ground slowly", "struggling"},
-    { MB_PAIN_BOND, "pain bonded", "sharing @pronoun_posessive@ pain", "pain bonded"},
+    { MB_PAIN_BOND, "pain bonded", "sharing @pronoun_possessive@ pain", "pain bonded"},
     { MB_IDEALISED, "idealised", "idealised", "idealised"},
     { MB_ENSLAVED, "", "disembodied soul", "" },
 };

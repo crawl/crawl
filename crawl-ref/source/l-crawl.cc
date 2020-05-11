@@ -914,8 +914,8 @@ static int crawl_string_compare(lua_State *ls)
  *  - "plain": just give the name
  *  - "the": use the definite article
  *  - "a": use the indefinite article
- *  - "your": use the second person posessive
- *  - "its": use the third person posessive
+ *  - "your": use the second person possessive
+ *  - "its": use the third person possessive
  *  - "worn": how it is equipped
  *  - "inv": describe something carried
  *  - "none": return the empty string

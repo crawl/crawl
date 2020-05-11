@@ -1337,7 +1337,7 @@ vector<string> monster_info::attributes() const
         if (is(name.flag))
         {
             v.push_back(replace_all(name.long_singular,
-                                    "@pronoun_possesive@",
+                                    "@pronoun_possessive@",
                                     pronoun(PRONOUN_POSSESSIVE)));
         }
     }
