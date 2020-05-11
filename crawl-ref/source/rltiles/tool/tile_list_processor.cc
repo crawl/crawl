@@ -1003,7 +1003,7 @@ bool tile_list_processor::write_data(bool image, bool code)
             {
                 if (old_enum_name.empty())
                 {
-                    fprintf(fp, "    %s_%s_FILLER_%d%s,\n", m_prefix.c_str(),
+                    fprintf(fp, "    %s_%s_FILLER_%u%s,\n", m_prefix.c_str(),
                             ucname.c_str(), i, start_val.c_str());
                 }
                 else
@@ -1163,7 +1163,7 @@ bool tile_list_processor::write_data(bool image, bool code)
         fprintf(fp, "static int _tile_%s_probs[%s - %s] =\n{\n",
                 lcname.c_str(), max.c_str(), m_start_value.c_str());
         for (unsigned int i = 0; i < m_page.m_probs.size(); i++)
-            fprintf(fp, "    %d,\n", m_page.m_probs[i]);
+            fprintf(fp, "    %u,\n", m_page.m_probs[i]);
         fprintf(fp, "};\n\n");
 
         fprintf(fp, "int tile_%s_probs(tileidx_t idx)\n{\n",
@@ -1177,7 +1177,7 @@ bool tile_list_processor::write_data(bool image, bool code)
         fprintf(fp, "static int _tile_%s_dominoes[%s - %s] =\n{\n",
                 lcname.c_str(), max.c_str(), m_start_value.c_str());
         for (unsigned int i = 0; i < m_page.m_domino.size(); i++)
-            fprintf(fp, "    %d,\n", m_page.m_domino[i]);
+            fprintf(fp, "    %u,\n", m_page.m_domino[i]);
         fprintf(fp, "};\n\n");
 
         fprintf(fp, "int tile_%s_dominoes(tileidx_t idx)\n{\n",
@@ -1198,7 +1198,7 @@ bool tile_list_processor::write_data(bool image, bool code)
             if (m_page.m_tiles[i]->enumcount() == 0)
             {
                 if (old_enum_name.empty())
-                    fprintf(fp, "    \"%s_FILLER_%d\",\n", ucname.c_str(), i);
+                    fprintf(fp, "    \"%s_FILLER_%u\",\n", ucname.c_str(), i);
                 else
                 {
                     fprintf(fp, "    \"%s_%d\",\n", old_enum_name.c_str(),
@@ -1257,7 +1257,7 @@ bool tile_list_processor::write_data(bool image, bool code)
                     lcname.c_str(), ctg_max.c_str());
 
             for (unsigned int i = 0; i < m_categories.size(); i++)
-                fprintf(fp, "    %u+%s,\n", part_min[i], m_start_value.c_str());
+                fprintf(fp, "    %d+%s,\n", part_min[i], m_start_value.c_str());
 
             fprintf(fp, "};\n\n");
         }
@@ -1336,7 +1336,7 @@ bool tile_list_processor::write_data(bool image, bool code)
                     continue;
 
                 fprintf(fp,
-                    "    _colour_pair(tile_variation(%d + %s, %d), %d + %s),\n",
+                    "    _colour_pair(tile_variation(%u + %s, %d), %d + %s),\n",
                     i, m_start_value.c_str(), c, var, m_start_value.c_str());
             }
         }
@@ -1621,7 +1621,7 @@ bool tile_list_processor::write_data(bool image, bool code)
             {
                 if (old_enum_name.empty())
                 {
-                    fprintf(fp, "exports.%s_FILLER_%d = val++;\n",
+                    fprintf(fp, "exports.%s_FILLER_%u = val++;\n",
                             ucname.c_str(), i);
                 }
                 else
