@@ -2112,6 +2112,12 @@ string get_item_description(const item_def &item, bool verbose,
         break;
 
     case OBJ_RODS:
+        if(item.sub_type == ROD_PAKELLAS)
+        {
+            string stats = "\n";
+            _append_weapon_stats(stats, item);
+            description << stats;
+        }
         if (verbose)
         {
             description <<

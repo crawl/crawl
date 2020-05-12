@@ -5099,12 +5099,9 @@ int pakellas_surge_devices()
     if (!you_worship(GOD_PAKELLAS) || !you.duration[DUR_DEVICE_SURGE])
         return 0;
 
-    const int mp = min(you.magic_points, min(9, max(3,
-                       1 + random2avg(you.piety * 9 / piety_breakpoint(5),
-                                      2))));
+    const int multi = min(9, max(3, 1 + random2avg(you.piety * 9 / piety_breakpoint(5), 2)));
 
-    const int severity = div_rand_round(mp, 3);
-    dec_mp(mp);
+    const int severity = div_rand_round(multi, 3);
     you.duration[DUR_DEVICE_SURGE] = 0;
     if (severity == 0)
     {

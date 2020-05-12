@@ -612,10 +612,10 @@ static const ability_def Ability_List[] =
 
     // Pakellas
     { ABIL_PAKELLAS_DEVICE_SURGE, "Device Surge",
-      0, 0, 0, generic_cost::fixed(1),
+      0, 0, 0, generic_cost::fixed(2),
       {fail_basis::invo, 40, 5, 20}, abflag::variable_mp | abflag::instant },
     { ABIL_PAKELLAS_QUICK_CHARGE, "Quick Charge",
-        0, 0, 100, 3, {fail_basis::invo, 40, 5, 20}, abflag::none },
+        0, 0, 100, generic_cost::fixed(4), {fail_basis::invo, 40, 5, 20}, abflag::none },
     { ABIL_PAKELLAS_PROTOTYPE, "Receive ProtoType",
       0, 0, 0, 0, {fail_basis::invo}, abflag::none },
     { ABIL_PAKELLAS_UPGRADE, "Upgrade Rod",

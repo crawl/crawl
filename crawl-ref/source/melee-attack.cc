@@ -37,6 +37,7 @@
 #include "mon-behv.h"
 #include "mon-poly.h"
 #include "mon-tentacle.h"
+#include "pakellas.h"
 #include "prompt.h"
 #include "religion.h"
 #include "shout.h"
@@ -1726,6 +1727,9 @@ void melee_attack::set_attack_verb(int damage)
         weap_type = WPN_UNARMED;
     else if (weapon->base_type == OBJ_STAVES)
         weap_type = WPN_STAFF;
+    else if (weapon->base_type == OBJ_RODS && weapon->sub_type == ROD_PAKELLAS) {
+        weap_type = WPN_STAFF;
+    }
     else if (weapon->base_type == OBJ_WEAPONS
              && !is_range_weapon(*weapon))
     {
@@ -2047,6 +2051,26 @@ bool melee_attack::player_monattk_hit_effects()
             defender->expose_to_element(special_damage_flavour, 2);
     }
 
+    if (you.religion == GOD_PAKELLAS) {
+
+        special_damage = 0;
+        apply_pakellas_rod_damage();
+
+        if (!defender->alive())
+            return false;
+
+        if (special_damage || special_damage_flavour)
+        {
+            dprf(DIAG_COMBAT, "Special damage to %s: %d, flavour: %d",
+                defender->name(DESC_THE).c_str(),
+                special_damage, special_damage_flavour);
+
+            special_damage = inflict_damage(special_damage);
+            if (special_damage > 0)
+                defender->expose_to_element(special_damage_flavour, 2);
+        }
+    }
+
     return true;
 }
 
@@ -2309,6 +2333,11 @@ int melee_attack::staff_damage(skill_type skill)
     return 0;
 }
 
+int melee_attack::pakellas_damage()
+{
+    return random2(you.piety*10 + attacker->skill(SK_EVOCATIONS, 100)) / 80;
+}
+
 void melee_attack::apply_staff_damage()
 {
     if (!weapon)
@@ -2436,6 +2465,112 @@ void melee_attack::apply_staff_damage()
         die("Invalid staff type: %d", weapon->sub_type);
     }
 }
+
+void melee_attack::apply_pakellas_rod_damage()
+{
+    if (!weapon)
+        return;
+
+    if (attacker->is_player() && you.get_mutation_level(MUT_NO_ARTIFICE))
+        return;
+
+    if (weapon->base_type != OBJ_RODS && weapon->sub_type != ROD_PAKELLAS)
+        return;
+
+    if (!is_blueprint_exist(BLUEPRINT_BATTLEMAGE))
+        return;
+    int element_ = get_blueprint_element();
+    switch (element_)
+    {
+    case BLUEPRINT_ELEMENTAL_ELEC:
+        special_damage = resist_adjust_damage(defender,
+            BEAM_ELECTRICITY, pakellas_damage());
+
+        if (special_damage)
+        {
+            special_damage_message =
+                make_stringf("%s %s electrocuted!",
+                    defender->name(DESC_THE).c_str(),
+                    defender->conj_verb("are").c_str());
+            special_damage_flavour = BEAM_ELECTRICITY;
+        }
+
+        break;
+
+    case BLUEPRINT_ELEMENTAL_COLD:
+        special_damage = resist_adjust_damage(defender,
+            BEAM_COLD, pakellas_damage());
+
+        if (special_damage)
+        {
+            special_damage_message =
+                make_stringf(
+                    "%s freeze%s %s!",
+                    attacker->name(DESC_THE).c_str(),
+                    attacker->is_player() ? "" : "s",
+                    defender->name(DESC_THE).c_str());
+            special_damage_flavour = BEAM_COLD;
+        }
+        break;
+
+    case BLUEPRINT_ELEMENTAL_EARTH:
+        special_damage = pakellas_damage();
+        special_damage = apply_defender_ac(special_damage);
+
+        if (special_damage > 0)
+        {
+            special_damage_message =
+                make_stringf(
+                    "%s crush%s %s!",
+                    attacker->name(DESC_THE).c_str(),
+                    attacker->is_player() ? "" : "es",
+                    defender->name(DESC_THE).c_str());
+        }
+        break;
+
+    case BLUEPRINT_ELEMENTAL_FIRE:
+        special_damage = resist_adjust_damage(defender,
+            BEAM_FIRE, pakellas_damage());
+
+        if (special_damage)
+        {
+            special_damage_message =
+                make_stringf(
+                    "%s burn%s %s!",
+                    attacker->name(DESC_THE).c_str(),
+                    attacker->is_player() ? "" : "s",
+                    defender->name(DESC_THE).c_str());
+            special_damage_flavour = BEAM_FIRE;
+
+            if (defender->is_player())
+                maybe_melt_player_enchantments(BEAM_FIRE, special_damage);
+        }
+        break;
+
+    case BLUEPRINT_CHAOS:
+    {
+        special_damage = resist_adjust_damage(defender,
+            BEAM_CHAOS, pakellas_damage());
+
+        if (special_damage)
+        {
+            special_damage_message =
+                make_stringf(
+                    "%s crush%s %s!",
+                    attacker->name(DESC_THE).c_str(),
+                    attacker->is_player() ? "" : "s",
+                    defender->name(DESC_THE).c_str());
+            special_damage_flavour = BEAM_CHAOS;
+            chaos_affects_defender();
+        }
+        break;
+    }
+    default:
+        break;
+    }
+}
+
+
 
 /**
  * Calculate the to-hit for an attacker

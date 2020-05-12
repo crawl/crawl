@@ -83,52 +83,52 @@ map<pakellas_blueprint_type, pakellas_blueprint_struct> blueprint_list =
                                 100,
                                 {},
                                 {BLUEPRINT_BOME})},
-    { BLUEPRINT_BOME, _prerequire_blueprint("Explosion", "Missile 3x3 explodes at the landing site.", "bomb+",
+    { BLUEPRINT_BOME, _prerequire_blueprint("Explosion", "3x3 explodes at the landing site.", "bomb+",
                                 100,
                                 {},
                                 {BLUEPRINT_PENTAN})},
-    { BLUEPRINT_ELEMENTAL_FIRE, _prerequire_blueprint("Fire Enchantment", "Missiles have a fire enchantmentand damage is slightly increased.", "fire",
+    { BLUEPRINT_ELEMENTAL_FIRE, _prerequire_blueprint("Fire Enchantment", "Turn 50% into a fire damage. Damage 1.2x increase.", "fire",
                                 100,
                                 {}, 
                                 {BLUEPRINT_ELEMENTAL_COLD, BLUEPRINT_ELEMENTAL_ELEC, BLUEPRINT_ELEMENTAL_EARTH, BLUEPRINT_CHAOS})},
-    { BLUEPRINT_ELEMENTAL_COLD, _prerequire_blueprint("Cold Enchantment", "Missiles have a clod enchantmentand damage is slightly increased.", "cold",
+    { BLUEPRINT_ELEMENTAL_COLD, _prerequire_blueprint("Cold Enchantment", "Turn 50% into a cold damage. Damage 1.2x increase.", "cold",
                                 100,
                                 {},
                                 {BLUEPRINT_ELEMENTAL_FIRE, BLUEPRINT_ELEMENTAL_ELEC, BLUEPRINT_ELEMENTAL_EARTH, BLUEPRINT_CHAOS})},
-    { BLUEPRINT_ELEMENTAL_ELEC, _prerequire_blueprint("Elec Enchantment", "Missiles have a elec enchantmentand damage is slightly increased.", "elec",
+    { BLUEPRINT_ELEMENTAL_ELEC, _prerequire_blueprint("Elec Enchantment", "Turn 50% into a elec damage. Damage 1.2x increase.", "elec",
                                 100,
                                 {},
                                 {BLUEPRINT_ELEMENTAL_FIRE, BLUEPRINT_ELEMENTAL_COLD, BLUEPRINT_ELEMENTAL_EARTH, BLUEPRINT_CHAOS})},
-    { BLUEPRINT_ELEMENTAL_EARTH, _prerequire_blueprint("Earth Enchantment", "Missiles damage is slightly increased.", "earth",
+    { BLUEPRINT_ELEMENTAL_EARTH, _prerequire_blueprint("Earth Enchantment", "Damage 1.1x increase.", "earth",
                                 100,
                                 {},
                                 {BLUEPRINT_ELEMENTAL_FIRE, BLUEPRINT_ELEMENTAL_COLD, BLUEPRINT_ELEMENTAL_ELEC, BLUEPRINT_CHAOS})},
-    { BLUEPRINT_PERFECT_SHOT, _base_blueprint("Deadly Accuracy", "Missiles hit 100%.", "acc+¡Ä" )},
+    { BLUEPRINT_PERFECT_SHOT, _base_blueprint("Deadly Accuracy", "Missiles hit 100%.", "acc+" )},
     { BLUEPRINT_CLOUD, _prerequire_blueprint("Cloud Trail", "Missile leaves a cloud trail.", "cloud",
                                 100,
                                 {BLUEPRINT_ELEMENTAL_FIRE, BLUEPRINT_ELEMENTAL_COLD, BLUEPRINT_ELEMENTAL_ELEC, BLUEPRINT_ELEMENTAL_EARTH, BLUEPRINT_CHAOS},
                                 {})},
-    { BLUEPRINT_DEBUF_SLOW, _base_blueprint("Debuf Slow", "The opponent hit by the missile is slow.", "slow" )},
-    { BLUEPRINT_DEBUF_BLIND, _base_blueprint("Debuf Blind", "The opponent hit by the missile is blind.", "blind" )},
+    { BLUEPRINT_DEBUF_SLOW, _base_blueprint("Slow", "Slow target with magic resistance check", "slow" )},
+    { BLUEPRINT_DEBUF_BLIND, _base_blueprint("Blind", "Blind target with Hit Dice check.", "blind" )},
     { BLUEPRINT_KNOCKBACK, _base2_blueprint("Knockback", "Enemy hit is knocked back.", "knockback",
                                 1,
                                 0,
                                 0)},
-    { BLUEPRINT_STICKY_FLAME, _prerequire_blueprint("Sticky flame", "Sticky flames take place on the right enemy.", "Innerflame",
-                                50,
+    { BLUEPRINT_STICKY_FLAME, _prerequire_blueprint("Sticky flame", "Sticky flames to the hit enemy.", "Innerflame",
+                                100,
                                 {BLUEPRINT_ELEMENTAL_FIRE},
                                 {})},
-    { BLUEPRINT_FROZEN, _prerequire_blueprint("Frozen", "Fronzen take place on the right enemy.", "frozen",
-                                50,
+    { BLUEPRINT_FROZEN, _prerequire_blueprint("Frozen", "Fronzen to the hit enemy.", "frozen",
+                                100,
                                 {BLUEPRINT_ELEMENTAL_COLD},
                                 {})},
-    { BLUEPRINT_CHAIN_LIGHTNING, _prerequire_blueprint("Chain lightening", "Chain Lightning splashes from the hit enemy.", "chain",
-                                50,
+    { BLUEPRINT_CHAIN_LIGHTNING, _prerequire_blueprint("lightening arc", "Lightning Arc splashes from the hit enemy.", "shock",
+                                100,
                                 {BLUEPRINT_ELEMENTAL_ELEC},
                                 {})},
-    { BLUEPRINT_DEFORM, _base_blueprint("Radiation", "Enemies hit by the missile are deformed.", "rad")},
-    { BLUEPRINT_CHAOS, _prerequire_blueprint("Choas", "Enemies hit by missiles have an unknown effect.", "choas",
-                                20,
+    { BLUEPRINT_DEFORM, _base_blueprint("Radiation", "deformed to the hit enemy.", "rad")},
+    { BLUEPRINT_CHAOS, _prerequire_blueprint("Choas", "Occur unknown effect to the hit enemy.", "choas",
+                                50,
                                 {},
                                 {BLUEPRINT_ELEMENTAL_FIRE, BLUEPRINT_ELEMENTAL_COLD, BLUEPRINT_ELEMENTAL_ELEC, BLUEPRINT_ELEMENTAL_EARTH})},
     //SUMMON
@@ -160,19 +160,19 @@ map<pakellas_blueprint_type, pakellas_blueprint_struct> blueprint_list =
     { BLUEPRINT_SMALL_HEAL, _base_blueprint("Penetration", "Adds penetration to missiles.", "penet+")},
     { BLUEPRINT_LARGE_HEAL, _base_blueprint("Penetration", "Adds penetration to missiles.", "penet+")},
     //COMMON
-    { BLUEPRINT_BATTERY_UP, _base2_blueprint("Battery Up", "The maximum rod capacity is increased by 3.", "capa+",
+    { BLUEPRINT_BATTERY_UP, _base2_blueprint("Battery Up", "Increase 3 rod capacity.", "capa+",
                                 6,
                                 0,
                                 150)},
     { BLUEPRINT_LIGHT, _base2_blueprint("Lightweight", "Can be used without holding.", "light",
                                 6,
                                 0,
-                                0)},
-    { BLUEPRINT_BATTLEMAGE, _base2_blueprint("Battle Mage", "Increases the damage the rod deals in melee combat.", "melee+",
-                                1,
-                                0,
-                                0)},
-    { BLUEPRINT_MORE_ENCHANT, _base2_blueprint("More Enchant", "Add enchant value by 1 without special ability.", "statup",
+                                100)},
+    { BLUEPRINT_BATTLEMAGE, _prerequire_blueprint("Battle Mage", "Increases the damage the rod deals in melee combat.", "melee+",
+                                100,
+                                {BLUEPRINT_ELEMENTAL_FIRE, BLUEPRINT_ELEMENTAL_COLD, BLUEPRINT_ELEMENTAL_ELEC, BLUEPRINT_ELEMENTAL_EARTH, BLUEPRINT_CHAOS},
+                                {})},
+    { BLUEPRINT_MORE_ENCHANT, _base2_blueprint("More Enchant", "Increase 1 enchant, Increase 1 rod capacity.", "statup",
                                 6,
                                 0,
                                 150)},
@@ -538,6 +538,30 @@ int is_blueprint_exist(pakellas_blueprint_type blueprint)
     return level;
 }
 
+int get_blueprint_element()
+{
+    if (you.props.exists(AVAILABLE_ROD_UPGRADE_KEY)) {
+        CrawlVector& available_upgrade = you.props[AVAILABLE_ROD_UPGRADE_KEY].get_vector();
+        for (auto upgrade : available_upgrade) {
+            switch (upgrade.get_int()) {
+            case BLUEPRINT_ELEMENTAL_FIRE:
+                return BLUEPRINT_ELEMENTAL_FIRE;
+            case BLUEPRINT_ELEMENTAL_COLD:
+                return BLUEPRINT_ELEMENTAL_COLD;
+            case BLUEPRINT_ELEMENTAL_ELEC:
+                return BLUEPRINT_ELEMENTAL_ELEC;
+            case BLUEPRINT_ELEMENTAL_EARTH:
+                return BLUEPRINT_ELEMENTAL_EARTH;
+            case BLUEPRINT_CHAOS:
+                return BLUEPRINT_CHAOS;
+            default:
+                break;
+            }
+        }
+    }
+    return 0;
+}
+
 int quick_charge_pakellas() {
 
     int item_slot = -1;
@@ -596,7 +620,6 @@ int quick_charge_pakellas() {
 
             const string orig_name = items_.name(DESC_YOUR);
             int& debt = evoker_debt(items_.sub_type);
-            mprf("debt %d.", debt);
 
             if (debt == 0) {
                 mprf("%s already charged.", orig_name.c_str());

@@ -35,6 +35,7 @@
 #include "message.h"
 #include "options.h"
 #include "output.h"
+#include "pakellas.h"
 #include "prompt.h"
 #include "religion.h"
 #include "showsymb.h"
@@ -2227,7 +2228,10 @@ bool item_is_evokable(const item_def &item, bool unskilled, bool known,
             mpr("That item cannot be evoked!");
         return false;
     case OBJ_RODS:
-        if (!wielded)
+        if (item.sub_type == ROD_PAKELLAS && is_blueprint_exist(BLUEPRINT_LIGHT)) {
+            return true;
+        }
+        else if (!wielded)
         {
             if (msg)
                 mpr(error);

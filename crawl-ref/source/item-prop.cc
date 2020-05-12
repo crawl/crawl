@@ -27,6 +27,7 @@
 #include "notes.h"
 #include "options.h"
 #include "orb-type.h"
+#include "pakellas.h"
 #include "potion-type.h"
 #include "random.h"
 #include "religion.h"
@@ -1924,6 +1925,9 @@ skill_type item_attack_skill(const item_def &item)
         return Weapon_prop[ Weapon_index[item.sub_type] ].skill;
     else if (item.base_type == OBJ_STAVES)
         return SK_STAVES;
+    else if (item.base_type == OBJ_RODS && item.sub_type == ROD_PAKELLAS) {
+        return SK_STAVES;
+    }
     else if (item.base_type == OBJ_MISSILES && !has_launcher(item))
         return SK_THROWING;
 
@@ -2033,7 +2037,8 @@ bool is_weapon_wieldable(const item_def &item, size_type size)
     ASSERT(is_weapon(item));
 
     const int subtype = OBJ_STAVES == item.base_type ? int{WPN_STAFF}
-                                                     : item.sub_type;
+    : (OBJ_RODS == item.base_type && ROD_PAKELLAS == item.sub_type ) ? int{ WPN_STAFF }
+    : item.sub_type;
     return Weapon_prop[Weapon_index[subtype]].min_2h_size <= size;
 }
 
@@ -2656,7 +2661,17 @@ int property(const item_def &item, int prop_type)
         else if (prop_type == PWPN_SPEED)
             return Weapon_prop[ Weapon_index[weapon_sub] ].speed;
         break;
-
+    case OBJ_RODS:
+        if (item.sub_type == ROD_PAKELLAS) {
+            weapon_sub = WPN_STAFF;
+            if (prop_type == PWPN_DAMAGE)
+                return Weapon_prop[Weapon_index[weapon_sub]].dam;
+            else if (prop_type == PWPN_HIT)
+                return Weapon_prop[Weapon_index[weapon_sub]].hit;
+            else if (prop_type == PWPN_SPEED)
+                return Weapon_prop[Weapon_index[weapon_sub]].speed;
+        }
+        break;
     default:
         break;
     }

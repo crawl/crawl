@@ -201,6 +201,11 @@ int attack::calc_to_hit(bool random)
             }
             else if (weapon->base_type == OBJ_STAVES)
                 mhit += property(*weapon, PWPN_HIT);
+            else if (weapon->base_type == OBJ_RODS && weapon->sub_type == ROD_PAKELLAS)
+            {
+                mhit += weapon->rod_plus;
+                mhit += property(*weapon, PWPN_HIT);
+            }
         }
 
         // slaying bonus
@@ -1185,14 +1190,13 @@ int attack::player_apply_misc_modifiers(int damage)
 int attack::get_weapon_plus()
 {
     if (weapon->base_type == OBJ_STAVES
-#if TAG_MAJOR_VERSION == 34
-        || weapon->sub_type == WPN_BLOWGUN
-#endif
         || weapon->base_type == OBJ_RODS
+        || weapon->sub_type == WPN_BLOWGUN
        )
     {
         return 0;
     }
+
     return weapon->plus;
 }
 

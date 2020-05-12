@@ -136,7 +136,9 @@ private:
     bool player_monattk_hit_effects();
     void attacker_sustain_passive_damage();
     int  staff_damage(skill_type skill);
+    int  pakellas_damage();
     void apply_staff_damage();
+    void apply_pakellas_rod_damage();
     void player_stab_check() override;
     bool player_good_stab() override;
     void player_announce_aux_hit();

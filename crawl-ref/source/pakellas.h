@@ -91,4 +91,5 @@ bool pakellas_upgrade();
 void pakellas_offer_new_upgrade();
 void pakellas_reset_upgrade_timer(bool clear_timer);
 int is_blueprint_exist(pakellas_blueprint_type blueprint);
+int get_blueprint_element();
 int quick_charge_pakellas();
