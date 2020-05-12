@@ -11,7 +11,7 @@
 #include <cctype>
 #include <cerrno>
 #include <cstdio>
-#include <cstdint>
+#include <stdint.h> // <cstdint> isn't working on CAO
 #include <cstdlib>
 #include <cstring>
 #include <functional>
