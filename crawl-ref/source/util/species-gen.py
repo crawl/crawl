@@ -167,6 +167,7 @@ SPECIES_GROUPS_TEMPLATE = {
     'Intermediate': SpeciesGroup('coord_def(1, 0)', '20', []),
     'Advanced': SpeciesGroup('coord_def(2, 0)', '20', []),
 }
+SPECIES_GROUPS_ORDER = ['Simple', 'Intermediate', 'Advanced']
 SPECIES_GROUP_TEMPLATE = """
     {{
         "{name}",
@@ -379,7 +380,8 @@ def update_species_group(sg, s):
 
 def generate_species_groups(sg):
     out = ''
-    for name, group in sg.items():
+    for name in SPECIES_GROUPS_ORDER:
+        group = sg[name]
         out += SPECIES_GROUP_TEMPLATE.format(
             name = name,
             position = group.position,
