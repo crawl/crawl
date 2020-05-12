@@ -170,8 +170,8 @@ MouseEvent::MouseEvent(Event::Type _type, const wm_mouse_event& wm_ev) : Event(_
     m_button = static_cast<MouseEvent::Button>(wm_ev.button);
     // XXX: is it possible that the cursor has moved since the SDL event fired?
     wm->get_mouse_state(&m_x, &m_y);
-    m_wheel_dx = type == MouseWheel ? wm_ev.px : 0;
-    m_wheel_dy = type == MouseWheel ? wm_ev.py : 0;
+    m_wheel_dx = _type == MouseWheel ? wm_ev.px : 0;
+    m_wheel_dy = _type == MouseWheel ? wm_ev.py : 0;
 }
 #endif
 

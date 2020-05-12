@@ -620,7 +620,7 @@ static T unmarshall_int_as(reader& th)
 #if TAG_MAJOR_VERSION == 34
 level_id level_id::from_packed_place(unsigned short place)
 #else
-level_id _unpack(unsigned short place)
+static level_id _unpack(unsigned short place)
 #endif
 {
     level_id id;
@@ -1024,6 +1024,8 @@ static dungeon_feature_type rewrite_feature(dungeon_feature_type x,
 
     if (x == DNGN_ENTER_LABYRINTH)
         x = DNGN_ENTER_GAUNTLET;
+#else
+    UNUSED(minor_version);
 #endif
 
     return x;
@@ -2579,6 +2581,7 @@ static void _tag_read_you(reader &th)
 #endif
         for (int i = 0; i < count; ++i)
             you.activated.set(i, unmarshallBoolean(th));
+
         for (int i = count; i < NUM_EQUIP; ++i)
             you.activated.set(i, false);
 #if TAG_MAJOR_VERSION == 34
