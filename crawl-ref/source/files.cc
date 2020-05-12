@@ -11,10 +11,11 @@
 #include <cctype>
 #include <cerrno>
 #include <cstdio>
-#ifndef  __STDC_LIMIT_MACROS // old compiler compatibility?
-#define  __STDC_LIMIT_MACROS 1
+// This should be provided by cstdint / stdint.h, but it is not on CAO/CBRO...
+#ifndef UINT8_MAX
+#define UINT8_MAX (255U)
 #endif
-#include <cstdint>
+
 #include <cstdlib>
 #include <cstring>
 #include <functional>
