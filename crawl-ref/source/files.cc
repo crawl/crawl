@@ -11,7 +11,10 @@
 #include <cctype>
 #include <cerrno>
 #include <cstdio>
-#include <stdint.h> // <cstdint> isn't working on CAO
+#ifndef  __STDC_LIMIT_MACROS // old compiler compatibility?
+#define  __STDC_LIMIT_MACROS 1
+#endif
+#include <cstdint>
 #include <cstdlib>
 #include <cstring>
 #include <functional>
