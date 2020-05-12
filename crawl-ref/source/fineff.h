@@ -392,13 +392,13 @@ public:
     void merge(const final_effect &) override;
     void fire() override;
 
-    static void schedule(const actor * defender)
+    static void schedule(const actor * _defender)
     {
-        final_effect::schedule(new summon_dismissal_fineff(defender));
+        final_effect::schedule(new summon_dismissal_fineff(_defender));
     }
 protected:
-    summon_dismissal_fineff(const actor * defender)
-        : final_effect(0, defender, coord_def())
+    summon_dismissal_fineff(const actor * _defender)
+        : final_effect(0, _defender, coord_def())
     {
     }
 };

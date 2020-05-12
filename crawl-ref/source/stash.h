@@ -22,8 +22,8 @@ class Stash
 {
 public:
     Stash(coord_def pos_ = coord_def());
-    Stash(const Stash &other) = default;
-    Stash& operator=(const Stash& other) = default;
+    Stash(const Stash &) = default;
+    Stash& operator=(const Stash &) = default;
 
     static bool is_boring_feature(dungeon_feature_type feat);
 

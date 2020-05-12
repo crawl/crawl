@@ -155,17 +155,17 @@ static ScissorStack scissor_stack;
 
 struct Widget::slots Widget::slots = {};
 
-Event::Event(Event::Type type) : m_type(type)
+Event::Event(Event::Type _type) : m_type(_type)
 {
 }
 
-KeyEvent::KeyEvent(Event::Type type, const wm_keyboard_event& wm_ev) : Event(type)
+KeyEvent::KeyEvent(Event::Type _type, const wm_keyboard_event& wm_ev) : Event(_type)
 {
     m_key = wm_ev.keysym.sym;
 }
 
 #ifdef USE_TILE_LOCAL
-MouseEvent::MouseEvent(Event::Type type, const wm_mouse_event& wm_ev) : Event(type)
+MouseEvent::MouseEvent(Event::Type _type, const wm_mouse_event& wm_ev) : Event(_type)
 {
     m_button = static_cast<MouseEvent::Button>(wm_ev.button);
     // XXX: is it possible that the cursor has moved since the SDL event fired?
@@ -261,12 +261,12 @@ SizeReq Widget::get_preferred_size(Direction dim, int prosp_width)
     else if (shrink)
         ret.nat = ret.min;
 
-    int& min_size = dim ? m_min_size.height : m_min_size.width;
-    int& max_size = dim ? m_max_size.height : m_max_size.width;
+    int& _min_size = dim ? m_min_size.height : m_min_size.width;
+    int& _max_size = dim ? m_max_size.height : m_max_size.width;
 
-    ASSERT(min_size <= max_size);
-    ret.min = max(ret.min, min_size);
-    ret.nat = min(ret.nat, max(max_size, ret.min));
+    ASSERT(_min_size <= _max_size);
+    ret.min = max(ret.min, _min_size);
+    ret.nat = min(ret.nat, max(_max_size, ret.min));
     ret.nat = max(ret.nat, ret.min);
     ASSERT(ret.min <= ret.nat);
 
@@ -1778,9 +1778,9 @@ void Checkbox::sync_save_state()
 
 void Checkbox::sync_load_state(const JsonNode *json)
 {
-    if (auto checked = json_find_member(json, "checked"))
-        if (checked->tag == JSON_BOOL)
-            set_checked(checked->bool_);
+    if (auto c = json_find_member(json, "checked"))
+        if (c->tag == JSON_BOOL)
+            set_checked(c->bool_);
 }
 #endif
 
