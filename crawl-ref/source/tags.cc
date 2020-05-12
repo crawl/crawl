@@ -913,20 +913,13 @@ static vector<string> unmarshallStringVector(reader &th)
     return vec;
 }
 
-static monster_type unmarshallMonType(reader &th)
+// This code looks totally busted but I don't really want to look further...
+static monster_type _fixup_monster_type(reader &th, monster_type x)
 {
-    monster_type x;
 #if TAG_MAJOR_VERSION == 34
-    if (th.getMinorVersion() < TAG_MINOR_MONSTER_TYPE_SIZE)
-        x = static_cast<monster_type>(unmarshallShort(th));
-    else
-#endif
-        x = static_cast<monster_type>(unmarshallUnsigned(th));
-
     if (x >= MONS_NO_MONSTER)
         return x;
 
-#if TAG_MAJOR_VERSION == 34
 # define AXED(a) if (x > a) --x
     if (th.getMinorVersion() == TAG_MINOR_0_11)
     {
@@ -939,24 +932,24 @@ static monster_type unmarshallMonType(reader &th)
     return x;
 }
 
+static monster_type unmarshallMonType(reader &th)
+{
+    monster_type x;
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_MONSTER_TYPE_SIZE)
+        x = static_cast<monster_type>(unmarshallShort(th));
+    else
+#endif
+        x = static_cast<monster_type>(unmarshallUnsigned(th));
+
+    return _fixup_monster_type(th, x);
+}
+
 // yay marshalling inconsistencies
 static monster_type unmarshallMonType_Info(reader &th)
 {
     monster_type x = static_cast<monster_type>(unmarshallUnsigned(th));
-
-    if (x >= MONS_NO_MONSTER)
-        return x;
-
-#if TAG_MAJOR_VERSION == 34
-    if (th.getMinorVersion() == TAG_MINOR_0_11)
-    {
-        AXED(MONS_KILLER_BEE); // killer bee larva
-        AXED(MONS_SHADOW_IMP); // midge
-        AXED(MONS_AGNES);      // Jozef
-    }
-#endif
-
-    return x;
+    return _fixup_monster_type(th, x);
 }
 
 static void marshallMonType(writer &th, monster_type mt)
