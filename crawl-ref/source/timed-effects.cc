@@ -1191,7 +1191,8 @@ void timeout_terrain_changes(int duration, bool force)
         {
             if (you.see_cell(marker->pos))
                 num_seen[marker->change_type]++;
-            revert.emplace(marker->pos, marker->change_type);
+            revert.insert(pair<coord_def, terrain_change_type>(marker->pos,
+                                                        marker->change_type));
         }
     }
     // finally, revert the changes and delete the markers
