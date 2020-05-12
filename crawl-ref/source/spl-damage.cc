@@ -3299,7 +3299,7 @@ spret cast_pakellas_bolt(int powc, bolt& beam, bool fail)
         pbolt.real_flavour = BEAM_CHAOS;
         pbolt.colour = BLUE;
         pbolt.glyph = dchar_glyph(DCHAR_FIRED_BOLT);
-        multiple *= 1.4f;
+        multiple *= 1.3f;
     }
 
 

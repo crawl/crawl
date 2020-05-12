@@ -127,7 +127,7 @@ map<pakellas_blueprint_type, pakellas_blueprint_struct> blueprint_list =
                                 {BLUEPRINT_ELEMENTAL_ELEC},
                                 {})},
     { BLUEPRINT_DEFORM, _base_blueprint("Radiation", "deformed to the hit enemy.", "rad")},
-    { BLUEPRINT_CHAOS, _prerequire_blueprint("Choas", "Occur unknown effect to the hit enemy.", "choas",
+    { BLUEPRINT_CHAOS, _prerequire_blueprint("Chaos", "Random effect to the hit enemy.  Damage 1.3x increase", "chaos",
                                 50,
                                 {},
                                 {BLUEPRINT_ELEMENTAL_FIRE, BLUEPRINT_ELEMENTAL_COLD, BLUEPRINT_ELEMENTAL_ELEC, BLUEPRINT_ELEMENTAL_EARTH})},
