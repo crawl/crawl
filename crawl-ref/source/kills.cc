@@ -666,12 +666,14 @@ kill_monster_desc::kill_monster_desc(const monster* mon)
         modifier = M_SHAPESHIFTER;
 }
 
+// TODO: de-duplicate with the monster * version?
 kill_monster_desc::kill_monster_desc(const monster_info& mon)
 {
     monnum = mon.type;
     modifier = M_NORMAL;
     switch (mon.type)
     {
+        case MONS_ZOMBIE:
 #if TAG_MAJOR_VERSION == 34
         case MONS_ZOMBIE_LARGE: case MONS_ZOMBIE_SMALL:
 #endif

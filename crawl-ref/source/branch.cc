@@ -278,6 +278,8 @@ bool branch_is_unfinished(branch_type branch)
     {
         return true;
     }
+#else
+    UNUSED(branch);
 #endif
     return false;
 }

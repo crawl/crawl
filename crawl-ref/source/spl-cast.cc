@@ -1253,6 +1253,7 @@ vector<string> desc_success_chance(const monster_info& mi, int pow, bool evoked,
         const int adj_pow = evoked ? pakellas_effective_hex_power(pow)
                                    : pow;
 #else
+        UNUSED(evoked);
         const int adj_pow = pow;
 #endif
         const int success = hex_success_chance(mr, adj_pow, 100);
