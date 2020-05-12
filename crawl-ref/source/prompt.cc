@@ -281,15 +281,12 @@ int yesnoquit(const char* str, bool allow_lowercase, int default_answer, bool al
  * @return -1 if <enter> or ';' are pressed (meaning all);
  *         0 if the user escaped;
  *         the number chosen otherwise.
- * Backspace gets special treatment so that it does not disrupt the prompt
  */
 int prompt_for_quantity(const char *prompt)
 {
     msgwin_prompt(prompt);
 
     int ch = getch_ck();
-    while (ch == CK_BKSP)
-        ch = getch_ck();
     if (ch == CK_ENTER || ch == ';')
         return -1;
     else if (ch == CK_ESCAPE || ch == CK_REDRAW)

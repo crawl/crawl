@@ -1179,7 +1179,7 @@ void do_annotate()
         clear_messages();
         const string prompt = make_stringf ("What level of %s? ",
                     branches[branch].longname);
-        depth = prompt_for_quantity(prompt.c_str());
+        depth = prompt_for_int(prompt.c_str(), true);
     }
     if (depth > 0 && depth <= max_depth)
     {
