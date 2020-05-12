@@ -11,6 +11,7 @@
 #include <cctype>
 #include <cerrno>
 #include <cstdio>
+#include <cstdint>
 #include <cstdlib>
 #include <cstring>
 #include <functional>
