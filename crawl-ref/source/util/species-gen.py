@@ -162,12 +162,10 @@ SpeciesGroup = collections.namedtuple('SpeciesGroup',
                                             ['position', 'width', 'species'])
 SpeciesGroupEntry = collections.namedtuple('SpeciesGroupEntry',
                                             ['priority', 'enum'])
-SPECIES_GROUPS_TEMPLATE = {
-    'Simple': SpeciesGroup('coord_def(0, 0)', '50', []),
-    'Intermediate': SpeciesGroup('coord_def(1, 0)', '20', []),
-    'Advanced': SpeciesGroup('coord_def(2, 0)', '20', []),
-}
-SPECIES_GROUPS_ORDER = ['Simple', 'Intermediate', 'Advanced']
+SPECIES_GROUPS_TEMPLATE = collections.OrderedDict()
+SPECIES_GROUPS_TEMPLATE['Simple'] = SpeciesGroup('coord_def(0, 0)', '50', [])
+SPECIES_GROUPS_TEMPLATE['Intermediate'] = SpeciesGroup('coord_def(1, 0)', '20', [])
+SPECIES_GROUPS_TEMPLATE['Advanced'] = SpeciesGroup('coord_def(2, 0)', '20', [])
 SPECIES_GROUP_TEMPLATE = """
     {{
         "{name}",
@@ -380,8 +378,7 @@ def update_species_group(sg, s):
 
 def generate_species_groups(sg):
     out = ''
-    for name in SPECIES_GROUPS_ORDER:
-        group = sg[name]
+    for name, group in sg.items():
         out += SPECIES_GROUP_TEMPLATE.format(
             name = name,
             position = group.position,
