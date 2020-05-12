@@ -3470,7 +3470,7 @@ spret cast_pakellas_bolt(int powc, bolt& beam, bool fail)
     if (is_blueprint_exist(BLUEPRINT_BOME)) {
         pbolt.ex_size = is_blueprint_exist(BLUEPRINT_BOME);
     }
-    pbolt.range = 5;
+    pbolt.range = spell_range(SPELL_PAKELLAS_ROD, powc);
     //pbolt.ench_power = zap_ench_power(z_type, power, is_monster);
     
     //pbolt.hit = AUTOMATIC_HIT;

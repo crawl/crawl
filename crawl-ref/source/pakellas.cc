@@ -78,7 +78,10 @@ static pakellas_blueprint_struct _prerequire_blueprint(const char* name, const c
 map<pakellas_blueprint_type, pakellas_blueprint_struct> blueprint_list =
 {
     //DESTRUCTION
-    { BLUEPRINT_RANGE, _base_blueprint("Range increase", "Range increased by 1.", "range+")},
+    { BLUEPRINT_RANGE, _base2_blueprint("Range increase", "Range increased by 1.", "range+",
+                                2,
+                                0,
+                                100)},
     { BLUEPRINT_PENTAN, _prerequire_blueprint("Penetration", "Adds penetration to missiles.", "penet",
                                 100,
                                 {},
