@@ -252,3 +252,4 @@ static inline bool is_weapon(const item_def &item)
 void remove_whitespace(string &str);
 
 void auto_id_inventory();
+int armour_gdr(armour_type type, bool consider_player);

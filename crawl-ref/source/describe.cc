@@ -1685,9 +1685,10 @@ static string _describe_armour(const item_def &item, bool verbose)
         else
         {
             const int evp = property(item, PARM_EVASION);
+            const bool is_body_armour = get_armour_slot(item) == EQ_BODY_ARMOUR;
             description += "\n\nBase armour rating: "
                         + to_string(property(item, PARM_AC));
-            if (get_armour_slot(item) == EQ_BODY_ARMOUR)
+            if (is_body_armour)
             {
                 description += "       Encumbrance rating: "
                             + to_string(-evp / 10);
@@ -1698,6 +1699,39 @@ static string _describe_armour(const item_def &item, bool verbose)
             {
                 description += "       Evasion: "
                             + to_string(evp / 30);
+            }
+
+            if (is_body_armour)
+            {
+                const armour_type body_type =
+                    static_cast<armour_type>(item.sub_type);
+                const int item_gdr_base = armour_gdr(body_type, false);
+                const int item_gdr_actual = armour_gdr(body_type, true);
+                const bool worn = _you_are_wearing_item(item);
+                if (item_gdr_actual) {
+                    description += "\n\n";
+                    const int gdr_cap = crawl_state.need_save
+                        ? you.armour_class() / 2
+                        : 100;
+                    description += make_stringf(
+                        "This armour is guaranteed to reduce damage from weapons by at least <white>%d%%</white>.",
+                        item_gdr_base);
+                    if (item_gdr_base != item_gdr_actual)
+                    // Assume this is only possible for Gargoyles
+                    {
+                        description += make_stringf(
+                            " As a Gargoyle, your stony skin increases your damage reduction, with this armour your total reduction %s <white>%d%%</white>.",
+                            worn ? "is" : "would be",
+                            item_gdr_actual);
+                    }
+                    if (item_gdr_actual > gdr_cap)
+                    {
+                        description += make_stringf(
+                            " For you, this reduction is currently capped at [half your total AC]%% (<white>%d%%</white>)",
+                            gdr_cap);
+                    }
+                    description += ".";
+                }
             }
         }
     }

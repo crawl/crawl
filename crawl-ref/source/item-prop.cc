@@ -9,6 +9,7 @@
 
 #include <algorithm>
 #include <cctype>
+#include <cmath>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -3085,4 +3086,22 @@ int missile_base_price(missile_type type)
 int armour_base_price(armour_type type)
 {
     return Armour_prop[ Armour_index[type] ].price;
+}
+
+/**
+ * How much Guaranteed Damage Reduction does the given body armour type provide?
+ * See player::gdr_perc for more discussion on GDR.
+ * Warning: GDR only makes sense for body armour!
+ *
+ * @param consider_player   If true, the player's state (read: are they a
+ *                          Gargoyle?) will be taken into consideration.
+ * @return                  Items's GDR, as a percentage.
+ */
+int armour_gdr(armour_type type, bool consider_player)
+{
+    ASSERT(get_armour_slot(type) == EQ_BODY_ARMOUR);
+
+    int base = ((you.species == SP_GARGOYLE && consider_player) ? 3 : -2);
+    int ac = Armour_prop[ Armour_index[type] ].ac;
+    return 14 * sqrt(max(base + ac, 0));
 }

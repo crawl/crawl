@@ -6051,18 +6051,10 @@ int player::gdr_perc() const
         break;
     }
 
-    const item_def *body_armour = slot_item(EQ_BODY_ARMOUR, false);
-
-    int body_base_AC = (species == SP_GARGOYLE ? 5 : 0);
-    if (body_armour)
-        body_base_AC += property(*body_armour, PARM_AC);
-
-    // We take a sqrt here because damage prevented by GDR is
-    // actually proportional to the square of the GDR percentage
-    // (assuming you have enough AC).
-    int gdr = 14 * sqrt(max(body_base_AC - 2, 0));
-
-    return gdr;
+    const item_def* armour = slot_item(EQ_BODY_ARMOUR, false);
+    if (armour)
+        return armour_gdr(static_cast<armour_type>(armour->sub_type), true);
+    return 0;
 }
 
 /**
