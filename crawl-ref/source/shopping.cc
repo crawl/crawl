@@ -699,6 +699,7 @@ unsigned int item_value(item_def item, bool ident)
 
         case MISC_PHIAL_OF_FLOODS:
         case MISC_LIGHTNING_ROD:
+        case MISC_TIN_OF_TREMORSTONES:
             valued += 400;
             break;
 
@@ -708,10 +709,6 @@ unsigned int item_value(item_def item, bool ident)
 
         case MISC_BOX_OF_BEASTS:
             valued += 200;
-            break;
-
-        case MISC_TIN_OF_TREMORSTONES:
-            valued += 150;
             break;
 
         default:
