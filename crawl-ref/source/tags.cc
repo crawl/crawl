@@ -915,7 +915,13 @@ static vector<string> unmarshallStringVector(reader &th)
 
 static monster_type unmarshallMonType(reader &th)
 {
-    monster_type x = static_cast<monster_type>(unmarshallShort(th));
+    monster_type x;
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_MONSTER_TYPE_SIZE)
+        x = static_cast<monster_type>(unmarshallShort(th));
+    else
+#endif
+        x = static_cast<monster_type>(unmarshallUnsigned(th));
 
     if (x >= MONS_NO_MONSTER)
         return x;
@@ -951,6 +957,11 @@ static monster_type unmarshallMonType_Info(reader &th)
 #endif
 
     return x;
+}
+
+static void marshallMonType(writer &th, monster_type mt)
+{
+    marshallUnsigned(th, mt);
 }
 
 static spell_type unmarshallSpellType(reader &th
@@ -5484,7 +5495,7 @@ void marshallMonster(writer &th, const monster& m)
 {
     if (!m.alive())
     {
-        marshallShort(th, MONS_NO_MONSTER);
+        marshallMonType(th, MONS_NO_MONSTER);
         return;
     }
 
@@ -5499,7 +5510,7 @@ void marshallMonster(writer &th, const monster& m)
     if (m.spells.size() > 0)
         parts |= MP_SPELLS;
 
-    marshallShort(th, m.type);
+    marshallMonType(th, m.type);
     marshallUnsigned(th, parts);
     ASSERT(m.mid > 0);
     marshallInt(th, m.mid);
@@ -5533,7 +5544,7 @@ void marshallMonster(writer &th, const monster& m)
     marshallShort(th, min(m.hit_points, MAX_MONSTER_HP));
     marshallShort(th, min(m.max_hit_points, MAX_MONSTER_HP));
     marshallInt(th, m.number);
-    marshallShort(th, m.base_monster);
+    marshallMonType(th, m.base_monster);
     marshallShort(th, m.colour);
     marshallInt(th, m.summoner);
 
@@ -5933,7 +5944,7 @@ static void _tag_construct_level_monsters(writer &th)
     // how many mons_alloc?
     marshallByte(th, nm);
     for (int i = 0; i < nm; ++i)
-        marshallShort(th, env.mons_alloc[i]);
+        marshallMonType(th, env.mons_alloc[i]);
 
     // how many monsters?
     nm = _last_used_index(menv, MAX_MONSTERS);
