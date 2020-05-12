@@ -1627,7 +1627,6 @@ void TilesFramework::_send_map(bool force_full)
                 screen_cell_t *cell = &m_next_view(gc);
 
                 draw_cell(cell, gc, false, m_current_flash_colour);
-                cell->tile.flv = env.tile_flv(gc);
                 pack_cell_overlays(gc, m_next_view);
             }
 
@@ -1802,7 +1801,6 @@ void TilesFramework::load_dungeon(const crawl_view_buffer &vbuf,
             screen_cell_t *cell = &m_next_view(grid);
 
             *cell = ((const screen_cell_t *) vbuf)[x + vbuf.size().x * y];
-            cell->tile.flv = env.tile_flv(grid);
             pack_cell_overlays(grid, m_next_view);
 
             mark_clean(grid); // Remove redraw flag
