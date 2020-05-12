@@ -5648,10 +5648,18 @@ void _unmarshallMonsterInfo(reader &th, monster_info& mi)
 {
     _unmarshallFixedBitVector<NUM_MB_FLAGS>(th, mi.mb);
     mi.mname = unmarshallString(th);
+
 #if TAG_MAJOR_VERSION == 34
     mi.type = unmarshallMonType_Info(th);
     ASSERT(!invalid_monster_type(mi.type));
     mi.base_type = unmarshallMonType_Info(th);
+#else
+    mi.type = unmarshallMonType(th);
+    ASSERT(!invalid_monster_type(mi.type));
+    mi.base_type = unmarshallMonType(th);
+#endif
+
+#if TAG_MAJOR_VERSION == 34
     if ((mons_genus(mi.type) == MONS_DRACONIAN
         || (mons_genus(mi.type) == MONS_DEMONSPAWN
             && th.getMinorVersion() >= TAG_MINOR_DEMONSPAWN))
@@ -5659,11 +5667,8 @@ void _unmarshallMonsterInfo(reader &th, monster_info& mi)
     {
         unmarshallMonType_Info(th); // was draco_type
     }
-#else
-    mi.type = unmarshallMonType(th);
-    ASSERT(!invalid_monster_type(mi.type));
-    mi.base_type = unmarshallMonType(th);
 #endif
+
     unmarshallUnsigned(th, mi.number);
 #if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() < TAG_MINOR_MON_COLOUR_LOOKUP)
@@ -6331,7 +6336,7 @@ void unmarshallMonster(reader &th, monster& m)
 {
     m.reset();
 
-    m.type           = unmarshallMonType(th);
+    m.type = unmarshallMonType(th);
     if (m.type == MONS_NO_MONSTER)
         return;
 
