@@ -3,6 +3,13 @@
  * @brief Functions used to save and load levels/games.
 **/
 
+// old compiler compatibility for CAO/CBRO stdint.h. cstdint doesn't work
+// on these gcc versions to provide UINT8_MAX.
+#ifndef  __STDC_LIMIT_MACROS
+#define  __STDC_LIMIT_MACROS 1
+#endif
+#include <stdint.h>
+
 #include "AppHdr.h"
 
 #include "files.h"
@@ -11,11 +18,6 @@
 #include <cctype>
 #include <cerrno>
 #include <cstdio>
-// This should be provided by cstdint / stdint.h, but it is not on CAO/CBRO...
-#ifndef UINT8_MAX
-#define UINT8_MAX (255U)
-#endif
-
 #include <cstdlib>
 #include <cstring>
 #include <functional>
