@@ -19,6 +19,9 @@
 - 새로운 종족 레서리치 추가. 높은 강령 적성, 빠른 마나회복, 27렙때 와일드매직을 얻음
   - Added Lesser-Lich. high necromancy skill, high mana regen, wild magic when 27 level
   
+- 파켈라스 추가 및 리워크(아직 진행중) 상세 설명은 [이 곳](https://github.com/kimjoy2002/crawl/issues/60)을 확인
+  - Added pakellas and rework(ongoing) Click [here](https://github.com/kimjoy2002/crawl/issues/60) for details
+  
 - 독물의 추출, 증산 추가
   - Added Fulsome Distillation, Evaporate spell
   
