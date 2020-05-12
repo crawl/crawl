@@ -1124,9 +1124,17 @@ static coord_def _fuzz_tremorstone_target(coord_def center)
     return chosen;
 }
 
+/**
+ * Number of explosions, scales up from 1 at 0 evo to 6 at 27 evo,
+ * via a stepdown.
+ *
+ * Currently pow is just evo + 15, but the abstraction is kept around in
+ * case an evocable enhancer returns to the game so that 0 evo with enhancer
+ * gets some amount of enhancement.
+ */
 static int _tremorstone_count(int pow)
 {
-    return 1 + stepdown((pow - 15) / 3, 3, ROUND_CLOSE);
+    return 1 + stepdown((pow - 15) / 3, 2, ROUND_CLOSE);
 }
 
 /**
@@ -1150,7 +1158,7 @@ static spret _tremorstone()
     static const int RADIUS = 2;
     static const int SPREAD = 1;
     static const int RANGE = RADIUS + SPREAD;
-    const int pow = 15 + you.skill(SK_EVOCATIONS, 7) / 2;
+    const int pow = 15 + you.skill(SK_EVOCATIONS);
     const int adjust_pow = player_adjust_evoc_power(pow);
     const int num_explosions = _tremorstone_count(adjust_pow);
 
