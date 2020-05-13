@@ -148,7 +148,7 @@ Their magical reserves absorb damage, and they pack a magic-restoring bite.
 Two Headed Ogre
 
 Two Headed Ogre has two heads and uses dual weapon, also wear two amulet. 
-However, They hate the shield.
+However, They hate and never hold shield, thinking it is only for cowards.
 %%%%
 Angel
 
