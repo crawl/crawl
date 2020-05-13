@@ -168,7 +168,7 @@ map<pakellas_blueprint_type, pakellas_blueprint_struct> blueprint_list =
                                 0,
                                 150)},
     { BLUEPRINT_LIGHT, _base2_blueprint("Lightweight", "Can be used without holding.", "light",
-                                6,
+                                1,
                                 0,
                                 100)},
     { BLUEPRINT_BATTLEMAGE, _prerequire_blueprint("Battle Mage", "Increases the damage the rod deals in melee combat.", "melee+",
