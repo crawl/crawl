@@ -2130,7 +2130,11 @@ string get_item_description(const item_def &item, bool verbose,
             if (item_ident(item, ISFLAG_KNOW_PLUSES))
             {
                 const int num_charges = item.charge_cap / ROD_CHARGE_MULT;
-                if (max_charges > num_charges)
+                if (item.sub_type == ROD_PAKELLAS) {
+                    description << "\nIt can currently hold " << num_charges
+                        << " charges.";
+                }
+                else if (max_charges > num_charges)
                 {
                     description << "\nIt can currently hold " << num_charges
                         << " charges. It can be magically "
