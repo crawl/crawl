@@ -1789,8 +1789,7 @@ static int _get_monster_jewellery_value(const monster *mon,
 
     if (item.sub_type == RING_PROTECTION
         || item.sub_type == RING_EVASION
-        || item.sub_type == RING_SLAYING
-        || item.sub_type == AMU_REFLECTION)
+        || item.sub_type == RING_SLAYING)
     {
         value += item.plus;
     }
@@ -3123,8 +3122,7 @@ bool monster::pacified() const
  */
 bool monster::shielded() const
 {
-    return shield()
-           || wearing(EQ_AMULET_PLUS, AMU_REFLECTION) > 0;
+    return shield() || wearing(EQ_AMULET, AMU_REFLECTION);
 }
 
 int monster::shield_bonus() const
@@ -3145,11 +3143,7 @@ int monster::shield_bonus() const
     // shielding from jewellery
     const item_def *amulet = mslot_item(MSLOT_JEWELLERY);
     if (amulet && amulet->sub_type == AMU_REFLECTION)
-    {
-        const int jewellery_plus = amulet->plus;
-        ASSERT(abs(jewellery_plus) < 30); // sanity check
-        sh += jewellery_plus * 2;
-    }
+        sh += AMU_REFLECT_SH;
 
     return sh;
 }

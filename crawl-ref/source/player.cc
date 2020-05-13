@@ -882,13 +882,12 @@ int player::wearing(equipment_type slot, int sub_type, bool calc_unid) const
         break;
 
     case EQ_AMULET:
-    case EQ_AMULET_PLUS:
         if ((item = slot_item(static_cast<equipment_type>(EQ_AMULET)))
             && item->sub_type == sub_type
             && (calc_unid
                 || item_type_known(*item)))
         {
-            ret += (slot == EQ_AMULET_PLUS ? item->plus : 1);
+            ret++;
         }
         break;
 
@@ -2220,7 +2219,7 @@ int player_shield_class()
 
     shield += qazlal_sh_boost() * 100;
     shield += tso_sh_boost() * 100;
-    shield += you.wearing(EQ_AMULET_PLUS, AMU_REFLECTION) * 200;
+    shield += you.wearing(EQ_AMULET, AMU_REFLECTION) * AMU_REFLECT_SH * 100;
     shield += you.scan_artefacts(ARTP_SHIELDING) * 200;
 
     return (shield + 50) / 100;
@@ -5516,7 +5515,7 @@ bool player::shielded() const
            || duration[DUR_DIVINE_SHIELD]
            || get_mutation_level(MUT_LARGE_BONE_PLATES) > 0
            || qazlal_sh_boost() > 0
-           || you.wearing(EQ_AMULET_PLUS, AMU_REFLECTION) > 0
+           || you.wearing(EQ_AMULET, AMU_REFLECTION)
            || you.scan_artefacts(ARTP_SHIELDING);
 }
 

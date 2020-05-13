@@ -579,13 +579,7 @@ unsigned int item_value(item_def item, bool ident)
         {
             // Variable-strength rings.
             if (item_ident(item, ISFLAG_KNOW_PLUSES)
-                && (item.sub_type == RING_PROTECTION
-                    || item.sub_type == RING_STRENGTH
-                    || item.sub_type == RING_EVASION
-                    || item.sub_type == RING_DEXTERITY
-                    || item.sub_type == RING_INTELLIGENCE
-                    || item.sub_type == RING_SLAYING
-                    || item.sub_type == AMU_REFLECTION))
+                && jewellery_type_has_plusses(item.sub_type))
             {
                 // Formula: price = kn(n+1) / 2, where k depends on the subtype,
                 // n is the power. (The base variable is equal to 2n.)
@@ -606,7 +600,6 @@ unsigned int item_value(item_def item, bool ident)
                 case RING_STRENGTH:
                 case RING_DEXTERITY:
                 case RING_INTELLIGENCE:
-                case AMU_REFLECTION:
                     coefficient = 30;
                     break;
                 default:
@@ -631,6 +624,7 @@ unsigned int item_value(item_def item, bool ident)
                 case AMU_GUARDIAN_SPIRIT:
                 case AMU_MANA_REGENERATION:
                 case AMU_ACROBAT:
+                case AMU_REFLECTION:
                     valued += 300;
                     break;
 

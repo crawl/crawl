@@ -1574,6 +1574,7 @@ static void _fire_kill_conducts(monster &mons, killer_type killer,
     // player gets credit for reflection kills, but not blame
     const bool blameworthy = god_hates_killing(you.religion, mons)
                              && killer_index != YOU_FAULTLESS;
+
     // if you can't get piety for it & your god won't give penance/-piety for
     // it, no one cares
     // XXX: this will break holy death curses if they're added back...

@@ -2186,7 +2186,12 @@ bool jewellery_has_pluses(const item_def &item)
     if (!item_type_known(item))
         return false;
 
-    switch (item.sub_type)
+    return jewellery_type_has_plusses(item.sub_type);
+}
+
+bool jewellery_type_has_plusses(int jewel_type)
+{
+    switch (jewel_type)
     {
     case RING_SLAYING:
     case RING_PROTECTION:
@@ -2194,7 +2199,6 @@ bool jewellery_has_pluses(const item_def &item)
     case RING_STRENGTH:
     case RING_INTELLIGENCE:
     case RING_DEXTERITY:
-    case AMU_REFLECTION:
         return true;
 
     default:

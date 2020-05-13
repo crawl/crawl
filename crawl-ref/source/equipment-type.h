@@ -37,9 +37,5 @@ enum equipment_type
     EQ_STAFF            = 100,         // weapon with base_type OBJ_STAVES
     EQ_RINGS,                          // check both rings
     EQ_RINGS_PLUS,                     // check both rings and sum plus
-#if TAG_MAJOR_VERSION == 34
-    EQ_RINGS_PLUS2,                    // check both rings and sum plus2
-#endif
     EQ_ALL_ARMOUR,                     // check all armour types
-    EQ_AMULET_PLUS,                    // check amulet for pluses.
 };

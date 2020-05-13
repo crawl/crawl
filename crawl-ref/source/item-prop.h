@@ -44,6 +44,8 @@ enum armour_flag
     ARMF_VUL_COLD           = ard(ARMF_RES_COLD, -1),
 };
 
+#define AMU_REFLECT_SH 5*2
+
 /// Removed items that have item knowledge.
 extern const set<pair<object_class_type, int> > removed_items;
 /// Check for membership in removed_items.
@@ -189,6 +191,7 @@ int evoker_charges(int evoker_type);
 int evoker_max_charges(int evoker_type);
 
 // ring functions:
+bool jewellery_type_has_plusses(int jewel_type) PURE;
 bool jewellery_has_pluses(const item_def &item) PURE;
 bool ring_has_stackable_effect(const item_def &item) PURE;
 
