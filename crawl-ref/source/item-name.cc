@@ -804,7 +804,9 @@ const char* jewellery_effect_name(int jeweltype, bool terse)
         case RING_LIFE_PROTECTION:       return "rN+";
         case RING_PROTECTION_FROM_MAGIC: return "MR+";
         case AMU_REGENERATION:           return "Regen";
+#if TAG_MAJOR_VERSION == 34
         case AMU_RAGE:                   return "+Rage";
+#endif
         case AMU_ACROBAT:                return "Acrobat";
         case AMU_NOTHING:                return "";
         default: return "buggy";
