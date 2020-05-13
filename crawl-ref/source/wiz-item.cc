@@ -1197,9 +1197,7 @@ static void _debug_acquirement_stats(FILE *ostat)
             "resistance",
             "positive energy",
             "archmagi",
-#if TAG_MAJOR_VERSION == 34
             "preservation",
-#endif
             "reflection",
             "spirit shield",
             "archery",
@@ -1207,7 +1205,10 @@ static void _debug_acquirement_stats(FILE *ostat)
             "jumping",
 #endif
             "repulsion",
+#if TAG_MAJOR_VERSION == 34
             "cloud immunity",
+#endif
+            "harm",
         };
 
         const int non_art = acq_calls - num_arts;
