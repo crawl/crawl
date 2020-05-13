@@ -2200,12 +2200,10 @@ void ShoppingList::fill_out_menu(Menu& shopmenu)
             const int col = menu_colour(item.name(DESC_A),
                                         colprf, "shop");
 
-#ifdef USE_TILE
             vector<tile_def> item_tiles;
             get_tiles_for_item(item, item_tiles, true);
             for (const auto &tile : item_tiles)
                 me->add_tile(tile);
-#endif
 
             if (col != -1)
                 me->colour = col;

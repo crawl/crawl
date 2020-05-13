@@ -70,11 +70,7 @@ int enchant_to_int(const item_def &item);
 tileidx_t tileidx_enchant_equ(const item_def &item, tileidx_t tile,
                               bool player = false);
 
-#ifdef USE_TILE
 void bind_item_tile(item_def &item);
-#else
-static inline void bind_item_tile(item_def &/*item*/) {}
-#endif
 
 // For a given fg/bg set of tile indices and a 1 character prefix,
 // return index, flag, and tile name as a printable string.

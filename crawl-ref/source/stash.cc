@@ -41,14 +41,12 @@
 #include "stringutil.h"
 #include "syscalls.h"
 #include "terrain.h"
+#include "tilepick.h"
 #include "traps.h"
 #include "travel.h"
 #include "unicode.h"
 #include "unwind.h"
 #include "viewmap.h"
-#ifdef USE_TILE
-# include "tilepick.h"
-#endif
 
 // Global
 StashTracker StashTrack;
@@ -1731,7 +1729,6 @@ bool StashTracker::display_search_results(
                 me->colour = itemcol;
         }
 
-#ifdef USE_TILE
         if (res.item.defined())
         {
             vector<tile_def> item_tiles;
@@ -1758,7 +1755,6 @@ bool StashTracker::display_search_results(
             const tileidx_t idx = tileidx_feature_base(feat);
             me->add_tile(tile_def(idx, get_dngn_tex(idx)));
         }
-#endif
 
         stashmenu.add_entry(me);
         if (!res.in_inventory)

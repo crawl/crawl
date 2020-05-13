@@ -34,9 +34,7 @@
 #include "spl-util.h"
 #include "state.h"
 #include "stringutil.h"
-#ifdef USE_TILE
- #include "tilepick.h"
-#endif
+#include "tilepick.h"
 #include "transform.h"
 #include "unicode.h"
 
@@ -757,9 +755,7 @@ private:
             ++hotkey;
 
             me->colour = colour;
-#ifdef USE_TILE
             me->add_tile(tile_def(tileidx_spell(spell.spell), TEX_GUI));
-#endif
 
             me->data = &(spell.spell);
             add_entry(me);

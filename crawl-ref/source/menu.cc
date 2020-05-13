@@ -1501,16 +1501,20 @@ bool MenuEntry::get_tiles(vector<tile_def>& tileset) const
 bool MenuEntry::get_tiles(vector<tile_def>& /*tileset*/) const { return false; }
 #endif
 
+void MenuEntry::add_tile(tile_def tile)
+{
+#ifdef USE_TILE
+    tiles.push_back(tile);
+#else
+    UNUSED(tile);
+#endif
+}
+
 #ifdef USE_TILE
 PlayerMenuEntry::PlayerMenuEntry(const string &str) :
     MenuEntry(str, MEL_ITEM, 1)
 {
     quantity = 1;
-}
-
-void MenuEntry::add_tile(tile_def tile)
-{
-    tiles.push_back(tile);
 }
 
 bool MonsterMenuEntry::get_tiles(vector<tile_def>& tileset) const

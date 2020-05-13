@@ -36,17 +36,15 @@
 #include "output.h"
 #include "prompt.h"
 #include "religion.h"
+#include "rltiles/tiledef-dngn.h"
+#include "rltiles/tiledef-icons.h"
+#include "rltiles/tiledef-main.h"
 #include "showsymb.h"
 #include "state.h"
 #include "stringutil.h"
 #include "terrain.h"
 #include "throw.h"
-#ifdef USE_TILE
- #include "rltiles/tiledef-icons.h"
- #include "rltiles/tiledef-main.h"
- #include "rltiles/tiledef-dngn.h"
- #include "tilepick.h"
-#endif
+#include "tilepick.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 // Inventory menu shenanigans
@@ -547,7 +545,6 @@ void InvMenu::load_inv_items(int item_selector, int excluded_slot,
         set_title("");
 }
 
-#ifdef USE_TILE
 bool get_tiles_for_item(const item_def &item, vector<tile_def>& tileset, bool show_background)
 {
     tileidx_t idx = tileidx_item(get_item_info(item));
@@ -628,6 +625,7 @@ bool get_tiles_for_item(const item_def &item, vector<tile_def>& tileset, bool sh
     return true;
 }
 
+#ifdef USE_TILE
 bool InvEntry::get_tiles(vector<tile_def>& tileset) const
 {
     if (!Options.tile_menu_icons)

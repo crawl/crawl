@@ -535,9 +535,7 @@ static deck_type _choose_deck(const string title = "Draw")
         if (!deck_cards((deck_type)i))
             me->colour = COL_USELESS;
 
-#ifdef USE_TILE
         me->add_tile(tile_def(TILEG_NEMELEX_DECK + i - FIRST_PLAYER_DECK + 1, TEX_GUI));
-#endif
         deck_menu.add_entry(me);
     }
 
@@ -731,9 +729,7 @@ static void _draw_stack(int to_stack)
         if (!deck_cards((deck_type)i))
             me->colour = COL_USELESS;
 
-#ifdef USE_TILE
         me->add_tile(tile_def(TILEG_NEMELEX_DECK + i - FIRST_PLAYER_DECK + 1, TEX_GUI));
-#endif
         deck_menu.add_entry(me);
     }
     deck_menu.on_single_selection = [&deck_menu, &stack, to_stack](const MenuEntry& sel)
@@ -786,9 +782,7 @@ bool stack_five(int to_stack)
         MenuEntry * const entry =
             new MenuEntry(card_name((card_type)stack[i].get_int()),
                           MEL_ITEM, 1, '1'+i);
-#ifdef USE_TILE
         entry->add_tile(tile_def(TILEG_NEMELEX_CARD, TEX_GUI));
-#endif
         menu.add_entry(entry);
     }
     menu.set_more(formatted_string::parse_string(

@@ -37,20 +37,18 @@
 #include "output.h"
 #include "prompt.h"
 #include "religion.h"
+#include "rltiles/tiledef-main.h"
 #include "skills.h"
-#include "stringutil.h"
 #include "spl-book.h"
 #include "spl-util.h"
+#include "stringutil.h"
 #include "terrain.h"
-#ifdef USE_TILE
 #include "tile-flags.h"
-#include "rltiles/tiledef-main.h"
 #include "tilepick.h"
 #include "tileview.h"
-#endif
 #include "ui.h"
-#include "view.h"
 #include "viewchar.h"
+#include "view.h"
 
 
 typedef vector<string> (*keys_by_glyph)(char32_t showchar);
@@ -620,7 +618,6 @@ static MenuEntry* _monster_menu_gen(char letter, const string &str,
 static MenuEntry* _item_menu_gen(char letter, const string &str, string &key)
 {
     MenuEntry* me = _simple_menu_gen(letter, str, key);
-#ifdef USE_TILE
     item_def item;
     item_kind kind = item_kind_by_name(key);
     get_item_by_name(&item, key.c_str(), kind.base_type);
@@ -630,7 +627,6 @@ static MenuEntry* _item_menu_gen(char letter, const string &str, string &key)
     if (base_item)
         me->add_tile(tile_def(base_item, TEX_DEFAULT));
     me->add_tile(tile_def(idx, TEX_DEFAULT));
-#endif
     return me;
 }
 
@@ -642,14 +638,12 @@ static MenuEntry* _feature_menu_gen(char letter, const string &str, string &key)
     MenuEntry* me = new MenuEntry(str, MEL_ITEM, 1, letter);
     me->data = &key;
 
-#ifdef USE_TILE
     const dungeon_feature_type feat = feat_by_desc(str);
     if (feat)
     {
         const tileidx_t idx = tileidx_feature_base(feat);
         me->add_tile(tile_def(idx, get_dngn_tex(idx)));
     }
-#endif
 
     return me;
 }
@@ -669,11 +663,9 @@ static MenuEntry* _ability_menu_gen(char letter, const string &str, string &key)
 {
     MenuEntry* me = _simple_menu_gen(letter, str, key);
 
-#ifdef USE_TILE
     const ability_type ability = ability_by_name(str);
     if (ability != ABIL_NON_ABILITY)
         me->add_tile(tile_def(tileidx_ability(ability), TEX_GUI));
-#endif
 
     return me;
 }
@@ -684,9 +676,7 @@ static MenuEntry* _ability_menu_gen(char letter, const string &str, string &key)
 static MenuEntry* _card_menu_gen(char letter, const string &str, string &key)
 {
     MenuEntry* me = _simple_menu_gen(letter, str, key);
-#ifdef USE_TILE
     me->add_tile(tile_def(TILEG_NEMELEX_CARD, TEX_GUI));
-#endif
     return me;
 }
 
@@ -698,10 +688,8 @@ static MenuEntry* _spell_menu_gen(char letter, const string &str, string &key)
     MenuEntry* me = _simple_menu_gen(letter, str, key);
 
     const spell_type spell = spell_by_name(str);
-#ifdef USE_TILE
     if (spell != SPELL_NO_SPELL)
         me->add_tile(tile_def(tileidx_spell(spell), TEX_GUI));
-#endif
     me->colour = is_player_spell(spell) ? WHITE
                                         : DARKGREY; // monster-only
 
@@ -715,10 +703,8 @@ static MenuEntry* _skill_menu_gen(char letter, const string &str, string &key)
 {
     MenuEntry* me = _simple_menu_gen(letter, str, key);
 
-#ifdef USE_TILE
     const skill_type skill = str_to_skill_safe(str);
     me->add_tile(tile_def(tileidx_skill(skill, TRAINING_ENABLED), TEX_GUI));
-#endif
 
     return me;
 }
@@ -733,9 +719,7 @@ static MenuEntry* _branch_menu_gen(char letter, const string &str, string &key)
     const branch_type branch = branch_by_shortname(str);
     int hotkey = branches[branch].travel_shortcut;
     me->hotkeys = {hotkey, tolower_safe(hotkey)};
-#ifdef USE_TILE
     me->add_tile(tile_def(tileidx_branch(branch), TEX_FEAT));
-#endif
 
     return me;
 }
@@ -756,13 +740,11 @@ static MenuEntry* _cloud_menu_gen(char letter, const string &str, string &key)
     fake_cloud.decay = 1000;
     me->colour = element_colour(get_cloud_colour(fake_cloud));
 
-#ifdef USE_TILE
     cloud_info fake_cloud_info;
     fake_cloud_info.type = cloud;
     fake_cloud_info.colour = me->colour;
     const tileidx_t idx = tileidx_cloud(fake_cloud_info) & ~TILE_FLAG_FLYING;
     me->add_tile(tile_def(idx, TEX_DEFAULT));
-#endif
 
     return me;
 }
