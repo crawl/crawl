@@ -342,27 +342,33 @@ string SkillMenuEntry::get_prefix()
     return make_stringf(" %c %c", letter, sign);
 }
 
-void SkillMenuEntry::set_aptitude()
+const formatted_string _skill_aptitude_label(skill_type skill)
 {
-    string text = "<white>";
+    formatted_string out;
+    out.textcolour(WHITE);
 
-    const bool manual = skill_has_manual(m_sk);
-    const int apt = species_apt(m_sk, you.species);
+    const int apt = species_apt(skill, you.species);
 
     if (apt != 0)
-        text += make_stringf("%+d", apt);
+        out.cprintf("%+d", apt);
     else
-        text += make_stringf(" %d", apt);
+        out.cprintf(" %d", apt);
 
-    text += "</white> ";
 
-    if (manual)
+    if (skill_has_manual(skill))
     {
-        skm.set_flag(SKMF_MANUAL);
-        text += "<lightred>+4</lightred>";
+        out.textcolour(LIGHTRED);
+        out.cprintf("+4");
     }
 
-    m_aptitude->set_text(text);
+    return out;
+}
+
+void SkillMenuEntry::set_aptitude()
+{
+    if (skill_has_manual(m_sk))
+        skm.set_flag(SKMF_MANUAL);
+    m_aptitude->set_text(_skill_aptitude_label(m_sk));
 }
 
 void SkillMenuEntry::set_level()

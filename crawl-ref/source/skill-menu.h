@@ -211,3 +211,4 @@ private:
 
 /* Public for testing purposes only: do not use elsewhere */
 const formatted_string _skill_training_label(skill_type skill);
+const formatted_string _skill_aptitude_label(skill_type skill);
