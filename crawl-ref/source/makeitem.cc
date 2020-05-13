@@ -905,11 +905,12 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
             return true;
         // deliberate fall-through
     case SPARM_RUNNING:
-    case SPARM_STEALTH:
 #if TAG_MAJOR_VERSION == 34
     case SPARM_JUMPING:
 #endif
         return slot == EQ_BOOTS;
+    case SPARM_STEALTH:
+        return slot == EQ_BOOTS || slot == EQ_CLOAK;
 
     case SPARM_ARCHMAGI:
         return !strict || type == ARM_ROBE;
@@ -972,9 +973,9 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
 #if TAG_MAJOR_VERSION == 34
                type == ARM_HAT ||
                type == ARM_CAP ||
+               type == ARM_SCARF ||
 #endif
-               slot == EQ_SHIELD ||
-               type == ARM_SCARF || !strict;
+               slot == EQ_SHIELD || !strict;
 
     case SPARM_REPULSION:
     case SPARM_HARM:
