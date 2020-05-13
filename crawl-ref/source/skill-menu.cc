@@ -542,21 +542,27 @@ void SkillMenuEntry::set_training()
     m_progress->set_fg_colour(BROWN);
 }
 
+const formatted_string _skill_cost_label(skill_type skill)
+{
+    formatted_string out;
+
+    if (you.skills[skill] == MAX_SKILL_LEVEL)
+        return out;
+
+    out.textcolour(skill_has_manual(skill) ? LIGHTRED : WHITE);
+
+    auto ratio = scaled_skill_cost(skill);
+    // Don't let the displayed number go greater than 4 characters
+    if (ratio > 0)
+        out.cprintf("%4.*f", ratio < 100 ? 1 : 0, ratio);
+
+    return out;
+}
+
 void SkillMenuEntry::set_cost()
 {
     m_progress->set_editable(false);
-
-    if (you.skills[m_sk] == MAX_SKILL_LEVEL)
-        return;
-    if (skill_has_manual(m_sk))
-        m_progress->set_fg_colour(LIGHTRED);
-    else
-        m_progress->set_fg_colour(CYAN);
-
-    auto ratio = scaled_skill_cost(m_sk);
-    // Don't let the displayed number go greater than 4 characters
-    if (ratio > 0)
-        m_progress->set_text(make_stringf("%4.*f", ratio < 100 ? 1 : 0, ratio));
+    m_progress->set_text(_skill_cost_label(m_sk));
 }
 
 SkillMenuSwitch::SkillMenuSwitch(string name, int hotkey) : m_name(name)
