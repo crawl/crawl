@@ -119,6 +119,8 @@ jobs:
         working-directory: crawl-ref/source
       - run: make -j$(nproc) ${{ matrix.build_opts }} ${{ matrix.debug }}
         working-directory: crawl-ref/source
+      - if: debug == 'FULLDEBUG=1'
+        run: make test
       - name: Print ccache stats
         run: ccache -s
 
