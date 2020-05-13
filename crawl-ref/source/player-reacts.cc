@@ -858,6 +858,14 @@ static void _update_equipment_attunement_by_health()
         you.activated.set(EQ_AMULET);
     }
 
+    if (!you.activated[EQ_AMULET] && you.wearing(EQ_AMULET, AMU_REFLECTION))
+    {
+        mprf("Your amulet attunes itself to your body. You feel a shielding "
+             "aura gather around you.");
+        you.activated.set(EQ_AMULET);
+        you.redraw_armour_class = true;
+    }
+
     if (you.get_mutation_level(MUT_NO_REGENERATION))
         return;
 
