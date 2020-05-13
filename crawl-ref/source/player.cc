@@ -2220,6 +2220,7 @@ int player_shield_class()
 
     shield += qazlal_sh_boost() * 100;
     shield += tso_sh_boost() * 100;
+    shield += you.wearing(EQ_AMULET_PLUS, AMU_REFLECTION) * 200;
     shield += you.scan_artefacts(ARTP_SHIELDING) * 200;
 
     return (shield + 50) / 100;
@@ -5515,6 +5516,7 @@ bool player::shielded() const
            || duration[DUR_DIVINE_SHIELD]
            || get_mutation_level(MUT_LARGE_BONE_PLATES) > 0
            || qazlal_sh_boost() > 0
+           || you.wearing(EQ_AMULET_PLUS, AMU_REFLECTION) > 0
            || you.scan_artefacts(ARTP_SHIELDING);
 }
 

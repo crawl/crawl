@@ -33,6 +33,11 @@ amulet of nothing
 
 An amulet with no special properties.
 %%%%
+amulet of reflection
+
+An amulet which exerts a force that blocks some incoming attacks, and can even
+reflect any blocked ranged attacks back towards the attacker.
+%%%%
 amulet of regeneration
 
 An amulet that increases the wearer's natural regeneration rate. In order to

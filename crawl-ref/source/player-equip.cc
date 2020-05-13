@@ -1196,6 +1196,7 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
         break;
 
     case RING_PROTECTION:
+    case AMU_REFLECTION:
         you.redraw_armour_class = true;
         break;
 
@@ -1349,6 +1350,7 @@ static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld,
         break;
 
     case RING_PROTECTION:
+    case AMU_REFLECTION:
         you.redraw_armour_class = true;
         break;
 

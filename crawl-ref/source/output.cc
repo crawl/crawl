@@ -2453,7 +2453,8 @@ static vector<formatted_string> _get_overview_resistances(
     out += _resist_composer("Spirit", cwidth, rspir) + "\n";
 
     const item_def *sh = you.shield();
-    const int reflect = sh && shield_reflects(*sh);
+    const int reflect = you.reflection(calc_unid)
+                        || sh && shield_reflects(*sh);
     out += _resist_composer("Reflect", cwidth, reflect) + "\n";
 
     const int harm = you.extra_harm(calc_unid);

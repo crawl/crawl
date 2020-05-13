@@ -168,7 +168,7 @@ bool ranged_attack::handle_phase_blocked()
     const bool reflected_by_shield = defender_shield
                                      && is_shield(*defender_shield)
                                      && shield_reflects(*defender_shield);
-    if (reflected_by_shield)
+    if (reflected_by_shield || defender->reflection())
     {
         reflected = true;
         verb = "reflect";

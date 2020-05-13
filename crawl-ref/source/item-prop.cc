@@ -741,7 +741,6 @@ const set<pair<object_class_type, int> > removed_items =
     { OBJ_JEWELLERY, AMU_THE_GOURMAND },
     { OBJ_JEWELLERY, AMU_HARM },
     { OBJ_JEWELLERY, AMU_RAGE },
-    { OBJ_JEWELLERY, AMU_REFLECTION },
     { OBJ_JEWELLERY, RING_REGENERATION },
     { OBJ_JEWELLERY, RING_SUSTAIN_ATTRIBUTES },
     { OBJ_JEWELLERY, RING_TELEPORT_CONTROL },
@@ -2195,6 +2194,7 @@ bool jewellery_has_pluses(const item_def &item)
     case RING_STRENGTH:
     case RING_INTELLIGENCE:
     case RING_DEXTERITY:
+    case AMU_REFLECTION:
         return true;
 
     default:

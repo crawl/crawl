@@ -223,7 +223,7 @@ KMONS:   ~ = ice dragon
 KMONS:   z = killer bee
 KMONS:   Z = queen bee
 ITEM:    scroll of teleportation
-ITEM:    amulet of the acrobat
+ITEM:    amulet of reflection
 KITEM:   gzZ = ration w:5 tile:food_honeycomb / nothing w:40
 KFEAT:   L = l
 KFEAT:   ~ = w

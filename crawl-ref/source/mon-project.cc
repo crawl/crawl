@@ -512,7 +512,7 @@ move_again:
         if (victim && _iood_shielded(mon, *victim))
         {
             item_def *shield = victim->shield();
-            if (!shield || !shield_reflects(*shield))
+            if ((!shield || !shield_reflects(*shield)) && !victim->reflection())
             {
                 if (victim->is_player())
                     mprf("You block %s.", mon.name(DESC_THE, true).c_str());
