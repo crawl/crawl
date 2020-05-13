@@ -924,7 +924,7 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
 #if TAG_MAJOR_VERSION == 34
         if (type == ARM_PLATE_ARMOUR && !strict)
             return true;
-        // deliberate fall-through
+        return slot == EQ_CLOAK;
     case SPARM_INVISIBILITY:
         return (slot == EQ_CLOAK && !strict) || type == ARM_SCARF;
 #endif
