@@ -1016,10 +1016,10 @@ INT:     3
 MAGIC:   2
 
 NAME:     brooch of Shielding
-OBJ:      OBJ_JEWELLERY/AMU_REFLECTION
+OBJ:      OBJ_JEWELLERY/AMU_GUARDIAN_SPIRIT
 COLOUR:   ETC_MAGIC
 TILE:     urand_brooch_of_shielding
-PLUS:     +8
+SH:       +8
 
 ENUM:     RCLOUDS
 NAME:     robe of Clouds
