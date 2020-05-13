@@ -109,7 +109,7 @@ map<pakellas_blueprint_type, pakellas_blueprint_struct> blueprint_list =
     { BLUEPRINT_PERFECT_SHOT, _base_blueprint("Deadly Accuracy", "Missiles hit 100%.", "acc+" )},
     { BLUEPRINT_CLOUD, _prerequire_blueprint("Cloud Trail", "Missile leaves a cloud trail.", "cloud",
                                 100,
-                                {BLUEPRINT_ELEMENTAL_FIRE, BLUEPRINT_ELEMENTAL_COLD, BLUEPRINT_ELEMENTAL_ELEC, BLUEPRINT_ELEMENTAL_EARTH, BLUEPRINT_CHAOS},
+                                {BLUEPRINT_ELEMENTAL_FIRE, BLUEPRINT_ELEMENTAL_COLD, BLUEPRINT_ELEMENTAL_ELEC, BLUEPRINT_CHAOS},
                                 {})},
     { BLUEPRINT_DEBUF_SLOW, _base_blueprint("Slow", "Slow target with magic resistance check", "slow" )},
     { BLUEPRINT_DEBUF_BLIND, _base_blueprint("Blind", "Blind target with Hit Dice check.", "blind" )},
@@ -416,22 +416,26 @@ bool pakellas_upgrade()
             CrawlVector& available_sacrifices = you.props[AVAILABLE_ROD_UPGRADE_KEY].get_vector();
             int _upgrade = you.props[PAKELLAS_UPGRADE_ON].get_vector().get_value(keyin).get_int();
             
-            int num_ = (_upgrade == BLUEPRINT_HEAVILY_MODIFIED) ? 2 : 1;
-
+            bool heavily_mod_ = (_upgrade == BLUEPRINT_HEAVILY_MODIFIED);
+            vector<string> add_string;
+            int num_ = heavily_mod_ ? 2 : 1;
 
             while (num_ > 0) {
                 if (_upgrade == BLUEPRINT_MORE_ENCHANT) {
                     _enchant_rod(rod_, false, true);
+                    add_string.push_back(blueprint_list[(pakellas_blueprint_type)_upgrade].name);
                     num_--;
                 }
                 else if (_upgrade == BLUEPRINT_BATTERY_UP) {
                     _enchant_rod(rod_, true, true);
                     _enchant_rod(rod_, true, true);
                     _enchant_rod(rod_, true, true);
+                    add_string.push_back(blueprint_list[(pakellas_blueprint_type)_upgrade].name);
                     num_--;
                 }
                 else if (_upgrade != BLUEPRINT_HEAVILY_MODIFIED) {
                     available_sacrifices.push_back(_upgrade);
+                    add_string.push_back(blueprint_list[(pakellas_blueprint_type)_upgrade].name);
                     num_--;
                 }
 
@@ -440,7 +444,9 @@ bool pakellas_upgrade()
                     _upgrade = *random_choose_weighted(upgrades);
                 }
             }
-            
+            if (heavily_mod_) {
+                mprf("upgrade random buleprint : %s, %s", add_string[0].c_str(), add_string[1].c_str());
+            }
 
         }
 
