@@ -1459,6 +1459,9 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         mon->ghost_demon_init();
     }
 
+    if (mons_class_flag(mg.cls, M_SOMETIMES_NEUTRAL) && one_chance_in(4))
+        mon->attitude = ATT_NEUTRAL;
+
     tile_init_props(mon);
 
 #ifndef DEBUG_DIAGNOSTICS

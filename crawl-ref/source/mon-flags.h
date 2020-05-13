@@ -172,6 +172,9 @@ enum monclass_flag_type : uint64_t
 
     /// uses they/them pronouns
     M_GENDER_NEUTRAL    = BIT(57),
+
+    /// (for uniques) sometimes generate with neutral attitude
+    M_SOMETIMES_NEUTRAL = BIT(58),
 };
 DEF_BITFIELD(monclass_flags_t, monclass_flag_type);
 
