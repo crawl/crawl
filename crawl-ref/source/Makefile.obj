@@ -194,6 +194,7 @@ player-reacts.o \
 player-stats.o \
 player.o \
 potion.o \
+precision-menu.o \
 prompt.o \
 quiver.o \
 randbook.o \
