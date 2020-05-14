@@ -1345,10 +1345,6 @@ NSUBST:   . = 6:1 / 3:2 / 1:34 / 4 = 4 / 2 = 42 / 6 = 14...
 SUBVAULT: A : elf_blade_entry
 SUBST:    A : x"", ' = .
 CLEAR:    "
-veto {{
-  return crawl.game_started()
-         and (dgn.br_exists("Blade"))
-}}
 MAP
                                 "
                                 "
@@ -1415,10 +1411,6 @@ NSUBST:   . = 6:1 / 3:2 / 1:34 / 4 = 4 / 2 = 42 / 6 = 14...
 SUBVAULT: A : elf_blade_entry
 SUBST:    A : x"", ' = .
 CLEAR:    "
-veto {{
-  return crawl.game_started()
-         and (dgn.br_exists("Blade"))
-}}
 MAP
                                   "
                                   "
@@ -1451,16 +1443,6 @@ xccF-.........5.........-Fcc             ccF-.........6.........-Fccx
 xcccc--EE-EE--E--EE--EE-cccc             cccc-EE--EE--E--EE-EE--ccccx
 xccccccccccccccccccccccccccc             cccccccccccccccccccccccccccx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxx             xxxxxxxxxxxxxxxxxxxxxxxxxxxx
-ENDMAP
-
-NAME:     elven_hall_of_blades_dummy
-# Not tagged 'dummy' because then the veto doesn't run.
-TAGS:     no_dump
-PLACE:    Elf:2
-ORIENT:   float
-veto {{ return crawl.game_started() and not dgn.br_exists("Blade") }}
-MAP
-.
 ENDMAP
 
 NAME:   mumra_blade_entry_bloodbath
