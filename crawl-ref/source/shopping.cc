@@ -1316,15 +1316,14 @@ bool ShopMenu::process_key(int keyin)
         // type-ID and once you can access the item (by buying it)
         // you have its full ID anyway. Worst case, it won't get
         // noted when you buy it.
+        unwind_var<iflags_t> old_flags(item.flags);
+        if (shoptype_identifies_stock(shop.type))
         {
-            unwind_var<iflags_t> old_flags(item.flags);
-            if (shoptype_identifies_stock(shop.type))
-            {
-                item.flags |= (ISFLAG_IDENT_MASK | ISFLAG_NOTED_ID
-                               | ISFLAG_NOTED_GET);
-            }
-            describe_item(item);
+            item.flags |= (ISFLAG_IDENT_MASK | ISFLAG_NOTED_ID
+                           | ISFLAG_NOTED_GET);
         }
+        describe_item(item);
+
         return true;
     }
     else if (keyin - 'A' >= 0 && keyin - 'A' < (int)items.size())

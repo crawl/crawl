@@ -1649,19 +1649,12 @@ bool AcquireMenu::process_key(int keyin)
         {
             item_def& item(*const_cast<item_def*>(dynamic_cast<AcquireEntry*>(
                 items[letter_to_index(keyin)])->item));
-            // A hack to make the description more useful.
-            // In theory, the user could kill the process at this
-            // point and end up with valid ID for the item.
-            // That's not very useful, though, because it doesn't set
-            // type-ID and once you can access the item (by buying it)
-            // you have its full ID anyway. Worst case, it won't get
-            // noted when you buy it.
-            {
-                unwind_var<iflags_t> old_flags(item.flags);
-                item.flags |= (ISFLAG_IDENT_MASK | ISFLAG_NOTED_ID
-                               | ISFLAG_NOTED_GET);
-                describe_item(item);
-            }
+
+            unwind_var<iflags_t> old_flags(item.flags);
+            item.flags |= (ISFLAG_IDENT_MASK | ISFLAG_NOTED_ID
+                           | ISFLAG_NOTED_GET);
+            describe_item(item);
+
             return true;
         }
         else
