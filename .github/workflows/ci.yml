@@ -78,8 +78,6 @@ jobs:
       - name: Install dependencies
         run: ./deps.py --compiler ${{ matrix.compiler }} --build-opts "${{ matrix.build_opts }}" --debug-opts "${{ matrix.debug }}"
         working-directory: .github/workflows
-      - name: Add ccache to PATH
-        run: echo "::add-path::/usr/lib/ccache"
       - name: Cache compilation
         uses: actions/cache@v1
         with:
@@ -91,24 +89,8 @@ jobs:
             ccache-linux-${{ matrix.compiler }}-${{ matrix.tag_upgrade }}-${{ matrix.build_opts }}-
             ccache-linux-${{ matrix.compiler }}-${{ matrix.tag_upgrade }}-
             ccache-linux-${{ matrix.compiler }}-
-      # ccache uses ~110mb to store the output from a single crawl compile
-      # (including submodules) (when compressed)
-      - name: Configure ccache
-        run: |
-          mkdir -p ~/.ccache
-          cat >~/.ccache/ccache.conf <<EOF
-          compression = true
-          compression_level = 9
-          log_file = /tmp/ccache.log
-          max_size = 150M
-          EOF
-      - name: Display ccache configuration
-        run: |
-          set -x
-          ccache -s
-          ls -l /usr/lib/ccache
-          which cc
-          cc --version
+      - name: Setup ccache
+        uses: alexjurkiewicz/setup-ccache@master
       - name: Run tag upgrade scripts
         if: matrix.tag_upgrade == true
         run: |
@@ -157,10 +139,7 @@ jobs:
           git -c "http.extraheader=$auth_header" -c protocol.version=2 submodule update --init --force --recursive --depth=1
       - name: Install Dependencies
         run: |
-          brew install ccache
           sudo pip3 install PyYAML
-      - name: Add ccache to PATH
-        run: echo "::add-path::/usr/local/opt/ccache/libexec"
       - name: Cache compilation
         uses: actions/cache@v1
         with:
@@ -169,21 +148,8 @@ jobs:
           restore-keys: |
             ccache-macos-clang-${{ matrix.build_type }}
             ccache-macos-clang
-      # ccache uses ~110mb to store the output from a single crawl compile
-      # (including submodules) (when compressed)
-      - name: Configure ccache
-        run: |
-          mkdir -p ~/.ccache
-          cat >~/.ccache/ccache.conf <<EOF
-          compression = true
-          compression_level = 9
-          log_file = /tmp/ccache.log
-          max_size = 150M
-          EOF
-      - name: Display ccache configuration
-        run: |
-          ccache -s
-          ls -l /usr/local/opt/ccache/libexec
+      - name: Setup ccache
+        uses: alexjurkiewicz/setup-ccache@master
       - run: make -j$(sysctl -n hw.ncpu) mac-app-${{ matrix.build_type }} ${{matrix.build_opts }}
         working-directory: crawl-ref/source
       - name: Print ccache stats
@@ -231,8 +197,6 @@ jobs:
       - name: Install dependencies
         run: ./deps.py --crosscompile
         working-directory: .github/workflows
-      - name: Add ccache to PATH
-        run: echo "::add-path::/usr/lib/ccache"
       - name: Cache compilation
         uses: actions/cache@v1
         with:
@@ -241,21 +205,8 @@ jobs:
           restore-keys: |
             ccache-mingw64-${{ matrix.build_type }}
             ccache-mingw64
-      # ccache uses ~110mb to store the output from a single crawl compile
-      # (including submodules) (when compressed)
-      - name: Configure ccache
-        run: |
-          mkdir -p ~/.ccache
-          cat >~/.ccache/ccache.conf <<EOF
-          compression = true
-          compression_level = 9
-          log_file = /tmp/ccache.log
-          max_size = 150M
-          EOF
-      - name: Display ccache configuration
-        run: |
-          ccache -s
-          ls -l /usr/lib/ccache
+      - name: Setup ccache
+        uses: alexjurkiewicz/setup-ccache@master
       - run: make -j$(nproc) CROSSHOST=i686-w64-mingw32 package-windows-${{ matrix.build_type }}
         working-directory: crawl-ref/source
       - name: Print ccache stats
@@ -306,8 +257,6 @@ jobs:
       - name: Install dependencies
         run: ./deps.py --coverage
         working-directory: .github/workflows
-      - name: Add ccache to PATH
-        run: echo "::add-path::/usr/lib/ccache"
       - name: Cache compilation
         uses: actions/cache@v1
         with:
@@ -315,21 +264,8 @@ jobs:
           key: ccache-catch2
           restore-keys: |
             ccache-catch2
-      # ccache uses ~110mb to store the output from a single crawl compile
-      # (including submodules) (when compressed)
-      - name: Configure ccache
-        run: |
-          mkdir -p ~/.ccache
-          cat >~/.ccache/ccache.conf <<EOF
-          compression = true
-          compression_level = 9
-          log_file = /tmp/ccache.log
-          max_size = 150M
-          EOF
-      - name: Display ccache configuration
-        run: |
-          ccache -s
-          ls -l /usr/lib/ccache
+      - name: Setup ccache
+        uses: alexjurkiewicz/setup-ccache@master
       - run: make -j$(nproc) catch2-tests
         working-directory: crawl-ref/source
       - name: Print ccache stats
