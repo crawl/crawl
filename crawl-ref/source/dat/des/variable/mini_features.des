@@ -1354,7 +1354,7 @@ ENDMAP
 
 NAME:  abandoned_shop
 TAGS:  transparent extra allow_dup decor
-DEPTH: D:4-, Depths, Orc, Elf, Shoals, Snake, Forest
+DEPTH: D:4-, Depths, Orc, Elf, Shoals, Snake
 KFEAT: O = abandoned_shop
 MAP
 O

@@ -146,7 +146,7 @@
   local avatar =
     "slime creature hp:10000 hd:100 name:The_Unspeakable " ..
     "n_rpl col:jewel tile:mons_unspeakable generate_awake perm_ench:haste " ..
-    "spells:shadow_creatures.25.natural;airstrike.25.natural;smiting.25.natural;death's_door.25.natural.emergency"
+    "spells:shadow_creatures.25.natural;airstrike.25.natural;smiting.25.natural"
 
   function blood_monster_definitions(e)
     e.kmons("1 = " .. bag_of_meat .. "")

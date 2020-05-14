@@ -56,7 +56,7 @@ ENDMAP
 # Regular vaults for non-dungeon branches.
 #
 NAME: dummy_balancer_other
-DEPTH: Orc, Elf, Lair, Snake, Shoals, Swamp, Slime, Vaults, Crypt, Dis, Geh, Tar, Coc, Forest, Spider, Abyss
+DEPTH: Orc, Elf, Lair, Snake, Shoals, Swamp, Slime, Vaults, Crypt, Dis, Geh, Tar, Coc, Spider, Abyss
 # Vaults tagged "dummy" are no-ops when the dungeon builder is looking for maps
 # by depth.
 TAGS: dummy
@@ -70,7 +70,7 @@ ENDMAP
 # Extra vaults for non-dungeon branches.
 #
 NAME: dummy_balancer_extra
-DEPTH: Orc, Elf, Lair, Snake, Shoals, Swamp, Slime, Vaults, Crypt, Dis, Geh, Tar, Coc, Forest, Spider, Abyss, Zot
+DEPTH: Orc, Elf, Lair, Snake, Shoals, Swamp, Slime, Vaults, Crypt, Dis, Geh, Tar, Coc,  Spider, Abyss, Zot
 TAGS: dummy allow_dup extra
 ORIENT: float
 WEIGHT: 100
