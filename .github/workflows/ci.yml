@@ -104,8 +104,11 @@ jobs:
           EOF
       - name: Display ccache configuration
         run: |
+          set -x
           ccache -s
           ls -l /usr/lib/ccache
+          which cc
+          cc --version
       - name: Run tag upgrade scripts
         if: matrix.tag_upgrade == true
         run: |
