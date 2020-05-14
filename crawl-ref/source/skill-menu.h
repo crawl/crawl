@@ -138,7 +138,7 @@ public:
     SkillMenu();
 
     void clear_flag(int flag);
-    void init(int flag, int region_height);
+    void init(int region_height);
     void clear() override;
     bool is_set(int flag) const;
     void set_flag(int flag);
@@ -189,7 +189,6 @@ private:
     skill_state m_skill_backup;
 
     SkillMenuEntry* find_entry(skill_type sk);
-    void init_flags();
     void init_button_row();
     void init_title();
     void init_switches();

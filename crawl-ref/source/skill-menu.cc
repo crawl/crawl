@@ -840,11 +840,8 @@ void SkillMenu::finish_experience(bool experience_change)
     }
 }
 
-void SkillMenu::init(int flag, int region_height)
+void SkillMenu::init(int region_height)
 {
-    m_flags = flag;
-    init_flags();
-
     init_experience();
 
 #ifdef USE_TILE_LOCAL
@@ -993,7 +990,6 @@ void SkillMenu::clear()
     m_middle_button = nullptr;
     m_clear_targets_button = nullptr;
     m_skill_backup = skill_state();
-    m_flags = 0;
 }
 
 //Public methods
@@ -1264,26 +1260,30 @@ SkillMenuEntry* SkillMenu::find_entry(skill_type sk)
     return nullptr;
 }
 
-void SkillMenu::init_flags()
+int _skill_menu_initial_flags()
 {
+    int flags = 0;
+
     if (crawl_state.game_is_hints_tutorial())
-        set_flag(SKMF_SIMPLE);
+        flags |= SKMF_SIMPLE;
     else
-        set_flag(SKMF_APTITUDE);
+        flags |= SKMF_APTITUDE;
 
     for (unsigned int i = 0; i < NUM_SKILLS; ++i)
     {
         skill_type type = skill_type(i);
         if (you.skill(type, 10) > you.skill(type, 10, true))
-            set_flag(SKMF_ENHANCED);
+            flags |= SKMF_ENHANCED;
         else if (you.skill(type, 10) < you.skill(type, 10, true))
-            set_flag(SKMF_REDUCED);
+            flags |= SKMF_REDUCED;
     }
 
     // You might be drained by a small enough amount to not affect the
     // rounded numbers.
     if (you.attribute[ATTR_XP_DRAIN])
-        set_flag(SKMF_REDUCED);
+        flags |= SKMF_REDUCED;
+
+    return flags;
 }
 
 void SkillMenu::init_title()
@@ -1751,7 +1751,7 @@ void SkillMenu::set_links()
 class UISkillMenu : public Widget
 {
 public:
-    UISkillMenu(int _flag) : flag(_flag) {};
+    UISkillMenu() {};
     ~UISkillMenu() {};
 
     virtual void _render() override;
@@ -1760,9 +1760,6 @@ public:
 #ifdef USE_TILE_LOCAL
     virtual bool on_event(const Event& ev) override;
 #endif
-
-protected:
-    int flag;
 };
 
 SizeReq UISkillMenu::_get_preferred_size(Direction dim, int /*prosp_width*/)
@@ -1791,7 +1788,7 @@ SizeReq UISkillMenu::_get_preferred_size(Direction dim, int /*prosp_width*/)
 void UISkillMenu::_allocate_region()
 {
     skm.exit(true);
-    skm.init(flag, m_region.height);
+    skm.init(m_region.height);
 }
 
 void UISkillMenu::_render()
@@ -1860,6 +1857,9 @@ void skill_menu(int flag, int exp)
         return;
     }
 
+    skm.clear_flag(~0);
+    skm.set_flag(flag | _skill_menu_initial_flags());
+
     unwind_bool xp_gain(crawl_state.simulating_xp_gain, flag & SKMF_EXPERIENCE);
 
     // notify the player again
@@ -1868,7 +1868,7 @@ void skill_menu(int flag, int exp)
     you.exp_available += exp;
 
     bool done = false;
-    auto skill_menu_ui = make_shared<UISkillMenu>(flag);
+    auto skill_menu_ui = make_shared<UISkillMenu>();
     auto popup = make_shared<ui::Popup>(skill_menu_ui);
 
     skill_menu_ui->on_keydown_event([&done, &skill_menu_ui](const KeyEvent& ev) {
@@ -1962,7 +1962,7 @@ void skill_menu(int flag, int exp)
     // position even after skm.init is called again, crashing when the screen
     // size is actually too small; ideally, the skill menu will get rewritten
     // to use the new ui framework; until then, this fixes the crash.
-    skm.init(flag, MIN_LINES);
+    skm.init(MIN_LINES);
 
     // Calling a user lua function here to let players automatically accept
     // the given skill distribution for a potion of experience.
