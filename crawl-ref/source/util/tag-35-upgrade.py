@@ -99,3 +99,5 @@ if __name__ == "__main__":
     _delete_file("dat/des/branches/temple_compat.des")
     _delete_file("dat/des/builder/layout_forest.des")
     _delete_file("dat/des/variable/compat.des")
+
+    _delete_file("dat/species/deprecated-draconian-mottled.yaml")
