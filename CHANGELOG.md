@@ -55,6 +55,9 @@
 - 로드 복구 (iron, clouds, ignition, inaccuracy, shadows)
   - rollback rod (iron, clouds, ignition, inaccuracy, shadows)
   
+- 전기디스크 복구
+  - rollback disc of storms
+  
 - 특이점과 아카식 레코드 마법책 복구
   - rollback singularity and akashic record
   
