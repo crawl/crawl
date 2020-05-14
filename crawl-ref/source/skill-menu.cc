@@ -1057,14 +1057,8 @@ bool SkillMenu::do_skill_enabled_check()
     return true;
 }
 
-bool SkillMenu::exit(bool just_reset)
+bool SkillMenu::exit()
 {
-    if (just_reset)
-    {
-        finish_experience(false);
-        clear();
-        return true;
-    }
     if (crawl_state.seen_hups)
     {
         clear();
@@ -1787,7 +1781,9 @@ SizeReq UISkillMenu::_get_preferred_size(Direction dim, int /*prosp_width*/)
 
 void UISkillMenu::_allocate_region()
 {
-    skm.exit(true);
+    skm.finish_experience(false);
+    skm.clear();
+
     skm.init(m_region.height);
 }
 
@@ -1908,11 +1904,11 @@ void skill_menu(int flag, int exp)
             // Fallthrough
             case ' ':
                 // Space and escape exit in any mode.
-                if (skm.exit(false))
+                if (skm.exit())
                     return done = true;
             default:
                 // Don't exit from !experience on random keys.
-                if (!skm.is_set(SKMF_EXPERIENCE) && skm.exit(false))
+                if (!skm.is_set(SKMF_EXPERIENCE) && skm.exit())
                     return done = true;
             }
         }
@@ -1968,7 +1964,7 @@ void skill_menu(int flag, int exp)
     // the given skill distribution for a potion of experience.
     if (skm.is_set(SKMF_EXPERIENCE)
         && clua.callbooleanfn(false, "auto_experience", nullptr)
-        && skm.exit(false))
+        && skm.exit())
     {
         return;
     }
