@@ -38,6 +38,7 @@
 #include "spl-summoning.h"
 #include "state.h"
 #include "stringutil.h"
+#include "pakellas.h"
 #ifdef USE_TILE
 #include "tilepick.h"
 #endif
@@ -1705,6 +1706,25 @@ reach_type monster_info::reach_range() const
 size_type monster_info::body_size() const
 {
     const size_type class_size = mons_class_body_size(base_type);
+
+
+    if (type == MONS_MACHINE_GOLEM) {
+        int size_ = is_blueprint_exist(BLUEPRINT_SIZEUP);
+
+        switch (size_) {
+        case 1:
+            return SIZE_MEDIUM;
+            break;
+        case 2:
+            return SIZE_BIG;
+            break;
+        case 3:
+            return SIZE_GIANT;
+            break;
+        default:
+            break;
+        }
+    }
 
     // Slime creature size is increased by the number merged.
     if (type == MONS_SLIME_CREATURE)

@@ -447,8 +447,29 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
     int power = 0;
 
 
-    if (rod)
+    if (rod) {
         power = 5 + you.skill(SK_EVOCATIONS, 3); // will be adjusted later
+        if (spell == SPELL_PAKELLAS_ROD || spell == SPELL_PAKELLAS_ROD_SUMMON) {
+            power = power * 3 / 2; //scale up. max evo = 127
+            if (you.religion == GOD_PAKELLAS) {
+                power += you.piety / 5; //max 40
+            }
+            item_def* rod_ = nullptr;
+            for (item_def& i : you.inv)
+            {
+                if (i.is_type(OBJ_RODS, ROD_PAKELLAS))
+                {
+                    rod_ = &i;
+                    break;
+                }
+            }
+            if (rod_) {
+                power += rod_->rod_plus * 5; //maybe 30... in +6
+            }
+            if (power > 200)
+                power = 200;
+        }
+    }
     else
     {
         const spschools_type disciplines = get_spell_disciplines(spell);
@@ -2054,6 +2075,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
 
     case SPELL_PAKELLAS_ROD:
         return cast_pakellas_bolt(powc, beam, fail);
+
+    case SPELL_PAKELLAS_ROD_SUMMON:
+        return cast_pakellas_summon(powc, god, fail);
 
     // non-player spells that have a zap, but that shouldn't be called (e.g
     // because they will crash as a player zap).

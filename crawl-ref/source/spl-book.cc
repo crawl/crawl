@@ -24,6 +24,7 @@
 #include "describe-spells.h"
 #include "end.h"
 #include "english.h"
+#include "god-abil.h"
 #include "god-conduct.h"
 #include "god-item.h"
 #include "invent.h"
@@ -34,6 +35,7 @@
 #include "macro.h"
 #include "message.h"
 #include "output.h"
+#include "pakellas.h"
 #include "prompt.h"
 #include "religion.h"
 #include "spl-cast.h"
@@ -143,6 +145,18 @@ static const map<rod_type, spell_type> _rod_spells =
 
 spell_type spell_in_rod(rod_type rod)
 {
+    //spiecal case
+    if (ROD_PAKELLAS == rod) {
+        switch (you.props[PAKELLAS_PROTOTYPE].get_int()) {
+        case 1:
+            return SPELL_PAKELLAS_ROD;
+        case 2:
+            return SPELL_PAKELLAS_ROD_SUMMON;
+        default:
+            break;
+        }
+    }
+
     if (const spell_type * const spl = map_find(_rod_spells, rod))
         return *spl;
     die("unknown rod type %d", rod);

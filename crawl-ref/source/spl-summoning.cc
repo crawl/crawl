@@ -47,6 +47,7 @@
 #include "mon-place.h"
 #include "mon-speak.h"
 #include "options.h"
+#include "pakellas.h"
 #include "player-equip.h"
 #include "player-stats.h"
 #include "prompt.h"
@@ -3342,6 +3343,8 @@ static const map<spell_type, summon_cap> summonsdata =
     { SPELL_GREATER_SERVANT_MAKHLEB,    { 1, 2 } },
     // Rod specials
     { SPELL_WEAVE_SHADOWS,              { 4, 2 } },
+
+    { SPELL_PAKELLAS_ROD_SUMMON,        { 1, 2 } },
 };
 
 bool summons_are_capped(spell_type spell)
@@ -3353,6 +3356,9 @@ bool summons_are_capped(spell_type spell)
 int summons_limit(spell_type spell)
 {
     const summon_cap *cap = map_find(summonsdata, spell);
+    if (cap && spell == SPELL_PAKELLAS_ROD_SUMMON) {
+        return is_blueprint_exist(BLUEPRINT_SUMMON_CAPACITY) + cap->type_cap;
+    }
     return cap ? cap->type_cap : 0;
 }
 
@@ -3400,6 +3406,9 @@ void summoned_monster(const monster *mons, const actor *caster,
         return;
 
     int max_this_time = cap->type_cap;
+    if (cap && spell == SPELL_PAKELLAS_ROD_SUMMON) {
+        max_this_time += is_blueprint_exist(BLUEPRINT_SUMMON_CAPACITY);
+    }
 
     // Cap large abominations and tentacled monstrosities separately
     if (spell == SPELL_SUMMON_HORRIBLE_THINGS)
@@ -3698,4 +3707,56 @@ spret fedhas_grow_oklob(bool fail)
 
     return spret::success;
 
+}
+
+spret cast_pakellas_summon(int pow, god_type god, bool fail)
+{
+    if (otr_stop_summoning_prompt())
+        return spret::abort;
+
+    fail_check();
+
+    mgen_data mdata = _pal_data(MONS_MACHINE_GOLEM, 2 + is_blueprint_exist(BLUEPRINT_SUMMON_TIME) * 2, god, SPELL_PAKELLAS_ROD_SUMMON);
+    mdata.hd = 2 + pow / 8;
+    mdata.hp = 10 + mdata.hd * 5;//1:15  20:110
+
+    int size_up = is_blueprint_exist(BLUEPRINT_SIZEUP);
+    while (size_up) {
+        mdata.hp = mdata.hp * 13 / 10;
+        size_up--;
+    }
+
+    if (is_blueprint_exist(BLUEPRINT_EARTH_SUMMON)) {
+        mdata.hp = mdata.hp * 12 / 10;
+    }
+
+    if (monster* mon = create_monster(mdata))
+    {
+        if (is_blueprint_exist(BLUEPRINT_MAGIC_ENERGY_BOLT)) {
+            int level_ = is_blueprint_exist(BLUEPRINT_MAGIC_ENERGY_BOLT);
+            if (is_blueprint_exist(BLUEPRINT_FIRE_SUMMON)) {
+                mon->spells.emplace_back(level_ ==2 ? SPELL_BOLT_OF_FIRE :SPELL_THROW_FLAME, 50, MON_SPELL_WIZARD);
+            }
+            else if (is_blueprint_exist(BLUEPRINT_COLD_SUMMON)) {
+                mon->spells.emplace_back(level_ == 2 ? SPELL_BOLT_OF_COLD : SPELL_THROW_FROST, 50, MON_SPELL_WIZARD);
+            }
+            else if (is_blueprint_exist(BLUEPRINT_ELEC_SUMMON)) {
+                mon->spells.emplace_back(level_ == 2 ? SPELL_LIGHTNING_BOLT : SPELL_SHOCK, 50, MON_SPELL_WIZARD);
+            }
+            else if (is_blueprint_exist(BLUEPRINT_POISON_SUMMON)) {
+                mon->spells.emplace_back(level_ == 2 ? SPELL_POISON_ARROW : SPELL_STING, 50, MON_SPELL_WIZARD);
+            }
+            else if (is_blueprint_exist(BLUEPRINT_EARTH_SUMMON)) {
+                mon->spells.emplace_back(level_ == 2 ? SPELL_IRON_SHOT : SPELL_STONE_ARROW, 50, MON_SPELL_WIZARD);
+            }
+            else {
+                mon->spells.emplace_back(level_ == 2 ? SPELL_ISKENDERUNS_MYSTIC_BLAST : SPELL_MAGIC_DART, 50, MON_SPELL_WIZARD);
+            }
+            mon->props[CUSTOM_SPELLS_KEY].get_bool() = true;
+        }
+    }
+    else
+        canned_msg(MSG_NOTHING_HAPPENS);
+    invalidate_agrid(true);
+    return spret::success;
 }

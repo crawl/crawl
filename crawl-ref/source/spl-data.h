@@ -4091,6 +4091,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_PAKELLAS_ROD_SUMMON, "Summon Machine",
+    spschool::summoning,
+    spflag::none,
+    4,
+    200,
+    -1, -1,
+    1, 0,
+    TILEG_SUMMON_GUARDIAN_GOLEM,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     spschool::none,
     spflag::testing,

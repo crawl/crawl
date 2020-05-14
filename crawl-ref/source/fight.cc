@@ -37,6 +37,7 @@
 #include "mon-place.h"
 #include "mon-util.h"
 #include "ouch.h"
+#include "pakellas.h"
 #include "player.h"
 #include "prompt.h"
 #include "random-var.h"
@@ -774,6 +775,9 @@ void get_cleave_targets(const actor &attacker, const coord_def& def,
     }
 
     if (weap && item_attack_skill(*weap) == SK_AXES
+            || attacker.is_monster()
+                && attacker.as_monster()->type == MONS_MACHINE_GOLEM
+                && is_blueprint_exist(BLUEPRINT_CLEAVING)
             || attacker.is_player()
                && (you.form == transformation::hydra && you.heads() > 1
                    || you.duration[DUR_CLEAVE]))

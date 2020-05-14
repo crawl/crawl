@@ -24,6 +24,7 @@
 #include "movement.h"
 #include "religion.h"
 #include "stepdown.h"
+#include "pakellas.h"
 #include "terrain.h"
 #include "traps.h"
 #include "travel.h"
@@ -649,6 +650,11 @@ int monster::halo_radius() const
     if (weap && is_unrandom_artefact(*weap, UNRAND_EOS))
         size = 3;
 
+    if (type == MONS_MACHINE_GOLEM &&
+        is_blueprint_exist(BLUEPRINT_HALO)) {
+        return 3;
+    }
+
     if (!(holiness() & MH_HOLY))
         return size;
 
@@ -869,6 +875,11 @@ int monster::antimagic_radius() const
     item_def* weapon = mslot_item(MSLOT_WEAPON);
     if (weapon && is_unrandom_artefact(*weapon, UNRAND_TROG))
         return 3;
+
+    if (type == MONS_MACHINE_GOLEM &&
+        is_blueprint_exist(BLUEPRINT_ANTIMAGIC_AURA)) {
+        return 2;
+    }
 
     return -1;
 }

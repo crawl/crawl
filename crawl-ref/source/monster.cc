@@ -59,6 +59,7 @@
 #include "spl-util.h"
 #include "state.h"
 #include "stringutil.h"
+#include "pakellas.h"
 #include "teleport.h"
 #include "terrain.h"
 #ifdef USE_TILE
@@ -3308,6 +3309,14 @@ int monster::base_armour_class() const
 
     const int base_ac = get_monster_data(type)->AC;
 
+
+    if (type == MONS_MACHINE_GOLEM) {
+        if (is_blueprint_exist(BLUEPRINT_ELEMENTAL_EARTH)) {
+            return base_ac + 5;
+        }
+    }
+
+
     // demonspawn & draconians combine base & class ac values.
     if (mons_is_job(type))
     {
@@ -4172,6 +4181,7 @@ bool monster::airborne() const
               && mslot_item(MSLOT_ARMOUR)->brand == SPARM_FLYING
            || mslot_item(MSLOT_JEWELLERY)
               && mslot_item(MSLOT_JEWELLERY)->is_type(OBJ_JEWELLERY, RING_FLIGHT)
+           || type == MONS_MACHINE_GOLEM && is_blueprint_exist(BLUEPRINT_FLIGHT)
            || has_ench(ENCH_FLIGHT);
 }
 
@@ -5737,6 +5747,10 @@ int monster::action_energy(energy_use_type et) const
     // Change _monster_stat_description in describe.cc if you change this.
     if (type == MONS_SHADOW && invisible())
         move_cost -= 3;
+
+    //jetpac
+    if (type == MONS_MACHINE_GOLEM && is_blueprint_exist(BLUEPRINT_FLIGHT))
+        move_cost -= 5;
 
     // Floundering monsters get the same penalty as the player, except that
     // players get the penalty on entering water, while monsters get the

@@ -71,6 +71,20 @@ static pakellas_blueprint_struct _prerequire_blueprint(const char* name, const c
         exclude
     };
 }
+static pakellas_blueprint_struct _prerequire2_blueprint(const char* name, const char* desc, const char* abbr, int max_level, int additional_mana, int percent, vector<int> pre, vector<int> exclude)
+{
+    return {
+        name,
+        desc,
+        abbr,
+        max_level,
+        additional_mana,
+        percent,
+        pre,
+        exclude
+    };
+}
+
 
 
 
@@ -135,19 +149,69 @@ map<pakellas_blueprint_type, pakellas_blueprint_struct> blueprint_list =
                                 {},
                                 {BLUEPRINT_ELEMENTAL_FIRE, BLUEPRINT_ELEMENTAL_COLD, BLUEPRINT_ELEMENTAL_ELEC, BLUEPRINT_ELEMENTAL_EARTH})},
     //SUMMON
-    { BLUEPRINT_SIZEUP, _base_blueprint("Penetration", "Adds penetration to missiles.", "penet+")},
-    { BLUEPRINT_SUMMON_CAPACITY, _base_blueprint("Penetration", "Adds penetration to missiles.", "penet+")},
-    { BLUEPRINT_MAGIC_ENERGY_BOLT, _base_blueprint("Penetration", "Adds penetration to missiles.", "penet+")},
-    { BLUEPRINT_FIRE_SUMMON, _base_blueprint("Penetration", "Adds penetration to missiles.", "penet+")},
-    { BLUEPRINT_COLD_SUMMON, _base_blueprint("Penetration", "Adds penetration to missiles.", "penet+")},
-    { BLUEPRINT_ELEC_SUMMON, _base_blueprint("Penetration", "Adds penetration to missiles.", "penet+")},
-    { BLUEPRINT_POISON_SUMMON, _base_blueprint("Penetration", "Adds penetration to missiles.", "penet+")},
-    { BLUEPRINT_FLIGHT, _base_blueprint("Penetration", "Adds penetration to missiles.", "penet+")},
-    { BLUEPRINT_SUMMON_SHOT, _base_blueprint("Penetration", "Adds penetration to missiles.", "penet+")},
-    { BLUEPRINT_CLEAVING, _base_blueprint("Penetration", "Adds penetration to missiles.", "penet+")},
-    { BLUEPRINT_HALO, _base_blueprint("Penetration", "Adds penetration to missiles.", "penet+")},
-    { BLUEPRINT_ANTIMAGIC_AURA, _base_blueprint("Penetration", "Adds penetration to missiles.", "penet+")},
-    { BLUEPRINT_CHOATIC_SUMMON, _base_blueprint("Penetration", "Adds penetration to missiles.", "penet+")},
+    { BLUEPRINT_SIZEUP, _base2_blueprint("Size up", "Max hp increased by 30 % and size increased.", "size+",
+                                3,
+                                0,
+                                100)},
+    { BLUEPRINT_SUMMON_CAPACITY, _base2_blueprint("Multiple summon", "Summon limit increased by 1.", "multi+",
+                                4,
+                                0,
+                                100)},
+    { BLUEPRINT_MAGIC_ENERGY_BOLT, _prerequire2_blueprint("Destruction Magic", "Learn weak destruction magic.", "destruction",
+                                2,
+                                0,
+                                100,
+                                {},
+                                {BLUEPRINT_ANTIMAGIC_AURA})},
+    { BLUEPRINT_FIRE_SUMMON, _prerequire_blueprint("Fire Enchantment", "Adds flame to attack. add fire resistance.", "fire",
+                                100,
+                                {},
+                                {BLUEPRINT_COLD_SUMMON, BLUEPRINT_ELEC_SUMMON, BLUEPRINT_POISON_SUMMON, BLUEPRINT_CHOATIC_SUMMON, BLUEPRINT_EARTH_SUMMON})},
+    { BLUEPRINT_COLD_SUMMON, _prerequire_blueprint("Cold Enchantment", "Adds cold to attack. add cold resistance.", "cold",
+                                100,
+                                {},
+                                {BLUEPRINT_FIRE_SUMMON, BLUEPRINT_ELEC_SUMMON, BLUEPRINT_POISON_SUMMON, BLUEPRINT_CHOATIC_SUMMON, BLUEPRINT_EARTH_SUMMON})},
+    { BLUEPRINT_ELEC_SUMMON, _prerequire_blueprint("Elec Enchantment", "Adds elec to attack. add elec resistance.", "elec",
+                                100,
+                                {},
+                                {BLUEPRINT_FIRE_SUMMON, BLUEPRINT_COLD_SUMMON, BLUEPRINT_POISON_SUMMON, BLUEPRINT_CHOATIC_SUMMON, BLUEPRINT_EARTH_SUMMON})},
+    { BLUEPRINT_POISON_SUMMON, _prerequire_blueprint("Poison Enchantment", "Adds a paralyzing poison to attack.", "poison",
+                                100,
+                                {},
+                                {BLUEPRINT_FIRE_SUMMON, BLUEPRINT_COLD_SUMMON, BLUEPRINT_ELEC_SUMMON, BLUEPRINT_CHOATIC_SUMMON, BLUEPRINT_EARTH_SUMMON})},
+    { BLUEPRINT_FLIGHT, _base2_blueprint("Jetpack", "Gain flight, and movement speed increases.", "fly",
+                                1,
+                                0,
+                                100)},
+    { BLUEPRINT_SUMMON_SHOT, _base2_blueprint("Launcher", "Fires at the enemy when summoned.", "bolt",
+                                1,
+                                0,
+                                0)},
+    { BLUEPRINT_CLEAVING, _base2_blueprint("Cleaving", "Gain cleaving.", "cleave",
+                                1,
+                                0,
+                                100)},
+    { BLUEPRINT_HALO, _prerequire_blueprint("Halo", "Get a 3-tile halo.", "halo",
+                                100,
+                                {},
+                                {BLUEPRINT_ANTIMAGIC_AURA}) },
+    { BLUEPRINT_ANTIMAGIC_AURA, _prerequire_blueprint("Antimagic aura", "Get a 2-tile antimagic aura.", "anitmagic",
+                                100,
+                                {},
+                                {BLUEPRINT_MAGIC_ENERGY_BOLT, BLUEPRINT_HALO})},
+    { BLUEPRINT_CHOATIC_SUMMON, _prerequire_blueprint("Chaos", "Adds Choas to attack.", "chaos",
+                                100,
+                                {},
+                                {BLUEPRINT_FIRE_SUMMON, BLUEPRINT_COLD_SUMMON, BLUEPRINT_ELEC_SUMMON, BLUEPRINT_POISON_SUMMON, BLUEPRINT_EARTH_SUMMON})},
+    { BLUEPRINT_EARTH_SUMMON, _prerequire_blueprint("Earth Enchantment", "Adds 5 ac and Max hp increased by 20%.", "earth",
+                                100,
+                                {},
+                                {BLUEPRINT_FIRE_SUMMON, BLUEPRINT_COLD_SUMMON, BLUEPRINT_ELEC_SUMMON, BLUEPRINT_POISON_SUMMON, BLUEPRINT_CHOATIC_SUMMON})},
+    { BLUEPRINT_SUMMON_TIME, _base2_blueprint("Power Efficiency", "Summon time is Increased", "time+",
+                                1,
+                                0,
+                                100)},
+                                                                       
     //ASSIST
     { BLUEPRINT_STATUP_STR, _base_blueprint("Penetration", "Adds penetration to missiles.", "penet+")},
     { BLUEPRINT_STATUP_DEX, _base_blueprint("Penetration", "Adds penetration to missiles.", "penet+")},
@@ -173,7 +237,8 @@ map<pakellas_blueprint_type, pakellas_blueprint_struct> blueprint_list =
                                 100)},
     { BLUEPRINT_BATTLEMAGE, _prerequire_blueprint("Battle Mage", "Increases the damage the rod deals in melee combat.", "melee+",
                                 100,
-                                {BLUEPRINT_ELEMENTAL_FIRE, BLUEPRINT_ELEMENTAL_COLD, BLUEPRINT_ELEMENTAL_ELEC, BLUEPRINT_ELEMENTAL_EARTH, BLUEPRINT_CHAOS},
+                                {BLUEPRINT_ELEMENTAL_FIRE, BLUEPRINT_ELEMENTAL_COLD, BLUEPRINT_ELEMENTAL_ELEC, BLUEPRINT_ELEMENTAL_EARTH, BLUEPRINT_CHAOS,
+                                BLUEPRINT_FIRE_SUMMON, BLUEPRINT_COLD_SUMMON, BLUEPRINT_ELEC_SUMMON, BLUEPRINT_POISON_SUMMON, BLUEPRINT_CHOATIC_SUMMON, BLUEPRINT_EARTH_SUMMON},
                                 {})},
     { BLUEPRINT_MORE_ENCHANT, _base2_blueprint("More Enchant", "Increase 1 enchant, Increase 1 rod capacity.", "statup",
                                 6,
@@ -233,14 +298,14 @@ bool pakellas_prototype()
         clear_messages();
 
         mpr_nojoin(MSGCH_PLAIN, "  [a] - destruction");
-        mpr_nojoin(MSGCH_PLAIN, "  [b] - summoning (not yet)");
+        mpr_nojoin(MSGCH_PLAIN, "  [b] - summoning");
         mpr_nojoin(MSGCH_PLAIN, "  [c] - assist (not yet)");
         mprf(MSGCH_PROMPT, "which one?");
 
         keyin = toalower(get_ch()) - 'a';
 
 
-        if (keyin == 1 || keyin == 2) {
+        if (keyin == 2) {
             continue;
         }
 
@@ -327,6 +392,15 @@ static vector<pair<pakellas_blueprint_type, int>> _get_possible_upgrade()
 
     if (prototype == 1) {
         for (int i = BLUEPRINT_DESTRUCTION_START; i < BLUEPRINT_DESTRUCTION_END; i++) {
+            pakellas_blueprint_type type = (pakellas_blueprint_type)i;
+            if (_check_able_upgrade(type)) {
+                possible_upgrade.emplace_back(type, blueprint_list[type].percent);
+            }
+        }
+    }
+
+    if (prototype == 2) {
+        for (int i = BLUEPRINT_SUMMON_START; i < BLUEPRINT_SUMMON_END; i++) {
             pakellas_blueprint_type type = (pakellas_blueprint_type)i;
             if (_check_able_upgrade(type)) {
                 possible_upgrade.emplace_back(type, blueprint_list[type].percent);
@@ -554,15 +628,22 @@ int get_blueprint_element()
         for (auto upgrade : available_upgrade) {
             switch (upgrade.get_int()) {
             case BLUEPRINT_ELEMENTAL_FIRE:
+            case BLUEPRINT_FIRE_SUMMON:
                 return BLUEPRINT_ELEMENTAL_FIRE;
             case BLUEPRINT_ELEMENTAL_COLD:
+            case BLUEPRINT_COLD_SUMMON:
                 return BLUEPRINT_ELEMENTAL_COLD;
             case BLUEPRINT_ELEMENTAL_ELEC:
+            case BLUEPRINT_ELEC_SUMMON:
                 return BLUEPRINT_ELEMENTAL_ELEC;
             case BLUEPRINT_ELEMENTAL_EARTH:
+            case BLUEPRINT_EARTH_SUMMON:
                 return BLUEPRINT_ELEMENTAL_EARTH;
             case BLUEPRINT_CHAOS:
+            case BLUEPRINT_CHOATIC_SUMMON:
                 return BLUEPRINT_CHAOS;
+            case BLUEPRINT_POISON_SUMMON:
+                return BLUEPRINT_POISON_SUMMON;
             default:
                 break;
             }

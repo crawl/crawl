@@ -53,6 +53,7 @@
 #include "mutant-beast.h"
 #include "notes.h"
 #include "options.h"
+#include "pakellas.h"
 #include "random.h"
 #include "reach-type.h"
 #include "religion.h"
@@ -383,6 +384,19 @@ resists_t get_mons_resists(const monster& m)
         if (subspecies != mon.type)
             resists |= get_mons_class_resists(subspecies);
     }
+    
+    if (mon.type == MONS_MACHINE_GOLEM) {
+        if (is_blueprint_exist(BLUEPRINT_FIRE_SUMMON)) {
+            resists |= MR_RES_FIRE;
+        }
+        else if (is_blueprint_exist(BLUEPRINT_COLD_SUMMON)) {
+            resists |= MR_RES_COLD;
+        }
+        else if (is_blueprint_exist(BLUEPRINT_ELEC_SUMMON)) {
+            resists |= MR_RES_ELEC;
+        }
+    }
+
 
     if (mon.props.exists(MUTANT_BEAST_FACETS))
         for (auto facet : mon.props[MUTANT_BEAST_FACETS].get_vector())
@@ -1928,6 +1942,37 @@ static mon_attack_def _hepliaklqana_ancestor_attack(const monster &mon,
     return { AT_HIT, AF_PLAIN, dam * dam_mult };
 }
 
+static mon_attack_def _machine_golem_attack(const monster& mon,
+    int attk_number)
+{
+    if (attk_number != 0)
+        return { };
+
+    const int HD = mon.get_experience_level();
+    const int dam = HD*4/3 + 2; // 3 at 1 HD, 38 at 27 HD
+
+    attack_flavour _flavour = AF_PLAIN;
+
+
+    if (is_blueprint_exist(BLUEPRINT_FIRE_SUMMON)) {
+        _flavour = AF_FIRE;
+    }
+    else if (is_blueprint_exist(BLUEPRINT_COLD_SUMMON)) {
+        _flavour = AF_COLD;
+    }
+    else if (is_blueprint_exist(BLUEPRINT_ELEC_SUMMON)) {
+        _flavour = AF_ELEC;
+    }
+    else if (is_blueprint_exist(BLUEPRINT_CHOATIC_SUMMON)) {
+        _flavour = AF_CHAOTIC;
+    }
+    else if (is_blueprint_exist(BLUEPRINT_POISON_SUMMON)) {
+        _flavour = AF_POISON_PARALYSE;
+    }
+
+    return { AT_HIT, _flavour, dam };
+}
+
 /** Get the attack type, attack flavour and damage for a monster attack.
  *
  * @param mon The monster to look at.
@@ -1966,6 +2011,8 @@ mon_attack_def mons_attack_spec(const monster& m, int attk_number,
         return _mutant_beast_attack(mon, attk_number);
     else if (mons_is_hepliaklqana_ancestor(mc))
         return _hepliaklqana_ancestor_attack(mon, attk_number);
+    else if (mc == MONS_MACHINE_GOLEM)
+        return _machine_golem_attack(mon, attk_number);
     else if (mons_is_demonspawn(mc) && attk_number != 0)
         mc = draco_or_demonspawn_subspecies(mon);
 
