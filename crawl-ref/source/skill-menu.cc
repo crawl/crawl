@@ -798,8 +798,9 @@ SkillMenu::SkillMenu() : PrecisionMenu(), m_min_coord(), m_max_coord(),
 
 void SkillMenu::init_experience()
 {
-    if (is_set(SKMF_EXPERIENCE) && !m_skill_backup.state_saved())
+    if (is_set(SKMF_EXPERIENCE))
     {
+        ASSERT(!m_skill_backup.state_saved());
         m_skill_backup.save();
         you.auto_training = false;
         reset_training();
@@ -824,8 +825,9 @@ void SkillMenu::init_experience()
  */
 void SkillMenu::finish_experience()
 {
-    if (is_set(SKMF_EXPERIENCE) && m_skill_backup.state_saved())
+    if (is_set(SKMF_EXPERIENCE))
     {
+        ASSERT(m_skill_backup.state_saved());
         {
             redraw_screen();
             unwind_bool change_xp_for_real(crawl_state.simulating_xp_gain, false);
@@ -838,8 +840,6 @@ void SkillMenu::finish_experience()
 
 void SkillMenu::init(int region_height)
 {
-    init_experience();
-
 #ifdef USE_TILE_LOCAL
     const int char_height = tiles.get_crt_font()->char_height();
     if (Options.tile_menu_icons)
@@ -985,7 +985,6 @@ void SkillMenu::clear()
     m_help_button = nullptr;
     m_middle_button = nullptr;
     m_clear_targets_button = nullptr;
-    m_skill_backup = skill_state();
 }
 
 //Public methods
@@ -1056,18 +1055,12 @@ bool SkillMenu::do_skill_enabled_check()
 bool SkillMenu::exit()
 {
     if (crawl_state.seen_hups)
-    {
-        clear();
         return true;
-    }
 
     // Before we exit, make sure there's at least one skill enabled.
     if (!do_skill_enabled_check())
         return false;
 
-    finish_experience();
-
-    clear();
     return true;
 }
 
@@ -1851,6 +1844,8 @@ void skill_menu(int flag, int exp)
     skm.clear_flag(~0);
     skm.set_flag(flag | _skill_menu_initial_flags());
 
+    skm.init_experience();
+
     unwind_bool xp_gain(crawl_state.simulating_xp_gain, flag & SKMF_EXPERIENCE);
 
     // notify the player again
@@ -1966,5 +1961,6 @@ void skill_menu(int flag, int exp)
 
     ui::run_layout(move(popup), done);
 
+    skm.finish_experience();
     skm.clear();
 }
