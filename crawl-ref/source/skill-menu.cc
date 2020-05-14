@@ -821,15 +821,11 @@ void SkillMenu::init_experience()
  * resolve the player's experience state at the end of the skill menu, dealing
  * with any experience applied to this skill menu instance (e.g. by a potion
  * of experience).
- *
- * @param experience_change whether to actually do the experience change, or
- *                          just do cleanup.
  */
-void SkillMenu::finish_experience(bool experience_change)
+void SkillMenu::finish_experience()
 {
     if (is_set(SKMF_EXPERIENCE) && m_skill_backup.state_saved())
     {
-        if (experience_change)
         {
             redraw_screen();
             unwind_bool change_xp_for_real(crawl_state.simulating_xp_gain, false);
@@ -1069,7 +1065,7 @@ bool SkillMenu::exit()
     if (!do_skill_enabled_check())
         return false;
 
-    finish_experience(true);
+    finish_experience();
 
     clear();
     return true;
@@ -1781,7 +1777,6 @@ SizeReq UISkillMenu::_get_preferred_size(Direction dim, int /*prosp_width*/)
 
 void UISkillMenu::_allocate_region()
 {
-    skm.finish_experience(false);
     skm.clear();
 
     skm.init(m_region.height);

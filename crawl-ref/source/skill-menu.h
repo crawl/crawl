@@ -162,7 +162,7 @@ public:
     void toggle(skill_menu_switch sw);
 
     void init_experience();
-    void finish_experience(bool experience_change);
+    void finish_experience();
 
 private:
     MenuFreeform*        m_ff;
