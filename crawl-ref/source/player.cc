@@ -5021,8 +5021,6 @@ player::player()
     where_are_you    = BRANCH_DUNGEON;
     depth            = 1;
 
-    branch_stairs.init(0);
-
     religion         = GOD_NO_GOD;
     jiyva_second_name.clear();
     piety            = 0;

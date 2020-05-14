@@ -626,7 +626,6 @@ void dgn_flush_map_memory()
     you.uniq_map_names_abyss.clear();
     you.vault_list.clear();
     you.branches_left.reset();
-    you.branch_stairs.init(0);
     you.zigs_completed = 0;
     you.zig_max = 0;
     you.exploration = 0;

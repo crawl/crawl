@@ -250,8 +250,6 @@ public:
     branch_type where_are_you;
     int depth;
 
-    FixedVector<uint8_t, 30> branch_stairs;
-
     god_type religion;
     string jiyva_second_name;       // Random second name of Jiyva
     uint8_t piety;
