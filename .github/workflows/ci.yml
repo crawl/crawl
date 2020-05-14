@@ -104,9 +104,12 @@ jobs:
         working-directory: crawl-ref/source
       - run: make -j$(nproc) ${{ matrix.build_opts }} ${{ matrix.debug }}
         working-directory: crawl-ref/source
-      # - if: matrix.debug == 'FULLDEBUG=1' && matrix.build_opts != 'TILES=1'
-      #   run: make test
-      #   working-directory: crawl-ref/source
+      # Only run `make test` with TAG_MAJOR_VERSION 34 (it fails with 35).
+      - if: matrix.debug == 'FULLDEBUG=1' && matrix.build_opts == '' && matrix.tag_upgrade == false
+        run: make -j$(nproc) ${{ matrix.build_opts }} ${{ matrix.debug }} test
+        working-directory: crawl-ref/source
+        env:
+          TERM: dumb
       - name: Print ccache stats
         run: ccache -s
 
