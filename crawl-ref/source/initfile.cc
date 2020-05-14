@@ -13,6 +13,9 @@
 
 #include "initfile.h"
 
+#include "json.h"
+#include "json-wrapper.h"
+
 #include <algorithm>
 #include <cinttypes>
 #include <cctype>
@@ -3913,6 +3916,7 @@ enum commandline_option_type
     CLO_NO_THROTTLE,
     CLO_PLAYABLE_JSON, // JSON metadata for species, jobs, combos.
     CLO_SAVE_JSON,
+    CLO_GAMETYPES_JSON,
     CLO_EDIT_BONES,
 #ifdef USE_TILE_WEB
     CLO_WEBTILES_SOCKET,
@@ -3932,7 +3936,7 @@ static const char *cmd_ops[] =
     "extra-opt-first", "extra-opt-last", "sprint-map", "edit-save",
     "print-charset", "tutorial", "wizard", "explore", "no-save", "gdb",
     "no-gdb", "nogdb", "throttle", "no-throttle", "playable-json",
-    "save-json", "bones",
+    "save-json", "gametypes-json", "bones",
 #ifdef USE_TILE_WEB
     "webtiles-socket", "await-connection", "print-webtiles-options",
 #endif
@@ -4568,6 +4572,44 @@ static void _print_webtiles_options()
 }
 #endif
 
+static string _gametype_to_clo(game_type g)
+{
+    switch (g)
+    {
+    case GAME_TYPE_CUSTOM_SEED:
+        return cmd_ops[CLO_SEED];
+    case GAME_TYPE_TUTORIAL:
+        return cmd_ops[CLO_TUTORIAL];
+    case GAME_TYPE_ARENA:
+        return cmd_ops[CLO_ARENA];
+    case GAME_TYPE_SPRINT:
+        return cmd_ops[CLO_SPRINT];
+    case GAME_TYPE_HINTS: // no CLO?
+    case GAME_TYPE_NORMAL:
+    default:
+        return "";
+    }
+}
+
+static void _print_gametypes_json()
+{
+    JsonWrapper json(json_mkobject());
+
+    for (int i = 0; i < NUM_GAME_TYPE; ++i)
+    {
+        auto gt = static_cast<game_type>(i);
+        string c = _gametype_to_clo(gt);
+        if (c != "")
+            c = "-" + c;
+        if (c != "" || gt == GAME_TYPE_NORMAL)
+        {
+            json_append_member(json.node, gametype_to_str(gt).c_str(),
+                                                        json_mkstring(c));
+        }
+    }
+    fprintf(stdout, "%s", json.to_string().c_str());
+}
+
 static bool _check_extra_opt(char* _opt)
 {
     string opt(_opt);
@@ -4983,10 +5025,16 @@ bool parse_args(int argc, char **argv, bool rc_only)
             end(0);
 
         case CLO_SAVE_JSON:
+            // Always parse.
             if (!next_is_param)
                 return false;
 
             print_save_json(next_arg);
+            end(0);
+
+        case CLO_GAMETYPES_JSON:
+            // Always parse.
+            _print_gametypes_json();
             end(0);
 
         case CLO_EDIT_SAVE:
