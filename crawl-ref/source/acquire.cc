@@ -675,6 +675,8 @@ static int _acquirement_misc_subtype(bool /*divine*/, int & /*quantity*/)
         // The player never needs more than one.
         {MISC_LIGHTNING_ROD,
             (you.seen_misc[MISC_LIGHTNING_ROD] ?      0 : 17)},
+	{MISC_DISC_OF_STORMS,
+            (you.seen_misc[MISC_DISC_OF_STORMS] ?     0 : 17)},
         {MISC_LAMP_OF_FIRE,
             (you.seen_misc[MISC_LAMP_OF_FIRE] ?       0 : 17)},
         {MISC_PHIAL_OF_FLOODS,

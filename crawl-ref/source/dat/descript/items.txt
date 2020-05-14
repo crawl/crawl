@@ -398,6 +398,11 @@ dire flail
 
 A flail with long spikes and a heavy head.
 %%%%
+disc of storms
+
+A crackling disc which can unleash a destructive storm of electricity. Its
+effectiveness greatly improves in the hands of one skilled in Evocations.
+%%%%
 double sword
 
 A magical weapon with two razor-sharp blades.

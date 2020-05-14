@@ -784,6 +784,7 @@ fan FAN
 bottle BOTTLE
 box BOX
 crystal CRYSTAL
+disc DISC
 horn HORN
 lantern LANTERN
 orb ORB

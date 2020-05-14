@@ -996,6 +996,7 @@ misc_stone MISC_STONE_OF_TREMORS
 misc_stone_inert MISC_STONE_OF_TREMORS_INERT
 misc_phial MISC_PHIAL_OF_FLOODS
 misc_phial_inert MISC_PHIAL_OF_FLOODS_INERT
+misc_disc MISC_DISC_OF_STORMS
 misc_lightning_rod MISC_LIGHTNING_ROD
 misc_lightning_rod_inert MISC_LIGHTNING_ROD_INERT
 %rim 1
