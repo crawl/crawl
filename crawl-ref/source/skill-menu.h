@@ -208,3 +208,6 @@ private:
     void set_links();
     bool do_skill_enabled_check();
 };
+
+/* Public for testing purposes only: do not use elsewhere */
+const formatted_string _skill_training_label(skill_type skill);

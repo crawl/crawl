@@ -520,14 +520,19 @@ void SkillMenuEntry::set_title()
     }
 }
 
+const formatted_string _skill_training_label(skill_type skill)
+{
+    formatted_string out;
+    out.textcolour(BROWN);
+    if (you.training[skill])
+        out.cprintf("%2d%%", you.training[skill]);
+    return out;
+}
+
 void SkillMenuEntry::set_training()
 {
     m_progress->set_editable(false);
-
-    if (!you.training[m_sk])
-        m_progress->set_text("");
-    else
-        m_progress->set_text(make_stringf("%2d%%", you.training[m_sk]));
+    m_progress->set_text(_skill_training_label(m_sk));
     m_progress->set_fg_colour(BROWN);
 }
 
