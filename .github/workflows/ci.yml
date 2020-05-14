@@ -122,6 +122,8 @@ jobs:
       - if: matrix.debug == 'FULLDEBUG=1'
         run: make test
         working-directory: crawl-ref/source
+        env:
+          TERM: dumb
       - name: Print ccache stats
         run: ccache -s
 
