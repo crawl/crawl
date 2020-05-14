@@ -1294,7 +1294,7 @@ static unique_ptr<targeter> _spell_targeter(spell_type spell, int pow,
     case SPELL_PAKELLAS_ROD:
     {
         return make_unique<targeter_beam>(&you, range, is_blueprint_exist(BLUEPRINT_PENTAN) ?ZAP_BOLT_OF_MAGMA: ZAP_MAGIC_DART, pow,
-            0, 0);
+            is_blueprint_exist(BLUEPRINT_BOME), is_blueprint_exist(BLUEPRINT_BOME));
     }
     default:
         break;
