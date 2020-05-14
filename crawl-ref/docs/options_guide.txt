@@ -1031,7 +1031,7 @@ auto_butcher = true
         full', 'full', 'satiated', 'hungry', 'very hungry', or 'near starving')
         to enable automatic butchery only when at that state or hungrier.
 
-auto_butcher_max_chunks = 10
+auto_butcher_max_chunks = 0
         If this is set to a nonzero value, automatic butchering will not
         be done if you have more than this many chunks in your inventory.
 
