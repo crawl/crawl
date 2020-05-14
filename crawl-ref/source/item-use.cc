@@ -3137,13 +3137,9 @@ void read_scroll(item_def& scroll)
             mpr("Anything you acquired here would fall and be lost!");
             cancel_scroll = true;
             break;
-            // yes, we cancel out even if the scroll wasn't known beforehand.
-            // there's no plausible abuse of this, and it's much better to
-            // never have to worry about "am i over dangerous terrain?" while
-            // IDing scrolls. (Not an interesting ID game mechanic!)
         }
 
-        run_uncancel(UNC_ACQUIREMENT, AQ_SCROLL);
+        cancel_scroll = !acquirement_menu();
         break;
 
     case SCR_FEAR:
@@ -3370,7 +3366,6 @@ void read_scroll(item_def& scroll)
     }
 
     if (!alreadyknown
-        && which_scroll != SCR_ACQUIREMENT
         && which_scroll != SCR_BRAND_WEAPON
         && which_scroll != SCR_ENCHANT_WEAPON
         && which_scroll != SCR_IDENTIFY

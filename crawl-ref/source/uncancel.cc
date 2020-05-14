@@ -43,11 +43,6 @@ void run_uncancels()
 
         switch (you.uncancel[act].first)
         {
-        case UNC_ACQUIREMENT:
-            if (!acquirement_menu() && crawl_state.seen_hups)
-                return;
-            break;
-
         case UNC_DRAW_THREE:
             if (!draw_three() && crawl_state.seen_hups)
                 return;
@@ -60,9 +55,10 @@ void run_uncancels()
 
 #if TAG_MAJOR_VERSION == 34
         case UNC_MERCENARY:
+        case UNC_ACQUIREMENT:
             break;
-#endif
 
+#endif
         case UNC_POTION_PETITION:
             if (!gozag_potion_petition() && crawl_state.seen_hups)
                 return;

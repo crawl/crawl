@@ -1519,7 +1519,7 @@ public:
 
 AcquireMenu::AcquireMenu(CrawlVector &aitems)
     : InvMenu(MF_SINGLESELECT | MF_NO_SELECT_QTY | MF_QUIET_SELECT
-              | MF_ALWAYS_SHOW_MORE | MF_ALLOW_FORMATTING | MF_UNCANCEL),
+              | MF_ALWAYS_SHOW_MORE | MF_ALLOW_FORMATTING),
       acq_items(aitems)
 {
     menu_action = ACT_EXECUTE;
@@ -1566,9 +1566,9 @@ void AcquireMenu::update_help()
 
     set_more(formatted_string::parse_string(top_line + make_stringf(
         //[!] acquire|examine item  [a-i] select item to acquire
-        //[$] show shopping list    [\] show identification knowledge
+        //[Esc/R-Click] exit
         "%s  [%s] %s\n"
-        "[$] show shopping list" "     " "[\\] show identification knowledge",
+        "[Esc/R-Click] exit",
         menu_action == ACT_EXECUTE ? "[<w>!</w>] <w>acquire</w>|examine items" :
                                      "[<w>!</w>] acquire|<w>examine</w> items",
         _hyphenated_letters(item_count(), 'a').c_str(),
@@ -1578,13 +1578,28 @@ void AcquireMenu::update_help()
 
 static void _create_acquirement_item(item_def &item)
 {
-    if (is_unrandom_artefact(item))
-        set_unique_item_status(item, UNIQ_EXISTS);
+    auto &acq_items = you.props[ACQUIRE_ITEMS_KEY].get_vector();
+
+    // Now that we have a selection, mark any generated unrands as not having
+    // been generated, so they go back in circulation. Exclude the selected
+    // item from this, if it's an unrand.
+    for (auto aitem : acq_items)
+    {
+        if (is_unrandom_artefact(aitem)
+            && (!is_unrandom_artefact(item)
+                || !is_unrandom_artefact(aitem, item.unrand_idx)))
+        {
+            set_unique_item_status(aitem, UNIQ_NOT_EXISTS);
+        }
+    }
 
     if (copy_item_to_grid(item, you.pos()))
         canned_msg(MSG_SOMETHING_APPEARS);
     else
         canned_msg(MSG_NOTHING_HAPPENS);
+
+    acq_items.clear();
+    you.props.erase(ACQUIRE_ITEMS_KEY);
 }
 
 bool AcquireMenu::acquire_selected()
@@ -1616,7 +1631,6 @@ bool AcquireMenu::acquire_selected()
     item_def &acq_item = *static_cast<item_def*>(entry.data);
     _create_acquirement_item(acq_item);
 
-    acq_items.clear();
     return false;
 }
 
@@ -1632,12 +1646,6 @@ bool AcquireMenu::process_key(int keyin)
             menu_action = ACT_EXECUTE;
         update_help();
         update_more();
-        return true;
-    case '$':
-        shopping_list.display(true);
-        return true;
-    case '\\':
-        check_item_knowledge();
         return true;
     default:
         break;
@@ -1665,7 +1673,12 @@ bool AcquireMenu::process_key(int keyin)
         }
     }
 
-    return true;
+    const bool ret = InvMenu::process_key(keyin);
+    auto selected = selected_entries();
+    if (selected.size() == 1)
+        return acquire_selected();
+    else
+        return ret;
 }
 
 static item_def _acquirement_item_def(object_class_type item_type)
@@ -1681,7 +1694,7 @@ static item_def _acquirement_item_def(object_class_type item_type)
         // We make a copy of the item def, but we don't keep the real item.
         item = mitm[item_index];
         set_ident_flags(item, ISFLAG_IDENT_MASK);
-        destroy_item(item_index, true);
+        destroy_item(item_index);
     }
 
     return item;
@@ -1732,6 +1745,16 @@ static void _make_acquirement_items()
     }
 }
 
+/*
+ * Handle scroll of acquirement.
+ *
+ * Generate acquirement choices as items in a prop if these don't already exist
+ * (because a scroll was read and canceled. Then either get the acquirement
+ * choice from the c_choose_acquirement lua handler if one exists or present a
+ * menu for the player to choose an item.
+ *
+ * returns True if the scroll was used, false if it was canceled.
+*/
 bool acquirement_menu()
 {
     ASSERT(!crawl_state.game_is_arena());
@@ -1751,9 +1774,6 @@ bool acquirement_menu()
     else if (index >= 1 && index <= acq_items.size())
     {
         _create_acquirement_item(acq_items[index - 1]);
-
-        acq_items.clear();
-        you.props.erase(ACQUIRE_ITEMS_KEY);
         return true;
     }
 #endif
@@ -1761,11 +1781,5 @@ bool acquirement_menu()
     AcquireMenu acq_menu(acq_items);
     acq_menu.show();
 
-    if (acq_items.empty())
-    {
-        you.props.erase(ACQUIRE_ITEMS_KEY);
-        return true;
-    }
-    else
-        return false;
+    return !you.props.exists(ACQUIRE_ITEMS_KEY);
 }
