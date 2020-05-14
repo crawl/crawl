@@ -571,7 +571,7 @@ ENDMAP
 # uniq_ tagged by tier: large, medium, small, rock, and decor.
 #
 NAME:   wad_woods_pond
-DEPTH:  D:2-, Lair, Forest
+DEPTH:  D:2-, Lair
 ORIENT: float
 : wad_woods_setup(_G, "large", 1, true, 21, 2, 36)
 FTILE:  ' = floor_dirt
@@ -611,7 +611,7 @@ ttt....tt1tt.t......1ttt1...tttt.ttt1t.t.t.tt..
 ENDMAP
 
 NAME:   wad_woods_settlement
-DEPTH:  D:2-, Lair, Forest
+DEPTH:  D:2-, Lair
 ORIENT: float
 : wad_woods_setup(_G, "large", 1, true, 21, 2, 36)
 NSUBST: 4 = 2:4 / 1 = 4' / *:', 6 = 4
@@ -648,7 +648,7 @@ tt.11..1.11..1.1  .1t.ttt      .t.ttt..1tt
 ENDMAP
 
 NAME:   wad_woods_tower
-DEPTH:  D:2-, Lair, Forest
+DEPTH:  D:2-, Lair
 ORIENT: float
 FTILE:  q13%OG. = floor_woodground
 : wad_woods_setup(_G, "large", 2, true, 21, 2, 36)
@@ -673,7 +673,7 @@ t..t1t..t...11t..ttt..ttt....tOt...t.11t
 ENDMAP
 
 NAME:    wad_woods_stonehenge
-DEPTH:   D:2-, Lair, Forest
+DEPTH:   D:2-, Lair
 ORIENT:  float
 : wad_woods_setup(_G, "med", 2, true, 21, 2, 36)
 SHUFFLE: 4% / '"
@@ -698,7 +698,7 @@ t1..t1.t.tt.t111.t...c.04C40.c..1t.1.tt.t.
 ENDMAP
 
 NAME:   wad_woods_01
-DEPTH:  Lair, Forest
+DEPTH:  Lair
 : wad_woods_setup(_G, "small", 2, true, 21, 2, 8)
 MAP
      tt.tt  tt.1ttt
@@ -718,7 +718,7 @@ ttt.tt4ttt..%.4ttOttt
 ENDMAP
 
 NAME:   wad_woods_02
-DEPTH:  Lair, Forest
+DEPTH:  Lair
 : wad_woods_setup(_G, "small", 2, false, 0, 0, 0)
 MAP
    .1t1.t   .t.1t
@@ -738,7 +738,7 @@ t.tt.t1t..1..1t.t1.t.
 ENDMAP
 
 NAME:   wad_woods_03
-DEPTH:  Lair, Forest
+DEPTH:  Lair
 : wad_woods_setup(_G, "rock", 3, false, 0, 0, 0)
 FTILE:  '%0+14 = floor_dirt
 MAP
@@ -759,7 +759,7 @@ MAP
 ENDMAP
 
 NAME:   wad_woods_04
-DEPTH:  Lair, Forest
+DEPTH:  Lair
 ORIENT: float
 : wad_woods_setup(_G, "rock", 2, false, 0, 0, 0)
 FTILE:  '+*0 = floor_dirt
@@ -785,7 +785,7 @@ ENDMAP
 
 NAME:   wad_woods_06
 TAGS:   extra
-DEPTH:  Lair, Forest
+DEPTH:  Lair
 : wad_woods_setup(_G, "small", 2, false, 0, 0, 0)
 MAP
     tt2ttt  1
@@ -803,7 +803,7 @@ ENDMAP
 
 NAME:   wad_woods_antlair
 TAGS:   uniq_anthill
-DEPTH:  Lair:2-, Forest
+DEPTH:  Lair:2-
 : wad_woods_setup(_G, "rock", 5, false, 0, 0, 0)
 MONS:   worker ant, soldier ant
 KMONS:  8 = entropy weaver
@@ -833,7 +833,7 @@ ENDMAP
 
 NAME:   wad_woods_river_01
 TAGS:   extra
-DEPTH:  D:2-, Lair, Forest
+DEPTH:  D:2-, Lair
 ORIENT: float
 : wad_woods_setup(_G, "med", 1, false, 0, 0, 0)
 MAP
@@ -862,7 +862,7 @@ ENDMAP
 
 NAME:   wad_woods_river_02
 TAGS:   extra
-DEPTH:  Lair, Forest
+DEPTH:  Lair
 : wad_woods_setup(_G, "small", 1, true, 32, 2, 24)
 MAP
       tttttttttt1tt
@@ -881,7 +881,7 @@ ttt1ttt.WWWt.ttt0t1t
 ENDMAP
 
 NAME:   wad_woods_river_03
-DEPTH:  Lair, Forest
+DEPTH:  Lair
 : wad_woods_setup(_G, "decor", 1, false, 32, 3, 24)
 MAP
    1t.tWwW.t.t.t
@@ -899,7 +899,7 @@ ENDMAP
 
 NAME:   wad_woods_river_04
 TAGS:   no_vmirror no_rotate
-DEPTH:  D, Lair, Forest
+DEPTH:  D, Lair
 TILE:   X = wall_brick_dark_leak
 TILE:   x = wall_brick_dark
 SUBST:  X = x
@@ -922,7 +922,7 @@ t.ttttWWWttttt1t
 ENDMAP
 
 NAME:   wad_woods_road_01
-DEPTH:  Lair, Forest
+DEPTH:  Lair
 : wad_woods_setup(_G, "decor", 2, true, 32, 3, 24)
 FTILE:  @' = floor_dirt
 MAP
@@ -946,7 +946,7 @@ ENDMAP
 
 NAME:   wad_woods_road_02
 TAGS:   extra
-DEPTH:  Lair, Forest
+DEPTH:  Lair
 : wad_woods_setup(_G, "small", 2, false, 32, 0, 0)
 FTILE:  @' = floor_dirt
 MAP
@@ -966,7 +966,7 @@ tt1tt1ttt303tttttt
 ENDMAP
 
 NAME:   wad_woods_road_03
-DEPTH:  Lair, Forest
+DEPTH:  Lair
 : wad_woods_setup(_G, "decor", 2, false, 0, 0, 0)
 FTILE:  @' = floor_dirt
 MAP
@@ -984,7 +984,7 @@ tttt1tt
 ENDMAP
 
 NAME:   wad_woods_road_04
-DEPTH:  Lair, Forest
+DEPTH:  Lair
 KMONS:  P = oklob plant
 : wad_woods_setup(_G, "small", 1, false, 0, 0, 0)
 FTILE:  @'+T = floor_dirt
@@ -1005,7 +1005,7 @@ ttt1tttt.'..ttttt1t
 ENDMAP
 
 NAME:   wad_woods_road_05
-DEPTH:  Lair, Forest
+DEPTH:  Lair
 KMONS:  * = 9
 KITEM:  * = *
 : wad_woods_setup(_G, "small", 2, false, 0, 0, 0)
@@ -1025,7 +1025,7 @@ tt.@t1ttt    tttxttt
 ENDMAP
 
 NAME:   wad_woods_road_06
-DEPTH:  Lair, Forest
+DEPTH:  Lair
 : wad_woods_setup(_G, "decor", 1, false, 0, 0, 0)
 FTILE:  @'*+T = floor_dirt
 MAP
@@ -1044,7 +1044,7 @@ ENDMAP
 
 NAME:   wad_woods_minihive
 TAGS:   uniq_beehive
-DEPTH:  D:8-, Lair, Forest
+DEPTH:  D:8-, Lair
 ORIENT: float
 MONS:   killer bee, queen bee
 KMONS:  8 = meliai
@@ -1082,7 +1082,7 @@ ENDMAP
 
 NAME:   wad_woods_structure_01
 TAGS:   no_monster_gen
-DEPTH:  D:10-, Lair, Forest
+DEPTH:  D:10-, Lair
 ORIENT: float
 : wad_woods_setup(_G, "large", 5, false, 0, 0, 0)
 FTILE:  "2T = floor_grass

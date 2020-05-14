@@ -1152,7 +1152,7 @@ MONS:   ogre zombie w:45 / centaur zombie w:50 / troll zombie w:5
 KMONS:  N  = mummy
 KMONS:  O  = Menkaure w:5 / mummy, mummy
 KFEAT:  N  = $
-KFEAT:  O  = exit_portal_vault
+KFEAT:  O  = exit_ossuary
 KFEAT:  ab = stone_wall
 KITEM:  $  = any scroll w:49 / any potion w:49 / any wand w:1 / any ring w:1
 NSUBST: `  = 2:2 / *:.

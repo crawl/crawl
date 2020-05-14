@@ -1243,7 +1243,7 @@ TAGS:   uniq_altar_makhleb temple_overflow_1 temple_overflow_makhleb
 TAGS:   no_monster_gen
 DEPTH:  D:2-9
 KFEAT:  _ = altar_makhleb
-KMONS:  _ = patrolling hound perm_ench:bleeding
+KMONS:  _ = patrolling hound
 TILE:   c = wall_hall
 SUBST:  y = xx.
 : interest_check(_G)
