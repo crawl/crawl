@@ -382,7 +382,7 @@ jobs:
       run: pytest
 
   notify_irc:
-    name: "Notify ##crawl-dev of build result"
+    name: "Notify ##crawl-dev of build failure"
     needs:
       - linting
       - build_linux
@@ -401,37 +401,14 @@ jobs:
           sha="${{ github.sha }}"
           short_sha="${sha:0:8}"
 
-          linting_result="${{ needs.linting.result }}"
-          build_linux_result="${{ needs.build_linux.result }}"
-          build_macos_result="${{ needs.build_macos.result }}"
-          build_mingw64_crosscompile_result="${{ needs.build_mingw64_crosscompile.result }}"
-          codecov_catch2_result="${{ needs.codecov_catch2.result }}"
-          webserver_result="${{ needs.webserver.result }}"
-
-          failed_components=()
-          if [[ $linting_result != success ]]; then
-            failed_components+=('Linting')
-          fi
-          if [[ $build_linux_result != success ]]; then
-            failed_components+=('Linux Build')
-          fi
-          if [[ $build_macos_result != success ]]; then
-            failed_components+=('MacOS Build')
-          fi
-          if [[ $build_mingw64_crosscompile_result != success ]]; then
-            failed_components+=('Linux MingW Build')
-          fi
-          if [[ $codecov_catch2_result != success ]]; then
-            failed_components+=('Catch2/codecov')
-          fi
-          if [[ $webserver_result != success ]]; then
-            failed_components+=('Webtiles Server')
-          fi
-
+          # https://modern.ircdocs.horse/formatting.html
+          bold=$(printf '\x02')
+          col=$(printf '\x03')
+          red="04"
+          magenta="06"
+          yellow="08"
           url="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-          message="Build failed for $branch @ $short_sha $url"
-          function join { local IFS=","; echo "$*"; }
-          message="${message} (failed: $(join "${failed_components[@]}"))"
+          message="${bold}${col}${red}Build failed${col}${bold} for ${col}${yellow}${branch}${col} @ $short_sha ${col}${magenta}${url}"
 
           echo "::set-output name=message::${message}"
       - uses: rectalogic/notify-irc@v1
