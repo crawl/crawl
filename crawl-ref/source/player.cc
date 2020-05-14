@@ -5208,6 +5208,7 @@ void player::init_skills()
 
 player_save_info& player_save_info::operator=(const player& rhs)
 {
+    // TODO: maybe seed, version?
     name             = rhs.your_name;
     experience       = rhs.experience;
     experience_level = rhs.experience_level;
@@ -5239,11 +5240,13 @@ string player_save_info::really_short_desc() const
     return desc.str();
 }
 
-string player_save_info::short_desc() const
+string player_save_info::short_desc(bool use_qualifier) const
 {
     ostringstream desc;
 
-    const string qualifier = game_state::game_type_name_for(saved_game_type);
+    const string qualifier = use_qualifier
+                    ? game_state::game_type_name_for(saved_game_type)
+                    : "";
     if (!qualifier.empty())
         desc << "[" << qualifier << "] ";
 

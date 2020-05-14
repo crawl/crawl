@@ -36,6 +36,6 @@ struct player_save_info
 
     player_save_info& operator=(const player& rhs);
     bool operator<(const player_save_info& rhs) const;
-    string short_desc() const;
+    string short_desc(bool use_qualifier=true) const;
     string really_short_desc() const;
 };

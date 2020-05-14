@@ -7,6 +7,9 @@
 
 #include "files.h"
 
+#include "json.h"
+#include "json-wrapper.h"
+
 #include <algorithm>
 #include <cctype>
 #include <cerrno>
@@ -815,6 +818,159 @@ string get_save_filename(const string &name)
 {
     return chop_string(strip_filename_unsafe_chars(name), MAX_FILENAME_LENGTH,
                        false) + SAVE_SUFFIX;
+}
+
+static bool _game_type_has_saves(const game_type g)
+{
+    // TODO: this may be useful elsewhere too?
+    switch (g)
+    {
+    case GAME_TYPE_ARENA:
+    case GAME_TYPE_HIGH_SCORES:
+    case GAME_TYPE_INSTRUCTIONS:
+    case GAME_TYPE_UNSPECIFIED:
+        return false;
+    default:
+        return true;
+    }
+}
+
+static bool _game_type_removed(const game_type g)
+{
+    return g == GAME_TYPE_ZOTDEF;
+}
+
+static bool _append_save_info(JsonWrapper &json, const char *filename,
+                                        game_type intended_gt=NUM_GAME_TYPE)
+{
+    if (!file_exists(filename))
+        return false;
+    try
+    {
+        package save(filename, false);
+        player_save_info p = _read_character_info(&save);
+
+        // TODO: some json for the non-loadable case? I think this comes up
+        // for save compat mismatches so shouldn't be relevant for webtiles
+        // except in case of bugs...
+        if (p.name.empty() || !p.save_loadable)
+            return false;
+
+        auto *game_json = json_mkobject();
+
+        // TODO: version info might be useful?
+        json_append_member(game_json, "loadable", json_mkbool(true));
+        json_append_member(game_json, "name", json_mkstring(p.name));
+        json_append_member(game_json, "game_type",
+            json_mkstring(gametype_to_str(p.saved_game_type)));
+        json_append_member(game_json, "short_desc",
+            json_mkstring(p.short_desc(false)));
+        json_append_member(game_json, "really_short_desc",
+            json_mkstring(p.really_short_desc()));
+
+        // for the case where we are querying just one file, we don't have
+        // info on what the save slot is (if any -- could be an arbitrary
+        // file) so just use the file's value. This is really only here so
+        // that there is a consistent format to the json.
+        json_append_member(json.node, intended_gt == NUM_GAME_TYPE
+                                ? gametype_to_str(p.saved_game_type).c_str()
+                                : gametype_to_str(intended_gt).c_str(),
+                            game_json);
+        return true;
+    }
+    catch (game_ended_condition &E) // another process is using the save
+    {
+        if (E.exit_reason != game_exit::abort)
+            end(1); // something has gone fairly wrong in this case
+
+        auto *game_json = json_mkobject();
+
+        json_append_member(game_json, "loadable", json_mkbool(false));
+        json_append_member(game_json, "name", json_mkstring(""));
+        json_append_member(game_json, "game_type", json_mkstring(""));
+        json_append_member(game_json, "short_desc",
+                                                json_mkstring("Save in use"));
+        json_append_member(game_json, "really_short_desc",
+                                                json_mkstring(""));
+
+        // May give "none" in the case of querying a save file by name
+        // that is currently in use.
+        json_append_member(json.node, gametype_to_str(intended_gt).c_str(),
+                                                                    game_json);
+        return true;
+    }
+}
+
+static bool _append_player_save_info(JsonWrapper &json, const char *name, game_type gt)
+{
+    // requires init file to have been read, otherwise the correct savedir
+    // paths may not have been initialized
+    unwind_var<game_type> temp_gt(crawl_state.type, gt);
+    return _append_save_info(json, get_savedir_filename(name).c_str(), gt);
+}
+
+/**
+ * Print information about save files associated with `name` in JSON format.
+ * The JSON format is a map (JSON Object) from (saveable) game types to save
+ * information.
+ *
+ * If `name` is a filename, the map will have one element in it for just that
+ * file; if it is a player name, the map will have one entry for every
+ * game type that has a save. (Keep in mind that most game types share a single
+ * save slot.)
+ *
+ * If a save file is currently in use by some other process, it will get
+ * `loadable': false, as well as most other info missing. If a save is queried
+ * by filename and is in use, it will additionally be mapped from game type
+ * `none`.
+ */
+NORETURN void print_save_json(const char *name)
+{
+    // TODO: The overall call is quite heavy. Can the overhead to get to this
+    // point be simplified at all? On my local machine it's about 80-100ms per
+    // call if things go well.
+    try
+    {
+        JsonWrapper json(json_mkobject());
+        // Check for the exact filename first, then go by char name.
+        // TODO: based on other CLOs, but maybe these shouldn't be collapsed
+        // into a single option?
+        if (file_exists(name))
+        {
+            if (!_append_save_info(json, name))
+            {
+                fprintf(stderr, "Could not load '%s'\n", name);
+                end(1);
+            }
+        }
+        else
+        {
+            // ugh. This is a heavy-handed way to ensure that the savedir
+            // option is set correctly on the first parse_args pass.
+            // TODO: test on dgl...
+            Options.reset_options();
+
+            // treat `name` as a character name. Prints an empty json dict
+            // if this is wrong (or if the character has no saves).
+            // TODO: this code (and much other code) could be a lot smarter
+            // about shared save slots. (Everything but sprint shares just
+            // one slot...)
+            for (int i = 0; i < NUM_GAME_TYPE; ++i)
+            {
+                auto gt = static_cast<game_type>(i);
+                if (_game_type_has_saves(gt) && !_game_type_removed(gt))
+                    _append_player_save_info(json, name, gt);
+            }
+        }
+
+        fprintf(stdout, "%s", json.to_string().c_str());
+        end(0);
+    }
+    catch (ext_fail_exception &fe)
+    {
+        fprintf(stderr, "Error: %s\n", fe.what());
+        end(1);
+    }
 }
 
 string get_prefs_filename()
