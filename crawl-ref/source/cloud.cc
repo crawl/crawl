@@ -289,6 +289,12 @@ static const cloud_data clouds[] = {
       BEAM_NONE, {},                              // beam & damage
       true,                                       // opacity
     },
+    { "inner flame", nullptr,
+	    ETC_FIRE,
+	    {TILE_CLOUD_FIRE, CTVARY_DUR },
+	    BEAM_FIRE,
+	    NORMAL_CLOUD_DAM,	 
+    }
 };
 COMPILE_CHECK(ARRAYSZ(clouds) == NUM_CLOUD_TYPES);
 
@@ -504,7 +510,7 @@ static void _spread_fire(const cloud_struct &cloud)
 
 static void _cloud_interacts_with_terrain(const cloud_struct &cloud)
 {
-    if (cloud.type != CLOUD_FIRE && cloud.type != CLOUD_FOREST_FIRE)
+    if (cloud.type != CLOUD_FIRE && cloud.type != CLOUD_FOREST_FIRE && cloud.type != CLOUD_INNER_FLAME)
         return;
 
     for (adjacent_iterator ai(cloud.pos); ai; ++ai)
@@ -904,6 +910,7 @@ bool actor_cloud_immune(const actor &act, cloud_type type)
     {
         case CLOUD_FIRE:
         case CLOUD_FOREST_FIRE:
+	case CLOUD_INNER_FLAME:
             if (!act.is_player())
                 return act.res_fire() >= 3;
             return you.duration[DUR_FIRE_SHIELD]
@@ -975,7 +982,7 @@ bool actor_cloud_immune(const actor &act, const cloud_struct &cloud)
     }
     if (player && you.species == SP_DJINNI
         && (cloud.type == CLOUD_FIRE
-            || cloud.type == CLOUD_FOREST_FIRE))
+            || cloud.type == CLOUD_FOREST_FIRE || cloud.type == CLOUD_INNER_FLAME))
     {
         return true;
     }
@@ -995,6 +1002,7 @@ static int _actor_cloud_resist(const actor *act, const cloud_struct &cloud)
         return act->is_fiery()? 0 : MAG_IMMUNE;
     case CLOUD_FIRE:
     case CLOUD_FOREST_FIRE:
+    case CLOUD_INNER_FLAME:
         return act->res_fire();
     case CLOUD_HOLY:
         return act->res_holy_energy();
@@ -1171,7 +1179,18 @@ static bool _actor_apply_cloud_side_effects(actor *act,
         }
         break;
     }
-
+    case CLOUD_INNER_FLAME:
+    {
+	    if (player)
+		maybe_melt_player_enchantments(BEAM_FIRE, final_damage);
+	    else
+	    {
+		    const monster &mons_ref = *mons;
+		    if (mons_immune_magic(mons_ref)) break;
+		    mons->add_ench(mon_enchant(ENCH_INNER_FLAME, 0, &you));
+		    return true;
+	    }
+    }
     default:
         break;
     }
@@ -1227,6 +1246,7 @@ static int _actor_cloud_damage(const actor *act,
     {
     case CLOUD_FIRE:
     case CLOUD_FOREST_FIRE:
+    case CLOUD_INNER_FLAME:
     case CLOUD_HOLY:
     case CLOUD_COLD:
     case CLOUD_STEAM:
@@ -1728,7 +1748,8 @@ colour_t get_cloud_colour(const cloud_struct &cloud)
         return random_choose_weighted(9, YELLOW,
                                       4, RED,
                                       3, LIGHTRED);
-
+    case CLOUD_INNER_FLAME:
+	return MAGENTA;
     case CLOUD_COLD:
         if (cloud.decay <= 20)
             return BLUE;

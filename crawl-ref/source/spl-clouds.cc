@@ -266,13 +266,13 @@ void manage_fire_shield()
     maybe_melt_player_enchantments(BEAM_FIRE, 100);
 
     // Remove fire clouds on top of you
-    if (cloud_at(you.pos()) && cloud_at(you.pos())->type == CLOUD_FIRE)
+    if (cloud_at(you.pos()) && cloud_at(you.pos())->type == CLOUD_INNER_FLAME)
         delete_cloud(you.pos());
 
     // Place fire clouds all around you
     for (adjacent_iterator ai(you.pos()); ai; ++ai)
         if (!cell_is_solid(*ai) && !cloud_at(*ai))
-            place_cloud(CLOUD_FIRE, *ai, 1 + random2(6), &you);
+            place_cloud(CLOUD_INNER_FLAME, *ai, 1 + random2(6), &you);
 }
 
 spret cast_corpse_rot(bool fail)
