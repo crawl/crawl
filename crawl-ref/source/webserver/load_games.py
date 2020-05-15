@@ -13,7 +13,7 @@ try:
     from typing import Union
     GameDefinition = Dict[str, Union[str, bool, List[str], Dict[str, str]]]
     GamesConfig = Dict[str, GameDefinition]
-except:
+except Exception:
     pass
 
 
