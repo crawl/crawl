@@ -1,5 +1,5 @@
-Stone Soup 0.25 (through 0.25-a0-884-g76b13fe646)
--------------------------------------------------
+Stone Soup 0.25 (through 0.25-a0-1105-ga8d24287ef)
+--------------------------------------------------
 
 Highlights
 ----------
@@ -19,6 +19,8 @@ Branches, Environment
   includes an undead version of the Lernaean Hydra.
 * Ziggurats now have level set featuring many player ghosts.
 * Zot traps have had their effect flowchart simplified and focused.
+* Abyss exits that spawn from earning xp can spawn after the initial spawn,
+  instead of every subsequent spawn being a downstair.
 
 Character
 ---------
@@ -39,6 +41,11 @@ Gods
 * God conducts for harming allies now apply to spells and items that place
   harmful clouds.
 * Nemelex abilities can no longer be used while silenced.
+* Nemelex card revisions:
+  - The pain card no longer summons a flayed ghost, instead it torments at high
+    power (the card user is spared).
+  - The cloud card now produces black smoke around enemies in sight, to better
+    fir with the deck of escape.
 * Wu Jian has been tweaked:
   - Wall jumps are now only activated via the 'a'bility menu.
   - Whirlwind attacks no longer pin
@@ -73,10 +80,12 @@ Items
   - The Miscellaneous category for evocable items is no longer available.
 * New Potion of Stabbing that gives a 50% chance to upgrade weak stabs (e.g.
   distracted monsters) to strong ones (e.g. sleeping monsters).
-* Tin of Tremorstones, a new multiuse evocable. When used, it creates two
-  radius 2 explosions at range 3 that are triple-affected by AC (like LRD), but
-  the explosions are randomly skewed and may hit the user. Most useful for
-  players with good armour.
+* Tin of Tremorstones, a new multiuse evocable. Tremorstones have 3 charges
+  which recover over time with XP. When used, it creates a number of radius 2
+  explosions (the number scales with evocations skill) near the center
+  of present monster that are triple-affected by AC (like LRD). The explosions
+  are randomly skewed and may hit the user. Most useful for players with good
+  armour.
 * The chaos brand now has might and agility effects, no longer causes miscast
   effects, and its cloning effect can create friendly and neutral monsters.
 * Potions of Brilliance now only provide a stronger universal spell enhancer
@@ -113,6 +122,7 @@ Items
   - The plutonium sword still applies transmutations miscasts, but gains a
     chance to polymorph the target on hit (since this is no longer a miscast
     effect for monsters).
+  - The brooch of Shielding is now a guardian spirit amulet with SH+8.
 * Phial of floods now applies a silencing "waterlogged" debuff to all monsters
   in the flooded area and no longer summons water elementals.
 * Staves of poison now do resistable poison damage on hit like other staves
@@ -123,8 +133,40 @@ Items
   severe contamination.
 * Regeneration items only activate after attuning to the player at full HP,
   identical to the amulet.
+* Scarf egos are revised: cloud immunity and spirit shield are removed, harm
+  and invisibility are added. Harm scarves do not drain the player when
+  removed.
+* Amulets of reflection now always give +5 SH and must attune to the player at
+  full HP. Reflected missiles, poison, and banishments now correctly award
+  piety.
+* Cloak egos are revised: invisibility is removed, preservation (providing
+  corrosion resistance) and stealth are added.
+* The Harm property can now appear on randart armour, and does not incur a
+  drain penalty on removal.
+* Stat rings are now always either +6 or -4. AC, EV, and Slay rings are now
+  always either +4 or -4.
 * Removed: potion of agility, staff of power, crystal ball of energy, sack of
-  spiders, lamp of fire, fan of gales.
+  spiders, lamp of fire, fan of gales, wand of scattershot, amulets of the
+  gourmand, amulets of harm, amulets of rage.
+
+Interface
+---------
+* A new option auto_butcher_max_chunks prevents automatic butchering with more
+  than that many chunks in inventory. Its default value is 10 for non-ghoul
+  characters.
+* explore_auto_rest now defaults to true
+* auto_butcher now defaults to always
+* New morgue section: screenshots. When notes are taken with : a screenshot is
+  additionally saved and can be added to morgues.
+* The console monster list now displays monster status information and whether
+  or not the monster is wielding a launcher or polearm, or has a wand
+* The ^x summary display now shows monster status information
+* A new option monster_item_view_coordinates can be set to true to display
+  player-relative coordinates in the ^x display.
+* The auto-travel trail displayed with show_travel_trail can now be customised
+  in console (both for glyph and colour).
+* The "visited status" of stairs and transporters can now be indicated both by
+  glyph and by colour in console.
 
 Monsters
 --------
@@ -167,6 +209,7 @@ Spells
   - Air school spells bounce, are pointy, or are hard to direct:
     + Airstrike damage now scales so it's greater the more unoccupied squares
       there are surrounding the target.
+    + Summon Lightning Spire now places the spire randomly.
   - Earth spells are directed:
     + Borgnjor's Vile Clutch now is a range 6 always-penetrating beam instead
       of a smite-targeted 3x3 explosion.
@@ -240,6 +283,8 @@ Spells
 * The Deflect Missiles spell has been removed.
 * Tukima's Dance can no longer be used if the player sacrificed Love.
 * Lesser Beckoning and Teleport Other now turn allies hostile.
+* Eldritch Tentacles from malign gateway can no longer attack out of LOS of the
+  player, and arrive sooner after the gateway is opened.
 
 Development
 -----------
@@ -247,6 +292,7 @@ Development
   well as Tornado 5+.
 * The catch2 testing framework is now integrated into the project and is
   enabled in our Travis CI testing.
+* GitHub actions have been configured to replace Travis CI testing.
 
 Stone Soup 0.24 (20191024)
 --------------------------
