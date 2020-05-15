@@ -87,6 +87,7 @@ games = OrderedDict([
         # dir_path = ".",
         # cwd = ".",
         morgue_url = None,
+        show_save_info = True,
         # milestone_path = "./rcs/milestones",
         send_json_options = True,
         # env = {"LANG": "en_US.UTF8"},

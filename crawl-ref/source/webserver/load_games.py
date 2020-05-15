@@ -1,8 +1,10 @@
 import collections
 import logging
 import os
+import subprocess
 
 import yaml
+from tornado.escape import json_decode
 
 try:
     import typing
@@ -112,8 +114,9 @@ def validate_game_dict(game):
                 'morgue_path', 'inprogress_path', 'ttyrec_path',
                 'socket_path', 'client_path')
     optional = ('dir_path', 'cwd', 'morgue_url', 'milestone_path',
-                'send_json_options', 'options', 'env', 'separator')
-    boolean = ('send_json_options',)
+                'send_json_options', 'options', 'env', 'separator',
+                'show_save_info')
+    boolean = ('send_json_options', 'show_save_info')
     string_array = ('options',)
     string_dict = ('env', )
     for prop in required:
@@ -169,3 +172,43 @@ def validate_game_dict(game):
                 logging.warn("Property '%s' value should be string in game '%s'",
                              prop, game['id'])
     return not found_errors
+
+game_modes = dict()
+
+def collect_game_modes():
+    import config
+    # figure out what game modes are associated with which game in the config.
+    # Basically: try to line up options in the game config with game types
+    # reported by the binary. If the binary doesn't support `-gametypes-json`
+    # then the type will by `None`. This is unfortunately fairly post-hoc, and
+    # there would be much better ways of doing this if I weren't aiming for
+    # backwards compatibility.
+    # This is very much a blocking call, especially with many binaries.
+    binaries = dict()
+    for g in config.games:
+        call = ([config.games[g]["crawl_binary"]]
+                    + config.games[g].get("options", [])
+                    + ["-gametypes-json",])
+        try:
+            m_json = subprocess.check_output(call, stderr=subprocess.STDOUT)
+            binaries[config.games[g]["crawl_binary"]] = json_decode(m_json)
+        except subprocess.CalledProcessError:
+            binaries[config.games[g]["crawl_binary"]] = None
+
+    global game_modes
+    game_modes = dict()
+    for g in config.games:
+        game_dict = config.games[g]
+        mode_found = False
+        if binaries[game_dict["crawl_binary"]] is None:
+            # binary does not support game mode json
+            game_modes[g] = None
+            continue
+        for mode in binaries[game_dict["crawl_binary"]]:
+            for opt in game_dict.get("options", [""]):
+                if opt == binaries[game_dict["crawl_binary"]][mode]:
+                    game_modes[g] = mode
+                    mode_found = True
+                    break
+            if mode_found:
+                break
