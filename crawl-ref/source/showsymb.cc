@@ -548,7 +548,8 @@ static cglyph_t _get_cell_glyph_with_class(const map_cell& cell,
     if (!g.ch)
     {
         const feature_def &fdef = get_feature_def(show);
-        g.ch = cell.seen() ? fdef.symbol() : fdef.magic_symbol();
+        g.ch = !cell.seen() || cell.flags & MAP_EMPHASIZE ? fdef.magic_symbol()
+                                                          : fdef.symbol();
     }
 
     if (g.col)

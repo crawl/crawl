@@ -1237,7 +1237,10 @@ static cglyph_t _get_feat_glyph(const coord_def& gc)
     if (travel_colour_override(gc))
         col = _get_travel_colour(gc);
     else if (emphasise(gc))
+    {
+        g.ch = fdef.magic_symbol();
         col = fdef.seen_em_colour();
+    }
     else
         col = fdef.seen_colour();
     g.col = real_colour(col);
