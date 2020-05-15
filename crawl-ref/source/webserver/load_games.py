@@ -6,6 +6,9 @@ import subprocess
 import yaml
 from tornado.escape import json_decode
 
+GamesConfig = None
+GamesDefinition = None
+
 try:
     import typing
     from typing import Dict
@@ -173,7 +176,9 @@ def validate_game_dict(game):
                              prop, game['id'])
     return not found_errors
 
-game_modes = dict()
+
+game_modes = {}
+
 
 def collect_game_modes():
     import config
@@ -184,11 +189,11 @@ def collect_game_modes():
     # there would be much better ways of doing this if I weren't aiming for
     # backwards compatibility.
     # This is very much a blocking call, especially with many binaries.
-    binaries = dict()
+    binaries = {}
     for g in config.games:
         call = ([config.games[g]["crawl_binary"]]
-                    + config.games[g].get("options", [])
-                    + ["-gametypes-json",])
+                + config.games[g].get("options", [])
+                + ["-gametypes-json"])
         try:
             m_json = subprocess.check_output(call, stderr=subprocess.STDOUT)
             binaries[config.games[g]["crawl_binary"]] = json_decode(m_json)
@@ -199,7 +204,7 @@ def collect_game_modes():
             binaries[config.games[g]["crawl_binary"]] = None
 
     global game_modes
-    game_modes = dict()
+    game_modes = {}
     for g in config.games:
         game_dict = config.games[g]
         mode_found = False
