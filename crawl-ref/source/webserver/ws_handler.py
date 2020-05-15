@@ -319,10 +319,13 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                             # There is a save, but it has a different game type.
                             # This happens if multiple game types share a slot.
                             self.save_info[game_key] = "[slot full]"
-                    except:
+                    except Exception:
                         # game key missing (or other error). This will mainly
                         # happen if there are no saves at all for the player
-                        # name.
+                        # name. It can also happen under some dgamelaunch-config
+                        # setups if escape codes are incorrectly inserted into
+                        # the output for some calls. See:
+                        # https://github.com/crawl/dgamelaunch-config/commit/6ad788ceb5614b3c83d65b61bf26a122e592b98d
                         self.save_info[game_key] = "[start]"
                 else:
                     # error in the subprocess: this will happen if the binary
