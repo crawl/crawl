@@ -7,7 +7,7 @@ import yaml
 from tornado.escape import json_decode
 
 try:
-    import typing  # noqa
+    import typing  # noqa 
     from typing import Dict  # OrderedDict would work in py38+
     from typing import List
     from typing import Union
@@ -197,7 +197,7 @@ def collect_game_modes():
         except subprocess.CalledProcessError:  # return value 1
             binaries[config.games[g]["crawl_binary"]] = None
         except ValueError:  # JSON decoding issue?
-            logging.warn("JSON error with output '%s'" % repr(m_json))
+            logging.warn("JSON error with output '%s'", repr(m_json))
             binaries[config.games[g]["crawl_binary"]] = None
 
     global game_modes
