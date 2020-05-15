@@ -157,7 +157,7 @@ map<pakellas_blueprint_type, pakellas_blueprint_struct> blueprint_list =
                                 4,
                                 0,
                                 100)},
-    { BLUEPRINT_MAGIC_ENERGY_BOLT, _prerequire2_blueprint("Destruction Magic", "Learn weak destruction magic.", "destruction",
+    { BLUEPRINT_MAGIC_ENERGY_BOLT, _prerequire2_blueprint("Destruction Magic", "Learn weak destruction magic.|Destruction magic is improved.", "destruction",
                                 2,
                                 0,
                                 100,
@@ -250,6 +250,24 @@ map<pakellas_blueprint_type, pakellas_blueprint_struct> blueprint_list =
                                 50)},
 };
 
+static vector<string> _split_desc(const char* str, char c = ' ')
+{
+    vector<string> result;
+
+    do
+    {
+        const char* begin = str;
+
+        while (*str != c && *str)
+            str++;
+
+        result.push_back(string(begin, str));
+    } while (0 != *str++);
+
+    return result;
+}
+
+
 
 static bool _enchant_rod(item_def* rod_, bool only_mana = false, bool slient_ = false) {
     const string orig_name = rod_->name(DESC_YOUR);
@@ -328,6 +346,7 @@ bool pakellas_prototype()
     mitm[thing_created].charges = mitm[thing_created].charge_cap;
     mitm[thing_created].rod_plus = 0;
 
+    do_uncurse_item(mitm[thing_created], false);
     you.props[PAKELLAS_PROTOTYPE].get_int() = keyin + 1;
     _pakellas_expire_upgrade();
     pakellas_reset_upgrade_timer(true);
@@ -456,8 +475,12 @@ bool pakellas_upgrade()
         {
             string line = make_stringf("  [%c] - ", i + 'a');
 
+            vector<string> descs = _split_desc(blueprint_list[(pakellas_blueprint_type)store.get_int()].desc, '|');
+
+            int prev_level = is_blueprint_exist((pakellas_blueprint_type)store.get_int());
+
             line += make_stringf("%s : %s", blueprint_list[(pakellas_blueprint_type)store.get_int()].name,
-                blueprint_list[(pakellas_blueprint_type)store.get_int()].desc);
+                descs[(prev_level>=(int)(descs.size()-1))? prev_level:0].c_str());
             mpr_nojoin(MSGCH_PLAIN, line);
             i++;
         }
