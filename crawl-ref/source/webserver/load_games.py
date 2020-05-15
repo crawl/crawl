@@ -1,14 +1,18 @@
 import collections
 import logging
 import os
-from typing import Dict
-from typing import List
-from typing import Union
 
 import yaml
 
-GameDefinition = Dict[str, Union[str, bool, List[str], Dict[str, str]]]
-GamesConfig = Dict[str, GameDefinition]
+try:
+    import typing
+    from typing import Dict
+    from typing import List
+    from typing import Union
+    GameDefinition = Dict[str, Union[str, bool, List[str], Dict[str, str]]]
+    GamesConfig = Dict[str, GameDefinition]
+except:
+    pass
 
 
 def load_games(existing_games):  # type: (GamesConfig) -> GamesConfig
