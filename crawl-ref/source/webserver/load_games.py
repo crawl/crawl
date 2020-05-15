@@ -13,7 +13,7 @@ try:
     from typing import Union
     GameDefinition = Dict[str, Union[str, bool, List[str], Dict[str, str]]]
     GamesConfig = Dict[str, GameDefinition]
-except Exception:
+except ImportError:
     pass
 
 
@@ -192,7 +192,10 @@ def collect_game_modes():
         try:
             m_json = subprocess.check_output(call, stderr=subprocess.STDOUT)
             binaries[config.games[g]["crawl_binary"]] = json_decode(m_json)
-        except subprocess.CalledProcessError:
+        except subprocess.CalledProcessError: # return value 1
+            binaries[config.games[g]["crawl_binary"]] = None
+        except ValueError: # JSON decoding issue?
+            logging.warn("JSON error with output '%s'" % repr(m_json))
             binaries[config.games[g]["crawl_binary"]] = None
 
     global game_modes
