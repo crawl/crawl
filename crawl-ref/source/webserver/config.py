@@ -63,6 +63,8 @@ game_data_no_cache = True
 # Watch socket dirs for games not started by the server
 watch_socket_dirs = False
 
+use_game_yaml = True
+
 # Game configs
 #
 # You can define game configs in two ways:

@@ -275,7 +275,8 @@ def ensure_tornado_current():
 
 
 def _do_load_games():
-    config.games = load_games.load_games(config.games)
+    if getattr(config, "use_game_yaml", False):
+        config.games = load_games.load_games(config.games)
 
 
 def usr1_handler(signum, frame):
