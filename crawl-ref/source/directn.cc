@@ -1225,8 +1225,9 @@ bool direction_chooser::select(bool allow_out_of_range, bool endpoint)
 
     if (restricts == DIR_SHADOW_STEP)
     {
-        const auto valid_shadow_step = hitfunc->has_additional_sites(target());
-        if (!valid_shadow_step)
+        targeter_shadow_step &tgt =
+            *static_cast<targeter_shadow_step*>(hitfunc);
+        if (!tgt.has_additional_sites(target()))
             return false;
     }
 
@@ -2351,7 +2352,8 @@ static bool _find_shadow_step_mons(const coord_def& where, targ_mode_type mode,
     if (where == you.pos())
         return false;
 
-    return hitfunc->has_additional_sites(where);
+    targeter_shadow_step &tgt = *static_cast<targeter_shadow_step*>(hitfunc);
+    return tgt.has_additional_sites(where);
 }
 
 static bool _find_monster_expl(const coord_def& where, targ_mode_type mode,

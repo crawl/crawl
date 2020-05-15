@@ -69,11 +69,6 @@ bool targeter::anyone_there(coord_def loc)
     return actor_at(loc);
 }
 
-bool targeter::has_additional_sites(coord_def /*loc*/)
-{
-    return false;
-}
-
 bool targeter::affects_monster(const monster_info& /*mon*/)
 {
     return true; //TODO: false

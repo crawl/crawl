@@ -37,7 +37,6 @@ public:
 
     virtual aff_type is_affected(coord_def loc) = 0;
     virtual bool can_affect_unseen();
-    virtual bool has_additional_sites(coord_def a);
     virtual bool affects_monster(const monster_info& mon);
 protected:
     bool anyone_there(coord_def loc);
@@ -217,7 +216,7 @@ public:
     bool set_aim(coord_def a) override;
     bool step_is_blocked;
     aff_type is_affected(coord_def loc) override;
-    bool has_additional_sites(coord_def a) override;
+    bool has_additional_sites(coord_def a);
     set<coord_def> additional_sites;
     coord_def landing_site;
 private:
