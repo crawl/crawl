@@ -375,9 +375,6 @@ jobs:
       if: matrix.python-version != 2.7
       working-directory: crawl-ref/source/webserver
       run: make lint
-    - name: Import Sorting (isort)
-      working-directory: crawl-ref/source/webserver
-      run: make format
     - name: Unit Tests (pytest)
       working-directory: crawl-ref/source/webserver
       run: pytest
