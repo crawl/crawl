@@ -30,6 +30,14 @@ static feature_def feat_defs[] =
 },
 
 {
+    DNGN_TRAVEL_TRAIL, "travel trail", "travel_trail",
+    NUM_DCHAR_TYPES, NUM_DCHAR_TYPES,
+    COLOUR_IS(BLACK),
+    FFT_NONE, MF_UNSEEN,
+},
+
+
+{
     DNGN_CLOSED_DOOR, "closed door", "closed_door",
     DCHAR_DOOR_CLOSED, NUM_DCHAR_TYPES,
     COLOUR_IS(LIGHTGREY),

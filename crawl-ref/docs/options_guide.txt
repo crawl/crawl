@@ -1537,7 +1537,9 @@ msg_condense_short = true
 
 show_travel_trail = false (defaults to true for online servers)
         When set to true, the path taken during autoexplore or travel
-        will be highlighted. If a travel trail is currently being displayed,
+        will be highlighted. The console colour and glyph of the travel trail
+        can be further configured using the feature option to override the
+        "travel trail" feature. If a travel trail is currently being displayed,
         the Clear Map command (Ctrl-C) clears the trail instead of the map
         (pressing it a second time then clears the map as usual).
 
@@ -2910,3 +2912,9 @@ option for terminal configuration specifics):
 
 List playe-relative coordinates in the ^x display:
     monster_item_view_coordinates = true
+
+Mark the path taken by auto-travel and the exploration horizon with special
+characters:
+    show_travel_trail = true
+    feature += travel trail {x25AA}
+    feature += explore horizon {x25AB}

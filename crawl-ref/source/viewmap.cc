@@ -339,7 +339,17 @@ static void _draw_level_map(int start_x, int start_y, bool travel_mode,
                 }
 
                 if (Options.show_travel_trail && travel_trail_index(c) >= 0)
+                {
+                    const feature_def& fd = get_feature_def(DNGN_TRAVEL_TRAIL);
+
+                    // Don't overwrite the player's symbol
+                    if (fd.symbol() && c != you.pos())
+                        cell->glyph = fd.symbol();
+                    if (fd.colour() != COLOUR_UNDEF)
+                        cell->colour = fd.colour();
+
                     cell->colour |= COLFLAG_REVERSE;
+                }
             }
 
             cell++;

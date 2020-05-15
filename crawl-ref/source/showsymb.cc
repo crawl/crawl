@@ -54,12 +54,7 @@ static unsigned short _cell_feat_show_colour(const map_cell& cell,
             colour = fdef.seen_colour();
 
         if (colour)
-        {
-            // Show trails even out of LOS.
-            if (Options.show_travel_trail && travel_trail_index(loc) >= 0)
-                colour |= COLFLAG_REVERSE;
             return colour;
-        }
     }
     else if (!feat_is_solid(feat)
              && (cell.flags & (MAP_SANCTUARY_1 | MAP_SANCTUARY_2)))
@@ -142,9 +137,6 @@ static unsigned short _cell_feat_show_colour(const map_cell& cell,
             colour = ETC_FIRE;
 #endif
     }
-
-    if (Options.show_travel_trail && travel_trail_index(loc) >= 0)
-        colour |= COLFLAG_REVERSE;
 
     return colour;
 }
@@ -539,6 +531,18 @@ static cglyph_t _get_cell_glyph_with_class(const map_cell& cell,
         // blackness
         g.ch = ' ';
         return g;
+    }
+
+    if (Options.show_travel_trail && travel_trail_index(loc) >= 0)
+    {
+        const feature_def& fd = get_feature_def(DNGN_TRAVEL_TRAIL);
+
+        if (fd.symbol())
+            g.ch = fd.symbol();
+        if (fd.colour() != COLOUR_UNDEF)
+            g.col = fd.colour();
+
+        g.col |= COLFLAG_REVERSE;
     }
 
     if (!g.ch)

@@ -230,6 +230,9 @@ enum dungeon_feature_type
 
     // Not meant to ever appear in grd().
     DNGN_EXPLORE_HORIZON, // dummy for redefinition
+#if TAG_MAJOR_VERSION > 34
+    DNGN_TRAVEL_TRAIL, // dummy for redefinition
+#endif
 
     DNGN_UNKNOWN_ALTAR,
     DNGN_UNKNOWN_PORTAL,
@@ -313,6 +316,7 @@ enum dungeon_feature_type
     DNGN_TRAP_NET,
     DNGN_TRAP_PLATE,
     DNGN_TRAP_TELEPORT_PERMANENT,
+    DNGN_TRAVEL_TRAIL,
 #endif
 
     NUM_FEATURES
