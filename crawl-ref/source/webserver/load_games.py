@@ -6,12 +6,9 @@ import subprocess
 import yaml
 from tornado.escape import json_decode
 
-GamesConfig = None
-GamesDefinition = None
-
 try:
-    import typing
-    from typing import Dict
+    import typing  # noqa 
+    from typing import Dict  # OrderedDict would work in py38+
     from typing import List
     from typing import Union
     GameDefinition = Dict[str, Union[str, bool, List[str], Dict[str, str]]]
@@ -51,9 +48,9 @@ def load_games(existing_games):  # type: (GamesConfig) -> GamesConfig
     """
     conf_subdir = "games.d"
     base_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), conf_subdir)
-    delta = collections.OrderedDict()
+    delta = collections.OrderedDict()  # type: GamesConfig
     delta_messages = []
-    new_games = collections.OrderedDict()
+    new_games = collections.OrderedDict()  # type: GamesConfig
     new_games.update(existing_games)
     for file_name in sorted(os.listdir(base_path)):
         path = os.path.join(base_path, file_name)
@@ -82,7 +79,7 @@ def load_games(existing_games):  # type: (GamesConfig) -> GamesConfig
               " (only 'games' key will be parsed).",
               extra_keys, file_name)
         logging.info("Loading data from %s", file_name)
-        for game in data['games']:
+        for game in data['games']:  # noqa
             if not validate_game_dict(game):
                 continue
             game_id = game['id']
@@ -90,7 +87,7 @@ def load_games(existing_games):  # type: (GamesConfig) -> GamesConfig
                 logging.warning(
                   "Game %s from %s was specified in an earlier config file, skipping.",
                   game_id, path)
-            delta[game_id] = game
+            delta[game_id] = game  # noqa
             action = "Updated" if game_id in existing_games else "Loaded"
             msg = ("%s game config %s (from %s).", action, game_id, file_name)
             delta_messages.append(msg)
@@ -177,7 +174,7 @@ def validate_game_dict(game):
     return not found_errors
 
 
-game_modes = {}
+game_modes = {}  # type: Dict[str, str]
 
 
 def collect_game_modes():
@@ -197,9 +194,9 @@ def collect_game_modes():
         try:
             m_json = subprocess.check_output(call, stderr=subprocess.STDOUT)
             binaries[config.games[g]["crawl_binary"]] = json_decode(m_json)
-        except subprocess.CalledProcessError: # return value 1
+        except subprocess.CalledProcessError:  # return value 1
             binaries[config.games[g]["crawl_binary"]] = None
-        except ValueError: # JSON decoding issue?
+        except ValueError:  # JSON decoding issue?
             logging.warn("JSON error with output '%s'" % repr(m_json))
             binaries[config.games[g]["crawl_binary"]] = None
 
