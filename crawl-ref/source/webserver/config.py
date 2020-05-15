@@ -74,6 +74,7 @@ games = OrderedDict([
         socket_path = "./rcs",
         client_path = "./webserver/game_data/",
         morgue_url = None,
+        show_save_info = True,
         send_json_options = True)),
     ("seeded-web-trunk", dict(
         name = "DCSS trunk, custom seed",
@@ -86,6 +87,7 @@ games = OrderedDict([
         socket_path = "./rcs",
         client_path = "./webserver/game_data/",
         morgue_url = None,
+        show_save_info = True,
         send_json_options = True,
         options = ["-seed"])),
     ("sprint-web-trunk", dict(
@@ -99,6 +101,7 @@ games = OrderedDict([
         socket_path = "./rcs",
         client_path = "./webserver/game_data/",
         morgue_url = None,
+        show_save_info = True,
         send_json_options = True,
         options = ["-sprint"])),
     ("tut-web-trunk", dict(
@@ -112,6 +115,7 @@ games = OrderedDict([
         socket_path = "./rcs",
         client_path = "./webserver/game_data/",
         morgue_url = None,
+        show_save_info = True,
         send_json_options = True,
         options = ["-tutorial"])),
 ])

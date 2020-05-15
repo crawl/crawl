@@ -33,6 +33,47 @@ current_id = 0
 shutting_down = False
 rand = random.SystemRandom()
 
+
+# this would be better in a config module, at some future time
+game_modes = dict()
+
+def collect_game_modes():
+    # figure out what game modes are associated with which game in the config.
+    # Basically: try to line up options in the game config with game types
+    # reported by the binary. If the binary doesn't support `-gametypes-json`
+    # then the type will by `None`. This is unfortunately fairly post-hoc, and
+    # there would be much better ways of doing this if I weren't aiming for
+    # backwards compatibility.
+    # This is very much a blocking call, especially with many binaries.
+    binaries = dict()
+    for g in config.games:
+        call = ([config.games[g]["crawl_binary"]]
+                    + config.games[g].get("options", [])
+                    + ["-gametypes-json",])
+        try:
+            m_json = subprocess.check_output(call, stderr=subprocess.STDOUT)
+            binaries[config.games[g]["crawl_binary"]] = json_decode(m_json)
+        except subprocess.CalledProcessError:
+            binaries[config.games[g]["crawl_binary"]] = None
+
+    global game_modes
+    game_modes = dict()
+    for g in config.games:
+        game_dict = config.games[g]
+        mode_found = False
+        if binaries[game_dict["crawl_binary"]] is None:
+            # binary does not support game mode json
+            game_modes[g] = None
+            continue
+        for mode in binaries[game_dict["crawl_binary"]]:
+            for opt in game_dict.get("options", [""]):
+                if opt == binaries[game_dict["crawl_binary"]][mode]:
+                    game_modes[g] = mode
+                    mode_found = True
+                    break
+            if mode_found:
+                break
+
 def shutdown():
     global shutting_down
     shutting_down = True
@@ -129,6 +170,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         self.process = None
         self.game_id = None
         self.received_pong = None
+        self.save_info = dict()
 
         tornado.ioloop.IOLoop.current()
 
@@ -253,6 +295,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         for process in list(processes.values()):
             self.queue_message("lobby_entry", **process.lobby_entry())
         self.send_message("lobby_complete")
+        self.send_game_links()
 
     def send_announcement(self, text):
         # TODO: something in lobby?
@@ -263,14 +306,75 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             if self.is_running():
                 self.process.handle_announcement(text)
 
+    # collect save info for the player from all binaries that support save
+    # info json. Cached on self.save_info. This is asynchronously done using
+    # a somewhat involved callback chain.
+    def collect_save_info(self, final_callback):
+        if not self.username:
+            return
+
+        # this code would be much simpler refactored using async
+        def build_callback(game_key, call, next_callback):
+            def update_save_info(data, returncode):
+                if returncode == 0:
+                    try:
+                        global game_modes
+                        save_dict = json_decode(data)[game_modes[game_key]]
+                        if not save_dict["loadable"]:
+                            # the save in this slot is in use.
+                            self.save_info[game_key] = "[playing]" # TODO: something better??
+                        elif game_modes[game_key] == save_dict["game_type"]:
+                            # save in the slot matches the game type we are
+                            # checking.
+                            self.save_info[game_key] = "[" + save_dict["short_desc"] + "]"
+                        else:
+                            # There is a save, but it has a different game type.
+                            # This happens if multiple game types share a slot.
+                            self.save_info[game_key] = "[slot full]"
+                    except:
+                        # game key missing (or other error). This will mainly
+                        # happen if there are no saves at all for the player
+                        # name.
+                        self.save_info[game_key] = "[start]"
+                else:
+                    # error in the subprocess: this will happen if the binary
+                    # does not support `-save-json`.
+                    self.save_info[game_key] = "[start]"
+                next_callback()
+            return lambda: checkoutput.check_output(call, update_save_info)
+
+        callback = final_callback
+        for g in config.games:
+            if not config.games[g].get("show_save_info", False):
+                self.save_info[g] = "[start]"
+                continue
+            if self.save_info.get(g, "") != "":
+                # set a game key to "" to invalidate the cache.
+                # if there is a value set, skip it.
+                continue
+            call = ([config.games[g]["crawl_binary"]]
+                            + config.games[g].get("options", [])
+                            + ["-save-json", self.username])
+            callback = build_callback(g, call, callback)
+
+        callback()
+
     def send_game_links(self):
         # Rerender Banner
         banner_html = to_unicode(self.render_string("banner.html",
                                                     username = self.username))
-        self.queue_message("html", id = "banner", content = banner_html)
-        play_html = to_unicode(self.render_string("game_links.html",
-                                                  games = config.games))
-        self.send_message("set_game_links", content = play_html)
+        def disable_check(s):
+            return s == "[slot full]"
+        def finalize_game_links():
+            self.queue_message("html", id = "banner", content = banner_html)
+            # TODO: dynamically send this info as it comes in, rather than
+            # rendering it all at the end?
+            play_html = to_unicode(self.render_string("game_links.html",
+                                                  games = config.games,
+                                                  save_info = self.save_info,
+                                                  disabled = disable_check))
+            self.send_message("set_game_links", content = play_html)
+        self.collect_save_info(finalize_game_links)
 
     def reset_timeout(self):
         if self.timeout:
@@ -317,6 +421,10 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             return
 
         self.game_id = game_id
+
+        # invalidate cached save info for lobby
+        # TODO: invalidate for other sockets of the same player?
+        self.save_info[game_id] = ""
 
         import process_handler
 
@@ -368,6 +476,9 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 # Go back to lobby
                 self.send_message("game_ended", reason = reason,
                                   message = message, dump = dump_url)
+                # invalidate cached save info for lobby
+                self.save_info[self.game_id] = ""
+
                 if config.dgl_mode:
                     if not self.watched_game:
                         self.send_message("go_lobby")

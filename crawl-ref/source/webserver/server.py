@@ -238,7 +238,6 @@ def init_logging(logging_config):
     logging.addLevelName(logging.DEBUG, "DEBG")
     logging.addLevelName(logging.WARNING, "WARN")
 
-
 def check_config():
     success = True
     for (game_id, game_data) in games.items():
@@ -250,6 +249,8 @@ def check_config():
             not os.path.exists(game_data["client_path"])):
             logging.warning("Client data path %s doesn't exist!", game_data["client_path"])
             success = False
+
+    collect_game_modes()
 
     if getattr(config, "allow_password_reset", False) and not config.lobby_url:
         logging.warning("Lobby URL needs to be defined!")
