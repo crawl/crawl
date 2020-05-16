@@ -1432,9 +1432,7 @@ level_id generic_shaft_dest(level_id place)
 
     // Shafts drop you 1/2/3 levels with equal chance.
     // 33.3% for 1, 2, 3 from D:3, less before
-    place.depth += 1;
-    if (you.species != SP_FORMICID)
-        place.depth += random2(min(place.depth, 3));
+    place.depth += 1 + random2(min(place.depth, 3));
 
     if (place.depth > max_depth)
         place.depth = max_depth;
