@@ -11,6 +11,7 @@ try:
     from typing import Dict  # OrderedDict would work in py38+
     from typing import List
     from typing import Union
+
     GameDefinition = Dict[str, Union[str, bool, List[str], Dict[str, str]]]
     GamesConfig = Dict[str, GameDefinition]
 except ImportError:
@@ -54,7 +55,7 @@ def load_games(existing_games):  # type: (GamesConfig) -> GamesConfig
     new_games.update(existing_games)
     for file_name in sorted(os.listdir(base_path)):
         path = os.path.join(base_path, file_name)
-        if not file_name.endswith('.yaml') and not file_name.endswith('.yml'):
+        if not file_name.endswith(".yaml") and not file_name.endswith(".yml"):
             logging.warn("Skipping non-yaml file %s", file_name)
             continue
         try:
@@ -65,28 +66,36 @@ def load_games(existing_games):  # type: (GamesConfig) -> GamesConfig
         try:
             data = yaml.safe_load(yaml_text)
         except yaml.YAMLError as e:
-            logging.warning("Failed to load games from %s, skipping (parse failure: %s).",
-                            file_name, e)
+            logging.warning(
+                "Failed to load games from %s, skipping (parse failure: %s).",
+                file_name,
+                e,
+            )
             continue
-        if data is None or 'games' not in data:
-            logging.warning("Failed to load games from %s, skipping (no 'games' key).",
-                            file_name)
+        if data is None or "games" not in data:
+            logging.warning(
+                "Failed to load games from %s, skipping (no 'games' key).", file_name
+            )
             continue
         if len(data.keys()) != 1:
-            extra_keys = ",".join(key for key in data.keys() if key != 'games')
+            extra_keys = ",".join(key for key in data.keys() if key != "games")
             logging.warning(
-              "Found extra top-level keys '%s' in %s, ignoring them"
-              " (only 'games' key will be parsed).",
-              extra_keys, file_name)
+                "Found extra top-level keys '%s' in %s, ignoring them"
+                " (only 'games' key will be parsed).",
+                extra_keys,
+                file_name,
+            )
         logging.info("Loading data from %s", file_name)
-        for game in data['games']:  # noqa
+        for game in data["games"]:  # noqa
             if not validate_game_dict(game):
                 continue
-            game_id = game['id']
+            game_id = game["id"]
             if game_id in delta:
                 logging.warning(
-                  "Game %s from %s was specified in an earlier config file, skipping.",
-                  game_id, path)
+                    "Game %s from %s was specified in an earlier config file, skipping.",
+                    game_id,
+                    path,
+                )
             delta[game_id] = game  # noqa
             action = "Updated" if game_id in existing_games else "Loaded"
             msg = ("%s game config %s (from %s).", action, game_id, file_name)
@@ -105,72 +114,111 @@ def validate_game_dict(game):
 
     Log warnings about issues and return validity.
     """
-    if 'id' not in game:
+    if "id" not in game:
         # Log the full game definition to help identify the game
         logging.warn("Missing 'id' from game definition %r", game)
         return False
     found_errors = False
-    required = ('id', 'name', 'crawl_binary', 'rcfile_path', 'macro_path',
-                'morgue_path', 'inprogress_path', 'ttyrec_path',
-                'socket_path', 'client_path')
-    optional = ('dir_path', 'cwd', 'morgue_url', 'milestone_path',
-                'send_json_options', 'options', 'env', 'separator',
-                'show_save_info')
-    boolean = ('send_json_options', 'show_save_info')
-    string_array = ('options',)
-    string_dict = ('env', )
+    required = (
+        "id",
+        "name",
+        "crawl_binary",
+        "rcfile_path",
+        "macro_path",
+        "morgue_path",
+        "inprogress_path",
+        "ttyrec_path",
+        "socket_path",
+        "client_path",
+    )
+    optional = (
+        "dir_path",
+        "cwd",
+        "morgue_url",
+        "milestone_path",
+        "send_json_options",
+        "options",
+        "env",
+        "separator",
+        "show_save_info",
+    )
+    boolean = ("send_json_options", "show_save_info")
+    string_array = ("options",)
+    string_dict = ("env",)
     for prop in required:
         if prop not in game:
             found_errors = True
-            logging.warn("Missing required property '%s' in game '%s'",
-                         prop, game['id'])
+            logging.warn(
+                "Missing required property '%s' in game '%s'", prop, game["id"]
+            )
     for prop, value in game.items():
         expected = prop in required or prop in optional
         if not expected:
             # Don't count this as an error
-            logging.warn("Unknown property '%s' in game '%s'",
-                         prop, game['id'])
+            logging.warn("Unknown property '%s' in game '%s'", prop, game["id"])
         if prop in boolean:
             if not isinstance(value, bool):
                 found_errors = True
-                logging.warn("Property '%s' value should be boolean in game '%s'",
-                             prop, game['id'])
+                logging.warn(
+                    "Property '%s' value should be boolean in game '%s'",
+                    prop,
+                    game["id"],
+                )
         elif prop in string_array:
             if not isinstance(value, list):
                 found_errors = True
-                logging.warn("Property '%s' value should be list of strings in game '%s'",
-                             prop, game['id'])
+                logging.warn(
+                    "Property '%s' value should be list of strings in game '%s'",
+                    prop,
+                    game["id"],
+                )
                 continue
             for item in value:
                 if not isinstance(item, str):
                     found_errors = True
                     logging.warn(
-                      "Item '%s' in property '%s' should be a string in game '%s'",
-                      item, prop, game['id'])
+                        "Item '%s' in property '%s' should be a string in game '%s'",
+                        item,
+                        prop,
+                        game["id"],
+                    )
         elif prop in string_dict:
             if not isinstance(value, dict):
                 found_errors = True
                 logging.warn(
-                  "Property '%s' value should be a map of string: string in game '%s'",
-                  prop, game['id'])
+                    "Property '%s' value should be a map of string: string in game '%s'",
+                    prop,
+                    game["id"],
+                )
                 continue
             for item_key, item_value in value.items():
                 if not isinstance(item_key, str):
                     found_errors = True
                     logging.warn(
-                      "Item key '%s' in property '%s' should be a string in game '%s'",
-                      item_key, prop, game['id'])
+                        "Item key '%s' in property '%s' should be a string in game '%s'",
+                        item_key,
+                        prop,
+                        game["id"],
+                    )
                 if not isinstance(item_value, str):
                     found_errors = True
-                    logging.warn("Item value '%s' of key '%s' in property '%s'"
-                                 " should be a string in game '%s'",
-                                 item_value, item_key, prop, game['id'])
+                    logging.warn(
+                        "Item value '%s' of key '%s' in property '%s'"
+                        " should be a string in game '%s'",
+                        item_value,
+                        item_key,
+                        prop,
+                        game["id"],
+                    )
         else:
             # String property
             if not isinstance(value, str):
                 found_errors = True
-                logging.warn("Property '%s' value should be string in game '%s'",
-                             prop, game['id'])
+                logging.warn(
+                    "Property '%s' value should be string in game '%s'",
+                    prop,
+                    game["id"],
+                )
     return not found_errors
 
 
@@ -179,6 +227,7 @@ game_modes = {}  # type: Dict[str, str]
 
 def collect_game_modes():
     import config
+
     # figure out what game modes are associated with which game in the config.
     # Basically: try to line up options in the game config with game types
     # reported by the binary. If the binary doesn't support `-gametypes-json`
@@ -188,9 +237,11 @@ def collect_game_modes():
     # This is very much a blocking call, especially with many binaries.
     binaries = {}
     for g in config.games:
-        call = ([config.games[g]["crawl_binary"]]
-                + config.games[g].get("options", [])
-                + ["-gametypes-json"])
+        call = (
+            [config.games[g]["crawl_binary"]]
+            + config.games[g].get("options", [])
+            + ["-gametypes-json"]
+        )
         try:
             m_json = subprocess.check_output(call, stderr=subprocess.STDOUT)
             binaries[config.games[g]["crawl_binary"]] = json_decode(m_json)

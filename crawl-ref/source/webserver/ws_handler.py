@@ -30,10 +30,11 @@ try:
 except:
     pass
 
-sockets = set() # type: Set[CrawlWebSocket]
+sockets = set()  # type: Set[CrawlWebSocket]
 current_id = 0
 shutting_down = False
 rand = random.SystemRandom()
+
 
 def shutdown():
     global shutting_down
@@ -41,22 +42,28 @@ def shutdown():
     for socket in list(sockets):
         socket.shutdown()
 
+
 def update_global_status():
     write_dgl_status_file()
+
 
 def update_all_lobbys(game):
     lobby_entry = game.lobby_entry()
     for socket in list(sockets):
         if socket.is_in_lobby():
             socket.send_message("lobby_entry", **lobby_entry)
+
+
 def remove_in_lobbys(process):
     for socket in list(sockets):
         if socket.is_in_lobby():
             socket.send_message("lobby_remove", id=process.id)
 
+
 def global_announce(text):
     for socket in list(sockets):
         socket.send_announcement(text)
+
 
 def write_dgl_status_file():
     f = None
@@ -64,31 +71,44 @@ def write_dgl_status_file():
         f = open(config.dgl_status_file, "w")
         for socket in list(sockets):
             if socket.username and socket.is_running():
-                f.write("%s#%s#%s#0x0#%s#%s#\n" %
-                        (socket.username, socket.game_id,
-                         (socket.process.human_readable_where()),
-                         str(socket.process.idle_time()),
-                         str(socket.process.watcher_count())))
+                f.write(
+                    "%s#%s#%s#0x0#%s#%s#\n"
+                    % (
+                        socket.username,
+                        socket.game_id,
+                        (socket.process.human_readable_where()),
+                        str(socket.process.idle_time()),
+                        str(socket.process.watcher_count()),
+                    )
+                )
     except (OSError, IOError) as e:
         logging.warning("Could not write dgl status file: %s", e)
     finally:
-        if f: f.close()
+        if f:
+            f.close()
+
 
 def status_file_timeout():
     write_dgl_status_file()
-    IOLoop.current().add_timeout(time.time() + config.status_file_update_rate,
-                                 status_file_timeout)
+    IOLoop.current().add_timeout(
+        time.time() + config.status_file_update_rate, status_file_timeout
+    )
+
 
 def find_user_sockets(username):
     for socket in list(sockets):
         if socket.username and socket.username.lower() == username.lower():
             yield socket
 
+
 def find_running_game(charname, start):
     from process_handler import processes
+
     for process in list(processes.values()):
-        if (process.where.get("name") == charname and
-            process.where.get("start") == start):
+        if (
+            process.where.get("name") == charname
+            and process.where.get("start") == start
+        ):
             return process
     return None
 
@@ -97,17 +117,17 @@ def _milestone_files():
     # First we collect all milestone files explicitly specified in the config.
     files = set()
 
-    top_level_milestones = getattr(config, 'milestone_file', None)
+    top_level_milestones = getattr(config, "milestone_file", None)
     if top_level_milestones is not None:
         if not isinstance(top_level_milestones, list):
             top_level_milestones = [top_level_milestones]
         files.update(top_level_milestones)
 
     for game_config in config.games.values():
-        milestone_file = game_config.get('milestone_file')
-        if milestone_file is None and 'dir_path' in game_config:
+        milestone_file = game_config.get("milestone_file")
+        if milestone_file is None and "dir_path" in game_config:
             # milestone appears in this dir by default
-            milestone_file = os.path.join(game_config['dir_path'], 'milestones')
+            milestone_file = os.path.join(game_config["dir_path"], "milestones")
         if milestone_file is not None:
             files.add(milestone_file)
 
@@ -115,10 +135,10 @@ def _milestone_files():
     # variant.
     new_files = set()
     for f in files:
-        if f.endswith('-seeded'):
+        if f.endswith("-seeded"):
             new_files.add(f[:-7])
         else:
-            new_files.add(f + '-seeded')
+            new_files.add(f + "-seeded")
     files.update(new_files)
 
     # Finally, drop any files that don't exist
@@ -126,27 +146,38 @@ def _milestone_files():
 
     return files
 
+
 milestone_file_tailers = []
+
+
 def start_reading_milestones():
     milestone_files = _milestone_files()
     for f in milestone_files:
         milestone_file_tailers.append(FileTailer(f, handle_new_milestone))
 
+
 def handle_new_milestone(line):
     data = parse_where_data(line)
-    if "name" not in data: return
+    if "name" not in data:
+        return
     game = find_running_game(data.get("name"), data.get("start"))
-    if game: game.log_milestone(data)
+    if game:
+        game.log_milestone(data)
+
 
 # decorator for admin calls
 def admin_required(f):
     def wrapper(self, *args, **kwargs):
         if not self.is_admin():
-            logging.error("Non-admin user '%s' attempted admin function '%s'" %
-                (self.username and self.username or "[Anon]", f.__name__))
+            logging.error(
+                "Non-admin user '%s' attempted admin function '%s'"
+                % (self.username and self.username or "[Anon]", f.__name__)
+            )
             return
         return f(self, *args, **kwargs)
+
     return wrapper
+
 
 class CrawlWebSocket(tornado.websocket.WebSocketHandler):
     def __init__(self, app, req, **kwargs):
@@ -168,9 +199,9 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         current_id += 1
 
         self.deflate = True
-        self._compressobj = zlib.compressobj(zlib.Z_DEFAULT_COMPRESSION,
-                                             zlib.DEFLATED,
-                                             -zlib.MAX_WBITS)
+        self._compressobj = zlib.compressobj(
+            zlib.Z_DEFAULT_COMPRESSION, zlib.DEFLATED, -zlib.MAX_WBITS
+        )
         self.total_message_bytes = 0
         self.compressed_bytes_sent = 0
         self.uncompressed_bytes_sent = 0
@@ -202,15 +233,19 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             "get_rc": self.get_rc,
             "set_rc": self.set_rc,
             "admin_announce": self.admin_announce,
-            }
+        }
 
     @admin_required
     def admin_announce(self, text):
         global_announce(text)
-        self.logger.info("User '%s' sent serverwide announcement: %s", self.username, text)
+        self.logger.info(
+            "User '%s' sent serverwide announcement: %s", self.username, text
+        )
         self.send_message("admin_log", text="Announcement made ('" + text + "')")
 
-    client_closed = property(lambda self: (not self.ws_connection) or self.ws_connection.client_terminated)
+    client_closed = property(
+        lambda self: (not self.ws_connection) or self.ws_connection.client_terminated
+    )
 
     def _process_log_msg(self, msg, kwargs):
         return "#%-5s %s" % (self.id, msg), kwargs
@@ -233,7 +268,9 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
     def open(self):
         compression = "on"
-        if isinstance(self.ws_connection, getattr(tornado.websocket, "WebSocketProtocol76", ())):
+        if isinstance(
+            self.ws_connection, getattr(tornado.websocket, "WebSocketProtocol76", ())
+        ):
             # Old Websocket versions don't support binary messages
             self.deflate = False
             compression = "off, old websockets"
@@ -244,17 +281,21 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 self.deflate = False
                 compression = "deflate-frame extension"
 
-        self.logger.info("Socket opened from ip %s (fd%s, compression: %s).",
-                         self.request.remote_ip,
-                         self.ws_connection.stream.socket.fileno(),
-                         compression)
+        self.logger.info(
+            "Socket opened from ip %s (fd%s, compression: %s).",
+            self.request.remote_ip,
+            self.ws_connection.stream.socket.fileno(),
+            compression,
+        )
         sockets.add(self)
 
         self.reset_timeout()
 
         if config.max_connections < len(sockets):
-            self.append_message("connection_closed('The maximum number of "
-                              + "connections has been reached, sorry :(');")
+            self.append_message(
+                "connection_closed('The maximum number of "
+                + "connections has been reached, sorry :(');"
+            )
             self.close()
         elif shutting_down:
             self.close()
@@ -281,6 +322,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
     def send_lobby(self):
         self.queue_message("lobby_clear")
         from process_handler import processes
+
         for process in list(processes.values()):
             self.queue_message("lobby_entry", **process.lobby_entry())
         self.send_message("lobby_complete")
@@ -310,11 +352,15 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                         save_dict = json_decode(data)[load_games.game_modes[game_key]]
                         if not save_dict["loadable"]:
                             # the save in this slot is in use.
-                            self.save_info[game_key] = "[playing]" # TODO: something better??
+                            self.save_info[
+                                game_key
+                            ] = "[playing]"  # TODO: something better??
                         elif load_games.game_modes[game_key] == save_dict["game_type"]:
                             # save in the slot matches the game type we are
                             # checking.
-                            self.save_info[game_key] = "[" + save_dict["short_desc"] + "]"
+                            self.save_info[game_key] = (
+                                "[" + save_dict["short_desc"] + "]"
+                            )
                         else:
                             # There is a save, but it has a different game type.
                             # This happens if multiple game types share a slot.
@@ -333,6 +379,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                     logging.warn("Save info check for '%s' failed" % game_key)
                     self.save_info[game_key] = "[start]"
                 next_callback()
+
             return lambda: checkoutput.check_output(call, update_save_info)
 
         callback = final_callback
@@ -344,28 +391,38 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 # set a game key to "" to invalidate the cache.
                 # if there is a value set, skip it.
                 continue
-            call = ([config.games[g]["crawl_binary"]]
-                            + config.games[g].get("options", [])
-                            + ["-save-json", self.username])
+            call = (
+                [config.games[g]["crawl_binary"]]
+                + config.games[g].get("options", [])
+                + ["-save-json", self.username]
+            )
             callback = build_callback(g, call, callback)
 
         callback()
 
     def send_game_links(self):
         # Rerender Banner
-        banner_html = to_unicode(self.render_string("banner.html",
-                                                    username = self.username))
+        banner_html = to_unicode(
+            self.render_string("banner.html", username=self.username)
+        )
+
         def disable_check(s):
             return s == "[slot full]"
+
         def finalize_game_links():
-            self.queue_message("html", id = "banner", content = banner_html)
+            self.queue_message("html", id="banner", content=banner_html)
             # TODO: dynamically send this info as it comes in, rather than
             # rendering it all at the end?
-            play_html = to_unicode(self.render_string("game_links.html",
-                                                  games = config.games,
-                                                  save_info = self.save_info,
-                                                  disabled = disable_check))
-            self.send_message("set_game_links", content = play_html)
+            play_html = to_unicode(
+                self.render_string(
+                    "game_links.html",
+                    games=config.games,
+                    save_info=self.save_info,
+                    disabled=disable_check,
+                )
+            )
+            self.send_message("set_game_links", content=play_html)
+
         self.collect_save_info(finalize_game_links)
 
     def reset_timeout(self):
@@ -375,8 +432,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         self.received_pong = False
         self.send_message("ping")
         self.timeout = IOLoop.current().add_timeout(
-                                        time.time() + config.connection_timeout,
-                                        self.check_connection)
+            time.time() + config.connection_timeout, self.check_connection
+        )
 
     def check_connection(self):
         self.timeout = None
@@ -402,7 +459,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             if self.username == None:
                 if self.watched_game:
                     self.stop_watching()
-                self.send_message("login_required", game = game_params["name"])
+                self.send_message("login_required", game=game_params["name"])
                 return
 
         if self.process:
@@ -436,7 +493,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.process = None
             self.go_lobby()
         else:
-            if self.process is None: # Can happen if the process creation fails
+            if self.process is None:  # Can happen if the process creation fails
                 self.go_lobby()
                 return
 
@@ -466,8 +523,9 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 self.close()
             else:
                 # Go back to lobby
-                self.send_message("game_ended", reason = reason,
-                                  message = message, dump = dump_url)
+                self.send_message(
+                    "game_ended", reason=reason, message=message, dump=dump_url
+                )
                 # invalidate cached save info for lobby
                 self.save_info[self.game_id] = ""
 
@@ -496,21 +554,28 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 # differently, and given that we're deprecating tornado 2.4
                 # it doesn't seem worth implementing right now. Just stick with
                 # the old synchronous approach for backwards compatibility.
-                p = subprocess.Popen([config.init_player_program, self.username],
-                                         stdout = f, stderr = subprocess.STDOUT)
+                p = subprocess.Popen(
+                    [config.init_player_program, self.username],
+                    stdout=f,
+                    stderr=subprocess.STDOUT,
+                )
                 callback(p.wait())
             else:
                 # TODO: do we need to care about the streams at all here?
                 p = tornado.process.Subprocess(
-                        [config.init_player_program, self.username],
-                        stdout = f, stderr = subprocess.STDOUT)
+                    [config.init_player_program, self.username],
+                    stdout=f,
+                    stderr=subprocess.STDOUT,
+                )
                 p.set_exit_callback(callback)
 
     def stop_watching(self):
         if self.watched_game:
-            self.logger.info("%s stopped watching %s.",
-                                    self.username and self.username or "[Anon]",
-                                    self.watched_game.username)
+            self.logger.info(
+                "%s stopped watching %s.",
+                self.username and self.username or "[Anon]",
+                self.watched_game.username,
+            )
             self.watched_game.remove_watcher(self)
             self.watched_game = None
 
@@ -518,7 +583,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         if not self.client_closed:
             self.logger.info("Shutting down user %s id %d", self.username, self.id)
             msg = to_unicode(self.render_string("shutdown.html", game=self))
-            self.send_message("close", reason = msg)
+            self.send_message("close", reason=msg)
             self.close()
         if self.is_running():
             self.process.stop()
@@ -531,18 +596,22 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         def login_callback(result):
             success = result == 0
             if not success:
-                msg = ("Could not initialize your rc and morgue!<br>" +
-                       "This probably means there is something wrong " +
-                       "with the server configuration.")
-                self.send_message("close", reason = msg)
-                self.logger.warning("User initialization returned an error for user %s!",
-                                    self.username)
+                msg = (
+                    "Could not initialize your rc and morgue!<br>"
+                    + "This probably means there is something wrong "
+                    + "with the server configuration."
+                )
+                self.send_message("close", reason=msg)
+                self.logger.warning(
+                    "User initialization returned an error for user %s!", self.username
+                )
                 self.username = None
                 self.close()
                 return
 
-            self.queue_message("login_success", username=username,
-                               admin=self.is_admin())
+            self.queue_message(
+                "login_success", username=username, admin=self.is_admin()
+            )
             if self.watched_game:
                 self.watched_game.update_watcher_description()
             else:
@@ -553,8 +622,9 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
     def login(self, username, password):
         real_username = userdb.user_passwd_match(username, password)
         if real_username:
-            self.logger.info("User %s logging in from %s.",
-                                        real_username, self.request.remote_ip)
+            self.logger.info(
+                "User %s logging in from %s.", real_username, self.request.remote_ip
+            )
             self.do_login(real_username)
         else:
             self.logger.warning("Failed login for user %s.", username)
@@ -574,8 +644,9 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         if self.username is None:
             return
         cookie = auth.log_in_as_user(self, self.username)
-        self.send_message("login_cookie", cookie = cookie,
-                          expires = config.login_token_lifetime)
+        self.send_message(
+            "login_cookie", cookie=cookie, expires=config.login_token_lifetime
+        )
 
     def forget_login_cookie(self, cookie):
         auth.forget_login_cookie(cookie)
@@ -596,7 +667,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         if db_string is None:
             db_string = ""
         # list constructor here is for forward compatibility with python 3.
-        muted = list([_f for _f in db_string.strip().split(' ') if _f])
+        muted = list([_f for _f in db_string.strip().split(" ") if _f])
         receiver.restore_mutelist(self.username, muted)
 
     def save_mutelist(self, muted):
@@ -610,10 +681,13 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         self.received_pong = True
 
     def rcfile_path(self, game_id):
-        if game_id not in config.games: return None
-        if not self.username: return None
-        path = dgl_format_str(config.games[game_id]["rcfile_path"],
-                                     self.username, config.games[game_id])
+        if game_id not in config.games:
+            return None
+        if not self.username:
+            return None
+        path = dgl_format_str(
+            config.games[game_id]["rcfile_path"], self.username, config.games[game_id]
+        )
         return os.path.join(path, self.username + ".rc")
 
     def send_json_options(self, game_id, player_name):
@@ -624,11 +698,14 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 if returncode != 1:
                     self.logger.warning("Error while getting JSON options!")
                 return
-            self.append_message('{"msg":"options","watcher":true,"options":'
-                                + data + '}')
+            self.append_message(
+                '{"msg":"options","watcher":true,"options":' + data + "}"
+            )
 
-        if not self.username: return
-        if game_id not in config.games: return
+        if not self.username:
+            return
+        if game_id not in config.games:
+            return
 
         game = config.games[game_id]
         if not "send_json_options" in game or not game["send_json_options"]:
@@ -639,8 +716,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         if "pre_options" in game:
             call += game["pre_options"]
 
-        call += ["-name", player_name,
-                 "-rc", self.rcfile_path(game_id)]
+        call += ["-name", player_name, "-rc", self.rcfile_path(game_id)]
         if "options" in game:
             call += game["options"]
         call.append("-print-webtiles-options")
@@ -652,21 +728,28 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.process.stop()
 
         from process_handler import processes
-        procs = [process for process in list(processes.values())
-                 if process.username.lower() == username.lower()]
+
+        procs = [
+            process
+            for process in list(processes.values())
+            if process.username.lower() == username.lower()
+        ]
         if len(procs) >= 1:
             process = procs[0]
             if self.watched_game:
                 if self.watched_game == process:
                     return
                 self.stop_watching()
-            self.logger.info("%s started watching %s (%s).",
-                                self.username and self.username or "[Anon]",
-                                process.username, process.id)
+            self.logger.info(
+                "%s started watching %s (%s).",
+                self.username and self.username or "[Anon]",
+                process.username,
+                process.id,
+            )
 
             self.watched_game = process
             process.add_watcher(self)
-            self.send_message("watching_started", username = process.username)
+            self.send_message("watching_started", username=process.username)
         else:
             if self.watched_game:
                 self.stop_watching()
@@ -681,8 +764,9 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
         if receiver:
             if self.username is None:
-                self.send_message("chat", content
-                                  = 'You need to log in to send messages!')
+                self.send_message(
+                    "chat", content="You need to log in to send messages!"
+                )
                 return
 
             if not receiver.handle_chat_command(self, text):
@@ -694,25 +778,36 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.logger.info("Registered user %s.", username)
             self.do_login(username)
         else:
-            self.logger.info("Registration attempt failed for username %s: %s",
-                             username, error)
-            self.send_message("register_fail", reason = error)
+            self.logger.info(
+                "Registration attempt failed for username %s: %s", username, error
+            )
+            self.send_message("register_fail", reason=error)
 
     def start_change_email(self):
-        self.send_message("start_change_email", email = self.user_email)
+        self.send_message("start_change_email", email=self.user_email)
 
     def change_email(self, email):
         if self.username is None:
-            self.send_message("change_email_fail", reason = "You need to log in to change your email")
+            self.send_message(
+                "change_email_fail", reason="You need to log in to change your email"
+            )
             return
         error = userdb.change_email(self.user_id, email)
         if error is None:
-            self.user_id, self.user_email, self.user_flags = userdb.get_user_info(self.username)
-            self.logger.info("User %s changed email to %s.", self.username, email if email else "null")
-            self.send_message("change_email_done", email = email)
+            self.user_id, self.user_email, self.user_flags = userdb.get_user_info(
+                self.username
+            )
+            self.logger.info(
+                "User %s changed email to %s.",
+                self.username,
+                email if email else "null",
+            )
+            self.send_message("change_email_done", email=email)
         else:
-            self.logger.info("Failed to change username for %s: %s", self.username, error)
-            self.send_message("change_email_fail", reason = error)
+            self.logger.info(
+                "Failed to change username for %s: %s", self.username, error
+            )
+            self.send_message("change_email_fail", reason=error)
 
     def forgot_password(self, email):
         if not getattr(config, "allow_password_reset", False):
@@ -722,34 +817,39 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             if sent:
                 self.logger.info("Sent password reset email to %s.", email)
             else:
-                self.logger.info("User requested a password reset, but email "
-                                 "is not registered (%s).", email)
+                self.logger.info(
+                    "User requested a password reset, but email "
+                    "is not registered (%s).",
+                    email,
+                )
             self.send_message("forgot_password_done")
         else:
-            self.logger.info("Failed to send password reset email for %s: %s",
-                             email, error)
-            self.send_message("forgot_password_fail", reason = error)
+            self.logger.info(
+                "Failed to send password reset email for %s: %s", email, error
+            )
+            self.send_message("forgot_password_fail", reason=error)
 
     def reset_password(self, token, password):
         if not getattr(config, "allow_password_reset", False):
             return
-        username, error = userdb.update_user_password_from_token(token,
-                                                                 password)
+        username, error = userdb.update_user_password_from_token(token, password)
         if error is None:
-            self.logger.info("User %s has completed their password reset.",
-                             username)
+            self.logger.info("User %s has completed their password reset.", username)
             self.send_message("reload_url")
         else:
             if username is None:
-                self.logger.info("Failed to update password for token %s: %s",
-                                 token, error)
+                self.logger.info(
+                    "Failed to update password for token %s: %s", token, error
+                )
             else:
-                self.logger.info("Failed to update password for user %s: %s",
-                                 username, error)
-            self.send_message("reset_password_fail", reason = error)
+                self.logger.info(
+                    "Failed to update password for user %s: %s", username, error
+                )
+            self.send_message("reset_password_fail", reason=error)
 
     def go_lobby(self):
-        if not config.dgl_mode: return
+        if not config.dgl_mode:
+            return
         if self.is_running():
             self.process.stop()
         elif self.watched_game:
@@ -764,27 +864,29 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         self.send_message("go_admin")
 
     def get_rc(self, game_id):
-        if game_id not in config.games: return
+        if game_id not in config.games:
+            return
         path = self.rcfile_path(game_id)
         try:
-            with open(path, 'r') as f:
+            with open(path, "r") as f:
                 contents = f.read()
         # Handle RC file not existing. IOError for py2, OSError for py3
         except (OSError, IOError):
-            contents = ''
-        self.send_message("rcfile_contents", contents = contents)
+            contents = ""
+        self.send_message("rcfile_contents", contents=contents)
 
     def set_rc(self, game_id, contents):
-        rcfile_path = dgl_format_str(config.games[game_id]["rcfile_path"],
-                                     self.username, config.games[game_id])
+        rcfile_path = dgl_format_str(
+            config.games[game_id]["rcfile_path"], self.username, config.games[game_id]
+        )
         rcfile_path = os.path.join(rcfile_path, self.username + ".rc")
-        with open(rcfile_path, 'wb') as f:
+        with open(rcfile_path, "wb") as f:
             # TODO: is binary + encode necessary in py 3?
             f.write(utf8(contents))
 
-    def on_message(self, message): # type: (Union[str, bytes]) -> None
+    def on_message(self, message):  # type: (Union[str, bytes]) -> None
         try:
-            obj = json_decode(message) # type: Dict[str, Any]
+            obj = json_decode(message)  # type: Dict[str, Any]
             if obj["msg"] in self.message_handlers:
                 handler = self.message_handlers[obj["msg"]]
                 del obj["msg"]
@@ -792,20 +894,19 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             elif self.process:
                 self.process.handle_input(message)
             elif not self.watched_game:
-                self.logger.warning("Didn't know how to handle msg (user %s): %s",
-                                    self.username and self.username or "[Anon]",
-                                    obj["msg"])
+                self.logger.warning(
+                    "Didn't know how to handle msg (user %s): %s",
+                    self.username and self.username or "[Anon]",
+                    obj["msg"],
+                )
         except Exception:
-            self.logger.warning("Error while handling JSON message!",
-                                exc_info=True)
+            self.logger.warning("Error while handling JSON message!", exc_info=True)
 
     def flush_messages(self):
         # type: () -> Optional[tornado.concurrent.Future[None]]
         if self.client_closed or len(self.message_queue) == 0:
             return None
-        msg = ("{\"msgs\":["
-                + ",".join(self.message_queue)
-                + "]}")
+        msg = '{"msgs":[' + ",".join(self.message_queue) + "]}"
         self.message_queue = []
 
         try:
@@ -824,7 +925,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 self.uncompressed_bytes_sent += len(binmsg)
                 return self.write_message(binmsg)
         except:
-            self.logger.warning("Exception trying to send message.", exc_info = True)
+            self.logger.warning("Exception trying to send message.", exc_info=True)
             if self.ws_connection is not None:
                 self.ws_connection._abort()
         return None
@@ -832,10 +933,11 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
     # n.b. this looks a lot like superclass write_message, but has a static
     # type signature that is not compatible with it, so we do not override
     # that function.
-    def append_message(self,
-                       msg,      # type: str
-                       send=True # type: bool
-                       ):
+    def append_message(
+        self,
+        msg,  # type: str
+        send=True,  # type: bool
+    ):
         # type: (...) -> Optional[tornado.concurrent.Future[None]]
         if self.client_closed:
             return None
@@ -873,8 +975,16 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         if self.total_message_bytes == 0:
             comp_ratio = "N/A"
         else:
-            comp_ratio = 100 - 100 * (self.compressed_bytes_sent + self.uncompressed_bytes_sent) / self.total_message_bytes
+            comp_ratio = (
+                100
+                - 100
+                * (self.compressed_bytes_sent + self.uncompressed_bytes_sent)
+                / self.total_message_bytes
+            )
             comp_ratio = round(comp_ratio, 2)
 
-        self.logger.info("Socket closed. (%s sent, compression ratio %s%%)",
-                         util.humanise_bytes(self.total_message_bytes), comp_ratio)
+        self.logger.info(
+            "Socket closed. (%s sent, compression ratio %s%%)",
+            util.humanise_bytes(self.total_message_bytes),
+            comp_ratio,
+        )

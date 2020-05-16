@@ -25,8 +25,9 @@ def purge_login_tokens():
 
 def purge_login_tokens_timeout():
     purge_login_tokens()
-    IOLoop.current().add_timeout(time.time() + 60 * 60 * 1000,
-                                 purge_login_tokens_timeout)
+    IOLoop.current().add_timeout(
+        time.time() + 60 * 60 * 1000, purge_login_tokens_timeout
+    )
 
 
 def log_in_as_user(request, username):
@@ -40,7 +41,7 @@ def log_in_as_user(request, username):
 
 
 def _parse_login_cookie(cookie):
-    username, _, token = cookie.partition('%20')
+    username, _, token = cookie.partition("%20")
     try:
         token = int(token)
     except ValueError:

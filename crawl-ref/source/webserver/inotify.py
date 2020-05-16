@@ -17,7 +17,7 @@ except ImportError:
 
 # The below class is from pyinotify, released under the MIT license
 # Copyright (c) 2010 Sebastien Martini <seb@dbzteam.org>
-class _CtypesLibcINotifyWrapper():
+class _CtypesLibcINotifyWrapper:
     def __init__(self):  # type: () -> None
         self._libc = None
         self._get_errno_func = None
@@ -26,7 +26,7 @@ class _CtypesLibcINotifyWrapper():
         assert ctypes
         libc_name = None
         try:
-            libc_name = ctypes.util.find_library('c')
+            libc_name = ctypes.util.find_library("c")
         except (OSError, IOError):
             pass  # Will attempt to load it with None anyway.
 
@@ -43,15 +43,20 @@ class _CtypesLibcINotifyWrapper():
                 pass
 
         # Eventually check that libc has needed inotify bindings.
-        if (not hasattr(self._libc, 'inotify_init') or
-            not hasattr(self._libc, 'inotify_add_watch') or
-            not hasattr(self._libc, 'inotify_rm_watch')):
+        if (
+            not hasattr(self._libc, "inotify_init")
+            or not hasattr(self._libc, "inotify_add_watch")
+            or not hasattr(self._libc, "inotify_rm_watch")
+        ):
             return False
 
         self._libc.inotify_init.argtypes = []
         self._libc.inotify_init.restype = ctypes.c_int
-        self._libc.inotify_add_watch.argtypes = [ctypes.c_int, ctypes.c_char_p,
-                                                 ctypes.c_uint32]
+        self._libc.inotify_add_watch.argtypes = [
+            ctypes.c_int,
+            ctypes.c_char_p,
+            ctypes.c_uint32,
+        ]
         self._libc.inotify_add_watch.restype = ctypes.c_int
         self._libc.inotify_rm_watch.argtypes = [ctypes.c_int, ctypes.c_int]
         self._libc.inotify_rm_watch.restype = ctypes.c_int
@@ -76,9 +81,10 @@ class _CtypesLibcINotifyWrapper():
         assert self._libc is not None
         return self._libc.inotify_rm_watch(fd, wd)
 
+
 class DirectoryWatcher(object):
-    CREATE = 0x100 # IN_CREATE
-    DELETE = 0x200 # IN_DELETE
+    CREATE = 0x100  # IN_CREATE
+    DELETE = 0x200  # IN_DELETE
 
     def __init__(self):  # type: () -> None
         self.inotify = _CtypesLibcINotifyWrapper()
@@ -87,17 +93,20 @@ class DirectoryWatcher(object):
             self.fd = self.inotify._inotify_init()
             tornado.platform.posix._set_nonblocking(self.fd)
             tornado.platform.posix.set_close_exec(self.fd)
-            IOLoop.current().add_handler(self.fd, self._handle_read,
-                                         IOLoop.ERROR | IOLoop.READ)
-        self.handlers = dict() # type: Dict[int, Callable[[str, int], Any]]
+            IOLoop.current().add_handler(
+                self.fd, self._handle_read, IOLoop.ERROR | IOLoop.READ
+            )
+        self.handlers = dict()  # type: Dict[int, Callable[[str, int], Any]]
         self.paths = dict()  # type: Dict[int, str]
         self.buffer = bytes()
 
     def watch(self, path, handler):  # type: (str, Callable[[str, int], Any]) -> None
         if self.enabled:
-            w = self.inotify._inotify_add_watch(self.fd, path.encode('utf-8'),
-                                                DirectoryWatcher.CREATE |
-                                                DirectoryWatcher.DELETE)
+            w = self.inotify._inotify_add_watch(
+                self.fd,
+                path.encode("utf-8"),
+                DirectoryWatcher.CREATE | DirectoryWatcher.DELETE,
+            )
             self.handlers[w] = handler
             self.paths[w] = path
 
@@ -113,9 +122,9 @@ class DirectoryWatcher(object):
                 (w,) = struct.unpack_from("@i", data, i)
                 i += struct.calcsize("@i")
                 (mask, cookie, l) = struct.unpack_from("=III", data, i)
-                i += 3*4
+                i += 3 * 4
                 (name,) = struct.unpack_from("%ds" % l, data, i)
-                name = name.rstrip(b"\x00").decode('utf-8')
+                name = name.rstrip(b"\x00").decode("utf-8")
                 i += l
                 self.handlers[w](os.path.join(self.paths[w], name), mask)
         except OSError as e:

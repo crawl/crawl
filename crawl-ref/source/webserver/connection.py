@@ -28,7 +28,7 @@ class WebtilesSocketConnection(object):
 
         self.msg_buffer = None
 
-    def connect(self, primary = True):
+    def connect(self, primary=True):
         if not os.path.exists(self.crawl_socketpath):
             # Wait until the socket exists
             IOLoop.current().add_timeout(time.time() + 1, self.connect)
@@ -42,13 +42,13 @@ class WebtilesSocketConnection(object):
         fcntl.fcntl(self.socket.fileno(), flags | fcntl.FD_CLOEXEC)
 
         self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        if (self.socket.getsockopt(socket.SOL_SOCKET, socket.SO_SNDBUF) < 2048):
+        if self.socket.getsockopt(socket.SOL_SOCKET, socket.SO_SNDBUF) < 2048:
             self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_SNDBUF, 2048)
         # on linux, the following may have no effect (setting SO_RCVBUF is
         # often documented as having no effect), but on other unixes, it
         # matters quite a bit. The choice of 212992 is based on the linux
         # default.
-        if (self.socket.getsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF) < 212992):
+        if self.socket.getsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF) < 212992:
             self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, 212992)
 
         # Bind to a temp path
@@ -60,19 +60,17 @@ class WebtilesSocketConnection(object):
         # socket, regular calls in tempfile are not appropriate.
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
-            self.socketpath = tempfile.mktemp(dir=server_socket_path,
-                                              prefix="crawl", suffix=".socket")
+            self.socketpath = tempfile.mktemp(
+                dir=server_socket_path, prefix="crawl", suffix=".socket"
+            )
         self.socket.bind(self.socketpath)
 
         # Install handler
-        IOLoop.current().add_handler(self.socket.fileno(),
-                                     self._handle_read,
-                                     IOLoop.ERROR | IOLoop.READ)
+        IOLoop.current().add_handler(
+            self.socket.fileno(), self._handle_read, IOLoop.ERROR | IOLoop.READ
+        )
 
-        msg = json_encode({
-                "msg": "attach",
-                "primary": primary
-                })
+        msg = json_encode({"msg": "attach", "primary": primary})
 
         self.open = True
 
@@ -87,13 +85,13 @@ class WebtilesSocketConnection(object):
         if events & IOLoop.ERROR:
             pass
 
-    def _handle_data(self, data): # type: (bytes) -> None
+    def _handle_data(self, data):  # type: (bytes) -> None
         if self.msg_buffer is not None:
             data = self.msg_buffer + data
 
         # TODO: is this check safe? Decoding won't always work for
         # fragmented messages...
-        if data[-1] != b'\n'[0]:
+        if data[-1] != b"\n"[0]:
             # All messages from crawl end with \n.
             # If this one doesn't, it's fragmented.
             self.msg_buffer = data
@@ -103,7 +101,7 @@ class WebtilesSocketConnection(object):
             if self.message_callback:
                 self.message_callback(to_unicode(data))
 
-    def send_message(self, data): # type: (str) -> None
+    def send_message(self, data):  # type: (str) -> None
         start = datetime.now()
         try:
             self.socket.sendto(utf8(data), self.crawl_socketpath)

@@ -56,8 +56,9 @@ settings_db = setup_settings_path()
 def ensure_settings_db_exists():  # type: () -> None
     if os.path.exists(settings_db):
         return
-    logging.warn("User settings database didn't exist at '%s'; creating it now.",
-                 settings_db)
+    logging.warn(
+        "User settings database didn't exist at '%s'; creating it now.", settings_db
+    )
     create_settings_db()
 
 
@@ -75,8 +76,10 @@ def create_settings_db():  # type: () -> None
 
 def get_mutelist(username):  # type: (str) -> Optional[str]
     with crawl_db(settings_db) as db:
-        db.c.execute("select mutelist from mutesettings where username=? collate nocase",
-                     (username,))
+        db.c.execute(
+            "select mutelist from mutesettings where username=? collate nocase",
+            (username,),
+        )
         result = db.c.fetchone()
     return result[0] if result is not None else None
 
@@ -111,6 +114,7 @@ def dgl_is_admin(flags):  # type: (int) -> bool
 
 def dgl_is_banned(flags):  # type: (int) -> bool
     return bool(flags & DGLACCT_LOGIN_LOCK)
+
 
 # TODO: something with other lock flags?
 
@@ -161,13 +165,17 @@ def ensure_user_db_exists():  # type: () -> None
 
 def create_user_db():  # type: () -> None
     with crawl_db(password_db) as db:
-        schema = ("CREATE TABLE dglusers (id integer primary key," +
-                  " username text, email text, env text," +
-                  " password text, flags integer);")
+        schema = (
+            "CREATE TABLE dglusers (id integer primary key,"
+            + " username text, email text, env text,"
+            + " password text, flags integer);"
+        )
         db.c.execute(schema)
-        schema = ("CREATE TABLE recovery_tokens (token text primary key,"
-                  " token_time text, user_id integer not null,"
-                  " foreign key(user_id) references dglusers(id));")
+        schema = (
+            "CREATE TABLE recovery_tokens (token text primary key,"
+            " token_time text, user_id integer not null,"
+            " foreign key(user_id) references dglusers(id));"
+        )
         db.c.execute(schema)
         db.conn.commit()
 
@@ -180,9 +188,11 @@ def upgrade_user_db():  # type: () -> None
 
         if "recovery_tokens" not in tables:
             logging.warn("User database missing table 'recovery_tokens'; adding now")
-            schema = ("CREATE TABLE recovery_tokens (token text primary key,"
-                      " token_time text, user_id integer not null,"
-                      " foreign key(user_id) references dglusers(id));")
+            schema = (
+                "CREATE TABLE recovery_tokens (token text primary key,"
+                " token_time text, user_id integer not null,"
+                " foreign key(user_id) references dglusers(id));"
+            )
             db.c.execute(schema)
             db.conn.commit()
 
@@ -191,7 +201,7 @@ _SALTCHARS = "./0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
 
 
 def make_salt(saltlen):  # type: (int) -> str
-    return ''.join(random.choice(_SALTCHARS) for x in range(0, saltlen))
+    return "".join(random.choice(_SALTCHARS) for x in range(0, saltlen))
 
 
 def encrypt_pw(passwd):  # type: (str) -> str
@@ -220,8 +230,9 @@ def register_user(username, passwd, email):  # type: (str, str, str) -> Optional
     crypted_pw = encrypt_pw(passwd)
 
     with crawl_db(password_db) as db:
-        db.c.execute("select username from dglusers where username=? collate nocase",
-                     (username,))
+        db.c.execute(
+            "select username from dglusers where username=? collate nocase", (username,)
+        )
         result = db.c.fetchone()
 
     if result:
@@ -282,7 +293,7 @@ def find_recovery_token(token):
         userid = result[0]
         username = result[1]
         expired = result[2]
-        if expired == 'Y':
+        if expired == "Y":
             return userid, username, "Expired token"
         else:
             return userid, username, None
@@ -304,10 +315,10 @@ def update_user_password_from_token(token, passwd):
 
     if userid and not token_error:
         with crawl_db(password_db) as db:
-            db.c.execute("update dglusers set password=? where id=?",
-                         (crypted_pw, userid))
-            db.c.execute("delete from recovery_tokens where user_id=?",
-                         (userid,))
+            db.c.execute(
+                "update dglusers set password=? where id=?", (crypted_pw, userid)
+            )
+            db.c.execute("delete from recovery_tokens where user_id=?", (userid,))
             db.conn.commit()
 
     return username, token_error
@@ -339,37 +350,55 @@ def send_forgot_password(email):  # type: (str) -> Tuple[bool, Optional[str]]
     token_hash = token_hash_obj.hexdigest()
     # store hash in db
     with crawl_db(password_db) as db:
-        db.c.execute("insert into recovery_tokens(token, token_time, user_id) "
-                     "values (?,datetime('now'),?)", (token_hash, userid))
+        db.c.execute(
+            "insert into recovery_tokens(token, token_time, user_id) "
+            "values (?,datetime('now'),?)",
+            (token_hash, userid),
+        )
         db.conn.commit()
 
     # send email
-    lobby_url = getattr(config, 'lobby_url', '')  # note: hack to satisfy mypy
+    lobby_url = getattr(config, "lobby_url", "")  # note: hack to satisfy mypy
     url_text = lobby_url + "?ResetToken=" + to_unicode(token)
 
-    msg_body_plaintext = """Someone (hopefully you) has requested to reset the password for your account at """ + lobby_url + """.
+    msg_body_plaintext = (
+        """Someone (hopefully you) has requested to reset the password for your account at """
+        + lobby_url
+        + """.
 
 If you initiated this request, please use this link to reset your password:
 
-    """ + url_text + """
+    """
+        + url_text
+        + """
 
 If you did not ask to reset your password, feel free to ignore this email.
 """
+    )
 
-    msg_body_html = """<html>
+    msg_body_html = (
+        """<html>
   <head></head>
   <body>
     <p>Someone (hopefully you) has requested to reset the password for your
-       account at """ + lobby_url + """.<br /><br />
+       account at """
+        + lobby_url
+        + """.<br /><br />
        If you initiated this request, please use this link to reset your
        password:<br /><br />
-       &emsp;<a href='""" + url_text + """'>""" + url_text + """</a><br /><br />
+       &emsp;<a href='"""
+        + url_text
+        + """'>"""
+        + url_text
+        + """</a><br /><br />
        If you did not ask to reset your password, feel free to ignore this email.
     </p>
   </body>
 </html>"""
+    )
 
-    send_email(email, 'Request to reset your password',
-               msg_body_plaintext, msg_body_html)
+    send_email(
+        email, "Request to reset your password", msg_body_plaintext, msg_body_html
+    )
 
     return True, None

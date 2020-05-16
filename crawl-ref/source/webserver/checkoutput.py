@@ -9,14 +9,18 @@ from tornado.ioloop import IOLoop
 
 BUFSIZ = 1024
 
+
 def _set_nonblocking(fd):
     flags = fcntl.fcntl(fd, fcntl.F_GETFL)
     fcntl.fcntl(fd, fcntl.F_SETFL, flags | os.O_NONBLOCK)
 
+
 """A non-blocking version of subprocess.check_output on the tornado ioloop."""
+
+
 def check_output(call, callback):
     out_r, out_w = os.pipe()
-    nul_f = open(os.devnull, 'w')
+    nul_f = open(os.devnull, "w")
     p = subprocess.Popen(call, stdout=out_w, stderr=nul_f)
     nul_f.close()
     os.close(out_w)
@@ -57,5 +61,4 @@ def check_output(call, callback):
         if events & IOLoop.ERROR:
             _poll()
 
-    IOLoop.current().add_handler(out_r, _handle_read,
-                                 IOLoop.ERROR | IOLoop.READ)
+    IOLoop.current().add_handler(out_r, _handle_read, IOLoop.ERROR | IOLoop.READ)

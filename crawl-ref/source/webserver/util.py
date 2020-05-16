@@ -34,7 +34,7 @@ class DynamicTemplateLoader(tornado.template.Loader):  # type: ignore
         name = self.resolve_path(name, parent_path=parent_path)
         # Fall back to template.html.default if template.html does not exist
         if not os.path.isfile(os.path.join(self.root, name)):
-            name = name + '.default'
+            name = name + ".default"
 
         if name in self.templates:
             template = self.templates[name]
@@ -67,8 +67,7 @@ class FileTailer(object):
         self.file = None  # type: Optional[TextIO]
         self.filename = filename
         self.callback = callback
-        self.scheduler = tornado.ioloop.PeriodicCallback(self.check,
-                                                         interval_ms)
+        self.scheduler = tornado.ioloop.PeriodicCallback(self.check, interval_ms)
         self.scheduler.start()
 
     def check(self):  # type: () -> None
@@ -128,7 +127,8 @@ def send_email(to_address, subject, body_plaintext, body_html):
         # TODO: this should not be a blocking call at all...
         if config.smtp_use_ssl:
             email_server = smtplib.SMTP_SSL(
-                config.smtp_host, config.smtp_port)  # type: smtplib.SMTP
+                config.smtp_host, config.smtp_port
+            )  # type: smtplib.SMTP
         else:
             email_server = smtplib.SMTP(config.smtp_host, config.smtp_port)
         connected = True
@@ -138,13 +138,13 @@ def send_email(to_address, subject, body_plaintext, body_html):
             email_server.login(config.smtp_user, config.smtp_password)
 
         # build multipart message
-        msg = MIMEMultipart('alternative')
-        msg['Subject'] = subject
-        msg['From'] = config.smtp_from_addr
-        msg['To'] = to_address
+        msg = MIMEMultipart("alternative")
+        msg["Subject"] = subject
+        msg["From"] = config.smtp_from_addr
+        msg["To"] = to_address
 
-        part1 = MIMEText(body_plaintext, 'plain')
-        part2 = MIMEText(body_html, 'html')
+        part1 = MIMEText(body_plaintext, "plain")
+        part2 = MIMEText(body_html, "html")
 
         msg.attach(part1)
         msg.attach(part2)
@@ -179,7 +179,7 @@ def humanise_bytes(num):  # type: (int) -> str
     units = ["kilobytes", "megabytes", "gigabytes"]
     for index, unit in reversed(list(enumerate(units))):
         index += 1
-        n = float(num) / 1000**index
+        n = float(num) / 1000 ** index
         if n > 1:
             return "{} {}".format(round(n, 1), unit)
     return "{} bytes".format(num)

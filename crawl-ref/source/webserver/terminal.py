@@ -14,16 +14,18 @@ from tornado.ioloop import IOLoop
 
 BUFSIZ = 2048
 
+
 class TerminalRecorder(object):
-    def __init__(self,
-                 command, # type: List[str]
-                 filename,
-                 id_header,
-                 logger,
-                 termsize,
-                 env_vars, # type: Dict[str, str]
-                 game_cwd, # type: Optional[str]
-                 ):
+    def __init__(
+        self,
+        command,  # type: List[str]
+        filename,
+        id_header,
+        logger,
+        termsize,
+        env_vars,  # type: Dict[str, str]
+        game_cwd,  # type: Optional[str]
+    ):
         """
         Args:
             command: argv of command to run, eg [cmd, args, ...]
@@ -32,7 +34,7 @@ class TerminalRecorder(object):
         """
         self.command = command
         if filename:
-            self.ttyrec = open(filename, "wb", 0) # type: Optional[BinaryIO]
+            self.ttyrec = open(filename, "wb", 0)  # type: Optional[BinaryIO]
         else:
             self.ttyrec = None
         self.id = id
@@ -69,6 +71,7 @@ class TerminalRecorder(object):
             # We're the child
             def handle_signal(signal, f):
                 sys.exit(0)
+
             signal.signal(1, handle_signal)
 
             # Set window size
@@ -88,11 +91,11 @@ class TerminalRecorder(object):
                     pass
 
             # And exec
-            env            = dict(os.environ)
+            env = dict(os.environ)
             env.update(self.env_vars)
             env["COLUMNS"] = str(cols)
-            env["LINES"]   = str(lines)
-            env["TERM"]    = "linux"
+            env["LINES"] = str(lines)
+            env["TERM"] = "linux"
             if self.game_cwd:
                 os.chdir(self.game_cwd)
             try:
@@ -103,13 +106,13 @@ class TerminalRecorder(object):
         # We're the parent
         os.close(errpipe_write)
 
-        IOLoop.current().add_handler(self.child_fd,
-                                     self._handle_read,
-                                     IOLoop.ERROR | IOLoop.READ)
+        IOLoop.current().add_handler(
+            self.child_fd, self._handle_read, IOLoop.ERROR | IOLoop.READ
+        )
 
-        IOLoop.current().add_handler(self.errpipe_read,
-                                     self._handle_err_read,
-                                     IOLoop.READ)
+        IOLoop.current().add_handler(
+            self.errpipe_read, self._handle_err_read, IOLoop.READ
+        )
 
     def _handle_read(self, fd, events):
         if events & IOLoop.READ:
@@ -140,12 +143,14 @@ class TerminalRecorder(object):
             self.poll()
 
     def write_ttyrec_header(self, sec, usec, l):
-        if self.ttyrec is None: return
+        if self.ttyrec is None:
+            return
         s = struct.pack("<iii", sec, usec, l)
         self.ttyrec.write(s)
 
     def write_ttyrec_chunk(self, data):
-        if self.ttyrec is None: return
+        if self.ttyrec is None:
+            return
         t = time.time()
         self.write_ttyrec_header(int(t), int((t % 1) * 1000000), len(data))
         self.ttyrec.write(data)
@@ -154,10 +159,11 @@ class TerminalRecorder(object):
         pos = self.output_buffer.find(b"\n")
         while pos >= 0:
             line = self.output_buffer[:pos]
-            self.output_buffer = self.output_buffer[pos + 1:]
+            self.output_buffer = self.output_buffer[pos + 1 :]
 
             if len(line) > 0:
-                if line[-1] == b"\r": line = line[:-1]
+                if line[-1] == b"\r":
+                    line = line[:-1]
 
                 if self.output_callback:
                     self.output_callback(to_unicode(line))
@@ -168,17 +174,17 @@ class TerminalRecorder(object):
         pos = self.error_buffer.find(b"\n")
         while pos >= 0:
             line = self.error_buffer[:pos]
-            self.error_buffer = self.error_buffer[pos + 1:]
+            self.error_buffer = self.error_buffer[pos + 1 :]
 
             if len(line) > 0:
-                if line[-1] == b"\r": line = line[:-1]
+                if line[-1] == b"\r":
+                    line = line[:-1]
 
                 self.logger.info("ERR: %s", to_unicode(line))
                 if self.error_callback:
                     self.error_callback(to_unicode(line))
 
             pos = self.error_buffer.find(b"\n")
-
 
     def send_signal(self, signal):
         os.kill(self.pid, signal)
@@ -214,7 +220,8 @@ class TerminalRecorder(object):
         return self.termsize
 
     def write_input(self, data):
-        if self.poll() is not None: return
+        if self.poll() is not None:
+            return
 
         while len(data) > 0:
             written = os.write(self.child_fd, data)
