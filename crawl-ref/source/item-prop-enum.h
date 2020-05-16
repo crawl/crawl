@@ -466,6 +466,7 @@ enum special_armour_type
 #endif
     SPARM_HARM,
     SPARM_SHADOWS,
+    SPARM_LUNGING,
     NUM_REAL_SPECIAL_ARMOURS,
     NUM_SPECIAL_ARMOURS,
 };
