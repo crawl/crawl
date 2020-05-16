@@ -26,6 +26,7 @@ import load_games
 from util import *
 
 try:
+    # pylint: disable=unused-import
     from typing import Dict, Set, Tuple, Any, Union, Optional
 except:
     pass
@@ -37,6 +38,7 @@ rand = random.SystemRandom()
 
 
 def shutdown():
+    # pylint: disable=global-statement
     global shutting_down
     shutting_down = True
     for socket in list(sockets):
@@ -194,6 +196,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
         tornado.ioloop.IOLoop.current()
 
+        # pylint: disable=global-statement
         global current_id
         self.id = current_id
         current_id += 1
@@ -307,6 +310,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             else:
                 self.start_crawl(None)
 
+    # pylint: disable=no-self-use,unused-argument
     def check_origin(self, origin):
         return True
 
@@ -365,6 +369,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                             # There is a save, but it has a different game type.
                             # This happens if multiple game types share a slot.
                             self.save_info[game_key] = "[slot full]"
+                    # pylint: disable=broad-except
                     except Exception:
                         # game key missing (or other error). This will mainly
                         # happen if there are no saves at all for the player
@@ -488,6 +493,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         self.process.add_watcher(self)
         try:
             self.process.start()
+        # pylint: disable=broad-except
         except Exception:
             self.logger.warning("Exception starting process!", exc_info=True)
             self.process = None
@@ -899,6 +905,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                     self.username and self.username or "[Anon]",
                     obj["msg"],
                 )
+        # pylint: disable=broad-except
         except Exception:
             self.logger.warning("Error while handling JSON message!", exc_info=True)
 
