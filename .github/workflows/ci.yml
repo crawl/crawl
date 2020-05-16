@@ -105,7 +105,7 @@ jobs:
       - run: make -j$(nproc) ${{ matrix.build_opts }} ${{ matrix.debug }}
         working-directory: crawl-ref/source
       # Only run `make test` with TAG_MAJOR_VERSION 34 (it fails with 35).
-      - if: matrix.debug == 'FULLDEBUG=1' && matrix.tag_upgrade == false
+      - if: matrix.debug == 'FULLDEBUG=1' && matrix.build_opts == '' && matrix.tag_upgrade == false
         run: make -j$(nproc) ${{ matrix.build_opts }} ${{ matrix.debug }} test
         working-directory: crawl-ref/source
         env:
