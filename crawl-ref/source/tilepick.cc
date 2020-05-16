@@ -1996,8 +1996,11 @@ tileidx_t tileidx_monster(const monster_info& mons)
         ch |= TILE_FLAG_STAB;
     }
     // Should petrify show the '?' symbol?
-    else if (mons.is(MB_DISTRACTED) && !mons.is(MB_PETRIFYING))
+    else if (mons.is(MB_DISTRACTED) && !mons.is(MB_PETRIFYING)
+            || mons.attitude == ATT_FRIENDLY && mons.is(MB_CONFUSED))
+    {
         ch |= TILE_FLAG_MAY_STAB;
+    }
 
     mon_dam_level_type damage_level = mons.dam;
 

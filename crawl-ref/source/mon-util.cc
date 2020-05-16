@@ -3513,7 +3513,7 @@ bool mons_is_removed(monster_type mc)
 bool mons_looks_stabbable(const monster& m)
 {
     const stab_type st = find_stab_type(&you, m, false);
-    return !m.friendly() && stab_bonus_denom(st) == 1; // top-tier stab
+    return stab_bonus_denom(st) == 1; // top-tier stab
 }
 
 bool mons_looks_distracted(const monster& m)
