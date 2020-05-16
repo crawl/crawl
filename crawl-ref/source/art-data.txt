@@ -1405,6 +1405,8 @@ NAME:     Cigotuvi's embrace
 OBJ:      OBJ_ARMOUR/ARM_LEATHER_ARMOUR
 PLUS:     +4 # varies with corpse count
 COLOUR:   ETC_UNHOLY
+TILE:     urand_cigotuvi
+TILE_EQ:  bplate_green
 # XXX TODO: tiles
 LIFE:     1
 INSCRIP:  rRot
