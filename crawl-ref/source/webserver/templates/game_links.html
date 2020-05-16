@@ -2,17 +2,16 @@ Play now:
 {% try %}
     {% set rcs = set() %}
     {% for id in games %}
-        {% if save_info[id] == "" %}
-            {% set save_info_text = "[start!]" %}
-        {% else %}
-            {% set save_info_text = save_info[id] %}
-        {% end %}
         {% if disabled(save_info[id]) %}<span class="fg7">{% else %}<span>{% end %}
         {% if games[id]["rcfile_path"] not in rcs %}
             {% if "separator" in games[id] %}
-              {% raw games[id]["separator"] %}
+                {% raw games[id]["separator"] %}
             {% else %}<br>{% end %}
-            {{ games[id]["name"] }}
+            {% if not save_info[id] %}<a href="#play-{{ id }}">{% end %}
+                {{ games[id]["name"] }}{% if not save_info[id] %}</a>{% end %}
+            {% if save_info[id] %}
+                <span>{% if not disabled(save_info[id]) %}<a href="#play-{{ id }}">{% end %}{{ save_info[id] }}{% if not disabled(save_info[id]) %}</a>{% end %}</span>
+            {% end %}
             {% set rcs.add(games[id]["rcfile_path"]) %}
             <a href="javascript:"
                class="edit_rc_link"
@@ -21,9 +20,12 @@ Play now:
             {% if "separator" in games[id] %}
               {% raw games[id]["separator"] %}
             {% else %} | {% end %}
-            {{ games[id]["name"] }}
+            {% if not save_info[id] %}<a href="#play-{{ id }}">{% end %}
+                {{ games[id]["name"] }}{% if not save_info[id] %}</a>{% end %}
+            {% if save_info[id] %}
+                <span>{% if not disabled(save_info[id]) %}<a href="#play-{{ id }}">{% end %}{{ save_info[id] }}{% if not disabled(save_info[id]) %}</a>{% end %}</span>
+            {% end %}
         {% end %}
-        <span>{% if not disabled(save_info[id]) %}<a href="#play-{{ id }}">{% end %}{{ save_info_text }}{% if not disabled(save_info[id]) %}</a>{% end %}</span>
         </span>
     {% end %}
 {% except %}

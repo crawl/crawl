@@ -5,7 +5,7 @@ games:
   # id must be unique for each game
   - id: seeded-web-trunk
     # The name for this game, displayed on the webtiles HTML interface
-    name: DCSS trunk, custom seed
+    name: Custom seed
     # Games are called with the following argv:
     # [
     #   $crawl_binary,
@@ -86,7 +86,7 @@ games:
     # (Or submit a PR to remove it.)
     send_json_options: True
   - id: tut-web-trunk
-    name: Tutorial trunk
+    name: Tutorial
     crawl_binary: ./crawl
     rcfile_path: ./rcs/
     macro_path: ./rcs/
@@ -106,7 +106,7 @@ games:
     # env:
     #   LANG: en_US.UTF8
   - id: sprint-web-trunk
-    name: Sprint trunk
+    name: Sprint
     crawl_binary: ./crawl
     rcfile_path: ./rcs/
     macro_path: ./rcs/

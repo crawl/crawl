@@ -75,7 +75,7 @@ use_game_yaml = True
 # All options in this config are documented in games.d/base.yaml.
 games = OrderedDict([
     ("dcss-web-trunk", dict(
-        name = "DCSS trunk",
+        name = "Play trunk",
         crawl_binary = "./crawl",
         rcfile_path = "./rcs/",
         macro_path = "./rcs/",

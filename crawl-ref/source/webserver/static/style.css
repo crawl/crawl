@@ -126,6 +126,10 @@ body {
     position: relative;
 }
 
+#play_now {
+    padding-top: 10px;
+}
+
 #admin_panel {
     border: 1px solid lightgray;
     padding: 10px;

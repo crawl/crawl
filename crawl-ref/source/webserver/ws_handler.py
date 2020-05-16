@@ -326,19 +326,21 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                         # setups if escape codes are incorrectly inserted into
                         # the output for some calls. See:
                         # https://github.com/crawl/dgamelaunch-config/commit/6ad788ceb5614b3c83d65b61bf26a122e592b98d
-                        self.save_info[game_key] = "[start]"
+                        self.save_info[game_key] = ""
                 else:
                     # error in the subprocess: this will happen if the binary
-                    # does not support `-save-json`.
+                    # does not support `-save-json`. Print a warning so that
+                    # the admin can see that they have save info enabled
+                    # incorrectly for this binary.
                     logging.warn("Save info check for '%s' failed" % game_key)
-                    self.save_info[game_key] = "[start]"
+                    self.save_info[game_key] = ""
                 next_callback()
             return lambda: checkoutput.check_output(call, update_save_info)
 
         callback = final_callback
         for g in config.games:
             if not config.games[g].get("show_save_info", False):
-                self.save_info[g] = "[start]"
+                self.save_info[g] = ""
                 continue
             if self.save_info.get(g, "") != "":
                 # set a game key to "" to invalidate the cache.
