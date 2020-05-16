@@ -295,6 +295,19 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             if self.is_running():
                 self.process.handle_announcement(text)
 
+    def invalidate_saveslot_cache(self, slot):
+        # TODO: the following will get false positives. However, to do any
+        # better would need some non-trivial refactoring of how crawl handles
+        # save slots (which is a bit insane). A heuristic might be to check the
+        # binary, but in practice this doesn't help as most servers launch
+        # crawl via a wrapper script, not via a direct call.
+        if self.save_info.get(slot, None) is not None:
+            cache_check = "" if self.save_info[slot] == "" else "[slot full]"
+            for g in self.save_info:
+                if self.save_info[g] == cache_check:
+                    self.save_info[g] = None
+        self.save_info[slot] = None
+
     # collect save info for the player from all binaries that support save
     # info json. Cached on self.save_info. This is asynchronously done using
     # a somewhat involved callback chain.
@@ -342,14 +355,13 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             if not config.games[g].get("show_save_info", False):
                 self.save_info[g] = ""
                 continue
-            if self.save_info.get(g, "") != "":
-                # set a game key to "" to invalidate the cache.
-                # if there is a value set, skip it.
-                continue
-            call = ([config.games[g]["crawl_binary"]]
-                            + config.games[g].get("options", [])
-                            + ["-save-json", self.username])
-            callback = build_callback(g, call, callback)
+            if self.save_info.get(g, None) is None:
+                # cache for g is invalid, add a callback for it to the callback
+                # chain
+                call = ([config.games[g]["crawl_binary"]]
+                                + config.games[g].get("options", [])
+                                + ["-save-json", self.username])
+                callback = build_callback(g, call, callback)
 
         callback()
 
@@ -418,7 +430,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
         # invalidate cached save info for lobby
         # TODO: invalidate for other sockets of the same player?
-        self.save_info[game_id] = ""
+        self.invalidate_saveslot_cache(game_id)
 
         import process_handler
 
@@ -470,8 +482,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 # Go back to lobby
                 self.send_message("game_ended", reason = reason,
                                   message = message, dump = dump_url)
-                # invalidate cached save info for lobby
-                self.save_info[self.game_id] = ""
+
+                self.invalidate_saveslot_cache(self.game_id)
 
                 if config.dgl_mode:
                     if not self.watched_game:
