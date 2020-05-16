@@ -7,7 +7,7 @@ import yaml
 from tornado.escape import json_decode
 
 try:
-    import typing  # noqa 
+    import typing  # noqa
     from typing import Dict  # OrderedDict would work in py38+
     from typing import List
     from typing import Union
