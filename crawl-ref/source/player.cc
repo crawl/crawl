@@ -6039,6 +6039,8 @@ int player::armour_class_with_specific_items(vector<const item_def *> items) con
   **/
 int player::gdr_perc() const
 {
+    // These reductions are documented in spells.txt & items.txt, make sure to
+    // keep them in sync.
     switch (form)
     {
     case transformation::dragon:

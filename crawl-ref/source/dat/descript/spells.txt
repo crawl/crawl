@@ -490,6 +490,9 @@ Dragon Form spell
 }} The caster becomes able to deal incredible damage in melee combat, and
 they become much more robust, although their evasiveness is reduced.
 
+This form's defenses will reduce damage from weapons by at least 34% or [half
+your AC]% (whichever is less).
+
 While transformed, any equipped weapons and armour are melded.
 %%%%
 Dragon's Call spell
@@ -1339,6 +1342,9 @@ Transforms the caster into a slow but extremely robust stone statue. The
 caster's melee damage, both unarmed and with weapons, is substantially
 increased. The caster's stone body is insulated from electricity and gains
 resistance to poison, rotting and negative energy.
+
+This form's defenses will reduce damage from weapons by at least 34% or [half
+your AC]% (whichever is less).
 
 While transformed, any equipped body armour, gloves and boots are melded.
 %%%%
