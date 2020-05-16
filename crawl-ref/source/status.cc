@@ -162,6 +162,7 @@ static void _describe_stat_zero(status_info& inf, stat_type st);
 static void _describe_terrain(status_info& inf);
 static void _describe_missiles(status_info& inf);
 static void _describe_invisible(status_info& inf);
+static void _describe_lunging(status_info& inf);
 
 bool fill_status_info(int status, status_info& inf)
 {
@@ -430,6 +431,10 @@ bool fill_status_info(int status, status_info& inf)
                 = make_stringf("Storm (%d)",
                                you.props[WU_JIAN_HEAVENLY_STORM_KEY].get_int());
         }
+        break;
+
+    case STATUS_LUNGING:
+        _describe_lunging(inf);
         break;
 
     case DUR_WEREBLOOD:
@@ -951,6 +956,17 @@ static void _describe_invisible(status_info& inf)
     _mark_expiring(inf, dur_expiring(you.form == transformation::shadow
                                      ? DUR_TRANSFORMATION
                                      : DUR_INVIS));
+}
+
+static void _describe_lunging(status_info& inf)
+{
+    if (you.attribute[ATTR_PERM_LUNGING] > 0)
+    {
+        inf.light_colour = WHITE;
+        inf.light_text   = "Lunge";
+        inf.short_text   = "lunging";
+        inf.long_text    = "You lunge towards enemies when moving.";
+    }
 }
 
 /**

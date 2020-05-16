@@ -21,3 +21,5 @@ int wand_mp_cost();
 void zap_wand(int slot = -1);
 
 void black_drac_breath();
+
+void lunge_forward(coord_def move);

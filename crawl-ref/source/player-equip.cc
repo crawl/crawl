@@ -907,6 +907,31 @@ static void _equip_armour_effect(item_def& arm, bool unmeld,
         case SPARM_SHADOWS:
             mpr("It gets dark.");
             update_vision_range();
+
+        case SPARM_LUNGING:
+            // If you weren't lunging when you took off the boots, don't restart.
+            if (you.attribute[ATTR_LAST_LUNGING_STATUS]
+                || you.has_mutation(MUT_NO_ARTIFICE))
+            {
+                you.attribute[ATTR_PERM_LUNGING] = 1;
+                mpr("You feel ready to lunge towards enemies.");
+                
+            }
+            if (!unmeld)
+            {
+                if (you.has_mutation(MUT_NO_ARTIFICE))
+                {
+                    mprf("Take your %s off to stop lunging.",
+                         arm.name(DESC_BASENAME).c_str());
+                }
+                else
+                {
+                    mprf("(use the <w>%s</w>bility menu to %s lunging)",
+                         command_to_string(CMD_USE_ABILITY).c_str(),
+                         you.attribute[ATTR_LAST_LUNGING_STATUS]
+                             ? "stop or start" : "start or stop");
+                }
+            }
             break;
         }
     }
@@ -1077,6 +1102,16 @@ static void _unequip_armour_effect(item_def& item, bool meld,
     case SPARM_SHADOWS:
         mpr("The dungeon's light returns to normal.");
         update_vision_range();
+
+    case SPARM_LUNGING:
+        // Save current lunging status so we can restore it on reequip
+        you.attribute[ATTR_LAST_LUNGING_STATUS] =
+            you.attribute[ATTR_PERM_LUNGING];
+        if (!you.wearing_ego(EQ_ALL_ARMOUR, SPARM_LUNGING))
+        {
+            you.attribute[ATTR_PERM_LUNGING] = 0;
+        }
+        mpr("You feel less ready to lunge towards enemies.");
         break;
 
     default:

@@ -344,6 +344,9 @@ static const ability_def Ability_List[] =
       3, 0, 0, {fail_basis::evo, 50, 2}, abflag::none },
     { ABIL_EVOKE_THUNDER, "Evoke Thunderclouds",
       5, 0, 0, {fail_basis::evo, 60, 2}, abflag::none },
+    { ABIL_EVOKE_LUNGING, "Evoke Lunging",
+      1, 0, 100, 0, {fail_basis::evo, 40, 2}, abflag::none },
+    { ABIL_STOP_LUNGING, "Stop Lunging", 0, 0, 0, 0, {}, abflag::starve_ok },
 
 
     { ABIL_END_TRANSFORMATION, "End Transformation",
@@ -2213,6 +2216,12 @@ static spret _do_ability(const ability_def& abil, bool fail)
 
         break;
 
+    case ABIL_EVOKE_LUNGING: // boots
+        fail_check();
+        you.attribute[ATTR_PERM_LUNGING] = 1;
+        mpr("You feel ready to lunge towards enemies.");
+        break;
+
     case ABIL_CANCEL_PPROJ:
         fail_check();
         you.duration[DUR_PORTAL_PROJECTILE] = 0;
@@ -2225,6 +2234,12 @@ static spret _do_ability(const ability_def& abil, bool fail)
         you.duration[DUR_FLIGHT] = 0;
         you.attribute[ATTR_PERM_FLIGHT] = 0;
         land_player();
+        break;
+
+    case ABIL_STOP_LUNGING:
+        fail_check();
+        you.attribute[ATTR_PERM_LUNGING] = 0;
+        mpr("You are no longer lunging towards enemies.");
         break;
 
     case ABIL_END_TRANSFORMATION:
@@ -3565,6 +3580,12 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
                 _add_talent(talents, ABIL_STOP_FLYING, check_confused);
         }
     }
+
+    if (you.evokable_lunging() && !you.attribute[ATTR_PERM_LUNGING])
+        _add_talent(talents, ABIL_EVOKE_LUNGING, check_confused);
+
+    if (you.attribute[ATTR_PERM_LUNGING] && you.evokable_lunging())
+        _add_talent(talents, ABIL_STOP_LUNGING, check_confused);
 
     // Find hotkeys for the non-hotkeyed talents.
     for (talent &tal : talents)

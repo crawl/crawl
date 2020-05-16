@@ -21,6 +21,7 @@
 #include "directn.h"
 #include "dungeon.h"
 #include "env.h"
+#include "evoke.h"
 #include "fight.h"
 #include "fprop.h"
 #include "god-abil.h"
@@ -532,6 +533,16 @@ void move_player_action(coord_def move)
 
             return;
         }
+    }
+
+    if (you.lunging())
+    {
+        lunge_forward(move);
+
+        // lunge may have updated the player's position:
+        // check it again to be sure
+        ASSERT(!in_bounds(you.pos()) || !cell_is_solid(you.pos())
+               || you.wizmode_teleported_into_rock);
     }
 
     const coord_def targ = you.pos() + move;
