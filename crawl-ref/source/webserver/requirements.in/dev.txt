@@ -18,3 +18,5 @@ flake8-mypy; python_version >= '3.5'
 flake8-bugbear; python_version >= '3'
 flake8-comprehensions; python_version >= '3'
 flake8-eradicate; python_version >= '3'
+
+black; python_version >= '3'
