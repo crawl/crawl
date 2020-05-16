@@ -52,6 +52,7 @@ mutations:
     MUT_BIG_WINGS: 1
 fake_mutations:
   - long: You are resistant to torment.
+  - long: Your stone body increases the effectiveness of body armour damage reduction.
 recommended_jobs:
   - JOB_FIGHTER
   - JOB_GLADIATOR
