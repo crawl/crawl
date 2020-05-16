@@ -787,7 +787,8 @@ FB_BRAND: SPARM_SEE_INVISIBLE
 INSCRIP:  Detection Stab+
 PLUS:     +2
 COLOUR:   BROWN
-# XXX: needs tiles
+TILE:     urand_hood_assassin
+TILE_EQ:  hood_purple
 STEALTH:  2
 VALUE:    600
 

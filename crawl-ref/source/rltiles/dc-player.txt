@@ -1148,6 +1148,7 @@ hood_white2 HOOD_WHITE2
 hood_ybrown HOOD_YBROWN
 hood_green HOOD_GREEN
 ninja_black MASK_NINJA_BLACK
+hood_purple HOOD_PURPLE
 %end_ctg
 
 # draconian wings and heads, need same order as draconians
