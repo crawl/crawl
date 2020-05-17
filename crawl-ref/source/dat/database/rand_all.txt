@@ -832,6 +832,8 @@ Antique
 w:5
 Avant Garde
 
+Barnacled
+
 Beastly
 
 Bedazzling
@@ -849,6 +851,8 @@ Carved
 Cleverly Designed
 
 Damp
+
+Decaying
 
 Deeply Unsettling
 
@@ -894,6 +898,8 @@ Fuzzy
 Ghostly
 
 Glamorous
+
+Golden
 
 Grand
 
