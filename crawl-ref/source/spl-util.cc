@@ -495,6 +495,17 @@ int spell_difficulty(spell_type which_spell)
             return 6;
         }
     }
+    else if (which_spell == SPELL_PAKELLAS_ROD_REGEN) {
+        if (is_blueprint_exist(BLUEPRINT_LARGE_HEAL))
+        {
+            return 6;
+        }
+        if (is_blueprint_exist(BLUEPRINT_SMALL_HEAL))
+        {
+            return 5;
+        }
+    }
+
 
     return _seekspell(which_spell)->level;
 }
