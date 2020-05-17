@@ -232,7 +232,9 @@ of @_sky_or_light_@
 w:30
 of @_virtue_or_vice_@
 
-w:16
+w:6
+of @_number_or_qualifier_@ @_verbing_@ @_thing_names_@
+
 of @_number_or_qualifier_@ @_thing_names_@
 
 w:20
@@ -260,6 +262,9 @@ of @_suspicion_name_@
 
 # as defined for weapons (see rand_wpn.txt)
 of the @_people_name_@
+
+w:5
+of the @_verbing_@ @_people_name_@
 
 w:17
 of @_balance_or_order_@
@@ -308,8 +313,9 @@ of @_virtue_name_@
 w:13
 of @_vice_name_@
 
-w:20
 of @_number_or_qualifier_@ @_thing_names_@
+
+of @_number_or_qualifier_@ @_verbing_@ @_thing_names_@
 %%%%
 ######################################################
 # GOD GIFT specials

@@ -548,11 +548,19 @@ the Well-Known
 _thing_names_
 Allies
 
+Artisans
+
+Artists
+
+Beasts
+
 Beds
 
 Beggars
 
 Blessings
+
+Bounties
 
 Cities
 
@@ -566,6 +574,8 @@ Dances
 
 Deaths
 
+Defenders
+
 Demons
 
 Dreams
@@ -576,11 +586,27 @@ Eyes
 
 Friends
 
+Friars
+
+Geomancers
+
 Ghosts
 
 Gods
 
+Heavens
+
 Hells
+
+Hosts
+
+Interlopers
+
+Invaders
+
+Knaves
+
+Knives
 
 Lies
 
@@ -592,21 +618,38 @@ Mice
 
 Moons
 
+Mystics
+
+w:5
+Nightcaps
+
+Nightingales
+
 Nightmares
 
 Nights
+
+Olives
 
 Orbs
 
 People
 
+Persimmons
+
 Places
 
 Planets
 
+Priests
+
 Princes
 
+Prophets
+
 Queens
+
+Quests
 
 Realms
 
@@ -615,6 +658,10 @@ Runes
 Scars
 
 Seas
+
+Seers
+
+Servitors
 
 Ships
 
@@ -639,11 +686,110 @@ Tables
 
 Tales
 
+Teeth
+
+Tusks
+
+Ultimatums
+
+Underlurkers
+
+Violins
+
+Visionaries
+
+Visions
+
 Wars
 
 Wishes
 
 Wonders
 
+Xalams
+
+Xenops
+
+Xeniums
+
+w:5
+Xenophobes
+
 Yaks
+
+Youths
+
+Ziggurats
+%%%%
+_verbing_
+Glowing
+
+Smoking
+
+Scorching
+
+Twisting
+
+Shimmering
+
+Freezing
+
+Dripping
+
+Jumping
+
+Leaping
+
+Dancing
+
+Singing
+
+Shouting
+
+Screaming
+
+Muttering
+
+Glimmering
+
+w:5
+Ageing
+
+w:5
+Baking
+
+Hungering
+
+Devouring
+
+Destroying
+
+Lusting
+
+Saving
+
+Thieving
+
+Witching
+
+Wizarding
+
+Bespelling
+
+Protecting
+
+w:5
+Slicing
+
+w:5
+Chopping
+
+w:5
+Crushing
+
+w:5
+Slashing
+
+w:5
+Piercing
 %%%%
