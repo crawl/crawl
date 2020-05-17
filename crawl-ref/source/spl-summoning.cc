@@ -262,6 +262,172 @@ spret cast_call_canine_familiar(int pow, god_type god, bool fail)
     return spret::success;
 }
 
+// 
+
+static monster_type _feature_to_elemental(const coord_def& where)
+{
+    if (!in_bounds(where))
+        return MONS_NO_MONSTER;
+
+    if (grd(where) == DNGN_ROCK_WALL || grd(where) == DNGN_STONE_WALL
+        || grd(where) == DNGN_CLEAR_ROCK_WALL || grd(where) == DNGN_CLEAR_STONE_WALL
+        || grd(where) == DNGN_CRYSTAL_WALL || grd(where) == DNGN_PERMAROCK_WALL 
+        || grd(where) == DNGN_CLEAR_PERMAROCK_WALL
+        || cloud_type_at(where) == CLOUD_DUST
+        || cloud_type_at(where) == CLOUD_GOLD_DUST
+        || cloud_type_at(where) == CLOUD_PETRIFY)
+    {
+        return MONS_EARTH_ELEMENTAL;
+    }
+    if (grd(where) == DNGN_LAVA
+        || cloud_type_at(where) == CLOUD_FIRE
+        || cloud_type_at(where) == CLOUD_INNER_FLAME)
+    {
+        return MONS_FIRE_ELEMENTAL;
+    }
+    if (feat_is_watery(grd(where))
+        || cloud_type_at(where) == CLOUD_RAIN)
+    {
+        return MONS_WATER_ELEMENTAL;
+    }
+    if (feat_has_dry_floor(grd(where)) && 
+        (cloud_type_at(where) == CLOUD_NONE 
+        ||cloud_type_at(where) == CLOUD_TORNADO
+        ||cloud_type_at(where) == CLOUD_STORM))
+    {
+        return MONS_AIR_ELEMENTAL;
+    }
+    return MONS_NO_MONSTER;
+}
+
+// 'unfriendly' is percentage chance summoned elemental goes
+//              postal on the caster (after taking into account
+//              chance of that happening to unskilled casters
+//              anyway).
+spret cast_summon_elemental(int pow, god_type god, bool fail)
+{
+   if (otr_stop_summoning_prompt())
+        return spret::abort;
+    
+    fail_check();
+
+    monster_type mon = MONS_PROGRAM_BUG;
+
+    coord_def targ;
+    dist smove;
+
+    const int dur = min(2 + (random2(pow) / 5), 6);
+
+    mprf(MSGCH_PROMPT, "Summon from material in which direction?");
+
+    direction_chooser_args args;
+    args.restricts = DIR_DIR;
+    direction(smove, args);
+
+    if (!smove.isValid)
+    {
+        canned_msg(MSG_OK);
+        return spret::abort;
+    }
+
+    targ = you.pos() + smove.delta;
+
+    if (const monster* m = monster_at(targ))
+    {
+        if (you.can_see(*m))
+        {
+            mpr("There's something there already!");
+            return spret::abort;
+        }
+        else
+        {
+            fail_check();
+            mpr("Something seems to disrupt your summoning.");
+            return spret::success; // still losing a turn
+        }
+    }
+    else if (smove.delta.origin())
+    {
+        mpr("You can't summon an elemental from yourself!");
+        return spret::abort;
+    }
+    else if (!in_bounds(targ))
+    {
+        // XXX: Should this cost a turn?
+        mpr("That material won't yield to your beckoning.");
+        return spret::abort;
+    }
+
+    mon = _feature_to_elemental(targ);
+
+    // Found something to summon?
+    if (mon == MONS_NO_MONSTER)
+    {
+        canned_msg(MSG_NOTHING_HAPPENS);
+        return spret::abort;
+    }
+
+    fail_check();
+
+    if (mon == MONS_EARTH_ELEMENTAL)
+    {
+        grd(targ) = DNGN_FLOOR;
+        set_terrain_changed(targ);
+    }
+    if (mon == MONS_FIRE_ELEMENTAL
+        && cloud_type_at(targ) == CLOUD_FIRE)
+    {
+        delete_cloud(targ);
+    }
+
+    int cnt = 0;
+
+    for (monster_iterator mi; mi; ++mi)
+        if (mi->type == mon
+            && mi->attitude == ATT_FRIENDLY // friendly() would count charmed
+            && mi->is_summoned())
+        {
+            cnt++;
+        }
+
+    // silly - ice for water? 15jan2000 {dlb}
+
+    // - Air elementals are harder to tame because they're more dynamic and
+    //   like to hide.
+    const bool friendly = ((mon != MONS_FIRE_ELEMENTAL
+                            || x_chance_in_y(max(0,you.skill(SK_AIR_MAGIC)
+                                             - cnt), 10))
+
+                        && (mon != MONS_WATER_ELEMENTAL
+                            || x_chance_in_y(max(0,you.skill(SK_AIR_MAGIC)
+                                             - cnt), 10))
+
+                        && (mon != MONS_AIR_ELEMENTAL
+                            || x_chance_in_y(max(0,you.skill(SK_AIR_MAGIC)
+                                             - cnt), 15))
+
+                        && (mon != MONS_EARTH_ELEMENTAL
+                            || x_chance_in_y(max(0,you.skill(SK_AIR_MAGIC)
+                                             - cnt), 10)));
+
+    mgen_data elemental = mgen_data(mon,
+                        friendly ? BEH_FRIENDLY : BEH_HOSTILE, targ, MHITYOU,
+                        MG_AUTOFOE);
+    elemental.set_summoned(&you, dur, SPELL_SUMMON_ELEMENTAL, god);
+    if (!create_monster(elemental))
+    {
+        canned_msg(MSG_NOTHING_HAPPENS);
+        return spret::success;
+    }
+
+    mpr("An elemental appears!");
+
+    if (!friendly)
+        mpr("It doesn't seem to appreciate being summoned.");
+
+    return spret::success;
+}
+
 spret cast_summon_ice_beast(int pow, god_type god, bool fail)
 {
     fail_check();
@@ -3305,6 +3471,7 @@ static const map<spell_type, summon_cap> summonsdata =
     { SPELL_SUMMON_DEMON,               { 3, 2 } },
     { SPELL_SUMMON_GREATER_DEMON,       { 3, 2 } },
     // General monsters
+    { SPELL_SUMMON_ELEMENTAL,           { 3, 2 } },
     { SPELL_MONSTROUS_MENAGERIE,        { 3, 2 } },
     { SPELL_SUMMON_HORRIBLE_THINGS,     { 8, 8 } },
     { SPELL_SHADOW_CREATURES,           { 4, 2 } },

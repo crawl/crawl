@@ -713,18 +713,16 @@ static const struct spell_desc spelldata[] =
     TILEG_FREEZE,
 },
 
-#if TAG_MAJOR_VERSION == 34
 {
     SPELL_SUMMON_ELEMENTAL, "Summon Elemental",
-    spschool::summoning,
+    spschool::summoning | spschool::transmutation,
     spflag::none,
-    4,
+    6,
     200,
     -1, -1,
-    3, 0,
-    TILEG_ERROR,
+    0, 3,
+    TILEG_SUMMON_ELEMENTAL,
 },
-#endif
 
 {
     SPELL_OZOCUBUS_REFRIGERATION, "Ozocubu's Refrigeration",
@@ -4080,7 +4078,7 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_PAKELLAS_ROD, "Destruction Bolt",
+    SPELL_PAKELLAS_ROD, "Pakellas Rod",
     spschool::conjuration,
     spflag::dir_or_target | spflag::needs_tracer,
     4,
@@ -4091,7 +4089,7 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_PAKELLAS_ROD_SUMMON, "Summon Machine Golem",
+    SPELL_PAKELLAS_ROD_SUMMON, "Summon Machine",
     spschool::summoning,
     spflag::none,
     4,

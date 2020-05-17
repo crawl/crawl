@@ -450,7 +450,7 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
     if (rod) {
         power = 5 + you.skill(SK_EVOCATIONS, 3); // will be adjusted later
         if (spell == SPELL_PAKELLAS_ROD || spell == SPELL_PAKELLAS_ROD_SUMMON) {
-            //power = power * 3 / 2; //scale up. max evo = 127
+            power = power * 3 / 2; //scale up. max evo = 127
             if (you.religion == GOD_PAKELLAS) {
                 power += you.piety / 5; //max 40
             }
@@ -1824,6 +1824,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_CALL_CANINE_FAMILIAR:
         return cast_call_canine_familiar(powc, god, fail);
 
+    case SPELL_SUMMON_ELEMENTAL:
+        return cast_summon_elemental(powc, god, fail);
+
     case SPELL_SUMMON_ICE_BEAST:
         return cast_summon_ice_beast(powc, god, fail);
 
@@ -2460,7 +2463,6 @@ const set<spell_type> removed_spells =
     SPELL_SEE_INVISIBLE,
     SPELL_SONG_OF_SHIELDING,
     SPELL_SUMMON_SCORPIONS,
-    SPELL_SUMMON_ELEMENTAL,
     SPELL_TWISTED_RESURRECTION,
     SPELL_SURE_BLADE,
     SPELL_FLY,
