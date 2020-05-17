@@ -186,6 +186,8 @@ of @_wacky_armour_name_@
 
 of the @_profession_name_@
 
+w:5
+of the @_adjective_@ @_profession_name_@
 of @_politics_name_armour_@
 
 w:3
@@ -202,6 +204,9 @@ of @_instrument_name_@
 
 w:20
 of the @_armour_animal_@
+
+w:1
+the @_adjective_@ @_armour_animal_@
 
 w:3
 of @_flower_name_@
@@ -408,6 +413,8 @@ of @_monster_name_@@killer_name@
 
 w:30
 "@_plain_weapon_name_@"
+
+"@_adjective_@ @_plain_weapon_name_@"
 %%%%
 ######################################################
 # OKAWARU weapon
