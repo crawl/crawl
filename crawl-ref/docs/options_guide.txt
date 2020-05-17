@@ -2903,7 +2903,7 @@ easier screen reading:
 
 Make the player cursor easier to track with screen reading, by setting a custom
 symbol for the player:
-    use_fake_player_curosr = false
+    use_fake_player_cursor = false
     show_player_species = false
     mon_glyph += player:x263A
 
@@ -2911,7 +2911,7 @@ Use mouse input clicks for automove (see the discussion of the mouse_input
 option for terminal configuration specifics):
     mouse_input = true
 
-List playe-relative coordinates in the ^x display:
+List player-relative coordinates in the ^x display:
     monster_item_view_coordinates = true
 
 Mark the path taken by auto-travel and the exploration horizon with special
