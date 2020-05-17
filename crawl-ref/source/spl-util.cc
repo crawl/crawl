@@ -481,7 +481,9 @@ bool spell_harms_area(spell_type spell)
 // for Xom acting (more power = more likely to grab his attention) {dlb}
 int spell_mana(spell_type which_spell)
 {
-    return _seekspell(which_spell)->level;
+    //exception case...
+    int add_ = pakellas_addtional_difficult(which_spell);
+    return _seekspell(which_spell)->level + add_;
 }
 
 // applied in naughties (more difficult = higher level knowledge = worse)
@@ -489,25 +491,8 @@ int spell_mana(spell_type which_spell)
 int spell_difficulty(spell_type which_spell)
 {
     //exception case...
-    if (which_spell == SPELL_PAKELLAS_ROD_BLINKTELE) {
-        if (is_blueprint_exist(BLUEPRINT_TELEPORT))
-        {
-            return 6;
-        }
-    }
-    else if (which_spell == SPELL_PAKELLAS_ROD_REGEN) {
-        if (is_blueprint_exist(BLUEPRINT_LARGE_HEAL))
-        {
-            return 6;
-        }
-        if (is_blueprint_exist(BLUEPRINT_SMALL_HEAL))
-        {
-            return 5;
-        }
-    }
-
-
-    return _seekspell(which_spell)->level;
+    int add_ = pakellas_addtional_difficult(which_spell);
+    return _seekspell(which_spell)->level + add_;
 }
 
 int spell_levels_required(spell_type which_spell)

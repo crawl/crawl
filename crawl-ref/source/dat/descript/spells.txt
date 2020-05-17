@@ -80,6 +80,11 @@ Awaken Vines spell
 Causes vines to grow from the ground. The vines will reach out and grab
 interlopers, dragging them towards any nearby trees.
 %%%%
+Barriar Unit spell
+
+Use a rod of pakellas to make a barricade. Its power and performance 
+depending on how you upgrade it.
+%%%%
 Banishment spell
 
 Banishes a creature into the Abyss.
@@ -226,6 +231,11 @@ Brothers in Arms spell
 
 <Brothers in Arms ability>
 %%%%
+Buff Unit spell
+
+Use a rod of pakellas to buff yourself. Its power and performance 
+depending on how you upgrade it.
+%%%%
 Call Canine Familiar spell
 
 Summons a solitary canine to the caster's aid.
@@ -294,6 +304,11 @@ lethal clouds that can be created are noxious fumes. As power increases, this
 gives way to roaring flames, freezing vapours, and poisonous gas. At the
 highest tiers of power storm clouds, acidic fog and clouds of negative energy
 become available.
+%%%%
+Cloud Unit spell
+
+Create a cloud using a rod.. Its power and performance depending on how you 
+upgrade it.
 %%%%
 Cold Breath spell
 
@@ -405,6 +420,11 @@ Protects the caster from all kinds of projectile attacks, making them
 significantly easier to dodge. It is highly effective against both
 single-target and penetrating attacks. Each time a missile is deflected the
 spell has a chance of expiring, with a lower chance of expiry at high power.
+%%%%
+Destruction Bolt spell
+
+The bolt of destruction created by rod of pakellas. Its power and performance 
+depending on how you upgrade it.
 %%%%
 Dig spell
 
@@ -696,6 +716,11 @@ dies.
 Heal Other spell
 
 Heals a nearby ally.
+%%%%
+Heal Unit spell
+
+Heal yourself with a rod of pakellas. Its power and performance 
+depending on how you upgrade it.
 %%%%
 Call Down Damnation spell
 
@@ -1503,6 +1528,11 @@ Summons a violet-scaled serpent whose bite can swiftly drain the magical
 reserves of nearly any foe. At higher power, the antimagic properties of the
 viper's bite grow even stronger.
 %%%%
+Summon Machine Golem spell
+
+Creates a mechanical golem through rod of pakellas. Its power and performance 
+depending on how you upgrade it.
+%%%%
 Summon Minor Demon spell
 
 Summons between one and three minor (rank 5) demons.
@@ -1666,6 +1696,11 @@ Wall of Brambles spell
 Causes brambles to rapidly grow nearby. They have almost no structural
 strength, but the wicked thorns they bear make their removal difficult. Such
 brambles are sparse enough that almost any missile can pass through unhindered.
+%%%%
+Warp Unit spell
+
+Activates the warp unit mounted on the rod. Its power and performance 
+depending on how you upgrade it.
 %%%%
 Warning Cry spell
 

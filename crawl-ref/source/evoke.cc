@@ -1858,10 +1858,6 @@ static bool _rod_spell(item_def& irod, bool check_range)
 
     if (irod.sub_type == ROD_PAKELLAS) {
         if (spell == SPELL_PAKELLAS_ROD_BLINKTELE) {
-            if (is_blueprint_exist(BLUEPRINT_TELEPORT))
-            {
-                mana += 3 * ROD_CHARGE_MULT;
-            }
             if (is_blueprint_exist(BLUEPRINT_WARF_MANA))
             {
                 mana -= ROD_CHARGE_MULT;

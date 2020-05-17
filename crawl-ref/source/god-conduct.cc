@@ -889,8 +889,6 @@ static like_map divine_likes[] =
                                   [](int &piety, int &denom,
                                      const monster* /*victim*/)
             {
-                piety *= 4;
-                denom *= 3;
                 ASSERT(you.props.exists(PAKELLAS_UPGRADE_ROD_PROGRESS_KEY));
                 you.props[PAKELLAS_UPGRADE_ROD_PROGRESS_KEY].get_int()++;
             }

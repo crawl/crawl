@@ -592,6 +592,10 @@ barachi
 
 An amphibious humanoid with a very ugly attitude.
 %%%%
+barricade
+
+obstacles blocking the way.
+%%%%
 basilisk
 
 A crested lizard of middling size with a terrible petrifying gaze.
@@ -1610,6 +1614,10 @@ manticore
 A hideous cross-breed, bearing the features of a human and a lion, with great
 bat-like wings. Its tail bristles with spikes that can be loosed at potential
 prey.
+%%%%
+machine golem
+
+golem made by machines
 %%%%
 meliai
 

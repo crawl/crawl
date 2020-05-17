@@ -4080,7 +4080,7 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_PAKELLAS_ROD, "Pakellas Rod",
+    SPELL_PAKELLAS_ROD, "Destruction Bolt",
     spschool::conjuration,
     spflag::dir_or_target | spflag::needs_tracer,
     4,
@@ -4091,7 +4091,7 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_PAKELLAS_ROD_SUMMON, "Summon Machine",
+    SPELL_PAKELLAS_ROD_SUMMON, "Summon Machine Golem",
     spschool::summoning,
     spflag::none,
     4,

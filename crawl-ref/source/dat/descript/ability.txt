@@ -621,12 +621,27 @@ lower the remaining bribe fund; upon its exhaustion, bribed enemies will become
 indifferent if they have not become your allies.
 %%%%
 # Pakellas
+Receive ProtoType ability
+
+Receive a prototype Rod from Pakellas. Choose one of the rods that are 
+specialized in destruction, summoned, or assisted. These prototypes are very
+weak, but can be strengthened through Pakellas experimental blueprints.
+%%%%
+Upgrade Rod ability
+
+Upgrade rod of Pakellas. Choose one of the three blueprints suggested by 
+Pakellas to strengthen the rod. You can go through up to maximum 6 upgrades,
+and if you don't like it, refuse them and take a long delay.
+%%%%
+Quick Charge ability
+
+charge a rod or xp base miscellaneous. The effectiveness of this depends on 
+your current piety.
+%%%%
 Device Surge ability
 
 Readies a device surge, which triggers on your next usage of a magical device
-to strengthen its power at the cost of some magic. The amount of magical power
-that can be used for a surge varies, but correlates with how devoted a follower
-is to Pakellas.
+to strengthen its power.
 %%%%
 # Qazlal
 Upheaval ability

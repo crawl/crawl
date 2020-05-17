@@ -924,6 +924,12 @@ rod of inaccuracy
 A rod that allows its wielder to fire a powerful but extremely inaccurate bolt
 of power.
 %%%%
+rod of pakellas
+
+Prototype created by pakellas. Followers are constantly testing and upgrading 
+prototypes to help pakellas research. Depending on how you upgrade, the power
+and use will be different.
+%%%%
 rod of shadows
 
 A rod that weaves creatures from shadows and ethereal matter.

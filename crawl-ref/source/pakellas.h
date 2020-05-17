@@ -137,3 +137,4 @@ spret cast_pakellas_regen(int powc, bolt & beam, bool fail);
 spret cast_pakellas_cloud(int powc, bolt & beam, bool fail);
 
 void pakellas_remove_self_buff();
+int pakellas_addtional_difficult(spell_type which_spell);

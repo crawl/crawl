@@ -109,11 +109,15 @@ map<pakellas_blueprint_type, pakellas_blueprint_struct> blueprint_list =
                                 2,
                                 0,
                                 100)},
-    { BLUEPRINT_PENTAN, _prerequire_blueprint("Penetration", "Adds penetration to missiles.", "penet",
+    { BLUEPRINT_PENTAN, _prerequire2_blueprint("Penetration", "Adds penetration to missiles. Increase Cost 1", "penet",
+                                1,
+                                1,   
                                 100,
                                 {},
                                 {BLUEPRINT_BOME})},
-    { BLUEPRINT_BOME, _prerequire_blueprint("Explosion", "3x3 explodes at the landing site.", "bomb+",
+    { BLUEPRINT_BOME, _prerequire2_blueprint("Explosion", "3x3 explodes at the landing site. Increase Cost 1", "bomb+",
+                                1,
+                                1,   
                                 100,
                                 {},
                                 {BLUEPRINT_PENTAN})},
@@ -446,9 +450,9 @@ bool pakellas_prototype()
 
         clear_messages();
 
-        mpr_nojoin(MSGCH_PLAIN, "  [a] - destruction");
-        mpr_nojoin(MSGCH_PLAIN, "  [b] - summoning");
-        mpr_nojoin(MSGCH_PLAIN, "  [c] - assist");
+        mpr_nojoin(MSGCH_PLAIN, "  [a] - destruction : A rod with destructive power");
+        mpr_nojoin(MSGCH_PLAIN, "  [b] - summoning : A rod that summons powerful allies");
+        mpr_nojoin(MSGCH_PLAIN, "  [c] - assist : A rod that provides various assistive abilities");
         mprf(MSGCH_PROMPT, "which one?");
 
         keyin = toalower(get_ch()) - 'a';
@@ -831,7 +835,9 @@ int get_blueprint_element()
 }
 
 int quick_charge_pakellas() {
+    int powers = you.piety / 2;
 
+    short inc_ = 30 + calc_dice(2, powers * 2 / 5).roll();
     int item_slot = -1;
     do
     {
@@ -870,9 +876,14 @@ int quick_charge_pakellas() {
             bool work = false;
             const string orig_name = items_.name(DESC_YOUR);
 
+
             if (items_.charges < items_.charge_cap)
             {
-                items_.charges = items_.charge_cap;
+                short charge_ = items_.charge_cap * inc_ / 100;
+                items_.charges = items_.charges + charge_;
+                if (items_.charge_cap < items_.charges) {
+                    items_.charges = items_.charge_cap;
+                }
                 work = true;
             }
 
@@ -894,9 +905,17 @@ int quick_charge_pakellas() {
                 return 0;
             }
 
-            debt = 0;
+            int max_debt_ = evoker_charge_xp_debt(items_.sub_type) * evoker_max_charges(items_.sub_type);
 
-            mprf("%s has recharged.", orig_name.c_str());
+            int charge_ = max_debt_ * inc_ / 100;
+            debt = max(0, debt - charge_);
+            
+            if (debt == 0) {
+                mprf("%s has fully recharged.", orig_name.c_str());
+            }
+            else {
+                mprf("%s has slightly recharged.", orig_name.c_str());
+            }
         }
 
         you.wield_change = true;
@@ -1306,4 +1325,37 @@ spret cast_pakellas_cloud(int powc, bolt& beam, bool fail)
         cloud_type_name(cloud).c_str());
 
     return spret::success;
+}
+
+
+int pakellas_addtional_difficult(spell_type which_spell) {
+
+    if (which_spell == SPELL_PAKELLAS_ROD || which_spell == SPELL_PAKELLAS_ROD_SUMMON) {
+        int add_ = 0;
+        if (you.props.exists(AVAILABLE_ROD_UPGRADE_KEY)) {
+            CrawlVector& available_upgrade = you.props[AVAILABLE_ROD_UPGRADE_KEY].get_vector();
+            for (auto upgrade : available_upgrade)             
+            {
+                add_ += blueprint_list[(pakellas_blueprint_type)upgrade.get_int()].additional_mana;
+            }
+        }
+        return add_;
+    }
+    else if (which_spell == SPELL_PAKELLAS_ROD_BLINKTELE) {
+        if (is_blueprint_exist(BLUEPRINT_TELEPORT))
+        {
+            return 3;
+        }
+    }
+    else if (which_spell == SPELL_PAKELLAS_ROD_REGEN) {
+        if (is_blueprint_exist(BLUEPRINT_LARGE_HEAL))
+        {
+            return 2;
+        }
+        if (is_blueprint_exist(BLUEPRINT_SMALL_HEAL))
+        {
+            return 1;
+        }
+    }
+    return 0;
 }

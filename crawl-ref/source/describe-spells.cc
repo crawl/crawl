@@ -12,6 +12,7 @@
 #include "describe.h"
 #include "english.h"
 #include "externs.h"
+#include "god-abil.h"
 #include "invent.h"
 #include "libutil.h"
 #include "macro.h"
@@ -43,7 +44,9 @@
 spellset item_spellset(const item_def &item)
 {
     if (item.base_type == OBJ_RODS && item.sub_type == ROD_PAKELLAS) {
-        return { { "\n", list_of_rod_spell() } };
+        if (you.props[PAKELLAS_PROTOTYPE].get_int() == 3) {
+            return { { "\n", list_of_rod_spell() } };
+        }
     }
 
     if (!item.has_spells())

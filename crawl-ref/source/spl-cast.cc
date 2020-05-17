@@ -450,7 +450,7 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
     if (rod) {
         power = 5 + you.skill(SK_EVOCATIONS, 3); // will be adjusted later
         if (spell == SPELL_PAKELLAS_ROD || spell == SPELL_PAKELLAS_ROD_SUMMON) {
-            power = power * 3 / 2; //scale up. max evo = 127
+            //power = power * 3 / 2; //scale up. max evo = 127
             if (you.religion == GOD_PAKELLAS) {
                 power += you.piety / 5; //max 40
             }
