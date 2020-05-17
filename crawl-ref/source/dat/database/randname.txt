@@ -75,7 +75,9 @@ of @player_doom@
 w:9
 of @death_or_doom@
 
-w:16
+w:6
+of @adjective@ @_strategy_or_justice_@
+
 of @_strategy_or_justice_@
 
 w:3
@@ -186,13 +188,18 @@ of @_wacky_armour_name_@
 
 of the @_profession_name_@
 
+w:5
+of the @_adjective_@ @_profession_name_@
 of @_politics_name_armour_@
 
 w:3
 of @_weather_name_@
 
-w:17
+w:9
 of @_good_or_divine_@
+
+w:9
+of @_adjective_@ @_good_or_divine_@
 
 w:5
 of the @_celestial_bodies_@
@@ -203,11 +210,17 @@ of @_instrument_name_@
 w:20
 of the @_armour_animal_@
 
+w:1
+the @_adjective_@ @_armour_animal_@
+
 w:3
 of @_flower_name_@
 
-w:3
+w:2
 of the @_critter_name_@
+
+w:1
+of the @_adjective_@ @_critter_name_@
 
 w:5
 of @_evil_being_@
@@ -408,6 +421,8 @@ of @_monster_name_@@killer_name@
 
 w:30
 "@_plain_weapon_name_@"
+
+"@_adjective_@ @_plain_weapon_name_@"
 %%%%
 ######################################################
 # OKAWARU weapon
