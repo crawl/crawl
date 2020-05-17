@@ -550,8 +550,6 @@ Allies
 
 Artisans
 
-Artists
-
 Beasts
 
 Beds
@@ -560,8 +558,13 @@ Beggars
 
 Blessings
 
+Bones
+
 Bounties
 
+Brambles
+
+w:5
 Cities
 
 Coins
@@ -579,6 +582,8 @@ Defenders
 Demons
 
 Dreams
+
+Ears
 
 Emperors
 
@@ -606,7 +611,10 @@ Invaders
 
 Knaves
 
+w:25
 Knives
+
+Leylines
 
 Lies
 
@@ -617,6 +625,8 @@ Lovers
 Mice
 
 Moons
+
+Mouths
 
 Mystics
 
@@ -640,6 +650,8 @@ Persimmons
 Places
 
 Planets
+
+Portals
 
 Priests
 
@@ -671,6 +683,8 @@ Songs
 
 Souls
 
+Spines
+
 Spirits
 
 w:5
@@ -688,11 +702,22 @@ Tales
 
 Teeth
 
+Thickets
+
+w:5
+Things
+
+w:5
+Towns
+
 Tusks
 
 Ultimatums
 
 Underlurkers
+
+w:5
+Villages
 
 Violins
 
