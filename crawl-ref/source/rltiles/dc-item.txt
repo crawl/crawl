@@ -962,6 +962,7 @@ rod07
 rod08
 rod09
 rod10
+rod_pakellas ROD_BASE_PAKELLAS
 
 # These must be in the same order as the enum in item-prop-enum.h!
 i-rod_lightning ROD_LIGHTNING ROD_ID_FIRST

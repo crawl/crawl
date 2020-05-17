@@ -2696,7 +2696,7 @@ tileidx_t tileidx_item(const item_def &item)
 
     case OBJ_RODS:
         if (item.sub_type == ROD_PAKELLAS) {
-            return TILE_ROD;
+            return TILE_ROD_BASE_PAKELLAS;
         }
         else {
             return TILE_ROD + item.rnd % tile_main_count(TILE_ROD);
@@ -3636,6 +3636,10 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_PAKELLAS_DEVICE_SURGE;
     case ABIL_PAKELLAS_QUICK_CHARGE:
         return TILEG_ABILITY_PAKELLAS_QUICK_CHARGE;
+    case ABIL_PAKELLAS_PROTOTYPE:
+        return TILEG_ABILITY_PAKELLAS_ROD_ACQUIRE;
+    case ABIL_PAKELLAS_UPGRADE:
+        return TILEG_ABILITY_PAKELLAS_ROD_UPGRADE;
     // Hepliaklqana
     case ABIL_HEPLIAKLQANA_RECALL:
         return TILEG_ABILITY_HEP_RECALL;

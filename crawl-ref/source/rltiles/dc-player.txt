@@ -731,6 +731,7 @@ rod_moon
 rod_magenta
 rod_forked
 rod_aries
+rod_pakellas ROD_PAKELLAS
 
 ## axes
 axe_small AXE_SMALL

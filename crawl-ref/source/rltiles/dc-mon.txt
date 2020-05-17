@@ -436,6 +436,8 @@ saltling MONS_SALTLING
 %rim 1
 # For the Cigotuvi WizLab
 flesh_golem MONS_FLESH_GOLEM
+# For the PAKELLAS
+machine_golem MONS_MACHINE_GOLEM
 
 ## Statues and statue-like things (also '8')
 %sdir mon/unique
