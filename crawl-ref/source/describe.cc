@@ -2804,7 +2804,7 @@ void target_item(item_def &item)
  *                    description before it's displayed.
  *  @return whether to stay in the inventory menu afterwards.
  */
-bool describe_item(item_def &item, function<void (string&)> fixup_desc)
+bool describe_item(item_def &item, function<void (string&)> fixup_desc, bool select_spell, int* return_spell)
 {
     if (!item.defined())
         return true;
@@ -2887,9 +2887,15 @@ bool describe_item(item_def &item, function<void (string&)> fixup_desc)
     formatted_string footer_text("", CYAN);
     if (!actions.empty())
     {
-        if (!spells.empty())
-            footer_text.cprintf("Select a spell, or ");
-        footer_text += formatted_string(_actions_desc(actions, item));
+        if (!spells.empty()) {
+            footer_text.cprintf("Select a spell");
+            if (select_spell == false)
+                footer_text += ", or";
+        }
+
+        if (select_spell == false) {
+            footer_text += formatted_string(_actions_desc(actions, item));
+        }
         auto footer = make_shared<Text>();
         footer->set_text(footer_text);
         footer->set_margin_for_crt(1, 0, 0, 0);
@@ -2921,8 +2927,14 @@ bool describe_item(item_def &item, function<void (string&)> fixup_desc)
                 [key](const pair<spell_type,char>& e) { return e.second == key; });
         if (entry == spell_map.end())
             return false;
-        describe_spell(entry->first, nullptr, &item);
-        done = already_learning_spell();
+        if (select_spell == true) {
+            done = true;
+        }
+        else {
+            describe_spell(entry->first, nullptr, &item);
+            done = already_learning_spell();
+        }
+
         return true;
     });
 
@@ -2955,6 +2967,10 @@ bool describe_item(item_def &item, function<void (string&)> fixup_desc)
     tiles.pop_ui_layout();
 #endif
 
+    if (select_spell == true) {
+        *return_spell = lastch;
+        return true;
+    }
     if (action != CMD_NO_CMD)
         return _do_action(item, actions, lastch);
     else if (item.has_spells())

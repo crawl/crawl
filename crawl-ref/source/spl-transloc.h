@@ -8,7 +8,7 @@ void disjunction_spell();
 spret cast_blink(bool fail = false);
 spret cast_controlled_blink(bool fail = false, bool safe = true);
 void uncontrolled_blink(bool override_stasis = false);
-spret controlled_blink(bool fail, bool safe_cancel = true);
+spret controlled_blink(bool fail, bool safe_cancel = true, int range = -1);
 spret frog_hop(bool fail);
 void wizard_blink();
 

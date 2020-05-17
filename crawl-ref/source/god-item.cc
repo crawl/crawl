@@ -42,8 +42,14 @@ static bool _is_bookrod_type(const item_def& item, bool (*matches)(spell_type sp
         return false;
     }
 
-    if (item.base_type == OBJ_RODS)
-        return matches(spell_in_rod(static_cast<rod_type>(item.sub_type)));
+    if (item.base_type == OBJ_RODS) {
+        vector<spell_type> _spells = spell_in_rod(static_cast<rod_type>(item.sub_type), false);
+        for (spell_type spell : _spells)
+        {
+            if (!matches(spell))
+                return false;
+        }
+    }
 
     if (!item_is_spellbook(item))
         return false;

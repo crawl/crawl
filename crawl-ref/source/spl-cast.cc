@@ -1296,6 +1296,9 @@ static unique_ptr<targeter> _spell_targeter(spell_type spell, int pow,
         return make_unique<targeter_beam>(&you, range, is_blueprint_exist(BLUEPRINT_PENTAN) ?ZAP_BOLT_OF_MAGMA: ZAP_MAGIC_DART, pow,
             is_blueprint_exist(BLUEPRINT_BOME), is_blueprint_exist(BLUEPRINT_BOME));
     }
+    case SPELL_PAKELLAS_ROD_CLOUD:
+        return make_unique<targeter_shotgun>(&you, CLOUD_CONE_BEAM_COUNT,
+            range);
     default:
         break;
     }
@@ -2078,6 +2081,27 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
 
     case SPELL_PAKELLAS_ROD_SUMMON:
         return cast_pakellas_summon(powc, god, fail);
+
+    case SPELL_PAKELLAS_ROD_SELFBUFF:
+        return cast_pakellas_selfbuff(powc, beam, fail);
+
+    case SPELL_PAKELLAS_ROD_BLINKTELE:
+        return cast_pakellas_blinktele(powc, beam, fail);
+
+    case SPELL_PAKELLAS_ROD_SWAP_BOLT:
+        return cast_pakellas_swap_bolt(powc, beam, fail);
+
+    case SPELL_PAKELLAS_ROD_CONTROLL_BLINK:
+        return cast_pakellas_controll_blink(powc, beam, fail);
+
+    case SPELL_PAKELLAS_ROD_BARRIAR:
+        return cast_pakellas_barriar(powc, beam, fail);
+
+    case SPELL_PAKELLAS_ROD_REGEN:
+        return cast_pakellas_regen(powc, beam, fail);
+
+    case SPELL_PAKELLAS_ROD_CLOUD:
+        return cast_pakellas_cloud(powc, beam, fail);
 
     // non-player spells that have a zap, but that shouldn't be called (e.g
     // because they will crash as a player zap).

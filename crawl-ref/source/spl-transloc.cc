@@ -375,10 +375,10 @@ spret frog_hop(bool fail)
  *                      for e.g. ?blink with blurryvis)
  * @return              Whether the blink succeeded, aborted, or was miscast.
  */
-spret controlled_blink(bool fail, bool safe_cancel)
+spret controlled_blink(bool fail, bool safe_cancel, int range)
 {
     coord_def target;
-    targeter_smite tgt(&you, LOS_RADIUS);
+    targeter_smite tgt(&you, range>0? range : LOS_RADIUS);
     tgt.obeys_mesmerise = true;
     if (!_find_cblink_target(target, safe_cancel, "blink", &tgt))
         return spret::abort;

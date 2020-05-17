@@ -52,7 +52,7 @@ void describe_feature_type(dungeon_feature_type feat);
 string get_cloud_desc(cloud_type cloud, bool include_title = true);
 void get_feature_desc(const coord_def &gc, describe_info &inf, bool include_extra = true);
 
-bool describe_item(item_def &item, function<void (string&)> fixup_desc = nullptr);
+bool describe_item(item_def &item, function<void (string&)> fixup_desc = nullptr, bool select_spell = false, int* return_spell = nullptr);
 void get_item_desc(const item_def &item, describe_info &inf);
 void inscribe_item(item_def &item);
 void target_item(item_def &item);

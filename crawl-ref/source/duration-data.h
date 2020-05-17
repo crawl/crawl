@@ -3,6 +3,7 @@
  */
 
 #include "god-passive.h"
+#include "pakellas.h"
 
 
 static void _end_weapon_brand()
@@ -639,6 +640,9 @@ static const duration_def duration_data[] =
     { DUR_POISON_GLAND, GREEN, "gland", "poison gland", "poison gland", "" , D_DISPELLABLE | D_EXPIRES,
       {{ "Your weapon no longer secretes poison glands." },
       { "The poison gland of your weapon is running out." }}, 10 },
+    { DUR_PAKELLAS_DURATION, 0, "", "", "pakellas buff", "", D_NO_FLAGS, {{ "", pakellas_remove_self_buff }} },
+
+          
 
 #if TAG_MAJOR_VERSION == 34
     // And removed ones

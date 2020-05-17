@@ -95,5 +95,9 @@ enum attribute_type
     ATTR_HEAVENLY_STORM,       // Strength of Heavenly Storm slaying.
     ATTR_WALL_JUMP_READY,      // Ready to perform a wall jump.
     ATTR_DEATHS_DOOR_HP,       // How much HP we should have under Death's Door
+    ATTR_PAKELLAS_STR,         // increase str of Pakellas Buff
+    ATTR_PAKELLAS_INT,         // increase int of Pakellas Buff
+    ATTR_PAKELLAS_DEX,         // increase dex of Pakellas Buff
+    ATTR_PAKELLAS_EV,          // increase dex of Pakellas Buff
     NUM_ATTRIBUTES
 };

@@ -10,24 +10,37 @@
 
 #include "env.h"
 #include "actor.h"
+#include "cloud.h"
 #include "coord.h"
 #include "debug.h"
 #include "defines.h"
+#include "fight.h"
 #include "god-abil.h"
 #include "items.h"
 #include "item-name.h"
 #include "item-prop.h"
 #include "item-status-flag-type.h"
+#include "level-state-type.h"
 #include "libutil.h"
 #include "invent.h"
+#include "orb.h"
 #include "player.h"
+#include "player-stats.h"
 #include "prompt.h"
 #include "sprint.h"
+#include "spl-book.h"
+#include "spl-transloc.h"
 #include "state.h"
 #include "stringutil.h"
+#include "target.h"
+#include "random.h"
 #include "macro.h"
 #include "makeitem.h"
 #include "message.h"
+#include "mgen-data.h"
+#include "mon-place.h"
+#include "misc.h"
+#include "viewchar.h"
 
 
 
@@ -213,33 +226,151 @@ map<pakellas_blueprint_type, pakellas_blueprint_struct> blueprint_list =
                                 100)},
                                                                        
     //ASSIST
-    { BLUEPRINT_STATUP_STR, _base_blueprint("Penetration", "Adds penetration to missiles.", "penet+")},
-    { BLUEPRINT_STATUP_DEX, _base_blueprint("Penetration", "Adds penetration to missiles.", "penet+")},
-    { BLUEPRINT_STATUP_INT, _base_blueprint("Penetration", "Adds penetration to missiles.", "penet+")},
-    { BLUEPRINT_SWIFT, _base_blueprint("Penetration", "Adds penetration to missiles.", "penet+")},
-    { BLUEPRINT_HASTE, _base_blueprint("Penetration", "Adds penetration to missiles.", "penet+")},
-    { BLUEPRINT_BLING, _base_blueprint("Penetration", "Adds penetration to missiles.", "penet+")},
-    { BLUEPRINT_DIRECTION_BLINK, _base_blueprint("Penetration", "Adds penetration to missiles.", "penet+")},
-    { BLUEPRINT_CONTROL_BLINK, _base_blueprint("Penetration", "Adds penetration to missiles.", "penet+")},
-    { BLUEPRINT_TELEPORT, _base_blueprint("Penetration", "Adds penetration to missiles.", "penet+")},
-    { BLUEPRINT_EMERGENCY_TELEPORT, _base_blueprint("Penetration", "Adds penetration to missiles.", "penet+")},
-    { BLUEPRINT_REGEN, _base_blueprint("Penetration", "Adds penetration to missiles.", "penet+")},
-    { BLUEPRINT_SMALL_HEAL, _base_blueprint("Penetration", "Adds penetration to missiles.", "penet+")},
-    { BLUEPRINT_LARGE_HEAL, _base_blueprint("Penetration", "Adds penetration to missiles.", "penet+")},
-    //COMMON
+    { BLUEPRINT_STATUP_STR, _base2_blueprint("Buff Unit-Str", "", "str+",
+                                3,
+                                0,
+                                33) },
+    { BLUEPRINT_STATUP_DEX, _base2_blueprint("Buff Unit-Dex", "", "dex+",
+                                3,
+                                0,
+                                33) },
+    { BLUEPRINT_STATUP_INT, _base2_blueprint("Buff Unit-Int", "", "int+",
+                                3,
+                                0,
+                                33) },
+    { BLUEPRINT_EVASION, _base2_blueprint("Buff Unit-Ev Up", "", "eva+",
+                                3,
+                                0,
+                                33) },
+    { BLUEPRINT_SWIFT, _base2_blueprint("Buff Unit-Swift", "", "swift",
+                                1,
+                                0,
+                                0) },
+    { BLUEPRINT_SWIFT_2, _prerequire_blueprint("Buff Unit-Swift Up", "", "swift+",
+                                200,
+                                {BLUEPRINT_SWIFT},
+                                {}) },
+    { BLUEPRINT_HASTE, _prerequire_blueprint("Buff Unit-Haste", "", "haste",
+                                300,
+                                {BLUEPRINT_SWIFT_2},
+                                {}) },
+    { BLUEPRINT_CLEAVE, _prerequire_blueprint("Buff Unit-Cleave", "", "cleave",
+                                100,
+                                {},
+                                {}) },
+
+    { BLUEPRINT_BLINK, _base2_blueprint("Warp Unit", "", "Warp",
+                                1,
+                                0,
+                                100) },
+    { BLUEPRINT_BLINK_STRONG, _prerequire_blueprint("Warp Unit-Range UP", "", "Wrange",
+                                150,
+                                {BLUEPRINT_BLINK},
+                                {BLUEPRINT_WARF_MANA}) },
+    { BLUEPRINT_WARF_MANA, _prerequire_blueprint("Warp Unit-Mana", "", "Wmana",
+                                150,
+                                {BLUEPRINT_BLINK},
+                                {BLUEPRINT_BLINK_STRONG}) },
+    { BLUEPRINT_SWAP_BLINK, _prerequire_blueprint("Warp Unit-Swap", "", "Wswap",
+                                200,
+                                {BLUEPRINT_WARF_MANA, BLUEPRINT_BLINK_STRONG},
+                                {BLUEPRINT_TELEPORT}) },
+    { BLUEPRINT_TELEPORT, _prerequire_blueprint("Warp Unit-Teleport", "", "Wtele",
+                                200,
+                                {BLUEPRINT_WARF_MANA, BLUEPRINT_BLINK_STRONG},
+                                {BLUEPRINT_SWAP_BLINK}) },
+    { BLUEPRINT_CONTROL_BLINK, _prerequire_blueprint("Warp Unit-ControlBlink", "", "Wcblink",
+                                300,
+                                {BLUEPRINT_SWAP_BLINK},
+                                {}) },
+
+    { BLUEPRINT_BARRICADE, _base2_blueprint("Barrier Unit", "", "Barr",
+                                1,
+                                0,
+                                100) },
+    { BLUEPRINT_BARRICADE_STRONG, _prerequire2_blueprint("Barrier Unit-Hard", "", "Bhard",
+                                3,
+                                0,
+                                150,
+                                {BLUEPRINT_BARRICADE},
+                                {}) },
+    { BLUEPRINT_BARRICADE_RANGE, _prerequire_blueprint("Barrier Unit-Range up", "", "Brange",
+                                150,
+                                {BLUEPRINT_BARRICADE},
+                                {}) },
+    { BLUEPRINT_BARRICADE_SPIKE, _prerequire_blueprint("Barrier Unit-Spike", "", "Bspike",
+                                150,
+                                {BLUEPRINT_BARRICADE},
+                                {}) },
+    { BLUEPRINT_BARRICADE_TIME, _prerequire_blueprint("Barrier Unit-Duration", "", "Btime",
+                                150,
+                                {BLUEPRINT_BARRICADE},
+                                {}) },
+                               
+    { BLUEPRINT_REGEN, _base2_blueprint("Heal Unit", "", "Heal",
+                                1,
+                                0,
+                                100) },
+    { BLUEPRINT_REGEN_STRONG, _prerequire_blueprint("Heal Unit-Power Up", "", "Hpower",
+                                150,
+                                {BLUEPRINT_REGEN},
+                                {BLUEPRINT_HEAL_PURIFICATION}) },
+    { BLUEPRINT_HEAL_PURIFICATION, _prerequire_blueprint("Heal Unit-Purification", "", "Hpurfi",
+                                150,
+                                {BLUEPRINT_REGEN},
+                                {BLUEPRINT_REGEN_STRONG}) },
+    { BLUEPRINT_SMALL_HEAL, _prerequire_blueprint("Heal Unit-Minor Heal", "", "Hminor",
+                                200,
+                                {BLUEPRINT_REGEN_STRONG, BLUEPRINT_HEAL_PURIFICATION},
+                                {}) },
+    { BLUEPRINT_LARGE_HEAL, _prerequire_blueprint("Heal Unit-Major Heal", "", "Hmajor",
+                                300,
+                                {BLUEPRINT_SMALL_HEAL},
+                                {}) },
+
+    { BLUEPRINT_CLOUD_UNIT, _base2_blueprint("Cloud Unit", "", "Cloud",
+                                1,
+                                0,
+                                100) },
+    { BLUEPRINT_CLOUD_CONFUSE, _prerequire_blueprint("Cloud Unit-Confusion", "", "Cconf",
+                                150,
+                                {BLUEPRINT_CLOUD_UNIT},
+                                {BLUEPRINT_CLOUD_FOG}) },
+    { BLUEPRINT_CLOUD_FOG, _prerequire_blueprint("Cloud Unit-Fog", "", "Cfog",
+                                150,
+                                {BLUEPRINT_CLOUD_UNIT},
+                                {BLUEPRINT_CLOUD_CONFUSE}) },
+    { BLUEPRINT_CLOUD_FIRE, _prerequire_blueprint("Cloud Unit-Fire", "", "Cfire",
+                                150,
+                                {BLUEPRINT_CLOUD_FOG, BLUEPRINT_CLOUD_CONFUSE},
+                                {BLUEPRINT_CLOUD_COLD}) },
+    { BLUEPRINT_CLOUD_COLD, _prerequire_blueprint("Cloud Unit-Cold", "", "Ccold",
+                                150,
+                                {BLUEPRINT_CLOUD_FOG, BLUEPRINT_CLOUD_CONFUSE},
+                                {BLUEPRINT_CLOUD_FIRE}) },
+    { BLUEPRINT_CLOUD_ACID, _prerequire_blueprint("Cloud Unit-Acid", "", "Cacid",
+                                150,
+                                {BLUEPRINT_CLOUD_COLD, BLUEPRINT_CLOUD_FIRE},
+                                {}) },
+    { BLUEPRINT_CLOUD_TIME, _prerequire_blueprint("Cloud Unit-Duration", "", "Cdur",
+                                100,
+                                {BLUEPRINT_CLOUD_UNIT},
+                                {}) },
+
+   //COMMON
     { BLUEPRINT_BATTERY_UP, _base2_blueprint("Battery Up", "Increase 3 rod capacity.", "capa+",
                                 6,
                                 0,
                                 150)},
-    { BLUEPRINT_LIGHT, _base2_blueprint("Lightweight", "Can be used without holding.", "light",
-                                1,
-                                0,
-                                100)},
+    { BLUEPRINT_LIGHT, _prerequire_blueprint("Lightweight", "Can be used without holding.", "light",
+                                100,
+                                {},
+                                {BLUEPRINT_BATTLEMAGE}) },
     { BLUEPRINT_BATTLEMAGE, _prerequire_blueprint("Battle Mage", "Increases the damage the rod deals in melee combat.", "melee+",
                                 100,
                                 {BLUEPRINT_ELEMENTAL_FIRE, BLUEPRINT_ELEMENTAL_COLD, BLUEPRINT_ELEMENTAL_ELEC, BLUEPRINT_ELEMENTAL_EARTH, BLUEPRINT_CHAOS,
                                 BLUEPRINT_FIRE_SUMMON, BLUEPRINT_COLD_SUMMON, BLUEPRINT_ELEC_SUMMON, BLUEPRINT_POISON_SUMMON, BLUEPRINT_CHOATIC_SUMMON, BLUEPRINT_EARTH_SUMMON},
-                                {})},
+                                {BLUEPRINT_LIGHT})},
     { BLUEPRINT_MORE_ENCHANT, _base2_blueprint("More Enchant", "Increase 1 enchant, Increase 1 rod capacity.", "statup",
                                 6,
                                 0,
@@ -317,15 +448,11 @@ bool pakellas_prototype()
 
         mpr_nojoin(MSGCH_PLAIN, "  [a] - destruction");
         mpr_nojoin(MSGCH_PLAIN, "  [b] - summoning");
-        mpr_nojoin(MSGCH_PLAIN, "  [c] - assist (not yet)");
+        mpr_nojoin(MSGCH_PLAIN, "  [c] - assist");
         mprf(MSGCH_PROMPT, "which one?");
 
         keyin = toalower(get_ch()) - 'a';
 
-
-        if (keyin == 2) {
-            continue;
-        }
 
         if (keyin < 0 || keyin > 2)
             continue;
@@ -384,6 +511,10 @@ static bool _check_able_upgrade(pakellas_blueprint_type type) {
         }
     }
 
+    if (type == BLUEPRINT_BLINK && you.species == SP_FORMICID)
+        return false;
+
+
     int max_level = blueprint_list[type].max_level;
     if (max_level > 0) {
         for (auto current_upgrade : available_upgrade) {
@@ -427,6 +558,15 @@ static vector<pair<pakellas_blueprint_type, int>> _get_possible_upgrade()
         }
     }
 
+    if (prototype == 3) {
+        for (int i = BLUEPRINT_CHARM_START; i < BLUEPRINT_CHARM_END; i++) {
+            pakellas_blueprint_type type = (pakellas_blueprint_type)i;
+            if (_check_able_upgrade(type)) {
+                possible_upgrade.emplace_back(type, blueprint_list[type].percent);
+            }
+        }
+    }
+
     for (int i = BLUEPRINT_PUBLIC_START; i < BLUEPRINT_PUBLIC_END; i++) {
         pakellas_blueprint_type type = (pakellas_blueprint_type)i;
         if (_check_able_upgrade(type)) {
@@ -437,6 +577,17 @@ static vector<pair<pakellas_blueprint_type, int>> _get_possible_upgrade()
 }
 
 
+static item_def* _get_pakellas_rod() {
+    for (item_def& i : you.inv)
+    {
+        if (i.is_type(OBJ_RODS, ROD_PAKELLAS))
+        {
+            return &i;
+            break;
+        }
+    }
+    return nullptr;
+}
 
 
 bool pakellas_upgrade()
@@ -444,15 +595,8 @@ bool pakellas_upgrade()
     ASSERT(you.props.exists(PAKELLAS_UPGRADE_ON));
     ASSERT(you.props.exists(AVAILABLE_ROD_UPGRADE_KEY));
 
-    item_def* rod_ = nullptr;
-    for (item_def& i : you.inv)
-    {
-        if (i.is_type(OBJ_RODS, ROD_PAKELLAS))
-        {
-            rod_ = &i;
-            break;
-        }
-    }
+
+    item_def* rod_ = _get_pakellas_rod();
 
     if (rod_ == nullptr)
     {
@@ -480,7 +624,7 @@ bool pakellas_upgrade()
             int prev_level = is_blueprint_exist((pakellas_blueprint_type)store.get_int());
 
             line += make_stringf("%s : %s", blueprint_list[(pakellas_blueprint_type)store.get_int()].name,
-                descs[(prev_level>=(int)(descs.size()-1))? prev_level:0].c_str());
+                descs[(prev_level>(int)(descs.size()-1))? 0: prev_level].c_str());
             mpr_nojoin(MSGCH_PLAIN, line);
             i++;
         }
@@ -749,4 +893,406 @@ int quick_charge_pakellas() {
     } while (true);
 
     return 0;
+}
+
+vector<spell_type> list_of_rod_spell()
+{
+    vector<spell_type> _spells;
+
+    _spells.emplace_back(SPELL_PAKELLAS_ROD_SELFBUFF);
+    if (is_blueprint_exist(BLUEPRINT_BLINK)) {
+        if(is_blueprint_exist(BLUEPRINT_CONTROL_BLINK))
+            _spells.emplace_back(SPELL_PAKELLAS_ROD_CONTROLL_BLINK);
+        else if (is_blueprint_exist(BLUEPRINT_SWAP_BLINK))
+            _spells.emplace_back(SPELL_PAKELLAS_ROD_SWAP_BOLT);
+        else 
+            _spells.emplace_back(SPELL_PAKELLAS_ROD_BLINKTELE);
+
+    }
+
+    if (is_blueprint_exist(BLUEPRINT_BARRICADE)) {
+        _spells.emplace_back(SPELL_PAKELLAS_ROD_BARRIAR);
+    }
+    if (is_blueprint_exist(BLUEPRINT_REGEN)) {
+        _spells.emplace_back(SPELL_PAKELLAS_ROD_REGEN);
+    }
+    if (is_blueprint_exist(BLUEPRINT_CLOUD_UNIT)) {
+        _spells.emplace_back(SPELL_PAKELLAS_ROD_CLOUD);
+        
+    }
+    return _spells;
+}
+
+
+spell_type evoke_support_pakellas_rod()
+{
+    item_def* rod_ = _get_pakellas_rod();
+
+    if (rod_ == nullptr)
+    {
+        mpr("You don't have pakellas rod.");
+        return SPELL_NO_SPELL;
+    }
+
+
+    vector<spell_type> list_spells = list_of_rod_spell();
+
+    int keyin = 0;
+    if (list_spells.size() == 0) {
+        canned_msg(MSG_NOTHING_HAPPENS);
+        return SPELL_NO_SPELL;
+    }
+    else if (list_spells.size() == 1) {
+        keyin = 'a';
+    }
+    else {
+        mprf(MSGCH_PROMPT,
+            "Evoke which spell from the rod ([a-%c] spell [?*] list)? ",
+            (char)('a' + list_spells.size()- 1));
+        keyin = get_ch();
+
+
+        if (keyin == '?' || keyin == '*')
+        {
+            keyin = read_book(*rod_, true);
+            // [ds] read_book sets turn_is_over.
+            you.turn_is_over = false;
+        }
+    }
+
+
+    if (!isaalpha(keyin))
+    {
+        canned_msg(MSG_HUH);
+        return SPELL_NO_SPELL;
+    }
+
+    if (keyin - 'a' >= (int)list_spells.size()) {
+        return SPELL_NO_SPELL;
+    }
+
+    return list_spells[keyin - 'a'];
+}
+
+spret cast_pakellas_selfbuff(int powc, bolt&, bool fail)
+{
+    fail_check();
+    mpr("Pakellas buff is in your body.");
+    int time_ = 7 + roll_dice(3, powc) / 2;
+    time_ = min(100, time_);
+    you.increase_duration(DUR_SHROUD_OF_GOLUBRIA, time_, 100);
+
+
+    const int str_up = is_blueprint_exist(BLUEPRINT_STATUP_STR) * 5;
+    const int dex_up = is_blueprint_exist(BLUEPRINT_STATUP_DEX) * 5;
+    const int int_up = is_blueprint_exist(BLUEPRINT_STATUP_INT) * 5;
+    const int ev_up = is_blueprint_exist(BLUEPRINT_EVASION) * 5;
+
+    if (str_up > 0 || dex_up > 0 || int_up > 0 || ev_up) {
+        if (!you.duration[DUR_PAKELLAS_DURATION]) {
+            you.attribute[ATTR_PAKELLAS_STR] = str_up;
+            notify_stat_change(STAT_STR, str_up, true);
+            you.attribute[ATTR_PAKELLAS_DEX] = dex_up;
+            notify_stat_change(STAT_DEX, dex_up, true);
+            you.attribute[ATTR_PAKELLAS_INT] = int_up;
+            notify_stat_change(STAT_INT, int_up, true);
+            you.attribute[ATTR_PAKELLAS_EV] = ev_up;
+            //notify_stat_change(STAT_EV, ev_up, true);
+            you.redraw_evasion = true;
+            you.set_duration(DUR_PAKELLAS_DURATION, time_);
+        }
+        else {
+            if (str_up > you.attribute[ATTR_PAKELLAS_STR]) {
+                int offset_ = str_up - you.attribute[ATTR_PAKELLAS_STR];
+                you.attribute[ATTR_PAKELLAS_STR] += offset_;
+                notify_stat_change(STAT_STR, offset_, true);
+            }
+            if (dex_up > you.attribute[ATTR_PAKELLAS_DEX]) {
+                int offset_ = dex_up - you.attribute[ATTR_PAKELLAS_DEX];
+                you.attribute[ATTR_PAKELLAS_STR] += offset_;
+                notify_stat_change(STAT_DEX, offset_, true);
+            }
+            if (int_up > you.attribute[ATTR_PAKELLAS_INT]) {
+                int offset_ = int_up - you.attribute[ATTR_PAKELLAS_INT];
+                you.attribute[ATTR_PAKELLAS_STR] += offset_;
+                notify_stat_change(STAT_INT, offset_, true);
+            }
+            if (ev_up > you.attribute[ATTR_PAKELLAS_EV]) {
+                int offset_ = ev_up - you.attribute[ATTR_PAKELLAS_EV];
+                you.attribute[ATTR_PAKELLAS_EV] += offset_;
+                you.redraw_evasion = true;
+                //notify_stat_change(STAT_EV, offset_, true);
+            }
+            you.set_duration(DUR_PAKELLAS_DURATION, time_);
+        }
+    }
+
+    if (is_blueprint_exist(BLUEPRINT_CLEAVE)) {
+        you.increase_duration(DUR_CLEAVE, time_, 100);
+    }
+
+    return spret::success;
+}
+
+
+void pakellas_remove_self_buff()
+{
+    mprf(MSGCH_DURATION, "Your stat buff fades away.");
+    notify_stat_change(STAT_STR, -you.attribute[ATTR_PAKELLAS_STR], true);
+    notify_stat_change(STAT_INT, -you.attribute[ATTR_PAKELLAS_INT], true);
+    notify_stat_change(STAT_DEX, -you.attribute[ATTR_PAKELLAS_DEX], true);
+    you.duration[DUR_PAKELLAS_DURATION] = 0;
+    you.attribute[ATTR_PAKELLAS_STR] = 0;
+    you.attribute[ATTR_PAKELLAS_INT] = 0;
+    you.attribute[ATTR_PAKELLAS_DEX] = 0;
+    you.attribute[ATTR_PAKELLAS_EV] = 0;
+    you.redraw_evasion = true;
+}
+
+spret cast_pakellas_blinktele(int, bolt&, bool fail)
+{
+    if (you.no_tele(false, false, true))
+        return fail ? spret::fail : spret::success;
+
+    fail_check();
+    if (is_blueprint_exist(BLUEPRINT_TELEPORT)) {
+        you_teleport();
+        if (is_blueprint_exist(BLUEPRINT_BLINK_STRONG)) {
+            if (you.duration[DUR_TELEPORT] > 1)
+                you.duration[DUR_TELEPORT]--;
+        }
+    }
+    else {
+        uncontrolled_blink();
+        if (is_blueprint_exist(BLUEPRINT_BLINK_STRONG))
+            uncontrolled_blink(); //more blink
+    }
+    return spret::success;
+}
+spret cast_pakellas_swap_bolt(int powc, bolt& beam, bool fail)
+{
+    bolt tracer = beam;
+    if (!player_tracer(ZAP_RANDOM_BOLT_TRACER, 200, tracer))
+        return spret::abort;
+
+    fail_check();
+
+    bolt pbolt = beam;
+    pbolt.name = "swap bolt";
+    pbolt.thrower = KILL_YOU_MISSILE;
+    pbolt.flavour = BEAM_MMISSILE;
+    pbolt.real_flavour = BEAM_MMISSILE;
+    pbolt.colour = LIGHTMAGENTA;
+    pbolt.glyph = dchar_glyph(DCHAR_FIRED_ZAP);
+
+    pbolt.hit_func = [](monster* mon, bool) {
+        if (mon == nullptr)
+            return;
+
+        swap_with_monster(mon);
+    };
+
+    pbolt.obvious_effect = true;
+    pbolt.range = spell_range(SPELL_PAKELLAS_ROD_SWAP_BOLT, powc);
+    pbolt.hit = AUTOMATIC_HIT;
+    pbolt.damage = calc_dice(1, 0);
+    pbolt.origin_spell = SPELL_PAKELLAS_ROD_SWAP_BOLT;
+    pbolt.fire();
+
+
+    return spret::success;
+}
+spret cast_pakellas_controll_blink(int, bolt&, bool fail)
+{
+    if (you.no_tele(true, true, true))
+    {
+        canned_msg(MSG_STRANGE_STASIS);
+        return spret::abort;
+    }
+
+    if (crawl_state.is_repeating_cmd())
+    {
+        crawl_state.cant_cmd_repeat("You can't repeat controlled blinks.");
+        crawl_state.cancel_cmd_again();
+        crawl_state.cancel_cmd_repeat();
+        return spret::abort;
+    }
+
+    if (orb_limits_translocation())
+    {
+        if (!yesno("Your blink will be uncontrolled - continue anyway?",
+            false, 'n'))
+        {
+            return spret::abort;
+        }
+
+        mprf(MSGCH_ORB, "The Orb prevents control of your translocation!");
+        return cast_blink(fail);
+    }
+    int add_range_ = is_blueprint_exist(BLUEPRINT_BLINK_STRONG);
+
+    return controlled_blink(fail, true, 6 + add_range_);
+}
+spret cast_pakellas_barriar(int powc, bolt& beam, bool fail)
+{
+    const int dur = 2 + 2 * is_blueprint_exist(BLUEPRINT_BARRICADE_TIME);
+
+    if (grid_distance(beam.target, you.pos()) > spell_range(SPELL_PAKELLAS_ROD_BARRIAR,
+        powc)
+        || !in_bounds(beam.target))
+    {
+        mpr("That's too far away.");
+        return spret::abort;
+    }
+
+    if (!monster_habitable_grid(MONS_HUMAN, grd(beam.target)))
+    {
+        mpr("You can't construct there.");
+        return spret::abort;
+    }
+
+    monster* mons = monster_at(beam.target);
+    if (mons)
+    {
+        if (you.can_see(*mons))
+        {
+            mpr("That space is already occupied.");
+            return spret::abort;
+        }
+
+        fail_check();
+
+        // invisible monster
+        mpr("Something you can't see is blocking your construction!");
+        return spret::success;
+    }
+
+    fail_check();
+    bool multi = false;//is_blueprint_exist(BLUEPRINT_BARRICADE_CROSS);
+
+    mgen_data barricade(MONS_BARRICADE, BEH_FRIENDLY, beam.target, MHITYOU,
+        MG_FORCE_BEH | MG_FORCE_PLACE | MG_AUTOFOE);
+    barricade.set_summoned(&you, dur, SPELL_PAKELLAS_ROD_BARRIAR, GOD_PAKELLAS);
+    barricade.hp += is_blueprint_exist(BLUEPRINT_BARRICADE_STRONG) * 30;
+
+
+    if (create_monster(barricade))
+    {
+        mprf("The structure of Barricade%s built.",
+            multi ? "s were" : " was");
+    }
+    else
+        canned_msg(MSG_NOTHING_HAPPENS);
+
+    return spret::success;
+}
+spret cast_pakellas_regen(int powc, bolt&, bool fail)
+{
+    fail_check();
+    if (is_blueprint_exist(BLUEPRINT_LARGE_HEAL) || is_blueprint_exist(BLUEPRINT_SMALL_HEAL)) {
+        int heal_pow = 1;
+
+        if (is_blueprint_exist(BLUEPRINT_LARGE_HEAL))
+        {
+            heal_pow = 9 + powc / 25;
+        } 
+        else if (is_blueprint_exist(BLUEPRINT_SMALL_HEAL))
+        {
+            heal_pow = 4 + powc / 40;
+        }
+        if (is_blueprint_exist(BLUEPRINT_REGEN_STRONG)) {
+            heal_pow += 2;
+        }
+
+        heal_pow = min(50, heal_pow);
+        const int healed = heal_pow + roll_dice(2, heal_pow) - 2;
+        mpr("You are healed.");
+        inc_hp(healed);
+    }
+    else {
+        int max_time_ = powc / 6 + 1;
+
+        if (is_blueprint_exist(BLUEPRINT_REGEN_STRONG)) {
+            max_time_ *= 2;
+        }
+
+        you.increase_duration(DUR_REGENERATION, 5 + roll_dice(2, max_time_), 100,
+            "Your skin crawls.");
+    }
+
+    if (is_blueprint_exist(BLUEPRINT_HEAL_PURIFICATION)) {
+        you.duration[DUR_POISONING] = 0;
+        you.duration[DUR_SLOW] = 0;
+        you.duration[DUR_PETRIFYING] = 0;
+    }
+
+    return spret::success;
+}
+spret cast_pakellas_cloud(int powc, bolt& beam, bool fail)
+{
+    if (env.level_state & LSTATE_STILL_WINDS)
+    {
+        mpr("The air is too still to form clouds.");
+        return spret::abort;
+    }
+
+    int max_time_ = 6 + div_rand_round(powc * 3, 6);
+
+    if (is_blueprint_exist(BLUEPRINT_CLOUD_TIME)) {
+        max_time_ *= 2;
+    }
+
+    const int range = spell_range(SPELL_PAKELLAS_ROD_CLOUD, powc);
+
+    targeter_shotgun hitfunc(&you, CLOUD_CONE_BEAM_COUNT, range);
+
+    hitfunc.set_aim(beam.target);
+
+    if (stop_attack_prompt(hitfunc, "cloud"))
+        return spret::abort;
+
+    fail_check();
+
+
+    cloud_type cloud = CLOUD_STEAM;
+
+    if (is_blueprint_exist(BLUEPRINT_CLOUD_ACID))
+    {
+        cloud = CLOUD_ACID;
+    }
+    else if (is_blueprint_exist(BLUEPRINT_CLOUD_FIRE))
+    {
+        cloud = CLOUD_FIRE;
+    }
+    else if (is_blueprint_exist(BLUEPRINT_CLOUD_COLD))
+    {
+        cloud = CLOUD_COLD;
+    }
+    else if (is_blueprint_exist(BLUEPRINT_CLOUD_FOG))
+    {
+        cloud = CLOUD_PURPLE_SMOKE;
+    }
+    else if (is_blueprint_exist(BLUEPRINT_CLOUD_CONFUSE))
+    {
+        cloud = CLOUD_MEPHITIC;
+    }
+    else
+    {
+        max_time_ /= 3;
+    }
+
+    for (const auto& entry : hitfunc.zapped)
+    {
+        if (entry.second <= 0)
+            continue;
+        place_cloud(cloud, entry.first,
+            4 + random2avg(max_time_, 3),
+            &you);
+    }
+    mprf("%s %s a blast of %s!",
+        you.name(DESC_THE).c_str(),
+        you.conj_verb("create").c_str(),
+        cloud_type_name(cloud).c_str());
+
+    return spret::success;
 }

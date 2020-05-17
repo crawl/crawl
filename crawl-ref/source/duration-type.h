@@ -205,5 +205,6 @@ enum duration_type
     DUR_POISON_GLAND,
     DUR_WALL_MELTING2,
     DUR_COWARD,
+    DUR_PAKELLAS_DURATION,    // duration of Pakellas Buff
     NUM_DURATIONS
 };

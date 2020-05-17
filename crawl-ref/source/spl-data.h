@@ -4102,6 +4102,84 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_PAKELLAS_ROD_SELFBUFF, "Buff Unit",
+    spschool::charms,
+    spflag::selfench | spflag::utility,
+    3,
+    200,
+    -1, -1,
+    2, 0,
+    TILEG_BLINK,
+},
+
+{
+    SPELL_PAKELLAS_ROD_BLINKTELE, "Warp Unit",
+    spschool::translocation,
+    spflag::escape | spflag::selfench | spflag::emergency | spflag::utility,
+    3,
+    200,
+    -1, -1,
+    2, 0,
+    TILEG_BLINK,
+},
+
+{
+    SPELL_PAKELLAS_ROD_SWAP_BOLT, "Warp Unit",
+    spschool::translocation,
+    spflag::dir_or_target | spflag::needs_tracer,
+    5,
+    200,
+    5, 5,
+    2, 0,
+    TILEG_BLINK,
+},
+
+{
+    SPELL_PAKELLAS_ROD_CONTROLL_BLINK, "Warp Unit",
+    spschool::translocation,
+    spflag::escape | spflag::emergency | spflag::utility,
+    7,
+    200,
+    -1, -1,
+    2, 0,
+    TILEG_BLINK,
+},
+
+
+{
+    SPELL_PAKELLAS_ROD_BARRIAR, "Barriar Unit",
+    spschool::summoning,
+    spflag::target | spflag::not_self | spflag::neutral,
+    4,
+    200,
+    2, 2,
+    2, 0,
+    TILEG_SUMMON_LIGHTNING_SPIRE,
+},
+
+{
+    SPELL_PAKELLAS_ROD_REGEN, "Heal Unit",
+    spschool::charms,
+    spflag::selfench | spflag::utility,
+    4,
+    200,
+    -1, -1,
+    3, 0,
+    TILEG_REGENERATION,
+},
+
+{
+    SPELL_PAKELLAS_ROD_CLOUD, "Cloud Unit",
+    spschool::conjuration,
+    spflag::target | spflag::not_self,
+    5,
+    200,
+    4, LOS_DEFAULT_RANGE,
+    3, 0,
+    TILEG_CLOUD_CONE,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     spschool::none,
     spflag::testing,

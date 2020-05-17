@@ -5448,6 +5448,12 @@ bool monster::is_skeletal() const
  */
 bool monster::is_spiny() const
 {
+    if (type == MONS_BARRICADE) {
+        if (is_blueprint_exist(BLUEPRINT_BARRICADE_SPIKE)) {
+            return true;
+        }
+    }
+
     return mons_class_flag(mons_is_job(type) ? base_monster : type,
                            M_SPINY);
 }

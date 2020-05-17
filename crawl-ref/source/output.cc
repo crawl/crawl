@@ -509,7 +509,7 @@ static bool _boosted_ac()
 
 static bool _boosted_ev()
 {
-    return you.duration[DUR_AGILITY] || acrobat_boost_active();
+    return you.duration[DUR_AGILITY] || acrobat_boost_active() || (you.duration[DUR_PAKELLAS_DURATION] && you.attribute[ATTR_PAKELLAS_EV]);
 }
 
 static bool _boosted_sh()
@@ -920,10 +920,10 @@ static short _get_stat_colour(stat_type stat)
 
     // Stat is magically increased.
     if (you.duration[DUR_DIVINE_STAMINA]
-        || stat == STAT_STR && you.duration[DUR_MIGHT]
-        || stat == STAT_STR && you.duration[DUR_BERSERK]
-        || stat == STAT_INT && you.duration[DUR_BRILLIANCE]
-        || stat == STAT_DEX && you.duration[DUR_AGILITY])
+        || (stat == STAT_STR && (you.duration[DUR_MIGHT] || (you.duration[DUR_PAKELLAS_DURATION] && you.attribute[ATTR_PAKELLAS_STR])))
+        || (stat == STAT_STR && you.duration[DUR_BERSERK])
+        || (stat == STAT_INT && (you.duration[DUR_BRILLIANCE] || (you.duration[DUR_PAKELLAS_DURATION] && you.attribute[ATTR_PAKELLAS_INT])))
+        || (stat == STAT_DEX && (you.duration[DUR_AGILITY]) || (you.duration[DUR_PAKELLAS_DURATION] && you.attribute[ATTR_PAKELLAS_DEX])))
     {
         return LIGHTBLUE;  // no end of effect warning
     }

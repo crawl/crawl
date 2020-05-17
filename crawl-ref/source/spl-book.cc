@@ -143,22 +143,40 @@ static const map<rod_type, spell_type> _rod_spells =
     { ROD_PAKELLAS,    SPELL_PAKELLAS_ROD },
 };
 
-spell_type spell_in_rod(rod_type rod)
+
+vector<spell_type> spell_in_rod(rod_type rod, bool select_one)
 {
+    vector<spell_type> ret;
+
     //spiecal case
     if (ROD_PAKELLAS == rod) {
         switch (you.props[PAKELLAS_PROTOTYPE].get_int()) {
         case 1:
-            return SPELL_PAKELLAS_ROD;
+            ret.emplace_back(SPELL_PAKELLAS_ROD);
+            break;
         case 2:
-            return SPELL_PAKELLAS_ROD_SUMMON;
+            ret.emplace_back(SPELL_PAKELLAS_ROD_SUMMON);
+        case 3:
+        {
+            if (select_one) {
+                spell_type spell_ = evoke_support_pakellas_rod();
+                ret.emplace_back(spell_);
+            }
+            else {
+                vector<spell_type> list_rod_spell = list_of_rod_spell();
+                ret.insert(ret.end(), list_rod_spell.begin(), list_rod_spell.end());
+            }
+        }
         default:
             break;
         }
+        return ret;
     }
 
-    if (const spell_type * const spl = map_find(_rod_spells, rod))
-        return *spl;
+    if (const spell_type * const spl = map_find(_rod_spells, rod)) {
+        ret.emplace_back(*spl);
+        return ret;
+    }
     die("unknown rod type %d", rod);
 }
 
@@ -169,8 +187,10 @@ vector<spell_type> spells_in_book(const item_def &book)
     vector<spell_type> ret;
     if (book.base_type == OBJ_RODS)
     {
-        if (item_type_known(book))
-            ret.emplace_back(spell_in_rod(static_cast<rod_type>(book.sub_type)));
+        if (item_type_known(book)) {
+            auto _spells = spell_in_rod(static_cast<rod_type>(book.sub_type), false);
+            ret.insert(ret.end(), _spells.begin(), _spells.end());
+        }
         return ret;
     }
 
@@ -367,9 +387,11 @@ int spell_rarity(spell_type which_spell)
     return rarity;
 }
 
-void read_book(item_def &book)
+int read_book(item_def &book, bool select_spell)
 {
-    describe_item(book);
+    int temp = 0;
+    describe_item(book, nullptr, select_spell, &temp);
+    return temp;
 }
 
 /**

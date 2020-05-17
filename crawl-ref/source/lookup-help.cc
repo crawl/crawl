@@ -556,9 +556,13 @@ static bool _is_rod_spell(spell_type spell)
     if (spell == SPELL_NO_SPELL)
         return false;
 
-    for (int i = 0; i < NUM_RODS; i++)
-        if (spell_in_rod(static_cast<rod_type>(i)) == spell)
-            return true;
+    for (int i = 0; i < NUM_RODS; i++) {
+        auto _spells = spell_in_rod(static_cast<rod_type>(i), false);
+        for (spell_type _spell : _spells) {
+            if(_spell == spell)
+                return true;
+        }
+    }
 
     return false;
 }

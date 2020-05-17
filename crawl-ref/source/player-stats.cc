@@ -391,6 +391,9 @@ static int _strength_modifier(bool innate_only)
         if (you.duration[DUR_DIVINE_STAMINA])
             result += you.attribute[ATTR_DIVINE_STAMINA];
 
+        if (you.duration[DUR_PAKELLAS_DURATION])
+            result += you.attribute[ATTR_PAKELLAS_STR];
+
         result += chei_stat_boost();
 
         // ego items of strength
@@ -429,6 +432,9 @@ static int _int_modifier(bool innate_only)
         if (you.duration[DUR_DIVINE_STAMINA])
             result += you.attribute[ATTR_DIVINE_STAMINA];
 
+        if (you.duration[DUR_PAKELLAS_DURATION])
+          result += you.attribute[ATTR_PAKELLAS_INT];
+
         result += chei_stat_boost();
 
         // ego items of intelligence
@@ -459,6 +465,9 @@ static int _dex_modifier(bool innate_only)
 
         if (you.duration[DUR_DIVINE_STAMINA])
             result += you.attribute[ATTR_DIVINE_STAMINA];
+
+        if (you.duration[DUR_PAKELLAS_DURATION])
+            result += you.attribute[ATTR_PAKELLAS_DEX];
 
         result += chei_stat_boost();
 

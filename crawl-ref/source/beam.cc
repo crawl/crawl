@@ -4858,7 +4858,7 @@ bool bolt::attempt_block(monster* mon)
 bool bolt::bush_immune(const monster &mons) const
 {
     return
-        (mons_species(mons.type) == MONS_BUSH || mons.type == MONS_BRIAR_PATCH)
+        (mons_species(mons.type) == MONS_BUSH || mons.type == MONS_BRIAR_PATCH || mons.type == MONS_BARRICADE)
         && !pierce && !is_explosion
         && !is_enchantment()
         && target != mons.pos()

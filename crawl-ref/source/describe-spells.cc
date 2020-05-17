@@ -19,6 +19,7 @@
 #include "mon-book.h"
 #include "mon-cast.h"
 #include "monster.h" // SEEN_SPELLS_KEY
+#include "pakellas.h"
 #include "prompt.h"
 #include "religion.h"
 #include "shopping.h"
@@ -41,6 +42,10 @@
  */
 spellset item_spellset(const item_def &item)
 {
+    if (item.base_type == OBJ_RODS && item.sub_type == ROD_PAKELLAS) {
+        return { { "\n", list_of_rod_spell() } };
+    }
+
     if (!item.has_spells())
         return {};
 

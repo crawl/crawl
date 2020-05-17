@@ -50,6 +50,7 @@
 #include "mutant-beast.h"
 #include "nearby-danger.h"
 #include "output.h"
+#include "pakellas.h"
 #include "place.h"
 #include "player.h"
 #include "player-stats.h"
@@ -1830,7 +1831,15 @@ static bool _rod_spell(item_def& irod, bool check_range)
 {
     ASSERT(irod.base_type == OBJ_RODS);
 
-    const spell_type spell = spell_in_rod(static_cast<rod_type>(irod.sub_type));
+    vector<spell_type> _spells = spell_in_rod(static_cast<rod_type>(irod.sub_type), true);
+    
+    
+    const spell_type spell = _spells[0];
+
+    if (spell == SPELL_NO_SPELL) {
+        crawl_state.zero_turns_taken();
+        return false;
+    }
     int mana = spell_mana(spell) * ROD_CHARGE_MULT;
     int power = calc_spell_power(spell, false, false, true, 1, true);
 
@@ -1845,6 +1854,26 @@ static bool _rod_spell(item_def& irod, bool check_range)
         canned_msg(MSG_NO_ENERGY);
         crawl_state.zero_turns_taken();
         return false;
+    }
+
+    if (irod.sub_type == ROD_PAKELLAS) {
+        if (spell == SPELL_PAKELLAS_ROD_BLINKTELE) {
+            if (is_blueprint_exist(BLUEPRINT_TELEPORT))
+            {
+                mana += 3 * ROD_CHARGE_MULT;
+            }
+            if (is_blueprint_exist(BLUEPRINT_WARF_MANA))
+            {
+                mana -= ROD_CHARGE_MULT;
+            }
+        }
+        if (spell == SPELL_PAKELLAS_ROD_SWAP_BOLT
+            || spell == SPELL_PAKELLAS_ROD_CONTROLL_BLINK) {
+            if (is_blueprint_exist(BLUEPRINT_WARF_MANA))
+            {
+                mana -= ROD_CHARGE_MULT;
+            }
+        }
     }
 
     if (spell == SPELL_THUNDERBOLT && you.props.exists("thunderbolt_last")

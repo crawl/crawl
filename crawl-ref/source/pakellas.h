@@ -1,5 +1,11 @@
 #pragma once
 
+#include "enum.h"
+#include "spl-cast.h"
+
+struct bolt;
+class dist;
+
 enum pakellas_blueprint_type
 {
     BLUEPRINT_DESTRUCTION_START = 0,
@@ -45,16 +51,39 @@ enum pakellas_blueprint_type
     BLUEPRINT_STATUP_STR,
     BLUEPRINT_STATUP_DEX,
     BLUEPRINT_STATUP_INT,
+    BLUEPRINT_EVASION,
     BLUEPRINT_SWIFT,
+    BLUEPRINT_SWIFT_2,
     BLUEPRINT_HASTE,
-    BLUEPRINT_BLING,
-    BLUEPRINT_DIRECTION_BLINK,
-    BLUEPRINT_CONTROL_BLINK,
+    BLUEPRINT_CLEAVE,
+
+    BLUEPRINT_BLINK,
+    BLUEPRINT_BLINK_STRONG,
+    BLUEPRINT_WARF_MANA,
+    BLUEPRINT_SWAP_BLINK,
     BLUEPRINT_TELEPORT,
-    BLUEPRINT_EMERGENCY_TELEPORT,
+    BLUEPRINT_CONTROL_BLINK,
+
+    BLUEPRINT_BARRICADE,
+    BLUEPRINT_BARRICADE_STRONG,
+    BLUEPRINT_BARRICADE_RANGE,
+    BLUEPRINT_BARRICADE_SPIKE,
+    BLUEPRINT_BARRICADE_TIME,
+
     BLUEPRINT_REGEN,
+    BLUEPRINT_REGEN_STRONG,
+    BLUEPRINT_HEAL_PURIFICATION,
     BLUEPRINT_SMALL_HEAL,
     BLUEPRINT_LARGE_HEAL,
+
+    BLUEPRINT_CLOUD_UNIT,
+    BLUEPRINT_CLOUD_CONFUSE,
+    BLUEPRINT_CLOUD_FOG,
+    BLUEPRINT_CLOUD_FIRE,
+    BLUEPRINT_CLOUD_COLD,
+    BLUEPRINT_CLOUD_ACID,
+    BLUEPRINT_CLOUD_TIME,
+
     BLUEPRINT_CHARM_END,
 
     BLUEPRINT_PUBLIC_START = 300,
@@ -95,3 +124,16 @@ void pakellas_reset_upgrade_timer(bool clear_timer);
 int is_blueprint_exist(pakellas_blueprint_type blueprint);
 int get_blueprint_element();
 int quick_charge_pakellas();
+
+vector<spell_type> list_of_rod_spell();
+spell_type evoke_support_pakellas_rod();
+
+spret cast_pakellas_selfbuff(int powc, bolt & beam, bool fail);
+spret cast_pakellas_blinktele(int powc, bolt & beam, bool fail);
+spret cast_pakellas_swap_bolt(int powc, bolt & beam, bool fail);
+spret cast_pakellas_controll_blink(int powc, bolt & beam, bool fail);
+spret cast_pakellas_barriar(int powc, bolt & beam, bool fail);
+spret cast_pakellas_regen(int powc, bolt & beam, bool fail);
+spret cast_pakellas_cloud(int powc, bolt & beam, bool fail);
+
+void pakellas_remove_self_buff();

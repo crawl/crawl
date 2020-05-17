@@ -2194,6 +2194,9 @@ static int _player_evasion_bonuses()
     if (you.duration[DUR_AGILITY])
         evbonus += AGILITY_BONUS;
 
+    if (you.duration[DUR_PAKELLAS_DURATION])
+        evbonus += you.attribute[ATTR_PAKELLAS_EV];
+
     evbonus += you.wearing(EQ_RINGS_PLUS, RING_EVASION);
 
     evbonus += you.scan_artefacts(ARTP_EVASION);

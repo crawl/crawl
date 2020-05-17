@@ -488,6 +488,14 @@ int spell_mana(spell_type which_spell)
 // and triggers for Sif acting (same reasoning as above, just good) {dlb}
 int spell_difficulty(spell_type which_spell)
 {
+    //exception case...
+    if (which_spell == SPELL_PAKELLAS_ROD_BLINKTELE) {
+        if (is_blueprint_exist(BLUEPRINT_TELEPORT))
+        {
+            return 6;
+        }
+    }
+
     return _seekspell(which_spell)->level;
 }
 
@@ -986,7 +994,19 @@ int spell_range(spell_type spell, int pow, bool allow_bonus)
         int add_range_ = is_blueprint_exist(BLUEPRINT_RANGE);
         maxrange+= add_range_;
         minrange+= add_range_;
+
     }
+    if (spell == SPELL_PAKELLAS_ROD_SWAP_BOLT) {
+        int add_range_ = is_blueprint_exist(BLUEPRINT_BLINK_STRONG);
+        maxrange += add_range_;
+        minrange += add_range_;
+    }
+    if (spell == SPELL_PAKELLAS_ROD_BARRIAR) {
+        int add_range_ = 2*is_blueprint_exist(BLUEPRINT_BARRICADE_RANGE);
+        maxrange += add_range_;
+        minrange += add_range_;
+    }
+
 
     if (minrange == maxrange)
         return min(minrange, (int)you.current_vision);
@@ -1435,6 +1455,8 @@ bool spell_no_hostile_in_range(spell_type spell, bool rod)
     case SPELL_FIRE_STORM:
     case SPELL_WALL_MELTING:
     case SPELL_WALL_MELTING_2:
+    case SPELL_PAKELLAS_ROD_BARRIAR:
+    case SPELL_PAKELLAS_ROD_CLOUD:
         return false;
 
     case SPELL_CHAIN_LIGHTNING:
