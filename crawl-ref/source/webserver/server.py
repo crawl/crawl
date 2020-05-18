@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 from __future__ import absolute_import
 
+import argparse
 import errno
 import logging
 import logging.handlers
@@ -18,7 +19,8 @@ import auth
 import load_games
 import process_handler
 import userdb
-from config import *
+import config
+from config import *  # TODO: remove
 from game_data_handler import GameDataHandler
 from util import *
 from ws_handler import *
@@ -78,35 +80,35 @@ def daemonize():
         os.dup2(f.fileno(), sys.stderr.fileno())
 
 def write_pidfile():
-    if not pidfile:
+    if not getattr(config, 'pidfile', None):
         return
-    if os.path.exists(pidfile):
+    if os.path.exists(config.pidfile):
         try:
-            with open(pidfile) as f:
+            with open(config.pidfile) as f:
                 pid = int(f.read())
         except ValueError:
-            err_exit("PIDfile %s contains non-numeric value" % pidfile)
+            err_exit("PIDfile %s contains non-numeric value" % config.pidfile)
         try:
             os.kill(pid, 0)
         except OSError as why:
             if why.errno == errno.ESRCH:
                 # The pid doesn't exist.
-                logging.warn("Removing stale pidfile %s" % pidfile)
-                os.remove(pidfile)
+                logging.warn("Removing stale pidfile %s" % config.pidfile)
+                os.remove(config.pidfile)
             else:
                 err_exit("Can't check status of PID %s from pidfile %s: %s" %
-                         (pid, pidfile, why.strerror))
+                         (pid, config.pidfile, why.strerror))
         else:
             err_exit("Another Webtiles server is running, PID %s\n" % pid)
 
-    with open(pidfile, "w") as f:
+    with open(config.pidfile, "w") as f:
         f.write(str(os.getpid()))
 
 def remove_pidfile():
-    if not pidfile:
+    if not getattr(config, 'pidfile', None):
         return
     try:
-        os.remove(pidfile)
+        os.remove(config.pidfile)
     except OSError as e:
         if e.errno == errno.EACCES or e.errno == errno.EPERM:
             logging.warn("No permission to delete pidfile!")
@@ -116,10 +118,10 @@ def remove_pidfile():
         logging.error("Failed to delete pidfile!")
 
 def shed_privileges():
-    if gid is not None:
-        os.setgid(gid)
-    if uid is not None:
-        os.setuid(uid)
+    if getattr(config, 'gid', None) is not None:
+        os.setgid(config.gid)
+    if getattr(config, 'uid', None) is not None:
+        os.setuid(config.uid)
 
 def stop_everything():
     for server in servers:
@@ -145,8 +147,8 @@ def signal_handler(signum, frame):
 
 def bind_server():
     settings = {
-        "static_path": static_path,
-        "template_loader": DynamicTemplateLoader.get(template_path),
+        "static_path": config.static_path,
+        "template_loader": DynamicTemplateLoader.get(config.template_path),
         "debug": bool(getattr(config, 'development_mode', False)),
         }
 
@@ -160,11 +162,14 @@ def bind_server():
             ], gzip=getattr(config,"use_gzip",True), **settings)
 
     kwargs = {}
-    if http_connection_timeout is not None:
-        kwargs["idle_connection_timeout"] = http_connection_timeout
+    if getattr(config, 'http_connection_timeout', None) is not None:
+        kwargs["idle_connection_timeout"] = config.http_connection_timeout
 
+    # TODO: the logic looks odd here, as it is set to None in the default
+    # config.py. But I'm not really sure how this is used so I don't want to
+    # mess with it...
     if getattr(config, "http_xheaders", False):
-        kwargs["xheaders"] = http_xheaders
+        kwargs["xheaders"] = config.http_xheaders
 
     servers = []
 
@@ -183,31 +188,33 @@ def bind_server():
                     "this to work.""")
             return server
 
-    if bind_nonsecure:
+    if config.bind_nonsecure:
         server = server_wrap(**kwargs)
 
         try:
-            listens = bind_pairs
-        except NameError:
-            listens = ( (bind_address, bind_port), )
+            listens = config.bind_pairs
+        except AttributeError:
+            listens = ( (config.bind_address, config.bind_port), )
         for (addr, port) in listens:
             logging.info("Listening on %s:%d" % (addr, port))
             server.listen(port, addr)
         servers.append(server)
-    if ssl_options:
+
+    if config.ssl_options:
         # TODO: allow different ssl_options per bind pair
-        server = server_wrap(ssl_options=ssl_options, **kwargs)
+        server = server_wrap(ssl_options=config.ssl_options, **kwargs)
 
         try:
-            listens = ssl_bind_pairs
+            listens = config.ssl_bind_pairs
         except NameError:
-            listens = ( (ssl_address, ssl_port), )
+            listens = ( (config.ssl_address, config.ssl_port), )
         for (addr, port) in listens:
             logging.info("Listening on %s:%d" % (addr, port))
             server.listen(port, addr)
         servers.append(server)
 
     return servers
+
 
 def init_logging(logging_config):
     filename = logging_config.get("filename")
@@ -239,9 +246,10 @@ def init_logging(logging_config):
     logging.addLevelName(logging.DEBUG, "DEBG")
     logging.addLevelName(logging.WARNING, "WARN")
 
+
 def check_config():
     success = True
-    for (game_id, game_data) in games.items():
+    for (game_id, game_data) in config.games.items():
         if not os.path.exists(game_data["crawl_binary"]):
             logging.warning("Crawl executable for %s (%s) doesn't exist!",
                             game_id, game_data["crawl_binary"])
@@ -259,10 +267,12 @@ def check_config():
         success = False
     return success
 
+
 def monkeypatch_tornado24():
     # extremely ugly compatibility hack, to ease transition for servers running
     # the ancient patched tornado 2.4.
     IOLoop.current = staticmethod(IOLoop.instance)
+
 
 def ensure_tornado_current():
     try:
@@ -294,35 +304,86 @@ def usr1_handler(signum, frame):
     except Exception:
         logging.exception("Failed to update games after USR1 signal.")
 
-if __name__ == "__main__":
-    if chroot:
-        os.chroot(chroot)
 
-    init_logging(logging_config)
+def parse_args():
+    parser = argparse.ArgumentParser(
+        description='Dungeon Crawl webtiles server',
+        epilog='Command line options will override config settings.')
+    parser.add_argument('-p', '--port', type=int, help='A port to bind.')
+    parser.add_argument('--logfile',
+                        help='A logfile to write to; use "-" for stdout.')
+    parser.add_argument('--daemon', action='store_true',
+                        help='Daemonize after start.')
+    parser.add_argument('-n', '--no-deamon', action='store_false',
+                        dest='daemon',
+                        help='Do not daemonize after start.')
+    parser.add_argument('--no-pidfile', dest='pidfile', action='store_false',
+                                                help='Do not use a PID-file.')
+    return parser.parse_args()
+
+
+# override config with any arguments supplied on the command line
+def export_args_to_config(args):
+    if args.port:
+        config.bind_nonsecure = True
+        config.bind_address = ""  # TODO: ??
+        config.bind_port = args.port
+        if getattr(config, 'bind_pairs', None) is not None:
+            del config.bind_pairs
+        logging.info("Using command-line supplied port: %d", args.port)
+    if args.daemon is not None:
+        config.daemon = args.daemon
+    if args.pidfile is not None:
+        if not args.pidfile:
+            if getattr(config, 'pidfile', None):
+                logging.info("Command line overrides config-specified PID file!")
+            config.pidfile = None
+
+
+def server_main():
+    args = parse_args()
+    if config.chroot:
+        os.chroot(config.chroot)
+
+    # do this here so it can happen before logging init
+    if args.logfile:
+        if args.logfile == "-":
+            config.logging_config.pop('filename', None)
+            args.logfile = "<stdout>"  # make the log message easier to read
+        else:
+            config.logging_config['filename'] = args.logfile
+
+    init_logging(config.logging_config)
+
+    if args.logfile:
+        logging.info("Using command-line supplied logfile: '%s'", args.logfile)
 
     _do_load_games()
+
+    export_args_to_config(args)
 
     if not check_config():
         err_exit("Errors in config. Exiting.")
 
-    if daemon:
+    if config.daemon:
         daemonize()
 
     signal.signal(signal.SIGTERM, signal_handler)
     signal.signal(signal.SIGHUP, signal_handler)
     signal.signal(signal.SIGINT, signal_handler)
 
-    if umask is not None:
-        os.umask(umask)
+    if getattr(config, 'umask', None) is not None:
+        os.umask(config.umask)
 
     write_pidfile()
 
+    global servers
     servers = bind_server()
     ensure_tornado_current()
 
     shed_privileges()
 
-    if dgl_mode:
+    if config.dgl_mode:
         userdb.ensure_user_db_exists()
         userdb.upgrade_user_db()
     userdb.ensure_settings_db_exists()
@@ -336,12 +397,12 @@ if __name__ == "__main__":
         # this is the new normal; still not sure of a way to deal with this.
         logging.info("Webserver running without a blocking call timeout.")
 
-    if dgl_mode:
+    if config.dgl_mode:
         status_file_timeout()
         auth.purge_login_tokens_timeout()
         start_reading_milestones()
 
-        if watch_socket_dirs:
+        if config.watch_socket_dirs:
             process_handler.watch_socket_dirs()
 
     logging.info("DCSS Webtiles server started with Tornado %s! (PID: %s)" %
@@ -351,3 +412,7 @@ if __name__ == "__main__":
 
     logging.info("Bye!")
     remove_pidfile()
+
+
+if __name__ == "__main__":
+    server_main()
