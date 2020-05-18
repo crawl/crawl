@@ -4089,7 +4089,7 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_PAKELLAS_ROD_SUMMON, "Summon Machine",
+    SPELL_PAKELLAS_ROD_SUMMON, "Summon Machine Golem",
     spschool::summoning,
     spflag::none,
     4,
