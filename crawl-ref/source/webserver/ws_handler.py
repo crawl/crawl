@@ -284,7 +284,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         for process in list(processes.values()):
             self.queue_message("lobby_entry", **process.lobby_entry())
         self.send_message("lobby_complete")
-        self.send_game_links()
+        self.send_lobby_html()
 
     def send_announcement(self, text):
         # TODO: something in lobby?
@@ -365,13 +365,18 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
         callback()
 
-    def send_game_links(self):
+    def send_lobby_html(self):
         # Rerender Banner
+        # TODO: don't really need to do this every time the lobby is loaded?
         banner_html = to_unicode(self.render_string("banner.html",
                                                     username = self.username))
+        self.queue_message("html", id = "banner", content = banner_html)
+
+        if not self.username:
+            return
         def disable_check(s):
             return s == "[slot full]"
-        def finalize_game_links():
+        def send_game_links():
             self.queue_message("html", id = "banner", content = banner_html)
             # TODO: dynamically send this info as it comes in, rather than
             # rendering it all at the end?
@@ -380,7 +385,16 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                                                   save_info = self.save_info,
                                                   disabled = disable_check))
             self.send_message("set_game_links", content = play_html)
-        self.collect_save_info(finalize_game_links)
+            logging.info("game links sent")
+        # if no game links at all have been sent, immediately render the
+        # empty version. This is so that if the server takes a while on
+        # initial connect, the player sees something immediately.
+        if len(self.save_info) == 0:
+            for g in config.games:
+                self.save_info[g] = None
+            logging.info("sending empty game links")
+            send_game_links()
+        self.collect_save_info(send_game_links)
 
     def reset_timeout(self):
         if self.timeout:
@@ -560,7 +574,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             if self.watched_game:
                 self.watched_game.update_watcher_description()
             else:
-                self.send_game_links()
+                self.send_lobby_html()
 
         self.init_user(login_callback)
 
