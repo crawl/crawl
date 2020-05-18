@@ -768,7 +768,6 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
 
     item_def *to_wield = &you.inv[0]; // default is 'a'
         // we'll set this to nullptr to indicate bare hands
-
     if (auto_wield)
     {
         if (!second_weapon) {
@@ -794,7 +793,6 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
                 to_wield = &you.inv[slot];
         }
     }
-
     if (to_wield)
     {
     // Prompt if not using the auto swap command
@@ -822,7 +820,6 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
         else if (!to_wield->defined() || !item_is_wieldable(*to_wield))
             to_wield = nullptr;
     }
-
     if (to_wield && (to_wield == you.weapon() || to_wield == you.second_weapon()))
     {
         if (Options.equip_unequip)
@@ -833,7 +830,6 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
             return true;
         }
     }
-
     // Reset the warning counter.
     you.received_weapon_warning = false;
 
@@ -865,7 +861,6 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
                 }
             }
         }
-
         if (wpn)
         {
             bool penance = false;
@@ -940,8 +935,9 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
 
     // At this point, we know it's possible to equip this item. However, there
     // might be reasons it's not advisable.
-    if (!check_warning_inscriptions(new_wpn, OPER_WIELD)
-        || !_safe_to_remove_or_wear(new_wpn, false))
+    if (!isDualWeapon
+        && (!check_warning_inscriptions(new_wpn, OPER_WIELD)
+        || !_safe_to_remove_or_wear(new_wpn, false)))
     {
         canned_msg(MSG_OK);
         return false;
@@ -954,18 +950,17 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
             ||
             you.hands_reqd(new_wpn) == HANDS_TWO)
         {
-            //if two handed weapon(maybe range weapon) you should unwield weapon all
-            if (you.weapon()) {
-                if (unwield_item(show_weff_messages, EQ_WEAPON))
+            if(you.weapon() || you.second_weapon())
+            {//if two handed weapon(maybe range weapon) you should unwield weapon all
+            auto choosed_wpn = !you.weapon() ? EQ_WEAPON : EQ_SECOND_WEAPON;
+
+                if (!check_warning_inscriptions(new_wpn, OPER_WIELD, you.second_weapon())
+                    || !_safe_to_remove_or_wear(new_wpn, false))
                 {
-                    // Enable skills so they can be re-disabled later
-                    update_can_currently_train();
-                }
-                else
+                    canned_msg(MSG_OK);
                     return false;
-            }
-            if (you.second_weapon()) {
-                if (unwield_item(show_weff_messages, EQ_SECOND_WEAPON))
+                }
+                if (unwield_item(show_weff_messages, choosed_wpn))
                 {
                     // Enable skills so they can be re-disabled later
                     update_can_currently_train();
@@ -984,12 +979,27 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
             }
             else if (!auto_wield) {
                 choosed_wpn = _choose_weapon_slot();
+                bool isSecond = false;
 
                 if (choosed_wpn == EQ_NONE)
                 {
                     canned_msg(MSG_OK);
                     return false;
                 }
+                else if (choosed_wpn == EQ_WEAPON)
+                {  
+                    isSecond = false;
+                }
+                else if (choosed_wpn == EQ_SECOND_WEAPON)
+                {
+                    isSecond = true;
+                }
+                if (!check_warning_inscriptions(new_wpn, OPER_WIELD, isSecond)
+                        || !_safe_to_remove_or_wear(new_wpn, false))
+                    {
+                        canned_msg(MSG_OK);
+                        return false;
+                    }
             }
 
             auto checkWpn = you.slot_item(choosed_wpn, true);
@@ -1008,6 +1018,25 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
             else
                 return false;
         }
+        else if(!you.weapon() && !you.second_weapon())
+        {
+            if (!check_warning_inscriptions(new_wpn, OPER_WIELD)
+                    || !_safe_to_remove_or_wear(new_wpn, false))
+                {
+                    canned_msg(MSG_OK);
+                    return false;
+                }
+        }
+        else
+        {  
+            if (!check_warning_inscriptions(new_wpn, OPER_WIELD, you.weapon())
+                    || !_safe_to_remove_or_wear(new_wpn, false))
+                {
+                    canned_msg(MSG_OK);
+                    return false;
+                } 
+        }
+        
     } 
     // Unwield any old weapon.
     else if (you.weapon())

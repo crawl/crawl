@@ -1559,7 +1559,8 @@ static bool _has_warning_inscription(const item_def& item,
 // corresponding slot which has a warning inscription. If this is the case,
 // prompt the user for confirmation.
 bool check_old_item_warning(const item_def& item,
-                             operation_types oper)
+                             operation_types oper, 
+                             bool second_weapon)
 {
     item_def old_item;
     string prompt;
@@ -1568,12 +1569,23 @@ bool check_old_item_warning(const item_def& item,
     {
         if (!you.weapon())
             return true;
-
+        
         int equip = you.equip[EQ_WEAPON];
-        if (equip == -1 || item.link == equip)
+        old_item = *you.weapon();
+
+        if (second_weapon)
+        {    
+            if (!you.second_weapon())
+            {
+                return true;
+            }
+            equip = you.equip[EQ_SECOND_WEAPON];
+            old_item = *you.second_weapon();
+        }
+
+        if (equip == -1 || item.link == equip) 
             return true;
 
-        old_item = *you.weapon();
         if (!needs_handle_warning(old_item, OPER_WIELD, penance))
             return true;
 
@@ -1671,6 +1683,7 @@ static bool _is_known_no_tele_item(const item_def &item)
 
     return artefact_known_property(item, ARTP_PREVENT_TELEPORTATION);
 }
+
 
 bool needs_notele_warning(const item_def &item, operation_types oper)
 {
@@ -1802,12 +1815,14 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
 // on this item, prompt the user for confirmation. Return true if all prompts
 // are OK'd.
 bool check_warning_inscriptions(const item_def& item,
-                                 operation_types oper)
+                                 operation_types oper,
+                                 bool second_weapon)
 {
     bool penance = false;
+        
     if (item.defined()
         && needs_handle_warning(item, oper, penance))
-    {
+    {   
         // When it's about destroying an item, don't even ask.
         // If the player really wants to do that, they'll have
         // to remove the inscription.
@@ -1825,10 +1840,15 @@ bool check_warning_inscriptions(const item_def& item,
             // a non-const item_def.
             if (!you.can_wield(item))
                 return true;
-
             int equip = you.equip[EQ_WEAPON];
+            
+            if (second_weapon)
+            {
+                equip = you.equip[EQ_SECOND_WEAPON];
+            }
+
             if (equip != -1 && item.link == equip)
-                return check_old_item_warning(item, oper);
+                return check_old_item_warning(item, oper, second_weapon);
         }
         else if (oper == OPER_WEAR)
         {
@@ -1879,7 +1899,6 @@ bool check_warning_inscriptions(const item_def& item,
             if (item.cursed())
                 return true;
         }
-
         // XXX: duplicates a check in delay.cc:_finish_delay()
         string prompt = "Really " + _operation_verb(oper) + " ";
         prompt += ((in_inventory(item) || in_bag(item)) ? item.name(DESC_INVENTORY)
@@ -1893,10 +1912,10 @@ bool check_warning_inscriptions(const item_def& item,
         if (penance)
             prompt += " This could place you under penance!";
         return yesno(prompt.c_str(), false, 'n')
-               && check_old_item_warning(item, oper);
+               && check_old_item_warning(item, oper, second_weapon);
     }
     else
-        return check_old_item_warning(item, oper);
+        return check_old_item_warning(item, oper, second_weapon);
 }
 
 /**
