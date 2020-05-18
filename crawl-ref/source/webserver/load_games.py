@@ -188,7 +188,7 @@ def binary_key(g):
     # binaries. To accommodate this we need to also use pre_options in
     # the key for organizing binaries. (sigh...)
     if "pre_options" in config.games[g]:
-        k += " " + config.games[g]["pre_options"]
+        k += " " + " ".join(config.games[g]["pre_options"])
 
 
 def collect_game_modes():
