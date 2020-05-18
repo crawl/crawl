@@ -147,8 +147,18 @@ class CrawlProcessHandlerBase(object):
         return dgl_format_str(path, self.username, self.game_params)
 
     def config_path(self, key):
-        if key not in self.game_params: return None
-        return self.format_path(self.game_params[key])
+        if key not in self.game_params:
+            return None
+        base_path = self.format_path(self.game_params[key])
+        if key == "socket_path" and getattr(config, "live_debug", False):
+            # TODO: this is kind of brute-force given that regular paths aren't
+            # validated at all...
+            debug_path = os.path.join(base_path, 'live-debug')
+            if not os.path.isdir(debug_path):
+                os.makedirs(debug_path)
+            return debug_path
+        else:
+            return base_path
 
     def idle_time(self):
         return int(time.time() - self.last_activity_time)

@@ -385,14 +385,12 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                                                   save_info = self.save_info,
                                                   disabled = disable_check))
             self.send_message("set_game_links", content = play_html)
-            logging.info("game links sent")
         # if no game links at all have been sent, immediately render the
         # empty version. This is so that if the server takes a while on
         # initial connect, the player sees something immediately.
         if len(self.save_info) == 0:
             for g in config.games:
                 self.save_info[g] = None
-            logging.info("sending empty game links")
             send_game_links()
         self.collect_save_info(send_game_links)
 
