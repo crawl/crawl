@@ -320,7 +320,20 @@ def parse_args():
                         help='Do not daemonize after start.')
     parser.add_argument('--no-pidfile', dest='pidfile', action='store_false',
                                                 help='Do not use a PID-file.')
-    return parser.parse_args()
+
+    # live debug mode is intended to be able to run (more or less) safely with
+    # a concurrent real webtiles server. However, still be careful with this...
+    parser.add_argument('--live-debug', action='store_true',
+        help='Debug mode for server admins. Entails --no-pidfile, --no-daemon, --logfile -, watch_socket_dirs=False, no_cache=True. (Further command line options can override these.)')
+    result = parser.parse_args()
+    if result.live_debug:
+        if not result.logfile:
+            result.logfile = '-'
+        if result.daemon is None:
+            result.daemon = False
+        if result.pidfile is None:
+            result.pidfile = False
+    return result
 
 
 # override config with any arguments supplied on the command line
@@ -342,6 +355,10 @@ def export_args_to_config(args):
             if getattr(config, 'pidfile', None):
                 logging.info("Command line overrides config-specified PID file!")
             config.pidfile = None
+    if args.live_debug:
+        logging.info("Starting in live-debug mode.")
+        config.watch_socket_dirs = False
+        config.no_cache = True
 
 
 def server_main():
