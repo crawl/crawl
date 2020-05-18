@@ -315,7 +315,7 @@ def parse_args():
                         help='A logfile to write to; use "-" for stdout.')
     parser.add_argument('--daemon', action='store_true',
                         help='Daemonize after start.')
-    parser.add_argument('-n', '--no-deamon', action='store_false',
+    parser.add_argument('-n', '--no-daemon', action='store_false',
                         dest='daemon',
                         help='Do not daemonize after start.')
     parser.add_argument('--no-pidfile', dest='pidfile', action='store_false',
