@@ -189,6 +189,7 @@ def binary_key(g):
     # the key for organizing binaries. (sigh...)
     if "pre_options" in config.games[g]:
         k += " " + " ".join(config.games[g]["pre_options"])
+    return k
 
 
 def collect_game_modes():
@@ -202,6 +203,9 @@ def collect_game_modes():
     # This is very much a blocking call, especially with many binaries.
     binaries = {}
     for g in config.games:
+        if not config.games[g].get("show_save_info", False):
+            binaries[binary_key(g)] = None
+            continue
         call = [config.games[g]["crawl_binary"]]
         if "pre_options" in config.games[g]:
             call += config.games[g]["pre_options"]

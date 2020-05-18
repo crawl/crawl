@@ -362,8 +362,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 call = [game["crawl_binary"]]
                 if "pre_options" in game:
                     call += game["pre_options"]
-                call = call + (game.get("options", [])
-                               + ["-save-json", self.username])
+                call += ["-save-json", self.username]
                 callback = build_callback(g, call, callback)
 
         callback()
