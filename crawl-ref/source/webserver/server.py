@@ -309,7 +309,8 @@ def parse_args():
     parser = argparse.ArgumentParser(
         description='Dungeon Crawl webtiles server',
         epilog='Command line options will override config settings.')
-    parser.add_argument('-p', '--port', type=int, help='A port to bind.')
+    parser.add_argument('-p', '--port', type=int, help='A port to bind; disables SSL.')
+    # TODO: --ssl-port or something?
     parser.add_argument('--logfile',
                         help='A logfile to write to; use "-" for stdout.')
     parser.add_argument('--daemon', action='store_true',
@@ -331,6 +332,9 @@ def export_args_to_config(args):
         if getattr(config, 'bind_pairs', None) is not None:
             del config.bind_pairs
         logging.info("Using command-line supplied port: %d", args.port)
+        if getattr(config, 'ssl_options', None):
+            logging.info("    (Overrides config-specified SSL settings.)")
+            config.ssl_options = None
     if args.daemon is not None:
         config.daemon = args.daemon
     if args.pidfile is not None:
