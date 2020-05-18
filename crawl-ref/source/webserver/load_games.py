@@ -177,6 +177,20 @@ def validate_game_dict(game):
 game_modes = {}  # type: Dict[str, str]
 
 
+# A key that uniquely determines the crawl binary called if `g` is started.
+# This can be messed up by launcher scripts if they do something other than
+# the one case handled here.
+def binary_key(g):
+    import config
+    k = config.games[g]["crawl_binary"]
+    # On dgamelaunch-config servers, `pre_options` is used to pass a
+    # version to the launcher script, which underlyingly calls different
+    # binaries. To accommodate this we need to also use pre_options in
+    # the key for organizing binaries. (sigh...)
+    if "pre_options" in config.games[g]:
+        k += " " + config.games[g]["pre_options"]
+
+
 def collect_game_modes():
     import config
     # figure out what game modes are associated with which game in the config.
@@ -188,30 +202,36 @@ def collect_game_modes():
     # This is very much a blocking call, especially with many binaries.
     binaries = {}
     for g in config.games:
-        call = ([config.games[g]["crawl_binary"]]
-                + config.games[g].get("options", [])
-                + ["-gametypes-json"])
+        call = [config.games[g]["crawl_binary"]]
+        if "pre_options" in config.games[g]:
+            call += config.games[g]["pre_options"]
+
+        # "dummy" is here for the sake of the dgamelaunch-config launcher
+        # scripts, which choke badly if there is no second argument. The actual
+        # crawl binary just ignores it. (TODO: this is not an ideal thing about
+        # these wrapper scripts...)
+        call += ["-gametypes-json", "dummy"]
         try:
             m_json = subprocess.check_output(call, stderr=subprocess.STDOUT)
-            binaries[config.games[g]["crawl_binary"]] = json_decode(m_json)
+            binaries[binary_key(g)] = json_decode(m_json)
         except subprocess.CalledProcessError:  # return value 1
-            binaries[config.games[g]["crawl_binary"]] = None
+            binaries[binary_key(g)] = None
         except ValueError:  # JSON decoding issue?
             logging.warn("JSON error with output '%s'", repr(m_json))
-            binaries[config.games[g]["crawl_binary"]] = None
+            binaries[binary_key(g)] = None
 
     global game_modes
     game_modes = {}
     for g in config.games:
         game_dict = config.games[g]
         mode_found = False
-        if binaries[game_dict["crawl_binary"]] is None:
+        if binaries[binary_key(g)] is None:
             # binary does not support game mode json
             game_modes[g] = None
             continue
-        for mode in binaries[game_dict["crawl_binary"]]:
+        for mode in binaries[binary_key(g)]:
             for opt in game_dict.get("options", [""]):
-                if opt == binaries[game_dict["crawl_binary"]][mode]:
+                if opt == binaries[binary_key(g)][mode]:
                     game_modes[g] = mode
                     mode_found = True
                     break
