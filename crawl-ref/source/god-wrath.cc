@@ -1068,19 +1068,29 @@ static void _lugonu_transloc_retribution()
  */
 static void _lugonu_minion_retribution()
 {
+    int angel_stepdown = _angel_wrath_stepdown();
+
+    if (angel_stepdown == 2) {
+        return; //not summon xl < 9
+    }
+
     // abyssal servant theme
     const god_type god = GOD_LUGONU;
 
     // should we summon more & higher-tier lugonu minions?
     // linear chance, from 0% at xl 4 to 80% at xl 16
-    const bool major = (you.experience_level > (4 + random2(12))
+    bool major = (you.experience_level > (4 + random2(12))
                         && !one_chance_in(5));
+
+    if (angel_stepdown == 1)
+        major = false;
 
     // how many lesser minions should we try to summon?
     // if this is major wrath, summon a few minions; 0 below xl9, 0-3 at xl 27.
     // otherwise, summon exactly (!) 1 + xl/7 minions, maxing at 4 at xl 21.
     const int how_many = (major ? random2(you.experience_level / 9 + 1)
                                 : 1 + you.experience_level / 7);
+
 
     // did we successfully summon any minions? (potentially set true below)
     bool success = false;
