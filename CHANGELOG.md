@@ -19,8 +19,8 @@
 - 새로운 종족 레서리치 추가. 높은 강령 적성, 빠른 마나회복, 27렙때 와일드매직을 얻음
   - Added Lesser-Lich. high necromancy skill, high mana regen, wild magic when 27 level
   
-- 파켈라스 추가 및 리워크(아직 진행중) 상세 설명은 [이 곳](https://github.com/kimjoy2002/crawl/issues/60)을 확인
-  - Added pakellas and rework(ongoing) Click [here](https://github.com/kimjoy2002/crawl/issues/60) for details
+- 파켈라스 추가 및 리워크. 이제 마나를 제약하지않으나 마음대로 업그레이드할 수 있는 프로토타입 로드를 선물함. 상세 설명은 [이 곳](https://github.com/kimjoy2002/crawl/issues/60)을 확인
+  - Added pakellas and rework.  No longer constrained mana, but presents a prototype rod that can be upgraded at will. Click [here](https://github.com/kimjoy2002/crawl/issues/60) for details
   
 - 독물의 추출, 증산 추가
   - Added Fulsome Distillation, Evaporate spell
@@ -49,8 +49,8 @@
 - 가방 아이템 추가. 아이템을 자유롭게 넣고 뺄 수 있는 유틸리티 아이템임
   - Added bag. Miscellany that provide additional storage space
 
-- 가속 마법 복구
-  - rollback Haste
+- 마법 복구 : 가속, 특이점, 정령소환
+  - rollback Haste, singularity, Summon Elemenatal
   
 - 로드 복구 (iron, clouds, ignition, inaccuracy, shadows)
   - rollback rod (iron, clouds, ignition, inaccuracy, shadows)
@@ -58,14 +58,14 @@
 - 전기디스크 복구
   - rollback disc of storms
   
-- 특이점과 아카식 레코드 마법책 복구
-  - rollback singularity and akashic record
+- 아카식 레코드 마법책 복구
+  - rollback akashic record
   
 - 스토커 복구. 벽과 융합하는 새로운 마법과 함께
   - rollback stalker. with magic of transforming into a wall
 
 - 라바 오크, 지니, 하이엘프, 마운틴드워프 복구
-  - rollback Lava orc, Djinni, 
+  - rollback Lava orc, Djinni, HighElf, MountainDwarf
   
 - 레펠 미사일 복구. 이제 경갑을 입어야 사용할 수 있음
   - Added and rework repel missle. now, need to wear light armor to cast RMsl
@@ -91,6 +91,9 @@
   
 - 오조크브의 갑옷은 이제 움직여도 풀리지않음
   - Ozocubu's armor no longer looses when moved
+  
+- 링 오브 파이어는 이제 맞은 적에게 이너파이어를 검
+  - Ring of Fire now casts Inner Fire on enemies it hits.
 
 - 드라코들은 이제 아래 종류의 갑옷을 입을 수 있음. All dracos can wear armour listed below
   - 로브 Robe
@@ -116,6 +119,8 @@
   - A new curse skull tile (kormed)
 
 ### Removed
+
+- Nothing
 
 
 ### 0.25 Featrue
