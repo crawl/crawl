@@ -648,7 +648,7 @@ static int _acquirement_staff_subtype(bool /*divine*/, int & /*quantity*/,
  * Return a miscellaneous evokable item for acquirement.
  * @return   The item type chosen.
  */
-static int _acquirement_misc_subtype(bool /*divine*/, int & quantity,
+static int _acquirement_misc_subtype(bool /*divine*/, int & /*quantity*/,
                                      int /*agent*/)
 {
     const bool NO_LOVE = you.get_mutation_level(MUT_NO_LOVE);
@@ -658,11 +658,13 @@ static int _acquirement_misc_subtype(bool /*divine*/, int & quantity,
         // These have charges, so give them a constant weight.
         {MISC_BOX_OF_BEASTS,            (NO_LOVE ? 0 : 10)},
         {MISC_PHANTOM_MIRROR,           (NO_LOVE ? 0 : 10)},
+        // The player never needs more than one of the rest.
         // Tremorstones are better for heavily armoured characters.
-        {MISC_TIN_OF_TREMORSTONES, 5 + _skill_rdiv(SK_ARMOUR) / 3 },
-        // The player never needs more than one.
+        {MISC_TIN_OF_TREMORSTONES,
+            (you.seen_misc[MISC_TIN_OF_TREMORSTONES]
+                     ? 0 : 5 + _skill_rdiv(SK_ARMOUR) / 3)},
         {MISC_LIGHTNING_ROD,
-            (you.seen_misc[MISC_LIGHTNING_ROD] ?   0 : 20)},
+            (you.seen_misc[MISC_LIGHTNING_ROD]   ? 0 : 20)},
         {MISC_PHIAL_OF_FLOODS,
             (you.seen_misc[MISC_PHIAL_OF_FLOODS] ? 0 : 20)},
 
@@ -670,8 +672,13 @@ static int _acquirement_misc_subtype(bool /*divine*/, int & quantity,
 
     const int * const choice = random_choose_weighted(choices);
 
-    if (choice != nullptr && *choice == MISC_TIN_OF_TREMORSTONES)
-        quantity = 2; // not quite worth it alone
+    // Possible for everything to be 0 weight - if so just give a random spare.
+    if (choice == nullptr)
+    {
+        return random_choose(MISC_TIN_OF_TREMORSTONES,
+                             MISC_LIGHTNING_ROD,
+                             MISC_PHIAL_OF_FLOODS);
+    }
 
     return *choice;
 }
