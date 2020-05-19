@@ -14,6 +14,7 @@
 #include "files.h"
 #include "food.h"
 #include "ghost.h"
+#include "god-abil.h"
 #include "item-name.h"
 #include "item-prop.h"
 #include "item-status-flag-type.h"
@@ -22,6 +23,7 @@
 #include "mon-tentacle.h"
 #include "mon-util.h"
 #include "options.h"
+#include "pakellas.h"
 #include "player.h"
 #include "rot.h"
 #include "shopping.h"
@@ -1466,6 +1468,17 @@ tileidx_t tileidx_monster_base(int type, bool in_water, int colour, int number,
 
         return TILEP_MONS_TIAMAT + offset;
     }
+    case MONS_MACHINE_GOLEM:
+    {
+        return TILEP_MONS_MACHINE_GOLEM + ui_random(4);
+    }
+    case MONS_BARRICADE:
+    {
+        if (is_blueprint_exist(BLUEPRINT_BARRICADE_SPIKE) ) {
+            return TILEP_MONS_BARRICADE_SPIKE;
+        }
+        return TILEP_MONS_BARRICADE;
+    }
     }
 
     const monster_type mtype = static_cast<monster_type>(type);
@@ -2696,6 +2709,21 @@ tileidx_t tileidx_item(const item_def &item)
 
     case OBJ_RODS:
         if (item.sub_type == ROD_PAKELLAS) {
+            if (you.props[AVAILABLE_UPGRADE_NUM_KEY].get_int() == 6) {
+                return TILE_ROD_BASE_PAKELLAS + ui_random(tile_main_count(TILE_ROD_BASE_PAKELLAS));
+            }
+            else {
+                switch (you.props[PAKELLAS_PROTOTYPE].get_int()) {
+                case 1:
+                    return TILE_ROD_BASE_PAKELLAS_1;
+                case 2:
+                    return TILE_ROD_BASE_PAKELLAS_2;
+                case 3:
+                    return TILE_ROD_BASE_PAKELLAS_3;
+                default:
+                    break;
+                }
+            }
             return TILE_ROD_BASE_PAKELLAS;
         }
         else {

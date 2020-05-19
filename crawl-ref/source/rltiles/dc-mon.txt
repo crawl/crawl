@@ -438,6 +438,11 @@ saltling MONS_SALTLING
 flesh_golem MONS_FLESH_GOLEM
 # For the PAKELLAS
 machine_golem MONS_MACHINE_GOLEM
+machine_golem_1 MONS_MACHINE_GOLEM_1
+machine_golem_2 MONS_MACHINE_GOLEM_2
+machine_golem_3 MONS_MACHINE_GOLEM_3
+barricade MONS_BARRICADE
+barricade_spike MONS_BARRICADE_SPIKE
 
 ## Statues and statue-like things (also '8')
 %sdir mon/unique

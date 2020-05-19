@@ -3311,9 +3311,8 @@ spret cast_pakellas_bolt(int powc, bolt& beam, bool fail)
             return;
         }
 
-
         bool resist = 0;
-        if (is_blueprint_exist(BLUEPRINT_DEBUF_SLOW)) {
+        if (mon->alive() && is_blueprint_exist(BLUEPRINT_DEBUF_SLOW)) {
             bolt beam_;
             beam_.flavour = BEAM_SLOW;
             beam_.ench_power = powc;
@@ -3325,13 +3324,13 @@ spret cast_pakellas_bolt(int powc, bolt& beam, bool fail)
                 resist = -1;
         }
 
-        if (is_blueprint_exist(BLUEPRINT_STICKY_FLAME)) {
+        if (mon->alive() && is_blueprint_exist(BLUEPRINT_STICKY_FLAME)) {
             mon->add_ench(mon_enchant(ENCH_STICKY_FLAME,
                 min(4, 1 + random2(mon->get_hit_dice()) / 2),
                 &you));
         }
 
-        if (is_blueprint_exist(BLUEPRINT_CHAIN_LIGHTNING)) {
+        if (mon->alive() && is_blueprint_exist(BLUEPRINT_CHAIN_LIGHTNING)) {
             coord_def source, target;
             source = mon->pos();
             int min_dist = LOS_DEFAULT_RANGE - 1;
@@ -3438,11 +3437,11 @@ spret cast_pakellas_bolt(int powc, bolt& beam, bool fail)
         }
 
 
-        if (is_blueprint_exist(BLUEPRINT_FROZEN)) {
+        if (mon->alive() && is_blueprint_exist(BLUEPRINT_FROZEN)) {
             mon->add_ench(mon_enchant(ENCH_FROZEN, 0, &you, 6 + random2(16) * BASELINE_DELAY));
         }
 
-        if (is_blueprint_exist(BLUEPRINT_DEBUF_BLIND)) {
+        if (mon->alive() && is_blueprint_exist(BLUEPRINT_DEBUF_BLIND)) {
             if (mons_can_be_dazzled(mon->type)) {
                 if (x_chance_in_y(95 - mon->get_hit_dice() * 5, 100))
                 {
@@ -3453,11 +3452,11 @@ spret cast_pakellas_bolt(int powc, bolt& beam, bool fail)
             }
         }
 
-        if (is_blueprint_exist(BLUEPRINT_DEFORM)) {
+        if (mon->alive() && is_blueprint_exist(BLUEPRINT_DEFORM)) {
             mon->malmutate("");
         }
 
-        if (resist > 0) {
+        if (mon->alive() && resist > 0) {
             simple_monster_message(*mon, mon->resist_margin_phrase(resist).c_str());
         }
     };

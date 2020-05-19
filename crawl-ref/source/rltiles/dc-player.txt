@@ -732,6 +732,9 @@ rod_magenta
 rod_forked
 rod_aries
 rod_pakellas ROD_PAKELLAS
+rod_pakellas_1 ROD_PAKELLAS_1
+rod_pakellas_2 ROD_PAKELLAS_2
+rod_pakellas_3 ROD_PAKELLAS_3
 
 ## axes
 axe_small AXE_SMALL

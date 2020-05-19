@@ -7,9 +7,11 @@
 
 #include "artefact.h"
 #include "describe.h"
+#include "god-abil.h"
 #include "item-name.h"
 #include "item-prop.h"
 #include "item-prop-enum.h"
+#include "pakellas.h"
 #include "player.h"
 #include "tile-flags.h"
 #include "tile-player-flag-cut.h"
@@ -45,6 +47,21 @@ tileidx_t tilep_equ_weapon(const item_def &item, bool hand2)
 
     if (item.base_type == OBJ_RODS) {
         if (item.sub_type == ROD_PAKELLAS) {
+            if (you.props[AVAILABLE_UPGRADE_NUM_KEY].get_int() == 6) {
+                return TILEP_HAND1_ROD_PAKELLAS + ui_random(4) * 2;
+            }
+            else {
+                switch (you.props[PAKELLAS_PROTOTYPE].get_int()) {
+                case 1:
+                    return TILEP_HAND1_ROD_PAKELLAS_1;
+                case 2:
+                    return TILEP_HAND1_ROD_PAKELLAS_2;
+                case 3:
+                    return TILEP_HAND1_ROD_PAKELLAS_3;
+                default:
+                    break;
+                }
+            }
             return TILEP_HAND1_ROD_PAKELLAS;
         }
         else {
