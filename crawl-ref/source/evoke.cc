@@ -1555,8 +1555,7 @@ static string _get_menu_titlefn(const Menu*, const string& slot_des)
     return prompt_base + slot_des;
 }
 
-//������ false�� ���濡 �ִ� �۾��� ����
-static bool _put_item(int bag_slot, int item_dropped, int quant_drop, bool message)
+bool put_bag_item(int bag_slot, int item_dropped, int quant_drop, bool fail_message, bool message)
 {
     item_def& item = you.inv[item_dropped];
 
@@ -1565,21 +1564,19 @@ static bool _put_item(int bag_slot, int item_dropped, int quant_drop, bool messa
 
     if (item.base_type == OBJ_FOOD && item.sub_type == FOOD_CHUNK)
     {
-        if (message) {
+        if (fail_message) {
             mprf("Unable to put the rotting food.");
         }
         return false;
     }
     if (item.base_type == OBJ_MISCELLANY && item.sub_type == MISC_BAG)
     {
-        if (message) {
+        if (fail_message) {
             canned_msg(MSG_UNTHINKING_ACT);
         }
         return false;
     }
 
-
-    //��ü ���⵵ ���ְ� �ϱ�
 
     if (item_dropped == you.equip[EQ_LEFT_RING]
         || item_dropped == you.equip[EQ_RIGHT_RING]
@@ -1598,7 +1595,7 @@ static bool _put_item(int bag_slot, int item_dropped, int quant_drop, bool messa
         || item_dropped == you.equip[EQ_WEAPON]
         || item_dropped == you.equip[EQ_SECOND_WEAPON])
     {
-        if (message) {
+        if (fail_message) {
             mprf("Unable to put the equipped item.");
         }
         return false;
@@ -1613,10 +1610,6 @@ static bool _put_item(int bag_slot, int item_dropped, int quant_drop, bool messa
     }
     ASSERT(item.defined());
 
-    if (message) {
-        mprf("You put the %s in the bag", quant_name(item, quant_drop, DESC_A).c_str());
-    }
-
     item_def& bag = you.inv[bag_slot];
 
     if (!bag.props.exists(BAG_PROPS_KEY))
@@ -1629,7 +1622,7 @@ static bool _put_item(int bag_slot, int item_dropped, int quant_drop, bool messa
     int emptySlot = -1;
     bool merged = false;
     CrawlVector& bagVector = bag.props[BAG_PROPS_KEY].get_vector();
-    //�� ���� ã��
+
     for (int i = 0; i < ENDOFPACK; i++) 
     {
         bool item_undefined = (bagVector[i].get_flags() & SFLAG_UNSET ||
@@ -1642,7 +1635,6 @@ static bool _put_item(int bag_slot, int item_dropped, int quant_drop, bool messa
 
         if (!item_undefined && items_stack(item, (bagVector[i].get_item())))
         {
-            //������ ������ ����
             item_def copy = item;
             merge_item_stacks(copy, (bagVector[i].get_item()), quant_drop);
             bagVector[i].get_item().quantity += quant_drop;
@@ -1653,10 +1645,15 @@ static bool _put_item(int bag_slot, int item_dropped, int quant_drop, bool messa
 
     if (emptySlot == -1 && merged == false)
     {
-        //������ ��ġ�� �׻� �޽���
-        mprf("bag is full!");
+        if (fail_message) {
+            mprf("bag is full!");
+        }
         return false;
     }
+    else if (message) {
+        mprf("You put the %s in the bag", quant_name(item, quant_drop, DESC_A).c_str());
+    }
+
     if (merged == false) {
         bag.props[BAG_PROPS_KEY].get_vector()[emptySlot].get_item() = item;
         bag.props[BAG_PROPS_KEY].get_vector()[emptySlot].get_item().quantity = quant_drop;
@@ -1720,7 +1717,7 @@ static spret _put_bag(int slot)
     bool success_put = false;
     bool multiple_item = bag_menu.get_selitems().size() > 1;
     for (auto sel_item : bag_menu.get_selitems()) {
-        if (!_put_item(slot, letter_to_index(sel_item.slot), sel_item.quantity, multiple_item ? false : true)) {
+        if (!put_bag_item(slot, letter_to_index(sel_item.slot), sel_item.quantity, multiple_item ? false : true, multiple_item ? false : true)) {
             break;
         }
         else {
@@ -1757,7 +1754,6 @@ static spret _get_bag(int slot)
     item_def& bag = you.inv[slot];
     if (bag.props.exists(BAG_PROPS_KEY))
     {
-        //����� �κ��丮
         {
             vector<const item_def*> tobeshown;
 

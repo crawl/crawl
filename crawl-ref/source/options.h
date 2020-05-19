@@ -319,6 +319,7 @@ public:
     vector<pair<text_pattern, string>> auto_spell_letters;
     vector<pair<text_pattern, string>> auto_item_letters;
     vector<pair<text_pattern, string>> auto_ability_letters;
+    map<object_class_type, bool> auto_bag_items;
 
     bool        pickup_thrown;  // Pickup thrown missiles
     int         travel_delay;   // How long to pause between travel moves

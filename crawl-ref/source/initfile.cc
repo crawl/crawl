@@ -3003,6 +3003,19 @@ void game_options::read_option_line(const string &str, bool runscript)
         }
         merge_lists(force_autopickup, new_entries, caret_equal);
     }
+    else if (key == "auto_bag_items")
+    {
+        if (plain)
+            auto_bag_items.clear();
+
+        for (char c : field)
+        {
+            object_class_type item_ = item_class_by_sym(c);
+            if (item_ != NUM_OBJECT_CLASSES) {
+                auto_bag_items.insert(std::pair<object_class_type, bool>{item_, true});
+            }
+        }
+    }
     else if (key == "autopickup_exceptions")
     {
         if (plain)

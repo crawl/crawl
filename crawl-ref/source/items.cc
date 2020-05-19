@@ -38,6 +38,7 @@
 #include "dungeon.h"
 #include "english.h"
 #include "env.h"
+#include "evoke.h"
 #include "food.h"
 #include "god-passive.h"
 #include "god-prayer.h"
@@ -1763,8 +1764,29 @@ static bool _put_item_in_inv(item_def& it, int quant_got, bool quiet, bool& put_
                 remove_oldest_perishable_item(it);
 
         // cleanup items that ended up in an inventory slot (not gold, etc)
-        if (inv_slot != -1)
+        if (inv_slot != -1) {
             _got_item(you.inv[inv_slot]);
+
+            if (Options.auto_bag_items.empty() == false &&
+                Options.auto_bag_items[you.inv[inv_slot].base_type]) {
+                int bag_slot = -1;
+
+                //if (i_feel_safe(false)) {
+                for (int i = 0; i < 52; i++)
+                {
+                    if (you.inv[i].is_type(OBJ_MISCELLANY, MISC_BAG))
+                    {
+                        bag_slot = i;
+                        break;
+                    }
+                }
+                if (bag_slot != -1) {
+                    put_bag_item(bag_slot, inv_slot, quant_got, false, true);
+                }
+                //}
+
+            }
+        }
         else if (it.base_type == OBJ_BOOKS)
             _got_item(it);
         _check_note_item(inv_slot == -1 ? it : you.inv[inv_slot]);
@@ -1816,6 +1838,7 @@ bool move_item_to_inv(int obj, int quant_got, bool quiet)
         // quantity before firing the position event, because the latter needs
         // the object's index.
         dec_mitm_item_quantity(obj, quant_got);
+
 
         you.turn_is_over = true;
     }

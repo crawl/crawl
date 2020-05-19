@@ -7,6 +7,8 @@
 
 #define BAG_PROPS_KEY  "bag_props"
 
+bool put_bag_item(int bag_slot, int item_dropped, int quant_drop, bool fail_message, bool message);
+
 int manual_slot_for_skill(skill_type skill);
 bool skill_has_manual(skill_type skill);
 void finish_manual(int slot);
