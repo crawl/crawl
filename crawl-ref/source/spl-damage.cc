@@ -867,7 +867,15 @@ spret cast_airstrike(int pow, const dist &beam, bool fail)
     noisy(spell_effect_noise(SPELL_AIRSTRIKE), beam.target);
 
     bolt pbeam;
+    pbeam.name = "airstrike";
     pbeam.flavour = BEAM_AIR;
+    pbeam.glyph = dchar_glyph(DCHAR_FIRED_ZAP);
+    pbeam.colour = WHITE;
+#ifdef USE_TILE
+    pbeam.tile_beam = -1;
+#endif
+    pbeam.draw_delay = 0;
+
 
     int empty_space = 0;
     for (adjacent_iterator ai(beam.target); ai; ++ai)
@@ -884,6 +892,11 @@ spret cast_airstrike(int pow, const dist &beam, bool fail)
     hurted = mons->apply_ac(mons->beam_resists(pbeam, hurted, false));
     dprf("preac: %d, postac: %d", preac, hurted);
 
+    pbeam.draw(beam.target);
+    scaled_delay(200);
+    pbeam.glyph = 0; // FIXME: a hack to avoid "appears out of thin air"
+
+    
     mprf("The air twists around and %sstrikes %s%s%s",
          mons->airborne() ? "violently " : "",
          mons->name(DESC_THE).c_str(),

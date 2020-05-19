@@ -210,6 +210,8 @@ cloud_gold_dust3
 
 poisonous_roots POISONOUS_ROOTS
 
+airstrike AIR_STRIKE
+
 %sdir mon
 fungi_plants/ballistomycete_spore SPORE_OVERLAY
 
