@@ -4178,6 +4178,18 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_DRACO_HOLY_BREATH, "Blessed Flame Breath",
+    spschool::conjuration,
+    spflag::dir_or_target | spflag::monster | spflag::noisy
+        | spflag::needs_tracer,
+    5,
+    0,
+    5, 5,
+    5, 0,
+    TILEG_ABILITY_BREATHE_HOLY,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     spschool::none,
     spflag::testing,

@@ -520,6 +520,7 @@ tileidx_t tileidx_player()
         case SP_PURPLE_DRACONIAN:  ch = TILEP_TRAN_DRAGON_PURPLE;  break;
         case SP_WHITE_DRACONIAN:   ch = TILEP_TRAN_DRAGON_WHITE;   break;
         case SP_RED_DRACONIAN:     ch = TILEP_TRAN_DRAGON_RED;     break;
+        case SP_PEARL_DRACONIAN:   ch = TILEP_TRAN_DRAGON_PEARL;     break;
         default:                   ch = TILEP_TRAN_DRAGON;         break;
         }
         break;
@@ -594,6 +595,7 @@ static int _draconian_colour(int race, int level)
     case SP_PURPLE_DRACONIAN:  return 6;
     case SP_RED_DRACONIAN:     return 7;
     case SP_WHITE_DRACONIAN:   return 8;
+    case SP_PEARL_DRACONIAN:   return 9;
     }
     return 0;
 }
@@ -637,6 +639,7 @@ tileidx_t tilep_species_to_base_tile(int sp, int level)
     case SP_BLACK_DRACONIAN:
     case SP_PURPLE_DRACONIAN:
     case SP_PALE_DRACONIAN:
+    case SP_PEARL_DRACONIAN:
     {
         const int colour_offset = _draconian_colour(sp, level);
         return TILEP_BASE_DRACONIAN + colour_offset * 2;
@@ -740,6 +743,7 @@ void tilep_race_default(int sp, int level, dolls_data *doll)
         case SP_BLACK_DRACONIAN:
         case SP_PURPLE_DRACONIAN:
         case SP_PALE_DRACONIAN:
+        case SP_PEARL_DRACONIAN:
         {
             tilep_draconian_init(sp, level, &result, &head, &wing);
             hair   = 0;

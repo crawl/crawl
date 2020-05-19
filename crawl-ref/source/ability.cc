@@ -312,6 +312,8 @@ static const ability_def Ability_List[] =
       0, 0, 75, 0, {fail_basis::xl, 20, 1}, abflag::breath },
     { ABIL_BREATHE_ACID, "Breathe Acid",
       0, 0, 125, 0, {fail_basis::xl, 30, 1}, abflag::breath },
+    { ABIL_BREATHE_HOLY, "Breathe Blessed Flame",
+      0, 0, 125, 0, {fail_basis::xl, 30, 1}, abflag::breath },
 
     { ABIL_TRAN_BAT, "Bat Form",
       2, 0, 0, 0, {fail_basis::xl, 45, 2}, abflag::starve_ok },
@@ -1076,6 +1078,7 @@ static int _adjusted_failure_chance(ability_type ability, int base_chance)
     case ABIL_BREATHE_POWER:
     case ABIL_BREATHE_MEPHITIC:
     case ABIL_BREATHE_STEAM:
+    case ABIL_BREATHE_HOLY:
         if (you.form == transformation::dragon)
             return base_chance - 20;
         return base_chance;
@@ -1614,6 +1617,7 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
     case ABIL_BREATHE_POWER:
     case ABIL_BREATHE_STEAM:
     case ABIL_BREATHE_MEPHITIC:
+    case ABIL_BREATHE_HOLY:
         if (you.duration[DUR_BREATH_WEAPON])
         {
             if (!quiet)
@@ -1822,6 +1826,7 @@ static int _calc_breath_ability_range(ability_type ability)
     case ABIL_BREATHE_FIRE:
     case ABIL_BREATHE_FROST:
     case ABIL_SPIT_POISON:
+    case ABIL_BREATHE_HOLY:
         range = 5;
         break;
     case ABIL_BREATHE_MEPHITIC:
@@ -2062,6 +2067,7 @@ static spret _do_ability(const ability_def& abil, bool fail)
     case ABIL_BREATHE_POWER:
     case ABIL_BREATHE_STEAM:
     case ABIL_BREATHE_MEPHITIC:
+    case ABIL_BREATHE_HOLY:
         beam.range = _calc_breath_ability_range(abil.ability);
         if (!spell_direction(abild, beam))
             return spret::abort;
@@ -2162,6 +2168,24 @@ static spret _do_ability(const ability_def& abil, bool fail)
                 return spret::abort;
             }
             break;
+
+        case ABIL_BREATHE_HOLY:
+        {
+            int power = you.experience_level;
+
+            if (you.form == transformation::dragon)
+                power += 12;
+
+            string msg = "You breathe a blast of blessed flame";
+            msg += (power < 15) ? '.' : '!';
+
+            if (zapping(ZAP_BREATHE_HOLY, power, beam, true, msg.c_str())
+                == spret::abort)
+            {
+                return spret::abort;
+            }
+            break;
+        }
 
         default:
             break;

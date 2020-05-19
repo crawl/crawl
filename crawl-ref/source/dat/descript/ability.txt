@@ -11,6 +11,11 @@ Blink ability
 
 Randomly translocates the user a short distance.
 %%%%
+Breathe Blessed Flame ability
+
+Breathes a blast of blessed flame at a targeted creature, leaving a cloud of 
+holy flames at the endpoint
+%%%%
 Breathe Dispelling Energy ability
 
 Breathes a bolt of dispelling energy at a targeted creature, possibly removing

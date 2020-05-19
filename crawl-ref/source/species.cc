@@ -231,6 +231,8 @@ const char* scale_type(species_type species)
             return "rich purple";
         case SP_PALE_DRACONIAN:
             return "pale cyan-grey";
+        case SP_PEARL_DRACONIAN:
+            return "pearl white";
         case SP_BASE_DRACONIAN:
             return "plain brown";
         default:
@@ -256,6 +258,8 @@ monster_type dragon_form_dragon_type()
         return MONS_QUICKSILVER_DRAGON;
     case SP_PALE_DRACONIAN:
         return MONS_STEAM_DRAGON;
+    case SP_PEARL_DRACONIAN:
+        return MONS_PEARL_DRAGON;
     case SP_RED_DRACONIAN:
     default:
         return MONS_FIRE_DRAGON;
@@ -274,6 +278,7 @@ ability_type draconian_breath(species_type species)
     case SP_BLACK_DRACONIAN:   return ABIL_BREATHE_LIGHTNING;
     case SP_PURPLE_DRACONIAN:  return ABIL_BREATHE_POWER;
     case SP_PALE_DRACONIAN:    return ABIL_BREATHE_STEAM;
+    case SP_PEARL_DRACONIAN:   return ABIL_BREATHE_HOLY;
     case SP_BASE_DRACONIAN: case SP_GREY_DRACONIAN:
     default: return ABIL_NON_ABILITY;
     }
@@ -530,11 +535,15 @@ static bool _is_viable_draconian(species_type species)
 // A random non-base draconian colour appropriate for the player.
 species_type random_draconian_colour()
 {
-  species_type species;
-  do {
-      species =
-          static_cast<species_type>(random_range(SP_FIRST_NONBASE_DRACONIAN,
+    if (you.religion == GOD_ZIN || you.religion == GOD_ELYVILON || you.religion == GOD_SHINING_ONE) {
+        return SP_PEARL_DRACONIAN;
+    }
+
+    species_type species;
+    do {
+        species =
+        static_cast<species_type>(random_range(SP_FIRST_NONBASE_DRACONIAN,
                                                  SP_LAST_NONBASE_DRACONIAN));
-  } while (!_is_viable_draconian(species));
-  return species;
+    } while (!_is_viable_draconian(species));
+    return species;
 }

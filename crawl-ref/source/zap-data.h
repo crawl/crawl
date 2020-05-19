@@ -1412,4 +1412,21 @@ _mon_hex_zap(ZAP_DRAIN_MAGIC, BEAM_DRAIN_MAGIC),
     6
 },
 
+{
+    ZAP_BREATHE_HOLY,
+    "blessed flame breath",
+    50,
+    new dicedef_calculator<3, 4, 1, 3>,
+    new tohit_calculator<8, 1, 6>,
+    nullptr,
+    nullptr,
+    YELLOW,
+    false,
+    BEAM_HOLY,
+    DCHAR_FIRED_ZAP,
+    true,
+    true,
+    false,
+    7
+},
 };

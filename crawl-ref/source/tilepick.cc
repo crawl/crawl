@@ -3386,6 +3386,8 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_BLINK;
     case ABIL_HOP:
         return TILEG_ABILITY_HOP;
+    case ABIL_BREATHE_HOLY:
+        return TILEG_ABILITY_BREATHE_HOLY;
 
     // Others
     case ABIL_END_TRANSFORMATION:

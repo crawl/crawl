@@ -115,7 +115,9 @@ draconian_purple_m
 draconian_red_f DRACONIAN_RED
 draconian_red_m
 draconian_white_f DRACONIAN_WHITE
-draconian_white_m DRACONIAN_LAST
+draconian_white_m
+draconian_pearl_f DRACONIAN_PEARL
+draconian_pearl_m DRACONIAN_LAST
 
 centaur_lightgrey_f CENTAUR
 centaur_lightgrey_m
@@ -1173,6 +1175,7 @@ drcwing_pale PALE
 drcwing_purple PURPLE
 drcwing_red RED
 drcwing_white WHITE
+drcwing_pearl PEARL
 %end_ctg
 
 %parts_ctg DRCHEAD
@@ -1186,4 +1189,5 @@ drchead_pale PALE
 drchead_purple PURPLE
 drchead_red RED
 drchead_white WHITE
+drchead_pearl PEARL
 %end_ctg

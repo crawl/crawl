@@ -1,0 +1,42 @@
+enum: SP_PEARL_DRACONIAN
+monster: MONS_DRACONIAN
+name: "Pearl Draconian"
+short_name: "Dr"
+adjective: "Draconian"
+genus: "Draconian"
+difficulty: False
+species_flags:
+  - draconian
+aptitudes:
+  xp: -1
+  hp: 1
+  mp_mod: 0
+  mr: 3
+  fighting: 1
+  slings: -1
+  bows: -1
+  crossbows: -1
+  throwing: -1
+  armour: -3
+  dodging: -1
+  spellcasting: -1
+  hexes: -1
+  charms: -1
+  # Pale Draconian specific
+  invocations: 3
+  necromancy: -2
+  poison_magic: -2
+str: 10
+int: 8
+dex: 6
+levelup_stat_frequency: 4
+mutations:
+  1:
+    MUT_COLD_BLOODED: 1
+  7:
+    MUT_NEGATIVE_ENERGY_RESISTANCE: 1
+  14:
+    MUT_BIG_WINGS: 1
+fake_mutations:
+  - long: You can breathe blasts of blessed flame.
+    short: holy breathe

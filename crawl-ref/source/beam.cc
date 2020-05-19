@@ -516,6 +516,12 @@ void zappy(zap_type z_type, int power, bool is_monster, bolt &pbolt)
         pbolt.origin_spell = SPELL_SEARING_BREATH;
     }
 
+    if (z_type == ZAP_BREATHE_HOLY && you.species == SP_PEARL_DRACONIAN
+        && !is_monster)
+    {
+        pbolt.origin_spell = SPELL_DRACO_HOLY_BREATH;
+    }
+
     if (pbolt.loudness == 0)
         pbolt.loudness = zinfo->hit_loudness;
 }
@@ -2568,6 +2574,9 @@ void bolt::affect_endpoint()
         if (!path_taken.empty())
             place_cloud(CLOUD_FIRE, pos(), 5 + random2(5), agent());
 
+    case SPELL_DRACO_HOLY_BREATH:
+        if (!path_taken.empty())
+            place_cloud(CLOUD_HOLY, pos(), 3 + random2(3), agent());
     default:
         break;
     }
