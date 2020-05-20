@@ -929,6 +929,10 @@ vector<spell_type> list_of_rod_spell()
 {
     vector<spell_type> _spells;
 
+    if (you.props[PAKELLAS_PROTOTYPE].get_int() != 3) {
+        return _spells;
+    }
+
     _spells.emplace_back(SPELL_PAKELLAS_ROD_SELFBUFF);
     if (is_blueprint_exist(BLUEPRINT_BLINK)) {
         if(is_blueprint_exist(BLUEPRINT_CONTROL_BLINK))
