@@ -4096,7 +4096,7 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     1, 0,
-    TILEG_SUMMON_GUARDIAN_GOLEM,
+    TILEG_SUMMON_MACHINE_GOLEM,
 },
 
 {
@@ -4152,7 +4152,7 @@ static const struct spell_desc spelldata[] =
     200,
     2, 2,
     2, 0,
-    TILEG_SUMMON_LIGHTNING_SPIRE,
+    TILEG_SUMMON_BARRICADE,
 },
 
 {

@@ -141,6 +141,8 @@ summon_forest SUMMON_FOREST
 monstrous_menagerie MONSTROUS_MENAGERIE
 summon_mana_viper SUMMON_MANA_VIPER
 spellforged_servitor SPELLFORGED_SERVITOR
+summon_barricade SUMMON_BARRICADE
+summon_machine_golem SUMMON_MACHINE_GOLEM
 
 %sdir gui/spells/translocation
 apportation APPORTATION
