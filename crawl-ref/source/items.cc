@@ -953,7 +953,7 @@ static bool _id_floor_item(item_def &item)
         set_ident_flags(item, ISFLAG_IDENT_MASK);
         return true;
     }
-    else if (item.base_type == OBJ_WANDS)
+    /*else if (item.base_type == OBJ_WANDS)
     {
         if (!get_ident_type(item))
         {
@@ -965,7 +965,7 @@ static bool _id_floor_item(item_def &item)
                 set_item_autopickup(item, AP_FORCE_OFF);
             return true;
         }
-    }
+    }*/
 
     return false;
 }
