@@ -1293,8 +1293,12 @@ static unique_ptr<targeter> _spell_targeter(spell_type spell, int pow,
         return make_unique<targeter_wallmelting>(&you, range);
     case SPELL_PAKELLAS_ROD:
     {
-        return make_unique<targeter_beam>(&you, range, is_blueprint_exist(BLUEPRINT_PENTAN) ?ZAP_BOLT_OF_MAGMA: ZAP_MAGIC_DART, pow,
-            is_blueprint_exist(BLUEPRINT_BOME), is_blueprint_exist(BLUEPRINT_BOME));
+        if (is_blueprint_exist(BLUEPRINT_BOME)) {
+            return make_unique<targeter_beam>(&you, range, ZAP_EXPLOSION_TRACER, pow,
+                1, 1);
+        }
+
+        return make_unique<targeter_beam>(&you, range, is_blueprint_exist(BLUEPRINT_PENTAN) ?ZAP_BOLT_OF_MAGMA: ZAP_MAGIC_DART, pow, 0, 0);
     }
     case SPELL_PAKELLAS_ROD_CLOUD:
         return make_unique<targeter_shotgun>(&you, CLOUD_CONE_BEAM_COUNT,

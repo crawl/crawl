@@ -3262,7 +3262,7 @@ spret cast_pakellas_bolt(int powc, bolt& beam, bool fail)
     // to account for the possibility of both bouncing and irresistible damage
     // (even though only one of these two ever occurs on the same bolt type).
     bolt tracer = beam;
-    if (!player_tracer(ZAP_RANDOM_BOLT_TRACER, 200, tracer))
+    if (!player_tracer(is_blueprint_exist(BLUEPRINT_BOME) ? ZAP_EXPLOSION_TRACER : ZAP_MAGIC_DART, 200, tracer))
         return spret::abort;
 
     fail_check();
@@ -3474,7 +3474,6 @@ spret cast_pakellas_bolt(int powc, bolt& beam, bool fail)
         }
     };
     
-
 
     pbolt.obvious_effect = true;
     pbolt.pierce = is_blueprint_exist(BLUEPRINT_PENTAN) >= 1;

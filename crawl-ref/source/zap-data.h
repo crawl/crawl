@@ -1429,4 +1429,23 @@ _mon_hex_zap(ZAP_DRAIN_MAGIC, BEAM_DRAIN_MAGIC),
     false,
     7
 },
+
+{
+    ZAP_EXPLOSION_TRACER,
+    "explosion",
+    200,
+    new dicedef_calculator<AUTOMATIC_HIT, 1, 0, 1>,
+    new tohit_calculator<AUTOMATIC_HIT>,
+    nullptr,
+    nullptr,
+    WHITE,
+    false,
+    BEAM_MMISSILE,
+    DCHAR_FIRED_DEBUG,
+    false,
+    false,
+    true,
+    0 // Noise comes from explosion
+},
+
 };
