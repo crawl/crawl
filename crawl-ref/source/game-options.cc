@@ -69,7 +69,7 @@ bool read_bool(const string &field, bool def_value)
 
 void BoolGameOption::reset() const { value = default_value; }
 
-string BoolGameOption::loadFromString(string field, rc_line_type) const
+string BoolGameOption::loadFromString(const string &field, rc_line_type) const
 {
     string error;
     const maybe_bool result = read_maybe_bool(field);
@@ -85,7 +85,7 @@ string BoolGameOption::loadFromString(string field, rc_line_type) const
 
 void ColourGameOption::reset() const { value = default_value; }
 
-string ColourGameOption::loadFromString(string field, rc_line_type) const
+string ColourGameOption::loadFromString(const string &field, rc_line_type) const
 {
     const int col = str_to_colour(field, -1, true, elemental);
     if (col == -1)
@@ -97,7 +97,7 @@ string ColourGameOption::loadFromString(string field, rc_line_type) const
 
 void CursesGameOption::reset() const { value = default_value; }
 
-string CursesGameOption::loadFromString(string field, rc_line_type) const
+string CursesGameOption::loadFromString(const string &field, rc_line_type) const
 {
     string error;
     const unsigned result = _curses_attribute(field, error);
@@ -116,7 +116,7 @@ TileColGameOption::TileColGameOption(VColour &val, std::set<std::string> _names,
 
 void TileColGameOption::reset() const { value = default_value; }
 
-string TileColGameOption::loadFromString(string field, rc_line_type) const
+string TileColGameOption::loadFromString(const string &field, rc_line_type) const
 {
     value = str_to_tile_colour(field);
     return "";
@@ -125,7 +125,7 @@ string TileColGameOption::loadFromString(string field, rc_line_type) const
 
 void IntGameOption::reset() const { value = default_value; }
 
-string IntGameOption::loadFromString(string field, rc_line_type) const
+string IntGameOption::loadFromString(const string &field, rc_line_type) const
 {
     int val = default_value;
     if (!parse_int(field.c_str(), val))
@@ -140,7 +140,7 @@ string IntGameOption::loadFromString(string field, rc_line_type) const
 
 void StringGameOption::reset() const { value = default_value; }
 
-string StringGameOption::loadFromString(string field, rc_line_type) const
+string StringGameOption::loadFromString(const string &field, rc_line_type) const
 {
     value = field;
     return "";
@@ -148,7 +148,7 @@ string StringGameOption::loadFromString(string field, rc_line_type) const
 
 void ColourThresholdOption::reset() const { value = default_value; }
 
-string ColourThresholdOption::loadFromString(string field,
+string ColourThresholdOption::loadFromString(const string &field,
                                              rc_line_type ltyp) const
 {
     string error;
@@ -177,7 +177,7 @@ string ColourThresholdOption::loadFromString(string field,
 }
 
 colour_thresholds
-    ColourThresholdOption::parse_colour_thresholds(string field,
+    ColourThresholdOption::parse_colour_thresholds(const string &field,
                                                    string* error) const
 {
     colour_thresholds result;
