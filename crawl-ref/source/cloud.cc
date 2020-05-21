@@ -542,15 +542,6 @@ static int _cloud_dissipation_rate(const cloud_struct &cloud)
 {
     int dissipate = you.time_taken;
 
-    // Player-created non-opaque clouds vanish instantly when outside LOS.
-    // (Opaque clouds don't to prevent cloud suicide.)
-    if ((cloud.source == MID_PLAYER || cloud.source == MID_YOU_FAULTLESS)
-        && !you.see_cell_no_trans(cloud.pos)
-        && !is_opaque_cloud(cloud.type))
-    {
-        return cloud.decay;
-    }
-
     // Ink cloud shouldn't appear outside of water.
     if (cloud.type == CLOUD_INK && !feat_is_watery(grd(cloud.pos)))
         return cloud.decay;
