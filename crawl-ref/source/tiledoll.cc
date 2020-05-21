@@ -403,7 +403,14 @@ void fill_doll_equipment(dolls_data &result)
         if (item == -1)
             result.parts[TILEP_PART_CLOAK] = 0;
         else
-            result.parts[TILEP_PART_CLOAK] = tilep_equ_cloak(you.inv[item]);
+        {
+            if (is_player_tile(result.parts[TILEP_PART_BASE], TILEP_BASE_FELID)) {
+                result.parts[TILEP_PART_CLOAK] = tilep_equ_felid_cloak(you.inv[item]);
+            }
+            else {
+                result.parts[TILEP_PART_CLOAK] = tilep_equ_cloak(you.inv[item]);
+            }
+        }
     }
     // Helmet.
     if (result.parts[TILEP_PART_HELM] == TILEP_SHOW_EQUIP)

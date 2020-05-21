@@ -223,6 +223,11 @@ scarf_red SCARF_RED
 scarf_white SCARF_WHITE
 scarf_magenta SCARF_MAGENTA
 scarf_green SCARF_GREEN SCARF_LAST_NORM
+felid_scarf_cyan FELID_SCARF_CYAN FELID_SCARF_FIRST_NORM
+felid_scarf_red FELID_SCARF_RED
+felid_scarf_white FELID_SCARF_WHITE
+felid_scarf_magenta FELID_SCARF_MAGENTA
+felid_scarf_green FELID_SCARF_GREEN FELID_SCARF_LAST_NORM
 %end_ctg
 
 ###Boots

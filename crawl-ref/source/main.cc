@@ -1576,8 +1576,14 @@ static void _do_remove_armour()
 {
     if (you.species == SP_FELID)
     {
-        mpr("You can't remove your fur, sorry.");
-        return;
+        if (item_def* item = you.slot_item(EQ_CLOAK)) {
+            takeoff_armour(item->link);
+            return;
+        }
+        else {
+            mpr("You can't remove your fur, sorry.");
+            return;
+        }
     }
     if (!form_can_wear())
     {
