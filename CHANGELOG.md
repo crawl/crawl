@@ -78,6 +78,9 @@
   
 - 분수를 다시 마실 수 있게 됨
   - Become able to drink fountain again
+  
+- auto_bag_items rc 옵션 추가. 주운 아이템을 자동으로 가방에 아이템을 넣는 옵션 ( example auto_bag_items = !? )
+  - Added auto_bag_items rc option. Option to automatically put picked items in a bag
 
 - 새로운 메인 타이틀 이미지 추가 (logal-image)
   - Add new title artwork (logal-image)
@@ -88,6 +91,9 @@
 
 - 메뉴 컬러링을 위한 태그(fixed_artefact, random_artefact) 추가. 픽다트의 기본 색깔을 노란색으로 변경
   - Added Menu/colouring Prefixes(fixed_artefact, random_artefact). Changed the default color of the fixed artefact to yellow
+  
+- 아쉔자리의 "아이템 저주"는 이제 여러 아이템을 저주시킬 수 있다.
+  - Ashenzari's 'curse item' curse multiple equipment.
   
 - 오조크브의 갑옷은 이제 움직여도 풀리지않음
   - Ozocubu's armor no longer looses when moved
@@ -109,6 +115,15 @@
 - 드라코 전원 14레벨에 영구 비행 변이를 얻도록 변경
   - All dracos will gain big wing mutation at xl 14
   
+- 펠리드와 옥토포드는 스카프를 낄 수 있게 됨
+  - Allow octopode, felid wields a scarf
+
+- 아군 소환물이 다시 LOS밖의 적과 싸울 수 있음
+  - Allow friendly summons from attacking out of LOS
+
+- 다시 시야 밖에서 구름이 사라지지않음
+  - Don't erase clouds outside of LOS
+
 - 이제 던전 5층이 되기전까진 구덩이 함정이 등장하지않음
   - Shaft traps will not spawn before D:5
   
