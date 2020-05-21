@@ -1528,7 +1528,7 @@ bool summon_can_attack(const monster* mons, const coord_def &p)
         return true;
     }
 
-    return you.see_cell_no_trans(mons->pos()) && you.see_cell_no_trans(p);
+    return true;//you.see_cell_no_trans(mons->pos()) && you.see_cell_no_trans(p);
 }
 
 bool summon_can_attack(const monster* mons, const actor* targ)
