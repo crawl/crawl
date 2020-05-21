@@ -2326,29 +2326,34 @@ bool ashenzari_end_transfer(bool finished, bool force)
  */
 bool ashenzari_curse_item(int num_rc)
 {
-    ASSERT(num_rc > 0);
-    const string prompt_msg = make_stringf(
-            "Curse which item? (%d remove curse scroll%s left)"
-            " (Esc to abort)",
-            num_rc, num_rc == 1 ? "" : "s");
-    const int item_slot = prompt_invent_item(prompt_msg.c_str(),
+    bool used = false;
+
+    while (1)
+    {
+        ASSERT(num_rc > 0);
+        const string prompt_msg = make_stringf(
+                 "Curse which item? (%d remove curse scroll%s left)"
+                 " (Esc to abort)",
+                 num_rc, num_rc == 1 ? "" : "s");
+        const int item_slot = prompt_invent_item(prompt_msg.c_str(),
                                              menu_type::invlist,
                                              OSEL_CURSABLE, OPER_ANY,
                                              invprompt_flag::escape_only);
-    if (prompt_failed(item_slot))
-        return false;
+        if (prompt_failed(item_slot))
+           return used;
 
-    item_def& item(you.inv[item_slot]);
+        item_def& item(you.inv[item_slot]);
 
-    if (!item_is_cursable(item))
-    {
-        mpr("You can't curse that!");
-        return false;
-    }
+        if (!item_is_cursable(item))
+        {
+            mpr("You can't curse that!");
+            return used;
+        }
 
-    do_curse_item(item, false);
-    learned_something_new(HINT_YOU_CURSED);
-    return true;
+        do_curse_item(item, false);
+        learned_something_new(HINT_YOU_CURSED);
+        used = true;
+      }
 }
 
 bool can_convert_to_beogh()
