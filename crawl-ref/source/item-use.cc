@@ -3263,7 +3263,12 @@ static bool _handle_enchant_weapon(bool alreadyknown, const string &pre_msg)
     if (!weapon)
         return !alreadyknown;
 
-    enchant_weapon(*weapon, false);
+    if (weapon->base_type == OBJ_RODS) {
+        return recharge_wand(*weapon);
+    }
+    else {
+        enchant_weapon(*weapon, false);
+    }
     return true;
 }
 

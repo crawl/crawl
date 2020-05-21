@@ -2312,3 +2312,55 @@ bool evoke_auto_item()
         return evoke_item(you.equip[EQ_WEAPON]);
     }
 }
+
+int recharge_wand(item_def& wand, bool known, std::string* pre_msg)
+{
+    if (!item_is_rechargeable(wand, known))
+    {
+        mpr("Cannot recharge this.");
+
+        return false;
+    }
+
+    if (wand.base_type != OBJ_RODS)
+        return false;
+
+    bool work = false;
+
+    if (wand.charge_cap < MAX_ROD_CHARGE * ROD_CHARGE_MULT)
+    {
+        wand.charge_cap += ROD_CHARGE_MULT * random_range(1, 2);
+
+        if (wand.charge_cap > MAX_ROD_CHARGE * ROD_CHARGE_MULT)
+            wand.charge_cap = MAX_ROD_CHARGE * ROD_CHARGE_MULT;
+
+        work = true;
+    }
+
+    if (wand.charges < wand.charge_cap)
+    {
+        wand.charges = wand.charge_cap;
+        work = true;
+    }
+
+    if (wand.rod_plus < MAX_WPN_ENCHANT)
+    {
+        wand.rod_plus += random_range(1, 2);
+
+        if (wand.rod_plus > MAX_WPN_ENCHANT)
+            wand.rod_plus = MAX_WPN_ENCHANT;
+
+        work = true;
+    }
+
+    if (!work)
+        return false;
+
+    if (pre_msg)
+        mpr(pre_msg->c_str());
+
+    mprf("%s glows for a moment.", wand.name(DESC_YOUR).c_str());
+
+    you.wield_change = true;
+    return true;
+}

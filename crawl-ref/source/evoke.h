@@ -26,3 +26,5 @@ void zap_wand(int slot = -1);
 
 bool disc_of_storms();
 void black_drac_breath();
+
+int recharge_wand(item_def& wand, bool known = true, std::string * pre_msg = nullptr);

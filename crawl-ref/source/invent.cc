@@ -479,6 +479,7 @@ string no_selectables_message(int item_selector)
     }
     case OSEL_UNIDENT:
         return "You don't have any unidentified items.";
+    case OSEL_RECHARGE:
     case OSEL_DIVINE_RECHARGE:
     case OSEL_SUPERCHARGE:
         return "You aren't carrying any rechargeable items.";
@@ -1133,6 +1134,10 @@ bool item_is_selected(const item_def &i, int selector)
                || (itype == OBJ_BOOKS && i.sub_type != BOOK_MANUAL)
              || (itype == OBJ_MISCELLANY && i.sub_type == MISC_BAG);
 
+    case OSEL_RECHARGE:
+        return itype == OBJ_RODS && i.sub_type != ROD_PAKELLAS &&
+            item_is_rechargeable(i);
+
     case OSEL_SUPERCHARGE:
         return item_is_rechargeable(i, selector != OSEL_SUPERCHARGE);
 
@@ -1164,10 +1169,12 @@ bool item_is_selected(const item_def &i, int selector)
         return is_brandable_weapon(i, true);
 
     case OSEL_ENCHANTABLE_WEAPON:
-        return itype == OBJ_WEAPONS
+        return (itype == OBJ_WEAPONS
                && !is_artefact(i)
                && (!item_ident(i, ISFLAG_KNOW_PLUSES)
-                   || i.plus < MAX_WPN_ENCHANT);
+                   || i.plus < MAX_WPN_ENCHANT)) ||
+            (itype == OBJ_RODS && i.sub_type != ROD_PAKELLAS &&
+            item_is_rechargeable(i, true));
 
     case OSEL_BLESSABLE_WEAPON:
         return is_brandable_weapon(i, you_worship(GOD_SHINING_ONE), true);

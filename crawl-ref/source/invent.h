@@ -21,9 +21,7 @@ enum object_selector
     OSEL_ANY                     =  -1,
     OSEL_WIELD                   =  -2,
     OSEL_UNIDENT                 =  -3,
-#if TAG_MAJOR_VERSION == 34
     OSEL_RECHARGE                =  -4,
-#endif
     OSEL_ENCHANTABLE_ARMOUR      =  -5,
     OSEL_BEOGH_GIFT              =  -6,
 #if TAG_MAJOR_VERSION == 34
