@@ -338,7 +338,7 @@ int raw_spell_fail(spell_type spell)
     const int spell_level = spell_difficulty(spell);
     ASSERT_RANGE(spell_level, 0, (int) ARRAYSZ(difficulty_by_level));
     chance += difficulty_by_level[spell_level]; // between 0 and 330
-    
+
     // since chance is passed through a 3rd degree polynomial, cap the
     // value to avoid any overflow issues. The value that causes an
     // overflow seems to be slightly higher than 1400, so the cap will
