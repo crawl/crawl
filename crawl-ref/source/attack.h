@@ -30,6 +30,7 @@ public:
     bool    needs_message;
     bool    attacker_visible, defender_visible;
     bool    perceived_attack, obvious_effect;
+    bool    turn_natural;
 
 
     int     to_hit;

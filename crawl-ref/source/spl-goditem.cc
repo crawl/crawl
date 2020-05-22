@@ -181,7 +181,7 @@ static int _pacification_hp(monster_type mc)
  *                      returns spret::success otherwise, regardless of whether
  *                      the target was actually pacified.
  */
-static spret _try_to_pacify(monster &mon, int healed, int pow,
+spret try_to_pacify(monster &mon, int healed, int pow,
                                  bool fail)
 {
     const monster_info mi(&mon);
@@ -353,7 +353,7 @@ spret cast_healing(int pow, bool fail)
     }
 
     if (_mons_hostile(mons))
-        return _try_to_pacify(*mons, healed, pow, fail);
+        return try_to_pacify(*mons, healed, pow, fail);
 
     fail_check();
 

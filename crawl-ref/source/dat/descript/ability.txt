@@ -191,6 +191,12 @@ Cure All Mutations ability
 
 Cures all your mutations — but only once.
 %%%%
+Brand Weapon With Silver ability
+
+Permanently blesses a weapon of your choice with the silver of the zin.
+Demon weapons will be converted into a more powerful sacred weapon. This
+blessing may only be used once, and it cannot be used on artefact weapons.
+%%%%
 # The Shining One
 Divine Shield ability
 
@@ -284,6 +290,12 @@ The enslaved soul will retain the monster's faculties, equipment and abilities,
 as well as some of its innate healing. However, only one soul can be enslaved
 at a time.
 %%%%
+Brand Weapon With Vampiric ability
+
+Permanently bloodied a weapon of your choice with the vampiric of the 
+yredelemnul. This blessing may only be used once, and it cannot be used on 
+artefact weapons.
+%%%%
 # Okawaru
 Heroism ability
 
@@ -315,6 +327,11 @@ Greater Servant of Makhleb ability
 
 Summons a major demon. Failing to use this ability correctly will turn the
 demon hostile.
+%%%%
+Brand Weapon With Chaos ability
+
+Permanently corrupted a weapon of your choice with the chaos of the makhleb.
+This blessing may only be used once, and it cannot be used on artefact weapons.
 %%%%
 # Sif Muna
 %%%%
@@ -353,6 +370,11 @@ enchantments.
 Brothers in Arms ability
 
 Summons huge angry allies to wreak havoc.
+%%%%
+Brand Weapon With Antimagic ability
+
+Permanently enchanted a weapon of your choice with the antimagic of the trog.
+This blessing may only be used once, and it cannot be used on artefact weapons.
 %%%%
 # Elyvilon
 Divine Protection ability
@@ -400,6 +422,12 @@ Divine Vigour ability
 Greatly increases your maximum health and magic points, depending on
 Invocations skill. Your current health and magic points will also be increased
 proportionally.
+%%%%
+Brand Weapon With Pacifing ability
+
+Permanently blesses a weapon of your choice with the pacifing of the elyvilon.
+Demon weapons will be converted into a more powerful sacred weapon. This
+blessing may only be used once, and it cannot be used on artefact weapons.
 %%%%
 # Lugonu
 Depart the Abyss ability
@@ -544,6 +572,11 @@ After some time has passed, you will return in the same state as the very
 second you departed. Invocations skill increases the amount of time that passes
 while you're gone.
 %%%%
+Brand Weapon With Sluggish ability
+
+Permanently blessed a weapon of your choice with the sluggish of the cheibriados.
+This blessing may only be used once, and it cannot be used on artefact weapons.
+%%%%
 # Jiyva
 Request Jelly ability
 
@@ -557,6 +590,11 @@ corporeal undead monster hit into a neutral slime.
 Cure Bad Mutation ability
 
 Removes a randomly selected bad mutation.
+%%%%
+Brand Weapon With Slimifing ability
+
+Permanently transforms a weapon of your choice with the slimifing of the jiyva.
+This blessing may only be used once, and it cannot be used on artefact weapons.
 %%%%
 # Ashenzari
 Scrying ability

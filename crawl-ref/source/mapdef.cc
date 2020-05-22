@@ -4973,8 +4973,8 @@ int str_to_ego(object_class_type item_type, string ego_str)
         "electrocution",
 #if TAG_MAJOR_VERSION == 34
         "orc_slaying",
-        "dragon_slaying",
 #endif
+        "silver",
         "venom",
         "protection",
         "draining",
@@ -4999,6 +4999,9 @@ int str_to_ego(object_class_type item_type, string ego_str)
 #endif
         "penetration",
         "reaping",
+        "pacifing",
+        "sluggish",
+        "slimyfing",
         nullptr
     };
     COMPILE_CHECK(ARRAYSZ(weapon_brands) == NUM_REAL_SPECIAL_WEAPONS);

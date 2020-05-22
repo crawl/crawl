@@ -185,4 +185,6 @@ bool wu_jian_can_wall_jump(const coord_def& target, string &error_ret);
 bool wu_jian_do_wall_jump(coord_def targ, bool ability);
 spret wu_jian_wall_jump_ability();
 
-void angel_good_god_help(bool closed_enemy);
+void angel_good_god_help(bool closed_enemy); 
+int slouch_damage(monster* mon);
+bool slouchable(coord_def where);

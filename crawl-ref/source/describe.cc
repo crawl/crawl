@@ -1339,6 +1339,31 @@ static string _describe_weapon(const item_def &item, bool verbose)
                     "hit. Natural abilities and divine invocations are not "
                     "affected.";
             break;
+
+        case SPWPN_PACIFING:
+            description += "It causes on hostile monsters will "
+                "try to turn them neutral. This works best on animals, and "
+                "is less effective on humanoids and other intelligent "
+                "creatures.Undead and demons are harder still to pacify. "
+                "It depending on Invocations skill and target max hit point";
+            break;
+
+        case SPWPN_SLUGGISH:
+            description += "It causes damage who is moving faster than you, "
+                "dealing more damage with greater differences in speed.";
+            break;
+
+        case SPWPN_SLIMIFYING:
+            description += "It turns the attacked opponent into a slime ";
+            break;
+
+        case SPWPN_SILVER:
+            description += "It deals increased damage compared to a normal "
+                "weapon substantially increased damage to chaoticand "
+                "magically transformed beings.It also inflicts extra damage "
+                "against mutated beings, according to how mutated they are.";
+            break;
+
         case SPWPN_NORMAL:
             ASSERT(enchanted);
             description += "It has no special brand (it is not flaming, "

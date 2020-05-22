@@ -320,6 +320,10 @@ bool is_weapon_brand_ok(int type, int brand, bool /*strict*/)
     case SPWPN_DISTORTION:
     case SPWPN_ANTIMAGIC:
     case SPWPN_REAPING: // only exists on Sword of Zonguldrok
+    case SPWPN_PACIFING:
+    case SPWPN_SLUGGISH:
+    case SPWPN_SLIMIFYING:
+    case SPWPN_SILVER:
         if (is_range_weapon(item))
             return false;
         break;
@@ -338,7 +342,6 @@ bool is_weapon_brand_ok(int type, int brand, bool /*strict*/)
     case SPWPN_ORC_SLAYING:
     case SPWPN_FLAME:
     case SPWPN_FROST:
-    case SPWPN_DRAGON_SLAYING:
     case SPWPN_EVASION:
         return false;
 #endif

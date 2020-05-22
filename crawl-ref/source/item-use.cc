@@ -3092,6 +3092,26 @@ static void _brand_weapon(item_def &wpn)
         mprf("%s oozes corrosive slime.", itname.c_str());
         break;
 
+    case SPWPN_PACIFING:
+        flash_colour = WHITE;
+        mprf("%s purify.", itname.c_str());
+        break;
+
+    case SPWPN_SLUGGISH:
+        flash_colour = LIGHTBLUE;
+        mprf("%s slow down.", itname.c_str());
+        break;
+
+    case SPWPN_SLIMIFYING:
+        flash_colour = ETC_SLIME;
+        mprf("%s oozes corrosive slime.", itname.c_str());
+        break;
+
+    case SPWPN_SILVER:
+        flash_colour = YELLOW;
+        mprf("%s emits a brilliant flash of light!", itname.c_str());
+        break;
+        
     default:
         success = false;
         break;
