@@ -381,6 +381,8 @@ static const ability_def Ability_List[] =
       7, 0, 0, 15, {fail_basis::invo, 80, 4, 25}, abflag::none },
     { ABIL_ZIN_DONATE_GOLD, "Donate Gold",
       0, 0, 0, 0, {fail_basis::invo}, abflag::none },
+    { ABIL_ZIN_BLESS_WEAPON, "Brand Weapon With Silver", 0, 0, 0, 0,
+      {fail_basis::invo}, abflag::none },
 
     // The Shining One
     { ABIL_TSO_DIVINE_SHIELD, "Divine Shield",
@@ -415,6 +417,8 @@ static const ability_def Ability_List[] =
       6, 0, 200, 2, {fail_basis::invo, 60, 4, 25}, abflag::none },
     { ABIL_YRED_ENSLAVE_SOUL, "Enslave Soul",
       8, 0, 500, 4, {fail_basis::invo, 80, 4, 25}, abflag::none },
+    { ABIL_YRED_BLESS_WEAPON, "Brand Weapon With Vampiric", 0, 0, 0, 0,
+      {fail_basis::invo}, abflag::none },
 
     // Okawaru
     { ABIL_OKAWARU_HEROISM, "Heroism",
@@ -433,6 +437,8 @@ static const ability_def Ability_List[] =
     { ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB, "Greater Servant of Makhleb",
       0, scaling_cost::fixed(10), 0, 5,
       {fail_basis::invo, 90, 2, 5}, abflag::hostile },
+    { ABIL_MAKHLEB_BLESS_WEAPON, "Brand Weapon With Chaos", 0, 0, 0, 0,
+      {fail_basis::invo}, abflag::none },
 
     // Sif Muna
     { ABIL_SIF_MUNA_CHANNEL_ENERGY, "Channel Magic",
@@ -450,6 +456,8 @@ static const ability_def Ability_List[] =
     { ABIL_TROG_BROTHERS_IN_ARMS, "Brothers in Arms",
       0, 0, 250, generic_cost::range(5, 6),
       {fail_basis::invo, piety_breakpoint(5), 0, 1}, abflag::none },
+    { ABIL_TROG_BLESS_WEAPON, "Brand Weapon With Antimagic", 0, 0, 0, 0,
+      {fail_basis::invo}, abflag::none },
 
     // Elyvilon
     { ABIL_ELYVILON_LIFESAVING, "Divine Protection",
@@ -464,6 +472,8 @@ static const ability_def Ability_List[] =
       2, 0, 250, 3, {fail_basis::invo, 40, 5, 20}, abflag::none },
     { ABIL_ELYVILON_DIVINE_VIGOUR, "Divine Vigour",
       0, 0, 600, 6, {fail_basis::invo, 80, 4, 25}, abflag::none },
+    { ABIL_ELYVILON_BLESS_WEAPON, "Brand Weapon With Pacifing", 0, 0, 0, 0,
+      {fail_basis::invo}, abflag::none },
 
     // Lugonu
     { ABIL_LUGONU_ABYSS_EXIT, "Depart the Abyss",
@@ -514,6 +524,8 @@ static const ability_def Ability_List[] =
       4, 0, 0, 8, {fail_basis::invo, 90, 0, 2}, abflag::none },
     { ABIL_JIYVA_CURE_BAD_MUTATION, "Cure Bad Mutation",
       0, 0, 0, 15, {fail_basis::invo}, abflag::none },
+    { ABIL_JIYVA_BLESS_WEAPON, "Brand Weapon With Slimifing", 0, 0, 0, 0,
+      {fail_basis::invo}, abflag::none },
 
     // Fedhas
     { ABIL_FEDHAS_WALL_OF_BRIARS, "Wall of Briars",
@@ -534,6 +546,8 @@ static const ability_def Ability_List[] =
       5, 0, 100, 8, {fail_basis::invo, 60, 4, 25}, abflag::none },
     { ABIL_CHEIBRIADOS_TIME_STEP, "Step From Time",
       10, 0, 200, 10, {fail_basis::invo, 80, 4, 25}, abflag::none },
+    { ABIL_CHEIBRIADOS_BLESS_WEAPON, "Brand Weapon With Sluggish", 0, 0, 0, 0,
+      {fail_basis::invo}, abflag::none },
 
     // Ashenzari
     { ABIL_ASHENZARI_CURSE, "Curse Item",
@@ -1038,6 +1052,13 @@ ability_type fixup_ability(ability_type ability)
     case ABIL_TSO_BLESS_WEAPON:
     case ABIL_KIKU_BLESS_WEAPON:
     case ABIL_LUGONU_BLESS_WEAPON:
+    case ABIL_ZIN_BLESS_WEAPON:
+    case ABIL_YRED_BLESS_WEAPON:
+    case ABIL_MAKHLEB_BLESS_WEAPON:
+    case ABIL_TROG_BLESS_WEAPON:
+    case ABIL_ELYVILON_BLESS_WEAPON:
+    case ABIL_JIYVA_BLESS_WEAPON:
+    case ABIL_CHEIBRIADOS_BLESS_WEAPON:
         if (you.species == SP_FELID)
             return ABIL_NON_ABILITY;
         else
@@ -2408,6 +2429,14 @@ static spret _do_ability(const ability_def& abil, bool fail)
         zin_donate_gold();
         break;
 
+    case ABIL_ZIN_BLESS_WEAPON:
+        fail_check();
+        simple_god_message(" will bless one of your weapons.");
+        // included in default force_more_message
+        if (!bless_weapon(GOD_ZIN, SPWPN_SILVER, YELLOW))
+            return spret::abort;
+        break;
+
     case ABIL_TSO_DIVINE_SHIELD:
         fail_check();
         tso_divine_shield();
@@ -2566,6 +2595,14 @@ static spret _do_ability(const ability_def& abil, bool fail)
         break;
     }
 
+    case ABIL_YRED_BLESS_WEAPON:
+        fail_check();
+        simple_god_message(" will bless one of your weapons.");
+        // included in default force_more_message
+        if (!bless_weapon(GOD_YREDELEMNUL, SPWPN_VAMPIRISM, MAGENTA))
+            return spret::abort;
+        break;
+
     case ABIL_OKAWARU_HEROISM:
         fail_check();
         mprf(MSGCH_DURATION, you.duration[DUR_HEROISM]
@@ -2673,6 +2710,14 @@ static spret _do_ability(const ability_def& abil, bool fail)
                           GOD_MAKHLEB, 0, !fail);
         break;
 
+    case ABIL_MAKHLEB_BLESS_WEAPON:
+        fail_check();
+        simple_god_message(" will bless one of your weapons.");
+        // included in default force_more_message
+        if (!bless_weapon(GOD_MAKHLEB, SPWPN_CHAOS, MAGENTA))
+            return spret::abort;
+        break;
+
     case ABIL_TROG_BERSERK:
         fail_check();
         // Trog abilities don't use or train invocations.
@@ -2691,6 +2736,13 @@ static spret _do_ability(const ability_def& abil, bool fail)
         summon_berserker(you.piety +
                          random2(you.piety/4) - random2(you.piety/4),
                          &you);
+        break;
+    case ABIL_TROG_BLESS_WEAPON:
+        fail_check();
+        simple_god_message(" will bless one of your weapons.");
+        // included in default force_more_message
+        if (!bless_weapon(GOD_TROG, SPWPN_ANTIMAGIC, GREEN))
+            return spret::abort;
         break;
 
     case ABIL_SIF_MUNA_FORGET_SPELL:
@@ -2768,6 +2820,14 @@ static spret _do_ability(const ability_def& abil, bool fail)
     case ABIL_ELYVILON_DIVINE_VIGOUR:
         fail_check();
         if (!elyvilon_divine_vigour())
+            return spret::abort;
+        break;
+
+    case ABIL_ELYVILON_BLESS_WEAPON:
+        fail_check();
+        simple_god_message(" will bless one of your weapons.");
+        // included in default force_more_message
+        if (!bless_weapon(GOD_ELYVILON, SPWPN_PACIFING, WHITE))
             return spret::abort;
         break;
 
@@ -2994,6 +3054,14 @@ static spret _do_ability(const ability_def& abil, bool fail)
         jiyva_remove_bad_mutation();
         break;
 
+    case ABIL_JIYVA_BLESS_WEAPON:
+        fail_check();
+        simple_god_message(" will bless one of your weapons.");
+        // included in default force_more_message
+        if (!bless_weapon(GOD_JIYVA, SPWPN_SLIMIFYING, GREEN))
+            return spret::abort;
+        break;
+
     case ABIL_CHEIBRIADOS_TIME_STEP:
         fail_check();
         cheibriados_time_step(max(1, you.skill(SK_INVOCATIONS, 10)
@@ -3013,6 +3081,14 @@ static spret _do_ability(const ability_def& abil, bool fail)
     case ABIL_CHEIBRIADOS_SLOUCH:
         fail_check();
         if (!cheibriados_slouch())
+            return spret::abort;
+        break;
+
+    case ABIL_CHEIBRIADOS_BLESS_WEAPON:
+        fail_check();
+        simple_god_message(" will bless one of your weapons.");
+        // included in default force_more_message
+        if (!bless_weapon(GOD_CHEIBRIADOS, SPWPN_SLUGGISH, LIGHTBLUE))
             return spret::abort;
         break;
 
@@ -3862,6 +3938,13 @@ int find_ability_slot(const ability_type abil, char firstletter)
     case ABIL_TSO_BLESS_WEAPON:
     case ABIL_KIKU_BLESS_WEAPON:
     case ABIL_LUGONU_BLESS_WEAPON:
+    case ABIL_ZIN_BLESS_WEAPON:
+    case ABIL_YRED_BLESS_WEAPON:
+    case ABIL_MAKHLEB_BLESS_WEAPON:
+    case ABIL_TROG_BLESS_WEAPON:
+    case ABIL_ELYVILON_BLESS_WEAPON:
+    case ABIL_JIYVA_BLESS_WEAPON:
+    case ABIL_CHEIBRIADOS_BLESS_WEAPON:
         first_slot = letter_to_index('W');
         break;
     case ABIL_CONVERT_TO_BEOGH:

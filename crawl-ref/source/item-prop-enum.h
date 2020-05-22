@@ -127,7 +127,7 @@ enum brand_type // item_def.special
     SPWPN_ELECTROCUTION,
 #if TAG_MAJOR_VERSION == 34
     SPWPN_ORC_SLAYING,
-    SPWPN_DRAGON_SLAYING,
+    SPWPN_SILVER,
 #endif
     SPWPN_VENOM,
     SPWPN_PROTECTION,
@@ -159,6 +159,9 @@ enum brand_type // item_def.special
 #endif
     SPWPN_PENETRATION,
     SPWPN_REAPING,
+    SPWPN_PACIFING,
+    SPWPN_SLUGGISH,
+    SPWPN_SLIMIFYING,
 
 // From this point on save compat is irrelevant.
     NUM_REAL_SPECIAL_WEAPONS,

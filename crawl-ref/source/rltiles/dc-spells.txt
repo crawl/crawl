@@ -87,6 +87,7 @@ animate_dead ANIMATE_DEAD
 animate_skeleton ANIMATE_SKELETON
 bolt_of_draining BOLT_OF_DRAINING
 borgnjors_revivification BORGNJORS_REVIVIFICATION
+control_undead CONTROL_UNDEAD
 corpse_rot CORPSE_ROT
 death_channel DEATH_CHANNEL
 deaths_door DEATHS_DOOR

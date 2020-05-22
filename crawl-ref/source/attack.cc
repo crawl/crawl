@@ -17,6 +17,7 @@
 #include <functional>
 
 #include "art-enum.h"
+#include "beam.h"
 #include "chardump.h"
 #include "delay.h"
 #include "english.h"
@@ -25,6 +26,7 @@
 #include "fight.h"
 #include "fineff.h"
 #include "food.h"
+#include "god-abil.h"
 #include "god-conduct.h"
 #include "god-passive.h" // passive_t::no_haste
 #include "item-name.h"
@@ -37,6 +39,7 @@
 #include "nearby-danger.h"
 #include "pronoun-type.h"
 #include "religion.h"
+#include "spl-goditem.h"
 #include "spl-miscast.h"
 #include "spl-util.h"
 #include "state.h"
@@ -54,7 +57,7 @@ attack::attack(actor *attk, actor *defn, actor *blame)
     : attacker(attk), defender(defn), responsible(blame ? blame : attk),
       attack_occurred(false), cancel_attack(false), did_hit(false),
       needs_message(false), attacker_visible(false), defender_visible(false),
-      perceived_attack(false), obvious_effect(false), to_hit(0),
+      perceived_attack(false), obvious_effect(false), turn_natural(false), to_hit(0),
       damage_done(0), special_damage(0), aux_damage(0), min_delay(0),
       final_attack_delay(0), special_damage_flavour(BEAM_NONE),
       stab_attempt(false), stab_bonus(0), ev_margin(0), weapon(nullptr),
@@ -1677,6 +1680,63 @@ bool attack::apply_damage_brand(const char *what)
         defender->splash_with_acid(attacker, 3);
         break;
 
+    case SPWPN_SILVER:
+    {
+        string msg = "";
+        int silver_dam = silver_damages_victim(defender, damage_done, msg);
+        if (silver_dam)
+        {
+            special_damage_message = msg;
+            special_damage = silver_dam;
+        }
+        break;
+    }
+
+    case SPWPN_SLIMIFYING:
+        if (attacker->is_player() && mon_can_be_slimified(defender->as_monster()))
+        {
+            if (x_chance_in_y(melee_slimify_chance(defender->get_hit_dice()), 100))
+            {
+                slimify_monster(defender->as_monster());
+                turn_natural = true;
+                break;
+            }
+        }
+        break;
+
+    case SPWPN_PACIFING:
+        if (attacker->is_player() && defender->is_monster())
+        {
+            if (one_chance_in(3))
+            {
+                int power_ = 30 + you.skill(SK_INVOCATIONS, 1);
+                if (try_to_pacify(*defender->as_monster(), defender->as_monster()->max_hit_points - defender->as_monster()->hit_points, power_, false) == spret::success) {
+                    turn_natural = true;
+                }
+            }
+        }
+        break;
+
+    case SPWPN_SLUGGISH:
+        if (attacker->is_player() && defender->is_monster()) {
+            if (one_chance_in(3))
+            {
+                if (slouchable(defender->pos())) 
+                {
+                    special_damage = slouch_damage(defender->as_monster()) / 2;
+
+                    if (special_damage > 0)
+                    {
+                        special_damage_message = make_stringf(
+                            "%s twisted time of %s%s",
+                            what ? what : atk_name(DESC_THE).c_str(),
+                            defender_name(!what).c_str(),
+                            attack_strength_punctuation(special_damage).c_str());
+                    }
+                }
+            }
+        }
+        break;
 
     default:
         if (using_weapon() && is_unrandom_artefact(*weapon, UNRAND_DAMNATION))

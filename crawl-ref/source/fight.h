@@ -36,6 +36,7 @@ int resist_adjust_damage(const actor *defender, beam_type flavour,
 int apply_chunked_AC(int dam, int ac);
 
 int melee_confuse_chance(int HD);
+int melee_slimify_chance(int HD);
 
 bool wielded_weapon_check(item_def *weapon);
 

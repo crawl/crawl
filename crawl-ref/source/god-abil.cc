@@ -116,6 +116,20 @@ static const char *_god_blessing_description(god_type god)
         return "corrupted by Lugonu";
     case GOD_KIKUBAAQUDGHA:
         return "bloodied by Kikubaaqudgha";
+    case GOD_YREDELEMNUL:
+        return "bloodied by Yredelemnul";
+    case GOD_MAKHLEB:
+        return "corrupted by Makhleb";
+    case GOD_TROG:
+        return "enchanted by Trog";
+    case GOD_JIYVA:
+        return "transformed by Jiyva";
+    case GOD_ELYVILON:
+        return "blessed by Elyvilon";
+    case GOD_CHEIBRIADOS:
+        return "blessed by Cheibriados";
+    case GOD_ZIN:
+        return "blessed by Zin";
     default:
         return "touched by the gods";
     }
@@ -156,6 +170,20 @@ bool bless_weapon(god_type god, brand_type brand, colour_t colour)
         prompt += "bloodied with pain";
     else if (brand == SPWPN_DISTORTION)
         prompt += "corrupted with distortion";
+    else if (brand == SPWPN_VAMPIRISM)
+        prompt += "bloodied with vampirism";
+    else if (brand == SPWPN_CHAOS)
+        prompt += "corrupted with chaos";
+    else if (brand == SPWPN_ANTIMAGIC)
+        prompt += "enchanted with antimagic";
+    else if (brand == SPWPN_SLIMIFYING)
+        prompt += "transformed with slimifying";
+    else if (brand == SPWPN_PACIFING)
+        prompt += "blessed with pacifing";
+    else if (brand == SPWPN_SLUGGISH)
+        prompt += "blessed with sluggish";
+    else if (brand == SPWPN_SILVER)
+        prompt += "blessed with sliver";
     else
         prompt += "blessed with holy wrath";
     prompt += "?";
@@ -179,7 +207,7 @@ bool bless_weapon(god_type god, brand_type brand, colour_t colour)
     if (wpn.cursed())
         do_uncurse_item(wpn);
 
-    if (god == GOD_SHINING_ONE)
+    if (god == GOD_SHINING_ONE || god == GOD_ELYVILON || god == GOD_ZIN)
     {
         convert2good(wpn);
 
@@ -205,7 +233,7 @@ bool bless_weapon(god_type god, brand_type brand, colour_t colour)
     you.one_time_ability_used.set(you.religion);
     take_note(Note(NOTE_GOD_GIFT, you.religion));
 
-    if (god == GOD_SHINING_ONE)
+    if (god == GOD_SHINING_ONE || god == GOD_ELYVILON || god == GOD_ZIN)
     {
         holy_word(100, HOLY_WORD_TSO, you.pos(), true);
         // Un-bloodify surrounding squares.
@@ -1298,7 +1326,6 @@ void zin_remove_divine_stamina()
 bool zin_remove_all_mutations()
 {
     ASSERT(you.how_mutated());
-    ASSERT(can_do_capstone_ability(you.religion));
 
     if (!yesno("Do you wish to cure all of your mutations?", true, 'n'))
     {
@@ -1311,7 +1338,7 @@ bool zin_remove_all_mutations()
     scaled_delay(1000);
 #endif
 
-    you.one_time_ability_used.set(GOD_ZIN);
+    you.props["zin_remove_all_mutations"].get_bool() = true;
     take_note(Note(NOTE_GOD_GIFT, you.religion));
     simple_god_message(" draws all chaos from your body!");
     delete_all_mutations("Zin's power");
@@ -2100,7 +2127,7 @@ void cheibriados_time_bend(int pow)
     }
 }
 
-static int _slouch_damage(monster *mon)
+int slouch_damage(monster *mon)
 {
     // Please change handle_monster_move in mon-act.cc to match.
     const int jerk_num = mon->type == MONS_SIXFIRHY ? 8
@@ -2117,7 +2144,7 @@ static int _slouch_damage(monster *mon)
                 - player_numer / player_movement_speed() / player_speed());
 }
 
-static bool _slouchable(coord_def where)
+bool slouchable(coord_def where)
 {
     monster* mon = monster_at(where);
     if (mon == nullptr || mon->is_stationary() || mon->cannot_move()
@@ -2127,19 +2154,19 @@ static bool _slouchable(coord_def where)
         return false;
     }
 
-    return _slouch_damage(mon) > 0;
+    return slouch_damage(mon) > 0;
 }
 
 static bool _act_slouchable(const actor *act)
 {
     if (act->is_player())
         return false;  // too slow-witted
-    return _slouchable(act->pos());
+    return slouchable(act->pos());
 }
 
 static int _slouch_monsters(coord_def where)
 {
-    if (!_slouchable(where))
+    if (!slouchable(where))
         return 0;
 
     monster* mon = monster_at(where);
@@ -2147,7 +2174,7 @@ static int _slouch_monsters(coord_def where)
 
     // Between 1/2 and 3/2 of _slouch_damage(), but weighted strongly
     // towards the middle.
-    const int dmg = roll_dice(_slouch_damage(mon), 3) / 2;
+    const int dmg = roll_dice(slouch_damage(mon), 3) / 2;
 
     mon->hurt(&you, dmg, BEAM_MMISSILE, KILLED_BY_BEAM, "", "", true);
     return 1;
@@ -2155,7 +2182,7 @@ static int _slouch_monsters(coord_def where)
 
 bool cheibriados_slouch()
 {
-    int count = apply_area_visible(_slouchable, you.pos());
+    int count = apply_area_visible(slouchable, you.pos());
     if (!count)
         if (!yesno("There's no one hasty visible. Invoke Slouch anyway?",
                    true, 'n'))

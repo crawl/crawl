@@ -66,6 +66,11 @@ int melee_confuse_chance(int HD)
     return max(80 * (24 - HD) / 24, 0);
 }
 
+int melee_slimify_chance(int HD)
+{
+    return max(30 * (30 - HD) / 30, 0);
+}
+
 /**
  * Switch from a bad weapon to melee.
  *

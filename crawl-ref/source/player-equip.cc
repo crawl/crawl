@@ -630,6 +630,23 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld, equ
                     mprf("%s begins to ooze corrosive slime!", item_name.c_str());
                     break;
 
+                case SPWPN_PACIFING:
+                    mpr("You feel peace.");
+                    break;
+
+                case SPWPN_SLUGGISH:
+                    mpr("You feel lazy.");
+                    break;
+
+                case SPWPN_SLIMIFYING:
+                    mprf("%s begins to ooze corrosive slime!", item_name.c_str());
+                    break;
+
+                case SPWPN_SILVER:
+                    mprf("%s softly glowes with silver!",
+                        item_name.c_str());
+                    break;
+
                 default:
                     break;
                 }

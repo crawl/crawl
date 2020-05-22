@@ -548,12 +548,15 @@ bool melee_attack::handle_phase_hit()
     {
         // Always upset monster regardless of damage.
         // However, successful stabs inhibit shouting.
-        behaviour_event(defender->as_monster(), ME_WHACK, attacker,
-                        coord_def(), !stab_attempt);
+        if (turn_natural == false) {
+            behaviour_event(defender->as_monster(), ME_WHACK, attacker,
+                coord_def(), !stab_attempt);
 
-        // [ds] Monster may disappear after behaviour event.
-        if (!defender->alive())
-            return true;
+            // [ds] Monster may disappear after behaviour event.
+            if (!defender->alive())
+                return true;
+        }
+
     }
     else if (defender->is_player())
     {

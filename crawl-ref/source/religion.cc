@@ -100,6 +100,9 @@ const vector<god_power> god_powers[NUM_GODS] =
            "Zin will no longer cleanse your potions of mutation.",
            "Zin will cleanse your potions of mutation." },
       {-1, ABIL_ZIN_DONATE_GOLD, "donate money to Zin" },
+      { 7, ABIL_ZIN_BLESS_WEAPON,
+           "Zin will bless your weapon with sliver... once.",
+           "Zin is no longer ready to bless your weapon." },
     },
 
     // TSO
@@ -141,6 +144,9 @@ const vector<god_power> god_powers[NUM_GODS] =
            "Yredelemnul will gift you servants as you gain piety." },
       { 4, ABIL_YRED_DRAIN_LIFE, "drain ambient life force" },
       { 5, ABIL_YRED_ENSLAVE_SOUL, "enslave living souls" },
+      { 7, ABIL_YRED_BLESS_WEAPON,
+           "Yredelemnul will bless your weapon with vampiric... once.",
+           "Yredelemnul is no longer ready to bless your weapon." },
     },
 
     // Xom
@@ -177,6 +183,9 @@ const vector<god_power> god_powers[NUM_GODS] =
            "hurl Makhleb's greater destruction" },
       { 5, ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB,
            "summon a greater servant of Makhleb" },
+      { 7, ABIL_MAKHLEB_BLESS_WEAPON,
+           "Makhleb will bless your weapon with chaos... once.",
+           "Makhleb is no longer ready to bless your weapon." },
     },
 
     // Sif Muna
@@ -204,6 +213,9 @@ const vector<god_power> god_powers[NUM_GODS] =
       { 5, "Trog will now gift you weapons as you gain piety.",
            "Trog will no longer gift you weapons.",
            "Trog will gift you weapons as you gain piety." },
+      { 7, ABIL_TROG_BLESS_WEAPON,
+           "Trog will bless your weapon with antimagic... once.",
+           "Trog is no longer ready to bless your weapon." },
     },
 
     // Nemelex
@@ -222,6 +234,9 @@ const vector<god_power> god_powers[NUM_GODS] =
       { 4, ABIL_ELYVILON_GREATER_HEALING, "provide greater healing for yourself" },
       { 5, ABIL_ELYVILON_DIVINE_VIGOUR, "call upon Elyvilon for divine vigour" },
       { 1, ABIL_ELYVILON_LIFESAVING, "call on Elyvilon to save your life" },
+      { 7, ABIL_ELYVILON_BLESS_WEAPON,
+           "Elyvilon will bless your weapon with pacifing... once.",
+           "Elyvilon is no longer ready to bless your weapon." },
     },
 
     // Lugonu
@@ -261,6 +276,9 @@ const vector<god_power> god_powers[NUM_GODS] =
            "You may expel jellies when seriously injured." },
       { 5, ABIL_JIYVA_CURE_BAD_MUTATION,
            "call upon Jiyva to remove your harmful mutations" },
+      { 7, ABIL_JIYVA_BLESS_WEAPON,
+           "Jiyva will bless your weapon with slimifying... once.",
+           "Jiyva is no longer ready to bless your weapon." },
     },
 
     // Fedhas
@@ -279,6 +297,9 @@ const vector<god_power> god_powers[NUM_GODS] =
       { 3, ABIL_CHEIBRIADOS_DISTORTION, "warp the flow of time around you" },
       { 4, ABIL_CHEIBRIADOS_SLOUCH, "inflict damage on those overly hasty" },
       { 5, ABIL_CHEIBRIADOS_TIME_STEP, "step out of the flow of time" },
+      { 7, ABIL_CHEIBRIADOS_BLESS_WEAPON,
+           "Cheibriados will bless your weapon with sluggish... once.",
+           "Cheibriados is no longer ready to bless your weapon." },
     },
 
     // Ashenzari
@@ -2406,7 +2427,7 @@ static void _gain_piety_point()
             auto_id_inventory();
 
         // TODO: add one-time ability check in have_passive
-        if (have_passive(passive_t::unlock_slime_vaults) && can_do_capstone_ability(you.religion))
+        if (have_passive(passive_t::unlock_slime_vaults) && you.props["jiyva_slime_vaults"].get_bool() == false)
         {
             simple_god_message(" will now unseal the treasures of the "
                                "Slime Pits.");
@@ -2417,7 +2438,7 @@ static void _gain_piety_point()
             if (level_id::current() == level_id(BRANCH_SLIME, brdepth[BRANCH_SLIME]))
                 dungeon_events.fire_event(DET_ENTERED_LEVEL);
 
-            you.one_time_ability_used.set(you.religion);
+            you.props["jiyva_slime_vaults"].get_bool() = true;
         }
         if (you_worship(GOD_HEPLIAKLQANA)
             && rank == 2 && !you.props.exists(HEPLIAKLQANA_ALLY_TYPE_KEY))

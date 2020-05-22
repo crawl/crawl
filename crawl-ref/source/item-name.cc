@@ -458,9 +458,9 @@ static const char *weapon_brands_terse[] =
 {
     "", "flame", "freeze", "holy", "elec",
 #if TAG_MAJOR_VERSION == 34
-    "obsolete", "obsolete",
+    "obsolete",
 #endif
-    "venom", "protect", "drain", "speed", "buggy-vorpal",
+    "silver", "venom", "protect", "drain", "speed", "buggy-vorpal",
 #if TAG_MAJOR_VERSION == 34
     "obsolete", "obsolete",
 #endif
@@ -472,7 +472,7 @@ static const char *weapon_brands_terse[] =
 #if TAG_MAJOR_VERSION == 34
     "evade", "confuse",
 #endif
-    "penet", "reap", "buggy-num", "acid",
+    "penet", "reap", "pacify", "slug", "slime", "buggy-num", "acid",
 #if TAG_MAJOR_VERSION > 34
     "confuse",
 #endif
@@ -483,9 +483,9 @@ static const char *weapon_brands_verbose[] =
 {
     "", "flaming", "freezing", "holy wrath", "electrocution",
 #if TAG_MAJOR_VERSION == 34
-    "orc slaying", "dragon slaying",
+    "orc slaying",
 #endif
-    "venom", "protection", "draining", "speed", "buggy-vorpal",
+    "silver", "venom", "protection", "draining", "speed", "buggy-vorpal",
 #if TAG_MAJOR_VERSION == 34
     "flame", "frost",
 #endif
@@ -497,7 +497,7 @@ static const char *weapon_brands_verbose[] =
 #if TAG_MAJOR_VERSION == 34
     "evasion", "confusion",
 #endif
-    "penetration", "reaping", "buggy-num", "acid",
+    "penetration", "reaping", "pacifing", "sluggish", "slimifying", "buggy-num", "acid",
 #if TAG_MAJOR_VERSION > 34
     "confusion",
 #endif
@@ -508,9 +508,9 @@ static const char *weapon_brands_adj[] =
 {
     "", "flaming", "freezing", "holy", "electric",
 #if TAG_MAJOR_VERSION == 34
-    "orc-killing", "dragon-slaying",
+    "orc-killing",
 #endif
-    "venomous", "protective", "draining", "fast", "vorpal",
+    "silver", "venomous", "protective", "draining", "fast", "vorpal",
 #if TAG_MAJOR_VERSION == 34
     "flaming", "freezing",
 #endif
@@ -522,7 +522,7 @@ static const char *weapon_brands_adj[] =
 #if TAG_MAJOR_VERSION == 34
     "evasive", "confusing",
 #endif
-    "penetrating", "reaping", "buggy-num", "acidic",
+    "penetrating", "reaping", "pacifing", "sluggish", "slimifying", "buggy-num", "acidic",
 #if TAG_MAJOR_VERSION > 34
     "confusing",
 #endif
