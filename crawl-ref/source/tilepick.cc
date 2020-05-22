@@ -3566,6 +3566,8 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_CONVERT_TO_BEOGH;
     case ABIL_BEOGH_RESURRECTION:
         return TILEG_ABILITY_BEOGH_RESURRECTION;
+    case ABIL_BEOGH_RETURN_ORCISH_FOLLOWERS:
+        return TILEG_ABILITY_BEOGH_RETURN;
     // Jiyva
     case ABIL_JIYVA_CALL_JELLY:
         return TILEG_ABILITY_JIYVA_REQUEST_JELLY;
