@@ -99,6 +99,8 @@ function trove.get_trove_item(e, value, base_item)
   -- currently 20% armour, 15% weapon, 50% consumable, 15% miscellaneous
   local prices = {
        {base="scroll", type="acquirement", quant=2},
+       {base="scroll", type="fear", quant=2+d(3)+d(3)},
+       {base="scroll", type="fog", quant=2+d(3)+d(3)},
        {base="miscellaneous", type="rune of Zot", quant=3, name="slimy rune of Zot"},
        {base="miscellaneous", type="rune of Zot", quant=11, name="abyssal rune of Zot"},
        {base="miscellaneous", type="horn of Geryon"} }
@@ -128,8 +130,7 @@ function trove.get_trove_item(e, value, base_item)
   end
 
   local pots = {
-       {base="potion", type="resistance", quant=2+d(3)},
-       {base="potion", type="stabbing", quant=4+d(3)+d(2)} }
+       {base="potion", type="resistance", quant=2+d(3)} }
 
   local heal_pots = {
        {base="potion", type="curing", quant=12+d(4)+d(4)},
