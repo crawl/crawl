@@ -644,7 +644,6 @@ static const struct spell_desc spelldata[] =
     TILEG_PAIN,
 },
 
-#if TAG_MAJOR_VERSION == 34
 {
     SPELL_CONTROL_UNDEAD, "Control Undead",
     spschool::necromancy,
@@ -653,9 +652,8 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     3, 0,
-    TILEG_ERROR,
+    TILEG_CONTROL_UNDEAD,
 },
-#endif
 
 {
     SPELL_ANIMATE_SKELETON, "Animate Skeleton",
@@ -1630,7 +1628,7 @@ static const struct spell_desc spelldata[] =
     5,
     200,
     -1, -1,
-    4, 15,
+    1, 0,
     TILEG_EXCRUCIATING_WOUNDS,
 },
 
