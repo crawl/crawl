@@ -32,6 +32,9 @@ game_state::game_state()
       io_inited(false),
       need_save(false), game_started(false), saving_game(false),
       updating_scores(false),
+#ifndef USE_TILE_LOCAL
+      smallterm(false),
+#endif
       seen_hups(0), map_stat_gen(false), map_stat_dump_disconnect(false),
       obj_stat_gen(false), type(GAME_TYPE_NORMAL),
       last_type(GAME_TYPE_UNSPECIFIED), last_game_exit(game_exit::unknown),

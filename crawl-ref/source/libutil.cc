@@ -378,6 +378,9 @@ static GotoRegion _current_region = GOTO_CRT;
 
 void cgotoxy(int x, int y, GotoRegion region)
 {
+#ifdef ASSERTS
+    auto const old_region = _current_region;
+#endif
     _current_region = region;
     const coord_def tl = _cgettopleft(region);
     const coord_def sz = cgetsize(region);
@@ -385,11 +388,12 @@ void cgotoxy(int x, int y, GotoRegion region)
 #ifdef ASSERTS
     if (x < 1 || y < 1 || x > sz.x || y > sz.y)
     {
-        dprf("screen write out of bounds: (%d,%d) into (%d,%d)", x, y,
-            sz.x, sz.y);
+        // dprf in case it's not safe
+        dprf("screen write out of bounds in region %d (old: %d): (%d,%d) into (%d,%d)",
+             (int) region, (int) old_region, x, y, sz.x, sz.y);
         save_game(false); // should be safe
-        die("screen write out of bounds: (%d,%d) into (%d,%d)", x, y,
-            sz.x, sz.y);
+        die( "screen write out of bounds in region %d (old: %d): (%d,%d) into (%d,%d)",
+             (int) region, (int) old_region, x, y, sz.x, sz.y);
     }
 #endif
 

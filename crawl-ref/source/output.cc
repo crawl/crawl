@@ -1482,6 +1482,13 @@ void draw_border()
 #ifndef USE_TILE_LOCAL
 void redraw_console_sidebar()
 {
+    if (crawl_state.smallterm)
+    {
+        clrscr();
+        CGOTOXY(1,1, GOTO_CRT);
+        CPRINTF("Your terminal window is too small; please resize to at least %d,%d", MIN_COLS, MIN_LINES);
+        return;
+    }
     // TODO: this is super hacky and merges stuff from redraw_screen and
     // viewwindow. It won't do nothing for webtiles, but should be basically
     // benign there.
@@ -1526,6 +1533,14 @@ void redraw_screen(bool show_updates)
     if (!ui::has_layout())
         tiles.pop_all_ui_layouts();
 #endif
+
+    if (crawl_state.smallterm)
+    {
+        clrscr();
+        CGOTOXY(1,1, GOTO_CRT);
+        CPRINTF("Your terminal window is too small; please resize to at least %d,%d", MIN_COLS, MIN_LINES);
+        return;
+    }
 
     draw_border();
 

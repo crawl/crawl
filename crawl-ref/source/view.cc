@@ -1399,6 +1399,12 @@ void viewwindow(bool show_updates, bool tiles_only, animation *a)
     {
         unwind_bool updating(_view_is_updating, true);
 
+        if (crawl_state.smallterm)
+        {
+            redraw_screen();
+            return;
+        }
+
         // The player could be at (0,0) if we are called during level-gen; this can
         // happen via mpr -> interrupt_activity -> stop_delay -> runrest::stop
         if (you.duration[DUR_TIME_STEP] || you.pos().origin())

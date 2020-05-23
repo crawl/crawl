@@ -1633,6 +1633,8 @@ void msgwin_new_turn()
 
 void msgwin_new_cmd()
 {
+    if (crawl_state.smallterm)
+        return;
     flush_prev_message();
     bool new_turn = (you.num_turns > _last_msg_turn);
     msgwin.new_cmdturn(new_turn);
