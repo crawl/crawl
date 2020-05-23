@@ -213,6 +213,7 @@ static void _ench_animation(int flavour, const monster* mon, bool force)
     case BEAM_DISPEL_UNDEAD:
         elem = ETC_HOLY;
         break;
+    case BEAM_CIGOTUVIS_PLAGUE:
     case BEAM_POLYMORPH:
     case BEAM_MALMUTATE:
         elem = ETC_MUTAGENIC;
@@ -3378,6 +3379,8 @@ void bolt::affect_player_enchantment(bool resistible)
     if (flavour == BEAM_INFESTATION || flavour == BEAM_VILE_CLUTCH)
         return;
 
+    // This will affect the player with confusion and mutation
+
     // You didn't resist it.
     if (animate)
         _ench_animation(effect_known ? real_flavour : BEAM_MAGIC);
@@ -5261,6 +5264,7 @@ bool bolt::has_saving_throw() const
     case BEAM_UNRAVELLED_MAGIC:
     case BEAM_INFESTATION:
     case BEAM_IRRESISTIBLE_CONFUSION:
+    case BEAM_CIGOTUVIS_PLAGUE:
     case BEAM_VILE_CLUTCH:
         return false;
     case BEAM_VULNERABILITY:
@@ -5342,6 +5346,9 @@ bool ench_flavour_affects_monster(beam_type flavour, const monster* mon,
     case BEAM_INFESTATION:
         rc = mons_gives_xp(*mon, you) && !mon->has_ench(ENCH_INFESTATION);
         break;
+
+    case BEAM_CIGOTUVIS_PLAGUE:
+        rc = mons_gives_xp(*mon, you) && !mon->has_ench(ENCH_CIGOTUVIS_PLAGUE) && MH_NATURAL;
 
     case BEAM_VILE_CLUTCH:
         rc = !mons_aligned(&you, mon) && you.can_constrict(mon, false);
@@ -5904,6 +5911,15 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         return MON_AFFECTED;
     }
 
+    case BEAM_CIGOTUVIS_PLAGUE:
+    {
+        const int dur = (5 + random2avg(ench_power / 2, 2)) * BASELINE_DELAY;
+        mon->add_ench(mon_enchant(ENCH_CIGOTUVIS_PLAGUE, 0, &you, dur));
+        if (simple_monster_message(*mon, " is plagued!"))
+            obvious_effect = true;
+        return MON_AFFECTED;
+    }
+
     case BEAM_VILE_CLUTCH:
     {
         const int dur = (4 + random2avg(div_rand_round(ench_power, 10), 2))
@@ -6433,6 +6449,7 @@ bool bolt::nasty_to(const monster* mon) const
         case BEAM_BECKONING:
             // Friendly and good neutral monsters don't mind being teleported.
             return !mon->wont_attack();
+        case BEAM_CIGOTUVIS_PLAGUE:
         case BEAM_INFESTATION:
         case BEAM_VILE_CLUTCH:
         case BEAM_SLOW:
@@ -6731,6 +6748,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_SHARED_PAIN:           return "shared pain";
     case BEAM_IRRESISTIBLE_CONFUSION:return "confusion";
     case BEAM_INFESTATION:           return "infestation";
+    case BEAM_CIGOTUVIS_PLAGUE:       return "cigotuvi's plague";
     case BEAM_VILE_CLUTCH:           return "vile clutch";
     case BEAM_ROD_FIRE:              return "fire";
     case BEAM_ROD_COLD:              return "cold";

@@ -789,6 +789,13 @@ Calls forth a plague of scarabs, infesting affected creatures for a duration
 depending on power and causing death scarabs to grow and burst from them upon
 death.
 %%%%
+Cigotuvi's Plague spell
+
+Throws and implatns a plasmid of Cigotuvi's virus, infecting targeted creature
+for a duration depending on power and causing their corpse to become monstrous
+abomination.  
+
+%%%%
 Infusion spell
 
 Infuses the caster's melee attacks with magic, drawing from their reserves of

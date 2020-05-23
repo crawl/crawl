@@ -2463,6 +2463,8 @@ item_def* monster_die(monster& mons, killer_type killer,
             _infestation_create_scarab(&mons);
         if (you.duration[DUR_DEATH_CHANNEL] && was_visible && gives_player_xp)
             _make_derived_undead(&mons, !death_message, false);
+        if (mons.has_ench(ENCH_CIGOTUVIS_PLAGUE))
+            _plague_create_abomination(&mons);
     }
 
     if (!wizard && !submerged && !was_banished)

@@ -172,6 +172,7 @@ enum monster_info_flags
     MB_IDEALISED,
     MB_BOUND_SOUL,
     MB_INFESTATION,
+    MB_CIGOTUVIS_PLAGUE,
     MB_NO_REWARD,
     MB_STILL_WINDS,
     MB_SLOWLY_DYING,

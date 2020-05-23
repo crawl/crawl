@@ -1279,6 +1279,8 @@ static unique_ptr<targeter> _spell_targeter(spell_type spell, int pow,
                                            [](const coord_def& p) -> bool {
                                               return you.pos() != p; });
 
+    //case SPELL_CIGOTUVIS_PLAGUE:
+        
     case SPELL_BORGNJORS_VILE_CLUTCH:
         return make_unique<targeter_smite>(&you, range, 1, 1, false,
                                            [](const coord_def& p) -> bool {
@@ -1905,6 +1907,8 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
 
     case SPELL_INFESTATION:
         return cast_infestation(powc, beam, fail);
+
+    //case SPELL_CIGOTUVIS_PLAGUE:
 
     // Enchantments.
     case SPELL_CONFUSING_TOUCH:

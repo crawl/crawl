@@ -552,6 +552,8 @@ void infestation_death_fineff::fire()
     }
 }
 
+// Cigotuvi's plague is similar for death channel and infestation.
+
 void make_derived_undead_fineff::fire()
 {
     if (monster *undead = create_monster(mg))
