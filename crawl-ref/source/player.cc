@@ -1172,8 +1172,7 @@ static int _player_bonus_regen()
 // Inhibited regeneration: stops regeneration when monsters are visible
 bool regeneration_is_inhibited()
 {
-    if (you.get_mutation_level(MUT_INHIBITED_REGENERATION) == 1
-        || (you.species == SP_VAMPIRE && !you.vampire_alive))
+    if (you.species == SP_VAMPIRE && !you.vampire_alive)
     {
         for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
         {
@@ -1224,6 +1223,20 @@ int player_regen()
 
     if (you.disease || regeneration_is_inhibited() || !player_regenerates_hp())
         rr = 0;
+
+    switch (you.get_mutation_level(MUT_INHIBITED_REGENERATION)) {
+    case 1:
+        rr = rr*2/3;
+        break;
+    case 2:
+        rr /= 3;
+        break;
+    case 3:
+        rr /= 6;
+        break;
+    default:
+        break;
+    }
 
     // Trog's Hand. This circumvents sickness or inhibited regeneration.
     if (you.duration[DUR_TROGS_HAND])

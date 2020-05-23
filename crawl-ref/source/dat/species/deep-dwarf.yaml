@@ -49,7 +49,7 @@ levelup_stats:
   - int
 mutations:
   1:
-    MUT_NO_REGENERATION: 1
+    MUT_INHIBITED_REGENERATION: 3
     MUT_PASSIVE_MAPPING: 1
   9:
     MUT_PASSIVE_MAPPING: 1
