@@ -72,7 +72,7 @@ coord_def prompt_compass_direction()
         if (crawl_state.seen_hups)
         {
             mprf(MSGCH_ERROR, "Targeting interrupted by HUP signal.");
-            return {-1, -1};
+            return {0, 0};
         }
 
 #ifdef USE_TILE
@@ -116,5 +116,5 @@ coord_def prompt_compass_direction()
     tiles.place_cursor(CURSOR_MOUSE, NO_CURSOR);
 #endif
 
-    return cancel ? coord_def(-1, -1) : delta;
+    return cancel ? coord_def(0, 0) : delta;
 }
