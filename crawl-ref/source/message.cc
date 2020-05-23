@@ -1633,8 +1633,11 @@ void msgwin_new_turn()
 
 void msgwin_new_cmd()
 {
+#ifndef USE_TILE_LOCAL
     if (crawl_state.smallterm)
         return;
+#endif
+
     flush_prev_message();
     bool new_turn = (you.num_turns > _last_msg_turn);
     msgwin.new_cmdturn(new_turn);

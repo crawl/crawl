@@ -377,12 +377,12 @@ void crawl_view_geometry::set_player_at(const coord_def &c, bool centre)
 void crawl_view_geometry::init_geometry()
 {
     termsz = coord_def(get_number_of_cols(), get_number_of_lines());
-    const bool smallterm = termsz.x < MIN_COLS || termsz.y < MIN_LINES;
 
     // currently, webtiles has weird interactions with this logic (I think
     // because of extra resize calls). But this is basically safe because
     // dgamelaunch wraps terminal size and prevents smallterm.
 #ifndef USE_TILE_LOCAL
+    const bool smallterm = termsz.x < MIN_COLS || termsz.y < MIN_LINES;
     crawl_state.smallterm = smallterm;
     if (crawl_state.need_save)
     {
