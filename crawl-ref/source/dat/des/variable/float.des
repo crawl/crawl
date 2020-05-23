@@ -8131,8 +8131,7 @@ NSUBST: 7 = 2:H / *:.
 KMONS: _ = torpor snail patrolling
 KFEAT: _ = altar_cheibriados
 KITEM: _ = plate armour good_item ego:ponderousness no_pickup /\
-           crystal plate armour good_item ego:ponderousness no_pickup w:5 /\
-           gold dragon scales good_item ego:ponderousness no_pickup w:5
+           crystal plate armour good_item ego:ponderousness no_pickup w:5
 # general settings
 KMONS: T = torpor snail
 KMONS: D = 0 band
