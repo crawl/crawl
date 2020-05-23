@@ -377,6 +377,23 @@ void crawl_view_geometry::set_player_at(const coord_def &c, bool centre)
 void crawl_view_geometry::init_geometry()
 {
     termsz = coord_def(get_number_of_cols(), get_number_of_lines());
+    const bool smallterm = termsz.x < MIN_COLS || termsz.y < MIN_LINES;
+
+    // currently, webtiles has weird interactions with this logic (I think
+    // because of extra resize calls). But this is basically safe because
+    // dgamelaunch wraps terminal size and prevents smallterm.
+#ifndef USE_TILE_LOCAL
+    crawl_state.smallterm = smallterm;
+    if (crawl_state.need_save)
+    {
+        // if the game has already started, just fake the terminal size.
+        // this can cause weird glitches, would be more elegant to actually
+        // crop this. (But is it worth it?) crawl_state.smallterm should mostly
+        // prevent drawing if this comes into play.
+        termsz.x = max(termsz.x, MIN_COLS);
+        termsz.y = max(termsz.y, MIN_LINES);
+    }
+#endif
     hudsz  = coord_def(HUD_WIDTH, HUD_HEIGHT);
 
     const _inline_layout lay_inline(termsz, hudsz);
@@ -385,7 +402,7 @@ void crawl_view_geometry::init_geometry()
 #ifndef USE_TILE_LOCAL
     if (!crawl_state.need_save)
     {
-        if (termsz.x < MIN_COLS || termsz.y < MIN_LINES)
+        if (smallterm)
         {
             end(1, false, "Terminal too small (%d,%d); need at least (%d,%d)",
                 termsz.x, termsz.y, MIN_COLS, MIN_LINES);
