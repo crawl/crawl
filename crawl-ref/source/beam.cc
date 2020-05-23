@@ -5915,7 +5915,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
     {
         const int dur = (5 + random2avg(ench_power / 2, 2)) * BASELINE_DELAY;
         mon->add_ench(mon_enchant(ENCH_CIGOTUVIS_PLAGUE, 0, &you, dur));
-        if (simple_monster_message(*mon, " is plagued!"))
+        if (simple_monster_message(*mon, " seems sick!"))
             obvious_effect = true;
         return MON_AFFECTED;
     }

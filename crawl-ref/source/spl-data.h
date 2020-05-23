@@ -3845,13 +3845,12 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_CIGOTUVIS_PLAGUE, "Cigotuvi's plague",
     spschool::necromancy | spschool::hexes,
-    spflag::dir_or_target | spflag::not_self | spflag::chaotic,
+    spflag::dir_or_target | spflag::not_self | spflag::chaotic | spflag::needs_tracer,
     5,
     200,
-    -1, -1,
     LOS_RADIUS, LOS_RADIUS,
     4, 0,
-    TILEG_ERROR,
+    TILEG_CIGOTUVIS_PLAGUE,
 },
 
 {

@@ -1931,8 +1931,6 @@ tileidx_t tileidx_monster(const monster_info& mons)
         ch |= TILE_FLAG_BOUND_SOUL;
     if (mons.is(MB_INFESTATION))
         ch |= TILE_FLAG_INFESTED;
-    if (mons.is(MB_CIGOTUVIS_PLAGUE))
-        ch |= TILE_FLAG_INFECTED;
     if (mons.is(MB_CORROSION))
         ch |= TILE_FLAG_CORRODED;
     if (mons.is(MB_SWIFT))

@@ -552,7 +552,20 @@ void infestation_death_fineff::fire()
     }
 }
 
-// Cigotuvi's plague is similar for death channel and infestation.
+// Cigotuvi's plague may be dealt with something similar situations
+// oftenly occured in necromancy skills. Temporarily, empty.
+void cigotuvis_plague_death_fineff::fire()
+{
+    if (monster *mass = create_monster(mgen_data(MONS_MACABRE_MASS,
+                                                   BEH_FRIENDLY, posn,
+                                                   MHITYOU, MG_AUTOFOE)
+                                         .set_summoned(&you, 0,
+                                                       SPELL_CIGOTUVIS_PLAGUE),
+                                         false))
+    {
+        mass->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 6));
+    }
+}
 
 void make_derived_undead_fineff::fire()
 {

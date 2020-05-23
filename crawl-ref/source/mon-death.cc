@@ -1292,6 +1292,7 @@ static void _infestation_create_scarab(monster* mons)
     infestation_death_fineff::schedule(mons->pos(), mons->name(DESC_THE));
 }
 
+
 static void _monster_die_cloud(const monster* mons, bool corpse, bool silent,
                                bool summoned)
 {
@@ -1442,6 +1443,28 @@ static void _make_derived_undead(monster* mons, bool quiet, bool bound_soul)
         make_derived_undead_fineff::schedule(mons->pos(), mg,
                 mons->get_experience_level(), agent_name, message);
 
+    }
+}
+
+static void _cigotuvis_plague_make_abomination(monster* mons)
+{
+    if (MH_NATURAL && mons_can_be_zombified(*mons))
+    {
+        // Use the original monster type as the zombified type here, to
+        // get the proper stats from it.
+        mgen_data mg(MONS_CRAWLING_CORPSE,
+                     BEH_FRIENDLY,
+                     mons->pos(),
+                     // XXX: is MHITYOU really correct here?
+                     crawl_state.game_is_arena() ? MHITNOT : MHITYOU);
+        mg.set_summoned(&you,
+                        0,
+                        SPELL_CIGOTUVIS_PLAGUE);
+        mg.set_base(mons->type);
+
+        mons->add_ench(ENCH_CIGOTUVIS_PLAGUE);
+
+        cigotuvis_plague_death_fineff::schedule(mons->pos());
     }
 }
 
@@ -2464,7 +2487,7 @@ item_def* monster_die(monster& mons, killer_type killer,
         if (you.duration[DUR_DEATH_CHANNEL] && was_visible && gives_player_xp)
             _make_derived_undead(&mons, !death_message, false);
         if (mons.has_ench(ENCH_CIGOTUVIS_PLAGUE))
-            _plague_create_abomination(&mons);
+            _cigotuvis_plague_make_abomination(&mons);
     }
 
     if (!wizard && !submerged && !was_banished)
@@ -2612,6 +2635,12 @@ item_def* monster_die(monster& mons, killer_type killer,
         _give_experience(player_xp, monster_xp, killer, killer_index,
                 pet_kill, was_visible, mons.xp_tracking);
     }
+
+    if (mons.has_ench(ENCH_CIGOTUVIS_PLAGUE))
+    {
+        return nullptr;
+    }
+
     return corpse;
 }
 

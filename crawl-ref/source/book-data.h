@@ -226,6 +226,7 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_BORGNJORS_VILE_CLUTCH,
     SPELL_DEATH_CHANNEL,
     SPELL_SIMULACRUM,
+    SPELL_CIGOTUVIS_PLAGUE,
 },
 
 #if TAG_MAJOR_VERSION == 34

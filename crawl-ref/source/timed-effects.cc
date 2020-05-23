@@ -391,6 +391,23 @@ static void _jiyva_effects(int /*time_delta*/)
         jiyva_eat_offlevel_items();
 }
 
+static void _evolve_by_cigotuvis_plague(int /*time_delta*/)
+{
+    printf("%d\n", you.duration[DUR_CIGOTUVIS_PLAGUE]);
+    if (you.duration[DUR_CIGOTUVIS_PLAGUE])
+        if (one_chance_in(2))
+        {
+            mpr("You feel a genetic drift caused by the virus.");
+            bool evol = one_chance_in(5) ?
+                mutate(RANDOM_BAD_MUTATION, "evolution", false, false, false, false, MUTCLASS_NORMAL) :
+                mutate(random_choose(RANDOM_GOOD_MUTATION, RANDOM_MUTATION),
+                       "evolution", false, false, false, false, MUTCLASS_NORMAL);
+            // interrupt the player only if something actually happened
+            if (evol)
+                more();
+        }
+}
+
 static void _evolve(int /*time_delta*/)
 {
     if (int lev = you.get_mutation_level(MUT_EVOLUTION))
@@ -460,6 +477,7 @@ static struct timed_effect timed_effects[] =
     { _abyss_speed,                  100,   300, false },
     { _jiyva_effects,                100,   300, false },
     { _evolve,                      5000, 15000, false },
+    { _evolve_by_cigotuvis_plague,     1,    10, false },
 #if TAG_MAJOR_VERSION == 34
     { nullptr,                         0,     0, false },
 #endif
@@ -834,7 +852,7 @@ void monster::timeout_enchantments(int levels)
         case ENCH_INNER_FLAME:
         case ENCH_MERFOLK_AVATAR_SONG:
         case ENCH_INFESTATION:
-        case ENCH_CIGOTUVI_PLAGUE:
+        case ENCH_CIGOTUVIS_PLAGUE:
             del_ench(entry.first);
             break;
 

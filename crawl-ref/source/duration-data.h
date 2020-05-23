@@ -190,6 +190,12 @@ static const duration_def duration_data[] =
       {{ "Your unholy channel expires.", []() {
           you.attribute[ATTR_DIVINE_DEATH_CHANNEL] = 0;
       }}, { "Your unholy channel is weakening.", 1 }}, 6},
+    { DUR_CIGOTUVIS_PLAGUE,
+      MAGENTA, "CigoPlg",
+      "cigotuvi's plague", "",
+      "You are infected by Cigotuvi's virus.", D_NO_FLAGS,
+      { "" }
+    },
     { DUR_DIVINE_STAMINA,
       WHITE, "Vit",
       "vitalised", "divine stamina",

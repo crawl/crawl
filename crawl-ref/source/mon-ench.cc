@@ -976,7 +976,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
 
     case ENCH_CIGOTUVIS_PLAGUE:
         if (!quiet)
-            simpe_monster_message(*this, " seems better.");
+            simple_monster_message(*this, " seems better.");
         break;
 
     case ENCH_VILE_CLUTCH:

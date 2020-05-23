@@ -320,6 +320,23 @@ protected:
     unsigned short foe;
 };
 
+class cigotuvis_plague_death_fineff : public final_effect
+{
+public:
+    bool mergeable(const final_effect &) const override { return false; }
+    void fire() override;
+
+    static void schedule(coord_def pos)
+    {
+        final_effect::schedule(new cigotuvis_plague_death_fineff(pos));
+    }
+protected:
+    cigotuvis_plague_death_fineff(coord_def pos)
+        : final_effect(0, 0, pos)
+    {
+    }
+};
+
 class infestation_death_fineff : public final_effect
 {
 public:
