@@ -54,6 +54,8 @@ public:
     void _assert_validity() const
     {
 #ifndef USE_TILE_LOCAL
+        ASSERT(viewp.x >= 1);
+        ASSERT(viewp.y >= 1);
         // Check that all the panes fit in the view.
         ASSERT((viewp+viewsz - termp).x <= termsz.x);
         ASSERT((viewp+viewsz - termp).y <= termsz.y);
@@ -68,7 +70,7 @@ public:
         ASSERT((mlistp+mlistsz-termp).y <= termsz.y);
 #endif
     }
- public:
+public:
     const coord_def termp, termsz;
     coord_def viewp, viewsz;
     coord_def hudp;
@@ -407,6 +409,7 @@ void crawl_view_geometry::init_geometry()
     {
         winner = &lay_mlist;
     }
+    ASSERT(winner->valid);
 
     msgp    = winner->msgp;
     msgsz   = winner->msgsz;

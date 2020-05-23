@@ -385,6 +385,8 @@ void cgotoxy(int x, int y, GotoRegion region)
 #ifdef ASSERTS
     if (x < 1 || y < 1 || x > sz.x || y > sz.y)
     {
+        dprf("screen write out of bounds: (%d,%d) into (%d,%d)", x, y,
+            sz.x, sz.y);
         save_game(false); // should be safe
         die("screen write out of bounds: (%d,%d) into (%d,%d)", x, y,
             sz.x, sz.y);
