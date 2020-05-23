@@ -38,6 +38,7 @@
 #include "tiles-build-specific.h"
 #include "unicode.h"
 #include "view.h"
+#include "ui.h"
 
 static struct termios def_term;
 static struct termios game_term;
@@ -731,6 +732,9 @@ void console_startup()
     crawl_view.init_geometry();
 
     set_mouse_enabled(false);
+
+    // TODO: how does this relate to what tiles.resize does?
+    ui::resize(crawl_view.termsz.x, crawl_view.termsz.y);
 
 #ifdef USE_TILE_WEB
     tiles.resize();
