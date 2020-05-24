@@ -427,6 +427,7 @@ void crawl_view_geometry::init_geometry()
         winner = &lay_mlist;
     }
 #ifndef USE_TILE_LOCAL
+    // I don't know why this crashes on local tiles
     ASSERT(winner->valid);
 #endif
 
