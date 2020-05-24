@@ -2,7 +2,7 @@ enum: SP_TWO_HEADED_OGRE
 monster: MONS_TWO_HEADED_OGRE
 name: Two Headed Ogre
 adjective: Ogreish
-difficulty: Intermediate
+difficulty: Simple
 difficulty_priority: 20
 aptitudes:
   xp: 0
