@@ -1487,7 +1487,7 @@ aff_type targeter_explosive_bolt::is_affected(coord_def loc)
     return on_path ? AFF_TRACER : AFF_NO;
 }
 
-targeter_cone::targeter_cone(const actor *act, int r)
+targeter_cone::targeter_cone(const actor *act, int r, double arc_)
 {
     ASSERT(act);
     agent = act;
@@ -1495,6 +1495,7 @@ targeter_cone::targeter_cone(const actor *act, int r)
     aim = origin;
     ASSERT_RANGE(r, 1 + 1, you.current_vision + 1);
     range = r;
+    this->arc = arc_;
 }
 
 bool targeter_cone::valid_aim(coord_def a)
@@ -1528,7 +1529,6 @@ bool targeter_cone::set_aim(coord_def a)
         return false;
 
     const coord_def delta = a - origin;
-    const double arc = PI/4;
     coord_def l, r;
     l.x = origin.x + (cos(-arc) * delta.x - sin(-arc) * delta.y + 0.5);
     l.y = origin.y + (sin(-arc) * delta.x + cos(-arc) * delta.y + 0.5);

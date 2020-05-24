@@ -114,33 +114,33 @@ map<pakellas_blueprint_type, pakellas_blueprint_struct> blueprint_list =
                                 1,   
                                 100,
                                 {},
-                                {BLUEPRINT_BOME})},
+                                {BLUEPRINT_BOME, BLUEPRINT_SPREAD})},
     { BLUEPRINT_BOME, _prerequire2_blueprint("Explosion", "3x3 explodes at the landing site. Increase Cost 1", "bomb+",
                                 1,
                                 1,   
                                 100,
                                 {},
-                                {BLUEPRINT_PENTAN})},
+                                {BLUEPRINT_PENTAN, BLUEPRINT_SPREAD})},
     { BLUEPRINT_ELEMENTAL_FIRE, _prerequire_blueprint("Fire Enchantment", "Turn 50% into a fire damage. Damage 1.2x increase.", "fire",
                                 100,
                                 {}, 
-                                {BLUEPRINT_ELEMENTAL_COLD, BLUEPRINT_ELEMENTAL_ELEC, BLUEPRINT_ELEMENTAL_EARTH, BLUEPRINT_CHAOS})},
+                                {BLUEPRINT_ELEMENTAL_COLD, BLUEPRINT_ELEMENTAL_ELEC, BLUEPRINT_ELEMENTAL_EARTH, BLUEPRINT_CHAOS, BLUEPRINT_ELEMENTAL_POISON})},
     { BLUEPRINT_ELEMENTAL_COLD, _prerequire_blueprint("Cold Enchantment", "Turn 50% into a cold damage. Damage 1.2x increase.", "cold",
                                 100,
                                 {},
-                                {BLUEPRINT_ELEMENTAL_FIRE, BLUEPRINT_ELEMENTAL_ELEC, BLUEPRINT_ELEMENTAL_EARTH, BLUEPRINT_CHAOS})},
+                                {BLUEPRINT_ELEMENTAL_FIRE, BLUEPRINT_ELEMENTAL_ELEC, BLUEPRINT_ELEMENTAL_EARTH, BLUEPRINT_CHAOS, BLUEPRINT_ELEMENTAL_POISON})},
     { BLUEPRINT_ELEMENTAL_ELEC, _prerequire_blueprint("Elec Enchantment", "Turn 50% into a elec damage. Damage 1.2x increase.", "elec",
                                 100,
                                 {},
-                                {BLUEPRINT_ELEMENTAL_FIRE, BLUEPRINT_ELEMENTAL_COLD, BLUEPRINT_ELEMENTAL_EARTH, BLUEPRINT_CHAOS})},
+                                {BLUEPRINT_ELEMENTAL_FIRE, BLUEPRINT_ELEMENTAL_COLD, BLUEPRINT_ELEMENTAL_EARTH, BLUEPRINT_CHAOS, BLUEPRINT_ELEMENTAL_POISON})},
     { BLUEPRINT_ELEMENTAL_EARTH, _prerequire_blueprint("Earth Enchantment", "Damage 1.1x increase.", "earth",
                                 100,
                                 {},
-                                {BLUEPRINT_ELEMENTAL_FIRE, BLUEPRINT_ELEMENTAL_COLD, BLUEPRINT_ELEMENTAL_ELEC, BLUEPRINT_CHAOS})},
+                                {BLUEPRINT_ELEMENTAL_FIRE, BLUEPRINT_ELEMENTAL_COLD, BLUEPRINT_ELEMENTAL_ELEC, BLUEPRINT_CHAOS, BLUEPRINT_ELEMENTAL_POISON})},
     { BLUEPRINT_PERFECT_SHOT, _base_blueprint("Deadly Accuracy", "Missiles hit 100%.", "acc+" )},
     { BLUEPRINT_CLOUD, _prerequire_blueprint("Cloud Trail", "Missile leaves a cloud trail.", "cloud",
                                 100,
-                                {BLUEPRINT_ELEMENTAL_FIRE, BLUEPRINT_ELEMENTAL_COLD, BLUEPRINT_ELEMENTAL_ELEC, BLUEPRINT_CHAOS},
+                                {BLUEPRINT_ELEMENTAL_FIRE, BLUEPRINT_ELEMENTAL_COLD, BLUEPRINT_ELEMENTAL_ELEC, BLUEPRINT_CHAOS, BLUEPRINT_ELEMENTAL_POISON},
                                 {})},
     { BLUEPRINT_DEBUF_SLOW, _base_blueprint("Slow", "Slow target with magic resistance check", "slow" )},
     { BLUEPRINT_DEBUF_BLIND, _base_blueprint("Blind", "Blind target with Hit Dice check.", "blind" )},
@@ -160,11 +160,29 @@ map<pakellas_blueprint_type, pakellas_blueprint_struct> blueprint_list =
                                 100,
                                 {BLUEPRINT_ELEMENTAL_ELEC},
                                 {})},
-    { BLUEPRINT_DEFORM, _base_blueprint("Radiation", "deformed to the hit enemy.", "rad")},
+    { BLUEPRINT_DEFORM, _base2_blueprint("Radiation", "deformed to the hit enemy, Increase Cost 1", "rad",
+                                1,
+                                1,
+                                100)},
     { BLUEPRINT_CHAOS, _prerequire_blueprint("Chaos", "Random effect to the hit enemy.  Damage 1.3x increase", "chaos",
                                 50,
                                 {},
-                                {BLUEPRINT_ELEMENTAL_FIRE, BLUEPRINT_ELEMENTAL_COLD, BLUEPRINT_ELEMENTAL_ELEC, BLUEPRINT_ELEMENTAL_EARTH})},
+                                {BLUEPRINT_ELEMENTAL_FIRE, BLUEPRINT_ELEMENTAL_COLD, BLUEPRINT_ELEMENTAL_ELEC, BLUEPRINT_ELEMENTAL_EARTH, BLUEPRINT_ELEMENTAL_POISON})},
+    { BLUEPRINT_SPREAD, _prerequire2_blueprint("Scatter", "Cone-shaped area. Range 1 reduced, Increase Cost 1", "cone",
+                                1,
+                                1,
+                                100,
+                                {},
+                                {BLUEPRINT_BOME, BLUEPRINT_PENTAN})},
+    { BLUEPRINT_ELEMENTAL_POISON, _prerequire_blueprint("Poison Enchantment", "Turn 50% into a poison damage. Damage 1.2x increase.", "poison",
+                                100,
+                                {},
+                                {BLUEPRINT_ELEMENTAL_FIRE, BLUEPRINT_ELEMENTAL_COLD, BLUEPRINT_ELEMENTAL_ELEC, BLUEPRINT_ELEMENTAL_EARTH, BLUEPRINT_CHAOS})},
+    { BLUEPRINT_CURARE, _prerequire_blueprint("Curare", "Poison causes slow.", "curare",
+                                0,
+                                {BLUEPRINT_ELEMENTAL_POISON},
+                                {})},
+                                
     //SUMMON
     { BLUEPRINT_SIZEUP, _base2_blueprint("Size up", "Max hp increased by 30 % and size increased.", "size+",
                                 3,
@@ -228,6 +246,13 @@ map<pakellas_blueprint_type, pakellas_blueprint_struct> blueprint_list =
                                 1,
                                 0,
                                 100)},
+    { BLUEPRINT_LEGION, _prerequire2_blueprint("Legion", "Summons two weak golems at a time. Increase Cost 1|Summons three weak golems at a time. Increase Cost 1", "legion+",
+                                2,
+                                1,
+                                100,
+                                {},
+                                {}) },
+
                                                                        
     //ASSIST
     { BLUEPRINT_STATUP_STR, _base2_blueprint("Buff Unit-Str", "When cast Buff Unit, increase str by 5|When Cast buff unit, increase str by 10|When Cast buff unit, increase str by 15", "str+",
@@ -372,7 +397,7 @@ map<pakellas_blueprint_type, pakellas_blueprint_struct> blueprint_list =
                                 {BLUEPRINT_BATTLEMAGE}) },
     { BLUEPRINT_BATTLEMAGE, _prerequire_blueprint("Battle Mage", "Increases the damage the rod deals in melee combat.", "melee+",
                                 100,
-                                {BLUEPRINT_ELEMENTAL_FIRE, BLUEPRINT_ELEMENTAL_COLD, BLUEPRINT_ELEMENTAL_ELEC, BLUEPRINT_ELEMENTAL_EARTH, BLUEPRINT_CHAOS,
+                                {BLUEPRINT_ELEMENTAL_FIRE, BLUEPRINT_ELEMENTAL_COLD, BLUEPRINT_ELEMENTAL_ELEC, BLUEPRINT_ELEMENTAL_EARTH, BLUEPRINT_CHAOS, BLUEPRINT_ELEMENTAL_POISON,
                                 BLUEPRINT_FIRE_SUMMON, BLUEPRINT_COLD_SUMMON, BLUEPRINT_ELEC_SUMMON, BLUEPRINT_POISON_SUMMON, BLUEPRINT_CHOATIC_SUMMON, BLUEPRINT_EARTH_SUMMON},
                                 {BLUEPRINT_LIGHT})},
     { BLUEPRINT_MORE_ENCHANT, _base2_blueprint("More Enchant", "Increase 1 enchant, Increase 1 rod capacity.", "statup",
@@ -487,7 +512,7 @@ bool pakellas_prototype()
     set_ident_flags(mitm[thing_created], ISFLAG_KNOW_PLUSES);
     simple_god_message(" grants you a gift!");
 
-    if (you.props[PAKELLAS_PROTOTYPE].get_int() == 3) {
+    if (you.props[PAKELLAS_PROTOTYPE].get_int() == 3 || you.species == SP_FELID) {
         CrawlVector& available_sacrifices = you.props[AVAILABLE_ROD_UPGRADE_KEY].get_vector();
         available_sacrifices.push_back(BLUEPRINT_LIGHT);
     }
@@ -726,6 +751,7 @@ bool pakellas_upgrade()
 void pakellas_offer_new_upgrade()
 {
     ASSERT(you.props.exists(PAKELLAS_UPGRADE_ON));
+    you.props[PAKELLAS_UPGRADE_ON].get_vector().clear();
 
     vector<pair<pakellas_blueprint_type, int>> possible_upgrade = _get_possible_upgrade();
     CrawlVector& available_upgrade = you.props[PAKELLAS_UPGRADE_ON].get_vector();
@@ -824,8 +850,9 @@ int get_blueprint_element()
             case BLUEPRINT_CHAOS:
             case BLUEPRINT_CHOATIC_SUMMON:
                 return BLUEPRINT_CHAOS;
+            case BLUEPRINT_ELEMENTAL_POISON:
             case BLUEPRINT_POISON_SUMMON:
-                return BLUEPRINT_POISON_SUMMON;
+                return BLUEPRINT_ELEMENTAL_POISON;
             default:
                 break;
             }
@@ -1010,6 +1037,10 @@ spell_type evoke_support_pakellas_rod()
 
 spret cast_pakellas_selfbuff(int powc, bolt&, bool fail)
 {
+    if (you.religion != GOD_PAKELLAS) {
+        mprf("You cannot use it if you do not believe pakellas.");
+        return spret::success;
+    }
     fail_check();
     mpr("Pakellas buff is in your body.");
     int time_ = 7 + roll_dice(3, powc) / 2;
@@ -1085,6 +1116,10 @@ void pakellas_remove_self_buff()
 
 spret cast_pakellas_blinktele(int, bolt&, bool fail)
 {
+    if (you.religion != GOD_PAKELLAS) {
+        mprf("You cannot use it if you do not believe pakellas.");
+        return spret::success;
+    }
     if (you.no_tele(false, false, true))
         return fail ? spret::fail : spret::success;
 
@@ -1105,6 +1140,10 @@ spret cast_pakellas_blinktele(int, bolt&, bool fail)
 }
 spret cast_pakellas_swap_bolt(int powc, bolt& beam, bool fail)
 {
+    if (you.religion != GOD_PAKELLAS) {
+        mprf("You cannot use it if you do not believe pakellas.");
+        return spret::success;
+    }
     bolt tracer = beam;
     if (!player_tracer(ZAP_RANDOM_BOLT_TRACER, 200, tracer))
         return spret::abort;
@@ -1138,6 +1177,10 @@ spret cast_pakellas_swap_bolt(int powc, bolt& beam, bool fail)
 }
 spret cast_pakellas_controll_blink(int, bolt&, bool fail)
 {
+    if (you.religion != GOD_PAKELLAS) {
+        mprf("You cannot use it if you do not believe pakellas.");
+        return spret::success;
+    }
     if (you.no_tele(true, true, true))
     {
         canned_msg(MSG_STRANGE_STASIS);
@@ -1169,6 +1212,10 @@ spret cast_pakellas_controll_blink(int, bolt&, bool fail)
 }
 spret cast_pakellas_barriar(int powc, bolt& beam, bool fail)
 {
+    if (you.religion != GOD_PAKELLAS) {
+        mprf("You cannot use it if you do not believe pakellas.");
+        return spret::success;
+    }
     const int dur = 2 + 2 * is_blueprint_exist(BLUEPRINT_BARRICADE_TIME);
 
     if (grid_distance(beam.target, you.pos()) > spell_range(SPELL_PAKELLAS_ROD_BARRIAR,
@@ -1222,6 +1269,10 @@ spret cast_pakellas_barriar(int powc, bolt& beam, bool fail)
 }
 spret cast_pakellas_regen(int powc, bolt&, bool fail)
 {
+    if (you.religion != GOD_PAKELLAS) {
+        mprf("You cannot use it if you do not believe pakellas.");
+        return spret::success;
+    }
     fail_check();
     if (is_blueprint_exist(BLUEPRINT_LARGE_HEAL) || is_blueprint_exist(BLUEPRINT_SMALL_HEAL)) {
         int heal_pow = 1;
@@ -1264,6 +1315,10 @@ spret cast_pakellas_regen(int powc, bolt&, bool fail)
 }
 spret cast_pakellas_cloud(int powc, bolt& beam, bool fail)
 {
+    if (you.religion != GOD_PAKELLAS) {
+        mprf("You cannot use it if you do not believe pakellas.");
+        return spret::success;
+    }
     if (env.level_state & LSTATE_STILL_WINDS)
     {
         mpr("The air is too still to form clouds.");

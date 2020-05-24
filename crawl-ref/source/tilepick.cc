@@ -3555,6 +3555,8 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_NEMELEX_DRAW_DESTRUCTION;
     case ABIL_NEMELEX_DRAW_SUMMONING:
         return TILEG_ABILITY_NEMELEX_DRAW_SUMMONING;
+    case ABIL_NEMELEX_DRAW_WONDER:
+        return TILEG_ABILITY_NEMELEX_DRAW_WONDER;
     case ABIL_NEMELEX_DRAW_STACK:
         return TILEG_ABILITY_NEMELEX_DRAW_STACK;
     // Beogh

@@ -1297,6 +1297,10 @@ static unique_ptr<targeter> _spell_targeter(spell_type spell, int pow,
         return make_unique<targeter_wallmelting>(&you, range);
     case SPELL_PAKELLAS_ROD:
     {
+        if (is_blueprint_exist(BLUEPRINT_SPREAD)) {
+            return make_unique<targeter_shotgun>(&you, 11, range);
+        }
+
         if (is_blueprint_exist(BLUEPRINT_BOME)) {
             return make_unique<targeter_beam>(&you, range, ZAP_EXPLOSION_TRACER, pow,
                 1, 1);
@@ -2018,7 +2022,7 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
 
     // Escape spells.
     case SPELL_BLINK:
-        return cast_blink(fail);
+        return cast_blink(god != GOD_XOM, fail);
 
     case SPELL_CONTROLLED_BLINK:
         return cast_controlled_blink(fail);

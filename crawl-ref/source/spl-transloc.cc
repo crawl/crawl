@@ -52,6 +52,7 @@
 #include "viewmap.h"
 #include "xom.h"
 
+static void _quadrant_blink(coord_def dir, int pow);
 /**
  * Place a cloud of translocational energy at a player's previous location,
  * to make it easier for players to tell what just happened.
@@ -143,6 +144,76 @@ void uncontrolled_blink(bool override_stasis)
     move_player_to_grid(target, false);
     _place_tloc_cloud(origin);
 }
+
+/**
+ * Attempt to blink the player to a random nearby tile, in a direction of
+ * the player's choosing.
+ *
+ * @param pow           Determines the number of iterations to run for (1-21),
+ *                      which increases the odds of actually getting a blink in
+ *                      the right direction.
+ * @param fail          Whether this came from a miscast spell (& should
+ *                      therefore fail after selecting a direction)
+ * @param safe_cancel   Whether it's OK to let the player cancel the control
+ *                      of the blink (or whether there should be a prompt -
+ *                      for e.g. cblink under the ORB, in which a recast could
+ *                      turn into random blink instead)
+ * @param end_ctele     Whether to end cTele.
+ * @return              Whether the blink succeed, aborted, or was miscast.
+ */
+spret semicontrolled_blink(int pow, bool fail, bool safe_cancel,
+    bool end_ctele)
+{
+    dist bmove;
+    direction_chooser_args args;
+    args.restricts = DIR_DIR;
+    args.mode = TARG_ANY;
+
+    while (true)
+    {
+        mprf(MSGCH_PROMPT, "Which direction? [ESC to cancel]");
+        direction(bmove, args);
+
+        if (crawl_state.seen_hups)
+        {
+            mpr("Cancelling blink due to HUP.");
+            return spret::abort;
+        }
+
+        if (bmove.isValid && !bmove.delta.origin())
+            break;
+
+        if (safe_cancel
+            || yesno("Are you sure you want to cancel this blink?", false, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return spret::abort;
+        }
+    }
+
+    fail_check();
+
+    if (you.no_tele(true, true, true))
+    {
+        canned_msg(MSG_STRANGE_STASIS);
+        return spret::success; // of a sort
+    }
+
+    if (!you.attempt_escape(2)) // prints its own messages
+        return spret::success; // of a sort
+
+    _quadrant_blink(bmove.delta, pow);
+    // Controlled blink causes glowing.
+    contaminate_player(1000, true);
+    // End teleport control if this was a random blink upgraded by cTele.
+    if (end_ctele && you.duration[DUR_CONTROL_TELEPORT])
+    {
+        mprf(MSGCH_DURATION, "You feel uncertain.");
+        you.duration[DUR_CONTROL_TELEPORT] = 0;
+    }
+    return spret::success;
+}
+
 
 /**
  * Let the player choose a destination for their controlled blink or similar
@@ -416,15 +487,29 @@ spret controlled_blink(bool fail, bool safe_cancel, int range)
 /**
  * Cast the player spell Blink.
  *
+ * @param allow_control     Whether cTele can be used to transform the blink
+ *                          into a semicontrolled blink. (False for e.g. Xom.)
  * @param fail              Whether the player miscast the spell.
  * @return                  Whether the spell was successfully cast, aborted,
  *                          or miscast.
  */
-spret cast_blink(bool fail)
+spret cast_blink(bool allow_control, bool fail)
 {
     // effects that cast the spell through the player, I guess (e.g. xom)
     if (you.no_tele(false, false, true))
         return fail ? spret::fail : spret::success; // probably always SUCCESS
+
+    if (allow_control && you.duration[DUR_CONTROL_TELEPORT])
+    {
+        if (!you.confused())
+            return semicontrolled_blink(100, fail);
+
+        // can't put this in allow_control_teleport(), since that's called for
+        // status lights, etc (and we don't want those to flip on and off
+        // whenever you're confused... probably?)
+        mpr("You're too confused to control your translocation!");
+        // anyway, fallthrough to random blink
+    }
 
     fail_check();
     uncontrolled_blink();
@@ -487,6 +572,12 @@ void you_teleport()
 
         int teleport_delay = 3 + random2(3);
 
+        // Doesn't care whether the cTele will actually work or not.
+        if (you.duration[DUR_CONTROL_TELEPORT])
+        {
+            mpr("You feel your translocation being delayed.");
+            teleport_delay += 1 + random2(3);
+        }
         if (player_in_branch(BRANCH_ABYSS))
         {
             mpr("You feel the power of the Abyss delaying your translocation!");
@@ -555,9 +646,17 @@ static void _handle_teleport_update(bool large_change, const coord_def old_pos)
 #endif
 }
 
-static bool _teleport_player(bool wizard_tele, bool teleportitis,
+static bool _teleport_player(bool allow_control, bool wizard_tele, bool teleportitis,
                              string reason="")
 {
+    bool is_controlled = (allow_control && !you.confused()
+        && you.duration[DUR_CONTROL_TELEPORT]
+        && !you.berserk());
+
+    // All wizard teleports are automatically controlled.
+    if (wizard_tele)
+        is_controlled = true;
+
     if (!wizard_tele && !teleportitis
         && (crawl_state.game_is_sprint() || you.no_tele())
             && !player_in_branch(BRANCH_ABYSS))
@@ -597,8 +696,16 @@ static bool _teleport_player(bool wizard_tele, bool teleportitis,
     const coord_def old_pos = you.pos();
     bool      large_change  = false;
 
-    if (wizard_tele)
-    {
+    if (is_controlled)
+    {        
+        // Only have the messages and the more prompt for non-wizard.
+        if (!wizard_tele)
+        {
+            mpr("You may choose your destination (press '.' or delete to select).");
+            mpr("Expect minor deviation.");
+            more();
+        }
+
         while (true)
         {
             level_pos lpos;
@@ -612,29 +719,109 @@ static bool _teleport_player(bool wizard_tele, bool teleportitis,
             {
                 mprf(MSGCH_ERROR, "Controlled teleport interrupted by HUP signal, "
                                   "cancelling teleport.");
+                if (!wizard_tele)
+                    contaminate_player(1000, true);
                 return false;
             }
 
             dprf("Target square (%d,%d)", pos.x, pos.y);
 
             if (!chose || pos == you.pos())
+            {
+                if (!wizard_tele)
+                {
+                    if (!yesno("Are you sure you want to cancel this teleport?",
+                        true, 'n'))
+                    {
+                        continue;
+                    }
+                }
+                if (!wizard_tele)
+                    contaminate_player(1000, true);
                 return false;
+            }
+            monster* beholder = you.get_beholder(pos);
+            if (beholder && !wizard_tele)
+            {
+                mprf("You cannot teleport away from %s!",
+                    beholder->name(DESC_THE, true).c_str());
+                mpr("Choose another destination (press '.' or delete to select).");
+                more();
+                continue;
+            }
 
+            monster* fearmonger = you.get_fearmonger(pos);
+            if (fearmonger && !wizard_tele)
+            {
+                mprf("You cannot teleport closer to %s!",
+                    fearmonger->name(DESC_THE, true).c_str());
+                mpr("Choose another destination (press '.' or delete to select).");
+                more();
+                continue;
+            }
             break;
         }
 
-        if (!you.see_cell(pos))
-            large_change = true;
-
-        if (_cell_vetoes_teleport(pos, true, wizard_tele))
+        // Don't randomly walk wizard teleports.
+        if (!wizard_tele)
         {
-            mprf(MSGCH_WARN, "Even you can't go there right now. Sorry!");
-            return false;
+            pos.x += random2(3) - 1;
+            pos.y += random2(3) - 1;
+
+            if (one_chance_in(4))
+            {
+                pos.x += random2(3) - 1;
+                pos.y += random2(3) - 1;
+            }
+            dprf("Scattered target square (%d, %d)", pos.x, pos.y);
         }
-        else
-            move_player_to_grid(pos, false);
+
+        if (!in_bounds(pos))
+        {
+            mpr("Nearby solid objects disrupt your rematerialisation!");
+            is_controlled = false;
+        }
+
+        if (is_controlled)
+        {
+            if (!you.see_cell(pos))
+                large_change = true;
+
+            // Merfolk should be able to control-tele into deep water.
+            if (_cell_vetoes_teleport(pos, true, wizard_tele))
+            {
+                if (wizard_tele)
+                {
+                    mprf(MSGCH_WARN, "Even you can't go there right now. Sorry!");
+                    return false;
+                }
+
+                dprf("Target square (%d, %d) vetoed, now random teleport.", pos.x, pos.y);
+                is_controlled = false;
+                large_change = false;
+            }
+            else
+            {
+                // Leave a purple cloud.
+                if (!wizard_tele)
+                    _place_tloc_cloud(old_pos);
+
+                move_player_to_grid(pos, false);
+
+                // Controlling teleport contaminates the player. - bwr
+                if (!wizard_tele)
+                    contaminate_player(1000, true);
+            }
+            // End teleport control.
+            if (you.duration[DUR_CONTROL_TELEPORT])
+            {
+                mprf(MSGCH_DURATION, "You feel uncertain.");
+                you.duration[DUR_CONTROL_TELEPORT] = 0;
+            }
+        }
     }
-    else
+
+    if (!is_controlled)
     {
         coord_def newpos;
         int tries = 500;
@@ -699,7 +886,7 @@ static bool _teleport_player(bool wizard_tele, bool teleportitis,
     }
 
     _handle_teleport_update(large_change, old_pos);
-    return !wizard_tele;
+    return !is_controlled;
 }
 
 bool you_teleport_to(const coord_def where_to, bool move_monsters)
@@ -769,14 +956,17 @@ bool you_teleport_to(const coord_def where_to, bool move_monsters)
     return true;
 }
 
-void you_teleport_now(bool wizard_tele, bool teleportitis, string reason)
+void you_teleport_now(bool allow_control, bool wizard_tele, bool teleportitis, string reason)
 {
-    const bool randtele = _teleport_player(wizard_tele, teleportitis, reason);
+    const bool randtele = _teleport_player(allow_control, wizard_tele,
+        teleportitis, reason);
 
-    // Xom is amused by teleports that land you in a dangerous place, unless
-    // the player is in the Abyss and teleported to escape from all the
-    // monsters chasing him/her, since in that case the new dangerous area is
-    // almost certainly *less* dangerous than the old dangerous area.
+    // Xom is amused by uncontrolled teleports that land you in a
+    // dangerous place, unless the player is in the Abyss and
+    // teleported to escape from all the monsters chasing him/her,
+    // since in that case the new dangerous area is almost certainly
+    // *less* dangerous than the old dangerous area.
+    // Teleporting in a labyrinth is also funny, more so for non-minotaurs.
     if (randtele && !player_in_branch(BRANCH_ABYSS)
         && player_in_a_dangerous_place())
     {
@@ -910,6 +1100,58 @@ spret cast_apportation(int pow, bolt& beam, bool fail)
     origin_set(new_spot);
 
     return spret::success;
+}
+
+/**
+ * Attempt to blink in the given direction.
+ *
+ * @param dir   A direction to blink in.
+ * @param pow   Determines number of iterations.
+ *              (pow^2 / 500 + 1, where pow is 0-100; so 1-21 iterations)
+ */
+static void _quadrant_blink(coord_def dir, int pow)
+{
+    pow = min(100, max(0, pow));
+
+    const int dist = random2(6) + 2;  // 2-7
+
+    // This is where you would *like* to go.
+    const coord_def base = you.pos() + dir * dist;
+
+    // This can take a while if pow is high and there's lots of translucent
+    // walls nearby.
+    coord_def target;
+    bool found = false;
+    for (int i = 0; i < pow * pow / 500 + 1; ++i)
+    {
+        // Find a space near our base point...
+        // First try to find a random square not adjacent to the basepoint,
+        // then one adjacent if that fails.
+        if (!random_near_space(&you, base, target)
+            && !random_near_space(&you, base, target, true))
+        {
+
+            continue; // could probably 'break;' random_near_space uses quite
+                      // a lot of iterations...
+        }
+
+        // ... which is close enough, but also far enough from us.
+        if (grid_distance(base, target) > 3 || grid_distance(you.pos(), target) < 3)
+            continue;
+
+        if (!you.see_cell_no_trans(target))
+            continue;
+
+        found = true;
+        break;
+    }
+
+    if (!found)
+        return uncontrolled_blink();
+
+    coord_def origin = you.pos();
+    move_player_to_grid(target, false);
+    _place_tloc_cloud(origin);
 }
 
 spret cast_golubrias_passage(const coord_def& where, bool fail)

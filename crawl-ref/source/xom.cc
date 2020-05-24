@@ -2891,7 +2891,7 @@ static void _handle_accidental_death(const int orig_hp,
     }
 
     if (is_feat_dangerous(feat) && !crawl_state.game_is_sprint())
-        you_teleport_now();
+        you_teleport_now(false);
 }
 
 /**
@@ -3542,7 +3542,7 @@ static void _xom_good_teleport(int /*sever*/)
     do
     {
         count++;
-        you_teleport_now();
+        you_teleport_now(false);
         more();
         if (one_chance_in(10) || count >= 7 + random2(5))
             break;
@@ -3572,7 +3572,7 @@ static void _xom_bad_teleport(int /*sever*/)
     int count = 0;
     do
     {
-        you_teleport_now();
+        you_teleport_now(false);
         more();
         if (count++ >= 7 + random2(5))
             break;

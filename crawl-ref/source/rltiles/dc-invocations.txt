@@ -58,6 +58,7 @@ makhleb_minor_destruction ABILITY_MAKHLEB_MINOR_DESTRUCTION
 nemelex_draw_destruction ABILITY_NEMELEX_DRAW_DESTRUCTION
 nemelex_draw_escape ABILITY_NEMELEX_DRAW_ESCAPE
 nemelex_draw_summoning ABILITY_NEMELEX_DRAW_SUMMONING
+nemelex_draw_wonder ABILITY_NEMELEX_DRAW_WONDER
 nemelex_deal_four ABILITY_NEMELEX_DEAL_FOUR
 nemelex_stack_five ABILITY_NEMELEX_STACK_FIVE
 nemelex_triple_draw ABILITY_NEMELEX_TRIPLE_DRAW
@@ -77,6 +78,10 @@ nemelex_deck NEMELEX_DECK
 %start
 %compose nemelex_deck
 %compose i-deck_summoning
+%finish
+%start
+%compose nemelex_deck
+%compose i-deck_wonder
 %finish
 %start
 %compose nemelex_deck

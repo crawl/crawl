@@ -504,17 +504,17 @@ static bool _boosted_mp()
 
 static bool _boosted_ac()
 {
-    return you.armour_class() > you.base_ac(1);
+    return you.duration[DUR_MAGIC_ARMOUR] || you.armour_class() > you.base_ac(1);
 }
 
 static bool _boosted_ev()
 {
-    return you.duration[DUR_AGILITY] || acrobat_boost_active() || (you.duration[DUR_PAKELLAS_DURATION] && you.attribute[ATTR_PAKELLAS_EV]);
+    return you.duration[DUR_PHASE_SHIFT] || you.duration[DUR_AGILITY] || acrobat_boost_active() || (you.duration[DUR_PAKELLAS_DURATION] && you.attribute[ATTR_PAKELLAS_EV]);
 }
 
 static bool _boosted_sh()
 {
-    return you.duration[DUR_DIVINE_SHIELD]
+    return you.duration[DUR_MAGIC_SHIELD] || you.duration[DUR_DIVINE_SHIELD]
            || qazlal_sh_boost() > 0;
 }
 

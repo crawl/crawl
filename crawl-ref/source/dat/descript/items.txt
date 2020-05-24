@@ -382,6 +382,11 @@ deck of summoning
 
 A deck of magical cards, depicting a range of weird and wonderful creatures.
 %%%%
+deck of wonders
+
+A deck of highly mysterious and magical cards, which can alter the drawer's
+physical and mental condition, for better or worse.
+%%%%
 demon blade
 
 A terrible weapon, forged in the fires of Hell.

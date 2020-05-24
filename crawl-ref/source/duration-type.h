@@ -44,9 +44,7 @@ enum duration_type
     DUR_CONTROLLED_FLIGHT,
 #endif
     DUR_TELEPORT,
-#if TAG_MAJOR_VERSION == 34
     DUR_CONTROL_TELEPORT,
-#endif
     DUR_BREATH_WEAPON,
     DUR_TRANSFORMATION,
     DUR_DEATH_CHANNEL,
@@ -65,8 +63,8 @@ enum duration_type
     DUR_MAGIC_ARMOUR,
 #endif
     DUR_GOURMAND,
-#if TAG_MAJOR_VERSION == 34
     DUR_BARGAIN,
+#if TAG_MAJOR_VERSION == 34
     DUR_INSULATION,
 #endif
     DUR_RESISTANCE,

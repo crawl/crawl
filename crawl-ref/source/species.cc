@@ -493,6 +493,11 @@ void change_species_to(species_type sp)
     // Sanitize skills.
     fixup_skills();
 
+    // Could delete only inappropriate ones, but meh.
+    you.sage_skills.clear();
+    you.sage_xp.clear();
+    you.sage_bonus.clear();
+
     calc_hp();
     calc_mp();
 

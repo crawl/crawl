@@ -195,7 +195,7 @@ static const struct spell_desc spelldata[] =
     spschool::charms,
     spflag::dir_or_target | spflag::helpful | spflag::hasty
         | spflag::selfench | spflag::utility,
-    6,
+    7,
     200,
     LOS_RADIUS, LOS_RADIUS,
     5, 0,

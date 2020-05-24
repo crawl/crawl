@@ -52,16 +52,28 @@
 
 ShoppingList shopping_list;
 
-static int _shop_get_item_value(const item_def& item, int greed, bool id)
+static int _bargain_cost(int value)
+{
+    // 20% discount
+    value *= 8;
+    value /= 10;
+
+    return max(value, 1);
+}
+
+static int _shop_get_item_value(const item_def& item, int greed, bool id, bool ignore_bargain)
 {
     int result = (greed * item_value(item, id) / 10);
+
+    if (you.duration[DUR_BARGAIN] && !ignore_bargain)
+        result = _bargain_cost(result);
 
     return max(result, 1);
 }
 
-int item_price(const item_def& item, const shop_struct& shop)
+int item_price(const item_def& item, const shop_struct& shop, bool ignore_bargain)
 {
-    return _shop_get_item_value(item, shop.greed, shoptype_identifies_stock(shop.type));
+    return _shop_get_item_value(item, shop.greed, shoptype_identifies_stock(shop.type), ignore_bargain);
 }
 
 // This probably still needs some work. Rings used to be the only
@@ -1166,7 +1178,7 @@ void ShopMenu::purchase_selected()
             if (shopping_list.is_on_list(it, &pos))
             {
                 selected.push_back(item);
-                cost += item_price(it, shop);
+                cost += item_price(it, shop, true);
             }
         }
     }
@@ -1437,7 +1449,7 @@ void shop()
     bool culled = false;
     for (const auto& item : shop.stock)
     {
-        const int cost = item_price(item, shop);
+        const int cost = item_price(item, shop, true);
         culled |= shopping_list.cull_identical_items(item, cost);
     }
     if (culled)
@@ -1998,7 +2010,7 @@ void ShoppingList::item_type_identified(object_class_type base_type,
             continue;
 
         thing[SHOPPING_THING_COST_KEY] =
-            _shop_get_item_value(item, shop->greed, false);
+            _shop_get_item_value(item, shop->greed, false, true);
     }
 
     // Prices could have changed.
@@ -2246,9 +2258,12 @@ void ShoppingList::fill_out_menu(Menu& shopmenu)
 
     for (CrawlHashTable &thing : *list)
     {
-        const int cost = thing_cost(thing);
+        int cost = thing_cost(thing);
         const bool unknown = thing_is_item(thing)
                              && shop_item_unknown(get_thing_item(thing));
+
+        if (you.duration[DUR_BARGAIN])
+            cost = _bargain_cost(cost);
 
         const string etitle =
             make_stringf(
@@ -2324,6 +2339,8 @@ void ShoppingList::display(bool view_only)
         if (shopmenu.menu_action == Menu::ACT_EXECUTE)
         {
             int cost = thing_cost(*thing);
+            if (you.duration[DUR_BARGAIN])
+                cost = _bargain_cost(cost);
 
             if (cost > you.gold)
             {

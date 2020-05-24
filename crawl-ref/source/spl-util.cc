@@ -988,6 +988,9 @@ int spell_range(spell_type spell, int pow, bool allow_bonus)
     }
     if (spell == SPELL_PAKELLAS_ROD) {
         int add_range_ = is_blueprint_exist(BLUEPRINT_RANGE);
+        if (is_blueprint_exist(BLUEPRINT_SPREAD)) {
+            add_range_--;
+        }
         maxrange+= add_range_;
         minrange+= add_range_;
 

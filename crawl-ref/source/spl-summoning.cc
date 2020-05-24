@@ -3524,7 +3524,9 @@ int summons_limit(spell_type spell)
 {
     const summon_cap *cap = map_find(summonsdata, spell);
     if (cap && spell == SPELL_PAKELLAS_ROD_SUMMON) {
-        return is_blueprint_exist(BLUEPRINT_SUMMON_CAPACITY) + cap->type_cap;
+        int limit_num_ = is_blueprint_exist(BLUEPRINT_SUMMON_CAPACITY) + cap->type_cap;
+        limit_num_ *= 1 + is_blueprint_exist(BLUEPRINT_LEGION);
+        return limit_num_;
     }
     return cap ? cap->type_cap : 0;
 }
@@ -3575,6 +3577,7 @@ void summoned_monster(const monster *mons, const actor *caster,
     int max_this_time = cap->type_cap;
     if (cap && spell == SPELL_PAKELLAS_ROD_SUMMON) {
         max_this_time += is_blueprint_exist(BLUEPRINT_SUMMON_CAPACITY);
+        max_this_time *= 1 + is_blueprint_exist(BLUEPRINT_LEGION);
     }
 
     // Cap large abominations and tentacled monstrosities separately
@@ -3878,13 +3881,20 @@ spret fedhas_grow_oklob(bool fail)
 
 spret cast_pakellas_summon(int pow, god_type god, bool fail)
 {
+    if (you.religion != GOD_PAKELLAS) {
+        mprf("You cannot use it if you do not believe pakellas.");
+        return spret::success;
+    }
     if (otr_stop_summoning_prompt())
         return spret::abort;
 
     fail_check();
 
+    int golem_num = 1 + is_blueprint_exist(BLUEPRINT_LEGION);
+
+
     mgen_data mdata = _pal_data(MONS_MACHINE_GOLEM, 2 + is_blueprint_exist(BLUEPRINT_SUMMON_TIME) * 2, god, SPELL_PAKELLAS_ROD_SUMMON);
-    mdata.hd = 2 + pow / 8;
+    mdata.hd = (2 + pow / 8) / golem_num;
     mdata.hp = 10 + mdata.hd * 5;//1:15  20:110
 
     int size_up = is_blueprint_exist(BLUEPRINT_SIZEUP);
@@ -3897,32 +3907,37 @@ spret cast_pakellas_summon(int pow, god_type god, bool fail)
         mdata.hp = mdata.hp * 12 / 10;
     }
 
-    if (monster* mon = create_monster(mdata))
-    {
-        if (is_blueprint_exist(BLUEPRINT_MAGIC_ENERGY_BOLT)) {
-            int level_ = is_blueprint_exist(BLUEPRINT_MAGIC_ENERGY_BOLT);
-            if (is_blueprint_exist(BLUEPRINT_FIRE_SUMMON)) {
-                mon->spells.emplace_back(level_ ==2 ? SPELL_BOLT_OF_FIRE :SPELL_THROW_FLAME, 50, MON_SPELL_WIZARD);
+    bool success_ = false;
+    for (int i = 0; i < golem_num; i++) {
+        if (monster * mon = create_monster(mdata))
+        {
+            if (is_blueprint_exist(BLUEPRINT_MAGIC_ENERGY_BOLT)) {
+                int level_ = is_blueprint_exist(BLUEPRINT_MAGIC_ENERGY_BOLT);
+                if (is_blueprint_exist(BLUEPRINT_FIRE_SUMMON)) {
+                    mon->spells.emplace_back(level_ == 2 ? SPELL_BOLT_OF_FIRE : SPELL_THROW_FLAME, 50, MON_SPELL_WIZARD);
+                }
+                else if (is_blueprint_exist(BLUEPRINT_COLD_SUMMON)) {
+                    mon->spells.emplace_back(level_ == 2 ? SPELL_BOLT_OF_COLD : SPELL_THROW_FROST, 50, MON_SPELL_WIZARD);
+                }
+                else if (is_blueprint_exist(BLUEPRINT_ELEC_SUMMON)) {
+                    mon->spells.emplace_back(level_ == 2 ? SPELL_LIGHTNING_BOLT : SPELL_SHOCK, 50, MON_SPELL_WIZARD);
+                }
+                else if (is_blueprint_exist(BLUEPRINT_POISON_SUMMON)) {
+                    mon->spells.emplace_back(level_ == 2 ? SPELL_POISON_ARROW : SPELL_STING, 50, MON_SPELL_WIZARD);
+                }
+                else if (is_blueprint_exist(BLUEPRINT_EARTH_SUMMON)) {
+                    mon->spells.emplace_back(level_ == 2 ? SPELL_IRON_SHOT : SPELL_STONE_ARROW, 50, MON_SPELL_WIZARD);
+                }
+                else {
+                    mon->spells.emplace_back(level_ == 2 ? SPELL_ISKENDERUNS_MYSTIC_BLAST : SPELL_MAGIC_DART, 50, MON_SPELL_WIZARD);
+                }
+                mon->props[CUSTOM_SPELLS_KEY].get_bool() = true;
             }
-            else if (is_blueprint_exist(BLUEPRINT_COLD_SUMMON)) {
-                mon->spells.emplace_back(level_ == 2 ? SPELL_BOLT_OF_COLD : SPELL_THROW_FROST, 50, MON_SPELL_WIZARD);
-            }
-            else if (is_blueprint_exist(BLUEPRINT_ELEC_SUMMON)) {
-                mon->spells.emplace_back(level_ == 2 ? SPELL_LIGHTNING_BOLT : SPELL_SHOCK, 50, MON_SPELL_WIZARD);
-            }
-            else if (is_blueprint_exist(BLUEPRINT_POISON_SUMMON)) {
-                mon->spells.emplace_back(level_ == 2 ? SPELL_POISON_ARROW : SPELL_STING, 50, MON_SPELL_WIZARD);
-            }
-            else if (is_blueprint_exist(BLUEPRINT_EARTH_SUMMON)) {
-                mon->spells.emplace_back(level_ == 2 ? SPELL_IRON_SHOT : SPELL_STONE_ARROW, 50, MON_SPELL_WIZARD);
-            }
-            else {
-                mon->spells.emplace_back(level_ == 2 ? SPELL_ISKENDERUNS_MYSTIC_BLAST : SPELL_MAGIC_DART, 50, MON_SPELL_WIZARD);
-            }
-            mon->props[CUSTOM_SPELLS_KEY].get_bool() = true;
+            success_ = true;
         }
     }
-    else
+
+    if(success_ == false)
         canned_msg(MSG_NOTHING_HAPPENS);
     invalidate_agrid(true);
     return spret::success;

@@ -276,7 +276,7 @@ static const duration_def duration_data[] =
       "about to teleport", "teleport",
       "You are about to teleport.", D_DISPELLABLE /*but special-cased*/,
       {{ "", []() {
-          you_teleport_now();
+          you_teleport_now(true);
           untag_followers();
       }}}},
     { DUR_DEATHS_DOOR,
@@ -648,8 +648,39 @@ static const duration_def duration_data[] =
       { "The poison gland of your weapon is running out." }}, 10 },
     { DUR_PAKELLAS_DURATION, 0, "", "", "pakellas buff", "", D_NO_FLAGS, {{ "", pakellas_remove_self_buff }} },
 
-          
+    { DUR_BARGAIN, BLUE, "Brgn", "charismatic", "", "You get a bargain in shops.", D_DISPELLABLE | D_EXPIRES,
+      {{ "You feel less charismatic." }}, 15 },
 
+    { DUR_CONTROL_TELEPORT,
+        MAGENTA, "cTele",
+        "controlling teleports", "control teleport",
+        "You can control teleportations.", D_DISPELLABLE | D_EXPIRES },
+
+    { DUR_PHASE_SHIFT,
+        0, "",
+        "phasing", "phase shift",
+        "You are out of phase with the material plane.", D_DISPELLABLE | D_EXPIRES,
+          {{ "You are firmly grounded in the material plane once more.", []() {
+              you.redraw_evasion = true;
+          }}, { "You feel closer to the material plane." }}, 1 },
+          
+    { DUR_MAGIC_ARMOUR,
+         0, "",
+          "magic armour", "magic armour",
+              "You are magically armoured.", D_DISPELLABLE,
+          { { "Your magical armour fades away.", []() {
+              you.props.erase(MAGIC_ARMOUR_KEY);
+              you.redraw_armour_class = true;
+          }} } },
+
+    { DUR_MAGIC_SHIELD,
+         0, "",
+          "magic shield", "magic shield",
+              "You are magically protected.", D_DISPELLABLE,
+         { { "Your magical shield fades away.", []() {
+             you.props.erase(MAGIC_SHIELD_KEY);
+             you.redraw_armour_class = true;
+         }} } },
 #if TAG_MAJOR_VERSION == 34
     // And removed ones
     { DUR_MAGIC_SAPPED, 0, "", "", "old magic sapped", "", D_NO_FLAGS},
@@ -659,7 +690,6 @@ static const duration_def duration_data[] =
     { DUR_CONTROLLED_FLIGHT, 0, "", "", "old controlled flight", "", D_NO_FLAGS},
     { DUR_SEE_INVISIBLE, 0, "", "", "old see invisible", "", D_NO_FLAGS},
     { DUR_INSULATION, 0, "", "", "old insulation", "", D_NO_FLAGS},
-    { DUR_BARGAIN, 0, "", "", "old bargain", "", D_NO_FLAGS},
     { DUR_SLAYING, 0, "", "", "old slaying", "", D_NO_FLAGS},
     { DUR_MISLED, 0, "", "", "old misled", "", D_NO_FLAGS},
     { DUR_NAUSEA, 0, "", "", "old nausea", "", D_NO_FLAGS},
@@ -672,13 +702,9 @@ static const duration_def duration_data[] =
     { DUR_BUILDING_RAGE, 0, "", "", "old building rage", "", D_NO_FLAGS},
     { DUR_NEGATIVE_VULN, 0, "", "", "old negative vuln", "", D_NO_FLAGS},
     { DUR_SURE_BLADE, 0, "", "", "old sure blade", "", D_NO_FLAGS},
-    { DUR_CONTROL_TELEPORT, 0, "", "", "old control teleport", "", D_NO_FLAGS},
     { DUR_DOOM_HOWL_IMMUNITY, 0, "", "", "old howl immunity", "", D_NO_FLAGS, {{""}}},
     { DUR_CONDENSATION_SHIELD, 0, "", "", "old condensation shield", "", D_NO_FLAGS},
-    { DUR_PHASE_SHIFT, 0, "", "", "old phase shift", "", D_NO_FLAGS},
     { DUR_TELEPATHY, 0, "", "", "old telepathy", "", D_NO_FLAGS},
-    { DUR_MAGIC_ARMOUR, 0, "", "", "old magic armour", "", D_NO_FLAGS},
-    { DUR_MAGIC_SHIELD, 0, "", "", "old magic shield", "", D_NO_FLAGS},
     { DUR_FORTITUDE, 0, "", "", "old fortitude", "", D_NO_FLAGS},
     { DUR_WATER_HOLD_IMMUNITY, 0, "", "", "old drowning immunity", "", D_NO_FLAGS, {{""}}},
     { DUR_NO_CAST, 0, "", "", "old no cast", "", D_NO_FLAGS},

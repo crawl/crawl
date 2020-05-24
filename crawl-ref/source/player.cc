@@ -1172,8 +1172,7 @@ static int _player_bonus_regen()
 // Inhibited regeneration: stops regeneration when monsters are visible
 bool regeneration_is_inhibited()
 {
-    if (you.get_mutation_level(MUT_INHIBITED_REGENERATION) == 1
-        || (you.species == SP_VAMPIRE && !you.vampire_alive))
+    if (you.species == SP_VAMPIRE && !you.vampire_alive)
     {
         for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
         {
@@ -1224,6 +1223,20 @@ int player_regen()
 
     if (you.disease || regeneration_is_inhibited() || !player_regenerates_hp())
         rr = 0;
+
+    switch (you.get_mutation_level(MUT_INHIBITED_REGENERATION)) {
+    case 1:
+        rr = rr*2/3;
+        break;
+    case 2:
+        rr /= 3;
+        break;
+    case 3:
+        rr /= 6;
+        break;
+    default:
+        break;
+    }
 
     // Trog's Hand. This circumvents sickness or inhibited regeneration.
     if (you.duration[DUR_TROGS_HAND])
@@ -2201,6 +2214,9 @@ static int _player_evasion_bonuses()
 
     evbonus += you.scan_artefacts(ARTP_EVASION);
 
+    if (you.duration[DUR_PHASE_SHIFT])
+        evbonus += 8;
+
     // mutations
     evbonus += you.get_mutation_level(MUT_GELATINOUS_BODY);
 
@@ -2398,6 +2414,9 @@ int player_shield_class()
     shield += tso_sh_boost() * 100;
     shield += you.wearing(EQ_AMULET_PLUS, AMU_REFLECTION) * 200;
     shield += you.scan_artefacts(ARTP_SHIELDING) * 200;
+
+    if (you.duration[DUR_MAGIC_SHIELD])
+        shield += 200 + 5 * you.props[MAGIC_SHIELD_KEY].get_int();
 
     return (shield + 50) / 100;
 }
@@ -2697,6 +2716,31 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain)
 
     // modified experience due to sprint inflation
     unsigned int skill_xp = exp_gained;
+
+    if (!you.sage_skills.empty())
+    {
+        int which_sage = random2(you.sage_skills.size());
+        skill_type skill = you.sage_skills[which_sage];
+
+        // FIXME: shouldn't use more XP than needed to max the skill
+        const int old_avail = you.exp_available;
+        // Bonus skill training from Sage.
+        you.exp_available =
+            div_rand_round(exp_gained * (you.sage_bonus[which_sage] + 50), 100);
+        you.sage_xp[which_sage] -= you.exp_available;
+        train_skill(skill, you.exp_available);
+        you.exp_available = old_avail;
+        exp_gained = div_rand_round(exp_gained, 2);
+
+        if (you.sage_xp[which_sage] <= 0 || you.skills[skill] == 27)
+        {
+            mprf("You feel less studious about %s.", skill_name(skill));
+            erase_any(you.sage_skills, which_sage);
+            erase_any(you.sage_xp, which_sage);
+            erase_any(you.sage_bonus, which_sage);
+        }
+    }
+
     if (crawl_state.game_is_sprint())
         skill_xp = sprint_modify_exp(skill_xp);
 
@@ -5265,6 +5309,10 @@ player::player()
     transfer_skill_points = 0;
     transfer_total_skill_points = 0;
 
+    sage_skills.clear();
+    sage_xp.clear();
+    sage_bonus.clear();
+
     skill_cost_level = 1;
     exp_available = 0;
 
@@ -6246,6 +6294,9 @@ int player::armour_class_with_specific_items(vector<item_def> items) const
     if (has_mutation(MUT_ICEMAIL))
         AC += 100 * player_icemail_armour_class();
 
+    if (duration[DUR_MAGIC_ARMOUR])
+        AC += 200 + you.props[MAGIC_ARMOUR_KEY].get_int() * 5;
+
     if (duration[DUR_QAZLAL_AC])
         AC += 300;
 
@@ -6795,9 +6846,9 @@ void player::expose_to_element(beam_type element, int _strength,
     ::expose_player_to_element(element, _strength, slow_cold_blood);
 }
 
-void player::blink()
+void player::blink(bool allow_partial_control)
 {
-    cast_blink();
+    cast_blink(allow_partial_control);
 }
 
 void player::teleport(bool now, bool wizard_tele)

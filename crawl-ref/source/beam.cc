@@ -1475,6 +1475,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
         break;
 
     case BEAM_POISON_ERINYA:
+    case BEAM_ROD_POISON:
         hurted = resist_adjust_damage(mons, pbolt.flavour, hurted);
         if (hurted < original)
         {
@@ -2795,6 +2796,9 @@ void bolt::affect_place_clouds()
             }
             else if (is_blueprint_exist(BLUEPRINT_CHAOS)) {
                 place_cloud(CLOUD_CHAOS, p, 2 + random2(5), agent());
+            }
+            else if(is_blueprint_exist(BLUEPRINT_ELEMENTAL_POISON)) {
+                place_cloud(CLOUD_POISON, p, 2 + random2(5), agent());
             }
         }
     }
@@ -6757,6 +6761,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_ROD_FIRE:              return "fire";
     case BEAM_ROD_COLD:              return "cold";
     case BEAM_ROD_ELEC:              return "electricity";
+    case BEAM_ROD_POISON:            return "poison";
 
     case NUM_BEAMS:                  die("invalid beam type");
     }

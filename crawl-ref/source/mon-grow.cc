@@ -33,6 +33,41 @@ static const monster_level_up mon_grow[] =
     monster_level_up(MONS_ORC_KNIGHT, MONS_ORC_WARLORD),
     monster_level_up(MONS_ORC_PRIEST, MONS_ORC_HIGH_PRIEST),
     monster_level_up(MONS_ORC_WIZARD, MONS_ORC_SORCERER),
+
+    monster_level_up(MONS_KOBOLD, MONS_BIG_KOBOLD),
+
+    monster_level_up(MONS_UGLY_THING, MONS_VERY_UGLY_THING),
+
+    monster_level_up(MONS_CENTAUR, MONS_CENTAUR_WARRIOR),
+    monster_level_up(MONS_YAKTAUR, MONS_YAKTAUR_CAPTAIN),
+
+    monster_level_up(MONS_NAGA, MONS_NAGA_WARRIOR),
+    monster_level_up(MONS_NAGA_MAGE, MONS_NAGARAJA),
+
+    monster_level_up(MONS_DEEP_ELF_SOLDIER, MONS_DEEP_ELF_FIGHTER),
+    monster_level_up(MONS_DEEP_ELF_FIGHTER, MONS_DEEP_ELF_KNIGHT),
+
+    // Deep elf magi can become either summoners or conjurers.
+    monster_level_up(MONS_DEEP_ELF_MAGE, MONS_DEEP_ELF_SUMMONER, 500),
+    monster_level_up(MONS_DEEP_ELF_MAGE, MONS_DEEP_ELF_CONJURER),
+
+    monster_level_up(MONS_DEEP_ELF_PRIEST, MONS_DEEP_ELF_HIGH_PRIEST),
+    monster_level_up(MONS_DEEP_ELF_CONJURER, MONS_DEEP_ELF_ANNIHILATOR),
+
+    monster_level_up(MONS_DEEP_ELF_SUMMONER, MONS_DEEP_ELF_DEMONOLOGIST, 500),
+    monster_level_up(MONS_DEEP_ELF_SUMMONER, MONS_DEEP_ELF_SORCERER),
+
+    monster_level_up(MONS_BABY_ALLIGATOR, MONS_ALLIGATOR),
+
+    monster_level_up(MONS_GNOLL, MONS_GNOLL_SERGEANT),
+
+    monster_level_up(MONS_MERFOLK, MONS_MERFOLK_IMPALER),
+
+    monster_level_up(MONS_FAUN, MONS_SATYR),
+    monster_level_up(MONS_TENGU, MONS_TENGU_CONJURER, 500),
+    monster_level_up(MONS_TENGU, MONS_TENGU_WARRIOR),
+    monster_level_up(MONS_TENGU_CONJURER, MONS_TENGU_REAVER),
+    monster_level_up(MONS_TENGU_WARRIOR, MONS_TENGU_REAVER),
 };
 
 mons_experience_levels::mons_experience_levels()

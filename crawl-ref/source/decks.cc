@@ -38,6 +38,7 @@
 #include "items.h"
 #include "item-use.h"
 #include "libutil.h"
+#include "maps.h"
 #include "macro.h"
 #include "message.h"
 #include "mon-cast.h"
@@ -68,6 +69,7 @@
 #include "spl-summoning.h"
 #include "spl-transloc.h"
 #include "spl-wpnench.h"
+#include "skill-menu.h"
 #include "state.h"
 #include "stringutil.h"
 #include "teleport.h"
@@ -92,6 +94,8 @@ deck_archetype deck_of_escape =
     { CARD_CLOUD,      5 },
     { CARD_VELOCITY,   5 },
     { CARD_SHAFT,      5 },
+    { CARD_PORTAL,     5 },
+    { CARD_HELM,       5 },
 };
 
 deck_archetype deck_of_destruction =
@@ -114,6 +118,17 @@ deck_archetype deck_of_summoning =
     { CARD_ILLUSION,        5 },
 };
 
+deck_archetype deck_of_wonder =
+{
+    { CARD_MERCENARY,    5 },
+    { CARD_ALCHEMIST,    5 },
+    { CARD_BARGAIN,      5 },
+    { CARD_SAGE,         5 },
+    { CARD_TROWEL,       5 },
+    { CARD_EXPERIENCE,   5 },
+    { CARD_SHUFFLE,      1 },
+};
+
 deck_archetype deck_of_punishment =
 {
     { CARD_WRAITH,     5 },
@@ -121,6 +136,7 @@ deck_archetype deck_of_punishment =
     { CARD_FAMINE,     5 },
     { CARD_SWINE,      5 },
     { CARD_TORMENT,    5 },
+    { CARD_XOM,        5 },
 };
 
 struct deck_type_data
@@ -150,6 +166,12 @@ static map<deck_type, deck_type_data> all_decks =
         deck_of_summoning,
         13,
     } },
+    { DECK_OF_WONDER, {
+        "wonder", "A deck of highly mysterious and magical cards, which can "
+        "alter the drawer's physical and mental condition, for better or worse.",
+        deck_of_wonder,
+        13,
+    } },
     { DECK_OF_PUNISHMENT, {
         "punishment", "which wreak havoc on the user.", deck_of_punishment,
         0, // Not a user deck
@@ -160,6 +182,7 @@ vector<ability_type> deck_ability = {
     ABIL_NEMELEX_DRAW_ESCAPE,
     ABIL_NEMELEX_DRAW_DESTRUCTION,
     ABIL_NEMELEX_DRAW_SUMMONING,
+    ABIL_NEMELEX_DRAW_WONDER,
     ABIL_NON_ABILITY,
     ABIL_NEMELEX_DRAW_STACK
 };
@@ -192,7 +215,16 @@ const char* card_name(card_type card)
     case CARD_ILLUSION:        return "the Illusion";
     case CARD_DEGEN:           return "Degeneration";
     case CARD_FAMINE:          return "Famine";
-
+    case CARD_XOM:             return "Xom";
+    case CARD_MERCENARY:       return "the Mercenary";
+    case CARD_ALCHEMIST:       return "the Alchemist";
+    case CARD_BARGAIN:         return "the Bargain";
+    case CARD_SAGE:            return "the Sage";
+    case CARD_PORTAL:          return "the Portal";
+    case CARD_TROWEL:          return "the Trowel";
+    case CARD_EXPERIENCE:      return "Experience";
+    case CARD_HELM:            return "the Helm";
+    case CARD_SHUFFLE:         return "Shuffle";
     case NUM_CARDS:            return "a buggy card";
     }
     return "a very buggy card";
@@ -301,7 +333,8 @@ bool gift_cards()
         deck_type choice = random_choose_weighted(
                                         3, DECK_OF_DESTRUCTION,
                                         1, DECK_OF_SUMMONING,
-                                        1, DECK_OF_ESCAPE);
+                                        1, DECK_OF_ESCAPE,
+                                        1, DECK_OF_WONDER);
         if (deck_cards(choice) < all_decks[choice].deck_max)
         {
             you.props[deck_name(choice)]++;
@@ -1705,6 +1738,411 @@ static void _torment_card()
         torment_player(&you, TORMENT_CARDS);
 }
 
+static void _mercenary_card(int power)
+{
+    const int power_level = _get_power_level(power);
+    const monster_type merctypes[] =
+    {
+        MONS_BIG_KOBOLD, MONS_MERFOLK, MONS_NAGA,
+        MONS_TENGU, MONS_DEEP_ELF_MAGE, MONS_ORC_KNIGHT,
+        RANDOM_BASE_DEMONSPAWN, MONS_OGRE_MAGE, MONS_MINOTAUR,
+        RANDOM_BASE_DRACONIAN, MONS_DEEP_ELF_BLADEMASTER,
+    };
+
+    int merc;
+    monster* mon;
+    bool hated = you.get_mutation_level(MUT_NO_LOVE);
+
+    while (1)
+    {
+        merc = power_level + random2(3 * (power_level + 1));
+        ASSERT(merc < (int)ARRAYSZ(merctypes));
+
+        mgen_data mg(merctypes[merc], BEH_HOSTILE,
+            you.pos(), MHITYOU, MG_FORCE_BEH, you.religion);
+
+        mg.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
+
+        // This is a bit of a hack to use give_monster_proper_name to feed
+        // the mgen_data, but it gets the job done.
+        monster tempmon;
+        tempmon.type = merctypes[merc];
+        if (give_monster_proper_name(tempmon, false))
+            mg.mname = tempmon.mname;
+        else
+            mg.mname = make_name();
+        // This is used for giving the merc better stuff in mon-gear.
+        mg.props["mercenary items"] = true;
+
+        mon = create_monster(mg);
+
+        if (!mon)
+        {
+            mpr("You see a puff of smoke.");
+            return;
+        }
+
+        // always hostile, don't try to find a good one
+        if (hated)
+            break;
+        if (player_will_anger_monster(*mon))
+        {
+            dprf("God %s doesn't like %s, retrying.",
+                god_name(you.religion).c_str(), mon->name(DESC_THE).c_str());
+            monster_die(*mon, KILL_RESET, NON_MONSTER);
+            continue;
+        }
+        else
+            break;
+    }
+
+    mon->props["dbname"].get_string() = mons_class_name(merctypes[merc]);
+
+    redraw_screen(); // We want to see the monster while it's asking to be paid.
+
+    if (hated)
+    {
+        simple_monster_message(*mon, " is unwilling to work for you!");
+        return;
+    }
+
+    const int fee = fuzz_value(exper_value(*mon), 15, 15);
+    if (fee > you.gold)
+    {
+        mprf("You cannot afford %s fee of %d gold!",
+            mon->name(DESC_ITS).c_str(), fee);
+        simple_monster_message(*mon, " attacks!");
+        return;
+    }
+
+    mon->props["mercenary_fee"] = fee;
+    run_uncancel(UNC_MERCENARY, mon->mid);
+}
+
+bool recruit_mercenary(int mid)
+{
+    monster* mon = monster_by_mid(mid);
+    if (!mon)
+        return true; // wut?
+
+    int fee = mon->props["mercenary_fee"].get_int();
+    const string prompt = make_stringf("Pay %s fee of %d gold?",
+        mon->name(DESC_ITS).c_str(), fee);
+    bool paid = yesno(prompt.c_str(), false, 0);
+    const string message = make_stringf("Hired %s for %d gold.",
+        mon->full_name(DESC_A).c_str(), fee);
+    if (crawl_state.seen_hups)
+        return false;
+
+    mon->props.erase("mercenary_fee");
+    if (!paid)
+    {
+        simple_monster_message(*mon, " attacks!");
+        return true;
+    }
+
+    simple_monster_message(*mon, " joins your ranks!");
+    for (mon_inv_iterator ii(*mon); ii; ++ii)
+        ii->flags &= ~ISFLAG_SUMMONED;
+    mon->flags &= ~MF_HARD_RESET;
+    mon->attitude = ATT_FRIENDLY;
+    mons_att_changed(mon);
+    take_note(Note(NOTE_MESSAGE, 0, 0, message), true);
+    you.del_gold(fee);
+    return true;
+}
+
+static void _alchemist_card(int power)
+{
+    const int power_level = _get_power_level(power);
+    const int gold_max = min(you.gold, random2avg(100, 2) * (1 + power_level));
+    int gold_used = 0;
+
+    dprf("%d gold available to spend.", gold_max);
+
+    // Spend some gold to regain health.
+    int hp = min((gold_max - gold_used) / 3, you.hp_max - you.hp);
+    if (hp > 0)
+    {
+        you.del_gold(hp * 2);
+        inc_hp(hp);
+        gold_used += hp * 2;
+        canned_msg(MSG_GAIN_HEALTH);
+        dprf("Gained %d health, %d gold remaining.", hp, gold_max - gold_used);
+    }
+    // Maybe spend some more gold to regain magic.
+    int mp = min((gold_max - gold_used) / 5,
+        you.max_magic_points - you.magic_points);
+    if (mp > 0 && x_chance_in_y(power_level + 1, 5))
+    {
+        you.del_gold(mp * 5);
+        inc_mp(mp);
+        gold_used += mp * 5;
+        canned_msg(MSG_GAIN_MAGIC);
+        dprf("Gained %d magic, %d gold remaining.", mp, gold_max - gold_used);
+    }
+
+    if (gold_used > 0)
+        mprf("%d of your gold pieces vanish!", gold_used);
+    else
+        canned_msg(MSG_NOTHING_HAPPENS);
+}
+
+static void _sage_card(int power)
+{
+    const int power_level = _get_power_level(power);
+    int c;                      // how much to weight your skills
+    if (power_level == 0)
+        c = 0;
+    else if (power_level == 1)
+        c = random2(10) + 1;
+    else
+        c = 10;
+
+    // FIXME: yet another reproduction of random_choose_weighted
+    // Ah for Python:
+    // skill = random_choice([x*(40-x)*c/10 for x in skill_levels])
+    int totalweight = 0;
+    skill_type result = SK_NONE;
+    for (int i = SK_FIRST_SKILL; i < NUM_SKILLS; ++i)
+    {
+        skill_type s = static_cast<skill_type>(i);
+        if (skill_name(s) == NULL || is_useless_skill(s))
+            continue;
+
+        if (you.skills[s] < MAX_SKILL_LEVEL)
+        {
+            // Choosing a skill is likelier if you are somewhat skilled in it.
+            const int curweight = 1 + you.skills[s] * (40 - you.skills[s]) * c;
+            totalweight += curweight;
+            if (x_chance_in_y(curweight, totalweight))
+                result = s;
+        }
+    }
+
+    if (result == SK_NONE)
+        mpr("You feel omnipotent.");  // All skills maxed.
+    else
+    {
+        int xp = exp_needed(min<int>(you.max_level, 27) + 1)
+            - exp_needed(min<int>(you.max_level, 27));
+        xp = xp / 10 + random2(xp / 4);
+
+        // There may be concurrent sages for the same skill, with different
+        // bonus multipliers.
+        you.sage_skills.push_back(result);
+        you.sage_xp.push_back(xp);
+        you.sage_bonus.push_back(power / 25);
+        mprf(MSGCH_PLAIN, "You feel studious about %s.", skill_name(result));
+        dprf("Will redirect %d xp, bonus = %d%%\n", xp, (power / 25) * 2);
+    }
+}
+
+
+// Actual card implementations follow.
+static void _portal_card(int power)
+{
+    const int control_level = _get_power_level(power);
+    bool controlled = false;
+
+    if (x_chance_in_y(control_level, 2))
+        controlled = true;
+
+    int threshold = 9;
+    const bool was_controlled = you.duration[DUR_CONTROL_TELEPORT] > 0;
+    const bool short_control = (you.duration[DUR_CONTROL_TELEPORT] > 0
+        && you.duration[DUR_CONTROL_TELEPORT]
+        < threshold * BASELINE_DELAY);
+
+    if (controlled && (!was_controlled || short_control))
+        you.set_duration(DUR_CONTROL_TELEPORT, threshold); // Long enough to kick in.
+
+    if (x_chance_in_y(control_level, 2))
+        you.blink(true);
+
+    you_teleport();
+}
+
+static void _trowel_card(int)
+{
+    if (!crawl_state.game_standard_levelgen())
+    {
+        canned_msg(MSG_NOTHING_HAPPENS);
+        return;
+    }
+
+    coord_def p;
+    for (distance_iterator di(you.pos(), true, false); di; ++di)
+    {
+        if (cell_is_solid(*di) || feat_is_critical(grd(*di)))
+            continue;
+        p = *di;
+        break;
+    }
+
+    if (p.origin()) // can't happen outside wizmode
+        return mpr("The dungeon trembles momentarily.");
+
+    // Vetoes are done too late, should not pass random_map_for_tag()
+    // at all.  Thus, allow retries.
+    int tries;
+    for (tries = 100; tries > 0; tries--)
+    {
+        // Generate a portal to something.
+        const map_def* map = random_map_for_tag("trowel_portal", true, true);
+
+        if (!map)
+            break;
+
+        {
+            no_messages n;
+            if (dgn_safe_place_map(map, true, true, p))
+            {
+                tries = -1; // hrm no_messages
+                break;
+            }
+        }
+    }
+    if (tries > -1)
+        mpr("A portal flickers into view, then vanishes.");
+    else
+        mpr("A mystic portal forms.");
+}
+
+static void _experience_card(int power)
+{
+    const int power_level = _get_power_level(power);
+
+    if (you.experience_level < 27)
+        mpr("You feel more experienced.");
+    else
+        mpr("You feel knowledgeable.");
+
+    skill_menu(SKMF_EXPERIENCE, 200 + power * 50);
+
+    // After level 27, boosts you get don't get increased (matters for
+    // charging V:$ with no rN+++ and for felids).
+    const int xp_cap = exp_needed(1 + you.experience_level)
+        - exp_needed(you.experience_level);
+
+    // power_level 2 means automatic level gain.
+    if (power_level == 2 && you.experience_level < 27)
+        adjust_level(1);
+    else
+    {
+        // Likely to give a level gain (power of ~500 is reasonable
+        // at high levels even for non-Nemelexites, so 50,000 XP.)
+        // But not guaranteed.
+        // Overrides archmagi effect, like potions of experience.
+        you.experience += min(xp_cap, power * 100);
+        level_change();
+    }
+}
+
+static void _helm_card(int power)
+{
+    const int power_level = _get_power_level(power);
+    bool do_phaseshift = false;
+    bool do_armour = false;
+    bool do_shield = false;
+    bool do_resistance = false;
+
+    // Chances are cumulative.
+    if (power_level >= 2)
+    {
+        if (coinflip()) do_phaseshift = true;
+        if (coinflip()) do_armour = true;
+        if (coinflip()) do_shield = true;
+        do_resistance = true;
+    }
+    if (power_level >= 1)
+    {
+        if (coinflip()) do_phaseshift = true;
+        if (coinflip()) do_armour = true;
+        if (coinflip()) do_shield = true;
+    }
+    if (power_level >= 0)
+    {
+        if (coinflip())
+            do_phaseshift = true;
+        else
+            do_armour = true;
+    }
+
+    if (do_phaseshift)
+        cast_phase_shift(random2(power / 4), false);
+    if (do_armour)
+    {
+        int pow = random2(power / 4);
+        if (you.duration[DUR_MAGIC_ARMOUR] == 0)
+            mpr("You gain magical protection.");
+        you.increase_duration(DUR_MAGIC_ARMOUR,
+            10 + random2(pow) + random2(pow), 50);
+        you.props[MAGIC_ARMOUR_KEY] = pow;
+        you.redraw_armour_class = true;
+    }
+    if (do_resistance)
+    {
+        mpr("You feel resistant.");
+        you.increase_duration(DUR_RESISTANCE, random2(power / 7) + 1);
+    }
+    if (do_shield)
+    {
+        int pow = random2(power / 4);
+        if (you.duration[DUR_MAGIC_SHIELD] == 0)
+            mpr("A magical shield forms in front of you.");
+        you.props[MAGIC_SHIELD_KEY] = pow;
+        you.increase_duration(DUR_MAGIC_SHIELD, random2(power / 6) + 1);
+        you.redraw_armour_class = true;
+    }
+}
+
+static string _god_wrath_stat_check(string cause_orig)
+{
+    string cause = cause_orig;
+
+    if (crawl_state.is_god_acting())
+    {
+        god_type which_god = crawl_state.which_god_acting();
+        if (crawl_state.is_god_retribution())
+            cause = "the wrath of " + god_name(which_god);
+        else if (which_god == GOD_XOM)
+            cause = "the capriciousness of Xom";
+        else
+            cause = "the 'helpfulness' of " + god_name(which_god);
+    }
+
+    return cause;
+}
+
+static void _shuffle_card(int power)
+{
+    int perm[] = { 0, 1, 2 };
+    COMPILE_CHECK(ARRAYSZ(perm) == NUM_STATS);
+    shuffle_array(perm, NUM_STATS);
+
+    FixedVector<int8_t, NUM_STATS> new_base;
+    for (int i = 0; i < NUM_STATS; ++i)
+        new_base[perm[i]] = you.base_stats[i];
+
+    const string cause = _god_wrath_stat_check("the Shuffle card");
+
+    for (int i = 0; i < NUM_STATS; ++i)
+    {
+        modify_stat(static_cast<stat_type>(i),
+            new_base[i] - you.base_stats[i],
+            true);
+    }
+
+    char buf[128];
+    snprintf(buf, sizeof(buf),
+        "Shuffle card: Str %d[%d], Int %d[%d], Dex %d[%d]",
+        you.base_stats[STAT_STR], you.strength(false),
+        you.base_stats[STAT_INT], you.intel(false),
+        you.base_stats[STAT_DEX], you.dex(false));
+    take_note(Note(NOTE_MESSAGE, 0, 0, buf));
+}
+
 // Punishment cards don't have their power adjusted depending on Nemelex piety,
 // and are based on experience level instead of invocations skill.
 // Max power = 200 * (2700+2500) / 2700 + 243 + 300 = 928
@@ -1715,9 +2153,9 @@ static int _card_power(bool punishment)
         return you.experience_level * 18;
 
     int result = you.piety;
-    result *= you.skill(SK_INVOCATIONS, 100) + 2500;
+    result *= you.skill(SK_EVOCATIONS, 100) + 2500;
     result /= 2700;
-    result += you.skill(SK_INVOCATIONS, 9);
+    result += you.skill(SK_EVOCATIONS, 9);
     result += (you.piety * 3) / 2;
 
     return result;
@@ -1765,7 +2203,16 @@ void card_effect(card_type which_card,
     case CARD_ILLUSION:         _illusion_card(power); break;
     case CARD_DEGEN:            _degeneration_card(power); break;
     case CARD_WILD_MAGIC:       _wild_magic_card(power); break;
-
+    case CARD_XOM:              xom_acts(5 + random2(power / 10)); break;
+    case CARD_MERCENARY:        _mercenary_card(power); break;
+    case CARD_ALCHEMIST:        _alchemist_card(power); break;
+    case CARD_BARGAIN:          you.increase_duration(DUR_BARGAIN, random2(power) + random2(power) + 2); break;
+    case CARD_SAGE:             _sage_card(power); break;
+    case CARD_PORTAL:           _portal_card(power); break;
+    case CARD_TROWEL:           _trowel_card(power); break;
+    case CARD_EXPERIENCE:       _experience_card(power); break;
+    case CARD_HELM:             _helm_card(power); break;
+    case CARD_SHUFFLE:          _shuffle_card(power); break;
     case CARD_VITRIOL:
     case CARD_PAIN:
     case CARD_ORB:
@@ -1785,6 +2232,7 @@ void card_effect(card_type which_card,
         else
             mpr("You feel a momentary urge to oink.");
         break;
+
 
     case NUM_CARDS:
         // The compiler will complain if any card remains unhandled.
