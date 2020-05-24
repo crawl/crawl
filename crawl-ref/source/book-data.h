@@ -369,7 +369,6 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Necronomicon
-    SPELL_CIGOTUVIS_PLAGUE,
     SPELL_HAUNT,
     SPELL_BORGNJORS_REVIVIFICATION,
     SPELL_DEATHS_DOOR,
