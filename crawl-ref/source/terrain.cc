@@ -1195,7 +1195,7 @@ static void _dgn_check_terrain_player(const coord_def pos)
     if (you.can_pass_through(pos))
         move_player_to_grid(pos, false);
     else
-        you_teleport_now();
+        you_teleport_now(true);
 }
 
 /**

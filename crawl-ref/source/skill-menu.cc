@@ -294,10 +294,14 @@ COLOURS SkillMenuEntry::get_colour() const
     bool use_bright_colour = you.train[m_sk] == TRAINING_ENABLED
         || you.train[m_sk] == TRAINING_FOCUSED;
 
+    bool sage_ = find(you.sage_skills.begin(), you.sage_skills.end(), m_sk) != you.sage_skills.end();
+
     if (is_set(SKMF_HELP))
         return LIGHTGRAY;
     else if (is_set(SKMF_RESKILL_TO) && m_sk == you.transfer_from_skill)
         return BROWN;
+    else if (sage_)
+        return LIGHTBLUE;
     else if (skm.get_state(SKM_VIEW) == SKM_VIEW_TRANSFER
              && (m_sk == you.transfer_from_skill
                  || m_sk == you.transfer_to_skill))

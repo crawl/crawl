@@ -2014,7 +2014,7 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
 
     // Escape spells.
     case SPELL_BLINK:
-        return cast_blink(fail);
+        return cast_blink(god != GOD_XOM, fail);
 
     case SPELL_CONTROLLED_BLINK:
         return cast_controlled_blink(fail);

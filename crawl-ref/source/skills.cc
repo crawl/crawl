@@ -281,7 +281,18 @@ static void _change_skill_level(skill_type exsk, int n)
     // are you drained/crosstrained/ash'd in the relevant skill?
     const bool specify_base = you.skill(exsk, 1) != you.skill(exsk, 1, true);
     if (you.skills[exsk] == MAX_SKILL_LEVEL)
+    {
         mprf(MSGCH_INTRINSIC_GAIN, "You have mastered %s!", skill_name(exsk));
+        for (int i = you.sage_skills.size() - 1; i >= 0; i--)
+        {
+            if (you.sage_skills[i] == exsk)
+            {
+                erase_any(you.sage_skills, i);
+                erase_any(you.sage_xp, i);
+                erase_any(you.sage_bonus, i);
+            }
+        }
+    }
     else if (abs(n) == 1 && you.num_turns)
     {
         mprf(MSGCH_INTRINSIC_GAIN, "Your %s%s skill %s to level %d!",
@@ -1082,6 +1093,18 @@ static void _train_skills(int exp, const int cost, const bool simu)
     if (magic_gain && !simu)
         did_god_conduct(DID_SPELL_PRACTISE, div_rand_round(magic_gain, 10));
 }
+
+void train_skill(skill_type skill, int exp)
+{
+    const int cost = calc_skill_cost(you.skill_cost_level);
+    int gain = 0;
+
+    while (exp >= cost)
+        gain += _train(skill, exp);
+
+    dprf("Trained %s by %d.", skill_name(skill), gain);
+}
+
 
 bool skill_trained(int i)
 {

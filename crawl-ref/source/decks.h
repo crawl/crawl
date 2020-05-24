@@ -47,6 +47,17 @@ enum card_type
     CARD_DEGEN,               // polymorph hostiles down hd, malmutate
     CARD_ELEMENTS,            // primal animals of the elements
     CARD_RANGERS,             // sharpshooting
+    //added
+    CARD_XOM,
+    CARD_MERCENARY, 
+    CARD_ALCHEMIST,
+    CARD_BARGAIN,
+    CARD_SAGE,
+    CARD_PORTAL,
+    CARD_TROWEL,
+    CARD_EXPERIENCE,
+    CARD_HELM,
+    CARD_SHUFFLE,
     NUM_CARDS
 };
 
@@ -87,3 +98,5 @@ bool is_deck(const item_def &item);
 void reclaim_decks();
 void reclaim_decks_on_level();
 #endif
+
+bool recruit_mercenary(int mid);

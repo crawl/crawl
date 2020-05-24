@@ -54,6 +54,15 @@ MAP
 O
 ENDMAP
 
+NAME:   gauntlet_entry_trowel
+TAGS:   transparent trowel_portal unrand can_overwrite
+DEPTH:  *, !Gauntlet
+veto {{ return you.is_level_on_stack("Gauntlet") }}
+: gauntlet_portal(_G)
+MAP
+O
+ENDMAP
+
 default-depth: Gauntlet
 
 #############################################################################
@@ -166,6 +175,7 @@ default-depth: Gauntlet
 # 'l' : (Optional) All 'l' glyphs get turned to deep water if the chosen
 #       monster set indicated that only lava is thematically appropriate.
 #############################################################################
+
 
 NAME:   gammafunk_gauntlet_arena_open
 TAGS:   gauntlet_arena_first gauntlet_arena_second

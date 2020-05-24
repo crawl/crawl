@@ -1368,7 +1368,7 @@ void do_trap_effects()
             break;
 
         case TRAP_TELEPORT:
-            you_teleport_now(false, true, "You stumble into a teleport trap!");
+            you_teleport_now(true, false, true, "You stumble into a teleport trap!");
             break;
 
         // Other cases shouldn't be possible, but having a default here quiets

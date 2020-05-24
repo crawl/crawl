@@ -1323,7 +1323,7 @@ LUAFN(you_teleport_to)
     return 1;
 }
 
-LUAWRAP(you_random_teleport, you_teleport_now())
+LUAWRAP(you_random_teleport, you_teleport_now(false))
 
 static int _you_uniques(lua_State *ls)
 {

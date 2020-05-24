@@ -496,6 +496,8 @@ static const ability_def Ability_List[] =
       0, 0, 0, 0, {}, abflag::card },
     { ABIL_NEMELEX_DRAW_SUMMONING, "Draw Summoning",
       0, 0, 0, 0, {}, abflag::card },
+    { ABIL_NEMELEX_DRAW_WONDER, "Draw Wonder",
+      0, 0, 0, 0, {}, abflag::card },          
     { ABIL_NEMELEX_DRAW_STACK, "Draw Stack",
       0, 0, 0, 0, {}, abflag::card },
     { ABIL_NEMELEX_TRIPLE_DRAW, "Triple Draw",
@@ -2224,7 +2226,7 @@ static spret _do_ability(const ability_def& abil, bool fail)
         fail_check();
         // deliberate fall-through
     case ABIL_BLINK:            // mutation
-        return cast_blink(fail);
+        return cast_blink(true, fail);
         break;
 
     case ABIL_EVOKE_BERSERK:    // amulet of rage, randarts
@@ -2904,6 +2906,11 @@ static spret _do_ability(const ability_def& abil, bool fail)
     case ABIL_NEMELEX_DRAW_SUMMONING:
         fail_check();
         if (!deck_draw(DECK_OF_SUMMONING))
+            return spret::abort;
+        break;
+    case ABIL_NEMELEX_DRAW_WONDER:
+        fail_check();
+        if (!deck_draw(DECK_OF_WONDER))
             return spret::abort;
         break;
     case ABIL_NEMELEX_DRAW_STACK:

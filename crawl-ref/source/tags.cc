@@ -1407,6 +1407,15 @@ static void tag_construct_you(writer &th)
     _marshall_as_int(th, you.form);
     CANARY;
 
+    int sage_size = min<int>(you.sage_skills.size(), 32767);
+    marshallShort(th, sage_size);
+    for (int i = 0; i < sage_size; ++i)
+    {
+        marshallByte(th, you.sage_skills[i]);
+        marshallInt(th, you.sage_xp[i]);
+        marshallInt(th, you.sage_bonus[i]);
+    }
+
     // how many you.equip?
     marshallByte(th, NUM_EQUIP - EQ_FIRST_EQUIP);
     for (int i = EQ_FIRST_EQUIP; i < NUM_EQUIP; ++i)
@@ -2392,19 +2401,25 @@ static void tag_read_you(reader &th)
 #endif
     EAT_CANARY;
 
-#if TAG_MAJOR_VERSION == 34
-    if (th.getMinorVersion() < TAG_MINOR_SAGE_REMOVAL)
+    if (th.getMinorVersion() < TAG_MINOR_SAGE_REMOVAL 
+        || th.getMinorVersion() >= TAG_MINOR_SAGE_ROLLBACK)
     {
         count = unmarshallShort(th);
         ASSERT_RANGE(count, 0, 32768);
+        you.sage_skills.resize(count, SK_NONE);
+        you.sage_xp.resize(count, 0);
+        you.sage_bonus.resize(count, 0);
         for (int i = 0; i < count; ++i)
         {
-            unmarshallByte(th);
-            unmarshallInt(th);
-            unmarshallInt(th);
+            you.sage_skills[i] = static_cast<skill_type>(unmarshallByte(th));
+            if (you.sage_skills[i] == SK_STABBING || you.sage_skills[i] == SK_TRAPS)
+                you.sage_skills[i] = SK_STEALTH;
+            ASSERT(!is_invalid_skill(you.sage_skills[i]));
+            ASSERT(!is_useless_skill(you.sage_skills[i]));
+            you.sage_xp[i] = unmarshallInt(th);
+            you.sage_bonus[i] = unmarshallInt(th);
         }
     }
-#endif
 
     // How many you.equip?
     count = unmarshallByte(th);

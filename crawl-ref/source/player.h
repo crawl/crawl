@@ -54,6 +54,8 @@
 #define WALL_INVISIBLE_KEY "wall_invisible"
 #define PARALYSED_BY_KEY "paralysed_by"
 #define PETRIFIED_BY_KEY "petrified_by"
+#define MAGIC_ARMOUR_KEY "magic_armour_pow"
+#define MAGIC_SHIELD_KEY "magic_shield_pow"
 
 // display/messaging breakpoints for penalties from Ru's MUT_HORROR
 #define HORROR_LVL_EXTREME  3
@@ -235,6 +237,10 @@ public:
     skill_type    transfer_to_skill;
     unsigned int  transfer_skill_points;
     unsigned int  transfer_total_skill_points;
+
+    vector<skill_type> sage_skills; // skills with active Sage
+    vector<int> sage_xp;            // how much more XP to redirect
+    vector<int> sage_bonus;         // how much bonus XP to give in these skills
 
     int  skill_cost_level;
     int  exp_available; // xp pool, scaled by 10 from you.experience
@@ -711,7 +717,7 @@ public:
     void backlight();
     void banish(actor* /*agent*/, const string &who = "", const int power = 0,
                 bool force = false) override;
-    void blink() override;
+    void blink(bool allow_partial_control = true) override;
     void teleport(bool right_now = false,
                   bool wizard_tele = false) override;
     void drain_stat(stat_type stat, int amount) override;

@@ -47,6 +47,17 @@ The card depicts an iron gate enshrouded in mist.
 Drawing this card imprisons the user's foes in rings of clouds. The type of clouds
 produced will improve with card power.
 %%%%
+the Portal card
+
+This card teleports you to a random location, allowing control of the
+translocation at high power. It is usually found in decks of escape and war, or
+in Nemelex Xobeh's deck of punishment.
+%%%%
+the Helm card
+
+This card increases your defences. It is usually found in decks of changes,
+defence and war.
+%%%%
 # Destruction
 Vitriol card
 
@@ -165,6 +176,44 @@ Torment card
 The card depicts a screaming figure being tortured on the rack.
 
 Drawing this card will cause agonising injury to the user.
+# Wonder
+%%%%
+Experience card
+
+This card makes you more experienced.
+%%%%
+the Sage card
+
+This card will funnel some of your earned experience towards training a
+specific skill and train it faster than it normally would. It is more likely to
+affect a skill that you are already knowledgeable in at high power levels.
+%%%%
+the Trowel card
+
+This card creates a mystic portal to somewhere. It has a limited range of
+possible destinations, and will no longer have any effect once those are
+exhausted.
+%%%%
+Xom card
+
+This card draws Xom's attention to you.
+%%%%
+the Mercenary card
+
+This card summons a mercenary to fight by your side... for a price.
+%%%%
+the Alchemist card
+
+This card transmutes some of your gold into health and magical energy.
+%%%%
+the Bargain card
+
+This card grants you a temporary discount in shops. It is not normally part of
+any deck.
+%%%%
+Shuffle card
+
+This card interchanges your three attributes. Use with caution!
 %%%%
 # cards for wizmode testing (&c)
 the Stairs card

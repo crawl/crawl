@@ -13,7 +13,7 @@ int artefact_value(const item_def &item);
 // as if the item was fully id'd
 unsigned int item_value(item_def item, bool ident = false);
 // price of an item if it were being sold in a given shop
-int item_price(const item_def& item, const shop_struct& shop);
+int item_price(const item_def& item, const shop_struct& shop, bool ignore_bargain = false);
 // Return true if an item is classified as a worthless consumable.
 // Note that this does not take into account the player's condition:
 // curse scrolls are worthless for everyone, most potions aren't worthless
