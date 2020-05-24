@@ -26,6 +26,7 @@
 #include "stringutil.h"
 #include "terrain.h"
 #include "unwind.h"
+#include "xom.h"
 
 string god_prayer_reaction()
 {
@@ -89,6 +90,8 @@ static bool _pray_ecumenical_altar()
 
         if (you_worship(GOD_RU))
             you.props[RU_SACRIFICE_PROGRESS_KEY] = 9999;
+        else if (you_worship(GOD_XOM))
+            xom_is_stimulated(200, XM_INTRIGUED, true);
         else
             gain_piety(20, 1, false);
 
