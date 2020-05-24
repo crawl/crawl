@@ -422,8 +422,13 @@ static const map<spschool, miscast_datum> miscast_effects = {
             [] (actor& target, actor* /*source*/,
                 miscast_source_info /*mc_info*/, int dam, string cause) {
 
+                // Double existing contamination, plus more from the damage
+                // roll
                 if (target.is_player())
-                    you.polymorph(2 * dam);
+                {
+                    contaminate_player(you.magic_contamination
+                                       + dam * MISCAST_DIVISOR, true);
+                }
                 else
                     target.malmutate(cause);
             }
