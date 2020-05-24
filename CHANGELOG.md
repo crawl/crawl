@@ -43,14 +43,17 @@
 - 베오그의 새로운 권능 오크 추종자 되돌리기 추가. 선택한 오크 추종자를 오크 광산으로 즉시 전송한다. 
    - Added Beogh ability "return Orcish Followers". Immediately send the selected orcish follower to orcrish mines.
    
+- 다음 신들이 6성때 무기에 브랜드를 부여해줌: 이레델렘눌(흡혈), 마크레브(혼돈), 트로그(안티매직), 지바(slimifying), 엘리빌론(pacifing), 체브리아도스(sluggish), 진(실버)
+   - The following gods give the weapon a brand at 6 stars: Yredelemnul(vampiric), Makhleb(chaos), Trog(antimagic), Jiyva(slimifying), Elyvilon(pacifing), Cheibriados(sluggish), zin(silver)
+
 - 독마법 최종티어 책인 거장의 회고록 추가
   - Added The Memoirs of the Virtuoso, the highest level Poison book
   
 - 가방 아이템 추가. 아이템을 자유롭게 넣고 뺄 수 있는 유틸리티 아이템임
   - Added bag. Miscellany that provide additional storage space
 
-- 마법 복구 : 가속, 특이점, 정령소환
-  - rollback Haste, singularity, Summon Elemenatal
+- 마법 복구 : 가속, 특이점, 정령소환, 컨트롤 언데드
+  - rollback Haste, Singularity, Summon Elemenatal, Control Undead
   
 - 로드 복구 (iron, clouds, ignition, inaccuracy, shadows)
   - rollback rod (iron, clouds, ignition, inaccuracy, shadows)
@@ -100,6 +103,13 @@
   
 - 링 오브 파이어는 이제 맞은 적에게 이너파이어를 검
   - Ring of Fire now casts Inner Fire on enemies it hits.
+  
+- 고통의 상처의 소음이 줄어듬
+  - excruciating wounds's noise reduction
+  
+- 네멜렉스의 원더덱이 돌아옴. 이제 네멜렉스는 다시 발동술을 사용함
+  - Nemelex's deck of wonder is comeback. Now Nemelex uses the evocation again.
+  - 돌아온 카드들 (xom, mercenary, alchemist, bargain, sage, portal, trowel, experience, helm, shuffle)
 
 - 드라코들은 이제 아래 종류의 갑옷을 입을 수 있음. All dracos can wear armour listed below
   - 로브 Robe
@@ -117,6 +127,12 @@
   
 - 펠리드와 옥토포드는 스카프를 낄 수 있게 됨
   - Allow octopode, felid wields a scarf
+
+- Inhibited Regeneration 변이 변경, 시험적으로 딥 드워프는 자연 회복이 이루어짐
+  - Change Inhibited Regeneration. and deep dwarf allow regen naturally (experimental)
+  
+- 강령술사는 스타팅책에 컨트롤 언데드와 고통의 상처를 들고 시작함
+  - necromancer starting book now contains 'control undead' and 'excruciating wounds'
 
 - 아군 소환물이 다시 LOS밖의 적과 싸울 수 있음
   - Allow friendly summons from attacking out of LOS
