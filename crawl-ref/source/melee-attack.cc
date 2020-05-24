@@ -2568,7 +2568,7 @@ void melee_attack::apply_pakellas_rod_damage()
         }
         break;
     }
-    case BLUEPRINT_POISON_SUMMON:
+    case BLUEPRINT_ELEMENTAL_POISON:
     {
         //more buf?
         defender->poison(attacker, 2);

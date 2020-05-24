@@ -192,6 +192,7 @@ int check_your_resists(int hurted, beam_type flavour, string source,
 
     case BEAM_POISON_ARROW:
     case BEAM_POISON_ERINYA:
+    case BEAM_ROD_POISON:
         if (doEffects)
         {
             // Ensure that we received a valid beam object before proceeding.

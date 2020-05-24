@@ -3258,6 +3258,10 @@ spret cast_olgrebs_last_mercy(int pow, const dist& dist, bool fail)
 
 spret cast_pakellas_bolt(int powc, bolt& beam, bool fail)
 {
+    if (you.religion != GOD_PAKELLAS) {
+        mprf("You cannot use it if you do not believe pakellas.");
+        return spret::success;
+    }
     // Need to use a 'generic' tracer regardless of the actual beam type,
     // to account for the possibility of both bouncing and irresistible damage
     // (even though only one of these two ever occurs on the same bolt type).
@@ -3265,9 +3269,13 @@ spret cast_pakellas_bolt(int powc, bolt& beam, bool fail)
     if (!player_tracer(is_blueprint_exist(BLUEPRINT_BOME) ? ZAP_EXPLOSION_TRACER : ZAP_MAGIC_DART, 200, tracer))
         return spret::abort;
 
+
+
     fail_check();
     
     float multiple = 1.0f;
+
+
 
     bolt pbolt = beam;
     pbolt.name = "magic bolt";
@@ -3306,7 +3314,16 @@ spret cast_pakellas_bolt(int powc, bolt& beam, bool fail)
         pbolt.colour = BROWN;
         pbolt.glyph = dchar_glyph(DCHAR_EXPLOSION);
         multiple *= 1.2f;
-    } else if (is_blueprint_exist(BLUEPRINT_CHAOS)) {
+    }
+    else if (is_blueprint_exist(BLUEPRINT_ELEMENTAL_POISON)) {
+        pbolt.name = "poison bolt";
+        pbolt.flavour = BEAM_ROD_POISON;
+        pbolt.real_flavour = BEAM_ROD_POISON;
+        pbolt.colour = GREEN;
+        pbolt.glyph = dchar_glyph(DCHAR_FIRED_ZAP);
+        multiple *= 1.2f;
+    }
+    else if (is_blueprint_exist(BLUEPRINT_CHAOS)) {
         pbolt.name = "choas bolt";
         pbolt.flavour = BEAM_CHAOS;
         pbolt.real_flavour = BEAM_CHAOS;
@@ -3481,7 +3498,8 @@ spret cast_pakellas_bolt(int powc, bolt& beam, bool fail)
     if (is_blueprint_exist(BLUEPRINT_BOME)) {
         pbolt.ex_size = is_blueprint_exist(BLUEPRINT_BOME);
     }
-    pbolt.range = spell_range(SPELL_PAKELLAS_ROD, powc);
+    int range = spell_range(SPELL_PAKELLAS_ROD, powc);
+    pbolt.range = range;
     //pbolt.ench_power = zap_ench_power(z_type, power, is_monster);
     
     //pbolt.hit = AUTOMATIC_HIT;
@@ -3496,6 +3514,40 @@ spret cast_pakellas_bolt(int powc, bolt& beam, bool fail)
 
     pbolt.loudness = 5 + is_blueprint_exist(BLUEPRINT_BOME);
 
-    pbolt.fire();
+    if (is_blueprint_exist(BLUEPRINT_SPREAD)) {
+        //targeter_cone hitfunc(&you, range, PI / 6);
+       // hitfunc.set_aim(pbolt.target);
+        targeter_shotgun hitfunc(&you, 11, range);
+
+        hitfunc.set_aim(pbolt.target);
+
+        bolt sbeam = pbolt;
+        sbeam.range = 1;
+#ifdef USE_TILE
+        sbeam.tile_beam = -1;
+#endif
+        sbeam.draw_delay = 0;
+
+        if (stop_attack_prompt(hitfunc, "glaciate", _player_glaciate_affects))
+        {
+            return spret::abort;
+        }
+
+        for (const auto& entry : hitfunc.zapped)
+        {
+            if (entry.second <= 0)
+                continue;
+
+            sbeam.source = entry.first;
+            sbeam.target = entry.first;
+            sbeam.fire();
+
+            sbeam.draw(entry.first);
+        }
+        scaled_delay(25);
+    }
+    else {
+        pbolt.fire();
+    }
     return spret::success;
 }
