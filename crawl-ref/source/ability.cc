@@ -190,6 +190,7 @@ skill_type invo_skill(god_type god)
         case GOD_KIKUBAAQUDGHA:
             return SK_NECROMANCY;
         case GOD_PAKELLAS:
+        case GOD_NEMELEX_XOBEH:
             return SK_EVOCATIONS;
         case GOD_ASHENZARI:
         case GOD_JIYVA:
@@ -501,11 +502,11 @@ static const ability_def Ability_List[] =
     { ABIL_NEMELEX_DRAW_STACK, "Draw Stack",
       0, 0, 0, 0, {}, abflag::card },
     { ABIL_NEMELEX_TRIPLE_DRAW, "Triple Draw",
-      2, 0, 0, 6, {fail_basis::invo, 60, 5, 20}, abflag::none },
+      2, 0, 0, 6, {fail_basis::evo, 60, 5, 20}, abflag::none },
     { ABIL_NEMELEX_DEAL_FOUR, "Deal Four",
-      8, 0, 0, 4, {fail_basis::invo, -1}, abflag::none }, // failure special-cased
+      8, 0, 0, 4, {fail_basis::evo, -1}, abflag::none }, // failure special-cased
     { ABIL_NEMELEX_STACK_FIVE, "Stack Five",
-      5, 0, 0, 10, {fail_basis::invo, 80, 4, 25}, abflag::none },
+      5, 0, 0, 10, {fail_basis::evo, 80, 4, 25}, abflag::none },
 
     // Beogh
     { ABIL_BEOGH_SMITING, "Smiting",

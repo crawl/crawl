@@ -2153,9 +2153,9 @@ static int _card_power(bool punishment)
         return you.experience_level * 18;
 
     int result = you.piety;
-    result *= you.skill(SK_INVOCATIONS, 100) + 2500;
+    result *= you.skill(SK_EVOCATIONS, 100) + 2500;
     result /= 2700;
-    result += you.skill(SK_INVOCATIONS, 9);
+    result += you.skill(SK_EVOCATIONS, 9);
     result += (you.piety * 3) / 2;
 
     return result;
