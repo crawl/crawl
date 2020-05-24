@@ -529,6 +529,7 @@ static void _maybe_drop_monster_hide(const item_def &corpse, bool silent)
 item_def* place_monster_corpse(const monster& mons, bool silent, bool force)
 {
     if (mons.is_summoned()
+        || mons.has_ench(ENCH_CIGOTUVIS_PLAGUE)
         || mons.flags & (MF_BANISHED | MF_HARD_RESET)
         || mons.props.exists("pikel_band"))
     {

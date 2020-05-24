@@ -1280,7 +1280,7 @@ static unique_ptr<targeter> _spell_targeter(spell_type spell, int pow,
                                               return you.pos() != p; });
 
     case SPELL_CIGOTUVIS_PLAGUE:
-        return make_unique<targeter_beam>(&you, range, ZAP_CRYSTAL_BOLT, pow,
+        return make_unique<targeter_beam>(&you, range, ZAP_CIGOTUVIS_PLAGUE, pow,
                                           0, 0);
         
     case SPELL_BORGNJORS_VILE_CLUTCH:
