@@ -626,6 +626,20 @@ steaming
 
 dazzling
 
+masterwork
+
+w:2
+smouldering
+
+w:5
+glimmering
+
+w:2
+buzzing
+
+w:5
+fading
+
 w:2
 blackened
 %%%%
