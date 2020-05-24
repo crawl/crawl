@@ -577,8 +577,7 @@ bool melee_attack::handle_phase_hit()
     {
         if (defender->is_player())
         {
-            you.duration[ENCH_CIGOTUVIS_PLAGUE] = 30;
-            printf("%d", you.duration[ENCH_CIGOTUVIS_PLAGUE]);
+            you.increase_duration(DUR_CIGOTUVIS_PLAGUE, 10);
         }
 
         else if (defender->is_monster())
@@ -587,7 +586,6 @@ bool melee_attack::handle_phase_hit()
             mon -> add_ench(mon_enchant(ENCH_CIGOTUVIS_PLAGUE, 0, &you, 10));
         }
     }
-
     return true;
 }
 
