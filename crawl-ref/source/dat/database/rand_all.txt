@@ -548,12 +548,25 @@ the Well-Known
 _thing_names_
 Allies
 
+Artisans
+
+Artists
+
+Beasts
+
 Beds
 
 Beggars
 
 Blessings
 
+Bones
+
+Bounties
+
+Brambles
+
+w:5
 Cities
 
 Coins
@@ -566,9 +579,13 @@ Dances
 
 Deaths
 
+Defenders
+
 Demons
 
 Dreams
+
+Ears
 
 Emperors
 
@@ -576,11 +593,30 @@ Eyes
 
 Friends
 
+Friars
+
+Geomancers
+
 Ghosts
 
 Gods
 
+Heavens
+
 Hells
+
+Hosts
+
+Interlopers
+
+Invaders
+
+Knaves
+
+w:25
+Knives
+
+Leylines
 
 Lies
 
@@ -592,21 +628,42 @@ Mice
 
 Moons
 
+Mouths
+
+Mystics
+
+w:5
+Nightcaps
+
+Nightingales
+
 Nightmares
 
 Nights
+
+Olives
 
 Orbs
 
 People
 
+Persimmons
+
 Places
 
 Planets
 
+Portals
+
+Priests
+
 Princes
 
+Prophets
+
 Queens
+
+Quests
 
 Realms
 
@@ -616,6 +673,10 @@ Scars
 
 Seas
 
+Seers
+
+Servitors
+
 Ships
 
 Shrikes
@@ -623,6 +684,8 @@ Shrikes
 Songs
 
 Souls
+
+Spines
 
 Spirits
 
@@ -639,11 +702,49 @@ Tables
 
 Tales
 
+Teeth
+
+Thickets
+
+w:5
+Things
+
+w:5
+Towns
+
+Tusks
+
+Ultimatums
+
+Underlurkers
+
+w:5
+Villages
+
+Violins
+
+Visionaries
+
+Visions
+
 Wars
 
 Wishes
 
 Wonders
 
+Xalams
+
+Xenops
+
+Xeniums
+
+w:5
+Xenophobes
+
 Yaks
+
+Youths
+
+Ziggurats
 %%%%
