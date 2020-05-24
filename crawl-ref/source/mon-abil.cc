@@ -279,7 +279,7 @@ static bool _do_merge_crawlies(monster* crawlie, monster* merge_to)
 {
     const int orighd = merge_to->get_experience_level();
     int addhd = crawlie->get_experience_level();
-
+    
     // Abomination is fully healed.
     if (merge_to->type == MONS_ABOMINATION_LARGE
         && merge_to->max_hit_points == merge_to->hit_points)
@@ -346,6 +346,7 @@ static bool _do_merge_crawlies(monster* crawlie, monster* merge_to)
             // Making a new abomination.
             hp = mhp = hit_points(newhd * 45); // 4.5 avg hp/hd
         }
+        
     }
 
     const monster_type old_type = merge_to->type;
@@ -404,6 +405,7 @@ static bool _do_merge_crawlies(monster* crawlie, monster* merge_to)
     else if (you.can_see(*crawlie))
         mprf("%s suddenly disappears!", crawlie->name(DESC_A).c_str());
 
+    
     // Now kill the other monster.
     monster_die(*crawlie, KILL_DISMISSED, NON_MONSTER, true);
 

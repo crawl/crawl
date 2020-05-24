@@ -399,8 +399,7 @@ static void _evolve_by_cigotuvis_plague(int /*time_delta*/)
             mpr("You feel a genetic drift caused by the virus.");
             bool evol = one_chance_in(5) ?
                 mutate(RANDOM_BAD_MUTATION, "evolution", false, false, false, false, MUTCLASS_NORMAL) :
-                mutate(random_choose(RANDOM_GOOD_MUTATION, RANDOM_MUTATION),
-                       "evolution", false, false, false, false, MUTCLASS_NORMAL);
+                mutate(RANDOM_MUTATION, "evolution", false, false, false, false, MUTCLASS_NORMAL);
             // interrupt the player only if something actually happened
             if (evol)
                 more();

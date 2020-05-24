@@ -5348,7 +5348,7 @@ bool ench_flavour_affects_monster(beam_type flavour, const monster* mon,
         break;
 
     case BEAM_CIGOTUVIS_PLAGUE:
-        rc = mons_gives_xp(*mon, you) && !mon->has_ench(ENCH_CIGOTUVIS_PLAGUE) && MH_NATURAL;
+        rc = mons_gives_xp(*mon, you) && mons_can_be_zombified(*mon);
 
     case BEAM_VILE_CLUTCH:
         rc = !mons_aligned(&you, mon) && you.can_constrict(mon, false);
@@ -5914,10 +5914,14 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
     case BEAM_CIGOTUVIS_PLAGUE:
     {
         const int dur = (5 + random2avg(ench_power / 2, 2)) * BASELINE_DELAY;
-        mon->add_ench(mon_enchant(ENCH_CIGOTUVIS_PLAGUE, 0, &you, dur));
-        if (simple_monster_message(*mon, " seems sick!"))
-            obvious_effect = true;
-        return MON_AFFECTED;
+        if (mons_can_be_zombified(*mon))
+        {
+            mon->add_ench(mon_enchant(ENCH_CIGOTUVIS_PLAGUE, 0, &you, dur));
+            if (simple_monster_message(*mon, " seems sick!"))
+                obvious_effect = true;
+            return MON_AFFECTED;
+        }
+        return MON_UNAFFECTED;   
     }
 
     case BEAM_VILE_CLUTCH:
@@ -6748,7 +6752,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_SHARED_PAIN:           return "shared pain";
     case BEAM_IRRESISTIBLE_CONFUSION:return "confusion";
     case BEAM_INFESTATION:           return "infestation";
-    case BEAM_CIGOTUVIS_PLAGUE:       return "cigotuvi's plague";
+    case BEAM_CIGOTUVIS_PLAGUE:      return "cigotuvi's plague";
     case BEAM_VILE_CLUTCH:           return "vile clutch";
     case BEAM_ROD_FIRE:              return "fire";
     case BEAM_ROD_COLD:              return "cold";
