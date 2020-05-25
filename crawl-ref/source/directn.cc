@@ -1767,10 +1767,15 @@ coord_def direction_chooser::find_summoner()
 {
     const monster* mon = monster_at(target());
 
-    // Don't leak information about rakshasa mirrored illusions.
-    if (mon && mon->is_summoned() && !mon->has_ench(ENCH_PHANTOM_MIRROR))
+    if (mon && mon->is_summoned()
+        // Don't leak information about rakshasa mirrored illusions.
+        && !mon->has_ench(ENCH_PHANTOM_MIRROR)
+        // Don't leak information about invisible or out-of-los summons.
+        && you.can_see(*mon))
+    {
         if (const monster *summ = monster_by_mid(mon->summoner))
             return summ->pos();
+    }
     return INVALID_COORD;
 }
 
