@@ -868,6 +868,11 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
                 this.draw_icon(icons.VILE_CLUTCH, x, y, -status_shift, 0);
                 status_shift += 11;
             }
+            if (fg.CIGOTUVIS_PLAGUE)
+            {
+                this.draw_icon(icons.CIGOTUVIS_PLAGUE, x, y, -status_shift, 0);
+                status_shift += 7;
+            }
             if (fg.GLOWING)
             {
                 this.draw_icon(icons.GLOWING, x, y, -status_shift, 0);
