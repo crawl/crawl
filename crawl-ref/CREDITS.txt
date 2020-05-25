@@ -108,6 +108,7 @@
     bones
     Peter Borgmann
     Matthew Boeh
+    Clare Boothby
     Mike Boutin
     John Boyle
     Josh Braden
@@ -132,6 +133,7 @@
     Aaron Curtis
     Simon Curtis
     cut1less
+    David Damerell
     Paul Dejean
     Denzi
     Lothar Dierkes
@@ -198,6 +200,7 @@
     Kornel Kisielewicz
     Vesa Kivimäki
     Daniel Klein
+    klorpa
     Jon Knapp
     Quinten Konyn
     Ilkka Koskela
@@ -235,6 +238,7 @@
     Jacob Meigs
     mgdelmonte
     mikee
+    Nathan Mills
     Andrew Minton
     Byrel Mitchell
     Yer Mivvaggah
@@ -335,6 +339,7 @@
     Tommy
     Sean VanMeter
     Mikko Vepsäläinen
+    vla22
     WanderingBlade
     Richard Wardin
     waylon531
@@ -347,6 +352,7 @@
     Yelve Yakut
     Edward Z. Yang
     Yermak
+    Andrew G. York
     Rob Young
     Zannick
     Zooko
