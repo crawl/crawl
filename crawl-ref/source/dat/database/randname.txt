@@ -76,7 +76,7 @@ w:9
 of @death_or_doom@
 
 w:6
-of @adjective@ @_strategy_or_justice_@
+of @_adjective_@ @_strategy_or_justice_@
 
 of @_strategy_or_justice_@
 
