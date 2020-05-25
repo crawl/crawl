@@ -2115,7 +2115,7 @@ static string _god_wrath_stat_check(string cause_orig)
     return cause;
 }
 
-static void _shuffle_card(int power)
+static void _shuffle_card(int)
 {
     int perm[] = { 0, 1, 2 };
     COMPILE_CHECK(ARRAYSZ(perm) == NUM_STATS);

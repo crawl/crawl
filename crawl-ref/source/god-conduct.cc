@@ -886,7 +886,7 @@ static like_map divine_likes[] =
     // GOD_PAKELLAS,
     {
         { DID_KILL_LIVING, _on_kill("you kill living beings", MH_NATURAL, false,
-                                  [](int &piety, int &denom,
+                                  [](int &, int &,
                                      const monster* /*victim*/)
             {
                 ASSERT(you.props.exists(PAKELLAS_UPGRADE_ROD_PROGRESS_KEY));

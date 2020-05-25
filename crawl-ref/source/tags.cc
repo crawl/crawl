@@ -3194,28 +3194,6 @@ static void tag_read_you(reader &th)
     _cap_mutation_at(MUT_HERBIVOROUS, 1);
     _cap_mutation_at(MUT_CARNIVOROUS, 1);
 
-    // Slow regeneration split into two single-level muts:
-    // * Inhibited regeneration (no regen in los of monsters, what Gh get)
-    // * No regeneration (what DDs get)
-    {
-        if (you.species == SP_DEEP_DWARF
-            && (you.mutation[MUT_INHIBITED_REGENERATION] > 0
-                || you.mutation[MUT_NO_REGENERATION] != 1))
-        {
-            you.innate_mutation[MUT_INHIBITED_REGENERATION] = 0;
-            you.mutation[MUT_INHIBITED_REGENERATION] = 0;
-            you.innate_mutation[MUT_NO_REGENERATION] = 1;
-            you.mutation[MUT_NO_REGENERATION] = 1;
-        }
-        else if (you.species == SP_GHOUL
-                 && you.mutation[MUT_INHIBITED_REGENERATION] > 1)
-        {
-            you.innate_mutation[MUT_INHIBITED_REGENERATION] = 1;
-            you.mutation[MUT_INHIBITED_REGENERATION] = 1;
-        }
-        else if (you.mutation[MUT_INHIBITED_REGENERATION] > 1)
-            you.mutation[MUT_INHIBITED_REGENERATION] = 1;
-    }
 
     if (th.getMinorVersion() < TAG_MINOR_YELLOW_DRACONIAN_RACID
         && you.species == SP_YELLOW_DRACONIAN)
