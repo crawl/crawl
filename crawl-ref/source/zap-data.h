@@ -513,7 +513,23 @@ _mon_hex_zap(ZAP_BANISHMENT, BEAM_BANISH, 150),
     false,
     1 // XXX: Maybe silent because it's poison?
 },
-
+{
+    ZAP_CIGOTUVIS_PLAGUE,
+    "cigotuvi's plague",
+    25,
+    nullptr,
+    nullptr,
+    nullptr,
+    nullptr,
+    MAGENTA,
+    true,
+    BEAM_CIGOTUVIS_PLAGUE,
+    DCHAR_FIRED_MISSILE,
+    false,
+    false,
+    false,
+    0 // XXX: Maybe silent because it's poison?
+},
 {
     ZAP_DAMNATION,
     "damnation",

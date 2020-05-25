@@ -1279,6 +1279,10 @@ static unique_ptr<targeter> _spell_targeter(spell_type spell, int pow,
                                            [](const coord_def& p) -> bool {
                                               return you.pos() != p; });
 
+    case SPELL_CIGOTUVIS_PLAGUE:
+        return make_unique<targeter_beam>(&you, range, ZAP_CIGOTUVIS_PLAGUE, pow,
+                                          0, 0);
+        
     case SPELL_BORGNJORS_VILE_CLUTCH:
         return make_unique<targeter_smite>(&you, range, 1, 1, false,
                                            [](const coord_def& p) -> bool {

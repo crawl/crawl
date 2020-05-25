@@ -568,6 +568,23 @@ bool melee_attack::handle_phase_hit()
         emit_foul_stench();
     }
 
+    if (attacker->is_player() && you.duration[DUR_CIGOTUVIS_PLAGUE] && defender->alive())
+    {
+        monster* mon = defender->as_monster();
+        mon -> add_ench(mon_enchant(ENCH_CIGOTUVIS_PLAGUE, 0, &you, 10));
+    }
+    if (attacker->is_monster() && attacker->as_monster()->has_ench(ENCH_CIGOTUVIS_PLAGUE))
+    {
+        if (defender->is_player())
+        {
+            you.duration[DUR_CIGOTUVIS_PLAGUE] = 10;
+        }
+
+        else if (defender->is_monster() && mons_can_be_zombified(*defender->as_monster()))
+        {
+           defender->as_monster()->add_ench(mon_enchant(ENCH_CIGOTUVIS_PLAGUE, 0, &you, 10));
+        }
+    }
     return true;
 }
 

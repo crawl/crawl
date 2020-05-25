@@ -110,6 +110,7 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_IDEALISED,       MB_IDEALISED },
     { ENCH_BOUND_SOUL,      MB_BOUND_SOUL },
     { ENCH_INFESTATION,     MB_INFESTATION },
+    { ENCH_CIGOTUVIS_PLAGUE, MB_CIGOTUVIS_PLAGUE }, 
     { ENCH_STILL_WINDS,     MB_STILL_WINDS },
     { ENCH_SLOWLY_DYING,    MB_SLOWLY_DYING },
     { ENCH_WHIRLWIND_PINNED, MB_PINNED },
@@ -1558,6 +1559,8 @@ vector<string> monster_info::attributes() const
         v.emplace_back("bound soul");
     if (is(MB_INFESTATION))
         v.emplace_back("infested");
+    if (is(MB_CIGOTUVIS_PLAGUE))
+        v.emplace_back("infected by Cigotuvi's virus");
     if (is(MB_STILL_WINDS))
         v.emplace_back("stilling the winds");
     if (is(MB_VILE_CLUTCH))

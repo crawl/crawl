@@ -3833,13 +3833,24 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_INFESTATION, "Infestation",
-    spschool::necromancy,
+    spschool::necromancy, 
     spflag::target | spflag::unclean,
     8,
     200,
     LOS_RADIUS, LOS_RADIUS,
     8, 4,
     TILEG_INFESTATION,
+},
+
+{
+    SPELL_CIGOTUVIS_PLAGUE, "Cigotuvi's plague",
+    spschool::necromancy | spschool::hexes,
+    spflag::dir_or_target | spflag::not_self | spflag::chaotic | spflag::needs_tracer,
+    5,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    4, 0,
+    TILEG_CIGOTUVIS_PLAGUE,
 },
 
 {

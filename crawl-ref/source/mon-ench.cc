@@ -974,6 +974,11 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             simple_monster_message(*this, " is no longer infested.");
         break;
 
+    case ENCH_CIGOTUVIS_PLAGUE:
+        if (!quiet)
+            simple_monster_message(*this, " seems better.");
+        break;
+
     case ENCH_VILE_CLUTCH:
     case ENCH_GRASPING_ROOTS:
     {
@@ -1398,6 +1403,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_ANTIMAGIC:
     case ENCH_BOUND_SOUL:
     case ENCH_INFESTATION:
+    case ENCH_CIGOTUVIS_PLAGUE:
     case ENCH_BLACK_MARK:
     case ENCH_STILL_WINDS:
     case ENCH_RING_OF_THUNDER:
@@ -2040,7 +2046,7 @@ static const char *enchant_names[] =
     "chanting_fire_storm", "chanting_word_of_entropy",
 #endif
     "aura_of_brilliance", "empowered_spells", "gozag_incite", "pain_bond",
-    "idealised", "bound_soul", "infestation",
+    "idealised", "bound_soul", "infestation", "CIGOTUVIS_PLAGUE",
     "stilling the winds", "thunder_ringed", "pinned_by_whirlwind",
     "vortex", "vortex_cooldown", "vile_clutch",
     "buggy",

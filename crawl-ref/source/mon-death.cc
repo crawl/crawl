@@ -438,6 +438,50 @@ static void _gold_pile(item_def &corpse, monster_type corpse_class)
     you.redraw_title = true;
 }
 
+static void _cigotuvis_plague_make_abomination(const monster* mons)
+{
+    if (mons_can_be_zombified(*mons) && !you_worship(GOD_GOZAG) 
+        && !(mons->flags & MF_EXPLODE_KILL))
+    {
+        int pow = you.skill(SK_NECROMANCY) + you.experience_level;
+        int chunks = max_corpse_chunks(mons -> type);
+        int hd = div_rand_round( pow * chunks, 9);
+        // Use the original monster type as the zombified type here, to
+        // get the proper stats from it.
+        if (hd > 15)
+            hd = 15 + (hd - 15) / 2;
+
+        hd = min(hd, 30);
+        monster_type montype;
+        if (hd >= 11 && mons->body_size() == SIZE_LARGE)
+            montype = MONS_ABOMINATION_LARGE;
+        else if (hd >= 6 && mons->body_size() != SIZE_LARGE)
+            montype = MONS_ABOMINATION_SMALL;
+        else if (mons->body_size() != SIZE_LARGE)
+            montype = MONS_MACABRE_MASS;
+        else
+            montype = MONS_CRAWLING_CORPSE;
+        mgen_data mg(montype,
+                     BEH_FRIENDLY,
+                     mons->pos(),
+                     crawl_state.game_is_arena() ? MHITNOT : MHITYOU);
+        mg.set_summoned(&you,
+                        0,
+                        SPELL_CIGOTUVIS_PLAGUE);
+        mg.set_base(mons->type);
+
+        if (monster *abm = create_monster(mg))
+        {
+            // Set hit dice, AC, and HP.
+            init_abomination(*abm, hd);
+            abm->add_ench(mon_enchant(ENCH_CIGOTUVIS_PLAGUE, 0, &you, INFINITE_DURATION));
+            abm->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 6));
+        }
+
+        cigotuvis_plague_death_fineff::schedule(mons->pos());
+    }
+}
+
 static void _create_monster_hide(const item_def &corpse, bool silent)
 {
     const monster_type mtyp = corpse.mon_type;
@@ -542,6 +586,8 @@ item_def* place_monster_corpse(const monster& mons, bool silent, bool force)
                    && mons_gives_xp(mons, you)
                    && !force;
 
+    bool cigotuvihost = mons.has_ench(ENCH_CIGOTUVIS_PLAGUE);
+
     const bool no_coinflip = mons.props.exists("always_corpse")
                              || force
                              || goldify;
@@ -584,6 +630,12 @@ item_def* place_monster_corpse(const monster& mons, bool silent, bool force)
     }
     else if (!_fill_out_corpse(mons, corpse))
         return nullptr;
+
+    else if (cigotuvihost)
+    {   
+        corpse.clear();
+        _cigotuvis_plague_make_abomination(&mons);
+    }
 
     origin_set_monster(corpse, &mons);
 
@@ -1292,6 +1344,7 @@ static void _infestation_create_scarab(monster* mons)
     infestation_death_fineff::schedule(mons->pos(), mons->name(DESC_THE));
 }
 
+
 static void _monster_die_cloud(const monster* mons, bool corpse, bool silent,
                                bool summoned)
 {
@@ -1444,6 +1497,8 @@ static void _make_derived_undead(monster* mons, bool quiet, bool bound_soul)
 
     }
 }
+
+
 
 static void _druid_final_boon(const monster* mons)
 {
@@ -2610,6 +2665,12 @@ item_def* monster_die(monster& mons, killer_type killer,
         _give_experience(player_xp, monster_xp, killer, killer_index,
                 pet_kill, was_visible, mons.xp_tracking);
     }
+
+    if (mons.has_ench(ENCH_CIGOTUVIS_PLAGUE))
+    {
+        return nullptr;
+    }
+
     return corpse;
 }
 

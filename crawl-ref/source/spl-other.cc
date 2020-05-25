@@ -88,6 +88,7 @@ spret cast_death_channel(int pow, god_type god, bool fail)
     return spret::success;
 }
 
+
 spret cast_recall(bool fail)
 {
     fail_check();
