@@ -222,10 +222,12 @@ map<pakellas_blueprint_type, pakellas_blueprint_struct> blueprint_list =
                                 1,
                                 0,
                                 0)},
-    { BLUEPRINT_CLEAVING, _base2_blueprint("Cleaving", "Gain cleaving.", "cleave",
+    { BLUEPRINT_CLEAVING, _prerequire2_blueprint("Cleaving", "Gain cleaving.", "cleave",
                                 1,
                                 0,
-                                100)},
+                                100,
+                                {},
+                                {BLUEPRINT_LEGION})},
     { BLUEPRINT_HALO, _prerequire_blueprint("Halo", "Get a 3-tile halo.", "halo",
                                 100,
                                 {},
@@ -251,7 +253,7 @@ map<pakellas_blueprint_type, pakellas_blueprint_struct> blueprint_list =
                                 1,
                                 100,
                                 {},
-                                {}) },
+                                {BLUEPRINT_CLEAVING}) },
 
                                                                        
     //ASSIST
