@@ -21,7 +21,6 @@
 #include "directn.h"
 #include "dungeon.h"
 #include "env.h"
-#include "evoke.h"
 #include "fight.h"
 #include "fprop.h"
 #include "god-abil.h"
@@ -49,6 +48,8 @@
 #include "travel.h"
 #include "transform.h"
 #include "xom.h" // XOM_CLOUD_TRAIL_TYPE_KEY
+
+static void _apply_move_time_taken(int additional_time_taken = 0);
 
 // Swap monster to this location. Player is swapped elsewhere.
 // Moves the monster into position, but does not move the player
@@ -142,12 +143,13 @@ static void _entered_malign_portal(actor* act)
               "", "entering a malign gateway");
 }
 
-bool cancel_barbed_move()
+bool cancel_barbed_move(bool lunging)
 {
     if (you.duration[DUR_BARBS] && !you.props.exists(BARBS_MOVE_KEY))
     {
-        std::string prompt = "The barbs in your skin will harm you if you move."
-                        " Continue?";
+        std::string prompt = "The barbs in your skin will harm you if you move.";
+        prompt += lunging ? " Lunging like this could really hurt!" : "";
+        prompt += " Continue?";
         if (!yesno(prompt.c_str(), false, 'n'))
         {
             canned_msg(MSG_OK);
@@ -160,7 +162,7 @@ bool cancel_barbed_move()
     return false;
 }
 
-void apply_barbs_damage()
+void apply_barbs_damage(bool lunging)
 {
     if (you.duration[DUR_BARBS])
     {
@@ -174,7 +176,7 @@ void apply_barbs_damage()
             extract_manticore_spikes("The barbed spikes snap loose.");
         // But if that failed to end the effect, duration stays the same.
         if (you.duration[DUR_BARBS])
-            you.duration[DUR_BARBS] += you.time_taken;
+            you.duration[DUR_BARBS] += (lunging ? 0 : you.time_taken);
     }
 }
 
@@ -186,6 +188,51 @@ void remove_ice_armour_movement()
                              "you move.");
         you.duration[DUR_ICY_ARMOUR] = 0;
         you.redraw_armour_class = true;
+    }
+}
+
+static void _remove_water_hold()
+{
+    if (you.duration[DUR_WATER_HOLD])
+    {
+        mpr("You slip free of the water engulfing you.");
+        you.props.erase("water_holder");
+        you.clear_far_engulf();
+    }
+}
+
+static void _clear_constriction_data()
+{
+    you.stop_directly_constricting_all(true);
+    if (you.is_directly_constricted())
+        you.stop_being_constricted();
+}
+
+static void _apply_noxious_bog(coord_def old_pos)
+{
+    if (you.duration[DUR_NOXIOUS_BOG])
+    {
+        if (cell_is_solid(old_pos))
+            ASSERT(you.wizmode_teleported_into_rock);
+        else
+            noxious_bog_cell(old_pos);
+    }
+}
+
+static void _apply_cloud_trail(coord_def old_pos)
+{
+    if (you.duration[DUR_CLOUD_TRAIL])
+    {
+        if (cell_is_solid(old_pos))
+            ASSERT(you.wizmode_teleported_into_rock);
+        else
+        {
+            auto cloud = static_cast<cloud_type>(
+                you.props[XOM_CLOUD_TRAIL_TYPE_KEY].get_int());
+            ASSERT(cloud != CLOUD_NONE);
+            check_place_cloud(cloud, old_pos, random_range(3, 10), &you,
+                              0, -1);
+        }
     }
 }
 
@@ -455,6 +502,257 @@ bool prompt_dangerous_portal(dungeon_feature_type ftype)
     }
 }
 
+/**
+ * Lunges the player toward a hostile monster, if one exists in the direction of
+ * the move input. Invalid things along the Lunge path cancel the Lunge.
+ *
+ * @param move  A relative coord_def of the player's CMD_MOVE input,
+ *              as called by move_player_action().
+ * @return      spret::fail if something invalid prevented the lunge,
+ *              spret::abort if a player prompt response should cancel the move
+ *              entirely,
+ *              spret::success if the lunge occurred.
+ */
+static spret _lunge_forward(coord_def move)
+{
+    ASSERT(!crawl_state.game_is_arena());
+
+    // Assert if the requested move is beyond [-1,1] distance,
+    // this would throw off our tracer_target.
+    ASSERT(abs(you.pos().x - move.x) > 1 || abs(you.pos().y - move.y) > 1);
+
+    if (crawl_state.is_repeating_cmd())
+    {
+        crawl_state.cant_cmd_repeat("You can't repeat lunge.");
+        crawl_state.cancel_cmd_again();
+        crawl_state.cancel_cmd_repeat();
+        return spret::fail;
+    }
+
+    // Don't lunge if the player has status effects that should prevent it:
+    // fungusform + terrified, confusion, immobile (tree)form, or constricted.
+    if (you.is_nervous()
+        || you.confused()
+        || you.is_stationary()
+        || you.is_constricted())
+    {
+        return spret::fail;
+    }
+
+    const int tracer_range = 7;
+    const int lunge_distance = 1;
+
+    // This logic assumes that the relative coord_def move is from [-1,1].
+    // If the move_player_action() calls are ever rewritten in a way that
+    // breaks this assumption, these targeters will need to be updated.
+    const coord_def tracer_target = you.pos() + (move * tracer_range);
+    const coord_def lunge_target = you.pos() + (move * lunge_distance);
+
+    // Setup the lunge tracer beam.
+    bolt beam;
+    beam.range           = LOS_RADIUS;
+    beam.aimed_at_spot   = true;
+    beam.target          = tracer_target;
+    beam.name            = "lunging";
+    beam.source_name     = "you";
+    beam.source          = you.pos();
+    beam.source_id       = MID_PLAYER;
+    beam.thrower         = KILL_YOU;
+    // The lunge reposition is explicitly noiseless for stab synergy.
+    // Its ensuing move or attack action will generate a normal amount of noise.
+    beam.loudness        = 0;
+    beam.pierce          = true;
+    beam.affects_nothing = true;
+    beam.is_tracer       = true;
+    // is_targeting prevents bolt::do_fire() from interrupting with a prompt,
+    // if our tracer crosses something that blocks line of fire.
+    beam.is_targeting    = true;
+    beam.fire();
+
+    const monster* valid_target = nullptr;
+
+    // Iterate the tracer to see if the first visible target is a hostile mons.
+    for (coord_def p : beam.path_taken)
+    {
+        // Don't lunge if our tracer path is broken by deep water, lava,
+        // teleport traps, etc., before it reaches a monster.
+        if (!feat_is_traversable(grd(p))
+            && !(grd(p) == DNGN_SHALLOW_WATER))
+        {
+            break;
+        }
+        // Don't lunge if the tracer path is broken by something solid or
+        // transparent: doors, grates, etc.
+        if (cell_is_solid(p) || you.trans_wall_blocking(p))
+            break;
+
+        const monster* mon = monster_at(p);
+        if (!mon)
+            continue;
+        // Don't lunge at invis mons, but allow the tracer to keep going.
+        else if (mon && !you.can_see(*mon))
+            continue;
+        // Don't lunge if the closest mons is non-hostile or a plant.
+        else if (mon && (mon->friendly()
+                         || mon->neutral()
+                         || mons_is_firewood(*mon)))
+        {
+            break;
+        }
+        // Okay, the first mons along the tracer is a valid target.
+        else if (mon)
+        {
+            valid_target = mon;
+            break;
+        }
+    }
+    if (!valid_target)
+        return spret::fail;
+
+    // Reset the beam target to the actual lunge_target distance.
+    beam.target = lunge_target;
+
+    // Don't lunge if the player's tile is being targeted, somehow.
+    if (beam.target == you.pos())
+        return spret::fail;
+
+    // Don't lunge if it would take us away from a beholder.
+    const monster* beholder = you.get_beholder(beam.target);
+    if (beholder)
+    {
+        clear_messages();
+        mprf("You cannot lunge away from %s!",
+             beholder->name(DESC_THE, true).c_str());
+        return spret::fail;
+    }
+
+    // Don't lunge if it would take us toward a fearmonger.
+    const monster* fearmonger = you.get_fearmonger(beam.target);
+    if (fearmonger)
+    {
+        clear_messages();
+        mprf("You cannot lunge closer to %s!",
+             fearmonger->name(DESC_THE, true).c_str());
+        return spret::fail;
+    }
+
+    // Don't lunge if it would land us on top of a monster.
+    const monster* mons = monster_at(beam.target);
+    if (mons)
+    {
+        if (!you.can_see(*mons))
+        {
+            // .. if it was in the way and invisible, notify the player.
+            clear_messages();
+            mpr("Something unexpectedly blocked you, preventing you from lunging!");
+        }
+        return spret::fail;
+    }
+
+    // Don't lunge if the target tile has a dangerous (!FFT_SOLID) feature:
+    if (feat_is_lava(grd(beam.target)))
+    {
+        return spret::fail;
+    }
+    else if (grd(beam.target) == DNGN_DEEP_WATER
+             || grd(beam.target) == DNGN_TOXIC_BOG)
+    {
+        return spret::fail;
+    }
+    // Don't lunge if the target tile is out of bounds,
+    // Don't lunge if we cannot see the target tile,
+    // Don't lunge if something transparent is in the way.
+    else if (you.trans_wall_blocking(beam.target))
+    {
+        return spret::fail;
+    }
+    // Don't lunge if the target tile has a feature with the FFT_SOLID flag:
+    // (see feature-data.h)
+    // This covers walls, closed doors, sealed doors, trees, open sea, lava sea,
+    // endless salt, grates, statues, malign gateways, and DNGN_UNSEEN.
+    else if (cell_is_solid(beam.target))
+    {
+        return spret::fail;
+    }
+
+    // Abort if the player answers no to a dangerous terrain/trap/cloud/
+    // exclusion prompt; messaging for this is handled by check_moveto().
+    if (!check_moveto(beam.target, "lunge"))
+        return spret::abort;
+
+    // Abort if the player answers no to a DUR_BARBS damaging move prompt.
+    if (cancel_barbed_move(true))
+        return spret::abort;
+
+    // We've passed the validity checks, go ahead and lunge.
+
+    // First, apply any necessary pre-move effects:
+    _remove_water_hold();
+    _clear_constriction_data();
+    const coord_def old_pos = you.pos();
+
+    clear_messages();
+    mprf("You lunge towards %s!", valid_target->name(DESC_THE, true).c_str());
+    // stepped = true, we're flavouring this as movement, not a blink.
+    move_player_to_grid(beam.target, true);
+
+    // Lastly, apply post-move effects unhandled by move_player_to_grid().
+    _apply_noxious_bog(old_pos);
+    _apply_cloud_trail(old_pos);
+    apply_barbs_damage(true);
+    remove_ice_armour_movement();
+
+    // If there is somehow an active run delay here, update the travel trail.
+    if (you_are_delayed() && current_delay()->is_run())
+        env.travel_trail.push_back(you.pos());
+
+    return spret::success;
+}
+
+static void _apply_move_time_taken(int additional_time_taken)
+{
+    you.time_taken *= player_movement_speed();
+    you.time_taken = div_rand_round(you.time_taken, 10);
+    you.time_taken += additional_time_taken;
+
+    if (you.running && you.running.travel_speed)
+    {
+        you.time_taken = max(you.time_taken,
+                             div_round_up(100, you.running.travel_speed));
+    }
+
+    if (you.duration[DUR_NO_HOP])
+        you.duration[DUR_NO_HOP] += you.time_taken;
+}
+
+// The "first square" of lunging ordinarily has no time cost, and the
+// "second square" is where its move delay or attack delay would be applied.
+// If the player begins a lunge, and then cancels the second move, as through a
+// prompt, we have to ensure they don't get zero-cost movement out of it.
+// Here we apply movedelay, end the turn, and call relevant post-move effects.
+static void _finalize_cancelled_lunge_move(coord_def initial_position)
+{
+    _apply_move_time_taken();   // tanstaaf-lunge
+    you.turn_is_over = true;
+
+    if (player_in_branch(BRANCH_ABYSS))
+        maybe_shift_abyss_around_player();
+
+    you.apply_berserk_penalty = true;
+
+    // lunging is pretty dang hasty
+    if (you_worship(GOD_CHEIBRIADOS) && one_chance_in(2))
+        did_god_conduct(DID_HASTY, 1, true);
+
+    bool did_wu_jian_attack = false;
+    if (you_worship(GOD_WU_JIAN))
+        did_wu_jian_attack = wu_jian_post_move_effects(false, initial_position);
+
+    // We're eligible for acrobat if we don't trigger WJC attacks.
+    if (!did_wu_jian_attack)
+        update_acrobat_status();
+}
+
 // Called when the player moves by walking/running. Also calls attack
 // function etc when necessary.
 void move_player_action(coord_def move)
@@ -477,7 +775,7 @@ void move_player_action(coord_def move)
         return;
     }
 
-    const coord_def initial_position = you.pos();
+    coord_def initial_position = you.pos();
 
     // When confused, sometimes make a random move.
     if (you.confused())
@@ -535,14 +833,31 @@ void move_player_action(coord_def move)
         }
     }
 
+    bool lunged = false;
+
     if (you.lunging())
     {
-        lunge_forward(move);
+        switch (_lunge_forward(move))
+        {
+            // Check the player's position again; lunge may have moved us.
 
-        // lunge may have updated the player's position:
-        // check it again to be sure
-        ASSERT(!in_bounds(you.pos()) || !cell_is_solid(you.pos())
-               || you.wizmode_teleported_into_rock);
+            // Cancel the move entirely if lunge was aborted from a prompt.
+            case spret::abort:
+                ASSERT(!in_bounds(you.pos()) || !cell_is_solid(you.pos())
+                       || you.wizmode_teleported_into_rock);
+                return;
+
+            case spret::success:
+                lunged = true;
+                // If we've lunged, reset initial_position for WJC targeting.
+                initial_position = you.pos();
+                // intentional fallthrough
+            default:
+            case spret::fail:
+                ASSERT(!in_bounds(you.pos()) || !cell_is_solid(you.pos())
+                       || you.wizmode_teleported_into_rock);
+                break;
+        }
     }
 
     const coord_def targ = you.pos() + move;
@@ -620,6 +935,13 @@ void move_player_action(coord_def move)
 
     if (you.running.check_stop_running())
     {
+        // If we cancel this move after lunging, we end the turn.
+        if (lunged)
+        {
+            move.reset();
+            _finalize_cancelled_lunge_move(initial_position);
+            return;
+        }
         // [ds] Do we need this? Shouldn't it be false to start with?
         you.turn_is_over = false;
         return;
@@ -656,6 +978,13 @@ void move_player_action(coord_def move)
                 && !check_moveto(targ, walkverb))
             {
                 stop_running();
+                // If we cancel this move after lunging, we end the turn.
+                if (lunged)
+                {
+                    move.reset();
+                    _finalize_cancelled_lunge_move(initial_position);
+                    return;
+                }
                 you.turn_is_over = false;
                 return;
             }
@@ -694,6 +1023,13 @@ void move_player_action(coord_def move)
         if (!you.confused() && !check_moveto(targ, walkverb))
         {
             stop_running();
+            // If we cancel this move after lunging, we end the turn.
+            if (lunged)
+            {
+                move.reset();
+                _finalize_cancelled_lunge_move(initial_position);
+                return;
+            }
             you.turn_is_over = false;
             return;
         }
@@ -706,12 +1042,7 @@ void move_player_action(coord_def move)
         if (!you.attempt_escape()) // false means constricted and did not escape
             return;
 
-        if (you.duration[DUR_WATER_HOLD])
-        {
-            mpr("You slip free of the water engulfing you.");
-            you.props.erase("water_holder");
-            you.clear_far_engulf();
-        }
+        _remove_water_hold();
 
         if (you.digging)
         {
@@ -730,10 +1061,7 @@ void move_player_action(coord_def move)
         else if (!running)
             clear_travel_trail();
 
-        // clear constriction data
-        you.stop_directly_constricting_all(true);
-        if (you.is_directly_constricted())
-            you.stop_being_constricted();
+        _clear_constriction_data();
 
         coord_def old_pos = you.pos();
         // Don't trigger traps when confusion causes no move.
@@ -747,28 +1075,8 @@ void move_player_action(coord_def move)
             targ_monst->apply_location_effects(targ);
         else
         {
-
-            if (you.duration[DUR_NOXIOUS_BOG])
-            {
-                if (cell_is_solid(old_pos))
-                    ASSERT(you.wizmode_teleported_into_rock);
-                else
-                    noxious_bog_cell(old_pos);
-            }
-
-            if (you.duration[DUR_CLOUD_TRAIL])
-            {
-                if (cell_is_solid(old_pos))
-                    ASSERT(you.wizmode_teleported_into_rock);
-                else
-                {
-                    auto cloud = static_cast<cloud_type>(
-                        you.props[XOM_CLOUD_TRAIL_TYPE_KEY].get_int());
-                    ASSERT(cloud != CLOUD_NONE);
-                    check_place_cloud(cloud, old_pos, random_range(3, 10), &you,
-                                      0, -1);
-                }
-            }
+            _apply_noxious_bog(old_pos);
+            _apply_cloud_trail(old_pos);
         }
         apply_barbs_damage();
         remove_ice_armour_movement();
@@ -776,18 +1084,7 @@ void move_player_action(coord_def move)
         if (you_are_delayed() && current_delay()->is_run())
             env.travel_trail.push_back(you.pos());
 
-        you.time_taken *= player_movement_speed();
-        you.time_taken = div_rand_round(you.time_taken, 10);
-        you.time_taken += additional_time_taken;
-
-        if (you.running && you.running.travel_speed)
-        {
-            you.time_taken = max(you.time_taken,
-                                 div_round_up(100, you.running.travel_speed));
-        }
-
-        if (you.duration[DUR_NO_HOP])
-            you.duration[DUR_NO_HOP] += you.time_taken;
+        _apply_move_time_taken(additional_time_taken);
 
         move.reset();
         you.turn_is_over = true;
@@ -858,8 +1155,10 @@ void move_player_action(coord_def move)
 
     you.apply_berserk_penalty = !attacking;
 
-    if (!attacking && you_worship(GOD_CHEIBRIADOS) && one_chance_in(10)
-        && you.run())
+    if (!attacking
+        && you_worship(GOD_CHEIBRIADOS)
+        && ((one_chance_in(10) && you.run())
+             || (one_chance_in(2) && lunged)))
     {
         did_god_conduct(DID_HASTY, 1, true);
     }

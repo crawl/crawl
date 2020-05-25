@@ -5,8 +5,8 @@
 
 #pragma once
 
-bool cancel_barbed_move();
-void apply_barbs_damage();
+bool cancel_barbed_move(bool lunging = false);
+void apply_barbs_damage(bool lunging = false);
 void remove_ice_armour_movement();
 bool cancel_confused_move(bool stationary);
 void open_door_action(coord_def move = {0,0});
