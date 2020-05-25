@@ -174,6 +174,10 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
         else
             return MB_MORE_POISON_VULN;
     }
+    
+    case ENCH_CIGOTUVIS_PLAGUE:
+        if (mons.has_ench(ENCH_CIGOTUVIS_PLAGUE))
+            return MB_CIGOTUVIS_PLAGUE;
     default:
         return NUM_MB_FLAGS;
     }
