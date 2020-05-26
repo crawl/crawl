@@ -440,24 +440,29 @@ static void _gold_pile(item_def &corpse, monster_type corpse_class)
 
 static void _cigotuvis_plague_make_abomination(const monster* mons)
 {
+    los_def ld(mons->pos(), opc_no_actor);
+    int pow = you.skill(SK_NECROMANCY) + you.experience_level;
+    const int chunks = max_corpse_chunks(mons->type);
+    int hd = 0;
+    monster_type montype;
+
     if (mons_can_be_zombified(*mons) && !you_worship(GOD_GOZAG) 
         && !(mons->flags & MF_EXPLODE_KILL))
     {
-        int pow = you.skill(SK_NECROMANCY) + you.experience_level;
-        int chunks = max_corpse_chunks(mons -> type);
-        int hd = div_rand_round( pow * chunks, 9);
+        hd = div_rand_round( pow * chunks, 9);
         // Use the original monster type as the zombified type here, to
         // get the proper stats from it.
         if (hd > 15)
             hd = 15 + (hd - 15) / 2;
-
         hd = min(hd, 30);
-        monster_type montype;
+
         if (hd >= 11 && mons->body_size() == SIZE_LARGE)
             montype = MONS_ABOMINATION_LARGE;
-        else if (hd >= 6 && mons->body_size() != SIZE_LARGE)
+        else if (hd >= 6 && mons->body_size() == SIZE_LARGE 
+                || hd >= 11 && mons -> body_size() != SIZE_LARGE)
             montype = MONS_ABOMINATION_SMALL;
-        else if (mons->body_size() != SIZE_LARGE)
+        else if (hd >= 6 && mons->body_size() != SIZE_LARGE
+                || mons -> body_size() == SIZE_LARGE)
             montype = MONS_MACABRE_MASS;
         else
             montype = MONS_CRAWLING_CORPSE;
@@ -480,6 +485,62 @@ static void _cigotuvis_plague_make_abomination(const monster* mons)
 
         cigotuvis_plague_death_fineff::schedule(mons->pos());
     }
+
+    else if (!you_worship(GOD_GOZAG) && (mons->flags & MF_EXPLODE_KILL))
+    {   
+        ld.update();
+
+        const int nchunks = stepdown_value(1 + random2(chunks), 4, 4, 12, 12);
+        blood_spray(mons->pos(), mons->type, nchunks * 3); // spray some blood
+
+        // spray crawling corpses everywhere!
+        for (int ntries = 0, cr_corpse_made = 0;
+            cr_corpse_made < nchunks && ntries < 10000; ++ntries)
+        {
+            coord_def cp = mons->pos();
+            cp.x += random_range(-LOS_DEFAULT_RANGE, LOS_DEFAULT_RANGE);
+            cp.y += random_range(-LOS_DEFAULT_RANGE, LOS_DEFAULT_RANGE);
+
+            dprf("Trying to scatter crawling corpses to %d, %d...", cp.x, cp.y);
+
+            if (!in_bounds(cp))
+                continue;
+
+            if (!ld.see_cell(cp))
+                continue;
+
+            dprf("Cell is visible...");
+
+            if (cell_is_solid(cp) || actor_at(cp))
+                continue;
+
+            ++cr_corpse_made;
+            hd = div_rand_round(pow, 9);
+            // Use the original monster type as the zombified type here, to
+            // get the proper stats from it.
+            
+            hd = min(hd, 5);
+            montype = MONS_CRAWLING_CORPSE;
+            mgen_data mg(montype,
+                        BEH_FRIENDLY,
+                        cp,
+                        crawl_state.game_is_arena() ? MHITNOT : MHITYOU);
+            mg.set_summoned(&you,
+                            0,
+                            SPELL_CIGOTUVIS_PLAGUE);
+            mg.set_base(mons->type);
+
+            if (monster *abm = create_monster(mg))
+            {
+                // Set hit dice, AC, and HP.
+                init_abomination(*abm, hd);
+                abm->add_ench(mon_enchant(ENCH_CIGOTUVIS_PLAGUE, 0, &you, INFINITE_DURATION));
+                abm->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 6));
+            }
+            dprf("Success");
+        }
+    }
+    
 }
 
 static void _create_monster_hide(const item_def &corpse, bool silent)
