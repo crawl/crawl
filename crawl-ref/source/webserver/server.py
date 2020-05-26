@@ -313,13 +313,13 @@ def parse_args():
     # TODO: --ssl-port or something?
     parser.add_argument('--logfile',
                         help='A logfile to write to; use "-" for stdout.')
-    parser.add_argument('--daemon', action='store_true',
+    parser.add_argument('--daemon', action='store_true', default=None,
                         help='Daemonize after start.')
-    parser.add_argument('-n', '--no-daemon', action='store_false',
+    parser.add_argument('-n', '--no-daemon', action='store_false', default=None,
                         dest='daemon',
                         help='Do not daemonize after start.')
     parser.add_argument('--no-pidfile', dest='pidfile', action='store_false',
-                                                help='Do not use a PID-file.')
+                        default=None, help='Do not use a PID-file.')
 
     # live debug mode is intended to be able to run (more or less) safely with
     # a concurrent real webtiles server. However, still be careful with this...
@@ -351,6 +351,7 @@ def export_args_to_config(args):
             logging.info("    (Overrides config-specified SSL settings.)")
             config.ssl_options = None
     if args.daemon is not None:
+        logging.info("Command line override for daemonize: %r", args.daemon)
         config.daemon = args.daemon
     if args.pidfile is not None:
         if not args.pidfile:
