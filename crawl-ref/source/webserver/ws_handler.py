@@ -824,7 +824,9 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                                     self.username and self.username or "[Anon]",
                                     obj["msg"])
         except Exception:
-            self.logger.warning("Error while handling JSON message!",
+            excerpt = message[:50] + "..." if len(message) > 50 else message
+            self.logger.warning("Error while handling JSON message ('%r')!",
+                                excerpt,
                                 exc_info=True)
 
     def flush_messages(self):
