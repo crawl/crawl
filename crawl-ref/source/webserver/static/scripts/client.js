@@ -174,6 +174,8 @@ function (exports, $, key_conversion, chat, comm) {
                && !showing_close_message;
     }
 
+    exports.in_game = in_game;
+
     function set_layer(layer)
     {
         if (showing_close_message) return;
@@ -550,6 +552,7 @@ function (exports, $, key_conversion, chat, comm) {
     }
     function hide_dialog()
     {
+        showing_close_message = false;
         $(".floating_dialog").blur().hide();
         $("#overlay").hide();
     }
@@ -856,6 +859,7 @@ function (exports, $, key_conversion, chat, comm) {
 
     function play_now(id)
     {
+        showing_close_message = false;
         send_message("play", {
             game_id: id
         });
