@@ -1855,6 +1855,7 @@ void process_command(command_type cmd)
     case CMD_FIRE:                 fire_thing();             break;
     case CMD_FORCE_CAST_SPELL:     do_cast_spell_cmd(true);  break;
     case CMD_LOOK_AROUND:          do_look_around();         break;
+    case CMD_PRAY:                 pray();                   break;
     case CMD_QUAFF:                drink();                  break;
     case CMD_READ:                 read();                   break;
     case CMD_REMOVE_ARMOUR:        _do_remove_armour();      break;

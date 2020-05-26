@@ -183,6 +183,8 @@ static bool _command_not_applicable(const command_type cmd, bool safe)
         return !safe;
     case CMD_DISPLAY_RELIGION:
         return you_worship(GOD_NO_GOD);
+    case CMD_PRAY:
+        return you_worship(GOD_NO_GOD);
     case CMD_USE_ABILITY:
         return your_talents(false).empty();
     case CMD_BUTCHER:

@@ -2196,6 +2196,12 @@ bool item_is_unique_rune(const item_def &item)
            && item.sub_type != RUNE_ABYSSAL;
 }
 
+bool item_is_rune(const item_def& item)
+{
+    return item.base_type == OBJ_RUNES;
+}
+
+
 bool item_is_orb(const item_def &item)
 {
     return item.is_type(OBJ_ORBS, ORB_ZOT);

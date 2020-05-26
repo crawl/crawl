@@ -762,9 +762,7 @@ static like_map divine_likes[] =
         } },
     },
     // GOD_NEMELEX_XOBEH,
-    {
-        { DID_EXPLORATION, EXPLORE_RESPONSE },
-    },
+    like_map(),
     // GOD_ELYVILON,
     {
         { DID_EXPLORATION, {
@@ -1048,6 +1046,56 @@ string get_god_likes(god_type which_god)
     case GOD_ZIN:
         likes.emplace_back("you donate money");
         break;
+    case GOD_NEMELEX_XOBEH:
+    {
+        string nemelex_note;
+        if (which_god == you.religion)
+        {
+            nemelex_note += "The piety increase when sacrificing mostly depends "
+                "on the value of the item. To prevent items from "
+                "being accidentally sacrificed, you can "
+                "<w>i</w>nscribe them with <w>!p</w> (protects the "
+                "whole stack), with <w>=p</w> (protects only the "
+                "item), or with <w>!D</w> (causes item to be ignored "
+                "in sacrifices)."
+                "\n\n"
+                "Nemelex Xobeh gifts various types of decks of cards. "
+                "The type of the deck gifts strongly "
+                "depends on the dominating item class sacrificed:\n";
+
+            for (int i = 0; i < NUM_NEMELEX_GIFT_TYPES; ++i)
+            {
+                const bool active = true;
+                std::string desc = "";
+                switch (i)
+                {
+                case NEM_GIFT_ESCAPE:
+                    desc = "decks of Escape      -- armour";
+                    break;
+                case NEM_GIFT_DESTRUCTION:
+                    desc = "decks of Destruction -- weapons and ammunition";
+                    break;
+                case NEM_GIFT_SUMMONING:
+                    desc = "decks of Summoning   -- corpses, chunks, blood";
+                    break;
+                case NEM_GIFT_WONDERS:
+                    desc = "decks of Wonders     -- food, potions, "
+                        "scrolls, wands, jewellery, "
+                        "miscellaneous items";
+                    break;
+                }
+                nemelex_note += make_stringf(" %c %s%s%s\n",
+                    'a' + (char)i,
+                    active ? "+ " : "- <darkgrey>",
+                    desc.c_str(),
+                    active ? "" : "</darkgrey>");
+            }
+
+            likes.emplace_back(nemelex_note);
+        }
+        break;
+    }
+
     default:
         break;
     }

@@ -153,7 +153,7 @@ static map<deck_type, deck_type_data> all_decks =
     { DECK_OF_ESCAPE, {
         "escape", "mainly dealing with various forms of escape.",
         deck_of_escape,
-        13,
+        26,
     } },
     { DECK_OF_DESTRUCTION, {
         "destruction", "most of which hurl death and destruction "
@@ -164,13 +164,13 @@ static map<deck_type, deck_type_data> all_decks =
     { DECK_OF_SUMMONING, {
         "summoning", "depicting a range of weird and wonderful creatures.",
         deck_of_summoning,
-        13,
+        26,
     } },
     { DECK_OF_WONDER, {
         "wonder", "A deck of highly mysterious and magical cards, which can "
         "alter the drawer's physical and mental condition, for better or worse.",
         deck_of_wonder,
-        13,
+        26,
     } },
     { DECK_OF_PUNISHMENT, {
         "punishment", "which wreak havoc on the user.", deck_of_punishment,
@@ -323,27 +323,124 @@ int deck_cards(deck_type deck)
                               : you.props[deck_name(deck)].get_int();
 }
 
+static void _get_pure_deck_weights(int weights[])
+{
+    weights[NEM_GIFT_ESCAPE] = you.sacrifice_value[OBJ_ARMOUR] + 1;
+    weights[NEM_GIFT_DESTRUCTION] = you.sacrifice_value[OBJ_WEAPONS]
+        + you.sacrifice_value[OBJ_STAVES]
+        + you.sacrifice_value[OBJ_RODS]
+        + you.sacrifice_value[OBJ_MISSILES] + 1;
+    weights[NEM_GIFT_SUMMONING] = you.sacrifice_value[OBJ_CORPSES] / 2;
+    weights[NEM_GIFT_WONDERS] = you.sacrifice_value[OBJ_POTIONS]
+        + you.sacrifice_value[OBJ_SCROLLS]
+        + you.sacrifice_value[OBJ_WANDS]
+        + you.sacrifice_value[OBJ_FOOD]
+        + you.sacrifice_value[OBJ_MISCELLANY]
+        + you.sacrifice_value[OBJ_JEWELLERY]
+        + you.sacrifice_value[OBJ_BOOKS];
+}
+
+static void _update_sacrifice_weights(int which)
+{
+    //(0.96)^8 = 0.72
+    switch (which)
+    {
+    case NEM_GIFT_ESCAPE:
+        you.sacrifice_value[OBJ_ARMOUR] *= 24;
+        you.sacrifice_value[OBJ_ARMOUR] /= 25;
+        break;
+    case NEM_GIFT_DESTRUCTION:
+        you.sacrifice_value[OBJ_WEAPONS] *= 24;
+        you.sacrifice_value[OBJ_STAVES] *= 24;
+        you.sacrifice_value[OBJ_RODS] *= 24;
+        you.sacrifice_value[OBJ_MISSILES] *= 24;
+        you.sacrifice_value[OBJ_WEAPONS] /= 25;
+        you.sacrifice_value[OBJ_STAVES] /= 25;
+        you.sacrifice_value[OBJ_RODS] /= 25;
+        you.sacrifice_value[OBJ_MISSILES] /= 25;
+        break;
+    case NEM_GIFT_SUMMONING:
+        you.sacrifice_value[OBJ_CORPSES] *= 24;
+        you.sacrifice_value[OBJ_CORPSES] /= 25;
+        break;
+    case NEM_GIFT_WONDERS:
+        you.sacrifice_value[OBJ_POTIONS] *= 24;
+        you.sacrifice_value[OBJ_SCROLLS] *= 24;
+        you.sacrifice_value[OBJ_WANDS] *= 24;
+        you.sacrifice_value[OBJ_FOOD] *= 24;
+        you.sacrifice_value[OBJ_MISCELLANY] *= 24;
+        you.sacrifice_value[OBJ_JEWELLERY] *= 24;
+        you.sacrifice_value[OBJ_BOOKS] *= 24;
+        you.sacrifice_value[OBJ_POTIONS] /= 25;
+        you.sacrifice_value[OBJ_SCROLLS] /= 25;
+        you.sacrifice_value[OBJ_WANDS] /= 25;
+        you.sacrifice_value[OBJ_FOOD] /= 25;
+        you.sacrifice_value[OBJ_MISCELLANY] /= 25;
+        you.sacrifice_value[OBJ_JEWELLERY] /= 25;
+        you.sacrifice_value[OBJ_BOOKS] /= 25;
+        break;
+    }
+}
+
+#if defined(DEBUG_GIFTS) || defined(DEBUG_CARDS) || defined(DEBUG_SACRIFICE)
+static void _show_pure_deck_chances()
+{
+    int weights[4];
+
+    _get_pure_deck_weights(weights);
+
+    float total = 0;
+    for (int i = 0; i < NUM_NEMELEX_GIFT_TYPES; ++i)
+        total += (float)weights[i];
+
+    mprf(MSGCH_DIAGNOSTICS, "Pure cards chances: "
+        "escape %0.2f%%, destruction %0.2f%%, "
+        "summoning %0.2f%%, wonders %0.2f%%",
+        (float)weights[0] / total * 100.0,
+        (float)weights[1] / total * 100.0,
+        (float)weights[2] / total * 100.0,
+        (float)weights[3] / total * 100.0);
+}
+#endif
+
+static deck_type _gift_type_to_deck(int gift)
+{
+    switch (gift)
+    {
+    case NEM_GIFT_ESCAPE:      return DECK_OF_ESCAPE;
+    case NEM_GIFT_DESTRUCTION: return DECK_OF_DESTRUCTION;
+    case NEM_GIFT_SUMMONING:   return DECK_OF_SUMMONING;
+    case NEM_GIFT_WONDERS:     return DECK_OF_WONDER;
+    }
+    die("invalid gift card type");
+}
+
 bool gift_cards()
 {
     const int deal = random_range(MIN_GIFT_CARDS, MAX_GIFT_CARDS);
     bool dealt_cards = false;
-
     for (int i = 0; i < deal; i++)
     {
-        deck_type choice = random_choose_weighted(
-                                        3, DECK_OF_DESTRUCTION,
-                                        1, DECK_OF_SUMMONING,
-                                        1, DECK_OF_ESCAPE,
-                                        1, DECK_OF_WONDER);
+        int weights[4];
+        _get_pure_deck_weights(weights);
+        const int choice_type = choose_random_weighted(weights, weights + 4);
+
+        deck_type choice = _gift_type_to_deck(choice_type);
+
         if (deck_cards(choice) < all_decks[choice].deck_max)
         {
+            _update_sacrifice_weights(choice_type);
             you.props[deck_name(choice)]++;
             dealt_cards = true;
         }
-    }
 
+    }
+#if defined(DEBUG_GIFTS) || defined(DEBUG_CARDS) || defined(DEBUG_SACRIFICE)
+    _show_pure_deck_chances();
+#endif
     return dealt_cards;
 }
+
 
 void reset_cards()
 {

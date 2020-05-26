@@ -13,3 +13,4 @@ void try_god_conversion(god_type god);
 
 void jiyva_slurp_item_stack(const item_def& item, int quant = 0);
 int zin_tithe(const item_def& item, int quant, bool converting = false);
+void pray();

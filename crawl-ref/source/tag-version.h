@@ -237,6 +237,7 @@ enum tag_minor_version
     TAG_MINOR_INCREMENTAL_PREGEN,  // save tracks whether the game is an incremental pregen game
     TAG_MINOR_NO_SUNLIGHT,         // Removal of Fedhas' Sunlight
     TAG_MINOR_SAGE_ROLLBACK,       // Rollback the Sage card and status.
+    TAG_MINOR_NEMELEX_WEIGHTS_ROLLBACK, // Nemelex deck weighting rollback
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

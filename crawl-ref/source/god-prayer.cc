@@ -4,10 +4,12 @@
 
 #include <cmath>
 
+#include "areas.h"
 #include "artefact.h"
 #include "butcher.h"
 #include "coordit.h"
 #include "database.h"
+#include "decks.h"
 #include "describe-god.h"
 #include "english.h"
 #include "env.h"
@@ -109,6 +111,8 @@ static bool _pray_ecumenical_altar()
         return false;
     }
 }
+
+
 
 /**
  * Attempt to convert to the given god.
@@ -258,39 +262,83 @@ static slurp_gain _sacrifice_one_item_noncount(const item_def& item)
 
     slurp_gain gain { jiyva_slurp_result::none, PIETY_NONE };
 
-    // compress into range 0..250
-    const int stepped = stepdown_value(value, 50, 50, 200, 250);
-    gain_piety(stepped, 50);
-    gain.piety_gain = (piety_gain_t)min(2, div_rand_round(stepped, 50));
-
-    if (player_under_penance(GOD_JIYVA))
-        return gain;
-
-    int item_value = div_rand_round(stepped, 50);
-    if (have_passive(passive_t::slime_feed)
-        && x_chance_in_y(you.piety, MAX_PIETY)
-        && !you_foodless())
+    //piety_gain_t relative_piety_gain = PIETY_NONE;
+    switch (you.religion)
     {
-        //same as a sultana
-        lessen_hunger(70, true);
-        gain.jiyva_bonus |= jiyva_slurp_result::food;
+    case GOD_NEMELEX_XOBEH:
+    {
+        if (you.attribute[ATTR_CARD_COUNTDOWN] && x_chance_in_y(value, 800))
+        {
+            you.attribute[ATTR_CARD_COUNTDOWN]--;
+            mprf(MSGCH_DIAGNOSTICS, "Countdown down to %d",
+                you.attribute[ATTR_CARD_COUNTDOWN]);
+        }
+        // Nemelex piety gain is fairly fast... at least when you
+        // have low piety.
+        int piety_change = value / 2 + 1;
+        if (is_artefact(item))
+            piety_change *= 2;
+        int piety_denom = 30 + you.piety / 2;
+
+        gain_piety(piety_change, piety_denom);
+
+        // Preserving the old behaviour of giving the big message for
+        // artefacts and artefacts only.
+        gain.piety_gain = x_chance_in_y(piety_change, piety_denom) ?
+           is_artefact(item) ?
+            PIETY_LOTS : PIETY_SOME : PIETY_NONE;
+
+        if (item.base_type == OBJ_FOOD && item.sub_type == FOOD_CHUNK
+            || is_blood_potion(item))
+        {
+            // Count chunks and blood potions towards decks of
+            // Summoning.
+            you.sacrifice_value[OBJ_CORPSES] += value;
+        }
+        else
+            you.sacrifice_value[item.base_type] += value;
+        break;
     }
 
-    if (have_passive(passive_t::slime_mp)
-        && x_chance_in_y(you.piety, MAX_PIETY)
-        && you.magic_points < you.max_magic_points)
+    case GOD_JIYVA:
     {
-        inc_mp(max(random2(item_value), 1));
-        gain.jiyva_bonus |= jiyva_slurp_result::mp;
-    }
+        // compress into range 0..250
+        const int stepped = stepdown_value(value, 50, 50, 200, 250);
+        gain_piety(stepped, 50);
+        gain.piety_gain = (piety_gain_t)min(2, div_rand_round(stepped, 50));
 
-    if (have_passive(passive_t::slime_hp)
-        && x_chance_in_y(you.piety, MAX_PIETY)
-        && you.hp < you.hp_max
-        && !you.duration[DUR_DEATHS_DOOR])
-    {
-        inc_hp(max(random2(item_value), 1));
-        gain.jiyva_bonus |= jiyva_slurp_result::hp;
+        if (player_under_penance(GOD_JIYVA))
+            return gain;
+
+        int item_value = div_rand_round(stepped, 50);
+        if (have_passive(passive_t::slime_feed)
+            && x_chance_in_y(you.piety, MAX_PIETY)
+            && !you_foodless())
+        {
+            //same as a sultana
+            lessen_hunger(70, true);
+            gain.jiyva_bonus |= jiyva_slurp_result::food;
+        }
+
+        if (have_passive(passive_t::slime_mp)
+            && x_chance_in_y(you.piety, MAX_PIETY)
+            && you.magic_points < you.max_magic_points)
+        {
+            inc_mp(max(random2(item_value), 1));
+            gain.jiyva_bonus |= jiyva_slurp_result::mp;
+        }
+
+        if (have_passive(passive_t::slime_hp)
+            && x_chance_in_y(you.piety, MAX_PIETY)
+            && you.hp < you.hp_max
+            && !you.duration[DUR_DEATHS_DOOR])
+        {
+            inc_hp(max(random2(item_value), 1));
+            gain.jiyva_bonus |= jiyva_slurp_result::hp;
+        }
+    }
+    default:
+        break;
     }
 
     return gain;
@@ -318,4 +366,358 @@ void jiyva_slurp_item_stack(const item_def& item, int quantity)
         canned_msg(MSG_GAIN_MAGIC);
     if (gain.jiyva_bonus & jiyva_slurp_result::hp)
         canned_msg(MSG_GAIN_HEALTH);
+}
+
+
+
+/*
+static bool _give_nemelex_gift(bool forced = false)
+{
+    // But only if you're not levitating over deep water.
+    // Merfolk don't get gifts in deep water. {due}
+    if (!feat_has_solid_floor(grd(you.pos())))
+        return false;
+
+    // Nemelex will give at least one gift early.
+    if (forced
+        || !you.num_total_gifts[GOD_NEMELEX_XOBEH]
+        && x_chance_in_y(you.piety + 1, piety_breakpoint(1))
+        || one_chance_in(3) && x_chance_in_y(you.piety + 1, MAX_PIETY)
+        && !you.attribute[ATTR_CARD_COUNTDOWN])
+    {
+        misc_item_type gift_type;
+
+        // Make a pure deck.
+        int weights[4];
+        _get_pure_deck_weights(weights);
+        const int choice = choose_random_weighted(weights, weights + 4);
+        gift_type = _gift_type_to_deck(choice);
+        _show_pure_deck_chances();
+
+        {
+            _update_sacrifice_weights(choice);
+
+            canned_msg(MSG_SOMETHING_APPEARS);
+
+            you.attribute[ATTR_CARD_COUNTDOWN] = 5;
+            //_inc_gift_timeout(5 + random2avg(9, 2));
+            you.num_current_gifts[you.religion]++;
+            you.num_total_gifts[you.religion]++;
+            take_note(Note(NOTE_GOD_GIFT, you.religion));
+        }
+        return true;
+    }
+
+    return false;
+}
+*/
+
+static int _leading_sacrifice_group()
+{
+    int weights[4];
+    //_get_pure_deck_weights(weights);
+    int best_i = -1, maxweight = -1;
+    for (int i = 0; i < 4; ++i)
+    {
+        if (best_i == -1 || weights[i] > maxweight)
+        {
+            maxweight = weights[i];
+            best_i = i;
+        }
+    }
+    return best_i;
+}
+
+static void _give_sac_group_feedback(int which)
+{
+    ASSERT(which >= 0 && which < 4);
+    const char* names[] = {
+        "Escape", "Destruction", "Summoning", "Wonder"
+    };
+    mprf(MSGCH_GOD, "A symbol of %s coalesces before you, then vanishes.",
+        names[which]);
+}
+
+static bool _god_likes_items(god_type god)
+{
+    switch (god)
+    {
+    case GOD_NEMELEX_XOBEH:
+        return true;
+    default:
+        return false;
+
+    }
+}
+
+static bool _god_likes_item(god_type god, const item_def& item)
+{
+    if (!_god_likes_items(god))
+        return false;
+
+
+    switch (god)
+    {
+    case GOD_NEMELEX_XOBEH:
+        return (!item.is_critical()
+            && !item_is_rune(item)
+            && item.base_type != OBJ_GOLD
+            && (item.base_type != OBJ_MISCELLANY
+                || item.sub_type != MISC_BAG));
+
+    default:
+        return false;
+    }
+}
+
+
+static piety_gain_t _sacrifice_item_stack(const item_def& item)
+{
+    piety_gain_t relative_gain = PIETY_NONE;
+    for (int j = 0; j < item.quantity; ++j)
+    {
+        slurp_gain sgain = _sacrifice_one_item_noncount(item);
+        const piety_gain_t gain = sgain.piety_gain;
+
+        // Update piety gain if necessary.
+        if (gain != PIETY_NONE)
+        {
+            if (relative_gain == PIETY_NONE)
+                relative_gain = gain;
+            else            // some + some = lots
+                relative_gain = PIETY_LOTS;
+        }
+    }
+    return relative_gain;
+}
+
+static void _replace(std::string& s,
+    const std::string& find,
+    const std::string& repl)
+{
+    std::string::size_type start = 0;
+    std::string::size_type found;
+
+    while ((found = s.find(find, start)) != std::string::npos)
+    {
+        s.replace(found, find.length(), repl);
+        start = found + repl.length();
+    }
+}
+
+static void _erase_between(std::string& s,
+    const std::string& left,
+    const std::string& right)
+{
+    std::string::size_type left_pos;
+    std::string::size_type right_pos;
+
+    while ((left_pos = s.find(left)) != std::string::npos
+        && (right_pos = s.find(right, left_pos + left.size())) != std::string::npos)
+        s.erase(s.begin() + left_pos, s.begin() + right_pos + right.size());
+}
+static std::string _sacrifice_message(std::string msg,
+    const std::string& itname,
+    bool glowing, bool plural,
+    piety_gain_t piety_gain)
+{
+    if (glowing)
+    {
+        _replace(msg, "[", "");
+        _replace(msg, "]", "");
+    }
+    else
+        _erase_between(msg, "[", "]");
+    _replace(msg, "%", (plural ? "" : "s"));
+    _replace(msg, "&", (plural ? "are" : "is"));
+
+    const char* tag_start, * tag_end;
+    switch (piety_gain)
+    {
+    case PIETY_NONE:
+        tag_start = "<lightgrey>";
+        tag_end = "</lightgrey>";
+        break;
+    default:
+    case PIETY_SOME:
+        tag_start = tag_end = "";
+        break;
+    case PIETY_LOTS:
+        tag_start = "<white>";
+        tag_end = "</white>";
+        break;
+    }
+
+    msg.insert(0, itname);
+    msg = tag_start + msg + tag_end;
+
+    return msg;
+}
+
+static void _print_nemelex_sacrifice_message(const item_def& item,
+    piety_gain_t piety_gain, bool your)
+{
+    static const char* _Sacrifice_Messages[NUM_PIETY_GAIN] =
+    {
+        " disappear% without a[dditional] glow.",
+        " glow% slightly [brighter ]and disappear%.",
+        " glow% with a rainbow of weird colours and disappear%.",
+    };
+
+    const std::string itname = item.name(your ? DESC_YOUR : DESC_THE);
+    mpr(_sacrifice_message(_Sacrifice_Messages[piety_gain], itname,
+        itname.find("glowing") != std::string::npos,
+        item.quantity > 1,
+        piety_gain));
+}
+
+static bool _confirm_pray_sacrifice(god_type god)
+{
+    for (stack_iterator si(you.pos(), true); si; ++si)
+    {
+        bool temp_;
+        if (_god_likes_item(god, *si)
+            && needs_handle_warning(*si, OPER_PRAY, temp_))
+        {
+            std::string prompt = "Really sacrifice stack with ";
+            prompt += si->name(DESC_A);
+            prompt += " in it?";
+
+            if (!yesno(prompt.c_str(), false, 'n'))
+                return false;
+        }
+    }
+
+    return true;
+}
+
+static bool _offer_items()
+{
+    if (!_god_likes_items(you.religion))
+        return false;
+
+    if (!_confirm_pray_sacrifice(you.religion))
+        return false;
+
+    int i = you.visible_igrd(you.pos());
+
+    god_acting gdact;
+
+    int num_sacced = 0;
+    int num_disliked = 0;
+    item_def* disliked_item = 0;
+
+    const int old_leading = _leading_sacrifice_group();
+
+    while (i != NON_ITEM)
+    {
+        item_def& item(mitm[i]);
+        const int next = item.link;  // in case we can't get it later.
+        const bool disliked = !_god_likes_item(you.religion, item);
+
+        if (disliked)
+        {
+            i = next;
+            if (disliked)
+            {
+                num_disliked++;
+                disliked_item = &item;
+            }
+            continue;
+        }
+
+        // Ignore {!D} inscribed items.
+        if (!check_warning_inscriptions(item, OPER_DESTROY))
+        {
+            mpr("Won't sacrifice {!D} inscribed item.");
+            i = next;
+            continue;
+        }
+
+        if (_god_likes_item(you.religion, item)
+            && (item.inscription.find("=p") != std::string::npos))
+        {
+            const std::string msg =
+                "Really sacrifice " + item.name(DESC_A) + "?";
+
+            if (!yesno(msg.c_str(), false, 'n'))
+            {
+                i = next;
+                continue;
+            }
+        }
+
+
+        piety_gain_t relative_gain = _sacrifice_item_stack(item);
+        _print_nemelex_sacrifice_message(mitm[i], relative_gain, true);
+        item_was_destroyed(mitm[i]);
+        destroy_item(i);
+        i = next;
+        num_sacced++;
+    }
+
+    if (num_sacced > 0 && you.religion == GOD_NEMELEX_XOBEH)
+    {
+        const int new_leading = _leading_sacrifice_group();
+        if (old_leading != new_leading || one_chance_in(50))
+            _give_sac_group_feedback(new_leading);
+    }
+
+    // Explanatory messages if nothing the god likes is sacrificed.
+    else if (num_sacced == 0 && num_disliked > 0)
+    {
+        ASSERT(disliked_item);
+
+        if (item_is_orb(*disliked_item))
+            simple_god_message(" wants the Orb's power used on the surface!");
+        else if (item_is_rune(*disliked_item))
+            simple_god_message(" wants the runes to be proudly displayed.");
+        else if (you.religion == GOD_NEMELEX_XOBEH)
+            if (disliked_item->base_type == OBJ_GOLD)
+                simple_god_message(" does not care about gold!");
+            else
+                simple_god_message(" not offer them!");
+    }
+    return (num_sacced > 0);
+}
+
+void pray()
+{
+    if (silenced(you.pos()))
+    {
+        mpr("You are unable to make a sound!");
+        return;
+    }
+
+    // only successful prayer takes time
+    you.turn_is_over = false;
+
+    bool something_happened = false;
+
+    if (you.religion == GOD_NO_GOD)
+    {
+        const mon_holy_type holi = you.holiness();
+
+        mprf(
+            "You spend a moment contemplating the meaning of %s.",
+            holi == MH_NONLIVING || holi == MH_UNDEAD ? "existence" : "life");
+
+        // Zen meditation is timeless.
+        return;
+    }
+
+    mprf("You offer a prayer to %s.", god_name(you.religion).c_str());
+
+
+    // All sacrifices affect items you're standing on.
+    something_happened |= _offer_items();
+
+    if (player_under_penance())
+        simple_god_message(" demands penance!");
+    else
+        mpr(god_prayer_reaction().c_str());
+
+    if (something_happened)
+        you.turn_is_over = true;
+    dprf("piety: %d (-%d)", you.piety, you.piety_hysteresis);
 }

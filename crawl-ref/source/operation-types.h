@@ -8,6 +8,7 @@ enum operation_types
     OPER_EAT      = 'e',
     OPER_TAKEOFF  = 'T',
     OPER_WEAR     = 'W',
+    OPER_PRAY     = 'p',
     OPER_PUTON    = 'P',
     OPER_REMOVE   = 'R',
     OPER_READ     = 'r',

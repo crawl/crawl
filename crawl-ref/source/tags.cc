@@ -1525,6 +1525,11 @@ static void tag_construct_you(writer &th)
     for (int j = 0; j < NUM_ATTRIBUTES; ++j)
         marshallInt(th, you.attribute[j]);
 
+    // Sacrifice values.
+    marshallByte(th, NUM_OBJECT_CLASSES);
+    for (int j = 0; j < NUM_OBJECT_CLASSES; ++j)
+        marshallInt(th, you.sacrifice_value[j]);
+
     // Event timers.
     marshallByte(th, NUM_TIMERS);
     for (int j = 0; j < NUM_TIMERS; ++j)
@@ -2812,12 +2817,16 @@ static void tag_read_you(reader &th)
 
 #if TAG_MAJOR_VERSION == 34
     // Nemelex item type sacrifice toggles.
-    if (th.getMinorVersion() < TAG_MINOR_NEMELEX_WEIGHTS)
+    if (th.getMinorVersion() < TAG_MINOR_NEMELEX_WEIGHTS
+        || th.getMinorVersion()  >= TAG_MINOR_NEMELEX_WEIGHTS_ROLLBACK
+        )
     {
         count = unmarshallByte(th);
         ASSERT(count <= NUM_OBJECT_CLASSES);
         for (int j = 0; j < count; ++j)
-            unmarshallInt(th);
+            you.sacrifice_value[j] = unmarshallInt(th);
+        for (int j = count; j < NUM_OBJECT_CLASSES; ++j)
+            you.sacrifice_value[j] = 0;
     }
 #endif
 
