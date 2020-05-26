@@ -141,7 +141,7 @@ static const vector<god_passive> god_passives[] =
         },
         { -1, passive_t::resist_mutation,
               "GOD can shield you from mutations",
-              "GOD NOW you from mutations"
+              "GOD NOW shields you from mutations"
         },
         { -1, passive_t::resist_polymorph,
               "GOD can protect you from unnatural transformations",
