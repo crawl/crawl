@@ -845,77 +845,32 @@ bool fake_noisy(int loudness, const coord_def& where)
     return noisy(loudness, where, nullptr, MID_NOBODY, true);
 }
 
-void check_monsters_sense(sense_type sense, int range, const coord_def& where)
+void check_monsters_web_sense(int range, const coord_def& where)
 {
     for (monster_iterator mi; mi; ++mi)
     {
-        if (grid_distance(mi->pos(), where) > range)
-            continue;
-
-        switch (sense)
+        if (grid_distance(mi->pos(), where) > range
+            || !mons_class_flag(mi->type, M_WEB_SENSE)
+            || one_chance_in(4))
         {
-        case SENSE_SMELL_BLOOD:
-            if (!mons_class_flag(mi->type, M_BLOOD_SCENT))
-                break;
+            continue;
+        }
 
-            // Let sleeping hounds lie.
-            if (mi->asleep()
-                && mons_species(mi->type) != MONS_VAMPIRE)
-            {
-                // 33% chance of sleeping on
-                // 33% of being disturbed (start BEH_WANDER)
-                // 33% of being alerted   (start BEH_SEEK)
-                if (!one_chance_in(3))
-                {
-                    if (coinflip())
-                    {
-                        dprf(DIAG_NOISE, "disturbing %s (%d, %d)",
-                             mi->name(DESC_A, true).c_str(),
-                             mi->pos().x, mi->pos().y);
-                        behaviour_event(*mi, ME_DISTURB, 0, where);
-                    }
-                    break;
-                }
-            }
+        if (coinflip())
+        {
+            dprf(DIAG_NOISE, "disturbing %s (%d, %d)",
+                    mi->name(DESC_A, true).c_str(),
+                    mi->pos().x, mi->pos().y);
+            behaviour_event(*mi, ME_DISTURB, 0, where);
+        }
+        else
+        {
             dprf(DIAG_NOISE, "alerting %s (%d, %d)",
-                            mi->name(DESC_A, true).c_str(),
-                            mi->pos().x, mi->pos().y);
+                    mi->name(DESC_A, true).c_str(),
+                    mi->pos().x, mi->pos().y);
             behaviour_event(*mi, ME_ALERT, 0, where);
-            break;
-
-        case SENSE_WEB_VIBRATION:
-            if (!mons_class_flag(mi->type, M_WEB_SENSE))
-                break;
-
-            if (!one_chance_in(4))
-            {
-                if (coinflip())
-                {
-                    dprf(DIAG_NOISE, "disturbing %s (%d, %d)",
-                         mi->name(DESC_A, true).c_str(),
-                         mi->pos().x, mi->pos().y);
-                    behaviour_event(*mi, ME_DISTURB, 0, where);
-                }
-                else
-                {
-                    dprf(DIAG_NOISE, "alerting %s (%d, %d)",
-                         mi->name(DESC_A, true).c_str(),
-                         mi->pos().x, mi->pos().y);
-                    behaviour_event(*mi, ME_ALERT, 0, where);
-                }
-            }
-            break;
         }
     }
-}
-
-void blood_smell(int strength, const coord_def& where)
-{
-    const int range = strength;
-    dprf("blood stain at (%d, %d), range of smell = %d",
-         where.x, where.y, range);
-
-    check_monsters_sense(SENSE_SMELL_BLOOD, range, where);
 }
 
 //////////////////////////////////////////////////////////////////////////////
