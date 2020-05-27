@@ -960,7 +960,7 @@ static void _describe_invisible(status_info& inf)
 
 static void _describe_lunging(status_info& inf)
 {
-    if (you.attribute[ATTR_PERM_LUNGING] > 0)
+    if (you.lunging())
     {
         inf.light_colour = WHITE;
         inf.light_text   = "Lunge";

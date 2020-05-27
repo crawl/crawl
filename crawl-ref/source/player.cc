@@ -4930,8 +4930,6 @@ player::player()
     attribute.init(0);
     // Default to flying the first time you wear boots of flying.
     attribute[ATTR_LAST_FLIGHT_STATUS] = 1;
-    // Default to lunging the first time you wear boots of lunging.
-    attribute[ATTR_LAST_LUNGING_STATUS] = 1;
     quiver.init(ENDOFPACK);
 
     last_timer_effect.init(0);
@@ -6427,11 +6425,6 @@ bool player::tengu_flight() const
 {
     // Only Tengu get perks for flying.
     return species == SP_TENGU && airborne();
-}
-
-bool player::lunging() const
-{
-    return attribute[ATTR_PERM_LUNGING];
 }
 
 /**

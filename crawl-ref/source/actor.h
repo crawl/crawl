@@ -341,7 +341,7 @@ public:
     // Return an int so we know whether an item is the sole source.
     virtual int evokable_flight(bool calc_unid = true) const;
     virtual int spirit_shield(bool calc_unid = true, bool items = true) const;
-    virtual bool evokable_lunging(bool calc_unid = true, bool items = true) const;
+    virtual bool lunging(bool calc_unid = true, bool items = true) const;
 
     virtual bool is_banished() const = 0;
     virtual bool is_web_immune() const = 0;

@@ -327,7 +327,7 @@ int actor::spirit_shield(bool calc_unid, bool items) const
     return ss;
 }
 
-bool actor::evokable_lunging(bool calc_unid, bool items) const
+bool actor::lunging(bool calc_unid, bool items) const
 {
     return items && wearing_ego(EQ_ALL_ARMOUR, SPARM_LUNGING, calc_unid);
 }

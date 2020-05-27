@@ -781,7 +781,6 @@ public:
     bool cancellable_flight() const;
     bool permanent_flight() const;
     bool racial_permanent_flight() const;
-    bool lunging() const;
     int get_noise_perception(bool adjusted = true) const;
 
     bool paralysed() const override;

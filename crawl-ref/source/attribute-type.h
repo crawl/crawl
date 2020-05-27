@@ -101,7 +101,5 @@ enum attribute_type
     ATTR_WALL_JUMP_READY,      // Ready to perform a wall jump.
 #endif
     ATTR_DEATHS_DOOR_HP,       // How much HP we should have under Death's Door
-    ATTR_PERM_LUNGING,         // Boots of lunging are active.
-    ATTR_LAST_LUNGING_STATUS,  // Whether SPARM_LUNGING should be restored after form change.
     NUM_ATTRIBUTES
 };
