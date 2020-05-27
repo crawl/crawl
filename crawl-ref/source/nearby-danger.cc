@@ -81,8 +81,7 @@ static bool _mons_has_path_to_player(const monster* mon, bool want_move = false)
     // direct path to you "safe" just because it would be too stupid to
     // track you that far out-of-sight. Use a factor of 2 for smarter
     // creatures as a safety margin.
-    if (range > 0)
-        mp.set_range(max(LOS_RADIUS, range * 2));
+    mp.set_range(max(LOS_RADIUS, range * 2));
 
     if (mp.init_pathfind(mon, you.pos(), true, false, true))
         return true;

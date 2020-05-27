@@ -196,7 +196,7 @@ bool try_pathfind(monster* mon)
 #endif
     const int range = mon->friendly() ? 1000 : mons_tracking_range(mon);
 
-    if (range > 0 && dist > range)
+    if (dist > range)
     {
         mon->travel_target = MTRAV_UNREACHABLE;
 #ifdef DEBUG_PATHFIND
@@ -212,8 +212,7 @@ bool try_pathfind(monster* mon)
          targpos.x, targpos.y, range);
 #endif
     monster_pathfind mp;
-    if (range > 0)
-        mp.set_range(range);
+    mp.set_range(range);
 
     if (mp.init_pathfind(mon, targpos))
     {
