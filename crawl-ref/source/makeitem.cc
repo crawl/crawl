@@ -1570,7 +1570,8 @@ static void _generate_rod_item(item_def& item, int force_type, int item_level)
         do
         {
             item.sub_type = random2(NUM_RODS);
-        } while (item_type_removed(OBJ_RODS, item.sub_type));
+        } while (item_type_removed(OBJ_RODS, item.sub_type)
+            || item.sub_type == ROD_PAKELLAS);
     }
     else
         item.sub_type = force_type;
