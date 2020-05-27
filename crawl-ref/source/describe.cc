@@ -3986,6 +3986,27 @@ static void _describe_monster_mr(const monster_info& mi, ostringstream &result)
     result << "\n";
 }
 
+/**
+ * Returns a string describing a given monster's habitat.
+ *
+ * @param mi[in]            Player-visible info about the monster in question.
+ * @return                  The habitat description.
+ */
+string _monster_habitat_description(const monster_info& mi)
+{
+    switch (mons_habitat_type(mi.type, mi.base_type))
+    {
+    case HT_AMPHIBIOUS:
+        return uppercase_first(make_stringf("%s can travel through water.\n",
+                               mi.pronoun(PRONOUN_SUBJECTIVE)));
+    case HT_AMPHIBIOUS_LAVA:
+        return uppercase_first(make_stringf("%s can travel through lava.\n",
+                               mi.pronoun(PRONOUN_SUBJECTIVE)));
+    default:
+        return "";
+    }
+}
+
 // Size adjectives
 const char* const size_adj[] =
 {
@@ -4321,6 +4342,7 @@ static string _monster_stat_description(const monster_info& mi)
 
     result << _monster_attacks_description(mi);
     result << _monster_missiles_description(mi);
+    result << _monster_habitat_description(mi);
     result << _monster_spells_description(mi);
 
     return result.str();
