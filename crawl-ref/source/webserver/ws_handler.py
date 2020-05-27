@@ -819,7 +819,14 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 handler(**obj)
             elif self.process:
                 self.process.handle_input(message)
-            elif not self.watched_game:
+            elif not self.watched_game and obj["msg"] != 'ui_state_sync':
+                # ui_state_sync can get queued by the js client just before
+                # shutdown, and have its sending delayed by enough that the
+                # process has stopped. I do not currently think there's a
+                # principled way to suppress it with this timing on the js
+                # side (because it's basically just a consequence of general
+                # ui code), so have an ugly exception here. Otherwise, various
+                # game ending conditions log a warning. TODO: fixes?
                 self.logger.warning("Didn't know how to handle msg (user %s): %s",
                                     self.username and self.username or "[Anon]",
                                     obj["msg"])
