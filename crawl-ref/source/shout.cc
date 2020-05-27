@@ -845,34 +845,6 @@ bool fake_noisy(int loudness, const coord_def& where)
     return noisy(loudness, where, nullptr, MID_NOBODY, true);
 }
 
-void check_monsters_web_sense(int range, const coord_def& where)
-{
-    for (monster_iterator mi; mi; ++mi)
-    {
-        if (grid_distance(mi->pos(), where) > range
-            || !mons_class_flag(mi->type, M_WEB_SENSE)
-            || one_chance_in(4))
-        {
-            continue;
-        }
-
-        if (coinflip())
-        {
-            dprf(DIAG_NOISE, "disturbing %s (%d, %d)",
-                    mi->name(DESC_A, true).c_str(),
-                    mi->pos().x, mi->pos().y);
-            behaviour_event(*mi, ME_DISTURB, 0, where);
-        }
-        else
-        {
-            dprf(DIAG_NOISE, "alerting %s (%d, %d)",
-                    mi->name(DESC_A, true).c_str(),
-                    mi->pos().x, mi->pos().y);
-            behaviour_event(*mi, ME_ALERT, 0, where);
-        }
-    }
-}
-
 //////////////////////////////////////////////////////////////////////////////
 // noise machinery
 
