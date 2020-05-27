@@ -4019,17 +4019,17 @@ static void _describe_monster_mr(const monster_info& mi, ostringstream &result)
  */
 static void _describe_monster_hab(const monster_info& mi, ostringstream &result)
 {
-    const monsterentry *e = get_monster_data(mi.type);
-    switch (e->habitat) {
-        case HT_AMPHIBIOUS:
+    const monsterentry *mon_type = get_monster_data(mi.type);
+    const monsterentry *mon_type_base = get_monster_data(mi.base_type);
+
+    if (mon_type->habitat == HT_AMPHIBIOUS
+        || mon_type_base->habitat == HT_AMPHIBIOUS)
             result << "It is amphibious." << "\n";
-            break;
-        case HT_AMPHIBIOUS_LAVA:
+
+    if (mon_type->habitat == HT_AMPHIBIOUS_LAVA
+        || mon_type_base->habitat == HT_AMPHIBIOUS_LAVA)
             result << "It can travel through lava." << "\n";
-            break;
-        default:
-            break;
-    }
+    
 }
 
 // Size adjectives
