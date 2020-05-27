@@ -45,19 +45,18 @@ int mons_tracking_range(const monster* mon)
         break;
     }
 
-    if (range)
-    {
-        if (mons_is_native_in_branch(*mon))
-            range += 3;
-        else if (mons_class_flag(mon->type, M_BLOOD_SCENT))
-            range++;
-    }
+    if (mons_is_native_in_branch(*mon))
+        range += 3;
+    else if (mons_class_flag(mon->type, M_BLOOD_SCENT))
+        range++;
 
     if (player_under_penance(GOD_ASHENZARI))
         range *= 5;
 
     if (mons_foe_is_marked(*mon) || mon->has_ench(ENCH_HAUNTING))
         range *= 5;
+
+    ASSERT(range);
 
     return range;
 }
