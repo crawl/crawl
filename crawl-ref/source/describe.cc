@@ -4032,7 +4032,6 @@ static void _describe_monster_hab(const monster_info& mi, ostringstream &result)
         default:
             break;
     }
-    
 }
 
 // Size adjectives
