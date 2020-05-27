@@ -47,8 +47,6 @@ int mons_tracking_range(const monster* mon)
 
     if (mons_is_native_in_branch(*mon))
         range += 3;
-    else if (mons_class_flag(mon->type, M_BLOOD_SCENT))
-        range++;
 
     if (player_under_penance(GOD_ASHENZARI))
         range *= 5;

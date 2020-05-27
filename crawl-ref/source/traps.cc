@@ -744,7 +744,7 @@ void trap_def::trigger(actor& triggerer)
 
                 if (_player_caught_in_web())
                 {
-                    check_monsters_sense(SENSE_WEB_VIBRATION, 9, you.pos());
+                    check_monsters_web_sense(9, you.pos());
                     if (player_in_a_dangerous_place())
                         xom_is_stimulated(50);
                 }
@@ -768,7 +768,7 @@ void trap_def::trigger(actor& triggerer)
                 m->props[NEWLY_TRAPPED_KEY] = true;
 
                 // Alert monsters.
-                check_monsters_sense(SENSE_WEB_VIBRATION, 9, triggerer.position);
+                check_monsters_web_sense(9, triggerer.position);
             }
         }
         break;
@@ -1657,7 +1657,7 @@ bool ensnare(actor *fly)
     if (!fly->alive())
         return true;
 
-    check_monsters_sense(SENSE_WEB_VIBRATION, 9, fly->pos());
+    check_monsters_web_sense(9, fly->pos());
     return true;
 }
 

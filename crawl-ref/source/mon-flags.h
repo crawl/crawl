@@ -51,8 +51,7 @@ enum monclass_flag_type : uint64_t
     /// monster is stationary
     M_STATIONARY        = BIT(14),
 
-    /// monster can smell blood
-    M_BLOOD_SCENT       = BIT(15),
+                        //BIT(15), // was M_BLOOD_SCENT
 
     /// susceptible to cold; drainable by vampires, splashes blood when hit
     M_COLD_BLOOD        = BIT(16),

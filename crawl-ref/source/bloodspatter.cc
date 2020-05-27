@@ -120,7 +120,6 @@ static void _orient_wall_blood(const coord_def& where, coord_def from,
 
 static void _maybe_bloodify_square(const coord_def& where, int amount,
                                    bool spatter = false,
-                                   bool smell_alert = true,
                                    const coord_def& from = INVALID_COORD,
                                    const bool old_blood = false)
 {
@@ -154,20 +153,11 @@ static void _maybe_bloodify_square(const coord_def& where, int amount,
             }
         }
 
-        // The blood spilled can be detected via blood scent even if the
-        // spot it would fall is prevented from becoming bloodied (for
-        // example, because it is water)
-        if (smell_alert && in_bounds(where))
-            blood_smell(12, where);
-
         if (spatter)
         {
             // Smaller chance of spattering surrounding squares.
             for (adjacent_iterator ai(where); ai; ++ai)
-            {
-                _maybe_bloodify_square(*ai, amount/15, false, true, from,
-                                       old_blood);
-            }
+                _maybe_bloodify_square(*ai, amount/15, false, from, old_blood);
         }
     }
 }
@@ -176,8 +166,8 @@ static void _maybe_bloodify_square(const coord_def& where, int amount,
 // "damage" depends on damage taken (or hitpoints, if damage higher),
 // or, for sacrifices, on the number of chunks possible to get out of a corpse.
 void bleed_onto_floor(const coord_def& where, monster_type montype,
-                      int damage, bool spatter, bool smell_alert,
-                      const coord_def& from, const bool old_blood)
+                      int damage, bool spatter, const coord_def& from,
+                      const bool old_blood)
 {
     ASSERT_IN_BOUNDS(where);
 
@@ -192,8 +182,7 @@ void bleed_onto_floor(const coord_def& where, monster_type montype,
             return;
     }
 
-    _maybe_bloodify_square(where, damage, spatter, smell_alert, from,
-                           old_blood);
+    _maybe_bloodify_square(where, damage, spatter, from, old_blood);
 }
 
 void blood_spray(const coord_def& origin, monster_type montype, int level)
@@ -215,7 +204,7 @@ void blood_spray(const coord_def& origin, monster_type montype, int level)
 
             if (in_bounds(bloody) && cell_see_cell(origin, bloody, LOS_SOLID))
             {
-                bleed_onto_floor(bloody, montype, 99, false, true, origin);
+                bleed_onto_floor(bloody, montype, 99, false, origin);
                 break;
             }
         }
