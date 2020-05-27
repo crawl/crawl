@@ -742,12 +742,8 @@ void trap_def::trigger(actor& triggerer)
             {
                 mpr("You are caught in the web!");
 
-                if (_player_caught_in_web())
-                {
-                    check_monsters_web_sense(9, you.pos());
-                    if (player_in_a_dangerous_place())
-                        xom_is_stimulated(50);
-                }
+                if (_player_caught_in_web() && player_in_a_dangerous_place())
+                    xom_is_stimulated(50);
             }
         }
         else if (m)
@@ -766,9 +762,6 @@ void trap_def::trigger(actor& triggerer)
 
                 // Don't try to escape the web in the same turn
                 m->props[NEWLY_TRAPPED_KEY] = true;
-
-                // Alert monsters.
-                check_monsters_web_sense(9, triggerer.position);
             }
         }
         break;
@@ -1657,7 +1650,6 @@ bool ensnare(actor *fly)
     if (!fly->alive())
         return true;
 
-    check_monsters_web_sense(9, fly->pos());
     return true;
 }
 
