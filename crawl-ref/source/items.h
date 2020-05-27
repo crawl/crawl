@@ -140,7 +140,7 @@ bool item_needs_autopickup(const item_def &, bool ignore_force = false);
 bool can_autopickup();
 
 bool need_to_autopickup();
-void autopickup();
+void autopickup(bool forced = false);
 
 void set_item_autopickup(const item_def &item, autopickup_level_type ap);
 int item_autopickup_level(const item_def &item);

@@ -2350,6 +2350,8 @@ Ctrl-direction or * direction
 ;
   Examine occupied tile and auto-pickup eligible items. Can also be used to pick
   up only part of a stack with no other item on the same square.
+  When a monster is present the first press of ; will only examine the tile
+  and a second press of ; will pick up all auto-pickup eligible items.
 
 x
   Examine surroundings, see below. Has '?' help.

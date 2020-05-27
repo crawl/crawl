@@ -1821,9 +1821,11 @@ void process_command(command_type cmd, command_type prev_cmd)
         break;
 
     case CMD_INSPECT_FLOOR:
-        request_autopickup();
         if (player_on_single_stack() && !you.running)
             pickup(true);
+        else
+            // Forced autopickup if CMD_INSPECT_FLOOR is used twice in a row
+            autopickup(prev_cmd == CMD_INSPECT_FLOOR);
         break;
     case CMD_SHOW_TERRAIN: toggle_show_terrain(); break;
     case CMD_ADJUST_INVENTORY: adjust(); break;
