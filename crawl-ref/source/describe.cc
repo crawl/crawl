@@ -4019,16 +4019,19 @@ static void _describe_monster_mr(const monster_info& mi, ostringstream &result)
  */
 static void _describe_monster_hab(const monster_info& mi, ostringstream &result)
 {
-    const monsterentry *mon_type = get_monster_data(mi.type);
-    const monsterentry *mon_type_base = get_monster_data(mi.base_type);
+    monster *m = monster_at(mi.pos);
+    habitat_type h = mons_habitat(*m,false);
 
-    if (mon_type->habitat == HT_AMPHIBIOUS
-        || mon_type_base->habitat == HT_AMPHIBIOUS)
-            result << "It is amphibious." << "\n";
-
-    if (mon_type->habitat == HT_AMPHIBIOUS_LAVA
-        || mon_type_base->habitat == HT_AMPHIBIOUS_LAVA)
+    switch (h) {
+        case HT_AMPHIBIOUS:
+            result << "It can travel through water." << "\n";
+            break;
+        case HT_AMPHIBIOUS_LAVA:
             result << "It can travel through lava." << "\n";
+            break;
+        default:
+            break;
+    }
     
 }
 
