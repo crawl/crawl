@@ -3326,12 +3326,19 @@ static habitat_type _mons_class_habitat(monster_type mc,
     return ht;
 }
 
-habitat_type mons_habitat(const monster& mon, bool real_amphibious)
-{
-    return _mons_class_habitat(fixup_zombie_type(mon.type,
-                                                 mons_base_type(mon)),
+habitat_type mons_habitat_types(monster_type t, monster_type base_t,
+                                bool real_amphibious) {
+    return _mons_class_habitat(fixup_zombie_type(t, base_t),
                                real_amphibious);
 }
+
+habitat_type mons_habitat(const monster& mon, bool real_amphibious)
+{
+    return mons_habitat_types(mon.type, mons_base_type(mon),
+                              real_amphibious);
+}
+
+
 
 habitat_type mons_class_primary_habitat(monster_type mc)
 {

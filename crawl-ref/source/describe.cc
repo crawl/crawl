@@ -4019,19 +4019,18 @@ static void _describe_monster_mr(const monster_info& mi, ostringstream &result)
  */
 static void _describe_monster_hab(const monster_info& mi, ostringstream &result)
 {
-    monster *m = monster_at(mi.pos);
-    habitat_type h = mons_habitat(*m,false);
+    habitat_type h = mons_habitat_types(mi.type, mi.base_type);
 
-    switch (h) {
-        case HT_AMPHIBIOUS:
-            result << "It can travel through water." << "\n";
-            break;
-        case HT_AMPHIBIOUS_LAVA:
-            result << "It can travel through lava." << "\n";
-            break;
-        default:
-            break;
-    }
+        switch (h) {
+            case HT_AMPHIBIOUS:
+                result << "It can travel through water." << "\n";
+                break;
+            case HT_AMPHIBIOUS_LAVA:
+                result << "It can travel through lava." << "\n";
+                break;
+            default:
+                break;
+        }
 }
 
 // Size adjectives
