@@ -4011,6 +4011,28 @@ static void _describe_monster_mr(const monster_info& mi, ostringstream &result)
     result << "\n";
 }
 
+/**
+ * Append information about a given monster's habitat to the provided stream.
+ *
+ * @param mi[in]            Player-visible info about the monster in question.
+ * @param result[in,out]    The stringstream to append to.
+ */
+static void _describe_monster_hab(const monster_info& mi, ostringstream &result)
+{
+    const monsterentry *e = get_monster_data(mi.type);
+    switch (e->habitat) {
+        case HT_AMPHIBIOUS:
+            result << "It is amphibious." << "\n";
+            break;
+        case HT_AMPHIBIOUS_LAVA:
+            result << "It can travel through lava." << "\n";
+            break;
+        default:
+            break;
+    }
+    result << "\n";
+}
+
 // Size adjectives
 const char* const size_adj[] =
 {
@@ -4347,6 +4369,7 @@ static string _monster_stat_description(const monster_info& mi)
     result << _monster_attacks_description(mi);
     result << _monster_missiles_description(mi);
     result << _monster_spells_description(mi);
+    _describe_monster_hab(mi, result);
 
     return result.str();
 }
