@@ -10,7 +10,7 @@
 
 #include "monster-type.h"
 
-TEST_CASE("_describe_monster_habitat outputs correct descriptions", "[single-file") {
+TEST_CASE("_describe_monster_habitat outputs correct descriptions", "[single-file]") {
 
     init_monsters();
 
