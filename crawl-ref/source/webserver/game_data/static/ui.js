@@ -368,7 +368,9 @@ function ($, comm, client, options, focus_trap) {
     {
         if (receiving_ui_state)
             return;
-        if (!client.in_game() || client.is_watching())
+        // TODO: remove the existence check once enough time has passed for
+        // browser caches to expire
+        if (client.in_game && !client.in_game() || client.is_watching())
             return;
         var $target_popup = $(elem).closest("[data-generation-id]");
         if ($target_popup[0] != top_popup().closest("[data-generation-id]")[0])
