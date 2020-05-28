@@ -3170,9 +3170,8 @@ string player_spell_desc(spell_type spell)
  *                      description, 'spell' is that monster. Else, null.
  * @param description   Set to the description & details of the spell.
  * @param item          The item holding the spell, if any.
- * @return              Whether you can memorise the spell.
  */
-static bool _get_spell_description(const spell_type spell,
+static void _get_spell_description(const spell_type spell,
                                   const monster_info *mon_owner,
                                   string &description,
                                   const item_def* item = nullptr)
@@ -3228,24 +3227,9 @@ static bool _get_spell_description(const spell_type spell,
     else
         description += player_spell_desc(spell);
 
-    // Don't allow memorisation after death.
-    // (In the post-game inventory screen.)
-    if (crawl_state.player_is_dead())
-        return false;
-
     const string quote = getQuoteString(string(spell_title(spell)) + " spell");
     if (!quote.empty())
         description += "\n" + quote;
-
-    if (item && item->base_type == OBJ_BOOKS
-        && (in_inventory(*item)
-            || item->pos == you.pos() && !is_shop_item(*item))
-        && !you.has_spell(spell) && you_can_memorise(spell))
-    {
-        return true;
-    }
-
-    return false;
 }
 
 /**
@@ -3318,7 +3302,7 @@ void describe_spell(spell_type spell, const monster_info *mon_owner,
                     const item_def* item, bool show_booklist)
 {
     string desc;
-    const bool can_mem = _get_spell_description(spell, mon_owner, desc, item);
+    _get_spell_description(spell, mon_owner, desc, item);
     if (show_booklist)
         desc += _spell_sources(spell);
 
@@ -3354,23 +3338,13 @@ void describe_spell(spell_type spell, const monster_info *mon_owner,
     scroller->set_child(move(text));
     vbox->add_child(scroller);
 
-    if (can_mem)
-    {
-        auto more = make_shared<Text>();
-        more->set_text(formatted_string("(M)emorise this spell.", CYAN));
-        more->set_margin_for_crt(1, 0, 0, 0);
-        more->set_margin_for_sdl(20, 0, 0, 0);
-        vbox->add_child(move(more));
-    }
-
     auto popup = make_shared<ui::Popup>(move(vbox));
 
     bool done = false;
     int lastch;
     popup->on_keydown_event([&](const KeyEvent& ev) {
         lastch = ev.key();
-        done = (toupper_safe(lastch) == 'M' && can_mem || lastch == CK_ESCAPE
-            || lastch == CK_ENTER || lastch == ' ');
+        done = (lastch == CK_ESCAPE || lastch == CK_ENTER || lastch == ' ');
         if (scroller->on_event(ev))
             return true;
         return done;
@@ -3387,19 +3361,11 @@ void describe_spell(spell_type spell, const monster_info *mon_owner,
     tiles.json_close_object();
     tiles.json_write_string("title", spl_title);
     tiles.json_write_string("desc", desc);
-    tiles.json_write_bool("can_mem", can_mem);
     tiles.push_ui_layout("describe-spell", 0);
     popup->on_layout_pop([](){ tiles.pop_ui_layout(); });
 #endif
 
     ui::run_layout(move(popup), done);
-
-    if (toupper_safe(lastch) == 'M' && can_mem)
-    {
-        redraw_screen(); // necessary to ensure stats is redrawn (!?)
-        if (!learn_spell(spell) || !you.turn_is_over)
-            more();
-    }
 }
 
 /**
