@@ -2575,10 +2575,12 @@ void bolt::affect_endpoint()
     case SPELL_SEARING_BREATH:
         if (!path_taken.empty())
             place_cloud(CLOUD_FIRE, pos(), 5 + random2(5), agent());
+        break;
 
     case SPELL_DRACO_HOLY_BREATH:
         if (!path_taken.empty())
             place_cloud(CLOUD_HOLY, pos(), 3 + random2(3), agent());
+        break;
     default:
         break;
     }
