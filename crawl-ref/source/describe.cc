@@ -3169,12 +3169,10 @@ string player_spell_desc(spell_type spell)
  * @param mon_owner     If this spell is being examined from a monster's
  *                      description, 'spell' is that monster. Else, null.
  * @param description   Set to the description & details of the spell.
- * @param item          The item holding the spell, if any.
  */
 static void _get_spell_description(const spell_type spell,
                                   const monster_info *mon_owner,
-                                  string &description,
-                                  const item_def* item = nullptr)
+                                  string &description)
 {
     description.reserve(500);
 
@@ -3296,13 +3294,14 @@ void get_spell_desc(const spell_type spell, describe_info &inf)
  * @param spelled   The spell in question.
  * @param mon_owner If this spell is being examined from a monster's
  *                  description, 'mon_owner' is that monster. Else, null.
- * @param item      The item holding the spell, if any.
  */
 void describe_spell(spell_type spell, const monster_info *mon_owner,
                     const item_def* item, bool show_booklist)
 {
+    UNUSED(item);
+
     string desc;
-    _get_spell_description(spell, mon_owner, desc, item);
+    _get_spell_description(spell, mon_owner, desc);
     if (show_booklist)
         desc += _spell_sources(spell);
 
