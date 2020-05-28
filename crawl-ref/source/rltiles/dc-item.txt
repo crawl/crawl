@@ -1054,6 +1054,7 @@ misc_phial MISC_PHIAL_OF_FLOODS
 misc_phial_inert MISC_PHIAL_OF_FLOODS_INERT
 misc_lightning_rod MISC_LIGHTNING_ROD
 misc_lightning_rod_inert MISC_LIGHTNING_ROD_INERT
+misc_tremorstones MISC_TIN_OF_TREMORSTONES
 %rim 1
 # start TAG_MAJOR_VERSION == 34
 misc_lantern MISC_LANTERN_OF_SHADOWS
