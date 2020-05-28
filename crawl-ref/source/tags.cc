@@ -4543,6 +4543,12 @@ void unmarshallItem(reader &th, item_def &item)
         item.sub_type = MISC_PHANTOM_MIRROR;
     }
 #endif
+
+    if (item.is_type(OBJ_MISCELLANY, MISC_XOMS_CHESSBOARD))
+    {
+        item.sub_type = MISC_BAG;
+    }
+
     item.plus2       = unmarshallShort(th);
     item.special     = unmarshallInt(th);
     item.quantity    = unmarshallShort(th);
