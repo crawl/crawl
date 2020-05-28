@@ -1886,8 +1886,13 @@ static string _describe_jewellery(const item_def &item, bool verbose)
     if (verbose && !is_artefact(item)
         && item_ident(item, ISFLAG_KNOW_PLUSES))
     {
-        // Explicit description of ring power.
-        if (item.plus != 0)
+        // Explicit description of ring or amulet power.
+        if (item.sub_type == AMU_REFLECTION)
+        {
+            description += make_stringf("\nIt affects your shielding (%+d).",
+                                        AMU_REFLECT_SH / 2);
+        }
+        else if (item.plus != 0)
         {
             switch (item.sub_type)
             {
@@ -1920,11 +1925,6 @@ static string _describe_jewellery(const item_def &item, bool verbose)
                 description += make_stringf("\nIt affects your accuracy and"
                       " damage with ranged weapons and melee attacks (%+d).",
                       item.plus);
-                break;
-
-            case AMU_REFLECTION:
-                description += make_stringf("\nIt affects your shielding (%+d).",
-                                            item.plus);
                 break;
 
             default:
