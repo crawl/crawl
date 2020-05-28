@@ -293,6 +293,13 @@ Chilling Breath spell
 Exhales a blast of frost that may knock back airborne targets. The range of the
 blast is decreased by one for every creature it strikes.
 %%%%
+Cigotuvi's Plague spell
+
+Throws and implants a plasmid of Cigotuvi's virus, infecting targeted creature
+for a duration depending on power and causing their corpse to become monstrous
+abomination.  
+
+%%%%
 Cleansing Flame spell
 
 <Cleansing Flame ability>
@@ -788,13 +795,6 @@ Infestation spell
 Calls forth a plague of scarabs, infesting affected creatures for a duration
 depending on power and causing death scarabs to grow and burst from them upon
 death.
-%%%%
-Cigotuvi's Plague spell
-
-Throws and implatns a plasmid of Cigotuvi's virus, infecting targeted creature
-for a duration depending on power and causing their corpse to become monstrous
-abomination.  
-
 %%%%
 Infusion spell
 
