@@ -7143,7 +7143,7 @@ static void _marshallSpells(writer &th, const monster_spells &spells)
 }
 
 #if TAG_MAJOR_VERSION == 34
-static const int NUM_MONSTER_SPELL_SLOTS = 6;
+static const uint8_t NUM_MONSTER_SPELL_SLOTS = 6;
 
 static void _fixup_spells(monster_spells &spells, int hd)
 {
