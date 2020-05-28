@@ -162,9 +162,9 @@ static void _maybe_bloodify_square(const coord_def& where, int amount,
     }
 }
 
-// Currently flavour only: colour ground (and possibly adjacent squares) red.
-// "damage" depends on damage taken (or hitpoints, if damage higher),
-// or, for sacrifices, on the number of chunks possible to get out of a corpse.
+// Colour ground (and possibly adjacent squares) red. "damage" depends on damage
+// taken (or hitpoints, if damage higher), or, for butchering, on the number of
+// chunks possible to get out of a corpse.
 void bleed_onto_floor(const coord_def& where, monster_type montype,
                       int damage, bool spatter, const coord_def& from,
                       const bool old_blood)
