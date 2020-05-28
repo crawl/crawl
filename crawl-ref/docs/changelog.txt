@@ -1,5 +1,5 @@
-Stone Soup 0.25 (through 0.25-a0-1105-ga8d24287ef)
---------------------------------------------------
+Stone Soup 0.25 (through 0.25-b1-22-g96581c4978)
+------------------------------------------------
 
 Highlights
 ----------
@@ -21,12 +21,14 @@ Branches, Environment
 * Zot traps have had their effect flowchart simplified and focused.
 * Abyss exits that spawn from earning xp can spawn after the initial spawn,
   instead of every subsequent spawn being a downstair.
+* Troves can now ask for scrolls of fog or scrolls of fear.
 
 Character
 ---------
 * Monsters summoned by the player now dismiss when they become hostile.
 * Players can now renounce their religion while silenced.
 * All Evocable items can no longer be used by the player while confused.
+* Formicids can no longer cast Swiftness.
 
 Gods
 ----
@@ -68,6 +70,7 @@ Gods
     fires a bolt of draining.
   - Kikubaaqudgha's wrath uses death curses in place of necromancy miscasts.
 * Vehumet is less likely to give duplicate gifts.
+* Xom is stimulated upon worship at a faded altar.
 
 Items
 -----
@@ -88,8 +91,8 @@ Items
   armour.
 * The chaos brand now has might and agility effects, no longer causes miscast
   effects, and its cloning effect can create friendly and neutral monsters.
-* Potions of Brilliance now only provide a stronger universal spell enhancer
-  and remove spell hunger. They no longer provide an Int bonus nor wizardry.
+* Potions of Brilliance now provide a stronger universal spell enhancer and
+  remove spell hunger. They no longer provide an Int bonus nor wizardry.
 * Potions of Might no longer provide a bonus to strength.
 * Scrolls of Magic Mapping now reveal any floor traps on the level.
 * The -Tele property no longer appears on artefact weapons and jewellery.
@@ -115,14 +118,14 @@ Items
     immunity to monsters wielding it.
   - The Dragonskin Cloak now provides rCorr instead of sticky flame
     resistance.
-  - Bloodbane has been removed, having been merged into Leech.
-  - Maxwell's Etheric Cage has been removed.
   - The scythe of Curses no longer curses items in inventory, and now applies
     death curses instead of necromancy miscasts.
   - The plutonium sword still applies transmutations miscasts, but gains a
     chance to polymorph the target on hit (since this is no longer a miscast
     effect for monsters).
   - The brooch of Shielding is now a guardian spirit amulet with SH+8.
+  - Bloodbane has been removed, having been merged into Leech.
+  - Maxwell's Etheric Cage has been removed.
 * Phial of floods now applies a silencing "waterlogged" debuff to all monsters
   in the flooded area and no longer summons water elementals.
 * Staves of poison now do resistable poison damage on hit like other staves
@@ -154,8 +157,8 @@ Interface
 * A new option auto_butcher_max_chunks prevents automatic butchering with more
   than that many chunks in inventory. Its default value is 10 for non-ghoul
   characters.
-* explore_auto_rest now defaults to true
-* auto_butcher now defaults to always
+* explore_auto_rest now defaults to true.
+* auto_butcher now defaults to always.
 * New morgue section: screenshots. When notes are taken with : a screenshot is
   additionally saved and can be added to morgues.
 * The console monster list now displays monster status information and whether
@@ -167,6 +170,7 @@ Interface
   in console (both for glyph and colour).
 * The "visited status" of stairs and transporters can now be indicated both by
   glyph and by colour in console.
+* Allies now show sleep and confusion status tiles.
 
 Monsters
 --------
@@ -187,6 +191,7 @@ Monsters
   frenzied.
 * Summoned monsters can now get the inner flame status, both from the spell and
   the scroll.
+* Monsters now try to avoid blocking the line of fire of monsters behind them.
 
 Spells
 ------
@@ -276,7 +281,7 @@ Spells
   - Charms and Hexes: debuff and slow.
   - Summoning: durably summon a nameless horror (new monster).
   - Translocation: dimension anchor.
-  - Transmutation: polymorph the player, malmutate a monster.
+  - Transmutation: extra contamination for the player, malmutate a monster.
   - Conjuration: irresistable AC-ignoring damage.
   - Elemental schools: school flavored damage (Earth uses fragmentation
     damage).
