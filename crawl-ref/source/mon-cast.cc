@@ -5889,11 +5889,17 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
             // Attempt to place adjacent to target first, and only at a wider
             // radius if no adjacent spots can be found
             coord_def empty;
-            find_habitable_spot_near(mons->get_foe()->pos(),
+
+            // Wizard mode creates a dummy friendly monster, with no foe
+            // Prevent a segfault by checking for that
+            if (!foe)
+                return;
+
+            find_habitable_spot_near(foe->pos(),
                                      MONS_WANDERING_MUSHROOM, 1, false, empty);
             if (empty.origin())
             {
-                find_habitable_spot_near(mons->get_foe()->pos(),
+                find_habitable_spot_near(foe->pos(),
                                          MONS_WANDERING_MUSHROOM, 2, false, empty);
             }
 
