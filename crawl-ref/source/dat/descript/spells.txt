@@ -1460,6 +1460,12 @@ Summon Earth Elementals spell
 
 Summons one or more earth elementals.
 %%%%
+Summon Elemental spell
+
+Summons elementals(Fire, Water, Earth, Air) from the natural feature existing
+in the dungeon. If you cast this spell toward nothing, then you may summon an air
+elemental.
+%%%%
 Summon Emperor Scorpions spell
 
 Summons multiple noble and monstrous emperor scorpions.

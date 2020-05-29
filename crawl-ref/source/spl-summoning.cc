@@ -368,7 +368,7 @@ spret cast_summon_elemental(int pow, god_type god, bool fail)
     }
 
     fail_check();
-
+/*
     if (mon == MONS_EARTH_ELEMENTAL)
     {
         grd(targ) = DNGN_FLOOR;
@@ -379,7 +379,7 @@ spret cast_summon_elemental(int pow, god_type god, bool fail)
     {
         delete_cloud(targ);
     }
-
+*/
     int cnt = 0;
 
     for (monster_iterator mi; mi; ++mi)
