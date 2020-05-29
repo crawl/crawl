@@ -107,10 +107,10 @@ T.T
 ENDMAP
 
 NAME:   shop_statue
-TAGS:   allow_dup extra shop no_tele_into
+TAGS:   allow_dup extra shop
 KFEAT:  O = any shop
 MAP
-@G..O..G@
+@G.O.<.G@
 ENDMAP
 
 NAME:   shop_coins
@@ -154,12 +154,12 @@ b.b
 ENDMAP
 
 NAME: nicolae_shop_statue_plus
-TAGS: allow_dup extra shop no_tele_into
+TAGS: allow_dup extra shop
 KFEAT: O = any shop
 MAP
    @
    G
-   .
+   <
 @G.O.G@
    .
    G
