@@ -5630,6 +5630,8 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
 
     case SPELL_SUMMON_SPECTRAL_ORCS:
+        if (!foe)
+            return;
         if (foe->is_player())
             mpr("Orcish apparitions take form around you.");
         else
