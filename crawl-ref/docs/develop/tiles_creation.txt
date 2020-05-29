@@ -212,7 +212,7 @@ Whenever you're faced with the task of creating a new tile, consider whether
 you can reuse an existing tile, either because it is currently not seeing use
 (check out the rltiles/UNUSED directory for this) or because it can easily be
 tweaked by adding details or changing its colour. Flipping or rotating (part
-of) a tile can make a huge difference already, and sometimes a combinition of
+of) a tile can make a huge difference already, and sometimes a combination of
 parts taken from different existing tiles can be used to great effect.
 
 For human monsters, usually uniques, in addition the in-game doll editor
