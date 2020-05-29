@@ -129,7 +129,7 @@ This ability will cost us about 50 food and 1 MP to use, and the success
 chance is only attached to our character level, not any skill. Farther
 down, in, the _do_ability function, we see the master switch() statement
 that handles ability use. We'll add ours in here, and order does not
-matter for this one, so we'll place it by similiar abilities instead of
+matter for this one, so we'll place it by similar abilities instead of
 at the end:
 
     case ABIL_LASER_EYES:      // eye lasers
@@ -214,9 +214,9 @@ the complexity of displaying a layered icon correctly in this tutorial.
 
 That leaves melee_attack.cc as where the meat of the mutation goes. The
 good news is that we can make a copy of already frequently implemented
-code. First let's copy this auxilliary attack class and modify it, then
+code. First let's copy this auxiliary attack class and modify it, then
 make an instance of our new class, and then check for our new attack
-along with the other auxilliary attacks:
+along with the other auxiliary attacks:
 
     //CREATE THIS:
     class AuxBeard: public AuxAttackType
