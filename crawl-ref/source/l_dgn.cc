@@ -1926,11 +1926,7 @@ LUAFN(_vp_size)
 LUAFN(_vp_orient)
 {
     VP(vp);
-<<<<<<< HEAD:crawl-ref/source/l_dgn.cc
-    PLUARET(number, vp.orient)
-=======
     PLUARET(number, (*vp)->orient);
->>>>>>> 218456f21e... Pointer checks for lua userdata objects:crawl-ref/source/l-dgn.cc
 }
 
 LUAFN(_vp_map)
