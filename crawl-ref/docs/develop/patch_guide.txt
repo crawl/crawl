@@ -10,7 +10,7 @@ Required tools
 --------------
 
 The Stone Soup project uses git for version control. It is preferred, although
-not mandatory, for the contributors to get acquinted with the git workflow and
+not mandatory, for the contributors to get acquainted with the git workflow and
 submit their patches in the git format. For Windows, msysgit is a good,
 self-contained package of all the required tools for Windows.
 
@@ -22,7 +22,7 @@ Main steps
     game, you can still submit patches for the documentation, descriptions
     or vaults. In that case, simply ignore the steps relating to compilation
     and coding. You don't even need the source code for that, instead you can
-    simply use the binary distributation that also contains the relevant
+    simply use the binary distribution that also contains the relevant
     text files.
 
 1.) Make a local clone of the source code:
@@ -48,7 +48,7 @@ Main steps
 
 5.) Once everything works as it should, run util/checkwhite to fix a few
     formatting problems. Now, you should make a local commit (or several), and
-    use git format-patch to produce easily appliable patches:
+    use git format-patch to produce easily applicable patches:
     git format-patch -n
 
     Where n is the number of commits you made. Each is made into a separate
@@ -129,7 +129,7 @@ such. The various properties are not self-explanatory but they're also not
 totally obscure, so you should be able to find out a lot about them by just
 fiddling with the values. In particular, beam.flavour is set to something
 called BEAM_POTION_STINKING_CLOUD which looks interesting enough to check
-out, so I grep the source (*.h and *.cc) for all occurences and have a look
+out, so I grep the source (*.h and *.cc) for all occurrences and have a look
 at all files this turns up. And so on.
 
 Evaluating and prioritising the findings takes some experience with the source
