@@ -43,7 +43,7 @@ allowed to submit translated text, especially for things like biblical
 references, but don't forget to include information about the translator.
 Quotes have keys ending with ':quote'. Not all entries have a quote associated
 with it. To submit a new quote from the transifex interface, edit the
-descripton and add a line with :quote at the end. Then, below it, you can add
+description and add a line with :quote at the end. Then, below it, you can add
 a quote. On the next synchronization, it will be moved to its own key.
 
 Aliases
@@ -96,7 +96,7 @@ access to a few basic git commands and transifex pull/push.
 At any moment you can change the languages and resources. All commands only
 apply to what is currently selected. When there are pending changes of
 different types, you can also "select changes" which allows you to review
-independantly new entries, changed ones, quotes and deleted entries.
+independently new entries, changed ones, quotes and deleted entries.
 
 Here is the process to do a full sync (hotkey commands are uppercased):
 start with only the english language (txc -s).

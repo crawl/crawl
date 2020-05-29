@@ -9,7 +9,7 @@ unique ones in.
 
 Today, we will add in Ralph, Demon Prince of Apathy to the Crawl pantheon.
 He's not known for doing much, or caring much about his followers.
-He does so little, his followers reace similar levels of apathy because
+He does so little, his followers reach similar levels of apathy because
 he can't be bothered to stop his divine power from transferring. His
 followers, in turn, become so apathetic that even those attacking them
 with bloodlust in their hearts get bored and look elsewhere.
@@ -121,7 +121,7 @@ enum order:
                     " forgives your inadvertent attack on a neutral, just this once."
                 } },
                 { DID_ATTACK_IN_SANCTUARY, {
-                    "you attack monters in a sanctuary", false,
+                    "you attack monsters in a sanctuary", false,
                     1, 1
                 } },
                 { DID_UNCLEAN, {
@@ -239,7 +239,7 @@ Also in religion.cc are the basic functions we'll need to handle our god's
 full name, excommunication/desertion penalties, and decaying piety and
 wrath timers. Ralph doesn't have either of those last 2, but we'll show
 you where they get handled, and you'll more than likely be happy to copy
-an existing entry for your new deity in mose cases. You may also want to
+an existing entry for your new deity in most cases. You may also want to
 update the divine_retribution() function to handle the things your god
 does when angry.
 
@@ -281,7 +281,7 @@ does when angry.
 
 For most deities, godwrath.cc will be necessary. The upside is that for
 gods with wrath, adding this is very free-form. You need to add in a line
-like this to divine_retribution() to handle wrath occuring:
+like this to divine_retribution() to handle wrath occurring:
 
         bool divine_retribution(god_type god, bool no_bonus, bool force)
         {
