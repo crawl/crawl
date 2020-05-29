@@ -1255,7 +1255,11 @@ protected:
         }
         else if (item_status == ITEM_STATUS_RESTRICTED)
         {
+#ifdef USE_TILE_LOCAL
+            fg = LIGHTGRAY;
+#else
             fg = DARKGRAY;
+#endif
             hl = STARTUP_HIGHLIGHT_BAD;
         }
         else
