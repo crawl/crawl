@@ -23,7 +23,7 @@ then this is all you need to do!
 - /source/enum.h
         - Defines monster type enumeration (an ID for the monster)
         - In monster_type, find similar monsters and add a new entry there.
-                - To preserve save compatability, you need to wrap that entry
+                - To preserve save compatibility, you need to wrap that entry
                 in #if TAG_MAJOR_VERSION > 34 #endif.
         - In the '// Add new monsters here:' block, at the end of that block
         add another entry for the monster. This entry should come right above
