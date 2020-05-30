@@ -129,8 +129,6 @@ static bool _merge_items_into_inv(item_def &it, int quant_got,
 static bool will_autopickup   = false;
 static bool will_autoinscribe = false;
 
-static int last_auto_pickup_try = 1;
-
 static inline string _autopickup_item_name(const item_def &item)
 {
     return userdef_annotate_item(STASH_LUA_SEARCH_ANNOTATE, &item)
@@ -3313,20 +3311,12 @@ static void _do_autopickup()
 
 void autopickup(bool forced)
 {
-    // register when ; is pressed twice in a row, and force autopickup.
-    if (forced)
-    {
-        if (last_auto_pickup_try == you.num_turns)
-            _do_autopickup();
-        last_auto_pickup_try = you.num_turns;
-        return;
-    }
-
     _autoinscribe_floor_items();
-    if (!can_autopickup())
-        item_check();
-    else
+    // pick up things when forced (by input ;;), or when you feel save
+    if (forced || can_autopickup())
         _do_autopickup();
+    else
+        item_check();
 }
 
 int inv_count()

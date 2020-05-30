@@ -1800,7 +1800,8 @@ void process_command(command_type cmd)
         if (player_on_single_stack() && !you.running)
             pickup(true);
         else
-            autopickup(true);
+            // Forced autopickup if CMD_INSPECT_FLOOR is used twice in a row
+            autopickup(crawl_state.prev_cmd == CMD_INSPECT_FLOOR);
         break;
     case CMD_SHOW_TERRAIN: toggle_show_terrain(); break;
     case CMD_ADJUST_INVENTORY: adjust(); break;
