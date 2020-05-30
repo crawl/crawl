@@ -132,7 +132,7 @@ def user_passwd_match(username, passwd):  # type: (str, str) -> Optional[Tuple[s
         result = db.c.fetchone()  # type: Optional[Tuple[str, str, str]]
 
     if dgl_is_banned(result[2]):
-	    return result[0], 'Account is disabled.'
+        return result[0], 'Account is disabled.'
     elif result and crypt.crypt(passwd, result[1]) == result[1]:
         return result[0], None
     else:
