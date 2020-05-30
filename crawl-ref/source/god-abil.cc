@@ -1689,7 +1689,7 @@ bool beogh_resurrect()
         {
             found_any = true;
             if (yesno(("Resurrect "
-                       + si->props[ORC_CORPSE_KEY].get_monster().name(DESC_THE)
+                       + si->props[ORC_CORPSE_KEY].get_monster().full_name(DESC_THE)
                        + "?").c_str(), true, 'n'))
             {
                 corpse = &*si;
