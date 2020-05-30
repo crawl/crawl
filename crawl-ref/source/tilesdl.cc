@@ -153,6 +153,7 @@ bool HiDPIState::update(int ndevice, int nlogical)
         device = ndevice;
         logical = nlogical;
     }
+
     // check if the ratios remain the same.
     // yes, this is kind of a dumb way to do it.
     return (old.device * 100 / old.logical) != (device * 100 / logical);
@@ -560,8 +561,11 @@ void TilesFramework::resize()
 
 void TilesFramework::resize_event(int w, int h)
 {
-    m_windowsz.x = w;
-    m_windowsz.y = h;
+    m_windowsz.x = w / Options.game_scale;
+    m_windowsz.y = h / Options.game_scale;
+    // TODO: does order of this call matter? This is based on a previous
+    // version where it was called from outside this function.
+    ui::resize(m_windowsz.x, m_windowsz.y);
 
     update_dpi();
     calculate_default_options();
@@ -654,6 +658,12 @@ int TilesFramework::getch_ck()
                 tiles.clear_text_tags(TAG_CELL_DESC);
                 m_region_msg->alt_text().clear();
             }
+
+            // These WME_* events are also handled, at different times, by a
+            // similar bit of code in ui.cc. Roughly, this handling is used
+            // during the main game display, and the ui.cc loop is used in the
+            // main menu and when there are ui elements on top.
+            // TODO: consolidate as much as possible
 
             switch (event.type)
             {
@@ -771,9 +781,7 @@ int TilesFramework::getch_ck()
                 return ESCAPE;
 
             case WME_RESIZE:
-                m_windowsz.x = event.resize.w;
-                m_windowsz.y = event.resize.h;
-                resize();
+                resize_event(event.resize.w, event.resize.h);
                 set_need_redraw();
                 return CK_REDRAW;
 

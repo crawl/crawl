@@ -374,6 +374,7 @@ const vector<GameOption*> game_options::build_options_list()
 #endif
 #endif
 #ifdef USE_TILE_LOCAL
+        new IntGameOption(SIMPLE_NAME(game_scale), 1, 1, 8),
         new IntGameOption(SIMPLE_NAME(tile_key_repeat_delay), 200, 0, INT_MAX),
         new IntGameOption(SIMPLE_NAME(tile_window_width), -90, INT_MIN, INT_MAX),
         new IntGameOption(SIMPLE_NAME(tile_window_height), -90, INT_MIN, INT_MAX),
