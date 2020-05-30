@@ -104,4 +104,4 @@ int count_desc_lines(const string& _desc, const int width);
 string extra_cloud_info(cloud_type cloud_type);
 
 /* Public for testing purposes only: do not use elsewhere */
-void _describe_monster_habitat(const monster_info& mi, ostringstream &result);
+string _monster_habitat_description(const monster_info& mi);

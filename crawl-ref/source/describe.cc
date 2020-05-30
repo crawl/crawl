@@ -4017,17 +4017,18 @@ static void _describe_monster_mr(const monster_info& mi, ostringstream &result)
  * @param mi[in]            Player-visible info about the monster in question.
  * @param result[in,out]    The stringstream to append to.
  */
-void _describe_monster_habitat(const monster_info& mi, ostringstream &result)
+string _monster_habitat_description(const monster_info& mi)
 {
     const habitat_type habitat = mons_habitat_type(mi.type, mi.base_type);
         switch (habitat) {
         case HT_AMPHIBIOUS:
-            result << "It can travel through water.\n";
+            return "It can travel through water.\n";
             break;
         case HT_AMPHIBIOUS_LAVA:
-            result << "It can travel through lava.\n";
+            return "It can travel through lava.\n";
             break;
         default:
+            return "";
             break;
         }
 }
@@ -4368,7 +4369,7 @@ static string _monster_stat_description(const monster_info& mi)
     result << _monster_attacks_description(mi);
     result << _monster_missiles_description(mi);
     result << _monster_spells_description(mi);
-    _describe_monster_habitat(mi, result);
+    result << _monster_habitat_description(mi);
 
     return result.str();
 }
