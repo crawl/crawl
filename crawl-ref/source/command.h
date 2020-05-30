@@ -32,4 +32,4 @@ void show_help(int section = CK_HOME, string highlight_string = "");
 int show_keyhelp_menu(const vector<formatted_string> &lines);
 
 // XXX: Actually defined in main.cc; we may want to move this to command.cc.
-void process_command(command_type cmd);
+void process_command(command_type cmd, command_type prev_cmd = CMD_NO_CMD);

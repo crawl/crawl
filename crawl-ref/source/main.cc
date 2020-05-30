@@ -1117,6 +1117,13 @@ static void _input()
         if (!crawl_state.is_replaying_keys())
             you.elapsed_time_at_last_input = you.elapsed_time;
 
+        // We need to capture this value, since crawl_state.prev_cmd is updated
+        // to be equal to the current command before process_command runs.
+        // This means that certain values CMD_PREV_CMD_AGAIN will be kept
+        // verbatim; the alternative would require keeping some more state. But
+        // it's not too important for the current use.
+        const command_type real_prev_cmd = crawl_state.prev_cmd;
+
         if (cmd != CMD_PREV_CMD_AGAIN && cmd != CMD_NO_CMD
             && !crawl_state.is_replaying_keys())
         {
@@ -1130,7 +1137,7 @@ static void _input()
         // binding, your turn may be ended by the first invoke of the
         // macro.
         if (!you.turn_is_over && cmd != CMD_NEXT_CMD)
-            process_command(cmd);
+            process_command(cmd, real_prev_cmd);
 
         repeat_again_rec.paused = true;
 
@@ -1666,7 +1673,7 @@ static void _do_list_gold()
 // e.g. list_jewellery, etc.
 // calling this directly will not record the command for later replay; if you
 // want to ensure that it's recorded, see macro.cc:process_command_on_record.
-void process_command(command_type cmd)
+void process_command(command_type cmd, command_type prev_cmd)
 {
     you.apply_berserk_penalty = true;
 
@@ -1734,8 +1741,7 @@ void process_command(command_type cmd)
             && !is_processing_macro()
             && you.real_time_delta
                <= chrono::milliseconds(Options.autofight_warning)
-            && (crawl_state.prev_cmd == CMD_AUTOFIGHT
-                || crawl_state.prev_cmd == CMD_AUTOFIGHT_NOMOVE))
+            && (prev_cmd == CMD_AUTOFIGHT || prev_cmd == CMD_AUTOFIGHT_NOMOVE))
         {
             mprf(MSGCH_DANGER, "You should not fight recklessly!");
         }

@@ -34,7 +34,7 @@ player you;
 game_state crawl_state;
 
 void process_command(command_type);
-void process_command(command_type) {}
+void process_command(command_type, command_type) {}
 
 void world_reacts();
 void world_reacts() {}
