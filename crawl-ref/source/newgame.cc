@@ -31,9 +31,9 @@
 #include "species-groups.h"
 #include "state.h"
 #include "stringutil.h"
+#include "tilepick.h"
 #ifdef USE_TILE
 #include "tilereg-crt.h"
-#include "tilepick.h"
 #include "tilepick-p.h"
 #include "tilefont.h"
 #include "rltiles/tiledef-main.h"
@@ -1225,9 +1225,7 @@ protected:
                                 int id,
                                 int item_status,
                                 string item_name,
-#ifdef USE_TILE
                                 tile_def item_tile,
-#endif
                                 bool is_active_item,
                                 coord_def position)
 
@@ -1244,6 +1242,8 @@ protected:
         tile->flex_grow = 0;
         hbox->add_child(move(tile));
         hbox->add_child(label);
+#else
+        UNUSED(item_tile);
 #endif
 
         COLOURS fg, hl;
@@ -1518,6 +1518,7 @@ void job_group::attach(const newgame_def& ng, const newgame_def& defaults,
             item_status = ITEM_STATUS_ALLOWED;
 
         const bool is_active_item = defaults.job == job;
+        const bool recommended = item_status != ITEM_STATUS_RESTRICTED;
 
         ++pos.y;
 
@@ -1526,10 +1527,7 @@ void job_group::attach(const newgame_def& ng, const newgame_def& defaults,
             job,
             item_status,
             get_job_name(job),
-#ifdef USE_TILE
-            tile_def(tileidx_player_job(job,
-                    item_status != ITEM_STATUS_RESTRICTED), TEX_GUI),
-#endif
+            tile_def(tileidx_player_job(job, recommended), TEX_GUI),
             is_active_item,
             pos
         );
@@ -1568,6 +1566,7 @@ void species_group::attach(const newgame_def& ng, const newgame_def& defaults,
             item_status = ITEM_STATUS_ALLOWED;
 
         const bool is_active_item = defaults.species == this_species;
+        const bool recommended = item_status != ITEM_STATUS_RESTRICTED;
 
         ++pos.y;
 
@@ -1576,10 +1575,7 @@ void species_group::attach(const newgame_def& ng, const newgame_def& defaults,
             this_species,
             item_status,
             species_name(this_species),
-#ifdef USE_TILE
-            tile_def(tileidx_player_species(this_species,
-                    item_status != ITEM_STATUS_RESTRICTED), TEX_GUI),
-#endif
+            tile_def(tileidx_player_species(this_species, recommended), TEX_GUI),
             is_active_item,
             pos
         );
