@@ -104,17 +104,19 @@ bool FTFontWrapper::configure_font()
     m_max_advance.x = metrics.max_advance >> 6;
     m_max_advance.y = (metrics.ascender-metrics.descender)>>6;
     m_ascender      = (metrics.ascender>>6);
-    // if you're looking for realistic glyph sizes uses m_max_advance
+    // if you're looking for realistic glyph sizes use m_max_advance
     // or char_width, these are still scaled.
+    // (TODO: why would you ever use these values? m_max_advance is almost
+    // certainly correct...)
     m_max_width     = (face->bbox.xMax >> 6) - (face->bbox.xMin >> 6);
     m_max_height    = (face->bbox.yMax >> 6) - (face->bbox.yMin >> 6);
     m_min_offset    = 0;
 
     charsz = coord_def(1,1);
     // Grow character size to power of 2
-    while (charsz.x < m_max_width)
+    while (charsz.x < m_max_advance.x)
         charsz.x *= 2;
-    while (charsz.y < m_max_height)
+    while (charsz.y < m_max_advance.y)
         charsz.y *= 2;
 
     // Fill out texture to be (16*charsz.x) X (16*charsz.y) X (32-bit)
@@ -150,10 +152,10 @@ bool FTFontWrapper::configure_font()
     // atlas[0] always contains a full-white block (never evicted)
     // this is currently used by colour_bar
     {
-        for (int x = 0; x < m_max_width; x++)
-            for (int y = 0; y < m_max_height; y++)
+        for (int x = 0; x < m_max_advance.x; x++)
+            for (int y = 0; y < m_max_advance.y; y++)
             {
-                unsigned int idx = x + y * m_max_width;
+                unsigned int idx = x + y * m_max_advance.x;
                 idx *= 4;
                 pixels[idx]     = 255;
                 pixels[idx + 1] = 255;
@@ -360,7 +362,7 @@ void FTFontWrapper::render_textblock(unsigned int x_pos, unsigned int y_pos,
     m_buf->clear();
     n_subst = 0;
 
-    float texcoord_dy = (float)m_max_height / (float)m_tex.height();
+    float texcoord_dy = (float)m_max_advance.y / (float)m_tex.height();
     for (unsigned int y = 0; y < height; y++)
     {
         for (unsigned int x = 0; x < width; x++)
@@ -394,7 +396,7 @@ void FTFontWrapper::render_textblock(unsigned int x_pos, unsigned int y_pos,
                 float tex_y2 = tex_y + texcoord_dy;
 
                 GLWPrim rect(adv.x, adv.y - glyph.ascender + m_ascender,
-                             adv.x + this_width, adv.y + m_max_height - glyph.ascender + m_ascender);
+                             adv.x + this_width, adv.y + m_max_advance.y - glyph.ascender + m_ascender);
 
                 VColour col(term_colours[col_fg].r,
                             term_colours[col_fg].g,
@@ -833,13 +835,13 @@ void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
     float pos_sx = x + glyph.offset * density_mult;
     float pos_sy = y - (glyph.ascender - m_ascender) * density_mult;
     float pos_ex = pos_sx + this_width * density_mult;
-    float pos_ey = y + (m_max_height - glyph.ascender + m_ascender)
+    float pos_ey = y + (m_max_advance.y - glyph.ascender + m_ascender)
                    * density_mult;
 
     float tex_sx = (float)(c % GLYPHS_PER_ROWCOL) / (float)GLYPHS_PER_ROWCOL;
     float tex_sy = (float)(c / GLYPHS_PER_ROWCOL) / (float)GLYPHS_PER_ROWCOL;
     float tex_ex = tex_sx + (float)this_width / (float)(GLYPHS_PER_ROWCOL*charsz.x);
-    float tex_ey = tex_sy + (float)m_max_height / (float)(GLYPHS_PER_ROWCOL*charsz.y);
+    float tex_ey = tex_sy + (float)m_max_advance.y / (float)(GLYPHS_PER_ROWCOL*charsz.y);
 
     GLWPrim rect(pos_sx, pos_sy, pos_ex, pos_ey);
     rect.set_tex(tex_sx, tex_sy, tex_ex, tex_ey);
