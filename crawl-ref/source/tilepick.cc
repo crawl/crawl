@@ -3458,6 +3458,8 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_ZIN_SANCTUARY;
     case ABIL_ZIN_DONATE_GOLD:
         return TILEG_ABILITY_ZIN_DONATE_GOLD;
+    case ABIL_ZIN_BLESS_WEAPON:
+        return TILEG_ABILITY_ZIN_BLESS_WEAPON;
     // TSO
     case ABIL_TSO_DIVINE_SHIELD:
         return TILEG_ABILITY_TSO_DIVINE_SHIELD;
@@ -3489,6 +3491,8 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_YRED_DRAIN_LIFE;
     case ABIL_YRED_ENSLAVE_SOUL:
         return TILEG_ABILITY_YRED_ENSLAVE_SOUL;
+    case ABIL_YRED_BLESS_WEAPON:
+        return TILEG_ABILITY_YRED_BLESS_WEAPON;
     // Xom, Vehumet = 90
     // Okawaru
     case ABIL_OKAWARU_HEROISM:
@@ -3504,6 +3508,8 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_MAKHLEB_MAJOR_DESTRUCTION;
     case ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB:
         return TILEG_ABILITY_MAKHLEB_GREATER_SERVANT;
+    case ABIL_MAKHLEB_BLESS_WEAPON:
+        return TILEG_ABILITY_MAKHLEB_BLESS_WEAPON;
     // Sif Muna
     case ABIL_SIF_MUNA_CHANNEL_ENERGY:
         return TILEG_ABILITY_SIF_MUNA_CHANNEL;
@@ -3518,6 +3524,8 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_TROG_HAND;
     case ABIL_TROG_BROTHERS_IN_ARMS:
         return TILEG_ABILITY_TROG_BROTHERS_IN_ARMS;
+    case ABIL_TROG_BLESS_WEAPON:
+        return TILEG_ABILITY_TROG_BLESS_WEAPON;
     // Elyvilon
     case ABIL_ELYVILON_LIFESAVING:
         return TILEG_ABILITY_ELYVILON_DIVINE_PROTECTION;
@@ -3531,6 +3539,8 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_ELYVILON_HEAL_OTHER;
     case ABIL_ELYVILON_DIVINE_VIGOUR:
         return TILEG_ABILITY_ELYVILON_DIVINE_VIGOUR;
+    case ABIL_ELYVILON_BLESS_WEAPON:
+        return TILEG_ABILITY_ELYVILON_BLESS_WEAPON;
     // Lugonu
     case ABIL_LUGONU_ABYSS_EXIT:
         return TILEG_ABILITY_LUGONU_EXIT_ABYSS;
@@ -3581,6 +3591,8 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_JIYVA_SLIMIFY;
     case ABIL_JIYVA_CURE_BAD_MUTATION:
         return TILEG_ABILITY_JIYVA_CURE_BAD_MUTATIONS;
+    case ABIL_JIYVA_BLESS_WEAPON:
+        return TILEG_ABILITY_JIYVA_BLESS_WEAPON;
     // Fedhas
     case ABIL_FEDHAS_WALL_OF_BRIARS:
         return TILEG_ABILITY_FEDHAS_WALL_OF_BRIARS;
@@ -3599,6 +3611,8 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_CHEIBRIADOS_SLOUCH;
     case ABIL_CHEIBRIADOS_DISTORTION:
         return TILEG_ABILITY_CHEIBRIADOS_TEMPORAL_DISTORTION;
+    case ABIL_CHEIBRIADOS_BLESS_WEAPON:
+        return TILEG_ABILITY_CHEIBRIADOS_BLESS_WEAPON;
     // Ashenzari
     case ABIL_ASHENZARI_CURSE:
         return TILEG_ABILITY_ASHENZARI_CURSE;
