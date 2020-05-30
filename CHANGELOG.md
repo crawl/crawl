@@ -21,7 +21,7 @@
   
 - 파켈라스 추가 및 리워크. 이제 마나를 제약하지않으나 마음대로 업그레이드할 수 있는 프로토타입 로드를 선물함. 상세 설명은 [이 곳](https://github.com/kimjoy2002/crawl/issues/60)을 확인
   - Added pakellas and rework.  No longer constrained mana, but presents a prototype rod that can be upgraded at will. Click [here](https://github.com/kimjoy2002/crawl/issues/60) for details
-  
+
 - 독물의 추출, 증산 추가
   - Added Fulsome Distillation, Evaporate spell
   
@@ -39,7 +39,10 @@
 
 - 5레벨 변이/대지 마법. 벽 위장. 벽으로 파고들어서 잠자는 적을 깨우지않고 이동, 암살 하는게 가능해진다.  
    - Added Wall Camoflage, level 5 earth/transmutation spell. Melting into the wall makes it possible to move and stab without waking the sleeping enemy.
-
+   
+- 5레벨 강령/주술 마법. 시고투비의 역병. 감염성이 있는 병으로 적을 감염시키고, 죽을때 그 시체에서 어보미네이션이 생겨난다.
+   - Added Cigotuvi's Plague, level 5 necromancy/hex spell. An infectious disease infects an enemy, and causing their corpse to become monstrous abomination.
+   
 - 베오그의 새로운 권능 오크 추종자 되돌리기 추가. 선택한 오크 추종자를 오크 광산으로 즉시 전송한다. 
    - Added Beogh ability "return Orcish Followers". Immediately send the selected orcish follower to orcrish mines.
    
