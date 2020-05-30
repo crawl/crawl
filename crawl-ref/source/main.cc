@@ -1117,12 +1117,6 @@ static void _input()
         if (!crawl_state.is_replaying_keys())
             you.elapsed_time_at_last_input = you.elapsed_time;
 
-        if (cmd != CMD_PREV_CMD_AGAIN && cmd != CMD_NO_CMD
-            && !crawl_state.is_replaying_keys())
-        {
-            crawl_state.prev_cmd = cmd;
-        }
-
         if (cmd != CMD_MOUSE_MOVE)
             c_input_reset(false);
 
@@ -1131,6 +1125,12 @@ static void _input()
         // macro.
         if (!you.turn_is_over && cmd != CMD_NEXT_CMD)
             process_command(cmd);
+
+        if (cmd != CMD_PREV_CMD_AGAIN && cmd != CMD_NO_CMD
+            && !crawl_state.is_replaying_keys())
+        {
+            crawl_state.prev_cmd = cmd;
+        }
 
         repeat_again_rec.paused = true;
 
