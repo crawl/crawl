@@ -940,30 +940,26 @@ void view_update_at(const coord_def &pos)
 #endif
 }
 
-// TODO: this should be fixed so that it can work in local tiles
+class single_cell_chooser : public cell_chooser
+{
+public:
+    single_cell_chooser(coord_def gc) : m_gc(gc) {}
+    virtual bool is_affected(coord_def gc) override {
+        return gc == m_gc;
+    }
+private:
+    coord_def m_gc;
+};
+
 void flash_monster_colour(const monster* mon, colour_t fmc_colour,
                           int fmc_delay)
 {
     ASSERT(mon); // XXX: change to const monster &mon
-#ifndef USE_TILE_LOCAL
-    if ((Options.use_animations & UA_PLAYER) && you.can_see(*mon))
+    if (you.can_see(*mon))
     {
-        colour_t old_flash_colour = you.flash_colour;
-        coord_def c(mon->pos());
-
-        you.flash_colour = fmc_colour;
-        view_update_at(c);
-
-        update_screen();
-        delay(fmc_delay);
-
-        you.flash_colour = old_flash_colour;
-        view_update_at(c);
-        update_screen();
+        single_cell_chooser chooser(mon->pos());
+        flash_view_delay(UA_PLAYER, fmc_colour, fmc_delay, &chooser);
     }
-#else
-    UNUSED(fmc_colour, fmc_delay);
-#endif
 }
 
 bool view_update()
@@ -976,7 +972,7 @@ bool view_update()
     return false;
 }
 
-void flash_view(use_animation_type a, colour_t colour, targeter *where)
+void flash_view(use_animation_type a, colour_t colour, cell_chooser *where)
 {
     if (Options.use_animations & a)
     {
@@ -987,7 +983,7 @@ void flash_view(use_animation_type a, colour_t colour, targeter *where)
 }
 
 void flash_view_delay(use_animation_type a, colour_t colour, int flash_delay,
-                      targeter *where)
+                      cell_chooser *where)
 {
     if (Options.use_animations & a)
     {
@@ -995,6 +991,24 @@ void flash_view_delay(use_animation_type a, colour_t colour, int flash_delay,
         scaled_delay(flash_delay);
         flash_view(a, 0);
     }
+}
+
+class targeter_cell_chooser : public cell_chooser
+{
+public:
+    targeter_cell_chooser(targeter& targeter) : m_targeter(targeter) {}
+    virtual bool is_affected(coord_def gc) override {
+        return m_targeter.is_affected(gc) > 0;
+    }
+private:
+    targeter& m_targeter;
+};
+
+void flash_view_delay(use_animation_type a, colour_t colour, int delay,
+                      targeter *where)
+{
+    targeter_cell_chooser chooser(*where);
+    flash_view_delay(a, colour, delay, &chooser);
 }
 
 enum class update_flag
@@ -1478,10 +1492,11 @@ void viewwindow(bool show_updates, bool tiles_only, animation *a)
                 ? a->cell_cb(view2grid(*ri), flash_colour)
                 : view2grid(*ri);
 
-            if (you.flash_where && you.flash_where->is_affected(gc) <= 0)
-                draw_cell(cell, gc, anim_updates, 0);
-            else
-                draw_cell(cell, gc, anim_updates, flash_colour);
+            colour_t flash_colour_here = flash_colour;
+            if (you.flash_where && !you.flash_where->is_affected(gc))
+                flash_colour_here = BLACK;
+
+            draw_cell(cell, gc, anim_updates, flash_colour_here);
 
             cell++;
         }

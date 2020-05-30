@@ -32,11 +32,21 @@ static inline void scaled_delay(unsigned int ms)
     delay(ms * Options.view_delay / DEFAULT_VIEW_DELAY);
 }
 
+/* Abstract interface for choosing whether a cell is affected. */
+class cell_chooser
+{
+public:
+    virtual bool is_affected(coord_def gc) = 0;
+};
+
 // beware, flash_view is broken for USE_TILE_LOCAL
 void flash_view(use_animation_type a, colour_t colour,
-                targeter *where = nullptr);
+                cell_chooser *where = nullptr);
+
 void flash_view_delay(use_animation_type a, colour_t colour, int delay,
-                      targeter *where = nullptr);
+                      targeter *where);
+void flash_view_delay(use_animation_type a, colour_t colour, int delay,
+                      cell_chooser *where = nullptr);
 
 // warning: this function is broken (and ifdef'd out) in local tiles.
 void flash_monster_colour(const monster* mon, colour_t fmc_colour,

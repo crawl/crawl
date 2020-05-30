@@ -75,7 +75,7 @@ static const int FASTEST_PLAYER_MOVE_SPEED = 6;
 // Min delay for thrown projectiles.
 static const int FASTEST_PLAYER_THROWING_SPEED = 7;
 
-class targeter;
+class cell_chooser;
 class Delay;
 
 int player_stealth();
@@ -430,7 +430,7 @@ public:
     bool redraw_status_lights;
 
     colour_t flash_colour;
-    targeter *flash_where;
+    cell_chooser *flash_where;
 
     int time_taken;
 
