@@ -2310,7 +2310,7 @@ static vector<extra_feature_desc> _get_feature_extra_descs(const coord_def &pos)
         ret.push_back({
             "A cloud of " + cloud_type_name(cloud->type) + ".",
             get_cloud_desc(cloud->type, false),
-            tile_def(tileidx_cloud(*cloud) & ~TILE_FLAG_FLYING, TEX_DEFAULT),
+            tile_def(tileidx_cloud(*cloud), TEX_DEFAULT),
         });
     }
     return ret;
