@@ -18,6 +18,7 @@ tileidx_t tilep_equ_shield(const item_def &item);
 tileidx_t tilep_equ_armour(const item_def &item);
 tileidx_t tilep_equ_cloak(const item_def &item);
 tileidx_t tilep_equ_felid_cloak(const item_def& item);
+tileidx_t tilep_equ_octo_cloak(const item_def& item);
 tileidx_t tilep_equ_helm(const item_def &item);
 tileidx_t tilep_equ_gloves(const item_def &item);
 tileidx_t tilep_equ_boots(const item_def &item);

@@ -410,6 +410,19 @@ tileidx_t tilep_equ_felid_cloak(const item_def& item)
         TILEP_CLOAK_FELID_SCARF_LAST_NORM);
 }
 
+tileidx_t tilep_equ_octo_cloak(const item_def& item)
+{
+    if (item.base_type != OBJ_ARMOUR)
+        return 0;
+    if (item.sub_type != ARM_SCARF)
+        return 0;
+
+    if (item.props.exists("worn_tile"))
+        return item.props["worn_tile"].get_short();
+
+    return _modrng(item.rnd, TILEP_CLOAK_OCTO_SCARF_FIRST_NORM,
+        TILEP_CLOAK_OCTO_SCARF_LAST_NORM);
+}
 
 tileidx_t tilep_equ_helm(const item_def &item)
 {
@@ -1135,7 +1148,6 @@ void tilep_calc_flags(const dolls_data &doll, int flag[])
     }
     else if (is_player_tile(doll.parts[TILEP_PART_BASE], TILEP_BASE_OCTOPODE))
     {
-        flag[TILEP_PART_CLOAK] = TILEP_FLAG_HIDE;
         flag[TILEP_PART_BOOTS] = TILEP_FLAG_HIDE;
         flag[TILEP_PART_LEG]   = TILEP_FLAG_HIDE;
         flag[TILEP_PART_BODY]  = TILEP_FLAG_HIDE;
