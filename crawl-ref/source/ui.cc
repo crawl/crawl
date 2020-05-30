@@ -3129,6 +3129,11 @@ void pump_events(int wait_event_timeout)
     }
 
 #ifdef USE_TILE_LOCAL
+    // These WME_* events are also handled, at different times, by a
+    // similar bit of code in tilesdl.cc. Roughly, that handling is used
+    // during the main game display, and the this loop is used in the
+    // main menu and when there are ui elements on top.
+    // TODO: consolidate as much as possible
     wm_event event = {0};
     while (true)
     {
@@ -3178,7 +3183,7 @@ void pump_events(int wait_event_timeout)
 
         case WME_RESIZE:
         {
-            ui_root.resize(event.resize.w, event.resize.h);
+            // triggers ui::resize:
             tiles.resize_event(event.resize.w, event.resize.h);
             break;
         }

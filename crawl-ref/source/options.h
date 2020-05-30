@@ -523,6 +523,7 @@ public:
 
     VColour     tile_window_col;
 #ifdef USE_TILE_LOCAL
+    int         game_scale;
     // font settings
     string      tile_font_crt_file;
     string      tile_font_msg_file;
