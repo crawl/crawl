@@ -22,6 +22,7 @@
 #include "message.h"
 #ifdef USE_TILE
  #include "mon-util.h"
+ #include "mon-death.h"
 #endif
 #include "options.h"
 #include "player.h"
@@ -1462,6 +1463,14 @@ void Menu::select_items(int key, int qty)
     }
 }
 
+ResurrectMenuEntry::ResurrectMenuEntry(const string &str, const item_def *item,
+                                   int hotkey) :
+    MenuEntry(str, MEL_ITEM, 1, hotkey)
+{
+    data = (void*)(item);
+    quantity = 1;
+}
+
 MonsterMenuEntry::MonsterMenuEntry(const string &str, const monster_info* mon,
                                    int hotkey) :
     MenuEntry(str, MEL_ITEM, 1, hotkey)
@@ -1642,6 +1651,45 @@ bool MonsterMenuEntry::get_tiles(vector<tile_def>& tileset) const
     else if (m->is(MB_DISTRACTED))
         tileset.emplace_back(TILEI_MAY_STAB_BRAND, TEX_ICONS);
 
+    return true;
+}
+
+bool ResurrectMenuEntry::get_tiles(vector<tile_def>& tileset) const
+{
+    if (!Options.tile_menu_icons)
+        return false;
+
+    item_def *corpse = (item_def*)(data);
+    monster_info* m = new monster_info(&corpse->props[ORC_CORPSE_KEY].get_monster());
+    if (!m)
+        return false;
+
+    MenuEntry::get_tiles(tileset);
+
+    const bool    fake = m->props.exists("fake");
+    const coord_def c  = m->pos;
+    tileidx_t       ch = TILE_FLOOR_NORMAL;
+
+    if (!fake)
+    {
+        ch = tileidx_feature(c);
+        if (ch == TILE_FLOOR_NORMAL)
+            ch = env.tile_flv(c).floor;
+        else if (ch == TILE_WALL_NORMAL)
+            ch = env.tile_flv(c).wall;
+    }
+    tileset.emplace_back(ch, get_dngn_tex(ch));
+/*
+    if (m->attitude == ATT_FRIENDLY)
+        tileset.emplace_back(TILE_HALO_FRIENDLY, TEX_FEAT);
+    else if (m->attitude == ATT_GOOD_NEUTRAL || m->attitude == ATT_STRICT_NEUTRAL)
+        tileset.emplace_back(TILE_HALO_GD_NEUTRAL, TEX_FEAT);
+    else if (m->neutral())
+        tileset.emplace_back(TILE_HALO_NEUTRAL, TEX_FEAT);
+*/
+    tileidx_t idx = tileidx_monster(*m) & TILE_FLAG_MASK;
+    tileset.emplace_back(idx, TEX_PLAYER);
+    
     return true;
 }
 

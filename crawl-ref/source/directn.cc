@@ -3006,13 +3006,27 @@ static string _describe_monster_weapon(const monster_info& mi, bool ident)
     string name1, name2;
     const item_def *weap = mi.inv[MSLOT_WEAPON].get();
     const item_def *alt  = mi.inv[MSLOT_ALT_WEAPON].get();
+    
 
-    if (weap && (!ident || item_type_known(*weap)))
+    
+    // Check the weapon and alt helds on the hand or on the corpse.
+    bool weap_inhand = false;
+    bool alt_inhand = false;
+    if (weap)
+    {
+        weap_inhand = weap->pos.x == -2;
+    }
+    if (alt)
+    {
+        alt_inhand = alt->pos.x == -2;
+    }
+
+    if (weap && (!ident || item_type_known(*weap)) && weap_inhand)
     {
         name1 = weap->name(DESC_A, false, false, true,
                            false, ISFLAG_KNOW_CURSE);
     }
-    if (alt && (!ident || item_type_known(*alt)) && mi.wields_two_weapons())
+    if (alt && (!ident || item_type_known(*alt)) && mi.wields_two_weapons() && weap_inhand)
     {
         name2 = alt->name(DESC_A, false, false, true,
                           false, ISFLAG_KNOW_CURSE);
@@ -3382,6 +3396,7 @@ string get_monster_equipment_desc(const monster_info& mi,
 
     string weap = _describe_monster_weapon(mi, level == DESC_IDENTIFIED);
 
+
     // Print the rest of the equipment only for full descriptions.
     if (level == DESC_WEAPON || level == DESC_WEAPON_WARNING)
         return desc + weap;
@@ -3392,6 +3407,27 @@ string get_monster_equipment_desc(const monster_info& mi,
     item_def* mon_alt = mi.inv[MSLOT_ALT_WEAPON].get();
     item_def* mon_wnd = mi.inv[MSLOT_WAND].get();
     item_def* mon_rng = mi.inv[MSLOT_JEWELLERY].get();
+
+    // Check them helds on the hand or on the corpse.
+    bool arm_inhand = false;
+    bool shd_inhand = false;
+    bool qvr_inhand = false;
+    bool alt_inhand = false;
+    bool wnd_inhand = false;
+    bool rng_inhand = false;
+
+    if (mon_arm)
+        arm_inhand = mon_arm->pos.x == -2;
+    if (mon_shd)
+        shd_inhand = mon_shd->pos.x == -2;
+    if (mon_qvr)
+        qvr_inhand = mon_qvr->pos.x == -2;
+    if (mon_alt)
+        alt_inhand = mon_alt->pos.x == -2;
+    if (mon_wnd)
+        wnd_inhand = mon_wnd->pos.x == -2;
+    if (mon_rng)
+        rng_inhand = mon_rng->pos.x == -2;
 
 #define no_warn(x) (!item_type_known(*x) || !item_is_branded(*x))
     // For Ashenzari warnings, we only care about ided and branded stuff.
@@ -3430,28 +3466,28 @@ string get_monster_equipment_desc(const monster_info& mi,
         item_descriptions.push_back(weap.substr(1)); // strip leading space
     }
 
-    if (mon_arm)
+    if (mon_arm && arm_inhand)
     {
         const string armour_desc = make_stringf("wearing %s",
                                                 mon_arm->name(DESC_A).c_str());
         item_descriptions.push_back(armour_desc);
     }
 
-    if (mon_shd)
+    if (mon_shd && shd_inhand)
     {
         const string shield_desc = make_stringf("wearing %s",
                                                 mon_shd->name(DESC_A).c_str());
         item_descriptions.push_back(shield_desc);
     }
 
-    if (mon_rng)
+    if (mon_rng && rng_inhand)
     {
         const string rng_desc = make_stringf("wearing %s",
                                              mon_rng->name(DESC_A).c_str());
         item_descriptions.push_back(rng_desc);
     }
 
-    if (mon_qvr)
+    if (mon_qvr && qvr_inhand)
     {
         const string qvr_desc = make_stringf("quivering %s",
                                              mon_qvr->name(DESC_A).c_str());
@@ -3462,14 +3498,14 @@ string get_monster_equipment_desc(const monster_info& mi,
     {
         string carried_desc = "carrying ";
 
-        if (mon_alt)
+        if (mon_alt && alt_inhand)
         {
             carried_desc += mon_alt->name(DESC_A);
             if (mon_has_wand)
                 carried_desc += " and ";
         }
 
-        if (mon_has_wand)
+        if (mon_has_wand && wnd_inhand)
             carried_desc += mon_wnd->name(DESC_A);
 
         item_descriptions.push_back(carried_desc);
