@@ -222,7 +222,7 @@ public:
 class ResurrectMenuEntry : public MenuEntry
 {
 public:
-    ResurrectMenuEntry(const string &str, const item_def* item, int hotkey);
+    ResurrectMenuEntry(const string &str, const item_def *item, int hotkey);
 #ifdef USE_TILE
     virtual bool get_tiles(vector<tile_def>& tileset) const override;
 #endif

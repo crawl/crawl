@@ -1463,11 +1463,11 @@ void Menu::select_items(int key, int qty)
     }
 }
 
-ResurrectMenuEntry::ResurrectMenuEntry(const string &str, const item_def* item,
+ResurrectMenuEntry::ResurrectMenuEntry(const string &str, const item_def *item,
                                    int hotkey) :
     MenuEntry(str, MEL_ITEM, 1, hotkey)
 {
-    data = (void*)item;
+    data = (void*)(item);
     quantity = 1;
 }
 
@@ -1659,7 +1659,7 @@ bool ResurrectMenuEntry::get_tiles(vector<tile_def>& tileset) const
     if (!Options.tile_menu_icons)
         return false;
 
-    item_def* corpse = (item_def*)(data);
+    item_def *corpse = (item_def*)(data);
     monster_info* m = new monster_info(&corpse->props[ORC_CORPSE_KEY].get_monster());
     if (!m)
         return false;
@@ -1678,108 +1678,18 @@ bool ResurrectMenuEntry::get_tiles(vector<tile_def>& tileset) const
         else if (ch == TILE_WALL_NORMAL)
             ch = env.tile_flv(c).wall;
     }
-
     tileset.emplace_back(ch, get_dngn_tex(ch));
-
+/*
     if (m->attitude == ATT_FRIENDLY)
         tileset.emplace_back(TILE_HALO_FRIENDLY, TEX_FEAT);
     else if (m->attitude == ATT_GOOD_NEUTRAL || m->attitude == ATT_STRICT_NEUTRAL)
         tileset.emplace_back(TILE_HALO_GD_NEUTRAL, TEX_FEAT);
     else if (m->neutral())
         tileset.emplace_back(TILE_HALO_NEUTRAL, TEX_FEAT);
-
-    if (m->type == MONS_DANCING_WEAPON)
-    {
-        // For fake dancing weapons, just use a generic long sword, since
-        // fake monsters won't have a real item equipped.
-        item_def item;
-        if (fake)
-        {
-            item.base_type = OBJ_WEAPONS;
-            item.sub_type  = WPN_LONG_SWORD;
-            item.quantity  = 1;
-        }
-        else
-            item = *m->inv[MSLOT_WEAPON];
-
-        tileset.emplace_back(tileidx_item(item), TEX_DEFAULT);
-        tileset.emplace_back(TILEI_ANIMATED_WEAPON, TEX_ICONS);
-    }
-    else if (mons_is_draconian(m->type))
-    {
-        tileset.emplace_back(tileidx_draco_base(*m), TEX_PLAYER);
-        const tileidx_t job = tileidx_draco_job(*m);
-        if (job)
-            tileset.emplace_back(job, TEX_PLAYER);
-    }
-    else if (mons_is_demonspawn(m->type))
-    {
-        tileset.emplace_back(tileidx_demonspawn_base(*m), TEX_PLAYER);
-        const tileidx_t job = tileidx_demonspawn_job(*m);
-        if (job)
-            tileset.emplace_back(job, TEX_PLAYER);
-    }
-    else
-    {
-        tileidx_t idx = tileidx_monster(*m) & TILE_FLAG_MASK;
-        tileset.emplace_back(idx, TEX_PLAYER);
-    }
-
-    // A fake monster might not have its ghost member set up properly.
-    if (!fake && m->ground_level())
-    {
-        if (ch == TILE_DNGN_LAVA)
-            tileset.emplace_back(TILEI_MASK_LAVA, TEX_ICONS);
-        else if (ch == TILE_DNGN_SHALLOW_WATER)
-            tileset.emplace_back(TILEI_MASK_SHALLOW_WATER, TEX_ICONS);
-        else if (ch == TILE_DNGN_DEEP_WATER)
-            tileset.emplace_back(TILEI_MASK_DEEP_WATER, TEX_ICONS);
-        else if (ch == TILE_DNGN_SHALLOW_WATER_MURKY)
-            tileset.emplace_back(TILEI_MASK_SHALLOW_WATER_MURKY, TEX_ICONS);
-        else if (ch == TILE_DNGN_DEEP_WATER_MURKY)
-            tileset.emplace_back(TILEI_MASK_DEEP_WATER_MURKY, TEX_ICONS);
-    }
-
-    string damage_desc;
-    mon_dam_level_type damage_level = m->dam;
-
-    switch (damage_level)
-    {
-    case MDAM_DEAD:
-    case MDAM_ALMOST_DEAD:
-        tileset.emplace_back(TILEI_MDAM_ALMOST_DEAD, TEX_ICONS);
-        break;
-    case MDAM_SEVERELY_DAMAGED:
-        tileset.emplace_back(TILEI_MDAM_SEVERELY_DAMAGED, TEX_ICONS);
-        break;
-    case MDAM_HEAVILY_DAMAGED:
-        tileset.emplace_back(TILEI_MDAM_HEAVILY_DAMAGED, TEX_ICONS);
-        break;
-    case MDAM_MODERATELY_DAMAGED:
-        tileset.emplace_back(TILEI_MDAM_MODERATELY_DAMAGED, TEX_ICONS);
-        break;
-    case MDAM_LIGHTLY_DAMAGED:
-        tileset.emplace_back(TILEI_MDAM_LIGHTLY_DAMAGED, TEX_ICONS);
-        break;
-    case MDAM_OKAY:
-    default:
-        // no flag for okay.
-        break;
-    }
-
-    if (m->attitude == ATT_FRIENDLY)
-        tileset.emplace_back(TILEI_FRIENDLY, TEX_ICONS);
-    else if (m->attitude == ATT_GOOD_NEUTRAL || m->attitude == ATT_STRICT_NEUTRAL)
-        tileset.emplace_back(TILEI_GOOD_NEUTRAL, TEX_ICONS);
-    else if (m->neutral())
-        tileset.emplace_back(TILEI_NEUTRAL, TEX_ICONS);
-    else if (m->is(MB_FLEEING))
-        tileset.emplace_back(TILEI_FLEEING, TEX_ICONS);
-    else if (m->is(MB_STABBABLE))
-        tileset.emplace_back(TILEI_STAB_BRAND, TEX_ICONS);
-    else if (m->is(MB_DISTRACTED))
-        tileset.emplace_back(TILEI_MAY_STAB_BRAND, TEX_ICONS);
-
+*/
+    tileidx_t idx = tileidx_monster(*m) & TILE_FLAG_MASK;
+    tileset.emplace_back(idx, TEX_PLAYER);
+    
     return true;
 }
 

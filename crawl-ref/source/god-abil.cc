@@ -1713,11 +1713,12 @@ bool beogh_gift_item()
 
 bool beogh_resurrect()
 {
-	vector<item_def> list_orcs;
+	vector<item_def *> list_orcs;
     for (stack_iterator si(you.pos()); si; ++si)
         if (si->props.exists(ORC_CORPSE_KEY))
         {
-    		list_orcs.push_back(*si);
+            item_def *pt = &(*si);
+    		list_orcs.push_back(pt);
         }
     // If you can't find an orc corpse, then the resurrect menu will not be shown.
     if (list_orcs.empty())
@@ -1749,9 +1750,9 @@ bool beogh_resurrect()
         // Build menu entries for monsters.
         
         desc_menu.add_entry(new MenuEntry("Orcs", MEL_SUBTITLE));
-        for (const item_def &orc : list_orcs)
+        for (const item_def* orcref : list_orcs)
         {
-            monster_info mi = monster_info(&orc.props[ORC_CORPSE_KEY].get_monster());
+            monster_info mi = monster_info(&orcref->props[ORC_CORPSE_KEY].get_monster());
             // List monsters in the form
             // (A) An angel (neutral), wielding a glowing long sword
 
@@ -1785,7 +1786,7 @@ bool beogh_resurrect()
             for (unsigned int j = 0; j < fss.size(); ++j)
             {
                 if (j == 0)
-                    me = new ResurrectMenuEntry(prefix + fss[j].tostring(), &orc, hotkey++);
+                    me = new ResurrectMenuEntry(prefix + fss[j].tostring(), orcref, hotkey++);
 #ifndef USE_TILE_LOCAL
                 else
                 {
@@ -1807,7 +1808,7 @@ bool beogh_resurrect()
         {   
             // Get selected corpse
 //            monster* m = get_free_monster();
-           item_def* corpse = static_cast<item_def*> (sel.data);
+           item_def &corpse = *(static_cast<item_def *> (sel.data));
 /*            *m = corpse->props[ORC_CORPSE_KEY].get_monster();
            monster_info* mi = new monster_info(m);
 
@@ -1836,7 +1837,7 @@ bool beogh_resurrect()
             // TODO : add yesorno
             coord_def pos;
             monster* mon = get_free_monster();
-            *mon = corpse->props[ORC_CORPSE_KEY].get_monster();
+            *mon = corpse.props[ORC_CORPSE_KEY].get_monster();
             flag = yesno(("Resurrect "
                        + mon->full_name(DESC_THE)
                        + "?").c_str(), true, 'n');
@@ -1856,8 +1857,7 @@ bool beogh_resurrect()
                     flag = false;
                     return false;
                 }
-
-                corpse->clear();
+                destroy_item(corpse.index());
                 env.mid_cache[mon->mid] = mon->mindex();
                 mon->hit_points = mon->max_hit_points;
                 mon->inv.init(NON_ITEM);
