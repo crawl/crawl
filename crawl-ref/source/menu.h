@@ -214,7 +214,15 @@ class MonsterMenuEntry : public MenuEntry
 {
 public:
     MonsterMenuEntry(const string &str, const monster_info* mon, int hotkey);
+#ifdef USE_TILE
+    virtual bool get_tiles(vector<tile_def>& tileset) const override;
+#endif
+};
 
+class ResurrectMenuEntry : public MenuEntry
+{
+public:
+    ResurrectMenuEntry(const string &str, const item_def* item, int hotkey);
 #ifdef USE_TILE
     virtual bool get_tiles(vector<tile_def>& tileset) const override;
 #endif

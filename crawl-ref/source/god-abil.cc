@@ -22,6 +22,7 @@
 #include "coordit.h"
 #include "dactions.h"
 #include "database.h"
+#include "describe.h"
 #include "dgn-overview.h"
 #include "directn.h"
 #include "dungeon.h"
@@ -1712,64 +1713,182 @@ bool beogh_gift_item()
 
 bool beogh_resurrect()
 {
-    item_def* corpse = nullptr;
-    bool found_any = false;
+	vector<item_def> list_orcs;
     for (stack_iterator si(you.pos()); si; ++si)
         if (si->props.exists(ORC_CORPSE_KEY))
         {
-            found_any = true;
-            if (yesno(("Resurrect "
-                       + si->props[ORC_CORPSE_KEY].get_monster().full_name(DESC_THE)
-                       + "?").c_str(), true, 'n'))
+    		list_orcs.push_back(*si);
+        }
+    // If you can't find an orc corpse, then the resurrect menu will not be shown.
+    if (list_orcs.empty())
+    {
+        mprf("There's nobody here you can resurrect.");
+        return false;
+    }
+
+    else
+    {
+        InvMenu desc_menu(MF_SINGLESELECT | MF_ANYPRINTABLE
+                            | MF_ALLOW_FORMATTING | MF_SELECT_BY_PAGE);
+
+
+        string title = "Who do you want to resurrect";
+
+//        string title1 = title + " (select to resurrect, '!' to examine):";
+//        title += " (select to examine, '!' to resurrect):";
+
+        desc_menu.set_title(new MenuEntry(title, MEL_TITLE));
+//        desc_menu.set_title(new MenuEntry(title1, MEL_TITLE));
+
+
+//        desc_menu.action_cycle = Menu::CYCLE_TOGGLE;
+        desc_menu.menu_action  = InvMenu::ACT_EXECUTE;
+
+        // Start with hotkey 'a' and count from there.
+        menu_letter hotkey;
+        // Build menu entries for monsters.
+        
+        desc_menu.add_entry(new MenuEntry("Orcs", MEL_SUBTITLE));
+        for (const item_def &orc : list_orcs)
+        {
+            monster_info mi = monster_info(&orc.props[ORC_CORPSE_KEY].get_monster());
+            // List monsters in the form
+            // (A) An angel (neutral), wielding a glowing long sword
+
+            string prefix = "";
+    #ifndef USE_TILE_LOCAL
+                cglyph_t g = get_mons_glyph(mi);
+                const string col_string = colour_to_str(g.col);
+                prefix = "(<" + col_string + ">"
+                        + (g.ch == '<' ? "<<" : stringize_glyph(g.ch))
+                        + "</" + col_string + ">) ";
+    #endif
+
+            string str = get_monster_equipment_desc(mi, DESC_FULL, DESC_A, true);
+            if (mi.is(MB_MESMERIZING))
+                str += ", keeping you mesmerised";
+
+            if (mi.dam != MDAM_OKAY)
+                str += ", " + mi.damage_desc();
+
+            string consinfo = mi.constriction_description();
+            if (!consinfo.empty())
+                str += ", " + consinfo;
+
+    #ifndef USE_TILE_LOCAL
+                // Wraparound if the description is longer than allowed.
+                linebreak_string(str, get_number_of_cols() - 9);
+    #endif
+            vector<formatted_string> fss;
+            formatted_string::parse_string_to_multiple(str, fss);
+            MenuEntry *me = nullptr;
+            for (unsigned int j = 0; j < fss.size(); ++j)
             {
-                corpse = &*si;
-                break;
+                if (j == 0)
+                    me = new ResurrectMenuEntry(prefix + fss[j].tostring(), &orc, hotkey++);
+#ifndef USE_TILE_LOCAL
+                else
+                {
+                    str = "         " + fss[j].tostring();
+                    me = new MenuEntry(str, MEL_ITEM, 1);
+                }
+#endif
+                desc_menu.add_entry(me);
             }
         }
-    if (!corpse)
-    {
-        mprf("There's nobody %shere you can resurrect.",
-             found_any ? "else " : "");
+
+        // Select an item to read its full description, or a monster to read its
+        // e'x'amine description. Toggle with '!' to travel to an item's position
+        // or read a monster's database entry.
+        // (Maybe that should be reversed in the case of monsters.)
+        // For ASCII, the 'x' information may include short database descriptions.
+        bool flag = false;
+        desc_menu.on_single_selection = [&desc_menu, &flag](const MenuEntry& sel)
+        {   
+            // Get selected corpse
+//            monster* m = get_free_monster();
+           item_def* corpse = static_cast<item_def*> (sel.data);
+/*            *m = corpse->props[ORC_CORPSE_KEY].get_monster();
+           monster_info* mi = new monster_info(m);
+
+#ifdef USE_TILE
+            // Highlight selected monster on the screen.
+            const coord_def gc(m->pos());
+            tiles.place_cursor(CURSOR_TUTORIAL, gc);
+            const string &desc = get_terse_square_desc(gc);
+            tiles.clear_text_tags(TAG_TUTORIAL);
+            tiles.add_text_tag(TAG_TUTORIAL, desc, gc);
+#endif
+
+            if (desc_menu.menu_action == InvMenu::ACT_EXAMINE)
+            {
+                // View database entry.
+                describe_monsters(*mi);
+                redraw_screen();
+                clear_messages();
+            }
+            else
+            {
+                
+            }
+*/
+            // Resurrection Part
+            // TODO : add yesorno
+            coord_def pos;
+            monster* mon = get_free_monster();
+            *mon = corpse->props[ORC_CORPSE_KEY].get_monster();
+            flag = yesno(("Resurrect "
+                       + mon->full_name(DESC_THE)
+                       + "?").c_str(), true, 'n');
+            if (flag)
+            {
+                for (fair_adjacent_iterator ai(you.pos()); ai; ++ai)
+                {
+                    if (!actor_at(*ai)
+                        && mon->is_location_safe(*ai))
+                    {
+                        pos = *ai;
+                    }
+                }
+                if (pos.origin())
+                {
+                    mpr("There's no room!");
+                    flag = false;
+                    return false;
+                }
+
+                corpse->clear();
+                env.mid_cache[mon->mid] = mon->mindex();
+                mon->hit_points = mon->max_hit_points;
+                mon->inv.init(NON_ITEM);
+                for (stack_iterator si(you.pos()); si; ++si)
+                {
+                    if (!si->props.exists(DROPPER_MID_KEY)
+                        || si->props[DROPPER_MID_KEY].get_int() != int(mon->mid))
+                    {
+                        continue;
+                    }
+                    unwind_var<int> save_speedinc(mon->speed_increment);
+                    mon->pickup_item(*si, false, true);
+                }
+                mon->move_to_pos(pos);
+                mon->timeout_enchantments(100);
+                beogh_convert_orc(mon, conv_t::resurrection);
+                return false;
+            }
+            else
+            {
+                return desc_menu.menu_action == InvMenu::ACT_EXECUTE;
+            }
+        };
+        desc_menu.show();
+        redraw_screen();
+        if(flag)
+        {
+            return true;
+        }
         return false;
     }
-
-    coord_def pos;
-    ASSERT(corpse->props.exists(ORC_CORPSE_KEY));
-    for (fair_adjacent_iterator ai(you.pos()); ai; ++ai)
-    {
-        if (!actor_at(*ai)
-            && corpse->props[ORC_CORPSE_KEY].get_monster().is_location_safe(*ai))
-        {
-            pos = *ai;
-        }
-    }
-    if (pos.origin())
-    {
-        mpr("There's no room!");
-        return false;
-    }
-
-    monster* mon = get_free_monster();
-    *mon = corpse->props[ORC_CORPSE_KEY];
-    destroy_item(corpse->index());
-    env.mid_cache[mon->mid] = mon->mindex();
-    mon->hit_points = mon->max_hit_points;
-    mon->inv.init(NON_ITEM);
-    for (stack_iterator si(you.pos()); si; ++si)
-    {
-        if (!si->props.exists(DROPPER_MID_KEY)
-            || si->props[DROPPER_MID_KEY].get_int() != int(mon->mid))
-        {
-            continue;
-        }
-        unwind_var<int> save_speedinc(mon->speed_increment);
-        mon->pickup_item(*si, false, true);
-    }
-    mon->move_to_pos(pos);
-    mon->timeout_enchantments(100);
-    beogh_convert_orc(mon, conv_t::resurrection);
-
-    return true;
 }
 
 bool jiyva_remove_bad_mutation()
