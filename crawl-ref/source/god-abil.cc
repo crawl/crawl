@@ -1764,7 +1764,7 @@ bool beogh_resurrect()
                         + (g.ch == '<' ? "<<" : stringize_glyph(g.ch))
                         + "</" + col_string + ">) ";
     #endif
-            string str = get_monster_equipment_desc(mi, DESC_FULL, DESC_A, true);
+            string str = get_monster_equipment_desc(mi, DESC_FULL, DESC_A, false);
 
     #ifndef USE_TILE_LOCAL
                 // Wraparound if the description is longer than allowed.
@@ -1831,12 +1831,10 @@ bool beogh_resurrect()
                        + "?").c_str(), true, 'n');
             if (flag)
             {
-                monster* mon = get_free_monster();
-                *mon = corpse.props[ORC_CORPSE_KEY].get_monster();
                 for (fair_adjacent_iterator ai(you.pos()); ai; ++ai)
                 {
                     if (!actor_at(*ai)
-                        && mon->is_location_safe(*ai))
+                        && corpse.props[ORC_CORPSE_KEY].get_monster().is_location_safe(*ai))
                     {
                         pos = *ai;
                     }
@@ -1847,8 +1845,10 @@ bool beogh_resurrect()
                     flag = false;
                     return false;
                 }
+                monster* mon = get_free_monster();
+                *mon = corpse.props[ORC_CORPSE_KEY].get_monster();
                 destroy_item(corpse.index());
-                env.mid_cache[mon->mid] = mon->mindex();
+                env.mid_cache[mon->mid] = mon->mindex(); 
                 mon->hit_points = mon->max_hit_points;
                 mon->inv.init(NON_ITEM);
                 for (stack_iterator si(you.pos()); si; ++si)
