@@ -109,6 +109,21 @@ void player::clear_fearmongers()
     duration[DUR_AFRAID] = 0;
 }
 
+// Possibly end fear if a loud noise happened.
+void player::fearmongers_check_noise(int loudness, bool axe)
+{
+    if (axe)
+        return;
+
+    if (loudness >= 20 && afraid())
+    {
+        mpr("For a moment, your terror fades away!");
+        clear_fearmongers();
+        _removed_fearmonger();
+    }
+}
+
+
 // Update all fearmongers' status after changes.
 void player::update_fearmongers()
 {
