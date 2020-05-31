@@ -558,8 +558,17 @@ void ash_check_bondage(bool msg)
             s = ET_WEAPON;
         else if (i == EQ_SHIELD)
             s = ET_SHIELD;
+        else if (you.species == SP_TWO_HEADED_OGRE
+            && i == EQ_SECOND_WEAPON)
+            s = ET_SHIELD;
         else if (i <= EQ_MAX_ARMOUR)
             s = ET_ARMOUR;
+        else if (you.species != SP_TWO_HEADED_OGRE
+            && (i == EQ_SECOND_WEAPON ||
+                i == EQ_AMULET_LEFT ||
+                i == EQ_AMULET_RIGHT)) {
+            continue;
+        }
         // Missing hands mean fewer rings
         else if (you.species != SP_OCTOPODE && i == EQ_LEFT_RING
                  && you.get_mutation_level(MUT_MISSING_HAND))
@@ -596,7 +605,7 @@ void ash_check_bondage(bool msg)
             if (you.equip[i] != -1)
             {
                 const item_def& item = you.inv[you.equip[i]];
-                if (item.cursed() && (i != EQ_WEAPON || is_weapon(item)))
+                if (item.cursed() && ((i != EQ_WEAPON && i != EQ_SECOND_WEAPON) || is_weapon(item)))
                 {
                     if (s == ET_WEAPON
                         && (_two_handed()
@@ -695,25 +704,51 @@ string ash_describe_bondage(int flags, bool level)
         }
         else
         {
+            string right_, left_;
+
+            if (you.species == SP_TWO_HEADED_OGRE) {
+                right_ = "right";
+                left_ = "left";
+            }
+            else {
+                right_ = "weapon";
+                left_ = "shield";
+            }
+
             // FIXME: what if you sacrificed a hand?
             desc = make_stringf("Your %s %s is bound but not your %s %s.\n",
-                                you.bondage[ET_WEAPON] ? "weapon" : "shield",
+                                you.bondage[ET_WEAPON] ? right_.c_str() : left_.c_str(),
                                 you.hand_name(false).c_str(),
-                                you.bondage[ET_WEAPON] ? "shield" : "weapon",
+                                you.bondage[ET_WEAPON] ? left_.c_str() : right_.c_str(),
                                 you.hand_name(false).c_str());
         }
     }
     else if (flags & ETF_WEAPON && you.bondage[ET_WEAPON] != -1)
     {
-        desc = make_stringf("Your weapon %s is %sbound.\n",
-                            you.hand_name(false).c_str(),
-                            you.bondage[ET_WEAPON] ? "" : "not ");
+        if (you.species == SP_TWO_HEADED_OGRE) {
+            desc = make_stringf("Your right %s is %sbound.\n",
+                you.hand_name(false).c_str(),
+                you.bondage[ET_WEAPON] ? "" : "not ");
+        }
+        else {
+            desc = make_stringf("Your weapon %s is %sbound.\n",
+                you.hand_name(false).c_str(),
+                you.bondage[ET_WEAPON] ? "" : "not ");
+        }
+
     }
     else if (flags & ETF_SHIELD && you.bondage[ET_SHIELD] != -1)
     {
-        desc = make_stringf("Your shield %s is %sbound.\n",
-                            you.hand_name(false).c_str(),
-                            you.bondage[ET_SHIELD] ? "" : "not ");
+        if (you.species == SP_TWO_HEADED_OGRE) {
+            desc = make_stringf("Your left weapon %s is %sbound.\n",
+                you.hand_name(false).c_str(),
+                you.bondage[ET_WEAPON] ? "" : "not ");
+        }
+        else {
+            desc = make_stringf("Your shield %s is %sbound.\n",
+                you.hand_name(false).c_str(),
+                you.bondage[ET_SHIELD] ? "" : "not ");
+        }
     }
 
     if (flags & ETF_ARMOUR && flags & ETF_JEWELS
@@ -922,6 +957,7 @@ map<skill_type, int8_t> ash_get_boosted_skills(eq_type type)
 
     // Include melded.
     const item_def* wpn = you.slot_item(EQ_WEAPON, true);
+    const item_def* scwpn = you.slot_item(EQ_SECOND_WEAPON, true);
     const item_def* armour = you.slot_item(EQ_BODY_ARMOUR, true);
     const int evp = armour ? -property(*armour, PARM_EVASION) / 10 : 0;
     switch (type)
@@ -955,8 +991,38 @@ map<skill_type, int8_t> ash_get_boosted_skills(eq_type type)
         break;
 
     case (ET_SHIELD):
-        if (bondage == 2)
-            boost[SK_SHIELDS] = 1;
+        if (you.species == SP_TWO_HEADED_OGRE) {
+            ASSERT(scwpn);
+
+            // Boost weapon skill. Plain "staff" means an unrand magical staff,
+            // boosted later.
+            if (scwpn->base_type == OBJ_WEAPONS
+                && scwpn->sub_type != WPN_STAFF)
+            {
+                boost[item_attack_skill(*scwpn)] = bondage;
+            }
+            // Staves that have a melee effect, powered by evocations.
+            if (staff_uses_evocations(*scwpn))
+            {
+                boost[SK_EVOCATIONS] = 1;
+                boost[SK_STAVES] = 1;
+
+            }
+            // Staves with an evokable ability but no melee effect.
+            else if (is_weapon(*scwpn)
+                && item_is_evokable(*scwpn, false, false, false, false))
+            {
+                boost[SK_EVOCATIONS] = 2;
+            }
+            // Other magical staves.
+            else if (scwpn->base_type == OBJ_STAVES)
+                boost[SK_SPELLCASTING] = 2;
+            break;
+        } 
+        else {
+            if (bondage == 2)
+                boost[SK_SHIELDS] = 1;
+        }
         break;
 
     // Bonus for bounded armour depends on body armour type.

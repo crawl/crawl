@@ -276,8 +276,14 @@ static string _describe_ash_skill_boost()
                "with cursed items.";
     }
 
-    static const char* bondage_parts[NUM_ET] = { "Weapon hand", "Shield hand",
+    string bondage_parts[NUM_ET] = { "Weapon hand", "Shield hand",
                                                  "Armour", "Jewellery" };
+
+    if (you.species == SP_TWO_HEADED_OGRE) {
+        bondage_parts[ET_WEAPON] = "Right hand";
+        bondage_parts[ET_SHIELD] = "Left hand";
+    }
+
     static const char* bonus_level[3] = { "Low", "Medium", "High" };
     ostringstream desc;
     desc.setf(ios::left);
