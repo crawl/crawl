@@ -44,7 +44,7 @@ protected:
     int m_window_height;
 
 private:
-    void glDebug(const char* msg);
+    bool glDebug(const char* msg) const;
 };
 
 class OGLShapeBuffer : public GLShapeBuffer
@@ -75,7 +75,7 @@ protected:
     vector<unsigned short int> m_ind_buffer;
 
 private:
-    void glDebug(const char* msg);
+    bool glDebug(const char* msg) const;
 };
 
 struct HiDPIState;
