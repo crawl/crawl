@@ -104,6 +104,9 @@
 - 아쉔자리의 "아이템 저주"는 이제 여러 아이템을 저주시킬 수 있다.
   - Ashenzari's 'curse item' curse multiple equipment.
   
+- 베오그의 부활 권능을 사용할때 부활 할 수 있는 오크들을 메뉴로 보여줌
+  - Shows the menu if try to resurrect the orc.
+
 - 오조크브의 갑옷은 이제 움직여도 풀리지않음
   - Ozocubu's armor no longer looses when moved
   
@@ -145,6 +148,9 @@
 
 - 다시 시야 밖에서 구름이 사라지지않음
   - Don't erase clouds outside of LOS
+  
+- 다시 매혹을 큰 소음으로 해제할 수 있게 됨
+  - Noise break mesmerisation again 
 
 - 이제 던전 5층이 되기전까진 구덩이 함정이 등장하지않음
   - Shaft traps will not spawn before D:5
