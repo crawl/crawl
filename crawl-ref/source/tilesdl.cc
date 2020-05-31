@@ -83,69 +83,24 @@ static int _screen_sizes[4][8] =
 #endif
 };
 
-HiDPIState display_density(1,1);
+HiDPIState display_density(1,1,1);
 
 TilesFramework tiles;
 
-
-HiDPIState::HiDPIState(int device_density, int logical_density) :
-        device(device_density), logical(logical_density)
-{
-}
-
-/**
- * Calculate the device pixels given the logical pixels; the two may be
- * different on high-DPI devices (such as retina displays).
- *
- * @param n a value in logical pixels
- * @return the result in device pixels. May be the same, if the device isn't
- *          high-DPI.
- */
-int HiDPIState::logical_to_device(int n) const
-{
-    return n * device / logical;
-}
-
-/**
- * Calculate logical pixels given device pixels; the two may be
- * different on high-DPI devices (such as retina displays).
- *
- * @param n a value in device pixels
- * @param round whether to round (or truncate); defaults to true. Rounding is
- *        safer, as truncating may lead to underestimating dimensions.
- * @return the result in logical pixels. May be the same, if the device isn't
- *          high-DPI.
- */
-int HiDPIState::device_to_logical(int n, bool round) const
-{
-    return (n * logical + (round ?  device - 1 : 0)) / device;
-}
-
-/*
- * Return a float multiplier such that device * multiplier = logical.
- * for high-dpi displays, will be fractional.
- */
-float HiDPIState::scale_to_logical() const
-{
-    return (float) logical / (float) device;
-}
-
-/*
- * Return a float multiplier such that logical * multiplier = device.
- */
-float HiDPIState::scale_to_device() const
-{
-    return (float) device / (float) logical;
-}
 
 /**
  * Update the DPI, e.g. after a window move.
  *
  * @return whether the ratio changed.
  */
-bool HiDPIState::update(int ndevice, int nlogical)
+bool HiDPIState::update(int ndevice, int nlogical, int ngame_scale)
 {
     HiDPIState old = *this;
+    game_scale = ngame_scale;
+    nlogical = apply_game_scale(nlogical);
+    // sanity check: should be impossible for this to happen without changing
+    // code.
+    ASSERT(nlogical != 0);
     if (nlogical == ndevice)
         logical = device = 1;
     else
@@ -561,8 +516,8 @@ void TilesFramework::resize()
 
 void TilesFramework::resize_event(int w, int h)
 {
-    m_windowsz.x = w / Options.game_scale;
-    m_windowsz.y = h / Options.game_scale;
+    m_windowsz.x = display_density.apply_game_scale(w);
+    m_windowsz.y = display_density.apply_game_scale(h);
     // TODO: does order of this call matter? This is based on a previous
     // version where it was called from outside this function.
     ui::resize(m_windowsz.x, m_windowsz.y);

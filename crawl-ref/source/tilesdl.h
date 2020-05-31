@@ -65,18 +65,76 @@ enum tiles_key_mod
 
 struct HiDPIState
 {
-    HiDPIState(int device_density, int logical_density);
-    int logical_to_device(int n) const;
-    int device_to_logical(int n, bool round=true) const;
-    float scale_to_logical() const;
-    float scale_to_device() const;
-    bool update(int ndevice, int nlogical);
+    constexpr HiDPIState(int device_density, int logical_density,
+                                     int _game_scale) :
+        device(device_density), game_scale(_game_scale),
+        logical(apply_game_scale(logical_density))
+    {
+    };
 
-    int get_device() const { return device; };
-    int get_logical() const { return logical; };
+    /**
+     * Calculate the device pixels given the logical pixels; the two may be
+     * different on high-DPI devices (such as retina displays).
+     *
+     * @param n a value in logical pixels
+     * @return the result in device pixels. May be the same, if the device isn't
+     *          high-DPI.
+     */
+    constexpr int logical_to_device(int n) const
+    {
+        return n * device / logical;
+    };
+
+    /**
+     * Calculate logical pixels given device pixels; the two may be
+     * different on high-DPI devices (such as retina displays).
+     *
+     * @param n a value in device pixels
+     * @param round whether to round (or truncate); defaults to true. Rounding is
+     *        safer, as truncating may lead to underestimating dimensions.
+     * @return the result in logical pixels. May be the same, if the device isn't
+     *          high-DPI.
+     */
+    constexpr int device_to_logical(int n, bool round=true) const
+    {
+        return (n * logical + (round ?  device - 1 : 0)) / device;
+    };
+
+
+    /*
+     * Return a float multiplier such that device * multiplier = logical.
+     * for high-dpi displays, will be fractional.
+     */
+    constexpr float scale_to_logical() const
+    {
+        return static_cast<float>(logical) / static_cast<float>(device);
+    };
+
+    /*
+     * Return a float multiplier such that logical * multiplier = device.
+     */
+    constexpr float scale_to_device() const
+    {
+        return static_cast<float>(device) / static_cast<float>(logical);
+    };
+
+    bool update(int ndevice, int nlogical, int ngame_scale);
+
+    constexpr int get_device() const { return device; };
+    constexpr int get_logical() const { return logical; };
+
+    /**
+     * Apply the game scale to some dimension n. This is necessary for things
+     * like mouse movements, which are expressed in raw logical pixels.
+     */
+    constexpr int apply_game_scale(int n) const
+    {
+        return game_scale == 1 ? n : n / game_scale;
+    };
 
 private:
     int device;
+    int game_scale;
     int logical;
 };
 
