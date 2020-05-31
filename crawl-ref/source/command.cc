@@ -99,9 +99,9 @@ static string _get_version_features()
         if (you.fully_seeded)
         {
             result += make_stringf(
-                "Game seed: %" PRIu64 ", levelgen mode: %s",
+                "Game seed: %" PRIu64 "%s",
                 crawl_state.seed, you.deterministic_levelgen
-                                                ? "deterministic" : "classic");
+                                        ? "" : ", levelgen mode: classic");
             if (Version::history_size() > 1)
                 result += " (seed may be affected by game upgrades)";
         }
