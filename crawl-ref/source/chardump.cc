@@ -223,9 +223,9 @@ static void _sdump_header(dump_params &par)
         )
     {
         par.text += make_stringf(
-            "Game seed: %" PRIu64 ", levelgen mode: %s\n\n",
+            "Game seed: %" PRIu64 "%s\n\n",
             crawl_state.seed, you.deterministic_levelgen
-                                                ? "deterministic" : "classic");
+                                            ? "" : ", levelgen mode: classic");
     }
 }
 
