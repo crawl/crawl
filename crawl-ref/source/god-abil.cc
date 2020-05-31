@@ -1826,13 +1826,13 @@ bool beogh_resurrect()
             // Resurrection Part
             // TODO : add yesorno
             coord_def pos;
-            monster* mon = get_free_monster();
-            *mon = corpse.props[ORC_CORPSE_KEY].get_monster();
             flag = yesno(("Resurrect "
-                       + mon->full_name(DESC_THE)
+                       + corpse.props[ORC_CORPSE_KEY].get_monster().full_name(DESC_THE)
                        + "?").c_str(), true, 'n');
             if (flag)
             {
+                monster* mon = get_free_monster();
+                *mon = corpse.props[ORC_CORPSE_KEY].get_monster();
                 for (fair_adjacent_iterator ai(you.pos()); ai; ++ai)
                 {
                     if (!actor_at(*ai)
