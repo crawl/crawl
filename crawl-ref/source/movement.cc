@@ -136,13 +136,32 @@ static void _entered_malign_portal(actor* act)
 
 static bool _can_leap_target(monster* mon)
 {
-    return (mon
+    if (!(mon
         && mon->alive()
         && you.see_cell_no_trans(mon->pos())
         && !mon->wont_attack()
         && !mons_is_firewood(*mon)
         && mon->type != MONS_BUTTERFLY
-        && !mons_is_tentacle_or_tentacle_segment(mon->type));
+        && !mons_is_tentacle_or_tentacle_segment(mon->type)))
+        return false;
+    bolt tempbeam;
+    tempbeam.source = you.pos();
+    tempbeam.source_id = MID_PLAYER;
+    tempbeam.target = mon->pos();
+    tempbeam.range = LOS_RADIUS;
+    tempbeam.is_tracer = true;
+    tempbeam.fire();    
+    for (auto iter : tempbeam.path_taken) {
+        if (iter == mon->pos()) {
+            return true;
+        }
+        if (!you.can_pass_through(iter))
+            return false;
+        if (monster_at(iter)) {
+            return false;
+        }
+    }
+    return false;
 }
 
 

@@ -19,6 +19,9 @@
 - 새로운 종족 레서리치 추가. 높은 강령 적성, 빠른 마나회복, 27렙때 와일드매직을 얻음
   - Added Lesser-Lich. high necromancy skill, high mana regen, wild magic when 27 level
   
+- 드라코니언이 7렙이 될때 선신을 믿고 있으면 펄 드라코니언으로 진화함. 음에너지1 기도술3 독,강령-2 신성한 불 브레스
+  - When the Draconian reaches the 7 level, if Dr believes good god, Dr evolves into a Pearl Draconian. Negative resist 1, invocation skil 3, poison/necromancy skill -2, blessed frame breath
+  
 - 파켈라스 추가 및 리워크. 이제 마나를 제약하지않으나 마음대로 업그레이드할 수 있는 프로토타입 로드를 선물함. 상세 설명은 [이 곳](https://github.com/kimjoy2002/crawl/issues/60)을 확인
   - Added pakellas and rework.  No longer constrained mana, but presents a prototype rod that can be upgraded at will. Click [here](https://github.com/kimjoy2002/crawl/issues/60) for details
 

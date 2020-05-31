@@ -643,9 +643,8 @@ spret cast_darkness(int pow, bool fail)
 spret cast_wall_melting(const coord_def& pos, int pow, bool fail)
 {
     fail_check();
-
-    if (feat_is_diggable(grd(pos)) && !monster_at(pos)) {
-            you.move_to_pos(pos);
+    if (feat_is_diggable(grd(pos)) && !monster_at(pos) && in_bounds(pos)) {
+        you.move_to_pos(pos);
     }
     else {
         mprf("You can only assimilate on diggable walls.");
