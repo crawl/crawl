@@ -1764,17 +1764,7 @@ bool beogh_resurrect()
                         + (g.ch == '<' ? "<<" : stringize_glyph(g.ch))
                         + "</" + col_string + ">) ";
     #endif
-
             string str = get_monster_equipment_desc(mi, DESC_FULL, DESC_A, true);
-            if (mi.is(MB_MESMERIZING))
-                str += ", keeping you mesmerised";
-
-            if (mi.dam != MDAM_OKAY)
-                str += ", " + mi.damage_desc();
-
-            string consinfo = mi.constriction_description();
-            if (!consinfo.empty())
-                str += ", " + consinfo;
 
     #ifndef USE_TILE_LOCAL
                 // Wraparound if the description is longer than allowed.
@@ -1883,7 +1873,7 @@ bool beogh_resurrect()
         };
         desc_menu.show();
         redraw_screen();
-        if(flag)
+        if (flag)
         {
             return true;
         }
