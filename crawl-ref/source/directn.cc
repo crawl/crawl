@@ -3494,7 +3494,7 @@ string get_monster_equipment_desc(const monster_info& mi,
         item_descriptions.push_back(qvr_desc);
     }
 
-    if (mon_carry)
+    if (mon_carry && (alt_inhand || wnd_inhand))
     {
         string carried_desc = "carrying ";
 
