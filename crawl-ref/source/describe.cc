@@ -4012,7 +4012,7 @@ static void _describe_monster_mr(const monster_info& mi, ostringstream &result)
 }
 
 /**
- * Append information about a given monster's habitat to the provided stream.
+ * Return a string of information about a given monster's habitat
  *
  * @param mi[in]            Player-visible info about the monster in question.
  * @return                  Habitat description
