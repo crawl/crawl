@@ -72,6 +72,7 @@
 #include "religion.h"
 #include "rot.h"
 #include "shout.h"
+#include "showsymb.h"
 #include "skill-menu.h"
 #include "spl-book.h"
 #include "spl-goditem.h"
