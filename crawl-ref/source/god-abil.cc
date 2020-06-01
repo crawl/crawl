@@ -3596,8 +3596,8 @@ static map<const char*, vector<mutation_type>> sacrifice_vector_map =
 /// School-disabling mutations that will be painful for most characters.
 static const vector<mutation_type> _major_arcane_sacrifices =
 {
-    MUT_NO_CHARM_MAGIC,
     MUT_NO_CONJURATION_MAGIC,
+    MUT_NO_NECROMANCY_MAGIC,
     MUT_NO_SUMMONING_MAGIC,
     MUT_NO_TRANSLOCATION_MAGIC,
 };
@@ -3605,8 +3605,8 @@ static const vector<mutation_type> _major_arcane_sacrifices =
 /// School-disabling mutations that are unfortunate for most characters.
 static const vector<mutation_type> _moderate_arcane_sacrifices =
 {
+    MUT_NO_CHARM_MAGIC,
     MUT_NO_TRANSMUTATION_MAGIC,
-    MUT_NO_NECROMANCY_MAGIC,
     MUT_NO_HEXES_MAGIC,
 };
 
