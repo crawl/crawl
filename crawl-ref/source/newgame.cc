@@ -868,6 +868,11 @@ static void _choose_seed(newgame_def& ng, newgame_def& choice,
     seed_hbox->add_child(move(daily_seed_btn));
 
     const string footer_text =
+#ifdef USE_TILE_LOCAL
+        "\n"
+        "Press [p] or [ctrl-v] to paste a seed from the clipboard\n"
+        "(overwriting the current value).\n"
+#endif
         "\n"
         "The seed will determine the dungeon layout, monsters, and items\n"
         "that you discover, relative to this version of crawl. Upgrading\n"
