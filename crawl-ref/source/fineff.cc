@@ -211,9 +211,6 @@ void mirror_damage_fineff::fire()
     else if (def == MID_PLAYER)
     {
         simple_god_message(" mirrors your injury!");
-#ifndef USE_TILE_LOCAL
-        flash_monster_colour(monster_by_mid(att), RED, 200);
-#endif
 
         attack->hurt(&you, damage);
 

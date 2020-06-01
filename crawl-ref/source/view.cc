@@ -940,32 +940,6 @@ void view_update_at(const coord_def &pos)
 #endif
 }
 
-// TODO: this should be fixed so that it can work in local tiles
-void flash_monster_colour(const monster* mon, colour_t fmc_colour,
-                          int fmc_delay)
-{
-    ASSERT(mon); // XXX: change to const monster &mon
-#ifndef USE_TILE_LOCAL
-    if ((Options.use_animations & UA_PLAYER) && you.can_see(*mon))
-    {
-        colour_t old_flash_colour = you.flash_colour;
-        coord_def c(mon->pos());
-
-        you.flash_colour = fmc_colour;
-        view_update_at(c);
-
-        update_screen();
-        delay(fmc_delay);
-
-        you.flash_colour = old_flash_colour;
-        view_update_at(c);
-        update_screen();
-    }
-#else
-    UNUSED(fmc_colour, fmc_delay);
-#endif
-}
-
 bool view_update()
 {
     if (you.num_turns > you.last_view_update)

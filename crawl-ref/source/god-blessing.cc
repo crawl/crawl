@@ -681,10 +681,6 @@ static void _display_god_blessing(monster* follower, god_type god,
     simple_god_message(make_stringf(" blesses %s with %s.",
                                     whom.c_str(), blessing.c_str()).c_str(),
                        god);
-
-#ifndef USE_TILE_LOCAL
-    flash_monster_colour(follower, god_colour(god), 200);
-#endif
 }
 
 /**

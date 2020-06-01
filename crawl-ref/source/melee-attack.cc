@@ -3041,10 +3041,6 @@ void melee_attack::do_passive_freeze()
 
         simple_monster_message(*mon, " is very cold.");
 
-#ifndef USE_TILE_LOCAL
-        flash_monster_colour(mon, LIGHTBLUE, 200);
-#endif
-
         mon->hurt(&you, hurted);
 
         if (mon->alive())
