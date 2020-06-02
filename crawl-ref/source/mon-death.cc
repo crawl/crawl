@@ -440,16 +440,19 @@ static void _gold_pile(item_def &corpse, monster_type corpse_class)
 
 static void _cigotuvis_plague_make_abomination(const monster* mons)
 {
+    if (you_worship(GOD_GOZAG) || !mons_can_be_zombified(*mons))
+    {
+        return;
+    }
     los_def ld(mons->pos(), opc_no_actor);
-    int pow = you.skill(SK_NECROMANCY) + you.experience_level;
+    int pow = div_rand_round(you.skill(SK_HEXES) * you.skill(SK_NECROMANCY), 27) + you.experience_level;
     const int chunks = max_corpse_chunks(mons->type);
     int hd = 0;
     monster_type montype;
 
-    if (mons_can_be_zombified(*mons) && !you_worship(GOD_GOZAG) 
-        && !(mons->flags & MF_EXPLODE_KILL))
+    if (!(mons->flags & MF_EXPLODE_KILL))
     {
-        hd = div_rand_round( pow * chunks, 9);
+        hd = div_rand_round( pow * chunks, 9) + div_rand_round(mons->get_hit_dice(),2);
         // Use the original monster type as the zombified type here, to
         // get the proper stats from it.
         if (hd > 15)
@@ -458,11 +461,9 @@ static void _cigotuvis_plague_make_abomination(const monster* mons)
 
         if (hd >= 11 && mons->body_size() == SIZE_LARGE)
             montype = MONS_ABOMINATION_LARGE;
-        else if (hd >= 6 && mons->body_size() == SIZE_LARGE 
-                || hd >= 11 && mons -> body_size() != SIZE_LARGE)
+        else if (hd >= 6)
             montype = MONS_ABOMINATION_SMALL;
-        else if (hd >= 6 && mons->body_size() != SIZE_LARGE
-                || mons -> body_size() == SIZE_LARGE)
+        else if (mons -> body_size() == SIZE_LARGE)
             montype = MONS_MACABRE_MASS;
         else
             montype = MONS_CRAWLING_CORPSE;
@@ -499,13 +500,13 @@ static void _cigotuvis_plague_make_abomination(const monster* mons)
             // Set hit dice, AC, and HP.
             init_abomination(*abm, hd);
             abm->add_ench(mon_enchant(ENCH_CIGOTUVIS_PLAGUE, 0, &you, INFINITE_DURATION));
-            abm->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 4));
+            abm->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 5));
         }
 
         cigotuvis_plague_death_fineff::schedule(mons->pos());
     }
 
-    else if (!you_worship(GOD_GOZAG) && (mons->flags & MF_EXPLODE_KILL))
+    else
     {   
         ld.update();
 
