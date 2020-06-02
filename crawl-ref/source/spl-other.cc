@@ -9,6 +9,8 @@
 #include "spl-other.h"
 
 #include "act-iter.h"
+#include "cloud.h"
+#include "directn.h"
 #include "delay.h"
 #include "env.h"
 #include "food.h"
@@ -25,6 +27,8 @@
 #include "potion.h"
 #include "religion.h"
 #include "spl-util.h"
+#include "state.h"
+#include "target.h"
 #include "terrain.h"
 #include "god-conduct.h"
 #include "items.h"
@@ -696,5 +700,145 @@ spret cast_phase_shift(int pow, bool fail)
 
     you.increase_duration(DUR_PHASE_SHIFT, 5 + random2(pow), 30);
     you.redraw_evasion = true;
+    return spret::success;
+}
+
+spret cast_will_of_earth(const coord_def&, int pow, bool fail)
+{
+    vector<coord_def> break_walls;
+    for (adjacent_iterator ai(you.pos()); ai; ++ai)
+    {
+        if (!in_bounds(*ai)
+            || !cell_is_solid(*ai)
+            || !feat_is_diggable(grd (*ai)))
+        {
+            continue;
+        }
+        break_walls.emplace_back(*ai);
+    }
+
+    if (break_walls.size() == 0) {
+        mprf("You can only use it near diggable walls.");
+        return spret::abort;
+    }
+
+    fail_check();
+
+    for (coord_def& wall : break_walls) {
+        destroy_wall(wall);
+        place_cloud(CLOUD_DUST, wall, 2 + random2(3), &you);
+    }
+
+    if (you.duration[DUR_WILL_OF_EARTH])
+        mpr("You gathered new stones.");
+    else
+        mpr("You gathered stones.");
+
+    you.set_duration(DUR_WILL_OF_EARTH, 20 + random2avg(pow, 2));
+    
+    you.props[WILL_OF_EARTH_POWER_KEY] = pow;
+    you.props[WILL_OF_EARTH_KEY] = (int)break_walls.size();
+    return spret::success;
+}
+
+static bool _find_wall_target(coord_def& target, targeter* hitfunc = nullptr)
+{
+    while (true)
+    {
+        // query for location {dlb}:
+        direction_chooser_args args;
+        args.restricts = DIR_TARGET;
+        args.needs_path = false;
+        args.top_prompt = "Create where?";
+        args.hitfunc = hitfunc;
+        dist beam;
+        direction(beam, args);
+
+        if (crawl_state.seen_hups)
+        {
+            mprf("Cancelling create due to HUP.");
+            return false;
+        }
+
+        if (!beam.isValid || beam.target == you.pos())
+        {
+            canned_msg(MSG_OK);
+            return false;
+        }
+
+        if (cell_is_solid(beam.target))
+        {
+            clear_messages();
+            mprf("You can't create into that!");
+            continue;
+        }
+
+        monster* target_mons = monster_at(beam.target);
+        if (target_mons && you.can_see(*target_mons))
+        {
+            mprf("You can't create onto %s!",
+                target_mons->name(DESC_THE).c_str());
+            continue;
+        }
+
+        if (!you.see_cell_no_trans(beam.target))
+        {
+            clear_messages();
+            if (you.trans_wall_blocking(beam.target))
+                canned_msg(MSG_SOMETHING_IN_WAY);
+            else
+                canned_msg(MSG_CANNOT_SEE);
+            continue;
+        }
+
+        target = beam.target; // Grid in los, no problem.
+        return true;
+    }
+}
+
+spret create_wall(bool fail)
+{
+    static const set<dungeon_feature_type> safe_tiles =
+    {
+        DNGN_SHALLOW_WATER, DNGN_FLOOR, DNGN_OPEN_DOOR,
+        DNGN_OPEN_CLEAR_DOOR
+    };
+
+    coord_def target;
+    targeter_smite tgt(&you, 1, 0, 0);
+    while (true)
+    {
+        if (!_find_wall_target(target, &tgt))
+            return spret::abort;
+        if (grid_distance(you.pos(), target) > 1)
+        {
+            mpr("That's out of range!");
+            continue;
+        }
+        break;
+    }
+
+    fail_check();
+
+    if (!safe_tiles.count(grd(target)) || feat_is_trap(grd(target)))
+    {
+
+        mpr("You cannot make wall here.");
+        return spret::abort;
+    }
+
+    you.props[WILL_OF_EARTH_KEY].get_int()--;
+
+
+    
+    int power = you.props[WILL_OF_EARTH_POWER_KEY].get_int();
+    temp_change_terrain(target, DNGN_ROCK_WALL, 50 + power + random2(power), TERRAIN_CHANGE_WALL_CREATE);
+
+    mpr("The wall rise from the ground!");
+
+    if (you.props[WILL_OF_EARTH_KEY].get_int() == 0) {
+        you.set_duration(DUR_WILL_OF_EARTH, 0);
+    }
+
     return spret::success;
 }

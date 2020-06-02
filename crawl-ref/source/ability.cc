@@ -369,6 +369,8 @@ static const ability_def Ability_List[] =
 
     { ABIL_END_TRANSFORMATION, "End Transformation",
       0, 0, 0, 0, {}, abflag::starve_ok },
+    { ABIL_CREATE_WALL, "Create Wall",
+      0, 0, 0, 0, {}, abflag::none },
 
     // INVOCATIONS:
     // Zin
@@ -2352,6 +2354,10 @@ static spret _do_ability(const ability_def& abil, bool fail)
         untransform();
         break;
 
+    case ABIL_CREATE_WALL:
+        return create_wall(fail);
+        break;
+
     // INVOCATIONS:
     case ABIL_ZIN_RECITE:
     {
@@ -3727,6 +3733,9 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
 
     if (you.get_mutation_level(MUT_BLINK))
         _add_talent(talents, ABIL_BLINK, check_confused);
+
+    if (you.duration[DUR_WILL_OF_EARTH])
+        _add_talent(talents, ABIL_CREATE_WALL, check_confused);
 
     // Religious abilities.
     for (ability_type abil : get_god_abilities(include_unusable, false,

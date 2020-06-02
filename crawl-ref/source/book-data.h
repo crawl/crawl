@@ -387,6 +387,7 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_EVAPORATE,
     SPELL_PASSWALL,
     SPELL_PETRIFY,
+    SPELL_WILL_OF_EARTH,
     SPELL_WALL_MELTING
 }
 };

@@ -723,6 +723,11 @@ bool fill_status_info(int status, status_info& inf)
         }
     }
     break;
+    case DUR_WILL_OF_EARTH:
+        inf.light_text
+            = make_stringf("Earth (%u)",
+                you.props[WILL_OF_EARTH_KEY].get_int());
+    break;
     default:
         if (!found)
         {

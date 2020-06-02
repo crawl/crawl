@@ -4199,6 +4199,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_WILL_OF_EARTH, "Will of Earth",
+    spschool::earth | spschool::transmutation,
+    spflag::not_self | spflag::utility,
+    4,
+    200,
+    -1, -1,
+    4, 0,
+    TILEG_WILL_OF_EARTH,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     spschool::none,
     spflag::testing,

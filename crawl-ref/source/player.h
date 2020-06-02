@@ -56,6 +56,8 @@
 #define PETRIFIED_BY_KEY "petrified_by"
 #define MAGIC_ARMOUR_KEY "magic_armour_pow"
 #define MAGIC_SHIELD_KEY "magic_shield_pow"
+#define WILL_OF_EARTH_POWER_KEY "will_of_earth_power"
+#define WILL_OF_EARTH_KEY "will_of_earth_num"
 
 // display/messaging breakpoints for penalties from Ru's MUT_HORROR
 #define HORROR_LVL_EXTREME  3

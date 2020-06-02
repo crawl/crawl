@@ -55,6 +55,7 @@ enum ability_type
     // Barachim
     ABIL_HOP,
     ABIL_BREATHE_HOLY,
+    ABIL_CREATE_WALL, // From will of earth
     ABIL_MAX_INTRINSIC = ABIL_HOP,
 
     // Evoking items.

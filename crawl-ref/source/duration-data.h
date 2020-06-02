@@ -593,6 +593,12 @@ static const duration_def duration_data[] =
       {{ "", []() {
           you.redraw_evasion = true;
       }}}},
+    { DUR_WILL_OF_EARTH,
+      BROWN, "Earth",
+      "earth", "will of earth",
+      "Stones began to float around you.", D_DISPELLABLE | D_EXPIRES,
+      {{ "The stones around you begin to lose power." },
+        { "The stones around you fell helplessly." }}, 6 },
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.
 

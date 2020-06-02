@@ -205,5 +205,6 @@ enum duration_type
     DUR_WALL_MELTING2,
     DUR_COWARD,
     DUR_PAKELLAS_DURATION,    // duration of Pakellas Buff
+    DUR_WILL_OF_EARTH,
     NUM_DURATIONS
 };

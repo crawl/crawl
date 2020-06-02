@@ -1458,6 +1458,7 @@ bool spell_no_hostile_in_range(spell_type spell, bool rod)
     case SPELL_WALL_MELTING_2:
     case SPELL_PAKELLAS_ROD_BARRIAR:
     case SPELL_PAKELLAS_ROD_CLOUD:
+    case SPELL_WILL_OF_EARTH:
         return false;
 
     case SPELL_CHAIN_LIGHTNING:
