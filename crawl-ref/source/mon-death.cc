@@ -480,7 +480,7 @@ static void _cigotuvis_plague_make_abomination(const monster* mons)
             // Set hit dice, AC, and HP.
             init_abomination(*abm, hd);
             abm->add_ench(mon_enchant(ENCH_CIGOTUVIS_PLAGUE, 0, &you, INFINITE_DURATION));
-            abm->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 6));
+            abm->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 4));
         }
 
         cigotuvis_plague_death_fineff::schedule(mons->pos());

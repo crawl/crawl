@@ -5919,7 +5919,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
 
     case BEAM_CIGOTUVIS_PLAGUE:
     {
-        const int dur = (5 + random2avg(ench_power / 2, 2)) * BASELINE_DELAY;
+        const int dur = (10 + random2avg(ench_power / 2, 2)) * BASELINE_DELAY;
         if (mons_can_be_zombified(*mon))
         {
             mon->add_ench(mon_enchant(ENCH_CIGOTUVIS_PLAGUE, 0, &you, dur));
