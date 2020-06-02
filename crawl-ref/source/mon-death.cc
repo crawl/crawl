@@ -459,11 +459,11 @@ static void _cigotuvis_plague_make_abomination(const monster* mons)
             hd = 15 + (hd - 15) / 2;
         hd = min(hd, 30);
 
-        if (hd >= 11 && mons->body_size() == SIZE_LARGE)
+        if (hd >= 11 && mons->body_size() >= SIZE_LARGE)
             montype = MONS_ABOMINATION_LARGE;
         else if (hd >= 6)
             montype = MONS_ABOMINATION_SMALL;
-        else if (mons -> body_size() == SIZE_LARGE)
+        else if (mons -> body_size() >= SIZE_LARGE)
             montype = MONS_MACABRE_MASS;
         else
             montype = MONS_CRAWLING_CORPSE;
@@ -471,7 +471,7 @@ static void _cigotuvis_plague_make_abomination(const monster* mons)
                      BEH_FRIENDLY,
                      mons->pos(),
                      crawl_state.game_is_arena() ? MHITNOT : MHITYOU,
-                    MG_FORCE_PLACE);
+                        MG_FORCE_PLACE | MG_AUTOFOE);
         mg.set_summoned(&you,
                         0,
                         SPELL_CIGOTUVIS_PLAGUE);
