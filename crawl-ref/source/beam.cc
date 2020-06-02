@@ -5923,6 +5923,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         if (mons_can_be_zombified(*mon))
         {
             mon->add_ench(mon_enchant(ENCH_CIGOTUVIS_PLAGUE, 0, &you, dur));
+            mon->add_ench(mon_enchant(ENCH_INSANE, 0, &you, dur));
             if (simple_monster_message(*mon, " seems sick!"))
                 obvious_effect = true;
             return MON_AFFECTED;
