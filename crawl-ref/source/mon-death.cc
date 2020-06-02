@@ -459,9 +459,9 @@ static void _cigotuvis_plague_make_abomination(const monster* mons)
             hd = 15 + (hd - 15) / 2;
         hd = min(hd, 30);
 
-        if (hd >= 11 && mons->body_size() >= SIZE_LARGE)
+        if (hd >= 11 && mons->body_size() >= SIZE_BIG)
             montype = MONS_ABOMINATION_LARGE;
-        else if (hd >= 6)
+        else if (hd >= 6 && mons->body_size() >= SIZE_LARGE)
             montype = MONS_ABOMINATION_SMALL;
         else if (mons -> body_size() >= SIZE_LARGE)
             montype = MONS_MACABRE_MASS;
