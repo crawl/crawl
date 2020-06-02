@@ -469,11 +469,30 @@ static void _cigotuvis_plague_make_abomination(const monster* mons)
         mgen_data mg(montype,
                      BEH_FRIENDLY,
                      mons->pos(),
-                     crawl_state.game_is_arena() ? MHITNOT : MHITYOU);
+                     crawl_state.game_is_arena() ? MHITNOT : MHITYOU,
+                    MG_FORCE_PLACE);
         mg.set_summoned(&you,
                         0,
                         SPELL_CIGOTUVIS_PLAGUE);
         mg.set_base(mons->type);
+        if (!mons->mname.empty() && !(mons->flags & MF_NAME_NOCORPSE))
+            mg.mname = mons->mname;
+        else if (mons_is_unique(mons->type))
+            mg.mname = mons_type_name(mons->type, DESC_PLAIN);
+        mg.extra_flags = mons->flags & (MF_NAME_SUFFIX
+                                          | MF_NAME_ADJECTIVE
+                                          | MF_NAME_DESCRIPTOR);
+
+        if (mons->mons_species() == MONS_HYDRA)
+        {
+            // No undead 0-headed hydras, sorry.
+            if (mons->heads() == 0)
+            {
+                return;
+            }
+            else
+                mg.props[MGEN_NUM_HEADS] = mons->heads();
+        }
 
         if (monster *abm = create_monster(mg))
         {
@@ -529,6 +548,24 @@ static void _cigotuvis_plague_make_abomination(const monster* mons)
                             0,
                             SPELL_CIGOTUVIS_PLAGUE);
             mg.set_base(mons->type);
+            if (!mons->mname.empty() && !(mons->flags & MF_NAME_NOCORPSE))
+                mg.mname = mons->mname;
+            else if (mons_is_unique(mons->type))
+                mg.mname = mons_type_name(mons->type, DESC_PLAIN);
+            mg.extra_flags = mons->flags & (MF_NAME_SUFFIX
+                                            | MF_NAME_ADJECTIVE
+                                            | MF_NAME_DESCRIPTOR);
+
+            if (mons->mons_species() == MONS_HYDRA)
+            {
+                // No undead 0-headed hydras, sorry.
+                if (mons->heads() == 0)
+                {
+                    return;
+                }
+                else
+                    mg.props[MGEN_NUM_HEADS] = mons->heads();
+            }
 
             if (monster *abm = create_monster(mg))
             {
