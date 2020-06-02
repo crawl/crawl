@@ -445,14 +445,14 @@ static void _cigotuvis_plague_make_abomination(const monster* mons)
         return;
     }
     los_def ld(mons->pos(), opc_no_actor);
-    int pow = div_rand_round(you.skill(SK_HEXES) * you.skill(SK_NECROMANCY), 27) + you.experience_level;
+    int pow = you.skill(SK_HEXES) + 2*you.skill(SK_NECROMANCY);
     const int chunks = max_corpse_chunks(mons->type);
     int hd = 0;
     monster_type montype;
 
     if (!(mons->flags & MF_EXPLODE_KILL))
     {
-        hd = div_rand_round( pow * chunks, 9) + div_rand_round(mons->get_hit_dice(),2);
+        hd = div_rand_round(pow * chunks, 9) + mons->get_hit_dice();
         // Use the original monster type as the zombified type here, to
         // get the proper stats from it.
         if (hd > 15)

@@ -998,7 +998,8 @@ void make_book_kiku_gift(item_def &book, bool first)
             ? SPELL_BORGNJORS_VILE_CLUTCH : SPELL_EXCRUCIATING_WOUNDS;
         chosen_spells[2] = random_choose(SPELL_BOLT_OF_DRAINING,
                                          SPELL_AGONY,
-                                         SPELL_DEATH_CHANNEL);
+                                        SPELL_DEATH_CHANNEL,
+                                        SPELL_CIGOTUVIS_PLAGUE);
 
         spell_type extra_spell;
         do
@@ -1009,7 +1010,8 @@ void make_book_kiku_gift(item_def &book, bool first)
                                         SPELL_EXCRUCIATING_WOUNDS,
                                         SPELL_BOLT_OF_DRAINING,
                                         SPELL_SIMULACRUM,
-                                        SPELL_DEATH_CHANNEL);
+                                        SPELL_DEATH_CHANNEL,
+                                        SPELL_CIGOTUVIS_PLAGUE);
             if (you.species == SP_FELID
                 && extra_spell == SPELL_EXCRUCIATING_WOUNDS)
             {
