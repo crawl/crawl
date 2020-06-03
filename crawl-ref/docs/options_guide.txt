@@ -382,7 +382,7 @@ restart_after_game = maybe/true
         local tiles builds by default, and maybe by default for other builds.
         This option is ignored for online games.
 
-restart_after_save = false
+restart_after_save = true
         When the game is saved, return to the main menu. This option
         only has an effect if restart_after_game is set to maybe or true.
         This option is ignored for online games.
