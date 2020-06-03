@@ -1915,7 +1915,7 @@ MONS:   torpor snail / ghost moth
 SUBST:  D = FH, fg = |*, h = *%, i = $%--, j= -
 NSUBST: - = 1 / 1. / 3=2 / 5=2. / 3 / 3=3. / 4. / .
 : elseif you.in_branch("Swamp") then
-MONS:   spiny frog / komodo dragon / hornet / ugly thing
+MONS:   cane toad / komodo dragon / hornet / ugly thing
 MONS:   hydra / alligator / swamp dragon
 MONS:   very ugly thing
 SUBST:  D = FH, fg = |*, h = *%, i = $%--, j= -

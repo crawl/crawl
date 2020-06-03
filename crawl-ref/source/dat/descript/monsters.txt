@@ -2230,9 +2230,10 @@ sphinx
 A fearsome hybrid with a woman's head, a lion's body and the wings of an eagle,
 able to cloud the minds of its foes and wield fell magics.
 %%%%
-spiny frog
+cane toad
 
-A frog the size of a wolf, covered in small spines and spurs which drip venom.
+A hideous toad whose thick, warty hide is covered in poison glands. Unlike its
+smaller above-ground relatives, this dungeon-dweller is the size of a wolf.
 %%%%
 spriggan
 

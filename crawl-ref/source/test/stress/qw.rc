@@ -1072,7 +1072,7 @@ local scary_monsters = {
   {12, "troll"},
   {12, "cyclops"},
   {12, "two-headed ogre"},
-  {12, "spiny frog"},
+  {12, "cane toad"},
   {12, "black mamba"},
   {12, "Snorg"},
   {12, "rime drake"},
