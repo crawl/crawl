@@ -5630,6 +5630,8 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
 
     case SPELL_SUMMON_SPECTRAL_ORCS:
+        // Wizard mode creates a dummy friendly monster, with no foe
+        // Prevent a segfault by checking for that and silently failing
         if (!foe)
             return;
         if (foe->is_player())
@@ -5893,7 +5895,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
             coord_def empty;
 
             // Wizard mode creates a dummy friendly monster, with no foe
-            // Prevent a segfault by checking for that
+            // Prevent a segfault by checking for that and silently failing
             if (!foe)
                 return;
 
