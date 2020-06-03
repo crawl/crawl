@@ -191,7 +191,7 @@ bullfrog MONS_BULLFROG
 %rim 0
 blink_frog MONS_BLINK_FROG
 %rim 1
-spiny_frog MONS_SPINY_FROG
+cane_toad MONS_CANE_TOAD
 
 ## Snakes ('S')
 %rim 0

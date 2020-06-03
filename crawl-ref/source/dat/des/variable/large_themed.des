@@ -26,7 +26,7 @@ function grandhive_vaults(e, hivewallglyph)
         e.kmons('0 = yak / hippogriff / wolf w:8 / \
                      water moccasin w:8 / wyvern w:8 / basilisk w:8 / \
                      crocodile / river rat w:2 / steam dragon w:2')
-        e.kmons('9 = elephant / spiny frog / rime drake / \
+        e.kmons('9 = elephant / cane toad / rime drake / \
                      blink frog w:8 / manticore w:4 / hell rat w:4')
         e.kmons('8 = death yak w:14 / hydra / komodo dragon / \
                      black mamba / lindwurm w:8 / torpor snail w:4 / \

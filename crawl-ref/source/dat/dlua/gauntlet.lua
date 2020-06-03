@@ -297,7 +297,7 @@ end
 --            Exactly one of this item will always place in the arena.
 tier1_gauntlet_arenas = {
   {
-    first  = {mons = "spiny frog simulacrum / wyvern simulacrum " ..
+    first  = {mons = "cane toad simulacrum / wyvern simulacrum " ..
                       "/ hornet simulacrum", min = 1, max = 1},
     second = {mons = "simulacrum place:D:12", min = 2, max = 4},
     liquid = "water",
