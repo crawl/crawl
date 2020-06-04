@@ -2997,7 +2997,15 @@ level_excursion::level_excursion()
 
 void level_excursion::go_to(const level_id& next)
 {
-    ASSERT(!crawl_state.generating_level);
+    // This ASSERT is here because level excursions are often triggered as
+    // side effects, e.g. in shopping list code, and we really don't want this
+    // happening during normal levelgen (weird interactions with seeding,
+    // potential crashes if items or monsters are incomplete, etc). However,
+    // the abyss purposefully does level excursions in order to pick up
+    // features from other levels and place them in the abyss: this is
+    // basically safe to do, and seeding isn't a concern.
+    ASSERT(!crawl_state.generating_level || original.branch == BRANCH_ABYSS);
+
     if (level_id::current() != next)
     {
         if (!you.level_visited(level_id::current()))
