@@ -48,10 +48,11 @@ mutations:
     MUT_TOUGH_SKIN: 2
     MUT_SCREAM: 3
 fake_mutations:
-  - long: You can wield two weapons. but, you can't wear a shield
+  - long: You can wield two weapons at the same time.
     short: dual wield
-  - long: You can wield two amulets
-    short: two head
+  - long: You cannot use shields.
+  - long: You can wear two amulets.
+    short: two heads
 recommended_jobs:
   - JOB_HUNTER
   - JOB_BERSERKER

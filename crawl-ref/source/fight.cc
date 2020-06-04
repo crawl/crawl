@@ -236,7 +236,7 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu, int
             && coinflip()) {
             if (defender && defender->alive() && _in_melee_range(defender))
             {
-                mprf("double attack!");
+                mprf("Double attack!");
                 fight_melee(&you, defender, nullptr, simu, attack_num?0:1);
             }
         }

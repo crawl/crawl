@@ -784,7 +784,7 @@ void melee_attack::mace_flail_knockback()
 
     if (you.can_see(*defender))
     {
-        mprf("%s %s knocked back by the %s.",
+        mprf("%s %s knocked back by %s.",
             defender->name(DESC_THE).c_str(),
             defender->conj_verb("are").c_str(),
             attacker->name(DESC_THE).c_str());
