@@ -1525,7 +1525,8 @@ bool summon_can_attack(const monster* mons, const coord_def &p)
         || !mons->is_summoned()
             && !mons->has_ench(ENCH_FAKE_ABJURATION)
             && !mons_is_hepliaklqana_ancestor(mons->type)
-            && !mons->has_ench(ENCH_PORTAL_PACIFIED))
+            && !mons->has_ench(ENCH_PORTAL_PACIFIED)
+            && mons->type != MONS_FOXFIRE)
     {
         return true;
     }
