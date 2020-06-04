@@ -8,6 +8,7 @@
 #include <numeric>
 #include <stack>
 #include <chrono>
+#include <cwctype>
 
 #include "ui.h"
 #include "cio.h"
