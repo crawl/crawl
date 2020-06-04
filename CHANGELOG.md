@@ -46,6 +46,9 @@
 - 5레벨 강령/주술 마법. 시고투비의 역병. 감염성이 있는 병으로 적을 감염시키고, 죽을때 그 시체에서 어보미네이션이 생겨난다.
    - Added Cigotuvi's Plague, level 5 necromancy/hex spell. An infectious disease infects an enemy, and causing their corpse to become monstrous abomination.
    
+- 4레벨 대지/변이술 마법. 대지의 의지. 사용하면 주변 벽을 파괴하여 earth버프를 얻고, earth 버프를 소모하는 것으로 일시적인 벽을 세우거나 물이나 용암을 메꿀 수 있음
+   - Added Will of Earth, level 4 earth/transmutation spell. When used, you can destroy the surrounding wall to get an earth buff, and consume the earth buff to build a temporary wall or fill up water or lava.
+   
 - 베오그의 새로운 권능 오크 추종자 되돌리기 추가. 선택한 오크 추종자를 오크 광산으로 즉시 전송한다. 
    - Added Beogh ability "return Orcish Followers". Immediately send the selected orcish follower to orcrish mines.
    
@@ -136,9 +139,6 @@
   
 - 펠리드와 옥토포드는 스카프를 낄 수 있게 됨
   - Allow octopode, felid wields a scarf
-
-- Inhibited Regeneration 변이 변경, 시험적으로 딥 드워프는 자연 회복이 이루어짐
-  - Change Inhibited Regeneration. and deep dwarf allow regen naturally (experimental)
   
 - 강령술사는 스타팅책에 컨트롤 언데드와 고통의 상처를 들고 시작함
   - necromancer starting book now contains 'control undead' and 'excruciating wounds'
