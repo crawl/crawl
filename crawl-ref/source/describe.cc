@@ -1185,6 +1185,11 @@ static string _describe_weapon(const item_def &item, bool verbose)
                                " unaware enemies.";
             }
             break;
+        case SK_MACES_FLAILS:
+            description += "\n\nAttacks with this weapon have a chance to "
+                           "knock back the defender, dealing extra damage if "
+                           "they collide with something.";
+            break;
         default:
             break;
         }
