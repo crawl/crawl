@@ -96,6 +96,7 @@ mantis MANTIS
 dwarf_f MOUNTAIN_DWARF
 lesser_lich LESSER_LICH
 dwarf_m
+crustacean CRUSTACEAN
 
 # draconians
 draconian_f DRACONIAN DRACONIAN_FIRST
