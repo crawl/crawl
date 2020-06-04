@@ -569,27 +569,29 @@ spret cast_fulsome_distillation(bool fail)
         break;
     }
 
-    switch (corpse.mon_type)
-    {
-    case MONS_WASP:
-        pot_type = POT_SLOWING;
-        break;
-    default:
-        break;
-    }
-
-    struct monsterentry* smc = get_monster_data(corpse.mon_type);
-
-    for (int nattk = 0; nattk < 4; ++nattk)
-    {
-        if (smc->attack[nattk].flavour == AF_POISON_MEDIUM
-            || smc->attack[nattk].flavour == AF_POISON_STRONG
-            || smc->attack[nattk].flavour == AF_POISON_STR
-            || smc->attack[nattk].flavour == AF_POISON_INT
-            || smc->attack[nattk].flavour == AF_POISON_DEX
-            || smc->attack[nattk].flavour == AF_POISON_STAT)
+    if (pot_type != POT_UNSTABLE_MUTATION) {
+        switch (corpse.mon_type)
         {
-            pot_type = POT_STRONG_POISON;
+        case MONS_WASP:
+            pot_type = POT_SLOWING;
+            break;
+        default:
+            break;
+        }
+
+        struct monsterentry* smc = get_monster_data(corpse.mon_type);
+
+        for (int nattk = 0; nattk < 4; ++nattk)
+        {
+            if (smc->attack[nattk].flavour == AF_POISON_MEDIUM
+                || smc->attack[nattk].flavour == AF_POISON_STRONG
+                || smc->attack[nattk].flavour == AF_POISON_STR
+                || smc->attack[nattk].flavour == AF_POISON_INT
+                || smc->attack[nattk].flavour == AF_POISON_DEX
+                || smc->attack[nattk].flavour == AF_POISON_STAT)
+            {
+                pot_type = POT_STRONG_POISON;
+            }
         }
     }
 
