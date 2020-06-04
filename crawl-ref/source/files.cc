@@ -2997,6 +2997,7 @@ level_excursion::level_excursion()
 
 void level_excursion::go_to(const level_id& next)
 {
+    ASSERT(!crawl_state.generating_level);
     if (level_id::current() != next)
     {
         if (!you.level_visited(level_id::current()))
