@@ -25,7 +25,6 @@ aptitudes:
   poison_magic: 3
   invocations: 2
   evocations: 1
-can_swim : true
 str: 12
 int: 7
 dex: 6
