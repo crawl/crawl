@@ -716,7 +716,7 @@ tileidx_t tilep_species_to_base_tile(int sp, int level)
         return TILEP_BASE_MOUNTAIN_DWARF;
     case SP_LESSER_LICH:
         return TILEP_BASE_LESSER_LICH;         
-    case SP_CRUSTACEAN
+    case SP_CRUSTACEAN:
         return TILEP_BASE_CRUSTACEAN;   
     default:
         return TILEP_BASE_HUMAN;
