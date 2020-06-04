@@ -224,9 +224,9 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_RECALL,
     SPELL_ANIMATE_DEAD,
     SPELL_BORGNJORS_VILE_CLUTCH,
+    SPELL_CIGOTUVIS_PLAGUE,
     SPELL_DEATH_CHANNEL,
     SPELL_SIMULACRUM,
-    SPELL_CIGOTUVIS_PLAGUE,
 },
 
 #if TAG_MAJOR_VERSION == 34
@@ -263,9 +263,9 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of Wizardry
     SPELL_FORCE_LANCE,
     SPELL_AGONY,
-    SPELL_HASTE,
     SPELL_INVISIBILITY,
     SPELL_SPELLFORGED_SERVITOR,
+    SPELL_HASTE,
 },
 #endif
 
