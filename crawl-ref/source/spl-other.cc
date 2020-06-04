@@ -803,7 +803,8 @@ spret create_wall(bool fail)
     static const set<dungeon_feature_type> safe_tiles =
     {
         DNGN_SHALLOW_WATER, DNGN_FLOOR, DNGN_OPEN_DOOR,
-        DNGN_OPEN_CLEAR_DOOR
+        DNGN_OPEN_CLEAR_DOOR, 
+        DNGN_DEEP_WATER, DNGN_LAVA //make floor
     };
 
     coord_def target;
@@ -831,10 +832,12 @@ spret create_wall(bool fail)
 
     you.props[WILL_OF_EARTH_KEY].get_int()--;
 
+    bool make_floor_ = (grd(target) == DNGN_DEEP_WATER ||
+        grd(target) == DNGN_LAVA);
 
     
     int power = you.props[WILL_OF_EARTH_POWER_KEY].get_int();
-    temp_change_terrain(target, DNGN_ROCK_WALL, 50 + power + random2(power), TERRAIN_CHANGE_WALL_CREATE);
+    temp_change_terrain(target, make_floor_? DNGN_TEMPORAL_FLOOR : DNGN_ROCK_WALL, 50 + power + random2(power), TERRAIN_CHANGE_WALL_CREATE);
 
     mpr("The wall rise from the ground!");
 

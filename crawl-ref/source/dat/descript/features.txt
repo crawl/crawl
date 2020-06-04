@@ -735,6 +735,10 @@ A collapsed entrance
 
 A collapsed passage which cannot be used anymore.
 %%%%
+A temporal floor
+
+This floor is the one that soon disappeared. Be careful!
+%%%%
 ########################################################################
 ### Vault redefinitions
 ########################################################################
