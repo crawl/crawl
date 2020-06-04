@@ -445,12 +445,10 @@ static const pop_entry pop_vaults[] =
 
 static const pop_entry pop_crypt[] =
 { // Crypt (OOD cap: 5)
-  { -3,  3,   70, PEAK, MONS_SHADOW },
-  { -3,  3,   40, PEAK, MONS_WIGHT },
-  { -3,  3,   45, PEAK, MONS_FLYING_SKULL },
-  { -3,  3,   75, SEMI, MONS_NECROMANCER },
+  { -4,  3,   45, PEAK, MONS_FLYING_SKULL },
+  { -4,  3,   75, SEMI, MONS_NECROMANCER },
   { -3,  3,   75, SEMI, MONS_DEATH_KNIGHT },
-  { -2,  4,  125, SEMI, MONS_WRAITH },
+  { -2,  3,  125, SEMI, MONS_WRAITH },
   { -1,  5,   75, PEAK, MONS_JIANGSHI },
   { -1,  5,  125, PEAK, MONS_PHANTASMAL_WARRIOR },
   { -1,  9,  120, PEAK, MONS_ANCIENT_CHAMPION },
