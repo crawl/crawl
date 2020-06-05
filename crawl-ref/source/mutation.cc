@@ -1749,6 +1749,8 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
                     hands = "front paws";
                 else if (you.species == SP_OCTOPODE)
                     hands = "tentacles";
+                else if (you.species == SP_CRUSTACEAN)
+                    hands = "claws";
                 else
                     break;
                 mprf(MSGCH_MUTATION, "%s",

@@ -3212,6 +3212,19 @@ bool gozag_call_merchant()
         {
             continue;
         }
+        if (you.species == SP_CRUSTACEAN &&
+            (type == SHOP_ARMOUR
+             || type == SHOP_ARMOUR_ANTIQUE))
+        {
+            continue;
+        }
+        
+        if (you.species == SP_CRUSTACEAN &&
+            (type == SHOP_ARMOUR
+             || type == SHOP_ARMOUR_ANTIQUE))
+        {
+            continue;
+        }
         valid_shops.push_back(type);
     }
 

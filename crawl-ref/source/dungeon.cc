@@ -4323,12 +4323,13 @@ static object_class_type _acquirement_object_class()
         OBJ_BOOKS,
         OBJ_WANDS,
         OBJ_MISCELLANY, // Felids stop here
-        OBJ_WEAPONS,
+        OBJ_WEAPONS, // Crustacean stop here
         OBJ_ARMOUR,
         OBJ_STAVES,
     };
 
-    const int nc = (you.species == SP_FELID) ? 4 : ARRAYSZ(classes);
+    int nc = (you.species == SP_FELID) ? 4 : ARRAYSZ(classes);
+    nc = (you.species == SP_CRUSTACEAN) ? 5 : ARRAYSZ(classes);
     return classes[random2(nc)];
 }
 

@@ -1556,6 +1556,14 @@ static void _experience_check()
              perc / 100, perc % 100);
     }
 
+    if (you.species == SP_CRUSTACEAN)
+    {
+        int xl = you.experience_level;
+        // calculate the "real" level
+        int nl = you.max_level;
+        // Fill this.
+    }
+
     handle_real_time();
     msg::stream << "Play time: " << make_time_string(you.real_time())
                 << " (" << you.num_turns << " turns)"
@@ -1589,6 +1597,7 @@ static void _do_remove_armour()
     if (you.species == SP_CRUSTACEAN)
     {
         mpr("You can't remove your exoskeleton.");
+        retur;
     }
    
     if (!form_can_wear())

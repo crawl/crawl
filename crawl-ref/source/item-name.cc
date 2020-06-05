@@ -3535,6 +3535,9 @@ bool is_useless_item(const item_def &item, bool temp)
         case MI_JAVELIN:
             return you.body_size(PSIZE_BODY, !temp) < SIZE_MEDIUM
                    && !you.can_throw_large_rocks();
+        case MI_ARROW:
+        case MI_BOLT:
+            return you.species == SP_CRUSTACEAN;
         }
 
         return false;
@@ -3589,10 +3592,10 @@ bool is_useless_item(const item_def &item, bool temp)
         case SCR_CURSE_WEAPON: // for non-Ashenzari, already handled
         case SCR_CURSE_ARMOUR:
 #endif  
-        case SCR_ENCHANT_ARMOUR:
+        case SCR_ENCHANT_WEAPON:
         case SCR_BRAND_WEAPON:
             return you.species == SP_FELID;
-        case SCR_ENCHANT_WEAPON:
+        case SCR_ENCHANT_ARMOUR:
             return you.species == SP_FELID || you.species == SP_CRUSTACEAN;
         case SCR_SUMMONING:
             return you.get_mutation_level(MUT_NO_LOVE) > 0;

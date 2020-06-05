@@ -122,7 +122,12 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
     if (ng.species == SP_FELID && wpn != WPN_UNARMED)
         return CC_BANNED;
     
-    if (ng.species == SP_CRUSTACEAN && !(wpn == WPN_RAPIER || wpn == WPN_SHORT_SWORD || wpn == WPN_DAGGER))
+    if (ng.species == SP_CRUSTACEAN && !(wpn == WPN_RAPIER 
+                                        || wpn == WPN_SHORT_SWORD 
+                                        || wpn == WPN_DAGGER
+                                        || wpn == WPN_QUICK_BLADE)
+        )
+        return CC_BANNED;
 
     // These recommend short blades because they're good at stabbing,
     // but the fighter's armour hinders that.

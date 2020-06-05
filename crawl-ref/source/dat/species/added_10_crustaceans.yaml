@@ -76,6 +76,5 @@ recommended_jobs:
   - JOB_STALKER
 recommended_weapons:
   - SK_UNARMED_COMBAT
-create_enum: false
 walking_verb: crawl
 altar_action: sit before

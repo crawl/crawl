@@ -729,7 +729,6 @@ maybe_bool you_can_wear(equipment_type eq, bool temp)
     case EQ_RING_SIX:
     case EQ_RING_SEVEN:
         return you.species == SP_OCTOPODE ? MB_TRUE : MB_FALSE;
-
     case EQ_WEAPON:
     case EQ_STAFF:
         return you.species == SP_FELID ? MB_FALSE :
@@ -3141,6 +3140,10 @@ void level_change(bool skip_attribute_increase)
             case SP_FELID:
                 _felid_extra_life();
                 break;
+            
+            case SP_CRUSTACEAN:
+                // ecdysis
+                break;
 
             default:
                 break;
@@ -3172,6 +3175,9 @@ void level_change(bool skip_attribute_increase)
         you.max_level++;
         if (you.species == SP_FELID)
             _felid_extra_life();
+        if (you.species == SP_CRUSTACEAN)
+            // ecdysis
+
     }
 
     you.redraw_title = true;
