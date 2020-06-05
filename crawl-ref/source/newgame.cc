@@ -2233,6 +2233,10 @@ static vector<weapon_choice> _get_weapons(const newgame_def& ng)
 
         for (int i = 0; i < 4; i++)
         {
+            if (ng.species == SP_CRUSTACEAN && i > 1)
+            {
+                break;
+            }
             weapon_choice wp;
             wp.first = startwep[i];
 
@@ -2248,6 +2252,10 @@ static vector<weapon_choice> _get_weapons(const newgame_def& ng)
                                     WPN_UNARMED };
         for (int i = 0; i < 7; ++i)
         {
+            if (ng.species == SP_CRUSTACEAN && (i != 0 || i != 6))
+            {
+                continue;
+            }
             weapon_choice wp;
             wp.first = startwep[i];
             if (job_gets_good_weapons(ng.job))

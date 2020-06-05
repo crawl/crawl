@@ -822,6 +822,7 @@ bool player_has_feet(bool temp, bool include_mutations)
     if (you.species == SP_NAGA
         || you.species == SP_FELID
         || you.species == SP_OCTOPODE
+        || you.species == SP_CRUSTACEAN
         || you.species == SP_DJINNI
         || you.fishtail && temp)
     {

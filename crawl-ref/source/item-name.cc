@@ -3309,6 +3309,8 @@ bool is_bad_item(const item_def &item, bool temp)
         {
 #if TAG_MAJOR_VERSION == 34
         case SCR_CURSE_ARMOUR:
+            if (you.species == SP_CRUSTACEAN || you.species == SP_FELID)
+                return false;
         case SCR_CURSE_WEAPON:
             if (you.species == SP_FELID)
                 return false;
@@ -3586,11 +3588,12 @@ bool is_useless_item(const item_def &item, bool temp)
 #if TAG_MAJOR_VERSION == 34
         case SCR_CURSE_WEAPON: // for non-Ashenzari, already handled
         case SCR_CURSE_ARMOUR:
-#endif
-        case SCR_ENCHANT_WEAPON:
+#endif  
         case SCR_ENCHANT_ARMOUR:
         case SCR_BRAND_WEAPON:
             return you.species == SP_FELID;
+        case SCR_ENCHANT_WEAPON:
+            return you.species == SP_FELID || you.species == SP_CRUSTACEAN;
         case SCR_SUMMONING:
             return you.get_mutation_level(MUT_NO_LOVE) > 0;
         case SCR_FOG:
@@ -3789,7 +3792,7 @@ bool is_useless_item(const item_def &item, bool temp)
         break;
 
     case OBJ_STAVES:
-        if (you.species == SP_FELID)
+        if (you.species == SP_FELID || you.species == SP_CRUSTACEAN)
             return true;
         if (!you.could_wield(item, true, !temp))
         {

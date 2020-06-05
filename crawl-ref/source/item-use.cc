@@ -1177,7 +1177,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
     const equipment_type slot = get_armour_slot(item);
 
     if (you.species == SP_FELID &&
-        !(slot == EQ_CLOAK && sub_type == ARM_SCARF)) {
+        !(slot == EQ_CLOAK && sub_type == ARM_SCARF) || you.species == SP_CRUSTACEAN) {
         if (verbose)
             mpr("You can't wear that.");
 

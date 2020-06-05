@@ -1585,6 +1585,12 @@ static void _do_remove_armour()
             return;
         }
     }
+
+    if (you.species == SP_CRUSTACEAN)
+    {
+        mpr("You can't remove your exoskeleton.");
+    }
+   
     if (!form_can_wear())
     {
         mpr("You can't wear or remove anything in your present form.");
