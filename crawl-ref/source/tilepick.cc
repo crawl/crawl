@@ -560,6 +560,8 @@ tileidx_t tileidx_feature(const coord_def &gc)
     case DNGN_TRAP_TELEPORT:
         return tileidx_trap(env.map_knowledge(gc).trap());
 
+    case DNGN_TEMPORAL_FLOOR:
+        return TILE_DNGN_TEMPORAL_FLOOR;
     case DNGN_TRAP_WEB:
     {
         /*

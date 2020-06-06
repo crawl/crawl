@@ -54,6 +54,7 @@ define(function () {
     exports.equip = {};
     val = 0;
     exports.equip.WEAPON = val++;
+    exports.equip.SECOND_WEAPON = val++;
     exports.equip.CLOAK = val++;
     exports.equip.HELMET = val++;
     exports.equip.GLOVES = val++;
@@ -63,6 +64,7 @@ define(function () {
     exports.equip.LEFT_RING = val++;
     exports.equip.RIGHT_RING = val++;
     exports.equip.AMULET = val++;
+    exports.equip.AMULET_RIGHT = val++;
     exports.equip.RING_ONE = val++;
     exports.equip.RING_TWO = val++;
     exports.equip.RING_THREE = val++;

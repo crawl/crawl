@@ -2290,8 +2290,7 @@ void makeitem_tests()
         if (item.brand == SPWPN_ORC_SLAYING
             || item.brand == SPWPN_REACHING
             || item.brand == SPWPN_RETURNING
-            || item.brand == SPWPN_CONFUSE
-            || item.brand == SPWPN_DRAGON_SLAYING)
+            || item.brand == SPWPN_CONFUSE)
         {
             item.brand = SPWPN_FORBID_BRAND;
         }

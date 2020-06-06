@@ -191,10 +191,10 @@ function ($, comm, enums, map_knowledge, messages, options) {
         return elem;
     }
 
-    function wielded_weapon()
+    function _wielded_weapon(slot)
     {
         var elem;
-        var wielded = player.equip[enums.equip.WEAPON];
+        var wielded = player.equip[slot];
         if (wielded == -1)
         {
             elem = $("<span>");
@@ -208,6 +208,16 @@ function ($, comm, enums, map_knowledge, messages, options) {
             elem.addClass("corroded_weapon");
 
         return elem;
+    }
+
+    function wielded_weapon()
+    {
+        return _wielded_weapon(enums.equip.WEAPON);
+    }
+
+    function wielded_second_weapon()
+    {
+        return _wielded_weapon(enums.equip.SECOND_WEAPON);
     }
 
     function quiver()
@@ -479,6 +489,12 @@ function ($, comm, enums, map_knowledge, messages, options) {
         $("#stats_weapon_letter").text(
             index_to_letter(player.equip[enums.equip.WEAPON]) + ")");
         $("#stats_weapon").html(wielded_weapon());
+        if (player.species == "Two Headed Ogre")
+        {
+            $("#stats_second_weapon_letter").text(
+                index_to_letter(player.equip[enums.equip.SECOND_WEAPON]) + ")");
+            $("#stats_second_weapon").html(wielded_second_weapon());
+        }
         $("#stats_quiver_letter").text(
             index_to_letter(player.quiver_item) + ")");
         $("#stats_quiver").html(quiver());

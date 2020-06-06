@@ -1293,7 +1293,7 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
             real_spell = SPELL_MIASMA_CLOUD;
             break;
         case 2:
-            real_spell = SPELL_POISON_CLOUD;
+            real_spell = SPELL_POISONOUS_CLOUD;
             break;
         case 3:
             real_spell = SPELL_FIRE_CLOUD;

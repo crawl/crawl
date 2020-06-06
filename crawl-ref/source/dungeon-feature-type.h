@@ -283,6 +283,7 @@ enum dungeon_feature_type
     DNGN_RUNED_CLEAR_DOOR,
     DNGN_SEALED_CLEAR_DOOR,
 #endif
+    DNGN_TEMPORAL_FLOOR,
 
     NUM_FEATURES
 };

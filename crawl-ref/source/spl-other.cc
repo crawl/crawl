@@ -569,27 +569,29 @@ spret cast_fulsome_distillation(bool fail)
         break;
     }
 
-    switch (corpse.mon_type)
-    {
-    case MONS_WASP:
-        pot_type = POT_SLOWING;
-        break;
-    default:
-        break;
-    }
-
-    struct monsterentry* smc = get_monster_data(corpse.mon_type);
-
-    for (int nattk = 0; nattk < 4; ++nattk)
-    {
-        if (smc->attack[nattk].flavour == AF_POISON_MEDIUM
-            || smc->attack[nattk].flavour == AF_POISON_STRONG
-            || smc->attack[nattk].flavour == AF_POISON_STR
-            || smc->attack[nattk].flavour == AF_POISON_INT
-            || smc->attack[nattk].flavour == AF_POISON_DEX
-            || smc->attack[nattk].flavour == AF_POISON_STAT)
+    if (pot_type != POT_UNSTABLE_MUTATION) {
+        switch (corpse.mon_type)
         {
-            pot_type = POT_STRONG_POISON;
+        case MONS_WASP:
+            pot_type = POT_SLOWING;
+            break;
+        default:
+            break;
+        }
+
+        struct monsterentry* smc = get_monster_data(corpse.mon_type);
+
+        for (int nattk = 0; nattk < 4; ++nattk)
+        {
+            if (smc->attack[nattk].flavour == AF_POISON_MEDIUM
+                || smc->attack[nattk].flavour == AF_POISON_STRONG
+                || smc->attack[nattk].flavour == AF_POISON_STR
+                || smc->attack[nattk].flavour == AF_POISON_INT
+                || smc->attack[nattk].flavour == AF_POISON_DEX
+                || smc->attack[nattk].flavour == AF_POISON_STAT)
+            {
+                pot_type = POT_STRONG_POISON;
+            }
         }
     }
 
@@ -801,7 +803,8 @@ spret create_wall(bool fail)
     static const set<dungeon_feature_type> safe_tiles =
     {
         DNGN_SHALLOW_WATER, DNGN_FLOOR, DNGN_OPEN_DOOR,
-        DNGN_OPEN_CLEAR_DOOR
+        DNGN_OPEN_CLEAR_DOOR, 
+        DNGN_DEEP_WATER, DNGN_LAVA //make floor
     };
 
     coord_def target;
@@ -829,10 +832,12 @@ spret create_wall(bool fail)
 
     you.props[WILL_OF_EARTH_KEY].get_int()--;
 
+    bool make_floor_ = (grd(target) == DNGN_DEEP_WATER ||
+        grd(target) == DNGN_LAVA);
 
     
     int power = you.props[WILL_OF_EARTH_POWER_KEY].get_int();
-    temp_change_terrain(target, DNGN_ROCK_WALL, 50 + power + random2(power), TERRAIN_CHANGE_WALL_CREATE);
+    temp_change_terrain(target, make_floor_? DNGN_TEMPORAL_FLOOR : DNGN_ROCK_WALL, 50 + power + random2(power), TERRAIN_CHANGE_WALL_CREATE);
 
     mpr("The wall rise from the ground!");
 
