@@ -126,7 +126,9 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
                                         || wpn == WPN_SHORT_SWORD 
                                         || wpn == WPN_DAGGER
                                         || wpn == WPN_QUICK_BLADE)
-        )
+                                    && wpn != WPN_UNARMED
+                                    && wpn != WPN_THROWN   
+                                    && wpn != WPN_HUNTING_SLING)
         return CC_BANNED;
 
     // These recommend short blades because they're good at stabbing,

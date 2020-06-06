@@ -206,5 +206,6 @@ enum duration_type
     DUR_COWARD,
     DUR_PAKELLAS_DURATION,    // duration of Pakellas Buff
     DUR_WILL_OF_EARTH,
+    DUR_ECDYSIS,
     NUM_DURATIONS
 };

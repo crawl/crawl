@@ -654,6 +654,12 @@ static const duration_def duration_data[] =
       { "The poison gland of your weapon is running out." }}, 10 },
     { DUR_PAKELLAS_DURATION, 0, "", "", "pakellas buff", "", D_NO_FLAGS, {{ "", pakellas_remove_self_buff }} },
 
+    { DUR_ECDYSIS,
+      RED, "ECD",
+      "undergoing ecdysis", "undergo ecdysis",
+      "You are moulting", D_NO_FLAGS,
+      {{ "Your moulting is now finished.", end_ecdysis}}},
+
     { DUR_BARGAIN, BLUE, "Brgn", "charismatic", "", "You get a bargain in shops.", D_DISPELLABLE | D_EXPIRES,
       {{ "You feel less charismatic." }}, 15 },
 
@@ -677,7 +683,7 @@ static const duration_def duration_data[] =
           { { "Your magical armour fades away.", []() {
               you.props.erase(MAGIC_ARMOUR_KEY);
               you.redraw_armour_class = true;
-          }} } },
+          } } } },
 
     { DUR_MAGIC_SHIELD,
          0, "",

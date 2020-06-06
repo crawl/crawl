@@ -50,20 +50,22 @@ mutations:
   1:
     MUT_BLURRY_VISION : 1
     MUT_SHAGGY_FUR: 1
-    MUT_CLAWS: 3
+    MUT_CLAWS: 1
     MUT_PAWS : 1
     MUT_ANTENNAE: 3
     MUT_NIGHTSTALKER : 1
-    MUT_INHIBITED_REGENERATION : 1
+    MUT_NO_REGENERATION : 1
     MUT_EXOSKELETON : 1
   6:
+    MUT_CLAWS: 1
     MUT_SHAGGY_FUR: 1
     MUT_NIGHTSTALKER : 1
-  12:
+    MUT_FOUL_STENCH : 1
+  14:
+    MUT_CLAWS: 1
     MUT_SHAGGY_FUR: 1
     MUT_NIGHTSTALKER : 1
     MUT_EXOSKELETON : 1
-    MUT_FOUL_STENCH : 1
 fake_mutations:
   - long: You cannot wear armour.
     short: no armour

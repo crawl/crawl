@@ -2801,6 +2801,15 @@ static void _felid_extra_life()
     }
 }
 
+static void _crustacean_moult()
+{
+    if (you.lives < 1 && you.experience_level != 1)
+    {
+        you.lives++;
+        mprf(MSGCH_INTRINSIC_GAIN, "You can now moult");
+    }
+}
+
 static void _gain_and_note_hp_mp()
 {
     const int old_mp = you.magic_points;
@@ -3143,6 +3152,7 @@ void level_change(bool skip_attribute_increase)
             
             case SP_CRUSTACEAN:
                 // ecdysis
+                _crustacean_moult();
                 break;
 
             default:
@@ -3176,7 +3186,9 @@ void level_change(bool skip_attribute_increase)
         if (you.species == SP_FELID)
             _felid_extra_life();
         if (you.species == SP_CRUSTACEAN)
-            // ecdysis
+        {    // ecdysis
+            _crustacean_moult();
+        }
 
     }
 
@@ -8841,4 +8853,25 @@ bool player::immune_to_hex(const spell_type hex) const
     default:
         return false;
     }
+}
+
+void end_ecdysis()
+{
+    you.hp = you.hp_max;
+    const bool ddoor = you.duration[DUR_DEATHS_DOOR];
+    bool unrotted = false;
+
+        if (player_rotted())
+        {
+            int amount = 5 + random2(7);
+            amount = unrot_hp(amount);
+            inc_hp(amount);
+            unrotted = true;
+        }
+
+        if (you.duration[DUR_POISONING])
+            you.redraw_hit_points = true;
+        you.duration[DUR_POISONING] = 0;
+        you.disease = 0;
+        you.duration[DUR_CONF] = 0;
 }

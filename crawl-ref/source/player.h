@@ -1182,6 +1182,7 @@ void player_close_door(coord_def doorpos);
 
 void dec_disease_player(int delay);
 void player_end_berserk();
+void end_ecdysis();
 
 void handle_player_drowning(int delay);
 

@@ -1061,7 +1061,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
     take_note(Note(NOTE_DEATH, you.hp, you.hp_max,
                     se.death_description(scorefile_entry::DDV_NORMAL).c_str()),
               true);
-    if (you.lives && !non_death)
+    if (you.species == SP_FELID && you.lives && !non_death)
     {
         mark_milestone("death", lowercase_first(se.long_kill_message()).c_str());
 

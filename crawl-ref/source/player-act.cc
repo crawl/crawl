@@ -445,7 +445,7 @@ bool player::could_wield(const item_def &item, bool ignore_brand,
         }
         return false;
     }
-    else if (species == SP_CRUSTACEAN || 
+    else if (species == SP_CRUSTACEAN &&
             !is_short_sword(item))
     {
         if (!quiet)

@@ -8317,6 +8317,7 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
     case SPELL_NOXIOUS_CLOUD:
     case SPELL_SPECTRAL_CLOUD:
     case SPELL_FLAMING_CLOUD:
+    case SPELL_MIASMA_CLOUD:
     case SPELL_CHAOS_BREATH:
         return no_clouds;
 

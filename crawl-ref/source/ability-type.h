@@ -57,7 +57,10 @@ enum ability_type
     ABIL_BREATHE_HOLY,
     ABIL_CREATE_WALL, // From will of earth
     ABIL_MAX_INTRINSIC = ABIL_HOP,
-
+    // Crustacean
+    ABIL_ECDYSIS = 31,
+    ABIL_CRAB_WALK = 32,
+    ABIL_MIASMA_CLOUD = 33,
     // Evoking items.
     ABIL_EVOKE_BERSERK = 40,
     ABIL_MIN_EVOKE = ABIL_EVOKE_BERSERK,

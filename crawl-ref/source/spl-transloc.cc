@@ -437,6 +437,52 @@ spret frog_hop(bool fail)
 }
 
 /**
+ * Attempt to walk like a crab to a space near a tile of their choosing.
+ *
+ * @param fail          Whether this came from a mis-invoked ability (& should
+ *                      therefore fail after selecting a target)
+ * @return              Whether the hop succeeded, aborted, or was miscast.
+*/
+spret crab_walk()
+{
+    
+    coord_def target;
+    targeter_smite tgt(&you, 2);
+    tgt.obeys_mesmerise = true;
+    while (true)
+    {
+        if (!_find_cblink_target(target, true, "crawl", &tgt))
+            return spret::abort;
+        if (grid_distance(you.pos(), target) != 2 
+            || abs((you.pos() - target).x) != 1 && abs((you.pos() - target).y) != 1
+            )
+        {
+            mpr("That's out of range! (You can move only like Knight in Chess.)"); // ! targeting
+            continue;
+        }
+        break;
+    }
+
+    if (!you.attempt_escape(2)) // XXX: 1?
+        return spret::success; // of a sort
+
+    // invisible monster that the targeter didn't know to avoid, or similar
+    if (target.origin())
+    {
+        mpr("You tried to crawl toward there, but there was no room to land!");
+        // TODO: what to do here?
+        return spret::success; // of a sort
+    }
+
+    move_player_to_grid(target, false);
+    crawl_state.cancel_cmd_again();
+    crawl_state.cancel_cmd_repeat();
+    mpr("C!");
+
+    return spret::success; // TODO
+}
+
+/**
  * Attempt to blink the player to a nearby tile of their choosing.
  *
  * @param fail          Whether this came from a miscast spell (& should
