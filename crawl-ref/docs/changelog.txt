@@ -1,4 +1,4 @@
-Stone Soup 0.25 (through 0.25-b1-22-g96581c4978)
+Stone Soup 0.25 (through 0.25-b1-37-g2669288)
 ------------------------------------------------
 
 Highlights
@@ -154,23 +154,33 @@ Items
 
 Interface
 ---------
-* A new option auto_butcher_max_chunks prevents automatic butchering with more
+* The seed selection dialogue has been ported to webtiles and is enabled on
+  select servers.
+* auto_butcher has been changed to default to `always` (from the previous value
+  of `very hungry`).
+* A new option, auto_butcher_max_chunks, prevents automatic butchering with more
   than that many chunks in inventory. Its default value is 10 for non-ghoul
   characters.
 * explore_auto_rest now defaults to true.
-* auto_butcher now defaults to always.
-* New morgue section: screenshots. When notes are taken with : a screenshot is
-  additionally saved and can be added to morgues.
+* New morgue section: screenshots. When notes are taken with : an ascii
+  screenshot is additionally saved and can be added to morgues.
 * The console monster list now displays monster status information and whether
   or not the monster is wielding a launcher or polearm, or has a wand
 * The ^x summary display now shows monster status information
-* A new option monster_item_view_coordinates can be set to true to display
+* A new option, monster_item_view_coordinates, can be set to true to display
   player-relative coordinates in the ^x display.
 * The auto-travel trail displayed with show_travel_trail can now be customised
   in console (both for glyph and colour).
 * The "visited status" of stairs and transporters can now be indicated both by
   glyph and by colour in console.
 * Allies now show sleep and confusion status tiles.
+* A new option, game_scale, allows for global pixel scaling to make dcss more
+  usable on large and/or high-resolution monitors. (Values in the range of 2-4
+  will be helpful for upscaling for 2k-4k monitors.)
+* The behavior of `tile_filter_scaling=false` has been improved to work on all
+  tiles in the game, for better pixelated effects.
+* Webtiles now supports showing save info in the lobby; see CAO for this feature
+  in action.
 
 Monsters
 --------
@@ -294,9 +304,9 @@ Spells
 Development
 -----------
 * The WebTiles server has seen a major overhaul and now supports python 3 as
-  well as Tornado 5+.
+  well as Tornado 5+, as well as numerous other backend/technical improvements.
 * The catch2 testing framework is now integrated into the project and is
-  enabled in our Travis CI testing.
+  enabled in our CI testing.
 * GitHub actions have been configured to replace Travis CI testing.
 
 Stone Soup 0.24.1 (20200322)
