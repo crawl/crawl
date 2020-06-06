@@ -54,13 +54,16 @@ enum ability_type
     ABIL_SHAFT_SELF,
     // Barachim
     ABIL_HOP,
+    // Pearl Draconion
     ABIL_BREATHE_HOLY,
-    ABIL_CREATE_WALL, // From will of earth
-    ABIL_MAX_INTRINSIC = ABIL_HOP,
+    // From will of earth
+    ABIL_CREATE_WALL,
     // Crustacean
-    ABIL_ECDYSIS = 31,
-    ABIL_CRAB_WALK = 32,
-    ABIL_MIASMA_CLOUD = 33,
+    ABIL_ECDYSIS,
+    ABIL_CRAB_WALK,
+    ABIL_MIASMA_CLOUD,
+    ABIL_MAX_INTRINSIC = ABIL_MIASMA_CLOUD,
+
     // Evoking items.
     ABIL_EVOKE_BERSERK = 40,
     ABIL_MIN_EVOKE = ABIL_EVOKE_BERSERK,
