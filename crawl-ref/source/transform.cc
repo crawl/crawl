@@ -1242,6 +1242,10 @@ static void _unmeld_equipment_type(equipment_type e)
             force_remove = true;
         }
     }
+    else if (e == EQ_SECOND_WEAPON)
+    {
+        force_remove = false;
+    }
     else if (item.base_type != OBJ_JEWELLERY)
     {
         // This could happen if the player was mutated during the form.
