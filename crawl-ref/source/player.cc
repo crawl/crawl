@@ -8861,4 +8861,5 @@ void end_ecdysis()
         you.duration[DUR_POISONING] = 0;
         you.disease = 0;
         you.duration[DUR_CONF] = 0;
+        you.redraw_hit_points = true;
 }
