@@ -1679,6 +1679,11 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
             return false;
 
     case ABIL_CRAB_WALK:
+        if (you.duration[DUR_MESMERISED])
+        {
+            mpr("You can't walk like a crab if you are mesmerised.");
+            return false;
+        }    
         return true;
 
     case ABIL_SHAFT_SELF:
