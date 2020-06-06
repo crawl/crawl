@@ -36,6 +36,7 @@
 #include "mon-place.h"
 #include "mon-poly.h"
 #include "mon-util.h"
+#include "mon-death.h"
 #include "ouch.h"
 #include "player.h"
 #include "random.h"
@@ -1247,6 +1248,13 @@ void dungeon_terrain_changed(const coord_def &pos,
         if (!feat_is_trap(nfeat))
             destroy_trap(pos);
     }
+
+    monster* mon = monster_at(pos);
+    if (mon) {
+        mons_check_pool(mon, pos);
+    }
+        
+        
 
     _dgn_check_terrain_items(pos, preserve_items);
     if (!wizmode)

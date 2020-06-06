@@ -1729,6 +1729,12 @@ Weave Shadows spell
 Weaves a creature from shadows and threads of Abyssal matter. More powerful
 creatures are summoned with higher power.
 %%%%
+Will of Earth spell
+
+Tear down the walls by making the surrounding land conform to the will
+of the caster. The stones collected in this way can be used to create walls
+or fill the floor temporary.
+%%%%
 Wind Blast spell
 
 Causes a strong gust of wind, pushing away creatures and clouds in a cone.

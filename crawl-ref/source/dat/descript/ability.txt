@@ -157,6 +157,12 @@ End Transformation ability
 
 Reverts you to your normal form.
 %%%%
+Create Wall ability
+
+You can make a wall or fill the floor in the direction you want to.
+The terrain created by this method will soon be return to its original 
+terrain.
+%%%%
 # Zin
 Recite ability
 
