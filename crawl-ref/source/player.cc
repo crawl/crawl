@@ -729,7 +729,6 @@ maybe_bool you_can_wear(equipment_type eq, bool temp)
     case EQ_RING_SIX:
     case EQ_RING_SEVEN:
         return you.species == SP_OCTOPODE ? MB_TRUE : MB_FALSE;
-
     case EQ_WEAPON:
     case EQ_STAFF:
         return you.species == SP_FELID ? MB_FALSE :
@@ -822,6 +821,7 @@ bool player_has_feet(bool temp, bool include_mutations)
     if (you.species == SP_NAGA
         || you.species == SP_FELID
         || you.species == SP_OCTOPODE
+        || you.species == SP_CRUSTACEAN
         || you.species == SP_DJINNI
         || you.fishtail && temp)
     {
@@ -2788,6 +2788,15 @@ static void _felid_extra_life()
     }
 }
 
+static void _crustacean_moult()
+{
+    if (you.lives < 1 && you.experience_level != 1)
+    {
+        you.lives++;
+        mprf(MSGCH_INTRINSIC_GAIN, "You can now moult");
+    }
+}
+
 static void _gain_and_note_hp_mp()
 {
     const int old_mp = you.magic_points;
@@ -3127,6 +3136,11 @@ void level_change(bool skip_attribute_increase)
             case SP_FELID:
                 _felid_extra_life();
                 break;
+            
+            case SP_CRUSTACEAN:
+                // ecdysis
+                _crustacean_moult();
+                break;
 
             default:
                 break;
@@ -3158,6 +3172,11 @@ void level_change(bool skip_attribute_increase)
         you.max_level++;
         if (you.species == SP_FELID)
             _felid_extra_life();
+        if (you.species == SP_CRUSTACEAN)
+        {    // ecdysis
+            _crustacean_moult();
+        }
+
     }
 
     you.redraw_title = true;
@@ -8821,4 +8840,25 @@ bool player::immune_to_hex(const spell_type hex) const
     default:
         return false;
     }
+}
+
+void end_ecdysis()
+{
+    you.hp = you.hp_max;
+    const bool ddoor = you.duration[DUR_DEATHS_DOOR];
+    bool unrotted = false;
+
+        if (player_rotted())
+        {
+            int amount = 5 + random2(7);
+            amount = unrot_hp(amount);
+            inc_hp(amount);
+            unrotted = true;
+        }
+
+        if (you.duration[DUR_POISONING])
+            you.redraw_hit_points = true;
+        you.duration[DUR_POISONING] = 0;
+        you.disease = 0;
+        you.duration[DUR_CONF] = 0;
 }

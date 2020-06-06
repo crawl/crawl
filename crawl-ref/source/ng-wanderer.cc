@@ -162,7 +162,7 @@ static skill_type _wanderer_role_skill_select(stat_type selected_role,
 
     if (selected_skill == NUM_SKILLS)
     {
-        ASSERT(you.species == SP_FELID);
+        ASSERT(you.species == SP_FELID || you.species == SP_CRUSTACEAN);
         selected_skill = SK_UNARMED_COMBAT;
     }
 

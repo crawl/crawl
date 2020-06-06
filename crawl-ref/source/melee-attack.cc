@@ -568,6 +568,13 @@ bool melee_attack::handle_phase_hit()
         emit_foul_stench();
     }
 
+    if (defender->is_player() && you.species == SP_CRUSTACEAN && you.duration[DUR_ECDYSIS] != 0)
+    {
+        mprf("You are threatened by something during ecdysis.");
+        you.hp = 1;
+        you.duration[DUR_ECDYSIS] = 0;
+    }
+
     if (attacker->is_player() && you.duration[DUR_CIGOTUVIS_PLAGUE] && defender->alive())
     {
         monster* mon = defender->as_monster();
@@ -587,6 +594,9 @@ bool melee_attack::handle_phase_hit()
             defender->as_monster()->add_ench(mon_enchant(ENCH_CONFUSION, 0, &you, 5 * BASELINE_DELAY));
         }
     }
+
+    
+
     return true;
 }
 

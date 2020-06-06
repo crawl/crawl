@@ -13,6 +13,7 @@ spret semicontrolled_blink(int pow = 100, bool fail = false,
     bool end_ctele = true);
 spret controlled_blink(bool fail, bool safe_cancel = true, int range = -1);
 spret frog_hop(bool fail);
+spret crab_walk();
 void wizard_blink();
 
 void you_teleport();

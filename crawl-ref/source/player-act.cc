@@ -445,6 +445,16 @@ bool player::could_wield(const item_def &item, bool ignore_brand,
         }
         return false;
     }
+    else if (species == SP_CRUSTACEAN &&
+            !is_short_sword(item))
+    {
+        if (!quiet)
+        {
+            mprf("You can't use such weapons which is not a short sword.");
+        }
+        return false;
+    }
+            
     else if (item.base_type == OBJ_RODS)
         return true;
 

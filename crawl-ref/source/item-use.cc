@@ -1184,8 +1184,12 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         return false;
     }
 
-
-
+    if (you.species == SP_CRUSTACEAN)
+    {
+        if (verbose)
+            mpr("You can't wear that.");
+        return false;
+    }
 
     if (you.species == SP_OCTOPODE && slot != EQ_HELMET && slot != EQ_SHIELD
         && !(slot == EQ_CLOAK && sub_type == ARM_SCARF))

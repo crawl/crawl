@@ -1898,6 +1898,18 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_MIASMA_CLOUD, "Flaming Cloud",
+    spschool::conjuration,
+    spflag::target | spflag::area | spflag::needs_tracer
+        | spflag::cloud,
+    5,
+    0,
+    5, 5,
+    5, 0,
+    TILEG_MIASMA_BREATH,
+},
+
+{
     SPELL_SUMMON_DRAKES, "Summon Drakes",
     spschool::summoning | spschool::necromancy, // since it can summon shadow dragons
     spflag::unclean | spflag::monster | spflag::mons_abjure,

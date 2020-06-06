@@ -348,6 +348,10 @@ static const ability_def Ability_List[] =
       1, 0, 50, 0, {fail_basis::evo, 40, 2}, abflag::none },
     { ABIL_HEAL_WOUNDS, "Heal Wounds",
       0, 0, 0, 0, {fail_basis::xl, 45, 2}, abflag::none },
+    { ABIL_ECDYSIS, "Undergo Ecdysis", 0, 0, 0, 0, {}, abflag::none },
+    { ABIL_CRAB_WALK, "Crab Walking", 0, 0, 0, 0, {}, abflag::none },
+    { ABIL_MIASMA_CLOUD, "Cloud Miasma",
+      0, 0, 75, 0, {fail_basis::xl, 20, 1}, abflag::breath },
     { ABIL_EVOKE_BERSERK, "Evoke Berserk Rage",
       0, 0, 600, 0, {fail_basis::evo, 50, 2}, abflag::none },
 
@@ -1644,6 +1648,7 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
     case ABIL_BREATHE_STEAM:
     case ABIL_BREATHE_MEPHITIC:
     case ABIL_BREATHE_HOLY:
+    case ABIL_MIASMA_CLOUD:
         if (you.duration[DUR_BREATH_WEAPON])
         {
             if (!quiet)
@@ -1665,6 +1670,15 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
                 mpr("You don't have enough innate magic capacity.");
             return false;
         }
+        return true;
+
+    case ABIL_ECDYSIS:
+        if (you.lives == 1 && !you.duration[DUR_DEATHS_DOOR])
+            return true;
+        else
+            return false;
+
+    case ABIL_CRAB_WALK:
         return true;
 
     case ABIL_SHAFT_SELF:
@@ -2010,6 +2024,26 @@ static spret _do_ability(const ability_def& abil, bool fail)
             rot_mp(1);
         }
         potionlike_effect(POT_HEAL_WOUNDS, 40);
+        break;
+
+    case ABIL_ECDYSIS:
+        you.lives = 0;
+        you.set_duration(DUR_PARALYSIS, 5 + you.experience_level);
+        you.set_duration(DUR_ECDYSIS, 5 + you.experience_level);
+        break;
+    
+    case ABIL_CRAB_WALK:
+        return crab_walk();
+
+    case ABIL_MIASMA_CLOUD:
+        fail_check();
+        if (your_spells(SPELL_MIASMA_BREATH,
+                        you.experience_level * 10,
+                        false) == spret::abort)
+        {
+            return spret::abort;
+        }
+        you.set_duration(DUR_BREATH_WEAPON, 30 + random2(5));
         break;
 
     case ABIL_DIG:
@@ -3680,6 +3714,21 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
         _add_talent(talents, ABIL_DIG, check_confused);
         if (!crawl_state.game_is_sprint() || brdepth[you.where_are_you] > 1)
             _add_talent(talents, ABIL_SHAFT_SELF, check_confused);
+    }
+
+    if (you.species == SP_CRUSTACEAN)
+    {
+        if (you.lives == 1)
+            _add_talent(talents, ABIL_ECDYSIS, check_confused);
+
+        _add_talent(talents, ABIL_CRAB_WALK, check_confused);
+
+        //add cloud?
+        if (you.experience_level > 13)
+        {
+            _add_talent(talents, ABIL_MIASMA_CLOUD, check_confused);
+        }
+
     }
 
     if (you.get_mutation_level(MUT_HOP))

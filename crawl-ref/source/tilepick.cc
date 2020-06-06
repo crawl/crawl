@@ -3946,6 +3946,8 @@ static tileidx_t _tileidx_player_species_base(const species_type species)
             return TILEG_SP_MOUNTAIN_DWARF;
         case SP_LESSER_LICH:
             return TILEG_SP_LESSER_LICH;
+        case SP_CRUSTACEAN:
+            return TILEG_SP_CRUSTACEAN;
         default:
             return TILEP_ERROR;
     }
