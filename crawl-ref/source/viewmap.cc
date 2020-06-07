@@ -1209,7 +1209,7 @@ map_control_state process_map_command(command_type cmd, const map_control_state&
     }
 
     state.lpos.pos = state.lpos.pos.clamped(known_map_bounds());
-    ASSERT(map_bounds(state.lpos.pos))
+    ASSERT(map_bounds(state.lpos.pos));
 
     return state;
 }
