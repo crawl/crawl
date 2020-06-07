@@ -61,6 +61,16 @@ struct coord_def
         return x > other.x || (x == other.x && y > other.y);
     }
 
+    constexpr bool operator<= (const coord_def &other) const
+    {
+        return operator== (other) || operator< (other);
+    }
+
+    constexpr bool operator>= (const coord_def &other) const
+    {
+        return operator== (other) || operator> (other);
+    }
+
     const coord_def &operator += (const coord_def &other)
     {
         x += other.x;
