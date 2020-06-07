@@ -7976,7 +7976,7 @@ static bool _nightmare_of_cubus(monster &caster, mon_spell_slot, bolt&)
             const int item_slot = you.equip[slot];
             if (item_slot == -1)
                 return false;
-            else
+            else if (!you.inv[you.equip[slot]].is_cursed())
             {
                 you.equip[slot] = -1;
 
