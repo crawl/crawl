@@ -6198,7 +6198,8 @@ int player::base_ac_with_specific_items(int scale,
 
         // Shields give SH instead of AC
         duration_type dur = duration_type((int)DUR_UNSH_CLOAK + (int)(get_armour_slot(item)-EQ_CLOAK));
-        if (get_armour_slot(item) != EQ_SHIELD && you.duration[dur] == 0){
+
+        if (get_armour_slot(item) != EQ_SHIELD && !you.duration[dur]){
             AC += base_ac_from(item, 100);
             AC += item.plus * 100;
         }
