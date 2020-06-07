@@ -498,8 +498,7 @@ ITEM:     (list of items, separated by comma)
           Modifiers:
           * "q:N" sets the item quantity to N (if N > 0). Does nothing
              if the item is not stackable.
-          * "charges:N" sets the number of charges for wands. Does no checks
-            against the maximum number of charges.
+          * "charges:N" sets the number of charges for wands.
           * "plus:N" and "plus2:N" set the item pluses for weapons, armour,
             jewellery (such as rings of intelligence or slaying), and
             throwing nets.
