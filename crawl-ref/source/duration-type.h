@@ -207,5 +207,11 @@ enum duration_type
     DUR_PAKELLAS_DURATION,    // duration of Pakellas Buff
     DUR_WILL_OF_EARTH,
     DUR_ECDYSIS,
+    DUR_UNSH_CLOAK,            // Unshelve
+    DUR_UNSH_HELMET,
+    DUR_UNSH_GLOVES,
+    DUR_UNSH_BOOTS,
+    DUR_UNSH_SHIELD,
+    DUR_UNSH_BODY_ARMOUR,
     NUM_DURATIONS
 };

@@ -954,7 +954,9 @@ static void _print_stats_ac(int x, int y)
     auto text_col = HUD_VALUE_COLOUR;
     if (_boosted_ac())
         text_col = LIGHTBLUE;
-    else if (you.duration[DUR_CORROSION])
+    else if (you.duration[DUR_CORROSION] ||(you.duration[DUR_UNSH_CLOAK] || you.duration[DUR_UNSH_HELMET]
+                                            || you.duration[DUR_UNSH_GLOVES] || you.duration[DUR_UNSH_BOOTS]
+                                            || you.duration[DUR_UNSH_BODY_ARMOUR]))
         text_col = RED;
 
     string ac = make_stringf("%2d ", you.armour_class());
@@ -972,6 +974,8 @@ static void _print_stats_ac(int x, int y)
         text_col = RED;
     else if (_boosted_sh())
         text_col = LIGHTBLUE;
+    if (you.duration[DUR_UNSH_SHIELD])
+        text_col = RED;
 
     string sh = make_stringf("%2d ", player_displayed_shield_class());
     textcolour(text_col);

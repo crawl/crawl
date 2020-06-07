@@ -2363,7 +2363,7 @@ int player_shield_class()
     if (you.incapacitated())
         return 0;
 
-    if (you.shield())
+    if (you.shield() && you.duration[DUR_UNSH_SHIELD] == 0)
     {
         const item_def& item = you.inv[you.equip[EQ_SHIELD]];
         int size_factor = (you.body_size(PSIZE_TORSO) - SIZE_MEDIUM)
@@ -6197,7 +6197,8 @@ int player::base_ac_with_specific_items(int scale,
         const item_def& item = armour_items[i];
 
         // Shields give SH instead of AC
-        if (get_armour_slot(item) != EQ_SHIELD){
+        duration_type dur = duration_type((int)DUR_UNSH_CLOAK + (int)(get_armour_slot(item)-EQ_CLOAK));
+        if (get_armour_slot(item) != EQ_SHIELD && you.duration[dur] == 0){
             AC += base_ac_from(item, 100);
             AC += item.plus * 100;
         }
