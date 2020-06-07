@@ -5,6 +5,7 @@
 #include "AppHdr.h"
 
 #include "viewmap.h"
+#include "map-knowledge.h"
 
 TEST_CASE( "Test map search path generation works", "[single-file]" ) {
     const auto search_path = search_path_around_point(coord_def(50, 50));
