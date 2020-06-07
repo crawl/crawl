@@ -334,7 +334,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
     } },
     { SPELL_STILL_WINDS, { _should_still_winds, _cast_still_winds } },
     { SPELL_SMITING, { _caster_has_foe, _cast_smiting, } },
-    { SPELL_NIGHTMARE_OF_CUBUS, { _caster_has_foe, _nightmare_of_cubus, } },
+    { SPELL_NIGHTMARE_OF_CUBUS, { _caster_sees_foe, _nightmare_of_cubus, } },
     { SPELL_RESONANCE_STRIKE, { _caster_has_foe, _cast_resonance_strike, } },
     { SPELL_FLAY, {
         [](const monster &caster) {
@@ -7974,9 +7974,10 @@ static bool _nightmare_of_cubus(monster &caster, mon_spell_slot, bolt&)
 
             mprf("You wake up and suddenly realize that you took it off yourself.");
             const int item_slot = you.equip[slot];
+    
             if (item_slot == -1)
                 return false;
-            else if (!you.inv[you.equip[slot]].is_cursed())
+            else if (!you.inv[you.equip[slot]].cursed())
             {
                 you.equip[slot] = -1;
 
