@@ -19,6 +19,11 @@ TEST_CASE( "Test basic key controls work", "[single-file]" ) {
     map_control_state process_map_command(command_type cmd, const map_control_state &state);
 
     map_control_state state;
+    // carve out a small known area so that known_map_bounds gives valid results
+    for (int i = 49; i <= 51; i++)
+        for (int j = 49; j <= 51; j++)
+            env.map_knowledge[i][j].flags |= MAP_GRID_KNOWN;
+
     state.lpos.pos = coord_def(50, 50);
 
     SECTION ("Panning the map down works.") {
@@ -45,6 +50,14 @@ TEST_CASE( "Test basic key controls work", "[single-file]" ) {
         REQUIRE( state.lpos.pos == coord_def(50, 49));
     }
 
+    SECTION ("Panning out of known map bounds clamps to known map bounds.") {
+        state.lpos.pos = coord_def(49, 49);
+        state = process_map_command(CMD_MAP_MOVE_LEFT, state);
+
+        REQUIRE( state.lpos.pos >= known_map_bounds().first );
+        REQUIRE( state.lpos.pos <= known_map_bounds().second );
+    }
+
     SECTION ("Exiting the map with Enter chooses a tile.") {
         state = process_map_command(CMD_MAP_GOTO_TARGET, state);
 
@@ -57,13 +70,15 @@ TEST_CASE( "Test basic key controls work", "[single-file]" ) {
         REQUIRE(state.chose == false);
     }
 
-    SECTION ("The current position is kept within the map bounds.") {
+    SECTION ("The current position is kept within the known map bounds.") {
         state.lpos.pos = coord_def(-100, 1000);
 
         REQUIRE(map_bounds(state.lpos.pos) == false);
 
         state = process_map_command(CMD_NO_CMD, state);
 
+        REQUIRE( state.lpos.pos >= known_map_bounds().first );
+        REQUIRE( state.lpos.pos <= known_map_bounds().second );
         REQUIRE(map_bounds(state.lpos.pos) == true);
     }
 }
