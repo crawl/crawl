@@ -32,6 +32,7 @@
 #include "fprop.h"
 #include "god-passive.h"
 #include "items.h"
+#include "item-use.h"
 #include "level-state-type.h"
 #include "libutil.h"
 #include "losglobal.h"
@@ -52,6 +53,7 @@
 #include "mon-tentacle.h"
 #include "mutation.h"
 #include "player-stats.h"
+#include "player-equip.h" //for cubus
 #include "random.h"
 #include "religion.h"
 #include "shout.h"
@@ -144,6 +146,7 @@ static bool _worth_hexing(const monster &caster, spell_type spell);
 static bool _torment_vulnerable(actor* victim);
 static function<bool(const monster&)> _should_selfench(enchant_type ench);
 static void _cast_grasping_roots(monster &caster, mon_spell_slot, bolt&);
+static bool _nightmare_of_cubus(monster &caster, mon_spell_slot, bolt&);
 
 enum spell_logic_flag
 {
@@ -331,6 +334,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
     } },
     { SPELL_STILL_WINDS, { _should_still_winds, _cast_still_winds } },
     { SPELL_SMITING, { _caster_has_foe, _cast_smiting, } },
+    { SPELL_NIGHTMARE_OF_CUBUS, { _caster_has_foe, _nightmare_of_cubus, } },
     { SPELL_RESONANCE_STRIKE, { _caster_has_foe, _cast_resonance_strike, } },
     { SPELL_FLAY, {
         [](const monster &caster) {
@@ -1871,6 +1875,7 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_SUMMON_HORRIBLE_THINGS:
     case SPELL_MALIGN_GATEWAY:
     case SPELL_SYMBOL_OF_TORMENT:
+    case SPELL_NIGHTMARE_OF_CUBUS:
     case SPELL_CAUSE_FEAR:
     case SPELL_MESMERISE:
     case SPELL_SUMMON_GREATER_DEMON:
@@ -6974,7 +6979,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     case SPELL_ENTROPIC_WEAVE:
         foe->corrode_equipment("the entropic weave");
         return;
-
+    
     case SPELL_SUMMON_EXECUTIONERS:
     {
         const int num_exec = 1 + random2(mons->spell_hd(spell_cast) / 5 + 1);
@@ -7856,6 +7861,152 @@ static void _siren_sing(monster* mons, bool avatar)
     }
 
     you.add_beholder(*mons);
+}
+
+/*
+
+{ SPELL_VAMPIRIC_DRAINING, {
+        [](const monster &caster)
+        {
+            const actor* foe = caster.get_foe();
+            // always cast at < 1/3rd hp, never at > 2/3rd hp
+            const bool low_hp = x_chance_in_y(caster.max_hit_points * 2 / 3
+                                                - caster.hit_points,
+                                              caster.max_hit_points / 3);
+            return foe
+                   && adjacent(caster.pos(), foe->pos())
+                   && !_foe_should_res_negative_energy(foe)
+                   && low_hp;
+        },
+        _mons_vampiric_drain,
+        nullptr,
+        MSPELL_NO_AUTO_NOISE,
+    } },
+
+    { SPELL_DRAINING_GAZE, {
+        _caster_sees_foe,
+        [](monster &caster, mon_spell_slot slot, bolt&) {
+            enchant_actor_with_flavour(caster.get_foe(), &caster,
+                                       BEAM_DRAIN_MAGIC,
+                                       mons_spellpower(caster, slot.spell));
+        },
+    } },
+
+static mons_spell_logic _hex_logic(spell_type spell,
+                                   function<bool(const monster&)> extra_logic,
+                                   int power_hd_factor)
+{
+    function<bool(const monster&)> worthwhile = nullptr;
+    if (!extra_logic)
+        worthwhile = _setup_hex_check(spell);
+    else
+    {
+        worthwhile = [spell, extra_logic](const monster& caster) {
+            return _worth_hexing(caster, spell) && extra_logic(caster);
+        };
+    }
+    return { worthwhile, _fire_simple_beam, _zap_setup(spell),
+             MSPELL_LOGIC_NONE, power_hd_factor * ENCH_POW_FACTOR };
+}
+
+if (!_can_takeoff_armour(item))
+        return false;
+
+    item_def& invitem = you.inv[item];
+
+    // It's possible to take this thing off, but if it would drop a stat
+    // below 0, we should get confirmation.
+    if (!_safe_to_remove_or_wear(invitem, true))
+        return false;
+
+    const equipment_type slot = get_armour_slot(invitem);
+
+    // TODO: isn't this check covered above by the call to item_is_worn? The
+    // only way to return false inside this switch would be if the player is
+    // wearing a hat on their feet or something like that.
+    switch (slot)
+    {
+    case EQ_BODY_ARMOUR:
+    case EQ_SHIELD:
+    case EQ_CLOAK:
+    case EQ_HELMET:
+    case EQ_GLOVES:
+    case EQ_BOOTS:
+        if (item != you.equip[slot])
+        {
+            mpr("You aren't wearing that!");
+            return false;
+        }
+        break;
+
+    default:
+        break;
+    }
+
+    you.turn_is_over = true;
+
+    const int delay = armour_equip_delay(invitem);
+    start_delay<ArmourOffDelay>(delay - 1, invitem);
+
+    return true;
+*/
+static bool _nightmare_of_cubus(monster &caster, mon_spell_slot, bolt&)
+{
+    function<bool(const monster&)> worthwhile = nullptr;
+    actor* foe = caster.get_foe();
+    ASSERT(foe);
+    vector<equipment_type> ret = current_equip_types();
+    vector<equipment_type> arm = current_armour_types();
+
+    mpr("You are now in the nightmare of cubus. Cubus charmingly approaches to you and whisper.");
+    if (foe->is_player())
+    {   
+        
+        //forced remove your weapon
+        if (coinflip())
+        {
+            equipment_type slot= *random_iterator(ret);
+        if (you.equip[slot] != -1 && !you.melded[slot])
+        {   
+            mprf("Take off %s..", you.inv[you.equip[slot]].name(DESC_YOUR).c_str());
+            ASSERT_RANGE(slot, EQ_FIRST_EQUIP, NUM_EQUIP);
+            ASSERT(!you.melded[slot] || you.equip[slot] != -1);
+
+            mprf("You wake up and suddenly realize that you took it off yourself.");
+            const int item_slot = you.equip[slot];
+            if (item_slot == -1)
+                return false;
+            else
+            {
+                you.equip[slot] = -1;
+
+                if (!you.melded[slot])
+                    unequip_effect(slot, item_slot, false, false);
+                else
+                    you.melded.set(slot, false);
+                ash_check_bondage();
+                you.last_unequip = item_slot;
+                return true;
+            }
+        }
+        }
+        else
+        {
+            equipment_type slot2 = *random_iterator(arm);
+            if (you.equip[slot2] != -1 && !you.melded[slot2])
+            {
+                mprf("Unshelve your %s..", you.inv[you.equip[slot2]].name(DESC_YOUR).c_str());
+                duration_type dur = (duration_type)((int)DUR_UNSH_CLOAK + (int)(slot2 - EQ_CLOAK));
+                you.set_duration(dur, 5);
+                mprf("You wake up and suddenly realize that you unshelve it yourself.");
+            }
+
+        }
+    }
+    else
+    {
+        const monster &foe_monster = *foe->as_monster();
+    }
 }
 
 // Checks to see if a particular spell is worth casting in the first place.

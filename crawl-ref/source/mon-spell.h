@@ -1528,6 +1528,12 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    { MST_CUBUS,
+      {
+        { SPELL_NIGHTMARE_OF_CUBUS, 29, MON_SPELL_MAGICAL },
+      }
+    },
+
     // ('1') Fiends and friends.
     {  MST_EXECUTIONER,
       {

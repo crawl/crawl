@@ -1260,6 +1260,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_NIGHTMARE_OF_CUBUS, "Nightmare of Cubus",
+    spschool::hexes,
+    spflag::target | spflag::not_self | spflag::monster,
+    6,
+    0,
+    LOS_RADIUS, LOS_RADIUS,
+    0, 0,
+    TILEG_DEATH_CHANNEL,
+},
+
+{
     SPELL_DEFLECT_MISSILES, "Deflect Missiles",
     spschool::charms | spschool::air,
     spflag::helpful | spflag::utility,

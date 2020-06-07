@@ -693,6 +693,13 @@ static const duration_def duration_data[] =
              you.props.erase(MAGIC_SHIELD_KEY);
              you.redraw_armour_class = true;
          }} } },
+
+    { DUR_UNSH_CLOAK, 0, "", "", "shaft immunity", "", D_NO_FLAGS, {{""}}},
+    { DUR_UNSH_HELMET, 0, "", "", "shaft immunity", "", D_NO_FLAGS, {{""}}},
+    { DUR_UNSH_GLOVES, 0, "", "", "shaft immunity", "", D_NO_FLAGS, {{""}}},
+    { DUR_UNSH_BOOTS, 0, "", "", "shaft immunity", "", D_NO_FLAGS, {{""}}},
+    { DUR_UNSH_SHIELD, 0, "", "", "shaft immunity", "", D_NO_FLAGS, {{""}}},
+    { DUR_UNSH_BODY_ARMOUR, 0, "", "", "shaft immunity", "", D_NO_FLAGS, {{""}}},
 #if TAG_MAJOR_VERSION == 34
     // And removed ones
     { DUR_MAGIC_SAPPED, 0, "", "", "old magic sapped", "", D_NO_FLAGS},

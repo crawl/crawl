@@ -4115,6 +4115,29 @@ void read_scroll(item_def& scroll)
 
 }
 
+vector<equipment_type> current_equip_types()
+{
+    vector<equipment_type> weap_ret = _current_weapon_types();
+    vector<equipment_type> ret = _current_ring_types();
+    vector<equipment_type> amulet_ret = _current_amulet_types();
+    weap_ret.insert(weap_ret.begin(), ret.begin(), ret.end());
+    weap_ret.insert(weap_ret.begin(), amulet_ret.begin(), amulet_ret.end());
+    return weap_ret;
+}
+
+vector<equipment_type> current_armour_types()
+{
+    vector<equipment_type> ret;
+    for(int i = 0; i < 6; ++i)
+    {
+        const equipment_type slot = (equipment_type)(EQ_CLOAK + i);
+
+        if (get_form()->slot_available(slot) && you.equip[slot] != -1)
+            ret.push_back(slot);
+    }
+    return ret;
+}
+
 #ifdef USE_TILE
 // Interactive menu for item drop/use.
 

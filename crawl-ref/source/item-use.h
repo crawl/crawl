@@ -9,6 +9,7 @@
 #include <string>
 
 #include "enum.h"
+#include "equipment-type.h"
 #include "item-prop-enum.h"
 #include "operation-types.h"
 
@@ -62,3 +63,5 @@ bool enchant_armour(int &ac_change, bool quiet, item_def &arm);
 void random_uselessness();
 
 void prompt_inscribe_item();
+vector<equipment_type> current_equip_types();
+vector<equipment_type> current_armour_types();
