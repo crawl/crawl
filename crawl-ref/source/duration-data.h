@@ -694,12 +694,12 @@ static const duration_def duration_data[] =
              you.redraw_armour_class = true;
          }} } },
 
-    { DUR_UNSH_CLOAK, 0, "", "", "shaft immunity", "", D_NO_FLAGS, {{""}}},
-    { DUR_UNSH_HELMET, 0, "", "", "shaft immunity", "", D_NO_FLAGS, {{""}}},
-    { DUR_UNSH_GLOVES, 0, "", "", "shaft immunity", "", D_NO_FLAGS, {{""}}},
-    { DUR_UNSH_BOOTS, 0, "", "", "shaft immunity", "", D_NO_FLAGS, {{""}}},
-    { DUR_UNSH_SHIELD, 0, "", "", "shaft immunity", "", D_NO_FLAGS, {{""}}},
-    { DUR_UNSH_BODY_ARMOUR, 0, "", "", "shaft immunity", "", D_NO_FLAGS, {{""}}},
+    { DUR_UNSH_CLOAK, 0, "", "unshelving cloak",  "unshelved cloak", "Your cloak is unshelved.", D_NO_FLAGS, {{"You trim your cloak.", [](){you.redraw_armour_class = true;},}}},
+    { DUR_UNSH_HELMET, 0, "", "unshelving helmet", "unshelved helmet", "Your helmet is unshelved.", D_NO_FLAGS, {{"You trim your helmet.", [](){you.redraw_armour_class = true;},}}},
+    { DUR_UNSH_GLOVES, 0, "", "unshelving gloves", "unshelved gloves", "Your gloves are unshelved.", D_NO_FLAGS, {{"You trim your gloves.", [](){you.redraw_armour_class = true;},}}},
+    { DUR_UNSH_BOOTS, 0, "", "unshelving boots", "unshelved boots", "Your boots are unshelved.", D_NO_FLAGS, {{"You trim your boots.", [](){you.redraw_armour_class = true;},}}},
+    { DUR_UNSH_SHIELD, 0, "", "unshelving shield", "unshelved shield", "Your shield is unshelved.", D_NO_FLAGS, {{"You trim your shield.", [](){you.redraw_armour_class = true;},}}},
+    { DUR_UNSH_BODY_ARMOUR, 0, "", "unshelving armour", "unshelved armour", "Your armour is unshelved.", D_NO_FLAGS, {{"You trim your armour.", [](){you.redraw_armour_class = true;},}}},
 #if TAG_MAJOR_VERSION == 34
     // And removed ones
     { DUR_MAGIC_SAPPED, 0, "", "", "old magic sapped", "", D_NO_FLAGS},

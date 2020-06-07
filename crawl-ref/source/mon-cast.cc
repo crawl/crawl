@@ -7990,14 +7990,16 @@ static bool _nightmare_of_cubus(monster &caster, mon_spell_slot, bolt&)
             }
         }
         }
-        else
+        else if(!arm.empty())
         {
+            
             equipment_type slot2 = *random_iterator(arm);
             if (you.equip[slot2] != -1 && !you.melded[slot2])
             {
                 mprf("Unshelve your %s..", you.inv[you.equip[slot2]].name(DESC_YOUR).c_str());
                 duration_type dur = (duration_type)((int)DUR_UNSH_CLOAK + (int)(slot2 - EQ_CLOAK));
                 you.set_duration(dur, 5);
+                you.redraw_armour_class = true;
                 mprf("You wake up and suddenly realize that you unshelve it yourself.");
             }
 
