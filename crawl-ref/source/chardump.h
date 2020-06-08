@@ -40,6 +40,8 @@ void display_char_dump();
 string chardump_desc(const item_def& item);
 const char *hunger_level();
 
+string seed_description();
+
 #ifdef DGL_WHEREIS
 void whereis_record(const char *status = "active");
 #endif
