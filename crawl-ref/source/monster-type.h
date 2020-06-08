@@ -592,6 +592,7 @@ enum monster_type                      // menv[].type
     MONS_HELLION,
     MONS_LOROCYPROCA,
     MONS_TORMENTOR,
+    MONS_CUBUS,
     MONS_REAPER,
     MONS_SOUL_EATER,
     MONS_ICE_DEVIL,
