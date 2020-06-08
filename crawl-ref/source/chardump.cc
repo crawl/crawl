@@ -193,6 +193,15 @@ bool dump_char(const string &fname, bool quiet, bool full_id,
     return _write_dump(fname, _get_dump(full_id, se), quiet);
 }
 
+string seed_description()
+{
+    return make_stringf(
+        "Game seed: %" PRIu64 "%s", crawl_state.seed,
+            crawl_state.type == GAME_TYPE_CUSTOM_SEED
+            ? ", levelgen mode: custom seed"
+            : you.deterministic_levelgen ? "" : ", levelgen mode: classic");
+}
+
 static void _sdump_header(dump_params &par)
 {
     string type = crawl_state.game_type_name();
@@ -222,10 +231,7 @@ static void _sdump_header(dump_params &par)
 #endif
         )
     {
-        par.text += make_stringf(
-            "Game seed: %" PRIu64 "%s\n\n",
-            crawl_state.seed, you.deterministic_levelgen
-                                            ? "" : ", levelgen mode: classic");
+        par.text += seed_description() + "\n\n";
     }
 }
 
