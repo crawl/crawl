@@ -592,7 +592,6 @@ enum monster_type                      // menv[].type
     MONS_HELLION,
     MONS_LOROCYPROCA,
     MONS_TORMENTOR,
-    MONS_CUBUS,
     MONS_REAPER,
     MONS_SOUL_EATER,
     MONS_ICE_DEVIL,
@@ -1051,6 +1050,7 @@ enum monster_type                      // menv[].type
     MONS_TEST_STATUE,
     MONS_MACHINE_GOLEM,
     MONS_BARRICADE,
+    MONS_CUBUS,
 #endif
 
     NUM_MONSTERS,               // used for polymorph
