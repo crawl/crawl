@@ -281,11 +281,12 @@ mon_intel_type mons_intel(const monster& mon);
 
 // Use mons_habitat() and mons_primary_habitat() wherever possible,
 // since the class variants do not handle zombies correctly.
-habitat_type mons_habitat(const monster& mon, bool real_amphibious = false);
+habitat_type mons_habitat(const monster& mon);
 habitat_type mons_class_primary_habitat(monster_type mc);
 habitat_type mons_primary_habitat(const monster& mon);
 habitat_type mons_class_secondary_habitat(monster_type mc);
 habitat_type mons_secondary_habitat(const monster& mon);
+bool mons_adapted_to_water(const monster& mon);
 
 bool intelligent_ally(const monster& mon);
 

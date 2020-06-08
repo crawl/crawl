@@ -30,6 +30,7 @@ static void _mark_neighbours_target_unreachable(monster* mon)
     const mon_intel_type intel = mons_intel(*mon);
     const bool flies         = mon->airborne();
     const bool amphibious    = (mons_habitat(*mon) == HT_AMPHIBIOUS);
+    const bool water_adapted = mons_adapted_to_water(*mon);
     const bool amph_lava     = (mons_habitat(*mon) == HT_AMPHIBIOUS_LAVA);
     const habitat_type habit = mons_primary_habitat(*mon);
 
@@ -60,6 +61,7 @@ static void _mark_neighbours_target_unreachable(monster* mon)
         // Same for a swimming one.
         if (!flies && m->airborne()
             || !amphibious && mons_habitat(*m) == HT_AMPHIBIOUS
+            || !water_adapted && mons_adapted_to_water(*m)
             || !amph_lava  && mons_habitat(*m) == HT_AMPHIBIOUS_LAVA)
         {
             continue;

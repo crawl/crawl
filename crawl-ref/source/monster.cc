@@ -296,9 +296,7 @@ bool monster::floundering_at(const coord_def p) const
                 // Can't use monster_habitable_grid() because that'll return
                 // true for non-water monsters in shallow water.
                 && mons_primary_habitat(*this) != HT_WATER
-                // Use real_amphibious to detect giant non-water monsters in
-                // deep water, who flounder despite being treated as amphibious.
-                && mons_habitat(*this, true) != HT_AMPHIBIOUS
+                && mons_habitat(*this) != HT_AMPHIBIOUS
                 && !extra_balanced_at(p)))
            && ground_level();
 }
@@ -3829,8 +3827,8 @@ int monster::res_water_drowning() const
     if (is_unbreathing())
         rw++;
 
-    habitat_type hab = mons_habitat(*this);
-    if (hab == HT_WATER || hab == HT_AMPHIBIOUS)
+    const habitat_type hab = mons_habitat(*this);
+    if (hab == HT_WATER || hab == HT_AMPHIBIOUS || mons_adapted_to_water(*this))
         rw++;
 
     if (get_mons_resist(*this, MR_VUL_WATER))

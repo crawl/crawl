@@ -3309,28 +3309,16 @@ mon_intel_type mons_intel(const monster& m)
     return mons_class_intel(mon.type);
 }
 
-static habitat_type _mons_class_habitat(monster_type mc,
-                                        bool real_amphibious = false)
+static habitat_type _mons_class_habitat(monster_type mc)
 {
     const monsterentry *me = get_monster_data(mc);
-    habitat_type ht = (me ? me->habitat
-                          : get_monster_data(MONS_PROGRAM_BUG)->habitat);
-    if (!real_amphibious)
-    {
-        // XXX: No class equivalent of monster::body_size(PSIZE_BODY)!
-        size_type st = (me ? me->size
-                           : get_monster_data(MONS_PROGRAM_BUG)->size);
-        if (ht == HT_LAND && st >= SIZE_GIANT || mc == MONS_GREY_DRACONIAN)
-            ht = HT_AMPHIBIOUS;
-    }
-    return ht;
+    return me ? me->habitat : get_monster_data(MONS_PROGRAM_BUG)->habitat;
 }
 
-habitat_type mons_habitat(const monster& mon, bool real_amphibious)
+habitat_type mons_habitat(const monster& mon)
 {
-    return _mons_class_habitat(fixup_zombie_type(mon.type,
-                                                 mons_base_type(mon)),
-                               real_amphibious);
+    const auto fixed_type = fixup_zombie_type(mon.type, mons_base_type(mon));
+    return _mons_class_habitat(fixed_type);
 }
 
 habitat_type mons_class_primary_habitat(monster_type mc)
@@ -3359,6 +3347,27 @@ habitat_type mons_class_secondary_habitat(monster_type mc)
 habitat_type mons_secondary_habitat(const monster& mon)
 {
     return mons_class_secondary_habitat(mons_base_type(mon));
+}
+
+/**
+ * Is this monster well-adapted to water? This affects drowning resistance and
+ * some pathfinding optimizations.
+ *
+ * @param mon       The monster in question.
+ * @return          The speed of the monster.
+ */
+bool mons_adapted_to_water(const monster& mon)
+{
+    const monsterentry *me = get_monster_data(mon.type);
+    // XXX: No class equivalent of monster::body_size(PSIZE_BODY)!
+    const auto size = (me ? me->size : get_monster_data(MONS_PROGRAM_BUG)->size);
+    const auto habitat = _mons_class_habitat(mon.type);
+
+    if (habitat == HT_LAND && size >= SIZE_GIANT)
+        return true;
+    if (mon.type == MONS_GREY_DRACONIAN)
+        return true;
+    return false;
 }
 
 bool intelligent_ally(const monster& mon)
