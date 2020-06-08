@@ -3342,7 +3342,8 @@ int monster::base_armour_class() const
 int monster::armour_class(bool calc_unid) const
 {
     int ac = base_armour_class();
-
+    if (has_ench(ENCH_UNSH_ARMOUR))
+        ac = (int)ac/2;
     // check for protection-brand weapons
     ac += 5 * _weapons_with_prop(this, SPWPN_PROTECTION, calc_unid);
 

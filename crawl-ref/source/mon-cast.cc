@@ -7958,17 +7958,24 @@ static bool _nightmare_of_cubus(monster &caster, mon_spell_slot, bolt&)
     vector<equipment_type> ret = current_equip_types();
     vector<equipment_type> arm = current_armour_types();
 
-    mpr("You are now in the nightmare of cubus. Cubus charmingly approaches to you and whisper.");
+    const int mrs = foe->res_magic() + random2(60) - 30;
+
+    if (!(mrs < 200))
+    {
+        mpr("It is groaning with anger.");
+        return;
+    }
+    mpr("You are fallen down into the nightmare of cubus. Cubus charmingly approaches to you and whisper.");
     if (foe->is_player())
     {   
         
         //forced remove your weapon
-        if (coinflip())
+        if (coinflip() && !ret.empty())
         {
             equipment_type slot= *random_iterator(ret);
         if (you.equip[slot] != -1 && !you.melded[slot])
         {   
-            mprf("Take off %s..", you.inv[you.equip[slot]].name(DESC_YOUR).c_str());
+            mprf("Take off your %s..", you.inv[you.equip[slot]].name(DESC_YOUR).c_str());
             ASSERT_RANGE(slot, EQ_FIRST_EQUIP, NUM_EQUIP);
             ASSERT(!you.melded[slot] || you.equip[slot] != -1);
 
@@ -8006,9 +8013,16 @@ static bool _nightmare_of_cubus(monster &caster, mon_spell_slot, bolt&)
 
         }
     }
+    else if (foe->is_monster())
+    {
+        monster &foe_monster = *foe->as_monster();
+        mpr("It giggles with a lascivious laughter.");
+        mprf("Poor %s falls into a daydream.", foe_monster.name(DESC_A));
+        foe_monster.add_ench(mon_enchant(ENCH_UNSH_ARMOUR, 0, &caster, 5*BASELINE_DELAY));
+    }
     else
     {
-        const monster &foe_monster = *foe->as_monster();
+        mpr("It stares and points out something in where they were born.");
     }
 }
 

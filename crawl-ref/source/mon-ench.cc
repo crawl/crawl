@@ -514,6 +514,14 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         }
         break;
 
+    case ENCH_UNSH_ARMOUR:
+        if (!quiet && you.can_see(*this))
+        {
+            mprf("%s seems awaken from the daydream",
+                 apostrophise(name(DESC_THE)).c_str());
+        }
+        break;
+
     case ENCH_PARALYSIS:
         if (!quiet)
             simple_monster_message(*this, " is no longer paralysed.");
@@ -2048,7 +2056,7 @@ static const char *enchant_names[] =
     "aura_of_brilliance", "empowered_spells", "gozag_incite", "pain_bond",
     "idealised", "bound_soul", "infestation", "CIGOTUVIS_PLAGUE",
     "stilling the winds", "thunder_ringed", "pinned_by_whirlwind",
-    "vortex", "vortex_cooldown", "vile_clutch",
+    "vortex", "vortex_cooldown", "vile_clutch", "unshelved armour",
     "buggy",
 };
 

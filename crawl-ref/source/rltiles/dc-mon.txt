@@ -310,6 +310,8 @@ lorocyproca MONS_LOROCYPROCA
 reaper MONS_REAPER
 soul_eater MONS_SOUL_EATER
 sun_demon MONS_SUN_DEMON
+cubus_1 MONS_CUBUS
+cubus_2 
 
 # type '3' demons
 chaos_spawn1 MONS_CHAOS_SPAWN
