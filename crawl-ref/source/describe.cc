@@ -4020,7 +4020,7 @@ static void _describe_monster_mr(const monster_info& mi, ostringstream &result)
 string _monster_habitat_description(const monster_info& mi)
 {
     const habitat_type habitat = mons_habitat_type(mi.type, mi.base_type);
-    switch (habitat) 
+    switch (habitat)
     {
     case HT_AMPHIBIOUS:
         return "It can travel through water.\n";

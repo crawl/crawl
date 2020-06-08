@@ -98,7 +98,7 @@ TEST_CASE("mons_habitat_type returns correct habitats", "[single-file]")
     SECTION("Simulacrum Salamanders should show HT_LAND")
     {
         const auto habitat = mons_habitat_type(MONS_SIMULACRUM, MONS_SALAMANDER);
-        
+
         REQUIRE(habitat == HT_LAND);
     }
 }
