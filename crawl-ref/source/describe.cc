@@ -4020,17 +4020,15 @@ static void _describe_monster_mr(const monster_info& mi, ostringstream &result)
 string _monster_habitat_description(const monster_info& mi)
 {
     const habitat_type habitat = mons_habitat_type(mi.type, mi.base_type);
-        switch (habitat) {
-        case HT_AMPHIBIOUS:
-            return "It can travel through water.\n";
-            break;
-        case HT_AMPHIBIOUS_LAVA:
-            return "It can travel through lava.\n";
-            break;
-        default:
-            return "";
-            break;
-        }
+    switch (habitat) 
+    {
+    case HT_AMPHIBIOUS:
+        return "It can travel through water.\n";
+    case HT_AMPHIBIOUS_LAVA:
+        return "It can travel through lava.\n";
+    default:
+        return "";
+    }
 }
 
 // Size adjectives
