@@ -58,6 +58,7 @@
 #define MAGIC_SHIELD_KEY "magic_shield_pow"
 #define WILL_OF_EARTH_POWER_KEY "will_of_earth_power"
 #define WILL_OF_EARTH_KEY "will_of_earth_num"
+#define NEMELEX_SACRIFICING_KEY "nemelex_sacrificing"
 
 // display/messaging breakpoints for penalties from Ru's MUT_HORROR
 #define HORROR_LVL_EXTREME  3

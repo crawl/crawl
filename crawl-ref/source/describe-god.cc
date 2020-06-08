@@ -31,6 +31,7 @@
 #include "macro.h"
 #include "menu.h"
 #include "message.h"
+#include "output.h"
 #include "religion.h"
 #include "scroller.h"
 #include "skills.h"
@@ -1201,8 +1202,9 @@ static void _send_god_ui(god_type god, bool is_altar)
 }
 #endif
 
-void describe_god(god_type which_god)
+void describe_god(god_type which_god, int start_num)
 {
+    int replay_ = -1;
     if (which_god == GOD_NO_GOD) //mv: No god -> say it and go away.
     {
         mpr("You are not religious.");
@@ -1213,6 +1215,12 @@ void describe_god(god_type which_god)
     shared_ptr<Switcher> desc_sw;
     shared_ptr<Switcher> more_sw;
     build_partial_god_ui(which_god, popup, desc_sw, more_sw);
+    desc_sw->current() = more_sw->current() = start_num;
+#ifdef USE_TILE_WEB
+    tiles.json_open_object();
+    tiles.json_write_int("pane", start_num);
+    tiles.ui_state_change("describe-god", 0);
+#endif
 
     bool done = false;
     popup->on_keydown_event([&](const KeyEvent& ev) {
@@ -1228,6 +1236,18 @@ void describe_god(god_type which_god)
 #endif
             return true;
         }
+        if (desc_sw->current() == 1 && you_worship(GOD_NEMELEX_XOBEH)
+            && key >= 'a' && key < 'a' + (char)NUM_NEMELEX_GIFT_TYPES)
+        {
+            const int num = key - 'a';
+
+            if (you.props.exists(NEMELEX_SACRIFICING_KEY)) {
+                you.props[NEMELEX_SACRIFICING_KEY].get_vector()[num] = !you.props[NEMELEX_SACRIFICING_KEY].get_vector()[num];
+
+                replay_ = desc_sw->current();
+                //return false;
+            }
+        }
         return done = !desc_sw->current_widget()->on_event(ev);
     });
 
@@ -1240,6 +1260,10 @@ void describe_god(god_type which_god)
 #ifdef USE_TILE_WEB
     tiles.pop_ui_layout();
 #endif
+    if (replay_ != -1) {
+        describe_god(which_god, desc_sw->current());
+    }
+
 }
 
 bool describe_god_with_join(god_type which_god)

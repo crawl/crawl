@@ -1065,7 +1065,12 @@ string get_god_likes(god_type which_god)
 
             for (int i = 0; i < NUM_NEMELEX_GIFT_TYPES; ++i)
             {
-                const bool active = true;
+                bool active = true;
+
+                if (you.props.exists(NEMELEX_SACRIFICING_KEY)) {
+                    active = you.props[NEMELEX_SACRIFICING_KEY].get_vector()[i].get_bool();
+                }
+
                 std::string desc = "";
                 switch (i)
                 {

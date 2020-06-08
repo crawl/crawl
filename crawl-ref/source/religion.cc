@@ -3615,6 +3615,16 @@ static void _join_cheibriados()
     notify_stat_change();
 }
 
+static void _join_nemelex()
+{
+    if (!you.props.exists(NEMELEX_SACRIFICING_KEY)) {
+        for (int i = 0; i < NUM_NEMELEX_GIFT_TYPES; ++i)
+        {
+            you.props[NEMELEX_SACRIFICING_KEY].get_vector().push_back(true);
+        }
+    }
+}
+
 /// What special things happen when you join a god?
 static const map<god_type, function<void ()>> on_join = {
     { GOD_ASHENZARI, []() { ash_check_bondage(); }},
@@ -3638,6 +3648,7 @@ static const map<god_type, function<void ()>> on_join = {
     { GOD_RU, _join_ru },
     { GOD_TROG, _join_trog },
     { GOD_ZIN, _join_zin },
+    { GOD_NEMELEX_XOBEH, _join_nemelex },
 };
 
 void join_religion(god_type which_god)
