@@ -121,6 +121,7 @@ Dependencies](#packaged-dependencies) above):
 * freetype (tiles builds only)
 * DejaVu fonts (tiles builds only)
 * SDL2 (tiles builds only)
+* SDL2_image (tiles builds only)
 * libpng (tiles builds only)
 
 Then follow [the above compilation steps](#compiling).
