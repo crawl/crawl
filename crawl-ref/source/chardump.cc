@@ -198,8 +198,8 @@ string seed_description()
     return make_stringf(
         "Game seed: %" PRIu64 "%s", crawl_state.seed,
             crawl_state.type == GAME_TYPE_CUSTOM_SEED
-            ? ", levelgen mode: custom seed"
-            : you.deterministic_levelgen ? "" : ", levelgen mode: classic");
+            ? " (custom seed)"
+            : you.deterministic_levelgen ? "" : " (classic levelgen)");
 }
 
 static void _sdump_header(dump_params &par)
