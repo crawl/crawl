@@ -7963,7 +7963,7 @@ static bool _nightmare_of_cubus(monster &caster, mon_spell_slot, bolt&)
     if (!(mrs < 200))
     {
         mpr("It is groaning with anger.");
-        return;
+        return false;
     }
     mpr("You are fallen down into the nightmare of cubus. Cubus charmingly approaches to you and whisper.");
     if (foe->is_player())
@@ -8009,6 +8009,7 @@ static bool _nightmare_of_cubus(monster &caster, mon_spell_slot, bolt&)
                 you.set_duration(dur, 5);
                 you.redraw_armour_class = true;
                 mprf("You wake up and suddenly realize that you unshelve it yourself.");
+                return true;
             }
 
         }
@@ -8017,12 +8018,14 @@ static bool _nightmare_of_cubus(monster &caster, mon_spell_slot, bolt&)
     {
         monster &foe_monster = *foe->as_monster();
         mpr("It giggles with a lascivious laughter.");
-        mprf("Poor %s falls into a daydream.", foe_monster.name(DESC_A));
+        mprf("Poor %s falls into a daydream.", foe_monster.name(DESC_A).c_str());
         foe_monster.add_ench(mon_enchant(ENCH_UNSH_ARMOUR, 0, &caster, 5*BASELINE_DELAY));
+        return true;
     }
     else
     {
         mpr("It stares and points out something in where they were born.");
+        return false;
     }
 }
 
