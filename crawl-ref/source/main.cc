@@ -409,7 +409,7 @@ NORETURN static void _launch_game()
                     << " " << get_job_name(you.char_class) << ".</yellow>"
                     << endl;
         // TODO: seeded sprint?
-        if (crawl_state.type = GAME_TYPE_CUSTOM_SEED)
+        if (crawl_state.type == GAME_TYPE_CUSTOM_SEED)
             msg::stream << "<white>" << seed_description() << "</white>" << endl;
     }
 
