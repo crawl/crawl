@@ -3771,6 +3771,16 @@ static void tag_read_you(reader &th)
             you.props[HEPLIAKLQANA_ALLY_GENDER_KEY] = GENDER_NEUTRAL;
     }
 #endif
+
+    //no minor version need
+    if (you.religion == GOD_NEMELEX_XOBEH &&
+        !you.props.exists(NEMELEX_SACRIFICING_KEY)) {
+        for (int i = 0; i < NUM_NEMELEX_GIFT_TYPES; ++i)
+        {
+            you.props[NEMELEX_SACRIFICING_KEY].get_vector().push_back(true);
+        }
+    }
+
 }
 
 static void tag_read_you_items(reader &th)
