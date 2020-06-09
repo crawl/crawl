@@ -1550,7 +1550,7 @@ static bool _generate_portal_levels()
     vector<level_id> to_build;
     for (auto b : portal_generation_order)
         if (brentry[b] == here)
-            for (int i = 1; i <= branches[b].numlevels; i++)
+            for (int i = 1; i <= brdepth[b]; i++)
                 to_build.push_back(level_id(b, i));
 
     bool generated = false;
@@ -1741,7 +1741,7 @@ bool pregen_dungeon(const level_id &stopping_point)
              || br == BRANCH_DUNGEON || br == BRANCH_VESTIBULE
              || !is_connected_branch(br)))
         {
-            for (int i = 1; i <= branches[br].numlevels; i++)
+            for (int i = 1; i <= brdepth[br]; i++)
             {
                 level_id new_level = level_id(br, i);
                 if (you.save->has_chunk(new_level.describe()))
@@ -1749,8 +1749,7 @@ bool pregen_dungeon(const level_id &stopping_point)
                 to_generate.push_back(new_level);
 
                 if (br == stopping_point.branch
-                    && (i == stopping_point.depth
-                        || i == branches[br].numlevels))
+                    && (i == stopping_point.depth || i == brdepth[br]))
                 {
                     at_end = true;
                     break;
