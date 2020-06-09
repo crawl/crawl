@@ -70,6 +70,9 @@
 - 로드 복구 (iron, clouds, ignition, inaccuracy, shadows)
   - rollback rod (iron, clouds, ignition, inaccuracy, shadows)
   
+- 완드 복구 (teleport, haste, heal wounds)
+  - rollback wand (teleport, haste, heal wounds)
+  
 - 전기디스크 복구
   - rollback disc of storms
   
