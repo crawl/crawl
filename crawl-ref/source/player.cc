@@ -2790,10 +2790,14 @@ static void _felid_extra_life()
 
 static void _crustacean_moult()
 {
-    if (you.lives < 1 && you.experience_level != 1)
+    if (you.experience_level != 1)
     {
+        if (!you.lives)
+            mprf(MSGCH_INTRINSIC_GAIN, "You can now moult");
+        else
+            mprf(MSGCH_INTRINSIC_GAIN, "You get an moulting chance.")
         you.lives++;
-        mprf(MSGCH_INTRINSIC_GAIN, "You can now moult");
+        
     }
 }
 
@@ -8863,5 +8867,8 @@ void end_ecdysis()
         you.duration[DUR_POISONING] = 0;
         you.disease = 0;
         you.duration[DUR_CONF] = 0;
+
+        if (you.lives != 0)
+        you.set_duration(DUR_GROW_FOR_ECD, 500);
         you.redraw_hit_points = true;
 }

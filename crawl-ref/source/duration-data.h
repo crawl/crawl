@@ -659,6 +659,12 @@ static const duration_def duration_data[] =
       "undergoing ecdysis", "undergo ecdysis",
       "You are moulting", D_NO_FLAGS,
       {{ "Your moulting is now finished.", end_ecdysis}}},
+    
+    { DUR_GROW_FOR_ECD,
+      RED, "Grow",
+      "", "",
+      "", D_NO_FLAGS,
+      {{"You can now moult.",}}},
 
     { DUR_BARGAIN, BLUE, "Brgn", "charismatic", "", "You get a bargain in shops.", D_DISPELLABLE | D_EXPIRES,
       {{ "You feel less charismatic." }}, 15 },

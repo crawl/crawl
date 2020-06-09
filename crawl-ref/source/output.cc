@@ -2524,6 +2524,18 @@ static vector<formatted_string> _get_overview_stats()
         entry.clear();
     }
 
+    if (you.species == SP_CRUSTACEAN)
+    {
+        entry.textcolour(HUD_CAPTION_COLOUR);
+        entry.cprintf("Moulting Chances:  ");
+
+        entry.textcolour(HUD_VALUE_COLOUR);
+        entry.cprintf("%d", you.lives);
+
+        cols.add_formatted(3, entry.to_colour_string(), false);
+        entry.clear();
+    }
+
     return cols.formatted_lines();
 }
 

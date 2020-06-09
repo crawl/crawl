@@ -1673,10 +1673,17 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         return true;
 
     case ABIL_ECDYSIS:
-        if (you.lives == 1 && !you.duration[DUR_DEATHS_DOOR])
+        if (you.lives > 0 && !you.duration[DUR_GROW_FOR_ECD]
+            && !you.duration[DUR_DEATHS_DOOR] && you.form == transformation::none)
             return true;
         else
+        {
+            if (you.duration[DUR_GROW_FOR_ECD])
+                mpr("You are not enough to moult yet.");
+            else
+                mpr("You could moult only in your original form.");
             return false;
+        }
 
     case ABIL_CRAB_WALK:
         if (you.duration[DUR_MESMERISED])
@@ -1866,9 +1873,9 @@ static int _calc_breath_ability_range(ability_type ability)
     switch (ability)
     {
     case ABIL_BREATHE_ACID:
+    case ABIL_MIASMA_CLOUD:
         range = 3;
         break;
-    case ABIL_MIASMA_CLOUD:
     case ABIL_BREATHE_FIRE:
     case ABIL_BREATHE_FROST:
     case ABIL_SPIT_POISON:
@@ -2033,7 +2040,7 @@ static spret _do_ability(const ability_def& abil, bool fail)
         break;
 
     case ABIL_ECDYSIS:
-        you.lives = 0;
+        you.lives--;
         you.set_duration(DUR_PARALYSIS, 5 + you.experience_level);
         you.set_duration(DUR_ECDYSIS, 5 + you.experience_level);
         break;
@@ -3724,7 +3731,7 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
 
     if (you.species == SP_CRUSTACEAN)
     {
-        if (you.lives == 1)
+        if (you.lives > 0)
             _add_talent(talents, ABIL_ECDYSIS, check_confused);
 
         _add_talent(talents, ABIL_CRAB_WALK, check_confused);
