@@ -4023,9 +4023,11 @@ string _monster_habitat_description(const monster_info& mi)
     switch (habitat)
     {
     case HT_AMPHIBIOUS:
-        return "It can travel through water.\n";
+        return uppercase_first(make_stringf("%s can travel through water.\n",
+                               mi.pronoun(PRONOUN_SUBJECTIVE)));
     case HT_AMPHIBIOUS_LAVA:
-        return "It can travel through lava.\n";
+        return uppercase_first(make_stringf("%s can travel through lava.\n",
+                               mi.pronoun(PRONOUN_SUBJECTIVE)));
     default:
         return "";
     }
@@ -4366,8 +4368,8 @@ static string _monster_stat_description(const monster_info& mi)
 
     result << _monster_attacks_description(mi);
     result << _monster_missiles_description(mi);
-    result << _monster_spells_description(mi);
     result << _monster_habitat_description(mi);
+    result << _monster_spells_description(mi);
 
     return result.str();
 }
