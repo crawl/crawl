@@ -2,9 +2,9 @@
 
 #include "AppHdr.h"
 
+#include "monster-type.h"
 #include "mon-enum.h"
 #include "mon-util.h"
-#include "monster-type.h"
 
 TEST_CASE("mons_is_removed() returns correct values", "[single-file]")
 {

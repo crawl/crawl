@@ -3338,8 +3338,6 @@ habitat_type mons_habitat(const monster& mon, bool real_amphibious)
                               real_amphibious);
 }
 
-
-
 habitat_type mons_class_primary_habitat(monster_type mc)
 {
     habitat_type ht = _mons_class_habitat(mc);
