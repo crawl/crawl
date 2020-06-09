@@ -79,3 +79,6 @@ spret cast_eringyas_rootspike(int pow, const dist& beam, bool fail);
 spret cast_olgrebs_last_mercy(int pow, const dist& dist, bool fail);
 
 spret cast_pakellas_bolt(int powc, bolt& beam, bool fail = false);
+
+void setup_miasma_breath(const actor *source, int pow, bolt &beam);
+spret cast_miasma_breath(int pow, bolt &beam);

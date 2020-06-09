@@ -1909,7 +1909,7 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_MIASMA_CLOUD, "Flaming Cloud",
+    SPELL_MIASMA_CLOUD, "Miasma Cloud",
     spschool::conjuration,
     spflag::target | spflag::area | spflag::needs_tracer
         | spflag::cloud,
@@ -1917,7 +1917,7 @@ static const struct spell_desc spelldata[] =
     0,
     5, 5,
     5, 0,
-    TILEG_MIASMA_BREATH,
+    TILEG_ABILITY_MIASMA_CLOUD,
 },
 
 {

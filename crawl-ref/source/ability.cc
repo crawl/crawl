@@ -1868,6 +1868,7 @@ static int _calc_breath_ability_range(ability_type ability)
     case ABIL_BREATHE_ACID:
         range = 3;
         break;
+    case ABIL_MIASMA_CLOUD:
     case ABIL_BREATHE_FIRE:
     case ABIL_BREATHE_FROST:
     case ABIL_SPIT_POISON:
@@ -2042,13 +2043,13 @@ static spret _do_ability(const ability_def& abil, bool fail)
 
     case ABIL_MIASMA_CLOUD:
         fail_check();
-        if (your_spells(SPELL_MIASMA_BREATH,
-                        you.experience_level * 10,
+        if(your_spells(SPELL_MIASMA_BREATH,
+                        you.experience_level,
                         false) == spret::abort)
         {
-            return spret::abort;
+                return spret::abort;
         }
-        you.set_duration(DUR_BREATH_WEAPON, 30 + random2(5));
+        you.set_duration(DUR_BREATH_WEAPON, 100 + random2(10));
         break;
 
     case ABIL_DIG:

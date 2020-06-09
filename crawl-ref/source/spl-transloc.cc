@@ -446,6 +446,8 @@ spret frog_hop(bool fail)
 spret crab_walk()
 {
     
+    if (you.religion == GOD_CHEIBRIADOS)
+        you.time_taken = player_speed() + player_movement_speed();
     coord_def target;
     targeter_smite tgt(&you, 2);
     tgt.obeys_mesmerise = true;
@@ -477,8 +479,7 @@ spret crab_walk()
     move_player_to_grid(target, false);
     crawl_state.cancel_cmd_again();
     crawl_state.cancel_cmd_repeat();
-    mpr("C!");
-
+    mpr("You crawl like a crab!");
     return spret::success; // TODO
 }
 

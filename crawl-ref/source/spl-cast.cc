@@ -1756,6 +1756,8 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_CALL_DOWN_DAMNATION:
         return cast_smitey_damnation(powc, beam) ? spret::success : spret::abort;
 
+    case SPELL_MIASMA_BREATH:
+        return cast_miasma_breath(powc, beam);
     // LOS spells
 
     // Beogh ability, no failure.

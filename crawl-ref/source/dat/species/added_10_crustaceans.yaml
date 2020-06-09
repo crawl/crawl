@@ -7,7 +7,7 @@ genus: "Crab"
 difficulty: Advanced
 difficulty_priority : 50
 aptitudes:
-  xp: -1
+  xp: 2
   hp: -4
   mp_mod: 1
   mr: 6
@@ -48,13 +48,14 @@ levelup_stats:
   - dex
 mutations:
   1:
+    MUT_CARNIVOROUS : 1
     MUT_BLURRY_VISION : 1
     MUT_SHAGGY_FUR: 1
     MUT_CLAWS: 1
     MUT_PAWS : 1
     MUT_ANTENNAE: 3
     MUT_NIGHTSTALKER : 1
-    MUT_INHIBITED_REGENERATION : 3
+    MUT_NO_REGENERATION : 1
     MUT_EXOSKELETON : 1
   6:
     MUT_CLAWS: 1

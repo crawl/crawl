@@ -3429,6 +3429,13 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_DIG;
     case ABIL_SHAFT_SELF:
         return TILEG_ABILITY_SHAFT_SELF;
+    // Crustacean
+    case ABIL_ECDYSIS:
+        return TILEG_ABILITY_ECDYSIS;
+    case ABIL_CRAB_WALK:
+        return TILEG_ABILITY_CRAB_WALK;
+    case ABIL_MIASMA_CLOUD:
+        return TILEG_ABILITY_MIASMA_CLOUD;
 
     // Evoking items.
     case ABIL_EVOKE_BERSERK:

@@ -3551,3 +3551,47 @@ spret cast_pakellas_bolt(int powc, bolt& beam, bool fail)
     }
     return spret::success;
 }
+
+void setup_miasma_breath(const actor *source, int pow, bolt &beam)
+{
+    beam.source_id= source->mid;
+    beam.name     = "foul vapour";
+    beam.damage   = dice_def(3, 5 + pow / 24);
+    beam.colour   = DARKGREY;
+    beam.flavour  = BEAM_MIASMA;
+    beam.hit      = 17 + pow / 20;
+    beam.pierce   = true;
+    beam.origin_spell = SPELL_MIASMA_BREATH;
+}
+
+spret cast_miasma_breath(int pow, bolt &beam)
+{
+    if (grid_distance(beam.target, beam.source) > beam.range)
+    {
+        mpr("That is beyond the maximum range.");
+        return spret::abort;
+    }
+
+    if (cell_is_solid(beam.target))
+    {
+        const char *feat = feat_type_name(grd(beam.target));
+        mprf("You can't place the cloud on %s.", article_a(feat).c_str());
+        return spret::abort;
+    }
+
+    setup_miasma_breath(&you, pow, beam);
+
+    bolt tempbeam = beam;
+    tempbeam.is_tracer = false;
+
+    tempbeam.explode(false);
+    if (tempbeam.beam_cancelled)
+        return spret::abort;
+
+    beam.apply_beam_conducts();
+    beam.refine_for_explosion();
+    beam.explode(false);
+
+    viewwindow();
+    return spret::success;
+}
