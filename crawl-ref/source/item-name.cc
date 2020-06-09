@@ -698,6 +698,8 @@ static const char* _wand_type_name(int wandtype)
     switch (wandtype)
     {
     case WAND_FLAME:           return "flame";
+    case WAND_HASTING:         return "hasting";
+    case WAND_HEAL_WOUNDS:      return "heal wounds";
     case WAND_PARALYSIS:       return "paralysis";
     case WAND_DIGGING:         return "digging";
     case WAND_ICEBLAST:        return "iceblast";
@@ -3209,6 +3211,11 @@ bool is_emergency_item(const item_def &item)
         {
         case WAND_TELEPORTATION:
             return you.species != SP_FORMICID;
+        case WAND_HASTING:
+            return !have_passive(passive_t::no_haste)
+                 && you.species != SP_FORMICID;
+        case WAND_HEAL_WOUNDS:
+            return you.can_potion_heal();
         default:
             return false;
         }
@@ -3624,6 +3631,22 @@ bool is_useless_item(const item_def &item, bool temp)
 
         if (item.sub_type == WAND_TELEPORTATION)
             return you.species == SP_FORMICID;
+
+        if (item.sub_type == WAND_HEAL_WOUNDS
+            && item_type_known(item)
+            && !you.can_potion_heal()
+            && you.get_mutation_level(MUT_NO_LOVE))
+        {
+            return true;
+        }
+
+        if (item.sub_type == WAND_HASTING
+            && item_type_known(item)
+            && you.species == SP_FORMICID
+            && you.get_mutation_level(MUT_NO_LOVE))
+        {
+            return true;
+        }
 
         return false;
 

@@ -1343,10 +1343,25 @@ static bool _handle_wand(monster& mons)
         should_fire = mons_should_cloud_cone(&mons, power, beem.target);
         break;
 
-    case WAND_DISINTEGRATION:
-        // Dial down damage from wands of disintegration, since
-        // disintegration beams can do large amounts of damage.
-        beem.damage.size = beem.damage.size * 2 / 3;
+        // These are wands that monsters will aim at themselves {dlb}:
+    case WAND_HASTING:
+        if (!mons.has_ench(ENCH_HASTE))
+        {
+            beem.target = mons.pos();
+            should_fire = mons_should_fire(beem);
+            break;
+        }
+        return false;
+
+    case WAND_HEAL_WOUNDS:
+        if (mons.hit_points <= mons.max_hit_points / 2)
+        {
+            beem.target = mons.pos();
+            should_fire = mons_should_fire(beem);
+            break;
+        }
+        else
+            break;
 
     case WAND_TELEPORTATION:
         if (mons.hit_points <= mons.max_hit_points / 2 || mons.caught())
@@ -1361,6 +1376,12 @@ static bool _handle_wand(monster& mons)
         }
         else
             break;
+
+    case WAND_DISINTEGRATION:
+        // Dial down damage from wands of disintegration, since
+        // disintegration beams can do large amounts of damage.
+        beem.damage.size = beem.damage.size * 2 / 3;
+
 
         // Intentional fallthrough
     default:

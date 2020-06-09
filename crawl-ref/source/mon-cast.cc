@@ -203,6 +203,13 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
         _fire_simple_beam,
         _setup_minor_healing,
     } },
+    { SPELL_HEAL_WOUNDS, { //wand healing, TODO: use on allies too
+        [](const monster& caster) {
+            return caster.hit_points <= caster.max_hit_points / 2;
+        },
+        _fire_simple_beam,
+        _selfench_beam_setup(BEAM_HEALING),
+    } },
     { SPELL_TELEPORT_SELF, {
         [](const monster &caster)
         {
