@@ -798,6 +798,8 @@ bool monster::likes_wand(const item_def &item) const
     ASSERT(item.base_type == OBJ_WANDS);
     switch (item.sub_type)
     {
+        case WAND_HEAL_WOUNDS:
+        case WAND_HASTING:
         case WAND_TELEPORTATION:
             return true; //good wand
 
