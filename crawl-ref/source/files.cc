@@ -1909,18 +1909,21 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     }
 
     // GENERATE new level(s) when the file can't be opened:
-    if (!pregen_dungeon(level_id::current()))
+    if (pregen_dungeon(level_id::current()))
+    {
+        // sanity check: did the pregenerator leave us on the requested level? If
+        // this happens via a bug, and this ASSERT isn't here, something incorrect
+        // will get saved under the chunk for the current level (typically the
+        // last level in the pregen sequence, which is zig 27).
+        ASSERT(you.on_current_level);
+    }
+    else
     {
         ASSERT(you.save->has_chunk(level_name));
         dprf("Loading old level '%s'.", level_name.c_str());
         _restore_tagged_chunk(you.save, level_name, TAG_LEVEL, "Level file is invalid.");
         _redraw_all(); // TODO why is there a redraw call here?
     }
-    // sanity check: did the pregenerator leave us on the requested level? If
-    // this happens via a bug, and this ASSERT isn't here, something incorrect
-    // will get saved under the chunk for the current level (typically the
-    // last level in the pregen sequence, which is zig 27).
-    ASSERT(you.on_current_level);
 
     const bool just_created_level = !you.level_visited(level_id::current());
 
