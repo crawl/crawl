@@ -1575,9 +1575,9 @@ bool generate_level(const level_id &l)
     if (you.save->has_chunk(level_name))
         return false;
 
-    unwind_var<int> depth(you.depth, l.depth);
-    unwind_var<branch_type> branch(you.where_are_you, l.branch);
-    unwind_var<coord_def> saved_position(you.position);
+    unwind_var<int> you_depth(you.depth, l.depth);
+    unwind_var<branch_type> you_branch(you.where_are_you, l.branch);
+    unwind_var<coord_def> you_saved_position(you.position);
     you.position.reset();
 
     // simulate a reasonable stair to enter the level with
@@ -1646,6 +1646,11 @@ bool generate_level(const level_id &l)
         _restore_tagged_chunk(you.save, save_name, TAG_LEVEL,
             "Level file is invalid.");
     }
+    // ensure that there is a way of checking whether the generation process
+    // effectively left us in an excursion. This shouldn't happen normally, but
+    // is needed for sanity checking.
+    you.on_current_level = (you_depth.original_value() == l.depth
+                            && you_branch.original_value() == l.branch);
     return true;
 }
 
@@ -1912,6 +1917,11 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
         _restore_tagged_chunk(you.save, level_name, TAG_LEVEL, "Level file is invalid.");
         _redraw_all(); // TODO why is there a redraw call here?
     }
+    // sanity check: did the pregenerator leave us on the requested level? If
+    // this happens via a bug, and this ASSERT isn't here, something incorrect
+    // will get saved under the chunk for the current level (typically the
+    // last level in the pregen sequence, which is zig 27).
+    ASSERT(you.on_current_level);
 
     const bool just_created_level = !you.level_visited(level_id::current());
 
