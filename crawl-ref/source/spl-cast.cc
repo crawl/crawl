@@ -644,7 +644,11 @@ bool can_cast_spells(bool quiet, bool exegesis)
     if (apply_starvation_penalties())
     {
         if (!quiet)
-            canned_msg(MSG_NO_ENERGY);
+        {
+            mpr("You don't have the energy to cast any spells.");
+            // included in default force_more_message
+            crawl_state.cancel_cmd_repeat();
+        }
         return false;
     }
 
@@ -819,7 +823,9 @@ bool cast_a_spell(bool check_range, spell_type spell)
     if (you.undead_state() == US_ALIVE && !you_foodless()
         && you.hunger <= spell_hunger(spell))
     {
-        canned_msg(MSG_NO_ENERGY);
+        mpr("You don't have the energy to cast that spell.");
+        // included in default force_more_message
+        crawl_state.cancel_cmd_repeat();
         crawl_state.zero_turns_taken();
         return false;
     }
