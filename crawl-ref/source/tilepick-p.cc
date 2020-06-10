@@ -44,6 +44,7 @@ tileidx_t tilep_equ_weapon(const item_def &item, bool hand2)
         int desc = (orig_special / NDSC_STAVE_PRI) % NDSC_STAVE_SEC;
         return TILEP_HAND1_STAFF_LARGE + desc;
     }
+    
 
     if (item.base_type == OBJ_RODS) {
         if (item.sub_type == ROD_PAKELLAS) {
@@ -113,6 +114,8 @@ tileidx_t tilep_equ_weapon(const item_def &item, bool hand2)
     if (is_unrandom_artefact(item))
     {
         const tileidx_t tile = unrandart_to_doll_tile(find_unrandart_index(item));
+        if(tile == TILEP_HAND1_GYRE && you.species == SP_CRUSTACEAN)
+            return TILEP_HAND1_GYRE_CR;
         if (tile)
             return  !hand2 ? tile : (tileidx_t) (tile-1);
     }
