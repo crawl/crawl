@@ -123,7 +123,10 @@
   - Ring of Fire now casts Inner Fire on enemies it hits.
   
 - 고통의 상처의 소음이 줄어듬
-  - excruciating wounds's noise reduction
+  - Excruciating wounds's noise reduction
+
+- 플레이어의 레후딥의 수정창은 이제 샷건과 같은 범위 마법임
+  - Change the player's Lehudib to area spell as shotgun
   
 - 네멜렉스의 원더덱이 돌아옴. 이제 네멜렉스는 다시 발동술을 사용함
   - Nemelex's deck of wonder is comeback. Now Nemelex uses the evocation again.
