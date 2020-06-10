@@ -540,7 +540,6 @@ spriggans_knife SPRIGGANS_KNIFE
 capt_cutlass CAPT_CUTLASS
 arc_blade ARC_BLADE
 gyre GYRE
-gyre_cr GYRE_CR
 thermic_engine THERMIC_ENGINE
 ## blunt
 wucad_mu WUCAD_MU

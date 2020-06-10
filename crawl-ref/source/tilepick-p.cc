@@ -114,8 +114,6 @@ tileidx_t tilep_equ_weapon(const item_def &item, bool hand2)
     if (is_unrandom_artefact(item))
     {
         const tileidx_t tile = unrandart_to_doll_tile(find_unrandart_index(item));
-        if(tile == TILEP_HAND1_GYRE && you.species == SP_CRUSTACEAN)
-            return TILEP_HAND1_GYRE_CR;
         if (tile)
             return  !hand2 ? tile : (tileidx_t) (tile-1);
     }
