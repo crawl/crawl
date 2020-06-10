@@ -6323,6 +6323,9 @@ int player::armour_class_with_specific_items(vector<item_def> items) const
     if (you.species == SP_LAVA_ORC && temperature_effect(LORC_STONESKIN))
         AC += 200 + (experience_level * 20);
 
+    if (you.species == SP_CRUSTACEAN)
+        AC += you.deaths * 100;
+
     AC += sanguine_armour_bonus();
 
     return AC / scale;
@@ -8871,4 +8874,5 @@ void end_ecdysis()
         if (you.lives != 0)
         you.set_duration(DUR_GROW_FOR_ECD, 20 * you.experience_level);
         you.redraw_hit_points = true;
+        you.deaths++;
 }
