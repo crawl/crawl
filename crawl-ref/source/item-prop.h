@@ -255,7 +255,8 @@ static inline bool is_weapon(const item_def &item)
 static inline bool is_short_sword(const item_def &item)
 {
     return (item.sub_type == WPN_DAGGER || item.sub_type == WPN_SHORT_SWORD
-            || item.sub_type == WPN_RAPIER || item.sub_type == WPN_QUICK_BLADE);
+            || item.sub_type == WPN_RAPIER || item.sub_type == WPN_QUICK_BLADE)
+            ||(item.sub_type == WPN_FUSTIBALUS || item.sub_type == WPN_HUNTING_SLING);
 }
 
 void remove_whitespace(string &str);
