@@ -295,6 +295,7 @@ void fill_doll_equipment(dolls_data &result)
         case SP_NAGA:    ch = TILEP_TRAN_STATUE_NAGA;     break;
         case SP_FELID:   ch = TILEP_TRAN_STATUE_FELID;    break;
         case SP_OCTOPODE:ch = TILEP_TRAN_STATUE_OCTOPODE; break;
+        case SP_CRUSTACEAN:ch = TILEP_TRAN_STATUE_CRUSTACEAN; break;
         default:         ch = TILEP_TRAN_STATUE_HUMANOID; break;
         }
         result.parts[TILEP_PART_BASE]    = ch;
@@ -309,7 +310,8 @@ void fill_doll_equipment(dolls_data &result)
         case SP_NAGA:    ch = TILEP_TRAN_LICH_NAGA;     break;
         case SP_FELID:   ch = TILEP_TRAN_LICH_FELID;    break;
         case SP_OCTOPODE:ch = TILEP_TRAN_LICH_OCTOPODE; break;
-        case SP_LESSER_LICH:ch = TILEP_TRAN_LICH_LESSER_LICH; break;          
+        case SP_LESSER_LICH:ch = TILEP_TRAN_LICH_LESSER_LICH; break;
+        case SP_CRUSTACEAN:ch = TILEP_TRAN_LICH_CRUSTACEAN; break;         
         default:         ch = TILEP_TRAN_LICH_HUMANOID; break;
         }
         result.parts[TILEP_PART_BASE]    = ch;
@@ -358,6 +360,8 @@ void fill_doll_equipment(dolls_data &result)
             else if (is_player_tile(result.parts[TILEP_PART_BASE], TILEP_BASE_FELID)
                      || Options.tile_use_monster == MONS_NATASHA)
                 result.parts[TILEP_PART_HAND1] = TILEP_HAND1_BLADEHAND_FE;
+            else if (is_player_tile(result.parts[TILEP_PART_BASE], TILEP_BASE_CRUSTACEAN))
+                result.parts[TILEP_PART_HAND1] = TILEP_HAND1_BLADEHAND_CR;
             else result.parts[TILEP_PART_HAND1] = TILEP_HAND1_BLADEHAND;
         }
         else if (item == -1)

@@ -825,6 +825,7 @@ fire_white2 FIRE_WHITE2
 bladehands BLADEHAND
 bladehands_op BLADEHAND_OP
 bladehands_fe BLADEHAND_FE
+bladehands_cr BLADEHAND_CR
 %end_ctg
 
 ### Hand 2

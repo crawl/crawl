@@ -2795,7 +2795,7 @@ static void _crustacean_moult()
         if (!you.lives)
             mprf(MSGCH_INTRINSIC_GAIN, "You can now moult");
         else
-            mprf(MSGCH_INTRINSIC_GAIN, "You get an moulting chance.")
+            mprf(MSGCH_INTRINSIC_GAIN, "You get an moulting chance.");
         you.lives++;
         
     }
