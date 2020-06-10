@@ -82,3 +82,5 @@ spret cast_pakellas_bolt(int powc, bolt& beam, bool fail = false);
 
 void setup_miasma_breath(const actor *source, int pow, bolt &beam);
 spret cast_miasma_breath(int pow, bolt &beam);
+
+spret cast_lehudibs_crystal_shot(const actor* caster, int powc, bolt& beam, bool fail);

@@ -1624,6 +1624,7 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
     case SPELL_GLACIATE:              // ditto
     case SPELL_CLOUD_CONE:            // ditto
     case SPELL_SCATTERSHOT:           // ditto
+    case SPELL_LEHUDIBS_CRYSTAL_SHOT:
         _setup_fake_beam(beam, *mons);
         break;
 
@@ -3830,6 +3831,32 @@ bool scattershot_tracer(monster *caster, int pow, coord_def aim)
             continue;
 
         const actor *victim = actor_at(entry.first);
+        if (!victim)
+            continue;
+
+        if (mons_atts_aligned(castatt, victim->temp_attitude()))
+            friendly += victim->get_experience_level();
+        else
+            enemy += victim->get_experience_level();
+    }
+
+    return enemy > friendly;
+}
+
+static bool _lehudib_shot_tracer(monster* caster, int pow, coord_def aim)
+{
+    targeter_shotgun hitfunc(caster, 5, spell_range(SPELL_LEHUDIBS_CRYSTAL_SHOT, pow));
+    hitfunc.set_aim(aim);
+
+    mon_attitude_type castatt = caster->temp_attitude();
+    int friendly = 0, enemy = 0;
+
+    for (const auto& entry : hitfunc.zapped)
+    {
+        if (entry.second <= 0)
+            continue;
+
+        const actor* victim = actor_at(entry.first);
         if (!victim)
             continue;
 
@@ -6965,6 +6992,13 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
     }
 
+    case SPELL_LEHUDIBS_CRYSTAL_SHOT:
+    {
+        ASSERT(foe);
+        cast_lehudibs_crystal_shot(mons, splpow, pbolt, false);
+        return;
+    }
+
     case SPELL_CLEANSING_FLAME:
         simple_monster_message(*mons, " channels a blast of cleansing flame!");
         cleansing_flame(5 + (5 * mons->spell_hd(spell_cast) / 12),
@@ -8427,6 +8461,11 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
         return !foe
                || !scattershot_tracer(mon, mons_spellpower(*mon, monspell),
                                       foe->pos());
+
+    case SPELL_LEHUDIBS_CRYSTAL_SHOT:
+        return !foe
+            || !_lehudib_shot_tracer(mon, mons_spellpower(*mon, monspell),
+                foe->pos());
 
     case SPELL_CLEANSING_FLAME:
     {

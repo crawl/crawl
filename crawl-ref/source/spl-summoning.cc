@@ -2525,6 +2525,7 @@ static spell_type servitor_spells[] =
 {
     // primary spells
     SPELL_LEHUDIBS_CRYSTAL_SPEAR,
+    SPELL_LEHUDIBS_CRYSTAL_SHOT,
     SPELL_IOOD,
     SPELL_IRON_SHOT,
     SPELL_BOLT_OF_FIRE,

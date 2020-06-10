@@ -3595,3 +3595,56 @@ spret cast_miasma_breath(int pow, bolt &beam)
     viewwindow();
     return spret::success;
 }
+
+
+
+spret cast_lehudibs_crystal_shot(const actor* caster, int powc, bolt& beam, bool fail)
+{
+
+    const size_t range = spell_range(SPELL_LEHUDIBS_CRYSTAL_SHOT, powc);
+
+    targeter_shotgun hitfunc(caster, 5, range);
+
+    hitfunc.set_aim(beam.target);
+
+    if (caster->is_player())
+    {
+        if (stop_attack_prompt(hitfunc, "lehudibs crystal shot"))
+            return spret::abort;
+    }
+
+    fail_check();
+
+    bolt pbolt = beam;
+    pbolt.name = "lehudibs crystal shot";
+    pbolt.thrower = KILL_YOU_MISSILE;
+    pbolt.flavour = BEAM_MMISSILE;
+    pbolt.real_flavour = BEAM_MMISSILE;
+    pbolt.colour = LIGHTGRAY;
+    pbolt.glyph = dchar_glyph(DCHAR_EXPLOSION);
+    pbolt.damage = caster->is_player() ? calc_dice(10, 23 + powc) : calc_dice(3, 16 + powc /10);
+    pbolt.hit = caster->is_player() ? 10 + powc / 15 : 22 + powc / 20;
+
+    pbolt.range = 1;
+#ifdef USE_TILE
+    pbolt.tile_beam = -1;
+#endif
+    pbolt.draw_delay = 0;
+
+    hitfunc.set_aim(pbolt.target);
+
+
+    for (const auto& entry : hitfunc.zapped)
+    {
+        if (entry.second <= 0)
+            continue;
+
+        pbolt.source = entry.first;
+        pbolt.target = entry.first;
+        pbolt.fire();
+
+        pbolt.draw(entry.first);
+    }
+    scaled_delay(25);
+    return spret::success;
+}

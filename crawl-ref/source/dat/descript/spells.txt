@@ -890,6 +890,10 @@ Lehudib's Crystal Spear spell
 
 Hurls a lethally sharp shard of crystal.
 %%%%
+Lehudib's Crystal Shot spell
+
+Hurls a lethally sharp shards of crystal.
+%%%%
 Lesser Beckoning spell
 
 Beckons the target forward, attempting to place them adjacent to the caster.

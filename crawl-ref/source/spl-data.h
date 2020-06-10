@@ -4244,6 +4244,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_LEHUDIBS_CRYSTAL_SHOT, "Lehudib's Crystal Shot",
+    spschool::conjuration | spschool::earth,
+    spflag::dir_or_target | spflag::needs_tracer,
+    8,
+    200,
+    3, 3,
+    8, 0,
+    TILEG_LEHUDIBS_CRYSTAL_SPEAR,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     spschool::none,
     spflag::testing,
