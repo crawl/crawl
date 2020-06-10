@@ -8869,6 +8869,6 @@ void end_ecdysis()
         you.duration[DUR_CONF] = 0;
 
         if (you.lives != 0)
-        you.set_duration(DUR_GROW_FOR_ECD, 500);
+        you.set_duration(DUR_GROW_FOR_ECD, 20 * you.experience_level);
         you.redraw_hit_points = true;
 }

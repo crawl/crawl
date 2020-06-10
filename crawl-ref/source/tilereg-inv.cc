@@ -425,7 +425,7 @@ bool InventoryRegion::update_tip_text(string& tip)
                 _handle_wield_tip(tmp, cmd, "\n[Ctrl + L-Click] ", true);
                 break;
             case OBJ_ARMOUR:
-                if (you.species != SP_FELID)
+                if (you.species != SP_FELID && you.species != SP_CRUSTACEAN)
                 {
                     tmp += "Wear (%)";
                     cmd.push_back(CMD_WEAR_ARMOUR);
