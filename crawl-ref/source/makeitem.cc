@@ -25,6 +25,11 @@
 #include "stepdown.h"
 #include "stringutil.h"
 
+static void _setup_fallback_randart(const int unrand_id,
+                                    item_def &item,
+                                    int &force_type,
+                                    int &item_level);
+
 int create_item_named(string name, coord_def pos, string *error)
 {
     trim_string(name);
@@ -182,7 +187,7 @@ static weapon_type _determine_weapon_subtype(int item_level)
     }
 }
 
-static bool _try_make_item_unrand(item_def& item, int force_type, int agent)
+static bool _try_make_item_unrand(item_def& item, int &force_type, int agent)
 {
     if (player_in_branch(BRANCH_PANDEMONIUM) && agent == NO_AGENT)
         return false;
@@ -190,6 +195,15 @@ static bool _try_make_item_unrand(item_def& item, int force_type, int agent)
     int idx = find_okay_unrandart(item.base_type, force_type,
                                   player_in_branch(BRANCH_ABYSS)
                                       && agent == NO_AGENT);
+
+    // if an idx was found that exists, the unrand was generated via
+    // acquirement or similar; replace it with a fallback randart.
+    if (idx != -1 && get_unique_item_status(idx))
+    {
+        int item_level;
+        _setup_fallback_randart(idx, item, force_type, item_level);
+        return false;
+    }
 
     if (idx != -1 && make_item_unrandart(item, idx))
         return true;
@@ -219,6 +233,10 @@ static bool _try_make_weapon_artefact(item_def& item, int force_type,
         {
             if (_try_make_item_unrand(item, force_type, agent))
                 return true;
+            // update sub type for fallback randarts (otherwise, the call will
+            // not have changed this value)
+            if (force_type != OBJ_RANDOM)
+                item.sub_type = force_type;
         }
 
         if (_weapon_disallows_randart(item.sub_type))
@@ -1548,7 +1566,9 @@ static void _generate_staff_item(item_def& item, bool allow_uniques,
     {
         // Temporarily fix the base_type to get enhancer staves
         item.base_type = OBJ_WEAPONS;
-        if (_try_make_item_unrand(item, WPN_STAFF, agent))
+        // TODO: how does this relate to force_type?
+        int tmp_force_type = WPN_STAFF;
+        if (_try_make_item_unrand(item, tmp_force_type, agent))
             return;
         item.base_type = OBJ_STAVES;
     }
