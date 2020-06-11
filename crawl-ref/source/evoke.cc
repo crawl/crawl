@@ -29,6 +29,7 @@
 #include "food.h"
 #include "god-abil.h"
 #include "god-conduct.h"
+#include "god-passive.h"
 #include "invent.h"
 #include "item-prop.h"
 #include "items.h"
@@ -1170,11 +1171,15 @@ static spret _tremorstone()
     beam.target = _find_tremorstone_target(see_target);
 
     targeter_radius hitfunc(&you, LOS_NO_TRANS);
-
+    auto vulnerable = [](const actor *act) -> bool
+    {
+        return !(have_passive(passive_t::shoot_through_plants)
+                 && fedhas_protects(act->as_monster()));
+    };
     if ((!see_target
         && !yesno("You can't see anything, throw a tremorstone anyway?",
                  true, 'n'))
-        || stop_attack_prompt(hitfunc, "throw a tremorstone", nullptr))
+        || stop_attack_prompt(hitfunc, "throw a tremorstone", vulnerable))
     {
         return spret::abort;
     }
