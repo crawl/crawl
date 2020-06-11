@@ -1133,6 +1133,9 @@ void bolt::do_fire()
         const dungeon_feature_type feat = grd(pos());
 
         if (in_bounds(target)
+            // Starburst beams are essentially untargeted; some might even hit
+            // a victim if others have LOF blocked.
+            && origin_spell != SPELL_STARBURST
             // We ran into a solid wall with a real beam...
             && (feat_is_solid(feat)
                 && flavour != BEAM_DIGGING && flavour <= BEAM_LAST_REAL
