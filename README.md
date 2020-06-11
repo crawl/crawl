@@ -13,6 +13,7 @@
      - 보조로드-보통11표(36.7%), 너무사기8표(26.7%), 적당히사기6표(20%), 적당히약함4표(13.3%), 너무약함1표(3.3%)
   6. 돌죽 0.25 feature 조사 (6.7) - https://forms.gle/PgDxG6sLXxm2LYd19 
   7. 일부 밸런스 조사 (6.7) - https://forms.gle/nSMnToJdZbJuwjpTA
+  8. 맨티스 점프 공격 버그 (6.11) - https://forms.gle/hcRLsADYbwJEbyxA7
 
 # Design goals
 
