@@ -303,9 +303,22 @@ unique_item_status_type get_unique_item_status(int art)
     return you.unique_items[art - UNRAND_START];
 }
 
-static void _set_unique_item_status(int art, unique_item_status_type status)
+static void _set_unique_item_status(int art, bool exists)
 {
     ASSERT_RANGE(art, UNRAND_START + 1, UNRAND_LAST);
+
+    const unique_item_status_type status = !exists
+        ? UNIQ_NOT_EXISTS
+        : !crawl_state.generating_level
+                // treat unrands that generate in these branches as if they
+                // were acquired. TODO: there's a potential bug here if every
+                // octopus king ring generates and the last is acquired. Also,
+                // I suspect that these getting lost in the abyss isn't handled
+                // right
+                || level_id::current().branch == BRANCH_TROVE
+                || level_id::current().branch == BRANCH_ABYSS
+            ? UNIQ_EXISTS_NONLEVELGEN
+            : UNIQ_EXISTS;
     you.unique_items[art - UNRAND_START] = status;
 }
 
@@ -1328,8 +1341,11 @@ int find_okay_unrandart(uint8_t aclass, uint8_t atype, bool in_abyss)
 {
     int ret = -1;
 
-    // Pick randomly among not-yet-existing unrandarts with the proper
-    // base_type and sub_type.
+    // Pick randomly among unrandarts with the proper
+    // base_type and sub_type. This will rule out unrands that have already
+    // placed as part of levelgen, but may find unrands that have been acquired.
+    // because of this, the caller needs to properly set up a fallback randart
+    // in some cases: see makeitem.cc:_setup_fallback_randart.
     for (int i = 0, count = 0; i < NUM_UNRANDARTS; i++)
     {
         const int              index = i + UNRAND_START;
@@ -1343,7 +1359,11 @@ int find_okay_unrandart(uint8_t aclass, uint8_t atype, bool in_abyss)
             get_unique_item_status(index);
 
         if (in_abyss && status != UNIQ_LOST_IN_ABYSS
-            || !in_abyss && status != UNIQ_NOT_EXISTS)
+            || !in_abyss && status != UNIQ_NOT_EXISTS
+               // for acquired items, ignore them in the random calculations
+               // here and let fallback artefacts replace them.
+               // TODO: abyss? double check trove
+               && status != UNIQ_EXISTS_NONLEVELGEN)
         {
             continue;
         }
@@ -1733,12 +1753,14 @@ static void _make_octoring(item_def &item)
 
     // If there are any types left, unset the 'already found' flag
     if (you.octopus_king_rings != 0xff)
-        _set_unique_item_status(UNRAND_OCTOPUS_KING_RING, UNIQ_NOT_EXISTS);
+        _set_unique_item_status(UNRAND_OCTOPUS_KING_RING, false);
 }
 
 bool make_item_unrandart(item_def &item, int unrand_index)
 {
     ASSERT_RANGE(unrand_index, UNRAND_START + 1, (UNRAND_START + NUM_UNRANDARTS));
+    rng::subgenerator item_rng; // for safety's sake, this is sometimes called
+                                // directly
 
     item.unrand_idx = unrand_index;
 
@@ -1755,7 +1777,7 @@ bool make_item_unrandart(item_def &item, int unrand_index)
     ASSERT(!item.props.exists(ARTEFACT_APPEAR_KEY));
     item.props[ARTEFACT_APPEAR_KEY].get_string() = unrand->unid_name;
 
-    _set_unique_item_status(unrand_index, UNIQ_EXISTS);
+    _set_unique_item_status(unrand_index, true);
 
     if (unrand_index == UNRAND_FAERIE)
         _make_faerie_armour(item);
