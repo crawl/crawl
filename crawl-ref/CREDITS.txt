@@ -177,6 +177,7 @@
     Tomas Krag Hansen
     Taylor Hedberg
     Anders Heggestøyl
+    hellmonk
     Alex Henry
     R. Dan Henry
     Max 'Ploomutoo' Hon-Anderson
@@ -310,6 +311,7 @@
     Aditya Shevade
     Alexandra Shields
     Robert Shimmin
+    Shummie
     Sigurd
     Edgar Simo
     Alex Smith
@@ -327,6 +329,7 @@
     John Stilley
     Johan Strandell
     Ben Striegel
+    Cebolla Sunbeam
     Derrick Sund
     Pavel 'Curio' Svinarchuk
     Tanner Swett
@@ -334,7 +337,6 @@
     William Tanksley, Jr.
     Tedronai
     Chris Terenzi
-    theJollySin
     Jared 'Twinge' Tinney
     Matt Titus
     Tommy
