@@ -1,10 +1,14 @@
-Stone Soup 0.25 (through 0.25-b1-37-g2669288)
-------------------------------------------------
+Stone Soup 0.25.0 (20200612)
+----------------------------
 
 Highlights
 ----------
 * Spells in many schools have been redesigned to make the schools more
   distinct.
+* Acquirement scrolls have been despoilered, offering the player a choice of
+  generated items.
+* Effects from spell miscasts, god wrath, death curses, and Zot traps have
+  been overhauled for consistency and simplicity.
 
 Branches, Environment
 ---------------------
