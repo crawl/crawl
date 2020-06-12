@@ -1676,7 +1676,7 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         if (you.lives > 0 && !you.duration[DUR_GROW_FOR_ECD]
             && !you.duration[DUR_DEATHS_DOOR] && you.form == transformation::none)
             return true;
-        else
+        else if(!quiet)
         {
             if (you.duration[DUR_GROW_FOR_ECD])
                 mpr("You are not enough to moult yet.");
