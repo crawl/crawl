@@ -6955,7 +6955,6 @@ bool player::crustacean_rot(actor */*who*/, int amount, bool quiet, bool /*no_cl
     else if (one_chance_in(experience_level * 2))
     {
         int d = random2(amount/3);
-        mprf("It is %d and %d.", amount, d);
         if (amount <= 0)
             return false;
 
