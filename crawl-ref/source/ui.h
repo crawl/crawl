@@ -1251,10 +1251,6 @@ void force_render();
 void render();
 void delay(unsigned int ms);
 
-void push_scissor(Region scissor);
-void pop_scissor();
-Region get_scissor();
-
 void set_focused_widget(Widget* w);
 Widget* get_focused_widget();
 bool raise_event(Event& event);
