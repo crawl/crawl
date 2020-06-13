@@ -329,6 +329,12 @@ bool ranged_attack::handle_phase_hit()
                         coord_def());
     }
 
+    if (defender->is_player())
+    {
+        if (you.species == SP_CRUSTACEAN)
+            you.crustacean_rot(attacker, damage_done);
+    }
+    
     return true;
 }
 

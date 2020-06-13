@@ -745,6 +745,7 @@ public:
     bool drain_exp(actor *, bool quiet = false, int pow = 3) override;
     bool rot(actor *, int amount, bool quiet = false, bool no_cleanup = false)
         override;
+    bool crustacean_rot(actor *, int amount, bool quiet = false, bool no_cleanup = false);
     void splash_with_acid(const actor* evildoer, int acid_strength,
                           bool allow_corrosion = true,
                           const char* hurt_msg = nullptr) override;

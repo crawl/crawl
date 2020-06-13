@@ -6208,6 +6208,9 @@ int player::base_ac_with_specific_items(int scale,
             AC += item.plus * 100;
         }
 
+        if (you.species == SP_CRUSTACEAN)
+            AC += you.deaths * 100;
+
         if (get_armour_ego_type(item) == SPARM_PROTECTION)
             AC += 300;
     }
@@ -6322,9 +6325,6 @@ int player::armour_class_with_specific_items(vector<item_def> items) const
     //Lava Orc Stoneskin simulation of 2+(0.2*XL)
     if (you.species == SP_LAVA_ORC && temperature_effect(LORC_STONESKIN))
         AC += 200 + (experience_level * 20);
-
-    if (you.species == SP_CRUSTACEAN)
-        AC += you.deaths * 100;
 
     AC += sanguine_armour_bonus();
 
@@ -6939,6 +6939,31 @@ bool player::rot(actor */*who*/, int amount, bool quiet, bool /*no_cleanup*/)
     if (one_chance_in(4))
         sicken(50 + random2(100));
 
+    return true;
+}
+
+bool player::crustacean_rot(actor */*who*/, int amount, bool quiet, bool /*no_cleanup*/)
+{
+    ASSERT(!crawl_state.game_is_arena());
+
+    if (you.duration[DUR_ECDYSIS] != 0)
+    {
+            mprf("You are threatened by something during ecdysis.");
+            you.hp = 1;
+            you.duration[DUR_ECDYSIS] = 0;
+    }
+    else if (one_chance_in(experience_level * 2))
+    {
+        int d = random2(amount/3);
+        mprf("It is %d and %d.", amount, d);
+        if (amount <= 0)
+            return false;
+
+        rot_hp(d);
+
+        if (!quiet && d > 0)
+            mprf(MSGCH_WARN, "You feel your flesh cutting away!");
+    }
     return true;
 }
 
@@ -8853,7 +8878,6 @@ bool player::immune_to_hex(const spell_type hex) const
 
 void end_ecdysis()
 {
-    you.hp = you.hp_max;
     const bool ddoor = you.duration[DUR_DEATHS_DOOR];
     bool unrotted = false;
 
@@ -8873,6 +8897,7 @@ void end_ecdysis()
 
         if (you.lives != 0)
         you.set_duration(DUR_GROW_FOR_ECD, 20 * you.experience_level);
+        you.hp = you.hp_max;
         you.redraw_hit_points = true;
         you.deaths++;
 }

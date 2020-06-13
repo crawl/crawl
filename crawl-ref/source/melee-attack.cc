@@ -482,7 +482,7 @@ bool melee_attack::handle_phase_hit()
     {
         if (!handle_phase_damaged())
             return false;
-
+            
         // TODO: Remove this, (placed here to remove player_attack)
         if (attacker->is_player() && hit_woke_orc)
         {
@@ -566,13 +566,8 @@ bool melee_attack::handle_phase_hit()
         do_passive_freeze();
         do_passive_heat();
         emit_foul_stench();
-    }
-
-    if (defender->is_player() && you.species == SP_CRUSTACEAN && you.duration[DUR_ECDYSIS] != 0)
-    {
-        mprf("You are threatened by something during ecdysis.");
-        you.hp = 1;
-        you.duration[DUR_ECDYSIS] = 0;
+        if (you.species == SP_CRUSTACEAN)
+            you.crustacean_rot(attacker, damage_done);
     }
 
     if (attacker->is_player() && you.duration[DUR_CIGOTUVIS_PLAGUE] && defender->alive())
