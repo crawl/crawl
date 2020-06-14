@@ -1568,59 +1568,24 @@ bool beogh_can_gift_items_to(const monster* mons, bool quiet)
 }
 
 /**
- * Checks whether there are any valid targets for beogh gifts in LOS.
+ * Return the monster* vector of any valid targets for beogh gifts in LOS.
  */
-static bool _valid_beogh_gift_targets_in_sight()
+static vector<monster* > _valid_beogh_gift_targets_in_sight()
 {
+    vector<monster* > list_orcs;
     for (monster_near_iterator rad(you.pos(), LOS_NO_TRANS); rad; ++rad)
-        if (beogh_can_gift_items_to(*rad))
-            return true;
-    return false;
+        if (beogh_can_gift_items_to(*rad, true))
+            list_orcs.push_back(*rad);
+    sort(list_orcs.begin(), list_orcs.end(), 
+    [](monster* m1, monster* m2){
+        monster_info m1i = monster_info(m1);
+        monster_info m2i = monster_info(m2);
+        return monster_info::less_than(m1i, m2i, true);});
+    return list_orcs;
 }
 
-/**
- * Allow the player to give an item to a named orcish ally that hasn't
- * been given a gift before
- *
- * @returns whether an item was given.
- */
-bool beogh_gift_item()
+bool _beogh_gift_items_to(monster* mons, int item_slot)
 {
-    if (!_valid_beogh_gift_targets_in_sight())
-    {
-        mpr("No worthy followers in sight.");
-        return false;
-    }
-
-    dist spd;
-
-    direction_chooser_args args;
-    args.restricts = DIR_TARGET;
-    args.mode = TARG_BEOGH_GIFTABLE;
-    args.range = LOS_RADIUS;
-    args.needs_path = false;
-    args.self = confirm_prompt_type::cancel;
-    args.show_floor_desc = true;
-    args.top_prompt = "Select a follower to give a gift to.";
-
-    direction(spd, args);
-
-    if (!spd.isValid)
-        return false;
-
-    monster* mons = monster_at(spd.target);
-    if (!beogh_can_gift_items_to(mons, false))
-        return false;
-
-    int item_slot = prompt_invent_item("Give which item?",
-                                       menu_type::invlist, OSEL_BEOGH_GIFT);
-
-    if (item_slot == PROMPT_ABORT || item_slot == PROMPT_NOTHING)
-    {
-        canned_msg(MSG_OK);
-        return false;
-    }
-
     item_def& gift = you.inv[item_slot];
 
     const bool shield = is_shield(gift);
@@ -1712,6 +1677,97 @@ bool beogh_gift_item()
     return true;
 }
 
+/**
+ * Allow the player to give an item to a named orcish ally that hasn't
+ * been given a gift before
+ *
+ * @returns whether an item was given.
+ */
+bool beogh_gift_item()
+{
+    vector<monster *> list_orcs = _valid_beogh_gift_targets_in_sight();
+    vector<monster_info *> list_orc_infos;
+    if (list_orcs.empty())
+    {
+        mpr("No worthy followers in sight.");
+        return false;
+    }
+
+    for (const monster* orc : list_orcs)
+    {
+        monster_info* mi = new monster_info(orc);
+        list_orc_infos.push_back(mi);
+    }
+
+    InvMenu desc_menu(MF_SINGLESELECT | MF_ANYPRINTABLE
+                        | MF_ALLOW_FORMATTING | MF_SELECT_BY_PAGE);
+
+
+    string title = "Select a follower to give a gift to.";
+    desc_menu.set_title(new MenuEntry(title, MEL_TITLE));
+    desc_menu.menu_action  = InvMenu::ACT_EXECUTE;
+    // Start with hotkey 'a' and count from there.
+    menu_letter hotkey;
+    // Build menu entries for monsters.
+    
+    desc_menu.add_entry(new MenuEntry("Orcs", MEL_SUBTITLE));
+    for (const monster_info* mi : list_orc_infos)
+    {
+        // List orcs in the form
+        string prefix = "";
+#ifndef USE_TILE_LOCAL
+            cglyph_t g = get_mons_glyph(*mi);
+            const string col_string = colour_to_str(g.col);
+            prefix = "(<" + col_string + ">"
+                    + (g.ch == '<' ? "<<" : stringize_glyph(g.ch))
+                    + "</" + col_string + ">) ";
+#endif
+        string str = get_monster_equipment_desc(*mi, DESC_FULL, DESC_A, false);
+
+#ifndef USE_TILE_LOCAL
+            // Wraparound if the description is longer than allowed.
+            linebreak_string(str, get_number_of_cols() - 9);
+#endif
+        vector<formatted_string> fss;
+        formatted_string::parse_string_to_multiple(str, fss);
+        MenuEntry *me = nullptr;
+        for (unsigned int j = 0; j < fss.size(); ++j)
+        {
+            if (j == 0)
+                me = new MonsterMenuEntry(prefix + fss[j].tostring(), mi, hotkey++);
+#ifndef USE_TILE_LOCAL
+            else
+            {
+                str = "         " + fss[j].tostring();
+                me = new MenuEntry(str, MEL_ITEM, 1);
+            }
+#endif
+            desc_menu.add_entry(me);
+        }
+    }
+
+    desc_menu.on_single_selection = [&desc_menu, &list_orcs, &list_orc_infos](const MenuEntry& sel)
+    {   
+        monster* mons = list_orcs[distance(list_orc_infos.begin(), 
+                                      find(list_orc_infos.begin(), list_orc_infos.end(), sel.data))];
+
+        // Gift Part
+        int item_slot = prompt_invent_item("Give which item?",
+                                       menu_type::invlist, OSEL_BEOGH_GIFT);
+
+        if (item_slot == PROMPT_ABORT || item_slot == PROMPT_NOTHING)
+        {
+            canned_msg(MSG_OK);
+            return false;
+        }
+        _beogh_gift_items_to(mons, item_slot);
+        return false;
+    };
+    desc_menu.show();
+    redraw_screen();
+    return true;
+}
+
 bool beogh_resurrect()
 {
 	vector<item_def *> list_orcs;
@@ -1734,7 +1790,7 @@ bool beogh_resurrect()
                             | MF_ALLOW_FORMATTING | MF_SELECT_BY_PAGE);
 
 
-        string title = "Who do you want to resurrect";
+        string title = "Who do you want to resurrect.";
 
 //        string title1 = title + " (select to resurrect, '!' to examine):";
 //        title += " (select to examine, '!' to resurrect):";
