@@ -3734,7 +3734,8 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
         if (you.lives > 0)
             _add_talent(talents, ABIL_ECDYSIS, check_confused);
 
-        _add_talent(talents, ABIL_CRAB_WALK, check_confused);
+        if (you.duration[DUR_BODY_LOSS])
+            _add_talent(talents, ABIL_CRAB_WALK, check_confused);
 
         //add cloud?
         if (you.experience_level > 13)

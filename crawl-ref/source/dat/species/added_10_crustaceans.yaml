@@ -53,18 +53,20 @@ mutations:
     MUT_SHAGGY_FUR: 1
     MUT_CLAWS: 1
     MUT_PAWS : 1
-    MUT_ANTENNAE: 3
+    MUT_ANTENNAE: 1
     MUT_NIGHTSTALKER : 1
     MUT_INHIBITED_REGENERATION : 1
     MUT_EXOSKELETON : 1
   6:
     MUT_CLAWS: 1
     MUT_SHAGGY_FUR: 1
+    MUT_ANTENNAE: 1
     MUT_NIGHTSTALKER : 1
     MUT_FOUL_STENCH : 1
   14:
     MUT_CLAWS: 1
     MUT_SHAGGY_FUR: 1
+    MUT_ANTENNAE: 1
     MUT_NIGHTSTALKER : 1
     MUT_EXOSKELETON : 1
 fake_mutations:
@@ -74,6 +76,8 @@ fake_mutations:
     short: no weapons excepting short blades.
   - long: You can swim through water.
     short: swims 
+  - long : Your body sometimes falls away.
+    short : falls away
 recommended_jobs:
   - JOB_ASSASSIN
   - JOB_STALKER

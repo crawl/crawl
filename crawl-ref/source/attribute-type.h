@@ -98,6 +98,7 @@ enum attribute_type
     ATTR_PAKELLAS_STR,         // increase str of Pakellas Buff
     ATTR_PAKELLAS_INT,         // increase int of Pakellas Buff
     ATTR_PAKELLAS_DEX,         // increase dex of Pakellas Buff
-    ATTR_PAKELLAS_EV,          // increase dex of Pakellas Buff
+    ATTR_PAKELLAS_EV,          // increase ev of Pakellas Buff
+    ATTR_BODY_LOSS,            // amount of losing body
     NUM_ATTRIBUTES
 };

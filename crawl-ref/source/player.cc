@@ -2193,6 +2193,9 @@ static int _player_evasion_bonuses()
 
     if (you.duration[DUR_AGILITY])
         evbonus += AGILITY_BONUS;
+    
+    if (you.duration[DUR_BODY_LOSS])
+        evbonus += you.attribute[ATTR_BODY_LOSS] * 2;
 
     if (you.duration[DUR_PAKELLAS_DURATION])
         evbonus += you.attribute[ATTR_PAKELLAS_EV];
@@ -6951,18 +6954,33 @@ bool player::crustacean_rot(actor */*who*/, int amount, bool quiet, bool /*no_cl
             mprf("You are threatened by something during ecdysis.");
             you.hp = 1;
             you.duration[DUR_ECDYSIS] = 0;
+            return false;
     }
-    else if (one_chance_in(experience_level * 2))
+    
+    if (you.form != transformation::none ||
+        you.form != transformation::statue ||
+        you.form != transformation::lich)
+    {
+        return false;
+    }
+    if (one_chance_in(experience_level * 2))
     {
         int d = random2(amount/3);
         if (amount <= 0)
             return false;
-
+        you.set_duration(DUR_BODY_LOSS, 3);
         rot_hp(d);
-
+        you.attribute[ATTR_BODY_LOSS] += d;
         if (!quiet && d > 0)
             mprf(MSGCH_WARN, "You feel your flesh cutting away!");
     }
+    else if (one_chance_in(experience_level) & coinflip())
+    {
+        you.set_duration(DUR_BODY_LOSS, 3);
+        lose_stat(STAT_RANDOM, 1);
+        you.attribute[ATTR_BODY_LOSS] += 1;
+    }
+    
     return true;
 }
 

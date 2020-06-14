@@ -208,6 +208,7 @@ enum duration_type
     DUR_WILL_OF_EARTH,
     DUR_ECDYSIS,
     DUR_GROW_FOR_ECD,
+    DUR_BODY_LOSS,
     DUR_UNSH_CLOAK,            // Unshelve
     DUR_UNSH_HELMET,
     DUR_UNSH_GLOVES,
