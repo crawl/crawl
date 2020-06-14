@@ -3602,6 +3602,10 @@ static void _join_pakellas()
     if (!you.props.exists(AVAILABLE_ROD_UPGRADE_KEY)) {
         _make_empty_vec(you.props[AVAILABLE_ROD_UPGRADE_KEY], SV_INT);
     }
+    if (!you.props.exists(AVAILABLE_ROD_UPGRADE_MODIFY)) {
+        _make_empty_vec(you.props[AVAILABLE_ROD_UPGRADE_MODIFY], SV_INT);
+    }
+    
     _make_empty_vec(you.props[PAKELLAS_UPGRADE_ON], SV_INT);
     //mprf(MSGCH_GOD, "You stop regenerating magic.");
     //you.attribute[ATTR_PAKELLAS_EXTRA_MP] = POT_MAGIC_MP;

@@ -529,7 +529,7 @@ static inline int get_resistible_fraction(beam_type flavour)
     case BEAM_ROD_COLD:
     case BEAM_ROD_ELEC:
     case BEAM_ROD_POISON:
-        return 50;
+        return 30;
 
     case BEAM_LAVA:
         return 55;
