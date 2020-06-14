@@ -271,6 +271,29 @@ MAP
    .....
 ENDMAP
 
+NAME:  pf_just_have_faith
+DEPTH: D:4-
+WEIGHT: 1
+TAGS: no_monster_gen
+KMASK: $ = no_trap_gen
+KFEAT: m = lava mimic
+# We use a statue mimic to stop autoexplore before the player reaches the lava.
+KFEAT: G = granite_statue mimic
+# The gold pulls an unspoiled player next to the mimics.
+KITEM: $ = gold q:3
+MAP
+xxxxx
+xl.lx
+x.C.x
+x.$.x
+xlmlx
+xl$lx
+xlmlx
+x.$.x
+x.G.x
+..@..
+ENDMAP
+
 ##############################################################################
 # III   Altars to minor gods
 #
