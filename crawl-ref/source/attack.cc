@@ -1311,7 +1311,19 @@ int attack::calc_damage()
         damage     += 1 + random2(attk_damage);
 
         damage = apply_damage_modifiers(damage);
-
+        
+        // rSalt
+        const item_def *item = nullptr;
+        if (you.equip[EQ_HELMET] != -1)
+            item = is_unrandom_artefact(you.inv[you.equip[EQ_HELMET]])
+                        ? &you.inv[you.equip[EQ_HELMET]] : nullptr;
+        if (mons_species(attacker->as_monster()->type) == MONS_SALTLING
+            && item && item->unrand_idx == UNRAND_PONDERING)
+        {
+            mpr("Your hat protects you from dangerous salty touch!");
+            damage = damage/2;
+        }
+        
         set_attack_verb(damage);
         return apply_defender_ac(damage, damage_max);
     }
