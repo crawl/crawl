@@ -714,6 +714,9 @@ bool show_map(level_pos &lpos, bool travel_mode, bool allow_offlevel)
             state.chose = false;
         }
 
+        state.lpos.pos = state.lpos.pos.clamped(known_map_bounds());
+        ASSERT(map_bounds(state.lpos.pos));
+
 #ifndef USE_TILE_LOCAL
         const auto view = _get_view_state(state);
 #endif
@@ -803,6 +806,9 @@ bool show_map(level_pos &lpos, bool travel_mode, bool allow_offlevel)
         if (!state.map_alive)
             break;
     }
+
+    state.lpos.pos = state.lpos.pos.clamped(known_map_bounds());
+    ASSERT(map_bounds(state.lpos.pos));
 
 #ifdef USE_TILE
     tiles.place_cursor(CURSOR_MAP, NO_CURSOR);
@@ -1207,9 +1213,6 @@ map_control_state process_map_command(command_type cmd, const map_control_state&
             state.redraw_map = false;
         break;
     }
-
-    state.lpos.pos = state.lpos.pos.clamped(known_map_bounds());
-    ASSERT(map_bounds(state.lpos.pos));
 
     return state;
 }
