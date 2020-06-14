@@ -233,6 +233,15 @@ static bool _try_make_weapon_artefact(item_def& item, int force_type,
         {
             if (_try_make_item_unrand(item, force_type, agent))
                 return true;
+            if (item.base_type == OBJ_STAVES)
+            {
+                // TODO: this is a bit messy: a fallback randart for an unrand
+                // enhancer stave can be generated this way, and this code won't
+                // currently respect an explicit request for an enhancer stave
+                // as a fallback.
+                item.base_type = OBJ_WEAPONS;
+                force_type = WPN_QUARTERSTAFF;
+            }
             // update sub type for fallback randarts (otherwise, the call will
             // not have changed this value)
             if (force_type != OBJ_RANDOM)
@@ -1554,6 +1563,22 @@ static void _generate_book_item(item_def& item, bool allow_uniques,
     }
 }
 
+static stave_type _get_random_stave_type()
+{
+    stave_type r;
+    do
+    {
+        r = static_cast<stave_type>(random2(NUM_STAVES));
+    }
+    while (item_type_removed(OBJ_STAVES, r));
+
+    // staves of energy are 25% less common, wizardry is more common
+    if (r == STAFF_ENERGY && one_chance_in(4))
+        r = STAFF_WIZARDRY;
+
+    return r;
+}
+
 static void _generate_staff_item(item_def& item, bool allow_uniques,
                                  int force_type, int item_level, int agent)
 {
@@ -1564,26 +1589,18 @@ static void _generate_staff_item(item_def& item, bool allow_uniques,
         && one_chance_in(item_level == ISPEC_GOOD_ITEM ? 27 : 100))
     {
         // Temporarily fix the base_type to get enhancer staves
+        // TODO: ???
         item.base_type = OBJ_WEAPONS;
-        // TODO: how does this relate to force_type?
-        int tmp_force_type = WPN_STAFF;
-        if (_try_make_item_unrand(item, tmp_force_type, agent))
+        // need to use force_type here, because _try_make_item_unrand can set
+        // it for fallback randarts.
+        force_type = WPN_STAFF;
+        if (_try_make_item_unrand(item, force_type, agent))
             return;
         item.base_type = OBJ_STAVES;
     }
 
     if (force_type == OBJ_RANDOM)
-    {
-        do
-        {
-            item.sub_type = random2(NUM_STAVES);
-        }
-        while (item_type_removed(OBJ_STAVES, item.sub_type));
-
-        // staves of energy are 25% less common, wizardry is more common
-        if (item.sub_type == STAFF_ENERGY && one_chance_in(4))
-            item.sub_type = STAFF_WIZARDRY;
-    }
+        item.sub_type = _get_random_stave_type();
     else
         item.sub_type = force_type;
 
@@ -1805,8 +1822,7 @@ static void _setup_fallback_randart(const int unrand_id,
             force_type = STAFF_POISON;
         else
             force_type = OBJ_RANDOM;
-        // XXX: small chance of the other unrand...
-        // (but we won't hit this case until a new staff unrand is added)
+        // XXX: small chance of other unrands under some circumstances...
     }
     else if (item.base_type == OBJ_JEWELLERY
              && fallback_sub_type == AMU_NOTHING)
