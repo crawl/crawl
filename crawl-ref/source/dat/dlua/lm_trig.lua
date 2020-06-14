@@ -584,7 +584,8 @@ end
 -- * turn: Called once for each player turn that passes.
 --
 -- * entered_level: Called when player enters the level, after all level
---      setup code has completed.
+--      setup code has completed. arg1 is set to 1 iff we're loading a save
+--      (rather than actually moving between levels).
 --
 -- * door_opened, door_closed: Called whenever doors are opened and closed by
 --      the player, or whenever they are opened by monsters (monsters do not
