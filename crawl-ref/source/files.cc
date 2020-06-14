@@ -2077,7 +2077,11 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
 
 
     if (load_mode != LOAD_VISITOR)
-        dungeon_events.fire_event(DET_ENTERED_LEVEL);
+    {
+        dungeon_events.fire_event(
+                        dgn_event(DET_ENTERED_LEVEL, coord_def(), you.time_taken,
+                                  load_mode == LOAD_RESTART_GAME));
+    }
 
     if (load_mode == LOAD_ENTER_LEVEL)
     {
