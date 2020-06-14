@@ -1586,7 +1586,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
 
         if (is_artefact(*this) && !dbname)
         {
-            buff << get_artefact_name(*this);
+            buff << get_artefact_name(*this, ident);
             break;
         }
 
@@ -1784,7 +1784,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
 
         if (is_randart && !dbname)
         {
-            buff << get_artefact_name(*this);
+            buff << get_artefact_name(*this, ident);
             break;
         }
 
@@ -1836,7 +1836,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
     case OBJ_BOOKS:
         if (is_random_artefact(*this) && !dbname && !basename)
         {
-            buff << get_artefact_name(*this);
+            buff << get_artefact_name(*this, ident);
             if (!know_type)
                 buff << "book";
             break;
