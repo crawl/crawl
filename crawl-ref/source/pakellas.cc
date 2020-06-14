@@ -398,7 +398,7 @@ map<pakellas_blueprint_type, pakellas_blueprint_struct> blueprint_list =
                                 {},
                                 {BLUEPRINT_BATTLEMAGE}) },
     { BLUEPRINT_BATTLEMAGE, _prerequire_blueprint("Battle Mage", "Increases the damage the rod deals in melee combat.", "melee+",
-                                100,
+                                150,
                                 {BLUEPRINT_ELEMENTAL_FIRE, BLUEPRINT_ELEMENTAL_COLD, BLUEPRINT_ELEMENTAL_ELEC, BLUEPRINT_ELEMENTAL_EARTH, BLUEPRINT_CHAOS, BLUEPRINT_ELEMENTAL_POISON,
                                 BLUEPRINT_FIRE_SUMMON, BLUEPRINT_COLD_SUMMON, BLUEPRINT_ELEC_SUMMON, BLUEPRINT_POISON_SUMMON, BLUEPRINT_CHOATIC_SUMMON, BLUEPRINT_EARTH_SUMMON},
                                 {BLUEPRINT_LIGHT})},
@@ -567,6 +567,32 @@ static bool _check_able_upgrade(pakellas_blueprint_type type) {
     return false;
 }
 
+static int _get_upgrade_modify(pakellas_blueprint_type type) {
+    CrawlVector& upgrade_modify = you.props[AVAILABLE_ROD_UPGRADE_MODIFY].get_vector();
+
+    int num = 1;
+    for (auto upgrade_ : upgrade_modify) {
+
+        if (upgrade_.get_int() == (int)type) {
+            num++;
+        }
+    }
+    return num;
+}
+
+static void _erase_upgrade_modify(pakellas_blueprint_type type) {
+    CrawlVector& upgrade_modify = you.props[AVAILABLE_ROD_UPGRADE_MODIFY].get_vector();
+
+    int i = 0;
+    for (auto upgrade_ : upgrade_modify) {
+
+        if (upgrade_.get_int() == (int)type) {
+            upgrade_modify.erase(i);
+            break;
+        }
+        i++;
+    }
+}
 
 /**
  * Which upgrade are valid for Pakellas to potentially present to the player?
@@ -575,14 +601,16 @@ static bool _check_able_upgrade(pakellas_blueprint_type type) {
  */
 static vector<pair<pakellas_blueprint_type, int>> _get_possible_upgrade()
 {
-    int prototype = you.props[PAKELLAS_PROTOTYPE].get_int();
+    int prototype = you.props[PAKELLAS_PROTOTYPE].get_int();     
     vector<pair<pakellas_blueprint_type, int>> possible_upgrade;
 
     if (prototype == 1) {
         for (int i = BLUEPRINT_DESTRUCTION_START; i < BLUEPRINT_DESTRUCTION_END; i++) {
             pakellas_blueprint_type type = (pakellas_blueprint_type)i;
             if (_check_able_upgrade(type)) {
-                possible_upgrade.emplace_back(type, blueprint_list[type].percent);
+                possible_upgrade.emplace_back(type, blueprint_list[type].percent/_get_upgrade_modify(type));
+                
+
             }
         }
     }
@@ -591,7 +619,7 @@ static vector<pair<pakellas_blueprint_type, int>> _get_possible_upgrade()
         for (int i = BLUEPRINT_SUMMON_START; i < BLUEPRINT_SUMMON_END; i++) {
             pakellas_blueprint_type type = (pakellas_blueprint_type)i;
             if (_check_able_upgrade(type)) {
-                possible_upgrade.emplace_back(type, blueprint_list[type].percent);
+                possible_upgrade.emplace_back(type, blueprint_list[type].percent / _get_upgrade_modify(type));
             }
         }
     }
@@ -600,7 +628,7 @@ static vector<pair<pakellas_blueprint_type, int>> _get_possible_upgrade()
         for (int i = BLUEPRINT_CHARM_START; i < BLUEPRINT_CHARM_END; i++) {
             pakellas_blueprint_type type = (pakellas_blueprint_type)i;
             if (_check_able_upgrade(type)) {
-                possible_upgrade.emplace_back(type, blueprint_list[type].percent);
+                possible_upgrade.emplace_back(type, blueprint_list[type].percent / _get_upgrade_modify(type));
             }
         }
     }
@@ -608,7 +636,7 @@ static vector<pair<pakellas_blueprint_type, int>> _get_possible_upgrade()
     for (int i = BLUEPRINT_PUBLIC_START; i < BLUEPRINT_PUBLIC_END; i++) {
         pakellas_blueprint_type type = (pakellas_blueprint_type)i;
         if (_check_able_upgrade(type)) {
-            possible_upgrade.emplace_back(type, blueprint_list[type].percent);
+            possible_upgrade.emplace_back(type, blueprint_list[type].percent / _get_upgrade_modify(type));
         }
     }
     return possible_upgrade;
@@ -717,6 +745,7 @@ bool pakellas_upgrade()
                     add_string.push_back(blueprint_list[(pakellas_blueprint_type)_upgrade].name);
                     num_--;
                 }
+                _erase_upgrade_modify((pakellas_blueprint_type)_upgrade);
 
                 if (num_ > 0) {
                     auto upgrades = _get_possible_upgrade();
@@ -755,8 +784,16 @@ void pakellas_offer_new_upgrade()
     ASSERT(you.props.exists(PAKELLAS_UPGRADE_ON));
     you.props[PAKELLAS_UPGRADE_ON].get_vector().clear();
 
+    if (!you.props.exists(AVAILABLE_ROD_UPGRADE_MODIFY)) {
+        you.props[AVAILABLE_ROD_UPGRADE_MODIFY].new_vector(SV_INT);
+    }
+
+
     vector<pair<pakellas_blueprint_type, int>> possible_upgrade = _get_possible_upgrade();
     CrawlVector& available_upgrade = you.props[PAKELLAS_UPGRADE_ON].get_vector();
+    CrawlVector& upgrade_modify = you.props[AVAILABLE_ROD_UPGRADE_MODIFY].get_vector();
+
+
 
     for (int i = 0; i < 3; i++) {
         pakellas_blueprint_type get_upgrade = *random_choose_weighted(possible_upgrade);
@@ -772,6 +809,7 @@ void pakellas_offer_new_upgrade()
             continue;
         }
         available_upgrade.push_back((int)get_upgrade);
+        upgrade_modify.push_back((int)get_upgrade);
     }
     simple_god_message(" believes you are ready to make a new upgrade.");
     // included in default force_more_message

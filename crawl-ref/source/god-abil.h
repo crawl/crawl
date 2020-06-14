@@ -32,6 +32,7 @@
 #define RU_SAC_XP_LEVELS 2
 
 #define AVAILABLE_ROD_UPGRADE_KEY "available_upgrades"
+#define AVAILABLE_ROD_UPGRADE_MODIFY "available_upgrades_modify"
 #define AVAILABLE_UPGRADE_NUM_KEY "upgrade_num"
 #define PAKELLAS_UPGRADE_ON "pakellas_upgrade_on"
 #define PAKELLAS_PROTOTYPE "pakellas_proto_type"
