@@ -1596,7 +1596,13 @@ static void _generate_staff_item(item_def& item, bool allow_uniques,
         force_type = WPN_STAFF;
         if (_try_make_item_unrand(item, force_type, agent))
             return;
-        item.base_type = OBJ_STAVES;
+        if (item.base_type != OBJ_STAVES)
+        {
+            // this will happen if an unrand staff requests a real weapon as
+            // a fallback. TODO: can this be accommodated in this code path?
+            item.base_type = OBJ_STAVES;
+            force_type = OBJ_RANDOM;
+        }
     }
 
     if (force_type == OBJ_RANDOM)
