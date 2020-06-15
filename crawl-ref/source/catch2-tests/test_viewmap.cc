@@ -54,6 +54,7 @@ TEST_CASE( "Test basic key controls work", "[single-file]" ) {
     SECTION ("Panning out of known map bounds clamps to known map bounds.") {
         state.lpos.pos = coord_def(49, 49);
         state = process_map_command(CMD_MAP_MOVE_LEFT, state);
+        state.lpos.pos = state.lpos.pos.clamped(known_map_bounds());
 
         REQUIRE( state.lpos.pos >= known_map_bounds().first );
         REQUIRE( state.lpos.pos <= known_map_bounds().second );
@@ -77,6 +78,7 @@ TEST_CASE( "Test basic key controls work", "[single-file]" ) {
         REQUIRE(map_bounds(state.lpos.pos) == false);
 
         state = process_map_command(CMD_NO_CMD, state);
+        state.lpos.pos = state.lpos.pos.clamped(known_map_bounds());
 
         REQUIRE( state.lpos.pos >= known_map_bounds().first );
         REQUIRE( state.lpos.pos <= known_map_bounds().second );
