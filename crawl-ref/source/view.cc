@@ -1442,7 +1442,11 @@ void viewwindow(bool show_updates, bool tiles_only, animation *a)
             tiles.clear_overlays();
 #endif
 
-            show_init(_layers);
+            // TODO: why on earth is this called from here? It seems like it
+            // should be called directly on changing location, or something
+            // like that...
+            if (you.on_current_level)
+                show_init(_layers);
         }
 
         if (show_updates)
