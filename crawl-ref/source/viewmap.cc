@@ -640,181 +640,188 @@ bool show_map(level_pos &lpos, bool travel_mode, bool allow_offlevel)
     tiles_ui_control ui(UI_VIEW_MAP);
 #endif
 
-    levelview_excursion le(travel_mode);
-
-    if (!lpos.id.is_valid() || !allow_offlevel)
-        lpos.id = level_id::current();
-
-    cursor_control ccon(!Options.use_fake_cursor);
-
-    bool new_level = true;
-
-    // Vector to track all features we can travel to, in order of distance.
-    vector<coord_def> features;
-    // List of all interesting features for display in the (console) title.
-    feature_list feats;
-
-#ifndef USE_TILE_LOCAL
-    const int top = 2;
-    clrscr();
-#endif
-    textcolour(DARKGREY);
-
     map_control_state state;
-    state.lpos = lpos;
-    state.features = &features;
-    state.feats = &feats;
-    state.excursion = &le;
-    state.allow_offlevel = allow_offlevel;
-    state.travel_mode = travel_mode;
-    state.original = level_id::current();
-    state.map_alive = true;
-    state.redraw_map = true;
-    state.search_anchor = coord_def(-1, -1);
-    state.chose = false;
 
-    while (state.map_alive)
     {
-        if (state.lpos.id != level_id::current())
+        // this RAII object must not be in the same scope as the
+        // redraw_screen call at the end of the function
+        levelview_excursion le(travel_mode);
+
+        if (!lpos.id.is_valid() || !allow_offlevel)
+            lpos.id = level_id::current();
+
+        cursor_control ccon(!Options.use_fake_cursor);
+
+        bool new_level = true;
+
+        // Vector to track all features we can travel to, in order of distance.
+        vector<coord_def> features;
+        // List of all interesting features for display in the (console) title.
+        feature_list feats;
+
+    #ifndef USE_TILE_LOCAL
+        const int top = 2;
+        clrscr();
+    #endif
+        textcolour(DARKGREY);
+
+        state.lpos = lpos;
+        state.features = &features;
+        state.feats = &feats;
+        state.excursion = &le;
+        state.allow_offlevel = allow_offlevel;
+        state.travel_mode = travel_mode;
+        state.original = level_id::current();
+        state.map_alive = true;
+        state.redraw_map = true;
+        state.search_anchor = coord_def(-1, -1);
+        state.chose = false;
+
+        while (state.map_alive)
         {
-            le.go_to(state.lpos.id);
-            new_level = true;
-        }
-
-        if (new_level)
-        {
-            state.on_level = (level_id::current() == state.original);
-
-            // Vector to track all state.features we can travel to, in
-            // order of distance.
-            if (travel_mode)
-                _reset_travel_colours(*state.features, state.on_level);
-            state.feats->init();
-            state.search_index = 0;
-            state.search_anchor.reset();
-
-            // This happens when CMD_MAP_PREV_LEVEL etc. assign dest to lpos,
-            // with a position == (-1, -1).
-            if (!map_bounds(state.lpos.pos))
+            if (state.lpos.id != level_id::current())
             {
-                state.lpos.pos = _recentre_map_target(state.lpos.id,
-                        state.original);
-                state.lpos.id = level_id::current();
+                le.go_to(state.lpos.id);
+                new_level = true;
             }
 
+            if (new_level)
+            {
+                state.on_level = (level_id::current() == state.original);
+
+                // Vector to track all state.features we can travel to, in
+                // order of distance.
+                if (travel_mode)
+                    _reset_travel_colours(*state.features, state.on_level);
+                state.feats->init();
+                state.search_index = 0;
+                state.search_anchor.reset();
+
+                // This happens when CMD_MAP_PREV_LEVEL etc. assign dest to lpos,
+                // with a position == (-1, -1).
+                if (!map_bounds(state.lpos.pos))
+                {
+                    state.lpos.pos = _recentre_map_target(state.lpos.id,
+                            state.original);
+                    state.lpos.id = level_id::current();
+                }
+
+                state.redraw_map = true;
+                new_level = false;
+            }
+
+            // If we've received a HUP signal then the user can't choose a
+            // location, so indicate this by returning an invalid position.
+            if (crawl_state.seen_hups)
+            {
+                state.lpos = level_pos();
+                state.chose = false;
+            }
+
+            state.lpos.pos = state.lpos.pos.clamped(known_map_bounds());
+            ASSERT(map_bounds(state.lpos.pos));
+
+    #ifndef USE_TILE_LOCAL
+            const auto view = _get_view_state(state);
+    #endif
+
+            if (state.redraw_map)
+            {
+                // Note: Tile versions just center on the current cursor
+                // location. It silently ignores everything else going
+                // on in this function.  --Enne
+    #ifdef USE_TILE_LOCAL
+                if (first_run)
+                {
+                    tiles.update_tabs();
+                    first_run = false;
+                }
+    #endif
+    #ifdef USE_TILE
+                tiles.load_dungeon(state.lpos.pos);
+    #endif
+    #ifndef USE_TILE_LOCAL
+                _draw_title(state.lpos.pos, *state.feats);
+                _draw_level_map(view.start.x, view.start.y, state.travel_mode, state.on_level);
+    #endif
+            }
+    #ifndef USE_TILE_LOCAL
+            cursorxy(view.cursor.x, view.cursor.y + top - 1);
+    #endif
             state.redraw_map = true;
-            new_level = false;
+
+            c_input_reset(true);
+    #ifdef USE_TILE_LOCAL
+            const int key = getchm(KMC_LEVELMAP);
+            command_type cmd = key_to_command(key, KMC_LEVELMAP);
+    #else
+            const int key = unmangle_direction_keys(getchm(KMC_LEVELMAP),
+                                                    KMC_LEVELMAP);
+            command_type cmd = key_to_command(key, KMC_LEVELMAP);
+    #endif
+            if (cmd < CMD_MIN_OVERMAP || cmd > CMD_MAX_OVERMAP)
+                cmd = CMD_NO_CMD;
+
+            if (key == CK_MOUSE_CLICK)
+            {
+    #ifdef USE_TILE_LOCAL
+                const coord_def grdp = tiles.get_cursor();
+                const coord_def delta = grdp - state.lpos.pos;
+
+                if (delta.zero()) // clicked on current position
+                    cmd = CMD_MAP_GOTO_TARGET; // go to current cursor pos
+                else
+                    cmd = CMD_NEXT_CMD; // a dummy command
+    #else
+                const c_mouse_event cme = get_mouse_event();
+                const coord_def grdp = cme.pos + view.start - coord_def(1, top);
+
+                if (cme.left_clicked() && in_bounds(grdp))
+                {
+                    state.lpos       = level_pos(level_id::current(), grdp);
+                    state.chose      = true;
+                    state.map_alive  = false;
+                }
+                else if (cme.scroll_up())
+                    cmd = CMD_MAP_SCROLL_UP;
+                else if (cme.scroll_down())
+                    cmd = CMD_MAP_SCROLL_DOWN;
+    #endif
+            }
+
+            if (key == CK_REDRAW)
+            {
+                if (Options.messages_at_top)
+                {
+                    display_message_window();
+                    viewwindow();
+                }
+                else
+                {
+                    viewwindow();
+                    display_message_window();
+                }
+                continue;
+            }
+
+            c_input_reset(false);
+
+            state = process_map_command(cmd, state);
+            if (!state.map_alive)
+                break;
         }
 
-        // If we've received a HUP signal then the user can't choose a
-        // location, so indicate this by returning an invalid position.
-        if (crawl_state.seen_hups)
-        {
-            state.lpos = level_pos();
-            state.chose = false;
-        }
-
+        // TODO: is this needed?
         state.lpos.pos = state.lpos.pos.clamped(known_map_bounds());
         ASSERT(map_bounds(state.lpos.pos));
-
-#ifndef USE_TILE_LOCAL
-        const auto view = _get_view_state(state);
-#endif
-
-        if (state.redraw_map)
-        {
-            // Note: Tile versions just center on the current cursor
-            // location. It silently ignores everything else going
-            // on in this function.  --Enne
-#ifdef USE_TILE_LOCAL
-            if (first_run)
-            {
-                tiles.update_tabs();
-                first_run = false;
-            }
-#endif
-#ifdef USE_TILE
-            tiles.load_dungeon(state.lpos.pos);
-#endif
-#ifndef USE_TILE_LOCAL
-            _draw_title(state.lpos.pos, *state.feats);
-            _draw_level_map(view.start.x, view.start.y, state.travel_mode, state.on_level);
-#endif
-        }
-#ifndef USE_TILE_LOCAL
-        cursorxy(view.cursor.x, view.cursor.y + top - 1);
-#endif
-        state.redraw_map = true;
-
-        c_input_reset(true);
-#ifdef USE_TILE_LOCAL
-        const int key = getchm(KMC_LEVELMAP);
-        command_type cmd = key_to_command(key, KMC_LEVELMAP);
-#else
-        const int key = unmangle_direction_keys(getchm(KMC_LEVELMAP),
-                                                KMC_LEVELMAP);
-        command_type cmd = key_to_command(key, KMC_LEVELMAP);
-#endif
-        if (cmd < CMD_MIN_OVERMAP || cmd > CMD_MAX_OVERMAP)
-            cmd = CMD_NO_CMD;
-
-        if (key == CK_MOUSE_CLICK)
-        {
-#ifdef USE_TILE_LOCAL
-            const coord_def grdp = tiles.get_cursor();
-            const coord_def delta = grdp - state.lpos.pos;
-
-            if (delta.zero()) // clicked on current position
-                cmd = CMD_MAP_GOTO_TARGET; // go to current cursor pos
-            else
-                cmd = CMD_NEXT_CMD; // a dummy command
-#else
-            const c_mouse_event cme = get_mouse_event();
-            const coord_def grdp = cme.pos + view.start - coord_def(1, top);
-
-            if (cme.left_clicked() && in_bounds(grdp))
-            {
-                state.lpos       = level_pos(level_id::current(), grdp);
-                state.chose      = true;
-                state.map_alive  = false;
-            }
-            else if (cme.scroll_up())
-                cmd = CMD_MAP_SCROLL_UP;
-            else if (cme.scroll_down())
-                cmd = CMD_MAP_SCROLL_DOWN;
-#endif
-        }
-
-        if (key == CK_REDRAW)
-        {
-            if (Options.messages_at_top)
-            {
-                display_message_window();
-                viewwindow();
-            }
-            else
-            {
-                viewwindow();
-                display_message_window();
-            }
-            continue;
-        }
-
-        c_input_reset(false);
-
-        state = process_map_command(cmd, state);
-        if (!state.map_alive)
-            break;
     }
-
-    state.lpos.pos = state.lpos.pos.clamped(known_map_bounds());
-    ASSERT(map_bounds(state.lpos.pos));
 
 #ifdef USE_TILE
     tiles.place_cursor(CURSOR_MAP, NO_CURSOR);
 #endif
 
     redraw_screen();
+
 #ifdef USE_TILE_LOCAL
     tiles.set_map_display(false);
 #endif
