@@ -1343,6 +1343,8 @@ void run_animation(animation_type anim, use_animation_type type, bool cleanup)
 
 static bool _view_is_updating = false;
 
+crawl_view_buffer view_dungeon(animation *a, bool anim_updates);
+
 /**
  * Draws the main window using the character set returned
  * by get_show_glyph().
@@ -1433,62 +1435,74 @@ void viewwindow(bool show_updates, bool tiles_only, animation *a)
         if (mouse_control::current_mode() != MOUSE_MODE_NORMAL)
             run_dont_draw = false;
 
-        if (run_dont_draw || you.asleep())
+        if (!run_dont_draw && !you.asleep())
         {
-            // Reset env.show if we munged it.
-            if (_layers != LAYERS_ALL)
-                show_init();
-            return;
-        }
+            crawl_view.vbuf = view_dungeon(a, anim_updates);
 
-        cursor_control cs(false);
-
-        int flash_colour = you.flash_colour;
-        if (flash_colour == BLACK)
-            flash_colour = viewmap_flash_colour();
-
-        const coord_def tl = coord_def(1, 1);
-        const coord_def br = crawl_view.viewsz;
-        for (rectangle_iterator ri(tl, br); ri; ++ri)
-        {
-            // in grid coords
-            const coord_def gc = a
-                ? a->cell_cb(view2grid(*ri), flash_colour)
-                : view2grid(*ri);
-
-            if (you.flash_where && you.flash_where->is_affected(gc) <= 0)
-                draw_cell(cell, gc, anim_updates, 0);
-            else
-                draw_cell(cell, gc, anim_updates, flash_colour);
-
-            cell++;
-        }
-
-        you.last_view_update = you.num_turns;
+            you.last_view_update = you.num_turns;
 #ifndef USE_TILE_LOCAL
-        if (!tiles_only)
-        {
-            puttext(crawl_view.viewp.x, crawl_view.viewp.y, crawl_view.vbuf);
-            update_monster_pane();
-        }
+            if (!tiles_only)
+            {
+                puttext(crawl_view.viewp.x, crawl_view.viewp.y, crawl_view.vbuf);
+                update_monster_pane();
+            }
 #else
-        UNUSED(tiles_only);
+            UNUSED(tiles_only);
 #endif
 #ifdef USE_TILE
-        tiles.set_need_redraw(you.running ? Options.tile_runrest_rate : 0);
-        tiles.load_dungeon(crawl_view.vbuf, crawl_view.vgrdc);
-        tiles.update_tabs();
+            tiles.set_need_redraw(you.running ? Options.tile_runrest_rate : 0);
+            tiles.load_dungeon(crawl_view.vbuf, crawl_view.vgrdc);
+            tiles.update_tabs();
 #endif
 
-        // Leaving it this way because short flashes can occur in long ones,
-        // and this simply works without requiring a stack.
-        you.flash_colour = BLACK;
-        you.flash_where = 0;
+            // Leaving it this way because short flashes can occur in long ones,
+            // and this simply works without requiring a stack.
+            you.flash_colour = BLACK;
+            you.flash_where = 0;
+        }
 
         // Reset env.show if we munged it.
         if (_layers != LAYERS_ALL)
             show_init();
     }
+}
+
+/**
+ * Constructs the main dungeon view, rendering it into a new crawl_view_buffer.
+ *
+ * @param a[in] the animation to be showing, if any.
+ * @return A new view buffer with the rendered content.
+ */
+crawl_view_buffer view_dungeon(animation *a, bool anim_updates)
+{
+    crawl_view_buffer vbuf(crawl_view.vbuf.size());
+
+    screen_cell_t *cell(vbuf);
+
+    cursor_control cs(false);
+
+    int flash_colour = you.flash_colour;
+    if (flash_colour == BLACK)
+        flash_colour = viewmap_flash_colour();
+
+    const coord_def tl = coord_def(1, 1);
+    const coord_def br = vbuf.size();
+    for (rectangle_iterator ri(tl, br); ri; ++ri)
+    {
+        // in grid coords
+        const coord_def gc = a
+            ? a->cell_cb(view2grid(*ri), flash_colour)
+            : view2grid(*ri);
+
+        if (you.flash_where && you.flash_where->is_affected(gc) <= 0)
+            draw_cell(cell, gc, anim_updates, 0);
+        else
+            draw_cell(cell, gc, anim_updates, flash_colour);
+
+        cell++;
+    }
+
+    return vbuf;
 }
 
 void draw_cell(screen_cell_t *cell, const coord_def &gc,
