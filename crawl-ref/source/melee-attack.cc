@@ -566,8 +566,6 @@ bool melee_attack::handle_phase_hit()
         do_passive_freeze();
         do_passive_heat();
         emit_foul_stench();
-        //if (you.species == SP_CRUSTACEAN)
-            //you.crustacean_rot(attacker, damage_done);
     }
 
     if (attacker->is_player() && you.duration[DUR_CIGOTUVIS_PLAGUE] && defender->alive())
