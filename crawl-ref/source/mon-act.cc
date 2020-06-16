@@ -1672,6 +1672,7 @@ static void _pre_monster_move(monster& mons)
     reset_battlesphere(&mons);
     reset_spectral_weapon(&mons);
 
+    good_god_follower_attitude_change(&mons);
     fedhas_neutralise(&mons);
     slime_convert(&mons);
 

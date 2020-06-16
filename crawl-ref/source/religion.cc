@@ -655,6 +655,10 @@ void dec_penance(god_type god, int val)
                 mprf(MSGCH_GOD, "A storm instantly forms around you!");
                 you.redraw_armour_class = true; // also handles shields
             }
+            if (have_passive(passive_t::neutral_holy))
+            {
+                add_daction(DACT_HOLY_NEW_ATTEMPT);
+            }
             // When you've worked through all your penance, you get
             // another chance to make hostile slimes strict neutral.
 
