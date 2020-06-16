@@ -131,15 +131,19 @@ void try_god_conversion(god_type god)
 
     if (you.species == SP_ANGEL)
     {
-        if (god != you.religion) {
-            mpr("You cannot abandon your faith.");
+        if (god != you.religion && 
+            !(god == GOD_ELYVILON || 
+                god == GOD_ZIN ||
+                god == GOD_SHINING_ONE)) {
+            mpr("You cannot abandon your faith. You can only convert to good god.");
+
+            return;
         }
         else {
             mprf(MSGCH_GOD, "You offer a %sprayer to %s.",
                 you.cannot_speak() ? "silent " : "",
                 god_name(god).c_str());
         }
-        return;
     }
 
     if (god == GOD_ECUMENICAL)

@@ -3457,7 +3457,7 @@ static spret _do_ability(const ability_def& abil, bool fail)
 
     case ABIL_RENOUNCE_RELIGION:
         if (you.species == SP_ANGEL) {
-            mpr("You cannot abandon your faith.");
+            mpr("You cannot abandon your faith. You can only convert to good god.");
             return spret::abort;
         }
         fail_check();
