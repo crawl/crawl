@@ -670,7 +670,8 @@ static const duration_def duration_data[] =
       WHITE, "Loss",
       "losing your body", "lose your body",
       "You feel your body lighter.", D_NO_FLAGS,
-      {"You get dull.", [](){you.attribute[ATTR_BODY_LOSS] = 0;}}},
+      {{"You get dull.", [](){you.attribute[ATTR_BODY_LOSS] = 0;}}}
+      },
 
     { DUR_BARGAIN, BLUE, "Brgn", "charismatic", "", "You get a bargain in shops.", D_DISPELLABLE | D_EXPIRES,
       {{ "You feel less charismatic." }}, 15 },

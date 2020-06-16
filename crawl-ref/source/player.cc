@@ -6211,12 +6211,12 @@ int player::base_ac_with_specific_items(int scale,
             AC += item.plus * 100;
         }
 
-        if (you.species == SP_CRUSTACEAN)
-            AC += you.deaths * 100;
-
         if (get_armour_ego_type(item) == SPARM_PROTECTION)
             AC += 300;
     }
+
+    if (you.species == SP_CRUSTACEAN)
+        AC += you.deaths * 100;
 
     AC += wearing(EQ_RINGS_PLUS, RING_PROTECTION) * 100;
 	
@@ -6948,7 +6948,7 @@ bool player::rot(actor */*who*/, int amount, bool quiet, bool /*no_cleanup*/)
 bool player::crustacean_rot(actor */*who*/, int amount, bool quiet, bool /*no_cleanup*/)
 {
     ASSERT(!crawl_state.game_is_arena());
-
+    mpr("Fuck");
     if (you.duration[DUR_ECDYSIS] != 0)
     {
             mprf("You are threatened by something during ecdysis.");
@@ -6956,32 +6956,58 @@ bool player::crustacean_rot(actor */*who*/, int amount, bool quiet, bool /*no_cl
             you.duration[DUR_ECDYSIS] = 0;
             return false;
     }
+
+    if (amount <= 0)
+        return false;
     
-    if (you.form != transformation::none ||
-        you.form != transformation::statue ||
-        you.form != transformation::lich)
+    bool crabform = (you.form == transformation::none ||
+                    you.form == transformation::statue ||
+                    you.form == transformation::lich);
+    if (!crabform)
     {
         return false;
     }
-    if (one_chance_in(experience_level * 2))
+    int d = random2(amount/3) + amount/6;
+    if (one_chance_in(2 + you.experience_level/9) && d > 0)
     {
-        int d = random2(amount/3);
-        if (amount <= 0)
-            return false;
-        you.set_duration(DUR_BODY_LOSS, 3);
-        rot_hp(d);
-        you.attribute[ATTR_BODY_LOSS] += d;
-        if (!quiet && d > 0)
-            mprf(MSGCH_WARN, "You feel your flesh cutting away!");
-    }
-    else if (one_chance_in(experience_level) & coinflip())
-    {
-        you.set_duration(DUR_BODY_LOSS, 3);
-        lose_stat(STAT_RANDOM, 1);
-        you.attribute[ATTR_BODY_LOSS] += 1;
+        if (coinflip())
+        {
+
+            if (you.hp < you.hp_max / 5)
+            {
+                rot_hp(1);
+                you.attribute[ATTR_BODY_LOSS] += 1;
+                you.set_duration(DUR_BODY_LOSS, 3);
+            }
+            rot_hp(d);
+            if (!quiet)
+                mprf(MSGCH_WARN, "You feel your flesh cutting away!");
+            you.attribute[ATTR_BODY_LOSS] += d;
+            you.set_duration(DUR_BODY_LOSS, 3);
+            
+            return true;
+        }
+    
+        else
+        {   
+
+            if (you.hp < you.hp_max / 5)
+            {
+                rot_hp(1);
+                you.attribute[ATTR_BODY_LOSS] += 1;
+                you.set_duration(DUR_BODY_LOSS, 3);
+            }
+            lose_stat(STAT_RANDOM, 1);
+            if (!quiet)
+                mprf(MSGCH_WARN, "Your body falls away!"); 
+            you.attribute[ATTR_BODY_LOSS] += d;
+            you.set_duration(DUR_BODY_LOSS, 3);
+            
+            return true;  
+        }
     }
     
-    return true;
+    
 }
 
 bool player::corrode_equipment(const char* corrosion_source, int degree)
@@ -8916,5 +8942,6 @@ void end_ecdysis()
         you.set_duration(DUR_GROW_FOR_ECD, 20 * you.experience_level);
         you.hp = you.hp_max;
         you.redraw_hit_points = true;
+        restore_stat(STAT_ALL, 0, true);
         you.deaths++;
 }

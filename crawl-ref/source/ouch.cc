@@ -952,7 +952,39 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
             take_note(Note(NOTE_HP_CHANGE, you.hp, you.hp_max,
                            damage_desc.c_str()));
 
-            _deteriorate(dam);
+            if (you.species == SP_CRUSTACEAN &&(death_type == KILLED_BY_MONSTER
+                                            || death_type == KILLED_BY_CLOUD
+                                            || death_type == KILLED_BY_BEAM
+                                            || death_type == KILLED_BY_LAVA
+                                            || death_type == KILLED_BY_FREEZING
+                                            || death_type == KILLED_BY_BURNING
+                                            || death_type == KILLED_BY_WILD_MAGIC
+                                            || death_type == KILLED_BY_XOM
+                                            || death_type ==KILLED_BY_TARGETING
+                                            || death_type ==KILLED_BY_SPORE
+                                            || death_type ==KILLED_BY_TSO_SMITING
+                                            || death_type ==KILLED_BY_PETRIFICATION
+                                            || death_type ==KILLED_BY_SOMETHING
+                                            || death_type ==KILLED_BY_FALLING_DOWN_STAIRS
+                                            || death_type ==KILLED_BY_ACID
+                                            || death_type ==KILLED_BY_CURARE
+                                            || death_type ==KILLED_BY_BEOGH_SMITING
+                                            || death_type ==KILLED_BY_DIVINE_WRATH
+                                            || death_type ==KILLED_BY_BOUNCE
+                                            || death_type ==KILLED_BY_REFLECTION
+                                            || death_type ==KILLED_BY_SELF_AIMED
+                                            || death_type ==KILLED_BY_FALLING_THROUGH_GATE
+                                            || death_type ==KILLED_BY_DISINT
+                                            || death_type ==KILLED_BY_HEADBUTT
+                                            || death_type ==KILLED_BY_ROLLING
+                                            || death_type ==KILLED_BY_MIRROR_DAMAGE
+                                            || death_type ==KILLED_BY_SPINES
+                                            || death_type ==KILLED_BY_BARBS
+                                            || death_type ==KILLED_BY_BEING_THROWN
+                                            || death_type ==KILLED_BY_COLLISION))
+                you.crustacean_rot(nullptr, dam);
+            else if (you.species != SP_CRUSTACEAN)
+                _deteriorate(dam);
             _yred_mirrors_injury(dam, source);
             _maybe_ru_retribution(dam, source);
             _maybe_spawn_monsters(dam, death_type, source);
