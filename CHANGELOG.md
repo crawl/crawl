@@ -81,7 +81,10 @@
   
 - 스토커 복구. 벽과 융합하는 새로운 마법과 함께
   - rollback stalker. with magic of transforming into a wall
-
+  
+- 2티어 악마인 쿠부스 추가. 적의 장비를 벗기는 마법을 사용함.
+  - New 2-tier demon, Cubus. Uses spell to take off equipped equipments.
+  
 - 라바 오크, 지니, 하이엘프, 마운틴드워프 복구
   - rollback Lava orc, Djinni, HighElf, MountainDwarf
   
@@ -166,6 +169,9 @@
   
 - 트로그의 분노는 이제 처형도끼 베이스에 +rage임. 또한 안티매직 오라를 가짐
   - Wrath of Trog is now executioner axe with +rage. also has antimagic aura
+
+- 심사숙고의 모자는 이제 소금 데미지를 반감해줌
+  - Hat of pondering protects wearer from salty attack.
 
 - 저주받은 해골 타일 변경 (kormed)
   - A new curse skull tile (kormed)
