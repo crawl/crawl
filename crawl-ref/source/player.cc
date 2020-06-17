@@ -1986,7 +1986,7 @@ int player_movement_speed()
     // transformations
     if (you.form == transformation::bat)
         mv = 5; // but allowed minimum is six
-    else if (you.form == transformation::pig || you.form == transformation::holy_swine)
+    else if (you.form == transformation::pig)
         mv = 7;
     else if (you.form == transformation::wisp)
         mv = 8;
@@ -8117,7 +8117,7 @@ bool player::form_uses_xl() const
     // unintentional form while others can just run or die. I believe this
     // should apply to more forms, too.  [1KB]
     return form == transformation::wisp || form == transformation::fungus
-        || form == transformation::pig || form == transformation::holy_swine
+        || form == transformation::pig
         || form == transformation::bat && you.species != SP_VAMPIRE;
 }
 

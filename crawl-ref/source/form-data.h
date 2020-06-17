@@ -149,17 +149,6 @@ static const form_entry formdata[] =
 },
 
 {
-    transformation::holy_swine, MONS_HOLY_SWINE, "Holy swine", "holy swine-form", "holy swine",
-    "a filthy, but celestial swine.",
-    EQF_PHYSICAL | EQF_RINGS, MR_NO_FLAGS,
-    BAD_DURATION, 0, 0, SIZE_SMALL, 10,
-    0, 0, 0, false, 0, 0, 3,
-    SPWPN_HOLY_WRATH, LIGHTGREY, "Teeth", ANIMAL_VERBS,
-    FC_DEFAULT, FC_FORBID, FC_ENABLE, true, false,
-    "squeal", 0, "front trotter", "trotter", "bow your head before", "flesh"
-},
-
-{
     transformation::appendage, MONS_PLAYER, "App", "appendage", "appendage",
     "",
     EQF_NONE, MR_NO_FLAGS,

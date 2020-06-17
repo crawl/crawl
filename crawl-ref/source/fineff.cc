@@ -491,7 +491,7 @@ void kirke_death_fineff::fire()
     delayed_action_fineff::fire();
 
     // Revert the player last
-    if (you.form == transformation::pig || you.form == transformation::holy_swine)
+    if (you.form == transformation::pig)
         untransform();
 }
 
