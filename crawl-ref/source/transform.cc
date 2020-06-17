@@ -780,6 +780,15 @@ public:
     static const FormPig &instance() { static FormPig inst; return inst; }
 };
 
+class FormHolySwine : public Form
+{
+private:
+    FormHolySwine() : Form(transformation::holy_swine) { }
+    DISALLOW_COPY_AND_ASSIGN(FormHolySwine);
+public:
+    static const FormHolySwine &instance() { static FormHolySwine inst; return inst; }
+};
+
 class FormAppendage : public Form
 {
 private:
@@ -1005,6 +1014,7 @@ static const Form* forms[] =
     &FormFungus::instance(),
     &FormShadow::instance(),
     &FormHydra::instance(),
+    &FormHolySwine::instance(),
 };
 
 const Form* get_form(transformation xform)
@@ -1630,6 +1640,12 @@ bool transform(int pow, transformation which_trans, bool involuntary,
     const bool was_flying = you.airborne();
     bool success = true;
     string msg;
+
+    // Celestial species will become a holy swine either player!
+    if (you.species == SP_ANGEL && which_trans == transformation::pig)
+    {  
+        which_trans = transformation::holy_swine;
+    }
 
     // Zin's protection.
     if (!just_check && have_passive(passive_t::resist_polymorph)
