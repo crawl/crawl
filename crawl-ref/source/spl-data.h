@@ -4048,7 +4048,7 @@ static const struct spell_desc spelldata[] =
     spflag::target | spflag::not_self,
     5,
     200,
-    2, 5,
+    3, 6,
     2, 4,
     TILEG_ERINGYAS_ROOTSPIKE,
 },
