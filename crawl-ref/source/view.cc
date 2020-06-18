@@ -906,6 +906,12 @@ void view_update_at(const coord_def &pos)
         return;
 
     show_update_at(pos);
+#ifdef USE_TILE
+    tile_draw_map_cell(pos, true);
+#endif
+#ifdef USE_TILE_WEB
+    tiles.mark_for_redraw(pos);
+#endif
 
 #ifndef USE_TILE_LOCAL
     if (!env.map_knowledge(pos).visible())
@@ -1361,17 +1367,18 @@ void viewwindow(bool show_updates, bool tiles_only, animation *a)
             if (!is_map_persistent())
                 ash_detect_portals(false);
 
-#ifdef USE_TILE
-            tile_draw_floor();
-            tile_draw_rays(true);
-            tiles.clear_overlays();
-#endif
-
             // TODO: why on earth is this called from here? It seems like it
             // should be called directly on changing location, or something
             // like that...
             if (you.on_current_level)
                 show_init(_layers);
+
+#ifdef USE_TILE
+            tile_draw_floor();
+            tile_draw_rays(true);
+            tiles.clear_overlays();
+            tile_draw_map_cells();
+#endif
         }
 
         if (show_updates)

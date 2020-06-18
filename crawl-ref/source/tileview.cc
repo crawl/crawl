@@ -835,6 +835,27 @@ void tile_floor_halo(dungeon_feature_type target, tileidx_t tile)
 }
 
 #ifdef USE_TILE
+
+void tile_draw_map_cells()
+{
+    if (crawl_state.game_is_arena())
+        for (rectangle_iterator ri(crawl_view.vgrdc, LOS_MAX_RANGE); ri; ++ri)
+        {
+            tile_draw_map_cell(*ri, true);
+#ifdef USE_TILE_WEB
+            tiles.mark_for_redraw(*ri);
+#endif
+        }
+    else
+        for (radius_iterator ri(you.pos(), LOS_NONE); ri; ++ri)
+        {
+            tile_draw_map_cell(*ri, true);
+#ifdef USE_TILE_WEB
+            tiles.mark_for_redraw(*ri);
+#endif
+        }
+}
+
 static tileidx_t _get_floor_bg(const coord_def& gc)
 {
     tileidx_t bg = TILE_DNGN_UNSEEN | tileidx_unseen_flag(gc);

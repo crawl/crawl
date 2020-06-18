@@ -358,8 +358,13 @@ void wizard_map_level()
     {
         update_item_at(*ri, false, true);
         show_update_at(*ri, LAYER_ITEMS);
+
 #ifdef USE_TILE
         tiles.update_minimap(*ri);
+        tile_draw_map_cell(*ri, true);
+#endif
+#ifdef USE_TILE_WEB
+        tiles.mark_for_redraw(*ri);
 #endif
     }
 }

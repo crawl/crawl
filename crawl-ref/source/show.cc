@@ -486,7 +486,7 @@ static void _update_monster(monster* mons)
 }
 
 /**
- * Update map knowledge and set the map tiles at a location.
+ * Updates the map knowledge at a location.
  * @param gp      The location to update.
  * @param layers  The information layers to display.
 **/
@@ -501,8 +501,6 @@ void show_update_at(const coord_def &gp, layers_type layers)
     // The sequence is grid, items, clouds, monsters.
     _update_feat_at(gp);
 
-    // If there's items on the boundary (shop inventory),
-    // we don't show them.
     if (in_bounds(gp))
     {
         if (layers & LAYER_MONSTERS)
@@ -521,13 +519,6 @@ void show_update_at(const coord_def &gp, layers_type layers)
         if (layers & LAYER_ITEMS)
             update_item_at(gp);
     }
-
-#ifdef USE_TILE
-    tile_draw_map_cell(gp, true);
-#endif
-#ifdef USE_TILE_WEB
-    tiles.mark_for_redraw(gp);
-#endif
 }
 
 void show_init(layers_type layers)
