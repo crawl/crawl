@@ -6948,7 +6948,6 @@ bool player::rot(actor */*who*/, int amount, bool quiet, bool /*no_cleanup*/)
 bool player::crustacean_rot(actor */*who*/, int amount, bool quiet, bool /*no_cleanup*/)
 {
     ASSERT(!crawl_state.game_is_arena());
-    mpr("Fuck");
     if (you.duration[DUR_ECDYSIS] != 0)
     {
             mprf("You are threatened by something during ecdysis.");
