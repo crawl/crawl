@@ -591,7 +591,10 @@ bool xp_penance(god_type god)
 
 void dec_penance(god_type god, int val)
 {
-    if (you.species == SP_ANGEL) //NEVER MOLLIFY!
+    if (you.species == SP_ANGEL &&
+        god != GOD_ZIN &&
+        god != GOD_ELYVILON &&
+        god != GOD_SHINING_ONE) //NEVER MOLLIFY!
         return;
 
     if (val <= 0 || you.penance[god] <= 0)
