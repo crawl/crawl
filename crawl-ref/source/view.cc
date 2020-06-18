@@ -1300,6 +1300,19 @@ static bool _view_is_updating = false;
 
 crawl_view_buffer view_dungeon(animation *a, bool anim_updates);
 
+static bool _viewwindow_should_render()
+{
+    if (you.asleep())
+        return false;
+    if (mouse_control::current_mode() != MOUSE_MODE_NORMAL)
+        return true;
+    if (you.running && you.running.is_rest())
+        return Options.rest_delay != -1;
+    const bool run_dont_draw = you.running && Options.travel_delay < 0
+                && (!you.running.is_explore() || Options.explore_delay < 0);
+    return !run_dont_draw;
+}
+
 /**
  * Draws the main window using the character set returned
  * by get_show_glyph().
@@ -1384,14 +1397,7 @@ void viewwindow(bool show_updates, bool tiles_only, animation *a)
         if (show_updates)
             player_view_update();
 
-        bool run_dont_draw = you.running && Options.travel_delay < 0
-                    && (!you.running.is_explore() || Options.explore_delay < 0);
-        if (you.running && you.running.is_rest())
-            run_dont_draw = Options.rest_delay == -1;
-        if (mouse_control::current_mode() != MOUSE_MODE_NORMAL)
-            run_dont_draw = false;
-
-        if (!run_dont_draw && !you.asleep())
+        if (_viewwindow_should_render())
         {
             crawl_view.vbuf = view_dungeon(a, anim_updates);
 
