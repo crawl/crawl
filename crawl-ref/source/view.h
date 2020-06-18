@@ -41,7 +41,6 @@ void flash_view_delay(use_animation_type a, colour_t colour, int delay,
 enum animation_type
 {
     ANIMATION_SHAKE_VIEWPORT,
-    ANIMATION_CHECKERBOARD,
     ANIMATION_BANISH,
     ANIMATION_ORB,
     NUM_ANIMATIONS

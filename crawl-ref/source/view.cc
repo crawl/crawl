@@ -1172,26 +1172,6 @@ private:
     coord_def offset;
 };
 
-class checkerboard_animation: public animation
-{
-public:
-    checkerboard_animation() { frame_delay = 100; frames = 5; }
-    void init_frame(int frame) override
-    {
-        current_frame = frame;
-    }
-
-    coord_def cell_cb(const coord_def &pos, int &/*colour*/) override
-    {
-        if (current_frame % 2 == (pos.x + pos.y) % 2 && pos != you.pos())
-            return coord_def(-1, -1);
-        else
-            return pos;
-    }
-
-    int current_frame;
-};
-
 class banish_animation: public animation
 {
 public:
@@ -1276,13 +1256,11 @@ public:
 };
 
 static shake_viewport_animation shake_viewport;
-static checkerboard_animation checkerboard;
 static banish_animation banish;
 static orb_animation orb;
 
 static animation *animations[NUM_ANIMATIONS] = {
     &shake_viewport,
-    &checkerboard,
     &banish,
     &orb
 };
