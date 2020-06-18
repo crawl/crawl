@@ -1242,33 +1242,6 @@ public:
     int current_frame;
 };
 
-class slideout_animation: public animation
-{
-public:
-    void init_frame(int frame) override
-    {
-        current_frame = frame;
-    }
-
-    coord_def cell_cb(const coord_def &pos, int &/*colour*/) override
-    {
-        coord_def ret;
-        if (pos.y % 2)
-            ret = coord_def(pos.x + current_frame * 4, pos.y);
-        else
-            ret = coord_def(pos.x - current_frame * 4, pos.y);
-
-        coord_def view = grid2view(ret);
-        const coord_def max = crawl_view.viewsz;
-        if (view.x < 1 || view.y < 1 || view.x > max.x || view.y > max.y)
-            return coord_def(-1, -1);
-        else
-            return ret;
-    }
-
-    int current_frame;
-};
-
 class orb_animation: public animation
 {
 public:
@@ -1305,14 +1278,12 @@ public:
 static shake_viewport_animation shake_viewport;
 static checkerboard_animation checkerboard;
 static banish_animation banish;
-static slideout_animation slideout;
 static orb_animation orb;
 
 static animation *animations[NUM_ANIMATIONS] = {
     &shake_viewport,
     &checkerboard,
     &banish,
-    &slideout,
     &orb
 };
 
