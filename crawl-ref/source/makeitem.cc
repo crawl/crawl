@@ -330,7 +330,7 @@ bool is_weapon_brand_ok(int type, int brand, bool /*strict*/)
 
     // Ranged-only brands.
     case SPWPN_PENETRATION:
-    case SPWPN_ACID: // Only exists on Punk
+    //case SPWPN_ACID: // Only exists on Punk
         if (!is_range_weapon(item))
             return false;
         break;

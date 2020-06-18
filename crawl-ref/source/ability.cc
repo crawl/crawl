@@ -444,8 +444,8 @@ static const ability_def Ability_List[] =
     { ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB, "Greater Servant of Makhleb",
       0, scaling_cost::fixed(10), 0, 5,
       {fail_basis::invo, 90, 2, 5}, abflag::hostile },
-    { ABIL_MAKHLEB_BLESS_WEAPON, "Brand Weapon With Chaos", 0, 0, 0, 0,
-      {fail_basis::invo}, abflag::none },
+ //   { ABIL_MAKHLEB_BLESS_WEAPON, "Brand Weapon With Chaos", 0, 0, 0, 0,
+ //     {fail_basis::invo}, abflag::none },
 
     // Sif Muna
     { ABIL_SIF_MUNA_CHANNEL_ENERGY, "Channel Magic",
@@ -479,8 +479,8 @@ static const ability_def Ability_List[] =
       2, 0, 250, 3, {fail_basis::invo, 40, 5, 20}, abflag::none },
     { ABIL_ELYVILON_DIVINE_VIGOUR, "Divine Vigour",
       0, 0, 600, 6, {fail_basis::invo, 80, 4, 25}, abflag::none },
-    { ABIL_ELYVILON_BLESS_WEAPON, "Brand Weapon With Pacifing", 0, 0, 0, 0,
-      {fail_basis::invo}, abflag::none },
+//    { ABIL_ELYVILON_BLESS_WEAPON, "Brand Weapon With Pacifing", 0, 0, 0, 0,
+//      {fail_basis::invo}, abflag::none },
 
     // Lugonu
     { ABIL_LUGONU_ABYSS_EXIT, "Depart the Abyss",
@@ -533,7 +533,7 @@ static const ability_def Ability_List[] =
       4, 0, 0, 8, {fail_basis::invo, 90, 0, 2}, abflag::none },
     { ABIL_JIYVA_CURE_BAD_MUTATION, "Cure Bad Mutation",
       0, 0, 0, 15, {fail_basis::invo}, abflag::none },
-    { ABIL_JIYVA_BLESS_WEAPON, "Brand Weapon With Slimifing", 0, 0, 0, 0,
+    { ABIL_JIYVA_BLESS_WEAPON, "Brand Weapon With Acid", 0, 0, 0, 0,
       {fail_basis::invo}, abflag::none },
 
     // Fedhas
@@ -555,8 +555,8 @@ static const ability_def Ability_List[] =
       5, 0, 100, 8, {fail_basis::invo, 60, 4, 25}, abflag::none },
     { ABIL_CHEIBRIADOS_TIME_STEP, "Step From Time",
       10, 0, 200, 10, {fail_basis::invo, 80, 4, 25}, abflag::none },
-    { ABIL_CHEIBRIADOS_BLESS_WEAPON, "Brand Weapon With Sluggish", 0, 0, 0, 0,
-      {fail_basis::invo}, abflag::none },
+ //   { ABIL_CHEIBRIADOS_BLESS_WEAPON, "Brand Weapon With Sluggish", 0, 0, 0, 0,
+ //     {fail_basis::invo}, abflag::none },
 
     // Ashenzari
     { ABIL_ASHENZARI_CURSE, "Curse Item",
@@ -3119,7 +3119,7 @@ static spret _do_ability(const ability_def& abil, bool fail)
         fail_check();
         simple_god_message(" will bless one of your weapons.");
         // included in default force_more_message
-        if (!bless_weapon(GOD_JIYVA, SPWPN_SLIMIFYING, GREEN))
+        if (!bless_weapon(GOD_JIYVA, SPWPN_ACID, GREEN))
             return spret::abort;
         break;
 

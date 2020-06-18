@@ -602,6 +602,11 @@ Brand Weapon With Slimifing ability
 Permanently transforms a weapon of your choice with the slimifing of the jiyva.
 This blessing may only be used once, and it cannot be used on artefact weapons.
 %%%%
+Brand Weapon With Acid ability
+
+Permanently corroded a weapon of your choice with the acid of the jiyva.
+This blessing may only be used once, and it cannot be used on artefact weapons.
+%%%%
 # Ashenzari
 Scrying ability
 

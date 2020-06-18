@@ -1369,6 +1369,10 @@ static string _describe_weapon(const item_def &item, bool verbose)
                 "against mutated beings, according to how mutated they are.";
             break;
 
+        case SPWPN_ACID:
+            description += "It corrodes enemy.";
+            break;
+
         case SPWPN_NORMAL:
             ASSERT(enchanted);
             description += "It has no special brand (it is not flaming, "

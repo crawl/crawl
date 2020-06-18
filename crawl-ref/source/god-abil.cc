@@ -125,7 +125,7 @@ static const char *_god_blessing_description(god_type god)
     case GOD_TROG:
         return "enchanted by Trog";
     case GOD_JIYVA:
-        return "transformed by Jiyva";
+        return "corroded by Jiyva";
     case GOD_ELYVILON:
         return "blessed by Elyvilon";
     case GOD_CHEIBRIADOS:
@@ -186,6 +186,8 @@ bool bless_weapon(god_type god, brand_type brand, colour_t colour)
         prompt += "blessed with sluggish";
     else if (brand == SPWPN_SILVER)
         prompt += "blessed with sliver";
+    else if (brand == SPWPN_ACID)
+        prompt += "corroded with acid";
     else
         prompt += "blessed with holy wrath";
     prompt += "?";

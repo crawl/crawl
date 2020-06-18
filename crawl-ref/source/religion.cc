@@ -183,9 +183,9 @@ const vector<god_power> god_powers[NUM_GODS] =
            "hurl Makhleb's greater destruction" },
       { 5, ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB,
            "summon a greater servant of Makhleb" },
-      { 7, ABIL_MAKHLEB_BLESS_WEAPON,
-           "Makhleb will bless your weapon with chaos... once.",
-           "Makhleb is no longer ready to bless your weapon." },
+ //     { 7, ABIL_MAKHLEB_BLESS_WEAPON,
+ //          "Makhleb will bless your weapon with chaos... once.",
+ //          "Makhleb is no longer ready to bless your weapon." },
     },
 
     // Sif Muna
@@ -234,9 +234,9 @@ const vector<god_power> god_powers[NUM_GODS] =
       { 4, ABIL_ELYVILON_GREATER_HEALING, "provide greater healing for yourself" },
       { 5, ABIL_ELYVILON_DIVINE_VIGOUR, "call upon Elyvilon for divine vigour" },
       { 1, ABIL_ELYVILON_LIFESAVING, "call on Elyvilon to save your life" },
-      { 7, ABIL_ELYVILON_BLESS_WEAPON,
-           "Elyvilon will bless your weapon with pacifing... once.",
-           "Elyvilon is no longer ready to bless your weapon." },
+ //     { 7, ABIL_ELYVILON_BLESS_WEAPON,
+ //          "Elyvilon will bless your weapon with pacifing... once.",
+ //          "Elyvilon is no longer ready to bless your weapon." },
     },
 
     // Lugonu
@@ -277,7 +277,7 @@ const vector<god_power> god_powers[NUM_GODS] =
       { 5, ABIL_JIYVA_CURE_BAD_MUTATION,
            "call upon Jiyva to remove your harmful mutations" },
       { 7, ABIL_JIYVA_BLESS_WEAPON,
-           "Jiyva will bless your weapon with slimifying... once.",
+           "Jiyva will bless your weapon with acid... once.",
            "Jiyva is no longer ready to bless your weapon." },
     },
 
@@ -297,9 +297,9 @@ const vector<god_power> god_powers[NUM_GODS] =
       { 3, ABIL_CHEIBRIADOS_DISTORTION, "warp the flow of time around you" },
       { 4, ABIL_CHEIBRIADOS_SLOUCH, "inflict damage on those overly hasty" },
       { 5, ABIL_CHEIBRIADOS_TIME_STEP, "step out of the flow of time" },
-      { 7, ABIL_CHEIBRIADOS_BLESS_WEAPON,
-           "Cheibriados will bless your weapon with sluggish... once.",
-           "Cheibriados is no longer ready to bless your weapon." },
+//      { 7, ABIL_CHEIBRIADOS_BLESS_WEAPON,
+//          "Cheibriados will bless your weapon with sluggish... once.",
+//           "Cheibriados is no longer ready to bless your weapon." },
     },
 
     // Ashenzari
