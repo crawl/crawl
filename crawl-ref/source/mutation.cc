@@ -665,7 +665,7 @@ string describe_mutations(bool drop_title)
             !form_keeps_mutations());
     }
 
-    if (you.species != SP_FELID)
+    if (you.species != SP_FELID && you.speies != SP_CRUSTACEAN)
     {
         switch (you.body_size(PSIZE_TORSO, true))
         {

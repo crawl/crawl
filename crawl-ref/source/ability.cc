@@ -1656,6 +1656,12 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
                 canned_msg(MSG_CANNOT_DO_YET);
             return false;
         }
+        else if (you.in_water())
+        {
+            if (!quiet)
+                mprf("Since you are filled with vigor in a water, you can't emit a miasma.");
+            return false;
+        }
         return true;
 
     case ABIL_HEAL_WOUNDS:

@@ -1990,7 +1990,7 @@ int player_movement_speed()
         mv = 7;
     else if (you.form == transformation::wisp)
         mv = 8;
-    else if (you.fishtail || you.form == transformation::hydra && you.in_water())
+    else if (you.fishtail || you.form == transformation::hydra && you.in_water() || you.species == SP_CRUSTACEAN && you.in_water())
         mv = 6;
 
     // Wading through water is very slow.
@@ -2225,7 +2225,7 @@ static int _player_evasion_bonuses()
     return evbonus;
 }
 
-// Player EV scaling for being flying tengu or swimming merfolk.
+// Player EV scaling for being flying tengu or swimming merfolk or swimming crustacean.
 static int _player_scale_evasion(int prescaled_ev, const int scale)
 {
     if (you.duration[DUR_PETRIFYING] || you.caught())
@@ -2242,6 +2242,13 @@ static int _player_scale_evasion(int prescaled_ev, const int scale)
     if (you.tengu_flight())
     {
         const int ev_bonus = max(1 * scale, prescaled_ev / 5);
+        return prescaled_ev + ev_bonus;
+    }
+
+    // Crustacean get a 33% evasion bonus in water.
+    if (you.species == SP_CRUSTACEAN && you.in_water())
+    {
+        const int ev_bonus = max(2 * scale, prescaled_ev / 3);
         return prescaled_ev + ev_bonus;
     }
 
