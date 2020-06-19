@@ -1,0 +1,59 @@
+enum: SP_HYDRA
+monster: MONS_HYDRA
+name: "Hydra"
+short_name: "Hy"
+adjective: "Hydrous"
+genus: "Hydra"
+aptitudes:
+  xp: 0
+  hp: 0
+  mp_mod: 0
+  mr: 1
+  fighting : 4
+  unarmed_combat : 4
+  short_blades: False
+  long_blades: False
+  axes: False
+  maces_and_flails: False
+  polearms: False
+  staves: False
+  slings: False
+  bows: False
+  crossbows: False
+  throwing: False
+  armour: -2
+  dodging: 0
+  stealth: 0
+  shields: False
+  spellcasting: -3
+  conjurations: -2
+  hexes: -2
+  charms: -2
+  translocations: -2
+  transmutations: -2
+  fire_magic: -3
+  ice_magic: -2
+  air_magic: -2
+  earth_magic: -2
+  poison_magic: -2
+  evocations: 1
+can_swim : true
+size: big
+str: 10
+int: 8
+dex: 6
+levelup_stat_frequency: 4
+mutations:
+  1:
+    MUT_DEFORMED : 1
+    MUT_REGENERATION : 3
+    MUT_POISON_RESISTANCE : 1
+fake_mutations:
+  - long: You are incapable of wielding weapons or throwing items.
+    short: no weapons or thrown items
+  - long: You can walk fast in water.
+    short: walks fast in water. 
+recommended_jobs:
+  - JOB_FIGHTER
+recommended_weapons:
+  - SK_UNARMED_COMBAT
