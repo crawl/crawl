@@ -1990,9 +1990,7 @@ int player_movement_speed()
         mv = 7;
     else if (you.form == transformation::wisp)
         mv = 8;
-    else if (you.fishtail || you.form == transformation::hydra && you.in_water() 
-            || (you.species == SP_CRUSTACEAN
-                || you.species == SP_HYDRA) && you.in_water())
+    else if (you.fishtail || (you.is_hydra() || you.species == SP_CRUSTACEAN) && you.in_water())
         mv = 6;
 
     // Wading through water is very slow.
@@ -6498,6 +6496,11 @@ bool player::is_unbreathing() const
 bool player::is_insubstantial() const
 {
     return form == transformation::wisp;
+}
+
+bool player::is_hydra() const
+{
+    return (form == transformation::hydra || species == SP_HYDRA)
 }
 
 int player::res_acid(bool calc_unid) const
