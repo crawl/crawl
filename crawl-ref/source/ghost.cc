@@ -132,27 +132,6 @@ void ghost_demon::reset()
     flies            = false;
 }
 
-/**
- * Choose a random brand for a pandemonium lord's melee attacks.
- *
- * @return  A random valid brand type (not holy wrath, protection, etc)
- */
-static brand_type _random_special_pan_lord_brand()
-{
-    return random_choose_weighted(10, SPWPN_FLAMING,
-                                  10, SPWPN_FREEZING,
-                                  10, SPWPN_ELECTROCUTION,
-                                  10, SPWPN_VENOM,
-                                  // Lower chance
-                                  5, SPWPN_DRAINING,
-                                  // Higher chance
-                                  20, SPWPN_VAMPIRISM,
-                                  20, SPWPN_PAIN,
-                                  20, SPWPN_ANTIMAGIC,
-                                  20, SPWPN_DISTORTION,
-                                  20, SPWPN_CHAOS);
-}
-
 #define ADD_SPELL(which_spell) \
     do { \
         const auto spell = (which_spell); \
@@ -174,6 +153,194 @@ static int _panlord_random_elec_resist_level()
     return random_choose_weighted(3, 0,
                                   6, 1,
                                   1, 3);
+}
+
+/**
+ * Generate a random attack_type for a pandemonium_lord. Since this is purely
+ * flavour, special attack types are rare.
+ */
+static attack_type _pan_lord_random_attack_type()
+{
+    attack_type attack = AT_HIT;
+    if (one_chance_in(4))
+    {
+        do {
+            attack = static_cast<attack_type>(random_range(AT_FIRST_ATTACK, AT_LAST_REAL_ATTACK));
+        } while (attack == AT_HIT || !is_plain_attack_type(attack));
+    }
+    return attack;
+}
+
+/**
+ * Set a random attack type for a pandemonium lord's melee attacks. Some of
+ * these are branded attacks, some are custom attack flavours, some are matching
+ * attack types & flavours. (Pan lord attack type is randomised, but can be
+ * overridden here if required.)
+ */
+void ghost_demon::set_pan_lord_special_attack()
+{
+    enum attack_form
+    {
+        BRAND_FLAMING,
+        BRAND_FREEZING,
+        BRAND_ELECTROCUTION,
+        BRAND_VENOM,
+        BRAND_DRAINING,
+        BRAND_VAMPIRISM,
+        BRAND_PAIN,
+        BRAND_ANTIMAGIC,
+        BRAND_DISTORTION,
+        BRAND_CHAOS,
+        ATTACK_TRAMPLE,
+        ATTACK_DRAIN_STR,
+        ATTACK_DRAIN_DEX,
+        ATTACK_DRAIN_INT,
+        ATTACK_HUNGER,
+        ATTACK_ROT,
+        ATTACK_ENSNARE,
+        ATTACK_DRAIN_SPEED,
+        ATTACK_DROWN,
+        ATTACK_CORRODE,
+        ATTACK_WEAKNESS,
+    };
+    const attack_form chosen = random_choose_weighted(
+        // Low chance
+        10, BRAND_VENOM,
+        10, BRAND_DRAINING,
+        4, ATTACK_DRAIN_STR,
+        4, ATTACK_DRAIN_INT,
+        2, ATTACK_DRAIN_DEX,
+        10, ATTACK_HUNGER,
+        10, ATTACK_ROT,
+        10, ATTACK_DROWN,
+        // Normal chance
+        20, BRAND_FLAMING,
+        20, BRAND_FREEZING,
+        20, BRAND_ELECTROCUTION,
+        20, BRAND_VAMPIRISM,
+        20, BRAND_PAIN,
+        20, ATTACK_ENSNARE,
+        20, ATTACK_DRAIN_SPEED,
+        20, ATTACK_CORRODE,
+        20, ATTACK_WEAKNESS,
+        // High chance
+        40, BRAND_ANTIMAGIC,
+        40, BRAND_DISTORTION,
+        40, BRAND_CHAOS,
+        40, ATTACK_TRAMPLE
+    );
+
+    switch (chosen) {
+        case BRAND_FLAMING:
+        {
+            brand = SPWPN_FLAMING;
+            break;
+        }
+        case BRAND_FREEZING:
+        {
+            brand = SPWPN_FREEZING;
+            break;
+        }
+        case BRAND_ELECTROCUTION:
+        {
+            brand = SPWPN_ELECTROCUTION;
+            break;
+        }
+        case BRAND_VENOM:
+        {
+            brand = SPWPN_VENOM;
+            if (coinflip())
+                att_type = AT_STING;
+            break;
+        }
+        case BRAND_DRAINING:
+        {
+            brand = SPWPN_DRAINING;
+            break;
+        }
+        case BRAND_VAMPIRISM:
+        {
+            brand = SPWPN_VAMPIRISM;
+            break;
+        }
+        case BRAND_PAIN:
+        {
+            brand = SPWPN_PAIN;
+            break;
+        }
+        case BRAND_ANTIMAGIC:
+        {
+            brand = SPWPN_ANTIMAGIC;
+            break;
+        }
+        case BRAND_DISTORTION:
+        {
+            brand = SPWPN_DISTORTION;
+            break;
+        }
+        case BRAND_CHAOS:
+        {
+            brand = SPWPN_CHAOS;
+            break;
+        }
+        case ATTACK_TRAMPLE:
+        {
+            att_type = AT_TRAMPLE;
+            att_flav = AF_TRAMPLE;
+            break;
+        }
+        case ATTACK_DRAIN_STR:
+        {
+            att_flav = AF_DRAIN_STR;
+            break;
+        }
+        case ATTACK_DRAIN_DEX:
+        {
+            att_flav = AF_DRAIN_DEX;
+            break;
+        }
+        case ATTACK_DRAIN_INT:
+        {
+            att_flav = AF_DRAIN_INT;
+            break;
+        }
+        case ATTACK_HUNGER:
+        {
+            att_flav = AF_HUNGER;
+            break;
+        }
+        case ATTACK_ROT:
+        {
+            att_flav = AF_ROT;
+            break;
+        }
+        case ATTACK_ENSNARE:
+        {
+            att_flav = AF_ENSNARE;
+            break;
+        }
+        case ATTACK_DRAIN_SPEED:
+        {
+            att_flav = AF_DRAIN_SPEED;
+            break;
+        }
+        case ATTACK_DROWN:
+        {
+            att_type = AT_ENGULF;
+            att_flav = AF_DROWN;
+            break;
+        }
+        case ATTACK_CORRODE:
+        {
+            att_flav = AF_CORRODE;
+            break;
+        }
+        case ATTACK_WEAKNESS:
+        {
+            att_flav = AF_WEAKNESS;
+            break;
+        }
+    };
 }
 
 void ghost_demon::init_pandemonium_lord()
@@ -225,10 +392,9 @@ void ghost_demon::init_pandemonium_lord()
         xl += 5;
     }
 
+    att_type = _pan_lord_random_attack_type();
     if (one_chance_in(3) || !spellcaster)
-        brand = _random_special_pan_lord_brand();
-    else
-        brand = SPWPN_NORMAL;
+        set_pan_lord_special_attack();
 
     // Non-caster demons are fast, casters may get haste.
     if (!spellcaster)
@@ -779,8 +945,7 @@ bool debug_check_ghost(const ghost_demon &ghost)
     if (ghost.brand == SPWPN_HOLY_WRATH)
         return false;
 
-    // Only (very) ugly things get non-plain attack types and
-    // flavours.
+    // Ghosts don't get non-plain attack types and flavours.
     if (ghost.att_type != AT_HIT || ghost.att_flav != AF_PLAIN)
         return false;
 

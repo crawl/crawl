@@ -67,6 +67,7 @@ private:
     spell_type translate_spell(spell_type playerspell) const;
     void ugly_thing_add_resistance(bool very_ugly,
                                    attack_flavour u_att_flav);
+    void set_pan_lord_special_attack();
 };
 
 bool debug_check_ghosts(vector<ghost_demon> &ghosts);

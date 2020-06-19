@@ -2080,6 +2080,28 @@ string mon_attack_name(attack_type attack, bool with_object)
 }
 
 /**
+ * Is this attack flavour 'plain'? A plain attack flavour doesn't imply the
+ * target will be affected in any particular way beyond damage.
+ * Certain attack flavours like AT_TRAMPLE, AT_SPORE, and AT_ENGULF do imply
+ * additional effects, and are not considered 'plain'.
+ */
+bool is_plain_attack_type(attack_type attack)
+{
+    return attack == AT_HIT
+        || attack == AT_BITE
+        || attack == AT_TOUCH
+        || attack == AT_CLAW
+        || attack == AT_PECK
+        || attack == AT_HEADBUTT
+        || attack == AT_PUNCH
+        || attack == AT_KICK
+        || attack == AT_TENTACLE_SLAP
+        || attack == AT_TAIL_SLAP
+        || attack == AT_GORE
+        || attack == AT_TRUNK_SLAP;
+}
+
+/**
  * Does this monster attack flavour trigger even if the base attack does no
  * damage?
  *
