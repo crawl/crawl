@@ -70,7 +70,6 @@ static spell_type search_order_selfench[] =
     SPELL_SILENCE,
     SPELL_INVISIBILITY,
     SPELL_BLINK,
-    SPELL_BLINKBOLT,
     SPELL_BLINK_RANGE,
 };
 
@@ -101,6 +100,19 @@ static spell_type search_order_misc[] =
     SPELL_SENTINEL_MARK,
     SPELL_DIMENSION_ANCHOR,
     SPELL_TELEPORT_OTHER, // funny
+};
+
+/**
+ * A small set of spells that pan lords without (other) spells can make use of.
+ * All related to closing the gap with the player, or messing with their
+ * movement.
+ */
+static spell_type search_order_non_spellcaster[] =
+{
+    SPELL_BLINKBOLT,
+    SPELL_BLINK_CLOSE,
+    SPELL_HARPOON_SHOT,
+    SPELL_SEAL_DOORS,
 };
 
 ghost_demon::ghost_demon()
@@ -429,8 +441,17 @@ void ghost_demon::init_pandemonium_lord()
         if (coinflip())
             ADD_SPELL(random_choose(SPELL_SUMMON_DEMON, SPELL_SUMMON_GREATER_DEMON));
 
-        normalize_spell_freq(spells, spell_freq_for_hd(xl));
     }
+    else
+    {
+        // Non-spellcasters may get one spell
+        if (one_chance_in(3))
+            ADD_SPELL(RANDOM_ELEMENT(search_order_non_spellcaster));
+    }
+
+    if (!spells.empty())
+        normalize_spell_freq(spells, spellcaster ? spell_freq_for_hd(xl)
+                                                 : spell_freq_for_hd(xl) / 3);
 
     colour = one_chance_in(10) ? colour_t{ETC_RANDOM} : random_monster_colour();
 }
