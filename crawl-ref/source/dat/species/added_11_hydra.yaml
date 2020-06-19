@@ -4,6 +4,7 @@ name: "Hydra"
 short_name: "Hy"
 adjective: "Hydrous"
 genus: "Hydra"
+difficulty : Advanced
 aptitudes:
   xp: 0
   hp: 0

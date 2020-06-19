@@ -1990,7 +1990,9 @@ int player_movement_speed()
         mv = 7;
     else if (you.form == transformation::wisp)
         mv = 8;
-    else if (you.fishtail || you.form == transformation::hydra && you.in_water() || you.species == SP_CRUSTACEAN && you.in_water())
+    else if (you.fishtail || you.form == transformation::hydra && you.in_water() 
+            || (you.species == SP_CRUSTACEAN
+                || you.species == SP_HYDRA) && you.in_water())
         mv = 6;
 
     // Wading through water is very slow.

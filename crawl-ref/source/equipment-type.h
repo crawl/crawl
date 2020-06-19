@@ -31,7 +31,17 @@ enum equipment_type
     // Two head orge can wield two amulet
     EQ_AMULET_LEFT,
     EQ_AMULET_RIGHT,
-    EQ_LAST_JEWELLERY = EQ_AMULET_RIGHT,
+    // Hyda can wield at most nine amulet.
+    EQ_AMULET_ONE,
+    EQ_AMULET_TWO,
+    EQ_AMULET_THREE,
+    EQ_AMULET_FOUR,
+    EQ_AMULET_FIVE,
+    EQ_AMULET_SIX,
+    EQ_AMULET_SEVEN,
+    EQ_AMULET_EIGHT,
+    EQ_AMULET_NINE,
+    EQ_LAST_JEWELLERY = EQ_AMULET_NINE,
     NUM_EQUIP,
 
     EQ_MIN_ARMOUR = EQ_CLOAK,
