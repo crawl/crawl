@@ -56,8 +56,6 @@ public:
     coord_def mlistp;              // Left-top pos of the monster list.
     coord_def mlistsz;             // Size of the monster list.
 
-    crawl_view_buffer vbuf;        // Buffer for drawing the main game map.
-
     coord_def vgrdc;               // What grid pos is at the centre of the view
                                    // usually you.pos().
 

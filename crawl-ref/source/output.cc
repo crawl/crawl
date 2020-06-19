@@ -1514,7 +1514,6 @@ void redraw_console_sidebar()
         print_stats_level();
         update_turn_count();
     }
-    puttext(crawl_view.viewp.x, crawl_view.viewp.y, crawl_view.vbuf);
     update_monster_pane();
 
     you.flash_colour = BLACK;

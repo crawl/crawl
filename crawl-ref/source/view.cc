@@ -1356,12 +1356,6 @@ void viewwindow(bool show_updates, bool tiles_only, animation *a)
         if (you.duration[DUR_TIME_STEP] || you.pos().origin())
             return;
 
-        screen_cell_t *cell(crawl_view.vbuf);
-
-        // The buffer is not initialised when run from 'monster'; abort early.
-        if (!cell)
-            return;
-
         // Update the animation of cells only once per turn.
         const bool anim_updates = (you.last_view_update != you.num_turns);
 
@@ -1399,13 +1393,13 @@ void viewwindow(bool show_updates, bool tiles_only, animation *a)
 
         if (_viewwindow_should_render())
         {
-            crawl_view.vbuf = view_dungeon(a, anim_updates);
+            const auto vbuf = view_dungeon(a, anim_updates);
 
             you.last_view_update = you.num_turns;
 #ifndef USE_TILE_LOCAL
             if (!tiles_only)
             {
-                puttext(crawl_view.viewp.x, crawl_view.viewp.y, crawl_view.vbuf);
+                puttext(crawl_view.viewp.x, crawl_view.viewp.y, vbuf);
                 update_monster_pane();
             }
 #else
@@ -1413,7 +1407,7 @@ void viewwindow(bool show_updates, bool tiles_only, animation *a)
 #endif
 #ifdef USE_TILE
             tiles.set_need_redraw(you.running ? Options.tile_runrest_rate : 0);
-            tiles.load_dungeon(crawl_view.vbuf, crawl_view.vgrdc);
+            tiles.load_dungeon(vbuf, crawl_view.vgrdc);
             tiles.update_tabs();
 #endif
 
@@ -1437,7 +1431,7 @@ void viewwindow(bool show_updates, bool tiles_only, animation *a)
  */
 crawl_view_buffer view_dungeon(animation *a, bool anim_updates)
 {
-    crawl_view_buffer vbuf(crawl_view.vbuf.size());
+    crawl_view_buffer vbuf(crawl_view.viewsz);
 
     screen_cell_t *cell(vbuf);
 

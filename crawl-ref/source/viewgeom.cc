@@ -291,7 +291,7 @@ crawl_view_geometry::crawl_view_geometry()
       msgp(1, viewp.y + viewsz.y), msgsz(80, 7),
       mlistp(hudp.x, hudp.y + hudsz.y),
       mlistsz(hudsz.x, msgp.y - mlistp.y),
-      vbuf(), vgrdc(), viewhalfsz(), glos1(), glos2(),
+      vgrdc(), viewhalfsz(), glos1(), glos2(),
       vlos1(), vlos2(), mousep(), last_player_pos()
 {
 }
@@ -299,7 +299,6 @@ crawl_view_geometry::crawl_view_geometry()
 void crawl_view_geometry::init_view()
 {
     viewhalfsz = viewsz / 2;
-    vbuf.resize(viewsz);
     if (!crawl_state.game_is_arena())
         set_player_at(you.pos(), true);
     else
