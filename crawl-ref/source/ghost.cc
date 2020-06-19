@@ -42,6 +42,7 @@ static spell_type search_order_aoe_conj[] =
     SPELL_METAL_SPLINTERS,
     SPELL_ENERGY_BOLT,
     SPELL_ORB_OF_ELECTRICITY,
+    SPELL_CONJURE_BALL_LIGHTNING,
 };
 
 // Pan lord conjuration spell list.
@@ -70,6 +71,7 @@ static spell_type search_order_selfench[] =
     SPELL_INVISIBILITY,
     SPELL_BLINK,
     SPELL_BLINKBOLT,
+    SPELL_BLINK_RANGE,
 };
 
 // Pan lord summoning spell list.
@@ -79,7 +81,6 @@ static spell_type search_order_summon[] =
     SPELL_MALIGN_GATEWAY,
     SPELL_SUMMON_DRAGON,
     SPELL_SUMMON_HORRIBLE_THINGS,
-    SPELL_SHADOW_CREATURES,
     SPELL_SUMMON_EYEBALLS,
     SPELL_SUMMON_VERMIN, // funny
     SPELL_SUMMON_BUTTERFLIES, // funny
@@ -97,6 +98,9 @@ static spell_type search_order_misc[] =
     SPELL_POLYMORPH,
     SPELL_FORCE_LANCE,
     SPELL_SLOW,
+    SPELL_SENTINEL_MARK,
+    SPELL_DIMENSION_ANCHOR,
+    SPELL_TELEPORT_OTHER, // funny
 };
 
 ghost_demon::ghost_demon()
