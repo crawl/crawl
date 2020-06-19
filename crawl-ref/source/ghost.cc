@@ -426,7 +426,18 @@ void ghost_demon::init_pandemonium_lord()
         if (!one_chance_in(10))
         {
             if (coinflip())
-                ADD_SPELL(RANDOM_ELEMENT(search_order_summon));
+            {
+                // Demon-summoning should be fairly common.
+                if (coinflip())
+                    ADD_SPELL(random_choose(SPELL_SUMMON_DEMON,
+                                            SPELL_SUMMON_GREATER_DEMON));
+                else
+                {
+                    ADD_SPELL(RANDOM_ELEMENT(search_order_summon));
+                    if (coinflip())
+                        ADD_SPELL(SPELL_BLINK_ALLIES_ENCIRCLE);
+                }
+            }
             else
                 ADD_SPELL(RANDOM_ELEMENT(search_order_aoe_conj));
         }
@@ -436,11 +447,6 @@ void ghost_demon::init_pandemonium_lord()
 
         if (coinflip())
             ADD_SPELL(RANDOM_ELEMENT(search_order_misc));
-
-        // Demon-summoning should be fairly common.
-        if (coinflip())
-            ADD_SPELL(random_choose(SPELL_SUMMON_DEMON, SPELL_SUMMON_GREATER_DEMON));
-
     }
     else
     {
