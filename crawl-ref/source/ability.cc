@@ -53,6 +53,7 @@
 #include "message.h"
 #include "mon-place.h"
 #include "mutation.h"
+#include "nearby-danger.h"
 #include "notes.h"
 #include "options.h"
 #include "output.h"
@@ -1675,7 +1676,16 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
     case ABIL_ECDYSIS:
         if (you.lives > 0 && !you.duration[DUR_GROW_FOR_ECD]
             && !you.duration[DUR_DEATHS_DOOR] && you.form == transformation::none)
+        {
+            
+        if (!i_feel_safe(false, false, true)
+            && !yesno("Really undergo on ecdysis while enemies are nearby?",
+                  false, 'n'))
+        {
+            canned_msg(MSG_OK);
             return true;
+        }
+        }   
         else if(!quiet)
         {
             if (you.duration[DUR_GROW_FOR_ECD])

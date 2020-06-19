@@ -28,10 +28,10 @@ aptitudes:
   shields: False
   spellcasting: 0
   conjurations: -1
-  hexes: 0
+  hexes: 2
   charms: 0
   translocations: 0
-  transmutations: 1
+  transmutations: 0
   fire_magic: -2
   ice_magic: -2
   air_magic: -1
