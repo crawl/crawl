@@ -6948,6 +6948,7 @@ bool player::rot(actor */*who*/, int amount, bool quiet, bool /*no_cleanup*/)
 bool player::crustacean_rot(actor */*who*/, int amount, bool quiet, bool /*no_cleanup*/)
 {
     ASSERT(!crawl_state.game_is_arena());
+
     if (you.duration[DUR_ECDYSIS] != 0)
     {
             mprf("You are threatened by something during ecdysis.");
@@ -6981,6 +6982,8 @@ bool player::crustacean_rot(actor */*who*/, int amount, bool quiet, bool /*no_cl
             rot_hp(d);
             if (!quiet)
                 mprf(MSGCH_WARN, "You feel your flesh cutting away!");
+                mprf(MSGCH_INTRINSIC_GAIN, "You want to walk like a crab for escaping here.");
+            
             you.attribute[ATTR_BODY_LOSS] += d;
             you.set_duration(DUR_BODY_LOSS, 3);
             
@@ -6999,6 +7002,7 @@ bool player::crustacean_rot(actor */*who*/, int amount, bool quiet, bool /*no_cl
             lose_stat(STAT_RANDOM, 1);
             if (!quiet)
                 mprf(MSGCH_WARN, "Your body falls away!"); 
+                mprf(MSGCH_INTRINSIC_GAIN, "You want to walk like a crab for escaping here.");
             you.attribute[ATTR_BODY_LOSS] += d;
             you.set_duration(DUR_BODY_LOSS, 3);
             

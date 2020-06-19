@@ -1679,7 +1679,7 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         else if(!quiet)
         {
             if (you.duration[DUR_GROW_FOR_ECD])
-                mpr("You are not enough to moult yet.");
+                mpr("You are still growig. It is not enough to moult yet.");
             else
                 mpr("You could moult only in your original form.");
             return false;
