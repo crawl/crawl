@@ -311,6 +311,8 @@ bool is_weapon_brand_ok(int type, int brand, bool /*strict*/)
     case SPWPN_ELECTROCUTION:
     case SPWPN_FLAMING:
     case SPWPN_FREEZING:
+    case SPWPN_SILVER:
+    case SPWPN_ACID:
         break;
 
     // Melee-only brands.
@@ -323,7 +325,6 @@ bool is_weapon_brand_ok(int type, int brand, bool /*strict*/)
     case SPWPN_PACIFING:
     case SPWPN_SLUGGISH:
     case SPWPN_SLIMIFYING:
-    case SPWPN_SILVER:
         if (is_range_weapon(item))
             return false;
         break;
