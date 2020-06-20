@@ -204,6 +204,11 @@ bool ranged_attack::handle_phase_blocked()
                         ident_reflector(defender->slot_item(EQ_AMULET_LEFT, false));
                     if (defender->slot_item(EQ_AMULET_RIGHT, false))
                         ident_reflector(defender->slot_item(EQ_AMULET_RIGHT, false));
+                    for (int eq = EQ_AMULET_ONE; eq <= EQ_AMULET_NINE; eq++)
+                    {
+                        if (defender->slot_item((equipment_type) eq, false))
+                            ident_reflector(defender->slot_item((equipment_type) eq, false));
+                    }
                 }
             }
         }

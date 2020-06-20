@@ -924,7 +924,8 @@ int player::wearing(equipment_type slot, int sub_type, bool calc_unid) const
     case EQ_AMULET_PLUS:
         for (int slots = EQ_FIRST_JEWELLERY; slots <= EQ_LAST_JEWELLERY; slots++)
         {
-            if (slots != EQ_AMULET && slots != EQ_AMULET_LEFT && slots != EQ_AMULET_RIGHT)
+            if (slots != EQ_AMULET && slots != EQ_AMULET_LEFT && slots != EQ_AMULET_RIGHT 
+                && !(EQ_AMULET_ONE <= slots && EQ_AMULET_NINE >= slots)) 
                 continue;
 
             if ((item = slot_item(static_cast<equipment_type>(slots)))
@@ -940,7 +941,8 @@ int player::wearing(equipment_type slot, int sub_type, bool calc_unid) const
     case EQ_RINGS_PLUS:
         for (int slots = EQ_FIRST_JEWELLERY; slots <= EQ_LAST_JEWELLERY; slots++)
         {
-            if (slots == EQ_AMULET || slots == EQ_AMULET_LEFT || slots == EQ_AMULET_RIGHT)
+            if (slots == EQ_AMULET || slots == EQ_AMULET_LEFT || slots == EQ_AMULET_RIGHT
+            || (EQ_AMULET_ONE <= slots && EQ_AMULET_NINE >= slots))
                 continue;
 
             if ((item = slot_item(static_cast<equipment_type>(slots)))
@@ -1068,7 +1070,8 @@ bool player_equip_unrand(int unrand_index)
     case EQ_AMULETS:
         for (int slots = EQ_FIRST_JEWELLERY; slots <= EQ_LAST_JEWELLERY; ++slots)
         {
-            if (slots != EQ_AMULET && slots != EQ_AMULET_LEFT && slots != EQ_AMULET_RIGHT)
+            if (slots != EQ_AMULET && slots != EQ_AMULET_LEFT && slots != EQ_AMULET_RIGHT
+                && !(EQ_AMULET_ONE <= slots && EQ_AMULET_NINE >= slots))
                 continue;
 
             if ((item = you.slot_item(static_cast<equipment_type>(slots)))
@@ -1083,7 +1086,8 @@ bool player_equip_unrand(int unrand_index)
     case EQ_RINGS:
         for (int slots = EQ_FIRST_JEWELLERY; slots <= EQ_LAST_JEWELLERY; ++slots)
         {
-            if (slots == EQ_AMULET || slots == EQ_AMULET_LEFT || slots == EQ_AMULET_RIGHT)
+            if (slots == EQ_AMULET || slots == EQ_AMULET_LEFT || slots == EQ_AMULET_RIGHT
+                || (EQ_AMULET_ONE <= slots && EQ_AMULET_NINE >= slots))
                 continue;
 
             if ((item = you.slot_item(static_cast<equipment_type>(slots)))
@@ -6907,7 +6911,7 @@ bool player::head_grow(int num) const
         {    for (int i = 0; i < num; i++)
                 you.props[HYDRA_HEADS_NET_LOSS].get_int()--;
             you.heal(4*num + random2(4*num));}
-        else
+        else if (num < 0)
         {
             for (int i = 0; i < num; i++)
                 you.props[HYDRA_HEADS_NET_LOSS].get_int()++;
@@ -6926,7 +6930,8 @@ bool player::head_grow(int num) const
         _handle_amulet_loss();
     }
     else
-    {
+    {  
+        _handle_amulet_loss();
         return false;
     }
     return true;

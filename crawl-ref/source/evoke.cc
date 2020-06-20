@@ -1592,6 +1592,15 @@ bool put_bag_item(int bag_slot, int item_dropped, int quant_drop, bool fail_mess
         || item_dropped == you.equip[EQ_RING_AMULET]
         || item_dropped == you.equip[EQ_AMULET_LEFT]
         || item_dropped == you.equip[EQ_AMULET_RIGHT]
+        || item_dropped == you.equip[EQ_AMULET_ONE]
+        || item_dropped == you.equip[EQ_AMULET_TWO]
+        || item_dropped == you.equip[EQ_AMULET_THREE]
+        || item_dropped == you.equip[EQ_AMULET_FOUR]
+        || item_dropped == you.equip[EQ_AMULET_FIVE]
+        || item_dropped == you.equip[EQ_AMULET_SIX]
+        || item_dropped == you.equip[EQ_AMULET_SEVEN]
+        || item_dropped == you.equip[EQ_AMULET_EIGHT]
+        || item_dropped == you.equip[EQ_AMULET_NINE]
         || item_dropped == you.equip[EQ_WEAPON]
         || item_dropped == you.equip[EQ_SECOND_WEAPON])
     {

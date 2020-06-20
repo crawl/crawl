@@ -1770,7 +1770,7 @@ static vector<equipment_type> _current_ring_types()
                 ret.push_back(slot);
         }
     }
-    else
+    else if (you.species != SP_HYDRA)
     {
         if (you.get_mutation_level(MUT_MISSING_HAND) == 0)
             ret.push_back(EQ_LEFT_RING);
@@ -1789,6 +1789,14 @@ static vector<equipment_type> _current_amulet_types()
     {
         ret.push_back(EQ_AMULET_LEFT);
         ret.push_back(EQ_AMULET_RIGHT);
+    }
+    else if (you.species == SP_HYDRA)
+    {
+        you.head_grow(0); // just for _handle_amulet_loss()
+        for (int eq = EQ_AMULET_ONE; eq - EQ_AMULET_ONE < you.heads()/3; eq++)
+        {
+            ret.push_back((equipment_type)eq);
+        }
     }
     else
     {
@@ -1831,6 +1839,15 @@ static char _amulet_slot_key(equipment_type slot)
     {
     case EQ_AMULET_LEFT:      return '<';
     case EQ_AMULET_RIGHT:     return '>';
+    case EQ_AMULET_ONE:       return '1';
+    case EQ_AMULET_TWO:       return '2';
+    case EQ_AMULET_THREE:     return '3';
+    case EQ_AMULET_FOUR:      return '4';
+    case EQ_AMULET_FIVE:      return '5';
+    case EQ_AMULET_SIX:       return '6';
+    case EQ_AMULET_SEVEN:     return '7';
+    case EQ_AMULET_EIGHT:     return '8';
+    case EQ_AMULET_NINE:      return '9';
     default:
         die("Invalid amulet slot");
     }
@@ -2227,12 +2244,14 @@ static equipment_type _choose_ring_slot()
 
 static equipment_type _choose_amulet_slot()
 {
-    ASSERT(you.species == SP_TWO_HEADED_OGRE);
+    ASSERT(you.species == SP_TWO_HEADED_OGRE || you.species == SP_HYDRA);
 
     clear_messages();
 
     mprf(MSGCH_PROMPT,
-        "Put amulet on which %s? (<w>Esc</w> to cancel)", you.hand_name(false).c_str());
+        "Put amulet on which %s? (<w>Esc</w> to cancel)",
+        you.species == SP_TWO_HEADED_OGRE ? you.hand_name(false).c_str()
+                                            :"neck");
 
     const vector<equipment_type> slots = _current_amulet_types();
     for (auto eq : slots)
@@ -2312,7 +2331,7 @@ static bool _can_puton_jewellery(const item_def &item)
     // Make sure there's at least one slot where we could equip this item
     if (is_amulet)
     {
-        if (you.species == SP_TWO_HEADED_OGRE) {
+        if (you.species == SP_TWO_HEADED_OGRE || you.species == SP_HYDRA) {
             const vector<equipment_type> slots = _current_amulet_types();
             int melded = 0;
             int cursed = 0;
@@ -2445,7 +2464,7 @@ static bool _puton_item(const item_def& item, bool prompt_slot,
     }
     else
     {
-        if (you.species == SP_TWO_HEADED_OGRE) {
+        if (you.species == SP_TWO_HEADED_OGRE || you.species == SP_HYDRA) {
             // Check whether there are any unused ring slots
             bool need_swap = true;
             for (auto eq : amulet_types)
@@ -2488,10 +2507,10 @@ static bool _puton_item(const item_def& item, bool prompt_slot,
     equipment_type hand_used = EQ_NONE;
 
     if (is_amulet) {
-        if (you.species == SP_TWO_HEADED_OGRE) {
+        if (you.species == SP_TWO_HEADED_OGRE || you.species == SP_HYDRA) {
             if (prompt_slot)
             {
-                // Prompt for a slot, even if we have empty ring slots.
+                // Prompt for a slot, even if we have empty amulet slots.
                 hand_used = _choose_amulet_slot();
 
                 if (hand_used == EQ_NONE)
@@ -2705,8 +2724,19 @@ bool remove_ring(int slot, bool announce)
         mpr("You can't take that off while it's melded.");
         return false;
     }
-    else if ((hand_used == EQ_AMULET || hand_used == EQ_AMULET_LEFT || hand_used == EQ_AMULET_RIGHT)
-        && you.equip[EQ_RING_AMULET] != -1)
+    else if ((hand_used == EQ_AMULET 
+            || hand_used == EQ_AMULET_LEFT 
+            || hand_used == EQ_AMULET_RIGHT
+            || hand_used == EQ_AMULET_ONE
+            || hand_used == EQ_AMULET_TWO
+            || hand_used == EQ_AMULET_THREE
+            || hand_used == EQ_AMULET_FOUR
+            || hand_used == EQ_AMULET_FIVE
+            || hand_used == EQ_AMULET_SIX
+            || hand_used == EQ_AMULET_SEVEN
+            || hand_used == EQ_AMULET_EIGHT
+            || hand_used == EQ_AMULET_NINE)
+            && you.equip[EQ_RING_AMULET] != -1)
     {
         // This can be removed in the future if more ring amulets are added.
         ASSERT(player_equip_unrand(UNRAND_FINGER_AMULET));
@@ -3301,7 +3331,16 @@ static bool _identify(bool alreadyknown, const string &pre_msg, int &link)
         if (item.is_type(OBJ_JEWELLERY, AMU_INACCURACY)
             && (item.link == you.equip[EQ_AMULET]
                 || item.link == you.equip[EQ_AMULET_LEFT]
-                || item.link == you.equip[EQ_AMULET_RIGHT])
+                || item.link == you.equip[EQ_AMULET_RIGHT]
+                || item.link == you.equip[EQ_AMULET_ONE]
+                || item.link == you.equip[EQ_AMULET_TWO]
+                || item.link == you.equip[EQ_AMULET_THREE]
+                || item.link == you.equip[EQ_AMULET_FOUR]
+                || item.link == you.equip[EQ_AMULET_FIVE]
+                || item.link == you.equip[EQ_AMULET_SIX]
+                || item.link == you.equip[EQ_AMULET_SEVEN]
+                || item.link == you.equip[EQ_AMULET_EIGHT]
+                || item.link == you.equip[EQ_AMULET_NINE])
             && !item_known_cursed(item))
         {
             learned_something_new(HINT_INACCURACY);

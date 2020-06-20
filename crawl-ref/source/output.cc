@@ -589,6 +589,8 @@ static const equipment_type e_order[] =
 {
     EQ_WEAPON, EQ_SECOND_WEAPON, EQ_SHIELD, EQ_BODY_ARMOUR, EQ_HELMET, EQ_CLOAK,
     EQ_GLOVES, EQ_BOOTS, EQ_AMULET, EQ_AMULET_LEFT, EQ_AMULET_RIGHT,
+    EQ_AMULET_ONE, EQ_AMULET_TWO, EQ_AMULET_THREE, EQ_AMULET_FOUR,
+    EQ_AMULET_FIVE, EQ_AMULET_SIX, EQ_AMULET_SEVEN, EQ_AMULET_EIGHT, EQ_AMULET_NINE,
     EQ_LEFT_RING, EQ_RIGHT_RING,
     EQ_RING_ONE, EQ_RING_TWO, EQ_RING_THREE, EQ_RING_FOUR,
     EQ_RING_FIVE, EQ_RING_SIX, EQ_RING_SEVEN, EQ_RING_EIGHT,
@@ -599,7 +601,7 @@ static void _print_stats_equip(int x, int y)
 {
     CGOTOXY(x, y, GOTO_STAT);
     textcolour(HUD_CAPTION_COLOUR);
-    cprintf((you.species == SP_OCTOPODE) ? "Eq: " : "Equip: ");
+    cprintf((you.species == SP_OCTOPODE || you.species == SP_HYDRA) ? "Eq: " : "Equip: ");
     textcolour(LIGHTGREY);
     for (equipment_type eqslot : e_order)
     {
@@ -2134,6 +2136,19 @@ static void _print_overview_screen_equip(column_composer& cols,
         }
 
         if (you.species != SP_TWO_HEADED_OGRE && eqslot == EQ_SECOND_WEAPON)
+        {
+            continue;
+        }
+
+        if (you.species != SP_HYDRA && (eqslot == EQ_AMULET_ONE
+                                        || eqslot == EQ_AMULET_TWO
+                                        || eqslot == EQ_AMULET_THREE
+                                        || eqslot == EQ_AMULET_FOUR
+                                        || eqslot == EQ_AMULET_FIVE
+                                        || eqslot == EQ_AMULET_SIX
+                                        || eqslot == EQ_AMULET_SEVEN
+                                        || eqslot == EQ_AMULET_EIGHT
+                                        || eqslot == EQ_AMULET_NINE))
         {
             continue;
         }

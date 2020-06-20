@@ -3157,9 +3157,21 @@ static void _god_welcome_handle_gear()
     item_def *amulet = you.slot_item(EQ_AMULET, false);
     item_def *amulet_left = you.slot_item(EQ_AMULET_LEFT, false);
     item_def *amulet_right = you.slot_item(EQ_AMULET_RIGHT, false);
+    bool hydra_faith_check = false;
+    for (int eq = EQ_AMULET_ONE; eq <= EQ_AMULET_NINE; eq ++)
+    {
+        item_def *am = you.slot_item((equipment_type)eq, false);
+        if ( am && am->sub_type == AMU_FAITH
+            && !is_useless_item(*am))
+        {
+            hydra_faith_check = true;
+        }
+    }
+    
     if ((amulet && amulet->sub_type == AMU_FAITH && !is_useless_item(*amulet)) ||
         (amulet_left && amulet_left->sub_type == AMU_FAITH && !is_useless_item(*amulet_left)) ||
-        (amulet_right && amulet_right->sub_type == AMU_FAITH && !is_useless_item(*amulet_right)))
+        (amulet_right && amulet_right->sub_type == AMU_FAITH && !is_useless_item(*amulet_right)) ||
+        (you.species == SP_HYDRA && hydra_faith_check))
     {
         //TODO double boost for two headed orge
         mprf(MSGCH_GOD, "Your amulet flashes!");
