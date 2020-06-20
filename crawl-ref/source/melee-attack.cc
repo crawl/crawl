@@ -1446,7 +1446,11 @@ bool melee_attack::player_gets_aux_punch()
     // Octopodes aren't affected by this, though!
     if (you.species != SP_OCTOPODE && !you.has_usable_offhand())
         return false;
-
+    
+    // Hydra can't punch!
+    if (you.species == SP_HYDRA)
+        return false;
+    
     // Octopodes get more tentacle-slaps.
     return x_chance_in_y(you.species == SP_OCTOPODE ? 3 : 2,
                          6);
@@ -2156,8 +2160,9 @@ bool melee_attack::consider_decapitation(int dam, int damage_type)
         return false;
 
     // What's the largest number of heads the defender can have?
-    const int limit = defender->type == MONS_LERNAEAN_HYDRA ? 27
-                                                            : MAX_HYDRA_HEADS;
+    const int limit = defender->type != MONS_LERNAEAN_HYDRA             ? MAX_HYDRA_HEADS       :
+                      defender->is_player() && you.species == SP_HYDRA  ? 27:
+                                                                          20;
 
     if (attacker->damage_brand(attack_number) == SPWPN_FLAMING)
     {
@@ -2169,10 +2174,13 @@ bool melee_attack::consider_decapitation(int dam, int damage_type)
     int heads = defender->heads();
     if (heads >= limit - 1)
         return false; // don't overshoot the head limit!
-
-    simple_monster_message(*defender->as_monster(), " grows two more!");
-    defender->as_monster()->num_heads += 2;
-    defender->heal(8 + random2(8));
+    
+    if (defender->is_monster())
+    {    
+        simple_monster_message(*defender->as_monster(), " grows two more!");
+         defender->as_monster()->num_heads += 2;
+         defender->heal(8 + random2(8));
+    }
 
     return false;
 }

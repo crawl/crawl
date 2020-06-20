@@ -665,7 +665,7 @@ string describe_mutations(bool drop_title)
             !form_keeps_mutations());
     }
 
-    if (you.species != SP_FELID && you.speies != SP_CRUSTACEAN)
+    if (you.species != SP_FELID && you.species != SP_CRUSTACEAN)
     {
         switch (you.body_size(PSIZE_TORSO, true))
         {
@@ -677,6 +677,7 @@ string describe_mutations(bool drop_title)
             result += "You are small and have problems with some larger weapons.\n";
             break;
         case SIZE_LARGE:
+        case SIZE_BIG:
             result += "You are too large for most types of armour.\n";
             break;
         default:
@@ -1378,8 +1379,9 @@ bool physiology_mutation_conflict(mutation_type mutat)
     }
 
     // Felids have innate claws, and unlike trolls/ghouls, there are no
-    // increases for them. And octopodes have no hands.
-    if ((you.species == SP_FELID || you.species == SP_CRUSTACEAN || you.species == SP_OCTOPODE)
+    // increases for them. And octopodes and hydras have no hands.
+    if ((you.species == SP_FELID || you.species == SP_CRUSTACEAN 
+         || you.species == SP_OCTOPODE || you.species == SP_HYDRA)
          && mutat == MUT_CLAWS)
     {
         return true;
@@ -1750,6 +1752,8 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
                     hands = "tentacles";
                 else if (you.species == SP_CRUSTACEAN)
                     hands = "claws";
+                else if (you.species == SP_HYDRA)
+                    hands = "necks";
                 else
                     break;
                 mprf(MSGCH_MUTATION, "%s",

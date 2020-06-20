@@ -59,6 +59,7 @@
 #define WILL_OF_EARTH_POWER_KEY "will_of_earth_power"
 #define WILL_OF_EARTH_KEY "will_of_earth_num"
 #define NEMELEX_SACRIFICING_KEY "nemelex_sacrificing"
+#define HYDRA_HEADS_NET_LOSS "hydra_heads_net_loss"
 
 // display/messaging breakpoints for penalties from Ru's MUT_HORROR
 #define HORROR_LVL_EXTREME  3

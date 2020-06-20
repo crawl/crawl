@@ -577,11 +577,15 @@ static int _acquirement_jewellery_subtype(bool /*divine*/, int & /*quantity*/)
     const int ring_num = (you.species == SP_OCTOPODE ? 8 : 2)
                        - (you.get_mutation_level(MUT_MISSING_HAND) ? 1 : 0);
 
+    const int amulet_num = (you.species == SP_HYDRA ? 9 : 2)
+                         - (you.get_mutation_level(MUT_MISSING_HAND) ? 1 : 0);
+
     // Try ten times to give something the player hasn't seen.
     for (int i = 0; i < 10; i++)
     {
-        result = one_chance_in(ring_num + 1) ? get_random_amulet_type()
-                                             : get_random_ring_type();
+        result = you.species == SP_HYDRA     ? get_random_amulet_type() :
+                 one_chance_in(ring_num + 1) ? get_random_amulet_type() :
+                                               get_random_ring_type();
 
         // If we haven't seen this yet, we're done.
         if (!get_ident_type(OBJ_JEWELLERY, result))

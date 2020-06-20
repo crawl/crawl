@@ -162,6 +162,16 @@ static void _assert_valid_slot(equipment_type eq, equipment_type slot)
                 }
             }
         }
+        else if (you.species == SP_HYDRA){
+            for (int _eq = EQ_AMULET_ONE; _eq <= EQ_AMULET_NINE; _eq++)
+            {
+                if (const item_def * amu = you.slot_item((equipment_type)_eq, true)) {
+                    if (is_unrandom_artefact(*amu, UNRAND_FINGER_AMULET) && slot == EQ_RING_AMULET) {
+                    return;
+                }
+            }
+        }
+        }
         else {
             if (const item_def * amu = you.slot_item(EQ_AMULET, true))
                 if (is_unrandom_artefact(*amu, UNRAND_FINGER_AMULET) && slot == EQ_RING_AMULET)
@@ -172,6 +182,11 @@ static void _assert_valid_slot(equipment_type eq, equipment_type slot)
     else if(eq == EQ_AMULETS) {
         if (you.species == SP_TWO_HEADED_OGRE) {
             if (slot >= EQ_AMULET_LEFT && slot <= EQ_AMULET_RIGHT) {
+                return;
+            }
+        }
+        else if (you.species == SP_HYDRA) {
+            if (slot >= EQ_AMULET_ONE && slot <= EQ_AMULET_NINE) {
                 return;
             }
         }

@@ -1656,6 +1656,12 @@ bool transform(int pow, transformation which_trans, bool involuntary,
         return false;
     }
 
+    if (you.species == SP_HYDRA && which_trans == transformation::blade_hands)
+    {   
+        mpr("You have no hands to be blade!");
+        return false;
+    }
+
     if (!involuntary && crawl_state.is_god_acting())
         involuntary = true;
 

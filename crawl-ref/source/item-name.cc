@@ -349,6 +349,17 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
                 case EQ_AMULET_RIGHT:
                     buff << " (around right neck)";
                     break;
+                case EQ_AMULET_ONE:
+                case EQ_AMULET_TWO:
+                case EQ_AMULET_THREE:
+                case EQ_AMULET_FOUR:
+                case EQ_AMULET_FIVE:
+                case EQ_AMULET_SIX:
+                case EQ_AMULET_SEVEN:
+                case EQ_AMULET_EIGHT:
+                case EQ_AMULET_NINE:
+                    buff << " (around neck)";
+                    break;
                 default:
                     die("Item in an invalid slot");
                 }

@@ -715,7 +715,7 @@ maybe_bool you_can_wear(equipment_type eq, bool temp)
             return MB_FALSE;
         // intentional fallthrough
     case EQ_RIGHT_RING:
-        return you.species != SP_OCTOPODE ? MB_TRUE : MB_FALSE;
+        return (you.species != SP_OCTOPODE && you.species != SP_HYDRA) ? MB_TRUE : MB_FALSE;
 
     case EQ_RING_EIGHT:
         if (you.get_mutation_level(MUT_MISSING_HAND))
@@ -731,7 +731,8 @@ maybe_bool you_can_wear(equipment_type eq, bool temp)
         return you.species == SP_OCTOPODE ? MB_TRUE : MB_FALSE;
     case EQ_WEAPON:
     case EQ_STAFF:
-        return you.species == SP_FELID ? MB_FALSE :
+        return (you.species == SP_FELID || 
+                you.species == SP_HYDRA) ? MB_FALSE :
                you.body_size(PSIZE_TORSO, !temp) < SIZE_MEDIUM ? MB_MAYBE :
                                          MB_TRUE;
     case EQ_SECOND_WEAPON:
@@ -743,10 +744,21 @@ maybe_bool you_can_wear(equipment_type eq, bool temp)
     case EQ_AMULETS:
         return MB_TRUE;
     case EQ_AMULET:
-        return you.species != SP_TWO_HEADED_OGRE ? MB_TRUE : MB_FALSE;
+        return (you.species != SP_TWO_HEADED_OGRE
+                && you.species != SP_HYDRA) ? MB_TRUE : MB_FALSE;
     case EQ_AMULET_LEFT:
     case EQ_AMULET_RIGHT:
         return you.species != SP_TWO_HEADED_OGRE ? MB_FALSE : MB_TRUE;
+    case EQ_AMULET_ONE:
+    case EQ_AMULET_TWO:
+    case EQ_AMULET_THREE:
+    case EQ_AMULET_FOUR:
+    case EQ_AMULET_FIVE:
+    case EQ_AMULET_SIX:
+    case EQ_AMULET_SEVEN:
+    case EQ_AMULET_EIGHT:
+    case EQ_AMULET_NINE:
+        return you.species != SP_HYDRA ? MB_FALSE : MB_TRUE;
     case EQ_RING_AMULET:
         return player_equip_unrand(UNRAND_FINGER_AMULET) ? MB_TRUE : MB_FALSE;
 
@@ -6500,7 +6512,7 @@ bool player::is_insubstantial() const
 
 bool player::is_hydra() const
 {
-    return (form == transformation::hydra || species == SP_HYDRA)
+    return (form == transformation::hydra || species == SP_HYDRA);
 }
 
 int player::res_acid(bool calc_unid) const

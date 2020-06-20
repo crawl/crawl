@@ -1980,11 +1980,14 @@ static string _itosym(int level, int max = 1)
 
 static const char *s_equip_slot_names[] =
 {
-    "Weapon", "Second Weapon", "Cloak",  "Helmet", "Gloves", "Boots",
-    "Shield", "Armour", "Left Ring", "Right Ring", "Amulet",
-    "First Ring", "Second Ring", "Third Ring", "Fourth Ring",
-    "Fifth Ring", "Sixth Ring", "Seventh Ring", "Eighth Ring",
-    "Amulet Ring", "Left Amulet", "Right Amulet"
+    "Weapon", "Second Weapon", "Cloak",  "Helmet", "Gloves", "Boots", // 6
+    "Shield", "Armour", "Left Ring", "Right Ring", "Amulet", // 5
+    "First Ring", "Second Ring", "Third Ring", "Fourth Ring", // 4
+    "Fifth Ring", "Sixth Ring", "Seventh Ring", "Eighth Ring", // 4
+    "Amulet Ring", "Left Amulet", "Right Amulet", // 3
+    "First Amulet", "Second Amulet", "Third Amulet", "Fourth Amulet",
+    "Fifth Amulet", "Sixth Amulet", "Seventh Amulet", "Eighth Amulet",
+    "Ninth Amulet"
 };
 
 const char *equip_slot_to_name(int equip)
@@ -1997,13 +2000,13 @@ const char *equip_slot_to_name(int equip)
 
     if (equip == EQ_RINGS
         || equip >= EQ_FIRST_JEWELLERY && equip <= EQ_LAST_JEWELLERY && 
-        (equip != EQ_AMULET && equip != EQ_AMULET_LEFT && equip != EQ_AMULET_RIGHT))
+        (equip != EQ_AMULET && equip < EQ_FIRST_AMULET))
     {
         return "Ring";
     }
 
     if (equip == EQ_AMULETS ||
-        equip == EQ_AMULET || equip == EQ_AMULET_LEFT || equip == EQ_AMULET_RIGHT)
+        equip == EQ_AMULET || equip >= EQ_FIRST_AMULET)
     {
         return "Amulet";
     }

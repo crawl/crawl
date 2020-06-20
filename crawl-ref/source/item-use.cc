@@ -1206,6 +1206,13 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         return false;
     }
 
+    if (you.species == SP_HYDRA && (slot == EQ_SHIELD || slot == EQ_CLOAK))
+        {
+            if (verbose)
+                mpr("You can't wear that!");
+            return false;
+        }
+
     if (species_is_draconian(you.species) && slot == EQ_BODY_ARMOUR)
     {
         if (sub_type == ARM_RING_MAIL || sub_type == ARM_SCALE_MAIL || sub_type == ARM_CHAIN_MAIL
@@ -1291,6 +1298,15 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         {
             if (verbose)
                 mpr("The hauberk won't fit your head.");
+            return false;
+        }
+
+        if (you.species == SP_HYDRA)
+        {
+            if (verbose)
+            {
+                mprf("Your body is too deformed to wear it.");
+            }
             return false;
         }
 
@@ -1380,12 +1396,22 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
             }
             return false;
         }
+
         if (you.has_sickle_hands(false) >= 1)
         {
             if (verbose)
             {
                 mprf("You can't wear a glove with your sickle-like hand%s!",
                     you.get_mutation_level(MUT_MISSING_HAND) ? "" : "s");
+            }
+            return false;
+        }
+
+        if (you.species == SP_HYDRA)
+        {
+            if (verbose)
+            {
+                mprf("You have no hands.");
             }
             return false;
         }
@@ -1415,6 +1441,13 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
             return false;
         }
 
+        if (you.species == SP_HYDRA)
+        {
+            if (verbose)
+                mpr("You have too large legs!");
+            return false;
+        }
+
         if (!ignore_temporary && you.fishtail)
         {
             if (verbose)
@@ -1437,6 +1470,13 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         {
             if (verbose)
                 mpr("You can't wear any headgear with your large antennae!");
+            return false;
+        }
+
+        if (you.species == SP_HYDRA)
+        {
+            if (verbose)
+                mpr("Your have too big and slippery heads to wear it.");
             return false;
         }
 
