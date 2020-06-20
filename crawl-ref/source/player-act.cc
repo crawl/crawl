@@ -932,7 +932,7 @@ int player::heads() const
 {
     if (props.exists(HYDRA_FORM_HEADS_KEY))
         return props[HYDRA_FORM_HEADS_KEY].get_int();
-    if (species == SP_HYDRA)
+    else if (species == SP_HYDRA)
     {   
         int net_loss = 0;
         if (props.exists(HYDRA_HEADS_NET_LOSS))

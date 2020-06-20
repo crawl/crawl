@@ -194,7 +194,7 @@ static const duration_def duration_data[] =
       MAGENTA, "CigoPlg",
       "cigotuvi's plague", "",
       "You are infected by Cigotuvi's virus.", D_NO_FLAGS,
-      { "" }
+      {{}},
     },
     { DUR_DIVINE_STAMINA,
       WHITE, "Vit",

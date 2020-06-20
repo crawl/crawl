@@ -6934,6 +6934,8 @@ bool player::head_grow(int num) const
         _handle_amulet_loss();
         return false;
     }
+    you.redraw_title = true;
+    you.redraw_status_lights = true;
     return true;
 }
 

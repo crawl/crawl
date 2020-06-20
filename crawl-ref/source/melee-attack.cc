@@ -2290,6 +2290,7 @@ void melee_attack::decapitate(int dam_type)
     }
 
     int heads = defender->heads();
+    mprf("%d heads remain.", heads);
     if (heads == 1) // will be zero afterwards
     {
         if (defender_visible)
