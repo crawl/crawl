@@ -186,25 +186,21 @@ the bolt's destination.
 %%%%
 Bolt of Cold spell
 
-Fires a penetrating bolt of frost. The range of the bolt is decreased by one for
-every creature it strikes.
+Fires a penetrating bolt of frost.
 %%%%
 Bolt of Draining spell
 
-Fires a penetrating bolt of negative energy, which drains any living creature
-it strikes. The range of the bolt is decreased by one for every creature it
-hits.
+Fires a penetrating bolt of negative energy which drains any living creature
+it strikes.
 %%%%
 Bolt of Fire spell
 
-Fires a penetrating bolt of flames. The range of the bolt is decreased by one
-for every creature it strikes.
+Fires a penetrating bolt of flames.
 %%%%
 Bolt of Magma spell
 
 Fires a penetrating bolt of molten rock. A portion of its damage bypasses
-fire resistance. The range of the bolt is decreased by one for every creature
-it strikes.
+fire resistance.
 %%%%
 Borgnjor's Revivification spell
 
@@ -284,8 +280,7 @@ Exhales a large cloud of fumes filled with the very essence of chaos.
 %%%%
 Chilling Breath spell
 
-Exhales a blast of frost that may knock back airborne targets. The range of the
-blast is decreased by one for every creature it strikes.
+Exhales a blast of frost that may knock back airborne targets.
 %%%%
 Cleansing Flame spell
 
@@ -302,7 +297,6 @@ become available.
 Cold Breath spell
 
 Exhales a focused blast of icy-cold air. It may knock back airborne targets.
-The range of the blast is decreased by one for every creature it strikes.
 %%%%
 Confuse spell
 
@@ -357,8 +351,7 @@ the life force of any creature they envelop.
 %%%%
 Corrosive Bolt spell
 
-Fires a penetrating bolt of acid. The range of the bolt is decreased by one for
-every creature it strikes.
+Fires a penetrating bolt of acid.
 %%%%
 Corrupting Pulse spell
 
@@ -370,8 +363,7 @@ Crystal Bolt spell
 
 Projects a penetrating projectile with peculiar magical properties. It is
 randomly imbued with either fire or ice, and additionally will reflect from
-walls of any material due to the crystal embedded in the shot. The range of the
-bolt is decreased by one for every creature it strikes.
+walls of any material due to the crystal embedded in the shot.
 %%%%
 Darkness spell
 
@@ -530,8 +522,7 @@ Throws a bolt of electricity at the target, with high accuracy.
 %%%%
 Energy Bolt spell
 
-Fires a bolt of highly destructive energy. The range of the bolt is decreased
-by one for every creature it strikes.
+Fires a bolt of highly destructive energy.
 %%%%
 Enslavement spell
 
@@ -572,8 +563,7 @@ ineffective against unnatural targets.
 %%%%
 Fire Breath spell
 
-Breathes a blast of fire at a targeted creature. The range of the blast is
-decreased by one for every creature it strikes.
+Breathes a blast of fire at a targeted creature.
 %%%%
 Fire Storm spell
 
@@ -940,8 +930,7 @@ shorter time.
 Metal Splinters spell
 
 Fires a directed stream of sharp metal splinters. Its damage is strongly
-reduced by armour. The range of the stream is decreased by one for every
-creature it strikes.
+reduced by armour.
 %%%%
 Miasma Breath spell
 
@@ -1323,8 +1312,6 @@ Causes the caster to move across terrain more rapidly for a short duration.
 Starburst spell
 
 Releases penetrating bolts of fire from the caster in every direction.
-The range of each bolt is decreased by one for every creature
-it strikes.
 %%%%
 Static Discharge spell
 
@@ -1344,8 +1331,7 @@ While transformed, any equipped body armour, gloves and boots are melded.
 %%%%
 Steam Ball spell
 
-Throws a ball of hot steam towards a targeted creature. The range of the ball
-is decreased by one for every creature it strikes.
+Throws a ball of hot steam towards a targeted creature.
 %%%%
 Sticks to Snakes spell
 
@@ -1626,8 +1612,7 @@ Life will not be drained in excess of what the caster can capably absorb.
 %%%%
 Venom Bolt spell
 
-Fires a penetrating bolt of poison. The range of the bolt is decreased by one
-for every creature it strikes.
+Fires a penetrating bolt of poison.
 %%%%
 Virulence spell
 

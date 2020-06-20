@@ -119,7 +119,7 @@ struct bolt
     vector<coord_def> path_taken = {}; // Path beam took.
 
     // INTERNAL use - should not usually be set outside of beam.cc
-    int  extra_range_used = false;
+    int  extra_range_used = 0;
     bool is_tracer = false;       // is this a tracer?
     bool is_targeting = false;    // . . . in particular, a targeting tracer?
     bool aimed_at_feet = false;   // this was aimed at self!
