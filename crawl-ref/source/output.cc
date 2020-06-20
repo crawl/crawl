@@ -1302,7 +1302,7 @@ static void _redraw_title()
     string title = you.your_name + " " + filtered_lang(player_title());
     if (you.species == SP_HYDRA)
     {
-        title = to_string(you.heads()) + "-headed" + title;
+        title = to_string(you.heads()) + "-headed " + title;
     }
     const bool small_layout =
 #ifdef USE_TILE_LOCAL
@@ -2201,7 +2201,7 @@ static void _print_overview_screen_equip(column_composer& cols,
         {
             str = "<darkgrey>(no " + slot_name_lwr + ")</darkgrey>";
         }
-        else if (!you_can_wear(eqslot))
+        else if (!you_can_wear(eqslot) && you.species != SP_HYDRA)
             str = "<darkgrey>(" + slot_name_lwr + " unavailable)</darkgrey>";
         else if (!you_can_wear(eqslot, true))
         {
@@ -2255,7 +2255,7 @@ static string _overview_screen_title(int sw)
     text += species_job;
     if (you.species == SP_HYDRA)
     {
-        title = to_string(you.heads()) + "-headed" + title;
+        title = to_string(you.heads()) + "-headed " + title;
     }
 
     const int num_spaces = sw - linelength - 1;

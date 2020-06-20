@@ -752,21 +752,21 @@ maybe_bool you_can_wear(equipment_type eq, bool temp)
     case EQ_AMULET_ONE:
         return you.species != SP_HYDRA ? MB_FALSE : MB_TRUE;
     case EQ_AMULET_TWO:
-        return you.heads() > 3 ? MB_FALSE : MB_TRUE;
+        return you.heads() <= 3 ? MB_FALSE : MB_TRUE;
     case EQ_AMULET_THREE:
-        return you.heads() > 6 ? MB_FALSE : MB_TRUE;
+        return you.heads() <= 6 ? MB_FALSE : MB_TRUE;
     case EQ_AMULET_FOUR:
-        return you.heads() > 9 ? MB_FALSE : MB_TRUE;
+        return you.heads() <= 9 ? MB_FALSE : MB_TRUE;
     case EQ_AMULET_FIVE:
-        return you.heads() > 12 ? MB_FALSE : MB_TRUE;
+        return you.heads() <= 12 ? MB_FALSE : MB_TRUE;
     case EQ_AMULET_SIX:
-        return you.heads() > 15 ? MB_FALSE : MB_TRUE;
+        return you.heads() <= 15 ? MB_FALSE : MB_TRUE;
     case EQ_AMULET_SEVEN:
-        return you.heads() > 18 ? MB_FALSE : MB_TRUE;
+        return you.heads() <= 18 ? MB_FALSE : MB_TRUE;
     case EQ_AMULET_EIGHT:
-        return you.heads() > 21 ? MB_FALSE : MB_TRUE;
+        return you.heads() <= 21 ? MB_FALSE : MB_TRUE;
     case EQ_AMULET_NINE:
-        return you.heads() > 24 ? MB_FALSE : MB_TRUE;
+        return you.heads() <= 24 ? MB_FALSE : MB_TRUE;
     case EQ_RING_AMULET:
         return player_equip_unrand(UNRAND_FINGER_AMULET) ? MB_TRUE : MB_FALSE;
 
@@ -2551,7 +2551,7 @@ void _handle_amulet_loss()
         if (!you_can_wear(eq)
             && you.slot_item(eq, true))
         {
-            unequip_item(eq);
+            unequip_item(eq, true);
         }
 
     }

@@ -7,7 +7,7 @@ genus: "Hydra"
 difficulty : Advanced
 aptitudes:
   xp: 0
-  hp: 0
+  hp: -4
   mp_mod: 0
   mr: 1
   fighting : 4
