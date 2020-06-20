@@ -3805,19 +3805,25 @@ static void _builder_monsters()
         // starting position, and we don't generate them awake.
         if (env.absdepth0 == 0)
         {
-            mg.proximity = PROX_AWAY_FROM_DUNGEON_ENTRANCE;
             mg.behaviour = BEH_SLEEP;
+            mg.proximity = PROX_AWAY_FROM_ENTRANCE;
         }
-        // Chance to generate the monster awake, but away from level stairs.
-        else if (player_in_connected_branch()
-                 && env.absdepth0 > 0
-                 && one_chance_in(8))
+        else if (player_in_connected_branch() && one_chance_in(8))
         {
+            // Chance to generate the monster awake, but away from all level
+            // stairs (including the delver start stairs).
             mg.proximity = PROX_AWAY_FROM_STAIRS;
         }
-        // Pan monsters always generate awake.
         else if (!player_in_branch(BRANCH_PANDEMONIUM))
+        {
+            // Pan monsters always generate awake.
+
+            // For delvers, waking monsters can generate on D:5, but they can't
+            // be near the entrance.
+            if (env.absdepth0 == starting_absdepth())
+                mg.proximity = PROX_AWAY_FROM_ENTRANCE;
             mg.behaviour = BEH_SLEEP;
+        }
 
         mg.flags    |= MG_PERMIT_BANDS;
         mg.map_mask |= MMT_NO_MONS;
@@ -7113,4 +7119,12 @@ static void _mark_solid_squares()
     for (rectangle_iterator ri(0); ri; ++ri)
         if (feat_is_solid(grd(*ri)))
             env.pgrid(*ri) |= FPROP_NO_TELE_INTO;
+}
+
+// Based on their starting class, where does the player start?
+int starting_absdepth()
+{
+    if (you.char_class == JOB_DELVER)
+        return 4;
+    return 0; // (absdepth is 0-indexed)
 }

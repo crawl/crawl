@@ -17,6 +17,7 @@
 #include "ng-restr.h"
 #include "species.h"
 #include "skills.h"
+#include "state.h"
 #include "stringutil.h" // to_string on Cygwin
 
 string combo_type::abbr() const
@@ -31,8 +32,11 @@ static inline vector<job_type> all_jobs()
     for (int i = 0; i < NUM_JOBS; ++i)
     {
         const auto job = static_cast<job_type>(i);
-        if (!job_is_removed(job))
-            jobs.push_back(job);
+        if (job_is_removed(job))
+            continue;
+        if (job == JOB_DELVER && crawl_state.game_is_sprint())
+            continue;
+        jobs.push_back(job);
     }
     return jobs;
 }
