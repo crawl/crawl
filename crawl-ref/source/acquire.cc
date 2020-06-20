@@ -1539,6 +1539,12 @@ bool acquirement(object_class_type class_wanted, int agent,
         bad_class.set(OBJ_ARMOUR);
         bad_class.set(OBJ_STAVES);
     }
+    if (you.species == SP_HYDRA)
+    {
+        bad_class.set(OBJ_WEAPONS);
+        bad_class.set(OBJ_RODS);
+        bad_class.set(OBJ_STAVES);
+    }
     if (you.get_mutation_level(MUT_NO_ARTIFICE))
         bad_class.set(OBJ_MISCELLANY);
 

@@ -2181,6 +2181,10 @@ bool melee_attack::consider_decapitation(int dam, int damage_type)
          defender->as_monster()->num_heads += 2;
          defender->heal(8 + random2(8));
     }
+    else if (defender->is_player())
+    {    
+        defender->as_player()->head_grow(2);
+    }
 
     return false;
 }
@@ -2196,7 +2200,10 @@ static bool actor_can_lose_heads(const actor* defender)
     if (defender->is_monster()
         && defender->as_monster()->has_hydra_multi_attack()
         && defender->type != MONS_SPECTRAL_THING
-        && defender->as_monster()->mons_species() != MONS_SERPENT_OF_HELL)
+        && defender->as_monster()->mons_species() != MONS_SERPENT_OF_HELL
+        || defender -> is_player() 
+            && you.species == SP_HYDRA 
+                && you.experience_level + you.props[HYDRA_HEADS_NET_LOSS].get_int() > 1)
     {
         return true;
     }
@@ -2262,8 +2269,9 @@ bool melee_attack::attack_chops_heads(int dam, int dam_type)
  */
 void melee_attack::decapitate(int dam_type)
 {
-    // Player hydras don't gain or lose heads.
-    ASSERT(defender->is_monster());
+    // *Player hydras don't gain or lose heads.*
+    // Player hydra also gain or lose heads if it is a natural born!
+    // ASSERT(defender->is_monster());
 
     const char *verb = nullptr;
 
@@ -2310,8 +2318,11 @@ void melee_attack::decapitate(int dam_type)
              attacker->conj_verb(verb).c_str(),
              apostrophise(defender_name(true)).c_str());
     }
-
-    defender->as_monster()->num_heads--;
+    
+    if (defender->is_monster())
+        defender->as_monster()->num_heads--;
+    else if (defender->is_player())
+        defender->as_player()->head_grow(-1);
 }
 
 /**

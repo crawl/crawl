@@ -545,6 +545,7 @@ public:
 
     bool tengu_flight() const;
     int heads() const override;
+    bool head_grow(int num) const;
 
     bool spellcasting_unholy() const;
 

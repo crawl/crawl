@@ -3276,6 +3276,12 @@ bool gozag_call_merchant()
         {
             continue;
         }
+        if (you.species == SP_HYDRA &&
+            (type == SHOP_WEAPON
+            || type == SHOP_WEAPON_ANTIQUE))
+        {
+            continue;
+        }
         
         if (you.species == SP_CRUSTACEAN &&
             (type == SHOP_ARMOUR

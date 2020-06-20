@@ -1298,6 +1298,10 @@ static void _redraw_title()
 {
     const unsigned int WIDTH = crawl_view.hudsz.x;
     string title = you.your_name + " " + filtered_lang(player_title());
+    if (you.species == SP_HYDRA)
+    {
+        title = to_string(you.heads()) + "-headed" + title;
+    }
     const bool small_layout =
 #ifdef USE_TILE_LOCAL
                               tiles.is_using_small_layout();
@@ -2234,6 +2238,10 @@ static string _overview_screen_title(int sw)
     text += you.your_name;
     text += title;
     text += species_job;
+    if (you.species == SP_HYDRA)
+    {
+        title = to_string(you.heads()) + "-headed" + title;
+    }
 
     const int num_spaces = sw - linelength - 1;
     if (num_spaces > 0)

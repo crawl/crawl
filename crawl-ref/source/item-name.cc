@@ -304,6 +304,8 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
                         buff << " (weapon)";
                     else if (you.species == SP_FELID)
                         buff << " (in mouth)";
+                    else if (you.species == SP_HYDRA)
+                        buff << " (in mouth)";
                     else
                         buff << " (in " << you.hand_name(false) << ")";
                     break;
@@ -3330,7 +3332,7 @@ bool is_bad_item(const item_def &item, bool temp)
             if (you.species == SP_CRUSTACEAN || you.species == SP_FELID)
                 return false;
         case SCR_CURSE_WEAPON:
-            if (you.species == SP_FELID)
+            if (you.species == SP_FELID || you.species == SP_HYDRA)
                 return false;
         case SCR_CURSE_JEWELLERY:
             return !have_passive(passive_t::want_curses);
@@ -3501,7 +3503,7 @@ bool is_useless_item(const item_def &item, bool temp)
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
-        if (you.species == SP_FELID)
+        if (you.species == SP_FELID || you.species == SP_HYDRA)
             return true;
 
         if (!you.could_wield(item, true, !temp)
@@ -3555,7 +3557,7 @@ bool is_useless_item(const item_def &item, bool temp)
                    && !you.can_throw_large_rocks();
         case MI_ARROW:
         case MI_BOLT:
-            return you.species == SP_CRUSTACEAN;
+            return you.species == SP_CRUSTACEAN || you.species == SP_HYDRA;
         }
 
         return false;
@@ -3612,7 +3614,7 @@ bool is_useless_item(const item_def &item, bool temp)
 #endif  
         case SCR_ENCHANT_WEAPON:
         case SCR_BRAND_WEAPON:
-            return you.species == SP_FELID;
+            return you.species == SP_FELID || you.species == SP_HYDRA;
         case SCR_ENCHANT_ARMOUR:
             return you.species == SP_FELID || you.species == SP_CRUSTACEAN;
         case SCR_SUMMONING:
@@ -3809,6 +3811,7 @@ bool is_useless_item(const item_def &item, bool temp)
 
     case OBJ_RODS:
         if (you.species == SP_FELID
+            || you.species == SP_HYDRA
             || you.get_mutation_level(MUT_NO_ARTIFICE))
         {
             return true;
@@ -3829,7 +3832,7 @@ bool is_useless_item(const item_def &item, bool temp)
         break;
 
     case OBJ_STAVES:
-        if (you.species == SP_FELID || you.species == SP_CRUSTACEAN)
+        if (you.species == SP_FELID || you.species == SP_CRUSTACEAN || you.species == SP_HYDRA)
             return true;
         if (!you.could_wield(item, true, !temp))
         {

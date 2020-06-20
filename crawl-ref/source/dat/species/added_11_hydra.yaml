@@ -49,6 +49,7 @@ mutations:
     MUT_DEFORMED : 1
     MUT_REGENERATION : 3
     MUT_POISON_RESISTANCE : 1
+    MUT_COLD_BLOODED: 1
 fake_mutations:
   - long: You are incapable of wielding weapons or throwing items.
     short: no weapons or thrown items
