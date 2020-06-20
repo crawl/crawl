@@ -322,6 +322,9 @@ static int _rot_stack(item_def &it, int slot, bool in_inv)
  */
 void rot_floor_items(int elapsedTime)
 {
+    if (!you.duration[DUR_NO_POTIONS]) // Refrigerator effects
+        return;
+
     if (elapsedTime <= 0)
         return;
 
@@ -347,7 +350,10 @@ void rot_floor_items(int elapsedTime)
  * @param time_delta    The amount of time to rot for.
  */
 void rot_inventory_food(int /*time_delta*/)
-{
+{   
+    if (!you.duration[DUR_NO_POTIONS]) // Refrigerator effects
+        return;
+
     int num_chunks         = 0;
     int num_chunks_gone    = 0;
 
