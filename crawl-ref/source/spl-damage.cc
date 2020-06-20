@@ -43,6 +43,7 @@
 #include "pakellas.h"
 #include "prompt.h"
 #include "religion.h"
+#include "rot.h"
 #include "shout.h"
 #include "spl-summoning.h"
 #include "spl-util.h"
@@ -483,7 +484,10 @@ static int _los_spell_damage_player(const actor* agent, bolt &beam,
         else if (beam.origin_spell == SPELL_OZOCUBUS_REFRIGERATION)
         {
             you.expose_to_element(beam.flavour, 5);
+            int old_duration = you.duration[DUR_NO_POTIONS];
             you.increase_duration(DUR_NO_POTIONS, 7 + random2(9), 15);
+            int dur_delta = you.duration[DUR_NO_POTIONS] - old_duration;
+            refrigerate_food(dur_delta);
         }
     }
 
