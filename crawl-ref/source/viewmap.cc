@@ -730,13 +730,6 @@ bool show_map(level_pos &lpos, bool travel_mode, bool allow_offlevel)
                 // Note: Tile versions just center on the current cursor
                 // location. It silently ignores everything else going
                 // on in this function.  --Enne
-    #ifdef USE_TILE_LOCAL
-                if (first_run)
-                {
-                    tiles.update_tabs();
-                    first_run = false;
-                }
-    #endif
     #ifdef USE_TILE
                 tiles.load_dungeon(state.lpos.pos);
     #endif
