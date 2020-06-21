@@ -3601,6 +3601,12 @@ void melee_attack::emit_foul_stench()
 {
     monster* mon = attacker->as_monster();
 
+    if ((you_worship(GOD_SHINING_ONE) || you_worship(GOD_ELYVILON) || you_worship(GOD_ZIN)))
+    {
+        mpr("You suddenly be nauseous and emit something, but it is dispersed away.");
+        return;
+    }
+
     if (you.has_mutation(MUT_FOUL_STENCH)
         && attacker->alive()
         && adjacent(you.pos(), mon->pos()))

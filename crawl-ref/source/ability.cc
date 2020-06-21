@@ -3754,7 +3754,8 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
             _add_talent(talents, ABIL_CRAB_WALK, check_confused);
 
         //add cloud?
-        if (you.experience_level > 13)
+        if (you.experience_level > 13 
+        && !(you_worship(GOD_SHINING_ONE) || you_worship(GOD_ELYVILON) || you_worship(GOD_ZIN)))
         {
             _add_talent(talents, ABIL_MIASMA_CLOUD, check_confused);
         }

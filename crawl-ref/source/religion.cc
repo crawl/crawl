@@ -2782,6 +2782,16 @@ void excommunication(bool voluntary, god_type new_god)
         }
     }
 
+    if (you.species == SP_CRUSTACEAN 
+        && (old_god == GOD_ZIN || old_god == GOD_SHINING_ONE || old_god == GOD_ELYVILON))
+    {
+
+        if (you.experience_level > 6)
+            mprf(MSGCH_INTRINSIC_GAIN, "Your body now produce miasma again.");
+        if (you.experience_level > 13)
+            mprf(MSGCH_INTRINSIC_GAIN, "You can emit the cloud of miasma again.");
+    }
+
     if (old_god == GOD_BEOGH)
     {
         // The player's symbol depends on Beogh worship.
@@ -3231,6 +3241,7 @@ static void _god_welcome_handle_gear()
     // Refresh wielded/quivered weapons in case we have a new conduct
     // on them.
     you.wield_change = true;
+
     you.redraw_quiver = true;
 }
 
@@ -3757,6 +3768,17 @@ void join_religion(god_type which_god)
         for (const auto& power : get_god_powers(you.religion))
             if (power.rank <= 0)
                 power.display(true, "You can now %s.");
+
+    // Disalow and warn Crustaceans cannot use their abilities emitting miasma anymore.
+    if (you.species == SP_CRUSTACEAN 
+        && you_worship(GOD_SHINING_ONE) || you_worship(GOD_ELYVILON) || you_worship(GOD_ZIN)
+        )
+    {
+        if (you.experience_level > 6)
+            mprf(MSGCH_INTRINSIC_GAIN, "Your body do not produce miasma anymore.");
+        if (you.experience_level > 13)
+            mprf(MSGCH_INTRINSIC_GAIN, "You can't emit the cloud of miasma anymore.");
+    }
 
     // Allow training all divine ability skills immediately.
     vector<ability_type> abilities = get_god_abilities();
