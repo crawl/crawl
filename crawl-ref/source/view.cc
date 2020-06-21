@@ -1552,10 +1552,9 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
     {
         cell->colour = DARKGREY;
 
-#ifdef USE_TILE_LOCAL
-        cell->tile.bg |= TILE_FLAG_OOR;
-#elif defined(USE_TILE_WEB)
-        // For webtiles, we only grey out visible tiles
+#ifdef USE_TILE
+        // Only grey out tiles within LOS; out-of-LOS tiles are already
+        // darkened.
         if (you.see_cell(gc))
             cell->tile.bg |= TILE_FLAG_OOR;
 #endif
