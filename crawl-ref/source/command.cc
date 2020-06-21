@@ -334,8 +334,17 @@ void list_jewellery()
                  (i == EQ_RING_EIGHT)  ? "8th ring" :
                  (i == EQ_RING_AMULET) ? "Amulet ring" :
                  (i == EQ_AMULET_LEFT) ? "Left Amulet" :
-                 (i == EQ_AMULET_RIGHT) ? "Right Amulet"
-                                       : "unknown";
+                 (i == EQ_AMULET_RIGHT)? "Right Amulet" :
+                 (i == EQ_AMULET_ONE)  ? "1st Amulet" :
+                 (i == EQ_AMULET_TWO)  ? "2nd Amulet" :
+                 (i == EQ_AMULET_THREE)? "3rd Amulet" :
+                 (i == EQ_AMULET_FOUR) ? "4th Amulet" :
+                 (i == EQ_AMULET_FIVE) ? "5th Amulet" :
+                 (i == EQ_AMULET_SIX)  ? "6th Amulet" :
+                 (i == EQ_AMULET_SEVEN)? "7th Amulet" :
+                 (i == EQ_AMULET_EIGHT)? "8th Amulet" :
+                 (i == EQ_AMULET_NINE) ? "9th Amulet" :
+                                         "unknown";
 
         string item;
         if (you_can_wear(i, true) == MB_FALSE)

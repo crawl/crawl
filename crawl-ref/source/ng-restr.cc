@@ -29,6 +29,13 @@ static bool _banned_combination(job_type job, species_type species)
             return true;
         }
         break;
+    case SP_HYDRA:
+        if (job == JOB_ASSASSIN
+            || job == JOB_HUNTER)
+        {
+            return true;
+        }
+        break;
     case SP_DEMIGOD:
         if (job == JOB_BERSERKER
             || job == JOB_CHAOS_KNIGHT
@@ -119,7 +126,7 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
 
     // Some special cases:
 
-    if (ng.species == SP_FELID && wpn != WPN_UNARMED)
+    if ((ng.species == SP_FELID || ng.species == SP_HYDRA) && wpn != WPN_UNARMED)
         return CC_BANNED;
     
     if (ng.species == SP_CRUSTACEAN && !(wpn == WPN_RAPIER 

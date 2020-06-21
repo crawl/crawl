@@ -715,7 +715,7 @@ maybe_bool you_can_wear(equipment_type eq, bool temp)
             return MB_FALSE;
         // intentional fallthrough
     case EQ_RIGHT_RING:
-        return you.species != SP_OCTOPODE ? MB_TRUE : MB_FALSE;
+        return (you.species != SP_OCTOPODE && you.species != SP_HYDRA) ? MB_TRUE : MB_FALSE;
 
     case EQ_RING_EIGHT:
         if (you.get_mutation_level(MUT_MISSING_HAND))
@@ -731,7 +731,8 @@ maybe_bool you_can_wear(equipment_type eq, bool temp)
         return you.species == SP_OCTOPODE ? MB_TRUE : MB_FALSE;
     case EQ_WEAPON:
     case EQ_STAFF:
-        return you.species == SP_FELID ? MB_FALSE :
+        return (you.species == SP_FELID || 
+                you.species == SP_HYDRA) ? MB_FALSE :
                you.body_size(PSIZE_TORSO, !temp) < SIZE_MEDIUM ? MB_MAYBE :
                                          MB_TRUE;
     case EQ_SECOND_WEAPON:
@@ -743,10 +744,29 @@ maybe_bool you_can_wear(equipment_type eq, bool temp)
     case EQ_AMULETS:
         return MB_TRUE;
     case EQ_AMULET:
-        return you.species != SP_TWO_HEADED_OGRE ? MB_TRUE : MB_FALSE;
+        return (you.species != SP_TWO_HEADED_OGRE
+                && you.species != SP_HYDRA) ? MB_TRUE : MB_FALSE;
     case EQ_AMULET_LEFT:
     case EQ_AMULET_RIGHT:
         return you.species != SP_TWO_HEADED_OGRE ? MB_FALSE : MB_TRUE;
+    case EQ_AMULET_ONE:
+        return you.species != SP_HYDRA ? MB_FALSE : MB_TRUE;
+    case EQ_AMULET_TWO:
+        return you.heads() <= 3 ? MB_FALSE : MB_TRUE;
+    case EQ_AMULET_THREE:
+        return you.heads() <= 6 ? MB_FALSE : MB_TRUE;
+    case EQ_AMULET_FOUR:
+        return you.heads() <= 9 ? MB_FALSE : MB_TRUE;
+    case EQ_AMULET_FIVE:
+        return you.heads() <= 12 ? MB_FALSE : MB_TRUE;
+    case EQ_AMULET_SIX:
+        return you.heads() <= 15 ? MB_FALSE : MB_TRUE;
+    case EQ_AMULET_SEVEN:
+        return you.heads() <= 18 ? MB_FALSE : MB_TRUE;
+    case EQ_AMULET_EIGHT:
+        return you.heads() <= 21 ? MB_FALSE : MB_TRUE;
+    case EQ_AMULET_NINE:
+        return you.heads() <= 24 ? MB_FALSE : MB_TRUE;
     case EQ_RING_AMULET:
         return player_equip_unrand(UNRAND_FINGER_AMULET) ? MB_TRUE : MB_FALSE;
 
@@ -904,7 +924,8 @@ int player::wearing(equipment_type slot, int sub_type, bool calc_unid) const
     case EQ_AMULET_PLUS:
         for (int slots = EQ_FIRST_JEWELLERY; slots <= EQ_LAST_JEWELLERY; slots++)
         {
-            if (slots != EQ_AMULET && slots != EQ_AMULET_LEFT && slots != EQ_AMULET_RIGHT)
+            if (slots != EQ_AMULET && slots != EQ_AMULET_LEFT && slots != EQ_AMULET_RIGHT 
+                && !(EQ_AMULET_ONE <= slots && EQ_AMULET_NINE >= slots)) 
                 continue;
 
             if ((item = slot_item(static_cast<equipment_type>(slots)))
@@ -920,7 +941,8 @@ int player::wearing(equipment_type slot, int sub_type, bool calc_unid) const
     case EQ_RINGS_PLUS:
         for (int slots = EQ_FIRST_JEWELLERY; slots <= EQ_LAST_JEWELLERY; slots++)
         {
-            if (slots == EQ_AMULET || slots == EQ_AMULET_LEFT || slots == EQ_AMULET_RIGHT)
+            if (slots == EQ_AMULET || slots == EQ_AMULET_LEFT || slots == EQ_AMULET_RIGHT
+            || (EQ_AMULET_ONE <= slots && EQ_AMULET_NINE >= slots))
                 continue;
 
             if ((item = slot_item(static_cast<equipment_type>(slots)))
@@ -1048,7 +1070,8 @@ bool player_equip_unrand(int unrand_index)
     case EQ_AMULETS:
         for (int slots = EQ_FIRST_JEWELLERY; slots <= EQ_LAST_JEWELLERY; ++slots)
         {
-            if (slots != EQ_AMULET && slots != EQ_AMULET_LEFT && slots != EQ_AMULET_RIGHT)
+            if (slots != EQ_AMULET && slots != EQ_AMULET_LEFT && slots != EQ_AMULET_RIGHT
+                && !(EQ_AMULET_ONE <= slots && EQ_AMULET_NINE >= slots))
                 continue;
 
             if ((item = you.slot_item(static_cast<equipment_type>(slots)))
@@ -1063,7 +1086,8 @@ bool player_equip_unrand(int unrand_index)
     case EQ_RINGS:
         for (int slots = EQ_FIRST_JEWELLERY; slots <= EQ_LAST_JEWELLERY; ++slots)
         {
-            if (slots == EQ_AMULET || slots == EQ_AMULET_LEFT || slots == EQ_AMULET_RIGHT)
+            if (slots == EQ_AMULET || slots == EQ_AMULET_LEFT || slots == EQ_AMULET_RIGHT
+                || (EQ_AMULET_ONE <= slots && EQ_AMULET_NINE >= slots))
                 continue;
 
             if ((item = you.slot_item(static_cast<equipment_type>(slots)))
@@ -1990,7 +2014,7 @@ int player_movement_speed()
         mv = 7;
     else if (you.form == transformation::wisp)
         mv = 8;
-    else if (you.fishtail || you.form == transformation::hydra && you.in_water() || you.species == SP_CRUSTACEAN && you.in_water())
+    else if (you.fishtail || (you.is_hydra() || you.species == SP_CRUSTACEAN) && you.in_water())
         mv = 6;
 
     // Wading through water is very slow.
@@ -2518,6 +2542,44 @@ static void _recover_stat()
             restore_stat((stat_type) i, recovered_stats[i], false, true);
 }
 
+// If hydra loses its heads, then it should unequip the amulet.
+void _handle_amulet_loss()
+{
+    for (int _eq = EQ_AMULET_ONE; _eq <= EQ_AMULET_NINE ; _eq++)
+    {
+        equipment_type eq = (equipment_type)_eq;
+        if (!you_can_wear(eq)
+            && you.slot_item(eq, true))
+        {
+            unequip_item(eq, true);
+        }
+
+    }
+}
+
+static void _recover_head()
+{
+    while (you.attribute[ATTR_HEAD_LOSS_XP] <= 0)
+    {
+        if (one_chance_in(4))
+        {
+        if (you.props[HYDRA_HEADS_NET_LOSS].get_int() > 0)
+            you.props[HYDRA_HEADS_NET_LOSS].get_int()--;
+        else
+            you.props[HYDRA_HEADS_NET_LOSS].get_int()++;
+        }
+        bool still_loss = false;
+        if (you.props[HYDRA_HEADS_NET_LOSS].get_int() != 0)
+                still_loss = true;
+        
+        if (still_loss)
+            you.attribute[ATTR_HEAD_LOSS_XP] += 1;
+        else
+            break;
+    }
+    _handle_amulet_loss();
+}
+
 int get_exp_progress()
 {
     if (you.experience_level >= you.get_max_xl())
@@ -2655,6 +2717,20 @@ static void _handle_stat_loss(int exp)
         _recover_stat();
 }
 
+// update head loss
+static void _handle_head_loss(int exp)
+{
+    if (!(you.attribute[ATTR_HEAD_LOSS_XP] > 0))
+        return;
+
+    int loss = div_rand_round(exp,
+                              2 * max(1, calc_skill_cost(you.skill_cost_level) - 3));
+    you.attribute[ATTR_HEAD_LOSS_XP] -= loss;
+    dprf("Head loss points: %d", you.attribute[ATTR_HEAD_LOSS_XP]);
+    if (you.attribute[ATTR_HEAD_LOSS_XP] <= 0)
+        _recover_head();
+}
+
 /// update xp drain
 static void _handle_xp_drain(int exp)
 {
@@ -2747,6 +2823,7 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain)
     _recharge_xp_evokers(skill_xp);
     _reduce_abyss_xp_timer(skill_xp);
     _handle_xp_drain(skill_xp);
+    _handle_head_loss(skill_xp);
 
     if (player_under_penance(GOD_HEPLIAKLQANA))
         return; // no xp for you!
@@ -3163,6 +3240,9 @@ void level_change(bool skip_attribute_increase)
             case SP_CRUSTACEAN:
                 // ecdysis
                 _crustacean_moult();
+                break;
+            case SP_HYDRA:
+                you.head_grow(1);
                 break;
 
             default:
@@ -6507,6 +6587,11 @@ bool player::is_insubstantial() const
     return form == transformation::wisp;
 }
 
+bool player::is_hydra() const
+{
+    return (form == transformation::hydra || species == SP_HYDRA);
+}
+
 int player::res_acid(bool calc_unid) const
 {
     return player_res_acid(calc_unid);
@@ -6822,6 +6907,45 @@ bool player::tengu_flight() const
 {
     // Only Tengu get perks for flying.
     return species == SP_TENGU && airborne();
+}
+
+// Deal with every amulet availability in here.
+
+bool player::head_grow(int num) const
+{
+    if (you.form == transformation::none)
+    {
+        mprf("Your head %s!", num > 0 ? "grows more" : "are cutted away");
+        if (num > 0)
+        {    for (int i = 0; i < num; i++)
+                you.props[HYDRA_HEADS_NET_LOSS].get_int()--;
+            you.heal(4*num + random2(4*num));}
+        else if (num < 0)
+        {
+            for (int i = 0; i < num; i++)
+                you.props[HYDRA_HEADS_NET_LOSS].get_int()++;
+            ouch(abs(4*num + random2(4*num)), KILLED_BY_DRAINING);
+            // If it loses, it unequips the amulet.
+            _handle_amulet_loss();
+        }
+    }
+    else if ((you.form == transformation::statue || you.form == transformation::lich) && num < 0)
+    {
+        mprf("Your head are %s away", you.form == transformation::statue ? "broken" : "cutted");
+        for (int i = 0; i < num; i++)
+                you.props[HYDRA_HEADS_NET_LOSS].get_int()++;
+        ouch(abs(4*num + random2(4*num)), KILLED_BY_DRAINING);
+        // If it loses, it unequips the amulet.
+        _handle_amulet_loss();
+    }
+    else
+    {  
+        _handle_amulet_loss();
+        return false;
+    }
+    you.redraw_title = true;
+    you.redraw_status_lights = true;
+    return true;
 }
 
 /**
@@ -8964,3 +9088,4 @@ void end_ecdysis()
         restore_stat(STAT_ALL, 0, true);
         you.deaths++;
 }
+

@@ -575,6 +575,12 @@ void ash_check_bondage(bool msg)
         {
             continue;
         }
+        // Missing hand is Missing head of hydra and it means fewer amulets
+        else if (you.species != SP_HYDRA && i == EQ_AMULET_NINE
+                 && you.get_mutation_level(MUT_MISSING_HAND))
+        {
+            continue;
+        }
         // Octopodes don't count these slots:
         else if (you.species == SP_OCTOPODE
                  && ((i == EQ_LEFT_RING || i == EQ_RIGHT_RING)
@@ -586,6 +592,20 @@ void ash_check_bondage(bool msg)
         // *Only* octopodes count these slots:
         else if (you.species != SP_OCTOPODE
                  && i >= EQ_RING_ONE && i <= EQ_RING_EIGHT)
+        {
+            continue;
+        }
+        // Hydras don't count these slots:
+        else if (you.species == SP_HYDRA
+                 && ((i == EQ_AMULET || i == EQ_AMULET_LEFT || i == EQ_AMULET_RIGHT)
+                     || (i == EQ_AMULET_NINE
+                         && you.get_mutation_level(MUT_MISSING_HAND))))
+        {
+            continue;
+        }
+        // *Only* hydra count these slots:
+        else if (you.species != SP_HYDRA
+                 && i >= EQ_AMULET_ONE && i <= EQ_AMULET_NINE)
         {
             continue;
         }

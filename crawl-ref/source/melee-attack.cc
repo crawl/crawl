@@ -900,7 +900,7 @@ static void _hydra_consider_devouring(monster &defender)
  */
 bool melee_attack::handle_phase_killed()
 {
-    if (attacker->is_player() && you.form == transformation::hydra
+    if (attacker->is_player() && you.is_hydra()
         && defender->is_monster() // better safe than sorry
         && defender->type != MONS_NO_MONSTER) // already reset
     {
@@ -1453,7 +1453,11 @@ bool melee_attack::player_gets_aux_punch()
     // Octopodes aren't affected by this, though!
     if (you.species != SP_OCTOPODE && !you.has_usable_offhand())
         return false;
-
+    
+    // Hydra can't punch!
+    if (you.species == SP_HYDRA)
+        return false;
+    
     // Octopodes get more tentacle-slaps.
     return x_chance_in_y(you.species == SP_OCTOPODE ? 3 : 2,
                          6);
@@ -2181,8 +2185,9 @@ bool melee_attack::consider_decapitation(int dam, int damage_type)
         return false;
 
     // What's the largest number of heads the defender can have?
-    const int limit = defender->type == MONS_LERNAEAN_HYDRA ? 27
-                                                            : MAX_HYDRA_HEADS;
+    const int limit = defender->type != MONS_LERNAEAN_HYDRA             ? MAX_HYDRA_HEADS       :
+                      defender->is_player() && you.species == SP_HYDRA  ? 27:
+                                                                          20;
 
     if (attacker->damage_brand(attack_number) == SPWPN_FLAMING)
     {
@@ -2194,10 +2199,17 @@ bool melee_attack::consider_decapitation(int dam, int damage_type)
     int heads = defender->heads();
     if (heads >= limit - 1)
         return false; // don't overshoot the head limit!
-
-    simple_monster_message(*defender->as_monster(), " grows two more!");
-    defender->as_monster()->num_heads += 2;
-    defender->heal(8 + random2(8));
+    
+    if (defender->is_monster())
+    {    
+        simple_monster_message(*defender->as_monster(), " grows two more!");
+         defender->as_monster()->num_heads += 2;
+         defender->heal(8 + random2(8));
+    }
+    else if (defender->is_player())
+    {    
+        defender->as_player()->head_grow(2);
+    }
 
     return false;
 }
@@ -2213,7 +2225,10 @@ static bool actor_can_lose_heads(const actor* defender)
     if (defender->is_monster()
         && defender->as_monster()->has_hydra_multi_attack()
         && defender->type != MONS_SPECTRAL_THING
-        && defender->as_monster()->mons_species() != MONS_SERPENT_OF_HELL)
+        && defender->as_monster()->mons_species() != MONS_SERPENT_OF_HELL
+        || defender -> is_player() 
+            && you.species == SP_HYDRA 
+                && you.experience_level + you.props[HYDRA_HEADS_NET_LOSS].get_int() > 1)
     {
         return true;
     }
@@ -2279,8 +2294,9 @@ bool melee_attack::attack_chops_heads(int dam, int dam_type)
  */
 void melee_attack::decapitate(int dam_type)
 {
-    // Player hydras don't gain or lose heads.
-    ASSERT(defender->is_monster());
+    // *Player hydras don't gain or lose heads.*
+    // Player hydra also gain or lose heads if it is a natural born!
+    // ASSERT(defender->is_monster());
 
     const char *verb = nullptr;
 
@@ -2299,6 +2315,7 @@ void melee_attack::decapitate(int dam_type)
     }
 
     int heads = defender->heads();
+    mprf("%d heads remain.", heads);
     if (heads == 1) // will be zero afterwards
     {
         if (defender_visible)
@@ -2327,8 +2344,11 @@ void melee_attack::decapitate(int dam_type)
              attacker->conj_verb(verb).c_str(),
              apostrophise(defender_name(true)).c_str());
     }
-
-    defender->as_monster()->num_heads--;
+    
+    if (defender->is_monster())
+        defender->as_monster()->num_heads--;
+    else if (defender->is_player())
+        defender->as_player()->head_grow(-1);
 }
 
 /**

@@ -3276,6 +3276,12 @@ bool gozag_call_merchant()
         {
             continue;
         }
+        if (you.species == SP_HYDRA &&
+            (type == SHOP_WEAPON
+            || type == SHOP_WEAPON_ANTIQUE))
+        {
+            continue;
+        }
         
         if (you.species == SP_CRUSTACEAN &&
             (type == SHOP_ARMOUR
@@ -4537,6 +4543,8 @@ static void _extra_sacrifice_code(ability_type sac)
 
         if (you.species == SP_OCTOPODE)
             ring_slot = EQ_RING_EIGHT;
+        else if (you.species == SP_HYDRA)
+            ring_slot = EQ_AMULET_NINE;
         else
             ring_slot = EQ_LEFT_RING;
 
@@ -4579,6 +4587,17 @@ static void _extra_sacrifice_code(ability_type sac)
                     }
                 }
             }
+            else if (you.species == SP_HYDRA)
+            {
+                for (int eq = EQ_AMULET_ONE; eq - EQ_AMULET_ONE <= you.heads() ; eq++)
+                {
+                    if (!you.slot_item(static_cast<equipment_type>(eq), true))
+                    {
+                        open_ring_slot = true;
+                        break;
+                    }
+                }
+            }
             else
             {
                 if (!you.slot_item(static_cast<equipment_type>(
@@ -4591,13 +4610,20 @@ static void _extra_sacrifice_code(ability_type sac)
             mprf("You can no longer wear %s!",
                 ring->name(DESC_YOUR).c_str());
             unequip_item(ring_slot);
-            if (open_ring_slot)
+            if (open_ring_slot && you.species != SP_HYDRA)
             {
                 mprf("You put %s back on %s %s!",
                      ring->name(DESC_YOUR).c_str(),
                      (you.species == SP_OCTOPODE ? "another" : "your other"),
                      you.hand_name(true).c_str());
                 puton_ring(ring_inv_slot, false);
+            }
+            else if (open_ring_slot && you.species == SP_HYDRA)
+            {
+                mprf("You put %s back on your other neck!",
+                ring->name(DESC_YOUR).c_str()); // Actually this is an amulet.
+                puton_ring(ring_inv_slot, false); // Fortunately, puton_ring is also deal with amulet.
+            
             }
         }
     }

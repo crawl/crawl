@@ -589,6 +589,8 @@ static const equipment_type e_order[] =
 {
     EQ_WEAPON, EQ_SECOND_WEAPON, EQ_SHIELD, EQ_BODY_ARMOUR, EQ_HELMET, EQ_CLOAK,
     EQ_GLOVES, EQ_BOOTS, EQ_AMULET, EQ_AMULET_LEFT, EQ_AMULET_RIGHT,
+    EQ_AMULET_ONE, EQ_AMULET_TWO, EQ_AMULET_THREE, EQ_AMULET_FOUR,
+    EQ_AMULET_FIVE, EQ_AMULET_SIX, EQ_AMULET_SEVEN, EQ_AMULET_EIGHT, EQ_AMULET_NINE,
     EQ_LEFT_RING, EQ_RIGHT_RING,
     EQ_RING_ONE, EQ_RING_TWO, EQ_RING_THREE, EQ_RING_FOUR,
     EQ_RING_FIVE, EQ_RING_SIX, EQ_RING_SEVEN, EQ_RING_EIGHT,
@@ -599,7 +601,7 @@ static void _print_stats_equip(int x, int y)
 {
     CGOTOXY(x, y, GOTO_STAT);
     textcolour(HUD_CAPTION_COLOUR);
-    cprintf((you.species == SP_OCTOPODE) ? "Eq: " : "Equip: ");
+    cprintf((you.species == SP_OCTOPODE || you.species == SP_HYDRA) ? "Eq: " : "Equip: ");
     textcolour(LIGHTGREY);
     for (equipment_type eqslot : e_order)
     {
@@ -1298,6 +1300,10 @@ static void _redraw_title()
 {
     const unsigned int WIDTH = crawl_view.hudsz.x;
     string title = you.your_name + " " + filtered_lang(player_title());
+    if (you.species == SP_HYDRA)
+    {
+        title = to_string(you.heads()) + "-headed " + title;
+    }
     const bool small_layout =
 #ifdef USE_TILE_LOCAL
                               tiles.is_using_small_layout();
@@ -1980,11 +1986,14 @@ static string _itosym(int level, int max = 1)
 
 static const char *s_equip_slot_names[] =
 {
-    "Weapon", "Second Weapon", "Cloak",  "Helmet", "Gloves", "Boots",
-    "Shield", "Armour", "Left Ring", "Right Ring", "Amulet",
-    "First Ring", "Second Ring", "Third Ring", "Fourth Ring",
-    "Fifth Ring", "Sixth Ring", "Seventh Ring", "Eighth Ring",
-    "Amulet Ring", "Left Amulet", "Right Amulet"
+    "Weapon", "Second Weapon", "Cloak",  "Helmet", "Gloves", "Boots", // 6
+    "Shield", "Armour", "Left Ring", "Right Ring", "Amulet", // 5
+    "First Ring", "Second Ring", "Third Ring", "Fourth Ring", // 4
+    "Fifth Ring", "Sixth Ring", "Seventh Ring", "Eighth Ring", // 4
+    "Amulet Ring", "Left Amulet", "Right Amulet", // 3
+    "First Amulet", "Second Amulet", "Third Amulet", "Fourth Amulet",
+    "Fifth Amulet", "Sixth Amulet", "Seventh Amulet", "Eighth Amulet",
+    "Ninth Amulet"
 };
 
 const char *equip_slot_to_name(int equip)
@@ -1997,13 +2006,13 @@ const char *equip_slot_to_name(int equip)
 
     if (equip == EQ_RINGS
         || equip >= EQ_FIRST_JEWELLERY && equip <= EQ_LAST_JEWELLERY && 
-        (equip != EQ_AMULET && equip != EQ_AMULET_LEFT && equip != EQ_AMULET_RIGHT))
+        (equip != EQ_AMULET && equip < EQ_FIRST_AMULET))
     {
         return "Ring";
     }
 
     if (equip == EQ_AMULETS ||
-        equip == EQ_AMULET || equip == EQ_AMULET_LEFT || equip == EQ_AMULET_RIGHT)
+        equip == EQ_AMULET || equip >= EQ_FIRST_AMULET)
     {
         return "Amulet";
     }
@@ -2131,6 +2140,19 @@ static void _print_overview_screen_equip(column_composer& cols,
             continue;
         }
 
+        if (you.species != SP_HYDRA && (eqslot == EQ_AMULET_ONE
+                                        || eqslot == EQ_AMULET_TWO
+                                        || eqslot == EQ_AMULET_THREE
+                                        || eqslot == EQ_AMULET_FOUR
+                                        || eqslot == EQ_AMULET_FIVE
+                                        || eqslot == EQ_AMULET_SIX
+                                        || eqslot == EQ_AMULET_SEVEN
+                                        || eqslot == EQ_AMULET_EIGHT
+                                        || eqslot == EQ_AMULET_NINE))
+        {
+            continue;
+        }
+
         if (eqslot == EQ_RING_AMULET  && !you_can_wear(eqslot))
             continue;
 
@@ -2179,7 +2201,7 @@ static void _print_overview_screen_equip(column_composer& cols,
         {
             str = "<darkgrey>(no " + slot_name_lwr + ")</darkgrey>";
         }
-        else if (!you_can_wear(eqslot))
+        else if (!you_can_wear(eqslot) && you.species != SP_HYDRA)
             str = "<darkgrey>(" + slot_name_lwr + " unavailable)</darkgrey>";
         else if (!you_can_wear(eqslot, true))
         {
@@ -2231,6 +2253,10 @@ static string _overview_screen_title(int sw)
     text += you.your_name;
     text += title;
     text += species_job;
+    if (you.species == SP_HYDRA)
+    {
+        title = to_string(you.heads()) + "-headed " + title;
+    }
 
     const int num_spaces = sw - linelength - 1;
     if (num_spaces > 0)

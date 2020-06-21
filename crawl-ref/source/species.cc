@@ -476,6 +476,25 @@ void change_species_to(species_type sp)
         // All species allow exactly one amulet.
     }
 
+    auto sp_to_slot
+    = [](species_type sp) -> equipment_type
+    {
+        equipment_type slot = EQ_AMULET;
+        
+        if (sp == SP_TWO_HEADED_OGRE)
+            slot = EQ_AMULET_LEFT;
+        else if (sp == SP_HYDRA)
+            slot = EQ_AMULET_ONE;
+
+        return slot;
+    };
+
+    if ((old_sp == SP_TWO_HEADED_OGRE) != (sp == SP_TWO_HEADED_OGRE) 
+        || (old_sp == SP_HYDRA) != (sp == SP_HYDRA))
+    {
+        _swap_equip(sp_to_slot(old_sp), sp_to_slot(sp));
+    }
+
     // FIXME: this checks only for valid slots, not for suitability of the
     // item in question. This is enough to make assertions happy, though.
     for (int i = EQ_FIRST_EQUIP; i < NUM_EQUIP; ++i)

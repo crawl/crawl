@@ -1924,7 +1924,7 @@ void canned_msg(canned_message_type which_message)
                     mprf("You are %s both empty-handed.", when);
                 }
             }
-            else if (you.species == SP_FELID)
+            else if (you.species == SP_FELID || you.species == SP_HYDRA)
                 mprf("Your mouth is %s empty.", when);
             else if (you.has_usable_claws(true))
                 mprf("You are %s empty-clawed.", when);

@@ -262,7 +262,8 @@ spret cast_shroud_of_golubria(int pow, bool fail)
 }
 
 spret cast_transform(int pow, transformation which_trans, bool fail)
-{
+{   
+    
     if (!transform(pow, which_trans, false, true)
         || !check_form_stat_safety(which_trans))
     {

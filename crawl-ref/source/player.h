@@ -59,6 +59,7 @@
 #define WILL_OF_EARTH_POWER_KEY "will_of_earth_power"
 #define WILL_OF_EARTH_KEY "will_of_earth_num"
 #define NEMELEX_SACRIFICING_KEY "nemelex_sacrificing"
+#define HYDRA_HEADS_NET_LOSS "hydra_heads_net_loss"
 
 // display/messaging breakpoints for penalties from Ru's MUT_HORROR
 #define HORROR_LVL_EXTREME  3
@@ -544,6 +545,7 @@ public:
 
     bool tengu_flight() const;
     int heads() const override;
+    bool head_grow(int num) const;
 
     bool spellcasting_unholy() const;
 
@@ -773,6 +775,7 @@ public:
     int how_chaotic(bool check_spells_god) const override;
     bool is_unbreathing() const override;
     bool is_insubstantial() const override;
+    bool is_hydra() const;
     int res_acid(bool calc_unid = true) const override;
     bool res_damnation() const override { return false; };
     int res_fire() const override;

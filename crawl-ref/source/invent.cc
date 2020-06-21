@@ -1622,8 +1622,8 @@ bool check_old_item_warning(const item_def& item,
 
         if (jewellery_is_amulet(item))
         {
-            if (you.species == SP_TWO_HEADED_OGRE) {
-                // ogre handled in prompt_ring_to_remove
+            if (you.species == SP_TWO_HEADED_OGRE || you.species == SP_HYDRA) {
+                // ogre and hydra handled in prompt_ring_to_remove
                 return true;
             }
             else {
@@ -1876,6 +1876,14 @@ bool check_warning_inscriptions(const item_def& item,
             {
                 if (you.species == SP_TWO_HEADED_OGRE) {
                     for (int slots = EQ_AMULET_LEFT; slots <= EQ_AMULET_RIGHT; ++slots)
+                    {
+                        int equip = you.equip[slots];
+                        if (equip != -1 && item.link == equip)
+                            return check_old_item_warning(item, oper);
+                    }
+                }
+                else if (you.species == SP_HYDRA){
+                    for (int slots = EQ_AMULET_ONE; slots <= EQ_AMULET_EIGHT; ++slots)
                     {
                         int equip = you.equip[slots];
                         if (equip != -1 && item.link == equip)
@@ -2140,7 +2148,7 @@ bool prompt_failed(int retval)
 // wielded to be used normally.
 bool item_is_wieldable(const item_def &item)
 {
-    return ((is_weapon(item) || item.base_type == OBJ_RODS) && you.species != SP_FELID)
+    return ((is_weapon(item) || item.base_type == OBJ_RODS) && (you.species != SP_FELID || you.species != SP_HYDRA))
            && (you.species != SP_CRUSTACEAN || is_short_sword(item));
 }
 

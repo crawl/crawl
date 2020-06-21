@@ -222,6 +222,8 @@ void wizard_heal(bool super_heal)
         delete_all_temp_mutations("Super heal");
         you.stat_loss.init(0);
         you.attribute[ATTR_STAT_LOSS_XP] = 0;
+        you.attribute[ATTR_HEAD_LOSS_XP] = 0;
+        you.props[HYDRA_HEADS_NET_LOSS] = 0;
         you.redraw_stats = true;
     }
     else

@@ -147,7 +147,7 @@ static const sacrifice_def sac_data[] =
 
 { ABIL_RU_SACRIFICE_HAND, MUT_MISSING_HAND,
   "sacrifice one of your ",
-  "sacrificed a hand",
+  you.species == SP_HYDRA ? "sacrificed a neck" :"sacrificed a hand",
 
   65,
   SK_SHIELDS,

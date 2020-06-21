@@ -2571,7 +2571,16 @@ bool drop_item(int item_dropped, int quant_drop)
      || item_dropped == you.equip[EQ_RING_EIGHT]
      || item_dropped == you.equip[EQ_RING_AMULET]
      || item_dropped == you.equip[EQ_AMULET_LEFT]
-     || item_dropped == you.equip[EQ_AMULET_RIGHT])
+     || item_dropped == you.equip[EQ_AMULET_RIGHT]
+     || item_dropped == you.equip[EQ_AMULET_ONE]
+    || item_dropped == you.equip[EQ_AMULET_TWO]
+    || item_dropped == you.equip[EQ_AMULET_THREE]
+    || item_dropped == you.equip[EQ_AMULET_FOUR]
+    || item_dropped == you.equip[EQ_AMULET_FIVE]
+    || item_dropped == you.equip[EQ_AMULET_SIX]
+    || item_dropped == you.equip[EQ_AMULET_SEVEN]
+    || item_dropped == you.equip[EQ_AMULET_EIGHT]
+    || item_dropped == you.equip[EQ_AMULET_NINE])
     {
         if (!Options.easy_unequip)
             mpr("You will have to take that off first.");

@@ -62,7 +62,11 @@ static const int EQF_RINGS = SLOTF(EQ_LEFT_RING) | SLOTF(EQ_RIGHT_RING)
                              | SLOTF(EQ_RING_FIVE) | SLOTF(EQ_RING_SIX)
                              | SLOTF(EQ_RING_SEVEN) | SLOTF(EQ_RING_EIGHT);
 // amulet & pal
-static const int EQF_AMULETS = SLOTF(EQ_AMULET) | SLOTF(EQ_AMULET_LEFT) | SLOTF(EQ_AMULET_RIGHT) | SLOTF(EQ_RING_AMULET);
+static const int EQF_AMULETS = SLOTF(EQ_AMULET) | SLOTF(EQ_AMULET_LEFT) | SLOTF(EQ_AMULET_RIGHT) | SLOTF(EQ_RING_AMULET)
+                             | SLOTF(EQ_AMULET_ONE) | SLOTF(EQ_AMULET_TWO)
+                             | SLOTF(EQ_AMULET_THREE) | SLOTF(EQ_AMULET_FOUR)
+                             | SLOTF(EQ_AMULET_FIVE) | SLOTF(EQ_AMULET_SIX)
+                             | SLOTF(EQ_AMULET_SEVEN) | SLOTF(EQ_AMULET_EIGHT) | SLOTF(EQ_AMULET_NINE);
 // everything
 static const int EQF_ALL = EQF_PHYSICAL | EQF_RINGS | EQF_AMULETS;
 
@@ -1653,6 +1657,12 @@ bool transform(int pow, transformation which_trans, bool involuntary,
         && which_trans != transformation::none)
     {
         simple_god_message(" protects your body from unnatural transformation!");
+        return false;
+    }
+
+    if (you.species == SP_HYDRA && which_trans == transformation::blade_hands)
+    {   
+        mpr("You have no hands to be blade!");
         return false;
     }
 

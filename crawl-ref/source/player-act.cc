@@ -436,7 +436,7 @@ bool player::could_wield(const item_def &item, bool ignore_brand,
 
         return true;
     }
-    else if (species == SP_FELID)
+    else if (species == SP_FELID || species == SP_HYDRA)
     {
         if (!quiet)
         {
@@ -652,6 +652,8 @@ string player::arm_name(bool plural, bool *can_plural) const
         adj = "bandage-wrapped";
     else if (species == SP_OCTOPODE)
         str = "tentacle";
+    else if (species == SP_HYDRA)
+        str = "neck";
 
     if (form == transformation::lich)
         adj = "bony";
@@ -930,5 +932,13 @@ int player::heads() const
 {
     if (props.exists(HYDRA_FORM_HEADS_KEY))
         return props[HYDRA_FORM_HEADS_KEY].get_int();
+    else if (species == SP_HYDRA)
+    {   
+        int net_loss = 0;
+        if (props.exists(HYDRA_HEADS_NET_LOSS))
+            net_loss = props[HYDRA_HEADS_NET_LOSS].get_int();
+        // Maybe die if the net loss is bigger?
+        return max(1, you.experience_level - net_loss); 
+    }
     return 1; // not actually always true
 }

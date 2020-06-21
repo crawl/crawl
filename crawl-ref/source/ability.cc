@@ -1069,7 +1069,7 @@ ability_type fixup_ability(ability_type ability)
     case ABIL_ELYVILON_BLESS_WEAPON:
     case ABIL_JIYVA_BLESS_WEAPON:
     case ABIL_CHEIBRIADOS_BLESS_WEAPON:
-        if (you.species == SP_FELID)
+        if (you.species == SP_FELID && you.species == SP_HYDRA)
             return ABIL_NON_ABILITY;
         else
             return ability;

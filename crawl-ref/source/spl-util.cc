@@ -1239,10 +1239,14 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "you're already a statue.";
         // fallthrough to other forms
 
-    case SPELL_BEASTLY_APPENDAGE:
     case SPELL_BLADE_HANDS:
-    case SPELL_DRAGON_FORM:
+        if (you.species == SP_HYDRA)
+            return "this spell is useless, since you have no hands!";
     case SPELL_HYDRA_FORM:
+        if (you.species == SP_HYDRA)
+            return "this spell is useless, since you are hydra yousrelf!";
+    case SPELL_BEASTLY_APPENDAGE:
+    case SPELL_DRAGON_FORM:
     case SPELL_ICE_FORM:
     case SPELL_SPIDER_FORM:
         if (you.undead_state(temp) == US_UNDEAD
@@ -1272,7 +1276,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         // intentional fallthrough
     case SPELL_PORTAL_PROJECTILE:
     case SPELL_SPECTRAL_WEAPON:
-        if (you.species == SP_FELID)
+        if (you.species == SP_FELID || you.species == SP_HYDRA)
             return "this spell is useless without hands.";
         break;
 
