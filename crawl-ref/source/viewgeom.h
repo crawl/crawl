@@ -6,8 +6,8 @@ struct screen_cell_t
 {
     char32_t glyph;
     unsigned short colour; // TODO: check if this is real colour (8 bit)
-    unsigned short flash_colour;
 #ifdef USE_TILE
+    unsigned short flash_colour;
     packed_cell tile;
 #endif
 };

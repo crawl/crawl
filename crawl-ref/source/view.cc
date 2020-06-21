@@ -1527,9 +1527,8 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
 
 #ifdef USE_TILE
     cell->tile.map_knowledge = map_bounds(gc) ? env.map_knowledge(gc) : map_cell();
-#endif
-
     cell->flash_colour = BLACK;
+#endif
 
     // Don't hide important information by recolouring monsters.
     bool allow_mon_recolour = query_map_knowledge(true, gc, [](const map_cell& m) {
@@ -1550,14 +1549,15 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
     {
         if (!you.see_cell(gc))
             cell->colour = DARKGREY;
-#ifdef USE_TILE_LOCAL
-        else
-            cell->colour = real_colour(flash_colour);
-#else
-        else if (gc != you.pos() && allow_mon_recolour)
+
+#ifndef USE_TILE_LOCAL
+        if (you.see_cell(gc) && gc != you.pos() && allow_mon_recolour)
             cell->colour = real_colour(flash_colour);
 #endif
-        cell->flash_colour = cell->colour;
+#ifdef USE_TILE
+        if (you.see_cell(gc))
+            cell->flash_colour = real_colour(flash_colour);
+#endif
     }
     else if (crawl_state.darken_range)
     {
