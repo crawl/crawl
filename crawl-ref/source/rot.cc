@@ -52,18 +52,50 @@ void refrigerate_food(int dur_delta)
         if (item.quantity < 1 || !_item_needs_rot_check(item))
             continue;
 	
-	if (!item.defined() || !is_perishable_stack(item))
-	    continue;
+        if (!item.defined() || !is_perishable_stack(item))
+            continue;
 
-	if (!item.props.exists(TIMER_KEY))
+        if (!item.props.exists(TIMER_KEY))
             init_perishable_stack(item);
 	
-	CrawlVector &stack_timer = item.props[TIMER_KEY].get_vector();
-        for(int t = 0; t < stack_timer.size(); t++)
-        {
-            int time = stack_timer[stack_timer.size()-1].get_int();
-            stack_timer.pop_back();
-            stack_timer.insert(0, time + dur_delta);
+        CrawlVector &stack_timer = item.props[TIMER_KEY].get_vector();
+            for(int t = 0; t < stack_timer.size(); t++)
+            {
+                int time = stack_timer[stack_timer.size()-1].get_int();
+                stack_timer.pop_back();
+                stack_timer.insert(0, time + dur_delta);
+            }
+    }
+
+    // Floor item part, 
+    // But does we need this part?
+    for (int mitm_index = 0; mitm_index < MAX_ITEMS; ++mitm_index)
+    {
+        item_def &it = mitm[mitm_index];
+
+        if (is_shop_item(it) || !_item_needs_rot_check(it) 
+            || (you.pos() - it.pos).rdist() < LOS_NONE || !you.see_cell(it.pos))
+            continue;
+
+        // /2 because it is on the surface, dirty !
+        int refrig_fresh = dur_delta / (ROT_TIME_FACTOR * 2); 
+        if (it.base_type == OBJ_CORPSES && it.props.exists(CORPSE_NEVER_DECAYS))
+            it.freshness += refrig_fresh;
+
+        else
+        {    if (!it.defined() || !is_perishable_stack(it))
+            continue;
+
+            if (!it.props.exists(TIMER_KEY))
+                init_perishable_stack(it);
+        
+            CrawlVector &stack_timer = it.props[TIMER_KEY].get_vector();
+            for(int t = 0; t < stack_timer.size(); t++)
+            {
+                int time = stack_timer[stack_timer.size()-1].get_int();
+                stack_timer.pop_back();
+                stack_timer.insert(0, time + refrig_fresh * ROT_TIME_FACTOR);
+            }
         }
     }
 }
