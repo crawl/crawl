@@ -1081,8 +1081,10 @@ static void player_view_update()
 
 static void _draw_out_of_bounds(screen_cell_t *cell)
 {
+#ifndef USE_TILE_LOCAL
     cell->glyph  = ' ';
     cell->colour = DARKGREY;
+#endif
 #ifdef USE_TILE
     cell->tile.fg = 0;
     cell->tile.bg = tileidx_out_of_bounds(you.where_are_you);
@@ -1092,10 +1094,12 @@ static void _draw_out_of_bounds(screen_cell_t *cell)
 static void _draw_outside_los(screen_cell_t *cell, const coord_def &gc,
                                     const coord_def &ep)
 {
+#ifndef USE_TILE_LOCAL
     // Outside the env.show area.
     cglyph_t g = get_cell_glyph(gc);
     cell->glyph  = g.ch;
     cell->colour = g.col;
+#endif
 
 #ifdef USE_TILE
     // this is just for out-of-los rays, but I don't see a more efficient way..
@@ -1112,6 +1116,7 @@ static void _draw_player(screen_cell_t *cell,
                          const coord_def &gc, const coord_def &ep,
                          bool anim_updates)
 {
+#ifndef USE_TILE_LOCAL
     // Player overrides everything in cell.
     cell->glyph  = mons_char(you.symbol);
     cell->colour = mons_class_colour(you.symbol);
@@ -1126,6 +1131,7 @@ static void _draw_player(screen_cell_t *cell,
         cell->colour |= COLFLAG_REVERSE;
 
     cell->colour = real_colour(cell->colour);
+#endif
 
 #ifdef USE_TILE
     cell->tile.fg = env.tile_fg(ep) = tileidx_player();
@@ -1142,9 +1148,11 @@ static void _draw_los(screen_cell_t *cell,
                       const coord_def &gc, const coord_def &ep,
                       bool anim_updates)
 {
+#ifndef USE_TILE_LOCAL
     cglyph_t g = get_cell_glyph(gc);
     cell->glyph  = g.ch;
     cell->colour = g.col;
+#endif
 
 #ifdef USE_TILE
     cell->tile.fg = env.tile_fg(ep);
@@ -1547,11 +1555,10 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
     // Alter colour if flashing the characters vision.
     if (flash_colour)
     {
+#ifndef USE_TILE_LOCAL
         if (!you.see_cell(gc))
             cell->colour = DARKGREY;
-
-#ifndef USE_TILE_LOCAL
-        if (you.see_cell(gc) && gc != you.pos() && allow_mon_recolour)
+        else if (gc != you.pos() && allow_mon_recolour)
             cell->colour = real_colour(flash_colour);
 #endif
 #ifdef USE_TILE
@@ -1564,7 +1571,9 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
         if ((crawl_state.darken_range->obeys_mesmerise && mesmerise_excluded)
             || (!crawl_state.darken_range->valid_aim(gc)))
         {
+#ifndef USE_TILE_LOCAL
             cell->colour = DARKGREY;
+#endif
 #ifdef USE_TILE
             if (you.see_cell(gc))
                 cell->tile.bg |= TILE_FLAG_OOR;
@@ -1573,6 +1582,7 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
     }
     else if (crawl_state.flash_monsters)
     {
+#ifndef USE_TILE_LOCAL
         bool found = gc == you.pos();
 
         if (!found)
@@ -1587,10 +1597,13 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
 
         if (!found)
             cell->colour = DARKGREY;
+#endif
     }
     else if (mesmerise_excluded) // but no range limits in place
     {
+#ifndef USE_TILE_LOCAL
         cell->colour = DARKGREY;
+#endif
 
 #ifdef USE_TILE
         // Only grey out tiles within LOS; out-of-LOS tiles are already
