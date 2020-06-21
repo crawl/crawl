@@ -186,7 +186,7 @@ void MenuButton::serialize()
             serialize_image(tile);
         else if (auto tilestack = dynamic_cast<Stack*>(((*box)[0].get())))
         {
-            for (const auto it : *tilestack)
+            for (const auto &it : *tilestack)
                 if (auto t = dynamic_cast<Image*>(it.get()))
                     serialize_image(t);
         }

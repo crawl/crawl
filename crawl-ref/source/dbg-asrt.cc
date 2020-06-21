@@ -187,7 +187,7 @@ static void _dump_player(FILE *file)
     {
         fprintf(file, "Delayed (%u):\n",
                 (unsigned int)you.delay_queue.size());
-        for (const auto delay : you.delay_queue)
+        for (const auto &delay : you.delay_queue)
         {
             fprintf(file, "    type:     %s", delay->name());
             fprintf(file, "\n");

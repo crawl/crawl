@@ -322,7 +322,7 @@ bool is_being_drained(const item_def &item)
 
 bool is_being_butchered(const item_def &item, bool just_first)
 {
-    for (const auto delay : you.delay_queue)
+    for (const auto &delay : you.delay_queue)
     {
         if (delay->is_being_used(&item, OPER_BUTCHER))
             return true;
@@ -358,7 +358,7 @@ bool player_stair_delay()
  */
 bool already_learning_spell(int spell)
 {
-    for (const auto delay : you.delay_queue)
+    for (const auto &delay : you.delay_queue)
     {
         auto mem = dynamic_cast<MemoriseDelay*>(delay.get());
         if (!mem)

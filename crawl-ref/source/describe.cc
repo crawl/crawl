@@ -3061,7 +3061,7 @@ static string _miscast_damage_string(spell_type spell)
     spschools_type disciplines = get_spell_disciplines(spell);
     vector <string> descs;
 
-    for (const auto flav : special_flavor)
+    for (const auto &flav : special_flavor)
         if (disciplines & flav.first)
             descs.push_back(flav.second);
 
@@ -3070,7 +3070,7 @@ static string _miscast_damage_string(spell_type spell)
 
     int dam = max_miscast_damage(spell);
     vector <string> dam_flavors;
-    for (const auto flav : damage_flavor)
+    for (const auto &flav : damage_flavor)
         if (disciplines & flav.first)
             dam_flavors.push_back(flav.second);
 
