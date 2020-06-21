@@ -31,6 +31,7 @@
 #include "player-stats.h"
 #include "potion.h"
 #include "religion.h"
+#include "rot.h"
 #include "shout.h"
 #include "spl-clouds.h"
 #include "spl-goditem.h"
@@ -2317,7 +2318,12 @@ void MiscastEffect::_ice(int severity)
             if (_ouch(5 + random2(6) + random2(7), BEAM_COLD) && target->alive())
                 target->expose_to_element(BEAM_COLD, 4);
             if (target->is_player() && !you_foodless(true, false))
+            {
+                int old_duration = you.duration[DUR_NO_POTIONS];
                 you.increase_duration(DUR_NO_POTIONS, 10 + random2(11), 50);
+                int dur_delta = you.duration[DUR_NO_POTIONS] - old_duration;
+                refrigerate_food(dur_delta);
+            }
             break;
 
         case 1:

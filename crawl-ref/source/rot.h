@@ -24,3 +24,5 @@ void merge_perishable_stacks(const item_def &source, item_def &dest, int quant);
 
 void rot_inventory_food(int time_delta);
 void rot_floor_items(int elapsedTime);
+
+void refrigerate_food(int time);

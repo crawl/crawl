@@ -38,6 +38,68 @@ static void _potion_stack_changed_message(string item_name, int num_changed,
                                           int remainder);
 
 
+/**
+ * Refrigerate chunks & blood in the player's inventory.
+ *
+ * @param time    The amount of time to be preserved.
+ */
+void refrigerate_food(int dur_delta)
+{
+    for (int i = 0; i < ENDOFPACK; i++)
+    {
+        item_def &item(you.inv[i]);
+
+        if (item.quantity < 1 || !_item_needs_rot_check(item))
+            continue;
+	
+        if (!item.defined() || !is_perishable_stack(item))
+            continue;
+
+        if (!item.props.exists(TIMER_KEY))
+            init_perishable_stack(item);
+	
+        CrawlVector &stack_timer = item.props[TIMER_KEY].get_vector();
+            for(int t = 0; t < stack_timer.size(); t++)
+            {
+                int time = stack_timer[stack_timer.size()-1].get_int();
+                stack_timer.pop_back();
+                stack_timer.insert(0, time + dur_delta);
+            }
+    }
+
+    // Floor item part, 
+    // But does we need this part?
+    for (int mitm_index = 0; mitm_index < MAX_ITEMS; ++mitm_index)
+    {
+        item_def &it = mitm[mitm_index];
+
+        if (is_shop_item(it) || !_item_needs_rot_check(it) 
+            || (you.pos() - it.pos).rdist() < LOS_NONE || !you.see_cell(it.pos))
+            continue;
+
+        // /2 because it is on the surface, dirty !
+        int refrig_fresh = dur_delta / (ROT_TIME_FACTOR * 2); 
+        if (it.base_type == OBJ_CORPSES && it.props.exists(CORPSE_NEVER_DECAYS))
+            it.freshness += refrig_fresh;
+
+        else
+        {    if (!it.defined() || !is_perishable_stack(it))
+            continue;
+
+            if (!it.props.exists(TIMER_KEY))
+                init_perishable_stack(it);
+        
+            CrawlVector &stack_timer = it.props[TIMER_KEY].get_vector();
+            for(int t = 0; t < stack_timer.size(); t++)
+            {
+                int time = stack_timer[stack_timer.size()-1].get_int();
+                stack_timer.pop_back();
+                stack_timer.insert(0, time + refrig_fresh * ROT_TIME_FACTOR);
+            }
+        }
+    }
+}
+
 /** * Checks if a given item is a stack of chunks.
  *
  * @param item  The stack to check.
@@ -322,8 +384,6 @@ static int _rot_stack(item_def &it, int slot, bool in_inv)
  */
 void rot_floor_items(int elapsedTime)
 {
-    if (!you.duration[DUR_NO_POTIONS]) // Refrigerator effects
-        return;
 
     if (elapsedTime <= 0)
         return;
@@ -351,9 +411,6 @@ void rot_floor_items(int elapsedTime)
  */
 void rot_inventory_food(int /*time_delta*/)
 {   
-    if (!you.duration[DUR_NO_POTIONS]) // Refrigerator effects
-        return;
-
     int num_chunks         = 0;
     int num_chunks_gone    = 0;
 
