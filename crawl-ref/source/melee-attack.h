@@ -23,6 +23,8 @@ enum unarmed_attack_type
     NUM_UNARMED_ATTACKS,
 };
 
+const int UC_FORM_TO_HIT_BONUS = 5;
+
 class melee_attack : public attack
 {
 public:
@@ -45,9 +47,8 @@ public:
 
     // Applies attack damage and other effects.
     bool attack();
-
-    // To-hit is a function of attacker/defender, inherited from attack
-    int calc_to_hit(bool random = true) override;
+    int calc_to_hit(bool random) override;
+    int post_roll_to_hit_modifiers(int mhit, bool random) override;
 
     static void chaos_affect_actor(actor *victim);
 

@@ -142,19 +142,34 @@ bool attack::handle_phase_end()
 }
 
 /**
- * Calculate the to-hit for an attacker
+ * Calculate to-hit penalties from the attacker's armour and shield, if any.
+ * Set them into the appropriate fields.
+ *
+ * @param random If false, calculate average to-hit penalties deterministically.
+ */
+void attack::calc_encumbrance_penalties(bool random) {
+    attacker_armour_tohit_penalty =
+        maybe_random_div(attacker->armour_tohit_penalty(true, 20), 20, random);
+    attacker_shield_tohit_penalty =
+        maybe_random_div(attacker->shield_tohit_penalty(true, 20), 20, random);
+}
+
+/**
+ * Calculate the to-hit for an attacker before the main die roll.
  *
  * @param random If false, calculate average to-hit deterministically.
  */
-int attack::calc_to_hit(bool random)
-{
+int attack::calc_pre_roll_to_hit(bool random) {
+    if (using_weapon()
+        && (is_unrandom_artefact(*weapon, UNRAND_WOE)
+            || is_unrandom_artefact(*weapon, UNRAND_SNIPER)))
+    {
+        return AUTOMATIC_HIT;
+    }
+
     int mhit = attacker->is_player() ?
                 15 + (you.dex() / 2)
               : calc_mon_to_hit_base();
-
-#ifdef DEBUG_DIAGNOSTICS
-    const int base_hit = mhit;
-#endif
 
     // This if statement is temporary, it should be removed when the
     // implementation of a more universal (and elegant) to-hit calculation
@@ -170,7 +185,7 @@ int attack::calc_to_hit(bool random)
         {
             if (wpn_skill != SK_FIGHTING)
             {
-                if (you.skill(wpn_skill) < 1 && player_in_a_dangerous_place())
+                if (you.skill(wpn_skill) < 1 && player_in_a_dangerous_place() && random)
                     xom_is_stimulated(10); // Xom thinks that is mildly amusing.
 
                 mhit += maybe_random_div(you.skill(wpn_skill, 100), 100,
@@ -206,7 +221,9 @@ int attack::calc_to_hit(bool random)
                               || (weapon && is_range_weapon(*weapon)
                                          && using_weapon()));
 
-        // armour penalty
+        // armour penalty (already calculated if random is true)
+        if (!random)
+            calc_encumbrance_penalties(random);
         mhit -= (attacker_armour_tohit_penalty + attacker_shield_tohit_penalty);
 
         // vertigo penalty
@@ -216,9 +233,6 @@ int attack::calc_to_hit(bool random)
         // mutation
         if (you.get_mutation_level(MUT_EYEBALLS))
             mhit += 2 * you.get_mutation_level(MUT_EYEBALLS) + 1;
-
-        // hit roll
-        mhit = maybe_random2(mhit, random);
     }
     else    // Monster to-hit.
     {
@@ -235,49 +249,75 @@ int attack::calc_to_hit(bool random)
         mhit += attacker->scan_artefacts(ARTP_SLAYING);
     }
 
+    return mhit;
+}
+
+/**
+ * Calculate to-hit modifiers for an attacker that apply after the player's roll.
+ *
+ * @param mhit The post-roll player's to-hit value.
+ */
+int attack::post_roll_to_hit_modifiers(int mhit, bool random) {
+    int modifiers = 0;
+
     // Penalties for both players and monsters:
-    mhit -= 5 * attacker->inaccuracy();
+    modifiers -= 5 * attacker->inaccuracy();
 
     if (attacker->confused())
-        mhit -= 5;
-
-    if (using_weapon()
-        && (is_unrandom_artefact(*weapon, UNRAND_WOE)
-            || is_unrandom_artefact(*weapon, UNRAND_SNIPER)))
-    {
-        return AUTOMATIC_HIT;
-    }
+        modifiers -= 5;
 
     // If no defender, we're calculating to-hit for debug-display
     // purposes, so don't drop down to defender code below
     if (defender == nullptr)
-        return mhit;
+        return modifiers;
 
     if (!defender->visible_to(attacker))
+    {
         if (attacker->is_player())
-            mhit -= 6;
+            modifiers -= 6;
         else
-            mhit = mhit * 65 / 100;
+            modifiers -= mhit * 35 / 100;
+    }
     else
     {
         // This can only help if you're visible!
         const int how_transparent = you.get_mutation_level(MUT_TRANSLUCENT_SKIN);
         if (defender->is_player() && how_transparent)
-            mhit -= 2 * how_transparent;
+            modifiers -= 2 * how_transparent;
 
+        // defender backlight bonus and umbra penalty.
         if (defender->backlit(false))
-            mhit += 2 + random2(8);
-        else if (!attacker->nightvision()
-                 && defender->umbra())
-            mhit -= 2 + random2(4);
+            modifiers += BACKLIGHT_TO_HIT_BONUS;
+        if (!attacker->nightvision() && defender->umbra())
+            modifiers += UMBRA_TO_HIT_MALUS;
     }
-    // Don't delay doing this roll until test_hit().
-    if (!attacker->is_player())
-        mhit = random2(mhit + 1);
 
-    dprf(DIAG_COMBAT, "%s: Base to-hit: %d, Final to-hit: %d",
-         attacker->name(DESC_PLAIN).c_str(),
-         base_hit, mhit);
+    return modifiers;
+}
+
+/**
+ * Calculate the to-hit for an attacker
+ *
+ * @param random If false, calculate average to-hit deterministically.
+ */
+int attack::calc_to_hit(bool random)
+{
+    int mhit = calc_pre_roll_to_hit(random);
+    if (mhit == AUTOMATIC_HIT)
+        return AUTOMATIC_HIT;
+
+    // hit roll
+    if (attacker->is_player())
+        mhit = maybe_random2(mhit, random);
+
+    mhit += post_roll_to_hit_modifiers(mhit, random);
+
+    // We already did this roll for players.
+    if (!attacker->is_player())
+        mhit = maybe_random2(mhit + 1, random);
+
+    dprf(DIAG_COMBAT, "%s: to-hit: %d",
+         attacker->name(DESC_PLAIN).c_str(), mhit);
 
     return mhit;
 }
@@ -355,10 +395,7 @@ void attack::init_attack(skill_type unarmed_skill, int attack_number)
     if (attacker->is_player() && you.form_uses_xl())
         wpn_skill = SK_FIGHTING; // for stabbing, mostly
 
-    attacker_armour_tohit_penalty =
-        div_rand_round(attacker->armour_tohit_penalty(true, 20), 20);
-    attacker_shield_tohit_penalty =
-        div_rand_round(attacker->shield_tohit_penalty(true, 20), 20);
+    calc_encumbrance_penalties(true);
     to_hit          = calc_to_hit(true);
 
     shield = attacker->shield();

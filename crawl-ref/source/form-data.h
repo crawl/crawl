@@ -27,7 +27,7 @@ struct form_entry
     int xl_ac;
     bool can_cast;
     int spellcasting_penalty;
-    int unarmed_hit_bonus;
+    bool unarmed_hit_bonus;
     int base_unarmed_damage;
 
     // Row 6
@@ -58,7 +58,7 @@ static const form_entry formdata[] =
     "",
     EQF_NONE, MR_NO_FLAGS,
     FormDuration(0, PS_NONE, 0), 0, 0, SIZE_CHARACTER, 10,
-    0, 0, 0, true, 0, 0, 3,
+    0, 0, 0, true, 0, false, 3,
     SPWPN_NORMAL, LIGHTGREY, "", DEFAULT_VERBS,
     FC_DEFAULT, FC_DEFAULT, FC_DEFAULT, true, true,
     "", 0, "", "", "", ""
@@ -68,7 +68,7 @@ static const form_entry formdata[] =
     "a venomous arachnid creature.",
     EQF_PHYSICAL, MR_VUL_POISON,
     FormDuration(10, PS_DOUBLE, 60), 0, 5, SIZE_TINY, 10,
-    2, 0, 0, true, 10, 10, 5,
+    2, 0, 0, true, 10, true, 5,
     SPWPN_VENOM, LIGHTGREEN, "Fangs", ANIMAL_VERBS,
     FC_DEFAULT, FC_FORBID, FC_FORBID, true, false,
     "hiss", -4, "front leg", "", "crawl onto", "flesh"
@@ -78,7 +78,7 @@ static const form_entry formdata[] =
     "",
     EQF_HANDS, MR_NO_FLAGS,
     FormDuration(10, PS_SINGLE, 100), 0, 0, SIZE_CHARACTER, 10,
-    0, 0, 0, true, 20, 12, 22,
+    0, 0, 0, true, 20, true, 22,
     SPWPN_NORMAL, RED, "", { "hit", "slash", "slice", "shred" },
     FC_DEFAULT, FC_DEFAULT, FC_DEFAULT, true, true,
     "", 0, "scythe-like blade", "", "", ""
@@ -88,7 +88,7 @@ static const form_entry formdata[] =
     "a stone statue.",
     EQF_STATUE, MR_RES_ELEC | MR_RES_NEG | MR_RES_PETRIFY,
     DEFAULT_DURATION, 0, 0, SIZE_CHARACTER, 13,
-    20, 12, 0, true, 0, 9, 12,
+    20, 12, 0, true, 0, true, 12,
     SPWPN_NORMAL, LIGHTGREY, "", DEFAULT_VERBS,
     FC_DEFAULT, FC_FORBID, FC_FORBID, false, true,
     "", 0, "", "", "place yourself before", "stone"
@@ -98,7 +98,7 @@ static const form_entry formdata[] =
     "a creature of crystalline ice.",
     EQF_PHYSICAL, MR_RES_POISON | MR_VUL_FIRE | mrd(MR_RES_COLD, 3),
     FormDuration(30, PS_DOUBLE, 100), 0, 0, SIZE_LARGE, 12,
-    5, 7, 0, true, 0, 10, 12,
+    5, 7, 0, true, 0, true, 12,
     SPWPN_FREEZING, WHITE, "", DEFAULT_VERBS,
     FC_DEFAULT, FC_ENABLE, FC_FORBID, true, false,
     "", 0, "front paw", "paw", "bow your head before", "ice"
@@ -109,7 +109,7 @@ static const form_entry formdata[] =
     "a fearsome dragon!",
     EQF_PHYSICAL, MR_RES_POISON,
     DEFAULT_DURATION, 10, 0, SIZE_GIANT, 15,
-    16, 0, 0, true, 0, 10, 32,
+    16, 0, 0, true, 0, true, 32,
     SPWPN_NORMAL, GREEN, "Teeth and claws", { "hit", "claw", "bite", "maul" },
     FC_ENABLE, FC_FORBID, FC_ENABLE, true, false,
     "roar", 6, "foreclaw", "", "bow your head before", "flesh"
@@ -120,7 +120,7 @@ static const form_entry formdata[] =
     "a lich.",
     EQF_NONE, MR_RES_COLD | mrd(MR_RES_NEG, 3),
     DEFAULT_DURATION, 0, 0, SIZE_CHARACTER, 10,
-    6, 0, 0, true, 0, 10, 5,
+    6, 0, 0, true, 0, true, 5,
     SPWPN_DRAINING, MAGENTA, "", DEFAULT_VERBS,
     FC_DEFAULT, FC_DEFAULT, FC_FORBID, false, true,
     "", 0, "", "", "", "bone"
@@ -131,7 +131,7 @@ static const form_entry formdata[] =
     "",
     EQF_PHYSICAL | EQF_RINGS, MR_NO_FLAGS,
     DEFAULT_DURATION, 0, 5, SIZE_TINY, 10,
-    0, 0, 0, false, 0, 12, 1,
+    0, 0, 0, false, 0, true, 1,
     SPWPN_NORMAL, LIGHTGREY, "Teeth", ANIMAL_VERBS,
     FC_ENABLE, FC_FORBID, FC_ENABLE, true, false,
     "squeak", -8, "foreclaw", "", "perch on", "flesh"
@@ -142,7 +142,7 @@ static const form_entry formdata[] =
     "a filthy swine.",
     EQF_PHYSICAL | EQF_RINGS, MR_NO_FLAGS,
     BAD_DURATION, 0, 0, SIZE_SMALL, 10,
-    0, 0, 0, false, 0, 0, 3,
+    0, 0, 0, false, 0, false, 3,
     SPWPN_NORMAL, LIGHTGREY, "Teeth", ANIMAL_VERBS,
     FC_DEFAULT, FC_FORBID, FC_ENABLE, true, false,
     "squeal", 0, "front trotter", "trotter", "bow your head before", "flesh"
@@ -153,7 +153,7 @@ static const form_entry formdata[] =
     "",
     EQF_HANDS | EQF_AUXES, MR_NO_FLAGS,
     FormDuration(10, PS_DOUBLE, 60), 0, 0, SIZE_CHARACTER, 10,
-    0, 0, 0, true, 0, 0, 3,
+    0, 0, 0, true, 0, false, 3,
     SPWPN_NORMAL, LIGHTGREY, "", DEFAULT_VERBS,
     FC_DEFAULT, FC_DEFAULT, FC_DEFAULT, true, true,
     "", 0, "", "", "", ""
@@ -164,7 +164,7 @@ static const form_entry formdata[] =
     "a tree.",
     EQF_LEAR | SLOTF(EQ_CLOAK), MR_RES_POISON | mrd(MR_RES_NEG, 3),
     BAD_DURATION, 0, 0, SIZE_CHARACTER, 15,
-    20, 0, 50, true, 0, 10, 12,
+    20, 0, 50, true, 0, true, 12,
     SPWPN_NORMAL, BROWN, "Branches", { "hit", "smack", "pummel", "thrash" },
     FC_FORBID, FC_FORBID, FC_FORBID, false, false,
     "creak", 0, "branch", "root", "sway towards", "wood"
@@ -176,7 +176,7 @@ static const form_entry formdata[] =
     "a spiny porcupine.",
     EQF_ALL, MR_NO_FLAGS,
     BAD_DURATION, 0, 0, SIZE_TINY, 10,
-    0, 0, 0, false, 0, 0, 3,
+    0, 0, 0, false, 0, false, 3,
     SPWPN_NORMAL, LIGHTGREY, "Teeth", ANIMAL_VERBS,
     FC_DEFAULT, FC_FORBID, FC_ENABLE, true, false,
     "squeak", -8, "front leg", "", "curl into a sanctuary of spikes before", "flesh"
@@ -190,7 +190,7 @@ static const form_entry formdata[] =
              | MR_RES_STICKY_FLAME | mrd(MR_RES_NEG, 3) | MR_RES_ACID
              | MR_RES_PETRIFY,
     BAD_DURATION, 0, 0, SIZE_TINY, 10,
-    5, 0, 50, false, 0, 10, 5,
+    5, 0, 50, false, 0, true, 5,
     SPWPN_NORMAL, LIGHTGREY, "Misty tendrils", { "touch", "hit",
                                                  "engulf", "engulf" },
     FC_ENABLE, FC_FORBID, FC_FORBID, false, false,
@@ -203,7 +203,7 @@ static const form_entry formdata[] =
     "a lump of jelly.",
     EQF_PHYSICAL | EQF_RINGS, MR_NO_FLAGS,
     BAD_DURATION, 0, 0, SIZE_CHARACTER, 10,
-    0, 0, 0, false, 0, 0, 3,
+    0, 0, 0, false, 0, false, 3,
     SPWPN_NORMAL, LIGHTGREY, "", DEFAULT_VERBS,
     FC_DEFAULT, FC_FORBID, FC_FORBID, false, false,
     "", 0, "", "", "", ""
@@ -215,7 +215,7 @@ static const form_entry formdata[] =
     "a sentient fungus.",
     EQF_PHYSICAL, MR_RES_POISON | mrd(MR_RES_NEG, 3),
     BAD_DURATION, 0, 0, SIZE_TINY, 10,
-    12, 0, 0, false, 0, 10, 12,
+    12, 0, 0, false, 0, true, 12,
     SPWPN_CONFUSE, BROWN, "Spores", FormAttackVerbs("release spores at"),
     FC_DEFAULT, FC_FORBID, FC_FORBID, false, false,
     "sporulate", -8, "hypha", "", "release spores on", "flesh"
@@ -227,7 +227,7 @@ static const form_entry formdata[] =
     EQF_NONE, mrd(MR_RES_POISON, 3) | mrd(MR_RES_NEG, 3) | MR_RES_ROTTING
                                                          | MR_RES_PETRIFY,
     DEFAULT_DURATION, 0, 0, SIZE_CHARACTER, 10,
-    0, 0, 0, true, 0, 0, 3,
+    0, 0, 0, true, 0, false, 3,
     SPWPN_NORMAL, MAGENTA, "", DEFAULT_VERBS,
     FC_DEFAULT, FC_FORBID, FC_FORBID, true, true,
     "", 0, "", "", "", "shadow"
@@ -238,7 +238,7 @@ static const form_entry formdata[] =
     "",
     EQF_PHYSICAL, MR_RES_POISON,
     FormDuration(10, PS_SINGLE, 100), 0, 0, SIZE_BIG, 13,
-    6, 5, 0, true, 0, 10, -1,
+    6, 5, 0, true, 0, true, -1,
     SPWPN_NORMAL, GREEN, "", { "nip at", "bite", "gouge", "chomp" },
     FC_DEFAULT, FC_ENABLE, FC_ENABLE, true, false,
     "roar", 4, "foreclaw", "", "bow your heads before", "flesh"

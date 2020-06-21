@@ -48,12 +48,14 @@
 #include "lang-fake.h"
 #include "libutil.h"
 #include "macro.h"
+#include "melee-attack.h" // _describe_to_hit
 #include "message.h"
 #include "mon-cast.h" // mons_spell_range
 #include "mon-death.h"
 #include "mon-tentacle.h"
 #include "output.h"
 #include "potion.h"
+#include "ranged-attack.h" // _describe_to_hit
 #include "religion.h"
 #include "rltiles/tiledef-feat.h"
 #include "skills.h"
@@ -68,6 +70,7 @@
 #include "state.h"
 #include "stringutil.h" // to_string on Cygwin
 #include "terrain.h"
+#include "throw.h" // is_pproj_active for _describe_to_hit
 #include "tile-flags.h"
 #include "tilepick.h"
 #ifdef USE_TILE_LOCAL
@@ -3860,6 +3863,100 @@ static void _add_energy_to_string(int speed, int energy, string what,
         slow.push_back(what + " " + _speed_description(act_speed));
 }
 
+/**
+ * Calculate some defender-specific effects on the player's to-hit.
+ *
+ * @param mi[in]        Player-visible info about the monster in question.
+ */
+static int _lighting_modifiers(const monster_info& mi)
+{
+    // Lighting effects.
+    if (mi.is(MB_GLOWING)       // corona, silver corona (!)
+        || mi.is(MB_BURNING)    // sticky flame
+        || mi.is(MB_HALOED))
+    {
+        return BACKLIGHT_TO_HIT_BONUS;
+    }
+    if (mi.is(MB_UMBRAED) && !you.nightvision())
+        return UMBRA_TO_HIT_MALUS;
+
+    return 0;
+}
+
+
+/**
+ * Return the odds of an attack with the given to-hit bonus hitting a defender with the
+ * given EV, rounded to the nearest percent.
+ *
+ * @return                  To-hit percent between 0 and 100 (inclusive).
+ */
+static int _to_hit_pct(const monster_info& mi, attack &atk, bool melee)
+{
+    const int to_land = atk.calc_pre_roll_to_hit(false);
+    int ev = mi.ev;
+    if (to_land >= AUTOMATIC_HIT)
+        return 100;
+
+    if (ev <= 0)
+        return 100 - MIN_HIT_MISS_PERCENTAGE / 2;
+
+    int hits = 0;
+    for (int rolled_mhit = 0; rolled_mhit < to_land; rolled_mhit++){
+        // Apply post-roll manipulations:
+        int adjusted_mhit = rolled_mhit + _lighting_modifiers(mi);
+
+        adjusted_mhit += atk.post_roll_to_hit_modifiers(adjusted_mhit, false);
+
+        // Duplicates ranged_attack::post_roll_to_hit_modifiers().
+        if (!melee && mi.is(MB_REPEL_MSL))
+            adjusted_mhit -= (adjusted_mhit + 1) / 2;
+
+        if (adjusted_mhit >= ev)
+            hits++;
+    }
+
+    double hit_chance = ((double)hits) / to_land;
+    // Apply Bayes Theorem to account for auto hit and miss.
+    hit_chance = hit_chance * (1 - MIN_HIT_MISS_PERCENTAGE / 200.0) + (1 - hit_chance) * MIN_HIT_MISS_PERCENTAGE / 200.0;
+
+    return (int)(hit_chance*100);
+}
+
+/**
+ * Display the % chance of a player hitting the given monster.
+ *
+ * @param mi[in]            Player-visible info about the monster in question.
+ * @param result[in,out]    The stringstream to append to.
+ */
+static void _describe_to_hit(const monster_info& mi, ostringstream &result)
+{
+    // TODO: don't do this if the player doesn't exist (main menu)
+
+    const item_def* weapon = you.weapon();
+    if (weapon != nullptr && !is_weapon(*weapon))
+        return; // breadwielding
+
+    const bool melee = weapon == nullptr || !is_range_weapon(*weapon);
+    int to_hit_pct;
+    if (melee)
+    {
+        melee_attack attk(&you, nullptr);
+        to_hit_pct = _to_hit_pct(mi, attk, true);
+    } else {
+        const int missile = you.m_quiver.get_fire_item();
+        if (missile < 0)
+            return; // failure to launch
+        ranged_attack attk(&you, nullptr, &you.inv[missile], is_pproj_active());
+        to_hit_pct = _to_hit_pct(mi, attk, false);
+    }
+
+    result << " (about " << (100 - to_hit_pct) << "% to evade ";
+    if (weapon == nullptr)
+        result << "your " << you.hand_name(true);
+    else
+        result << weapon->name(DESC_YOUR, false, false, false);
+    result << ")";
+}
 
 /**
  * Print a bar of +s and .s representing a given stat to a provided stream.
@@ -3944,6 +4041,7 @@ static void _describe_monster_ac(const monster_info& mi, ostringstream &result)
 static void _describe_monster_ev(const monster_info& mi, ostringstream &result)
 {
     _print_bar(mi.ev, 5, "EV", result, mi.base_ev);
+    _describe_to_hit(mi, result);
     result << "\n";
 }
 
