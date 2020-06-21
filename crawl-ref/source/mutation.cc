@@ -151,6 +151,8 @@ static const int conflict[][3] =
     { MUT_TRANSLUCENT_SKIN,    MUT_CAMOUFLAGE,             -1},
     { MUT_MUTATION_RESISTANCE, MUT_EVOLUTION,              -1},
     { MUT_ANTIMAGIC_BITE,      MUT_ACIDIC_BITE,            -1},
+    { MUT_ACIDIC_BITE,         MUT_HOLY_BITE,            -1},
+    { MUT_ANTIMAGIC_BITE,      MUT_HOLY_BITE,            -1},
     { MUT_HEAT_RESISTANCE,     MUT_HEAT_VULNERABILITY,     -1},
     { MUT_COLD_RESISTANCE,     MUT_COLD_VULNERABILITY,     -1},
     { MUT_SHOCK_RESISTANCE,    MUT_SHOCK_VULNERABILITY,    -1},
@@ -316,6 +318,11 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
                 return mutation_activity_type::FULL;
             if ((mut == MUT_ACIDIC_BITE || mut == MUT_ACID_RESISTANCE)
                 && drag == MONS_GOLDEN_DRAGON)
+            {
+                return mutation_activity_type::FULL;
+            }
+            if ((mut == MUT_HOLY_BITE || mut == MUT_NEGATIVE_ENERGY_RESISTANCE)
+                && drag == MONS_PEARL_DRAGON)
             {
                 return mutation_activity_type::FULL;
             }

@@ -2767,6 +2767,21 @@ void excommunication(bool voluntary, god_type new_god)
     mpr("You have lost your religion!");
     // included in default force_more_message
 
+    if ((old_god == GOD_ZIN || old_god == GOD_SHINING_ONE || old_god == GOD_ELYVILON)
+        && you.species == SP_PEARL_DRACONIAN)
+    {
+        you.innate_mutation[MUT_NEGATIVE_ENERGY_RESISTANCE]--;
+        delete_mutation(MUT_NEGATIVE_ENERGY_RESISTANCE, "species change", false, true, false, false);
+        you.innate_mutation[MUT_HOLY_BITE]--;
+        delete_mutation(MUT_HOLY_BITE, "species change", false, true, false, false);
+        
+        change_draconian_colour();
+        give_level_mutations(you.species, 7); //for draconian
+        if (you.experience_level >= 14) {
+            give_level_mutations(you.species, 14); //for yellow draconian
+        }
+    }
+
     if (old_god == GOD_BEOGH)
     {
         // The player's symbol depends on Beogh worship.

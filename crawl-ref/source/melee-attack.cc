@@ -1335,6 +1335,10 @@ public:
         if (you.get_mutation_level(MUT_ACIDIC_BITE))
             return fang_damage + str_damage;
 
+        if (you.get_mutation_level(MUT_HOLY_BITE)) {
+            return fang_damage + div_rand_round(you.get_hit_dice(), 3) + str_damage;
+        }
+
         return fang_damage + str_damage;
     }
 
@@ -1345,6 +1349,9 @@ public:
 
         if (you.get_mutation_level(MUT_ACIDIC_BITE))
             return SPWPN_ACID;
+
+        if (you.get_mutation_level(MUT_HOLY_BITE))
+            return SPWPN_HOLY_WRATH;
 
         return SPWPN_NORMAL;
     }
@@ -1618,6 +1625,24 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
                         mpr("You feel invigorated.");
                         inc_mp(drain);
                     }
+                }
+            }
+
+            if (damage_brand == SPWPN_HOLY_WRATH && damage_done > 0)
+            {
+                if (defender->holy_wrath_susceptible())
+                    special_damage = 1 + (random2(damage_done * 15) / 10);
+
+                if (special_damage && defender_visible)
+                {
+                    special_damage_message =
+                        make_stringf(
+                            "%s %s%s",
+                            defender_name(false).c_str(),
+                            defender->conj_verb("convulse").c_str(),
+                            attack_strength_punctuation(special_damage).c_str());
+                    inflict_damage(special_damage, BEAM_HOLY);
+                    mpr(special_damage_message);
                 }
             }
         }
@@ -3836,7 +3861,8 @@ bool melee_attack::_extra_aux_attack(unarmed_attack_type atk)
     case UNAT_BITE:
         return you.get_mutation_level(MUT_ANTIMAGIC_BITE)
                || (you.has_usable_fangs()
-                   || you.get_mutation_level(MUT_ACIDIC_BITE))
+                   || you.get_mutation_level(MUT_ACIDIC_BITE)
+                   || you.get_mutation_level(MUT_HOLY_BITE))
                    && x_chance_in_y(2, 5);
 
     case UNAT_PUNCH:
