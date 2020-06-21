@@ -3956,10 +3956,11 @@ static void _describe_to_hit(const monster_info& mi, ostringstream &result) {
         to_hit = attk.calc_to_hit(false);
     }
     result << " (about " << (100 - _to_hit_pct(to_hit, mi.ev)) << "% to evade ";
-
-    const string wpn_name = weapon == nullptr ? you.hand_name(true)
-                                              : weapon->name(DESC_PLAIN, true, false, false);
-    result << "your " << wpn_name << ")";
+    if (weapon == nullptr)
+        result << "your " << you.hand_name(true);
+    else
+        result << weapon->name(DESC_YOUR, false, false, false);
+    result << ")";
 }
 
 /**
