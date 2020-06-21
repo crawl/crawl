@@ -59,12 +59,12 @@ void refrigerate_food(int dur_delta)
             init_perishable_stack(item);
 	
 	CrawlVector &stack_timer = item.props[TIMER_KEY].get_vector();
-	for(int i = 0; i<stack_timer.size(); i++)
-	{
-        int time = stack_timer[stack_timer.size() -1].get_int();
-        stack_timer.pop_back();
-        stack_timer.insert(0, time + dur_delta * ROT_TIME_FACTOR);
-	}
+        for(int t = 0; t < stack_timer.size(); t++)
+        {
+            int time = stack_timer[stack_timer.size()-1].get_int();
+            stack_timer.pop_back();
+            stack_timer.insert(0, time + dur_delta);
+        }
     }
 }
 

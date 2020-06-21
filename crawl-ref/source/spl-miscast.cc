@@ -2319,7 +2319,7 @@ void MiscastEffect::_ice(int severity)
                 target->expose_to_element(BEAM_COLD, 4);
             if (target->is_player() && !you_foodless(true, false))
             {
-                int old_duration = you.duation[DUR_NO_POTIONS];
+                int old_duration = you.duration[DUR_NO_POTIONS];
                 you.increase_duration(DUR_NO_POTIONS, 10 + random2(11), 50);
                 int dur_delta = you.duration[DUR_NO_POTIONS] - old_duration;
                 refrigerate_food(dur_delta);
