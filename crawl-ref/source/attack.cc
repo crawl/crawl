@@ -276,7 +276,7 @@ int attack::calc_to_hit(bool random)
                  && defender->umbra())
             mhit -= 2 + random2(4);
     }
-    // Don't delay doing this roll until test_hit().
+    // We already did this roll for players.
     if (!attacker->is_player())
         mhit = random2(mhit + 1);
 

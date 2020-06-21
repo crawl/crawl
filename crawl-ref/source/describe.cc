@@ -49,11 +49,13 @@
 #include "lang-fake.h"
 #include "libutil.h"
 #include "macro.h"
+#include "melee-attack.h" // _describe_to_hit
 #include "message.h"
 #include "mon-cast.h" // mons_spell_range
 #include "mon-death.h"
 #include "mon-tentacle.h"
 #include "output.h"
+#include "ranged-attack.h" // _describe_to_hit
 #include "religion.h"
 #include "rltiles/tiledef-feat.h"
 #include "skills.h"
@@ -3880,6 +3882,85 @@ static void _add_energy_to_string(int speed, int energy, string what,
         slow.push_back(what + " " + _speed_description(act_speed));
 }
 
+/**
+ * Return the odds of an attack with the given to-hit bonus hitting a defender with the
+ * given EV, rounded to the nearest percent.
+ *
+ * @param to_land           Attack accuracy.
+ * @param ev                Defender evasion.
+ * @return                  To-hit percent between 0 and 100 (inclusive).
+ */
+static int _to_hit_pct(int to_land, int ev) {
+    if (to_land >= AUTOMATIC_HIT)
+        return 100;
+
+    if (ev <= 0)
+        return 100 - MIN_HIT_MISS_PERCENTAGE / 2;
+
+    // We actually roll random2(to_land + 1).
+    to_land++;
+    // We roll double the defender's ev, for some reason.
+    ev *= 2;
+
+    // Calculate the odds of any given random2avg(ev) roll.
+    // There are a lot of ways to do this: we could try to generate the closed form,
+    // approximate with an integral, or enumerate each possibility and sum the odds.
+    // We'll do the latter here.
+    int hits = 0;
+    for (int roll1 = 0; roll1 < ev; roll1++)
+    {
+        for (int roll2 = 0; roll2 < ev; roll2++) // slightly wrong
+        {
+            const int rolled_ev = (roll1 + roll2)/2;
+            // If we roll random2(to_land + 1), we'll hit this EV (hits) times, not counting
+            // MIN_HIT_MISS_PERCENTAGE.
+            if (rolled_ev < to_land)
+                hits += to_land - rolled_ev;
+        }
+    }
+    const int total_rolls = ev * ev * to_land;
+    const int base_hit_perc = hits * 100 / total_rolls;
+    const int base_miss_perc = 100 - base_hit_perc;
+    // final hits are 97.5% of rolled hits + the 2.5% of misses that convert into hits
+    const int non_automissed_hits = (100 - MIN_HIT_MISS_PERCENTAGE/2) * base_hit_perc / 100;
+    const int autohit_misses = (MIN_HIT_MISS_PERCENTAGE/2) * base_miss_perc / 100;
+    dprf("to_land: %d, ev: %d, hits: %d, total rolls: %d, base_hit: %d, base_miss: %d, non_automiss: %d, autohit: %d",
+        to_land, ev, hits, total_rolls, base_hit_perc, base_miss_perc, non_automissed_hits, autohit_misses);
+    return non_automissed_hits + autohit_misses;
+}
+
+/**
+ * Display the % chance of a player hitting the given monster.
+ *
+ * @param mi[in]            Player-visible info about the monster in question.
+ * @param result[in,out]    The stringstream to append to.
+ */
+static void _describe_to_hit(const monster_info& mi, ostringstream &result) {
+    // TODO: don't do this if the player doesn't exist (main menu)
+
+    const item_def* weapon = you.weapon();
+    if (weapon != nullptr && !is_weapon(*weapon))
+        return; // breadwielding
+
+    const bool melee = weapon == nullptr || !is_range_weapon(*weapon);
+    int to_hit;
+    if (melee)
+    {
+        melee_attack attk(&you, nullptr);
+        to_hit = attk.calc_to_hit(false);
+    } else {
+        const int missile = you.m_quiver.get_fire_item();
+        if (missile < 0)
+            return; // failure to launch
+        ranged_attack attk(&you, nullptr, &you.inv[missile], false);
+        to_hit = attk.calc_to_hit(false);
+    }
+    result << " (about " << (100 - _to_hit_pct(to_hit, mi.ev)) << "% to evade ";
+
+    const string wpn_name = weapon == nullptr ? you.hand_name(true)
+                                              : weapon->name(DESC_PLAIN, true, false, false);
+    result << "your " << wpn_name << ")";
+}
 
 /**
  * Print a bar of +s and .s representing a given stat to a provided stream.
@@ -3964,6 +4045,7 @@ static void _describe_monster_ac(const monster_info& mi, ostringstream &result)
 static void _describe_monster_ev(const monster_info& mi, ostringstream &result)
 {
     _print_bar(mi.ev, 5, "EV", result, mi.base_ev);
+    _describe_to_hit(mi, result);
     result << "\n";
 }
 

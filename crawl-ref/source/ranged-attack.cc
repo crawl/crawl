@@ -80,7 +80,7 @@ int ranged_attack::calc_to_hit(bool random)
     }
 
     int hit = orig_to_hit;
-    if (defender->missile_repulsion())
+    if (defender && defender->missile_repulsion())
     {
         if (random)
             hit = random2(hit);
