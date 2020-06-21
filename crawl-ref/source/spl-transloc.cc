@@ -445,9 +445,7 @@ spret frog_hop(bool fail)
 */
 spret crab_walk()
 {
-    
-    if (you.religion == GOD_CHEIBRIADOS)
-        you.time_taken = player_speed() + player_movement_speed();
+    you.time_taken = (player_speed() * player_movement_speed()) / 10;
     coord_def target;
     targeter_smite tgt(&you, 2);
     tgt.obeys_mesmerise = true;
