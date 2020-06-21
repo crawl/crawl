@@ -233,8 +233,6 @@ void SkillRegion::update()
     {
         const skill_type skill = (skill_type) idx;
 
-        if (skill > SK_UNARMED_COMBAT && skill < SK_SPELLCASTING)
-            continue;
         if (is_useless_skill(skill))
             continue;
         InventoryTile desc;
