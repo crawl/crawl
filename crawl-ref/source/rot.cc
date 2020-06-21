@@ -79,7 +79,7 @@ void refrigerate_food(int dur_delta)
 
         // /2 because it is on the surface, dirty !
         int refrig_fresh = dur_delta / (ROT_TIME_FACTOR * 2); 
-        if (it.base_type == OBJ_CORPSES && it.props.exists(CORPSE_NEVER_DECAYS))
+        if (it.base_type == OBJ_CORPSES && !it.props.exists(CORPSE_NEVER_DECAYS))
             it.freshness += refrig_fresh;
 
         else
