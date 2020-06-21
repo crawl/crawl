@@ -1216,11 +1216,6 @@ void describe_god(god_type which_god, int start_num)
     shared_ptr<Switcher> more_sw;
     build_partial_god_ui(which_god, popup, desc_sw, more_sw);
     desc_sw->current() = more_sw->current() = start_num;
-#ifdef USE_TILE_WEB
-    tiles.json_open_object();
-    tiles.json_write_int("pane", start_num);
-    tiles.ui_state_change("describe-god", 0);
-#endif
 
     bool done = false;
     popup->on_keydown_event([&](const KeyEvent& ev) {

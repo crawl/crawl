@@ -280,47 +280,31 @@ static monster* _mantis_leap_attack(coord_def& new_pos)
 
 }
 
-static int _mantis_number_of_attacks()
-{
-    const int move_delay = player_movement_speed() * player_speed();
-
-    int attack_delay;
-    {
-        unwind_var<int> reset_speed(you.time_taken, player_speed());
-        attack_delay = you.attack_delay().roll();
-    }
-    return div_rand_round(move_delay, attack_delay * BASELINE_DELAY);
-}
-
 static bool _mantis_leap_attack_doing(monster* mons)
 {
     if (!mons->alive())
         return false;
-    const int number_of_attacks = _mantis_number_of_attacks();
-
-    bool lunge = you_worship(GOD_WU_JIAN) && have_passive(passive_t::wu_jian_lunge);
+    const int number_of_attacks = 1;
 
     if (number_of_attacks == 0)
     {
         mprf("You %s at %s, but your attack speed is too slow for a blow "
-            "to land.", lunge ? "lunge" : "leap", mons->name(DESC_THE).c_str());
+            "to land.", "leap", mons->name(DESC_THE).c_str());
         return false;
     }
     else
     {
         mprf("You %s at %s%s.",
-            lunge ? "lunge" : "leap",
+            "leap",
             mons->name(DESC_THE).c_str(),
             number_of_attacks > 1 ? ", in a flurry of attacks" : "");
     }
-
+    you.time_taken = player_speed();
     for (int i = 0; i < number_of_attacks; i++)
     {
         if (!mons->alive())
             break;
         melee_attack leap(&you, mons);
-        if(lunge)
-            leap.wu_jian_attack = WU_JIAN_ATTACK_LUNGE;
         leap.attack();
     }
     return true;

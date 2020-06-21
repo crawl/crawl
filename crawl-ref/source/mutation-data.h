@@ -1922,6 +1922,15 @@ static const mutation_def mut_data[] =
 
   {"Your hands are back.", "", ""},
 },
+
+{ MUT_HOLY_BITE, 0, 1, mutflag::good, true,
+  "holy bite",
+
+  {"You have blessed saliva.", "", ""},
+  {"Divine energy comes from your mouth.", "", ""},
+  {"The sacred energy of your mouth disappears.", "", ""},
+},
+
 };
 
 static const mutation_category_def category_mut_data[] =

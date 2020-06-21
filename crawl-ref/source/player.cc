@@ -2922,6 +2922,75 @@ if (you.species == SP_DJINNI)
     take_note(Note(NOTE_XP_LEVEL_CHANGE, you.experience_level, 0, buf));
 }
 
+
+void change_draconian_colour()
+{
+
+    you.species = random_draconian_colour();
+
+    // We just changed our aptitudes, so some skills may now
+    // be at the wrong level (with negative progress); if we
+    // print anything in this condition, we might trigger a
+    // --More--, a redraw, and a crash (#6376 on Mantis).
+    //
+    // Hence we first fix up our skill levels silently (passing
+    // do_level_up = false) but save the old values; then when
+    // we want the messages later, we restore the old skill
+    // levels and call check_skill_level_change() again, this
+    // time passing do_level_up = true.
+
+    uint8_t saved_skills[NUM_SKILLS];
+    for (skill_type sk = SK_FIRST_SKILL; sk < NUM_SKILLS; ++sk)
+    {
+        saved_skills[sk] = you.skills[sk];
+        check_skill_level_change(sk, false);
+    }
+    // The player symbol depends on species.
+    update_player_symbol();
+#ifdef USE_TILE
+    init_player_doll();
+#endif
+    mprf(MSGCH_INTRINSIC_GAIN,
+        "Your scales start taking on %s colour.",
+        article_a(scale_type(you.species)).c_str());
+
+    // Produce messages about skill increases/decreases. We
+    // restore one skill level at a time so that at most the
+    // skill being checked is at the wrong level.
+    for (skill_type sk = SK_FIRST_SKILL; sk < NUM_SKILLS; ++sk)
+    {
+        const int oldapt = species_apt(sk, SP_BASE_DRACONIAN);
+        const int newapt = species_apt(sk, you.species);
+        if (oldapt != newapt)
+        {
+            mprf(MSGCH_INTRINSIC_GAIN, "You learn %s %s%s.",
+                skill_name(sk),
+                abs(oldapt - newapt) > 1 ? "much " : "",
+                oldapt > newapt ? "slower" : "quicker");
+        }
+
+        you.skills[sk] = saved_skills[sk];
+        check_skill_level_change(sk);
+    }
+
+    // It's possible we passed a training target due to
+    // skills being rescaled to new aptitudes. Thus, we must
+    // check the training targets.
+    check_training_targets();
+
+    // Tell the player about their new species
+    for (auto& mut : fake_mutations(you.species, false))
+        mprf(MSGCH_INTRINSIC_GAIN, "%s", mut.c_str());
+
+    // needs to be done early here, so HP doesn't look rotted
+    // when we redraw the screen
+    _gain_and_note_hp_mp();
+
+    redraw_screen();
+}
+
+
+
 /**
  * Calculate max HP changes and scale current HP accordingly.
  */
@@ -3110,68 +3179,8 @@ void level_change(bool skip_attribute_increase)
             case SP_BASE_DRACONIAN:
                 if (you.experience_level >= 7)
                 {
-                    you.species = random_draconian_colour();
-
-                    // We just changed our aptitudes, so some skills may now
-                    // be at the wrong level (with negative progress); if we
-                    // print anything in this condition, we might trigger a
-                    // --More--, a redraw, and a crash (#6376 on Mantis).
-                    //
-                    // Hence we first fix up our skill levels silently (passing
-                    // do_level_up = false) but save the old values; then when
-                    // we want the messages later, we restore the old skill
-                    // levels and call check_skill_level_change() again, this
-                    // time passing do_level_up = true.
-
-                    uint8_t saved_skills[NUM_SKILLS];
-                    for (skill_type sk = SK_FIRST_SKILL; sk < NUM_SKILLS; ++sk)
-                    {
-                        saved_skills[sk] = you.skills[sk];
-                        check_skill_level_change(sk, false);
-                    }
-                    // The player symbol depends on species.
-                    update_player_symbol();
-#ifdef USE_TILE
-                    init_player_doll();
-#endif
-                    mprf(MSGCH_INTRINSIC_GAIN,
-                         "Your scales start taking on %s colour.",
-                         article_a(scale_type(you.species)).c_str());
-
-                    // Produce messages about skill increases/decreases. We
-                    // restore one skill level at a time so that at most the
-                    // skill being checked is at the wrong level.
-                    for (skill_type sk = SK_FIRST_SKILL; sk < NUM_SKILLS; ++sk)
-                    {
-                        const int oldapt = species_apt(sk, SP_BASE_DRACONIAN);
-                        const int newapt = species_apt(sk, you.species);
-                        if (oldapt != newapt)
-                        {
-                            mprf(MSGCH_INTRINSIC_GAIN, "You learn %s %s%s.",
-                                 skill_name(sk),
-                                 abs(oldapt - newapt) > 1 ? "much " : "",
-                                 oldapt > newapt ? "slower" : "quicker");
-                        }
-
-                        you.skills[sk] = saved_skills[sk];
-                        check_skill_level_change(sk);
-                    }
-
-                    // It's possible we passed a training target due to
-                    // skills being rescaled to new aptitudes. Thus, we must
-                    // check the training targets.
-                    check_training_targets();
-
-                    // Tell the player about their new species
-                    for (auto &mut : fake_mutations(you.species, false))
-                        mprf(MSGCH_INTRINSIC_GAIN, "%s", mut.c_str());
-
-                    // needs to be done early here, so HP doesn't look rotted
-                    // when we redraw the screen
-                    _gain_and_note_hp_mp();
+                    change_draconian_colour();
                     updated_maxhp = true;
-
-                    redraw_screen();
                 }
                 break;
 

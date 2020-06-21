@@ -1108,6 +1108,8 @@ bool player_has_feet(bool temp = true, bool include_mutations = true);
 bool enough_hp(int minimum, bool suppress_msg, bool abort_macros = true);
 bool enough_mp(int minimum, bool suppress_msg, bool abort_macros = true);
 
+void change_draconian_colour();
+
 void calc_hp(bool scale = false, bool set = false);
 void calc_mp();
 

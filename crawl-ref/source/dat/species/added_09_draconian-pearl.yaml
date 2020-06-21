@@ -36,6 +36,7 @@ mutations:
   7:
     MUT_NEGATIVE_ENERGY_RESISTANCE: 1
   14:
+    MUT_HOLY_BITE: 1
     MUT_BIG_WINGS: 1
 fake_mutations:
   - long: You can breathe blasts of blessed flame.
