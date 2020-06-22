@@ -250,7 +250,7 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu, int
             you.turn_is_over = false;
             for (int i = 0; i < attack_num; ++i) 
             {
-                if (!(defender && !_dont_harm(you, *defender)))
+                if (!defender)
                     continue;
                 if (!defender->alive())
                     break;
