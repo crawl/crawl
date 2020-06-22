@@ -2245,9 +2245,10 @@ static void _god_smites_you(god_type god, const char *message,
 
     int angel_stepdown = _angel_wrath_stepdown();
 
-    if (angel_stepdown == 2)
+    if (angel_stepdown == 1)
         divine_hurt /= 2;
-
+    else if (angel_stepdown == 2)
+        divine_hurt /= 3;
 
     simple_god_message(" smites you!", god);
     ouch(divine_hurt, death_type, MID_NOBODY, aux.c_str());
