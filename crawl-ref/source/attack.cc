@@ -186,7 +186,7 @@ int attack::calc_to_hit(bool random)
         {
             if (wpn_skill != SK_FIGHTING)
             {
-                if (you.skill(wpn_skill) < 1 && player_in_a_dangerous_place())
+                if (you.skill(wpn_skill) < 1 && player_in_a_dangerous_place() && random)
                     xom_is_stimulated(10); // Xom thinks that is mildly amusing.
 
                 mhit += maybe_random_div(you.skill(wpn_skill, 100), 100,
