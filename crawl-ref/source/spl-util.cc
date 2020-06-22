@@ -1238,13 +1238,6 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         if (SP_GARGOYLE == you.species)
             return "you're already a statue.";
         // fallthrough to other forms
-
-    case SPELL_BLADE_HANDS:
-        if (you.species == SP_HYDRA)
-            return "this spell is useless, since you have no hands!";
-    case SPELL_HYDRA_FORM:
-        if (you.species == SP_HYDRA)
-            return "this spell is useless, since you are hydra yousrelf!";
     case SPELL_BEASTLY_APPENDAGE:
     case SPELL_DRAGON_FORM:
     case SPELL_ICE_FORM:
@@ -1258,6 +1251,30 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "your current blood level is not sufficient.";
         break;
 
+    case SPELL_BLADE_HANDS:
+        if (you.species == SP_HYDRA)
+            return "this spell is useless, since you have no hands!";
+        if (you.undead_state(temp) == US_UNDEAD
+            || you.undead_state(temp) == US_HUNGRY_DEAD)
+        {
+            return "your undead flesh cannot be transformed.";
+        }
+        if (temp && you.is_lifeless_undead())
+            return "your current blood level is not sufficient.";
+        break;
+        
+    case SPELL_HYDRA_FORM:
+        if (you.species == SP_HYDRA)
+            return "this spell is useless, since you are hydra yousrelf!";
+        if (you.undead_state(temp) == US_UNDEAD
+            || you.undead_state(temp) == US_HUNGRY_DEAD)
+        {
+            return "your undead flesh cannot be transformed.";
+        }
+        if (temp && you.is_lifeless_undead())
+            return "your current blood level is not sufficient.";
+        break;
+        
     case SPELL_REGENERATION:
         if (you.species == SP_DEEP_DWARF)
             return "you can't regenerate without divine aid.";

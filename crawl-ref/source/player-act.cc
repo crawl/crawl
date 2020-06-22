@@ -923,6 +923,18 @@ int player::constriction_damage(bool direct) const
                 calc_spell_power(SPELL_BORGNJORS_VILE_CLUTCH, true), 20));
 }
 
+
+/**
+ * Does hydra-player really have multiple heads in current form?
+ */
+bool player::has_hydra_multi_attack() const
+{
+    return (you.form == transformation::none
+           || you.form == transformation::appendage
+           || you.form == transformation::statue
+           || you.form == transformation::lich) && you.species == SP_HYDRA;
+}
+
 /**
  * How many heads does the player have, in their current form?
  *
@@ -932,7 +944,7 @@ int player::heads() const
 {
     if (props.exists(HYDRA_FORM_HEADS_KEY))
         return props[HYDRA_FORM_HEADS_KEY].get_int();
-    else if (species == SP_HYDRA)
+    else if (has_hydra_multi_attack())
     {   
         int net_loss = 0;
         if (props.exists(HYDRA_HEADS_NET_LOSS))
@@ -942,3 +954,4 @@ int player::heads() const
     }
     return 1; // not actually always true
 }
+

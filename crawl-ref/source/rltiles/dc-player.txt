@@ -178,6 +178,9 @@ cat7
 cat8
 cat9
 cat10
+%sdir player/hydras
+%rim 0
+hydra HYDRA
 %sdir player/base
 %end_ctg
 

@@ -544,6 +544,7 @@ public:
     bool is_skeletal() const override;
 
     bool tengu_flight() const;
+    bool has_hydra_multi_attack() const;
     int heads() const override;
     bool head_grow(int num) const;
 

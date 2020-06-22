@@ -152,8 +152,8 @@ public:
         while (you.props[HYDRA_HEADS_NET_LOSS].get_int() != 0)
         {
             you.props[HYDRA_HEADS_NET_LOSS].get_int() > 0 ?
-                you.props[HYDRA_HEADS_NET_LOSS].get_int()-- :
-                you.props[HYDRA_HEADS_NET_LOSS].get_int()++;
+            you.props[HYDRA_HEADS_NET_LOSS].get_int()-- :
+            you.props[HYDRA_HEADS_NET_LOSS].get_int()++;
         }
         return true;
     }

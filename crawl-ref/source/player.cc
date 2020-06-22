@@ -6922,17 +6922,17 @@ bool player::head_grow(int num) const
             you.heal(4*num + random2(4*num));}
         else if (num < 0)
         {
-            for (int i = 0; i < num; i++)
+            for (int i = 0; i < abs(num); i++)
                 you.props[HYDRA_HEADS_NET_LOSS].get_int()++;
             ouch(abs(4*num + random2(4*num)), KILLED_BY_DRAINING);
             // If it loses, it unequips the amulet.
             _handle_amulet_loss();
         }
     }
-    else if ((you.form == transformation::statue || you.form == transformation::lich) && num < 0)
+    else if (you.form == transformation::lich && num < 0)
     {
-        mprf("Your head are %s away", you.form == transformation::statue ? "broken" : "cutted");
-        for (int i = 0; i < num; i++)
+        mprf("Your head are %s away");
+        for (int i = 0; i < abs(num); i++)
                 you.props[HYDRA_HEADS_NET_LOSS].get_int()++;
         ouch(abs(4*num + random2(4*num)), KILLED_BY_DRAINING);
         // If it loses, it unequips the amulet.

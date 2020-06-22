@@ -53,6 +53,7 @@
 #include "traps.h"
 #include "travel.h"
 
+static bool _dont_harm(const actor &attacker, const actor &defender);
 /**
  * What are the odds of an HD-checking confusion effect (e.g. Confusing Touch,
  * Fungus Form, SPWPN_CHAOS maybe) to confuse a monster of the given HD?
@@ -189,56 +190,140 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu, int
                 }
             }
         }
+        if (!you.has_hydra_multi_attack())
+        {       
+
+            melee_attack attk(&you, defender);
+                if (second_attack != -1) {
+                    attk.is_double_attack = true;
+                }
 
 
-        melee_attack attk(&you, defender, attack_num);
-        if (second_attack != -1) {
-            attk.is_double_attack = true;
+                if (simu)
+                    attk.simu = true;
+
+                // We're trying to hit a monster, break out of travel/explore now.
+                interrupt_activity(activity_interrupt::hit_monster,
+                    defender->as_monster());
+
+                // Check if the player is fighting with something unsuitable,
+                // or someone unsuitable.
+                if (you.can_see(*defender) && !simu
+                    && !wielded_weapon_check(attk.weapon))
+                {
+                    you.turn_is_over = false;
+                    return false;
+                }
+
+                if (!attk.attack())
+                {
+                    // Attack was cancelled or unsuccessful...
+                    if (attk.cancel_attack)
+                        you.turn_is_over = false;
+                    return !attk.cancel_attack;
+                }
+
+                if (did_hit)
+                    *did_hit = attk.did_hit;
+
+                // A spectral weapon attacks whenever the player does
+                if (!simu && second_attack == -1 && you.props.exists("spectral_weapon"))
+                    trigger_spectral_weapon(&you, defender);
+
+                if (!simu && will_have_passive(passive_t::shadow_attacks))
+                    dithmenos_shadow_melee(defender);
+
+                if (second_attack == -1
+                    && dual_handed_
+                    && coinflip()) {
+                    if (defender && defender->alive() && _in_melee_range(defender))
+                    {
+                        mprf("Double attack!");
+                        fight_melee(&you, defender, nullptr, simu, attack_num?0:1);
+                    }
+                }
         }
-
-
-        if (simu)
-            attk.simu = true;
-
-        // We're trying to hit a monster, break out of travel/explore now.
-        interrupt_activity(activity_interrupt::hit_monster,
-            defender->as_monster());
-
-        // Check if the player is fighting with something unsuitable,
-        // or someone unsuitable.
-        if (you.can_see(*defender) && !simu
-            && !wielded_weapon_check(attk.weapon))
+        else
         {
+            attack_num = you.heads()/3 + 1;
+            int remain = you.heads() - attack_num;
             you.turn_is_over = false;
-            return false;
-        }
-
-        if (!attk.attack())
-        {
-            // Attack was cancelled or unsuccessful...
-            if (attk.cancel_attack)
-                you.turn_is_over = false;
-            return !attk.cancel_attack;
-        }
-
-        if (did_hit)
-            *did_hit = attk.did_hit;
-
-        // A spectral weapon attacks whenever the player does
-        if (!simu && second_attack == -1 && you.props.exists("spectral_weapon"))
-            trigger_spectral_weapon(&you, defender);
-
-        if (!simu && will_have_passive(passive_t::shadow_attacks))
-            dithmenos_shadow_melee(defender);
-
-        if (second_attack == -1
-            && dual_handed_
-            && coinflip()) {
-            if (defender && defender->alive() && _in_melee_range(defender))
+            for (int i = 0; i < attack_num; ++i) 
             {
-                mprf("Double attack!");
-                fight_melee(&you, defender, nullptr, simu, attack_num?0:1);
+                if (!(defender && !_dont_harm(you, *defender)))
+                    continue;
+                if (!defender->alive())
+                    break;
+                melee_attack attk(&you, defender);
+                
+                if (simu)
+                    attk.simu = true;
+
+                // We're trying to hit a monster, break out of travel/explore now.
+                interrupt_activity(activity_interrupt::hit_monster,
+                    defender->as_monster());
+
+                // Check if the player is fighting with something unsuitable,
+                // or someone unsuitable.
+                if (!(you.can_see(*defender) && !simu
+                    && !wielded_weapon_check(attk.weapon)))
+                {
+                    you.turn_is_over = true;
+                }
+
+                if (!attk.attack())
+                {
+                    // Attack was cancelled or unsuccessful...
+                    if (attk.cancel_attack)
+                        continue;
+                    continue;
+                }
+
+                if (did_hit)
+                    *did_hit = attk.did_hit;
             }
+
+            const coord_def atk = you.pos();
+            coord_def atk_vector = defender->pos() - atk;
+            const int dir = random_choose(-1, 1);
+            for (int i = 0; i < remain; ++i)
+            {
+                atk_vector = rotate_adjacent(atk_vector, dir);
+                actor *target = actor_at(atk + atk_vector);
+                if (!(target && !_dont_harm(you, *target)))
+                    continue;
+
+                if (!target->alive())
+                    continue;
+
+                melee_attack attk(&you, target);
+                if (simu)
+                    attk.simu = true;
+
+                // We're trying to hit a monster, break out of travel/explore now.
+                interrupt_activity(activity_interrupt::hit_monster,
+                    defender->as_monster());
+
+                // Check if the player is fighting with something unsuitable,
+                // or someone unsuitable.
+                if (!(you.can_see(*defender) && !simu
+                    && !wielded_weapon_check(attk.weapon)))
+                {
+                    you.turn_is_over = true;
+                }
+
+                if (!attk.attack())
+                {
+                    // Attack was cancelled or unsuccessful...
+                    if (attk.cancel_attack)
+                        continue;
+                    continue;
+                }
+
+                if (did_hit)
+                    *did_hit = attk.did_hit;
+            }
+            return you.turn_is_over;
         }
 
         return true;
@@ -786,7 +871,7 @@ void get_cleave_targets(const actor &attacker, const coord_def& def,
                 && attacker.as_monster()->type == MONS_MACHINE_GOLEM
                 && is_blueprint_exist(BLUEPRINT_CLEAVING)
             || attacker.is_player()
-               && (you.is_hydra() && you.heads() > 1
+               && (you.form == transformation::hydra && you.heads() > 1
                    || you.duration[DUR_CLEAVE]))
     {
         const coord_def atk = attacker.pos();
