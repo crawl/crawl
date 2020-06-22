@@ -2768,6 +2768,7 @@ void excommunication(bool voluntary, god_type new_god)
     // included in default force_more_message
 
     if ((old_god == GOD_ZIN || old_god == GOD_SHINING_ONE || old_god == GOD_ELYVILON)
+        && !((new_god == GOD_ZIN || new_god == GOD_SHINING_ONE || new_god == GOD_ELYVILON))
         && you.species == SP_PEARL_DRACONIAN)
     {
         you.innate_mutation[MUT_NEGATIVE_ENERGY_RESISTANCE]--;
