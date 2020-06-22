@@ -2185,9 +2185,9 @@ bool melee_attack::consider_decapitation(int dam, int damage_type)
         return false;
 
     // What's the largest number of heads the defender can have?
-    const int limit = defender->type != MONS_LERNAEAN_HYDRA             ? MAX_HYDRA_HEADS       :
-                      defender->is_player() && you.has_hydra_multi_attack()? 27:
-                                                                          20;
+    const int limit = defender->type == MONS_LERNAEAN_HYDRA             ?     27:
+                      (defender->is_player() && you.has_hydra_multi_attack())?27:
+                                                                              MAX_HYDRA_HEADS;
 
     if (attacker->damage_brand(attack_number) == SPWPN_FLAMING)
     {

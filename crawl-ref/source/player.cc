@@ -6913,9 +6913,14 @@ bool player::tengu_flight() const
 
 bool player::head_grow(int num) const
 {
-    if (you.form == transformation::none)
+    if (!(0 < you.heads() + num <= 27))
     {
-        mprf("Your head %s!", num >= 0 ? "grows more" : "are cutted away");
+        return true;
+    }
+    if (you.form == transformation::none && num != 0)
+    {
+        mprf("Your %s %s!", abs(num)!=1? "heads":"head" , num >= 0? (abs(num)!=1? "grow more" : "grows more" )
+                                                                  : (abs(num)!=1? "are cut away" : "is cut away"));
         if (num > 0)
         {    for (int i = 0; i < num; i++)
                 you.props[HYDRA_HEADS_NET_LOSS].get_int()--;
@@ -6932,12 +6937,23 @@ bool player::head_grow(int num) const
     }
     else if (you.form == transformation::lich && num < 0)
     {
-        mprf("Your head are %s away");
+        mprf("Your %s $s cut away", abs(num)!=1? "heads":"head" , abs(num)!=1? "are" : "is");
         for (int i = 0; i < abs(num); i++)
                 you.props[HYDRA_HEADS_NET_LOSS].get_int()++;
         ouch(abs(4*num + random2(4*num)), KILLED_BY_DRAINING);
         // If it loses, it unequips the amulet.
         _handle_amulet_loss();
+    }
+    else if (num == 0)
+    {
+        if (you.props[HYDRA_HEADS_NET_LOSS].get_int() < 0)
+        {
+            you.props[HYDRA_HEADS_NET_LOSS].get_int()++; // A temporary head will be your real head.
+        }
+        else
+        {
+            mprf("Your head is grown up!");
+        }
     }
     else
     {  
