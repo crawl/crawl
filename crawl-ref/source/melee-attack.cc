@@ -576,7 +576,7 @@ bool melee_attack::handle_phase_hit()
     }
     if (attacker->is_monster() && attacker->as_monster()->has_ench(ENCH_CIGOTUVIS_PLAGUE))
     {
-        if (defender->is_player())
+        if (defender->is_player() && !you.is_nonliving())
         {
             you.duration[DUR_CIGOTUVIS_PLAGUE] = 10;
         }
