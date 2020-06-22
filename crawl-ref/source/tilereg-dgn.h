@@ -44,8 +44,6 @@ public:
 
     const coord_def &get_cursor() const { return m_cursor[CURSOR_MOUSE]; }
 
-    void zoom(bool in);
-
     int tile_iw, tile_ih;
 
 protected:

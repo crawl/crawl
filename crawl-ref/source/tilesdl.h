@@ -164,8 +164,6 @@ public:
     int get_number_of_cols();
     bool is_using_small_layout();
     void zoom_dungeon(bool in);
-    bool zoom_to_minimap();
-    bool zoom_from_minimap();
 
     void deactivate_tab();
 

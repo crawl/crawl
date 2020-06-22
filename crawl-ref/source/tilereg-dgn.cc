@@ -659,42 +659,6 @@ static bool _handle_zap_player(wm_mouse_event &event)
     return false;
 }
 
-void DungeonRegion::zoom(bool in)
-{
-    int sign = in ? 1 : -1;
-    int amt  = 4;
-    const int max_zoom = 64; // this needs to be a proportion, not a fixed amount!
-    const bool minimap_zoom = (sx>dx); // i.e. there's a border bigger than a tile (was dx<min_zoom+amt)
-
-    // if we try to zoom out too far, go to minimap instead
-    if (!in && minimap_zoom)
-        if (tiles.zoom_to_minimap())
-            return;
-
-    // if we zoomed in from min zoom, and the map's still up, switch off minimap instead
-    if (in && minimap_zoom)
-        if (tiles.zoom_from_minimap())
-            return;
-
-    // if we zoom out too much, stop
-    if (!in && minimap_zoom) //(dx + sign*amt < min_zoom)
-        return;
-    // if we zoom in too close, stop
-    if (dx + sign*amt > max_zoom)
-        return;
-
-    dx = dx + sign*amt;
-    dy = dy + sign*amt;
-
-    int old_wx = wx; int old_wy = wy;
-    recalculate();
-
-    place((old_wx-wx)/2+sx, (old_wy-wy)/2+sy, 0);
-
-    crawl_view.viewsz.x = mx;
-    crawl_view.viewsz.y = my;
-}
-
 int DungeonRegion::handle_mouse(wm_mouse_event &event)
 {
     tiles.clear_text_tags(TAG_CELL_DESC);

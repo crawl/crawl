@@ -1038,9 +1038,7 @@ bool TilesFramework::is_using_small_layout()
 
 void TilesFramework::zoom_dungeon(bool in)
 {
-#ifdef TOUCH_UI
-    m_region_tile->zoom(in);
-#elif defined(USE_TILE_LOCAL)
+#if defined(USE_TILE_LOCAL)
     int &current_scale = m_map_mode_enabled ?  Options.tile_map_scale
                                             :  Options.tile_viewport_scale;
     // max zoom relative to to tile size that keeps LOS in view
@@ -1054,56 +1052,6 @@ void TilesFramework::zoom_dungeon(bool in)
     dprf("Zooming to %d", current_scale);
     redraw_screen(false);
 #endif
-}
-
-bool TilesFramework::zoom_to_minimap()
-{
-    // don't zoom to the minimap if it's already on the screen
-    if (m_region_map || !tiles.is_using_small_layout())
-        return false;
-
-    m_region_map  = new MapRegion(m_map_pixels);
-    m_region_map->dx = m_region_map->dy = min((m_windowsz.x-2*map_margin)/GXM,(m_windowsz.y-2*map_margin)/GYM);
-    m_region_map->resize(GXM, GYM);
-    m_region_map->place(0, 0, map_margin);
-    // put the minimap at the beginning so that menus get drawn over it
-    m_layers[LAYER_NORMAL].m_regions.insert(m_layers[LAYER_NORMAL].m_regions.begin(),m_region_map);
-
-    // move the dregion out of the way
-    m_region_tile->place(m_region_tile->sx,m_windowsz.y,0);
-
-    set_need_redraw();
-
-    // force the minimap to be redrawn properly
-    //  - not sure why this is necessary :(
-    clear_map();
-
-    // force UI into map mode
-//    set_map_display(true);
-//    process_command(CMD_DISPLAY_MAP);
-    return true;
-}
-
-bool TilesFramework::zoom_from_minimap()
-{
-    // don't try to zap the overlaid minimap twice
-    if (!m_region_map || !tiles.is_using_small_layout())
-        return false;
-    delete m_region_map;
-    m_region_map = nullptr;
-
-    // remove minimap from layers again (was at top of vector)
-    m_layers[LAYER_NORMAL].m_regions.erase(m_layers[LAYER_NORMAL].m_regions.begin());
-
-    // take UI out of map mode again
-//    set_map_display(false);
-
-    // put the dregion back (not at 0,0 because we scaled it!)
-    // NB. this assumes that we can work out sy again based on the ratio of wx to wy :O
-    m_region_tile->place(m_region_tile->sx,m_region_tile->sx*m_region_tile->wy/m_region_tile->wx,0);
-
-    set_need_redraw();
-    return true;
 }
 
 void TilesFramework::deactivate_tab()
