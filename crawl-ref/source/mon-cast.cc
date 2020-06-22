@@ -7993,7 +7993,6 @@ if (!_can_takeoff_armour(item))
 */
 static bool _nightmare_of_cubus(monster &caster, mon_spell_slot, bolt&)
 {
-    function<bool(const monster&)> worthwhile = nullptr;
     actor* foe = caster.get_foe();
     ASSERT(foe);
     vector<equipment_type> ret = current_equip_types();
@@ -8068,6 +8067,7 @@ static bool _nightmare_of_cubus(monster &caster, mon_spell_slot, bolt&)
         mpr("It stares and points out something in where they were born.");
         return false;
     }
+    return true;
 }
 
 // Checks to see if a particular spell is worth casting in the first place.
