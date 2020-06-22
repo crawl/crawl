@@ -8015,7 +8015,7 @@ static bool _nightmare_of_cubus(monster &caster, mon_spell_slot, bolt&)
             equipment_type slot= *random_iterator(ret);
         if (you.equip[slot] != -1 && !you.melded[slot])
         {   
-            mprf("Take off your %s..", you.inv[you.equip[slot]].name(DESC_YOUR).c_str());
+            mprf("\"Take off your %s..\"", you.inv[you.equip[slot]].name(DESC_YOUR).c_str());
             ASSERT_RANGE(slot, EQ_FIRST_EQUIP, NUM_EQUIP);
             ASSERT(!you.melded[slot] || you.equip[slot] != -1);
 
@@ -8044,7 +8044,7 @@ static bool _nightmare_of_cubus(monster &caster, mon_spell_slot, bolt&)
             equipment_type slot2 = *random_iterator(arm);
             if (you.equip[slot2] != -1 && !you.melded[slot2])
             {
-                mprf("Unshelve your %s..", you.inv[you.equip[slot2]].name(DESC_YOUR).c_str());
+                mprf("\"Unshelve your %s..\"", you.inv[you.equip[slot2]].name(DESC_YOUR).c_str());
                 duration_type dur = (duration_type)((int)DUR_UNSH_CLOAK + (int)(slot2 - EQ_CLOAK));
                 you.set_duration(dur, 5);
                 you.redraw_armour_class = true;
