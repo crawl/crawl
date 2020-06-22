@@ -19,9 +19,12 @@
 - 새로운 종족 레서리치 추가. 높은 강령 적성, 빠른 마나회복, 27렙때 와일드매직을 얻음
   - Added Lesser-Lich(playable). high necromancy skill, high mana regen, wild magic when 27 level
   
-- 새로운 종족 갑각류 추가. 단검, 슬링만 착용할 수 있는 소형종족. 자연 재생을 할 수 없는대신, 매 레벨마다 탈피가 가능하다. 또한 나이트처럼 움직일 수 있다.
-  - Added Crustacean(playable). Small species that can only wear daggers and slings, Instead of not regenerate, they can molt at every level. It can move like a knight.
+- 새로운 종족 갑각류 추가. 단검, 슬링만 착용할 수 있는 소형종족. 맞을때마다 부패가 일어나는 대신, 매 레벨마다 탈피를 통해 회복할 수 있다. 또한 나이트처럼 움직일 수 있다.
+  - Added Crustacean(playable). Small species that can only wear daggers and slings. they deteriorates upon taking damage, and can molt at every level for recovery. It can move like a knight.
   
+- 새로운 종족 히드라 추가. 무기를 장착할 수 없고, 무거운 갑옷도 입지 못한다. 매 레벨마다 머리를 1개씩 얻는다. 매 3레벨마다 아뮬렛 슬롯을 1개씩 추가한다. 머리의 숫자만큼 다단공격을 한다.
+  - Added Hydra(playable). Weapons cannot be equipped, and heavy armor cannot be worn. Get 1 head per level. Get an amulet slot every 3 levels. Multi attacks as many as the number of heads.
+    
 - 드라코니언이 7렙이 될때 선신을 믿고 있으면 펄 드라코니언으로 진화함. 음에너지1 기도술3 독,강령-2 신성한 불 브레스
   - When the Draconian reaches the 7 level, if Dr believes good god, Dr evolves into a Pearl Draconian. Negative resist 1, invocation skil 3, poison/necromancy skill -2, blessed frame breath
   
@@ -130,6 +133,9 @@
 
 - 플레이어의 레후딥의 수정창은 이제 샷건과 같은 범위 마법임
   - Change the player's Lehudib to area spell as shotgun
+ 
+- 냉장고가 음식의 유통기한을 늘려준다. 
+  - Refrigerator preserves the freshness of food.
   
 - 네멜렉스의 원더덱이 돌아옴. 이제 네멜렉스는 다시 발동술을 사용함
   - Nemelex's deck of wonder is comeback. Now Nemelex uses the evocation again.
