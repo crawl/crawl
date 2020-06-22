@@ -135,6 +135,7 @@ protected:
     virtual int calc_mon_to_hit_base() = 0;
     virtual int apply_damage_modifiers(int damage) = 0;
     virtual int calc_damage();
+    void calc_encumbrance_penalties(bool random);
     int lighting_effects();
     int test_hit(int to_hit, int ev, bool randomise_ev);
     int apply_defender_ac(int damage, int damage_max = 0) const;

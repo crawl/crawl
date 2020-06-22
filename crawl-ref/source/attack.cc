@@ -143,6 +143,19 @@ bool attack::handle_phase_end()
 }
 
 /**
+ * Calculate to-hit penalties from the attacker's armour and shield, if any.
+ * Set them into the appropriate fields.
+ *
+ * @param random If false, calculate average to-hit penalties deterministically.
+ */
+void attack::calc_encumbrance_penalties(bool random) {
+    attacker_armour_tohit_penalty =
+        maybe_random_div(attacker->armour_tohit_penalty(true, 20), 20, random);
+    attacker_shield_tohit_penalty =
+        maybe_random_div(attacker->shield_tohit_penalty(true, 20), 20, random);
+}
+
+/**
  * Calculate to-hit bonuses & penalties for backlighting and umbras, respectively.
  *
  * @return The value added to the attack's to-hit before it's rolled.
@@ -226,7 +239,9 @@ int attack::calc_to_hit(bool random)
         if (apply_starvation_penalties())
             mhit -= 3;
 
-        // armour penalty
+        // armour penalty (already calculated if random is true)
+        if (!random)
+            calc_encumbrance_penalties(random);
         mhit -= (attacker_armour_tohit_penalty + attacker_shield_tohit_penalty);
 
         // vertigo penalty
@@ -376,10 +391,7 @@ void attack::init_attack(skill_type unarmed_skill, int attack_number)
     if (attacker->is_player() && you.form_uses_xl())
         wpn_skill = SK_FIGHTING; // for stabbing, mostly
 
-    attacker_armour_tohit_penalty =
-        div_rand_round(attacker->armour_tohit_penalty(true, 20), 20);
-    attacker_shield_tohit_penalty =
-        div_rand_round(attacker->shield_tohit_penalty(true, 20), 20);
+    calc_encumbrance_penalties(true);
     to_hit          = calc_to_hit(true);
 
     shield = attacker->shield();
