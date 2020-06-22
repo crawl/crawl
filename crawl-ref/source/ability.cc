@@ -1683,14 +1683,7 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         if (you.lives > 0 && !you.duration[DUR_GROW_FOR_ECD]
             && !you.duration[DUR_DEATHS_DOOR] && you.form == transformation::none)
         {
-            
-        if (!i_feel_safe(false, false, true)
-            && !yesno("Really undergo on ecdysis while enemies are nearby?",
-                  false, 'n'))
-        {
-            canned_msg(MSG_OK);
             return true;
-        }
         }   
         else if(!quiet)
         {
@@ -2056,6 +2049,13 @@ static spret _do_ability(const ability_def& abil, bool fail)
         break;
 
     case ABIL_ECDYSIS:
+        if (!i_feel_safe(false, false, true)
+            && !yesno("Really undergo on ecdysis while enemies are nearby?",
+                  false, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return spret::abort;
+        }
         you.lives--;
         you.set_duration(DUR_PARALYSIS, 5 + you.experience_level);
         you.set_duration(DUR_ECDYSIS, 5 + you.experience_level);
