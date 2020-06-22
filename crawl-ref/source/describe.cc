@@ -3883,6 +3883,29 @@ static void _add_energy_to_string(int speed, int energy, string what,
 }
 
 /**
+ * Calculate effects on the player's to-hit from a defending monster.
+ *
+ * @param base_to_hit   The to-hit with only attacker-side effects applied.
+ * @param mi[in]        Player-visible info about the monster in question.
+ * @param melee         Whether the attack is melee or ranged.
+ */
+static int _apply_defender_effects(int base_to_hit, const monster_info& mi, bool melee)
+{
+    int to_hit = base_to_hit;
+
+    // Lighting effects.
+    if (mi.is(MB_GLOWING)       // corona, silver corona (!)
+        || mi.is(MB_BURNING)    // sticky flame
+        || mi.is(MB_HALOED))
+    {
+        to_hit += BACKLIGHT_TO_HIT_BONUS;
+    } else if (mi.is(MB_UMBRAED) && !you.nightvision())
+        to_hit += UMBRA_TO_HIT_MALUS;
+
+    return to_hit;
+}
+
+/**
  * Return the odds of an attack with the given to-hit bonus hitting a defender with the
  * given EV, rounded to the nearest percent.
  *
@@ -3890,7 +3913,8 @@ static void _add_energy_to_string(int speed, int energy, string what,
  * @param ev                Defender evasion.
  * @return                  To-hit percent between 0 and 100 (inclusive).
  */
-static int _to_hit_pct(int to_land, int ev) {
+static int _to_hit_pct(int to_land, int ev)
+{
     if (to_land >= AUTOMATIC_HIT)
         return 100;
 
@@ -3929,13 +3953,15 @@ static int _to_hit_pct(int to_land, int ev) {
     return non_automissed_hits + autohit_misses;
 }
 
+
 /**
  * Display the % chance of a player hitting the given monster.
  *
  * @param mi[in]            Player-visible info about the monster in question.
  * @param result[in,out]    The stringstream to append to.
  */
-static void _describe_to_hit(const monster_info& mi, ostringstream &result) {
+static void _describe_to_hit(const monster_info& mi, ostringstream &result)
+{
     // TODO: don't do this if the player doesn't exist (main menu)
 
     const item_def* weapon = you.weapon();
@@ -3955,6 +3981,10 @@ static void _describe_to_hit(const monster_info& mi, ostringstream &result) {
         ranged_attack attk(&you, nullptr, &you.inv[missile], false);
         to_hit = attk.calc_to_hit(false);
     }
+
+    to_hit = _apply_defender_effects(to_hit, mi, melee);
+    dprf("to hit after defender fx: %d", to_hit);
+
     result << " (about " << (100 - _to_hit_pct(to_hit, mi.ev)) << "% to evade ";
     if (weapon == nullptr)
         result << "your " << you.hand_name(true);

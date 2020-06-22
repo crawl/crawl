@@ -13,6 +13,9 @@ const int HIT_WEAK   = 7;
 const int HIT_MED    = 18;
 const int HIT_STRONG = 36;
 
+const int BACKLIGHT_TO_HIT_BONUS = 6;
+const int UMBRA_TO_HIT_MALUS = -4;
+
 class attack
 {
 // Public Properties
@@ -132,6 +135,7 @@ protected:
     virtual int calc_mon_to_hit_base() = 0;
     virtual int apply_damage_modifiers(int damage) = 0;
     virtual int calc_damage();
+    int lighting_effects();
     int test_hit(int to_hit, int ev, bool randomise_ev);
     int apply_defender_ac(int damage, int damage_max = 0) const;
     // Determine if we're blocking (partially or entirely)
