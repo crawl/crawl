@@ -3097,9 +3097,12 @@ spret cast_hailstorm(int pow, bool fail, bool tracer)
     targeter_radius hitfunc(&you, LOS_NO_TRANS, 3, 0, 2);
     bool (*vulnerable) (const actor *) = [](const actor * act) -> bool
     {
-        return !act->is_icy()
-            && !(you_worship(GOD_FEDHAS)
-                 && fedhas_protects(act->as_monster()));
+      // actor guaranteed to be monster from usage,
+      // but we'll verify it as a matter of good hygiene.
+        const monster* mon = act->as_monster();
+        return mon && !mon->is_icy()
+            && !mons_is_firewood(*mon)
+            && !(you_worship(GOD_FEDHAS) && fedhas_protects(mon));
     };
 
     if (tracer)
