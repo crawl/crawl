@@ -3242,7 +3242,7 @@ void level_change(bool skip_attribute_increase)
                 _crustacean_moult();
                 break;
             case SP_HYDRA:
-                you.head_grow(1);
+                you.head_grow(0);
                 break;
 
             default:
@@ -6919,7 +6919,8 @@ bool player::head_grow(int num) const
         if (num > 0)
         {    for (int i = 0; i < num; i++)
                 you.props[HYDRA_HEADS_NET_LOSS].get_int()--;
-            you.heal(4*num + random2(4*num));}
+            you.heal(4*num + random2(4*num));
+        }
         else if (num < 0)
         {
             for (int i = 0; i < abs(num); i++)
