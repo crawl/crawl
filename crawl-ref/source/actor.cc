@@ -280,7 +280,7 @@ bool actor::reflection(bool calc_unid, bool items) const
 bool actor::extra_harm(bool calc_unid, bool items) const
 {
     return items &&
-           (wearing(EQ_CLOAK, SPARM_HARM, calc_unid)
+           (wearing_ego(EQ_CLOAK, SPARM_HARM, calc_unid)
             || scan_artefacts(ARTP_HARM, calc_unid));
 }
 
