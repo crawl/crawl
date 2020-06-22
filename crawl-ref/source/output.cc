@@ -2461,9 +2461,6 @@ static vector<formatted_string> _get_overview_resistances(
     const int rinvi = you.can_see_invisible(calc_unid);
     out += _resist_composer("SeeInvis", cwidth, rinvi) + "\n";
 
-    const int gourmand = you.gourmand(calc_unid);
-    out += _resist_composer("Gourm", cwidth, gourmand, 1) + "\n";
-
     const int faith = you.faith(calc_unid);
     out += _resist_composer("Faith", cwidth, faith) + "\n";
 
