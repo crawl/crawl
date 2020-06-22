@@ -6915,7 +6915,7 @@ bool player::head_grow(int num) const
 {
     if (you.form == transformation::none)
     {
-        mprf("Your head %s!", num > 0 ? "grows more" : "are cutted away");
+        mprf("Your head %s!", num >= 0 ? "grows more" : "are cutted away");
         if (num > 0)
         {    for (int i = 0; i < num; i++)
                 you.props[HYDRA_HEADS_NET_LOSS].get_int()--;

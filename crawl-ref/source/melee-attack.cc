@@ -2186,7 +2186,7 @@ bool melee_attack::consider_decapitation(int dam, int damage_type)
 
     // What's the largest number of heads the defender can have?
     const int limit = defender->type != MONS_LERNAEAN_HYDRA             ? MAX_HYDRA_HEADS       :
-                      defender->is_player() && you.species == SP_HYDRA  ? 27:
+                      defender->is_player() && you.has_hydra_multi_attack()? 27:
                                                                           20;
 
     if (attacker->damage_brand(attack_number) == SPWPN_FLAMING)
@@ -2207,7 +2207,7 @@ bool melee_attack::consider_decapitation(int dam, int damage_type)
          defender->heal(8 + random2(8));
     }
     else if (defender->is_player())
-    {    
+    {   
         defender->as_player()->head_grow(2);
     }
 
@@ -2226,9 +2226,8 @@ static bool actor_can_lose_heads(const actor* defender)
         && defender->as_monster()->has_hydra_multi_attack()
         && defender->type != MONS_SPECTRAL_THING
         && defender->as_monster()->mons_species() != MONS_SERPENT_OF_HELL
-        || defender -> is_player() 
-            && you.species == SP_HYDRA 
-                && you.experience_level + you.props[HYDRA_HEADS_NET_LOSS].get_int() > 1)
+        || defender->is_player() 
+            && you.has_hydra_multi_attack())
     {
         return true;
     }
@@ -2315,7 +2314,6 @@ void melee_attack::decapitate(int dam_type)
     }
 
     int heads = defender->heads();
-    mprf("%d heads remain.", heads);
     if (heads == 1) // will be zero afterwards
     {
         if (defender_visible)
