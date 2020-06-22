@@ -37,10 +37,10 @@
 
 // Make sure there's enough room in you.unique_items to hold all
 // the unrandarts.
-COMPILE_CHECK(NUM_UNRANDARTS < MAX_UNRANDARTS);
+COMPILE_CHECK((NUM_UNRANDARTS < MAX_UNRANDARTS));
 // Non-artefact brands and unrandart indexes both go into
 // item.special, so make sure they don't overlap.
-COMPILE_CHECK((int) NUM_SPECIAL_WEAPONS < (int) UNRAND_START);
+COMPILE_CHECK(((int) NUM_SPECIAL_WEAPONS < (int) UNRAND_START));
 
 static bool _god_fits_artefact(const god_type which_god, const item_def &item,
                                bool name_check_only = false)
