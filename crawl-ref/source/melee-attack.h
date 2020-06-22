@@ -45,9 +45,6 @@ public:
     // Applies attack damage and other effects.
     bool attack();
 
-    // To-hit is a function of attacker/defender, inherited from attack
-    int calc_to_hit(bool random = true) override;
-
     static void chaos_affect_actor(actor *victim);
 
 private:
@@ -63,6 +60,7 @@ private:
     /* Combat Calculations */
     bool using_weapon() const override;
     int weapon_damage() override;
+    int apply_special_to_hit(int to_hit, bool random) override;
     int calc_mon_to_hit_base() override;
     int apply_damage_modifiers(int damage) override;
     int calc_damage() override;

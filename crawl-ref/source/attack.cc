@@ -255,6 +255,9 @@ int attack::calc_to_hit(bool random)
         // defender backlight bonus and umbra penalty.
         mhit += lighting_effects();
 
+        // miscellaneous melee/ranged-specific effects
+        mhit = apply_special_to_hit(mhit, random);
+
         // hit roll
         mhit = maybe_random2(mhit, random);
     }
@@ -275,6 +278,8 @@ int attack::calc_to_hit(bool random)
         // historically, these were applied before the hit roll for the monsters
         // (not for players), so we halve the effect for monsters to recreate that.
         mhit += lighting_effects() / 2;
+
+        mhit = apply_special_to_hit(mhit, random);
     }
 
     // Penalties for both players and monsters:

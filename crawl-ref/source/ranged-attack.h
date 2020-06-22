@@ -14,8 +14,6 @@ public:
     ranged_attack(actor *attacker, actor *defender, item_def *projectile,
                   bool teleport, actor *blame = 0);
 
-    int calc_to_hit(bool random) override;
-
     // Applies attack damage and other effects.
     bool attack();
 
@@ -31,6 +29,7 @@ private:
     bool using_weapon() const override;
     int weapon_damage() override;
     int calc_base_unarmed_damage() override;
+    int apply_special_to_hit(int to_hit, bool random) override;
     int calc_mon_to_hit_base() override;
     int apply_damage_modifiers(int damage) override;
     bool apply_damage_brand(const char *what = nullptr) override;

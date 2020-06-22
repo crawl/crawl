@@ -2290,27 +2290,25 @@ bool melee_attack::apply_staff_damage()
 }
 
 /**
- * Calculate the to-hit for an attacker
+ * Apply melee-specific to-hit modifiers.
  *
+ * @param to_hit The base to-hit before modifiers.
  * @param random If false, calculate average to-hit deterministically.
  */
-int melee_attack::calc_to_hit(bool random)
+int melee_attack::apply_special_to_hit(int to_hit, bool /*random*/)
 {
-    int mhit = attack::calc_to_hit(random);
-
     // Just trying to touch is easier than trying to damage.
     if (you.duration[DUR_CONFUSING_TOUCH])
-        mhit += maybe_random2(you.dex(), random);
+        to_hit += you.dex();
 
     if (attacker->is_player() && !weapon)
     {
-
         // TODO: Review this later (transformations getting extra hit
         // almost across the board seems bad) - Cryp71c
-        mhit += maybe_random2(get_form()->unarmed_hit_bonus, random);
+        to_hit += get_form()->unarmed_hit_bonus;
     }
 
-    return mhit;
+    return to_hit;
 }
 
 void melee_attack::player_stab_check()

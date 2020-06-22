@@ -3887,9 +3887,8 @@ static void _add_energy_to_string(int speed, int energy, string what,
  *
  * @param base_to_hit   The to-hit with only attacker-side effects applied.
  * @param mi[in]        Player-visible info about the monster in question.
- * @param melee         Whether the attack is melee or ranged.
  */
-static int _apply_defender_effects(int base_to_hit, const monster_info& mi, bool melee)
+static int _apply_defender_effects(int base_to_hit, const monster_info& mi)
 {
     int to_hit = base_to_hit;
 
@@ -3982,7 +3981,7 @@ static void _describe_to_hit(const monster_info& mi, ostringstream &result)
         to_hit = attk.calc_to_hit(false);
     }
 
-    to_hit = _apply_defender_effects(to_hit, mi, melee);
+    to_hit = _apply_defender_effects(to_hit, mi);
     dprf("to hit after defender fx: %d", to_hit);
 
     result << " (about " << (100 - _to_hit_pct(to_hit, mi.ev)) << "% to evade ";
