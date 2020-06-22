@@ -734,6 +734,7 @@ item_def* place_monster_corpse(const monster& mons, bool silent, bool force)
     {   
         corpse.clear();
         _cigotuvis_plague_make_abomination(&mons);
+        return nullptr;
     }
 
     origin_set_monster(corpse, &mons);

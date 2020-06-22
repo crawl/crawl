@@ -196,6 +196,8 @@ void bleed_onto_floor(const coord_def& where, monster_type montype,
 
 void blood_spray(const coord_def& origin, monster_type montype, int level)
 {
+    bool plague = actor_at(origin)->is_player() && actor_at(origin)->as_player()->duration[DUR_CIGOTUVIS_PLAGUE] ||
+                    actor_at(origin)->is_monster() && actor_at(origin)->as_monster()->has_ench(ENCH_CIGOTUVIS_PLAGUE); 
     int tries = 0;
     for (int i = 0; i < level; ++i)
     {
@@ -210,10 +212,24 @@ void blood_spray(const coord_def& origin, monster_type montype, int level)
             coord_def bloody = origin;
             bloody.x += random_range(-range, range);
             bloody.y += random_range(-range, range);
+            actor *victim = actor_at(bloody);
 
             if (in_bounds(bloody) && cell_see_cell(origin, bloody, LOS_SOLID))
             {
                 bleed_onto_floor(bloody, montype, 99, false, true, origin);
+                if (victim && bloody != origin && plague)
+                {
+                    if(victim->is_player())
+                    {
+                        mprf("You touches infected blood!");
+                        you.duration[DUR_CIGOTUVIS_PLAGUE] += random2(3);
+                    }
+                    else if(victim->is_monster())
+                    {
+                        mprf("%s touches infected blood!", victim->as_monster()->name(DESC_THE).c_str());
+                        victim->as_monster()->add_ench(mon_enchant(ENCH_CIGOTUVIS_PLAGUE, 0, nullptr, (1+random2(3)) * BASELINE_DELAY));
+                    }
+                }
                 break;
             }
         }
