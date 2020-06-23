@@ -1792,7 +1792,7 @@ static vector<equipment_type> _current_amulet_types()
     }
     else if (you.species == SP_HYDRA)
     {
-        you.head_grow(0); // just for _handle_amulet_loss()
+        you.head_grow(27); // Just for calling _handle_amulet_loss().
         for (int eq = EQ_AMULET_ONE; eq <= EQ_AMULET_NINE; eq++)
         {
             if (you_can_wear((equipment_type) eq))
