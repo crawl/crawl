@@ -477,13 +477,13 @@ void change_species_to(species_type sp)
     }
 
     auto sp_to_slot
-    = [](species_type sp) -> equipment_type
+    = [](species_type sptype) -> equipment_type
     {
         equipment_type slot = EQ_AMULET;
         
-        if (sp == SP_TWO_HEADED_OGRE)
+        if (sptype == SP_TWO_HEADED_OGRE)
             slot = EQ_AMULET_LEFT;
-        else if (sp == SP_HYDRA)
+        else if (sptype == SP_HYDRA)
             slot = EQ_AMULET_ONE;
 
         return slot;

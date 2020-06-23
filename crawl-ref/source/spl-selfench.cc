@@ -80,7 +80,7 @@ void remove_missile_prot()
     you.attribute[ATTR_REPEL_MISSILES] = 0;
 }
 
-spret missile_prot(int pow, bool fail)
+spret missile_prot(int, bool fail)
 {
     fail_check();
     you.attribute[ATTR_REPEL_MISSILES] = 1;
