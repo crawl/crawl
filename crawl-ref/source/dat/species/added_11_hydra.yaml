@@ -47,7 +47,7 @@ levelup_stat_frequency: 4
 mutations:
   1:
     MUT_DEFORMED : 1
-    MUT_REGENERATION : 1
+    MUT_REGENERATION : 2
     MUT_POISON_RESISTANCE : 1
     MUT_COLD_BLOODED: 1
 fake_mutations:
