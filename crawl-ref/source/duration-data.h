@@ -523,7 +523,7 @@ static const duration_def duration_data[] =
     { DUR_AMBROSIA, GREEN, "Ambros", "", "ambrosia",
       "You are regenerating under the effects of ambrosia.", D_DISPELLABLE },
     { DUR_CHANNEL_ENERGY, LIGHTBLUE, "Channel", "", "channel",
-      "You are rapidly regenerating magical energy.", D_DISPELLABLE },
+      "You are rapidly regenerating magical energy.", D_NO_FLAGS },
     { DUR_DEVICE_SURGE, WHITE, "Surge", "device surging", "device surge",
       "You have readied a device surge.", D_EXPIRES,
       {{ "Your device surge dissipates." },
