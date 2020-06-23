@@ -6956,7 +6956,7 @@ bool player::head_grow(int num) const
         }
         else
         {
-            mprf("A new head is grown up!");
+            mprf("A new head is grown up.");
         }
     }
     else
@@ -6964,12 +6964,12 @@ bool player::head_grow(int num) const
         you.redraw_title = true;
         you.redraw_status_lights = true;
         _handle_amulet_loss();
-        redraw_screen();
+        init_player_doll();
         return false;
     }
     you.redraw_title = true;
     you.redraw_status_lights = true;
-    redraw_screen();
+    init_player_doll();
     return true;
 }
 

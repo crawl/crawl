@@ -296,18 +296,18 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu, int
                 if (!target->alive())
                     continue;
 
-                mpr("Your smaller head tries to attack something!");
+                mpr("Your smaller head tries to attack something.");
                 melee_attack attk(&you, target);
                 if (simu)
                     attk.simu = true;
 
                 // We're trying to hit a monster, break out of travel/explore now.
                 interrupt_activity(activity_interrupt::hit_monster,
-                    defender->as_monster());
+                    target->as_monster());
 
                 // Check if the player is fighting with something unsuitable,
                 // or someone unsuitable.
-                if (you.can_see(*defender) && !simu
+                if (you.can_see(*target) && !simu
                     && !wielded_weapon_check(attk.weapon))
                 {
                     continue;
@@ -322,9 +322,6 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu, int
                     continue;
                 }
                 you.turn_is_over = true;
-                if (did_hit)
-                    *did_hit = attk.did_hit;
-                return you.turn_is_over;
             }
         }
 
