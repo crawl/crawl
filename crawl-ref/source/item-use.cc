@@ -808,6 +808,18 @@ bool armour_prompt(const string & mesg, int *index, operation_types oper)
 
 static const int ARMOUR_EQUIP_DELAY = 5;
 
+// If you can't wear a bardings, why not? (If you can, return "".)
+static string _cant_wear_barding_reason(bool ignore_temporary)
+{
+    if (!you.wear_barding())
+        return "You can't wear that!";
+
+    if (!ignore_temporary && player_is_shapechanged())
+        return "You can wear that only in your normal form.";
+
+    return "";
+}
+
 /**
  * Can you wear this item of armour currently?
  *
@@ -854,18 +866,13 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         return false;
     }
 
-    if (sub_type == ARM_NAGA_BARDING || sub_type == ARM_CENTAUR_BARDING)
+    if (sub_type == ARM_BARDING)
     {
-        if (you.species == SP_NAGA && sub_type == ARM_NAGA_BARDING
-            || you.species == SP_CENTAUR && sub_type == ARM_CENTAUR_BARDING)
-        {
-            if (ignore_temporary || !player_is_shapechanged())
-                return true;
-            else if (verbose)
-                mpr("You can wear that only in your normal form.");
-        }
-        else if (verbose)
-            mpr("You can't wear that!");
+        const string reason = _cant_wear_barding_reason(ignore_temporary);
+        if (reason == "")
+            return true;
+        if (verbose)
+            mpr(reason);
         return false;
     }
 
@@ -1031,10 +1038,15 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
             return false;
         }
 
-        if (you.species == SP_NAGA)
+        if (you.wear_barding())
         {
             if (verbose)
-                mpr("You have no legs!");
+            {
+                if (you.species == SP_NAGA)
+                    mpr("You have no legs!");
+                else
+                    mpr("Boots don't fit your feet!");
+            }
             return false;
         }
 

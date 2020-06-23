@@ -613,12 +613,7 @@ function armour_value(it, cur, it2)
   -- name always starts with {boots armour} here
   -- ^ is no longer true I think?
   if good_slots[st] == "Boots" then
-    if you.race() == "Centaur" then
-      if not (name:find("centaur barding")
-              or name:find("horse barding")) then
-        return -1,-1
-      end
-    elseif you.race() == "Naga" then
+    if you.race() == "Naga" then
       if not (name:find("naga barding")
               or name:find("lightning scales")) then
         return -1,-1

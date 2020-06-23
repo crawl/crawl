@@ -5187,6 +5187,12 @@ void unmarshallItem(reader &th, item_def &item)
         }
     }
 
+    if (th.getMinorVersion() < TAG_MINOR_BARDING_MERGE)
+    {
+        if (item.is_type(OBJ_ARMOUR, ARM_CENTAUR_BARDING))
+            item.sub_type = ARM_BARDING;
+    }
+
 #endif
 
     if (is_unrandom_artefact(item))

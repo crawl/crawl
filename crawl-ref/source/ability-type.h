@@ -54,7 +54,9 @@ enum ability_type
     ABIL_SHAFT_SELF,
     // Barachim
     ABIL_HOP,
-    ABIL_MAX_INTRINSIC = ABIL_HOP,
+    // Palentongas
+    ABIL_ROLLING_CHARGE,
+    ABIL_MAX_INTRINSIC = ABIL_ROLLING_CHARGE,
 
     // Evoking items.
     ABIL_EVOKE_BERSERK = 40,

@@ -767,10 +767,8 @@ maybe_bool you_can_wear(equipment_type eq, bool temp)
 
     case EQ_BOOTS: // And bardings
         dummy.sub_type = ARM_BOOTS;
-        if (you.species == SP_NAGA)
-            alternate.sub_type = ARM_NAGA_BARDING;
-        if (you.species == SP_CENTAUR)
-            alternate.sub_type = ARM_CENTAUR_BARDING;
+        if (you.wear_barding())
+            alternate.sub_type = ARM_BARDING;
         break;
 
     case EQ_BODY_ARMOUR:
@@ -1769,13 +1767,7 @@ int player_prot_life(bool calc_unid, bool temp, bool items)
     return pl;
 }
 
-// New player movement speed system... allows for a bit more than
-// "player runs fast" and "player walks slow" in that the speed is
-// actually calculated (allowing for centaurs to get a bonus from
-// swiftness and other such things). Levels of the mutation now
-// also have meaning (before they all just meant fast). Most of
-// this isn't as fast as it used to be (6 for having anything), but
-// even a slight speed advantage is very good... and we certainly don't
+// Even a slight speed advantage is very good... and we certainly don't
 // want to go past 6 (see below). -- bwr
 int player_movement_speed()
 {
@@ -1950,7 +1942,7 @@ static int _player_evasion_size_factor(bool base = false)
 // other medium-sized races)
 int player_shield_racial_factor()
 {
-    return max(1, 5 + (you.species == SP_FORMICID ? -2 // Same as trolls/centaurs/etc.
+    return max(1, 5 + (you.species == SP_FORMICID ? -2 // Same as trolls, etc.
                                                   : _player_evasion_size_factor(true)));
 }
 
@@ -5673,7 +5665,7 @@ int player::base_ac_from(const item_def &armour, int scale) const
     const int AC = base * (440 + skill(SK_ARMOUR, 20)) / 440;
 
     // The deformed don't fit into body armour very well.
-    // (This includes nagas and centaurs.)
+    // (This includes nagas and palentongas.)
     if (get_armour_slot(armour) == EQ_BODY_ARMOUR
             && (get_mutation_level(MUT_DEFORMED)
                 || get_mutation_level(MUT_PSEUDOPODS)))
@@ -6814,7 +6806,7 @@ bool player::has_usable_hooves(bool allow_tran) const
 {
     return has_hooves(allow_tran)
            && (!slot_item(EQ_BOOTS)
-               || wearing(EQ_BOOTS, ARM_CENTAUR_BARDING, true));
+               || wearing(EQ_BOOTS, ARM_BARDING, true));
 }
 
 int player::has_fangs(bool allow_tran) const
@@ -6850,6 +6842,7 @@ int player::has_tail(bool allow_tran) const
     // XXX: Do merfolk in water belong under allow_tran?
     if (species_is_draconian(species)
         || fishtail
+        || get_mutation_level(MUT_ARMOURED_TAIL, allow_tran)
         || get_mutation_level(MUT_STINGER, allow_tran))
     {
         return 1;
@@ -7672,6 +7665,19 @@ bool player::form_uses_xl() const
         || form == transformation::bat && you.species != SP_VAMPIRE;
 }
 
+bool player::wear_barding() const {
+    switch (you.species) {
+        case SP_NAGA:
+        case SP_PALENTONGA:
+#if TAG_MAJOR_VERSION == 34
+        case SP_CENTAUR:
+#endif
+            return true;
+        default:
+            return false;
+    }
+}
+
 static int _get_potion_heal_factor()
 {
     // healing factor is expressed in thirds, so default is 3/3 -- 100%.
@@ -7709,6 +7715,7 @@ void print_potion_heal_message()
     else if (_get_potion_heal_factor() < 3)
         mpr("Your system partially rejects the healing.");
 }
+
 
 bool player::can_potion_heal()
 {

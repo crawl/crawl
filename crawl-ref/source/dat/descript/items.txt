@@ -69,6 +69,10 @@ bardiche
 
 A long pole with an enormous, cleaving blade on one end.
 %%%%
+barding
+
+Armour for nagas' tails.
+%%%%
 battleaxe
 
 A large war axe with a formidable double-sided head.
@@ -282,10 +286,6 @@ buckler
 A small piece of wood and metal, to be strapped on one arm for defence. It is
 cumbersome to wear, and impedes the evasion, spellcasting ability, and attack
 speed of an unskilled wearer.
-%%%%
-centaur barding
-
-An armour made for centaurs, to wear over their equine half.
 %%%%
 chain mail
 
@@ -556,10 +556,6 @@ when carried.
 morningstar
 
 A mace with a head covered in short spikes.
-%%%%
-naga barding
-
-A special armour made for nagas, to wear over their tails.
 %%%%
 necronomicon
 

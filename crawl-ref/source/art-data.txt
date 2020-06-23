@@ -1055,7 +1055,7 @@ FB_BRAND: SPWPN_PAIN
 BOOL:     evil, seeinv, fly, curse
 
 NAME:     lightning scales
-OBJ:      OBJ_ARMOUR/ARM_NAGA_BARDING
+OBJ:      OBJ_ARMOUR/ARM_BARDING
 PLUS:     +6
 TILE:     urand_lightning_scales
 TILE_EQ:  lightning_scales
@@ -1063,16 +1063,18 @@ COLOUR:   ETC_ELECTRICITY
 BRAND:    SPARM_RUNNING
 BOOL:     elec
 
+# start TAG_MAJOR_VERSION == 34
 ENUM:     BLACK_KNIGHT_HORSE
 NAME:     Black Knight's horse barding
-OBJ:      OBJ_ARMOUR/ARM_CENTAUR_BARDING
+OBJ:      OBJ_ARMOUR/ARM_BARDING
 PLUS:     +10
 TILE:     urand_bk_barding
 TILE_EQ:  black_knight
 COLOUR:   ETC_UNHOLY
 BRAND:    SPARM_PONDEROUSNESS
 LIFE:     1
-BOOL:     poison, evil
+BOOL:     poison, evil, nogen
+# end TAG_MAJOR_VERSION
 
 NAME:     amulet of Vitality
 OBJ:      OBJ_JEWELLERY/AMU_REGENERATION
