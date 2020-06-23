@@ -904,7 +904,8 @@ bool melee_attack::handle_phase_killed()
         && defender->is_monster() // better safe than sorry
         && defender->type != MONS_NO_MONSTER) // already reset
     {
-        _hydra_consider_devouring(*defender->as_monster());
+        if (!you.has_hydra_multi_attack() || coinflip())
+            _hydra_consider_devouring(*defender->as_monster());
     }
 
     if (weapon && item_attack_skill(*weapon) == SK_MACES_FLAILS) {
