@@ -33,7 +33,8 @@ public:
     list<actor*> cleave_targets;
     bool         cleaving;        // additional attack from cleaving
     bool         is_riposte;      // long blade retaliation attack
-    bool         is_double_attack; // is double attack
+    bool         is_double_attack;// is double attack
+    bool         quiet;           // whether message is shown or not.
     wu_jian_attack_type wu_jian_attack;
     int wu_jian_number_of_targets;
     coord_def attack_position;
@@ -41,7 +42,7 @@ public:
 public:
     melee_attack(actor *attacker, actor *defender,
                  int attack_num = -1, int effective_attack_num = -1,
-                 bool is_cleaving = false);
+                 bool is_cleaving = false, bool quiet = false);
 
     // Applies attack damage and other effects.
     bool attack();

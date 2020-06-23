@@ -41,7 +41,7 @@ static void _potion_stack_changed_message(string item_name, int num_changed,
 /**
  * Refrigerate chunks & blood in the player's inventory.
  *
- * @param time    The amount of time to be preserved.
+ * @param dur_delta  The amount of time to be preserved.
  */
 void refrigerate_food(int dur_delta)
 {

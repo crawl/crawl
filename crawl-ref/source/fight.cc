@@ -256,8 +256,9 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu, int
                     continue;
                 if (!defender->alive())
                     break;
-                melee_attack attk(&you, defender, 0, i);
-                
+                melee_attack attk(&you, defender, 7, i);
+                if (i+1 != attack_num)
+                    attk.quiet = true;
                 if (simu)
                     attk.simu = true;
 
@@ -305,7 +306,7 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu, int
                     continue;
 
                 mpr("Your smaller head tries to attack something.");
-                melee_attack attk(&you, target, 0, 2);
+                melee_attack attk(&you, target, 7, 2);
                 if (simu)
                     attk.simu = true;
 

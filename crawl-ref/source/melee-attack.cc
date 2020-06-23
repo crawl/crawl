@@ -69,12 +69,12 @@
 */
 melee_attack::melee_attack(actor *attk, actor *defn,
                            int attack_num, int effective_attack_num,
-                           bool is_cleaving)
+                           bool is_cleaving, bool quiet)
     :  // Call attack's constructor
     ::attack(attk, defn),
 
     attack_number(attack_num), effective_attack_number(effective_attack_num),
-    cleaving(is_cleaving), is_riposte(false), is_double_attack(false),
+    cleaving(is_cleaving), quiet(quiet), is_riposte(false), is_double_attack(false),
     wu_jian_attack(WU_JIAN_ATTACK_NONE),
     wu_jian_number_of_targets(1)
 {
@@ -664,7 +664,7 @@ bool melee_attack::handle_phase_aux()
         // DUR_CLEAVE and Gyre/Gimble interact poorly together at the moment,
         // so don't try to skip print_wounds in that case.
         if (!(weapon && is_unrandom_artefact(*weapon, UNRAND_GYRE)
-              && !you.duration[DUR_CLEAVE]))
+              && !you.duration[DUR_CLEAVE]) && !quiet)
         {
             print_wounds(*defender->as_monster());
         }
@@ -3451,7 +3451,7 @@ void melee_attack::do_passive_freeze()
 
         mon->hurt(&you, hurted);
 
-        if (mon->alive())
+        if (mon->alive() && !quiet)
         {
             mon->expose_to_element(BEAM_COLD, orig_hurted);
             print_wounds(*mon);
@@ -3484,7 +3484,7 @@ void melee_attack::do_passive_heat()
 #endif
         mon->hurt(&you, hurted);
 
-        if (mon->alive())
+        if (mon->alive() && !quiet)
         {
             mon->expose_to_element(BEAM_FIRE, orig_hurted);
             print_wounds(*mon);
