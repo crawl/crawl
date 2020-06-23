@@ -6589,7 +6589,7 @@ bool player::is_insubstantial() const
 
 bool player::is_hydra() const
 {
-    return (form == transformation::hydra || species == SP_HYDRA);
+    return (form == transformation::hydra || has_hydra_multi_attack());
 }
 
 int player::res_acid(bool calc_unid) const
@@ -6913,23 +6913,27 @@ bool player::tengu_flight() const
 
 bool player::head_grow(int num) const
 {
-    if (!(0 < you.heads() + num <= 27))
-    {
-        return true;
-    }
     if (you.form == transformation::none && num != 0)
     {
         mprf("Your %s %s!", abs(num)!=1? "heads":"head" , num >= 0? (abs(num)!=1? "grow more" : "grows more" )
                                                                   : (abs(num)!=1? "are cut away" : "is cut away"));
         if (num > 0)
         {    for (int i = 0; i < num; i++)
+            {    
                 you.props[HYDRA_HEADS_NET_LOSS].get_int()--;
+                if (you.experience_level - you.props[HYDRA_HEADS_NET_LOSS].get_int() == 27)
+                {
+                    break;
+                }
+            }
             you.heal(4*num + random2(4*num));
         }
         else if (num < 0)
         {
             for (int i = 0; i < abs(num); i++)
+            {    
                 you.props[HYDRA_HEADS_NET_LOSS].get_int()++;
+            }
             ouch(abs(4*num + random2(4*num)), KILLED_BY_DRAINING);
             // If it loses, it unequips the amulet.
             _handle_amulet_loss();
@@ -6937,7 +6941,7 @@ bool player::head_grow(int num) const
     }
     else if (you.form == transformation::lich && num < 0)
     {
-        mprf("Your %s $s cut away", abs(num)!=1? "heads":"head" , abs(num)!=1? "are" : "is");
+        mprf("Your %s $s cut away", abs(num)!=1? "heads":"head", abs(num)!=1? "are" : "is");
         for (int i = 0; i < abs(num); i++)
                 you.props[HYDRA_HEADS_NET_LOSS].get_int()++;
         ouch(abs(4*num + random2(4*num)), KILLED_BY_DRAINING);

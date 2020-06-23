@@ -287,8 +287,13 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu, int
             const coord_def atk = you.pos();
             coord_def atk_vector = defender->pos() - atk;
             const int dir = random_choose(-1, 1);
+            int additional_attack_success = 0;
             for (int i = 0; i < remain; ++i)
             {
+                if (!one_chance_in(pow(2, additional_attack_success)))
+                {
+                    continue;
+                }
                 atk_vector = rotate_adjacent(atk_vector, dir);
                 actor *target = actor_at(atk + atk_vector);
                 if (!(target && !_dont_harm(you, *target)))

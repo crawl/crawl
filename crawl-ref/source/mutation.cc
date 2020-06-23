@@ -618,7 +618,7 @@ string describe_mutations(bool drop_title)
     {
         if (species_is_draconian(you.species))
             result += _dragon_abil(str);
-        else if (you.species == SP_MERFOLK)
+        else if (you.species == SP_MERFOLK || you.species == SP_HYDRA || you.species == SP_CRUSTACEAN)
             result += _annotate_form_based(str, form_changed_physiology());
         else if (you.species == SP_MINOTAUR)
             result += _annotate_form_based(str, !form_keeps_mutations());
