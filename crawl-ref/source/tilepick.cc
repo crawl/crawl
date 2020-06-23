@@ -3956,7 +3956,7 @@ static tileidx_t _tileidx_player_species_base(const species_type species)
         case SP_CRUSTACEAN:
             return TILEG_SP_CRUSTACEAN;
         case SP_HYDRA:
-            return TILEG_SP_NAGA;
+            return TILEG_SP_HYDRA;
         default:
             return TILEP_ERROR;
     }

@@ -180,7 +180,15 @@ cat9
 cat10
 %sdir player/hydras
 %rim 0
-hydra HYDRA
+hydra1 HYDRA
+hydra2
+hydra3
+hydra4
+hydra5
+hydra6
+hydra7
+hydra8
+hydra9
 %sdir player/base
 %end_ctg
 

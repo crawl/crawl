@@ -721,7 +721,7 @@ tileidx_t tilep_species_to_base_tile(int sp, int level)
     case SP_CRUSTACEAN:
         return TILEP_BASE_CRUSTACEAN;
     case SP_HYDRA:
-        return TILEP_BASE_HYDRA;   
+        return TILEP_BASE_HYDRA + min(you.heads(), 9) - 1;   
     default:
         return TILEP_BASE_HUMAN;
     }
@@ -855,6 +855,8 @@ void tilep_race_default(int sp, int level, dolls_data *doll)
             }
             hair = 0;
             break;
+        case SP_HYDRA:
+            result = TILEP_BASE_HYDRA + min(you.heads(), 9) - 1;
         default:
             // nothing to do
             break;

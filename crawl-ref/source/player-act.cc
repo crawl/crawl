@@ -542,6 +542,9 @@ static string _hand_name_singular()
     if (you.has_usable_tentacles())
         return "tentacle";
 
+    if (you.species == SP_HYDRA)
+        return "neck";
+        
     return "hand";
 }
 

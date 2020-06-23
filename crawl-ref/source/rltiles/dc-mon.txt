@@ -1143,6 +1143,17 @@ statue_form_centaur TRAN_STATUE_CENTAUR
 statue_form_naga TRAN_STATUE_NAGA
 statue_form_octopode TRAN_STATUE_OCTOPODE
 statue_form_crustacean TRAN_STATUE_CRUSTACEAN
+%sdir player/transform/hydra
+statue_form_hydra1 TRAN_STATUE_HYDRA
+statue_form_hydra2
+statue_form_hydra3
+statue_form_hydra4
+statue_form_hydra5
+statue_form_hydra6
+statue_form_hydra7
+statue_form_hydra8
+statue_form_hydra9
+%sdir player/transform
 %syn TRAN_STATUE_EQUIP_LAST
 statue_form_felid TRAN_STATUE_FELID
 dragon_form TRAN_DRAGON
@@ -1162,6 +1173,17 @@ lich_form_centaur TRAN_LICH_CENTAUR
 lich_form_naga TRAN_LICH_NAGA
 lich_form_octopode TRAN_LICH_OCTOPODE
 lich_form_crustacean TRAN_LICH_CRUSTACEAN
+%sdir player/transform/hydra
+lich_form_hydra1 TRAN_LICH_HYDRA
+lich_form_hydra2
+lich_form_hydra3
+lich_form_hydra4
+lich_form_hydra5
+lich_form_hydra6
+lich_form_hydra7
+lich_form_hydra8
+lich_form_hydra9
+%sdir player/transform
 %syn TRAN_LICH_EQUIP_LAST
 lich_form_felid TRAN_LICH_FELID
 tree_form TRAN_TREE

@@ -296,6 +296,7 @@ void fill_doll_equipment(dolls_data &result)
         case SP_FELID:   ch = TILEP_TRAN_STATUE_FELID;    break;
         case SP_OCTOPODE:ch = TILEP_TRAN_STATUE_OCTOPODE; break;
         case SP_CRUSTACEAN:ch = TILEP_TRAN_STATUE_CRUSTACEAN; break;
+        case SP_HYDRA     :ch = TILEP_TRAN_STATUE_HYDRA + min(you.heads(),9) - 1; break;
         default:         ch = TILEP_TRAN_STATUE_HUMANOID; break;
         }
         result.parts[TILEP_PART_BASE]    = ch;
@@ -311,7 +312,8 @@ void fill_doll_equipment(dolls_data &result)
         case SP_FELID:   ch = TILEP_TRAN_LICH_FELID;    break;
         case SP_OCTOPODE:ch = TILEP_TRAN_LICH_OCTOPODE; break;
         case SP_LESSER_LICH:ch = TILEP_TRAN_LICH_LESSER_LICH; break;
-        case SP_CRUSTACEAN:ch = TILEP_TRAN_LICH_CRUSTACEAN; break;         
+        case SP_CRUSTACEAN:ch = TILEP_TRAN_LICH_CRUSTACEAN; break;    
+        case SP_HYDRA     :ch = TILEP_TRAN_LICH_HYDRA + min(you.heads(),9) - 1 ; break;     
         default:         ch = TILEP_TRAN_LICH_HUMANOID; break;
         }
         result.parts[TILEP_PART_BASE]    = ch;

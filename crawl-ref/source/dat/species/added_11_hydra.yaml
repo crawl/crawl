@@ -6,9 +6,9 @@ adjective: "Hydrous"
 genus: "Hydra"
 difficulty : Advanced
 aptitudes:
-  xp: 0
+  xp: -1
   hp: -2
-  mp_mod: 0
+  mp_mod: -2
   mr: 1
   fighting : 4
   unarmed_combat : 4
@@ -40,8 +40,8 @@ aptitudes:
   evocations: 1
 can_swim : true
 size: big
-str: 10
-int: 8
+str: 6
+int: 6
 dex: 6
 levelup_stat_frequency: 4
 mutations:

@@ -607,7 +607,7 @@ static const ability_def Ability_List[] =
       0, 0, 0, 0, {fail_basis::invo}, abflag::sacrifice },
     { ABIL_RU_SACRIFICE_DURABILITY, "Sacrifice Durability",
       0, 0, 0, 0, {fail_basis::invo}, abflag::sacrifice },
-    { ABIL_RU_SACRIFICE_HAND, "Sacrifice a Hand",
+    { ABIL_RU_SACRIFICE_HAND, you.species != SP_HYDRA? "Sacrifice a Hand":"Sacrifice a Neck",
       0, 0, 0, 0, {fail_basis::invo}, abflag::sacrifice },
     { ABIL_RU_SACRIFICE_EXPERIENCE, "Sacrifice Experience",
       0, 0, 0, 0, {fail_basis::invo}, abflag::sacrifice },
