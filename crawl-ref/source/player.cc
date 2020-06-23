@@ -2562,9 +2562,9 @@ static void _recover_head()
     while (you.attribute[ATTR_HEAD_LOSS_XP] <= 0)
     {
         if (you.props[HYDRA_HEADS_NET_LOSS].get_int() > 0)
-            head_grow(1);
+            you.head_grow(1);
         else
-            head_grow(-1);
+            you.head_grow(-1);
         bool still_loss = false;
         if (you.props[HYDRA_HEADS_NET_LOSS].get_int() != 0)
             still_loss = true;
@@ -9109,4 +9109,5 @@ void end_ecdysis()
         restore_stat(STAT_ALL, 0, true);
         you.deaths++;
 }
+
 
