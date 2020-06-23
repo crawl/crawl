@@ -332,6 +332,7 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu, int
                     continue;
                 }
                 you.turn_is_over = true;
+                additional_attack_success++;
             }
         }
 
