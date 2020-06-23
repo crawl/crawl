@@ -291,6 +291,7 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu, int
             coord_def atk_vector = defender->pos() - atk;
             const int dir = random_choose(-1, 1);
             int additional_attack_success = 0;
+            mpr("Your smaller heads are ready to attack something.");
             for (int i = 0; i < remain; ++i)
             {
                 if (!one_chance_in(pow(2, additional_attack_success)))
@@ -305,8 +306,8 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu, int
                 if (!target->alive())
                     continue;
 
-                mpr("Your smaller head tries to attack something.");
                 melee_attack attk(&you, target, 7, 2);
+                attk.quiet = true; //it is almost same with cleaving.
                 if (simu)
                     attk.simu = true;
 
