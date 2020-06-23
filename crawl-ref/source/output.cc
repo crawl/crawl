@@ -1300,10 +1300,6 @@ static void _redraw_title()
 {
     const unsigned int WIDTH = crawl_view.hudsz.x;
     string title = you.your_name + " " + filtered_lang(player_title());
-    if (you.species == SP_HYDRA)
-    {
-        title = to_string(you.heads()) + "-headed " + title;
-    }
     const bool small_layout =
 #ifdef USE_TILE_LOCAL
                               tiles.is_using_small_layout();
@@ -1352,6 +1348,7 @@ static void _redraw_title()
     textcolour(YELLOW);
     CGOTOXY(1, 2, GOTO_STAT);
     string species = species_name(you.species);
+    species = ((you.species == SP_HYDRA) ? to_string(you.heads()) + "-headed " : "") + species;
     NOWRAP_EOL_CPRINTF("%s", species.c_str());
     if (you_worship(GOD_NO_GOD))
     {
@@ -2221,7 +2218,8 @@ static string _overview_screen_title(int sw)
     string title = make_stringf(" %s ", player_title().c_str());
 
     string species_job = make_stringf("(%s %s)",
-                                      species_name(you.species).c_str(),
+                                      ((you.species == SP_HYDRA ?  to_string(you.heads()) + "-headed " : "")
+                                      + species_name(you.species)).c_str(),
                                       get_job_name(you.char_class));
 
     handle_real_time();
@@ -2253,10 +2251,6 @@ static string _overview_screen_title(int sw)
     text += you.your_name;
     text += title;
     text += species_job;
-    if (you.species == SP_HYDRA)
-    {
-        title = to_string(you.heads()) + "-headed " + title;
-    }
 
     const int num_spaces = sw - linelength - 1;
     if (num_spaces > 0)

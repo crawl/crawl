@@ -250,10 +250,9 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu, int
             you.turn_is_over = false;
             for (int i = 0; i < attack_num; ++i) 
             {
-                if (coinflip())
-                    continue;
                 if (!defender)
                     continue;
+                
                 if (!defender->alive())
                     break;
                 melee_attack attk(&you, defender, 7, i);
