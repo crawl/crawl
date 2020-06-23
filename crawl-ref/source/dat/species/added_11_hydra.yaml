@@ -8,7 +8,7 @@ difficulty : Advanced
 aptitudes:
   xp: -1
   hp: -2
-  mp_mod: -2
+  mp_mod: 0
   mr: 1
   fighting : 4
   unarmed_combat : 4
@@ -47,14 +47,14 @@ levelup_stat_frequency: 4
 mutations:
   1:
     MUT_DEFORMED : 1
-    MUT_REGENERATION : 3
+    MUT_REGENERATION : 1
     MUT_POISON_RESISTANCE : 1
     MUT_COLD_BLOODED: 1
 fake_mutations:
   - long: You are incapable of wielding weapons or throwing items.
     short: no weapons or thrown items
-  - long: You can walk fast in water.
-    short: walks fast in water. 
+  - long: You can walk faster in water.
+    short: walks faster in water. 
 recommended_jobs:
   - JOB_FIGHTER
 recommended_weapons:
