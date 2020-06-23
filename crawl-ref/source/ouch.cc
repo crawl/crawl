@@ -723,6 +723,10 @@ static void _wizard_restore_life()
         you.hp_max_adj_perm++, calc_hp();
     if (you.hp <= 0)
         set_hp(you.hp_max);
+    if (you.species == SP_HYDRA)
+    {
+        you.head_grow(-you.props[HYDRA_HEADS_NET_LOSS].get_int());
+    }
 }
 #endif
 
