@@ -6913,7 +6913,7 @@ bool player::tengu_flight() const
 
 bool player::head_grow(int num) const
 {
-    if (you.form == transformation::none && num < 27)
+    if (you.form == transformation::none && 0 < num < 27)
     {
         mprf("Your %s %s!", abs(num)!=1? "heads":"head" , num >= 0? (abs(num)!=1? "grow more" : "grows more" )
                                                                   : (abs(num)!=1? "are cut away" : "is cut away"));
