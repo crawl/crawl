@@ -856,7 +856,9 @@ void tilep_race_default(int sp, int level, dolls_data *doll)
             hair = 0;
             break;
         case SP_HYDRA:
+            hair = 0;
             result = TILEP_BASE_HYDRA + min(you.heads(), 9) - 1;
+            break;
         default:
             // nothing to do
             break;
