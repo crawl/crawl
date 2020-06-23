@@ -2561,23 +2561,19 @@ static void _recover_head()
 {
     while (you.attribute[ATTR_HEAD_LOSS_XP] <= 0)
     {
-        if (one_chance_in(4))
-        {
         if (you.props[HYDRA_HEADS_NET_LOSS].get_int() > 0)
-            you.props[HYDRA_HEADS_NET_LOSS].get_int()--;
+            head_grow(1);
         else
-            you.props[HYDRA_HEADS_NET_LOSS].get_int()++;
-        }
+            head_grow(-1);
         bool still_loss = false;
         if (you.props[HYDRA_HEADS_NET_LOSS].get_int() != 0)
-                still_loss = true;
+            still_loss = true;
         
         if (still_loss)
             you.attribute[ATTR_HEAD_LOSS_XP] += 1;
         else
             break;
     }
-    _handle_amulet_loss();
 }
 
 int get_exp_progress()
@@ -6913,7 +6909,7 @@ bool player::tengu_flight() const
 
 bool player::head_grow(int num) const
 {
-    if (you.form == transformation::none && 0 < num < 27)
+    if (you.form == transformation::none && num != 0 && num < 27)
     {
         mprf("Your %s %s!", abs(num)!=1? "heads":"head" , num >= 0? (abs(num)!=1? "grow more" : "grows more" )
                                                                   : (abs(num)!=1? "are cut away" : "is cut away"));
