@@ -6948,11 +6948,12 @@ bool player::head_grow(int num) const
     {
         if (you.props[HYDRA_HEADS_NET_LOSS].get_int() < 0)
         {
+            mpr(MSGCH_INTRINSIC_GAIN, "One of your head be permanent.");
             you.props[HYDRA_HEADS_NET_LOSS].get_int()++; // A temporary head will be your real head.
         }
         else
         {
-            mprf("A new head is grown up.");
+            mpr(MSGCH_INTRINSIC_GAIN, "Your head grows one more.");
         }
     }
     else if (num == 27)
