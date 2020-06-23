@@ -4,11 +4,6 @@ Barachi
 Barachim are amphibious humanoids who rebelled against the gods. They're fast
 learners and can hop long distances, but are otherwise slow and easily seen.
 %%%%
-Centaur
-
-Swift, strong and bulky, Centaurs are particularly skilled with ranged
-weaponry.
-%%%%
 Deep Dwarf
 
 Deep Dwarves live underground and cannot regenerate health naturally, but they
@@ -110,6 +105,10 @@ Ogre
 
 Large, strong, and extremely robust, Ogres are competent at all forms of melee.
 They are not merely brutes, as they are comfortable with spellcasting.
+%%%%
+Palentonga
+
+Scaled mammals the size of horses, Palentongas launch powerful rolling charges.
 %%%%
 Spriggan
 

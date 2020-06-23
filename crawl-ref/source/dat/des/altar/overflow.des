@@ -110,10 +110,6 @@ end
 function species_mock(e)
   if you.race() == "Barachi" then
     return "bullfrog"
-  elseif you.race() == "Gnoll" then
-    return "jackal"
-  elseif you.race() == "Centaur" then
-    return "dart slug"
   elseif you.race() == "Demigod" then
     return "titan simulacrum"
   elseif you.race() == "Demonspawn" then
@@ -124,6 +120,8 @@ function species_mock(e)
     return "deep dwarf zombie"
   elseif you.race() == "Deep Elf" then
     return "insubstantial wisp"
+  elseif you.race() == "Gnoll" then
+    return "jackal"
   elseif you.race() == "Halfling" then
     return "hobgoblin ; mundane hunting sling"
   elseif you.race() == "Hill Orc" then
@@ -152,6 +150,8 @@ function species_mock(e)
     return "tentacled monstrosity"
   elseif you.race() == "Ogre" then
     return "ettin skeleton"
+  elseif you.race() == "Palentonga" then
+    return "rat"
   elseif you.race() == "Spriggan" then
     return "unseen horror"
   elseif you.race() == "Tengu" then

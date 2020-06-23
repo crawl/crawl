@@ -10,6 +10,7 @@ spret cast_controlled_blink(bool fail = false, bool safe = true);
 void uncontrolled_blink(bool override_stasis = false);
 spret controlled_blink(bool fail, bool safe_cancel = true);
 spret frog_hop(bool fail);
+spret palentonga_charge(bool fail);
 void wizard_blink();
 
 void you_teleport();

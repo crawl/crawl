@@ -327,6 +327,8 @@ static const ability_def Ability_List[] =
 
     { ABIL_HOP, "Hop", 0, 0, 0, 0, {}, abflag::none },
 
+    { ABIL_ROLLING_CHARGE, "Rolling Charge", 0, 0, 0, 0, {}, abflag::none },
+
     // EVOKE abilities use Evocations and come from items.
     // Teleportation and Blink can also come from mutations
     // so we have to distinguish them (see above). The off items
@@ -1971,6 +1973,9 @@ static spret _do_ability(const ability_def& abil, bool fail)
         else
             return spret::abort;
 
+    case ABIL_ROLLING_CHARGE:
+        return palentonga_charge(fail);
+
     case ABIL_SPIT_POISON:      // Naga poison spit
     {
         int power = 10 + you.experience_level;
@@ -3465,6 +3470,9 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
 
     if (you.get_mutation_level(MUT_HOP))
         _add_talent(talents, ABIL_HOP, check_confused);
+
+    if (you.get_mutation_level(MUT_ROLL))
+        _add_talent(talents, ABIL_ROLLING_CHARGE, check_confused);
 
     // Spit Poison, possibly upgraded to Breathe Poison.
     if (you.get_mutation_level(MUT_SPIT_POISON) == 2)

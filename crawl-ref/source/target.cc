@@ -17,6 +17,7 @@
 #include "los-def.h"
 #include "losglobal.h"
 #include "mon-tentacle.h"
+#include "ray.h"
 #include "spl-damage.h"
 #include "spl-goditem.h" // player_is_debuffable
 #include "spl-other.h"
@@ -72,6 +73,79 @@ bool targeter::anyone_there(coord_def loc)
 bool targeter::affects_monster(const monster_info& /*mon*/)
 {
     return true; //TODO: false
+}
+
+targeter_charge::targeter_charge(const actor *act, int r)
+{
+    ASSERT(act);
+    ASSERT(r > 0);
+    agent = act;
+    range = r;
+    obeys_mesmerise = true;
+}
+
+bool targeter_charge::valid_aim(coord_def a)
+{
+    if (adjacent(agent->pos(), a)
+        || grid_distance(agent->pos(), a) > range)
+    {
+        return false;
+    }
+
+    ray_def ray;
+    if (!find_ray(agent->pos(), a, ray, opc_solid))
+        return false;
+    while (ray.advance()) {
+        const monster* mons = monster_at(ray.pos());
+        const bool can_atk = mons && agent->can_see(*mons)
+                             && !fedhas_passthrough(mons);
+        if (ray.pos() == a)
+            return can_atk;
+        if (is_feat_dangerous(grd(ray.pos())))
+            return false;
+    }
+    return false;
+}
+
+bool targeter_charge::set_aim(coord_def a)
+{
+    ray_def ray;
+    if (!find_ray(agent->pos(), a, ray, opc_solid))
+        return false;
+
+    path_taken.clear();
+    while (ray.advance())
+    {
+        path_taken.push_back(ray.pos());
+        if (grid_distance(agent->pos(), ray.pos()) >= range || ray.pos() == a)
+            break;
+
+        const monster* target_mons = monster_at(ray.pos());
+        if (target_mons && agent->can_see(*target_mons) && !fedhas_passthrough(target_mons))
+            break;
+        if (is_feat_dangerous(grd(ray.pos())))
+            return false;
+    }
+    return true;
+}
+
+aff_type targeter_charge::is_affected(coord_def loc) {
+    bool in_path = false;
+    for (coord_def a : path_taken) {
+        if (a == loc)
+        {
+            in_path = true;
+            break;
+        }
+    }
+    if (!in_path)
+        return AFF_NO;
+    const monster* target_mons = monster_at(loc);
+    if (target_mons && agent->can_see(*target_mons) && !fedhas_passthrough(target_mons))
+        return AFF_MAYBE; // the target of the attack
+    if (grid_distance(agent->pos(), loc) == range)
+        return AFF_NO; // out of range for movement and nothing seen
+    return AFF_YES; // a movement space
 }
 
 targeter_beam::targeter_beam(const actor *act, int r, zap_type zap,

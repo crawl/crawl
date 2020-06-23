@@ -3900,6 +3900,7 @@ static tileidx_t _tileidx_player_species_base(const species_type species)
             return TILEG_SP_TROLL;
         case SP_BASE_DRACONIAN:
             return TILEG_SP_DRACONIAN;
+        case SP_PALENTONGA: // placeholder
         case SP_CENTAUR:
             return TILEG_SP_CENTAUR;
         case SP_DEMIGOD:

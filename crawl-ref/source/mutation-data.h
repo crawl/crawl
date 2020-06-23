@@ -884,6 +884,22 @@ static const mutation_def mut_data[] =
   {"", "", ""},
 },
 
+{ MUT_ROLL, 0, 1, mutflag::good, true,
+  "roll",
+
+  {"You can roll at foes to attack.", "", ""},
+  {"", "", ""},
+  {"", "", ""},
+},
+
+{ MUT_ARMOURED_TAIL, 0, 1, mutflag::good, true,
+  "armoured tail",
+
+  {"You have a long armoured tail.", "", ""},
+  {"", "", ""},
+  {"", "", ""},
+},
+
 
 { MUT_SHAGGY_FUR, 2, 3, mutflag::good, true,
   "shaggy fur",

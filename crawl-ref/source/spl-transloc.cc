@@ -19,6 +19,7 @@
 #include "delay.h"
 #include "directn.h"
 #include "dungeon.h"
+#include "god-abil.h" // fedhas_passthrough for palentonga charge
 #include "item-prop.h"
 #include "items.h"
 #include "level-state-type.h"
@@ -26,6 +27,7 @@
 #include "los.h"
 #include "losglobal.h"
 #include "losparam.h"
+#include "melee-attack.h" // palentonga charge
 #include "message.h"
 #include "mon-behv.h"
 #include "mon-tentacle.h"
@@ -360,6 +362,226 @@ spret frog_hop(bool fail)
     you.increase_duration(DUR_NO_HOP, 12 + random2(13));
 
     return spret::success; // TODO
+}
+
+static bool _check_charge_through(coord_def pos) {
+
+    if (!you.can_pass_through_feat(grd(pos)))
+    {
+        clear_messages();
+        mprf("You can't roll into that!");
+        return false;
+    }
+
+    if (!check_moveto_terrain(pos, "roll") || !check_moveto_trap(pos, "roll"))
+        return false;
+
+    return true;
+}
+
+bool _find_charge_target(coord_def &target, int max_range, targeter *hitfunc) {
+    while (true) {
+        // query for location {dlb}:
+        direction_chooser_args args;
+        args.restricts = DIR_TARGET;
+        args.mode = TARG_HOSTILE;
+        args.prefer_farthest = true;
+        args.top_prompt = "Roll where?";
+        args.hitfunc = hitfunc;
+        dist beam;
+        direction(beam, args);
+
+        // TODO: deduplicate with _find_cblink_target
+        if (crawl_state.seen_hups)
+        {
+            mpr("Cancelling rolling charge due to HUP.");
+            return false;
+        }
+
+        if (!beam.isValid || beam.target == you.pos())
+        {
+            canned_msg(MSG_OK);
+            return false;
+        }
+
+        const monster* beholder = you.get_beholder(beam.target);
+        if (beholder)
+        {
+            mprf("You cannot roll away from %s!",
+                beholder->name(DESC_THE, true).c_str());
+            continue;
+        }
+
+        const monster* fearmonger = you.get_fearmonger(beam.target);
+        if (fearmonger)
+        {
+            mprf("You cannot roll closer to %s!",
+                fearmonger->name(DESC_THE, true).c_str());
+            continue;
+        }
+
+        if (!you.see_cell_no_trans(beam.target))
+        {
+            clear_messages();
+            if (you.trans_wall_blocking(beam.target))
+                canned_msg(MSG_SOMETHING_IN_WAY);
+            else
+                canned_msg(MSG_CANNOT_SEE);
+            continue;
+        }
+
+        if (grid_distance(you.pos(), beam.target) > max_range)
+        {
+            mpr("That's out of range!"); // ! targeting
+            continue;
+        }
+
+        ray_def ray;
+        if (!find_ray(you.pos(), beam.target, ray, opc_solid)) {
+            mpr("You can't roll through that!");
+            continue;
+        }
+
+        // done with hard vetos; now we're on a mix of prompts and vetos.
+        // (Ideally we'd like to split these up and do all the vetos before
+        // the prompts, but...)
+
+        bool ok = true;
+        while (ray.advance()) {
+            const monster* mons = monster_at(ray.pos());
+            if (mons && you.can_see(*mons) && !fedhas_passthrough(mons))
+                break;
+            ok = _check_charge_through(ray.pos());
+            if (ray.pos() == beam.target || !ok)
+                break;
+        }
+        if (!ok)
+            continue;
+
+        // DON'T use beam.target here - we might have used ! targeting to
+        // target something behind another known monster
+        const monster* target_mons = monster_at(ray.pos());
+        const bool attacking = target_mons && you.can_see(*target_mons) && !fedhas_passthrough(target_mons);
+
+        if (!attacking) {
+            mpr("You can't see anything there to charge at!");
+            continue;
+        }
+
+        if (adjacent(you.pos(), ray.pos()))
+        {
+            mprf("You're already next to %s!",
+                 target_mons->name(DESC_THE).c_str());
+            continue;
+        }
+
+        // prompt to make sure the player really wants to attack the monster (if extant and not hostile)
+        // Intentionally don't use the real attack position here - that's only used for sanctuary,
+        // so it's more accurate if we use our current pos, since sanctuary should move with us.
+        if (stop_attack_prompt(target_mons, false, target_mons->pos()))
+        {
+            continue;
+        }
+
+        // Check for unholy weapons, breadswinging, etc
+        if (!wielded_weapon_check(you.weapon()))
+            continue;
+
+        // regress so that other checks refer to the actual final space, not the mons
+        ray.regress();
+
+        // check for clouds and traps on the final space only
+        if (!check_moveto_cloud(ray.pos(), "charge") || !check_moveto_trap(ray.pos(),  "charge"))
+            continue;
+
+        ray.advance();
+        target = ray.pos();
+        return true;
+    }
+}
+
+/**
+ * Attempt to charge the player to a target of their choosing.
+ *
+ * @param fail          Whether this came from a mis-invoked ability (& should
+ *                      therefore fail after selecting a target)
+ * @return              Whether the charge succeeded, aborted, or was miscast.
+ */
+spret palentonga_charge(bool fail)
+{
+    const int charge_range = 4;
+    const coord_def initial_pos = you.pos();
+
+    coord_def target;
+    targeter_charge tgt(&you, charge_range);
+    tgt.obeys_mesmerise = true;
+    if (!_find_charge_target(target, charge_range, &tgt))
+        return spret::abort;
+
+    fail_check();
+
+    if (!you.attempt_escape(1)) // prints its own messages
+        return spret::success;
+
+    monster* target_mons = monster_at(target);
+    if (fedhas_passthrough(target_mons))
+    {
+        target_mons = nullptr;
+    }
+    ASSERT(target_mons != nullptr);
+    // Are you actually moving forward?
+    if (grid_distance(you.pos(), target) > 1 || !target_mons)
+        mpr("You roll forward with a clatter of scales!");
+
+    crawl_state.cancel_cmd_again();
+    crawl_state.cancel_cmd_repeat();
+
+    const coord_def orig_pos = you.pos();
+    ray_def ray;
+    ASSERT(find_ray(you.pos(), target, ray, opc_solid));
+    while (ray.advance()
+           && ray.pos() != target
+           && grid_distance(orig_pos, ray.pos()) < charge_range) {
+        // we've already accounted for visible mons, but now we need
+        // to handle invisible ones
+        monster* sneaky_mons = monster_at(ray.pos());
+        if (sneaky_mons && !fedhas_passthrough(sneaky_mons)) {
+            target_mons = sneaky_mons;
+            break;
+        }
+
+        you.set_position(ray.pos());
+        trap_def* ptrap = trap_at(you.pos());
+        if (ptrap)
+            ptrap->trigger(you);
+        if (you.pos() != ray.pos()) // trap really went off!
+            return spret::success; // let's just stop this here.
+
+        you.set_position(orig_pos);
+        place_cloud(CLOUD_DUST, ray.pos(), 2 + random2(3), &you);
+    }
+    // Target the space before the monster.
+    ray.regress();
+
+    if (ray.pos() != orig_pos) {
+        move_player_to_grid(ray.pos(), true);
+        noisy(12, you.pos());
+        if (you.pos() != ray.pos()) // tornado nonsense
+            return spret::success; // of a sort
+    }
+
+    // Maybe we hit a trap and something weird happened.
+    if (!target_mons->alive() || !adjacent(you.pos(), target_mons->pos()))
+        return spret::success;
+
+    // manually apply noise
+    behaviour_event(target_mons, ME_ALERT, &you, you.pos()); // shout + set you as foe
+
+    melee_attack charge_atk(&you, target_mons);
+    charge_atk.roll_dist = grid_distance(initial_pos, you.pos());
+    charge_atk.attack();
+
+    return spret::success;
 }
 
 /**
