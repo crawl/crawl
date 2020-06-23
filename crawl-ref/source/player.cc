@@ -89,7 +89,6 @@
 #include "xom.h"
 
 const int DJ_MP_RATE = 2;
-bool player::head_grow(int num) const;
 
 static void _moveto_maybe_repel_stairs()
 {
