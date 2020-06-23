@@ -6911,7 +6911,7 @@ bool player::head_grow(int num) const
 {
     if (you.form == transformation::none && num != 0 && num < 27)
     {
-        mprf("Your %s %s!", abs(num)!=1? "heads":"head" , num >= 0? (abs(num)!=1? "grow more" : "grows more" )
+        mprf(MSGCH_INTRINSIC_GAIN, "Your %s %s!", abs(num)!=1? "heads":"head" , num >= 0? (abs(num)!=1? "grow more" : "grows more" )
                                                                   : (abs(num)!=1? "are cut away" : "is cut away"));
         if (num > 0)
         {    for (int i = 0; i < num; i++)
@@ -6937,7 +6937,7 @@ bool player::head_grow(int num) const
     }
     else if (you.form == transformation::lich && num < 0)
     {
-        mprf("Your %s %s cut away", abs(num)!=1? "heads":"head", abs(num)!=1? "are" : "is");
+        mprf(MSGCH_INTRINSIC_GAIN, "Your %s %s cut away", abs(num)!=1? "heads":"head", abs(num)!=1? "are" : "is");
         for (int i = 0; i < abs(num); i++)
                 you.props[HYDRA_HEADS_NET_LOSS].get_int()++;
         ouch(abs(4*num + random2(4*num)), KILLED_BY_DRAINING);
@@ -6948,12 +6948,12 @@ bool player::head_grow(int num) const
     {
         if (you.props[HYDRA_HEADS_NET_LOSS].get_int() < 0)
         {
-            mpr(MSGCH_INTRINSIC_GAIN, "One of your head be permanent.");
+            mprf(MSGCH_INTRINSIC_GAIN, "One of your head be permanent.");
             you.props[HYDRA_HEADS_NET_LOSS].get_int()++; // A temporary head will be your real head.
         }
         else
         {
-            mpr(MSGCH_INTRINSIC_GAIN, "Your head grows one more.");
+            mprf(MSGCH_INTRINSIC_GAIN, "Your head grows one more.");
         }
     }
     else if (num == 27)
