@@ -726,6 +726,7 @@ static void _draw_stack(int to_stack)
                     MEL_ITEM, 1, _deck_hotkey((deck_type)i));
         numbers[i] = i;
         me->data = &numbers[i];
+        // TODO: update this if a deck is emptied while in this menu
         if (!deck_cards((deck_type)i))
             me->colour = COL_USELESS;
 
@@ -744,13 +745,21 @@ static void _draw_stack(int to_stack)
             describe_deck(selected);
         else
         {
-            you.props[deck_name(selected)]--;
-            me->text = deck_status(selected);
-            me->alt_text = deck_status(selected);
+            string status;
+            if (deck_cards(selected))
+            {
+                you.props[deck_name(selected)]--;
+                me->text = deck_status(selected);
+                me->alt_text = deck_status(selected);
 
-            card_type draw = _random_card(selected);
-            stack.push_back(draw);
-            string status = "Drawn so far: " + stack_contents();
+                card_type draw = _random_card(selected);
+                stack.push_back(draw);
+            }
+            else
+                status = "<lightred>That deck is empty!</lightred> ";
+
+            if (stack.size() > 0)
+                status += "Drawn so far: " + stack_contents();
             deck_menu.set_more(formatted_string::parse_string(
                        status + "\n" +
                        "Press '<w>!</w>' or '<w>?</w>' to toggle "
