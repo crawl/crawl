@@ -884,6 +884,18 @@ static const mutation_def mut_data[] =
   {"", "", ""},
 },
 
+{ MUT_CHARGE, 0, 2, mutflag::good, true,
+  "equine legs",
+
+  {"You can charge forward.",
+   "You can charge forward and attack.",
+   ""},
+
+  {"", "Your legs feel stronger.", ""},
+
+  {"", "", ""},
+},
+
 
 { MUT_SHAGGY_FUR, 2, 3, mutflag::good, true,
   "shaggy fur",

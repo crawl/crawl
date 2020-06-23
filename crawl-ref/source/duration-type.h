@@ -204,5 +204,6 @@ enum duration_type
     DUR_NOXIOUS_BOG,
     DUR_FROZEN_RAMPARTS,
     DUR_STABBING,
+    DUR_NO_CHARGE,
     NUM_DURATIONS
 };

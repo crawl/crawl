@@ -296,7 +296,7 @@ static species_type _get_hints_species(unsigned int type)
     case HINT_MAGIC_CHAR:
         return SP_DEEP_ELF;
     case HINT_RANGER_CHAR:
-        return SP_CENTAUR;
+        return SP_HALFLING;
     default:
         // Use something fancy for debugging.
         return SP_TENGU;
@@ -2041,8 +2041,8 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 
         if (you.species == SP_CENTAUR)
         {
-            text << " As a four-legged centaur you are particularly quick - "
-                    "running is usually an option!";
+            text << " As a four-legged centaur, you have the ability to charge - "
+                    "charging away is usually an option!";
         }
 
         if (you_worship(GOD_TROG) && you.can_go_berserk())

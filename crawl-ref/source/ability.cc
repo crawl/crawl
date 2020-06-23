@@ -327,6 +327,8 @@ static const ability_def Ability_List[] =
 
     { ABIL_HOP, "Hop", 0, 0, 0, 0, {}, abflag::none },
 
+    { ABIL_CHARGE, "Charge", 0, 0, 0, 0, {}, abflag::none },
+
     // EVOKE abilities use Evocations and come from items.
     // Teleportation and Blink can also come from mutations
     // so we have to distinguish them (see above). The off items
@@ -1293,6 +1295,15 @@ static bool _can_hop(bool quiet)
     return false;
 }
 
+static bool _can_charge(bool quiet)
+{
+    if (!you.duration[DUR_NO_CHARGE])
+        return true;
+    if (!quiet)
+        mpr("You're too worn out to charge.");
+    return false;
+}
+
 // Check prerequisites for a number of abilities.
 // Abort any attempt if these cannot be met, without losing the turn.
 // TODO: Many more cases need to be added!
@@ -1600,6 +1611,9 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
 
     case ABIL_HOP:
         return _can_hop(quiet);
+
+    case ABIL_CHARGE:
+        return _can_charge(quiet);
 
     case ABIL_BLINK:
     case ABIL_EVOKE_BLINK:
@@ -1976,6 +1990,11 @@ static spret _do_ability(const ability_def& abil, bool fail)
             return frog_hop(fail);
         else
             return spret::abort;
+
+    case ABIL_CHARGE:
+        if (_can_charge(false))
+            return centaur_charge(fail);
+        return spret::abort;
 
     case ABIL_SPIT_POISON:      // Naga poison spit
     {
@@ -3471,6 +3490,9 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
 
     if (you.get_mutation_level(MUT_HOP))
         _add_talent(talents, ABIL_HOP, check_confused);
+
+    if (you.get_mutation_level(MUT_CHARGE))
+        _add_talent(talents, ABIL_CHARGE, check_confused);
 
     // Spit Poison, possibly upgraded to Breathe Poison.
     if (you.get_mutation_level(MUT_SPIT_POISON) == 2)

@@ -687,6 +687,12 @@ Your legs are tired, and you are unable to hop. This status will only recover
 after you spend several turns not moving. (Other actions, such as attacking or
 casting spells, are fine.)
 %%%%
+-Charge status
+
+You're tired and unable to charge. This status will only recover after you spend
+several turns not moving. (Other actions, such as attacking or casting spells,
+are fine.)
+%%%%
 Ray status
 
 You are currently channeling a ray of searing magical energy. Pressing . will

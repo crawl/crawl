@@ -112,6 +112,13 @@ Shaft Self ability
 Sends you to a random position one to two floors down, as if you jumped into a
 shaft trap. It takes some time to dig the shaft.
 %%%%
+Charge ability
+
+Gallop forward and strike! The further you travel, the greater the damage dealt.
+Combat energizes but cowardice enervates; if your charge finds no foe at its end,
+you will be unable to charge again until you have spent some time not moving.
+(Other actions, such as casting spells and attacking, are fine.)
+%%%%
 Evoke Blink ability
 
 <Blink ability>

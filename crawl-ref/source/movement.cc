@@ -784,6 +784,8 @@ void move_player_action(coord_def move)
 
         if (you.duration[DUR_NO_HOP])
             you.duration[DUR_NO_HOP] += you.time_taken;
+        if (you.duration[DUR_NO_CHARGE])
+            you.duration[DUR_NO_CHARGE] += you.time_taken;
 
         move.reset();
         you.turn_is_over = true;
