@@ -766,7 +766,7 @@ maybe_bool you_can_wear(equipment_type eq, bool temp)
     case EQ_AMULET_EIGHT:
         return you.heads() <= 21 ? MB_FALSE : MB_TRUE;
     case EQ_AMULET_NINE:
-        return you.heads() <= 24 ? MB_FALSE : MB_TRUE;
+        return you.heads() <= 24 && !you.get_mutation_level(MUT_MISSING_HAND) ? MB_FALSE : MB_TRUE;
     case EQ_RING_AMULET:
         return player_equip_unrand(UNRAND_FINGER_AMULET) ? MB_TRUE : MB_FALSE;
 
@@ -6941,7 +6941,7 @@ bool player::head_grow(int num) const
     }
     else if (you.form == transformation::lich && num < 0)
     {
-        mprf("Your %s $s cut away", abs(num)!=1? "heads":"head", abs(num)!=1? "are" : "is");
+        mprf("Your %s %s cut away", abs(num)!=1? "heads":"head", abs(num)!=1? "are" : "is");
         for (int i = 0; i < abs(num); i++)
                 you.props[HYDRA_HEADS_NET_LOSS].get_int()++;
         ouch(abs(4*num + random2(4*num)), KILLED_BY_DRAINING);
