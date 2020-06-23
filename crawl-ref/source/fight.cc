@@ -245,45 +245,39 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu, int
         }
         else
         {
-            attack_num = you.heads()/3 + 1;
-            int remain = you.heads() - attack_num;
-            you.turn_is_over = false;
-            for (int i = 0; i < attack_num; ++i) 
-            {
-                if (!defender)
-                    continue;
-                if (!defender->alive())
-                    break;
-                melee_attack attk(&you, defender);
+            attack_num = max(1, you.heads()/3 + 1 - you.get_mutation_level(MUT_MISSING_HAND));
+            int remain = max(0, you.heads() - attack_num);
+
+            melee_attack attk(&you, defender, 0, attack_num);
                 
-                if (simu)
-                    attk.simu = true;
+            if (simu)
+                attk.simu = true;
 
-                // We're trying to hit a monster, break out of travel/explore now.
-                interrupt_activity(activity_interrupt::hit_monster,
-                    defender->as_monster());
+            // We're trying to hit a monster, break out of travel/explore now.
+            interrupt_activity(activity_interrupt::hit_monster,
+                defender->as_monster());
 
-                // Check if the player is fighting with something unsuitable,
-                // or someone unsuitable.
-                if (you.can_see(*defender) && !simu
-                    && !wielded_weapon_check(attk.weapon))
-                {
-                    continue;
-                }
+            // Check if the player is fighting with something unsuitable,
+            // or someone unsuitable.
+            if (you.can_see(*defender) && !simu
+                && !wielded_weapon_check(attk.weapon))
+            {
+                you.turn_is_over = false;
+                return false;
+            }
 
-                if (!attk.attack())
-                {
-                    // Attack was cancelled or unsuccessful...
-                    if (attk.cancel_attack)
-                        continue;
-                    you.turn_is_over = true;
-                    continue;
-                }
+            if (!attk.attack())
+            {
+                // Attack was cancelled or unsuccessful...
+                if (attk.cancel_attack)
+                        you.turn_is_over = false;
+                return !attk.cancel_attack;
+            }
                 you.turn_is_over = true;
                 if (did_hit)
                     *did_hit = attk.did_hit;
-            }
 
+            // additional attack
             const coord_def atk = you.pos();
             coord_def atk_vector = defender->pos() - atk;
             const int dir = random_choose(-1, 1);
@@ -302,6 +296,7 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu, int
                 if (!target->alive())
                     continue;
 
+                mpr("Your smaller head tries to attack something!");
                 melee_attack attk(&you, target);
                 if (simu)
                     attk.simu = true;
@@ -329,8 +324,6 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu, int
                 you.turn_is_over = true;
                 if (did_hit)
                     *did_hit = attk.did_hit;
-                
-                mprf("%s", you.turn_is_over? "Yes":"No");
                 return you.turn_is_over;
             }
         }
