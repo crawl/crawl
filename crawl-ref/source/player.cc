@@ -6952,7 +6952,7 @@ bool player::head_grow(int num) const
         }
         else
         {
-            mprf("Your head is grown up!");
+            mprf("A new head is grown up!");
         }
     }
     else

@@ -265,10 +265,10 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu, int
 
                 // Check if the player is fighting with something unsuitable,
                 // or someone unsuitable.
-                if (!(you.can_see(*defender) && !simu
-                    && !wielded_weapon_check(attk.weapon)))
+                if (you.can_see(*defender) && !simu
+                    && !wielded_weapon_check(attk.weapon))
                 {
-                    you.turn_is_over = true;
+                    continue;
                 }
 
                 if (!attk.attack())
@@ -276,9 +276,10 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu, int
                     // Attack was cancelled or unsuccessful...
                     if (attk.cancel_attack)
                         continue;
+                    you.turn_is_over = true;
                     continue;
                 }
-
+                you.turn_is_over = true;
                 if (did_hit)
                     *did_hit = attk.did_hit;
             }
@@ -306,10 +307,10 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu, int
 
                 // Check if the player is fighting with something unsuitable,
                 // or someone unsuitable.
-                if (!(you.can_see(*defender) && !simu
-                    && !wielded_weapon_check(attk.weapon)))
+                if (you.can_see(*defender) && !simu
+                    && !wielded_weapon_check(attk.weapon))
                 {
-                    you.turn_is_over = true;
+                    continue;
                 }
 
                 if (!attk.attack())
@@ -317,13 +318,16 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu, int
                     // Attack was cancelled or unsuccessful...
                     if (attk.cancel_attack)
                         continue;
+                    you.turn_is_over = true;
                     continue;
                 }
-
+                you.turn_is_over = true;
                 if (did_hit)
                     *did_hit = attk.did_hit;
+                
+                mprf("%s", you.turn_is_over? "Yes":"No");
+                return you.turn_is_over;
             }
-            return you.turn_is_over;
         }
 
         return true;

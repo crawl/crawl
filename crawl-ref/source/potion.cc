@@ -149,12 +149,7 @@ public:
         you.duration[DUR_POISONING] = 0;
         you.disease = 0;
         you.duration[DUR_CONF] = 0;
-        while (you.props[HYDRA_HEADS_NET_LOSS].get_int() != 0)
-        {
-            you.props[HYDRA_HEADS_NET_LOSS].get_int() > 0 ?
-            you.props[HYDRA_HEADS_NET_LOSS].get_int()-- :
-            you.props[HYDRA_HEADS_NET_LOSS].get_int()++;
-        }
+        you.head_grow(-you.props[HYDRA_HEADS_NET_LOSS].get_int());
         return true;
     }
 };
