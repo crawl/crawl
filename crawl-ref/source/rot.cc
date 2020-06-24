@@ -81,10 +81,10 @@ void refrigerate_food(int dur_delta)
         int refrig_fresh = dur_delta / (ROT_TIME_FACTOR * 2); 
         if (it.base_type == OBJ_CORPSES && !it.props.exists(CORPSE_NEVER_DECAYS))
             it.freshness += refrig_fresh;
-
         else
-        {    if (!it.defined() || !is_perishable_stack(it))
-            continue;
+        {    
+            if (!it.defined() || !is_perishable_stack(it))
+                continue;
 
             if (!it.props.exists(TIMER_KEY))
                 init_perishable_stack(it);

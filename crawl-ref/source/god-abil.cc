@@ -1586,7 +1586,7 @@ static vector<monster* > _valid_beogh_gift_targets_in_sight()
     return list_orcs;
 }
 
-bool _beogh_gift_items_to(monster* mons, int item_slot)
+static bool _beogh_gift_items_to(monster* mons, int item_slot)
 {
     item_def& gift = you.inv[item_slot];
 

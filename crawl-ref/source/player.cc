@@ -2543,7 +2543,7 @@ static void _recover_stat()
 }
 
 // If hydra loses its heads, then it should unequip the amulet.
-void _handle_amulet_loss()
+static void _handle_amulet_loss()
 {
     for (int _eq = EQ_AMULET_ONE; _eq <= EQ_AMULET_NINE ; _eq++)
     {
@@ -7144,16 +7144,15 @@ bool player::crustacean_rot(actor */*who*/, int amount, bool quiet, bool /*no_cl
                 you.set_duration(DUR_BODY_LOSS, 3);
             }
             rot_hp(d);
-            if (!quiet)
+            if (!quiet) {
                 mprf(MSGCH_WARN, "You feel your flesh cutting away!");
                 mprf(MSGCH_INTRINSIC_GAIN, "You want to walk like a crab for escaping here.");
-            
+            }
             you.attribute[ATTR_BODY_LOSS] += d;
             you.set_duration(DUR_BODY_LOSS, 3);
             
             return true;
-        }
-    
+        }   
         else
         {   
 
@@ -7164,17 +7163,17 @@ bool player::crustacean_rot(actor */*who*/, int amount, bool quiet, bool /*no_cl
                 you.set_duration(DUR_BODY_LOSS, 3);
             }
             lose_stat(STAT_RANDOM, 1);
-            if (!quiet)
-                mprf(MSGCH_WARN, "Your body falls away!"); 
+            if (!quiet) {
+                mprf(MSGCH_WARN, "Your body falls away!");
                 mprf(MSGCH_INTRINSIC_GAIN, "You want to walk like a crab for escaping here.");
+            }
             you.attribute[ATTR_BODY_LOSS] += d;
             you.set_duration(DUR_BODY_LOSS, 3);
             
             return true;  
         }
     }
-    
-    
+    return true;
 }
 
 bool player::corrode_equipment(const char* corrosion_source, int degree)
@@ -9088,29 +9087,25 @@ bool player::immune_to_hex(const spell_type hex) const
 
 void end_ecdysis()
 {
-    const bool ddoor = you.duration[DUR_DEATHS_DOOR];
-    bool unrotted = false;
+    if (player_rotted())
+    {
+        int amount = 5 + random2(7);
+        amount = unrot_hp(amount);
+        inc_hp(amount);
+    }
 
-        if (player_rotted())
-        {
-            int amount = 5 + random2(7);
-            amount = unrot_hp(amount);
-            inc_hp(amount);
-            unrotted = true;
-        }
-
-        if (you.duration[DUR_POISONING])
-            you.redraw_hit_points = true;
-        you.duration[DUR_POISONING] = 0;
-        you.disease = 0;
-        you.duration[DUR_CONF] = 0;
-
-        if (you.lives != 0)
-        you.set_duration(DUR_GROW_FOR_ECD, 20 * you.experience_level);
-        you.hp = you.hp_max;
+    if (you.duration[DUR_POISONING])
         you.redraw_hit_points = true;
-        restore_stat(STAT_ALL, 0, true);
-        you.deaths++;
+    you.duration[DUR_POISONING] = 0;
+    you.disease = 0;
+    you.duration[DUR_CONF] = 0;
+
+    if (you.lives != 0)
+        you.set_duration(DUR_GROW_FOR_ECD, 20 * you.experience_level);
+    you.hp = you.hp_max;
+    you.redraw_hit_points = true;
+    restore_stat(STAT_ALL, 0, true);
+    you.deaths++;
 }
 
 

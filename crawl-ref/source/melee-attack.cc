@@ -69,12 +69,12 @@
 */
 melee_attack::melee_attack(actor *attk, actor *defn,
                            int attack_num, int effective_attack_num,
-                           bool is_cleaving, bool quiet)
+                           bool is_cleaving, bool quiet_)
     :  // Call attack's constructor
     ::attack(attk, defn),
 
     attack_number(attack_num), effective_attack_number(effective_attack_num),
-    cleaving(is_cleaving), quiet(quiet), is_riposte(false), is_double_attack(false),
+    cleaving(is_cleaving), is_riposte(false), is_double_attack(false), quiet(quiet_),
     wu_jian_attack(WU_JIAN_ATTACK_NONE),
     wu_jian_number_of_targets(1)
 {
