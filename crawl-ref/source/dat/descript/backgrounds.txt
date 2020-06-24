@@ -62,6 +62,11 @@ Gladiator
 Gladiators are ready for the arena with light armour, nets, and a weapon of
 their choice.
 %%%%
+Hedge Wizard
+
+Hedge Wizards learn many minor magics, letting them backstab or escape their
+bewildered foes.
+%%%%
 Hunter
 
 Hunters carry a ranged weapon of their choice, and are also equipped with light
@@ -110,9 +115,4 @@ Warper
 
 Warpers start with a weapon of their choice and a scroll of blinking. They
 begin with a number of Translocations spells in their library.
-%%%%
-Wizard
-
-Wizards start with the wide range of spells present in a book of Minor Magic in
-their spell library.
 %%%%
