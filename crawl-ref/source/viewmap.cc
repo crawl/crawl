@@ -627,8 +627,6 @@ static map_view_state _get_view_state(const map_control_state& state)
 bool show_map(level_pos &lpos, bool travel_mode, bool allow_offlevel)
 {
 #ifdef USE_TILE_LOCAL
-    bool first_run  = true;
-
     mouse_control mc(MOUSE_MODE_NORMAL);
     tiles.do_map_display();
 #endif
