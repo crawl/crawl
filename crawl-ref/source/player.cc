@@ -3843,8 +3843,7 @@ int get_real_mp(bool include_items)
 
     int spell_extra = spellcasting; // 100%
     int invoc_extra = you.skill(SK_INVOCATIONS, 1 * scale, true) / 2; // 50%
-    int evoc_extra = you.skill(SK_EVOCATIONS, 1 * scale, true) / 2; // 50%
-    int highest_skill = max(spell_extra, max(invoc_extra, evoc_extra));
+    int highest_skill = max(spell_extra, invoc_extra);
     enp += highest_skill + min(8 * scale, min(highest_skill, scaled_xl)) / 2;
 
     // Analogous to ROBUST/FRAIL
