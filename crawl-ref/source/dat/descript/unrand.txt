@@ -512,9 +512,7 @@ Black Knight's horse barding
 
 A heavy barding made from pitch-black steel and inlaid with plates of black
 diamond. It once protected the steed of the Black Knight during their reign of
-terror. Those who wear it become partially undead, gaining some of the benefits
-without the unfortunate downsides, although the great weight of metal and stone
-slows the wearer somewhat.
+terror. Wearing it allows one to drive a charge home with terrifying power.
 %%%%
 amulet of Vitality
 

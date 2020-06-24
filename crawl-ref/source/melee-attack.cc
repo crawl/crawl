@@ -1528,7 +1528,9 @@ int melee_attack::player_apply_final_multipliers(int damage)
     // Centaur charge bonus
     if (charge_dist > 0) {
         // + 1/3rd base per distance charged, up to double at dist 3.
-        damage = damage * charge_dist * 2 / 3;
+        // (triple with the BKHB!)
+        const int charge_mult = player_equip_unrand(UNRAND_BLACK_KNIGHT_HORSE) ? 3 : 2;
+        damage = damage * charge_dist * charge_mult / 3;
     }
 
     // not additive, statues are supposed to be bad with tiny toothpicks but

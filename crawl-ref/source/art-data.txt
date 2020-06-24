@@ -1071,8 +1071,6 @@ TILE:     urand_bk_barding
 TILE_EQ:  black_knight
 COLOUR:   ETC_UNHOLY
 BRAND:    SPARM_PONDEROUSNESS
-LIFE:     1
-BOOL:     poison, evil
 
 NAME:     amulet of Vitality
 OBJ:      OBJ_JEWELLERY/AMU_REGENERATION
