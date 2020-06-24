@@ -253,6 +253,17 @@ static const form_entry formdata[] =
     SPWPN_NORMAL, GREEN, "", { "nip at", "bite", "gouge", "chomp" },
     FC_DEFAULT, FC_ENABLE, FC_ENABLE, true, false,
     "roar", 4, "foreclaw", "", "bow your heads before", "flesh"
-}
+},
+
+{
+    transformation::eldritch, MONS_PROGRAM_BUG, "Monster", "eldritch-form", "monster",
+    "a eldritch thing.",
+    EQF_PHYSICAL, MR_RES_POISON,
+    DEFAULT_DURATION, 10, 0, SIZE_GIANT, 15,
+    0, 0, 0, true, 0, 10, 10,
+    SPWPN_NORMAL, GREEN, "Tentacles", { "hit", "smack", "pummel", "thrash" },
+    FC_ENABLE, FC_FORBID, FC_ENABLE, true, false,
+    "scream", 6, "tentacle", "", "wriggle towards", "flesh"
+},
 };
 COMPILE_CHECK(ARRAYSZ(formdata) == NUM_TRANSFORMS);

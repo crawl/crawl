@@ -557,6 +557,8 @@ public:
     bool is_parent_monster_of(const monster* mons) const;
     bool is_child_tentacle_segment() const;
 
+    bool is_child_tentacle_of_player() const;
+
     bool is_illusion() const;
     bool is_divine_companion() const;
     // Jumping spiders (jump instead of blink)

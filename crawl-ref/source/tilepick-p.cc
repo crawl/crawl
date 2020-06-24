@@ -555,6 +555,7 @@ tileidx_t tileidx_player()
         }
         break;
     }
+    case transformation::eldritch:    ch = TILEP_MONS_TENTACLED_STARSPAWN;    break;
     // no special tile
     case transformation::blade_hands:
     case transformation::appendage:

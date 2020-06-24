@@ -60,6 +60,7 @@
 #define WILL_OF_EARTH_KEY "will_of_earth_num"
 #define NEMELEX_SACRIFICING_KEY "nemelex_sacrificing"
 #define HYDRA_HEADS_NET_LOSS "hydra_heads_net_loss"
+#define PLAYER_TENTACLE_CONNECT "player_tentacle_connect"
 
 // display/messaging breakpoints for penalties from Ru's MUT_HORROR
 #define HORROR_LVL_EXTREME  3
@@ -932,6 +933,8 @@ public:
     int armour_class_with_one_sub(item_def sub) const;
 
     int armour_class_with_one_removal(item_def sub) const;
+
+    bool is_parent_monster_of(const monster* mons) const;
 
 protected:
     void _removed_beholder(bool quiet = false);

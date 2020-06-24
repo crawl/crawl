@@ -24,6 +24,7 @@ enum class transformation
     shadow,
     hydra,
     holy_swine,
+    eldritch,
     COUNT
 };
 constexpr int NUM_TRANSFORMS = static_cast<int>(transformation::COUNT);

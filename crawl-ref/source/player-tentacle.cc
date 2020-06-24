@@ -1,0 +1,803 @@
+/**
+ * @file
+ * @brief Player tentacle-related code.
+**/
+
+#include "AppHdr.h"
+
+#include "mon-tentacle.h"
+#include "player-tentacle.h"
+
+#include <functional>
+
+#include "act-iter.h"
+#include "coordit.h"
+#include "delay.h"
+#include "env.h"
+#include "fprop.h"
+#include "libutil.h" // map_find
+#include "losglobal.h"
+#include "mgen-data.h"
+#include "mon-death.h"
+#include "mon-place.h"
+#include "nearby-danger.h"
+#include "terrain.h"
+#include "view.h"
+
+
+static mgen_data _segment_data(coord_def pos, monster_type type)
+{
+    mgen_data mg(type, BEH_FRIENDLY, pos, MHITYOU, MG_FORCE_PLACE);
+    mg.set_summoned(&you, 0, 0, you.religion);
+    return mg;
+}
+
+bool monster::is_child_tentacle_of_player() const
+{
+    return tentacle_connect == you.mid;
+}
+
+bool player::is_parent_monster_of(const monster* mons) const
+{
+    return mons->tentacle_connect == mid;
+}
+
+bool mons_tentacle_adjacent_of_player(const monster* child)
+{
+    return //mons_is_tentacle_head(mons_base_type(*parent)) &&
+        mons_is_tentacle_segment(child->type)
+        && child->props.exists("inwards")
+        && child->props["inwards"].get_int() == (int)you.mid;
+}
+
+static void _establish_connection(monster* tentacle,
+    set<position_node>::iterator path,
+    monster_type connector_type)
+{
+    const position_node* last = &(*path);
+    const position_node* current = last->last;
+
+    // Tentacle is adjacent to the end position, not much to do.
+    if (!current)
+    {
+        // This is a little awkward now. Oh well. -cao
+        tentacle->props["inwards"].get_int() = you.mid;
+        return;
+    }
+
+    // No base monster case (demonic tentacles)
+    if (last->pos != you.pos() && !monster_at(last->pos))
+    {
+        mgen_data mg = _segment_data(last->pos, connector_type);
+        mg.props[MGEN_TENTACLE_CONNECT] = int(tentacle->mid);
+        if (monster * connect = create_monster(mg))
+        {
+            connect->props["inwards"].get_int() = MID_NOBODY;
+            connect->props["outwards"].get_int() = MID_NOBODY;
+
+            connect->max_hit_points = tentacle->max_hit_points;
+            connect->hit_points = tentacle->hit_points;
+
+            mprf("create tentacle (%d, %d)", connect->pos().x, connect->pos().y);
+        }
+        else
+        {
+            // Big failure mode.
+            return;
+        }
+    }
+
+    while (current)
+    {
+
+        mprf("last->pos (%d, %d)", last->pos.x, last->pos.y);
+
+
+        // Last monster we visited or placed
+        actor* last_mon = (you.pos() == last->pos ? (actor*) &you : (actor*)monster_at(last->pos));
+        if (!last_mon)
+        {
+            // Should be something there, what to do if there isn't?
+            mpr("Error! failed to place monster in tentacle connect change");
+            break;
+        }
+
+        // Monster at the current square, should be the end of the line if there
+        monster* current_mons = monster_at(current->pos);
+        if (current_mons)
+        {
+            // Todo verify current monster type
+            current_mons->props["inwards"].get_int() = last_mon->mid;
+            last_mon->props["outwards"].get_int() = current_mons->mid;
+            break;
+        }
+
+        // place a connector
+        mgen_data mg = _segment_data(current->pos, connector_type);
+        mg.props[MGEN_TENTACLE_CONNECT] = int(tentacle->mid);
+        if (monster * connect = create_monster(mg))
+        {
+            connect->max_hit_points = tentacle->max_hit_points;
+            connect->hit_points = tentacle->hit_points;
+
+            connect->props["inwards"].get_int() = last_mon->mid;
+            connect->props["outwards"].get_int() = MID_NOBODY;
+
+            if (last_mon->type == connector_type)
+                last_mon->props["outwards"].get_int() = connect->mid;
+
+
+            if (monster_can_submerge(connect, env.grid(connect->pos())))
+                connect->add_ench(ENCH_SUBMERGED);
+        }
+        else
+        {
+            // connector placement failed, what to do?
+            mprf("connector placement failed at %d %d", current->pos.x, current->pos.y);
+        }
+
+        last = current;
+        current = current->last;
+    }
+}
+
+struct tentacle_attack_constraints
+{
+    vector<coord_def>* target_positions;
+
+    map<coord_def, set<int> >* connection_constraints;
+    monster* base_monster;
+    int max_string_distance;
+    int connect_idx[8];
+
+    tentacle_attack_constraints()
+    {
+        for (int i = 0; i < 8; i++)
+            connect_idx[i] = i;
+    }
+
+    int min_dist(const coord_def& pos)
+    {
+        int min = INT_MAX;
+        for (coord_def tpos : *target_positions)
+            min = std::min(min, grid_distance(pos, tpos));
+        return min;
+    }
+
+    void operator()(const position_node& node,
+        vector<position_node>& expansion)
+    {
+        shuffle_array(connect_idx);
+
+        //        mprf("expanding %d %d, string dist %d", node.pos.x, node.pos.y, node.string_distance);
+        for (int idx : connect_idx)
+        {
+            position_node temp;
+
+            temp.pos = node.pos + Compass[idx];
+            temp.string_distance = node.string_distance;
+            temp.departure = node.departure;
+            temp.connect_level = node.connect_level;
+            temp.path_distance = node.path_distance;
+            temp.estimate = 0;
+
+            if (!in_bounds(temp.pos) || is_sanctuary(temp.pos))
+                continue;
+
+            if (!base_monster->is_habitable(temp.pos))
+                temp.path_distance = DISCONNECT_DIST;
+            else
+            {
+                actor* act_at = actor_at(temp.pos);
+                monster* mons_at = monster_at(temp.pos);
+
+                if (!act_at)
+                    temp.path_distance += 1;
+                // Can still search through a firewood monster, just at a higher
+                // path cost.
+                else if (mons_at && mons_is_firewood(*mons_at)
+                    && !mons_aligned(base_monster, mons_at))
+                {
+                    temp.path_distance += 10;
+                }
+                // An actor we can't path through is there
+                else
+                    temp.path_distance = DISCONNECT_DIST;
+
+            }
+
+            int connect_level = temp.connect_level;
+            int base_connect_level = connect_level;
+
+            if (auto constraint = map_find(*connection_constraints, temp.pos))
+            {
+                int max_val = constraint->empty()
+                    ? INT_MAX : *constraint->rbegin();
+
+                if (max_val < connect_level)
+                    temp.departure = true;
+
+                // If we can still feasibly retract (haven't left connect range)
+                if (!temp.departure)
+                {
+                    if (constraint->count(connect_level))
+                    {
+                        while (constraint->count(connect_level + 1))
+                            connect_level++;
+                    }
+
+                    int delta = connect_level - base_connect_level;
+                    temp.connect_level = connect_level;
+                    if (delta)
+                        temp.string_distance -= delta;
+                }
+
+                if (connect_level < max_val)
+                    temp.path_distance = DISCONNECT_DIST;
+            }
+            else
+            {
+                // We stopped retracting
+                temp.departure = true;
+            }
+
+            if (temp.departure)
+                temp.string_distance++;
+
+            //            if (temp.string_distance > MAX_KRAKEN_TENTACLE_DIST)
+            if (temp.string_distance > max_string_distance)
+                temp.path_distance = DISCONNECT_DIST;
+
+            if (temp.path_distance != DISCONNECT_DIST)
+                temp.estimate = min_dist(temp.pos);
+
+            expansion.push_back(temp);
+        }
+    }
+};
+
+struct tentacle_connect_constraints
+{
+    map<coord_def, set<int> >* connection_constraints;
+
+    monster* base_monster;
+
+    tentacle_connect_constraints()
+    {
+        for (int i = 0; i < 8; i++)
+            connect_idx[i] = i;
+    }
+
+    int connect_idx[8];
+    void operator()(const position_node& node,
+        vector<position_node>& expansion)
+    {
+        shuffle_array(connect_idx);
+
+        for (int idx : connect_idx)
+        {
+            position_node temp;
+
+            temp.pos = node.pos + Compass[idx];
+
+            if (!in_bounds(temp.pos))
+                continue;
+
+            auto constraint = map_find(*connection_constraints, temp.pos);
+
+            if (!constraint || !constraint->count(node.connect_level))
+                continue;
+
+            if (!base_monster->is_habitable(temp.pos) || actor_at(temp.pos))
+                temp.path_distance = DISCONNECT_DIST;
+            else
+                temp.path_distance = 1 + node.path_distance;
+
+            //temp.estimate = grid_distance(temp.pos, kraken->pos());
+            // Don't bother with an estimate, the search is highly constrained
+            // so it's not really going to help
+            temp.estimate = 0;
+            int test_level = node.connect_level;
+
+            while (constraint->count(test_level + 1))
+                test_level++;
+
+            int max = constraint->empty() ? INT_MAX : *constraint->rbegin();
+
+            if (test_level < max)
+                continue;
+
+            temp.connect_level = test_level;
+
+            expansion.push_back(temp);
+        }
+    }
+};
+
+struct target_position
+{
+    coord_def target;
+    bool operator() (const coord_def& pos)
+    {
+        return pos == target;
+    }
+};
+
+struct multi_target
+{
+    vector<coord_def>* targets;
+
+    bool operator() (const coord_def& pos)
+    {
+        return find(begin(*targets), end(*targets), pos) != end(*targets);
+    }
+};
+
+// returns pathfinding success/failure
+static bool _tentacle_pathfind(monster* tentacle,
+    tentacle_attack_constraints& attack_constraints,
+    coord_def& new_position,
+    vector<coord_def>& target_positions,
+    int total_length)
+{
+    multi_target foe_check{ &target_positions };
+
+    vector<set<position_node>::iterator > tentacle_path;
+
+    set<position_node> visited;
+    visited.clear();
+
+    position_node temp;
+    temp.pos = tentacle->pos();
+
+    auto constraint = map_find(*attack_constraints.connection_constraints,
+        temp.pos);
+    ASSERT(constraint);
+    temp.connect_level = 0;
+    while (constraint->count(temp.connect_level + 1))
+        temp.connect_level++;
+
+    temp.departure = false;
+    temp.string_distance = total_length;
+
+    search_astar(temp,
+        foe_check, attack_constraints,
+        visited, tentacle_path);
+
+    bool path_found = false;
+    // Did we find a path?
+    if (!tentacle_path.empty())
+    {
+        // The end position is the enemy or target square, we need
+        // to rewind the found path to find the next move
+
+        const position_node* current = &(*tentacle_path[0]);
+        const position_node* last;
+
+        // The last position in the chain is the base position,
+        // so we want to stop at the one before the last.
+        while (current && current->last)
+        {
+            last = current;
+            current = current->last;
+            new_position = last->pos;
+            path_found = true;
+        }
+    }
+
+    return path_found;
+}
+
+static bool _try_tentacle_connect(const coord_def& new_pos,
+    const coord_def& base_position,
+    monster* tentacle,
+    tentacle_connect_constraints& connect_costs,
+    monster_type connect_type)
+{
+    // Nothing to do here.
+    // Except fix the tentacle end's pointer, idiot.
+    if (base_position == new_pos)
+    {
+        tentacle->props["inwards"].get_int() = you.mid;
+        return true;
+    }
+
+    int start_level = 0;
+    // This condition should never miss
+    if (auto constraint = map_find(*connect_costs.connection_constraints,
+        new_pos))
+    {
+        while (constraint->count(start_level + 1))
+            start_level++;
+    }
+
+    // Find the tentacle -> head path
+    target_position current_target;
+    current_target.target = base_position;
+    /*  target_monster current_target;
+        current_target.target_mindex = headnum;
+    */
+
+    set<position_node> visited;
+    vector<set<position_node>::iterator> candidates;
+
+    position_node temp;
+    temp.pos = new_pos;
+    temp.connect_level = start_level;
+
+    search_astar(temp,
+        current_target, connect_costs,
+        visited, candidates);
+
+    if (candidates.empty())
+        return false;
+
+    _establish_connection(tentacle, candidates[0], connect_type);
+
+    return true;
+}
+
+static void _collect_tentacles(vector<monster_iterator>& tentacles)
+{
+    // TODO: reorder tentacles based on distance to head or something.
+    for (monster_iterator mi; mi; ++mi)
+        if (you.is_parent_monster_of(*mi))
+            tentacles.push_back(mi);
+}
+
+static void _purge_connectors(monster* tentacle)
+{
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (mi->is_child_tentacle_of(tentacle))
+        {
+            int hp = mi->hit_points;
+            if (hp > 0 && hp < tentacle->hit_points)
+                tentacle->hit_points = hp;
+
+            monster_die(**mi, KILL_MISC, NON_MONSTER, true);
+        }
+    }
+    ASSERT(tentacle->alive());
+}
+
+static monster* _closest_target_in_range(int radius)
+{
+    for (distance_iterator di(you.pos(), true, true, radius); di; ++di)
+    {
+        monster* mon = monster_at(*di);
+        if (mon
+            && you.see_cell_no_trans(mon->pos())
+            && !mon->wont_attack()
+            && !mons_is_firewood(*mon))
+        {
+            return mon;
+        }
+    }
+
+    return nullptr;
+}
+
+static void _collect_foe_positions(
+    vector<coord_def>& foe_positions,
+    function<bool(const actor*)> sight_check)
+{
+    coord_def foe_pos(-1, -1);
+    actor* foe = _closest_target_in_range(8);
+    if (foe && sight_check(foe))
+    {
+        mprf("target %d, %d", foe->pos().x, foe->pos().y);
+
+        foe_positions.push_back(foe->pos());
+        foe_pos = foe_positions.back();
+    }
+
+    for (monster_iterator mi; mi; ++mi)
+    {
+        const monster* const test = *mi;
+        if (!mons_is_firewood(*test)
+            //&& !mons_aligned(test, mons)
+            && test->pos() != foe_pos
+            && sight_check(test))
+        {
+            foe_positions.push_back(test->pos());
+        }
+    }
+}
+
+void move_child_tentacles_player()
+{
+    bool no_foe = false;
+
+    vector<coord_def> foe_positions;
+    _collect_foe_positions(foe_positions, [](const actor* test) -> bool
+        {
+            return you.can_see(*test);
+        });
+
+    //if (!kraken->near_foe())
+    if (foe_positions.empty())
+    {
+        no_foe = true;
+    }
+    vector<monster_iterator> tentacles;
+    _collect_tentacles(tentacles);
+
+    // Move each tentacle in turn
+    for (monster_iterator& tent_it : tentacles)
+    {
+        // XXX: Why not just use *tent_it ?
+        monster* tentacle = monster_at(tent_it->pos());
+
+        if (!tentacle)
+        {
+            dprf("Missing tentacle in path.");
+            continue;
+        }
+
+        tentacle_connect_constraints connect_costs;
+        map<coord_def, set<int> > connection_data;
+
+        monster* current_mon = tentacle;
+        int current_count = 0;
+        bool retract_found = false;
+        coord_def retract_pos(-1, -1);
+
+        while (current_mon)
+        {
+            for (adjacent_iterator adj_it(current_mon->pos(), false);
+                adj_it; ++adj_it)
+            {
+                connection_data[*adj_it].insert(current_count);
+            }
+
+            bool basis = current_mon->props.exists("inwards");
+            int _mid = current_mon->props["inwards"].get_int();
+
+            if (_mid == (int)you.mid) {
+                current_mon = nullptr;
+                current_count++;
+                retract_pos = you.pos();
+                retract_found = true;
+
+                mprf("yes... inward players %d", current_count);
+            }
+            else {
+                monster* inward = basis ? monster_by_mid(_mid) : nullptr;
+
+                if (inward
+                    && (inward->is_child_tentacle_of(tentacle)
+                        || inward->is_parent_monster_of(tentacle)))
+                {
+                    current_mon = inward;
+                    if (!retract_found
+                        && current_mon->is_child_tentacle_of(tentacle))
+                    {
+                        retract_pos = current_mon->pos();
+                        retract_found = true;
+                    }
+                }
+                else
+                    current_mon = nullptr;
+            }
+            current_count++;
+        }
+
+        _purge_connectors(tentacle);
+
+        if (no_foe
+            && grid_distance(tentacle->pos(), you.pos()) == 1)
+        {
+            // Drop the tentacle if no enemies are in sight and it is
+            // adjacent to the main body. This is to prevent players from
+            // just sniping tentacles while outside the kraken's fov.
+            monster_die(*tentacle, KILL_MISC, NON_MONSTER, true);
+            continue;
+        }
+
+        coord_def new_pos = tentacle->pos();
+        coord_def old_pos = tentacle->pos();
+        bool path_found = false;
+
+        tentacle_attack_constraints attack_constraints;
+        attack_constraints.base_monster = tentacle;
+        attack_constraints.max_string_distance = 8;
+        attack_constraints.connection_constraints = &connection_data;
+        attack_constraints.target_positions = &foe_positions;
+
+        //If this tentacle is constricting a creature, attempt to pull it back
+        //towards the head.
+        bool pull_constrictee = false;
+        actor* constrictee = nullptr;
+        if (tentacle->is_constricting() && retract_found)
+        {
+            constrictee = actor_by_mid(tentacle->constricting->begin()->first);
+            if (feat_has_solid_floor(grd(old_pos))
+                && constrictee->is_habitable(old_pos))
+            {
+                pull_constrictee = true;
+            }
+        }
+
+        if (!no_foe && !pull_constrictee)
+        {
+
+            mprf("path_found(%d, %d)", new_pos.x, new_pos.y);
+            path_found = _tentacle_pathfind(
+                tentacle,
+                attack_constraints,
+                new_pos,
+                foe_positions,
+                current_count);
+            mprf("path_found2(%d, %d)", new_pos.x, new_pos.y);
+        }
+
+        if (no_foe || !path_found || pull_constrictee)
+        {
+            mprf("retract_found(%s) path_found(%s)", no_foe ?"t" :"f", path_found?"t":"f");
+            if (retract_found)
+                new_pos = retract_pos;
+            else
+            {
+                // What happened here? Usually retract found should be true
+                // or we should get pruned (due to being adjacent to the
+                // head), in any case just stay here.
+            }
+        }
+
+        // Did we path into a target?
+        if (actor * blocking_actor = actor_at(new_pos))
+        {
+            tentacle->target = new_pos;
+            tentacle->foe = blocking_actor->mindex();
+            new_pos = old_pos;
+        }
+
+        // Why do I have to do this move? I don't get it.
+        // specifically, if tentacle isn't registered at its new position on
+        // mgrd the search fails (sometimes), Don't know why. -cao
+        tentacle->move_to_pos(new_pos);
+
+        if (pull_constrictee)
+        {
+            if (you.can_see(*tentacle))
+            {
+                mprf("The tentacle pulls %s backwards!",
+                    constrictee->name(DESC_THE).c_str());
+            }
+
+            if (constrictee->as_player())
+                move_player_to_grid(old_pos, false);
+            else
+                constrictee->move_to_pos(old_pos);
+
+            // Interrupt stair travel and passwall.
+            if (constrictee->is_player())
+                stop_delay(true);
+        }
+        tentacle->clear_invalid_constrictions();
+
+        connect_costs.connection_constraints = &connection_data;
+        connect_costs.base_monster = tentacle;
+
+        mprf("you pos(%d, %d)", you.pos().x, you.pos().y);
+
+        mprf("new_pos(%d, %d)", new_pos.x, new_pos.y);
+        bool connected = _try_tentacle_connect(new_pos, you.pos(),
+            tentacle, 
+            connect_costs,
+            mons_tentacle_child_type(tentacle));
+
+        // Can't connect, usually the head moved and invalidated our position
+        // in some way. Should look into this more at some point -cao
+        if (!connected)
+        {
+            mgrd(tentacle->pos()) = tentacle->mindex();
+            monster_die(*tentacle, KILL_MISC, NON_MONSTER, true);
+
+            continue;
+        }
+
+        tentacle->check_redraw(old_pos);
+        tentacle->apply_location_effects(old_pos);
+    }
+}
+
+static monster* _mons_get_parent_monster(monster* mons)
+{
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (mi->is_parent_monster_of(mons))
+            return *mi;
+    }
+
+    return nullptr;
+}
+
+// When given either a tentacle end or segment, kills the end and all segments
+// of that tentacle.
+bool destroy_tentacle_of_player()
+{
+    bool any = false;
+    // Some issue with using monster_die leading to DEAD_MONSTER
+    // or w/e. Using hurt seems to cause more problems though.
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (mi->is_child_tentacle_of_player())
+        {
+            any = true;
+            //mi->hurt(*mi, INSTANT_DEATH);
+            monster_die(**mi, KILL_MISC, NON_MONSTER, true);
+        }
+    }
+
+    return any;
+}
+
+
+static int _max_tentacles()
+{
+    return 1;
+}
+
+int player_available_tentacles()
+{
+    int tentacle_count = 0;
+
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (mi->is_child_tentacle_of_player())
+            tentacle_count++;
+    }
+
+    return _max_tentacles() - tentacle_count;
+}
+
+void player_create_tentacles()
+{
+    int possible_count = 1;
+
+    if (possible_count <= 0)
+        return;
+
+    monster_type tent_type = MONS_STARSPAWN_TENTACLE;
+
+    vector<coord_def> adj_squares;
+
+    // Collect open adjacent squares. Candidate squares must be
+    // unoccupied.
+    for (adjacent_iterator adj_it(you.pos()); adj_it; ++adj_it)
+    {
+        if (monster_habitable_grid(tent_type, grd(*adj_it))
+            && !actor_at(*adj_it))
+        {
+            adj_squares.push_back(*adj_it);
+        }
+    }
+
+    if (unsigned(possible_count) > adj_squares.size())
+        possible_count = adj_squares.size();
+    else if (adj_squares.size() > unsigned(possible_count))
+        shuffle_array(adj_squares);
+
+    int visible_count = 0;
+
+    for (int i = 0; i < possible_count; ++i)
+    {
+        mgen_data mg = _segment_data(adj_squares[i], tent_type);
+        mg.props[MGEN_TENTACLE_CONNECT] = int(you.mid);
+        if (monster * tentacle = create_monster(mg))
+        {
+            if (you.can_see(*tentacle))
+                visible_count++;
+
+            tentacle->props["inwards"].get_int() = you.mid;
+        }
+    }
+
+    if (visible_count == 1)
+        mpr("A tentacle flies out from the starspawn's body!");
+    else if (visible_count > 1)
+        mpr("Tentacles burst from the starspawn's body!");
+    return;
+}

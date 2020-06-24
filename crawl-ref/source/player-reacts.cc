@@ -95,6 +95,7 @@
 #include "output.h"
 #include "player.h"
 #include "player-stats.h"
+#include "player-tentacle.h"
 #include "quiver.h"
 #include "random.h"
 #include "religion.h"
@@ -1127,6 +1128,14 @@ void player_reacts()
         xom_tick();
     else if (you_worship(GOD_QAZLAL))
         qazlal_storm_clouds();
+
+    if (you.form == transformation::eldritch) {
+        move_child_tentacles_player();
+        if (x_chance_in_y(you.time_taken, 10 * BASELINE_DELAY)) {
+            player_create_tentacles();
+        }
+    }
+
 
     if (you.props[EMERGENCY_FLIGHT_KEY].get_bool())
         _handle_emergency_flight();

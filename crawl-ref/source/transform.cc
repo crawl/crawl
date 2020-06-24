@@ -992,6 +992,31 @@ public:
 
 };
 
+
+class FormEldritch : public Form
+{
+private:
+    FormEldritch() : Form(transformation::eldritch) { }
+    DISALLOW_COPY_AND_ASSIGN(FormEldritch);
+public:
+    static const FormEldritch& instance() { static FormEldritch inst; return inst; }
+
+    /**
+     * Get an monster type corresponding to the transformation.
+     *
+     * (Used for console player glyphs.)
+     *
+     * @return  A monster type corresponding to the player in this form.
+     */
+    monster_type get_equivalent_mons() const override
+    {
+        return MONS_ELDRITCH_TENTACLE;
+    }
+};
+
+
+
+
 static const Form* forms[] =
 {
     &FormNone::instance(),
@@ -1019,6 +1044,7 @@ static const Form* forms[] =
     &FormShadow::instance(),
     &FormHydra::instance(),
     &FormHolySwine::instance(),
+    &FormEldritch::instance(),
 };
 
 const Form* get_form(transformation xform)

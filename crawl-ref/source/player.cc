@@ -6446,6 +6446,8 @@ int player::gdr_perc() const
         return 34; // base AC 8
     case transformation::statue:
         return 39; // like plate (AC 10)
+    case transformation::eldritch:
+        return 40;
     case transformation::tree:
         return 48;
     default:

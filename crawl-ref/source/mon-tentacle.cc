@@ -188,6 +188,9 @@ const monster& get_tentacle_head(const monster& mon)
     // For tentacle segments, find the associated tentacle.
     if (m->is_child_tentacle_segment())
     {
+        if(m->tentacle_connect == you.mid)
+            return *m;
+
         monster* tentacle = monster_by_mid(m->tentacle_connect);
         if (!tentacle)
             return *m;
@@ -198,6 +201,9 @@ const monster& get_tentacle_head(const monster& mon)
     // For tentacles, find the associated head.
     if (m->is_child_tentacle())
     {
+        if (m->tentacle_connect == you.mid)
+            return *m;
+
         monster* head = monster_by_mid(m->tentacle_connect);
         if (!head)
             return *m;
