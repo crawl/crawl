@@ -546,7 +546,7 @@ public:
     bool tengu_flight() const;
     bool has_hydra_multi_attack() const;
     int heads() const override;
-    bool head_grow(int num) const;
+    bool head_grow(int num, bool heal = true) const;
 
     bool spellcasting_unholy() const;
 

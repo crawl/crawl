@@ -6905,9 +6905,16 @@ bool player::tengu_flight() const
     return species == SP_TENGU && airborne();
 }
 
-// Deal with every amulet availability in here.
-
-bool player::head_grow(int num) const
+/**
+ * Every growing/cutting of hydra heads will be dealt here.
+ * Also, it checks whether every amulet is available or not.
+ * 
+ * @param num           How many heads grows?
+ *                      (if negative, it is now cutting.)
+ * @param heal          Does we need to heal or hurt player? (default : true, it oftenly call in fight.)
+ * @return              Whether the player's heads properly grow or cut.
+ */
+bool player::head_grow(int num, bool heal) const
 {
     if (you.form == transformation::none && num != 0 && num < 27)
     {
@@ -6922,7 +6929,8 @@ bool player::head_grow(int num) const
                     break;
                 }
             }
-            you.heal(4*num + random2(4*num));
+            if (heal)
+                you.heal(4*num + random2(4*num));
         }
         else if (num < 0)
         {
@@ -6930,9 +6938,8 @@ bool player::head_grow(int num) const
             {    
                 you.props[HYDRA_HEADS_NET_LOSS].get_int()++;
             }
-            ouch(abs(4*num + random2(4*num)), KILLED_BY_DRAINING);
-            // If it loses, it unequips the amulet.
-            _handle_amulet_loss();
+            if (heal)
+                ouch(abs(4*num + random2(4*num)), KILLED_BY_DRAINING);
         }
     }
     else if (you.form == transformation::lich && num < 0)
@@ -6940,11 +6947,10 @@ bool player::head_grow(int num) const
         mprf(MSGCH_INTRINSIC_GAIN, "Your %s %s cut away", abs(num)!=1? "heads":"head", abs(num)!=1? "are" : "is");
         for (int i = 0; i < abs(num); i++)
                 you.props[HYDRA_HEADS_NET_LOSS].get_int()++;
-        ouch(abs(4*num + random2(4*num)), KILLED_BY_DRAINING);
-        // If it loses, it unequips the amulet.
-        _handle_amulet_loss();
+        if (heal)
+            ouch(abs(4*num + random2(4*num)), KILLED_BY_DRAINING);
     }
-    else if (num == 0)
+    else if (num == 0 && heal)
     {
         if (you.props[HYDRA_HEADS_NET_LOSS].get_int() < 0)
         {
@@ -6956,17 +6962,13 @@ bool player::head_grow(int num) const
             mprf(MSGCH_INTRINSIC_GAIN, "Your head grows one more.");
         }
     }
-    else if (num == 27)
-    {  
-        you.redraw_title = true;
-        you.redraw_status_lights = true;
+    if (num < 0)
         _handle_amulet_loss();
-        init_player_doll();
-        return false;
-    }
     you.redraw_title = true;
     you.redraw_status_lights = true;
-    init_player_doll();
+    #ifdef USE_TILE
+        init_player_doll();
+    #endif
     return true;
 }
 

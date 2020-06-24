@@ -149,7 +149,9 @@ public:
         you.duration[DUR_POISONING] = 0;
         you.disease = 0;
         you.duration[DUR_CONF] = 0;
-        you.head_grow(-you.props[HYDRA_HEADS_NET_LOSS].get_int());
+        // Do not heal or hurt player.
+        if (you.species == SP_HYDRA)
+            you.head_grow(-you.props[HYDRA_HEADS_NET_LOSS].get_int(), false); 
         return true;
     }
 };
