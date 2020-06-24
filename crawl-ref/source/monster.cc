@@ -3465,9 +3465,6 @@ int monster::evasion(ev_ignore_type evit, const actor* /*act*/) const
 
 bool monster::heal(int amount)
 {
-    if (mons_is_statue(type))
-        return false;
-
     if (amount < 1)
         return false;
     else if (hit_points == max_hit_points)
