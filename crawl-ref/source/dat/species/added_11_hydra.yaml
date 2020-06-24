@@ -21,7 +21,6 @@ aptitudes:
   slings: False
   bows: False
   crossbows: False
-  throwing: False
   armour: -2
   dodging: 0
   stealth: 0
