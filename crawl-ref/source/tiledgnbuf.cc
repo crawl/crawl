@@ -330,6 +330,11 @@ void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
 
         if (!(bg & TILE_FLAG_UNSEEN))
         {
+            if (cell.fg & TILE_FLAG_CUBUS_AURA)
+            {
+                m_buf_feat.add(TILE_CUBUS_AURA, x, y);
+            }
+
             if (cell.is_sanctuary)
                 m_buf_feat.add(TILE_SANCTUARY, x, y);
             if (cell.heat_aura)
