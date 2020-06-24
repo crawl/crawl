@@ -1483,7 +1483,7 @@ tileidx_t tileidx_monster_base(int type, bool in_water, int colour, int number,
     }
     case MONS_CUBUS:
     {
-        if (number)
+        if (number == 0)
         {
             return TILEP_MONS_CUBUS;
         }

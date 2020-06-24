@@ -337,14 +337,7 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
     else
         number = 0;
 
-    if (type == MONS_CUBUS)
-    {
-        if (is(MB_FLEEING) || is(MB_STABBABLE) || is(MB_SLEEPING)
-             || is(MB_DORMANT)  || is(MB_DISTRACTED) && !is(MB_PETRIFYING))
-            number = 1;
-        else
-            number = 0;
-    }
+    
     _colour = COLOUR_INHERIT;
 
     holi = mons_class_holiness(type);
@@ -787,6 +780,15 @@ monster_info::monster_info(const monster* m, int milev)
             mb.set(MB_FIREWOOD);
     }
 
+    if (type == MONS_CUBUS)
+    {
+        if (is(MB_FLEEING) || is(MB_STABBABLE) || is(MB_SLEEPING)
+             || is(MB_DORMANT)  || is(MB_DISTRACTED) && !is(MB_PETRIFYING))
+            number = 0;
+        else
+            number = 1;
+    }
+    
     client_id = m->get_client_id();
 }
 

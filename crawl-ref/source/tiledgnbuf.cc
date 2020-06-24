@@ -451,6 +451,9 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
     if (fg & TILE_FLAG_IDEALISED)
         m_buf_icons.add(TILEI_IDEALISED, x, y);
 
+    if (fg & TILE_FLAG_CUBUS_AURA)
+        m_buf_icons.add(TILEI_CUBUS_COLLAR, x, y);
+
     int status_shift = 0;
     if (fg & TILE_FLAG_BEH_MASK)
     {
