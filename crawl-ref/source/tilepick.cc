@@ -1481,6 +1481,16 @@ tileidx_t tileidx_monster_base(int type, bool in_water, int colour, int number,
         }
         return TILEP_MONS_BARRICADE;
     }
+    case MONS_CUBUS:
+    {
+        if (number == 0)
+        {
+            return TILEP_MONS_CUBUS;
+        }
+        else
+            return tileidx_monster_base(player_species_to_mons_species(you.species), in_water, 3, 3, 3, false);
+        return TILEP_MONS_CUBUS;
+    }
     }
 
     const monster_type mtype = static_cast<monster_type>(type);
@@ -1964,7 +1974,8 @@ tileidx_t tileidx_monster(const monster_info& mons)
     // Should petrify show the '?' symbol?
     else if (mons.is(MB_DISTRACTED) && !mons.is(MB_PETRIFYING))
         ch |= TILE_FLAG_MAY_STAB;
-
+    else if (mons.type == MONS_CUBUS)
+        ch |= TILE_FLAG_CUBUS_AURA;
     mon_dam_level_type damage_level = mons.dam;
 
     switch (damage_level)
