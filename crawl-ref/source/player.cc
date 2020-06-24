@@ -6961,12 +6961,16 @@ bool player::head_grow(int num) const
         you.redraw_title = true;
         you.redraw_status_lights = true;
         _handle_amulet_loss();
+#ifdef USE_TILE
         init_player_doll();
+#endif
         return false;
     }
     you.redraw_title = true;
     you.redraw_status_lights = true;
+#ifdef USE_TILE
     init_player_doll();
+#endif
     return true;
 }
 
