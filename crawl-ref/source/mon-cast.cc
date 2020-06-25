@@ -13,6 +13,7 @@
 #include <unordered_set>
 
 #include "act-iter.h"
+#include "art-enum.h"
 #include "areas.h"
 #include "attack.h"
 #include "bloodspatter.h"
@@ -8015,28 +8016,29 @@ static bool _nightmare_of_cubus(monster &caster, mon_spell_slot, bolt&)
             equipment_type slot= *random_iterator(ret);
         if (you.equip[slot] != -1 && !you.melded[slot])
         {   
-            mprf(MSGCH_TALK, "\"Take off your %s..\"", you.inv[you.equip[slot]].name(DESC_YOUR).c_str());
             ASSERT_RANGE(slot, EQ_FIRST_EQUIP, NUM_EQUIP);
-            ASSERT(!you.melded[slot] || you.equip[slot] != -1);
-
-            mprf("You wake up and suddenly realize that you took it off yourself.");
-            const int item_slot = you.equip[slot];
-    
+            int item_slot = you.equip[slot];
             if (item_slot == -1)
                 return false;
-            else if (!you.inv[you.equip[slot]].cursed())
+            if (is_unrandom_artefact(you.inv[item_slot], UNRAND_FINGER_AMULET)
+                && you.equip[EQ_RING_AMULET] != -1)
+                    item_slot = you.equip[EQ_RING_AMULET];
+            item_def item = you.inv[item_slot];
+
+            mprf(MSGCH_TALK, "\"Take off your %s..\"", item.name(DESC_YOUR).c_str());
+            ASSERT(!you.melded[slot] || you.equip[slot] != -1);
+            mprf("You wake up and suddenly realize that you took it off yourself.");
+            
+            if (!item.cursed())
             {
                 you.equip[slot] = -1;
 
-                if (!you.melded[slot])
-                    unequip_effect(slot, item_slot, false, false);
-                else
-                    you.melded.set(slot, false);
+                unequip_effect(slot, item_slot, false, false);
                 ash_check_bondage();
                 you.last_unequip = item_slot;
                 return true;
             }
-        }
+            }
         }
         else if(!arm.empty())
         {
