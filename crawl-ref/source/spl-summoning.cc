@@ -900,13 +900,11 @@ spret cast_conjure_ball_lightning(int pow, god_type god, bool fail)
     fail_check();
     bool success = false;
 
-    const int how_many = min(5, 2 + pow / 100 + random2(pow / 50 + 1));
-
     mgen_data cbl =_pal_data(MONS_BALL_LIGHTNING, 0, god,
                              SPELL_CONJURE_BALL_LIGHTNING);
-    cbl.hd = 5 + div_rand_round(pow, 20);
+    cbl.hd = max(1, div_rand_round(pow, 6) - 6);
 
-    for (int i = 0; i < how_many; ++i)
+    for (int i = 0; i < 3; ++i)
     {
         if (monster *ball = create_monster(cbl))
         {
