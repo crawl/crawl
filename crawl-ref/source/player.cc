@@ -2551,9 +2551,14 @@ static void _handle_amulet_loss()
         if (!you_can_wear(eq)
             && you.slot_item(eq, true))
         {
-            unequip_item(eq, true);
-        }
+                // Remove ring in finger
+                // though it's cursed. Your neck is just disappeared. Who cares the curse?
+                if (is_unrandom_artefact(*you.slot_item((equipment_type)_eq, true),UNRAND_FINGER_AMULET)
+                    && you.slot_item(EQ_RING_AMULET, true))
+                        unequip_item(EQ_RING_AMULET, true);
 
+                unequip_item(eq, true);
+        }
     }
 }
 
@@ -6964,7 +6969,7 @@ bool player::head_grow(int num, bool heal) const
             mprf(MSGCH_INTRINSIC_GAIN, "Your head grows one more.");
         }
     }
-    if (num < 0)
+    if (num < 0 || num == 0 && !heal)
         _handle_amulet_loss();
     you.redraw_title = true;
     you.redraw_status_lights = true;

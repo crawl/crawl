@@ -43,6 +43,10 @@
 // transform slot enums into flags
 #define SLOTF(s) (1 << s)
 
+static const int EQF_HYDRA = (SLOTF(EQ_AMULET_TWO) | SLOTF(EQ_AMULET_THREE) | SLOTF(EQ_AMULET_FOUR)
+                             | SLOTF(EQ_AMULET_FIVE) | SLOTF(EQ_AMULET_SIX)
+                             | SLOTF(EQ_AMULET_SEVEN) | SLOTF(EQ_AMULET_EIGHT) | SLOTF(EQ_AMULET_NINE))
+                             | ((!is_unrandom_artefact(*you.slot_item(EQ_AMULET_ONE, true), UNRAND_FINGER_AMULET)? SLOTF(EQ_RING_AMULET) : 0));
 static const int EQF_NONE = 0;
 // "hand" slots (not rings)
 static const int EQF_HANDS = SLOTF(EQ_WEAPON) | SLOTF(EQ_SECOND_WEAPON) | SLOTF(EQ_SHIELD)
@@ -51,7 +55,8 @@ static const int EQF_HANDS = SLOTF(EQ_WEAPON) | SLOTF(EQ_SECOND_WEAPON) | SLOTF(
 static const int EQF_STATUE = SLOTF(EQ_GLOVES) | SLOTF(EQ_BOOTS)
                               | SLOTF(EQ_BODY_ARMOUR);
 // more core body slots (Lear's Hauberk)
-static const int EQF_LEAR = EQF_STATUE | SLOTF(EQ_HELMET);
+// Constraint for hydra is here.
+static const int EQF_LEAR = EQF_STATUE | SLOTF(EQ_HELMET) | EQF_HYDRA;
 // everything you can (W)ear
 static const int EQF_WEAR = EQF_LEAR | SLOTF(EQ_CLOAK) | SLOTF(EQ_SHIELD);
 // everything but jewellery
@@ -68,6 +73,7 @@ static const int EQF_AMULETS = SLOTF(EQ_AMULET) | SLOTF(EQ_AMULET_LEFT) | SLOTF(
                              | SLOTF(EQ_AMULET_THREE) | SLOTF(EQ_AMULET_FOUR)
                              | SLOTF(EQ_AMULET_FIVE) | SLOTF(EQ_AMULET_SIX)
                              | SLOTF(EQ_AMULET_SEVEN) | SLOTF(EQ_AMULET_EIGHT) | SLOTF(EQ_AMULET_NINE);
+                             // Only hydra can wield these. Hydra form also can't equip these.
 // everything
 static const int EQF_ALL = EQF_PHYSICAL | EQF_RINGS | EQF_AMULETS;
 
