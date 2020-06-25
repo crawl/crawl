@@ -197,6 +197,8 @@ int player::damage_type(int attack_number)
         return DVORP_SLICING;
     else if (has_usable_tentacles())
         return DVORP_TENTACLE;
+    else if (has_hydra_multi_attack())
+        return DVORP_BITING;
 
     return DVORP_CRUSHING;
 }

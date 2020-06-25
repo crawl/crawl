@@ -675,6 +675,7 @@ enum vorpal_damage_type
 
     DVORP_CLAWING       = 0x6000,       // claw damage
     DVORP_TENTACLE      = 0x7000,       // tentacle damage
+    DVORP_BITING        = 0x8000,       // hydra biting
 
     // These are shortcuts to tie vorpal/damage types for easy setting...
     // as above, setting more than one vorpal type is trouble.

@@ -1968,6 +1968,17 @@ void melee_attack::set_attack_verb(int damage)
             else
                 attack_verb = "eviscerate";
         }
+        else if (you.damage_type() == DVORP_BITING)
+        {
+            if (damage < HIT_WEAK)
+                attack_verb = "chaw";
+            else if (damage < HIT_MED)
+                attack_verb = "bite";
+            else if (damage < HIT_STRONG)
+                attack_verb = "savage";
+            else
+                attack_verb = "triturate";
+        }
         else if (you.damage_type() == DVORP_TENTACLE)
         {
             if (damage < HIT_WEAK)
