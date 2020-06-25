@@ -2322,8 +2322,15 @@ static bool _can_puton_jewellery(const item_def &item)
         mpr("You can only put on jewellery.");
         return false;
     }
-
+    
     const bool is_amulet = jewellery_is_amulet(item);
+
+    if (!is_amulet && !player_equip_unrand(UNRAND_FINGER_AMULET)
+        && you.species == SP_HYDRA)
+    {
+        mpr("You have no fingers and your toes are too big to put on.");
+        return false;
+    }
 
     if (is_amulet && !you_can_wear(EQ_AMULETS, true)
         || !is_amulet && !you_can_wear(EQ_RINGS, true))

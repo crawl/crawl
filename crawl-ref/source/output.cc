@@ -2108,6 +2108,11 @@ static void _print_overview_screen_equip(column_composer& cols,
             continue;
         }
 
+        if (you.species == SP_HYDRA &&
+            eqslot != EQ_BODY_ARMOUR
+            && !you_can_wear(eqslot))
+            continue;
+
         if (you.species != SP_OCTOPODE
             && eqslot >= EQ_RING_ONE && eqslot <= EQ_RING_EIGHT)
         {

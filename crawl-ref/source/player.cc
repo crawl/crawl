@@ -738,7 +738,7 @@ maybe_bool you_can_wear(equipment_type eq, bool temp)
     case EQ_SECOND_WEAPON:
         return you.species == SP_TWO_HEADED_OGRE ? MB_TRUE : MB_FALSE;
 
-    // You can always wear at least one ring (forms were already handled).
+    // You can always wear at least one ring unless you are not hydra. (forms were already handled).
     case EQ_RINGS:
     case EQ_ALL_ARMOUR:
     case EQ_AMULETS:
