@@ -6445,9 +6445,8 @@ int player::gdr_perc() const
     case transformation::dragon:
         return 34; // base AC 8
     case transformation::statue:
-        return 39; // like plate (AC 10)
     case transformation::eldritch:
-        return 40;
+        return 39; // like plate (AC 10)
     case transformation::tree:
         return 48;
     default:
@@ -6726,7 +6725,8 @@ int player::res_magic(bool /*calc_unid*/) const
 int player_res_magic(bool calc_unid, bool temp)
 {
 
-    if (temp && you.form == transformation::shadow)
+    if (temp && (you.form == transformation::shadow || 
+        you.form == transformation::eldritch))
         return MAG_IMMUNE;
 
     int rm = you.experience_level * species_mr_modifier(you.species);
@@ -7128,7 +7128,8 @@ bool player::crustacean_rot(actor */*who*/, int amount, bool quiet, bool /*no_cl
     
     bool crabform = (you.form == transformation::none ||
                     you.form == transformation::statue ||
-                    you.form == transformation::lich);
+                    you.form == transformation::lich ||
+                    you.form == transformation::eldritch);
     if (!crabform)
     {
         return false;

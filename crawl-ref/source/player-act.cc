@@ -662,6 +662,8 @@ string player::arm_name(bool plural, bool *can_plural) const
         adj = "bony";
     else if (form == transformation::shadow)
         adj = "shadowy";
+    else if (form == transformation::eldritch)
+        str = "tentacle";
 
     if (!adj.empty())
         str = adj + " " + str;

@@ -33,11 +33,13 @@
 #include "message.h"
 #include "melee-attack.h"
 #include "mon-act.h"
+#include "mon-death.h"
 #include "mon-place.h"
 #include "mon-tentacle.h"
 #include "mon-util.h"
 #include "player.h"
 #include "player-reacts.h"
+#include "player-tentacle.h"
 #include "prompt.h"
 #include "random.h"
 #include "religion.h"
@@ -816,6 +818,26 @@ void move_player_action(coord_def move)
                                                                : "walk";
 
     monster* targ_monst = monster_at(targ);
+
+
+    if (targ_monst && mons_tentacle_adjacent_of_player(targ_monst))
+    {
+        const bool basis = targ_monst->props.exists("outwards");
+        monster* outward =  basis ? monster_by_mid(targ_monst->props["outwards"].get_int()) : nullptr;
+        if (outward)
+            outward->props["inwards"].get_int() = targ_monst->mid;
+
+        monster_die(*targ_monst, KILL_MISC, NON_MONSTER, true);
+        targ_monst = nullptr;
+    }
+
+    if (targ_monst && you.is_parent_monster_of(targ_monst))
+    {
+        destroy_tentacle(targ_monst);
+        monster_die(*targ_monst, KILL_MISC, NON_MONSTER, true);
+        targ_monst = nullptr;
+    }
+
     if (fedhas_passthrough(targ_monst) && !you.is_stationary())
     {
         // Moving on a plant takes 1.5 x normal move delay. We

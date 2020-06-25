@@ -33,6 +33,8 @@ static monster_type _head_child_segment[][3] =
         MONS_KRAKEN_TENTACLE_SEGMENT },
     { MONS_TENTACLED_STARSPAWN, MONS_STARSPAWN_TENTACLE,
         MONS_STARSPAWN_TENTACLE_SEGMENT },
+    { MONS_PROGRAM_BUG, MONS_PLAYER_ELDRITCH_TENTACLE,
+        MONS_PLAYER_ELDRITCH_TENTACLE_SEGMENT},
 };
 
 static monster_type _solo_tentacle_to_segment[][2] =

@@ -548,6 +548,13 @@ Druid's Call spell
 
 Recalls woodland creatures from elsewhere on the same level.
 %%%%
+Eldritch Form spell
+
+This spell turns you into a monster with terrible tentacles. While being a monster,
+you get a strong body and amazing resistance, But in return, your body will be 
+distorted. While you're a monster, you can't use any potions or scrolls, but your 
+tentacles will pop out of your body to help attack the enemy.
+%%%%
 Electrical Bolt spell
 
 Throws a bolt of electricity at the target, with high accuracy.

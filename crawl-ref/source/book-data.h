@@ -131,7 +131,6 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_STATUE_FORM,
     SPELL_HYDRA_FORM,
     SPELL_DRAGON_FORM,
-    SPELL_ELDRITCH_FORM,
 },
 
 {   // Fen Folio
@@ -367,6 +366,7 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_SUMMON_GREATER_DEMON,
     SPELL_MALIGN_GATEWAY,
     SPELL_SUMMON_HORRIBLE_THINGS,
+    SPELL_ELDRITCH_FORM,
 },
 
 {   // Necronomicon

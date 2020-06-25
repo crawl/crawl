@@ -295,19 +295,31 @@ static void _translate_tentacle_ref(monster_info& mi, const monster* m,
     if (!m->props.exists(key))
         return;
 
-    const monster* other = monster_by_mid(m->props[key].get_int());
-    if (other)
-    {
-        coord_def h_pos = other->pos();
-        // If the tentacle and the other segment are no longer adjacent
-        // (distortion etc.), just treat them as not connected.
-        if (adjacent(m->pos(), h_pos)
-            && !mons_is_zombified(*other)
-            && !_tentacle_pos_unknown(other, m->pos()))
+    int _mid = m->props[key].get_int();
+
+    if(_mid == (int)you.mid) {
+        coord_def h_pos = you.pos();
+        if (adjacent(m->pos(), h_pos))
         {
             mi.props[key] = h_pos - m->pos();
         }
+    } else {
+        const monster* other = monster_by_mid(_mid);
+        if (other)
+        {
+            coord_def h_pos = other->pos();
+            // If the tentacle and the other segment are no longer adjacent
+            // (distortion etc.), just treat them as not connected.
+            if (adjacent(m->pos(), h_pos)
+                && !mons_is_zombified(*other)
+                && !_tentacle_pos_unknown(other, m->pos()))
+            {
+                mi.props[key] = h_pos - m->pos();
+            }
+        }
     }
+
+
 }
 
 /// is the given monster_info a hydra, zombie hydra, lerny, etc?

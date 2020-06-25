@@ -30,6 +30,7 @@
 #include "output.h"
 #include "player-equip.h"
 #include "player-stats.h"
+#include "player-tentacle.h"
 #include "prompt.h"
 #include "religion.h"
 #include "spl-cast.h"
@@ -1010,7 +1011,7 @@ public:
      */
     monster_type get_equivalent_mons() const override
     {
-        return MONS_ELDRITCH_TENTACLE;
+        return MONS_TENTACLED_STARSPAWN;
     }
 };
 
@@ -1931,6 +1932,10 @@ bool transform(int pow, transformation which_trans, bool involuntary,
             mpr("You feel less conspicuous.");
         break;
 
+    case transformation::eldritch:
+        you.malmutate("eldritch form");
+        break;
+
     default:
         break;
     }
@@ -2053,6 +2058,10 @@ void untransform(bool skip_move)
                  mutation_name(app), verb,
                  app == MUT_TENTACLE_SPIKE ? "s" : "");
         }
+    }
+    if (old_form == transformation::eldritch)
+    {
+        destroy_tentacle_of_player();
     }
 
     calc_hp(true, false);

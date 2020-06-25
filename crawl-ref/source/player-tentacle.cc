@@ -24,6 +24,9 @@
 #include "terrain.h"
 #include "view.h"
 
+static int _get_create_tentacle_num() {
+    return 1;
+}
 
 static mgen_data _segment_data(coord_def pos, monster_type type)
 {
@@ -44,8 +47,7 @@ bool player::is_parent_monster_of(const monster* mons) const
 
 bool mons_tentacle_adjacent_of_player(const monster* child)
 {
-    return //mons_is_tentacle_head(mons_base_type(*parent)) &&
-        mons_is_tentacle_segment(child->type)
+    return mons_is_tentacle_segment(child->type)
         && child->props.exists("inwards")
         && child->props["inwards"].get_int() == (int)you.mid;
 }
@@ -77,8 +79,6 @@ static void _establish_connection(monster* tentacle,
 
             connect->max_hit_points = tentacle->max_hit_points;
             connect->hit_points = tentacle->hit_points;
-
-            mprf("create tentacle (%d, %d)", connect->pos().x, connect->pos().y);
         }
         else
         {
@@ -89,10 +89,6 @@ static void _establish_connection(monster* tentacle,
 
     while (current)
     {
-
-        mprf("last->pos (%d, %d)", last->pos.x, last->pos.y);
-
-
         // Last monster we visited or placed
         actor* last_mon = (you.pos() == last->pos ? (actor*) &you : (actor*)monster_at(last->pos));
         if (!last_mon)
@@ -486,8 +482,6 @@ static void _collect_foe_positions(
     actor* foe = _closest_target_in_range(8);
     if (foe && sight_check(foe))
     {
-        mprf("target %d, %d", foe->pos().x, foe->pos().y);
-
         foe_positions.push_back(foe->pos());
         foe_pos = foe_positions.back();
     }
@@ -496,7 +490,7 @@ static void _collect_foe_positions(
     {
         const monster* const test = *mi;
         if (!mons_is_firewood(*test)
-            //&& !mons_aligned(test, mons)
+            && !mons_aligned(test, &you)
             && test->pos() != foe_pos
             && sight_check(test))
         {
@@ -556,11 +550,12 @@ void move_child_tentacles_player()
 
             if (_mid == (int)you.mid) {
                 current_mon = nullptr;
-                current_count++;
-                retract_pos = you.pos();
-                retract_found = true;
-
-                mprf("yes... inward players %d", current_count);
+                if (!retract_found)
+                {
+                    current_count++;
+                    retract_pos = you.pos();
+                    retract_found = true;
+                }
             }
             else {
                 monster* inward = basis ? monster_by_mid(_mid) : nullptr;
@@ -621,20 +616,16 @@ void move_child_tentacles_player()
 
         if (!no_foe && !pull_constrictee)
         {
-
-            mprf("path_found(%d, %d)", new_pos.x, new_pos.y);
             path_found = _tentacle_pathfind(
                 tentacle,
                 attack_constraints,
                 new_pos,
                 foe_positions,
                 current_count);
-            mprf("path_found2(%d, %d)", new_pos.x, new_pos.y);
         }
 
         if (no_foe || !path_found || pull_constrictee)
         {
-            mprf("retract_found(%s) path_found(%s)", no_foe ?"t" :"f", path_found?"t":"f");
             if (retract_found)
                 new_pos = retract_pos;
             else
@@ -680,9 +671,6 @@ void move_child_tentacles_player()
         connect_costs.connection_constraints = &connection_data;
         connect_costs.base_monster = tentacle;
 
-        mprf("you pos(%d, %d)", you.pos().x, you.pos().y);
-
-        mprf("new_pos(%d, %d)", new_pos.x, new_pos.y);
         bool connected = _try_tentacle_connect(new_pos, you.pos(),
             tentacle, 
             connect_costs,
@@ -702,18 +690,6 @@ void move_child_tentacles_player()
         tentacle->apply_location_effects(old_pos);
     }
 }
-
-static monster* _mons_get_parent_monster(monster* mons)
-{
-    for (monster_iterator mi; mi; ++mi)
-    {
-        if (mi->is_parent_monster_of(mons))
-            return *mi;
-    }
-
-    return nullptr;
-}
-
 // When given either a tentacle end or segment, kills the end and all segments
 // of that tentacle.
 bool destroy_tentacle_of_player()
@@ -723,21 +699,20 @@ bool destroy_tentacle_of_player()
     // or w/e. Using hurt seems to cause more problems though.
     for (monster_iterator mi; mi; ++mi)
     {
+        any |= destroy_tentacle(*mi);
         if (mi->is_child_tentacle_of_player())
         {
             any = true;
-            //mi->hurt(*mi, INSTANT_DEATH);
             monster_die(**mi, KILL_MISC, NON_MONSTER, true);
         }
     }
-
     return any;
 }
 
 
 static int _max_tentacles()
 {
-    return 1;
+    return 4;
 }
 
 int player_available_tentacles()
@@ -753,14 +728,20 @@ int player_available_tentacles()
     return _max_tentacles() - tentacle_count;
 }
 
+static monster_type _get_tentacle_type() {
+    //current eldritch tentacle has many bug
+    //TODO create MONS_ELDRITCH_TENTACLE for player
+    return x_chance_in_y(0, 4) ? MONS_ELDRITCH_TENTACLE : MONS_PLAYER_ELDRITCH_TENTACLE;    
+}
+
 void player_create_tentacles()
 {
-    int possible_count = 1;
+    int possible_count = _get_create_tentacle_num();
 
     if (possible_count <= 0)
         return;
 
-    monster_type tent_type = MONS_STARSPAWN_TENTACLE;
+    monster_type tent_type = _get_tentacle_type();
 
     vector<coord_def> adj_squares;
 
@@ -796,8 +777,8 @@ void player_create_tentacles()
     }
 
     if (visible_count == 1)
-        mpr("A tentacle flies out from the starspawn's body!");
+        mpr("A tentacle flies out from your body!");
     else if (visible_count > 1)
-        mpr("Tentacles burst from the starspawn's body!");
+        mpr("Tentacles burst from your body!");
     return;
 }
