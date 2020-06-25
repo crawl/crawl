@@ -1051,6 +1051,8 @@ enum monster_type                      // menv[].type
     MONS_MACHINE_GOLEM,
     MONS_BARRICADE,
     MONS_CUBUS,
+    MONS_PLAYER_ELDRITCH_TENTACLE,
+    MONS_PLAYER_ELDRITCH_TENTACLE_SEGMENT,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

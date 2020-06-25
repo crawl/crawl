@@ -33,6 +33,8 @@ static monster_type _head_child_segment[][3] =
         MONS_KRAKEN_TENTACLE_SEGMENT },
     { MONS_TENTACLED_STARSPAWN, MONS_STARSPAWN_TENTACLE,
         MONS_STARSPAWN_TENTACLE_SEGMENT },
+    { MONS_PROGRAM_BUG, MONS_PLAYER_ELDRITCH_TENTACLE,
+        MONS_PLAYER_ELDRITCH_TENTACLE_SEGMENT},
 };
 
 static monster_type _solo_tentacle_to_segment[][2] =
@@ -188,6 +190,9 @@ const monster& get_tentacle_head(const monster& mon)
     // For tentacle segments, find the associated tentacle.
     if (m->is_child_tentacle_segment())
     {
+        if(m->tentacle_connect == you.mid)
+            return *m;
+
         monster* tentacle = monster_by_mid(m->tentacle_connect);
         if (!tentacle)
             return *m;
@@ -198,6 +203,9 @@ const monster& get_tentacle_head(const monster& mon)
     // For tentacles, find the associated head.
     if (m->is_child_tentacle())
     {
+        if (m->tentacle_connect == you.mid)
+            return *m;
+
         monster* head = monster_by_mid(m->tentacle_connect);
         if (!head)
             return *m;

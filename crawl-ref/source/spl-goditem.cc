@@ -395,7 +395,8 @@ static void _dispellable_player_buffs(player_debuff_effects &buffs)
         const int dur = you.duration[i];
         if (dur <= 0 || !duration_dispellable((duration_type) i))
             continue;
-        if (i == DUR_TRANSFORMATION && you.form == transformation::shadow)
+        if (i == DUR_TRANSFORMATION && (you.form == transformation::shadow || 
+            you.form == transformation::eldritch))
             continue;
         buffs.durations.push_back((duration_type) i);
         // this includes some buffs that won't be reduced in duration -

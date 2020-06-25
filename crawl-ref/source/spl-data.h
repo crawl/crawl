@@ -4255,6 +4255,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_ELDRITCH_FORM, "Eldritch Form",
+    spschool::transmutation,
+    spflag::helpful | spflag::chaotic | spflag::utility,
+    9,
+    200,
+    -1, -1,
+    6, 0,
+    TILEG_SUMMON_HORRIBLE_THINGS,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     spschool::none,
     spflag::testing,

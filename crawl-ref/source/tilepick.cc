@@ -720,6 +720,7 @@ tileidx_t tileidx_tentacle(const monster_info& mon)
             {
                 case MONS_KRAKEN_TENTACLE: tile = TILEP_MONS_KRAKEN_TENTACLE_WATER; break;
                 case MONS_STARSPAWN_TENTACLE: tile = TILEP_MONS_STARSPAWN_TENTACLE_S; break;
+                case MONS_PLAYER_ELDRITCH_TENTACLE: tile = TILEP_MONS_STARSPAWN_TENTACLE_S; break;
                 case MONS_ELDRITCH_TENTACLE: tile = TILEP_MONS_ELDRITCH_TENTACLE_PORTAL; break;
                 case MONS_SNAPLASHER_VINE: tile = TILEP_MONS_VINE_S; break;
                 default: die("bad tentacle type");
@@ -1668,6 +1669,8 @@ static tentacle_type _get_tentacle_type(const monster_info& mon)
             return tentacle_type::eldritch;
         case MONS_STARSPAWN_TENTACLE:
         case MONS_STARSPAWN_TENTACLE_SEGMENT:
+        case MONS_PLAYER_ELDRITCH_TENTACLE:
+        case MONS_PLAYER_ELDRITCH_TENTACLE_SEGMENT:
             return tentacle_type::starspawn;
         case MONS_SNAPLASHER_VINE:
         case MONS_SNAPLASHER_VINE_SEGMENT:
@@ -1828,6 +1831,8 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
         case MONS_ELDRITCH_TENTACLE_SEGMENT:
         case MONS_STARSPAWN_TENTACLE:
         case MONS_STARSPAWN_TENTACLE_SEGMENT:
+        case MONS_PLAYER_ELDRITCH_TENTACLE:
+        case MONS_PLAYER_ELDRITCH_TENTACLE_SEGMENT:
         case MONS_SNAPLASHER_VINE:
         case MONS_SNAPLASHER_VINE_SEGMENT:
         {
@@ -1844,7 +1849,9 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
                 tile -= TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N;
 
                 if (mon.type == MONS_STARSPAWN_TENTACLE
-                    || mon.type == MONS_STARSPAWN_TENTACLE_SEGMENT)
+                    || mon.type == MONS_STARSPAWN_TENTACLE_SEGMENT
+                    || mon.type == MONS_PLAYER_ELDRITCH_TENTACLE
+                    || mon.type == MONS_PLAYER_ELDRITCH_TENTACLE_SEGMENT)
                 {
                     tile += TILEP_MONS_STARSPAWN_TENTACLE_N;
                     tile -= TILEP_MONS_ELDRITCH_TENTACLE_N;

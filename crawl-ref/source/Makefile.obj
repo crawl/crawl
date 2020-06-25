@@ -188,6 +188,7 @@ player-act.o \
 player-equip.o \
 player-reacts.o \
 player-stats.o \
+player-tentacle.o \
 player.o \
 potion.o \
 prompt.o \

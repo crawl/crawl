@@ -1985,6 +1985,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_NECROMUTATION:
         return cast_transform(powc, transformation::lich, fail);
 
+    case SPELL_ELDRITCH_FORM:
+        return cast_transform(powc, transformation::eldritch, fail);
+
     // General enhancement.
     case SPELL_REGENERATION:
         return cast_regen(powc, fail);

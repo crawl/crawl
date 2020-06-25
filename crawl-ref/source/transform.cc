@@ -30,6 +30,7 @@
 #include "output.h"
 #include "player-equip.h"
 #include "player-stats.h"
+#include "player-tentacle.h"
 #include "prompt.h"
 #include "religion.h"
 #include "spl-cast.h"
@@ -992,6 +993,31 @@ public:
 
 };
 
+
+class FormEldritch : public Form
+{
+private:
+    FormEldritch() : Form(transformation::eldritch) { }
+    DISALLOW_COPY_AND_ASSIGN(FormEldritch);
+public:
+    static const FormEldritch& instance() { static FormEldritch inst; return inst; }
+
+    /**
+     * Get an monster type corresponding to the transformation.
+     *
+     * (Used for console player glyphs.)
+     *
+     * @return  A monster type corresponding to the player in this form.
+     */
+    monster_type get_equivalent_mons() const override
+    {
+        return MONS_TENTACLED_STARSPAWN;
+    }
+};
+
+
+
+
 static const Form* forms[] =
 {
     &FormNone::instance(),
@@ -1019,6 +1045,7 @@ static const Form* forms[] =
     &FormShadow::instance(),
     &FormHydra::instance(),
     &FormHolySwine::instance(),
+    &FormEldritch::instance(),
 };
 
 const Form* get_form(transformation xform)
@@ -1905,6 +1932,10 @@ bool transform(int pow, transformation which_trans, bool involuntary,
             mpr("You feel less conspicuous.");
         break;
 
+    case transformation::eldritch:
+        you.malmutate("eldritch form");
+        break;
+
     default:
         break;
     }
@@ -2027,6 +2058,10 @@ void untransform(bool skip_move)
                  mutation_name(app), verb,
                  app == MUT_TENTACLE_SPIKE ? "s" : "");
         }
+    }
+    if (old_form == transformation::eldritch)
+    {
+        destroy_tentacle_of_player();
     }
 
     calc_hp(true, false);

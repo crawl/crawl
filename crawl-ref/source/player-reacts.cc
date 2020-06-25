@@ -95,6 +95,7 @@
 #include "output.h"
 #include "player.h"
 #include "player-stats.h"
+#include "player-tentacle.h"
 #include "quiver.h"
 #include "random.h"
 #include "religion.h"
@@ -312,6 +313,22 @@ static int _current_horror_level()
     horror_level = max(0, horror_level - 1);
     return horror_level;
 }
+
+static bool _monster_near_by_you()
+{
+    for (monster_near_iterator mi(&you, LOS_NO_TRANS); mi; ++mi)
+    {
+        if (!mi->alive()
+            || mons_aligned(*mi, &you))
+        {
+            continue;
+        }
+
+        return true;
+    }
+    return false;
+}
+
 
 /**
  * What was the player's most recent horror level?
@@ -1127,6 +1144,19 @@ void player_reacts()
         xom_tick();
     else if (you_worship(GOD_QAZLAL))
         qazlal_storm_clouds();
+
+    if (you.form == transformation::eldritch) {
+        move_child_tentacles_player();
+        if(_monster_near_by_you() && player_available_tentacles() > 0) {
+            if (x_chance_in_y(you.time_taken, 3 * BASELINE_DELAY)) {
+                player_create_tentacles();
+            }
+        }
+        if (x_chance_in_y(you.time_taken, 500 * BASELINE_DELAY)) {
+            you.malmutate("eldritch form");
+        }
+    }
+
 
     if (you.props[EMERGENCY_FLIGHT_KEY].get_bool())
         _handle_emergency_flight();

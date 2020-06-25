@@ -336,6 +336,13 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
         {
             return mutation_activity_type::FULL;
         }
+
+        if (you.form == transformation::eldritch &&
+            _is_valid_mutation(mut))
+        {
+            return mutation_activity_type::INACTIVE;
+        }
+
         // Dex and HP changes are kept in all forms.
 #if TAG_MAJOR_VERSION == 34
         if (mut == MUT_ROUGH_BLACK_SCALES)

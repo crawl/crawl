@@ -2935,6 +2935,11 @@ void drink(item_def* potion)
         mpr("You can't drink.");
         return;
     }
+    if (you.form == transformation::eldritch)
+    {
+        mpr("You can't drink in this form.");
+        return;
+    }
     if (is_able_into_wall())
     {
         mpr("In this state, you cannot do this");
@@ -3573,6 +3578,11 @@ bool player_can_read()
     if (you.berserk())
     {
         canned_msg(MSG_TOO_BERSERK);
+        return false;
+    }    
+    if (you.form == transformation::eldritch)
+    {
+        mpr("You can't read in this form.");
         return false;
     }
     if (is_able_into_wall())

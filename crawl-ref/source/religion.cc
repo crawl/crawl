@@ -3108,6 +3108,7 @@ static bool _transformed_player_can_join_god(god_type which_god)
     switch (you.form)
     {
     case transformation::lich:
+    case transformation::eldritch:
         return !is_good_god(which_god);
     case transformation::statue:
     case transformation::wisp:
@@ -4053,6 +4054,8 @@ bool god_hates_spell(spell_type spell, god_type god, bool fake_spell)
 bool god_loathes_spell(spell_type spell, god_type god)
 {
     if (spell == SPELL_NECROMUTATION && is_good_god(god))
+        return true;
+    if (spell == SPELL_ELDRITCH_FORM && is_good_god(god))
         return true;
     if (spell == SPELL_STATUE_FORM && god == GOD_YREDELEMNUL)
         return true;
