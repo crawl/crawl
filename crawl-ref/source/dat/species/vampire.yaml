@@ -54,7 +54,7 @@ fake_mutations:
     short: no food
 recommended_jobs:
   - JOB_GLADIATOR
-  - JOB_ASSASSIN
+  - JOB_BRIGAND
   - JOB_ENCHANTER
   - JOB_NECROMANCER
   - JOB_EARTH_ELEMENTALIST

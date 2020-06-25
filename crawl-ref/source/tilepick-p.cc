@@ -818,7 +818,7 @@ void tilep_job_default(int job, dolls_data *doll)
             break;
 #endif
 
-        case JOB_ASSASSIN:
+        case JOB_BRIGAND:
             parts[TILEP_PART_HELM]  = TILEP_HELM_MASK_NINJA_BLACK;
             parts[TILEP_PART_BODY]  = TILEP_BODY_SHIRT_BLACK3;
             parts[TILEP_PART_LEG]   = TILEP_LEG_PANTS_BLACK;

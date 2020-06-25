@@ -9,7 +9,7 @@ enum job_type
 #endif
     JOB_GLADIATOR,
     JOB_NECROMANCER,
-    JOB_ASSASSIN,
+    JOB_BRIGAND,
     JOB_BERSERKER,
     JOB_HUNTER,
     JOB_CONJURER,

@@ -67,18 +67,6 @@ static const map<job_type, job_def> job_data =
       { SK_WEAPON, 1 }, { SK_STEALTH, 1 }, },
 } },
 
-{ JOB_ASSASSIN, {
-    "As", "Assassin",
-    3, 3, 6,
-    { SP_TROLL, SP_HALFLING, SP_SPRIGGAN, SP_DEMONSPAWN, SP_VAMPIRE,
-      SP_VINE_STALKER, },
-    { "dagger plus:2", "robe", "cloak", "dart ego:poisoned q:8",
-      "dart ego:curare q:2" },
-    WCHOICE_NONE,
-    { { SK_FIGHTING, 2 }, { SK_DODGING, 1 }, { SK_STEALTH, 4 },
-      { SK_THROWING, 2 }, { SK_WEAPON, 2 }, },
-} },
-
 { JOB_BERSERKER, {
     "Be", "Berserker",
     9, -1, 4,
@@ -87,6 +75,18 @@ static const map<job_type, job_def> job_data =
     { "animal skin" },
     WCHOICE_PLAIN,
     { { SK_FIGHTING, 3 }, { SK_DODGING, 2 }, { SK_WEAPON, 3 }, },
+} },
+
+{ JOB_BRIGAND, {
+    "Br", "Brigand",
+    3, 3, 6,
+    { SP_TROLL, SP_HALFLING, SP_SPRIGGAN, SP_DEMONSPAWN, SP_VAMPIRE,
+      SP_VINE_STALKER, },
+    { "dagger plus:2", "robe", "cloak", "dart ego:poisoned q:8",
+      "dart ego:curare q:2" },
+    WCHOICE_NONE,
+    { { SK_FIGHTING, 2 }, { SK_DODGING, 1 }, { SK_STEALTH, 4 },
+      { SK_THROWING, 2 }, { SK_WEAPON, 2 }, },
 } },
 
 { JOB_CHAOS_KNIGHT, {

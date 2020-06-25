@@ -47,7 +47,7 @@ mutations:
     MUT_REGENERATION: 1
 recommended_jobs:
   - JOB_FIGHTER
-  - JOB_ASSASSIN
+  - JOB_BRIGAND
   - JOB_BERSERKER
   - JOB_ENCHANTER
   - JOB_CONJURER

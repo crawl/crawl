@@ -19,14 +19,14 @@ Artificer
 Artificers start with a few magical devices and are competent at using such
 tools.
 %%%%
-Assassin
-
-Assassins carry poisoned darts and a small number of nasty curare darts.
-%%%%
 Berserker
 
 Berserkers believe in Trog, the magic-hating god of frenzy. Not much can stop a
 raging berserker early on, apart from hubris.
+%%%%
+Brigand
+
+Brigands carry poisoned darts and a small number of nasty curare darts.
 %%%%
 Chaos Knight
 

@@ -50,7 +50,7 @@ mutations:
     MUT_ACUTE_VISION: 1
     MUT_SLOW_METABOLISM: 2
 recommended_jobs:
-  - JOB_ASSASSIN
+  - JOB_BRIGAND
   - JOB_ARTIFICER
   - JOB_ABYSSAL_KNIGHT
   - JOB_WARPER
