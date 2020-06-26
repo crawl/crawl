@@ -193,7 +193,7 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu, int
         if (!you.has_hydra_multi_attack())
         {       
 
-            melee_attack attk(&you, defender);
+            melee_attack attk(&you, defender, attack_num);
                 if (second_attack != -1) {
                     attk.is_double_attack = true;
                 }
