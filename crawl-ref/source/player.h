@@ -61,6 +61,7 @@
 #define NEMELEX_SACRIFICING_KEY "nemelex_sacrificing"
 #define HYDRA_HEADS_NET_LOSS "hydra_heads_net_loss"
 #define PLAYER_TENTACLE_CONNECT "player_tentacle_connect"
+#define PLAYER_TENTACLE_DELAY "player_tentacle_delay"
 
 // display/messaging breakpoints for penalties from Ru's MUT_HORROR
 #define HORROR_LVL_EXTREME  3

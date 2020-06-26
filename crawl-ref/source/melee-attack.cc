@@ -3874,7 +3874,8 @@ bool melee_attack::_extra_aux_attack(unarmed_attack_type atk)
     {
     case UNAT_CONSTRICT:
         return you.get_mutation_level(MUT_CONSTRICTING_TAIL)
-                || you.species == SP_OCTOPODE && you.has_usable_tentacle();
+                || (you.species == SP_OCTOPODE && you.has_usable_tentacle())
+                || you.form == transformation::eldritch;
 
     case UNAT_KICK:
         return you.has_usable_hooves()

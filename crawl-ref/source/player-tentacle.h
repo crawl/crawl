@@ -11,4 +11,4 @@ void move_child_tentacles_player();
 bool destroy_tentacle_of_player();
 bool destroy_tentacles_of_player();
 int player_available_tentacles();
-void player_create_tentacles();
+void player_create_tentacles(int tentacle_num);

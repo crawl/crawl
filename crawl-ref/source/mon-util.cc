@@ -1973,6 +1973,20 @@ static mon_attack_def _machine_golem_attack(const monster& mon,
     return { AT_HIT, _flavour, dam };
 }
 
+static mon_attack_def _player_eldritch_tentacle_attack(const monster&,
+                                                     int attk_number)
+{
+    if (attk_number != 0)
+        return { };
+
+    const int dam = you.skill_rdiv(SK_UNARMED_COMBAT) + 3;
+
+    const int slaying = slaying_bonus() / 2; //slaying heuristic
+    return { AT_HIT, AF_PLAIN, (dam + slaying)};
+}
+
+
+
 /** Get the attack type, attack flavour and damage for a monster attack.
  *
  * @param mon The monster to look at.
@@ -2013,6 +2027,8 @@ mon_attack_def mons_attack_spec(const monster& m, int attk_number,
         return _hepliaklqana_ancestor_attack(mon, attk_number);
     else if (mc == MONS_MACHINE_GOLEM)
         return _machine_golem_attack(mon, attk_number);
+    else if (mc == MONS_PLAYER_ELDRITCH_TENTACLE)
+        return _player_eldritch_tentacle_attack(mon, attk_number);
     else if (mons_is_demonspawn(mc) && attk_number != 0)
         mc = draco_or_demonspawn_subspecies(mon);
 

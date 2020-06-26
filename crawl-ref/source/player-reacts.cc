@@ -1146,13 +1146,18 @@ void player_reacts()
         qazlal_storm_clouds();
 
     if (you.form == transformation::eldritch) {
-        move_child_tentacles_player();
-        if(_monster_near_by_you() && player_available_tentacles() > 0) {
-            if (x_chance_in_y(you.time_taken, 3 * BASELINE_DELAY)) {
-                player_create_tentacles();
+        you.props[PLAYER_TENTACLE_DELAY].get_int() += you.time_taken;
+        while(you.props[PLAYER_TENTACLE_DELAY].get_int() > 7) {
+            move_child_tentacles_player();
+            you.props[PLAYER_TENTACLE_DELAY].get_int() -= 7;
+        }
+        if(_monster_near_by_you()) {
+            int current_tentacle_available = player_available_tentacles();
+            if (current_tentacle_available > 0 && x_chance_in_y(you.time_taken, 3 * BASELINE_DELAY )) {
+                player_create_tentacles(current_tentacle_available >= 2 ? (coinflip()?2:1) : 1);
             }
         }
-        if (x_chance_in_y(you.time_taken, 500 * BASELINE_DELAY)) {
+        if (x_chance_in_y(you.time_taken, 300 * BASELINE_DELAY)) {
             you.malmutate("eldritch form");
         }
     }

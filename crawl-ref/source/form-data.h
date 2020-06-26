@@ -261,7 +261,7 @@ static const form_entry formdata[] =
     EQF_PHYSICAL, mrd(MR_RES_POISON, 3) | mrd(MR_RES_NEG, 3) | MR_RES_ROTTING
                                                          | MR_RES_PETRIFY,
     DEFAULT_DURATION, 10, 0, SIZE_GIANT, 16,
-    25, 0, 0, true, 0, 10, 15,
+    25, 0, 0, true, 0, 10, 5,
     SPWPN_NORMAL, RED, "Tentacles", { "hit", "smack", "pummel", "thrash" },
     FC_DEFAULT, FC_ENABLE, FC_FORBID, true, false,
     "scream", 5, "tentacle", "", "wriggle towards", "flesh"

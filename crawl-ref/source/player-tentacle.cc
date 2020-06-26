@@ -24,9 +24,6 @@
 #include "terrain.h"
 #include "view.h"
 
-static int _get_create_tentacle_num() {
-    return 1;
-}
 
 static mgen_data _segment_data(coord_def pos, monster_type type)
 {
@@ -734,9 +731,9 @@ static monster_type _get_tentacle_type() {
     return x_chance_in_y(0, 4) ? MONS_ELDRITCH_TENTACLE : MONS_PLAYER_ELDRITCH_TENTACLE;    
 }
 
-void player_create_tentacles()
+void player_create_tentacles(int tentacle_num)
 {
-    int possible_count = _get_create_tentacle_num();
+    int possible_count = tentacle_num;
 
     if (possible_count <= 0)
         return;
