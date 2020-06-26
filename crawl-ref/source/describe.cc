@@ -2400,7 +2400,7 @@ void describe_feature_wide(const coord_def& pos)
 #ifdef USE_TILE
         tileidx_t tile = tileidx_feature(pos);
         apply_variations(env.tile_flv(pos), &tile, pos);
-        f.tile = tile_def(tile, get_dngn_tex(tile));
+        f.tile = tile_def(tile, get_tile_texture(tile));
 #endif
         f.quote = trimmed_string(inf.quote);
         feats.emplace_back(f);
@@ -2519,7 +2519,7 @@ void describe_feature_type(dungeon_feature_type feat)
     inf.body << getLongDescription(name);
 #ifdef USE_TILE
     const tileidx_t idx = tileidx_feature_base(feat);
-    tile_def tile = tile_def(idx, get_dngn_tex(idx));
+    tile_def tile = tile_def(idx, get_tile_texture(idx));
     show_description(inf, &tile);
 #else
     show_description(inf);
@@ -4851,7 +4851,7 @@ int describe_monsters(const monster_info &mi, const string& /*footer*/)
                 tiles.json_write_null("mcache");
             }
         }
-        else if (t0 >= TILE_MAIN_MAX)
+        else if (get_tile_texture(t0) == TEX_PLAYER)
         {
             tiles.json_write_comma();
             tiles.write_message("\"doll\":[[%u,%d]]", (unsigned int) t0, TILE_Y);

@@ -1741,19 +1741,19 @@ bool StashTracker::display_search_results(
         else if (feat_is_trap(res.feat))
         {
             const tileidx_t idx = tileidx_trap(res.trap);
-            me->add_tile(tile_def(idx, get_dngn_tex(idx)));
+            me->add_tile(tile_def(idx, get_tile_texture(idx)));
         }
         else if (feat_is_runed(res.feat))
         {
             // Handle large doors and huge gates
             const tileidx_t idx = tileidx_feature_base(res.feat);
-            me->add_tile(tile_def(idx, get_dngn_tex(idx)));
+            me->add_tile(tile_def(idx, get_tile_texture(idx)));
         }
         else
         {
             const dungeon_feature_type feat = feat_by_desc(res.match);
             const tileidx_t idx = tileidx_feature_base(feat);
-            me->add_tile(tile_def(idx, get_dngn_tex(idx)));
+            me->add_tile(tile_def(idx, get_tile_texture(idx)));
         }
 
         stashmenu.add_entry(me);

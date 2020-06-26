@@ -35,7 +35,7 @@ GodMenuEntry::GodMenuEntry(god_type god_, bool long_name) :
     {
         const tileidx_t idx = tileidx_feature_base(feat);
         add_tile(tile_def(pick_dngn_tile(idx, ui_random(INT_MAX)),
-                                         get_dngn_tex(idx)));
+                                         get_tile_texture(idx)));
     }
 }
 

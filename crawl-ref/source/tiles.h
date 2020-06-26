@@ -58,5 +58,3 @@ struct tile_def
     TextureID tex;
     int ymax;
 };
-
-TextureID get_dngn_tex(tileidx_t idx);
