@@ -46,7 +46,7 @@
 static const int EQF_HYDRA = (SLOTF(EQ_AMULET_TWO) | SLOTF(EQ_AMULET_THREE) | SLOTF(EQ_AMULET_FOUR)
                              | SLOTF(EQ_AMULET_FIVE) | SLOTF(EQ_AMULET_SIX)
                              | SLOTF(EQ_AMULET_SEVEN) | SLOTF(EQ_AMULET_EIGHT) | SLOTF(EQ_AMULET_NINE))
-                             | ((!is_unrandom_artefact(*you.slot_item(EQ_AMULET_ONE, true), UNRAND_FINGER_AMULET)? SLOTF(EQ_RING_AMULET) : 0));
+                             | SLOTF(EQ_RING_AMULET);
 static const int EQF_NONE = 0;
 // "hand" slots (not rings)
 static const int EQF_HANDS = SLOTF(EQ_WEAPON) | SLOTF(EQ_SECOND_WEAPON) | SLOTF(EQ_SHIELD)
