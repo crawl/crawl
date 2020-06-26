@@ -21,7 +21,6 @@
 class Popup;
 class Region;
 class CRTRegion;
-class CRTRegionSingleSelect;
 class MenuRegion;
 class TileRegion;
 class DungeonRegion;
@@ -211,8 +210,6 @@ public:
     FontWrapper* get_stat_font() const { return m_stat_font; }
     FontWrapper* get_tip_font() const { return m_tip_font; }
     FontWrapper* get_lbl_font() const { return m_lbl_font; }
-
-    CRTRegion* get_crt() { return m_region_crt; }
 
     const ImageManager* get_image_manager() { return m_image; }
     int to_lines(int num_tiles, int tile_height = TILE_Y);
