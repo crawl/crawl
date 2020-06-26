@@ -498,8 +498,6 @@ void pack_cell_overlays(const coord_def &gc, crawl_view_buffer &vbuf)
 {
     auto& cell = vbuf(gc).tile;
 
-    cell.num_dngn_overlay = 0;
-
     if (cell.map_knowledge.feat() == DNGN_UNSEEN)
         return; // Don't put overlays on unseen tiles
 

@@ -78,14 +78,23 @@ DungeonRegion::~DungeonRegion()
 }
 
 void DungeonRegion::load_dungeon(const crawl_view_buffer &vbuf,
-                                 const coord_def &gc)
+                                 const coord_def &gc_at_vbuf_centre)
 {
     m_dirty = true;
 
-    m_cx_to_gx = gc.x - mx / 2;
-    m_cy_to_gy = gc.y - my / 2;
+    m_cx_to_gx = gc_at_vbuf_centre.x - mx / 2;
+    m_cy_to_gy = gc_at_vbuf_centre.y - my / 2;
 
     m_vbuf = vbuf;
+
+    for (int y = 0; y < m_vbuf.size().y; ++y)
+        for (int x = 0; x < m_vbuf.size().x; ++x)
+        {
+            coord_def gc(x + m_cx_to_gx, y + m_cy_to_gy);
+
+            if (map_bounds(gc))
+                pack_cell_overlays(coord_def(x, y), m_vbuf);
+        }
 
     place_cursor(CURSOR_TUTORIAL, m_cursor[CURSOR_TUTORIAL]);
 }
@@ -116,10 +125,6 @@ void DungeonRegion::pack_buffers()
     for (int y = 0; y < crawl_view.viewsz.y; ++y)
         for (int x = 0; x < crawl_view.viewsz.x; ++x)
         {
-            coord_def gc(x + m_cx_to_gx, y + m_cy_to_gy);
-
-            if (map_bounds(gc))
-                pack_cell_overlays(coord_def(x, y), m_vbuf);
             m_buf_dngn.add(vbuf_cell->tile, x, y);
 
             const int fcol = vbuf_cell->flash_colour;
