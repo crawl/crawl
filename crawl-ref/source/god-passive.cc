@@ -577,7 +577,7 @@ void ash_check_bondage(bool msg)
         }
         // Missing hand is Missing head of hydra and it means fewer amulets
         else if (you.species != SP_HYDRA && i == EQ_AMULET_NINE
-                 && you.get_mutation_level(MUT_MISSING_HAND))
+                 && you.get_mutation_level(MUT_MISSING_NECK))
         {
             continue;
         }
@@ -599,7 +599,7 @@ void ash_check_bondage(bool msg)
         else if (you.species == SP_HYDRA
                  && ((i == EQ_AMULET || i == EQ_AMULET_LEFT || i == EQ_AMULET_RIGHT)
                      || (i == EQ_AMULET_NINE
-                         && you.get_mutation_level(MUT_MISSING_HAND))))
+                         && you.get_mutation_level(MUT_MISSING_NECK))))
         {
             continue;
         }

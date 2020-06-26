@@ -152,7 +152,7 @@ static const sacrifice_def sac_data[] =
   65,
   SK_SHIELDS,
   nullptr,
-  nullptr,
+  []() { return you.species != SP_HYDRA; },
 },
 
 { ABIL_RU_SACRIFICE_EXPERIENCE, MUT_INEXPERIENCED,
@@ -193,5 +193,15 @@ static const sacrifice_def sac_data[] =
   SK_NONE,
   nullptr,
   nullptr,
+},
+
+{ ABIL_RU_SACRIFICE_NECK, MUT_MISSING_NECK,
+  "sacrifice one of your ",
+  "sacrificed a neck",
+
+  65,
+  SK_NONE,
+  nullptr,
+  []() { return you.species == SP_HYDRA; },
 },
 };

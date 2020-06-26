@@ -2198,7 +2198,7 @@ bool melee_attack::consider_decapitation(int dam, int damage_type)
 
     // What's the largest number of heads the defender can have?
     const int limit = defender->type == MONS_LERNAEAN_HYDRA             ?     27:
-                      (defender->is_player() && you.has_hydra_multi_attack())?27 - you.get_mutation_level(MUT_MISSING_HAND):
+                      (defender->is_player() && you.has_hydra_multi_attack())?27 - you.get_mutation_level(MUT_MISSING_NECK):
                                                                               MAX_HYDRA_HEADS;
 
     if (attacker->damage_brand(attack_number) == SPWPN_FLAMING)

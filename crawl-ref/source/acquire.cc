@@ -578,7 +578,7 @@ static int _acquirement_jewellery_subtype(bool /*divine*/, int & /*quantity*/)
                        - (you.get_mutation_level(MUT_MISSING_HAND) ? 1 : 0);
 
     const int amulet_num = (you.species == SP_HYDRA ? 9 : 2)
-                         - (you.get_mutation_level(MUT_MISSING_HAND) ? 1 : 0);
+                         - (you.get_mutation_level(MUT_MISSING_NECK) ? 1 : 0);
 
     // Try ten times to give something the player hasn't seen.
     for (int i = 0; i < 10; i++)

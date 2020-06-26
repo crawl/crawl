@@ -766,7 +766,7 @@ maybe_bool you_can_wear(equipment_type eq, bool temp)
     case EQ_AMULET_EIGHT:
         return you.heads() <= 21 ? MB_FALSE : MB_TRUE;
     case EQ_AMULET_NINE:
-        return you.heads() <= 24 && !you.get_mutation_level(MUT_MISSING_HAND) ? MB_FALSE : MB_TRUE;
+        return you.heads() <= 24 && !you.get_mutation_level(MUT_MISSING_NECK) ? MB_FALSE : MB_TRUE;
     case EQ_RING_AMULET:
         return player_equip_unrand(UNRAND_FINGER_AMULET) ? MB_TRUE : MB_FALSE;
 

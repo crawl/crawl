@@ -4537,7 +4537,8 @@ static void _ru_kill_skill(skill_type skill)
 static void _extra_sacrifice_code(ability_type sac)
 {
     const sacrifice_def &sac_def = _get_sacrifice_def(sac);
-    if (sac_def.sacrifice == ABIL_RU_SACRIFICE_HAND)
+    if (sac_def.sacrifice == ABIL_RU_SACRIFICE_HAND ||
+        sac_def.sacrifice == ABIL_RU_SACRIFICE_NECK)
     {
         equipment_type ring_slot;
 

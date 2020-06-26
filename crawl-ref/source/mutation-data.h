@@ -1931,6 +1931,14 @@ static const mutation_def mut_data[] =
   {"The sacred energy of your mouth disappears.", "", ""},
 },
 
+{ MUT_MISSING_NECK, 0, 1, mutflag::bad, false,
+  "missing a neck",
+
+  {"You are missing a neck.", "", ""},
+  {"One of your necks has vanished, leaving only a stump!", "", ""},
+  {"Your stump has regrown into a neck!", "", ""},
+},
+
 };
 
 static const mutation_category_def category_mut_data[] =

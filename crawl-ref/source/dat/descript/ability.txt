@@ -792,6 +792,10 @@ Sacrifice Durability ability
 Sacrifices durability, preventing you from having any ranks in the Armour
 skill. This sacrifice is worth more if you cannot train Dodging.
 %%%%
+Sacrifice a Neck ability
+
+Sacrifices a Neck to be able to wear one fewer amulet.
+%%%%
 Sacrifice a Hand ability
 
 Sacrifices a hand, causing you to lose the ability to use shields{{

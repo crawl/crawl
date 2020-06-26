@@ -1758,6 +1758,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
             break;
 
         case MUT_MISSING_HAND:
+        case MUT_MISSING_NECK:
             {
                 const char *hands;
                 if (you.species == SP_FELID)

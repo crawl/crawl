@@ -3211,6 +3211,17 @@ static void tag_read_you(reader &th)
         you.innate_mutation[MUT_ACID_RESISTANCE] = 1;
     }
 
+    if (th.getMinorVersion() < TAG_MINOR_SACRIFICE_NECK
+        && you.species == SP_HYDRA
+        && you.mutation[MUT_MISSING_HAND])
+    {
+        you.mutation[MUT_MISSING_HAND] =
+        you.innate_mutation[MUT_MISSING_HAND] = 0;
+
+        you.mutation[MUT_MISSING_NECK] =
+        you.innate_mutation[MUT_MISSING_NECK] = 1;
+    }
+
     // Fixup for Sacrifice XP from XL 27 (#9895). No minor tag, but this
     // should still be removed on a major bump.
     const int xl_remaining = you.get_max_xl() - you.experience_level;
