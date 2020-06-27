@@ -390,7 +390,7 @@ static void _describe_cards(CrawlVector& cards)
     auto title_hbox = make_shared<Box>(Widget::HORZ);
 #ifdef USE_TILE
         auto icon = make_shared<Image>();
-        icon->set_tile(tile_def(TILEG_NEMELEX_CARD, TEX_GUI));
+        icon->set_tile(tile_def(TILEG_NEMELEX_CARD));
         title_hbox->add_child(move(icon));
 #endif
         auto title = make_shared<Text>(formatted_string(name, WHITE));
@@ -535,7 +535,7 @@ static deck_type _choose_deck(const string title = "Draw")
         if (!deck_cards((deck_type)i))
             me->colour = COL_USELESS;
 
-        me->add_tile(tile_def(TILEG_NEMELEX_DECK + i - FIRST_PLAYER_DECK + 1, TEX_GUI));
+        me->add_tile(tile_def(TILEG_NEMELEX_DECK + i - FIRST_PLAYER_DECK + 1));
         deck_menu.add_entry(me);
     }
 
@@ -730,7 +730,7 @@ static void _draw_stack(int to_stack)
         if (!deck_cards((deck_type)i))
             me->colour = COL_USELESS;
 
-        me->add_tile(tile_def(TILEG_NEMELEX_DECK + i - FIRST_PLAYER_DECK + 1, TEX_GUI));
+        me->add_tile(tile_def(TILEG_NEMELEX_DECK + i - FIRST_PLAYER_DECK + 1));
         deck_menu.add_entry(me);
     }
     deck_menu.on_single_selection = [&deck_menu, &stack, to_stack](const MenuEntry& sel)
@@ -791,7 +791,7 @@ bool stack_five(int to_stack)
         MenuEntry * const entry =
             new MenuEntry(card_name((card_type)stack[i].get_int()),
                           MEL_ITEM, 1, '1'+i);
-        entry->add_tile(tile_def(TILEG_NEMELEX_CARD, TEX_GUI));
+        entry->add_tile(tile_def(TILEG_NEMELEX_CARD));
         menu.add_entry(entry);
     }
     menu.set_more(formatted_string::parse_string(

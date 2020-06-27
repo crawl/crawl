@@ -949,7 +949,7 @@ void TextTileItem::render()
         for (const tile_def &tdef : m_tiles)
         {
             int tile      = tdef.tile;
-            TextureID tex = tdef.tex;
+            const auto tex = get_tile_texture(tile);
             m_tile_buf[tex].add_unscaled(tile, m_min_coord.x + 2, m_min_coord.y + 2,
                                          tdef.ymax,
                                          (float)m_unit_height_pixels / TILE_Y);

@@ -3354,11 +3354,11 @@ int choose_ability_menu(const vector<talent>& talents)
                                         describe_talent(talents[i]),
                                         MEL_ITEM, 1, talents[i].hotkey);
             me->data = &numbers[i];
-            me->add_tile(tile_def(tileidx_ability(talents[i].which), TEX_GUI));
+            me->add_tile(tile_def(tileidx_ability(talents[i].which)));
             if (!check_ability_possible(talents[i].which, true))
             {
                 me->colour = COL_INAPPLICABLE;
-                me->add_tile(tile_def(TILEI_MESH, TEX_ICONS));
+                me->add_tile(tile_def(TILEI_MESH));
             }
             else if (_check_ability_dangerous(talents[i].which, true))
                 me->colour = COL_DANGEROUS;
@@ -3387,12 +3387,11 @@ int choose_ability_menu(const vector<talent>& talents)
                                             describe_talent(talents[i]),
                                             MEL_ITEM, 1, talents[i].hotkey);
                 me->data = &numbers[i];
-                me->add_tile(tile_def(tileidx_ability(talents[i].which),
-                                      TEX_GUI));
+                me->add_tile(tile_def(tileidx_ability(talents[i].which)));
                 if (!check_ability_possible(talents[i].which, true))
                 {
                     me->colour = COL_INAPPLICABLE;
-                    me->add_tile(tile_def(TILEI_MESH, TEX_ICONS));
+                    me->add_tile(tile_def(TILEI_MESH));
                 }
                 else if (_check_ability_dangerous(talents[i].which, true))
                     me->colour = COL_DANGEROUS;

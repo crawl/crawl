@@ -1532,7 +1532,7 @@ void job_group::attach(const newgame_def& ng, const newgame_def& defaults,
             job,
             item_status,
             get_job_name(job),
-            tile_def(tileidx_player_job(job, recommended), TEX_GUI),
+            tile_def(tileidx_player_job(job, recommended)),
             is_active_item,
             pos
         );
@@ -1580,7 +1580,7 @@ void species_group::attach(const newgame_def& ng, const newgame_def& defaults,
             this_species,
             item_status,
             species_name(this_species),
-            tile_def(tileidx_player_species(this_species, recommended), TEX_GUI),
+            tile_def(tileidx_player_species(this_species, recommended)),
             is_active_item,
             pos
         );
@@ -1730,7 +1730,7 @@ static void _construct_weapon_menu(const newgame_def& ng,
         if (choice.skill == SK_THROWING)
         {
             tile_stack->add_child(make_shared<Image>(
-                    tile_def(TILE_MI_THROWING_NET, TEX_DEFAULT)));
+                    tile_def(TILE_MI_THROWING_NET)));
         }
         if (choice.skill == SK_UNARMED_COMBAT)
         {
@@ -1741,7 +1741,7 @@ static void _construct_weapon_menu(const newgame_def& ng,
         else
         {
             tile_stack->add_child(make_shared<Image>(
-                    tile_def(choice.tile, TEX_DEFAULT)));
+                    tile_def(choice.tile)));
         }
 #endif
 
@@ -2082,28 +2082,28 @@ static tile_def tile_for_map_name(string name)
             TILEG_CMD_CAST_SPELL,
             TILEG_CMD_USE_ABILITY,
         };
-        return tile_def(tutorial_tiles[i], TEX_GUI);
+        return tile_def(tutorial_tiles[i]);
     }
 
     if (name == "Sprint I: \"Red Sonja\"")
-        return tile_def(TILEP_MONS_SONJA, TEX_PLAYER);
+        return tile_def(TILEP_MONS_SONJA);
     if (name == "Sprint II: \"The Violet Keep of Menkaure\"")
-        return tile_def(TILEP_MONS_MENKAURE, TEX_PLAYER);
+        return tile_def(TILEP_MONS_MENKAURE);
     if (name == "Sprint III: \"The Ten Rune Challenge\"")
-        return tile_def(TILE_MISC_RUNE_OF_ZOT, TEX_DEFAULT);
+        return tile_def(TILE_MISC_RUNE_OF_ZOT);
     if (name == "Sprint IV: \"Fedhas' Mad Dash\"")
-        return tile_def(TILE_DNGN_ALTAR_FEDHAS, TEX_FEAT);
+        return tile_def(TILE_DNGN_ALTAR_FEDHAS);
     if (name == "Sprint V: \"Ziggurat Sprint\"")
-        return tile_def(TILE_DNGN_PORTAL_ZIGGURAT, TEX_FEAT);
+        return tile_def(TILE_DNGN_PORTAL_ZIGGURAT);
     if (name == "Sprint VI: \"Thunderdome\"")
-        return tile_def(TILE_GOLD16, TEX_DEFAULT);
+        return tile_def(TILE_GOLD16);
     if (name == "Sprint VII: \"The Pits\"")
-        return tile_def(TILE_WALL_CRYPT_METAL + 2, TEX_WALL);
+        return tile_def(TILE_WALL_CRYPT_METAL + 2);
     if (name == "Sprint VIII: \"Arena of Blood\"")
-        return tile_def(TILE_UNRAND_WOE, TEX_DEFAULT);
+        return tile_def(TILE_UNRAND_WOE);
     if (name == "Sprint IX: \"|||||||||||||||||||||||||||||\"")
-        return tile_def(TILE_WALL_LAB_METAL + 2, TEX_WALL);
-    return tile_def(0, TEX_GUI);
+        return tile_def(TILE_WALL_LAB_METAL + 2);
+    return tile_def(0);
 }
 #endif
 

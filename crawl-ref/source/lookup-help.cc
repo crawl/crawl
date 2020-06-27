@@ -625,8 +625,8 @@ static MenuEntry* _item_menu_gen(char letter, const string &str, string &key)
     tileidx_t idx = tileidx_item(get_item_info(item));
     tileidx_t base_item = tileidx_known_base_item(idx);
     if (base_item)
-        me->add_tile(tile_def(base_item, TEX_DEFAULT));
-    me->add_tile(tile_def(idx, TEX_DEFAULT));
+        me->add_tile(tile_def(base_item));
+    me->add_tile(tile_def(idx));
     return me;
 }
 
@@ -642,7 +642,7 @@ static MenuEntry* _feature_menu_gen(char letter, const string &str, string &key)
     if (feat)
     {
         const tileidx_t idx = tileidx_feature_base(feat);
-        me->add_tile(tile_def(idx, get_tile_texture(idx)));
+        me->add_tile(tile_def(idx));
     }
 
     return me;
@@ -665,7 +665,7 @@ static MenuEntry* _ability_menu_gen(char letter, const string &str, string &key)
 
     const ability_type ability = ability_by_name(str);
     if (ability != ABIL_NON_ABILITY)
-        me->add_tile(tile_def(tileidx_ability(ability), TEX_GUI));
+        me->add_tile(tile_def(tileidx_ability(ability)));
 
     return me;
 }
@@ -676,7 +676,7 @@ static MenuEntry* _ability_menu_gen(char letter, const string &str, string &key)
 static MenuEntry* _card_menu_gen(char letter, const string &str, string &key)
 {
     MenuEntry* me = _simple_menu_gen(letter, str, key);
-    me->add_tile(tile_def(TILEG_NEMELEX_CARD, TEX_GUI));
+    me->add_tile(tile_def(TILEG_NEMELEX_CARD));
     return me;
 }
 
@@ -689,7 +689,7 @@ static MenuEntry* _spell_menu_gen(char letter, const string &str, string &key)
 
     const spell_type spell = spell_by_name(str);
     if (spell != SPELL_NO_SPELL)
-        me->add_tile(tile_def(tileidx_spell(spell), TEX_GUI));
+        me->add_tile(tile_def(tileidx_spell(spell)));
     me->colour = is_player_spell(spell) ? WHITE
                                         : DARKGREY; // monster-only
 
@@ -704,7 +704,7 @@ static MenuEntry* _skill_menu_gen(char letter, const string &str, string &key)
     MenuEntry* me = _simple_menu_gen(letter, str, key);
 
     const skill_type skill = str_to_skill_safe(str);
-    me->add_tile(tile_def(tileidx_skill(skill, TRAINING_ENABLED), TEX_GUI));
+    me->add_tile(tile_def(tileidx_skill(skill, TRAINING_ENABLED)));
 
     return me;
 }
@@ -719,7 +719,7 @@ static MenuEntry* _branch_menu_gen(char letter, const string &str, string &key)
     const branch_type branch = branch_by_shortname(str);
     int hotkey = branches[branch].travel_shortcut;
     me->hotkeys = {hotkey, tolower_safe(hotkey)};
-    me->add_tile(tile_def(tileidx_branch(branch), TEX_FEAT));
+    me->add_tile(tile_def(tileidx_branch(branch)));
 
     return me;
 }
@@ -744,7 +744,7 @@ static MenuEntry* _cloud_menu_gen(char letter, const string &str, string &key)
     fake_cloud_info.type = cloud;
     fake_cloud_info.colour = me->colour;
     const tileidx_t idx = tileidx_cloud(fake_cloud_info);
-    me->add_tile(tile_def(idx, TEX_DEFAULT));
+    me->add_tile(tile_def(idx));
 
     return me;
 }
@@ -1035,7 +1035,7 @@ static int _describe_card(const string &key, const string &suffix,
     const card_type card = name_to_card(card_name);
     ASSERT(card != NUM_CARDS);
 #ifdef USE_TILE
-    tile_def tile = tile_def(TILEG_NEMELEX_CARD, TEX_GUI);
+    tile_def tile = tile_def(TILEG_NEMELEX_CARD);
     return _describe_key(key, suffix, footer, which_decks(card) + "\n", &tile);
 #else
     return _describe_key(key, suffix, footer, which_decks(card) + "\n");
@@ -1060,7 +1060,7 @@ static int _describe_cloud(const string &key, const string &suffix,
     cloud_info fake_cloud_info;
     fake_cloud_info.type = cloud;
     const tileidx_t idx = tileidx_cloud(fake_cloud_info);
-    tile_def tile = tile_def(idx, TEX_DEFAULT);
+    tile_def tile = tile_def(idx);
     return _describe_key(key, suffix, footer, extra_cloud_info(cloud), &tile);
 #else
     return _describe_key(key, suffix, footer, extra_cloud_info(cloud));
@@ -1219,7 +1219,7 @@ static int _describe_branch(const string &key, const string &suffix,
             + "\n\n"
             + branch_rune_desc(branch, false);
 
-    tile_def tile = tile_def(tileidx_branch(branch), TEX_FEAT);
+    tile_def tile = tile_def(tileidx_branch(branch));
     return _describe_key(key, suffix, footer, info, &tile);
 }
 

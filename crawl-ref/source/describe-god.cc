@@ -1093,7 +1093,7 @@ static void build_partial_god_ui(god_type which_god, shared_ptr<ui::Popup>& popu
 #ifdef USE_TILE
     auto icon = make_shared<Image>();
     const tileidx_t idx = tileidx_feature_base(altar_for_god(which_god));
-    icon->set_tile(tile_def(idx, get_tile_texture(idx)));
+    icon->set_tile(tile_def(idx));
     title_hbox->add_child(move(icon));
 #endif
 

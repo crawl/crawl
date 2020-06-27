@@ -755,7 +755,7 @@ private:
             ++hotkey;
 
             me->colour = colour;
-            me->add_tile(tile_def(tileidx_spell(spell.spell), TEX_GUI));
+            me->add_tile(tile_def(tileidx_spell(spell.spell)));
 
             me->data = &(spell.spell);
             add_entry(me);
