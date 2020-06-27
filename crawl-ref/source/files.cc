@@ -1813,6 +1813,50 @@ bool pregen_dungeon(const level_id &stopping_point)
     }
 }
 
+static void _rescue_player_from_wall()
+{
+    // n.b. you.wizmode_teleported_into_rock would be better, but it is not
+    // actually saved.
+    if (cell_is_solid(you.pos()) && !you.wizard)
+    {
+        // if the player has somehow gotten into a wall, there may have been
+        // a fairly non-trivial crash, putting the player at some arbitrary
+        // position relative to where they were. Rescue them by trying to find
+        // a seen staircase, with a clear space near the wall as just a
+        // a fallback.
+        mprf(MSGCH_ERROR, "Emergency fixup: removing player from wall "
+                          "at %d,%d. Please report this as a bug!",
+                          you.pos().x, you.pos().y);
+        vector<coord_def> upstairs;
+        vector<coord_def> downstairs;
+        coord_def backup_clear_pos(-1,-1);
+        for (distance_iterator di(you.pos()); di; ++di)
+        {
+            // just find any clear square as a backup for really weird cases.
+            if (!in_bounds(backup_clear_pos) && !cell_is_solid(*di))
+                backup_clear_pos = *di;
+            // TODO: in principle this should use env.map_forgotten if it
+            // exists, but I'm not sure that is worth the trouble.
+            if (feat_is_stair(grd(*di)) && env.map_seen(*di))
+            {
+                const command_type dir = feat_stair_direction(grd(*di));
+                if (dir == CMD_GO_UPSTAIRS)
+                    upstairs.push_back(*di);
+                else if (dir == CMD_GO_DOWNSTAIRS)
+                    downstairs.push_back(*di);
+            }
+        }
+        coord_def target = backup_clear_pos;
+        if (upstairs.size())
+            target = upstairs[0];
+        else if (downstairs.size())
+            target = downstairs[0];
+        // if things get this messed up, don't make them worse
+        ASSERT(in_bounds(target));
+        you.moveto(target);
+    }
+}
+
 /**
  * Load the current level.
  *
@@ -1985,6 +2029,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     }
     else if (load_mode == LOAD_RESTART_GAME)
     {
+        _rescue_player_from_wall();
         // Travel needs initialize some things on reload, too.
         travel_init_load_level();
     }
