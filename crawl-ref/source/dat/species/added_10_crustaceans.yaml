@@ -9,8 +9,8 @@ difficulty_priority : 50
 aptitudes:
   xp: 2
   hp: -3
-  mp_mod: 1
-  mr: 6
+  mp_mod: 0
+  mr: 4
   unarmed_combat : 1
   short_blades: 0
   long_blades: False
