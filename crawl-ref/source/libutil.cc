@@ -391,7 +391,8 @@ void cgotoxy(int x, int y, GotoRegion region)
         // dprf in case it's not safe
         dprf("screen write out of bounds in region %d (old: %d): (%d,%d) into (%d,%d)",
              (int) region, (int) old_region, x, y, sz.x, sz.y);
-        save_game(false); // should be safe
+        if (you.on_current_level)
+            save_game(false); // should be safe
         die( "screen write out of bounds in region %d (old: %d): (%d,%d) into (%d,%d)",
              (int) region, (int) old_region, x, y, sz.x, sz.y);
     }
