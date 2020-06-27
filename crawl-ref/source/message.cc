@@ -1313,11 +1313,21 @@ static bool _check_option(const string& line, msg_channel_type channel,
 
 static bool _check_more(const string& line, msg_channel_type channel)
 {
+    // Try to avoid mores during level excursions, they are glitchy at best.
+    // TODO: this is sort of an emergency check, possibly it should
+    // crash here in order to find the real bug?
+    if (!you.on_current_level)
+        return false;
     return _check_option(line, channel, Options.force_more_message);
 }
 
 static bool _check_flash_screen(const string& line, msg_channel_type channel)
 {
+    // absolutely never flash during a level excursion, things will go very
+    // badly. TODO: this is sort of an emergency check, possibly it should
+    // crash here in order to find the real bug?
+    if (!you.on_current_level)
+        return false;
     return _check_option(line, channel, Options.flash_screen_message);
 }
 
