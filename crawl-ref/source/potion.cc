@@ -135,7 +135,9 @@ public:
                  || !is_potion
                  || you.duration[DUR_POISONING]
                  || you.duration[DUR_CONF]
-                 || unrotted)
+                 || you.duration[DUR_CIGOTUVIS_PLAGUE]
+                 || unrotted
+                 || you.props[HYDRA_HEADS_NET_LOSS].get_int())
         {
             if (is_potion)
                 print_potion_heal_message();
