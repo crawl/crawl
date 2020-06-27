@@ -43,11 +43,11 @@
 // transform slot enums into flags
 #define SLOTF(s) (1 << s)
 
-static const int EQF_HYDRA = (SLOTF(EQ_AMULET_TWO) | SLOTF(EQ_AMULET_THREE) | SLOTF(EQ_AMULET_FOUR)
-                             | SLOTF(EQ_AMULET_FIVE) | SLOTF(EQ_AMULET_SIX)
-                             | SLOTF(EQ_AMULET_SEVEN) | SLOTF(EQ_AMULET_EIGHT) | SLOTF(EQ_AMULET_NINE))
-                             | SLOTF(EQ_RING_AMULET);
 static const int EQF_NONE = 0;
+static const int EQF_HYDRA = SLOTF(EQ_AMULET_TWO) | SLOTF(EQ_AMULET_THREE) | SLOTF(EQ_AMULET_FOUR)
+                             | SLOTF(EQ_AMULET_FIVE) | SLOTF(EQ_AMULET_SIX)
+                             | SLOTF(EQ_AMULET_SEVEN) | SLOTF(EQ_AMULET_EIGHT) | SLOTF(EQ_AMULET_NINE);
+
 // "hand" slots (not rings)
 static const int EQF_HANDS = SLOTF(EQ_WEAPON) | SLOTF(EQ_SECOND_WEAPON) | SLOTF(EQ_SHIELD)
                              | SLOTF(EQ_GLOVES);
@@ -56,7 +56,7 @@ static const int EQF_STATUE = SLOTF(EQ_GLOVES) | SLOTF(EQ_BOOTS)
                               | SLOTF(EQ_BODY_ARMOUR);
 // more core body slots (Lear's Hauberk)
 // Constraint for hydra is here.
-static const int EQF_LEAR = EQF_STATUE | SLOTF(EQ_HELMET) | EQF_HYDRA;
+static const int EQF_LEAR = EQF_STATUE | SLOTF(EQ_HELMET);
 // everything you can (W)ear
 static const int EQF_WEAR = EQF_LEAR | SLOTF(EQ_CLOAK) | SLOTF(EQ_SHIELD);
 // everything but jewellery
@@ -1204,15 +1204,17 @@ _init_equipment_removal(transformation form)
     {
         result.insert(EQ_SECOND_WEAPON);
     }
-
     for (int i = EQ_FIRST_EQUIP; i < NUM_EQUIP; ++i)
     {
         if (i == EQ_WEAPON || i == EQ_SECOND_WEAPON)
             continue;
         const equipment_type eq = static_cast<equipment_type>(i);
         const item_def *pitem = you.slot_item(eq, true);
+        int blocked_slots = get_form(form)->blocked_slots;
+        if (get_form(form)->blocked_slots >= EQF_LEAR)
+            blocked_slots |= (you.species == SP_HYDRA) ? EQF_HYDRA | (!is_unrandom_artefact(*you.slot_item(EQ_AMULET_ONE, true), UNRAND_FINGER_AMULET)? SLOTF(EQ_RING_AMULET) : 0) : 0;
 
-        if (pitem && (get_form(form)->blocked_slots & SLOTF(i)
+        if (pitem && (blocked_slots & SLOTF(i)
                       || (i != EQ_RING_AMULET
                           && !get_form(form)->can_wear_item(*pitem))))
         {

@@ -9,7 +9,7 @@ aptitudes:
   xp: -1
   hp: -2
   mp_mod: 0
-  mr: 1
+  mr: 5
   fighting : 4
   unarmed_combat : 4
   short_blades: False
