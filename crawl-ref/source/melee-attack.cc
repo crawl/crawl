@@ -578,7 +578,7 @@ bool melee_attack::handle_phase_hit()
     {
         if (defender->is_player() && !you.is_nonliving())
         {
-            you.duration[DUR_CIGOTUVIS_PLAGUE] = 10;
+            you.set_duration(DUR_CIGOTUVIS_PLAGUE, 10);
         }
 
         else if (defender->is_monster() && mons_can_be_zombified(*defender->as_monster()))
