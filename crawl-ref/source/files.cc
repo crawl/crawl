@@ -2260,6 +2260,7 @@ static void _save_game_exit()
 void save_game(bool leave_game, const char *farewellmsg)
 {
     unwind_bool saving_game(crawl_state.saving_game, true);
+    ASSERT(you.on_current_level);
 
 
     if (leave_game && Options.dump_on_save)
