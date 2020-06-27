@@ -26,6 +26,9 @@ ae += [^n]identified.*spellbook
 
 # Don't pick up misc items when duplication doesn't help.
 :add_autopickup_func(function (it, name)
+:  if it.class(true) ~= "misc" then
+:    return
+:  end
 :  local itname = it.name(true) -- Not the name parameter, which includes prefixes.
 :  if string.find(itname, "phial of floods")
 :  or string.find(itname, "tin of tremorstones")
@@ -42,8 +45,8 @@ ae += [^n]identified.*spellbook
 # If you've sacrificed a hand, don't pick up pointless duplicate rings
 :add_autopickup_func(function (it, name)
 :  local itsubtype = it.subtype()
-:  if you.mutation("missing a hand") == 1 and you.race() ~= "octopode"
-:  and it.class(true) == "jewellery"
+:  if it.class(true) == "jewellery"
+:  and you.mutation("missing a hand") == 1 and you.race() ~= "octopode"
 :  and (itsubtype == "ring of positive energy"
 :   or itsubtype == "ring of flight"
 :   or itsubtype == "ring of poison resistance"
