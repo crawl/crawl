@@ -62,6 +62,13 @@ public:
     int frame_delay;
 };
 
+#ifdef USE_TILE
+void view_add_tile_overlay(const coord_def &gc, tileidx_t tile);
+#endif
+#ifndef USE_TILE_LOCAL
+void view_add_glyph_overlay(const coord_def &gc, cglyph_t glyph);
+#endif
+
 void run_animation(animation_type anim, use_animation_type type,
                    bool cleanup = true);
 void viewwindow(bool show_updates = true, bool tiles_only = false,

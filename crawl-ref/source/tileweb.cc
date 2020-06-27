@@ -2065,25 +2065,6 @@ const coord_def &TilesFramework::get_cursor() const
     return m_cursor[CURSOR_MOUSE];
 }
 
-void TilesFramework::add_overlay(const coord_def &gc, tileidx_t idx)
-{
-    if (get_tile_texture(idx) != TEX_DEFAULT)
-        return;
-
-    m_has_overlays = true;
-
-    send_message("{\"msg\":\"overlay\",\"idx\":%u,\"x\":%d,\"y\":%d}",
-                 (unsigned int) idx, gc.x - m_origin.x, gc.y - m_origin.y);
-}
-
-void TilesFramework::clear_overlays()
-{
-    if (m_has_overlays)
-        send_message("{\"msg\":\"clear_overlays\"}");
-
-    m_has_overlays = false;
-}
-
 void TilesFramework::set_need_redraw(unsigned int min_tick_delay)
 {
     unsigned int ticks = (get_milliseconds() - m_last_tick_redraw);

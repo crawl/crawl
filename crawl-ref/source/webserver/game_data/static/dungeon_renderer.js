@@ -340,14 +340,6 @@ function ($, cr, map_knowledge, options, dngn, util, view_data, enums) {
             }
         },
 
-        draw_overlay: function(idx, x, y)
-        {
-            if (this.in_view(x, y))
-                this.draw_main(idx,
-                               (x - this.view.x) * this.cell_width,
-                               (y - this.view.y) * this.cell_height);
-        },
-
         // This is mostly here so that it can inherit cell size
         new_renderer: function(tiles)
         {

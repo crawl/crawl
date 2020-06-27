@@ -1530,16 +1530,6 @@ const coord_def &TilesFramework::get_cursor() const
     return m_region_tile->get_cursor();
 }
 
-void TilesFramework::add_overlay(const coord_def &gc, tileidx_t idx)
-{
-    m_region_tile->add_overlay(gc, idx);
-}
-
-void TilesFramework::clear_overlays()
-{
-    m_region_tile->clear_overlays();
-}
-
 void TilesFramework::set_need_redraw(unsigned int min_tick_delay)
 {
     unsigned int ticks = (wm->get_ticks() - m_last_tick_redraw);

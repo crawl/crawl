@@ -118,9 +118,6 @@ public:
 
     const coord_def &get_cursor() const;
 
-    void add_overlay(const coord_def &gc, tileidx_t idx);
-    void clear_overlays();
-
     void draw_doll_edit();
 
     // Webtiles-specific

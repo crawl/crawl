@@ -253,7 +253,13 @@ void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
             add_blood_overlay(x, y, cell, bg_idx >= TILE_FLOOR_MAX);
 
         for (int i = 0; i < cell.num_dngn_overlay; ++i)
-            add_dngn_tile(cell.dngn_overlay[i], x, y);
+        {
+            const auto tile = cell.dngn_overlay[i];
+            if (tile < TILE_DNGN_MAX)
+                add_dngn_tile(tile, x, y);
+            else if (tile < TILE_MAIN_MAX)
+                add_main_tile(tile, x, y);
+        }
 
         if (!(bg & TILE_FLAG_UNSEEN))
         {

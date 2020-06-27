@@ -175,16 +175,13 @@ static void _zap_animation(int colour, const monster* mon = nullptr,
     if (in_los_bounds_v(drawp))
     {
 #ifdef USE_TILE
-        tiles.add_overlay(p, tileidx_zap(colour));
+        view_add_tile_overlay(p, tileidx_zap(colour));
 #endif
 #ifndef USE_TILE_LOCAL
-        view_update();
-        cgotoxy(drawp.x, drawp.y, GOTO_DNGN);
-        put_colour_ch(colour, dchar_glyph(DCHAR_FIRED_ZAP));
+        view_add_glyph_overlay(p, {dchar_glyph(DCHAR_FIRED_ZAP),
+                                   static_cast<unsigned short>(colour)});
 #endif
-
-        update_screen();
-
+        viewwindow(false);
         scaled_delay(50);
     }
 }
@@ -750,18 +747,15 @@ void bolt::draw(const coord_def& p)
     if (tile_beam != -1)
     {
         int dist = (p - source).rdist();
-        tiles.add_overlay(p, vary_bolt_tile(tile_beam, dist));
+        view_add_tile_overlay(p, vary_bolt_tile(tile_beam, dist));
     }
 #endif
 #ifndef USE_TILE_LOCAL
-    cgotoxy(drawpos.x, drawpos.y, GOTO_DNGN);
-    put_colour_ch(colour == BLACK ? random_colour(true)
-                                  : element_colour(colour),
-                  glyph);
-
-    // Get curses to update the screen so we can see the beam.
-    update_screen();
+    const unsigned short c = colour == BLACK ? random_colour(true)
+                                             : element_colour(colour);
+    view_add_glyph_overlay(p, {glyph, c});
 #endif
+    viewwindow(false);
     scaled_delay(draw_delay);
 }
 
@@ -5921,7 +5915,7 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
             }
             if (pass_visible)
             {
-                update_screen();
+                viewwindow(false);
                 scaled_delay(explode_delay);
             }
         }
@@ -5973,13 +5967,12 @@ bool bolt::explosion_draw_cell(const coord_def& p)
 #ifdef USE_TILE
             int dist = (p - source).rdist();
             tileidx_t tile = tileidx_bolt(*this);
-            tiles.add_overlay(p, vary_bolt_tile(tile, dist));
+            view_add_tile_overlay(p, vary_bolt_tile(tile, dist));
 #endif
 #ifndef USE_TILE_LOCAL
-            cgotoxy(drawpos.x, drawpos.y, GOTO_DNGN);
-            put_colour_ch(colour == BLACK ? random_colour(true)
-                                          : element_colour(colour, false, p),
-                          dchar_glyph(DCHAR_EXPLOSION));
+            const unsigned short c = colour == BLACK ?
+                    random_colour(true) : element_colour(colour, false, p);
+            view_add_glyph_overlay(p, {dchar_glyph(DCHAR_EXPLOSION), c});
 #endif
             return true;
         }

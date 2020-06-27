@@ -146,21 +146,6 @@ void DungeonRegion::pack_buffers()
                                  m_cursor[CURSOR_TUTORIAL].x,
                                  m_cursor[CURSOR_TUTORIAL].y);
     }
-
-    for (const tile_overlay &overlay : m_overlays)
-    {
-        // overlays must be from the main image and must be in LOS.
-        if (!crawl_view.in_los_bounds_g(overlay.gc))
-            continue;
-
-        const tileidx_t idx = overlay.idx;
-        if (get_tile_texture(idx) != TEX_DEFAULT)
-            continue;
-
-        const coord_def ep(overlay.gc.x - m_cx_to_gx,
-                           overlay.gc.y - m_cy_to_gy);
-        m_buf_dngn.add_main_tile(idx, ep.x, ep.y);
-    }
 }
 
 struct tag_def
@@ -1302,22 +1287,6 @@ void DungeonRegion::add_text_tag(text_tag_type type, const string &tag,
     t.gc  = gc;
 
     m_tags[type].push_back(t);
-}
-
-void DungeonRegion::add_overlay(const coord_def &gc, int idx)
-{
-    tile_overlay over;
-    over.gc  = gc;
-    over.idx = idx;
-
-    m_overlays.push_back(over);
-    m_dirty = true;
-}
-
-void DungeonRegion::clear_overlays()
-{
-    m_overlays.clear();
-    m_dirty = true;
 }
 
 #endif

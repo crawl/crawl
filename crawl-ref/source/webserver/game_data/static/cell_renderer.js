@@ -348,6 +348,18 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
                 }
             }
 
+            // Draw main-tile overlays (i.e. zaps), on top of clouds.
+            if (cell.ov)
+            {
+                $.each(cell.ov, function (i, overlay)
+                        {
+                            if (dngn.FEAT_MAX <= overlay && overlay < main.MAIN_MAX)
+                            {
+                                renderer.draw_main(overlay, x, y);
+                            }
+                        });
+            }
+
             this.render_flash(x, y);
 
             this.render_cursors(cx, cy, x, y);
@@ -641,7 +653,9 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
                 {
                     $.each(cell.ov, function (i, overlay)
                            {
-                               if (overlay &&
+                               if (overlay > dngn.DNGN_MAX)
+                                   return;
+                               else if (overlay &&
                                    (bg_idx < dngn.DNGN_FIRST_TRANSPARENT ||
                                     overlay > dngn.FLOOR_MAX))
                                {
