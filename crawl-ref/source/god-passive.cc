@@ -1754,13 +1754,29 @@ static bool _wu_jian_lunge(const coord_def& old_pos)
 
     count_action(CACT_INVOKE, ABIL_WU_JIAN_LUNGE);
 
+    int hydra_additional_attack = you.heads()/9;
+
     for (int i = 0; i < number_of_attacks; i++)
     {
         if (!mons->alive())
             break;
-        melee_attack lunge(&you, mons);
-        lunge.wu_jian_attack = WU_JIAN_ATTACK_LUNGE;
-        lunge.attack();
+        if (i == 0 && you.species == SP_HYDRA) // HYDRA additional attaack
+        {
+            for (int j = 0; j < hydra_additional_attack; j++)
+            {
+                if (!mons->alive())
+                    break;
+                melee_attack lunge(&you, mons, true);
+                lunge.wu_jian_attack = WU_JIAN_ATTACK_LUNGE;
+                lunge.attack();
+            }
+        }
+        else
+        {
+            melee_attack lunge(&you, mons);
+            lunge.wu_jian_attack = WU_JIAN_ATTACK_LUNGE;
+            lunge.attack();
+        }
     }
 
     return true;
