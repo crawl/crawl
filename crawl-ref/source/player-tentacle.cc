@@ -249,13 +249,13 @@ struct tentacle_attack_constraints
     }
 };
 
-struct tentacle_connect_constraints
+struct player_tentacle_connect_constraints
 {
     map<coord_def, set<int> >* connection_constraints;
 
     monster* base_monster;
 
-    tentacle_connect_constraints()
+    player_tentacle_connect_constraints()
     {
         for (int i = 0; i < 8; i++)
             connect_idx[i] = i;
@@ -276,10 +276,21 @@ struct tentacle_connect_constraints
             if (!in_bounds(temp.pos))
                 continue;
 
+
             auto constraint = map_find(*connection_constraints, temp.pos);
 
-            if (!constraint || !constraint->count(node.connect_level))
-                continue;
+            if (!constraint || !constraint->count(node.connect_level)) {
+
+                if (abs(you.pos().x - temp.pos.x) <=1 &&
+                    abs(you.pos().y - temp.pos.y) <=1) {
+                    temp.path_distance = 1 + node.path_distance;
+                    expansion.push_back(temp);
+                    continue;
+                }
+                else {
+                    continue;
+                }
+            }
 
             if (!base_monster->is_habitable(temp.pos) || actor_at(temp.pos))
                 temp.path_distance = DISCONNECT_DIST;
@@ -384,7 +395,7 @@ static bool _tentacle_pathfind(monster* tentacle,
 static bool _try_tentacle_connect(const coord_def& new_pos,
     const coord_def& base_position,
     monster* tentacle,
-    tentacle_connect_constraints& connect_costs,
+    player_tentacle_connect_constraints& connect_costs,
     monster_type connect_type)
 {
     // Nothing to do here.
@@ -496,7 +507,12 @@ static void _collect_foe_positions(
     }
 }
 
-void move_child_tentacles_player()
+/**
+ *
+ * @param want_delay      expect delay
+ * @return real_delay     real delay
+*/
+int move_child_tentacles_player(int want_delay)
 {
     bool no_foe = false;
 
@@ -509,6 +525,7 @@ void move_child_tentacles_player()
     //if (!kraken->near_foe())
     if (foe_positions.empty())
     {
+        want_delay /= 2; //retract speed is double
         no_foe = true;
     }
     vector<monster_iterator> tentacles;
@@ -526,7 +543,7 @@ void move_child_tentacles_player()
             continue;
         }
 
-        tentacle_connect_constraints connect_costs;
+        player_tentacle_connect_constraints connect_costs;
         map<coord_def, set<int> > connection_data;
 
         monster* current_mon = tentacle;
@@ -686,6 +703,7 @@ void move_child_tentacles_player()
         tentacle->check_redraw(old_pos);
         tentacle->apply_location_effects(old_pos);
     }
+    return want_delay;
 }
 // When given either a tentacle end or segment, kills the end and all segments
 // of that tentacle.

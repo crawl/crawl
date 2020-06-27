@@ -6,7 +6,7 @@
 #pragma once
 
 bool mons_tentacle_adjacent_of_player(const monster* child);
-void move_child_tentacles_player();
+int move_child_tentacles_player(int want_delay);
 
 bool destroy_tentacle_of_player();
 bool destroy_tentacles_of_player();

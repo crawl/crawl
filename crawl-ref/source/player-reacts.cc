@@ -1146,10 +1146,11 @@ void player_reacts()
         qazlal_storm_clouds();
 
     if (you.form == transformation::eldritch) {
+        const int tentacle_delay = 7;
         you.props[PLAYER_TENTACLE_DELAY].get_int() += you.time_taken;
-        while(you.props[PLAYER_TENTACLE_DELAY].get_int() > 7) {
-            move_child_tentacles_player();
-            you.props[PLAYER_TENTACLE_DELAY].get_int() -= 7;
+        while(you.props[PLAYER_TENTACLE_DELAY].get_int() > tentacle_delay) {
+            int delay_ = move_child_tentacles_player(tentacle_delay);
+            you.props[PLAYER_TENTACLE_DELAY].get_int() -= delay_;
         }
         if(_monster_near_by_you()) {
             int current_tentacle_available = player_available_tentacles();
