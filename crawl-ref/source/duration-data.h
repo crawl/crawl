@@ -34,6 +34,7 @@ static void _redraw_armour()
     you.redraw_armour_class = true;
 }
 
+
 // properties of the duration.
 enum duration_flags : uint32_t
 {
@@ -707,12 +708,12 @@ static const duration_def duration_data[] =
              you.redraw_armour_class = true;
          }} } },
 
-    { DUR_UNSH_CLOAK, 0, "", "unshelving cloak",  "unshelved cloak", "Your cloak is unshelved.", D_NO_FLAGS, {{"You trim your cloak.", [](){you.redraw_armour_class = true;},}}},
-    { DUR_UNSH_HELMET, 0, "", "unshelving helmet", "unshelved helmet", "Your helmet is unshelved.", D_NO_FLAGS, {{"You trim your helmet.", [](){you.redraw_armour_class = true;},}}},
-    { DUR_UNSH_GLOVES, 0, "", "unshelving gloves", "unshelved gloves", "Your gloves are unshelved.", D_NO_FLAGS, {{"You trim your gloves.", [](){you.redraw_armour_class = true;},}}},
-    { DUR_UNSH_BOOTS, 0, "", "unshelving boots", "unshelved boots", "Your boots are unshelved.", D_NO_FLAGS, {{"You trim your boots.", [](){you.redraw_armour_class = true;},}}},
-    { DUR_UNSH_SHIELD, 0, "", "unshelving shield", "unshelved shield", "Your shield is unshelved.", D_NO_FLAGS, {{"You trim your shield.", [](){you.redraw_armour_class = true;},}}},
-    { DUR_UNSH_BODY_ARMOUR, 0, "", "unshelving armour", "unshelved armour", "Your armour is unshelved.", D_NO_FLAGS, {{"You trim your armour.", [](){you.redraw_armour_class = true;},}}},
+    { DUR_UNSH_CLOAK, 0, "", "unshelving cloak",  "unshelved cloak", "Your cloak is unshelved.", D_NO_FLAGS, {{"You trim your cloak.", [](){equip_effect(EQ_CLOAK, you.equip[EQ_CLOAK], false, true); you.redraw_armour_class = true;},}}},
+    { DUR_UNSH_HELMET, 0, "", "unshelving helmet", "unshelved helmet", "Your helmet is unshelved.", D_NO_FLAGS, {{"You trim your helmet.", [](){equip_effect(EQ_HELMET, you.equip[EQ_HELMET], false, true); you.redraw_armour_class = true;},}}},
+    { DUR_UNSH_GLOVES, 0, "", "unshelving gloves", "unshelved gloves", "Your gloves are unshelved.", D_NO_FLAGS, {{"You trim your gloves.", [](){equip_effect(EQ_GLOVES, you.equip[EQ_GLOVES], false, true); you.redraw_armour_class = true;},}}},
+    { DUR_UNSH_BOOTS, 0, "", "unshelving boots", "unshelved boots", "Your boots are unshelved.", D_NO_FLAGS, {{"You trim your boots.", [](){equip_effect(EQ_BOOTS, you.equip[EQ_BOOTS], false, true); you.redraw_armour_class = true;},}}},
+    { DUR_UNSH_SHIELD, 0, "", "unshelving shield", "unshelved shield", "Your shield is unshelved.", D_NO_FLAGS, {{"You trim your shield.", [](){equip_effect(EQ_SHIELD, you.equip[EQ_SHIELD], false, true); you.redraw_armour_class = true;},}}},
+    { DUR_UNSH_BODY_ARMOUR, 0, "", "unshelving armour", "unshelved armour", "Your armour is unshelved.", D_NO_FLAGS, {{"You trim your armour.", [](){equip_effect(EQ_BODY_ARMOUR, you.equip[EQ_BODY_ARMOUR], false, true); you.redraw_armour_class = true;},}}},
 #if TAG_MAJOR_VERSION == 34
     // And removed ones
     { DUR_MAGIC_SAPPED, 0, "", "", "old magic sapped", "", D_NO_FLAGS},

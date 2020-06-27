@@ -8033,7 +8033,7 @@ static bool _nightmare_of_cubus(monster &caster, mon_spell_slot, bolt&)
             {
                 you.equip[slot] = -1;
 
-                unequip_effect(slot, item_slot, false, false);
+                unequip_effect(slot, item_slot, false, true);
                 ash_check_bondage();
                 you.last_unequip = item_slot;
                 return true;
@@ -8050,6 +8050,13 @@ static bool _nightmare_of_cubus(monster &caster, mon_spell_slot, bolt&)
                 duration_type dur = (duration_type)((int)DUR_UNSH_CLOAK + (int)(slot2 - EQ_CLOAK));
                 you.set_duration(dur, 5);
                 you.redraw_armour_class = true;
+                const int item_slot = you.equip[slot2];
+                item_def item = you.inv[item_slot];
+                if (!item.cursed())
+                {
+                    unequip_effect(slot2, item_slot, false, true);
+                    return true;
+                }
                 mprf("You wake up and suddenly realize that you unshelve it yourself.");
                 return true;
             }
