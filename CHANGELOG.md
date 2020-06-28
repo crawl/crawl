@@ -54,7 +54,10 @@
    
 - 4레벨 대지/변이술 마법. 대지의 의지. 사용하면 주변 벽을 파괴하여 earth버프를 얻고, earth 버프를 소모하는 것으로 일시적인 벽을 세우거나 물이나 용암을 메꿀 수 있음
    - Added Will of Earth, level 4 earth/transmutation spell. When used, you can destroy the surrounding wall to get an earth buff, and consume the earth buff to build a temporary wall or fill up water or lava.
-   
+
+- 9레벨 변이술 마법. 엘드리치 폼. 거대한 촉수괴물로 변신한다. 촉수괴물은 주기적으로 촉수를 내보내서 적을 같이 공격한다.
+   - Added Eldritch Form, level 9 transmutation spell. Transforms the caster into a otherwordly monster with terrible tentacles. Tentacles will crawl out of the caster's body and attack their foes.
+
 - 베오그의 새로운 권능 오크 추종자 되돌리기 추가. 선택한 오크 추종자를 오크 광산으로 즉시 전송한다. 
    - Added Beogh ability "return Orcish Followers". Immediately send the selected orcish follower to orcrish mines.
    
@@ -84,7 +87,10 @@
   
 - 스토커 복구. 벽과 융합하는 새로운 마법과 함께
   - rollback stalker. with magic of transforming into a wall
-  
+
+- 용해의 기사 추가. 지바를 믿고 시작하는 직업 
+  - Added melted knight. background that starts the game worshipping Jiyva.
+
 - 2티어 악마인 쿠부스 추가. 적의 장비를 벗기는 마법을 사용함.
   - New 2-tier demon, Cubus. Uses spell to take off equipped equipments.
   
@@ -140,6 +146,10 @@
 - 네멜렉스의 원더덱이 돌아옴. 이제 네멜렉스는 다시 발동술을 사용함
   - Nemelex's deck of wonder is comeback. Now Nemelex uses the evocation again.
   - 돌아온 카드들 (xom, mercenary, alchemist, bargain, sage, portal, trowel, experience, helm, shuffle)
+
+- 지바 리워크. Jiyva rework
+  - 슬라임은 이제 자연적으로 생성되지않는다. jellies do not randomly spawn
+  - 적을 죽일때 일시적으로 동료인 젤리를 소환한다. Temporarily friendly jelly summoned when killing an enemy.
 
 - 드라코들은 이제 아래 종류의 갑옷을 입을 수 있음. All dracos can wear armour listed below
   - 로브 Robe
