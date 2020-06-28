@@ -69,7 +69,11 @@ string userdef_annotate_item(const char *s, const item_def *item)
 
 string stash_annotate_item(const char *s, const item_def *item)
 {
-    string text = userdef_annotate_item(s, item);
+    // the special-casing of gold here is for the sake of gozag players in
+    // extreme circumstances. It does mean that custom annotation code can't
+    // do anything with gold, but I'm not sure why you'd want to.
+    string text = item->base_type == OBJ_GOLD
+                            ? "{gold}" : userdef_annotate_item(s, item);
 
     if (item->has_spells())
     {
