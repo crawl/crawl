@@ -50,8 +50,8 @@ mutations:
     MUT_POISON_RESISTANCE : 1
     MUT_COLD_BLOODED: 1
 fake_mutations:
-  - long: You are incapable of wielding weapons or throwing items.
-    short: no weapons or thrown items
+  - long: You are incapable of wielding weapons.
+    short: no weapons.
   - long: You can walk faster in water.
     short: walks faster in water. 
 recommended_jobs:
