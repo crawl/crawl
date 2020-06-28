@@ -250,8 +250,15 @@ static cglyph_t _get_item_override(const item_def &item)
     if (Options.item_glyph_overrides.empty())
         return g;
 
+    // use qualname for gold so that pile quantity doesn't affect caching.
+    // Could extend this to missiles, but in that case I can actually imagine
+    // someone writing annotation code that relies on a count.
+    // TODO: the caching here avoids the regex penalty, but annotation and
+    // item.name themselves are quite heavy when called a lot, so some better
+    // caching might be in order. (Or more efficient calls to this function.)
     string name = stash_annotate_item(STASH_LUA_SEARCH_ANNOTATE, &item)
-                + " {" + item_prefix(item, false) + "} " + item.name(DESC_PLAIN);
+                + " {" + item_prefix(item, false) + "} "
+                + item.name(item.base_type == OBJ_GOLD ? DESC_QUALNAME : DESC_PLAIN);
 
     {
         // Check the cache...

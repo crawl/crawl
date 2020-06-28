@@ -499,6 +499,7 @@ void show_update_at(const coord_def &gp, layers_type layers)
     else
         env.map_knowledge(gp).clear_monster();
     // The sequence is grid, items, clouds, monsters.
+    // XX it actually seems to be grid monsters clouds items??
     _update_feat_at(gp);
 
     if (in_bounds(gp))
