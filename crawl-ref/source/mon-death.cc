@@ -779,7 +779,7 @@ void record_monster_defeat(const monster* mons, killer_type killer)
         return;
     if (killer == KILL_RESET || killer == KILL_DISMISSED)
         return;
-    if (mons->has_ench(ENCH_FAKE_ABJURATION) || mons->is_summoned())
+    if (mons->has_ench(ENCH_FAKE_ABJURATION) || mons->has_ench(ENCH_NATURAL_ABJURATION) || mons->is_summoned())
         return;
     if (mons->is_named() && mons->friendly()
         && !mons_is_hepliaklqana_ancestor(mons->type))
@@ -1438,6 +1438,14 @@ static bool _explode_monster(monster* mons, killer_type killer,
     return true;
 }
 
+static void _jiyva_kill_to_slime(monster* mons)
+{
+    if (mons_gives_xp(*mons, you)) {
+        jiyva_create_jelly_fineff::schedule(mons->pos(), mons->name(DESC_THE), mons->get_hit_dice());
+    }
+}
+
+
 static void _infestation_create_scarab(monster* mons)
 {
     mons->flags |= MF_EXPLODE_KILL;
@@ -1948,7 +1956,7 @@ item_def* monster_die(monster& mons, killer_type killer,
     const int monster_killed = mons.mindex();
     const bool hard_reset    = testbits(mons.flags, MF_HARD_RESET);
     const bool timeout       = killer == KILL_TIMEOUT;
-    const bool fake_abjure   = mons.has_ench(ENCH_FAKE_ABJURATION);
+    const bool fake_abjure   = mons.has_ench(ENCH_FAKE_ABJURATION) || mons.has_ench(ENCH_NATURAL_ABJURATION);
     const bool gives_player_xp = mons_gives_xp(mons, you);
     bool drop_items          = !hard_reset;
     const bool submerged     = mons.submerged();
@@ -2614,6 +2622,8 @@ item_def* monster_die(monster& mons, killer_type killer,
     // Necromancy
     if (!was_banished && !mons_reset)
     {
+        if (have_passive(passive_t::jiyva_kill_to_slime))
+            _jiyva_kill_to_slime(&mons);
         if (mons.has_ench(ENCH_INFESTATION))
             _infestation_create_scarab(&mons);
         if (you.duration[DUR_DEATH_CHANNEL] && was_visible && gives_player_xp)

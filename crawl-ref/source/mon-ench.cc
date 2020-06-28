@@ -705,6 +705,10 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         monster_web_cleanup(*this, true);
         break;
     }
+    case ENCH_NATURAL_ABJURATION:
+        attitude = ATT_STRICT_NEUTRAL;
+        flags |= MF_WAS_NEUTRAL;
+        break;
     case ENCH_FAKE_ABJURATION:
         if (type == MONS_BATTLESPHERE)
             return end_battlesphere(this, false);
@@ -1384,6 +1388,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_FLIGHT:
     case ENCH_DAZED:
     case ENCH_FAKE_ABJURATION:
+    case ENCH_NATURAL_ABJURATION:
     case ENCH_RECITE_TIMER:
     case ENCH_INNER_FLAME:
     case ENCH_MUTE:
@@ -2057,6 +2062,7 @@ static const char *enchant_names[] =
     "idealised", "bound_soul", "infestation", "CIGOTUVIS_PLAGUE",
     "stilling the winds", "thunder_ringed", "pinned_by_whirlwind",
     "vortex", "vortex_cooldown", "vile_clutch", "unshelved armour",
+    "natural_abjuration",
     "buggy",
 };
 
@@ -2127,7 +2133,7 @@ void mon_enchant::cap_degree()
 
     // Hard cap to simulate old enum behaviour, we should really throw this
     // out entirely.
-    const int max = (ench == ENCH_ABJ || ench == ENCH_FAKE_ABJURATION) ?
+    const int max = (ench == ENCH_ABJ || ench == ENCH_FAKE_ABJURATION || ench == ENCH_NATURAL_ABJURATION) ?
             MAX_ENCH_DEGREE_ABJURATION : MAX_ENCH_DEGREE_DEFAULT;
     if (degree > max)
         degree = max;
@@ -2275,6 +2281,7 @@ int mon_enchant::calc_duration(const monster* mons,
 
     case ENCH_FAKE_ABJURATION:
     case ENCH_ABJ:
+    case ENCH_NATURAL_ABJURATION:
         // The duration is:
         // deg = 1     90 aut
         // deg = 2    180 aut

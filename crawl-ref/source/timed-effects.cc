@@ -391,8 +391,8 @@ static void _jiyva_effects(int /*time_delta*/)
         jiyva_stat_action();
     }
 
-    if (have_passive(passive_t::jelly_eating) && one_chance_in(25))
-        jiyva_eat_offlevel_items();
+    //if (have_passive(passive_t::jelly_eating) && one_chance_in(25))
+    //    jiyva_eat_offlevel_items();
 }
 
 static void _evolve_by_cigotuvis_plague(int /*time_delta*/)
@@ -817,7 +817,7 @@ void monster::timeout_enchantments(int levels)
         case ENCH_LOWERED_MR: case ENCH_SOUL_RIPE: case ENCH_ANTIMAGIC:
         case ENCH_FEAR_INSPIRING: case ENCH_REGENERATION: case ENCH_RAISED_MR:
         case ENCH_MIRROR_DAMAGE: case ENCH_LIQUEFYING:
-        case ENCH_SILVER_CORONA: case ENCH_DAZED: case ENCH_FAKE_ABJURATION:
+        case ENCH_SILVER_CORONA: case ENCH_DAZED: case ENCH_FAKE_ABJURATION: case ENCH_NATURAL_ABJURATION:
         case ENCH_BREATH_WEAPON: case ENCH_WRETCHED:
         case ENCH_SCREAMED: case ENCH_BLIND: case ENCH_WORD_OF_RECALL:
         case ENCH_INJURY_BOND: case ENCH_FLAYED: case ENCH_BARBS:

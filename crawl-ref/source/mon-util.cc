@@ -732,6 +732,7 @@ bool mons_gives_xp(const monster& victim, const actor& agent)
     return !victim.is_summoned()                   // no summons
         && !victim.has_ench(ENCH_ABJ)              // not-really-summons
         && !victim.has_ench(ENCH_FAKE_ABJURATION)  // no animated remains
+        && !victim.has_ench(ENCH_NATURAL_ABJURATION)
         && mons_class_gives_xp(victim.type)        // class must reward xp
         && !testbits(victim.flags, MF_WAS_NEUTRAL) // no neutral monsters
         && !testbits(victim.flags, MF_NO_REWARD)   // no reward for no_reward
@@ -1029,7 +1030,7 @@ bool mons_is_plant(const monster& mon)
 
 bool mons_eats_items(const monster& mon)
 {
-    return mons_is_slime(mon) && have_passive(passive_t::jelly_eating);
+    return mons_is_slime(mon) && (have_passive(passive_t::jelly_eating) && mon.strict_neutral());
 }
 
 /* Is the actor susceptible to vampirism?
@@ -1051,6 +1052,7 @@ bool actor_is_susceptible_to_vampirism(const actor& act)
     // Don't allow HP draining from temporary monsters such as those created by
     // Sticks to Snakes.
     return !mon->has_ench(ENCH_FAKE_ABJURATION)
+           && !mon->has_ench(ENCH_NATURAL_ABJURATION)
            // Nor from now-ghostly monsters.
            && !testbits(mon->flags, MF_SPECTRALISED);
 }
@@ -1753,7 +1755,7 @@ bool mons_can_use_stairs(const monster& mon, dungeon_feature_type stair)
         return false;
 
     // Summons can't use stairs.
-    if (mon.has_ench(ENCH_ABJ) || mon.has_ench(ENCH_FAKE_ABJURATION))
+    if (mon.has_ench(ENCH_ABJ) || mon.has_ench(ENCH_FAKE_ABJURATION) || mon.has_ench(ENCH_NATURAL_ABJURATION))
         return false;
 
     if (mon.has_ench(ENCH_FRIENDLY_BRIBED)

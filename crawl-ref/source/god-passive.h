@@ -256,6 +256,9 @@ enum class passive_t
 
     //angel passive
     neutral_holy,
+
+    //jiyva kill to slime
+    jiyva_kill_to_slime,
 };
 
 enum ru_interference

@@ -355,6 +355,25 @@ protected:
     string name;
 };
 
+class jiyva_create_jelly_fineff : public final_effect
+{
+public:
+    bool mergeable(const final_effect&) const override { return false; }
+    void fire() override;
+
+    static void schedule(coord_def pos, const string& name, int hitdice)
+    {
+        final_effect::schedule(new jiyva_create_jelly_fineff(pos, name, hitdice));
+    }
+protected:
+    jiyva_create_jelly_fineff(coord_def pos, const string& _name, int _hitdice)
+        : final_effect(0, 0, pos), name(_name), hitdice(_hitdice)
+    {
+    }
+    string name;
+    int hitdice;
+};
+
 class make_derived_undead_fineff : public final_effect
 {
 public:

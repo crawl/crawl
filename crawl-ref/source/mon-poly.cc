@@ -310,6 +310,7 @@ void change_monster_type(monster* mons, monster_type targetc)
 
     mon_enchant abj       = mons->get_ench(ENCH_ABJ);
     mon_enchant fabj      = mons->get_ench(ENCH_FAKE_ABJURATION);
+    mon_enchant nbj       = mons->get_ench(ENCH_NATURAL_ABJURATION);
     mon_enchant charm     = mons->get_ench(ENCH_CHARM);
     mon_enchant shifter   = mons->get_ench(ENCH_GLOWING_SHAPESHIFTER,
                                            ENCH_SHAPESHIFTER);
@@ -353,6 +354,7 @@ void change_monster_type(monster* mons, monster_type targetc)
 
     mons->add_ench(abj);
     mons->add_ench(fabj);
+    mons->add_ench(nbj);
     mons->add_ench(charm);
     mons->add_ench(shifter);
     mons->add_ench(sub);

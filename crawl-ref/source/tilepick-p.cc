@@ -921,6 +921,13 @@ void tilep_job_default(int job, dolls_data *doll)
             parts[TILEP_PART_HELM]  = TILEP_HELM_FHELM_PLUME;
             break;
 
+        case JOB_MELTED_KNIGHT:
+            parts[TILEP_PART_BODY] = TILEP_BODY_SHOULDER_PAD;
+            parts[TILEP_PART_LEG] = TILEP_LEG_METAL_GRAY;
+            parts[TILEP_PART_ARM] = TILEP_ARM_GLOVE_BLUE;
+            parts[TILEP_PART_BOOTS] = TILEP_BOOTS_MIDDLE_GREEN;
+            break;
+
         case JOB_BERSERKER:
             parts[TILEP_PART_BODY]  = TILEP_BODY_ANIMAL_SKIN;
             parts[TILEP_PART_LEG]   = TILEP_LEG_BELT_REDBROWN;

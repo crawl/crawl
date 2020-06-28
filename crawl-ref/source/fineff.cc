@@ -25,6 +25,7 @@
 #include "mon-death.h"
 #include "mon-place.h"
 #include "ouch.h"
+#include "random.h"
 #include "religion.h"
 #include "spl-miscast.h"
 #include "state.h"
@@ -548,6 +549,34 @@ void infestation_death_fineff::fire()
         {
             mprf("%s bursts from %s!", scarab->name(DESC_A, true).c_str(),
                                        name.c_str());
+        }
+    }
+}
+
+void jiyva_create_jelly_fineff::fire()
+{
+    monster_type jelly_type = MONS_JELLY;
+    int jelly_hd = hitdice/2 + random2(hitdice/2);
+
+    if (jelly_hd > 7) {
+        jelly_type = MONS_SLIME_CREATURE;
+    }
+    else if (jelly_hd > 13) {
+        jelly_type = random_choose(MONS_ACID_BLOB, MONS_AZURE_JELLY, MONS_DEATH_OOZE);
+    }
+
+    if (monster * jelly = create_monster(mgen_data(jelly_type,
+        BEH_FRIENDLY, posn,
+        MHITYOU, MG_AUTOFOE)
+        .set_summoned(&you, 0, 0, GOD_JIYVA),
+        false))
+    {
+        jelly->add_ench(mon_enchant(ENCH_NATURAL_ABJURATION, 2));
+
+        if (you.see_cell(posn) || you.can_see(*jelly))
+        {
+            mprf("%s spits out from %s!", jelly->name(DESC_A, true).c_str(),
+                name.c_str());
         }
     }
 }
