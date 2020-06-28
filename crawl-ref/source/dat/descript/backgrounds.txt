@@ -72,6 +72,10 @@ Ice Elementalist
 Ice Elementalists begin with the Freeze spell. The spells in their starting
 library are quite versatile.
 %%%%
+Melted Knight
+
+Melted Knights worship Jiyva.
+%%%%
 Monk
 
 Monks start with a simple weapon of their choice, and gain additional piety
