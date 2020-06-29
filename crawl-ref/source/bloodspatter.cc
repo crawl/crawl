@@ -196,7 +196,9 @@ void bleed_onto_floor(const coord_def& where, monster_type montype,
 
 void blood_spray(const coord_def& origin, monster_type montype, int level)
 {
-    bool plague = actor_at(origin)->is_player() && actor_at(origin)->as_player()->duration[DUR_CIGOTUVIS_PLAGUE] ||
+    bool plague = false;
+    if (actor_at(origin))
+        plague = actor_at(origin)->is_player() && actor_at(origin)->as_player()->duration[DUR_CIGOTUVIS_PLAGUE] ||
                     actor_at(origin)->is_monster() && actor_at(origin)->as_monster()->has_ench(ENCH_CIGOTUVIS_PLAGUE); 
     int tries = 0;
     for (int i = 0; i < level; ++i)

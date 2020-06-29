@@ -42,6 +42,7 @@
 #include "kills.h"
 #include "level-state-type.h"
 #include "libutil.h"
+#include "losglobal.h"  //for cell_see_cell.
 #include "mapdef.h"
 #include "mapmark.h"
 #include "message.h"
@@ -438,6 +439,48 @@ static void _gold_pile(item_def &corpse, monster_type corpse_class)
     you.redraw_title = true;
 }
 
+void _blood_spray_with_cigotuvis(const monster* mons, int level)
+{
+    coord_def origin = mons->pos();
+    monster_type montype = mons->type;
+    int tries = 0;
+    for (int i = 0; i < level; ++i)
+    {
+        // Blood drops are small and light and suffer a lot of wind
+        // resistance.
+        int range = random2(8) + 1;
+
+        while (tries < 5000)
+        {
+            ++tries;
+
+            coord_def bloody = origin;
+            bloody.x += random_range(-range, range);
+            bloody.y += random_range(-range, range);
+            actor *victim = actor_at(bloody);
+
+            if (in_bounds(bloody) && cell_see_cell(origin, bloody, LOS_SOLID))
+            {
+                bleed_onto_floor(bloody, montype, 99, false, true, origin);
+                if (victim && bloody != origin)
+                {
+                    if (victim->is_player() && !you.is_nonliving())
+                    {   
+                        mprf("You've been touched by infected blood!");
+                        you.set_duration(DUR_CIGOTUVIS_PLAGUE, 10);
+                    }
+                    else if (victim->is_monster() && mons_can_be_zombified(*victim->as_monster()))
+                    {
+                        mprf("%s touches infected blood!", victim->as_monster()->name(DESC_THE).c_str());
+                        victim->as_monster()->add_ench(mon_enchant(ENCH_CIGOTUVIS_PLAGUE, 0, nullptr, (1+random2(3)) * BASELINE_DELAY));
+                    }
+                }
+                break;
+            }
+        }
+    }
+}
+
 static void _cigotuvis_plague_make_abomination(const monster* mons)
 {
     if (you_worship(GOD_GOZAG) || !mons_can_be_zombified(*mons))
@@ -511,7 +554,7 @@ static void _cigotuvis_plague_make_abomination(const monster* mons)
         ld.update();
 
         const int nchunks = stepdown_value(1 + random2(chunks), 4, 4, 12, 12);
-        blood_spray(mons->pos(), mons->type, nchunks * 3); // spray some blood
+        _blood_spray_with_cigotuvis(mons, nchunks * 3); // spray some blood
 
         // spray crawling corpses everywhere!
         for (int ntries = 0, cr_corpse_made = 0;
