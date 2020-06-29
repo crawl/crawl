@@ -340,7 +340,12 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
         if (you.form == transformation::eldritch &&
             _is_valid_mutation(mut))
         {
-            return mutation_activity_type::INACTIVE;
+            if (is_slime_mutation(mut)) {
+                return mutation_activity_type::FULL;
+            }
+            else {
+                return mutation_activity_type::INACTIVE;
+            }
         }
 
         // Dex and HP changes are kept in all forms.
@@ -361,6 +366,7 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
         switch (mut)
         {
         case MUT_GELATINOUS_BODY:
+        case MUT_SLIMY_BODY:
         case MUT_TOUGH_SKIN:
         case MUT_SHAGGY_FUR:
         case MUT_FAST:
@@ -2801,7 +2807,7 @@ int player::how_mutated(bool innate, bool levels, bool temp) const
         if (you.mutation[i])
         {
             const int mut_level = get_base_mutation_level(static_cast<mutation_type>(i), innate, temp);
-
+            
             if (levels)
                 result += mut_level;
             else if (mut_level > 0)
@@ -2811,6 +2817,25 @@ int player::how_mutated(bool innate, bool levels, bool temp) const
             && you.props.exists("num_sacrifice_muts"))
         {
             result -= you.props["num_sacrifice_muts"].get_int();
+        }
+    }
+
+    return result;
+}
+
+int player::how_jiyva_mutated() const
+{
+    int result = 0;
+
+    for (int i = 0; i < NUM_MUTATIONS; ++i)
+    {
+        if (you.mutation[i])
+        {
+            const int mut_level = get_base_mutation_level(static_cast<mutation_type>(i));
+
+            if (mut_level > 0 && is_slime_mutation(static_cast<mutation_type>(i))) {
+                result++;
+            }
         }
     }
 

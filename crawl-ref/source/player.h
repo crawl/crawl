@@ -670,6 +670,7 @@ public:
     bool      has_mutation(mutation_type mut, bool check_form=true) const;
 
     int       how_mutated(bool innate=false, bool levels=false, bool temp=true) const;
+    int       how_jiyva_mutated() const;
 
     int wearing(equipment_type slot, int sub_type, bool calc_unid = true) const
         override;

@@ -3222,6 +3222,23 @@ static void tag_read_you(reader &th)
         you.innate_mutation[MUT_MISSING_NECK] = 1;
     }
 
+    if (th.getMinorVersion() < TAG_MINOR_JIYVA_MUTATION_REWORK) {
+        //MUT_GELATINOUS_BODY is octopod mutation
+        //if (you.mutation[MUT_GELATINOUS_BODY] > 1) {
+        //     you.mutation[MUT_GELATINOUS_BODY] = 1;
+        //}
+        if (you.mutation[MUT_EYEBALLS] > 1) {
+            you.mutation[MUT_EYEBALLS] = 1;
+        }
+        if (you.mutation[MUT_TRANSLUCENT_SKIN] > 1) {
+            you.mutation[MUT_TRANSLUCENT_SKIN] = 1;
+        }
+        if (you.mutation[MUT_PSEUDOPODS] > 1) {
+            you.mutation[MUT_PSEUDOPODS] = 0;
+        }
+    }
+
+
     // Fixup for Sacrifice XP from XL 27 (#9895). No minor tag, but this
     // should still be removed on a major bump.
     const int xl_remaining = you.get_max_xl() - you.experience_level;

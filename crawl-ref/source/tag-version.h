@@ -239,6 +239,7 @@ enum tag_minor_version
     TAG_MINOR_SAGE_ROLLBACK,       // Rollback the Sage card and status.
     TAG_MINOR_NEMELEX_WEIGHTS_ROLLBACK, // Nemelex deck weighting rollback
     TAG_MINOR_SACRIFICE_NECK,      // sacrifice neck for hydra
+    TAG_MINOR_JIYVA_MUTATION_REWORK,// rework jiyva mutation
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

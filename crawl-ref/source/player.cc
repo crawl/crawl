@@ -2234,6 +2234,8 @@ static int _player_evasion_bonuses()
     // mutations
     evbonus += you.get_mutation_level(MUT_GELATINOUS_BODY);
 
+    evbonus += you.get_mutation_level(MUT_SLIMY_BODY) * 3;
+
     if (you.get_mutation_level(MUT_DISTORTION_FIELD))
         evbonus += you.get_mutation_level(MUT_DISTORTION_FIELD) + 1;
 
@@ -3410,7 +3412,7 @@ int player_stealth()
     stealth += (STEALTH_PIP / 2)
                 * you.get_mutation_level(MUT_THIN_SKELETAL_STRUCTURE);
     stealth += STEALTH_PIP * you.get_mutation_level(MUT_CAMOUFLAGE);
-    const int how_transparent = you.get_mutation_level(MUT_TRANSLUCENT_SKIN);
+    const int how_transparent = you.get_mutation_level(MUT_TRANSLUCENT_SKIN) * 3;
     if (how_transparent)
         stealth += 15 * (how_transparent);
 
@@ -6333,7 +6335,10 @@ int player::base_ac_with_specific_items(int scale,
               // +1, +2, +3
     AC += get_mutation_level(MUT_GELATINOUS_BODY)
           ? get_mutation_level(MUT_GELATINOUS_BODY) * 100 : 0;
-              // +1, +2, +3
+              // +1, +2, +3    
+    AC += get_mutation_level(MUT_SLIMY_BODY)
+        ? get_mutation_level(MUT_SLIMY_BODY) * 300 : 0;
+              // +3
     AC += get_mutation_level(MUT_IRIDESCENT_SCALES, mutation_activity_type::FULL) * 200;
               // +2, +4, +6
 #if TAG_MAJOR_VERSION == 34
@@ -7528,7 +7533,7 @@ int player::usable_tentacles() const
 
 int player::has_pseudopods(bool allow_tran) const
 {
-    return get_mutation_level(MUT_PSEUDOPODS, allow_tran);
+    return get_mutation_level(MUT_PSEUDOPODS, allow_tran) * 3;
 }
 
 int player::has_usable_pseudopods(bool allow_tran) const
@@ -7612,7 +7617,7 @@ bool player::innate_sinv() const
     if (get_mutation_level(MUT_ANTENNAE) == 3)
         return true;
 
-    if (get_mutation_level(MUT_EYEBALLS) == 3)
+    if (get_mutation_level(MUT_EYEBALLS))
         return true;
 
     if (have_passive(passive_t::sinv))

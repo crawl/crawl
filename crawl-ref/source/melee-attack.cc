@@ -3508,9 +3508,9 @@ void melee_attack::mons_do_eyeball_confusion()
     if (you.has_mutation(MUT_EYEBALLS)
         && attacker->alive()
         && adjacent(you.pos(), attacker->as_monster()->pos())
-        && x_chance_in_y(you.get_mutation_level(MUT_EYEBALLS), 20))
+        && x_chance_in_y(you.get_mutation_level(MUT_EYEBALLS)*3, 20))
     {
-        const int ench_pow = you.get_mutation_level(MUT_EYEBALLS) * 30;
+        const int ench_pow = you.get_mutation_level(MUT_EYEBALLS) * 90;
         monster* mon = attacker->as_monster();
 
         if (mon->check_res_magic(ench_pow) <= 0)
@@ -3535,7 +3535,7 @@ void melee_attack::mons_do_tendril_disarm()
                                              : mon->get_hit_dice();
 
     if (you.get_mutation_level(MUT_TENDRILS)
-        && one_chance_in(5)
+        && x_chance_in_y(2,5)
         && (random2(you.dex()) > adj_mon_hd
             || random2(you.strength()) > adj_mon_hd))
     {
@@ -3929,7 +3929,7 @@ int melee_attack::calc_your_to_hit_unarmed()
     your_to_hit -= 5 * you.inaccuracy();
 
     if (you.get_mutation_level(MUT_EYEBALLS))
-        your_to_hit += 2 * you.get_mutation_level(MUT_EYEBALLS) + 1;
+        your_to_hit += 6 * you.get_mutation_level(MUT_EYEBALLS) + 1;
 
     if (apply_starvation_penalties())
         your_to_hit -= 3;

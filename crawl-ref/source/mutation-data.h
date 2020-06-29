@@ -1133,8 +1133,7 @@ static const mutation_def mut_data[] =
   {"", "", ""},
 },
 
-// Jiyva only mutations
-{ MUT_GELATINOUS_BODY, 0, 3, mutflag::good | mutflag::jiyva, true,
+{ MUT_GELATINOUS_BODY, 0, 3, mutflag::good, true,
   "gelatinous body",
 
   {"Your rubbery body absorbs attacks. (AC +1, EV +1)",
@@ -1150,52 +1149,35 @@ static const mutation_def mut_data[] =
    "Your body becomes less viscous."},
 },
 
-{ MUT_EYEBALLS, 0, 3, mutflag::good | mutflag::jiyva, true,
+// Jiyva only mutations
+{ MUT_EYEBALLS, 0, 1, mutflag::good | mutflag::jiyva, true,
   "eyeballs",
 
-  {"Your body has grown golden eyes which may confuse attackers. (Acc +3)",
-   "Your body has grown many golden eyes which may confuse attackers. (Acc +5)",
-   "Your body is covered in golden eyes which may confuse attackers. (Acc +7, SInv)"},
+  {"Your body is covered in golden eyes which may confuse attackers. (Acc +7, SInv)", "", ""},
 
-  {"Eyeballs grow over part of your body.",
-   "Eyeballs cover a large portion of your body.",
-   "Eyeballs cover you completely."},
+  {"Eyeballs cover you completely.", "", ""},
 
-  {"The eyeballs on your body disappear.",
-   "The eyeballs on your body recede somewhat.",
-   "The eyeballs on your body recede somewhat."},
+  {"The eyeballs on your body recede somewhat."},
 },
 
-{ MUT_TRANSLUCENT_SKIN, 0, 3, mutflag::good | mutflag::jiyva, true,
+{ MUT_TRANSLUCENT_SKIN, 0, 1, mutflag::good | mutflag::jiyva, true,
   "translucent skin",
 
-  {"Your translucent skin slightly reduces your foes' accuracy. (Stealth)",
-   "Your translucent skin reduces your foes' accuracy. (Stealth)",
-   "Your transparent skin significantly reduces your foes' accuracy. (Stealth)"},
+  {"Your transparent skin significantly reduces your foes' accuracy. (Stealth)", "", ""},
 
-  {"Your skin becomes partially translucent.",
-   "Your skin becomes more translucent.",
-   "Your skin becomes completely transparent."},
+  {"Your skin becomes completely transparent.", "", ""},
 
-  {"Your skin returns to its normal opacity.",
-   "Your skin's translucency fades.",
-   "Your skin's transparency fades."},
+  {"Your skin's transparency fades.", "", ""},
 },
 
-{ MUT_PSEUDOPODS, 0, 3, mutflag::good | mutflag::jiyva, true,
+{ MUT_PSEUDOPODS, 0, 1, mutflag::good | mutflag::jiyva, true,
   "pseudopods",
 
-  {"Armour fits poorly on your pseudopods.",
-   "Armour fits poorly on your large pseudopods.",
-   "Armour fits poorly on your massive pseudopods."},
+  {"Armour fits poorly on your massive pseudopods.", "", ""},
 
-  {"Pseudopods emerge from your body.",
-   "Your pseudopods grow in size.",
-   "Your pseudopods grow in size."},
+  {"Your pseudopods grow in size.", "", ""},
 
-  {"Your pseudopods retract into your body.",
-   "Your pseudopods become smaller.",
-   "Your pseudopods become smaller."},
+  {"Your pseudopods become smaller.", "", ""},
 },
 
 #if TAG_MAJOR_VERSION == 34
@@ -1498,9 +1480,9 @@ static const mutation_def mut_data[] =
 },
 
 { MUT_JELLY_GROWTH, 0, 1, mutflag::good | mutflag::jiyva, true,
-  "jelly sensing items",
+  "jelly sensing surroundings",
 
-  {"You have a small jelly attached to you that senses nearby items.", "", ""},
+  {"You have a small jelly attached to you that senses items and area around you.", "", ""},
   {"Your body partially splits into a small jelly.", "", ""},
   {"The jelly growth is reabsorbed into your body.", "", ""},
 },
@@ -1939,6 +1921,15 @@ static const mutation_def mut_data[] =
   {"Your stump has regrown into a neck!", "", ""},
 },
 
+{ MUT_SLIMY_BODY, 0, 1, mutflag::good | mutflag::jiyva, true,
+  "slime body",
+
+  {"Your slime body deflects attacks. (AC +3, EV +3)"},
+
+  {"Your body becomes viscous."},
+
+  {"Your body becomes less viscous."},
+},
 };
 
 static const mutation_category_def category_mut_data[] =

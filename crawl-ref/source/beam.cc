@@ -4045,8 +4045,7 @@ void bolt::affect_player()
         if (you.has_mutation(MUT_JELLY_MISSILE)
             && you.hp < you.hp_max
             && !you.duration[DUR_DEATHS_DOOR]
-            && item_is_jelly_edible(*item)
-            && coinflip())
+            && item_is_jelly_edible(*item))
         {
             mprf("Your attached jelly eats %s!", item->name(DESC_THE).c_str());
             inc_hp(random2(final_dam / 2));

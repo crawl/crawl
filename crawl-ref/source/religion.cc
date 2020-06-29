@@ -1095,14 +1095,26 @@ static bool _jiyva_mutate()
 
     const int rand = random2(100);
 
-    if (rand < 5)
-        return delete_mutation(RANDOM_SLIME_MUTATION, "Jiyva's grace", true, false, true);
-    else if (rand < 30)
+    int number_of_jiyva_mutation = you.how_jiyva_mutated();
+
+    if (number_of_jiyva_mutation == 2 && x_chance_in_y(5, 100)) {
+        //5% remove Jiyva mutation
+        delete_mutation(RANDOM_SLIME_MUTATION, "Jiyva's grace", true, true, true);
+        delete_mutation(RANDOM_SLIME_MUTATION, "Jiyva's grace", true, true, true);
+        number_of_jiyva_mutation = 0;
+    }
+
+    if (number_of_jiyva_mutation < 2) {
+        for (; number_of_jiyva_mutation < 2; number_of_jiyva_mutation++) {
+            mutate(RANDOM_SLIME_MUTATION, "Jiyva's grace", true, true, true);
+        }
+        return true;
+    }
+
+    if (rand < 25)
         return delete_mutation(RANDOM_NON_SLIME_MUTATION, "Jiyva's grace", true, false, true);
-    else if (rand < 55)
+    else if (rand < 60)
         return mutate(RANDOM_MUTATION, "Jiyva's grace", true, false, true);
-    else if (rand < 75)
-        return mutate(RANDOM_SLIME_MUTATION, "Jiyva's grace", true, false, true);
     else
         return mutate(RANDOM_GOOD_MUTATION, "Jiyva's grace", true, false, true);
 }
