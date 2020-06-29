@@ -554,11 +554,11 @@ static void _maybe_spawn_monsters(int dam, kill_method_type death_type,
     if (have_passive(passive_t::spawn_slimes_on_hit))
     {
         mon = royal_jelly_ejectable_monster();
-        if (dam >= you.hp_max / 2)
+        if (dam >= you.hp_max * 2 / 3)
             how_many = random2(4) + 2;
-        else if (dam >= you.hp_max / 4)
+        else if (dam >= you.hp_max / 3)
             how_many = random2(2) + 2;
-        else if (dam >= you.hp_max / 8)
+        else if (dam >= you.hp_max / 6)
             how_many = 1;
     }
     else if (you_worship(GOD_XOM)
