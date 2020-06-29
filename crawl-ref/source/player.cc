@@ -6925,10 +6925,12 @@ bool player::head_grow(int num, bool heal) const
 {
     if (you.form == transformation::none && num != 0 && num < 27)
     {
-        mprf(MSGCH_INTRINSIC_GAIN, "Your %s %s!", abs(num)!=1? "heads":"head" , num >= 0? (abs(num)!=1? "grow more" : "grows more" )
-                                                                  : (abs(num)!=1? "are cut away" : "is cut away"));
+        num = min(num, 27 - you.heads());
         if (num > 0)
-        {    for (int i = 0; i < num; i++)
+        {    
+            mprf(MSGCH_INTRINSIC_GAIN, "Your %s %s!", abs(num)!=1? "heads":"head" , num >= 0? (abs(num)!=1? "grow more" : "grows more" )
+                                                                  : (abs(num)!=1? "are cut away" : "is cut away"));
+            for (int i = 0; i < num; i++)
             {    
                 if (you.heads() >= 27)
                 {
@@ -6962,7 +6964,7 @@ bool player::head_grow(int num, bool heal) const
     {
         if (you.props[HYDRA_HEADS_NET_LOSS].get_int() < 0)
         {
-            mprf(MSGCH_INTRINSIC_GAIN, "One of your head be permanent.");
+            mprf(MSGCH_INTRINSIC_GAIN, "One of your temporary head be permanent.");
             you.props[HYDRA_HEADS_NET_LOSS].get_int()++; // A temporary head will be your real head.
         }
         else
