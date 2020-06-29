@@ -81,7 +81,7 @@ TextureID get_tile_texture(tileidx_t idx)
     else if (idx < TILEI_ICONS_MAX)
         return TEX_ICONS;
     else
-        die("Cannot get texture for bad tileidx %zu", idx);
+        die("Cannot get texture for bad tileidx %" PRIu64, idx);
 }
 
 tileidx_t tileidx_trap(trap_type type)
