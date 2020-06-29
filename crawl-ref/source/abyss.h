@@ -42,6 +42,7 @@ void abyss_maybe_spawn_xp_exit();
 void abyss_teleport();
 void save_abyss_uniques();
 bool is_level_incorruptible(bool quiet = false);
+bool is_level_incorrosion_able(bool quiet = false);
 bool lugonu_corrupt_level(int power);
 void run_corruption_effects(int duration);
 void set_abyss_state(coord_def coord, uint32_t depth);

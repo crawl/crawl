@@ -11,6 +11,7 @@
 #include <numeric>
 #include <sstream>
 
+#include "abyss.h"
 #include "act-iter.h"
 #include "areas.h"
 #include "attitude-change.h"
@@ -69,6 +70,7 @@
 #include "player-stats.h"
 #include "potion.h"
 #include "prompt.h"
+#include "random.h"
 #include "religion.h"
 #include "rot.h"
 #include "shout.h"
@@ -87,6 +89,7 @@
 #include "target.h"
 #include "teleport.h" // monster_teleport
 #include "terrain.h"
+#include "tiledef-dngn.h"
 #ifdef USE_TILE
  #include "tiledef-main.h"
 #endif
@@ -1956,6 +1959,166 @@ bool jiyva_remove_bad_mutation()
     }
 
     mpr("You feel cleansed.");
+    return true;
+}
+
+
+static bool _is_grid_corrosion_able(const coord_def &c)
+{
+    const dungeon_feature_type feat = grd(c);
+
+    // Stairs and portals cannot be corrupted.
+    if (feat_stair_direction(feat) != CMD_NO_CMD)
+        return false;
+
+    switch (feat)
+    {
+    case DNGN_PERMAROCK_WALL:
+    case DNGN_CLEAR_PERMAROCK_WALL:
+    case DNGN_OPEN_SEA:
+    case DNGN_LAVA_SEA:
+    case DNGN_TRANSPORTER_LANDING: // entry already taken care of as stairs
+        return false;
+
+    case DNGN_METAL_WALL:
+    case DNGN_CRYSTAL_WALL:
+        return one_chance_in(4);
+
+    case DNGN_STONE_WALL:
+    case DNGN_CLEAR_STONE_WALL:
+        return one_chance_in(3);
+
+    case DNGN_ROCK_WALL:
+    case DNGN_CLEAR_ROCK_WALL:
+        return !one_chance_in(4);
+
+    default:
+        return false;
+    }
+}
+
+static monster_type _get_corrosion_jelly() {
+    return random_choose_weighted<monster_type>(
+         500, MONS_JELLY,
+         100, MONS_OOZE,
+         // no CYAN (silence)
+         100, MONS_SLIME_CREATURE,
+         60, MONS_ACID_BLOB,
+         50, MONS_AZURE_JELLY,
+         40, MONS_DEATH_OOZE);
+}
+
+static bool _spawn_corrosion_jelly_near(const coord_def &pos)
+{
+    // Thirty tries for a place.
+    for (int i = 0; i < 30; ++i)
+    {
+        int offsetX = random2avg(4, 3);
+        offsetX += random2(3); // force a sequence point between random calls
+        int offsetY = random2avg(4, 3);
+        offsetY += random2(3); // ditto
+        coord_def p;
+        p.x = pos.x + random_choose(offsetX, -offsetX);
+        p.y = pos.y + random_choose(offsetY, -offsetY);
+        if (!in_bounds(p) || actor_at(p))
+            continue;
+
+        monster_type mons = _get_corrosion_jelly();
+        ASSERT(mons);
+        if (!monster_habitable_grid(mons, grd(p)))
+            continue;
+        //mgen_data mg(mons, BEH_STRICT_NEUTRAL, p);
+        //mg.set_summoned(0, 5, 0).set_non_actor_summoner("Jiyva's corrosion");
+
+        
+
+        if (monster * jelly = create_monster(mgen_data(mons,
+            BEH_STRICT_NEUTRAL, p,
+            MHITYOU, MG_AUTOFOE)
+            .set_summoned(&you, 0, 0, GOD_JIYVA).set_non_actor_summoner("Jiyva's corrosion"),
+            false))
+        {
+            jelly->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 5));
+            return true;
+        }
+        return false;//create_monster(mg);
+    }
+    return false;
+}
+
+static void _corrosion_square(const coord_def &c, int power)
+{
+    if(!you.see_cell(c))
+        return;
+
+    bool preserve_features = true;
+    dungeon_feature_type feat = DNGN_UNSEEN;
+    if (feat_altar_god(grd(c)) != GOD_NO_GOD)
+    {
+        preserve_features = false;
+        if (!one_chance_in(3))
+            feat = DNGN_ALTAR_JIYVA;
+    }
+    else if (grd(c) == DNGN_FLOOR) {
+        feat = DNGN_FLOOR;
+    }
+    else if (_is_grid_corrosion_able(c)) {
+        feat = DNGN_SLIMY_WALL;
+    }
+
+    if(feat == DNGN_UNSEEN)
+        return;
+        
+    dungeon_terrain_changed(c, feat, preserve_features, true);
+    if (feat == DNGN_FLOOR)
+        env.grid_colours(c) = GREEN;
+
+    if (feat == DNGN_FLOOR)
+    {
+        tileidx_t idx = tile_dngn_coloured(TILE_FLOOR_NERVES,
+                                           GREEN);
+        env.tile_flv(c).floor = idx + random2(tile_dngn_count(idx));
+    }
+    if (feat == DNGN_FLOOR && x_chance_in_y(power, 500)) {
+        _spawn_corrosion_jelly_near(c);
+    }
+}
+
+static void _corrosion_level_features(const coord_def &center, int power)
+{
+    for (rectangle_iterator ri(center, LOS_RADIUS, true); ri; ++ri)
+    {
+        int dist = grid_distance(*ri, center);
+        const int ground_zero_radius = 2;
+
+        const int corrupt_perc_chance = 100 - max(dist - ground_zero_radius, 0) * (6 + max(0, 100 - power)/3);
+        if (random2(100) < corrupt_perc_chance) 
+            _corrosion_square(*ri, power);
+    }
+}
+
+bool jiyva_corrosion_level(int power)
+{
+    if (is_level_incorrosion_able())
+        return false;
+
+    env.markers.add(new map_corruption_marker(you.pos(), 0));
+    env.markers.clear_need_activate();
+
+    simple_god_message("'s Hand of Corrosion reaches out!");
+    take_note(Note(NOTE_MESSAGE, 0, 0, make_stringf("Corroded %s",
+              level_id::current().describe().c_str()).c_str()));
+    mark_corrode_level(level_id::current());
+
+    flash_view(UA_PLAYER, GREEN);
+
+    _corrosion_level_features(you.pos(), power);
+
+#ifndef USE_TILE_LOCAL
+    // Allow extra time for the flash to linger.
+    scaled_delay(1000);
+#endif
+
     return true;
 }
 

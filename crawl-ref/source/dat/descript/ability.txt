@@ -607,6 +607,11 @@ Brand Weapon With Acid ability
 Permanently corroded a weapon of your choice with the acid of the jiyva.
 This blessing may only be used once, and it cannot be used on artefact weapons.
 %%%%
+Corrosion Dungeon ability
+
+Corrosion the current level. this will create slimy walls and natural jellies.
+The size of the effect is increased by Invocations skill.
+%%%%
 # Ashenzari
 Scrying ability
 

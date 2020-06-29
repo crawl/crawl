@@ -840,6 +840,14 @@ void mark_corrupted_level(level_id li)
     level_annotations[li] += "corrupted";
 }
 
+void mark_corrode_level(level_id li)
+{
+    if (!level_annotations[li].empty())
+        level_annotations[li] += ", ";
+    level_annotations[li] += "corroded";
+}
+
+
 ////////////////////////////////////////////////////////////////////////
 
 static void _update_unique_annotation(level_id level)

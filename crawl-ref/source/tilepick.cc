@@ -3622,6 +3622,8 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_JIYVA_CURE_BAD_MUTATIONS;
     case ABIL_JIYVA_BLESS_WEAPON:
         return TILEG_ABILITY_JIYVA_BLESS_WEAPON;
+    case ABIL_JIYVA_CORROSION_DUNGEON:
+        return TILEG_ABILITY_JIYVA_CORROSION_DUNGEON;
     // Fedhas
     case ABIL_FEDHAS_WALL_OF_BRIARS:
         return TILEG_ABILITY_FEDHAS_WALL_OF_BRIARS;

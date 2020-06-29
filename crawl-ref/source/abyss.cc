@@ -2060,6 +2060,18 @@ bool is_level_incorruptible(bool quiet)
     return false;
 }
 
+bool is_level_incorrosion_able(bool quiet)
+{
+    if (_is_level_corrupted())
+    {
+        if (!quiet)
+            mpr("This place is already corroded.");
+        return true;
+    }
+
+    return false;
+}
+
 static void _corrupt_choose_colours(corrupt_env *cenv)
 {
     colour_t colour = BLACK;

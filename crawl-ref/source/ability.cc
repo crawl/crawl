@@ -194,7 +194,6 @@ skill_type invo_skill(god_type god)
         case GOD_NEMELEX_XOBEH:
             return SK_EVOCATIONS;
         case GOD_ASHENZARI:
-        case GOD_JIYVA:
         case GOD_GOZAG:
         case GOD_RU:
         case GOD_TROG:
@@ -532,6 +531,8 @@ static const ability_def Ability_List[] =
       2, 0, 0, 1, {fail_basis::invo}, abflag::none },
     { ABIL_JIYVA_SLIMIFY, "Slimify",
       4, 0, 0, 8, {fail_basis::invo, 90, 0, 2}, abflag::none },
+    { ABIL_JIYVA_CORROSION_DUNGEON, "Corrosion Dungeon", 
+      7, 0, 500, 15, {fail_basis::invo, 70, 4, 25}, abflag::none },
     { ABIL_JIYVA_CURE_BAD_MUTATION, "Cure Bad Mutation",
       0, 0, 0, 15, {fail_basis::invo}, abflag::none },
     { ABIL_JIYVA_BLESS_WEAPON, "Brand Weapon With Acid", 0, 0, 0, 0,
@@ -1611,6 +1612,7 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
     case ABIL_LUGONU_CORRUPT:
         return !is_level_incorruptible(quiet);
 
+
     case ABIL_LUGONU_ABYSS_ENTER:
         if (player_in_branch(BRANCH_ABYSS))
         {
@@ -1619,6 +1621,9 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
             return false;
         }
         return true;
+        
+    case ABIL_JIYVA_CORROSION_DUNGEON:
+        return !is_level_incorrosion_able(quiet);
 
     case ABIL_SIF_MUNA_FORGET_SPELL:
         if (you.spell_no == 0)
@@ -3138,6 +3143,12 @@ static spret _do_ability(const ability_def& abil, bool fail)
         simple_god_message(" will bless one of your weapons.");
         // included in default force_more_message
         if (!bless_weapon(GOD_JIYVA, SPWPN_ACID, GREEN))
+            return spret::abort;
+        break;
+
+    case ABIL_JIYVA_CORROSION_DUNGEON:    
+        fail_check();
+        if (!jiyva_corrosion_level(1 + you.skill(SK_INVOCATIONS, 4)))
             return spret::abort;
         break;
 
