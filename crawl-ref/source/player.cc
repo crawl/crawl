@@ -6930,11 +6930,12 @@ bool player::head_grow(int num, bool heal) const
         if (num > 0)
         {    for (int i = 0; i < num; i++)
             {    
-                you.props[HYDRA_HEADS_NET_LOSS].get_int()--;
-                if (you.experience_level - you.props[HYDRA_HEADS_NET_LOSS].get_int() == 27)
+                if (you.heads() >= 27)
                 {
                     break;
                 }
+                you.props[HYDRA_HEADS_NET_LOSS].get_int()--;
+                
             }
             if (heal)
                 you.heal(4*num + random2(4*num));
