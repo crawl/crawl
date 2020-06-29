@@ -3337,15 +3337,13 @@ KPROP:   . = bloody / w:30 nothing
 TILE:    c = wall_hall
 FTILE:   .{uvt+ = floor_marble
 COLOUR:  .c = white
-: local race = you.race()
-: local ally = you.monster()
-: -- The corpseless. Before the game starts, you.monster() is "program bug".
-: if (not crawl.game_started()) or race == "Vampire"
-:     or race == "Mummy" or race == "Ghoul" or race == "Octopode"
-:     or race == "Gargoyle" or race == "Vine Stalker"
-:     or race == "Yak" or race == "Formicid" then
-:   ally = util.random_from({"dwarf", "human"})
-: end
+: -- specific to the 0.25 branch, this vault is fixed to give the deep dwarf
+: -- arrival scene. (In 0.25.0 there is a seed stability bug with this vault
+: -- that is fixed in a more general way in trunk.) This is an easter egg of
+: -- sorts in order to keep seed 10834663189915259185 stable in 0.25, so that
+: -- people can try out the seed in
+: -- https://crawl.kelbi.org/crawl/morgue/Yermak/morgue-Yermak-20200628-195118.txt
+: local ally = "dwarf"
 :
 : local axis = util.random_from({"goblin", "gnoll", "kobold", "orc"})
 :
