@@ -615,6 +615,8 @@ public:
             return "Stone claws";
         if (you.has_usable_tentacles(true))
             return "Stone tentacles";
+        if (you.species == SP_HYDRA)
+            return "Stone teeth";
 
         const bool singular = you.get_mutation_level(MUT_MISSING_HAND);
         return make_stringf("Stone fist%s", singular ? "" : "s");

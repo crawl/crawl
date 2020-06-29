@@ -698,6 +698,8 @@ string player::unarmed_attack_name() const
         default_name = "Sickle hands";
     else if (has_usable_tentacles(true))
         default_name = "Tentacles";
+    else if (you.has_multiple_hydra_attack())
+        default_name = "Teeth";
 
     return get_form()->get_uc_attack_name(default_name);
 }
