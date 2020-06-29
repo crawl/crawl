@@ -4220,6 +4220,7 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
                          || mons_class_itemuse(mspec.monbase)
                             < MONUSE_STARTING_EQUIPMENT))
             {
+                // TODO: skip this error if the monspec is `nothing`
                 error = make_stringf("Monster '%s' can't use items.",
                     mon_str.c_str());
             }

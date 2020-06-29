@@ -4339,6 +4339,8 @@ static object_class_type _acquirement_object_class()
 
 static int _dgn_item_corpse(const item_spec &ispec, const coord_def where)
 {
+    rng::subgenerator corpse_rng;
+
     mons_spec mspec(ispec.corpse_monster_spec());
     item_def* corpse = nullptr;
 
