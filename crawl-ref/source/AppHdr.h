@@ -20,26 +20,11 @@
 
 #include "platform.h"
 #include <stdint.h>
-namespace std {}
-using namespace std;
-
-#ifndef SIZE_MAX
-# include <limits>
-# define SIZE_MAX (std::numeric_limits<std::size_t>::max())
-#endif
 
 // Define COMPILE_CHECK before including any of our headers, so even things
 // like externs.h can use it. platform.h a few lines up is standalone, so
 // doesn't count.
-#ifndef _lint
-# define COMPILE_CHECK(expr) static_assert((expr), #expr)
-#else
-# define COMPILE_CHECK(expr)
-#endif
-
-#define DISALLOW_COPY_AND_ASSIGN(TypeName) \
-    TypeName(const TypeName&) = delete;   \
-    void operator=(const TypeName&) = delete
+#include "macros.h"
 
 #ifdef TARGET_COMPILER_VC
 /* Disable warning about:
@@ -170,25 +155,6 @@ static inline double pow(int x, double y) { return std::pow((double)x, y); }
 #ifndef _WIN32_WINNT
 // Allow using Win2000 syscalls.
 # define _WIN32_WINNT 0x501
-#endif
-
-// See the GCC __attribute__ documentation for what these mean.
-// Note: clang does masquerade as GNUC.
-
-#if defined(__GNUC__)
-# define NORETURN __attribute__ ((noreturn))
-#elif defined(_MSC_VER)
-# define NORETURN __declspec(noreturn)
-#else
-# define NORETURN
-#endif
-
-#if defined(__GNUC__)
-# define PURE __attribute__ ((pure))
-# define IMMUTABLE __attribute__ ((const))
-#else
-# define PURE
-# define IMMUTABLE
 #endif
 
 // /usr/bin is not writable on OSX 10.11+ due to System Integrity Protection
@@ -416,36 +382,6 @@ static inline void UNUSED(const volatile T &...)
 }
 
 #endif // __cplusplus
-
-
-#ifdef __GNUC__
-// show warnings about the format string
-# ifdef TARGET_COMPILER_MINGW
-// Configure mingw32 / mingw-w64 printf format
-//
-// If __USE_MINGW_ANSI_STDIO is defined, mingw-w64 will try to use a C99 printf
-//  However, stdio.h must be included to have a C99 printf for use with
-//  __attribute__((format(...)).
-#  ifdef __cplusplus
-#   include <cstdio>
-#  else
-#   include <stdio.h>
-#  endif
-// If mingw defined a special format function to use, use this over 'printf'.
-#  ifdef __MINGW_PRINTF_FORMAT
-#   define CRAWL_PRINTF_FORMAT __MINGW_PRINTF_FORMAT
-#  else
-#   define CRAWL_PRINTF_FORMAT printf
-#  endif
-# else
-// standard GNU-compatible compiler (i.e., not mingw32/mingw-w64)
-#  define CRAWL_PRINTF_FORMAT printf
-# endif
-# define PRINTF(x, dfmt) const char *format dfmt, ...) \
-                   __attribute__((format (CRAWL_PRINTF_FORMAT, x+1, x+2))
-#else
-# define PRINTF(x, dfmt) const char *format dfmt, ...
-#endif
 
 // And now headers we want precompiled
 #ifdef TARGET_COMPILER_VC
