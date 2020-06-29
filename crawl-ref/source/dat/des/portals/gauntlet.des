@@ -1013,7 +1013,7 @@ SHUFFLE: bvc, DELM, DEFHJK, LMNOPQ
 -- These adventurers always place a weapon.
 
 local light_scales = "troll leather armour good_item" ..
-    " / stream dragon scales good_item / acid dragon scales good_item"
+    " / steam dragon scales good_item / acid dragon scales good_item"
 local medium_scales = "swamp dragon scales good_item" ..
     " / quicksilver dragon scales / fire dragon scales good_item" ..
     " / ice dragon scales good_item / quicksilver dragon scales" ..
@@ -1027,7 +1027,7 @@ local heavy_armour = "scale mail good_item w:50 / chain mail good_item w:50" ..
 dgn.delayed_decay_extra(_G, "D", "dwarf skeleton",
     "flail randart / morningstar good_item / eveningstar w:2" ..
     "    / demon whip w:2 / dire flail good_item / great mace good_item" ..
-    "    / war axe randart / broad axe good_item / battle axe good_item" ..
+    "    / war axe randart / broad axe good_item / battleaxe good_item" ..
     "    / executioner's axe w:2 " ..
     ", ring mail randart w:50 / " .. heavy_armour .. " / " .. medium_scales ..
     "    / " .. heavy_scales ..
@@ -1084,7 +1084,7 @@ dgn.delayed_decay_extra(_G, "J", "orc skeleton",
  -- Ogre, maybe an ogre mage of some kind.
 dgn.delayed_decay_extra(_G, "K", "ogre skeleton",
     "trident good_item / demon trident / glaive good_item / bardiche" ..
-    "    / war axe randart / broad axe good_item / battle axe good_item" ..
+    "    / war axe randart / broad axe good_item / battleaxe good_item" ..
     "    / executioner's axe w:2 / giant club good_item" ..
     "    / giant spiked club good_item / quarterstaff good_item / lajatang" ..
     "    / any magical staff w:20" ..
@@ -1109,16 +1109,16 @@ dgn.delayed_decay_extra(_G, "L", "human skeleton",
 -- Deep Elf caster.
 dgn.delayed_decay_extra(_G, "M", "elf skeleton",
     "randbook, any magical staff" ..
-    ", robe good_item w:50 / leather armour good_item w:50 " .. light_scales ..
-    "    / buckler good_item / " .. dgn.good_aux_armour ..
-    "    / nothing" ..
+    ", robe good_item w:50 / leather armour good_item w:50" ..
+    "    / " .. light_scales .. " / buckler good_item" ..
+    "    / " .. dgn.good_aux_armour .. " / nothing" ..
     ", any jewellery w:20 / any wand w:20 / any misc / gold" ..
     "    / any scroll / any potion / nothing w:80")
 
 -- Deep Dwarf artificer.
 dgn.delayed_decay_extra(_G, "N", "dwarf skeleton",
     "any wand, any misc, any wand / any misc / nothing w:20" ..
-    ", any weapon good_item / any amour good_item / gold / any scroll" ..
+    ", any weapon good_item / any armour good_item / gold / any scroll" ..
     "    / any potion / nothing w:50")
 
 -- Octopode. Two guaranteed rings and up to two more.
