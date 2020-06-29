@@ -168,6 +168,7 @@ irradiate IRRADIATE
 hydra_form HYDRA_FORM
 dragon_form DRAGON_FORM
 wall_camoflage WALL_CAMOFLAGE
+eldritch_form ELDRITCH_FORM
 
 # item-based spells
 %sdir gui/spells/misc
