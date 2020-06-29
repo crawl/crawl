@@ -2266,6 +2266,8 @@ void map_def::reinit()
 
 void map_def::reload_epilogue()
 {
+    if (!epilogue.empty())
+        return;
     // reload the epilogue from the current .des cache; this is because it
     // isn't serialized but with pregen orderings could need to be run after
     // vaults have been generated, saved, and reloaded. This can be a tricky
@@ -2273,7 +2275,15 @@ void map_def::reload_epilogue()
     // triggered by markers is currently handled.
     const map_def *cache_version = find_map_by_name(name);
     if (cache_version)
-        epilogue = cache_version->epilogue;
+    {
+        map_def tmp = *cache_version;
+        // TODO: I couldn't reliably get the epilogue to be in vdefs, is there
+        // a way to cache it and not do a full load here? The original idea
+        // was to not clear it out in strip(), but this fails under some
+        // circumstances.
+        tmp.load();
+        epilogue = tmp.epilogue;
+    }
     // for save compat reasons, fail silently if the map is no longer around.
     // Probably shouldn't do anything really crucial in the epilogue that you
     // aren't prepared to deal with save compat for somehow...
@@ -2442,8 +2452,7 @@ void map_def::strip()
     main.clear();
     validate.clear();
     veto.clear();
-    // don't clear epilogues: this may still be needed when reloading a vault
-    // on a level that the player hasn't visited yet.
+    epilogue.clear();
     feat_renames.clear();
 }
 
