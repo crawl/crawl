@@ -76,6 +76,7 @@ phase_bat MONS_PHASE_BAT
 ## Hounds and hogs ('h')
 %rim 0
 jackal MONS_JACKAL
+fire_fox MONS_FIRE_FOX
 %rim 1
 hound MONS_HOUND
 howler MONS_HOWLER_MONKEY
@@ -258,6 +259,7 @@ fulminant_prism1 MONS_FULMINANT_PRISM
 fulminant_prism2
 fulminant_prism3
 fulminant_prism4
+foxfire MONS_FOXFIRE
 singularity1 MONS_SINGULARITY /*'*'*/
 singularity2
 singularity3

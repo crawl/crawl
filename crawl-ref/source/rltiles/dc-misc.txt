@@ -208,9 +208,15 @@ cloud_gold_dust1
 cloud_gold_dust2
 cloud_gold_dust3
 
-poisonous_roots POISONOUS_ROOTS
-
 airstrike AIR_STRIKE
+
+cloud_flame_trail0 CLOUD_FLAME
+cloud_flame_trail1
+cloud_flame_trail2
+cloud_flame_trail3
+
+#########MISC
+poisonous_roots POISONOUS_ROOTS
 
 %sdir mon
 fungi_plants/ballistomycete_spore SPORE_OVERLAY

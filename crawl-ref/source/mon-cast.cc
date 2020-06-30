@@ -1124,6 +1124,7 @@ static int _mons_power_hd_factor(spell_type spell)
 
         case SPELL_CHAIN_LIGHTNING:
         case SPELL_CHAIN_OF_CHAOS:
+        case SPELL_FOXFIRE:
             return 4;
 
         default:
@@ -1257,6 +1258,7 @@ static spell_type _legendary_destruction_spell()
                                   20, SPELL_ICEBLAST,
                                   15, SPELL_GHOSTLY_FIREBALL);
 }
+
 
 // TODO: documentme
 // NOTE: usually doesn't set target, but if set, should take precedence
@@ -1626,6 +1628,7 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
     case SPELL_CLOUD_CONE:            // ditto
     case SPELL_SCATTERSHOT:           // ditto
     case SPELL_LEHUDIBS_CRYSTAL_SHOT:
+    case SPELL_FOXFIRE:
         _setup_fake_beam(beam, *mons);
         break;
 
@@ -6628,6 +6631,9 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     case SPELL_IOOD:
         cast_iood(mons, 6 * mons->spell_hd(spell_cast), &pbolt);
         return;
+    
+    case SPELL_FOXFIRE:
+        cast_foxfire(mons, mons->spell_hd(spell_cast), &pbolt, god);
 
     case SPELL_AWAKEN_FOREST:
         if (!mons->friendly() && have_passive(passive_t::friendly_plants))

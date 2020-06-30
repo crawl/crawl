@@ -41,6 +41,7 @@ enum monster_type                      // menv[].type
     MONS_QUOKKA,         // Quokka are a type of wallaby, returned -- bwr 382
     MONS_PORCUPINE,
     MONS_JACKAL,
+    MONS_FIRE_FOX,
     MONS_HOUND,
 #if TAG_MAJOR_VERSION == 34
     MONS_WAR_DOG,
@@ -843,6 +844,7 @@ enum monster_type                      // menv[].type
 #if TAG_MAJOR_VERSION > 34
     MONS_FULMINANT_PRISM,
     MONS_BATTLESPHERE,
+    MONS_FOXFIRE,
 #endif
     MONS_SINGULARITY,
     MONS_PILLAR_OF_SALT,
@@ -1053,6 +1055,7 @@ enum monster_type                      // menv[].type
     MONS_CUBUS,
     MONS_PLAYER_ELDRITCH_TENTACLE,
     MONS_PLAYER_ELDRITCH_TENTACLE_SEGMENT,
+    MONS_FOXFIRE,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

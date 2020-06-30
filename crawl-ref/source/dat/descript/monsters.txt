@@ -1111,6 +1111,11 @@ A giant with obsidian skin and a wild mane of glowing red hair, holding aloft a
 fiery sword. Fire giants believe that they are destined to unite and burn the
 entire world to cinders.
 %%%%
+fire fox
+
+A small canine whose tail looks like a glaring flame.
+The number of tails seems to decrease or increase.
+%%%%
 fire vortex
 
 A swirling cloud of flame. After striking a foe, it disintegrates.

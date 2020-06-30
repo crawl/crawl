@@ -68,6 +68,7 @@ throw_flame THROW_FLAME
 inner_flame INNER_FLAME
 ignition IGNITION
 evaporate EVAPORATE
+foxfire FOXFIRE
 
 %sdir gui/spells/ice
 bolt_of_cold BOLT_OF_COLD

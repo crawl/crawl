@@ -15,6 +15,7 @@
 #include "act-iter.h"
 #include "areas.h"
 #include "cloud.h"
+#include "coordit.h"
 #include "directn.h"
 #include "env.h"
 #include "item-prop.h"
@@ -700,4 +701,72 @@ void iood_catchup(monster* mons, int pturns)
     for (int i = 0; i < moves; ++i)
         if (_iood_catchup_move(mon))
             return;
+}
+
+
+spret cast_foxfire(actor *caster, int pow, bolt *beam, god_type god, bool fail)
+{
+    fail_check();
+    int created = 0;
+
+    for (fair_adjacent_iterator ai(caster->pos()); ai; ++ai)
+    {
+        mgen_data fox(MONS_FOXFIRE, BEH_HOSTILE,
+                      *ai, MHITNOT, MG_FORCE_PLACE | MG_AUTOFOE);
+        fox.set_summoned(caster, 0, SPELL_FOXFIRE, god);
+        fox.hd = pow;
+        monster *foxfire;
+
+        if (!cell_is_solid(*ai) && !monster_at(*ai)
+            && (foxfire = create_monster(fox)))
+        {
+            ++created;
+            foxfire->add_ench(ENCH_SHORT_LIVED);
+            foxfire->steps_remaining = random2(3) + 2;
+            foxfire->props[IOOD_CASTER].get_string() = caster->name(DESC_A, true);
+
+            // Avoid foxfire without targets always moving towards (0,0)
+            if (!foxfire->get_foe())
+                foxfire->foe = MHITYOU;
+        }
+
+        if (created == 2)
+            break;
+    }
+
+    if (created && you.can_see(*caster))
+    {
+        mprf("%s %s a foxfire.",
+             caster->name(DESC_THE).c_str(),
+             caster->conj_verb("conjure").c_str());
+    }
+    else
+        canned_msg(MSG_NOTHING_HAPPENS);
+
+    return spret::success;
+}
+
+void foxfire_attack(const monster *foxfire, const actor *target)
+{
+    actor * summoner = actor_by_mid(foxfire->summoner);
+
+    // Don't allow foxfires that have wandered off to attack before dissapating
+    if (summoner && !(summoner->can_see(*foxfire)
+                      && summoner->see_cell(target->pos())))
+    {
+        return;
+    }
+
+    bolt beam;
+    beam.thrower = (foxfire && foxfire->friendly()) ? KILL_YOU :
+                   (foxfire)                       ? KILL_MON
+                                                  : KILL_MISC;
+    beam.range       = 1;
+    beam.source      = foxfire->pos();
+    beam.source_id   = foxfire->summoner;
+    beam.source_name = foxfire->props[IOOD_CASTER].get_string();
+    zappy(ZAP_FOXFIRE, foxfire->get_hit_dice(), !foxfire->friendly(), beam);
+    beam.aux_source  = beam.name;
+    beam.target      = target->pos();
+    beam.fire();
 }
