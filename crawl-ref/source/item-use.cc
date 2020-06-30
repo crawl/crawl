@@ -2735,18 +2735,7 @@ bool remove_ring(int slot, bool announce)
         mpr("You can't take that off while it's melded.");
         return false;
     }
-    else if ((hand_used == EQ_AMULET 
-            || hand_used == EQ_AMULET_LEFT 
-            || hand_used == EQ_AMULET_RIGHT
-            || hand_used == EQ_AMULET_ONE
-            || hand_used == EQ_AMULET_TWO
-            || hand_used == EQ_AMULET_THREE
-            || hand_used == EQ_AMULET_FOUR
-            || hand_used == EQ_AMULET_FIVE
-            || hand_used == EQ_AMULET_SIX
-            || hand_used == EQ_AMULET_SEVEN
-            || hand_used == EQ_AMULET_EIGHT
-            || hand_used == EQ_AMULET_NINE)
+    else if (is_unrandom_artefact(*you.slot_item(hand_used, true), UNRAND_FINGER_AMULET)
             && you.equip[EQ_RING_AMULET] != -1)
     {
         // This can be removed in the future if more ring amulets are added.

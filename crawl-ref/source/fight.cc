@@ -248,13 +248,16 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu, int
             attack_num = you.heads()/3 + 1;
             int remain = you.heads() - attack_num;
             you.turn_is_over = false;
+            bool gl_cancel_attack = false;
             for (int i = 0; i < attack_num; ++i) 
             {
+
                 if (!defender)
                     continue;
                 
                 if (!defender->alive())
                     break;
+
                 melee_attack attk(&you, defender, 7, i);
                 if (i+1 != attack_num)
                     attk.quiet = true;
@@ -276,10 +279,11 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu, int
                 if (!attk.attack())
                 {
                     // Attack was cancelled or unsuccessful...
-                    if (attk.cancel_attack)
-                        continue;
-                    you.turn_is_over = true;
-                    continue;
+                    if (attk.cancel_attack && !gl_cancel_attack)
+                        gl_cancel_attack = true;
+                    else
+                        you.turn_is_over = true;
+                    return !gl_cancel_attack;
                 }
                 you.turn_is_over = true;
                 if (did_hit)
@@ -292,6 +296,8 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu, int
             int additional_attack_success = 0;
             for (int i = 0; i < remain; ++i)
             {
+                if (gl_cancel_attack)
+                    break;
                 if (!one_chance_in(pow(2, additional_attack_success)))
                 {
                     continue;

@@ -6942,6 +6942,7 @@ bool player::head_grow(int num, bool heal) const
                     break;
                 }
                 you.props[HYDRA_HEADS_NET_LOSS].get_int()--;
+                you.attribute[ATTR_HEAD_LOSS_XP] += random2(30) + 30;
                 
             }
             if (heal)
@@ -6952,6 +6953,7 @@ bool player::head_grow(int num, bool heal) const
             for (int i = 0; i < abs(num); i++)
             {    
                 you.props[HYDRA_HEADS_NET_LOSS].get_int()++;
+                you.attribute[ATTR_HEAD_LOSS_XP] += random2(30) + 30;
             }
             if (heal)
                 ouch(abs(4*num + random2(4*num)), KILLED_BY_DRAINING);
@@ -6961,7 +6963,10 @@ bool player::head_grow(int num, bool heal) const
     {
         mprf(MSGCH_INTRINSIC_GAIN, "Your %s %s cut away", abs(num)!=1? "heads":"head", abs(num)!=1? "are" : "is");
         for (int i = 0; i < abs(num); i++)
+        {
                 you.props[HYDRA_HEADS_NET_LOSS].get_int()++;
+                you.attribute[ATTR_HEAD_LOSS_XP] += random2(30) + 30;
+        }
         if (heal)
             ouch(abs(4*num + random2(4*num)), KILLED_BY_DRAINING);
     }
@@ -6979,6 +6984,8 @@ bool player::head_grow(int num, bool heal) const
     }
     if (num < 0 || num == 0 && !heal)
         _handle_amulet_loss();
+    if (you.props[HYDRA_HEADS_NET_LOSS].get_int() == 0)
+        you.attribute[ATTR_HEAD_LOSS_XP] = 0;
     you.redraw_title = true;
     you.redraw_status_lights = true;
     #ifdef USE_TILE

@@ -1213,8 +1213,10 @@ _init_equipment_removal(transformation form)
         const equipment_type eq = static_cast<equipment_type>(i);
         const item_def *pitem = you.slot_item(eq, true);
         int blocked_slots = get_form(form)->blocked_slots;
+        bool finger = !is_unrandom_artefact(*you.slot_item(EQ_AMULET_ONE, true), UNRAND_FINGER_AMULET);
         if (get_form(form)->blocked_slots >= EQF_LEAR)
-            blocked_slots |= (you.species == SP_HYDRA) ? EQF_HYDRA | (!is_unrandom_artefact(*you.slot_item(EQ_AMULET_ONE, true), UNRAND_FINGER_AMULET)? SLOTF(EQ_RING_AMULET) : 0) : 0;
+            blocked_slots |= (you.species == SP_HYDRA) ? EQF_HYDRA | (finger ? SLOTF(EQ_RING_AMULET) : 0) 
+                                                        : 0;
 
         if (pitem && (blocked_slots & SLOTF(i)
                       || (i != EQ_RING_AMULET
