@@ -1762,7 +1762,7 @@ static bool _wu_jian_lunge(const coord_def& old_pos)
     {
         if (!mons->alive())
             break;
-        if (i == 0 && you.species == SP_HYDRA) // HYDRA additional attaack
+        if (i == 0 && you.has_hydra_multi_attack()) // HYDRA additional attaack
         {
             for (int j = 0; j < hydra_additional_attack; j++)
             {

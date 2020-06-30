@@ -4264,7 +4264,16 @@ static const struct spell_desc spelldata[] =
     6, 0,
     TILEG_ELDRITCH_FORM,
 },
-
+{
+    SPELL_FOXFIRE, "Foxfire",
+    spschool::conjuration | spschool::fire,
+    spflag::selfench | spflag::monster,
+    1,
+    25,
+    -1, -1,
+    1, 0,
+    TILEG_FOXFIRE,
+},
 {
     SPELL_NO_SPELL, "nonexistent spell",
     spschool::none,
