@@ -346,7 +346,7 @@ stab_type find_stab_type(const actor *attacker,
 {
     const monster* def = defender.as_monster();
 
-    // Stabbing intelligent monsters is unchivalric, and disabled under TSO!
+    // Stabbing monsters is unchivalric, and disabled under TSO!
     // When just checking for display purposes, still indicate when monsters
     // are sleeping/paralysed etc.
     if (actual && attacker && attacker->is_player()
