@@ -259,6 +259,7 @@ fulminant_prism1 MONS_FULMINANT_PRISM
 fulminant_prism2
 fulminant_prism3
 fulminant_prism4
+foxfire MONS_FOXFIRE
 singularity1 MONS_SINGULARITY /*'*'*/
 singularity2
 singularity3

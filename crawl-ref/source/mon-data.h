@@ -1107,7 +1107,7 @@ static monsterentry mondata[] =
 
 {
     MONS_FIRE_FOX, 'h', RED, "fire fox",
-    M_WARM_BLOOD | M_UNBLIDABLE | M_BLOOD_SCENT,
+    M_WARM_BLOOD | M_UNBLINDABLE | M_BLOOD_SCENT,
     MR_RES_COLD,
     10, MONS_HOUND, MONS_FIRE_FOX, MH_NATURAL, 0,
     { {AT_BITE, AF_PLAIN, 4}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
