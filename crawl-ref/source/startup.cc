@@ -527,14 +527,14 @@ static bool _game_defined(const newgame_def& ng)
            && ng.job != JOB_UNKNOWN;
 }
 
-// TODO: should be game_type. Also, does this really need to be static?
-// maybe part of crawl_state?
-static int startup_menu_game_type = GAME_TYPE_UNSPECIFIED;
-
 class UIStartupMenu : public Widget
 {
 public:
-    UIStartupMenu(newgame_def& _ng_choice, const newgame_def &_defaults) : done(false), end_game(false), ng_choice(_ng_choice), defaults(_defaults) {
+    UIStartupMenu(newgame_def& _ng_choice, const newgame_def &_defaults)
+                : done(false), end_game(false), ng_choice(_ng_choice),
+                  defaults(_defaults),
+                  selected_game_type(crawl_state.last_type)
+    {
         chars = find_all_saved_characters();
         num_saves = chars.size();
         input_string = crawl_state.default_startup_name;
@@ -691,8 +691,8 @@ private:
 
     bool on_button_focusin(const MenuButton& btn)
     {
-        startup_menu_game_type = btn.id;
-        switch (startup_menu_game_type)
+        selected_game_type = btn.id;
+        switch (selected_game_type)
         {
         case GAME_TYPE_NORMAL:
         case GAME_TYPE_CUSTOM_SEED:
@@ -711,7 +711,7 @@ private:
             break;
 
         default:
-            int save_number = startup_menu_game_type - NUM_GAME_TYPE;
+            int save_number = selected_game_type - NUM_GAME_TYPE;
             if (save_number < num_saves)
                 input_string = chars.at(save_number).name;
             else // new game
@@ -730,6 +730,8 @@ private:
     shared_ptr<Switcher> descriptions;
     shared_ptr<OuterMenu> game_modes_menu;
     shared_ptr<OuterMenu> save_games_menu;
+    // not a `game_type` because it is used for save #s as well
+    int selected_game_type;
 };
 
 SizeReq UIStartupMenu::_get_preferred_size(Direction dim, int prosp_width)
@@ -758,12 +760,12 @@ void UIStartupMenu::on_show()
     int save = _find_save(chars, input_string);
     // don't use non-enum game_type values across restarts, as the list of
     // saves may have changed on restart.
-    if (startup_menu_game_type >= NUM_GAME_TYPE)
-        startup_menu_game_type = GAME_TYPE_UNSPECIFIED;
+    if (selected_game_type >= NUM_GAME_TYPE)
+        selected_game_type = GAME_TYPE_UNSPECIFIED;
 
     int id;
-    if (startup_menu_game_type != GAME_TYPE_UNSPECIFIED)
-        id = startup_menu_game_type;
+    if (selected_game_type != GAME_TYPE_UNSPECIFIED)
+        id = selected_game_type;
     else if (save != -1)
     {
         // save game id is offset by NUM_GAME_TYPE
