@@ -336,6 +336,8 @@ static void _reset_game()
     reset_hud();
     StashTrack = StashTracker();
     travel_cache = TravelCache();
+    // TODO: hint state needs seem work
+    Hints.hints_events.init(false);
     clear_level_target();
     overview_clear();
     clear_message_window();
