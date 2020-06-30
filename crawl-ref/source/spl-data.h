@@ -4262,7 +4262,7 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     6, 0,
-    TILEG_SUMMON_HORRIBLE_THINGS,
+    TILEG_ELDRITCH_FORM,
 },
 
 {
