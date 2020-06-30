@@ -3011,31 +3011,6 @@ spret cast_random_bolt(int pow, bolt& beam, bool fail)
     return spret::success;
 }
 
-void foxfire_attack(const monster *foxfire, const actor *target)
-{
-    actor * summoner = actor_by_mid(foxfire->summoner);
-
-    // Don't allow foxfires that have wandered off to attack before dissapating
-    if (summoner && !(summoner->can_see(*foxfire)
-                      && summoner->see_cell(target->pos())))
-    {
-        return;
-    }
-
-    bolt beam;
-    beam.thrower = (foxfire && foxfire->friendly()) ? KILL_YOU :
-                   (foxfire)                       ? KILL_MON
-                                                  : KILL_MISC;
-    beam.range       = 1;
-    beam.source      = foxfire->pos();
-    beam.source_id   = foxfire->summoner;
-    beam.source_name = summoner->name(DESC_PLAIN, true);
-    zappy(ZAP_FOXFIRE, foxfire->get_hit_dice(), !foxfire->friendly(), beam);
-    beam.aux_source  = beam.name;
-    beam.target      = target->pos();
-    beam.fire();
-}
-
 size_t shotgun_beam_count(int pow)
 {
     return 1 + stepdown((pow - 5) / 3, 5, ROUND_CLOSE);
