@@ -2705,6 +2705,8 @@ static bool _do_action(item_def &item, const command_type action)
     case CMD_SET_SKILL_TARGET: target_item(item);                   break;
     case CMD_EVOKE:
 #ifndef USE_TILE_LOCAL
+        // XX why does CMD_EVOKE lead to the only call to this redraw function
+        // in the entire game??
         redraw_console_sidebar();
 #endif
         evoke_item(slot);

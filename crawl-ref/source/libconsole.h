@@ -43,3 +43,22 @@ coord_def cgetpos(GotoRegion region = GOTO_CRT);
 void cgotoxy(int x, int y, GotoRegion region = GOTO_CRT);
 GotoRegion get_cursor_region();
 void set_cursor_region(GotoRegion region);
+
+bool valid_cursor_pos(int x, int y, GotoRegion region);
+
+struct save_cursor_pos
+{
+    save_cursor_pos()
+        : region(get_cursor_region()), pos(cgetpos(region))
+    {
+        ASSERT(valid_cursor_pos(pos.x, pos.y, region));
+    };
+    ~save_cursor_pos()
+    {
+        cgotoxy(pos.x, pos.y, region);
+    };
+
+private:
+    GotoRegion region;
+    coord_def pos;
+};
