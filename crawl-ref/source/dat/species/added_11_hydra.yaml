@@ -27,6 +27,8 @@ aptitudes:
   shields: False
   spellcasting: -3
   conjurations: -2
+  summoning: -3
+  necromancy: -3
   hexes: -2
   charms: -2
   translocations: -2
