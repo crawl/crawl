@@ -10,8 +10,8 @@ aptitudes:
   hp: -2
   mp_mod: 0
   mr: 5
-  fighting : 4
-  unarmed_combat : 4
+  fighting : 2
+  unarmed_combat : 2
   short_blades: False
   long_blades: False
   axes: False
@@ -22,8 +22,8 @@ aptitudes:
   bows: False
   crossbows: False
   armour: -2
-  dodging: 0
-  stealth: 0
+  dodging: -2
+  stealth: -2
   shields: False
   spellcasting: -3
   conjurations: -2
