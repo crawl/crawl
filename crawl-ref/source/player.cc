@@ -3430,6 +3430,10 @@ int player_stealth()
     if (you.species == SP_VAMPIRE && !you.vampire_alive)
             stealth += STEALTH_PIP * 2;
 
+    // Hydra species are large and it walks with noise.
+    if (you.species == SP_HYDRA)
+        stealth -= STEALTH_PIP * you.experience_level/9;
+
     if (!you.airborne())
     {
         if (you.in_water())
