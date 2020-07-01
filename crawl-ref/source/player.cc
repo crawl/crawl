@@ -6993,6 +6993,7 @@ bool player::head_grow(int num, bool heal) const
         {
             mprf(MSGCH_INTRINSIC_GAIN, "One of your temporary head be permanent.");
             you.props[HYDRA_HEADS_NET_LOSS].get_int()++; // A temporary head will be your real head.
+            _head_loss_xp(old_num, -1);
         }
         else
         {
