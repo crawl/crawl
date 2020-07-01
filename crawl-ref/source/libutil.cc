@@ -374,30 +374,32 @@ coord_def cgetpos(GotoRegion region)
     return where - _cgettopleft(region) + coord_def(1, 1);
 }
 
+bool valid_cursor_pos(int x, int y, GotoRegion region)
+{
+    const coord_def sz = cgetsize(region);
+    return x >= 1 && y >= 1 && x <= sz.x && y <= sz.y;
+}
+
 static GotoRegion _current_region = GOTO_CRT;
 
 void cgotoxy(int x, int y, GotoRegion region)
 {
 #ifdef ASSERTS
-    auto const old_region = _current_region;
-#endif
-    _current_region = region;
-    const coord_def tl = _cgettopleft(region);
-    const coord_def sz = cgetsize(region);
-
-#ifdef ASSERTS
-    if (x < 1 || y < 1 || x > sz.x || y > sz.y)
+    if (!valid_cursor_pos(x, y, region))
     {
+        const coord_def sz = cgetsize(region);
         // dprf in case it's not safe
         dprf("screen write out of bounds in region %d (old: %d): (%d,%d) into (%d,%d)",
-             (int) region, (int) old_region, x, y, sz.x, sz.y);
+             (int) region, (int) _current_region, x, y, sz.x, sz.y);
         if (you.on_current_level)
-            save_game(false); // should be safe
+            save_game(false); // should be safe (lol)
         die( "screen write out of bounds in region %d (old: %d): (%d,%d) into (%d,%d)",
-             (int) region, (int) old_region, x, y, sz.x, sz.y);
+             (int) region, (int) _current_region, x, y, sz.x, sz.y);
     }
 #endif
 
+    const coord_def tl = _cgettopleft(region);
+    _current_region = region;
     gotoxy_sys(tl.x + x - 1, tl.y + y - 1);
 
 #ifdef USE_TILE_WEB
@@ -410,10 +412,6 @@ GotoRegion get_cursor_region()
     return _current_region;
 }
 
-void set_cursor_region(GotoRegion region)
-{
-    _current_region = region;
-}
 #endif // !USE_TILE_LOCAL
 
 coord_def cgetsize(GotoRegion region)

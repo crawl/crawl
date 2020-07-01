@@ -978,8 +978,12 @@ bool view_update()
 
 void flash_view(use_animation_type a, colour_t colour, targeter *where)
 {
-    if (Options.use_animations & a)
+    if (crawl_state.need_save && Options.use_animations & a)
     {
+#ifndef USE_TILE_LOCAL
+        save_cursor_pos save;
+#endif
+
         you.flash_colour = colour;
         you.flash_where = where;
         viewwindow(false);
@@ -989,7 +993,7 @@ void flash_view(use_animation_type a, colour_t colour, targeter *where)
 void flash_view_delay(use_animation_type a, colour_t colour, int flash_delay,
                       targeter *where)
 {
-    if (Options.use_animations & a)
+    if (crawl_state.need_save && Options.use_animations & a)
     {
         flash_view(a, colour, where);
         scaled_delay(flash_delay);
@@ -1400,6 +1404,8 @@ void viewwindow(bool show_updates, bool tiles_only, animation *a)
         unwind_bool updating(_view_is_updating, true);
 
 #ifndef USE_TILE_LOCAL
+        save_cursor_pos save;
+
         if (crawl_state.smallterm)
         {
             redraw_screen();
