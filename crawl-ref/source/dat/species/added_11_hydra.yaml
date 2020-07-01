@@ -56,6 +56,8 @@ fake_mutations:
     short: no weapons.
   - long: You can walk faster in water.
     short: walks faster in water. 
+  - long : You stomp with loud noise.
+    short : stomps
 recommended_jobs:
   - JOB_FIGHTER
 recommended_weapons:
