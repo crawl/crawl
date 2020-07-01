@@ -2726,8 +2726,8 @@ static void _handle_head_loss(int exp)
     if (!(you.attribute[ATTR_HEAD_LOSS_XP] > 0))
         return;
 
-    int loss = div_rand_round(exp,
-                              2 * max(1, calc_skill_cost(you.skill_cost_level) - 3));
+    int loss = div_rand_round(exp * abs(you.props[HYDRA_HEADS_NET_LOSS].get_int())/3,
+                                max(1, calc_skill_cost(you.skill_cost_level) - 3));
     you.attribute[ATTR_HEAD_LOSS_XP] -= loss;
     dprf("Head loss points: %d", you.attribute[ATTR_HEAD_LOSS_XP]);
     if (you.attribute[ATTR_HEAD_LOSS_XP] <= 0)
