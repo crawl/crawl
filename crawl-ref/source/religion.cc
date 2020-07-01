@@ -2797,7 +2797,8 @@ void excommunication(bool voluntary, god_type new_god)
     }
 
     if (you.species == SP_CRUSTACEAN 
-        && (old_god == GOD_ZIN || old_god == GOD_SHINING_ONE || old_god == GOD_ELYVILON))
+        && (old_god == GOD_ZIN || old_god == GOD_SHINING_ONE || old_god == GOD_ELYVILON)
+        && !((new_god == GOD_ZIN || new_god == GOD_SHINING_ONE || new_god == GOD_ELYVILON)))
     {
 
         if (you.experience_level > 6)
@@ -3786,7 +3787,7 @@ void join_religion(god_type which_god)
 
     // Disalow and warn Crustaceans cannot use their abilities emitting miasma anymore.
     if (you.species == SP_CRUSTACEAN 
-        && you_worship(GOD_SHINING_ONE) || you_worship(GOD_ELYVILON) || you_worship(GOD_ZIN)
+        && (you_worship(GOD_SHINING_ONE) || you_worship(GOD_ELYVILON) || you_worship(GOD_ZIN))
         )
     {
         if (you.experience_level > 6)
