@@ -1516,6 +1516,10 @@ void fakecursorxy(int x, int y)
     cchar_t c = character_at(y_curses, x_curses);
     flip_colour(c);
     write_char_at(y_curses, x_curses, c);
+    // the above still results in changes to the return values for wherex and
+    // wherey, so set the cursor region to ensure that the cursor position is
+    // valid after this call. (This also matches the behavior of real cursorxy.)
+    set_cursor_region(GOTO_CRT);
 }
 
 int wherex()
