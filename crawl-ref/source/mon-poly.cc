@@ -27,6 +27,7 @@
 #include "mon-gear.h"
 #include "mon-place.h"
 #include "mon-tentacle.h"
+#include "mutation.h"
 #include "notes.h"
 #include "religion.h"
 #include "state.h"
@@ -617,12 +618,41 @@ void slimify_monster(monster* mon)
     mons_att_changed(mon);
 }
 
+static void _seen_eldritch(monster* mons)
+{
+    if(you.form != transformation::eldritch) {
+        return;
+    }
+
+    if (mons->flags & MF_ELDRITCH_SEEN)
+        return;
+
+    // First time we've seen this particular monster.
+    mons->flags |= MF_ELDRITCH_SEEN;
+
+    const mon_threat_level_type threat_level = mons_threat_level(*mons);
+
+    if(threat_level == MTHRT_TRIVIAL) {
+        if(mons->undead_or_demonic() ||
+           mons->is_holy() ||
+           mons->is_nonliving() ||
+           mons_intel(*mons) == I_BRAINLESS)
+            return;
+        if (mons->add_ench(mon_enchant(ENCH_MAD, 1, &you, INFINITE_DURATION)))
+        {
+            simple_monster_message(*mons, " is driven mad!");
+        }
+    }
+}
+
 void seen_monster(monster* mons)
 {
     set_unique_annotation(mons);
 
     // id equipment (do this every time we see them, it may have changed)
     view_monster_equipment(mons);
+
+    _seen_eldritch(mons);
 
     item_def* weapon = mons->weapon();
     if (weapon && is_range_weapon(*weapon))
