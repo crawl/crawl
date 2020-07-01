@@ -1307,6 +1307,15 @@ fire dragon scales
 
 <steam dragon scales>
 %%%%
+fire fox
+
+"Over the last decade we have seen this promise fulfilled in many ways. We have 
+also seen the power of the internet used to magnify divisiveness, incite violence, 
+promote hatred, and intentionally manipulate fact and reality. We have learned that 
+we should more explicitly set out our aspirations for the human experience of the 
+internet. We do so now."
+    -Mozilla Foundation, _The Mozilla Manifesto_
+%%%%
 flail
 
 “Even after forcing their way, with great effort and loss, through this double

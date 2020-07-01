@@ -62,7 +62,7 @@ zombie_goblin MONS_ZOMBIE_GOBLIN
 zombie_hobgoblin MONS_ZOMBIE_HOBGOBLIN
 zombie_human MONS_ZOMBIE_HUMAN
 zombie_jackal MONS_ZOMBIE_JACKAL
-zombie_jackal MONS_ZOMBILE_FIRE_FOX
+zombie_fire_fox MONS_ZOMBIE_FIRE_FOX
 zombie_kobold MONS_ZOMBIE_KOBOLD
 zombie_orc MONS_ZOMBIE_ORC
 zombie_quokka MONS_ZOMBIE_QUOKKA
