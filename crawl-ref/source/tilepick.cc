@@ -1748,9 +1748,6 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
         case MONS_CEREBOV:
             return base + (mon.inv[MSLOT_WEAPON] ? 0 : 1);
 
-        case MONS_SLAVE:
-            return base + (mon.mname == "freed slave" ? 1 : 0);
-
         case MONS_BALLISTOMYCETE:
             return base + (mon.is_active ? 1 : 0);
 
@@ -4242,7 +4239,6 @@ void tile_init_props(monster* mon)
     // Only monsters using mon_mod or mon_cycle need a tile_num.
     switch (mon->type)
     {
-        case MONS_SLAVE:
         case MONS_TOADSTOOL:
         case MONS_FUNGUS:
         case MONS_PLANT:

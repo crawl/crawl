@@ -333,6 +333,7 @@ hellwing MONS_HELLWING
 # type '5' demons
 crimson_imp MONS_CRIMSON_IMP
 %rim 0
+lemure MONS_LEMURE
 quasit MONS_QUASIT
 %rim 1
 iron_imp MONS_IRON_IMP
@@ -549,8 +550,6 @@ killer_klown_green
 killer_klown_purple
 killer_klown_red
 killer_klown_yellow
-slave MONS_SLAVE
-slave_freed
 %sdir mon/vault
 ## From a Lair ending
 %rim 0

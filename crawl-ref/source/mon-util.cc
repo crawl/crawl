@@ -3547,9 +3547,7 @@ void mons_stop_fleeing_from_sanctuary(monster& mons)
 void mons_pacify(monster& mon, mon_attitude_type att, bool no_xp)
 {
     // If the _real_ (non-charmed) attitude is already that or better,
-    // don't degrade it. This can happen, for example, with a high-power
-    // Crusade card on Pikel's slaves who would then go down from friendly
-    // to good_neutral when you kill Pikel.
+    // don't degrade it.
     if (mon.attitude >= att)
         return;
 

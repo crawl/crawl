@@ -378,10 +378,10 @@ out of reality.
 %%%%
 Pikel
 
-While kobolds are normally slaves, Pikel's rough life, selfish ambition and
-large stature have caused him to rise up and become a slaver himself. He is on
-his way to the Orcish Mines to sell his wares, a selection of timid humans who
-cower with every crack of his whip.
+A wise kobold would fear the forces of Hell, and certainly would not set up a
+highly lucrative transdimensional trade in damned souls. But Pikel is better
+known for his whip than his wisdom, mercilessly tormenting his pitieous charges
+as he ferries them to their buyers.
 %%%%
 Polyphemus
 
@@ -1133,11 +1133,6 @@ flying skull
 
 An undead skull kept aloft and flitting swiftly about by unholy magic.
 %%%%
-freed slave
-
-A human who has just been released from magical enslavement. It tries to stand
-proudly, despite its lingering fear and unkempt appearance.
-%%%%
 frilled lizard
 
 A lizard with a giant and colourful fringe folded around its neck. It flares
@@ -1559,6 +1554,11 @@ lava snake
 
 A burning red snake which dwells in pools of lava. It spits gobs of molten rock
 at passers-by.
+%%%%
+lemure
+
+Accursed souls magically bound to hellish servitude for the highest bidder. If
+their master is slain, they will be freed, departing this realm with gratitude.
 %%%%
 leopard gecko
 
@@ -2140,12 +2140,6 @@ sky beast
 
 A strange aerial creature formed of clouds and tortured flesh that sparkles
 with electricity and, every so often, slips entirely from view.
-%%%%
-slave
-
-A once-proud human who has been magically enslaved, forcing it to perform any
-deed its master commands. However, its magical enslavement lasts only as long
-as its master does, and it would surely appreciate being freed.
 %%%%
 slime creature
 

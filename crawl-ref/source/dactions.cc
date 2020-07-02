@@ -54,7 +54,7 @@ static const char *daction_names[] =
 #endif
     "reapply passive mapping",
     "remove Jiyva altars",
-    "Pikel's slaves go good-neutral",
+    "Pikel's minions go poof",
     "corpses rot",
 #if TAG_MAJOR_VERSION == 34
     "Tomb loses -cTele",
@@ -106,11 +106,10 @@ bool mons_matches_daction(const monster* mon, daction_type act)
         return mon->wont_attack() && mons_is_god_gift(*mon, GOD_HEPLIAKLQANA);
 
     // Not a stored counter:
-    case DACT_PIKEL_SLAVES:
-        return mon->type == MONS_SLAVE
+    case DACT_PIKEL_MINIONS:
+        return mon->type == MONS_LEMURE
                && testbits(mon->flags, MF_BAND_MEMBER)
-               && mon->props.exists("pikel_band")
-               && mon->mname != "freed slave";
+               && mon->props.exists("pikel_band");
 
     case DACT_OLD_ENSLAVED_SOULS_POOF:
         return mons_enslaved_soul(*mon);
@@ -229,16 +228,13 @@ void apply_daction_to_mons(monster* mon, daction_type act, bool local,
             mon->flags &= ~MF_ATT_CHANGE_ATTEMPT;
             break;
 
-        case DACT_PIKEL_SLAVES:
+        case DACT_PIKEL_MINIONS:
         {
-            // monster changes attitude
-            bool hostile = you.get_mutation_level(MUT_NO_LOVE);
-            mon->attitude = hostile ? ATT_HOSTILE : ATT_GOOD_NEUTRAL;
-            mons_att_changed(mon);
-            mon->flags |= MF_NAME_REPLACE | MF_NAME_DESCRIPTOR
-                              | MF_NAME_NOCORPSE;
-            mon->mname = "freed slave";
-            mon->behaviour = hostile ? BEH_SEEK : BEH_WANDER;
+            simple_monster_message(*mon, " departs this earthly plane.");
+            check_place_cloud(CLOUD_BLACK_SMOKE, mon->pos(),
+                              random_range(3, 5), nullptr);
+            // The monster disappears.
+            monster_die(*mon, KILL_DISMISSED, NON_MONSTER);
             break;
         }
         case DACT_KIRKE_HOGS:
@@ -284,7 +280,7 @@ static void _apply_daction(daction_type act)
     case DACT_ALLY_PLANT:
     case DACT_OLD_ENSLAVED_SOULS_POOF:
     case DACT_SLIME_NEW_ATTEMPT:
-    case DACT_PIKEL_SLAVES:
+    case DACT_PIKEL_MINIONS:
     case DACT_KIRKE_HOGS:
     case DACT_BRIBE_TIMEOUT:
     case DACT_SET_BRIBES:

@@ -113,8 +113,6 @@ for (grep /\.des$/, `git ls-files`)
     }
 }
 
-$mons{"freed slave"} = 1;
-
 if ($db)
 {
     # No description needed, but they still should present translated
