@@ -277,7 +277,7 @@ static void _nowrap_eol_cprintf_touchui(const char *format, ...)
 
 #else
 #define CGOTOXY cgotoxy
-#define CPRINTF cprintf
+#define CPRINTF wrapcprintf
 #define NOWRAP_EOL_CPRINTF nowrap_eol_cprintf
 #endif
 
@@ -1413,6 +1413,7 @@ void print_stats()
         update_screen();
 #else
     update_screen();
+    assert_valid_cursor_pos();
 #endif
 }
 
@@ -1519,6 +1520,7 @@ void redraw_console_sidebar()
 
     you.flash_colour = BLACK;
     you.flash_where = 0;
+    assert_valid_cursor_pos();
 }
 #endif
 
@@ -1582,6 +1584,9 @@ void redraw_screen(bool show_updates)
     }
 
     update_screen();
+#ifndef USE_TILE_LOCAL
+    assert_valid_cursor_pos();
+#endif
 }
 
 // ----------------------------------------------------------------------
@@ -1723,9 +1728,10 @@ static void _print_next_monster_desc(const vector<monster_info>& mons,
             mons_to_string_pane(desc, desc_colour, zombified,
                                 mons, start, count);
             textcolour(desc_colour);
-            if (desc.length() > (unsigned) abs(crawl_view.mlistsz.x - printed))
+            if (static_cast<int>(desc.length()) > crawl_view.mlistsz.x - printed)
             {
-                desc.resize(crawl_view.mlistsz.x - 3 - printed, ' ');
+                ASSERT(crawl_view.mlistsz.x - 2 - printed >= 0);
+                desc.resize(crawl_view.mlistsz.x - 2 - printed, ' ');
                 desc += "…)";
             }
             else
@@ -1804,11 +1810,13 @@ int update_monster_pane()
         if (i_mons < (int)mons.size())
         {
             // Didn't get to all of them.
-            CGOTOXY(crawl_view.mlistsz.x - 3, crawl_view.mlistsz.y, GOTO_MLIST);
+            CGOTOXY(crawl_view.mlistsz.x - 2, crawl_view.mlistsz.y, GOTO_MLIST);
             textbackground(COLFLAG_REVERSE);
             CPRINTF("(…)");
             textbackground(BLACK);
         }
+
+        assert_valid_cursor_pos();
 
         if (mons.empty())
             return -1;

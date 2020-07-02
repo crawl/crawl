@@ -173,15 +173,32 @@ void nowrap_eol_cprintf(const char *s, ...)
     cprintf("%s", chop_string(buf, max(wrapcol + 1 - wherex(), 0), false).c_str());
 }
 
+/**
+ * Print a string wrapped by some value, relative to the current cursor region,
+ * potentially skipping some lines. This function truncates if the region has
+ * no more space. It is guaranteed to leave the cursor position in a valid spot
+ * relative to the region.
+ *
+ * @param skiplines how many lines of text in `buf` to skip before printing
+ * anything. (No output will be displayed for these lines.)
+ * @param wrapcol the column to wrap at. The new line will start at the left
+ * edge of the current cursor region after wrapping.
+ * @param buf the string to print.
+ */
 static void wrapcprint_skipping(int skiplines, int wrapcol, const string &buf)
 {
     ASSERT(skiplines >= 0);
 
+#ifndef USE_TILE_LOCAL
+    assert_valid_cursor_pos();
+#endif
     const GotoRegion region = get_cursor_region();
-    const int max_y = cgetsize(region).y;
+    const coord_def sz = cgetsize(region);
 
     size_t linestart = 0;
     size_t len = buf.length();
+
+    bool linebreak = false;
 
     while (linestart < len)
     {
@@ -194,29 +211,63 @@ static void wrapcprint_skipping(int skiplines, int wrapcol, const string &buf)
             linestart += line.length();
             if (skiplines == 0)
                 cprintf("%s", line.c_str());
+
+            linebreak = skiplines == 0
+                        && line.length() >= static_cast<unsigned int>(avail);
         }
+        else
+            linebreak = true; // cursor started at the end of a line
 
         // No room for more lines, quit now.
-        if (pos.y >= max_y)
-            break;
-        if (linestart < len)
+        if (pos.y >= sz.y)
         {
-            // Only advance the cursor line if we printed something.
-            cgotoxy(1, pos.y + (skiplines ? 0 : 1), region);
+#ifndef USE_TILE_LOCAL
+            // leave the cursor at the end of the region to ensure a valid pos.
+            // This could happen for example from printing something right up
+            // to the end of the mlist.
+            if (!valid_cursor_pos(cgetpos(region).x, pos.y, region))
+                cgotoxy(sz.x, sz.y, region);
+#endif
+            break;
         }
+
+        // even if the function returns, this will leave the cursor in a valid
+        // position inside the region.
+        if (linebreak)
+            cgotoxy(1, pos.y + 1, region);
+
         if (skiplines)
             --skiplines;
     }
 }
 
 // cprintf that knows how to wrap down lines
-static void wrapcprintf(int wrapcol, const char *s, ...)
+void wrapcprintf(int wrapcol, const char *s, ...)
 {
     va_list args;
     va_start(args, s);
     string buf = vmake_stringf(s, args);
     va_end(args);
     wrapcprint_skipping(0, wrapcol, buf);
+}
+
+/**
+ * Print a string wrapped by some value, relative to the current cursor region,
+ * potentially skipping some lines. This function truncates if the region has
+ * no more space. It is guaranteed to leave the cursor position in a valid spot
+ * relative to the region, and uses the width of the region to determine the
+ * wrap column.
+ *
+ * @param s a format string
+ * @param ... formatting parameters
+ */
+void wrapcprintf(const char *s, ...)
+{
+    va_list args;
+    va_start(args, s);
+    string buf = vmake_stringf(s, args);
+    va_end(args);
+    wrapcprint_skipping(0, cgetsize(get_cursor_region()).x, buf);
 }
 
 int cancellable_get_line(char *buf, int len, input_history *mh,
