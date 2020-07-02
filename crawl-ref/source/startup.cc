@@ -273,6 +273,10 @@ static void _post_init(bool newc)
         // Abyssal Knights start out in the Abyss.
         if (you.chapter == CHAPTER_POCKET_ABYSS)
             you.where_are_you = BRANCH_ABYSS;
+        if (you.chapter == CHAPTER_STARTING_SLIME) { 
+            you.chapter = CHAPTER_ORB_HUNTING;
+            you.where_are_you = BRANCH_SLIME;
+        }
         else
             you.where_are_you = root_branch;
     }

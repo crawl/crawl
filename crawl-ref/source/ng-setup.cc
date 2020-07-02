@@ -285,6 +285,9 @@ void give_items_skills(const newgame_def& ng)
     {
         you.religion = GOD_JIYVA;
         you.piety = 35;
+        if (crawl_state.game_is_sprint())
+            you.chapter = CHAPTER_ORB_HUNTING;
+
         if (species_apt(SK_ARMOUR) < species_apt(SK_DODGING))
             you.skills[SK_DODGING]++;
         else
@@ -478,6 +481,10 @@ static void _setup_generic(const newgame_def& ng)
     you.your_name  = ng.name;
     you.species    = ng.species;
     you.char_class = ng.job;
+    if(ng.starting_pos >= 1) {
+        //for melted knight
+        you.chapter = CHAPTER_STARTING_SLIME;
+    }
 
     you.chr_class_name = get_job_name(you.char_class);
 
