@@ -1816,7 +1816,7 @@ spret cast_ignition(const actor *agent, int pow, bool fail)
             }
             beam_visual.explosion_draw_cell(pos);
         }
-        update_screen();
+        viewwindow(false);
         scaled_delay(50);
 
         // Real explosions on each individual square.
