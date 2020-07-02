@@ -112,7 +112,7 @@ The contents of this text are:
                 tile_font_lbl_size, tile_font_ft_light, tile_show_minihealthbar,
                 tile_show_minimagicbar, tile_show_demon_tier, tile_water_anim,
                 tile_misc_anim, tile_realtime_anim, tile_show_player_species,
-                tile_layout_priority, tile_display_mode,
+                tile_show_threat_levels, tile_layout_priority, tile_display_mode,
                 tile_level_map_hide_messages, tile_level_map_hide_sidebar,
                 tile_player_tile, tile_weapon_offsets, tile_shield_offsets,
                 tile_web_mouse_control
@@ -2139,6 +2139,10 @@ tile_show_player_species = false
         If enabled, displays the player using the monster tile for her species,
         instead of using the normal doll and showing equipment.
 
+tile_show_threat_levels = trivial easy tough nasty
+        This option controls which monsters will be highlighted with their
+        threat level.
+        
 tile_layout_priority = minimap, inventory, command, spell, monster
         (Ordered list option)
         This option allows you to control the order in which elements are
