@@ -2205,6 +2205,8 @@ bool melee_attack::consider_decapitation(int dam, int damage_type)
     {
         if (defender_visible)
             mpr("The flame cauterises the wound!");
+            if (defender->is_player() && defender->heads() == 0)
+                defender->hurt(attacker, INSTANT_DEATH);
         return false;
     }
 
@@ -2326,7 +2328,7 @@ void melee_attack::decapitate(int dam_type)
     }
 
     int heads = defender->heads();
-    if (heads == 1) // will be zero afterwards
+    if (heads == 1 && defender->is_monster()) // will be zero afterwards
     {
         if (defender_visible)
         {

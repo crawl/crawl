@@ -223,7 +223,7 @@ void wizard_heal(bool super_heal)
         you.stat_loss.init(0);
         you.attribute[ATTR_STAT_LOSS_XP] = 0;
         you.attribute[ATTR_HEAD_LOSS_XP] = 0;
-        you.props[HYDRA_HEADS_NET_LOSS] = 0;
+        you.head_grow(you.props[HYDRA_HEADS_NET_LOSS].get_int());
         you.redraw_stats = true;
     }
     else
@@ -237,6 +237,7 @@ void wizard_heal(bool super_heal)
     set_hp(you.hp_max);
     set_mp(you.max_magic_points);
     set_hunger(HUNGER_VERY_FULL + 100, true);
+    you.head_grow(you.props[HYDRA_HEADS_NET_LOSS].get_int());
     you.redraw_hit_points = true;
     you.redraw_armour_class = true;
     you.redraw_evasion = true;

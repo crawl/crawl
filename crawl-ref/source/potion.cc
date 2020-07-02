@@ -154,7 +154,7 @@ public:
         you.duration[DUR_CIGOTUVIS_PLAGUE] = 0;
         // Do not heal or hurt player via changing head numbers.
         if (you.species == SP_HYDRA)
-            you.head_grow(-you.props[HYDRA_HEADS_NET_LOSS].get_int(), false); 
+            you.head_grow(you.props[HYDRA_HEADS_NET_LOSS].get_int(), false); 
         return true;
     }
 };
