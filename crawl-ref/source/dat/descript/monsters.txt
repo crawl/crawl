@@ -827,8 +827,7 @@ pestilential maw.
 %%%%
 death knight
 
-A warrior-priest of Yredelemnul that chants unholy homages to the dark god
-and calls forth the dead.
+A warrior-priest of Yredelemnul, chanting fearful supplications to its dark god.
 %%%%
 death ooze
 
