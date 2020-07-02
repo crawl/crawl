@@ -1202,6 +1202,10 @@ static void _place_player(dungeon_feature_type stair_taken,
         you.moveto(ABYSS_CENTRE);
     else if (!return_pos.origin())
         you.moveto(return_pos);
+    else if (you.chapter == CHAPTER_STARTING_SLIME) {
+        //you.moveto(dgn_find_feature_marker(DNGN_ALTAR_JIYVA));
+        you.chapter = CHAPTER_ORB_HUNTING;
+    }
     else
         _place_player_on_stair(stair_taken, dest_pos, hatch_name);
 

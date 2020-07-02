@@ -274,8 +274,9 @@ static void _post_init(bool newc)
         if (you.chapter == CHAPTER_POCKET_ABYSS)
             you.where_are_you = BRANCH_ABYSS;
         if (you.chapter == CHAPTER_STARTING_SLIME) { 
-            you.chapter = CHAPTER_ORB_HUNTING;
+            //you.chapter = CHAPTER_ORB_HUNTING;
             you.where_are_you = BRANCH_SLIME;
+            you.depth = 5;
         }
         else
             you.where_are_you = root_branch;
