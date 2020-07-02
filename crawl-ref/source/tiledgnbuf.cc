@@ -77,6 +77,14 @@ void DungeonCellBuffer::add(const packed_cell &cell, int x, int y)
             // Otherwise render it normally with full transparency
              m_buf_main.add(cloud_idx, x, y);
     }
+
+    // Render any 'main' overlays (zaps) on top of clouds and items.
+    for (int i = 0; i < cell.num_dngn_overlay; ++i)
+    {
+        const auto tile = cell.dngn_overlay[i];
+        if (TILE_DNGN_MAX <= tile && tile < TILE_MAIN_MAX)
+            add_main_tile(tile, x, y);
+    }
 }
 
 void DungeonCellBuffer::add_monster(const monster_info &mon, int x, int y)
@@ -259,8 +267,6 @@ void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
             const auto tile = cell.dngn_overlay[i];
             if (tile < TILE_DNGN_MAX)
                 add_dngn_tile(tile, x, y);
-            else if (tile < TILE_MAIN_MAX)
-                add_main_tile(tile, x, y);
         }
 
         if (!(bg & TILE_FLAG_UNSEEN))
