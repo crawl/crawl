@@ -1203,7 +1203,7 @@ static void _place_player(dungeon_feature_type stair_taken,
     else if (!return_pos.origin())
         you.moveto(return_pos);
     else if (you.chapter == CHAPTER_STARTING_SLIME) {
-        //you.moveto(dgn_find_feature_marker(DNGN_ALTAR_JIYVA));
+        you.moveto(dgn_find_nearby_stair(DNGN_ALTAR_JIYVA, coord_def(), false));
         you.chapter = CHAPTER_ORB_HUNTING;
     }
     else
