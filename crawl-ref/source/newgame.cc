@@ -1718,7 +1718,7 @@ static void _construct_starting_menu(const newgame_def&,
 
     for (unsigned int i = 0; i < 2; ++i)
     {
-        string text = i==0?"start from D:1":"start from Slime:1 (Experimental)";
+        string text = i==0?"start from D:1":"start from Slime:5 (Experimental)";
 
 #ifdef USE_TILE
         dungeon_feature_type g_tile = i==0?DNGN_EXIT_DUNGEON:DNGN_ENTER_SLIME;
