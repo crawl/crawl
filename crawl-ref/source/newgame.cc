@@ -52,6 +52,7 @@ static void _choose_gamemode_map(newgame_def& ng, newgame_def& ng_choice,
 static bool _choose_weapon(newgame_def& ng, newgame_def& ng_choice,
                           const newgame_def& defaults);
 static bool _choose_god(newgame_def& ng, newgame_def& ng_choice);
+static bool _choose_job_specific(newgame_def& ng, newgame_def& ng_choice);
 
 #ifdef USE_TILE_LOCAL
 #  define STARTUP_HIGHLIGHT_NORMAL LIGHTGRAY
@@ -72,6 +73,7 @@ static bool _choose_god(newgame_def& ng, newgame_def& ng_choice);
 newgame_def::newgame_def()
     : name(), type(GAME_TYPE_NORMAL),
       seed(0), pregenerate(false),
+      starting_pos(0),
       species(SP_UNKNOWN), job(JOB_UNKNOWN),
       weapon(WPN_UNKNOWN), god(GOD_NO_GOD),
       fully_random(false)
@@ -553,8 +555,10 @@ static void _choose_char(newgame_def& ng, newgame_def& choice,
         {
             if (_choose_god(ng, choice))
             {
-                // We're done!
-                return;
+                if(_choose_job_specific(ng, choice)) {
+                    // We're done!
+                    return;
+                }
             }
         }
 
@@ -1056,6 +1060,7 @@ bool choose_game(newgame_def& ng, newgame_def& choice,
     ng.type = choice.type;
     ng.seed = choice.seed;
     ng.pregenerate = choice.pregenerate;
+    ng.starting_pos = choice.starting_pos;
 
 #ifndef DGAMELAUNCH
     // New: pick name _after_ character choices.
@@ -1696,6 +1701,87 @@ static weapon_type _fixup_weapon(weapon_type wp,
 }
 
 
+static void _construct_starting_menu(const newgame_def&,
+    shared_ptr<OuterMenu>& main_items,
+    shared_ptr<OuterMenu>& sub_items)
+{
+    struct _menu_item {
+        int type;
+        string label;
+        tileidx_t tile;
+        _menu_item(int _type, string _label, tileidx_t _tile)
+            : type(_type), label(move(_label)), tile(move(_tile)) {};
+        _menu_item(int _type, string _label)
+            : type(_type), label(move(_label)), tile(0) {};
+    };
+    vector<_menu_item> choices;
+
+    for (unsigned int i = 0; i < 2; ++i)
+    {
+        string text = i==0?"start from D:1":"start from Slime:1 (Experimental)";
+
+#ifdef USE_TILE
+        dungeon_feature_type g_tile = i==0?DNGN_EXIT_DUNGEON:DNGN_ENTER_SLIME;
+#endif
+
+        choices.emplace_back(i, text
+#ifdef USE_TILE
+            , tileidx_feature_base(g_tile)
+#endif
+        );
+    }
+
+    int max_text_width = 0;
+    for (const auto& choice : choices)
+        max_text_width = max(max_text_width, strwidth(choice.label));
+
+    for (unsigned int i = 0; i < 2; ++i)
+    {
+        const auto& choice = choices[i];
+
+        auto hbox = make_shared<Box>(Box::HORZ);
+        hbox->set_cross_alignment(Widget::Align::CENTER);
+        hbox->set_margin_for_sdl(2, 10, 2, 2);
+
+        
+#ifdef USE_TILE
+        auto tile_stack = make_shared<Stack>();
+        tile_stack->set_margin_for_sdl(0, 6, 0, 0);
+        tile_stack->flex_grow = 0;
+        hbox->add_child(tile_stack);
+
+        tile_stack->add_child(make_shared<Image>(
+            tile_def(choice.tile, TEX_FEAT)));
+#endif
+
+        auto label = make_shared<Text>();
+        hbox->add_child(label);
+
+        const char letter = 'a' + i;
+
+        string text = make_stringf(" %c - %s", letter,
+            chop_string(choice.label, max_text_width, true).c_str()
+        );
+
+        label->set_text(formatted_string(text, WHITE));
+        hbox->set_main_alignment(Widget::Align::STRETCH);
+        auto btn = make_shared<MenuButton>();
+        btn->set_child(move(hbox));
+        btn->id = i;
+        btn->hotkey = letter;
+        btn->highlight_colour = STARTUP_HIGHLIGHT_GOOD;
+
+        main_items->add_button(move(btn), 0, i);
+    }
+
+    _add_menu_sub_item(sub_items, 1, 0, "* - Random starting",
+        "Picks a random starting position", '*', GOD_RANDOM);
+    _add_menu_sub_item(sub_items, 1, 1, "Bksp - Return to character menu",
+        "Lets you return back to Character choice menu", CK_BKSP, M_ABORT);
+}
+
+
+
 static void _construct_religion_menu(const newgame_def&,
     const vector<god_type>& gods,
     shared_ptr<OuterMenu>& main_items,
@@ -1788,7 +1874,6 @@ static void _construct_religion_menu(const newgame_def&,
         "Lets you return back to Character choice menu", CK_BKSP, M_ABORT);
 
 }
-
 
 
 
@@ -2373,6 +2458,109 @@ static bool _choose_god(newgame_def& ng, newgame_def& ng_choice)
     }
 
     return true;
+}
+
+
+static bool _choose_job_specific(newgame_def& ng, newgame_def& ng_choice)
+{
+    if (ng.job != JOB_MELTED_KNIGHT)
+        return true;
+
+    auto title_hbox = make_shared<Box>(Widget::HORZ);
+#ifdef USE_TILE
+    dolls_data doll;
+    fill_doll_for_newgame(doll, ng);
+#ifdef USE_TILE_LOCAL
+    auto tile = make_shared<ui::PlayerDoll>(doll);
+    tile->set_margin_for_sdl(0, 10, 0, 0);
+    title_hbox->add_child(move(tile));
+#endif
+#endif
+    auto title = make_shared<Text>(formatted_string(_welcome(ng), BROWN));
+    title_hbox->add_child(title);
+    title_hbox->set_cross_alignment(Widget::CENTER);
+    title_hbox->set_margin_for_sdl(0, 0, 20, 0);
+    title_hbox->set_margin_for_crt(0, 0, 1, 0);
+
+    auto vbox = make_shared<Box>(Box::VERT);
+    vbox->set_cross_alignment(Widget::Align::STRETCH);
+    vbox->add_child(title_hbox);
+    auto prompt = make_shared<Text>(formatted_string("You have a choice of starting position.", CYAN));
+    vbox->add_child(prompt);
+
+    auto main_items = make_shared<OuterMenu>(true, 1, 2);
+    main_items->menu_id = "starting position";
+    main_items->set_margin_for_sdl(15, 0);
+    main_items->set_margin_for_crt(1, 0);
+    vbox->add_child(main_items);
+
+    auto sub_items = make_shared<OuterMenu>(false, 2, 3);
+    sub_items->menu_id = "starting position sub";
+    vbox->add_child(sub_items);
+
+    main_items->linked_menus[2] = sub_items;
+    sub_items->linked_menus[0] = main_items;
+
+    _construct_starting_menu(ng, main_items, sub_items);
+
+    bool done = false, ret = false;
+
+    vbox->on_activate_event([&](const ActivateEvent& event) {
+        const auto button = static_pointer_cast<MenuButton>(event.target());
+        const auto id = button->id;
+        switch (id)
+        {
+        case M_ABORT:
+            ret = false;
+            return done = true;
+        case GOD_RANDOM:
+            ng_choice.starting_pos = random_choose(0, 1);
+            break;
+        default:
+            ng_choice.starting_pos = id;
+            break;
+        }
+        return ret = done = true;
+        });
+
+    auto popup = make_shared<ui::Popup>(vbox);
+    popup->on_hotkey_event([&](const KeyEvent& ev) {
+        switch (ev.key())
+        {
+        case 'X':
+        case CONTROL('Q'):
+#ifdef USE_TILE_WEB
+            tiles.send_exit_reason("cancel");
+#endif
+            end(0);
+            break;
+        case ' ':
+            CASE_ESCAPE
+        case CK_MOUSE_CMD:
+            ret = false;
+            return done = true;
+        default:
+            break;
+        }
+
+        return false;
+        });
+
+#ifdef USE_TILE_WEB
+    tiles.json_open_object();
+    tiles.json_write_string("title", title->get_text().to_colour_string());
+    tiles.json_write_string("prompt", prompt->get_text().to_colour_string());
+    main_items->serialize("main-items");
+    sub_items->serialize("sub-items");
+    tiles.send_doll(doll, false, false);
+    tiles.push_ui_layout("newgame-choice", 1);
+#endif
+    ui::run_layout(move(popup), done);
+#ifdef USE_TILE_WEB
+    tiles.pop_ui_layout();
+#endif
+
+    return ret;
 }
 
 
