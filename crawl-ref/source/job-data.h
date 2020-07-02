@@ -102,7 +102,7 @@ static const map<job_type, job_def> job_data =
 
 { JOB_CONJURER, {
     "Cj", "Conjurer",
-    0, 7, 5,
+    -1, 10, 3,
     { SP_DEEP_ELF, SP_NAGA, SP_TENGU, SP_BASE_DRACONIAN, SP_DEMIGOD, },
     { "robe", "book of Conjurations" },
     WCHOICE_NONE,
