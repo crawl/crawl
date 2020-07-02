@@ -45,6 +45,7 @@ GotoRegion get_cursor_region();
 void set_cursor_region(GotoRegion region);
 
 bool valid_cursor_pos(int x, int y, GotoRegion region);
+void assert_valid_cursor_pos();
 
 struct save_cursor_pos
 {
