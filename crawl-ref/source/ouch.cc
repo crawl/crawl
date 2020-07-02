@@ -717,14 +717,14 @@ static void _place_player_corpse(bool explode)
 #if defined(WIZARD) || defined(DEBUG)
 static void _wizard_restore_life()
 {
+    if (you.species == SP_HYDRA)
+        you.head_grow(you.props[HYDRA_HEADS_NET_LOSS].get_int(), false);
     if (you.hp_max <= 0)
         unrot_hp(9999);
     while (you.hp_max <= 0)
         you.hp_max_adj_perm++, calc_hp();
     if (you.hp <= 0)
         set_hp(you.hp_max);
-    if (you.species == SP_HYDRA)
-        you.head_grow(-you.props[HYDRA_HEADS_NET_LOSS].get_int());
 }
 #endif
 
