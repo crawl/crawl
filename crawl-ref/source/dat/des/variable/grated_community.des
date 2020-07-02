@@ -16,7 +16,7 @@ NAME:   grated_community_mu
 TAGS:   no_rotate no_monster_gen no_item_gen
 ORIENT: north
 MONS:   patrolling vault guard, patrolling wolf, patrolling centaur warrior
-MONS:   generate_awake slave, kobold
+MONS:   generate_awake lemure, kobold
   : if you.absdepth() < 23 then
 KMONS:  a = patrolling two-headed ogre
   : else
@@ -59,8 +59,7 @@ KFEAT:  f = fountain_blue
 KFEAT:  j = fountain_sparkling
 KFEAT:  ~ = closed_door
 KFEAT:  7 = tree
-KFEAT:  A = general shop type:Slaves suffix:and_Accessories count:10 ; \
-            w:50 whip | wand of enslavement
+KFEAT:  A = general shop
 KFEAT:  B = food shop name:Jack type:Jerk-a-riffic suffix:Jerky count:10 ; \
             q:1 ration
 KFEAT:  C = distillery shop type:Miraculous suffix:Elixirs count:10 \
@@ -127,7 +126,7 @@ ENDMAP
 ####  vampire, some slaves, bloody lounge, bricked up window, guard dogs
 NAME: grated_community_mu_vampire_home
 TAGS: grated_community_mu_home grated_community_mu_home1 unrand
-KMONS:   1 = generate_awake slave
+KMONS:   1 = generate_awake lemure
 KMONS:   2 = generate_awake spectral hound
 KMONS:   3 = generate_awake spectral wolf
 KMONS:   4 = generate_awake spectral warg
