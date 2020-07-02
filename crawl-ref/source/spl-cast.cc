@@ -1824,6 +1824,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_IGNITION:
         return cast_ignition(&you, powc, fail);
 
+    case SPELL_FROZEN_RAMPARTS:
+        return cast_frozen_ramparts(powc, fail);
+
     case SPELL_BORGNJORS_VILE_CLUTCH:
         return cast_borgnjors_vile_clutch(powc, beam, fail);
 

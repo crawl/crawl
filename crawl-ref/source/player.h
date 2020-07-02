@@ -62,6 +62,7 @@
 #define HYDRA_HEADS_NET_LOSS "hydra_heads_net_loss"
 #define PLAYER_TENTACLE_CONNECT "player_tentacle_connect"
 #define PLAYER_TENTACLE_DELAY "player_tentacle_delay"
+#define FROZEN_RAMPARTS_KEY "frozen_ramparts_position"
 
 // display/messaging breakpoints for penalties from Ru's MUT_HORROR
 #define HORROR_LVL_EXTREME  3
@@ -1185,6 +1186,7 @@ void dec_haste_player(int delay);
 void dec_elixir_player(int delay);
 void dec_ambrosia_player(int delay);
 void dec_channel_player(int delay);
+void dec_frozen_ramparts(int delay);
 bool invis_allowed(bool quiet = false, string *fail_reason = nullptr);
 bool flight_allowed(bool quiet = false, string *fail_reason = nullptr);
 void fly_player(int pow, bool already_flying = false);

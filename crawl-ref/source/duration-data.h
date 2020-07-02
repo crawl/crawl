@@ -654,6 +654,9 @@ static const duration_def duration_data[] =
       {{ "Your weapon no longer secretes poison glands." },
       { "The poison gland of your weapon is running out." }}, 10 },
     { DUR_PAKELLAS_DURATION, 0, "", "", "pakellas buff", "", D_NO_FLAGS, {{ "", pakellas_remove_self_buff }} },
+    { DUR_FROZEN_RAMPARTS, LIGHTBLUE, "Ramparts", "frozen ramparts",
+      "frozen ramparts", "You have covered nearby walls with an icy ambush.",
+       D_DISPELLABLE },
 
     { DUR_ECDYSIS,
       RED, "ECD",

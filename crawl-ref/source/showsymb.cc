@@ -78,11 +78,17 @@ static unsigned short _cell_feat_show_colour(const map_cell& cell,
     }
     else if (cell.flags & MAP_BLOODY && !norecolour)
         colour = RED;
-    else if (cell.flags & MAP_CORRODING && !norecolour
-             && !feat_is_wall(feat) && !feat_is_lava(feat)
-             && !feat_is_water(feat))
+    else if (cell.flags & MAP_CORRODING && feat == DNGN_FLOOR)
     {
         colour = LIGHTGREEN;
+    }
+    else if (cell.flags & MAP_ICY
+        && (feat_is_wall(feat) || feat == DNGN_FLOOR))
+    {
+        if (feat_is_wall(feat))
+            colour = ETC_ICE;
+        else
+            colour = LIGHTCYAN;
     }
     else if (cell.feat_colour() && !no_vault_recolour)
         colour = cell.feat_colour();

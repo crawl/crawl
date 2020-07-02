@@ -18,6 +18,7 @@
 #include "item-name.h"
 #include "item-prop.h"
 #include "item-status-flag-type.h"
+#include "level-state-type.h"
 #include "libutil.h"
 #include "mon-death.h"
 #include "mon-tentacle.h"
@@ -522,6 +523,18 @@ tileidx_t tileidx_feature(const coord_def &gc)
             }
             if (slimy)
                 return TILE_FLOOR_SLIME_ACIDIC;
+        }
+
+        if (env.level_state & LSTATE_ICY_WALL)
+        {
+            for (adjacent_iterator ai(gc); ai; ++ai)
+            {
+                if (feat_is_wall(env.map_knowledge(*ai).feat())
+                    && env.map_knowledge(*ai).flags & MAP_ICY)
+                {
+                    return TILE_FLOOR_ICY;
+                }
+            }
         }
         // deliberate fall-through
     case DNGN_ROCK_WALL:

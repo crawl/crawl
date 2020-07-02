@@ -215,5 +215,6 @@ enum duration_type
     DUR_UNSH_BOOTS,
     DUR_UNSH_SHIELD,
     DUR_UNSH_BODY_ARMOUR,
+    DUR_FROZEN_RAMPARTS,
     NUM_DURATIONS
 };

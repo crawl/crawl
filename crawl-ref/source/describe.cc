@@ -2353,42 +2353,76 @@ string get_cloud_desc(cloud_type cloud, bool include_title)
     return ret;
 }
 
-static vector<pair<string,string>> _get_feature_extra_descs(const coord_def &pos)
+typedef struct {
+    string title;
+    string description;
+    tile_def tile;
+} extra_feature_desc;
+
+static vector<extra_feature_desc> _get_feature_extra_descs(const coord_def& pos)
 {
-    vector<pair<string,string>> ret;
+    vector<extra_feature_desc> ret;
     dungeon_feature_type feat = env.map_knowledge(pos).feat();
-    if (!feat_is_solid(feat))
+
+    if (feat_is_wall(feat) && env.map_knowledge(pos).flags & MAP_ICY)
     {
+        ret.push_back({
+            "A covering of ice.",
+            getLongDescription("ice covered"),
+            tile_def(TILE_FLOOR_ICY, TEX_FLOOR)
+            });
+    }
+    else if (!feat_is_solid(feat))
+    {
+
         if (haloed(pos) && !umbraed(pos))
         {
-            ret.emplace_back(pair<string,string>(
-                    "A halo.", getLongDescription("haloed")));
+            ret.push_back({
+                "A halo.",
+                getLongDescription("haloed"),
+                tile_def(TILE_HALO_RANGE, TEX_FEAT)
+                });
         }
         if (umbraed(pos) && !haloed(pos))
         {
-            ret.emplace_back(pair<string,string>(
-                    "An umbra.", getLongDescription("umbraed")));
+            ret.push_back({
+                "An umbra.",
+                getLongDescription("umbraed"),
+                tile_def(TILE_UMBRA, TEX_FEAT)
+                });
         }
         if (liquefied(pos))
         {
-            ret.emplace_back(pair<string,string>(
-                    "Liquefied ground.", getLongDescription("liquefied")));
+            ret.push_back({
+                "Liquefied ground.",
+                getLongDescription("liquefied"),
+                tile_def(TILE_LIQUEFACTION, TEX_FEAT)
+                });
         }
         if (disjunction_haloed(pos))
         {
-            ret.emplace_back(pair<string,string>(
-                    "Translocational energy.", getLongDescription("disjunction haloed")));
+            ret.push_back({
+                "Translocational energy.",
+                getLongDescription("disjunction haloed"),
+                tile_def(TILE_DISJUNCT, TEX_FEAT)
+                });
         }
         if (antimagic_haloed(pos))
         {
-            ret.emplace_back(pair<string, string>(
-                "An antimagic.", getLongDescription("antimagic haloed")));
+            ret.push_back({
+                "An antimagic.",
+                getLongDescription("antimagic haloe"),
+                tile_def(TILE_ANTIMAGIC_AURA, TEX_FEAT)
+                });
         }
     }
-    if (const cloud_type cloud = env.map_knowledge(pos).cloud())
+    if (const auto cloud = env.map_knowledge(pos).cloudinfo())
     {
-        ret.emplace_back(pair<string,string>(
-                    "A cloud of "+cloud_type_name(cloud)+".", get_cloud_desc(cloud, false)));
+        ret.push_back({
+            "A cloud of " + cloud_type_name(cloud->type) + ".",
+            get_cloud_desc(cloud->type, false),
+            tile_def(tileidx_cloud(*cloud), TEX_DEFAULT),
+        });
     }
     return ret;
 }
@@ -2451,9 +2485,9 @@ void get_feature_desc(const coord_def &pos, describe_info &inf, bool include_ext
 
     if (include_extra)
     {
-        auto extra_descs = _get_feature_extra_descs(pos);
-        for (const auto &d : extra_descs)
-            inf.body << (d == extra_descs.back() ? "" : "\n") << d.second;
+        const auto extra_descs = _get_feature_extra_descs(pos);
+        for (const auto& d : extra_descs)
+            inf.body << (d.title == extra_descs.back().title ? "" : "\n") << d.description;
     }
 
     inf.quote = getQuoteString(db_name);
@@ -2483,21 +2517,12 @@ void describe_feature_wide(const coord_def& pos)
         feats.emplace_back(f);
     }
     auto extra_descs = _get_feature_extra_descs(pos);
-    for (const auto &desc : extra_descs)
+    for (const auto& desc : extra_descs)
     {
-        feat_info f = { "", "", "", tile_def(TILEG_TODO, TEX_GUI)};
-        f.title = desc.first;
-        f.body = trimmed_string(desc.second);
-#ifdef USE_TILE
-        if (desc.first == "A halo.")
-            f.tile = tile_def(TILE_HALO_RANGE, TEX_FEAT);
-        else if (desc.first == "An umbra.")
-            f.tile = tile_def(TILE_UMBRA, TEX_FEAT);
-        else if  (desc.first == "Liquefied ground.")
-            f.tile = tile_def(TILE_LIQUEFACTION, TEX_FLOOR);
-        else
-            f.tile = tile_def(env.tile_bk_cloud(pos) & ~TILE_FLAG_FLYING, TEX_DEFAULT);
-#endif
+        feat_info f = { "", "", "", tile_def(TILEG_TODO, TEX_GUI) };
+        f.title = desc.title;
+        f.body = trimmed_string(desc.description);
+        f.tile = desc.tile;
         feats.emplace_back(f);
     }
     if (crawl_state.game_is_hints())

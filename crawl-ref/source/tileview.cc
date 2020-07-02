@@ -15,6 +15,7 @@
 #include "fprop.h"
 #include "items.h"
 #include "kills.h"
+#include "level-state-type.h"
 #include "mon-util.h"
 #include "options.h"
 #include "pcg.h"
@@ -1500,5 +1501,27 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
     }
 
     cell.flv = env.tile_flv(gc);
+
+    if (env.level_state & LSTATE_SLIMY_WALL)
+    {
+        for (adjacent_iterator ai(gc); ai; ++ai)
+            if (env.map_knowledge(*ai).feat() == DNGN_SLIMY_WALL)
+            {
+                cell.flv.floor = TILE_FLOOR_SLIME_ACIDIC;
+                break;
+            }
+    }
+    else if (env.level_state & LSTATE_ICY_WALL)
+    {
+        for (adjacent_iterator ai(gc); ai; ++ai)
+        {
+            if (feat_is_wall(env.map_knowledge(*ai).feat())
+                && env.map_knowledge(*ai).flags & MAP_ICY)
+            {
+                cell.flv.floor = TILE_FLOOR_ICY;
+                break;
+            }
+        }
+    }
 }
 #endif

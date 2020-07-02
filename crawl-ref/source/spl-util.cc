@@ -1412,6 +1412,11 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
                 "from working.";
         }
 
+    case SPELL_FROZEN_RAMPARTS:
+        if (temp && you.duration[DUR_FROZEN_RAMPARTS])
+            return "you cannot sustain more frozen ramparts right now.";
+        break;
+
     default:
         break;
     }
@@ -1489,6 +1494,7 @@ bool spell_no_hostile_in_range(spell_type spell, bool rod)
     case SPELL_OLGREBS_TOXIC_RADIANCE:
     case SPELL_INTOXICATE:
     case SPELL_IGNITION:
+    case SPELL_FROZEN_RAMPARTS:
         return minRange > you.current_vision;
 
     // Special handling for cloud spells.

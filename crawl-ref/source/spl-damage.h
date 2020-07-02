@@ -86,3 +86,5 @@ spret cast_miasma_breath(int pow, bolt &beam);
 spret cast_lehudibs_crystal_shot(const actor* caster, int powc, bolt& beam, bool fail);
 
 void foxfire_attack(const monster *foxfire, const actor *target);
+
+spret cast_frozen_ramparts(int pow, bool fail);

@@ -101,6 +101,8 @@ bool slime_wall_neighbour(const coord_def& c);
 int count_adjacent_slime_walls(const coord_def &pos);
 void slime_wall_damage(actor* act, int delay);
 
+int count_adjacent_icy_walls(const coord_def& pos);
+
 void get_door_description(int door_size, const char** adjective,
                           const char** noun);
 void feat_splash_noise(dungeon_feature_type feat);
@@ -163,3 +165,4 @@ coord_def push_actor_from(const coord_def& pos, const vector<coord_def>* exclude
 
 void dgn_close_door(const coord_def &dest);
 void dgn_open_door(const coord_def &dest);
+void ice_wall_damage(monster& victim, int delay);

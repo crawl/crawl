@@ -25,6 +25,7 @@
 #include "hiscores.h"
 #include "item-name.h"
 #include "item-status-flag-type.h"
+#include "losglobal.h"
 #include "items.h"
 #include "level-state-type.h"
 #include "mapmark.h"
@@ -627,6 +628,7 @@ void floor_transition(dungeon_feature_type how,
     you.stop_being_constricted();
     you.clear_beholders();
     you.clear_fearmongers();
+    dec_frozen_ramparts(you.duration[DUR_FROZEN_RAMPARTS]);
 
     if (!forced)
     {
@@ -1089,9 +1091,34 @@ static void _update_level_state()
                   + mon_it->get_ench(ENCH_AWAKEN_FOREST).duration;
         }
     }
+
+    const bool have_ramparts = you.duration[DUR_FROZEN_RAMPARTS];
+    const auto& ramparts_pos = you.props[FROZEN_RAMPARTS_KEY].get_coord();
     for (rectangle_iterator ri(0); ri; ++ri)
+    {
         if (grd(*ri) == DNGN_SLIMY_WALL)
             env.level_state |= LSTATE_SLIMY_WALL;
+
+        if (is_icecovered(*ri))
+#if TAG_MAJOR_VERSION == 34
+        {
+            // Buggy versions of Frozen Ramparts didn't properly clear
+            // FPROP_ICY from walls in some cases, so we detect invalid walls
+            // and remove the flag.
+            if (have_ramparts
+                && ramparts_pos.distance_from(*ri) <= 3
+                && cell_see_cell(*ri, ramparts_pos, LOS_NO_TRANS))
+            {
+#endif
+                env.level_state |= LSTATE_ICY_WALL;
+#if TAG_MAJOR_VERSION == 34
+            }
+            else
+                env.pgrid(*ri) &= ~FPROP_ICY;
+        }
+#endif
+    }
+
 
     env.orb_pos = coord_def();
     if (item_def* orb = find_floor_item(OBJ_ORBS, ORB_ZOT))

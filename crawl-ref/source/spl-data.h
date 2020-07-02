@@ -4275,6 +4275,16 @@ static const struct spell_desc spelldata[] =
     TILEG_FOXFIRE,
 },
 {
+    SPELL_FROZEN_RAMPARTS, "Frozen Ramparts",
+    spschool::ice,
+    spflag::area | spflag::no_ghost,
+    3,
+    50,
+    2, 2,
+    3, 8,
+    TILEG_FROZEN_RAMPARTS,
+},
+{
     SPELL_NO_SPELL, "nonexistent spell",
     spschool::none,
     spflag::testing,

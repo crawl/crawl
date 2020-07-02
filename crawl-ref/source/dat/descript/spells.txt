@@ -662,6 +662,15 @@ Freezing Cloud spell
 
 Conjures up a large cloud of lethally cold vapour.
 %%%%
+Frozen Ramparts spell
+
+Encases surrounding walls with ice for a short time. Victims that wander near
+the icy walls will be damaged, and this may temporarily slow cold-blooded
+creatures. The damage dealt bypasses any armour the target may have. Each
+victim is only ever affected by one icy wall at a time.
+
+The caster and any allies can walk safely past icy walls.
+%%%%
 Fulminant Prism spell
 
 Conjures a prism which unleashes a violent explosion of arcane force after a

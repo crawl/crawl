@@ -12,6 +12,7 @@
 #include <sstream>
 
 #include "areas.h"
+#include "attack.h"
 #include "branch.h"
 #include "cloud.h"
 #include "coord.h"
@@ -33,6 +34,7 @@
 #include "mapmark.h"
 #include "message.h"
 #include "misc.h"
+#include "mon-behv.h"
 #include "mon-place.h"
 #include "mon-poly.h"
 #include "mon-util.h"
@@ -884,6 +886,16 @@ void slime_wall_damage(actor* act, int delay)
         }
         mon->hurt(nullptr, dam, BEAM_ACID);
     }
+}
+
+int count_adjacent_icy_walls(const coord_def& pos)
+{
+    int count = 0;
+    for (adjacent_iterator ai(pos); ai; ++ai)
+        if (is_icecovered(*ai))
+            count++;
+
+    return count;
 }
 
 void feat_splash_noise(dungeon_feature_type feat)
@@ -2424,4 +2436,42 @@ void dgn_open_door(const coord_def &dest)
     }
     else
         grd(dest) = DNGN_OPEN_DOOR;
+}
+
+void ice_wall_damage(monster& mons, int delay)
+{
+    if (!you.duration[DUR_FROZEN_RAMPARTS]
+        || !you.see_cell_no_trans(mons.pos())
+        || mons_aligned(&you, &mons))
+    {
+        return;
+    }
+
+    const int walls = count_adjacent_icy_walls(mons.pos());
+    if (!walls)
+        return;
+
+    const int pow = calc_spell_power(SPELL_FROZEN_RAMPARTS, true);
+    const int orig_dam = div_rand_round(
+        delay * roll_dice(1, 2 + div_rand_round(pow, 5)), BASELINE_DELAY);
+
+    bolt beam;
+    beam.flavour = BEAM_COLD;
+    beam.thrower = KILL_YOU;
+    int dam = mons_adjust_flavoured(&mons, beam, orig_dam);
+    mprf("The wall freezes %s%s%s",
+        you.can_see(mons) ? mons.name(DESC_THE).c_str() : "something",
+        dam ? "" : " but do no damage",
+        attack_strength_punctuation(dam).c_str());
+
+    if (dam > 0)
+    {
+        mons.hurt(&you, dam, BEAM_COLD);
+
+        if (mons.alive())
+        {
+            behaviour_event(&mons, ME_WHACK, &you);
+            mons.expose_to_element(BEAM_COLD, orig_dam);
+        }
+    }
 }
