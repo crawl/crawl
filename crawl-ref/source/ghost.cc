@@ -99,7 +99,6 @@ static spell_type search_order_misc[] =
     SPELL_SLOW,
     SPELL_SENTINEL_MARK,
     SPELL_DIMENSION_ANCHOR,
-    SPELL_TELEPORT_OTHER, // funny
 };
 
 /**
@@ -112,7 +111,6 @@ static spell_type search_order_non_spellcaster[] =
     SPELL_BLINKBOLT,
     SPELL_BLINK_CLOSE,
     SPELL_HARPOON_SHOT,
-    SPELL_SEAL_DOORS,
 };
 
 ghost_demon::ghost_demon()
@@ -217,7 +215,6 @@ void ghost_demon::set_pan_lord_special_attack()
         4, _flavour_attack(AF_DRAIN_STR),
         4, _flavour_attack(AF_DRAIN_INT),
         2, _flavour_attack(AF_DRAIN_DEX),
-        10, _flavour_attack(AF_HUNGER),
         10, _flavour_attack(AF_ROT),
         10, _flavour_attack(AF_DROWN),
         // Normal chance
