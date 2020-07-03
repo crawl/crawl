@@ -747,6 +747,17 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
               { 1, 0, 5 },
               HELL_KNIGHT_BRANDS
         } },
+        { MONS_MAGGIE,
+            { { { WPN_HALBERD,          1 },
+                { WPN_GLAIVE,           1 },
+                { WPN_WAR_AXE,          1 },
+                { WPN_MORNINGSTAR,       1 },
+                { WPN_LONG_SWORD,       1 },
+                { WPN_SCIMITAR,         1 },
+                { WPN_BROAD_AXE,        1 }, },
+              { },
+              HELL_KNIGHT_BRANDS
+        } },
         { MONS_MARGERY,
             { { { WPN_DEMON_WHIP,       2 },
                 { WPN_DEMON_BLADE,      2 },
@@ -1765,6 +1776,7 @@ int make_mons_armour(monster_type type, int level)
 
     case MONS_JOSEPH:
     case MONS_IMPERIAL_MYRMIDON:
+    case MONS_MAGGIE:
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = random_choose_weighted(3, ARM_LEATHER_ARMOUR,
                                                 2, ARM_RING_MAIL);
