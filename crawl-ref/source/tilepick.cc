@@ -2976,7 +2976,7 @@ tileidx_t tileidx_known_base_item(tileidx_t label)
 
     return 0;
 }
-
+#endif
 tileidx_t tileidx_cloud(const cloud_info &cl)
 {
     const cloud_type type  = cl.type;
@@ -3034,6 +3034,7 @@ tileidx_t tileidx_cloud(const cloud_info &cl)
     return ch | TILE_FLAG_FLYING;
 }
 
+#ifdef USE_TILE
 tileidx_t tileidx_bolt(const bolt &bolt)
 {
     const int col = bolt.colour;
