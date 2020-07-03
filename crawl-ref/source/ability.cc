@@ -778,9 +778,7 @@ const string make_cost_description(ability_type ability)
         ret += make_stringf(", %d HP", abil.hp_cost.cost(you.hp_max));
 
     if (abil.food_cost && !you_foodless())
-    {
         ret += ", Hunger"; // randomised and exact amount hidden from player
-    }
 
     if (abil.piety_cost || abil.flags & abflag::piety)
         ret += ", Piety"; // randomised and exact amount hidden from player
