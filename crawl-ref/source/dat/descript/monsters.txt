@@ -380,7 +380,7 @@ Pikel
 
 A wise kobold would fear the forces of Hell, and certainly would not set up a
 highly lucrative transdimensional trade in damned souls. But Pikel is better
-known for his whip than his wisdom, mercilessly tormenting his pitieous charges
+known for his whip than his wisdom, mercilessly tormenting his piteous charges
 as he ferries them to their buyers.
 %%%%
 Polyphemus
@@ -1557,8 +1557,8 @@ at passers-by.
 %%%%
 lemure
 
-Accursed souls magically bound to hellish servitude for the highest bidder. If
-their master is slain, they will be freed, departing this realm with gratitude.
+An accursed soul magically bound to hellish servitude for the highest bidder.
+If its master is slain, it will be freed, departing this realm with gratitude.
 %%%%
 leopard gecko
 

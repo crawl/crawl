@@ -5558,7 +5558,7 @@ VISUAL:@The_monster@ scowls and wipes @possessive@ hands on @possessive@ robe.
 
 @The_monster@ says, "Antaeus said I was his favorite kobold. Me!"
 
-@The_monster@ says, "Dispater doesn't talk much, but I know he digs me."
+@The_monster@ says, "Dispater doesn't talk much, but I know they dig me."
 
 @The_monster@ says, "I touched Geryon's horn once."
 
