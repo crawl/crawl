@@ -973,7 +973,7 @@ static formatted_string _describe_god_powers(god_type which_god)
                 uppercase_first(god_name(which_god)).c_str());
         desc.cprintf("%s identifies device charges for you.\n",
                 uppercase_first(god_name(which_god)).c_str());
-        if (!you_foodless(false))
+        if (!you_drinkless(false))
         {
             if (have_passive(passive_t::bottle_mp))
                 desc.textcolour(god_colour(which_god));

@@ -469,7 +469,7 @@ static const duration_def duration_data[] =
       "no potions", "",
       "You cannot drink potions.", D_NO_FLAGS,
       {{ "", []() {
-          if (!you_foodless())
+          if (!you_drinkless())
               mprf(MSGCH_RECOVERY, "You can drink potions again.");
       }}}},
     { DUR_QAZLAL_FIRE_RES,

@@ -2206,7 +2206,7 @@ void prompt_inscribe_item()
 
 void drink(item_def* potion)
 {
-    if (you_foodless() && you.species != SP_VAMPIRE)
+    if (you_drinkless())
     {
         mpr("You can't drink.");
         return;

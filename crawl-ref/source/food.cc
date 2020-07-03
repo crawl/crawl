@@ -120,6 +120,11 @@ bool you_foodless(bool temp)
         || you.undead_state(temp) == US_SEMI_UNDEAD;
 }
 
+bool you_drinkless(bool temp)
+{
+    return you.undead_state(temp) == US_UNDEAD;
+}
+
 bool prompt_eat_item(int slot)
 {
     item_def* item = nullptr;
@@ -650,7 +655,7 @@ bool is_noxious(const item_def &food)
 // be eaten (respecting species and mutations set).
 bool is_inedible(const item_def &item, bool temp)
 {
-    // Mummies and liches don't eat.
+    // Mummies, liches, and vampires don't eat.
     if (you_foodless(temp))
         return true;
 
