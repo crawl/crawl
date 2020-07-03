@@ -2240,6 +2240,8 @@ static string _overview_screen_title(int sw)
     {
         species_job = make_stringf("(%s%s)", get_species_abbrev(you.species),
                                              get_job_abbrev(you.char_class));
+        if (you.species == SP_HYDRA)
+            species_job = to_string(you.heads())+"-"+species_job; // ex) 2-HyFi
         linelength -= (char_width - strwidth(species_job));
     }
 
