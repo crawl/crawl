@@ -181,7 +181,7 @@ DEPTH:  D:14-, Elf, Swamp, Snake, Shoals, Spider
 : place_unique(_G, "Louise")
 
 NAME:   uniq_maggie
-DEPTH:  D:6-12, Lair
+DEPTH:  D:8-12, Lair:1-4
 : place_unique(_G, "Maggie")
 
 NAME:   uniq_maurice
@@ -310,6 +310,9 @@ DEPTH:  Depths:3-, Vaults:2-, Crypt, Tomb
 : place_unique(_G, "Jory")
 
 NAME:   uniq_margery
+# Higher WEIGHT to compensate for Maggie. Used objstat to calculate doubling the WEIGHT
+# would lead to numbers closest to Margery's pre-Maggie spawn rates
+WEIGHT: 20
 DEPTH:  Depths:3-, Vaults:2-, Crypt
 : place_unique(_G, "Margery band")
 

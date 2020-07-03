@@ -1193,6 +1193,24 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         }
         break;
 
+    case MONS_MAGGIE:
+        if (one_chance_in(100) && !get_unique_item_status(UNRAND_WYRMBANE))
+        {
+            make_item_unrandart(item, UNRAND_WYRMBANE);
+            item.plus = 9; // Since she's wearing a dragon armour
+            force_item = true;
+        }
+        break;
+
+    case MONS_MARGERY:
+        if (one_chance_in(100) && !get_unique_item_status(UNRAND_WYRMBANE))
+        {
+            make_item_unrandart(item, UNRAND_WYRMBANE);
+            item.plus = 10 + random2(2); // Now she's killed at least 2 dragons
+            force_item = true;
+        }
+        break;
+
     case MONS_ANCESTOR_HEXER:
     case MONS_ANCESTOR_BATTLEMAGE:
     case MONS_ANCESTOR_KNIGHT:
@@ -1776,7 +1794,6 @@ int make_mons_armour(monster_type type, int level)
 
     case MONS_JOSEPH:
     case MONS_IMPERIAL_MYRMIDON:
-    case MONS_MAGGIE:
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = random_choose_weighted(3, ARM_LEATHER_ARMOUR,
                                                 2, ARM_RING_MAIL);
@@ -1852,11 +1869,18 @@ int make_mons_armour(monster_type type, int level)
         item.sub_type  = random_choose(ARM_RING_MAIL,   ARM_SCALE_MAIL);
         break;
 
-    case MONS_MARGERY:
+    case MONS_MAGGIE:
         item.base_type = OBJ_ARMOUR;
         item.sub_type = random_choose_weighted(3, ARM_ACID_DRAGON_ARMOUR,
-                                               1, ARM_SWAMP_DRAGON_ARMOUR,
-                                               6, ARM_FIRE_DRAGON_ARMOUR);
+                                               3, ARM_SWAMP_DRAGON_ARMOUR,
+                                               6, ARM_STEAM_DRAGON_ARMOUR);
+        break;
+
+    case MONS_MARGERY:
+        item.base_type = OBJ_ARMOUR;
+        item.sub_type = random_choose_weighted(3, ARM_STORM_DRAGON_ARMOUR,
+                                               3, ARM_SHADOW_DRAGON_ARMOUR,
+                                               6, ARM_STEAM_DRAGON_ARMOUR);
         break;
 
     case MONS_HELLBINDER:
