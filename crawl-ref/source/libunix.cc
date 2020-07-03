@@ -858,6 +858,8 @@ int num_to_lines(int num)
 
 void clrscr()
 {
+    save_cursor_pos save; // is this generally correct? alternative, set region
+                          // to GOTO_CRT.
     textcolour(LIGHTGREY);
     textbackground(BLACK);
     clear();
