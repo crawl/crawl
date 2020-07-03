@@ -331,6 +331,10 @@ Slug Dart cast
 Paralysis Gaze cast
 
 @The_monster@ gazes piercingly through @target@!
+%%%%
+Foxfire cast
+
+@The_monster@'s flaming tails are disappeared.
 ########################################################################
 # Unique monsters
 ########################################################################
