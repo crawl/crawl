@@ -59,6 +59,7 @@
 #include "output.h"
 #include "prompt.h"
 #include "religion.h"
+#include "rltiles/tiledef-dngn.h"
 #include "scroller.h"
 #include "skills.h"
 #include "species.h"
@@ -71,15 +72,14 @@
 #include "state.h"
 #include "stringutil.h" // to_string on Cygwin
 #include "terrain.h"
+#include "tile-flags.h"
+#include "tilepick.h"
 #ifdef USE_TILE_LOCAL
  #include "tilereg-crt.h"
- #include "tiledef-dngn.h"
+ #include "rltiles/tiledef-dngn.h"
 #endif
 #ifdef USE_TILE
- #include "tiledef-feat.h"
- #include "tilepick.h"
- #include "tileview.h"
- #include "tile-flags.h"
+#include "tileview.h"
 #endif
 #include "unicode.h"
 
