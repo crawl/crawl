@@ -1820,9 +1820,6 @@ void TilesFramework::load_dungeon(const coord_def &cen)
     m_next_gc = cen;
 
     crawl_view.calc_vlos();
-    // XX this is necessary so that the cursor position is valid, but I'm not
-    // yet sure why...
-    set_cursor_region(GOTO_CRT);
     viewwindow(false, true);
     place_cursor(CURSOR_MAP, cen);
 }
