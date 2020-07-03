@@ -658,6 +658,10 @@ bool show_map(level_pos &lpos, bool travel_mode, bool allow_offlevel)
         feature_list feats;
 
     #ifndef USE_TILE_LOCAL
+        // so that cursor positions are valid in case viewwindow is triggered
+        // during map rendering (which can happen at least for webtiles).
+        set_cursor_region(GOTO_CRT);
+
         const int top = 2;
         clrscr();
     #endif
