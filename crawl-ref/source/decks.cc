@@ -176,7 +176,9 @@ const char* card_name(card_type card)
     case CARD_DEGEN:           return "Degeneration";
     case CARD_FAMINE:          return "Famine";
 
+#if TAG_MAJOR_VERSION == 34
     case CARD_SHAFT_REMOVED:
+#endif
     case NUM_CARDS:            return "a buggy card";
     }
     return "a very buggy card";
@@ -1720,7 +1722,9 @@ void card_effect(card_type which_card,
             mpr("You feel a momentary urge to oink.");
         break;
 
+#if TAG_MAJOR_VERSION == 34
     case CARD_SHAFT_REMOVED:
+#endif
     case NUM_CARDS:
         // The compiler will complain if any card remains unhandled.
         mprf("You have %s a buggy card!", participle);
