@@ -100,7 +100,7 @@ static const sacrifice_def sac_data[] =
   "sacrificed love",
 
   35,
-  SK_NONE,
+  SK_SUMMONINGS,
   nullptr,
   nullptr,
 },
