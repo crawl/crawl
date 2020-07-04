@@ -318,8 +318,11 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
 
     case ENCH_RING_OF_THUNDER:
         _place_thunder_ring(*this);
-        mprf(MSGCH_WARN, "A violent storm begins to rage around %s.",
-             name(DESC_THE).c_str());
+        if (you.see_cell(pos()))
+        {
+            mprf(MSGCH_WARN, "A violent storm begins to rage around %s.",
+                name(DESC_THE).c_str());
+        }
         break;
 
     case ENCH_VILE_CLUTCH:
@@ -329,7 +332,11 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
         const string noun = ench.ench == ENCH_VILE_CLUTCH ? "Zombie hands" :
                                                             "Roots";
         source_actor->start_constricting(*this);
-        mprf(MSGCH_WARN, "%s grab %s.", noun.c_str(), name(DESC_THE).c_str());
+        if (you.see_cell(pos()))
+        {
+            mprf(MSGCH_WARN, "%s grab %s.", noun.c_str(),
+                 name(DESC_THE).c_str());
+        }
         break;
     }
 
