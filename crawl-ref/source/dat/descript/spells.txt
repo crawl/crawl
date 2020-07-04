@@ -1635,6 +1635,11 @@ Throw Barbs spell
 Fires a volley of barbs at the target, skewering them and making movement
 painful.
 %%%%
+The Nightmare of Cubus spell
+
+Cubus generates the imaginary space. Your mentality was weakened and be dispersed in here.
+You feel your mind was filled by a will of cubus via its whispering.
+%%%%
 Throw Flame spell
 
 Throws a small puff of flame.
