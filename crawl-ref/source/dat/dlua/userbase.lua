@@ -354,3 +354,12 @@ end
 --
 -- @tparam string kind
 -- @function ch_start_running
+--
+--- Acquirement scroll hook.
+--
+-- This hook can be defined to execute lua when an acquirement scroll is read.
+--
+-- The parameter is an array of items.
+--
+-- @tparam array items
+-- @function c_acquirement

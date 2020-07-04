@@ -3935,11 +3935,7 @@ void read_scroll(item_def& scroll)
             // IDing scrolls. (Not an interesting ID game mechanic!)
         }
 
-        if (!alreadyknown)
-            run_uncancel(UNC_ACQUIREMENT, AQ_SCROLL);
-        else
-            cancel_scroll = !acquirement(OBJ_RANDOM, AQ_SCROLL, false, nullptr,
-                    true);
+        cancel_scroll = !acquirement_menu();
         break;
 
     case SCR_FEAR:
@@ -4176,7 +4172,6 @@ void read_scroll(item_def& scroll)
     }
 
     if (!alreadyknown
-        && which_scroll != SCR_ACQUIREMENT
         && which_scroll != SCR_BRAND_WEAPON
         && which_scroll != SCR_ENCHANT_WEAPON
         && which_scroll != SCR_IDENTIFY

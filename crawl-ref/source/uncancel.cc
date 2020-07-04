@@ -44,8 +44,6 @@ void run_uncancels()
         switch (you.uncancel[act].first)
         {
         case UNC_ACQUIREMENT:
-            if (!acquirement(OBJ_RANDOM, arg) && crawl_state.seen_hups)
-                return;
             break;
 
         case UNC_DRAW_THREE:

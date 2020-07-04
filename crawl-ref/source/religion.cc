@@ -1356,7 +1356,8 @@ static bool _give_pakellas_gift()
     if (basetype == OBJ_UNASSIGNED)
         return false;
     else if (basetype == OBJ_RODS)
-        success = acquirement(basetype, you.religion);
+        success = acquirement_create_item(basetype, you.religion,
+            false, you.pos()) != NON_ITEM;
     else
     {
         ASSERT(subtype >= 0);
@@ -1423,7 +1424,8 @@ static bool _give_trog_oka_gift(bool forced)
     else
         return false;
 
-    success = acquirement(gift_type, you.religion);
+    success = acquirement_create_item(gift_type, you.religion,
+        false, you.pos()) != NON_ITEM;
     if (success)
     {
         if (gift_type == OBJ_MISSILES)

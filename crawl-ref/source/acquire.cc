@@ -17,6 +17,8 @@
 
 #include "artefact.h"
 #include "art-enum.h"
+#include "colour.h"
+#include "describe.h"
 #include "dungeon.h"
 #include "food.h"
 #include "god-item.h"
@@ -26,10 +28,13 @@
 #include "item-status-flag-type.h"
 #include "items.h"
 #include "item-use.h"
+#include "invent.h"
 #include "libutil.h"
 #include "macro.h"
 #include "message.h"
 #include "output.h"
+#include "options.h"
+#include "prompt.h"
 #include "randbook.h"
 #include "random.h"
 #include "religion.h"
@@ -577,9 +582,6 @@ static int _acquirement_jewellery_subtype(bool /*divine*/, int & /*quantity*/)
     const int ring_num = (you.species == SP_OCTOPODE ? 8 : 2)
                        - (you.get_mutation_level(MUT_MISSING_HAND) ? 1 : 0);
 
-    const int amulet_num = (you.species == SP_HYDRA ? 9 : 2)
-                         - (you.get_mutation_level(MUT_MISSING_NECK) ? 1 : 0);
-
     // Try ten times to give something the player hasn't seen.
     for (int i = 0; i < 10; i++)
     {
@@ -742,7 +744,7 @@ static int _acquirement_wand_subtype(bool /*divine*/, int & /*quantity*/)
     vector<pair<wand_type, int>> weights = {
         { WAND_SCATTERSHOT,     25 },
         { WAND_CLOUDS,          25 },
-		// normally 20
+        // normally 20
         { WAND_TELEPORTATION,   _tele_wand_weight() },
         { WAND_HEAL_WOUNDS,     _hw_wand_weight() },
         { WAND_HASTING,         _haste_wand_weight() },
@@ -991,9 +993,6 @@ static bool _acquire_manual(item_def &book)
                     choose_random_weighted(weights, end(weights)));
     // Set number of bonus skill points.
     book.skill_points = random_range(2000, 3000);
-    // Identify.
-    set_ident_type(book, true);
-    set_ident_flags(book, ISFLAG_IDENT_MASK);
     return true;
 }
 
@@ -1493,8 +1492,19 @@ int acquirement_create_item(object_class_type class_wanted,
 
     item_set_appearance(mitm[thing_created]); // cleanup
 
+    if (thing_created != NON_ITEM)
+    {
+        ASSERT(mitm[thing_created].is_valid());
+        mitm[thing_created].props[ACQUIRE_KEY].get_int() = agent;
+    }
+
     ASSERT(!is_useless_item(mitm[thing_created], false) || agent == GOD_XOM);
     ASSERT(!god_hates_item(mitm[thing_created]));
+
+    // If we have a zero coord_def, don't move the item to the grid. Used for
+    // generating scroll of acquirement items.
+    if (pos.origin())
+        return thing_created;
 
     // Moving this above the move since it might not exist after falling.
     if (thing_created != NON_ITEM && !quiet)
@@ -1514,129 +1524,338 @@ int acquirement_create_item(object_class_type class_wanted,
 
     move_item_to_grid(&thing_created, pos);
 
-    if (thing_created != NON_ITEM)
-    {
-        ASSERT(mitm[thing_created].is_valid());
-        mitm[thing_created].props[ACQUIRE_KEY].get_int() = agent;
-    }
     return thing_created;
 }
 
-bool acquirement(object_class_type class_wanted, int agent,
-                 bool quiet, int* item_index, bool known_scroll)
+class AcquireMenu : public InvMenu
+{
+    friend class AcquireEntry;
+
+    CrawlVector& acq_items;
+
+    void init_entries();
+    void update_help();
+    bool acquire_selected();
+
+    virtual bool process_key(int keyin) override;
+
+public:
+    AcquireMenu(CrawlVector& aitems);
+};
+
+class AcquireEntry : public InvEntry
+{
+    string get_text(bool need_cursor = false) const override
+    {
+        need_cursor = need_cursor && show_cursor;
+        const colour_t keycol = LIGHTCYAN;
+        const string keystr = colour_to_str(keycol);
+        const string itemstr =
+            colour_to_str(menu_colour(text, item_prefix(*item), tag));
+        const string gold_text = item->base_type == OBJ_GOLD
+            ? make_stringf(" (you have %d gold)", you.gold) : "";
+        return make_stringf(" <%s>%c%c%c%c</%s><%s>%s%s</%s>",
+            keystr.c_str(),
+            hotkeys[0],
+            need_cursor ? '[' : ' ',
+            selected() ? '+' : '-',
+            need_cursor ? ']' : ' ',
+            keystr.c_str(),
+            itemstr.c_str(),
+            text.c_str(),
+            gold_text.c_str(),
+            itemstr.c_str());
+    }
+
+public:
+    AcquireEntry(const item_def& i) : InvEntry(i)
+    {
+        show_background = false;
+    }
+};
+
+AcquireMenu::AcquireMenu(CrawlVector& aitems)
+    : InvMenu(MF_SINGLESELECT | MF_NO_SELECT_QTY | MF_QUIET_SELECT
+        | MF_ALWAYS_SHOW_MORE | MF_ALLOW_FORMATTING),
+    acq_items(aitems)
+{
+    menu_action = ACT_EXECUTE;
+    set_flags(get_flags() & ~MF_USE_TWO_COLUMNS);
+
+    set_tag("acquirement");
+
+    init_entries();
+
+    update_help();
+
+    set_title("Choose an item to acquire.");
+}
+
+void AcquireMenu::init_entries()
+{
+    menu_letter ckey = 'a';
+    for (item_def& item : acq_items)
+    {
+        auto newentry = make_unique<AcquireEntry>(item);
+        newentry->hotkeys.clear();
+        newentry->add_hotkey(ckey++);
+        add_entry(move(newentry));
+    }
+}
+
+static string _hyphenated_letters(int how_many, char first)
+{
+    string s = "<w>";
+    s += first;
+    s += "</w>";
+    if (how_many > 1)
+    {
+        s += "-<w>";
+        s += first + how_many - 1;
+        s += "</w>";
+    }
+    return s;
+}
+
+void AcquireMenu::update_help()
+{
+    string top_line = string(80, ' ') + '\n';
+
+    set_more(formatted_string::parse_string(top_line + make_stringf(
+        //[!] acquire|examine item  [a-i] select item to acquire
+        //[Esc/R-Click] exit
+        "%s  [%s] %s\n"
+        "[Esc/R-Click] exit",
+        menu_action == ACT_EXECUTE ? "[<w>!</w>] <w>acquire</w>|examine items" :
+        "[<w>!</w>] acquire|<w>examine</w> items",
+        _hyphenated_letters(item_count(), 'a').c_str(),
+        menu_action == ACT_EXECUTE ? "select item for acquirement"
+        : "examine item")));
+}
+
+static void _create_acquirement_item(item_def& item)
+{
+    auto& acq_items = you.props[ACQUIRE_ITEMS_KEY].get_vector();
+
+    // Now that we have a selection, mark any generated unrands as not having
+    // been generated, so they go back in circulation. Exclude the selected
+    // item from this, if it's an unrand.
+    for (auto aitem : acq_items)
+    {
+        if (is_unrandom_artefact(aitem)
+            && (!is_unrandom_artefact(item)
+                || !is_unrandom_artefact(aitem, item.unrand_idx)))
+        {
+            set_unique_item_status(aitem, UNIQ_NOT_EXISTS);
+        }
+    }
+
+    // We're now safe to make any notes about finding the item.
+    unset_ident_flags(item, ISFLAG_NOTED_ID | ISFLAG_NOTED_GET);
+    set_ident_type(item, true);
+
+    if (copy_item_to_grid(item, you.pos()))
+        canned_msg(MSG_SOMETHING_APPEARS);
+    else
+        canned_msg(MSG_NOTHING_HAPPENS);
+
+    acq_items.clear();
+    you.props.erase(ACQUIRE_ITEMS_KEY);
+}
+
+bool AcquireMenu::acquire_selected()
+{
+    vector<MenuEntry*> selected = selected_entries();
+    ASSERT(selected.size() == 1);
+    auto& entry = *selected[0];
+
+    const string col = colour_to_str(channel_to_colour(MSGCH_PROMPT));
+    update_help();
+    const formatted_string old_more = more;
+    more = formatted_string::parse_string(make_stringf(
+        "<%s>Acquire %s? (%s/N)</%s>\n",
+        col.c_str(),
+        entry.text.c_str(),
+        Options.easy_confirm == easy_confirm_type::none ? "Y" : "y",
+        col.c_str()));
+    more += old_more;
+    update_more();
+
+    if (!yesno(nullptr, true, 'n', false, false, true))
+    {
+        deselect_all();
+        more = old_more;
+        update_more();
+        return true;
+    }
+
+    item_def& acq_item = *static_cast<item_def*>(entry.data);
+    _create_acquirement_item(acq_item);
+
+    return false;
+}
+
+bool AcquireMenu::process_key(int keyin)
+{
+    switch (keyin)
+    {
+    case '!':
+    case '?':
+        if (menu_action == ACT_EXECUTE)
+            menu_action = ACT_EXAMINE;
+        else
+            menu_action = ACT_EXECUTE;
+        update_help();
+        update_more();
+        return true;
+    default:
+        break;
+    }
+
+    if (keyin - 'a' >= 0 && keyin - 'a' < (int)items.size())
+    {
+        if (menu_action == ACT_EXAMINE)
+        {
+            item_def& item(*const_cast<item_def*>(dynamic_cast<AcquireEntry*>(
+                items[letter_to_index(keyin)])->item));
+
+            unwind_var<iflags_t> old_flags(item.flags);
+            item.flags |= (ISFLAG_IDENT_MASK | ISFLAG_NOTED_ID
+                | ISFLAG_NOTED_GET);
+            describe_item(item);
+
+            return true;
+        }
+        else
+        {
+            const unsigned int i = keyin - 'a';
+            select_item_index(i, 1, false);
+            return acquire_selected();
+        }
+    }
+
+    const bool ret = InvMenu::process_key(keyin);
+    auto selected = selected_entries();
+    if (selected.size() == 1)
+        return acquire_selected();
+    else
+        return ret;
+}
+
+static item_def _acquirement_item_def(object_class_type item_type)
+{
+    item_def item;
+
+    const int item_index = acquirement_create_item(item_type, AQ_SCROLL, true);
+
+    if (item_index != NON_ITEM)
+    {
+        ASSERT(!god_hates_item(mitm[item_index]));
+
+        // We make a copy of the item def, but we don't keep the real item.
+        item = mitm[item_index];
+        set_ident_flags(item,
+            // Act as if we've recieved this item already to prevent notes.
+            ISFLAG_IDENT_MASK | ISFLAG_NOTED_ID | ISFLAG_NOTED_GET);
+        destroy_item(item_index);
+    }
+
+    return item;
+}
+
+static void _make_acquirement_items()
+{
+    vector<object_class_type> rand_classes;
+
+    if (you.species != SP_FELID && you.species != SP_CRUSTACEAN && you.species != SP_HYDRA)
+    {
+        rand_classes.emplace_back(OBJ_WEAPONS);
+        rand_classes.emplace_back(OBJ_MISSILES);
+        rand_classes.emplace_back(OBJ_RODS);
+        rand_classes.emplace_back(OBJ_ARMOUR);
+        rand_classes.emplace_back(OBJ_STAVES);
+    }
+    else if (you.species == SP_CRUSTACEAN) {
+        //SP_CRUSTACEAN
+        rand_classes.emplace_back(OBJ_WEAPONS);
+        rand_classes.emplace_back(OBJ_MISSILES);
+        rand_classes.emplace_back(OBJ_RODS);
+    }
+    else if (you.species == SP_HYDRA) {
+        //SP_CRUSTACEAN
+        rand_classes.emplace_back(OBJ_MISSILES);
+        rand_classes.emplace_back(OBJ_ARMOUR);
+    }
+
+    rand_classes.emplace_back(OBJ_JEWELLERY);
+    rand_classes.emplace_back(OBJ_BOOKS);
+
+    const int num_wanted = min(3, (int)rand_classes.size());
+    shuffle_array(rand_classes);
+
+    CrawlVector& acq_items = you.props[ACQUIRE_ITEMS_KEY].get_vector();
+    acq_items.empty();
+
+    // Generate item defs until we have enough, skipping any random classes
+    // that fail to generate an item.
+    for (auto obj_type : rand_classes)
+    {
+        if (acq_items.size() == num_wanted)
+            break;
+
+        auto item = _acquirement_item_def(obj_type);
+        if (item.defined())
+            acq_items.push_back(item);
+    }
+
+    // Gold and food (for characters that eat) are guaranteed.
+    auto gold_item = _acquirement_item_def(OBJ_GOLD);
+    if (gold_item.defined())
+        acq_items.push_back(gold_item);
+
+    if (!you_foodless(false))
+    {
+        auto food_item = _acquirement_item_def(OBJ_FOOD);
+        if (food_item.defined())
+            acq_items.push_back(food_item);
+    }
+}
+
+/*
+ * Handle scroll of acquirement.
+ *
+ * Generate acquirement choices as items in a prop if these don't already exist
+ * (because a scroll was read and canceled. Then either get the acquirement
+ * choice from the c_choose_acquirement lua handler if one exists or present a
+ * menu for the player to choose an item.
+ *
+ * returns True if the scroll was used, false if it was canceled.
+*/
+bool acquirement_menu()
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    FixedBitVector<NUM_OBJECT_CLASSES> bad_class;
-    if (you.species == SP_FELID || you.species == SP_CRUSTACEAN)
+    if (!you.props.exists(ACQUIRE_ITEMS_KEY))
+        _make_acquirement_items();
+
+    auto& acq_items = you.props[ACQUIRE_ITEMS_KEY].get_vector();
+
+#ifdef CLUA_BINDINGS
+    int index = 0;
+    if (!clua.callfn("c_choose_acquirement", ">d", &index))
     {
-        if (you.species != SP_CRUSTACEAN)
-        {
-            bad_class.set(OBJ_WEAPONS);
-            bad_class.set(OBJ_MISSILES);
-            bad_class.set(OBJ_RODS);
-        }
-        bad_class.set(OBJ_ARMOUR);
-        bad_class.set(OBJ_STAVES);
+        if (!clua.error.empty())
+            mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
     }
-    if (you.species == SP_HYDRA)
+    else if (index >= 1 && index <= acq_items.size())
     {
-        bad_class.set(OBJ_WEAPONS);
-        bad_class.set(OBJ_RODS);
-        bad_class.set(OBJ_STAVES);
+        _create_acquirement_item(acq_items[index - 1]);
+        return true;
     }
-    if (you.get_mutation_level(MUT_NO_ARTIFICE))
-        bad_class.set(OBJ_MISCELLANY);
-
-    bad_class.set(OBJ_FOOD, you_foodless(false) && !you_worship(GOD_FEDHAS));
-
-    static struct { object_class_type type; const char* name; } acq_classes[] =
-    {
-        { OBJ_WEAPONS,    "Weapon" },
-        { OBJ_ARMOUR,     "Armour" },
-        { OBJ_JEWELLERY,  "Jewellery" },
-        { OBJ_BOOKS,      "Book" },
-        { OBJ_STAVES,     "Staff " },
-        { OBJ_MISCELLANY, "Evocable" },
-        { OBJ_FOOD,       "Food" }, // amended below
-        { OBJ_GOLD,       0 },
-    };
-    ASSERT(acq_classes[6].type == OBJ_FOOD);
-    string gold_text = make_stringf("Gold (you have $%d)", you.gold);
-    ASSERT(acq_classes[7].type == OBJ_GOLD);
-    acq_classes[7].name = gold_text.c_str();
-
-    int thing_created = NON_ITEM;
-
-    if (item_index == nullptr)
-        item_index = &thing_created;
-
-    *item_index = NON_ITEM;
-
-#ifdef USE_TILE_WEB
-    ui::cutoff_point ui_cutoff_point;
 #endif
 
-    while (class_wanted == OBJ_RANDOM)
-    {
-        ASSERT(!quiet);
-        clear_messages();
+    AcquireMenu acq_menu(acq_items);
+    acq_menu.show();
 
-        string line;
-        for (unsigned int i = 0; i < ARRAYSZ(acq_classes); i++)
-        {
-            int len = max(strlen(acq_classes[i].name),
-                          strlen(acq_classes[(i + ARRAYSZ(acq_classes) / 2)
-                                             % ARRAYSZ(acq_classes)].name));
-            if (bad_class[acq_classes[i].type])
-                line += make_stringf("     %-*s", len, "");
-            else
-                line += make_stringf(" [%c] %-*s", i + 'a', len, acq_classes[i].name);
-
-            if (i == ARRAYSZ(acq_classes) / 2 - 1 || i == ARRAYSZ(acq_classes) - 1)
-            {
-                line.erase(0, 1);
-                mpr(line);
-                line.clear();
-            }
-        }
-        mprf(MSGCH_PROMPT, "What kind of item would you like to acquire?"
-                "<lightgrey> [<w>\\</w>] known items %s</lightgrey>",
-                shopping_list.empty() ? "" : "[<w>$</w>] shopping list");
-
-        const int keyin = toalower(get_ch());
-        if (keyin >= 'a' && keyin < 'a' + (int)ARRAYSZ(acq_classes))
-            class_wanted = acq_classes[keyin - 'a'].type;
-        else if (keyin == '\\')
-            check_item_knowledge(), redraw_screen();
-        else if (keyin == '$' && !shopping_list.empty())
-            shopping_list.display(true), redraw_screen();
-        else
-        {
-            // Lets wizards escape out of accidentally choosing acquirement.
-            if (agent == AQ_WIZMODE || known_scroll)
-            {
-                canned_msg(MSG_OK);
-                return false;
-            }
-
-            // If we've gotten a HUP signal then the player will be unable
-            // to make a selection.
-            if (crawl_state.seen_hups)
-            {
-                dprf("Acquirement interrupted by HUP signal.");
-                you.turn_is_over = false;
-                return false;
-            }
-        }
-
-        if (class_wanted >= NUM_OBJECT_CLASSES || bad_class[class_wanted])
-            class_wanted = OBJ_RANDOM;
-    }
-
-    *item_index = acquirement_create_item(class_wanted, agent, quiet,
-                                          you.pos());
-    ASSERT(*item_index == NON_ITEM || !god_hates_item(mitm[*item_index]));
-
-    return true;
+    return !you.props.exists(ACQUIRE_ITEMS_KEY);
 }
