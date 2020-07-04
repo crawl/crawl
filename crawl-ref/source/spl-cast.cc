@@ -1923,6 +1923,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_INFESTATION:
         return cast_infestation(powc, beam, fail);
 
+    case SPELL_NOXIOUS_BOG:
+        return cast_noxious_bog(powc, fail);
+        
     // Enchantments.
     case SPELL_CONFUSING_TOUCH:
         return cast_confusing_touch(powc, fail);

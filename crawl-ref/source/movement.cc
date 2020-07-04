@@ -46,6 +46,7 @@
 #include "shout.h"
 #include "state.h"
 #include "stringutil.h"
+#include "spl-selfench.h" // noxious_bog_cell
 #include "terrain.h"
 #include "traps.h"
 #include "travel.h"
@@ -1036,20 +1037,7 @@ void move_player_action(coord_def move)
 
         if (swap)
             _swap_places(targ_monst, mon_swap_dest);
-        else if (you.duration[DUR_CLOUD_TRAIL])
-        {
-            if (cell_is_solid(you.pos()))
-                ASSERT(you.wizmode_teleported_into_rock);
-            else
-            {
-                auto cloud = static_cast<cloud_type>(
-                    you.props[XOM_CLOUD_TRAIL_TYPE_KEY].get_int());
-                ASSERT(cloud != CLOUD_NONE);
-                check_place_cloud(cloud,you.pos(), random_range(3, 10), &you,
-                                  0, -1);
-            }
-        }
-
+        
         if (running && env.travel_trail.empty())
             env.travel_trail.push_back(you.pos());
         else if (!running)
@@ -1060,6 +1048,7 @@ void move_player_action(coord_def move)
         if (you.is_directly_constricted())
             you.stop_being_constricted();
 
+        coord_def old_pos = you.pos();
 
         if (you.species == SP_MANTIS && !attacking)
         {
@@ -1082,11 +1071,36 @@ void move_player_action(coord_def move)
                 did_wall_jump = true;
         }
 
-        // Now it is safe to apply the swappee's location effects. Doing
-        // so earlier would allow e.g. shadow traps to put a monster
-        // at the player's location.
+        // Now it is safe to apply the swappee's location effects and add
+        // trailing effects. Doing so earlier would allow e.g. shadow traps to
+        // put a monster at the player's location.
         if (swap)
             targ_monst->apply_location_effects(targ);
+        else
+        {
+
+            if (you.duration[DUR_NOXIOUS_BOG])
+            {
+                if (cell_is_solid(old_pos))
+                    ASSERT(you.wizmode_teleported_into_rock);
+                else
+                    noxious_bog_cell(old_pos);
+            }
+
+            if (you.duration[DUR_CLOUD_TRAIL])
+            {
+                if (cell_is_solid(old_pos))
+                    ASSERT(you.wizmode_teleported_into_rock);
+                else
+                {
+                    auto cloud = static_cast<cloud_type>(
+                        you.props[XOM_CLOUD_TRAIL_TYPE_KEY].get_int());
+                    ASSERT(cloud != CLOUD_NONE);
+                    check_place_cloud(cloud, old_pos, random_range(3, 10), &you,
+                                      0, -1);
+                }
+            }
+        }
 
         apply_barbs_damage();
 

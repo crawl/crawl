@@ -141,6 +141,7 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_SUMMON_FOREST,
     SPELL_HYDRA_FORM,
     SPELL_SUMMON_HYDRA,
+    //SPELL_NOXIOUS_BOG,?
 },
 
 #if TAG_MAJOR_VERSION > 34
@@ -344,6 +345,7 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_PETRIFY,
     SPELL_INTOXICATE,
     SPELL_IRRADIATE,
+    SPELL_NOXIOUS_BOG,
 },
 
 {   // Book of Beasts

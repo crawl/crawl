@@ -503,7 +503,8 @@ bool feat_is_water(dungeon_feature_type feat)
 {
     return feat == DNGN_SHALLOW_WATER
            || feat == DNGN_DEEP_WATER
-           || feat == DNGN_OPEN_SEA;
+           || feat == DNGN_OPEN_SEA
+           || feat == DNGN_TOXIC_BOG;
 }
 
 /** Does this feature have enough water to keep water-only monsters alive in it?
@@ -2201,6 +2202,8 @@ bool revert_terrain_change(coord_def pos, terrain_change_type ctype)
 
     if (newfeat != DNGN_UNSEEN)
     {
+        if (ctype == TERRAIN_CHANGE_BOG)
+            env.map_knowledge(pos).set_feature(newfeat, colour);
         dungeon_terrain_changed(pos, newfeat, false, true);
         env.grid_colours(pos) = colour;
         return true;
