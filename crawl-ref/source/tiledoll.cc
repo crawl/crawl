@@ -292,7 +292,9 @@ void fill_doll_equipment(dolls_data &result)
         switch (you.species)
         {
         case SP_PALENTONGA: // placeholder
+#if TAG_MAJOR_VERSION == 34
         case SP_CENTAUR: ch = TILEP_TRAN_STATUE_CENTAUR;  break;
+#endif
         case SP_NAGA:    ch = TILEP_TRAN_STATUE_NAGA;     break;
         case SP_FELID:   ch = TILEP_TRAN_STATUE_FELID;    break;
         case SP_OCTOPODE:ch = TILEP_TRAN_STATUE_OCTOPODE; break;
@@ -307,7 +309,9 @@ void fill_doll_equipment(dolls_data &result)
         switch (you.species)
         {
         case SP_PALENTONGA: // placeholder
+#if TAG_MAJOR_VERSION == 34
         case SP_CENTAUR: ch = TILEP_TRAN_LICH_CENTAUR;  break;
+#endif
         case SP_NAGA:    ch = TILEP_TRAN_LICH_NAGA;     break;
         case SP_FELID:   ch = TILEP_TRAN_LICH_FELID;    break;
         case SP_OCTOPODE:ch = TILEP_TRAN_LICH_OCTOPODE; break;

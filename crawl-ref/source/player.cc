@@ -1803,13 +1803,7 @@ int player_prot_life(bool calc_unid, bool temp, bool items)
     return pl;
 }
 
-// New player movement speed system... allows for a bit more than
-// "player runs fast" and "player walks slow" in that the speed is
-// actually calculated (allowing for centaurs to get a bonus from
-// swiftness and other such things). Levels of the mutation now
-// also have meaning (before they all just meant fast). Most of
-// this isn't as fast as it used to be (6 for having anything), but
-// even a slight speed advantage is very good... and we certainly don't
+// Even a slight speed advantage is very good... and we certainly don't
 // want to go past 6 (see below). -- bwr
 int player_movement_speed()
 {
@@ -1984,7 +1978,7 @@ static int _player_evasion_size_factor(bool base = false)
 // other medium-sized races)
 int player_shield_racial_factor()
 {
-    return max(1, 5 + (you.species == SP_FORMICID ? -2 // Same as trolls/centaurs/etc.
+    return max(1, 5 + (you.species == SP_FORMICID ? -2 // Same as trolls, etc.
                                                   : _player_evasion_size_factor(true)));
 }
 
@@ -5720,7 +5714,7 @@ int player::base_ac_from(const item_def &armour, int scale) const
     const int AC = base * (440 + skill(SK_ARMOUR, 20)) / 440;
 
     // The deformed don't fit into body armour very well.
-    // (This includes nagas and centaurs.)
+    // (This includes nagas and palentongas.)
     if (get_armour_slot(armour) == EQ_BODY_ARMOUR
             && (get_mutation_level(MUT_DEFORMED)
                 || get_mutation_level(MUT_PSEUDOPODS)))

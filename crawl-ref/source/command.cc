@@ -268,7 +268,10 @@ void list_armour()
                  (i == EQ_SHIELD)      ? "Shield " :
                  (i == EQ_BODY_ARMOUR) ? "Armour " :
                  (i == EQ_BOOTS) ?
-                 ((you.species == SP_CENTAUR
+                 ((
+#if TAG_MAJOR_VERSION == 34
+                   you.species == SP_CENTAUR
+#endif
                    || you.species == SP_NAGA) ? "Barding"
                                               : "Boots  ")
                                  : "unknown")

@@ -1293,7 +1293,11 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         cmd.push_back(CMD_REMOVE_ARMOUR);
         cmd.push_back(CMD_DISPLAY_INVENTORY);
 
-        if (you.species == SP_CENTAUR || you.species == SP_MINOTAUR)
+        if (
+#if TAG_MAJOR_VERSION == 34
+            you.species == SP_CENTAUR ||
+#endif
+            you.species == SP_MINOTAUR)
         {
             text << "\nNote that as a " << species_name(you.species)
                  << " you will be unable to wear "
@@ -2039,11 +2043,13 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 "dying, check your options carefully. Often, retreat or use "
                 "of some item might be a viable alternative to fighting on.";
 
+#if TAG_MAJOR_VERSION == 34
         if (you.species == SP_CENTAUR)
         {
             text << " As a four-legged centaur, you are particularly quick - "
                     "running away is usually an option!";
         }
+#endif
 
         if (you_worship(GOD_TROG) && you.can_go_berserk())
         {
