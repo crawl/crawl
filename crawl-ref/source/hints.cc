@@ -3183,6 +3183,7 @@ string hints_describe_item(const item_def &item)
         case OBJ_ARMOUR:
         {
             bool wearable = true;
+#if TAG_MAJOR_VERSION == 34
             if (you.species == SP_CENTAUR && item.sub_type == ARM_BOOTS)
             {
                 ostr << "As a Centaur you cannot wear boots. "
@@ -3191,7 +3192,9 @@ string hints_describe_item(const item_def &item)
                 cmd.push_back(CMD_DISPLAY_MUTATIONS);
                 wearable = false;
             }
-            else if (you.species == SP_MINOTAUR && is_hard_helmet(item))
+            else
+#endif
+            if (you.species == SP_MINOTAUR && is_hard_helmet(item))
             {
                 ostr << "As a Minotaur you cannot wear helmets. "
                         "(Type <w>%</w> to see a list of your mutations and "
@@ -3199,14 +3202,9 @@ string hints_describe_item(const item_def &item)
                 cmd.push_back(CMD_DISPLAY_MUTATIONS);
                 wearable = false;
             }
-            else if (item.sub_type == ARM_CENTAUR_BARDING)
+            else if (item.sub_type == ARM_BARDING)
             {
-                ostr << "Only centaurs can wear centaur barding.";
-                wearable = false;
-            }
-            else if (item.sub_type == ARM_NAGA_BARDING)
-            {
-                ostr << "Only nagas can wear naga barding.";
+                ostr << "Only nagas can wear barding.";
                 wearable = false;
             }
             else

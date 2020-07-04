@@ -1079,7 +1079,7 @@ public:
 
     int get_damage() const override
     {
-        return damage + max(0, you.get_mutation_level(MUT_STINGER) * 2 - 1);
+        return damage + max(0, you.get_mutation_level(MUT_STINGER) * 2 - 1)
                       + you.get_mutation_level(MUT_ARMOURED_TAIL) * 4;
     }
 

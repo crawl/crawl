@@ -648,8 +648,7 @@ KITEM:    d = plate armour plus:5 not_cursed ident:all /\
     hat plus:0 good_item not_cursed ident:all /\
     tower shield plus:3 not_cursed ident:all /\
     tower shield plus:0 good_item not_cursed ident:all /\
-    naga barding plus:2 not_cursed ident:all w:5 /\
-    centaur barding plus:2 not_cursed ident:all w:5
+    barding plus:2 not_cursed ident:all w:5
 : line_setup(_G)
 : general_item_setup(_G)
 MAP
@@ -868,8 +867,7 @@ KITEM:    d = plate armour plus:6 not_cursed ident:all /\
     hat plus:0 good_item not_cursed ident:all /\
     tower shield plus:5 not_cursed ident:all /\
     tower shield plus:3 good_item not_cursed ident:all /\
-    naga barding plus:4 not_cursed ident:all w:5 /\
-    centaur barding plus:4 not_cursed ident:all w:5
+    barding plus:4 not_cursed ident:all w:5
 KITEM:     e = potion of haste q:5 ident:all
 KITEM:     f = potion of magic q:5 ident:all
 : line_setup(_G)

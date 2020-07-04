@@ -1043,7 +1043,7 @@ dgn.delayed_decay_extra(_G, "E", "centaur skeleton",
     ", leather armour good_item w:50 / ring mail good_item w:50" ..
     "    / " .. heavy_armour .. " / " .. medium_scales ..
     "    / " .. heavy_scales ..
-    ", centaur barding good_item / " .. dgn.good_aux_armour ..
+    ", barding good_item / " .. dgn.good_aux_armour ..
     "    / nothing w:70" ..
     ", any wand w:20 / any misc / gold / any scroll / any potion" ..
     "    / nothing w:60")

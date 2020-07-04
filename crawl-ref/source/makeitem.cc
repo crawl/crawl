@@ -754,12 +754,9 @@ static bool _try_make_armour_artefact(item_def& item, int force_type,
 
         // The rest are normal randarts.
 
-        // 10% of boots become barding.
-        if (item.sub_type == ARM_BOOTS && one_chance_in(10))
-        {
-            item.sub_type = random_choose(ARM_NAGA_BARDING,
-                                          ARM_CENTAUR_BARDING);
-        }
+        // 5% of boots become barding.
+        if (item.sub_type == ARM_BOOTS && one_chance_in(20))
+            item.sub_type = ARM_BARDING;
 
         // Determine enchantment and cursedness.
         if (one_chance_in(5))
@@ -850,8 +847,7 @@ static special_armour_type _generate_armour_type_ego(armour_type type)
     case ARM_BOOTS:
         return random_choose(SPARM_RUNNING, SPARM_FLYING, SPARM_STEALTH);
 
-    case ARM_NAGA_BARDING:
-    case ARM_CENTAUR_BARDING:
+    case ARM_BARDING:
         return random_choose(SPARM_FLYING, SPARM_STEALTH,
                              SPARM_COLD_RESISTANCE, SPARM_FIRE_RESISTANCE);
 
@@ -1188,13 +1184,8 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
         return;
     }
 
-    if (item.sub_type == ARM_BOOTS)
-    {
-        if (one_chance_in(8))
-            item.sub_type = ARM_NAGA_BARDING;
-        else if (one_chance_in(7))
-            item.sub_type = ARM_CENTAUR_BARDING;
-    }
+    if (item.sub_type == ARM_BOOTS && one_chance_in(8))
+        item.sub_type = ARM_BARDING;
 
     const bool force_good = item_level >= ISPEC_GIFT;
     const bool forced_ego = (item.brand > 0);

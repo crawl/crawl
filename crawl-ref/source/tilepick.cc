@@ -2362,11 +2362,8 @@ static tileidx_t _tileidx_armour_base(const item_def &item)
     case ARM_TOWER_SHIELD:
         return TILE_ARM_TOWER_SHIELD;
 
-    case ARM_CENTAUR_BARDING:
-        return TILE_ARM_CENTAUR_BARDING;
-
-    case ARM_NAGA_BARDING:
-        return TILE_ARM_NAGA_BARDING;
+    case ARM_BARDING:
+        return TILE_ARM_BARDING;
 
     case ARM_ANIMAL_SKIN:
         return TILE_ARM_ANIMAL_SKIN;

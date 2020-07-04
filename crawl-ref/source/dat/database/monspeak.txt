@@ -2771,7 +2771,7 @@ w:50
 
 @The_monster@ says, "This place is the Pits."
 
-@The_monster@ says, "What do I need a naga barding for?"
+@The_monster@ says, "What do naga need barding for?"
 
 @The_monster@ says, "What's a barding, anyway? Does it sing for its supper?"
 

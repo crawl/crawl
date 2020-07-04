@@ -245,6 +245,7 @@ enum tag_minor_version
     TAG_MINOR_UNSTACK_TREMORSTONES, // Unstack tins of tremorstones
     TAG_MINOR_MONSTER_TYPE_SIZE,   // Consistently marshall monster_type enums
     TAG_MINOR_SHAFT_CARD,          // Remove the Shaft card
+    TAG_MINOR_BARDING_MERGE,       // Merge naga and centaur bardings.
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

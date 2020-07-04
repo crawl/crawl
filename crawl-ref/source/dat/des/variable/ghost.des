@@ -2066,7 +2066,7 @@ NSUBST: - = 1 / 1. / 3=2. / q / r / 3=3. / .
 : elseif you.in_branch("Snake") then
 {{
 kmons("q = naga warrior; " .. wrathful_weapon("warrior", "randart") ..
-      "    . nothing w:95 | robe good_item w:95 | naga barding good_item" ..
+      "    . nothing w:95 | robe good_item w:95 | barding good_item" ..
       "    . nothing w:40 | kite shield good_item | tower shield good_item")
 }}
 MONS:   naga / salamander
@@ -2281,10 +2281,10 @@ NSUBST: - = q / -
 :     elseif you.in_branch("Snake") then
 {{
 kmons("q = naga warrior ; " .. disto_weapon("warrior", "randart") ..
-      "    . nothing w:95 | robe good_item w:95 | naga barding good_item" ..
+      "    . nothing w:95 | robe good_item w:95 | barding good_item" ..
       "    . nothing w:40 | kite shield good_item | tower shield good_item")
 kmons("r = nagaraja ; " .. disto_weapon("warrior", "randart") ..
-      "    . robe good_item w:40 | naga barding good_item")
+      "    . robe good_item w:40 | barding good_item")
 }}
 NSUBST: - = qr / -
 :     elseif you.in_branch("Swamp") then
