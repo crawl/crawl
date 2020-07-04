@@ -1276,7 +1276,6 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
     }
 
     if (get_spell_disciplines(spell) & spschool::summoning
-        && spell != SPELL_AURA_OF_ABJURATION
         && you.get_mutation_level(MUT_NO_LOVE))
     {
         return "you cannot coerce anything to answer your summons.";

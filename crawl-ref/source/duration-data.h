@@ -473,11 +473,6 @@ static const duration_def duration_data[] =
       "", "dragon call cooldown",
       "", D_NO_FLAGS,
       {{ "You can once more reach out to the dragon horde." }}},
-    { DUR_ABJURATION_AURA,
-      BLUE, "Abj",
-      "aura of abjuration", "",
-      "You are abjuring all hostile summons around you.", D_DISPELLABLE,
-      {{ "Your aura of abjuration expires." }}},
     { DUR_NO_POTIONS,
       RED, "-Potion",
       "no potions", "",
@@ -673,5 +668,6 @@ static const duration_def duration_data[] =
     { DUR_REGENERATION, 0, "", "", "old regeneration", "", D_NO_FLAGS},
     { DUR_NO_CAST, 0, "", "", "old no cast", "", D_NO_FLAGS},
     { DUR_GOURMAND, 0, "", "", "old gourmand", "", D_NO_FLAGS},
+    { DUR_ABJURATION_AURA, 0, "", "", "old abjuration", "", D_NO_FLAGS},
 #endif
 };

@@ -762,9 +762,6 @@ static void _decrement_durations()
     if (you.duration[DUR_DRAGON_CALL])
         do_dragon_call(delay);
 
-    if (you.duration[DUR_ABJURATION_AURA])
-        do_aura_of_abjuration(delay);
-
     if (you.duration[DUR_DOOM_HOWL])
         doom_howl(min(delay, you.duration[DUR_DOOM_HOWL]));
 

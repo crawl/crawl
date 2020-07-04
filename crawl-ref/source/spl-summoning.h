@@ -99,9 +99,6 @@ bool twisted_resurrection(actor *caster, int pow, beh_type beha,
 monster_type pick_random_wraith();
 spret cast_haunt(int pow, const coord_def& where, god_type god, bool fail);
 
-spret cast_aura_of_abjuration(int pow, bool fail);
-void do_aura_of_abjuration(int delay);
-
 monster* find_battlesphere(const actor* agent);
 spret cast_battlesphere(actor* agent, int pow, god_type god, bool fail);
 void end_battlesphere(monster* mons, bool killed);

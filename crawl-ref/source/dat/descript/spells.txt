@@ -60,11 +60,6 @@ caster's position.
 Extremely powerful magical items, such as the Orb of Zot, may actively resist
 the pull of this spell.
 %%%%
-Aura of Abjuration spell
-
-Continuously abjures hostile summoned creatures in the vicinity of the caster.
-This reduces their remaining time before being sent back where they came from.
-%%%%
 Aura of Brilliance spell
 
 Empowers the magic of nearby wizard allies of the caster, allowing them to
@@ -1102,11 +1097,6 @@ Random Bolt spell
 
 Fires, at random, a bolt of venom, negative energy, fire, cold, dispelling
 energy, electricity, or acid.
-%%%%
-Recall spell
-
-Recalls any friendly creatures on the same level to a position adjacent to the
-caster, over a short duration.
 %%%%
 Repel Missiles spell
 

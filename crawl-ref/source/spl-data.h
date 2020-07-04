@@ -407,17 +407,6 @@ static const struct spell_desc spelldata[] =
     TILEG_MASS_ABJURATION,
 },
 
-{
-    SPELL_AURA_OF_ABJURATION, "Aura of Abjuration",
-    spschool::summoning,
-    spflag::area | spflag::neutral | spflag::escape,
-    5,
-    200,
-    -1, -1,
-    5, 0,
-    TILEG_MASS_ABJURATION,
-},
-
 #if TAG_MAJOR_VERSION == 34
 {
     SPELL_SUMMON_SCORPIONS, "Summon Scorpions",
@@ -920,17 +909,6 @@ static const struct spell_desc spelldata[] =
     LOS_RADIUS, LOS_RADIUS,
     7, 0,
     TILEG_GENERIC_MONSTER_SPELL,
-},
-
-{
-    SPELL_RECALL, "Recall",
-    spschool::summoning | spschool::translocation,
-    spflag::utility,
-    3,
-    0,
-    -1, -1,
-    3, 0,
-    TILEG_RECALL,
 },
 
 {
@@ -3449,6 +3427,7 @@ static const struct spell_desc spelldata[] =
 #define AXED_SPELL(tag, name) \
     { tag, name, spschool::none, spflag::none, 7, 0, -1, -1, 0, 0, TILEG_ERROR },
 
+AXED_SPELL(SPELL_AURA_OF_ABJURATION, "Aura of Abjuration")
 AXED_SPELL(SPELL_BOLT_OF_INACCURACY, "Bolt of Inaccuracy")
 AXED_SPELL(SPELL_CHANT_FIRE_STORM, "Chant Fire Storm")
 AXED_SPELL(SPELL_CIGOTUVIS_DEGENERATION, "Cigotuvi's Degeneration")
@@ -3486,6 +3465,7 @@ AXED_SPELL(SPELL_MISLEAD, "Mislead")
 AXED_SPELL(SPELL_PHASE_SHIFT, "Phase Shift")
 AXED_SPELL(SPELL_POISON_WEAPON, "Poison Weapon")
 AXED_SPELL(SPELL_REARRANGE_PIECES, "Rearrange the Pieces")
+AXED_SPELL(SPELL_RECALL, "Recall")
 AXED_SPELL(SPELL_REGENERATION, "Regeneration")
 AXED_SPELL(SPELL_SEE_INVISIBLE, "See Invisible")
 AXED_SPELL(SPELL_SHAFT_SELF, "Shaft Self")

@@ -1673,7 +1673,7 @@ KITEM:      d = scroll of summoning / scroll of holy word \
                 / w:5 scroll of torment / any scroll w:20 / potion of haste \
                 / potion of heal wounds / any potion w:20
 KITEM:      e = wand of acid / wand of iceblast / ring of fire / ring of ice \
-                / randbook disc:summoning spells:aura_of_abjuration
+                / randbook disc:summoning
 KITEM:      f = demon blade w:1 / demon whip w:1 / demon trident w:1 \
                 / staff of summoning w:1 / manual of summonings w:1 \
                 / any randart jewellery w:5 / cloak good_item w:5 \

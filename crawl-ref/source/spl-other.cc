@@ -78,13 +78,6 @@ spret cast_death_channel(int pow, god_type god, bool fail)
     return spret::success;
 }
 
-spret cast_recall(bool fail)
-{
-    fail_check();
-    start_recall(recall_t::spell);
-    return spret::success;
-}
-
 void start_recall(recall_t type)
 {
     // Assemble the recall list.
@@ -112,7 +105,7 @@ void start_recall(recall_t type)
         rlist.push_back(m);
     }
 
-    if (type != recall_t::spell && branch_allows_followers(you.where_are_you))
+    if (branch_allows_followers(you.where_are_you))
         populate_offlevel_recall_list(rlist);
 
     if (!rlist.empty())

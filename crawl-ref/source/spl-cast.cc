@@ -1772,9 +1772,6 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_ENGLACIATION:
         return cast_englaciation(powc, fail);
 
-    case SPELL_AURA_OF_ABJURATION:
-        return cast_aura_of_abjuration(powc, fail);
-
     case SPELL_EXCRUCIATING_WOUNDS:
         return cast_excruciating_wounds(powc, fail);
 
@@ -1849,9 +1846,6 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
 
     case SPELL_APPORTATION:
         return cast_apportation(powc, beam, fail);
-
-    case SPELL_RECALL:
-        return cast_recall(fail);
 
     case SPELL_DISJUNCTION:
         return cast_disjunction(powc, fail);
@@ -2273,6 +2267,7 @@ void spell_skills(spell_type spell, set<skill_type> &skills)
 const set<spell_type> removed_spells =
 {
 #if TAG_MAJOR_VERSION == 34
+    SPELL_AURA_OF_ABJURATION,
     SPELL_BOLT_OF_INACCURACY,
     SPELL_CHANT_FIRE_STORM,
     SPELL_CIGOTUVIS_DEGENERATION,
@@ -2315,6 +2310,7 @@ const set<spell_type> removed_spells =
     SPELL_POISON_CLOUD,
     SPELL_POISON_WEAPON,
     SPELL_REARRANGE_PIECES,
+    SPELL_RECALL,
     SPELL_REGENERATION,
     SPELL_RESURRECT,
     SPELL_SACRIFICE,
