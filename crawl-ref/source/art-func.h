@@ -35,6 +35,7 @@
 #include "nearby-danger.h" // For Zhor
 #include "player.h"
 #include "player-stats.h"
+#include "showsymb.h"      // For Cigotuvi's Embrace
 #include "spl-cast.h"      // For evokes
 #include "spl-damage.h"    // For the Singing Sword.
 #include "spl-goditem.h"   // For Sceptre of Torment tormenting
@@ -1477,4 +1478,110 @@ static void _BATTLE_world_reacts(item_def */*item*/)
         your_spells(SPELL_BATTLESPHERE, 0, false);
         did_god_conduct(DID_SPELL_CASTING, 1);
     }
+}
+
+
+////////////////////////////////////////////////////
+
+static void _EMBRACE_unequip(item_def* item, bool* show_msgs)
+{
+    int& armour = item->props[EMBRACE_ARMOUR_KEY].get_int();
+    if (armour > 0)
+    {
+        _equip_mpr(show_msgs, "Your corpse armour falls away.");
+        armour = 0;
+        item->plus = get_unrand_entry(item->unrand_idx)->plus;
+    }
+}
+
+/**
+ * Iterate over all corpses in LOS and harvest them.
+ *
+ * @return            The total number of corpses destroyed.
+ */
+static int _harvest_corpses()
+{
+    int harvested = 0;
+
+    for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
+    {
+        for (stack_iterator si(*ri, true); si; ++si)
+        {
+            item_def& item = *si;
+            if (item.base_type != OBJ_CORPSES)
+                continue;
+
+            // forbid harvesting orcs under Beogh
+            const monster_type monnum
+                = static_cast<monster_type>(item.orig_monnum);
+            if (you.religion == GOD_BEOGH && mons_genus(monnum) == MONS_ORC)
+                continue;
+
+            did_god_conduct(DID_EVIL, 1);
+
+            // apply these in addition to use of an evil item
+            if (mons_class_holiness(item.mon_type) & MH_HOLY)
+                did_god_conduct(DID_DESECRATE_HOLY_REMAINS, 4);
+            else if (corpse_intelligence(item) >= I_HUMAN)
+                did_god_conduct(DID_DESECRATE_SOULED_BEING, 1);
+
+            ++harvested;
+
+            // don't spam animations
+            if (harvested <= 5)
+            {
+                bolt beam;
+                beam.source = *ri;
+                beam.target = you.pos();
+                beam.glyph = get_item_glyph(item).ch;
+                beam.colour = item.get_colour();
+                beam.range = LOS_RADIUS;
+                beam.aimed_at_spot = true;
+                beam.item = &item;
+                beam.flavour = BEAM_VISUAL;
+                beam.draw_delay = 3;
+                beam.fire();
+                viewwindow();
+            }
+
+            destroy_item(item.index());
+        }
+    }
+
+    return harvested;
+}
+
+static void _EMBRACE_world_reacts(item_def* item)
+{
+    int& armour = item->props[EMBRACE_ARMOUR_KEY].get_int();
+    const int harvested = _harvest_corpses();
+    // diminishing returns for more corpses
+    for (int i = 0; i < harvested; i++)
+        armour += div_rand_round(100 * 100, (armour + 100));
+
+    // decay over time - 1 turn per 'armour' base, 0.5 turns at 400 'armour'
+    armour -= div_rand_round(you.time_taken * (armour + 400), 10 * 400);
+
+    const int last_plus = item->plus;
+    const int base_plus = get_unrand_entry(item->unrand_idx)->plus;
+    if (armour <= 0)
+    {
+        armour = 0;
+        item->plus = base_plus;
+        if (last_plus > base_plus)
+            mpr("Your corpse armour falls away.");
+    }
+    else
+    {
+        item->plus = base_plus + 1 + (armour - 1) * 6 / 100;
+        if (item->plus < last_plus)
+            mpr("A chunk of your corpse armour falls away.");
+        else if (last_plus == base_plus)
+            mpr("The bodies of the dead rush to embrace you!");
+        else if (item->plus > last_plus)
+            mpr("Your shell of carrion and bone grows thicker.");
+    }
+
+    if (item->plus != last_plus)
+        you.redraw_armour_class = true;
 }

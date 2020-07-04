@@ -3960,6 +3960,10 @@ int monster::res_rotting(bool /*temp*/) const
         res = 3;
     if (get_mons_resist(*this, MR_RES_ROTTING))
         res += 1;
+    
+    const item_def* armour = mslot_item(MSLOT_ARMOUR);
+    if (armour && is_unrandom_artefact(*armour, UNRAND_EMBRACE))
+        res = 3;
 
     return min(3, res);
 }

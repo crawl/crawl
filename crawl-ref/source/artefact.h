@@ -16,6 +16,7 @@
 #define ARTEFACT_APPEAR_KEY "artefact_appearance"
 
 #define DAMNATION_BOLT_KEY "damnation_bolt"
+#define EMBRACE_ARMOUR_KEY "embrace_armour"
 
 struct bolt;
 
