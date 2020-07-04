@@ -3653,6 +3653,13 @@ static mutation_type _random_valid_sacrifice(const vector<mutation_type> &muts)
 
         // Special case a few weird interactions:
 
+        // Don't offer to sacrifice summoning magic when already hated by all.
+        if (mut == MUT_NO_SUMMONING_MAGIC
+            && you.get_mutation_level(MUT_NO_LOVE))
+        {
+            continue;
+        }
+
         // Vampires can't get inhibited regeneration for some reason related
         // to their existing regen silliness.
         // Neither can deep dwarf, for obvious reasons.
@@ -3870,11 +3877,11 @@ static int _get_stat_piety(stat_type input_stat, int multiplier)
 {
     int stat_val = 3; // If this is your highest stat.
     if (you.base_stats[STAT_INT] > you.base_stats[input_stat])
-            stat_val -= 1;
+        stat_val -= 1;
     if (you.base_stats[STAT_STR] > you.base_stats[input_stat])
-            stat_val -= 1;
+        stat_val -= 1;
     if (you.base_stats[STAT_DEX] > you.base_stats[input_stat])
-            stat_val -= 1;
+        stat_val -= 1;
     return stat_val * multiplier;
 }
 
@@ -3984,7 +3991,7 @@ int get_sacrifice_piety(ability_type sac, bool include_skill)
                 piety_gain = 1;
             }
             else if (you.get_mutation_level(MUT_NO_SUMMONING_MAGIC)
-                || you.get_mutation_level(MUT_NO_ARTIFICE))
+                     || you.get_mutation_level(MUT_NO_ARTIFICE))
             {
                 piety_gain /= 2;
             }
