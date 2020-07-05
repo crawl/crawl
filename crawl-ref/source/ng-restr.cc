@@ -40,6 +40,7 @@ static bool _banned_combination(job_type job, species_type species)
         if (job == JOB_BERSERKER
             || job == JOB_CHAOS_KNIGHT
             || job == JOB_ABYSSAL_KNIGHT
+            || job == JOB_MELTED_KNIGHT
             || job == JOB_MONK)
         {
             return true;
