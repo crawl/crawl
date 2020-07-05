@@ -3037,6 +3037,14 @@ static bool _is_option_autopickup(const item_def &item, bool ignore_force)
         if (option.first.matches(iname))
             return option.second;
 
+    // WARNING : Do not add like this. (Using Lua instead. See mummy and octopode in autopickup_exeptions.txt)
+    // Case of hydra is really, really different. It's hard to pick ring-only case from OBJ_JEWELLERY
+    // and also, I haven't find a way to check player equip unrand. (Of course, there may exists a way.. but HOW?)
+    // Therefore, I will migrate it into ae.txt in future.
+    if (item.base_type == OBJ_JEWELLERY)
+    {   if(!jewellery_is_amulet(item) && you.species == SP_HYDRA && !player_equip_unrand(UNRAND_FINGER_AMULET))
+        return false;}
+
     return Options.autopickups[item.base_type];
 }
 

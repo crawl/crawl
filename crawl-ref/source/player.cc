@@ -774,6 +774,8 @@ maybe_bool you_can_wear(equipment_type eq, bool temp)
 
     // You can always wear at least one ring unless you are not hydra. (forms were already handled).
     case EQ_RINGS:
+        if (you.species == SP_HYDRA)
+            return player_equip_unrand(UNRAND_FINGER_AMULET) ? MB_TRUE : MB_FALSE;
     case EQ_ALL_ARMOUR:
     case EQ_AMULETS:
         return MB_TRUE;
