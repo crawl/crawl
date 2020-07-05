@@ -242,12 +242,13 @@ int book_rarity(book_type which_book)
         return 3;
 
     case BOOK_FLAMES:
-    case BOOK_FROST:
     case BOOK_AIR:
     case BOOK_GEOMANCY:
         return 4;
 
     case BOOK_YOUNG_POISONERS:
+    case BOOK_FROST:
+    case BOOK_FROST2:
     case BOOK_BATTLE:
     case BOOK_DEBILITATION:
     case BOOK_STALKING:

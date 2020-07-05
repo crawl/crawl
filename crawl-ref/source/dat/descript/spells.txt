@@ -733,6 +733,13 @@ Greater Servant of Makhleb spell
 
 <Greater Servant of Makhleb ability>
 %%%%
+Hailstorm spell
+
+Conjures a cannonade of hail. The eye of the storm is wide enough that monsters
+adjacent to the caster are unaffected. Due to the strong impact and cutting
+edges a significant portion of its damage bypasses cold resistance. However,
+creatures made of pure ice are immune.
+%%%%
 Haste Other spell
 
 Speeds the actions of a nearby ally.

@@ -308,6 +308,15 @@ void give_items_skills(const newgame_def& ng)
         newgame_make_item(OBJ_WEAPONS, ng.weapon);
 
     give_job_equipment(you.char_class);
+
+    //job_specific
+    if (you.char_class == JOB_ICE_ELEMENTALIST) {
+        if (ng.job_specific == 1)
+            newgame_make_item(OBJ_BOOKS, BOOK_FROST2);
+        else
+            newgame_make_item(OBJ_BOOKS, BOOK_FROST);
+    }
+
     give_job_skills(you.char_class);
 
     if (job_gets_ranged_weapons(you.char_class))
@@ -481,9 +490,11 @@ static void _setup_generic(const newgame_def& ng)
     you.your_name  = ng.name;
     you.species    = ng.species;
     you.char_class = ng.job;
-    if(ng.starting_pos >= 1) {
-        //for melted knight
-        you.chapter = CHAPTER_STARTING_SLIME;
+    if (ng.job == JOB_MELTED_KNIGHT) {
+        if (ng.job_specific >= 1) {
+            //for melted knight
+            you.chapter = CHAPTER_STARTING_SLIME;
+        }
     }
 
     you.chr_class_name = get_job_name(you.char_class);

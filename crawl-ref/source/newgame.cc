@@ -27,9 +27,11 @@
 #include "ng-restr.h"
 #include "options.h"
 #include "prompt.h"
+#include "random.h"
 #include "religion.h"
 #include "skills.h"
 #include "species-groups.h"
+#include "spell-type.h"
 #include "state.h"
 #include "stringutil.h"
 #include "terrain.h"
@@ -73,7 +75,7 @@ static bool _choose_job_specific(newgame_def& ng, newgame_def& ng_choice);
 newgame_def::newgame_def()
     : name(), type(GAME_TYPE_NORMAL),
       seed(0), pregenerate(false),
-      starting_pos(0),
+      job_specific(0),
       species(SP_UNKNOWN), job(JOB_UNKNOWN),
       weapon(WPN_UNKNOWN), god(GOD_NO_GOD),
       fully_random(false)
@@ -1060,7 +1062,7 @@ bool choose_game(newgame_def& ng, newgame_def& choice,
     ng.type = choice.type;
     ng.seed = choice.seed;
     ng.pregenerate = choice.pregenerate;
-    ng.starting_pos = choice.starting_pos;
+    ng.job_specific = choice.job_specific;
 
 #ifndef DGAMELAUNCH
     // New: pick name _after_ character choices.
@@ -1700,37 +1702,23 @@ static weapon_type _fixup_weapon(weapon_type wp,
     return WPN_UNKNOWN;
 }
 
+struct _custom_menu_item {
+    int type;
+    string label;
+    tileidx_t tile;
+    TextureID tile_id;
+
+    _custom_menu_item(int _type, string _label, tileidx_t _tile, TextureID _tile_id)
+        : type(_type), label(move(_label)), tile(move(_tile)), tile_id(_tile_id) {};
+    _custom_menu_item(int _type, string _label)
+        : type(_type), label(move(_label)), tile(0), tile_id(TEX_FEAT){};
+};
 
 static void _construct_starting_menu(const newgame_def&,
+    vector<_custom_menu_item>& choices,
     shared_ptr<OuterMenu>& main_items,
     shared_ptr<OuterMenu>& sub_items)
 {
-    struct _menu_item {
-        int type;
-        string label;
-        tileidx_t tile;
-        _menu_item(int _type, string _label, tileidx_t _tile)
-            : type(_type), label(move(_label)), tile(move(_tile)) {};
-        _menu_item(int _type, string _label)
-            : type(_type), label(move(_label)), tile(0) {};
-    };
-    vector<_menu_item> choices;
-
-    for (unsigned int i = 0; i < 2; ++i)
-    {
-        string text = i==0?"start from D:1":"start from Slime:5 (Experimental)";
-
-#ifdef USE_TILE
-        dungeon_feature_type g_tile = i==0?DNGN_EXIT_DUNGEON:DNGN_ENTER_SLIME;
-#endif
-
-        choices.emplace_back(i, text
-#ifdef USE_TILE
-            , tileidx_feature_base(g_tile)
-#endif
-        );
-    }
-
     int max_text_width = 0;
     for (const auto& choice : choices)
         max_text_width = max(max_text_width, strwidth(choice.label));
@@ -1751,7 +1739,7 @@ static void _construct_starting_menu(const newgame_def&,
         hbox->add_child(tile_stack);
 
         tile_stack->add_child(make_shared<Image>(
-            tile_def(choice.tile, TEX_FEAT)));
+            tile_def(choice.tile, choice.tile_id)));
 #endif
 
         auto label = make_shared<Text>();
@@ -2463,7 +2451,7 @@ static bool _choose_god(newgame_def& ng, newgame_def& ng_choice)
 
 static bool _choose_job_specific(newgame_def& ng, newgame_def& ng_choice)
 {
-    if (ng.job != JOB_MELTED_KNIGHT)
+    if (ng.job != JOB_MELTED_KNIGHT && ng.job != JOB_ICE_ELEMENTALIST)
         return true;
 
     auto title_hbox = make_shared<Box>(Widget::HORZ);
@@ -2485,23 +2473,51 @@ static bool _choose_job_specific(newgame_def& ng, newgame_def& ng_choice)
     auto vbox = make_shared<Box>(Box::VERT);
     vbox->set_cross_alignment(Widget::Align::STRETCH);
     vbox->add_child(title_hbox);
-    auto prompt = make_shared<Text>(formatted_string("You have a choice of starting position.", CYAN));
+    auto prompt = make_shared<Text>(formatted_string("You have a choice of starting condition.", CYAN));
     vbox->add_child(prompt);
 
     auto main_items = make_shared<OuterMenu>(true, 1, 2);
-    main_items->menu_id = "starting position";
+    main_items->menu_id = "starting condition";
     main_items->set_margin_for_sdl(15, 0);
     main_items->set_margin_for_crt(1, 0);
     vbox->add_child(main_items);
 
     auto sub_items = make_shared<OuterMenu>(false, 2, 3);
-    sub_items->menu_id = "starting position sub";
+    sub_items->menu_id = "starting condition sub";
     vbox->add_child(sub_items);
 
     main_items->linked_menus[2] = sub_items;
     sub_items->linked_menus[0] = main_items;
 
-    _construct_starting_menu(ng, main_items, sub_items);
+    vector<_custom_menu_item> choices;
+    
+    if (ng.job == JOB_MELTED_KNIGHT) {
+        choices.emplace_back(0, "start from D:1"
+#ifdef USE_TILE
+            , tileidx_feature_base(DNGN_EXIT_DUNGEON), TEX_FEAT
+#endif
+        );
+        choices.emplace_back(1, "start from Slime:5 (Experimental)"
+#ifdef USE_TILE
+            , tileidx_feature_base(DNGN_ENTER_SLIME), TEX_FEAT
+#endif
+        );
+    }
+    else if (ng.job == JOB_ICE_ELEMENTALIST) {
+        choices.emplace_back(0, "old spell set"
+#ifdef USE_TILE
+            , tileidx_spell(SPELL_THROW_ICICLE), TEX_GUI
+#endif
+        );
+        choices.emplace_back(1, "new spell set"
+#ifdef USE_TILE
+            , tileidx_spell(SPELL_FROZEN_RAMPARTS), TEX_GUI
+#endif
+        );
+    }
+
+
+    _construct_starting_menu(ng, choices, main_items, sub_items);
 
     bool done = false, ret = false;
 
@@ -2514,10 +2530,10 @@ static bool _choose_job_specific(newgame_def& ng, newgame_def& ng_choice)
             ret = false;
             return done = true;
         case GOD_RANDOM:
-            ng_choice.starting_pos = random_choose(0, 1);
+            ng_choice.job_specific = random2(choices.size());
             break;
         default:
-            ng_choice.starting_pos = id;
+            ng_choice.job_specific = id;
             break;
         }
         return ret = done = true;

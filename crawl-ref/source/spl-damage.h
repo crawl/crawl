@@ -90,4 +90,4 @@ void foxfire_attack(const monster *foxfire, const actor *target);
 void actor_apply_toxic_bog(actor *act);
 
 spret cast_frozen_ramparts(int pow, bool fail);
-
+spret cast_hailstorm(int pow, bool fail, bool tracer = false);
