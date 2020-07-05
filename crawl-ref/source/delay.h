@@ -284,7 +284,7 @@ public:
 
     const char* name() const override
     {
-        return "armour_on";
+        return "armour_off";
     }
 };
 
