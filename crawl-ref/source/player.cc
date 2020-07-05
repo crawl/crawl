@@ -249,6 +249,26 @@ bool check_moveto_terrain(const coord_def& p, const string &move_verb,
 
     if (!_check_moveto_dangerous(p, msg))
         return false;
+    if (!you.airborne() && env.grid(you.pos()) != DNGN_TOXIC_BOG
+        && env.grid(p) == DNGN_TOXIC_BOG)
+    {
+        string prompt;
+
+        if (prompted)
+            *prompted = true;
+
+        if (!msg.empty())
+            prompt = msg + " ";
+
+        prompt += "Are you sure you want to " + move_verb
+                + " into a toxic bog?";
+
+        if (!yesno(prompt.c_str(), false, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return false;
+        }
+    }
     if (!need_expiration_warning() && need_expiration_warning(p)
         && !crawl_state.disables[DIS_CONFIRMATIONS])
     {
@@ -475,9 +495,18 @@ void moveto_location_effects(dungeon_feature_type old_feat,
             {
                 if (!feat_is_water(old_feat))
                 {
-                    mprf("You %s the %s water.",
-                         stepped ? "enter" : "fall into",
-                         new_grid == DNGN_SHALLOW_WATER ? "shallow" : "deep");
+                    if (new_grid == DNGN_TOXIC_BOG)
+                    {
+                        mprf("You %s the toxic bog.",
+                                stepped ? "enter" : "fall into");
+                    }
+                    else
+                    {
+                        mprf("You %s the %s water.",
+                             stepped ? "enter" : "fall into",
+                             new_grid == DNGN_SHALLOW_WATER ? "shallow"
+                             : "deep");
+                    }
                 }
 
                 if (new_grid == DNGN_DEEP_WATER && old_feat != DNGN_DEEP_WATER)
@@ -503,6 +532,10 @@ void moveto_location_effects(dungeon_feature_type old_feat,
     }
 
     id_floor_items();
+
+    // Falling into a toxic bog, take the damage
+    if (old_pos == you.pos() && stepped)
+        actor_apply_toxic_bog(&you);
 
     // Traps go off.
     // (But not when losing flight - i.e., moving into the same tile)

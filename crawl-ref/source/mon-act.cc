@@ -1888,6 +1888,8 @@ void handle_monster_move(monster* mons)
 
     _mons_in_cloud(*mons);
     _heated_area(*mons);
+    actor_apply_toxic_bog(mons);
+    
     if (!mons->alive())
         return;
 

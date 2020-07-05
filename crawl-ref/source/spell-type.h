@@ -476,5 +476,6 @@ enum spell_type : int
     SPELL_ELDRITCH_FORM,
     SPELL_FOXFIRE,
     SPELL_FROZEN_RAMPARTS,
+    SPELL_NOXIOUS_BOG,
     NUM_SPELLS
 };

@@ -87,4 +87,7 @@ spret cast_lehudibs_crystal_shot(const actor* caster, int powc, bolt& beam, bool
 
 void foxfire_attack(const monster *foxfire, const actor *target);
 
+void actor_apply_toxic_bog(actor *act);
+
 spret cast_frozen_ramparts(int pow, bool fail);
+

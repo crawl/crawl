@@ -63,6 +63,7 @@
 #define PLAYER_TENTACLE_CONNECT "player_tentacle_connect"
 #define PLAYER_TENTACLE_DELAY "player_tentacle_delay"
 #define FROZEN_RAMPARTS_KEY "frozen_ramparts_position"
+#define NOXIOUS_BOG_KEY "noxious_bog_pow"
 
 // display/messaging breakpoints for penalties from Ru's MUT_HORROR
 #define HORROR_LVL_EXTREME  3

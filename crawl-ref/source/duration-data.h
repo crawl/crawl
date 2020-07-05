@@ -717,6 +717,12 @@ static const duration_def duration_data[] =
     { DUR_UNSH_BOOTS, 0, "", "unshelving boots", "unshelved boots", "Your boots are unshelved.", D_NO_FLAGS, {{"You trim your boots.", [](){equip_effect(EQ_BOOTS, you.equip[EQ_BOOTS], false, true); you.redraw_armour_class = true;},}}},
     { DUR_UNSH_SHIELD, 0, "", "unshelving shield", "unshelved shield", "Your shield is unshelved.", D_NO_FLAGS, {{"You trim your shield.", [](){equip_effect(EQ_SHIELD, you.equip[EQ_SHIELD], false, true); you.redraw_armour_class = true;},}}},
     { DUR_UNSH_BODY_ARMOUR, 0, "", "unshelving armour", "unshelved armour", "Your armour is unshelved.", D_NO_FLAGS, {{"You trim your armour.", [](){equip_effect(EQ_BODY_ARMOUR, you.equip[EQ_BODY_ARMOUR], false, true); you.redraw_armour_class = true;},}}},
+
+    { DUR_NOXIOUS_BOG,
+      MAGENTA, "Bog",
+      "noxious spew", "noxious bog",
+      "You are spewing a noxious bog.", D_DISPELLABLE,
+      {{ "Your noxious spew wanes." }}},
 #if TAG_MAJOR_VERSION == 34
     // And removed ones
     { DUR_MAGIC_SAPPED, 0, "", "", "old magic sapped", "", D_NO_FLAGS},
