@@ -227,13 +227,10 @@ ITEM:    amulet of reflection
 KITEM:   gzZ = ration w:5 tile:food_honeycomb / nothing w:40
 KFEAT:   L = l
 KFEAT:   ~ = w
-KFEAT:   ^ = known teleport trap / known Zot trap
-KFEAT:   T = known permanent teleport trap / dispersal trap
-NSUBST:  T = 1:. / *:T
 NSUBST:  w = 1:~ / *:w, l = 1:L / *:l
 NSUBST:  A = 1:+ / *:b, B = 1:+ / *:b
 NSUBST:  C = 1:+ / *:b, D = 1:+ / *:b
-NSUBST:  E = 1:+ / *:x, N = 1:= / *:n
+NSUBST:  E = 1:+ / *:x, N = 1:+ / *:n
 SUBST:   ' : ''l. , ' = l.
 SUBST:   " : ""W. , " = Ww..
 NSUBST:  * = 1:e / *:*
@@ -268,11 +265,11 @@ xwwwwwwww".."wwwxww.."w........................................>xx...x
 xxwwww""....."xwxw"...ww........................................xx...x
 xxww".........xxxw..............................................xx..xx
 xww............xx"w...ccccccccccccccccccNcccccccccccccccccc.....xx..xx
-xw"...xxx.......x..w..c^..*...*...*...*...*...*...*...*...c.....x...xx
+xw"...xxx.......x..w..c...*...*...*...*...*...*...*...*...c.....x...xx
 xw....x!x..xxx..x..w..c...................................c.....x...xx
 xxx...x+x..x!x..x.....c*..;...;...;...;...;...;...;...;..*c.....xx..xx
 xxx....1..1+!x..x.....c...................................c.....xx...x
-x..........xxx.xx.....c.......bbbbbbbbbbTbbbbbbbbbb.......c.....xx..xx
+x..........xxx.xx.....c.......bbbbbbbbbb.bbbbbbbbbb.......c.....xx..xx
 x..xxxx........xx.....c.......b.........b.........b.......c.....x...xx
 x..x!!+1..xxxx..x.....c*..;...b.bbbAbbb.b.bbbBbbb.b...;..*c.....x..xxx
 x..xxxx..1+!!x..x.....c.......b.b8...|b.b.b|...8b.b.......c.....xx.xxx
@@ -280,7 +277,7 @@ x.........xxxx..x.....c.......b.A|.P.|A.b.B|.P.|B.b.......c.....xx.xxx
 x.......1.......x.....c.......b.b|...8b.b.b8...|b.b.......c.....x...xx
 xxx....121....xxx.....c*..;...b.bbbAbbn.b.nbbBbbb.b...;..*c.....x...xx
 x!x...cc+cc...xxx.....c.......b.........b.........b.......c.....xx..xx
-x&+1..c!2!c...xxx.....N.......Tbbbbbbbbb.bbbbbbbbbT.......N.....x..xxx
+x&+1..c!2!c...xxx.....N........bbbbbbbbb.bbbbbbbbb........N.....x..xxx
 x!x...c&&&c...xxx.....c.......b.........b.........b.......c.....x..xxx
 xxx...ccccc...xxx.....c*..;...b.bbbDbbn.b.nbbCbbb.b...;..*c.....x.xxxx
 x...............x.....c.......b.b|...8b.b.b|...8b.b.......c.....x.xxxx
@@ -288,11 +285,11 @@ xx...1...xxxx...x.....c.......b.D|.P.|D.b.C|.P.|C.b.......c.....x..x.x
 xx..x+x.1+!!x...x.....c.......b.b8...|b.b.b8...|b.b.......c.....xx...x
 x...x!x..xxxx...x.....c*..;...b.bbbDbbb.b.bbbCbbb.b...;..*c.....xxx.xx
 x...xxx.........x.....c.......b.........b.........b.......c.....xxx.xx
-x.........xxxxxxx.....c.......bbbbbbbbbbTbbbbbbbbbb.......c.....xxx..x
+x.........xxxxxxx.....c.......bbbbbbbbbb.bbbbbbbbbb.......c.....xxx..x
 xxxx......+*9*9*+.....c...................................c.....xxxx.x
 xxxx..xx..xxxxxxx.....c*..;...;...;...;...;...;...;...;..*c.....x....x
 x.....xx........x.....c...................................c.....x.xx.x
-x.xx.....xxx....x.....c...*...*...*...*...*...*...*...*..^c.....x.xx+x
+x.xx.....xxx....x.....c...*...*...*...*...*...*...*...*...c.....x.xx+x
 x.xx....1+!x..xxx.....ccccccccccccccccccNcccccccccccccccccc.....xxx..x
 x....xx..xxx..xxx...............................................xx..xx
 x....xx.......xxx.........................................z..z..x....x

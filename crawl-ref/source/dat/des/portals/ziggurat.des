@@ -411,17 +411,18 @@ MONS:    lost soul, rakshasa
 KFEAT:   ~ = known permanent teleport trap
 SHUFFLE: xm / cn
 SUBST:   9 : 00., c : bcv
+KFEAT:   a = iron_grate
 : if you.depth() > 18 then
 SUBST:   0 : 0112
 : end
 MAP
-  xmx
- mx0xm
+  xax
+ ax0xa
 xx9.9xx
-m0.~.0m
+a0.~.0a
 xx9.9xx
- mx0xm
-  xmx
+ ax0xa
+  xax
 ENDMAP
 
 NAME:  ziggurat_pillar_centre_dispersal

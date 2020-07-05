@@ -4561,6 +4561,7 @@ DEPTH:  D:4-, Depths
 KMASK:  ^809 = opaque
 KFEAT:  ^ = known permanent teleport trap
 KFEAT:  _ = known alarm trap
+KFEAT:  a = iron_grate
 KPROP:  8^ = no_tele_into
 : if you.absdepth() < 9 then
 SUBST: | = %
@@ -4576,11 +4577,11 @@ MAP
    .cnc.
 ....n|n....
 .cccc+cccc.
-.c8^n_n^8c.
+.c8^a~a^8c.
 .cc^c.c^cc.
-.c8^n.n^8c.
+.c8^a.a^8c.
 .cc^c.c^cc.
-.c8^n.n^8c.
+.c8^a.a^8c.
 .cccc+cccc.
 ...........
 ENDMAP
