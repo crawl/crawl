@@ -2978,23 +2978,12 @@ static bool _is_option_autopickup(const item_def &item, bool ignore_force)
     return Options.autopickups[item.base_type];
 }
 
-static int _get_chunk_count() {
-    auto it = find_if(you.inv.begin(), you.inv.end(),
-                      [](const item_def& item) {
-                          return item.base_type == OBJ_FOOD
-                                 && item.sub_type == FOOD_CHUNK;
-                      });
-    return it == you.inv.end() ? 0 : it->quantity;
-}
-
 /// Should the player automatically butcher the given item?
 static bool _should_autobutcher(const item_def &item)
 {
-    const int max_chunks = Options.auto_butcher_max_chunks;
-    return Options.auto_butcher >= you.hunger_state
+    return Options.auto_butcher
            && item.base_type == OBJ_CORPSES
-           && !is_inedible(item)
-           && (max_chunks == 0 || _get_chunk_count() < max_chunks);
+           && !is_inedible(item);
 }
 
 /** Is the item something that we should try to autopickup?

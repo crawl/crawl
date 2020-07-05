@@ -14,8 +14,3 @@ note_messages += Your scales start
 note_messages += protects you from harm
 note_messages += You (fall|are sucked) into a shaft
 note_monsters += orb of fire, ancient lich, Sigmund
-
-# Some races want all the chunks
-: if you.race() == "Ghoul" or you.race() == "Troll" or you.race() == "Kobold" then
-auto_butcher_max_chunks = 0
-: end

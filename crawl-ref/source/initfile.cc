@@ -164,6 +164,7 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(easy_door), true),
         new BoolGameOption(SIMPLE_NAME(warn_hatches), false),
         new BoolGameOption(SIMPLE_NAME(enable_recast_spell), true),
+        new BoolGameOption(SIMPLE_NAME(auto_butcher), true),
         new BoolGameOption(SIMPLE_NAME(auto_eat), true),
         new BoolGameOption(SIMPLE_NAME(auto_hide_spells), false),
         new BoolGameOption(SIMPLE_NAME(blink_brightens_background), false),
@@ -286,7 +287,6 @@ const vector<GameOption*> game_options::build_options_list()
         new IntGameOption(SIMPLE_NAME(level_map_cursor_step), 7, 1, 50),
         new IntGameOption(SIMPLE_NAME(dump_item_origin_price), -1, -1),
         new IntGameOption(SIMPLE_NAME(dump_message_count), 20),
-        new IntGameOption(SIMPLE_NAME(auto_butcher_max_chunks), 10, 0),
         new ListGameOption<text_pattern>(SIMPLE_NAME(confirm_action)),
         new ListGameOption<text_pattern>(SIMPLE_NAME(drop_filter)),
         new ListGameOption<text_pattern>(SIMPLE_NAME(note_monsters)),
@@ -1052,7 +1052,6 @@ void game_options::reset_options()
     autopickups.set(OBJ_FOOD);
 
     confirm_butcher        = confirm_butcher_type::normal;
-    auto_butcher           = HS_ENGORGED;
     easy_confirm           = easy_confirm_type::safe;
     allow_self_target      = confirm_prompt_type::prompt;
     skill_focus            = SKM_FOCUS_ON;
@@ -2689,25 +2688,6 @@ void game_options::read_option_line(const string &str, bool runscript)
             confirm_butcher = confirm_butcher_type::never;
         else if (field == "auto")
             confirm_butcher = confirm_butcher_type::normal;
-    }
-    else if (key == "auto_butcher")
-    {
-        if (field == "true" || field == "engorged")
-            auto_butcher = HS_ENGORGED;
-        else if (field == "very full")
-            auto_butcher = HS_VERY_FULL;
-        else if (field == "full")
-            auto_butcher = HS_FULL;
-        else if (field == "satiated")
-            auto_butcher = HS_SATIATED;
-        else if (field == "hungry")
-            auto_butcher = HS_HUNGRY;
-        else if (field == "very hungry")
-            auto_butcher = HS_VERY_HUNGRY;
-        else if (field == "near starving")
-            auto_butcher = HS_NEAR_STARVING;
-        else if (field == "false" || field == "starving")
-            auto_butcher = HS_STARVING;
     }
     else if (key == "lua_file" && runscript)
     {

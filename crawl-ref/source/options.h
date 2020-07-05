@@ -236,9 +236,7 @@ public:
     bool        warn_hatches;    // offer a y/n prompt when the player uses an escape hatch
     bool        enable_recast_spell; // Allow recasting spells with 'z' Enter.
     confirm_butcher_type confirm_butcher; // When to prompt for butchery
-    hunger_state_t auto_butcher; // auto-butcher corpses while travelling
-    int         auto_butcher_max_chunks; // if nonzero, only auto-butcher if player
-                                         // has fewer than this many chunks
+    bool        auto_butcher; // auto-butcher corpses while travelling
     bool        auto_eat; // allow eating while resting or travelling
     skill_focus_mode skill_focus; // is the focus skills available
     bool        auto_hide_spells; // hide new spells
