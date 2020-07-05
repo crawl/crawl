@@ -2689,13 +2689,6 @@ void melee_attack::mons_apply_attack_flavour()
         }
         break;
 
-    case AF_HUNGER:
-        if (defender->holiness() & MH_UNDEAD)
-            break;
-
-        defender->make_hungry(you.hunger / 4, false);
-        break;
-
     case AF_BLINK:
         // blinking can kill, delay the call
         if (one_chance_in(3))

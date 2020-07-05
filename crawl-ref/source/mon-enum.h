@@ -80,7 +80,9 @@ enum attack_flavour
     AF_DRAIN_XP,
     AF_ELEC,
     AF_FIRE,
+#if TAG_MAJOR_VERSION == 34
     AF_HUNGER,
+#endif
     AF_MUTATE,
     AF_POISON_PARALYSE,
     AF_POISON,

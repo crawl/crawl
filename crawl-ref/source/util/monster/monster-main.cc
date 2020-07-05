@@ -971,9 +971,6 @@ int main(int argc, char* argv[])
                 case AF_STICKY_FLAME:
                     monsterattacks += colour(LIGHTRED, "(napalm)");
                     break;
-                case AF_HUNGER:
-                    monsterattacks += colour(BLUE, "(hunger)");
-                    break;
                 case AF_MUTATE:
                     monsterattacks += colour(LIGHTGREEN, "(mutation)");
                     break;
