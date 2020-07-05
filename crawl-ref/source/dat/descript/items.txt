@@ -36,8 +36,7 @@ An amulet with no special properties.
 amulet of reflection
 
 An amulet which exerts a force that blocks some incoming attacks, and can even
-reflect any blocked ranged attacks back towards the attacker. In order to
-function, it must first attune itself to the wearer's body at full health.
+reflect any blocked ranged attacks back towards the attacker.
 %%%%
 amulet of regeneration
 
@@ -48,8 +47,7 @@ amulet of the acrobat
 
 An amulet that allows the user to tumble and roll to evade the blows of their
 enemies, but only while moving and waiting. While taking other actions the
-amulet conveys no benefits. In order to function, it must first attune itself
-to the wearer's body at full health.
+amulet conveys no benefits.
 %%%%
 animal skin
 

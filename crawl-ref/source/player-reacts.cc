@@ -840,29 +840,10 @@ static void _handle_emergency_flight()
     }
 }
 
-// Regen equipment and amulet of the acrobat only begins to function when full
-// health is reached while they are worn.
+// Regen equipment only begins to function when full health is reached.
 static void _update_equipment_attunement_by_health()
 {
-    if (you.hp != you.hp_max)
-        return;
-
-    if (!you.activated[EQ_AMULET] && you.wearing(EQ_AMULET, AMU_ACROBAT))
-    {
-        mprf("Your amulet attunes itself to your body. You feel like doing "
-             "cartwheels.");
-        you.activated.set(EQ_AMULET);
-    }
-
-    if (!you.activated[EQ_AMULET] && you.wearing(EQ_AMULET, AMU_REFLECTION))
-    {
-        mprf("Your amulet attunes itself to your body. You feel a shielding "
-             "aura gather around you.");
-        you.activated.set(EQ_AMULET);
-        you.redraw_armour_class = true;
-    }
-
-    if (you.get_mutation_level(MUT_NO_REGENERATION))
+    if (you.hp != you.hp_max || you.get_mutation_level(MUT_NO_REGENERATION))
         return;
 
     vector<string> eq_list;

@@ -745,13 +745,13 @@ static void _spirit_shield_message(bool unmeld)
 {
     if (!unmeld && you.spirit_shield() < 2)
     {
-        dec_mp(you.magic_points);
         mpr("You feel your power drawn to a protective spirit.");
 #if TAG_MAJOR_VERSION == 34
         if (you.species == SP_DEEP_DWARF
             && !(have_passive(passive_t::no_mp_regen)
                  || player_under_penance(GOD_PAKELLAS)))
         {
+            dec_mp(you.magic_points);
             mpr("Now linked to your health, your magic stops regenerating.");
         }
 #endif
@@ -1132,20 +1132,6 @@ static void _equip_regeneration_item(const item_def &item)
     return;
 }
 
-static void _equip_amulet_of_the_acrobat()
-{
-    if (you.hp == you.hp_max)
-    {
-        you.activated.set(EQ_AMULET);
-        mpr("You feel ready to tumble and roll out of harm's way.");
-    }
-    else
-    {
-        you.activated.set(EQ_AMULET, false);
-        mpr("Your injuries prevent the amulet from attuning itself.");
-    }
-}
-
 bool acrobat_boost_active()
 {
     return you.activated[EQ_AMULET]
@@ -1162,7 +1148,6 @@ static void _equip_amulet_of_mana_regeneration()
     else if (you.magic_points == you.max_magic_points)
     {
         you.props[MANA_REGEN_AMULET_ACTIVE] = 1;
-        mpr("The amulet hums as it attunes itself to your energized body.");
     }
     else
     {
@@ -1173,17 +1158,8 @@ static void _equip_amulet_of_mana_regeneration()
 
 static void _equip_amulet_of_reflection()
 {
-    if (you.hp == you.hp_max)
-    {
-        you.activated.set(EQ_AMULET);
-        you.redraw_armour_class = true;
-        mpr("You feel a shielding aura gather around you.");
-    }
-    else
-    {
-        you.activated.set(EQ_AMULET, false);
-        mpr("The amulet cannot attune itself to your injured body.");
-    }
+    you.redraw_armour_class = true;
+    mpr("You feel a shielding aura gather around you.");
 }
 
 static void _equip_jewellery_effect(item_def &item, bool unmeld,
@@ -1268,7 +1244,7 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
 
     case AMU_ACROBAT:
         if (!unmeld)
-            _equip_amulet_of_the_acrobat();
+            mpr("You feel ready to tumble and roll out of harm's way.");
         break;
 
     case AMU_MANA_REGENERATION:
