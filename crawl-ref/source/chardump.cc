@@ -916,7 +916,7 @@ static void _sdump_spells(dump_params &par)
 
         text += "You " + verb + " the following spells:\n\n";
 
-        text += " Your Spells              Type           Power        Failure   Level  Hunger" "\n";
+        text += " Your Spells              Type           Power        Failure   Level" "\n";
 
         for (int j = 0; j < 52; j++)
         {
@@ -957,7 +957,6 @@ static void _sdump_spells(dump_params &par)
 
                 spell_line += make_stringf("%-5d", spell_difficulty(spell));
 
-                spell_line += spell_hunger_string(spell);
                 spell_line += "\n";
 
                 text += spell_line;
@@ -975,7 +974,7 @@ static void _sdump_spells(dump_params &par)
     {
         verb = par.se? "contained" : "contains";
         text += "Your spell library " + verb + " the following spells:\n\n";
-        text += " Spells                   Type           Power        Failure   Level  Hunger" "\n";
+        text += " Spells                   Type           Power        Failure   Level" "\n";
 
         auto const library = get_sorted_spell_list(true, false);
 
@@ -1020,10 +1019,6 @@ static void _sdump_spells(dump_params &par)
 
             spell_line += make_stringf("%-5d", spell_difficulty(spell));
 
-            if (memorisable)
-                spell_line += spell_hunger_string(spell);
-            else
-                spell_line += "N/A";
             spell_line += "\n";
 
             text += spell_line;

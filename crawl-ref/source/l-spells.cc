@@ -186,17 +186,6 @@ LUAFN(l_spells_fail_severity)
     PLUARET(number, fail_severity(spell));
 }
 
-/*** The current hunger of the spell.
- * @tparam string name
- * @treturn int number of hunger bars
- * @function hunger
- */
-LUAFN(l_spells_hunger)
-{
-    spell_type spell = spell_by_name(luaL_checkstring(ls, 1), false);
-    PLUARET(number, hunger_bars(spell_hunger(spell)));
-}
-
 /*** The current spellpower (in bars).
  * @tparam string name
  * @treturn int
@@ -330,7 +319,6 @@ static const struct luaL_reg spells_clib[] =
     { "min_range"     , l_spells_min_range },
     { "fail"          , l_spells_fail },
     { "fail_severity" , l_spells_fail_severity },
-    { "hunger"        , l_spells_hunger },
     { "power"         , l_spells_power },
     { "max_power"     , l_spells_max_power },
     { "dir_or_target" , l_spells_dir_or_target },

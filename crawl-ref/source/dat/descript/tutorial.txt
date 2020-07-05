@@ -571,12 +571,6 @@ Mephitic Cloud covers an area in noxious fumes when cast, and you'll be able to
 see the area it affects as you target it. Try to catch multiple enemies in a
 single cloud in order to be more efficient with your magic.
 %%%%
-tutorial4 spell_hunger
-
-Spellcasting can make you really hungry. Spell hunger is higher for more
-difficult spells and can be reduced by high intelligence and by training the
-Spellcasting skill.
-%%%%
 tutorial4 forget_spell
 
 Gaining an experience level and raising your Spellcasting skill gives you spell

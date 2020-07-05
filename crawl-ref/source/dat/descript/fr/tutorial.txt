@@ -521,12 +521,6 @@ et vous pourrez voir la zone affectée pendant la visée. Essayez de prendre
 plusieurs ennemis dans un seul nuage pour optimiser l'utilisation de votre
 magie.
 %%%%
-tutorial4 spell_hunger
-
-Jeter des sorts peut vous affamer sérieusement. La faim liée aux sorts est plus
-importante pour les sorts difficiles mais elle peut être atténuée grâce à une
-Intelligence élevée et l'entraînement de la compétence de Magie.
-%%%%
 tutorial4 forget_spell
 
 Gagner un niveau d'expérience et augmenter votre compétence de Magie vous

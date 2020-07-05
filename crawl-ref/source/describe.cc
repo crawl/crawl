@@ -2962,8 +2962,6 @@ static string _player_spell_stats(const spell_type spell)
     description += spell_power_string(spell);
     description += "\nRange : ";
     description += spell_range_string(spell);
-    description += "\nHunger: ";
-    description += spell_hunger_string(spell);
     description += "\nNoise : ";
     description += spell_noise_string(spell);
     description += "\n";

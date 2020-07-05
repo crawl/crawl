@@ -519,12 +519,6 @@ Dämpfen und während du zielst wirst du in der Lage sein zu sehen welchen
 Bereich sie betrifft. Versuche mehrere Feinde in einer einzigen Wolke zu
 fangen, um mit deiner Magie effizienter zu sein.
 %%%%
-tutorial4 spell_hunger
-
-Zaubern kann dich wirklich hungrig hungrig machen. Der Zauberhunger ist höher
-für schwierigere Zauber und kann durch hohe Intelligenz und Ausbildung der
-Fertigkeit Zaubern reduziert werden.
-%%%%
 tutorial4 forget_spell
 
 Eine Stufe aufsteigen und das Erhöhen der Zaubern Fertigkeit geben weitere

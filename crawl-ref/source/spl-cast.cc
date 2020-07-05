@@ -153,7 +153,6 @@ static string _spell_extra_description(spell_type spell, bool viewing)
 
     desc << chop_string(spell_power_string(spell), 13)
          << chop_string(rangestring, 9)
-         << chop_string(spell_hunger_string(spell), 8)
          << chop_string(spell_noise_string(spell, 10), 14);
 
     desc << "</" << colour_to_str(highlight) <<">";
@@ -177,7 +176,7 @@ int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
         ToggleableMenuEntry* me =
             new ToggleableMenuEntry(
                 titlestring + "         Type                          Failure  Level",
-                titlestring + "         Power        Range    Hunger  Noise         ",
+                titlestring + "         Power        Range    Noise         ",
                 MEL_TITLE);
         spell_menu.set_title(me, true, true);
     }
@@ -820,16 +819,6 @@ bool cast_a_spell(bool check_range, spell_type spell)
         return false;
     }
 
-    if (you.undead_state() == US_ALIVE && !you_foodless()
-        && you.hunger <= spell_hunger(spell))
-    {
-        mpr("You don't have the energy to cast that spell.");
-        // included in default force_more_message
-        crawl_state.cancel_cmd_repeat();
-        crawl_state.zero_turns_taken();
-        return false;
-    }
-
     // This needs more work: there are spells which are hated but allowed if
     // they don't have a certain effect. You may use Poison Arrow on those
     // immune, use Mephitic Cloud to shield yourself from other clouds, and
@@ -851,7 +840,6 @@ bool cast_a_spell(bool check_range, spell_type spell)
         }
     }
 
-    const bool hungerless = hungerless_spells();
     you.last_cast_spell = spell;
     // Silently take MP before the spell.
     dec_mp(cost, true);
@@ -875,16 +863,6 @@ bool cast_a_spell(bool check_range, spell_type spell)
     }
 
     flush_mp();
-
-    if (!hungerless && you.undead_state() != US_UNDEAD)
-    {
-        const int spellh = spell_hunger(spell);
-        if (calc_hunger(spellh) > 0)
-        {
-            make_hungry(spellh, true, true);
-            learned_something_new(HINT_SPELL_HUNGER);
-        }
-    }
 
     you.turn_is_over = true;
     alert_nearby_monsters();
@@ -2092,11 +2070,6 @@ int failure_rate_to_int(int fail)
 string failure_rate_to_string(int fail)
 {
     return make_stringf("%d%%", failure_rate_to_int(fail));
-}
-
-string spell_hunger_string(spell_type spell)
-{
-    return hunger_cost_string(spell_hunger(spell));
 }
 
 string spell_failure_rate_string(spell_type spell)

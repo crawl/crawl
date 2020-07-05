@@ -131,11 +131,6 @@ tutorial4 start
 
 In deze les leer je hoe spreuken te leren en gebruiken.
 %%%%
-tutorial4 spell_hunger
-
-Tovenarij kan jou erg hongerig maken. Je krijgt meer honger van lastigere
-spreuken, maar hoge Intelligentie en Tovenarij vaardigheid helpt daartegen.
-%%%%
 tutorial4 tutorial_end
 
 Super, je bent een echte tovenaar nu! Om deze uitleg te sluiten ga je de trap

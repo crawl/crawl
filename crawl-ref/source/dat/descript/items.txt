@@ -639,8 +639,7 @@ A potion containing the essence of life.
 %%%%
 potion of brilliance
 
-A potion which increases the power of the drinker's spells and removes their
-metabolic cost.
+A potion which increases the power of the drinker's spells.
 %%%%
 potion of cancellation
 
@@ -1038,9 +1037,8 @@ by it.
 %%%%
 staff of energy
 
-A staff that allows its wielder to control magical energy. It allows the
-wielder to cast spells without gaining hunger, and to channel ambient magical
-energy to restore their reserves of magic.
+A staff that allows its wielder to channel ambient magical energy to restore
+their reserves of magic.
 %%%%
 staff of fire
 

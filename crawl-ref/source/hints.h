@@ -86,7 +86,9 @@ enum hints_event_type
     HINT_GOD_DISPLEASED,
     HINT_EXCOMMUNICATE,
     HINT_SPELL_MISCAST,
+#if TAG_MAJOR_VERSION == 34
     HINT_SPELL_HUNGER,
+#endif
     HINT_GLOWING,
     HINT_YOU_RESIST,
     // status changes

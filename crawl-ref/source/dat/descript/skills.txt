@@ -129,8 +129,7 @@ do so.
 Spellcasting
 
 Being skilled in Spellcasting slightly increases the success rate and spell
-power of all spells, along with increasing your magical reserves and reducing
-the effects of spell hunger.
+power of all spells, along with increasing your magical reserves.
 
 Training Spellcasting also gives you more spell slots to spend on new spells.
 %%%%

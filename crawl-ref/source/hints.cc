@@ -2567,21 +2567,6 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 "of MP and nutrition that a successfully cast spell would.";
         break;
     }
-            // XXX: remove this?
-    case HINT_SPELL_HUNGER:
-        text << "The spell you just cast made you hungrier; you can see how "
-                "hungry spells make you by "
-#ifdef USE_TILE
-                "examining your spells in the spell display, or by "
-#endif
-                "entering <w>%\?!</w> or <w>%I</w>. "
-                "The amount of nutrition consumed increases with the level of "
-                "the spell and decreases depending on your intelligence stat "
-                "and your Spellcasting skill. If both of these are high "
-                "enough a spell might even not cost you any nutrition at all.";
-        cmd.push_back(CMD_CAST_SPELL);
-        cmd.push_back(CMD_DISPLAY_SPELLS);
-        break;
 
     case HINT_GLOWING:
         text << "You've accumulated so much magical contamination that you're "

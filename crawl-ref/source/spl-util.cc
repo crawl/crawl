@@ -377,34 +377,6 @@ bool del_spell_from_memory(spell_type spell)
         return del_spell_from_memory_by_slot(i);
 }
 
-int spell_hunger(spell_type which_spell)
-{
-    if (hungerless_spells())
-        return 0;
-
-    const int level = spell_difficulty(which_spell);
-
-    const int basehunger[] = { 50, 100, 150, 250, 400, 550, 700, 850, 1000 };
-
-    int hunger;
-
-    if (level < 10 && level > 0)
-        hunger = basehunger[level-1];
-    else
-        hunger = (basehunger[0] * level * level) / 4;
-
-    hunger -= you.skill(SK_SPELLCASTING, you.intel());
-
-    if (you.duration[DUR_BRILLIANCE] > 0) {
-        hunger /= 2;
-    }
-
-    if (hunger < 0)
-        hunger = 0;
-
-    return hunger;
-}
-
 // Checks if the spell is an explosion that can be placed anywhere even without
 // an unobstructed beam path, such as fire storm.
 bool spell_is_direct_explosion(spell_type spell)
