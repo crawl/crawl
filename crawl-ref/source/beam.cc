@@ -4239,10 +4239,19 @@ void glaciate_freeze(monster* mon, killer_type englaciator,
                                 : mons_species(mon->type);
     const int hd = mon->get_experience_level();
 
-    simple_monster_message(*mon, " is frozen into a solid block of ice!");
+    bool goldify = have_passive(passive_t::goldify_corpses);
+
+    if (goldify)
+        simple_monster_message(*mon, " shatters and turns to gold!");
+    else
+        simple_monster_message(*mon, " is frozen into a solid block of ice!");
 
     // If the monster leaves a corpse when it dies, destroy the corpse.
     item_def* corpse = monster_die(*mon, englaciator, kindex);
+    // Unless it was turned into gold, in which case don't make an ice statue.
+    if (goldify)
+        return;
+
     if (corpse)
         destroy_item(corpse->index());
 
