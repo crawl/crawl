@@ -808,16 +808,7 @@ bool armour_prompt(const string & mesg, int *index, operation_types oper)
     return false;
 }
 
-/**
- * The number of turns it takes to put on or take off a given piece of armour.
- *
- * @param item      The armour in question.
- * @return          The number of turns it takes to don or doff the item.
- */
-static int armour_equip_delay(const item_def &/*item*/)
-{
-    return 5;
-}
+static const int ARMOUR_EQUIP_DELAY = 5;
 
 /**
  * Can you wear this item of armour currently?
@@ -1259,12 +1250,8 @@ bool wear_armour(int item)
     // NB we already made sure there was space for the item
     int item_slot = _get_item_slot_maybe_with_move(*to_wear);
 
-    const int delay = armour_equip_delay(*to_wear);
-    if (delay)
-    {
-        start_delay<ArmourOnDelay>(delay - (swapping ? 0 : 1),
-                                   you.inv[item_slot]);
-    }
+    start_delay<ArmourOnDelay>(ARMOUR_EQUIP_DELAY - (swapping ? 0 : 1),
+                               you.inv[item_slot]);
 
     return true;
 }
@@ -1348,8 +1335,7 @@ bool takeoff_armour(int item)
 
     you.turn_is_over = true;
 
-    const int delay = armour_equip_delay(invitem);
-    start_delay<ArmourOffDelay>(delay - 1, invitem);
+    start_delay<ArmourOffDelay>(ARMOUR_EQUIP_DELAY - 1, invitem);
 
     return true;
 }
