@@ -32,10 +32,8 @@ static const vector<spell_type> spellbook_templates[] =
 
 {   // Book of Frost
     SPELL_FREEZE,
-    SPELL_FROZEN_RAMPARTS,
     SPELL_THROW_FROST,
     SPELL_OZOCUBUS_ARMOUR,
-    SPELL_HAILSTORM,
     SPELL_THROW_ICICLE,
     SPELL_SUMMON_ICE_BEAST,
 },
@@ -394,7 +392,15 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_PETRIFY,
     SPELL_WILL_OF_EARTH,
     SPELL_WALL_MELTING
-}
+},
+
+{   // Book of Frost2
+    SPELL_FREEZE,
+    SPELL_FROZEN_RAMPARTS,
+    SPELL_OZOCUBUS_ARMOUR,
+    SPELL_HAILSTORM,
+    SPELL_SUMMON_ICE_BEAST,
+},
 };
 
 COMPILE_CHECK(ARRAYSZ(spellbook_templates) == 1 + MAX_FIXED_BOOK);

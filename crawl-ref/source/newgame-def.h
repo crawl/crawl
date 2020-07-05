@@ -16,7 +16,7 @@ struct newgame_def
     string filename;
     uint64_t seed;
     bool pregenerate;
-    int starting_pos;
+    int job_specific;
 
     // map name for sprint (or others in the future)
     // XXX: "random" means a random eligible map

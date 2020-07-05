@@ -284,7 +284,7 @@ static void _give_wanderer_book(skill_type skill)
         break;
 
     case SK_ICE_MAGIC:
-        book = BOOK_FROST;
+        book = random_choose(BOOK_FROST, BOOK_FROST2);
         break;
 
     case SK_AIR_MAGIC:

@@ -206,6 +206,11 @@ book of frost
 A book of magic spells, often used as an introduction to the elemental magics
 of Ice.
 %%%%
+book of frost2
+
+A book of magic spells, often used as an introduction to the elemental magics
+of Ice.
+%%%%
 book of geomancy
 
 A book containing basic spells involving the element of Earth.
