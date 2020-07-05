@@ -153,7 +153,7 @@ TAGS:    arrival no_monster_gen no_pool_fixup no_trap_gen
 ORIENT:  west
 KPROP:   M = no_tele_into
 NSUBST:  M = 2=E / * = M E:2
-KFEAT:   E = permanent known teleport trap
+KFEAT:   E = permanent teleport trap
 KFEAT:   MNOQ = shallow_water
 SHUFFLE: M/N/O/P/Q
 SUBST:   P = MNO
@@ -871,8 +871,7 @@ SUBST:   x : x c:1
   SUBST:   x = t
   SUBST:   1 : 2 T
 : end
-KFEAT:   A = abandoned_shop / stone_arch / known shaft trap / \
-         known teleport trap
+KFEAT:   A = abandoned_shop / stone_arch / shaft trap / teleport trap
 NSUBST:  A = A / x
 SUBST:   X = x
 SUBST:   ([ = .

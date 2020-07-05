@@ -879,7 +879,7 @@ MONS:    spriggan defender w:30 / titan w:30 / ancient lich w:30 / \
          draconian monk / draconian annihilator / draconian knight / \
          juggernaut w:20
 KMONS:   Z = draconian knight / draconian annihilator
-KFEAT:   z^ = known zot trap w:499 / floor w:1
+KFEAT:   z^ = zot trap w:499 / floor w:1
 KFEAT:   Z = enter_zot
 SHUFFLE: Y], {([>, HI / HI / IH, JK / JK / KJ
 SHUFFLE: NO / NO / ON, PQ / PQ / QP, RS / RS / SR, lm / lm / ml

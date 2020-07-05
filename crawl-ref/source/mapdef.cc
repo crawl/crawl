@@ -5972,8 +5972,6 @@ void keyed_mapspec::parse_features(const string &s)
 feature_spec keyed_mapspec::parse_trap(string s, int weight)
 {
     strip_tag(s, "trap");
-    // All traps are known, strip this tag for compatibility
-    strip_tag(s, "known");
 
     trim_string(s);
     lowercase(s);

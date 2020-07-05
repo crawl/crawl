@@ -1482,7 +1482,7 @@ TAGS: vaults_room
 NSUBST: s = 1:S / *:.
 KITEM: i = any
 KMONS: S = vault sentinel
-KFEAT: i = known alarm trap / .
+KFEAT: i = alarm trap / .
 MAP
 xxsxsxx
 xi...ix

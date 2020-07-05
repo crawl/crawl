@@ -549,7 +549,7 @@ NAME: wheals_swamp_sinkhole
 TAGS: extra no_monster_gen decor
 DEPTH: Swamp:1-2
 WEIGHT: 5
-KFEAT: ^ = known shaft trap
+KFEAT: ^ = shaft trap
 SUBST: u = Ww
 KPROP: wW^ = no_tele_into
 MAP
@@ -1039,7 +1039,7 @@ DEPTH:   Swamp, Zot, !Zot:$
 KITEM:   *| = % no_pickup w:2 / * no_pickup / | no_pickup
 KFEAT:   aA = stone_arch
 KFEAT:   B = shallow_water
-KFEAT:   Z = known zot trap
+KFEAT:   Z = zot trap
 : if you.in_branch("Swamp") then
 MONS:    swamp drake, hydra, swamp dragon
 KMONS:   A = swamp dragon

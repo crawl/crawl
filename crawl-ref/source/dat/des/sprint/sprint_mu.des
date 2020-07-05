@@ -1199,7 +1199,7 @@ KMONS: G = iron troll simulacrum hd:20
 KMONS: I = patrolling vault guard / patrolling orc knight / patrolling draconian knight /\
  patrolling deep elf knight
 KITEM: % = quad damage
-KFEAT: % = known zot trap
+KFEAT: % = zot trap
 KFEAT: J = deep_water
 SUBST: J = Jh
 KFEAT: h = deep_water

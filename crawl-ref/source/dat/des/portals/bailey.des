@@ -397,14 +397,14 @@ ITEM:   any good_item w:10 / nothing w:5
 : set_feature_name("granite_statue", "granite statue wielding a mighty axe")
 #
 # Yes, I want everyone to wake up.
-KFEAT: ~ : known alarm trap / floor
+KFEAT: ~ : alarm trap / floor
 #
 # There is only one way up. You have to pass near the axe-throwing kobolds
 # twice. This is intended. Teleportation traps ensure you won't get
 # stranded.
 NSUBST: s = T / .
 NSUBST: t = T / .
-KFEAT:  T = known permanent teleport trap
+KFEAT:  T = permanent teleport trap
 : bailey_setup(_G)
 MAP
      ccc
@@ -492,7 +492,7 @@ TAGS:   bailey_axe no_rotate no_item_gen no_monster_gen no_pool_fixup
 SUBST:  v : ccv
 ITEM:   any good_item
 KFEAT:  _ = altar_trog / altar_okawaru / altar_makhleb
-KFEAT:  T = known permanent teleport trap
+KFEAT:  ^ = permanent teleport trap
 #
 # Monsters defined in the header. Do not change order!
 : kobold_axe_returning(_G)
@@ -563,7 +563,7 @@ SUBST:   X = c, Y = +
 NSUBST:  C = 1:+ / *:c
 SUBST:   D = c
 #
-KFEAT:   ^ = known alarm trap
+KFEAT:   ^ = alarm trap
 SUBST:   W = w:2 .:1 W:1
 SUBST:   ? = c.
 SUBST:   N = nc
@@ -761,7 +761,7 @@ MONS:   orc knight
 SUBST:  2 = 23
 NSUBST: 4 = 1:4 / *:3
 SUBST:  W : W..
-KFEAT:  T = known permanent teleport trap
+KFEAT:  ^ = permanent teleport trap
 SUBST:  X = I G C
 KFEAT:  C = altar_beogh
 ITEM:   manual of armour / manual of fighting / manual of shields /\
@@ -1026,7 +1026,7 @@ KITEM:  g = any food
 KITEM:  | = scroll of acquirement ident:type
 KITEM:  $ = gold
 NSUBST: | = 1:| / *:$
-KFEAT:  ^ = known zot trap
+KFEAT:  ^ = zot trap
 KFEAT:  B = altar_okawaru
 NSUBST: ^ = 1:^ / *:.
 NSUBST: w = 5:4 / *:w

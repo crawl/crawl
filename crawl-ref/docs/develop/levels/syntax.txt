@@ -1247,11 +1247,6 @@ KFEAT:    G = C / needle trap / antique armour shop / altar_zin
           for shops, see the section on shop definitions at the end of this
           document.
 
-          If you want a trap to start out known to the player, add "known"
-          to the trap name:
-
-          KFEAT: A = known needle trap
-
           You can also place feature mimics using the same syntax as item
           mimics. For example this altar has a 1 in 10 chance of being
           turned into a mimic:

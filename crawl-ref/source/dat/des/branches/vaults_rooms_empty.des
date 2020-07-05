@@ -933,7 +933,7 @@ ENDMAP
 NAME:  vaults_dpeg_emergency_exit
 TAGS:  vaults_empty no_tele_into
 DEPTH: Vaults:1-3
-KFEAT: ^ = known shaft trap
+KFEAT: ^ = shaft trap
 MAP
 .....
 .mmm.

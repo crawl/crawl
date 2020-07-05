@@ -379,7 +379,7 @@ TAGS:   no_pool_fixup
 DEPTH:  Elf, Swamp, Shoals, Snake, Spider
 : ice_cave_portal(_G)
 MONS:   ice statue
-KFEAT:  ^ = known web trap
+KFEAT:  ^ = web trap
 : if you.in_branch("Swamp") then
 SUBST:  + = ., x = t
 : elseif you.in_branch("Shoals") then
@@ -847,7 +847,7 @@ KMONS:  3 = necromancer
 : end
 KITEM:  34 = any scroll q:3
 KITEM:  d` = any potion / any scroll / any weapon good_item / any armour good_item
-KFEAT:  ' = known alarm trap / floor w:40
+KFEAT:  ' = alarm trap / floor w:40
 : ice_cave_appearance(_G)
 : ice_cave_random_monster_list_undead_demon(_G)
 MAP

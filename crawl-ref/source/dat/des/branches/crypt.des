@@ -347,7 +347,7 @@ ENDMAP
 # It's been undisturbed for so long, cobwebs are starting to form.
 NAME:   grunt_crypt_arrival_webbed
 TAGS:   extra uniq_crypt_arrival no_monster_gen no_trap_gen no_item_gen
-KFEAT:  ^ = known web trap / w:20 floor
+KFEAT:  ^ = web trap / w:20 floor
 DEPTH:  Crypt:1
 WEIGHT: 30
 ORIENT: south

@@ -625,7 +625,7 @@ MONS:    reaper / hellion / tormentor / executioner w:2      / \
          bone dragon / lich / ancient champion               / \
          balrug w:2 / blizzard demon w:2 / shadow demon w:2  / \
          iron dragon w:2 / quicksilver dragon w:2
-KFEAT:   Z = known zot trap
+KFEAT:   Z = zot trap
 # Standard floor spawn equipment drops, not real loot.
 KITEM:   d = battleaxe no_pickup / great mace no_pickup      / \
              great sword no_pickup / glaive no_pickup        / \

@@ -194,7 +194,7 @@ TAGS:   no_monster_gen zot_entry layout_city
 NSUBST: O = 1:O / *:A
 SUBST:  ^ = ^..
 SUBST:  s = ccc+
-KFEAT:  ^ = known alarm trap
+KFEAT:  ^ = alarm trap
 FTILE:  "OADx = floor_marble
 COLOUR: " = magenta
 TILE:   x = wall_zot_magenta
@@ -1112,8 +1112,8 @@ KMONS:   7 = guardian mummy ; randart ring mail | randart scale mail | \
 KMONS:   2468 = killer klown
 KMONS:   _ = ghost moth
 KMONS:   90 = moth of wrath / butterfly w:30
-KFEAT:   0 = known zot trap
-KFEAT:   ^~ = known teleport trap / dispersal trap
+KFEAT:   0 = zot trap
+KFEAT:   ^~ = teleport trap / dispersal trap
 KFEAT:   _ = altar_xom
 KFEAT:   > = } mimic
 KFEAT:   m = iron_grate
@@ -1873,7 +1873,7 @@ TAGS:    extra transparent
 DEPTH:   Zot
 WEIGHT:  8
 KITEM:   % = % no_pickup
-KFEAT:   Z = known zot trap
+KFEAT:   Z = zot trap
 SHUFFLE: dD, eE, fF, gG, hH, dD / eE / fF / gG / hH
 SHUFFLE: cCbB / cCbB / bBcC, qQ / qQ / ZZ / wl / '' / ''
 SUBST:   defhH = X, DEF = ., g : X.., G : X.., ' = .
@@ -2003,7 +2003,7 @@ NAME:    hangedman_zot_decor_slant
 TAGS:    extra transparent
 DEPTH:   Zot
 WEIGHT:  8
-KFEAT:   zZ = known zot trap
+KFEAT:   zZ = zot trap
 KFEAT:   fF = floor
 SHUFFLE: BVfF / VBFf, BV / BV / BV / wl, bv / bv / cc, aAuU / aAuU / aAuU / uUaA
 SHUFFLE: AU / "", fF / fF / zz / '' / '', @! / !@ / ?? / ??
@@ -2042,7 +2042,7 @@ ENDMAP
 NAME:    hangedman_zot_decor_scrapings
 TAGS:    transparent extra
 DEPTH:   Zot
-KFEAT:   Z = known zot trap
+KFEAT:   Z = zot trap
 SHUFFLE: HIJKLM / HIJKLM / IHKJML
 SUBST:   HJL : xxcb, I : x..., K : x..., M : x...
 SUBST:   N : xcG.., O : xc..., P : xcG.., Z = ()G .:45 Z:25
@@ -2067,7 +2067,7 @@ ENDMAP
 NAME:    hangedman_zot_decor_tridents
 TAGS:    transparent extra
 DEPTH:   Zot
-KFEAT:   Z = known zot trap
+KFEAT:   Z = zot trap
 SHUFFLE: vb / xy / XY
 SUBST:   = = ()+Z .:60, - : ++., _ : +.., H : z., I : z., J : z.
 SUBST:   K : zzwl...., L : zzzwl.., M : zzwl...
@@ -2291,7 +2291,7 @@ NAME:    hangedman_zot_diagonal_lockstep
 TAGS:    transparent extra decor
 DEPTH:   Zot
 ITEM:    % no_pickup
-KFEAT:   Z = known zot trap
+KFEAT:   Z = zot trap
 SHUFFLE: ABCDEFG, defg / hijk / mnop / qrst, defg, hjik, mnop
 SUBST:   A : xbvcZ, B : xbvc, C : xxbvc, D : xxbvc, EFG = x
 SUBST:   d : xxZ, h = x, e : xx., i : xx., f : x.., j : x.., m : x..
@@ -2343,7 +2343,7 @@ ITEM:    stone q:1 no_pickup, large rock q:1 no_pickup
 ITEM:    sling bullet q:1 no_pickup, tin of tremorstones no_pickup
 # Altars obliquely refer to those temple maps.
 KFEAT:   D = altar_lugonu / altar_jiyva / altar_beogh w:5 / C w:20
-KFEAT:   ~ = known zot trap
+KFEAT:   ~ = zot trap
 SHUFFLE: Xy / Xy / Xy / Aa
 NSUBST:  A = 1:. / 19 = X:9 .:1 / *:X
 SUBST:   X : X Y Z:4, X = bbbbvnc, Y = bvvvvnc, Z = bbvnncc

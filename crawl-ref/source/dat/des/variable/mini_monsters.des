@@ -265,7 +265,7 @@ TAGS:  no_rotate uniq_anthill
 DEPTH: D:8-13, Lair:2-, Spider
 MONS:  patrolling worker ant, soldier ant
 MONS:  entropy weaver, patrolling queen ant
-KFEAT: ^ = known alarm trap
+KFEAT: ^ = alarm trap
 : if (you.branch() == "Lair" and you.absdepth() < 14)
 :  or you.absdepth() < 12 then
 SUBST: 1 = 11., 2 = 221, 3 = ., ^ = ^.
@@ -937,9 +937,9 @@ KMONS:  8 = worker ant
 KMONS:  9 = hound / jackal
 KMONS:  & = bush
 KFEAT:  78 = W
-KFEAT:  ' = known shaft trap
-KFEAT:  ~ = known alarm trap / floor
-KFEAT:  ` = known web trap / floor w:30
+KFEAT:  ' = shaft trap
+KFEAT:  ~ = alarm trap / floor
+KFEAT:  ` = web trap / floor w:30
 : if you.absdepth() < 11 then
 KFEAT:  ? = altar_fedhas
 SUBST:  m : 1twx
@@ -988,8 +988,8 @@ KMONS:  8 = worker ant
 KMONS:  9 = hound / jackal band
 KMONS:  & = bush
 KFEAT:  78 = W
-KFEAT:  ' = known shaft trap
-KFEAT:  ` = known web trap / floor w:60
+KFEAT:  ' = shaft trap
+KFEAT:  ` = web trap / floor w:60
 : if you.absdepth() < 11 then
 KFEAT:  ? = altar_fedhas
 SUBST:  m : 1twx
@@ -1520,7 +1520,7 @@ ITEM:    randbook numspells:2 title:Plaster_Cramp disc:earth
 ITEM:    randbook numspells:2 title:Axaxaxas_mlö
 ITEM:    randbook numspells:3 title:Forking_Paths owner:Ts'ui_Pên disc:hexes disc2:charms
 ITEM:    randbook numspells:2 title:Sand
-KFEAT:   ^ : known shaft trap
+KFEAT:   ^ : shaft trap
 SHUFFLE: defg, efghij, bm, bm / ++
 MAP
    xxx@xxx     xxx@xxx
@@ -2110,7 +2110,7 @@ MONS: jackal, gnoll
 : else
 MONS: hound, gnoll
 : end
-KFEAT: S = known shaft trap
+KFEAT: S = shaft trap
 MAP
 ...@...
 ..P.P..
@@ -3161,7 +3161,7 @@ KITEM:   dT = any weapon good_item ego:electrocution ident:type, \
               lightning rod
 KFEAT:   E = deep_water
 KFEAT:   d = shallow_water
-KFEAT:   T = known permanent teleport trap / dispersal trap
+KFEAT:   T = permanent teleport trap / dispersal trap
 MARKER:  T = lua:fog_machine { cloud_type = "rain", pow_max = 2, \
                  delay_min = 10, delay_max = 60, size = 4, walk_dist = 2 }
 SHUFFLE: ab, {( / <<
@@ -3491,8 +3491,8 @@ KMASK: 89 = opaque
 KMONS: 8 = 8
 KMONS: 9 = 9
 KITEM: 89 = % / * / w:1 |
-KFEAT: X = known permanent teleport trap / dispersal trap
-KFEAT: Z : known permanent teleport trap / w:30 x
+KFEAT: X = permanent teleport trap / dispersal trap
+KFEAT: Z : permanent teleport trap / w:30 x
 SUBST: Y = 89, x : xcvb
 MAP
 ............
@@ -3766,8 +3766,8 @@ DEPTH:   D, Depths, Orc, Elf, Crypt, Snake, Shoals, Geh, Coc, Dis, Tar, Zot
 WEIGHT:  10 (D), 1 (Geh, Coc, Dis, Tar, Zot), 4
 KFEAT:   A = stone_arch
 KFEAT:   D = any shop
-KFEAT:   ^ : known teleport trap / known shaft trap
-KFEAT:   Z = known zot trap
+KFEAT:   ^ : teleport trap / shaft trap
+KFEAT:   Z = zot trap
 SUBST:   A : C:20 D:20 ATVY^{[(<>, b : c:30 G:20 bvwtdGG123, 0 : 0:3 9:2 ':1
 SUBST:   .' : .:99 W:1, [ : [], ( : ()
 NSUBST:  { = 1:{ / 1:}, [ = 1:[ / 1:(, ] = 1:[ / 1:], ( = 1:] / 1:), ) = 1:( / 1:)
@@ -4559,8 +4559,8 @@ NAME:   grunt_tough_drop
 TAGS:   no_monster_gen no_trap_gen transparent
 DEPTH:  D:4-, Depths
 KMASK:  ^809 = opaque
-KFEAT:  ^ = known permanent teleport trap
-KFEAT:  _ = known alarm trap
+KFEAT:  ^ = permanent teleport trap
+KFEAT:  _ = alarm trap
 KFEAT:  a = iron_grate
 KPROP:  8^ = no_tele_into
 : if you.absdepth() < 9 then
@@ -5626,7 +5626,7 @@ DEPTH:   Geh:2-, !Geh:$, Coc:2-, !Coc:$, Tar:2-, !Tar:$, Dis:2-, !Dis:$
 WEIGHT:  5
 # Specific allotment of monsters, terrain, and items for this small box.
 # Monsters are in three tiers: generic undead, specific fodder, bosses.
-# Terrain includes known zot traps, and per-hell clouds, liquid, statues.
+# Terrain includes zot traps, and per-hell clouds, liquid, statues.
 # Items include generic hellspawn weapon drops and free skeletons.
 NSUBST:  . = 2:0 / 1:9 / 2:8 / 4 = 9:3 0:1 / 1 = 8:6 / 7:1 / *:.
 NSUBST:  . = 1:* / 1:d / 6 = *:2 d:3 / *:.
@@ -5637,7 +5637,7 @@ KITEM:   * = battleaxe no_pickup / great mace no_pickup / \
              scythe good_item no_pickup w:5 / demon whip no_pickup w:5 / \
              demon blade no_pickup w:5 / demon trident no_pickup w:5
 : dgn.delayed_decay(_G, 'd', 'human skeleton')
-KFEAT:   ^ = known zot trap
+KFEAT:   ^ = zot trap
 : if you.in_branch("Geh") then
 KMONS:   9 = sun demon / smoke demon / hell knight / \
              red devil w:5 / efreet w:5

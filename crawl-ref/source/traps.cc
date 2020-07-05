@@ -507,7 +507,7 @@ void trap_def::trigger(actor& triggerer)
         && mons_intel(*m) >= I_HUMAN;
 
     // Smarter monsters and those native to the level will simply
-    // side-step known shafts. Unless they are already looking for
+    // side-step shafts. Unless they are already looking for
     // an exit, of course.
     if (type == TRAP_SHAFT
         && m
@@ -1128,11 +1128,11 @@ item_def trap_def::generate_trap_item()
 }
 
 // Shoot a single piece of ammo at the relevant actor.
-void trap_def::shoot_ammo(actor& act, bool was_known)
+void trap_def::shoot_ammo(actor& act, bool trig_smart)
 {
     if (ammo_qty <= 0)
     {
-        if (was_known && act.is_player())
+        if (trig_smart && act.is_player())
             mpr("The trap is out of ammunition!");
         else if (player_can_hear(pos) && you.see_cell(pos))
             mpr("You hear a soft click.");
@@ -1143,7 +1143,7 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
 
     if (act.is_player())
     {
-        if (one_chance_in(5) || was_known && !one_chance_in(4))
+        if (one_chance_in(5) || trig_smart && !one_chance_in(4))
         {
             mprf("You avoid triggering %s.", name(DESC_A).c_str());
             return;
@@ -1151,7 +1151,7 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
     }
     else if (one_chance_in(5))
     {
-        if (was_known && you.see_cell(pos) && you.can_see(act))
+        if (trig_smart && you.see_cell(pos) && you.can_see(act))
         {
             mprf("%s avoids triggering %s.", act.name(DESC_THE).c_str(),
                  name(DESC_A).c_str());

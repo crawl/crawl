@@ -408,7 +408,7 @@ TAGS:    ziggurat_pillar centered generate_awake unrand no_exits
 DEPTH:   Zig:10-
 WEIGHT:  5
 MONS:    lost soul, rakshasa
-KFEAT:   ~ = known permanent teleport trap
+KFEAT:   ~ = permanent teleport trap
 SHUFFLE: xm / cn
 SUBST:   9 : 00., c : bcv
 KFEAT:   a = iron_grate

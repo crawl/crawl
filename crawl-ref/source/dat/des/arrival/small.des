@@ -144,7 +144,7 @@ ORIENT:  northwest
 SUBST:   { = {:30 .
 ITEM:    q:1 chunk, skeleton, corpse
 SUBST:   Y = A.
-KFEAT:   A = known shaft trap
+KFEAT:   A = shaft trap
 SUBST:   ` = df `:60
 SUBST:   . = ' .:120
 SUBST:   ` = ''., V = Xx, U = Xxxx, x = X x:60
@@ -695,7 +695,7 @@ NAME:    elethiomel_arrival_shortcut
 TAGS:    arrival
 ORIENT:  float
 SHUFFLE: XY/AB
-KFEAT:   X = known permanent teleport trap
+KFEAT:   X = permanent teleport trap
 SUBST:   Y=x, A=., B=+
 MAP
    xxxx@xxxxxxx.@.x
@@ -2461,7 +2461,7 @@ ENDMAP
 
 ##############################################################
 # This map provides no space to run around/away, so there is
-# either some staircase or a known shaft.
+# either some staircase or a shaft.
 NAME:   minmay_arrival_hallway
 TAGS:   arrival no_monster_gen
 ORIENT: float
@@ -2469,7 +2469,7 @@ SUBST:  x : x:10 c:2 v:1
 SUBST:  a : ab
 NSUBST: a = 2:> / *:.
 NSUBST: b = 1:b / 1:b. / *:.
-KFEAT:  b = known shaft trap
+KFEAT:  b = shaft trap
 SUBST:  G : G T t
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxx

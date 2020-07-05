@@ -2292,7 +2292,7 @@ DEPTH:   Depths, !Depths:$
 WEIGHT:  3
 MONS:    generate_awake floating eye, eye of devastation, glowing orange brain
 MONS:    generate_awake golden eye, slime creature, jelly
-KFEAT:   > = known shaft trap
+KFEAT:   > = shaft trap
 KFEAT:   n = iron_grate
 KMASK:   ' = !no_monster_gen
 KMASK:   ' = !no_item_gen
@@ -2780,7 +2780,7 @@ ORIENT: float
 KITEM:  $ = amulet_of_vitality / any good_item
 KITEM:  12345d = gold / any / nothing
 KITEM:  67M = superb_item / any
-KFEAT:  ~ = known zot trap
+KFEAT:  ~ = zot trap
 KMONS:  1 = mummy
 KMONS:  25 = guardian mummy
 KMONS:  36 = mummy priest
@@ -7661,7 +7661,7 @@ ORIENT: float
 TAGS:   no_monster_gen
 DEPTH:  D:5-10
 MONS:   steam dragon, fungus
-KFEAT:  ^ = known shaft trap
+KFEAT:  ^ = shaft trap
 SUBST:  p = .....^22222wwwww
 MAP
    xxxxx
@@ -9045,7 +9045,7 @@ ITEM:    any randart jewellery
 SHUFFLE: FGHI / JKLM
 NSUBST:  D = ^ / ., E = ^ / ., I = . / "
 SUBST:   FGH = ., JKLM = ", ' = ^., " = ^^., d = dd$
-KFEAT:   ^ = known zot trap
+KFEAT:   ^ = zot trap
 MARKER:  P = lua:transp_loc("its_a_trap_entry")
 MARKER:  Q = lua:transp_dest_loc("its_a_trap_entry")
 MARKER:  R = lua:transp_loc("its_a_trap_exit")

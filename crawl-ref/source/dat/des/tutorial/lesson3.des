@@ -106,7 +106,7 @@ NAME:    tutorial_lesson3_level2
 TAGS:    no_rotate no_monster_gen no_item_gen no_hmirror no_vmirror no_trap_gen no_pool_fixup tutorial_lesson3
 PLACE:   D:2
 ORIENT:  encompass
-KFEAT:   ^ = known pressure plate trap
+KFEAT:   ^ = pressure plate trap
 {{
  local tm = TriggerableFunction:new{func="callback.tutorial_trap",
               repeated=true,

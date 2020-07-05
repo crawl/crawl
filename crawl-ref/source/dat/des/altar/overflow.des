@@ -1411,7 +1411,7 @@ TAGS:   overflow_altar_nemelex_xobeh transparent
 TAGS:   no_rotate no_vmirror no_monster_gen no_item_gen
 DEPTH:  D:2-9
 KFEAT:  _ = altar_nemelex_xobeh
-KFEAT:  o = known shaft trap
+KFEAT:  o = shaft trap
 NSUBST: ' = 6:o / *:.
 TILE:   x = wall_pebble_darkgray
 MAP
@@ -1645,7 +1645,7 @@ KFEAT:  _ = altar_qazlal
 KPROP:  c = no_tele_into
 SUBST:  c = cccl^.
 SUBST:  - = ..l^
-KFEAT:  ^ = known shaft trap
+KFEAT:  ^ = shaft trap
 KITEM:  . = nothing w:189 / stone / large rock q:1 w:1
 KFEAT:  . = .
 : interest_check(_G)
@@ -1815,7 +1815,7 @@ DEPTH: D:2-
 NSUBST: r = 3:^ / 1:^p / 7:p / 2:p. / *:., i = 1:^^p. / 2:p / *:., \
         A = . / xxp / x, B = . / xxp / x, C = xxp / .
 KFEAT: _ = altar_ru
-KFEAT: ^ = known web trap
+KFEAT: ^ = web trap
 KMONS: p = plant / fungus w:3
 MAP
 xxxxxxx
@@ -2109,7 +2109,7 @@ MONS:   iguana / worker ant
 NSUBST: ' = 3:2 / *:.
 KPROP:  1y" = bloody
 KFEAT:  _ = altar_trog
-KFEAT:  ^ = known shaft trap
+KFEAT:  ^ = shaft trap
 KFEAT:  m = iron_grate
 SUBST:  y = x
 SUBST:  " = .
@@ -2302,7 +2302,7 @@ MONS:   rakshasa ; flail ego:chaos | long sword ego:chaos | trident ego:chaos
 :  if you.depth() == dgn.br_depth(you.branch()) then
 KFEAT:  ~ = teleport trap w:20 / alarm trap w:3 / dispersal trap
 :  else
-KFEAT:  ~ = known shaft trap / teleport trap / alarm trap w:3 / dispersal trap
+KFEAT:  ~ = shaft trap / teleport trap / alarm trap w:3 / dispersal trap
 :  end
 # Previously on raw average 5.17 M glyphs.
 NSUBST: ' = 1:_ / *:.
@@ -2335,7 +2335,7 @@ TAGS:    temple_overflow_1 temple_overflow_xom uniq_altar_xom
 TAGS:    transparent
 KFEAT:   _ = altar_xom
 NSUBST:  T = . / T
-KFEAT:   T = known teleport trap
+KFEAT:   T = teleport trap
 MAP
 .....
 .TTT.
@@ -2409,7 +2409,7 @@ NSUBST:  . = 2:T / .
 SUBST:   . = lWwtm_~......
 KFEAT:   _ = altar_xom
 NSUBST:  T = 3:T / .
-KFEAT:   T = known teleport trap
+KFEAT:   T = teleport trap
 KFEAT:   ~ = shaft trap / alarm trap / teleport trap / dispersal trap
 : interest_check(_G)
 MAP
@@ -2430,7 +2430,7 @@ NAME:   led_xom_imps
 DEPTH:  D:3-5
 TAGS:   temple_overflow_1 temple_overflow_xom uniq_altar_xom
 KFEAT:  _ = altar_xom
-KFEAT:  T = known teleport trap / dispersal trap
+KFEAT:  T = teleport trap / dispersal trap
 NSUBST: I = 1:1 / 3:2
 MONS: crimson imp ; dagger ego:chaos ident:type, crimson imp ; nothing
 MAP
@@ -2571,7 +2571,7 @@ NAME:   yredelemnul_forgotten_temple_becter
 TAGS:   temple_overflow_1 temple_overflow_yredelemnul no_monster_gen no_item_gen
 DEPTH:  D:2-9
 KFEAT:  _ = altar_yredelemnul
-KFEAT:  . = known web trap / .
+KFEAT:  . = web trap / .
 KMONS:  _ = spectral orc
 MAP
 xxxxxxxxx
@@ -3261,7 +3261,7 @@ KFEAT:  O = altar_qazlal
 KPROP:  12Ll = no_tele_into
 SUBST:  L = ll^.
 SUBST:  l = cll.
-KFEAT:  ^ = known shaft trap
+KFEAT:  ^ = shaft trap
 MAP
  222.@.LLL
 21112.LlllL
