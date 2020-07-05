@@ -779,7 +779,7 @@ void EquipOnDelay::finish()
             remove_ice_armour();
         }
     }
-    
+
     equip_item(eq_slot, equip.link);
 
     check_item_hint(equip, old_talents);

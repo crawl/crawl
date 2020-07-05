@@ -1146,9 +1146,7 @@ static void _equip_amulet_of_mana_regeneration()
     if (!player_regenerates_mp())
         mpr("The amulet feels cold and inert.");
     else if (you.magic_points == you.max_magic_points)
-    {
         you.props[MANA_REGEN_AMULET_ACTIVE] = 1;
-    }
     else
     {
         mpr("The amulet cannot attune itself to your exhausted body.");
