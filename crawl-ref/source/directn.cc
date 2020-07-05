@@ -53,6 +53,7 @@
 #include "terrain.h"
 #ifdef USE_TILE
  #include "tileview.h"
+ #include "tile-flags.h"
 #endif
 #include "traps.h"
 #include "travel.h"
@@ -379,10 +380,9 @@ static void _draw_ray_glyph(const coord_def &pos, int colour,
         glych = mons_char(you.symbol);
         colour = mcol;
     }
-    const coord_def vp = grid2view(pos);
-    cgotoxy(vp.x, vp.y, GOTO_DNGN);
-    textcolour(real_colour(colour));
-    putwch(glych);
+    view_add_glyph_overlay(pos,
+                           {static_cast<char32_t>(glych),
+                            static_cast<unsigned short>(real_colour(colour))});
 }
 #endif
 
@@ -1042,11 +1042,25 @@ void direction_chooser::set_target(const coord_def& new_target)
     moves.target = new_target;
 }
 
+static tileidx_t tileidx_aff_type(aff_type aff)
+{
+    if (aff < AFF_YES)
+        return TILE_RAY_OUT_OF_RANGE;
+    else if (aff == AFF_YES)
+        return TILE_RAY;
+    else if (aff == AFF_LANDING)
+        return TILE_LANDING;
+    else if (aff == AFF_MULTIPLE)
+        return TILE_RAY_MULTI;
+    else
+        return 0;
+}
+
 static void _draw_ray_cell(coord_def p, coord_def target, aff_type aff)
 {
     UNUSED(target);
 #ifdef USE_TILE
-    tile_place_ray(p, aff);
+    view_add_tile_overlay(p, tileidx_aff_type(aff));
 #endif
 #ifndef USE_TILE_LOCAL
     int bcol = BLACK;
@@ -1070,27 +1084,21 @@ static void _draw_ray_cell(coord_def p, coord_def target, aff_type aff)
 
 void direction_chooser::draw_beam()
 {
+    // Clear the old beam if necessary.
+    view_clear_overlays();
+
     if (!show_beam)
     {
-        viewwindow(
-#ifndef USE_TILE
-            false
-#endif
-            );
+        viewwindow(false);
         return;
     }
-
-    // Clear the old beam if necessary.
-    viewwindow(false);
 
     // Use the new API if implemented.
     if (hitfunc)
     {
         if (!hitfunc->set_aim(target()))
         {
-#ifdef USE_TILE
-            viewwindow(true, true);
-#endif
+            viewwindow(false);
             return;
         }
         const los_type los = hitfunc->can_affect_unseen()
@@ -1099,19 +1107,15 @@ void direction_chooser::draw_beam()
             if (aff_type aff = hitfunc->is_affected(*ri))
                 _draw_ray_cell(*ri, target(), aff);
 
-#ifdef USE_TILE
-        viewwindow(true, true);
-#endif
+        viewwindow(false);
         return;
     }
 
     // If we don't have a new beam to show, we're done.
     if (!have_beam)
     {
-#ifdef USE_TILE
-        // Clear the old beam if we're not drawing anything else.
-        viewwindow(true, true);
-#endif
+        view_clear_overlays();
+        viewwindow(false);
         return;
     }
 
@@ -1133,7 +1137,7 @@ void direction_chooser::draw_beam()
 
         const bool inrange = in_range(p);
 #ifdef USE_TILE
-        tile_place_ray(p, inrange ? AFF_YES : AFF_NO);
+        view_add_tile_overlay(p, inrange ? TILE_RAY : TILE_RAY_OUT_OF_RANGE);
 #endif
 #ifndef USE_TILE_LOCAL
         const int bcol = inrange ? MAGENTA : DARKGREY;
@@ -1141,12 +1145,13 @@ void direction_chooser::draw_beam()
 #endif
     }
     textcolour(LIGHTGREY);
-#ifdef USE_TILE
-    tile_place_ray(target(), in_range(ray.pos()) ? AFF_YES : AFF_NO);
 
-    // In tiles, we need to refresh the window to get the beam drawn.
-    viewwindow(true, true);
+    // Only draw the ray over the target on tiles.
+#ifdef USE_TILE
+    view_add_tile_overlay(target(), in_range(ray.pos()) ? TILE_RAY : TILE_RAY_OUT_OF_RANGE);
 #endif
+
+    viewwindow(false);
 }
 
 bool direction_chooser::in_range(const coord_def& p) const

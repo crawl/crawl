@@ -1070,49 +1070,6 @@ static void _tile_place_cloud(const coord_def &gc, const cloud_info &cl)
         env.tile_bk_cloud(gc) = tileidx_cloud(cl);
 }
 
-unsigned int num_tile_rays = 0;
-struct tile_ray
-{
-    coord_def ep;
-    aff_type in_range;
-};
-// Allow the rays to fill the whole visible area if necessary. The size is
-// about 4/pi times larger than it needs to be, but this way supports squarelos
-// as well.
-FixedVector<tile_ray, ENV_SHOW_DIAMETER * ENV_SHOW_DIAMETER> tile_ray_vec;
-
-void tile_place_ray(const coord_def &gc, aff_type in_range)
-{
-    // Record rays for later. The curses version just applies
-    // rays directly to the screen. The tiles version doesn't have
-    // (nor want) such direct access. So, it batches up all of the
-    // rays and applies them in viewwindow(...).
-    ASSERT(num_tile_rays < tile_ray_vec.size() - 1);
-    tile_ray_vec[num_tile_rays].in_range = in_range;
-    tile_ray_vec[num_tile_rays++].ep = grid2show(gc);
-}
-
-void tile_draw_rays(bool reset_count)
-{
-    tileidx_t flag = 0;
-
-    for (unsigned int i = 0; i < num_tile_rays; i++)
-    {
-        if (tile_ray_vec[i].in_range < AFF_YES)
-            flag = TILE_FLAG_RAY_OOR;
-        else if (tile_ray_vec[i].in_range == AFF_YES)
-            flag = TILE_FLAG_RAY;
-        else if (tile_ray_vec[i].in_range == AFF_LANDING)
-            flag = TILE_FLAG_LANDING;
-        else if (tile_ray_vec[i].in_range == AFF_MULTIPLE)
-            flag = TILE_FLAG_RAY_MULTI;
-        env.tile_bg(tile_ray_vec[i].ep) |= flag;
-    }
-
-    if (reset_count)
-        num_tile_rays = 0;
-}
-
 void tile_draw_map_cell(const coord_def& gc, bool foreground_only)
 {
     if (!foreground_only)

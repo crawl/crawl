@@ -1325,8 +1325,6 @@ static bool _viewwindow_should_render()
     return !run_dont_draw;
 }
 
-void _view_clear_overlays();
-
 /**
  * Draws the main window using the character set returned
  * by get_show_glyph().
@@ -1398,10 +1396,9 @@ void viewwindow(bool show_updates, bool tiles_only, animation *a)
 
 #ifdef USE_TILE
             tile_draw_floor();
-            tile_draw_rays(true);
             tile_draw_map_cells();
 #endif
-            _view_clear_overlays();
+            view_clear_overlays();
         }
 
         if (show_updates)
@@ -1467,7 +1464,7 @@ void view_add_glyph_overlay(const coord_def &gc, cglyph_t glyph)
 }
 #endif
 
-void _view_clear_overlays()
+void view_clear_overlays()
 {
 #ifdef USE_TILE
     tile_overlays.clear();

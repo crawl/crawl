@@ -48,8 +48,6 @@ void tile_draw_map_cells();
 void tile_draw_floor();
 void tile_reset_fg(const coord_def &gc);
 void tile_reset_feat(const coord_def &gc);
-void tile_place_ray(const coord_def &gc, aff_type in_range);
-void tile_draw_rays(bool reset_count);
 void tile_draw_map_cell(const coord_def &gc, bool foreground_only = false);
 void tile_wizmap_terrain(const coord_def &gc);
 

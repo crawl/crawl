@@ -68,6 +68,7 @@ void view_add_tile_overlay(const coord_def &gc, tileidx_t tile);
 #ifndef USE_TILE_LOCAL
 void view_add_glyph_overlay(const coord_def &gc, cglyph_t glyph);
 #endif
+void view_clear_overlays();
 
 void run_animation(animation_type anim, use_animation_type type,
                    bool cleanup = true);
