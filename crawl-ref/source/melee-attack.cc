@@ -617,13 +617,7 @@ bool melee_attack::handle_phase_aux()
  */
 static void _hydra_devour(monster &victim)
 {
-    // will eating this actually fill the player up?
-    const bool filling = !have_passive(passive_t::goldify_corpses)
-                          && you.get_mutation_level(MUT_HERBIVOROUS, false) == 0
-                          && you.hunger_state < HS_ENGORGED;
-
-    mprf("You %sdevour %s!",
-         filling ? "hungrily " : "",
+    mprf("You devour %s!",
          victim.name(DESC_THE).c_str());
 
     // give a clearer message for eating invisible things
@@ -638,14 +632,6 @@ static void _hydra_devour(monster &victim)
     }
     if (victim.has_ench(ENCH_STICKY_FLAME))
         mprf("Spicy!");
-
-    // nutrition (maybe)
-    if (filling)
-    {
-        const int equiv_chunks =
-            1 + random2(max_corpse_chunks(victim.type));
-        lessen_hunger(CHUNK_BASE_NUTRITION * equiv_chunks, false);
-    }
 
     // healing
     if (!you.duration[DUR_DEATHS_DOOR])

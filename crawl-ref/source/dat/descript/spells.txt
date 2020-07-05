@@ -731,7 +731,7 @@ creatures.
 Hydra Form spell
 
 Transforms the caster into an amphibious, many-headed hydra for a brief
-duration. Its multiple heads strike in all directions. Edible foes slain by the
+duration. Its multiple heads strike in all directions. Foes slain by the
 gnashing teeth are instantly devoured, reinvigorating the caster in their
 reptilian rampage. The caster gains innate armour and increased health, and
 becomes resistant to poison.
