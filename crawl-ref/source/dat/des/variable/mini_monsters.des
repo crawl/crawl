@@ -2501,8 +2501,8 @@ ENDMAP
 NAME:   hangedman_tell_no_tales
 DEPTH:  D:9-, !D:$
 TAGS:   no_monster_gen no_item_gen patrolling
-MONS:   spriggan skeleton / centaur skeleton
-MONS:   troll skeleton / hungry ghost
+MONS:   spriggan skeleton
+MONS:   troll skeleton
 KMONS:  A = unseen horror
 ITEM:   ration q:1 w:15 / nothing
 SUBST:  D : DDDDE

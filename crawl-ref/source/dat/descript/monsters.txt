@@ -1384,11 +1384,6 @@ human
 An uppity sort of surface-dwelling, hairless ape. Dwarves think of them as
 fragile, elves think of them as clumsy, and monsters think of them as tasty.
 %%%%
-hungry ghost
-
-The undead form of someone who died of starvation. It drains sustenance from
-the bodies of its victims, hoping to inflict its own miserable fate on others.
-%%%%
 hydra
 
 A great and nightmarish lacertilian beast. It has many heads, and the potential

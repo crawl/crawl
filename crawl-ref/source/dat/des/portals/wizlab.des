@@ -1251,7 +1251,7 @@ MARKER:     t = lua:props_marker {veto_shatter="veto", \
                                   veto_tornado="veto" }
 :           wizlab_setup(_G)
 :           set_border_fill_type("tree")
-:           set_random_mon_list([[shadow w:6 / flayed ghost w:2 / hungry ghost w:2 / ]]
+:           set_random_mon_list([[shadow w:6 / flayed ghost w:2 / wraith w:2 / ]]
 :                            .. [[monstrous demonspawn / deep troll / ]]
 :                            .. [[grey draconian monk w:6 / ]])
 :           set_feature_name("tree", "autumnal tree")

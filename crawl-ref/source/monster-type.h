@@ -678,7 +678,9 @@ enum monster_type                      // menv[].type
     MONS_GHOST,                 // common genus for monster and player ghosts
     MONS_PHANTOM,
     MONS_SHADOW,
+#if TAG_MAJOR_VERSION == 34
     MONS_HUNGRY_GHOST,
+#endif
     MONS_FLAYED_GHOST,
     MONS_WIGHT,
     MONS_WRAITH,

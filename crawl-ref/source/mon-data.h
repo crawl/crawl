@@ -284,6 +284,7 @@ static monsterentry mondata[] =
     AXED_MON(MONS_LAVA_ORC, "lava orc")
     AXED_MON(MONS_MONSTROUS_FEATURE_MIMIC, "monstrous feature mimic")
     AXED_MON(MONS_SLAVE, "slave")
+    AXED_MON(MONS_HUNGRY_GHOST, "hungry ghost")
 #endif
 
 // Used for genus monsters (which are used for grouping monsters by how they
@@ -4377,19 +4378,6 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake", TILEP_MONS_ADDER)
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, SIZE_MEDIUM, MON_SHAPE_HUMANOID,
     {TILEP_MONS_PHANTOM}, TILE_ERROR
-},
-
-{
-    MONS_HUNGRY_GHOST, 'W', GREEN, "hungry ghost",
-    M_SEE_INVIS | M_INSUBSTANTIAL | M_SPEAKS | M_FLIES,
-    mrd(MR_RES_COLD, 2),
-    8, MONS_PHANTOM, MONS_HUNGRY_GHOST, MH_UNDEAD, 40,
-    { {AT_HIT, AF_HUNGER, 5}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    7, 385,
-    0, 17, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
-    I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
-    MONUSE_OPEN_DOORS, SIZE_MEDIUM, MON_SHAPE_HUMANOID,
-    {TILEP_MONS_HUNGRY_GHOST}, TILE_ERROR
 },
 
 {

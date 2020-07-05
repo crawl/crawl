@@ -255,7 +255,7 @@ TAGS:    generate_awake no_monster_gen no_trap_gen no_item_gen no_pool_fixup
 DEPTH:   D:2-
 WEIGHT:  0
 KFEAT:   _ = altar_pakellas
-MONS:    hungry ghost / ugly thing / hydra / rakshasa spells:none ; nothing \
+MONS:    ugly thing / hydra / rakshasa spells:none ; nothing \
          / fire dragon / wolf spider / ice dragon
 KFEAT:   p = clear_stone_wall
 TILE:    p = dngn_transparent_stone_green

@@ -554,18 +554,6 @@ MAP
 .......
 ENDMAP
 
-NAME: nicolae_shop_scaring_up_business
-TAGS: transparent
-DEPTH: D:7-
-WEIGHT: 1
-KFEAT: O = food shop
-KMONS: O = patrolling hungry ghost
-MAP
-...
-.O.
-...
-ENDMAP
-
 # Get away from it all.
 NAME: nicolae_island_escapes
 DEPTH: D:7-, !D:$, Depths, !Depths:$, Shoals, !Shoals:$, Swamp, !Swamp:$

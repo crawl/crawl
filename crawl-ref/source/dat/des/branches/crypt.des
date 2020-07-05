@@ -1438,7 +1438,7 @@ MONS:   eidolon / flayed ghost
 MONS:   phantasmal warrior / shadow wraith w:6
 MONS:   flying skull
 MONS:   wraith / freezing wraith / shadow wraith / spectral thing / \
-        hungry ghost / w:15 shadow / w:5 nothing
+        w:20 shadow / nothing
 # mummy layout - rare
 : else
 MONS:   greater mummy
@@ -1685,7 +1685,7 @@ KMONS:  8 = gargoyle
 KMONS:  A = ancient lich / w:2 mummy priest
 KMONS:  DL = lich / w:5 ancient lich
 KMONS:  E = war gargoyle
-KMONS:  G = shadow / hungry ghost / wraith
+KMONS:  G = shadow / wraith
 ####### NE monsters (hoard). On a coinflip, either vampires or mummies.
 : if crawl.coinflip() then
 KMONS:  H = vampire knight

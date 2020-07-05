@@ -18,8 +18,7 @@ function base_monster_setup(e)
            centaur / jelly / water moccasin / ice beast / crimson imp /\
            necrophage / quasit / zombie / sky beast / deep elf mage /\
            bullfrog / mummy / orc warrior band / wight band /\
-           hungry ghost / big kobold band /\
-           warg / wolf / porcupine / black bear /\
+           big kobold band / warg / wolf / porcupine / black bear /\
            river rat / flying skull / iron imp /\
            white imp / ufetubus / fire bat")
   e.kmons("B = steam dragon / crocodile / hippogriff /\

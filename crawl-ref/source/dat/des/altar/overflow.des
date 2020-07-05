@@ -109,7 +109,7 @@ end
 
 function species_mock(e)
   if you.race() == "Barachi" then
-    return "bullfrog"
+    return "cane toad"
   elseif you.race() == "Gnoll" then
     return "jackal"
   elseif you.race() == "Centaur" then
@@ -157,7 +157,7 @@ function species_mock(e)
   elseif you.race() == "Tengu" then
     return "caustic shrike"
   elseif you.race() == "Troll" then
-    return "hungry ghost"
+    return "necrophage"
   elseif you.race() == "Vampire" then
     return "tyrant leech"
   elseif you.race() == "Vine Stalker" then
@@ -3387,17 +3387,16 @@ TAGS:   no_monster_gen no_trap_gen temple_overflow_2
 TAGS:   temple_overflow_kikubaaqudgha temple_overflow_yredelemnul
 : if you.depth() <= 4 then
 MONS: zombie / skeleton
-MONS: mummy / shadow imp / wight / necrophage / phantom / hungry ghost
+MONS: mummy / shadow imp / wight / necrophage / phantom
 KMONS: 3 = menkaure, necrophage / wight
 SUBST: 2 = 2---
 : elseif you.depth() <= 7 then
-MONS: zombie / skeleton / mummy / shadow imp / wight / necrophage / phantom \
-      / hungry ghost
+MONS: zombie / skeleton / mummy / shadow imp / wight / necrophage / phantom
 MONS: wraith / vampire
 KMONS: 3 = menkaure, wraith / vampire
 SUBST: 2 = 12--
 : else
-MONS: mummy / wight / zombie / skeleton / phantom / hungry ghost
+MONS: mummy / wight / zombie / skeleton / phantom
 MONS: wraith / vampire / shadow / w:5 death knight / w:5 skeletal warrior
 MONS: flayed ghost / death knight
 NSUBST: 2 = 2 / 2-
