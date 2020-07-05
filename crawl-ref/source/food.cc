@@ -125,26 +125,6 @@ bool you_drinkless(bool temp)
     return you.undead_state(temp) == US_UNDEAD;
 }
 
-bool prompt_eat_item(int slot)
-{
-    item_def* item = nullptr;
-    if (slot == -1)
-    {
-        if (!use_an_item(item, OBJ_FOOD, OPER_EAT, "Eat which item (* to show all)?"))
-            return false;
-    }
-    else
-        item = &you.inv[slot];
-
-    ASSERT(item);
-    if (!can_eat(*item, false))
-        return false;
-
-    eat_item(*item);
-
-    return true;
-}
-
 static bool _eat_check(bool check_hunger = true, bool silent = false,
                                                             bool temp = true)
 {
@@ -173,23 +153,74 @@ static bool _eat_check(bool check_hunger = true, bool silent = false,
     return true;
 }
 
+// Returns which of two food items is older (true for first, else false).
+static bool _compare_by_freshness(const item_def *food1, const item_def *food2)
+{
+    ASSERT(food1->base_type == OBJ_CORPSES || food1->base_type == OBJ_FOOD);
+    ASSERT(food2->base_type == OBJ_CORPSES || food2->base_type == OBJ_FOOD);
+    ASSERT(food1->base_type == food2->base_type);
+
+    if (is_inedible(*food1))
+        return false;
+
+    if (is_inedible(*food2))
+        return true;
+
+    // Permafood can last longest, skip it if possible.
+    if (food1->base_type == OBJ_FOOD && food1->sub_type != FOOD_CHUNK)
+        return false;
+    if (food2->base_type == OBJ_FOOD && food2->sub_type != FOOD_CHUNK)
+        return true;
+
+    // At this point, we know both are corpses or chunks, edible
+
+    return food1->freshness < food2->freshness;
+}
+
 // [ds] Returns true if something was eaten.
-bool eat_food(int slot)
+bool eat_food()
 {
     if (!_eat_check())
         return false;
 
-    // Skip the prompts if we already know what we're eating.
-    if (slot == -1)
+    food_type want = player_likes_chunks() ? FOOD_CHUNK : FOOD_RATION;
+
+    bool found_valid = false;
+    vector<item_def *> snacks;
+
+    for (stack_iterator si(you.pos(), true); si; ++si)
     {
-        int result = prompt_eat_chunks();
-        if (result == 1)
-            return true;
-        else if (result == -1)
-            return false;
+        if (si->base_type != OBJ_FOOD
+                 || si->sub_type != want)
+        {
+            continue;
+        }
+
+        found_valid = true;
+        snacks.push_back(&(*si));
     }
 
-    return prompt_eat_item(slot);
+    // Then search through the inventory.
+    for (auto &item : you.inv)
+    {
+        if (!item.defined())
+            continue;
+
+        if (item.base_type != OBJ_FOOD || item.sub_type != want)
+            continue;
+
+        found_valid = true;
+        snacks.push_back(&item);
+    }
+
+    if (found_valid)
+    {
+        if (want == FOOD_CHUNK)
+            sort(snacks.begin(), snacks.end(), _compare_by_freshness);
+        return eat_item(*snacks.front());
+    }
+
+    return false;
 }
 
 static string _how_hungry()
@@ -330,261 +361,20 @@ static void _finished_eating_message(food_type type)
     }
 }
 
-// Returns which of two food items is older (true for first, else false).
-static bool _compare_by_freshness(const item_def *food1, const item_def *food2)
+// Only for ghouls
+static void _eat_chunk()
 {
-    ASSERT(food1->base_type == OBJ_CORPSES || food1->base_type == OBJ_FOOD);
-    ASSERT(food2->base_type == OBJ_CORPSES || food2->base_type == OBJ_FOOD);
-    ASSERT(food1->base_type == food2->base_type);
+    if (you.species != SP_GHOUL)
+        return;
 
-    if (is_inedible(*food1))
-        return false;
+    int nutrition     = CHUNK_BASE_NUTRITION;
 
-    if (is_inedible(*food2))
-        return true;
+    const int hp_amt = 1 + random2avg(5 + you.experience_level, 3);
+    _heal_from_food(hp_amt);
 
-    // Permafood can last longest, skip it if possible.
-    if (food1->base_type == OBJ_FOOD && food1->sub_type != FOOD_CHUNK)
-        return false;
-    if (food2->base_type == OBJ_FOOD && food2->sub_type != FOOD_CHUNK)
-        return true;
-
-    // At this point, we know both are corpses or chunks, edible
-
-    // Always offer inedible chunks last.
-    if (is_bad_food(*food1) && !is_bad_food(*food2))
-        return false;
-    if (is_bad_food(*food2) && !is_bad_food(*food1))
-        return true;
-
-    return food1->freshness < food2->freshness;
-}
-
-/** Make the prompt for chunk eating/corpse draining.
- *
- *  @param only_auto Don't actually make a prompt: if there are
- *                   things to auto_eat, eat them, and exit otherwise.
- *  @returns -1 for cancel, 1 for eaten, 0 for not eaten,
- */
-int prompt_eat_chunks(bool only_auto)
-{
-    // Most species cannot eat chunks.
-    if (!player_likes_chunks())
-        return 0;
-
-    bool found_valid = false;
-    vector<item_def *> chunks;
-
-    for (stack_iterator si(you.pos(), true); si; ++si)
-    {
-        if (si->base_type != OBJ_FOOD
-                 || si->sub_type != FOOD_CHUNK
-                 || is_bad_food(*si))
-        {
-            continue;
-        }
-
-        found_valid = true;
-        chunks.push_back(&(*si));
-    }
-
-    // Then search through the inventory.
-    for (auto &item : you.inv)
-    {
-        if (!item.defined())
-            continue;
-
-        if (item.base_type != OBJ_FOOD || item.sub_type != FOOD_CHUNK)
-            continue;
-
-        // Don't prompt for bad food types.
-        if (is_bad_food(item))
-            continue;
-
-        found_valid = true;
-        chunks.push_back(&item);
-    }
-
-    const bool easy_eat = Options.easy_eat_chunks || only_auto;
-
-    if (found_valid)
-    {
-        sort(chunks.begin(), chunks.end(), _compare_by_freshness);
-        for (item_def *item : chunks)
-        {
-            bool autoeat = false;
-            string item_name = menu_colour_item_name(*item, DESC_A);
-
-            const bool bad = is_bad_food(*item);
-
-            // Allow undead to use easy_eat, but not auto_eat, since the player
-            // might not want to drink blood as a vampire and might want to save
-            // chunks as a ghoul. Ghouls can auto_eat if they have rotted hp.
-            const bool no_auto = you.undead_state()
-                && !(you.species == SP_GHOUL && player_rotted());
-
-            // If this chunk is safe to eat, just do so without prompting.
-            if (easy_eat && !bad && i_feel_safe() && !(only_auto && no_auto))
-                autoeat = true;
-            else if (only_auto)
-                return 0;
-            else
-            {
-                mprf(MSGCH_PROMPT, "Eat %s%s? (ye/n/q)",
-                     ((item->quantity > 1) ? "one of " : ""),
-                     item_name.c_str());
-            }
-
-            int keyin = autoeat ? 'y' : toalower(getchm(KMC_CONFIRM));
-            switch (keyin)
-            {
-            case 'q':
-            CASE_ESCAPE
-                canned_msg(MSG_OK);
-                return -1;
-            case 'i':
-            case '?':
-                // Skip ahead to the inventory.
-                return 0;
-            case 'e':
-            case 'y':
-                if (can_eat(*item, false))
-                {
-                    if (autoeat)
-                    {
-                        mprf("Eating %s%s.",
-                             ((item->quantity > 1) ? "one of " : ""),
-                             item_name.c_str());
-                    }
-
-                    return eat_item(*item) ? 1 : 0;
-                }
-                break;
-            default:
-                // Else no: try next one.
-                break;
-            }
-        }
-    }
-
-    return 0;
-}
-
-static const char *_chunk_flavour_phrase()
-{
-    const char *phrase;
-
-    if (you.species == SP_GHOUL)
-        phrase = "tastes great!";
-    else
-    {
-        phrase = one_chance_in(1000) ? "tastes like chicken!"
-                                     : "tastes great.";
-    }
-
-    return phrase;
-}
-
-static void _chunk_nutrition_message(int nutrition)
-{
-    int perc_nutrition = nutrition * 100 / CHUNK_BASE_NUTRITION;
-    if (perc_nutrition < 15)
-        mpr("That was extremely unsatisfying.");
-    else if (perc_nutrition < 35)
-        mpr("That was not very filling.");
-}
-
-static int _apply_herbivore_nutrition_effects(int nutrition)
-{
-    if (you.get_mutation_level(MUT_HERBIVOROUS) > 0)
-        return nutrition * 5 / 12; // Was 42.2% with Herb 3, now 41.7%
-    else
-        return nutrition;
-}
-
-static int _apply_gourmand_nutrition_effects(int nutrition)
-{
-    return nutrition * ((you.gourmand() ? GOURMAND_MAX : 0) + GOURMAND_NUTRITION_BASE)
-                     / (GOURMAND_MAX + GOURMAND_NUTRITION_BASE);
-}
-
-static int _chunk_nutrition()
-{
-    int nutrition = CHUNK_BASE_NUTRITION;
-
-    const int effective_nutrition =
-        _apply_gourmand_nutrition_effects(nutrition);
-
-#ifdef DEBUG_DIAGNOSTICS
-    const int epercent = effective_nutrition * 100 / nutrition;
-    mprf(MSGCH_DIAGNOSTICS,
-            "Gourmand: %s, chunk base: %d, effective: %d, %%: %d",
-                you.gourmand() ? "y" : "n", nutrition, effective_nutrition,
-                epercent);
-#endif
-
-    return _apply_herbivore_nutrition_effects(effective_nutrition);
-}
-
-/**
- * How intelligent was the monster that the given corpse came from?
- *
- * @param   The corpse being examined.
- * @return  The mon_intel_type of the monster that the given corpse was
- *          produced from.
- */
-mon_intel_type corpse_intelligence(const item_def &corpse)
-{
-    // An optimising compiler can assume an enum value is in range, so
-    // check the range on the uncast value.
-    const bool bad = corpse.orig_monnum < 0
-                     || corpse.orig_monnum >= NUM_MONSTERS;
-    const monster_type orig_mt = static_cast<monster_type>(corpse.orig_monnum);
-    const monster_type type = bad || invalid_monster_type(orig_mt)
-                                ? corpse.mon_type
-                                : orig_mt;
-    return mons_class_intel(type);
-}
-
-// Never called directly - chunk_effect values must pass
-// through food:determine_chunk_effect() first. {dlb}:
-static void _eat_chunk(item_def& food)
-{
-    const corpse_effect_type chunk_effect = determine_chunk_effect(food);
-
-    int nutrition     = _chunk_nutrition();
-    bool suppress_msg = false; // do we display the chunk nutrition message?
-    bool do_eat       = false;
-
-    switch (chunk_effect)
-    {
-    case CE_CLEAN:
-    {
-        if (you.species == SP_GHOUL)
-        {
-            suppress_msg = true;
-            const int hp_amt = 1 + random2avg(5 + you.experience_level, 3);
-            _heal_from_food(hp_amt);
-        }
-
-        mprf("This raw flesh %s", _chunk_flavour_phrase());
-        do_eat = true;
-        break;
-    }
-
-    case CE_NOXIOUS:
-    case CE_NOCORPSE:
-        mprf(MSGCH_ERROR, "This flesh (%d) tastes buggy!", chunk_effect);
-        break;
-    }
-
-    if (do_eat)
-    {
-        dprf("nutrition: %d", nutrition);
-        lessen_hunger(nutrition, true);
-        if (!suppress_msg)
-            _chunk_nutrition_message(nutrition);
-    }
+    mpr("This raw flesh tastes great!");
+    dprf("nutrition: %d", nutrition);
+    lessen_hunger(nutrition, true);
 }
 
 bool eat_item(item_def &food)
@@ -596,7 +386,7 @@ bool eat_item(item_def &food)
                           food.name(DESC_THE).c_str());
 
     if (food.sub_type == FOOD_CHUNK)
-        _eat_chunk(food);
+        _eat_chunk();
     else
     {
         int value = food_value(food);
@@ -616,20 +406,6 @@ bool eat_item(item_def &food)
 
     you.turn_is_over = true;
     return true;
-}
-
-bool is_bad_food(const item_def &food)
-{
-    return is_forbidden_food(food) || is_noxious(food);
-}
-
-// Returns true if a food item (or corpse) is totally inedible.
-bool is_noxious(const item_def &food)
-{
-    if (food.base_type != OBJ_FOOD && food.base_type != OBJ_CORPSES)
-        return false;
-
-    return determine_chunk_effect(food) == CE_NOXIOUS;
 }
 
 // Returns true if an item of basetype FOOD or CORPSES cannot currently
@@ -661,41 +437,6 @@ bool is_inedible(const item_def &item, bool temp)
     return false;
 }
 
-// As we want to avoid autocolouring the entire food selection, this should
-// be restricted to the absolute highlights, even though other stuff may
-// still be edible or even delicious.
-bool is_preferred_food(const item_def &food)
-{
-    if (you.species == SP_GHOUL)
-        return food.is_type(OBJ_FOOD, FOOD_CHUNK);
-
-    return false;
-}
-
-/**
- * Is the given food item forbidden to the player by their god?
- *
- * @param food  The food item in question.
- * @return      Whether your god hates you eating it.
- */
-bool is_forbidden_food(const item_def &food)
-{
-    // no food is forbidden to the player who does not yet exist
-    if (!crawl_state.need_save)
-        return false;
-
-    // Only corpses are only forbidden, now.
-    if (food.base_type != OBJ_CORPSES)
-        return false;
-
-    // Specific handling for intelligent monsters like Gastronok and Xtahua
-    // of a normally unintelligent class.
-    if (you_worship(GOD_ZIN) && corpse_intelligence(food) >= I_HUMAN)
-        return true;
-
-    return god_hates_eating(you.religion, food.mon_type);
-}
-
 /** Can the player eat this item?
  *
  *  @param food the item (must be a corpse or food item)
@@ -714,66 +455,20 @@ bool can_eat(const item_def &food, bool suppress_msg, bool check_hunger,
     if (!_eat_check(check_hunger, suppress_msg, temp))
         return false;
 
-    if (is_noxious(food))
-        FAIL("It is completely inedible.");
-
     if (food.base_type == OBJ_CORPSES)
         return false;
 
-    if (food_is_meaty(food))
+    if (food.sub_type == FOOD_CHUNK)
     {
-        if (you.get_mutation_level(MUT_HERBIVOROUS) > 0)
-            FAIL("Sorry, you're a herbivore.")
-        else if (food.sub_type == FOOD_CHUNK)
-        {
-            if (player_likes_chunks())
-                return true;
+        if (player_likes_chunks())
+            return true;
 
-            FAIL("Raw flesh disgusts you!")
-        }
+        FAIL("Raw flesh disgusts you!")
     }
 
     // Any food types not specifically handled until here (e.g. meat
     // rations for non-herbivores) are okay.
     return true;
-}
-
-/**
- * Determine the 'effective' chunk type for a given piece of carrion (chunk or
- * corpse), for the player.
- * E.g., ghouls treat rotting and poisonous chunks as normal chunks.
- *
- * @param carrion       The actual chunk or corpse.
- * @return              A chunk type corresponding to the effect eating the
- *                      given item will have on the player.
- */
-corpse_effect_type determine_chunk_effect(const item_def &carrion)
-{
-    return determine_chunk_effect(mons_corpse_effect(carrion.mon_type));
-}
-
-/**
- * Determine the 'effective' chunk type for a given input for the player.
- * E.g., ghouls/vampires treat rotting and poisonous chunks as normal chunks.
- *
- * @param chunktype     The actual chunk type.
- * @return              A chunk type corresponding to the effect eating a chunk
- *                      of the given type will have on the player.
- */
-corpse_effect_type determine_chunk_effect(corpse_effect_type chunktype)
-{
-    switch (chunktype)
-    {
-    case CE_NOXIOUS:
-        if (you.species == SP_GHOUL)
-            chunktype = CE_CLEAN;
-        break;
-
-    default:
-        break;
-    }
-
-    return chunktype;
 }
 
 static void _heal_from_food(int hp_amt)

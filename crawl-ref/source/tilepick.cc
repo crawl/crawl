@@ -2419,12 +2419,6 @@ static tileidx_t _tileidx_chunk(const item_def &item)
     if (is_inedible(item))
         return TILE_FOOD_CHUNK_INEDIBLE;
 
-    if (is_noxious(item))
-        return TILE_FOOD_CHUNK_ROTTING;
-
-    if (is_forbidden_food(item))
-        return TILE_FOOD_CHUNK_FORBIDDEN;
-
     return TILE_FOOD_CHUNK;
 }
 
@@ -4030,13 +4024,6 @@ tileidx_t tileidx_corpse_brand(const item_def &item)
 {
     if (item.base_type != OBJ_CORPSES || item.sub_type != CORPSE_BODY)
         return 0;
-
-    // Harmful chunk effects > religious rules > reduced nutrition.
-    if (is_noxious(item))
-        return TILE_FOOD_ROTTING;
-
-    if (is_forbidden_food(item))
-        return TILE_FOOD_FORBIDDEN;
 
     return 0;
 }

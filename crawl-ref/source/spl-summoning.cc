@@ -2226,8 +2226,6 @@ bool twisted_resurrection(actor *caster, int pow, beh_type beha,
 
     if (num_orcs > 0 && caster->is_player())
         did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2 * num_orcs);
-    if (num_holy > 0 && caster->is_player())
-        did_god_conduct(DID_DESECRATE_HOLY_REMAINS, 2 * num_holy);
 
     return true;
 }

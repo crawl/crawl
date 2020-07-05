@@ -209,11 +209,11 @@ outside of it.
 Zin
 
 Zin is a god of discipline. Followers must remain pure of body and soul,
-refraining from dark magic and chaotic acts, and never consuming the flesh of
-intelligent beings. They must also tithe a fraction of all gold gained,
-preferably followed by donations of more. In exchange, worshippers may invoke
-Zin's wrath upon sinners, and eventually gain various divine protections. Zin's
-followers can convert to Elyvilon or the Shining One while keeping some piety.
+refraining from dark magic and chaotic acts. They must also tithe a fraction of
+all gold gained, preferably followed by donations of more. In exchange,
+worshippers may invoke Zin's wrath upon sinners, and eventually gain various
+divine protections. Zin's followers can convert to Elyvilon or the Shining One
+while keeping some piety.
 %%%%
 Ashenzari powers
 

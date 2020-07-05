@@ -239,8 +239,7 @@ public:
     hunger_state_t auto_butcher; // auto-butcher corpses while travelling
     int         auto_butcher_max_chunks; // if nonzero, only auto-butcher if player
                                          // has fewer than this many chunks
-    bool        easy_eat_chunks; // make 'e' auto-eat the oldest safe chunk
-    bool        auto_eat_chunks; // allow eating chunks while resting or travelling
+    bool        auto_eat; // allow eating while resting or travelling
     skill_focus_mode skill_focus; // is the focus skills available
     bool        auto_hide_spells; // hide new spells
 

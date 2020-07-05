@@ -440,9 +440,10 @@ static void _xom_check_corpse_waste()
 
 static bool _auto_eat()
 {
-    return Options.auto_eat_chunks
+    return Options.auto_eat
            && Options.autopickup_on > 0
-           && player_likes_chunks();
+           && (player_likes_chunks() && player_rotted()
+               || you.hunger_state < HS_SATIATED);
 }
 
 void clear_macro_process_key_delay()
@@ -537,7 +538,7 @@ void BaseRunDelay::handle()
         if (want_autoeat() && _auto_eat())
         {
             const interrupt_block block_interrupts;
-            if (prompt_eat_chunks(true) == 1)
+            if (eat_food())
                 return;
         }
 
@@ -1352,7 +1353,7 @@ bool interrupt_activity(activity_interrupt ai,
 
     // If we get hungry while traveling, let's try to auto-eat a chunk.
     if (ai == activity_interrupt::hungry && delay->want_autoeat() && _auto_eat()
-        && prompt_eat_chunks(true) == 1)
+        && eat_food())
     {
         return false;
     }

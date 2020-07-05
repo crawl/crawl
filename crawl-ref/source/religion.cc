@@ -3881,10 +3881,6 @@ bool god_hates_eating(god_type god, monster_type mc)
 {
     if (god_hates_cannibalism(god) && is_player_same_genus(mc))
         return true;
-    if (is_good_god(you.religion) && mons_class_holiness(mc) & MH_HOLY)
-        return true;
-    if (you_worship(GOD_ZIN) && mons_class_intel(mc) >= I_HUMAN)
-        return true;
     return false;
 }
 

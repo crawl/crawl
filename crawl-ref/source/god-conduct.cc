@@ -74,10 +74,10 @@ static const char *conducts[] =
     "Kill Living", "Kill Undead", "Kill Demon", "Kill Natural Evil",
     "Kill Unclean", "Kill Chaotic", "Kill Wizard", "Kill Priest", "Kill Holy",
     "Kill Fast", "Banishment", "Spell Memorise", "Spell Cast",
-    "Spell Practise", "Cannibalism", "Eat Souled Being", "Deliberate Mutation",
+    "Spell Practise", "Cannibalism", "Deliberate Mutation",
     "Cause Glowing", "Use Unclean", "Use Chaos", "Desecrate Orcish Remains",
     "Kill Slime", "Kill Plant", "Was Hasty", "Attack In Sanctuary",
-    "Kill Artificial", "Exploration", "Desecrate Holy Remains", "Seen Monster",
+    "Kill Artificial", "Exploration", "Seen Monster",
     "Sacrificed Love", "Channel", "Hurt Foe", "Use Wizardly Item",
 };
 COMPILE_CHECK(ARRAYSZ(conducts) == NUM_CONDUCTS);
@@ -226,12 +226,6 @@ static const dislike_response RUDE_CANNIBALISM_RESPONSE = {
     5, 3, nullptr, " expects more respect for your departed relatives."
 };
 
-/// Zin and Ely's responses to desecrating holy remains.
-static const dislike_response GOOD_DESECRATE_HOLY_RESPONSE = {
-    "you desecrate holy remains", true,
-    1, 1, nullptr, " expects more respect for holy creatures!"
-};
-
 /// Zin and Ely's responses to evil actions. TODO: parameterize & merge w/TSO
 static const dislike_response GOOD_EVIL_RESPONSE = {
     "you use evil magic or items", true,
@@ -282,7 +276,6 @@ static peeve_map divine_peeves[] =
         { DID_CANNIBALISM, RUDE_CANNIBALISM_RESPONSE },
         { DID_ATTACK_HOLY, GOOD_ATTACK_HOLY_RESPONSE },
         { DID_KILL_HOLY, GOOD_KILL_HOLY_RESPONSE },
-        { DID_DESECRATE_HOLY_REMAINS, GOOD_DESECRATE_HOLY_RESPONSE },
         { DID_EVIL, GOOD_EVIL_RESPONSE },
         { DID_ATTACK_FRIEND, _on_attack_friend("you attack allies") },
         { DID_ATTACK_NEUTRAL, {
@@ -306,10 +299,6 @@ static peeve_map divine_peeves[] =
             "you deliberately mutate or transform yourself", true,
             1, 0, " forgives your inadvertent chaotic act, just this once."
         } },
-        { DID_DESECRATE_SOULED_BEING, {
-            "you butcher sentient beings", true,
-            5, 3
-        } },
         { DID_CAUSE_GLOWING, { nullptr, false, 1 } },
     },
     // GOD_SHINING_ONE,
@@ -320,10 +309,6 @@ static peeve_map divine_peeves[] =
             1, 2, nullptr, nullptr, _attacking_holy_matters
         } },
         { DID_KILL_HOLY, GOOD_KILL_HOLY_RESPONSE },
-        { DID_DESECRATE_HOLY_REMAINS, {
-            "you desecrate holy remains", true,
-            1, 2, nullptr, " expects more respect for holy creatures!"
-        } },
         { DID_EVIL, {
             "you use evil magic or items", true,
             1, 2, " forgives your inadvertent evil act, just this once."
@@ -378,7 +363,6 @@ static peeve_map divine_peeves[] =
         { DID_CANNIBALISM, RUDE_CANNIBALISM_RESPONSE },
         { DID_ATTACK_HOLY, GOOD_ATTACK_HOLY_RESPONSE },
         { DID_KILL_HOLY, GOOD_KILL_HOLY_RESPONSE },
-        { DID_DESECRATE_HOLY_REMAINS, GOOD_DESECRATE_HOLY_RESPONSE },
         { DID_EVIL, GOOD_EVIL_RESPONSE },
         { DID_ATTACK_NEUTRAL, GOOD_ATTACK_NEUTRAL_RESPONSE },
         { DID_ATTACK_FRIEND, _on_attack_friend("you attack allies") },

@@ -1537,12 +1537,6 @@ static int _harvest_corpses()
 
             did_god_conduct(DID_EVIL, 1);
 
-             // apply these in addition to use of an evil item
-             if (mons_class_holiness(item.mon_type) & MH_HOLY)
-                 did_god_conduct(DID_DESECRATE_HOLY_REMAINS, 4);
-             else if (corpse_intelligence(item) >= I_HUMAN)
-                 did_god_conduct(DID_DESECRATE_SOULED_BEING, 1);
-
             ++harvested;
 
             // don't spam animations

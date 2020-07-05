@@ -1721,18 +1721,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         switch (item_typ)
         {
         case FOOD_RATION: buff << "ration"; break;
-        case FOOD_CHUNK:
-            switch (determine_chunk_effect(*this))
-            {
-                case CE_NOXIOUS:
-                    buff << "inedible ";
-                    break;
-                default:
-                    break;
-            }
-
-            buff << "chunk of flesh";
-            break;
+        case FOOD_CHUNK: buff << "chunk of flesh"; break;
 #if TAG_MAJOR_VERSION == 34
         default: buff << "removed food"; break;
 #endif
@@ -3255,14 +3244,6 @@ string item_prefix(const item_def &item, bool temp)
             break;
 
         if (is_inedible(item))
-            prefixes.push_back("inedible");
-        else if (is_preferred_food(item))
-            prefixes.push_back("preferred");
-
-        if (is_forbidden_food(item))
-            prefixes.push_back("forbidden");
-
-        else if (is_noxious(item))
             prefixes.push_back("inedible");
         break;
 

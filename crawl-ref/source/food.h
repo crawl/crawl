@@ -29,7 +29,7 @@ constexpr int hunger_threshold[HS_ENGORGED + 1] =
     HUNGER_ENGORGED
 };
 
-bool eat_food(int slot = -1);
+bool eat_food();
 
 void make_hungry(int hunger_amount, bool suppress_msg, bool magic = false);
 
@@ -37,26 +37,15 @@ void lessen_hunger(int statiated_amount, bool suppress_msg, int max = - 1);
 
 void set_hunger(int new_hunger_level, bool suppress_msg);
 
-bool is_bad_food(const item_def &food);
-bool is_noxious(const item_def &food);
 bool is_inedible(const item_def &item, bool temp = true);
-bool is_preferred_food(const item_def &food);
-bool is_forbidden_food(const item_def &food);
-corpse_effect_type determine_chunk_effect(const item_def &carrion);
-corpse_effect_type determine_chunk_effect(corpse_effect_type chunktype);
-mon_intel_type corpse_intelligence(const item_def &corpse);
 
 bool can_eat(const item_def &food, bool suppress_msg, bool check_hunger = true,
                                                         bool temp = true);
 
 bool eat_item(item_def &food);
 
-int prompt_eat_chunks(bool only_auto = false);
-
 hunger_state_t calc_hunger_state();
 bool food_change(bool initial = false);
-
-bool prompt_eat_item(int slot = -1);
 
 int you_max_hunger();
 int you_min_hunger();

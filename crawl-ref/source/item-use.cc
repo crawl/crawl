@@ -3522,7 +3522,7 @@ void tile_item_use(int idx)
 
         case OBJ_FOOD:
             if (check_warning_inscriptions(item, OPER_EAT))
-                eat_food(idx);
+                eat_food();
             return;
 
         case OBJ_SCROLLS:

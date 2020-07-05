@@ -41,12 +41,6 @@
  */
 static bool _start_butchering(item_def& corpse)
 {
-    if (is_forbidden_food(corpse))
-    {
-        mprf("It would be a sin to butcher this!");
-        return false;
-    }
-
     // Yes, 0 is correct (no "continue butchering" stage).
     start_delay<ButcherDelay>(0, corpse);
 
@@ -58,21 +52,11 @@ void finish_butchering(item_def& corpse)
 {
     ASSERT(corpse.base_type == OBJ_CORPSES);
     ASSERT(corpse.sub_type == CORPSE_BODY);
-    const bool was_holy = bool(mons_class_holiness(corpse.mon_type) & MH_HOLY);
-    const bool was_intelligent = corpse_intelligence(corpse) >= I_HUMAN;
-    const bool was_same_genus = is_player_same_genus(corpse.mon_type);
 
     mprf("You butcher %s.",
          corpse.name(DESC_THE).c_str());
 
     butcher_corpse(corpse);
-
-    if (was_same_genus)
-        did_god_conduct(DID_CANNIBALISM, 2);
-    else if (was_holy)
-        did_god_conduct(DID_DESECRATE_HOLY_REMAINS, 4);
-    else if (was_intelligent)
-        did_god_conduct(DID_DESECRATE_SOULED_BEING, 1);
 
     StashTrack.update_stash(you.pos()); // Stash-track the generated items.
 }
@@ -146,8 +130,7 @@ void butchery(item_def* specific_corpse)
     vector<corpse_quality> corpse_qualities;
 
     for (item_def *c : edible_corpses)
-        if (!is_forbidden_food(*c))
-            corpse_qualities.emplace_back(c, _corpse_quality(*c));
+        corpse_qualities.emplace_back(c, _corpse_quality(*c));
 
     if (corpse_qualities.empty())
     {
@@ -323,14 +306,7 @@ void turn_corpse_into_chunks(item_def &item, bool bloodspatter)
     item.quantity  = 1 + random2(max_chunks);
     item.quantity  = stepdown_value(item.quantity, 4, 4, 12, 12);
 
-    // Don't mark it as dropped if we are forcing autopickup of chunks.
-    if (you.force_autopickup[OBJ_FOOD][FOOD_CHUNK] <= AP_FORCE_NONE
-        && is_bad_food(item))
-    {
-        item.flags |= ISFLAG_DROPPED;
-    }
-    else
-        clear_item_pickup_flags(item);
+    clear_item_pickup_flags(item);
 
     // Initialise timer depending on corpse age
     init_perishable_stack(item, item.freshness * ROT_TIME_FACTOR);
