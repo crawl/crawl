@@ -122,6 +122,7 @@ poisonous_vapours POISONOUS_VAPOURS
 eringyas_rootspike ERINGYAS_ROOTSPIKE
 olgrebs_last_mercy OLGREBS_LAST_MERCY
 poison_gland POISON_GLAND
+noxious_bog NOXIOUS_BOG
 
 %sdir gui/spells/summoning
 mass_abjuration MASS_ABJURATION
