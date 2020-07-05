@@ -466,6 +466,9 @@ bool can_eat(const item_def &food, bool suppress_msg, bool check_hunger,
         FAIL("Raw flesh disgusts you!")
     }
 
+    if (player_likes_chunks())
+        FAIL("You crave only raw flesh!")
+
     // Any food types not specifically handled until here (e.g. meat
     // rations for non-herbivores) are okay.
     return true;
