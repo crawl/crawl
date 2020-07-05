@@ -116,9 +116,9 @@ void butchery(item_def* specific_corpse)
         mprf("You can't eat.");
         return;
     }
-    if (you.get_mutation_level(MUT_HERBIVOROUS) > 0)
+    if (!player_likes_chunks())
     {
-        mprf("Sorry, you're a herbivore.");
+        mprf("Sorry, you don't eat raw flesh.");
         return;
     }
 

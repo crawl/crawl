@@ -1235,10 +1235,9 @@ int player_spell_levels()
     return sl;
 }
 
-bool player_likes_chunks(bool permanently)
+bool player_likes_chunks()
 {
-    return you.gourmand(true, !permanently)
-           || you.get_mutation_level(MUT_CARNIVOROUS) > 0;
+    return you.species == SP_GHOUL;
 }
 
 // If temp is set to false, temporary sources or resistance won't be counted.

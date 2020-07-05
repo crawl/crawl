@@ -30,9 +30,6 @@ str: 5
 int: 9
 dex: 10
 levelup_stat_frequency: 5
-mutations:
-  1:
-    MUT_CARNIVOROUS: 1
 recommended_jobs:
   - JOB_HUNTER
   - JOB_BERSERKER

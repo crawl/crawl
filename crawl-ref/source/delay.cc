@@ -442,9 +442,7 @@ static bool _auto_eat()
 {
     return Options.auto_eat_chunks
            && Options.autopickup_on > 0
-           && (player_likes_chunks(true)
-               || !you.gourmand()
-               || you.hunger_state < HS_SATIATED);
+           && player_likes_chunks();
 }
 
 void clear_macro_process_key_delay()

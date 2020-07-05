@@ -284,7 +284,7 @@ LUARET1(you_res_corr, boolean, you.res_corr(false))
  * @treturn int
  * @function like_chunks
  */
-LUARET1(you_like_chunks, number, player_likes_chunks(true) ? 3 : 0)
+LUARET1(you_like_chunks, number, player_likes_chunks() ? 3 : 0)
 /*** Are you flying?
  * @treturn boolean
  * @function flying

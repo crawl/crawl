@@ -46,7 +46,6 @@ levelup_stats:
   - dex
 mutations:
   1:
-    MUT_CARNIVOROUS: 1
     MUT_FAST: 1
     MUT_FANGS: 3
     MUT_SHAGGY_FUR: 1

@@ -360,11 +360,6 @@ static bool _compare_by_freshness(const item_def *food1, const item_def *food2)
     return food1->freshness < food2->freshness;
 }
 
-static hunger_state_t _max_chunk_state(bool like_chunks = player_likes_chunks())
-{
-    return like_chunks ? HS_VERY_FULL : HS_HUNGRY;
-}
-
 /** Make the prompt for chunk eating/corpse draining.
  *
  *  @param only_auto Don't actually make a prompt: if there are
@@ -373,13 +368,8 @@ static hunger_state_t _max_chunk_state(bool like_chunks = player_likes_chunks())
  */
 int prompt_eat_chunks(bool only_auto)
 {
-    // Full herbivores cannot eat chunks.
-    if (you.get_mutation_level(MUT_HERBIVOROUS) > 0)
-        return 0;
-
-    // If we *know* the player can eat chunks, doesn't have the gourmand
-    // effect and isn't hungry, don't prompt for chunks.
-    if (you.hunger_state > _max_chunk_state())
+    // Most species cannot eat chunks.
+    if (!player_likes_chunks())
         return 0;
 
     bool found_valid = false;
@@ -480,15 +470,13 @@ int prompt_eat_chunks(bool only_auto)
     return 0;
 }
 
-static const char *_chunk_flavour_phrase(bool likes_chunks)
+static const char *_chunk_flavour_phrase()
 {
-    const char *phrase = "tastes terrible.";
+    const char *phrase;
 
     if (you.species == SP_GHOUL)
         phrase = "tastes great!";
-    else if (likes_chunks)
-        phrase = "tastes great.";
-    else if (you.gourmand())
+    else
     {
         phrase = one_chance_in(1000) ? "tastes like chicken!"
                                      : "tastes great.";
@@ -520,15 +508,9 @@ static int _apply_gourmand_nutrition_effects(int nutrition)
                      / (GOURMAND_MAX + GOURMAND_NUTRITION_BASE);
 }
 
-static int _chunk_nutrition(bool likes_chunks)
+static int _chunk_nutrition()
 {
     int nutrition = CHUNK_BASE_NUTRITION;
-
-    if (you.hunger_state <= _max_chunk_state(likes_chunks))
-    {
-        return likes_chunks ? nutrition
-                            : _apply_herbivore_nutrition_effects(nutrition);
-    }
 
     const int effective_nutrition =
         _apply_gourmand_nutrition_effects(nutrition);
@@ -570,8 +552,7 @@ static void _eat_chunk(item_def& food)
 {
     const corpse_effect_type chunk_effect = determine_chunk_effect(food);
 
-    bool likes_chunks = player_likes_chunks(true);
-    int nutrition     = _chunk_nutrition(likes_chunks);
+    int nutrition     = _chunk_nutrition();
     bool suppress_msg = false; // do we display the chunk nutrition message?
     bool do_eat       = false;
 
@@ -586,7 +567,7 @@ static void _eat_chunk(item_def& food)
             _heal_from_food(hp_amt);
         }
 
-        mprf("This raw flesh %s", _chunk_flavour_phrase(likes_chunks));
+        mprf("This raw flesh %s", _chunk_flavour_phrase());
         do_eat = true;
         break;
     }
@@ -745,14 +726,10 @@ bool can_eat(const item_def &food, bool suppress_msg, bool check_hunger,
             FAIL("Sorry, you're a herbivore.")
         else if (food.sub_type == FOOD_CHUNK)
         {
-            if (!check_hunger
-                || you.hunger_state < HS_SATIATED
-                || player_likes_chunks())
-            {
+            if (player_likes_chunks())
                 return true;
-            }
 
-            FAIL("You aren't quite hungry enough to eat that!")
+            FAIL("Raw flesh disgusts you!")
         }
     }
 

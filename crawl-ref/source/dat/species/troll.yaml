@@ -51,8 +51,7 @@ mutations:
     MUT_TOUGH_SKIN: 3
     MUT_REGENERATION: 1
     MUT_CLAWS: 3
-    MUT_GOURMAND: 1
-    MUT_FAST_METABOLISM: 3
+    MUT_FAST_METABOLISM: 1
     MUT_SHAGGY_FUR: 1
 recommended_jobs:
   - JOB_FIGHTER
