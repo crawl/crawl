@@ -35,6 +35,7 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_FROZEN_RAMPARTS,
     SPELL_THROW_FROST,
     SPELL_OZOCUBUS_ARMOUR,
+    SPELL_HAILSTORM,
     SPELL_THROW_ICICLE,
     SPELL_SUMMON_ICE_BEAST,
 },

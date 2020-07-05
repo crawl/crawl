@@ -4284,6 +4284,18 @@ static const struct spell_desc spelldata[] =
     3, 8,
     TILEG_FROZEN_RAMPARTS,
 },
+
+{
+    SPELL_HAILSTORM, "Hailstorm",
+    spschool::conjuration | spschool::ice,
+    spflag::area,
+    4,
+    100,
+    3, 3, // Range special-cased in describe-spells
+    4, 0,
+    TILEG_HAILSTORM,
+},
+
 {
     SPELL_NOXIOUS_BOG, "Eringya's Noxious Bog",
     spschool::poison | spschool::transmutation,
