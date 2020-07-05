@@ -409,9 +409,9 @@ DEPTH:   Zig:10-
 WEIGHT:  5
 MONS:    lost soul, rakshasa
 KFEAT:   ~ = permanent teleport trap
-SHUFFLE: xm / cn
-SUBST:   9 : 00., c : bcv
 KFEAT:   a = iron_grate
+SHUFFLE: xbcv
+SUBST:   9 : 00.
 : if you.depth() > 18 then
 SUBST:   0 : 0112
 : end

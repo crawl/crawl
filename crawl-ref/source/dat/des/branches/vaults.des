@@ -2158,12 +2158,12 @@ ENDMAP
 # about 21 |
 NAME:   vaults_end_mu_flips
 TAGS:   vaults_end_quadrant_prize unrand
-NSUBST: ; = 3:l / 3:z / 3:A / *:.
+NSUBST: ; = 3=D / 3=E / 3=F / .
 SUBST:  9 = 8 9
 SUBST:  $ = | * $
-KFEAT:  l = teleport trap / dispersal trap
-KFEAT:  z = zot trap
-KFEAT:  A = alarm trap
+KFEAT:  D = teleport trap / dispersal trap
+KFEAT:  E = zot trap
+KFEAT:  F = alarm trap
 SUBST:  s = x:250 +:1
 SUBST:  a = x.
 : vaults_end_loot(_G)

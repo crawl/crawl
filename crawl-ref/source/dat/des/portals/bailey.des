@@ -402,9 +402,9 @@ KFEAT: ~ : alarm trap / floor
 # There is only one way up. You have to pass near the axe-throwing kobolds
 # twice. This is intended. Teleportation traps ensure you won't get
 # stranded.
-NSUBST: s = T / .
-NSUBST: t = T / .
-KFEAT:  T = permanent teleport trap
+NSUBST: s = ^ / .
+NSUBST: t = ^ / .
+KFEAT:  ^ = permanent teleport trap
 : bailey_setup(_G)
 MAP
      ccc
@@ -519,7 +519,7 @@ xxxc.+1+ww.......ww+1+.cxxx
 xxxc.cccww.......wwccc.cxxx
 xxxc.+1+ww.......ww+1+.cxxx
 xxxc.cccww.......wwccc.cxxx
-xxxcT+1+ww.......ww+1+Tcxxx
+xxxc^+1+ww.......ww+1+^cxxx
 xxxcccccww.......wwcccccxxx
 xxxxxxxccw.......wccxxxxxxx
 xxxxxxxxcccc+++ccccxxxxxxxx
@@ -759,7 +759,7 @@ MONS:   orc warrior w:5 ; arbalest . bolt . ring mail | scale mail / \
 : orc_knight_with_polearm(_G)
 MONS:   orc knight
 SUBST:  2 = 23
-NSUBST: 4 = 1:4 / *:3
+NSUBST: 4 = 4 / 3
 SUBST:  W : W..
 KFEAT:  ^ = permanent teleport trap
 SUBST:  X = I G C

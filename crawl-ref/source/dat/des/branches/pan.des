@@ -3624,14 +3624,15 @@ MAP
 ...............
 ENDMAP
 
-NAME: nicolae_pan_sick_transit
-DEPTH: Pan
-TAGS: transparent extra decor allow_dup
-SHUFFLE: Aai/Bbj/Cck/Ddl/Eem/Ffn/Ggo/Hhp, Ffn/Qqr/Qqr, Ggo/Sst/Sst, Hhp/Uuv/Uuv
-SUBST: ABCDFGHijklnop = x, abcdfgh = -, EQSU = @, emqrstuv = ., \
-       I : x., J : x., K : x., L: x., M: x., N : x.
-KFEAT: - = transit_pandemonium w:36 / permanent teleport trap w:1 / \
-           exit_pandemonium w:1 / exit_through_abyss w:1
+NAME:    nicolae_pan_sick_transit
+DEPTH:   Pan
+TAGS:    transparent extra decor allow_dup
+SHUFFLE: Aai/Bbj/Cck/Ddl/Eem/Ffn/Ggo/Hhp, Ffn/Qqr/Qqr, Ggo/Sst/Sst
+SHUFFLE: Hhp/Uuv/Uuv
+SUBST:   ABCDFGHijklnop = x, abcdfgh = -, EQSU = @, emqrstuv = .
+SUBST:   I : x., J : x., K : x., L: x., M: x., N : x.
+KFEAT:   - = transit_pandemonium w:36 / permanent teleport trap w:1 / \
+             exit_pandemonium w:1 / exit_through_abyss w:1
 MAP
     xxxAxxx
    xxxxaxxxx

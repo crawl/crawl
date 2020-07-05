@@ -4560,7 +4560,7 @@ TAGS:   no_monster_gen no_trap_gen transparent
 DEPTH:  D:4-, Depths
 KMASK:  ^809 = opaque
 KFEAT:  ^ = permanent teleport trap
-KFEAT:  _ = alarm trap
+KFEAT:  ~ = alarm trap
 KFEAT:  a = iron_grate
 KPROP:  8^ = no_tele_into
 : if you.absdepth() < 9 then

@@ -1807,22 +1807,22 @@ MAP
 ENDMAP
 
 # Overgrown and disused, since many pilgrims find Ru's sacrifices too onerous.
-NAME: nicolae_ru_the_path_less_chosen
-TAGS: temple_overflow_ru temple_overflow_1 uniq_altar_ru transparent decor
-TAGS: no_item_gen no_monster_gen
+NAME:   nicolae_ru_the_path_less_chosen
+TAGS:   temple_overflow_ru temple_overflow_1 uniq_altar_ru transparent decor
+TAGS:   no_item_gen no_monster_gen
 : interest_check(_G)
-DEPTH: D:2-
-NSUBST: r = 3:^ / 1:^p / 7:p / 2:p. / *:., i = 1:^^p. / 2:p / *:., \
-        A = . / xxp / x, B = . / xxp / x, C = xxp / .
-KFEAT: _ = altar_ru
-KFEAT: ^ = web trap
-KMONS: p = plant / fungus w:3
+DEPTH:  D:2-
+KMONS:  p = plant / fungus w:3
+NSUBST: r = 3=^ / ^p / 7=p / 2:p. / ., i = ^^p. / 2=p / .
+NSUBST: D = . / xxp / x, E = . / xxp / x, F = xxp / .
+KFEAT:  _ = altar_ru
+KFEAT:  ^ = web trap
 MAP
 xxxxxxx
 xrrrrrxxxxx
-xriiirxACBx
-xri_ir.A.B.@
-xriiirxACBx
+xriiirxDFEx
+xri_ir.D.E.@
+xriiirxDFEx
 xrrrrrxxxxx
 xxxxxxx
 ENDMAP
@@ -2106,13 +2106,12 @@ MONS:   iguana / worker ant
                     'worker ant chunk q:1')
 }}
 : end
-NSUBST: ' = 3:2 / *:.
+NSUBST: ' = 3=2 / .
+SUBST:  y = x, " = .
 KPROP:  1y" = bloody
 KFEAT:  _ = altar_trog
 KFEAT:  ^ = shaft trap
 KFEAT:  m = iron_grate
-SUBST:  y = x
-SUBST:  " = .
 MAP
   xxxxxxx
  xx'''''xx
@@ -2132,7 +2131,7 @@ MONS:   goblin ; stone q:5 . animal skin / \
         hobgoblin ; stone q:5 . animal skin / \
         kobold ; stone q:5 | throwing net q:1 . animal skin
 ITEM:   stone
-NSUBST: T = 6:1 / *:.
+NSUBST: D = 6=1 / .
 SUBST:  . = d....
 KFEAT:  _ = altar_trog
 KFEAT:  m = iron_grate
@@ -2141,10 +2140,10 @@ MAP
   xxxxx
  xxmmmxx
 xx.._..xx
-xTw...wTx
-xTWw.wWTx
-xTTw.wTTx
-xxTw.wTxx
+xDw...wDx
+xDWw.wWDx
+xDDw.wDDx
+xxDw.wDxx
  xxx.xxx
   xx@xx
 ENDMAP
@@ -2305,12 +2304,12 @@ KFEAT:  ~ = teleport trap w:20 / alarm trap w:3 / dispersal trap
 KFEAT:  ~ = shaft trap / teleport trap / alarm trap w:3 / dispersal trap
 :  end
 # Previously on raw average 5.17 M glyphs.
-NSUBST: ' = 1:_ / *:.
-NSUBST: . = 8:M / * = .:220 W:60 w:50 x:80 n:80 v b l % T U ~
-NSUBST: % = 1:*% / *:%
+NSUBST: ' = _ / .
+NSUBST: . = 8=M / * = .:220 W:60 w:50 x:80 n:80 v b l % T U ~
+NSUBST: % = *% / %
 SUBST:  M : .111123M
-NSUBST: 1 = 1:0 / 1:1 / * = 01., 2 = 1:2 / 2 = 2. /  * = 2...
-NSUBST: 3 = 1:3 / 2 = 3. / * = 3..., M = 1:1 / * = 123.
+NSUBST: 1 = 0 / 1 / 01., 2 = 2 / 2=2. / 2...
+NSUBST: 3 = 3 / 2=3. / 3..., M = 1 / 123.
 :  if you.in_branch("Depths") then
 SUBST:  2 = 4, 3 = 5
 :  end
@@ -2404,40 +2403,40 @@ ENDMAP
 NAME:    xom_redecorated
 DEPTH:   D:2-, !D:$
 TAGS:    temple_overflow_1 temple_overflow_xom uniq_altar_xom decor transparent
-SUBST:   x = ccbbbv
-NSUBST:  . = 2:T / .
+SUBST:   c = ccbbbv
+NSUBST:  . = 2=^ / .
 SUBST:   . = lWwtm_~......
+NSUBST:  ^ = 3=^ / .
 KFEAT:   _ = altar_xom
-NSUBST:  T = 3:T / .
-KFEAT:   T = teleport trap
+KFEAT:   ^ = teleport trap
 KFEAT:   ~ = shaft trap / alarm trap / teleport trap / dispersal trap
 : interest_check(_G)
 MAP
       @
-   xxxTxxx
-  xx.....xx
- xx.......xx
- x.........x
+   cccTccc
+  cc.....cc
+ cc.......cc
+ c.........c
 @T...._....T@
- x.........x
- xx.......xx
-  xx.....xx
-   xxxTxxx
+ c.........c
+ cc.......cc
+  cc.....cc
+   cccTccc
       @
 ENDMAP
 
 NAME:   led_xom_imps
-DEPTH:  D:3-5
 TAGS:   temple_overflow_1 temple_overflow_xom uniq_altar_xom
+DEPTH:  D:3-5
+MONS:   crimson imp, crimson imp ; dagger ego:chaos
+NSUBST: 1 = 2 / 1
 KFEAT:  _ = altar_xom
-KFEAT:  T = teleport trap / dispersal trap
-NSUBST: I = 1:1 / 3:2
-MONS: crimson imp ; dagger ego:chaos ident:type, crimson imp ; nothing
+KFEAT:  ^ = teleport trap / dispersal trap
 MAP
 xxxx+xxxx
-xIT...TIx
+x1^...^1x
 xxx._.xxx
-xIT...TIx
+x1^...^1x
 xxxx+xxxx
 ENDMAP
 

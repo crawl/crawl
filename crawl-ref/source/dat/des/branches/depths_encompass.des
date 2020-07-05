@@ -227,13 +227,13 @@ ITEM:    amulet of reflection
 KITEM:   gzZ = ration w:5 tile:food_honeycomb / nothing w:40
 KFEAT:   L = l
 KFEAT:   ~ = w
-NSUBST:  w = 1:~ / *:w, l = 1:L / *:l
-NSUBST:  A = 1:+ / *:b, B = 1:+ / *:b
-NSUBST:  C = 1:+ / *:b, D = 1:+ / *:b
-NSUBST:  E = 1:+ / *:x, N = 1:+ / *:n
+NSUBST:  w = ~ / w, l = L / l
+NSUBST:  A = + / b, B = + / b
+NSUBST:  C = + / b, D = + / b
+NSUBST:  E = + / x, N = + / n
 SUBST:   ' : ''l. , ' = l.
 SUBST:   " : ""W. , " = Ww..
-NSUBST:  * = 1:e / *:*
+NSUBST:  * = e / *
 SUBST:   * = * % % $ $ d
 SUBST:   ; = 9 0
 SUBST:   ! = %$, & = *%

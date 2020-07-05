@@ -764,7 +764,7 @@ ENDMAP
 NAME:  lemuel_golem_globe
 DEPTH: Zot
 TAGS:  no_rotate no_exits
-KFEAT: T = permanent teleport trap / dispersal trap
+KFEAT: ^ = permanent teleport trap / dispersal trap
 KFEAT: m = iron_grate
 SUBST: 1 = 1.
 MONS:  electric golem
@@ -772,7 +772,7 @@ MAP
   mmmm
  mm..mm
 mm.11.mm
-m.1TT1.m
+m.1^^1.m
 mm.11.mm
  mm..mm
   mmmm
@@ -1118,8 +1118,8 @@ KFEAT:   _ = altar_xom
 KFEAT:   > = } mimic
 KFEAT:   m = iron_grate
 SUBST:   d = tGmcc, y = c`, c = cccccbbvvx, l = wl
-NSUBST:  > = 1 = }:80 > / 1 = ):80 > / 1 = ]:80 > / *:>, 9 = 1:0 / *:9
-NSUBST:  ^ = 1:' / *:^, ~ = 1:" / *:~, ` = 2:f / *:.
+NSUBST:  > = 1 = }:80 > / 1 = ):80 > / 1 = ]:80 > / >, 9 = 0 / 9
+NSUBST:  ^ = ' / ^, ~ = " / ~, ` = 2=f / .
 SHUFFLE: 12 / 34 / 56 / 78, 56, 78, ^' / ~"
 MARKER:  f = lua:fog_machine { cloud_type = "seething chaos", pow_max = 17, \
              delay_min = 450, delay_max = 700, size = 1, excl_rad = 0 }
@@ -1975,14 +1975,14 @@ NAME:    hangedman_zot_decor_checkerboard
 TAGS:    extra transparent
 DEPTH:   Zot
 WEIGHT:  8
-KFEAT:   Z = known zot trap
+KFEAT:   Z = zot trap
 SHUFFLE: @' / '@ / "" / "", defg / jkhi / HIJK / NOLM
 SUBST:   d : wbb, e : wwb, g : lvv, f : llv
 SUBST:   h : lvv, i : llv, j : wbb, k : wwb
 SUBST:   H : wwwwb, I : wwwwb, J : llllv, K : llllv
 SUBST:   L : lvvvv, M : lvvvv, N : wbbbb, O : wbbbb
 SHUFFLE: bv / bv / bv / vb / xx / cc
-NSUBST:  Z = 1 = (:1 Z:14 / 1 = ):1 Z:14 / *:Z
+NSUBST:  Z = 1 = (:1 Z:14 / 1 = ):1 Z:14 / Z
 SUBST:   Z = ZZUG..., '" = .
 KPROP:   l = no_cloud_gen
 KMASK:   wl = no_monster_gen
@@ -2005,7 +2005,8 @@ DEPTH:   Zot
 WEIGHT:  8
 KFEAT:   zZ = zot trap
 KFEAT:   fF = floor
-SHUFFLE: BVfF / VBFf, BV / BV / BV / wl, bv / bv / cc, aAuU / aAuU / aAuU / uUaA
+SHUFFLE: BVfF / VBFf, BV / BV / BV / wl, bv / bv / cc
+SHUFFLE: aAuU / aAuU / aAuU / uUaA
 SHUFFLE: AU / "", fF / fF / zz / '' / '', @! / !@ / ?? / ??
 SUBST:   aAB = b, uUV = v, Z = ()G .:45 Z:25, '"!? = .
 KMASK:   wlfF = no_monster_gen

@@ -989,15 +989,15 @@ ENDMAP
 ################################################################################
 NAME:       psy_arrival_wood_between_worlds
 TAGS:       arrival no_monster_gen no_trap_gen no_pool_fixup
-WEIGHT:     3
 ORIENT:     float
+WEIGHT:     3
 FTILE:      t.qG^P{ = floor_grass
 COLOUR:     . = green
 KMONS:      P = plant / bush
 KFEAT:      ^ = teleport trap
 KFEAT:      p = W
 KMONS:      p = plant
-NSUBST:     p = 10:p / *:W, q = 10:P / *:.
+NSUBST:     p = 10=p / W, q = 10=P / .
 MAP
  xxxxxxxxx@@@xxxxxxxxx
 xxtttttttx...xtttttttxx

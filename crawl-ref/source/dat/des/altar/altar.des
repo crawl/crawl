@@ -157,20 +157,20 @@ ENDMAP
 NAME:  lemuel_tele_altar
 TAGS:  transparent decor
 DEPTH: D:2-, Vaults
-SUBST: Y = X x
-KFEAT: X = teleport trap
-KMASK: _C = opaque
+SUBST: D = ^ x
+KFEAT: ^ = teleport trap
+KMASK: 'C = opaque
 MAP
 ...........
-.xxxxXxxxx.
-.x_______x.
-.x_______x.
-.x_______x.
-.Y___C___Y.
-.x_______x.
-.x_______x.
-.x_______x.
-.xxxxYxxxx.
+.xxxx^xxxx.
+.x'''''''x.
+.x'''''''x.
+.x'''''''x.
+.D'''C'''D.
+.x'''''''x.
+.x'''''''x.
+.x'''''''x.
+.xxxxDxxxx.
 ...........
 ENDMAP
 

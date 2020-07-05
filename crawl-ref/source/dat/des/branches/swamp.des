@@ -545,9 +545,9 @@ ttttttt
 ttttttt
 ENDMAP
 
-NAME: wheals_swamp_sinkhole
-TAGS: extra no_monster_gen decor
-DEPTH: Swamp:1-2
+NAME:   wheals_swamp_sinkhole
+TAGS:   extra no_monster_gen decor
+DEPTH:  Swamp:1-2
 WEIGHT: 5
 KFEAT: ^ = shaft trap
 SUBST: u = Ww
@@ -1045,7 +1045,7 @@ MONS:    swamp drake, hydra, swamp dragon
 KMONS:   A = swamp dragon
 KMONS:   B = green draconian
 SUBST:   x = t
-NSUBST:  1 = 1:2 / 1:3 / * = 1:80 23
+NSUBST:  1 = 2 / 3 / * = 1:80 23
 : else
 KMONS:   1 = green draconian
 KMONS:   a = death drake
@@ -1066,7 +1066,7 @@ KMONS:   | = large abomination / tentacled monstrosity w:5
 SHUFFLE: AB%| / abd*
 : end
 SUBST:   < : <:1 .:9
-NSUBST:  < = 1:{ / 1:}
+NSUBST:  < = { / 1=}
 SHUFFLE: {} / {[ / {[ / }] / }]
 MARKER:  A = lua:fog_machine { cloud_type = "translocational energy", \
                                pow_max = 2, delay_min = 100, delay_max = 150, \
@@ -1686,16 +1686,16 @@ ti...tffftttt
 tttttttttt
 ENDMAP
 
-NAME: nicolae_swamp_oklob_treasure_island
-TAGS: no_pool_fixup
-DEPTH: Swamp, !Swamp:$
+NAME:    nicolae_swamp_oklob_treasure_island
+TAGS:    no_pool_fixup
+DEPTH:   Swamp, !Swamp:$
 SHUFFLE: Aa/Bb/Cc/Dd/Ee/Ff/Gg/Hh/Ii, %*$
-NSUBST: ' = 1:^ / 1:o / *:'
-SUBST: abcde = w, fghi = t, ABCDE = .wW, FGHI = .t, ' = ':100 $$$%%, \
-       _ = .._, . = ......W
-KFEAT: ^ = permanent teleport trap
-KMONS: o = oklob plant
-CLEAR: _
+NSUBST:  ' = ^ / o / '
+SUBST:   abcde = w, fghi = t, ABCDE = .wW, FGHI = .t, ' = ':100 $$$%%
+SUBST:   _ = .._, . = ......W
+KFEAT:   ^ = permanent teleport trap
+KMONS:   o = oklob plant
+CLEAR:   _
 MAP
        _____
      __.....__
