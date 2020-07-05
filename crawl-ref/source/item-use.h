@@ -30,7 +30,7 @@ bool safe_to_remove(const item_def &item, bool quiet = false);
 bool puton_ring(int slot = -1, bool allow_prompt = true,
                 bool check_for_inscriptions = true);
 
-bool puton_ring(const item_def &to_puton, bool allow_prompt = true,
+bool puton_ring(item_def &to_puton, bool allow_prompt = true,
                 bool check_for_inscriptions = true);
 
 void read(item_def* scroll = nullptr);

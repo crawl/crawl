@@ -1250,7 +1250,7 @@ bool wear_armour(int item)
     // NB we already made sure there was space for the item
     int item_slot = _get_item_slot_maybe_with_move(*to_wear);
 
-    start_delay<ArmourOnDelay>(ARMOUR_EQUIP_DELAY - (swapping ? 0 : 1),
+    start_delay<EquipOnDelay>(ARMOUR_EQUIP_DELAY - (swapping ? 0 : 1),
                                you.inv[item_slot]);
 
     return true;
@@ -1610,7 +1610,7 @@ bool safe_to_remove(const item_def &item, bool quiet)
 // in one of those slots.
 //
 // Does not do amulets.
-static bool _swap_rings(const item_def& to_puton)
+static bool _swap_rings(item_def& to_puton)
 {
     vector<equipment_type> ring_types = _current_ring_types();
     const int num_rings = ring_types.size();
@@ -1860,7 +1860,7 @@ static bool _can_puton_amulet(const item_def &item)
     return true;
 }
 
-static bool _puton_amulet(const item_def &item,
+static bool _puton_amulet(item_def &item,
                           bool check_for_inscriptions)
 {
     if (&item == you.slot_item(EQ_AMULET, true))
@@ -1887,46 +1887,24 @@ static bool _puton_amulet(const item_def &item,
         return false;
     }
 
-    if (you.slot_item(EQ_AMULET, true))
+    item_def *old_amu = you.slot_item(EQ_AMULET, true);
+    if (old_amu)
     {
         // Remove the previous one.
-        if (!remove_ring(you.equip[EQ_AMULET], true))
+        if (!remove_ring(old_amu->link, true))
             return false;
 
         // Check for stat loss.
         if (!_safe_to_remove_or_wear(item, false))
             return false;
-
-        // Put on the new amulet.
-        start_delay<JewelleryOnDelay>(1, item);
-
-        // Assume it's going to succeed.
-        return true;
     }
 
-    const unsigned int old_talents = your_talents(false).size();
-
-    // Actually equip the item.
-    const int item_slot = _get_item_slot_maybe_with_move(item);
-    equip_item(EQ_AMULET, item_slot);
-
-    check_item_hint(you.inv[item_slot], old_talents);
-#ifdef USE_TILE_LOCAL
-    if (your_talents(false).size() != old_talents)
-    {
-        tiles.layout_statcol();
-        redraw_screen();
-    }
-#endif
-
-    // Putting on jewellery is fast.
-    you.time_taken /= 2;
-    you.turn_is_over = true;
+    start_delay<EquipOnDelay>(ARMOUR_EQUIP_DELAY, item);
     return true;
 }
 
 // Put on a particular ring.
-static bool _puton_ring(const item_def &item, bool prompt_slot,
+static bool _puton_ring(item_def &item, bool prompt_slot,
                         bool check_for_inscriptions)
 {
     vector<equipment_type> current_jewellery = _current_ring_types();
@@ -2037,7 +2015,7 @@ static bool _puton_ring(const item_def &item, bool prompt_slot,
 }
 
 // Put on a ring or amulet. (Most of the work is in _puton_item.)
-bool puton_ring(const item_def &to_puton, bool allow_prompt,
+bool puton_ring(item_def &to_puton, bool allow_prompt,
                 bool check_for_inscriptions)
 {
     if (you.berserk())

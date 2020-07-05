@@ -232,9 +232,9 @@ public:
     virtual const char* name() const = 0;
 };
 
-class ArmourOnDelay : public Delay
+class EquipOnDelay : public Delay
 {
-    item_def& armour;
+    item_def& equip;
     bool was_prompted = false;
 
     void start() override;
@@ -242,13 +242,13 @@ class ArmourOnDelay : public Delay
     void tick() override
     {
         mprf(MSGCH_MULTITURN_ACTION, "You continue putting on %s.",
-             armour.name(DESC_YOUR).c_str());
+             equip.name(DESC_YOUR).c_str());
     }
 
     void finish() override;
 public:
-    ArmourOnDelay(int dur, item_def& item) :
-                  Delay(dur), armour(item)
+    EquipOnDelay(int dur, item_def& item) :
+                 Delay(dur), equip(item)
     { }
 
     bool try_interrupt() override;
@@ -261,7 +261,7 @@ public:
 
 class EquipOffDelay : public Delay
 {
-    item_def& equip;
+    const item_def& equip;
     bool was_prompted = false;
 
     void start() override;
@@ -276,7 +276,7 @@ class EquipOffDelay : public Delay
 
     void finish() override;
 public:
-    EquipOffDelay(int dur, item_def& item) :
+    EquipOffDelay(int dur, const item_def& item) :
                    Delay(dur), equip(item)
     { }
 
@@ -286,19 +286,17 @@ public:
     {
         return "armour_off";
     }
-private:
-    string eq_category();
 };
 
 class JewelleryOnDelay : public Delay
 {
-    const item_def& jewellery;
+    item_def& jewellery;
 
     void tick() override;
 
     void finish() override;
 public:
-    JewelleryOnDelay(int dur, const item_def& item) :
+    JewelleryOnDelay(int dur, item_def& item) :
                      Delay(dur), jewellery(item)
     { }
 

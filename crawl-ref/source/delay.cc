@@ -74,6 +74,11 @@ int interrupt_block::interrupts_blocked = 0;
 static void _xom_check_corpse_waste();
 static const char *_activity_interrupt_name(activity_interrupt ai);
 
+static string _eq_category(const item_def &equip)
+{
+    return equip.base_type == OBJ_JEWELLERY ? "amulet" : "armour";
+}
+
 void push_delay(shared_ptr<Delay> delay)
 {
     if (delay->is_run())
@@ -168,14 +173,14 @@ bool MacroDelay::try_interrupt()
     // to the Lua function, it can't do damage.
 }
 
-bool ArmourOnDelay::try_interrupt()
+bool EquipOnDelay::try_interrupt()
 {
     if (duration > 1 && !was_prompted)
     {
         if (!crawl_state.disables[DIS_CONFIRMATIONS]
             && !yesno("Keep equipping yourself?", false, 0, false))
         {
-            mpr("You stop putting on your armour.");
+            mprf("You stop putting on your %s.", _eq_category(equip).c_str());
             return true;
         }
         else
@@ -191,7 +196,7 @@ bool EquipOffDelay::try_interrupt()
         if (!crawl_state.disables[DIS_CONFIRMATIONS]
             && !yesno("Keep disrobing?", false, 0, false))
         {
-            mprf("You stop removing your %s.", eq_category().c_str());
+            mprf("You stop removing your %s.", _eq_category(equip).c_str());
             return true;
         }
         else
@@ -452,15 +457,16 @@ void clear_macro_process_key_delay()
         _pop_delay();
 }
 
-void ArmourOnDelay::start()
+void EquipOnDelay::start()
 {
-    mprf(MSGCH_MULTITURN_ACTION, "You start putting on your armour.");
+    mprf(MSGCH_MULTITURN_ACTION, "You start putting on your %s.",
+         _eq_category(equip).c_str());
 }
 
 void EquipOffDelay::start()
 {
     mprf(MSGCH_MULTITURN_ACTION, "You start removing your %s.",
-         eq_category().c_str());
+         _eq_category(equip).c_str());
 }
 
 void MemoriseDelay::start()
@@ -747,33 +753,36 @@ void JewelleryOnDelay::finish()
     puton_ring(jewellery, false, false);
 }
 
-void ArmourOnDelay::finish()
+void EquipOnDelay::finish()
 {
     const unsigned int old_talents = your_talents(false).size();
 
-    set_ident_flags(armour, ISFLAG_IDENT_MASK);
-    if (is_artefact(armour))
-        armour.flags |= ISFLAG_NOTED_ID;
+    set_ident_flags(equip, ISFLAG_IDENT_MASK);
+    if (is_artefact(equip))
+        equip.flags |= ISFLAG_NOTED_ID;
 
-    const equipment_type eq_slot = get_armour_slot(armour);
+    const bool is_amulet = equip.base_type == OBJ_JEWELLERY;
+    const equipment_type eq_slot = is_amulet ? EQ_AMULET :
+                                               get_armour_slot(equip);
 
 #ifdef USE_SOUND
-    parse_sound(EQUIP_ARMOUR_SOUND);
+    if (!is_amulet)
+        parse_sound(EQUIP_ARMOUR_SOUND);
 #endif
-    mprf("You finish putting on %s.", armour.name(DESC_YOUR).c_str());
+    mprf("You finish putting on %s.", equip.name(DESC_YOUR).c_str());
 
     if (eq_slot == EQ_BODY_ARMOUR)
     {
         if (you.duration[DUR_ICY_ARMOUR] != 0
-            && !is_effectively_light_armour(&armour))
+            && !is_effectively_light_armour(&equip))
         {
             remove_ice_armour();
         }
     }
+    
+    equip_item(eq_slot, equip.link);
 
-    equip_item(eq_slot, armour.link);
-
-    check_item_hint(armour, old_talents);
+    check_item_hint(equip, old_talents);
 }
 
 bool EquipOffDelay::invalidated()
@@ -955,11 +964,6 @@ void RevivifyDelay::finish()
     mpr("Now alive.");
     temp_mutate(MUT_FRAIL, "vampire revification");
     vampire_update_transformations();
-}
-
-string EquipOffDelay::eq_category()
-{
-    return equip.base_type == OBJ_JEWELLERY ? "amulet" : "armour";
 }
 
 void run_macro(const char *macroname)
