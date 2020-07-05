@@ -2036,7 +2036,6 @@ bool puton_ring(int slot, bool allow_prompt, bool check_for_inscriptions)
 bool remove_ring(int slot, bool announce)
 {
     equipment_type hand_used = EQ_NONE;
-    int ring_wear_2;
     bool has_jewellery = false;
     bool has_melded = false;
     const vector<equipment_type> jewellery_slots = _current_jewellery_types();
@@ -2145,16 +2144,16 @@ bool remove_ring(int slot, bool announce)
         return false;
     }
 
-    ring_wear_2 = you.equip[hand_used];
+    const int removed_ring_slot = you.equip[hand_used];
 
-    // Remove the ring.
-    if (!_safe_to_remove_or_wear(you.inv[ring_wear_2], true))
+    if (!_safe_to_remove_or_wear(you.inv[removed_ring_slot], true))
         return false;
 
+    // Remove the ring.
 #ifdef USE_SOUND
     parse_sound(REMOVE_JEWELLERY_SOUND);
 #endif
-    mprf("You remove %s.", you.inv[ring_wear_2].name(DESC_YOUR).c_str());
+    mprf("You remove %s.", you.inv[removed_ring_slot].name(DESC_YOUR).c_str());
 #ifdef USE_TILE_LOCAL
     const unsigned int old_talents = your_talents(false).size();
 #endif
