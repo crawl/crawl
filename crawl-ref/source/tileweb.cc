@@ -2165,8 +2165,6 @@ bool TilesFramework::cell_needs_redraw(const coord_def& gc)
 
 void TilesFramework::write_message_escaped(const string& s)
 {
-    m_msg_buf.reserve(m_msg_buf.size() + s.size());
-
     for (unsigned char c : s)
     {
         if (c == '"')
@@ -2180,7 +2178,7 @@ void TilesFramework::write_message_escaped(const string& s)
             m_msg_buf.append(buf);
         }
         else
-            m_msg_buf.append(1, c);
+            m_msg_buf.push_back(c);
     }
 }
 
