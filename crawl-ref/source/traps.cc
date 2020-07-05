@@ -487,8 +487,12 @@ void trap_def::trigger(actor& triggerer)
 {
     const bool you_trigger = triggerer.is_player();
 
-    // Out of sight, out of mind.
-    if (!you.see_cell(pos))
+    // Traps require line of sight without blocking translocation effects.
+    // Requiring LOS prevents monsters from dispersing out of vaults that have
+    // teleport traps available for the player to utilize. Additionally
+    // requiring LOS_NO_TRANS prevents vaults that feature monsters with trap
+    // behind glass from spamming the message log with irrelevant events.
+    if (!you.see_cell_no_trans(pos))
         return;
 
     // If set, the trap will be removed at the end of the
