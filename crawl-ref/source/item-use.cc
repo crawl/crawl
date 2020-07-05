@@ -1335,7 +1335,7 @@ bool takeoff_armour(int item)
 
     you.turn_is_over = true;
 
-    start_delay<ArmourOffDelay>(ARMOUR_EQUIP_DELAY - 1, invitem);
+    start_delay<EquipOffDelay>(ARMOUR_EQUIP_DELAY - 1, invitem);
 
     return true;
 }
@@ -2195,15 +2195,22 @@ bool remove_ring(int slot, bool announce)
     }
 
     const int removed_ring_slot = you.equip[hand_used];
-
-    if (!_safe_to_remove_or_wear(you.inv[removed_ring_slot], true))
+    item_def &invitem = you.inv[removed_ring_slot];
+    if (!_safe_to_remove_or_wear(invitem, true))
         return false;
 
     // Remove the ring.
+    you.turn_is_over = true;
+    if (hand_used == EQ_AMULET)
+    {
+        start_delay<EquipOffDelay>(ARMOUR_EQUIP_DELAY - 1, invitem);
+        return true;
+    }
+
 #ifdef USE_SOUND
     parse_sound(REMOVE_JEWELLERY_SOUND);
 #endif
-    mprf("You remove %s.", you.inv[removed_ring_slot].name(DESC_YOUR).c_str());
+    mprf("You remove %s.", invitem.name(DESC_YOUR).c_str());
 #ifdef USE_TILE_LOCAL
     const unsigned int old_talents = your_talents(false).size();
 #endif
@@ -2217,7 +2224,6 @@ bool remove_ring(int slot, bool announce)
 #endif
 
     you.time_taken /= 2;
-    you.turn_is_over = true;
 
     return true;
 }

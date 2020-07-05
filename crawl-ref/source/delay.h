@@ -259,9 +259,9 @@ public:
     }
 };
 
-class ArmourOffDelay : public Delay
+class EquipOffDelay : public Delay
 {
-    item_def& armour;
+    item_def& equip;
     bool was_prompted = false;
 
     void start() override;
@@ -269,15 +269,15 @@ class ArmourOffDelay : public Delay
     void tick() override
     {
         mprf(MSGCH_MULTITURN_ACTION, "You continue taking off %s.",
-             armour.name(DESC_YOUR).c_str());
+             equip.name(DESC_YOUR).c_str());
     }
 
     bool invalidated() override;
 
     void finish() override;
 public:
-    ArmourOffDelay(int dur, item_def& item) :
-                   Delay(dur), armour(item)
+    EquipOffDelay(int dur, item_def& item) :
+                   Delay(dur), equip(item)
     { }
 
     bool try_interrupt() override;
@@ -286,6 +286,8 @@ public:
     {
         return "armour_off";
     }
+private:
+    string eq_category();
 };
 
 class JewelleryOnDelay : public Delay

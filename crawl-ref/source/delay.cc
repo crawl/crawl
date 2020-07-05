@@ -184,14 +184,14 @@ bool ArmourOnDelay::try_interrupt()
     return false;
 }
 
-bool ArmourOffDelay::try_interrupt()
+bool EquipOffDelay::try_interrupt()
 {
     if (duration > 1 && !was_prompted)
     {
         if (!crawl_state.disables[DIS_CONFIRMATIONS]
             && !yesno("Keep disrobing?", false, 0, false))
         {
-            mpr("You stop removing your armour.");
+            mprf("You stop removing your %s.", eq_category().c_str());
             return true;
         }
         else
@@ -457,9 +457,10 @@ void ArmourOnDelay::start()
     mprf(MSGCH_MULTITURN_ACTION, "You start putting on your armour.");
 }
 
-void ArmourOffDelay::start()
+void EquipOffDelay::start()
 {
-    mprf(MSGCH_MULTITURN_ACTION, "You start removing your armour.");
+    mprf(MSGCH_MULTITURN_ACTION, "You start removing your %s.",
+         eq_category().c_str());
 }
 
 void MemoriseDelay::start()
@@ -775,20 +776,21 @@ void ArmourOnDelay::finish()
     check_item_hint(armour, old_talents);
 }
 
-bool ArmourOffDelay::invalidated()
+bool EquipOffDelay::invalidated()
 {
-    return !armour.defined();
+    return !equip.defined();
 }
 
-void ArmourOffDelay::finish()
+void EquipOffDelay::finish()
 {
-    const equipment_type slot = get_armour_slot(armour);
-    ASSERT(you.equip[slot] == armour.link);
+    const bool is_amu = equip.base_type == OBJ_JEWELLERY;
+    const equipment_type slot = is_amu ? EQ_AMULET : get_armour_slot(equip);
+    ASSERT(you.equip[slot] == equip.link);
 
 #ifdef USE_SOUND
-    parse_sound(DEQUIP_ARMOUR_SOUND);
+    parse_sound(is_amu ? REMOVE_JEWELLERY_SOUND : DEQUIP_ARMOUR_SOUND);
 #endif
-    mprf("You finish taking off %s.", armour.name(DESC_YOUR).c_str());
+    mprf("You finish taking off %s.", equip.name(DESC_YOUR).c_str());
     unequip_item(slot);
 }
 
@@ -953,6 +955,11 @@ void RevivifyDelay::finish()
     mpr("Now alive.");
     temp_mutate(MUT_FRAIL, "vampire revification");
     vampire_update_transformations();
+}
+
+string EquipOffDelay::eq_category()
+{
+    return equip.base_type == OBJ_JEWELLERY ? "amulet" : "armour";
 }
 
 void run_macro(const char *macroname)
