@@ -511,7 +511,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_BLINK_CLOSE, "Blink Close",
     spschool::translocation,
-    spflag::monster,
+    spflag::monster | spflag::target,
     2,
     0,
     -1, -1,
