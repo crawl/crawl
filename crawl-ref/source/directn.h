@@ -11,6 +11,7 @@
 #include "targ-mode-type.h"
 #include "targeting-type.h"
 #include "trap-type.h"
+#include "view.h"
 
 struct describe_info;
 
@@ -109,8 +110,20 @@ struct direction_chooser_args
         default_place(0, 0) {}
 };
 
+class direction_chooser;
+
+class direction_chooser_renderer : public view_renderer
+{
+public:
+    direction_chooser_renderer(direction_chooser &directn) : m_directn(directn) {}
+    void render(crawl_view_buffer& vbuf);
+private:
+    direction_chooser &m_directn;
+};
+
 class direction_chooser
 {
+    friend class direction_chooser_renderer;
 public:
     direction_chooser(dist& moves, const direction_chooser_args& args);
     bool choose_direction();
@@ -224,8 +237,8 @@ private:
     void finalize_moves();
     void do_redraws();
 
-    void draw_beam();
-    void highlight_summoner();
+    void draw_beam(crawl_view_buffer &vbuf);
+    void highlight_summoner(crawl_view_buffer &vbuf);
     coord_def find_summoner();
 
     // Whether the current target is you.
@@ -266,6 +279,8 @@ private:
 
     // Default behaviour, saved across instances.
     static targeting_behaviour stock_behaviour;
+
+    direction_chooser_renderer renderer;
 
     bool unrestricted;
 public:

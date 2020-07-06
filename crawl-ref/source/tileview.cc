@@ -1407,9 +1407,6 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
     else
         cell.halo = HALO_NONE;
 
-    if (mc.monsterinfo() && mc.monsterinfo()->is(MB_HIGHLIGHTED_SUMMONER))
-        cell.is_highlighted_summoner = true;
-
     if (mc.flags & MAP_LIQUEFIED)
         cell.is_liquefied = true;
     else if (print_blood && (_suppress_blood(mc)

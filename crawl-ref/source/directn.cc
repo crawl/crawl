@@ -364,14 +364,14 @@ void direction_chooser::describe_cell() const
 }
 
 #ifndef USE_TILE_LOCAL
-static void _draw_ray_glyph(const coord_def &pos, int colour,
-                            int glych, int mcol)
+static cglyph_t _get_ray_glyph(const coord_def& pos, int colour, int glych,
+                               int mcol)
 {
     if (const monster* mons = monster_at(pos))
     {
         if (mons->alive() && mons->visible_to(&you))
         {
-            glych  = get_cell_glyph(pos).ch;
+            glych = get_cell_glyph(pos).ch;
             colour = mcol;
         }
     }
@@ -380,9 +380,8 @@ static void _draw_ray_glyph(const coord_def &pos, int colour,
         glych = mons_char(you.symbol);
         colour = mcol;
     }
-    view_add_glyph_overlay(pos,
-                           {static_cast<char32_t>(glych),
-                            static_cast<unsigned short>(real_colour(colour))});
+    return {static_cast<char32_t>(glych),
+            static_cast<unsigned short>(real_colour(colour))};
 }
 #endif
 
@@ -441,6 +440,7 @@ direction_chooser::direction_chooser(dist& moves_,
     show_boring_feats(args.show_boring_feats),
     hitfunc(args.hitfunc),
     default_place(args.default_place),
+    renderer(*this),
     unrestricted(args.unrestricted),
     needs_path(args.needs_path)
 {
@@ -1058,68 +1058,72 @@ static tileidx_t _tileidx_aff_type(aff_type aff)
 }
 #endif
 
-static void _draw_ray_cell(coord_def p, coord_def target, aff_type aff)
-{
-    UNUSED(target);
-#ifdef USE_TILE
-    view_add_tile_overlay(p, _tileidx_aff_type(aff));
-#endif
 #ifndef USE_TILE_LOCAL
-    int bcol = BLACK;
+static colour_t _colour_aff_type(aff_type aff, bool target)
+{
     if (aff < 0)
-        bcol = DARKGREY;
+        return DARKGREY;
     else if (aff < AFF_YES)
-        bcol = (p == target) ? RED : MAGENTA;
+        return target ? RED : MAGENTA;
     else if (aff == AFF_YES)
-        bcol = (p == target) ? LIGHTRED : LIGHTMAGENTA;
+        return target ? LIGHTRED : LIGHTMAGENTA;
     else if (aff == AFF_LANDING)
-        bcol = (p == target) ? LIGHTGREEN : GREEN;
+        return target ? LIGHTGREEN : GREEN;
     else if (aff == AFF_MULTIPLE)
-        bcol = (p == target) ? LIGHTCYAN : CYAN;
+        return target ? LIGHTCYAN : CYAN;
     else
         die("unhandled aff %d", aff);
+}
+#endif
 
-    int mbcol = (p == target) ? bcol : bcol | COLFLAG_REVERSE;
-    _draw_ray_glyph(p, bcol, '*', mbcol);
+static void _draw_ray_cell(screen_cell_t& cell, coord_def p, bool on_target,
+                           aff_type aff)
+{
+#ifdef USE_TILE
+    UNUSED(on_target, p);
+    cell.tile.dngn_overlay[cell.tile.num_dngn_overlay++] =
+        _tileidx_aff_type(aff);
+#endif
+#ifndef USE_TILE_LOCAL
+    const auto bcol = _colour_aff_type(aff, on_target);
+    const auto mbcol = on_target ? bcol : bcol | COLFLAG_REVERSE;
+    const auto cglyph = _get_ray_glyph(p, bcol, '*', mbcol);
+    cell.glyph = cglyph.ch;
+    cell.colour = cglyph.col;
 #endif
 }
 
-void direction_chooser::draw_beam()
+void direction_chooser_renderer::render(crawl_view_buffer& vbuf)
 {
-    // Clear the old beam if necessary.
-    view_clear_overlays();
+    m_directn.draw_beam(vbuf);
+    m_directn.highlight_summoner(vbuf);
+}
 
+void direction_chooser::draw_beam(crawl_view_buffer &vbuf)
+{
     if (!show_beam)
-    {
-        viewwindow(false);
         return;
-    }
 
     // Use the new API if implemented.
     if (hitfunc)
     {
         if (!hitfunc->set_aim(target()))
-        {
-            viewwindow(false);
             return;
-        }
         const los_type los = hitfunc->can_affect_unseen()
                                             ? LOS_NONE : LOS_DEFAULT;
         for (radius_iterator ri(you.pos(), los); ri; ++ri)
             if (aff_type aff = hitfunc->is_affected(*ri))
-                _draw_ray_cell(*ri, target(), aff);
+            {
+                auto& cell = vbuf(grid2view(*ri) - 1);
+                _draw_ray_cell(cell, *ri, *ri == target(), aff);
+            }
 
-        viewwindow(false);
         return;
     }
 
     // If we don't have a new beam to show, we're done.
     if (!have_beam)
-    {
-        view_clear_overlays();
-        viewwindow(false);
         return;
-    }
 
     // We shouldn't ever get a beam to an out-of-LOS target.
     ASSERT(you.see_cell(target()));
@@ -1138,22 +1142,26 @@ void direction_chooser::draw_beam()
             continue;
 
         const bool inrange = in_range(p);
+        auto& cell = vbuf(grid2view(p) - 1);
 #ifdef USE_TILE
-        view_add_tile_overlay(p, inrange ? TILE_RAY : TILE_RAY_OUT_OF_RANGE);
+        cell.tile.dngn_overlay[cell.tile.num_dngn_overlay++] =
+            inrange ? TILE_RAY : TILE_RAY_OUT_OF_RANGE;
 #endif
 #ifndef USE_TILE_LOCAL
-        const int bcol = inrange ? MAGENTA : DARKGREY;
-        _draw_ray_glyph(p, bcol, '*', bcol | COLFLAG_REVERSE);
+        const auto bcol = inrange ? MAGENTA : DARKGREY;
+        const auto cglyph = _get_ray_glyph(p, bcol, '*', bcol| COLFLAG_REVERSE);
+        cell.glyph = cglyph.ch;
+        cell.colour = cglyph.col;
 #endif
     }
     textcolour(LIGHTGREY);
 
     // Only draw the ray over the target on tiles.
 #ifdef USE_TILE
-    view_add_tile_overlay(target(), in_range(ray.pos()) ? TILE_RAY : TILE_RAY_OUT_OF_RANGE);
+    auto& cell = vbuf(grid2view(target()) - 1);
+    cell.tile.dngn_overlay[cell.tile.num_dngn_overlay++] =
+        in_range(ray.pos()) ? TILE_RAY : TILE_RAY_OUT_OF_RANGE;
 #endif
-
-    viewwindow(false);
 }
 
 bool direction_chooser::in_range(const coord_def& p) const
@@ -1742,11 +1750,7 @@ void direction_chooser::do_redraws()
 
     if (need_viewport_redraw)
     {
-        draw_beam();
-        // draw_beam calls viewwindow(true) at least one in tiles mode, and
-        // viewwindow(false) at least once in console, so the old highlight and
-        // the old beam are both gone here.
-        highlight_summoner();
+        viewwindow(false, false, nullptr, &renderer);
         need_viewport_redraw = false;
     }
 
@@ -1786,35 +1790,19 @@ coord_def direction_chooser::find_summoner()
     return INVALID_COORD;
 }
 
-void direction_chooser::highlight_summoner()
+void direction_chooser::highlight_summoner(crawl_view_buffer &vbuf)
 {
     const coord_def summ_loc = find_summoner();
 
     if (summ_loc == INVALID_COORD || !you.see_cell(summ_loc))
         return;
 
+    auto& cell = vbuf(grid2view(summ_loc) - 1);
 #ifdef USE_TILE
-    monster_info* summ_info = env.map_knowledge(summ_loc).monsterinfo();
-
-    if (!summ_info)  // Can happen, e. g. if the summoner is invisible
-        return;
-
-    summ_info->mb.set(MB_HIGHLIGHTED_SUMMONER);
-
-    // The first argument must be false, because otherwise viewwindow would
-    // wipe any beams we might have drawn, and also reset the monster_info we
-    // just altered, before it draws anything.
-    viewwindow(false, true);
+    cell.tile.is_highlighted_summoner = true;
 #endif
 #if defined(USE_TILE_WEB) || !defined(USE_TILE)
-    char32_t glych  = get_cell_glyph(summ_loc).ch;
-    int col = CYAN;
-    col |= COLFLAG_REVERSE;
-
-    const coord_def vp = grid2view(summ_loc);
-    cgotoxy(vp.x, vp.y, GOTO_DNGN);
-    textcolour(real_colour(col));
-    putwch(glych);
+    cell.colour = CYAN | COLFLAG_REVERSE;
 #endif
 }
 

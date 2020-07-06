@@ -62,6 +62,20 @@ public:
     int frame_delay;
 };
 
+/**
+ * A crawl_view_buffer renderer callback that can be injected into
+ * viewwindow(), allowing the addition of new visual elements without
+ * adding code directly to viewwindow() itself.
+ */
+class view_renderer
+{
+public:
+    view_renderer() {}
+    virtual ~view_renderer() {}
+
+    virtual void render(crawl_view_buffer &vbuf) = 0;
+};
+
 #ifdef USE_TILE
 void view_add_tile_overlay(const coord_def &gc, tileidx_t tile);
 #endif
@@ -73,7 +87,7 @@ void view_clear_overlays();
 void run_animation(animation_type anim, use_animation_type type,
                    bool cleanup = true);
 void viewwindow(bool show_updates = true, bool tiles_only = false,
-                animation *a = nullptr);
+                animation *a = nullptr, view_renderer *renderer = nullptr);
 void draw_cell(screen_cell_t *cell, const coord_def &gc,
                bool anim_updates, int flash_colour);
 
