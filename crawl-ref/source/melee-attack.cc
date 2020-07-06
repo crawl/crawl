@@ -237,9 +237,6 @@ bool melee_attack::handle_phase_attempted()
         check_autoberserk();
     }
 
-    // The attacker loses nutrition.
-    attacker->make_hungry(3, true);
-
     // Xom thinks fumbles are funny...
     if (attacker->fumbles_attack())
     {
