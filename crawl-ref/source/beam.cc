@@ -1154,6 +1154,9 @@ void bolt::do_fire()
         const dungeon_feature_type feat = grd(pos());
 
         if (in_bounds(target)
+            // Starburst beams are essentially untargeted; some might even hit
+            // a victim if others have LOF blocked.
+            && origin_spell != SPELL_STARBURST
             // We ran into a solid wall with a real beam...
             && (feat_is_solid(feat)
                 && flavour != BEAM_DIGGING && flavour <= BEAM_LAST_REAL
@@ -2675,7 +2678,10 @@ bool bolt::can_burn_trees() const
            || origin_spell == SPELL_BOLT_OF_MAGMA
            || origin_spell == SPELL_FIREBALL
            || origin_spell == SPELL_EXPLOSIVE_BOLT
-           || origin_spell == SPELL_INNER_FLAME;
+           || origin_spell == SPELL_FIRE_STORM
+           || origin_spell == SPELL_IGNITION
+           || origin_spell == SPELL_INNER_FLAME
+           || origin_spell == SPELL_STARBURST;
 }
 
 bool bolt::can_affect_wall(const coord_def& p, bool map_knowledge) const
@@ -6366,7 +6372,7 @@ void bolt::determine_affected_cells(explosion_map& m, const coord_def& delta,
     // would have some unintended side-effects. Would be ideal to deal with
     // those and simplify feat_is_wall() to return true for trees. -gammafunk
     if (feat_is_wall(dngn_feat)
-        || feat_is_tree(dngn_feat)
+        || feat_is_tree(dngn_feat) && !can_burn_trees()
         || feat_is_closed_door(dngn_feat))
     {
         // Special case: explosion originates from rock/statue

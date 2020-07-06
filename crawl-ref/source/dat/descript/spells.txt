@@ -1412,6 +1412,12 @@ Sprint spell
 
 Causes the caster to move across terrain more rapidly for a short duration.
 %%%%
+Starburst spell
+
+Releases penetrating bolts of fire from the caster in every direction.
+The range of each bolt is decreased by one for every creature
+it strikes.
+%%%%
 Static Discharge spell
 
 Releases electrical charges against those next to the caster. These may arc to

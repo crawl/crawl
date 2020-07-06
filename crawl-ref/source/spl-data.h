@@ -4307,6 +4307,17 @@ static const struct spell_desc spelldata[] =
     TILEG_NOXIOUS_BOG,
 },
 {
+    SPELL_STARBURST, "Starburst",
+    spschool::conjuration | spschool::fire,
+    spflag::area,
+    6,
+    200,
+    5, 5,
+    6, 0,
+    TILEG_BOLT_OF_FIRE,
+    TILEG_STARBURST,
+},
+{
     SPELL_NO_SPELL, "nonexistent spell",
     spschool::none,
     spflag::testing,

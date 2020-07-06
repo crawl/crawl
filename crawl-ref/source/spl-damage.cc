@@ -44,6 +44,7 @@
 #include "ouch.h"
 #include "pakellas.h"
 #include "prompt.h"
+#include "random.h"
 #include "religion.h"
 #include "rot.h"
 #include "shout.h"
@@ -1779,6 +1780,7 @@ spret cast_ignition(const actor *agent, int pow, bool fail)
         beam_actual.ex_size       = 0;
         beam_actual.is_explosion  = true;
         beam_actual.loudness      = 0;
+        beam_actual.origin_spell  = SPELL_IGNITION;
         beam_actual.apply_beam_conducts();
 
 #ifdef DEBUG_DIAGNOSTICS
@@ -1791,8 +1793,12 @@ spret cast_ignition(const actor *agent, int pow, bool fail)
         {
             for (adjacent_iterator ai(pos); ai; ++ai)
             {
-                if (cell_is_solid(*ai))
+                if (cell_is_solid(*ai)
+                    && (!beam_actual.can_affect_wall(*ai)
+                        || you_worship(GOD_FEDHAS)))
+                {
                     continue;
+                }
 
                 actor *act = actor_at(*ai);
 
@@ -3894,6 +3900,65 @@ spret cast_hailstorm(int pow, bool fail, bool tracer)
             continue;
 
         _hailstorm_cell(*ri, pow, &you);
+    }
+
+    return spret::success;
+}
+
+spret cast_starburst(int pow, bool fail, bool tracer)
+{
+    int range = spell_range(SPELL_STARBURST, pow);
+
+    vector<coord_def> offsets = { coord_def(range, 0),
+                                coord_def(range, range),
+                                coord_def(0, range),
+                                coord_def(-range, range),
+                                coord_def(-range, 0),
+                                coord_def(-range, -range),
+                                coord_def(0, -range),
+                                coord_def(range, -range) };
+
+    bolt beam;
+    beam.range        = range;
+    beam.source       = you.pos();
+    beam.source_id    = MID_PLAYER;
+    beam.is_tracer    = tracer;
+    beam.is_targeting = tracer;
+    beam.dont_stop_player = true;
+    beam.friend_info.dont_stop = true;
+    beam.foe_info.dont_stop = true;
+    beam.attitude = ATT_FRIENDLY;
+    beam.thrower      = KILL_YOU;
+    beam.origin_spell = SPELL_STARBURST;
+    beam.draw_delay   = 5;
+    zappy(ZAP_BOLT_OF_FIRE, pow, false, beam);
+
+    for (const coord_def & offset : offsets)
+    {
+        beam.target = you.pos() + offset;
+        if (!tracer && !player_tracer(ZAP_BOLT_OF_FIRE, pow, beam))
+            return spret::abort;
+
+        if (tracer)
+        {
+            beam.fire();
+            // something to hit
+            if (beam.foe_info.count > 0)
+                return spret::success;
+        }
+    }
+
+    if (tracer)
+        return spret::abort;
+
+    fail_check();
+
+    // Randomize for nice animations
+    shuffle_array(offsets);
+    for (auto & offset : offsets)
+    {
+        beam.target = you.pos() + offset;
+        beam.fire();
     }
 
     return spret::success;
