@@ -2064,42 +2064,28 @@ void fire_tracer(const monster* mons, bolt &pbolt, bool explode_only,
     pbolt.is_tracer = false;
 }
 
-static coord_def _random_point_hittable_from(const coord_def &c,
-                                            int radius,
-                                            int margin = 1,
-                                            int tries = 5)
-{
-    while (tries-- > 0)
-    {
-        const coord_def point = dgn_random_point_from(c, radius, margin);
-        if (point.origin())
-            continue;
-        if (!cell_see_cell(c, point, LOS_SOLID))
-            continue;
-        return point;
-    }
-    return coord_def();
-}
-
-void create_feat_splash(coord_def center,
+vector<coord_def> create_feat_splash(coord_def center,
                                 int radius,
-                                int nattempts)
+                                int number,
+                                int duration)
 {
-    // Always affect center, if compatible
-    if ((grd(center) == DNGN_FLOOR || grd(center) == DNGN_SHALLOW_WATER))
+    vector<coord_def> splash_coords;
+
+    for (distance_iterator di(center, true, false, radius); di && number > 0; ++di)
     {
-        temp_change_terrain(center, DNGN_SHALLOW_WATER, 100 + random2(100),
-                            TERRAIN_CHANGE_FLOOD);
+        const dungeon_feature_type feat = grd(*di);
+        if ((feat == DNGN_FLOOR || feat == DNGN_SHALLOW_WATER)
+            && cell_see_cell(center, *di, LOS_NO_TRANS))
+        {
+            number--;
+            int time = random_range(duration, duration * 3 / 2) - (di.radius() * 20);
+            temp_change_terrain(*di, DNGN_SHALLOW_WATER, time,
+                                TERRAIN_CHANGE_FLOOD);
+            splash_coords.push_back(*di);
+        }
     }
 
-    for (int i = 0; i < nattempts; ++i)
-    {
-        const coord_def newp(_random_point_hittable_from(center, radius));
-        if (newp.origin() || (grd(newp) != DNGN_FLOOR && grd(newp) != DNGN_SHALLOW_WATER))
-            continue;
-        temp_change_terrain(newp, DNGN_SHALLOW_WATER, 100 + random2(100),
-                            TERRAIN_CHANGE_FLOOD);
-    }
+    return splash_coords;
 }
 
 void bolt_parent_init(const bolt &parent, bolt &child)
@@ -2356,6 +2342,7 @@ void bolt::affect_endpoint()
     switch (origin_spell)
     {
     case SPELL_PRIMAL_WAVE:
+    {
         if (you.see_cell(pos()))
         {
             mpr("The wave splashes down.");
@@ -2366,9 +2353,26 @@ void bolt::affect_endpoint()
             noisy(spell_effect_noise(SPELL_PRIMAL_WAVE),
                   pos(), "You hear a splash.");
         }
-        create_feat_splash(pos(), 2, random_range(3, 12, 2));
+        const int num = agent() && agent()->is_player() ? div_rand_round(ench_power * 3, 20) + 3 + random2(7)
+                                                        : random_range(3, 12, 2);
+        const int dur = div_rand_round(ench_power * 4, 3) + 66;
+        vector<coord_def> splash_coords = create_feat_splash(pos(), agent()->is_player() ? 2 : 1, num, dur);
+        dprf(DIAG_BEAM, "Creating pool at %d,%d with %d tiles of water for %d auts.", pos().x, pos().y, num, dur);
+        if (agent() && agent()->is_player())
+        {
+            for (const coord_def coord: splash_coords)
+            {
+                monster* mons = monster_at(coord);
+                if (mons && !mons->res_water_drowning())
+                {
+                    simple_monster_message(*mons, " is engulfed in water.");
+                    mons->add_ench(mon_enchant(ENCH_WATERLOGGED, 0, &you,
+                                                   random_range(dur, dur * 3 / 2) - 20 * coord.distance_from(pos())));
+                }
+            }
+        }
         break;
-
+    }
     case SPELL_BLINKBOLT:
     {
         actor *act = agent(true); // use orig actor even when reflected
