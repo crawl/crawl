@@ -1953,6 +1953,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
         ASSERT(you.save->has_chunk(level_name));
         dprf("Loading old level '%s'.", level_name.c_str());
         _restore_tagged_chunk(you.save, level_name, TAG_LEVEL, "Level file is invalid.");
+        you.on_current_level = true;
         _redraw_all(); // TODO why is there a redraw call here?
     }
 
