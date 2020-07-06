@@ -2673,7 +2673,14 @@ item_def* monster_die(monster& mons, killer_type killer,
     if (!was_banished && !mons_reset)
     {
         if (have_passive(passive_t::jiyva_kill_to_slime))
-            _jiyva_kill_to_slime(&mons);
+        {
+            if(YOU_KILL(killer) ||
+               pet_kill)
+            {
+              _jiyva_kill_to_slime(&mons);
+            }
+        }
+        
         if (mons.has_ench(ENCH_INFESTATION))
             _infestation_create_scarab(&mons);
         if (you.duration[DUR_DEATH_CHANNEL] && was_visible && gives_player_xp)
