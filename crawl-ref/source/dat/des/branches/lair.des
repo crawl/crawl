@@ -2226,6 +2226,25 @@ EttxxxxxttttttttttttttttE
 EEEEEEEEEEEEEEEEEEEEEEEEE
 ENDMAP
 
+# A Den of Fire Fox
+NAME:   lair_fire_fox_den
+DEPTH:  Lair
+TAGS:   no_monster_gen patrolling
+KITEM:  % = crystal ball of energy
+MONS:   fire fox, plant, bush
+MAP
+ xxxxx
+xxxxxxx
+xx...xx
+xx1%.xx
+xx...xx
+ xxx.xx
+ xx.xxx
+xxx.xxx
+xx.xxx.
+ 223
+ENDMAP
+
 # A hidden river runs under a mountain, feeding into an enchanted lake.
 NAME:   gammafunk_lair_enchanted_lake
 TAGS:   no_pool_fixup
@@ -2556,7 +2575,7 @@ NAME:    hangedman_lair_caniforms_friends
 PLACE:   Lair:$
 TAGS:    no_monster_gen no_rotate patrolling
 ORIENT:  southwest
-MONS:    wolf, warg, hell hound, raiju
+MONS:    wolf, warg, hell hound, raiju, fire fox
 MONS:    black bear, polar bear
 KMONS:   P = plant
 # The one big reward and the several smaller stacks of items
