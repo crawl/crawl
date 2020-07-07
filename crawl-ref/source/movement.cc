@@ -576,12 +576,7 @@ void move_player_action(coord_def move)
 
     if (you.digging)
     {
-        if (apply_starvation_penalties())
-        {
-            you.digging = false;
-            canned_msg(MSG_TOO_HUNGRY);
-        }
-        else if (feat_is_diggable(grd(targ)))
+        if (feat_is_diggable(grd(targ)))
             targ_pass = true;
         else // moving or attacking ends dig
         {
@@ -714,7 +709,6 @@ void move_player_action(coord_def move)
                  DESC_THE).c_str());
             destroy_wall(targ);
             noisy(6, you.pos());
-            make_hungry(50, true);
             additional_time_taken += BASELINE_DELAY / 5;
         }
 
