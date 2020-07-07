@@ -550,7 +550,7 @@ void infestation_death_fineff::fire()
                                                        SPELL_INFESTATION),
                                          false))
     {
-        scarab->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 6));
+        scarab->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 5));
 
         if (you.see_cell(posn) || you.can_see(*scarab))
         {
