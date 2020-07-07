@@ -1235,12 +1235,6 @@ int max_corpse_chunks(monster_type mc)
     }
 }
 
-corpse_effect_type mons_corpse_effect(monster_type mc)
-{
-    ASSERT_smc();
-    return smc->corpse_thingy;
-}
-
 int derived_undead_avg_hp(monster_type mtype, int hd, int scale)
 {
     static const map<monster_type, int> hp_per_hd_by_type = {
@@ -1678,7 +1672,8 @@ monster_type mons_base_type(const monster& mon)
 
 bool mons_class_can_leave_corpse(monster_type mc)
 {
-    return mons_corpse_effect(mc) != CE_NOCORPSE;
+    ASSERT_smc();
+    return smc->leaves_corpse;
 }
 
 bool mons_class_can_be_zombified(monster_type mc)
@@ -4998,7 +4993,7 @@ void debug_mondata()
                                  name);
             }
         }
-        else if (md->corpse_thingy == CE_NOCORPSE)
+        else if (!md->leaves_corpse)
         {
             if (has_corpse_tile)
             {

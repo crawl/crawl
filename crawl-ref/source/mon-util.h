@@ -152,7 +152,7 @@ struct monsterentry
     int8_t AC; // armour class
     int8_t ev; // evasion
     int sec;   // actually mon_spellbook_type
-    corpse_effect_type corpse_thingy;
+    bool leaves_corpse;
     shout_type         shouts;
     mon_intel_type     intel;
     habitat_type     habitat;
@@ -250,8 +250,6 @@ string mon_attack_name(attack_type attack, bool with_object = true);
 bool is_plain_attack_type(attack_type attack);
 bool flavour_triggers_damageless(attack_flavour flavour);
 int flavour_damage(attack_flavour flavour, int HD, bool random = true);
-
-corpse_effect_type mons_corpse_effect(monster_type mc);
 
 bool mons_class_flag(monster_type mc, monclass_flags_t bits);
 

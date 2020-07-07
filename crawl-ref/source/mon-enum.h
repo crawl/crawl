@@ -10,13 +10,6 @@
 
 #define HERD_COMFORT_RANGE 6
 
-enum corpse_effect_type
-{
-    CE_NOCORPSE,
-    CE_CLEAN,
-    CE_NOXIOUS,
-};
-
 // TODO: Unify this and a player_equivalent (if applicable)
 // and move into attack.h
 enum attack_type

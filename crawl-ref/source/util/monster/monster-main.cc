@@ -1220,22 +1220,8 @@ int main(int argc, char* argv[])
         printf("%s", monsterresistances.c_str());
         printf("%s", monstervulnerabilities.c_str());
 
-        if (me->corpse_thingy != CE_NOCORPSE && me->corpse_thingy != CE_CLEAN)
-        {
-            printf(" | Chunks: ");
-            switch (me->corpse_thingy)
-            {
-            case CE_NOXIOUS:
-                printf("%s", colour(DARKGREY, "noxious").c_str());
-                break;
-            // We should't get here; including these values so we can get
-            // compiler
-            // warnings for unhandled enum values.
-            case CE_NOCORPSE:
-            case CE_CLEAN:
-                printf("???");
-            }
-        }
+        if (me->leaves_corpse)
+            printf(" | Corpse");
 
         printf(" | XP: %ld", exper);
 
