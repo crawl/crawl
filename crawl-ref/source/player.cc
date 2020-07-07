@@ -1189,9 +1189,6 @@ int player_hunger_rate()
 {
     int hunger = 3;
 
-    if (you.species == SP_TROLL)
-        hunger += 3;            // in addition to the +3 for fast metabolism
-
     hunger += you.get_mutation_level(MUT_FAST_METABOLISM)
             - you.get_mutation_level(MUT_SLOW_METABOLISM);
 
