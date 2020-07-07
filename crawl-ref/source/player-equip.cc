@@ -1134,8 +1134,7 @@ static void _equip_regeneration_item(const item_def &item)
 
 bool acrobat_boost_active()
 {
-    return you.activated[EQ_AMULET]
-           && you.wearing(EQ_AMULET, AMU_ACROBAT)
+    return you.wearing(EQ_AMULET, AMU_ACROBAT)
            && you.duration[DUR_ACROBAT]
            && (!you.caught())
            && (!you.is_constricted());

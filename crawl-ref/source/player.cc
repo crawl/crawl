@@ -1949,7 +1949,7 @@ bool player_is_shapechanged()
 
 void update_acrobat_status()
 {
-    if (!you.wearing(EQ_AMULET, AMU_ACROBAT) || !you.activated[EQ_AMULET])
+    if (!you.wearing(EQ_AMULET, AMU_ACROBAT))
         return;
 
     // Acrobat duration goes slightly into the next turn, giving the
