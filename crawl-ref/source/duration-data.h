@@ -2,6 +2,7 @@
  * Status defaults for durations.
  */
 
+#include "act-iter.h"
 #include "god-passive.h"
 
 static void _end_weapon_brand()
@@ -25,6 +26,20 @@ static void _end_corrosion()
     you.props["corrosion_amount"] = 0;
     you.redraw_armour_class = true;
     you.wield_change = true;
+}
+
+static void _end_death_channel()
+{
+    you.attribute[ATTR_DIVINE_DEATH_CHANNEL] = 0;
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (mi->type == MONS_SPECTRAL_THING && mi->summoner == MID_PLAYER)
+        {
+            mon_enchant abj = mi->get_ench(ENCH_FAKE_ABJURATION);
+            abj.duration = 0;
+            mi->update_ench(abj);
+        }
+    }
 }
 
 static void _redraw_armour()
@@ -178,9 +193,8 @@ static const duration_def duration_data[] =
       MAGENTA, "DChan",
       "death channel", "",
       "You are channeling the dead.", D_DISPELLABLE | D_EXPIRES,
-      {{ "Your unholy channel expires.", []() {
-          you.attribute[ATTR_DIVINE_DEATH_CHANNEL] = 0;
-      }}, { "Your unholy channel is weakening.", 1 }}, 6},
+      {{ "Your unholy channel expires.", _end_death_channel },
+      { "Your unholy channel is weakening.", 1 }}, 6},
     { DUR_DIVINE_STAMINA,
       WHITE, "Vit",
       "vitalised", "divine stamina",
