@@ -1655,12 +1655,24 @@ static bool _has_launcher(const monster_info& mi)
     if (mi.itemuse() >= MONUSE_STARTING_EQUIPMENT)
     {
         const item_def* weapon = mi.inv[MSLOT_WEAPON].get();
-        return weapon && is_ranged_weapon_type(weapon->sub_type);
+        const item_def* missile = mi.inv[MSLOT_MISSILE].get();
+        return weapon && missile && missile->launched_by(*weapon);
     }
     else
         return false;
 }
 
+static bool _has_missile(const monster_info& mi)
+{
+    if (mi.itemuse() >= MONUSE_STARTING_EQUIPMENT)
+    {
+        const item_def* missile = mi.inv[MSLOT_MISSILE].get();
+        // Assume that if the monster don't pick up items they can't use.
+        return missile && is_throwable(nullptr, *missile);
+    }
+    else
+        return false;
+}
 static bool _has_wand(const monster_info& mi)
 {
      if (mi.itemuse() >= MONUSE_STARTING_EQUIPMENT)
@@ -1689,6 +1701,7 @@ void mons_conditions_string(string& desc, const vector<monster_info>& mi,
         int wand_count = 0;
         int polearm_count = 0;
         int launcher_count = 0;
+        int missile_count = 0;
 
         for (int j = start; j < start + count; ++j)
         {
@@ -1698,6 +1711,8 @@ void mons_conditions_string(string& desc, const vector<monster_info>& mi,
                 polearm_count++;
             if (_has_launcher(mi[j]))
                 launcher_count++;
+            else if (_has_missile(mi[j]))
+                missile_count++;
         }
 
         if (wand_count)
@@ -1719,6 +1734,13 @@ void mons_conditions_string(string& desc, const vector<monster_info>& mi,
             conditions.push_back(_condition_string(launcher_count, count,
                                                    {MB_UNSAFE, "launcher",
                                                     "launcher", "launchers"}));
+        }
+
+        if (missile_count)
+        {
+            conditions.push_back(_condition_string(launcher_count, count,
+                                                   {MB_UNSAFE, "missile",
+                                                    "missile", "missiles"}));
         }
     }
 

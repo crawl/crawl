@@ -938,7 +938,7 @@ static int _item_training_target(const item_def &item)
         return weapon_min_delay_skill(item) * 10;
     else if (is_shield(item))
         return round(you.get_shield_skill_to_offset_penalty(item) * 10);
-    else if (item.base_type == OBJ_MISSILES && is_throwable(&you, item, false))
+    else if (item.base_type == OBJ_MISSILES && is_throwable(&you, item))
         return (((10 + throw_dam / 2) - FASTEST_PLAYER_THROWING_SPEED) * 2) * 10;
     else
         return 0;
@@ -957,7 +957,7 @@ static skill_type _item_training_skill(const item_def &item)
         return SK_SHIELDS; // shields are armour, so do shields before armour
     else if (item.base_type == OBJ_ARMOUR)
         return SK_ARMOUR;
-    else if (item.base_type == OBJ_MISSILES && is_throwable(&you, item, false))
+    else if (item.base_type == OBJ_MISSILES && is_throwable(&you, item))
         return SK_THROWING;
     else if (item_is_evokable(item)) // not very accurate
         return SK_EVOCATIONS;
@@ -1432,7 +1432,7 @@ static string _describe_ammo(const item_def &item)
     description.reserve(64);
 
     const bool can_launch = has_launcher(item);
-    const bool can_throw  = is_throwable(&you, item, true);
+    const bool can_throw  = is_throwable(nullptr, item);
 
     if (item.brand && item_type_known(item))
     {
@@ -1515,7 +1515,7 @@ static string _describe_ammo(const item_def &item)
     }
 
     const int dam = property(item, PWPN_DAMAGE);
-    const bool player_throwable = is_throwable(&you, item, false);
+    const bool player_throwable = is_throwable(&you, item);
     if (player_throwable)
     {
         const int throw_delay = (10 + dam / 2);
