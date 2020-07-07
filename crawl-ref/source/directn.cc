@@ -1042,7 +1042,8 @@ void direction_chooser::set_target(const coord_def& new_target)
     moves.target = new_target;
 }
 
-static tileidx_t tileidx_aff_type(aff_type aff)
+#ifdef USE_TILE
+static tileidx_t _tileidx_aff_type(aff_type aff)
 {
     if (aff < AFF_YES)
         return TILE_RAY_OUT_OF_RANGE;
@@ -1055,12 +1056,13 @@ static tileidx_t tileidx_aff_type(aff_type aff)
     else
         return 0;
 }
+#endif
 
 static void _draw_ray_cell(coord_def p, coord_def target, aff_type aff)
 {
     UNUSED(target);
 #ifdef USE_TILE
-    view_add_tile_overlay(p, tileidx_aff_type(aff));
+    view_add_tile_overlay(p, _tileidx_aff_type(aff));
 #endif
 #ifndef USE_TILE_LOCAL
     int bcol = BLACK;
