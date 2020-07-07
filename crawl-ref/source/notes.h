@@ -60,6 +60,7 @@ enum NOTE_TYPES
     NOTE_ANCESTOR_SPECIALIZATION, /* needs: ancestor specialization (string) */
 #endif
     NOTE_FOUND_UNRAND,          /* needs: item name (string) */
+    NOTE_ACQUIRE_ITEM,
     NOTE_NUM_TYPES
 };
 

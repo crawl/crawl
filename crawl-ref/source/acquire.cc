@@ -34,6 +34,7 @@
 #include "libutil.h"
 #include "macro.h"
 #include "message.h"
+#include "notes.h"
 #include "output.h"
 #include "options.h"
 #include "prompt.h"
@@ -1598,8 +1599,10 @@ static void _create_acquirement_item(item_def &item)
         }
     }
 
-    // We're now safe to make any notes about finding the item.
-    unset_ident_flags(item, ISFLAG_NOTED_ID | ISFLAG_NOTED_GET);
+    take_note(Note(NOTE_ACQUIRE_ITEM, 0, 0, item.name(DESC_A),
+              origin_desc(item)));
+    item.flags |= (ISFLAG_NOTED_ID | ISFLAG_NOTED_GET);
+
     set_ident_type(item, true);
 
     if (copy_item_to_grid(item, you.pos()))

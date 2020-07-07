@@ -93,6 +93,7 @@ static bool _is_noteworthy(const Note& note)
         || note.type == NOTE_PERM_MUTATION
         || note.type == NOTE_GET_ITEM
         || note.type == NOTE_ID_ITEM
+        || note.type == NOTE_ACQUIRE_ITEM
         || note.type == NOTE_BUY_ITEM
         || note.type == NOTE_DONATE_MONEY
         || note.type == NOTE_SEEN_MONSTER
@@ -259,6 +260,9 @@ string Note::describe(bool when, bool where, bool what) const
             break;
         case NOTE_GET_ITEM:
             result << "Got " << name;
+            break;
+        case NOTE_ACQUIRE_ITEM:
+            result << "Acquired " << name;
             break;
         case NOTE_BUY_ITEM:
             result << "Bought " << name << " for " << first << " gold piece"
