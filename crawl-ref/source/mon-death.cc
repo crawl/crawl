@@ -2671,16 +2671,7 @@ item_def* monster_die(monster& mons, killer_type killer,
 
     // Necromancy
     if (!was_banished && !mons_reset)
-    {
-        if (have_passive(passive_t::jiyva_kill_to_slime))
-        {
-            if(YOU_KILL(killer) ||
-               pet_kill)
-            {
-              _jiyva_kill_to_slime(&mons);
-            }
-        }
-        
+    {   
         if (mons.has_ench(ENCH_INFESTATION))
             _infestation_create_scarab(&mons);
         if (you.duration[DUR_DEATH_CHANNEL] && was_visible && gives_player_xp)
@@ -2814,12 +2805,21 @@ item_def* monster_die(monster& mons, killer_type killer,
         autotoggle_autopickup(false);
     }
 
-    if (corpse && _reaping(mons))
+    if (have_passive(passive_t::jiyva_kill_to_slime))
+    {
+        if(YOU_KILL(killer) ||
+            pet_kill)
+        {
+            _jiyva_kill_to_slime(&mons);
+        }
+    }
+
+    if (corpse && (_reaping(mons) || mons.has_ench(ENCH_CIGOTUVIS_PLAGUE)))
         corpse = nullptr;
 
     crawl_state.dec_mon_acting(&mons);
     monster_cleanup(&mons);
-
+    
     // Force redraw for monsters that die.
     if (in_bounds(mwhere) && you.see_cell(mwhere))
     {
@@ -2831,11 +2831,6 @@ item_def* monster_die(monster& mons, killer_type killer,
     {
         _give_experience(player_xp, monster_xp, killer, killer_index,
                 pet_kill, was_visible, mons.xp_tracking);
-    }
-
-    if (mons.has_ench(ENCH_CIGOTUVIS_PLAGUE))
-    {
-        return nullptr;
     }
 
     return corpse;

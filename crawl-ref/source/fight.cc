@@ -249,13 +249,18 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu, int
             int remain = you.heads() - attack_num;
             you.turn_is_over = false;
             bool gl_cancel_attack = false;
+            uint32_t placeholder = 0;
+            if (defender->is_monster())
+                placeholder = defender->as_monster()->get_client_id();
             for (int i = 0; i < attack_num; ++i) 
             {
-
                 if (!defender)
-                    continue;
-                
+                    break;
+
                 if (!defender->alive())
+                    break;
+                
+                if (!defender->is_monster() || defender->as_monster()->get_client_id() != placeholder)
                     break;
 
                 melee_attack attk(&you, defender, 7, i);
