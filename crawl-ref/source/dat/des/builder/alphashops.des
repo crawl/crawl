@@ -165,7 +165,7 @@
        "troll leather armour", "manual of throwing",
        "wand of teleportation",
        "manual of translocations", "manual of transmutations",
-       "trident", "throwing net" }
+       "trident", "throwing net", "tin of tremorstones" }
 
       elseif s == "U" then i = { "book of unlife", "manual of unarmed combat" }
 

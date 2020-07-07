@@ -30,6 +30,7 @@
 #include "ghost.h"
 #include "god-abil.h"
 #include "god-conduct.h"
+#include "god-passive.h"
 #include "god-wrath.h"
 #include "invent.h"
 #include "item-prop.h"
@@ -61,9 +62,11 @@
 #include "spl-book.h"
 #include "spl-cast.h"
 #include "spl-clouds.h"
+#include "spl-damage.h"
 #include "spl-util.h"
 #include "spl-zap.h"
 #include "state.h"
+#include "stepdown.h"
 #include "stringutil.h"
 #include "target.h"
 #include "terrain.h"
@@ -1088,6 +1091,13 @@ static bool _lamp_of_fire()
     bolt base_beam;
     dist target;
     direction_chooser_args args;
+
+    if (you.confused())
+    {
+        canned_msg(MSG_TOO_CONFUSED);
+        return false;
+    }
+
     args.restricts = DIR_TARGET;
     args.mode = TARG_HOSTILE;
     args.top_prompt = "Aim the lamp in which direction?";
@@ -1387,6 +1397,12 @@ static bool _phial_of_floods()
     dist target;
     bolt beam;
 
+    if (you.confused())
+    {
+        canned_msg(MSG_TOO_CONFUSED);
+        return false;
+    }
+
     const int base_pow = 10 + you.skill(SK_EVOCATIONS, 4); // placeholder?
     zappy(ZAP_PRIMAL_WAVE, base_pow, false, beam);
     beam.range = LOS_RADIUS;
@@ -1398,11 +1414,6 @@ static bool _phial_of_floods()
     if (spell_direction(target, beam, &args)
         && player_tracer(ZAP_PRIMAL_WAVE, base_pow, beam))
     {
-        if (you.confused())
-        {
-            target.confusion_fuzz();
-            beam.set_target(target);
-        }
 
 #if TAG_MAJOR_VERSION == 34
         const int surge = pakellas_surge_devices();
@@ -1936,6 +1947,149 @@ static bool _rod_spell(item_def& irod, bool check_range)
     return true;
 }
 
+
+
+/**
+ * Find the cell at range 3 closest to the center of mass of monsters in range,
+ * or a random range 3 cell if there are none.
+ *
+ * @param see_targets a boolean parameter indicating if the user can see any of
+ * the targets
+ * @return The cell in question.
+ */
+static coord_def _find_tremorstone_target(bool& see_targets)
+{
+    coord_def com = {0, 0};
+    see_targets = false;
+    int num = 0;
+
+    for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
+    {
+        if (monster_at(*ri) && !mons_is_firewood(*monster_at(*ri)))
+        {
+            com += *ri;
+            see_targets = see_targets || you.can_see(*monster_at(*ri));
+            ++num;
+        }
+    }
+
+    coord_def target = {0, 0};
+    int distance = LOS_RADIUS * num;
+    int ties = 0;
+
+    for (radius_iterator ri(you.pos(), 3, C_SQUARE, LOS_NO_TRANS, true); ri; ++ri)
+    {
+        if (ri->distance_from(you.pos()) != 3 || cell_is_solid(*ri))
+            continue;
+
+        if (num > 0)
+        {
+            if (com.distance_from((*ri) * num) < distance)
+            {
+                ties = 1;
+                target = *ri;
+                distance = com.distance_from((*ri) * num);
+            }
+            else if (com.distance_from((*ri) * num) == distance
+                     && one_chance_in(++ties))
+            {
+                target = *ri;
+            }
+        }
+        else if (one_chance_in(++ties))
+            target = *ri;
+    }
+
+    return target;
+}
+
+/**
+ * Find an adjacent tile for a tremorstone explosion to go off in.
+ *
+ * @param center    The original target of the stone.
+ * @return          The new, final origin of the stone's explosion.
+ */
+static coord_def _fuzz_tremorstone_target(coord_def center)
+{
+    coord_def chosen = center;
+    int seen = 1;
+    for (adjacent_iterator ai(center); ai; ++ai)
+        if (!cell_is_solid(*ai) && one_chance_in(++seen))
+            chosen = *ai;
+    return chosen;
+}
+
+/**
+ * Number of explosions, scales up from 1 at 0 evo to 6 at 27 evo,
+ * via a stepdown.
+ *
+ * Currently pow is just evo + 15, but the abstraction is kept around in
+ * case an evocable enhancer returns to the game so that 0 evo with enhancer
+ * gets some amount of enhancement.
+ */
+static int _tremorstone_count(int pow)
+{
+    return 1 + stepdown((pow - 15) / 3, 2, ROUND_CLOSE);
+}
+
+/**
+ * Evokes a tremorstone, blasting something in the general area of a
+ * chosen target.
+ *
+ * @return          spret::abort if the player cancels, spret::fail if they
+ *                  try to evoke but fail, and spret::success otherwise.
+ */
+static spret _tremorstone() {
+    bool see_target;
+    bolt beam;
+
+    if (you.confused())
+    {
+        canned_msg(MSG_TOO_CONFUSED);
+        return spret::abort;
+    }
+
+    static const int RADIUS = 2;
+    static const int SPREAD = 1;
+    static const int RANGE = RADIUS + SPREAD;
+    const int pow = 15 + you.skill(SK_EVOCATIONS);
+    const int adjust_pow = player_adjust_evoc_power(pow);
+    const int num_explosions = shotgun_beam_count(adjust_pow);
+
+    beam.source_id  = MID_PLAYER;
+    beam.thrower    = KILL_YOU;
+    zappy(ZAP_TREMORSTONE, pow, false, beam);
+    beam.range = RANGE;
+    beam.ex_size = RADIUS;
+    beam.target = _find_tremorstone_target(see_target);
+
+    targeter_radius hitfunc(&you, LOS_NO_TRANS);
+
+    auto vulnerable = [](const actor *act) -> bool
+    {
+        return !(have_passive(passive_t::shoot_through_plants)
+                 && fedhas_protects(*act->as_monster()));
+    };
+    if ((!see_target
+        && !yesno("You can't see anything, throw a tremorstone anyway?",
+                 true, 'n'))
+        || stop_attack_prompt(hitfunc, "throw a tremorstone", vulnerable))
+    {
+        return spret::abort;
+    }
+
+    mpr("The tremorstone explodes into fragments!");
+    const coord_def center = beam.target;
+    for (int i = 0; i < num_explosions; i++)
+    {
+        bolt explosion = beam;
+        explosion.target = _fuzz_tremorstone_target(center);
+        explosion.explode(i == num_explosions - 1);
+    }
+
+    return spret::success;
+}
+
 bool evoke_check(int slot, bool quiet)
 {
     const bool reaching = slot != -1 && ((slot == you.equip[EQ_WEAPON]
@@ -2265,6 +2419,20 @@ bool evoke_item(int slot)
         case MISC_ZIGGURAT:
             // Don't set did_work to false, _make_zig handles the message.
             unevokable = !_make_zig(item);
+            break;
+
+        case MISC_TIN_OF_TREMORSTONES:
+            switch (_tremorstone()) 
+            {
+                default:
+                case spret::abort:
+                    return false;
+
+                case spret::success:
+                case spret::fail:
+                    practise_evoking(1);
+                    break;
+            }
             break;
 
         case MISC_BAG:

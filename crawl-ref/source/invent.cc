@@ -2291,16 +2291,12 @@ bool item_is_evokable(const item_def &item, bool unskilled, bool known,
             mpr("That item cannot be evoked!");
         return false;
 
-    case OBJ_MISCELLANY:
 #if TAG_MAJOR_VERSION == 34
+        case OBJ_MISCELLANY:
         if (item.sub_type != MISC_BUGGY_LANTERN_OF_SHADOWS
             && item.sub_type != MISC_BUGGY_EBONY_CASKET
             )
-        {
-#endif
-            return unskilled || item.sub_type != MISC_BAG;
-#if TAG_MAJOR_VERSION == 34
-        }
+           return true;
         // removed items fallthrough to failure
 #endif
 

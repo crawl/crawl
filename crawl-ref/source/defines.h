@@ -141,13 +141,6 @@ const int MIN_HIT_MISS_PERCENTAGE = 5;
 // Maximum charge level for rods
 const int MAX_ROD_CHARGE = 17;
 const int ROD_CHARGE_MULT = 100;
-const int LIGHTNING_CHARGE_MULT = 100;
-const int LIGHTNING_MAX_CHARGE = 4;
-
-// Evoker debt for evoking one XP evoker.
-const int XP_EVOKE_DEBT = 10;
-// Evoker debt for evoking a lightning rod once.
-const int XP_EVOKE_LIGHTNING_ROD_DEBT = 3;
 
 const int BASELINE_DELAY  = 10;
 const int INVIS_CONTAM_PER_TURN = 30;
