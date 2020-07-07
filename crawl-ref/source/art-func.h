@@ -119,7 +119,6 @@ static bool _ASMODEUS_evoke(item_def */*item*/, bool* did_work,
 {
     if (_evoke_sceptre_of_asmodeus())
     {
-        make_hungry(200, false, true);
         *did_work = true;
         practise_evoking(1);
     }
@@ -203,7 +202,6 @@ static bool _DISPATER_evoke(item_def */*item*/, bool* did_work, bool* unevokable
     mpr("You feel the staff feeding on your energy!");
     dec_hp(14, false);
     dec_mp(4);
-    make_hungry(100, false, true);
     practise_evoking(random_range(1, 2));
 
     return false;
@@ -275,7 +273,6 @@ static bool _OLGREB_evoke(item_def */*item*/, bool* did_work, bool* unevokable)
     }
 
     dec_mp(4);
-    make_hungry(50, false, true);
     practise_evoking(1);
     did_god_conduct(DID_WIZARDLY_ITEM, 10);
 
@@ -504,6 +501,11 @@ static bool _WUCAD_MU_evoke(item_def */*item*/, bool* did_work, bool* unevokable
     {
         mpr("Your reserves of magic are full.");
         *unevokable = true;
+        return true;
+    }
+    else if (apply_starvation_penalties())
+    {
+        canned_msg(MSG_TOO_HUNGRY);
         return true;
     }
 
