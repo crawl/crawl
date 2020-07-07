@@ -1167,6 +1167,8 @@ void no_ability_msg()
         mpr("Sorry, you're not good enough to have a special ability.");
 }
 
+// Prompts the user for an ability to use, first checking the lua hook
+// c_choose_ability
 bool activate_ability()
 {
     vector<talent> talents = your_talents(false);
@@ -1179,8 +1181,37 @@ bool activate_ability()
     }
 
     int selected = -1;
+
+    string luachoice;
+
+    if (!clua.callfn("c_choose_ability", ">s", &luachoice))
+    {
+        if (!clua.error.empty())
+            mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
+    }
+    else if (!luachoice.empty())
+    {
+        bool valid = false;
+        // Sanity check
+        for (unsigned int i = 0; i < talents.size(); ++i)
+        {
+            if (talents[i].hotkey == luachoice[0])
+            {
+                selected = static_cast<int>(i);
+                valid = true;
+                break;
+            }
+        }
+
+        // Lua gave us garbage, defer to the user
+        if (!valid)
+            selected = -1;
+    }
+
 #ifndef TOUCH_UI
-    if (Options.ability_menu)
+    if (Options.ability_menu && selected == -1)
+#else
+    if (selected == -1)
 #endif
     {
         selected = choose_ability_menu(talents);

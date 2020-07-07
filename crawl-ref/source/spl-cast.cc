@@ -684,6 +684,22 @@ bool cast_a_spell(bool check_range, spell_type spell)
     {
         int keyin = 0;
 
+        string luachoice;
+        if (!clua.callfn("c_choose_spell", ">s", &luachoice))
+        {
+            if (!clua.error.empty())
+                mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
+        }
+        else if (!luachoice.empty() && isalpha(luachoice[0]))
+        {
+            keyin = luachoice[0];
+            const spell_type spl = get_spell_by_letter(keyin);
+
+            // Bad entry from lua, defer to the user
+            if (!is_valid_spell(spl))
+                keyin = 0;
+        }
+
         while (true)
         {
 #ifdef TOUCH_UI

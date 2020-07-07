@@ -194,6 +194,55 @@ function clear_autopickup_funcs()
     end
 end
 
+--- Ability choice.
+--
+-- This variable can be set by lua before the user is shown the
+-- "Activate which ability?" prompt. If set to a valid ability letter that
+-- ability will be activated without prompting the user. Otherwise the ability
+-- prompt proceedes as normal.
+--
+-- This value is cleared after every ability activation.
+--
+-- The current table mapping letters to abilities can be accessed with the
+-- @{you.abil_table} function.
+chk_ability_choice = ""
+
+--- Ability choice internal hook.
+--
+-- Internal function supporting chk_ability_choice
+--
+-- @treturn string|nil The ability letter to activate or nil to prompt the user
+-- @local
+function c_choose_ability()
+    local ret = chk_ability_choice
+    chk_ability_choice = ""
+    return ret
+end
+
+
+--- Spell choice.
+--
+-- This variable can be set by lua before the user is shown the
+-- "Cast which spell?" prompt. If set to a valid spell letter that
+-- will be selected without prompting the user. Execution passes to targeting,
+-- which can be handled either through the lua system or by the user.
+--
+-- The current table mapping letters to spells can be accessed with the
+-- @{you.spell_table} function.
+chk_spell_choice = ""
+
+--- Spell choice internal hook.
+--
+-- Internal function supporting chk_ability_choice
+--
+-- @treturn string|nil The spell letter to activate or nil to prompt the user
+-- @local
+function c_choose_spell()
+    local ret = chk_spell_choice
+    chk_spell_choice = ""
+    return ret
+end
+
 -- The remainder of these hooks are called elsewhere in the codebase from
 -- various places. We document the user-intended ones here.
 
