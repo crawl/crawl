@@ -90,15 +90,14 @@ enum class abflag
     exhaustion          = 0x00000010, // fails if you.exhausted
     instant             = 0x00000020, // doesn't take time to use
     conf_ok             = 0x00000040, // can use even if confused
-    rations             = 0x00000080, // ability requires 2 rations per target
-    variable_mp         = 0x00000100, // costs a variable amount of MP
-    remove_curse_scroll = 0x00000200, // Uses ?rc
-    skill_drain         = 0x00000400, // drains skill levels
-    gold                = 0x00000800, // costs gold
-    sacrifice           = 0x00001000, // sacrifice (Ru)
-    hostile             = 0x00002000, // failure summons a hostile (Makhleb)
-    berserk_ok          = 0x00004000, // can use even if berserk
-    card                = 0x00008000, // deck drawing (Nemelex)
+    variable_mp         = 0x00000080, // costs a variable amount of MP
+    remove_curse_scroll = 0x00000100, // Uses ?rc
+    skill_drain         = 0x00000200, // drains skill levels
+    gold                = 0x00000400, // costs gold
+    sacrifice           = 0x00000800, // sacrifice (Ru)
+    hostile             = 0x00001000, // failure summons a hostile (Makhleb)
+    berserk_ok          = 0x00002000, // can use even if berserk
+    card                = 0x00004000, // deck drawing (Nemelex)
 };
 DEF_BITFIELD(ability_flags, abflag);
 
