@@ -900,7 +900,7 @@ static void _hydra_consider_devouring(monster &defender)
  */
 bool melee_attack::handle_phase_killed()
 {
-    if (attacker->is_player() && you.is_hydra()
+    if (attacker->is_player() && (you.is_hydra() || player_equip_unrand(UNRAND_JAWS))
         && defender->is_monster() // better safe than sorry
         && defender->type != MONS_NO_MONSTER) // already reset
     {
@@ -1166,6 +1166,20 @@ void melee_attack::check_autoberserk()
 
 bool melee_attack::check_unrand_effects()
 {
+    if (player_equip_unrand(UNRAND_JAWS) && attacker->is_player())
+    {
+        int hp_boost = 1 + random2(damage_done);
+        hp_boost = resist_adjust_damage(defender, BEAM_NEG, hp_boost);
+
+        if (hp_boost)
+        {
+            obvious_effect = true;
+            canned_msg(MSG_GAIN_HEALTH);
+            dprf(DIAG_COMBAT, "Vampiric Healing: damage %d, healed %d",
+                damage_done, hp_boost/3);
+            attacker->heal(hp_boost/3);
+        }
+    }
     if (unrand_entry && unrand_entry->melee_effects && weapon)
     {
         const bool died = !defender->alive();

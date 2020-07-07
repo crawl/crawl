@@ -1375,8 +1375,10 @@ int player_hunger_rate(bool temp)
         hunger += 4;
     }
 
-    hunger += you.get_mutation_level(MUT_FAST_METABOLISM)
-            - you.get_mutation_level(MUT_SLOW_METABOLISM);
+    int jaws_eager = player_equip_unrand(UNRAND_JAWS) ? 2 : 0;
+
+    hunger += you.get_mutation_level(MUT_FAST_METABOLISM) + jaws_eager
+            - you.get_mutation_level(MUT_SLOW_METABOLISM); 
 
     // If Cheibriados has slowed your life processes, you will hunger less.
     if (have_passive(passive_t::slow_metabolism))
@@ -3781,7 +3783,8 @@ bool player::clarity(bool calc_unid, bool items) const
 bool player::gourmand(bool calc_unid, bool items) const
 {
     return you.get_mutation_level(MUT_GOURMAND) > 0
-           || actor::gourmand(calc_unid, items);
+           || actor::gourmand(calc_unid, items)
+           || player_equip_unrand(UNRAND_JAWS);
 }
 
 bool player::stasis() const
