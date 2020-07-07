@@ -666,15 +666,19 @@ static void _catchup_monster_moves(monster* mon, int turns)
         return;
     }
 
-    // Expire friendly summons
-    if (mon->friendly() && mon->is_summoned() && !mon->is_perm_summoned())
+    // Expire friendly summons and temporary allies
+    if (mon->friendly()
+        && (mon->is_summoned() || mon->has_ench(ENCH_FAKE_ABJURATION))
+        && !mon->is_perm_summoned())
     {
         // You might still see them disappear if you were quick
         if (turns > 2)
             monster_die(*mon, KILL_DISMISSED, NON_MONSTER);
         else
         {
-            mon_enchant abj  = mon->get_ench(ENCH_ABJ);
+            enchant_type abj_type = mon->has_ench(ENCH_ABJ) ? ENCH_ABJ
+                                    : ENCH_FAKE_ABJURATION;
+            mon_enchant abj  = mon->get_ench(abj_type);
             abj.duration = 0;
             mon->update_ench(abj);
         }
