@@ -1558,6 +1558,7 @@ static void _display_undead_motions(int motions)
 }
 
 static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
+                           int pow,
                            unsigned short hitting, actor *as, string nas,
                            god_type god, bool actual, bool force_beh,
                            monster **raised, int* motions_r)
@@ -1578,8 +1579,8 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
     if (zombie_type == MONS_PRINCE_RIBBIT)
         zombie_type = MONS_HUMAN;
 
-    const int hd = (item.props.exists(MONSTER_HIT_DICE)) ?
-                    item.props[MONSTER_HIT_DICE].get_short() : 0;
+    int hd = (item.props.exists(MONSTER_HIT_DICE)) ?
+              item.props[MONSTER_HIT_DICE].get_short() : 0;
 
     // Save the corpse name before because it can get destroyed if it is
     // being drained and the raising interrupts it.
@@ -1644,10 +1645,12 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
         return false;
 
     if (god == GOD_NO_GOD) // only Yred dead-raising lasts forever.
-        mons->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 6));
+        mons->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 4));
 
     // If the original monster has been levelled up, its HD might be different
-    // from its class HD, in which case its HP should be rerolled to match.
+    // from its class HD. For player spells the hd is scaled with spellpower.
+    if (nas.empty())
+        hd = div_rand_round(hd * (100 + pow), 300);
     if (mons->get_experience_level() != hd)
     {
         mons->set_hit_dice(max(hd, 1));
@@ -1710,7 +1713,7 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
 // you are butchering being animated.
 // This is called for Animate Skeleton and from animate_dead.
 int animate_remains(const coord_def &a, corpse_type class_allowed,
-                    beh_type beha, unsigned short hitting,
+                    beh_type beha, int pow, unsigned short hitting,
                     actor *as, string nas,
                     god_type god, bool actual,
                     bool quiet, bool force_beh,
@@ -1743,8 +1746,8 @@ int animate_remains(const coord_def &a, corpse_type class_allowed,
         const bool was_draining = is_being_drained(*si);
         const bool was_butchering = is_being_butchered(*si);
 
-        const bool success = _raise_remains(a, si.index(), beha, hitting,
-                                            as, nas, god, actual,
+        const bool success = _raise_remains(a, si.index(), beha, pow,
+                                            hitting, as, nas, god, actual,
                                             force_beh, mon, &motions);
 
         if (actual && success)
@@ -1783,7 +1786,7 @@ int animate_remains(const coord_def &a, corpse_type class_allowed,
     return 1;
 }
 
-int animate_dead(actor *caster, int /*pow*/, beh_type beha,
+int animate_dead(actor *caster, int pow, beh_type beha,
                  unsigned short hitting, actor *as, string nas, god_type god,
                  bool actual)
 {
@@ -1794,7 +1797,8 @@ int animate_dead(actor *caster, int /*pow*/, beh_type beha,
     for (radius_iterator ri(caster->pos(), LOS_NO_TRANS); ri; ++ri)
     {
         // There may be many corpses on the same spot.
-        while (animate_remains(*ri, CORPSE_BODY, beha, hitting, as, nas, god,
+        while (animate_remains(*ri, CORPSE_BODY, beha, pow, hitting,
+                               as, nas, god,
                                actual, true, 0, 0, &motions) > 0)
         {
             number_raised++;
@@ -1814,75 +1818,42 @@ int animate_dead(actor *caster, int /*pow*/, beh_type beha,
     return number_raised;
 }
 
-spret cast_animate_skeleton(god_type god, bool fail)
+spret cast_animate_skeleton(int pow, god_type god, bool fail)
 {
-    bool found = false;
-
-    for (stack_iterator si(you.pos(), true); si; ++si)
-    {
-        if (si->base_type == OBJ_CORPSES
-            && mons_class_can_be_zombified(si->mon_type)
-            && mons_skeleton(si->mon_type))
-        {
-            found = true;
-        }
-    }
-
-    if (!found)
-    {
-        mpr("There is nothing here that can be animated!");
-        return spret::abort;
-    }
-
     fail_check();
     canned_msg(MSG_ANIMATE_REMAINS);
 
-    const char* no_space = "...but the skeleton had no space to rise!";
-
-    // First, we try to animate a skeleton if there is one.
-    const int animate_skel_result = animate_remains(you.pos(), CORPSE_SKELETON,
-                                                    BEH_FRIENDLY, MHITYOU,
-                                                    &you, "", god);
-    if (animate_skel_result != -1)
+    for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
     {
-        if (animate_skel_result == 0)
-            mpr(no_space);
-        return spret::success;
-    }
-
-    // If not, look for a corpse and butcher it.
-    for (stack_iterator si(you.pos(), true); si; ++si)
-    {
-        if (si->is_type(OBJ_CORPSES, CORPSE_BODY)
-            && mons_skeleton(si->mon_type)
-            && mons_class_can_be_zombified(si->mon_type))
+        for (stack_iterator si(*ri, true); si; ++si)
         {
-            butcher_corpse(*si, true);
-            mpr("Before your eyes, flesh is ripped from the corpse!");
-            request_autopickup();
-            // Only convert the top one.
-            break;
+            if (si->base_type == OBJ_CORPSES
+                && mons_class_can_be_zombified(si->mon_type)
+                && mons_skeleton(si->mon_type))
+            {
+                if (si->is_type(OBJ_CORPSES, CORPSE_BODY))
+                {
+                    butcher_corpse(*si, true);
+                    mpr("Before your eyes, flesh is ripped from the corpse!");
+                    request_autopickup();
+                    // Only convert the top one.
+                }
+
+                const int animate_skel_result =
+                    animate_remains(*ri, CORPSE_SKELETON, BEH_FRIENDLY,
+                                    pow, MHITYOU, &you, "", god);
+
+                if (animate_skel_result != -1)
+                {
+                    if (animate_skel_result == 0)
+                        mpr("...but the skeleton had no space to rise!");
+                    return spret::success;
+                }
+            }
         }
     }
 
-    // Now we try again to animate a skeleton.
-    // this return type is insanely stupid
-    const int animate_result = animate_remains(you.pos(), CORPSE_SKELETON,
-                                               BEH_FRIENDLY, MHITYOU, &you, "",
-                                               god);
-    dprf("result: %d", animate_result);
-    switch (animate_result)
-    {
-        case -1:
-            mpr("There is no skeleton here to animate!");
-            break;
-        case 0:
-            mpr(no_space);
-            break;
-        default:
-            // success, messages already printed
-            break;
-    }
+    canned_msg(MSG_NOTHING_HAPPENS);
 
     return spret::success;
 }
@@ -1892,7 +1863,7 @@ spret cast_animate_dead(int pow, god_type god, bool fail)
     fail_check();
     canned_msg(MSG_CALL_DEAD);
 
-    if (!animate_dead(&you, pow + 1, BEH_FRIENDLY, MHITYOU, &you, "", god))
+    if (!animate_dead(&you, pow, BEH_FRIENDLY, MHITYOU, &you, "", god))
         canned_msg(MSG_NOTHING_HAPPENS);
 
     return spret::success;

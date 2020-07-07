@@ -1496,7 +1496,7 @@ static bool _mons_reaped(actor &killer, monster& victim)
     }
 
     monster *zombie = 0;
-    if (animate_remains(victim.pos(), CORPSE_BODY, beh, hitting, &killer, "",
+    if (animate_remains(victim.pos(), CORPSE_BODY, beh, 0, hitting, &killer, "",
                         GOD_NO_GOD, true, true, true, &zombie) <= 0)
     {
         return false;

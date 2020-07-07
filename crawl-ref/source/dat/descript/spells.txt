@@ -41,13 +41,15 @@ Animate Dead spell
 
 Reanimates all corpses and skeletons in the vicinity as followers. This magic
 is unstable, so eventually those reanimated will crumble to dust. Zombies and
-skeletons cannot leave the level they were created on.
+skeletons cannot leave the level they were created on. The resilience of
+zombies raised by this spell increases with spell power.
 %%%%
 Animate Skeleton spell
 
 Reanimates a single skeleton as a follower, even if that skeleton is still
 encased in flesh. This magic is unstable, so eventually those reanimated will
-crumble to dust. Skeletons cannot leave the level they were created on.
+crumble to dust. Skeletons cannot leave the level they were created on. The
+resilience of a skeleton raised by this spell increases with spell power.
 %%%%
 Apportation spell
 
