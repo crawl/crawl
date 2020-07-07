@@ -89,25 +89,16 @@ enum class abflag
     piety               = 0x00000008, // ability has its own piety cost
     exhaustion          = 0x00000010, // fails if you.exhausted
     instant             = 0x00000020, // doesn't take time to use
-                        //0x00000040,
-                        //0x00000080,
-    conf_ok             = 0x00000100, // can use even if confused
-    rations             = 0x00000200, // ability requires 2 rations per target
-    rations_or_piety    = 0x00000400, // ability requires 2 rations or piety
-    variable_mp         = 0x00000800, // costs a variable amount of MP
-                        //0x00001000,
-                        //0x00002000,
-                        //0x00004000,
-                        //0x00008000,
-                        //0x00010000,
-                        //0x00020000,
-    remove_curse_scroll = 0x00040000, // Uses ?rc
-    skill_drain         = 0x00080000, // drains skill levels
-    gold                = 0x00100000, // costs gold
-    sacrifice           = 0x00200000, // sacrifice (Ru)
-    hostile             = 0x00400000, // failure summons a hostile (Makhleb)
-    berserk_ok          = 0x00800000, // can use even if berserk
-    card                = 0x01000000, // deck drawing (Nemelex)
+    conf_ok             = 0x00000040, // can use even if confused
+    rations             = 0x00000080, // ability requires 2 rations per target
+    variable_mp         = 0x00000100, // costs a variable amount of MP
+    remove_curse_scroll = 0x00000200, // Uses ?rc
+    skill_drain         = 0x00000400, // drains skill levels
+    gold                = 0x00000800, // costs gold
+    sacrifice           = 0x00001000, // sacrifice (Ru)
+    hostile             = 0x00002000, // failure summons a hostile (Makhleb)
+    berserk_ok          = 0x00004000, // can use even if berserk
+    card                = 0x00008000, // deck drawing (Nemelex)
 };
 DEF_BITFIELD(ability_flags, abflag);
 
@@ -792,12 +783,6 @@ const string make_cost_description(ability_type ability)
     if (abil.flags & abflag::instant)
         ret += ", Instant"; // not really a cost, more of a bonus - bwr
 
-    if (abil.flags & abflag::rations)
-        ret += ", 2 Rations per target";
-
-    if (abil.flags & abflag::rations_or_piety)
-        ret += ", Piety or 2 Rations";
-
     if (abil.flags & abflag::skill_drain)
         ret += ", Skill drain";
 
@@ -893,12 +878,6 @@ static const string _detailed_cost_description(ability_type ability)
             ret << "variable";
     }
 
-    if (abil.flags & abflag::rations_or_piety)
-        ret << "\nPiety, or 2 rations";
-
-    if (abil.flags & abflag::rations)
-        ret << "\nRations: 2 per target";
-
     if (abil.flags & abflag::remove_curse_scroll)
     {
         have_cost = true;
@@ -912,22 +891,22 @@ static const string _detailed_cost_description(ability_type ability)
         ret << "\nYou must catch your breath between uses of this ability.";
 
     if (abil.flags & abflag::delay)
-        ret << "\nIt takes some time before being effective.";
+        ret << "\nThis ability takes some time before being effective.";
 
     if (abil.flags & abflag::pain)
         ret << "\nUsing this ability will hurt you.";
 
     if (abil.flags & abflag::exhaustion)
-        ret << "\nIt causes exhaustion, and cannot be used when exhausted.";
+        ret << "\nThis ability causes exhaustion, and cannot be used when exhausted.";
 
     if (abil.flags & abflag::instant)
-        ret << "\nIt is instantaneous.";
+        ret << "\nThis ability is instantaneous.";
 
     if (abil.flags & abflag::conf_ok)
-        ret << "\nYou can use it even if confused.";
+        ret << "\nYou can use this ability even if confused.";
 
     if (abil.flags & abflag::skill_drain)
-        ret << "\nIt will temporarily drain your skills when used.";
+        ret << "\nThis ability will temporarily drain your skills when used.";
 
     if (abil.ability == ABIL_HEAL_WOUNDS)
     {
