@@ -80,6 +80,7 @@
 # * fragile:  Is destroyed when unequipped.
 # * fog:      Lets wearer use the evoke fog ability.
 # * evil:     Is treated as an evil item (hated by good gods).
+# * harm:     Provides harm effect.
 # * holy:     Is treated as a holy item.
 # * inv:      Lets wearer evoke invisibility ability.
 # * fly:      Lets wearer evoke flight ability.
@@ -220,7 +221,7 @@ COLOUR:  RED
 TILE:    spwpn_sword_of_power
 TILE_EQ: sword_of_power
 VALUE:   800
-BOOL:    special, no_upgrade
+BOOL:    special, no_upgrade, mutate
 
 NAME:    staff of Olgreb
 INSCRIP: rPois∞
