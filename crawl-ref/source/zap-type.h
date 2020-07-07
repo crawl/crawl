@@ -97,5 +97,6 @@ enum zap_type
     ZAP_BREATHE_HOLY,
     ZAP_EXPLOSION_TRACER,
     ZAP_FOXFIRE,
+    ZAP_TREMORSTONE,
     NUM_ZAPS
 };

@@ -303,7 +303,8 @@ enum misc_item_type
     MISC_XOMS_CHESSBOARD,
 #endif
     MISC_BAG,
-
+    MISC_TIN_OF_TREMORSTONES,
+    
     NUM_MISCELLANY,
     MISC_DECK_UNKNOWN = NUM_MISCELLANY,
 };

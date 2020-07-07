@@ -678,6 +678,11 @@ static int _acquirement_misc_subtype(bool /*divine*/, int & /*quantity*/)
                                        (NO_LOVE ?     0 :  7)},
         {MISC_PHANTOM_MIRROR,
                                        (NO_LOVE ?     0 :  7)},
+        // The player never needs more than one of the rest.
+        // Tremorstones are better for heavily armoured characters.
+        {MISC_TIN_OF_TREMORSTONES, 
+                            (you.seen_misc[MISC_TIN_OF_TREMORSTONES]
+                                                ? 0 : 5 + _skill_rdiv(SK_ARMOUR) / 3)},
         // The player never needs more than one.
         {MISC_LIGHTNING_ROD,
             (you.seen_misc[MISC_LIGHTNING_ROD] ?      0 : 17)},
@@ -692,6 +697,14 @@ static int _acquirement_misc_subtype(bool /*divine*/, int & /*quantity*/)
     };
 
     const int * const choice = random_choose_weighted(choices);
+
+    // Possible for everything to be 0 weight - if so just give a random spare.
+    if (choice == nullptr)
+    {
+        return random_choose(MISC_TIN_OF_TREMORSTONES,
+                             MISC_LIGHTNING_ROD,
+                             MISC_PHIAL_OF_FLOODS);
+    }
 
     // Could be nullptr if all the weights were 0.
     return choice ? *choice : MISC_CRYSTAL_BALL_OF_ENERGY;

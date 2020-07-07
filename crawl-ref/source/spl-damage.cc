@@ -27,6 +27,7 @@
 #include "fprop.h"
 #include "god-abil.h"
 #include "god-conduct.h"
+#include "god-passive.h"
 #include "invent.h"
 #include "item-name.h"
 #include "items.h"
@@ -59,6 +60,7 @@
 #include "unicode.h"
 #include "viewchar.h"
 #include "view.h"
+#include "xp-evoker-data.h"
 
 void setup_fire_storm(const actor *source, int pow, bolt &beam)
 {
@@ -864,8 +866,12 @@ spret cast_airstrike(int pow, const dist &beam, bool fail)
         return spret::success; // still losing a turn
     }
 
-    if (stop_attack_prompt(mons, false, you.pos()))
+    if (!(have_passive(passive_t::shoot_through_plants)
+          && fedhas_protects(*mons))
+        && stop_attack_prompt(mons, false, you.pos()))
+    {
         return spret::abort;
+    }
     fail_check();
 
     god_conduct_trigger conducts[3];
@@ -1082,7 +1088,14 @@ static bool _shatterable(const actor *act)
 spret cast_shatter(int pow, bool fail)
 {
     targeter_radius hitfunc(&you, LOS_ARENA);
-    if (stop_attack_prompt(hitfunc, "attack", _shatterable))
+    auto vulnerable = [](const actor *act) -> bool
+    {
+        return !act->is_player()
+               && !(have_passive(passive_t::shoot_through_plants)
+                    && fedhas_protects(*act->as_monster()))
+               && _shatterable(act);
+    };
+    if (stop_attack_prompt(hitfunc, "attack", vulnerable))
         return spret::abort;
 
     fail_check();
@@ -3184,8 +3197,12 @@ spret cast_eringyas_rootspike(int splpow, const dist& beam, bool fail)
         return spret::success; // still losing a turn
     }
 
-    if (stop_attack_prompt(mons, false, you.pos()))
+    if (!(have_passive(passive_t::shoot_through_plants)
+          && fedhas_protects(*mons))
+        && stop_attack_prompt(mons, false, you.pos()))
+    {
         return spret::abort;
+    }
     fail_check();
 
     god_conduct_trigger conducts[3];

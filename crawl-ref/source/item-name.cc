@@ -1096,6 +1096,7 @@ static string misc_type_name(int type)
     case MISC_XOMS_CHESSBOARD:           return "removed chess piece";
 #endif
     case MISC_BAG:                       return "bag";
+    case MISC_TIN_OF_TREMORSTONES:               return "tin of tremorstones";
 
     default:
         return "buggy miscellaneous item";
@@ -1137,7 +1138,6 @@ static const char* _book_type_name(int booktype)
     case BOOK_CONJURATIONS:           return "Conjurations";
     case BOOK_FLAMES:                 return "Flames";
     case BOOK_FROST:                  return "Frost";
-    case BOOK_FROST2:                 return "Frost2";
     case BOOK_SUMMONINGS:             return "Summonings";
     case BOOK_FIRE:                   return "Fire";
     case BOOK_ICE:                    return "Ice";
@@ -1999,7 +1999,8 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
 
         if (is_xp_evoker(*this) && !dbname && !evoker_charges(sub_type))
             buff << " (inert)";
-        else if (!dbname && evoker_max_charges(sub_type) > 1)
+        else if (is_xp_evoker(*this) &&
+                 !dbname && evoker_max_charges(sub_type) > 1)
         {
             buff << " (" << evoker_charges(sub_type) << "/"
                  << evoker_max_charges(sub_type) << ")";
@@ -3372,7 +3373,7 @@ bool is_bad_item(const item_def &item, bool temp)
         // Potentially useful. TODO: check the properties.
         if (is_artefact(item))
             return false;
-
+        
         switch (item.sub_type)
         {
         case AMU_INACCURACY:
@@ -3445,6 +3446,10 @@ bool is_dangerous_item(const item_def &item, bool temp)
         default:
             return false;
         }
+
+    case OBJ_MISCELLANY:
+        // Tremorstones will blow you right up.
+        return item.sub_type == MISC_TIN_OF_TREMORSTONES;
 
     case OBJ_FOOD:
         switch (item.sub_type)
