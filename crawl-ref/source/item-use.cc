@@ -1899,7 +1899,10 @@ static bool _puton_amulet(item_def &item,
             return false;
     }
 
-    start_delay<EquipOnDelay>(ARMOUR_EQUIP_DELAY, item);
+    // puton_ring already confirmed there's room for it
+    int item_slot = _get_item_slot_maybe_with_move(item);
+
+    start_delay<EquipOnDelay>(ARMOUR_EQUIP_DELAY, you.inv[item_slot]);
     return true;
 }
 
