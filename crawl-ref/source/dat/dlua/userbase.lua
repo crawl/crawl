@@ -354,14 +354,15 @@ end
 --
 -- @tparam string kind
 -- @function ch_start_running
---
+
 --- Acquirement scroll hook.
 --
 -- This hook can be defined to execute lua when an acquirement scroll is read.
 --
--- The hook should call items.acquirement_items() to get an array of items.Item
--- representations of the offered items. If it returns a valid index in this
--- array, the given item will be acquired without the usual acquirement menu.
+-- The hook should call @{items.acquirement_items} to get an array of
+-- @{items.Item} representations of the offered items. If it returns a valid
+-- index in this array, the given item will be acquired without the usual
+-- acquirement menu.
 --
 -- @treturn int An index between 1 and the number of offered items.
 -- @function c_choose_acquirement
