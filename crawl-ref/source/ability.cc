@@ -931,8 +931,9 @@ static const string _detailed_cost_description(ability_type ability)
 
     if (abil.ability == ABIL_HEAL_WOUNDS)
     {
-        ret << "\nIt has a chance of reducing your maximum magic capacity "
-               "when used.";
+        ASSERT(!have_cost); // validate just in case this ever changes
+        return "This ability has a chance of reducing your maximum magic "
+               "capacity when used.";
     }
 
     return ret.str();
