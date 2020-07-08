@@ -1759,6 +1759,7 @@ static const mon_spellbook mspell_list[] =
     { MST_FIRE_FOX,
       {
         { SPELL_FOXFIRE, 13, MON_SPELL_WIZARD },
+        { SPELL_BLINK, 66, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY }
       }
     },
 
