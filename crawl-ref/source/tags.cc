@@ -6653,9 +6653,6 @@ void unmarshallMonster(reader &th, monster& m)
         m.props.clear();
     }
 
-    // If an upgrade synthesizes ghost_demon, please mark it in "parts" above.
-    ASSERT(parts & MP_GHOST_DEMON || !mons_is_ghost_demon(m.type));
-
     m.check_speed();
 }
 
