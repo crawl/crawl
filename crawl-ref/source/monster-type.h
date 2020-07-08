@@ -1058,7 +1058,6 @@ enum monster_type                      // menv[].type
     MONS_PLAYER_ELDRITCH_TENTACLE_SEGMENT,
     MONS_FOXFIRE,
     MONS_MAGGIE,
-    MONS_FIRE_FOX,
 #endif
 
     NUM_MONSTERS,               // used for polymorph
