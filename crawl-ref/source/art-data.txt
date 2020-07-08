@@ -1391,6 +1391,17 @@ LIFE:     1
 INSCRIP:  rRot
 BOOL:     drain, evil, special, no_upgrade
 
+ENUM:     JAWS
+NAME:     The Jaws of Erysichthon
+OBJ:      OBJ_ARMOUR/ARM_HAT
+PLUS:     +0
+COLOUR:   ETC_UNHOLY
+TILE:     urand_jaws
+TILE_EQ:  jaws
+ANGRY:    5
+INSCRIP:  Vamp, devour, FastMet
+BOOL:     evil, curse
+
 # This entry must always be last.
 ENUM:   DUMMY2
 NAME:   DUMMY UNRANDART 2
