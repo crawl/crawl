@@ -322,11 +322,11 @@ static void _give_starting_food()
 
     object_class_type base_type = OBJ_FOOD;
     int sub_type = FOOD_RATION;
-    int quantity = 1;
+    int quantity = 2;
 
-    // Give another one for hungry species.
+    // Give another two for hungry species.
     if (you.get_mutation_level(MUT_FAST_METABOLISM))
-        quantity = 2;
+        quantity = 4;
 
     newgame_make_item(base_type, sub_type, quantity);
 }
