@@ -1821,6 +1821,26 @@ int animate_dead(actor *caster, int pow, beh_type beha,
 spret cast_animate_skeleton(int pow, god_type god, bool fail)
 {
     fail_check();
+    bool found = false;
+    for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
+    {
+        for (stack_iterator si(*ri, true); si; ++si)
+        {
+            if (si->base_type == OBJ_CORPSES
+                && mons_class_can_be_zombified(si->mon_type)
+                && mons_skeleton(si->mon_type))
+            {
+                found = true;
+                break;
+            }
+        }
+    }
+    if (!found)
+    {
+        mpr("There is nothing nearby to animate!");
+        return spret::abort;
+    }
+
     canned_msg(MSG_ANIMATE_REMAINS);
 
     for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
@@ -1860,6 +1880,12 @@ spret cast_animate_skeleton(int pow, god_type god, bool fail)
 
 spret cast_animate_dead(int pow, god_type god, bool fail)
 {
+    if (!animate_dead(&you, pow, BEH_FRIENDLY, MHITYOU, &you, "", god, false))
+    {
+        mpr("There is nothing nearby to animate!");
+        return spret::abort;
+    }
+
     fail_check();
     canned_msg(MSG_CALL_DEAD);
 

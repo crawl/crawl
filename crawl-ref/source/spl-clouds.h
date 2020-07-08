@@ -19,7 +19,7 @@ spret cast_ring_of_flames(int power, bool fail);
 void manage_fire_shield();
 
 spret cast_corpse_rot(bool fail);
-void corpse_rot(actor* caster);
+spret corpse_rot(actor* caster);
 
 void holy_flames(monster* caster, actor* defender);
 
