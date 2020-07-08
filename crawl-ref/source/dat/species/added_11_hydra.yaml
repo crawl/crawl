@@ -21,36 +21,41 @@ aptitudes:
   slings: False
   bows: False
   crossbows: False
+  throwings: 1
   armour: -2
-  dodging: -2
-  stealth: -2
+  dodging: -4
+  stealth: -4
   shields: False
-  spellcasting: -3
-  conjurations: -2
-  summoning: -3
-  necromancy: -3
-  hexes: -2
-  charms: -2
-  translocations: -2
-  transmutations: -2
+  spellcasting: -4
+  conjurations: -3
+  summoning: -4
+  necromancy: -4
+  hexes: -3
+  charms: -3
+  translocations: -3
+  transmutations: -3
   fire_magic: -3
-  ice_magic: -2
-  air_magic: -2
-  earth_magic: -2
-  poison_magic: -2
-  evocations: 1
+  ice_magic: -3
+  air_magic: -3
+  earth_magic: -3
+  poison_magic: -3
+  invocations: -2
+  evocations: -2
 can_swim : true
 size: big
 str: 6
 int: 6
 dex: 6
 levelup_stat_frequency: 4
+levelup_stats:
+  - str
 mutations:
   1:
     MUT_DEFORMED : 1
-    MUT_REGENERATION : 2
+    MUT_REGENERATION : 1
     MUT_POISON_RESISTANCE : 1
     MUT_COLD_BLOODED: 1
+    MUT_FAST_METABOLISM: 1
 fake_mutations:
   - long: You are incapable of wielding weapons.
     short: no weapons.
