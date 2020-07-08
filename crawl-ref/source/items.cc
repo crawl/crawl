@@ -2105,13 +2105,6 @@ static int _place_item_in_free_slot(item_def &it, int quant_got,
     if (item.base_type == OBJ_BOOKS)
         set_ident_flags(item, ISFLAG_IDENT_MASK);
 
-    // Normalize ration tile in inventory
-    if (item.base_type == OBJ_FOOD && item.sub_type == FOOD_RATION)
-    {
-        item.props["item_tile_name"] = "food_ration_inventory";
-        bind_item_tile(item);
-    }
-
     note_inscribe_item(item);
 
     // avoid blood potion timer/stack size mismatch
@@ -3683,7 +3676,6 @@ colour_t item_def::food_colour() const
     {
         case FOOD_CHUNK:
             return LIGHTRED;
-        case FOOD_RATION:
         default:
             return BROWN;
     }

@@ -109,7 +109,7 @@ function sroom_beehive(e)
         e.nsubst('1 = 3:M / *:1')
     end
 
-    e.kitem('12M = ration tile:food_honeycomb / nothing w:20')
+    e.kitem('12M = never_decay yak corpse / potion of ambrosia / nothing w:20')
 end
 
 function sroom_morgue(e)

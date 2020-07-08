@@ -1309,14 +1309,19 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         break;
 
     case HINT_SEEN_FOOD:
-            text << "You have picked up some food"
-            "<console> ('<w>"
-             << stringize_glyph(get_item_symbol(SHOW_ITEM_FOOD))
-             << "</w>')</console>"
-                ". You can eat it by typing <w>e</w>"
-                "<tiles> or by <w>left-clicking</w> on it</tiles>"
-                ". However, it is usually best to conserve rations, "
-                "since raw meat from corpses is generally plentiful.";
+        text << "You have picked up a chunk of flesh"
+        "<console> ('<w>"
+         << stringize_glyph(get_item_symbol(SHOW_ITEM_FOOD))
+         << "</w>')</console>.  ";
+        if (you.species == SP_GHOUL)
+        {
+            text << "Ghouls need to consume flesh to keep from rotting away, "
+                    "and will heal when they do so. Butcher corpses to get "
+                    "more. You can eat it by typing <w>e</w>"
+                     "<tiles> or by <w>left-clicking</w> on it</tiles>.";
+        }
+        else
+            text << "It's pretty disgusting, unless you are a ghoul.";
         break;
 
     case HINT_SEEN_CARRION:
@@ -1344,18 +1349,27 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 #endif
             }
         }
+        if (you.species == SP_GHOUL)
+        {
+            text << "Ghouls need to consume flesh to keep from rotting away, "
+                    "and will heal when they do so. "
+                    "When a corpse is lying on the ground, you "
+                    "can <w>%</w>hop it up. Once hungry, you can "
+                    "then <w>%</w>at the resulting chunks.";
+            cmd.push_back(CMD_BUTCHER);
+            cmd.push_back(CMD_EAT);
 
-        text << " When a corpse is lying on the ground, you "
-                "can <w>%</w>hop it up. Once hungry, you can "
-                "then <w>%</w>at the resulting chunks.";
-        cmd.push_back(CMD_BUTCHER);
-        cmd.push_back(CMD_EAT);
-
-        text << "<tiles> You can also chop up any corpse that shows up in "
-                "the floor part of your inventory region, simply by "
-                "<w>left-clicking</w> on it while pressing <w>Shift</w>, and "
-                "then eat the resulting chunks with <w>Shift + right-mouse</w>"
-                ".</tiles>";
+            text << "<tiles> You can also chop up any corpse that shows up in "
+                    "the floor part of your inventory region, simply by "
+                    "<w>left-clicking</w> on it while pressing <w>Shift</w>, and "
+                    "then eat the resulting chunks with <w>Shift + right-mouse</w>"
+                    ".</tiles>";
+        }
+        else
+        {
+            text << "It's pretty disgusting; only a ghoul would want to mess "
+                    "with it.";
+        }
         break;
 
     case HINT_SEEN_JEWELLERY:

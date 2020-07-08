@@ -1232,11 +1232,6 @@ int player_spell_levels()
     return sl;
 }
 
-bool player_likes_chunks()
-{
-    return you.species == SP_GHOUL;
-}
-
 // If temp is set to false, temporary sources or resistance won't be counted.
 int player_res_fire(bool calc_unid, bool temp, bool items)
 {

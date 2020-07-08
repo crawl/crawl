@@ -899,7 +899,7 @@ ENDMAP
 NAME:    minmay_temple_entry_offerings
 TAGS:    transparent
 SHUFFLE: def$
-ITEM:    any weapon, any book, ration
+ITEM:    any weapon, any book, gold
 : temple_entry(_G)
 MAP
 d.e

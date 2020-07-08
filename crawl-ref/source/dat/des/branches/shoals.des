@@ -610,8 +610,8 @@ KPROP: YycfZ. = no_tide
 KPROP: ZYcf. = no_tele_into
 KMONS: c = patrolling wraith
 NSUBST: f = 1:g / 2:f / *:.
-KITEM: g = ration
-KITEM: f = ration / nothing w:10
+KITEM: g = gold
+KITEM: f = gold / nothing w:10
 : dgn.delayed_decay(_G, 'c', 'human skeleton')
 SUBST: Z = yY
 KFEAT: y = w

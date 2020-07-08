@@ -741,8 +741,8 @@ enum wand_type
 
 enum food_type
 {
-    FOOD_RATION,
 #if TAG_MAJOR_VERSION == 34
+    FOOD_RATION,
     FOOD_BREAD_RATION,
     FOOD_PEAR,
     FOOD_APPLE,

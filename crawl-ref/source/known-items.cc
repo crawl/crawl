@@ -120,9 +120,6 @@ public:
             case FOOD_CHUNK:
                 name = "chunks";
                 break;
-            case FOOD_RATION:
-                name = "rations";
-                break;
 #if TAG_MAJOR_VERSION == 34
             default:
                 name = "removed food";

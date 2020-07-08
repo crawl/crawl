@@ -43,7 +43,9 @@ enum card_type
     CARD_STAIRS,              // moves stairs around
     CARD_WRATH,               // random godly wrath
     CARD_WRAITH,              // drain XP
-    CARD_FAMINE,              // starving
+#if TAG_MAJOR_VERSION == 34
+    CARD_FAMINE_REMOVED,      // starving
+#endif
     CARD_SWINE,               // *oink*
     CARD_ILLUSION,            // a copy of the player
     CARD_DEGEN,               // polymorph hostiles down hd, malmutate

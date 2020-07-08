@@ -1720,7 +1720,6 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
     case OBJ_FOOD:
         switch (item_typ)
         {
-        case FOOD_RATION: buff << "ration"; break;
         case FOOD_CHUNK: buff << "chunk of flesh"; break;
 #if TAG_MAJOR_VERSION == 34
         default: buff << "removed food"; break;

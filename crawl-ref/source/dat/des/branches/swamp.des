@@ -621,7 +621,7 @@ dgn.delayed_decay_extra(_G, 'p', 'orc corpse', 'hand axe / broad axe, ' ..
    'leather armour / pair of gloves')
 }}
 KITEM: w = mundane quarterstaff
-KITEM: s = ration
+KITEM: s = gold
 KFEAT: 'o = W
 CLEAR:  _
 MAP
@@ -1669,7 +1669,6 @@ SUBST: ghi = .
 KMONS: D = patrolling spriggan rider
 KMONS: SGHI = spriggan / nothing
 KMONS: F = spriggan druid
-KITEM: f = ration / nothing w:8
 MAP
        ttttt
   ttttttgggt
@@ -1682,7 +1681,7 @@ tttt.......tt
 tttt.tt.tt..t
 ti...t...tH.t
 tiI..t.F.thht
-ti...tffftttt
+ti...t...tttt
 tttttttttt
 ENDMAP
 
@@ -1860,7 +1859,7 @@ NAME: nicolae_swamp_phyte_club
 DEPTH: Swamp:2-, !Swamp:$
 ORIENT: float
 TAGS: transparent no_monster_gen no_item_gen
-NSUBST: M = 1:M / 1:H / 2 = hmmf / 2:A / *:.
+NSUBST: M = 1:M / 1:H / 2 = hmm / 2:A / *:.
 NSUBST: O = 1:O / 1:o / 1:Hh / 1:h^ / 1:b
 SUBST: T = t., Z = ttW, _ = t_, v = t--
 KMONS: Hh = thorn hunter
@@ -1871,7 +1870,6 @@ KMONS: . = plant w:5 / fungus w:5 / nothing w:100
 KMONS: - = plant / fungus / nothing w:80
 KITEM: h^m = % / * w:5
 KITEM: o = * / | w:5
-KITEM: f = ration / nothing
 KITEM: b = Fen Folio ident:type
 KFEAT: ^, = .
 CLEAR: _

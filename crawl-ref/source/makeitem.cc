@@ -1350,14 +1350,8 @@ static void _generate_wand_item(item_def& item, int force_type, int item_level)
         item.flags |= ISFLAG_NO_PICKUP;
 }
 
-static void _generate_food_item(item_def& item, int force_quant, int force_type)
+static void _generate_food_item(item_def& item, int force_quant)
 {
-    // Determine sub_type:
-    if (force_type == OBJ_RANDOM)
-        item.sub_type = FOOD_RATION;
-    else
-        item.sub_type = force_type;
-
     // Happens with ghoul food acquirement -- use place_chunks() outherwise
     if (item.sub_type == FOOD_CHUNK)
     {
@@ -1932,13 +1926,12 @@ int items(bool allow_uniques,
     else
     {
         ASSERT(force_type == OBJ_RANDOM);
-        // Total weight: 2000
+        // Total weight: 1820
         item.base_type = random_choose_weighted(
                                     10, OBJ_STAVES,
                                     30, OBJ_BOOKS,
                                     50, OBJ_JEWELLERY,
                                     70, OBJ_WANDS,
-                                   140, OBJ_FOOD,
                                    212, OBJ_ARMOUR,
                                    212, OBJ_WEAPONS,
                                    176, OBJ_POTIONS,
@@ -2007,7 +2000,7 @@ int items(bool allow_uniques,
         break;
 
     case OBJ_FOOD:
-        _generate_food_item(item, allow_uniques, force_type);
+        _generate_food_item(item, allow_uniques);
         break;
 
     case OBJ_POTIONS:

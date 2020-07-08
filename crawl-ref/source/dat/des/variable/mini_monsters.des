@@ -125,7 +125,7 @@ MONS:   killer bee, meliai, queen bee, hornet
 KMASK:  1234*R = opaque
 KMONS:  *R = worm
 KITEM:  * = *
-KITEM:  R = ration tile:food_honeycomb
+KITEM:  R = potion of ambrosia
 SUBST:  ? : .w
 SUBST:  * : *:20 R:3
 # Since one has to dig the bees out, early meliai are fine.
@@ -160,7 +160,7 @@ NAME:   minivault_7
 TAGS:   uniq_beehive patrolling transparent
 DEPTH:  D:9-
 MONS:   queen bee, meliai, killer bee
-KITEM:  R = ration tile:food_honeycomb / nothing
+KITEM:  R = potion of ambrosia / nothing
 COLOUR: x = yellow
 TILE:   x = wall_wax
 : if you.absdepth() < 12 then
@@ -513,7 +513,7 @@ ENDMAP
 NAME:  minmay_rat_hole
 DEPTH: D:2-4
 MONS:  rat, quokka
-ITEM:  ration / nothing w:30
+ITEM:  stone / nothing w:30
 MAP
  xxx
 xxdx
@@ -1094,7 +1094,7 @@ TAGS:  patrolling no_monster_gen transparent
 DEPTH: D:2-5
 KMONS: 2 = adder
 KMONS: 3 = plant
-ITEM:  ration
+ITEM:  any potion / gold / stone / nothing
 SUBST: - = wwwwwwWWW
 SUBST: . = ........33
 SUBST: ? = ..wwwtt33%%d222
@@ -1321,7 +1321,7 @@ NAME:   minmay_ogre_servants
 DEPTH:  D:3-6
 MONS:   ogre
 NSUBST: " = 6:" / *:'
-KITEM:  ' = ration
+KITEM:  ' = large rock
 KMONS:  "' = goblin
 MAP
 xxxxx
@@ -1513,7 +1513,7 @@ NAME:    bh_hangedman_babel_library
 TAGS:    transparent no_monster_gen no_item_gen
 DEPTH:   D:10-, !D:$, Elf, !Elf:$
 MONS:    wizard / deep elf mage
-ITEM:    ration
+ITEM:    any potion
 ITEM:    randbook numspells:2 title:Dhcmrlchtdj
 ITEM:    randbook numspells:2 title:Combed_Thunderclap disc:air
 ITEM:    randbook numspells:2 title:Plaster_Cramp disc:earth
@@ -2005,7 +2005,7 @@ ENDMAP
 NAME: lightli_orcish_oven
 DEPTH: D:6-11, Orc
 MONS: orc warrior, orc
-ITEM: ration
+:dgn.delayed_decay(_G, '1', 'chunk')
 MAP
 xxxxxxxxxx
 xvvv....xx
@@ -2504,7 +2504,7 @@ TAGS:   no_monster_gen no_item_gen patrolling
 MONS:   spriggan skeleton
 MONS:   troll skeleton
 KMONS:  A = unseen horror
-ITEM:   ration q:1 w:15 / nothing
+ITEM:   never_decay chunk w:15 / nothing
 SUBST:  D : DDDDE
 NSUBST: D = 1 = A:4 .:1 / 2:d / 2:e / 1:1, E = 2:d / 2:e / 2:1
 MAP
@@ -2870,7 +2870,7 @@ DEPTH:  D:8-, !D:$
 TAGS:   extra no_monster_gen
 NSUBST: T = 1:. / 1:t
 KMONS:  1 = oklob plant
-KITEM:  1A_ = ration / nothing w:7
+KITEM:  1A_ = gold / nothing w:7
 KFEAT:  _ = altar_fedhas
 MAP
  tttttttttt
@@ -3208,7 +3208,9 @@ TAGS:    no_monster_gen
 DEPTH:   D:13-
 MONS:    patrolling cherub, patrolling dancing weapon ; great sword ego:flaming
 KMONS:   p = plant
-ITEM:    ration tile:food_apple
+# TODO: this potion once was an apple, maybe just remove this with no apple
+# flavor possible?
+ITEM:    potion of ambrosia
 NSUBST:  1 = 2:1 / *:.
 NSUBST:  d = 2:d / *:.
 SUBST:   3 = 33.

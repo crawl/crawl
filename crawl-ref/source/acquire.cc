@@ -412,20 +412,9 @@ static armour_type _pick_unseen_armour()
 static int _acquirement_food_subtype(bool /*divine*/, int& quantity,
                                      int /*agent*/)
 {
-    int type_wanted;
-    // Food is a little less predictable now. - bwr
-    if (you.species == SP_GHOUL)
-        type_wanted = FOOD_CHUNK;
-    else
-        type_wanted = FOOD_RATION;
+    quantity = 5 + random2(5) + random2avg(10, 2);
 
-    quantity = 3 + random2(5);
-
-    // giving more of the lower food value items
-    if (type_wanted == FOOD_CHUNK)
-        quantity += 2 + random2avg(10, 2);
-
-    return type_wanted;
+    return FOOD_CHUNK;
 }
 
 /**

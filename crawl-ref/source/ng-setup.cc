@@ -317,11 +317,11 @@ void give_items_skills(const newgame_def& ng)
 static void _give_starting_food()
 {
     // No food for those who don't need it.
-    if (you_foodless() || player_likes_chunks())
+    if (you_foodless())
         return;
 
     object_class_type base_type = OBJ_FOOD;
-    int sub_type = FOOD_RATION;
+    int sub_type = FOOD_CHUNK;
     int quantity = 2;
 
     // Give another two for hungry species.
@@ -472,7 +472,8 @@ static void _setup_generic(const newgame_def& ng,
 
     roll_demonspawn_mutations();
 
-    _give_starting_food();
+    if (you.get_mutation_level(MUT_CARNIVOROUS))
+        _give_starting_food();
 
     if (crawl_state.game_is_sprint())
         _give_bonus_items();

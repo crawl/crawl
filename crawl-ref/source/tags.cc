@@ -2528,6 +2528,12 @@ static void _tag_read_you(reader &th)
     you.hunger          = unmarshallShort(th);
     you.fishtail        = unmarshallBoolean(th);
 #if TAG_MAJOR_VERSION == 34
+    if (!you.get_mutation_level(MUT_CARNIVOROUS))
+    {
+        you.hunger = HUNGER_SATIATED;
+        you.hunger_state = HS_SATIATED;
+    }
+
     if (th.getMinorVersion() >= TAG_MINOR_VAMPIRE_NO_EAT)
         you.vampire_alive = unmarshallBoolean(th);
     else
@@ -3315,7 +3321,7 @@ static void _tag_read_you(reader &th)
     }
 
     // Carnivore and herbivore used to be 3-level mutations.
-    _cap_mutation_at(MUT_HERBIVOROUS, 1);
+    _cap_mutation_at(MUT_HERBIVOROUS, 0);
     _cap_mutation_at(MUT_CARNIVOROUS, 1);
 
     // Slow regeneration split into two single-level muts:

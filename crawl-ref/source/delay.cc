@@ -447,7 +447,8 @@ static bool _auto_eat()
 {
     return Options.auto_eat
            && Options.autopickup_on > 0
-           && (player_likes_chunks() && player_rotted()
+           && !you_foodless()
+           && (you.get_mutation_level(MUT_CARNIVOROUS) && player_rotted()
                || you.hunger_state < HS_SATIATED);
 }
 

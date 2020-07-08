@@ -95,7 +95,7 @@ function setup_room(e, id)
     e.tile("X = wall_stone_white")
 
     -- Create items
-e.kitem("1 = superb_item ident:all w:590 / ration w:2 /\
+e.kitem("1 = superb_item ident:all w:590 /\
             potion of heal wounds ident:all q:4 w:3 /\
             potion of haste ident:all q:4 w:3 /\
             scroll of fog w:1 ident:all / scroll of holy word w:1 ident:all /\
@@ -779,7 +779,6 @@ KITEM:    L = scroll of blinking q:3 ident:all, \
               scroll of holy word q:1 ident:all, \
               scroll of fog q:7 ident:all, \
               scroll of amnesia q:4 ident:all
-KITEM:    M = ration q:6
 KITEM:    N = wand of acid ident:all charges:7, \
               wand of iceblast ident:all charges:7, \
               wand of disintegration ident:all charges:7
@@ -826,7 +825,7 @@ f.........RT..n
 e..HG.........o
 ^..IF.........^
 d..JE.....S...q
-^...D..M..P...^
+^...D.....P...^
 c......L..O...r
 ^...C..K..N...^
 b...B.{.......s

@@ -916,7 +916,7 @@ MONS:   human ; club
 SUBST:  1 = 1 2:5 3:20
 SUBST:  2 = 2 2 .
 SUBST:  % = !:10 ?:4 .:20
-KITEM:  ! = ration / nothing
+KITEM:  ! = club / nothing
 KITEM:  ? = wand of random effects
 COLOUR: " : yellow
 MAP
@@ -2274,9 +2274,9 @@ NAME: amethyst_zot_foddershock
 DEPTH: Zot, !Zot:$
 TAGS: no_monster_gen transparent
 MONS: lightning spire, patrolling electric golem
-NSUBST: % = 2:!
+NSUBST: % = 2:!, % = 2:a
 KMONS: ! = patrolling death cob
-KITEM: %! = ration w:2 / nothing w:8
+:dgn.delayed_decay(_G, 'a', 'random draconian corpse')
 MAP
 @xxxxx@
 .......

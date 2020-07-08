@@ -162,7 +162,7 @@ end
 
 
 function general_item_setup(e)
-  e.kitem("^ = superb_item ident:all w:590 / ration w:2 /\
+  e.kitem("^ = superb_item ident:all w:590 /\
           potion of heal wounds ident:all q:4 w:3 /\
           potion of haste ident:all q:4 w:3 /\
           scroll of fog w:1 ident:all / scroll of holy word w:1 ident:all /\
@@ -624,7 +624,6 @@ SUBVAULT: Y : storerooms_room_b
 SUBVAULT: T : the_temple
 SUBVAULT: U : equipment_1
 # Initial consumables
-KITEM: a = ration q:8
 KITEM: b = scroll of summoning ident:all q:1, \
        scroll of amnesia q:5 ident:all, \
        scroll of remove curse q:3 ident:all, \
@@ -1884,7 +1883,7 @@ TILE:   v = wall_cobalt_stone
 : general_item_setup(_G)
 : base_monster_setup(_G)
 KITEM:  34CBDEJK = superb_item ident:all w:66 /\
-                   ration q:2 w:30
+                   nothing w:30
 : lua_marker('_', props_marker {
 :           door_description_suffix=" to a Minivault (Hard)",
 :           })

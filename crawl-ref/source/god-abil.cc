@@ -2850,7 +2850,7 @@ static string _gozag_special_shop_name(shop_type type)
 {
     if (type == SHOP_FOOD)
     {
-        if (you.species == SP_GHOUL)
+        if (you.get_mutation_level(MUT_CARNIVOROUS))
             return "Carrion"; // yum!
     }
 

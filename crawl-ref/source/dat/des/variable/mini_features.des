@@ -1172,7 +1172,7 @@ NAME:    roderic_nine_men_s_morris
 TAGS:    transparent extra decor
 DEPTH:   D, Depths, Elf
 WEIGHT:  1
-ITEM:    q:1 $, ration q:1, stone q:1
+ITEM:    q:1 $, stone q:1
 NSUBST:  ' = 2:d / 1:e / 2:f / *:.
 SHUFFLE: ddeff
 MAP
@@ -1200,7 +1200,7 @@ NAME:   roderic_three_in_a_row
 TAGS:   transparent extra decor
 DEPTH:  D, Depths, Elf
 WEIGHT: 1
-ITEM:   q:1 $, ration, stone
+ITEM:   q:1 $, stone
 SUBST:  ' : TTUUddeff
 MAP
 @xxxx@xxxx@
@@ -2898,7 +2898,7 @@ ENDMAP
 NAME:   supply_closet_lemuel
 DEPTH:  D:1-9
 TAGS:   no_monster_gen extra
-ITEM:   ration w:20 / arrow / bolt / spear / any potion w:5
+ITEM:   stone w:15 / arrow / bolt / spear / any potion w:10
 MAP
 x+xx
 xddx
@@ -3003,8 +3003,7 @@ SUBST:  . = ..", X = xxB
 KPROP:  "B = bloody
 SUBST:  " = ., B = x
 NSUBST: . = 5:d / 10=d. / 2:e / 1:e. / *=.f
-ITEM:   ration / w:5 minotaur chunk
-: dgn.delayed_decay(_G, 'e', 'minotaur corpse')
+: dgn.delayed_decay(_G, 'e', 'minotaur corpse, minotaur chunk')
 ITEM:   hand axe
 SUBST:  ' = .
 MAP
@@ -3023,7 +3022,7 @@ NAME:   dk_vineyard_1
 DEPTH:  D:2-12
 WEIGHT: 4
 TAGS:   no_item_gen no_monster_gen uniq_vineyard extra
-ITEM:   ration / nothing
+ITEM:   any potion / nothing
 NSUBST: . = 6:d
 KFEAT:  w = shallow_water
 FTILE:  .d = floor_moss / floor_grass / floor_dirt
@@ -3045,7 +3044,7 @@ NAME:   dk_vineyard_2
 DEPTH:  D:2-12
 WEIGHT: 4
 TAGS:   no_item_gen no_monster_gen uniq_vineyard extra
-ITEM:   ration / nothing
+ITEM:   any potion / nothing
 NSUBST: . = 4:d
 KFEAT:  w = shallow_water
 FTILE:  .d = floor_moss / floor_grass
@@ -3062,7 +3061,7 @@ NAME:   dk_vineyard_3
 DEPTH:  D:2-12
 WEIGHT: 4
 TAGS:   no_item_gen no_monster_gen uniq_vineyard extra transparent
-ITEM:   ration / nothing
+ITEM:   any potion / nothing
 NSUBST: . = 4:d
 NSUBST: : = 5:. / *:'
 KFEAT:  w = shallow_water
@@ -3294,27 +3293,6 @@ cw.xxxxxxx.wc
 cw.........ED
 cwHwwwwwwwwwc
 ccFcccccccccc
-ENDMAP
-
-NAME:  bh_chokoban
-TAGS:  extra decor no_exits
-TAGS:  no_rotate no_hmirror no_vmirror
-DEPTH: D:2-, !D:$, Depths:2-, !Depths:$, Lair:2-, !Lair:$
-ITEM:  ration w:5 / stone
-MAP
-cccccc  ccccc
-c....c  c...c
-c.d..cccc.d.c
-c.d......d..c
-c..ccc(cccd.c
-cccccccccc.ccc
-c.....)c.....c
-c..cccccd....c
-cc.c   c.d...c
- c.ccccc.d...c
- c......d.d..c
- c%%cccccccccc
- cccc
 ENDMAP
 
 ##########################################################################

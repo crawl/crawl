@@ -390,7 +390,7 @@ ENDMAP
 NAME:   hellmonk_ghost_happy_afterlife
 DEPTH:  D:3-, Lair
 ORIENT: float
-ITEM:   ration, any potion
+ITEM:   any potion
 : item(dgn.loot_potions)
 KMONS:  O = player ghost
 : if you.absdepth() < 6 then
@@ -1608,10 +1608,10 @@ ENDMAP
 
 NAME:   gammafunk_ghost_hive
 DEPTH:  D:5-, Lair
-KITEM:  ' = ration
+KITEM:  ' = potion of ambrosia
 KMONS:  O = player ghost
 MONS:   killer bee, queen bee, hornet, meliai
-# Chance to make a partial wall in each of the full cells. Add 0-4 rations.
+# Chance to make a partial wall in each of the full cells. Add 0-4 ambrosias.
 NSUBST: p = x- / -, q = x- / -, r = x- / -, s = x- / -, - = 4='- / -
 : ghost_good_loot(_G)
 : if you.in_branch("D") then

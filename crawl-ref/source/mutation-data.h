@@ -83,15 +83,17 @@ static const mutation_def mut_data[] =
   {"You feel able to eat a more balanced diet.", "", ""},
 },
 
+#if TAG_MAJOR_VERSION == 34
 { MUT_HERBIVOROUS, 0, 1, mutflag::bad, false,
   "herbivore",
 
   {"You are a herbivore.", "", ""},
 
-  {"You hunger for vegetation.", "", ""},
+  {"", "", ""},
 
-  {"You feel able to eat a more balanced diet."},
+  {""},
 },
+#endif
 
 { MUT_HEAT_RESISTANCE, 4, 3, mutflag::good, true,
   "fire resistance",

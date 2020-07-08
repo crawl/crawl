@@ -341,8 +341,7 @@ MONS:    steam dragon / acid dragon / swamp drake
 MONS:    basilisk / wyvern w:25 / komodo dragon / crocodile w:25
 NSUBST:  2 = 3:2 / 3 = 2. / *:.
 SUBST:   z = .xc
-SHUFFLE: %*RO
-KITEM:   R = ration
+SHUFFLE: %*O
 KFEAT:   O = enter_lair
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -354,7 +353,7 @@ xxzxxzzzxxxxx..xxzzxxzz..........z...zzz..zzc+.zc
 xxxzxxx...xxxxxxxxxxxxzxxxx.zz.2...z......zccc$cc
 xxxxxxzxxxzxxxxxxxxxxxx....xxzz...z....zz..zzcczc
 xxxxxxxxxxxxxxxxxxxxxzz2xxxzxxzzzz..zzz2zz.2Ozccc
-xxxxxxxxxxxxxxxxxxxxxzRzxxxxxxxxxx.xxxzxxxzxxxxxx
+xxxxxxxxxxxxxxxxxxxxxz%zxxxxxxxxxx.xxxzxxxzxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
@@ -1144,10 +1143,9 @@ NAME:    grunt_forest_small_clearings
 TAGS:    transparent extra decor
 DEPTH:   Lair
 MONS:    plant / bush
-KITEM:   d = ration
 KMASK:   G = no_monster_gen
 SHUFFLE: Ww. / ''` / ''`
-SUBST:   t = t.., '` = 1:49 d:7 .:405
+SUBST:   t = t.., '` = 1:49 .:405
 SUBST:   G = w., W = WW., w = wwW
 MAP
  tt@@@tt
@@ -1233,12 +1231,11 @@ MONS:    wolf, black bear / polar bear, spriggan / centaur w:4
 KMONS:   9 = 9
 KMONS:   * = spriggan rider / faun w:4
 KMONS:   P = plant / bush
-ITEM:    ration
 KITEM:   9* = *
 KFEAT:   9 = W
-SHUFFLE: wW'"-~_9 / ''GG'''* / '''0'''% / `````11G
+SHUFFLE: wW'"-~_9 / ''GG'''* / '''0'''% / `````..G
 SUBST:   t = t.., '. = 1:49 d:7 .:405, W = WW., "w = wwwW
-NSUBST:  2 = 3:1 / 2:2 / 1:3 / *:.
+NSUBST:  2 = 3:1 / 2:2 / *:.
 MAP
       tt@@@tt
     ttt.....ttt
@@ -1405,7 +1402,7 @@ NAME:   beast_lair_carwin_2
 TAGS:   transparent luniq_beast_lair
 : beast_lair_populate_mons_small(_G)
 : beast_lair_randomise(_G)
-ITEM:  ration
+ITEM:  gold
 SUBST: ? : .
 MAP
   ...
@@ -1566,7 +1563,7 @@ DEPTH:  Lair
 ORIENT: float
 WEIGHT: 9
 MONS:   plant, butterfly
-ITEM:   ration
+ITEM:   gold
 KFEAT:  ^~ = .
 : local size = crawl.random2(9)
 : if size > 7 then
@@ -1606,7 +1603,7 @@ TAGS:   extra transparent decor
 DEPTH:  Lair, Snake
 ORIENT: float
 MONS:   plant, fungus
-KITEM:  a : ration
+KITEM:  a : stone
 : if crawl.one_chance_in(5) then
 SUBST:  '"~ = . 1
 SUBST:  0`-. = .:90 a:2 2:1
@@ -1831,7 +1828,7 @@ NAME:    lemuel_ratsnest
 ORIENT:  northeast
 DEPTH:   D:5-8, Lair:1-3
 MONS:    rat, quokka, river rat, hell rat
-ITEM:    ration
+ITEM:    gold / stone
 SUBST:   d = d$$$........., e = d$$$
 SHUFFLE: 234 / 324 / 243
 : if you.in_branch("Lair") then
@@ -2094,8 +2091,7 @@ TAGS:   no_monster_gen
 DEPTH:  Lair
 MONS:   river rat band, hell rat, river rat / rat
 KMONS:  P = plant / fungus w:2
-KITEM:  d = ration
-NSUBST: ' = 1:1 / 2:P / 2:2 / 2:3 / 1:d
+NSUBST: ' = 1:1 / 2:P / 2:2 / 2:3
 MAP
  xxxx
  xxxxxx
@@ -2108,12 +2104,12 @@ xxx'''''xx
      @  @
 ENDMAP
 
-# Contains food and one ok item to make the hell rats a little more worth it.
+# Contains gold and one ok item to make the hell rats a little more worth it.
 NAME:   kennysheep_abandoned_house
 TAGS:   ruin transparent
 DEPTH:  Lair
 MONS:   rat, river rat, hell rat
-KITEM:  d = ration
+KITEM:  d = gold
 NSUBST: d = 1:d / 1:* / 1:9 / 1:3 / * = d11223.......
 MAP
       .......
@@ -2208,7 +2204,7 @@ DEPTH:  Lair
 MONS:   black bear / polar bear
 KFEAT:  " = W
 KMONS:  " = electric eel w:40 / nothing
-KITEM:  % = ration
+KITEM:  % = gold / stone
 SUBST:  % = %., * = *:40 |, B = 1., E = tE
 CLEAR:  E
 MAP
@@ -2282,7 +2278,7 @@ KMONS:  Y = yak
 KMONS:  D = death yak
 KMONS:  C = catoblepas
 KMONS:  P = plant
-KITEM:  f = ration
+KITEM:  f = stone
 SUBST:  P = P., f = f...
 NSUBST: D = 1:D / *:.
 MAP
@@ -2561,7 +2557,7 @@ MONS:    black bear, polar bear
 KMONS:   P = plant
 # The one big reward and the several smaller stacks of items
 # are randomly split between the mostly-dog and mostly-bear sections.
-KITEM:   % = any, any w:1 / nothing w:5, ration q:1
+KITEM:   % = any, any w:1
 KITEM:   *| = gold, gold, gold, any good_item
 NSUBST:  2 = 2:22334 / *:3
 SHUFFLE: %'*" / %'"|

@@ -46,7 +46,6 @@ levelup_stats:
 mutations:
   1:
     MUT_FAST: 3
-    MUT_HERBIVOROUS: 1
     MUT_ACUTE_VISION: 1
     MUT_SLOW_METABOLISM: 2
 recommended_jobs:

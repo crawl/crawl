@@ -341,7 +341,7 @@ ENDMAP
 
 NAME:     items_3
 TAGS:     items_3
-KITEM:    a = ration q:10
+KITEM:    a = gold
 KITEM:    b = pair of gloves mundane ident:all not_cursed /\
            pair of boots mundane ident:all not_cursed /\
            helmet mundane ident:all not_cursed /\

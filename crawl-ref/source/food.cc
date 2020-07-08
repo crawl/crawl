@@ -114,10 +114,9 @@ void set_hunger(int new_hunger_level, bool suppress_msg)
         lessen_hunger(hunger_difference, suppress_msg);
 }
 
-bool you_foodless(bool temp)
+bool you_foodless(bool /* temp */)
 {
-    return you.undead_state(temp) == US_UNDEAD
-        || you.undead_state(temp) == US_SEMI_UNDEAD;
+    return !you.get_mutation_level(MUT_CARNIVOROUS);
 }
 
 bool you_drinkless(bool temp)
@@ -183,7 +182,7 @@ bool eat_food()
     if (!_eat_check())
         return false;
 
-    food_type want = player_likes_chunks() ? FOOD_CHUNK : FOOD_RATION;
+    food_type want = FOOD_CHUNK;
 
     bool found_valid = false;
     vector<item_def *> snacks;
@@ -343,24 +342,6 @@ static void _describe_food_change(int food_increment)
     mpr(msg);
 }
 
-// Handle messaging at the end of eating.
-// Some food types may not get a message.
-static void _finished_eating_message(food_type type)
-{
-    const bool herbivorous = you.get_mutation_level(MUT_HERBIVOROUS) > 0;
-
-    if (type == FOOD_RATION)
-    {
-        mpr("That ration really hit the spot!");
-        return;
-    }
-    else if (herbivorous && food_is_meaty(type))
-    {
-        mpr("Blech - you need greens!");
-        return;
-    }
-}
-
 // Only for ghouls
 static void _eat_chunk()
 {
@@ -385,15 +366,7 @@ bool eat_item(item_def &food)
     mprf("You eat %s%s.", food.quantity > 1 ? "one of " : "",
                           food.name(DESC_THE).c_str());
 
-    if (food.sub_type == FOOD_CHUNK)
-        _eat_chunk();
-    else
-    {
-        int value = food_value(food);
-        ASSERT(value > 0);
-        lessen_hunger(value, true);
-        _finished_eating_message(static_cast<food_type>(food.sub_type));
-    }
+    _eat_chunk();
 
     count_action(CACT_EAT, food.sub_type);
 
@@ -458,19 +431,6 @@ bool can_eat(const item_def &food, bool suppress_msg, bool check_hunger,
     if (food.base_type == OBJ_CORPSES)
         return false;
 
-    if (food.sub_type == FOOD_CHUNK)
-    {
-        if (player_likes_chunks())
-            return true;
-
-        FAIL("Raw flesh disgusts you!")
-    }
-
-    if (player_likes_chunks())
-        FAIL("You crave only raw flesh!")
-
-    // Any food types not specifically handled until here (e.g. meat
-    // rations for non-herbivores) are okay.
     return true;
 }
 
@@ -495,10 +455,7 @@ int you_max_hunger()
         return HUNGER_DEFAULT;
 
     // Ghouls can never be full or above.
-    if (you.species == SP_GHOUL)
-        return hunger_threshold[HS_SATIATED];
-
-    return hunger_threshold[HS_ENGORGED];
+    return hunger_threshold[HS_SATIATED];
 }
 
 int you_min_hunger()

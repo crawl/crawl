@@ -284,7 +284,7 @@ LUARET1(you_res_corr, boolean, you.res_corr(false))
  * @treturn int
  * @function like_chunks
  */
-LUARET1(you_like_chunks, number, player_likes_chunks() ? 3 : 0)
+LUARET1(you_like_chunks, number, you_foodless() ? 0 : 3)
 /*** Are you flying?
  * @treturn boolean
  * @function flying
@@ -843,8 +843,7 @@ static int you_gold(lua_State *ls)
  */
 static int you_can_consume_corpses(lua_State *ls)
 {
-    lua_pushboolean(ls, you.get_mutation_level(MUT_HERBIVOROUS) == 0
-                        && !you_foodless());
+    lua_pushboolean(ls, you.get_mutation_level(MUT_CARNIVOROUS) == 0);
     return 1;
 }
 

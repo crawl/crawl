@@ -679,7 +679,9 @@ struct food_def
 static int Food_index[NUM_FOODS];
 static const food_def Food_prop[] =
 {
-    { FOOD_RATION,       "ration",       3400,  1900,  1900 },
+#if TAG_MAJOR_VERSION == 34
+    { FOOD_RATION,       "buggy ration", 3400,  1900,  1900 },
+#endif
     { FOOD_CHUNK,        "chunk",        1000,  1300,     0 },
 
 #if TAG_MAJOR_VERSION == 34
@@ -799,6 +801,7 @@ const set<pair<object_class_type, int> > removed_items =
     { OBJ_FOOD,      FOOD_ROYAL_JELLY },
     { OBJ_FOOD,      FOOD_UNUSED },
     { OBJ_FOOD,      FOOD_FRUIT },
+    { OBJ_FOOD,      FOOD_RATION },
 #endif
     { OBJ_JEWELLERY, AMU_NOTHING }, // These should only spawn as uniques
 };
@@ -2273,8 +2276,7 @@ int food_value(const item_def &item)
 
     const food_def &food = Food_prop[Food_index[item.sub_type]];
 
-    return you.get_mutation_level(MUT_HERBIVOROUS) > 0 ? food.herb_nutr
-         : you.get_mutation_level(MUT_CARNIVOROUS) > 0 ? food.carn_nutr
+    return you.get_mutation_level(MUT_CARNIVOROUS) > 0 ? food.carn_nutr
                                                        : food.normal_nutr;
 }
 

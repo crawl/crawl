@@ -97,12 +97,7 @@ void butchery(item_def* specific_corpse)
     }
     if (you_foodless(false))
     {
-        mprf("You can't eat.");
-        return;
-    }
-    if (!player_likes_chunks())
-    {
-        mprf("Sorry, you don't eat raw flesh.");
+        mprf("You do not need to butcher.");
         return;
     }
 

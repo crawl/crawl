@@ -1882,8 +1882,6 @@ static bool _animate_dead_okay(spell_type spell)
 
     if (you_are_delayed() && current_delay()->is_butcher()
         || is_vampire_feeding()
-        || you.hunger_state < HS_SATIATED
-           && you.get_base_mutation_level(MUT_HERBIVOROUS) == 0
         || god_hates_spell(spell, you.religion)
         || will_have_passive(passive_t::convert_orcs))
     {

@@ -306,7 +306,7 @@ static bool _zin_retribution()
     // preaching/creeping doom theme
     const god_type god = GOD_ZIN;
 
-    int punishment = random2(8);
+    int punishment = random2(6);
 
     // If not mutated, do something else instead.
     if (punishment > 7 && !you.how_mutated())
@@ -331,17 +331,12 @@ static bool _zin_retribution()
             return false;
         }
         break;
-    case 3:
-    case 4: // famine
-        simple_god_message(" sends a famine down upon you!", god);
-        make_hungry(you.hunger / 2, false);
-        break;
-    case 5: // noisiness
+    case 3: // noisiness
         simple_god_message(" booms out: \"Turn to the light! REPENT!\"", god);
         noisy(25, you.pos()); // same as scroll of noise
         break;
-    case 6:
-    case 7: // remove good mutations
+    case 4:
+    case 5: // remove good mutations
         _zin_remove_good_mutations();
         break;
     }

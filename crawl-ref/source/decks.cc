@@ -102,7 +102,6 @@ deck_archetype deck_of_punishment =
 {
     { CARD_WRAITH,     5 },
     { CARD_WRATH,      5 },
-    { CARD_FAMINE,     5 },
     { CARD_SWINE,      5 },
     { CARD_TORMENT,    5 },
 };
@@ -174,9 +173,9 @@ const char* card_name(card_type card)
     case CARD_ORB:             return "the Orb";
     case CARD_ILLUSION:        return "the Illusion";
     case CARD_DEGEN:           return "Degeneration";
-    case CARD_FAMINE:          return "Famine";
 
 #if TAG_MAJOR_VERSION == 34
+    case CARD_FAMINE_REMOVED:
     case CARD_SHAFT_REMOVED:
 #endif
     case NUM_CARDS:            return "a buggy card";
@@ -1709,13 +1708,6 @@ void card_effect(card_type which_card,
         _damaging_card(which_card, power, dealt);
         break;
 
-    case CARD_FAMINE:
-        if (you_foodless())
-            mpr("You feel rather smug.");
-        else
-            set_hunger(min(you.hunger, HUNGER_STARVING / 2), true);
-        break;
-
     case CARD_SWINE:
         if (transform(5 + power/10 + random2(power/10), transformation::pig, true))
             you.transform_uncancellable = true;
@@ -1724,6 +1716,7 @@ void card_effect(card_type which_card,
         break;
 
 #if TAG_MAJOR_VERSION == 34
+    case CARD_FAMINE_REMOVED:
     case CARD_SHAFT_REMOVED:
 #endif
     case NUM_CARDS:
