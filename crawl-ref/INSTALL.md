@@ -370,7 +370,7 @@ Troubleshooting tips:
   `source/contrib/bin/8.0/$(Platform)` after building the `Contribs` solution.
 - Make sure `crawl.exe` and `tilegen.exe` are in `crawl-ref/source` after
   building the `crawl-ref` solution.
-- `tilegen.exe runs early during the `crawl.exe` build process, using
+- `tilegen.exe` runs early during the `crawl.exe` build process, using
   `libpng.dll` to build PNG files inside `source/rtiles`. Breaking tilegen
   (e.g. by building a different `Contribs` configuration) after building these
   png files correctly will result in `tilegen.exe` crashing during the crawl
@@ -420,7 +420,8 @@ Use `make install prefix=/usr/local` to build and install DCSS.
 
 Make options:
 
-* `prefix`: Specify the prefix to install to. You probably want `/usr` or `/usr/local`
+* `prefix`: Specify the prefix to install to. You probably want `/usr` or
+  `/usr/local`
 * `SAVEDIR`: defaults to `~/.crawl`
 * `DATADIR`: defaults to `$prefix/share/crawl`
 
@@ -484,6 +485,8 @@ font](http://www.yohng.com/software/terminalvector.html)
 
 ## Getting Help
 
-The best place to ask for help is `##crawl-dev` on Freenode IRC, where developers chat.
+The best place to ask for help is `##crawl-dev` on Freenode IRC, where
+developers chat.
 
-You can also try [any of the community forums detailed in the README](../README.md#community).
+You can also try [any of the community forums detailed in the
+README](../README.md#community).
