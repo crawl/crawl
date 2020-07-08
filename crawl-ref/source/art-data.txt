@@ -1396,9 +1396,10 @@ NAME:     The Jaws of Erysichthon
 OBJ:      OBJ_ARMOUR/ARM_HAT
 PLUS:     +0
 COLOUR:   ETC_UNHOLY
-# XXX TODO: tiles
+TILE:     urand_jaws
+TILE_EQ:  jaws
 ANGRY:    5
-INSCRIP:  devour, FastMet
+INSCRIP:  Vamp, devour, FastMet
 BOOL:     evil, curse
 
 # This entry must always be last.
