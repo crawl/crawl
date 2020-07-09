@@ -303,7 +303,7 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu, int
             {
                 if (gl_cancel_attack)
                     break;
-                if (!one_chance_in(pow(2, 3*additional_attack_success/4)))
+                if (!one_chance_in(pow(2, additional_attack_success)))
                 {
                     continue;
                 }
