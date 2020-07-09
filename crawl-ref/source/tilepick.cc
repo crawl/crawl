@@ -3094,7 +3094,7 @@ tileidx_t tileidx_bolt(const bolt &bolt)
 
     case GREEN:
         if (bolt.name == "sting")
-            return TILE_BOLT_STING;
+            return TILE_BOLT_POISON_ARROW + dir;
         break;
 
     case LIGHTGREEN:

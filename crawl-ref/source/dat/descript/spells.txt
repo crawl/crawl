@@ -1465,7 +1465,9 @@ begin to form again as normal.
 %%%%
 Sting spell
 
-Fires a magical dart of poison.
+Briefly transforms one of the caster's limbs into a long insectoid stinger,
+which lashes out at the target. The stinger's impact will always poison the
+target, and a portion of the direct damage is from the physical impact.
 %%%%
 Stone Arrow spell
 
