@@ -176,14 +176,6 @@ CMD_CAST_SPELL verbose
 
 Lance un sort.
 %%%%
-CMD_BUTCHER
-
-Débite un cadavre
-%%%%
-CMD_BUTCHER verbose
-
-Découpe un cadavre en morceaux.
-%%%%
 CMD_MEMORISE_SPELL
 
 Mémorise un sort

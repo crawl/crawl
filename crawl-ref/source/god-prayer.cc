@@ -8,7 +8,6 @@
 #include "database.h"
 #include "describe-god.h"
 #include "env.h"
-#include "food.h"
 #include "fprop.h"
 #include "god-abil.h"
 #include "god-passive.h"
@@ -250,11 +249,8 @@ static slurp_gain _sacrifice_one_item_noncount(const item_def& item)
 
     int item_value = div_rand_round(stepped, 50);
     if (have_passive(passive_t::slime_feed)
-        && x_chance_in_y(you.piety, MAX_PIETY)
-        && !you_foodless())
+        && x_chance_in_y(you.piety, MAX_PIETY))
     {
-        //same as a sultana
-        lessen_hunger(70, true);
         gain.jiyva_bonus |= jiyva_slurp_result::food;
     }
 

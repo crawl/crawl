@@ -29,7 +29,6 @@
 #include "errors.h"
 #include "fight.h"
 #include "files.h"
-#include "food.h"
 #include "fprop.h"
 #include "ghost.h"
 #include "god-item.h"

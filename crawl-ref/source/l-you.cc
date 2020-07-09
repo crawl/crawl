@@ -17,7 +17,6 @@
 #include "delay.h"
 #include "english.h"
 #include "env.h"
-#include "food.h"
 #include "initfile.h"
 #include "item-name.h"
 #include "item-prop.h"
@@ -134,16 +133,6 @@ LUARET1(you_poison_survival, number, poison_survival())
  * @function corrosion
  */
 LUARET1(you_corrosion, number, you.props["corrosion_amount"].get_int())
-/*** Hunger state number.
- * @treturn int
- * @function hunger
- */
-LUARET1(you_hunger, number, you.hunger_state - 1)
-/*** Hunger state string.
- * @treturn string
- * @function hunger_name
- */
-LUARET1(you_hunger_name, string, hunger_level())
 /*** Strength.
  * @treturn int current strength
  * @treturn int max strength
@@ -269,22 +258,11 @@ LUARET1(you_see_invisible, boolean, you.can_see_invisible(false))
  * @function spirit_shield
  */
 LUARET1(you_spirit_shield, number, you.spirit_shield(false) ? 1 : 0)
-/*** Gourmand.
- * @treturn boolean
- * @function gourmond
- */
-LUARET1(you_gourmand, boolean, you.gourmand(false))
 /*** Corrosion resistance (rCorr).
  * @treturn int resistance level
  * @function res_corr
  */
 LUARET1(you_res_corr, boolean, you.res_corr(false))
-/*** Do you like to eat chunks?
- * Returns a number so as not to break existing scripts.
- * @treturn int
- * @function like_chunks
- */
-LUARET1(you_like_chunks, number, you_foodless() ? 0 : 3)
 /*** Are you flying?
  * @treturn boolean
  * @function flying
@@ -1180,8 +1158,6 @@ static const struct luaL_reg you_clib[] =
     { "mp"          , you_mp },
     { "base_mp"     , you_base_mp },
     { "rot"         , you_rot },
-    { "hunger"      , you_hunger },
-    { "hunger_name" , you_hunger_name },
     { "strength"    , you_strength },
     { "intelligence", you_intelligence },
     { "dexterity"   , you_dexterity },
@@ -1207,8 +1183,6 @@ static const struct luaL_reg you_clib[] =
     { "res_mutation", you_res_mutation },
     { "see_invisible", you_see_invisible },
     { "spirit_shield", you_spirit_shield },
-    { "like_chunks",  you_like_chunks },
-    { "gourmand",     you_gourmand },
     { "res_corr",     you_res_corr },
     { "flying",       you_flying },
     { "transform",    you_transform },

@@ -35,7 +35,6 @@
 #include "env.h"
 #include "evoke.h"
 #include "fight.h"
-#include "food.h"
 #include "ghost.h"
 #include "god-abil.h"
 #include "god-item.h"
@@ -54,6 +53,7 @@
 #include "mon-death.h"
 #include "mon-tentacle.h"
 #include "output.h"
+#include "potion.h"
 #include "religion.h"
 #include "rltiles/tiledef-feat.h"
 #include "skills.h"
@@ -2559,8 +2559,6 @@ static vector<command_type> _allowed_actions(const item_def& item)
             actions.push_back(CMD_WEAR_ARMOUR);
         break;
     case OBJ_FOOD:
-        if (can_eat(item, true, false))
-            actions.push_back(CMD_EAT);
         break;
     case OBJ_SCROLLS:
     //case OBJ_BOOKS: these are handled differently
@@ -2605,7 +2603,6 @@ static string _actions_desc(const vector<command_type>& actions, const item_def&
         { CMD_WEAR_ARMOUR, "(w)ear" },
         { CMD_REMOVE_ARMOUR, "(t)ake off" },
         { CMD_EVOKE, "e(v)oke" },
-        { CMD_EAT, "(e)at" },
         { CMD_READ, "(r)ead" },
         { CMD_WEAR_JEWELLERY, "(p)ut on" },
         { CMD_REMOVE_JEWELLERY, "(r)emove" },
@@ -2637,7 +2634,6 @@ static command_type _get_action(int key, vector<command_type> actions)
         { CMD_WEAR_ARMOUR,      'w' },
         { CMD_REMOVE_ARMOUR,    't' },
         { CMD_EVOKE,            'v' },
-        { CMD_EAT,              'e' },
         { CMD_READ,             'r' },
         { CMD_WEAR_JEWELLERY,   'p' },
         { CMD_REMOVE_JEWELLERY, 'r' },
@@ -2679,7 +2675,6 @@ static bool _do_action(item_def &item, const command_type action)
     case CMD_QUIVER_ITEM:      quiver_item(slot);                   break;
     case CMD_WEAR_ARMOUR:      wear_armour(slot);                   break;
     case CMD_REMOVE_ARMOUR:    takeoff_armour(slot);                break;
-    case CMD_EAT:              eat_food();                          break;
     case CMD_READ:             read(&item);                         break;
     case CMD_WEAR_JEWELLERY:   puton_ring(slot);                    break;
     case CMD_REMOVE_JEWELLERY: remove_ring(slot, true);             break;

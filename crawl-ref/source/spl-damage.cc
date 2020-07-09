@@ -23,7 +23,6 @@
 #include "env.h"
 #include "fight.h"
 #include "fineff.h"
-#include "food.h"
 #include "fprop.h"
 #include "god-conduct.h"
 #include "god-passive.h"

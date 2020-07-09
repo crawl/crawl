@@ -41,8 +41,7 @@ MONS:    ooze hp:10
 MARKER:  d = lua:tutorial2.msg("pickup_weapon")
 MARKER:  A = lua:tutorial2.msg("melee")
 MARKER:  B = lua:tutorial2.msg("resting")
-MARKER:  C = lua:tutorial2.msg("chop_corpses")
-MARKER:  D = lua:tutorial2.msg("rest_and_chop_reminder")
+# TODO: Pad C and pad D were for food related lessons. What could go there?
 MARKER:  E = lua:tutorial2.msg("wait")
 MARKER:  F = lua:tutorial2.msg("compare_monster_desc")
 MARKER:  G = lua:tutorial2.msg("resting_reminder")
@@ -51,8 +50,6 @@ MARKER:  { = lua:one_way_stair { dst  = "tutorial_lesson2", \
                                  onclimb = "tutorial2.exit" }
 epilogue{{
   if crawl.game_started() then
-    -- Make the tutoree hungry for the chopping tutorial.
-    crawl.tutorial_hunger(2700)
     crawl.tutorial_hint("HINT_NEW_LEVEL")
     crawl.clear_messages(true)
     crawl.tutorial_msg("tutorial2 start")
@@ -110,7 +107,7 @@ MARKER:  e = lua:tutorial2.msg("wield_bow")
 MARKER:  C = lua:tutorial2.msg("travel_reminder")
 MARKER:  D = lua:tutorial2.msg("firing")
 MARKER:  E = lua:tutorial2.msg("explore")
-MARKER:  F = lua:tutorial2.msg("eat_reminder")
+# TODO Pad F was also a reminder to eat, anything else needed?
 # This is just for atmosphere.
 MARKER:  F = lua:fog_machine { cloud_type = "thin mist", pow_min = 10, \
              pow_max = 10, delay = 10, start_clouds = 1, size_min = 2, \

@@ -31,7 +31,6 @@
 #include "english.h"
 #include "env.h"
 #include "files.h"
-#include "food.h"
 #include "format.h"
 #include "god-abil.h"
 #include "god-passive.h"
@@ -3175,9 +3174,7 @@ void start_explore(bool grab_items)
 
 void do_explore_cmd()
 {
-    if (apply_starvation_penalties())
-        mpr("You need to eat something NOW!");
-    else if (you.berserk())
+    if (you.berserk())
         mpr("Calm down first, please.");
     else                        // Start exploring
         start_explore(Options.explore_greedy);

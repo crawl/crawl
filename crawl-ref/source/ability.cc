@@ -31,7 +31,6 @@
 #include "evoke.h"
 #include "exercise.h"
 #include "fight.h"
-#include "food.h"
 #include "god-abil.h"
 #include "god-companions.h"
 #include "god-conduct.h"

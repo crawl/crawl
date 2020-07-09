@@ -35,7 +35,6 @@
 #include "errors.h"
 #include "exercise.h"
 #include "files.h"
-#include "food.h"
 #include "god-abil.h"
 #include "god-conduct.h"
 #include "god-passive.h"
@@ -1183,23 +1182,6 @@ int player_mp_regen()
         regen_amount += 25;
 
     return regen_amount;
-}
-
-int player_hunger_rate()
-{
-    int hunger = 3;
-
-    hunger += you.get_mutation_level(MUT_FAST_METABOLISM)
-            - you.get_mutation_level(MUT_SLOW_METABOLISM);
-
-    // If Cheibriados has slowed your life processes, you will hunger less.
-    if (have_passive(passive_t::slow_metabolism))
-        hunger /= 2;
-
-    if (hunger < 1)
-        hunger = 1;
-
-    return hunger;
 }
 
 /**
@@ -4925,8 +4907,6 @@ player::player()
     stat_loss.init(0);
     base_stats.init(0);
 
-    hunger          = HUNGER_DEFAULT;
-    hunger_state    = HS_SATIATED;
     disease         = 0;
     max_level       = 1;
     hit_points_regeneration   = 0;
@@ -5125,8 +5105,6 @@ player::player()
     game_seed           = 0;
     fully_seeded        = true;
     deterministic_levelgen = true;
-
-    old_hunger          = hunger;
 
     los_noise_level     = 0;        ///< temporary slot for loud noise levels
     los_noise_last_turn = 0;
@@ -5397,13 +5375,6 @@ void player::banish(actor* /*agent*/, const string &who, const int power,
     banished    = true;
     banished_by = who;
     banished_power = power;
-}
-
-// Currently a no-op, previously was used for vampire hunger modifications.
-// Perhaps in the fullness of time this can be removed.
-int calc_hunger(int food_cost)
-{
-    return food_cost;
 }
 
 /*

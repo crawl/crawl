@@ -172,14 +172,6 @@ CMD_CAST_SPELL verbose
 
 Kaster en besværgelse.
 %%%%
-CMD_BUTCHER
-
-Slagt lig
-%%%%
-CMD_BUTCHER verbose
-
-Slagter et lig til lunser.
-%%%%
 CMD_MEMORISE_SPELL
 
 Lær besværgelse

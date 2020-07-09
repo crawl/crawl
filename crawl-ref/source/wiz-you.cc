@@ -12,7 +12,6 @@
 
 #include "abyss.h"
 #include "dbg-util.h"
-#include "food.h"
 #include "god-abil.h"
 #include "god-wrath.h"
 #include "item-use.h"
@@ -224,48 +223,12 @@ void wizard_heal(bool super_heal)
     you.duration[DUR_EXHAUSTED] = 0;
     set_hp(you.hp_max);
     set_mp(you.max_magic_points);
-    set_hunger(HUNGER_VERY_FULL + 100, true);
     you.redraw_hit_points = true;
     you.redraw_armour_class = true;
     you.redraw_evasion = true;
 
     for (int stat = 0; stat < NUM_STATS; stat++)
         you.duration[stat_zero_duration(static_cast<stat_type> (stat))] = 0;
-}
-
-void wizard_set_hunger_state()
-{
-    string hunger_prompt = "Set hunger state to ";
-    if (you.species != SP_VAMPIRE && you.species != SP_GHOUL)
-        hunger_prompt += "f(A)inting, ";
-    hunger_prompt += "s(T)arving, (N)ear starving, (H)ungry";
-    if (you.species == SP_GHOUL)
-        hunger_prompt += " or (S)atiated";
-    else
-        hunger_prompt += ", (S)atiated, (F)ull or (E)ngorged";
-    hunger_prompt += "? ";
-
-    mprf(MSGCH_PROMPT, "%s", hunger_prompt.c_str());
-
-    const int c = toalower(getch_ck());
-
-    // Values taken from food.cc.
-    switch (c)
-    {
-    case 'a': you.hunger = HUNGER_FAINTING / 2; break;
-    case 't': you.hunger = (HUNGER_STARVING + HUNGER_FAINTING) / 2; break;
-    case 'n': you.hunger = 1100;  break;
-    case 'h': you.hunger = 2300;  break;
-    case 's': you.hunger = 4900;  break;
-    case 'f': you.hunger = 7900;  break;
-    case 'e': you.hunger = HUNGER_MAXIMUM; break;
-    default:  canned_msg(MSG_OK); break;
-    }
-
-    food_change();
-
-    if (you.species == SP_GHOUL && you.hunger_state >= HS_SATIATED)
-        mpr("Ghouls can never be full or above!");
 }
 
 void wizard_set_piety_to(int newpiety, bool force)

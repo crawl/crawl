@@ -21,7 +21,6 @@
 #include "death-curse.h"
 #include "decks.h"
 #include "env.h"
-#include "food.h"
 #include "ghost.h"
 #include "god-abil.h"
 #include "god-passive.h" // shadow_monster

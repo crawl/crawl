@@ -6,7 +6,6 @@
 #include "l-libs.h"
 
 #include "cluautil.h"
-#include "food.h"
 #include "religion.h"
 #include "spl-util.h"
 #include "spl-zap.h"

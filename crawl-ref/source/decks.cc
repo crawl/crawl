@@ -25,7 +25,6 @@
 #include "directn.h"
 #include "dungeon.h"
 #include "evoke.h"
-#include "food.h"
 #include "ghost.h"
 #include "god-passive.h" // passive_t::no_haste
 #include "god-wrath.h"

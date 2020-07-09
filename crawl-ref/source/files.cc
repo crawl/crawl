@@ -51,7 +51,6 @@
 #include "errors.h"
 #include "player-save-info.h"
 #include "fineff.h"
-#include "food.h" //for HUNGER_MAXIMUM
 #include "ghost.h"
 #include "god-abil.h"
 #include "god-companions.h"
@@ -3182,8 +3181,6 @@ static bool _convert_obsolete_species()
         you.magic_contamination = 0;
         // Djinni were flying, so give the player some time to land
         fly_player(100);
-        // Give them some time to find food. Creating food isn't safe as the grid doesn't exist yet, and may have water anyways.
-        you.hunger = HUNGER_MAXIMUM;
         return true;
     }
 #endif

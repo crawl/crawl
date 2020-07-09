@@ -118,8 +118,8 @@ and spellcasters.
 %%%%
 Troll
 
-Trolls are monstrous creatures with powerful claws, always hungering for food.
-They regenerate health rapidly.
+Trolls are monstrous creatures with powerful claws. They regenerate health
+rapidly.
 %%%%
 Vampire
 

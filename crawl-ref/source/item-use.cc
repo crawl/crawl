@@ -25,7 +25,6 @@
 #include "env.h"
 #include "evoke.h"
 #include "fight.h"
-#include "food.h"
 #include "god-conduct.h"
 #include "god-item.h"
 #include "god-passive.h"
@@ -3418,12 +3417,6 @@ void read_scroll(item_def& scroll)
 #ifdef USE_TILE
 // Interactive menu for item drop/use.
 
-void tile_item_use_floor(int idx)
-{
-    if (mitm[idx].is_type(OBJ_CORPSES, CORPSE_BODY))
-        butchery(&mitm[idx]);
-}
-
 void tile_item_pickup(int idx, bool part)
 {
     if (item_is_stationary(mitm[idx]))
@@ -3455,12 +3448,6 @@ void tile_item_drop(int idx, bool partdrop)
             quantity = you.inv[idx].quantity;
     }
     drop_item(idx, quantity);
-}
-
-void tile_item_eat_floor(int idx)
-{
-    if (can_eat(mitm[idx], false))
-        eat_item(mitm[idx]);
 }
 
 void tile_item_use_secondary(int idx)

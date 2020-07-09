@@ -12,7 +12,6 @@
 #include <unordered_map>
 
 #include "cloud.h"
-#include "food.h"
 #include "god-conduct.h"
 #include "god-passive.h"
 #include "god-wrath.h" // reduce_xp_penance
@@ -35,6 +34,11 @@
 #include "xom.h"
 
 int _xom_factor(bool was_known);
+
+bool you_drinkless(bool temp)
+{
+    return you.undead_state(temp) == US_UNDEAD;
+}
 
 PotionEffect::PotionEffect(const potion_type pot)
     : potion_name(potion_type_name(pot)), kind(pot)

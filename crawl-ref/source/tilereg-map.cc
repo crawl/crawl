@@ -6,7 +6,6 @@
 
 #include "cio.h"
 #include "command.h"
-#include "food.h"
 #include "libutil.h"
 #include "nearby-danger.h"
 #include "player.h"
@@ -302,11 +301,8 @@ bool MapRegion::update_tip_text(string& tip)
     tip = "[L-Click] Enable map mode";
 #else
     tip = "[L-Click] Travel / [R-Click] View";
-    if ((you.hunger_state > HS_STARVING || you_min_hunger())
-        && i_feel_safe())
-    {
+    if (i_feel_safe())
         tip += "\n[Shift + L-Click] Autoexplore";
-    }
 #endif
     return true;
 }

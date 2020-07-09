@@ -29,7 +29,6 @@
 #include "fight.h"
 #include "files.h"
 #include "fineff.h"
-#include "food.h"
 #include "format.h" // formatted_string
 #include "god-blessing.h"
 #include "god-companions.h"
@@ -2713,9 +2712,6 @@ static int _gozag_max_shops()
 {
     const int max_non_food_shops = 3;
 
-    // add a food shop if you can eat (non-mu/dj)
-    if (!you_foodless(false))
-        return max_non_food_shops + 1;
     return max_non_food_shops;
 }
 
@@ -2812,15 +2808,10 @@ static void _setup_gozag_shop(int index, vector<shop_type> &valid_shops)
     ASSERT(!you.props.exists(make_stringf(GOZAG_SHOPKEEPER_NAME_KEY, index)));
 
     shop_type type = NUM_SHOPS;
-    if (index == 0 && !you_foodless(false))
-        type = SHOP_FOOD;
-    else
-    {
-        int choice = random2(valid_shops.size());
-        type = valid_shops[choice];
-        // Don't choose this shop type again for this merchant call.
-        valid_shops.erase(valid_shops.begin() + choice);
-    }
+    int choice = random2(valid_shops.size());
+    type = valid_shops[choice];
+    // Don't choose this shop type again for this merchant call.
+    valid_shops.erase(valid_shops.begin() + choice);
     you.props[make_stringf(GOZAG_SHOP_TYPE_KEY, index)].get_int() = type;
 
     you.props[make_stringf(GOZAG_SHOPKEEPER_NAME_KEY, index)].get_string()

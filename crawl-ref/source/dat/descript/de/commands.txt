@@ -163,14 +163,6 @@ CMD_CAST_SPELL verbose
 
 Wirke einen Zauberspruch.
 %%%%
-CMD_BUTCHER
-
-Zerhacke Leiche
-%%%%
-CMD_BUTCHER verbose
-
-Zerhacke Leiche in Stücke
-%%%%
 CMD_MEMORISE_SPELL
 
 Zauberspruch einprägen

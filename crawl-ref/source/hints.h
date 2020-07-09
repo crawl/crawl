@@ -163,7 +163,6 @@ void print_hint(string key, const string& arg1 = "", const string& arg2 = "");
 void hints_death_screen();
 void hints_finished();
 
-void hints_dissection_reminder();
 void hints_healing_check();
 
 void taken_new_item(object_class_type item_type);

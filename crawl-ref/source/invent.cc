@@ -19,7 +19,6 @@
 #include "command.h"
 #include "describe.h"
 #include "env.h"
-#include "food.h"
 #include "god-item.h"
 #include "god-passive.h"
 #include "initfile.h"
@@ -490,7 +489,7 @@ string no_selectables_message(int item_selector)
     case OBJ_CORPSES:
         return "You don't have any corpses.";
     case OBJ_FOOD:
-        if (you_foodless())
+        if (you.species != SP_GHOUL)
             return "You don't even eat.";
         else
             return "You aren't carrying any food.";
@@ -1116,9 +1115,6 @@ bool item_is_selected(const item_def &i, int selector)
 
     case OSEL_ENCHANTABLE_ARMOUR:
         return is_enchantable_armour(i, true);
-
-    case OBJ_FOOD:
-        return itype == OBJ_FOOD && !is_inedible(i);
 
     case OSEL_CURSED_WORN:
         return i.cursed() && item_is_equipped(i)

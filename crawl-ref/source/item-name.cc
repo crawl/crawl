@@ -24,7 +24,6 @@
 #include "english.h"
 #include "env.h" // LSTATE_STILL_WINDS
 #include "errors.h" // sysfail
-#include "food.h"
 #include "god-item.h"
 #include "god-passive.h" // passive_t::want_curses, no_haste
 #include "invent.h"
@@ -2742,7 +2741,7 @@ bool is_bad_item(const item_def &item)
  *
  * @param item The item being queried.
  * @param temp Should temporary conditions such as transformations and
- *             vampire hunger levels be taken into account?  Religion (but
+ *             vampire state be taken into account?  Religion (but
  *             not its absence) is considered to be permanent here.
  * @return True if using the item is known to be risky but occasionally
  *         worthwhile.
@@ -2815,7 +2814,7 @@ static bool _invisibility_is_useless(const bool temp)
  *
  * @param item The item being queried.
  * @param temp Should temporary conditions such as transformations and
- *             vampire hunger levels be taken into account? Religion (but
+ *             vampire state be taken into account? Religion (but
  *             not its absence) is considered to be permanent here.
  * @return True if the item is known to be useless.
  */
@@ -3103,24 +3102,9 @@ bool is_useless_item(const item_def &item, bool temp)
         if (item.sub_type == NUM_FOODS)
             break;
 
-        if (!is_inedible(item))
-            return false;
-
-        if (!temp && you.form == transformation::lich)
-        {
-            // See what would happen if we were in our normal state.
-            unwind_var<transformation> formsim(you.form, transformation::none);
-
-            if (!is_inedible(item))
-                return false;
-        }
-
-        return true;
+        return you.species != SP_GHOUL;
 
     case OBJ_CORPSES:
-        if (item.sub_type != CORPSE_SKELETON && !you_foodless())
-            return false;
-
         if (you.has_spell(SPELL_ANIMATE_DEAD)
             || you.has_spell(SPELL_ANIMATE_SKELETON)
             || you.has_spell(SPELL_SIMULACRUM)
@@ -3229,23 +3213,6 @@ string item_prefix(const item_def &item, bool temp)
 
     switch (item.base_type)
     {
-    case OBJ_CORPSES:
-        // Skeletons cannot be eaten.
-        if (item.sub_type == CORPSE_SKELETON)
-        {
-            prefixes.push_back("inedible");
-            break;
-        }
-        // intentional fall-through
-    case OBJ_FOOD:
-        // this seems like a big horrible gotcha waiting to happen
-        if (item.sub_type == NUM_FOODS)
-            break;
-
-        if (is_inedible(item))
-            prefixes.push_back("inedible");
-        break;
-
     case OBJ_STAVES:
     case OBJ_WEAPONS:
         if (is_range_weapon(item))

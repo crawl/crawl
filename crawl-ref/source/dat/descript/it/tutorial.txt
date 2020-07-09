@@ -57,10 +57,6 @@ tutorial2 exit
   <input>$cmd[CMD_WAIT]</input>  aspetta e riposati per un singolo turno
   <input>$cmd[CMD_REST]</input>  aspetta e riposati per 100 turni
 
-<yellow>Cadaveri<console> <brown>%</brown></console></yellow>
-  <input>$cmd[CMD_BUTCHER]</input>  macella una cadavere in cosciotti
-  <input>$cmd[CMD_EAT]</input>  mangia un cosciotto di carne
-
                   <cyan>Premi un <input>qualunque tasto</input> per liberare questo schermo...</cyan>
 %%%%
 tutorial3 start
@@ -147,12 +143,6 @@ tutorial5 piety_on_kill
 
 Qualche divinità ama davvero l'uccidere mostri nel suo nome. Lascia che il
 massacro inizi!
-%%%%
-tutorial5 hunger
-
-Non puoi infuriarti quando sei affamato, perciò dovresti sempre portare un po'
-di cibo con te. Questo significa che dovrai decidere fra il macellare un
-cadavere o sacrificarlo a Trog.
 %%%%
 tutorial5 berserk2
 

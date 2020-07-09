@@ -10,7 +10,6 @@
 #include "art-enum.h"
 #include "delay.h"
 #include "english.h" // conjugate_verb
-#include "food.h"
 #include "god-abil.h"
 #include "god-item.h"
 #include "god-passive.h"

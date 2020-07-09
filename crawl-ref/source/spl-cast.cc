@@ -23,7 +23,6 @@
 #include "env.h"
 #include "evoke.h"
 #include "exercise.h"
-#include "food.h"
 #include "format.h"
 #include "god-abil.h"
 #include "god-conduct.h"
@@ -148,7 +147,7 @@ static string _spell_extra_description(spell_type spell, bool viewing)
     // spell name
     desc << chop_string(spell_title(spell), 30);
 
-    // spell power, spell range, hunger level, noise
+    // spell power, spell range, noise
     const string rangestring = spell_range_string(spell);
 
     desc << chop_string(spell_power_string(spell), 13)
@@ -637,17 +636,6 @@ bool can_cast_spells(bool quiet, bool exegesis)
         if (!quiet)
             mpr("You cannot cast spells when silenced!");
         // included in default force_more_message
-        return false;
-    }
-
-    if (apply_starvation_penalties())
-    {
-        if (!quiet)
-        {
-            mpr("You don't have the energy to cast any spells.");
-            // included in default force_more_message
-            crawl_state.cancel_cmd_repeat();
-        }
         return false;
     }
 

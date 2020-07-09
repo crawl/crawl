@@ -14,7 +14,6 @@
 #include "colour.h"
 #include "coord.h"
 #include "env.h"
-#include "food.h"
 #include "invent.h"
 #include "item-prop.h"
 #include "item-status-flag-type.h"

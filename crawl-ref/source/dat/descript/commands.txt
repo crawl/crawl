@@ -179,14 +179,6 @@ CMD_CAST_SPELL verbose
 
 Casts a spell.
 %%%%
-CMD_BUTCHER
-
-Butcher corpse
-%%%%
-CMD_BUTCHER verbose
-
-Butchers a corpse into chunks.
-%%%%
 CMD_MEMORISE_SPELL
 
 Memorise spell

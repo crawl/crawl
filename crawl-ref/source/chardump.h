@@ -38,7 +38,6 @@ void dump_map(FILE *fp, bool debug = false, bool dist = false);
 void display_notes();
 void display_char_dump();
 string chardump_desc(const item_def& item);
-const char *hunger_level();
 
 string seed_description();
 

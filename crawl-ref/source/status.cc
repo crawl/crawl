@@ -8,7 +8,6 @@
 #include "duration-type.h"
 #include "env.h"
 #include "evoke.h"
-#include "food.h"
 #include "god-abil.h"
 #include "god-passive.h"
 #include "item-prop.h"
@@ -18,6 +17,7 @@
 #include "options.h"
 #include "orb.h" // orb_limits_translocation in fill_status_info
 #include "player-stats.h"
+#include "potion.h" // you_drinkless
 #include "random.h" // for midpoint_msg.offset() in duration-data
 #include "religion.h"
 #include "spl-summoning.h" // NEXT_DOOM_HOUND_KEY in duration-data
@@ -153,9 +153,7 @@ static bool _fill_inf_from_ddef(duration_type dur, status_info& inf)
 
 static void _describe_airborne(status_info& inf);
 static void _describe_glow(status_info& inf);
-static void _describe_hunger(status_info& inf);
 static void _describe_regen(status_info& inf);
-static void _describe_rotting(status_info& inf);
 static void _describe_sickness(status_info& inf);
 static void _describe_speed(status_info& inf);
 static void _describe_poison(status_info& inf);
@@ -258,17 +256,26 @@ bool fill_status_info(int status, status_info& inf)
         }
         break;
 
-    case STATUS_HUNGER:
-        _describe_hunger(inf);
+    case STATUS_ALIVE_STATE:
+        if (you.species == SP_VAMPIRE)
+        {
+            if (!you.vampire_alive)
+            {
+                inf.light_colour = LIGHTRED;
+                inf.light_text = "Bloodless";
+                inf.short_text = "bloodless";
+            }
+            else
+            {
+                inf.light_colour = GREEN;
+                inf.light_text = "Alive";
+            }
+        }
         break;
 
     case STATUS_REGENERATION:
         // DUR_TROGS_HAND + some vampire and non-healing stuff
         _describe_regen(inf);
-        break;
-
-    case STATUS_ROT:
-        _describe_rotting(inf);
         break;
 
     case STATUS_SICK:
@@ -713,67 +720,6 @@ bool fill_status_info(int status, status_info& inf)
     return true;
 }
 
-static void _describe_hunger(status_info& inf)
-{
-
-    if (you.species == SP_VAMPIRE)
-    {
-        if (!you.vampire_alive)
-        {
-            inf.light_colour = LIGHTRED;
-            inf.light_text = "Bloodless";
-            inf.short_text = "bloodless";
-        }
-        else
-        {
-            inf.light_colour = GREEN;
-            inf.light_text = "Alive";
-        }
-        return;
-    }
-
-    switch (you.hunger_state)
-    {
-    case HS_ENGORGED:
-        inf.light_colour = LIGHTGREEN;
-        inf.light_text   = "Engorged";
-        break;
-    case HS_VERY_FULL:
-        inf.light_colour = GREEN;
-        inf.light_text   = "Very Full";
-        break;
-    case HS_FULL:
-        inf.light_colour = GREEN;
-        inf.light_text   = "Full";
-        break;
-    case HS_HUNGRY:
-        inf.light_colour = YELLOW;
-        inf.light_text   = "Hungry";
-        break;
-    case HS_VERY_HUNGRY:
-        inf.light_colour = YELLOW;
-        inf.light_text   = "Very Hungry";
-        break;
-    case HS_NEAR_STARVING:
-        inf.light_colour = YELLOW;
-        inf.light_text   = "Near Starving";
-        break;
-    case HS_STARVING:
-        inf.light_colour = LIGHTRED;
-        inf.light_text   = "Starving";
-        inf.short_text   = "starving";
-        break;
-    case HS_FAINTING:
-        inf.light_colour = RED;
-        inf.light_text   = "Fainting";
-        inf.short_text   = "fainting";
-        break;
-    case HS_SATIATED: // no status light
-    default:
-        break;
-    }
-}
-
 static void _describe_glow(status_info& inf)
 {
     const int signed_cont = get_contamination_level();
@@ -908,27 +854,6 @@ static void _describe_airborne(status_info& inf)
     inf.long_text    = "You are flying" + desc + ".";
     inf.light_colour = _dur_colour(inf.light_colour, expiring);
     _mark_expiring(inf, expiring);
-}
-
-static void _describe_rotting(status_info& inf)
-{
-    if (you.species == SP_GHOUL)
-    {
-        inf.short_text = "rotting";
-        inf.long_text = "Your flesh is rotting";
-        int rot = 1 + (1 << max(0, HS_SATIATED - you.hunger_state));
-        if (rot > 15)
-            inf.long_text += " before your eyes";
-        else if (rot > 8)
-            inf.long_text += " away quickly";
-        else if (rot > 4)
-            inf.long_text += " badly";
-        else if (rot > 2)
-            inf.long_text += " faster than usual";
-        else
-            inf.long_text += " at the usual pace";
-        inf.long_text += ".";
-    }
 }
 
 static void _describe_sickness(status_info& inf)

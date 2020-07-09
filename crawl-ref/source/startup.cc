@@ -20,7 +20,6 @@
 #include "end.h"
 #include "exclude.h"
 #include "files.h"
-#include "food.h"
 #include "god-abil.h"
 #include "god-passive.h"
 #include "hints.h"
@@ -262,8 +261,6 @@ static void _post_init(bool newc)
 
     calc_hp();
     calc_mp();
-    if (you.form != transformation::lich)
-        food_change(true);
     shopping_list.refresh();
 
     run_map_local_preludes();

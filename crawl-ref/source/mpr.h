@@ -19,7 +19,6 @@ enum msg_channel_type
     MSGCH_DURATION,         // effect down/warnings
     MSGCH_DANGER,           // serious life threats (ie very large HP attacks)
     MSGCH_WARN,             // much less serious threats
-    MSGCH_FOOD,             // hunger notices
     MSGCH_RECOVERY,         // recovery from disease/stat/poison condition
     MSGCH_SOUND,            // messages about things the player hears
     MSGCH_TALK,             // monster talk (param is monster type)

@@ -1088,13 +1088,6 @@ static msg_colour_type channel_to_msgcol(msg_channel_type channel, int param)
             ret = MSGCOL_LIGHTRED;
             break;
 
-        case MSGCH_FOOD:
-            if (param) // positive change
-                ret = MSGCOL_GREEN;
-            else
-                ret = MSGCOL_YELLOW;
-            break;
-
         case MSGCH_INTRINSIC_GAIN:
             ret = MSGCOL_GREEN;
             break;
@@ -1350,7 +1343,6 @@ static void _debug_channel_arena(msg_channel_type channel)
     case MSGCH_PROMPT:
     case MSGCH_GOD:
     case MSGCH_DURATION:
-    case MSGCH_FOOD:
     case MSGCH_RECOVERY:
     case MSGCH_INTRINSIC_GAIN:
     case MSGCH_MUTATION:

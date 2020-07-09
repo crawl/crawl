@@ -14,7 +14,6 @@
 #include "command.h"
 #include "dungeon.h"
 #include "end.h"
-#include "food.h"
 #include "initfile.h"
 #include "item-name.h"
 #include "item-status-flag-type.h"
@@ -874,8 +873,6 @@ namespace arena
                     count_foes();
 
                 you.time_taken = 10;
-                // Make sure we don't starve.
-                you.hunger = HUNGER_MAXIMUM;
                 //report_foes();
                 world_reacts();
                 do_miscasts();

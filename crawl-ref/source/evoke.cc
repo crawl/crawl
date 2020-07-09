@@ -26,7 +26,6 @@
 #include "env.h"
 #include "exercise.h"
 #include "fight.h"
-#include "food.h"
 #include "god-abil.h"
 #include "god-conduct.h"
 #include "god-passive.h"
@@ -182,7 +181,6 @@ static bool _reaching_weapon_attack(const item_def& wpn)
                 // Let's assume friendlies cooperate.
                 mpr("You could not reach far enough!");
                 you.time_taken = attack_delay;
-                make_hungry(3, true);
                 return true;
             }
         }
@@ -203,7 +201,6 @@ static bool _reaching_weapon_attack(const item_def& wpn)
         // of invisible monsters.
         mpr("You attack empty space.");
         you.time_taken = attack_delay;
-        make_hungry(3, true);
         return true;
     }
     else if (!fight_melee(&you, mons))
@@ -214,7 +211,6 @@ static bool _reaching_weapon_attack(const item_def& wpn)
             // a failed attempt to reach further should not be free; instead,
             // charge the same as a successful attempt.
             you.time_taken = attack_delay;
-            make_hungry(3, true);
             you.turn_is_over = true;
         }
         else
@@ -1268,12 +1264,7 @@ bool evoke_item(int slot)
             return false;
         }
 
-        if (apply_starvation_penalties())
-        {
-            canned_msg(MSG_TOO_HUNGRY);
-            return false;
-        }
-        else if (you.magic_points >= you.max_magic_points)
+        if (you.magic_points >= you.max_magic_points)
         {
             canned_msg(MSG_FULL_MAGIC);
             return false;
@@ -1285,7 +1276,6 @@ bool evoke_item(int slot)
         {
             mpr("You channel some magical energy.");
             inc_mp(1 + random2(3));
-            make_hungry(50, false, true);
             did_work = true;
             practise_evoking(1);
             count_action(CACT_EVOKE, STAFF_ENERGY, OBJ_STAVES);

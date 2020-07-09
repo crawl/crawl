@@ -150,21 +150,6 @@ its lowest level and have to turn around to explore another one. Check the
 dungeon overview ('Ctrl-O') to see how deep you've delved into a given branch,
 or the database ('?/b') for the number of levels for unseen branches.
 %%%%
-Q:starving
-
-My characters keep starving. What am I doing wrong?
-%%%%
-A:starving
-
-A: It's possible that you simply spend too much time on cleared levels where
-not enough monsters are generated to dine on. You might also be too choosy
-about what you eat; unless you are herbivorous, you should usually be eating
-monster chunks.
-
-Also, casting (difficult) spells will make you hungry, but high Intelligence
-and Spellcasting will lessen this effect. If you press 'II', you can read about
-the hunger effects of your spells. Invocations likewise often have a Food cost.
-%%%%
 Q:cheating
 
 Is there a cheating mode to Crawl where I can play without dying?

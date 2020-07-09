@@ -37,9 +37,7 @@
 {'y', CMD_MOVE_UP_LEFT},
 // other commands
 {'a', CMD_USE_ABILITY},
-{'c', CMD_BUTCHER},
 {'d', CMD_DROP},
-{'e', CMD_EAT},
 {'f', CMD_FIRE},
 {'g', CMD_PICKUP},
 {'i', CMD_DISPLAY_INVENTORY},

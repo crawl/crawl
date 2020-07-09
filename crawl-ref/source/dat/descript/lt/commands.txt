@@ -147,14 +147,6 @@ CMD_DISPLAY_INVENTORY verbose
 
 Rodyti inventoriaus turinį
 %%%%
-CMD_BUTCHER
-
-Išdarinėti lavoną
-%%%%
-CMD_BUTCHER verbose
-
-Išdarinėti lavoną į gabalus
-%%%%
 CMD_MEMORISE_SPELL
 
 Įsiminti burtažodį

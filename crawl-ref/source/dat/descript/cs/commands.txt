@@ -161,14 +161,6 @@ CMD_CAST_SPELL verbose
 
 Sešle zvolené kouzlo.
 %%%%
-CMD_BUTCHER
-
-Sekat mrtvolu
-%%%%
-CMD_BUTCHER verbose
-
-Naporcuje mrtvolu na kousky.
-%%%%
 CMD_MEMORISE_SPELL
 
 Zapamatovat si kouzlo

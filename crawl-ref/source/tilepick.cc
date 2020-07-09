@@ -12,7 +12,6 @@
 #include "debug.h"
 #include "env.h"
 #include "files.h"
-#include "food.h"
 #include "item-name.h"
 #include "item-prop.h"
 #include "item-status-flag-type.h"
@@ -2414,21 +2413,13 @@ static tileidx_t _tileidx_armour(const item_def &item)
     return tileidx_enchant_equ(item, tile);
 }
 
-static tileidx_t _tileidx_chunk(const item_def &item)
-{
-    if (is_inedible(item))
-        return TILE_FOOD_CHUNK_INEDIBLE;
-
-    return TILE_FOOD_CHUNK;
-}
-
 static tileidx_t _tileidx_food(const item_def &item)
 {
 
     switch (item.sub_type)
     {
     case FOOD_CHUNK:
-        return _tileidx_chunk(item);
+        return TILE_FOOD_CHUNK;
     default:
         return TILE_ERROR;
     }
@@ -3308,8 +3299,6 @@ tileidx_t tileidx_command(const command_type cmd)
         return TILEG_CMD_DISPLAY_INVENTORY;
     case CMD_CAST_SPELL:
         return TILEG_CMD_CAST_SPELL;
-    case CMD_BUTCHER:
-        return TILEG_CMD_BUTCHER;
     case CMD_MEMORISE_SPELL:
         return TILEG_CMD_MEMORISE_SPELL;
     case CMD_DROP:

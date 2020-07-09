@@ -809,7 +809,7 @@ static string _display_vampire_attributes()
 
     for (int y = 0; y < lines; y++)  // lines   (properties)
     {
-        for (int x = 0; x < 3; x++)  // columns (hunger states)
+        for (int x = 0; x < 3; x++)  // columns (states)
         {
             if (y > 0 && x == current)
                 result += "<w>";

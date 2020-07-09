@@ -52,18 +52,15 @@ The contents of this text are:
 3-g     Command Enhancements.
                 auto_switch, travel_open_doors, easy_unequip, equip_unequip,
                 jewellery_prompt, easy_confirm, simple_targeting,
-                allow_self_target, auto_butcher,
-                confirm_butcher, auto_eat,
-                easy_quit_item_prompts, ability_menu, easy_floor_use,
-                sort_menus, spell_slot, item_slot, ability_slot, autofight_stop,
-                autofight_warning, autofight_hunger_stop,
-                autofight_hunger_stop_undead, autofight_throw,
-                autofight_throw_nomove, autofight_fire_stop, autofight_caught,
-                autofight_wait, autofight_prompt_range, automagic_enable,
-                automagic_slot, automagic_fight, automagic_stop,
-                fail_severity_to_confirm, easy_door, warn_hatches,
-                enable_recast_spell, confirm_action, regex_search,
-                autopickup_search, bad_item_prompt
+                allow_self_target, easy_quit_item_prompts, ability_menu,
+                easy_floor_use, sort_menus, spell_slot, item_slot,
+                ability_slot, autofight_stop, autofight_warning,
+                autofight_throw, autofight_throw_nomove, autofight_fire_stop,
+                autofight_caught, autofight_wait, autofight_prompt_range,
+                automagic_enable, automagic_slot, automagic_fight,
+                automagic_stop, fail_severity_to_confirm, easy_door,
+                warn_hatches, enable_recast_spell, confirm_action,
+                regex_search, autopickup_search, bad_item_prompt
 3-h     Message and Display Improvements.
                 hp_warning, mp_warning, hp_colour, mp_colour, stat_colour,
                 status_caption_colour, enemy_hp_colour, clear_messages,
@@ -80,7 +77,7 @@ The contents of this text are:
 3-j     Missiles.
                 fire_items_start, fire_order
 3-k     Message Channels.
-                plain, prompt, god, duration, danger, food, warning, recovery,
+                plain, prompt, god, duration, danger, warning, recovery,
                 talk, talk_visual, timed_portal, sound, intrinsic_gain,
                 mutation, monster_spell, monster_enchant, monster_warning,
                 friend_spell, friend_enchant, friend_action, monster_damage,
@@ -231,10 +228,9 @@ There are two styles you can use to set options. The classic
 name=value syntax, one option per-line:
     remember_name  = true
     explore_greedy = false
-    confirm_butcher= never
 
 And the NetHack-style combined option line:
-    OPTION = remember_name, !explore_greedy, confirm_butcher:never
+    OPTION = remember_name, !explore_greedy
 
 The second style is useful to specify simple options in a few lines,
 but it cannot be used for options that take complex lists of values
@@ -309,11 +305,10 @@ To prevent a variable from being changed you can make it a constant:
 This is useful if you wish to prevent an included file from altering
 a variable.
 
-See dat/defaults/standard_colours.txt and dat/defaults/food_colouring.txt
-for usage of aliases and variables. Note that changing the variables defined
-in these files will only affect your own configuration file, as the default
-options will have already been loaded. If you want to change them, you will
-have to override the options themselves.
+See dat/defaults/standard_colours.txt for usage of aliases and variables. Note
+that changing the variables defined in these files will only affect your own
+configuration file, as the default options will have already been loaded. If
+you want to change them, you will have to override the options themselves.
 
 
 1-  Starting Screen.
@@ -1027,23 +1022,6 @@ allow_self_target = (yes | no | prompt)
         effect on area-effect spells, such as Mephitic Cloud, where you are
         always a valid target.
 
-auto_butcher = true
-        If this is set to true, you will automatically travel to and attempt to
-        butcher edible corpses. This option only affects Ghoul characters.
-
-confirm_butcher = (always | never | auto)
-        If auto (default) you will be prompted for which corpses to butcher if
-        there are multiple corpses on the square, and not prompted otherwise.
-        If never, you will automatically butcher the first available corpse,
-        even if there are multiple corpses on the square. If always, you will
-        be prompted before butchering any number of corpses.
-
-auto_eat = true
-        Setting this option to true will allow you to automatically eat if you
-        get hungry while you are travelling, auto-exploring or resting.
-        Automatic eating is disabled whenever autopickup is disabled, whether
-        with ctrl-a or because of an invisible monster.
-
 easy_quit_item_prompts = true
         Setting this option to true allows the quitting of item listing
         with Space (as well as Escape, which always works). These lists
@@ -1245,39 +1223,6 @@ autofight_warning = 0
         commands will be ignored, and the message "You should not fight
         recklessly!" printed to the danger channel. Any value less than
         or equal to zero disables this check.
-
-autofight_hunger_stop = 0
-        Autofight will not act if your nutrition level is at or lower than
-        this value:
-
-          -1: Fainting
-           0: Starving (default)
-           1: Near Starving
-           2: Very Hungry
-           3: Satiated (no status light)
-           4: Full
-           5: Very Full
-           6: Engorged (never autofight)
-
-        By default, this option has no effect on undead players, but see
-        autofight_hunger_stop_undead below.
-
-        To disable this stop, set it to -2 or to any non-numeric value,
-        for example:
-            autofight_hunger_stop = never
-        or even:
-            autofight_hunger_stop =
-
-autofight_hunger_stop_undead = false
-        If true, autofight_hunger_stop applies to Vampires and Ghouls. It
-        never applies to Mummies or players in Lich form. To enable hunger
-        stops for Ghouls but not for Vampires, use conditional Lua:
-
-          : if you.race() == "Ghoul" then
-          autofight_hunger_stop_undead = true
-          : else
-          autofight_hunger_stop_undead = false
-          : end
 
 autofight_throw = false
         If your quiver contains a throwable item, autofight will throw it
@@ -1765,7 +1710,6 @@ CHANNEL_NAME can currently be one of these:
    god             = messages from the gods
    duration        = messages about character spells/effects wearing off
    danger          = serious threats to the character's existence
-   food            = warnings about food
    warning         = various other warnings
    recovery        = recovery from disease/stat loss/poison conditions
    talk            = monsters talking

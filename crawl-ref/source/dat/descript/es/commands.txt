@@ -163,14 +163,6 @@ CMD_CAST_SPELL verbose
 
 Pronuncias un hechizo.
 %%%%
-CMD_BUTCHER
-
-Descuartizar cadáver
-%%%%
-CMD_BUTCHER verbose
-
-Descuartizas un cadáver en pedazos.
-%%%%
 CMD_MEMORISE_SPELL
 
 Memorizar hechizo

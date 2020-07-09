@@ -581,19 +581,6 @@ void hints_finished()
     you.save->delete_chunk("tut");
 }
 
-void hints_dissection_reminder()
-{
-    if (!crawl_state.game_is_hints())
-        return;
-
-    if (Hints.hints_just_triggered)
-        return;
-
-    // When hungry, give appropriate message
-    if (you.hunger_state < HS_SATIATED && you.get_mutation_level(MUT_CARNIVOROUS))
-        learned_something_new(HINT_MAKE_CHUNKS);
-}
-
 static bool _advise_use_healing_potion()
 {
     for (auto &obj : you.inv)
@@ -1349,27 +1336,8 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 #endif
             }
         }
-        if (you.get_mutation_level(MUT_CARNIVOROUS))
-        {
-            text << "You are carnivorous and need to consume flesh to keep from "
-                    "rotting away, and will heal when you do so. "
-                    "When a corpse is lying on the ground, you "
-                    "can <w>%</w>hop it up. Once hungry, you can "
-                    "then <w>%</w>at the resulting chunks.";
-            cmd.push_back(CMD_BUTCHER);
-            cmd.push_back(CMD_EAT);
-
-            text << "<tiles> You can also chop up any corpse that shows up in "
-                    "the floor part of your inventory region, simply by "
-                    "<w>left-clicking</w> on it while pressing <w>Shift</w>, and "
-                    "then eat the resulting chunks with <w>Shift + right-mouse</w>"
-                    ".</tiles>";
-        }
-        else
-        {
-            text << "It's pretty disgusting; only a ghoul would want to mess "
-                    "with it.";
-        }
+        text << "It's pretty disgusting; only a ghoul would want to mess "
+                "with it.";
         break;
 
     case HINT_SEEN_JEWELLERY:
@@ -1837,25 +1805,6 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 "can now unequip any previously cursed items.";
         break;
 
-    case HINT_YOU_HUNGRY:
-        text << "You are hungry. To eat, you will need to get chunks by "
-                "<w>%</w>hopping up a corpse. "
-                "Luckily, your claws are sharp enough to do this.";
-        if (Hints.hints_type == HINT_BERSERK_CHAR)
-            text << "\nNote that you cannot Berserk while starving or near starving.";
-        cmd.push_back(CMD_BUTCHER);
-        break;
-
-    case HINT_YOU_STARVING:
-
-        text << "You are now suffering from terrible hunger. You'll need to "
-                "<w>%</w>at something quickly, or you'll rot terribly.";
-        cmd.push_back(CMD_EAT);
-
-        if (Hints.hints_type == HINT_MAGIC_CHAR)
-            text << "\nNote that you cannot cast spells while starving.";
-        break;
-
     case HINT_MULTI_PICKUP:
         text << "There are a lot of items here. You choose what to pick up "
                 "from a menu: type <w>%</w> "
@@ -1879,14 +1828,6 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 "items to drop by pressing their inventory letter, or by "
                 "clicking on them.";
 #endif
-        break;
-
-    case HINT_MAKE_CHUNKS:
-        text << "How lucky! That monster left a corpse which you can now "
-                "<w>%</w>hop up, producing chunks that you can then "
-                "<w>%</w>at.";
-        cmd.push_back(CMD_BUTCHER);
-        cmd.push_back(CMD_EAT);
         break;
 
     case HINT_SHIFT_RUN:
@@ -2699,7 +2640,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         break;
     case HINT_GAINED_SPELLCASTING:
         text << "As your Spellcasting skill increases, you will be able to "
-             << "memorise more spells, and will suffer less hunger and "
+             << "memorise more spells, and will suffer "
              << "somewhat fewer failures when you cast them.\n"
              << "Press <w>%</w> "
 #ifdef USE_TILE_LOCAL
@@ -3308,20 +3249,7 @@ string hints_describe_item(const item_def &item)
             break;
 
         case OBJ_FOOD:
-            if (you.get_mutation_level(MUT_CARNIVOROUS))
-            {
-                ostr << "Chunks of flesh! You are carnivorous and can <w>%</w>at "
-                    "these in order to keep from rotting away and gain hit "
-                    "points."
-#ifdef USE_TILE
-                    "   You can also do this by <w>left clicking</w> "
-                    "on it."
-#endif
-                    ;
-            }
-            else
-                ostr << "Gross, only a ghoul would want to mess with this.";
-            cmd.push_back(CMD_EAT);
+            ostr << "Gross, only a ghoul would want to mess with this.";
 
             Hints.hints_events[HINT_SEEN_FOOD] = false;
             break;
@@ -3411,20 +3339,9 @@ string hints_describe_item(const item_def &item)
 
         case OBJ_CORPSES:
             Hints.hints_events[HINT_SEEN_CARRION] = false;
-
-            if (item.sub_type == CORPSE_SKELETON)
-            {
-                ostr << "Skeletons can be used as components for certain "
-                        "necromantic spells. Apart from that, they are "
-                        "largely useless.";
-                break;
-            }
-
-            if (you.get_mutation_level(MUT_CARNIVOROUS))
-            {
-                ostr << "Most corpses can be <w>%</w>hopped into edible chunks.";
-                cmd.push_back(CMD_BUTCHER);
-            }
+            ostr << "Skeletons and corpses can be used as components for "
+                    "certain necromantic spells. Apart from that, they are "
+                    "largely useless.";
             break;
 
        case OBJ_STAVES:

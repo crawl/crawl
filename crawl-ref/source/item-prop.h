@@ -198,9 +198,6 @@ bool ring_has_stackable_effect(const item_def &item) PURE;
 #if TAG_MAJOR_VERSION == 34
 bool is_real_food(food_type food) PURE;
 #endif
-bool food_is_meaty(int food_type) PURE;
-bool food_is_meaty(const item_def &item) PURE;
-int food_value(const item_def &item) PURE;
 
 // generic item property functions:
 int armour_type_prop(const uint8_t arm, const armour_flag prop) PURE;

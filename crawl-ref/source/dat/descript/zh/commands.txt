@@ -154,14 +154,6 @@ CMD_CAST_SPELL verbose
 
 施放一道法术。
 %%%%
-CMD_BUTCHER
-
-切碎尸体
-%%%%
-CMD_BUTCHER verbose
-
-将一具尸体切成肉块。
-%%%%
 CMD_MEMORISE_SPELL
 
 记忆法术

@@ -47,13 +47,6 @@ death berserker unberserked
 
 Vergiss nicht die Berserkerwut zu nutzen wenn du gegen besonders schwierige
 Gegner kämpfst. Das ist zwar riskant, macht dich aber schneller und kräftiger.
-{{
-    if you.hunger() < 3 then
-        return "Berserkerwut ist nicht möglich wenn du sehr hungrig oder " ..
-               "krank bist, deswegen solltest du jederzeit Satt sein, nur " ..
-               "für den Fall das du in Raserei verfallen musst."
-    end
-}}
 %%%%
 death ranger melee
 

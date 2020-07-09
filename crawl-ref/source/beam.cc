@@ -31,7 +31,6 @@
 #include "english.h"
 #include "exercise.h"
 #include "fight.h"
-#include "food.h"
 #include "god-conduct.h"
 #include "god-item.h"
 #include "god-passive.h" // passive_t::convert_orcs

@@ -44,13 +44,6 @@ death berserker unberserked
 
 Don't forget to go berserk when fighting particularly difficult foes. It's
 risky, but makes you faster and beefier.
-{{
-    if you.hunger() < 3 then
-        return "Berserking is impossible while very hungry or worse, so " ..
-               "make sure to stay fed at all times, just in case you need " ..
-               "to berserk."
-    end
-}}
 %%%%
 death ranger melee
 

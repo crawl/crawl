@@ -501,7 +501,7 @@ static msg_colour_type _str_to_channel_colour(const string &str)
 static const string message_channel_names[] =
 {
     "plain", "friend_action", "prompt", "god", "duration", "danger", "warning",
-    "food", "recovery", "sound", "talk", "talk_visual", "intrinsic_gain",
+    "recovery", "sound", "talk", "talk_visual", "intrinsic_gain",
     "mutation", "monster_spell", "monster_enchant", "friend_spell",
     "friend_enchant", "monster_damage", "monster_target", "banishment",
     "rotten_meat", "equipment", "floor", "multiturn", "examine",
@@ -1576,7 +1576,6 @@ static const char* config_defaults[] =
     "defaults/autopickup_exceptions.txt",
     "defaults/runrest_messages.txt",
     "defaults/standard_colours.txt",
-    "defaults/food_colouring.txt",
     "defaults/menu_colours.txt",
     "defaults/glyph_colours.txt",
     "defaults/messages.txt",

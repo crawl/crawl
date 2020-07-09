@@ -27,7 +27,6 @@
 #include "english.h"
 #include "env.h"
 #include "fineff.h"
-#include "food.h"
 #include "god-abil.h"
 #include "god-blessing.h"
 #include "god-companions.h"
@@ -54,6 +53,7 @@
 #include "mutation.h"
 #include "nearby-danger.h"
 #include "notes.h"
+#include "potion.h" // you_drinkless for pakellas compat
 #include "religion.h"
 #include "rot.h"
 #include "spl-damage.h"
@@ -589,9 +589,6 @@ item_def* place_monster_corpse(const monster& mons, bool silent, bool force)
 
     if (o == NON_ITEM)
         return nullptr;
-
-    if (you.see_cell(mons.pos()) && !silent && !goldify)
-        hints_dissection_reminder();
 
     return &mitm[o];
 }

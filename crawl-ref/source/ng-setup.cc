@@ -6,7 +6,6 @@
 #include "dungeon.h"
 #include "end.h"
 #include "files.h"
-#include "food.h"
 #include "god-companions.h"
 #include "hints.h"
 #include "invent.h"
@@ -314,23 +313,6 @@ void give_items_skills(const newgame_def& ng)
     }
 }
 
-static void _give_starting_food()
-{
-    // No food for those who don't need it.
-    if (you_foodless())
-        return;
-
-    object_class_type base_type = OBJ_FOOD;
-    int sub_type = FOOD_CHUNK;
-    int quantity = 2;
-
-    // Give another two for hungry species.
-    if (you.get_mutation_level(MUT_FAST_METABOLISM))
-        quantity = 4;
-
-    newgame_make_item(base_type, sub_type, quantity);
-}
-
 static void _setup_tutorial_miscs()
 {
     // Allow for a few specific hint mode messages.
@@ -464,16 +446,12 @@ static void _setup_generic(const newgame_def& ng,
 
     _unfocus_stats();
 
-    // Needs to be done before handing out food.
     give_basic_mutations(you.species);
 
     // This function depends on stats and mutations being finalised.
     give_items_skills(ng);
 
     roll_demonspawn_mutations();
-
-    if (you.get_mutation_level(MUT_CARNIVOROUS))
-        _give_starting_food();
 
     if (crawl_state.game_is_sprint())
         _give_bonus_items();

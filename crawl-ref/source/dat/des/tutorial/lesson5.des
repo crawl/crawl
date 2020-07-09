@@ -43,7 +43,7 @@ MARKER:  B = lua:tutorial5.msg("religion")
 MARKER:  C = lua:tutorial5.msg("piety_on_kill")
 MARKER:  D = lua:tutorial5.msg("berserk")
 MARKER:  E = lua:tutorial5.msg("exhaustion")
-MARKER:  F = lua:tutorial5.msg("hunger")
+# TODO Pad F was a hunger reminder, can something else go here?
 MARKER:  H = lua:tutorial5.msg("berserk2")
 MARKER:  { = lua:one_way_stair { dst  = "tutorial_lesson5", \
                                  onclimb = "tutorial5.exit" }

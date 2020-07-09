@@ -48,7 +48,6 @@
 #include "env.h"
 #include "exercise.h"
 #include "files.h"
-#include "food.h"
 #include "god-abil.h"
 #include "god-companions.h"
 #include "god-passive.h"
@@ -803,26 +802,6 @@ static void _decrement_durations()
             _decrement_simple_duration((duration_type) i, delay);
 }
 
-/**
- * Handles player ghoul rotting over time.
- */
-static void _rot_ghoul_players()
-{
-    if (you.species != SP_GHOUL)
-        return;
-
-    int resilience = 400;
-    if (have_passive(passive_t::slow_metabolism))
-        resilience = resilience * 3 / 2;
-
-    if (one_chance_in(resilience))
-    {
-        dprf("rot rate: 1/%d", resilience);
-        mprf(MSGCH_WARN, "You feel your flesh rotting away.");
-        rot_hp(1);
-    }
-}
-
 static void _handle_emergency_flight()
 {
     ASSERT(you.props[EMERGENCY_FLIGHT_KEY].get_bool());
@@ -1023,14 +1002,7 @@ void player_reacts()
     if (grd(you.pos()) == DNGN_LAVA)
         maybe_melt_player_enchantments(BEAM_FIRE, you.time_taken);
 
-    // Handle starvation before subtracting hunger for this turn (including
-    // hunger from the berserk duration) and before monsters react, so you
-    // always get a turn (though it may be a delay or macro!) between getting
-    // the Fainting light and actually fainting.
-    handle_starvation();
-
     _decrement_durations();
-    _rot_ghoul_players();
 
     // Translocations and possibly other duration decrements can
     // escape a player from beholders and fearmongers. These should
@@ -1042,11 +1014,6 @@ void player_reacts()
 
     // increment constriction durations
     you.accum_has_constricted();
-
-    const int food_use = div_rand_round(player_hunger_rate() * you.time_taken,
-                                        BASELINE_DELAY);
-    if (food_use > 0 && you.hunger > 0)
-        make_hungry(food_use, true);
 
     _regenerate_hp_and_mp(you.time_taken);
 

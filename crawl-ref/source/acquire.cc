@@ -21,7 +21,6 @@
 #include "colour.h"
 #include "describe.h"
 #include "dungeon.h"
-#include "food.h"
 #include "god-item.h"
 #include "god-passive.h"
 #include "item-name.h"
@@ -409,14 +408,6 @@ static armour_type _pick_unseen_armour()
     return picked;
 }
 
-static int _acquirement_food_subtype(bool /*divine*/, int& quantity,
-                                     int /*agent*/)
-{
-    quantity = 5 + random2(5) + random2avg(10, 2);
-
-    return FOOD_CHUNK;
-}
-
 /**
  * Randomly choose a class of weapons (those using a specific weapon skill)
  * for acquirement to give the player. Weight toward the player's skills.
@@ -723,10 +714,10 @@ static const acquirement_subtype_finder _subtype_finders[] =
     _acquirement_missile_subtype,
     _acquirement_armour_subtype,
     _acquirement_wand_subtype,
-    _acquirement_food_subtype,
+    0, // no food
     0, // no scrolls
     _acquirement_jewellery_subtype,
-    _acquirement_food_subtype, // potion acquirement = food for vampires
+    0, // no potions
     _acquirement_book_subtype,
     _acquirement_staff_subtype,
     0, // no, you can't acquire the orb
@@ -1234,7 +1225,7 @@ int acquirement_create_item(object_class_type class_wanted,
             type_wanted = _useless_armour_type();
         else
         {
-            // This may clobber class_wanted (e.g. staves or vampire food)
+            // This may clobber class_wanted (e.g. staves)
             type_wanted = _find_acquirement_subtype(class_wanted, quant,
                                                     divine, agent);
         }
@@ -1735,17 +1726,10 @@ static void _make_acquirement_items()
             acq_items.push_back(item);
     }
 
-    // Gold and food (for characters that eat) are guaranteed.
+    // Gold is guaranteed.
     auto gold_item = _acquirement_item_def(OBJ_GOLD);
     if (gold_item.defined())
             acq_items.push_back(gold_item);
-
-    if (!you_foodless(false))
-    {
-        auto food_item = _acquirement_item_def(OBJ_FOOD);
-        if (food_item.defined())
-            acq_items.push_back(food_item);
-    }
 }
 
 /*

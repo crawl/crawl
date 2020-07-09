@@ -17,7 +17,6 @@
 #include "english.h"
 #include "env.h"
 #include "fight.h"
-#include "food.h"
 #include "god-abil.h" // RU_SAC_XP_LEVELS
 #include "god-conduct.h"
 #include "god-item.h"
@@ -431,14 +430,6 @@ bool player::could_wield(const item_def &item, bool ignore_brand,
 item_def *player::shield() const
 {
     return slot_item(EQ_SHIELD, false);
-}
-
-void player::make_hungry(int hunger_increase, bool silent)
-{
-    if (hunger_increase > 0)
-        ::make_hungry(hunger_increase, silent);
-    else if (hunger_increase < 0)
-        ::lessen_hunger(-hunger_increase, silent);
 }
 
 string player::name(description_level_type dt, bool, bool) const

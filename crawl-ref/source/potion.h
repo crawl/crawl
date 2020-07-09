@@ -7,6 +7,8 @@
 
 #include "potion-type.h"
 
+bool you_drinkless(bool temp = true);
+
 class PotionEffect
 {
 private:

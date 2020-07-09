@@ -45,13 +45,6 @@ death berserker unberserked
 
 Non scordarti di infuriarti quando combatti contro nemici particolarmente
 difficili. È rischioso, ma ti fa più forte e resistente.
-{{
-    if you.hunger() < 3 then
-        return "Infuriarsi è impossibile se si è molto affamati o peggio, " ..
-               "quindi tenta di essere sempre nutrito, in caso qualcosa " ..
-               "vada male, devi infuriarti."
-    end
-}}
 %%%%
 death ranger melee
 

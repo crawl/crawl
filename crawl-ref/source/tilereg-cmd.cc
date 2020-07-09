@@ -181,14 +181,6 @@ static bool _command_not_applicable(const command_type cmd, bool safe)
         return you_worship(GOD_NO_GOD);
     case CMD_USE_ABILITY:
         return your_talents(false).empty();
-    case CMD_BUTCHER:
-        // this logic is enormously simplistic compared to food.cc
-        for (stack_iterator si(you.pos(), true); si; ++si)
-            if (si->is_type(OBJ_CORPSES, CORPSE_BODY))
-                return false;
-        if (you.species == SP_VAMPIRE)
-            return false;
-        return true;
     case CMD_CAST_SPELL:
         return can_cast_spells(true);
     case CMD_DISPLAY_MAP:

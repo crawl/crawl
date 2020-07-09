@@ -188,14 +188,6 @@ CMD_CAST_SPELL verbose
 
 Бросить заклинание.
 %%%%
-CMD_BUTCHER
-
-Разделать труп
-%%%%
-CMD_BUTCHER verbose
-
-Разделать труп на куски.
-%%%%
 CMD_MEMORISE_SPELL
 
 Запомнить заклинание

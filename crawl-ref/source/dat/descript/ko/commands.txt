@@ -158,15 +158,6 @@ CMD_CAST_SPELL verbose
 
 주문을 시전한다.
 %%%%
-CMD_BUTCHER
-
-시체 해체
-%%%%
-CMD_BUTCHER verbose
-
-시체를 해체하여 살을 발라낸다. 던전은 보존식량만 먹고 살 수 있을 정도로 그렇게
-만만한 곳이 아니다.
-%%%%
 CMD_MEMORISE_SPELL
 
 주문 암기

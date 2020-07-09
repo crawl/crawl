@@ -35,8 +35,6 @@
 #include "branch.h"
 #if TAG_MAJOR_VERSION == 34
  #include "decks.h"
- #include "food.h"
- #include "hunger-state-t.h"
 #endif
 #include "colour.h"
 #include "coordit.h"
@@ -1398,7 +1396,6 @@ static void _tag_construct_you(writer &th)
     ASSERT(you.hp > 0 || you.pending_revival);
     marshallShort(th, you.pending_revival ? 0 : you.hp);
 
-    marshallShort(th, you.hunger);
     marshallBoolean(th, you.fishtail);
     marshallBoolean(th, you.vampire_alive);
     _marshall_as_int(th, you.form);
@@ -2525,19 +2522,17 @@ static void _tag_read_you(reader &th)
 
     you.disease         = unmarshallInt(th);
     you.hp              = unmarshallShort(th);
-    you.hunger          = unmarshallShort(th);
+#if TAG_MAJOR_VERSION == 34
+    // was you.hunger
+    if (th.getMinorVersion() < TAG_MINOR_LOAF_BUST)
+        unmarshallShort(th);
+#endif
     you.fishtail        = unmarshallBoolean(th);
 #if TAG_MAJOR_VERSION == 34
-    if (!you.get_mutation_level(MUT_CARNIVOROUS))
-    {
-        you.hunger = HUNGER_SATIATED;
-        you.hunger_state = HS_SATIATED;
-    }
-
     if (th.getMinorVersion() >= TAG_MINOR_VAMPIRE_NO_EAT)
         you.vampire_alive = unmarshallBoolean(th);
     else
-        you.vampire_alive = calc_hunger_state() > HS_STARVING;
+        you.vampire_alive = true;
 #else
     you.vampire_alive   = unmarshallBoolean(th);
 #endif

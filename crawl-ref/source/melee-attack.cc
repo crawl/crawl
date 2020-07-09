@@ -23,7 +23,6 @@
 #include "env.h"
 #include "exercise.h"
 #include "fineff.h"
-#include "food.h"
 #include "god-conduct.h"
 #include "god-item.h"
 #include "god-passive.h" // passive_t::convert_orcs
@@ -1477,9 +1476,6 @@ int melee_attack::player_apply_misc_modifiers(int damage)
 {
     if (you.duration[DUR_MIGHT] || you.duration[DUR_BERSERK])
         damage += 1 + random2(10);
-
-    if (apply_starvation_penalties())
-        damage -= random2(5);
 
     return damage;
 }
@@ -3433,9 +3429,6 @@ int melee_attack::calc_your_to_hit_unarmed()
 
     if (you.get_mutation_level(MUT_EYEBALLS))
         your_to_hit += 2 * you.get_mutation_level(MUT_EYEBALLS) + 1;
-
-    if (apply_starvation_penalties())
-        your_to_hit -= 3;
 
     if (you.duration[DUR_VERTIGO])
         your_to_hit -= 5;

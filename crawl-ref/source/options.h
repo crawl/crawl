@@ -10,7 +10,6 @@
 #include "feature.h"
 #include "flang-t.h"
 #include "flush-reason-type.h"
-#include "hunger-state-t.h"
 #include "lang-t.h"
 #include "maybe-bool.h"
 #include "mpr.h"

@@ -69,7 +69,6 @@
 #include "fight.h"
 #include "files.h"
 #include "fineff.h"
-#include "food.h"
 #include "god-abil.h"
 #include "god-companions.h"
 #include "god-conduct.h"
@@ -759,7 +758,6 @@ static bool _cmd_is_repeatable(command_type cmd, bool is_again = false)
     case CMD_PICKUP:
     case CMD_DROP:
     case CMD_DROP_LAST:
-    case CMD_BUTCHER:
     case CMD_GO_UPSTAIRS:
     case CMD_GO_DOWNSTAIRS:
     case CMD_WIELD_WEAPON:
@@ -1593,12 +1591,6 @@ static void _toggle_travel_speed()
 
 static void _do_rest()
 {
-    if (apply_starvation_penalties())
-    {
-        mpr("You're too hungry to rest.");
-        return;
-    }
-
     if (i_feel_safe())
     {
         if ((you.hp == you.hp_max || !player_regenerates_hp())
@@ -1830,10 +1822,8 @@ void process_command(command_type cmd, command_type prev_cmd)
         break;
 
         // Action commands.
-    case CMD_BUTCHER:              butchery();               break;
     case CMD_CAST_SPELL:           do_cast_spell_cmd(false); break;
     case CMD_DISPLAY_SPELLS:       inspect_spells();         break;
-    case CMD_EAT:                  eat_food();               break;
     case CMD_FIRE:                 fire_thing();             break;
     case CMD_FORCE_CAST_SPELL:     do_cast_spell_cmd(true);  break;
     case CMD_LOOK_AROUND:          do_look_around();         break;
@@ -2280,12 +2270,6 @@ static command_type _get_next_cmd()
     check_messages();
 #endif
 
-#ifdef DEBUG_DIAGNOSTICS
-    // Save hunger at start of round for use with hunger "delta-meter"
-    // in output.cc.
-    you.old_hunger = you.hunger;
-#endif
-
 #ifdef DEBUG_ITEM_SCAN
     debug_item_scan();
 #endif
@@ -2419,7 +2403,6 @@ static void _swing_at_target(coord_def move)
         }
         else if (!you.fumbles_attack())
             mpr("You swing at nothing.");
-        make_hungry(3, true);
         // Take the usual attack delay.
         you.time_taken = you.attack_delay().roll();
     }

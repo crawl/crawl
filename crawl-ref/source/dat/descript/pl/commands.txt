@@ -93,14 +93,6 @@ CMD_CAST_SPELL verbose
 
 Rzuć czar
 %%%%
-CMD_BUTCHER
-
-Porżnij ciało
-%%%%
-CMD_BUTCHER verbose
-
-Porżnij ciało na kawałki.
-%%%%
 CMD_MEMORISE_SPELL
 
 Zapamiętaj zaklęcie

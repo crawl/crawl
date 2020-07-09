@@ -37,7 +37,6 @@
 #include "dungeon.h"
 #include "english.h"
 #include "env.h"
-#include "food.h"
 #include "god-passive.h"
 #include "god-prayer.h"
 #include "hints.h"
@@ -2971,14 +2970,6 @@ static bool _is_option_autopickup(const item_def &item, bool ignore_force)
     return Options.autopickups[item.base_type];
 }
 
-/// Should the player automatically butcher the given item?
-static bool _should_autobutcher(const item_def &item)
-{
-    return Options.auto_butcher
-           && item.base_type == OBJ_CORPSES
-           && !is_inedible(item);
-}
-
 /** Is the item something that we should try to autopickup?
  *
  * @param ignore_force If true, ignore force_autopickup settings from the
@@ -2989,10 +2980,6 @@ bool item_needs_autopickup(const item_def &item, bool ignore_force)
 {
     if (in_inventory(item))
         return false;
-
-    // mark autobutcher corpses for pickup so autotravel works
-    if (_should_autobutcher(item))
-        return true;
 
     if (item_is_stationary(item))
         return false;
@@ -3033,12 +3020,6 @@ static bool _identical_types(const item_def& pickup_item,
                              const item_def& inv_item)
 {
     return pickup_item.is_type(inv_item.base_type, inv_item.sub_type);
-}
-
-static bool _edible_food(const item_def& /*pickup_item*/,
-                         const item_def& inv_item)
-{
-    return inv_item.base_type == OBJ_FOOD && !is_inedible(inv_item);
 }
 
 static bool _similar_equip(const item_def& pickup_item,
@@ -3176,13 +3157,6 @@ static bool _interesting_explore_pickup(const item_def& item)
     case OBJ_JEWELLERY:
         return _item_different_than_inv(item, _similar_jewellery);
 
-    case OBJ_FOOD:
-        if (is_inedible(item))
-            return false;
-
-        // Interesting if we don't have any other edible food.
-        return _item_different_than_inv(item, _edible_food);
-
     case OBJ_MISCELLANY:
     case OBJ_SCROLLS:
     case OBJ_POTIONS:
@@ -3238,15 +3212,6 @@ static void _do_autopickup()
 
         if (item_needs_autopickup(mi))
         {
-            if (_should_autobutcher(mi))
-            {
-                if (you_are_delayed() && current_delay()->want_autoeat())
-                    butchery(&mi);
-                else
-                    o = next;
-                continue;
-            }
-
             // Do this before it's picked up, otherwise the picked up
             // item will be in inventory and _interesting_explore_pickup()
             // will always return false.

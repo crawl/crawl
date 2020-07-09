@@ -144,10 +144,6 @@ public:
                              bool ignore_transform = false,
                              bool quiet = true) const = 0;
 
-    virtual void make_hungry(int /*nutrition*/, bool /*silent*/ = true)
-    {
-    }
-
     virtual void lose_energy(energy_use_type, int /*div*/ = 1, int /*mult*/ = 1)
     {
     }

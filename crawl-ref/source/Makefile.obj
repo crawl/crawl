@@ -68,7 +68,6 @@ feature.o \
 fight.o \
 files.o \
 fineff.o \
-food.o \
 format.o \
 fprop.o \
 game-options.o \
@@ -109,7 +108,6 @@ l-dgnmon.o \
 l-dgntil.o \
 l-feat.o \
 l-file.o \
-l-food.o \
 l-global.o \
 l-item.o \
 l-los.o \

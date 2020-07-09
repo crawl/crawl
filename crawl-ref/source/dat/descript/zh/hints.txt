@@ -41,13 +41,6 @@ death berserker unberserked
 
 当面对特别困难的对手时，别忘记开狂暴。虽然有一定风险，但这会使你变得更快、
 更强壮。
-{{
-    if you.hunger() < 3 then
-        return "在非常饥饿以及更加饥饿的状态下无法开启狂暴，" ..
-               "所以在游戏过程中你得尽量吃饱肚子，否则" ..
-               "到需要狂暴的时候再后悔就晚了。"
-     end
-}}
 %%%%
 death ranger melee
 

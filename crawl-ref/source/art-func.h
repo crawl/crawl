@@ -30,7 +30,6 @@
 #include "english.h"       // For apostrophise
 #include "exercise.h"      // For practise_evoking
 #include "fight.h"
-#include "food.h"          // For evokes
 #include "ghost.h"         // For is_dragonkind ghost_demon datas
 #include "god-conduct.h"   // did_god_conduct
 #include "god-passive.h"   // passive_t::want_curses
@@ -503,11 +502,6 @@ static bool _WUCAD_MU_evoke(item_def */*item*/, bool* did_work, bool* unevokable
         *unevokable = true;
         return true;
     }
-    else if (apply_starvation_penalties())
-    {
-        canned_msg(MSG_TOO_HUNGRY);
-        return true;
-    }
 
     if (!x_chance_in_y(you.skill(SK_EVOCATIONS, 100) + 100, 2500))
         return false;
@@ -524,7 +518,6 @@ static bool _WUCAD_MU_evoke(item_def */*item*/, bool* did_work, bool* unevokable
 
     const int mp_inc_base = 3 + random2(5);
     inc_mp(mp_inc_base + you.skill_rdiv(SK_EVOCATIONS, 1, 3));
-    make_hungry(50, false, true);
 
     *did_work = true;
     practise_evoking(1);
@@ -541,8 +534,7 @@ static bool _WUCAD_MU_evoke(item_def */*item*/, bool* did_work, bool* unevokable
 
 static void _VAMPIRES_TOOTH_equip(item_def */*item*/, bool *show_msgs, bool /*unmeld*/)
 {
-    if (you.undead_state() == US_ALIVE
-        && (you.species == SP_VAMPIRE || !you_foodless()))
+    if (you.undead_state() == US_ALIVE && you.species == SP_VAMPIRE)
     {
         _equip_mpr(show_msgs,
                    "You feel a strange hunger, and smell blood in the air...");
@@ -1387,11 +1379,8 @@ static void _FROSTBITE_melee_effects(item_def* /*weapon*/, actor* attacker,
 
 static void _LEECH_equip(item_def */*item*/, bool *show_msgs, bool /*unmeld*/)
 {
-    if (you.undead_state() == US_ALIVE
-        && (you.species == SP_VAMPIRE || !you_foodless()))
-    {
+    if (you.undead_state() == US_ALIVE && you.species == SP_VAMPIRE)
         _equip_mpr(show_msgs, "You feel a powerful hunger.");
-    }
     else if (you.species != SP_VAMPIRE)
         _equip_mpr(show_msgs, "You feel very empty.");
     // else let player-equip.cc handle message

@@ -1802,7 +1802,6 @@ bool transform(int pow, transformation which_trans, bool involuntary,
         break;
 
     case transformation::lich:
-        you.hunger_state = HS_SATIATED;  // no hunger effects while transformed
         you.redraw_status_lights = true;
         break;
 

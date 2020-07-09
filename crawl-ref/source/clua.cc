@@ -806,7 +806,6 @@ void CLua::init_libraries()
     cluaopen_kills(_state);
     cluaopen_you(_state);
     cluaopen_item(_state);
-    cluaopen_food(_state);
     cluaopen_crawl(_state);
     cluaopen_file(_state);
     cluaopen_moninf(_state);

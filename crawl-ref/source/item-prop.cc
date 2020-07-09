@@ -2253,33 +2253,6 @@ bool is_real_food(food_type food)
 }
 #endif
 
-bool food_is_meaty(int food_type)
-{
-    ASSERTM(food_type >= 0 && food_type < NUM_FOODS,
-            "Bad food type %d (NUM_FOODS = %d)",
-            food_type, NUM_FOODS);
-
-    return Food_prop[Food_index[food_type]].herb_nutr == 0;
-}
-
-bool food_is_meaty(const item_def &item)
-{
-    if (item.base_type != OBJ_FOOD)
-        return false;
-
-    return food_is_meaty(item.sub_type);
-}
-
-int food_value(const item_def &item)
-{
-    ASSERT(item.defined() && item.base_type == OBJ_FOOD);
-
-    const food_def &food = Food_prop[Food_index[item.sub_type]];
-
-    return you.get_mutation_level(MUT_CARNIVOROUS) > 0 ? food.carn_nutr
-                                                       : food.normal_nutr;
-}
-
 //
 // Generic item functions:
 //

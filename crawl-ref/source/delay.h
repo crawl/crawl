@@ -146,14 +146,6 @@ public:
     }
 
     /**
-     * @return whether this is a butcher delay (including blood bottling).
-     */
-    virtual bool is_butcher() const
-    {
-        return false;
-    }
-
-    /**
      * @return whether this is a stair travel delay, which are generally
      * uninterruptible but are interrupted by teleport. Note that no stairs
      * are necessarily involved.
@@ -328,36 +320,6 @@ public:
     const char* name() const override
     {
         return "memorise";
-    }
-};
-
-class ButcherDelay : public Delay
-{
-    item_def& corpse;
-
-    bool invalidated() override;
-
-    void finish() override;
-public:
-    ButcherDelay(int dur, item_def& item) :
-                 Delay(dur), corpse(item)
-    { }
-
-    bool try_interrupt() override;
-
-    bool is_butcher() const override
-    {
-        return true;
-    }
-
-    bool is_being_used(const item_def* item, operation_types oper) const override
-    {
-        return oper == OPER_BUTCHER && (!item || &corpse == item);
-    }
-
-    const char* name() const override
-    {
-        return "butcher";
     }
 };
 
@@ -746,9 +708,6 @@ bool you_are_delayed();
 shared_ptr<Delay> current_delay();
 void handle_delay();
 
-bool is_being_drained(const item_def &item);
-bool is_being_butchered(const item_def &item, bool just_first = true);
-bool is_vampire_feeding();
 bool player_stair_delay();
 bool already_learning_spell(int spell = -1);
 

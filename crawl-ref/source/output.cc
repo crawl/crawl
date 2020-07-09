@@ -1010,7 +1010,7 @@ static void _add_status_light_to_out(int i, vector<status_light>& out)
 // - blue, light blue           for good enchantments
 // - magenta, light magenta     for "better" enchantments (deflect, fly)
 //
-// Prints hunger,
+// Prints
 // pray, holy, teleport, regen, fly/lev, invis, silence,
 //   conf. touch, sage
 // confused, mesmerised, fire, poison, disease, rot, held, glow, swift,
@@ -1029,11 +1029,6 @@ static void _get_status_lights(vector<status_light>& out)
         snprintf(static_pos_buf, sizeof(static_pos_buf),
                  "%2d,%2d", you.pos().x, you.pos().y);
         out.emplace_back(LIGHTGREY, static_pos_buf);
-
-        static char static_hunger_buf[80];
-        snprintf(static_hunger_buf, sizeof(static_hunger_buf),
-                 "(%d:%d)", you.hunger - you.old_hunger, you.hunger);
-        out.emplace_back(LIGHTGREY, static_hunger_buf);
     }
 #endif
 
@@ -1043,7 +1038,7 @@ static void _get_status_lights(vector<status_light>& out)
     {
         STATUS_ORB,
         STATUS_STR_ZERO, STATUS_INT_ZERO, STATUS_DEX_ZERO,
-        STATUS_HUNGER,
+        STATUS_ALIVE_STATE,
         DUR_PARALYSIS,
         DUR_CONF,
         DUR_PETRIFYING,

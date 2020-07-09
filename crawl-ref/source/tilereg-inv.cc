@@ -7,7 +7,6 @@
 #include "cio.h"
 #include "describe.h"
 #include "env.h"
-#include "food.h"
 #include "invent.h"
 #include "item-name.h"
 #include "item-prop.h"
@@ -162,12 +161,7 @@ int InventoryRegion::handle_mouse(wm_mouse_event &event)
         m_last_clicked_item = item_idx;
         tiles.set_need_redraw();
         if (on_floor)
-        {
-            if (event.mod & TILES_MOD_SHIFT)
-                tile_item_use_floor(idx);
-            else
-                tile_item_pickup(idx, (event.mod & TILES_MOD_CTRL));
-        }
+            tile_item_pickup(idx, (event.mod & TILES_MOD_CTRL));
         else
         {
             if (event.mod & TILES_MOD_SHIFT)
@@ -184,17 +178,8 @@ int InventoryRegion::handle_mouse(wm_mouse_event &event)
     {
         if (on_floor)
         {
-            if (event.mod & TILES_MOD_SHIFT)
-            {
-                m_last_clicked_item = item_idx;
-                tiles.set_need_redraw();
-                tile_item_eat_floor(idx);
-            }
-            else
-            {
-                describe_item(mitm[idx]);
-                redraw_screen();
-            }
+            describe_item(mitm[idx]);
+            redraw_screen();
         }
         else // in inventory
         {
@@ -337,18 +322,6 @@ bool InventoryRegion::update_tip_text(string& tip)
                 cmd.push_back(CMD_PICKUP_QUANTITY);
             }
         }
-        if (item.base_type == OBJ_CORPSES
-            && item.sub_type != CORPSE_SKELETON)
-        {
-            tip += "\n[Shift + L-Click] Chop up (%)";
-            cmd.push_back(CMD_BUTCHER);
-        }
-        else if (item.base_type == OBJ_FOOD
-                 && !you_foodless())
-        {
-            tip += "\n[Shift + R-Click] Eat (e)";
-            cmd.push_back(CMD_EAT);
-        }
     }
     else
     {
@@ -484,8 +457,6 @@ bool InventoryRegion::update_tip_text(string& tip)
                     _handle_wield_tip(tmp, cmd, "\n[Ctrl + L-Click] ", true);
                 break;
             case OBJ_FOOD:
-                tmp += "Eat (%)";
-                cmd.push_back(CMD_EAT);
                 if (wielded)
                     _handle_wield_tip(tmp, cmd, "\n[Ctrl + L-Click] ", true);
                 break;

@@ -19,7 +19,6 @@
 #include "english.h"
 #include "env.h"
 #include "eq-type-flags.h"
-#include "food.h"
 #include "god-abil.h"
 #include "god-companions.h"
 #include "god-conduct.h"
@@ -29,6 +28,7 @@
 #include "libutil.h"
 #include "menu.h"
 #include "message.h"
+#include "potion.h" // you_drinkless for pakellas compat
 #include "religion.h"
 #include "skills.h"
 #include "spl-util.h"
@@ -885,11 +885,7 @@ static formatted_string _describe_god_powers(god_type which_god)
     case GOD_JIYVA:
         have_any = true;
         if (have_passive(passive_t::slime_feed))
-        {
             desc.textcolour(god_colour(which_god));
-            if (!you_foodless())
-                desc.cprintf("You gain nutrition when your fellow slimes consume items.\n");
-        }
         else
             desc.textcolour(DARKGREY);
 

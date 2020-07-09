@@ -169,23 +169,6 @@ Very good! You can heal by resting with <input>$cmd[CMD_REST]</input>
 minimap</localtiles>. This will make you rest until your health is full, but
 will be interrupted by important events.
 %%%%
-tutorial2 chop_corpses
-
-While standing on corpses, you can chop them into edible meat chunks with
-<input>$cmd[CMD_BUTCHER]</input><localtiles> or <input>Shift +
-mouseclick</input></localtiles>. When you're hungry, you can eat the resulting
-chunks with <input>$cmd[CMD_EAT]</input><localtiles> or
-<input>mouseclick</input></localtiles>. If you grow hungry while autoexploring,
-you will automatically eat a chunk of meat if one is available.
-%%%%
-tutorial2 rest_and_chop_reminder
-
-Don't forget about chopping corpses for food (with
-<input>$cmd[CMD_BUTCHER]</input><localtiles> or <input>Shift +
-mouseclick</input></localtiles>), or resting (with
-<input>$cmd[CMD_REST]</input><localtiles> or the button in the command
-bar</localtiles>)!
-%%%%
 tutorial2 wait
 
 Rather than storm the room and get swarmed by monsters, you can also step back
@@ -195,13 +178,6 @@ and wait (with <input>$cmd[CMD_WAIT]</input><localtiles> or by
 tutorial2 resting_reminder
 
 Remember, you can rest up with <input>$cmd[CMD_REST]</input>.
-%%%%
-tutorial2 eat_reminder
-
-Remember, you can chop creatures up with <input>$cmd[CMD_BUTCHER]</input>
-<localtiles> or <input>Shift + mouseclick</input></localtiles>, and then eat
-the resulting chunks with <input>$cmd[CMD_EAT]</input><localtiles> or
-<input>mouseclick</input></localtiles>.
 %%%%
 tutorial2 compare_monster_desc
 
@@ -289,10 +265,6 @@ tutorial2 exit
 <yellow>Resting</yellow>
   <input>$cmd[CMD_WAIT]</input>  wait and rest a single turn
   <input>$cmd[CMD_REST]</input>  wait and rest up to 100 turns
-
-<yellow>Corpses<console> <brown>%</brown></console></yellow>
-  <input>$cmd[CMD_BUTCHER]</input>  chop a corpse into meat chunks
-  <input>$cmd[CMD_EAT]</input>  eat a chunk of meat
 
                                  <cyan>Press <input>any key</input> to clear this screen...</cyan>
 %%%%

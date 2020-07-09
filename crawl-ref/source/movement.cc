@@ -22,7 +22,6 @@
 #include "dungeon.h"
 #include "env.h"
 #include "fight.h"
-#include "food.h"
 #include "fprop.h"
 #include "god-abil.h"
 #include "god-conduct.h"

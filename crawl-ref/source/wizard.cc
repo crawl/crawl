@@ -81,7 +81,6 @@ static void _do_wizard_command(int wiz_command)
     case 'D': wizard_detect_creatures(); break;
     case CONTROL('D'): wizard_edit_durations(); break;
 
-    case 'e': wizard_set_hunger_state(); break;
     case 'E': wizard_freeze_time(); break;
     case CONTROL('E'): debug_dump_levgen(); break;
 
@@ -460,7 +459,6 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>Ctrl-G</w> save/load ghost (bones file)\n"
 #endif
                        "<w>h</w>/<w>H</w>    heal yourself (super-Heal)\n"
-                       "<w>e</w>      set hunger state\n"
                        "<w>X</w>      make Xom do something now\n"
                        "<w>z</w>      cast spell by number/name\n"
                        "<w>!</w>      memorise spell\n"
