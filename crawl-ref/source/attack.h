@@ -13,8 +13,8 @@ const int HIT_WEAK   = 7;
 const int HIT_MED    = 18;
 const int HIT_STRONG = 36;
 
-const int BACKLIGHT_TO_HIT_BONUS = 6;
-const int UMBRA_TO_HIT_MALUS = -4;
+const int BACKLIGHT_TO_HIT_BONUS = 12;
+const int UMBRA_TO_HIT_MALUS = -8;
 
 class attack
 {
