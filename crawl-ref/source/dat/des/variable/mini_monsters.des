@@ -2995,12 +2995,11 @@ TAGS:    no_monster_gen no_item_gen transparent
 DEPTH:   Depths, !Depths:$
 MONS:    large slime creature, great orb of eyes, eye of draining
 KMASK:   %$de = opaque
-KITEM:   R = ration
+KITEM:   R = gold
 ITEM:    scroll of teleportation q:2 / wand of digging
 ITEM:    scroll of teleportation q:2 w:20 / wand of digging w:20 / \
          dagger ego:distortion ident:type
 SUBST:   J = 1111111123
-SUBST:   m : xxxm
 SHUFFLE: %!'"
 NSUBST:  % = 1:d / * = %$
 NSUBST:  ! = 1:d / * = %$
