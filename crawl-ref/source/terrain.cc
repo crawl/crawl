@@ -1941,7 +1941,7 @@ void set_terrain_changed(const coord_def p)
 }
 
 /**
- * Does this cell count for exploraation piety?
+ * Does this cell count for exploration piety?
  *
  * Don't count: endless map borders, deep water, lava, and cells explicitly
  * marked. (player_view_update_at in view.cc updates the flags)
