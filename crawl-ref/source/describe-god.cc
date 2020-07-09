@@ -885,13 +885,19 @@ static formatted_string _describe_god_powers(god_type which_god)
     case GOD_JIYVA:
         have_any = true;
         if (have_passive(passive_t::slime_feed))
+        {
             desc.textcolour(god_colour(which_god));
+            if (!you_foodless())
+                desc.cprintf("You gain nutrition when your fellow slimes consume items.\n");
+        }
         else
             desc.textcolour(DARKGREY);
-        desc.cprintf("You gain nutrition%s when your fellow slimes consume items.\n",
-                have_passive(passive_t::slime_hp) ? ", magic and health" :
-                have_passive(passive_t::slime_mp) ? " and magic" :
-                                                    "");
+
+        if (have_passive(passive_t::slime_hp))
+            desc.cprintf("You gain magic and health when your fellow slimes consume items.\n");
+        else if (have_passive(passive_t::slime_mp))
+            desc.cprintf("You gain magic when your fellow slimes consume items.\n");
+
         break;
 
     case GOD_FEDHAS:
