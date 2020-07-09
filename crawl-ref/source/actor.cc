@@ -212,7 +212,8 @@ bool actor::res_corr(bool calc_unid, bool items) const
 {
     return items && (wearing(EQ_RINGS, RING_RESIST_CORROSION, calc_unid)
                      || wearing(EQ_BODY_ARMOUR, ARM_ACID_DRAGON_ARMOUR, calc_unid)
-                     || scan_artefacts(ARTP_RCORR, calc_unid));
+                     || scan_artefacts(ARTP_RCORR, calc_unid)
+                     || wearing_ego(EQ_ALL_ARMOUR, SPARM_PRESERVATION, calc_unid));
 }
 
 bool actor::cloud_immune(bool calc_unid, bool items) const
