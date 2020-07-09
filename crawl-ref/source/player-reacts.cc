@@ -692,9 +692,6 @@ static void _decrement_durations()
     dec_berserk_recovery_player(delay);
     dec_haste_player(delay);
 
-    if (you.duration[DUR_LIQUEFYING] && !you.stand_on_solid_ground())
-        you.duration[DUR_LIQUEFYING] = 1;
-
     for (int i = 0; i < NUM_STATS; ++i)
     {
         stat_type s = static_cast<stat_type>(i);

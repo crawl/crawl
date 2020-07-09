@@ -2071,8 +2071,9 @@ int player_movement_speed()
     if (you.in_water() && !you.can_swim())
         mv += 6;
 
-    // moving on liquefied ground takes longer
-    if (you.liquefied_ground())
+    // moving on liquefied ground, or while maintaining the
+    // effect takes longer
+    if (you.liquefied_ground() || you.duration[DUR_LIQUEFYING])
         mv += 3;
 
     // armour
@@ -5232,7 +5233,7 @@ bool flight_allowed(bool quiet, string *fail_reason)
             : "You can't fly in this form.";
         success = false;
     }
-    else if (you.liquefied_ground())
+    else if (you.liquefied_ground() && you.duration[DUR_LIQUEFYING] == 0)
     {
         msg = "You can't fly while stuck in liquid ground.";
         success = false;
