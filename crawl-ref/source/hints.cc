@@ -1874,9 +1874,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
     case HINT_MAKE_CHUNKS:
         text << "How lucky! That monster left a corpse which you can now "
                 "<w>%</w>hop up, producing chunks that you can then "
-                "<w>%</w>at. Some monsters are inedible or or even mutagenic,"
-                "but their chunks will be named accordingly, so don't worry "
-                "about any surprises in the food!";
+                "<w>%</w>at.";
         cmd.push_back(CMD_BUTCHER);
         cmd.push_back(CMD_EAT);
         break;
