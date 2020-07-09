@@ -163,6 +163,22 @@ You can make a wall or fill the floor in the direction you want to.
 The terrain created by this method will soon be return to its original 
 terrain.
 %%%%
+#Crustacean
+Undergo Ecdysis ability
+
+Your stats and broken body(reduced max hp) will be recovered when you use this
+ability. After you use this ability, you should wait to grow if you have other
+chances.
+%%%%
+Crab Walking ability
+
+You can move toward a destination like a knight in chess for a moment after
+you lose your body(Loss).
+%%%%
+Cloud Miasma ability
+
+You emits a cloud of miasma from your body.
+%%%%
 # Zin
 Recite ability
 

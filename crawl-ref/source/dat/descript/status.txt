@@ -399,6 +399,16 @@ Infus status
 Your melee attacks are infused with magical energy, and will drain your
 reserves of magic to deal additional damage whenever an enemy is hit.
 %%%%
+Loss status
+
+Your stats or your maximum of hp may be decreased. Your evasion is increasing
+and you can use "Crab Walking" ability
+%%%%
+Grow status
+
+You need to gain more experience for undergoing ecdysis again.
+It's still not enough to moult again. 
+%%%%
 Slay status
 
 You are singing a Song of Slaying, providing bonuses to your ranged and melee
