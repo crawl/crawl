@@ -74,6 +74,7 @@
 
 * Members of the Dungeon Crawl community who have contributed to Dungeon
   Crawl Stone Soup:
+    Eugene Abramchuk
     achuah
     AdamPG
     Brent Adams
