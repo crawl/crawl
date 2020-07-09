@@ -57,8 +57,11 @@ static bool _is_bookrod_type(const item_def& item, bool (*matches)(spell_type sp
     //temporal fixed code...
     item_def* tempfixer = const_cast<item_def*>(&item);
     if(tempfixer->sub_type == BOOK_RANDART_THEME) {
-        tempfixer->sub_type = BOOK_MANUAL;
-        return false;
+        const CrawlHashTable &props = item.props;
+        if (!props.exists(SPELL_LIST_KEY)) {
+            tempfixer->sub_type = BOOK_MANUAL;
+            return false;
+        }
     }
 
     // Book matches only if all the spells match
