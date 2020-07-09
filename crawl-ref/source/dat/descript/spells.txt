@@ -857,8 +857,9 @@ Releases a thick cloud of ink to obscure vision.
 %%%%
 Inner Flame spell
 
-Fills an enemy with an intense fire, to be explosively released upon death. The
-size of the explosion caused is dependent on the size of the target.
+Fills an enemy with an intense fire. This fire is released any time the target
+is hit, and explosively released upon death. The size of the explosion caused
+is dependent on the size of the target.
 %%%%
 Invisibility spell
 
