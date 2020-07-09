@@ -6388,7 +6388,7 @@ int player::base_ac_with_specific_items(int scale,
     }
 
     if (you.species == SP_CRUSTACEAN)
-        AC += you.deaths * 100;
+        AC += you.deaths * 75;
 
     AC += wearing(EQ_RINGS_PLUS, RING_PROTECTION) * 100;
 	
@@ -7239,9 +7239,9 @@ bool player::crustacean_rot(actor */*who*/, int amount, bool quiet, bool /*no_cl
         return false;
     
     bool crabform = (you.form == transformation::none ||
-                    you.form == transformation::statue ||
-                    you.form == transformation::lich ||
-                    you.form == transformation::eldritch);
+                     you.form == transformation::appendage ||
+                     you.form == transformation::blade_hands);
+
     if (!crabform)
     {
         return false;
@@ -7287,6 +7287,7 @@ bool player::crustacean_rot(actor */*who*/, int amount, bool quiet, bool /*no_cl
             
             return true;  
         }
+        redraw_evasion = true;
     }
     return true;
 }

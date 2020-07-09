@@ -933,7 +933,7 @@ int player::constriction_damage(bool direct) const
 }
 
 
-/**
+/*
  * Does hydra-player really have multiple heads in current form?
  */
 bool player::has_hydra_multi_attack() const
@@ -944,7 +944,7 @@ bool player::has_hydra_multi_attack() const
            || you.form == transformation::lich) && you.species == SP_HYDRA;
 }
 
-/**
+/*
  * How many heads does the player have, in their current form?
  *
  * Currently only checks for hydra form.
