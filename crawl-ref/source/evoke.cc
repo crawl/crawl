@@ -2039,22 +2039,23 @@ static int _tremorstone_count(int pow)
  * @return          spret::abort if the player cancels, spret::fail if they
  *                  try to evoke but fail, and spret::success otherwise.
  */
-static spret _tremorstone() {
-    bool see_target;
-    bolt beam;
-
+static spret _tremorstone()
+{
     if (you.confused())
     {
         canned_msg(MSG_TOO_CONFUSED);
         return spret::abort;
     }
 
+    bool see_target;
+    bolt beam;
+
     static const int RADIUS = 2;
     static const int SPREAD = 1;
     static const int RANGE = RADIUS + SPREAD;
     const int pow = 15 + you.skill(SK_EVOCATIONS);
     const int adjust_pow = player_adjust_evoc_power(pow);
-    const int num_explosions = shotgun_beam_count(adjust_pow);
+    const int num_explosions = _tremorstone_count(adjust_pow);
 
     beam.source_id  = MID_PLAYER;
     beam.thrower    = KILL_YOU;
@@ -2064,7 +2065,6 @@ static spret _tremorstone() {
     beam.target = _find_tremorstone_target(see_target);
 
     targeter_radius hitfunc(&you, LOS_NO_TRANS);
-
     auto vulnerable = [](const actor *act) -> bool
     {
         return !(have_passive(passive_t::shoot_through_plants)
@@ -2080,6 +2080,7 @@ static spret _tremorstone() {
 
     mpr("The tremorstone explodes into fragments!");
     const coord_def center = beam.target;
+
     for (int i = 0; i < num_explosions; i++)
     {
         bolt explosion = beam;
@@ -2422,13 +2423,21 @@ bool evoke_item(int slot)
             break;
 
         case MISC_TIN_OF_TREMORSTONES:
-            switch (_tremorstone()) 
+            if (!evoker_charges(item.sub_type))
+            {
+                mpr("That is presently inert.");
+                return false;
+            }
+            switch (_tremorstone())
             {
                 default:
                 case spret::abort:
                     return false;
 
                 case spret::success:
+                    expend_xp_evoker(item.sub_type);
+                    if (!evoker_charges(item.sub_type))
+                        mpr("The tin is emptied!");
                 case spret::fail:
                     practise_evoking(1);
                     break;
