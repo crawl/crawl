@@ -1925,7 +1925,7 @@ bool kiku_receive_corpses(int pow)
         define_monster(dummy);
         dummy.position = *ri;
 
-        item_def* corpse = place_monster_corpse(dummy, true, true);
+        item_def* corpse = place_monster_corpse(dummy, true);
         if (!corpse)
             continue;
 

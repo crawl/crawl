@@ -511,7 +511,7 @@ static void _maybe_drop_monster_hide(const item_def &corpse, bool silent)
  *          corpse or if the 50% chance is rolled; it may be gold, if the player
  *          worships Gozag, or it may be the corpse.
  */
-item_def* place_monster_corpse(const monster& mons, bool silent, bool force)
+item_def* place_monster_corpse(const monster& mons, bool force)
 {
     if (mons.is_summoned()
         || mons.flags & (MF_BANISHED | MF_HARD_RESET)
@@ -1712,7 +1712,7 @@ item_def* monster_die(monster& mons, killer_type killer,
 
         // revived by a lost soul?
         if (!spectralised && testbits(mons.flags, MF_SPECTRALISED))
-            return place_monster_corpse(mons, silent);
+            return place_monster_corpse(mons);
         return nullptr;
     }
 
@@ -2506,7 +2506,7 @@ item_def* monster_die(monster& mons, killer_type killer,
             daddy_corpse = mounted_kill(&mons, MONS_HORNET, killer, killer_index);
             mons.type = MONS_SPRIGGAN;
         }
-        corpse = place_monster_corpse(mons, silent);
+        corpse = place_monster_corpse(mons);
         if (!corpse)
             corpse = daddy_corpse;
     }

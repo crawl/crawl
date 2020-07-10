@@ -183,7 +183,7 @@ void wizard_create_spec_object()
                 =  max(1, min(27, prompt_for_int("How many heads? ", false)));
         }
 
-        if (!place_monster_corpse(dummy, false, true))
+        if (!place_monster_corpse(dummy, true))
         {
             mpr("Failed to create corpse.");
             return;
