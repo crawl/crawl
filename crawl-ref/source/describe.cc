@@ -3889,23 +3889,24 @@ static void _add_energy_to_string(int speed, int energy, string what,
  * @param mi[in]        Player-visible info about the monster in question.
  * @param melee         Whether the attack is melee or ranged.
  */
-static int _apply_defender_effects(int base_to_hit, const monster_info& mi, bool melee)
+static int _apply_defender_effects(const monster_info& mi, int to_hit, bool melee)
 {
-    int to_hit = base_to_hit;
+    int ev = mi.ev;
 
-    // Lighting effects.
+    // Lighting effects. Subtracting these from EV is weirdly equivalent to adding
+    // them to the post-roll to-hit (the to_hit we have here is pre-roll).
     if (mi.is(MB_GLOWING)       // corona, silver corona (!)
         || mi.is(MB_BURNING)    // sticky flame
         || mi.is(MB_HALOED))
     {
-        to_hit += BACKLIGHT_TO_HIT_BONUS;
+        ev = max(0, ev - BACKLIGHT_TO_HIT_BONUS);
     } else if (mi.is(MB_UMBRAED) && !you.nightvision())
-        to_hit += UMBRA_TO_HIT_MALUS;
+        ev -= UMBRA_TO_HIT_MALUS;
 
     if (!melee && mi.is(MB_REPEL_MSL))
-        to_hit = (to_hit - 1) / 2;
+        ev -= to_hit - (to_hit - 1) / 2;
 
-    return to_hit;
+    return ev;
 }
 
 /**
@@ -3985,9 +3986,8 @@ static void _describe_to_hit(const monster_info& mi, ostringstream &result)
         to_hit = attk.calc_to_hit(false);
     }
 
-    to_hit = _apply_defender_effects(to_hit, mi, melee);
-
-    result << " (about " << (100 - _to_hit_pct(to_hit, mi.ev)) << "% to evade ";
+    const int ev = _apply_defender_effects(mi, to_hit, melee);
+    result << " (about " << (100 - _to_hit_pct(to_hit, ev)) << "% to evade ";
     if (weapon == nullptr)
         result << "your " << you.hand_name(true);
     else

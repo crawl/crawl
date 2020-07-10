@@ -156,21 +156,6 @@ void attack::calc_encumbrance_penalties(bool random) {
 }
 
 /**
- * Calculate to-hit bonuses & penalties for backlighting and umbras, respectively.
- *
- * @return The value added to the attack's to-hit before it's rolled.
- */
-int attack::lighting_effects() {
-    if (!defender)
-        return 0;
-    if (defender->backlit(false))
-        return BACKLIGHT_TO_HIT_BONUS;
-    if (!attacker->nightvision() && defender->umbra())
-        return UMBRA_TO_HIT_MALUS;
-    return 0;
-}
-
-/**
  * Calculate the to-hit for an attacker
  *
  * @param random If false, calculate average to-hit deterministically.
@@ -252,9 +237,6 @@ int attack::calc_to_hit(bool random)
         if (you.get_mutation_level(MUT_EYEBALLS))
             mhit += 2 * you.get_mutation_level(MUT_EYEBALLS) + 1;
 
-        // defender backlight bonus and umbra penalty.
-        mhit += lighting_effects();
-
         // miscellaneous melee/ranged-specific effects
         mhit = apply_special_to_hit(mhit, random);
 
@@ -274,10 +256,6 @@ int attack::calc_to_hit(bool random)
         }
 
         mhit += attacker->scan_artefacts(ARTP_SLAYING);
-
-        // historically, these were applied before the hit roll for the monsters
-        // (not for players), so we halve the effect for monsters to recreate that.
-        mhit += lighting_effects() / 2;
 
         mhit = apply_special_to_hit(mhit, random);
     }
@@ -311,6 +289,12 @@ int attack::calc_to_hit(bool random)
         const int how_transparent = you.get_mutation_level(MUT_TRANSLUCENT_SKIN);
         if (defender->is_player() && how_transparent)
             mhit -= 2 * how_transparent;
+
+        // defender backlight bonus and umbra penalty.
+        if (defender->backlit(false))
+            mhit += 5;
+        if (!attacker->nightvision() && defender->umbra())
+            mhit -= 3;
     }
     // We already did this roll for players.
     if (!attacker->is_player())
