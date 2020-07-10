@@ -4533,7 +4533,7 @@ static void _tag_construct_level(writer &th)
     marshallByte(th, env.rock_colour);
 
     marshallInt(th, you.on_current_level ? you.elapsed_time : env.elapsed_time);
-    marshallCoord(th, you.pos());
+    marshallCoord(th, you.on_current_level ? you.pos() : env.old_player_pos);
 
     // Map grids.
     // how many X?
