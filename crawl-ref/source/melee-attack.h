@@ -23,6 +23,8 @@ enum unarmed_attack_type
     NUM_UNARMED_ATTACKS,
 };
 
+const int UC_FORM_TO_HIT_BONUS = 5;
+
 class melee_attack : public attack
 {
 public:
@@ -44,6 +46,7 @@ public:
 
     // Applies attack damage and other effects.
     bool attack();
+    int calc_to_hit(bool random) override;
 
     static void chaos_affect_actor(actor *victim);
 
@@ -60,7 +63,6 @@ private:
     /* Combat Calculations */
     bool using_weapon() const override;
     int weapon_damage() override;
-    int apply_special_to_hit(int to_hit, bool random) override;
     int calc_mon_to_hit_base() override;
     int apply_damage_modifiers(int damage) override;
     int calc_damage() override;

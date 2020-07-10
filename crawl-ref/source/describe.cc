@@ -70,6 +70,7 @@
 #include "state.h"
 #include "stringutil.h" // to_string on Cygwin
 #include "terrain.h"
+#include "throw.h" // is_pproj_active for _describe_to_hit
 #include "tile-flags.h"
 #include "tilepick.h"
 #ifdef USE_TILE_LOCAL
@@ -3903,8 +3904,27 @@ static int _apply_defender_effects(const monster_info& mi, int to_hit, bool mele
     } else if (mi.is(MB_UMBRAED) && !you.nightvision())
         ev -= UMBRA_TO_HIT_MALUS;
 
-    if (!melee && mi.is(MB_REPEL_MSL))
-        ev -= to_hit - (to_hit - 1) / 2;
+    if (melee) {
+        // Duplicates melee_attack::calc_to_hit().
+
+        if (you.duration[DUR_CONFUSING_TOUCH])
+            ev -= you.dex() / 2;
+
+        if (!you.weapon() && get_form()->unarmed_hit_bonus)
+            ev -= UC_FORM_TO_HIT_BONUS;
+    } else {
+        // Duplicates ranged_attack::calc_to_hit().
+
+        // this is slightly wrong but reasonably close
+        if (is_pproj_active())
+        {
+            ev -= (you.attribute[ATTR_PORTAL_PROJECTILE] + PPROJ_TO_HIT_DIV/2)
+                   / PPROJ_TO_HIT_DIV;
+        }
+
+        if (mi.is(MB_REPEL_MSL))
+            ev += to_hit / 2;
+    }
 
     return ev;
 }

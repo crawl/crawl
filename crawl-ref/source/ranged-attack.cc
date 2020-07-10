@@ -64,25 +64,26 @@ ranged_attack::ranged_attack(actor *attk, actor *defn, item_def *proj,
         wpn_skill = SK_THROWING;
 }
 
-int ranged_attack::apply_special_to_hit(int to_hit, bool random)
+// Duplicates describe.cc:_apply_defender_effects().
+int ranged_attack::calc_to_hit(bool random)
 {
-    if (to_hit == AUTOMATIC_HIT)
+    int mhit = attack::calc_to_hit(random);
+    if (mhit == AUTOMATIC_HIT)
         return AUTOMATIC_HIT;
 
     if (teleport)
     {
-        to_hit +=
+        mhit +=
             (attacker->is_player())
-            ? maybe_random_div(you.attribute[ATTR_PORTAL_PROJECTILE], 4, random)
-            : 3 * attacker->as_monster()->get_hit_dice();
+            ? maybe_random_div(you.attribute[ATTR_PORTAL_PROJECTILE],
+                               PPROJ_TO_HIT_DIV, random)
+            : attacker->as_monster()->get_hit_dice() * 3 / 2;
     }
 
     if (defender && defender->missile_repulsion())
-    {
-        return (to_hit - 1) / 2;
-    }
+        mhit = (mhit - 1) / 2;
 
-    return to_hit;
+    return mhit;
 }
 
 bool ranged_attack::attack()

@@ -2,6 +2,8 @@
 
 #include "attack.h"
 
+const int PPROJ_TO_HIT_DIV = 8;
+
 class ranged_attack : public attack
 {
 // Public Properties
@@ -16,6 +18,7 @@ public:
 
     // Applies attack damage and other effects.
     bool attack();
+    int calc_to_hit(bool random) override;
 
 private:
     /* Attack Phases */
@@ -29,7 +32,6 @@ private:
     bool using_weapon() const override;
     int weapon_damage() override;
     int calc_base_unarmed_damage() override;
-    int apply_special_to_hit(int to_hit, bool random) override;
     int calc_mon_to_hit_base() override;
     int apply_damage_modifiers(int damage) override;
     bool apply_damage_brand(const char *what = nullptr) override;

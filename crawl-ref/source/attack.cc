@@ -237,9 +237,6 @@ int attack::calc_to_hit(bool random)
         if (you.get_mutation_level(MUT_EYEBALLS))
             mhit += 2 * you.get_mutation_level(MUT_EYEBALLS) + 1;
 
-        // miscellaneous melee/ranged-specific effects
-        mhit = apply_special_to_hit(mhit, random);
-
         // hit roll
         mhit = maybe_random2(mhit, random);
     }
@@ -256,8 +253,6 @@ int attack::calc_to_hit(bool random)
         }
 
         mhit += attacker->scan_artefacts(ARTP_SLAYING);
-
-        mhit = apply_special_to_hit(mhit, random);
     }
 
     // Penalties for both players and monsters:
