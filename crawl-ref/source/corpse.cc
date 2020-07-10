@@ -1,22 +1,21 @@
 /**
  * @file
- * @brief Functions for blood, chunk, & corpse rot.
+ * @brief Functions for corpse handling.
  **/
 
 #include "AppHdr.h"
 
-#include "rot.h"
+#include "corpse.h"
 
-#include <algorithm>
-
-#include "butcher.h"
-#include "delay.h"
+#include "bloodspatter.h"
+#include "defines.h"
 #include "env.h"
+#include "item-name.h"
 #include "item-prop.h"
+#include "item-status-flag-type.h"
 #include "items.h"
-#include "shopping.h"
-
-static void _rot_corpse(item_def &it, int mitm_index, int rot_time);
+#include "makeitem.h"
+#include "mon-util.h"
 
 /**
  * Check whether an item decays over time. (Corpses, chunks, and blood.)
@@ -82,5 +81,54 @@ void rot_corpses(int elapsedTime)
 
         if (it.base_type == OBJ_CORPSES)
             _rot_corpse(it, mitm_index, rot_time);
+    }
+}
+
+/** Skeletonise this corpse.
+ *
+ *  @param item the corpse to be turned into a skeleton.
+ *  @returns whether a valid skeleton could be made.
+ */
+bool turn_corpse_into_skeleton(item_def &item)
+{
+    ASSERT(item.base_type == OBJ_CORPSES);
+    ASSERT(item.sub_type == CORPSE_BODY);
+
+    // Some monsters' corpses lack the structure to leave skeletons
+    // behind.
+    if (!mons_skeleton(item.mon_type))
+        return false;
+
+    item.sub_type = CORPSE_SKELETON;
+    item.freshness = FRESHEST_CORPSE; // reset rotting counter
+    item.rnd = 1 + random2(255); // not sure this is necessary, but...
+    item.props.erase(FORCED_ITEM_COLOUR_KEY);
+    return true;
+}
+
+static void _bleed_monster_corpse(const item_def &corpse)
+{
+    const coord_def pos = item_pos(corpse);
+    if (!pos.origin())
+    {
+        const int max_chunks = max_corpse_chunks(corpse.mon_type);
+        bleed_onto_floor(pos, corpse.mon_type, max_chunks, true);
+    }
+}
+
+void butcher_corpse(item_def &item, bool skeleton)
+{
+    item_was_destroyed(item);
+    if (!mons_skeleton(item.mon_type))
+        skeleton = false;
+    if (skeleton)
+    {
+        _bleed_monster_corpse(item);
+        turn_corpse_into_skeleton(item);
+    }
+    else
+    {
+        _bleed_monster_corpse(item);
+        destroy_item(item.index());
     }
 }

@@ -15,6 +15,7 @@
 #include "cloud.h"
 #include "colour.h"
 #include "coordit.h"
+#include "corpse.h"
 #include "dbg-scan.h"
 #include "delay.h"
 #include "directn.h" // feature_description_at
@@ -50,7 +51,6 @@
 #include "mon-tentacle.h"
 #include "nearby-danger.h"
 #include "religion.h"
-#include "rot.h"
 #include "shout.h"
 #include "spl-book.h"
 #include "spl-clouds.h"

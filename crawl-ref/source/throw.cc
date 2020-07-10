@@ -34,7 +34,6 @@
 #include "output.h"
 #include "prompt.h"
 #include "religion.h"
-#include "rot.h"
 #include "shout.h"
 #include "showsymb.h"
 #include "skills.h"

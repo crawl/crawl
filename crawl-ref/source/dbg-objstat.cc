@@ -13,7 +13,7 @@
 
 #include "artefact.h"
 #include "branch.h"
-#include "butcher.h"
+#include "corpse.h"
 #include "dbg-maps.h"
 #include "dbg-util.h"
 #include "end.h"

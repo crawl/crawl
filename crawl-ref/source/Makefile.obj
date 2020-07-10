@@ -16,7 +16,6 @@ behold.o \
 bitary.o \
 branch.o \
 branch-data-json.o \
-butcher.o \
 bloodspatter.o \
 chardump.o \
 cio.o \
@@ -28,6 +27,7 @@ command.o \
 coord.o \
 coord-circle.o \
 coordit.o \
+corpse.o \
 crash.o \
 ctest.o \
 dactions.o \
@@ -201,7 +201,6 @@ random-var.o \
 ranged-attack.o \
 ray.o \
 religion.o \
-rot.o \
 scroller.o \
 shopping.o \
 shout.o \

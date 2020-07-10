@@ -1,6 +1,6 @@
 /**
  * @file
- * @brief Functions for blood & chunk rot.
+ * @brief Functions for corpse handling.
  **/
 
 #pragma once
@@ -12,3 +12,6 @@
 #define FRESHEST_CORPSE 110
 
 void rot_corpses(int elapsedTime);
+
+bool turn_corpse_into_skeleton(item_def &item);
+void butcher_corpse(item_def &item, bool skeleton = true);

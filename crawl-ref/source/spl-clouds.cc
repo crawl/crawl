@@ -9,10 +9,10 @@
 
 #include <algorithm>
 
-#include "butcher.h"
 #include "cloud.h"
 #include "coord.h"
 #include "coordit.h"
+#include "corpse.h"
 #include "directn.h"
 #include "english.h"
 #include "env.h"
