@@ -507,56 +507,6 @@ void handle_time()
 }
 
 /**
- * Return the number of turns it takes for monsters to forget about the player
- * 50% of the time.
- *
- * @param   The intelligence of the monster.
- * @return  An average number of turns before the monster forgets.
- */
-static int _mon_forgetfulness_time(mon_intel_type intelligence)
-{
-    switch (intelligence)
-    {
-        case I_HUMAN:
-            return 600;
-        case I_ANIMAL:
-            return 300;
-        case I_BRAINLESS:
-            return 150;
-        default:
-            die("Invalid intelligence type!");
-    }
-}
-
-/**
- * Make monsters forget about the player after enough time passes off-level.
- *
- * @param mon           The monster in question.
- * @param mon_turns     Monster turns. (Turns * monster speed)
- * @return              Whether the monster forgot about the player.
- */
-static bool _monster_forget(monster* mon, int mon_turns)
-{
-    // After x turns, half of the monsters will have forgotten about the
-    // player. A given monster has a 95% chance of forgetting the player after
-    // 4*x turns.
-    const int forgetfulness_time = _mon_forgetfulness_time(mons_intel(*mon));
-    const int forget_chances = mon_turns / forgetfulness_time;
-    // n.b. this is an integer division, so if range < forgetfulness_time
-    // nothing happens
-
-    if (bernoulli(forget_chances, 0.5))
-    {
-        mon->behaviour = BEH_WANDER;
-        mon->foe = MHITNOT;
-        mon->target = random_in_bounds();
-        return true;
-    }
-
-    return false;
-}
-
-/**
  * Make ranged monsters flee from the player during their time offlevel.
  *
  * @param mon           The monster in question.
@@ -719,14 +669,10 @@ static void _catchup_monster_moves(monster* mon, int turns)
     if (mon_turns <= 0)
         return;
 
-
-    // did the monster forget about the player?
-    const bool forgot = _monster_forget(mon, mon_turns);
-
     // restore behaviour later if we start fleeing
     unwind_var<beh_type> saved_beh(mon->behaviour);
 
-    if (!forgot && mons_has_ranged_attack(*mon))
+    if (mons_has_ranged_attack(*mon))
     {
         // If we're doing short time movement and the monster has a
         // ranged attack (missile or spell), then the monster will
