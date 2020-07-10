@@ -210,10 +210,6 @@ choko
 
 En næsten smagløs, grøn grøntsag, som vokser på en vinranke.
 %%%%
-chunk of flesh
-
-En klump kød, du har fundet i de underjordiske gange.
-%%%%
 cloak
 
 En stofkappe.

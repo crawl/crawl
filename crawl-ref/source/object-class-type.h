@@ -6,7 +6,9 @@ enum object_class_type : uint8_t           // mitm[].base_type
     OBJ_MISSILES,
     OBJ_ARMOUR,
     OBJ_WANDS,
+#if TAG_MAJOR_VERSION == 34
     OBJ_FOOD,
+#endif
     OBJ_SCROLLS,
     OBJ_JEWELLERY,
     OBJ_POTIONS,

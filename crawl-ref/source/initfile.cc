@@ -437,8 +437,6 @@ object_class_type item_class_by_sym(char32_t c)
         return OBJ_ARMOUR;
     case '/':
         return OBJ_WANDS;
-    case '%':
-        return OBJ_FOOD;
     case '?':
         return OBJ_SCROLLS;
     case '"': // Make the amulet symbol equiv to ring -- bwross
@@ -1049,7 +1047,6 @@ void game_options::reset_options()
     autopickups.set(OBJ_BOOKS);
     autopickups.set(OBJ_JEWELLERY);
     autopickups.set(OBJ_WANDS);
-    autopickups.set(OBJ_FOOD);
 
     confirm_butcher        = confirm_butcher_type::normal;
     easy_confirm           = easy_confirm_type::safe;

@@ -2831,24 +2831,6 @@ static void _setup_gozag_shop(int index, vector<shop_type> &valid_shops)
 }
 
 /**
- * If Gozag's version of a given shop type has a special name, what is it?
- *
- * @param type      The type of shop in question.
- * @return          A special name for the shop (replacing its type-name) if
- *                  appropriate, or an empty string otherwise.
- */
-static string _gozag_special_shop_name(shop_type type)
-{
-    if (type == SHOP_FOOD)
-    {
-        if (you.get_mutation_level(MUT_CARNIVOROUS))
-            return "Carrion"; // yum!
-    }
-
-    return "";
-}
-
-/**
  * Build a string describing the name, price & type of the shop being offered
  * at the given index.
  *
@@ -2865,10 +2847,7 @@ static string _describe_gozag_shop(int index)
         apostrophise(you.props[make_stringf(GOZAG_SHOPKEEPER_NAME_KEY,
                                             index)].get_string());
     const shop_type type = _gozag_shop_type(index);
-    const string special_name = _gozag_special_shop_name(type);
-    const string type_name = !special_name.empty() ?
-                                special_name :
-                                shop_type_name(type);
+    const string type_name = shop_type_name(type);
     const string suffix =
         you.props[make_stringf(GOZAG_SHOP_SUFFIX_KEY, index)].get_string();
 
@@ -2926,15 +2905,10 @@ static string _gozag_shop_spec(int index)
     if (!suffix.empty())
         suffix = " suffix:" + suffix;
 
-    string spec_type = _gozag_special_shop_name(type);
-    if (!spec_type.empty())
-        spec_type = " type:" + spec_type;
-
-    return make_stringf("%s shop name:%s%s%s gozag",
+    return make_stringf("%s shop name:%s%s gozag",
                         shoptype_to_str(type),
                         replace_all(name, " ", "_").c_str(),
-                        suffix.c_str(),
-                        spec_type.c_str());
+                        suffix.c_str());
 
 }
 
@@ -2979,10 +2953,10 @@ bool gozag_call_merchant()
     for (int i = 0; i < NUM_SHOPS; i++)
     {
         shop_type type = static_cast<shop_type>(i);
-        // if they are useful to the player, food shops are handled through the
-        // first index.
+#if TAG_MAJOR_VERSION == 34
         if (type == SHOP_FOOD)
             continue;
+#endif
         if (type == SHOP_DISTILLERY && you.species == SP_MUMMY)
             continue;
         if (type == SHOP_EVOKABLES && you.get_mutation_level(MUT_NO_ARTIFICE))

@@ -1570,9 +1570,9 @@ MARKER: F = lua:fog_machine { \
 MONS:   death yak w:5 / dream sheep w:3 / yak w:7
 MONS:   generate_awake human ; dagger | hand axe
 SUBST:  F=d, 2=2.
-# these chunks are in the freezer, so never_decay is appropriate. (Also, I
+# these corpses are in the freezer, so never_decay is appropriate. (Also, I
 # couldn't get this item_spec to work with delayed_decay.)
-ITEM:   never_decay chunk w:5 / never_decay yak corpse w:1 / nothing
+ITEM:   never_decay yak corpse w:1 / nothing
 KFEAT:  ~ = closed_clear_door
 MAP
 cccccc       ccccccc
@@ -5072,7 +5072,7 @@ NSUBST: Q = 1:+ / *:x, R = 1:+ / *:x, S = 1:+ / *:x, T = 1:+ / *:x
 NSUBST: U = 1:+ / *:x, V = 1:+ / *:x
 # There are 111 - glyphs, which leads to about 27 monsters
 SUBST:  - = 2:20 d .:50
-ITEM:   any food / any weapon / any missile / w:5 any armour / \
+ITEM:   any weapon / any missile / w:5 any armour / \
         w:5 any potion / w:5 any scroll, w:1 any misc
 MONS:   plant / w:40 nothing, goblin / hobgoblin / kobold / orc / w:5 gnoll
 MAP
@@ -5112,7 +5112,7 @@ NSUBST: E = 1:+ / *:x, F = 1:+ / *:x, G = 1:+ / *:x, H = 1:+ / *:x
 # 39 - glyphs, leading to about 10 monsters.
 SUBST:  - = 2:20 d .:50
 SUBST:  T = T:50 V G 1 .:20
-ITEM:   any food / any weapon / any missile / w:5 any armour / w:5 any potion
+ITEM:   any weapon / any missile / w:5 any armour / w:5 any potion
 MONS:   plant / w:40 nothing, goblin / hobgoblin / kobold / orc
 MAP
 ....................

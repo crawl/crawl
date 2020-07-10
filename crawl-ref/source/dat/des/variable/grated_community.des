@@ -38,7 +38,6 @@ KMONS:  i = titan
   : end
 KMONS:  P = plant
 KMONS:  h = generate_awake human / generate_awake elf / generate_awake kobold
-: dgn.delayed_decay(_G, 'h', 'elf chunk / q:2 human chunk / q:2 kobold chunk')
 KFEAT:  = = floor
 KPROP:  4 = no_tele_into
 FTILE:  =E79 = floor_grass
@@ -172,8 +171,7 @@ KITEM: - = animal skin
 :                            manticore skeleton', 'animal skin')
 KFEAT:  8 = granite_statue / orcish_idol / w:5 altar_trog /\
             w:5 altar_beogh / w:1 altar_makhleb / w:4 floor
-KITEM:  $ = q:5 never_decay chunk / nothing, \
-            giant spiked club / giant club / nothing
+KITEM:  $ = giant spiked club / giant club / nothing
 : local frosty = crawl.random2(6)
 : if frosty == 5 then
 SUBST:  1 = 2
@@ -302,7 +300,7 @@ MONS: patrolling iron troll / patrolling deep troll
 FTILE:   1.c~+#$%& = floor_dirt
 KITEM:   $ = animal skin
 NSUBST:  . = 7:% / 2:$ / *:.
-: dgn.delayed_decay_extra(_G, '%', 'w:20 any skeleton / w:5 any chunk', 'any / nothing')
+: dgn.delayed_decay_extra(_G, '%', 'w:20 any skeleton', 'any / nothing')
 KFEAT:   ~ = floor
 MARKER:  # = lua:fog_machine { cloud_type = "flame", \
                  pow_min = 10, pow_max = 10, delay = 10, \

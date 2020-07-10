@@ -137,8 +137,7 @@ ORIENT: northwest
 WEIGHT: 5
 TAGS:   uniq_black_bear_nest
 DEPTH:  D:4-8
-NSUBST: ' = 1:1 / 1:R / *:.
-:dgn.delayed_decay(_G, 'R', 'chunk')
+NSUBST: ' = 1:1 / *:.
 MONS:   patrolling black bear
 MAP
 xxxxxxxxxxxxxxx
@@ -155,8 +154,7 @@ ORIENT: southeast
 WEIGHT: 5
 TAGS:   uniq_black_bear_nest
 DEPTH:  D:4-8
-NSUBST: ' = 1:1 / 1:R / *:.
-:dgn.delayed_decay(_G, 'R', 'chunk')
+NSUBST: ' = 1:1 / *:.
 MONS:   patrolling black bear
 MAP
 xxxxxxxx@xx

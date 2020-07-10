@@ -1581,7 +1581,7 @@ NAME:   corexii_shack
 TAGS:   no_monster_gen no_item_gen allow_dup extra transparent
 DEPTH:  D:2-6
 NSUBST: + = 1:+ / *:x, m = 1:m / *:x, - = 1:1 / *:d
-ITEM:   w:20 any food / any weapon / any armour / w:5 any potion / w:20 nothing
+ITEM:   any weapon / any armour / w:5 any potion / w:40 nothing
 MONS:   goblin / hobgoblin / kobold / orc, plant / w:100 nothing
 MAP
 ........
@@ -1878,7 +1878,7 @@ NAME:  guppyfry_early_elven_hall
 DEPTH: D:6-9
 TAGS:  patrolling no_monster_gen transparent
 MONS:  deep elf mage, plant
-ITEM:  any scroll / any food / any book
+ITEM:  any scroll / any potion / any book
 SUBST: - = 2....GTd$%
 MARKER: H = lua:props_marker { stop_explore = "statue" }
 SUBST: HI = G
@@ -2005,7 +2005,7 @@ ENDMAP
 NAME: lightli_orcish_oven
 DEPTH: D:6-11, Orc
 MONS: orc warrior, orc
-:dgn.delayed_decay(_G, '1', 'chunk')
+:dgn.delayed_decay(_G, '1', 'rat corpse')
 MAP
 xxxxxxxxxx
 xvvv....xx
@@ -2077,13 +2077,11 @@ ENDMAP
 NAME: sigmund_edmund_badplayer
 TAGS: no_item_gen no_monster_gen no_pool_fixup no_trap_gen transparent
 DEPTH: D:4-7
-ITEM: any food
 KITEM: ( = flail / any armour
 KITEM: s = scythe / robe
 KMONS: S = Sigmund
 KMONS: E = Edmund
 MONS: plant w:25 / bush w:25 / nothing w:50
-NSUBST: d = 1:d / *:.
 NSUBST: S = 1:S / *:.
 NSUBST: E = 1:E / *:.
 SHUFFLE: S / E
@@ -2091,7 +2089,7 @@ veto {{ return you.uniques("Edmund") or you.uniques("Sigmund") }}
 MAP
 ....................
 .xxxxxxxxxxxxxxxx...
-.xEEEExWS....xddx11.
+.xEEEExWS....x..x11.
 .x....xWE.......x11.
 .x..xxxxxx.xxx..x11.
 .x.........xsxx.xxx.
@@ -2504,9 +2502,9 @@ TAGS:   no_monster_gen no_item_gen patrolling
 MONS:   spriggan skeleton
 MONS:   troll skeleton
 KMONS:  A = unseen horror
-ITEM:   never_decay chunk w:15 / nothing
 SUBST:  D : DDDDE
 NSUBST: D = 1 = A:4 .:1 / 2:d / 2:e / 1:1, E = 2:d / 2:e / 2:1
+KPROP:  def = bloody
 MAP
  cccccccccc
 ccxx1x1+DDc
@@ -3606,21 +3604,6 @@ xd.........dx
 xx.........xx
 xd.........dx
 xxxxxx+xxxxxx
-ENDMAP
-
-NAME:   nooodl_food_tri
-TAGS:   no_rotate
-ITEM:   any food
-NSUBST: R = 1:0 / 1:d / * = 0d$...
-MAP
-       x
-      xxx
-     xxRxx
-    xxRRRxx
-   xxRRRRRxx
-  xxRRRRRRRxx
- xxRRRRRRRRRxx
-xxxxxxx+xxxxxxx
 ENDMAP
 
 NAME:   wad_scary_box

@@ -1273,21 +1273,6 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
     }
 }
 
-static monster_type _choose_random_monster_corpse()
-{
-    for (int count = 0; count < 1000; ++count)
-    {
-        monster_type spc = mons_species(static_cast<monster_type>(
-                                        random2(NUM_MONSTERS)));
-        if (mons_class_flag(spc, M_NO_POLY_TO | M_CANT_SPAWN))
-            continue;
-        if (mons_class_can_leave_corpse(spc))
-            return spc;
-    }
-
-    return MONS_RAT;          // if you can't find anything else...
-}
-
 /**
  * Choose a random wand subtype for ordinary wand generation.
  *
@@ -1348,22 +1333,6 @@ static void _generate_wand_item(item_def& item, int force_type, int item_level)
     // Don't let monsters pickup early high-tier wands
     if (item_level < 2 && is_high_tier_wand(item.sub_type))
         item.flags |= ISFLAG_NO_PICKUP;
-}
-
-static void _generate_food_item(item_def& item, int force_quant)
-{
-    // Happens with ghoul food acquirement -- use place_chunks() outherwise
-    if (item.sub_type == FOOD_CHUNK)
-    {
-        // Set chunk flavour:
-        item.plus = _choose_random_monster_corpse();
-        item.orig_monnum = item.plus;
-        // Set duration.
-        item.freshness = (10 + random2(11)) * 10;
-    }
-
-    // Determine quantity.
-    item.quantity = force_quant > 2 ? force_quant : 2;
 }
 
 static void _generate_potion_item(item_def& item, int force_type,
@@ -1997,10 +1966,6 @@ int items(bool allow_uniques,
 
     case OBJ_WANDS:
         _generate_wand_item(item, force_type, item_level);
-        break;
-
-    case OBJ_FOOD:
-        _generate_food_item(item, allow_uniques);
         break;
 
     case OBJ_POTIONS:

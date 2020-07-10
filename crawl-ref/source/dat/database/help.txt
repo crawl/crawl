@@ -20,7 +20,7 @@ The cursor is usually hidden; pressing <w>.</w> or <w>'</w> makes it appear.
 You can quickly select items by type by pressing:
 <w>!</w>   potions      <w>(</w>   weapons        <w>)</w>   ammunition      <w>[</w>   armour
 <w>/</w>   wands        <w>|</w>   magical staves <w>?</w>   scrolls         <w>:</w>   books
-<w>"</w>   amulets      <w>=</w>   rings          <w>}</w>   miscellaneous   <w>%</w>   food
+<w>"</w>   amulets      <w>=</w>   rings          <w>}</w>   miscellaneous
 Global selects:  <w>,</w>   select all     <w>*</w>   invert all      <w>-</w>   deselect all
                  <w>;</w>   select last unequipped
 Note that for dropping, the <w>,</w> command uses the <w>drop_filter</w> option, which

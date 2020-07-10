@@ -2090,19 +2090,9 @@ DEPTH:  D:2-9, Orc, !Orc:$
 : if you.absdepth() < 6 then
 MONS:   orc ; hand axe . animal skin
 MONS:   leopard gecko / rat / frilled lizard / quokka
-{{
-  dgn.delayed_decay(_G, 'd',
-                    'leopard gecko chunk q:1 / rat chunk q:1 / ' ..
-                    'frilled lizard chunk q:1 / quokka chunk q:1')
-}}
 : else
 MONS:   orc warrior ; war axe . animal skin
 MONS:   iguana / worker ant
-{{
-  dgn.delayed_decay(_G, 'd',
-                    'yak chunk q:1 / iguana chunk q:1 / ' ..
-                    'worker ant chunk q:1')
-}}
 : end
 NSUBST: ' = 3=2 / .
 SUBST:  y = x, " = .
@@ -2115,7 +2105,7 @@ MAP
  xx'''''xx
 xx.xxxxxxxx
 xx+xmmmx^yx
-xx.."1d""yx
+xx.."1"""yx
 xx..._"..xx
  xx.....xx
   xx...xx

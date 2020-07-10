@@ -321,11 +321,6 @@ choko
 
 Un légume vert presque insipide, qui pousse sur des vignes.
 %%%%
-chunk of flesh
-
-Un morceau de viande crue trouvé dans le donjon. Il ne va pas rester frais bien
-longtemps.
-%%%%
 cloak
 
 Une cape en tissu.

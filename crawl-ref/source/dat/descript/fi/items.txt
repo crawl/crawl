@@ -187,10 +187,6 @@ choko
 
 Köynnöksessä kasvava, lähes mauton vihreä kasvis.
 %%%%
-chunk of flesh
-
-Luolastosta löydetty lihanpalanen.
-%%%%
 cloak
 
 Kangasviitta.

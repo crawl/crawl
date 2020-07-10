@@ -124,7 +124,7 @@ syn keyword desOrientation damaged cursed randart not_cursed useful unobtainable
 syn keyword desOrientation mimic no_mimic no_pickup no_uniq allow_uniq
 "Note: `rotting` removed here which often caught `rotting devil` but was
 "unused as item tag
-syn keyword desOrientation corpse chunk skeleton never_decay
+syn keyword desOrientation corpse skeleton never_decay
 
 " MONS | KMONS (in mapdef.cc)
 syn keyword desOrientation fix_slot priest_spells actual_spells god_gift

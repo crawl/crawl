@@ -1,16 +1,4 @@
 %%%%
-Full status
-
-You have eaten a lot.
-%%%%
-Very Full status
-
-You have eaten almost all you can for now.
-%%%%
-Engorged status
-
-You can't eat any more for now.
-%%%%
 Fast status
 
 All of your actions are 50% faster.
@@ -80,29 +68,6 @@ paralysed temporarily as well.
 
 You are recovering from your berserk rage, and are unable to berserk again for
 a short duration.
-%%%%
-Hungry status
-
-You are hungry. Most species can eat chunks of corpses only if hungry.
-%%%%
-Very Hungry status
-
-You are even hungrier than usual.
-%%%%
-Near Starving status
-
-You are in desperate need of food.
-%%%%
-Starving status
-
-You are starving; death is not far away. While starving, your combat abilities
-are impaired and you are unable to cast spells or use many evoked or divine
-abilities.
-%%%%
-Fainting status
-
-You are beyond starving, and are likely to lose consciousness and die at any
-moment.
 %%%%
 Pois status
 
@@ -587,7 +552,7 @@ Lich status
 
 You have been transformed into a lich. You are resistant to cold and hostile
 enchantments and completely immune to poison, rotting, negative energy and
-torment, and require no food at all for the duration of the transformation.
+torment for the duration of the transformation.
 Your necromancy spells are increased in power, and you gain a draining melee
 attack. However, you are also vulnerable to holy damage and Dispel Undead,
 and are unable to consume potions.

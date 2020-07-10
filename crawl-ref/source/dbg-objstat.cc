@@ -45,7 +45,6 @@ const static char *stat_out_ext = ".txt";
 // This must match the order of item_fields
 enum item_base_type
 {
-    ITEM_FOOD,
     ITEM_GOLD,
     ITEM_SCROLLS,
     ITEM_POTIONS,
@@ -99,10 +98,6 @@ static map<level_id, vector< vector< int> > > missile_brands;
 
 // This must match the order of item_base_type
 static const vector<string> item_fields[NUM_ITEM_BASE_TYPES] = {
-    { // ITEM_FOOD
-        "Num", "NumMin", "NumMax", "NumSD", "NumPiles", "PileQuant",
-        "TotalNormNutr", "TotalCarnNutr", "TotalHerbNutr"
-    },
     { // ITEM_GOLD
         "Num", "NumMin", "NumMax", "NumSD", "NumHeldMons",
         "NumPiles", "PileQuant"
@@ -208,9 +203,6 @@ static item_base_type _item_base_type(const item_def &item)
         else
             type = ITEM_BOOKS;
         break;
-    case OBJ_FOOD:
-        type = ITEM_FOOD;
-        break;
     case OBJ_GOLD:
         type = ITEM_GOLD;
         break;
@@ -250,9 +242,6 @@ static object_class_type _item_orig_base_type(item_base_type base_type)
     object_class_type type;
     switch (base_type)
     {
-    case ITEM_FOOD:
-        type = OBJ_FOOD;
-        break;
     case ITEM_GOLD:
         type = OBJ_GOLD;
         break;
@@ -566,7 +555,6 @@ static bool _item_track_piles(item_base_type base_type)
     case ITEM_GOLD:
     case ITEM_POTIONS:
     case ITEM_SCROLLS:
-    case ITEM_FOOD:
     case ITEM_MISSILES:
         return true;
     default:
@@ -767,24 +755,6 @@ void objstat_record_monster(const monster *mons)
 
     _record_monster_stat(lev, mons_ind, "MonsHP", mons->max_hit_points);
     _record_monster_stat(lev, mons_ind, "MonsHD", mons->get_experience_level());
-
-    // Record chunks/nutrition if monster leaves a corpse.
-    if (mons_class_can_leave_corpse(type))
-    {
-        item_def chunk_item = _dummy_item(item_type(ITEM_FOOD, FOOD_CHUNK));
-
-        you.mutation[MUT_CARNIVOROUS] = 1;
-        int carn_value = food_value(chunk_item);
-        you.mutation[MUT_CARNIVOROUS] = 0;
-
-        // copied from turn_corpse_into_chunks()
-        double chunks = (1 + stepdown_value(max_corpse_chunks(type),
-                                            4, 4, 12, 12)) / 2.0;
-        _record_monster_stat(lev, mons_ind, "MonsNumChunks", chunks);
-
-        _record_monster_stat(lev, mons_ind, "TotalGhoulNutr",
-                             chunks * carn_value);
-    }
 }
 
 static void _record_feature_stat(const level_id &lev,

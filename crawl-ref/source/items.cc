@@ -207,8 +207,7 @@ void link_items()
 static bool _item_ok_to_clean(int item)
 {
     // Never clean food, zigfigs, Orbs, or runes.
-    if (mitm[item].base_type == OBJ_FOOD
-        || mitm[item].base_type == OBJ_MISCELLANY
+    if (mitm[item].base_type == OBJ_MISCELLANY
             && mitm[item].sub_type == MISC_ZIGGURAT
         || item_is_orb(mitm[item])
         || mitm[item].base_type == OBJ_RUNES)
@@ -1182,8 +1181,7 @@ bool origin_describable(const item_def &item)
            && !_origin_is_special(item)
            && !is_stackable_item(item)
            && item.quantity == 1
-           && item.base_type != OBJ_CORPSES
-           && (item.base_type != OBJ_FOOD || item.sub_type != FOOD_CHUNK);
+           && item.base_type != OBJ_CORPSES;
 }
 
 static string _article_it(const item_def &/*item*/)
@@ -1502,7 +1500,6 @@ bool is_stackable_item(const item_def &item)
     switch (item.base_type)
     {
         case OBJ_MISSILES:
-        case OBJ_FOOD:
         case OBJ_SCROLLS:
         case OBJ_POTIONS:
         case OBJ_GOLD:
@@ -1585,29 +1582,6 @@ bool items_stack(const item_def &item1, const item_def &item2)
         && fully_identified(item1) == fully_identified(item2);
 }
 
-/**
- * Handles special cases involved in merging a specified number of items from
- * one stack into another.
- * Assumes that it's being called before the destination stack is incremented -
- * bugginess will occur if this order is reversed.
- * DOES NOT modify the original stack - the caller must handle any cleanup!
- *
- * @param source    The source from which items are being drawn.
- * @param dest      The stack into which items are being placed.
- * @param quant     The number of items to be added to the destination stack.
- * Defaults to the entirety of the source stack.
- */
-void merge_item_stacks(const item_def &source, item_def &dest, int quant)
-{
-    if (quant == -1)
-        quant = source.quantity;
-
-    ASSERT_RANGE(quant, 0 + 1, source.quantity + 1);
-
-    if (is_perishable_stack(source) && is_perishable_stack(dest))
-        merge_perishable_stacks(source, dest, quant);
-}
-
 static int _userdef_find_free_slot(const item_def &i)
 {
 #ifdef CLUA_BINDINGS
@@ -1645,9 +1619,7 @@ int find_free_slot(const item_def &i)
         return slot;
 
     FixedBitVector<ENDOFPACK> disliked;
-    if (i.base_type == OBJ_FOOD)
-        disliked.set('e' - 'a'), disliked.set('y' - 'a');
-    else if (i.base_type == OBJ_POTIONS)
+    if (i.base_type == OBJ_POTIONS)
         disliked.set('y' - 'a');
 
     if (!searchforward)
@@ -1754,10 +1726,6 @@ static bool _put_item_in_inv(item_def& it, int quant_got, bool quiet, bool& put_
     if (_merge_items_into_inv(it, quant_got, inv_slot, quiet))
     {
         put_in_inv = true;
-        // if you succeeded, actually reduce the number in the original stack
-        if (quant_got != it.quantity && is_perishable_stack(it))
-            for (int i = 0; i < quant_got; i++)
-                remove_oldest_perishable_item(it);
 
         // cleanup items that ended up in an inventory slot (not gold, etc)
         if (inv_slot != -1)
@@ -1947,7 +1915,6 @@ static bool _merge_stackable_item_into_inv(const item_def &it, int quant_got,
             you.inv[inv_slot].inscription = it.inscription;
         }
 
-        merge_item_stacks(it, you.inv[inv_slot], quant_got);
         inc_inv_item_quantity(inv_slot, quant_got);
         you.last_pickup[inv_slot] = quant_got;
 
@@ -2105,10 +2072,6 @@ static int _place_item_in_free_slot(item_def &it, int quant_got,
         set_ident_flags(item, ISFLAG_IDENT_MASK);
 
     note_inscribe_item(item);
-
-    // avoid blood potion timer/stack size mismatch
-    if (quant_got != it.quantity && is_perishable_stack(it))
-        remove_newest_perishable_item(item);
 
     if (crawl_state.game_is_hints())
     {
@@ -2284,7 +2247,6 @@ bool move_item_to_grid(int *const obj, const coord_def& p, bool silent)
             {
                 // Add quantity to item already here, and dispose
                 // of obj, while returning the found item. -- bwr
-                merge_item_stacks(item, *si);
                 inc_mitm_item_quantity(si->index(), item.quantity);
                 destroy_item(ob);
                 ob = si->index();
@@ -2400,7 +2362,6 @@ bool copy_item_to_grid(item_def &item, const coord_def& p,
             if (items_stack(item, *si))
             {
                 item_def copy = item;
-                merge_item_stacks(copy, *si, quant_drop);
                 inc_mitm_item_quantity(si->index(), quant_drop);
 
                 if (mark_dropped)
@@ -2441,10 +2402,6 @@ bool copy_item_to_grid(item_def &item, const coord_def& p,
     }
 
     move_item_to_grid(&new_item_idx, p, true);
-    // In the case of a partial drop, since only the oldest items have
-    // been dropped, remove the newest ones.
-    if (item.quantity != quant_drop && is_perishable_stack(item))
-        remove_newest_perishable_item(new_item);
 
     return true;
 }
@@ -2602,14 +2559,6 @@ bool drop_item(int item_dropped, int quant_drop)
     // makes no noise falling.
     if (!you.swimming())
         feat_splash_noise(grd(you.pos()));
-
-    // XP evoker has been handled in copy_item_to_grid
-    if (item.quantity != quant_drop && is_perishable_stack(item))
-    {
-        // Oldest potions have been dropped.
-        for (int i = 0; i < quant_drop; i++)
-            remove_oldest_perishable_item(item);
-    }
 
     dec_inv_item_quantity(item_dropped, quant_drop);
     you.turn_is_over = true;
@@ -3225,8 +3174,6 @@ static void _do_autopickup()
             clear_item_pickup_flags(mi);
 
             const bool pickup_result = move_item_to_inv(o, mi.quantity);
-            if (mi.is_type(OBJ_FOOD, FOOD_CHUNK))
-                mi.flags |= ISFLAG_DROPPED;
 
             if (pickup_result)
             {
@@ -3304,7 +3251,9 @@ int get_max_subtype(object_class_type base_type)
         NUM_MISSILES,
         NUM_ARMOURS,
         NUM_WANDS,
+#if TAG_MAJOR_VERSION == 34
         NUM_FOODS,
+#endif
         NUM_SCROLLS,
         NUM_JEWELLERY,
         NUM_POTIONS,
@@ -3628,22 +3577,6 @@ colour_t item_def::potion_colour() const
     };
     COMPILE_CHECK(ARRAYSZ(potion_colours) == NDSC_POT_PRI);
     return potion_colours[subtype_rnd % NDSC_POT_PRI];
-}
-
-/**
- * Assuming this item is a piece of food, what colour is it?
- */
-colour_t item_def::food_colour() const
-{
-    ASSERT(base_type == OBJ_FOOD);
-
-    switch (sub_type)
-    {
-        case FOOD_CHUNK:
-            return LIGHTRED;
-        default:
-            return BROWN;
-    }
 }
 
 /**
@@ -3998,8 +3931,10 @@ colour_t item_def::get_colour() const
             return wand_colour();
         case OBJ_POTIONS:
             return potion_colour();
+#if TAG_MAJOR_VERSION == 34
         case OBJ_FOOD:
-            return food_colour();
+            return LIGHTRED;
+#endif
         case OBJ_JEWELLERY:
             return jewellery_colour();
         case OBJ_SCROLLS:
@@ -4393,7 +4328,6 @@ bool get_item_by_name(item_def *item, const char* specs,
         item->quantity = 12;
         break;
 
-    case OBJ_FOOD:
     case OBJ_SCROLLS:
         item->quantity = 12;
         break;
@@ -4558,14 +4492,6 @@ item_info get_item_info(const item_def& item)
             ii.sub_type = NUM_POTIONS;
         ii.subtype_rnd = item.subtype_rnd;
         break;
-    case OBJ_FOOD:
-        ii.sub_type = item.sub_type;
-        if (ii.sub_type == FOOD_CHUNK)
-        {
-            ii.mon_type = item.mon_type;
-            ii.freshness = 100;
-        }
-        break;
     case OBJ_CORPSES:
         ii.sub_type = item.sub_type;
         ii.mon_type = item.mon_type;
@@ -4679,7 +4605,7 @@ int runes_in_pack()
 object_class_type get_random_item_mimic_type()
 {
    return random_choose(OBJ_GOLD, OBJ_WEAPONS, OBJ_ARMOUR, OBJ_SCROLLS,
-                        OBJ_POTIONS, OBJ_BOOKS, OBJ_STAVES, OBJ_FOOD,
+                        OBJ_POTIONS, OBJ_BOOKS, OBJ_STAVES,
                         OBJ_MISCELLANY, OBJ_JEWELLERY);
 }
 

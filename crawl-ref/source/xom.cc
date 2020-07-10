@@ -672,7 +672,7 @@ static void _xom_acquirement(int /*sever*/)
     const object_class_type types[] =
     {
         OBJ_WEAPONS, OBJ_ARMOUR, OBJ_JEWELLERY,  OBJ_BOOKS,
-        OBJ_STAVES,  OBJ_WANDS,  OBJ_MISCELLANY, OBJ_FOOD,  OBJ_GOLD,
+        OBJ_STAVES,  OBJ_WANDS,  OBJ_MISCELLANY, OBJ_GOLD,
         OBJ_MISSILES
     };
     const object_class_type force_class = RANDOM_ELEMENT(types);

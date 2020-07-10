@@ -166,8 +166,7 @@ function explorer.item_ignore_boring(item)
     if item.is_useless then
         return false
     elseif item.base_type == "gold"
-            or item.base_type == "missile"
-            or item.base_type == "food" then
+            or item.base_type == "missile" then
         return false
     elseif (item.base_type == "weapon" or item.base_type == "armour")
             and item.pluses() <= 0 and not item.branded then

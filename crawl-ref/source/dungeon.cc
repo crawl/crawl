@@ -4366,19 +4366,11 @@ static int _dgn_item_corpse(const item_spec &ispec, const coord_def where)
 
     if (ispec.base_type == OBJ_CORPSES && ispec.sub_type == CORPSE_SKELETON)
         turn_corpse_into_skeleton(*corpse);
-    else if (ispec.base_type == OBJ_FOOD && ispec.sub_type == FOOD_CHUNK)
-        turn_corpse_into_chunks(*corpse, false);
 
     if (ispec.props.exists(MONSTER_HIT_DICE))
     {
         corpse->props[MONSTER_HIT_DICE].get_short() =
             ispec.props[MONSTER_HIT_DICE].get_short();
-    }
-
-    if (ispec.qty && ispec.base_type == OBJ_FOOD)
-    {
-        corpse->quantity = ispec.qty;
-        init_perishable_stack(*corpse);
     }
 
     return corpse->index();
@@ -5527,8 +5519,6 @@ void place_spec_shop(const coord_def& where, shop_type force_type)
 
 int greed_for_shop_type(shop_type shop, int level_number)
 {
-    if (shop == SHOP_FOOD)
-        return 10 + random2(5);
     if (_shop_sells_antiques(shop))
     {
         const int rand = random2avg(19, 2);
@@ -5541,7 +5531,7 @@ int greed_for_shop_type(shop_type shop, int level_number)
 /**
  * How greedy should a given shop be? (Applies a multiplier to prices.)
  *
- * @param type              The type of the shop. (E.g. SHOP_FOOD.)
+ * @param type              The type of the shop. (E.g. SHOP_WEAPON_ANTIQUE.)
  * @param level_number      The depth in which the shop is placed.
  * @param spec_greed        An override for the greed, based on a vault
  *                          specification; if not -1, will override other
@@ -5646,10 +5636,9 @@ static bool _valid_item_for_shop(int item_index, shop_type shop_type_,
     if (item.base_type == OBJ_GOLD)
         return false;
 
-    // Don't place missiles or food in general antique shops...
+    // Don't place missiles in general antique shops...
     if (shop_type_ == SHOP_GENERAL_ANTIQUE
-            && (item.base_type == OBJ_MISSILES
-                || item.base_type == OBJ_FOOD))
+            && item.base_type == OBJ_MISSILES)
     {
         // ...unless they're specified by the item spec.
         return !spec.items.empty();
@@ -5666,7 +5655,7 @@ static bool _valid_item_for_shop(int item_index, shop_type shop_type_,
  *
  * @param j                 The index of the item being created in the shop's
  *                          inventory.
- * @param shop_type_        The type of shop. (E.g. SHOP_FOOD.)
+ * @param shop_type_        The type of shop. (E.g. SHOP_WEAPON_ANTIQUE.)
  * @param stocked[in,out]   An array mapping book types to the # in the shop.
  * @param spec              The specification of the shop.
  * @param shop              The shop.
@@ -5754,6 +5743,15 @@ static void _stock_shop_item(int j, shop_type shop_type_,
                     item.name(DESC_PLAIN, false, true).c_str());
 }
 
+static shop_type _random_shop()
+{
+    return random_choose(SHOP_WEAPON, SHOP_ARMOUR, SHOP_WEAPON_ANTIQUE,
+                         SHOP_ARMOUR_ANTIQUE, SHOP_GENERAL_ANTIQUE,
+                         SHOP_JEWELLERY, SHOP_EVOKABLES, SHOP_BOOK,
+                         SHOP_DISTILLERY, SHOP_SCROLL, SHOP_GENERAL);
+}
+
+
 /**
  * Attempt to place a shop in a given location.
  *
@@ -5780,7 +5778,7 @@ void place_spec_shop(const coord_def& where, shop_spec &spec, int shop_level)
     shop.level = level_number * 2;
     shop.type = spec.sh_type;
     if (shop.type == SHOP_RANDOM)
-        shop.type = static_cast<shop_type>(random2(NUM_SHOPS));
+        shop.type = _random_shop();
     shop.greed = _shop_greed(shop.type, level_number, spec.greed);
     shop.pos = where;
 
@@ -5824,9 +5822,6 @@ object_class_type item_in_shop(shop_type shop_type)
 
     case SHOP_BOOK:
         return OBJ_BOOKS;
-
-    case SHOP_FOOD:
-        return OBJ_FOOD;
 
     case SHOP_DISTILLERY:
         return OBJ_POTIONS;

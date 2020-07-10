@@ -250,9 +250,6 @@ void get_class_hotkeys(const int type, vector<char> &glyphs)
     case OBJ_WANDS:
         glyphs.push_back('/');
         break;
-    case OBJ_FOOD:
-        glyphs.push_back('%');
-        break;
     case OBJ_BOOKS:
         glyphs.push_back(':');
         break;
@@ -488,8 +485,6 @@ string no_selectables_message(int item_selector)
         return "You aren't carrying any armour which can be enchanted further.";
     case OBJ_CORPSES:
         return "You don't have any corpses.";
-    case OBJ_FOOD:
-        return "The developers stupid removed food.";
     case OBJ_POTIONS:
         return "You aren't carrying any potions.";
     case OBJ_SCROLLS:
@@ -823,7 +818,9 @@ FixedVector<int, NUM_OBJECT_CLASSES> inv_order(
     OBJ_POTIONS,
     OBJ_BOOKS,
     OBJ_MISCELLANY,
+#if TAG_MAJOR_VERSION == 34
     OBJ_FOOD,
+#endif
     // These four can't actually be in your inventory.
     OBJ_CORPSES,
     OBJ_RUNES,
@@ -1000,7 +997,9 @@ const char *item_class_name(int type, bool terse)
         case OBJ_MISSILES:   return "Missiles";
         case OBJ_ARMOUR:     return "Armour";
         case OBJ_WANDS:      return "Wands";
+#if TAG_MAJOR_VERSION == 34
         case OBJ_FOOD:       return "Comestibles";
+#endif
         case OBJ_SCROLLS:    return "Scrolls";
         case OBJ_JEWELLERY:  return "Jewellery";
         case OBJ_POTIONS:    return "Potions";
@@ -1068,7 +1067,7 @@ bool item_is_selected(const item_def &i, int selector)
 {
     const object_class_type itype = i.base_type;
     if (selector == OSEL_ANY || selector == itype
-                                && itype != OBJ_FOOD && itype != OBJ_ARMOUR)
+                                && itype != OBJ_ARMOUR)
     {
         return true;
     }

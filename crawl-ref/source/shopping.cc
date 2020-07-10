@@ -496,12 +496,6 @@ unsigned int item_value(item_def item, bool ident)
         }
         break;
 
-    case OBJ_FOOD:
-        break;
-
-    case OBJ_CORPSES:
-        valued = max_corpse_chunks(item.mon_type) * 5;
-
     case OBJ_SCROLLS:
         if (!item_type_known(item))
             valued += 10;
@@ -1436,8 +1430,10 @@ string shop_type_name(shop_type type)
             return "Gadget";
         case SHOP_BOOK:
             return "Book";
+#if TAG_MAJOR_VERSION == 34
         case SHOP_FOOD:
-            return "Food";
+            return "Removed Food";
+#endif
         case SHOP_SCROLL:
             return "Magic Scroll";
         case SHOP_GENERAL_ANTIQUE:

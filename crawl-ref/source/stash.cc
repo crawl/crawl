@@ -194,9 +194,7 @@ bool Stash::are_items_same(const item_def &a, const item_def &b, bool exact)
 
     return same
            || (!exact && a.base_type == b.base_type
-               && (a.base_type == OBJ_CORPSES
-                   || (a.is_type(OBJ_FOOD, FOOD_CHUNK)
-                       && b.sub_type == FOOD_CHUNK))
+               && a.base_type == OBJ_CORPSES
                && a.plus == b.plus);
 }
 
@@ -374,14 +372,11 @@ static bool _is_rottable(const item_def &item)
 {
     if (is_shop_item(item))
         return false;
-    return item.base_type == OBJ_CORPSES || item.is_type(OBJ_FOOD, FOOD_CHUNK);
+    return item.base_type == OBJ_CORPSES;
 }
 
 static short _min_rot(const item_def &item)
 {
-    if (item.base_type == OBJ_FOOD)
-        return 0;
-
     if (item.is_type(OBJ_CORPSES, CORPSE_SKELETON))
         return 0;
 

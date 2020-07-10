@@ -24,7 +24,6 @@ DEPTH:  D:7-14
 # placing by chance tag doesn't work that way. Hence, there's also a WEIGHT
 # tag to give it more weight than other food vaults.
 WEIGHT: 25
-: dgn.delayed_decay(_G, 'e', 'chunk q:2')
 : if crawl.one_chance_in(8) then
 :   dgn.delayed_decay(_G, 'e', 'spriggan name:baked n_adj n_spe n_des corpse')
 : else
@@ -199,7 +198,6 @@ TAGS:   extra no_monster_gen no_trap_gen \
                              .. ' / dwarf skeleton')
 }}
 ITEM:   throwing net
-: dgn.delayed_decay(_G, '1', 'orc chunk / human chunk / elf chunk / dwarf chunk')
 MARKER: O = lua:fog_machine { cloud_type = "flame", pow_min = 10, \
                               pow_max = 10, delay = 10, size = 1, \
                               walk_dist = 0, excl_rad = 0 }

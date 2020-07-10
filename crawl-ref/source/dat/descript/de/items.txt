@@ -209,11 +209,6 @@ choko
 
 Eine fast geschmackslose grüne Frucht, die an einer Kletterpflanze wächst.
 %%%%
-chunk of flesh
-
-Ein Stück rohen Fleisches, gefunden im Verlies. Es wird nicht lange frisch
-bleiben.
-%%%%
 cloak
 
 Ein Stoffumhang.

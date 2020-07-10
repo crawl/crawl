@@ -1218,8 +1218,10 @@ static string _describe_action(caction_type type)
         return "  Use";
     case CACT_STAB:
         return " Stab";
+#if TAG_MAJOR_VERSION == 34
     case CACT_EAT:
         return "  Eat";
+#endif
     case CACT_RIPOSTE:
         return "Rpst.";
     default:
@@ -1363,9 +1365,10 @@ static string _describe_action_subtype(caction_type type, int compound_subtype)
         COMPILE_CHECK(ARRAYSZ(_stab_names) == NUM_STABS);
         ASSERT_RANGE(subtype, 1, NUM_STABS);
         return _stab_names[subtype];
+#if TAG_MAJOR_VERSION == 34
     case CACT_EAT:
-        return subtype >= 0 ? uppercase_first(food_type_name(subtype))
-                            : "Corpse";
+        return "Removed food";
+#endif
     default:
         return "Error";
     }

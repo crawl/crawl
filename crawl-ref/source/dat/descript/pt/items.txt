@@ -113,10 +113,6 @@ choko
 
 Um vegetal verde e quase sem gosto que cresce em uma vinha.
 %%%%
-chunk of flesh
-
-Um pedaço de carne encontrado no calabouço.
-%%%%
 cloak
 
 Uma capa de tecido.

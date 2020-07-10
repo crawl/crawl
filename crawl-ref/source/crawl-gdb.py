@@ -107,7 +107,6 @@ class item_def_printer:
             'OBJ_MISSILES':  'missile_type',
             'OBJ_ARMOUR':    'armour_type',
             'OBJ_WANDS':     'wand_type',
-            'OBJ_FOOD':      'food_type',
             'OBJ_SCROLLS':   'scroll_type',
             'OBJ_JEWELLERY': 'jewellery_type',
             'OBJ_POTIONS':   'potion_type',
@@ -125,7 +124,7 @@ class item_def_printer:
         yield f('base_type')
         yield g('sub_type', sub_type_type)
 
-        if ty == 'OBJ_CORPSES' or (ty == 'OBJ_FOOD' and sub_ty == 'FOOD_CHUNK'):
+        if ty == 'OBJ_CORPSES':
             yield f('mon_type')
         else:
             yield f('plus')

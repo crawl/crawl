@@ -163,8 +163,7 @@ HINT_CONVERT Gozag
 You've just converted to worshipping <w>Gozag</w>. Unlike other gods, Gozag only
 cares about gold; each divine power costs gold, and they grow more expensive
 with use. Still, that gold won't do you any good if you're dead, and Gozag's
-Potion Petition can be a huge help in combat! If you run short on food, you can
-use Call Merchant to buy a food shop.
+Potion Petition can be a huge help in combat!
 %%%%
 HINT_CONVERT Ru
 

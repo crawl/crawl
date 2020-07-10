@@ -53,8 +53,8 @@ mutations:
   26:
     MUT_NECRO_ENHANCER: 1
 fake_mutations:
-  - long: You do not eat or drink.
-    short: no food or potions
+  - long: You do not drink.
+    short: no potions
   - long: Your flesh is vulnerable to fire.
     short: fire vulnerability
 recommended_jobs:

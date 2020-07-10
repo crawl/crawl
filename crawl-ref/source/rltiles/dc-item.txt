@@ -571,8 +571,9 @@ i-scattershot WAND_REMOVEME12 WAND_ID_LAST
 # i-clouds WAND_CLOUDS WAND_ID_LAST
 # end TAG_MAJOR_VERSION
 
-#################OBJ_FOOD
+################# Skeletons
 %sdir item/food
+# start TAG_MAJOR_VERSION == 34
 bread_ration FOOD_RATION UNSEEN_FOOD FOOD_RATION_FIRST FOOD_RATION_INVENTORY
 meat_ration
 cheese
@@ -591,6 +592,7 @@ pear
 snozzcumber
 strawberry FOOD_FRUIT_LAST
 fruit FOOD_FRUIT_INVENTORY FOOD_RATION_LAST
+# end TAG_MAJOR_VERSION
 
 %rim 0
 bone_humanoid1 FOOD_BONE_HUMANOID
@@ -601,6 +603,8 @@ bone1 FOOD_BONE
 bone2
 bone3
 bone4
+
+# start TAG_MAJOR_VERSION == 34
 %rim 1
 chunk FOOD_CHUNK
 %back chunk
@@ -611,6 +615,7 @@ chunk_brands/i-inedible FOOD_CHUNK_INEDIBLE
 chunk_brands/i-decay FOOD_ROTTING
 chunk_brands/i-forbidden FOOD_FORBIDDEN
 chunk_brands/i-inedible FOOD_INEDIBLE
+# end TAG_MAJOR_VERSION
 
 #################OBJ_UNKNOWN_I
 ##################OBJ_SCROLLS

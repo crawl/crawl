@@ -10,7 +10,7 @@
 -- {ego} for identified branded items.
 -- { <skill> } - the relevant weapon skill for weapons.
 -- { <num>-handed } - the handedness of the weapon for weapons.
--- { <class> } - item class: gold, weapon, missile, wand, carrion, food,
+-- { <class> } - item class: gold, weapon, missile, wand, carrion,
 --               scroll, jewellery, potion, book, magical staff, orb, misc,
 --               <armourtype> armour
 -- { <ego> } - short item ego description: rC+, rPois, SInv, freeze etc.

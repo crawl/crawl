@@ -428,7 +428,7 @@ struct timed_effect
 // to timed_effect_type in timef-effect-type.h!
 static struct timed_effect timed_effects[] =
 {
-    { rot_floor_items,               200,   200, true  },
+    { rot_corpses,               200,   200, true  },
     { _hell_effects,                 200,   600, false },
 #if TAG_MAJOR_VERSION == 34
     { nullptr,                         0,     0, false },
@@ -440,8 +440,8 @@ static struct timed_effect timed_effects[] =
     { handle_god_time,               100,   300, false },
 #if TAG_MAJOR_VERSION == 34
     { nullptr,                                0,     0, false },
+    { nullptr,            0,   0, false },
 #endif
-    { rot_inventory_food,            100,   300, false },
     { _wait_practice,                100,   300, false },
 #if TAG_MAJOR_VERSION == 34
     { nullptr,                         0,     0, false },
@@ -839,7 +839,7 @@ void update_level(int elapsedTime)
     dprf("turns: %d", turns);
 #endif
 
-    rot_floor_items(elapsedTime);
+    rot_corpses(elapsedTime);
     shoals_apply_tides(turns, true);
     timeout_tombs(turns);
     timeout_terrain_changes(elapsedTime);

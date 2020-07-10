@@ -667,6 +667,7 @@ static const missile_def Missile_prop[] =
     { MI_BOOMERANG,     "boomerang",     6, 20, 5,  true  },
 };
 
+#if TAG_MAJOR_VERSION == 34
 struct food_def
 {
     int         id;
@@ -679,12 +680,9 @@ struct food_def
 static int Food_index[NUM_FOODS];
 static const food_def Food_prop[] =
 {
-#if TAG_MAJOR_VERSION == 34
     { FOOD_RATION,       "buggy ration", 3400,  1900,  1900 },
-#endif
-    { FOOD_CHUNK,        "chunk",        1000,  1300,     0 },
+    { FOOD_CHUNK,        "buggy chunk",        1000,  1300,     0 },
 
-#if TAG_MAJOR_VERSION == 34
     // is_real_food assumes we list FOOD_ROYAL_JELLY as the first removed
     // food here, after all the unremoved foods.
     { FOOD_UNUSED,       "buggy pizza",     0,     0,     0 },
@@ -708,8 +706,8 @@ static const food_def Food_prop[] =
     { FOOD_SAUSAGE,      "buggy fruit",  1200,   150,  -400 },
     { FOOD_BEEF_JERKY,   "buggy fruit",  1500,   200,  -200 },
     { FOOD_PIZZA,        "buggy fruit",  1500,     0,     0 },
-#endif
 };
+#endif
 
 // Must call this functions early on so that the above tables can
 // be accessed correctly.
@@ -720,7 +718,9 @@ void init_properties()
     COMPILE_CHECK(NUM_ARMOURS  == ARRAYSZ(Armour_prop));
     COMPILE_CHECK(NUM_WEAPONS  == ARRAYSZ(Weapon_prop));
     COMPILE_CHECK(NUM_MISSILES == ARRAYSZ(Missile_prop));
+#if TAG_MAJOR_VERSION == 34
     COMPILE_CHECK(NUM_FOODS    == ARRAYSZ(Food_prop));
+#endif
 
     for (int i = 0; i < NUM_ARMOURS; i++)
         Armour_index[ Armour_prop[i].id ] = i;
@@ -731,8 +731,10 @@ void init_properties()
     for (int i = 0; i < NUM_MISSILES; i++)
         Missile_index[ Missile_prop[i].id ] = i;
 
+#if TAG_MAJOR_VERSION == 34
     for (int i = 0; i < NUM_FOODS; i++)
         Food_index[ Food_prop[i].id ] = i;
+#endif
 }
 
 const set<pair<object_class_type, int> > removed_items =
@@ -797,6 +799,7 @@ const set<pair<object_class_type, int> > removed_items =
     { OBJ_SCROLLS,   SCR_CURSE_WEAPON },
     { OBJ_SCROLLS,   SCR_CURSE_ARMOUR },
     { OBJ_SCROLLS,   SCR_CURSE_JEWELLERY },
+    { OBJ_FOOD,      FOOD_CHUNK},
     { OBJ_FOOD,      FOOD_BREAD_RATION },
     { OBJ_FOOD,      FOOD_ROYAL_JELLY },
     { OBJ_FOOD,      FOOD_UNUSED },
@@ -1099,13 +1102,13 @@ static iflags_t _full_ident_mask(const item_def& item)
     iflags_t flagset = ISFLAG_IDENT_MASK & ~ISFLAG_KNOW_PROPERTIES;
     switch (item.base_type)
     {
-    case OBJ_FOOD:
     case OBJ_CORPSES:
     case OBJ_MISSILES:
     case OBJ_ORBS:
     case OBJ_RUNES:
     case OBJ_GOLD:
 #if TAG_MAJOR_VERSION == 34
+    case OBJ_FOOD:
     case OBJ_RODS:
 #endif
         flagset = 0;
@@ -2249,7 +2252,7 @@ bool ring_has_stackable_effect(const item_def &item)
 #if TAG_MAJOR_VERSION == 34
 bool is_real_food(food_type food)
 {
-    return food < NUM_FOODS && Food_index[food] < Food_index[FOOD_UNUSED];
+    return false;
 }
 #endif
 
@@ -2835,11 +2838,6 @@ string item_base_name(object_class_type type, int sub_type)
     default:
         return "";
     }
-}
-
-string food_type_name(int sub_type)
-{
-    return Food_prop[Food_index[sub_type]].name;
 }
 
 const char* weapon_base_name(weapon_type subtype)

@@ -142,10 +142,10 @@ TAGS:    arrival no_rotate
 ORIENT:  northwest
 # the exit will be placed elsewhere 25% of the time
 SUBST:   { = {:30 .
-ITEM:    q:1 chunk, skeleton, corpse
+ITEM:    skeleton, corpse
 SUBST:   Y = A.
 KFEAT:   A = shaft trap
-SUBST:   ` = df `:60
+SUBST:   ` = de `:60
 SUBST:   . = ' .:120
 SUBST:   ` = ''., V = Xx, U = Xxxx, x = X x:60
 KPROP:   X' = bloody
@@ -2830,7 +2830,7 @@ TAGS:   arrival no_monster_gen no_trap_gen
 ORIENT: float
 COLOUR: W# = lightgreen
 NSUBST: W = 6:% / 7:#
-KITEM:  % = nothing / q:1 river rat chunk / w:5 river rat skeleton
+KITEM:  % = nothing / w:5 river rat skeleton
 MARKER: # = lua:fog_machine { cloud_type = "foul pestilence", pow_max = 10, \
                               delay = 5, size = 5, excl_rad = 0 }
 KFEAT:  %# = W

@@ -150,10 +150,6 @@ choko
 
 Una fruta verde e insípida que crece en una parra.
 %%%%
-chunk of flesh
-
-Un trozo de carne encontrado en el calabozo.
-%%%%
 cloak
 
 Una capa de tela.

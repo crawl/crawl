@@ -64,7 +64,6 @@ void clear_item_pickup_flags(item_def &item);
 bool is_stackable_item(const item_def &item);
 bool items_similar(const item_def &item1, const item_def &item2);
 bool items_stack(const item_def &item1, const item_def &item2);
-void merge_item_stacks(const item_def &source, item_def &dest, int quant = -1);
 void get_gold(const item_def& item, int quant, bool quiet);
 
 item_def *find_floor_item(object_class_type cls, int sub_type = -1);

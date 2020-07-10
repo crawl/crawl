@@ -666,11 +666,6 @@ and are also slowed. It's best to rest with <input>$cmd[CMD_REST]</input>
 <localtiles> (or via the <w>command panel</w>)</localtiles> until you feel fit
 again.
 %%%%
-tutorial5 hunger
-
-Berserking also causes a large amount of hunger. You cannot berserk while near
-starving, so you should always carry some food with you.
-%%%%
 tutorial5 berserk2
 
 Berserk is also really useful against multiple enemies — as long as you don't

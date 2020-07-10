@@ -100,5 +100,3 @@ local name_checks = {
     { "a", "a gnoll corpse of gnoll lieutenant" } },
 }
 check_names(name_checks)
-
-test.eq(itemname("hydra chunk q:10"), "10 chunks of flesh")

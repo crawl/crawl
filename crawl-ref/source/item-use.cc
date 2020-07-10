@@ -97,7 +97,6 @@ public:
     //      OBJ_SCROLLS
     //      OSEL_WIELD
     //      OBJ_ARMOUR
-    //      OBJ_FOOD
     UseItemMenu(int selector, const char* prompt);
 
     void toggle_display_all();
@@ -3542,11 +3541,6 @@ void tile_item_use(int idx)
             }
             else if (check_warning_inscriptions(item, OPER_WEAR))
                 wear_armour(idx);
-            return;
-
-        case OBJ_FOOD:
-            if (check_warning_inscriptions(item, OPER_EAT))
-                eat_food();
             return;
 
         case OBJ_SCROLLS:

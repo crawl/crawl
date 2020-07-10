@@ -998,7 +998,7 @@ SUBST:   A = >, B = >
 SUBST:   . = .:1000 $
 SUBST:   K = T:20 1 .:5
 KFEAT:   C = any shop / distillery shop
-KFEAT:   D = any shop / gadget shop / food shop
+KFEAT:   D = any shop / gadget shop
 KFEAT:   E = any shop / weapon shop / armour shop
 KFEAT:   F = any shop / book shop / scroll shop
 :        bazaar_setup(_G)
@@ -1432,14 +1432,13 @@ NAME:   bazaar_minmay_snake
 TAGS:   no_rotate
 WEIGHT: 5
 ORIENT: encompass
-KFEAT:  ! = food shop
 KFEAT:  ? = any shop / T
 :       bazaar_setup(_G)
 MAP
  xxxxx         xxxxx         xxxxx
 xx...xxxxxxxxxxx...xxxxxxxxxxx...xx
 x.................................x
-x..<.............?.............!..x
+x..<.............?.............?..x
 x.................................x
 xx...xxxxxxxxxxx...xxxxxxxxxxx...xx
  xxxxx         xxxxx         x...x
@@ -1453,7 +1452,7 @@ xx...xxxxxxxxxxx...xxxxxxxxxxx...xx
  xxxxx         xxxxx         x...x
 xx...xxxxxxxxxxx...xxxxxxxxxxx...xx
 x.................................x
-x..?.............!.............?..x
+x..?.............?.............?..x
 x.................................x
 xx...xxxxxxxxxxx...xxxxxxxxxxx...xx
  x...x         xxxxx         xxxxx
@@ -1643,7 +1642,7 @@ ORIENT:  encompass
 WEIGHT:  1
 SHUFFLE: AC, BD
 KFEAT:   A = armour shop / weapon shop / gadget shop
-KFEAT:   B = general shop / food shop
+KFEAT:   B = general shop
 KFEAT:   C = scroll shop / book shop / distillery shop
 SUBST:   D = >
 SUBST:   = : +x
@@ -1703,7 +1702,7 @@ SHUFFLE:  AEST
 NSUBST:   A = 1:A / 1:B / 1:C / 1:D
 SUBST:    E=>, S=T, T:TUV, D=ABC.
 KFEAT:    A = armour shop / weapon shop / gadget shop
-KFEAT:    B = general shop / food shop
+KFEAT:    B = general shop
 KFEAT:    C = scroll shop / book shop / distillery shop
 : if crawl.coinflip() then
 SUBST:    '=+, "=x, :=x

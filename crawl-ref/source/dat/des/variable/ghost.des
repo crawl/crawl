@@ -270,11 +270,10 @@ WEIGHT: 5 (D:3-7)
 KPROP:  cn'O = w:5 bloody / nothing
 KMONS:  O = player_ghost
 KITEM:  O = scroll of immolation ident:all
-NSUBST: ' = |* / |*$ / 998 / dF / 3=d. / F. / .
+NSUBST: ' = |* / |*$ / 998 / 2=F. / .
 MARKER: F = lua:fog_machine { cloud_type = "black smoke", \
             pow_min = 10000, pow_max = 10000, delay = 1, \
             size = 1, walk_dist = 0, start_clouds = 1 }
-: dgn.delayed_decay(_G, "d", "chunk")
 : ghost_setup(_G)
 MAP
  ccccc

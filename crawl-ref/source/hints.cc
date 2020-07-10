@@ -687,9 +687,6 @@ void taken_new_item(object_class_type item_type)
     case OBJ_BOOKS:
         learned_something_new(HINT_SEEN_SPBOOK);
         break;
-    case OBJ_FOOD:
-        learned_something_new(HINT_SEEN_FOOD);
-        break;
     case OBJ_CORPSES:
         learned_something_new(HINT_SEEN_CARRION);
         break;
@@ -3246,12 +3243,6 @@ string hints_describe_item(const item_def &item)
                     "<w>left mouse click</w> on your target.";
 #endif
             Hints.hints_events[HINT_SEEN_WAND] = false;
-            break;
-
-        case OBJ_FOOD:
-            ostr << "Gross, only a ghoul would want to mess with this.";
-
-            Hints.hints_events[HINT_SEEN_FOOD] = false;
             break;
 
         case OBJ_SCROLLS:

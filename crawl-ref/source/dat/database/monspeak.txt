@@ -2832,8 +2832,6 @@ w:50
 
 @The_monster@ says, "Zombies are pretty boring."
 
-@The_monster@ says, "I'm hungry."
-
 @The_monster@ says, "Man, I can't wait until I find the rune."
 
 @The_monster@ says, "They must've been making zombies for centuries to fill this place."
@@ -3046,8 +3044,6 @@ w:50
 
 @The_monster@ says, "I hate zombies."
 
-@The_monster@ says, "I'm hungry. Can you summon some snacks?"
-
 @The_monster@ says, "Yuck, you smell of miasma!"
 %%%%
 Yredelemnul Donald
@@ -3227,8 +3223,6 @@ w:50
 @The_monster@ says, "Nothing ever attacks me when I'm in the Abyss."
 
 @The_monster@ says, "Are you going to banish me, too?"
-
-@The_monster@ says, "I hate it when my food blinks away from me."
 %%%%
 Beogh Donald
 
@@ -3428,8 +3422,6 @@ w:50
 
 @The_monster@ says, "So the shops here weren't enough for you?"
 
-@The_monster@ says, "Feeling hungry yet?"
-
 @The_monster@ says, "I saw some gold over there. Quick, better go get it!"
 
 @The_monster@ says, "What do potions have to do with a god of gold, anyway?"
@@ -3603,11 +3595,7 @@ _generic_Donald_
 
 @The_monster@ says, "The Vaults look kind of boring."
 
-@The_monster@ says, "Why do the shops only ever sell food? I could get that at home."
-
 @The_monster@ says, "I can never work out what any of these scrolls mean."
-
-@The_monster@ says, "I'm hungry."
 
 @The_monster@ sighs.
 

@@ -1932,7 +1932,7 @@ spret cast_simulacrum(int pow, god_type god, bool fail)
             mprf("The headless hydra simulacr%s immediately collapse%s into snow!",
                  how_many == 1 ? "um" : "a", how_many == 1 ? "s" : "");
             if (!turn_corpse_into_skeleton(corpse))
-                butcher_corpse(corpse, false, false);
+                butcher_corpse(corpse, false);
             return spret::success;
         }
         mg.props[MGEN_NUM_HEADS] = corpse.props[CORPSE_HEADS].get_short();
@@ -1951,7 +1951,7 @@ spret cast_simulacrum(int pow, god_type god, bool fail)
     if (!count)
         canned_msg(MSG_NOTHING_HAPPENS);
     else if (!turn_corpse_into_skeleton(corpse))
-        butcher_corpse(corpse, false, false);
+        butcher_corpse(corpse, false);
 
     return spret::success;
 }

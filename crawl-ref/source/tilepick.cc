@@ -139,8 +139,10 @@ tileidx_t tileidx_shop(const shop_struct *shop)
             return TILE_SHOP_JEWELLERY;
         case SHOP_EVOKABLES:
             return TILE_SHOP_GADGETS;
+#if TAG_MAJOR_VERSION == 34
         case SHOP_FOOD:
             return TILE_SHOP_FOOD;
+#endif
         case SHOP_BOOK:
             return TILE_SHOP_BOOKS;
         case SHOP_SCROLL:
@@ -2413,18 +2415,6 @@ static tileidx_t _tileidx_armour(const item_def &item)
     return tileidx_enchant_equ(item, tile);
 }
 
-static tileidx_t _tileidx_food(const item_def &item)
-{
-
-    switch (item.sub_type)
-    {
-    case FOOD_CHUNK:
-        return TILE_FOOD_CHUNK;
-    default:
-        return TILE_ERROR;
-    }
-}
-
 // Returns index of skeleton tiles.
 // Parameter item holds the skeleton.
 static tileidx_t _tileidx_bone(const item_def &item)
@@ -2666,9 +2656,6 @@ tileidx_t tileidx_item(const item_def &item)
             return TILE_WAND_ID_FIRST + type;
         else
             return TILE_WAND_OFFSET + subtype_rnd % NDSC_WAND_PRI;
-
-    case OBJ_FOOD:
-        return _tileidx_food(item);
 
     case OBJ_SCROLLS:
         if (item.flags & ISFLAG_KNOW_TYPE)

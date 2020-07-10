@@ -15,7 +15,9 @@ enum caction_type    // Primary categorization of counted actions.
                      //   auxtype = item basetype, subtype = item subtype
     CACT_USE,        // object_class_type
     CACT_STAB,       // stab_type
+#if TAG_MAJOR_VERSION == 34
     CACT_EAT,        // food_type, or subtype = -1 for corpse
+#endif
     CACT_ARMOUR,     // armour subtype or subtype = -1 for unarmoured
     CACT_DODGE,      // dodge_type
     CACT_BLOCK,      // armour subtype or subtype = -1 and

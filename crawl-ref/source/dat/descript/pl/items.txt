@@ -151,10 +151,6 @@ choko
 
 Zielone dyniowate warzywo, niemal pozbawione smaku.
 %%%%
-chunk of flesh
-
-Kawał surowego mięsa podejrzanej proweniencji.
-%%%%
 cloak
 
 Wierzchnie okrycie z tkaniny.

@@ -714,7 +714,9 @@ static const acquirement_subtype_finder _subtype_finders[] =
     _acquirement_missile_subtype,
     _acquirement_armour_subtype,
     _acquirement_wand_subtype,
+#if TAG_MAJOR_VERSION == 34
     0, // no food
+#endif
     0, // no scrolls
     _acquirement_jewellery_subtype,
     0, // no potions

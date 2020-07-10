@@ -224,9 +224,9 @@ static bool _can_use_item(const item_def &item, bool equipped)
         return !_is_true_equipped_item(item);
     }
 
-    // Mummies can't do anything with food or potions.
+    // Mummies can't do anything with potions.
     if (you.species == SP_MUMMY)
-        return item.base_type != OBJ_POTIONS && item.base_type != OBJ_FOOD;
+        return item.base_type != OBJ_POTIONS;
 
     // In all other cases you can use the item in some way.
     return true;
@@ -453,10 +453,6 @@ bool InventoryRegion::update_tip_text(string& tip)
             case OBJ_POTIONS:
                 tmp += "Quaff (%)";
                 cmd.push_back(CMD_QUAFF);
-                if (wielded)
-                    _handle_wield_tip(tmp, cmd, "\n[Ctrl + L-Click] ", true);
-                break;
-            case OBJ_FOOD:
                 if (wielded)
                     _handle_wield_tip(tmp, cmd, "\n[Ctrl + L-Click] ", true);
                 break;

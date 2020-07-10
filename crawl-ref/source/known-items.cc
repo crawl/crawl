@@ -113,22 +113,12 @@ public:
 
         string name;
 
-        if (item->base_type == OBJ_FOOD)
-        {
-            switch (item->sub_type)
-            {
-            case FOOD_CHUNK:
-                name = "chunks";
-                break;
-#if TAG_MAJOR_VERSION == 34
-            default:
-                name = "removed food";
-                break;
-#endif
-            }
-        }
-        else if (item->base_type == OBJ_MISCELLANY)
+        if (item->base_type == OBJ_MISCELLANY)
             name = pluralise(item->name(DESC_DBNAME));
+#if TAG_MAJOR_VERSION == 34
+        else if (item->base_type == OBJ_FOOD)
+            name = "removed food";
+#endif
         else if (item->is_type(OBJ_BOOKS, BOOK_MANUAL))
             name = "manuals";
         else if (item->base_type == OBJ_GOLD)
@@ -254,11 +244,6 @@ static void _add_fake_item(object_class_type base, int sub,
         ptmp->charges = wand_charge_value(ptmp->sub_type);
     else if (base == OBJ_GOLD)
         ptmp->quantity = 18;
-    else if (ptmp->is_type(OBJ_FOOD, FOOD_CHUNK))
-    {
-        ptmp->freshness = 100;
-        ptmp->mon_type = MONS_RAT;
-    }
 
     if (force_known_type)
         ptmp->flags |= ISFLAG_KNOW_TYPE;
@@ -321,15 +306,6 @@ void check_item_knowledge(bool unknown_items)
                 continue;
 #endif
             _add_fake_item(OBJ_MISSILES, i, selected_items, items_missile);
-        }
-        // Foods
-        for (int i = 0; i < NUM_FOODS; i++)
-        {
-#if TAG_MAJOR_VERSION == 34
-            if (!is_real_food(static_cast<food_type>(i)))
-                continue;
-#endif
-            _add_fake_item(OBJ_FOOD, i, selected_items, items_food);
         }
 
         for (int i = 0; i < NUM_MISCELLANY; i++)

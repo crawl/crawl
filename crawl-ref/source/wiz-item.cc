@@ -876,7 +876,7 @@ static void _debug_acquirement_stats(FILE *ostat)
 
     clear_messages();
     mpr("[a] Weapons [b] Armours   [c] Jewellery [d] Books");
-    mpr("[e] Staves  [f] Evocables [g] Food");
+    mpr("[e] Staves  [f] Evocables");
     mprf(MSGCH_PROMPT, "What kind of item would you like to get acquirement stats on? ");
 
     object_class_type type;
@@ -889,7 +889,6 @@ static void _debug_acquirement_stats(FILE *ostat)
     case 'd': type = OBJ_BOOKS;      break;
     case 'e': type = OBJ_STAVES;     break;
     case 'f': type = OBJ_MISCELLANY; break;
-    case 'g': type = OBJ_FOOD;       break;
     default:
         canned_msg(MSG_OK);
         return;
@@ -1004,8 +1003,7 @@ static void _debug_acquirement_stats(FILE *ostat)
             type == OBJ_BOOKS      ? "books" :
             type == OBJ_STAVES     ? "staves" :
             type == OBJ_WANDS      ? "wands" :
-            type == OBJ_MISCELLANY ? "misc. items" :
-            type == OBJ_FOOD       ? "food"
+            type == OBJ_MISCELLANY ? "misc. items"
                                    : "buggy items");
 
     // Print player species/profession.

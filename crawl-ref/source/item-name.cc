@@ -1109,7 +1109,6 @@ const char *base_type_string(object_class_type type)
     case OBJ_MISSILES: return "missile";
     case OBJ_ARMOUR: return "armour";
     case OBJ_WANDS: return "wand";
-    case OBJ_FOOD: return "food";
     case OBJ_SCROLLS: return "scroll";
     case OBJ_JEWELLERY: return "jewellery";
     case OBJ_POTIONS: return "potion";
@@ -1139,7 +1138,6 @@ string sub_type_string(const item_def &item, bool known)
     case OBJ_ARMOUR:
         return item_base_name(type, sub_type);
     case OBJ_WANDS: return _wand_type_name(sub_type);
-    case OBJ_FOOD: return food_type_name(sub_type);
     case OBJ_SCROLLS: return scroll_type_name(sub_type);
     case OBJ_JEWELLERY: return jewellery_type_name(sub_type);
     case OBJ_POTIONS: return potion_type_name(sub_type);
@@ -1716,16 +1714,11 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         }
         break;
 
-    case OBJ_FOOD:
-        switch (item_typ)
-        {
-        case FOOD_CHUNK: buff << "chunk of flesh"; break;
 #if TAG_MAJOR_VERSION == 34
-        default: buff << "removed food"; break;
-#endif
-        }
-
+    case OBJ_FOOD:
+        buff << "removed food"; break;
         break;
+#endif
 
     case OBJ_SCROLLS:
         buff << "scroll";
@@ -3096,9 +3089,6 @@ bool is_useless_item(const item_def &item, bool temp)
             return you_worship(GOD_TROG);
         }
 
-        return false;
-
-    case OBJ_FOOD:
         return false;
 
     case OBJ_CORPSES:

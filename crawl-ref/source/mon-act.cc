@@ -2567,9 +2567,6 @@ static bool _monster_eat_item(monster* mons)
 
         if (quant >= si->quantity)
             item_was_destroyed(*si);
-        else if (is_perishable_stack(*si))
-            for (int i = 0; i < quant; ++i)
-                remove_oldest_perishable_item(*si);
         dec_mitm_item_quantity(si.index(), quant);
     }
 

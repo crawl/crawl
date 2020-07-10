@@ -2909,14 +2909,14 @@ ENDMAP
 NAME:    minmay_variable_closet
 TAGS:    extra
 DEPTH:   D:9-, Depths
-ITEM:    any weapon, any missile, any armour, any food, any scroll
+ITEM:    any weapon, any missile, any armour, any scroll
 ITEM:    any jewellery, any potion, any book
 SUBST:   $ : $ZYXW
-SUBST:   $ : $%defghijk
-SUBST:   W = $%defghijk
+SUBST:   $ : $%defghij
+SUBST:   W = $%defghij
 SUBST:   Z = def
-SUBST:   Y = hj
-SUBST:   X = ik
+SUBST:   Y = gi
+SUBST:   X = hj
 MAP
 x+xx
 x$$x
@@ -3003,7 +3003,7 @@ SUBST:  . = ..", X = xxB
 KPROP:  "B = bloody
 SUBST:  " = ., B = x
 NSUBST: . = 5:d / 10=d. / 2:e / 1:e. / *=.f
-: dgn.delayed_decay(_G, 'e', 'minotaur corpse, minotaur chunk')
+: dgn.delayed_decay(_G, 'e', 'minotaur corpse')
 ITEM:   hand axe
 SUBST:  ' = .
 MAP
@@ -3082,13 +3082,13 @@ ENDMAP
 NAME:   nicolae_wand_duel
 DEPTH:  D:6-
 WEIGHT: 1
-KITEM:  d = wand of disintegration ident:all
+KITEM:  d = wand of acid / wand of iceblast / wand of flame
 TAGS:   no_hmirror no_vmirror no_monster_gen no_item_gen extra transparent
 SUBST:  a = a A:4, b = b B:4
 KPROP:  ABd = bloody
 SUBST:  A = a, B = b
-NSUBST: a = 5:c / *:. , b = 5:c / *:.
-: dgn.delayed_decay(_G, 'c', 'human chunk q:1')
+NSUBST: a = 1:c / *:. , b = 1:c / *:.
+: dgn.delayed_decay(_G, 'c', 'human corpse')
 MAP
   aaa.....bbb
  aaaaa...bbbbb

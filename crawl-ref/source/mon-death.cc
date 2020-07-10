@@ -187,19 +187,16 @@ static bool _explode_corpse(item_def& corpse, const coord_def& where)
 
     const int max_chunks = max_corpse_chunks(corpse.mon_type);
     const int nchunks = stepdown_value(1 + random2(max_chunks), 4, 4, 12, 12);
-    if (corpse.base_type != OBJ_GOLD)
-        blood_spray(where, corpse.mon_type, nchunks * 3); // spray some blood
 
-    // turn the corpse into chunks
     if (corpse.base_type != OBJ_GOLD)
     {
-        corpse.base_type = OBJ_FOOD;
-        corpse.sub_type  = FOOD_CHUNK;
+        blood_spray(where, corpse.mon_type, nchunks * 3); // spray some blood
+        return true;
     }
 
     const int total_gold = corpse.quantity;
 
-    // spray chunks everywhere!
+    // spray gold everywhere!
     for (int ntries = 0, chunks_made = 0;
          chunks_made < nchunks && ntries < 10000; ++ntries)
     {
@@ -207,7 +204,7 @@ static bool _explode_corpse(item_def& corpse, const coord_def& where)
         cp.x += random_range(-LOS_DEFAULT_RANGE, LOS_DEFAULT_RANGE);
         cp.y += random_range(-LOS_DEFAULT_RANGE, LOS_DEFAULT_RANGE);
 
-        dprf("Trying to scatter chunk to %d, %d...", cp.x, cp.y);
+        dprf("Trying to scatter gold to %d, %d...", cp.x, cp.y);
 
         if (!in_bounds(cp))
             continue;

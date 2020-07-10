@@ -204,7 +204,6 @@ TEST_CASE("Test all_item_subtypes() does include items for each category",
     REQUIRE(all_item_subtypes(OBJ_MISSILES).size() > 0);
     REQUIRE(all_item_subtypes(OBJ_ARMOUR).size() > 0);
     REQUIRE(all_item_subtypes(OBJ_WANDS).size() > 0);
-    REQUIRE(all_item_subtypes(OBJ_FOOD).size() > 0);
     REQUIRE(all_item_subtypes(OBJ_SCROLLS).size() > 0);
     REQUIRE(all_item_subtypes(OBJ_JEWELLERY).size() > 0);
     REQUIRE(all_item_subtypes(OBJ_POTIONS).size() > 0);

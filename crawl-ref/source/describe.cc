@@ -2109,7 +2109,6 @@ string get_item_description(const item_def &item, bool verbose,
         break;
 
     case OBJ_CORPSES:
-    case OBJ_FOOD:
         break;
 
     case OBJ_STAVES:
@@ -2161,6 +2160,7 @@ string get_item_description(const item_def &item, bool verbose,
     case OBJ_RUNES:
     case OBJ_WANDS:
 #if TAG_MAJOR_VERSION == 34
+    case OBJ_FOOD:
     case OBJ_RODS:
 #endif
         // No extra processing needed for these item types.
@@ -2557,8 +2557,6 @@ static vector<command_type> _allowed_actions(const item_def& item)
             actions.push_back(CMD_REMOVE_ARMOUR);
         else
             actions.push_back(CMD_WEAR_ARMOUR);
-        break;
-    case OBJ_FOOD:
         break;
     case OBJ_SCROLLS:
     //case OBJ_BOOKS: these are handled differently
