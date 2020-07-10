@@ -489,10 +489,7 @@ string no_selectables_message(int item_selector)
     case OBJ_CORPSES:
         return "You don't have any corpses.";
     case OBJ_FOOD:
-        if (you.species != SP_GHOUL)
-            return "You don't even eat.";
-        else
-            return "You aren't carrying any food.";
+        return "The developers stupid removed food.";
     case OBJ_POTIONS:
         return "You aren't carrying any potions.";
     case OBJ_SCROLLS:

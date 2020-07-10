@@ -5659,30 +5659,6 @@ static bool _valid_item_for_shop(int item_index, shop_type shop_type_,
 }
 
 /**
- * Attempt to make a corpse to be placed in a gozag ghoul corpse shop.
- *
- * @return  The mitm index of the corpse.
- *          If we couldn't make one, returns NON_ITEM instead.
- */
-static int _make_delicious_corpse()
-{
-    // Choose corpses from D:<XL>
-    const level_id lev(BRANCH_DUNGEON, you.get_experience_level());
-    const monster_type mon_type = pick_local_corpsey_monster(lev);
-
-    // Create corpse object.
-    monster dummy;
-    dummy.type = mon_type;
-    define_monster(dummy);
-
-    item_def* corpse = place_monster_corpse(dummy, true, true);
-    if (!corpse)
-        return NON_ITEM;
-
-    return corpse->index();
-}
-
-/**
  * Create an item and place it in a shop.
  *
  * FIXME: I'm pretty sure this will go into an infinite loop if mitm is full.
@@ -5727,11 +5703,6 @@ static void _stock_shop_item(int j, shop_type shop_type_,
             // shop lists ordered items; take the one at the right index
             item_index = dgn_place_item(spec.items.get_item(j), coord_def(),
                                         item_level);
-        }
-        else if (spec.gozag && shop_type_ == SHOP_FOOD
-                 && you.species == SP_GHOUL)
-        {
-            item_index = _make_delicious_corpse();
         }
         else
         {

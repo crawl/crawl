@@ -3099,10 +3099,7 @@ bool is_useless_item(const item_def &item, bool temp)
         return false;
 
     case OBJ_FOOD:
-        if (item.sub_type == NUM_FOODS)
-            break;
-
-        return you.species != SP_GHOUL;
+        return false;
 
     case OBJ_CORPSES:
         if (you.has_spell(SPELL_ANIMATE_DEAD)

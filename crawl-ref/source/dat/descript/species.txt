@@ -46,7 +46,7 @@ item manipulation or the use of armour or weapons.
 Ghoul
 
 Ghouls are undead creatures, damned to rot eternally. They have sharp claws,
-and they feed on decaying flesh to sustain themselves.
+and they heal from the death of the living.
 %%%%
 Gargoyle
 

@@ -2084,16 +2084,17 @@ item_def* monster_die(monster& mons, killer_type killer,
 
             _fire_kill_conducts(mons, killer, killer_index, gives_player_xp);
 
-            // Divine health and mana restoration doesn't happen when
+            // Divine and innate health and mana restoration doesn't happen when
             // killing born-friendly monsters.
             if (gives_player_xp
-                && (have_passive(passive_t::restore_hp)
-                    || have_passive(passive_t::mp_on_kill)
-                    || have_passive(passive_t::restore_hp_mp_vs_evil)
-                       && mons.evil())
                 && !mons_is_object(mons.type)
-                && !player_under_penance()
-                && (random2(you.piety) >= piety_breakpoint(0)
+                && (you.species == SP_GHOUL
+                    || (have_passive(passive_t::restore_hp)
+                        || have_passive(passive_t::mp_on_kill)
+                        || have_passive(passive_t::restore_hp_mp_vs_evil)
+                           && mons.evil())
+                       && !player_under_penance()
+                       && (random2(you.piety) >= piety_breakpoint(0))
 #if TAG_MAJOR_VERSION == 34
                     || you_worship(GOD_PAKELLAS)
 #endif
@@ -2106,6 +2107,12 @@ item_def* monster_die(monster& mons, killer_type killer,
                 {
                     hp_heal = mons.get_experience_level()
                         + random2(mons.get_experience_level());
+                }
+                if (you.species == SP_GHOUL
+                    && mons.holiness() & MH_NATURAL
+                    && coinflip())
+                {
+                    hp_heal += 1 + random2avg(1 + you.experience_level, 3);
                 }
                 if (have_passive(passive_t::restore_hp_mp_vs_evil))
                 {
