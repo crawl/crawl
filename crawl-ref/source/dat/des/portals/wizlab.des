@@ -1247,7 +1247,7 @@ MARKER:     ' = lua:props_marker {veto_dig="veto", \
                                   veto_shatter="veto" }
 MARKER:     c = lua:props_marker {veto_dig="veto", \
                                   veto_shatter="veto" }
-MARKER:     t = lua:props_marker {veto_dig="veto", \
+MARKER:     t = lua:props_marker {veto_tornado="veto", \
                                   veto_shatter="veto", \
                                   veto_fire="veto" }
 :           wizlab_setup(_G)

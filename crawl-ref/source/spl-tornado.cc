@@ -319,8 +319,11 @@ void tornado_damage(actor *caster, int dur, bool is_vortex)
         vector<coord_def> clouds;
         for (; dam_i && dam_i.radius() == r; ++dam_i)
         {
+            bool veto =
+                env.markers.property_at(*dam_i, MAT_ANY, "veto_tornado") == "veto";
+
             if (feat_is_tree(grd(*dam_i)) && dur > 0
-                && bernoulli(rdur * 0.01, 0.05)) // 5% chance per 10 aut
+                && !veto && bernoulli(rdur * 0.01, 0.05)) // 5% chance per 10 aut
             {
                 grd(*dam_i) = DNGN_FLOOR;
                 set_terrain_changed(*dam_i);
