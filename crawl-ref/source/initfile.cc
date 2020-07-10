@@ -4359,7 +4359,16 @@ static void _bones_merge(const vector<string> files, const string out_name)
     for (auto filename : files)
     {
         auto ghosts = load_bones_file(filename, false);
-        out.insert(out.end(), ghosts.begin(), ghosts.end());
+        auto end = ghosts.end();
+        if (out.size() + ghosts.size() > MAX_GHOSTS)
+        {
+            //cout << "ghosts " << out.size() + ghosts.size() - MAX_GHOSTS;
+            cout << "Too many ghosts! Capping merge at " << MAX_GHOSTS << "\n";
+            end = ghosts.begin() + (MAX_GHOSTS - out.size());
+        }
+        out.insert(out.end(), ghosts.begin(), end);
+        if (end != ghosts.end())
+            break;
     }
     if (file_exists(out_name))
         unlink(out_name.c_str());
@@ -4376,11 +4385,13 @@ static void _edit_bones(int argc, char **argv)
     if (argc <= 1 || !strcmp(argv[1], "help"))
     {
         printf("Usage: crawl --bones <command> ARGS, where <command> may be:\n"
-               "  ls <file> [<name>] [--long] list the ghosts in <file>\n"
+               "  ls <file> [<name>] [--long] List the ghosts in <file>\n"
                "                              --long shows full monster descriptions\n"
-               "  merge <file1> <file2>       merge two bones files together, rewriting into <file2>\n"
-               "  rm <file> <name>            rewrite a ghost file without <name>\n"
-               "  rewrite <file> [--dedup]    rewrite a ghost file, fixing up version etc.\n"
+               "  merge <file1> <file2>       Merge two bones files together, rewriting into\n"
+               "                              <file2>. Capped at %d; read in reverse order.\n"
+               "  rm <file> <name>            Rewrite a ghost file without <name>\n"
+               "  rewrite <file> [--dedup]    Rewrite a ghost file, fixing up version etc.\n",
+               MAX_GHOSTS
              );
         return;
     }
@@ -4434,7 +4445,7 @@ static void _edit_bones(int argc, char **argv)
         else if (cmd == EB_MERGE)
         {
             const string out_name = argv[2];
-            _bones_merge({name, out_name}, out_name);
+            _bones_merge({out_name, name}, out_name);
         }
     }
     catch (corrupted_save &err)
