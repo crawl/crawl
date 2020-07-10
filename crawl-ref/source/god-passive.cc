@@ -1061,6 +1061,7 @@ int gozag_gold_in_los(actor *whom)
 
 void gozag_detect_level_gold(bool count)
 {
+    ASSERT(you.on_current_level);
     vector<item_def *> gold_piles;
     vector<coord_def> gold_places;
     int gold = 0;
