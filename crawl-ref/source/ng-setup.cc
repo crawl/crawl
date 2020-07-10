@@ -249,6 +249,14 @@ void give_items_skills(const newgame_def& ng)
         }
         break;
 
+    case JOB_ARTIFICER:
+    {
+        if (species_apt(SK_ARMOUR) < species_apt(SK_DODGING))
+            you.skills[SK_DODGING]++;
+        else
+            you.skills[SK_ARMOUR]++;
+        break;
+    }
     case JOB_CHAOS_KNIGHT:
     {
         you.religion = GOD_XOM;
