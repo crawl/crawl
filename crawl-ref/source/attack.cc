@@ -156,19 +156,21 @@ void attack::calc_encumbrance_penalties(bool random) {
 }
 
 /**
- * Calculate the to-hit for an attacker
+ * Calculate the to-hit for an attacker before the main die roll.
  *
  * @param random If false, calculate average to-hit deterministically.
  */
-int attack::calc_to_hit(bool random)
-{
+int attack::calc_pre_roll_to_hit(bool random) {
+    if (using_weapon()
+        && (is_unrandom_artefact(*weapon, UNRAND_WOE)
+            || is_unrandom_artefact(*weapon, UNRAND_SNIPER)))
+    {
+        return AUTOMATIC_HIT;
+    }
+
     int mhit = attacker->is_player() ?
                 15 + (you.dex() / 2)
               : calc_mon_to_hit_base();
-
-#ifdef DEBUG_DIAGNOSTICS
-    const int base_hit = mhit;
-#endif
 
     // This if statement is temporary, it should be removed when the
     // implementation of a more universal (and elegant) to-hit calculation
@@ -236,9 +238,6 @@ int attack::calc_to_hit(bool random)
         // mutation
         if (you.get_mutation_level(MUT_EYEBALLS))
             mhit += 2 * you.get_mutation_level(MUT_EYEBALLS) + 1;
-
-        // hit roll
-        mhit = maybe_random2(mhit, random);
     }
     else    // Monster to-hit.
     {
@@ -255,49 +254,75 @@ int attack::calc_to_hit(bool random)
         mhit += attacker->scan_artefacts(ARTP_SLAYING);
     }
 
+    return mhit;
+}
+
+/**
+ * Calculate to-hit modifiers for an attacker that apply after the player's roll.
+ *
+ * @param mhit The post-roll player's to-hit value.
+ */
+int attack::post_roll_to_hit_modifiers(int mhit) {
+    int modifiers = 0;
+
     // Penalties for both players and monsters:
-    mhit -= 5 * attacker->inaccuracy();
+    modifiers -= 5 * attacker->inaccuracy();
 
     if (attacker->confused())
-        mhit -= 5;
-
-    if (using_weapon()
-        && (is_unrandom_artefact(*weapon, UNRAND_WOE)
-            || is_unrandom_artefact(*weapon, UNRAND_SNIPER)))
-    {
-        return AUTOMATIC_HIT;
-    }
+        modifiers -= 5;
 
     // If no defender, we're calculating to-hit for debug-display
     // purposes, so don't drop down to defender code below
     if (defender == nullptr)
-        return mhit;
+        return modifiers;
 
     if (!defender->visible_to(attacker))
+    {
         if (attacker->is_player())
-            mhit -= 6;
+            modifiers -= 6;
         else
-            mhit = mhit * 65 / 100;
+            modifiers -= mhit * 35 / 100;
+    }
     else
     {
         // This can only help if you're visible!
         const int how_transparent = you.get_mutation_level(MUT_TRANSLUCENT_SKIN);
         if (defender->is_player() && how_transparent)
-            mhit -= 2 * how_transparent;
+            modifiers -= 2 * how_transparent;
 
         // defender backlight bonus and umbra penalty.
         if (defender->backlit(false))
-            mhit += 5;
+            modifiers += 5;
         if (!attacker->nightvision() && defender->umbra())
-            mhit -= 3;
+            modifiers -= 3;
     }
+
+    return modifiers;
+}
+
+/**
+ * Calculate the to-hit for an attacker
+ *
+ * @param random If false, calculate average to-hit deterministically.
+ */
+int attack::calc_to_hit(bool random)
+{
+    int mhit = calc_pre_roll_to_hit(random);
+    if (mhit == AUTOMATIC_HIT)
+        return AUTOMATIC_HIT;
+
+    // hit roll
+    if (attacker->is_player())
+        mhit = maybe_random2(mhit, random);
+
+    mhit += post_roll_to_hit_modifiers(mhit);
+
     // We already did this roll for players.
     if (!attacker->is_player())
-        mhit = random2(mhit + 1);
+        mhit = maybe_random2(mhit + 1, random);
 
-    dprf(DIAG_COMBAT, "%s: Base to-hit: %d, Final to-hit: %d",
-         attacker->name(DESC_PLAIN).c_str(),
-         base_hit, mhit);
+    dprf(DIAG_COMBAT, "%s: to-hit: %d",
+         attacker->name(DESC_PLAIN).c_str(), mhit);
 
     return mhit;
 }

@@ -3892,41 +3892,40 @@ static void _add_energy_to_string(int speed, int energy, string what,
  */
 static int _apply_defender_effects(const monster_info& mi, int to_hit, bool melee)
 {
-    int ev = mi.ev;
-
+    int effect = 0;
     // Lighting effects. Subtracting these from EV is weirdly equivalent to adding
     // them to the post-roll to-hit (the to_hit we have here is pre-roll).
     if (mi.is(MB_GLOWING)       // corona, silver corona (!)
         || mi.is(MB_BURNING)    // sticky flame
         || mi.is(MB_HALOED))
     {
-        ev = max(0, ev - BACKLIGHT_TO_HIT_BONUS);
+        effect += BACKLIGHT_TO_HIT_BONUS;
     } else if (mi.is(MB_UMBRAED) && !you.nightvision())
-        ev -= UMBRA_TO_HIT_MALUS;
+        effect += UMBRA_TO_HIT_MALUS;
 
     if (melee) {
         // Duplicates melee_attack::calc_to_hit().
 
         if (you.duration[DUR_CONFUSING_TOUCH])
-            ev -= you.dex() / 2;
+            effect += you.dex() / 2;
 
         if (!you.weapon() && get_form()->unarmed_hit_bonus)
-            ev -= UC_FORM_TO_HIT_BONUS;
+            effect += UC_FORM_TO_HIT_BONUS;
     } else {
         // Duplicates ranged_attack::calc_to_hit().
 
         // this is slightly wrong but reasonably close
         if (is_pproj_active())
         {
-            ev -= (you.attribute[ATTR_PORTAL_PROJECTILE] + PPROJ_TO_HIT_DIV/2)
+            effect += (you.attribute[ATTR_PORTAL_PROJECTILE] + PPROJ_TO_HIT_DIV/2)
                    / PPROJ_TO_HIT_DIV;
         }
 
         if (mi.is(MB_REPEL_MSL))
-            ev += to_hit / 2;
+            effect -= (to_hit - 1) / 2;
     }
 
-    return ev;
+    return effect;
 }
 
 /**
@@ -3993,20 +3992,22 @@ static void _describe_to_hit(const monster_info& mi, ostringstream &result)
         return; // breadwielding
 
     const bool melee = weapon == nullptr || !is_range_weapon(*weapon);
-    int to_hit;
+    int to_hit, ev;
     if (melee)
     {
         melee_attack attk(&you, nullptr);
-        to_hit = attk.calc_to_hit(false);
+        to_hit = attk.calc_pre_roll_to_hit(false);
+        ev = mi.ev - attk.post_roll_to_hit_modifiers(to_hit/2);
     } else {
         const int missile = you.m_quiver.get_fire_item();
         if (missile < 0)
             return; // failure to launch
         ranged_attack attk(&you, nullptr, &you.inv[missile], false);
-        to_hit = attk.calc_to_hit(false);
+        to_hit = attk.calc_pre_roll_to_hit(false);
+        ev = mi.ev - attk.post_roll_to_hit_modifiers(to_hit/2);
     }
 
-    const int ev = _apply_defender_effects(mi, to_hit, melee);
+    ev -= _apply_defender_effects(mi, to_hit, melee);
     result << " (about " << (100 - _to_hit_pct(to_hit, ev)) << "% to evade ";
     if (weapon == nullptr)
         result << "your " << you.hand_name(true);
