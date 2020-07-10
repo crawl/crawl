@@ -1219,9 +1219,15 @@ TITLEIMGS = denzi_dragon denzi_kitchen_duty denzi_summoner \
             white_noise_grabbing_the_orb pooryurik_knight \
             psiweapon_roxanne baconkid_gastronok baconkid_mnoleg \
             peileppe_bloax_eye baconkid_duvessa_dowan ploomutoo_ijyb \
-	    froggy_thunder_fist_nikola froggy_rune_and_run_failed_on_dis \
-	    froggy_natasha_and_boris froggy_jiyva_felid \
-	    froggy_goodgod_tengu_gold Cws_Minotauros
+            froggy_thunder_fist_nikola froggy_rune_and_run_failed_on_dis \
+            froggy_natasha_and_boris froggy_jiyva_felid \
+            froggy_goodgod_tengu_gold Cws_Minotauros \
+            title_logalimage_kimchisoup title_logalimage_kimchisoup2 \
+            title_logalimage_kimchisoup3 title_logalimage_kimchisoup4 \
+            title_logalimage_kimchisoup5 title_logalimage_kimchisoup6 \
+            title_logalimage_kimchisoup7 title_logalimage_kimchisoup8 \
+            title_logalimage_kimchisoup9 title_logalimage_kimchisoup10 \
+            title_magatonman_kimchisoup
 
 STATICFILES = $(TILEIMAGEFILES:%=webserver/game_data/static/%.png) \
               webserver/static/stone_soup_icon-32x32.png \
