@@ -1100,11 +1100,11 @@ static bool _summon_greater_demon(int pow, god_type god, int spell)
 {
     monster_type mon = summon_any_demon(RANDOM_DEMON_GREATER);
 
-    const bool charmed = (random2(pow) > 5);
-    const bool friendly = (charmed && mons_demon_tier(mon) == 2);
+    const bool high_tier = mons_demon_tier(mon) == 1;
+    const bool friendly = (random2(pow) > (high_tier ? 15 : 10));
 
     return _summon_demon_wrapper(pow, god, spell, mon,
-                                 4, friendly, charmed);
+                                 4, friendly, !friendly);
 }
 
 bool summon_demon_type(monster_type mon, int pow, god_type god,
