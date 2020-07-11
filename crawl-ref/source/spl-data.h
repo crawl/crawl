@@ -891,7 +891,7 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_SWIFTNESS, "Swiftness",
-    spschool::charms | spschool::air,
+    spschool::air,
     spflag::hasty | spflag::selfench | spflag::utility,
     2,
     100,
