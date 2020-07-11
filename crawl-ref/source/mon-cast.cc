@@ -1060,7 +1060,6 @@ static int _mons_power_hd_factor(spell_type spell)
 
         case SPELL_MONSTROUS_MENAGERIE:
         case SPELL_BATTLESPHERE:
-        case SPELL_SPECTRAL_WEAPON:
         case SPELL_IGNITE_POISON:
         case SPELL_IOOD:
             return 6;
@@ -1768,7 +1767,6 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_OLGREBS_TOXIC_RADIANCE:
     case SPELL_SHATTER:
     case SPELL_BATTLESPHERE:
-    case SPELL_SPECTRAL_WEAPON:
     case SPELL_WORD_OF_RECALL:
     case SPELL_INJURY_BOND:
     case SPELL_CALL_LOST_SOUL:
@@ -1785,7 +1783,6 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_IGNITE_POISON:
     case SPELL_BLACK_MARK:
     case SPELL_BLINK_ALLIES_AWAY:
-    case SPELL_SHROUD_OF_GOLUBRIA:
     case SPELL_PHANTOM_MIRROR:
     case SPELL_SUMMON_MANA_VIPER:
     case SPELL_SUMMON_EMPEROR_SCORPIONS:
@@ -6009,10 +6006,6 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         cast_battlesphere(mons, min(splpow, 200), mons->god, false);
         return;
 
-    case SPELL_SPECTRAL_WEAPON:
-        cast_spectral_weapon(mons, min(splpow, 200), mons->god, false);
-        return;
-
     case SPELL_TORNADO:
     {
         _mons_tornado(mons);
@@ -6369,16 +6362,6 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
     case SPELL_BLINK_ALLIES_AWAY:
         _blink_allies_away(mons);
-        return;
-
-    case SPELL_SHROUD_OF_GOLUBRIA:
-        if (you.can_see(*mons))
-        {
-            mprf("Space distorts along a thin shroud covering %s %s.",
-                 apostrophise(mons->name(DESC_THE)).c_str(),
-                 mons->is_insubstantial() ? "form" : "body");
-        }
-        mons->add_ench(mon_enchant(ENCH_SHROUD));
         return;
 
     case SPELL_GLACIATE:
@@ -7505,16 +7488,6 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
     case SPELL_BATTLESPHERE:
         return find_battlesphere(mon);
 
-    case SPELL_SPECTRAL_WEAPON:
-        return find_spectral_weapon(mon)
-            || !weapon_can_be_spectral(mon->weapon())
-            || !foe
-            // Don't cast unless the caster is at or close to melee range for
-            // its target. Casting spectral weapon at distance is bad since it
-            // generally helps the caster's target maintain distance, also
-            // letting the target exploit the spectral's damage sharing.
-            || grid_distance(mon->pos(), foe->pos()) > 2;
-
     case SPELL_INJURY_BOND:
         for (monster_iterator mi; mi; ++mi)
         {
@@ -7628,9 +7601,6 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
             if (_valid_blink_away_ally(mon, *mi, foe->pos()))
                 return false;
         return true;
-
-    case SPELL_SHROUD_OF_GOLUBRIA:
-        return mon->has_ench(ENCH_SHROUD);
 
     // Don't let clones duplicate anything, to prevent exponential explosion
     case SPELL_FAKE_MARA_SUMMON:

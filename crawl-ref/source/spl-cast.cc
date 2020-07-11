@@ -1737,9 +1737,6 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_SPELLFORGED_SERVITOR:
         return cast_spellforged_servitor(powc, god, fail);
 
-    case SPELL_SPECTRAL_WEAPON:
-        return cast_spectral_weapon(&you, powc, god, fail);
-
     case SPELL_BATTLESPHERE:
         return cast_battlesphere(&you, powc, god, fail);
 
@@ -1805,9 +1802,6 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_SILENCE:
         return cast_silence(powc, fail);
 
-    case SPELL_INFUSION:
-        return cast_infusion(powc, fail);
-
     case SPELL_WEREBLOOD:
         return cast_wereblood(powc, fail);
 
@@ -1823,9 +1817,6 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
 
     case SPELL_DEATHS_DOOR:
         return cast_deaths_door(powc, fail);
-
-    case SPELL_RING_OF_FLAMES:
-        return cast_ring_of_flames(powc, fail);
 
     // Escape spells.
     case SPELL_BLINK:
@@ -1851,12 +1842,6 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
 
     case SPELL_GOLUBRIAS_PASSAGE:
         return cast_golubrias_passage(beam.target, fail);
-
-    case SPELL_DARKNESS:
-        return cast_darkness(powc, fail);
-
-    case SPELL_SHROUD_OF_GOLUBRIA:
-        return cast_shroud_of_golubria(powc, fail);
 
     case SPELL_FULMINANT_PRISM:
         return cast_fulminating_prism(&you, powc, beam.target, fail);

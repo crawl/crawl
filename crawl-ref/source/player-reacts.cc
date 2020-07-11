@@ -711,13 +711,6 @@ static void _decrement_durations()
         you.props.erase(XOM_CLOUD_TRAIL_TYPE_KEY);
     }
 
-    if (you.duration[DUR_DARKNESS] && you.haloed())
-    {
-        you.duration[DUR_DARKNESS] = 0;
-        mpr("The divine light dispels your darkness!");
-        update_vision_range();
-    }
-
     if (you.duration[DUR_WATER_HOLD])
         handle_player_drowning(delay);
 

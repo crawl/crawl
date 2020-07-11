@@ -151,20 +151,6 @@ int cast_selective_amnesia(const string &pre_msg)
     return -1;
 }
 
-spret cast_infusion(int pow, bool fail)
-{
-    fail_check();
-    if (!you.duration[DUR_INFUSION])
-        mpr("You begin infusing your attacks with magical energy.");
-    else
-        mpr("You extend your infusion's duration.");
-
-    you.increase_duration(DUR_INFUSION,  8 + roll_dice(2, pow), 100);
-    you.props["infusion_power"] = pow;
-
-    return spret::success;
-}
-
 spret cast_wereblood(int pow, bool fail)
 {
     fail_check();
@@ -206,18 +192,6 @@ spret cast_liquefaction(int pow, bool fail)
 
     you.increase_duration(DUR_LIQUEFYING, 10 + random2avg(pow, 2), 100);
     invalidate_agrid(true);
-    return spret::success;
-}
-
-spret cast_shroud_of_golubria(int pow, bool fail)
-{
-    fail_check();
-    if (you.duration[DUR_SHROUD_OF_GOLUBRIA])
-        mpr("You renew your shroud.");
-    else
-        mpr("Space distorts slightly along a thin shroud covering your body.");
-
-    you.increase_duration(DUR_SHROUD_OF_GOLUBRIA, 7 + roll_dice(2, pow), 50);
     return spret::success;
 }
 

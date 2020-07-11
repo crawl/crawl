@@ -124,12 +124,6 @@ Cure Poison spell
 
 Ten czar leczy truciznę z ciała rzucającego.
 %%%%
-Darkness spell
-
-Ten czar przyciemnia światło, zmniejszając zasięg wzroku. Brzegi tego efektu są
-bardzo stopniowe, tak więc nie wzbudza to alarmu u niezbyt uważnych
-przeciwników.
-%%%%
 Death Channel spell
 
 Ten czar zniewala dusze żywych istot zabitych przez zarówno rzucającego jak i
@@ -404,14 +398,6 @@ tylko nieznacznych obrażeń.
 Shock spell
 
 Ten czar ciska małą dawkę elektryczności, zdolną do odbijania się od ścian.
-%%%%
-Shroud of Golubria spell
-
-Ten czar zakrzywia przestrzeń, tworząc osłonę wokół ciała rzucającego,
-zatrzymując ciosy. Nie daje to żadnej ochrony przed pociskami, jako że
-poruszają się one zbyt szybko aby ten czar mógł je odchylić. Ta osłona jest
-bardzo niestabilna, i ma tendencję do zawodzenia, zwłaszcza wobec mocniejszych
-ataków.
 %%%%
 Simulacrum spell
 

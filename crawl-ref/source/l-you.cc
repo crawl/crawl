@@ -284,11 +284,6 @@ LUARET1(you_berserk, boolean, you.berserk())
  * @function confused
  */
 LUARET1(you_confused, boolean, you.confused())
-/*** Do you have a Shroud of Golubria?
- * @treturn boolean
- * @function shrouded
- */
-LUARET1(you_shrouded, boolean, you.duration[DUR_SHROUD_OF_GOLUBRIA])
 /*** Are you currently +Swift or -Swift?
  * If you have neither, returns 0. If you are +Swift, +1, and -Swift, -1.
  * @treturn int Swift level
@@ -1190,7 +1185,6 @@ static const struct luaL_reg you_clib[] =
     { "confused",     you_confused },
     { "noise_perception", you_noise_perception },
     { "paralysed",    you_paralysed },
-    { "shrouded",     you_shrouded },
     { "swift",        you_swift },
     { "caught",       you_caught },
     { "asleep",       you_asleep },

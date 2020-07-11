@@ -362,10 +362,6 @@ Projects a penetrating projectile with peculiar magical properties. It is
 randomly imbued with either fire or ice, and additionally will reflect from
 walls of any material due to the crystal embedded in the shot.
 %%%%
-Darkness spell
-
-Dims the light of the dungeon, reducing the range of vision.
-%%%%
 Dazzling Flash spell
 
 The caster erupts in a scintillating display of light. Any living creature
@@ -772,12 +768,6 @@ Calls forth a plague of scarabs, infesting affected creatures for a duration
 depending on power and causing death scarabs to grow and burst from them upon
 death.
 %%%%
-Infusion spell
-
-Infuses the caster's melee attacks with magic, drawing from their reserves of
-magical energy to deal additional damage whenever an enemy is hit. It has no
-effect when the caster's magic is depleted.
-%%%%
 Injury Bond spell
 
 Binds the caster to nearby allies, redirecting half of any damage they suffer
@@ -1114,13 +1104,6 @@ Calls a surge of power from the earth, striking an enemy within the caster's
 sight. The spell cascades through nearby constructs, growing in strength with
 each one standing near the target.
 %%%%
-Ring of Flames spell
-
-Surrounds the caster with a mobile ring of searing flame, and keeps other fire
-clouds away from the caster. This spell attunes the caster to the forces of
-fire, increasing the power of their fire magic and giving protection from fire.
-However, it also makes them much more susceptible to cold.
-%%%%
 Ring of Thunder spell
 
 Surrounds the caster with a mobile ring of highly-damaging thunderclouds.
@@ -1192,13 +1175,6 @@ Shock spell
 
 Throws a bouncing bolt of electricity. It partially bypasses armour.
 %%%%
-Shroud of Golubria spell
-
-Bends space around the caster's body, protecting them from some blows by
-redirecting their force to the air nearby. Ranged attacks cannot be diverted in
-this way. The shroud is highly unstable, and may fall apart unexpectedly under
-stress.
-%%%%
 Silence spell
 
 Eliminates all sound near the caster. This makes reading scrolls, casting
@@ -1248,17 +1224,6 @@ Spectral Cloud spell
 Creates a cloud of spectral mist, dealing minor damage to all creatures other
 than the undead. Dangerous but short-lived spectral undead creatures will
 coalesce from the mist over time.
-%%%%
-Spectral Weapon spell
-
-Draws out the spirit within a wielded weapon to fight for the caster, with its
-strength increasing with power. It only attacks when the caster does, and its
-kills count as the caster's own. If the weapon is damaged, part of the injury
-will be echoed on the caster's body. Only one spectral weapon can be maintained
-at a time, and only while the original weapon remains wielded.
-
-Certain powerful named artefacts cannot be affected, and any abilities that
-require evocation skill to trigger will not be active.
 %%%%
 Spellforged Servitor spell
 

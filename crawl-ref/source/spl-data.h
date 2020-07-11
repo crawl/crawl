@@ -295,17 +295,6 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_RING_OF_FLAMES, "Ring of Flames",
-    spschool::charms | spschool::fire,
-    spflag::area,
-    7,
-    200,
-    -1, -1,
-    6, 0,
-    TILEG_RING_OF_FLAMES,
-},
-
-{
     SPELL_RING_OF_THUNDER, "Ring of Thunder",
     spschool::charms | spschool::air,
     spflag::area,
@@ -2010,17 +1999,6 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_DARKNESS, "Darkness",
-    spschool::hexes,
-    spflag::none,
-    6,
-    200,
-    -1, -1,
-    3, 0,
-    TILEG_DARKNESS,
-},
-
-{
     SPELL_MESMERISE, "Mesmerise",
     spschool::hexes,
     spflag::area | spflag::MR_check,
@@ -2051,17 +2029,6 @@ static const struct spell_desc spelldata[] =
     LOS_RADIUS, LOS_RADIUS,
     5, 0,
     TILEG_PETRIFYING_CLOUD,
-},
-
-{
-    SPELL_SHROUD_OF_GOLUBRIA, "Shroud of Golubria",
-    spschool::charms | spschool::translocation,
-    spflag::selfench,
-    2,
-    50,
-    -1, -1,
-    2, 0,
-    TILEG_SHROUD_OF_GOLUBRIA,
 },
 
 {
@@ -2322,17 +2289,6 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_INFUSION, "Infusion",
-    spschool::charms,
-    spflag::utility,
-    1,
-    25,
-    -1, -1,
-    1, 0,
-    TILEG_INFUSION,
-},
-
-{
     SPELL_WEREBLOOD, "Wereblood",
     spschool::transmutation,
     spflag::utility,
@@ -2341,17 +2297,6 @@ static const struct spell_desc spelldata[] =
     -1, -1,
     2, 8,
     TILEG_WEREBLOOD,
-},
-
-{
-    SPELL_SPECTRAL_WEAPON, "Spectral Weapon",
-    spschool::hexes | spschool::charms,
-    spflag::selfench | spflag::utility | spflag::no_ghost,
-    3,
-    100,
-    -1, -1,
-    3, 0,
-    TILEG_SPECTRAL_WEAPON,
 },
 
 {
@@ -3416,6 +3361,7 @@ AXED_SPELL(SPELL_CONTROL_UNDEAD, "Control Undead")
 AXED_SPELL(SPELL_CONTROL_WINDS, "Control Winds")
 AXED_SPELL(SPELL_CORRUPT_BODY, "Corrupt Body")
 AXED_SPELL(SPELL_CURE_POISON, "Cure Poison")
+AXED_SPELL(SPELL_DARKNESS, "Darkness")
 AXED_SPELL(SPELL_DEFLECT_MISSILES, "Deflect Missiles")
 AXED_SPELL(SPELL_DELAYED_FIREBALL, "Delayed Fireball")
 AXED_SPELL(SPELL_DEMONIC_HORDE, "Demonic Horde")
@@ -3436,6 +3382,7 @@ AXED_SPELL(SPELL_HOLY_LIGHT, "Holy Light")
 AXED_SPELL(SPELL_HUNTING_CRY, "Hunting Cry")
 AXED_SPELL(SPELL_IGNITE_POISON_SINGLE, "Localized Ignite Poison")
 AXED_SPELL(SPELL_INSULATION, "Insulation")
+AXED_SPELL(SPELL_INFUSION, "Infusion")
 AXED_SPELL(SPELL_IRON_ELEMENTALS, "Summon Iron Elementals")
 AXED_SPELL(SPELL_LETHAL_INFUSION, "Lethal Infusion")
 AXED_SPELL(SPELL_MELEE, "Melee")
@@ -3445,11 +3392,14 @@ AXED_SPELL(SPELL_POISON_WEAPON, "Poison Weapon")
 AXED_SPELL(SPELL_REARRANGE_PIECES, "Rearrange the Pieces")
 AXED_SPELL(SPELL_RECALL, "Recall")
 AXED_SPELL(SPELL_REGENERATION, "Regeneration")
+AXED_SPELL(SPELL_RING_OF_FLAMES, "Ring of Flames")
 AXED_SPELL(SPELL_SEE_INVISIBLE, "See Invisible")
 AXED_SPELL(SPELL_SHAFT_SELF, "Shaft Self")
+AXED_SPELL(SPELL_SHROUD_OF_GOLUBRIA, "Shroud of Golubria")
 AXED_SPELL(SPELL_SILVER_BLAST, "Silver Blast")
 AXED_SPELL(SPELL_SINGULARITY, "Singularity")
 AXED_SPELL(SPELL_SONG_OF_SHIELDING, "Song of Shielding")
+AXED_SPELL(SPELL_SPECTRAL_WEAPON, "Spectral Weapon")
 AXED_SPELL(SPELL_STICKS_TO_SNAKES, "Sticks to Snakes")
 AXED_SPELL(SPELL_STONESKIN, "Stoneskin")
 AXED_SPELL(SPELL_SUMMON_BUTTERFLIES, "Summon Butterflies")

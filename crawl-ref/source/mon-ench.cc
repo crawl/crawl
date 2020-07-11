@@ -2031,7 +2031,11 @@ static const char *enchant_names[] =
 #if TAG_MAJOR_VERSION == 34
     "grand_avatar",
 #endif
-    "sap magic", "shroud", "phantom_mirror", "bribed", "permabribed",
+    "sap magic",
+#if TAG_MAJOR_VERSION == 34
+    "shroud",
+#endif
+    "phantom_mirror", "bribed", "permabribed",
     "corrosion", "gold_lust", "drained", "repel missiles",
 #if TAG_MAJOR_VERSION == 34
     "deflect missiles",

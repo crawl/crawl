@@ -1343,7 +1343,7 @@ KITEM:   f = book of spatial translocations w:5 / book of the warp w:5 / \
              manual of translocations w:5 / \
              randbook disc:translocation numspells:5 / \
              randbook disc:translocation owner:Golubria numspells:7 \
-             spells:shroud_of_golubria&passage_of_golubria
+             spells:passage_of_golubria
 KITEM:   g = ring of flight / potion of flight q:2 / \
              potion of haste w:5 / \
              scroll of fog / \

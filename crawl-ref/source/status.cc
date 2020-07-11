@@ -319,19 +319,6 @@ bool fill_status_info(int status, status_info& inf)
         break;
     }
 
-    case DUR_FIRE_SHIELD:
-    {
-        // Might be better to handle this with an extra virtual status.
-        const bool exp = dur_expiring(DUR_FIRE_SHIELD);
-        if (exp)
-            inf.long_text += "Expiring: ";
-        inf.long_text += "You are surrounded by a ring of flames.\n";
-        if (exp)
-            inf.long_text += "Expiring: ";
-        inf.long_text += "You are immune to clouds of flame.";
-        break;
-    }
-
     case DUR_POISONING:
         _describe_poison(inf);
         break;
@@ -670,13 +657,6 @@ bool fill_status_info(int status, status_info& inf)
     case DUR_PORTAL_PROJECTILE:
     {
         if (!is_pproj_active())
-            inf.light_colour = DARKGREY;
-        break;
-    }
-
-    case DUR_INFUSION:
-    {
-        if (!enough_mp(1, true, false))
             inf.light_colour = DARKGREY;
         break;
     }

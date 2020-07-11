@@ -1109,12 +1109,6 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "invisibility won't help you when you glow in the dark.";
         break;
 
-    case SPELL_DARKNESS:
-        // mere corona is not enough, but divine light blocks it completely
-        if (temp && (you.haloed() || !prevent && have_passive(passive_t::halo)))
-            return "darkness is useless against divine light.";
-        break;
-
     case SPELL_STATUE_FORM:
         if (SP_GARGOYLE == you.species)
             return "you're already a statue.";
@@ -1145,7 +1139,6 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         }
         // intentional fallthrough
     case SPELL_PORTAL_PROJECTILE:
-    case SPELL_SPECTRAL_WEAPON:
         if (you.species == SP_FELID)
             return "this spell is useless without hands.";
         break;
