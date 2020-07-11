@@ -1585,3 +1585,31 @@ static void _EMBRACE_world_reacts(item_def* item)
     if (item->plus != last_plus)
         you.redraw_armour_class = true;
 }
+
+////////////////////////////////////////////////////
+
+static void _JAWS_equip(item_def *item, bool *show_msgs,
+                                  bool /*unmeld*/)
+{
+    if (you.species != SP_VAMPIRE
+                    && you.undead_state() == US_ALIVE
+                    && !you_foodless())
+        {
+            make_hungry(4500, false, false);
+            _equip_mpr(show_msgs, "You begin to suffer a terrible hunger.");
+        }
+}
+
+
+static void _JAWS_unequip(item_def *item, bool *show_msgs)
+{
+    _equip_mpr(show_msgs, "You are satiated.");
+}
+
+static void _JAWS_melee_effects(item_def* weapon, actor* attacker,
+                                   actor* defender, bool mondied, int dam)
+{
+    /*
+        melee_attack::check_unrand_effects()
+    */
+}

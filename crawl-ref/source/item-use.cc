@@ -1457,7 +1457,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
     }
 
     if (slot == EQ_HELMET)
-    {
+    {   
         // Horns 3 & Antennae 3 mutations disallow all headgear
         if (you.get_mutation_level(MUT_HORNS, false) == 3)
         {
@@ -1480,6 +1480,16 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
             return false;
         }
 
+        if (!ignore_temporary
+             && you.hunger_state < HS_FULL
+             && is_unrandom_artefact(item, UNRAND_JAWS)
+             && you.undead_state() == US_ALIVE
+             && !you_foodless())
+        {
+            if (verbose)
+                mpr("This item is vampiric, and you must be Full or above to equip it.");
+            return false;
+        }
         // Soft helmets (caps and wizard hats) always fit, otherwise.
         if (is_hard_helmet(item))
         {

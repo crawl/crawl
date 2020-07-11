@@ -1166,18 +1166,46 @@ void melee_attack::check_autoberserk()
 
 bool melee_attack::check_unrand_effects()
 {
-    if (player_equip_unrand(UNRAND_JAWS) && attacker->is_player())
+    if ( attacker->slot_item(EQ_HELMET) &&
+            is_unrandom_artefact(*attacker->slot_item(EQ_HELMET), UNRAND_JAWS)&&
+            !(damage_done < 1
+            || !actor_is_susceptible_to_vampirism(*defender)
+            || attacker->stat_hp() == attacker->stat_maxhp()
+            || attacker->is_player() && you.duration[DUR_DEATHS_DOOR]
+            || x_chance_in_y(2, 5)))
     {
-        int hp_boost = 1 + random2(damage_done);
-        hp_boost = resist_adjust_damage(defender, BEAM_NEG, hp_boost);
-
-        if (hp_boost)
+        if (attacker->is_player())
         {
-            obvious_effect = true;
-            canned_msg(MSG_GAIN_HEALTH);
-            dprf(DIAG_COMBAT, "Vampiric Healing: damage %d, healed %d",
-                damage_done, hp_boost/3);
-            attacker->heal(hp_boost/3);
+            int hp_boost = 1 + random2(damage_done);
+            hp_boost = resist_adjust_damage(defender, BEAM_NEG, hp_boost);
+
+            if (hp_boost)
+            {
+                obvious_effect = true;
+                canned_msg(MSG_GAIN_HEALTH);
+                dprf(DIAG_COMBAT, "Vampiric Healing: damage %d, healed %d",
+                    damage_done, hp_boost/3);
+                attacker->heal(hp_boost/3);
+            }
+        }
+        else if (attacker->is_monster())
+        {
+            if (defender->stat_hp() < defender->stat_maxhp())
+            {
+                int healed = resist_adjust_damage(defender, BEAM_NEG,
+                                                1 + random2(damage_done));
+                if (healed)
+                {
+                    attacker->heal(healed);
+                    if (needs_message)
+                    {
+                        mprf("%s %s strength from %s injuries!",
+                            atk_name(DESC_THE).c_str(),
+                            attacker->conj_verb("draw").c_str(),
+                            def_name(DESC_ITS).c_str());
+                    }
+                }
+            }
         }
     }
     if (unrand_entry && unrand_entry->melee_effects && weapon)
