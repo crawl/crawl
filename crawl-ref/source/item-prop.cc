@@ -2250,7 +2250,7 @@ bool ring_has_stackable_effect(const item_def &item)
 // Food functions:
 //
 #if TAG_MAJOR_VERSION == 34
-bool is_real_food(food_type food)
+bool is_real_food(food_type /*food*/)
 {
     return false;
 }

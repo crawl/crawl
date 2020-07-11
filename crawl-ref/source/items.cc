@@ -1502,6 +1502,9 @@ bool is_stackable_item(const item_def &item)
         case OBJ_SCROLLS:
         case OBJ_POTIONS:
         case OBJ_GOLD:
+#if TAG_MAJOR_VERSION == 34
+        case OBJ_FOOD:
+#endif
             return true;
         case OBJ_MISCELLANY:
             switch (item.sub_type)
