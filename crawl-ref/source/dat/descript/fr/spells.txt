@@ -765,11 +765,6 @@ Steam Ball spell
 Cette créature peut dégager une boule de vapeur chaude et la lancer vers un
 ennemi.
 %%%%
-Sticks to Snakes spell
-
-Ce sort utilise des projectiles en bois (flèches ou javelots) tenus en main
-comme matière première pour une puissant transmutation.
-%%%%
 Sticky Flame spell
 
 Ce sort conjure un globe de feu liquide, qui adhèrera sur, et brûlera, toute

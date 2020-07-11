@@ -1114,17 +1114,6 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_STICKS_TO_SNAKES, "Sticks to Snakes",
-    spschool::transmutation,
-    spflag::no_ghost,
-    2,
-    100,
-    -1, -1,
-    2, 0,
-    TILEG_STICKS_TO_SNAKES,
-},
-
-{
     SPELL_CALL_CANINE_FAMILIAR, "Call Canine Familiar",
     spschool::summoning,
     spflag::none,
@@ -3461,6 +3450,7 @@ AXED_SPELL(SPELL_SHAFT_SELF, "Shaft Self")
 AXED_SPELL(SPELL_SILVER_BLAST, "Silver Blast")
 AXED_SPELL(SPELL_SINGULARITY, "Singularity")
 AXED_SPELL(SPELL_SONG_OF_SHIELDING, "Song of Shielding")
+AXED_SPELL(SPELL_STICKS_TO_SNAKES, "Sticks to Snakes")
 AXED_SPELL(SPELL_STONESKIN, "Stoneskin")
 AXED_SPELL(SPELL_SUMMON_BUTTERFLIES, "Summon Butterflies")
 AXED_SPELL(SPELL_SUMMON_ELEMENTAL, "Summon Elemental")

@@ -1705,7 +1705,6 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     // The below are no-ops since they don't involve fire_tracer or beams.
     switch (spell_cast)
     {
-    case SPELL_STICKS_TO_SNAKES:
     case SPELL_SUMMON_SMALL_MAMMAL:
     case SPELL_VAMPIRIC_DRAINING:
     case SPELL_MAJOR_HEALING:
@@ -5730,32 +5729,6 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
                 .set_summoned(mons, 5, spell_cast, god));
         }
         return;
-
-    case SPELL_STICKS_TO_SNAKES:
-    {
-        const int pow = (mons->spell_hd(spell_cast) * 15) / 10;
-        int cnt = 1 + random2(1 + pow / 4);
-        monster_type sum;
-        for (int i = 0; i < cnt; i++)
-        {
-            if (random2(mons->spell_hd(spell_cast)) > 27
-                || one_chance_in(5 - min(4, div_rand_round(pow * 2, 25))))
-            {
-                sum = x_chance_in_y(pow / 3, 100) ? MONS_WATER_MOCCASIN
-                                                  : MONS_ADDER;
-            }
-            else
-                sum = MONS_BALL_PYTHON;
-
-            if (create_monster(
-                    mgen_data(sum, SAME_ATTITUDE(mons), mons->pos(), mons->foe)
-                    .set_summoned(mons, 5, spell_cast, god)))
-            {
-                i++;
-            }
-        }
-        return;
-    }
 
     case SPELL_SHADOW_CREATURES:       // summon anything appropriate for level
     {

@@ -1388,8 +1388,6 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     }
     else if (mons_class_is_zombified(mg.cls))
         blame_prefix = "animated by ";
-    else if (mg.summon_type == SPELL_STICKS_TO_SNAKES)
-        blame_prefix = "transmuted by ";
     else if (mg.cls == MONS_ELDRITCH_TENTACLE
              || mg.cls == MONS_ELDRITCH_TENTACLE_SEGMENT)
     {

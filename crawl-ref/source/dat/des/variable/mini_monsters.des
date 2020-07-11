@@ -926,7 +926,7 @@ ITEM:   Young Poisoner's Handbook / book of Changes / \
         randbook numspells:4 title:Nature \
         spells:beastly_appendage&summon_small_mammal&call_canine_familiar&spider_form / \
         randbook numspells:4 title:Nature \
-        spells:beastly_appendage&sting&sticks_to_snakes&spider_form
+        spells:beastly_appendage&sting&wereblood&spider_form
 KMASK:  'f = opaque
 KITEM:  f = dart ego:poisoned / dart ego:curare / dart ego:atropa
 KITEM:  g = any potion q:2-3
@@ -978,7 +978,7 @@ ITEM:   Young Poisoner's Handbook / book of Changes / \
         randbook numspells:4 title:Nature \
         spells:beastly_appendage&summon_small_mammal&call_canine_familiar&spider_form / \
         randbook numspells:4 title:Nature \
-        spells:beastly_appendage&sting&sticks_to_snakes&spider_form
+        spells:beastly_appendage&sting&wereblood&spider_form
 KITEM:  f = dart ego:poisoned / dart ego:curare / dart ego:atropa
 KITEM:  g = any potion q:2 / any potion q:3
 MONS:   plant, oklob sapling, ball python

@@ -104,8 +104,7 @@ other Summonings spells in their library.
 %%%%
 Transmuter
 
-Transmuters learn spells to shift their form, as well as to turn sticks into
-snakes.
+Transmuters learn spells to shift their form.
 %%%%
 Venom Mage
 

@@ -121,7 +121,6 @@ call_canine_familiar CALL_CANINE_FAMILIAR
 call_imp CALL_IMP
 malign_gateway MALIGN_GATEWAY
 recall RECALL
-sticks_to_snakes STICKS_TO_SNAKES
 summon_demon SUMMON_DEMON
 summon_dragon SUMMON_DRAGON
 summon_greater_demon SUMMON_GREATER_DEMON

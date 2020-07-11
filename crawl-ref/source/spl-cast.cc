@@ -1668,9 +1668,6 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_SUMMON_SMALL_MAMMAL:
         return cast_summon_small_mammal(powc, god, fail);
 
-    case SPELL_STICKS_TO_SNAKES:
-        return cast_sticks_to_snakes(powc, god, fail);
-
     case SPELL_CALL_CANINE_FAMILIAR:
         return cast_call_canine_familiar(powc, god, fail);
 
