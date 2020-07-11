@@ -2222,6 +2222,8 @@ void makeitem_tests()
 #if TAG_MAJOR_VERSION == 34
         if (type == ARM_CAP)
             type = ARM_HAT;
+        if (type == ARM_CENTAUR_BARDING)
+            type = ARM_BOOTS;
 #endif
         _generate_armour_item(item,
                               coinflip(),
