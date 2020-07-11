@@ -70,6 +70,9 @@
 - 가방 아이템 추가. 아이템을 자유롭게 넣고 뺄 수 있는 유틸리티 아이템임
   - Added bag. Miscellany that provide additional storage space
 
+- 새 아티팩트 에리시크톤의 턱. 착용자에게 흡혈과 Devour를 부여하는 머리방어구
+  - New artefact : The jaws of Erysichthon. Helmet Armour that grants Vampiric and Devour
+
 - 마법 복구 : 가속, 특이점, 정령소환, 컨트롤 언데드
   - rollback Haste, Singularity, Summon Elemenatal, Control Undead
   
@@ -90,6 +93,9 @@
 
 - 용해의 기사 추가. 지바를 믿고 시작하는 직업 
   - Added melted knight. background that starts the game worshipping Jiyva.
+
+- 파이어폭스 추가. 던전과 짐승굴에서 등장하면서 폭스파이어 마법을 쓰는 동물 몹
+  - Added Fire fox, new canine monster appeared in Dungeon and Lair
 
 - 2티어 악마인 쿠부스 추가. 적의 장비를 벗기는 마법을 사용함.
   - New 2-tier demon, Cubus. Uses spell to take off equipped equipments.
@@ -150,6 +156,9 @@
 - 지바 리워크. Jiyva rework
   - 슬라임은 이제 자연적으로 생성되지않는다. jellies do not randomly spawn
   - 적을 죽일때 일시적으로 동료인 젤리를 소환한다. Temporarily friendly jelly summoned when killing an enemy.
+  - 새로운 4성권능, 던전 부식. 루고누의 타락처럼 동작함.  new jiyva 4-star ability. corrosion dungeon like corruption.
+  - 지바 돌연변이 강화, 항상 2개의 지바 돌연변이가 보장됨. buff jiyva mutation. 2 jiyva mutations are always guaranteed
+  - 6성 패시브 버프 6star passive buff (20%/33%/66%)
 
 - 드라코들은 이제 아래 종류의 갑옷을 입을 수 있음. All dracos can wear armour listed below
   - 로브 Robe
@@ -177,6 +186,9 @@
 - 다시 시야 밖에서 구름이 사라지지않음
   - Don't erase clouds outside of LOS
   
+- 장검반격은 이제 50%확률로 나감
+  - Long Blade's Riposte buff. Now triggers at 50%
+  
 - 다시 매혹을 큰 소음으로 해제할 수 있게 됨
   - Noise break mesmerisation again 
 
@@ -198,21 +210,27 @@
 
 
 ### 0.25 Featrue
-- 갑옷 장착시 AC를 보여주는 인터페이스 추가
-  - Improve armour AC change descriptions
-  
-- 독 중첩단계에 따른 타일 이펙트 추가
-  - can see poison level mons and player
-  
-- 에어스트라이크는 주변의 빈공간의 수만큼 데미지가 증가됨
-  - Airstrike damage now scales so it's greater the more unoccupied squares there are surrounding the target.
-
-- 오조크브의 냉장고의 데미지 33%증가되고 시전자에게 데미지를 주지않음
-  - Ozocubu's Refrigeration does 33% more damage on-average and no longer harms the caster
-  
-- 베놈 메이지의 기본책인 The Young Poisoner's Handbook은 이제 이그나이트 포이즌을 들고 시작함
-  - The Young Poisoner's Handbook now contains Ignite Poison.
-  
-  
+- 갑옷 장착시 AC를 보여주는 인터페이스 추가. Improve armour AC change descriptions  
+- 독 중첩단계에 따른 타일 이펙트 추가. can see poison level mons and player  
+- 에어스트라이크는 주변의 빈공간의 수만큼 데미지가 증가됨. Airstrike damage now scales so it's greater the more unoccupied squares there are surrounding the target.
+- 오조크브의 냉장고의 데미지 33%증가되고 시전자에게 데미지를 주지않음. Ozocubu's Refrigeration does 33% more damage on-average and no longer harms the caster
+- 베놈 메이지의 기본책인 The Young Poisoner's Handbook은 이제 이그나이트 포이즌을 들고 시작함. The Young Poisoner's Handbook now contains Ignite Poison.
+- tile_show_threat_levels 옵션추가. added tile_show_threat_levels option
+- 콥스랏 리워크  Rework Corpse Rot
+- 이너플레임 리워크 Rework Innerflame 
+- 획득스크롤 리워크 Rework the scroll of acquirement
+- 반사된 공격으로도 신앙심을 얻도록 수정 Give piety by reflected things 
+- 엘리멘탈 스태프가 4속성 버프를 하도록 버프 Make the Elemental Staff an enhancer for all elemental schools 
+- 에링야의 유독성 진흙 추가 Added Eringya's Noxious Bog.
+- 레다의 용해술 버프 Buff Leda's Liquefication 
+- 스타버스트 추가 Added Starburst Spell 
+- 스팅 버프 Buff sting
+- 지구랏 아이템풀 추가 Add ziggurat some item pool.
+- 진동석 추가 New item Tremorstone
+- 시고투비의 포옹 아티 추가. Added Cigotuvi's Embrace, unrand body armour.
+- 새 유니크 메기 추가 New unique: "Maggie"
+- 프로즌 램바트 추가 Added Frozen Ramparts.
+- 헤일스톰추가 Added Hailstorm
+- 냉기술사의 기본책은 이제 예전버전과 최신버전을 고를 수 있음 Ice elementalist chooses old or new spell set.
   
 [Unreleased]: https://github.com/kimjoy2002/crawl/compare/0.24.1...HEAD
