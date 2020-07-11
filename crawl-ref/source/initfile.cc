@@ -1706,6 +1706,8 @@ newgame_def read_startup_prefs()
 #ifndef DISABLE_STICKY_STARTUP_OPTIONS
 static void write_newgame_options(const newgame_def& prefs, FILE *f)
 {
+    if (Options.no_save)
+        return;
     if (prefs.type != NUM_GAME_TYPE)
         fprintf(f, "type = %s\n", gametype_to_str(prefs.type).c_str());
     if (!prefs.map.empty())
