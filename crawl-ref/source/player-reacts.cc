@@ -936,6 +936,18 @@ static void _regenerate_hp_and_mp(int delay)
     _update_mana_regen_amulet_attunement();
 }
 
+void _handle_wereblood()
+{
+    if (you.duration[DUR_WEREBLOOD]
+        && x_chance_in_y(you.props[WEREBLOOD_KEY].get_int(), 9))
+    {
+        // Keep the spam down
+        if (you.props[WEREBLOOD_KEY].get_int() < 3 || one_chance_in(5))
+            mpr("You howl as the wereblood boils in your veins!");
+        noisy(spell_effect_noise(SPELL_WEREBLOOD), you.pos());
+    }
+}
+
 void player_reacts()
 {
     //XXX: does this _need_ to be calculated up here?
@@ -952,19 +964,7 @@ void player_reacts()
     if (you.unrand_reacts.any())
         unrand_reacts();
 
-    // Handle sound-dependent effects that are silenced
-    if (silenced(you.pos()))
-    {
-        if (you.duration[DUR_SONG_OF_SLAYING])
-        {
-            mpr("The silence causes your song to end.");
-            _decrement_a_duration(DUR_SONG_OF_SLAYING, you.duration[DUR_SONG_OF_SLAYING]);
-        }
-    }
-
-    // Singing makes a continuous noise
-    if (you.duration[DUR_SONG_OF_SLAYING])
-        noisy(spell_effect_noise(SPELL_SONG_OF_SLAYING), you.pos());
+    _handle_wereblood();
 
     if (x_chance_in_y(you.time_taken, 10 * BASELINE_DELAY))
     {

@@ -1802,6 +1802,11 @@ bool transform(int pow, transformation which_trans, bool involuntary,
         break;
 
     case transformation::lich:
+        if (you.duration[DUR_WEREBLOOD])
+        {
+            you.duration[DUR_WEREBLOOD] = 0;
+            mpr("Your lifeless body cannot sustain the wereblood!");
+        }
         you.redraw_status_lights = true;
         break;
 

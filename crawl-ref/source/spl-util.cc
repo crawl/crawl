@@ -1269,6 +1269,15 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "you cannot sustain more frozen ramparts right now.";
         break;
 
+    case SPELL_WEREBLOOD:
+        if (you.undead_state(temp) == US_UNDEAD
+            || you.undead_state(temp) == US_HUNGRY_DEAD
+            || temp && you.is_lifeless_undead())
+        {
+            return "you lack blood to transform.";
+        }
+        break;
+
     default:
         break;
     }

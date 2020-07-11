@@ -135,7 +135,7 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of Battle
     SPELL_INFUSION,
     SPELL_SHROUD_OF_GOLUBRIA,
-    SPELL_SONG_OF_SLAYING,
+    SPELL_WEREBLOOD,
     SPELL_OZOCUBUS_ARMOUR,
     SPELL_SPECTRAL_WEAPON,
 },
@@ -219,7 +219,7 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of Battle
     SPELL_INFUSION,
     SPELL_SHROUD_OF_GOLUBRIA,
-    SPELL_SONG_OF_SLAYING,
+    SPELL_WEREBLOOD,
     SPELL_OZOCUBUS_ARMOUR,
     SPELL_SPECTRAL_WEAPON,
 },

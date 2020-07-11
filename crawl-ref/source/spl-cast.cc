@@ -1811,8 +1811,8 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_INFUSION:
         return cast_infusion(powc, fail);
 
-    case SPELL_SONG_OF_SLAYING:
-        return cast_song_of_slaying(powc, fail);
+    case SPELL_WEREBLOOD:
+        return cast_wereblood(powc, fail);
 
     case SPELL_PORTAL_PROJECTILE:
         return cast_portal_projectile(powc, fail);

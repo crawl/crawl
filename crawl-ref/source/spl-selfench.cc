@@ -165,18 +165,18 @@ spret cast_infusion(int pow, bool fail)
     return spret::success;
 }
 
-spret cast_song_of_slaying(int pow, bool fail)
+spret cast_wereblood(int pow, bool fail)
 {
     fail_check();
 
-    if (you.duration[DUR_SONG_OF_SLAYING])
-        mpr("You start a new song!");
+    if (you.duration[DUR_WEREBLOOD])
+        mpr("Your blood is freshly infused with primal strength!");
     else
-        mpr("You start singing a song of slaying.");
+        mpr("Your blood is infused with primal strength.");
 
-    you.set_duration(DUR_SONG_OF_SLAYING, 20 + random2avg(pow, 2));
+    you.set_duration(DUR_WEREBLOOD, 20 + random2avg(pow, 2));
 
-    you.props[SONG_OF_SLAYING_KEY] = 0;
+    you.props[WEREBLOOD_KEY] = 0;
     return spret::success;
 }
 

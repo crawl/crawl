@@ -55,6 +55,7 @@
 #include "notes.h"
 #include "potion.h" // you_drinkless for pakellas compat
 #include "religion.h"
+#include "shout.h"
 #include "spl-damage.h"
 #include "spl-goditem.h"
 #include "spl-summoning.h"
@@ -2028,13 +2029,13 @@ item_def* monster_die(monster& mons, killer_type killer,
 
     // Adjust song of slaying bonus. Kills by relevant avatars are adjusted by
     // now to KILL_YOU and are counted.
-    if (you.duration[DUR_SONG_OF_SLAYING]
+    if (you.duration[DUR_WEREBLOOD]
         && killer == KILL_YOU
         && gives_player_xp)
     {
-        const int sos_bonus = you.props[SONG_OF_SLAYING_KEY].get_int();
-        if (sos_bonus <= 8) // cap at +9 slay
-            you.props[SONG_OF_SLAYING_KEY] = sos_bonus + 1;
+        const int wereblood_bonus = you.props[WEREBLOOD_KEY].get_int();
+        if (wereblood_bonus <= 8) // cap at +9 slay
+            you.props[WEREBLOOD_KEY] = wereblood_bonus + 1;
     }
 
     switch (killer)

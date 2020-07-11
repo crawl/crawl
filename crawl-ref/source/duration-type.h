@@ -134,7 +134,7 @@ enum duration_type
     DUR_SPIRIT_HOWL,
 #endif
     DUR_INFUSION,
-    DUR_SONG_OF_SLAYING,
+    DUR_WEREBLOOD,
 #if TAG_MAJOR_VERSION == 34
     DUR_SONG_OF_SHIELDING,
 #endif

@@ -369,7 +369,7 @@ reserves of magic to deal additional damage whenever an enemy is hit.
 %%%%
 Slay status
 
-You are singing a Song of Slaying, providing bonuses to your ranged and melee
+You have the blood of a were-beast, providing bonuses to your ranged and melee
 attacks which increase every time you slay a foe in combat.
 %%%%
 Toxic status

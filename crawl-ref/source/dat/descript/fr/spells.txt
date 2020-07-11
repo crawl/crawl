@@ -720,15 +720,6 @@ Slow spell
 
 Ce sort ralentit les actions d'une créature.
 %%%%
-Song of Slaying spell
-
-Ce sort conjure des versets antiques de batailles dans votre esprit et vous les
-fait récitez — en beuglant ! Chaque ennemi non invoquée que vous tuez dans le
-combat pendant cette récitation améliore temporairement vos compétences de
-mêlée. Votre efficacité ne sera renforcée que pendant la durée de la chanson.
-Lancer ce sort alors que vous la chanter deja débutera une nouvelle chanson, et
-non étendre l'existante.
-%%%%
 Spawn Tentacles spell
 
 Les créatures monstrueuses possédant de grandes tentacules peuvent les étendre

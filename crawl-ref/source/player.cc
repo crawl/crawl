@@ -3417,8 +3417,8 @@ int slaying_bonus(bool ranged)
 
     ret += 3 * augmentation_amount();
 
-    if (you.duration[DUR_SONG_OF_SLAYING])
-        ret += you.props[SONG_OF_SLAYING_KEY].get_int();
+    if (you.duration[DUR_WEREBLOOD])
+        ret += you.props[WEREBLOOD_KEY].get_int();
 
     if (you.duration[DUR_HORROR])
         ret -= you.props[HORROR_PENALTY_KEY].get_int();

@@ -47,7 +47,6 @@ infusion INFUSION
 invisibility INVISIBILITY
 mass_confusion MASS_CONFUSION
 slow SLOW
-song_of_slaying SONG_OF_SLAYING
 spectral_weapon SPECTRAL_WEAPON
 tukimas_dance TUKIMAS_DANCE
 violent_unravelling VIOLENT_UNRAVELLING
@@ -157,6 +156,7 @@ beastly_appendage BEASTLY_APPENDAGE
 irradiate IRRADIATE
 hydra_form HYDRA_FORM
 dragon_form DRAGON_FORM
+wereblood WEREBLOOD
 
 # item-based spells
 %sdir gui/spells/misc
