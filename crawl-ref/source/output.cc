@@ -2030,9 +2030,9 @@ static void _print_overview_screen_equip(column_composer& cols,
             str = string("  - Blade Hand") + (plural ? "s" : "");
         }
         else if (eqslot == EQ_BOOTS
-                 && (you.species == SP_NAGA ||
+                 && (you.species == SP_NAGA
 #if TAG_MAJOR_VERSION == 34
-                     you.species == SP_CENTAUR
+                     || you.species == SP_CENTAUR
 #endif
                      ))
         {
