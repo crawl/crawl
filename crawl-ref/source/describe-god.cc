@@ -634,8 +634,11 @@ static formatted_string _god_extra_description(god_type which_god)
     switch (which_god)
     {
         case GOD_ASHENZARI:
+            desc = formatted_string::parse_string(
+                       getLongDescription(god_name(which_god) + " extra"));
             if (have_passive(passive_t::bondage_skill_boost))
             {
+                desc.cprintf("\n");
                 _add_par(desc, "Ashenzari supports the following skills because of your curses:");
                 _add_par(desc,  _describe_ash_skill_boost());
             }
