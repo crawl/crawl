@@ -2307,7 +2307,10 @@ static void _save_game_exit()
 void save_game(bool leave_game, const char *farewellmsg)
 {
     unwind_bool saving_game(crawl_state.saving_game, true);
-    ASSERT(you.on_current_level);
+    // Should you.no_save disable more here? Currently it entails an empty
+    // package, and persists won't save, but there's a bunch of other stuff
+    // that can.
+    ASSERT(you.on_current_level || Options.no_save);
 
 
     if (leave_game && Options.dump_on_save)
