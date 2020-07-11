@@ -352,9 +352,9 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_DEATHS_DOOR, "Death's Door",
-    spschool::charms | spschool::necromancy,
+    spschool::necromancy,
     spflag::emergency | spflag::utility | spflag::no_ghost,
-    8,
+    9,
     200,
     -1, -1,
     6, 0,
