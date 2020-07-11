@@ -5950,7 +5950,10 @@ int player::armour_class_with_specific_items(vector<const item_def *> items) con
     int AC = base_ac_with_specific_items(scale, items);
 
     if (duration[DUR_ICY_ARMOUR])
-        AC += 500 + you.props[ICY_ARMOUR_KEY].get_int() * 8;
+    {
+        AC += max(0, 500 + you.props[ICY_ARMOUR_KEY].get_int() * 8
+                     - unadjusted_body_armour_penalty() * 50);
+    }
 
     if (has_mutation(MUT_ICEMAIL))
         AC += 100 * player_icemail_armour_class();

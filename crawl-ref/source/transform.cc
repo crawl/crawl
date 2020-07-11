@@ -2000,17 +2000,6 @@ void untransform(bool skip_move)
             remove_one_equip(EQ_BOOTS);
     }
 
-    // End Ozocubu's Icy Armour if you unmelded wearing heavy armour
-    if (you.duration[DUR_ICY_ARMOUR]
-        && !player_effectively_in_light_armour())
-    {
-        you.duration[DUR_ICY_ARMOUR] = 0;
-
-        const item_def *armour = you.slot_item(EQ_BODY_ARMOUR, false);
-        mprf(MSGCH_DURATION, "%s cracks your icy armour.",
-             armour->name(DESC_YOUR).c_str());
-    }
-
     if (you.hp <= 0)
     {
         ouch(0, KILLED_BY_FRAILTY, MID_NOBODY,
