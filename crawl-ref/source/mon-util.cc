@@ -1985,7 +1985,7 @@ static mon_attack_def _player_eldritch_tentacle_attack(const monster&,
     const int dam = you.skill_rdiv(SK_UNARMED_COMBAT) + 3;
 
     const int slaying = slaying_bonus() / 2; //slaying heuristic
-    return { AT_HIT, AF_PLAIN, (dam + slaying)};
+    return { AT_CONSTRICT, AF_CRUSH, (dam + slaying)};
 }
 
 
