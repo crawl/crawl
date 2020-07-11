@@ -706,6 +706,8 @@ true within, but not without.
 %%%%
 The Jaws of Erysichthon
 
-The owner of this jaw was cursed by a terrible hunger when he was alive.
-He is already dead, His jaws still remain, and make strangely and threateningly 
-crackling sound as it seems to soothe unfilled hunger.
+The owner of this jaw was cursed by a terrible hunger when he was alive. He is 
+already dead, but his jaws still remain, and make strangely and threateningly 
+crackling sound as it seems to soothe unfilled hunger. Since it makes wielder
+suffer a terrible hunger, wielder sucks a bloods and devours every livings to
+fill its hunger.
