@@ -363,6 +363,8 @@ int raw_spell_fail(spell_type spell)
                       / 262144, 0);
 
     chance2 += get_form()->spellcasting_penalty;
+    if (you.duration[DUR_EXCRUCIATING_WOUNDS])
+        chance2 += 10; // same as spider form
 
     chance2 -= 2 * you.get_mutation_level(MUT_SUBDUED_MAGIC);
     chance2 += 4 * you.get_mutation_level(MUT_WILD_MAGIC);

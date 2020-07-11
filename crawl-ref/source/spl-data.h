@@ -1293,12 +1293,12 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_EXCRUCIATING_WOUNDS, "Excruciating Wounds",
-    spschool::charms | spschool::necromancy,
+    spschool::necromancy,
     spflag::helpful,
     5,
     200,
     -1, -1,
-    4, 15,
+    5, 5,
     TILEG_EXCRUCIATING_WOUNDS,
 },
 

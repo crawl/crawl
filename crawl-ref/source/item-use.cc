@@ -403,6 +403,13 @@ bool can_wield(const item_def *weapon, bool say_reason,
     }
 
     if (!ignore_temporary_disability
+        && you.duration[DUR_EXCRUCIATING_WOUNDS])
+    {
+        SAY(mpr("You cannot break your focus on the pain!"));
+        return false;
+    }
+
+    if (!ignore_temporary_disability
         && you.weapon()
         && is_weapon(*you.weapon())
         && you.weapon()->cursed())
