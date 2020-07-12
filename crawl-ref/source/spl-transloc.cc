@@ -1113,12 +1113,6 @@ spret cast_apportation(int pow, bolt& beam, bool fail)
 
 spret cast_golubrias_passage(const coord_def& where, bool fail)
 {
-    if (orb_limits_translocation())
-    {
-        mprf(MSGCH_ORB, "The Orb prevents you from opening a passage!");
-        return spret::abort;
-    }
-
     if (player_in_branch(BRANCH_GAUNTLET))
     {
         mprf(MSGCH_ORB, "A magic seal in the Gauntlet prevents you from "
@@ -1130,14 +1124,16 @@ spret cast_golubrias_passage(const coord_def& where, bool fail)
     // chasing you, as well as to not give away hidden trap positions
     int tries = 0;
     int tries2 = 0;
+    // Less accurate when the orb is interfering.
+    const int range = orb_limits_translocation() ? 4 : 2;
     coord_def randomized_where = where;
     coord_def randomized_here = you.pos();
     do
     {
         tries++;
         randomized_where = where;
-        randomized_where.x += random_range(-2, 2);
-        randomized_where.y += random_range(-2, 2);
+        randomized_where.x += random_range(-range, range);
+        randomized_where.y += random_range(-range, range);
     }
     while ((!in_bounds(randomized_where)
             || grd(randomized_where) != DNGN_FLOOR
@@ -1151,8 +1147,8 @@ spret cast_golubrias_passage(const coord_def& where, bool fail)
     {
         tries2++;
         randomized_here = you.pos();
-        randomized_here.x += random_range(-2, 2);
-        randomized_here.y += random_range(-2, 2);
+        randomized_here.x += random_range(-range, range);
+        randomized_here.y += random_range(-range, range);
     }
     while ((!in_bounds(randomized_here)
             || grd(randomized_here) != DNGN_FLOOR
@@ -1184,6 +1180,9 @@ spret cast_golubrias_passage(const coord_def& where, bool fail)
         mpr("Something buggy happened.");
         return spret::abort;
     }
+
+    if (orb_limits_translocation())
+        mprf(MSGCH_ORB, "The Orb disrupts the stability of your passage!");
 
     trap->reveal();
     trap2->reveal();

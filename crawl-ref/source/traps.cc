@@ -33,6 +33,7 @@
 #include "message.h"
 #include "mon-place.h"
 #include "nearby-danger.h"
+#include "orb.h"
 #include "player-stats.h" // lose_stat for zot traps
 #include "random.h"
 #include "religion.h"
@@ -100,8 +101,9 @@ void trap_def::prepare_ammo(int charges)
         ammo_qty = 2 + random2avg(6, 3);
         break;
     case TRAP_GOLUBRIA:
-        // really, turns until it vanishes
-        ammo_qty = 30 + random2(20);
+        // really, time until it vanishes
+        ammo_qty = (orb_limits_translocation() ? 10 + random2(10)
+                                               : 30 + random2(20));
         break;
     case TRAP_TELEPORT:
         ammo_qty = 1;

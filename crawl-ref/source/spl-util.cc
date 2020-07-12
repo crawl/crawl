@@ -1247,12 +1247,10 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         break;
 
     case SPELL_GOLUBRIAS_PASSAGE:
-        if (orb_limits_translocation(temp))
-            return "the Orb prevents this spell from working.";
-        else if (temp && player_in_branch(BRANCH_GAUNTLET))
+        if (temp && player_in_branch(BRANCH_GAUNTLET))
         {
             return "a magic seal in the Gauntlet prevents this spell "
-                "from working.";
+                   "from working.";
         }
         break;
 
