@@ -10,8 +10,6 @@ struct trap_def
     trap_type type;
     /// The amount of ammo remaining. For web traps, if 1, destroy on exit.
     short     ammo_qty;
-    /// How difficult the trap is to detect
-    uint8_t   skill_rnd;
 
     bool is_mechanical() const;
     dungeon_feature_type feature() const;

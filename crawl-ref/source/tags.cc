@@ -5370,7 +5370,6 @@ static void _tag_construct_level_items(writer &th)
         marshallByte(th, trap.type);
         marshallCoord(th, trap.pos);
         marshallShort(th, trap.ammo_qty);
-        marshallUByte(th, trap.skill_rnd);
     }
 
     // how many items?
@@ -6204,14 +6203,13 @@ static void _tag_read_level_items(reader &th)
             trap.type = (trap_type)(trap.type - 1);
         if (th.getMinorVersion() < TAG_MINOR_REVEAL_TRAPS)
             grd(trap.pos) = trap.feature();
-        if (th.getMinorVersion() < TAG_MINOR_TRAPS_DETERM
-            || th.getMinorVersion() == TAG_MINOR_0_11)
+        if (th.getMinorVersion() >= TAG_MINOR_TRAPS_DETERM
+            && th.getMinorVersion() != TAG_MINOR_0_11
+            && th.getMinorVersion() < TAG_MINOR_REVEALED_TRAPS)
         {
-            trap.skill_rnd = random2(256);
+            unmarshallUByte(th);
         }
-        else
 #endif
-        trap.skill_rnd = unmarshallUByte(th);
         env.trap[trap.pos] = trap;
     }
 
