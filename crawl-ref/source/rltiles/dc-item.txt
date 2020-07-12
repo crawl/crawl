@@ -518,7 +518,8 @@ i-repulsion BRAND_ARM_REPULSION
 # start TAG_MAJOR_VERSION == 34
 i-cloud-immune BRAND_ARM_CLOUD_IMMUNE
 # end TAG_MAJOR_VERSION
-i-harm BRAND_ARM_HARM BRAND_ARM_LAST
+i-harm BRAND_ARM_HARM
+i-shadows BRAND_ARM_SHADOWS BRAND_ARM_LAST
 
 ###########OBJ_WANDS
 %sdir item/wand

@@ -1818,6 +1818,10 @@ static string _describe_armour(const item_def &item, bool verbose)
         case SPARM_HARM:
             description += "It increases damage dealt and taken.";
             break;
+
+        case SPARM_SHADOWS:
+            description += "It reduces the wearer's line of sight "
+                           "and spell power.";
         }
     }
 

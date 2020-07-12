@@ -464,6 +464,7 @@ enum special_armour_type
     SPARM_CLOUD_IMMUNE,
 #endif
     SPARM_HARM,
+    SPARM_SHADOWS,
     NUM_REAL_SPECIAL_ARMOURS,
     NUM_SPECIAL_ARMOURS,
 };

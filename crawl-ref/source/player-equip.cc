@@ -11,6 +11,7 @@
 #include "delay.h"
 #include "english.h" // conjugate_verb
 #include "god-abil.h"
+#include "god-conduct.h"
 #include "god-item.h"
 #include "god-passive.h"
 #include "hints.h"
@@ -887,6 +888,11 @@ static void _equip_armour_effect(item_def& arm, bool unmeld,
         case SPARM_REPULSION:
             mpr("You are surrounded by a repulsion field.");
             break;
+
+        case SPARM_SHADOWS:
+            mpr("It gets dark.");
+            update_vision_range();
+            break;
         }
     }
 
@@ -1051,6 +1057,11 @@ static void _unequip_armour_effect(item_def& item, bool meld,
 
     case SPARM_REPULSION:
         mpr("The haze of the repulsion field disappears.");
+        break;
+
+    case SPARM_SHADOWS:
+        mpr("The dungeon's light returns to normal.");
+        update_vision_range();
         break;
 
     default:

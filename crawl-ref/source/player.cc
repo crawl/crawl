@@ -679,8 +679,8 @@ void update_vision_range()
         denom *= you.normal_vision;
     }
 
-    // the Darkness spell.
-    if (you.duration[DUR_DARKNESS])
+    // scarf of shadows
+    if (you.wearing_ego(EQ_CLOAK, SPARM_SHADOWS))
         nom *= 3, denom *= 4;
 
     // robe of Night.
