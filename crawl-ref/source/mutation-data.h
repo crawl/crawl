@@ -220,7 +220,6 @@ static const mutation_def mut_data[] =
   {"You begin to regenerate regardless of the presence of monsters.", "", ""},
 },
 
-#if TAG_MAJOR_VERSION == 34
 { MUT_FAST_METABOLISM, 0, 3, mutflag::bad, false,
   "fast metabolism",
 
@@ -252,7 +251,6 @@ static const mutation_def mut_data[] =
    "You feel a little hungry.",
    ""},
 },
-#endif
 
 { MUT_WEAK, 8, 2, mutflag::bad | mutflag::xom, false,
   "weak",
