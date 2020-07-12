@@ -2226,6 +2226,9 @@ bool item_type_known(const item_def& item)
     if (item.is_type(OBJ_BOOKS, BOOK_MANUAL))
         return false;
 
+    if (item.is_type(OBJ_FOOD, FOOD_CHUNK))
+        return true;
+
     if (!item_type_has_ids(item.base_type))
         return false;
     return you.type_ids[item.base_type][item.sub_type];
@@ -3369,6 +3372,7 @@ bool is_bad_item(const item_def &item, bool temp)
         default:
             return false;
         }
+
     case OBJ_JEWELLERY:
         // Potentially useful. TODO: check the properties.
         if (is_artefact(item))
@@ -3649,7 +3653,9 @@ bool is_useless_item(const item_def &item, bool temp)
             return temp && (env.level_state & LSTATE_STILL_WINDS);
 
         if (item.sub_type == WAND_TELEPORTATION)
-            return you.species == SP_FORMICID;
+            return you.species == SP_FORMICID
+            || crawl_state.game_is_sprint()
+            || player_in_branch(BRANCH_GAUNTLET);
 
         if (item.sub_type == WAND_HEAL_WOUNDS
             && item_type_known(item)

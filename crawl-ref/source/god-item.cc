@@ -331,6 +331,9 @@ bool is_hasty_item(const item_def& item, bool calc_unid)
     case OBJ_RODS:
         retval = _is_bookrod_type(item, is_hasty_spell);
         break;
+    case OBJ_WANDS:
+        retval = (item.sub_type == WAND_HASTING);
+        break;
     default:
         break;
     }
