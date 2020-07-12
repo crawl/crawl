@@ -1170,17 +1170,6 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_SUMMON_BUTTERFLIES, "Summon Butterflies",
-    spschool::summoning,
-    spflag::none,
-    1,
-    100,
-    -1, -1,
-    1, 0,
-    TILEG_SUMMON_BUTTERFLIES,
-},
-
-{
     SPELL_SILENCE, "Silence",
     spschool::hexes | spschool::air,
     spflag::area,
@@ -3473,6 +3462,7 @@ AXED_SPELL(SPELL_SILVER_BLAST, "Silver Blast")
 AXED_SPELL(SPELL_SINGULARITY, "Singularity")
 AXED_SPELL(SPELL_SONG_OF_SHIELDING, "Song of Shielding")
 AXED_SPELL(SPELL_STONESKIN, "Stoneskin")
+AXED_SPELL(SPELL_SUMMON_BUTTERFLIES, "Summon Butterflies")
 AXED_SPELL(SPELL_SUMMON_ELEMENTAL, "Summon Elemental")
 AXED_SPELL(SPELL_SUMMON_RAKSHASA, "Summon Rakshasa")
 AXED_SPELL(SPELL_SUMMON_TWISTER, "Summon Twister")

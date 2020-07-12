@@ -1373,10 +1373,6 @@ Summon Air Elementals spell
 
 Summons one or more air elementals.
 %%%%
-Summon Butterflies spell
-
-Creates a shower of colourful butterflies. How pretty!
-%%%%
 Summon Demon spell
 
 Opens a gate to the realm of Pandemonium and draws forth one of its inhabitants

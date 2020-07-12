@@ -1663,9 +1663,6 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     // Summoning spells, and other spells that create new monsters.
     // If a god is making you cast one of these spells, any monsters
     // produced will count as god gifts.
-    case SPELL_SUMMON_BUTTERFLIES:
-        return cast_summon_butterflies(powc, god, fail);
-
     case SPELL_SUMMON_SMALL_MAMMAL:
         return cast_summon_small_mammal(powc, god, fail);
 
@@ -2323,6 +2320,7 @@ const set<spell_type> removed_spells =
     SPELL_STEAM_CLOUD,
     SPELL_STONESKIN,
     SPELL_STRIKING,
+    SPELL_SUMMON_BUTTERFLIES,
     SPELL_SUMMON_ELEMENTAL,
     SPELL_SUMMON_RAKSHASA,
     SPELL_SUMMON_SCORPIONS,

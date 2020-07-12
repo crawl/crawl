@@ -2030,33 +2030,6 @@ cc.1.cccccc
  ccncc
 ENDMAP
 
-# This one is really, really weird...
-NAME:  evilmike_abyss_exit_smiterflies
-TAGS:  abyss_exit
-KMONS: O = generate_awake statue spells:summon_butterflies.100.magical \
-           tile:mons_statue_mage col:lightblue
-MONS:  smoke demon, deep elf mage
-: init_abyss_exit(_G, "O")
-MAP
-       ccc
-     ccc1ccc
-   ccc.....ccc
-  cc.........cc
-  c....2......c
- cc...........cc
- c.............c
-cc..2..........cc
-c1......O.......+@
-cc..2..........cc
- c.............c
- cc...........cc
-  c....2......c
-  cc.........cc
-   ccc.....ccc
-     ccc1ccc
-       ccc
-ENDMAP
-
 NAME:    hangedman_abyss_exit_choices
 TAGS:    abyss_exit unrand no_monster_gen
 MONS:    hell hound, raiju, great orb of eyes

@@ -30,7 +30,6 @@ TEST_CASE( "When setting book spell list", "[single-file]" ) {
             SPELL_SUMMON_SMALL_MAMMAL,
             SPELL_MAGIC_DART,
             SPELL_SHOCK,
-            SPELL_SUMMON_BUTTERFLIES,
             SPELL_INFUSION,
             SPELL_SANDBLAST,
             SPELL_FOXFIRE,

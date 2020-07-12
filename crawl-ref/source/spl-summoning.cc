@@ -87,31 +87,6 @@ static mgen_data _pal_data(monster_type pal, int dur, god_type god,
     return _summon_data(you, pal, dur, god, spell);
 }
 
-spret cast_summon_butterflies(int pow, god_type god, bool fail)
-{
-    if (otr_stop_summoning_prompt())
-        return spret::abort;
-
-    fail_check();
-    bool success = false;
-
-    const int how_many = min(8, 3 + random2(3) + random2(pow) / 10);
-
-    for (int i = 0; i < how_many; ++i)
-    {
-        if (create_monster(_pal_data(MONS_BUTTERFLY, 3, god,
-                                     SPELL_SUMMON_BUTTERFLIES)))
-        {
-            success = true;
-        }
-    }
-
-    if (!success)
-        canned_msg(MSG_NOTHING_HAPPENS);
-
-    return spret::success;
-}
-
 spret cast_summon_small_mammal(int pow, god_type god, bool fail)
 {
     if (otr_stop_summoning_prompt())
@@ -3165,7 +3140,6 @@ struct summon_cap
 static const map<spell_type, summon_cap> summonsdata =
 {
     // Beasts
-    { SPELL_SUMMON_BUTTERFLIES,         { 8, 5 } },
     { SPELL_SUMMON_SMALL_MAMMAL,        { 4, 2 } },
     { SPELL_CALL_CANINE_FAMILIAR,       { 1, 2 } },
     { SPELL_SUMMON_ICE_BEAST,           { 3, 3 } },
