@@ -940,7 +940,8 @@ bool actor_cloud_immune(const actor &act, cloud_type type)
         case CLOUD_FOREST_FIRE:
             if (!act.is_player())
                 return act.res_fire() >= 3;
-            return you.has_mutation(MUT_FLAME_CLOUD_IMMUNITY)
+            return player_equip_unrand(UNRAND_SALAMANDER)
+                || you.has_mutation(MUT_FLAME_CLOUD_IMMUNITY)
                 || player_equip_unrand(UNRAND_FIRESTARTER);
         case CLOUD_HOLY:
             return act.res_holy_energy() >= 3;

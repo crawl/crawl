@@ -415,9 +415,6 @@ void player_reacts_to_monsters()
     if (!you_are_delayed())
         update_can_currently_train();
 
-    if (you.duration[DUR_FIRE_SHIELD] > 0)
-        manage_fire_shield();
-
     check_monster_detect();
 
     if (have_passive(passive_t::detect_items) || you.has_mutation(MUT_JELLY_GROWTH)

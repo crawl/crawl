@@ -30,6 +30,7 @@
 #include "player-stats.h"
 #include "religion.h"
 #include "shopping.h"
+#include "spl-clouds.h"
 #include "spl-summoning.h"
 #include "spl-transloc.h"
 #include "spl-wpnench.h"

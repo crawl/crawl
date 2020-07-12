@@ -24,7 +24,7 @@
 #include "attack.h"        // For attack_strength_punctuation()
 #include "beam.h"          // For Lajatang of Order's silver damage
 #include "bloodspatter.h"  // For Leech
-#include "cloud.h"         // For storm bow's and robe of clouds' rain
+#include "cloud.h"         // For robe of clouds' thunder and salamander's flame
 #include "coordit.h"       // For distance_iterator()
 #include "death-curse.h"   // For the Scythe of Curses
 #include "english.h"       // For apostrophise
@@ -1589,4 +1589,38 @@ static void _EMBRACE_world_reacts(item_def *item)
 
     if (item->plus != last_plus)
         you.redraw_armour_class = true;
+}
+
+////////////////////////////////////////////////////
+
+void _manage_fire_shield()
+{
+    // Melt ice armour entirely.
+    maybe_melt_player_enchantments(BEAM_FIRE, 100);
+
+    // Remove fire clouds on top of you
+    if (cloud_at(you.pos()) && cloud_at(you.pos())->type == CLOUD_FIRE)
+        delete_cloud(you.pos());
+
+    // Place fire clouds all around you
+    for (adjacent_iterator ai(you.pos()); ai; ++ai)
+        if (!cell_is_solid(*ai) && !cloud_at(*ai))
+            place_cloud(CLOUD_FIRE, *ai, 1 + random2(3), &you);
+}
+
+static void _SALAMANDER_equip(item_def * /* item */, bool * show_msgs,
+                              bool /* unmeld */)
+{
+    _equip_mpr(show_msgs, "The air around you leaps into flame!");
+    _manage_fire_shield();
+}
+
+static void _SALAMANDER_unequip(item_def * /* item */, bool * show_msgs)
+{
+   _equip_mpr(show_msgs, "Your ring of flames gutters out.");
+}
+
+static void _SALAMANDER_world_reacts(item_def * /* item */)
+{
+    _manage_fire_shield();
 }

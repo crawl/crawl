@@ -15,6 +15,7 @@
 #include <cstring>
 
 #include "areas.h"
+#include "art-enum.h"
 #include "coordit.h"
 #include "directn.h"
 #include "env.h"
@@ -1169,7 +1170,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
     case SPELL_OZOCUBUS_ARMOUR:
         if (temp && you.form == transformation::statue)
             return "the film of ice won't work on stone.";
-        if (temp && you.duration[DUR_FIRE_SHIELD])
+        if (temp && player_equip_unrand(UNRAND_SALAMANDER))
             return "your ring of flames would instantly melt the ice.";
         break;
 
