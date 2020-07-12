@@ -1343,7 +1343,7 @@ static bool _give_pakellas_gift()
              && you.num_total_gifts[GOD_PAKELLAS] == 4)
     {
         // Felids get another high-level wand or evoker instead of a rod.
-        if (you.species == SP_FELID)
+        if (you.species == SP_FELID || you.species == SP_HYDRA)
         {
             basetype = random_choose(OBJ_WANDS, OBJ_MISCELLANY);
             subtype = (basetype == OBJ_WANDS) ? _pakellas_high_wand()
