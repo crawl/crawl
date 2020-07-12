@@ -1017,7 +1017,9 @@ static const char* _book_type_name(int booktype)
     case BOOK_MISFORTUNE:             return "Misfortune";
     case BOOK_CHANGES:                return "Changes";
     case BOOK_TRANSFIGURATIONS:       return "Transfigurations";
+#if TAG_MAJOR_VERSION == 34
     case BOOK_BATTLE:                 return "Battle";
+#endif
     case BOOK_CLOUDS:                 return "Clouds";
     case BOOK_NECROMANCY:             return "Necromancy";
     case BOOK_CALLINGS:               return "Callings";

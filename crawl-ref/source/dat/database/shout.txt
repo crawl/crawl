@@ -259,10 +259,6 @@ Earth Elementalist player ghost
 
 @player ghost@
 %%%%
-Skald player ghost
-
-@player ghost@
-%%%%
 Venom Mage player ghost
 
 @player ghost@

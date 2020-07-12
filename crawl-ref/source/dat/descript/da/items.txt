@@ -67,11 +67,6 @@ sølle troldkarle risikerer en krank skæbne, hvis de læser dette værk.
 ADVARSEL: Hvis det mislykkes at lære en besværgelse fra denne bog, vil den
 angribe dig.
 %%%%
-book of battle
-
-Denne bog med besværgelser bruges af skjalde, som får magisk hjælp af dens
-kampsange.
-%%%%
 book of cantrips
 
 En bog som indeholder et lille udvalg af de mest grundlæggende besværgelser,

@@ -21,7 +21,6 @@ aptitudes:
   dodging: -1
   spellcasting: -1
   hexes: -1
-  charms: -1
   invocations: 1
   # Pale Draconian specific
   fire_magic: 1

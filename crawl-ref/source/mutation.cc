@@ -120,6 +120,7 @@ static vector<mutation_type> removed_mutations =
         MUT_TELEPORT_CONTROL,
         MUT_TRAMPLE_RESISTANCE,
         MUT_MUMMY_RESTORATION,
+        MUT_NO_CHARM_MAGIC,
 #endif
     };
 

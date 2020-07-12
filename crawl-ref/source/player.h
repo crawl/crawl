@@ -1020,7 +1020,6 @@ int player_spec_death();
 int player_spec_earth();
 int player_spec_fire();
 int player_spec_hex();
-int player_spec_charm();
 int player_spec_poison();
 int player_spec_summ();
 

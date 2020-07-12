@@ -27,7 +27,6 @@ aptitudes:
   spellcasting: 8
   conjurations: 6
   hexes: 6
-  charms: 6
   summoning: 6
   necromancy: 6
   translocations: 6
@@ -51,7 +50,6 @@ fake_mutations:
   - long: Your experience applies equally to all skills.
     short: distributed training
 recommended_jobs:
-  - JOB_SKALD
   - JOB_WARPER
   - JOB_ARCANE_MARKSMAN
   - JOB_TRANSMUTER

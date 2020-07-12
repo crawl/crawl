@@ -79,8 +79,7 @@ static void _random_hell_miscast()
         = random_choose_weighted(8, spschool::necromancy,
                                  4, spschool::summoning,
                                  2, spschool::conjuration,
-                                 1, spschool::charms,
-                                 1, spschool::hexes);
+                                 2, spschool::hexes);
 
     miscast_effect(you, nullptr, {miscast_source::hell_effect}, which_miscast,
                    5, random2avg(40, 3), "the effects of Hell");

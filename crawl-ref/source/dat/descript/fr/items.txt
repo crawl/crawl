@@ -96,11 +96,6 @@ sorciers, car il permet aux plus doués de répandre la destruction avec la
 facilité d'un claquement de doigt. Cependant, les médiocres courent à leur
 perte s'ils essaient de le lire.
 %%%%
-book of battle
-
-Un livre de sorts utilisés par les skalds, dont les chants de batailles leur
-accorde une aide magique.
-%%%%
 book of burglary
 
 Un livre contenant de nombreux sorts utiles pour voler, entrer par effraction,
@@ -264,12 +259,6 @@ Ce livre impie décrit une variété de méthodes magiques pour la création et 
 commandement de serviteurs morts-vivants. Ce livre terrible irradie une aura
 malfaisante, et ses pages de parchemin tremblent et frémissent parfois toutes
 seules.
-%%%%
-book of war chants
-
-Un livre de sorts utile pour un guerrier. Les versions présentées ici ont une
-forme musicale, suivant les traditions des skalds guerriers. Fonctionnellement,
-cependant, ils sont identiques aux sorts dont les mots sont simplement parlés.
 %%%%
 book of wizardry
 

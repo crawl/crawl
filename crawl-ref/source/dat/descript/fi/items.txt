@@ -145,12 +145,6 @@ Tämä epäpyhä kirja kertoo maagisista keinoista epäkuolleiden palvelijoiden
 luomiseen ja käskemiseen. Kauheassa kirjassa säteilee pahansuopa aura, ja sen
 pergamenttisivut joskus sätkivät ja värisevät itsestään.
 %%%%
-book of war chants
-
-Soturille hyödyllisiä loitsuja sisältävä kirja. Kirjan loitsuilla on
-musikaalinen muoto, seuraten skaldien perinteitä. Niillä on kuitenkin sama
-vaikutus kuin puhutuilla taioilla.
-%%%%
 book of wizardry
 
 Tämän kirjan loitsut sopivat kenelle tahansa pätevälle loitsijalle. Oppineet

@@ -1674,12 +1674,6 @@ int player_spec_hex()
     return 0;
 }
 
-int player_spec_charm()
-{
-    // Nothing, for the moment.
-    return 0;
-}
-
 int player_spec_summ()
 {
     int ss = 0;

@@ -191,18 +191,6 @@ appartiennent à une combinaison de différentes écoles, dans ce cas la réussi
 du lancement et la puissance dépendront du niveau de compétence dans ces
 écoles.
 %%%%
-Charms
-
-Charmes vous offre un certain nombre d'auras pour accroitre vos capacités.
-Entrainer la compétence Charmes augmentera en général la durée ou l'efficacité
-de ces auras.
-
-Être compétent dans une « école » de magie rend l'apprentissage et le lancement
-des sortilèges de cette école plus simples. De nombreux sortilèges
-appartiennent à une combinaison de différentes écoles, dans ce cas la réussite
-du lancement et la puissance dépendront du niveau de compétence dans ces
-écoles.
-%%%%
 Summonings
 
 Les Convocations permettent de faire apparaitre des créatures d'autres plans de

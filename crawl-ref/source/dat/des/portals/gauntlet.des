@@ -1062,7 +1062,6 @@ dgn.delayed_decay_extra(_G, "H", "merfolk skeleton",
     "trident good_item / demon trident / glaive good_item / bardiche" ..
     ", leather armour good_item w:100 / ring mail good_item w:100" ..
     "    / " .. light_scales .. " / " .. medium_scales ..
-    ", randbook disc:charms / book of battle" ..
     -- Give this a 1/4 in chance of placing since we guarantee 3 items above.
     ", buckler good_item / kite shield good_item / tower shield good_item" ..
     "    / " .. dgn.good_aux_armour .. " / any wand w:20 / any misc / gold" ..

@@ -91,7 +91,9 @@ static const char *skill_titles[NUM_SKILLS][6] =
     {"Spellcasting",   "Magician",      "Thaumaturge",     "Eclecticist",     "Sorcerer",       "Archmage"},
     {"Conjurations",   "Conjurer",      "Destroyer",       "Devastator",      "Ruinous",        "Annihilator"},
     {"Hexes",          "Vexing",        "Jinx",            "Bewitcher",       "Maledictor",     "Spellbinder"},
+#if TAG_MAJOR_VERSION == 34
     {"Charms",         "Charmwright",   "Infuser",         "Anointer",        "Gracecrafter",   "Miracle Worker"},
+#endif
     {"Summonings",     "Caller",        "Summoner",        "Convoker",        "Demonologist",   "Hellbinder"},
     {"Necromancy",     "Grave Robber",  "Reanimator",      "Necromancer",     "Thanatomancer",  "@Genus_Short@ of Death"},
     {"Translocations", "Grasshopper",   "Placeless @Genus@", "Blinker",       "Portalist",      "Plane @Walker@"},
@@ -1874,7 +1876,6 @@ bool is_useless_skill(skill_type skill)
 {
     if (is_removed_skill(skill)
         || (skill == SK_AIR_MAGIC && you.get_mutation_level(MUT_NO_AIR_MAGIC))
-        || (skill == SK_CHARMS && you.get_mutation_level(MUT_NO_CHARM_MAGIC))
         || (skill == SK_CONJURATIONS
             && you.get_mutation_level(MUT_NO_CONJURATION_MAGIC))
         || (skill == SK_EARTH_MAGIC

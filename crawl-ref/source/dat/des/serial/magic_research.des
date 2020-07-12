@@ -13,7 +13,7 @@
 # Note:
 # Schools covered: Fire, Ice, Air, Earth, Poison, Necromancy,
 # Transmutations, Translocations, Summonings, Hexes.
-# Schools not covered: Charms, Conjurations. Too little to work with right now.
+# Schools not covered: Conjurations. Too little to work with right now.
 # Other magic concepts might be interesting; additions are always welcome!
 
 default-depth: Depths, Vaults:1-4, Elf:1-2

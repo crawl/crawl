@@ -1705,13 +1705,15 @@ static const mutation_def mut_data[] =
   {"You can once more study and cast Air magic.", "", ""},
 },
 
+#if TAG_MAJOR_VERSION == 34
 { MUT_NO_CHARM_MAGIC, 0, 1, mutflag::bad, false,
   "no charms magic",
 
-  {"You cannot study or cast Charms magic.", "", ""},
+  {"You cannot study or cast removed Charms magic.", "", ""},
   {"You can no longer study or cast Charms magic.", "", ""},
   {"You can once more study and cast Charms magic.", "", ""},
 },
+#endif
 
 { MUT_NO_CONJURATION_MAGIC, 0, 1, mutflag::bad, false,
   "no conjurations magic",

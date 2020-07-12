@@ -24,7 +24,6 @@ aptitudes:
   unarmed_combat: 1
   conjurations: 1
   hexes: 1
-  charms: 1
   summoning: 2
   necromancy: -1
   translocations: 1
@@ -54,7 +53,6 @@ fake_mutations:
 recommended_jobs:
   - JOB_FIGHTER
   - JOB_BERSERKER
-  - JOB_SKALD
   - JOB_SUMMONER
   - JOB_ICE_ELEMENTALIST
 # start TAG_MAJOR_VERSION == 34

@@ -491,9 +491,6 @@ static int _spell_enhancement(spell_type spell)
     if (typeflags & spschool::hexes)
         enhanced += player_spec_hex();
 
-    if (typeflags & spschool::charms)
-        enhanced += player_spec_charm();
-
     if (typeflags & spschool::summoning)
         enhanced += player_spec_summ();
 

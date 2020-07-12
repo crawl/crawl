@@ -869,7 +869,8 @@ enum old_job_type
     OLD_JOB_JESTER       = -6,
     OLD_JOB_PRIEST       = -7,
     OLD_JOB_HEALER       = -8,
-    NUM_OLD_JOBS = -OLD_JOB_HEALER
+    OLD_JOB_SKALD        = -9,
+    NUM_OLD_JOBS = -OLD_JOB_SKALD
 };
 
 static const char* _job_name(int job)
@@ -892,6 +893,8 @@ static const char* _job_name(int job)
         return "Priest";
     case OLD_JOB_HEALER:
         return "Healer";
+    case OLD_JOB_SKALD:
+        return "Skald";
     }
 
     return get_job_name(static_cast<job_type>(job));
@@ -917,6 +920,8 @@ static const char* _job_abbrev(int job)
         return "Pr";
     case OLD_JOB_HEALER:
         return "He";
+    case OLD_JOB_SKALD:
+        return "Sk";
     }
 
     return get_job_abbrev(static_cast<job_type>(job));

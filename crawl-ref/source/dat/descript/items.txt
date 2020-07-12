@@ -96,10 +96,6 @@ book of annihilations
 A tome of arcane fury, greatly sought after by sorcerers. It allows the gifted
 and resourceful to conjure destruction with ease.
 %%%%
-book of battle
-
-A book of battle songs, containing spells to assist in combat.
-%%%%
 book of burglary
 
 A book containing many diverse spells useful for theft, breaking and entering,

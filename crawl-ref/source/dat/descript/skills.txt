@@ -159,16 +159,6 @@ this school. Many spells belong to a combination of several schools, in which
 case spellcasting success and power will depend on the average skill in these
 schools.
 %%%%
-Charms
-
-Charms provide you with a number of self-enhancing auras. Training Charms skill
-will often increase the duration or effectiveness of these auras.
-
-Being skilled in Charms increases the success rate and spell power of spells in
-this school. Many spells belong to a combination of several schools, in which
-case spellcasting success and power will depend on the average skill in these
-schools.
-%%%%
 Summonings
 
 Summonings deals with summoning creatures from another plane of reality to join

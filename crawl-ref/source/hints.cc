@@ -741,7 +741,6 @@ void hints_gained_new_skill(skill_type skill)
     }
     // Only one message for all magic skills (except Spellcasting).
     case SK_CONJURATIONS:
-    case SK_CHARMS:
     case SK_HEXES:
     case SK_SUMMONINGS:
     case SK_NECROMANCY:

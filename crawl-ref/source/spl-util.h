@@ -15,20 +15,19 @@ enum class spschool
   none           = 0,
   conjuration    = 1<<0,
   hexes          = 1<<1,
-  charms         = 1<<2,
-  fire           = 1<<3,
-  ice            = 1<<4,
-  transmutation  = 1<<5,
-  necromancy     = 1<<6,
-  summoning      = 1<<7,
-  translocation  = 1<<8,
-  poison         = 1<<9,
-  earth          = 1<<10,
-  air            = 1<<11,
+  fire           = 1<<2,
+  ice            = 1<<3,
+  transmutation  = 1<<4,
+  necromancy     = 1<<5,
+  summoning      = 1<<6,
+  translocation  = 1<<7,
+  poison         = 1<<8,
+  earth          = 1<<9,
+  air            = 1<<10,
   LAST_SCHOOL    = spschool::air,
   random         = spschool::LAST_SCHOOL << 1,
 };
-DEF_BITFIELD(spschools_type, spschool, 11);
+DEF_BITFIELD(spschools_type, spschool, 10);
 const int SPSCHOOL_LAST_EXPONENT = spschools_type::last_exponent;
 COMPILE_CHECK(spschools_type::exponent(SPSCHOOL_LAST_EXPONENT)
               == spschool::LAST_SCHOOL);

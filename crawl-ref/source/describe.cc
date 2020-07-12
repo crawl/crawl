@@ -3034,6 +3034,7 @@ static string _miscast_damage_string(spell_type spell)
         { spschool::summoning, "summon a nameless horror" },
         { spschool::transmutation, "further contaminate you" },
         { spschool::translocation, "dimensionally anchor you" },
+        { spschool::hexes, "debuff and slow you" },
     };
 
     spschools_type disciplines = get_spell_disciplines(spell);
@@ -3042,9 +3043,6 @@ static string _miscast_damage_string(spell_type spell)
     for (const auto &flav : special_flavor)
         if (disciplines & flav.first)
             descs.push_back(flav.second);
-
-    if (disciplines & (spschool::charms | spschool::hexes))
-        descs.push_back("debuff and slow you");
 
     int dam = max_miscast_damage(spell);
     vector <string> dam_flavors;

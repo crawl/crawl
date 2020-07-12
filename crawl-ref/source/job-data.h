@@ -216,16 +216,6 @@ static const map<job_type, job_def> job_data =
       { SK_STEALTH, 2 }, },
 } },
 
-{ JOB_SKALD, {
-    "Sk", "Skald",
-    3, 5, 4,
-    { SP_HALFLING, SP_GNOLL, SP_MERFOLK, SP_BASE_DRACONIAN, SP_VAMPIRE, },
-    { "leather armour", "book of Battle" },
-    WCHOICE_PLAIN,
-    { { SK_FIGHTING, 2 }, { SK_ARMOUR, 1 }, { SK_DODGING, 2 },
-      { SK_SPELLCASTING, 2 }, { SK_CHARMS, 3 }, { SK_WEAPON, 2 }, },
-} },
-
 { JOB_SUMMONER, {
     "Su", "Summoner",
     0, 7, 5,
@@ -293,6 +283,15 @@ static const map<job_type, job_def> job_data =
       { SK_TRANSLOCATIONS, 1 }, { SK_CONJURATIONS, 1 }, { SK_SUMMONINGS, 1 }, },
 } },
 #if TAG_MAJOR_VERSION == 34
+{ JOB_SKALD, {
+    "Sk", "Skald",
+    0, 0, 0,
+    { },
+    { },
+    WCHOICE_NONE,
+    { },
+} },
+
 { JOB_DEATH_KNIGHT, {
     "DK", "Death Knight",
     0, 0, 0,

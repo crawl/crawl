@@ -3745,7 +3745,6 @@ static bool _ms_ranged_spell(spell_type monspell, bool attack_only = false,
 
     // buffs & escape spells aren't considered 'ranged'.
     if (testbits(flags, spflag::selfench)
-        || spell_typematch(monspell, spschool::charms)
         || testbits(flags, spflag::escape)
         || monspell == SPELL_BLINK_OTHER_CLOSE)
     {

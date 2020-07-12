@@ -93,11 +93,6 @@ Necromancer
 I negromanti sono maghi specialisti nella magia della morte. Cominciano con
 l'incantesimo Dolore.
 %%%%
-Skald
-
-Gli Skald sono dei guerrieri che possono potenziarsi in battaglia con gli
-incantesimi dal libro della Battaglia.
-%%%%
 Summoner
 
 Gli attrattori cominciano con il Libro delle Chiamate e sono in grado

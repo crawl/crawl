@@ -20,8 +20,6 @@ enum book_type
     BOOK_FEN,
 #if TAG_MAJOR_VERSION == 34
     BOOK_WAR_CHANTS = BOOK_FEN,
-#else
-    BOOK_BATTLE,
 #endif
     BOOK_CLOUDS,
     BOOK_NECROMANCY,

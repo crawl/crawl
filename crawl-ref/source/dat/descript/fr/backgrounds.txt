@@ -99,11 +99,6 @@ Necromancer
 Les Nécromanciens sont des sorciers spécialisés dans la magie des morts. Ils
 connaissent le sort Douleur.
 %%%%
-Skald
-
-Les Skalds sont des combattants qui se renforcent avec des sorts de leur livre
-des batailles.
-%%%%
 Summoner
 
 Les Invocateurs commencent avec le livre des Appels et sont capables de

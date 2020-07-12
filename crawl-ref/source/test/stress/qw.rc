@@ -4911,7 +4911,7 @@ function choose_single_skill(sk)
   skill_list = {"Fighting","Short Blades","Long Blades","Axes","Maces & Flails",
                 "Polearms","Staves","Unarmed Combat","Bows","Crossbows",
                 "Throwing","Slings","Armour","Dodging","Shields","Spellcasting",
-                "Conjurations","Hexes","Charms","Summonings","Necromancy",
+                "Conjurations","Hexes","Summonings","Necromancy",
                 "Translocations","Transmutations","Fire Magic","Ice Magic",
                 "Air Magic","Earth Magic","Poison Magic","Invocations",
                 "Evocations","Stealth"}

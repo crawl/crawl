@@ -51,10 +51,6 @@ urządzić prawdziwy Armageddon — ale jedynie najlepsi magowie mogą liczyć n
 jakąś szansę użycia tej mocy. Ktokolwiek słabszy spotka się z zagładą próbując
 czytać tą księgę.
 %%%%
-book of battle
-
-Księga magicznych pieśni skaldów, będących czarami w muzycznej formie.
-%%%%
 book of cantrips
 
 Księga czarów. Z tych mocy mogą korzystać nawet dzieci.
@@ -110,12 +106,6 @@ Księga czarów.
 book of unlife
 
 Księga czarów, wypełniona mrocznymi symbolami mogącymi przymusić umarłych.
-%%%%
-book of war chants
-
-Księga czarów dla wojownika. Zawarte tu czary podane są w formie przyśpiewek,
-według tradycji skaldów. Działają one tak samo dobrze jak ich tradycyjne formy,
-jednak dla muzykalnych osób są one prostsze w użyciu.
 %%%%
 book of wizardry
 

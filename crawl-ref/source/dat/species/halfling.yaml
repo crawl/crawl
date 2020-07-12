@@ -24,7 +24,6 @@ aptitudes:
   spellcasting: -3
   conjurations: -2
   hexes: -2
-  charms: 1
   summoning: -2
   necromancy: -2
   translocations: 1
@@ -45,7 +44,6 @@ recommended_jobs:
   - JOB_HUNTER
   - JOB_BERSERKER
   - JOB_ABYSSAL_KNIGHT
-  - JOB_SKALD
 recommended_weapons:
   - SK_SHORT_BLADES
   - SK_LONG_BLADES

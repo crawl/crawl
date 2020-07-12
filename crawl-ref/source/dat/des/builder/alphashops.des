@@ -64,8 +64,8 @@
        "manual of axes", "manual of armour", "wand of acid",
        "acid dragon scales" }
 
-      elseif s == "B" then i = { "bardiche", "barding", "battleaxe", "bolt",
-       "book of battle", "book of burglary", "box of beasts",
+      elseif s == "B" then i = { "bardiche", "battleaxe", "bolt",
+       "book of burglary", "box of beasts",
        "broad axe", "pair of boots", "potion of berserk rage",
        "potion of brilliance",
        "scroll of blinking", "scroll of brand weapon",
@@ -75,7 +75,7 @@
        "club", "book of changes", "book of conjurations",
        "chain mail", "cloak", "crystal plate armour", "potion of cancellation",
        "book of clouds", "staff of cold", "staff of conjuration",
-       "manual of crossbows", "manual of conjurations", "manual of charms",
+       "manual of crossbows", "manual of conjurations",
        "potion of curing", "wand of clouds" }
 
       elseif s == "D" then i = { "book of death", "book of debilitation",

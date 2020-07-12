@@ -24,12 +24,6 @@ book of fixed theme
 
 Kniha kouzel.
 %%%%
-book of war chants
-
-Kniha kouzel určená bojovníkům. Verze v této knize jsou zhudebněné podle
-tradice bojujících skaldů. Funkčně jsou však identické s těmi, které jsou
-obyčejně vyslovovány.
-%%%%
 bow
 
 Zakřivený kus dřeva s tětivou, určený k střílení šípů. V boji způsobuje

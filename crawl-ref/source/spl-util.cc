@@ -739,8 +739,6 @@ const char* spelltype_short_name(spschool which_spelltype)
         return "Conj";
     case spschool::hexes:
         return "Hex";
-    case spschool::charms:
-        return "Chrm";
     case spschool::fire:
         return "Fire";
     case spschool::ice:
@@ -774,8 +772,6 @@ const char* spelltype_long_name(spschool which_spelltype)
         return "Conjuration";
     case spschool::hexes:
         return "Hexes";
-    case spschool::charms:
-        return "Charms";
     case spschool::fire:
         return "Fire";
     case spschool::ice:
@@ -807,7 +803,6 @@ skill_type spell_type2skill(spschool spelltype)
     {
     case spschool::conjuration:    return SK_CONJURATIONS;
     case spschool::hexes:          return SK_HEXES;
-    case spschool::charms:         return SK_CHARMS;
     case spschool::fire:           return SK_FIRE_MAGIC;
     case spschool::ice:            return SK_ICE_MAGIC;
     case spschool::transmutation:  return SK_TRANSMUTATIONS;
@@ -832,7 +827,6 @@ spschool skill2spell_type(skill_type spell_skill)
     {
     case SK_CONJURATIONS:    return spschool::conjuration;
     case SK_HEXES:           return spschool::hexes;
-    case SK_CHARMS:          return spschool::charms;
     case SK_FIRE_MAGIC:      return spschool::fire;
     case SK_ICE_MAGIC:       return spschool::ice;
     case SK_TRANSMUTATIONS:  return spschool::transmutation;
@@ -1491,7 +1485,6 @@ bool spell_no_hostile_in_range(spell_type spell)
 static const mutation_type arcana_sacrifice_map[] = {
     MUT_NO_CONJURATION_MAGIC,
     MUT_NO_HEXES_MAGIC,
-    MUT_NO_CHARM_MAGIC,
     MUT_NO_FIRE_MAGIC,
     MUT_NO_ICE_MAGIC,
     MUT_NO_TRANSMUTATION_MAGIC,

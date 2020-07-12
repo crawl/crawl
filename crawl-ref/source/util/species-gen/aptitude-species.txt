@@ -17,7 +17,6 @@
     APT({enum}, SK_SPELLCASTING,   {spellcasting}),
     APT({enum}, SK_CONJURATIONS,   {conjurations}),
     APT({enum}, SK_HEXES,          {hexes}),
-    APT({enum}, SK_CHARMS,         {charms}),
     APT({enum}, SK_SUMMONINGS,     {summoning}),
     APT({enum}, SK_NECROMANCY,     {necromancy}),
     APT({enum}, SK_TRANSLOCATIONS, {translocations}),
@@ -32,4 +31,5 @@
 #if TAG_MAJOR_VERSION == 34
     APT({enum}, SK_STABBING,       UNUSABLE_SKILL),
     APT({enum}, SK_TRAPS,          UNUSABLE_SKILL),
+    APT({enum}, SK_CHARMS,         UNUSABLE_SKILL),
 #endif

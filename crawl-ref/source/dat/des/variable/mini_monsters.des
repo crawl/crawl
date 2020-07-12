@@ -1518,7 +1518,7 @@ ITEM:    randbook numspells:2 title:Dhcmrlchtdj
 ITEM:    randbook numspells:2 title:Combed_Thunderclap disc:air
 ITEM:    randbook numspells:2 title:Plaster_Cramp disc:earth
 ITEM:    randbook numspells:2 title:Axaxaxas_mlö
-ITEM:    randbook numspells:3 title:Forking_Paths owner:Ts'ui_Pên disc:hexes disc2:charms
+ITEM:    randbook numspells:3 title:Forking_Paths owner:Ts'ui_Pên disc:hexes
 ITEM:    randbook numspells:2 title:Sand
 KFEAT:   ^ : shaft trap
 SHUFFLE: defg, efghij, bm, bm / ++
@@ -5057,7 +5057,6 @@ NSUBST: d = 1:e / *:d
 : end
 KITEM:  d = any potion / any scroll / nothing w:30
 KITEM:  e = randbook disc:necromancy slevels:2 owner:Jessica / \
-            randbook disc:charms slevels:2 owner:Jessica / \
             randbook disc:hexes slevels:2 owner:Jessica / \
             randbook disc:translocation slevels:2 owner:Jessica
 MONS:   jessica, quokka

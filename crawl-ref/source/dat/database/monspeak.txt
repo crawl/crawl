@@ -1201,10 +1201,6 @@ Hexes player ghost
 
 @The_monster@ says @to_foe@, "When I snap my fingers, you will think you are a chicken."
 %%%%
-Charms player ghost
-
-@The_monster@ says, "If you think I look tough now, just wait!"
-%%%%
 Summonings player ghost
 
 @The_monster@ says, "It's dangerous to adventure alone."

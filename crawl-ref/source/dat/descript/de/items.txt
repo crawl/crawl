@@ -61,11 +61,6 @@ Erfinderischen die Kontrolle über Zerstörung mit der Leichtigkeit eines
 Augenzwinkerns. Schwache Zauberer werden allerdings ihrem Tod entgegensehen,
 wenn sie versuchen, dieses Werk zu lesen.
 %%%%
-book of battle
-
-Ein Buch mit Zaubersprüchen die von Skalden genutzt wurden, dessen Kampflieder
-gewährten ihnen magische Hilfe.
-%%%%
 book of cantrips
 
 Ein Buch, das eine kleine Auswahl sehr grundlegender Zaubersprüche enthält,
@@ -162,13 +157,6 @@ Dieses unheilige Buch beschreibt eine Vielfalt von magischen Methoden für die
 Entwicklung und den Befehl von untoten Dienern. Das schreckliche Buch strahlt
 eine bösartige Aura aus, und seine Pergament-Seiten zucken manchmal und
 schaudern selbstständig.
-%%%%
-book of war chants
-
-Ein Buch der Zaubersprüche nützlich für einen Krieger. Die Versionen haben hier
-eine musikalische Form enthalten, nach den Traditionen des Kampfes skald.
-Funktionell, obwohl sie genau wie Zauber funktionieren, sind die magischen
-Worte gesprochen.
 %%%%
 book of wizardry
 

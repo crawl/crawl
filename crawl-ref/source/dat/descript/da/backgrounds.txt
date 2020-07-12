@@ -96,10 +96,6 @@ Necromancer
 Nekromantikere er troldmænd, som specialiserer sig i studiet af dødsmagi. De
 starter med besværgelsen Smerte.
 %%%%
-Skald
-
-Skjalde er nærkampskrigere, som kan styrke sig selv i kamp med Bogen om kamp.
-%%%%
 Summoner
 
 Hidkaldere starter med Bogen om kald og kan kaste Hidkald Små Pattedyr fra

@@ -94,11 +94,6 @@ Necromancer
 Los Nigromantes son magos especializados en la práctica de la magia de la
 muerte. Empiezan con el hechizo del Dolor.
 %%%%
-Skald
-
-Los Skald son luchadores cuerpo a cuerpo que pueden mejorar sus habilidades de
-combate con hechizos del Libro de Batallas.
-%%%%
 Summoner
 
 Los Convocadores comienzan con el Libro de las Llamadas y son capaces de

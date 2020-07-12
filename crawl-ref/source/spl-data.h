@@ -181,7 +181,7 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_HASTE, "Haste",
-    spschool::charms,
+    spschool::hexes,
     spflag::helpful | spflag::hasty | spflag::selfench | spflag::utility,
     6,
     200,
@@ -296,7 +296,7 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_RING_OF_THUNDER, "Ring of Thunder",
-    spschool::charms | spschool::air,
+    spschool::air,
     spflag::area,
     7,
     200,
@@ -712,7 +712,7 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_REPEL_MISSILES, "Repel Missiles",
-    spschool::charms | spschool::air,
+    spschool::air,
     spflag::monster,
     2,
     50,
@@ -723,7 +723,7 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_BERSERKER_RAGE, "Berserker Rage",
-    spschool::charms,
+    spschool::earth,
     spflag::hasty | spflag::monster,
     3,
     0,
@@ -1829,7 +1829,7 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_MIGHT, "Might",
-    spschool::charms,
+    spschool::hexes,
     spflag::helpful | spflag::selfench | spflag::emergency | spflag::utility,
     3,
     200,
@@ -1840,7 +1840,7 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_MIGHT_OTHER, "Might Other",
-    spschool::charms,
+    spschool::hexes,
     spflag::dir_or_target | spflag::not_self | spflag::helpful
         | spflag::needs_tracer | spflag::utility,
     5,
@@ -1863,7 +1863,7 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_DRUIDS_CALL, "Druid's Call",
-    spschool::charms,
+    spschool::summoning,
     spflag::monster,
     6,
     0,
@@ -2157,7 +2157,7 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_INJURY_BOND, "Injury Bond",
-    spschool::charms,
+    spschool::hexes,
     spflag::area | spflag::helpful,
     5,
     200,
@@ -2345,7 +2345,7 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_INVISIBILITY_OTHER, "Invisibility Other",
-    spschool::charms | spschool::hexes,
+    spschool::hexes,
     spflag::dir_or_target | spflag::not_self | spflag::helpful,
     6,
     200,
@@ -2433,7 +2433,7 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_CALL_OF_CHAOS, "Call of Chaos",
-    spschool::charms,
+    spschool::hexes,
     spflag::area | spflag::chaotic | spflag::monster,
     7,
     200,
@@ -2444,7 +2444,7 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_BLACK_MARK, "Black Mark",
-    spschool::charms | spschool::necromancy,
+    spschool::necromancy,
     spflag::monster,
     7,
     200,
@@ -2621,7 +2621,7 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_PHANTOM_MIRROR, "Phantom Mirror",
-    spschool::charms | spschool::hexes,
+    spschool::hexes,
     spflag::helpful | spflag::selfench,
     5,
     200,
@@ -2773,7 +2773,7 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_BATTLECRY, "Battlecry",
-    spschool::charms,
+    spschool::hexes,
     spflag::area | spflag::monster | spflag::selfench,
     6,
     0,
@@ -2817,7 +2817,7 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_BERSERK_OTHER, "Berserk Other",
-    spschool::charms,
+    spschool::hexes,
     spflag::hasty | spflag::monster | spflag::not_self | spflag::helpful,
     3,
     0,
@@ -3005,7 +3005,7 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_AURA_OF_BRILLIANCE, "Aura of Brilliance",
-    spschool::charms,
+    spschool::conjuration,
     spflag::area | spflag::monster,
     5,
     200,
@@ -3038,7 +3038,7 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_SPRINT, "Sprint",
-    spschool::charms,
+    spschool::hexes,
     spflag::hasty | spflag::selfench | spflag::utility,
     2,
     100,
