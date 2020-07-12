@@ -821,7 +821,7 @@ static int you_gold(lua_State *ls)
  */
 static int you_can_consume_corpses(lua_State *ls)
 {
-    lua_pushboolean(ls, you.get_mutation_level(MUT_CARNIVOROUS) == 0);
+    lua_pushboolean(ls, false);
     return 1;
 }
 
