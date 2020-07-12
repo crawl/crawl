@@ -81,6 +81,21 @@
 static void _do_xom_event(xom_event_type event_type, int sever);
 static int _xom_event_badness(xom_event_type event_type);
 
+static bool _xom_is_bored()
+{
+    if (!you_worship(GOD_XOM))
+        return false;
+    if (you.gift_timeout < 1)
+        return true;
+    // possible after 10000auts, guaranteed after 20000.
+    const bool boring = random2(10000) > 20000 - you.seen_something_new;
+#ifdef DEBUG_XOM
+    if (boring)
+        dprf("boring scummer, %d auts", you.seen_something_new);
+#endif
+    return boring;
+}
+
 static bool _action_is_bad(xom_event_type action)
 {
     return action > XOM_LAST_GOOD_ACT && action <= XOM_LAST_BAD_ACT;
@@ -178,7 +193,7 @@ const string describe_xom_favour()
     string favour;
     if (!you_worship(GOD_XOM))
         favour = "a very buggy toy of Xom.";
-    else if (you.gift_timeout < 1)
+    else if (_xom_is_bored())
         favour = "a BORING thing.";
     else
         favour = describe_xom_mood();
@@ -200,11 +215,6 @@ static string _get_xom_speech(const string &key)
     return result;
 }
 
-static bool _xom_is_bored()
-{
-    return you_worship(GOD_XOM) && !you.gift_timeout;
-}
-
 static bool _xom_feels_nasty()
 {
     // Xom will only directly kill you with a bad effect if you're under
@@ -220,7 +230,7 @@ bool xom_is_nice(int tension)
     if (you_worship(GOD_XOM))
     {
         // If you.gift_timeout is 0, then Xom is BORED. He HATES that.
-        if (!you.gift_timeout)
+        if (_xom_is_bored())
             return false;
 
         // At high tension Xom is more likely to be nice, at zero
@@ -274,7 +284,8 @@ static void _xom_is_stimulated(int maxinterestingness,
     if (interestingness > you.gift_timeout && interestingness >= 10)
     {
         you.gift_timeout = interestingness;
-        was_stimulated = true;
+        // a player could still be standing around being boring
+        was_stimulated = !_xom_is_bored();
     }
 
     if (was_stimulated || force_message)
@@ -376,12 +387,12 @@ void xom_tick()
                                           : 5);
 
         // If Xom is bored, the chances for Xom acting are sort of reversed.
-        if (!you.gift_timeout && x_chance_in_y(25 - chance*chance, 100))
+        if (_xom_is_bored() && x_chance_in_y(25 - chance*chance, 100))
         {
             xom_acts(abs(you.piety - HALF_MAX_PIETY), MB_MAYBE, tension);
             return;
         }
-        else if (you.gift_timeout <= 1 && chance > 0
+        else if (_xom_is_bored() && chance > 0
                  && x_chance_in_y(chance - 1, 80))
         {
             // During tension, Xom may briefly forget about being bored.

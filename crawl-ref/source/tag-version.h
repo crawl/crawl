@@ -246,6 +246,7 @@ enum tag_minor_version
     TAG_MINOR_MONSTER_TYPE_SIZE,   // Consistently marshall monster_type enums
     TAG_MINOR_SHAFT_CARD,          // Remove the Shaft card
     TAG_MINOR_LOAF_BUST,           // Remove rations, eating, and hunger mechanics
+    TAG_MINOR_NOVELTY,             // Field for tracking when player last saw something new
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

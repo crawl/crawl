@@ -460,6 +460,8 @@ void handle_time()
     int base_time = you.elapsed_time % 200;
     int old_time = base_time - you.time_taken;
 
+    you.seen_something_new += you.time_taken;
+
     // The checks below assume the function is called at least
     // once every 50 elapsed time units.
 

@@ -99,6 +99,17 @@ bool handle_seen_interrupt(monster* mons, vector<string>* msgs_buf)
 
     if (!mons_is_safe(mons))
     {
+        // TODO: this is a bad place for this, but I had some trouble finding
+        // a better place where the relevant flags are still set
+        if (aid.context == SC_NEWLY_SEEN && !mons->is_summoned())
+        {
+            dprf("seen new monster!");
+            you.seen_something_new = 0;
+        }
+        else
+            dprf("boring monster");
+
+
         return interrupt_activity(activity_interrupt::see_monster,
                                   aid, msgs_buf);
     }
@@ -1035,6 +1046,7 @@ static update_flags player_view_update_at(const coord_def &gc)
             && !player_in_branch(BRANCH_TEMPLE))
         {
             did_god_conduct(DID_EXPLORATION, 2500);
+            you.seen_something_new = 0;
             const int density = env.density ? env.density : 2000;
             you.exploration += div_rand_round(1<<16, density);
             roll_trap_effects();

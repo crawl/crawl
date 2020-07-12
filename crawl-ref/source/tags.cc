@@ -1587,6 +1587,7 @@ static void _tag_construct_you(writer &th)
     marshallInt(th, you.real_time());
     marshallInt(th, you.num_turns);
     marshallInt(th, you.exploration);
+    marshallInt(th, you.seen_something_new);
 
     marshallInt(th, you.magic_contamination);
 
@@ -3512,6 +3513,13 @@ static void _tag_read_you(reader &th)
     you.real_time_ms = chrono::milliseconds(real_time * 1000);
     you.num_turns  = unmarshallInt(th);
     you.exploration = unmarshallInt(th);
+
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_NOVELTY)
+        you.seen_something_new = 0;
+    else
+#endif
+        you.seen_something_new = unmarshallInt(th);
 
 #if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() < TAG_MINOR_CONTAM_SCALE)

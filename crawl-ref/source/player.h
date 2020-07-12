@@ -293,6 +293,8 @@ public:
 
     int num_turns;            // number of turns taken
     int exploration;          // levels explored (16.16 bit real number)
+    int seen_something_new;   // how long it has been since the player
+                              // encountered a new tile or monster. AUTs.
 
     int                       last_view_update;     // what turn was the view last updated?
 
