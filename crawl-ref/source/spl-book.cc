@@ -180,7 +180,6 @@ int book_rarity(book_type which_book)
         return 7;
 
     case BOOK_TRANSFIGURATIONS:
-    case BOOK_BEASTS:
         return 8;
 
     case BOOK_FIRE:

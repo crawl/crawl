@@ -96,11 +96,6 @@ book of battle
 
 A book of battle songs, containing spells to assist in combat.
 %%%%
-book of beasts
-
-A book of spells focused on the summoning of beasts. Its pages nip at careless
-readers' fingers.
-%%%%
 book of burglary
 
 A book containing many diverse spells useful for theft, breaking and entering,

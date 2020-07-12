@@ -101,12 +101,6 @@ book of battle
 Un livre de sorts utilisés par les skalds, dont les chants de batailles leur
 accorde une aide magique.
 %%%%
-book of beasts
-
-Un livre de sorts aux pages faites de peaux d'animaux et à la couverture
-couverte de morsure dont le contenu est principalement concentré sur la
-production magiques de bêtes.
-%%%%
 book of burglary
 
 Un livre contenant de nombreux sorts utiles pour voler, entrer par effraction,

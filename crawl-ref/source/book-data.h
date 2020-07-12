@@ -40,6 +40,7 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_SUMMON_FOREST,
     SPELL_SUMMON_MANA_VIPER,
     SPELL_SHADOW_CREATURES,
+    SPELL_SUMMON_HYDRA,
 },
 
 {   // Book of Fire
@@ -322,12 +323,14 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_NOXIOUS_BOG,
 },
 
+#if TAG_MAJOR_VERSION == 34
 {   // Book of Beasts
     SPELL_CALL_CANINE_FAMILIAR,
     SPELL_SUMMON_ICE_BEAST,
     SPELL_SUMMON_MANA_VIPER,
     SPELL_SUMMON_HYDRA,
 },
+#endif
 
 {   // Book of Annihilations
     SPELL_CHAIN_LIGHTNING,
