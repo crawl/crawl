@@ -33,7 +33,6 @@ mutations:
     MUT_DEFORMED: 1
     MUT_SPIT_POISON: 1
     MUT_POISON_RESISTANCE: 1
-    MUT_SLOW_METABOLISM: 1
   13:
     MUT_CONSTRICTING_TAIL: 1
 fake_mutations:

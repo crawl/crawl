@@ -63,6 +63,7 @@
  #include "mon-tentacle.h"
  #include "mon-util.h"
 #endif
+#include "mutation.h"
 #include "place.h"
 #include "player-stats.h"
 #include "prompt.h" // index_to_letter
@@ -2308,6 +2309,11 @@ static void _cap_mutation_at(mutation_type mut, int cap)
         you.innate_mutation[mut] = cap;
 }
 
+static void _clear_mutation(mutation_type mut)
+{
+    _cap_mutation_at(mut, 0);
+}
+
 static spell_type _fixup_positional_player_spell(spell_type s)
 {
     switch (s)
@@ -3066,11 +3072,12 @@ static void _tag_read_you(reader &th)
     }
     you.mutation[MUT_FAST] = you.innate_mutation[MUT_FAST];
     you.mutation[MUT_SLOW] = you.innate_mutation[MUT_SLOW];
-    you.mutation[MUT_BREATHE_FLAMES] = 0;
     if (you.species != SP_NAGA)
-        you.mutation[MUT_SPIT_POISON] = 0;
+        _clear_mutation(MUT_SPIT_POISON);
 #endif
 
+    // TODO: this code looks really out of context, it should at least have
+    // an ASSERT identifying count, but I'm not 100% sure what that would be
     for (int j = count; j < NUM_MUTATIONS; ++j)
         you.mutation[j] = you.innate_mutation[j] = you.sacrifices[j];
 
@@ -3080,33 +3087,15 @@ static void _tag_read_you(reader &th)
         // was, so when TAG_MINOR_NO_POTION_HEAL was added
         // these were all moved to only apply to previous
         // tags.
-        if (you.mutation[MUT_TELEPORT_CONTROL] == 1)
-            you.mutation[MUT_TELEPORT_CONTROL] = 0;
-        if (you.mutation[MUT_TRAMPLE_RESISTANCE] > 0
-            || you.innate_mutation[MUT_TRAMPLE_RESISTANCE] > 0)
-        {
-            you.mutation[MUT_TRAMPLE_RESISTANCE] = 0;
-            you.innate_mutation[MUT_TRAMPLE_RESISTANCE] = 0;
-        }
-        if (you.mutation[MUT_CLING] == 1)
-            you.mutation[MUT_CLING] = 0;
-        if (you.species == SP_GARGOYLE)
-        {
-            you.mutation[MUT_POISON_RESISTANCE] =
-            you.innate_mutation[MUT_POISON_RESISTANCE] = 0;
-        }
-        if (you.species == SP_FORMICID)
-        {
-            you.mutation[MUT_ANTENNAE] = you.innate_mutation[MUT_ANTENNAE] = 3;
-            you.mutation[MUT_EXOSKELETON] =
-            you.innate_mutation[MUT_EXOSKELETON] = 0;
-        }
-    }
 
-    if (th.getMinorVersion() < TAG_MINOR_DIET_MUT)
-    {
-        you.mutation[MUT_CARNIVOROUS] = you.innate_mutation[MUT_CARNIVOROUS];
-        you.mutation[MUT_HERBIVOROUS] = you.innate_mutation[MUT_HERBIVOROUS];
+        // some mutations from this tag are handled by generic cleanup code
+        // below.
+
+        if (you.species == SP_GARGOYLE)
+            _clear_mutation(MUT_POISON_RESISTANCE);
+
+        if (you.species == SP_FORMICID)
+            you.mutation[MUT_ANTENNAE] = you.innate_mutation[MUT_ANTENNAE] = 3;
     }
 
     if (th.getMinorVersion() < TAG_MINOR_SAPROVOROUS
@@ -3117,36 +3106,19 @@ static void _tag_read_you(reader &th)
         you.innate_mutation[MUT_FAST_METABOLISM] -= 1;
     }
 
-    if (th.getMinorVersion() < TAG_MINOR_CE_HA_DIET)
-    {
-        if (you.species == SP_CENTAUR)
-        {
-            you.mutation[MUT_FAST_METABOLISM] -= 1;
-            you.innate_mutation[MUT_FAST_METABOLISM] -= 1;
-
-            you.mutation[MUT_HERBIVOROUS] = 1;
-            you.innate_mutation[MUT_HERBIVOROUS] = 1;
-        }
-        else if (you.species == SP_HALFLING)
-        {
-            you.mutation[MUT_SLOW_METABOLISM] -= 1;
-            you.innate_mutation[MUT_SLOW_METABOLISM] -= 1;
-        }
-    }
-
     if (th.getMinorVersion() < TAG_MINOR_ROT_IMMUNITY)
     {
         if (you.species == SP_VINE_STALKER)
         {
             you.mutation[MUT_NO_POTION_HEAL] =
-            you.innate_mutation[MUT_NO_POTION_HEAL] = 3;
+                    you.innate_mutation[MUT_NO_POTION_HEAL] = 3;
         }
 
         if (you.species == SP_VINE_STALKER
             || you.species == SP_GARGOYLE)
         {
             you.mutation[MUT_ROT_IMMUNITY] =
-            you.innate_mutation[MUT_ROT_IMMUNITY] = 1;
+                    you.innate_mutation[MUT_ROT_IMMUNITY] = 1;
         }
     }
 
@@ -3155,46 +3127,24 @@ static void _tag_read_you(reader &th)
         && you.innate_mutation[MUT_SAPROVOROUS])
     {
         you.mutation[MUT_ROT_IMMUNITY] =
-        you.innate_mutation[MUT_ROT_IMMUNITY] = 1;
+                you.innate_mutation[MUT_ROT_IMMUNITY] = 1;
     }
-
-    you.mutation[MUT_SAPROVOROUS] =
-    you.innate_mutation[MUT_SAPROVOROUS] = 0;
 
     if (th.getMinorVersion() < TAG_MINOR_DS_CLOUD_MUTATIONS
         && you.species == SP_DEMONSPAWN)
     {
         if (you.innate_mutation[MUT_CONSERVE_POTIONS])
         {
-            you.mutation[MUT_CONSERVE_POTIONS] =
-            you.innate_mutation[MUT_CONSERVE_POTIONS] = 0;
-
+            // cleanup handled below
             you.mutation[MUT_FREEZING_CLOUD_IMMUNITY] =
-            you.innate_mutation[MUT_FREEZING_CLOUD_IMMUNITY] = 1;
+                    you.innate_mutation[MUT_FREEZING_CLOUD_IMMUNITY] = 1;
         }
         if (you.innate_mutation[MUT_CONSERVE_SCROLLS])
         {
-            you.mutation[MUT_CONSERVE_SCROLLS] =
-            you.innate_mutation[MUT_CONSERVE_SCROLLS] = 0;
-
+            // cleanup handled below
             you.mutation[MUT_FLAME_CLOUD_IMMUNITY] =
-            you.innate_mutation[MUT_FLAME_CLOUD_IMMUNITY] = 1;
+                    you.innate_mutation[MUT_FLAME_CLOUD_IMMUNITY] = 1;
         }
-    }
-
-    if (th.getMinorVersion() < TAG_MINOR_METABOLISM)
-    {
-        you.mutation[MUT_FAST_METABOLISM] =
-        you.innate_mutation[MUT_FAST_METABOLISM];
-
-        you.mutation[MUT_SLOW_METABOLISM] =
-        you.innate_mutation[MUT_SLOW_METABOLISM];
-    }
-
-    if (th.getMinorVersion() < TAG_MINOR_NO_JUMP
-        && you.species == SP_FELID && you.innate_mutation[MUT_JUMP] != 0)
-    {
-        you.mutation[MUT_JUMP] = 0;
     }
 
     // No minor version needed: all old felids should get MUT_PAWS.
@@ -3207,13 +3157,11 @@ static void _tag_read_you(reader &th)
         if (you.innate_mutation[MUT_SPIT_POISON] < 2)
         {
             you.mutation[MUT_SPIT_POISON] =
-            you.innate_mutation[MUT_SPIT_POISON] = 2;
+                    you.innate_mutation[MUT_SPIT_POISON] = 2;
         }
+        // cleanup handled below
         if (you.mutation[MUT_BREATHE_POISON])
-        {
-            you.mutation[MUT_BREATHE_POISON] = 0;
             you.mutation[MUT_SPIT_POISON] = 3;
-        }
     }
 
     // Give nagas constrict, tengu flight, and mummies restoration/enhancers.
@@ -3224,12 +3172,6 @@ static void _tag_read_you(reader &th)
     {
         for (int xl = 2; xl <= you.experience_level; ++xl)
             give_level_mutations(you.species, xl);
-    }
-
-    if (th.getMinorVersion() < TAG_MINOR_NO_FORLORN)
-    {
-        if (you.mutation[MUT_FORLORN])
-            you.mutation[MUT_FORLORN] = 0;
     }
 
     if (th.getMinorVersion() < TAG_MINOR_MP_WANDS)
@@ -3259,36 +3201,6 @@ static void _tag_read_you(reader &th)
             you.mutation[MUT_BLINK] = 1;
     }
 
-    if (th.getMinorVersion() < TAG_MINOR_MUMMY_RESTORATION)
-    {
-        if (you.mutation[MUT_MUMMY_RESTORATION])
-        {
-            you.mutation[MUT_MUMMY_RESTORATION] = 0;
-            you.innate_mutation[MUT_MUMMY_RESTORATION] = 0;
-        }
-        if (you.mutation[MUT_SUSTAIN_ATTRIBUTES])
-        {
-            you.mutation[MUT_SUSTAIN_ATTRIBUTES] = 0;
-            you.innate_mutation[MUT_SUSTAIN_ATTRIBUTES] = 0;
-        }
-    }
-    else
-    {
-        // need another fixup due to save compat issues; the first version
-        // above forgot to deal with innate mutations. The mutation might
-        // have been readded in the generic fixup code.
-        if (you.innate_mutation[MUT_MUMMY_RESTORATION])
-        {
-            you.mutation[MUT_MUMMY_RESTORATION] = 0;
-            you.innate_mutation[MUT_MUMMY_RESTORATION] = 0;
-        }
-        if (you.innate_mutation[MUT_SUSTAIN_ATTRIBUTES])
-        {
-            you.mutation[MUT_SUSTAIN_ATTRIBUTES] = 0;
-            you.innate_mutation[MUT_SUSTAIN_ATTRIBUTES] = 0;
-        }
-    }
-
     if (th.getMinorVersion() < TAG_MINOR_SPIT_POISON_AGAIN)
     {
         if (you.mutation[MUT_SPIT_POISON] > 1)
@@ -3314,10 +3226,6 @@ static void _tag_read_you(reader &th)
         if (you.innate_mutation[MUT_SPIT_POISON] == 2)
             you.innate_mutation[MUT_SPIT_POISON] = 1;
     }
-
-    // Carnivore and herbivore used to be 3-level mutations.
-    _cap_mutation_at(MUT_HERBIVOROUS, 0);
-    _cap_mutation_at(MUT_CARNIVOROUS, 1);
 
     // Slow regeneration split into two single-level muts:
     // * Inhibited regeneration (no regen in los of monsters, what Gh get)
@@ -3348,6 +3256,10 @@ static void _tag_read_you(reader &th)
         you.mutation[MUT_ACID_RESISTANCE] = 1;
         you.innate_mutation[MUT_ACID_RESISTANCE] = 1;
     }
+
+    // fully clean up any removed mutations
+    for (auto m : get_removed_mutations())
+        _clear_mutation(m);
 
     // Fixup for Sacrifice XP from XL 27 (#9895). No minor tag, but this
     // should still be removed on a major bump.

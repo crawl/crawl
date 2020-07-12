@@ -95,6 +95,39 @@ static const body_facet_def _body_facets[] =
     { EQ_BOOTS, MUT_TALONS }
 };
 
+static vector<mutation_type> removed_mutations =
+    {
+#if TAG_MAJOR_VERSION == 34
+        MUT_ROUGH_BLACK_SCALES,
+        MUT_BREATHE_FLAMES,
+        MUT_BREATHE_POISON,
+        MUT_CARNIVOROUS,
+        MUT_CLING,
+        MUT_CONSERVE_POTIONS,
+        MUT_CONSERVE_SCROLLS,
+        MUT_EXOSKELETON,
+        MUT_FAST_METABOLISM,
+        MUT_FLEXIBLE_WEAK,
+        MUT_FOOD_JELLY,
+        MUT_FORLORN,
+        MUT_FUMES,
+        MUT_HERBIVOROUS,
+        MUT_JUMP,
+        MUT_SAPROVOROUS,
+        MUT_SLOW_METABOLISM,
+        MUT_STRONG_STIFF,
+        MUT_SUSTAIN_ATTRIBUTES,
+        MUT_TELEPORT_CONTROL,
+        MUT_TRAMPLE_RESISTANCE,
+        MUT_MUMMY_RESTORATION,
+#endif
+    };
+
+vector<mutation_type> get_removed_mutations()
+{
+    return removed_mutations;
+}
+
 /**
  * Conflicting mutation pairs. Entries are symmetric (so if A conflicts
  * with B, B conflicts with A in the same way).
@@ -1244,11 +1277,9 @@ bool physiology_mutation_conflict(mutation_type mutat)
         return true;
     }
 
-    // Vampires' healing and thirst rates depend on their blood level.
+    // Vampires' healing rates depend on their blood level.
     if (you.species == SP_VAMPIRE
-        && (mutat == MUT_CARNIVOROUS || mutat == MUT_HERBIVOROUS
-            || mutat == MUT_REGENERATION || mutat == MUT_INHIBITED_REGENERATION
-            || mutat == MUT_FAST_METABOLISM || mutat == MUT_SLOW_METABOLISM))
+        && (mutat == MUT_REGENERATION || mutat == MUT_INHIBITED_REGENERATION))
     {
         return true;
     }

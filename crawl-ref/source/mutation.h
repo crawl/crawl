@@ -29,6 +29,8 @@ enum mutation_permanence_class
     MUTCLASS_INNATE
 };
 
+vector<mutation_type> get_removed_mutations();
+
 void init_mut_index();
 
 bool is_body_facet(mutation_type mut);

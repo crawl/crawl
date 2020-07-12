@@ -1047,8 +1047,6 @@ static bool _rare_hints_event(hints_event_type event)
     case HINT_YOU_POISON:
     case HINT_YOU_ROTTING:
     case HINT_YOU_CURSED:
-    case HINT_YOU_HUNGRY:
-    case HINT_YOU_STARVING:
     case HINT_GLOWING:
     case HINT_CAUGHT_IN_NET:
     case HINT_YOU_SILENCE:
@@ -1292,22 +1290,6 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 "special properties, good or bad.";
         break;
 
-    case HINT_SEEN_FOOD:
-        text << "You have picked up a chunk of flesh"
-        "<console> ('<w>"
-         << stringize_glyph(get_item_symbol(SHOW_ITEM_FOOD))
-         << "</w>')</console>.  ";
-        if (you.get_mutation_level(MUT_CARNIVOROUS))
-        {
-            text << "Ghouls need to consume flesh to keep from rotting away, "
-                    "and will heal when they do so. Butcher corpses to get "
-                    "more. You can eat it by typing <w>e</w>"
-                     "<tiles> or by <w>left-clicking</w> on it</tiles>.";
-        }
-        else
-            text << "It's pretty disgusting, unless you are a ghoul.";
-        break;
-
     case HINT_SEEN_CARRION:
         // TODO: Specialcase skeletons!
 
@@ -1333,8 +1315,6 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 #endif
             }
         }
-        text << "It's pretty disgusting; only a ghoul would want to mess "
-                "with it.";
         break;
 
     case HINT_SEEN_JEWELLERY:
@@ -2664,8 +2644,6 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
     case HINT_ANIMATE_CORPSE_SKELETON:
         text << "Animate Skeleton works on the corpse of any monster that has "
                 "a skeleton inside.";
-        if (you.get_mutation_level(MUT_CARNIVOROUS))
-            text << "  It will also butcher them automatically.";
         break;
     default:
         text << "You've found something new (but I don't know what)!";
