@@ -699,7 +699,7 @@ string player::unarmed_attack_name() const
     else if (has_usable_tentacles(true))
         default_name = "Tentacles";
     else if (you.has_hydra_multi_attack())
-        default_name = "Teeth";
+        default_name = "Bite (x"+to_string(you.heads())+")"; //as Hydra form
 
     return get_form()->get_uc_attack_name(default_name);
 }
