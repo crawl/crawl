@@ -215,7 +215,8 @@ i-evasion BRAND_EVASION
 i-confusion BRAND_CONFUSION
 # end TAG_MAJOR_VERSION
 i-penetration BRAND_PENETRATION
-i-reaping BRAND_REAPING BRAND_WEP_LAST
+i-reaping BRAND_REAPING
+i-spectral BRAND_SPECTRAL BRAND_WEP_LAST
 # missile-only brands, order doesn't matter
 i-dispersal BRAND_DISPERSAL
 i-explosion BRAND_EXPLOSION

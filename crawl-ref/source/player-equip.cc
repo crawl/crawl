@@ -596,6 +596,17 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
                 case SPWPN_ACID:
                     mprf("%s begins to ooze corrosive slime!", item_name.c_str());
                     break;
+                case SPWPN_SPECTRAL:
+                    if (you.skill(SK_EVOCATIONS) == 0)
+                        mpr("You have a feeling of ineptitude.");
+                    else if (you.skill(SK_EVOCATIONS) <= 6)
+                        mprf("You feel a bond with your %s.", item_name.c_str());
+                    else
+                    {
+                        mprf("You feel a deep bond with your %s!",
+                             item_name.c_str());
+                    }
+                    break;
 
                 default:
                     break;
@@ -713,6 +724,18 @@ static void _unequip_weapon_effect(item_def& real_item, bool showMsgs,
                 mpr("You feel magic returning to you.");
                 break;
 
+            case SPWPN_SPECTRAL:
+                {
+                    monster *spectral_weapon = find_spectral_weapon(&you);
+                    if (spectral_weapon)
+                    {
+                        mprf("Your spectral weapon disappears as %s.",
+                             meld ? "your weapon melds" : "you unwield");
+                        end_spectral_weapon(spectral_weapon, false, true);
+                    }
+                }
+                break;
+
                 // NOTE: When more are added here, *must* duplicate unwielding
                 // effect in brand weapon scroll effect in read_scroll.
 
@@ -731,15 +754,6 @@ static void _unequip_weapon_effect(item_def& real_item, bool showMsgs,
 
     if (is_artefact(item))
         _unequip_fragile_artefact(item, meld);
-
-    // Unwielding dismisses an active spectral weapon
-    monster *spectral_weapon = find_spectral_weapon(&you);
-    if (spectral_weapon)
-    {
-        mprf("Your spectral weapon disappears as %s.",
-             meld ? "your weapon melds" : "you unwield");
-        end_spectral_weapon(spectral_weapon, false, true);
-    }
 }
 
 static void _spirit_shield_message(bool unmeld)

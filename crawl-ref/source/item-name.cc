@@ -418,7 +418,7 @@ static const char *weapon_brands_terse[] =
 #if TAG_MAJOR_VERSION == 34
     "evade", "confuse",
 #endif
-    "penet", "reap", "vorpal", "acid",
+    "penet", "reap", "spect", "vorpal", "acid",
 #if TAG_MAJOR_VERSION > 34
     "confuse",
 #endif
@@ -443,7 +443,7 @@ static const char *weapon_brands_verbose[] =
 #if TAG_MAJOR_VERSION == 34
     "evasion", "confusion",
 #endif
-    "penetration", "reaping", "vorpal", "acid",
+    "penetration", "reaping", "spectralizing", "vorpal", "acid",
 #if TAG_MAJOR_VERSION > 34
     "confusion",
 #endif
@@ -476,7 +476,7 @@ static const char *weapon_brands_adj[] =
 };
 
 static const set<brand_type> brand_prefers_adj =
-            { SPWPN_VAMPIRISM, SPWPN_ANTIMAGIC, SPWPN_VORPAL };
+            { SPWPN_VAMPIRISM, SPWPN_ANTIMAGIC, SPWPN_VORPAL, SPWPN_SPECTRAL };
 
 /**
  * What's the name of a type of weapon brand?

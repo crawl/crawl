@@ -2365,6 +2365,9 @@ static void _rebrand_weapon(item_def& wpn)
     if (&wpn == you.weapon() && you.duration[DUR_EXCRUCIATING_WOUNDS])
         end_weapon_brand(wpn);
     const brand_type old_brand = get_weapon_brand(wpn);
+    monster * spect = find_spectral_weapon(&you);
+    if (&wpn == you.weapon() && old_brand == SPWPN_SPECTRAL && spect)
+        end_spectral_weapon(spect, false);
     brand_type new_brand = old_brand;
 
     // now try and find an appropriate brand

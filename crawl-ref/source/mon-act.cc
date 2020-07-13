@@ -2305,6 +2305,15 @@ static void _post_monster_move(monster* mons)
             }
     }
 
+
+    const item_def * weapon = mons->mslot_item(MSLOT_WEAPON);
+    if (weapon && get_weapon_brand(*weapon) == SPWPN_SPECTRAL
+        && !mons_is_avatar(mons->type)
+        && !find_spectral_weapon(mons))
+    {
+        cast_spectral_weapon(mons, mons->get_experience_level() * 4, mons->god);
+    }
+
     if (mons->type != MONS_NO_MONSTER && mons->hit_points < 1)
         monster_die(*mons, KILL_MISC, NON_MONSTER);
 }

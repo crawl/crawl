@@ -1149,6 +1149,7 @@ static void _debug_acquirement_stats(FILE *ostat)
 #endif
             "penetration",
             "reaping",
+            "spectral",
             "INVALID",
             "acid",
 #if TAG_MAJOR_VERSION > 34

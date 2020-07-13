@@ -2742,32 +2742,13 @@ bool weapon_can_be_spectral(const item_def *wpn)
         && !is_special_unrandom_artefact(*wpn);
 }
 
-spret cast_spectral_weapon(actor *agent, int pow, god_type god, bool fail)
+// Now used for the spectral ego, so it lacks certain parameters
+void cast_spectral_weapon(actor *agent, int pow, god_type god)
 {
     ASSERT(agent);
 
     const int dur = min(2 + random2(1 + div_rand_round(pow, 25)), 4);
     item_def* wpn = agent->weapon();
-
-    // If the wielded weapon should not be cloned, abort
-    if (!weapon_can_be_spectral(wpn))
-    {
-        if (agent->is_player())
-        {
-            if (wpn)
-            {
-                mprf("%s vibrate%s crazily for a second.",
-                     wpn->name(DESC_YOUR).c_str(),
-                     wpn->quantity > 1 ? "" : "s");
-            }
-            else
-                mpr(you.hands_act("twitch", "."));
-        }
-
-        return spret::abort;
-    }
-
-    fail_check();
 
     // Remove any existing spectral weapons. Only one should be alive at any
     // given time.
@@ -2780,18 +2761,13 @@ spret cast_spectral_weapon(actor *agent, int pow, god_type god, bool fail)
                                     : SAME_ATTITUDE(agent->as_monster()),
                  agent->pos(),
                  agent->mindex());
-    mg.set_summoned(agent, dur, SPELL_SPECTRAL_WEAPON, god);
+    mg.set_summoned(agent, dur, 0, god);
     mg.props[TUKIMA_WEAPON] = *wpn;
     mg.props[TUKIMA_POWER] = pow;
 
     monster *mons = create_monster(mg);
     if (!mons)
-    {
-        //if (agent->is_player())
-            canned_msg(MSG_NOTHING_HAPPENS);
-
-        return spret::success;
-    }
+        return;
 
     if (agent->is_player())
         mpr("You draw out your weapon's spirit!");
@@ -2814,8 +2790,6 @@ spret cast_spectral_weapon(actor *agent, int pow, god_type god, bool fail)
 
     mons->summoner = agent->mid;
     agent->props["spectral_weapon"].get_int() = mons->mid;
-
-    return spret::success;
 }
 
 void end_spectral_weapon(monster* mons, bool killed, bool quiet)
