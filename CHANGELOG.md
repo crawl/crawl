@@ -5,6 +5,9 @@
 이 체인지 로그 포맷은 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)를 기반으로 작성됨,
 
 ## [Unreleased]
+
+
+## [kimchi-1.0] - ~2020-07-13
 ### Added
 - 새로운 종족 쌍두 오우거 추가. 2개의 무기와 2개의 목걸이를 낄 수 있음. 그러나 방패를 낄 수 없음
   - Added two-headed ogre(playable). Can wear 2 weapons and 2 amulets. But you can't wear a shield
@@ -186,9 +189,6 @@
 - 다시 시야 밖에서 구름이 사라지지않음
   - Don't erase clouds outside of LOS
   
-- 장검반격은 이제 50%확률로 나감
-  - Long Blade's Riposte buff. Now triggers at 50%
-  
 - 다시 매혹을 큰 소음으로 해제할 수 있게 됨
   - Noise break mesmerisation again 
 
@@ -233,4 +233,5 @@
 - 헤일스톰추가 Added Hailstorm
 - 냉기술사의 기본책은 이제 예전버전과 최신버전을 고를 수 있음 Ice elementalist chooses old or new spell set.
   
-[Unreleased]: https://github.com/kimjoy2002/crawl/compare/0.24.1...HEAD
+[Unreleased]: https://github.com/kimjoy2002/crawl/compare/kimchi-1.0-branch...HEAD  
+[kimchi-1.0]: https://github.com/kimjoy2002/crawl/tree/kimchi-1.0-branch
