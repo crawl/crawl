@@ -1792,7 +1792,6 @@ static void _make_acquirement_items()
         //SP_CRUSTACEAN
         rand_classes.emplace_back(OBJ_WEAPONS);
         rand_classes.emplace_back(OBJ_MISSILES);
-        rand_classes.emplace_back(OBJ_RODS);
     }
     else if (you.species == SP_HYDRA) {
         //SP_CRUSTACEAN
