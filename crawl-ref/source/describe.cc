@@ -3884,49 +3884,49 @@ static void _add_energy_to_string(int speed, int energy, string what,
 }
 
 /**
- * Calculate effects on the player's to-hit from a defending monster.
+ * Calculate post-randomization effects on the player's to-hit.
  *
- * @param base_to_hit   The to-hit with only attacker-side effects applied.
+ * @param to_hit        The actual randomized to-hit.
  * @param mi[in]        Player-visible info about the monster in question.
  * @param melee         Whether the attack is melee or ranged.
  */
-static int _apply_defender_effects(const monster_info& mi, int to_hit, bool melee)
+static int _post_roll_to_hit_modifiers(const monster_info& mi, int to_hit, bool melee)
 {
     int effect = 0;
-    // Lighting effects. Subtracting these from EV is weirdly equivalent to adding
-    // them to the post-roll to-hit (the to_hit we have here is pre-roll).
+
+    effect -= 5 * you.inaccuracy();
+
+    if (you.confused()) effect -= 5;
+
+    // Lighting effects.
     if (mi.is(MB_GLOWING)       // corona, silver corona (!)
         || mi.is(MB_BURNING)    // sticky flame
         || mi.is(MB_HALOED))
     {
         effect += BACKLIGHT_TO_HIT_BONUS;
-    } else if (mi.is(MB_UMBRAED) && !you.nightvision())
+    }
+    else if (mi.is(MB_UMBRAED) && !you.nightvision())
         effect += UMBRA_TO_HIT_MALUS;
 
     if (melee) {
-        // Duplicates melee_attack::calc_to_hit().
-
+        // Duplicates melee_attack::post_roll_to_hit_modifiers().
         if (you.duration[DUR_CONFUSING_TOUCH])
-            effect += you.dex() / 2;
+            effect += maybe_random_div(you.dex(), 2, false);
 
         if (!you.weapon() && get_form()->unarmed_hit_bonus)
             effect += UC_FORM_TO_HIT_BONUS;
     } else {
-        // Duplicates ranged_attack::calc_to_hit().
-
-        // this is slightly wrong but reasonably close
+        // Duplicates ranged_attack::post_roll_to_hit_modifiers().
         if (is_pproj_active())
-        {
-            effect += (you.attribute[ATTR_PORTAL_PROJECTILE] + PPROJ_TO_HIT_DIV/2)
-                   / PPROJ_TO_HIT_DIV;
-        }
+            effect += maybe_random_div(you.attribute[ATTR_PORTAL_PROJECTILE], PPROJ_TO_HIT_DIV, false);
 
         if (mi.is(MB_REPEL_MSL))
-            effect -= (to_hit - 1) / 2;
+            effect -= (to_hit + 1) / 2;
     }
 
     return effect;
 }
+
 
 /**
  * Return the odds of an attack with the given to-hit bonus hitting a defender with the
@@ -3936,46 +3936,37 @@ static int _apply_defender_effects(const monster_info& mi, int to_hit, bool mele
  * @param ev                Defender evasion.
  * @return                  To-hit percent between 0 and 100 (inclusive).
  */
-static int _to_hit_pct(int to_land, int ev)
+static int _to_hit_pct(const monster_info& mi, int to_land, bool melee)
 {
+    int ev = mi.ev;
     if (to_land >= AUTOMATIC_HIT)
         return 100;
 
     if (ev <= 0)
         return 100 - MIN_HIT_MISS_PERCENTAGE / 2;
 
-    // We actually roll random2(to_land + 1).
-    to_land++;
-    // We roll double the defender's ev, for some reason.
-    ev *= 2;
-
-    // Calculate the odds of any given random2avg(ev) roll.
-    // There are a lot of ways to do this: we could try to generate the closed form,
-    // approximate with an integral, or enumerate each possibility and sum the odds.
-    // We'll do the latter here.
     int hits = 0;
-    for (int roll1 = 0; roll1 < ev; roll1++)
-    {
-        for (int roll2 = 0; roll2 < ev; roll2++) // slightly wrong
+    for (int rolled_mhit = 0; rolled_mhit < to_land; rolled_mhit++){
+        // Apply post-roll manipulations:
+        int adjusted_mhit = rolled_mhit + _post_roll_to_hit_modifiers(mi, rolled_mhit, melee);
+
+        if (adjusted_mhit >= ev)
         {
-            const int rolled_ev = (roll1 + roll2)/2;
-            // If we roll random2(to_land + 1), we'll hit this EV (hits) times, not counting
-            // MIN_HIT_MISS_PERCENTAGE.
-            if (rolled_ev < to_land)
-                hits += to_land - rolled_ev;
+            hits++;
+
+        dprf("rolled_mhit: %d, ev: %d, to_land: %d, modifiers: %d",
+            rolled_mhit, ev, to_land, _post_roll_to_hit_modifiers(mi, rolled_mhit, melee));
         }
     }
-    const int total_rolls = ev * ev * to_land;
-    const int base_hit_perc = hits * 100 / total_rolls;
-    const int base_miss_perc = 100 - base_hit_perc;
-    // final hits are 97.5% of rolled hits + the 2.5% of misses that convert into hits
-    const int non_automissed_hits = (100 - MIN_HIT_MISS_PERCENTAGE/2) * base_hit_perc / 100;
-    const int autohit_misses = (MIN_HIT_MISS_PERCENTAGE/2) * base_miss_perc / 100;
-    dprf("to_land: %d, ev: %d, hits: %d, total rolls: %d, base_hit: %d, base_miss: %d, non_automiss: %d, autohit: %d",
-        to_land, ev, hits, total_rolls, base_hit_perc, base_miss_perc, non_automissed_hits, autohit_misses);
-    return non_automissed_hits + autohit_misses;
-}
 
+    double hit_chance = ((double)hits) / to_land;
+    // Apply Bayes Theorem to account for auto hit and miss.
+    hit_chance = hit_chance * (1 - MIN_HIT_MISS_PERCENTAGE / 200.0) + (1 - hit_chance) * MIN_HIT_MISS_PERCENTAGE / 200.0;
+
+    dprf("to_land: %d, ev: %d, hits: %d, hit_chance: %f",
+        to_land, ev, hits, hit_chance);
+    return (int)(hit_chance*100);
+}
 
 /**
  * Display the % chance of a player hitting the given monster.
@@ -3992,23 +3983,20 @@ static void _describe_to_hit(const monster_info& mi, ostringstream &result)
         return; // breadwielding
 
     const bool melee = weapon == nullptr || !is_range_weapon(*weapon);
-    int to_hit, ev;
+    int to_hit_pct;
     if (melee)
     {
         melee_attack attk(&you, nullptr);
-        to_hit = attk.calc_pre_roll_to_hit(false);
-        ev = mi.ev - attk.post_roll_to_hit_modifiers(to_hit/2);
+        to_hit_pct = _to_hit_pct(mi, attk.calc_pre_roll_to_hit(false), true);
     } else {
         const int missile = you.m_quiver.get_fire_item();
         if (missile < 0)
             return; // failure to launch
         ranged_attack attk(&you, nullptr, &you.inv[missile], false);
-        to_hit = attk.calc_pre_roll_to_hit(false);
-        ev = mi.ev - attk.post_roll_to_hit_modifiers(to_hit/2);
+        to_hit_pct = _to_hit_pct(mi, attk.calc_pre_roll_to_hit(false), false);
     }
 
-    ev -= _apply_defender_effects(mi, to_hit, melee);
-    result << " (about " << (100 - _to_hit_pct(to_hit, ev)) << "% to evade ";
+    result << " (about " << (100 - to_hit_pct) << "% to evade ";
     if (weapon == nullptr)
         result << "your " << you.hand_name(true);
     else

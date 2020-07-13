@@ -71,9 +71,16 @@ int ranged_attack::calc_to_hit(bool random)
     if (mhit == AUTOMATIC_HIT)
         return AUTOMATIC_HIT;
 
+    return mhit;
+}
+
+int ranged_attack::post_roll_to_hit_modifiers(int mhit, bool random)
+{
+    int modifiers = attack::post_roll_to_hit_modifiers(mhit, random);
+
     if (teleport)
     {
-        mhit +=
+        modifiers +=
             (attacker->is_player())
             ? maybe_random_div(you.attribute[ATTR_PORTAL_PROJECTILE],
                                PPROJ_TO_HIT_DIV, random)
@@ -81,9 +88,9 @@ int ranged_attack::calc_to_hit(bool random)
     }
 
     if (defender && defender->missile_repulsion())
-        mhit = (mhit - 1) / 2;
+        modifiers -= (mhit + 1) / 2;
 
-    return mhit;
+    return modifiers;
 }
 
 bool ranged_attack::attack()

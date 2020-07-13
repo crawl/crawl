@@ -2289,25 +2289,32 @@ bool melee_attack::apply_staff_damage()
     return true;
 }
 
-// Duplicates describe.cc:_apply_defender_effects().
 int melee_attack::calc_to_hit(bool random)
 {
     int mhit = attack::calc_to_hit(random);
     if (mhit == AUTOMATIC_HIT)
         return AUTOMATIC_HIT;
 
+    return mhit;
+}
+
+// Duplicates describe.cc:_apply_defender_effects().
+int melee_attack::post_roll_to_hit_modifiers(int mhit, bool random)
+{
+    int modifiers = attack::post_roll_to_hit_modifiers(mhit, random);
+
     // Just trying to touch is easier than trying to damage.
     if (you.duration[DUR_CONFUSING_TOUCH])
-        mhit += maybe_random_div(you.dex(), 2, random);
+        modifiers += maybe_random_div(you.dex(), 2, random);
 
     if (attacker->is_player() && !weapon && get_form()->unarmed_hit_bonus)
     {
         // TODO: Review this later (transformations getting extra hit
         // almost across the board seems bad) - Cryp71c
-        mhit += UC_FORM_TO_HIT_BONUS;
+        modifiers += UC_FORM_TO_HIT_BONUS;
     }
 
-    return mhit;
+    return modifiers;
 }
 
 void melee_attack::player_stab_check()

@@ -262,7 +262,7 @@ int attack::calc_pre_roll_to_hit(bool random) {
  *
  * @param mhit The post-roll player's to-hit value.
  */
-int attack::post_roll_to_hit_modifiers(int mhit) {
+int attack::post_roll_to_hit_modifiers(int mhit, bool random) {
     int modifiers = 0;
 
     // Penalties for both players and monsters:
@@ -292,9 +292,9 @@ int attack::post_roll_to_hit_modifiers(int mhit) {
 
         // defender backlight bonus and umbra penalty.
         if (defender->backlit(false))
-            modifiers += 5;
+            modifiers += BACKLIGHT_TO_HIT_BONUS;
         if (!attacker->nightvision() && defender->umbra())
-            modifiers -= 3;
+            modifiers += UMBRA_TO_HIT_MALUS;
     }
 
     return modifiers;
@@ -315,7 +315,7 @@ int attack::calc_to_hit(bool random)
     if (attacker->is_player())
         mhit = maybe_random2(mhit, random);
 
-    mhit += post_roll_to_hit_modifiers(mhit);
+    mhit += post_roll_to_hit_modifiers(mhit, random);
 
     // We already did this roll for players.
     if (!attacker->is_player())
