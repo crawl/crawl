@@ -68,8 +68,8 @@ struct player_info
     int elapsed_time;
     int num_turns;
     int lives, deaths;
-    int heads;
-    
+    string heads; //maybe int is better?
+
     string place;
     int depth;
     coord_def position;
