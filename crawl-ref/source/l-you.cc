@@ -533,6 +533,11 @@ LUARET1(you_temp_mutations, number, you.attribute[ATTR_TEMP_MUTATIONS])
  */
 LUARET1(you_mutation_overview, string, mutation_overview().c_str())
 
+/*** Number of heads.
+ * @treturn string
+ * @function heads
+ */
+LUARET1(you_heads, string, to_string(you.heads()).c_str())
 /*** LOS Radius.
  * @treturn int
  * @function los
@@ -1240,6 +1245,7 @@ static const struct luaL_reg you_clib[] =
     { "antimagic",    you_antimagic },
     { "status",       you_status },
     { "immune_to_hex", you_immune_to_hex },
+    { "heads",        you_heads },
 
     { "can_consume_corpses",      you_can_consume_corpses },
 
