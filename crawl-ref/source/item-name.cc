@@ -468,14 +468,13 @@ static const char *weapon_brands_adj[] =
 #if TAG_MAJOR_VERSION == 34
     "evasive", "confusing",
 #endif
-    "penetrating", "reaping", "vorpal", "acidic",
+    "penetrating", "reaping", "spectral", "vorpal", "acidic",
 #if TAG_MAJOR_VERSION > 34
     "confusing",
 #endif
     "debug",
 };
 
-// TODO: currently only for pghosts...expand?
 static const set<brand_type> brand_prefers_adj =
             { SPWPN_VAMPIRISM, SPWPN_ANTIMAGIC, SPWPN_VORPAL };
 
@@ -1383,22 +1382,20 @@ string weapon_brand_desc(const char *body, const item_def &weap,
     if (terse)
         return make_stringf("%s (%s)", body, brand_name.c_str());
 
-    switch (override_brand ? override_brand : get_weapon_brand(weap))
+    const brand_type brand = override_brand ? override_brand :
+                             get_weapon_brand(weap);
+
+    if (brand_prefers_adj.count(brand))
+        return make_stringf("%s %s", brand_type_adj(brand), body);
+    else if (brand == SPWPN_NORMAL)
     {
-        case SPWPN_VAMPIRISM:
-            return make_stringf("vampiric %s", body);
-        case SPWPN_ANTIMAGIC:
-            return make_stringf("antimagic %s", body);
-        case SPWPN_VORPAL:
-            return make_stringf("vorpal %s", body);
-        case SPWPN_NORMAL:
-            if (get_equip_desc(weap))
-                return make_stringf("enchanted %s", body);
-            else
-                return body;
-        default:
-            return make_stringf("%s of %s", body, brand_name.c_str());
+        if (get_equip_desc(weap))
+            return make_stringf("enchanted %s", body);
+        else
+            return body;
     }
+    else
+        return make_stringf("%s of %s", body, brand_name.c_str());
 }
 
 /**
