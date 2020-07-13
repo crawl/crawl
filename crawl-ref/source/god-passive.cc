@@ -671,10 +671,10 @@ void ash_check_bondage(bool msg)
         for (int i = EQ_LEFT_RING; i <= EQ_AMULET; ++i)
             if (you.equip[i] != -1 && you.inv[you.equip[i]].cursed())
                 ++you.bondage_level;
-
+        
         // Allow full bondage when all available slots are cursed.
-        if (you.bondage_level == 3)
-            ++you.bondage_level;
+        if (you.equip[EQ_CLOAK] != -1 && you.inv[you.equip[EQ_CLOAK]].cursed())
+                ++you.bondage_level;
     }
     else
         for (int i = ET_WEAPON; i < NUM_ET; ++i)
