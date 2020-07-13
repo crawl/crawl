@@ -3659,19 +3659,13 @@ bool is_useless_item(const item_def &item, bool temp)
 
         if (item.sub_type == WAND_HEAL_WOUNDS
             && item_type_known(item)
-            && !you.can_potion_heal()
-            && you.get_mutation_level(MUT_NO_LOVE))
-        {
-            return true;
-        }
+            && !you.can_potion_heal())
+            return you.get_mutation_level(MUT_NO_ARTIFICE);
 
         if (item.sub_type == WAND_HASTING
             && item_type_known(item)
-            && you.species == SP_FORMICID
-            && you.get_mutation_level(MUT_NO_LOVE))
-        {
-            return true;
-        }
+            && you.species == SP_FORMICID)
+            return you.get_mutation_level(MUT_NO_ARTIFICE);
 
         return false;
 
