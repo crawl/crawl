@@ -1586,7 +1586,7 @@ bool targeter_overgrow::overgrow_affects_pos(const coord_def &p)
 {
     if (!in_bounds(p))
         return false;
-    if (env.markers.property_at(p, MAT_ANY, "veto_shatter") == "veto")
+    if (env.markers.property_at(p, MAT_ANY, "veto_destroy") == "veto")
         return false;
 
     const dungeon_feature_type feat = grd(p);

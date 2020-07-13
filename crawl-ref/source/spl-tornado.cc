@@ -308,7 +308,7 @@ void tornado_damage(actor *caster, int dur, bool is_vortex)
         for (; dam_i && dam_i.radius() == r; ++dam_i)
         {
             bool veto =
-                env.markers.property_at(*dam_i, MAT_ANY, "veto_tornado") == "veto";
+                env.markers.property_at(*dam_i, MAT_ANY, "veto_destroy") == "veto";
 
             if ((feat_is_tree(grd(*dam_i)) && !is_temp_terrain(*dam_i))
                 && !veto && dur > 0

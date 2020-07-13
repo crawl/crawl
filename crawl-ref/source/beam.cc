@@ -813,7 +813,7 @@ void bolt::fake_flavour()
 
 void bolt::digging_wall_effect()
 {
-    if (env.markers.property_at(pos(), MAT_ANY, "veto_dig") == "veto")
+    if (env.markers.property_at(pos(), MAT_ANY, "veto_destroy") == "veto")
     {
         finish_beam();
         return;
@@ -867,7 +867,7 @@ void bolt::burn_wall_effect()
     dungeon_feature_type feat = grd(pos());
     // Fire only affects trees.
     if (!feat_is_tree(feat)
-        || env.markers.property_at(pos(), MAT_ANY, "veto_fire") == "veto"
+        || env.markers.property_at(pos(), MAT_ANY, "veto_destroy") == "veto"
         || !can_burn_trees()) // sanity
     {
         finish_beam();
@@ -921,8 +921,9 @@ void bolt::affect_wall()
         // potentially warn about offending your god by burning trees
         const bool god_relevant = you.religion == GOD_FEDHAS
                                   && can_burn_trees();
-        const bool vetoed = env.markers.property_at(pos(), MAT_ANY, "veto_fire")
-                            == "veto";
+        const bool vetoed =
+            env.markers.property_at(pos(), MAT_ANY, "veto_destroy") == "veto";
+
         // XXX: should check env knowledge for feat_is_tree()
         if (god_relevant && feat_is_tree(grd(pos())) && !vetoed
             && !is_targeting && YOU_KILL(thrower) && !dont_stop_trees)

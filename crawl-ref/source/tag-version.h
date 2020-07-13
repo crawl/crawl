@@ -248,6 +248,7 @@ enum tag_minor_version
     TAG_MINOR_LOAF_BUST,           // Remove rations, eating, and hunger mechanics
     TAG_MINOR_REVEALED_TRAPS,      // No skill check to spot traps
     TAG_MINOR_BARDING_MERGE,       // Merge naga and centaur bardings.
+    TAG_MINOR_MERGE_VETOES,        // Merge veto tags in vaults
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

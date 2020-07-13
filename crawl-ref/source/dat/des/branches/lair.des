@@ -2766,16 +2766,14 @@ set_feature_name("granite_statue", "elephant-shaped statue")
 }}
 MARKER: S = lua:MonPropsMarker:new { anaconda_guard="anaconda_guard" }
 MARKER: o = lua:portal_desc { slaved_to="elephant" }
-MARKER: G = lua:props_marker { veto_dig="veto", \
-                               veto_shatter="veto" }
+MARKER: G = lua:props_marker { veto_destroy="veto" }
 MARKER: o = lua:monster_on_death { \
             target="anaconda_guard", \
             new_monster="generate_awake dire elephant", \
             message_seen="The elephant guardians awaken!", \
             message_unseen="You hear a distant trumpeting.", \
             master_name="elephant", \
-            veto_dig="veto", \
-            veto_shatter="veto", \
+            veto_destroy="veto", \
          }
 COLOUR: oG = green
 TILE:   oG = dngn_statue_elephant_jade

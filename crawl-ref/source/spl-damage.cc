@@ -962,7 +962,7 @@ static int _shatter_walls(coord_def where, int /*pow*/, actor *agent)
     if (!in_bounds(where))
         return 0;
 
-    if (env.markers.property_at(where, MAT_ANY, "veto_shatter") == "veto")
+    if (env.markers.property_at(where, MAT_ANY, "veto_destroy") == "veto")
         return 0;
 
     const dungeon_feature_type grid = grd(where);

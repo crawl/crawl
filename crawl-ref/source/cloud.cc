@@ -453,7 +453,7 @@ static void _spread_fire(const cloud_struct &cloud)
             continue;
         }
 
-        if (env.markers.property_at(*ai, MAT_ANY, "veto_fire") == "veto")
+        if (env.markers.property_at(*ai, MAT_ANY, "veto_destroy") == "veto")
             continue;
 
         if (you.see_cell(*ai))
