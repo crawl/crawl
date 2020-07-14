@@ -64,7 +64,7 @@ enum tiles_key_mod
 
 struct HiDPIState
 {
-    /* constexpr (c++11) */ HiDPIState(int device_density, int logical_density,
+    constexpr HiDPIState(int device_density, int logical_density,
                                      int _game_scale) :
         device(device_density), game_scale(_game_scale),
         logical(apply_game_scale(logical_density))
