@@ -401,13 +401,13 @@ reserves of magic to deal additional damage whenever an enemy is hit.
 %%%%
 Loss status
 
-Your stats or your maximum of hp may be decreased. Your evasion is increasing
-and you can use "Crab Walking" ability
+Your stats or maximum HP is decreased. Your evasion is increased and you
+can use "crab walking" ability.
 %%%%
 Grow status
 
-You need to gain more experience for undergoing ecdysis again.
-It's still not enough to moult again. 
+You have been through ecdysis and are unable to moult again until you gain
+enough experience.
 %%%%
 Slay status
 
