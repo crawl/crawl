@@ -3495,6 +3495,11 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_CRAB_WALK;
     case ABIL_MIASMA_CLOUD:
         return TILEG_ABILITY_MIASMA_CLOUD;
+    // Homunculus
+    case ABIL_BLOSSOM:
+        return TILEG_ABILITY_BLOSSOM;
+    case ABIL_ADAPTION:
+        return TILEG_ABILITY_ADAPTION;
 
     // Evoking items.
     case ABIL_EVOKE_BERSERK:
@@ -4022,6 +4027,10 @@ static tileidx_t _tileidx_player_species_base(const species_type species)
             return TILEG_SP_CRUSTACEAN;
         case SP_HYDRA:
             return TILEG_SP_HYDRA;
+        case SP_HOMUNCULUS:
+        case SP_BLOSSOM_HOMUNCULUS:
+        case SP_ADAPTION_HOMUNCULUS:
+            return TILEG_SP_HOMUNCULUS;
         default:
             return TILEP_ERROR;
     }

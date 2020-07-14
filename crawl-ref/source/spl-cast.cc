@@ -391,6 +391,10 @@ int raw_spell_fail(spell_type spell)
     chance2 += 4 * you.get_mutation_level(MUT_WILD_MAGIC);
     chance2 += 4 * you.get_mutation_level(MUT_ANTI_WIZARDRY);
 
+    if (you.duration[DUR_HOMUNCULUS_WILD_MAGIC]) {
+        chance2 += 3 * you.props[HOMUNCULUS_WILD_MAGIC].get_int();
+    }
+
     if (you.props.exists(SAP_MAGIC_KEY))
         chance2 += you.props[SAP_MAGIC_KEY].get_int() * 12;
 
@@ -512,7 +516,9 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
             // Wild magic boosts spell power but decreases success rate.
             power *= (10 + 3 * you.get_mutation_level(MUT_WILD_MAGIC));
             power /= (10 + 3 * you.get_mutation_level(MUT_SUBDUED_MAGIC));
-
+            if (you.duration[DUR_HOMUNCULUS_WILD_MAGIC]) {
+                power *= (10 + 2 * you.props[HOMUNCULUS_WILD_MAGIC].get_int());
+            }
             // Augmentation boosts spell power at high HP.
             power *= 10 + 4 * augmentation_amount();
             power /= 10;
@@ -1029,6 +1035,17 @@ static void _spellcasting_side_effects(spell_type spell, god_type god,
         {
             mprf(MSGCH_WARN, "Your control over your magic is sapped.");
             you.props[SAP_MAGIC_KEY].get_int()++;
+        }
+
+        if ((you.species == SP_HOMUNCULUS ||
+            you.species == SP_ADAPTION_HOMUNCULUS ||
+            you.species == SP_BLOSSOM_HOMUNCULUS)
+            && you.props[HOMUNCULUS_WILD_MAGIC].get_int() < 5
+            && real_spell)
+        {
+            you.props[HOMUNCULUS_WILD_MAGIC].get_int()++;
+            you.increase_duration(DUR_HOMUNCULUS_WILD_MAGIC, random_range(20, 30), 50);
+            mprf(MSGCH_WARN, "Your magic is getting wild.");
         }
 
         // Make some noise if it's actually the player casting.

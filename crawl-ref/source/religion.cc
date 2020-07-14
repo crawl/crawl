@@ -3190,6 +3190,23 @@ bool player_can_join_god(god_type which_god)
       return false;
     }
 
+    if (you.species == SP_HOMUNCULUS || you.species == SP_ADAPTION_HOMUNCULUS) {
+        if (which_god == GOD_FEDHAS ||
+            which_god == GOD_BEOGH ||
+            which_god == GOD_ZIN ||
+            which_god == GOD_TROG ||
+            which_god == GOD_YREDELEMNUL) {
+            return false;
+        }
+    }
+
+    if (you.species == SP_BLOSSOM_HOMUNCULUS) {
+        if (which_god == GOD_BEOGH ||
+            which_god == GOD_TROG) {
+            return false;
+        }
+    }
+
     return _transformed_player_can_join_god(which_god);
 }
 

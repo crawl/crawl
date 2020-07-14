@@ -459,6 +459,21 @@ bool melee_attack::handle_phase_hit()
         }
     }
 
+    if (attacker->is_player() &&
+        (you.species == SP_HOMUNCULUS ||
+            you.species == SP_ADAPTION_HOMUNCULUS ||
+            you.species == SP_BLOSSOM_HOMUNCULUS))
+    {
+        if (you.duration[DUR_HOMUNCULUS_WILD_MAGIC] && coinflip()) {
+            you.props[HOMUNCULUS_WILD_MAGIC].get_int()--;
+            if (you.props[HOMUNCULUS_WILD_MAGIC].get_int() == 0) {
+                you.duration[DUR_HOMUNCULUS_WILD_MAGIC] = 0;
+            }
+        }
+    }
+
+
+
     // This does more than just calculate the damage, it also sets up
     // messages, etc. It also wakes nearby creatures on a failed stab,
     // meaning it could have made the attacked creature vanish. That
