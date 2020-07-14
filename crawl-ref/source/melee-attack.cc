@@ -356,7 +356,7 @@ bool melee_attack::handle_phase_dodged()
                 const bool using_fencers = player_equip_unrand(UNRAND_FENCERS);
                 const int chance = using_lbl + using_fencers;
 
-                if (x_chance_in_y(chance, 3) && !is_riposte) // no ping-pong!
+                if (x_chance_in_y(chance, 2) && !is_riposte) // no ping-pong!
                     riposte(i == 0);
 
                 // Retaliations can kill!
