@@ -1691,7 +1691,7 @@ art-enum.h rltiles/dc-unrand.txt rltiles/tiledef-unrand.cc: art-data.h
 mon-mst.h: mon-spell.h util/gen-mst.pl
 	$(QUIET_GEN)util/gen-mst.pl
 
-cmd-name.h: enum.h util/cmd-name.pl
+cmd-name.h: command-type.h util/cmd-name.pl
 	$(QUIET_GEN)util/cmd-name.pl
 
 dat/dlua/tags.lua: tag-version.h util/gen-luatags.pl
