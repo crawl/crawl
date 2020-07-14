@@ -123,24 +123,26 @@ targeter_charge::targeter_charge(const actor *act, int r)
 
 bool targeter_charge::valid_aim(coord_def a)
 {
-    if (adjacent(agent->pos(), a)
-        || grid_distance(agent->pos(), a) > range)
-    {
-        return false;
-    }
+    if (adjacent(agent->pos(), a))
+        return notify_fail("You're already next to there.");
+    if (grid_distance(agent->pos(), a) > range)
+        return notify_fail("That's out of range!");
 
     ray_def ray;
     if (!find_ray(agent->pos(), a, ray, opc_solid))
-        return false;
+        return notify_fail("There's something in the way.");
     while (ray.advance()) {
         if (ray.pos() == a
             || !can_charge_through_mons(ray.pos())
             || is_feat_dangerous(grd(ray.pos())))
         {
-            return _ok_charge_target(ray.pos());
+            const string bad = bad_charge_target(ray.pos());
+            if (bad != "")
+                return notify_fail(bad);
+            return true;
         }
     }
-    return false;
+    return notify_fail("There's something in the way.");
 }
 
 bool targeter_charge::set_aim(coord_def a)
