@@ -460,6 +460,13 @@ bool fill_status_info(int status, status_info& inf)
             inf.light_colour = you.props[WALL_INVISIBLE_KEY].get_bool()? BROWN : LIGHTGREY;
         }
         break;
+
+    case DUR_HOMUNCULUS_WILD_MAGIC:
+        inf.light_text
+            = make_stringf("Wild (%u)",
+                you.props[HOMUNCULUS_WILD_MAGIC].get_int());
+        break;
+
     case STATUS_BEOGH:
         if (env.level_state & LSTATE_BEOGH && can_convert_to_beogh())
         {

@@ -49,11 +49,9 @@ levelup_stats:
 mutations:
   1:
     MUT_MANA_REGENERATION: 1
-    MUT_WILD_MAGIC: 1
-  7:
-    MUT_WILD_MAGIC: 1
-  21:
-    MUT_WILD_MAGIC: 1
+fake_mutations:
+  - long: Your magic cast will make your mana wild, and released by melee combat. 
+    short: Magic overheating
 recommended_jobs:
   - JOB_WIZARD
   - JOB_CONJURER
@@ -64,3 +62,6 @@ recommended_jobs:
   - JOB_AIR_ELEMENTALIST
   - JOB_EARTH_ELEMENTALIST
   - JOB_VENOM_MAGE
+  - JOB_WARPER
+  - JOB_SKALD
+  - JOB_ENCHANTER

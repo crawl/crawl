@@ -3300,6 +3300,13 @@ void level_change(bool skip_attribute_increase)
                 you.head_grow(0);
                 break;
 
+            case SP_HOMUNCULUS:
+                if (you.experience_level == 14)
+                {
+                    mprf(MSGCH_INTRINSIC_GAIN, "The time has come to decide your goal.");
+                }
+                break;
+
             default:
                 break;
             }

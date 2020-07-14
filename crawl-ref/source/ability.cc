@@ -336,8 +336,8 @@ static const ability_def Ability_List[] =
 
     { ABIL_HOP, "Hop", 0, 0, 0, 0, {}, abflag::none },
 
-    { ABIL_BLOSSOM, "blossom", 0, 0, 0, 0, {}, abflag::starve_ok },
-    { ABIL_ADAPTION, "adaption", 0, 0, 0, 0, {}, abflag::starve_ok },
+    { ABIL_BLOSSOM, "Choose Blossom", 0, 0, 0, 0, {}, abflag::starve_ok },
+    { ABIL_ADAPTION, "Choose Adaption", 0, 0, 0, 0, {}, abflag::starve_ok },
 
     // EVOKE abilities use Evocations and come from items.
     // Teleportation and Blink can also come from mutations
@@ -2031,7 +2031,7 @@ static void _cause_vampire_bat_form_stat_drain()
 
 static void _homunculus_blossom_or_adaption(species_type _speice)
 {
-    ASSERT(_speice == SP_HOMUNCULUS_ADAPTION || _speice == SP_HOMUNCULUS_BLOSSOM);
+    ASSERT(_speice == SP_ADAPTION_HOMUNCULUS || _speice == SP_BLOSSOM_HOMUNCULUS);
     you.species = _speice;
 
     uint8_t saved_skills[NUM_SKILLS];
@@ -2046,7 +2046,7 @@ static void _homunculus_blossom_or_adaption(species_type _speice)
     init_player_doll();
 #endif
     mprf(MSGCH_INTRINSIC_GAIN,
-        _speice == SP_HOMUNCULUS_BLOSSOM ? 
+        _speice == SP_BLOSSOM_HOMUNCULUS ?
         "You bloom as near-life beings" :
         "You have adapted to your body for survival in the dungeon");
 
@@ -2070,6 +2070,8 @@ static void _homunculus_blossom_or_adaption(species_type _speice)
         you.skills[sk] = saved_skills[sk];
         check_skill_level_change(sk);
     }
+    
+    give_level_mutations(you.species, 1);
 
     check_training_targets();
 
@@ -2168,11 +2170,11 @@ static spret _do_ability(const ability_def& abil, bool fail)
             return spret::abort;
 
     case ABIL_BLOSSOM:
-       _homunculus_blossom_or_adaption(SP_HOMUNCULUS_BLOSSOM);
+       _homunculus_blossom_or_adaption(SP_BLOSSOM_HOMUNCULUS);
        return spret::success;
 
     case ABIL_ADAPTION:
-       _homunculus_blossom_or_adaption(SP_HOMUNCULUS_ADAPTION);
+       _homunculus_blossom_or_adaption(SP_ADAPTION_HOMUNCULUS);
        return spret::success;
 
     case ABIL_SPIT_POISON:      // Naga poison spit

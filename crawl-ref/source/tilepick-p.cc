@@ -724,8 +724,8 @@ tileidx_t tilep_species_to_base_tile(int sp, int level)
     case SP_HYDRA:
         return TILEP_BASE_HYDRA + min(you.heads(), 9) - 1;  
     case SP_HOMUNCULUS:
-    case SP_HOMUNCULUS_BLOSSOM:
-    case SP_HOMUNCULUS_ADAPTION:
+    case SP_BLOSSOM_HOMUNCULUS:
+    case SP_ADAPTION_HOMUNCULUS:
         return TILEP_BASE_HOMUNCULUS;
     default:
         return TILEP_BASE_HUMAN;

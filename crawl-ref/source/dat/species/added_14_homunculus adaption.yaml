@@ -1,8 +1,9 @@
-enum: SP_HOMUNCULUS_ADAPTION
+enum: SP_ADAPTION_HOMUNCULUS
 monster: MONS_HUMAN
 name: Adaption Homunculus
 short_name: "Hm"
 adjective: "Homunculus"
+genus: "Homunculus"
 difficulty: False
 difficulty_priority: 90
 aptitudes:
@@ -50,9 +51,7 @@ levelup_stats:
 mutations:
   1:
     MUT_MANA_REGENERATION: 2
-    MUT_WILD_MAGIC: 1
     MUT_CLARITY : 1
-  7:
-    MUT_WILD_MAGIC: 1
-  21:
-    MUT_WILD_MAGIC: 1
+fake_mutations:
+  - long: Your magic cast will make your mana wild, and released by melee combat. 
+    short: Magic overheating

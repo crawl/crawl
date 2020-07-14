@@ -4028,8 +4028,8 @@ static tileidx_t _tileidx_player_species_base(const species_type species)
         case SP_HYDRA:
             return TILEG_SP_HYDRA;
         case SP_HOMUNCULUS:
-        case SP_HOMUNCULUS_BLOSSOM:
-        case SP_HOMUNCULUS_ADAPTION:
+        case SP_BLOSSOM_HOMUNCULUS:
+        case SP_ADAPTION_HOMUNCULUS:
             return TILEG_SP_HOMUNCULUS;
         default:
             return TILEP_ERROR;
