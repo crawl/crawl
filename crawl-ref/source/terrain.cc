@@ -1649,27 +1649,7 @@ void fall_into_a_pool(dungeon_feature_type terrain)
          (terrain == DNGN_DEEP_WATER) ? "water"
                                       : "programming rift");
     // included in default force_more_message
-
-    clear_messages();
-    if (terrain == DNGN_LAVA)
-    {
-        if (you.species == SP_MUMMY)
-            mpr("You burn to ash...");
-        else
-            mpr("The lava burns you to a cinder!");
-        ouch(INSTANT_DEATH, KILLED_BY_LAVA);
-    }
-    else if (terrain == DNGN_DEEP_WATER)
-    {
-        mpr("You sink like a stone!");
-
-        if (you.is_nonliving() || you.undead_state())
-            mpr("You fall apart...");
-        else
-            mpr("You drown...");
-
-        ouch(INSTANT_DEATH, KILLED_BY_WATER);
-    }
+    enable_emergency_flight();
 }
 
 typedef map<string, dungeon_feature_type> feat_desc_map;
