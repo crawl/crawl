@@ -2569,23 +2569,14 @@ static void _gozag_add_potions(CrawlVector &vec, potion_type *which)
 
 #define ADD_POTIONS(a,b) _gozag_add_potions(a, b[random2(ARRAYSZ(b))])
 
-int gozag_potion_price()
-{
-    if (!you.attribute[ATTR_GOZAG_FIRST_POTION])
-        return 0;
-
-    return GOZAG_POTION_PETITION_AMOUNT;
-}
-
 bool gozag_setup_potion_petition(bool quiet)
 {
-    const int gold_min = gozag_potion_price();
-    if (you.gold < gold_min)
+    if (you.gold < GOZAG_POTION_PETITION_AMOUNT)
     {
         if (!quiet)
         {
             mprf("You need at least %d gold to purchase potions right now!",
-                 gold_min);
+                 GOZAG_POTION_PETITION_AMOUNT);
         }
         return false;
     }
@@ -2610,10 +2601,7 @@ bool gozag_potion_petition()
             for (int i = 0; i < GOZAG_MAX_POTIONS; i++)
             {
                 prices[i] = 0;
-                int multiplier = random_range(20, 30); // arbitrary
-
-                if (!you.attribute[ATTR_GOZAG_FIRST_POTION])
-                    multiplier = 0;
+                const int multiplier = random_range(20, 30); // arbitrary
 
                 string key = make_stringf(GOZAG_POTIONS_KEY, i);
                 you.props.erase(key);
@@ -2638,7 +2626,7 @@ bool gozag_potion_petition()
                 key = make_stringf(GOZAG_PRICE_KEY, i);
                 you.props[key].get_int() = prices[i];
 
-                if (prices[i] <= gozag_potion_price())
+                if (prices[i] <= GOZAG_POTION_PETITION_AMOUNT)
                     affordable_potions = true;
             }
         }
@@ -2693,9 +2681,6 @@ bool gozag_potion_petition()
 
     for (auto pot : *pots[keyin])
         potionlike_effect(static_cast<potion_type>(pot.get_int()), 40);
-
-    if (!you.attribute[ATTR_GOZAG_FIRST_POTION])
-        you.attribute[ATTR_GOZAG_FIRST_POTION] = 1;
 
     for (int i = 0; i < GOZAG_MAX_POTIONS; i++)
     {

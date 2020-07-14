@@ -127,7 +127,6 @@ void spare_beogh_convert();
 
 bool dithmenos_shadow_step();
 
-int gozag_potion_price();
 bool gozag_setup_potion_petition(bool quiet = false);
 bool gozag_potion_petition();
 int gozag_price_for_shop(bool max = false);

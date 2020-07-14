@@ -718,7 +718,7 @@ int get_gold_cost(ability_type ability)
     case ABIL_GOZAG_CALL_MERCHANT:
         return gozag_price_for_shop(true);
     case ABIL_GOZAG_POTION_PETITION:
-        return gozag_potion_price();
+        return GOZAG_POTION_PETITION_AMOUNT;
     case ABIL_GOZAG_BRIBE_BRANCH:
         return GOZAG_BRIBE_AMOUNT;
     default:

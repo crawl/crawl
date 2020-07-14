@@ -3442,13 +3442,6 @@ static void _join_gozag()
     bool needs_redraw = false;
     for (const auto& power : get_god_powers(you.religion))
     {
-        if (power.abil == ABIL_GOZAG_POTION_PETITION
-            && !you.attribute[ATTR_GOZAG_FIRST_POTION])
-        {
-            simple_god_message(" offers you a free set of potion effects!");
-            needs_redraw = true;
-            continue;
-        }
         if (you.gold >= get_gold_cost(power.abil))
         {
             power.display(true, "You have enough gold to %s.");
