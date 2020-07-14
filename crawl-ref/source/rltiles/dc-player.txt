@@ -97,6 +97,8 @@ dwarf_f MOUNTAIN_DWARF
 dwarf_m
 lesser_lich LESSER_LICH
 crustacean CRUSTACEAN
+homunculus_f HOMUNCULUS
+homunculus_m
 
 # draconians
 draconian_f DRACONIAN DRACONIAN_FIRST

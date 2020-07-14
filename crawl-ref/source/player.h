@@ -1118,6 +1118,7 @@ bool enough_mp(int minimum, bool suppress_msg, bool abort_macros = true);
 
 void change_draconian_colour();
 
+void gain_and_note_hp_mp();
 void calc_hp(bool scale = false, bool set = false);
 void calc_mp();
 
