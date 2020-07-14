@@ -1,3 +1,89 @@
+Stone Soup 0.26 (through 0.26-a0-295-gb4063fc)
+----------------------------------------------
+
+Highlights
+----------
+* New species: Palentonga.
+* New background: Delver.
+* Food and hunger are removed.
+
+Branches, Environment
+---------------------
+* Crimson Imps no longer spawn as an enemy.
+* Shadow Imps are lower spawn weight and don't spawn after D:10.
+* Ufetubi and White Imps replace their spawn weight in the dungeon.
+* Shadows and wights no longer appear in the Crypt spawn list, replaced with
+  flying skulls, necromancers, and wraiths.
+* Spider is now quiet.
+
+Character
+---------
+* Evocations skill no longer grants MaxMP
+* Banishment (from god abilities, distortion weapons, and reflections from the
+  warlock's mirror) grants full XP.
+* The Wizard background is renamed "Hedge Wizard". The stat spread is
+  changed to 2/6/4 from -1/10/3, and the background starts with a dagger.
+* The Conjurer background now has starting stat modifiers -1/10/3.
+* The Assassin background is renamed "Brigand".
+* Eating and hunger are removed.
+* Ghouls heal on kill instead of healing by eating chunks.
+* New background Delver: Delvers start on D:5 with a wand of digging, a scroll
+  of magic mapping, a scroll of fear, a scroll of fog, and a potion of haste
+  as well as some stealth and weapon skill.
+* New species Palentonga: Palentongas are a two-armed, four-legged, scaled
+  mammal species the size of a horse. Palentogas have a rolling charge attack,
+  covering several squares at once and dealing extra damage proportionate to
+  the distance traveled. They have a large, deformed body and wear bardings.
+* Centaurs are removed.
+* Deep Elves' Bows aptitude is increased to +3.
+
+Gods
+----
+* Ru now considers Necromancy a major sacrifice and Charms a moderate sacrifice
+* Nemelex' Shaft card is removed, the Exile card no longer has a chance to
+  self banish.
+
+Items
+-----
+* Rations and chunks of food are removed.
+* Amulets are now slow to equip (like armour), and many amulets no longer have
+  attunement logic (Faith, Regen, and MPRegen retain their swap drawbacks).
+* Bardings are merged into a single item type. The Black Knight's barding is
+  removed.
+
+Lua
+---
+* Two new hooks, chk_ability_choice and chk_spell_choice can be used to
+  answer the ability and spell menu prompts.
+
+Monsters
+--------
+* Pikel's slaves have been rethemed and now dissappear upon Pikel's death.
+* Spiny Frogs are renamed Cane Toads, for a more authentic Australian
+  experience
+* Pandemonium lords' possible spells and melee flavours have been expanded
+* The blood scent and web sense monster AI logic is removed.
+* Hungry ghosts are removed.
+* Monsters don't forget about the player while the player is off level.
+
+Spells
+------
+* Player Conjure ball lightning now conjures a fixed number of balls (3), whose
+  damage varies with spellpower.
+* Beam spells all fire their full range.
+* Spells no longer cost hunger.
+* All temporary allies dismiss when you leave the level.
+* Animate Skeleton and Animate Dead creations now have strength scaling with
+  spellpower; Animate Skeleton has a power cap. Both creations have a shorter
+  lifespan. Additionally, these spells can't be cast if corpses are not nearby.
+* Animate Skeleton now animates the nearest skeleton, and does not require you
+  to stand on the corpse.
+* Death Channel spectral things have a shorter duration and fade if Death
+  Channel expires.
+* Infestation scarabs have a shorter duration.
+* Aura of Abjuration, Recall, and Summon Butterflies are removed.
+
+
 Stone Soup 0.25.0 (20200612)
 ----------------------------
 
