@@ -1704,8 +1704,11 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
         case MUT_HOOVES:
         case MUT_TALONS:
             // Hooves and talons force boots off at 3.
-            if (cur_base_level >= 3 && !you.melded[EQ_BOOTS])
+            if (cur_base_level >= 3 && !you.melded[EQ_BOOTS]
+                && !you.wear_barding())
+            {
                 remove_one_equip(EQ_BOOTS, false, true);
+            }
             // Recheck Ashenzari bondage in case our available slots changed.
             ash_check_bondage();
             break;
