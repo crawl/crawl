@@ -16,8 +16,8 @@ vulnerable to attacks from afar.
 %%%%
 Artificer
 
-Artificers are opportunists who start with three powerful wands. They aim to
-scrounge their other equipment from the dungeon floor.
+Artificers are opportunists who start with three powerful wands and a
+spectral club. They aim to scrounge their other equipment from the dungeon.
 %%%%
 Berserker
 
