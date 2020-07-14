@@ -611,7 +611,7 @@ static bool _valid_monster_generation_location(const mgen_data &mg,
                     return false;
                 }
             }
-            else if (env.absdepth0 == starting_absdepth())
+            else if (env.absdepth0 == starting_absdepth() - 1)
             {
                 // Delvers start on a (specific) D:5 downstairs.
                 if (grd(*di) == DNGN_STONE_STAIRS_DOWN_I)
