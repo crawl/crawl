@@ -3820,7 +3820,7 @@ static void _builder_monsters()
 
             // For delvers, waking monsters can generate on D:5, but they can't
             // be near the entrance.
-            if (env.absdepth0 == starting_absdepth() - 1)
+            if (env.absdepth0 == starting_absdepth())
                 mg.proximity = PROX_AWAY_FROM_ENTRANCE;
             mg.behaviour = BEH_SLEEP;
         }
@@ -7125,6 +7125,6 @@ static void _mark_solid_squares()
 int starting_absdepth()
 {
     if (you.char_class == JOB_DELVER)
-        return 5;
-    return 1; // (absdepth is 1-indexed)
+        return 4;
+    return 0; // (absdepth is 0-indexed)
 }
