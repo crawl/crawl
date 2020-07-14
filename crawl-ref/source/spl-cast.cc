@@ -1229,6 +1229,7 @@ static unique_ptr<targeter> _spell_targeter(spell_type spell, int pow,
                                           1, 1);
     case SPELL_EVAPORATE:
     case SPELL_MEPHITIC_CLOUD:
+    case SPELL_MIASMA_BREATH: //Temporarily..
         return make_unique<targeter_beam>(&you, range, ZAP_MEPHITIC, pow,
                                           pow >= 100 ? 1 : 0, 1);
     case SPELL_ISKENDERUNS_MYSTIC_BLAST:

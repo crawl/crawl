@@ -3624,6 +3624,7 @@ void setup_miasma_breath(const actor *source, int pow, bolt &beam)
     beam.hit      = 17 + pow / 20;
     beam.pierce   = true;
     beam.origin_spell = SPELL_MIASMA_BREATH;
+    beam.loudness = 0;
 }
 
 spret cast_miasma_breath(int pow, bolt &beam)
@@ -3653,7 +3654,7 @@ spret cast_miasma_breath(int pow, bolt &beam)
     beam.apply_beam_conducts();
     beam.refine_for_explosion();
     beam.explode(false);
-
+    
     viewwindow();
     return spret::success;
 }
