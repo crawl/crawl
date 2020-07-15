@@ -2515,16 +2515,12 @@ void end_battlesphere(monster* mons, bool killed)
 
 bool battlesphere_can_mirror(spell_type spell)
 {
-    return (spell_typematch(spell, spschool::conjuration)
-           && spell_to_zap(spell) != NUM_ZAPS)
-           || spell == SPELL_FREEZE
-           || spell == SPELL_STICKY_FLAME
-           || spell == SPELL_SANDBLAST
-           || spell == SPELL_AIRSTRIKE
-           || spell == SPELL_SEARING_RAY;
+    return spell_typematch(spell, spschool::conjuration)
+           && spell != SPELL_BATTLESPHERE
+           && spell != SPELL_SPELLFORGED_SERVITOR;
 }
 
-bool aim_battlesphere(actor* agent, spell_type spell, int powc, bolt& beam)
+bool aim_battlesphere(actor* agent, spell_type spell)
 {
     //Is this spell something that will trigger the battlesphere?
     if (battlesphere_can_mirror(spell))
@@ -2543,61 +2539,22 @@ bool aim_battlesphere(actor* agent, spell_type spell, int powc, bolt& beam)
         // target-seeking action, cancel it so that it can focus on a new
         // target
         reset_battlesphere(battlesphere);
-
-        // Don't try to fire at ourselves
-        if (beam.target == battlesphere->pos())
-            return false;
-
-        // If the player beam is targeted at a creature, aim at this creature.
-        // Otherwise, aim at the furthest creature in the player beam path
-        bolt testbeam = beam;
-
-        if (agent->is_player())
-            testbeam.thrower = KILL_YOU_MISSILE;
-        else
-        {
-            testbeam.thrower = KILL_MON_MISSILE;
-            testbeam.source_id = agent->mid;
-        }
-
-        testbeam.is_tracer = true;
-        zap_type ztype = spell_to_zap(spell);
-
-        // Fallback for non-standard spell zaps
-        if (ztype == NUM_ZAPS)
-            ztype = ZAP_MAGIC_DART;
-
-        // This is so that reflection and pathing rules for the parent beam
-        // will be obeyed when figuring out what is being aimed at
-        zappy(ztype, powc, false, testbeam);
-
-        battlesphere->props["firing_target"] = beam.target;
         battlesphere->props.erase("foe");
-        if (!actor_at(beam.target))
-        {
-            testbeam.fire();
 
-            for (const coord_def c : testbeam.path_taken)
+        // Pick a random baddie in LOS
+        vector<actor *> targets;
+        for (radius_iterator ri(agent->pos(), LOS_NO_TRANS); ri; ++ri)
+        {
+            actor * foe = actor_at(*ri);
+            if (foe && battlesphere->can_see(*foe)
+                    && !mons_aligned(agent, foe))
             {
-                if (c != battlesphere->pos() && monster_at(c))
-                {
-                    battlesphere->props["firing_target"] = c;
-                    battlesphere->foe = actor_at(c)->mindex();
-                    battlesphere->props["foe"] = battlesphere->foe;
-                    break;
-                }
+                targets.push_back(foe);
             }
-
-            // If we're firing at empty air, lose any prior target lock
-            if (!battlesphere->props.exists("foe"))
-                battlesphere->foe = agent->mindex();
         }
-        else
-        {
-            battlesphere->foe = actor_at(beam.target)->mindex();
-            battlesphere->props["foe"] = battlesphere->foe;
-        }
-
+        const actor * target = *random_iterator(targets);
+        battlesphere->foe = target->mindex();
+        battlesphere->props["foe"] = battlesphere->foe;
         battlesphere->props["ready"] = true;
 
         return true;
@@ -2606,7 +2563,7 @@ bool aim_battlesphere(actor* agent, spell_type spell, int powc, bolt& beam)
     return false;
 }
 
-bool trigger_battlesphere(actor* agent, bolt& beam)
+bool trigger_battlesphere(actor* agent)
 {
     monster* battlesphere = find_battlesphere(agent);
     if (!battlesphere)
@@ -2614,33 +2571,6 @@ bool trigger_battlesphere(actor* agent, bolt& beam)
 
     if (battlesphere->props.exists("ready"))
     {
-        // If the battlesphere is aiming at empty air but the triggering
-        // conjuration is an explosion, try to find something to shoot within
-        // the blast
-        if (!battlesphere->props.exists("foe") && beam.is_explosion)
-        {
-            explosion_map exp_map;
-            exp_map.init(INT_MAX);
-            beam.determine_affected_cells(exp_map, coord_def(), 0,
-                                          beam.ex_size, true, true);
-
-            for (radius_iterator ri(beam.target, beam.ex_size, C_SQUARE);
-                 ri; ++ri)
-            {
-                if (exp_map(*ri - beam.target + coord_def(9,9)) < INT_MAX)
-                {
-                    const actor *targ = actor_at(*ri);
-                    if (targ && targ != battlesphere)
-                    {
-                        battlesphere->props["firing_target"] = *ri;
-                        battlesphere->foe = targ->mindex();
-                        battlesphere->props["foe"] = battlesphere->foe;
-                        continue;
-                    }
-                }
-            }
-        }
-
         battlesphere->props.erase("ready");
         battlesphere->props["firing"] = true;
 
@@ -2726,15 +2656,12 @@ bool fire_battlesphere(monster* mons)
         // If we are locked onto a foe, use its current position
         if (!invalid_monster_index(mons->foe) && menv[mons->foe].alive())
             beam.target = menv[mons->foe].pos();
-        else
-            beam.target = mons->props["firing_target"].get_coord();
 
         // Sanity check: if we have somehow ended up targeting ourselves, bail
         if (beam.target == mons->pos())
         {
             mprf(MSGCH_ERROR, "Battlesphere targeting itself? Fixing.");
             mons->props.erase("firing");
-            mons->props.erase("firing_target");
             mons->props.erase("foe");
             return false;
         }
@@ -2754,11 +2681,7 @@ bool fire_battlesphere(monster* mons)
         // Never fire if we would hurt the caster, and ensure that the beam
         // would hit at least SOMETHING, unless it was targeted at empty space
         // in the first place
-        if (beam.friend_info.count == 0
-            && (monster_at(beam.target) ? beam.foe_info.count > 0 :
-                find(beam.path_taken.begin(), beam.path_taken.end(),
-                     beam.target)
-                    != beam.path_taken.end()))
+        if (beam.friend_info.count == 0 && beam.foe_info.count > 0)
         {
             beam.thrower = (agent->is_player()) ? KILL_YOU : KILL_MON;
             simple_monster_message(*mons, " fires!");

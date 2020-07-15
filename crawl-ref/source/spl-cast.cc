@@ -1477,7 +1477,7 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
 
     // Have to set aim first, in case the spellcast kills its first target
     if (you.props.exists("battlesphere") && allow_fail)
-        aim_battlesphere(&you, spell, powc, beam);
+        aim_battlesphere(&you, spell);
 
     const auto orig_target = monster_at(beam.target);
     const bool self_target = you.pos() == beam.target;
@@ -1490,7 +1490,7 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
     case spret::success:
     {
         if (you.props.exists("battlesphere") && allow_fail)
-            trigger_battlesphere(&you, beam);
+            trigger_battlesphere(&you);
 
         const auto victim = monster_at(beam.target);
         if (will_have_passive(passive_t::shadow_spells)
