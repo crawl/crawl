@@ -650,7 +650,7 @@ A coat of armour said to have been forged for Queen Kryia in her old age. She
 continued to insist on leading her armies from the front even into her dotage,
 and as her aging body failed her, this coat helped to enhance the healing
 draughts that kept her alive. The wearer of this garment will have
-significantly increased healing from potions.
+significantly increased healing from devices.
 %%%%
 frozen axe "Frostbite"
 

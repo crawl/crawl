@@ -1295,7 +1295,7 @@ PLUS:    +2
 COLOUR:  GREEN
 TILE:    urand_vines
 TILE_EQ: vines
-INSCRIP: NoPotionHeal
+INSCRIP: NoDeviceHeal
 REGEN:   7
 VALUE:   800
 
@@ -1306,7 +1306,7 @@ PLUS:    +7
 COLOUR:  LIGHTCYAN
 TILE:    urand_kryias
 TILE_EQ: kryias
-INSCRIP: PotionHeal*2
+INSCRIP: DeviceHeal*2
 COLD:    1
 VALUE:   600
 

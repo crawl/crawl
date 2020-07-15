@@ -4035,7 +4035,7 @@ static map<const char*, vector<mutation_type>> sacrifice_vector_map =
     { PURITY_SAC_KEY, {
         MUT_SCREAM,
         MUT_INHIBITED_REGENERATION,
-        MUT_NO_POTION_HEAL,
+        MUT_NO_DEVICE_HEAL,
         MUT_DOPEY,
         MUT_CLUMSY,
         MUT_WEAK,
@@ -4118,7 +4118,7 @@ static mutation_type _random_valid_sacrifice(const vector<mutation_type> &muts)
         }
 
         // No potion heal doesn't affect mummies since they can't quaff potions
-        if (mut == MUT_NO_POTION_HEAL && you.species == SP_MUMMY)
+        if (mut == MUT_NO_DEVICE_HEAL && you.species == SP_MUMMY)
             continue;
 
         // The Grunt Algorithm

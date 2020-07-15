@@ -1206,7 +1206,7 @@ static const mutation_def mut_data[] =
   {"Your magical appetite wanes.", "", ""},
 },
 
-{ MUT_NO_POTION_HEAL, 3, 3, mutflag::bad, false,
+{ MUT_NO_DEVICE_HEAL, 3, 3, mutflag::bad, false,
   "no device heal",
 
   {"Potions and wands are less effective at restoring your health.",
