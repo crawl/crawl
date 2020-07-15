@@ -2166,7 +2166,7 @@ string get_item_description(const item_def &item, bool verbose,
         break;
 
     case OBJ_POTIONS:
-        if (item.sub_type == POT_LIGNIFY && verbose)
+        if (item.sub_type == POT_LIGNIFY && verbose && item_type_known(item))
             description << "\n\n" + _describe_lignify_ac();
         break;
 
