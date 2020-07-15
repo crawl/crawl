@@ -6223,7 +6223,8 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
 
         // Not an "explosion", but still a bit noisy at the target location.
         if (origin_spell == SPELL_INFESTATION
-            || origin_spell == SPELL_BORGNJORS_VILE_CLUTCH)
+            || origin_spell == SPELL_BORGNJORS_VILE_CLUTCH
+            || origin_spell == SPELL_MIASMA_BREATH)
         {
             loudness = spell_effect_noise(origin_spell);
         }

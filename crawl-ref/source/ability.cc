@@ -99,7 +99,7 @@ enum class abflag
     piety               = 0x00000008, // ability has its own piety cost
     exhaustion          = 0x00000010, // fails if you.exhausted
     instant             = 0x00000020, // doesn't take time to use
-                        //0x00000040,
+    ecdysis             = 0x00000040, // ability using a moulting chance
                         //0x00000080,
     conf_ok             = 0x00000100, // can use even if confused
     rations             = 0x00000200, // ability requires 2 rations per target
@@ -348,7 +348,7 @@ static const ability_def Ability_List[] =
       1, 0, 50, 0, {fail_basis::evo, 40, 2}, abflag::none },
     { ABIL_HEAL_WOUNDS, "Heal Wounds",
       0, 0, 0, 0, {fail_basis::xl, 45, 2}, abflag::none },
-    { ABIL_ECDYSIS, "Undergo Ecdysis", 0, 0, 0, 0, {}, abflag::none },
+    { ABIL_ECDYSIS, "Undergo Ecdysis", 0, 0, 0, 0, {}, abflag::ecdysis },
     { ABIL_CRAB_WALK, "Crab Walking", 0, 0, 0, 0, {}, abflag::none },
     { ABIL_MIASMA_CLOUD, "Cloud Miasma",
       0, 0, 75, 0, {fail_basis::xl, 20, 1}, abflag::breath },
@@ -988,6 +988,13 @@ static const string _detailed_cost_description(ability_type ability)
     {
         have_cost = true;
         ret << "\nOne scroll of remove curse";
+    }
+
+    if (abil.flags & abflag::ecdysis)
+    {
+        have_cost = true;
+        ret << "One moulting chance";
+        ret << "\nIt cannot be used until your growth are finished.";
     }
 
     if (!have_cost)
