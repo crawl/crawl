@@ -32,6 +32,7 @@
 #include "mon-behv.h"
 #include "mon-tentacle.h"
 #include "mon-util.h"
+#include "movement.h" // remove_ice_armour_movement for palentonga charge
 #include "nearby-danger.h"
 #include "orb.h"
 #include "output.h"
@@ -553,6 +554,7 @@ spret palentonga_charge(bool fail)
 
     move_player_to_grid(dest_pos, true);
     noisy(12, you.pos());
+    remove_ice_armour_movement();
     if (you.pos() != dest_pos) // tornado nonsense
         return spret::success; // of a sort
 
