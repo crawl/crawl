@@ -410,10 +410,12 @@ void fill_doll_equipment(dolls_data &result)
             result.parts[TILEP_PART_CLOAK] = 0;
         else
         {
-            if (is_player_tile(result.parts[TILEP_PART_BASE], TILEP_BASE_FELID)) {
+            if (is_player_tile(result.parts[TILEP_PART_BASE], TILEP_BASE_FELID)
+                || is_player_tile(result.parts[TILEP_PART_BASE], TILEP_TRAN_STATUE_FELID)) {
                 result.parts[TILEP_PART_CLOAK] = tilep_equ_felid_cloak(you.inv[item]);
             }
-            else if (is_player_tile(result.parts[TILEP_PART_BASE], TILEP_BASE_OCTOPODE)) {
+            else if (is_player_tile(result.parts[TILEP_PART_BASE], TILEP_BASE_OCTOPODE)
+                    || is_player_tile(result.parts[TILEP_PART_BASE], TILEP_TRAN_STATUE_OCTOPODE)) {
                 result.parts[TILEP_PART_CLOAK] = tilep_equ_octo_cloak(you.inv[item]);
             }
             else {
