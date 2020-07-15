@@ -700,7 +700,7 @@ staff of Battle
 A staff encased in vividly coloured scales, wrought by a long-forgotten wizard.
 It was the mage Iskenderun's favourite playtoy. The staff increases the power of
 its wielder's conjurations. When danger looms, it conjures a battlesphere, the
-strength of which depends on the wielder's skill with Charms and Conjurations.
+strength of which depends on the wielder's skill with Conjurations.
 %%%%
 Cigotuvi's embrace
 

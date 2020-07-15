@@ -2122,7 +2122,7 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_BATTLESPHERE, "Iskenderun's Battlesphere",
-    spschool::conjuration | spschool::charms,
+    spschool::conjuration,
     spflag::utility,
     5,
     100,
