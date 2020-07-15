@@ -2314,7 +2314,7 @@ static void _clear_mutation(mutation_type mut)
     _cap_mutation_at(mut, 0);
 }
 
-static spell_type _fixup_positional_player_spell(spell_type s)
+static spell_type _fixup_removed_spells(spell_type s)
 {
     switch (s)
     {
@@ -2371,7 +2371,7 @@ static void _fixup_library_spells(FixedBitVector<NUM_SPELLS>& lib)
 {
     for (int i = 0; i < NUM_SPELLS; ++i)
     {
-        spell_type newspell = _fixup_positional_player_spell((spell_type) i);
+        spell_type newspell = _fixup_removed_spells((spell_type) i);
 
         if (newspell == SPELL_NO_SPELL)
             lib.set(i, false);
@@ -2434,7 +2434,7 @@ FixedVector<spell_type, MAX_KNOWN_SPELLS> unmarshall_player_spells(reader &th)
     {
         spells[i] = unmarshallSpellType(th);
 #if TAG_MAJOR_VERSION == 34
-        spells[i] = _fixup_positional_player_spell(spells[i]);
+        spells[i] = _fixup_removed_spells(spells[i]);
 #endif
         if (spell_removed(spells[i]))
             spells[i] = SPELL_NO_SPELL;
@@ -2711,14 +2711,11 @@ static void _tag_read_you(reader &th)
     if (th.getMinorVersion() >= TAG_MINOR_GOLDIFY_BOOKS)
     {
 #endif
-    _unmarshallFixedBitVector<NUM_SPELLS>(th, you.spell_library);
-    _unmarshallFixedBitVector<NUM_SPELLS>(th, you.hidden_spells);
+        _unmarshallFixedBitVector<NUM_SPELLS>(th, you.spell_library);
+        _unmarshallFixedBitVector<NUM_SPELLS>(th, you.hidden_spells);
 #if TAG_MAJOR_VERSION == 34
-        if (th.getMinorVersion() < TAG_MINOR_POSITIONAL_MAGIC)
-        {
-            _fixup_library_spells(you.spell_library);
-            _fixup_library_spells(you.hidden_spells);
-        }
+        _fixup_library_spells(you.spell_library);
+        _fixup_library_spells(you.hidden_spells);
     }
 #endif
 
