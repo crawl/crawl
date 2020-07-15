@@ -71,7 +71,7 @@ A long pole with an enormous, cleaving blade on one end.
 %%%%
 barding
 
-Armour for the long, scaly tails of nagas and palentongas.
+Armour for the scaly midsections of nagas and palentongas.
 %%%%
 battleaxe
 
