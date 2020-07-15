@@ -723,6 +723,16 @@ static const duration_def duration_data[] =
       "noxious spew", "noxious bog",
       "You are spewing a noxious bog.", D_DISPELLABLE,
       {{ "Your noxious spew wanes." }}},
+
+    { DUR_HOMUNCULUS_WILD_MAGIC,
+      MAGENTA, "Wild",
+      "wild magic", "",
+      "Casting spells uprouses your spell.", D_DISPELLABLE,
+      {{ "Your magic seems less wild.", []() {
+          you.props.erase(HOMUNCULUS_WILD_MAGIC);
+    }}} },
+
+
 #if TAG_MAJOR_VERSION == 34
     // And removed ones
     { DUR_MAGIC_SAPPED, 0, "", "", "old magic sapped", "", D_NO_FLAGS},

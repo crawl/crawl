@@ -77,6 +77,11 @@ Hill Orc
 Orcs are skilled in close combat, and often dabble in offensive magic. Hated by
 most, orcs are very proud and many of them feel superior.
 %%%%
+Homunculus
+
+The Homunculus are 'created beings'. From any origin, they all have bodies that
+span between life and artificial construct.
+%%%%
 Human
 
 Humans advance quickly in levels and have equal abilities in most skills.

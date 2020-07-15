@@ -64,6 +64,7 @@
 #define PLAYER_TENTACLE_DELAY "player_tentacle_delay"
 #define FROZEN_RAMPARTS_KEY "frozen_ramparts_position"
 #define NOXIOUS_BOG_KEY "noxious_bog_pow"
+#define HOMUNCULUS_WILD_MAGIC "homunculus_wild_magic"
 
 // display/messaging breakpoints for penalties from Ru's MUT_HORROR
 #define HORROR_LVL_EXTREME  3
@@ -1118,6 +1119,7 @@ bool enough_mp(int minimum, bool suppress_msg, bool abort_macros = true);
 
 void change_draconian_colour();
 
+void gain_and_note_hp_mp();
 void calc_hp(bool scale = false, bool set = false);
 void calc_mp();
 

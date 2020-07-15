@@ -336,6 +336,9 @@ static const ability_def Ability_List[] =
 
     { ABIL_HOP, "Hop", 0, 0, 0, 0, {}, abflag::none },
 
+    { ABIL_BLOSSOM, "Choose Blossom", 0, 0, 0, 0, {}, abflag::starve_ok },
+    { ABIL_ADAPTION, "Choose Adaption", 0, 0, 0, 0, {}, abflag::starve_ok },
+
     // EVOKE abilities use Evocations and come from items.
     // Teleportation and Blink can also come from mutations
     // so we have to distinguish them (see above). The off items
@@ -2033,6 +2036,57 @@ static void _cause_vampire_bat_form_stat_drain()
     lose_stat(STAT_DEX, VAMPIRE_BAT_FORM_STAT_DRAIN);
 }
 
+static void _homunculus_blossom_or_adaption(species_type _speice)
+{
+    ASSERT(_speice == SP_ADAPTION_HOMUNCULUS || _speice == SP_BLOSSOM_HOMUNCULUS);
+    you.species = _speice;
+
+    uint8_t saved_skills[NUM_SKILLS];
+    for (skill_type sk = SK_FIRST_SKILL; sk < NUM_SKILLS; ++sk)
+    {
+        saved_skills[sk] = you.skills[sk];
+        check_skill_level_change(sk, false);
+    }
+    // The player symbol depends on species.
+    update_player_symbol();
+#ifdef USE_TILE
+    init_player_doll();
+#endif
+    mprf(MSGCH_INTRINSIC_GAIN,
+        _speice == SP_BLOSSOM_HOMUNCULUS ?
+        "You bloom as near-life beings" :
+        "You have adapted to your body for survival in the dungeon");
+
+    //perma_mutate(MUT_REGENERATION, 1, "blossom");
+
+    // Produce messages about skill increases/decreases. We
+    // restore one skill level at a time so that at most the
+    // skill being checked is at the wrong level.
+    for (skill_type sk = SK_FIRST_SKILL; sk < NUM_SKILLS; ++sk)
+    {
+        const int oldapt = species_apt(sk, SP_HOMUNCULUS);
+        const int newapt = species_apt(sk, you.species);
+        if (oldapt != newapt)
+        {
+            mprf(MSGCH_INTRINSIC_GAIN, "You learn %s %s%s.",
+                skill_name(sk),
+                abs(oldapt - newapt) > 1 ? "much " : "",
+                oldapt > newapt ? "slower" : "quicker");
+        }
+
+        you.skills[sk] = saved_skills[sk];
+        check_skill_level_change(sk);
+    }
+    
+    give_level_mutations(you.species, 1);
+
+    check_training_targets();
+
+    gain_and_note_hp_mp();
+
+    redraw_screen();
+}
+
 /*
  * Use an ability.
  *
@@ -2121,6 +2175,14 @@ static spret _do_ability(const ability_def& abil, bool fail)
             return frog_hop(fail);
         else
             return spret::abort;
+
+    case ABIL_BLOSSOM:
+       _homunculus_blossom_or_adaption(SP_BLOSSOM_HOMUNCULUS);
+       return spret::success;
+
+    case ABIL_ADAPTION:
+       _homunculus_blossom_or_adaption(SP_ADAPTION_HOMUNCULUS);
+       return spret::success;
 
     case ABIL_SPIT_POISON:      // Naga poison spit
     {
@@ -3782,6 +3844,16 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
         }
 
     }
+
+    if ( you.species == SP_HOMUNCULUS ) 
+    {
+        if (you.experience_level >= 14) 
+        {
+            _add_talent(talents, ABIL_BLOSSOM, check_confused);
+            _add_talent(talents, ABIL_ADAPTION, check_confused);
+        }
+    }
+
 
     if (you.get_mutation_level(MUT_HOP))
         _add_talent(talents, ABIL_HOP, check_confused);

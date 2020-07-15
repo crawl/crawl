@@ -2943,7 +2943,7 @@ static void _crustacean_moult()
     }
 }
 
-static void _gain_and_note_hp_mp()
+void gain_and_note_hp_mp()
 {
     const int old_mp = you.magic_points;
     const int old_maxmp = you.max_magic_points;
@@ -3039,7 +3039,7 @@ void change_draconian_colour()
 
     // needs to be done early here, so HP doesn't look rotted
     // when we redraw the screen
-    _gain_and_note_hp_mp();
+    gain_and_note_hp_mp();
 
     redraw_screen();
 }
@@ -3300,6 +3300,13 @@ void level_change(bool skip_attribute_increase)
                 you.head_grow(0);
                 break;
 
+            case SP_HOMUNCULUS:
+                if (you.experience_level == 14)
+                {
+                    mprf(MSGCH_INTRINSIC_GAIN, "The time has come to decide your goal.");
+                }
+                break;
+
             default:
                 break;
             }
@@ -3314,7 +3321,7 @@ void level_change(bool skip_attribute_increase)
             you.redraw_armour_class = true;
         }
         if (!updated_maxhp)
-            _gain_and_note_hp_mp();
+            gain_and_note_hp_mp();
 
         xom_is_stimulated(12);
         if (in_good_standing(GOD_HEPLIAKLQANA))

@@ -718,11 +718,15 @@ tileidx_t tilep_species_to_base_tile(int sp, int level)
     case SP_MOUNTAIN_DWARF:
         return TILEP_BASE_MOUNTAIN_DWARF;
     case SP_LESSER_LICH:
-        return TILEP_BASE_LESSER_LICH;         
+        return TILEP_BASE_LESSER_LICH;
     case SP_CRUSTACEAN:
         return TILEP_BASE_CRUSTACEAN;
     case SP_HYDRA:
-        return TILEP_BASE_HYDRA + min(you.heads(), 9) - 1;   
+        return TILEP_BASE_HYDRA + min(you.heads(), 9) - 1;  
+    case SP_HOMUNCULUS:
+    case SP_BLOSSOM_HOMUNCULUS:
+    case SP_ADAPTION_HOMUNCULUS:
+        return TILEP_BASE_HOMUNCULUS;
     default:
         return TILEP_BASE_HUMAN;
     }
