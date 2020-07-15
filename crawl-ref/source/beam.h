@@ -104,6 +104,7 @@ struct bolt
                                         // itself.
     bool   was_missile = false;   // For determining if this was SPMSL_FLAME /
                                   // FROST etc so that we can change mulch rate
+    bool   evoked = false;        // Was this beam evoked from a wand?
     // Do we draw animations?
     bool   animate = bool(Options.use_animations & UA_BEAM);
     ac_type ac_rule = ac_type::normal;   // How defender's AC affects damage.

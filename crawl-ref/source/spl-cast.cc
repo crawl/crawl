@@ -1545,6 +1545,7 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
 
     if (evoked_item)
     {
+        beam.evoked = true;
 #if TAG_MAJOR_VERSION == 34
         const int surge = pakellas_surge_devices();
 #else

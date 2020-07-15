@@ -2959,7 +2959,7 @@ static void tag_read_you(reader &th)
         you.mutation[j] = you.innate_mutation[j] = you.sacrifices[j];
 
 #if TAG_MAJOR_VERSION == 34
-    if (th.getMinorVersion() < TAG_MINOR_NO_POTION_HEAL)
+    if (th.getMinorVersion() < TAG_MINOR_NO_DEVICE_HEAL)
     {   // These use to apply no matter what the minor tag
         // was, so when TAG_MINOR_NO_POTION_HEAL was added
         // these were all moved to only apply to previous
@@ -3022,8 +3022,8 @@ static void tag_read_you(reader &th)
     {
         if (you.species == SP_VINE_STALKER)
         {
-            you.mutation[MUT_NO_POTION_HEAL] =
-            you.innate_mutation[MUT_NO_POTION_HEAL] = 3;
+            you.mutation[MUT_NO_DEVICE_HEAL] =
+            you.innate_mutation[MUT_NO_DEVICE_HEAL] = 3;
         }
 
         if (you.species == SP_VINE_STALKER
