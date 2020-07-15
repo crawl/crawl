@@ -395,7 +395,7 @@ base/octopode1 SP_RECOMMENDED_OCTOPODE
 %compose base/hydra
 %finish SP_RECOMMENDED_HYDRA
 %start
-%compose base/homunculus_m
+%compose base/homunculus
 %compose body/animal_skin
 %compose hair/short_black
 %finish SP_RECOMMENDED_HOMUNCULUS
