@@ -4446,7 +4446,7 @@ fleeing Harold
 __NEXT
 
 w:5
-@The_monster@ @yells@, "I'm getting too old for this!"
+@The_monster@ @_yells_@, "I'm getting too old for this!"
 %%%%
 Harold killed
 
