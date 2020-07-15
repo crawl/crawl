@@ -366,6 +366,11 @@ spret frog_hop(bool fail)
 }
 
 static bool _check_charge_through(coord_def pos) {
+/*    if (is_feat_dangerous(grd(pos)))
+    {
+        canned_msg(MSG_UNTHINKING_ACT);
+        return false;
+    }*/
 
     if (!you.can_pass_through_feat(grd(pos)))
     {
@@ -380,7 +385,7 @@ static bool _check_charge_through(coord_def pos) {
     return true;
 }
 
-static bool _find_charge_target(coord_def &target, int max_range,
+static bool _find_charge_target(vector<coord_def> &target_path, int max_range,
                                 targeter *hitfunc) {
     while (true) {
         // query for location {dlb}:
@@ -448,8 +453,10 @@ static bool _find_charge_target(coord_def &target, int max_range,
         // (Ideally we'd like to split these up and do all the vetos before
         // the prompts, but...)
 
+        target_path.clear();
         bool ok = true;
         while (ray.advance()) {
+            target_path.push_back(ray.pos());
             if (!can_charge_through_mons(ray.pos()))
                 break;
             ok = _check_charge_through(ray.pos());
@@ -486,15 +493,11 @@ static bool _find_charge_target(coord_def &target, int max_range,
         if (!wielded_weapon_check(you.weapon()))
             continue;
 
-        // regress so that other checks refer to the actual final space, not the mons
         ray.regress();
-
         // check for clouds and traps on the final space only
         if (!check_moveto_cloud(ray.pos(), "charge") || !check_moveto_trap(ray.pos(),  "charge"))
             continue;
 
-        ray.advance();
-        target = ray.pos();
         return true;
     }
 }
@@ -511,10 +514,10 @@ spret palentonga_charge(bool fail)
     const int charge_range = 4;
     const coord_def initial_pos = you.pos();
 
-    coord_def target;
+    vector<coord_def> target_path;
     targeter_charge tgt(&you, charge_range);
     tgt.obeys_mesmerise = true;
-    if (!_find_charge_target(target, charge_range, &tgt))
+    if (!_find_charge_target(target_path, charge_range, &tgt))
         return spret::abort;
 
     fail_check();
@@ -522,6 +525,7 @@ spret palentonga_charge(bool fail)
     if (!you.attempt_escape(1)) // prints its own messages
         return spret::success;
 
+    const coord_def target = target_path.back();
     monster* target_mons = monster_at(target);
     if (fedhas_passthrough(target_mons))
         target_mons = nullptr;
@@ -534,38 +538,29 @@ spret palentonga_charge(bool fail)
     crawl_state.cancel_cmd_repeat();
 
     const coord_def orig_pos = you.pos();
-    ray_def ray;
-    ASSERT(find_ray(you.pos(), target, ray, opc_solid));
-    while (ray.advance()
-           && ray.pos() != target
-           && grid_distance(orig_pos, ray.pos()) < charge_range) {
-        // we've already accounted for visible mons, but now we need
-        // to handle invisible ones
-        monster* sneaky_mons = monster_at(ray.pos());
+    for (coord_def pos : target_path) {
+        monster* sneaky_mons = monster_at(pos);
         if (sneaky_mons && !fedhas_passthrough(sneaky_mons)) {
             target_mons = sneaky_mons;
             break;
         }
 
-        you.set_position(ray.pos());
-        trap_def* ptrap = trap_at(you.pos());
+        you.set_position(pos);
+        trap_def* ptrap = trap_at(pos);
         if (ptrap)
             ptrap->trigger(you);
-        if (you.pos() != ray.pos()) // trap really went off!
+        if (you.pos() != pos) // trap really went off!
             return spret::success; // let's just stop this here.
 
         you.set_position(orig_pos);
-        place_cloud(CLOUD_DUST, ray.pos(), 2 + random2(3), &you);
+        place_cloud(CLOUD_DUST, pos, 2 + random2(3), &you);
     }
-    // Target the space before the monster.
-    ray.regress();
+    const coord_def dest_pos = target_path.at(target_path.size() - 2);
 
-    if (ray.pos() != orig_pos) {
-        move_player_to_grid(ray.pos(), true);
-        noisy(12, you.pos());
-        if (you.pos() != ray.pos()) // tornado nonsense
-            return spret::success; // of a sort
-    }
+    move_player_to_grid(dest_pos, true);
+    noisy(12, you.pos());
+    if (you.pos() != dest_pos) // tornado nonsense
+        return spret::success; // of a sort
 
     // Maybe we hit a trap and something weird happened.
     if (!target_mons->alive() || !adjacent(you.pos(), target_mons->pos()))
