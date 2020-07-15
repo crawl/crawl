@@ -5,6 +5,16 @@
 이 체인지 로그 포맷은 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)를 기반으로 작성됨,
 
 ## [Unreleased]
+### Added
+- 새로운 종족 호문쿨루스 추가. 호문쿨루스는 반생명 반인공체기에 둘의 특성을 동시에 가지고있고 14레벨에 한 쪽을 특화시킬 수 있다. 또한 마법을 사용할때마다 일시적인 와일드매직을 얻고, 근접공격으론 그 수치를 줄일 수 있다.
+  - Added homunculus(playable). Homunculus are a semi-living, semi-artificial speices. they can specialize in 14 level. Also, whenever magic is used, temporary wild magic stack up, and melee attacks can reduce that stack.
+
+### Changed 
+
+### Removed
+- Nothing
+
+### 0.26 Featrue
 
 
 ## [kimchi-1.0] - ~2020-07-13
@@ -188,6 +198,9 @@
 
 - 다시 시야 밖에서 구름이 사라지지않음
   - Don't erase clouds outside of LOS
+  
+- 장검반격은 이제 50%확률로 나감
+  - Long Blade's Riposte buff. Now triggers at 50%
   
 - 다시 매혹을 큰 소음으로 해제할 수 있게 됨
   - Noise break mesmerisation again 
