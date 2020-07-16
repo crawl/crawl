@@ -8,6 +8,9 @@
 bool cancel_barbed_move();
 void apply_barbs_damage();
 void remove_ice_armour_movement();
+void remove_water_hold();
+void apply_noxious_bog(const coord_def old_pos);
+bool apply_cloud_trail(const coord_def old_pos);
 bool cancel_confused_move(bool stationary);
 void open_door_action(coord_def move = {0,0});
 void close_door_action(coord_def move);

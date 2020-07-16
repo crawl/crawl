@@ -188,6 +188,46 @@ void remove_ice_armour_movement()
     }
 }
 
+void remove_water_hold()
+{
+    if (you.duration[DUR_WATER_HOLD])
+    {
+        mpr("You slip free of the water engulfing you.");
+        you.props.erase("water_holder");
+        you.clear_far_engulf();
+    }
+}
+
+void apply_noxious_bog(const coord_def old_pos)
+{
+    if (you.duration[DUR_NOXIOUS_BOG])
+    {
+        if (cell_is_solid(old_pos))
+            ASSERT(you.wizmode_teleported_into_rock);
+        else
+            noxious_bog_cell(old_pos);
+    }
+}
+
+bool apply_cloud_trail(const coord_def old_pos)
+{
+    if (you.duration[DUR_CLOUD_TRAIL])
+    {
+        if (cell_is_solid(old_pos))
+            ASSERT(you.wizmode_teleported_into_rock);
+        else
+        {
+            auto cloud = static_cast<cloud_type>(
+                you.props[XOM_CLOUD_TRAIL_TYPE_KEY].get_int());
+            ASSERT(cloud != CLOUD_NONE);
+            check_place_cloud(cloud, old_pos, random_range(3, 10), &you,
+                              0, -1);
+            return true;
+        }
+    }
+    return false;
+}
+
 bool cancel_confused_move(bool stationary)
 {
     dungeon_feature_type dangerous = DNGN_FLOOR;
@@ -695,13 +735,6 @@ void move_player_action(coord_def move)
         if (!you.attempt_escape()) // false means constricted and did not escape
             return;
 
-        if (you.duration[DUR_WATER_HOLD])
-        {
-            mpr("You slip free of the water engulfing you.");
-            you.props.erase("water_holder");
-            you.clear_far_engulf();
-        }
-
         if (you.digging)
         {
             mprf("You dig through %s.", feature_description_at(targ, false,
@@ -725,42 +758,23 @@ void move_player_action(coord_def move)
             you.stop_being_constricted();
 
         coord_def old_pos = you.pos();
-        // Don't trigger traps when confusion causes no move.
+        // Don't trigger things that require movement
+        // when confusion causes no move.
         if (you.pos() != targ && targ_pass)
+        {
+            remove_water_hold();
             move_player_to_grid(targ, true);
+            apply_barbs_damage();
+            remove_ice_armour_movement();
+            apply_noxious_bog(old_pos);
+            apply_cloud_trail(old_pos);
+        }
 
         // Now it is safe to apply the swappee's location effects and add
         // trailing effects. Doing so earlier would allow e.g. shadow traps to
         // put a monster at the player's location.
         if (swap)
             targ_monst->apply_location_effects(targ);
-        else
-        {
-
-            if (you.duration[DUR_NOXIOUS_BOG])
-            {
-                if (cell_is_solid(old_pos))
-                    ASSERT(you.wizmode_teleported_into_rock);
-                else
-                    noxious_bog_cell(old_pos);
-            }
-
-            if (you.duration[DUR_CLOUD_TRAIL])
-            {
-                if (cell_is_solid(old_pos))
-                    ASSERT(you.wizmode_teleported_into_rock);
-                else
-                {
-                    auto cloud = static_cast<cloud_type>(
-                        you.props[XOM_CLOUD_TRAIL_TYPE_KEY].get_int());
-                    ASSERT(cloud != CLOUD_NONE);
-                    check_place_cloud(cloud, old_pos, random_range(3, 10), &you,
-                                      0, -1);
-                }
-            }
-        }
-        apply_barbs_damage();
-        remove_ice_armour_movement();
 
         if (you_are_delayed() && current_delay()->is_run())
             env.travel_trail.push_back(you.pos());
