@@ -557,8 +557,8 @@ spret palentonga_charge(bool fail)
 
     move_player_to_grid(dest_pos, true);
     noisy(12, you.pos());
-    remove_ice_armour_movement();
     apply_barbs_damage();
+    remove_ice_armour_movement();
     if (you.pos() != dest_pos) // tornado nonsense
         return spret::success; // of a sort
 
