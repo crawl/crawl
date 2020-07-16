@@ -2166,7 +2166,7 @@ static void _check_trapped()
     }
 }
 
-static void _update_golubria_traps()
+static void _update_golubria_traps(int dur)
 {
     vector<coord_def> traps = find_golubria_on_level();
     for (auto c : traps)
@@ -2174,7 +2174,8 @@ static void _update_golubria_traps()
         trap_def *trap = trap_at(c);
         if (trap && trap->type == TRAP_GOLUBRIA)
         {
-            if (--trap->ammo_qty <= 0)
+            trap->ammo_qty -= div_rand_round(dur, BASELINE_DELAY);
+            if (trap->ammo_qty <= 0)
             {
                 if (you.see_cell(c))
                     mpr("Your passage of Golubria closes with a snap!");
@@ -2273,7 +2274,7 @@ void world_reacts()
     handle_time();
     manage_clouds();
     if (env.level_state & LSTATE_GOLUBRIA)
-        _update_golubria_traps();
+        _update_golubria_traps(you.time_taken);
     if (env.level_state & LSTATE_STILL_WINDS)
         _update_still_winds();
     if (!crawl_state.game_is_arena())
