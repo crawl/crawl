@@ -2322,13 +2322,6 @@ static int _player_scale_evasion(int prescaled_ev, const int scale)
         return prescaled_ev + ev_bonus;
     }
 
-    // Crustacean get a 33% evasion bonus in water.
-    if (you.species == SP_CRUSTACEAN && you.in_water())
-    {
-        const int ev_bonus = max(2 * scale, prescaled_ev / 3);
-        return prescaled_ev + ev_bonus;
-    }
-
     return prescaled_ev;
 }
 
