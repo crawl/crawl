@@ -2036,9 +2036,19 @@ static void _cause_vampire_bat_form_stat_drain()
     lose_stat(STAT_DEX, VAMPIRE_BAT_FORM_STAT_DRAIN);
 }
 
-static void _homunculus_blossom_or_adaption(species_type _speice)
+static spret _homunculus_blossom_or_adaption(species_type _speice)
 {
     ASSERT(_speice == SP_ADAPTION_HOMUNCULUS || _speice == SP_BLOSSOM_HOMUNCULUS);
+
+    string prompt = _speice == SP_ADAPTION_HOMUNCULUS ?
+                    "This choice makes you an artificial being, and your aptitude becomes more like a pure mage. Really choose this?" :
+                    "This choice makes you a near-life being, and your aptitude becomes more like a warrior-mage. Really choose this?";
+    if (!yesno(prompt.c_str(), false, 'n'))
+    {
+        canned_msg(MSG_OK);
+        return spret::abort;
+    }
+
     you.species = _speice;
 
     uint8_t saved_skills[NUM_SKILLS];
@@ -2085,6 +2095,8 @@ static void _homunculus_blossom_or_adaption(species_type _speice)
     gain_and_note_hp_mp();
 
     redraw_screen();
+
+    return spret::success;
 }
 
 /*
@@ -2177,12 +2189,10 @@ static spret _do_ability(const ability_def& abil, bool fail)
             return spret::abort;
 
     case ABIL_BLOSSOM:
-       _homunculus_blossom_or_adaption(SP_BLOSSOM_HOMUNCULUS);
-       return spret::success;
+       return _homunculus_blossom_or_adaption(SP_BLOSSOM_HOMUNCULUS);
 
     case ABIL_ADAPTION:
-       _homunculus_blossom_or_adaption(SP_ADAPTION_HOMUNCULUS);
-       return spret::success;
+       return _homunculus_blossom_or_adaption(SP_ADAPTION_HOMUNCULUS);
 
     case ABIL_SPIT_POISON:      // Naga poison spit
     {
