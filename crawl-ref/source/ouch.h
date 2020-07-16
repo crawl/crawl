@@ -66,6 +66,7 @@ enum kill_method_type
     KILLED_BY_BARBS,
     KILLED_BY_BEING_THROWN,
     KILLED_BY_COLLISION,
+    KILLED_BY_ZOT,
     NUM_KILLBY
 };
 

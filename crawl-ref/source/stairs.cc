@@ -44,6 +44,7 @@
  #include "tilepick.h"
 #endif
 #include "tiles-build-specific.h"
+#include "timed-effects.h" // bezotted
 #include "traps.h"
 #include "travel.h"
 #include "view.h"
@@ -787,6 +788,8 @@ void floor_transition(dungeon_feature_type how,
             else if (branch != BRANCH_ABYSS) // too many messages...
                 mprf("Welcome to %s!", branches[branch].longname);
         }
+        if (old_level.branch == BRANCH_ABYSS && bezotted())
+            mpr("Zot's attention fixes on you again. Flee to new levels!");
 
         if (branch == BRANCH_GAUNTLET)
             _gauntlet_effect();

@@ -324,6 +324,9 @@ static const vector<god_passive> god_passives[] =
         {  0, passive_t::slow_abyss,
               "GOD will NOW slow the Abyss"
         },
+        {  0, passive_t::slow_zot,
+              "GOD will NOW slow Zot's hunt for you"
+        },
         // TODO: this one should work regardless of penance
         {  1, passive_t::slow_metabolism, "have a slowed metabolism" },
     },

@@ -424,7 +424,7 @@ struct timed_effect
 };
 
 // If you add an entry to this list, remember to add a matching entry
-// to timed_effect_type in timef-effect-type.h!
+// to timed_effect_type in timed-effect-type.h!
 static struct timed_effect timed_effects[] =
 {
     { rot_corpses,               200,   200, true  },
@@ -1257,4 +1257,48 @@ int speed_to_duration(int speed)
         speed = 100;
 
     return div_rand_round(100, speed);
+}
+
+// Is the zot clock running, or is it paused or stopped altogether?
+bool zot_clock_active() {
+    return !player_in_branch(BRANCH_ABYSS) && !player_has_orb();
+}
+
+static bool _over_zot_threshold() {
+    return you.attribute[ATTR_ZOT_CLOCK] >= MAX_ZOT_CLOCK - BEZOTTING_THRESHOLD;
+}
+
+// Is the player suffering penalties from nearing the end of the zot clock?
+bool bezotted() {
+    return zot_clock_active() && _over_zot_threshold();
+}
+
+// How many times should the player have been drained by Zot?
+int bezotting_level() {
+    if (!bezotted())
+        return 0;
+    const int MAX_ZOTS = 5;
+    const int TURNS_PER_ZOT = (MAX_ZOT_CLOCK - BEZOTTING_THRESHOLD) / MAX_ZOTS;
+    const int over_thresh = you.attribute[ATTR_ZOT_CLOCK] -
+                            (MAX_ZOT_CLOCK - BEZOTTING_THRESHOLD);
+    return over_thresh / TURNS_PER_ZOT + 1;
+}
+
+// Decrease the zot clock when the player enters a new level.
+void decr_zot_clock() {
+    if (player_in_branch(BRANCH_TEMPLE)) {
+        if (bezotted())
+            mpr("Zot knows this place too well - flee elsewhere!");
+        return;
+    }
+    if (!zot_clock_active()) {
+        if (_over_zot_threshold() && player_in_branch(BRANCH_ABYSS))
+            mpr("Zot cannot harm you here.");
+        return;
+    }
+    if (bezotted()) {
+        mpr("As you enter the new level, Zot loses track of you.");
+    }
+    const int zot = you.attribute[ATTR_ZOT_CLOCK];
+    you.attribute[ATTR_ZOT_CLOCK] = max(0, zot - 4000);
 }

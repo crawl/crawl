@@ -91,6 +91,7 @@
 #include "rltiles/tiledef-dngn.h"
 #include "tilepick.h"
 #endif
+#include "timed-effects.h" // bezotting
 #include "transform.h"
 #include "traps.h"
 #include "travel.h"
@@ -950,6 +951,40 @@ static void _handle_spectral_brand()
     }
 }
 
+// Odds of the zot clock incrementing every aut, expressed as odds
+// out of 1000 (aka 10x a percent chance).
+static unsigned _zot_clock_odds() {
+    const int base_odds = 100; // 10% per aut, aka on average 1/turn
+    if (have_passive(passive_t::slow_zot)) {
+        // down to 6.7% at full piety, aka once every 1.5 turns. (only movement
+        // (is slowed, not all actions, so we shouldn't give double clock!)
+        return base_odds - div_rand_round(you.piety, 6);
+    }
+    return base_odds;
+}
+
+static void _increment_zot_clock() {
+    const int clock_incr = binomial(you.time_taken, _zot_clock_odds(), 1000);
+    const int old_lvl = bezotting_level();
+    you.attribute[ATTR_ZOT_CLOCK] += clock_incr;
+    if (!bezotted()) return;
+
+    if (you.attribute[ATTR_ZOT_CLOCK] >= MAX_ZOT_CLOCK)
+    {
+        mpr("Zot has found you!");
+        ouch(INSTANT_DEATH, KILLED_BY_ZOT);
+        return;
+    }
+
+    if (!old_lvl) {
+        mpr("You have lingered too long in familiar places. Zot approaches. Travel to new levels before it's too late!");
+        drain_player(150, true, true);
+    } else if (bezotting_level() > old_lvl) {
+        mpr("Zot draws near...");
+        drain_player(75, true, true);
+    }
+}
+
 void player_reacts()
 {
     //XXX: does this _need_ to be calculated up here?
@@ -1036,6 +1071,8 @@ void player_reacts()
 
     if (you.props[EMERGENCY_FLIGHT_KEY].get_bool())
         _handle_emergency_flight();
+
+    _increment_zot_clock();
 }
 
 void extract_manticore_spikes(const char* endmsg)

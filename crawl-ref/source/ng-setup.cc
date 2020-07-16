@@ -468,6 +468,10 @@ static void _setup_generic(const newgame_def& ng,
     if (you.char_class == JOB_ARCANE_MARKSMAN && ng.weapon != WPN_THROWN)
         _free_up_slot('b');
 
+    // Give Delver a pile of extra time to compensate for 'wasted' levels
+    if (you.char_class == JOB_DELVER)
+        you.attribute[ATTR_ZOT_CLOCK] = -6000;
+
     // Give tutorial skills etc
     if (crawl_state.game_is_tutorial())
         _setup_tutorial_miscs();
