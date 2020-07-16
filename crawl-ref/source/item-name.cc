@@ -2787,6 +2787,10 @@ bool is_dangerous_item(const item_def &item, bool temp)
         // Tremorstones will blow you right up.
         return item.sub_type == MISC_TIN_OF_TREMORSTONES;
 
+    case OBJ_ARMOUR:
+        // Tilting at windmills can be dangerous.
+        return get_armour_ego_type(item) == SPARM_LUNGING;
+
     default:
         return false;
     }
