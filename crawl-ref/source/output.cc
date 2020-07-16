@@ -1047,6 +1047,7 @@ static void _get_status_lights(vector<status_light>& out)
     const unsigned int important_statuses[] =
     {
         STATUS_ORB,
+        STATUS_BEZOTTED,
         STATUS_STR_ZERO, STATUS_INT_ZERO, STATUS_DEX_ZERO,
         STATUS_ALIVE_STATE,
         DUR_PARALYSIS,

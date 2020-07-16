@@ -825,9 +825,9 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
                                || death_type == KILLED_BY_WATER);
 
     // death's door protects against everything but falling into water/lava,
-    // excessive rot, leaving the dungeon, or quitting.
+    // Zot, excessive rot, leaving the dungeon, or quitting.
     if (you.duration[DUR_DEATHS_DOOR] && !env_death && !non_death
-        && you.hp_max > 0)
+        && death_type != KILLED_BY_ZOT && you.hp_max > 0)
     {
         return;
     }

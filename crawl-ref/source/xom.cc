@@ -3307,6 +3307,7 @@ static int _death_is_worth_saving(const kill_method_type killed_by)
     case KILLED_BY_WATER:
     case KILLED_BY_DRAINING:
     case KILLED_BY_STARVATION:
+    case KILLED_BY_ZOT:
     case KILLED_BY_ROTTING:
 
     // Don't protect the player from these.

@@ -29,6 +29,7 @@
 #include "stringutil.h"
 #include "state.h"
 #include "terrain.h"
+#include "timed-effects.h" // decr_zot_clock
 #include "transform.h"
 #include "traps.h"
 #include "travel.h"
@@ -461,6 +462,7 @@ void revive()
     you.attribute[ATTR_FLIGHT_UNCANCELLABLE] = 0;
     you.attribute[ATTR_XP_DRAIN] = 0;
     you.attribute[ATTR_SERPENTS_LASH] = 0;
+    decr_zot_clock();
     you.los_noise_level = 0;
     you.los_noise_last_turn = 0; // silence in death
 

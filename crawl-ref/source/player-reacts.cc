@@ -91,6 +91,7 @@
 #include "rltiles/tiledef-dngn.h"
 #include "tilepick.h"
 #endif
+#include "timed-effects.h" // bezotting
 #include "transform.h"
 #include "traps.h"
 #include "travel.h"
@@ -1033,6 +1034,8 @@ void player_reacts()
 
     if (you.props[EMERGENCY_FLIGHT_KEY].get_bool())
         _handle_emergency_flight();
+
+    incr_zot_clock();
 }
 
 void extract_manticore_spikes(const char* endmsg)

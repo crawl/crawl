@@ -104,6 +104,11 @@ force_more_message += You don't have the energy to cast that spell
 force_more_message += You don't have the energy to cast any spells
 force_more_message += This is a scroll of acquirement
 
+## Zot is coming!
+force_more_message += You have lingered too long in familiar places
+force_more_message += Zot's attention fixes on you again
+force_more_message += Zot already knows this place too well
+
 ## Reduce chance of draining because flight or form runs out:
 force_more_message += ^Careful!
 

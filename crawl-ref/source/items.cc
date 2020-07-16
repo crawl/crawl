@@ -76,6 +76,7 @@
 #include "terrain.h"
 #include "throw.h"
 #include "tilepick.h"
+#include "timed-effects.h" // bezotted
 #include "travel.h"
 #include "viewchar.h"
 #include "view.h"
@@ -1865,6 +1866,9 @@ static void _get_orb()
     run_animation(ANIMATION_ORB, UA_PICKUP);
 
     mprf(MSGCH_ORB, "You pick up the Orb of Zot!");
+
+    if (bezotted())
+        mpr("Zot can harm you no longer.");
 
     env.orb_pos = you.pos(); // can be wrong in wizmode
     orb_pickup_noise(you.pos(), 30);
