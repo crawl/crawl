@@ -2125,8 +2125,8 @@ static spret _do_ability(const ability_def& abil, bool fail)
             return spret::abort;
         }
         you.lives--;
-        you.set_duration(DUR_PARALYSIS, 5 + you.experience_level);
-        you.set_duration(DUR_ECDYSIS, 5 + you.experience_level);
+        you.set_duration(DUR_PARALYSIS, 5 + you.deaths);
+        you.set_duration(DUR_ECDYSIS, 5 + you.deaths);
         break;
     
     case ABIL_CRAB_WALK:
