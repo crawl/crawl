@@ -856,10 +856,8 @@ int num_to_lines(int num)
     return num;
 }
 
-void clrscr()
+void clrscr_sys()
 {
-    save_cursor_pos save; // is this generally correct? alternative, set region
-                          // to GOTO_CRT.
     textcolour(LIGHTGREY);
     textbackground(BLACK);
     clear();
@@ -868,9 +866,6 @@ void clrscr()
     fflush(stdout);
 #endif
 
-#ifdef USE_TILE_WEB
-    tiles.clrscr();
-#endif
 }
 
 void set_cursor_enabled(bool enabled)

@@ -440,6 +440,18 @@ void set_cursor_region(GotoRegion region)
 {
     _current_region = region;
 }
+
+void clrscr()
+{
+    save_cursor_pos save; // is this generally correct? alternative, set region
+                          // to GOTO_CRT.
+    clrscr_sys();
+
+#ifdef USE_TILE_WEB
+    tiles.clrscr();
+#endif
+}
+
 #endif // !USE_TILE_LOCAL
 
 coord_def cgetsize(GotoRegion region)
