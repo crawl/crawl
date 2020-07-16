@@ -2302,7 +2302,7 @@ static int _player_evasion_bonuses()
     return evbonus;
 }
 
-// Player EV scaling for being flying tengu or swimming merfolk or swimming crustacean.
+// Player EV scaling for being flying tengu or swimming merfolk.
 static int _player_scale_evasion(int prescaled_ev, const int scale)
 {
     if (you.duration[DUR_PETRIFYING] || you.caught())
@@ -6313,6 +6313,8 @@ int player::racial_ac(bool temp) const
             return 200 + 100 * experience_level * 2 / 5     // max 20
                        + 100 * max(0, experience_level - 7) * 2 / 5;
         }
+        else if (species == SP_CRUSTACEAN)
+            return 100 * you.deaths * 2 / 5;                // no maximum
     }
 
     return 0;
@@ -6399,9 +6401,6 @@ int player::base_ac_with_specific_items(int scale,
         if (get_armour_ego_type(item) == SPARM_PROTECTION)
             AC += 300;
     }
-
-    if (you.species == SP_CRUSTACEAN)
-        AC += you.deaths * 75;
 
     AC += wearing(EQ_RINGS_PLUS, RING_PROTECTION) * 100;
 	
@@ -9230,7 +9229,7 @@ void end_ecdysis()
     you.duration[DUR_CONF] = 0;
 
     if (you.lives != 0)
-        you.set_duration(DUR_GROW_FOR_ECD, 20 * you.experience_level);
+        you.set_duration(DUR_GROW_FOR_ECD, 10 + 20 * you.deaths);
     you.hp = you.hp_max;
     you.redraw_hit_points = true;
     restore_stat(STAT_ALL, 0, true);
