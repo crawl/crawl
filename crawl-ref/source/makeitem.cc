@@ -856,7 +856,7 @@ static special_armour_type _generate_armour_type_ego(armour_type type)
         return random_choose(SPARM_DEXTERITY, SPARM_STRENGTH, SPARM_ARCHERY);
 
     case ARM_BOOTS:
-        return random_choose(SPARM_RUNNING, SPARM_FLYING, SPARM_STEALTH, 
+        return random_choose(SPARM_RUNNING, SPARM_FLYING, SPARM_STEALTH,
                              SPARM_LUNGING);
 
     case ARM_BARDING:
