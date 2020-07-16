@@ -518,6 +518,7 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
             power /= (10 + 3 * you.get_mutation_level(MUT_SUBDUED_MAGIC));
             if (you.duration[DUR_HOMUNCULUS_WILD_MAGIC]) {
                 power *= (10 + 2 * you.props[HOMUNCULUS_WILD_MAGIC].get_int());
+                power /= 10;
             }
             // Augmentation boosts spell power at high HP.
             power *= 10 + 4 * augmentation_amount();
@@ -1044,7 +1045,7 @@ static void _spellcasting_side_effects(spell_type spell, god_type god,
             && real_spell)
         {
             you.props[HOMUNCULUS_WILD_MAGIC].get_int()++;
-            you.increase_duration(DUR_HOMUNCULUS_WILD_MAGIC, random_range(20, 30), 50);
+            you.increase_duration(DUR_HOMUNCULUS_WILD_MAGIC, 10, 10);
             mprf(MSGCH_WARN, "Your magic is getting wild.");
         }
 

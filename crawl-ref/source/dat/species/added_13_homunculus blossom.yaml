@@ -9,7 +9,7 @@ difficulty_priority: 90
 aptitudes:
   xp: -1
   hp: 0
-  mp_mod: 0
+  mp_mod: 1
   mr: 4
   fighting: 1
   short_blades: 0

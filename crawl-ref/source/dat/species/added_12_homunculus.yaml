@@ -7,7 +7,7 @@ difficulty_priority: 90
 aptitudes:
   xp: -1
   hp: 0
-  mp_mod: 0
+  mp_mod: 1
   mr: 4
   fighting: 1
   short_blades: -1
@@ -46,9 +46,6 @@ dex: 7
 levelup_stat_frequency: 4
 levelup_stats:
   - int
-mutations:
-  1:
-    MUT_MANA_REGENERATION: 1
 fake_mutations:
   - long: Your magic cast will make your mana wild, and released by melee combat. 
     short: Magic overheating
