@@ -1593,7 +1593,7 @@ static void _EMBRACE_world_reacts(item_def *item)
 
 ////////////////////////////////////////////////////
 
-void _manage_fire_shield()
+static void _manage_fire_shield()
 {
     // Melt ice armour entirely.
     maybe_melt_player_enchantments(BEAM_FIRE, 100);
