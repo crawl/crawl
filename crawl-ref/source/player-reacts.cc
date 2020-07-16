@@ -927,7 +927,7 @@ static void _regenerate_hp_and_mp(int delay)
     _update_mana_regen_amulet_attunement();
 }
 
-void _handle_wereblood()
+static void _handle_wereblood()
 {
     if (you.duration[DUR_WEREBLOOD]
         && x_chance_in_y(you.props[WEREBLOOD_KEY].get_int(), 9))
@@ -938,7 +938,7 @@ void _handle_wereblood()
         noisy(spell_effect_noise(SPELL_WEREBLOOD), you.pos());
     }
 }
-void _handle_spectral_brand()
+static void _handle_spectral_brand()
 {
     const int pow = you.skill(SK_EVOCATIONS, 4);
     if (you.damage_brand() == SPWPN_SPECTRAL
