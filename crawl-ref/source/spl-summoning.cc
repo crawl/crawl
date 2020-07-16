@@ -2452,6 +2452,10 @@ bool aim_battlesphere(actor* agent, spell_type spell)
                 targets.push_back(foe);
             }
         }
+
+        if (targets.empty())
+            return false;
+
         const actor * target = *random_iterator(targets);
         battlesphere->foe = target->mindex();
         battlesphere->props["foe"] = battlesphere->foe;
