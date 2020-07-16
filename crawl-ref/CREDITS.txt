@@ -124,6 +124,7 @@
     Cedor
     Cerol
     Rahul Chandra
+    Joe Childers
     Thom Chiovoloni
     Anthony Chuah
     Henry Cipolla
@@ -229,7 +230,6 @@
     Lain I. W. Madreisz
     Johannes Maier
     Markus Maier
-    MainiacJoe
     Arien Malec
     Paul Maloney
     Pablo Mansanet
