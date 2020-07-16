@@ -74,6 +74,20 @@ attributes.
 While tranformed, any equipped weapons, armour and rings are melded, and the
 user becomes unable to cast spells.
 %%%%
+Choose Blossom ability
+
+This choice makes you more life beings. You gain regeneration and you can get 
+mutations, and some of the god's restrictions are disappeared. Also, your 
+aptitude will be better suited to the warrior-mage. invocation skills is better 
+because you are becoming more religious.
+%%%%
+Choose Adaption ability
+
+This choice makes you more artifact-like. You gain magical regeneration and 
+clarity, and some necromancy becomes unusable. Also, your aptitude will be 
+better suited to the pure mage. As it becomes less religious, invocation skills 
+are also reduced.
+%%%%
 Exsanguinate ability
 
 Remove all of your blood, transitioning to a bloodless state.
