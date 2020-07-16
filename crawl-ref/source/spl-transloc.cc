@@ -509,6 +509,9 @@ spret palentonga_charge(bool fail)
     const int charge_range = 4;
     const coord_def initial_pos = you.pos();
 
+    if (cancel_barbed_move())
+        return spret::abort;
+
     vector<coord_def> target_path;
     targeter_charge tgt(&you, charge_range);
     tgt.obeys_mesmerise = true;
@@ -555,6 +558,7 @@ spret palentonga_charge(bool fail)
     move_player_to_grid(dest_pos, true);
     noisy(12, you.pos());
     remove_ice_armour_movement();
+    apply_barbs_damage();
     if (you.pos() != dest_pos) // tornado nonsense
         return spret::success; // of a sort
 
