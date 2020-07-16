@@ -403,11 +403,11 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_SUMMON_ICE_BEAST,
 }, 
 {   // Book of the War Chants
-    SPELL_STONESKIN,
+    //SPELL_STONESKIN,
     SPELL_ELENENTAL_WEAPON,
     SPELL_FLAME_STRIKE,
-    SPELL_INSULATION,
-    SPELL_CONDENSATION_SHIELD,
+    //SPELL_INSULATION,
+    //SPELL_CONDENSATION_SHIELD,
 },
 };
 

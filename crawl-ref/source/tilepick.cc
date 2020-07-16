@@ -3930,6 +3930,8 @@ static tileidx_t _tileidx_player_job_base(const job_type job)
             return TILEG_JOB_TRANSMUTER;
         case JOB_STALKER:
             return TILEG_JOB_STALKER;
+        case JOB_CRUSADER:
+            return TILEG_JOB_CRUSADER;
         case JOB_MONK:
             return TILEG_JOB_MONK;
         case JOB_WARPER:

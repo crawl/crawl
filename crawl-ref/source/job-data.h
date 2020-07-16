@@ -304,6 +304,15 @@ static const map<job_type, job_def> job_data =
       { SK_WEAPON, 3 } },
 } },
 
+{ JOB_CRUSADER, {
+    "Cr", "Crusader",
+    3, 5, 4,
+    { SP_HALFLING, SP_CENTAUR, SP_MERFOLK, SP_BASE_DRACONIAN, SP_VAMPIRE, SP_HOMUNCULUS},
+    { "leather armour", "book of War Chants" },
+    WCHOICE_PLAIN,
+    { { SK_FIGHTING, 2 }, { SK_ARMOUR, 1 }, { SK_DODGING, 2 },
+      { SK_SPELLCASTING, 2 }, { SK_CHARMS, 3 }, { SK_WEAPON, 2 }, },
+} },
 #if TAG_MAJOR_VERSION == 34
 { JOB_DEATH_KNIGHT, {
     "DK", "Death Knight",

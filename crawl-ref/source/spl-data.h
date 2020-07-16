@@ -4324,7 +4324,7 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     3, 0,
-    TILEG_ELENENTAL_WEAPON,
+    TILEG_ELEMENTAL_WEAPON,
 },
 {
     SPELL_FLAME_STRIKE, "Flame Strike",
