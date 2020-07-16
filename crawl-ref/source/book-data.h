@@ -401,6 +401,13 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_OZOCUBUS_ARMOUR,
     SPELL_HAILSTORM,
     SPELL_SUMMON_ICE_BEAST,
+}, 
+{   // Book of the War Chants
+    SPELL_STONESKIN,
+    SPELL_ELENENTAL_WEAPON,
+    SPELL_FLAME_STRIKE,
+    SPELL_INSULATION,
+    SPELL_CONDENSATION_SHIELD,
 },
 };
 
