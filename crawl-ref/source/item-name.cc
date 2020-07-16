@@ -3233,7 +3233,7 @@ bool is_emergency_item(const item_def &item)
             return !have_passive(passive_t::no_haste)
                  && you.species != SP_FORMICID;
         case WAND_HEAL_WOUNDS:
-            return you.can_potion_heal();
+            return you.can_device_heal();
         default:
             return false;
         }
@@ -3259,7 +3259,7 @@ bool is_emergency_item(const item_def &item)
             return !have_passive(passive_t::no_haste)
                 && you.species != SP_FORMICID;
         case POT_HEAL_WOUNDS:
-            return you.can_potion_heal();
+            return you.can_device_heal();
         case POT_CURING:
         case POT_RESISTANCE:
         case POT_MAGIC:
@@ -3659,7 +3659,7 @@ bool is_useless_item(const item_def &item, bool temp)
 
         if (item.sub_type == WAND_HEAL_WOUNDS
             && item_type_known(item)
-            && !you.can_potion_heal())
+            && !you.can_device_heal())
             return you.get_mutation_level(MUT_NO_LOVE);
 
         if (item.sub_type == WAND_HASTING
@@ -3729,7 +3729,7 @@ bool is_useless_item(const item_def &item, bool temp)
             // If you're poison resistant, poison is only useless.
             return !is_bad_item(item, temp);
         case POT_HEAL_WOUNDS:
-            return !you.can_potion_heal();
+            return !you.can_device_heal();
         case POT_INVISIBILITY:
             return _invisibility_is_useless(temp);
         case POT_WATER:

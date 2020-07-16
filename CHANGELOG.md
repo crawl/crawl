@@ -5,6 +5,18 @@
 이 체인지 로그 포맷은 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)를 기반으로 작성됨,
 
 ## [Unreleased]
+### Added
+- 새로운 종족 호문쿨루스 추가. 호문쿨루스는 반생명 반인공체기에 둘의 특성을 동시에 가지고있고 14레벨에 한 쪽을 특화시킬 수 있다. 또한 마법을 사용할때마다 일시적인 와일드매직을 얻고, 근접공격으론 그 수치를 줄일 수 있다.
+  - Added homunculus(playable). Homunculus are a semi-living, semi-artificial speices. they can specialize in 14 level. Also, whenever magic is used, temporary wild magic stack up, and melee attacks can reduce that stack.
+
+### Changed   
+- 장검반격은 이제 50%확률로 나감
+  - Long Blade's Riposte buff. Now triggers at 50%
+  
+### Removed
+- Nothing
+
+### 0.26 Featrue
 
 
 ## [kimchi-1.0] - ~2020-07-13
@@ -64,8 +76,8 @@
 - 베오그의 새로운 권능 오크 추종자 되돌리기 추가. 선택한 오크 추종자를 오크 광산으로 즉시 전송한다. 
    - Added Beogh ability "return Orcish Followers". Immediately send the selected orcish follower to orcrish mines.
    
-- 다음 신들이 6성때 무기에 브랜드를 부여해줌: 이레델렘눌(흡혈), 마크레브(혼돈), 트로그(안티매직), 지바(slimifying), 엘리빌론(pacifing), 체브리아도스(sluggish), 진(실버)
-   - The following gods give the weapon a brand at 6 stars: Yredelemnul(vampiric), Makhleb(chaos), Trog(antimagic), Jiyva(slimifying), Elyvilon(pacifing), Cheibriados(sluggish), zin(silver)
+- 다음 신들이 6성때 무기에 브랜드를 부여해줌: 이레델렘눌(흡혈), 트로그(안티매직), 지바(산성), 진(실버)
+   - The following gods give the weapon a brand at 6 stars: Yredelemnul(vampiric),Trog(antimagic), Jiyva(acid), zin(silver)
 
 - 독마법 최종티어 책인 거장의 회고록 추가
   - Added The Memoirs of the Virtuoso, the highest level Poison book
