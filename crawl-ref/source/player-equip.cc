@@ -907,6 +907,7 @@ static void _equip_armour_effect(item_def& arm, bool unmeld,
         case SPARM_SHADOWS:
             mpr("It gets dark.");
             update_vision_range();
+            break;
 
         case SPARM_LUNGING:
             mpr("You feel ready to lunge towards enemies.");
@@ -1080,6 +1081,7 @@ static void _unequip_armour_effect(item_def& item, bool meld,
     case SPARM_SHADOWS:
         mpr("The dungeon's light returns to normal.");
         update_vision_range();
+        break;
 
     case SPARM_LUNGING:
         if (!you.lunging())
