@@ -651,9 +651,7 @@ static spret _lunge_forward(coord_def move)
 
     // Don't lunge if the target tile has a dangerous (!FFT_SOLID) feature:
     if (feat_is_lava(grd(beam.target)))
-    {
         return spret::fail;
-    }
     else if (grd(beam.target) == DNGN_DEEP_WATER
              || grd(beam.target) == DNGN_TOXIC_BOG)
     {
@@ -663,17 +661,13 @@ static spret _lunge_forward(coord_def move)
     // Don't lunge if we cannot see the target tile,
     // Don't lunge if something transparent is in the way.
     else if (you.trans_wall_blocking(beam.target))
-    {
         return spret::fail;
-    }
     // Don't lunge if the target tile has a feature with the FFT_SOLID flag:
     // (see feature-data.h)
     // This covers walls, closed doors, sealed doors, trees, open sea, lava sea,
     // endless salt, grates, statues, malign gateways, and DNGN_UNSEEN.
     else if (cell_is_solid(beam.target))
-    {
         return spret::fail;
-    }
 
     // Abort if the player answers no to a dangerous terrain/trap/cloud/
     // exclusion prompt; messaging for this is handled by check_moveto().
