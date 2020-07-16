@@ -521,7 +521,9 @@ i-cloud-immune BRAND_ARM_CLOUD_IMMUNE
 # end TAG_MAJOR_VERSION
 i-harm BRAND_ARM_HARM
 i-shadows BRAND_ARM_SHADOWS
+%rim 0
 i-lunging BRAND_ARM_LUNGING BRAND_ARM_LAST
+%rim 1
 
 ###########OBJ_WANDS
 %sdir item/wand
