@@ -471,7 +471,47 @@ bool melee_attack::handle_phase_hit()
             }
         }
     }
+    if (attacker->is_player() && you.duration[DUR_FLAME_STRIKE] && !cleaving)
+    {
+        unwind_var<int> reset_speed(you.time_taken, player_speed());
+        int _delay = you.attack_delay(nullptr, false).expected();
+        int require_mana = 1+ div_rand_round(you.max_magic_points, 10);
 
+        if (you.species == SP_DJINNI) {
+            require_mana = 1 + div_rand_round(you.hp_max, 30);
+        }
+        
+        int final_mana = div_rand_round(require_mana * _delay, 10);
+        if (you.species == SP_DJINNI) {
+            final_mana = max(1, final_mana);
+        }
+        else {
+            final_mana = min(you.magic_points, max(1, final_mana));
+        }
+
+        if (enough_mp(final_mana, true, false))
+        {
+            int damage = using_weapon() || wpn_skill == SK_THROWING
+                ? weapon_damage() : calc_base_unarmed_damage();
+
+            damage = player_stat_modify_damage(damage);
+
+            damage = player_apply_weapon_skill(damage);
+            damage = player_apply_fighting_skill(damage, false);
+            damage = player_apply_misc_modifiers(damage);
+            damage = player_apply_slaying_bonuses(damage, false);
+            damage = player_apply_final_multipliers(damage);
+            damage *= 80 + you.props["flame_power"].get_int() / 2; //80~130% in power dependency
+            damage /= 100;
+
+            cast_flame_strike_shot(attacker, defender, div_rand_round(10 * _delay, 10) + damage, AUTOMATIC_HIT, false);
+            dec_mp(final_mana);
+            if (!enough_mp(1, true, false)) {
+                you.duration[DUR_FLAME_STRIKE] = 0;
+                you.increase_duration(DUR_OVERHEAT, random_range(30, 50), 50);
+            }
+        }
+    }
 
 
     // This does more than just calculate the damage, it also sets up

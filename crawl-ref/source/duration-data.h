@@ -731,8 +731,19 @@ static const duration_def duration_data[] =
       {{ "Your magic seems less wild.", []() {
           you.props.erase(HOMUNCULUS_WILD_MAGIC);
     }}} },
-
-
+     { DUR_ELEMENTAL_WEAPON, LIGHTBLUE, "", "", "Elemental", "Elemental", D_NO_FLAGS },
+     { DUR_FLAME_STRIKE,
+       LIGHTBLUE, "Flame",
+       "Flame strike", "Flame strike",
+       "Your attack was engulfed in flames.", D_DISPELLABLE,
+     {{ "The flames fades away.", []() {
+        you.increase_duration(DUR_OVERHEAT, random_range(30, 50), 50);
+     }} } },
+     { DUR_OVERHEAT,
+       RED, "Overheat",
+       "Overheat", "",
+       "You cannot regen mana .", D_NO_FLAGS,
+       {{ "You regen mana again." }, {}, true } },
 #if TAG_MAJOR_VERSION == 34
     // And removed ones
     { DUR_MAGIC_SAPPED, 0, "", "", "old magic sapped", "", D_NO_FLAGS},

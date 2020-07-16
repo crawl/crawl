@@ -3981,3 +3981,56 @@ spret cast_starburst(int pow, bool fail, bool tracer)
 
     return spret::success;
 }
+
+spret cast_flame_strike_shot(const actor* caster, const actor* defender, int damage, int hit, bool fail)
+{
+    const size_t range = 3;
+
+    bolt beam;
+    beam.range = range;
+    beam.source = caster->pos();
+    beam.source_id = MID_PLAYER;
+    beam.target = defender->pos();
+    beam.attitude = ATT_FRIENDLY;
+    beam.thrower = KILL_YOU;
+    beam.origin_spell = SPELL_FLAME_STRIKE;
+
+    targeter_shotgun hitfunc(caster, 15, range);
+
+    hitfunc.set_aim(defender->pos());
+
+    fail_check();
+
+    bolt pbolt = beam;
+    pbolt.name = "flame strike";
+    pbolt.thrower = KILL_YOU_MISSILE;
+    pbolt.flavour = BEAM_FIRE;
+    pbolt.real_flavour = BEAM_FIRE;
+    pbolt.colour = RED;
+    pbolt.glyph = dchar_glyph(DCHAR_EXPLOSION);
+    pbolt.damage = calc_dice(1, damage);
+    pbolt.hit = hit;
+
+    pbolt.range = 1;
+#ifdef USE_TILE
+    pbolt.tile_beam = -1;
+#endif
+    pbolt.draw_delay = 0;
+
+    hitfunc.set_aim(pbolt.target);
+    noisy(explosion_noise(1), pbolt.target);
+
+    for (const auto& entry : hitfunc.zapped)
+    {
+        if (entry.second <= 0)
+            continue;
+
+        pbolt.source = entry.first;
+        pbolt.target = entry.first;
+        pbolt.fire();
+
+        pbolt.draw(entry.first);
+    }
+    scaled_delay(25);
+    return spret::success;
+}

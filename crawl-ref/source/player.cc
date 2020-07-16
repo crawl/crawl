@@ -4379,6 +4379,9 @@ bool player_regenerates_mp()
     // Pakellas blocks MP regeneration.
     if (have_passive(passive_t::no_mp_regen))
         return false;
+    if(you.duration[DUR_OVERHEAT])
+        return false;
+
     return true;
 }
 
