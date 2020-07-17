@@ -56,11 +56,6 @@ Tengu
 Ludzie-ptaki które kochają walczyć, zarówno bronią jak i magią. Są bardzo
 delikatni, za to uzyskują później zdolność lotu.
 %%%%
-Kobold
-
-Małe, złośliwe i mało wytrzymałe, koboldy znają wiele niecnych sztuczek. I
-zjedzą każde mięso.
-%%%%
 Merfolk
 
 Pół-ludzie, pół-ryby, merfolkowie czują się jak w domu zarówno w wodzie jak in
