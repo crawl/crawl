@@ -18,7 +18,7 @@ def run(cmd: List[str], max_retries: int = 1) -> None:
             subprocess.check_call(cmd)
         except Exception as e:
             print(
-                "%s: Command failed (%e) (attempt %s of %s)"
+                "%s: Command failed (%s) (attempt %s of %s)"
                 % (sys.argv[0], e, attempt, max_retries),
             )
             attempt += 1
