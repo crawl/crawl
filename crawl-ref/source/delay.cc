@@ -782,11 +782,16 @@ void ArmourOnDelay::finish()
             remove_ice_armour();
         }
 		
-		if (you.attribute[ATTR_REPEL_MISSILES] != 0
-			&& !is_effectively_light_armour(&armour))
-		{
+        if (you.attribute[ATTR_REPEL_MISSILES] != 0
+        && !is_effectively_light_armour(&armour))
+        {
             remove_missile_prot();
         }	
+    }
+    else if (eq_slot == EQ_SHIELD)
+    {
+        if (you.duration[DUR_CONDENSATION_SHIELD] > 0)
+            remove_condensation_shield();
     }
 
     equip_item(eq_slot, armour.link);

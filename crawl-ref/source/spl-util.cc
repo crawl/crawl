@@ -1155,7 +1155,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
 
     if (you.species == SP_DJINNI)
     {
-        if (spell == SPELL_ICE_FORM  || spell == SPELL_OZOCUBUS_ARMOUR)
+        if (spell == SPELL_ICE_FORM  || spell == SPELL_OZOCUBUS_ARMOUR || spell == SPELL_CONDENSATION_SHIELD)
             return "you're too hot.";
          if (spell == SPELL_LEDAS_LIQUEFACTION)
             return "you can't cast this while perpetually flying.";
@@ -1174,6 +1174,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             {
             case SPELL_STATUE_FORM:
             case SPELL_ICE_FORM:
+            case SPELL_CONDENSATION_SHIELD:
                 return "you're too hot.";
             default:
                 break;

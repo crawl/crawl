@@ -2026,6 +2026,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
 
     case SPELL_SWIFTNESS:
         return cast_swiftness(powc, fail);
+        
+    case SPELL_CONDENSATION_SHIELD:
+        return cast_condensation_shield(powc, fail);
 
     case SPELL_INSULATION:
         return cast_insulation(powc, fail);
@@ -2528,7 +2531,6 @@ const set<spell_type> removed_spells =
 #if TAG_MAJOR_VERSION == 34
     SPELL_ABJURATION,
     SPELL_CIGOTUVIS_DEGENERATION,
-    SPELL_CONDENSATION_SHIELD,
     SPELL_CONTROL_TELEPORT,
     SPELL_DEMONIC_HORDE,
     SPELL_FIRE_BRAND,

@@ -3314,6 +3314,7 @@ bool bolt::misses_player()
                 finish_beam();
             }
             you.shield_block_succeeded(agent());
+            hit_shield(&you);
             return true;
         }
 
@@ -4827,6 +4828,37 @@ bool bolt::god_cares() const
 {
     return effect_known || effect_wanton;
 }
+
+/** Apply effects of this beam to a blocker.
+ *
+ *  @param blocker the actor that just blocked.
+ */
+void bolt::hit_shield(actor* blocker) const
+{
+    if (is_fiery() || flavour == BEAM_STEAM)
+    {
+        monster* mon = blocker->as_monster();
+        if (mon && mon->has_ench(ENCH_CONDENSATION_SHIELD))
+        {
+            if (!mon->lose_ench_levels(mon->get_ench(ENCH_CONDENSATION_SHIELD),
+                                       10 * BASELINE_DELAY, true)
+                && you.can_see(*mon))
+            {
+                mprf("The heat melts %s icy shield.",
+                     apostrophise(mon->name(DESC_THE)).c_str());
+            }
+        }
+        else if (!mon && you.duration[DUR_CONDENSATION_SHIELD] > 0)
+        {
+            you.duration[DUR_CONDENSATION_SHIELD] -= 10 * BASELINE_DELAY;
+            if (you.duration[DUR_CONDENSATION_SHIELD] <= 0)
+                remove_condensation_shield();
+            else
+                you.props[MELT_SHIELD_KEY] = true;
+        }
+    }
+}
+
 
 // Return true if the block succeeded (including reflections.)
 bool bolt::attempt_block(monster* mon)

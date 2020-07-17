@@ -3134,7 +3134,7 @@ bool monster::pacified() const
  */
 bool monster::shielded() const
 {
-    return shield()
+    return shield() || has_ench(ENCH_CONDENSATION_SHIELD)
            || wearing(EQ_AMULET_PLUS, AMU_REFLECTION) > 0;
 }
 
@@ -3152,6 +3152,12 @@ int monster::shield_bonus() const
         shld_c = shld_c * 2 + (body_size(PSIZE_TORSO) - SIZE_MEDIUM)
                             * (shld->sub_type - ARM_LARGE_SHIELD);
         sh = random2avg(shld_c + get_hit_dice() * 4 / 3, 2) / 2;
+    }
+
+    if (has_ench(ENCH_CONDENSATION_SHIELD))
+    {
+        const int condensation_shield = get_hit_dice() / 2;
+        sh = max(sh + condensation_shield, condensation_shield);
     }
     // shielding from jewellery
     const item_def *amulet = mslot_item(MSLOT_JEWELLERY);

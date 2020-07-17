@@ -45,6 +45,7 @@ const enchant_type dispellable_enchantments[] =
     ENCH_IDEALISED,
     ENCH_INSANE,
     ENCH_BOUND_SOUL,
+    ENCH_CONDENSATION_SHIELD,
 };
 
 bool player_is_debuffable();

@@ -270,13 +270,27 @@ static void _decrement_paralysis(int delay)
  */
 static void _maybe_melt_armour()
 {
+    string what;
     // We have to do the messaging here, because a simple wand of flame will
     // call _maybe_melt_player_enchantments twice. It also avoids duplicate
     // messages when melting because of several heat sources.
     if (you.props.exists(MELT_ARMOUR_KEY))
     {
+        what = "armour";
         you.props.erase(MELT_ARMOUR_KEY);
-        mprf(MSGCH_DURATION, "The heat melts your icy armour.");
+    }
+
+    if (you.props.exists(MELT_SHIELD_KEY))
+    {
+        if (what != "")
+            what += " and ";
+        what += "shield";
+        you.props.erase(MELT_SHIELD_KEY);
+    }
+
+    if (what != "")
+    {
+        mprf(MSGCH_DURATION, "The heat melts your icy %s.", what.c_str());
     }
 }
 

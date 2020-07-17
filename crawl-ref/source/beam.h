@@ -189,6 +189,7 @@ public:
     bool can_knockback(const actor &act, int dam = -1) const;
     bool can_pull(const actor &act, int dam = -1) const;
     bool god_cares() const; // Will the god be unforgiving about this beam?
+    void hit_shield(actor* blocker) const;
     bool is_harmless(const monster* mon) const;
     bool nasty_to(const monster* mon) const;
     bool nice_to(const monster_info& mi) const;

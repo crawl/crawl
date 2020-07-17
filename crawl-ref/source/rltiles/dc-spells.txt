@@ -89,6 +89,7 @@ ozocubus_refrigeration OZOCUBUS_REFRIGERATION
 throw_frost THROW_FROST
 frozen_ramparts FROZEN_RAMPARTS
 hailstorm HAILSTORM
+condensation_shield CONDENSATION_SHIELD
 
 %sdir gui/spells/necromancy
 agony AGONY
