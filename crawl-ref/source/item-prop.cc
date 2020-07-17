@@ -1985,7 +1985,9 @@ bool item_skills(const item_def &item, set<skill_type> &skills)
 
     if (item_is_evokable(item, false, false, false, false)
         || staff_uses_evocations(item)
-        || item.base_type == OBJ_WEAPONS && gives_ability(item))
+        || item.base_type == OBJ_WEAPONS && gives_ability(item)
+        || item.base_type == OBJ_WEAPONS
+           && get_weapon_brand(item) == SPWPN_SPECTRAL)
     {
         skills.insert(SK_EVOCATIONS);
     }
