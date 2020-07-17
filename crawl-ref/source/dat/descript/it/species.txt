@@ -66,11 +66,6 @@ I tengu sono uomini uccello che amano combattere, sia con le armi che con la
 magia. Sono abbastanza fragili ma con l'aumentare dell'esperienza imparano a
 usare le loro ali per spiccare il volo.
 %%%%
-Kobold
-
-I coboldi sono piccoli, maligni e un po' fragili, ma possiedono molti talenti.
-Possono mangiare ogni tipo di carne e lo fanno spesso.
-%%%%
 Lava Orc
 
 Questi maestri della magia di terra e fuoco vengono dalle profondità sotto al

@@ -57,11 +57,6 @@ Tengu
 Madárember, egyaránt szeret fegyverekkel és varázslatokkal harcolni. Nagyon
 törékenyek, de később megtanul repülni.
 %%%%
-Kobold
-
-Kicsi, csintalan és kicsit törékeny, de sok mindenhez ért. Képes és hajlandó is
-felfalni bármilyen húst.
-%%%%
 Merfolk
 
 Félig ember, félig hal, a hablény otthon érzi magát vízben és szárazon is.
