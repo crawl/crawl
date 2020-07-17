@@ -10,6 +10,7 @@ silence SILENCE
 static_discharge STATIC_DISCHARGE
 swiftness SWIFTNESS
 tornado TORNADO
+Insulation INSULATION
 
 %sdir gui/spells/conjuration
 iskenderuns_mystic_blast ISKENDERUNS_MYSTIC_BLAST
@@ -34,6 +35,7 @@ shatter SHATTER
 statue_form STATUE_FORM
 stone_arrow STONE_ARROW
 will_of_earth WILL_OF_EARTH
+stoneskin STONESKIN
 
 %sdir gui/spells/enchantment
 berserker_rage BERSERKER_RAGE
@@ -53,6 +55,8 @@ song_of_slaying SONG_OF_SLAYING
 spectral_weapon SPECTRAL_WEAPON
 tukimas_dance TUKIMAS_DANCE
 violent_unravelling VIOLENT_UNRAVELLING
+elemental_weapon ELEMENTAL_WEAPON
+flame_strike FLAME_STRIKE
 
 %sdir gui/spells/fire
 bolt_of_fire BOLT_OF_FIRE

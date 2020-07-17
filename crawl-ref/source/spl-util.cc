@@ -1166,6 +1166,8 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
     {
         if (spell == SPELL_OZOCUBUS_ARMOUR)
             return "your stony body would shatter the ice.";
+        if (spell == SPELL_STONESKIN)
+            return "your skin is already made of stone.";
         if (temp && !temperature_effect(LORC_STONESKIN))
         {
             switch (spell)
@@ -1241,6 +1243,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         if (you.species == SP_ADAPTION_HOMUNCULUS)
             return "you're an artificial being.";
         // fallthrough to other forms
+    case SPELL_STONESKIN:
     case SPELL_BEASTLY_APPENDAGE:
     case SPELL_DRAGON_FORM:
     case SPELL_ICE_FORM:
@@ -1343,7 +1346,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
     case SPELL_OZOCUBUS_ARMOUR:
         if (temp && !player_effectively_in_light_armour())
             return "your body armour is too heavy.";
-        if (temp && you.form == transformation::statue)
+        if (temp && (you.form == transformation::statue || you.duration[DUR_STONESKIN]))
             return "the film of ice won't work on stone.";
         if (temp && you.duration[DUR_FIRE_SHIELD])
             return "your ring of flames would instantly melt the ice.";

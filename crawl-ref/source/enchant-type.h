@@ -182,6 +182,7 @@ enum enchant_type
     ENCH_VILE_CLUTCH,
     ENCH_UNSH_ARMOUR,
     ENCH_NATURAL_ABJURATION,
+    ENCH_STONESKIN,
     // Update enchant_names[] in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS

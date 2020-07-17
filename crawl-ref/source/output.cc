@@ -504,7 +504,9 @@ static bool _boosted_mp()
 
 static bool _boosted_ac()
 {
-    return you.duration[DUR_MAGIC_ARMOUR] || you.armour_class() > you.base_ac(1);
+    return you.duration[DUR_MAGIC_ARMOUR] 
+    || you.duration[DUR_STONESKIN]
+    || you.armour_class() > you.base_ac(1);
 }
 
 static bool _boosted_ev()

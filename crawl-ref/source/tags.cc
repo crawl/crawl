@@ -4836,6 +4836,14 @@ void unmarshallItem(reader &th, item_def &item)
             item.sub_type = FOOD_ROYAL_JELLY; // will be fixed up later
         }
     }
+    if (th.getMinorVersion() < TAG_MINOR_WAR_CHANT)
+    {
+        if (item.base_type == OBJ_BOOKS) {
+            if (item.sub_type >= BOOK_WAR_CHANTS2) {
+                item.sub_type++;
+            }
+        }
+    }
 
     if (th.getMinorVersion() < TAG_MINOR_FOOD_PURGE)
     {

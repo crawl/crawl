@@ -2027,6 +2027,12 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_SWIFTNESS:
         return cast_swiftness(powc, fail);
 
+    case SPELL_INSULATION:
+        return cast_insulation(powc, fail);
+        
+    case SPELL_STONESKIN:
+        return cast_stoneskin(powc, fail);
+
     case SPELL_OZOCUBUS_ARMOUR:
         return ice_armour(powc, fail);
 
@@ -2167,6 +2173,12 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
 
     case SPELL_STARBURST:
         return cast_starburst(powc, fail);
+
+    case SPELL_ELENENTAL_WEAPON:
+        return cast_elemental_weapon(powc, fail);
+
+    case SPELL_FLAME_STRIKE:
+        return cast_flame_strike(powc, fail);
 
     // non-player spells that have a zap, but that shouldn't be called (e.g
     // because they will crash as a player zap).
@@ -2522,7 +2534,6 @@ const set<spell_type> removed_spells =
     SPELL_FIRE_BRAND,
     SPELL_FORCEFUL_DISMISSAL,
     SPELL_FREEZING_AURA,
-    SPELL_INSULATION,
     SPELL_LETHAL_INFUSION,
     SPELL_POISON_WEAPON,
     SPELL_SEE_INVISIBLE,
@@ -2531,7 +2542,6 @@ const set<spell_type> removed_spells =
     SPELL_TWISTED_RESURRECTION,
     SPELL_SURE_BLADE,
     SPELL_FLY,
-    SPELL_STONESKIN,
     SPELL_SUMMON_SWARM,
     SPELL_PHASE_SHIFT,
     SPELL_MASS_CONFUSION,

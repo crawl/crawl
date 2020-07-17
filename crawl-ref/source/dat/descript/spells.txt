@@ -861,6 +861,10 @@ Fills an enemy with an intense fire. This fire is released any time the target
 is hit, and explosively released upon death. The size of the explosion caused
 is dependent on the size of the target.
 %%%%
+Insulation spell
+
+This spell protects the caster from electric shocks.
+%%%%
 Invisibility spell
 
 Turns a targeted creature invisible. Turning invisible causes magical
@@ -1472,6 +1476,11 @@ target, and a portion of the direct damage is from the physical impact.
 Stone Arrow spell
 
 Fires a sharp spine of rock.
+%%%%
+Stoneskin spell
+
+Hardens the caster's skin. It has no effect on the undead or those under the
+effects of most types of transformation.
 %%%%
 Strip Resistance spell
 

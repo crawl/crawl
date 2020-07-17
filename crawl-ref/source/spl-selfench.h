@@ -33,3 +33,8 @@ spret cast_transform(int pow, transformation which_trans, bool fail);
 
 spret cast_noxious_bog(int pow, bool fail);
 void noxious_bog_cell(coord_def p);
+
+spret cast_elemental_weapon(int pow, bool fail);
+spret cast_flame_strike(int pow, bool fail);
+
+spret cast_insulation(int power, bool fail);

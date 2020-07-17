@@ -65,6 +65,7 @@
 #define FROZEN_RAMPARTS_KEY "frozen_ramparts_position"
 #define NOXIOUS_BOG_KEY "noxious_bog_pow"
 #define HOMUNCULUS_WILD_MAGIC "homunculus_wild_magic"
+#define STONESKIN_KEY "stoneskin_pow"
 
 // display/messaging breakpoints for penalties from Ru's MUT_HORROR
 #define HORROR_LVL_EXTREME  3

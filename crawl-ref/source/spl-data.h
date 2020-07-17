@@ -1063,6 +1063,7 @@ static const struct spell_desc spelldata[] =
     3, 0,
     TILEG_ERROR,
 },
+#endif
 
 {
     SPELL_INSULATION, "Insulation",
@@ -1072,9 +1073,8 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     3, 0,
-    TILEG_ERROR,
+    TILEG_INSULATION,
 },
-#endif
 
 #if TAG_MAJOR_VERSION == 34
 {
@@ -1590,12 +1590,12 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_STONESKIN, "Stoneskin",
     spschool::earth | spschool::transmutation,
-    spflag::helpful | spflag::utility | spflag::no_ghost | spflag::monster,
+    spflag::helpful | spflag::utility | spflag::no_ghost,
     2,
     100,
     -1, -1,
     2, 0,
-    TILEG_ERROR,
+    TILEG_STONESKIN,
 },
 #endif
 
@@ -4315,6 +4315,26 @@ static const struct spell_desc spelldata[] =
     5, 5,
     6, 0,
     TILEG_STARBURST,
+},
+{
+    SPELL_ELENENTAL_WEAPON, "Elemental Weapon",
+    spschool::charms,
+    spflag::helpful,
+    3,
+    200,
+    -1, -1,
+    3, 0,
+    TILEG_ELEMENTAL_WEAPON,
+},
+{
+    SPELL_FLAME_STRIKE, "Flame Strike",
+    spschool::charms | spschool::fire,
+    spflag::utility,
+    3,
+    100,
+    -1, -1,
+    4, 0,
+    TILEG_FLAME_STRIKE,
 },
 {
     SPELL_NO_SPELL, "nonexistent spell",

@@ -302,3 +302,43 @@ void noxious_bog_cell(coord_def p)
     temp_change_terrain(p, DNGN_TOXIC_BOG, turns * BASELINE_DELAY,
             TERRAIN_CHANGE_BOG, you.as_monster());
 }
+spret cast_elemental_weapon(int pow, bool fail)
+{
+    fail_check();
+
+    mpr("not yet implement");
+
+    return spret::abort;
+}
+
+spret cast_flame_strike(int pow, bool fail)
+{
+    if (you.duration[DUR_OVERHEAT]) {
+        mpr("You're overheated.");
+        return spret::abort;
+    }
+    fail_check();
+
+    if (!you.duration[DUR_FLAME_STRIKE])
+        mpr("Flames are enveloped in your attack.");
+    else
+        mpr("You extend your flame strike's duration.");
+
+    if (you.species == SP_LAVA_ORC)
+    {
+        you.temperature = TEMP_MAX;
+    }
+
+    you.increase_duration(DUR_FLAME_STRIKE, 8 + roll_dice(2, pow), 100);
+    you.props["flame_power"] = pow;
+
+    return spret::success;
+}
+
+spret cast_insulation(int power, bool fail)
+{
+    fail_check();
+    you.increase_duration(DUR_INSULATION, 10 + random2(power), 100,
+                          "You feel insulated.");
+    return spret::success;
+}

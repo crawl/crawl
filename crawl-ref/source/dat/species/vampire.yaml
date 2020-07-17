@@ -60,6 +60,7 @@ recommended_jobs:
   - JOB_EARTH_ELEMENTALIST
   - JOB_ICE_ELEMENTALIST
   - JOB_STALKER
+  - JOB_CRUSADER
 recommended_weapons:
   - SK_SHORT_BLADES
   - SK_AXES

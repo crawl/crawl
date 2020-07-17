@@ -1681,7 +1681,7 @@ int player_res_electricity(bool calc_unid, bool temp, bool items)
 
     if (temp)
     {
-        if (you.duration[DUR_RESISTANCE])
+        if (you.duration[DUR_INSULATION] ||you.duration[DUR_RESISTANCE])
             re++;
 
         if (you.duration[DUR_QAZLAL_ELEC_RES])
@@ -4377,6 +4377,9 @@ bool player_regenerates_mp()
     // Pakellas blocks MP regeneration.
     if (have_passive(passive_t::no_mp_regen))
         return false;
+    if(you.duration[DUR_OVERHEAT])
+        return false;
+
     return true;
 }
 
@@ -6495,6 +6498,9 @@ int player::armour_class_with_specific_items(vector<item_def> items) const
     if (duration[DUR_ICY_ARMOUR])
         AC += 500 + you.props[ICY_ARMOUR_KEY].get_int() * 8;
 
+    if (duration[DUR_STONESKIN])
+        AC += 200 + you.props[STONESKIN_KEY].get_int() * 5;
+        
     if (has_mutation(MUT_ICEMAIL))
         AC += 100 * player_icemail_armour_class();
 

@@ -49,3 +49,4 @@ spret cast_wall_melting2(const coord_def& delta, int pow, bool fail);
 spret cast_phase_shift(int pow, bool fail);
 spret cast_will_of_earth(const coord_def& delta, int pow, bool fail); 
 spret create_wall(bool fail);
+spret cast_stoneskin(int pow, bool fail);

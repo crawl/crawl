@@ -847,3 +847,52 @@ spret create_wall(bool fail)
 
     return spret::success;
 }
+
+spret cast_stoneskin(int pow, bool fail)
+{
+    if (you.form != transformation::none
+        && you.form != transformation::appendage
+        && you.form != transformation::statue
+        && you.form != transformation::blade_hands)
+    {
+        mpr("This spell does not affect your current form.");
+        return spret::abort;
+    }
+
+    if (you.duration[DUR_ICY_ARMOUR])
+    {
+        mpr("Turning your skin into stone would shatter your icy armour.");
+        return spret::abort;
+    }
+
+#if TAG_MAJOR_VERSION == 34
+    if (you.species == SP_LAVA_ORC)
+    {
+        // We can't get here from normal casting, and probably don't want
+        // a message from the Helm card.
+        // mpr("Your skin is naturally stony.");
+        return spret::abort;
+    }
+#endif
+
+    fail_check();
+
+    if (you.duration[DUR_STONESKIN])
+        mpr("Your skin feels harder.");
+    else if (you.form == transformation::statue)
+        mpr("Your stone body feels more resilient.");
+    else
+        mpr("Your skin hardens.");
+
+    if (you.attribute[ATTR_BONE_ARMOUR] > 0)
+    {
+        you.attribute[ATTR_BONE_ARMOUR] = 0;
+        mpr("Your corpse armour falls away.");
+    }
+
+    you.increase_duration(DUR_STONESKIN, 10 + random2(pow) + random2(pow), 50);
+    you.props[STONESKIN_KEY] = pow;
+    you.redraw_armour_class = true;
+
+    return spret::success;
+}
