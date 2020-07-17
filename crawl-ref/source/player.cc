@@ -1681,7 +1681,7 @@ int player_res_electricity(bool calc_unid, bool temp, bool items)
 
     if (temp)
     {
-        if (you.duration[DUR_RESISTANCE])
+        if (you.duration[DUR_INSULATION] ||you.duration[DUR_RESISTANCE])
             re++;
 
         if (you.duration[DUR_QAZLAL_ELEC_RES])

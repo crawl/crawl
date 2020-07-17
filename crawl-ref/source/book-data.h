@@ -199,6 +199,7 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Book of the Sky
+    SPELL_INSULATION,
     SPELL_SUMMON_LIGHTNING_SPIRE,
     SPELL_SILENCE,
     SPELL_DEFLECT_MISSILES,
@@ -408,7 +409,7 @@ static const vector<spell_type> spellbook_templates[] =
 	  SPELL_STONESKIN,
     SPELL_ELENENTAL_WEAPON,
     SPELL_FLAME_STRIKE,
-    //SPELL_INSULATION,
+    SPELL_INSULATION,
     //SPELL_CONDENSATION_SHIELD,
 },
 };

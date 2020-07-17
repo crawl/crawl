@@ -861,6 +861,10 @@ Fills an enemy with an intense fire. This fire is released any time the target
 is hit, and explosively released upon death. The size of the explosion caused
 is dependent on the size of the target.
 %%%%
+Insulation spell
+
+This spell protects the caster from electric shocks.
+%%%%
 Invisibility spell
 
 Turns a targeted creature invisible. Turning invisible causes magical

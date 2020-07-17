@@ -2026,6 +2026,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
 
     case SPELL_SWIFTNESS:
         return cast_swiftness(powc, fail);
+
+    case SPELL_INSULATION:
+        return cast_insulation(powc, fail);
         
     case SPELL_STONESKIN:
         return cast_stoneskin(powc, fail);
@@ -2531,7 +2534,6 @@ const set<spell_type> removed_spells =
     SPELL_FIRE_BRAND,
     SPELL_FORCEFUL_DISMISSAL,
     SPELL_FREEZING_AURA,
-    SPELL_INSULATION,
     SPELL_LETHAL_INFUSION,
     SPELL_POISON_WEAPON,
     SPELL_SEE_INVISIBLE,

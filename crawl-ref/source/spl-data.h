@@ -1063,6 +1063,7 @@ static const struct spell_desc spelldata[] =
     3, 0,
     TILEG_ERROR,
 },
+#endif
 
 {
     SPELL_INSULATION, "Insulation",
@@ -1072,9 +1073,8 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     3, 0,
-    TILEG_ERROR,
+    TILEG_INSULATION,
 },
-#endif
 
 #if TAG_MAJOR_VERSION == 34
 {

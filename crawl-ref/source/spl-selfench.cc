@@ -334,3 +334,11 @@ spret cast_flame_strike(int pow, bool fail)
 
     return spret::success;
 }
+
+spret cast_insulation(int power, bool fail)
+{
+    fail_check();
+    you.increase_duration(DUR_INSULATION, 10 + random2(power), 100,
+                          "You feel insulated.");
+    return spret::success;
+}

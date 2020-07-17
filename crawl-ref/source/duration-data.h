@@ -752,6 +752,11 @@ static const duration_def duration_data[] =
           you.props.erase(STONESKIN_KEY);
           you.redraw_armour_class = true;
      }}} },
+    { DUR_INSULATION, 
+      BLUE, "Ins", 
+      "insulation", "insulation", "You feel conductive.", D_NO_FLAGS,
+      {{ "You feel less protected from electricity." },
+      { "You start to feel a little less insulated", 1}}, 6},
 #if TAG_MAJOR_VERSION == 34
     // And removed ones
     { DUR_MAGIC_SAPPED, 0, "", "", "old magic sapped", "", D_NO_FLAGS},
@@ -760,7 +765,6 @@ static const duration_def duration_data[] =
     { DUR_JELLY_PRAYER, 0, "", "", "old jelly prayer", "", D_NO_FLAGS},
     { DUR_CONTROLLED_FLIGHT, 0, "", "", "old controlled flight", "", D_NO_FLAGS},
     { DUR_SEE_INVISIBLE, 0, "", "", "old see invisible", "", D_NO_FLAGS},
-    { DUR_INSULATION, 0, "", "", "old insulation", "", D_NO_FLAGS},
     { DUR_SLAYING, 0, "", "", "old slaying", "", D_NO_FLAGS},
     { DUR_MISLED, 0, "", "", "old misled", "", D_NO_FLAGS},
     { DUR_NAUSEA, 0, "", "", "old nausea", "", D_NO_FLAGS},
