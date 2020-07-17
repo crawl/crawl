@@ -2613,15 +2613,13 @@ static void _recover_head()
     while (you.attribute[ATTR_HEAD_LOSS_XP] <= 0)
     {
         if (you.props[HYDRA_HEADS_NET_LOSS].get_int() > 0)
-            you.head_grow(1);
+            you.head_grow(1, false);
         else
-            you.head_grow(-1);
+            you.head_grow(-1, false);
         bool still_loss = false;
         if (you.props[HYDRA_HEADS_NET_LOSS].get_int() != 0)
             still_loss = true;
-        
-        if (still_loss)
-            you.attribute[ATTR_HEAD_LOSS_XP] += 1;
+
         else
             break;
     }
@@ -2770,7 +2768,7 @@ static void _handle_head_loss(int exp)
     if (!(you.attribute[ATTR_HEAD_LOSS_XP] > 0))
         return;
 
-    int loss = div_rand_round(exp * abs(you.props[HYDRA_HEADS_NET_LOSS].get_int())/3,
+    int loss = div_rand_round(exp * abs(you.props[HYDRA_HEADS_NET_LOSS].get_int())/12,
                                 max(1, calc_skill_cost(you.skill_cost_level) - 3));
     you.attribute[ATTR_HEAD_LOSS_XP] -= loss;
     dprf("Head loss points: %d", you.attribute[ATTR_HEAD_LOSS_XP]);
@@ -2872,6 +2870,8 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain)
     _handle_xp_drain(skill_xp);
     if (you.form != transformation::lich) // There is nothing to do if hydra is in a lich form.
         _handle_head_loss(skill_xp);
+
+    mprf("head loss xp %d", you.attribute[ATTR_HEAD_LOSS_XP]);
 
     if (player_under_penance(GOD_HEPLIAKLQANA))
         return; // no xp for you!
@@ -7016,10 +7016,7 @@ void _head_loss_xp(int old_num, int delta)
         return;
     }   
 
-    if (num * delta < 0)
-        you.attribute[ATTR_HEAD_LOSS_XP] += random2(30) + 30;
-    else
-        you.attribute[ATTR_HEAD_LOSS_XP] += (you.attribute[ATTR_HEAD_LOSS_XP])* num/old_num;
+    you.attribute[ATTR_HEAD_LOSS_XP] = random2(30) + 30;
 }
 
 /**
