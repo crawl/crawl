@@ -66,6 +66,7 @@
 #include "species.h" // random_starting_species
 #include "spl-damage.h"
 #include "spl-selfench.h"
+#include "spl-summoning.h"
 #include "spl-transloc.h"
 #include "spl-util.h"
 #include "sprint.h"
@@ -8198,6 +8199,16 @@ void refresh_weapon_protection()
 
     you.increase_duration(DUR_SPWPN_PROTECTION, 3 + random2(2), 5);
     you.redraw_armour_class = true;
+}
+
+/**
+ * Refreshes a player's spectral weaapon on hit.
+ */
+void handle_spectral_brand()
+{
+    const int pow = you.skill(SK_EVOCATIONS, 4);
+    if (you.skill(SK_EVOCATIONS) > 0 && !find_spectral_weapon(&you))
+        cast_spectral_weapon(&you, pow, you.religion);
 }
 
 // Is the player immune to a particular hex because of their

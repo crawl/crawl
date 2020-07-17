@@ -938,17 +938,6 @@ static void _handle_wereblood()
         noisy(spell_effect_noise(SPELL_WEREBLOOD), you.pos());
     }
 }
-static void _handle_spectral_brand()
-{
-    const int pow = you.skill(SK_EVOCATIONS, 4);
-    if (you.damage_brand() == SPWPN_SPECTRAL
-        && you.skill(SK_EVOCATIONS) > 0
-        && !find_spectral_weapon(&you)
-        && there_are_monsters_nearby(true, true, false))
-    {
-        cast_spectral_weapon(&you, pow, you.religion);
-    }
-}
 
 void player_reacts()
 {
@@ -967,7 +956,6 @@ void player_reacts()
         unrand_reacts();
 
     _handle_wereblood();
-    _handle_spectral_brand();
 
     if (x_chance_in_y(you.time_taken, 10 * BASELINE_DELAY))
     {
