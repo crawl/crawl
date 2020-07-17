@@ -34,6 +34,7 @@ shatter SHATTER
 statue_form STATUE_FORM
 stone_arrow STONE_ARROW
 will_of_earth WILL_OF_EARTH
+stoneskin STONESKIN
 
 %sdir gui/spells/enchantment
 berserker_rage BERSERKER_RAGE

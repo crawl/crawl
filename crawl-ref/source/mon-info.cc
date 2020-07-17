@@ -78,6 +78,7 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_MAD,             MB_MAD },
     { ENCH_INNER_FLAME,     MB_INNER_FLAME },
     { ENCH_BREATH_WEAPON,   MB_BREATH_WEAPON },
+    { ENCH_STONESKIN,       MB_STONESKIN },
     { ENCH_OZOCUBUS_ARMOUR, MB_OZOCUBUS_ARMOUR },
     { ENCH_WRETCHED,        MB_WRETCHED },
     { ENCH_SCREAMED,        MB_SCREAMED },
@@ -1499,6 +1500,8 @@ vector<string> monster_info::attributes() const
         v.emplace_back("lost in madness");
     if (is(MB_REGENERATION))
         v.emplace_back("regenerating");
+    if (is(MB_STONESKIN))
+        v.emplace_back("stone skin");
     if (is(MB_RAISED_MR))
         v.emplace_back("resistant to hostile enchantments");
     if (is(MB_OZOCUBUS_ARMOUR))

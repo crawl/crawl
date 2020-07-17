@@ -1473,6 +1473,11 @@ Stone Arrow spell
 
 Fires a sharp spine of rock.
 %%%%
+Stoneskin spell
+
+Hardens the caster's skin. It has no effect on the undead or those under the
+effects of most types of transformation.
+%%%%
 Strip Resistance spell
 
 Greatly reduces the target's magic resistance, making them more vulnerable to

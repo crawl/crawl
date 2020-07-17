@@ -1845,6 +1845,15 @@ bool transform(int pow, transformation which_trans, bool involuntary,
     // Give the transformation message.
     mpr(get_form(which_trans)->transform_message(previous_trans));
 
+    if (form_changed_physiology(which_trans)
+        && which_trans != transformation::statue
+        && you.duration[DUR_STONESKIN])
+    {
+        mprf("Your stony body turns to %s.",
+             get_form(which_trans)->flesh_equivalent.c_str());
+        you.duration[DUR_STONESKIN] = 0;
+    }
+
     // Update your status.
     // Order matters here, take stuff off (and handle attendant HP and stat
     // changes) before adjusting the player to be transformed.

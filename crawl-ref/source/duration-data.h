@@ -744,6 +744,14 @@ static const duration_def duration_data[] =
        "Overheat", "",
        "You cannot regen mana .", D_NO_FLAGS,
        {{ "You regen mana again." }, {}, true } },
+     { DUR_STONESKIN,
+       0, "",
+       "stone skin", "stoneskin",
+       "Your skin is tough as stone.", D_DISPELLABLE,
+       {{ "Your skin feels tender.", [](){
+          you.props.erase(STONESKIN_KEY);
+          you.redraw_armour_class = true;
+     }}} },
 #if TAG_MAJOR_VERSION == 34
     // And removed ones
     { DUR_MAGIC_SAPPED, 0, "", "", "old magic sapped", "", D_NO_FLAGS},

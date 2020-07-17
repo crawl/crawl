@@ -1590,12 +1590,12 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_STONESKIN, "Stoneskin",
     spschool::earth | spschool::transmutation,
-    spflag::helpful | spflag::utility | spflag::no_ghost | spflag::monster,
+    spflag::helpful | spflag::utility | spflag::no_ghost,
     2,
     100,
     -1, -1,
     2, 0,
-    TILEG_ERROR,
+    TILEG_STONESKIN,
 },
 #endif
 

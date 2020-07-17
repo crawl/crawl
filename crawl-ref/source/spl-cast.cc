@@ -2026,6 +2026,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
 
     case SPELL_SWIFTNESS:
         return cast_swiftness(powc, fail);
+        
+    case SPELL_STONESKIN:
+        return cast_stoneskin(powc, fail);
 
     case SPELL_OZOCUBUS_ARMOUR:
         return ice_armour(powc, fail);
@@ -2537,7 +2540,6 @@ const set<spell_type> removed_spells =
     SPELL_TWISTED_RESURRECTION,
     SPELL_SURE_BLADE,
     SPELL_FLY,
-    SPELL_STONESKIN,
     SPELL_SUMMON_SWARM,
     SPELL_PHASE_SHIFT,
     SPELL_MASS_CONFUSION,

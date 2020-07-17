@@ -221,5 +221,6 @@ enum duration_type
     DUR_ELEMENTAL_WEAPON,
     DUR_FLAME_STRIKE,
     DUR_OVERHEAT,
+    DUR_STONESKIN,
     NUM_DURATIONS
 };

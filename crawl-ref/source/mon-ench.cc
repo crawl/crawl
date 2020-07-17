@@ -465,6 +465,14 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         scale_hp(2, 3);
         calc_speed();
         break;
+        
+    case ENCH_STONESKIN:
+        if (!quiet && you.can_see(*this))
+        {
+            mprf("%s skin looks tender.",
+                 apostrophise(name(DESC_THE)).c_str());
+        }
+        break;
 
     case ENCH_HASTE:
         calc_speed();
@@ -1382,6 +1390,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_TIDE:
     case ENCH_REGENERATION:
     case ENCH_RAISED_MR:
+    case ENCH_STONESKIN:
     case ENCH_IDEALISED:
     case ENCH_FEAR_INSPIRING:
     case ENCH_LIFE_TIMER:
@@ -2062,7 +2071,7 @@ static const char *enchant_names[] =
     "idealised", "bound_soul", "infestation", "CIGOTUVIS_PLAGUE",
     "stilling the winds", "thunder_ringed", "pinned_by_whirlwind",
     "vortex", "vortex_cooldown", "vile_clutch", "unshelved armour",
-    "natural_abjuration",
+    "natural_abjuration", "stoneskin",
     "buggy",
 };
 
@@ -2201,6 +2210,7 @@ int mon_enchant::calc_duration(const monster* mons,
     case ENCH_MIGHT:
     case ENCH_INVIS:
     case ENCH_FEAR_INSPIRING:
+    case ENCH_STONESKIN:
     case ENCH_AGILE:
     case ENCH_BLACK_MARK:
     case ENCH_RESISTANCE:

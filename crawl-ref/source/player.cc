@@ -6500,6 +6500,9 @@ int player::armour_class_with_specific_items(vector<item_def> items) const
     if (duration[DUR_ICY_ARMOUR])
         AC += 500 + you.props[ICY_ARMOUR_KEY].get_int() * 8;
 
+    if (duration[DUR_STONESKIN])
+        AC += 200 + you.props[STONESKIN_KEY].get_int() * 5;
+        
     if (has_mutation(MUT_ICEMAIL))
         AC += 100 * player_icemail_armour_class();
 
