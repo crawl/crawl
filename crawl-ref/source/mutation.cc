@@ -2386,8 +2386,6 @@ static const facet_def _demon_facets[] =
       { -33, 0, 0 } },
     { 2, { MUT_DEMONIC_GUARDIAN, MUT_DEMONIC_GUARDIAN, MUT_DEMONIC_GUARDIAN },
       { -66, 17, 50 } },
-    { 2, { MUT_NIGHTSTALKER, MUT_NIGHTSTALKER, MUT_NIGHTSTALKER },
-      { -33, 0, 0 } },
     { 2, { MUT_SPINY, MUT_SPINY, MUT_SPINY },
       { -33, 0, 0 } },
     { 2, { MUT_POWERED_BY_PAIN, MUT_POWERED_BY_PAIN, MUT_POWERED_BY_PAIN },
