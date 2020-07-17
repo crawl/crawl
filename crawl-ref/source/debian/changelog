@@ -1,3 +1,8 @@
+crawl (2:0.25.1-1) UNRELEASED; urgency=low
+
+  * New upstream release.
+ -- advil <rawlins@gmail.com>  Fri, 17 Jul 2020 09:18:26 -0400
+
 crawl (2:0.25.0-1) UNRELEASED; urgency=low
 
   * New upstream release.
