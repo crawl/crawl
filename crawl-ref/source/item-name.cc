@@ -2812,9 +2812,11 @@ static bool _invisibility_is_useless(const bool temp)
  * @param temp Should temporary conditions such as transformations and
  *             vampire state be taken into account? Religion (but
  *             not its absence) is considered to be permanent here.
+ * @param ident Should uselessness be checked as if the item were already
+ *              identified?
  * @return True if the item is known to be useless.
  */
-bool is_useless_item(const item_def &item, bool temp)
+bool is_useless_item(const item_def &item, bool temp, bool ident)
 {
     // During game startup, no item is useless. If someone re-glyphs an item
     // based on its uselessness, the glyph-to-item cache will use the useless
@@ -2883,7 +2885,7 @@ bool is_useless_item(const item_def &item, bool temp)
         if (is_artefact(item))
             return false;
 
-        if (item.sub_type == ARM_SCARF && item_type_known(item))
+        if (item.sub_type == ARM_SCARF && (ident || item_type_known(item)))
         {
             special_armour_type ego = get_armour_ego_type(item);
             switch (ego)
@@ -2903,7 +2905,7 @@ bool is_useless_item(const item_def &item, bool temp)
         if (temp && silenced(you.pos()))
             return true; // can't use scrolls while silenced
 
-        if (!item_type_known(item))
+        if (!ident && !item_type_known(item))
             return false;
 
         // A bad item is always useless.
@@ -2946,7 +2948,7 @@ bool is_useless_item(const item_def &item, bool temp)
         if (is_known_empty_wand(item))
             return true;
 #endif
-        if (!item_type_known(item))
+        if (!ident && !item_type_known(item))
             return false;
 
         if (item.sub_type == WAND_ENSLAVEMENT)
@@ -2963,7 +2965,7 @@ bool is_useless_item(const item_def &item, bool temp)
         if (you.undead_state(temp) == US_UNDEAD)
             return true;
 
-        if (!item_type_known(item))
+        if (!ident && !item_type_known(item))
             return false;
 
         // A bad item is always useless.
@@ -3001,7 +3003,7 @@ bool is_useless_item(const item_def &item, bool temp)
         return false;
     }
     case OBJ_JEWELLERY:
-        if (!item_type_known(item))
+        if (!ident && !item_type_known(item))
             return false;
 
         // Potentially useful. TODO: check the properties.
@@ -3078,7 +3080,7 @@ bool is_useless_item(const item_def &item, bool temp)
             // be thrown either.
             return true;
         }
-        if (!item_type_known(item))
+        if (!ident && !item_type_known(item))
             return false;
 
         switch (item.sub_type)
@@ -3129,7 +3131,7 @@ bool is_useless_item(const item_def &item, bool temp)
         }
 
     case OBJ_BOOKS:
-        if (!item_type_known(item))
+        if (!ident && !item_type_known(item))
             return false;
         if (item_type_known(item) && item.sub_type != BOOK_MANUAL)
         {

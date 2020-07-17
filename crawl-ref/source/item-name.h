@@ -118,7 +118,8 @@ bool is_emergency_item(const item_def& item);
 bool is_good_item(const item_def &item);
 bool is_bad_item(const item_def &item);
 bool is_dangerous_item(const item_def& item, bool temp = false);
-bool is_useless_item(const item_def &item, bool temp = false);
+bool is_useless_item(const item_def &item, bool temp = false,
+                     bool ident = false);
 
 string make_name(uint32_t seed = rng::get_uint32(),
                  makename_type name_type = MNAME_DEFAULT);
