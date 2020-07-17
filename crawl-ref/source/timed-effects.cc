@@ -1300,5 +1300,5 @@ void decr_zot_clock() {
         mpr("As you enter the new level, Zot loses track of you.");
     }
     const int zot = you.attribute[ATTR_ZOT_CLOCK];
-    you.attribute[ATTR_ZOT_CLOCK] = max(0, zot - 4000);
+    you.attribute[ATTR_ZOT_CLOCK] = max(0, zot - 5000);
 }

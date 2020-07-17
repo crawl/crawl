@@ -7,7 +7,7 @@
 
 // After roughly how many turns without visiting new levels does the player
 // die instantly?
-static const int MAX_ZOT_CLOCK = 6000;
+static const int MAX_ZOT_CLOCK = 7500;
 // Roughly how many turns before the end of the clock does the player become
 // bezotted?
 static const int BEZOTTING_THRESHOLD = 500;
