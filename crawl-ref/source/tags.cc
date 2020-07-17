@@ -7298,8 +7298,8 @@ static ghost_demon _unmarshallGhost(reader &th)
     {
         if (th.getMinorVersion() < TAG_MINOR_GHOST_MAGIC)
             slot.spell = _fixup_positional_monster_spell(slot.spell);
-
-        ghost.spells.push_back(slot);
+        if (!spell_removed(slot.spell))
+            ghost.spells.push_back(slot);
     }
 #endif
 
