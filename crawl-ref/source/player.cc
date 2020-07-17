@@ -2871,8 +2871,6 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain)
     if (you.form != transformation::lich) // There is nothing to do if hydra is in a lich form.
         _handle_head_loss(skill_xp);
 
-    mprf("head loss xp %d", you.attribute[ATTR_HEAD_LOSS_XP]);
-
     if (player_under_penance(GOD_HEPLIAKLQANA))
         return; // no xp for you!
 
