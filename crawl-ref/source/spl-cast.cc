@@ -338,11 +338,11 @@ int raw_spell_fail(spell_type spell)
     chance += difficulty_by_level[spell_level]; // between 0 and 330
 
     // since chance is passed through a 3rd degree polynomial, cap the
-    // value to avoid any overflow issues. The value that causes an
-    // overflow seems to be slightly higher than 1400, so the cap will
-    // be set there. This value is only reachable through gameplay by
-    // extreme scenarios, e.g. a 1 str character wearing CPA.
-    chance = min(chance, 1400);
+    // value to avoid any overflow issues. We choose 210 by solving for chance2
+    // = 200 in the polynomial -- it gets capped at 100 ultimately, but we
+    // need a bunch of headroom in case some later calculations lower the value
+    // below 100 after this.
+    chance = min(chance, 210);
 
     // This polynomial is a smoother approximation of a breakpoint-based
     // calculation that originates pre-DCSS, mapping `chance` at this point to
