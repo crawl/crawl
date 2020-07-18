@@ -1416,6 +1416,8 @@ static void _attract_actor(const actor* agent, actor* victim,
     ASSERT(victim); // XXX: change to actor &victim
 
     ray_def ray;
+    if (victim->is_monster())
+        victim->as_monster()->add_ench(mon_enchant(ENCH_SLOW, 0, agent, 2));
     if (!find_ray(victim->pos(), pos, ray, opc_solid))
     {
         // This probably shouldn't ever happen, but just in case:
