@@ -471,21 +471,21 @@ static string _sdump_turns_place_info(const PlaceInfo place_info, string name = 
         name = place_info.short_name();
 
     unsigned int non_interlevel =
-        place_info.turns_total - place_info.turns_interlevel;
+        place_info.elapsed_total / 10 - place_info.elapsed_interlevel / 10;
 
-    const float f = static_cast<float>(place_info.turns_total)
-                                / static_cast<float>(place_info.levels_seen);
+    const float g = static_cast<float>(place_info.elapsed_total / 10)
+                            / static_cast<float>(place_info.levels_seen);
 
     out =
         make_stringf("%14s | %6d | %6d | %6d | %6d | %6d | %3d | %6.1f |\n",
                      name.c_str(),
-                     place_info.turns_total,
+                     place_info.elapsed_total / 10,
                      non_interlevel,
-                     place_info.turns_interlevel,
-                     place_info.turns_resting,
-                     place_info.turns_explore,
+                     place_info.elapsed_interlevel / 10,
+                     place_info.elapsed_resting / 10,
+                     place_info.elapsed_explore / 10,
                      place_info.levels_seen,
-                     f);
+                     g);
 
     return _denanify(out);
 }
@@ -497,14 +497,14 @@ static void _sdump_turns_by_place(dump_params &par)
     const vector<PlaceInfo> all_visited = you.get_all_place_info(true);
 
     text +=
-"Table legend:\n"
-" A = Turns spent in this place.\n"
-" B = Non-inter-level travel turns spent in this place.\n"
-" C = Inter-level travel turns spent in this place.\n"
-" D = Turns resting spent in this place.\n"
-" E = Turns spent auto-exploring this place.\n"
+"Table legend: (Time is in decaauts)\n"
+" A = Elapsed time spent in this place.\n"
+" B = Non-inter-level travel time spent in this place.\n"
+" C = Inter-level travel time spent in this place.\n"
+" D = Time resting spent in this place.\n"
+" E = Time spent auto-exploring this place.\n"
 " F = Levels seen in this place.\n"
-" G = Mean turns per level.\n";
+" G = Mean time per level.\n";
 
     text += "               ";
     text += "    A        B        C        D        E      F       G\n";
