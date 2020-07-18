@@ -16,6 +16,7 @@
 #include "god-passive.h"
 #include "env.h"
 #include "hints.h"
+#include "item-prop.h"
 #include "items.h" // stack_iterator
 #include "libutil.h"
 #include "macro.h"
@@ -302,14 +303,106 @@ void noxious_bog_cell(coord_def p)
     temp_change_terrain(p, DNGN_TOXIC_BOG, turns * BASELINE_DELAY,
             TERRAIN_CHANGE_BOG, you.as_monster());
 }
+
+
 spret cast_elemental_weapon(int pow, bool fail)
 {
+    item_def& weapon = *you.weapon();
+    const brand_type orig_brand = get_weapon_brand(weapon);
+
+    if (orig_brand != SPWPN_NORMAL)
+    {
+        mpr("This weapon is already enchanted.");
+        return spret::abort;
+    }
+
     fail_check();
 
-    mpr("not yet implement");
+    if (!you.duration[DUR_ELEMENTAL_WEAPON])
+        mpr("You inject the force of elements into a weapon.");
+    else
+        mpr("You extend your elemental weapon's duration.");
 
-    return spret::abort;
+    you.increase_duration(DUR_ELEMENTAL_WEAPON, 8 + roll_dice(2, pow), 100);
+    return spret::success;
 }
+
+void end_elemental_weapon(item_def& weapon, bool verbose)
+{
+    ASSERT(you.duration[DUR_ELEMENTAL_WEAPON]);
+
+    set_item_ego_type(weapon, OBJ_WEAPONS, SPWPN_NORMAL);
+    you.duration[DUR_ELEMENTAL_WEAPON] = 0;
+    you.props[ELEMENTAL_ENCHANT_KEY] = 0;
+
+    if (verbose)
+    {
+        mprf(MSGCH_DURATION, "%s has lost its magical powers.",
+            weapon.name(DESC_YOUR).c_str());
+    }
+
+    you.wield_change = true;
+}
+void enchant_elemental_weapon(item_def& weapon, spschools_type disciplines, bool verbose)
+{
+    ASSERT(you.duration[DUR_ELEMENTAL_WEAPON]);
+
+    vector<spschool> schools;
+    if (disciplines & spschool::fire) {
+        schools.emplace_back(spschool::fire);
+    }
+    if (disciplines & spschool::ice) {
+        schools.emplace_back(spschool::ice);
+    }
+    if (disciplines & spschool::air) {
+        schools.emplace_back(spschool::air);
+    }
+    if (disciplines & spschool::earth) {
+        schools.emplace_back(spschool::earth);
+    }
+    if (schools.size() == 0) {
+        return;
+    }
+    spschool sel_school = schools[random2(schools.size())];
+    you.wield_change = true;
+    switch (sel_school) {
+    case spschool::fire:
+        if (verbose)
+        {
+            mprf("%s resonated with the elements of fire", weapon.name(DESC_YOUR).c_str());
+        }
+        you.props[ELEMENTAL_ENCHANT_KEY] = you.skills[SK_FIRE_MAGIC] / 3;
+        set_item_ego_type(weapon, OBJ_WEAPONS, SPWPN_FLAMING);
+        break;
+    case spschool::ice:
+        if (verbose)
+        {
+            mprf("%s resonated with the elements of ice", weapon.name(DESC_YOUR).c_str());
+        }
+        you.props[ELEMENTAL_ENCHANT_KEY] = you.skills[SK_ICE_MAGIC] / 3;
+        set_item_ego_type(weapon, OBJ_WEAPONS, SPWPN_FREEZING);
+        break;
+    case spschool::air:
+        if (verbose)
+        {
+            mprf("%s resonated with the elements of air", weapon.name(DESC_YOUR).c_str());
+        }
+        you.props[ELEMENTAL_ENCHANT_KEY] = you.skills[SK_AIR_MAGIC] / 3;
+        set_item_ego_type(weapon, OBJ_WEAPONS, SPWPN_ELECTROCUTION);
+        break;
+    case spschool::earth:
+        if (verbose)
+        {
+            mprf("%s resonated with the elements of earth", weapon.name(DESC_YOUR).c_str());
+        }
+        you.props[ELEMENTAL_ENCHANT_KEY] = you.skills[SK_EARTH_MAGIC] / 3;
+        set_item_ego_type(weapon, OBJ_WEAPONS, SPWPN_VORPAL);
+        break;
+    default:
+        break;
+    }
+}
+
 
 spret cast_flame_strike(int pow, bool fail)
 {

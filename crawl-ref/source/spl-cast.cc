@@ -1020,6 +1020,11 @@ static void _spellcasting_side_effects(spell_type spell, god_type god,
 {
     _spellcasting_god_conduct(spell);
 
+    if (you.duration[DUR_ELEMENTAL_WEAPON] && real_spell) {
+        spschools_type disciplines = get_spell_disciplines(spell);
+        enchant_elemental_weapon(*you.weapon(), disciplines, true);
+    }
+
     if (god == GOD_NO_GOD)
     {
         // Casting pain costs 1 hp.

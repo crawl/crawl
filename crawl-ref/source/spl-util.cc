@@ -1307,6 +1307,16 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "you aren't wielding a brandable weapon.";
         }
         // intentional fallthrough
+
+    case SPELL_ELENENTAL_WEAPON:
+        if (temp
+            && (!you.weapon()
+                || you.weapon()->base_type != OBJ_WEAPONS
+                || !is_brandable_weapon(*you.weapon(), true)))
+        {
+            return "you aren't wielding a brandable weapon.";
+        }
+        // intentional fallthrough
     case SPELL_PORTAL_PROJECTILE:
     case SPELL_SPECTRAL_WEAPON:
         if (you.species == SP_FELID || you.species == SP_HYDRA)

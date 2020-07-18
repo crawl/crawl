@@ -32,6 +32,7 @@
 #include "religion.h"
 #include "shopping.h"
 #include "spl-miscast.h"
+#include "spl-selfench.h"
 #include "spl-summoning.h"
 #include "spl-wpnench.h"
 #include "xom.h"
@@ -810,11 +811,16 @@ static void _unequip_weapon_effect(item_def& real_item, bool showMsgs, bool meld
                 break;
             }
 
-            if (you.duration[DUR_EXCRUCIATING_WOUNDS])
+            if (you.duration[DUR_EXCRUCIATING_WOUNDS] && slot == EQ_WEAPON)
             {
                 ASSERT(real_item.defined());
                 end_weapon_brand(real_item, true);
             }
+        }
+        if (you.duration[DUR_ELEMENTAL_WEAPON] && slot == EQ_WEAPON)
+        {
+            ASSERT(real_item.defined());
+            end_elemental_weapon(real_item, true);
         }
     }
     else if (item.is_type(OBJ_STAVES, STAFF_POWER))

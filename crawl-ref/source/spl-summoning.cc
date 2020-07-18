@@ -54,6 +54,7 @@
 #include "religion.h"
 #include "rot.h"
 #include "shout.h"
+#include "spl-selfench.h"
 #include "spl-util.h"
 #include "spl-wpnench.h"
 #include "spl-zap.h"
@@ -991,6 +992,8 @@ static void _animate_weapon(int pow, actor* target)
         // Clear temp branding so we don't change the brand permanently.
         if (you.duration[DUR_EXCRUCIATING_WOUNDS])
             end_weapon_brand(*wpn);
+        if (you.duration[DUR_ELEMENTAL_WEAPON])
+            end_elemental_weapon(*wpn);
 
         // Mark weapon as "thrown", so we'll autopickup it later.
         wpn->flags |= ISFLAG_THROWN;

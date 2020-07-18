@@ -13,6 +13,13 @@ static void _end_weapon_brand()
     end_weapon_brand(*you.weapon(), true);
 }
 
+static void _end_elemental_weapon_brand()
+{
+    you.duration[DUR_ELEMENTAL_WEAPON] = 1;
+    ASSERT(you.weapon());
+    end_elemental_weapon(*you.weapon(), true);
+}
+
 static void _end_invis()
 {
     if (you.invisible())
@@ -731,7 +738,8 @@ static const duration_def duration_data[] =
       {{ "Your magic seems less wild.", []() {
           you.props.erase(HOMUNCULUS_WILD_MAGIC);
     }}} },
-     { DUR_ELEMENTAL_WEAPON, LIGHTBLUE, "", "", "Elemental", "Elemental", D_NO_FLAGS },
+     { DUR_ELEMENTAL_WEAPON, LIGHTGRAY, "Elem", "", "Elemental", "Elemental", D_NO_FLAGS,
+      {{ "", _end_elemental_weapon_brand }} },
      { DUR_FLAME_STRIKE,
        LIGHTBLUE, "Flame",
        "Flame strike", "Flame strike",

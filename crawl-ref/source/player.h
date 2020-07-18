@@ -67,6 +67,7 @@
 #define HOMUNCULUS_WILD_MAGIC "homunculus_wild_magic"
 #define STONESKIN_KEY "stoneskin_pow"
 #define CONDENSATION_SHIELD_KEY "condensation_shield_pow"
+#define ELEMENTAL_ENCHANT_KEY "elemenatal enchant"
 
 // display/messaging breakpoints for penalties from Ru's MUT_HORROR
 #define HORROR_LVL_EXTREME  3

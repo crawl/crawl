@@ -1216,6 +1216,9 @@ int attack::player_apply_slaying_bonuses(int damage, bool aux)
         damage_plus = get_weapon_plus();
     if (you.duration[DUR_CORROSION])
         damage_plus -= 4 * you.props["corrosion_amount"].get_int();
+    if (you.props[ELEMENTAL_ENCHANT_KEY].get_int() > 0)
+        damage_plus += you.props[ELEMENTAL_ENCHANT_KEY].get_int();
+
     damage_plus += slaying_bonus(!weapon && wpn_skill == SK_THROWING
                                  || (weapon && is_range_weapon(*weapon)
                                             && using_weapon()));
