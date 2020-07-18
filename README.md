@@ -63,7 +63,7 @@
   
   [Link](https://github.com/kimjoy2002/crawl/blob/master/CHANGELOG.md)
   
-# 웹타일
+# Webtile (Test Server)
 
 * 웹타일주소
   *  http://joy1999.codns.com:8081/
@@ -71,9 +71,12 @@
   * 플레이용도보단 테스트용도기때문에 위자드모드 가능한 버전도 열어뒀음
   * 주의) 기본적으로 서버용 컴퓨터가 아니라서 느림. 플레이용이 아닌 테스트용도로만 사용하세요
 
-# 다운로드
+# Download
 
 * [![Build Status](http://joy1999.codns.com:8080/buildStatus/icon?job=crawl%2Fcrawl)](http://joy1999.codns.com:8080/job/crawl/job/crawl/)
+
+* Last Release (kimchi-1.0.1)
+  * https://github.com/kimjoy2002/crawl/releases/tag/kimchi-1.0.1
 
 * 타일판 다운로드
   * http://joy1999.codns.com:8999/download/stone_soup-kimchi-trunk-tiles-win64.zip - 64비트
