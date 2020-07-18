@@ -1,3 +1,134 @@
+Stone Soup kimchi-1.0.1 (20200718)
+--------------------------------
+
+Highlights
+----------
+* New Speice: Two-headed ogre, Angel, Mantis, Lesser-Lich, Crustacean, Hydra
+* Rollback many things
+* Add many spells
+* Pakellas, Jiyva reworked
+
+Added
+----------
+* Added two-headed ogre(playable). Can wear 2 weapons and 2 amulets. 
+  But you can't wear a shield
+* Added angel(playable). A holy species who starts by believing in one of 
+  the three good gods. To be hated by evil gods and to fight infinity wrath
+* Added mantis(playable). leap attack automatically when approaching an enemy
+* Added Lesser-Lich(playable). high necromancy skill, high mana regen, 
+  wild magic when 27 level
+* Added Crustacean(playable). Small species that can only wear daggers and slings.
+  they deteriorates upon taking damage, and can molt at every level for recovery. It can move like a knight.
+* Added Hydra(playable). Weapons cannot be equipped, and heavy armor cannot be worn. 
+  Get 1 head per level. Get an amulet slot every 3 levels. Multi attacks as many as the number of heads.
+* When the Draconian reaches the 7 level, if Dr believes good god, Dr evolves into 
+  a Pearl Draconian. Negative resist 1, invocation skil 3, poison/necromancy skill -2, blessed frame breath
+* Added pakellas and rework. No longer constrained mana, but presents a prototype rod 
+  that can be upgraded at will. Click here for details
+* Added Fulsome Distillation, Evaporate spell
+* Added bad potions (poison, strong poison, water, unstable mutation) for Evaporate. 
+  only create by Fulsome Distillation
+* Added Eringya's Rootspike, level 5 posion/conjuraion spell. 2~5 range smite-targeting spell. 
+  partially ignores poison resistance
+* Added Olgreb's Last Mercy, level 7 posion spell. Choosing an enemy in the LOS, 
+  dealing damage equal to the amount of poison, and causes a 3X3 irresistible explosion upon death
+* Added Poison Gland, level 5 posion/charm spell. For the duration, melee attack makes a attacked 
+  creature more vulnerable to poison
+* Added Wall Camoflage, level 5 earth/transmutation spell. Melting into the wall makes it possible 
+  to move and stab without waking the sleeping enemy.
+* Added Cigotuvi's Plague, level 5 necromancy/hex spell. An infectious disease infects an enemy, 
+  and causing their corpse to become monstrous abomination.
+* Added Will of Earth, level 4 earth/transmutation spell. When used, you can destroy the surrounding 
+  wall to get an earth buff, and consume the earth buff to build a temporary wall or fill up water or lava.
+* Added Eldritch Form, level 9 transmutation spell. Transforms the caster into a otherwordly monster 
+  with terrible tentacles. Tentacles will crawl out of the caster's body and attack their foes.
+* Added Beogh ability "return Orcish Followers". Immediately send the selected orcish follower 
+  to orcrish mines.
+* The following gods give the weapon a brand at 6 stars: Yredelemnul(vampiric), Trog(antimagic), 
+  Jiyva(acid), zin(silver)
+* Added The Memoirs of the Virtuoso, the highest level Poison book
+* Added bag. Miscellany that provide additional storage space
+* New artefact : The jaws of Erysichthon. Helmet Armour that grants Vampiric and Devour
+* Rollback Haste, Singularity, Summon Elemenatal, Control Undead
+* Rollback rod (iron, clouds, ignition, inaccuracy, shadows)
+* Rollback wand (teleport, haste, heal wounds)
+* Rollback disc of storms
+* Rollback akashic record
+* Rollback stalker. with magic of transforming into a wall
+* Added melted knight. background that starts the game worshipping Jiyva.
+* Added Fire fox, new canine monster appeared in Dungeon and Lair
+* New 2-tier demon, Cubus. Uses spell to take off equipped equipments.
+* rollback Lava orc, Djinni, HighElf, MountainDwarf
+* Added and rework repel missle. now, need to wear light armor to cast RMsl
+* add mace&flail ability. Now every time you kill an enemy with a mace&flail weapon, you can 
+  knock back the corpse, and the knocked back corpse deals damage to the enemy
+* rollback mutagenic corpse
+* Become able to drink fountain again
+* Added auto_bag_items rc option. Option to automatically put picked items in a bag
+* Add new title artwork (logal-image)
+
+Changed
+----------
+* Ogre Maces & Flails aptitude changed to +3 (prev -1)
+* Added Menu/colouring Prefixes(fixed_artefact, random_artefact). Changed the default color 
+  of the fixed artefact to yellow
+* Ashenzari's 'curse item' curse multiple equipment.
+* Shows the menu if try to resurrect the orc.
+* Ozocubu's armor no longer looses when moved
+* Ring of Fire now casts Inner Fire on enemies it hits.
+* Excruciating wounds's noise reduction
+* Change the player's Lehudib to area spell as shotgun
+* Refrigerator preserves the freshness of food.
+* Nemelex's deck of wonder is comeback. Now Nemelex uses the evocation again.
+  - xom, mercenary, alchemist, bargain, sage, portal, trowel, experience, helm, shuffle
+* Jiyva rework
+  - Jellies do not randomly spawn
+  - Temporarily friendly jelly summoned when killing an enemy.
+  - New jiyva 4-star ability. corrosion dungeon like corruption.
+  - Buff jiyva mutation. 2 jiyva mutations are always guaranteed
+  - Jiyva 6 star passive buff (20%/33%/66%)
+* All dracos can wear some armour. 
+  (robe, leather armour, troll leather armour, all kinds of dragon scale)
+* All draco can train armour skill.
+* Aptitude is -3.
+* All draco have deform mutation at start.
+* All dracos will gain big wing mutation at xl 14
+* Allow octopode, felid wields a scarf
+* Necromancer starting book now contains 'control undead' and 'excruciating wounds'
+* Allow friendly summons from attacking out of LOS
+* Don't erase clouds outside of LOS
+* Noise break mesmerisation again
+* Shaft traps will not spawn before D:5
+* Wrath of Trog is now executioner axe with +rage. also has antimagic aura
+* Hat of pondering protects wearer from salty attack.
+* A new curse skull tile (kormed)
+
+0.25 Featrue
+----------
+* Improve armour AC change descriptions
+* Can see poison level mons and player
+* Airstrike damage now scales so it's greater the more unoccupied squares there are surrounding the target.
+* Ozocubu's Refrigeration does 33% more damage on-average and no longer harms the caster
+* The Young Poisoner's Handbook now contains Ignite Poison.
+* added tile_show_threat_levels option
+* Rework Corpse Rot
+* Rework Innerflame
+* Rework the scroll of acquirement
+* Give piety by reflected things
+* Make the Elemental Staff an enhancer for all elemental schools
+* Added Eringya's Noxious Bog.
+* Buff Leda's Liquefication
+* Added Starburst Spell
+* Buff sting
+* Add ziggurat some item pool.
+* New item Tremorstone
+* Added Cigotuvi's Embrace, unrand body armour.
+* New unique: "Maggie"
+* Added Frozen Ramparts.
+* Added Hailstorm
+* Ice elementalist chooses old or new spell set.
+
+
 Stone Soup 0.24.1 (20200322)
 --------------------------------
 
