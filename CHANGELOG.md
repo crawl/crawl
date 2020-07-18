@@ -8,6 +8,18 @@
 ### Added
 - 새로운 종족 호문쿨루스 추가. 호문쿨루스는 반생명 반인공체기에 둘의 특성을 동시에 가지고있고 14레벨에 한 쪽을 특화시킬 수 있다. 또한 마법을 사용할때마다 일시적인 와일드매직을 얻고, 근접공격으론 그 수치를 줄일 수 있다.
   - Added homunculus(playable). Homunculus are a semi-living, semi-artificial speices. they can specialize in 14 level. Also, whenever magic is used, temporary wild magic stack up, and melee attacks can reduce that stack.
+  
+- 새로운 직업 크루세이더 추가. 돌의 피부, 원소의 무기, 화염강타, 절연화, 응축의 방패를 들고 시작하는 마법 전사 직업
+  - Added Crusader(background), Warrior-mage Starts with Stoneskin, Elemental Weapon, Flame Strike, Insulation, Condensation Shield.
+
+- 3레벨 참 마법, 원소의 무기 추가. 사용시 elem 버프를 주며 버프시간동안 원소마법을 사용시 들고있는 무기에 일시적인 브랜드와 강화치를 부여한다.
+  - Added Elemental Weapon, level 3 charm spell. It gives an buff when using it, and gives a temporary brand and slaying bonus when using element magic during buff time.
+  
+- 3레벨 참/화염 마법, 화염 강타 추가. 지속시간도중 공격시 마나를 소모하여 부채꼴형의 불속성 범위 추가타를 준다. 사용후엔 일시적으로 마나가 회복되지않는 오버히트상태가 된다.
+  - Added Elemental Weapon, level 3 charm/fire spell. When attacking during duration, use mana to give a fan-shaped fire additional hit. After use, you becomes overheat and does not recover mana.
+  
+- 마법 복구 : 돌의 피부, 절연화, 응축의 방패
+  - rollback Stoneskin, Insulation, Condensation Shield
 
 ### Changed   
 - 장검반격은 이제 50%확률로 나감
