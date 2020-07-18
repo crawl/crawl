@@ -25,6 +25,9 @@
 - 장검반격은 이제 50%확률로 나감
   - Long Blade's Riposte buff. Now triggers at 50%
   
+- 이제 시체는 다시 수집 마법으로 끌어올 수 있다.
+  - Corpse can be apported
+  
 ### Removed
 - Nothing
 
