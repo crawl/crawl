@@ -25,6 +25,7 @@
 #include "spl-book.h"
 #include "spl-util.h"
 #include "state.h"
+#include "timed-effects.h" // zot clock stuff
 
 #define MIN_START_STAT       3
 
@@ -470,7 +471,9 @@ static void _setup_generic(const newgame_def& ng,
 
     // Give Delver a pile of extra time to compensate for 'wasted' levels
     if (you.char_class == JOB_DELVER)
-        you.attribute[ATTR_ZOT_CLOCK] = -6000;
+        you.attribute[ATTR_ZOT_CLOCK] = -ZOT_CLOCK_PER_FLOOR;
+    else // don't let players burn through infinity time on the first floor
+        you.attribute[ATTR_ZOT_CLOCK] = MAX_ZOT_CLOCK - ZOT_CLOCK_PER_FLOOR;
 
     // Give tutorial skills etc
     if (crawl_state.game_is_tutorial())

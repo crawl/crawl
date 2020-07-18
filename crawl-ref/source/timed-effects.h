@@ -5,9 +5,12 @@
 
 #pragma once
 
-// After roughly how many turns without visiting new levels does the player
+// Roughly how many turns does the clock roll back every time the player enters
+// a new floor?
+static const int ZOT_CLOCK_PER_FLOOR = 5000;
+// After roughly how many turns without visiting new floors does the player
 // die instantly?
-static const int MAX_ZOT_CLOCK = 7500;
+static const int MAX_ZOT_CLOCK = ZOT_CLOCK_PER_FLOOR * 3;
 // Roughly how many turns before the end of the clock does the player become
 // bezotted?
 static const int BEZOTTING_THRESHOLD = 500;
