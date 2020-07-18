@@ -2291,7 +2291,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_WEREBLOOD, "Wereblood",
     spschool::transmutation,
-    spflag::utility,
+    spflag::utility | spflag::chaotic,
     2,
     100,
     -1, -1,
