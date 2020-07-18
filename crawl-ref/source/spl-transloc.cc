@@ -439,7 +439,8 @@ static bool _find_charge_target(vector<coord_def> &target_path, int max_range,
         }
 
         ray_def ray;
-        if (!find_ray(you.pos(), beam.target, ray, opc_solid)) {
+        if (!find_ray(you.pos(), beam.target, ray, opc_solid))
+        {
             mpr("You can't roll through that!");
             continue;
         }
@@ -450,7 +451,8 @@ static bool _find_charge_target(vector<coord_def> &target_path, int max_range,
 
         target_path.clear();
         bool ok = true;
-        while (ray.advance()) {
+        while (ray.advance())
+        {
             target_path.push_back(ray.pos());
             if (!can_charge_through_mons(ray.pos()))
                 break;
@@ -478,9 +480,12 @@ static bool _find_charge_target(vector<coord_def> &target_path, int max_range,
             continue;
         }
 
-        // prompt to make sure the player really wants to attack the monster (if extant and not hostile)
-        // Intentionally don't use the real attack position here - that's only used for sanctuary,
-        // so it's more accurate if we use our current pos, since sanctuary should move with us.
+        // prompt to make sure the player really wants to attack the monsteri
+        // (if extant and not hostile)
+        // Intentionally don't use the real attack position here - that's only
+        // used for sanctuary,
+        // so it's more accurate if we use our current pos, since sanctuary
+        // should move with us.
         if (stop_attack_prompt(target_mons, false, target_mons->pos()))
             continue;
 
@@ -490,8 +495,11 @@ static bool _find_charge_target(vector<coord_def> &target_path, int max_range,
 
         ray.regress();
         // check for clouds and traps on the final space only
-        if (!check_moveto_cloud(ray.pos(), "charge") || !check_moveto_trap(ray.pos(),  "charge"))
+        if (!check_moveto_cloud(ray.pos(), "charge")
+            || !check_moveto_trap(ray.pos(),  "charge"))
+        {
             continue;
+        }
 
         return true;
     }

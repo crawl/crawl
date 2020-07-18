@@ -131,7 +131,8 @@ bool targeter_charge::valid_aim(coord_def a)
     ray_def ray;
     if (!find_ray(agent->pos(), a, ray, opc_solid))
         return notify_fail("There's something in the way.");
-    while (ray.advance()) {
+    while (ray.advance())
+    {
         if (ray.pos() == a
             || !can_charge_through_mons(ray.pos())
             || is_feat_dangerous(grd(ray.pos())))
@@ -166,9 +167,11 @@ bool targeter_charge::set_aim(coord_def a)
     return true;
 }
 
-aff_type targeter_charge::is_affected(coord_def loc) {
+aff_type targeter_charge::is_affected(coord_def loc)
+{
     bool in_path = false;
-    for (coord_def a : path_taken) {
+    for (coord_def a : path_taken)
+    {
         if (a == loc)
         {
             in_path = true;
