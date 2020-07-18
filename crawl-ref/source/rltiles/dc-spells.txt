@@ -10,7 +10,7 @@ silence SILENCE
 static_discharge STATIC_DISCHARGE
 swiftness SWIFTNESS
 tornado TORNADO
-Insulation INSULATION
+insulation INSULATION
 
 %sdir gui/spells/conjuration
 iskenderuns_mystic_blast ISKENDERUNS_MYSTIC_BLAST
