@@ -3080,10 +3080,7 @@ void pop_layout()
     ui_root.update_hover_path();
 #else
     if (!has_layout())
-    {
         redraw_screen(false);
-        update_screen();
-    }
 #endif
 }
 
