@@ -2505,6 +2505,10 @@ void UIRoot::layout()
     }
 }
 
+#ifdef USE_TILE_LOCAL
+bool should_render_current_regions = true;
+#endif
+
 void UIRoot::render()
 {
     if (!needs_paint)
@@ -2512,7 +2516,9 @@ void UIRoot::render()
 
 #ifdef USE_TILE_LOCAL
     glmanager->reset_view_for_redraw();
-    tiles.render_current_regions();
+    tiles.maybe_redraw_screen();
+    if (should_render_current_regions)
+        tiles.render_current_regions();
     glmanager->reset_transform();
 #else
     // On console, clear and redraw only the dirty region of the screen

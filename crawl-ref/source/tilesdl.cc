@@ -1372,12 +1372,15 @@ void TilesFramework::redraw()
     m_last_tick_redraw = wm->get_ticks();
 }
 
-void TilesFramework::render_current_regions()
+void TilesFramework::maybe_redraw_screen()
 {
     // need to call with show_updates=false, which is passed to viewwindow
     if (m_active_layer == LAYER_NORMAL && !crawl_state.game_is_arena())
         redraw_screen(false);
+}
 
+void TilesFramework::render_current_regions()
+{
     for (Region *region : m_layers[m_active_layer].m_regions)
         region->render();
 }

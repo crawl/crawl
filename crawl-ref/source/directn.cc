@@ -121,8 +121,6 @@ static void _extend_move_to_edge(dist &moves);
 static vector<string> _get_monster_desc_vector(const monster_info& mi);
 static string _get_monster_desc(const monster_info& mi);
 
-static int targeting_behaviour_get_key();
-
 #ifdef DEBUG_DIAGNOSTICS
 static void _debug_describe_feature_at(const coord_def &where);
 #endif
@@ -1949,60 +1947,6 @@ bool direction_chooser::process_command(command_type command)
     return loop_done;
 }
 
-// Return false if we should continue looping, true if we're done.
-bool direction_chooser::do_main_loop()
-{
-    if (handle_signals())
-        return true;
-
-    // This needs to be done every loop iteration.
-    reinitialize_move_flags();
-
-    const coord_def old_target = target();
-    const auto key = targeting_behaviour_get_key();
-    if (key == CK_REDRAW)
-    {
-        redraw_screen(false);
-        return false;
-    }
-
-    const command_type key_command = behaviour->get_command(key);
-    behaviour->update_top_prompt(&top_prompt);
-
-    bool loop_done = process_command(key_command);
-
-    // Don't allow going out of bounds.
-    if (!crawl_view.in_viewport_g(target()))
-        set_target(old_target);
-
-    if (loop_done)
-    {
-        if (just_looking)
-            return true;
-
-        if (!move_is_ok())
-        {
-            moves.isCancel = true;
-            moves.isValid = false;
-        }
-        return true;
-    }
-
-    // Redraw whatever is necessary.
-    if (old_target != target())
-    {
-        have_beam = show_beam && find_ray(you.pos(), target(), beam,
-                                          opc_solid_see, you.current_vision);
-        need_text_redraw   = true;
-        need_viewport_redraw   = true;
-        need_cursor_redraw = true;
-    }
-    do_redraws();
-
-    // We're not done.
-    return false;
-}
-
 void direction_chooser::finalize_moves()
 {
     moves.choseRay = have_beam;
@@ -2016,6 +1960,128 @@ void direction_chooser::finalize_moves()
     tiles.place_cursor(CURSOR_MOUSE, NO_CURSOR);
 #endif
 }
+
+class UIDirectionChooserView : public ui::Widget
+{
+public:
+    UIDirectionChooserView(direction_chooser& dc) :
+        m_dc(dc), old_target(dc.target())
+    {
+    }
+    ~UIDirectionChooserView() {}
+
+    void _render() override
+    {
+#ifndef USE_TILE_LOCAL
+        // do_redraws() only calls viewwindow(); we must first draw the sidebar.
+        redraw_screen(false);
+#endif
+
+        // We always have to redraw the viewport, because ui::redraw() will call
+        // redraw_screen in case the window has been resized.
+        m_dc.need_viewport_redraw = true;
+        m_dc.do_redraws();
+
+#ifdef USE_TILE_LOCAL
+        tiles.render_current_regions();
+        glmanager->reset_transform();
+#endif
+    }
+
+    void _allocate_region() override
+    {
+        _expose();
+    }
+
+    bool on_event(const ui::Event& ev) override
+    {
+        if (ev.type() == ui::Event::Type::KeyDown)
+        {
+            auto key = static_cast<const ui::KeyEvent&>(ev).key();
+            key = unmangle_direction_keys(key, KMC_TARGETING, false);
+
+            const auto command = m_dc.behaviour->get_command(key);
+
+            string top_prompt;
+            m_dc.behaviour->update_top_prompt(&top_prompt);
+            if (m_dc.top_prompt != top_prompt)
+                _expose();
+            m_dc.top_prompt = top_prompt;
+
+            process_command(command);
+
+            // Flush the input buffer before the next command.
+            if (!crawl_state.is_replaying_keys())
+                flush_input_buffer(FLUSH_BEFORE_COMMAND);
+            return true;
+        }
+
+#ifdef USE_TILE_LOCAL
+        if (ev.type() == ui::Event::Type::MouseMove
+            || ev.type() == ui::Event::Type::MouseDown)
+        {
+            auto wm_event = to_wm_event(static_cast<const ui::MouseEvent&>(ev));
+            tiles.handle_mouse(wm_event);
+            process_command(ev.type() == ui::Event::Type::MouseMove ?
+                                CMD_TARGET_MOUSE_MOVE :
+                                CMD_TARGET_MOUSE_SELECT);
+            return true;
+        }
+#endif
+
+        return false;
+    }
+
+    void process_command(command_type cmd)
+    {
+        bool loop_done = m_dc.process_command(cmd);
+
+        // Don't allow going out of bounds.
+        if (!crawl_view.in_viewport_g(m_dc.target()))
+            m_dc.set_target(old_target);
+
+        if (loop_done)
+        {
+            m_is_alive = false;
+
+            if (!m_dc.just_looking && !m_dc.move_is_ok())
+            {
+                m_dc.moves.isCancel = true;
+                m_dc.moves.isValid = false;
+            }
+            return;
+        }
+
+        // Redraw whatever is necessary.
+        if (old_target != m_dc.target())
+        {
+            m_dc.have_beam = m_dc.show_beam
+                             && find_ray(you.pos(), m_dc.target(), m_dc.beam,
+                                         opc_solid_see, you.current_vision);
+            m_dc.need_text_redraw = true;
+            m_dc.need_viewport_redraw = true;
+            m_dc.need_cursor_redraw = true;
+        }
+
+        if (m_dc.need_viewport_redraw || m_dc.need_cursor_redraw
+            || m_dc.need_text_redraw || m_dc.need_all_redraw)
+        {
+            _expose();
+        }
+
+        old_target = m_dc.target();
+    }
+
+    bool is_alive()
+    {
+        return m_is_alive;
+    }
+
+private:
+    direction_chooser& m_dc;
+    coord_def old_target;
+    bool m_is_alive = true;
+};
 
 bool direction_chooser::choose_direction()
 {
@@ -2057,10 +2123,17 @@ bool direction_chooser::choose_direction()
     show_initial_prompt();
     need_text_redraw = false;
 
-    do_redraws();
+    auto directn_view = make_shared<UIDirectionChooserView>(*this);
 
-    while (!do_main_loop())
-        ;
+#ifdef USE_TILE_LOCAL
+    unwind_bool inhibit_rendering(ui::should_render_current_regions, false);
+#endif
+
+    ui::push_layout(directn_view, KMC_TARGETING);
+    directn_view->_queue_allocation();
+    while (directn_view->is_alive() && !handle_signals())
+        ui::pump_events();
+    ui::pop_layout();
 
     msgwin_set_temporary(false);
     finalize_moves();
@@ -3623,17 +3696,6 @@ targeting_behaviour::targeting_behaviour(bool look_around)
 
 targeting_behaviour::~targeting_behaviour()
 {
-}
-
-static int targeting_behaviour_get_key()
-{
-    if (!crawl_state.is_replaying_keys())
-        flush_input_buffer(FLUSH_BEFORE_COMMAND);
-
-    flush_prev_message();
-    msgwin_got_input();
-    return unmangle_direction_keys(getchm(KMC_TARGETING), KMC_TARGETING,
-                                   false);
 }
 
 command_type targeting_behaviour::get_command(int key)

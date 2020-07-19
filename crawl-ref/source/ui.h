@@ -1293,4 +1293,7 @@ private:
 wm_mouse_event to_wm_event(const MouseEvent &);
 #endif
 
+#ifdef USE_TILE_LOCAL
+extern bool should_render_current_regions;
+#endif
 }

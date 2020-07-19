@@ -123,9 +123,12 @@ private:
     direction_chooser &m_directn;
 };
 
+class UIDirectionChooserView;
+
 class direction_chooser
 {
     friend class direction_chooser_renderer;
+    friend class UIDirectionChooserView;
 public:
     direction_chooser(dist& moves, const direction_chooser_args& args);
     bool choose_direction();
@@ -133,8 +136,6 @@ public:
 private:
     bool targets_objects() const;
     bool targets_enemies() const;
-
-    bool do_main_loop();
 
     // Return the location where targeting should start.
     coord_def find_default_target() const;

@@ -178,6 +178,7 @@ public:
     void redraw();
     bool update_dpi();
 
+    void maybe_redraw_screen();
     void render_current_regions();
 
     void place_cursor(cursor_type type, const coord_def &gc);
@@ -208,11 +209,13 @@ public:
 
     const ImageManager* get_image_manager() { return m_image; }
     int to_lines(int num_tiles, int tile_height = TILE_Y);
+
+    int handle_mouse(wm_mouse_event &event);
+
 protected:
     void reconfigure_fonts();
     FontWrapper* load_font(const char *font_file, int font_size,
                   bool default_on_fail);
-    int handle_mouse(wm_mouse_event &event);
 
     bool m_map_mode_enabled;
 
