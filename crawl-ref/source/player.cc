@@ -7097,6 +7097,7 @@ bool player::head_grow(int num, bool heal) const
     }
     if (num < 0 || num == 0 && !heal)
         _handle_amulet_loss();
+    you.wield_change = true;
     you.redraw_title = true;
     you.redraw_status_lights = true;
     #ifdef USE_TILE
