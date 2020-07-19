@@ -786,6 +786,7 @@ range_view_annotator::range_view_annotator(targeter *range)
     {
         crawl_state.darken_range = range;
         viewwindow(false);
+        update_screen();
     }
 }
 
@@ -795,6 +796,7 @@ range_view_annotator::~range_view_annotator()
     {
         crawl_state.darken_range = nullptr;
         viewwindow(false);
+        update_screen();
     }
 }
 
@@ -804,6 +806,7 @@ monster_view_annotator::monster_view_annotator(vector<monster *> *monsters)
     {
         crawl_state.flash_monsters = monsters;
         viewwindow(false);
+        update_screen();
     }
 }
 
@@ -814,6 +817,7 @@ monster_view_annotator::~monster_view_annotator()
     {
         crawl_state.flash_monsters = nullptr;
         viewwindow(false);
+        update_screen();
     }
 }
 
@@ -1749,6 +1753,7 @@ void direction_chooser::do_redraws()
     if (need_viewport_redraw)
     {
         viewwindow(false, false, nullptr, &renderer);
+        update_screen();
         need_viewport_redraw = false;
     }
 

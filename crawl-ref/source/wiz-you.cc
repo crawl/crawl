@@ -827,6 +827,7 @@ void wizard_toggle_xray_vision()
     you.xray_vision = !you.xray_vision;
     mprf("X-ray vision %s.", you.xray_vision ? "enabled" : "disabled");
     viewwindow(true);
+    update_screen();
 }
 
 void wizard_freeze_time()

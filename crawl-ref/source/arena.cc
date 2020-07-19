@@ -861,6 +861,7 @@ namespace arena
     static void do_fight()
     {
         viewwindow();
+        update_screen();
         clear_messages(true);
 
         {
@@ -887,6 +888,7 @@ namespace arena
                 ASSERT(you.pet_target == MHITNOT);
             }
             viewwindow();
+            update_screen();
         }
 
         if (contest_cancelled)
@@ -1050,6 +1052,7 @@ namespace arena
             virtual void _allocate_region() override {
                 show_fight_banner();
                 viewwindow();
+                update_screen();
                 display_message_window();
             };
             virtual bool on_event(const Event& ev) override {

@@ -1729,6 +1729,7 @@ static int _fedhas_corpse_spores(beh_type attitude)
     }
 
     viewwindow(false);
+    update_screen();
 
     return count;
 }

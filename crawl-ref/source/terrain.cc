@@ -1549,12 +1549,14 @@ bool swap_features(const coord_def &pos1, const coord_def &pos2,
         you.set_position(pos2);
         you.clear_invalid_constrictions();
         viewwindow();
+        update_screen();
     }
     else if (pos2 == you.pos())
     {
         you.set_position(pos1);
         you.clear_invalid_constrictions();
         viewwindow();
+        update_screen();
     }
 
     set_terrain_changed(pos1);

@@ -548,6 +548,7 @@ void move_player_to_grid(const coord_def& p, bool stepped)
     // Move the player to new location.
     you.moveto(p, true);
     viewwindow();
+    update_screen();
 
     moveto_location_effects(old_grid, stepped, old_pos);
 }
@@ -7878,6 +7879,7 @@ void player_open_door(coord_def doorpos)
 
     update_exclusion_los(excludes);
     viewwindow();
+    update_screen();
     you.turn_is_over = true;
 }
 

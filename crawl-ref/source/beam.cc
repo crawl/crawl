@@ -181,6 +181,7 @@ static void _zap_animation(int colour, const monster* mon = nullptr,
                                    static_cast<unsigned short>(colour)});
 #endif
         viewwindow(false);
+        update_screen();
         scaled_delay(50);
     }
 }
@@ -755,6 +756,7 @@ void bolt::draw(const coord_def& p)
     view_add_glyph_overlay(p, {glyph, c});
 #endif
     viewwindow(false);
+    update_screen();
     scaled_delay(draw_delay);
 }
 
@@ -5915,6 +5917,7 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
             if (pass_visible)
             {
                 viewwindow(false);
+                update_screen();
                 scaled_delay(explode_delay);
             }
         }

@@ -102,6 +102,7 @@ spret cast_fire_storm(int pow, bolt &beam, bool fail)
     beam.explode(false);
 
     viewwindow();
+    update_screen();
     return spret::success;
 }
 
@@ -1816,6 +1817,7 @@ spret cast_ignition(const actor *agent, int pow, bool fail)
             beam_visual.explosion_draw_cell(pos);
         }
         viewwindow(false);
+        update_screen();
         scaled_delay(50);
 
         // Real explosions on each individual square.

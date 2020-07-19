@@ -1519,7 +1519,14 @@ LUAFN(_crawl_milestone)
  * @within dlua
  * @function redraw_view
  */
-LUAWRAP(_crawl_redraw_view, viewwindow())
+LUAFN(_crawl_redraw_view)
+{
+    UNUSED(ls);
+
+    viewwindow();
+    update_screen();
+    return 0;
+}
 
 /*** Redraw the player stats.
  * You probably want @{redraw_screen} unless you specifically want only the

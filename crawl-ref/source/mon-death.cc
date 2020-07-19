@@ -1213,6 +1213,7 @@ static bool _explode_monster(monster* mons, killer_type killer,
     {
         saw = true;
         viewwindow();
+        update_screen();
         if (is_sanctuary(mons->pos()))
             mprf(MSGCH_GOD, "%s", sanct_msg);
         else if (type == MONS_BENNU)
@@ -1251,7 +1252,10 @@ static bool _explode_monster(monster* mons, killer_type killer,
     // Exploding kills the monster a bit earlier than normal.
     mons->hit_points = -16;
     if (saw)
+    {
         viewwindow();
+        update_screen();
+    }
 
     // FIXME: show_more == you.see_cell(mons->pos())
     if (type == MONS_LURKING_HORROR)

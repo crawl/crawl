@@ -419,6 +419,7 @@ NORETURN void end_game(scorefile_entry &se)
 
         flush_prev_message();
         viewwindow(); // don't do for leaving/winning characters
+        update_screen();
 
         if (crawl_state.game_is_hints())
             hints_death_screen();

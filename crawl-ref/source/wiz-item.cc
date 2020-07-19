@@ -1462,6 +1462,7 @@ static void _debug_rap_stats(FILE *ostat)
                 / (float) MAX_TRIES;
             mprf("%4.1f%% done.", curr_percent / 10.0);
             viewwindow();
+            update_screen();
         }
 
     }

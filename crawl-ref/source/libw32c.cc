@@ -933,7 +933,6 @@ void puttext(int x1, int y1, const crawl_view_buffer &vbuf)
             cell++;
         }
     }
-    update_screen();
     textcolour(WHITE);
 }
 

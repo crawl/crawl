@@ -1480,5 +1480,6 @@ void keyhelp_query_descriptions()
     }
 
     viewwindow();
+    update_screen();
     mpr("Okay, then.");
 }

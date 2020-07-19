@@ -356,6 +356,7 @@ static void _draw_level_map(int start_x, int start_y, bool travel_mode,
         }
 
     puttext(1, top, vbuf);
+    update_screen();
 }
 #endif // USE_TILE_LOCAL
 
@@ -796,6 +797,7 @@ bool show_map(level_pos &lpos, bool travel_mode, bool allow_offlevel)
                     viewwindow();
                     display_message_window();
                 }
+                update_screen();
                 continue;
             }
 

@@ -571,6 +571,7 @@ public:
     {
         // Update known terrain
         viewwindow();
+        update_screen();
 
         const bool exit_is_near = abyss_exit_nearness();
         const bool rune_is_near = abyss_rune_nearness();

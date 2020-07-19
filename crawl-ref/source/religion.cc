@@ -1054,6 +1054,7 @@ static void _delayed_gift_callback(const mgen_data &/*mg*/, monster *&mon,
 
     // Make sure monsters are shown.
     viewwindow();
+    update_screen();
     more();
     _inc_gift_timeout(4 + random2avg(7, 2));
     you.num_current_gifts[you.religion]++;

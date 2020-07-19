@@ -4445,7 +4445,10 @@ void runrest::stop(bool clear_delays)
 #endif
 
     if (need_redraw)
+    {
         viewwindow();
+        update_screen();
+    }
 }
 
 bool runrest::is_rest() const

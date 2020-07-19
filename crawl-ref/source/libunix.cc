@@ -807,7 +807,6 @@ void puttext(int x1, int y1, const crawl_view_buffer &vbuf)
             cell++;
         }
     }
-    update_screen();
 }
 
 // These next four are front functions so that we can reduce

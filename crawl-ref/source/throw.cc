@@ -1010,6 +1010,7 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
         // Fire beam in reverse.
         pbolt.setup_retrace();
         viewwindow();
+        update_screen();
         pbolt.fire();
     }
     else
@@ -1142,6 +1143,7 @@ bool mons_throw(monster* mons, bolt &beam, int msl, bool teleport)
     // Redraw the screen before firing, in case the monster just
     // came into view and the screen hasn't been updated yet.
     viewwindow();
+    update_screen();
     if (teleport)
     {
         beam.use_target_as_pos = true;
@@ -1164,6 +1166,7 @@ bool mons_throw(monster* mons, bolt &beam, int msl, bool teleport)
         // Fire beam in reverse.
         beam.setup_retrace();
         viewwindow();
+        update_screen();
         beam.fire();
 
         // Only print a message if you can see the target or the thrower.
