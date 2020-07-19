@@ -540,7 +540,7 @@ static int _mi_create_monster(mons_spec spec)
     {
         monster->behaviour = BEH_SEEK;
         monster->foe = MHITYOU;
-        no_messages mx;
+        msg::suppress mx;
         monster->del_ench(ENCH_SUBMERGED);
         return monster->mindex();
     }

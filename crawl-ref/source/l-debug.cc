@@ -97,7 +97,7 @@ LUAFN(debug_flush_map_memory)
 
 LUAFN(debug_generate_level)
 {
-    no_messages mx;
+    msg::suppress mx;
     env.map_knowledge.init(map_cell());
     los_changed();
     tile_init_default_flavour();

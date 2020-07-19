@@ -18,8 +18,6 @@
 void display_message_window();
 void clear_message_window();
 
-void set_log_emergency_stderr(bool b);
-
 void scroll_message_window(int n);
 
 void clear_messages(bool force = false);
@@ -96,35 +94,47 @@ void msgwin_new_cmd();
 // Tell the message window that a new turn has started.
 void msgwin_new_turn();
 
-bool msgwin_errors_to_stderr();
-
-class message_tee
+namespace msg
 {
-public:
-    message_tee();
-    message_tee(string &_target);
-    virtual ~message_tee();
-    virtual void append(const string &s, msg_channel_type ch = MSGCH_PLAIN);
-    virtual void append_line(const string &s, msg_channel_type ch = MSGCH_PLAIN);
-    virtual string get_store() const;
+    bool uses_stderr(msg_channel_type channel);
 
-private:
-    stringstream store;
-    string *target;
-};
+    class tee
+    {
+    public:
+        tee();
+        tee(string &_target);
+        virtual ~tee();
+        virtual void append(const string &s, msg_channel_type ch = MSGCH_PLAIN);
+        virtual void append_line(const string &s, msg_channel_type ch = MSGCH_PLAIN);
+        virtual string get_store() const;
 
-class no_messages
-{
-public:
-    no_messages();
-    no_messages(bool really_suppress);
-    no_messages(msg_channel_type _channel);
-    ~no_messages();
-private:
-    bool msuppressed;
-    msg_channel_type channel;
-    msg_colour_type prev_colour;
-};
+    private:
+        stringstream store;
+        string *target;
+    };
+
+    class force_stderr
+    {
+    public:
+        force_stderr(maybe_bool f);
+        ~force_stderr();
+    private:
+        maybe_bool prev_state;
+    };
+
+    class suppress
+    {
+    public:
+        suppress();
+        suppress(bool really_suppress);
+        suppress(msg_channel_type _channel);
+        ~suppress();
+    private:
+        bool msuppressed;
+        msg_channel_type channel;
+        msg_colour_type prev_colour;
+    };
+}
 
 void webtiles_send_messages(); // does nothing unless USE_TILE_WEB is defined
 

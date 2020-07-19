@@ -796,7 +796,7 @@ void wizard_set_xl(bool change_skills)
 
 void set_xl(const int newxl, const bool train, const bool silent)
 {
-    no_messages mx(silent);
+    msg::suppress mx(silent);
 
     if (newxl < you.experience_level)
         debug_downtick_xl(newxl);

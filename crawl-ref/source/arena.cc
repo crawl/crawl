@@ -47,70 +47,73 @@ using namespace ui;
 
 #define ARENA_VERBOSE
 
-// wrap a message tee around a file ptr, which can be null.
-// for a more general purpose application you'd want this to handle opening
-// and closing the file too, but that would require some restructuring of the
-// arena.
-class arena_message_tee : message_tee
+namespace msg
 {
-public:
-    arena_message_tee(FILE **_file) : message_tee(), file(_file) { }
-
-    ~arena_message_tee()
+    // wrap a message tee around a file ptr, which can be null.
+    // for a more general purpose application you'd want this to handle opening
+    // and closing the file too, but that would require some restructuring of the
+    // arena.
+    class arena_tee : tee
     {
-        if (*file)
-            fflush(*file);
-    }
+    public:
+        arena_tee(FILE **_file) : tee(), file(_file) { }
 
-    void append(const string &s, msg_channel_type ch = MSGCH_PLAIN)
-    {
-        if (Options.arena_dump_msgs && *file)
+        ~arena_tee()
         {
-            if (!s.size())
-                return;
-            string prefix;
-            switch (ch)
-            {
-                case MSGCH_DIAGNOSTICS:
-                    prefix = "DIAG: ";
-                    if (Options.arena_dump_msgs_all)
-                        break;
-                    return;
-
-                // Ignore messages generated while the user examines
-                // the arnea.
-                case MSGCH_PROMPT:
-                case MSGCH_MONSTER_TARGET:
-                case MSGCH_FLOOR_ITEMS:
-                case MSGCH_EXAMINE:
-                case MSGCH_EXAMINE_FILTER:
-                    return;
-
-                // If a monster-damage message ends with '!' it's a
-                // death message, otherwise it's an examination message
-                // and should be skipped.
-                case MSGCH_MONSTER_DAMAGE:
-                    if (s[s.size() - 1] != '!')
-                        return;
-                    break;
-
-                case MSGCH_ERROR: prefix = "ERROR: "; break;
-                case MSGCH_WARN: prefix = "WARN: "; break;
-                case MSGCH_SOUND: prefix = "SOUND: "; break;
-
-                case MSGCH_TALK_VISUAL:
-                case MSGCH_TALK: prefix = "TALK: "; break;
-                default: break;
-            }
-            formatted_string fs = formatted_string::parse_string(s);
-            fprintf(*file, "%s%s", prefix.c_str(), fs.tostring().c_str());
-            fflush(*file);
+            if (*file)
+                fflush(*file);
         }
-    }
 
-private:
-    FILE **file;
-};
+        void append(const string &s, msg_channel_type ch = MSGCH_PLAIN)
+        {
+            if (Options.arena_dump_msgs && *file)
+            {
+                if (!s.size())
+                    return;
+                string prefix;
+                switch (ch)
+                {
+                    case MSGCH_DIAGNOSTICS:
+                        prefix = "DIAG: ";
+                        if (Options.arena_dump_msgs_all)
+                            break;
+                        return;
+
+                    // Ignore messages generated while the user examines
+                    // the arnea.
+                    case MSGCH_PROMPT:
+                    case MSGCH_MONSTER_TARGET:
+                    case MSGCH_FLOOR_ITEMS:
+                    case MSGCH_EXAMINE:
+                    case MSGCH_EXAMINE_FILTER:
+                        return;
+
+                    // If a monster-damage message ends with '!' it's a
+                    // death message, otherwise it's an examination message
+                    // and should be skipped.
+                    case MSGCH_MONSTER_DAMAGE:
+                        if (s[s.size() - 1] != '!')
+                            return;
+                        break;
+
+                    case MSGCH_ERROR: prefix = "ERROR: "; break;
+                    case MSGCH_WARN: prefix = "WARN: "; break;
+                    case MSGCH_SOUND: prefix = "SOUND: "; break;
+
+                    case MSGCH_TALK_VISUAL:
+                    case MSGCH_TALK: prefix = "TALK: "; break;
+                    default: break;
+                }
+                formatted_string fs = formatted_string::parse_string(s);
+                fprintf(*file, "%s%s", prefix.c_str(), fs.tostring().c_str());
+                fflush(*file);
+            }
+        }
+
+    private:
+        FILE **file;
+    };
+}
 
 extern void world_reacts();
 
@@ -629,7 +632,7 @@ namespace arena
     /// @throws arena_error if the specification was invalid.
     static void setup_fight()
     {
-        //no_messages mx;
+        //msg::suppress mx;
         parse_monster_spec();
         setup_level();
 
@@ -1526,10 +1529,10 @@ NORETURN void run_arena(const newgame_def& choice, const string &default_arena_t
     string last_teams = default_arena_teams;
     if (arena::file != nullptr)
         end(0, false, "Results file already open");
-    // would be more elegant if arena_message_tee handled file open/close, but
+    // would be more elegant if arena_tee handled file open/close, but
     // that would need a bunch of refactoring of how the file is handled here.
     arena::file = fopen("arena.result", "w");
-    arena_message_tee log(&arena::file);
+    msg::arena_tee log(&arena::file);
 
     do
     {

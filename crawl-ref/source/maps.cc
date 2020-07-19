@@ -1568,7 +1568,7 @@ static weighted_map_names _find_random_vaults(
     map_selector sel = map_selector::by_depth(place, wantmini, MB_MAYBE);
     sel.preserve_dummy = true;
 
-    no_messages mx;
+    msg::suppress mx;
     vault_indices filtered = _eligible_maps_for_selector(sel);
 
     for (int i = 0; i < 10000; ++i)

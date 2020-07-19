@@ -32,13 +32,6 @@
 #include "unwind.h"
 #include "view.h"
 
-static bool _msgs_to_stderr = false;
-
-void set_log_emergency_stderr(bool b)
-{
-    _msgs_to_stderr = b;
-}
-
 static void _mpr(string text, msg_channel_type channel=MSGCH_PLAIN, int param=0,
                  bool nojoin=false, bool cap=true);
 
@@ -948,90 +941,138 @@ void webtiles_send_messages() { }
 
 static FILE* _msg_dump_file = nullptr;
 
-static bool suppress_messages = false;
 static msg_colour_type prepare_message(const string& imsg,
                                        msg_channel_type channel,
                                        int param,
                                        bool allow_suppress=true);
 
-static unordered_set<message_tee *> current_message_tees;
 
-message_tee::message_tee()
-    : target(nullptr)
+namespace msg
 {
-    current_message_tees.insert(this);
-}
+    static bool suppress_messages = false;
+    static unordered_set<tee *> current_message_tees;
+    static maybe_bool _msgs_to_stderr = MB_MAYBE;
 
-message_tee::message_tee(string &_target)
-    : target(&_target)
-{
-    current_message_tees.insert(this);
-}
+    static bool _suppressed()
+    {
+        return suppress_messages;
+    }
 
-message_tee::~message_tee()
-{
-    if (target)
-        *target += get_store();
-    current_message_tees.erase(this);
-}
+    /**
+     * RAII logic for controlling echoing to stderr.
+     * @param f the new state:
+     *   MB_TRUE: always echo to stderr (mainly used for debugging)
+     *   MB_MAYBE: use default logic, based on mode, io state, etc
+     *   MB_FALSE: never echo to stderr (for suppressing error echoing during
+     *             startup, e.g. for first-pass initfile processing)
+     */
+    force_stderr::force_stderr(maybe_bool f)
+        : prev_state(_msgs_to_stderr)
+    {
+        _msgs_to_stderr = f;
+    }
 
-void message_tee::append(const string &s, msg_channel_type /*ch*/)
-{
-    // could use a more c++y external interface -- but that just complicates things
-    store << s;
-}
+    force_stderr::~force_stderr()
+    {
+        _msgs_to_stderr = prev_state;
+    }
 
-void message_tee::append_line(const string &s, msg_channel_type ch)
-{
-    append(s + "\n", ch);
-}
 
-string message_tee::get_store() const
-{
-    return store.str();
-}
+    bool uses_stderr(msg_channel_type channel)
+    {
+        if (_msgs_to_stderr == MB_TRUE)
+            return true;
+        else if (_msgs_to_stderr == MB_FALSE)
+            return false;
+        // else, MB_MAYBE:
 
-static void _append_to_tees(const string &s, msg_channel_type ch)
-{
-    for (auto tee : current_message_tees)
-        tee->append(s, ch);
-}
+        if (channel == MSGCH_ERROR)
+        {
+            return !crawl_state.io_inited // one of these is not like the others
+                || crawl_state.test || crawl_state.script
+                || crawl_state.build_db
+                || crawl_state.map_stat_gen || crawl_state.obj_stat_gen;
+        }
+        return false;
+    }
 
-no_messages::no_messages()
-    : msuppressed(suppress_messages),
-      channel(NUM_MESSAGE_CHANNELS),
-      prev_colour(MSGCOL_NONE)
-{
-    suppress_messages = true;
-}
+    tee::tee()
+        : target(nullptr)
+    {
+        current_message_tees.insert(this);
+    }
 
-// Push useful RAII conditional logic into a constructor
-// Won't override an outer suppressing no_messages
-no_messages::no_messages(bool really_suppress)
-    : msuppressed(suppress_messages),
-      channel(NUM_MESSAGE_CHANNELS),
-      prev_colour(MSGCOL_NONE)
-{
-    suppress_messages = suppress_messages || really_suppress;
-}
+    tee::tee(string &_target)
+        : target(&_target)
+    {
+        current_message_tees.insert(this);
+    }
 
-// Mute just one channel. Mainly useful for hiding debug spam in various
-// circumstances.
-no_messages::no_messages(msg_channel_type _channel)
-    : msuppressed(suppress_messages),
-      channel(_channel),
-      prev_colour(Options.channels[channel])
-{
-    // don't change global suppress_messages for this case
-    ASSERT(channel < NUM_MESSAGE_CHANNELS);
-    Options.channels[channel] = MSGCOL_MUTED;
-}
+    tee::~tee()
+    {
+        if (target)
+            *target += get_store();
+        current_message_tees.erase(this);
+    }
 
-no_messages::~no_messages()
-{
-    suppress_messages = msuppressed;
-    if (channel < NUM_MESSAGE_CHANNELS)
-        Options.channels[channel] = prev_colour;
+    void tee::append(const string &s, msg_channel_type /*ch*/)
+    {
+        // could use a more c++y external interface -- but that just complicates things
+        store << s;
+    }
+
+    void tee::append_line(const string &s, msg_channel_type ch)
+    {
+        append(s + "\n", ch);
+    }
+
+    string tee::get_store() const
+    {
+        return store.str();
+    }
+
+    static void _append_to_tees(const string &s, msg_channel_type ch)
+    {
+        for (auto tee : current_message_tees)
+            tee->append(s, ch);
+    }
+
+    suppress::suppress()
+        : msuppressed(suppress_messages),
+          channel(NUM_MESSAGE_CHANNELS),
+          prev_colour(MSGCOL_NONE)
+    {
+        suppress_messages = true;
+    }
+
+    // Push useful RAII conditional logic into a constructor
+    // Won't override an outer suppressing msg::suppress
+    suppress::suppress(bool really_suppress)
+        : msuppressed(suppress_messages),
+          channel(NUM_MESSAGE_CHANNELS),
+          prev_colour(MSGCOL_NONE)
+    {
+        suppress_messages = suppress_messages || really_suppress;
+    }
+
+    // Mute just one channel. Mainly useful for hiding debug spam in various
+    // circumstances.
+    suppress::suppress(msg_channel_type _channel)
+        : msuppressed(suppress_messages),
+          channel(_channel),
+          prev_colour(Options.channels[channel])
+    {
+        // don't change global suppress_messages for this case
+        ASSERT(channel < NUM_MESSAGE_CHANNELS);
+        Options.channels[channel] = MSGCOL_MUTED;
+    }
+
+    suppress::~suppress()
+    {
+        suppress_messages = msuppressed;
+        if (channel < NUM_MESSAGE_CHANNELS)
+            Options.channels[channel] = prev_colour;
+    }
 }
 
 msg_colour_type msg_colour(int col)
@@ -1415,13 +1456,6 @@ void msgwin_set_temporary(bool temp)
     }
 }
 
-bool msgwin_errors_to_stderr()
-{
-    return crawl_state.test || crawl_state.script
-            || crawl_state.build_db
-            || crawl_state.map_stat_gen || crawl_state.obj_stat_gen;
-}
-
 void msgwin_clear_temporary()
 {
     buffer.roll_back();
@@ -1449,12 +1483,8 @@ static void _mpr(string text, msg_channel_type channel, int param, bool nojoin,
         die_noline("%s", text.c_str());
 #endif
 
-    if (channel == MSGCH_ERROR &&
-        (!crawl_state.io_inited || msgwin_errors_to_stderr())
-        || _msgs_to_stderr)
-    {
+    if (msg::uses_stderr(channel))
         fprintf(stderr, "%s\n", text.c_str());
-    }
 
     // Flush out any "comes into view" monster announcements before the
     // monster has a chance to give any other messages.
@@ -1479,8 +1509,7 @@ static void _mpr(string text, msg_channel_type channel, int param, bool nojoin,
     string col = colour_to_str(colour_msg(colour));
     text = "<" + col + ">" + text + "</" + col + ">"; // XXX
 
-    if (current_message_tees.size())
-        _append_to_tees(text + "\n", channel);
+    msg::_append_to_tees(text + "\n", channel);
 
     if (colour == MSGCOL_MUTED && crawl_state.io_inited)
     {
@@ -1732,7 +1761,7 @@ static msg_colour_type prepare_message(const string& imsg,
                                        int param,
                                        bool allow_suppress)
 {
-    if (allow_suppress && suppress_messages)
+    if (allow_suppress && msg::_suppressed())
         return MSGCOL_MUTED;
 
     if (you.num_turns > 0 && silenced(you.pos())
@@ -1852,7 +1881,7 @@ static bool _pre_more()
         return true;
 #endif
 
-    if (!crawl_state.show_more_prompt || suppress_messages)
+    if (!crawl_state.show_more_prompt || msg::_suppressed())
         return true;
 
     return false;

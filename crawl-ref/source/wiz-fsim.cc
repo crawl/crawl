@@ -445,7 +445,7 @@ static fight_data _get_fight_data(monster &mon, int iter_limit, bool defend)
     crawl_state.disables.set(DIS_AFFLICTIONS);
 
     {
-        no_messages mx;
+        msg::suppress mx;
 
         for (int i = 0; i < iter_limit; i++)
             _do_one_fsim_round(mon, fdata, defend);

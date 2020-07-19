@@ -256,6 +256,10 @@ int main(int argc, char *argv[])
     real_crawl_state = new game_state();
     real_env = new crawl_environment();
 #endif
+    // do this explicitly so that static initialization order woes can be
+    // ignored.
+    msg::force_stderr echo(MB_MAYBE);
+
     init_crash_handler();
 
     _startup_asserts();
@@ -288,8 +292,22 @@ int main(int argc, char *argv[])
     // make sure all the expected data directories exist
     validate_basedirs();
 
-    // Read the init file.
-    read_init_file();
+    {
+        // Read the init file -- first pass. This pass ignores lua. It'll get
+        // reread with lua on starting a game.
+#ifdef USE_TILE_WEB
+        // on webtiles, prevent echoing a player's rc errors to the webtiles
+        // log. At this point, io is not initialized so for other builds we
+        // do want to echo, in case things go extremely wrong. For dgl builds,
+        // players will see the error in their log anyways. (Regular webtiles
+        // actually gets a popup, but this is rarely used except for dev work)
+
+        // TODO: would be simpler to just never echo? Do other builds really
+        // need this outside of debugging contexts?
+        msg::force_stderr suppress_log_stderr(MB_FALSE);
+#endif
+        read_init_file();
+    }
 
     // Now parse the args again, looking for everything else.
     parse_args(argc, argv, false);

@@ -249,7 +249,7 @@ bool builder(bool enable_random_maps)
 #ifndef DEBUG_FULL_DUNGEON_SPAM
     // hide builder debug spam by default -- this is still collected by a tee
     // and accessible via &ctrl-l without this #define.
-    no_messages quiet(MSGCH_DIAGNOSTICS);
+    msg::suppress quiet(MSGCH_DIAGNOSTICS);
 #endif
 
     // Re-check whether we're in a valid place, it leads to obscure errors
@@ -280,7 +280,7 @@ bool builder(bool enable_random_maps)
 #ifdef DEBUG_DIAGNOSTICS // no point in enabling unless dprf works
     CrawlHashTable &debug_logs = you.props["debug_builder_logs"].get_table();
     string &cur_level_log = debug_logs[level_id::current().describe()].get_string();
-    message_tee debug_messages(cur_level_log);
+    msg::tee debug_messages(cur_level_log);
     debug_messages.append_line(make_stringf("Builder log for %s:",
         level_id::current().describe().c_str()));
 #endif

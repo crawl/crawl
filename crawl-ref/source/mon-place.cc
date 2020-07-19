@@ -1247,7 +1247,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     // Don't leave shifters in their starting shape.
     if (mg.cls == MONS_SHAPESHIFTER || mg.cls == MONS_GLOWING_SHAPESHIFTER)
     {
-        no_messages nm;
+        msg::suppress nm;
         monster_polymorph(mon, RANDOM_MONSTER);
 
         // It's not actually a known shapeshifter if it happened to be

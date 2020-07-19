@@ -84,7 +84,7 @@ static bool _do_build_level()
 
     watchdog();
 
-    no_messages mx;
+    msg::suppress mx;
     if (kbhit() && key_is_escape(getch_ck()))
     {
         mprf(MSGCH_WARN, "User requested cancel");
