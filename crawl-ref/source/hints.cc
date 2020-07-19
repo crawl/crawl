@@ -2564,6 +2564,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 
     case HINT_YOU_SILENCE:
         redraw_screen();
+        update_screen();
         text << "While you are silenced, you cannot cast spells, read scrolls "
                 "or use divine invocations. The same is true for any monster "
                 "within the effect radius. The field of silence (recognizable "

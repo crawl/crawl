@@ -1369,6 +1369,7 @@ void viewwindow(bool show_updates, bool tiles_only, animation *a, view_renderer 
         if (crawl_state.smallterm)
         {
             redraw_screen();
+            update_screen();
             return;
         }
 #endif
@@ -1791,4 +1792,5 @@ void handle_terminal_resize()
         crawl_view.init_geometry();
 
     redraw_screen();
+    update_screen();
 }

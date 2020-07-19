@@ -266,7 +266,10 @@ int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
 
     spell_menu.show();
     if (!crawl_state.doing_prev_cmd_again)
+    {
         redraw_screen();
+        update_screen();
+    }
     return choice;
 }
 
@@ -698,7 +701,10 @@ bool cast_a_spell(bool check_range, spell_type spell)
                 keyin = ESCAPE;
 
             if (!crawl_state.doing_prev_cmd_again)
+            {
                 redraw_screen();
+                update_screen();
+            }
 
             if (isaalpha(keyin) || key_is_escape(keyin))
                 break;
@@ -758,7 +764,10 @@ bool cast_a_spell(bool check_range, spell_type spell)
                     keyin = ESCAPE;
 
                 if (!crawl_state.doing_prev_cmd_again)
+                {
                     redraw_screen();
+                    update_screen();
+                }
 
                 if (isaalpha(keyin) || key_is_escape(keyin))
                     break;
@@ -858,6 +867,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
         // Return the MP since the spell is aborted.
         inc_mp(cost, true);
         redraw_screen();
+        update_screen();
         return false;
     }
 

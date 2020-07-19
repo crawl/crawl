@@ -2542,7 +2542,10 @@ void UIRoot::render()
     if (m_root.num_children() > 0)
         m_root.get_child(m_root.num_children()-1)->render();
     else
+    {
         redraw_screen(false);
+        update_screen();
+    }
 
     if (is_cursor_enabled() && !cursor_pos.origin())
     {
@@ -3077,7 +3080,10 @@ void pop_layout()
     ui_root.update_hover_path();
 #else
     if (!has_layout())
+    {
         redraw_screen(false);
+        update_screen();
+    }
 #endif
 }
 

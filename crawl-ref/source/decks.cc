@@ -552,7 +552,10 @@ static deck_type _choose_deck(const string title = "Draw")
     };
     deck_menu.show(false);
     if (!crawl_state.doing_prev_cmd_again)
+    {
         redraw_screen();
+        update_screen();
+    }
     return (deck_type) ret;
 }
 
@@ -905,6 +908,7 @@ bool draw_three()
         {
             _describe_cards(draws);
             redraw_screen();
+            update_screen();
             need_prompt_redraw = true;
         }
         else if (keyin >= 'a' && keyin < 'a' + draws.size())
@@ -1462,6 +1466,7 @@ static void _storm_card(int power)
 
     wind_blast(&you, (power_level + 1) * 66, coord_def(), true);
     redraw_screen(); // Update monster positions
+    update_screen();
 
     // 1-3, 4-6, 7-9
     const int max_explosions = random_range((power_level * 3) + 1, (power_level + 1) * 3);

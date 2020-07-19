@@ -457,6 +457,7 @@ static item_def* _get_evokable_item(const actor* target)
 
     update_screen();
     redraw_screen();
+    update_screen();
 
     if (sel.empty())
         return nullptr;
@@ -786,6 +787,7 @@ int DungeonRegion::handle_mouse(wm_mouse_event &event)
                         pickup_menu(o);
                         flush_prev_message();
                         redraw_screen();
+                        update_screen();
                         return CK_MOUSE_CMD;
                     }
                     return command_to_key(CMD_PICKUP);

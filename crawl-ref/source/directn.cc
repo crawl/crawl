@@ -697,6 +697,7 @@ void full_describe_view()
                 // View database entry.
                 describe_monsters(*m);
                 redraw_screen();
+                update_screen();
                 clear_messages();
             }
             else // ACT_EXECUTE -> view/travel
@@ -727,6 +728,7 @@ void full_describe_view()
     };
     desc_menu.show();
     redraw_screen();
+    update_screen();
 
     // need to do this after the menu has been closed on console,
     // since do_look_around() runs its own loop
@@ -1727,6 +1729,7 @@ void direction_chooser::handle_wizard_command(command_type key_command,
         return;
     }
     redraw_screen();
+    update_screen();
 #endif
 }
 
@@ -1842,6 +1845,7 @@ void direction_chooser::show_help()
 {
     show_targeting_help();
     redraw_screen();
+    update_screen();
     clear_messages(true);
     need_all_redraw = true;
 }
@@ -1981,6 +1985,7 @@ public:
 #ifndef USE_TILE_LOCAL
         // do_redraws() only calls viewwindow(); we must first draw the sidebar.
         redraw_screen(false);
+        update_screen();
 #endif
 
         // We always have to redraw the viewport, because ui::redraw() will call
@@ -2249,6 +2254,7 @@ void full_describe_square(const coord_def &c, bool cleanup)
     if (cleanup)
     {
         redraw_screen();
+        update_screen();
         clear_messages();
     }
 }

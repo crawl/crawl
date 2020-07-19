@@ -160,7 +160,14 @@ LUAWRAP(crawl_clear_messages,
 clear_messages(lua_isboolean(ls, 1) ? lua_toboolean(ls, 1) : false))
 /*** Redraw the screen.
  * @function redraw_screen */
-LUAWRAP(crawl_redraw_screen, redraw_screen())
+LUAFN(crawl_redraw_screen)
+{
+    UNUSED(ls);
+
+    redraw_screen();
+    update_screen();
+    return 0;
+}
 
 /*** Toggle autoclearing of `--- more ---` prompts.
  * @tparam boolean flag

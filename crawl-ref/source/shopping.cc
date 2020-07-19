@@ -1379,6 +1379,7 @@ void shop()
     if (shop.stock.empty())
         destroy_shop_at(you.pos());
     redraw_screen();
+    update_screen();
     if (menu.bought_something)
         mprf("Thank you for shopping at %s!", shopname.c_str());
     if (any_on_list)
@@ -2303,6 +2304,7 @@ void ShoppingList::display(bool view_only)
 
     shopmenu.show();
     redraw_screen();
+    update_screen();
 }
 
 static bool _compare_shopping_things(const CrawlStoreValue& a,

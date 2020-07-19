@@ -493,6 +493,7 @@ void change_species_to(species_type sp)
     init_player_doll();
 #endif
     redraw_screen();
+    update_screen();
 }
 
 // A random valid (selectable on the new game screen) species.

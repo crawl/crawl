@@ -93,6 +93,7 @@ void wizard_suppress()
     you.wizard = false;
     you.suppress_wizard = true;
     redraw_screen();
+    update_screen();
 }
 
 void wizard_change_job_to(job_type job)

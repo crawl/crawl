@@ -2153,6 +2153,7 @@ static int _prompt_travel_branch(int prompt_flags)
         case '?':
             show_interlevel_travel_branch_help();
             redraw_screen();
+            update_screen();
             break;
         case '_':
             return ID_ALTAR;
@@ -2327,6 +2328,7 @@ static level_pos _prompt_travel_altar()
             case '?':
                 show_interlevel_travel_altar_help();
                 redraw_screen();
+                update_screen();
                 break;
             case '\n': case '\r':
                 return level_target;
@@ -2519,6 +2521,7 @@ static level_pos _travel_depth_munge(int munge_method, const string &s,
     case '?':
         show_interlevel_travel_depth_help();
         redraw_screen();
+        update_screen();
         return level_pos(targ); // no change
     case '<':
         result.id = find_up_level(result.id);

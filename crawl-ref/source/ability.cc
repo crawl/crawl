@@ -3391,7 +3391,10 @@ int choose_ability_menu(const vector<talent>& talents)
     };
     abil_menu.show(false);
     if (!crawl_state.doing_prev_cmd_again)
+    {
         redraw_screen();
+        update_screen();
+    }
     return ret;
 }
 

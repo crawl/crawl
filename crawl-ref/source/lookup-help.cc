@@ -1468,6 +1468,7 @@ void keyhelp_query_descriptions()
     while (true)
     {
         redraw_screen();
+        update_screen();
 
         if (!response.empty())
             mprf(MSGCH_PROMPT, "%s", response.c_str());

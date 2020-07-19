@@ -755,6 +755,7 @@ bool check_selected_skills()
     reset_training();
     skill_menu();
     redraw_screen();
+    update_screen();
     return true;
 }
 

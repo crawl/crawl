@@ -836,6 +836,7 @@ static bool _teleport_player(bool wizard_tele, bool teleportitis,
             bool chose = show_map(lpos, false, false);
             pos = lpos.pos;
             redraw_screen();
+            update_screen();
 
             // If we've received a HUP signal then the user can't choose a
             // location, so cancel the teleport.

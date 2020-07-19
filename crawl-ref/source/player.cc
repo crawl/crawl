@@ -2674,6 +2674,7 @@ void level_change(bool skip_attribute_increase)
         {
             // Don't want to see the dead creature at the prompt.
             redraw_screen();
+            update_screen();
 
             if (new_exp == 27)
                 mprf(MSGCH_INTRINSIC_GAIN, "You have reached level 27, the final one!");
@@ -2705,6 +2706,7 @@ void level_change(bool skip_attribute_increase)
             // In case of intrinsic ability changes.
             tiles.layout_statcol();
             redraw_screen();
+            update_screen();
 #endif
             if (!skip_attribute_increase)
                 species_stat_gain(you.species);
@@ -2800,6 +2802,7 @@ void level_change(bool skip_attribute_increase)
                     updated_maxhp = true;
 
                     redraw_screen();
+                    update_screen();
                 }
                 break;
 
@@ -7332,6 +7335,7 @@ bool player::do_shaft_ability()
     {
         canned_msg(MSG_NOTHING_HAPPENS);
         redraw_screen();
+        update_screen();
         return false;
     }
 }

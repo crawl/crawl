@@ -355,6 +355,7 @@ bool use_an_item(item_def *&target, int item_type, operation_types oper,
         }
 
         redraw_screen();
+        update_screen();
         // For weapons, armour, and jewellery this is handled in wield_weapon,
         // wear_armour, and _puton_item after selection
         if (item_type != OSEL_WIELD && item_type != OBJ_ARMOUR
@@ -2014,6 +2015,7 @@ static bool _puton_ring(item_def &item, bool prompt_slot,
     {
         tiles.layout_statcol();
         redraw_screen();
+        update_screen();
     }
 #endif
 
@@ -2208,6 +2210,7 @@ bool remove_ring(int slot, bool announce)
     {
         tiles.layout_statcol();
         redraw_screen();
+        update_screen();
     }
 #endif
 

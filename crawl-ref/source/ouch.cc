@@ -356,6 +356,7 @@ void lose_level()
     // In case of intrinsic ability changes.
     tiles.layout_statcol();
     redraw_screen();
+    update_screen();
 #endif
 
     xom_is_stimulated(200);

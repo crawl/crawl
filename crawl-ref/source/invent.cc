@@ -1253,7 +1253,10 @@ void display_inventory()
 
     menu.show(true);
     if (!crawl_state.doing_prev_cmd_again)
+    {
         redraw_screen();
+        update_screen();
+    }
 }
 
 // Reads in digits for a count and apprends then to val, the
@@ -1354,6 +1357,7 @@ vector<SelItem> prompt_drop_items(const vector<SelItem> &preselected_items)
         if (need_redraw && !crawl_state.doing_prev_cmd_again)
         {
             redraw_screen();
+            update_screen();
             clear_messages();
         }
 
@@ -1405,6 +1409,7 @@ vector<SelItem> prompt_drop_items(const vector<SelItem> &preselected_items)
                 if (!crawl_state.doing_prev_cmd_again)
                 {
                     redraw_screen();
+                    update_screen();
                     clear_messages();
                 }
 
@@ -1915,6 +1920,7 @@ int prompt_invent_item(const char *prompt,
         if (need_redraw && !crawl_state.doing_prev_cmd_again)
         {
             redraw_screen();
+            update_screen();
             clear_messages();
         }
 
@@ -1974,6 +1980,7 @@ int prompt_invent_item(const char *prompt,
                 if (!crawl_state.doing_prev_cmd_again)
                 {
                     redraw_screen();
+                    update_screen();
                     clear_messages();
                 }
             }

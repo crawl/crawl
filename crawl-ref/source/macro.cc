@@ -1069,6 +1069,7 @@ void macro_add_query()
 
     crawl_state.unsaved_macros = true;
     redraw_screen();
+    update_screen();
 }
 
 /*

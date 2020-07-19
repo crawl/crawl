@@ -967,6 +967,7 @@ void debug_pathfind(int idx)
     bool chose = show_map(ldest, false, false);
     dest = ldest.pos;
     redraw_screen();
+    update_screen();
     if (!chose)
     {
         canned_msg(MSG_OK);

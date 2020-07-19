@@ -248,6 +248,7 @@ void TilesFramework::set_map_display(const bool display)
         m_region_tab->activate_tab(TAB_ITEM);
     do_layout(); // recalculate the viewport setup for zoom levels
     redraw_screen(false);
+    update_screen();
 }
 
 bool TilesFramework::get_map_display()
@@ -260,6 +261,7 @@ void TilesFramework::do_map_display()
     m_map_mode_enabled = true;
     do_layout(); // recalculate the viewport setup for zoom levels
     redraw_screen(false);
+    update_screen();
     m_region_tab->activate_tab(TAB_NAVIGATION);
 }
 
@@ -1052,6 +1054,7 @@ void TilesFramework::zoom_dungeon(bool in)
     do_layout(); // recalculate the viewport setup
     dprf("Zooming to %d", current_scale);
     redraw_screen(false);
+    update_screen();
 #endif
 }
 
@@ -1377,7 +1380,10 @@ void TilesFramework::maybe_redraw_screen()
 {
     // need to call with show_updates=false, which is passed to viewwindow
     if (m_active_layer == LAYER_NORMAL && !crawl_state.game_is_arena())
+    {
         redraw_screen(false);
+        update_screen();
+    }
 }
 
 void TilesFramework::render_current_regions()

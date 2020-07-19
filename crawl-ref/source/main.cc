@@ -1006,6 +1006,7 @@ static void _input()
         revive();
         bring_to_safety();
         redraw_screen();
+        update_screen();
     }
 
     // Unhandled things that should have caused death.
@@ -1890,12 +1891,32 @@ void process_command(command_type cmd, command_type prev_cmd)
 
         // Informational commands.
     case CMD_DISPLAY_CHARACTER_STATUS: display_char_status();          break;
-    case CMD_DISPLAY_COMMANDS:         show_help(); redraw_screen(); break;
+    case CMD_DISPLAY_COMMANDS:
+        show_help();
+        redraw_screen();
+        update_screen();
+        break;
     case CMD_DISPLAY_INVENTORY:        display_inventory();            break;
-    case CMD_DISPLAY_KNOWN_OBJECTS: check_item_knowledge(); redraw_screen(); break;
-    case CMD_DISPLAY_MUTATIONS: display_mutations(); redraw_screen();  break;
-    case CMD_DISPLAY_RUNES: display_runes(); redraw_screen();          break;
-    case CMD_DISPLAY_SKILLS:           skill_menu(); redraw_screen();  break;
+    case CMD_DISPLAY_KNOWN_OBJECTS:
+        check_item_knowledge();
+        redraw_screen();
+        update_screen();
+        break;
+    case CMD_DISPLAY_MUTATIONS:
+        display_mutations();
+        redraw_screen();
+        update_screen();
+        break;
+    case CMD_DISPLAY_RUNES:
+        display_runes();
+        redraw_screen();
+        update_screen();
+        break;
+    case CMD_DISPLAY_SKILLS:
+        skill_menu();
+        redraw_screen();
+        update_screen();
+        break;
     case CMD_EXPERIENCE_CHECK:         _experience_check();            break;
     case CMD_FULL_VIEW:                full_describe_view();           break;
     case CMD_INSCRIBE_ITEM:            prompt_inscribe_item();         break;
@@ -1903,7 +1924,11 @@ void process_command(command_type cmd, command_type prev_cmd)
     case CMD_LIST_GOLD:                _do_list_gold();                break;
     case CMD_LIST_JEWELLERY:           list_jewellery();               break;
     case CMD_MAKE_NOTE:                make_user_note();               break;
-    case CMD_REPLAY_MESSAGES: replay_messages(); redraw_screen();      break;
+    case CMD_REPLAY_MESSAGES:
+        replay_messages();
+        redraw_screen();
+        update_screen();
+        break;
     case CMD_RESISTS_SCREEN:           print_overview_screen();        break;
     case CMD_LOOKUP_HELP:           keyhelp_query_descriptions();      break;
 
@@ -1911,6 +1936,7 @@ void process_command(command_type cmd, command_type prev_cmd)
     {
         describe_god(you.religion);
         redraw_screen();
+        update_screen();
         break;
     }
 
@@ -1981,7 +2007,10 @@ void process_command(command_type cmd, command_type prev_cmd)
 #endif
 
         // Game commands.
-    case CMD_REDRAW_SCREEN: redraw_screen(); break;
+    case CMD_REDRAW_SCREEN:
+        redraw_screen();
+        update_screen();
+        break;
 
 #ifdef USE_UNIX_SIGNALS
     case CMD_SUSPEND_GAME:
@@ -1995,6 +2024,7 @@ void process_command(command_type cmd, command_type prev_cmd)
         console_startup();
 #endif
         redraw_screen();
+        update_screen();
         break;
 #endif
 
@@ -2351,7 +2381,10 @@ static keycode_type _get_next_keycode()
     {
         keyin = unmangle_direction_keys(getch_with_command_macros());
         if (keyin == CK_REDRAW)
+        {
             redraw_screen();
+            update_screen();
+        }
         else
             break;
     }

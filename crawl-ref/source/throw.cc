@@ -234,6 +234,7 @@ void fire_target_behaviour::display_help()
 {
     show_targeting_help();
     redraw_screen();
+    update_screen();
     need_redraw = true;
     set_prompt();
 }
