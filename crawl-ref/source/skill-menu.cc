@@ -1792,19 +1792,9 @@ bool UISkillMenu::on_event(const Event& ev)
 
     const auto mouse_event = static_cast<const MouseEvent&>(ev);
 
-    // XXX: convert Event back into a wm_mouse_event for the PrecisionMenu
-    // code. once skill-menu is widgified, PrecisionMenu can be removed
-    wm_mouse_event mev;
-    mev.event = ev.type() == Event::Type::MouseMove ? wm_mouse_event::MOVE :
-                ev.type() == Event::Type::MouseDown ? wm_mouse_event::PRESS :
-                wm_mouse_event::WHEEL;
-    mev.button = static_cast<wm_mouse_event::mouse_event_button>(
-            mouse_event.button());
-    mev.mod = wm->get_mod_state();
-    int x, y;
-    mev.held = wm->get_mouse_state(&x, &y);
-    mev.px = x - m_region.x;
-    mev.py = y - m_region.y;
+    wm_mouse_event mev = ui::to_wm_event(mouse_event);
+    mev.px -= m_region.x;
+    mev.py -= m_region.y;
 
     int key = skm.handle_mouse(mev);
     if (key && key != CK_NO_KEY)

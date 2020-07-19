@@ -3541,4 +3541,21 @@ bool raise_event(Event& event)
     return ui_root.deliver_event(event);
 }
 
+#ifdef USE_TILE_LOCAL
+wm_mouse_event to_wm_event(const MouseEvent &ev)
+{
+    wm_mouse_event mev;
+    mev.event = ev.type() == Event::Type::MouseMove ? wm_mouse_event::MOVE :
+                ev.type() == Event::Type::MouseDown ? wm_mouse_event::PRESS :
+                wm_mouse_event::WHEEL;
+    mev.button = static_cast<wm_mouse_event::mouse_event_button>(ev.button());
+    mev.mod = wm->get_mod_state();
+    int x, y;
+    mev.held = wm->get_mouse_state(&x, &y);
+    mev.px = x;
+    mev.py = y;
+    return mev;
+}
+#endif
+
 }

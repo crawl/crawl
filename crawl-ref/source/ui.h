@@ -1289,4 +1289,8 @@ private:
     unwind_bool no_more;
 };
 
+#ifdef USE_TILE_LOCAL
+wm_mouse_event to_wm_event(const MouseEvent &);
+#endif
+
 }
