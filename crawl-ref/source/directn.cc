@@ -785,21 +785,12 @@ static dist _look_around_target(const coord_def &whence)
 range_view_annotator::range_view_annotator(targeter *range)
 {
     if (range && Options.darken_beyond_range)
-    {
         crawl_state.darken_range = range;
-        viewwindow(false);
-        update_screen();
-    }
 }
 
 range_view_annotator::~range_view_annotator()
 {
-    if (crawl_state.darken_range)
-    {
-        crawl_state.darken_range = nullptr;
-        viewwindow(false);
-        update_screen();
-    }
+    crawl_state.darken_range = nullptr;
 }
 
 monster_view_annotator::monster_view_annotator(vector<monster *> *monsters)
@@ -1756,7 +1747,6 @@ void direction_chooser::do_redraws()
     if (need_viewport_redraw)
     {
         viewwindow(false, false, nullptr, &renderer);
-        update_screen();
         need_viewport_redraw = false;
     }
 
@@ -1837,7 +1827,7 @@ void direction_chooser::describe_target()
 {
     if (!map_bounds(target()) || !env.map_knowledge(target()).known())
         return;
-    full_describe_square(target());
+    full_describe_square(target(), false);
     need_all_redraw = true;
 }
 
@@ -1985,7 +1975,6 @@ public:
 #ifndef USE_TILE_LOCAL
         // do_redraws() only calls viewwindow(); we must first draw the sidebar.
         redraw_screen(false);
-        update_screen();
 #endif
 
         // We always have to redraw the viewport, because ui::redraw() will call
