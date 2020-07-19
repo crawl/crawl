@@ -301,13 +301,13 @@ static const cloud_data clouds[] = {
       ETC_FIRE,                              // colour
       { TILE_CLOUD_FLAME, CTVARY_RANDOM },   // tile
     },
-	// CLOUD_HEAL,
+    // CLOUD_HEAL,
     { "healing mist", nullptr,                  // terse, verbose name
       GREEN,                                    // colour
       { TILE_CLOUD_HEAL, CTVARY_DUR },  		// tile
       BEAM_NONE,                                // beam_effect
-	  true,                                     // opacity
-	},
+      true,                                     // opacity
+    },
 };
 COMPILE_CHECK(ARRAYSZ(clouds) == NUM_CLOUD_TYPES);
 
@@ -1137,13 +1137,6 @@ static bool _actor_apply_cloud_side_effects(actor *act,
             miasma_monster(mons, cloud.agent());
         break;
 
-    case CLOUD_MIASMA:
-        if (player)
-            miasma_player(cloud.agent(), cloud.cloud_name());
-        else
-            miasma_monster(mons, cloud.agent());
-        break;
-
     case CLOUD_MUTAGENIC:
         if (player)
         {
@@ -1202,21 +1195,21 @@ static bool _actor_apply_cloud_side_effects(actor *act,
 		    return true;
 	    }
     }
-	case CLOUD_HEAL:
-        {
-			if (player && !you.duration[DUR_DEATHS_DOOR])
-			{
-				unrot_hp(1);
-				inc_hp(1);
-			}
-			else
-			{
-				// Useful to healing mobs
-				const monster &mons_ref = *mons;
-				mons->heal(1+(mons->get_hit_dice()/10));
-			}
-		}
-        return true;
+    case CLOUD_HEAL:
+    {
+	if (player && !you.duration[DUR_DEATHS_DOOR])
+	{
+		unrot_hp(1);
+		inc_hp(1);
+	}
+	else
+	{
+		// Useful to healing mobs
+		const monster &mons_ref = *mons;
+		mons->heal(1+(mons->get_hit_dice()/10));
+		return true;
+	}
+    }
     default:
         break;
     }
