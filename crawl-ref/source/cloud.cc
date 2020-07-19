@@ -1185,30 +1185,34 @@ static bool _actor_apply_cloud_side_effects(actor *act,
     }
     case CLOUD_INNER_FLAME:
     {
-	    if (player)
-		maybe_melt_player_enchantments(BEAM_FIRE, final_damage);
-	    else
-	    {
-		    const monster &mons_ref = *mons;
-		    if (mons_immune_magic(mons_ref)) break;
-		    mons->add_ench(mon_enchant(ENCH_INNER_FLAME, 0, &you));
-		    return true;
-	    }
+        if (player)
+        {
+            maybe_melt_player_enchantments(BEAM_FIRE, final_damage);
+        }
+        else
+        {
+            const monster& mons_ref = *mons;
+            if (mons_immune_magic(mons_ref)) break;
+            mons->add_ench(mon_enchant(ENCH_INNER_FLAME, 0, &you));
+            return true;
+        }
+        break;
     }
     case CLOUD_HEAL:
     {
-	if (player && !you.duration[DUR_DEATHS_DOOR])
-	{
-		unrot_hp(1);
-		inc_hp(1);
-	}
-	else
-	{
-		// Useful to healing mobs
-		const monster &mons_ref = *mons;
-		mons->heal(1+(mons->get_hit_dice()/10));
-		return true;
-	}
+        if (player && !you.duration[DUR_DEATHS_DOOR])
+        {
+            unrot_hp(1);
+            inc_hp(1);
+        }
+        else
+        {
+            // Useful to healing mobs
+            const monster& mons_ref = *mons;
+            mons->heal(1 + (mons->get_hit_dice() / 10));
+            return true;
+        }
+        break;
     }
     default:
         break;
