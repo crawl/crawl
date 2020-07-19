@@ -310,7 +310,7 @@ void Widget::allocate_region(Region region)
 
 SizeReq Widget::_get_preferred_size(Direction, int)
 {
-    return { 0, 0 };
+    return { 0, 0xffffff };
 }
 
 void Widget::_allocate_region()
