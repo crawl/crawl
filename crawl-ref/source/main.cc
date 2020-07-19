@@ -2072,6 +2072,7 @@ static void _prep_input()
 
     you.redraw_status_lights = true;
     print_stats();
+    update_screen();
 
     viewwindow();
     maybe_update_stashes();

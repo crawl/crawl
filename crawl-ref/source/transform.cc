@@ -2093,6 +2093,7 @@ void vampire_update_transformations()
     if (form_reason != UFR_GOOD && you.duration[DUR_TRANSFORMATION])
     {
         print_stats();
+        update_screen();
         mprf(MSGCH_WARN,
              "Your blood-%s body can't sustain your transformation.",
              form_reason == UFR_TOO_DEAD ? "deprived" : "filled");

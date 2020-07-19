@@ -13,7 +13,7 @@ void reset_hud();
 
 void update_turn_count();
 
-void print_stats();
+bool print_stats();
 void print_stats_level();
 void draw_border();
 

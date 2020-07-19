@@ -685,6 +685,7 @@ public:
         else
         {
             print_stats();
+            update_screen();
             show();
         }
 

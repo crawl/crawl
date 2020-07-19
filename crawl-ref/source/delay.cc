@@ -601,6 +601,7 @@ void Delay::handle()
         you.wield_change = true;
         _pop_delay();
         print_stats();  // force redraw of the stats
+        update_screen();
 #ifdef USE_TILE
         tiles.update_tabs();
 #endif

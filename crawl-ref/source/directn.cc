@@ -1650,6 +1650,7 @@ void direction_chooser::handle_wizard_command(command_type key_command,
         {
             set_hp(1);
             print_stats();
+            update_screen();
         }
         break;
 

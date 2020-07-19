@@ -354,6 +354,7 @@ static void _post_init(bool newc)
     you.redraw_title = true;
     you.redraw_status_lights = true;
     print_stats();
+    update_screen();
     viewwindow();
 
     activate_notes(true);
