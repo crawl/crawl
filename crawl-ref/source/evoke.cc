@@ -251,9 +251,8 @@ static bool _evoke_horn_of_geryon()
     {
         monster* mon;
         beh_type beh = BEH_HOSTILE;
-        bool will_anger = player_will_anger_monster(MONS_HELL_BEAST);
 
-        if (!will_anger && random2(adjusted_power) > 7)
+        if (random2(adjusted_power) > 7)
             beh = BEH_FRIENDLY;
         mgen_data mg(MONS_HELL_BEAST, beh, you.pos(), MHITYOU, MG_FORCE_BEH);
         mg.set_summoned(&you, 3, SPELL_NO_SPELL);
@@ -261,11 +260,6 @@ static bool _evoke_horn_of_geryon()
         mon = create_monster(mg);
         if (mon)
             created = true;
-        if (mon && will_anger)
-        {
-            mprf("%s is enraged by your holy aura!",
-                 mon->name(DESC_THE).c_str());
-        }
     }
     if (!created)
         mpr("Nothing answers your call.");
@@ -977,9 +971,6 @@ static spret _phantom_mirror()
         mpr("The mirror can't reflect that.");
         return spret::abort;
     }
-
-    if (player_angers_monster(victim, false))
-        return spret::abort;
 
 #if TAG_MAJOR_VERSION == 34
     const int surge = pakellas_surge_devices();

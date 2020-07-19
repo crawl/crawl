@@ -278,17 +278,7 @@ void change_monster_type(monster* mons, monster_type targetc)
             name = name.substr(0, the_pos);
     }
 
-    const monster_type real_targetc =
-        (mons->has_ench(ENCH_GLOWING_SHAPESHIFTER)) ? MONS_GLOWING_SHAPESHIFTER :
-        (mons->has_ench(ENCH_SHAPESHIFTER))         ? MONS_SHAPESHIFTER
-                                                    : targetc;
-
-    const god_type god =
-        player_will_anger_monster(real_targetc) ? GOD_NO_GOD : mons->god;
-
-    if (god == GOD_NO_GOD)
-        flags &= ~MF_GOD_GIFT;
-
+    const god_type old_god        = mons->god;
     const int  old_hp             = mons->hit_points;
     const int  old_hp_max         = mons->max_hit_points;
     const bool old_mon_caught     = mons->caught();
@@ -347,7 +337,8 @@ void change_monster_type(monster* mons, monster_type targetc)
     mons->props.erase("speech_prefix");
 
     // Make sure we have a god if we've been polymorphed into a priest.
-    mons->god = (mons->is_priest() && god == GOD_NO_GOD) ? GOD_NAMELESS : god;
+    mons->god = (mons->is_priest() && old_god == GOD_NO_GOD) ? GOD_NAMELESS
+                                                             : old_god;
 
     mons->add_ench(abj);
     mons->add_ench(fabj);
@@ -413,8 +404,7 @@ void change_monster_type(monster* mons, monster_type targetc)
 // Relaxation still takes effect when needed, no matter what relpower
 // says.
 bool monster_polymorph(monster* mons, monster_type targetc,
-                       poly_power_type power,
-                       bool force_beh)
+                       poly_power_type power)
 {
     // Don't attempt to polymorph a monster that is busy using the stairs.
     if (mons->flags & MF_TAKING_STAIRS)
@@ -537,9 +527,6 @@ bool monster_polymorph(monster* mons, monster_type targetc,
         if (can_see)
             mons->flags |= MF_SEEN;
     }
-
-    if (!force_beh)
-        player_angers_monster(mons);
 
     // Xom likes watching monsters being polymorphed.
     if (can_see)

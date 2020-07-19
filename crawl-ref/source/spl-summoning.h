@@ -77,7 +77,7 @@ int animate_remains(const coord_def &a, corpse_type class_allowed,
                     beh_type beha, int pow, unsigned short hitting,
                     actor *as = nullptr, string nas = "",
                     god_type god = GOD_NO_GOD, bool actual = true,
-                    bool quiet = false, bool force_beh = false,
+                    bool quiet = false, bool apply_lovelessness = true,
                     monster** mon = nullptr, int* motions = nullptr);
 
 spret cast_animate_skeleton(int pow, god_type god, bool fail);
@@ -87,7 +87,6 @@ int animate_dead(actor *caster, int pow, beh_type beha,
                  god_type god = GOD_NO_GOD, bool actual = true);
 
 spret cast_simulacrum(int pow, god_type god, bool fail);
-bool monster_simulacrum(monster *caster, bool actual);
 
 bool twisted_resurrection(actor *caster, int pow, beh_type beha,
                           unsigned short foe, god_type god, bool actual = true);

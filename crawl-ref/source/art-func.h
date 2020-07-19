@@ -80,6 +80,12 @@ static void _equip_mpr(bool* show_msgs, const char* msg,
 
 static bool _evoke_sceptre_of_asmodeus()
 {
+    if (you.get_mutation_level(MUT_NO_LOVE))
+    {
+        mpr("You are hated by all, and nothing answers your call!");
+        return false;
+    }
+
     if (!x_chance_in_y(you.skill(SK_EVOCATIONS, 100), 3000))
         return false;
 
@@ -104,8 +110,7 @@ static bool _evoke_sceptre_of_asmodeus()
 
         m->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 6));
 
-        if (!player_angers_monster(m))
-            mpr("You don't feel so good about this...");
+        mpr("You don't feel so good about this...");
     }
     else
         mpr("The air shimmers briefly.");

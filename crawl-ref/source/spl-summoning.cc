@@ -162,9 +162,6 @@ spret cast_monstrous_menagerie(actor* caster, int pow, god_type god, bool fail)
     else
         type = random_choose(MONS_HARPY, MONS_MANTICORE, MONS_LINDWURM);
 
-    if (player_will_anger_monster(type))
-        type = MONS_MANTICORE;
-
     int num = (type == MONS_HARPY ? 1 + x_chance_in_y(pow, 80)
                                       + x_chance_in_y(pow - 75, 100)
                                   : 1);
@@ -255,7 +252,7 @@ static monster_type _choose_dragon_type(int pow, god_type /*god*/, bool player)
         mon = random_choose(MONS_FIRE_DRAGON, MONS_ICE_DRAGON);
 
     // For good gods, switch away from shadow dragons to storm/iron dragons.
-    if (player && player_will_anger_monster(mon))
+    if (player && god_hates_monster(mon))
         mon = random_choose(MONS_STORM_DRAGON, MONS_IRON_DRAGON);
 
     return mon;
@@ -573,7 +570,6 @@ bool summon_holy_warrior(int pow, bool punish)
     if (!punish)
         mpr("You are momentarily dazzled by a brilliant light.");
 
-    player_angers_monster(summon);
     return true;
 }
 
@@ -885,13 +881,10 @@ spret cast_call_imp(int pow, god_type god, bool fail)
     const int dur = min(2 + (random2(pow) / 4), 6);
 
     mgen_data imp_data = _pal_data(imp_type, dur, god, SPELL_CALL_IMP);
-    imp_data.flags |= MG_FORCE_BEH; // disable player_angers_monster()
     if (monster *imp = create_monster(imp_data))
     {
         mpr(_imp_summon_messages[imp_type]);
-
-        if (!player_angers_monster(imp))
-            _monster_greeting(imp, "_friendly_imp_greeting");
+        _monster_greeting(imp, "_friendly_imp_greeting");
     }
     else
         canned_msg(MSG_NOTHING_HAPPENS);
@@ -917,18 +910,15 @@ static bool _summon_demon_wrapper(int pow, god_type god, int spell,
 
         mpr("A demon appears!");
 
-        if (!player_angers_monster(demon) && !friendly)
+        if (!friendly)
         {
             mpr(charmed ? "You don't feel so good about this..."
                         : "It doesn't seem very happy.");
         }
-        else if (friendly)
-        {
-            if (mon == MONS_CRIMSON_IMP || mon == MONS_WHITE_IMP
+        else if (mon == MONS_CRIMSON_IMP || mon == MONS_WHITE_IMP
                 || mon == MONS_IRON_IMP || mon == MONS_SHADOW_IMP)
-            {
-                _monster_greeting(demon, "_friendly_imp_greeting");
-            }
+        {
+            _monster_greeting(demon, "_friendly_imp_greeting");
         }
 
         if (charmed && !friendly)
@@ -1045,7 +1035,7 @@ spret cast_shadow_creatures(int st, god_type god, level_id place,
             // In the rare cases that a specific spell set of a monster will
             // cause anger, even if others do not, try rerolling
             int tries = 0;
-            while (player_will_anger_monster(*mons) && ++tries <= 20)
+            while (god_hates_monster(*mons) && ++tries <= 20)
             {
                 // Save the enchantments, particularly ENCH_SUMMON etc.
                 mon_enchant_list ench = mons->enchantments;
@@ -1087,7 +1077,7 @@ spret cast_shadow_creatures(int st, god_type god, level_id place,
                 if (testbits(mi->flags, MF_BAND_MEMBER)
                     && (mid_t) mi->props["band_leader"].get_int() == mons->mid)
                 {
-                    if (player_will_anger_monster(**mi))
+                    if (god_hates_monster(**mi))
                         monster_die(**mi, KILL_RESET, NON_MONSTER);
 
                     mi->props["summon_id"].get_int() = mons->mid;
@@ -1435,7 +1425,7 @@ static void _display_undead_motions(int motions)
 static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
                            int pow,
                            unsigned short hitting, actor *as, string nas,
-                           god_type god, bool actual, bool force_beh,
+                           god_type god, bool actual, bool apply_lovelessness,
                            monster **raised, int* motions_r)
 {
     if (raised)
@@ -1546,8 +1536,8 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
     item_was_destroyed(item);
     destroy_item(corps);
 
-    if (!force_beh)
-        player_angers_monster(mons);
+    if (apply_lovelessness)
+        check_lovelessness(*mons);
 
     // Bitfield for motions - determines text displayed when animating dead.
     // XXX: could this use monster shape in some way?
@@ -1591,7 +1581,7 @@ int animate_remains(const coord_def &a, corpse_type class_allowed,
                     beh_type beha, int pow, unsigned short hitting,
                     actor *as, string nas,
                     god_type god, bool actual,
-                    bool quiet, bool force_beh,
+                    bool quiet, bool apply_lovelessness,
                     monster** mon, int* motions_r)
 {
     if (is_sanctuary(a))
@@ -1620,7 +1610,7 @@ int animate_remains(const coord_def &a, corpse_type class_allowed,
 
         const bool success = _raise_remains(a, si.index(), beha, pow,
                                             hitting, as, nas, god, actual,
-                                            force_beh, mon, &motions);
+                                            apply_lovelessness, mon, &motions);
 
         if (actual && success)
         {
@@ -1658,7 +1648,7 @@ int animate_dead(actor *caster, int pow, beh_type beha,
         // There may be many corpses on the same spot.
         while (animate_remains(*ri, CORPSE_BODY, beha, pow, hitting,
                                as, nas, god,
-                               actual, true, 0, 0, &motions) > 0)
+                               actual, true, true, 0, &motions) > 0)
         {
             number_raised++;
             if (you.see_cell(*ri))
@@ -1829,88 +1819,6 @@ spret cast_simulacrum(int pow, god_type god, bool fail)
         butcher_corpse(corpse, false);
 
     return spret::success;
-}
-
-/**
- * Have a monster cast simulacrum.
- *
- * @param mon The monster casting the spell.
- * @param actual If false, return true if the spell would have succeeded on at
- *               least one corpse, but don't cast.
- * @returns True if at least one simulacrum was created, or if actual is true,
- *          if one would have been created.
- */
-bool monster_simulacrum(monster *mon, bool actual)
-{
-    // You can see the spell being cast, not necessarily the caster.
-    const bool cast_visible = you.see_cell(mon->pos());
-    bool did_creation = false;
-    int num_seen = 0;
-
-    dprf("trying to cast simulacrum");
-    for (radius_iterator ri(mon->pos(), LOS_NO_TRANS); ri; ++ri)
-    {
-
-        // Search all the items on the ground for a corpse.
-        for (stack_iterator si(*ri, true); si; ++si)
-        {
-            if (si->base_type != OBJ_CORPSES
-                || si->sub_type != CORPSE_BODY
-                || !mons_class_can_be_zombified(si->mon_type))
-            {
-                continue;
-            }
-
-            mgen_data mg(MONS_SIMULACRUM, SAME_ATTITUDE(mon), *ri, mon->foe,
-                         MG_FORCE_BEH
-                         | (cast_visible ? MG_DONT_COME : MG_NONE));
-            mg.set_base(si->mon_type);
-            mg.set_summoned(mon, 0, SPELL_SIMULACRUM, mon->god);
-            if (si->props.exists(CORPSE_HEADS))
-            {
-                if (si->props[CORPSE_HEADS].get_short() == 0)
-                    continue;
-                else
-                    mg.props[MGEN_NUM_HEADS] = si->props[CORPSE_HEADS].get_short();
-            }
-
-            if (!actual)
-                return true;
-
-            // Create half as many as the player version.
-            int how_many = 1 + random2(
-                                  div_rand_round(
-                                    max_corpse_chunks(si->mon_type), 2));
-            how_many  = stepdown_value(how_many, 2, 2, 6, 6);
-            bool was_successful = false;
-            for (int i = 0; i < how_many; ++i)
-            {
-                // Use the original monster type as the zombified type here,
-                // to get the proper stats from it.
-                if (monster *sim = create_monster(mg))
-                {
-                    was_successful = true;
-                    player_angers_monster(sim);
-                    sim->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 4));
-                    if (you.can_see(*sim))
-                        num_seen++;
-                }
-            }
-
-            if (was_successful)
-            {
-                did_creation = true;
-                turn_corpse_into_skeleton(*si);
-            }
-        }
-    }
-
-    if (num_seen > 1)
-        mprf("Some icy apparitions appear!");
-    else if (num_seen == 1)
-        mprf("An icy apparition appears!");
-
-    return did_creation;
 }
 
 // Return a definite/indefinite article for (number) things.
@@ -2123,14 +2031,8 @@ spret cast_haunt(int pow, const coord_def& where, god_type god, bool fail)
                 .set_summoned(&you, 3, SPELL_HAUNT, god)))
         {
             success++;
-
-            if (player_angers_monster(mons))
-                friendly = false;
-            else
-            {
-                mons->add_ench(mon_enchant(ENCH_HAUNTING, 1, m, INFINITE_DURATION));
-                mons->foe = mi;
-            }
+            mons->add_ench(mon_enchant(ENCH_HAUNTING, 1, m, INFINITE_DURATION));
+            mons->foe = mi;
         }
     }
 
