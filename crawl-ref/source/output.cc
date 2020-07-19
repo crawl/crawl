@@ -1468,50 +1468,6 @@ void draw_border()
     // Line 8 is exp pool, Level
 }
 
-#ifndef USE_TILE_LOCAL
-void redraw_console_sidebar()
-{
-#ifndef USE_TILE_LOCAL
-    if (crawl_state.smallterm)
-    {
-        clrscr();
-        CGOTOXY(1,1, GOTO_CRT);
-        CPRINTF("Your terminal window is too small; please resize to at least %d,%d", MIN_COLS, MIN_LINES);
-        return;
-    }
-#endif
-    // TODO: this is super hacky and merges stuff from redraw_screen and
-    // viewwindow. It won't do nothing for webtiles, but should be basically
-    // benign there.
-    draw_border();
-
-    you.redraw_title        = true;
-    you.redraw_hit_points   = true;
-    you.redraw_magic_points = true;
-    you.redraw_stats.init(true);
-    you.redraw_armour_class  = true;
-    you.redraw_evasion       = true;
-    you.redraw_experience    = true;
-    you.wield_change         = true;
-    you.redraw_quiver        = true;
-    you.redraw_status_lights = true;
-
-    print_stats();
-    update_screen();
-
-    {
-        no_notes nx;
-        print_stats_level();
-        update_turn_count();
-    }
-    update_monster_pane();
-
-    you.flash_colour = BLACK;
-    you.flash_where = 0;
-    assert_valid_cursor_pos();
-}
-#endif
-
 void redraw_screen(bool show_updates)
 {
     if (!crawl_state.need_save)
