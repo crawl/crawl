@@ -320,8 +320,7 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
             this.draw_foreground(x, y, map_cell);
 
             // draw clouds over stuff
-            if (fg_idx && cell.cloud.value
-                && cell.cloud.value < dngn.FEAT_MAX)
+            if (fg_idx && cell.cloud.value)
             {
                 this.ctx.save();
                 try
