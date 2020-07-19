@@ -390,7 +390,7 @@ static std::vector<int> _get_evaporate_result(int potion)
     case POT_CURING:
     case POT_HEAL_WOUNDS:
         // TODO: replace into 'BEAM_POTION_HEAL'?
-        clouds.push_back(CLOUD_HEAL);
+        beams.push_back(BEAM_POTION_HEAL);
         break;
       default:
         beams.push_back(BEAM_POTION_FIRE);
@@ -404,6 +404,7 @@ static std::vector<int> _get_evaporate_result(int potion)
     }
 
     std::vector<int> clouds;
+
     for (unsigned int k = 0; k < beams.size(); ++k)
         clouds.push_back(beam2cloud((beam_type)beams[k]));
 
@@ -518,6 +519,10 @@ spret cast_evaporate(int pow, bolt& beem, int pot_idx, bool fail)
             tracer_flavour = BEAM_FIRE;
         else
             tracer_flavour = BEAM_RANDOM;
+        break;
+    case POT_CURING:
+    case POT_HEAL_WOUNDS:
+        tracer_flavour = beem.flavour = BEAM_POTION_HEAL;
         break;
 
     case POT_MUTATION:

@@ -2849,6 +2849,7 @@ void bolt::affect_place_explosion_clouds()
         case BEAM_POTION_PURPLE_SMOKE:
         case BEAM_POTION_RAIN:
         case BEAM_POTION_MUTAGENIC:
+        case BEAM_POTION_HEAL:
             cl_type = beam2cloud(flavour);
             break;
 
@@ -6731,6 +6732,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_POTION_PURPLE_SMOKE:   return "purple smoke";
     case BEAM_POTION_RAIN:           return "rain";
     case BEAM_POTION_MUTAGENIC:      return "mutagenic fog";
+    case BEAM_POTION_HEAL:           return "heal cloud";
     case BEAM_POTION_RANDOM:         return "random potion";
     case BEAM_POISON:                return "poison";
     case BEAM_NEG:                   return "negative energy";
