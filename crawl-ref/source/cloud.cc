@@ -301,6 +301,13 @@ static const cloud_data clouds[] = {
       ETC_FIRE,                              // colour
       { TILE_CLOUD_FLAME, CTVARY_RANDOM },   // tile
     },
+    // CLOUD_HEAL,
+    { "healing mist", nullptr,                  // terse, verbose name
+      GREEN,                                    // colour
+      { TILE_CLOUD_HEAL, CTVARY_DUR },          // tile
+      BEAM_NONE, {},                            // beam_effect
+      true,                                     // opacity
+    },
 };
 COMPILE_CHECK(ARRAYSZ(clouds) == NUM_CLOUD_TYPES);
 
@@ -375,6 +382,8 @@ cloud_type beam2cloud(beam_type flavour)
         return CLOUD_RANDOM;
     case BEAM_PETRIFYING_CLOUD:
         return CLOUD_PETRIFY;
+    case BEAM_POTION_HEAL:
+        return CLOUD_HEAL;
     }
 }
 
@@ -1178,15 +1187,18 @@ static bool _actor_apply_cloud_side_effects(actor *act,
     }
     case CLOUD_INNER_FLAME:
     {
-	    if (player)
-		maybe_melt_player_enchantments(BEAM_FIRE, final_damage);
-	    else
-	    {
-		    const monster &mons_ref = *mons;
-		    if (mons_immune_magic(mons_ref)) break;
-		    mons->add_ench(mon_enchant(ENCH_INNER_FLAME, 0, &you));
-		    return true;
-	    }
+        if (player)
+        {
+            maybe_melt_player_enchantments(BEAM_FIRE, final_damage);
+        }
+        else
+        {
+            const monster& mons_ref = *mons;
+            if (mons_immune_magic(mons_ref)) break;
+            mons->add_ench(mon_enchant(ENCH_INNER_FLAME, 0, &you));
+            return true;
+        }
+        break;
     }
     default:
         break;
@@ -1337,6 +1349,22 @@ int actor_apply_cloud(actor *act)
     const bool player = act->is_player();
     monster *mons = !player? act->as_monster() : nullptr;
     const beam_type cloud_flavour = _cloud2beam(cloud.type);
+
+    if(cloud.type == CLOUD_HEAL)
+    { //special case. because this cloud is harmless
+        if (player)
+        {
+            if (!you.duration[DUR_DEATHS_DOOR]) {
+                unrot_hp(1);
+                inc_hp(1);
+            }
+        }
+        else
+        {
+            // Useful to healing mobs
+            mons->heal(1 + (mons->max_hit_points / 10));
+        }
+    }
 
     if (actor_cloud_immune(*act, cloud))
         return 0;

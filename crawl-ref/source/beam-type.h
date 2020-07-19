@@ -95,6 +95,7 @@ enum beam_type                  // bolt::flavour
     BEAM_POTION_PURPLE_SMOKE,
     BEAM_POTION_RAIN,
     BEAM_POTION_MUTAGENIC,
+    BEAM_POTION_HEAL,
     BEAM_POTION_RANDOM,
     BEAM_AIR,
     BEAM_PETRIFYING_CLOUD,
