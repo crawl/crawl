@@ -333,6 +333,9 @@ static void _apply_daction(daction_type act)
     case DACT_HOLY_PETS_GO_NEUTRAL:
     case DACT_ALLY_MAKHLEB:
     case DACT_ALLY_TROG:
+    case DACT_ALLY_UNHOLY_EVIL:
+    case DACT_ALLY_UNCLEAN_CHAOTIC:
+    case DACT_ALLY_SPELLCASTER:
 #endif
     case NUM_DACTION_COUNTERS:
     case NUM_DACTIONS:
