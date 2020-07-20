@@ -914,10 +914,16 @@ struct disable_check
     bool was_disabled;
 };
 
-static void _update_place_info()
+static void _update_place_stats()
 {
     if (you.num_turns == -1)
         return;
+
+    // not strictly stored as part of PlaceInfo, but this is a natural place
+    // to do this update.
+    CrawlHashTable &time_tracking = you.props[TIME_PER_LEVEL_KEY].get_table();
+    int &cur_value = time_tracking[level_id::current().describe()].get_int();
+    cur_value += you.time_taken;
 
     PlaceInfo  delta;
 
@@ -2294,7 +2300,7 @@ void world_reacts()
         if (you.num_turns < INT_MAX)
             you.num_turns++;
 
-        _update_place_info();
+        _update_place_stats();
 
         if (env.turns_on_level < INT_MAX)
             env.turns_on_level++;

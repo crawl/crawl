@@ -10,6 +10,8 @@
 
 #include "caction-type.h"
 
+#define TIME_PER_LEVEL_KEY "auts_on_level"
+
 enum item_origin_dump_selector
 {
     IODS_PRICE            = 0,      // Extra info is provided based on price
