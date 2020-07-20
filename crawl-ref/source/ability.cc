@@ -1072,13 +1072,16 @@ ability_type fixup_ability(ability_type ability)
         else
             return ability;
 
+    case ABIL_TROG_BLESS_WEAPON:
+        if (you.species == SP_DJINNI)
+            return ABIL_NON_ABILITY;
+    // Intentional fallthrough
     case ABIL_TSO_BLESS_WEAPON:
     case ABIL_KIKU_BLESS_WEAPON:
     case ABIL_LUGONU_BLESS_WEAPON:
     case ABIL_ZIN_BLESS_WEAPON:
     case ABIL_YRED_BLESS_WEAPON:
     case ABIL_MAKHLEB_BLESS_WEAPON:
-    case ABIL_TROG_BLESS_WEAPON:
     case ABIL_ELYVILON_BLESS_WEAPON:
     case ABIL_JIYVA_BLESS_WEAPON:
     case ABIL_CHEIBRIADOS_BLESS_WEAPON:
