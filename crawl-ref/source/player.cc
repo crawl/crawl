@@ -7040,8 +7040,6 @@ void _head_loss_xp()
  */
 bool player::head_grow(int num, bool heal) const
 {
-    int old_num = you.props[HYDRA_HEADS_NET_LOSS].get_int();
-
     if (you.form == transformation::none && num != 0 && num < 27)
     {
         num = min(num, 27 - you.heads());
@@ -7077,7 +7075,7 @@ bool player::head_grow(int num, bool heal) const
         for (int i = 0; i < abs(num); i++)
         {
                 you.props[HYDRA_HEADS_NET_LOSS].get_int()++;
-                _head_loss_xp(old_num, -1);
+                _head_loss_xp();
         }
         if (heal)
             ouch(abs(4*num + random2(4*num)), KILLED_BY_DRAINING);
@@ -7088,7 +7086,7 @@ bool player::head_grow(int num, bool heal) const
         {
             mprf(MSGCH_INTRINSIC_GAIN, "One of your temporary head be permanent.");
             you.props[HYDRA_HEADS_NET_LOSS].get_int()++; // A temporary head will be your real head.
-            _head_loss_xp(old_num, -1);
+            _head_loss_xp();
         }
         else
         {
