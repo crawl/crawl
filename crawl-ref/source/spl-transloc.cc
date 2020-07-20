@@ -1415,6 +1415,7 @@ static void _attract_actor(const actor* agent, actor* victim,
 {
     ASSERT(victim); // XXX: change to actor &victim
 
+    victim->as_monster()->add_ench(mon_enchant(ENCH_WHIRLWIND_PINNED, 0, agent, 1));
     ray_def ray;
     if (!find_ray(victim->pos(), pos, ray, opc_solid))
     {
@@ -1470,8 +1471,6 @@ static void _attract_actor(const actor* agent, actor* victim,
         if (victim->is_monster())
             mons_relocated(victim->as_monster());
     }
-    if (victim->is_monster() && victim->alive())
-        victim->as_monster()->add_ench(mon_enchant(ENCH_WHIRLWIND_PINNED, 0, agent, 2));
 }
 
 void singularity_pull(const monster *singularity)
