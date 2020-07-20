@@ -1951,7 +1951,6 @@ int prompt_invent_item(const char *prompt,
         if (need_redraw && !crawl_state.doing_prev_cmd_again)
         {
             redraw_screen();
-            update_screen();
             clear_messages();
         }
 
@@ -1977,7 +1976,8 @@ int prompt_invent_item(const char *prompt,
             ret = PROMPT_GOT_SPECIAL;
             break;
         }
-        else if (keyin == '?' || keyin == '*')
+
+        if (keyin == '?' || keyin == '*')
         {
             // The "view inventory listing" mode.
             vector< SelItem > items;
@@ -1985,38 +1985,25 @@ int prompt_invent_item(const char *prompt,
             int mflags = MF_SINGLESELECT | MF_ANYPRINTABLE | MF_NO_SELECT_QTY;
             if (other_valid_char == '-')
                 mflags |= MF_SPECIAL_MINUS;
-            keyin = _invent_select(
-                        prompt,
-                        mtype,
-                        current_type_expected,
-                        -1,
-                        mflags,
-                        nullptr,
-                        &items);
 
-            if (allow_list_known && keyin == '\\')
+            while (true)
             {
-                check_item_knowledge();
-                keyin = '?';
-            }
+                keyin = _invent_select(prompt, mtype, current_type_expected, -1,
+                                       mflags, nullptr, &items);
 
-            need_prompt = false;
-            need_getch  = false;
-
-            // Don't redraw if we're just going to display another listing
-            need_redraw = keyin != '?' && keyin != '*';
-
-            if (!items.empty())
-            {
-                if (!crawl_state.doing_prev_cmd_again)
+                if (allow_list_known && keyin == '\\')
                 {
-                    redraw_screen();
-                    update_screen();
-                    clear_messages();
+                    check_item_knowledge();
+                    continue;
                 }
+                break;
             }
+
+            if (items.empty())
+                continue;
         }
-        else if (isadigit(keyin))
+
+        if (isadigit(keyin))
         {
             // scan for our item
             item_def *item = digit_inscription_to_item(keyin, oper);
