@@ -4132,7 +4132,7 @@ void handle_player_poison(int delay)
     // If Cheibriados has slowed your life processes, poison affects you less
     // quickly (you take the same total damage, but spread out over a longer
     // period of time).
-    const double delay_scaling = have_passive(passive_t::slow_metabolism)
+    const double delay_scaling = have_passive(passive_t::slow_poison)
                                ? 2.0 / 3.0 : 1.0;
 
     const double new_aut = cur_aut - ((double) delay) * delay_scaling;
@@ -4229,7 +4229,7 @@ int poison_survival()
     if (!get_player_poisoning())
         return you.hp;
     const int rr = player_regen();
-    const bool chei = have_passive(passive_t::slow_metabolism);
+    const bool chei = have_passive(passive_t::slow_poison);
     const bool dd = (you.species == SP_DEEP_DWARF);
     const int amount = you.duration[DUR_POISONING];
     const double full_aut = _poison_dur_to_aut(amount);
