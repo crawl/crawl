@@ -7016,7 +7016,7 @@ bool player::tengu_flight() const
     return species == SP_TENGU && airborne();
 }
 
-void _head_loss_xp(int old_num, int delta) 
+void _head_loss_xp() 
 {
     int num = you.props[HYDRA_HEADS_NET_LOSS].get_int();
 
@@ -7055,7 +7055,7 @@ bool player::head_grow(int num, bool heal) const
                 if (you.heads() >= 27)
                     break;
                 you.props[HYDRA_HEADS_NET_LOSS].get_int()--;
-                _head_loss_xp(old_num, 1);
+                _head_loss_xp();
             }
             if (heal)
                 you.heal(4*num + random2(4*num));
@@ -7065,7 +7065,7 @@ bool player::head_grow(int num, bool heal) const
             for (int i = 0; i < abs(num); i++)
             {    
                 you.props[HYDRA_HEADS_NET_LOSS].get_int()++;
-                _head_loss_xp(old_num, -1);
+                _head_loss_xp();
             }
             if (heal)
                 ouch(abs(4*num + random2(4*num)), KILLED_BY_DRAINING);

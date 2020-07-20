@@ -704,7 +704,7 @@ void iood_catchup(monster* mons, int pturns)
 }
 
 
-spret cast_foxfire(actor *caster, int pow, bolt *beam, god_type god, bool fail)
+spret cast_foxfire(actor *caster, int pow, god_type god, bool fail)
 {
     fail_check();
     int created = 0;
