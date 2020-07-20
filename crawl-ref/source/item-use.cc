@@ -3078,6 +3078,10 @@ static void _rebrand_weapon(item_def& wpn)
 {
     if (&wpn == you.weapon() && you.duration[DUR_EXCRUCIATING_WOUNDS])
         end_weapon_brand(wpn);
+    if (&wpn == you.weapon() && you.duration[DUR_ELEMENTAL_WEAPON])
+        end_elemental_weapon(wpn);
+
+
     const brand_type old_brand = get_weapon_brand(wpn);
     brand_type new_brand = old_brand;
 

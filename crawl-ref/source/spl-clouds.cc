@@ -387,7 +387,12 @@ static std::vector<int> _get_evaporate_result(int potion)
         beams.push_back(BEAM_POTION_MIASMA);
         random_potion = true;
         break;
-    default:
+    case POT_CURING:
+    case POT_HEAL_WOUNDS:
+        // TODO: replace into 'BEAM_POTION_HEAL'?
+        beams.push_back(BEAM_POTION_HEAL);
+        break;
+      default:
         beams.push_back(BEAM_POTION_FIRE);
         beams.push_back(BEAM_MEPHITIC);
         beams.push_back(BEAM_POTION_COLD);
@@ -399,6 +404,7 @@ static std::vector<int> _get_evaporate_result(int potion)
     }
 
     std::vector<int> clouds;
+
     for (unsigned int k = 0; k < beams.size(); ++k)
         clouds.push_back(beam2cloud((beam_type)beams[k]));
 
@@ -514,6 +520,10 @@ spret cast_evaporate(int pow, bolt& beem, int pot_idx, bool fail)
         else
             tracer_flavour = BEAM_RANDOM;
         break;
+    case POT_CURING:
+    case POT_HEAL_WOUNDS:
+        tracer_flavour = beem.flavour = BEAM_POTION_HEAL;
+        break;
 
     case POT_MUTATION:
         // Maybe we'll get a mutagenic cloud.
@@ -560,7 +570,7 @@ spret cast_evaporate(int pow, bolt& beem, int pot_idx, bool fail)
     // Fire tracer. FIXME: use player_tracer() here!
     beem.source = you.pos();
     //beem.seen = you.can_see_invisible();
-    //beem.smart_monster = true; ´Ù¸¥ º¯¼ö·Î ¹Ù²ñ?
+    //beem.smart_monster = true; Â´Ã™Â¸Â¥ ÂºÂ¯Â¼Ã¶Â·ÃŽ Â¹Ã™Â²Ã±?
     beem.attitude = ATT_FRIENDLY; 
     beem.beam_cancelled = false;
     beem.is_tracer = true;

@@ -516,7 +516,7 @@ static bool _boosted_ev()
 
 static bool _boosted_sh()
 {
-    return you.duration[DUR_MAGIC_SHIELD] || you.duration[DUR_DIVINE_SHIELD]
+    return you.duration[DUR_CONDENSATION_SHIELD] || you.duration[DUR_MAGIC_SHIELD] || you.duration[DUR_DIVINE_SHIELD]
            || qazlal_sh_boost() > 0;
 }
 
@@ -1036,6 +1036,8 @@ static void _print_stats_wp(int y, bool second)
 
         if (you.duration[DUR_CORROSION] && wpn.base_type == OBJ_WEAPONS)
             wpn.plus -= 4 * you.props["corrosion_amount"].get_int();
+        if(you.props[ELEMENTAL_ENCHANT_KEY].get_int() > 0 && wpn.base_type == OBJ_WEAPONS)
+            wpn.plus += you.props[ELEMENTAL_ENCHANT_KEY].get_int();
 
         text = wpn.name(DESC_PLAIN, true, false, true);
     }

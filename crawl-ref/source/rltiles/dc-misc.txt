@@ -215,6 +215,10 @@ cloud_flame_trail1
 cloud_flame_trail2
 cloud_flame_trail3
 
+cloud_heal0 CLOUD_HEAL
+cloud_heal1
+cloud_heal2
+
 #########MISC
 poisonous_roots POISONOUS_ROOTS
 

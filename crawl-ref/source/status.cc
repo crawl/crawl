@@ -22,6 +22,7 @@
 #include "random.h" // for midpoint_msg.offset() in duration-data
 #include "religion.h"
 #include "skills.h"
+#include "spl-selfench.h"
 #include "spl-summoning.h" // NEXT_DOOM_HOUND_KEY in duration-data
 #include "spl-transloc.h"
 #include "spl-wpnench.h" // for _end_weapon_brand() in duration-data
@@ -329,6 +330,33 @@ bool fill_status_info(int status, status_info& inf)
         if (exp)
             inf.long_text += "Expiring: ";
         inf.long_text += "You are immune to clouds of flame.";
+        break;
+    }
+    case DUR_ELEMENTAL_WEAPON:
+    {
+        inf.light_text = "Elem";
+        inf.short_text = "Elemental Weapon";
+        inf.long_text = "Weapons are full of elemental power.";
+        item_def& weapon = *you.weapon();
+        const brand_type orig_brand = get_weapon_brand(weapon);
+        switch (orig_brand) 
+        {
+        case SPWPN_FLAMING:
+            inf.light_colour = RED;
+            break;
+        case SPWPN_FREEZING:
+            inf.light_colour = LIGHTBLUE;
+            break;
+        case SPWPN_VORPAL:
+            inf.light_colour = BROWN;
+            break;
+        case SPWPN_ELECTROCUTION:
+            inf.light_colour = YELLOW;
+            break;
+        default:
+            inf.light_colour = LIGHTGRAY;
+            break;
+        }
         break;
     }
 

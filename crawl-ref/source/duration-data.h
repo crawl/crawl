@@ -13,6 +13,13 @@ static void _end_weapon_brand()
     end_weapon_brand(*you.weapon(), true);
 }
 
+static void _end_elemental_weapon_brand()
+{
+    you.duration[DUR_ELEMENTAL_WEAPON] = 1;
+    ASSERT(you.weapon());
+    end_elemental_weapon(*you.weapon(), true);
+}
+
 static void _end_invis()
 {
     if (you.invisible())
@@ -731,7 +738,8 @@ static const duration_def duration_data[] =
       {{ "Your magic seems less wild.", []() {
           you.props.erase(HOMUNCULUS_WILD_MAGIC);
     }}} },
-     { DUR_ELEMENTAL_WEAPON, LIGHTBLUE, "", "", "Elemental", "Elemental", D_NO_FLAGS },
+     { DUR_ELEMENTAL_WEAPON, LIGHTGRAY, "Elem", "", "Elemental", "Elemental", D_NO_FLAGS,
+      {{ "", _end_elemental_weapon_brand }} },
      { DUR_FLAME_STRIKE,
        LIGHTBLUE, "Flame",
        "Flame strike", "Flame strike",
@@ -751,12 +759,20 @@ static const duration_def duration_data[] =
        {{ "Your skin feels tender.", [](){
           you.props.erase(STONESKIN_KEY);
           you.redraw_armour_class = true;
-     }}} },
+    }}} },
     { DUR_INSULATION, 
       BLUE, "Ins", 
       "insulation", "insulation", "You feel conductive.", D_NO_FLAGS,
       {{ "You feel less protected from electricity." },
       { "You start to feel a little less insulated", 1}}, 6},
+    { DUR_CONDENSATION_SHIELD,
+      0, "",
+      "icy shield", "",
+      "You are shielded by a disc of ice.", D_DISPELLABLE,
+      {{ "Your icy shield evaporates.", [](){
+         you.props.erase(CONDENSATION_SHIELD_KEY);
+         you.redraw_armour_class = true;
+    }} } },
 #if TAG_MAJOR_VERSION == 34
     // And removed ones
     { DUR_MAGIC_SAPPED, 0, "", "", "old magic sapped", "", D_NO_FLAGS},
@@ -778,7 +794,6 @@ static const duration_def duration_data[] =
     { DUR_NEGATIVE_VULN, 0, "", "", "old negative vuln", "", D_NO_FLAGS},
     { DUR_SURE_BLADE, 0, "", "", "old sure blade", "", D_NO_FLAGS},
     { DUR_DOOM_HOWL_IMMUNITY, 0, "", "", "old howl immunity", "", D_NO_FLAGS, {{""}}},
-    { DUR_CONDENSATION_SHIELD, 0, "", "", "old condensation shield", "", D_NO_FLAGS},
     { DUR_TELEPATHY, 0, "", "", "old telepathy", "", D_NO_FLAGS},
     { DUR_FORTITUDE, 0, "", "", "old fortitude", "", D_NO_FLAGS},
     { DUR_WATER_HOLD_IMMUNITY, 0, "", "", "old drowning immunity", "", D_NO_FLAGS, {{""}}},

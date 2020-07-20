@@ -50,3 +50,6 @@ spret cast_phase_shift(int pow, bool fail);
 spret cast_will_of_earth(const coord_def& delta, int pow, bool fail); 
 spret create_wall(bool fail);
 spret cast_stoneskin(int pow, bool fail);
+
+void remove_condensation_shield();
+spret cast_condensation_shield(int pow, bool fail);

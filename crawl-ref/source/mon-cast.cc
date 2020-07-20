@@ -1988,7 +1988,6 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_SUMMON_SCARABS:
 #if TAG_MAJOR_VERSION == 34
     case SPELL_HUNTING_CRY:
-    case SPELL_CONDENSATION_SHIELD:
     case SPELL_CONTROL_UNDEAD:
 #endif
     case SPELL_CLEANSING_FLAME:
@@ -6036,6 +6035,21 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         _mons_cast_haunt(mons);
         return;
 
+    case SPELL_CONDENSATION_SHIELD:
+    {
+        if (you.can_see(*mons))
+        {
+            mprf("A crackling disc of dense vapour forms near %s!",
+                 mons->name(DESC_THE).c_str());
+        }
+        const int power = (mons->spell_hd(spell_cast) * 15) / 10;
+        mons->add_ench(mon_enchant(ENCH_CONDENSATION_SHIELD,
+                                   15 + random2(power),
+                                   mons));
+
+        return;
+    }
+
     // SPELL_SLEEP_GAZE ;)
     case SPELL_DREAM_DUST:
         _dream_sheep_sleep(*mons, *foe);
@@ -8557,6 +8571,10 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
                 return grid_distance(foe->pos(), mi->pos()) * grid_distance(foe->pos(), mi->pos()) <= mi->get_hit_dice();
         return false;
     }
+    
+    case SPELL_CONDENSATION_SHIELD:
+        return mon->shield()
+               || mon->has_ench(ENCH_CONDENSATION_SHIELD);
 
     case SPELL_CORPSE_ROT:
     case SPELL_POISONOUS_CLOUD:
@@ -8583,7 +8601,6 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
     case SPELL_SIMULACRUM:
     case SPELL_CHANT_FIRE_STORM:
     case SPELL_IGNITE_POISON_SINGLE:
-    case SPELL_CONDENSATION_SHIELD:
     case SPELL_HUNTING_CRY:
     case SPELL_CONTROL_WINDS:
     case SPELL_DEATHS_DOOR:

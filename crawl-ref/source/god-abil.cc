@@ -79,6 +79,7 @@
 #include "spl-book.h"
 #include "spl-goditem.h"
 #include "spl-monench.h"
+#include "spl-selfench.h"
 #include "spl-summoning.h"
 #include "spl-transloc.h"
 #include "spl-util.h"
@@ -202,8 +203,11 @@ bool bless_weapon(god_type god, brand_type brand, colour_t colour)
 
     if (you.duration[DUR_EXCRUCIATING_WOUNDS]) // just in case
     {
-        ASSERT(you.weapon());
         end_weapon_brand(*you.weapon());
+    }
+    if (you.duration[DUR_ELEMENTAL_WEAPON]) // just in case
+    {
+        end_elemental_weapon(*you.weapon());
     }
 
     string old_name = wpn.name(DESC_A);
@@ -1383,7 +1387,7 @@ void tso_divine_shield()
 {
     if (!you.duration[DUR_DIVINE_SHIELD])
     {
-        if (you.shield())
+        if (you.shield()|| you.duration[DUR_CONDENSATION_SHIELD])
         {
             mprf("Your shield is strengthened by %s divine power.",
                  apostrophise(god_name(GOD_SHINING_ONE)).c_str());

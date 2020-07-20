@@ -10,7 +10,7 @@ silence SILENCE
 static_discharge STATIC_DISCHARGE
 swiftness SWIFTNESS
 tornado TORNADO
-Insulation INSULATION
+insulation INSULATION
 
 %sdir gui/spells/conjuration
 iskenderuns_mystic_blast ISKENDERUNS_MYSTIC_BLAST
@@ -89,6 +89,7 @@ ozocubus_refrigeration OZOCUBUS_REFRIGERATION
 throw_frost THROW_FROST
 frozen_ramparts FROZEN_RAMPARTS
 hailstorm HAILSTORM
+condensation_shield CONDENSATION_SHIELD
 
 %sdir gui/spells/necromancy
 agony AGONY

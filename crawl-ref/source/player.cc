@@ -2483,7 +2483,12 @@ int player_shield_class()
     shield += you.scan_artefacts(ARTP_SHIELDING) * 200;
 
     if (you.duration[DUR_MAGIC_SHIELD])
+    {
         shield += 200 + 5 * you.props[MAGIC_SHIELD_KEY].get_int();
+    }
+
+    if (you.duration[DUR_CONDENSATION_SHIELD])
+        shield += 800 + you.props[CONDENSATION_SHIELD_KEY].get_int() * 15;
 
     return (shield + 50) / 100;
 }
@@ -6025,6 +6030,7 @@ int player::shield_block_penalty() const
 bool player::shielded() const
 {
     return shield()
+           || duration[DUR_CONDENSATION_SHIELD]
            || duration[DUR_DIVINE_SHIELD]
            || get_mutation_level(MUT_LARGE_BONE_PLATES) > 0
            || qazlal_sh_boost() > 0
@@ -7091,6 +7097,7 @@ bool player::head_grow(int num, bool heal) const
     }
     if (num < 0 || num == 0 && !heal)
         _handle_amulet_loss();
+    you.wield_change = true;
     you.redraw_title = true;
     you.redraw_status_lights = true;
     #ifdef USE_TILE

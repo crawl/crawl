@@ -978,7 +978,7 @@ void set_net_stationary(item_def &item)
 */
 bool item_is_stationary(const item_def &item)
 {
-    return item.base_type == OBJ_CORPSES || item_is_stationary_net(item);
+    return item_is_stationary_net(item);
 }
 
 /**

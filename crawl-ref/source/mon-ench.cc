@@ -964,6 +964,13 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             simple_monster_message(*this, " is no longer deflecting missiles.");
         break;
 
+    case ENCH_CONDENSATION_SHIELD:
+        if (!quiet && you.can_see(*this))
+        {
+            mprf("%s icy shield evaporates.",
+                 apostrophise(name(DESC_THE)).c_str());
+        }
+
     case ENCH_RESISTANCE:
         if (!quiet)
             simple_monster_message(*this, " is no longer unusually resistant.");
