@@ -2218,6 +2218,10 @@ int melee_attack::post_roll_to_hit_modifiers(int mhit, bool random)
     if (you.duration[DUR_CONFUSING_TOUCH])
         modifiers += maybe_random_div(you.dex(), 2, random);
 
+    // Rolling charges feel bad when they miss, so make them miss less often.
+    if (roll_dist > 0)
+        modifiers += 5; // matching UC form to-hit bonuses
+
     if (attacker->is_player() && !weapon && get_form()->unarmed_hit_bonus)
     {
         // TODO: Review this later (transformations getting extra hit
