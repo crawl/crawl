@@ -84,12 +84,6 @@ bool mons_matches_daction(const monster* mon, daction_type act)
 
     switch (act)
     {
-    case DACT_ALLY_UNHOLY_EVIL:
-        return mon->wont_attack() && mon->evil();
-    case DACT_ALLY_UNCLEAN_CHAOTIC:
-        return mon->wont_attack() && (mon->how_unclean() || mon->how_chaotic());
-    case DACT_ALLY_SPELLCASTER:
-        return mon->wont_attack() && mon->is_actual_spellcaster();
     case DACT_ALLY_YRED_SLAVE:
         // Changed: we don't force enslavement of those merely marked.
         return is_yred_undead_slave(*mon);
@@ -188,9 +182,6 @@ void apply_daction_to_mons(monster* mon, daction_type act, bool local,
                 monster_die(*mon, KILL_DISMISSED, NON_MONSTER);
                 break;
             }
-        case DACT_ALLY_UNHOLY_EVIL:
-        case DACT_ALLY_UNCLEAN_CHAOTIC:
-        case DACT_ALLY_SPELLCASTER:
         case DACT_ALLY_BEOGH:
         case DACT_ALLY_SLIME:
         case DACT_ALLY_PLANT:
@@ -270,9 +261,6 @@ static void _apply_daction(daction_type act)
 
     switch (act)
     {
-    case DACT_ALLY_UNHOLY_EVIL:
-    case DACT_ALLY_UNCLEAN_CHAOTIC:
-    case DACT_ALLY_SPELLCASTER:
     case DACT_ALLY_YRED_SLAVE:
     case DACT_ALLY_BEOGH:
     case DACT_ALLY_HEPLIAKLQANA:

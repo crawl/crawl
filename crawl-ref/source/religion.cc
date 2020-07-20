@@ -3535,27 +3535,11 @@ static void _join_trog()
     if (you.species != SP_GNOLL)
         for (int sk = SK_SPELLCASTING; sk <= SK_LAST_MAGIC; ++sk)
             you.train[sk] = you.train_alt[sk] = TRAINING_DISABLED;
-
-    // When you start worshipping Trog, you make all non-hostile magic
-    // users hostile.
-    if (query_daction_counter(DACT_ALLY_SPELLCASTER))
-    {
-        add_daction(DACT_ALLY_SPELLCASTER);
-        mprf(MSGCH_MONSTER_ENCHANT, "Your magic-using allies forsake you.");
-    }
 }
 
 // Setup for joining the orderly ascetics of Zin.
 static void _join_zin()
 {
-    // When you start worshipping Zin, you make all non-hostile unclean and
-    // chaotic beings hostile.
-    if (query_daction_counter(DACT_ALLY_UNCLEAN_CHAOTIC))
-    {
-        add_daction(DACT_ALLY_UNCLEAN_CHAOTIC);
-        mprf(MSGCH_MONSTER_ENCHANT, "Your unclean and chaotic allies forsake you.");
-    }
-
     // Need to pay St. Peters.
     if (you.attribute[ATTR_DONATIONS] * 9 < you.gold)
     {
@@ -3656,15 +3640,6 @@ void join_religion(god_type which_god)
     set_god_ability_slots();    // remove old god's slots, reserve new god's
 
     _set_initial_god_piety();
-
-    // When you start worshipping a good god, you make all non-hostile
-    // unholy and evil beings hostile.
-    if (is_good_god(you.religion)
-        && query_daction_counter(DACT_ALLY_UNHOLY_EVIL))
-    {
-        add_daction(DACT_ALLY_UNHOLY_EVIL);
-        mprf(MSGCH_MONSTER_ENCHANT, "Your unholy and evil allies forsake you.");
-    }
 
     const function<void ()> *join_effect = map_find(on_join, you.religion);
     if (join_effect != nullptr)
