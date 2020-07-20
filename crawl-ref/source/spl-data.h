@@ -1208,7 +1208,7 @@ static const struct spell_desc spelldata[] =
     spschool::transmutation | spschool::poison,
     spflag::none,
     5,
-    100,
+    150,
     -1, -1,
     3, 0,
     TILEG_ALISTAIRS_INTOXICATION,

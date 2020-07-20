@@ -411,42 +411,57 @@ spret cast_passwall(const coord_def& c, int pow, bool fail)
     return spret::success;
 }
 
-static int _intoxicate_monsters(coord_def where, int pow)
+static int _intoxicate_monsters(coord_def where, int pow, bool tracer)
 {
     monster* mons = monster_at(where);
     if (mons == nullptr
         || mons_intel(*mons) < I_HUMAN
         || !(mons->holiness() & MH_NATURAL)
         || mons->check_clarity()
-        || monster_resists_this_poison(*mons))
+        || mons->res_poison() >= 3)
     {
         return 0;
     }
 
-    if (x_chance_in_y(40 + pow/3, 100))
+    if (tracer && !you.can_see(*mons))
+        return 0;
+
+    if (!tracer && monster_resists_this_poison(*mons))
+        return 0;
+
+    if (!tracer && x_chance_in_y(40 + pow/3, 100))
     {
         mons->add_ench(mon_enchant(ENCH_CONFUSION, 0, &you));
         simple_monster_message(*mons, " looks rather confused.");
         return 1;
     }
-    return 0;
+    // Just count affectable monsters for the tracer
+    return tracer ? 1 : 0;
 }
 
-spret cast_intoxicate(int pow, bool fail)
+spret cast_intoxicate(int pow, bool fail, bool tracer)
 {
+    if (tracer)
+    {
+        const int work = apply_area_visible([] (coord_def where) {
+            return _intoxicate_monsters(where, 0, true);
+        }, you.pos());
+
+        return work > 0 ? spret::success : spret::abort;
+    }
+
     fail_check();
     mpr("You attempt to intoxicate your foes!");
-    int count = apply_area_visible([pow] (coord_def where) {
-        return _intoxicate_monsters(where, pow);
+
+    const int count = apply_area_visible([pow] (coord_def where) {
+        return _intoxicate_monsters(where, pow, false);
     }, you.pos());
+
     if (count > 0)
     {
-        if (x_chance_in_y(60 - pow/3, 100))
-        {
-            mprf(MSGCH_WARN, "The world spins around you!");
-            you.increase_duration(DUR_VERTIGO, 4 + random2(20 + (100 - pow) / 10));
-            you.redraw_evasion = true;
-        }
+        mprf(MSGCH_WARN, "The world spins around you!");
+        you.increase_duration(DUR_VERTIGO, 4 + count + random2(count + 1));
+        you.redraw_evasion = true;
     }
 
     return spret::success;

@@ -32,10 +32,10 @@ It is especially effective against flying enemies.
 Alistair's Intoxication spell
 
 Converts a small portion of the brain matter of those around you into alcohol,
-confusing all intelligent humanoids within view (although poison-resistant
-creatures may resist the effects). The caster may experience vertigo briefly
-as a result of making contact with other minds. It is frequently used as an
-icebreaker at wizard parties.
+attempting to confuse all intelligent living creatures within view (although
+poison-resistant creatures may resist the effects). The caster will experience
+vertigo briefly if they successfully make contact with other minds. It is
+frequently used as an icebreaker at wizard parties.
 %%%%
 Animate Dead spell
 
