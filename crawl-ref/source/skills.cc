@@ -1865,7 +1865,7 @@ void init_skill_order()
 bool is_removed_skill(skill_type skill)
 {
 #if TAG_MAJOR_VERSION == 34
-    if (skill == SK_STABBING || skill == SK_TRAPS)
+    if (skill == SK_STABBING || skill == SK_TRAPS || skill == SK_CHARMS)
         return true;
 #else
     UNUSED(skill);
