@@ -1472,7 +1472,7 @@ static skill_type _choose_manual_skill()
     // spell skill (or invo/evo)
     if (one_chance_in(4))
     {
-        skill_type skill = SK_NONE;
+        skill_type skill;
         do
         {
             skill = static_cast<skill_type>(
@@ -1482,7 +1482,7 @@ static skill_type _choose_manual_skill()
     }
 
     // mundane skill
-    skill_type skill = SK_NONE;
+    skill_type skill;
     do
     {
         skill = static_cast<skill_type>(random2(SK_LAST_MUNDANE+1));
