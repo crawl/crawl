@@ -532,8 +532,8 @@ static void _sdump_turns_by_place(dump_params &par)
     reverse(to_sort.begin(), to_sort.end());
 
     text += "Top levels by time:\n";
-    for (unsigned int i = 0; i < 10 && i < to_sort.size(); i++)
-        text += make_stringf("%5s: %d daAuts\n", to_sort[i].second.c_str(), to_sort[i].first / 10);
+    for (unsigned int i = 0; i < 15 && i < to_sort.size(); i++)
+        text += make_stringf("%8s: %d daAuts\n", to_sort[i].second.c_str(), to_sort[i].first / 10);
     if (time_tracking.exists("upgrade"))
         text += "Note: time per level data comes from an upgraded game and may be incomplete.\n";
     text += "\n";
