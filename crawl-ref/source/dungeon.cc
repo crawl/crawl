@@ -3265,7 +3265,10 @@ static void _place_traps()
             break;
         }
 
-        const trap_type type = random_trap_for_place();
+        // Don't place dispersal traps in opaque vaults, they won't
+        // be later checked for connectivity and we might break them.
+        const trap_type type = random_trap_for_place(
+                                   !map_masked(ts.pos, MMT_OPAQUE));
         if (type == NUM_TRAPS)
         {
             dprf("failed to find a trap type to place");

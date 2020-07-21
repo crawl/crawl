@@ -1484,7 +1484,7 @@ int trap_rate_for_place()
  *                            May be NUM_TRAPS, if no traps were valid.
  */
 
-trap_type random_trap_for_place()
+trap_type random_trap_for_place(bool dispersal_ok)
 {
     // zot traps are Very Special.
     // very common in zot...
@@ -1503,7 +1503,7 @@ trap_type random_trap_for_place()
 
     const pair<trap_type, int> trap_weights[] =
     {
-        { TRAP_DISPERSAL, tele_ok  ? 1 : 0},
+        { TRAP_DISPERSAL, dispersal_ok && tele_ok  ? 1 : 0},
         { TRAP_TELEPORT,  tele_ok  ? 1 : 0},
         { TRAP_SHAFT,    shaft_ok  ? 1 : 0},
         { TRAP_ALARM,    alarm_ok  ? 1 : 0},
