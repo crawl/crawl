@@ -524,14 +524,14 @@ static void _sdump_turns_by_place(dump_params &par)
     CrawlHashTable &time_tracking = you.props[TIME_PER_LEVEL_KEY].get_table();
     vector<pair<int, string>> to_sort;
     for (auto &l : time_tracking)
-        if (l.first != "upgrade")
+        if (l.first != "upgrade" && l.first != "Pan")
             to_sort.emplace_back(l.second.get_int(), l.first);
     if (to_sort.size() == 0)
         return; // turn 0 game
     sort(to_sort.begin(), to_sort.end());
     reverse(to_sort.begin(), to_sort.end());
 
-    text += "Top levels by time:\n";
+    text += "Top non-repeatable levels by time:\n";
     for (unsigned int i = 0; i < 15 && i < to_sort.size(); i++)
         text += make_stringf("%8s: %d daAuts\n", to_sort[i].second.c_str(), to_sort[i].first / 10);
     if (time_tracking.exists("upgrade"))
