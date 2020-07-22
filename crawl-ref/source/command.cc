@@ -365,6 +365,7 @@ void list_jewellery()
 static const char *targeting_help_1 =
     "<h>Examine surroundings ('<w>x</w><h>' in main):\n"
     "<w>Esc</w> : cancel (also <w>Space</w>, <w>x</w>)\n"
+    "<w>Ctrl-X</w> : list all things in view\n"
     "<w>Dir.</w>: move cursor in that direction\n"
     "<w>.</w> : move to cursor (also <w>Enter</w>, <w>Del</w>)\n"
     "<w>g</w> : pick up item at cursor\n"

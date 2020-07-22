@@ -250,6 +250,7 @@ private:
     // Whether the current target is valid.
     bool move_is_ok() const;
 
+    void full_describe();
     void describe_target();
     void show_help();
 
@@ -325,7 +326,7 @@ string feature_description(dungeon_feature_type grid,
 
 vector<dungeon_feature_type> features_by_desc(const base_pattern &pattern);
 
-void full_describe_view();
+coord_def full_describe_view(bool targeting = false);
 void do_look_around(const coord_def &whence = coord_def(0, 0));
 bool get_look_position(coord_def *c);
 
