@@ -1176,7 +1176,8 @@ bool item_is_selected(const item_def &i, int selector)
                 (itype == OBJ_RODS 
                 && i.sub_type != ROD_PAKELLAS 
                 && item_is_rechargeable(i, true) 
-                && i.plus < MAX_WPN_ENCHANT);
+                && (i.charge_cap < MAX_ROD_CHARGE * ROD_CHARGE_MULT
+                || i.rod_plus < MAX_WPN_ENCHANT));
 
     case OSEL_BLESSABLE_WEAPON:
         return is_brandable_weapon(i, you_worship(GOD_SHINING_ONE), true);
