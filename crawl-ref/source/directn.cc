@@ -3132,8 +3132,13 @@ static vector<string> _get_monster_behaviour_vector(const monster_info& mi)
 {
     vector<string> descs;
 
-    if ((mi.is(MB_SLEEPING) || mi.is(MB_DORMANT)) && mi.is(MB_CONFUSED))
-        descs.emplace_back("sleepwalking");
+    if ((mi.is(MB_SLEEPING) || mi.is(MB_DORMANT)))
+    {
+        if (mi.is(MB_CONFUSED))
+            descs.emplace_back("sleepwalking");
+        else if (mons_class_flag(mi.type, M_CONFUSED))
+            descs.emplace_back("drifting");
+    }
     else if (mi.attitude == ATT_HOSTILE && (mi.is(MB_UNAWARE) || mi.is(MB_WANDERING)))
         descs.emplace_back("hasn't noticed you");
 

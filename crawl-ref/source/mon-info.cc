@@ -577,17 +577,17 @@ monster_info::monster_info(const monster* m, int milev)
 
     dam = mons_get_damage_level(*m);
 
-    if (mons_is_threatening(*m)) // Firewood, butterflies, etc.
+    if (m->asleep())
     {
-        if (m->asleep())
-        {
-            if (!m->can_hibernate(true))
-                mb.set(MB_DORMANT);
-            else
-                mb.set(MB_SLEEPING);
-        }
+        if (!m->can_hibernate(true))
+            mb.set(MB_DORMANT);
+        else
+            mb.set(MB_SLEEPING);
+    }
+    else if (mons_is_threatening(*m)) // Firewood, butterflies, etc.
+    {
         // Applies to both friendlies and hostiles
-        else if (mons_is_fleeing(*m))
+        if (mons_is_fleeing(*m))
             mb.set(MB_FLEEING);
         else if (mons_is_wandering(*m) && !mons_is_batty(*m))
         {
@@ -596,8 +596,8 @@ monster_info::monster_info(const monster* m, int milev)
             else
                 mb.set(MB_WANDERING);
         }
-        // TODO: is this ever needed?
-        else if (m->foe == MHITNOT && !mons_is_batty(*m)
+        else if (m->foe == MHITNOT
+                 && !mons_is_batty(*m)
                  && m->attitude == ATT_HOSTILE)
         {
             mb.set(MB_UNAWARE);
