@@ -72,6 +72,7 @@ public:
     void resize(int w, int h);
     void layout();
     void render();
+    void swap_buffers();
 
     bool on_event(wm_event& event);
     bool deliver_event(Event& event);
@@ -93,6 +94,7 @@ public:
     }
 
     bool needs_paint;
+    bool needs_swap;
 
 #ifdef DEBUG
     bool debug_draw = false;
@@ -2555,14 +2557,21 @@ void UIRoot::render()
 #endif
     scissor_stack.pop();
 
+    needs_paint = false;
+    needs_swap = true;
+    m_dirty_region = {0, 0, 0, 0};
+}
+
+void UIRoot::swap_buffers()
+{
+    if (!needs_swap)
+        return;
+    needs_swap = false;
 #ifdef USE_TILE_LOCAL
     wm->swap_buffers();
 #else
     update_screen();
 #endif
-
-    needs_paint = false;
-    m_dirty_region = {0, 0, 0, 0};
 }
 
 #ifdef DEBUG
@@ -3107,12 +3116,14 @@ void force_render()
     ui_root.layout();
     ui_root.needs_paint = true;
     ui_root.render();
+    ui_root.swap_buffers();
 }
 
 void render()
 {
     ui_root.layout();
     ui_root.render();
+    ui_root.swap_buffers();
 }
 
 void pump_events(int wait_event_timeout)
@@ -3128,13 +3139,20 @@ void pump_events(int wait_event_timeout)
 #endif
     {
         ui_root.layout();
-#ifndef USE_TILE_WEB
+#ifdef USE_TILE_WEB
         // On webtiles, we can't skip rendering while there are macro keys: a
         // crt screen may be opened and without a render() call, its text won't
         // won't be sent to the client(s). E.g: macro => iai
+        ui_root.render();
         if (macro_key == -1)
-#endif
+            ui_root.swap_buffers();
+#else
+        if (macro_key == -1)
+        {
             ui_root.render();
+            ui_root.swap_buffers();
+        }
+#endif
     }
 
 #ifdef USE_TILE_LOCAL
