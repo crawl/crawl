@@ -6660,7 +6660,8 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
     
     case SPELL_FOXFIRE:
-        cast_foxfire(mons, mons->spell_hd(spell_cast), &pbolt, god);
+        cast_foxfire(mons, mons->spell_hd(spell_cast), /*&pbolt,*/ god);
+        return;
 
     case SPELL_AWAKEN_FOREST:
         if (!mons->friendly() && have_passive(passive_t::friendly_plants))

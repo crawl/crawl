@@ -28,6 +28,9 @@
 - 이제 시체는 다시 수집 마법으로 끌어올 수 있다.
   - Corpse can be apported
   
+- 이제 큐어링, 힐운드 포션을 증산하면 치유구름이 나온다.
+  - Now, when you Evaporate the Curing and Heal Wound Potion, the heal cloud comes out
+  
 ### Removed
 - Nothing
 

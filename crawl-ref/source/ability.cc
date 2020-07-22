@@ -462,10 +462,10 @@ static const ability_def Ability_List[] =
     { ABIL_TROG_BERSERK, "Berserk",
       0, 0, 600, 0, {fail_basis::invo}, abflag::none },
     { ABIL_TROG_REGEN_MR, "Trog's Hand",
-      0, 0, 200, 2, {fail_basis::invo, piety_breakpoint(2), 0, 1}, abflag::none },
+      0, 0, 200, 2, {fail_basis::invo, piety_breakpoint(2), 0, 1}, abflag::berserk_ok },
     { ABIL_TROG_BROTHERS_IN_ARMS, "Brothers in Arms",
       0, 0, 250, generic_cost::range(5, 6),
-      {fail_basis::invo, piety_breakpoint(5), 0, 1}, abflag::none },
+      {fail_basis::invo, piety_breakpoint(5), 0, 1}, abflag::berserk_ok },
     { ABIL_TROG_BLESS_WEAPON, "Brand Weapon With Antimagic", 0, 0, 0, 0,
       {fail_basis::invo}, abflag::none },
 
@@ -1072,13 +1072,16 @@ ability_type fixup_ability(ability_type ability)
         else
             return ability;
 
+    case ABIL_TROG_BLESS_WEAPON:
+        if (you.species == SP_DJINNI)
+            return ABIL_NON_ABILITY;
+    // Intentional fallthrough
     case ABIL_TSO_BLESS_WEAPON:
     case ABIL_KIKU_BLESS_WEAPON:
     case ABIL_LUGONU_BLESS_WEAPON:
     case ABIL_ZIN_BLESS_WEAPON:
     case ABIL_YRED_BLESS_WEAPON:
     case ABIL_MAKHLEB_BLESS_WEAPON:
-    case ABIL_TROG_BLESS_WEAPON:
     case ABIL_ELYVILON_BLESS_WEAPON:
     case ABIL_JIYVA_BLESS_WEAPON:
     case ABIL_CHEIBRIADOS_BLESS_WEAPON:

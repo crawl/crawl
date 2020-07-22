@@ -154,6 +154,13 @@ bool bless_weapon(god_type god, brand_type brand, colour_t colour)
 {
     ASSERT(can_do_capstone_ability(god));
 
+
+    if (you.species == SP_DJINNI && brand == SPWPN_ANTIMAGIC)
+    {
+        mpr("You stop wishing to bless, since you cannot wield an antimagic weapon!");
+        return false;
+    }
+
     int item_slot = prompt_invent_item("Brand which weapon?",
                                        menu_type::invlist,
                                        OSEL_BLESSABLE_WEAPON, OPER_ANY,
@@ -195,6 +202,7 @@ bool bless_weapon(god_type god, brand_type brand, colour_t colour)
     else
         prompt += "blessed with holy wrath";
     prompt += "?";
+
     if (!yesno(prompt.c_str(), true, 'n'))
     {
         canned_msg(MSG_OK);
@@ -1756,7 +1764,7 @@ bool beogh_gift_item()
         }
     }
 
-    desc_menu.on_single_selection = [&desc_menu, &list_orcs, &list_orc_infos](const MenuEntry& sel)
+    desc_menu.on_single_selection = [&list_orcs, &list_orc_infos](const MenuEntry& sel)
     {   
         monster* mons = list_orcs[distance(list_orc_infos.begin(), 
                                       find(list_orc_infos.begin(), list_orc_infos.end(), sel.data))];

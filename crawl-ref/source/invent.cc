@@ -1173,8 +1173,11 @@ bool item_is_selected(const item_def &i, int selector)
                && !is_artefact(i)
                && (!item_ident(i, ISFLAG_KNOW_PLUSES)
                    || i.plus < MAX_WPN_ENCHANT)) ||
-            (itype == OBJ_RODS && i.sub_type != ROD_PAKELLAS &&
-            item_is_rechargeable(i, true));
+                (itype == OBJ_RODS 
+                && i.sub_type != ROD_PAKELLAS 
+                && item_is_rechargeable(i, true) 
+                && (i.charge_cap < MAX_ROD_CHARGE * ROD_CHARGE_MULT
+                || i.rod_plus < MAX_WPN_ENCHANT));
 
     case OSEL_BLESSABLE_WEAPON:
         return is_brandable_weapon(i, you_worship(GOD_SHINING_ONE), true);
