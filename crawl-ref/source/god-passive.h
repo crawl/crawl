@@ -259,6 +259,9 @@ enum class passive_t
 
     //jiyva kill to slime
     jiyva_kill_to_slime,
+	
+	///share resistance
+	share_resistance,
 };
 
 enum ru_interference
