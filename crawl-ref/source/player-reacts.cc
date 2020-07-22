@@ -937,7 +937,10 @@ static void _handle_wereblood()
     {
         // Keep the spam down
         if (you.props[WEREBLOOD_KEY].get_int() < 3 || one_chance_in(5))
-            mpr("You howl as the wereblood boils in your veins!");
+        {
+            mprf("You %s as the wereblood boils in your veins!",
+                 you.shout_verb().c_str());
+        }
         noisy(spell_effect_noise(SPELL_WEREBLOOD), you.pos());
     }
 }

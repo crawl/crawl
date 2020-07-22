@@ -5303,6 +5303,10 @@ string player::shout_verb(bool directed) const
     if (!get_form()->shout_verb.empty())
         return get_form()->shout_verb;
 
+    // Overrides species, but gets overridden in turn by other forms.
+    if (you.duration[DUR_WEREBLOOD])
+        return "howl";
+
     const int screaminess = max(get_mutation_level(MUT_SCREAM) - 1, 0);
 
     if (species == SP_GNOLL)
