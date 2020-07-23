@@ -410,7 +410,7 @@ static const vector<god_passive> god_passives[] =
               "GOD NOW siphons a part of your essence into your ancestor" },
         {  5, passive_t::transfer_drain,
               "drain nearby creatures when transferring your ancestor" },
-		{  6, passive_t::hep_share_resistance,
+        {  6, passive_t::share_resistance,
               "Your resistance will partially share with your ancestor" },
     },
 

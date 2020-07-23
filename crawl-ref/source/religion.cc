@@ -1750,19 +1750,19 @@ static int _hepliaklqana_ally_hd()
  */
 int hepliaklqana_ally_hp()
 {
-	// Base
+    // Base
     const int HD = _hepliaklqana_ally_hd();
-	const int HP = HD * 5 + max(0, (HD - 12) * 5);
-	
-	// +Collected Runes bonus
-	if (runes_in_pack() <= 3){
-		// 0-3 Runes: +0 ~ +30
-		HP = HP + (runes_in_pack()*10);
-	} else {
-		// after 3 Runes: +50 ~ +270
-		HP = HP + 30 + ((runes_in_pack()-3)*20);
-	}
-	
+    int HP = HD * 5 + max(0, (HD - 12) * 5);
+
+    // +Collected Runes bonus
+    if (runes_in_pack() <= 3){
+        // 0-3 Runes: +0 ~ +30
+        HP = HP + (runes_in_pack()*10);
+    } else {
+        // after 3 Runes: +50 ~ +270
+        HP = HP + 30 + ((runes_in_pack()-3)*20);
+    }
+
     return HP;
 }
 
