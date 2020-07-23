@@ -1893,10 +1893,10 @@ void direction_chooser::full_describe()
         if (_want_target_monster(m, mode, hitfunc))
             list_mons.push_back(monster_info(m));
 
-    if (targets_objects())
+    if (targets_objects() || just_looking)
         _get_nearby_items(list_items, needs_path, range, hitfunc);
 
-    if (hitfunc && hitfunc->can_affect_walls())
+    if (hitfunc && hitfunc->can_affect_walls() || just_looking)
         _get_nearby_features(list_features, needs_path, range, hitfunc);
 
     if (list_mons.empty() && list_items.empty() && list_features.empty())
@@ -1906,8 +1906,10 @@ void direction_chooser::full_describe()
         return;
     }
 
-    const coord_def choice = _full_describe_menu(list_mons, list_items,
-                                                 list_features, "target");
+    const coord_def choice =
+        _full_describe_menu(list_mons, list_items, list_features,
+                            just_looking ? "target/travel" : "target");
+
     if (choice != coord_def(-1, -1))
         set_target(choice);
     need_all_redraw = true;
