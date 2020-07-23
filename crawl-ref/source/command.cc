@@ -409,7 +409,8 @@ static const char *targeting_help_wiz =
 static const char *targeting_help_2 =
     "<h>Targeting (zap wands, cast spells, etc.):\n"
     "Most keys from examine surroundings work.\n"
-    "Some keys fire at the target. By default,\n"
+    "Some keys fire at the target. <w>Ctrl-X</w> only\n"
+    "lists eligible targets. By default,\n"
     "range is respected and beams don't stop.\n"
     "<w>Enter</w> : fire (<w>Space</w>, <w>Del</w>)\n"
     "<w>.</w> : fire, stop at target\n"

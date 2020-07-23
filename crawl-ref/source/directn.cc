@@ -95,6 +95,7 @@ static void _describe_cell(const coord_def& where, bool in_range = true);
 static bool _print_cloud_desc(const coord_def where);
 static bool _print_item_desc(const coord_def where);
 
+static bool _blocked_ray(const coord_def &where);
 static bool _want_target_monster(const monster *mon, targ_mode_type mode,
                                  targeter* hitfunc);
 static bool _find_monster(const coord_def& where, targ_mode_type mode,
@@ -473,50 +474,11 @@ public:
     void nextline() { cgotoxy(1, wherey() + 1); }
 };
 
-// Lists monsters, items, and some interesting features in the player's view.
-// TODO: Allow sorting of items lists.
-coord_def full_describe_view(bool targeting)
+static coord_def _full_describe_menu(vector<monster_info> const &list_mons,
+                                     vector<item_def> const &list_items,
+                                     vector<coord_def> const &list_features,
+                                     string selectverb)
 {
-    vector<monster_info> list_mons;
-    vector<item_def> list_items;
-    vector<coord_def> list_features;
-
-    // Grab all items known (or thought) to be in the stashes in view.
-    for (radius_iterator ri(you.pos(),
-                            you.xray_vision ? LOS_NONE : LOS_DEFAULT); ri; ++ri)
-    {
-        if (feat_stair_direction(grd(*ri)) != CMD_NO_CMD
-            || (feat_is_trap(grd(*ri))))
-        {
-            list_features.push_back(*ri);
-        }
-
-        const int oid = you.visible_igrd(*ri);
-        if (oid == NON_ITEM)
-            continue;
-
-        const vector<item_def> items = item_list_in_stash(*ri);
-
-#ifdef DEBUG_DIAGNOSTICS
-        if (items.empty())
-        {
-            mprf(MSGCH_ERROR, "No items found in stash, but top item is %s",
-                 mitm[oid].name(DESC_PLAIN).c_str());
-            more();
-        }
-#endif
-        list_items.insert(list_items.end(), items.begin(), items.end());
-    }
-
-    // Get monsters via the monster_info, sorted by difficulty.
-    get_monster_info(list_mons);
-
-    if (list_mons.empty() && list_items.empty() && list_features.empty())
-    {
-        mpr("No monsters, items or features are visible.");
-        return coord_def(-1, -1);
-    }
-
     InvMenu desc_menu(MF_SINGLESELECT | MF_ANYPRINTABLE
                         | MF_ALLOW_FORMATTING | MF_SELECT_BY_PAGE);
 
@@ -537,8 +499,8 @@ coord_def full_describe_view(bool targeting)
     }
 
     title = "Visible " + title;
-    string title1 = title + " (select to target/travel, '!' to examine):";
-    title += " (select to examine, '!' to target/travel):";
+    string title1 = title + " (select to " + selectverb + ", '!' to examine):";
+    title += " (select to examine, '!' to " + selectverb + "):";
 
     desc_menu.set_title(new MenuEntry(title, MEL_TITLE), false);
     desc_menu.set_title(new MenuEntry(title1, MEL_TITLE));
@@ -573,7 +535,6 @@ coord_def full_describe_view(bool targeting)
                 const coord_def relpos = mi.pos - you.pos();
                 prefix << "(" << relpos.x << ", " << -relpos.y << ") ";
             }
-
 
             string str = get_monster_equipment_desc(mi, DESC_FULL, DESC_A, true);
             if (mi.dam != MDAM_OKAY)
@@ -666,10 +627,8 @@ coord_def full_describe_view(bool targeting)
     }
 
     // Select an item to read its full description, or a monster to read its
-    // e'x'amine description. Toggle with '!' to travel to an item's position
-    // or read a monster's database entry.
-    // (Maybe that should be reversed in the case of monsters.)
-    // For ASCII, the 'x' information may include short database descriptions.
+    // e'x'amine description. Toggle with '!' to return the coordinates to
+    // the caller so that it may perform the promised selectverb
 
     coord_def target(-1, -1);
 
@@ -730,12 +689,6 @@ coord_def full_describe_view(bool targeting)
     redraw_screen();
     update_screen();
 
-    // need to do this after the menu has been closed on console,
-    // since do_look_around() runs its own loop
-    // Don't call this when targeting, since we instead return our
-    // selection (if any) to the targeter
-    if (target != coord_def(-1, -1) && !targeting)
-        do_look_around(target);
 
 #ifndef USE_TILE_LOCAL
     if (!list_items.empty())
@@ -750,8 +703,92 @@ coord_def full_describe_view(bool targeting)
     tiles.place_cursor(CURSOR_TUTORIAL, NO_CURSOR);
     tiles.clear_text_tags(TAG_TUTORIAL);
 #endif
-
     return target;
+}
+
+void _get_nearby_items(vector<item_def> &list_items,
+                                bool need_path, int range, targeter *hitfunc)
+{
+    // Grab all items known (or thought) to be in the stashes in view.
+    for (radius_iterator ri(you.pos(),
+                            you.xray_vision ? LOS_NONE : LOS_DEFAULT); ri; ++ri)
+    {
+        if (!_is_target_in_range(*ri, range, hitfunc))
+            continue;
+
+        if (need_path && (!you.see_cell(*ri) || _blocked_ray(*ri)))
+            continue;
+
+        const int oid = you.visible_igrd(*ri);
+        if (oid == NON_ITEM)
+            continue;
+
+        const vector<item_def> items = item_list_in_stash(*ri);
+
+#ifdef DEBUG_DIAGNOSTICS
+        if (items.empty())
+        {
+            mprf(MSGCH_ERROR, "No items found in stash, but top item is %s",
+                 mitm[oid].name(DESC_PLAIN).c_str());
+            more();
+        }
+#endif
+        list_items.insert(list_items.end(), items.begin(), items.end());
+    }
+}
+
+void _get_nearby_features(vector<coord_def> &list_features,
+                          bool need_path, int range, targeter *hitfunc)
+{
+    for (radius_iterator ri(you.pos(),
+                            you.xray_vision ? LOS_NONE : LOS_DEFAULT); ri; ++ri)
+    {
+        if (!_is_target_in_range(*ri, range, hitfunc))
+            continue;
+
+        if (need_path && (!you.see_cell(*ri) || _blocked_ray(*ri)))
+            continue;
+
+        // Do we want to aim at this because its the feature, not because
+        // of a monster.
+        if (hitfunc && !monster_at(*ri))
+            list_features.push_back(*ri);
+        // XXX: hitfuncs override the default behavior, this should maybe
+        // be better factorized by moving the default into a hitfunc that
+        // selects full describe features?
+        else if (!hitfunc && feat_stair_direction(grd(*ri)) != CMD_NO_CMD
+            || (feat_is_trap(grd(*ri))))
+        {
+            list_features.push_back(*ri);
+        }
+    }
+}
+
+// Lists monsters, items, and some interesting features in the player's view.
+// TODO: Allow sorting of items lists.
+void full_describe_view()
+{
+    vector<monster_info> list_mons;
+    vector<item_def> list_items;
+    vector<coord_def> list_features;
+    // Get monsters via the monster_info, sorted by difficulty.
+    get_monster_info(list_mons);
+    _get_nearby_items(list_items, false, get_los_radius(), nullptr);
+    _get_nearby_features(list_features, false, get_los_radius(), nullptr);
+
+    if (list_mons.empty() && list_items.empty() && list_features.empty())
+    {
+        mpr("No monsters, items or features are visible.");
+        return;
+    }
+
+    coord_def target = _full_describe_menu(list_mons, list_items,
+                                           list_features, "target/travel");
+
+    // need to do this after the menu has been closed on console,
+    // since do_look_around() runs its own loop
+    if (target != coord_def(-1, -1))
+        do_look_around(target);
 }
 
 void do_look_around(const coord_def &whence)
@@ -1831,7 +1868,32 @@ void direction_chooser::move_to_you()
 
 void direction_chooser::full_describe()
 {
-    const coord_def choice = full_describe_view(true);
+    vector <monster_info> list_mons;
+    vector<item_def> list_items;
+    vector<coord_def> list_features;
+
+    vector <monster *> nearby_mons = get_nearby_monsters(true, false, false,
+                                                         false, true, true,
+                                                         range);
+    for (auto m : nearby_mons)
+        if (_want_target_monster(m, mode, hitfunc))
+            list_mons.push_back(monster_info(m));
+
+    if (targets_objects())
+        _get_nearby_items(list_items, needs_path, range, hitfunc);
+
+    if (hitfunc && hitfunc->can_affect_walls())
+        _get_nearby_features(list_features, needs_path, range, hitfunc);
+
+    if (list_mons.empty() && list_items.empty() && list_features.empty())
+    {
+        mprf(MSGCH_EXAMINE_FILTER, "There are no valid targets to list.");
+        flush_prev_message();
+        return;
+    }
+
+    const coord_def choice = _full_describe_menu(list_mons, list_items,
+                                                 list_features, "target");
     if (choice != coord_def(-1, -1))
         set_target(choice);
     need_all_redraw = true;
