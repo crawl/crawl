@@ -57,6 +57,7 @@
 #include "nearby-danger.h"
 #include "notes.h"
 #include "output.h"
+#include "player-stats.h"
 #include "religion.h"
 #include "rot.h"
 #include "spl-damage.h"
@@ -2319,8 +2320,8 @@ item_def* monster_die(monster& mons, killer_type killer,
                     || have_passive(passive_t::mp_on_kill)
                     || (have_passive(passive_t::restore_hp_mp_vs_evil)
                        && mons.evil())
-                    || (have_passive(passive_t::wyrm_restore
-                        && mons->has_ench(ENCH_POISON)))
+                    || (have_passive(passive_t::wyrm_restore)
+                        && mons.has_ench(ENCH_POISON)))
                 && !mons_is_object(mons.type)
                 && !player_under_penance()
                 && random2(you.piety) >= piety_breakpoint(0)

@@ -3575,7 +3575,7 @@ static spret _do_ability(const ability_def& abil, bool fail)
     case ABIL_WYRM_CONVERT_POISON:
     fail_check();
     if (your_spells(SPELL_CONVERT_POISON,
-                    12 + skill_bump((SK_POISON_MAGIC + SK_TRANSMUTATIONS), 6),
+                    12 + skill_bump(SK_POISON_MAGIC, 6) + skill_bump(SK_TRANSMUTATIONS, 6),
                     false, nullptr) == spret::abort)
     {
     return spret::abort;

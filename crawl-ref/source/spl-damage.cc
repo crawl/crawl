@@ -1729,6 +1729,9 @@ spret cast_ignite_poison(actor* agent, int pow, bool fail, bool tracer)
     return spret::success;
 }
 
+static int _convert_poison_clouds(coord_def where, int pow, actor* agent);
+static int _convert_poison_bog(coord_def where, int pow, actor* agent);
+
 /**
  * Cast the spell Convert Poison, replace poisonous clouds in LOS
  * into healing clouds.
@@ -1803,7 +1806,8 @@ static int _convert_poison_bog(coord_def where, int pow, actor *agent)
 
     if (tracer)
     {
-        const int value = _convert_tracer_cloud_value(where, agent);
+        //FIXME) create _convert_tracer_cloud_value function
+        const int value = 1;// _convert_tracer_cloud_value(where, agent);
         // Player doesn't care about magnitude.
         return agent && agent->is_player() ? sgn(value) : value;
     }
@@ -1840,7 +1844,8 @@ static int _convert_poison_clouds(coord_def where, int pow, actor *agent)
 
     if (tracer)
     {
-        const int value = _convert_tracer_cloud_value(where, agent);
+        //FIXME) create _convert_tracer_cloud_value function
+        const int value = 1;//_convert_tracer_cloud_value(where, agent);
         // Player doesn't care about magnitude.
         return agent && agent->is_player() ? sgn(value) : value;
     }

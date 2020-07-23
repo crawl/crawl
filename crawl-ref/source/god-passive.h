@@ -262,8 +262,6 @@ enum class passive_t
     
     ///share resistance
     share_resistance,
-    ///share resistance
-    share_resistance,
     
     /// the Great Wyrm: poisonous melee attack
     wyrm_poisonous,	

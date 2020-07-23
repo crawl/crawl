@@ -3956,7 +3956,7 @@ int monster::res_poison(bool temp) const
         u -= get_ench(ENCH_POISON_VULN).degree + 1;
     }
 
-    if (you_worship(GOD_WYRM) && !mons->wont_attack()
+    if (you_worship(GOD_WYRM) && !wont_attack()
         && !player_under_penance(GOD_WYRM)
         && (one_chance_in(20) || x_chance_in_y(you.piety, 400)))
     {

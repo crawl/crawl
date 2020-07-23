@@ -3806,7 +3806,7 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_WU_JIAN_HEAVENLY_STORM;
     // The Great Wyrm
     case ABIL_WYRM_CONVERT_POISON:
-        return ABILITY_WYRM_CONVERT_POISON;
+        return TILEG_ABILITY_WYRM_CONVERT_POISON;
 
     // General divine (pseudo) abilities.
     case ABIL_RENOUNCE_RELIGION:

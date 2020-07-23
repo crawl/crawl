@@ -640,10 +640,10 @@ static void _maybe_fog(int dam)
         ? piety_breakpoint(rank_for_passive(passive_t::hit_smoke) - 1)
         : piety_breakpoint(2); // Xom
 
-        const int minpiety_wyrm = piety_breakpoint(2); // Wyrm
-        const int upper_threshold_wyrm = you.hp_max / 10;
-        const int lower_threshold_wyrm = upper_threshold_wyrm
-                                    upper_threshold_wyrm
+    const int minpiety_wyrm = piety_breakpoint(2); // Wyrm
+    const int upper_threshold_wyrm = you.hp_max / 10;
+    const int lower_threshold_wyrm = upper_threshold_wyrm
+                                    - upper_threshold_wyrm
                                     * (you.piety - minpiety_wyrm)
                                     / (MAX_PIETY - minpiety_wyrm);
 
