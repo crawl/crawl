@@ -740,6 +740,7 @@ void _get_nearby_items(vector<item_def> &list_items,
 void _get_nearby_features(vector<coord_def> &list_features,
                           bool need_path, int range, targeter *hitfunc)
 {
+    vector <text_pattern> &filters = Options.monster_item_view_features;
     for (radius_iterator ri(you.pos(),
                             you.xray_vision ? LOS_NONE : LOS_DEFAULT); ri; ++ri)
     {
@@ -750,16 +751,29 @@ void _get_nearby_features(vector<coord_def> &list_features,
             continue;
 
         // Do we want to aim at this because its the feature, not because
-        // of a monster.
+        // of a monster. This is a bit of a hack since hitfunc->valid_aim
+        // is monster-aware and monster targets are listed in a different
+        // place.
         if (hitfunc && !monster_at(*ri))
             list_features.push_back(*ri);
-        // XXX: hitfuncs override the default behavior, this should maybe
-        // be better factorized by moving the default into a hitfunc that
-        // selects full describe features?
-        else if (!hitfunc && feat_stair_direction(grd(*ri)) != CMD_NO_CMD
-            || (feat_is_trap(grd(*ri))))
+        // Not using a targeter, list features according to user preferences.
+        else if (!hitfunc)
         {
-            list_features.push_back(*ri);
+            if (!filters.empty())
+            {
+                for (const text_pattern &pattern : filters)
+                {
+                    if (pattern.matches(feature_description(grd(*ri)))
+                        || feat_stair_direction(grd(*ri)) != CMD_NO_CMD
+                           && pattern.matches("stair")
+                        || feat_is_trap(grd(*ri))
+                           && pattern.matches("trap"))
+                    {
+                        list_features.push_back(*ri);
+                        break;
+                    }
+                }
+            }
         }
     }
 }

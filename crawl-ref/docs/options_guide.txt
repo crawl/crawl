@@ -66,12 +66,14 @@ The contents of this text are:
                 status_caption_colour, enemy_hp_colour, clear_messages,
                 show_more, small_more, show_newturn_mark, show_game_time,
                 equip_bar, animate_equip_bar, item_stack_summary_minimum,
-                mlist_min_height, mlist_allow_alternate_layout, msg_min_height,
-                msg_max_height, msg_webtiles_height, messages_at_top,
-                msg_condense_repeats, msg_condense_short, show_travel_trail,
-                skill_focus, default_show_all_skills, monster_list_colour,
-                view_delay, use_animations, darken_beyond_range,
-                force_more_message, flash_screen_message, cloud_status
+                mlist_min_height, mlist_allow_alternate_layout,
+                monster_item_view_coordinates, monster_item_view_features,
+                msg_min_height, msg_max_height, msg_webtiles_height,
+                messages_at_top, msg_condense_repeats, msg_condense_short,
+                show_travel_trail, skill_focus, default_show_all_skills,
+                monster_list_colour, view_delay, use_animations,
+                darken_beyond_range, force_more_message, flash_screen_message,
+                cloud_status
 3-i     Colours (messages and menus)
                 menu_colour, message_colour
 3-j     Missiles.
@@ -1432,8 +1434,19 @@ mlist_allow_alternate_layout = false
         This option is not supported in the tiles build.
 
 monster_item_view_coordinates = false
-        Display player-centered coordinates in the ^x visible monsters/items
-        view.
+        Display player-centered coordinates in the ^x view description.
+
+monster_item_view_features += <regex>, <regex>
+        (List option)
+        Display features matching the <regex> in the ^x view description. Each
+        <regex> is a regular expression describing a dungeon feature. This
+        regex should match the description when using the 'x' command. In case
+        the regex matches several descriptions, all such features are listed.
+
+        Two special keywords are active here, if any pattern matches the string
+        "stair" all features that can be interacted with using the stair
+        commands are shown; if any pattern matches "trap" all trap features
+        (including webs) are shown.
 
 msg_min_height = 7
         You can reduce this to give more space to the map display. The
@@ -2856,6 +2869,10 @@ Allow auto-travel/move to advance one step even when monsters are present:
 
 List player-relative coordinates in the ^x display:
     monster_item_view_coordinates = true
+
+The ^x display can list a customizable set of features controlled with regular
+expressions. For example, to include all water in ^x set:
+    monster_item_view_features += water
 
 Mark the path taken by auto-travel and the exploration horizon with special
 characters:
