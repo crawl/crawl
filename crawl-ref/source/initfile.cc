@@ -219,6 +219,7 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(explore_greedy), true),
         new BoolGameOption(SIMPLE_NAME(explore_auto_rest), true),
         new BoolGameOption(SIMPLE_NAME(travel_key_stop), true),
+        new BoolGameOption(SIMPLE_NAME(travel_one_unsafe_move), false),
         new BoolGameOption(SIMPLE_NAME(dump_on_save), true),
         new BoolGameOption(SIMPLE_NAME(rest_wait_both), false),
         new BoolGameOption(SIMPLE_NAME(rest_wait_ancestor), false),

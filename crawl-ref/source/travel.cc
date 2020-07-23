@@ -636,9 +636,12 @@ static void _start_running()
 {
     _userdef_run_startrunning_hook();
     you.running.init_travel_speed();
+    const bool unsafe = Options.travel_one_unsafe_move &&
+                        (you.running == RMODE_TRAVEL
+                         || you.running == RMODE_INTERLEVEL);
 
     if (you.running < 0)
-        start_delay<TravelDelay>();
+        start_delay<TravelDelay>(unsafe);
 }
 
 // Stops shift+running and all forms of travel.
@@ -2733,7 +2736,7 @@ void start_translevel_travel(const level_pos &pos)
 
     trans_travel_dest = _get_trans_travel_dest(level_target);
 
-    if (!i_feel_safe(true, true))
+    if (!Options.travel_one_unsafe_move && !i_feel_safe(true, true))
         return;
     if (you.confused())
     {
@@ -3141,7 +3144,7 @@ void start_travel(const coord_def& p)
 
     if (!can_travel_interlevel())
     {
-        if (!i_feel_safe(true, true))
+        if (!Options.travel_one_unsafe_move && !i_feel_safe(true, true))
             return;
         if (you.confused())
         {

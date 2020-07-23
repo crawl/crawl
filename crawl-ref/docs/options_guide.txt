@@ -43,7 +43,7 @@ The contents of this text are:
 3-f     Travel and Exploration.
                 travel_delay, explore_delay, rest_delay, travel_avoid_terrain,
                 explore_greedy, explore_stop, explore_stop_pickup_ignore,
-                explore_wall_bias, travel_key_stop,
+                explore_wall_bias, travel_key_stop, travel_one_unsafe_move,
                 tc_reachable, tc_dangerous, tc_disconnected, tc_excluded,
                 tc_exclude_circle, runrest_ignore_message,
                 runrest_stop_message, interrupt_<delay>, delay_safe_poison,
@@ -866,6 +866,10 @@ explore_wall_bias = 0
 
 travel_key_stop = true
         If set to true then travel will stop at any keypress.
+
+travel_one_unsafe_move = false
+        If set to true then travel will make one move before conducting safety
+        checks for nearby danger.
 
 tc_reachable      = blue
 tc_dangerous      = cyan
@@ -2846,6 +2850,9 @@ symbol for the player:
 Use mouse input clicks for automove (see the discussion of the mouse_input
 option for terminal configuration specifics):
     mouse_input = true
+
+Allow auto-travel/move to advance one step even when monsters are present:
+    travel_one_unsafe_move = true
 
 List player-relative coordinates in the ^x display:
     monster_item_view_coordinates = true

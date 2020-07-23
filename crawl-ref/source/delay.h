@@ -441,6 +441,9 @@ class BaseRunDelay : public Delay
     virtual bool want_clear_messages() const = 0;
     virtual command_type move_cmd() const = 0;
 
+protected:
+    bool unsafe_once = false;
+
 public:
     bool is_run() const override
     {
@@ -535,8 +538,10 @@ class TravelDelay : public BaseRunDelay
 
     command_type move_cmd() const override;
 public:
-    TravelDelay() : BaseRunDelay()
-    { }
+    TravelDelay(bool unsafe) : BaseRunDelay()
+    {
+        unsafe_once = unsafe;
+    }
 
     const char* name() const override
     {
