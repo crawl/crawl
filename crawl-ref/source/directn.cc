@@ -706,7 +706,7 @@ static coord_def _full_describe_menu(vector<monster_info> const &list_mons,
     return target;
 }
 
-void _get_nearby_items(vector<item_def> &list_items,
+static void _get_nearby_items(vector<item_def> &list_items,
                                 bool need_path, int range, targeter *hitfunc)
 {
     // Grab all items known (or thought) to be in the stashes in view.
@@ -731,7 +731,7 @@ void _get_nearby_items(vector<item_def> &list_items,
     }
 }
 
-void _get_nearby_features(vector<coord_def> &list_features,
+static void _get_nearby_features(vector<coord_def> &list_features,
                           bool need_path, int range, targeter *hitfunc)
 {
     vector <text_pattern> &filters = Options.monster_item_view_features;
