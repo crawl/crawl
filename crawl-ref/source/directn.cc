@@ -164,7 +164,7 @@ static void _wizard_make_friendly(monster* m)
 #endif
 
 dist::dist()
-    : isValid(false), isTarget(false), isEndpoint(false), isCancel(true),
+    : isValid(false), isTarget(false), isEndpoint(false), isCancel(false),
       choseRay(false), target(), delta(), ray()
 {
 }
@@ -1845,6 +1845,9 @@ void direction_chooser::show_help()
 bool direction_chooser::process_command(command_type command)
 {
     bool loop_done = false;
+
+    // Move flags are volitile, reset them to defaults before each command
+    reinitialize_move_flags();
 
     switch (command)
     {
