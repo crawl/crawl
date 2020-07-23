@@ -1780,7 +1780,9 @@ coord_def direction_chooser::find_summoner()
         // Don't leak information about invisible or out-of-los summons.
         && you.can_see(*mon))
     {
-        if (const monster *summ = monster_by_mid(mon->summoner))
+        const monster *summ = monster_by_mid(mon->summoner);
+        // Don't leak information about invisible summoners.
+        if (summ && you.can_see(*summ))
             return summ->pos();
     }
     return INVALID_COORD;
