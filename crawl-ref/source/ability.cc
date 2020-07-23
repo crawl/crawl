@@ -198,6 +198,7 @@ skill_type invo_skill(god_type god)
         case GOD_RU:
         case GOD_TROG:
         case GOD_WU_JIAN:
+        case GOD_WYRM:
             return SK_NONE; // ugh
         default:
             return SK_INVOCATIONS;
@@ -693,6 +694,10 @@ static const ability_def Ability_List[] =
     { ABIL_WU_JIAN_WHIRLWIND, "Whirlwind", 0, 0, 0, 0, {}, abflag::berserk_ok },
     { ABIL_WU_JIAN_WALLJUMP, "Wall Jump",
         0, 0, 0, 0, {}, abflag::starve_ok | abflag::berserk_ok },
+
+    // The Great Wyrm
+    { ABIL_WYRM_CONVERT_POISON, "Viriditas",
+      3, 0, 0, generic_cost::fixed(3), {fail_basis::invo, 40, 5, 20}, abflag::none },
 
     { ABIL_STOP_RECALL, "Stop Recall", 0, 0, 0, 0, {fail_basis::invo}, abflag::starve_ok },
     { ABIL_RENOUNCE_RELIGION, "Renounce Religion",
@@ -3566,6 +3571,16 @@ static spret _do_ability(const ability_def& abil, bool fail)
             return spret::abort;
         break;
     }
+
+    case ABIL_WYRM_CONVERT_POISON:
+    fail_check();
+    if (your_spells(SPELL_CONVERT_POISON,
+                    12 + skill_bump(SK_POISON_MAGIC, 6) + skill_bump(SK_TRANSMUTATIONS, 6),
+                    false, nullptr) == spret::abort)
+    {
+    return spret::abort;
+    }
+    break;
 
     case ABIL_RENOUNCE_RELIGION:
         if (you.species == SP_ANGEL) {

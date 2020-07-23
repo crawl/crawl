@@ -1553,6 +1553,9 @@ bool spell_no_hostile_in_range(spell_type spell, bool rod)
     case SPELL_IGNITE_POISON:
         return cast_ignite_poison(&you, -1, false, true) == spret::abort;
 
+    case SPELL_CONVERT_POISON:
+        return cast_convert_poison(&you, -1, false, true) == spret::abort;
+
     case SPELL_HAILSTORM:
         return cast_hailstorm(-1, false, true) == spret::abort;
 
