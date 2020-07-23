@@ -6,6 +6,9 @@
 
 ## [Unreleased]
 ### Added
+- 새로운 신 위대한 뱀 추가. 연금술의 신이며 독 마법과 변이술을 지원해줌. 상세 설명은 [이 곳](https://github.com/kimjoy2002/crawl/pull/260#issue-455796133)을 확인
+  - New god: The Great Wyrm. God of Alchemy, supporting poison magic and transmutation. Click [here](https://github.com/kimjoy2002/crawl/pull/260#issue-455796133) for details
+
 - 새로운 종족 호문쿨루스 추가. 호문쿨루스는 반생명 반인공체기에 둘의 특성을 동시에 가지고있고 14레벨에 한 쪽을 특화시킬 수 있다. 또한 마법을 사용할때마다 일시적인 와일드매직을 얻고, 근접공격으론 그 수치를 줄일 수 있다.
   - Added homunculus(playable). Homunculus are a semi-living, semi-artificial speices. they can specialize in 14 level. Also, whenever magic is used, temporary wild magic stack up, and melee attacks can reduce that stack.
   
