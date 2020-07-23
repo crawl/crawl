@@ -286,6 +286,9 @@ enum ability_type
     ABIL_WU_JIAN_WHIRLWIND,
     ABIL_WU_JIAN_WALLJUMP,
 
+    // The Great Wyrm
+    ABIL_WYRM_CONVERT_POISON = 1290,
+    
     // For both Yred and Beogh
     ABIL_STOP_RECALL = 1500,
 

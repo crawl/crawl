@@ -465,6 +465,8 @@ tileidx_t tileidx_feature_base(dungeon_feature_type feat)
         return TILE_DNGN_ALTAR_HEPLIAKLQANA;
     case DNGN_ALTAR_WU_JIAN:
         return TILE_DNGN_ALTAR_WU_JIAN;
+    case DNGN_ALTAR_WYRM:
+        return TILE_DNGN_ALTAR_WYRM;
     case DNGN_ALTAR_ECUMENICAL:
         return TILE_DNGN_ALTAR_ECUMENICAL;
     case DNGN_FOUNTAIN_BLUE:
@@ -3802,6 +3804,9 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_WU_JIAN_SERPENTS_LASH;
     case ABIL_WU_JIAN_HEAVENLY_STORM:
         return TILEG_ABILITY_WU_JIAN_HEAVENLY_STORM;
+    // The Great Wyrm
+    case ABIL_WYRM_CONVERT_POISON:
+        return ABILITY_WYRM_CONVERT_POISON;
 
     // General divine (pseudo) abilities.
     case ABIL_RENOUNCE_RELIGION:
