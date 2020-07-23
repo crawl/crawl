@@ -977,7 +977,7 @@ command_type travel()
         // we turn off travel (find_travel_pos does that automatically).
         find_travel_pos(you.pos(), move_x, move_y);
 
-        // Stop greedy explore when visiting an unverified stash.
+        // Stop greedy explore when visiting a stash for the first time.
         if ((*move_x || *move_y)
             && you.running == RMODE_EXPLORE_GREEDY
             && ES_stack)

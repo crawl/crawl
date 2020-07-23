@@ -198,9 +198,9 @@ bool Stash::are_items_same(const item_def &a, const item_def &b, bool exact)
                && a.plus == b.plus);
 }
 
-bool Stash::unverified() const
+bool Stash::unvisited() const
 {
-    return !verified;
+    return !visited;
 }
 
 bool Stash::pickup_eligible() const
@@ -262,12 +262,14 @@ void Stash::update()
     else
         feat_desc = feature_description_at(pos, false, DESC_A);
 
+    int previous_size = items.size();
+
     // Zap existing items
     items.clear();
 
     if (!_grid_has_perceived_item(pos))
     {
-        verified = true;
+        visited = true;
         return;
     }
 
@@ -287,7 +289,8 @@ void Stash::update()
             add_item(*si);
     }
 
-    verified = true;
+    visited = pos == you.pos()
+              || static_cast<int>(items.size()) == previous_size && visited;
 }
 
 static bool _is_rottable(const item_def &item)
@@ -460,7 +463,7 @@ void Stash::add_item(const item_def &item, bool add_to_front)
 
 void Stash::write(FILE *f, coord_def refpos, string place, bool identify) const
 {
-    if (items.empty() && verified)
+    if (items.empty() && visited)
         return;
 
     no_notes nx;
@@ -486,7 +489,7 @@ void Stash::write(FILE *f, coord_def refpos, string place, bool identify) const
         }
 
         fprintf(f, "  %s%s%s\n", OUTS(s), OUTS(ann),
-            (!verified && (items.size() > 1 || i) ? " (still there?)" : ""));
+            (!visited && (items.size() > 1 || i) ? " (still there?)" : ""));
 
         if (is_dumpable_artefact(item))
         {
@@ -508,7 +511,7 @@ void Stash::write(FILE *f, coord_def refpos, string place, bool identify) const
         }
     }
 
-    if (items.size() <= 1 && !verified)
+    if (items.size() <= 1 && !visited)
         fprintf(f, "  (unseen)\n");
 }
 
@@ -525,7 +528,7 @@ void Stash::save(writer& outf) const
 
     marshallString(outf, feat_desc);
 
-    marshallByte(outf, verified? 1 : 0);
+    marshallByte(outf, visited? 1 : 0);
 
     // And dump the items individually. We don't bother saving fields we're
     // not interested in (and don't anticipate being interested in).
@@ -546,7 +549,7 @@ void Stash::load(reader& inf)
     feat_desc = unmarshallString(inf);
 
     uint8_t flags = unmarshallUByte(inf);
-    verified = (flags & 1) != 0;
+    visited = (flags & 1) != 0;
 
     // Zap out item vector, in case it's in use (however unlikely)
     items.clear();
@@ -715,7 +718,7 @@ bool LevelStashes::shop_needs_visit(const coord_def& c) const
 bool LevelStashes::needs_visit(const coord_def& c, bool autopickup) const
 {
     const Stash *s = find_stash(c);
-    if (s && (s->unverified()
+    if (s && (s->unvisited()
               || autopickup && s->pickup_eligible()))
     {
         return true;
@@ -726,7 +729,7 @@ bool LevelStashes::needs_visit(const coord_def& c, bool autopickup) const
 bool LevelStashes::needs_stop(const coord_def &c) const
 {
     const Stash *s = find_stash(c);
-    return s && s->unverified() && s->needs_stop();
+    return s && s->unvisited() && s->needs_stop();
 }
 
 ShopInfo &LevelStashes::get_shop(const coord_def& c)
