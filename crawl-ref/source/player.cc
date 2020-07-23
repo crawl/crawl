@@ -2224,6 +2224,8 @@ static int _player_evasion_size_factor(bool base = false)
 {
     // XXX: you.body_size() implementations are incomplete, fix.
     const size_type size = you.body_size(PSIZE_BODY, base);
+    if (you.species == SP_CRUSTACEAN)
+        return 2 * (SIZE_MEDIUM - size) - 2 * min(2, you.deaths/6);
     return 2 * (SIZE_MEDIUM - size);
 }
 
@@ -7264,8 +7266,8 @@ bool player::crustacean_rot(actor */*who*/, int amount, bool quiet, bool /*no_cl
     {
         return false;
     }
-    int d = random2(amount/3) + amount/6;
-    if (one_chance_in(2 + you.experience_level/9) && d > 0)
+    int d = random2(amount/6) + amount/3;
+    if (one_chance_in(1 + you.experience_level/9) && d > 0)
     {
         if (coinflip())
         {

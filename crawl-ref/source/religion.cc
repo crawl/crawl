@@ -1750,8 +1750,20 @@ static int _hepliaklqana_ally_hd()
  */
 int hepliaklqana_ally_hp()
 {
+    // Base
     const int HD = _hepliaklqana_ally_hd();
-    return HD * 5 + max(0, (HD - 12) * 5);
+    int HP = HD * 5 + max(0, (HD - 12) * 5);
+
+    // +Collected Runes bonus
+    if (runes_in_pack() <= 3){
+        // 0-3 Runes: +0 ~ +30
+        HP = HP + (runes_in_pack()*10);
+    } else {
+        // after 3 Runes: +50 ~ +270
+        HP = HP + 30 + ((runes_in_pack()-3)*20);
+    }
+
+    return HP;
 }
 
 /**
@@ -1935,8 +1947,6 @@ static weapon_type _hepliaklqana_weapon_type(monster_type mc, int HD)
         return HD < 16 ? WPN_DAGGER : WPN_QUICK_BLADE;
     case MONS_ANCESTOR_KNIGHT:
         return HD < 10 ? WPN_FLAIL : WPN_BROAD_AXE;
-    case MONS_ANCESTOR_BATTLEMAGE:
-        return HD < 13 ? WPN_QUARTERSTAFF : WPN_LAJATANG;
     default:
         return NUM_WEAPONS; // should never happen
     }
@@ -1960,9 +1970,6 @@ static brand_type _hepliaklqana_weapon_brand(monster_type mc, int HD)
             return HD < 10 ?   SPWPN_NORMAL :
                    HD < 16 ?   SPWPN_FLAMING :
                                SPWPN_SPEED;
-        case MONS_ANCESTOR_BATTLEMAGE:
-            return HD < 13 ?   SPWPN_NORMAL :
-                               SPWPN_FREEZING;
         default:
             return SPWPN_NORMAL;
     }
@@ -1980,7 +1987,7 @@ static brand_type _hepliaklqana_weapon_brand(monster_type mc, int HD)
 void upgrade_hepliaklqana_weapon(monster_type mtyp, item_def &item)
 {
     ASSERT(mons_is_hepliaklqana_ancestor(mtyp));
-    if (mtyp == MONS_ANCESTOR)
+    if (mtyp == MONS_ANCESTOR || mtyp == MONS_ANCESTOR_BATTLEMAGE)
         return; // bare-handed!
 
     item.base_type = OBJ_WEAPONS;
