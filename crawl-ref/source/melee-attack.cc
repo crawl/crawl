@@ -1242,6 +1242,8 @@ bool melee_attack::check_unrand_effects()
                     damage_done, hp_boost/3);
                 attacker->heal(hp_boost/3);
             }
+            
+            attacker->god_conduct(DID_EVIL, 2 + random2(3));
         }
         else if (attacker->is_monster())
         {
