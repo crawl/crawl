@@ -723,17 +723,11 @@ void _get_nearby_items(vector<item_def> &list_items,
         if (oid == NON_ITEM)
             continue;
 
-        const vector<item_def> items = item_list_in_stash(*ri);
+        const vector<const item_def *> items = item_list_on_square(
+                                                   you.visible_igrd(*ri));
 
-#ifdef DEBUG_DIAGNOSTICS
-        if (items.empty())
-        {
-            mprf(MSGCH_ERROR, "No items found in stash, but top item is %s",
-                 mitm[oid].name(DESC_PLAIN).c_str());
-            more();
-        }
-#endif
-        list_items.insert(list_items.end(), items.begin(), items.end());
+        for (const item_def * item : items)
+            list_items.push_back(*item);
     }
 }
 
@@ -1531,16 +1525,18 @@ void direction_chooser::print_items_description() const
     if (!in_bounds(target()))
         return;
 
-    const item_def* item = top_item_at(target());
-    if (!item)
+    auto items = item_list_on_square(you.visible_igrd(target()));
+
+    if (items.empty())
         return;
 
-    // Print the first item.
-    mprf(MSGCH_FLOOR_ITEMS, "%s.",
-         menu_colour_item_name(*item, DESC_A).c_str());
-
-    if (multiple_items_at(target()))
-        mprf(MSGCH_FLOOR_ITEMS, "There is something else lying underneath.");
+    if (items.size() == 1)
+    {
+        mprf(MSGCH_FLOOR_ITEMS, "<cyan>Item here:</cyan> %s.",
+             menu_colour_item_name(*items[0], DESC_A).c_str());
+    }
+    else
+        mprf(MSGCH_FLOOR_ITEMS, "<cyan>Items here: </cyan> %s.", item_message(items).c_str());
 }
 
 void direction_chooser::print_floor_description(bool boring_too) const

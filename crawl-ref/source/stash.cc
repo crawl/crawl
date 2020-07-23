@@ -233,16 +233,6 @@ static bool _grid_has_perceived_item(const coord_def& pos)
     return you.visible_igrd(pos) != NON_ITEM;
 }
 
-static bool _grid_has_perceived_multiple_items(const coord_def& pos)
-{
-    int count = 0;
-
-    for (stack_iterator si(pos, true); si && count < 2; ++si)
-        ++count;
-
-    return count > 1;
-}
-
 bool Stash::unmark_trapping_nets()
 {
     bool changed = false;
@@ -272,100 +262,32 @@ void Stash::update()
     else
         feat_desc = feature_description_at(pos, false, DESC_A);
 
-    // If this is your position, you know what's on this square
-    if (pos == you.pos())
+    // Zap existing items
+    items.clear();
+
+    if (!_grid_has_perceived_item(pos))
     {
-        // Zap existing items
-        items.clear();
-
-        // Now, grab all items on that square and fill our vector
-        for (stack_iterator si(pos, true); si; ++si)
-        {
-            god_id_item(*si);
-            add_item(*si);
-        }
-
         verified = true;
+        return;
     }
-    // If this is not your position, the only thing we can do is verify that
-    // what the player sees on the square is the first item in this vector.
-    else
+
+    // Squares are big, whole piles of loot can be seen on each so
+    // let's update them
+
+    // There's something on this square. Take a squint at it.
+    item_def *pitem = &mitm[you.visible_igrd(pos)];
+    hints_first_item(*pitem);
+
+    // Now, grab all items on that square and fill our vector
+    for (stack_iterator si(pos, true); si; ++si)
     {
-        if (!_grid_has_perceived_item(pos))
-        {
-            items.clear();
-            verified = true;
-            return;
-        }
-
-        // There's something on this square. Take a squint at it.
-        item_def *pitem = &mitm[you.visible_igrd(pos)];
-        hints_first_item(*pitem);
-
-        god_id_item(*pitem);
-        maybe_identify_base_type(*pitem);
-        const item_def& item = *pitem;
-
-        if (!_grid_has_perceived_multiple_items(pos))
-            items.clear();
-
-        // We knew of nothing on this square, so we'll assume this is the
-        // only item here, but mark it as unverified unless we can see nothing
-        // under the item.
-        if (items.empty())
-        {
-            if (!(item.flags & ISFLAG_UNOBTAINABLE))
-                add_item(item);
-            // Note that we could be lying here, since we can have
-            // a verified falsehood (if there's a mimic.)
-            verified = !_grid_has_perceived_multiple_items(pos);
-            return;
-        }
-
-        // There's more than one item in this pile. Check to see if
-        // the top item matches what we remember.
-        const item_def &first = items[0];
-        // Compare these items
-        if (are_items_same(first, item))
-        {
-            // Replace the item to reflect seen recharging, etc.
-            if (!are_items_same(first, item, true))
-            {
-                items.erase(items.begin());
-                add_item(item, true);
-            }
-        }
-        else
-        {
-            // See if 'item' matches any of the items we have. If it does,
-            // we'll just make that the first item and leave 'verified'
-            // unchanged.
-
-            // Start from 1 because we've already checked items[0]
-            for (int i = 1, count = items.size(); i < count; ++i)
-            {
-                if (are_items_same(items[i], item))
-                {
-                    // Found it. Swap it to the front of the vector.
-                    swap(items[i], items[0]);
-
-                    // We don't set verified to true. If this stash was
-                    // already unverified, it remains so.
-                    return;
-                }
-            }
-
-            // If this is unverified, forget last item on stack. This isn't
-            // terribly clever, but it prevents the vector swelling forever.
-            if (!verified)
-                items.pop_back();
-
-            // Items are different. We'll put this item in the front of our
-            // vector, and mark this as unverified
-            add_item(item, true);
-            verified = false;
-        }
+        god_id_item(*si);
+        maybe_identify_base_type(*si);
+        if (!(si->flags & ISFLAG_UNOBTAINABLE))
+            add_item(*si);
     }
+
+    verified = true;
 }
 
 static bool _is_rottable(const item_def &item)

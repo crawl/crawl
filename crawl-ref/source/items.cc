@@ -831,31 +831,11 @@ static void _maybe_give_corpse_hint(const item_def& item)
     }
 }
 
-void item_check()
+string item_message(vector<const item_def *> const &items)
 {
-    describe_floor();
-    origin_set(you.pos());
-
-    ostream& strm = msg::streams(MSGCH_FLOOR_ITEMS);
-
-    auto items = item_list_on_square(you.visible_igrd(you.pos()));
-
-    if (items.empty())
-        return;
-
-    if (items.size() == 1)
-    {
-        const item_def& it(*items[0]);
-        string name = menu_colour_item_name(it, DESC_A);
-        strm << "You see here " << name << '.' << endl;
-        _maybe_give_corpse_hint(it);
-        return;
-    }
-
-    bool done_init_line = false;
-
     if (static_cast<int>(items.size()) >= Options.item_stack_summary_minimum)
     {
+        string out_string;
         vector<unsigned int> item_chars;
         for (unsigned int i = 0; i < items.size() && i < 50; ++i)
         {
@@ -865,7 +845,6 @@ void item_check()
         }
         sort(item_chars.begin(), item_chars.end());
 
-        string out_string = "Items here: ";
         int cur_state = -1;
         string colour = "";
         for (unsigned int i = 0; i < item_chars.size(); ++i)
@@ -895,21 +874,49 @@ void item_check()
         }
         if (!colour.empty())
             out_string += "</" + colour + ">";
-        mpr_nojoin(MSGCH_FLOOR_ITEMS, out_string);
-        done_init_line = true;
+
+        return out_string;
     }
 
-    if (items.size() <= msgwin_lines() - 1)
+    vector<string> colour_names;
+    for (const item_def *it : items)
+        colour_names.push_back(menu_colour_item_name(*it, DESC_A));
+
+    return join_strings(colour_names.begin(), colour_names.end(), "; ");
+}
+
+void item_check()
+{
+    describe_floor();
+    origin_set(you.pos());
+
+    ostream& strm = msg::streams(MSGCH_FLOOR_ITEMS);
+
+    auto items = item_list_on_square(you.visible_igrd(you.pos()));
+
+    if (items.empty())
+        return;
+
+    // Special case
+    if (items.size() == 1)
     {
-        if (!done_init_line)
-            mpr_nojoin(MSGCH_FLOOR_ITEMS, "Things that are here:");
-        for (const item_def *it : items)
-        {
-            mprf_nocap("%s", menu_colour_item_name(*it, DESC_A).c_str());
-            _maybe_give_corpse_hint(*it);
-        }
+        const item_def& it(*items[0]);
+        string name = menu_colour_item_name(it, DESC_A);
+        strm << "You see here " << name << '.' << endl;
+        _maybe_give_corpse_hint(it);
+        return;
     }
-    else if (!done_init_line)
+
+    string desc_string = item_message(items);
+    // Stack summary case
+    if (static_cast<int>(items.size()) >= Options.item_stack_summary_minimum)
+        mprf_nojoin(MSGCH_FLOOR_ITEMS, "Items here: %s.", desc_string.c_str());
+    else if (items.size() <= msgwin_lines() - 1)
+    {
+        mpr_nojoin(MSGCH_FLOOR_ITEMS, "Things that are here:");
+        mprf_nocap("%s", desc_string.c_str());
+    }
+    else
         strm << "There are many items here." << endl;
 
     if (items.size() > 2 && crawl_state.game_is_hints_tutorial())
@@ -919,6 +926,7 @@ void item_check()
         int count = 0;
         for (const item_def *it : items)
         {
+            _maybe_give_corpse_hint(*it);
             if (it->base_type == OBJ_CORPSES)
                 continue;
 
