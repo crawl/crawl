@@ -1370,6 +1370,17 @@ static const struct spell_desc spelldata[] =
     TILEG_IGNITE_POISON,
 },
 
+	{
+		SPELL_CONVERT_POISON, "Viriditas",
+		spschool::poison | spschool::transmutation,
+		spflag::area,
+		4,
+		200,
+		-1, -1,
+		4, 0,
+		TILEG_IGNITE_POISON, // mimicing invocation
+	},
+
 {
     SPELL_STICKS_TO_SNAKES, "Sticks to Snakes",
     spschool::transmutation,

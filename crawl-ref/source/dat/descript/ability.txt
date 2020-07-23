@@ -980,3 +980,11 @@ Hop ability
 Hops toward a chosen destination, landing somewhere nearby. After using this
 ability, you will be unable to hop again until you have spent some time not
 moving. (Other actions, such as casting spells and attacking, are fine.)
+%%%%
+Viriditas ability
+
+Transmute all nearby poisonous, mephitic, miasma, mutagenic gases into
+healing clouds. Toxic bog is also attuned to emit healing clouds. Within
+these healing clouds, the dwellers of the Dungeon or summoned creatures
+are healed rapidly. Although the amount of healing is minimal, you can
+also receive healing from these clouds.

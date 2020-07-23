@@ -924,6 +924,7 @@ static bool _skill_useless_with_god(int skill)
     case GOD_ASHENZARI:
     case GOD_JIYVA:
     case GOD_GOZAG:
+		case GOD_WYRM:
     case GOD_NO_GOD:
         return skill == SK_INVOCATIONS;
     default:

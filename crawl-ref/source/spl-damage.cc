@@ -1729,6 +1729,130 @@ spret cast_ignite_poison(actor* agent, int pow, bool fail, bool tracer)
     return spret::success;
 }
 
+/**
+ * Cast the spell Convert Poison, replace poisonous clouds in LOS
+ * into healing clouds.
+ *
+ * @param agent         The spell's caster.
+ * @param pow           The power with which the spell is being cast.
+ * @param fail          If it's a player spell, whether the spell fail chance
+ *                      was hit (whether the spell will fail as soon as the
+ *                      player chooses not to abort the casting)
+ * @param mon_tracer    Whether the 'casting' is just a tracer (a check to see
+ *                      if it's worth actually casting)
+ * @return              If it's a tracer, spret::success if the spell should
+ *                      be cast & spret::abort otherwise.
+ *                      If it's a real spell, spret::abort if the player chose
+ *                      to abort the spell, spret::fail if they failed the cast
+ *                      chance, and spret::success otherwise.
+ */
+spret cast_convert_poison(actor* agent, int pow, bool fail, bool tracer)
+{
+    if (tracer)
+    {
+        // Estimate how much useful effect we'd get if we cast the spell now
+        const int work = apply_area_visible([agent] (coord_def where) {
+            return _convert_poison_clouds(where, -1, agent)
+                 + _convert_poison_bog(where, -1, agent);
+        }, agent->pos());
+
+        return work > 0 ? spret::success : spret::abort;
+    }
+
+    targeter_radius hitfunc(agent, LOS_NO_TRANS);
+    flash_view_delay(
+        agent->is_player()
+            ? UA_PLAYER
+            : UA_MONSTER,
+        LIGHTGREEN, 100, &hitfunc);
+
+    mprf("%s %s the poisonous cloud in %s surroundings!", agent->name(DESC_THE).c_str(),
+         agent->conj_verb("convert").c_str(),
+         agent->pronoun(PRONOUN_POSSESSIVE).c_str());
+
+    // this could conceivably cause crashes if the player dies midway through
+    // maybe split it up...?
+    apply_area_visible([pow, agent] (coord_def where) {
+        _convert_poison_clouds(where, pow, agent);
+        _convert_poison_bog(where, pow, agent);
+        return 0; // ignored
+    }, agent->pos());
+
+    return spret::success;
+}
+
+/**
+ * Place healing clouds over toxic bogs, by the power of Convert Poison.
+ *
+ * @param where     The tile in question.
+ * @param pow       The power with which Convert Poison is being cast.
+ *                  If -1, this indicates the spell is a test-run 'tracer'.
+ * @param agent     The caster of Convert Poison.
+ * @return          If we're just running a tracer, return the expected 'value'
+ *                  of creating fire clouds in the given location (could be
+ *                  negative if there are allies there).
+ *                  If it's not a tracer, return 1 if a flame cloud is created
+ *                  and 0 otherwise.
+ */
+static int _convert_poison_bog(coord_def where, int pow, actor *agent)
+{
+    const bool tracer = (pow == -1);  // Only testing damage, not dealing it
+
+    if (grd(where) != DNGN_TOXIC_BOG)
+        return false;
+
+    if (tracer)
+    {
+        const int value = _convert_tracer_cloud_value(where, agent);
+        // Player doesn't care about magnitude.
+        return agent && agent->is_player() ? sgn(value) : value;
+    }
+
+    place_cloud(CLOUD_HEAL, where,
+                40 + (pow/40) + random2(10 + pow/2), agent);
+    return true;
+}
+/**
+ * Turn poisonous clouds in the given tile into healing clouds, by the power of
+ * Convert Poison.
+ *
+ * @param where     The tile in question.
+ * @param pow       The power with which Convert Poison is being cast.
+ *                  If -1, this indicates the spell is a test-run 'tracer'.
+ * @param agent     The caster of Convert Poison.
+ * @return          If we're just running a tracer, return the expected 'value'
+ *                  of creating fire clouds in the given location (could be
+ *                  negative if there are allies there).
+ *                  If it's not a tracer, return 1 if a flame cloud is created
+ *                  and 0 otherwise.
+ */
+static int _convert_poison_clouds(coord_def where, int pow, actor *agent)
+{
+    const bool tracer = (pow == -1);  // Only testing damage, not dealing it
+
+    cloud_struct* cloud = cloud_at(where);
+    if (!cloud)
+        return false;
+
+    if (cloud->type != CLOUD_MEPHITIC && cloud->type != CLOUD_POISON
+		&& cloud->type != CLOUD_MIASMA && cloud->type != CLOUD_MUTAGENIC)
+        return false;
+
+    if (tracer)
+    {
+        const int value = _convert_tracer_cloud_value(where, agent);
+        // Player doesn't care about magnitude.
+        return agent && agent->is_player() ? sgn(value) : value;
+    }
+
+    cloud->type = CLOUD_HEAL;
+    cloud->decay = 40 + (pow/40) + random2(10 + pow/2);
+    cloud->whose = agent->kill_alignment();
+    cloud->killer = agent->is_player() ? KILL_YOU_MISSILE : KILL_MON_MISSILE;
+    cloud->source = agent->mid;
+    return true;
+}
+
 static void _ignition_square(const actor */*agent*/, bolt beam, coord_def square, bool center)
 {
     // HACK: bypass visual effect

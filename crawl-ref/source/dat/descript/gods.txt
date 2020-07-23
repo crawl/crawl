@@ -157,6 +157,16 @@ the Loreminder for magical power and the ability to cast spells beyond their
 magical training. The devout are rewarded with a supply of spellbooks taken
 directly from Sif Muna's legendary library.
 %%%%
+the Great Wyrm
+
+The Great Wyrm, also called as 'Wyrm-bites-itself', is an wise and elder deity
+of alchemy. Followers perform their alchemical arts with poison magic and
+transmutation spells. These arts include penetration resistance; even if undeads
+or non-livings, or enhance their transformation and resistance. Also, someday
+they can access to more higher alchemy, such as transmute poison gases into
+healing clouds, emits poisonous gases when damaged, and transmute essence from
+defeating poisoned enemies into curing essence to heal themselves.
+%%%%
 the Shining One
 
 Followers of the Shining One are bound to the code of the honourable warrior,
@@ -402,6 +412,20 @@ the Loreminder to help cast any spell they've discovered, even if it's well
 beyond their current magical training. Over time, devout followers will receive
 spellbooks containing a vast range of spells.
 %%%%
+the Great Wyrm powers
+
+Followers of the Wyrm will receive spellbooks to practice their alchemical arts,
+peform as 'poison magic' and 'transmutation'. The Wyrm is watching its followers
+travel around the world, encounter and observe new things. As travel progresses,
+followers become resistant to poison, later become immune to it. The more favored
+they are, the more likely to be granted the fangs of the Wyrm to penetrate enemy's
+resistance; even undeads or non-livings. Also, their transformation has a chance
+to poison enemies with melee attacks, The expert alchemists can transmute nearby
+poisonous, mepthic, miasma, mutagenic gases and toxic bog into healing clouds,
+or transmute their vein for emit poisonous cloud when damaged. At last, the most
+favored alchemist of the Wyrm, will restore health and cure harmful effects by
+essences from killing poisoned enemies.
+%%%%
 the Shining One powers
 
 Followers of the Shining One are surrounded by a halo that reveals their
@@ -609,6 +633,15 @@ Those in Sif Muna's ill graces find the very forces of magic rebelling against
 them. They are confused and stupefied, their magical reserves drained, their
 enchantments unravelled. Casting spells, too, becomes unreliable – and even
 dangerous.
+%%%%
+the Great Wyrm wrath
+
+The Great Wyrm is a wise deity, but also an elder deity with menacing fangs.
+The Wyrm-of-World will bites those who abandon their travel. They will be
+penetrated by the venomus, slowing, and paralysing fangs of the Wyrm.
+Their poison magic and transmutation spells will occasionally backfire.
+Curing potions and their resistance, even if species trait or immunity, will
+entirely suppressed. 
 %%%%
 the Shining One wrath
 

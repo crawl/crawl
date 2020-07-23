@@ -2317,8 +2317,10 @@ item_def* monster_die(monster& mons, killer_type killer,
             if (gives_player_xp
                 && (have_passive(passive_t::restore_hp)
                     || have_passive(passive_t::mp_on_kill)
-                    || have_passive(passive_t::restore_hp_mp_vs_evil)
+                    || (have_passive(passive_t::restore_hp_mp_vs_evil)
                        && mons.evil())
+					|| (have_passive(passive_t::wyrm_restore
+						&& mons->has_ench(ENCH_POISON)))
                 && !mons_is_object(mons.type)
                 && !player_under_penance()
                 && random2(you.piety) >= piety_breakpoint(0)
@@ -2330,6 +2332,24 @@ item_def* monster_die(monster& mons, killer_type killer,
                 {
                     hp_heal = mons.get_experience_level()
                         + random2(mons.get_experience_level());
+                }
+				if (have_passive(passive_t::wyrm_restore))
+                {
+                    hp_heal = mons.get_experience_level()
+                        + random2(mons.get_experience_level());
+					
+					    you.disease = 0;
+						you.duration[DUR_POISONING] = 0;
+						you.duration[DUR_CONF] = 0;
+						you.duration[DUR_PARALYSIS] = 0; // It can be happen when enemies died by poison
+						you.duration[DUR_SLEEP] = 0;
+						you.duration[DUR_VERTIGO] = 0;
+						you.duration[DUR_SLOW] = 0;
+						you.duration[DUR_PETRIFYING] = 0;
+						you.duration[DUR_WEAK] = 0;
+						restore_stat(STAT_ALL, 0, false);
+						unrot_hp(9999);
+						you.redraw_evasion = true;
                 }
                 if (have_passive(passive_t::restore_hp_mp_vs_evil))
                 {

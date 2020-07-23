@@ -146,12 +146,16 @@ public:
         else
             mpr("That felt strangely inert.");
         // need to redraw from yellow to green even if no hp was gained
-        if (you.duration[DUR_POISONING])
-            you.redraw_hit_points = true;
-        you.duration[DUR_POISONING] = 0;
-        you.disease = 0;
-        you.duration[DUR_CONF] = 0;
-        you.duration[DUR_CIGOTUVIS_PLAGUE] = 0;
+        if (player_under_penance(GOD_WYRM)){
+			mprf(MSGCH_WARN, "The Great Wyrm says: Cures will be useless...");				
+		} else {
+			if (you.duration[DUR_POISONING])
+				you.redraw_hit_points = true;
+			you.duration[DUR_POISONING] = 0;
+			you.disease = 0;
+			you.duration[DUR_CONF] = 0;
+			you.duration[DUR_CIGOTUVIS_PLAGUE] = 0;
+		}
         // Do not heal or hurt player via changing head numbers.
         if (you.species == SP_HYDRA)
             you.head_grow(you.props[HYDRA_HEADS_NET_LOSS].get_int(), false); 

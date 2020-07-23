@@ -1635,6 +1635,32 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
                           (you.experience_level / 2) + (spell_difficulty(spell) * 2),
                           random2avg(88, 3), "the malice of Kikubaaqudgha");
         }
+			else if (spell_typematch(spell, spschool::poison)
+					 && !you_worship(GOD_WYRM)
+					 && you.penance[GOD_WYRM]
+					 && one_chance_in(20))
+			{
+				simple_god_message(" does not allow the disloyal to dabble in "
+								   "poison magic!", GOD_WYRM);
+				MiscastEffect(&you, nullptr,
+							  {miscast_source::god, GOD_WYRM},
+							  spschool::poison,
+							  (you.experience_level / 2) + (spell_difficulty(spell) * 2),
+							  random2avg(88, 3), "the fangs of Great Wyrm");
+			} else if (spell_typematch(spell, spschool::transmutation)
+					 && !you_worship(GOD_WYRM)
+					 && you.penance[GOD_WYRM]
+					 && one_chance_in(20))
+			{
+				simple_god_message(" does not allow the disloyal to dabble in "
+								   "transmutation!", GOD_WYRM);
+				MiscastEffect(&you, nullptr,
+							  {miscast_source::god, GOD_WYRM},
+							  spschool::transmutation,
+							  (you.experience_level / 2) + (spell_difficulty(spell) * 2),
+							  random2avg(88, 3), "the fangs of Great Wyrm");
+			}
+			
         else if (vehumet_supports_spell(spell)
                  && !you_worship(GOD_VEHUMET)
                  && you.penance[GOD_VEHUMET]
@@ -1830,6 +1856,11 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
 
     case SPELL_IGNITE_POISON:
         return cast_ignite_poison(&you, powc, fail);
+		
+		// Not an 'damage' spell, just related ignite poison
+		// The Great Wyrm ability, no failure.
+		case SPELL_CONVERT_POISON:
+			return cast_convert_poison(&you, powc, fail);
 
     case SPELL_TORNADO:
         return cast_tornado(powc, fail);
