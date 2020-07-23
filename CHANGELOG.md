@@ -22,8 +22,26 @@
   - rollback Stoneskin, Insulation, Condensation Shield
 
 ### Changed   
+- 트로그는 이제 광폭화중에 권능을 사용할 수 있음
+  - Trog now can use power while berserk
+  
+- 헤플리아클카나와 베오그는 6성이 될때 아군과 저항을 일부 공유한다.
+  - Hepliaklqana and Beogh share partially resistance with their allies when 6-stars.
+  
+- 헤플리아클카나 배틀메이지 리워크. 이제 배틀메이지 조상은 근접 공격을 할 수 없는 대신, 파이어볼과 화염폭풍을 쓸 수 있게 되었다.
+  - Hepliaklqana battlemage Rework. Now battlemage ancestor can't attack melee, Instead, ancestor can use fireball and firestorm.
+  
+- 헤플리아클카나의 조상은 얻은 룬의 갯수만큼 추가 체력을 얻는다.
+  - Hepliaklqana's ancestors gain additional health equal to the number of runes you get.
+
+- 겔의 위압은 이제 적을 1턴간 고정시킨다.
+  - Gell's Gravitas now pinned the target for 1 turn.
+
 - 장검반격은 이제 50%확률로 나감
   - Long Blade's Riposte buff. Now triggers at 50%
+  
+- 왜곡 무기의 공격 방식이 간소화 되었다. (0.25 feature)
+  - Make distortion simplify (0.25 feature)
   
 - 이제 시체는 다시 수집 마법으로 끌어올 수 있다.
   - Corpse can be apported
