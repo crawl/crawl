@@ -1594,7 +1594,7 @@ static bool _gift_sif_kiku_gift(bool forced)
         // ...also the Great Wyrm
         if (you_worship(GOD_WYRM))
         {
-            make_book_kiku_gift(mitm[thing_created],
+            make_book_wyrm_gift(mitm[thing_created],
                                 gift == BOOK_YOUNG_POISONERS);
         }
         if (thing_created == NON_ITEM)
