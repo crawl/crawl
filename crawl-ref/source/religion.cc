@@ -260,6 +260,8 @@ const vector<god_power> god_powers[NUM_GODS] =
       { 5, "walk on water" },
       { 5, ABIL_BEOGH_GIFT_ITEM, "give items to your followers" },
       { 6, ABIL_BEOGH_RESURRECTION, "revive fallen orcs" },
+      { 6, "Your resistance will partially share with your followers",
+           "You will no longer share resistance with your followers" },
     },
 
     // Jiyva
@@ -397,6 +399,8 @@ const vector<god_power> god_powers[NUM_GODS] =
       { 3, ABIL_HEPLIAKLQANA_TRANSFERENCE, "swap creatures with your ancestor" },
       { 4, ABIL_HEPLIAKLQANA_IDEALISE, "heal and protect your ancestor" },
       { 5, "drain nearby creatures when transferring your ancestor"},
+      { 6, "Your resistance will partially share with your ancestor",
+           "You will no longer share resistance with your ancestor" },
     },
 
     // Wu Jian
