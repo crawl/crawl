@@ -1336,9 +1336,6 @@ static unique_ptr<targeter> _spell_targeter(spell_type spell, int pow,
         return make_unique<targeter_shotgun>(&you, CLOUD_CONE_BEAM_COUNT,
             range);
 
-    case SPELL_LEHUDIBS_CRYSTAL_SHOT:
-        return make_unique<targeter_shotgun>(&you, 5, range);
-
     default:
         break;
     }
@@ -2172,9 +2169,6 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
 
     case SPELL_WILL_OF_EARTH:
         return cast_will_of_earth(target, powc, fail);
-
-    case SPELL_LEHUDIBS_CRYSTAL_SHOT:
-        return cast_lehudibs_crystal_shot(&you, powc, beam, fail);
 
     case SPELL_HAILSTORM:
         return cast_hailstorm(powc, fail);
