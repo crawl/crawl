@@ -2321,10 +2321,14 @@ void full_describe_square(const coord_def &c, bool cleanup)
         // First priority: monsters.
         describe_monsters(*mi);
     }
-    else if (item_info *obj = env.map_knowledge(c).item())
+    else if (const item_info *obj = env.map_knowledge(c).item())
     {
-        // Second priority: objects.
-        describe_item(*obj);
+        // Second priority: item(s).
+        if (!you.see_cell(c))
+            describe_item_popup(*obj);
+        else
+            describe_items(item_list_on_square(you.visible_igrd(c)),
+                           "Describe which item?");
     }
     else
     {
