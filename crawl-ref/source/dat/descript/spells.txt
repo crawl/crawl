@@ -1756,6 +1756,10 @@ Venom Bolt spell
 Fires a penetrating bolt of poison. The range of the bolt is decreased by one
 for every creature it strikes.
 %%%%
+Viriditas spell
+
+<Viriditas ability>
+%%%%
 Virulence spell
 
 Makes a targeted creature more vulnerable to poison.

@@ -416,6 +416,17 @@ const vector<god_power> god_powers[NUM_GODS] =
            "summon a storm of heavenly clouds to empower your attacks",
            "summon a storm of heavenly clouds" },
     },
+
+        // The Great Wyrm
+        { { 0, "Your poison has chance to penetrate resistance, even undeads or non-livings." },
+        { 1, "gain resistance to poison" },
+        { 3, "gain immunity to poison" },
+        { 3, "You will now sometimes emit poisonous cloud when damaged by enemies.",
+           "You will no longer emit poisonous cloud.",
+           "You sometimes emit poisonous cloud when damaged by enemies." },
+        { 5, ABIL_WYRM_CONVERT_POISON,
+            "transmute poisonous, mepthic, miasma, mutagenic gases and toxic bog into healing clouds" },
+        },
 };
 
 vector<god_power> get_god_powers(god_type god)
@@ -1543,6 +1554,20 @@ static bool _gift_sif_kiku_gift(bool forced)
             gift = BOOK_DEATH;
         }
     }
+    else if (you_worship(GOD_WYRM))
+    // Similar to the Wyrm
+    {
+        if (you.piety >= piety_breakpoint(0)
+            && you.num_total_gifts[you.religion] == 0)
+        {
+            gift = BOOK_YOUNG_POISONERS;
+        }
+        else if (you.piety >= piety_breakpoint(2)
+                 && you.num_total_gifts[you.religion] == 1)
+        {
+            gift = BOOK_ALCHEMY;
+        }
+    }
     else if (forced
              || you.piety >= piety_breakpoint(4) && random2(you.piety) > 100)
     {
@@ -1566,6 +1591,12 @@ static bool _gift_sif_kiku_gift(bool forced)
             make_book_kiku_gift(mitm[thing_created],
                                 gift == BOOK_NECROMANCY);
         }
+        // ...also the Great Wyrm
+        if (you_worship(GOD_WYRM))
+        {
+            make_book_wyrm_gift(mitm[thing_created],
+                                gift == BOOK_YOUNG_POISONERS);
+        }
         if (thing_created == NON_ITEM)
             return false;
 
@@ -1582,8 +1613,8 @@ static bool _gift_sif_kiku_gift(bool forced)
 
         you.num_current_gifts[you.religion]++;
         you.num_total_gifts[you.religion]++;
-        // Timeouts are meaningless for Kiku.
-        if (!you_worship(GOD_KIKUBAAQUDGHA))
+        // Timeouts are meaningless for Kiku and the Wyrm.
+        if (!you_worship(GOD_KIKUBAAQUDGHA) || !you_worship(GOD_WYRM))
             _inc_gift_timeout(40 + random2avg(19, 2));
         take_note(Note(NOTE_GOD_GIFT, you.religion));
     }
@@ -2099,6 +2130,7 @@ bool do_god_gift(bool forced)
 
         case GOD_KIKUBAAQUDGHA:
         case GOD_SIF_MUNA:
+        case GOD_WYRM:
             success = _gift_sif_kiku_gift(forced);
             break;
 
@@ -2171,6 +2203,7 @@ string god_name(god_type which_god, bool long_name)
     case GOD_USKAYAW:       return "Uskayaw";
     case GOD_HEPLIAKLQANA:  return "Hepliaklqana";
     case GOD_WU_JIAN:     return "Wu Jian";
+    case GOD_WYRM:     return "the Great Wyrm";
     case GOD_JIYVA: // This is handled at the beginning of the function
     case GOD_ECUMENICAL:    return "an unknown god";
     case NUM_GODS:          return "Buggy";
@@ -4282,6 +4315,7 @@ void handle_god_time(int /*time_delta*/)
         case GOD_CHEIBRIADOS:
         case GOD_SHINING_ONE:
         case GOD_NEMELEX_XOBEH:
+        case GOD_WYRM:
             if (one_chance_in(35))
                 lose_piety(1);
             break;
@@ -4380,6 +4414,7 @@ int god_colour(god_type god) // mv - added
         return LIGHTBLUE;
 
     case GOD_JIYVA:
+    case GOD_WYRM:
         return GREEN;
 
     case GOD_CHEIBRIADOS:

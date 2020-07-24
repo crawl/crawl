@@ -420,6 +420,15 @@ static const vector<god_passive> god_passives[] =
         { 1, passive_t::wu_jian_whirlwind, "lightly attack and pin monsters in place by moving around them." },
         { 2, passive_t::wu_jian_wall_jump, "perform airborne attacks by moving against a solid obstacle." },
     },
+    
+    // The Great Wyrm
+    {
+        {  2, passive_t::wyrm_poisonous,
+              "While transformed, your melee attacks has chance to poison your enemies" },
+
+        {  6, passive_t::wyrm_restore,
+              "gain health and cure yourself from killing poisoned enemy" },
+    }
 };
 COMPILE_CHECK(ARRAYSZ(god_passives) == NUM_GODS);
 

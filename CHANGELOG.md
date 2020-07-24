@@ -6,6 +6,9 @@
 
 ## [Unreleased]
 ### Added
+- 새로운 신 위대한 뱀 추가. 연금술의 신이며 독 마법과 변이술을 지원해줌. 상세 설명은 [이 곳](https://github.com/kimjoy2002/crawl/pull/260#issue-455796133)을 확인
+  - New god: The Great Wyrm. God of Alchemy, supporting poison magic and transmutation. Click [here](https://github.com/kimjoy2002/crawl/pull/260#issue-455796133) for details
+
 - 새로운 종족 호문쿨루스 추가. 호문쿨루스는 반생명 반인공체기에 둘의 특성을 동시에 가지고있고 14레벨에 한 쪽을 특화시킬 수 있다. 또한 마법을 사용할때마다 일시적인 와일드매직을 얻고, 근접공격으론 그 수치를 줄일 수 있다.
   - Added homunculus(playable). Homunculus are a semi-living, semi-artificial speices. they can specialize in 14 level. Also, whenever magic is used, temporary wild magic stack up, and melee attacks can reduce that stack.
   
@@ -22,8 +25,26 @@
   - rollback Stoneskin, Insulation, Condensation Shield
 
 ### Changed   
+- 트로그는 이제 광폭화중에 권능을 사용할 수 있음
+  - Trog now can use power while berserk
+  
+- 헤플리아클카나와 베오그는 6성이 될때 아군과 저항을 일부 공유한다.
+  - Hepliaklqana and Beogh share partially resistance with their allies when 6-stars.
+  
+- 헤플리아클카나 배틀메이지 리워크. 이제 배틀메이지 조상은 근접 공격을 할 수 없는 대신, 파이어볼과 화염폭풍을 쓸 수 있게 되었다.
+  - Hepliaklqana battlemage Rework. Now battlemage ancestor can't attack melee, Instead, ancestor can use fireball and firestorm.
+  
+- 헤플리아클카나의 조상은 얻은 룬의 갯수만큼 추가 체력을 얻는다.
+  - Hepliaklqana's ancestors gain additional health equal to the number of runes you get.
+
+- 겔의 위압은 이제 적을 1턴간 고정시킨다.
+  - Gell's Gravitas now pinned the target for 1 turn.
+
 - 장검반격은 이제 50%확률로 나감
   - Long Blade's Riposte buff. Now triggers at 50%
+  
+- 왜곡 무기의 공격 방식이 간소화 되었다. (0.25 feature)
+  - Make distortion simplify (0.25 feature)
   
 - 이제 시체는 다시 수집 마법으로 끌어올 수 있다.
   - Corpse can be apported
