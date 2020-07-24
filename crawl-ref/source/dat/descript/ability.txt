@@ -180,10 +180,10 @@ terrain.
 #Crustacean
 Undergo Ecdysis ability
 
-Recovers your reduced stats and maximum HP and increases your AC by one,
-shedding your old, damaged shell. It takes some time to moult and you remain
-extremely vulnerable in the process. After you moult, you should wait to grow
-even if you have another moulting chance.
+Recovers your reduced stats and maximum HP and increases your AC, by shedding
+your old, damaged shell. It takes some time to moult and you remain extremely
+vulnerable in the process. After you moult, you get bigger and you should wait
+to grow even if you have another moulting chance. 
 %%%%
 Crab Walking ability
 
