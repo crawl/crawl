@@ -67,6 +67,8 @@ string InvTitle::get_text(const bool) const
 InvEntry::InvEntry(const item_def &i)
     : MenuEntry("", MEL_ITEM), item(&i), _has_star(false)
 {
+    // Data is an inherited void *. When using InvEntry in menus
+    // use the const item in this class whenever possible
     data = const_cast<item_def *>(item);
 
     if (in_inventory(i) && i.base_type != OBJ_GOLD)

@@ -1293,22 +1293,19 @@ bool ShopMenu::process_key(int keyin)
     if (keyin - 'a' >= 0 && keyin - 'a' < (int)items.size()
         && menu_action == ACT_EXAMINE)
     {
+        // A hack to make the description more useful.
+        // The default copy constructor is non-const for item_def,
+        // so we need this violation of const hygene to tweak the flags
+        // to make the description more useful. The flags are copied by
+        // value by the default copy constructor so this is safe.
         item_def& item(*const_cast<item_def*>(dynamic_cast<ShopEntry*>(
             items[letter_to_index(keyin)])->item));
-        // A hack to make the description more useful.
-        // In theory, the user could kill the process at this
-        // point and end up with valid ID for the item.
-        // That's not very useful, though, because it doesn't set
-        // type-ID and once you can access the item (by buying it)
-        // you have its full ID anyway. Worst case, it won't get
-        // noted when you buy it.
-        unwind_var<iflags_t> old_flags(item.flags);
         if (shoptype_identifies_stock(shop.type))
         {
             item.flags |= (ISFLAG_IDENT_MASK | ISFLAG_NOTED_ID
                            | ISFLAG_NOTED_GET);
         }
-        describe_item(item);
+        describe_item_popup(item);
 
         return true;
     }
@@ -2261,7 +2258,7 @@ void ShoppingList::display(bool view_only)
             if (is_item)
             {
                 const item_def &item = get_thing_item(*thing);
-                describe_item(const_cast<item_def&>(item));
+                describe_item_popup(item);
             }
             else // not an item, so we only stored a description.
             {

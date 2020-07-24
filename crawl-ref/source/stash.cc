@@ -1691,7 +1691,7 @@ bool StashTracker::display_search_results(
             if (res->item.defined())
             {
                 item_def it = res->item;
-                describe_item(it,
+                describe_item_popup(it,
                     [search, nohl](string& desc)
                     {
                         if (!nohl)

@@ -665,9 +665,9 @@ static coord_def _full_describe_menu(vector<monster_info> const &list_mons,
         else if (quant == 2)
         {
             // Get selected item.
-            item_def* i = static_cast<item_def*>(sel.data);
+            const item_def* i = static_cast<item_def*>(sel.data);
             if (desc_menu.menu_action == InvMenu::ACT_EXAMINE)
-                describe_item(*i);
+                describe_item_popup(*i);
             else // ACT_EXECUTE -> view/travel
                 target = i->pos;
         }
