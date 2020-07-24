@@ -1814,19 +1814,19 @@ int player_res_poison(bool calc_unid, bool temp, bool items)
     // don't allow rPois--, etc.
     rp = max(-1, rp);
 
-		// The Great Wyrm grants: rPois+ -> ImmunePois
-		if (you_worship(GOD_WYRM))
-		{
-			if (you.piety >= piety_breakpoint(1))
-				rp = max(1, rp);
-			if (you.piety >= piety_breakpoint(3))
-				rp = max(3, rp);
-		}
-		// Under penance of the Great Wyrm, loss resistance
-		if (player_under_penance(GOD_WYRM))
-		{
-			rp = min(0, rp);
-		}
+        // The Great Wyrm grants: rPois+ -> ImmunePois
+        if (you_worship(GOD_WYRM))
+        {
+            if (you.piety >= piety_breakpoint(1))
+                rp = max(1, rp);
+            if (you.piety >= piety_breakpoint(3))
+                rp = max(3, rp);
+        }
+        // Under penance of the Great Wyrm, loss resistance
+        if (player_under_penance(GOD_WYRM))
+        {
+            rp = min(0, rp);
+        }
 
     return rp;
 }

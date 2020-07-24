@@ -23,6 +23,7 @@
 #include "item-use.h"
 #include "libutil.h"
 #include "macro.h" // command_to_string
+#include "monster.h"
 #include "message.h"
 #include "mutation.h"
 #include "nearby-danger.h"
@@ -34,7 +35,9 @@
 #include "spl-miscast.h"
 #include "spl-selfench.h"
 #include "spl-summoning.h"
+#include "spl-transloc.h"
 #include "spl-wpnench.h"
+#include "stringutil.h"
 #include "xom.h"
 
 static void _mark_unseen_monsters();

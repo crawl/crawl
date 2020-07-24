@@ -33,7 +33,7 @@ spret cast_ignite_poison(actor *agent, int pow, bool fail,
 // The Great Wyrm's Viriditas
 spret cast_convert_poison(actor *agent, int pow, bool fail,
                               bool tracer = false);
-							  
+
 bool safe_discharge(coord_def where, vector<const actor *> &exclude);
 spret cast_discharge(int pow, const actor &agent, bool fail = false,
                           bool prompt = true);

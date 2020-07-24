@@ -287,7 +287,7 @@ enum dungeon_feature_type
     DNGN_RUNED_CLEAR_DOOR,
     DNGN_SEALED_CLEAR_DOOR,
     DNGN_TOXIC_BOG,
-		DNGN_ALTAR_WYRM,
+    DNGN_ALTAR_WYRM,
 #endif
     DNGN_TEMPORAL_FLOOR,
 

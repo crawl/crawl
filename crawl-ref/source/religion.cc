@@ -260,6 +260,8 @@ const vector<god_power> god_powers[NUM_GODS] =
       { 5, "walk on water" },
       { 5, ABIL_BEOGH_GIFT_ITEM, "give items to your followers" },
       { 6, ABIL_BEOGH_RESURRECTION, "revive fallen orcs" },
+      { 6, "Your resistance will partially share with your followers",
+           "You will no longer share resistance with your followers" },
     },
 
     // Jiyva
@@ -397,6 +399,8 @@ const vector<god_power> god_powers[NUM_GODS] =
       { 3, ABIL_HEPLIAKLQANA_TRANSFERENCE, "swap creatures with your ancestor" },
       { 4, ABIL_HEPLIAKLQANA_IDEALISE, "heal and protect your ancestor" },
       { 5, "drain nearby creatures when transferring your ancestor"},
+      { 6, "Your resistance will partially share with your ancestor",
+           "You will no longer share resistance with your ancestor" },
     },
 
     // Wu Jian
@@ -412,17 +416,17 @@ const vector<god_power> god_powers[NUM_GODS] =
            "summon a storm of heavenly clouds to empower your attacks",
            "summon a storm of heavenly clouds" },
     },
-	
-		// The Great Wyrm
-		{ { 0, "Your poison has chance to penetrate resistance, even undeads or non-livings." },
-		  { 1, "gain resistance to poison" },
-		  { 3, "gain immunity to poison" },
-		  { 3, "You will now sometimes emit poisonous cloud when damaged by enemies.",
+
+        // The Great Wyrm
+        { { 0, "Your poison has chance to penetrate resistance, even undeads or non-livings." },
+        { 1, "gain resistance to poison" },
+        { 3, "gain immunity to poison" },
+        { 3, "You will now sometimes emit poisonous cloud when damaged by enemies.",
            "You will no longer emit poisonous cloud.",
            "You sometimes emit poisonous cloud when damaged by enemies." },
-		  { 5, ABIL_WYRM_CONVERT_POISON,
-			"transmute poisonous, mepthic, miasma, mutagenic gases and toxic bog into healing clouds" },
-		},
+        { 5, ABIL_WYRM_CONVERT_POISON,
+            "transmute poisonous, mepthic, miasma, mutagenic gases and toxic bog into healing clouds" },
+        },
 };
 
 vector<god_power> get_god_powers(god_type god)
@@ -1550,8 +1554,8 @@ static bool _gift_sif_kiku_gift(bool forced)
             gift = BOOK_DEATH;
         }
     }
-	else if (you_worship(GOD_WYRM))
-	// Similar to the Wyrm
+    else if (you_worship(GOD_WYRM))
+    // Similar to the Wyrm
     {
         if (you.piety >= piety_breakpoint(0)
             && you.num_total_gifts[you.religion] == 0)
@@ -1587,12 +1591,12 @@ static bool _gift_sif_kiku_gift(bool forced)
             make_book_kiku_gift(mitm[thing_created],
                                 gift == BOOK_NECROMANCY);
         }
-			// ...also the Great Wyrm
-			if (you_worship(GOD_WYRM))
-			{
-				make_book_kiku_gift(mitm[thing_created],
-									gift == BOOK_YOUNG_POISONERS);
-			}
+        // ...also the Great Wyrm
+        if (you_worship(GOD_WYRM))
+        {
+            make_book_wyrm_gift(mitm[thing_created],
+                                gift == BOOK_YOUNG_POISONERS);
+        }
         if (thing_created == NON_ITEM)
             return false;
 
@@ -1781,19 +1785,19 @@ static int _hepliaklqana_ally_hd()
  */
 int hepliaklqana_ally_hp()
 {
-	// Base
+    // Base
     const int HD = _hepliaklqana_ally_hd();
-	const int HP = HD * 5 + max(0, (HD - 12) * 5);
-	
-	// +Collected Runes bonus
-	if (runes_in_pack() <= 3){
-		// 0-3 Runes: +0 ~ +30
-		HP = HP + (runes_in_pack()*10);
-	} else {
-		// after 3 Runes: +50 ~ +270
-		HP = HP + 30 + ((runes_in_pack()-3)*20);
-	}
-	
+    int HP = HD * 5 + max(0, (HD - 12) * 5);
+
+    // +Collected Runes bonus
+    if (runes_in_pack() <= 3){
+        // 0-3 Runes: +0 ~ +30
+        HP = HP + (runes_in_pack()*10);
+    } else {
+        // after 3 Runes: +50 ~ +270
+        HP = HP + 30 + ((runes_in_pack()-3)*20);
+    }
+
     return HP;
 }
 
@@ -2199,7 +2203,7 @@ string god_name(god_type which_god, bool long_name)
     case GOD_USKAYAW:       return "Uskayaw";
     case GOD_HEPLIAKLQANA:  return "Hepliaklqana";
     case GOD_WU_JIAN:     return "Wu Jian";
-		case GOD_WYRM:     return "the Great Wyrm";
+    case GOD_WYRM:     return "the Great Wyrm";
     case GOD_JIYVA: // This is handled at the beginning of the function
     case GOD_ECUMENICAL:    return "an unknown god";
     case NUM_GODS:          return "Buggy";
@@ -4311,7 +4315,7 @@ void handle_god_time(int /*time_delta*/)
         case GOD_CHEIBRIADOS:
         case GOD_SHINING_ONE:
         case GOD_NEMELEX_XOBEH:
-		case GOD_WYRM:
+        case GOD_WYRM:
             if (one_chance_in(35))
                 lose_piety(1);
             break;

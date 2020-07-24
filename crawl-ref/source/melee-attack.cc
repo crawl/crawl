@@ -512,15 +512,14 @@ bool melee_attack::handle_phase_hit()
             }
         }
     }
-	if (attacker->is_player() && you_worship(GOD_WYRM)
-		&& !player_under_penance(GOD_WYRM)
-		&& have_passive(passive_t::wyrm_poisonous)
-		&& you.form != transformation::none){
-		// The Great Wyrm: chance to poison while transformed
-		if (x_chance_in_y(one_chance_in(20) || x_chance_in_y(you.piety, 400))
-			defender->poison(attacker, 2);
-	}
-}
+    if (attacker->is_player() && you_worship(GOD_WYRM)
+        && !player_under_penance(GOD_WYRM)
+        && have_passive(passive_t::wyrm_poisonous)
+        && you.form != transformation::none){
+        // The Great Wyrm: chance to poison while transformed
+        if (one_chance_in(20) || x_chance_in_y(you.piety, 400))
+            defender->poison(attacker, 2);
+    }
 
 
     // This does more than just calculate the damage, it also sets up

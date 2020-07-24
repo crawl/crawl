@@ -259,15 +259,15 @@ enum class passive_t
 
     //jiyva kill to slime
     jiyva_kill_to_slime,
-	
-	/// share resistance
-	share_resistance,
-	
-	/// the Great Wyrm: poisonous melee attack
-	wyrm_poisonous,	
-	
-	/// the Great Wyrm: restore & cure
-	wyrm_restore,
+    
+    ///share resistance
+    share_resistance,
+    
+    /// the Great Wyrm: poisonous melee attack
+    wyrm_poisonous,	
+    
+    /// the Great Wyrm: restore & cure
+    wyrm_restore,
 };
 
 enum ru_interference

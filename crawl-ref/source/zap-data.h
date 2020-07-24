@@ -1518,4 +1518,21 @@ _mon_hex_zap(ZAP_DRAIN_MAGIC, BEAM_DRAIN_MAGIC),
     0 // Noise comes from explosion
 },
 
+{
+    ZAP_LEHUDIBS_CRYSTAL_SHOT,      // was splinters
+    "crystal spear",
+    200,
+    new calcdice_calculator<10, 23, 1, 1>,
+    new tohit_calculator<10, 1, 15>,
+    new dicedef_calculator<3, 16, 1, 10>,
+    new tohit_calculator<22, 1, 20>,
+    WHITE,
+    false,
+    BEAM_MMISSILE,
+    DCHAR_FIRED_MISSILE,
+    true,
+    true,
+    false,
+    8
+},
 };

@@ -1734,13 +1734,13 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
                 result = god_title(god, species, piety);
             break;
 
-			// Alchemy god: poison + transmute
-			// Use higher skill?
-			case SK_POISON_MAGIC:
-			case SK_TRANSMUTATIONS:
-				if (god == GOD_WYRM)
-					result = god_title(god, species, piety);
-				break;
+        // Alchemy god: poison + transmute
+        // Use higher skill?
+        case SK_POISON_MAGIC:
+        case SK_TRANSMUTATIONS:
+            if (god == GOD_WYRM)
+                result = god_title(god, species, piety);
+            break;
 
         default:
             break;

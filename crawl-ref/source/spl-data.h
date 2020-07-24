@@ -1370,16 +1370,16 @@ static const struct spell_desc spelldata[] =
     TILEG_IGNITE_POISON,
 },
 
-	{
-		SPELL_CONVERT_POISON, "Viriditas",
-		spschool::poison | spschool::transmutation,
-		spflag::area,
-		4,
-		200,
-		-1, -1,
-		4, 0,
-		TILEG_IGNITE_POISON, // mimicing invocation
-	},
+    {
+        SPELL_CONVERT_POISON, "Viriditas",
+        spschool::poison | spschool::transmutation,
+        spflag::area,
+        4,
+        200,
+        -1, -1,
+        4, 0,
+        TILEG_IGNITE_POISON, // mimicing invocation
+    },
 
 {
     SPELL_STICKS_TO_SNAKES, "Sticks to Snakes",
@@ -4255,7 +4255,7 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_LEHUDIBS_CRYSTAL_SHOT, "Lehudib's Crystal Shot",
+    SPELL_LEHUDIBS_CRYSTAL_SHOT, "Lehudib's Crystal Spear",
     spschool::conjuration | spschool::earth,
     spflag::dir_or_target | spflag::needs_tracer,
     8,

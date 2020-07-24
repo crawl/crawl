@@ -1062,25 +1062,25 @@ void make_book_wyrm_gift(item_def &book, bool first)
 
     if (first)
     {
-		bool can_transform = you.species != SP_GHOUL
+        bool can_transform = you.species != SP_GHOUL
             && you.species != SP_GHOUL
             && you.species != SP_ADAPTION_HOMUNCULUS;
-		
-		chosen_spells[0] = coinflip() ? SPELL_STING : SPELL_POISONOUS_VAPOURS;
+
+        chosen_spells[0] = coinflip() ? SPELL_STING : SPELL_POISONOUS_VAPOURS;
         chosen_spells[1] = coinflip() ? SPELL_MEPHITIC_CLOUD : SPELL_IGNITE_POISON;
-		chosen_spells[2] = SPELL_FULSOME_DISTILLATION;
-		chosen_spells[3] = SPELL_EVAPORATE;
-		if (can_transform) { chosen_spells[4] = SPELL_SPIDER_FORM; }
+        chosen_spells[2] = SPELL_FULSOME_DISTILLATION;
+        chosen_spells[3] = SPELL_EVAPORATE;
+        if (can_transform) { chosen_spells[4] = SPELL_SPIDER_FORM; }
     }
     else
     {
         chosen_spells[0] = random_choose(SPELL_OLGREBS_TOXIC_RADIANCE,
-											SPELL_ERINGYAS_ROOTSPIKE,
-											SPELL_VENOM_BOLT);
+                                            SPELL_ERINGYAS_ROOTSPIKE,
+                                            SPELL_VENOM_BOLT);
         chosen_spells[1] = random_choose(SPELL_INTOXICATE,
-											SPELL_NOXIOUS_BOG);
-		chosen_spells[2] = SPELL_POISON_ARROW;
-		chosen_spells[3] = SPELL_OLGREBS_LAST_MERCY;
+                                            SPELL_NOXIOUS_BOG);
+        chosen_spells[2] = SPELL_POISON_ARROW;
+        chosen_spells[3] = SPELL_OLGREBS_LAST_MERCY;
     }
 
     sort(chosen_spells, chosen_spells + RANDBOOK_SIZE, _compare_spells);
