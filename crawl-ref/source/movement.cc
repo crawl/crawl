@@ -574,30 +574,30 @@ static spret _lunge_forward(coord_def move)
     // Iterate the tracer to see if the first visible target is a hostile mons.
     for (coord_def p : beam.path_taken)
     {
-        // Don't lunge if our tracer path is broken by deep water, lava,
-        // teleport traps, etc., before it reaches a monster.
-        if (!feat_is_traversable(grd(p))
-            && !(grd(p) == DNGN_SHALLOW_WATER))
-        {
-            break;
-        }
-        // Don't lunge if the tracer path is broken by something solid or
-        // transparent: doors, grates, etc.
-        if (cell_is_solid(p) || you.trans_wall_blocking(p))
-            break;
+        // Don't lunge without direct visibility to the target tile.
+        if (!you.see_cell_no_trans(p))
+            return spret::fail;
+
+        // Don't lunge if our tracer path is broken by something we can't
+        // pass through before it reaches a monster.
+        if (!you.can_pass_through(p))
+            return spret::fail;
 
         const monster* mon = monster_at(p);
         if (!mon)
             continue;
+        // Allow our tracer to passthrough Fedhas allies.
+        else if (mon && fedhas_passthrough(mon))
+            continue;
         // Don't lunge at invis mons, but allow the tracer to keep going.
         else if (mon && !you.can_see(*mon))
             continue;
-        // Don't lunge if the closest mons is non-hostile or a plant.
+        // Don't lunge if the closest mons is non-hostile or a (non-Fedhas) plant.
         else if (mon && (mon->friendly()
                          || mon->neutral()
                          || mons_is_firewood(*mon)))
         {
-            break;
+            return spret::fail;
         }
         // Okay, the first mons along the tracer is a valid target.
         else if (mon)
@@ -636,43 +636,31 @@ static spret _lunge_forward(coord_def move)
         return spret::fail;
     }
 
-    // Don't lunge if it would land us on top of a monster.
+    // Do allow lunging on top of Fedhas plants,
     const monster* mons = monster_at(beam.target);
-    if (mons)
+    bool fedhas_move = false;
+    if (mons && fedhas_passthrough(mons))
+        fedhas_move = true;
+    // but otherwise, don't lunge if it would land us on top of a monster,
+    else if (mons)
     {
         if (!you.can_see(*mons))
         {
-            // .. if it was in the way and invisible, notify the player.
+            // .. and if a mons was in the way and invisible, notify the player.
             clear_messages();
             mpr("Something unexpectedly blocked you, preventing you from lunging!");
         }
         return spret::fail;
     }
 
-    // Don't lunge if the target tile has a dangerous (!FFT_SOLID) feature:
-    if (feat_is_lava(grd(beam.target)))
-        return spret::fail;
-    else if (grd(beam.target) == DNGN_DEEP_WATER
-             || grd(beam.target) == DNGN_TOXIC_BOG)
-    {
-        return spret::fail;
-    }
-    // Don't lunge if the target tile is out of bounds,
-    // Don't lunge if we cannot see the target tile,
-    // Don't lunge if something transparent is in the way.
-    else if (you.trans_wall_blocking(beam.target))
-        return spret::fail;
-    // Don't lunge if the target tile has a feature with the FFT_SOLID flag:
-    // (see feature-data.h)
-    // This covers walls, closed doors, sealed doors, trees, open sea, lava sea,
-    // endless salt, grates, statues, malign gateways, and DNGN_UNSEEN.
-    else if (cell_is_solid(beam.target))
-        return spret::fail;
-
     // Abort if the player answers no to a dangerous terrain/trap/cloud/
     // exclusion prompt; messaging for this is handled by check_moveto().
     if (!check_moveto(beam.target, "lunge"))
+    {
+        stop_running();
+        you.turn_is_over = false;
         return spret::abort;
+    }
 
     // Abort if the player answers no to a DUR_BARBS damaging move prompt.
     if (cancel_barbed_move(true))
@@ -686,7 +674,15 @@ static spret _lunge_forward(coord_def move)
     const coord_def old_pos = you.pos();
 
     clear_messages();
-    mprf("You lunge towards %s!", valid_target->name(DESC_THE, true).c_str());
+    const monster* current = monster_at(you.pos());
+    if (fedhas_move && (!current || !fedhas_passthrough(current)))
+    {
+        mprf("You lunge quickly through the %s towards %s!",
+             mons_genus(mons->type) == MONS_FUNGUS ? "fungus" : "plants",
+             valid_target->name(DESC_THE, true).c_str());
+    }
+    else
+        mprf("You lunge towards %s!", valid_target->name(DESC_THE, true).c_str());
     // stepped = true, we're flavouring this as movement, not a blink.
     move_player_to_grid(beam.target, true);
 
@@ -726,7 +722,7 @@ static void _apply_move_time_taken(int additional_time_taken)
 // Here we apply movedelay, end the turn, and call relevant post-move effects.
 static void _finalize_cancelled_lunge_move(coord_def initial_position)
 {
-    _apply_move_time_taken();   // tanstaaf-lunge
+    _apply_move_time_taken();
     you.turn_is_over = true;
 
     if (player_in_branch(BRANCH_ABYSS))
