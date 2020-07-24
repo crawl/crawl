@@ -302,11 +302,6 @@ int spell_rarity(spell_type which_spell)
     return rarity;
 }
 
-void read_book(item_def &book)
-{
-    describe_item(book);
-}
-
 /**
  * Is the player ever allowed to memorise the given spell? (Based on race, not
  * spell slot restrictions, etc)

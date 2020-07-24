@@ -24,8 +24,6 @@ bool is_player_spell(spell_type which_spell);
 
 bool book_has_title(const item_def &book);
 
-void read_book(item_def &item);
-
 bool player_can_memorise(const item_def &book);
 bool can_learn_spell(bool silent = false);
 bool player_has_available_spells();
