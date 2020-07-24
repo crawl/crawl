@@ -1063,15 +1063,8 @@ bool connected_branch_can_exist(branch_type br)
     return true;
 }
 
-static int _prompt_annotate_branch(level_id lid)
+static void _show_dungeon_overview()
 {
-    // these 3 lines make a vector containing all shown branches.
-    vector<branch_type> brs;
-    for (branch_iterator it; it; ++it)
-        if (is_known_branch_id(it->id))
-            brs.push_back(it->id);
-
-
     // Make the little overview
     // (D) Dungeon        (T) Temple         (L) Lair           etc.
     // at most 4 branches on 1 line
@@ -1093,8 +1086,19 @@ static int _prompt_annotate_branch(level_id lid)
     }
     if (!line.empty())
         mpr(line);
+    return;
+}
 
-    mprf(MSGCH_PROMPT, "Annotate which branch? (. - %s, ? - help)",
+static int _prompt_annotate_branch(level_id lid)
+{
+    // these 3 lines make a vector containing all shown branches.
+    vector<branch_type> brs;
+    for (branch_iterator it; it; ++it)
+        if (is_known_branch_id(it->id))
+            brs.push_back(it->id);
+
+
+    mprf(MSGCH_PROMPT, "Annotate which branch? (. - %s, ? - help, ! - show branch list)",
         lid.describe(false, true).c_str());
 
     while (true)
@@ -1106,6 +1110,9 @@ static int _prompt_annotate_branch(level_id lid)
             return ID_CANCEL;
         case '?':
             show_annotate_help();
+            break;
+        case '!':
+            _show_dungeon_overview();
             break;
         case '\n': case '\r': case '.':
             return ID_HERE;

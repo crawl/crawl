@@ -241,6 +241,7 @@ annotate.prompt
  <w><<</w>          : Annotate the level upstairs.
  <w>></w>          : Annotate the level downstairs.
  <w>Ctrl-P</w>     : Annotate a level in the branch above this one.
+ <w>!</w>          : Show list of dungeon branches.
 
 %%%%
 butchering
