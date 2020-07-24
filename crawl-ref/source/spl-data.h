@@ -396,19 +396,6 @@ static const struct spell_desc spelldata[] =
     TILEG_MASS_ABJURATION,
 },
 
-#if TAG_MAJOR_VERSION == 34
-{
-    SPELL_SUMMON_SCORPIONS, "Summon Scorpions",
-    spschool::summoning | spschool::poison,
-    spflag::none,
-    4,
-    200,
-    -1, -1,
-    3, 0,
-    TILEG_ERROR,
-},
-#endif
-
 {
     SPELL_BOLT_OF_DRAINING, "Bolt of Draining",
     spschool::conjuration | spschool::necromancy,
@@ -3336,6 +3323,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    // This "spell" is implemented in a way that ignores all this information,
+    // and it is never triggered the way spells usually are, but it still has
+    // a spell-type enum entry. So, use fake data in order to have a valid
+    // entry here. If it ever were to be castable, this would need some updates.
+    SPELL_SONIC_WAVE, "Sonic wave",
+    spschool::none,
+    spflag::noisy,
+    7, 0, -1, -1, 0, 0, TILEG_ERROR
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     spschool::none,
     spflag::testing,
@@ -3412,6 +3410,18 @@ AXED_SPELL(SPELL_THROW, "Throw")
 AXED_SPELL(SPELL_VAMPIRE_SUMMON, "Vampire Summon")
 AXED_SPELL(SPELL_WARP_BRAND, "Warp Weapon")
 AXED_SPELL(SPELL_WEAVE_SHADOWS, "Weave Shadows")
+AXED_SPELL(SPELL_STRIKING, "Striking")
+AXED_SPELL(SPELL_SUMMON_SCORPIONS, "Summon Scorpions")
+AXED_SPELL(SPELL_RESURRECT, "Resurrect")
+AXED_SPELL(SPELL_HOLY_WORD, "Holy word")
+AXED_SPELL(SPELL_SACRIFICE, "Sacrifice")
+AXED_SPELL(SPELL_MIASMA_CLOUD, "Miasma cloud")
+AXED_SPELL(SPELL_POISON_CLOUD, "Poison cloud")
+AXED_SPELL(SPELL_FIRE_CLOUD, "Fire cloud")
+AXED_SPELL(SPELL_STEAM_CLOUD, "Steam cloud")
+AXED_SPELL(SPELL_HOMUNCULUS, "Homunculus")
+AXED_SPELL(SPELL_SERPENT_OF_HELL_BREATH_REMOVED, "Old serpent of hell breath")
+AXED_SPELL(SPELL_SCATTERSHOT, "Scattershot")
 #endif
 
 };
