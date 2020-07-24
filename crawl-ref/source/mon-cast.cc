@@ -1923,9 +1923,7 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_SUMMON_DRAGON:
     case SPELL_SUMMON_HYDRA:
     case SPELL_FIRE_SUMMON:
-#if TAG_MAJOR_VERSION == 34
     case SPELL_DEATHS_DOOR:
-#endif
     case SPELL_OZOCUBUS_ARMOUR:
     case SPELL_OLGREBS_TOXIC_RADIANCE:
     case SPELL_SHATTER:
@@ -6685,6 +6683,17 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
                 .set_summoned(mons, duration, spell_cast, god));
         }
         return;
+
+    
+    case SPELL_DEATHS_DOOR:
+         if (!mons->has_ench(ENCH_DEATHS_DOOR))
+         {
+             const int dur = BASELINE_DELAY * 2 * mons->skill(SK_NECROMANCY);
+             mprf("%s stands defiantly in death's doorway!", mons->name(DESC_THE).c_str());
+             mons->hit_points = std::max(std::min(mons->hit_points, mons->skill(SK_NECROMANCY)), 1);
+             mons->add_ench(mon_enchant(ENCH_DEATHS_DOOR, 0, mons, dur));
+         }
+         return;
 
     case SPELL_REGENERATION:
     {

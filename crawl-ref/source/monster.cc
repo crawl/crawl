@@ -4503,6 +4503,8 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
                 amount /= 2;
             else if (petrifying())
                 amount = amount * 2 / 3;
+            else if (this->has_ench(ENCH_DEATHS_DOOR))
+               return (0);
         }
 
         if (amount != INSTANT_DEATH && has_ench(ENCH_INJURY_BOND))
