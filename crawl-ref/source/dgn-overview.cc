@@ -1063,11 +1063,13 @@ bool connected_branch_can_exist(branch_type br)
     return true;
 }
 
+/**
+ * Make the little overview
+ * (D) Dungeon        (T) Temple         (L) Lair           etc.
+ * at most 4 branches on 1 line
+*/
 static void _show_dungeon_overview(vector<branch_type> brs)
 {
-    // Make the little overview
-    // (D) Dungeon        (T) Temple         (L) Lair           etc.
-    // at most 4 branches on 1 line
     clear_messages();
     int linec = 0;
     string line;
