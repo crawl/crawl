@@ -381,6 +381,10 @@ static bool _check_charge_through(coord_def pos)
 static bool _find_charge_target(vector<coord_def> &target_path, int max_range,
                                 targeter *hitfunc)
 {
+    // Check for unholy weapons, breadswinging, etc
+    if (!wielded_weapon_check(you.weapon()))
+        return false;
+
     while (true)
     {
         // query for location {dlb}:
@@ -470,36 +474,29 @@ static bool _find_charge_target(vector<coord_def> &target_path, int max_range,
         if (bad_charge != "")
         {
             mpr(bad_charge.c_str());
-            continue;
+            return false;
         }
 
         if (adjacent(you.pos(), ray.pos()))
         {
             mprf("You're already next to %s!",
                  target_mons->name(DESC_THE).c_str());
-            continue;
+            return false;
         }
 
-        // prompt to make sure the player really wants to attack the monsteri
+        // prompt to make sure the player really wants to attack the monster
         // (if extant and not hostile)
         // Intentionally don't use the real attack position here - that's only
         // used for sanctuary,
         // so it's more accurate if we use our current pos, since sanctuary
         // should move with us.
         if (stop_attack_prompt(target_mons, false, target_mons->pos()))
-            continue;
-
-        // Check for unholy weapons, breadswinging, etc
-        if (!wielded_weapon_check(you.weapon()))
-            continue;
+            return false;
 
         ray.regress();
-        // check for clouds and traps on the final space only
-        if (!check_moveto_cloud(ray.pos(), "charge")
-            || !check_moveto_trap(ray.pos(),  "charge"))
-        {
-            continue;
-        }
+        // confirm movement for the final square only
+        if (!check_moveto(ray.pos(), "charge"))
+            return false;
 
         return true;
     }
