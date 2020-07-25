@@ -618,25 +618,18 @@ static spret _rampage_forward(coord_def move)
     if (beam.target == you.pos())
         return spret::fail;
 
+    // Beholder/fearmonger messaging is handled by the movement code,
+    // so we return fail even though the move will ultimately be aborted.
+    // Rampaging within (up to the edge) of the allowed range is permitted.
     // Don't rampage if it would take us away from a beholder.
     const monster* beholder = you.get_beholder(beam.target);
     if (beholder)
-    {
-        clear_messages();
-        mprf("You cannot rampage away from %s!",
-             beholder->name(DESC_THE, true).c_str());
         return spret::fail;
-    }
 
     // Don't rampage if it would take us toward a fearmonger.
     const monster* fearmonger = you.get_fearmonger(beam.target);
     if (fearmonger)
-    {
-        clear_messages();
-        mprf("You cannot rampage closer to %s!",
-             fearmonger->name(DESC_THE, true).c_str());
         return spret::fail;
-    }
 
     // Do allow rampaging on top of Fedhas plants,
     const monster* mons = monster_at(beam.target);
@@ -967,7 +960,9 @@ void move_player_action(coord_def move)
             // with confirmation prompts.
             if (!you.can_see(*targ_monst)
                 && !you.confused()
-                && !check_moveto(targ, walkverb))
+                && !check_moveto(targ, walkverb)
+                // Attack cancelled by fight_melee
+                || !fight_melee(&you, targ_monst))
             {
                 stop_running();
                 // If we cancel this move after rampaging, we end the turn.
@@ -982,8 +977,6 @@ void move_player_action(coord_def move)
             }
 
             you.turn_is_over = true;
-            fight_melee(&you, targ_monst);
-
             you.berserk_penalty = 0;
             attacking = true;
         }
@@ -1096,6 +1089,8 @@ void move_player_action(coord_def move)
         if (!crawl_state.disables[DIS_CONFIRMATIONS]
             && !prompt_dangerous_portal(grd(targ)))
         {
+            // No rampage check because the portal blocks the
+            // rampage tracer
             return;
         }
 
@@ -1107,6 +1102,7 @@ void move_player_action(coord_def move)
     }
     else if (!targ_pass && !attacking)
     {
+        // No rampage check here, since you can't rampage at walls
         if (you.is_stationary())
             canned_msg(MSG_CANNOT_MOVE);
         else if (grd(targ) == DNGN_OPEN_SEA)
@@ -1127,6 +1123,14 @@ void move_player_action(coord_def move)
         mprf("You cannot move away from %s!",
             beholder->name(DESC_THE).c_str());
         stop_running();
+        // If this would have been the move after rampaging, we end the turn.
+        if (rampaged)
+        {
+            move.reset();
+            _finalize_cancelled_rampage_move(initial_position);
+            return;
+        }
+        you.turn_is_over = false;
         return;
     }
     else if (fmonger && !attacking)
@@ -1134,6 +1138,14 @@ void move_player_action(coord_def move)
         mprf("You cannot move closer to %s!",
             fmonger->name(DESC_THE).c_str());
         stop_running();
+        // If this would have been the move after rampaging, we end the turn.
+        if (rampaged)
+        {
+            move.reset();
+            _finalize_cancelled_rampage_move(initial_position);
+            return;
+        }
+        you.turn_is_over = false;
         return;
     }
 
