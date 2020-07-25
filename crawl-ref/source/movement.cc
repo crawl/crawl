@@ -548,7 +548,8 @@ static spret _rampage_forward(coord_def move)
     // If the move_player_action() calls are ever rewritten in a way that
     // breaks this assumption, these targeters will need to be updated.
     const coord_def tracer_target = you.pos() + (move * tracer_range);
-    const coord_def rampage_target = you.pos() + (move * rampage_distance);
+    const coord_def rampage_destination = you.pos() + (move * rampage_distance);
+    const coord_def rampage_target = you.pos() + (move * (rampage_distance + 1));
 
     // Setup the rampage tracer beam.
     bolt beam;
@@ -611,8 +612,11 @@ static spret _rampage_forward(coord_def move)
     if (!valid_target)
         return spret::fail;
 
-    // Reset the beam target to the actual rampage_target distance.
-    beam.target = rampage_target;
+    // Reset the beam target to the actual rampage_destination distance.
+    beam.target = rampage_destination;
+
+    // Will the second move be an attack?
+    const bool attacking = valid_target->pos() == rampage_target;
 
     // Don't rampage if the player's tile is being targeted, somehow.
     if (beam.target == you.pos())
@@ -649,8 +653,11 @@ static spret _rampage_forward(coord_def move)
     }
 
     // Abort if the player answers no to a dangerous terrain/trap/cloud/
-    // exclusion prompt; messaging for this is handled by check_moveto().
-    if (!check_moveto(beam.target, "rampage"))
+    // exclusion prompt and weapon check prompts;
+    // messaging for this is handled by check_moveto().
+    if (!check_moveto(beam.target, "rampage")
+        || attacking && !wielded_weapon_check(you.weapon())
+        || !attacking && !check_moveto(rampage_target, "rampage"))
     {
         stop_running();
         you.turn_is_over = false;
@@ -834,7 +841,8 @@ void move_player_action(coord_def move)
 
             case spret::success:
                 rampaged = true;
-                // If we've rampaged, reset initial_position for WJC targeting.
+                // If we've rampaged, reset initial_position for the second
+                // move.
                 initial_position = you.pos();
                 // intentional fallthrough
             default:
@@ -918,15 +926,8 @@ void move_player_action(coord_def move)
     if (!you.confused())
         fmonger = you.get_fearmonger(targ);
 
-    if (you.running.check_stop_running())
+    if (!rampaged && you.running.check_stop_running())
     {
-        // If we cancel this move after rapaging, we end the turn.
-        if (rampaged)
-        {
-            move.reset();
-            _finalize_cancelled_rampage_move(initial_position);
-            return;
-        }
         // [ds] Do we need this? Shouldn't it be false to start with?
         you.turn_is_over = false;
         return;
@@ -958,7 +959,9 @@ void move_player_action(coord_def move)
         {
             // Don't allow the player to freely locate invisible monsters
             // with confirmation prompts.
-            if (!you.can_see(*targ_monst)
+            // Rampaging forcibly initiates the attack, but the attack
+            // can still be cancelled.
+            if (!rampaged && !you.can_see(*targ_monst)
                 && !you.confused()
                 && !check_moveto(targ, walkverb)
                 // Attack cancelled by fight_melee
@@ -1005,23 +1008,18 @@ void move_player_action(coord_def move)
             return;
         }
 
-        if (!you.confused() && !check_moveto(targ, walkverb))
+        // Prompt already handled by rampage
+        if (!you.confused() && !rampaged && !check_moveto(targ, walkverb))
         {
             stop_running();
-            // If we cancel this move after rampaging, we end the turn.
-            if (rampaged)
-            {
-                move.reset();
-                _finalize_cancelled_rampage_move(initial_position);
-                return;
-            }
             you.turn_is_over = false;
             return;
         }
 
         // If confused, we've already been prompted (in case of stumbling into
         // a monster and attacking instead).
-        if (!you.confused() && cancel_barbed_move())
+        // If rampaging we've already been prompted.
+        if (!you.confused() && !rampaged && cancel_barbed_move())
             return;
 
         if (!you.attempt_escape()) // false means constricted and did not escape
