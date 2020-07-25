@@ -559,11 +559,6 @@ void show_stash_search_help()
     show_specific_help("stash-search.prompt");
 }
 
-void show_butchering_help()
-{
-    show_specific_help("butchering");
-}
-
 void show_skill_menu_help()
 {
     show_specific_help("skill-menu");

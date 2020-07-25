@@ -82,7 +82,7 @@ hotkey to travel to its location.
 
 Some examples of search strings:
 <w>mutation</w>      find all potions of mutation, including potions in shops.
-<w>ration</w>        finds every single ration and pile of rations.
+<w>throwing net</w>  finds every single throwing net and piles of nets.
 <w>shop</w>          lists all shops. Press <w>?</w> and a shop's letter for the stock.
 <w>Lair:2</w>        find everything known to be on Lair:2.
 <w>/D:[2-4]</w>      finds everything on Dungeon levels 2-4. Regexes are allowed!
@@ -232,22 +232,6 @@ interlevel-travel.altar.prompt
  Once you select a god, you will begin travelling to the nearst altar.
 
  <w>Enter</w>  : Repeat last interlevel travel.
-%%%%
-butchering
-
-<h>Butchering<h>
-Only corpses that your species can butcher or bottle will be available here.
-<w>y</w>      : Butcher/bottle the selected corpse.
-<w>a, c, e</w>: Butcher/bottle this corpse and all the ones following in the stack.
-<w>q</w>      : Quit the prompt (don't butcher/bottle anything).
-<w>n</w>      : Don't butcher/bottle this corpse, skip to the next one.
-      (This is the default behaviour if you answer with anything not
-       listed here.)
-
-<h>Notes for Tiles</h>
-If you are playing with Tiles you can butcher (or bottle) a single
-corpse on the ground by clicking the <w>left mouse button</w> while pressing
-<w>Shift</w>.
 %%%%
 skill-menu
 
