@@ -115,8 +115,16 @@ void init_spell_descs()
                 || (data.min_range >= 0 && data.max_range > 0),
                 "targeted/directed spell '%s' has invalid range", data.title);
 
-        ASSERTM(!(data.flags & spflag::monster && is_player_spell(data.id)),
+        if (!spell_removed(data.id)
+            && data.id != SPELL_NO_SPELL
+            && data.id != SPELL_DEBUGGING_RAY)
+        {
+            ASSERTM(!(data.flags & spflag::monster && is_player_spell(data.id)),
                 "spell '%s' is declared as a monster spell but is a player spell", data.title);
+
+            ASSERTM(!(!(data.flags & spflag::monster) && !is_player_spell(data.id)),
+                "spell '%s' is not declared as a monster spell but is not a player spell", data.title);
+        }
 
         spell_list[data.id] = i;
     }
@@ -1653,6 +1661,7 @@ const set<spell_type> removed_spells =
     SPELL_SUMMON_ELEMENTAL,
     SPELL_SUMMON_RAKSHASA,
     SPELL_SUMMON_SCORPIONS,
+    SPELL_SUMMON_SWARM,
     SPELL_SUMMON_TWISTER,
     SPELL_SUNRAY,
     SPELL_SURE_BLADE,
