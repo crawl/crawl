@@ -1833,8 +1833,8 @@ static string _describe_armour(const item_def &item, bool verbose)
                            "and spell power.";
             break;
 
-        case SPARM_LUNGING:
-            description += "It allows its wearer to lunge towards enemies.";
+        case SPARM_RAMPAGING:
+            description += "It allows its wearer to rampage towards enemies.";
             break;
         }
     }

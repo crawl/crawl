@@ -909,8 +909,8 @@ static void _equip_armour_effect(item_def& arm, bool unmeld,
             update_vision_range();
             break;
 
-        case SPARM_LUNGING:
-            mpr("You feel ready to lunge towards enemies.");
+        case SPARM_RAMPAGING:
+            mpr("You feel ready to rampage towards enemies.");
             break;
         }
     }
@@ -1083,9 +1083,9 @@ static void _unequip_armour_effect(item_def& item, bool meld,
         update_vision_range();
         break;
 
-    case SPARM_LUNGING:
-        if (!you.lunging())
-            mpr("You no longer feel able to lunge towards enemies.");
+    case SPARM_RAMPAGING:
+        if (!you.rampaging())
+            mpr("You no longer feel able to rampage towards enemies.");
         break;
 
     default:

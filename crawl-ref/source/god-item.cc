@@ -291,7 +291,7 @@ bool is_hasty_item(const item_def& item, bool calc_unid)
         {
         const int item_brand = get_armour_ego_type(item);
         retval = (item_brand == SPARM_RUNNING
-                  || item_brand == SPARM_LUNGING);
+                  || item_brand == SPARM_RAMPAGING);
         }
         break;
     case OBJ_POTIONS:

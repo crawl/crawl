@@ -143,12 +143,12 @@ static void _entered_malign_portal(actor* act)
               "", "entering a malign gateway");
 }
 
-bool cancel_barbed_move(bool lunging)
+bool cancel_barbed_move(bool rampaging)
 {
     if (you.duration[DUR_BARBS] && !you.props.exists(BARBS_MOVE_KEY))
     {
         std::string prompt = "The barbs in your skin will harm you if you move.";
-        prompt += lunging ? " Lunging like this could really hurt!" : "";
+        prompt += rampaging ? " Rampaging like this could really hurt!" : "";
         prompt += " Continue?";
         if (!yesno(prompt.c_str(), false, 'n'))
         {
@@ -162,7 +162,7 @@ bool cancel_barbed_move(bool lunging)
     return false;
 }
 
-void apply_barbs_damage(bool lunging)
+void apply_barbs_damage(bool rampaging)
 {
     if (you.duration[DUR_BARBS])
     {
@@ -176,7 +176,7 @@ void apply_barbs_damage(bool lunging)
             extract_manticore_spikes("The barbed spikes snap loose.");
         // But if that failed to end the effect, duration stays the same.
         if (you.duration[DUR_BARBS])
-            you.duration[DUR_BARBS] += (lunging ? 0 : you.time_taken);
+            you.duration[DUR_BARBS] += (rampaging ? 0 : you.time_taken);
     }
 }
 
@@ -505,17 +505,17 @@ bool prompt_dangerous_portal(dungeon_feature_type ftype)
 }
 
 /**
- * Lunges the player toward a hostile monster, if one exists in the direction of
- * the move input. Invalid things along the Lunge path cancel the Lunge.
+ * Rampages the player toward a hostile monster, if one exists in the direction
+ * of the move input. Invalid things along the rampage path cancel the rampage.
  *
  * @param move  A relative coord_def of the player's CMD_MOVE input,
  *              as called by move_player_action().
- * @return      spret::fail if something invalid prevented the lunge,
+ * @return      spret::fail if something invalid prevented the rampage,
  *              spret::abort if a player prompt response should cancel the move
  *              entirely,
- *              spret::success if the lunge occurred.
+ *              spret::success if the rampage occurred.
  */
-static spret _lunge_forward(coord_def move)
+static spret _rampage_forward(coord_def move)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -525,13 +525,13 @@ static spret _lunge_forward(coord_def move)
 
     if (crawl_state.is_repeating_cmd())
     {
-        crawl_state.cant_cmd_repeat("You can't repeat lunge.");
+        crawl_state.cant_cmd_repeat("You can't repeat rampage.");
         crawl_state.cancel_cmd_again();
         crawl_state.cancel_cmd_repeat();
         return spret::fail;
     }
 
-    // Don't lunge if the player has status effects that should prevent it:
+    // Don't rampage if the player has status effects that should prevent it:
     // fungusform + terrified, confusion, immobile (tree)form, or constricted.
     if (you.is_nervous()
         || you.confused()
@@ -542,25 +542,25 @@ static spret _lunge_forward(coord_def move)
     }
 
     const int tracer_range = 7;
-    const int lunge_distance = 1;
+    const int rampage_distance = 1;
 
     // This logic assumes that the relative coord_def move is from [-1,1].
     // If the move_player_action() calls are ever rewritten in a way that
     // breaks this assumption, these targeters will need to be updated.
     const coord_def tracer_target = you.pos() + (move * tracer_range);
-    const coord_def lunge_target = you.pos() + (move * lunge_distance);
+    const coord_def rampage_target = you.pos() + (move * rampage_distance);
 
-    // Setup the lunge tracer beam.
+    // Setup the rampage tracer beam.
     bolt beam;
     beam.range           = LOS_RADIUS;
     beam.aimed_at_spot   = true;
     beam.target          = tracer_target;
-    beam.name            = "lunging";
+    beam.name            = "rampaging";
     beam.source_name     = "you";
     beam.source          = you.pos();
     beam.source_id       = MID_PLAYER;
     beam.thrower         = KILL_YOU;
-    // The lunge reposition is explicitly noiseless for stab synergy.
+    // The rampage reposition is explicitly noiseless for stab synergy.
     // Its ensuing move or attack action will generate a normal amount of noise.
     beam.loudness        = 0;
     beam.pierce          = true;
@@ -576,11 +576,11 @@ static spret _lunge_forward(coord_def move)
     // Iterate the tracer to see if the first visible target is a hostile mons.
     for (coord_def p : beam.path_taken)
     {
-        // Don't lunge without direct visibility to the target tile.
+        // Don't rampage without direct visibility to the target tile.
         if (!you.see_cell_no_trans(p))
             return spret::fail;
 
-        // Don't lunge if our tracer path is broken by something we can't
+        // Don't rampage if our tracer path is broken by something we can't
         // pass through before it reaches a monster.
         if (!you.can_pass_through(p))
             return spret::fail;
@@ -591,10 +591,10 @@ static spret _lunge_forward(coord_def move)
         // Allow our tracer to passthrough Fedhas allies.
         else if (mon && fedhas_passthrough(mon))
             continue;
-        // Don't lunge at invis mons, but allow the tracer to keep going.
+        // Don't rampage at invis mons, but allow the tracer to keep going.
         else if (mon && !you.can_see(*mon))
             continue;
-        // Don't lunge if the closest mons is non-hostile or a (non-Fedhas) plant.
+        // Don't rampage if the closest mons is non-hostile or a (non-Fedhas) plant.
         else if (mon && (mon->friendly()
                          || mon->neutral()
                          || mons_is_firewood(*mon)))
@@ -611,53 +611,53 @@ static spret _lunge_forward(coord_def move)
     if (!valid_target)
         return spret::fail;
 
-    // Reset the beam target to the actual lunge_target distance.
-    beam.target = lunge_target;
+    // Reset the beam target to the actual rampage_target distance.
+    beam.target = rampage_target;
 
-    // Don't lunge if the player's tile is being targeted, somehow.
+    // Don't rampage if the player's tile is being targeted, somehow.
     if (beam.target == you.pos())
         return spret::fail;
 
-    // Don't lunge if it would take us away from a beholder.
+    // Don't rampage if it would take us away from a beholder.
     const monster* beholder = you.get_beholder(beam.target);
     if (beholder)
     {
         clear_messages();
-        mprf("You cannot lunge away from %s!",
+        mprf("You cannot rampage away from %s!",
              beholder->name(DESC_THE, true).c_str());
         return spret::fail;
     }
 
-    // Don't lunge if it would take us toward a fearmonger.
+    // Don't rampage if it would take us toward a fearmonger.
     const monster* fearmonger = you.get_fearmonger(beam.target);
     if (fearmonger)
     {
         clear_messages();
-        mprf("You cannot lunge closer to %s!",
+        mprf("You cannot rampage closer to %s!",
              fearmonger->name(DESC_THE, true).c_str());
         return spret::fail;
     }
 
-    // Do allow lunging on top of Fedhas plants,
+    // Do allow rampaging on top of Fedhas plants,
     const monster* mons = monster_at(beam.target);
     bool fedhas_move = false;
     if (mons && fedhas_passthrough(mons))
         fedhas_move = true;
-    // but otherwise, don't lunge if it would land us on top of a monster,
+    // but otherwise, don't rampage if it would land us on top of a monster,
     else if (mons)
     {
         if (!you.can_see(*mons))
         {
             // .. and if a mons was in the way and invisible, notify the player.
             clear_messages();
-            mpr("Something unexpectedly blocked you, preventing you from lunging!");
+            mpr("Something unexpectedly blocked you, preventing you from rampaging!");
         }
         return spret::fail;
     }
 
     // Abort if the player answers no to a dangerous terrain/trap/cloud/
     // exclusion prompt; messaging for this is handled by check_moveto().
-    if (!check_moveto(beam.target, "lunge"))
+    if (!check_moveto(beam.target, "rampage"))
     {
         stop_running();
         you.turn_is_over = false;
@@ -668,7 +668,7 @@ static spret _lunge_forward(coord_def move)
     if (cancel_barbed_move(true))
         return spret::abort;
 
-    // We've passed the validity checks, go ahead and lunge.
+    // We've passed the validity checks, go ahead and rampage.
 
     // First, apply any necessary pre-move effects:
     remove_water_hold();
@@ -679,12 +679,12 @@ static spret _lunge_forward(coord_def move)
     const monster* current = monster_at(you.pos());
     if (fedhas_move && (!current || !fedhas_passthrough(current)))
     {
-        mprf("You lunge quickly through the %s towards %s!",
+        mprf("You rampage quickly through the %s towards %s!",
              mons_genus(mons->type) == MONS_FUNGUS ? "fungus" : "plants",
              valid_target->name(DESC_THE, true).c_str());
     }
     else
-        mprf("You lunge towards %s!", valid_target->name(DESC_THE, true).c_str());
+        mprf("You rampage towards %s!", valid_target->name(DESC_THE, true).c_str());
     // stepped = true, we're flavouring this as movement, not a blink.
     move_player_to_grid(beam.target, true);
 
@@ -717,12 +717,12 @@ static void _apply_move_time_taken(int additional_time_taken)
         you.duration[DUR_NO_HOP] += you.time_taken;
 }
 
-// The "first square" of lunging ordinarily has no time cost, and the
-// "second square" is where its move delay or attack delay would be applied.
-// If the player begins a lunge, and then cancels the second move, as through a
-// prompt, we have to ensure they don't get zero-cost movement out of it.
-// Here we apply movedelay, end the turn, and call relevant post-move effects.
-static void _finalize_cancelled_lunge_move(coord_def initial_position)
+// The "first square" of rampaging ordinarily has no time cost, and the "second
+// square" is where its move delay or attack delay would be applied. If the
+// player begins a rampage, and then cancels the second move, as through a
+// prompt, we have to ensure they don't get zero-cost movement out of it. Here
+// we apply movedelay, end the turn, and call relevant post-move effects.
+static void _finalize_cancelled_rampage_move(coord_def initial_position)
 {
     _apply_move_time_taken();
     you.turn_is_over = true;
@@ -732,7 +732,7 @@ static void _finalize_cancelled_lunge_move(coord_def initial_position)
 
     you.apply_berserk_penalty = true;
 
-    // lunging is pretty dang hasty
+    // rampaging is pretty dang hasty
     if (you_worship(GOD_CHEIBRIADOS) && one_chance_in(2))
         did_god_conduct(DID_HASTY, 1, true);
 
@@ -825,23 +825,23 @@ void move_player_action(coord_def move)
         }
     }
 
-    bool lunged = false;
+    bool rampaged = false;
 
-    if (you.lunging())
+    if (you.rampaging())
     {
-        switch (_lunge_forward(move))
+        switch (_rampage_forward(move))
         {
-            // Check the player's position again; lunge may have moved us.
+            // Check the player's position again; rampage may have moved us.
 
-            // Cancel the move entirely if lunge was aborted from a prompt.
+            // Cancel the move entirely if rampage was aborted from a prompt.
             case spret::abort:
                 ASSERT(!in_bounds(you.pos()) || !cell_is_solid(you.pos())
                        || you.wizmode_teleported_into_rock);
                 return;
 
             case spret::success:
-                lunged = true;
-                // If we've lunged, reset initial_position for WJC targeting.
+                rampaged = true;
+                // If we've rampaged, reset initial_position for WJC targeting.
                 initial_position = you.pos();
                 // intentional fallthrough
             default:
@@ -927,11 +927,11 @@ void move_player_action(coord_def move)
 
     if (you.running.check_stop_running())
     {
-        // If we cancel this move after lunging, we end the turn.
-        if (lunged)
+        // If we cancel this move after rapaging, we end the turn.
+        if (rampaged)
         {
             move.reset();
-            _finalize_cancelled_lunge_move(initial_position);
+            _finalize_cancelled_rampage_move(initial_position);
             return;
         }
         // [ds] Do we need this? Shouldn't it be false to start with?
@@ -970,11 +970,11 @@ void move_player_action(coord_def move)
                 && !check_moveto(targ, walkverb))
             {
                 stop_running();
-                // If we cancel this move after lunging, we end the turn.
-                if (lunged)
+                // If we cancel this move after rampaging, we end the turn.
+                if (rampaged)
                 {
                     move.reset();
-                    _finalize_cancelled_lunge_move(initial_position);
+                    _finalize_cancelled_rampage_move(initial_position);
                     return;
                 }
                 you.turn_is_over = false;
@@ -1015,11 +1015,11 @@ void move_player_action(coord_def move)
         if (!you.confused() && !check_moveto(targ, walkverb))
         {
             stop_running();
-            // If we cancel this move after lunging, we end the turn.
-            if (lunged)
+            // If we cancel this move after rampaging, we end the turn.
+            if (rampaged)
             {
                 move.reset();
-                _finalize_cancelled_lunge_move(initial_position);
+                _finalize_cancelled_rampage_move(initial_position);
                 return;
             }
             you.turn_is_over = false;
@@ -1148,7 +1148,7 @@ void move_player_action(coord_def move)
     if (!attacking
         && you_worship(GOD_CHEIBRIADOS)
         && ((one_chance_in(10) && you.run())
-             || (one_chance_in(2) && lunged)))
+             || (one_chance_in(2) && rampaged)))
     {
         did_god_conduct(DID_HASTY, 1, true);
     }
