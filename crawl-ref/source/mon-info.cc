@@ -579,7 +579,7 @@ monster_info::monster_info(const monster* m, int milev)
 
     // BEH_SLEEP is meaningless on firewood, don't show it. But it *is*
     // meaningful on non-firewood non-threatening monsters (i.e. butterflies).
-    if (!mons_is_firewood(m) && m->asleep())
+    if (!mons_is_firewood(*m) && m->asleep())
     {
         if (!m->can_hibernate(true))
             mb.set(MB_DORMANT);
