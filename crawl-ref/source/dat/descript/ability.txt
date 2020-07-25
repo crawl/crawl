@@ -192,7 +192,7 @@ you lose your body(Loss).
 %%%%
 Cloud Miasma ability
 
-You emits a cloud of miasma from your body.
+emits a cloud of miasma from your body.
 %%%%
 # Zin
 Recite ability
