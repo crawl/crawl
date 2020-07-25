@@ -3149,8 +3149,6 @@ static void _do_autopickup()
     int  n_did_pickup   = 0;
     int  n_tried_pickup = 0;
 
-    will_autopickup = false;
-
     // Store last_pickup in case we need to restore it.
     // Then clear it to fill with items picked up.
     map<int,int> tmp_l_p = you.last_pickup;
@@ -3213,6 +3211,8 @@ static void _do_autopickup()
 void autopickup(bool forced)
 {
     _autoinscribe_floor_items();
+
+    will_autopickup = false;
     // pick up things when forced (by input ;;), or when you feel save
     if (forced || can_autopickup())
         _do_autopickup();
