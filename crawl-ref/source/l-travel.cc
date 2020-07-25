@@ -64,7 +64,7 @@ LUAFN(l_del_exclude)
 /*** Can we get across this without swimming or flying?
  * @tparam string featurename
  * @treturn boolean
- * @function feature_is_traversable
+ * @function feature_traversable
  */
 LUAFN(l_feature_is_traversable)
 {
@@ -76,7 +76,7 @@ LUAFN(l_feature_is_traversable)
 /*** Is this feature solid?
  * @tparam string featurename
  * @treturn boolean
- * @function feature_is_solid
+ * @function feature_solid
  */
 LUAFN(l_feature_is_solid)
 {
