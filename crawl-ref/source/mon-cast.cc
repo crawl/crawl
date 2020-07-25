@@ -1872,6 +1872,7 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_SIMULACRUM:
 #endif
     case SPELL_CALL_IMP:
+    case SPELL_CALL_CANINE_FAMILIAR:
     case SPELL_SUMMON_MINOR_DEMON:
 #if TAG_MAJOR_VERSION == 34
     case SPELL_SUMMON_SCORPIONS:
@@ -6749,6 +6750,30 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
         return;
     }
+    
+    case SPELL_CALL_CANINE_FAMILIAR:
+    {
+        const int power = (mons->spell_hd(spell_cast) * 15)/10;
+
+        monster_type mon = MONS_PROGRAM_BUG;
+
+        const int chance = power * 2 + random_range(-10, 10);
+
+        if (chance > 59)
+            mon = MONS_WARG;
+        else if (chance > 39)
+            mon = MONS_WOLF;
+        else
+            mon = MONS_HOUND;
+
+        const int dur = min(2 + (random2(power) / 4), 6);
+
+        create_monster(mgen_data(mon, SAME_ATTITUDE(mons),
+                                 mons->pos(), mons->foe)
+                       .set_summoned(mons, dur, spell_cast, god));
+
+        return;
+    }
 
     case SPELL_CALL_LOST_SOUL:
         create_monster(mgen_data(MONS_LOST_SOUL, SAME_ATTITUDE(mons),
@@ -8575,10 +8600,11 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
     case SPELL_IGNITE_POISON_SINGLE:
     case SPELL_HUNTING_CRY:
     case SPELL_CONTROL_WINDS:
-    case SPELL_DEATHS_DOOR:
     case SPELL_FULMINANT_PRISM:
     case SPELL_CONTROL_UNDEAD:
 #endif
+    case SPELL_DEATHS_DOOR:
+        return mon->has_ench(ENCH_DEATHS_DOOR);
     case SPELL_NO_SPELL:
         return true;
 

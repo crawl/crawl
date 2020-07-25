@@ -1759,7 +1759,6 @@ static const mon_spellbook mspell_list[] =
     { MST_FIRE_FOX,
       {
         { SPELL_FOXFIRE, 13, MON_SPELL_WIZARD },
-        { SPELL_BLINK, 66, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY }
       }
     },
 
@@ -1801,6 +1800,12 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_URUG,
+      {
+       { SPELL_CALL_CANINE_FAMILIAR, 9, MON_SPELL_WIZARD },
+      }
+    },
+
     {  MST_NERGALLE,
       {
        { SPELL_BOLT_OF_DRAINING, 12, MON_SPELL_WIZARD },
@@ -1815,7 +1820,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_SUMMON_SPECTRAL_ORCS, 24, MON_SPELL_WIZARD },
        { SPELL_HASTE_OTHER, 12, MON_SPELL_WIZARD },
        { SPELL_DISPEL_UNDEAD, 12, MON_SPELL_WIZARD },
-       { SPELL_DEATHS_DOOR, 12, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY }
+       { SPELL_DEATHS_DOOR, 60, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY }
       }
     },
     
