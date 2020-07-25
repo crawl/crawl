@@ -290,6 +290,7 @@ void Stash::update()
     }
 
     visited = pos == you.pos()
+              || static_cast<int>(items.size()) == 1
               || static_cast<int>(items.size()) == previous_size && visited;
 }
 
