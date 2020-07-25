@@ -24,7 +24,7 @@ You can quickly select items by type by pressing:
 Global selects:  <w>,</w>   select all     <w>*</w>   invert all      <w>-</w>   deselect all
                  <w>;</w>   select last unequipped
 Note that for dropping, the <w>,</w> command uses the <w>drop_filter</w> option, which
-narrows the range of items to be (de)selected. The default are useless items.
+narrows the range of items to be (de)selected. The default is all useless items.
 
 <h>Disabling autopickup via the drop menu</h>
 On the drop menu, items you select after pressing <w>\</w> will be marked with a <w>*</w>
@@ -296,8 +296,7 @@ Apart from (de)selecting skills, you also have the following toggles:
 Fighting, Throwing, Armour, Dodging, Stealth, Unarmed Combat, and Spellcasting
 can always be trained. For the rest:
   - Weapon skills require carrying a weapon of the appropriate type.
-  - Shields requires that you either be carrying a shield, or worship a deity
-        who can offer one through divine means (The Shining One).
+  - Shields requires that you be carrying a shield.
   - Evocations requires carrying an evocable item.
   - Spell schools require knowing a spell of the school.
   - Necromancy can also be trained when worshipping Kikubaaqudgha.
