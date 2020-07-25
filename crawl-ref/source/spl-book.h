@@ -21,6 +21,8 @@ int  spell_rarity(spell_type which_spell);
 bool is_rare_book(book_type type);
 void init_spell_rarities();
 bool is_player_spell(spell_type which_spell);
+bool is_player_book_spell(spell_type which_spell);
+bool is_wand_spell(spell_type spell);
 
 bool book_has_title(const item_def &book);
 

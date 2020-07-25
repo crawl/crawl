@@ -1773,7 +1773,6 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
 #endif
     case SPELL_CALL_IMP:
     case SPELL_SUMMON_MINOR_DEMON:
-    case SPELL_SUMMON_SWARM:
     case SPELL_SUMMON_UFETUBUS:
     case SPELL_SUMMON_HELL_BEAST:  // Geryon
     case SPELL_SUMMON_UNDEAD:
@@ -7883,8 +7882,8 @@ static ai_action::goodness _ms_waste_of_time(monster* mon, mon_spell_slot slot)
     case SPELL_CHAOS_BREATH:
         return ai_action::good_or_impossible(!no_clouds);
 
-    case SPELL_SUMMON_SWARM:
 #if TAG_MAJOR_VERSION == 34
+    case SPELL_SUMMON_SWARM:
     case SPELL_INNER_FLAME:
     case SPELL_ANIMATE_DEAD:
     case SPELL_SIMULACRUM:
