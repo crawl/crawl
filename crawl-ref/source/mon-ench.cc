@@ -842,6 +842,11 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         behaviour_event(this, ME_EVAL);
         break;
 
+    case ENCH_DEATHS_DOOR:
+        if (!quiet)
+            simple_monster_message(*this, " is no longer invulnerable.");
+        break;
+
     case ENCH_REGENERATION:
         if (!quiet)
             simple_monster_message(*this, " is no longer regenerating.");
@@ -1439,6 +1444,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_WHIRLWIND_PINNED:
     case ENCH_VILE_CLUTCH:
     case ENCH_GRASPING_ROOTS:
+    case ENCH_DEATHS_DOOR:
         decay_enchantment(en);
         break;
 
@@ -2031,9 +2037,9 @@ static const char *enchant_names[] =
 #if TAG_MAJOR_VERSION == 34
     "roused",
 #endif
-    "breath timer",
+    "breath timer", "deaths_door",
 #if TAG_MAJOR_VERSION == 34
-    "deaths_door", "rolling",
+     "rolling",
 #endif
     "ozocubus_armour", "wretched", "screamed", "rune_of_recall", "injury bond",
     "drowning", "flayed", "haunting",
@@ -2233,6 +2239,7 @@ int mon_enchant::calc_duration(const monster* mons,
     case ENCH_MIRROR_DAMAGE:
     case ENCH_SAP_MAGIC:
     case ENCH_STILL_WINDS:
+    case ENCH_DEATHS_DOOR:
         cturn = 300 / _mod_speed(25, mons->speed);
         break;
     case ENCH_SLOW:
