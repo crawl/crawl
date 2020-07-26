@@ -187,7 +187,7 @@ to grow even if you have another moulting chance.
 %%%%
 Crab Walking ability
 
-You can move toward a destination like a knight in chess for a moment after
+Moves toward a destination like a knight in chess for a moment after
 you lose your body(Loss).
 %%%%
 Cloud Miasma ability
