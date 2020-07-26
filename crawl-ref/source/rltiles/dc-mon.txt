@@ -1020,9 +1020,14 @@ ghoul MONS_GHOUL
 
 %sdir mon/unique
 blork_the_orc MONS_BLORK_THE_ORC
+blork_the_orc_warrior MONS_BLORK_THE_ORC_WARRIOR
+blork_the_orc_knight MONS_BLORK_THE_ORC_KNIGHT
+blork_the_orc_warlord MONS_BLORK_THE_ORC_WARLORD
 %rim 0
 urug MONS_URUG
+urug_II MONS_URUG_II
 nergalle MONS_NERGALLE
+nergalle_II MONS_NERGALLE_II
 saint_roka MONS_SAINT_ROKA
 %sdir mon/humanoids/orcs
 orc MONS_ORC
