@@ -519,9 +519,9 @@ static spret _rampage_forward(coord_def move)
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    // Assert if the requested move is beyond [-1,1] distance,
+    // Assert if the requested move is not a move delta
     // this would throw off our tracer_target.
-    ASSERT(abs(you.pos().x - move.x) > 1 || abs(you.pos().y - move.y) > 1);
+    ASSERT(abs(move.x) <= 1 && abs(move.y) <= 1);
 
     if (crawl_state.is_repeating_cmd())
     {
