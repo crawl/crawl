@@ -1471,6 +1471,22 @@ static const mutation_def mut_data[] =
    "You feel your blood thin."},
 },
 
+{ MUT_BIG_BRAIN, 0, 3, mutflag::good, false,
+  "big brain",
+
+  {"You have an unusually large brain. (Int +2)",
+   "You have an extremely huge brain. (Int + 4)",
+   "You have an absolutely massive brain. (Int +6, Wiz)"},
+
+  {"Your brain expands.",
+   "Your brain expands.",
+   "Your brain expands to incredible size."},
+
+  {"Your brain returns to normal size.",
+   "Your brain shrinks.",
+   "Your brain shrinks."},
+},
+
 { MUT_CAMOUFLAGE, 1, 3, mutflag::good, true,
   "camouflage",
 
