@@ -541,7 +541,7 @@ static spret _rampage_forward(coord_def move)
         return spret::fail;
     }
 
-    const int tracer_range = 7;
+    const int tracer_range = you.current_vision;
     const int rampage_distance = 1;
 
     // This logic assumes that the relative coord_def move is from [-1,1].
