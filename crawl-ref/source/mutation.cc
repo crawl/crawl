@@ -291,7 +291,7 @@ static const mutation_type _all_scales[] =
     MUT_RUGGED_BROWN_SCALES,        MUT_SLIMY_GREEN_SCALES,
     MUT_THIN_METALLIC_SCALES,       MUT_THIN_SKELETAL_STRUCTURE,
     MUT_YELLOW_SCALES,              MUT_STURDY_FRAME,
-    MUT_SANGUINE_ARMOUR,
+    MUT_SANGUINE_ARMOUR,            MUT_BIG_BRAIN,
 };
 
 static bool _is_covering(mutation_type mut)
@@ -2359,6 +2359,8 @@ static const facet_def _demon_facets[] =
     { 1, { MUT_STURDY_FRAME, MUT_STURDY_FRAME, MUT_STURDY_FRAME },
       { -33, -33, 0 } },
     { 1, { MUT_SANGUINE_ARMOUR, MUT_SANGUINE_ARMOUR, MUT_SANGUINE_ARMOUR },
+      { -33, -33, 0 } },
+    { 1, { MUT_BIG_BRAIN, MUT_BIG_BRAIN, MUT_BIG_BRAIN },
       { -33, -33, 0 } },
     // Tier 2 facets
     { 2, { MUT_HEAT_RESISTANCE, MUT_FLAME_CLOUD_IMMUNITY, MUT_IGNITE_BLOOD },
