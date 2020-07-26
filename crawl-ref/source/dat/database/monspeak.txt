@@ -5881,7 +5881,7 @@ _Saint Roka rival_
 
 @The_monster@ shouts @at_foe@, "There can only be one messiah: ME!"
 
-@The_monster@ despairs, @at_foe@, "False prophets abound here!"
+@The_monster@ despairs @at_foe@, "False prophets abound here!"
 
 @The_monster@ shouts, "Orcs, take notice: this deceiver is a mere {{ return you.race() }}!"
 %%%%
