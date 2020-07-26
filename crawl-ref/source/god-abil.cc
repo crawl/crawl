@@ -3309,8 +3309,7 @@ spret qazlal_upheaval(coord_def target, bool quiet, bool fail)
     for (coord_def pos : affected)
     {
         beam.draw(pos);
-        if (!quiet)
-            scaled_delay(25);
+        scaled_delay(25);
     }
     if (!quiet)
     {
@@ -3321,6 +3320,7 @@ spret qazlal_upheaval(coord_def target, bool quiet, bool fail)
         scaled_delay(25);
 
     int wall_count = 0;
+    beam.animate = false; // already drawn
 
     for (coord_def pos : affected)
     {
