@@ -3402,6 +3402,7 @@ int slaying_bonus(bool ranged)
         ret += 4;
 
     ret += 3 * augmentation_amount();
+    ret += you.get_mutation_level(MUT_SHARP_SCALES);
 
     if (you.duration[DUR_WEREBLOOD])
         ret += you.props[WEREBLOOD_KEY].get_int();
@@ -5769,6 +5770,7 @@ vector<mutation_ac_changes> all_mutation_ac_changes = {
     ,mutation_ac_changes(MUT_SLIMY_GREEN_SCALES,     mutation_activity_type::FULL,    TWO_THREE_FOUR)
     ,mutation_ac_changes(MUT_THIN_METALLIC_SCALES,   mutation_activity_type::FULL,    TWO_THREE_FOUR)
     ,mutation_ac_changes(MUT_YELLOW_SCALES,          mutation_activity_type::FULL,    TWO_THREE_FOUR)
+    ,mutation_ac_changes(MUT_SHARP_SCALES,           mutation_activity_type::FULL,    ONE_TWO_THREE)
 };
 
 /**
