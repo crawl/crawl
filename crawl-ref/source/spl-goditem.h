@@ -60,7 +60,6 @@ const enchant_type dispellable_beneficials[] =
     ENCH_OZOCUBUS_ARMOUR,
     ENCH_TOXIC_RADIANCE,
     ENCH_AGILE,
-    ENCH_BLACK_MARK,
     ENCH_SHROUD,
     ENCH_REPEL_MISSILES,
     ENCH_DEFLECT_MISSILES,
