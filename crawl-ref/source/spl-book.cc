@@ -463,6 +463,34 @@ static spell_list _get_spell_list(bool just_check = false,
     return mem_spells;
 }
 
+bool library_add_spells(vector<spell_type> spells)
+{
+    vector<spell_type> new_spells;
+    for (spell_type st : spells)
+    {
+        if (!you.spell_library[st])
+        {
+            you.spell_library.set(st, true);
+            bool memorise = you_can_memorise(st);
+            if (memorise)
+                new_spells.push_back(st);
+            if (!memorise || Options.auto_hide_spells)
+                you.hidden_spells.set(st, true);
+        }
+    }
+    if (!new_spells.empty())
+    {
+        vector<string> spellnames(new_spells.size());
+        transform(new_spells.begin(), new_spells.end(), spellnames.begin(), spell_title);
+        mprf("You add the spell%s %s to your library.",
+             spellnames.size() > 1 ? "s" : "",
+             comma_separated_line(spellnames.begin(),
+                                  spellnames.end()).c_str());
+        return true;
+    }
+    return false;
+}
+
 bool has_spells_to_memorise(bool silent)
 {
     // TODO: this is a bit dumb

@@ -252,6 +252,9 @@ spell_type get_spell_by_letter(char letter)
 
 bool add_spell_to_memory(spell_type spell)
 {
+    if (vehumet_is_offering(spell))
+        library_add_spells({ spell });
+
     int slot_i;
     int letter_j = -1;
     string sname = spell_title(spell);

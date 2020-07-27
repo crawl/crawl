@@ -30,6 +30,8 @@ bool player_has_available_spells();
 bool learn_spell();
 bool learn_spell(spell_type spell, bool wizard = false);
 
+bool library_add_spells(vector<spell_type> spells);
+
 string desc_cannot_memorise_reason(spell_type spell);
 
 spell_type spell_in_wand(wand_type wand);
