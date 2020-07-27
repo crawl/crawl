@@ -886,6 +886,27 @@ bool god_id_item(item_def& item, bool silent)
         }
     }
 
+        else if (you_worship(GOD_ELYVILON))
+    {
+        if ((item.base_type == OBJ_STAVES || item.base_type == OBJ_RODS)
+            && is_evil_item(item))
+        {
+            // staff of death, evil rods
+            ided |= ISFLAG_KNOW_TYPE;
+        }
+
+        // Don't use is_{evil,unholy}_item() for weapons -- on demonic weapons
+        // the brand is irrelevant, unrands may have an innocuous brand; let's
+        // still show evil brands on unholy weapons for consistency even if this
+        // gives more information than absolutely needed.
+        brand_type brand = get_weapon_brand(item);
+        if (brand == SPWPN_DRAINING || brand == SPWPN_PAIN
+            || brand == SPWPN_VAMPIRISM || brand == SPWPN_REAPING)
+        {
+            ided |= ISFLAG_KNOW_TYPE;
+        }
+    }
+
     if (ided & ~old_ided)
     {
         if (ided & ISFLAG_KNOW_TYPE)

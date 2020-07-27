@@ -2826,8 +2826,8 @@ void excommunication(bool voluntary, god_type new_god)
     mpr("You have lost your religion!");
     // included in default force_more_message
 
-    if ((old_god == GOD_ZIN || old_god == GOD_SHINING_ONE || old_god == GOD_ELYVILON)
-        && !((new_god == GOD_ZIN || new_god == GOD_SHINING_ONE || new_god == GOD_ELYVILON))
+    if (is_good_god(old_god)
+        && !is_good_god(new_god)
         && you.species == SP_PEARL_DRACONIAN)
     {
         you.innate_mutation[MUT_NEGATIVE_ENERGY_RESISTANCE]--;
@@ -2843,8 +2843,8 @@ void excommunication(bool voluntary, god_type new_god)
     }
 
     if (you.species == SP_CRUSTACEAN 
-        && (old_god == GOD_ZIN || old_god == GOD_SHINING_ONE || old_god == GOD_ELYVILON)
-        && !((new_god == GOD_ZIN || new_god == GOD_SHINING_ONE || new_god == GOD_ELYVILON)))
+        && is_good_god(old_god)
+        && !is_good_god(new_god))
     {
 
         if (you.experience_level > 6)
@@ -2985,6 +2985,7 @@ void excommunication(bool voluntary, god_type new_god)
             mprf(MSGCH_MONSTER_ENCHANT, "All of your fellow slimes turn on you.");
             add_daction(DACT_ALLY_SLIME);
         }
+        remove_all_companions(GOD_JIYVA);
         break;
 
     case GOD_FEDHAS:
