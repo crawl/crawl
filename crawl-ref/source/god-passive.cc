@@ -423,11 +423,8 @@ static const vector<god_passive> god_passives[] =
     
     // The Great Wyrm
     {
-        {  2, passive_t::wyrm_poisonous,
-              "While transformed, your melee attacks has chance to poison your enemies" },
-
-        {  6, passive_t::wyrm_restore,
-              "gain health and cure yourself from killing poisoned enemy" },
+        { 0, passive_t::wyrm_quicksilver,
+             "GOD NOW extracts magical buffs into potions, from corpse of defeated enemies." },
     }
 };
 COMPILE_CHECK(ARRAYSZ(god_passives) == NUM_GODS);

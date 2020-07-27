@@ -46,7 +46,8 @@ enum object_selector
     OSEL_UNCURSED_WORN_RINGS     = -19,
     OSEL_UNCURSED_WORN_AMULETS = -20,
     OSEL_BAG = -21,
-    OSEL_SUPERCHARGE = -22
+    OSEL_SUPERCHARGE = -22,
+	OSEL_WYRM_ESSENCES = -23
 };
 
 /// Behaviour flags for prompt_invent_item().

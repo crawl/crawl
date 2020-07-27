@@ -222,5 +222,6 @@ enum duration_type
     DUR_FLAME_STRIKE,
     DUR_OVERHEAT,
     DUR_STONESKIN,
+		DUR_CITRINITAS,
     NUM_DURATIONS
 };

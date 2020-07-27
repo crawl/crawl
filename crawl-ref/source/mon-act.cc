@@ -1909,7 +1909,7 @@ void handle_monster_move(monster* mons)
         draconian_change_colour(mons);
 
     _monster_regenerate(mons);
-
+	
     // Please change _slouch_damage to match!
     if (mons->cannot_act()
         || mons->type == MONS_SIXFIRHY // these move only 8 of 24 turns
@@ -1920,6 +1920,15 @@ void handle_monster_move(monster* mons)
         mons->speed_increment -= non_move_energy;
         return;
     }
+
+	if (mons->has_ench(ENCH_ALBEDO) && monster_is_debuffable(*mons)
+		&& one_chance_in(2)){
+		
+		simple_monster_message(*mons, " is interrupted by reaction of Albedo!");
+        mons->speed_increment -= non_move_energy;
+        return;
+    }
+
 
     if (mons->has_ench(ENCH_DAZED) && one_chance_in(4))
     {
@@ -3909,6 +3918,12 @@ static bool _monster_move(monster* mons)
         if (!mons->alive())
             return true;
 
+		// The Great Wyrm: infused with Nigredo makes other cloud sources are unabled
+		if (mons->has_ench(ENCH_NIGREDO)){
+			
+			place_cloud(CLOUD_MIASMA, mons->pos(), min(10, 2+(you.piety/20)), mons);
+			
+		} else {
         if (mons_genus(mons->type) == MONS_EFREET
             || mons->type == MONS_FIRE_ELEMENTAL)
         {
@@ -3920,6 +3935,7 @@ static bool _monster_move(monster* mons)
 
         if (mons->type == MONS_CURSE_TOE)
             place_cloud(CLOUD_MIASMA, mons->pos(), 2 + random2(3), mons);
+		}
     }
     else
     {

@@ -262,12 +262,9 @@ enum class passive_t
     
     ///share resistance
     share_resistance,
-    
-    /// the Great Wyrm: poisonous melee attack
-    wyrm_poisonous,	
-    
-    /// the Great Wyrm: restore & cure
-    wyrm_restore,
+
+	/// the Great Wyrm
+	wyrm_quicksilver,
 };
 
 enum ru_interference

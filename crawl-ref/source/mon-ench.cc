@@ -1439,6 +1439,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_WHIRLWIND_PINNED:
     case ENCH_VILE_CLUTCH:
     case ENCH_GRASPING_ROOTS:
+	case ENCH_NIGREDO: case ENCH_ALBEDO: case ENCH_CITRINITAS: case ENCH_VIRIDITAS:
         decay_enchantment(en);
         break;
 

@@ -180,6 +180,9 @@ enum monster_info_flags
     MB_VILE_CLUTCH,
     MB_HIGHLIGHTED_SUMMONER,
     MB_STONESKIN,
+		MB_NIGREDO,
+		MB_ALBEDO,
+		MB_CITRINITAS,
     NUM_MB_FLAGS
 };
 

@@ -95,7 +95,7 @@ static const char *_god_wrath_adjectives[] =
     "fury",             // Uskayaw
     "memory",           // Hepliaklqana (unused)
     "rancor",           // Wu Jian
-    "bite",           // Great Wyrm
+    "distillation",     // Great Wyrm
 };
 COMPILE_CHECK(ARRAYSZ(_god_wrath_adjectives) == NUM_GODS);
 
@@ -2071,19 +2071,25 @@ static bool _wyrm_retribution()
     case 1:
     case 2:
     case 3:
-        you.set_duration(DUR_BARBS, random_range(5, 10));
-        poison_player(10 + random2avg(15, 2), "", "fangs of the Wyrm");
+		if (you.hp > 1){
+			dec_hp((you.hp/4)+1, false);
+		}
+		if (you.magic_points > 1 || you.species == SP_DJINNI)
+        {
+            drain_mp((you.magic_points/4)+1);
+            canned_msg(MSG_MAGIC_DRAIN);
+        }
+		simple_god_message("'s extracts your essence!", god);
         break;
     case 4:
     case 5:
-        simple_god_message("'s slowing venom runs through your body!", god);
+        simple_god_message("'s extracts your vigor!", god);
         slow_player(10 + random2avg(15, 2));
-        poison_player(10 + random2avg(15, 2), "", "fangs of the Wyrm");
         break;
     case 6:
         if (!you.duration[DUR_PARALYSIS])
         {
-            mprf(MSGCH_WARN, "You suddenly pass out!");
+            simple_god_message("'s extracts your energy!", god);
             const int turns = 2 + random2(6);
             take_note(Note(NOTE_PARALYSIS, min(turns, 13), 0, "Great Wyrm"));
             you.increase_duration(DUR_PARALYSIS, turns, 13);

@@ -5081,6 +5081,10 @@ void bolt::affect_monster(monster* mon)
         // Umbra is harder to hit:
         if (!nightvision && mon->umbra())
             beam_hit -= 2 + random2(4);
+		
+		// The Great Wyrm:
+		if (you.duration[DUR_CITRINITAS])
+			beam_hit += you.piety/40;
     }
 
     // The monster may block the beam.

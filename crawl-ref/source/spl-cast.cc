@@ -505,7 +505,11 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
             // spell school levels).
             if (you.duration[DUR_BRILLIANCE])
                 power += 600;
-
+			
+			// The Great Wyrm: Empowered by piety when drink Citrinitas.
+			if (you.duration[DUR_CITRINITAS])
+				power += you.piety*4; //starts at +300(25%), max at +800(66%)
+			
             if (apply_intel)
                 power = (power * you.intel()) / 10;
 
@@ -1632,31 +1636,6 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
                           (you.experience_level / 2) + (spell_difficulty(spell) * 2),
                           random2avg(88, 3), "the malice of Kikubaaqudgha");
         }
-            else if (spell_typematch(spell, spschool::poison)
-                    && !you_worship(GOD_WYRM)
-                    && you.penance[GOD_WYRM]
-                    && one_chance_in(20))
-            {
-                simple_god_message(" does not allow the disloyal to dabble in "
-                                    "poison magic!", GOD_WYRM);
-                MiscastEffect(&you, nullptr,
-                                {miscast_source::god, GOD_WYRM},
-                                spschool::poison,
-                                (you.experience_level / 2) + (spell_difficulty(spell) * 2),
-                                random2avg(88, 3), "the fangs of Great Wyrm");
-            } else if (spell_typematch(spell, spschool::transmutation)
-                    && !you_worship(GOD_WYRM)
-                    && you.penance[GOD_WYRM]
-                    && one_chance_in(20))
-            {
-                simple_god_message(" does not allow the disloyal to dabble in "
-                                    "transmutation!", GOD_WYRM);
-                MiscastEffect(&you, nullptr,
-                                {miscast_source::god, GOD_WYRM},
-                                spschool::transmutation,
-                                (you.experience_level / 2) + (spell_difficulty(spell) * 2),
-                                random2avg(88, 3), "the fangs of Great Wyrm");
-            }
 
         else if (vehumet_supports_spell(spell)
                  && !you_worship(GOD_VEHUMET)

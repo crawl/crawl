@@ -935,6 +935,15 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
             you.source_damage = 0;
         }
         you.source_damage += dam;
+		
+		// The Great Wyrm: infused enemy with viriditas will heals you
+		monster * const mons = monster_by_mid(source);		
+		if (mons->has_ench(ENCH_VIRIDITAS))
+		{
+			mpr("Attacks from the infused with Viriditas, heals you instead of hurts you.");
+			inc_hp(dam);
+			return;
+		}
 
         dec_hp(dam, true);
 

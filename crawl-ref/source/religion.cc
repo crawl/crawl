@@ -417,16 +417,20 @@ const vector<god_power> god_powers[NUM_GODS] =
            "summon a storm of heavenly clouds" },
     },
 
-        // The Great Wyrm
-        { { 0, "Your poison has chance to penetrate resistance, even undeads or non-livings." },
-        { 1, "gain resistance to poison" },
-        { 3, "gain immunity to poison" },
-        { 3, "You will now sometimes emit poisonous cloud when damaged by enemies.",
-           "You will no longer emit poisonous cloud.",
-           "You sometimes emit poisonous cloud when damaged by enemies." },
-        { 5, ABIL_WYRM_CONVERT_POISON,
-            "transmute poisonous, mepthic, miasma, mutagenic gases and toxic bog into healing clouds" },
-        },
+      // The Great Wyrm
+      { { 1, ABIL_WYRM_INFUSE,
+			"infuse a target in your sight with alcemical essence" },
+		{ 1, ABIL_WYRM_NIGREDO,
+			"transmute essence of Nigredo. Press 'a' and check how to use it."},
+		{ 2, ABIL_WYRM_ALBEDO,
+			"transmute essence of Albedo. Press 'a' and check how to use it."},
+		{ 3, ABIL_WYRM_CITRINITAS,
+			"transmute essence of Citrinitas. Press 'a' and check how to use it."},
+		{ 4, ABIL_WYRM_VIRIDITAS,
+			"transmute essence of Viriditas. Press 'a' and check how to use it."},
+		{ 5, ABIL_WYRM_RUBEDO,
+			"transmute essence of Rubedo. Press 'a' and check how to use it."},
+		},
 };
 
 vector<god_power> get_god_powers(god_type god)

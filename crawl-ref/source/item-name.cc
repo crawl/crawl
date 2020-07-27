@@ -796,6 +796,21 @@ const char* potion_type_name(int potiontype)
     case POT_RESISTANCE:        return "resistance";
     case POT_LIGNIFY:           return "lignification";
     case POT_UNSTABLE_MUTATION: return "unstable mutation";
+	
+		case POT_SWIFT:  		return "swift";
+		case POT_REGENERATION:  return "regeneration";
+		case POT_ICY_ARMOUR:  	return "icy armour";
+		case POT_TOXIC:  		return "toxic radiance";
+		case POT_SHROUD:  		return "shroud cover";
+		case POT_REPEL_MISSILES:	return "repel missiles";
+		case POT_DEFLECT_MISSILES:  return "deflect missiles";
+		case POT_ICY_SHIELD:  	return "icy shield";
+		case POT_NIGREDO:  		return "essence Nigredo";
+		case POT_ALBEDO:  		return "essence Albedo";
+		case POT_CITRINITAS:  	return "essence Citrinitas";
+		case POT_VIRIDITAS:  	return "essence Viriditas";
+		case POT_RUBEDO:  		return "essence Rubedo";
+		
     default:                    return "bugginess";
     }
 }
@@ -3733,6 +3748,10 @@ bool is_useless_item(const item_def &item, bool temp)
             return !you.can_device_heal();
         case POT_INVISIBILITY:
             return _invisibility_is_useless(temp);
+		case POT_SWIFT:
+            return you.species == SP_FORMICID;
+		case POT_NIGREDO:
+            return you.res_rotting(temp) > 0;
         case POT_WATER:
             return true;
         }
