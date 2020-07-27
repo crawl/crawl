@@ -696,12 +696,12 @@ static const ability_def Ability_List[] =
         0, 0, 0, 0, {}, abflag::starve_ok | abflag::berserk_ok },
 
     // The Great Wyrm
-    { ABIL_WYRM_INFUSE, "Infuse Essece", 2, 0, 0, 0, {}, abflag::potion },
-    { ABIL_WYRM_NIGREDO, "Nigredo", 0, 0, 500, 1, {}, abflag::essence },
-    { ABIL_WYRM_ALBEDO, "Albedo", 0, 0, 500, 2, {}, abflag::essence },
-    { ABIL_WYRM_CITRINITAS, "Citrinitas", 0, 0, 500, 2, {}, abflag::essence },
-    { ABIL_WYRM_VIRIDITAS, "Viriditas", 0, 0, 500, 4, {}, abflag::essence },
-    { ABIL_WYRM_RUBEDO, "Rubedo", 0, 0, 500, 6, {}, abflag::essence },
+    { ABIL_WYRM_INFUSE, "Infuse Essece", 2, 0, 0, 0, {}, abflag::essence },
+    { ABIL_WYRM_NIGREDO, "Nigredo", 0, 0, 500, 1, {}, abflag::potion },
+    { ABIL_WYRM_ALBEDO, "Albedo", 0, 0, 500, 2, {}, abflag::potion },
+    { ABIL_WYRM_CITRINITAS, "Citrinitas", 0, 0, 500, 2, {}, abflag::potion },
+    { ABIL_WYRM_VIRIDITAS, "Viriditas", 0, 0, 500, 4, {}, abflag::potion },
+    { ABIL_WYRM_RUBEDO, "Rubedo", 0, 0, 500, 6, {}, abflag::potion },
 
     { ABIL_STOP_RECALL, "Stop Recall", 0, 0, 0, 0, {fail_basis::invo}, abflag::starve_ok },
     { ABIL_RENOUNCE_RELIGION, "Renounce Religion",
