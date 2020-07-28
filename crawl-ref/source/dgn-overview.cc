@@ -34,9 +34,6 @@
 
 enum annotation_menu_commands
 {
-    // Added to help diagnose bugs etc
-    ANNOTATION_MENU_BIGGEST = -98,
-
     // Annotate one level up
     ID_UP       = -99,
 
@@ -48,9 +45,6 @@ enum annotation_menu_commands
 
     // Cancel the whole thing
     ID_CANCEL   = -102,
-
-    // Added to help diagnose bugs etc
-    ANNOTATION_MENU_SMALLEST = -103
 };
 
 typedef map<branch_type, set<level_id> > stair_map_type;
@@ -1155,7 +1149,7 @@ void do_annotate()
 
     if (branch < 0)
     {
-        ASSERT(ANNOTATION_MENU_SMALLEST <= branch && branch <= ANNOTATION_MENU_BIGGEST);
+        ASSERT(ID_UP <= branch && branch <= ID_CANCEL);
         annotation_menu_commands a = static_cast<annotation_menu_commands>(branch);
         switch(a)
         {
