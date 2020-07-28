@@ -7,7 +7,7 @@ genus: "Hydra"
 difficulty : Intermediate
 aptitudes:
   xp: -1
-  hp: -2
+  hp: 2
   mp_mod: 0
   mr: 5
   fighting : 2
@@ -26,18 +26,18 @@ aptitudes:
   stealth: -2
   shields: False
   spellcasting: -3
-  conjurations: -2
+  conjurations: -3
   summoning: -3
   necromancy: -3
-  hexes: -2
-  charms: -2
-  translocations: -2
-  transmutations: -2
-  fire_magic: -3
-  ice_magic: -2
-  air_magic: -2
-  earth_magic: -2
-  poison_magic: -2
+  hexes: -3
+  charms: -3
+  translocations: -3
+  transmutations: -3
+  fire_magic: -4
+  ice_magic: -3
+  air_magic: -3
+  earth_magic: -3
+  poison_magic: -3
   evocations: 1
 can_swim : true
 size: big
@@ -45,12 +45,16 @@ str: 6
 int: 6
 dex: 6
 levelup_stat_frequency: 4
+levelup_stats:
+  - str
 mutations:
   1:
-    MUT_DEFORMED : 1
-    MUT_REGENERATION : 2
+    MUT_DEFORMED: 1
     MUT_POISON_RESISTANCE : 1
     MUT_COLD_BLOODED: 1
+    MUT_REGENERATION: 1
+    MUT_GOURMAND: 1
+    MUT_FAST_METABOLISM: 3
 fake_mutations:
   - long: You are incapable of wielding weapons.
     short: no weapons.
@@ -59,6 +63,6 @@ fake_mutations:
   - long : You stomp with loud noise.
     short : stomps
 recommended_jobs:
-  - JOB_FIGHTER
+  - JOB_GLADIATOR
 recommended_weapons:
   - SK_UNARMED_COMBAT

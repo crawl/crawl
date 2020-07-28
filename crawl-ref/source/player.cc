@@ -2789,7 +2789,7 @@ static void _handle_head_loss(int exp)
     if (!(you.attribute[ATTR_HEAD_LOSS_XP] > 0))
         return;
 
-    int loss = div_rand_round(exp * abs(you.props[HYDRA_HEADS_NET_LOSS].get_int())/12,
+    int loss = div_rand_round(exp * abs(you.props[HYDRA_HEADS_NET_LOSS].get_int())/2,
                                 max(1, calc_skill_cost(you.skill_cost_level) - 3));
     you.attribute[ATTR_HEAD_LOSS_XP] -= loss;
     dprf("Head loss points: %d", you.attribute[ATTR_HEAD_LOSS_XP]);
@@ -7070,9 +7070,11 @@ bool player::head_grow(int num, bool heal) const
                     break;
                 you.props[HYDRA_HEADS_NET_LOSS].get_int()--;
                 _head_loss_xp();
+
+                if (heal)
+                    you.heal(random2(1));
             }
-            if (heal)
-                you.heal(4*num + random2(4*num));
+            
         }
         else if (num < 0)
         {
@@ -7080,9 +7082,9 @@ bool player::head_grow(int num, bool heal) const
             {    
                 you.props[HYDRA_HEADS_NET_LOSS].get_int()++;
                 _head_loss_xp();
+                if (heal)
+                    ouch(4 + random2(4), KILLED_BY_DRAINING);
             }
-            if (heal)
-                ouch(abs(4*num + random2(4*num)), KILLED_BY_DRAINING);
         }
     }
     else if (you.form == transformation::lich && num < 0)
@@ -7092,9 +7094,9 @@ bool player::head_grow(int num, bool heal) const
         {
                 you.props[HYDRA_HEADS_NET_LOSS].get_int()++;
                 _head_loss_xp();
+                if (heal)
+                    ouch(4 + random2(4), KILLED_BY_DRAINING);
         }
-        if (heal)
-            ouch(abs(4*num + random2(4*num)), KILLED_BY_DRAINING);
     }
     else if (num == 0 && heal)
     {
