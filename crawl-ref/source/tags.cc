@@ -48,6 +48,7 @@
 #include "errors.h"
 #include "ghost.h"
 #include "god-abil.h" // just for the Ru sac penalty key
+#include "god-passive.h"
 #include "god-companions.h"
 #include "item-name.h"
 #include "item-prop.h"
@@ -3870,6 +3871,12 @@ static void _tag_read_you(reader &th)
                                         - beast_levels);
         you.mutation[app] = you.get_innate_mutation_level(app) + extra;
         you.attribute[ATTR_UNUSED3] = 0;
+    }
+
+    if (you.props.exists(WU_JIAN_HEAVENLY_STORM_KEY) && !you.duration[DUR_HEAVENLY_STORM])
+    {
+        mprf(MSGCH_ERROR, "Fixing up incorrect heavenly storm key");
+        wu_jian_end_heavenly_storm();
     }
 
 #endif
