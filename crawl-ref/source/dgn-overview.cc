@@ -1151,7 +1151,7 @@ void do_annotate()
     {
         ASSERT(ID_UP <= branch && branch <= ID_CANCEL);
         annotation_menu_commands a = static_cast<annotation_menu_commands>(branch);
-        switch(a)
+        switch (a)
         {
         case ID_CANCEL:
             canned_msg(MSG_OK);
