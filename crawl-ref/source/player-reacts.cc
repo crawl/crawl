@@ -1176,6 +1176,11 @@ void player_reacts()
         }
     }
 
+    if (monster* pavise = find_pavise_shield(&you)) {
+        if (grid_distance(pavise->pos(), you.pos()) > 1) {
+            monster_die(*pavise, KILL_RESET, NON_MONSTER);
+        }
+    }
 
     if (you.props[EMERGENCY_FLIGHT_KEY].get_bool())
         _handle_emergency_flight();

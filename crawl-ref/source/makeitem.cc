@@ -784,8 +784,16 @@ static special_armour_type _generate_armour_type_ego(armour_type type)
     // TODO: move this into data
     switch (type)
     {
-    case ARM_SHIELD:
     case ARM_LARGE_SHIELD:
+        return random_choose_weighted(1, SPARM_RESISTANCE,
+                                      3, SPARM_FIRE_RESISTANCE,
+                                      3, SPARM_COLD_RESISTANCE,
+                                      3, SPARM_POISON_RESISTANCE,
+                                      3, SPARM_POSITIVE_ENERGY,
+                                      6, SPARM_BUNKER,
+                                      6, SPARM_REFLECTION,
+                                      12, SPARM_PROTECTION);
+    case ARM_SHIELD:
     case ARM_BUCKLER:
         return random_choose_weighted(1, SPARM_RESISTANCE,
                                       3, SPARM_FIRE_RESISTANCE,
@@ -975,6 +983,8 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
                slot == EQ_SHIELD ||
                type == ARM_SCARF || !strict;
 
+    case SPARM_BUNKER:
+        return slot == EQ_SHIELD && type == ARM_LARGE_SHIELD;
     case SPARM_REPULSION:
     case SPARM_CLOUD_IMMUNE:
         return type == ARM_SCARF;

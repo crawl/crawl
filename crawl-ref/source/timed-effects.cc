@@ -827,7 +827,7 @@ void monster::timeout_enchantments(int levels)
         case ENCH_RESISTANCE: case ENCH_HEXED: case ENCH_IDEALISED:
         case ENCH_BOUND_SOUL: case ENCH_STILL_WINDS: case ENCH_RING_OF_THUNDER:
         case ENCH_WHIRLWIND_PINNED:
-		case ENCH_NIGREDO: case ENCH_ALBEDO: case ENCH_CITRINITAS: case ENCH_VIRIDITAS:
+        case ENCH_NIGREDO: case ENCH_ALBEDO: case ENCH_CITRINITAS: case ENCH_VIRIDITAS:
             lose_ench_levels(entry.second, levels);
             break;
 
@@ -1285,6 +1285,11 @@ void timeout_terrain_changes(int duration, bool force)
             revert_terrain_change(marker->pos, marker->change_type);
         }
     }
+
+    if (num_seen[TERRAIN_CHANGE_WALL_CREATE] > 1)
+        mpr("The walls crumble.");
+    else if (num_seen[TERRAIN_CHANGE_WALL_CREATE] > 0)
+        mpr("The wall crumbles.");
 
     if (num_seen[TERRAIN_CHANGE_DOOR_SEAL] > 1)
         mpr("The runic seals fade away.");

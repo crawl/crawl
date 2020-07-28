@@ -999,6 +999,8 @@ static void _equip_armour_effect(item_def& arm, bool unmeld,
             else
                 mpr("You feel immune to the effects of clouds.");
             break;
+        case SPARM_BUNKER:
+            break;
         }
     }
 
@@ -1165,6 +1167,8 @@ static void _unequip_armour_effect(item_def& item, bool meld,
     case SPARM_CLOUD_IMMUNE:
         if (!you.cloud_immune())
             mpr("You feel vulnerable to the effects of clouds.");
+        break;
+    case SPARM_BUNKER:
         break;
 
     default:

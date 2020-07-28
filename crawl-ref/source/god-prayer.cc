@@ -113,6 +113,25 @@ static bool _pray_ecumenical_altar()
 }
 
 
+//Elyvilon
+
+// Is the destroyed weapon valuable enough to gain piety by doing so?
+// Unholy and evil weapons are handled specially.
+static bool _destroyed_valuable_weapon(int value, int type)
+{
+    // value/500 chance of piety normally
+    if (value > random2(500))
+        return true;
+
+    // But all non-missiles are acceptable if you've never reached *.
+    if (you.piety_max[GOD_ELYVILON] < piety_breakpoint(0)
+        && type != OBJ_MISSILES)
+    {
+        return true;
+    }
+
+    return false;
+}
 
 /**
  * Attempt to convert to the given god.
@@ -301,6 +320,34 @@ static slurp_gain _sacrifice_one_item_noncount(const item_def& item)
         }
         else
             you.sacrifice_value[item.base_type] += value;
+        break;
+    }
+
+        case GOD_ELYVILON:
+    {
+        const bool valuable_weapon =
+            _destroyed_valuable_weapon(value, item.base_type);
+        const bool evil_weapon = is_evil_item(item);
+
+        if (valuable_weapon || evil_weapon)
+        {
+            if (evil_weapon)
+            {
+                const char *desc_weapon = "evil";
+
+                // Print this in addition to the above!
+                simple_god_message(make_stringf(
+                            " welcomes the destruction of %s %s weapon%s.",
+                            item.quantity == 1 ? "this" : "these",
+                            desc_weapon,
+                            item.quantity == 1 ? ""     : "s").c_str(),
+                            GOD_ELYVILON);
+                            
+                gain_piety(1); // Bonus for evil.
+            }
+
+            gain.piety_gain = PIETY_SOME;
+        }
         break;
     }
 
@@ -729,6 +776,11 @@ static bool _offer_items()
             else
                 simple_god_message(" not offer them!");
     }
+        if (num_sacced == 0 && you_worship(GOD_ELYVILON))
+    {
+        mprf("There are no %sweapons here to destroy!",
+             you.piety_max[GOD_ELYVILON] < piety_breakpoint(2) ? "" : "unholy or evil ");
+    }
     return (num_sacced > 0);
 }
 
@@ -772,3 +824,4 @@ void pray()
         you.turn_is_over = true;
     dprf("piety: %d (-%d)", you.piety, you.piety_hysteresis);
 }
+

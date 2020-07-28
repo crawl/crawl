@@ -605,8 +605,8 @@ static const duration_def duration_data[] =
       BROWN, "Earth",
       "earth", "will of earth",
       "Stones began to float around you.", D_DISPELLABLE | D_EXPIRES,
-      {{ "The stones around you begin to lose power." },
-        { "The stones around you fell helplessly." }}, 6 },
+      {{ "The stones around you fall away." },
+        { "The stones around you begin to lose power." }}, 6 },
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.
 
@@ -773,7 +773,7 @@ static const duration_def duration_data[] =
          you.props.erase(CONDENSATION_SHIELD_KEY);
          you.redraw_armour_class = true;
     }} } },
-	{ DUR_CITRINITAS, 
+    { DUR_CITRINITAS, 
       BLUE, "Empower", 
       "Citrinitas", "Citrinitas", "Your accuracy and spells are empowered!", D_NO_FLAGS,
       {{ "You feel less empowered." },

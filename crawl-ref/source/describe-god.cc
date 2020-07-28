@@ -245,10 +245,10 @@ static const char *divine_title[][8] =
         "Young Dragon",     "Red Sash",               "Golden Sash",              "Sifu"},
 
         // The Great Wyrm -- alchemy theme
-        {"Fangless",      		"Hyle",             	"Solvent",       	 "Torus",
+        {"Fangless",            "Hyle",                 "Solvent",            "Torus",
             "Lapis",   	"@Walking@ Metaphor",    "@Walking@ Providence",    "Ouroboros"},
 };
-COMPILE_CHECK(ARRAYSZ(divine_title) == NUM_GODS);Metaphors
+COMPILE_CHECK(ARRAYSZ(divine_title) == NUM_GODS);
 
 string god_title(god_type which_god, species_type which_species, int piety)
 {

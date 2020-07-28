@@ -1241,6 +1241,8 @@ bool melee_attack::check_unrand_effects()
                     damage_done, hp_boost/3);
                 attacker->heal(hp_boost/3);
             }
+            
+            attacker->god_conduct(DID_EVIL, 2 + random2(3));
         }
         else if (attacker->is_monster())
         {
@@ -4037,9 +4039,9 @@ int melee_attack::calc_your_to_hit_unarmed()
 
     if (you.confused())
         your_to_hit -= 5;
-	
-	if (you.duration[DUR_CITRINITAS])
-		your_to_hit += you.piety/40;
+
+    if (you.duration[DUR_CITRINITAS])
+        your_to_hit += you.piety/40;
 
     your_to_hit += slaying_bonus();
 

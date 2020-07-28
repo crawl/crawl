@@ -2775,8 +2775,7 @@ static void _handle_head_loss(int exp)
     if (!(you.attribute[ATTR_HEAD_LOSS_XP] > 0))
         return;
 
-    int loss = div_rand_round(exp * abs(you.props[HYDRA_HEADS_NET_LOSS].get_int())/12,
-                                max(1, calc_skill_cost(you.skill_cost_level) - 3));
+    int loss = exp * abs(you.props[HYDRA_HEADS_NET_LOSS].get_int())/2;
     you.attribute[ATTR_HEAD_LOSS_XP] -= loss;
     dprf("Head loss points: %d", you.attribute[ATTR_HEAD_LOSS_XP]);
     if (you.attribute[ATTR_HEAD_LOSS_XP] <= 0)
@@ -2875,7 +2874,7 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain)
     _recharge_xp_evokers(skill_xp);
     _reduce_abyss_xp_timer(skill_xp);
     _handle_xp_drain(skill_xp);
-    if (you.form != transformation::lich) // There is nothing to do if hydra is in a lich form.
+    if (you.form != transformation::lich && you.props[HYDRA_HEADS_NET_LOSS].get_int() != 0) // There is nothing to do if hydra is in a lich form.
         _handle_head_loss(skill_xp);
 
     if (player_under_penance(GOD_HEPLIAKLQANA))
@@ -7056,9 +7055,11 @@ bool player::head_grow(int num, bool heal) const
                     break;
                 you.props[HYDRA_HEADS_NET_LOSS].get_int()--;
                 _head_loss_xp();
+
+                if (heal)
+                    you.heal(random2(1));
             }
-            if (heal)
-                you.heal(4*num + random2(4*num));
+            
         }
         else if (num < 0)
         {
@@ -7066,9 +7067,9 @@ bool player::head_grow(int num, bool heal) const
             {    
                 you.props[HYDRA_HEADS_NET_LOSS].get_int()++;
                 _head_loss_xp();
+                if (heal)
+                    ouch(4 + random2(4), KILLED_BY_DRAINING);
             }
-            if (heal)
-                ouch(abs(4*num + random2(4*num)), KILLED_BY_DRAINING);
         }
     }
     else if (you.form == transformation::lich && num < 0)
@@ -7078,9 +7079,9 @@ bool player::head_grow(int num, bool heal) const
         {
                 you.props[HYDRA_HEADS_NET_LOSS].get_int()++;
                 _head_loss_xp();
+                if (heal)
+                    ouch(4 + random2(4), KILLED_BY_DRAINING);
         }
-        if (heal)
-            ouch(abs(4*num + random2(4*num)), KILLED_BY_DRAINING);
     }
     else if (num == 0 && heal)
     {

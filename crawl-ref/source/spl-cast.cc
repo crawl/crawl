@@ -505,11 +505,11 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
             // spell school levels).
             if (you.duration[DUR_BRILLIANCE])
                 power += 600;
-			
-			// The Great Wyrm: Empowered by piety when drink Citrinitas.
-			if (you.duration[DUR_CITRINITAS])
-				power += you.piety*4; //starts at +300(25%), max at +800(66%)
-			
+            
+            // The Great Wyrm: Empowered by piety when drink Citrinitas.
+            if (you.duration[DUR_CITRINITAS])
+                power += you.piety*4; //starts at +300(25%), max at +800(66%)
+            
             if (apply_intel)
                 power = (power * you.intel()) / 10;
 
@@ -1974,7 +1974,7 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_ENGLACIATION:
         return cast_englaciation(powc, fail);
 
-    case SPELL_CONTROL_UNDEAD:	
+    case SPELL_CONTROL_UNDEAD:
         return mass_enchantment(ENCH_CHARM, powc, fail);
 
     case SPELL_AURA_OF_ABJURATION:
@@ -2191,6 +2191,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
 
     case SPELL_FLAME_STRIKE:
         return cast_flame_strike(powc, fail);
+
+    case SPELL_PAVISE:
+        return cast_pavise(powc, beam, fail);
 
     // non-player spells that have a zap, but that shouldn't be called (e.g
     // because they will crash as a player zap).

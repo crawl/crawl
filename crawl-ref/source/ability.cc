@@ -170,6 +170,7 @@ enum class fail_basis
     xl,
     evo,
     invo,
+    shield, //only pavise!
 };
 
 /**
@@ -242,6 +243,8 @@ struct failure_info
                 = piety_fail_denom ? you.piety / piety_fail_denom : 0;
             return base_chance - sk_mod - piety_mod;
         }
+        case fail_basis::shield:
+            return base_chance - you.skill(SK_SHIELDS, variable_fail_mult);
         default:
             die("unknown failure basis %d!", (int)basis);
         }
@@ -256,6 +259,8 @@ struct failure_info
             return SK_EVOCATIONS;
         case fail_basis::invo:
             return invo_skill();
+        case fail_basis::shield:
+            return SK_SHIELDS;
         case fail_basis::xl:
         default:
             return SK_NONE;
@@ -373,7 +378,8 @@ static const ability_def Ability_List[] =
       3, 0, 200, 0, {fail_basis::evo, 50, 2}, abflag::none },
     { ABIL_EVOKE_THUNDER, "Evoke Thunderclouds",
       5, 0, 200, 0, {fail_basis::evo, 60, 2}, abflag::none },
-
+    { ABIL_EVOKE_PAVISE, "Deploy Shield",
+      0, 0, 0, 0, {fail_basis::shield, 60, 2}, abflag::none },
 
     { ABIL_END_TRANSFORMATION, "End Transformation",
       0, 0, 0, 0, {}, abflag::starve_ok },
@@ -882,12 +888,12 @@ const string make_cost_description(ability_type ability)
 
     if (abil.flags & abflag::remove_curse_scroll)
         ret += ", Scroll of remove curse";
-	
-		if (abil.flags & abflag::potion)
-			ret += ", 1 Potion";
-		
-		if (abil.flags & abflag::essence)
-			ret += ", 1 Essence";
+
+    if (abil.flags & abflag::potion)
+        ret += ", 1 Potion";
+
+    if (abil.flags & abflag::essence)
+        ret += ", 1 Essence";
 
     if (abil.flags & abflag::gold)
     {
@@ -1007,18 +1013,18 @@ static const string _detailed_cost_description(ability_type ability)
         have_cost = true;
         ret << "\nOne scroll of remove curse";
     }
-	
-	if (abil.flags & abflag::potion)
+
+    if (abil.flags & abflag::potion)
     {
         have_cost = true;
         ret << "\nA potion to spend";
     }
-	
-		if (abil.flags & abflag::essence)
-		{
-			have_cost = true;
-			ret << "\nAn essence to spend";
-		}
+
+    if (abil.flags & abflag::essence)
+    {
+        have_cost = true;
+        ret << "\nAn essence to spend";
+    }
 
     if (abil.flags & abflag::ecdysis)
     {
@@ -1922,6 +1928,9 @@ bool activate_talent(const talent& tal)
     }
 }
 
+static int _setup_essence_costs();
+static int _setup_potion_costs();
+
 static int _calc_breath_ability_range(ability_type ability)
 {
     int range = 0;
@@ -2502,6 +2511,16 @@ static spret _do_ability(const ability_def& abil, bool fail)
                 m->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 3));
         }
 
+        break;
+
+    case ABIL_EVOKE_PAVISE:
+        fail_check();
+        if (your_spells(SPELL_PAVISE,
+            you.experience_level * 10,
+            false) == spret::abort)
+        {
+            return spret::abort;
+        }
         break;
 
     case ABIL_EVOKE_THUNDER: // robe of Clouds
@@ -3594,348 +3613,319 @@ static spret _do_ability(const ability_def& abil, bool fail)
         break;
     }
 
-	case ABIL_WYRM_INFUSE:
-	{
-		int essence = -1;
-        essence = _setup_essence_costs();
+    case ABIL_WYRM_INFUSE:
+    {
+        int essence_idx = -1;
+        essence_idx = _setup_essence_costs();
 
-		int essence_idx = -1;
-		ASSERT(you.inv[essence_idx].base_type == OBJ_POTIONS); // Dose it work properly?
-		item_def& essence = you.inv[essence_idx];
-		
-        if (essence == -1) {
-			mpr("You need an essence to infuse.");
+        if (essence_idx == -1) {
+            mpr("You need an essence to infuse.");
             return spret::abort;
         }
-		
-		god_acting gdact;
-		beam.range = LOS_MAX_RANGE;
-		direction_chooser_args args;
-		args.restricts = DIR_TARGET;
-		args.mode = TARG_ANY;
-		args.needs_path = false;
-				
-		if (!spell_direction(spd, beam, &args))
-			return spret::abort;
 
-		if (beam.target == you.pos())
-		{
-			mpr("You need to drink this if you want use its effect to yourself.");
-			return spret::abort;
-		}
+        ASSERT(you.inv[essence_idx].base_type == OBJ_POTIONS); // Dose it work properly?
+        item_def& essence_item = you.inv[essence_idx];
 
-		monster* mons = monster_at(beam.target);
-		if (mons == nullptr || !you.can_see(*mons))
-		{
-			mpr("You see nothing there you can infuse.");
-			return spret::abort;
-		}
+        god_acting gdact;
+        beam.range = LOS_MAX_RANGE;
+        direction_chooser_args args;
+        args.restricts = DIR_TARGET;
+        args.mode = TARG_ANY;
+        args.needs_path = false;
 
-		if (essence.sub_type == POT_NIGREDO){
-			
-			const int duration = 10 + you.piety/20;
-			mons->add_ench(mon_enchant(ENCH_NIGREDO, 0, &you, duration * BASELINE_DELAY));
-			simple_monster_message(*mons, "is infused with Nigredo, begins to leave miasma on trail!");
-			
-		} else if (essence.sub_type == POT_ALBEDO){
-			
-			if (!monster_is_debuffable(*mons))
-			{
-				mpr("You can only infuse a target which under dispellable magic.");
-				return spret::abort;
-			}	
+        if (!spell_direction(spd, beam, &args))
+            return spret::abort;
 
-			const int duration = 6 + you.piety/40;
-			mons->add_ench(mon_enchant(ENCH_ALBEDO, 0, &you, duration * BASELINE_DELAY));
-			simple_monster_message(*mons, "is infused with Albedo, begins to be interrupted!");
-			
-		} else if (essence.sub_type == POT_CITRINITAS){ 
-			
-			if (!mons->friendly()){
-				if (yesno("This will be beneficial for target! Are you sure want to infuse it?", true, 'y')){
-				} else return spret::abort;
-			}
+        if (beam.target == you.pos())
+        {
+            mpr("You need to drink this if you want use its effect to yourself.");
+            return spret::abort;
+        }
 
-			const int duration = min(10 + you.piety/10 + random2(10), 50);
-			mons->add_ench(mon_enchant(ENCH_CITRINITAS, 0, &you, duration * BASELINE_DELAY));
-			simple_monster_message(*mons, "is infused with Citrinitas, begins to empowered!");
-		
-		} else if (essence.sub_type == POT_VIRIDITAS){ 
-			
-			if (mons->friendly())
-			{
-				mpr("You can't infuse allies with this.");
-				return spret::abort;
-			}
-			
-			const int duration = min(2 + you.piety/50, 10); // Never use random: It is critical to player
-			mons->add_ench(mon_enchant(ENCH_VIRIDITAS, 0, &you, duration * BASELINE_DELAY));
-			simple_monster_message(*mons, "is infused with Viriditas, begins to heal you instead damage!");
-		
-		} else if (essence.sub_type == POT_RUBEDO){ 
+        monster* mons = monster_at(beam.target);
+        if (mons == nullptr || !you.can_see(*mons))
+        {
+            mpr("You see nothing there you can infuse.");
+            return spret::abort;
+        }
 
-			for (radius_iterator ri(you.pos(), LOS_DEFAULT); ri; ++ri)
-			{
-				const monster *diffuse = monster_at(*ri);
-				if (!diffuse || !you.can_see(*diffuse))
-				{
-					mpr("You see nothing there you can diffuse.");
-					return spret::abort;
-				}
-		
-				if (!mons->has_ench(ENCH_NIGREDO)
-					&& !mons->has_ench(ENCH_ALBEDO)
-					&& !mons->has_ench(ENCH_CITRINITAS)
-					&& !mons->has_ench(ENCH_VIRIDITAS))
-				{
-					mpr("You can only diffuse an infused target with other essence.");
-					return spret::abort;
-				}
-				
-				const int other = 0;
-				if (mons->has_ench(ENCH_NIGREDO)){
-					
-					const int duration_nigredo = 10 + you.piety/20;
-					diffuse->add_ench(mon_enchant(ENCH_NIGREDO, 0, &you, duration_nigredo * BASELINE_DELAY));
-					other++;
-					
-				} if (mons->has_ench(ENCH_ALBEDO)){
-					
-					const int duration_albedo = 6 + you.piety/40;
-					diffuse->add_ench(mon_enchant(ENCH_ALBEDO, 0, &you, duration_albedo * BASELINE_DELAY));
-					other++;
-					
-				} if (mons->has_ench(ENCH_CITRINITAS)){
-					
-					const int duration_citrinitas = min(10 + you.piety/10 + random2(10), 50);
-					if (diffuse->friendly())
-					{
-						diffuse->add_ench(mon_enchant(ENCH_CITRINITAS, 0, &you, duration_citrinitas * BASELINE_DELAY));
-						other++;
-					}
-					
-				} if (mons->has_ench(ENCH_VIRIDITAS)){
-					
-					const int duration_viriditas = min(2 + you.piety/50, 10);
-					if (!diffuse->friendly())
-					{
-						diffuse->add_ench(mon_enchant(ENCH_VIRIDITAS, 0, &you, duration_viriditas * BASELINE_DELAY));
-						other++;
-					}
-					
-				} if (other >= 1){
-					flash_view(UA_PLAYER, RED);
-					simple_monster_message(*mons, " diffuse its other infusions!");
-				}
-			}
-		}
-		
-		dec_inv_item_quantity(essence_idx, 1);
-		break;
-	}
-	
+        if (essence_item.sub_type == POT_NIGREDO){
+            const int duration = 10 + you.piety/20;
+            mons->add_ench(mon_enchant(ENCH_NIGREDO, 0, &you, duration * BASELINE_DELAY));
+            simple_monster_message(*mons, "is infused with Nigredo, begins to leave miasma on trail!");
+        } else if (essence_item.sub_type == POT_ALBEDO){
+            if (!monster_is_debuffable(*mons))
+            {
+                mpr("You can only infuse a target which under dispellable magic.");
+                return spret::abort;
+            }
+
+            const int duration = 6 + you.piety/40;
+            mons->add_ench(mon_enchant(ENCH_ALBEDO, 0, &you, duration * BASELINE_DELAY));
+            simple_monster_message(*mons, "is infused with Albedo, begins to be interrupted!");
+        } else if (essence_item.sub_type == POT_CITRINITAS){
+            if (!mons->friendly()){
+                if (yesno("This will be beneficial for target! Are you sure want to infuse it?", true, 'y')){
+                } else return spret::abort;
+            }
+            const int duration = min(10 + you.piety/10 + random2(10), 50);
+            mons->add_ench(mon_enchant(ENCH_CITRINITAS, 0, &you, duration * BASELINE_DELAY));
+            simple_monster_message(*mons, "is infused with Citrinitas, begins to empowered!");
+        
+        } else if (essence_item.sub_type == POT_VIRIDITAS){
+            if (mons->friendly())
+            {
+                mpr("You can't infuse allies with this.");
+                return spret::abort;
+            }
+            const int duration = min(2 + you.piety/50, 10); // Never use random: It is critical to player
+            mons->add_ench(mon_enchant(ENCH_VIRIDITAS, 0, &you, duration * BASELINE_DELAY));
+            simple_monster_message(*mons, "is infused with Viriditas, begins to heal you instead damage!");
+
+        } else if (essence_item.sub_type == POT_RUBEDO){
+
+            for (radius_iterator ri(you.pos(), LOS_DEFAULT); ri; ++ri)
+            {
+                monster *diffuse = monster_at(*ri);
+                if (!diffuse || !you.can_see(*diffuse))
+                {
+                    mpr("You see nothing there you can diffuse.");
+                    return spret::abort;
+                }
+        
+                if (!mons->has_ench(ENCH_NIGREDO)
+                    && !mons->has_ench(ENCH_ALBEDO)
+                    && !mons->has_ench(ENCH_CITRINITAS)
+                    && !mons->has_ench(ENCH_VIRIDITAS))
+                {
+                    mpr("You can only diffuse an infused target with other essence.");
+                    return spret::abort;
+                }
+                
+                int other = 0;
+                if (mons->has_ench(ENCH_NIGREDO)){
+                    
+                    const int duration_nigredo = 10 + you.piety/20;
+                    diffuse->add_ench(mon_enchant(ENCH_NIGREDO, 0, &you, duration_nigredo * BASELINE_DELAY));
+                    other++;
+                    
+                } if (mons->has_ench(ENCH_ALBEDO)){
+                    
+                    const int duration_albedo = 6 + you.piety/40;
+                    diffuse->add_ench(mon_enchant(ENCH_ALBEDO, 0, &you, duration_albedo * BASELINE_DELAY));
+                    other++;
+                    
+                } if (mons->has_ench(ENCH_CITRINITAS)){
+                    
+                    const int duration_citrinitas = min(10 + you.piety/10 + random2(10), 50);
+                    if (diffuse->friendly())
+                    {
+                        diffuse->add_ench(mon_enchant(ENCH_CITRINITAS, 0, &you, duration_citrinitas * BASELINE_DELAY));
+                        other++;
+                    }
+                    
+                } if (mons->has_ench(ENCH_VIRIDITAS)){
+                    
+                    const int duration_viriditas = min(2 + you.piety/50, 10);
+                    if (!diffuse->friendly())
+                    {
+                        diffuse->add_ench(mon_enchant(ENCH_VIRIDITAS, 0, &you, duration_viriditas * BASELINE_DELAY));
+                        other++;
+                    }
+                    
+                } if (other >= 1){
+                    flash_view(UA_PLAYER, RED);
+                    simple_monster_message(*mons, " diffuse its other infusions!");
+                }
+            }
+        }
+        
+        dec_inv_item_quantity(essence_idx, 1);
+        break;
+    }
+    
     case ABIL_WYRM_NIGREDO:
     {
-        int potion = -1;
-        potion = _setup_potion_costs();
-
-		int pot_idx = -1;
-		ASSERT(you.inv[pot_idx].base_type == OBJ_POTIONS);
-		item_def& potion = you.inv[pot_idx];
-		
-        if (potion == -1) {
-			mpr("You need a potion to transmute into essence of Nigredo.");
+        int pot_idx = -1;
+        pot_idx = _setup_potion_costs();
+        if (pot_idx == -1) {
+            mpr("You need a potion to transmute into essence of Rubedo.");
             return spret::abort;
         }
-		
-		int thing_created = items(true, OBJ_POTIONS, POT_NIGREDO, 1, 0, you.religion);
-		if (thing_created == NON_ITEM || !move_item_to_grid(&thing_created, you.pos()))
-		{
-			return false;
-		}
-		set_ident_type(mitm[thing_created], true);
-		
-		switch (random2(4))
-		{
-		case 0:
-			mprf(MSGCH_GOD, "The Great Wyrm whispers: Yout transmutation is finish.");
-			break;
-		case 1:
-			mprf(MSGCH_GOD, "Nigredo, the black essence of decay, now is your own.");
-			break;
-		case 2:
-			mprf(MSGCH_GOD, "You transmute an essence of Nigredo.");
-			break;
-		case 3:
-			mprf(MSGCH_GOD, "'Note; Nigredo can infuse a target with miasma.'");
-			break;
-		}
-		flash_view(UA_PLAYER, DARKGRAY);
-		dec_inv_item_quantity(pot_idx, 1);
+        ASSERT(you.inv[pot_idx].base_type == OBJ_POTIONS);
+        
+        int thing_created = items(true, OBJ_POTIONS, POT_NIGREDO, 1, 0, you.religion);
+        if (thing_created == NON_ITEM || !move_item_to_grid(&thing_created, you.pos()))
+        {
+            return spret::abort;
+        }
+        set_ident_type(mitm[thing_created], true);
+        
+        switch (random2(4))
+        {
+        case 0:
+            mprf(MSGCH_GOD, "The Great Wyrm whispers: Yout transmutation is finish.");
+            break;
+        case 1:
+            mprf(MSGCH_GOD, "Nigredo, the black essence of decay, now is your own.");
+            break;
+        case 2:
+            mprf(MSGCH_GOD, "You transmute an essence of Nigredo.");
+            break;
+        case 3:
+            mprf(MSGCH_GOD, "'Note; Nigredo can infuse a target with miasma.'");
+            break;
+        }
+        flash_view(UA_PLAYER, DARKGRAY);
+        dec_inv_item_quantity(pot_idx, 1);
         break;
     }
-	
-	case ABIL_WYRM_ALBEDO:
+    
+    case ABIL_WYRM_ALBEDO:
     {
-        int potion = -1;
-        potion = _setup_potion_costs();
-
-		int pot_idx = -1;
-		ASSERT(you.inv[pot_idx].base_type == OBJ_POTIONS);
-		item_def& potion = you.inv[pot_idx];
-		
-        if (potion == -1) {
-			mpr("You need a potion to transmute into essence of Albedo.");
+        int pot_idx = -1;
+        pot_idx = _setup_potion_costs();
+        if (pot_idx == -1) {
+            mpr("You need a potion to transmute into essence of Rubedo.");
             return spret::abort;
         }
-		
-		int thing_created = items(true, OBJ_POTIONS, POT_ALBEDO, 1, 0, you.religion);
-		if (thing_created == NON_ITEM || !move_item_to_grid(&thing_created, you.pos()))
-		{
-			return false;
-		}
-		set_ident_type(mitm[thing_created], true);
-		
-		switch (random2(4))
-		{
-		case 0:
-			mprf(MSGCH_GOD, "The Great Wyrm whispers: Your transmutation is finish.");
-			break;
-		case 1:
-			mprf(MSGCH_GOD, "Albedo, the white essence of purge, now is your own.");
-			break;
-		case 2:
-			mprf(MSGCH_GOD, "You transmute an essence of Albedo.");
-			break;
-		case 3:
-			mprf(MSGCH_GOD, "Note; Albedo can interrupt a target with dispellable magic.");
-			break;
-		}
-		flash_view(UA_PLAYER, WHITE);
-		dec_inv_item_quantity(pot_idx, 1);
+        ASSERT(you.inv[pot_idx].base_type == OBJ_POTIONS);
+        
+        int thing_created = items(true, OBJ_POTIONS, POT_ALBEDO, 1, 0, you.religion);
+        if (thing_created == NON_ITEM || !move_item_to_grid(&thing_created, you.pos()))
+        {
+            return spret::abort;
+        }
+        set_ident_type(mitm[thing_created], true);
+        
+        switch (random2(4))
+        {
+        case 0:
+            mprf(MSGCH_GOD, "The Great Wyrm whispers: Your transmutation is finish.");
+            break;
+        case 1:
+            mprf(MSGCH_GOD, "Albedo, the white essence of purge, now is your own.");
+            break;
+        case 2:
+            mprf(MSGCH_GOD, "You transmute an essence of Albedo.");
+            break;
+        case 3:
+            mprf(MSGCH_GOD, "Note; Albedo can interrupt a target with dispellable magic.");
+            break;
+        }
+        flash_view(UA_PLAYER, WHITE);
+        dec_inv_item_quantity(pot_idx, 1);
         break;
     }
-	
-	case ABIL_WYRM_CITRINITAS:
+    
+    case ABIL_WYRM_CITRINITAS:
     {
-        int potion = -1;
-        potion = _setup_potion_costs();
-
-		int pot_idx = -1;
-		ASSERT(you.inv[pot_idx].base_type == OBJ_POTIONS);
-		item_def& potion = you.inv[pot_idx];
-		
-        if (potion == -1) {
-			mpr("You need a potion to transmute into essence of Citrinitas.");
+        int pot_idx = -1;
+        pot_idx = _setup_potion_costs();
+        if (pot_idx == -1) {
+            mpr("You need a potion to transmute into essence of Rubedo.");
             return spret::abort;
         }
+        ASSERT(you.inv[pot_idx].base_type == OBJ_POTIONS);
 
-		int thing_created = items(true, OBJ_POTIONS, POT_CITRINITAS, 1, 0, you.religion);
-		if (thing_created == NON_ITEM || !move_item_to_grid(&thing_created, you.pos()))
-		{
-			return false;
-		}
-		set_ident_type(mitm[thing_created], true);
-		
-		switch (random2(4))
-		{
-		case 0:
-			mprf(MSGCH_GOD, "The Great Wyrm whispers: Your transmutation is finish.");
-			break;
-		case 1:
-			mprf(MSGCH_GOD, "Citrinitas, the yellow essence of empowerment, now is your own.");
-			break;
-		case 2:
-			mprf(MSGCH_GOD, "You transmute an essence of Citrinitas.");
-			break;
-		case 3:
-			mprf(MSGCH_GOD, "Note; Citrinitas empowers accuracy and spells of drinker or infused target.");
-			break;
-		}
-		flash_view(UA_PLAYER, YELLOW);
-		dec_inv_item_quantity(pot_idx, 1);
+        int thing_created = items(true, OBJ_POTIONS, POT_CITRINITAS, 1, 0, you.religion);
+        if (thing_created == NON_ITEM || !move_item_to_grid(&thing_created, you.pos()))
+        {
+            return spret::abort;
+        }
+        set_ident_type(mitm[thing_created], true);
+        
+        switch (random2(4))
+        {
+        case 0:
+            mprf(MSGCH_GOD, "The Great Wyrm whispers: Your transmutation is finish.");
+            break;
+        case 1:
+            mprf(MSGCH_GOD, "Citrinitas, the yellow essence of empowerment, now is your own.");
+            break;
+        case 2:
+            mprf(MSGCH_GOD, "You transmute an essence of Citrinitas.");
+            break;
+        case 3:
+            mprf(MSGCH_GOD, "Note; Citrinitas empowers accuracy and spells of drinker or infused target.");
+            break;
+        }
+        flash_view(UA_PLAYER, YELLOW);
+        dec_inv_item_quantity(pot_idx, 1);
         break;
     }
 
-	case ABIL_WYRM_VIRIDITAS:
+    case ABIL_WYRM_VIRIDITAS:
     {
-        int potion = -1;
-        potion = _setup_potion_costs();
-
-		int pot_idx = -1;
-		ASSERT(you.inv[pot_idx].base_type == OBJ_POTIONS);
-		item_def& potion = you.inv[pot_idx];
-		
-        if (potion == -1) {
-			mpr("You need a potion to transmute into essence of Viriditas.");
+        int pot_idx = -1;
+        pot_idx = _setup_potion_costs();
+        if (pot_idx == -1) {
+            mpr("You need a potion to transmute into essence of Rubedo.");
             return spret::abort;
         }
-		
-		int thing_created = items(true, OBJ_POTIONS, POT_VIRIDITAS, 1, 0, you.religion);
-		if (thing_created == NON_ITEM || !move_item_to_grid(&thing_created, you.pos()))
-		{
-			return false;
-		}
-		set_ident_type(mitm[thing_created], true);
-		
-		switch (random2(4))
-		{
-		case 0:
-			mprf(MSGCH_GOD, "The Great Wyrm whispers: Your transmutation is finish.");
-			break;
-		case 1:
-			mprf(MSGCH_GOD, "Viriditas, the yellow essence of restoration, now is your own.");
-			break;
-		case 2:
-			mprf(MSGCH_GOD, "You transmute an essence of Viriditas.");
-			break;
-		case 3:
-			mprf(MSGCH_GOD, "Note; Viriditas can convert damage from infused target into heal.");
-			break;
-		}	
-		flash_view(UA_PLAYER, LIGHTGREEN);
-		dec_inv_item_quantity(pot_idx, 1);
+        ASSERT(you.inv[pot_idx].base_type == OBJ_POTIONS);
+        
+        int thing_created = items(true, OBJ_POTIONS, POT_VIRIDITAS, 1, 0, you.religion);
+        if (thing_created == NON_ITEM || !move_item_to_grid(&thing_created, you.pos()))
+        {
+            return spret::abort;
+        }
+        set_ident_type(mitm[thing_created], true);
+        
+        switch (random2(4))
+        {
+        case 0:
+            mprf(MSGCH_GOD, "The Great Wyrm whispers: Your transmutation is finish.");
+            break;
+        case 1:
+            mprf(MSGCH_GOD, "Viriditas, the yellow essence of restoration, now is your own.");
+            break;
+        case 2:
+            mprf(MSGCH_GOD, "You transmute an essence of Viriditas.");
+            break;
+        case 3:
+            mprf(MSGCH_GOD, "Note; Viriditas can convert damage from infused target into heal.");
+            break;
+        }    
+        flash_view(UA_PLAYER, LIGHTGREEN);
+        dec_inv_item_quantity(pot_idx, 1);
         break;
     }
-	
-	case ABIL_WYRM_RUBEDO:
+    
+    case ABIL_WYRM_RUBEDO:
     {
-        int potion = -1;
-        potion = _setup_potion_costs();
-
-		int pot_idx = -1;
-		ASSERT(you.inv[pot_idx].base_type == OBJ_POTIONS);
-		item_def& potion = you.inv[pot_idx];
-		
-        if (potion == -1) {
-			mpr("You need a potion to transmute into essence of Rubedo.");
+        int pot_idx = -1;
+        pot_idx = _setup_potion_costs();
+        if (pot_idx == -1) {
+            mpr("You need a potion to transmute into essence of Rubedo.");
             return spret::abort;
         }
-		
-		int thing_created = items(true, OBJ_POTIONS, POT_RUBEDO, 1, 0, you.religion);
-		if (thing_created == NON_ITEM || !move_item_to_grid(&thing_created, you.pos()))
-		{
-			return false;
-		}
-		set_ident_type(mitm[thing_created], true);
-		
-		switch (random2(4))
-		{
-		case 0:
-			mprf(MSGCH_GOD, "The Great Wyrm whispers: Your transmutation is finish.");
-			break;
-		case 1:
-			mprf(MSGCH_GOD, "Rubedo, the red essence of the end-as-begin, now is your own.");
-			break;
-		case 2:
-			mprf(MSGCH_GOD, "You transmute an essence of Rubedo.");
-			break;
-		case 3:
-			mprf(MSGCH_GOD, "Note; Rubedo can diffuse other infusions.");
-			break;
-		}	
-		flash_view(UA_PLAYER, RED);
-		dec_inv_item_quantity(pot_idx, 1);
+        ASSERT(you.inv[pot_idx].base_type == OBJ_POTIONS);        
+        
+        int thing_created = items(true, OBJ_POTIONS, POT_RUBEDO, 1, 0, you.religion);
+        if (thing_created == NON_ITEM || !move_item_to_grid(&thing_created, you.pos()))
+        {
+            return spret::abort;
+        }
+        set_ident_type(mitm[thing_created], true);
+        
+        switch (random2(4))
+        {
+        case 0:
+            mprf(MSGCH_GOD, "The Great Wyrm whispers: Your transmutation is finish.");
+            break;
+        case 1:
+            mprf(MSGCH_GOD, "Rubedo, the red essence of the end-as-begin, now is your own.");
+            break;
+        case 2:
+            mprf(MSGCH_GOD, "You transmute an essence of Rubedo.");
+            break;
+        case 3:
+            mprf(MSGCH_GOD, "Note; Rubedo can diffuse other infusions.");
+            break;
+        }    
+        flash_view(UA_PLAYER, RED);
+        dec_inv_item_quantity(pot_idx, 1);
         break;
     }
 
@@ -4040,7 +4030,7 @@ static int _setup_potion_costs()
         rc = -1;
     }
     
-	return rc;
+    return rc;
 }
 
 static int _setup_essence_costs()
@@ -4052,15 +4042,15 @@ static int _setup_essence_costs()
     if (prompt_failed(rc))
         rc = -1;
     else if (you.inv[rc].sub_type != POT_NIGREDO
-			&& you.inv[rc].sub_type != POT_ALBEDO
-			&& you.inv[rc].sub_type != POT_CITRINITAS
-			&& you.inv[rc].sub_type != POT_VIRIDITAS)
+            && you.inv[rc].sub_type != POT_ALBEDO
+            && you.inv[rc].sub_type != POT_CITRINITAS
+            && you.inv[rc].sub_type != POT_VIRIDITAS)
     {
         mpr("You need an essence of alchemy to do this.");
         rc = -1;
     }
     
-	return rc;
+    return rc;
 }
 
 int choose_ability_menu(const vector<talent>& talents)
@@ -4410,6 +4400,11 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
             if (you.airborne() && !you.attribute[ATTR_FLIGHT_UNCANCELLABLE])
                 _add_talent(talents, ABIL_STOP_FLYING, check_confused);
         }
+    }
+
+    if (you.evokable_pavise())
+    {
+        _add_talent(talents, ABIL_EVOKE_PAVISE, check_confused);
     }
 
     // Find hotkeys for the non-hotkeyed talents.

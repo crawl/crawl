@@ -2071,15 +2071,15 @@ static bool _wyrm_retribution()
     case 1:
     case 2:
     case 3:
-		if (you.hp > 1){
-			dec_hp((you.hp/4)+1, false);
-		}
-		if (you.magic_points > 1 || you.species == SP_DJINNI)
+        if (you.hp > 1){
+            dec_hp((you.hp/4)+1, false);
+        }
+        if (you.magic_points > 1 || you.species == SP_DJINNI)
         {
             drain_mp((you.magic_points/4)+1);
             canned_msg(MSG_MAGIC_DRAIN);
         }
-		simple_god_message("'s extracts your essence!", god);
+        simple_god_message("'s extracts your essence!", god);
         break;
     case 4:
     case 5:

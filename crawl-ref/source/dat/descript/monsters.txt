@@ -63,6 +63,22 @@ Blork the orc
 A particularly fat and ugly orc. He's scavenged a pair of rainbow-coloured
 suspenders from somewhere. They're not helping.
 %%%%
+Blork the orc warrior
+
+A particularly fat, ugly, but experienced, leather armoured and well-armed orc. 
+He can command a small mob of its fellows and he casts some minor magics.
+%%%%
+Blork the orc knight
+
+A particularly fat and ugly orc covered in scars from many past battles.
+It commands its brethren in battle, rousing them to greater, more violent efforts
+with bloodcurdling shouts.
+%%%%
+Blork the orc warlord
+
+A particularly fat and ugly orc. He is a supreme commander of an orc host, skilled
+at both melee and ranged combat. Unlike other warlords, he casts some minor magics.
+%%%%
 Boris
 
 An ancient and powerful lich. Like all true liches, Boris is immortal, and will
@@ -365,6 +381,10 @@ Nergalle
 A withered sorceress, exceptionally cruel even by orc standards. The living
 fear her; the dead obey her every command. She has a soft spot for the latter.
 %%%%
+Nergalle the deathbinder
+
+<Nergalle>
+%%%%
 Nessos
 
 A centaur warrior, skilled at warfare and deceit. They slew a mighty hydra, and
@@ -466,6 +486,13 @@ remaining eye is not very good, and she has mistaken you for one.
         return "She smells terrible."
     end
 }}
+%%%%
+Urug the Orcish Culverin
+
+A coarse and lanky orc. Urug lost her eye in a fight with a harpy, and has
+sworn to slay every last one of them. A long time passes, but her revenge 
+have not been finished. She still traces the scent of harpy with her canine
+familiars.
 %%%%
 Vashnia
 

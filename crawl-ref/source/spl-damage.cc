@@ -2832,7 +2832,7 @@ spret cast_dazzling_spray(int pow, coord_def aim, bool fail)
     return spret::success;
 }
 
-static bool _toxic_can_affect(const actor *act)
+bool toxic_can_affect(const actor *act)
 {
     if (act->is_monster() && act->as_monster()->submerged())
         return false;
@@ -2847,7 +2847,7 @@ spret cast_toxic_radiance(actor *agent, int pow, bool fail, bool mon_tracer)
     {
         targeter_radius hitfunc(&you, LOS_NO_TRANS);
         {
-            if (stop_attack_prompt(hitfunc, "poison", _toxic_can_affect))
+            if (stop_attack_prompt(hitfunc, "poison", toxic_can_affect))
                 return spret::abort;
         }
         fail_check();
@@ -2868,7 +2868,7 @@ spret cast_toxic_radiance(actor *agent, int pow, bool fail, bool mon_tracer)
     {
         for (actor_near_iterator ai(agent->pos(), LOS_NO_TRANS); ai; ++ai)
         {
-            if (!_toxic_can_affect(*ai) || mons_aligned(agent, *ai))
+            if (!toxic_can_affect(*ai) || mons_aligned(agent, *ai))
                 continue;
             else
                 return spret::success;
@@ -2919,7 +2919,7 @@ void toxic_radiance_effect(actor* agent, int mult, bool on_cast)
 
     for (actor_near_iterator ai(agent->pos(), LOS_NO_TRANS); ai; ++ai)
     {
-        if (!_toxic_can_affect(*ai))
+        if (!toxic_can_affect(*ai))
             continue;
 
         // Monsters can skip hurting friendlies

@@ -399,8 +399,8 @@ const vector<god_power> god_powers[NUM_GODS] =
       { 3, ABIL_HEPLIAKLQANA_TRANSFERENCE, "swap creatures with your ancestor" },
       { 4, ABIL_HEPLIAKLQANA_IDEALISE, "heal and protect your ancestor" },
       { 5, "drain nearby creatures when transferring your ancestor"},
-      { 6, "Your resistance will partially share with your ancestor",
-           "You will no longer share resistance with your ancestor" },
+      { 6, "Your resistance will partially share with your ancestor.",
+           "You will no longer share resistance with your ancestor." },
     },
 
     // Wu Jian
@@ -419,18 +419,18 @@ const vector<god_power> god_powers[NUM_GODS] =
 
       // The Great Wyrm
       { { 1, ABIL_WYRM_INFUSE,
-			"infuse a target in your sight with alcemical essence" },
-		{ 1, ABIL_WYRM_NIGREDO,
-			"transmute essence of Nigredo. Press 'a' and check how to use it."},
-		{ 2, ABIL_WYRM_ALBEDO,
-			"transmute essence of Albedo. Press 'a' and check how to use it."},
-		{ 3, ABIL_WYRM_CITRINITAS,
-			"transmute essence of Citrinitas. Press 'a' and check how to use it."},
-		{ 4, ABIL_WYRM_VIRIDITAS,
-			"transmute essence of Viriditas. Press 'a' and check how to use it."},
-		{ 5, ABIL_WYRM_RUBEDO,
-			"transmute essence of Rubedo. Press 'a' and check how to use it."},
-		},
+            "infuse a target in your sight with alcemical essence" },
+        { 1, ABIL_WYRM_NIGREDO,
+            "transmute essence of Nigredo"},
+        { 2, ABIL_WYRM_ALBEDO,
+            "transmute essence of Albedo"},
+        { 3, ABIL_WYRM_CITRINITAS,
+            "transmute essence of Citrinitas"},
+        { 4, ABIL_WYRM_VIRIDITAS,
+            "transmute essence of Viriditas"},
+        { 5, ABIL_WYRM_RUBEDO,
+            "transmute essence of Rubedo"},
+        },
 };
 
 vector<god_power> get_god_powers(god_type god)
@@ -1303,7 +1303,7 @@ static int _pakellas_high_misc()
         MISC_LAMP_OF_FIRE,
         MISC_PHIAL_OF_FLOODS,
         MISC_LIGHTNING_ROD,
-	MISC_DISC_OF_STORMS,
+        MISC_DISC_OF_STORMS,
     };
 
     return _preferably_unseen_item(high_miscs, [](int misc) {
@@ -1558,20 +1558,6 @@ static bool _gift_sif_kiku_gift(bool forced)
             gift = BOOK_DEATH;
         }
     }
-    else if (you_worship(GOD_WYRM))
-    // Similar to the Wyrm
-    {
-        if (you.piety >= piety_breakpoint(0)
-            && you.num_total_gifts[you.religion] == 0)
-        {
-            gift = BOOK_YOUNG_POISONERS;
-        }
-        else if (you.piety >= piety_breakpoint(2)
-                 && you.num_total_gifts[you.religion] == 1)
-        {
-            gift = BOOK_ALCHEMY;
-        }
-    }
     else if (forced
              || you.piety >= piety_breakpoint(4) && random2(you.piety) > 100)
     {
@@ -1594,12 +1580,6 @@ static bool _gift_sif_kiku_gift(bool forced)
         {
             make_book_kiku_gift(mitm[thing_created],
                                 gift == BOOK_NECROMANCY);
-        }
-        // ...also the Great Wyrm
-        if (you_worship(GOD_WYRM))
-        {
-            make_book_wyrm_gift(mitm[thing_created],
-                                gift == BOOK_YOUNG_POISONERS);
         }
         if (thing_created == NON_ITEM)
             return false;
@@ -2134,7 +2114,6 @@ bool do_god_gift(bool forced)
 
         case GOD_KIKUBAAQUDGHA:
         case GOD_SIF_MUNA:
-        case GOD_WYRM:
             success = _gift_sif_kiku_gift(forced);
             break;
 
@@ -2830,8 +2809,8 @@ void excommunication(bool voluntary, god_type new_god)
     mpr("You have lost your religion!");
     // included in default force_more_message
 
-    if ((old_god == GOD_ZIN || old_god == GOD_SHINING_ONE || old_god == GOD_ELYVILON)
-        && !((new_god == GOD_ZIN || new_god == GOD_SHINING_ONE || new_god == GOD_ELYVILON))
+    if (is_good_god(old_god)
+        && !is_good_god(new_god)
         && you.species == SP_PEARL_DRACONIAN)
     {
         you.innate_mutation[MUT_NEGATIVE_ENERGY_RESISTANCE]--;
@@ -2847,8 +2826,8 @@ void excommunication(bool voluntary, god_type new_god)
     }
 
     if (you.species == SP_CRUSTACEAN 
-        && (old_god == GOD_ZIN || old_god == GOD_SHINING_ONE || old_god == GOD_ELYVILON)
-        && !((new_god == GOD_ZIN || new_god == GOD_SHINING_ONE || new_god == GOD_ELYVILON)))
+        && is_good_god(old_god)
+        && !is_good_god(new_god))
     {
 
         if (you.experience_level > 6)
@@ -2989,6 +2968,7 @@ void excommunication(bool voluntary, god_type new_god)
             mprf(MSGCH_MONSTER_ENCHANT, "All of your fellow slimes turn on you.");
             add_daction(DACT_ALLY_SLIME);
         }
+        remove_all_companions(GOD_JIYVA);
         break;
 
     case GOD_FEDHAS:

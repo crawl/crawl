@@ -263,8 +263,8 @@ enum class passive_t
     ///share resistance
     share_resistance,
 
-	/// the Great Wyrm
-	wyrm_quicksilver,
+    /// the Great Wyrm
+    wyrm_quicksilver,
 };
 
 enum ru_interference

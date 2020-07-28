@@ -1058,6 +1058,12 @@ enum monster_type                      // menv[].type
     MONS_PLAYER_ELDRITCH_TENTACLE_SEGMENT,
     MONS_FOXFIRE,
     MONS_MAGGIE,
+    MONS_BLORK_THE_ORC_WARRIOR,
+    MONS_BLORK_THE_ORC_KNIGHT,
+    MONS_BLORK_THE_ORC_WARLORD,
+    MONS_URUG_II,
+    MONS_NERGALLE_II,
+    MONS_PAVISE,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

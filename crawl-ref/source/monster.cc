@@ -1649,6 +1649,8 @@ static int _get_monster_armour_value(const monster *mon,
               + get_armour_res_elec(item, true)
               + get_armour_res_corr(item);
 
+
+
     // Give a simple bonus, no matter the size of the MR bonus.
     if (get_armour_res_magic(item, true) > 0)
         value++;
@@ -3327,6 +3329,13 @@ int monster::base_armour_class() const
         }
     }
 
+    if (type == MONS_PAVISE) {
+        int item_ = inv[MSLOT_SHIELD];
+        if (item_ != NON_ITEM) {
+            item_def& shield = mitm[item_];
+            return base_ac + shield.plus;
+        }
+    }
 
     // demonspawn & draconians combine base & class ac values.
     if (mons_is_job(type))
@@ -4495,6 +4504,8 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
                 amount /= 2;
             else if (petrifying())
                 amount = amount * 2 / 3;
+            else if (this->has_ench(ENCH_DEATHS_DOOR))
+               return (0);
         }
 
         if (amount != INSTANT_DEATH && has_ench(ENCH_INJURY_BOND))
@@ -6736,8 +6747,8 @@ int monster::spell_hd(spell_type spell) const
         hd *= 2;
     if (has_ench(ENCH_EMPOWERED_SPELLS))
         hd += 5;
-	if (has_ench(ENCH_CITRINITAS))
-		hd += max(2, you.piety/40);
+    if (has_ench(ENCH_CITRINITAS))
+        hd += max(2, you.piety/40);
     return hd;
 }
 

@@ -215,6 +215,15 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu, int
                     return false;
                 }
 
+                // Check if the player is fighting with something in Deaths' Door,
+                if (attacker->is_player() && defender->as_monster()->has_ench(ENCH_DEATHS_DOOR))
+                {
+                    string prompt = "Really attack a monster in death's door?";
+                    if (!yesno(prompt.c_str(), true, 'n'))
+                    {   you.turn_is_over = false;
+                        return false;}
+                }
+
                 if (!attk.attack())
                 {
                     // Attack was cancelled or unsuccessful...

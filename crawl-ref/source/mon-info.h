@@ -96,9 +96,7 @@ enum monster_info_flags
     MB_OLD_ROUSED,
 #endif
     MB_BREATH_WEAPON,
-#if TAG_MAJOR_VERSION == 34
     MB_DEATHS_DOOR,
-#endif
     MB_FIREWOOD,
     MB_TWO_WEAPONS,
     MB_NO_REGEN,
@@ -180,9 +178,10 @@ enum monster_info_flags
     MB_VILE_CLUTCH,
     MB_HIGHLIGHTED_SUMMONER,
     MB_STONESKIN,
-		MB_NIGREDO,
-		MB_ALBEDO,
-		MB_CITRINITAS,
+    MB_NIGREDO,
+    MB_ALBEDO,
+    MB_CITRINITAS,
+    MB_VIRIDITAS,
     NUM_MB_FLAGS
 };
 

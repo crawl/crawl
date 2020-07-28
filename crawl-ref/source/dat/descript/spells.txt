@@ -1063,9 +1063,9 @@ Creates a large cloud of noxious fumes, which may cause confusion.
 %%%%
 Olgreb's Last Mercy spell
 
-Made by the arch-venomancer Olgreb in the last years, this spell reacts strongly
-toxins in the poisoned being. If the target survives, all toxins remove, but if
-target dies, its body explodes and sweeps nearby area.
+Causes the poison in a targeted creature to explode mercilessly and burst out
+from it upon death. The blast upon the victim's death sweeps nearby area and
+engulfs other adjacent creatures.
 %%%%
 Olgreb's Toxic Radiance spell
 
@@ -1164,9 +1164,11 @@ Conjures forth a great cloud of lethal gases.
 %%%%
 Poison Gland spell
 
-A spell that instills a deadly poison gland against a caster's melee 
-attack. When a melee attack hits, the poison gland infiltrates
-into the wound, cutting off the target's poison resistance little by little.
+Infuses the caster's melee attacks with a deadly poison gland. Whenever the
+caster attacks, the poison infiltrates into the wound of its victim and makes
+them more vulnerable to poison. Even those who are immune to poison becomes
+susceptible to poison. However, it only causes loss of poison resistance and
+does not poison its victims directly.
 %%%%
 Poisonous Vapours spell
 
@@ -1779,7 +1781,7 @@ again for a short time.
 Wall Camouflage spell
 
 Melts into the wall in a magical way. You can move on the surface of the wall
-for a short time using this magic.While melting into the wall, it becomes 
+for a short time using this magic. While melting into the wall, it becomes
 possible to approach an enemy sleeping silently. But it's not visually hidden,
 so it's meaningless for an awake enemy.
 %%%%
@@ -1810,9 +1812,9 @@ creatures are summoned with higher power.
 %%%%
 Will of Earth spell
 
-Tear down the walls by making the surrounding land conform to the will
+Tears down the walls by making the surrounding land conform to the will
 of the caster. The stones collected in this way can be used to create walls
-or fill the floor temporary.
+or floors over the surface of lava and water temporarily.
 %%%%
 Wind Blast spell
 

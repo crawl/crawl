@@ -2967,29 +2967,29 @@ void drink(item_def* potion)
         mpr("You cannot drink potions in your current state!");
         return;
     }
-	
-	// The Great Wyrm: sometimes you will waste potion
-	if (player_under_penance(GOD_WYRM) && one_chance_in(3))
+    
+    // The Great Wyrm: sometimes you will waste potion
+    if (player_under_penance(GOD_WYRM) && one_chance_in(3))
     {
-		if (in_inventory(*potion))
-		{
-			dec_inv_item_quantity(potion->link, 1);
-			auto_assign_item_slot(*potion);
-		}
-		else if (in_bag(*potion))
-		{
-			potion->quantity--;
-			if (potion->quantity == 0) {
-				potion->base_type = OBJ_UNASSIGNED;
-				potion->props.clear();
-			}
-		}
-		else {
-			dec_mitm_item_quantity(potion->index(), 1);
-		}
-		count_action(CACT_USE, OBJ_POTIONS);
-		
-		simple_god_message(" extracts your potion just before you drink!", GOD_WYRM);
+        if (in_inventory(*potion))
+        {
+            dec_inv_item_quantity(potion->link, 1);
+            auto_assign_item_slot(*potion);
+        }
+        else if (in_bag(*potion))
+        {
+            potion->quantity--;
+            if (potion->quantity == 0) {
+                potion->base_type = OBJ_UNASSIGNED;
+                potion->props.clear();
+            }
+        }
+        else {
+            dec_mitm_item_quantity(potion->index(), 1);
+        }
+        count_action(CACT_USE, OBJ_POTIONS);
+        
+        simple_god_message(" extracts your potion just before you drink!", GOD_WYRM);
         you.turn_is_over = true;
         return;
     }

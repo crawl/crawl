@@ -1980,13 +1980,17 @@ static mon_attack_def _machine_golem_attack(const monster& mon,
 static mon_attack_def _player_eldritch_tentacle_attack(const monster&,
                                                      int attk_number)
 {
+    if (attk_number == 1) {
+        return { AT_CONSTRICT, AF_CRUSH, 3 };
+    }
+
     if (attk_number != 0)
         return { };
 
     const int dam = you.skill_rdiv(SK_UNARMED_COMBAT) + 3;
 
     const int slaying = slaying_bonus() / 2; //slaying heuristic
-    return { AT_CONSTRICT, AF_CRUSH, (dam + slaying)};
+    return { AT_HIT, AF_PLAIN, (dam + slaying)};
 }
 
 

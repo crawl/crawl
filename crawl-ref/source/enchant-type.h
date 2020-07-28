@@ -183,10 +183,10 @@ enum enchant_type
     ENCH_UNSH_ARMOUR,
     ENCH_NATURAL_ABJURATION,
     ENCH_STONESKIN,
-		ENCH_NIGREDO,
-		ENCH_ALBEDO,
-		ENCH_CITRINITAS,
-		ENCH_VIRIDITAS,
+    ENCH_NIGREDO,
+    ENCH_ALBEDO,
+    ENCH_CITRINITAS,
+    ENCH_VIRIDITAS,
     // Update enchant_names[] in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS

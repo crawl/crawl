@@ -28,6 +28,7 @@
 #include "ghost.h"
 #include "god-abil.h"
 #include "god-passive.h" // passive_t::slow_abyss, slow_orb_run
+#include "items.h"
 #include "lev-pand.h"
 #include "libutil.h"
 #include "losglobal.h"
@@ -1300,6 +1301,21 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
 
         unwind_var<int> save_speedinc(mon->speed_increment);
         mon->wield_melee_weapon(MB_FALSE);
+    }
+
+    if (mon->type == MONS_PAVISE)
+    {
+        if (mg.props.exists(PAVISE_SHIELD))
+        {
+            give_specific_item(mon, mg.props[PAVISE_SHIELD].get_item());
+            /*int thing = get_mitm_slot();
+            if (thing != NON_ITEM) {
+                mitm[thing] = mg.props[PAVISE_SHIELD].get_item();
+                mitm[thing].pos.reset();
+                mitm[thing].link = NON_ITEM;
+                mon->props[PAVISE_SHIELD_INT] = thing;
+            }*/
+        }
     }
 
     if (mon->type == MONS_SLIME_CREATURE && mon->blob_size > 1)
