@@ -1088,6 +1088,7 @@ static void _show_dungeon_overview(vector<branch_type> brs)
     }
     if (!line.empty())
         mpr(line);
+    flush_prev_message();
     return;
 }
 
