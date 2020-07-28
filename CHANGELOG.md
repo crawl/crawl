@@ -6,8 +6,8 @@
 
 ## [Unreleased]
 ### Added
-- 새로운 신 위대한 뱀 추가. 연금술의 신이며 독 마법과 변이술을 지원해줌. 상세 설명은 [이 곳](https://github.com/kimjoy2002/crawl/pull/260#issue-455796133)을 확인
-  - New god: The Great Wyrm. God of Alchemy, supporting poison magic and transmutation. Click [here](https://github.com/kimjoy2002/crawl/pull/260#issue-455796133) for details
+- 새로운 신 연금술의 신인 위대한 뱀 추가. 상세 설명은 [이 곳](https://github.com/kimjoy2002/crawl/pull/277)을 확인
+  - New god: The Great Wyrm, God of Alchemy. Click [here](https://github.com/kimjoy2002/crawl/pull/277) for details
 
 - 새로운 종족 호문쿨루스 추가. 호문쿨루스는 반생명 반인공체기에 둘의 특성을 동시에 가지고있고 14레벨에 한 쪽을 특화시킬 수 있다. 또한 마법을 사용할때마다 일시적인 와일드매직을 얻고, 근접공격으론 그 수치를 줄일 수 있다.
   - Added homunculus(playable). Homunculus are a semi-living, semi-artificial speices. they can specialize in 14 level. Also, whenever magic is used, temporary wild magic stack up, and melee attacks can reduce that stack.
@@ -19,7 +19,10 @@
   - Added Elemental Weapon, level 3 charm spell. It gives an buff when using it, and gives a temporary brand and slaying bonus when using element magic during buff time.
   
 - 3레벨 참/화염 마법, 화염 강타 추가. 지속시간도중 공격시 마나를 소모하여 부채꼴형의 불속성 범위 추가타를 준다. 사용후엔 일시적으로 마나가 회복되지않는 오버히트상태가 된다.
-  - Added Elemental Weapon, level 3 charm/fire spell. When attacking during duration, use mana to give a fan-shaped fire additional hit. After use, you becomes overheat and does not recover mana.
+  - Added Flame Strike, level 3 charm/fire spell. When attacking during duration, use mana to give a fan-shaped fire additional hit. After use, you becomes overheat and does not recover mana.
+  
+- 새로운 방어구 에고인 벙커 추가. 라지실드에만 붙는다. 장착하고있는 라지실드를 투사체나 이동을 막는 구조물로서 바닥에 설치할 수 있다.
+  - Added bunker, new armour ego. Only attach to large shield. The equipped large shield can be installed on the ground as a structure to prevent the projectile and movement.
   
 - 마법 복구 : 돌의 피부, 절연화, 응축의 방패
   - rollback Stoneskin, Insulation, Condensation Shield
@@ -27,6 +30,12 @@
 ### Changed   
 - 트로그는 이제 광폭화중에 권능을 사용할 수 있음
   - Trog now can use power while berserk
+  
+- 베오그는 이제 오크 유니크들도 성장시킴
+  - Beogh now grows the orc unique.
+  
+- 엘리빌론은 옛날처럼 무기를 P로 바칠 수 있게 됨
+  - Elyvilon can be sacrificed weapon with p again.
   
 - 헤플리아클카나와 베오그는 6성이 될때 아군과 저항을 일부 공유한다.
   - Hepliaklqana and Beogh share partially resistance with their allies when 6-stars.
@@ -205,6 +214,7 @@
   
 - 네멜렉스의 원더덱이 돌아옴. 이제 네멜렉스는 다시 발동술을 사용함
   - Nemelex's deck of wonder is comeback. Now Nemelex uses the evocation again.
+  - 네멜렉스의 신앙은 옛날처럼 p로 아이템을 바쳐야 증가함. Nemelex's faith now increases when you sacrifice an item with p again
   - 돌아온 카드들 (xom, mercenary, alchemist, bargain, sage, portal, trowel, experience, helm, shuffle)
 
 - 지바 리워크. Jiyva rework
