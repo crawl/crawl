@@ -2213,6 +2213,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_FLAME_STRIKE:
         return cast_flame_strike(powc, fail);
 
+    case SPELL_PAVISE:
+        return cast_pavise(powc, beam, fail);
+
     // non-player spells that have a zap, but that shouldn't be called (e.g
     // because they will crash as a player zap).
     case SPELL_DRAIN_LIFE:

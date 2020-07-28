@@ -4348,6 +4348,16 @@ static const struct spell_desc spelldata[] =
     TILEG_FLAME_STRIKE,
 },
 {
+    SPELL_PAVISE, "Deploy Shield",
+    spschool::summoning,
+    spflag::target | spflag::not_self | spflag::neutral,
+    4,
+    200,
+    1, 1,
+    2, 0,
+    TILEG_SUMMON_BARRICADE,
+},
+{
     SPELL_NO_SPELL, "nonexistent spell",
     spschool::none,
     spflag::testing,

@@ -2723,6 +2723,15 @@ monster* find_battlesphere(const actor* agent)
         return nullptr;
 }
 
+monster* find_pavise_shield(const actor* agent)
+{
+    if (agent->props.exists("pavise"))
+        return monster_by_mid(agent->props["pavise"].get_int());
+    else
+        return nullptr;
+}
+
+
 spret cast_battlesphere(actor* agent, int pow, god_type god, bool fail)
 {
     fail_check();
@@ -3944,5 +3953,71 @@ spret cast_pakellas_summon(int pow, god_type god, bool fail)
     if(success_ == false)
         canned_msg(MSG_NOTHING_HAPPENS);
     invalidate_agrid(true);
+    return spret::success;
+}
+
+spret cast_pavise(int powc, bolt& beam, bool fail)
+{
+    if (grid_distance(beam.target, you.pos()) > spell_range(SPELL_PAVISE,
+        powc)
+        || !in_bounds(beam.target))
+    {
+        mpr("That's too far away.");
+        return spret::abort;
+    }
+
+    if (!monster_habitable_grid(MONS_HUMAN, grd(beam.target)))
+    {
+        mpr("You can't construct there.");
+        return spret::abort;
+    }
+    if (find_pavise_shield(&you)) {
+        mpr("Only one can be installed at a time.");
+        return spret::abort;
+    }
+
+    monster* mons = monster_at(beam.target);
+    if (mons)
+    {
+        if (you.can_see(*mons))
+        {
+            mpr("That space is already occupied.");
+            return spret::abort;
+        }
+
+        fail_check();
+
+        // invisible monster
+        mpr("Something you can't see is blocking!");
+        return spret::success;
+    }
+
+    fail_check();
+
+    item_def* shield = you.shield();
+    shield->flags |= ISFLAG_THROWN;
+    if(shield == nullptr)
+    {
+        mpr("You have not shield.");
+        return spret::abort;
+    }
+
+    mgen_data barricade(MONS_PAVISE, BEH_FRIENDLY, beam.target, MHITYOU,
+        MG_FORCE_BEH | MG_FORCE_PLACE | MG_AUTOFOE);
+    barricade.set_summoned(&you, 0, 0, GOD_NO_GOD);
+    barricade.hp += 5 * you.skill(SK_SHIELDS);
+    barricade.props[PAVISE_SHIELD] = *shield;
+
+    if (monster* mon = create_monster(barricade))
+    {
+        you.props["pavise"].get_int() = mon->mid;
+        if (unequip_item(EQ_SHIELD, false)) {
+            mprf("You pinned the shield to the ground.");
+            shield->clear();
+        }
+    }
+    else
+        canned_msg(MSG_NOTHING_HAPPENS);
+
     return spret::success;
 }

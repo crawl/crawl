@@ -1851,6 +1851,10 @@ static string _describe_armour(const item_def &item, bool verbose)
         case SPARM_CLOUD_IMMUNE:
             description += "It completely protects its wearer from the effects of clouds.";
             break;
+
+        case SPARM_BUNKER:
+            description += "It can be fixed to the ground and used as a barrier.";
+            break;
         }
     }
 

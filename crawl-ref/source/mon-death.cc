@@ -57,6 +57,7 @@
 #include "nearby-danger.h"
 #include "notes.h"
 #include "output.h"
+#include "player-equip.h"
 #include "player-stats.h"
 #include "religion.h"
 #include "rot.h"
@@ -2251,6 +2252,15 @@ item_def* monster_die(monster& mons, killer_type killer,
         if (!silent)
             simple_monster_message(mons, " exhausts itself and dries up.");
         silent = true;
+    }
+    else if (mons.type == MONS_PAVISE)
+    {
+        you.props.erase("pavise");
+        int item_ = mons.inv[MSLOT_SHIELD];
+        if (item_ != NON_ITEM) {
+            mitm[item_].flags &= ~ISFLAG_SUMMONED;
+            move_item_to_grid(&item_, mons.pos());
+        }
     }
 
     const bool death_message = !silent && !did_death_message

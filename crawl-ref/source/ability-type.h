@@ -86,7 +86,8 @@ enum ability_type
 #endif
     ABIL_EVOKE_RATSKIN,
     ABIL_EVOKE_THUNDER,
-    ABIL_MAX_EVOKE = ABIL_EVOKE_THUNDER,
+    ABIL_EVOKE_PAVISE,
+    ABIL_MAX_EVOKE = ABIL_EVOKE_PAVISE,
 
     // Divine abilities
     // Zin

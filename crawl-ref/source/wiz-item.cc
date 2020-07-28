@@ -1235,6 +1235,7 @@ static void _debug_acquirement_stats(FILE *ostat)
 #endif
             "repulsion",
             "cloud immunity",
+            "bunker"
         };
 
         const int non_art = acq_calls - num_arts;

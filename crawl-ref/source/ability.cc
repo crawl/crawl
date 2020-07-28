@@ -170,6 +170,7 @@ enum class fail_basis
     xl,
     evo,
     invo,
+    shield, //only pavise!
 };
 
 /**
@@ -242,6 +243,8 @@ struct failure_info
                 = piety_fail_denom ? you.piety / piety_fail_denom : 0;
             return base_chance - sk_mod - piety_mod;
         }
+        case fail_basis::shield:
+            return base_chance - you.skill(SK_SHIELDS, variable_fail_mult);
         default:
             die("unknown failure basis %d!", (int)basis);
         }
@@ -256,6 +259,8 @@ struct failure_info
             return SK_EVOCATIONS;
         case fail_basis::invo:
             return invo_skill();
+        case fail_basis::shield:
+            return SK_SHIELDS;
         case fail_basis::xl:
         default:
             return SK_NONE;
@@ -373,7 +378,8 @@ static const ability_def Ability_List[] =
       3, 0, 200, 0, {fail_basis::evo, 50, 2}, abflag::none },
     { ABIL_EVOKE_THUNDER, "Evoke Thunderclouds",
       5, 0, 200, 0, {fail_basis::evo, 60, 2}, abflag::none },
-
+    { ABIL_EVOKE_PAVISE, "Deploy Shield",
+      0, 0, 0, 0, {fail_basis::shield, 60, 2}, abflag::none },
 
     { ABIL_END_TRANSFORMATION, "End Transformation",
       0, 0, 0, 0, {}, abflag::starve_ok },
@@ -2482,6 +2488,16 @@ static spret _do_ability(const ability_def& abil, bool fail)
 
         break;
 
+    case ABIL_EVOKE_PAVISE:
+        fail_check();
+        if (your_spells(SPELL_PAVISE,
+            you.experience_level * 10,
+            false) == spret::abort)
+        {
+            return spret::abort;
+        }
+        break;
+
     case ABIL_EVOKE_THUNDER: // robe of Clouds
         fail_check();
         mpr("The folds of your robe billow into a mighty storm.");
@@ -4017,6 +4033,11 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
             if (you.airborne() && !you.attribute[ATTR_FLIGHT_UNCANCELLABLE])
                 _add_talent(talents, ABIL_STOP_FLYING, check_confused);
         }
+    }
+
+    if (you.evokable_pavise())
+    {
+        _add_talent(talents, ABIL_EVOKE_PAVISE, check_confused);
     }
 
     // Find hotkeys for the non-hotkeyed talents.

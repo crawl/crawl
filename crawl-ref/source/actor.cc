@@ -326,6 +326,11 @@ int actor::evokable_flight(bool calc_unid) const
            + scan_artefacts(ARTP_FLY, calc_unid);
 }
 
+bool actor::evokable_pavise(bool calc_unid) const
+{
+    return wearing_ego(EQ_SHIELD, SPARM_BUNKER, calc_unid);
+}
+
 int actor::spirit_shield(bool calc_unid, bool items) const
 {
     int ss = 0;

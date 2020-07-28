@@ -88,6 +88,14 @@ clarity, and some necromancy becomes unusable. Also, your aptitude will be
 better suited to the pure mage. As it becomes less religious, invocation skills 
 are also reduced.
 %%%%
+Deploy Shield ability
+
+You can fix the shield to the ground and use it as a barrier. Before moving to
+retrieve or destroy shields, shields prevent movement and attack. The projectile 
+shot by an opponent who is not close to the shield is blocked by the shield. 
+Hit point and success rate of the shield are dependent on your shield skill, 
+and the AC of the shield is depending on enchant value of the shield.
+%%%%
 Exsanguinate ability
 
 Remove all of your blood, transitioning to a bloodless state.

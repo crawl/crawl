@@ -9,6 +9,8 @@
 
 // Hash key for passing a weapon to be given to
 // a dancing weapon.
+#define PAVISE_SHIELD "pavise-shield"
+#define PAVISE_SHIELD_INT "pavise-shield-int"
 #define TUKIMA_WEAPON "tukima-weapon"
 #define TUKIMA_POWER "tukima-power"
 

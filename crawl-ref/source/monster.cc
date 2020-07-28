@@ -1649,6 +1649,8 @@ static int _get_monster_armour_value(const monster *mon,
               + get_armour_res_elec(item, true)
               + get_armour_res_corr(item);
 
+
+
     // Give a simple bonus, no matter the size of the MR bonus.
     if (get_armour_res_magic(item, true) > 0)
         value++;
@@ -3327,6 +3329,13 @@ int monster::base_armour_class() const
         }
     }
 
+    if (type == MONS_PAVISE) {
+        int item_ = inv[MSLOT_SHIELD];
+        if (item_ != NON_ITEM) {
+            item_def& shield = mitm[item_];
+            return base_ac + shield.plus;
+        }
+    }
 
     // demonspawn & draconians combine base & class ac values.
     if (mons_is_job(type))
