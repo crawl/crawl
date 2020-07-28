@@ -962,7 +962,8 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
                     return false;
                 }
 
-                if (!get_form()->slot_available(s))
+                if (!get_form()->slot_available(s)
+                    || s == EQ_BOOTS && you.wear_barding())
                 {
                     if (verbose)
                     {
@@ -2743,34 +2744,6 @@ void random_uselessness()
     }
 }
 
-static void _handle_read_book(item_def& book)
-{
-    if (you.berserk())
-    {
-        canned_msg(MSG_TOO_BERSERK);
-        return;
-    }
-
-    if (you.duration[DUR_BRAINLESS])
-    {
-        mpr("Reading books requires mental cohesion, which you lack.");
-        return;
-    }
-
-    ASSERT(book.sub_type != BOOK_MANUAL);
-
-#if TAG_MAJOR_VERSION == 34
-    if (book.sub_type == BOOK_BUGGY_DESTRUCTION)
-    {
-        mpr("This item has been removed, sorry!");
-        return;
-    }
-#endif
-
-    set_ident_flags(book, ISFLAG_IDENT_MASK);
-    read_book(book);
-}
-
 static void _vulnerability_scroll()
 {
     mon_enchant lowered_mr(ENCH_LOWERED_MR, 1, &you, 400);
@@ -2984,12 +2957,6 @@ void read(item_def* scroll)
     if (!failure_reason.empty())
     {
         mprf(MSGCH_PROMPT, "%s", failure_reason.c_str());
-        return;
-    }
-
-    if (scroll->base_type == OBJ_BOOKS)
-    {
-        _handle_read_book(*scroll);
         return;
     }
 

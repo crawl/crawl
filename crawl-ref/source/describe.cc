@@ -1831,6 +1831,11 @@ static string _describe_armour(const item_def &item, bool verbose)
         case SPARM_SHADOWS:
             description += "It reduces the wearer's line of sight "
                            "and spell power.";
+            break;
+
+        case SPARM_RAMPAGING:
+            description += "Its wearer goes twice as far when moving towards enemies.";
+            break;
         }
     }
 
@@ -2722,17 +2727,21 @@ void target_item(item_def &item)
 }
 
 /**
- *  Describe any item in the game.
+ *  Display a pop-up describe any item in the game.
  *
  *  @param item       the item to be described.
  *  @param fixup_desc a function (possibly null) to modify the
  *                    description before it's displayed.
- *  @return whether to stay in the inventory menu afterwards.
+ *  @param do_actions display interaction options
+ *  @return an action to perform (if any was available or selected)
+ *
  */
-bool describe_item(item_def &item, function<void (string&)> fixup_desc)
+command_type describe_item_popup(const item_def &item,
+                                 function<void (string&)> fixup_desc,
+                                 bool do_actions)
 {
     if (!item.defined())
-        return true;
+        return CMD_NO_CMD;
 
     string name = item.name(DESC_INVENTORY_EQUIP) + ".";
     if (!in_inventory(item))
@@ -2767,9 +2776,6 @@ bool describe_item(item_def &item, function<void (string&)> fixup_desc)
     string desc_without_spells = fs_desc.to_colour_string();
 #endif
     fs_desc += spells_desc;
-
-    const bool do_actions = in_inventory(item) // Dead men use no items.
-            && !(you.pending_revival || crawl_state.updating_scores);
 
     vector<command_type> actions;
     if (do_actions)
@@ -2876,6 +2882,29 @@ bool describe_item(item_def &item, function<void (string&)> fixup_desc)
 #endif
 
     ui::run_layout(move(popup), done);
+
+    return action;
+}
+
+/**
+ *  Describe any item in the game and offer interactions if available.
+ *
+ *  This is split out from the popup because _do_action is necessarily non
+ *  const but we would like to offer the description UI for items not in
+ *  inventory in places where only a const item_def is available.
+ *
+ *  @param item       the item to be described.
+ *  @param fixup_desc a function (possibly null) to modify the
+ *                    description before it's displayed.
+ *  @return whether to remain in the inventory menu after description
+ *
+ */
+bool describe_item(item_def &item, function<void (string&)> fixup_desc)
+{
+
+    const bool do_actions = in_inventory(item) // Dead men use no items.
+            && !(you.pending_revival || crawl_state.updating_scores);
+    command_type action = describe_item_popup(item, fixup_desc, do_actions);
 
     return _do_action(item, action);
 }

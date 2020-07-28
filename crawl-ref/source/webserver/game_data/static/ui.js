@@ -116,7 +116,7 @@ function ($, comm, client, options, focus_trap) {
                     return $(ev.target).closest("#game").length !== 1;
                 },
             }).activate();
-        });
+        }).css("display","");
         if (client.is_watching())
             wrapper.find("input, button").attr("disabled", true);
         if (elem.find(".paneset").length > 0)
@@ -146,7 +146,7 @@ function ($, comm, client, options, focus_trap) {
             elem = unwrap_popup(wrapper);
             wrapper.stop(true, true).fadeIn(100, function () {
                 elem.focus();
-            });
+            }).css("display","");
         }
     }
 

@@ -665,9 +665,9 @@ static coord_def _full_describe_menu(vector<monster_info> const &list_mons,
         else if (quant == 2)
         {
             // Get selected item.
-            item_def* i = static_cast<item_def*>(sel.data);
+            const item_def* i = static_cast<item_def*>(sel.data);
             if (desc_menu.menu_action == InvMenu::ACT_EXAMINE)
-                describe_item(*i);
+                describe_item_popup(*i);
             else // ACT_EXECUTE -> view/travel
                 target = i->pos;
         }
@@ -2321,10 +2321,14 @@ void full_describe_square(const coord_def &c, bool cleanup)
         // First priority: monsters.
         describe_monsters(*mi);
     }
-    else if (item_info *obj = env.map_knowledge(c).item())
+    else if (const item_info *obj = env.map_knowledge(c).item())
     {
-        // Second priority: objects.
-        describe_item(*obj);
+        // Second priority: item(s).
+        if (!you.see_cell(c))
+            describe_item_popup(*obj);
+        else
+            describe_items(item_list_on_square(you.visible_igrd(c)),
+                           "Describe which item?");
     }
     else
     {

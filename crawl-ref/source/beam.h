@@ -190,7 +190,7 @@ public:
     bool nice_to(const monster_info& mi) const;
     bool has_saving_throw() const;
 
-    void draw(const coord_def& p);
+    void draw(const coord_def& p, bool force_refresh=true);
     void drop_object();
 
     // Various explosion-related stuff.

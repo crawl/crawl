@@ -290,6 +290,7 @@ void Stash::update()
     }
 
     visited = pos == you.pos()
+              || static_cast<int>(items.size()) == 1
               || static_cast<int>(items.size()) == previous_size && visited;
 }
 
@@ -1691,7 +1692,7 @@ bool StashTracker::display_search_results(
             if (res->item.defined())
             {
                 item_def it = res->item;
-                describe_item(it,
+                describe_item_popup(it,
                     [search, nohl](string& desc)
                     {
                         if (!nohl)

@@ -24,7 +24,7 @@ You can quickly select items by type by pressing:
 Global selects:  <w>,</w>   select all     <w>*</w>   invert all      <w>-</w>   deselect all
                  <w>;</w>   select last unequipped
 Note that for dropping, the <w>,</w> command uses the <w>drop_filter</w> option, which
-narrows the range of items to be (de)selected. The default are useless items.
+narrows the range of items to be (de)selected. The default is all useless items.
 
 <h>Disabling autopickup via the drop menu</h>
 On the drop menu, items you select after pressing <w>\</w> will be marked with a <w>*</w>
@@ -82,7 +82,7 @@ hotkey to travel to its location.
 
 Some examples of search strings:
 <w>mutation</w>      find all potions of mutation, including potions in shops.
-<w>ration</w>        finds every single ration and pile of rations.
+<w>throwing net</w>  finds every single throwing net and piles of nets.
 <w>shop</w>          lists all shops. Press <w>?</w> and a shop's letter for the stock.
 <w>Lair:2</w>        find everything known to be on Lair:2.
 <w>/D:[2-4]</w>      finds everything on Dungeon levels 2-4. Regexes are allowed!
@@ -242,23 +242,6 @@ annotate.prompt
  <w>></w>          : Annotate the level downstairs.
  <w>Ctrl-P</w>     : Annotate a level in the branch above this one.
  <w>!</w>          : Show list of dungeon branches.
-
-%%%%
-butchering
-
-<h>Butchering<h>
-Only corpses that your species can butcher or bottle will be available here.
-<w>y</w>      : Butcher/bottle the selected corpse.
-<w>a, c, e</w>: Butcher/bottle this corpse and all the ones following in the stack.
-<w>q</w>      : Quit the prompt (don't butcher/bottle anything).
-<w>n</w>      : Don't butcher/bottle this corpse, skip to the next one.
-      (This is the default behaviour if you answer with anything not
-       listed here.)
-
-<h>Notes for Tiles</h>
-If you are playing with Tiles you can butcher (or bottle) a single
-corpse on the ground by clicking the <w>left mouse button</w> while pressing
-<w>Shift</w>.
 %%%%
 skill-menu
 
@@ -307,8 +290,7 @@ Apart from (de)selecting skills, you also have the following toggles:
 Fighting, Throwing, Armour, Dodging, Stealth, Unarmed Combat, and Spellcasting
 can always be trained. For the rest:
   - Weapon skills require carrying a weapon of the appropriate type.
-  - Shields requires that you either be carrying a shield, or worship a deity
-        who can offer one through divine means (The Shining One).
+  - Shields requires that you be carrying a shield.
   - Evocations requires carrying an evocable item.
   - Spell schools require knowing a spell of the school.
   - Necromancy can also be trained when worshipping Kikubaaqudgha.

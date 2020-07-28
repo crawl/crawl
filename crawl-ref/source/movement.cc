@@ -49,6 +49,8 @@
 #include "transform.h"
 #include "xom.h" // XOM_CLOUD_TRAIL_TYPE_KEY
 
+static void _apply_move_time_taken(int additional_time_taken = 0);
+
 // Swap monster to this location. Player is swapped elsewhere.
 // Moves the monster into position, but does not move the player
 // or apply location effects: the latter should happen after the
@@ -141,12 +143,13 @@ static void _entered_malign_portal(actor* act)
               "", "entering a malign gateway");
 }
 
-bool cancel_barbed_move()
+bool cancel_barbed_move(bool rampaging)
 {
     if (you.duration[DUR_BARBS] && !you.props.exists(BARBS_MOVE_KEY))
     {
-        std::string prompt = "The barbs in your skin will harm you if you move."
-                        " Continue?";
+        std::string prompt = "The barbs in your skin will harm you if you move.";
+        prompt += rampaging ? " Rampaging like this could really hurt!" : "";
+        prompt += " Continue?";
         if (!yesno(prompt.c_str(), false, 'n'))
         {
             canned_msg(MSG_OK);
@@ -159,7 +162,7 @@ bool cancel_barbed_move()
     return false;
 }
 
-void apply_barbs_damage()
+void apply_barbs_damage(bool rampaging)
 {
     if (you.duration[DUR_BARBS])
     {
@@ -173,7 +176,7 @@ void apply_barbs_damage()
             extract_manticore_spikes("The barbed spikes snap loose.");
         // But if that failed to end the effect, duration stays the same.
         if (you.duration[DUR_BARBS])
-            you.duration[DUR_BARBS] += you.time_taken;
+            you.duration[DUR_BARBS] += (rampaging ? 0 : you.time_taken);
     }
 }
 
@@ -196,6 +199,13 @@ void remove_water_hold()
         you.props.erase("water_holder");
         you.clear_far_engulf();
     }
+}
+
+static void _clear_constriction_data()
+{
+    you.stop_directly_constricting_all(true);
+    if (you.is_directly_constricted())
+        you.stop_being_constricted();
 }
 
 void apply_noxious_bog(const coord_def old_pos)
@@ -494,6 +504,243 @@ bool prompt_dangerous_portal(dungeon_feature_type ftype)
     }
 }
 
+/**
+ * Rampages the player toward a hostile monster, if one exists in the direction
+ * of the move input. Invalid things along the rampage path cancel the rampage.
+ *
+ * @param move  A relative coord_def of the player's CMD_MOVE input,
+ *              as called by move_player_action().
+ * @return      spret::fail if something invalid prevented the rampage,
+ *              spret::abort if a player prompt response should cancel the move
+ *              entirely,
+ *              spret::success if the rampage occurred.
+ */
+static spret _rampage_forward(coord_def move)
+{
+    ASSERT(!crawl_state.game_is_arena());
+
+    // Assert if the requested move is not a move delta
+    // this would throw off our tracer_target.
+    ASSERT(abs(move.x) <= 1 && abs(move.y) <= 1);
+
+    if (crawl_state.is_repeating_cmd())
+    {
+        crawl_state.cant_cmd_repeat("You can't repeat rampage.");
+        crawl_state.cancel_cmd_again();
+        crawl_state.cancel_cmd_repeat();
+        return spret::fail;
+    }
+
+    // Don't rampage if the player has status effects that should prevent it:
+    // fungusform + terrified, confusion, immobile (tree)form, or constricted.
+    if (you.is_nervous()
+        || you.confused()
+        || you.is_stationary()
+        || you.is_constricted())
+    {
+        return spret::fail;
+    }
+
+    const int tracer_range = you.current_vision;
+    const int rampage_distance = 1;
+
+    // This logic assumes that the relative coord_def move is from [-1,1].
+    // If the move_player_action() calls are ever rewritten in a way that
+    // breaks this assumption, these targeters will need to be updated.
+    const coord_def tracer_target = you.pos() + (move * tracer_range);
+    const coord_def rampage_destination = you.pos() + (move * rampage_distance);
+    const coord_def rampage_target = you.pos() + (move * (rampage_distance + 1));
+
+    // Setup the rampage tracer beam.
+    bolt beam;
+    beam.range           = LOS_RADIUS;
+    beam.aimed_at_spot   = true;
+    beam.target          = tracer_target;
+    beam.name            = "rampaging";
+    beam.source_name     = "you";
+    beam.source          = you.pos();
+    beam.source_id       = MID_PLAYER;
+    beam.thrower         = KILL_YOU;
+    // The rampage reposition is explicitly noiseless for stab synergy.
+    // Its ensuing move or attack action will generate a normal amount of noise.
+    beam.loudness        = 0;
+    beam.pierce          = true;
+    beam.affects_nothing = true;
+    beam.is_tracer       = true;
+    // is_targeting prevents bolt::do_fire() from interrupting with a prompt,
+    // if our tracer crosses something that blocks line of fire.
+    beam.is_targeting    = true;
+    beam.fire();
+
+    const monster* valid_target = nullptr;
+
+    // Iterate the tracer to see if the first visible target is a hostile mons.
+    for (coord_def p : beam.path_taken)
+    {
+        // Don't rampage without direct visibility to the target tile.
+        if (!you.see_cell_no_trans(p))
+            return spret::fail;
+
+        // Don't rampage if our tracer path is broken by something we can't
+        // pass through before it reaches a monster.
+        if (!you.can_pass_through(p))
+            return spret::fail;
+
+        const monster* mon = monster_at(p);
+        if (!mon)
+            continue;
+        // Allow our tracer to passthrough Fedhas allies.
+        else if (mon && fedhas_passthrough(mon))
+            continue;
+        // Don't rampage at invis mons, but allow the tracer to keep going.
+        else if (mon && !you.can_see(*mon))
+            continue;
+        // Don't rampage if the closest mons is non-hostile or a (non-Fedhas) plant.
+        else if (mon && (mon->friendly()
+                         || mon->neutral()
+                         || mons_is_firewood(*mon)))
+        {
+            return spret::fail;
+        }
+        // Okay, the first mons along the tracer is a valid target.
+        else if (mon)
+        {
+            valid_target = mon;
+            break;
+        }
+    }
+    if (!valid_target)
+        return spret::fail;
+
+    // Reset the beam target to the actual rampage_destination distance.
+    beam.target = rampage_destination;
+
+    // Will the second move be an attack?
+    const bool attacking = valid_target->pos() == rampage_target;
+
+    // Don't rampage if the player's tile is being targeted, somehow.
+    if (beam.target == you.pos())
+        return spret::fail;
+
+    // Beholder/fearmonger messaging is handled by the movement code,
+    // so we return fail even though the move will ultimately be aborted.
+    // Rampaging within (up to the edge) of the allowed range is permitted.
+    // Don't rampage if it would take us away from a beholder.
+    const monster* beholder = you.get_beholder(beam.target);
+    if (beholder)
+        return spret::fail;
+
+    // Don't rampage if it would take us toward a fearmonger.
+    const monster* fearmonger = you.get_fearmonger(beam.target);
+    if (fearmonger)
+        return spret::fail;
+
+    // Do allow rampaging on top of Fedhas plants,
+    const monster* mons = monster_at(beam.target);
+    bool fedhas_move = false;
+    if (mons && fedhas_passthrough(mons))
+        fedhas_move = true;
+    // but otherwise, don't rampage if it would land us on top of a monster,
+    else if (mons)
+    {
+        if (!you.can_see(*mons))
+        {
+            // .. and if a mons was in the way and invisible, notify the player.
+            clear_messages();
+            mpr("Something unexpectedly blocked you, preventing you from rampaging!");
+        }
+        return spret::fail;
+    }
+
+    // Abort if the player answers no to a dangerous terrain/trap/cloud/
+    // exclusion prompt and weapon check prompts;
+    // messaging for this is handled by check_moveto().
+    if (!check_moveto(beam.target, "rampage")
+        || attacking && !wielded_weapon_check(you.weapon())
+        || !attacking && !check_moveto(rampage_target, "rampage"))
+    {
+        stop_running();
+        you.turn_is_over = false;
+        return spret::abort;
+    }
+
+    // Abort if the player answers no to a DUR_BARBS damaging move prompt.
+    if (cancel_barbed_move(true))
+        return spret::abort;
+
+    // We've passed the validity checks, go ahead and rampage.
+
+    // First, apply any necessary pre-move effects:
+    remove_water_hold();
+    _clear_constriction_data();
+    const coord_def old_pos = you.pos();
+
+    clear_messages();
+    const monster* current = monster_at(you.pos());
+    if (fedhas_move && (!current || !fedhas_passthrough(current)))
+    {
+        mprf("You rampage quickly through the %s towards %s!",
+             mons_genus(mons->type) == MONS_FUNGUS ? "fungus" : "plants",
+             valid_target->name(DESC_THE, true).c_str());
+    }
+    else
+        mprf("You rampage towards %s!", valid_target->name(DESC_THE, true).c_str());
+    // stepped = true, we're flavouring this as movement, not a blink.
+    move_player_to_grid(beam.target, true);
+
+    // Lastly, apply post-move effects unhandled by move_player_to_grid().
+    apply_barbs_damage(true);
+    remove_ice_armour_movement();
+    apply_noxious_bog(old_pos);
+    apply_cloud_trail(old_pos);
+
+    // If there is somehow an active run delay here, update the travel trail.
+    if (you_are_delayed() && current_delay()->is_run())
+        env.travel_trail.push_back(you.pos());
+
+    return spret::success;
+}
+
+static void _apply_move_time_taken(int additional_time_taken)
+{
+    you.time_taken *= player_movement_speed();
+    you.time_taken = div_rand_round(you.time_taken, 10);
+    you.time_taken += additional_time_taken;
+
+    if (you.running && you.running.travel_speed)
+    {
+        you.time_taken = max(you.time_taken,
+                             div_round_up(100, you.running.travel_speed));
+    }
+
+    if (you.duration[DUR_NO_HOP])
+        you.duration[DUR_NO_HOP] += you.time_taken;
+}
+
+// The "first square" of rampaging ordinarily has no time cost, and the "second
+// square" is where its move delay or attack delay would be applied. If the
+// player begins a rampage, and then cancels the second move, as through a
+// prompt, we have to ensure they don't get zero-cost movement out of it. Here
+// we apply movedelay, end the turn, and call relevant post-move effects.
+static void _finalize_cancelled_rampage_move()
+{
+    _apply_move_time_taken();
+    you.turn_is_over = true;
+
+    if (player_in_branch(BRANCH_ABYSS))
+        maybe_shift_abyss_around_player();
+
+    you.apply_berserk_penalty = true;
+
+    // rampaging is pretty dang hasty
+    if (you_worship(GOD_CHEIBRIADOS) && one_chance_in(2))
+        did_god_conduct(DID_HASTY, 1, true);
+
+    // Rampaging prevents Wu Jian attacks, so we do not process them
+    // here
+    update_acrobat_status();
+}
+
 // Called when the player moves by walking/running. Also calls attack
 // function etc when necessary.
 void move_player_action(coord_def move)
@@ -516,7 +763,7 @@ void move_player_action(coord_def move)
         return;
     }
 
-    const coord_def initial_position = you.pos();
+    coord_def initial_position = you.pos();
 
     // When confused, sometimes make a random move.
     if (you.confused())
@@ -571,6 +818,34 @@ void move_player_action(coord_def move)
             crawl_state.cancel_cmd_repeat();
 
             return;
+        }
+    }
+
+    bool rampaged = false;
+
+    if (you.rampaging())
+    {
+        switch (_rampage_forward(move))
+        {
+            // Check the player's position again; rampage may have moved us.
+
+            // Cancel the move entirely if rampage was aborted from a prompt.
+            case spret::abort:
+                ASSERT(!in_bounds(you.pos()) || !cell_is_solid(you.pos())
+                       || you.wizmode_teleported_into_rock);
+                return;
+
+            case spret::success:
+                rampaged = true;
+                // If we've rampaged, reset initial_position for the second
+                // move.
+                initial_position = you.pos();
+                // intentional fallthrough
+            default:
+            case spret::fail:
+                ASSERT(!in_bounds(you.pos()) || !cell_is_solid(you.pos())
+                       || you.wizmode_teleported_into_rock);
+                break;
         }
     }
 
@@ -647,7 +922,7 @@ void move_player_action(coord_def move)
     if (!you.confused())
         fmonger = you.get_fearmonger(targ);
 
-    if (you.running.check_stop_running())
+    if (!rampaged && you.running.check_stop_running())
     {
         // [ds] Do we need this? Shouldn't it be false to start with?
         you.turn_is_over = false;
@@ -680,18 +955,27 @@ void move_player_action(coord_def move)
         {
             // Don't allow the player to freely locate invisible monsters
             // with confirmation prompts.
-            if (!you.can_see(*targ_monst)
+            // Rampaging forcibly initiates the attack, but the attack
+            // can still be cancelled.
+            if (!rampaged && !you.can_see(*targ_monst)
                 && !you.confused()
-                && !check_moveto(targ, walkverb))
+                && !check_moveto(targ, walkverb)
+                // Attack cancelled by fight_melee
+                || !fight_melee(&you, targ_monst))
             {
                 stop_running();
+                // If we cancel this move after rampaging, we end the turn.
+                if (rampaged)
+                {
+                    move.reset();
+                    _finalize_cancelled_rampage_move();
+                    return;
+                }
                 you.turn_is_over = false;
                 return;
             }
 
             you.turn_is_over = true;
-            fight_melee(&you, targ_monst);
-
             you.berserk_penalty = 0;
             attacking = true;
         }
@@ -708,6 +992,7 @@ void move_player_action(coord_def move)
     }
 
     const bool running = you_are_delayed() && current_delay()->is_run();
+    bool dug = false;
 
     if (!attacking && targ_pass && moving && !beholder && !fmonger)
     {
@@ -720,7 +1005,8 @@ void move_player_action(coord_def move)
             return;
         }
 
-        if (!you.confused() && !check_moveto(targ, walkverb))
+        // Prompt already handled by rampage
+        if (!you.confused() && !rampaged && !check_moveto(targ, walkverb))
         {
             stop_running();
             you.turn_is_over = false;
@@ -729,7 +1015,8 @@ void move_player_action(coord_def move)
 
         // If confused, we've already been prompted (in case of stumbling into
         // a monster and attacking instead).
-        if (!you.confused() && cancel_barbed_move())
+        // If rampaging we've already been prompted.
+        if (!you.confused() && !rampaged && cancel_barbed_move())
             return;
 
         if (!you.attempt_escape()) // false means constricted and did not escape
@@ -742,6 +1029,7 @@ void move_player_action(coord_def move)
             destroy_wall(targ);
             noisy(6, you.pos());
             additional_time_taken += BASELINE_DELAY / 5;
+            dug = true;
         }
 
         if (swap)
@@ -752,17 +1040,13 @@ void move_player_action(coord_def move)
         else if (!running)
             clear_travel_trail();
 
-        // clear constriction data
-        you.stop_directly_constricting_all(true);
-        if (you.is_directly_constricted())
-            you.stop_being_constricted();
-
         coord_def old_pos = you.pos();
         // Don't trigger things that require movement
         // when confusion causes no move.
         if (you.pos() != targ && targ_pass)
         {
             remove_water_hold();
+            _clear_constriction_data();
             move_player_to_grid(targ, true);
             apply_barbs_damage();
             remove_ice_armour_movement();
@@ -779,18 +1063,7 @@ void move_player_action(coord_def move)
         if (you_are_delayed() && current_delay()->is_run())
             env.travel_trail.push_back(you.pos());
 
-        you.time_taken *= player_movement_speed();
-        you.time_taken = div_rand_round(you.time_taken, 10);
-        you.time_taken += additional_time_taken;
-
-        if (you.running && you.running.travel_speed)
-        {
-            you.time_taken = max(you.time_taken,
-                                 div_round_up(100, you.running.travel_speed));
-        }
-
-        if (you.duration[DUR_NO_HOP])
-            you.duration[DUR_NO_HOP] += you.time_taken;
+        _apply_move_time_taken(additional_time_taken);
 
         move.reset();
         you.turn_is_over = true;
@@ -812,6 +1085,8 @@ void move_player_action(coord_def move)
         if (!crawl_state.disables[DIS_CONFIRMATIONS]
             && !prompt_dangerous_portal(grd(targ)))
         {
+            // No rampage check because the portal blocks the
+            // rampage tracer
             return;
         }
 
@@ -823,6 +1098,7 @@ void move_player_action(coord_def move)
     }
     else if (!targ_pass && !attacking)
     {
+        // No rampage check here, since you can't rampage at walls
         if (you.is_stationary())
             canned_msg(MSG_CANNOT_MOVE);
         else if (grd(targ) == DNGN_OPEN_SEA)
@@ -843,6 +1119,14 @@ void move_player_action(coord_def move)
         mprf("You cannot move away from %s!",
             beholder->name(DESC_THE).c_str());
         stop_running();
+        // If this would have been the move after rampaging, we end the turn.
+        if (rampaged)
+        {
+            move.reset();
+            _finalize_cancelled_rampage_move();
+            return;
+        }
+        you.turn_is_over = false;
         return;
     }
     else if (fmonger && !attacking)
@@ -850,6 +1134,14 @@ void move_player_action(coord_def move)
         mprf("You cannot move closer to %s!",
             fmonger->name(DESC_THE).c_str());
         stop_running();
+        // If this would have been the move after rampaging, we end the turn.
+        if (rampaged)
+        {
+            move.reset();
+            _finalize_cancelled_rampage_move();
+            return;
+        }
+        you.turn_is_over = false;
         return;
     }
 
@@ -861,14 +1153,16 @@ void move_player_action(coord_def move)
 
     you.apply_berserk_penalty = !attacking;
 
-    if (!attacking && you_worship(GOD_CHEIBRIADOS) && one_chance_in(10)
-        && you.run())
+    if (!attacking
+        && you_worship(GOD_CHEIBRIADOS)
+        && ((one_chance_in(10) && you.run())
+             || (one_chance_in(2) && rampaged)))
     {
         did_god_conduct(DID_HASTY, 1, true);
     }
 
     bool did_wu_jian_attack = false;
-    if (you_worship(GOD_WU_JIAN) && !attacking)
+    if (you_worship(GOD_WU_JIAN) && !attacking && !dug && !rampaged)
         did_wu_jian_attack = wu_jian_post_move_effects(false, initial_position);
 
     // If you actually moved you are eligible for amulet of the acrobat.

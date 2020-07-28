@@ -3011,7 +3011,7 @@ int player_stealth()
     }
 
     // Mutations.
-    stealth += STEALTH_PIP * you.get_mutation_level(MUT_NIGHTSTALKER);
+    stealth += (STEALTH_PIP / 3) * you.get_mutation_level(MUT_NIGHTSTALKER);
     stealth += (STEALTH_PIP / 2)
                 * you.get_mutation_level(MUT_THIN_SKELETAL_STRUCTURE);
     stealth += STEALTH_PIP * you.get_mutation_level(MUT_CAMOUFLAGE);
