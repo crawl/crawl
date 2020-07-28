@@ -711,11 +711,6 @@ rapier
 
 A slender, sharply pointed sword, with an uncommonly elegant design.
 %%%%
-ration
-
-Something for everyone: A filling meal of preserved meats, fruits, cheese,
-and stale, but hearty, bread.
-%%%%
 ring mail
 
 A light leather suit reinforced with a covering of metal rings. It is

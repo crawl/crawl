@@ -1636,13 +1636,15 @@ bool AcquireMenu::process_key(int keyin)
     {
         if (menu_action == ACT_EXAMINE)
         {
+            // Use a copy to set flags that make the description better
+            // See the similar code in shopping.cc for details about const
+            // hygene
             item_def& item(*const_cast<item_def*>(dynamic_cast<AcquireEntry*>(
                 items[letter_to_index(keyin)])->item));
 
-            unwind_var<iflags_t> old_flags(item.flags);
             item.flags |= (ISFLAG_IDENT_MASK | ISFLAG_NOTED_ID
                            | ISFLAG_NOTED_GET);
-            describe_item(item);
+            describe_item_popup(item);
 
             return true;
         }

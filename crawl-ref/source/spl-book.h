@@ -21,16 +21,18 @@ int  spell_rarity(spell_type which_spell);
 bool is_rare_book(book_type type);
 void init_spell_rarities();
 bool is_player_spell(spell_type which_spell);
+bool is_player_book_spell(spell_type which_spell);
+bool is_wand_spell(spell_type spell);
 
 bool book_has_title(const item_def &book);
-
-void read_book(item_def &item);
 
 bool player_can_memorise(const item_def &book);
 bool can_learn_spell(bool silent = false);
 bool player_has_available_spells();
 bool learn_spell();
 bool learn_spell(spell_type spell, bool wizard = false);
+
+bool library_add_spells(vector<spell_type> spells);
 
 string desc_cannot_memorise_reason(spell_type spell);
 

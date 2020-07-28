@@ -458,7 +458,7 @@ void change_species_to(species_type sp)
         }
     }
 
-    update_vision_range(); // for Ba, and for DS with Nightstalker
+    update_vision_range(); // for Ba, and for Ko
 
     if ((old_sp == SP_OCTOPODE) != (sp == SP_OCTOPODE))
     {

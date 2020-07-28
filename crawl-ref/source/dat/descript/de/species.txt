@@ -65,11 +65,6 @@ Tengu
 Vogelmenschen, die den Kampf lieben – sowohl mit Waffen, als auch mit Zaubern.
 Sie sind recht gebrechlich, aber später lernen sie, geschickt zu fliegen.
 %%%%
-Kobold
-
-Klein, bösartig und ein bisschen gebrechlich, aber vielseitig begabt. Sie
-können und werden jede Art von Fleisch essen.
-%%%%
 Lava Orc
 
 Diese Meister der Erde und Feuer Magie kommen von tief unter dem Dungeon. Ihre

@@ -24,7 +24,6 @@ void show_interlevel_travel_depth_help();
 void show_interlevel_travel_altar_help();
 void show_annotate_help();
 void show_stash_search_help();
-void show_butchering_help();
 void show_skill_menu_help();
 void show_spell_library_help();
 

@@ -725,7 +725,7 @@ void bolt::choose_ray()
 }
 
 // Draw the bolt at p if needed.
-void bolt::draw(const coord_def& p)
+void bolt::draw(const coord_def& p, bool force_refresh)
 {
     if (is_tracer || is_enchantment() || !you.see_cell(p))
         return;
@@ -755,9 +755,16 @@ void bolt::draw(const coord_def& p)
                                              : element_colour(colour);
     view_add_glyph_overlay(p, {glyph, c});
 #endif
-    viewwindow(false);
-    update_screen();
-    scaled_delay(draw_delay);
+    // to avoid redraws, set force_refresh = false, and draw_delay = 0. This
+    // will still force a refresh if there is a draw_delay regardless of the
+    // param, because a delay on drawing is pretty meaningless without a
+    // redraw.
+    if (force_refresh || draw_delay > 0)
+    {
+        viewwindow(false);
+        update_screen();
+        scaled_delay(draw_delay);
+    }
 }
 
 // Bounce a bolt off a solid feature.

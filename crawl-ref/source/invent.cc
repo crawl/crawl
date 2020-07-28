@@ -67,6 +67,8 @@ string InvTitle::get_text(const bool) const
 InvEntry::InvEntry(const item_def &i)
     : MenuEntry("", MEL_ITEM), item(&i), _has_star(false)
 {
+    // Data is an inherited void *. When using InvEntry in menus
+    // use the const item in this class whenever possible
     data = const_cast<item_def *>(item);
 
     if (in_inventory(i) && i.base_type != OBJ_GOLD)
@@ -1063,6 +1065,35 @@ vector<SelItem> select_items(const vector<const item_def*> &items,
     return selected;
 }
 
+// Show the user an inventory menu with the stack of items
+// to be described
+void describe_items(const vector<const item_def*> &items, const char *title)
+{
+    if (items.empty())
+        return;
+
+    if (items.size() == 1)
+    {
+        describe_item_popup(*items[0]);
+        return;
+    }
+
+    InvMenu menu;
+    menu.set_type(menu_type::invlist);
+    menu.set_title(title);
+    menu.load_items(items);
+    menu.set_flags(MF_SINGLESELECT | MF_ALLOW_FORMATTING);
+
+    menu.on_single_selection = [](const MenuEntry& me)
+    {
+        const InvEntry * inv = dynamic_cast<const InvEntry*>(&me);
+        return describe_item_popup(*inv->item);
+    };
+
+    menu.show();
+}
+
+
 bool item_is_selected(const item_def &i, int selector)
 {
     const object_class_type itype = i.base_type;
@@ -1920,7 +1951,6 @@ int prompt_invent_item(const char *prompt,
         if (need_redraw && !crawl_state.doing_prev_cmd_again)
         {
             redraw_screen();
-            update_screen();
             clear_messages();
         }
 
@@ -1946,7 +1976,8 @@ int prompt_invent_item(const char *prompt,
             ret = PROMPT_GOT_SPECIAL;
             break;
         }
-        else if (keyin == '?' || keyin == '*')
+
+        if (keyin == '?' || keyin == '*')
         {
             // The "view inventory listing" mode.
             vector< SelItem > items;
@@ -1954,38 +1985,25 @@ int prompt_invent_item(const char *prompt,
             int mflags = MF_SINGLESELECT | MF_ANYPRINTABLE | MF_NO_SELECT_QTY;
             if (other_valid_char == '-')
                 mflags |= MF_SPECIAL_MINUS;
-            keyin = _invent_select(
-                        prompt,
-                        mtype,
-                        current_type_expected,
-                        -1,
-                        mflags,
-                        nullptr,
-                        &items);
 
-            if (allow_list_known && keyin == '\\')
+            while (true)
             {
-                check_item_knowledge();
-                keyin = '?';
-            }
+                keyin = _invent_select(prompt, mtype, current_type_expected, -1,
+                                       mflags, nullptr, &items);
 
-            need_prompt = false;
-            need_getch  = false;
-
-            // Don't redraw if we're just going to display another listing
-            need_redraw = keyin != '?' && keyin != '*';
-
-            if (!items.empty())
-            {
-                if (!crawl_state.doing_prev_cmd_again)
+                if (allow_list_known && keyin == '\\')
                 {
-                    redraw_screen();
-                    update_screen();
-                    clear_messages();
+                    check_item_knowledge();
+                    continue;
                 }
+                break;
             }
+
+            if (items.empty())
+                continue;
         }
-        else if (isadigit(keyin))
+
+        if (isadigit(keyin))
         {
             // scan for our item
             item_def *item = digit_inscription_to_item(keyin, oper);

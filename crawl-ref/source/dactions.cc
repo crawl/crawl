@@ -222,8 +222,11 @@ void apply_daction_to_mons(monster* mon, daction_type act, bool local,
         case DACT_PIKEL_MINIONS:
         {
             simple_monster_message(*mon, " departs this earthly plane.");
-            check_place_cloud(CLOUD_BLACK_SMOKE, mon->pos(),
-                              random_range(3, 5), nullptr);
+            if (!in_transit)
+            {
+                check_place_cloud(CLOUD_BLACK_SMOKE, mon->pos(),
+                                                random_range(3, 5), nullptr);
+            }
             // The monster disappears.
             monster_die(*mon, KILL_DISMISSED, NON_MONSTER);
             break;
