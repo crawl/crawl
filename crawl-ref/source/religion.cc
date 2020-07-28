@@ -417,15 +417,19 @@ const vector<god_power> god_powers[NUM_GODS] =
            "summon a storm of heavenly clouds" },
     },
 
-        // The Great Wyrm
-        { { 0, "Your poison has chance to penetrate resistance, even undeads or non-livings." },
-        { 1, "gain resistance to poison" },
-        { 3, "gain immunity to poison" },
-        { 3, "You will now sometimes emit poisonous cloud when damaged by enemies.",
-           "You will no longer emit poisonous cloud.",
-           "You sometimes emit poisonous cloud when damaged by enemies." },
-        { 5, ABIL_WYRM_CONVERT_POISON,
-            "transmute poisonous, mepthic, miasma, mutagenic gases and toxic bog into healing clouds" },
+      // The Great Wyrm
+      { { 1, ABIL_WYRM_INFUSE,
+            "infuse a target in your sight with alcemical essence" },
+        { 1, ABIL_WYRM_NIGREDO,
+            "transmute essence of Nigredo"},
+        { 2, ABIL_WYRM_ALBEDO,
+            "transmute essence of Albedo"},
+        { 3, ABIL_WYRM_CITRINITAS,
+            "transmute essence of Citrinitas"},
+        { 4, ABIL_WYRM_VIRIDITAS,
+            "transmute essence of Viriditas"},
+        { 5, ABIL_WYRM_RUBEDO,
+            "transmute essence of Rubedo"},
         },
 };
 
@@ -1299,7 +1303,7 @@ static int _pakellas_high_misc()
         MISC_LAMP_OF_FIRE,
         MISC_PHIAL_OF_FLOODS,
         MISC_LIGHTNING_ROD,
-	MISC_DISC_OF_STORMS,
+        MISC_DISC_OF_STORMS,
     };
 
     return _preferably_unseen_item(high_miscs, [](int misc) {
@@ -1554,20 +1558,6 @@ static bool _gift_sif_kiku_gift(bool forced)
             gift = BOOK_DEATH;
         }
     }
-    else if (you_worship(GOD_WYRM))
-    // Similar to the Wyrm
-    {
-        if (you.piety >= piety_breakpoint(0)
-            && you.num_total_gifts[you.religion] == 0)
-        {
-            gift = BOOK_YOUNG_POISONERS;
-        }
-        else if (you.piety >= piety_breakpoint(2)
-                 && you.num_total_gifts[you.religion] == 1)
-        {
-            gift = BOOK_ALCHEMY;
-        }
-    }
     else if (forced
              || you.piety >= piety_breakpoint(4) && random2(you.piety) > 100)
     {
@@ -1590,12 +1580,6 @@ static bool _gift_sif_kiku_gift(bool forced)
         {
             make_book_kiku_gift(mitm[thing_created],
                                 gift == BOOK_NECROMANCY);
-        }
-        // ...also the Great Wyrm
-        if (you_worship(GOD_WYRM))
-        {
-            make_book_wyrm_gift(mitm[thing_created],
-                                gift == BOOK_YOUNG_POISONERS);
         }
         if (thing_created == NON_ITEM)
             return false;
@@ -2130,7 +2114,6 @@ bool do_god_gift(bool forced)
 
         case GOD_KIKUBAAQUDGHA:
         case GOD_SIF_MUNA:
-        case GOD_WYRM:
             success = _gift_sif_kiku_gift(forced);
             break;
 

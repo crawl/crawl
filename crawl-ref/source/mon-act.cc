@@ -57,6 +57,7 @@
 #include "spl-book.h"
 #include "spl-clouds.h"
 #include "spl-damage.h"
+#include "spl-goditem.h"
 #include "spl-summoning.h"
 #include "spl-transloc.h"
 #include "spl-util.h"
@@ -1920,6 +1921,15 @@ void handle_monster_move(monster* mons)
         mons->speed_increment -= non_move_energy;
         return;
     }
+
+    if (mons->has_ench(ENCH_ALBEDO) && monster_is_debuffable(*mons)
+        && one_chance_in(2)){
+
+        simple_monster_message(*mons, " is interrupted by reaction of Albedo!");
+        mons->speed_increment -= non_move_energy;
+        return;
+    }
+
 
     if (mons->has_ench(ENCH_DAZED) && one_chance_in(4))
     {
@@ -3909,17 +3919,24 @@ static bool _monster_move(monster* mons)
         if (!mons->alive())
             return true;
 
-        if (mons_genus(mons->type) == MONS_EFREET
-            || mons->type == MONS_FIRE_ELEMENTAL)
-        {
-            place_cloud(CLOUD_FIRE, mons->pos(), 2 + random2(4), mons);
+        // The Great Wyrm: infused with Nigredo makes other cloud sources are unabled
+        if (mons->has_ench(ENCH_NIGREDO)){
+
+            place_cloud(CLOUD_MIASMA, mons->pos(), min(10, 2+(you.piety/20)), mons);
+
+        } else {
+            if (mons_genus(mons->type) == MONS_EFREET
+                || mons->type == MONS_FIRE_ELEMENTAL)
+            {
+                place_cloud(CLOUD_FIRE, mons->pos(), 2 + random2(4), mons);
+            }
+
+            if (mons->type == MONS_FOXFIRE)
+                check_place_cloud(CLOUD_FLAME, mons->pos(), 2, mons);
+
+            if (mons->type == MONS_CURSE_TOE)
+                place_cloud(CLOUD_MIASMA, mons->pos(), 2 + random2(3), mons);
         }
-
-        if (mons->type == MONS_FOXFIRE)
-            check_place_cloud(CLOUD_FLAME, mons->pos(), 2, mons);
-
-        if (mons->type == MONS_CURSE_TOE)
-            place_cloud(CLOUD_MIASMA, mons->pos(), 2 + random2(3), mons);
     }
     else
     {

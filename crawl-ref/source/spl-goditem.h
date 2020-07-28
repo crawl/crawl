@@ -48,6 +48,25 @@ const enchant_type dispellable_enchantments[] =
     ENCH_CONDENSATION_SHIELD,
 };
 
+/// The Great Wyrm's passive
+/// List of monster enchantments which 'beneficial' for monsters.
+const enchant_type dispellable_beneficials[] =
+{
+    ENCH_HASTE,
+    ENCH_SWIFT,
+    ENCH_MIGHT,
+    ENCH_AGILE,
+    ENCH_REGENERATION,
+    ENCH_OZOCUBUS_ARMOUR,
+    ENCH_TOXIC_RADIANCE,
+    ENCH_AGILE,
+    ENCH_SHROUD,
+    ENCH_REPEL_MISSILES,
+    ENCH_DEFLECT_MISSILES,
+    ENCH_RESISTANCE,
+    ENCH_CONDENSATION_SHIELD,
+};
+
 bool player_is_debuffable();
 void debuff_player();
 bool monster_is_debuffable(const monster &mon);

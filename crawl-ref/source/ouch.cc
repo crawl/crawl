@@ -640,13 +640,6 @@ static void _maybe_fog(int dam)
         ? piety_breakpoint(rank_for_passive(passive_t::hit_smoke) - 1)
         : piety_breakpoint(2); // Xom
 
-    const int minpiety_wyrm = piety_breakpoint(2); // Wyrm
-    const int upper_threshold_wyrm = you.hp_max / 10;
-    const int lower_threshold_wyrm = upper_threshold_wyrm
-                                    - upper_threshold_wyrm
-                                    * (you.piety - minpiety_wyrm)
-                                    / (MAX_PIETY - minpiety_wyrm);
-
     const int upper_threshold = you.hp_max / 2;
     const int lower_threshold = upper_threshold
                                 - upper_threshold
@@ -668,15 +661,6 @@ static void _maybe_fog(int dam)
         mprf(MSGCH_GOD, "You emit a cloud of colourful smoke!");
         big_cloud(CLOUD_XOM_TRAIL, &you, you.pos(), 50, 4 + random2(5), -1);
         take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "smoke on damage"), true);
-    }
-    else if (you_worship(GOD_WYRM)
-                && (dam > 0 
-                || dam >= lower_threshold_wyrm
-                && x_chance_in_y(dam - lower_threshold_wyrm,
-                upper_threshold_wyrm - lower_threshold_wyrm)))
-    {
-        mpr("You emit a cloud of poison.");
-        big_cloud(CLOUD_POISON, &you, you.pos(), 50, 4 + random2(5));
     }
 }
 
@@ -935,6 +919,15 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
             you.source_damage = 0;
         }
         you.source_damage += dam;
+        
+        // The Great Wyrm: infused enemy with viriditas will heals you
+        monster * const mons = monster_by_mid(source);        
+        if (mons->has_ench(ENCH_VIRIDITAS))
+        {
+            mpr("Attacks from the infused with Viriditas, heals you instead of hurts you.");
+            inc_hp(dam);
+            return;
+        }
 
         dec_hp(dam, true);
 

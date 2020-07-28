@@ -1445,6 +1445,10 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_VILE_CLUTCH:
     case ENCH_GRASPING_ROOTS:
     case ENCH_DEATHS_DOOR:
+    case ENCH_NIGREDO:
+    case ENCH_ALBEDO:
+    case ENCH_CITRINITAS:
+    case ENCH_VIRIDITAS:
         decay_enchantment(en);
         break;
 
@@ -2085,6 +2089,7 @@ static const char *enchant_names[] =
     "stilling the winds", "thunder_ringed", "pinned_by_whirlwind",
     "vortex", "vortex_cooldown", "vile_clutch", "unshelved armour",
     "natural_abjuration", "stoneskin",
+    "nigredo", "albedo", "citrinitas", "virditas",
     "buggy",
 };
 

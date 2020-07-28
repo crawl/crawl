@@ -1051,61 +1051,6 @@ void make_book_kiku_gift(item_def &book, bool first)
     set_artefact_name(book, name);
 }
 
-void make_book_wyrm_gift(item_def &book, bool first)
-{
-    book.sub_type = BOOK_RANDART_THEME;
-    _make_book_randart(book);
-
-    spell_type chosen_spells[RANDBOOK_SIZE];
-    for (int i = 0; i < RANDBOOK_SIZE; i++)
-        chosen_spells[i] = SPELL_NO_SPELL;
-
-    if (first)
-    {
-        bool can_transform = you.species != SP_GHOUL
-            && you.species != SP_GHOUL
-            && you.species != SP_ADAPTION_HOMUNCULUS;
-
-        chosen_spells[0] = coinflip() ? SPELL_STING : SPELL_POISONOUS_VAPOURS;
-        chosen_spells[1] = coinflip() ? SPELL_MEPHITIC_CLOUD : SPELL_IGNITE_POISON;
-        chosen_spells[2] = SPELL_FULSOME_DISTILLATION;
-        chosen_spells[3] = SPELL_EVAPORATE;
-        if (can_transform) { chosen_spells[4] = SPELL_SPIDER_FORM; }
-    }
-    else
-    {
-        chosen_spells[0] = random_choose(SPELL_OLGREBS_TOXIC_RADIANCE,
-                                            SPELL_ERINGYAS_ROOTSPIKE,
-                                            SPELL_VENOM_BOLT);
-        chosen_spells[1] = random_choose(SPELL_INTOXICATE,
-                                            SPELL_NOXIOUS_BOG);
-        chosen_spells[2] = SPELL_POISON_ARROW;
-        chosen_spells[3] = SPELL_OLGREBS_LAST_MERCY;
-    }
-
-    sort(chosen_spells, chosen_spells + RANDBOOK_SIZE, _compare_spells);
-
-    CrawlHashTable &props = book.props;
-    props.erase(SPELL_LIST_KEY);
-    props[SPELL_LIST_KEY].new_vector(SV_INT).resize(RANDBOOK_SIZE);
-
-    CrawlVector &spell_vec = props[SPELL_LIST_KEY].get_vector();
-    spell_vec.set_max_size(RANDBOOK_SIZE);
-
-    for (int i = 0; i < RANDBOOK_SIZE; i++)
-        spell_vec[i].get_int() = chosen_spells[i];
-
-    string name = "Great Wyrm's ";
-    book.props[BOOK_TITLED_KEY].get_bool() = true;
-    name += getRandNameString("book_name") + " ";
-    string type_name = getRandNameString("Alchemy");
-    if (type_name.empty())
-        name += "Alchemy";
-    else
-        name += type_name;
-    set_artefact_name(book, name);
-}
-
 /// Does the given acq source generate books totally randomly?
 static bool _completely_random_books(int agent)
 {

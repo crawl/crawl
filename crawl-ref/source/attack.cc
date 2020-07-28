@@ -235,6 +235,10 @@ int attack::calc_to_hit(bool random)
         if (you.get_mutation_level(MUT_EYEBALLS))
             mhit += 2 * you.get_mutation_level(MUT_EYEBALLS) + 1;
 
+        // The Great Wyrm
+        if (you.duration[DUR_CITRINITAS])
+            mhit += you.piety/40;
+
         // hit roll
         mhit = maybe_random2(mhit, random);
     }
@@ -292,6 +296,10 @@ int attack::calc_to_hit(bool random)
     // Don't delay doing this roll until test_hit().
     if (!attacker->is_player())
         mhit = random2(mhit + 1);
+
+    // The Great Wyrm can buff ally mob
+    if (!attacker->is_player() && attacker->as_monster()->has_ench(ENCH_CITRINITAS))
+        mhit += you.piety/40;
 
     dprf(DIAG_COMBAT, "%s: Base to-hit: %d, Final to-hit: %d",
          attacker->name(DESC_PLAIN).c_str(),
