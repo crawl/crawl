@@ -989,10 +989,51 @@ Hops toward a chosen destination, landing somewhere nearby. After using this
 ability, you will be unable to hop again until you have spent some time not
 moving. (Other actions, such as casting spells and attacking, are fine.)
 %%%%
+# The Great Wyrm
+Infuse Essence ability
+
+Spend an essence of alchemy, to infuse a target in your sight. Essences to
+use this ability can be made by Nigredo, Albedo, Citrinitas, Viriditas, and
+Rubedo ability. Effects of each essences also descripted at those abilities.
+%%%%
+Nigredo ability
+
+Transmute a potion or other essence into essence of decay called 'Nigredo'.
+Drinking Nigredo causes decay yourself, evaporate will create miasma. Also 
+it can be used for Infuse Essence ability; When infused target with Nigredo
+moves, will leaving miasma on its trail. Duraction of this infusion and miasma
+is depending on your piety.
+%%%%
+Albedo ability
+
+Transmute a potion or other essence into essence of purge called 'Albedo'.
+Dirnking Albedo causes magically purge yourself, evaporate will create clouds
+of flame. Also it can be used for Infuse Essence ability; While target has any
+disspellable magic, this infusion often has the chance to interrupt target,
+force target to waste its turn. Duraction of this infusion is depending
+on your piety. 
+%%%%
+Citrinitas ability
+
+Transmute a potion or other essence into essence of empower called 'Citrinitas'.
+Dirnking Citrinitas empowers your accuracy and spells, and result of evaporate 
+isn't specified. Also it can be used for Infuse Essence ability; Infused target
+will receive empowerment of accuracy and spells. These empowerments last longer
+and stronger depending on your piety.
+%%%%
 Viriditas ability
 
-Transmute all nearby poisonous, mephitic, miasma, mutagenic gases into
-healing clouds. Toxic bog is also attuned to emit healing clouds. Within
-these healing clouds, the dwellers of the Dungeon or summoned creatures
-are healed rapidly. Although the amount of healing is minimal, you can
-also receive healing from these clouds.
+Transmute a potion or other essence into essence of restore called 'Viriditas'.
+Drinking Viriditas restores all damaged stats and cures yourself, evaporate
+will create clouds of healing. Also it can be used for Infuse Essence ability;
+Infused target will act like in common, but its attack will heal you, instead
+damage. However some effects, such as harmful enchantments, can still affects you.
+Duraction of this infusion is extremely short, but also depending on your piety.
+%%%%
+Rubedo ability
+
+Transmute a potion or other essence into essence of the 'end-as-begin',
+called 'Rubedo'. Drinking Rubedo will grants you resistances from fire,
+cold, electricity, poison, and acid, and result of evaporate isn't specified.
+Also it can be used for Infuse Essence ability; Infused target will diffuse
+other infusions, makes all targets in your sight are infused by same essences.

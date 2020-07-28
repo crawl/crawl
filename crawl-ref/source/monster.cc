@@ -3965,14 +3965,6 @@ int monster::res_poison(bool temp) const
         u -= get_ench(ENCH_POISON_VULN).degree + 1;
     }
 
-    if (you_worship(GOD_WYRM) && !wont_attack()
-        && !player_under_penance(GOD_WYRM)
-        && (one_chance_in(20) || x_chance_in_y(you.piety, 400)))
-    {
-        // chance to ignore resistance: 20%-70%
-        u = min(0, u);
-    }
-
     if (u < 0)
         u = -1;
 
@@ -6755,6 +6747,8 @@ int monster::spell_hd(spell_type spell) const
         hd *= 2;
     if (has_ench(ENCH_EMPOWERED_SPELLS))
         hd += 5;
+    if (has_ench(ENCH_CITRINITAS))
+        hd += max(2, you.piety/40);
     return hd;
 }
 

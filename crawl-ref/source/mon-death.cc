@@ -790,6 +790,93 @@ item_def* place_monster_corpse(const monster& mons, bool silent, bool force)
         item_was_destroyed(corpse);
         destroy_item(o);
         return nullptr;
+    } else if (gives_player_xp && have_passive(passive_t::wyrm_quicksilver)
+        && monster_is_debuffable) // Distillation from despellable monster
+    {
+        vector<enchant_type> buffs;
+        potion_type pot_type = POT_WATER;
+        for (enchant_type ench : dispellable_beneficials)
+        {
+            // except for permaconfusion.
+            if (ench == ENCH_CONFUSION && mons_class_flag(mon.type, M_CONFUSED))
+                continue;
+
+            // Gozag-incited haste is permanent.
+            if (ench == ENCH_HASTE && mons.has_ench(ENCH_GOZAG_INCITE))
+                continue;
+
+            if (mons.has_ench(ench))
+                buffs.push_back(ench);
+        }
+        
+        switch (ench){
+        case ENCH_HASTE:
+            pot_type = POT_HASTE;
+            break;
+        case ENCH_MIGHT:
+            pot_type = POT_MIGHT;
+            break;        
+        case ENCH_AGILE:
+            pot_type = POT_AGILITY;
+            break;
+        case ENCH_RESISTANCE:
+            pot_type = POT_RESISTANCE;
+            break;
+        case ENCH_SWIFT:
+            pot_type = POT_SWIFT;
+            break;
+        case ENCH_REGENERATION:
+            pot_type = POT_REGENERATION;
+            break;
+        case ENCH_OZOCUBUS_ARMOUR:
+            pot_type = POT_ICY_ARMOUR;
+            break;
+        case ENCH_TOXIC_RADIANCE:
+            pot_type = POT_TOXIC;
+            break;    
+        case ENCH_SHROUD:
+            pot_type = POT_SHROUD;
+            break;
+        case ENCH_REPEL_MISSILES:
+            pot_type = POT_REPEL_MISSILES;
+            break;
+        case ENCH_DEFLECT_MISSILES:
+            pot_type = POT_DEFLECT_MISSILES;
+            break;
+        case ENCH_CONDENSATION_SHIELD:
+            pot_type = POT_ICY_SHIELD;
+            break;
+        default:
+            break;
+        }
+
+        if (mons.has_ench(ENCH_INVIS) || mons_class_flag(mons.type, M_INVIS))
+            pot_type = POT_INVISIBILITY;
+        
+        if (pot_type != POT_WATER) {
+        // codes from spl-other.cc
+        item_def& essence = mitm[co];
+        essence.base_type = OBJ_POTIONS;
+        essence.sub_type = pot_type;
+        essence.quantity = 1;
+        essence.plus = 0;
+        essence.plus2 = 0;
+        essence.flags = 0;
+        essence.inscription.clear();
+        item_colour(essence); // sets special as well
+
+        // Always identify said potion.
+        set_ident_type(essence, true);
+        
+        mprf(MSGCH_GOD, " extract %s from the corpse.",
+            essence.name(DESC_A).c_str());
+
+        std::map<int, int> tmp_l_p = you.last_pickup;
+        you.last_pickup.clear();
+
+        if (you.last_pickup.empty())
+            you.last_pickup = tmp_l_p;
+        }
     }
 
     if (in_bounds(mons.pos()))
@@ -2329,9 +2416,7 @@ item_def* monster_die(monster& mons, killer_type killer,
                 && (have_passive(passive_t::restore_hp)
                     || have_passive(passive_t::mp_on_kill)
                     || (have_passive(passive_t::restore_hp_mp_vs_evil)
-                       && mons.evil())
-                    || (have_passive(passive_t::wyrm_restore)
-                        && mons.has_ench(ENCH_POISON)))
+                       && mons.evil()))
                 && !mons_is_object(mons.type)
                 && !player_under_penance()
                 && random2(you.piety) >= piety_breakpoint(0)
@@ -2343,24 +2428,6 @@ item_def* monster_die(monster& mons, killer_type killer,
                 {
                     hp_heal = mons.get_experience_level()
                         + random2(mons.get_experience_level());
-                }
-                if (have_passive(passive_t::wyrm_restore))
-                {
-                    hp_heal = mons.get_experience_level()
-                        + random2(mons.get_experience_level());
-
-                    you.disease = 0;
-                    you.duration[DUR_POISONING] = 0;
-                    you.duration[DUR_CONF] = 0;
-                    you.duration[DUR_PARALYSIS] = 0; // It can be happen when enemies died by poison
-                    you.duration[DUR_SLEEP] = 0;
-                    you.duration[DUR_VERTIGO] = 0;
-                    you.duration[DUR_SLOW] = 0;
-                    you.duration[DUR_PETRIFYING] = 0;
-                    you.duration[DUR_WEAK] = 0;
-                    restore_stat(STAT_ALL, 0, false);
-                    unrot_hp(9999);
-                    you.redraw_evasion = true;
                 }
                 if (have_passive(passive_t::restore_hp_mp_vs_evil))
                 {

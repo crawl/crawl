@@ -118,6 +118,10 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_SLOWLY_DYING,    MB_SLOWLY_DYING },
     { ENCH_WHIRLWIND_PINNED, MB_PINNED },
     { ENCH_VILE_CLUTCH, MB_VILE_CLUTCH},
+    { ENCH_NIGREDO,         MB_NIGREDO},
+    { ENCH_ALBEDO,          MB_ALBEDO},
+    { ENCH_CITRINITAS,      MB_CITRINITAS},
+    { ENCH_VIRIDITAS,       MB_VIRIDITAS},
 };
 
 static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
@@ -1602,6 +1606,14 @@ vector<string> monster_info::attributes() const
         v.emplace_back("stilling the winds");
     if (is(MB_VILE_CLUTCH))
         v.emplace_back("constricted by zombie hands");
+    if (is(MB_NIGREDO))
+        v.emplace_back("infused by decaying essence of Nigredo");
+    if (is(MB_ALBEDO))
+        v.emplace_back("infused by purging essence of Albedo");
+    if (is(MB_CITRINITAS))
+        v.emplace_back("infused by empowering essence of Cirtintas");
+    if (is(MB_VIRIDITAS))
+        v.emplace_back("infused by restorative essence of Viriditas");
     return v;
 }
 

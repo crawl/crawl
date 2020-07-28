@@ -773,6 +773,11 @@ static const duration_def duration_data[] =
          you.props.erase(CONDENSATION_SHIELD_KEY);
          you.redraw_armour_class = true;
     }} } },
+    { DUR_CITRINITAS, 
+      BLUE, "Empower", 
+      "Citrinitas", "Citrinitas", "Your accuracy and spells are empowered!", D_NO_FLAGS,
+      {{ "You feel less empowered." },
+      { "You start to feel a little less empowered", 1}}, 6},
 #if TAG_MAJOR_VERSION == 34
     // And removed ones
     { DUR_MAGIC_SAPPED, 0, "", "", "old magic sapped", "", D_NO_FLAGS},
