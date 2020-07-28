@@ -962,7 +962,8 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
                     return false;
                 }
 
-                if (!get_form()->slot_available(s))
+                if (!get_form()->slot_available(s)
+                    || s == EQ_BOOTS && you.wear_barding())
                 {
                     if (verbose)
                     {
