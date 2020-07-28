@@ -7643,7 +7643,7 @@ static ai_action::goodness _monster_spell_goodness(monster* mon, mon_spell_slot 
             fire_tracer(mon, tracer);
 
             actor* act = actor_at(tracer.path_taken.back());
-            // XX does this handle multiple actors? 
+            // XX does this handle multiple actors?
             return ai_action::good_or_bad(!act || !mons_aligned(mon, act));
         }
         else
