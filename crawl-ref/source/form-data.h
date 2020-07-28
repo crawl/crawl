@@ -151,7 +151,7 @@ static const form_entry formdata[] =
 {
     transformation::appendage, MONS_PLAYER, "App", "appendages", "appendages",
     "",
-    EQF_HANDS | EQF_AUXES, MR_NO_FLAGS,
+    EQF_HEAD_FOOT, MR_NO_FLAGS,
     FormDuration(10, PS_DOUBLE, 60), 0, 0, SIZE_CHARACTER, 10,
     0, 0, 0, true, 0, false, 3,
     SPWPN_NORMAL, LIGHTGREY, "", DEFAULT_VERBS,
