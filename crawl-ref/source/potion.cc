@@ -11,6 +11,7 @@
 #include <cstring>
 
 #include "cloud.h"
+#include "fight.h"
 #include "food.h"
 #include "god-conduct.h"
 #include "god-passive.h"
@@ -28,10 +29,12 @@
 #include "prompt.h"
 #include "religion.h"
 #include "skill-menu.h"
+#include "spl-damage.h"
 #include "spl-goditem.h"
 #include "stringutil.h"
 #include "target.h"
 #include "transform.h"
+#include "view.h"
 #include "xom.h"
 
 int _xom_factor(bool was_known);
@@ -1363,7 +1366,7 @@ class PotionIcyArmour : public PotionEffect
 {
 private:
     PotionIcyArmour() : PotionEffect(POT_REGENERATION) { }
-    DISALLOW_COPY_AND_ASSIGN(PotionRegeneration);
+    DISALLOW_COPY_AND_ASSIGN(PotionIcyArmour);
 public:
     static const PotionIcyArmour &instance()
     {
@@ -1424,7 +1427,7 @@ public:
         } else {
             targeter_radius hitfunc(&you, LOS_NO_TRANS);
             {
-                if (stop_attack_prompt(hitfunc, "poison", _toxic_can_affect))
+                if (stop_attack_prompt(hitfunc, "poison", toxic_can_affect))
                     return true;
             }
 
@@ -1480,7 +1483,7 @@ public:
         static PotionRepelMissiles inst; return inst;
     }
 
-    bool effect(bool=true, int pow = 40, bool=true) const override
+    bool effect(bool=true, int=40, bool=true) const override
     {
         if (!you_worship(GOD_WYRM)){
             simple_god_message(" whispers: Only followers of wisdom can embrace this...", GOD_WYRM);
@@ -1503,7 +1506,7 @@ public:
         static PotionDeflectMissiles inst; return inst;
     }
 
-    bool effect(bool=true, int pow = 40, bool=true) const override
+    bool effect(bool=true, int=40, bool=true) const override
     {
         if (!you_worship(GOD_WYRM)){
             simple_god_message(" whispers: Only followers of wisdom can embrace this...", GOD_WYRM);
@@ -1521,7 +1524,7 @@ public:
 class PotionIcyShield : public PotionEffect
 {
 private:
-    PotionIcyShield() : PotionIcyShield(POT_ICY_SHIELD) { }
+    PotionIcyShield() : PotionEffect(POT_ICY_SHIELD) { }
     DISALLOW_COPY_AND_ASSIGN(PotionIcyShield);
 public:
     static const PotionIcyShield &instance()
@@ -1566,12 +1569,12 @@ public:
 class PotionNigredo : public PotionEffect
 {
 private:
-    PotionDecay() : PotionEffect(POT_DECAY) { }
-    DISALLOW_COPY_AND_ASSIGN(PotionDecay);
+    PotionNigredo() : PotionEffect(POT_NIGREDO) { }
+    DISALLOW_COPY_AND_ASSIGN(PotionNigredo);
 public:
-    static const PotionDecay &instance()
+    static const PotionNigredo &instance()
     {
-        static PotionDecay inst; return inst;
+        static PotionNigredo inst; return inst;
     }
 
     bool effect(bool=true, int=40, bool=true) const override
@@ -1769,7 +1772,6 @@ static const PotionEffect* potion_effects[] =
     &PotionRegeneration::instance(),
     &PotionIcyArmour::instance(),
     &PotionToxic::instance(),
-    &PotionBlackMark::instance(),
     &PotionShroud::instance(),
     &PotionRepelMissiles::instance(),
     &PotionDeflectMissiles::instance(),

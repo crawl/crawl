@@ -1558,20 +1558,6 @@ static bool _gift_sif_kiku_gift(bool forced)
             gift = BOOK_DEATH;
         }
     }
-    else if (you_worship(GOD_WYRM))
-    // Similar to the Wyrm
-    {
-        if (you.piety >= piety_breakpoint(0)
-            && you.num_total_gifts[you.religion] == 0)
-        {
-            gift = BOOK_YOUNG_POISONERS;
-        }
-        else if (you.piety >= piety_breakpoint(2)
-                 && you.num_total_gifts[you.religion] == 1)
-        {
-            gift = BOOK_ALCHEMY;
-        }
-    }
     else if (forced
              || you.piety >= piety_breakpoint(4) && random2(you.piety) > 100)
     {
@@ -1594,12 +1580,6 @@ static bool _gift_sif_kiku_gift(bool forced)
         {
             make_book_kiku_gift(mitm[thing_created],
                                 gift == BOOK_NECROMANCY);
-        }
-        // ...also the Great Wyrm
-        if (you_worship(GOD_WYRM))
-        {
-            make_book_wyrm_gift(mitm[thing_created],
-                                gift == BOOK_YOUNG_POISONERS);
         }
         if (thing_created == NON_ITEM)
             return false;
@@ -2134,7 +2114,6 @@ bool do_god_gift(bool forced)
 
         case GOD_KIKUBAAQUDGHA:
         case GOD_SIF_MUNA:
-        case GOD_WYRM:
             success = _gift_sif_kiku_gift(forced);
             break;
 

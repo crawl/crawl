@@ -889,11 +889,11 @@ const string make_cost_description(ability_type ability)
     if (abil.flags & abflag::remove_curse_scroll)
         ret += ", Scroll of remove curse";
 
-        if (abil.flags & abflag::potion)
-            ret += ", 1 Potion";
+    if (abil.flags & abflag::potion)
+        ret += ", 1 Potion";
 
-        if (abil.flags & abflag::essence)
-            ret += ", 1 Essence";
+    if (abil.flags & abflag::essence)
+        ret += ", 1 Essence";
 
     if (abil.flags & abflag::gold)
     {
@@ -1927,6 +1927,9 @@ bool activate_talent(const talent& tal)
             return false;
     }
 }
+
+static int _setup_essence_costs();
+static int _setup_potion_costs();
 
 static int _calc_breath_ability_range(ability_type ability)
 {
@@ -3612,17 +3615,16 @@ static spret _do_ability(const ability_def& abil, bool fail)
 
     case ABIL_WYRM_INFUSE:
     {
-        int essence = -1;
-        essence = _setup_essence_costs();
-
         int essence_idx = -1;
-        ASSERT(you.inv[essence_idx].base_type == OBJ_POTIONS); // Dose it work properly?
-        item_def& essence = you.inv[essence_idx];
+        essence_idx = _setup_essence_costs();
 
-        if (essence == -1) {
+        if (essence_idx == -1) {
             mpr("You need an essence to infuse.");
             return spret::abort;
         }
+
+        ASSERT(you.inv[essence_idx].base_type == OBJ_POTIONS); // Dose it work properly?
+        item_def& essence_item = you.inv[essence_idx];
 
         god_acting gdact;
         beam.range = LOS_MAX_RANGE;
@@ -3647,11 +3649,11 @@ static spret _do_ability(const ability_def& abil, bool fail)
             return spret::abort;
         }
 
-        if (essence.sub_type == POT_NIGREDO){
+        if (essence_item.sub_type == POT_NIGREDO){
             const int duration = 10 + you.piety/20;
             mons->add_ench(mon_enchant(ENCH_NIGREDO, 0, &you, duration * BASELINE_DELAY));
             simple_monster_message(*mons, "is infused with Nigredo, begins to leave miasma on trail!");
-        } else if (essence.sub_type == POT_ALBEDO){
+        } else if (essence_item.sub_type == POT_ALBEDO){
             if (!monster_is_debuffable(*mons))
             {
                 mpr("You can only infuse a target which under dispellable magic.");
@@ -3661,7 +3663,7 @@ static spret _do_ability(const ability_def& abil, bool fail)
             const int duration = 6 + you.piety/40;
             mons->add_ench(mon_enchant(ENCH_ALBEDO, 0, &you, duration * BASELINE_DELAY));
             simple_monster_message(*mons, "is infused with Albedo, begins to be interrupted!");
-        } else if (essence.sub_type == POT_CITRINITAS){ 
+        } else if (essence_item.sub_type == POT_CITRINITAS){
             if (!mons->friendly()){
                 if (yesno("This will be beneficial for target! Are you sure want to infuse it?", true, 'y')){
                 } else return spret::abort;
@@ -3670,7 +3672,7 @@ static spret _do_ability(const ability_def& abil, bool fail)
             mons->add_ench(mon_enchant(ENCH_CITRINITAS, 0, &you, duration * BASELINE_DELAY));
             simple_monster_message(*mons, "is infused with Citrinitas, begins to empowered!");
         
-        } else if (essence.sub_type == POT_VIRIDITAS){ 
+        } else if (essence_item.sub_type == POT_VIRIDITAS){
             if (mons->friendly())
             {
                 mpr("You can't infuse allies with this.");
@@ -3680,11 +3682,11 @@ static spret _do_ability(const ability_def& abil, bool fail)
             mons->add_ench(mon_enchant(ENCH_VIRIDITAS, 0, &you, duration * BASELINE_DELAY));
             simple_monster_message(*mons, "is infused with Viriditas, begins to heal you instead damage!");
 
-        } else if (essence.sub_type == POT_RUBEDO){ 
+        } else if (essence_item.sub_type == POT_RUBEDO){
 
             for (radius_iterator ri(you.pos(), LOS_DEFAULT); ri; ++ri)
             {
-                const monster *diffuse = monster_at(*ri);
+                monster *diffuse = monster_at(*ri);
                 if (!diffuse || !you.can_see(*diffuse))
                 {
                     mpr("You see nothing there you can diffuse.");
@@ -3700,7 +3702,7 @@ static spret _do_ability(const ability_def& abil, bool fail)
                     return spret::abort;
                 }
                 
-                const int other = 0;
+                int other = 0;
                 if (mons->has_ench(ENCH_NIGREDO)){
                     
                     const int duration_nigredo = 10 + you.piety/20;
@@ -3744,22 +3746,18 @@ static spret _do_ability(const ability_def& abil, bool fail)
     
     case ABIL_WYRM_NIGREDO:
     {
-        int potion = -1;
-        potion = _setup_potion_costs();
-
         int pot_idx = -1;
-        ASSERT(you.inv[pot_idx].base_type == OBJ_POTIONS);
-        item_def& potion = you.inv[pot_idx];
-        
-        if (potion == -1) {
-            mpr("You need a potion to transmute into essence of Nigredo.");
+        pot_idx = _setup_potion_costs();
+        if (pot_idx == -1) {
+            mpr("You need a potion to transmute into essence of Rubedo.");
             return spret::abort;
         }
+        ASSERT(you.inv[pot_idx].base_type == OBJ_POTIONS);
         
         int thing_created = items(true, OBJ_POTIONS, POT_NIGREDO, 1, 0, you.religion);
         if (thing_created == NON_ITEM || !move_item_to_grid(&thing_created, you.pos()))
         {
-            return false;
+            return spret::abort;
         }
         set_ident_type(mitm[thing_created], true);
         
@@ -3785,22 +3783,18 @@ static spret _do_ability(const ability_def& abil, bool fail)
     
     case ABIL_WYRM_ALBEDO:
     {
-        int potion = -1;
-        potion = _setup_potion_costs();
-
         int pot_idx = -1;
-        ASSERT(you.inv[pot_idx].base_type == OBJ_POTIONS);
-        item_def& potion = you.inv[pot_idx];
-        
-        if (potion == -1) {
-            mpr("You need a potion to transmute into essence of Albedo.");
+        pot_idx = _setup_potion_costs();
+        if (pot_idx == -1) {
+            mpr("You need a potion to transmute into essence of Rubedo.");
             return spret::abort;
         }
+        ASSERT(you.inv[pot_idx].base_type == OBJ_POTIONS);
         
         int thing_created = items(true, OBJ_POTIONS, POT_ALBEDO, 1, 0, you.religion);
         if (thing_created == NON_ITEM || !move_item_to_grid(&thing_created, you.pos()))
         {
-            return false;
+            return spret::abort;
         }
         set_ident_type(mitm[thing_created], true);
         
@@ -3826,22 +3820,18 @@ static spret _do_ability(const ability_def& abil, bool fail)
     
     case ABIL_WYRM_CITRINITAS:
     {
-        int potion = -1;
-        potion = _setup_potion_costs();
-
         int pot_idx = -1;
-        ASSERT(you.inv[pot_idx].base_type == OBJ_POTIONS);
-        item_def& potion = you.inv[pot_idx];
-        
-        if (potion == -1) {
-            mpr("You need a potion to transmute into essence of Citrinitas.");
+        pot_idx = _setup_potion_costs();
+        if (pot_idx == -1) {
+            mpr("You need a potion to transmute into essence of Rubedo.");
             return spret::abort;
         }
+        ASSERT(you.inv[pot_idx].base_type == OBJ_POTIONS);
 
         int thing_created = items(true, OBJ_POTIONS, POT_CITRINITAS, 1, 0, you.religion);
         if (thing_created == NON_ITEM || !move_item_to_grid(&thing_created, you.pos()))
         {
-            return false;
+            return spret::abort;
         }
         set_ident_type(mitm[thing_created], true);
         
@@ -3867,22 +3857,18 @@ static spret _do_ability(const ability_def& abil, bool fail)
 
     case ABIL_WYRM_VIRIDITAS:
     {
-        int potion = -1;
-        potion = _setup_potion_costs();
-
         int pot_idx = -1;
-        ASSERT(you.inv[pot_idx].base_type == OBJ_POTIONS);
-        item_def& potion = you.inv[pot_idx];
-        
-        if (potion == -1) {
-            mpr("You need a potion to transmute into essence of Viriditas.");
+        pot_idx = _setup_potion_costs();
+        if (pot_idx == -1) {
+            mpr("You need a potion to transmute into essence of Rubedo.");
             return spret::abort;
         }
+        ASSERT(you.inv[pot_idx].base_type == OBJ_POTIONS);
         
         int thing_created = items(true, OBJ_POTIONS, POT_VIRIDITAS, 1, 0, you.religion);
         if (thing_created == NON_ITEM || !move_item_to_grid(&thing_created, you.pos()))
         {
-            return false;
+            return spret::abort;
         }
         set_ident_type(mitm[thing_created], true);
         
@@ -3908,22 +3894,18 @@ static spret _do_ability(const ability_def& abil, bool fail)
     
     case ABIL_WYRM_RUBEDO:
     {
-        int potion = -1;
-        potion = _setup_potion_costs();
-
         int pot_idx = -1;
-        ASSERT(you.inv[pot_idx].base_type == OBJ_POTIONS);
-        item_def& potion = you.inv[pot_idx];
-        
-        if (potion == -1) {
+        pot_idx = _setup_potion_costs();
+        if (pot_idx == -1) {
             mpr("You need a potion to transmute into essence of Rubedo.");
             return spret::abort;
         }
+        ASSERT(you.inv[pot_idx].base_type == OBJ_POTIONS);        
         
         int thing_created = items(true, OBJ_POTIONS, POT_RUBEDO, 1, 0, you.religion);
         if (thing_created == NON_ITEM || !move_item_to_grid(&thing_created, you.pos()))
         {
-            return false;
+            return spret::abort;
         }
         set_ident_type(mitm[thing_created], true);
         

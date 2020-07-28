@@ -790,15 +790,15 @@ item_def* place_monster_corpse(const monster& mons, bool silent, bool force)
         item_was_destroyed(corpse);
         destroy_item(o);
         return nullptr;
-    } else if (gives_player_xp && have_passive(passive_t::wyrm_quicksilver)
-        && monster_is_debuffable) // Distillation from despellable monster
+    } else if (mons_gives_xp(mons, you) && have_passive(passive_t::wyrm_quicksilver)
+        && monster_is_debuffable(mons)) // Distillation from despellable monster
     {
-        vector<enchant_type> buffs;
+        vector<potion_type> potions;
         potion_type pot_type = POT_WATER;
         for (enchant_type ench : dispellable_beneficials)
         {
             // except for permaconfusion.
-            if (ench == ENCH_CONFUSION && mons_class_flag(mon.type, M_CONFUSED))
+            if (ench == ENCH_CONFUSION && mons_class_flag(mons.type, M_CONFUSED))
                 continue;
 
             // Gozag-incited haste is permanent.
@@ -806,76 +806,80 @@ item_def* place_monster_corpse(const monster& mons, bool silent, bool force)
                 continue;
 
             if (mons.has_ench(ench))
-                buffs.push_back(ench);
-        }
-        
-        switch (ench){
-        case ENCH_HASTE:
-            pot_type = POT_HASTE;
-            break;
-        case ENCH_MIGHT:
-            pot_type = POT_MIGHT;
-            break;        
-        case ENCH_AGILE:
-            pot_type = POT_AGILITY;
-            break;
-        case ENCH_RESISTANCE:
-            pot_type = POT_RESISTANCE;
-            break;
-        case ENCH_SWIFT:
-            pot_type = POT_SWIFT;
-            break;
-        case ENCH_REGENERATION:
-            pot_type = POT_REGENERATION;
-            break;
-        case ENCH_OZOCUBUS_ARMOUR:
-            pot_type = POT_ICY_ARMOUR;
-            break;
-        case ENCH_TOXIC_RADIANCE:
-            pot_type = POT_TOXIC;
-            break;    
-        case ENCH_SHROUD:
-            pot_type = POT_SHROUD;
-            break;
-        case ENCH_REPEL_MISSILES:
-            pot_type = POT_REPEL_MISSILES;
-            break;
-        case ENCH_DEFLECT_MISSILES:
-            pot_type = POT_DEFLECT_MISSILES;
-            break;
-        case ENCH_CONDENSATION_SHIELD:
-            pot_type = POT_ICY_SHIELD;
-            break;
-        default:
-            break;
-        }
+            {
+                switch (ench) {
+                case ENCH_HASTE:
+                    pot_type = POT_HASTE;
+                    break;
+                case ENCH_MIGHT:
+                    pot_type = POT_MIGHT;
+                    break;
+                case ENCH_AGILE:
+                    pot_type = POT_AGILITY;
+                    break;
+                case ENCH_RESISTANCE:
+                    pot_type = POT_RESISTANCE;
+                    break;
+                case ENCH_SWIFT:
+                    pot_type = POT_SWIFT;
+                    break;
+                case ENCH_REGENERATION:
+                    pot_type = POT_REGENERATION;
+                    break;
+                case ENCH_OZOCUBUS_ARMOUR:
+                    pot_type = POT_ICY_ARMOUR;
+                    break;
+                case ENCH_TOXIC_RADIANCE:
+                    pot_type = POT_TOXIC;
+                    break;
+                case ENCH_SHROUD:
+                    pot_type = POT_SHROUD;
+                    break;
+                case ENCH_REPEL_MISSILES:
+                    pot_type = POT_REPEL_MISSILES;
+                    break;
+                case ENCH_DEFLECT_MISSILES:
+                    pot_type = POT_DEFLECT_MISSILES;
+                    break;
+                case ENCH_CONDENSATION_SHIELD:
+                    pot_type = POT_ICY_SHIELD;
+                    break;
+                default:
+                    break;
+                }
 
-        if (mons.has_ench(ENCH_INVIS) || mons_class_flag(mons.type, M_INVIS))
-            pot_type = POT_INVISIBILITY;
+                if (mons.has_ench(ENCH_INVIS) || mons_class_flag(mons.type, M_INVIS))
+                    pot_type = POT_INVISIBILITY;
+
+                potions.push_back(pot_type);
+            }
+        }
+        if (!potions.empty())
+            pot_type = potions[random2(potions.size())];
         
         if (pot_type != POT_WATER) {
-        // codes from spl-other.cc
-        item_def& essence = mitm[co];
-        essence.base_type = OBJ_POTIONS;
-        essence.sub_type = pot_type;
-        essence.quantity = 1;
-        essence.plus = 0;
-        essence.plus2 = 0;
-        essence.flags = 0;
-        essence.inscription.clear();
-        item_colour(essence); // sets special as well
+            // codes from spl-other.cc
+            item_def& essence = mitm[o];
+            essence.base_type = OBJ_POTIONS;
+            essence.sub_type = pot_type;
+            essence.quantity = 1;
+            essence.plus = 0;
+            essence.plus2 = 0;
+            essence.flags = 0;
+            essence.inscription.clear();
+            item_colour(essence); // sets special as well
 
-        // Always identify said potion.
-        set_ident_type(essence, true);
+            // Always identify said potion.
+            set_ident_type(essence, true);
         
-        mprf(MSGCH_GOD, " extract %s from the corpse.",
-            essence.name(DESC_A).c_str());
+            mprf(MSGCH_GOD, " extract %s from the corpse.",
+                essence.name(DESC_A).c_str());
 
-        std::map<int, int> tmp_l_p = you.last_pickup;
-        you.last_pickup.clear();
+            std::map<int, int> tmp_l_p = you.last_pickup;
+            you.last_pickup.clear();
 
-        if (you.last_pickup.empty())
-            you.last_pickup = tmp_l_p;
+            if (you.last_pickup.empty())
+                you.last_pickup = tmp_l_p;
         }
     }
 

@@ -26,6 +26,7 @@
 #include "mon-behv.h" // ME_WHACK
 #include "ouch.h"
 #include "prompt.h"
+#include "religion.h"
 #include "random-pick.h"
 #include "shout.h"
 #include "spl-util.h"
@@ -503,7 +504,7 @@ spret cast_evaporate(int pow, bolt& beem, int pot_idx, bool fail)
     case POT_REPEL_MISSILES:
     case POT_DEFLECT_MISSILES:
         tracer_flavour = beem.flavour = BEAM_POTION_BLACK_SMOKE;
-        break:
+        break;
     
     case POT_ICY_ARMOUR:
     case POT_ICY_SHIELD:

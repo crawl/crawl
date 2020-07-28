@@ -181,6 +181,7 @@ enum monster_info_flags
     MB_NIGREDO,
     MB_ALBEDO,
     MB_CITRINITAS,
+    MB_VIRIDITAS,
     NUM_MB_FLAGS
 };
 

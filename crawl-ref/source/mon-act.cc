@@ -57,6 +57,7 @@
 #include "spl-book.h"
 #include "spl-clouds.h"
 #include "spl-damage.h"
+#include "spl-goditem.h"
 #include "spl-summoning.h"
 #include "spl-transloc.h"
 #include "spl-util.h"
