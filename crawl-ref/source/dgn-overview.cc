@@ -32,19 +32,25 @@
 #include "travel.h"
 #include "unicode.h"
 
-enum AnnotationPossibilities
+enum annotation_menu_commands
 {
-    // Annotate the dungeon floor the player character is currently on
-    ID_HERE     = -100,
+    // Added to help diagnose bugs etc
+    ANNOTATION_MENU_BIGGEST = -98,
 
     // Annotate one level up
     ID_UP       = -99,
+
+    // Annotate the dungeon floor the player character is currently on
+    ID_HERE     = -100,
 
     // Annotate one level down
     ID_DOWN     = -101,
 
     // Cancel the whole thing
     ID_CANCEL   = -102,
+
+    // Added to help diagnose bugs etc
+    ANNOTATION_MENU_SMALLEST = -103
 };
 
 typedef map<branch_type, set<level_id> > stair_map_type;
@@ -1147,37 +1153,35 @@ void do_annotate()
     const level_id lid  = level_id::current();
     const int branch = _prompt_annotate_branch(lid);
 
-    if (branch == ID_CANCEL)
+    if (branch < 0)
     {
-        canned_msg(MSG_OK);
-        return;
+        ASSERT(ANNOTATION_MENU_SMALLEST <= branch && branch <= ANNOTATION_MENU_BIGGEST);
+        annotation_menu_commands a = static_cast<annotation_menu_commands>(branch);
+        switch(a)
+        {
+        case ID_CANCEL:
+            canned_msg(MSG_OK);
+            return;
+        case ID_HERE:
+            annotate_level(lid);
+            return;
+        case ID_UP:
+            // level_id() is the error vallue of find_up_level(lid)
+            if (find_up_level(lid) == level_id())
+                mpr("There is no level above you.");
+            else
+                annotate_level(find_up_level(lid));
+            return;
+        case ID_DOWN:
+            if (find_down_level(lid) == lid)
+                mpr("There is no level below you in this branch.");
+            else
+                annotate_level(find_down_level(lid));
+            return;
+        }
     }
-
-    if (branch == ID_HERE)
+    else
     {
-        annotate_level(lid);
-        return;
-    }
-
-    if (branch == ID_UP)
-    {
-        // level_id() is the error vallue of find_up_level(lid)
-        if (find_up_level(lid) == level_id())
-            mpr("There is no level above you.");
-        else
-            annotate_level(find_up_level(lid));
-        return;
-    }
-
-    if (branch == ID_DOWN)
-    {
-        if (find_down_level(lid) == lid)
-            mpr("There is no level below you in this branch.");
-        else
-            annotate_level(find_down_level(lid));
-        return;
-    }
-
     int depth;
     const int max_depth = branches[branch].numlevels;
     // Handle one-level branches by not prompting.
@@ -1197,6 +1201,7 @@ void do_annotate()
     }
     else
         mpr("That's not a valid depth.");
+    }
 }
 
 void annotate_level(level_id li)
