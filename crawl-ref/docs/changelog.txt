@@ -1,4 +1,4 @@
-Stone Soup 0.26 (through 0.26-a0-386-g8013e45)
+Stone Soup 0.26 (through 0.26-a0-470-g4b749af)
 ----------------------------------------------
 
 Highlights
@@ -39,9 +39,12 @@ Character
 * The Charms skill is removed.
 * The Skald background is removed.
 * Artificers now start with better defensive skills, no weapon skill, and a
-  spectral club in place of the short sword and short blade skill.
+  club in place of the short sword and short blade skill.
 * Transmuters no longer start with arrows, and Wereblood replaces Sticks to
   Snakes in the starting book.
+* Kobolds now have the Nightstalker 3 mutation (reducing LOS and providing
+  bonus stealth).
+* Demonspawn no longer have the Nightstalker facet.
 
 Gods
 ----
@@ -50,12 +53,21 @@ Gods
   self banish.
 * Gozag no longer offers flight potions in petition and occasionally offers
   lignification.
+* Wu Jian martial moves are no longer available while digging.
 
 Interface
 ---------
 * Viewing a monster with xv now shows to-hit chance with your current weapon.
 * The "view stack/pickup key" ; can be pressed twice to force autopickup even
   in unsafe situations.
+* New option: travel_one_unsafe_move. Setting this option to true causes
+  auto-travel to make one move towards its goal before conducting the usual
+  safety checks.
+* New option: monster_item_view_features. This is a regex list option, features
+  that match patterns on this list will be displayed in the ^x view
+  description.
+* The ^x view description is now available from all targeting prompts, and
+  when used while targeting lists valid targets in range.
 
 Items
 -----
@@ -74,6 +86,9 @@ Items
 * The Salamander Hide Armour no longer gives *Rage, it now is a fire spell
   enhancer with rF++, rC--, flame cloud immunity, and a ring of flame clouds
   effect.
+* The contents of item piles are revealed on sight, instead of on visit.
+* New boots ego: Rampaging. Boots of rampaging cause the wearer to take an
+  extra step for no cost---only when moving in the direction of a foe.
 
 Lua
 ---
@@ -90,6 +105,7 @@ Monsters
 * Hungry ghosts are removed.
 * Monsters don't forget about the player while the player is off level.
 * Many strange corner-cases for angering allies are removed.
+* The Cloud Mage can now fly.
 
 Spells
 ------
@@ -116,9 +132,9 @@ Spells
     to work with all Conjurations school spells other than Servitor.
   - Song of Slaying is now Transmutations and renamed Wereblood; the noise is
     reduced somewhat.
-* Beastly Appendage now melds auxilliary armour slots, weapons, and shields,
-  and gives two levels of both Horns and Talons (octopodes keep their tentacle
-  spike) instead of randomly choosing.
+* Beastly Appendage now melds helmets and boots, and gives two levels of both
+  Horns and Talons (octopodes keep their tentacle spike) instead of randomly
+  choosing.
 * Alistair's Intoxication prompts when nothing in view can be affected, always
   applies Vertigo when successful, and has a higher power cap.
 * Aura of Abjuration, Darkness, Infusion, Recall, Ring of Flames, Shroud of
