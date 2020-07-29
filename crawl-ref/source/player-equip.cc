@@ -64,6 +64,7 @@ void equip_item(equipment_type slot, int item_slot, bool msg)
     ash_check_bondage();
     if (you.equip[slot] != -1 && you.inv[you.equip[slot]].cursed())
         auto_id_inventory();
+    you.gear_change = true;
 }
 
 // Clear an equipment slot (possibly melded).
@@ -85,6 +86,7 @@ bool unequip_item(equipment_type slot, bool msg)
             you.melded.set(slot, false);
         ash_check_bondage();
         you.last_unequip = item_slot;
+        you.gear_change = true;
         return true;
     }
 }
@@ -100,6 +102,7 @@ bool meld_slot(equipment_type slot)
     if (you.equip[slot] != -1 && !you.melded[slot])
     {
         you.melded.set(slot);
+        you.gear_change = true;
         return true;
     }
     return false;
@@ -115,6 +118,7 @@ bool unmeld_slot(equipment_type slot)
     if (you.equip[slot] != -1 && you.melded[slot])
     {
         you.melded.set(slot, false);
+        you.gear_change = true;
         return true;
     }
     return false;
