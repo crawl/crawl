@@ -3147,6 +3147,10 @@ static bool _transformed_player_can_join_god(god_type which_god)
 {
     if (which_god == GOD_ZIN && you.form != transformation::none)
         return false; // zin hates everything
+
+    if (which_god == GOD_WYRM && you.form != transformation::lich)
+        return false; // The Great Wyrm dislikes lich, because they can't drink
+
     // all these clauses are written with a ! in front of them, so that
     // the stuff to the right of that is uniformly "gods that hate this form"
     switch (you.form)
@@ -3234,6 +3238,9 @@ bool player_can_join_god(god_type which_god)
             return false;
         }
     }
+
+    if (you.species == SP_MUMMY && which_god == GOD_WYRM)
+        return false;
 
     return _transformed_player_can_join_god(which_god);
 }
