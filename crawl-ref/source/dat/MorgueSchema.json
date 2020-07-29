@@ -300,33 +300,37 @@
                     "place": {
                         "type": "string"
                     },
-                    "spentPercent": {
+                    "total": {
                         "type": "number"
                     },
-                    "nonInterLevelTravelPercent": {
+                    "nonInterLevel": {
                         "type": "number"
                     },
-                    "interLevelTravelPercent": {
+                    "interLevel": {
                         "type": "number"
                     },
-                    "restPercent": {
+                    "resting": {
                         "type": "number"
                     },
-                    "autoExploring": {
+                    "exploring": {
                         "type": "number"
                     },
-                    "spentProportion": {
+                    "levelsSeen": {
+                        "type": "number"
+                    },
+                    "averageByLevel": {
                         "type": "number"
                     },
                 },
                 "required": [
-                    "place",
-                    "spentPercent",
-                    "nonInterLevelTravelPercent",
-                    "interLevelTravelPercent",
-                    "restPercent",
-                    "autoExploring",
-                    "spentProportion"
+                    "place"
+                    "total"
+                    "nonInterLevel"
+                    "interLevel"
+                    "resting"
+                    "exploring"
+                    "levelsSeen"
+                    "averageByLevel"
                 ]
             }
         },

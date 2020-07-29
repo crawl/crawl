@@ -24,8 +24,6 @@
 #endif
 #include "english.h"
 #include "env.h"
-#include "tiledef_defines.h"
-#include "tiledef-player.h"
 #include "files.h"
 #include "god-passive.h"
 #include "initfile.h"

@@ -385,9 +385,11 @@ static void _json_sdump_header(json_dump_params &jpar)
     json_append_member(header, "client", json_mkstring(client.c_str()));
 
     // Seed
-    if (you.game_is_seeded
+    if (you.fully_seeded
 #ifdef DGAMELAUNCH
-        && jpar.se // for online games, only show seed for a dead char
+        && (jpar.se // for online games, only show seed for a dead char
+            || you.wizard
+            || crawl_state.type == GAME_TYPE_CUSTOM_SEED)
 #endif
         )
     {
@@ -781,7 +783,7 @@ static string _sdump_turns_place_info(const PlaceInfo place_info, string name = 
     return _denanify(out);
 }
 
-static JsonNode *_json_sdump_turns_place_info(const PlaceInfo place_info, string name = "")
+static JsonNode *_json_sdump_turns_place_info(const PlaceInfo place_info)
 {
     unsigned int non_interlevel =
         place_info.elapsed_total / 10 - place_info.elapsed_interlevel / 10;
@@ -1574,7 +1576,6 @@ static void _json_sdump_spells(json_dump_params &jpar)
             json_append_member(json_spell, "power", json_mkstring(spell_power_string(spell).c_str()));
             json_append_member(json_spell, "failure", json_mknumber(failure_rate_to_int(raw_spell_fail(spell))));
             json_append_member(json_spell, "level", json_mknumber(spell_difficulty(spell)));
-            json_append_member(json_spell, "hunger", json_mkstring(spell_hunger_string(spell).c_str()));
 
             string type;
             bool already = false;
@@ -1611,11 +1612,6 @@ static void _json_sdump_spells(json_dump_params &jpar)
             json_append_member(json_spell, "failure", json_mknumber(failure_rate_to_int(raw_spell_fail(spell))));
 
         json_append_member(json_spell, "level", json_mknumber(spell_difficulty(spell)));
-
-        if (memorisable)
-            json_append_member(json_spell, "hunger", json_mkstring(spell_hunger_string(spell).c_str()));
-        else
-            json_append_member(json_spell, "hunger", json_mkstring("N/A"));
 
         string type;
         bool already = false;

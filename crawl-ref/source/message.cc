@@ -2157,8 +2157,6 @@ static string _channel_name(msg_channel_type chan)
         return string("danger");
     case MSGCH_WARN:
         return string("warn");
-    case MSGCH_FOOD:
-        return string("food");
     case MSGCH_RECOVERY:
         return string("recovery");
     case MSGCH_SOUND:
