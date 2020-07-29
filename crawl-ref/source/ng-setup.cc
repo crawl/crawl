@@ -14,6 +14,7 @@
 #include "items.h"
 #include "item-use.h"
 #include "jobs.h"
+#include "message.h"
 #include "mutation.h"
 #include "ng-init.h"
 #include "ng-wanderer.h"
@@ -478,8 +479,11 @@ static void _setup_generic(const newgame_def& ng,
 
     _give_basic_knowledge();
 
-    // Must be after _give_basic_knowledge
-    add_held_books_to_library();
+    {
+        msg::suppress quiet;
+        // Must be after _give_basic_knowledge
+        add_held_books_to_library();
+    }
 
     if (you.char_class == JOB_WANDERER)
         memorise_wanderer_spell();
