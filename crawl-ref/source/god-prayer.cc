@@ -342,7 +342,7 @@ static slurp_gain _sacrifice_one_item_noncount(const item_def& item)
                             desc_weapon,
                             item.quantity == 1 ? ""     : "s").c_str(),
                             GOD_ELYVILON);
-                            
+
                 gain_piety(1); // Bonus for evil.
             }
 
@@ -495,6 +495,8 @@ static bool _god_likes_items(god_type god)
     {
     case GOD_NEMELEX_XOBEH:
         return true;
+    case GOD_ELYVILON:
+        return true;
     default:
         return false;
 
@@ -515,6 +517,18 @@ static bool _god_likes_item(god_type god, const item_def& item)
             && item.base_type != OBJ_GOLD
             && (item.base_type != OBJ_MISCELLANY
                 || item.sub_type != MISC_BAG));
+
+    case GOD_ELYVILON:
+        if (item_is_stationary(item)) // Held in a net?
+            return false;
+        return (item.base_type == OBJ_WEAPONS
+                || item.base_type == OBJ_STAVES
+                || item.base_type == OBJ_RODS
+                || item.base_type == OBJ_MISSILES)
+               // Once you've reached *** once, don't accept mundane weapon
+               // sacrifices ever again just because of value.
+               && (is_evil_item(item)
+                   || you.piety_max[GOD_ELYVILON] < piety_breakpoint(2));
 
     default:
         return false;
@@ -724,6 +738,7 @@ static bool _offer_items()
             continue;
         }
 
+
         // Ignore {!D} inscribed items.
         if (!check_warning_inscriptions(item, OPER_DESTROY))
         {
@@ -744,7 +759,6 @@ static bool _offer_items()
                 continue;
             }
         }
-
 
         piety_gain_t relative_gain = _sacrifice_item_stack(item);
         _print_nemelex_sacrifice_message(mitm[i], relative_gain, true);
@@ -776,7 +790,8 @@ static bool _offer_items()
             else
                 simple_god_message(" not offer them!");
     }
-        if (num_sacced == 0 && you_worship(GOD_ELYVILON))
+    
+    if (num_sacced == 0 && you_worship(GOD_ELYVILON))
     {
         mprf("There are no %sweapons here to destroy!",
              you.piety_max[GOD_ELYVILON] < piety_breakpoint(2) ? "" : "unholy or evil ");
