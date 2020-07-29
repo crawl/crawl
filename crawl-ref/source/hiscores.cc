@@ -1805,7 +1805,7 @@ JsonNode *scorefile_entry::hiscore_json() const
 
     json_append_member(hiscore, "death",
                        json_mkstring(trimmed_string(death_description(scorefile_entry::DDV_ONELINE)).c_str()));
-    json_append_member(hiscore, "location", json_mkstring(level_id(branch, dlvl).describe().c_str()));
+    json_append_member(hiscore, "location", level_id(branch, dlvl).to_json());
     json_append_member(hiscore, "turns", json_mknumber(num_turns));
     json_append_member(hiscore, "time", json_mknumber(real_time));
 

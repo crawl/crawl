@@ -332,22 +332,22 @@ static void _get_json_seen_branches(JsonNode *json_branches)
             level_id lid(branch, 0);
             lid = find_deepest_explored(lid);
 
-            string entry_desc;
-            for (auto lvl : stair_level[branch])
-                entry_desc += " " + lvl.describe(false, true);
-
-            // "D" is a little too short here.
-            const char *brname = (branch == BRANCH_DUNGEON
-                                  ? it->shortname
-                                  : it->abbrevname);
-
             JsonNode *json_branch(json_mkobject());
-            json_append_member(json_branch, "name", json_mkstring(brname));
+            json_append_member(json_branch, "name", json_mkstring(it->shortname));
             json_append_member(json_branch, "visited", json_mknumber(lid.depth));
             json_append_member(json_branch, "depth", json_mknumber(brdepth[branch]));
 
-            if (entry_desc.size() > 0)
-                json_append_member(json_branch, "location", json_mkstring(entry_desc.c_str()));
+            JsonNode *locations(json_mkarray());
+
+            for (auto lvl : stair_level[branch]) {
+                JsonNode *location(json_mkobject());
+                json_append_member(location, "branch", json_mkstring(branches[lvl.branch].shortname));
+                json_append_member(location, "depth", json_mknumber(lvl.depth));
+
+                json_append_element(locations, location);
+            }
+
+            json_append_member(json_branch, "locations", locations);
 
             json_append_element(json_branches, json_branch);
         }
@@ -452,14 +452,12 @@ static void _get_json_unseen_branches(JsonNode *json_branches)
                 json_append_member(json_branch, "visited", json_mknumber(0));
                 json_append_member(json_branch, "depth", json_mknumber(brdepth[branch]));
 
-                ostringstream location;
-                location << it->abbrevname << ":" << it->mindepth;
-                if (it->mindepth != it->maxdepth)
-                {
-                    location << "-" << it->maxdepth;
+                JsonNode *location(json_mkobject());
+                json_append_member(location, "branch", json_mkstring(it->abbrevname));
+                json_append_member(location, "from", json_mknumber(it->mindepth));
+                json_append_member(location, "to", json_mknumber(it->maxdepth));
 
-                json_append_member(json_branch, "location", json_mkstring(location.str().c_str()));
-                }
+                json_append_member(json_branch, "location", location);
 
                 json_append_element(json_branches, json_branch);
             }
@@ -683,20 +681,11 @@ JsonNode *get_json_shops()
 {
     JsonNode *json_shops(json_mkarray());
 
-    level_id last_id;
-    last_id.depth = 10000;
-
     for (const auto &entry : shops_present)
     {
         JsonNode *json_shop(json_mkobject());
 
-        if (entry.first.id != last_id)
-        {
-            json_append_member(json_shop, "location",
-                               json_mkstring(entry.first.id.describe(false, true).c_str()));
-
-            last_id = entry.first.id;
-        }
+        json_append_member(json_shop, "location", entry.first.id.to_json());
         json_append_member(json_shop, "type", json_mkstring(shoptype_to_raw_string(entry.second).c_str()));
 
         json_append_element(json_shops, json_shop);
@@ -730,16 +719,9 @@ JsonNode *get_json_portals()
             if (entry.second == it->id && last_id.depth == 10000) {
                 JsonNode *json_portal(json_mkobject());
 
-                string location;
-                if (entry.first.id == last_id)
-                    location += '*';
-                else
-                    location += entry.first.id.describe(false, true);
-                last_id = entry.first.id;
-
                 json_append_member(json_portal, "destination",
                                    json_mkstring(branches[entry.second].shortname));
-                json_append_member(json_portal, "location", json_mkstring(location.c_str()));
+                json_append_member(json_portal, "location", entry.first.id.to_json());
 
                 if (portal_notes[entry.first].size() > 0)
                     json_append_member(json_portal, "note", json_mkstring(portal_notes[entry.first].c_str()));
@@ -783,7 +765,9 @@ JsonNode *get_json_notes()
             level_id i(it->id, d);
             if (!get_level_annotation(i).empty()) {
                 JsonNode *json_note(json_mkobject());
-                json_append_member(json_note, "location", json_mkstring(i.describe().c_str()));
+
+                json_append_member(json_note, "location", i.to_json());
+
                 json_append_member(json_note, "value",
                                    json_mkstring(get_level_annotation(i, false, false, false, WHITE).c_str()));
 

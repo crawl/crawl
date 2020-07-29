@@ -39,6 +39,7 @@
 #include "item-prop.h"
 #include "item-status-flag-type.h"
 #include "items.h"
+#include "json.h"
 #include "libutil.h"
 #include "macro.h"
 #include "mapmark.h"
@@ -3262,6 +3263,14 @@ string level_id::describe(bool long_name, bool with_number) const
             result = make_stringf("%s:$", result.c_str());
     }
     return result;
+}
+
+JsonNode *level_id::to_json() const
+{
+    JsonNode *json(json_mkobject());
+    json_append_member(json, "branch", json_mkstring(branches[branch].shortname));
+    json_append_member(json, "depth", json_mknumber(depth));
+    return json;
 }
 
 level_id level_id::parse_level_id(const string &s)

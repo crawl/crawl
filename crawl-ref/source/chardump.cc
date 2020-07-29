@@ -563,7 +563,7 @@ static void _json_sdump_visits(json_dump_params &jpar)
     for (const PlaceInfo &place : branches_visited)
     {
         JsonNode *branch(json_mkobject());
-        json_append_member(branch, "name", json_mkstring(place.long_name().c_str()));
+        json_append_member(branch, "name", json_mkstring(place.short_name().c_str()));
         json_append_member(branch, "visits", json_mknumber(place.num_visits));
         json_append_member(branch, "levels", json_mknumber(place.levels_seen));
 
@@ -577,7 +577,7 @@ static void _json_sdump_visits(json_dump_params &jpar)
             continue;
 
         JsonNode *portal(json_mkobject());
-        json_append_member(portal, "name", json_mkstring(place.long_name().c_str()));
+        json_append_member(portal, "name", json_mkstring(place.short_name().c_str()));
         json_append_member(portal, "visits", json_mknumber(place.num_visits));
         json_append_member(portal, "levels", json_mknumber(place.levels_seen));
 
@@ -728,14 +728,11 @@ static string _sdump_level_xp_info(LevelXPInfo xp_info, string name = "")
     return _denanify(out);
 }
 
-static JsonNode *_json_sdump_level_xp_info(LevelXPInfo xp_info, string name = "")
+static JsonNode *_json_sdump_level_xp_info(LevelXPInfo xp_info)
 {
     JsonNode *level_xp_info(json_mkobject());
 
-    if (name.empty())
-        json_append_member(level_xp_info, "name", json_mkstring(xp_info.level.describe().c_str()));
-    else
-        json_append_member(level_xp_info, "name", json_mkstring(name.c_str()));
+    json_append_member(level_xp_info, "location", xp_info.level.to_json());
 
     float c, f;
     unsigned int total_xp = xp_info.vault_xp + xp_info.non_vault_xp;
@@ -1064,7 +1061,7 @@ static void _json_sdump_notes(json_dump_params &jpar)
         JsonNode *jnote = json_mkobject();
 
         json_append_member(jnote, "turn", json_mknumber(note.turn));
-        json_append_member(jnote, "location", json_mkstring(note.place.describe().c_str()));
+        json_append_member(jnote, "location", note.place.to_json());
         json_append_member(jnote, "value", json_mkstring(note.describe(false, false, true).c_str()));
 
         json_append_element(notes, jnote);
@@ -1088,11 +1085,11 @@ static void _sdump_location(dump_params &par)
 
 static void _json_sdump_location(json_dump_params &jpar)
 {
-    if (you.depth == 0 && player_in_branch(BRANCH_DUNGEON))
-        json_append_member(jpar.json, "location", json_mkstring("escaped"));
-    else
-        json_append_member(jpar.json, "location",
-                           json_mkstring(prep_branch_level_name().c_str()));
+    JsonNode *location(json_mkobject());
+    json_append_member(location, "branch", json_mkstring(branches[you.where_are_you].shortname));
+    json_append_member(location, "depth", json_mknumber(you.depth));
+
+    json_append_member(jpar.json, "location", location);
 }
 
 static void _sdump_religion(dump_params &par)
@@ -1332,7 +1329,10 @@ static void _json_sdump_inventory(json_dump_params &jpar)
                 json_append_member(json_item, "origin", json_mkstring(origin_desc(item).c_str()));
 
             if (is_dumpable_artefact(item))
-                json_append_member(json_item, "description", json_mkstring(chardump_desc(item).c_str()));
+            {
+                json_append_member(json_item, "description",
+                                   json_mkstring(trimmed_string(chardump_desc(item)).c_str()));
+            }
 
             json_append_element(items, json_item);
         }

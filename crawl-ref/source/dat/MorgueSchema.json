@@ -115,7 +115,7 @@
             ]
         },
         "location": {
-            "type": "string"
+            "$ref": "#/definitions/_location"
         },
         "religion": {
             "type": "object",
@@ -233,7 +233,7 @@
                         "type": "number"
                     },
                     "location": {
-                        "type": "string"
+                        "$ref": "#/definitions/_location"
                     },
                     "value": {
                         "type": "number"
@@ -484,7 +484,7 @@
                                 "locations": {
                                     "type": "array",
                                     "items": {
-                                        "type": "string"
+                                        "$ref": "#/definitions/_location"
                                     }
                                 }
                             },
@@ -506,8 +506,8 @@
             "items": {
                 "type": "object",
                 "properties": {
-                    "name": {
-                        "type": "string"
+                    "location": {
+                        "$ref": "#/definitions/_location"
                     },
                     "nonVaultXP": {
                         "type": "number"
@@ -557,7 +557,13 @@
                                 "type": "number"
                             },
                             "location": {
-                                "type": "string"
+                                "$ref": "#/definitions/_location"
+                            },
+                            "locations": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/definitions/_location"
+                                },
                             }
                         },
                         "required": [
@@ -579,7 +585,7 @@
                         "type": "object",
                         "properties": {
                             "location": {
-                                "type": "string"
+                                "$ref": "#/definitions/_location"
                             },
                             "type": {
                                 "type": "string"
@@ -599,7 +605,7 @@
                                 "type": "string"
                             },
                             "location": {
-                                "type": "string"
+                                "$ref": "#/definitions/_location"
                             },
                             "note": {
                                 "type": "string"
@@ -617,7 +623,7 @@
                         "type": "object",
                         "properties": {
                             "location": {
-                                "type": "string"
+                                "$ref": "#/definitions/_location"
                             },
                             "value": {
                                 "type": "string"
@@ -659,7 +665,7 @@
                     "type": "string"
                 },
                 "location": {
-                    "type": "string"
+                    "$ref": "#/definitions/_location"
                 },
                 "turns": {
                     "type": "number"
@@ -689,8 +695,8 @@
             "items": {
                 "type": "object",
                 "properties": {
-                    "level": {
-                        "type": "string"
+                    "location": {
+                        "$ref": "#/definitions/_location"
                     },
                     "generated": {
                         "type": "boolean"
@@ -832,6 +838,26 @@
         "actionCounts"
     ],
     "definitions": {
+        "_location": {
+            "type": "object",
+            "properties": {
+                "branch": {
+                    "type": "string"
+                },
+                "depth": {
+                    "type": "number"
+                },
+                "from": {
+                    "type": "number"
+                },
+                "to": {
+                    "type": "number"
+                }
+            },
+            "required": [
+                "branch"
+            ]
+        },
         "_monster": {
             "type": "object",
             "properties": {

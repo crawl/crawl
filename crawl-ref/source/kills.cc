@@ -147,7 +147,7 @@ JsonNode *KillMaster::json_kills() const
                 JsonNode *locations(json_mkarray());
 
                 for (auto iter = kill.places.begin(); iter != kill.places.end(); ++iter)
-                    json_append_element(locations, json_mkstring(iter->describe().c_str()));
+                    json_append_element(locations, iter->to_json());
 
                 json_append_member(json_kill, "locations", locations);
             }
