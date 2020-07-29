@@ -51,6 +51,7 @@
 #include "maps.h"
 #include "menu.h"
 #include "message.h"
+#include "mon-behv.h"
 #include "mon-place.h"
 #include "mutation.h"
 #include "nearby-danger.h"

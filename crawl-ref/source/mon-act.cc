@@ -2567,7 +2567,7 @@ static void _post_monster_move(monster* mons)
 	
 	// The Great Wyrm: place short-term miasma if there is no cloud
 	if (mons->has_ench(ENCH_NIGREDO) && !cloud_at(mons->pos()))
-		place_cloud(CLOUD_MIASMA, mons->pos(), 2), mons);
+		place_cloud(CLOUD_MIASMA, mons->pos(), 2, mons);
 
     if (mons->type != MONS_NO_MONSTER && mons->hit_points < 1)
         monster_die(*mons, KILL_MISC, NON_MONSTER);
