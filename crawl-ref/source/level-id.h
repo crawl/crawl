@@ -41,6 +41,7 @@ public:
 #endif
 
     string describe(bool long_name = false, bool with_number = true) const;
+    JsonNode *to_json() const;
 
     void clear()
     {

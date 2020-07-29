@@ -33,6 +33,7 @@ public:
     void assert_validity() const;
 
     const string short_name() const;
+    const string long_name() const;
 
     const PlaceInfo &operator += (const PlaceInfo &other);
     const PlaceInfo &operator -= (const PlaceInfo &other);

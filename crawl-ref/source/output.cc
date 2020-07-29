@@ -11,6 +11,9 @@
 #include <cstdlib>
 #include <sstream>
 
+#include "json.h"
+#include "json-wrapper.h"
+
 #include "ability.h"
 #include "art-enum.h"
 #include "areas.h"
@@ -2549,6 +2552,90 @@ string dump_overview_screen(bool full_id)
     text += "\n";
 
     return text;
+}
+
+JsonNode *json_dump_overview_screen(bool full_id)
+{
+    JsonNode *overview(json_mkobject());
+
+    json_append_member(overview, "name", json_mkstring(you.your_name.c_str()));
+    json_append_member(overview, "title", json_mkstring(player_title().c_str()));
+    json_append_member(overview, "species", json_mkstring(species_name(you.species).c_str()));
+    json_append_member(overview, "job", json_mkstring(get_job_name(you.char_class)));
+
+    // HP
+    JsonNode* health(json_mkobject());
+    json_append_member(health, "value", json_mknumber(you.hp));
+    json_append_member(health, "max", json_mknumber(you.hp_max));
+    json_append_member(health, "realMax", json_mknumber(get_real_hp(true, false)));
+    json_append_member(overview, "health", health);
+
+    // MP
+    JsonNode* magic(json_mkobject());
+    json_append_member(magic, "value", json_mknumber(you.magic_points));
+    json_append_member(magic, "max", json_mknumber(you.max_magic_points));
+    json_append_member(magic, "realMax", json_mknumber(get_real_mp(false)));
+    json_append_member(overview, "magic", magic);
+
+    // Gold
+    json_append_member(overview, "gold", json_mknumber(you.gold));
+
+    // AC
+    json_append_member(overview, "armorClass", json_mknumber(you.armour_class()));
+
+    // EV
+    json_append_member(overview, "evasion", json_mknumber(you.evasion()));
+
+    // SH
+    json_append_member(overview, "shieldClass", json_mknumber(player_displayed_shield_class()));
+
+    // Str
+    JsonNode* strength(json_mkobject());
+    json_append_member(strength, "value", json_mknumber(you.strength(false)));
+    json_append_member(strength, "max", json_mknumber(you.max_strength()));
+    json_append_member(overview, "strength", strength);
+
+    // Int
+    JsonNode* intelligence(json_mkobject());
+    json_append_member(intelligence, "value", json_mknumber(you.intel(false)));
+    json_append_member(intelligence, "max", json_mknumber(you.max_intel()));
+    json_append_member(overview, "intelligence", intelligence);
+
+    // Dex
+    JsonNode* dexterity(json_mkobject());
+    json_append_member(dexterity, "value", json_mknumber(you.dex(false)));
+    json_append_member(dexterity, "max", json_mknumber(you.max_dex()));
+    json_append_member(overview, "dexterity", dexterity);
+
+    // XL
+    JsonNode* experience(json_mkobject());
+    json_append_member(experience, "value", json_mknumber(you.experience_level));
+    if (you.experience_level < you.get_max_xl())
+        json_append_member(experience, "next", json_mknumber(get_exp_progress()));
+    json_append_member(overview, "experience", experience);
+
+    // God
+    if (!you_worship(GOD_NO_GOD)) {
+        JsonNode* god(json_mkobject());
+        json_append_member(god, "god", json_mkstring(god_name(you.religion).c_str()));
+        // TODO: if (you.wizard)
+        json_append_member(god, "rank", json_mkstring(_god_asterisks().c_str()));
+        json_append_member(overview, "god", god);
+    }
+
+    // Spells
+    JsonNode* spells(json_mkobject());
+    json_append_member(spells, "value", json_mknumber(player_spell_levels()));
+    json_append_member(spells, "max", json_mknumber(player_total_spell_levels()));
+    json_append_member(overview, "spells", spells);
+
+    if (you.species == SP_FELID)
+    {
+        json_append_member(overview, "lives", json_mknumber(you.lives));
+        json_append_member(overview, "deaths", json_mknumber(you.deaths));
+    }
+
+    return overview;
 }
 
 static string _annotate_form_based(string desc, bool suppressed)

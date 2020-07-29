@@ -9,6 +9,8 @@
 
 #include <sstream>
 
+#include "json.h"
+
 #include "areas.h"
 #include "colour.h"
 #include "delay.h"
@@ -2135,6 +2137,35 @@ string get_last_messages(int mcount, bool full)
     if (!text.empty())
         text += "\n";
     return text;
+}
+
+JsonNode *get_json_last_messages(int mcount, bool full)
+{
+    flush_prev_message();
+
+    JsonNode *messages(json_mkarray());
+
+    // XXX: should use some message_history iterator here
+    const store_t& msgs = buffer.get_store();
+    // XXX: loop wraps around otherwise. This could be done better.
+    mcount = min(mcount, NUM_STORED_MESSAGES);
+    for (int i = -1; mcount > 0; --i)
+    {
+        const message_line msg = msgs[i];
+        if (!msg)
+            break;
+        if (full || is_channel_dumpworthy(msg.channel))
+        {
+            JsonNode *message(json_mkobject());
+            json_append_member(message, "channel", json_mknumber(msg.channel));
+            json_append_member(message, "content", json_mkstring(msg.pure_text_with_repeats().c_str()));
+
+            json_append_element(messages, message);
+        }
+        mcount--;
+    }
+
+    return messages;
 }
 
 void get_recent_messages(vector<string> &mess,

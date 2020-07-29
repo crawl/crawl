@@ -93,7 +93,7 @@ static const char* _interesting_origin(const item_def &item)
 /**
  * What inscription should be appended to the given item's name?
  */
-static string _item_inscription(const item_def &item)
+string item_inscription(const item_def &item)
 {
     vector<string> insparts;
 
@@ -125,6 +125,140 @@ static string _item_inscription(const item_def &item)
                                              ", ").c_str());
 }
 
+string item_slot(const item_def &item)
+{
+    string slot;
+
+    equipment_type eq = item_equip_slot(item);
+    if (eq != EQ_NONE)
+    {
+        if (you.melded[eq])
+            slot += "melded";
+        else
+        {
+            switch (eq)
+            {
+            case EQ_WEAPON:
+                if (is_weapon(item))
+                    slot += "weapon";
+                else if (you.species == SP_FELID)
+                    slot += "in mouth";
+                else
+                    slot += "in " + you.hand_name(false);
+                break;
+            case EQ_CLOAK:
+            case EQ_HELMET:
+            case EQ_GLOVES:
+            case EQ_BOOTS:
+            case EQ_SHIELD:
+            case EQ_BODY_ARMOUR:
+                slot += "worn";
+                break;
+            case EQ_LEFT_RING:
+            case EQ_RIGHT_RING:
+            case EQ_RING_ONE:
+            case EQ_RING_TWO:
+                slot += "";
+                slot += ((eq == EQ_LEFT_RING || eq == EQ_RING_ONE)
+                         ? "left" : "right");
+                slot += " ";
+                slot += you.hand_name(false);
+                slot += "";
+                break;
+            case EQ_AMULET:
+                if (you.species == SP_OCTOPODE && form_keeps_mutations())
+                    slot += "around mantle";
+                else
+                    slot += "around neck";
+                break;
+            case EQ_RING_THREE:
+            case EQ_RING_FOUR:
+            case EQ_RING_FIVE:
+            case EQ_RING_SIX:
+            case EQ_RING_SEVEN:
+            case EQ_RING_EIGHT:
+                slot += "on tentacle";
+                break;
+            case EQ_RING_AMULET:
+                slot += "on amulet";
+                break;
+            default:
+                die("Item in an invalid slot");
+            }
+        }
+    }
+    else if (item_is_quivered(item))
+        slot += "quivered";
+
+    return slot;
+}
+
+string item_pronoun(description_level_type descrip, const item_def &item, bool startvowel, bool ident)
+{
+    monster_flags_t corpse_flags;
+    string pronoun = "";
+
+    // no "a dragon scales"
+    const bool always_plural = armour_is_hide(item)
+                               && item.sub_type != ARM_TROLL_LEATHER_ARMOUR;
+
+    if ((item.base_type == OBJ_CORPSES && is_named_corpse(item)
+         && !(((corpse_flags.flags = item.props[CORPSE_NAME_TYPE_KEY].get_int64())
+               & MF_NAME_SPECIES)
+              && !(corpse_flags & MF_NAME_DEFINITE))
+         && !(corpse_flags & MF_NAME_SUFFIX)
+         && !starts_with(get_corpse_name(item), "shaped "))
+        || item_is_orb(item) || item_is_horn_of_geryon(item)
+        || (ident || item_type_known(item)) && is_artefact(item)
+            && item.special != UNRAND_OCTOPUS_KING_RING)
+    {
+        // Artefacts always get "the" unless we just want the plain name.
+        switch (descrip)
+        {
+        default:
+            pronoun = "the";
+        case DESC_PLAIN:
+        case DESC_DBNAME:
+        case DESC_BASENAME:
+        case DESC_QUALNAME:
+            break;
+        }
+    }
+    else if (item.quantity > 1 || always_plural)
+    {
+        switch (descrip)
+        {
+        case DESC_THE:        pronoun = "the"; break;
+        case DESC_YOUR:       pronoun = "your"; break;
+        case DESC_ITS:        pronoun = "its"; break;
+        case DESC_A:
+        case DESC_INVENTORY_EQUIP:
+        case DESC_INVENTORY:
+        case DESC_PLAIN:
+        default:
+            break;
+        }
+    }
+    else
+    {
+        switch (descrip)
+        {
+        case DESC_THE:        pronoun = "the"; break;
+        case DESC_YOUR:       pronoun = "your"; break;
+        case DESC_ITS:        pronoun = "its"; break;
+        case DESC_A:
+        case DESC_INVENTORY_EQUIP:
+        case DESC_INVENTORY:
+                              pronoun = (startvowel ? "an" : "a"); break;
+        case DESC_PLAIN:
+        default:
+            break;
+        }
+    }
+
+    return pronoun;
+}
+
 string item_def::name(description_level_type descrip, bool terse, bool ident,
                       bool with_inscription, bool quantity_in_words,
                       iflags_t ignore_flags) const
@@ -140,10 +274,8 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
 
     ostringstream buff;
 
-    const string auxname = name_aux(descrip, terse, ident, with_inscription,
-                                    ignore_flags);
-
-    const bool startvowel     = is_vowel(auxname[0]);
+    const string auxname = unqualified_name(descrip, terse, ident, with_inscription,
+                                            ignore_flags);
 
     if (descrip == DESC_INVENTORY_EQUIP || descrip == DESC_INVENTORY)
     {
@@ -169,143 +301,29 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
     if (terse && descrip != DESC_DBNAME)
         descrip = DESC_PLAIN;
 
-    monster_flags_t corpse_flags;
+    string pronoun = item_pronoun(descrip, *this, is_vowel(auxname[0]), ident);
+    buff << (pronoun.size() > 0 ? pronoun + " " : pronoun);
 
-    // no "a dragon scales"
-    const bool always_plural = armour_is_hide(*this)
-                               && sub_type != ARM_TROLL_LEATHER_ARMOUR;
-
-    if ((base_type == OBJ_CORPSES && is_named_corpse(*this)
-         && !(((corpse_flags.flags = props[CORPSE_NAME_TYPE_KEY].get_int64())
-               & MF_NAME_SPECIES)
-              && !(corpse_flags & MF_NAME_DEFINITE))
-         && !(corpse_flags & MF_NAME_SUFFIX)
-         && !starts_with(get_corpse_name(*this), "shaped "))
-        || item_is_orb(*this) || item_is_horn_of_geryon(*this)
-        || (ident || item_type_known(*this)) && is_artefact(*this)
-            && special != UNRAND_OCTOPUS_KING_RING)
+    if (quantity > 1
+        && descrip != DESC_BASENAME && descrip != DESC_QUALNAME
+            && descrip != DESC_DBNAME)
     {
-        // Artefacts always get "the" unless we just want the plain name.
-        switch (descrip)
-        {
-        default:
-            buff << "the ";
-        case DESC_PLAIN:
-        case DESC_DBNAME:
-        case DESC_BASENAME:
-        case DESC_QUALNAME:
-            break;
-        }
+        if (quantity_in_words)
+            buff << number_in_words(quantity) << " ";
+        else
+            buff << quantity << " ";
     }
-    else if (quantity > 1 || always_plural)
-    {
-        switch (descrip)
-        {
-        case DESC_THE:        buff << "the "; break;
-        case DESC_YOUR:       buff << "your "; break;
-        case DESC_ITS:        buff << "its "; break;
-        case DESC_A:
-        case DESC_INVENTORY_EQUIP:
-        case DESC_INVENTORY:
-        case DESC_PLAIN:
-        default:
-            break;
-        }
-
-        if (descrip != DESC_BASENAME && descrip != DESC_QUALNAME
-            && descrip != DESC_DBNAME && !always_plural)
-        {
-            if (quantity_in_words)
-                buff << number_in_words(quantity) << " ";
-            else
-                buff << quantity << " ";
-        }
-    }
-    else
-    {
-        switch (descrip)
-        {
-        case DESC_THE:        buff << "the "; break;
-        case DESC_YOUR:       buff << "your "; break;
-        case DESC_ITS:        buff << "its "; break;
-        case DESC_A:
-        case DESC_INVENTORY_EQUIP:
-        case DESC_INVENTORY:
-                              buff << (startvowel ? "an " : "a "); break;
-        case DESC_PLAIN:
-        default:
-            break;
-        }
-    }
+    
 
     buff << auxname;
 
-    if (descrip == DESC_INVENTORY_EQUIP)
-    {
-        equipment_type eq = item_equip_slot(*this);
-        if (eq != EQ_NONE)
-        {
-            if (you.melded[eq])
-                buff << " (melded)";
-            else
-            {
-                switch (eq)
-                {
-                case EQ_WEAPON:
-                    if (is_weapon(*this))
-                        buff << " (weapon)";
-                    else if (you.species == SP_FELID)
-                        buff << " (in mouth)";
-                    else
-                        buff << " (in " << you.hand_name(false) << ")";
-                    break;
-                case EQ_CLOAK:
-                case EQ_HELMET:
-                case EQ_GLOVES:
-                case EQ_BOOTS:
-                case EQ_SHIELD:
-                case EQ_BODY_ARMOUR:
-                    buff << " (worn)";
-                    break;
-                case EQ_LEFT_RING:
-                case EQ_RIGHT_RING:
-                case EQ_RING_ONE:
-                case EQ_RING_TWO:
-                    buff << " (";
-                    buff << ((eq == EQ_LEFT_RING || eq == EQ_RING_ONE)
-                             ? "left" : "right");
-                    buff << " ";
-                    buff << you.hand_name(false);
-                    buff << ")";
-                    break;
-                case EQ_AMULET:
-                    if (you.species == SP_OCTOPODE && form_keeps_mutations())
-                        buff << " (around mantle)";
-                    else
-                        buff << " (around neck)";
-                    break;
-                case EQ_RING_THREE:
-                case EQ_RING_FOUR:
-                case EQ_RING_FIVE:
-                case EQ_RING_SIX:
-                case EQ_RING_SEVEN:
-                case EQ_RING_EIGHT:
-                    buff << " (on tentacle)";
-                    break;
-                case EQ_RING_AMULET:
-                    buff << " (on amulet)";
-                    break;
-                default:
-                    die("Item in an invalid slot");
-                }
-            }
-        }
-        else if (item_is_quivered(*this))
-            buff << " (quivered)";
+    if (descrip == DESC_INVENTORY_EQUIP) {
+        string slot_string = item_slot(*this);
+        buff << (slot_string.size() > 0 ? " (" + slot_string + ")" : slot_string);
     }
 
     if (descrip != DESC_BASENAME && descrip != DESC_DBNAME && with_inscription)
-        buff << _item_inscription(*this);
+        buff << item_inscription(*this);
 
     // These didn't have "cursed " prepended; add them here so that
     // it comes after the inscription.
@@ -1446,7 +1464,7 @@ static string _name_weapon(const item_def &weap, description_level_type desc,
             const bool has_inscript = desc != DESC_BASENAME
                                    && desc != DESC_DBNAME
                                    && inscr;
-            const string inscription = _item_inscription(weap);
+            const string inscription = item_inscription(weap);
 
             const int total_length = long_name.size()
                                      + (has_inscript ? inscription.size() : 0);
@@ -1494,7 +1512,7 @@ static string _name_weapon(const item_def &weap, description_level_type desc,
 
 // Note that "terse" is only currently used for the "in hand" listing on
 // the game screen.
-string item_def::name_aux(description_level_type desc, bool terse, bool ident,
+string item_def::unqualified_name(description_level_type desc, bool terse, bool ident,
                           bool with_inscription, iflags_t ignore_flags) const
 {
     // Shortcuts

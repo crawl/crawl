@@ -45,6 +45,11 @@ const string PlaceInfo::short_name() const
     return branches[branch].shortname;
 }
 
+const string PlaceInfo::long_name() const
+{
+    return branches[branch].longname;
+}
+
 const PlaceInfo &PlaceInfo::operator += (const PlaceInfo &other)
 {
     num_visits  += other.num_visits;

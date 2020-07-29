@@ -165,3 +165,7 @@ string weapon_brand_desc(const char *body, const item_def &weap,
 
 const char* potion_type_name(int potiontype);  //used in xom.cc
 const char* jewellery_effect_name(int jeweltype, bool terse = false) PURE; //used in l-item.cc
+
+string item_slot(const item_def &item);
+string item_inscription(const item_def &item);
+string item_pronoun(description_level_type descrip, const item_def &item, bool startvowel, bool ident = false);

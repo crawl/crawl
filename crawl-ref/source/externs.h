@@ -24,6 +24,7 @@
 #include "description-level-type.h"
 #include "dungeon-feature-type.h"
 #include "enum.h"
+#include "json.h"
 #include "spell-type.h"
 #include "branch-type.h"
 #include "fixedarray.h"

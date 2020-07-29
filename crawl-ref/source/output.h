@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include "json.h"
+
 #ifdef DGL_SIMPLE_MESSAGING
 void update_message_status();
 #endif
@@ -32,3 +34,5 @@ void print_overview_screen();
 string mutation_overview();
 
 string dump_overview_screen(bool full_id);
+
+JsonNode *json_dump_overview_screen(bool full_id);
