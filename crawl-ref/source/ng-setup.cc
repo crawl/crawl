@@ -472,12 +472,6 @@ static void _setup_generic(const newgame_def& ng,
 
     _give_basic_knowledge();
 
-    // Must be after _give_basic_knowledge
-    add_held_books_to_library();
-
-    if (you.char_class == JOB_WANDERER)
-        memorise_wanderer_spell();
-
     // A first pass to link the items properly.
     for (int i = 0; i < ENDOFPACK; ++i)
     {
@@ -489,6 +483,12 @@ static void _setup_generic(const newgame_def& ng,
         item.slot = index_to_letter(item.link);
         item_colour(item);  // set correct special and colour
     }
+
+    // Must be after _give_basic_knowledge
+    add_held_books_to_library();
+
+    if (you.char_class == JOB_WANDERER)
+        memorise_wanderer_spell();
 
     if (you.equip[EQ_WEAPON] > 0)
         swap_inv_slots(0, you.equip[EQ_WEAPON], false);

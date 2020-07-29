@@ -514,7 +514,9 @@ bool library_add_spells(vector<spell_type> spells)
     {
         vector<string> spellnames(new_spells.size());
         transform(new_spells.begin(), new_spells.end(), spellnames.begin(), spell_title);
-        mprf("You add the spell%s %s to your library.",
+        mprf(you.num_turns < 1
+             ? "You begin with the spell%s %s in your library."
+             : "You add the spell%s %s to your library.",
              spellnames.size() > 1 ? "s" : "",
              comma_separated_line(spellnames.begin(),
                                   spellnames.end()).c_str());
