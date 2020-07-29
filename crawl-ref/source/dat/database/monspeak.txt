@@ -4290,6 +4290,8 @@ _Grinder_rare_
 
 @The_monster@ says, "At least @my_God@ appreciates what I'm doing."
 
+@The_monster@ says, "Make like a tree!"
+
 VISUAL:@The_monster@ rolls @possessive@ eyes.
 %%%%
 ############ GRUM ### A war dog-breeding gnoll
