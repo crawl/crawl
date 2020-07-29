@@ -948,6 +948,8 @@ static void _print_stats_qv(int y)
     if (q != -1 && !fire_warn_if_impossible(true))
     {
         const item_def& quiver = you.inv[q];
+        if (quiver.link == NON_ITEM)
+            return; // don't crash if this is triggered during character setup
         hud_letter = index_to_letter(quiver.link);
         const string prefix = item_prefix(quiver);
         const int prefcol =
