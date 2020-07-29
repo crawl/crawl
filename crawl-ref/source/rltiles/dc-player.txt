@@ -749,15 +749,15 @@ staff_fork STAFF_FORK
 # Remove when TAG_MAJOR_VERSION > 34
 # These 10 rods correspond to the same order as item/rod/
 rod_ruby ROD_FIRST
-rod_brown
-rod_emerald
-rod_hammer
-rod_blue
-rod_thick
-rod_moon
-rod_magenta
-rod_forked
-rod_aries
+rod_brown ROD_2
+rod_emerald ROD_3
+rod_hammer ROD_4
+rod_blue ROD_5
+rod_thick ROD_6
+rod_moon ROD_7
+rod_magenta ROD_8
+rod_forked ROD_9
+rod_aries ROD_10 ROD_HAND_MAX
 rod_pakellas ROD_PAKELLAS
 rod_pakellas_1 ROD_PAKELLAS_1
 rod_pakellas_2 ROD_PAKELLAS_2

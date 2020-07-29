@@ -42,31 +42,32 @@ tileidx_t tilep_equ_weapon(const item_def &item, bool hand2)
     {
         int orig_special = you.item_description[IDESC_STAVES][item.sub_type];
         int desc = (orig_special / NDSC_STAVE_PRI) % NDSC_STAVE_SEC;
-        return TILEP_HAND1_STAFF_LARGE + desc;
+        return TILEP_HAND1_STAFF_LARGE + desc*2 - (hand2?1:0);
     }
     
 
     if (item.base_type == OBJ_RODS) {
         if (item.sub_type == ROD_PAKELLAS) {
             if (you.props[AVAILABLE_UPGRADE_NUM_KEY].get_int() == 6) {
-                return TILEP_HAND1_ROD_PAKELLAS + ui_random(4) * 2;
+                return TILEP_HAND1_ROD_PAKELLAS + ui_random(4) * 2 - (hand2 ? 1 : 0);
             }
             else {
                 switch (you.props[PAKELLAS_PROTOTYPE].get_int()) {
                 case 1:
-                    return TILEP_HAND1_ROD_PAKELLAS_1;
+                    return TILEP_HAND1_ROD_PAKELLAS_1 - (hand2 ? 1 : 0);
                 case 2:
-                    return TILEP_HAND1_ROD_PAKELLAS_2;
+                    return TILEP_HAND1_ROD_PAKELLAS_2 - (hand2 ? 1 : 0);
                 case 3:
-                    return TILEP_HAND1_ROD_PAKELLAS_3;
+                    return TILEP_HAND1_ROD_PAKELLAS_3 - (hand2 ? 1 : 0);
                 default:
                     break;
                 }
             }
-            return TILEP_HAND1_ROD_PAKELLAS;
+            return TILEP_HAND1_ROD_PAKELLAS - (hand2 ? 1 : 0);
         }
         else {
-            return _mon_mod(TILEP_HAND1_ROD_FIRST, item.rnd);
+            int count = (TILEP_HAND1_ROD_HAND_MAX - TILEP_HAND1_ROD_FIRST)/2;
+            return TILEP_HAND1_ROD_FIRST + 2 * (item.rnd% count) - (hand2 ? 1 : 0);
         }
     }
 
