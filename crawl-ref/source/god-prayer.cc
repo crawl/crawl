@@ -703,7 +703,6 @@ static bool _offer_items()
     if (!_confirm_pray_sacrifice(you.religion))
         return false;
 
- mprf("There here1");
     int i = you.visible_igrd(you.pos());
 
     god_acting gdact;
@@ -713,8 +712,6 @@ static bool _offer_items()
     item_def* disliked_item = 0;
 
     const int old_leading = _leading_sacrifice_group();
-
-            mprf("There here2");
 
     while (i != NON_ITEM)
     {
@@ -732,7 +729,6 @@ static bool _offer_items()
             }
             continue;
         }
-                mprf("Here you are1");
 
         // Skip items you don't want to sacrifice right now.
         if (you_worship(GOD_NEMELEX_XOBEH)
@@ -741,7 +737,6 @@ static bool _offer_items()
             i = next;
             continue;
         }
-                mprf("Here you are2");
 
 
         // Ignore {!D} inscribed items.
@@ -751,7 +746,6 @@ static bool _offer_items()
             i = next;
             continue;
         }
-            mprf("Here you are3");
 
         if (_god_likes_item(you.religion, item)
             && (item.inscription.find("=p") != std::string::npos))
@@ -766,8 +760,6 @@ static bool _offer_items()
             }
         }
 
-
-        mprf("Here you are4");
         piety_gain_t relative_gain = _sacrifice_item_stack(item);
         _print_nemelex_sacrifice_message(mitm[i], relative_gain, true);
         item_was_destroyed(mitm[i]);
