@@ -3653,13 +3653,13 @@ static spret _do_ability(const ability_def& abil, bool fail)
         if (essence_item.sub_type == POT_NIGREDO){
             
 
-			behaviour_event(mons, ME_WHACK, &you);
-			
-			const int duration = 10 + you.piety/20;
-			mons->add_ench(mon_enchant(ENCH_NIGREDO, 0, &you, duration * BASELINE_DELAY));
+            behaviour_event(mons, ME_WHACK, &you);
+            
+            const int duration = 10 + you.piety/20;
+            mons->add_ench(mon_enchant(ENCH_NIGREDO, 0, &you, duration * BASELINE_DELAY));
             simple_monster_message(*mons, "is infused with Nigredo, begins to leave miasma on trail!");
-			
-			
+            
+            
         } else if (essence_item.sub_type == POT_ALBEDO){
             if (!monster_is_debuffable(*mons))
             {

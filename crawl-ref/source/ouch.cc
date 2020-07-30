@@ -704,16 +704,16 @@ static void _maybe_invisible()
     if (player_equip_unrand(UNRAND_INVDRAGON)
         && invis_allowed() && one_chance_in(4)) // chance = 25%
     {
-		const int unseen = 10 + random2(5);
+        const int unseen = 10 + random2(5);
         if (!you.duration[DUR_INVIS]) {
-			mpr("Scales of the Unseen Dragon become transparent with you!");
-			you.increase_duration(DUR_INVIS, unseen, 100);
-			contaminate_player(unseen*40 + random2(unseen*40));
-		} else {
-			mpr("Scales of the Unseen Dragon hold your invisiblity.");
+            mpr("Scales of the Unseen Dragon become transparent with you!");
+            you.increase_duration(DUR_INVIS, unseen, 100);
+            contaminate_player(unseen*40 + random2(unseen*40));
+        } else {
+            mpr("Scales of the Unseen Dragon hold your invisiblity.");
             you.set_duration(DUR_INVIS, unseen/2, 100);
-			contaminate_player(unseen*20 + random2(unseen*20));
-		}
+            contaminate_player(unseen*20 + random2(unseen*20));
+        }
     }
 }
 
