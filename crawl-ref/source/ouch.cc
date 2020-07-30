@@ -700,15 +700,20 @@ static void _maybe_slow()
  **/
 static void _maybe_invisible()
 {
-    // works like *Inv
+    // works like *Inv, become invisible but also contaminates you 
     if (player_equip_unrand(UNRAND_INVDRAGON)
-        && invis_allowed() && one_chance_in(10)) // chance = 10%
+        && invis_allowed() && one_chance_in(4)) // chance = 25%
     {
-        if (!you.duration[DUR_INVIS])
-            you.set_duration(DUR_INVIS, 10 + random2(20), 100);
-        else
-            you.increase_duration(DUR_INVIS, random2(20), 100);
-        contaminate_player(500 + random2(500), blame_player);
+		const int unseen = 10 + random2(5);
+        if (!you.duration[DUR_INVIS]) {
+			mpr("Scales of the Unseen Dragon become transparent with you!");
+			you.increase_duration(DUR_INVIS, unseen, 100);
+			contaminate_player(unseen*40 + random2(unseen*40), blame_player);
+		} else {
+			mpr("Scales of the Unseen Dragon hold your invisiblity.");
+            you.set_duration(DUR_INVIS, unseen/2, 100);
+			contaminate_player(unseen*20 + random2(unseen*20), blame_player);
+		}
     }
 }
 

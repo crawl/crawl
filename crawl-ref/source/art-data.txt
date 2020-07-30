@@ -1403,14 +1403,15 @@ INSCRIP:  vamp, devour, FastMet
 BOOL:     evil, curse
 
 ENUM:     INVDRAGON
-NAME:     scales of the Invisible Dragon
+NAME:     scales of the Unseen Dragon
 OBJ:      OBJ_ARMOUR/ARMF_RES_MAGIC
 PLUS:     +0
 COLOUR:   ETC_SILVER
 TILE:     urand_invdragon
 TILE_EQ:  invdragon
 STEALTH:  1
-BOOL:     seeinv, inv
+INSCRIP:  *Inv
+BOOL:     seeinv, corrode
 
 # This entry must always be last.
 ENUM:   DUMMY2
