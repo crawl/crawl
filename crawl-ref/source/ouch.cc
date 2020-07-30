@@ -695,6 +695,23 @@ static void _maybe_slow()
         slow_player(10 + random2(5));
 }
 
+/**
+ * Maybe invisible the player after taking damage if they're wearing *Inv.
+ **/
+static void _maybe_invisible()
+{
+    // works like *Inv
+    if (player_equip_unrand(UNRAND_INVDRAGON)
+        && invis_allowed() && one_chance_in(10)) // chance = 10%
+    {
+        if (!you.duration[DUR_INVIS])
+            you.set_duration(DUR_INVIS, 10 + random2(20), 100);
+        else
+            you.increase_duration(DUR_INVIS, random2(20), 100);
+        contaminate_player(500 + random2(500), blame_player);
+    }
+}
+
 static void _place_player_corpse(bool explode)
 {
     if (!in_bounds(you.pos()))
@@ -1009,6 +1026,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
             {
                 _maybe_corrode();
                 _maybe_slow();
+                _maybe_invisible();
             }
             if (drain_amount > 0)
                 drain_player(drain_amount, true, true);
