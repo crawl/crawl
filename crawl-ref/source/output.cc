@@ -398,6 +398,9 @@ public:
 
         textcolour(LIGHTGREY);
         textbackground(BLACK);
+        // the cursor position is now invalid, because we are past the end of
+        // the stat region: leave it somewhere valid.
+        CGOTOXY(ox, oy, GOTO_STAT);
     }
 
     void vdraw(int ox, int oy, int val, int max_val)
