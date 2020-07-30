@@ -24,6 +24,9 @@
 - 새로운 방어구 에고인 벙커 추가. 라지실드에만 붙는다. 장착하고있는 라지실드를 투사체나 이동을 막는 구조물로서 바닥에 설치할 수 있다.
   - Added bunker, new armour ego. Only attach to large shield. The equipped large shield can be installed on the ground as a structure to prevent the projectile and movement.
   
+- 새로운 픽다트: 보이지 않는 용의 비늘 {\*Inv MR+ Stlth+ SInv \*Corrode}. 퀵실버 드래곤 갑옷 베이스인 아티팩트이며, 맞을때 일정확률로 투명해질 수 있다.
+  - A New Fixedart scales of the Unseen Dragon {\*Inv MR+ Stlth+ SInv \*Corrode}. It is quicksilver dragon based artifact. It may invisible you when you take damage.
+  
 - 마법 복구 : 돌의 피부, 절연화, 응축의 방패
   - rollback Stoneskin, Insulation, Condensation Shield
 
