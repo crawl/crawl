@@ -708,11 +708,11 @@ static void _maybe_invisible()
         if (!you.duration[DUR_INVIS]) {
 			mpr("Scales of the Unseen Dragon become transparent with you!");
 			you.increase_duration(DUR_INVIS, unseen, 100);
-			contaminate_player(unseen*40 + random2(unseen*40), blame_player);
+			contaminate_player(unseen*40 + random2(unseen*40));
 		} else {
 			mpr("Scales of the Unseen Dragon hold your invisiblity.");
             you.set_duration(DUR_INVIS, unseen/2, 100);
-			contaminate_player(unseen*20 + random2(unseen*20), blame_player);
+			contaminate_player(unseen*20 + random2(unseen*20));
 		}
     }
 }
