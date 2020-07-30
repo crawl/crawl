@@ -1402,6 +1402,17 @@ ANGRY:    5
 INSCRIP:  vamp, devour, FastMet
 BOOL:     evil, curse
 
+ENUM:     INVDRAGON
+NAME:     scales of the Unseen Dragon
+OBJ:      OBJ_ARMOUR/ARM_QUICKSILVER_DRAGON_ARMOUR
+PLUS:     +0
+COLOUR:   ETC_SILVER
+TILE:     urand_invdragon
+TILE_EQ:  invdragon
+STEALTH:  1
+INSCRIP:  *Inv
+BOOL:     seeinv, corrode
+
 # This entry must always be last.
 ENUM:   DUMMY2
 NAME:   DUMMY UNRANDART 2

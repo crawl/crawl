@@ -695,6 +695,28 @@ static void _maybe_slow()
         slow_player(10 + random2(5));
 }
 
+/**
+ * Maybe invisible the player after taking damage if they're wearing *Inv.
+ **/
+static void _maybe_invisible()
+{
+    // works like *Inv, become invisible but also contaminates you 
+    if (player_equip_unrand(UNRAND_INVDRAGON)
+        && invis_allowed() && one_chance_in(4)) // chance = 25%
+    {
+        const int unseen = 10 + random2(5);
+        if (!you.duration[DUR_INVIS]) {
+            mpr("Scales of the Unseen Dragon become transparent with you!");
+            you.increase_duration(DUR_INVIS, unseen, 100);
+            contaminate_player(unseen*40 + random2(unseen*40));
+        } else {
+            mpr("Scales of the Unseen Dragon hold your invisiblity.");
+            you.set_duration(DUR_INVIS, unseen/2, 100);
+            contaminate_player(unseen*20 + random2(unseen*20));
+        }
+    }
+}
+
 static void _place_player_corpse(bool explode)
 {
     if (!in_bounds(you.pos()))
@@ -1009,6 +1031,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
             {
                 _maybe_corrode();
                 _maybe_slow();
+                _maybe_invisible();
             }
             if (drain_amount > 0)
                 drain_player(drain_amount, true, true);

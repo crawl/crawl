@@ -1605,3 +1605,17 @@ static void _JAWS_unequip(item_def */*item*/, bool *show_msgs)
 {
     _equip_mpr(show_msgs, "You are satiated.");
 }
+
+////////////////////////////////////////////////////
+
+static void _INVDRAGON_equip(item_def */*item*/, bool *show_msgs,
+                                  bool /*unmeld*/)
+{
+    _equip_mpr(show_msgs, "The Unseen power is now your own!");
+}
+
+
+static void _INVDRAGON_unequip(item_def *item, bool *show_msgs)
+{
+    _equip_mpr(show_msgs, "You feel less unseen.");
+}
