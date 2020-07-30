@@ -5106,6 +5106,14 @@ void unmarshallItem(reader &th, item_def &item)
         item.quantity = 1;
     }
 
+    if (th.getMinorVersion() < TAG_MINOR_REALLY_UNSTACK_EVOKERS
+        && item.base_type == OBJ_MISCELLANY
+        && item.sub_type == MISC_PHANTOM_MIRROR
+           || item.sub_type == MISC_BOX_OF_BEASTS )
+    {
+        item.quantity = 1;
+    }
+
     if (th.getMinorVersion() < TAG_MINOR_NO_NEGATIVE_VULN
         && is_artefact(item)
         && artefact_property(item, ARTP_NEGATIVE_ENERGY))

@@ -623,10 +623,11 @@ static int _acquirement_misc_subtype(bool /*divine*/, int & /*quantity*/,
 
     const vector<pair<int, int> > choices =
     {
-        // These have charges, so give them a constant weight.
-        {MISC_BOX_OF_BEASTS,            (NO_LOVE ? 0 : 10)},
-        {MISC_PHANTOM_MIRROR,           (NO_LOVE ? 0 : 10)},
-        // The player never needs more than one of the rest.
+        // The player never needs more than one of these.
+        {MISC_BOX_OF_BEASTS,
+            (NO_LOVE || you.seen_misc[MISC_BOX_OF_BEASTS] ? 0 : 10)},
+        {MISC_PHANTOM_MIRROR,
+            (NO_LOVE || you.seen_misc[MISC_PHANTOM_MIRROR] ? 0 : 10)},
         // Tremorstones are better for heavily armoured characters.
         {MISC_TIN_OF_TREMORSTONES,
             (you.seen_misc[MISC_TIN_OF_TREMORSTONES]
@@ -635,7 +636,6 @@ static int _acquirement_misc_subtype(bool /*divine*/, int & /*quantity*/,
             (you.seen_misc[MISC_LIGHTNING_ROD]   ? 0 : 20)},
         {MISC_PHIAL_OF_FLOODS,
             (you.seen_misc[MISC_PHIAL_OF_FLOODS] ? 0 : 20)},
-
     };
 
     const int * const choice = random_choose_weighted(choices);
@@ -643,7 +643,9 @@ static int _acquirement_misc_subtype(bool /*divine*/, int & /*quantity*/,
     // Possible for everything to be 0 weight - if so just give a random spare.
     if (choice == nullptr)
     {
-        return random_choose(MISC_TIN_OF_TREMORSTONES,
+        return random_choose(MISC_BOX_OF_BEASTS,
+                             MISC_PHANTOM_MIRROR,
+                             MISC_TIN_OF_TREMORSTONES,
                              MISC_LIGHTNING_ROD,
                              MISC_PHIAL_OF_FLOODS);
     }

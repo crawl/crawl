@@ -573,7 +573,7 @@ string manual_skill_names(bool short_text)
         return skill_names(skills);
 }
 
-static bool _box_of_beasts(item_def &box)
+static bool _box_of_beasts()
 {
 #if TAG_MAJOR_VERSION == 34
     const int surge = pakellas_surge_devices();
@@ -611,14 +611,6 @@ static bool _box_of_beasts(item_def &box)
     mprf("...and %s %s out!",
          mons->name(DESC_A).c_str(), mons->airborne() ? "flies" : "leaps");
     did_god_conduct(DID_CHAOS, random_range(5,10));
-
-    // After unboxing a beast, chance to break.
-    if (one_chance_in(3))
-    {
-        mpr("The now-empty box falls apart.");
-        ASSERT(in_inventory(box));
-        dec_inv_item_quantity(box.link, 1);
-    }
 
     return true;
 }
@@ -1347,8 +1339,18 @@ bool evoke_item(int slot)
             break;
 
         case MISC_BOX_OF_BEASTS:
-            if (_box_of_beasts(item))
+            if (!evoker_charges(item.sub_type))
+            {
+                mpr("That is presently inert.");
+                return false;
+            }
+            if (_box_of_beasts())
+            {
+                expend_xp_evoker(item.sub_type);
+                if (!evoker_charges(item.sub_type))
+                    mpr("The box is emptied!");
                 practise_evoking(1);
+            }
             break;
 
 #if TAG_MAJOR_VERSION == 34
@@ -1387,6 +1389,11 @@ bool evoke_item(int slot)
             break;
 
         case MISC_PHANTOM_MIRROR:
+            if (!evoker_charges(item.sub_type))
+            {
+                mpr("That is presently inert.");
+                return false;
+            }
             switch (_phantom_mirror())
             {
                 default:
@@ -1394,8 +1401,9 @@ bool evoke_item(int slot)
                     return false;
 
                 case spret::success:
-                    ASSERT(in_inventory(item));
-                    dec_inv_item_quantity(item.link, 1);
+                    expend_xp_evoker(item.sub_type);
+                    if (!evoker_charges(item.sub_type))
+                        mpr("The mirror clouds!");
                     // deliberate fall-through
                 case spret::fail:
                     practise_evoking(1);

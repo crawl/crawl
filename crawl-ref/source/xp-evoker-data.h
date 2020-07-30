@@ -20,4 +20,6 @@ static const unordered_map<misc_item_type, evoker_data, std::hash<int>> xp_evoke
     { MISC_HORN_OF_GERYON, { "horn_debt", 10, 1 } },
     { MISC_LIGHTNING_ROD,  { "rod_debt", 3, LIGHTNING_MAX_CHARGE } },
     { MISC_TIN_OF_TREMORSTONES, { "tin_debt", 6, 3 } },
+    { MISC_PHANTOM_MIRROR, { "mirror_debt", 10, 1 } },
+    { MISC_BOX_OF_BEASTS, { "box_debt", 6, 3 } },
 };
