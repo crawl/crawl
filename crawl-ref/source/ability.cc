@@ -4051,7 +4051,8 @@ static int _setup_essence_costs()
     else if (you.inv[rc].sub_type != POT_NIGREDO
             && you.inv[rc].sub_type != POT_ALBEDO
             && you.inv[rc].sub_type != POT_CITRINITAS
-            && you.inv[rc].sub_type != POT_VIRIDITAS)
+            && you.inv[rc].sub_type != POT_VIRIDITAS
+            && you.inv[rc].sub_type != POT_RUBEDO)
     {
         mpr("You need an essence of alchemy to do this.");
         rc = -1;
