@@ -2044,6 +2044,9 @@ item_def* monster_die(monster& mons, killer_type killer,
     // ... and liquefiers.
     mons.del_ench(ENCH_LIQUEFYING);
 
+    // ... and healing-emitters.
+    mons.del_ench(ENCH_HEALING_AURA);
+
     // ... and wind-stillers.
     mons.del_ench(ENCH_STILL_WINDS, true);
 
@@ -3016,7 +3019,8 @@ void monster_cleanup(monster* mons)
     if (mons->halo_radius()
         || mons->umbra_radius()
         || mons->silence_radius()
-        || mons->antimagic_radius())
+        || mons->antimagic_radius()
+        || mons->healaura_radius())
     {
         invalidate_agrid();
     }

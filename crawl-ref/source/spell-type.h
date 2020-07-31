@@ -483,5 +483,6 @@ enum spell_type : int
     SPELL_FLAME_STRIKE,
     SPELL_CONVERT_POISON,
     SPELL_PAVISE,
+    SPELL_AURA_OF_HEALING,
     NUM_SPELLS
 };

@@ -2420,6 +2420,14 @@ static vector<extra_feature_desc> _get_feature_extra_descs(const coord_def& pos)
                 tile_def(TILE_ANTIMAGIC_AURA, TEX_FEAT)
                 });
         }
+        if (within_healaura(pos))
+        {
+            ret.push_back({
+                "Healing Energy",
+                getLongDescription("within healaura"),
+                tile_def(TILE_HEALAURA, TEX_FEAT)
+                });
+        }
     }
     if (const auto cloud = env.map_knowledge(pos).cloudinfo())
     {

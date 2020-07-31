@@ -211,6 +211,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
         _fire_simple_beam,
         _selfench_beam_setup(BEAM_HEALING),
     } },
+
     { SPELL_TELEPORT_SELF, {
         [](const monster &caster)
         {
@@ -493,6 +494,24 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             const actor* foe = caster.get_foe();
             return foe && caster.can_constrict(foe, false);
         }, _cast_grasping_roots, } },
+	{ SPELL_AURA_OF_HEALING, {
+        [](const monster &caster) {
+            return !within_healaura(caster.pos());
+        },
+        [](monster &caster, mon_spell_slot, bolt&) {
+            if (you.can_see(caster))
+            {
+                mprf("%s begins to emit aura of healing! %s!",
+                     caster.name(DESC_THE).c_str(),
+                     caster.pronoun(PRONOUN_REFLEXIVE).c_str());
+            }
+
+            caster.add_ench(ENCH_HEALING_AURA);
+            invalidate_agrid(true);
+        },
+        nullptr,
+        MSPELL_NO_AUTO_NOISE,
+    } },
 };
 
 /// Is the 'monster' actually a proxy for the player?
@@ -2163,7 +2182,6 @@ static bool _valid_aura_of_brilliance_ally(const monster* caster,
     return mons_aligned(caster, target) && caster != target
            && target->is_actual_spellcaster();
 }
-
 
 /**
  * Print the message that the player sees after a battlecry goes off.

@@ -14,7 +14,8 @@ enum class area_centre_type
     hot,
     leap,
     coward,
-    antimagic
+    antimagic,
+	healaura
 };
 
 void invalidate_agrid(bool recheck_new = false);
@@ -61,3 +62,6 @@ bool cowarded(const coord_def& p);
 
 // ...or is the point of antimagic?
 bool antimagic_haloed(const coord_def& p);
+
+// ...or is the point of aura of healing?
+bool within_healaura(const coord_def& p);

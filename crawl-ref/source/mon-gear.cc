@@ -172,7 +172,20 @@ static void _give_wand(monster* mon, int level)
 
 static void _give_potion(monster* mon, int level)
 {
-    if (mons_is_unique(mon->type) && one_chance_in(4)
+    if (mon->type == MONS_ASCLEPIA)
+    {
+        const int which_potion = (coinflip() ? POT_HEAL_WOUNDS : POT_INVISIBILITY);
+
+        const int thing_created = items(false, OBJ_POTIONS, which_potion, level);
+
+        if (thing_created == NON_ITEM)
+            return;
+
+        mitm[thing_created].flags = 0;
+        give_specific_item(mon, thing_created);
+    }
+    
+    else if (mons_is_unique(mon->type) && one_chance_in(4)
                 && _should_give_unique_item(mon))
     {
         const int thing_created = items(false, OBJ_POTIONS, OBJ_RANDOM,
@@ -1211,6 +1224,13 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         }
         break;
 
+    case MONS_ASCLEPIA:
+        force_item = true;
+        item.base_type = OBJ_STAVES;
+        item.sub_type = STAFF_POISON;
+        item.flags    |= ISFLAG_KNOW_TYPE;
+        break;
+
     case MONS_ANCESTOR_HEXER:
     case MONS_ANCESTOR_BATTLEMAGE:
     case MONS_ANCESTOR_KNIGHT:
@@ -2133,6 +2153,16 @@ int make_mons_armour(monster_type type, int level)
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = random_choose(ARM_LEATHER_ARMOUR, ARM_ROBE);
         break;
+
+    case MONS_ASCLEPIA:
+    {
+        force_item = true;
+        item.base_type = OBJ_ARMOUR;
+        item.sub_type  = ARM_SCARF;
+        set_item_ego_type(item, OBJ_ARMOUR, SPARM_CLOUD_IMMUNE);
+        item.flags |= ISFLAG_KNOW_TYPE;
+        break;
+    }
 
     default:
         return NON_ITEM;

@@ -1725,6 +1725,26 @@ Arachne
 
 @The_monster@ says @to_foe@, "No one escapes my webs."
 %%%%
+############ ASCLEPIA ### orcish herbalist
+Asclepia
+
+VISUAL:@The_monster@ grabs herbs and soaks them into a bottle of potion.
+
+VISUAL:@The_monster@ tied up her protective scarf.
+
+@The_monster@ says @to_foe@, "Have you heard what Ambrosia made of?"
+
+@The_monster@ says @to_foe@, "After all, the best ingredients are blood and remains."
+
+@The_monster@ says @to_foe@, "Trust me! The next one will be curing!"
+
+@The_monster@ says, "{{
+    if you.god() == "Beogh" then
+      return "Faith therapy? How uncivilized!"
+    else
+      return "I'm a therapist, not a healer!"
+    end }}" @player_only@
+%%%%
 ############ ASTERION ### Minotaur of Makhleb
 Asterion
 
