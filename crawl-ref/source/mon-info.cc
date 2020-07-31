@@ -108,6 +108,7 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_HEXED,           MB_HEXED },
     { ENCH_BRILLIANCE_AURA, MB_BRILLIANCE_AURA },
     { ENCH_EMPOWERED_SPELLS, MB_EMPOWERED_SPELLS },
+    { ENCH_HEALING_AURA, MB_HEALING_AURA },
     { ENCH_GOZAG_INCITE,    MB_GOZAG_INCITED },
     { ENCH_PAIN_BOND,       MB_PAIN_BOND },
     { ENCH_IDEALISED,       MB_IDEALISED },
@@ -1581,6 +1582,8 @@ vector<string> monster_info::attributes() const
         v.emplace_back("aura of brilliance");
     if (is(MB_EMPOWERED_SPELLS))
         v.emplace_back("spells empowered");
+    if (is(MB_HEALING_AURA))
+        v.emplace_back("aura of healing");
     if (is(MB_READY_TO_HOWL))
         v.emplace_back("ready to howl");
     if (is(MB_PARTIALLY_CHARGED))

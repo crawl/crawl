@@ -301,6 +301,7 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
 
     case ENCH_LIQUEFYING:
     case ENCH_SILENCE:
+	case ENCH_HEALING_AURA:
         invalidate_agrid(true);
         break;
 
@@ -991,6 +992,12 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             simple_monster_message(*this, " seems less brilliant.");
         break;
 
+    case ENCH_HEALING_AURA:
+        invalidate_agrid();
+        if (!quiet)
+            simple_monster_message(*this, " is no longer emits aura of healing.");
+        break;
+
     case ENCH_IDEALISED:
         if (!quiet)
             simple_monster_message(*this, " loses the glow of perfection.");
@@ -1459,6 +1466,7 @@ void monster::apply_enchantment(const mon_enchant &me)
 
     case ENCH_SILENCE:
     case ENCH_LIQUEFYING:
+    case ENCH_HEALING_AURA:
         decay_enchantment(en);
         invalidate_agrid();
         break;
@@ -2090,6 +2098,7 @@ static const char *enchant_names[] =
     "vortex", "vortex_cooldown", "vile_clutch", "unshelved armour",
     "natural_abjuration", "stoneskin",
     "nigredo", "albedo", "citrinitas", "virditas",
+    "aura_of_healing",
     "buggy",
 };
 
@@ -2359,6 +2368,9 @@ int mon_enchant::calc_duration(const monster* mons,
         break;
     case ENCH_EMPOWERED_SPELLS:
         cturn = 2 * BASELINE_DELAY;
+        break;
+    case ENCH_HEALING_AURA:
+        cturn = 20 * BASELINE_DELAY;
         break;
     case ENCH_GOZAG_INCITE:
         cturn = 100; // is never decremented

@@ -345,6 +345,8 @@ void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
                 m_buf_feat.add(TILE_COWARD_ATTACK, x, y);
             if (cell.antimagic_aura)
                 m_buf_feat.add(TILE_ANTIMAGIC_AURA, x, y);
+            if (cell.healaura)
+                m_buf_feat.add(TILE_HEALAURA, x, y);
 
             if (cell.is_silenced)
                 m_buf_feat.add(TILE_SILENCED, x, y);

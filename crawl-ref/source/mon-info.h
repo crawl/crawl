@@ -182,6 +182,7 @@ enum monster_info_flags
     MB_ALBEDO,
     MB_CITRINITAS,
     MB_VIRIDITAS,
+    MB_HEALING_AURA,
     NUM_MB_FLAGS
 };
 

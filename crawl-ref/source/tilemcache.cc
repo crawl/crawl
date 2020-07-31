@@ -587,6 +587,8 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_URUG:
     case TILEP_MONS_ORC_PRIEST:
     case TILEP_MONS_ORC_HIGH_PRIEST:
+    case TILEP_MONS_ASCLEPIA:
+    case TILEP_MONS_ASCLEPIA_II:
     case TILEP_MONS_SPRIGGAN:
     case TILEP_MONS_SPRIGGAN_DEFENDER:
         *ofs_x = -1;

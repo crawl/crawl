@@ -32,6 +32,19 @@ present form: half-human, half-spider. Her sympathies now lie with the inhuman
 residents of her new home, and she's eager to dispose of any who would threaten
 them.
 %%%%
+Asclepia
+
+An Orcish herbalist, who brings some potion and incense which made by herself.
+Her therapy is based by unknown herbs from the Dungeon and some 'additives', such
+as blood and remains. Because she wears specialized scarf; which protects herself
+from after-effects of therapy, she is immune to clouds.
+%%%%
+Asclepia the Anointer
+
+An Orcish herbalist, who brings some potion and incense which made by herself.
+Now she serves Beogh as an anointer, and perform her therapy as the blessed
+art of healing which under the Beogh's favour.
+%%%%
 Asmodeus
 
 Greatest and most cunning of the Lords of Hell, Asmodeus was born when the twin
