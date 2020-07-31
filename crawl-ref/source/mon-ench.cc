@@ -1466,7 +1466,7 @@ void monster::apply_enchantment(const mon_enchant &me)
 
     case ENCH_SILENCE:
     case ENCH_LIQUEFYING:
-	case ENCH_HEALING_AURA:
+    case ENCH_HEALING_AURA:
         decay_enchantment(en);
         invalidate_agrid();
         break;
@@ -2098,7 +2098,7 @@ static const char *enchant_names[] =
     "vortex", "vortex_cooldown", "vile_clutch", "unshelved armour",
     "natural_abjuration", "stoneskin",
     "nigredo", "albedo", "citrinitas", "virditas",
-	"aura_of_healing",
+    "aura_of_healing",
     "buggy",
 };
 
