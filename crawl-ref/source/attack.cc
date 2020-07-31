@@ -147,7 +147,8 @@ bool attack::handle_phase_end()
  *
  * @param random If false, calculate average to-hit penalties deterministically.
  */
-void attack::calc_encumbrance_penalties(bool random) {
+void attack::calc_encumbrance_penalties(bool random)
+{
     attacker_armour_tohit_penalty =
         maybe_random_div(attacker->armour_tohit_penalty(true, 20), 20, random);
     attacker_shield_tohit_penalty =
@@ -159,7 +160,8 @@ void attack::calc_encumbrance_penalties(bool random) {
  *
  * @param random If false, calculate average to-hit deterministically.
  */
-int attack::calc_pre_roll_to_hit(bool random) {
+int attack::calc_pre_roll_to_hit(bool random)
+{
     if (using_weapon()
         && (is_unrandom_artefact(*weapon, UNRAND_WOE)
             || is_unrandom_artefact(*weapon, UNRAND_SNIPER)))
@@ -257,7 +259,8 @@ int attack::calc_pre_roll_to_hit(bool random) {
  *
  * @param mhit The post-roll player's to-hit value.
  */
-int attack::post_roll_to_hit_modifiers(int mhit, bool /*random*/) {
+int attack::post_roll_to_hit_modifiers(int mhit, bool /*random*/)
+{
     int modifiers = 0;
 
     // Penalties for both players and monsters:

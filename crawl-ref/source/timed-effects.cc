@@ -1323,7 +1323,9 @@ void decr_zot_clock()
     {
         // new branch
         zot = MAX_ZOT_CLOCK - ZOT_CLOCK_PER_FLOOR;
-    } else {
+    }
+    else
+    {
         // old branch, new floor
         if (bezotted())
             mpr("As you enter the new level, Zot loses track of you.");

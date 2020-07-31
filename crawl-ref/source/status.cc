@@ -687,7 +687,8 @@ bool fill_status_info(int status, status_info& inf)
         break;
 
     case STATUS_BEZOTTED:
-        if (bezotted()) {
+        if (bezotted())
+        {
             inf.light_colour = MAGENTA;
             inf.light_text = "Zot";
             inf.short_text = "bezotted";

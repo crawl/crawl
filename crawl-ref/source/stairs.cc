@@ -797,7 +797,8 @@ void floor_transition(dungeon_feature_type how,
                 mpr("Zot already knows this place too well. Flee this branch!");
             else
                 mpr("Zot's attention fixes on you again. Flee this branch!");
-        } else if (was_bezotted)
+        }
+        else if (was_bezotted)
         {
             if (branch == BRANCH_ABYSS)
                 mpr("Zot has no power in the Abyss.");

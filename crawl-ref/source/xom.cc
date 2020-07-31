@@ -3028,7 +3028,8 @@ static xom_event_type _xom_choose_bad_action(int sever, int tension)
             if (player_prot_life() < 3)
                 return XOM_BAD_DRAINING;
             // else choose something else
-        } else if (!player_res_torment(false))
+        }
+        else if (!player_res_torment(false))
             return XOM_BAD_TORMENT;
         // else choose something else
     }
@@ -3612,7 +3613,8 @@ void validate_xom_events()
                 fails += make_stringf("'%s' badness %d outside 10-50 range.\n",
                                       event->name, event->badness_10x);
             }
-        } else if (event->badness_10x)
+        }
+        else if (event->badness_10x)
         {
             fails += make_stringf("'%s' is not bad, but has badness!\n",
                                   event->name);

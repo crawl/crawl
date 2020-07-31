@@ -2616,7 +2616,8 @@ int xp_to_level_diff(int xp, int scale)
                                     - (int) exp_needed(adjusted_level));
         // TODO: this would be more usable with better rounding behaviour
         return adjusted_level_scaled - cur_level_scaled;
-    } else
+    }
+    else
         return adjusted_level - projected_level;
 }
 

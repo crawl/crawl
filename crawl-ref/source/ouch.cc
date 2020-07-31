@@ -544,7 +544,8 @@ static void _maybe_spawn_rats(int dam, kill_method_type death_type)
 
     mgen_data mg(mon, BEH_FRIENDLY, you.pos(), MHITYOU);
     mg.flags |= MG_FORCE_BEH; // don't mention how much it hates you before it appears
-    if (monster *m = create_monster(mg)) {
+    if (monster *m = create_monster(mg))
+    {
         m->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 3));
         mprf("%s scurries out from under your cloak.", m->name(DESC_A).c_str());
         check_lovelessness(*m);

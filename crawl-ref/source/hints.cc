@@ -3640,7 +3640,8 @@ static void _hints_describe_cloud(int x, int y, ostringstream& ostr)
     {
         ostr << "probably dangerous, and you should stay out of it if you "
                 "can. ";
-    } else
+    }
+    else
     {
         ostr << "currently harmless, but that could change at some point. "
                 "Check the overview screen (<w>%</w>) to view your "

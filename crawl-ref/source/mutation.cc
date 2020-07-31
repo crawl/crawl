@@ -939,7 +939,8 @@ void display_mutations()
             tiles.json_write_int("pane", c);
             tiles.ui_state_change("mutations", 0);
 #endif
-        } else
+        }
+        else
             done = !switcher->current_widget()->on_event(ev);
         return true;
     });

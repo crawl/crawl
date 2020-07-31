@@ -3937,7 +3937,8 @@ static int _to_hit_pct(const monster_info& mi, attack &atk, bool melee)
         return 100 - MIN_HIT_MISS_PERCENTAGE / 2;
 
     int hits = 0;
-    for (int rolled_mhit = 0; rolled_mhit < to_land; rolled_mhit++){
+    for (int rolled_mhit = 0; rolled_mhit < to_land; rolled_mhit++)
+    {
         // Apply post-roll manipulations:
         int adjusted_mhit = rolled_mhit + _lighting_modifiers(mi);
 
@@ -3978,7 +3979,9 @@ static void _describe_to_hit(const monster_info& mi, ostringstream &result)
     {
         melee_attack attk(&you, nullptr);
         to_hit_pct = _to_hit_pct(mi, attk, true);
-    } else {
+    }
+    else
+    {
         const int missile = you.m_quiver.get_fire_item();
         if (missile < 0)
             return; // failure to launch

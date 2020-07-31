@@ -4410,7 +4410,8 @@ static bool _apply_item_props(item_def &item, const item_spec &spec,
             else
                 disc1 = random_book_theme();
             disc2 = random_book_theme();
-        } else if (disc2 == spschool::none)
+        }
+        else if (disc2 == spschool::none)
             disc2 = disc1;
         else
             ASSERT(disc1 != spschool::none); // mapdef should've handled this
