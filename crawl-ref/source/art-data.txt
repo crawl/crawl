@@ -1404,7 +1404,7 @@ BOOL:     evil, curse
 
 ENUM:     INVDRAGON
 NAME:     scales of the Unseen Dragon
-OBJ:      OBJ_ARMOUR/ARMF_RES_MAGIC
+OBJ:      OBJ_ARMOUR/ARM_QUICKSILVER_DRAGON_ARMOUR
 PLUS:     +0
 COLOUR:   ETC_SILVER
 TILE:     urand_invdragon

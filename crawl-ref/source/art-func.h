@@ -1611,7 +1611,7 @@ static void _JAWS_unequip(item_def */*item*/, bool *show_msgs)
 static void _INVDRAGON_equip(item_def */*item*/, bool *show_msgs,
                                   bool /*unmeld*/)
 {
-	_equip_mpr(show_msgs, "The Unseen power is now your own!");
+    _equip_mpr(show_msgs, "The Unseen power is now your own!");
 }
 
 
