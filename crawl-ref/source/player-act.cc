@@ -939,10 +939,7 @@ int player::constriction_damage(bool direct) const
  */
 bool player::has_hydra_multi_attack() const
 {
-    return (you.form == transformation::none
-           || you.form == transformation::appendage
-           || you.form == transformation::statue
-           || you.form == transformation::lich) && you.species == SP_HYDRA;
+    return !player_is_shapechanged() && you.species == SP_HYDRA;
 }
 
 /*

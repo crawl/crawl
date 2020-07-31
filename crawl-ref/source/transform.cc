@@ -1835,6 +1835,7 @@ bool transform(int pow, transformation which_trans, bool involuntary,
     you.redraw_quiver       = true;
     you.redraw_evasion      = true;
     you.redraw_armour_class = true;
+    you.redraw_title        = true;
     you.wield_change        = true;
     if (form_changed_physiology(which_trans))
         merfolk_stop_swimming();
@@ -1880,6 +1881,20 @@ bool transform(int pow, transformation which_trans, bool involuntary,
     {
         mpr("Your mandibles meld away.");
         you.digging = false;
+    }
+
+    if (you.species == SP_HYDRA && !you.has_hydra_multi_attack())
+    {
+        switch(which_trans)
+        {
+            case transformation::statue:
+                mprf(MSGCH_INTRINSIC_GAIN, "Your heads got stiffen.");
+                break;
+            default:
+                mprf(MSGCH_INTRINSIC_GAIN, "Your heads are disappeared.");
+                break;
+        }
+        
     }
 
     // Extra effects
@@ -2044,6 +2059,7 @@ void untransform(bool skip_move)
     you.redraw_evasion          = true;
     you.redraw_armour_class     = true;
     you.wield_change            = true;
+    you.redraw_title            = true;
     you.received_weapon_warning = false;
     if (you.props.exists(TRANSFORM_POW_KEY))
         you.props.erase(TRANSFORM_POW_KEY);
@@ -2116,6 +2132,20 @@ void untransform(bool skip_move)
         // Update merfolk swimming for the form change.
         if (you.species == SP_MERFOLK)
             merfolk_check_swimming(false);
+    }
+
+    if (you.species == SP_HYDRA && !you.has_hydra_multi_attack())
+    {
+        switch(old_form)
+        {
+            case transformation::statue:
+                mprf(MSGCH_INTRINSIC_GAIN, "Your heads moves flexibly.");
+                break;
+            default:
+                mprf(MSGCH_INTRINSIC_GAIN, "Your heads appear again.");
+                break;
+        }
+        
     }
 
 #ifdef USE_TILE
