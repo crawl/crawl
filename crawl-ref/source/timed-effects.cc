@@ -1313,7 +1313,7 @@ int bezotting_level()
     if (!bezotted())
         return 0;
     const int MAX_ZOTS = 5;
-    const int TURNS_PER_ZOT = (MAX_ZOT_CLOCK - BEZOTTING_THRESHOLD) / MAX_ZOTS;
+    const int TURNS_PER_ZOT = BEZOTTING_THRESHOLD / MAX_ZOTS;
     const int over_thresh = _zot_clock() - (MAX_ZOT_CLOCK - BEZOTTING_THRESHOLD);
     return over_thresh / TURNS_PER_ZOT + 1;
 }
