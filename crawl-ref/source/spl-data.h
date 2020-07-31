@@ -1746,6 +1746,19 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_AURA_OF_HEALING, "Aura of Healing",
+    spschool::necromancy,
+    TILEG_MAJOR_HEALING,
+	spschool::charms,
+    spflag::area | spflag::recovery | spflag::helpful | spflag::utility,
+    5,
+    200,
+    -1, -1,
+    5, 0,
+    TILEG_MAJOR_HEALING,
+},
+
+{
     SPELL_HURL_DAMNATION, "Hurl Damnation",
     spschool::conjuration,
     spflag::dir_or_target | spflag::unholy | spflag::monster

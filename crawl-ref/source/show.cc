@@ -152,6 +152,9 @@ static void _update_feat_at(const coord_def &gp)
     if (antimagic_haloed(gp))
         env.map_knowledge(gp).flags |= MAP_ANTIMAGIC;
 
+    if (within_healaura(gp))
+        env.map_knowledge(gp).flags |= MAP_HEALAURA;
+
     if (is_sanctuary(gp))
     {
         if (testbits(env.pgrid(gp), FPROP_SANCTUARY_1))

@@ -1910,6 +1910,11 @@ void handle_monster_move(monster* mons)
         draconian_change_colour(mons);
 
     _monster_regenerate(mons);
+	
+    if (mons->within_healaura() && mons->attitude == ATT_FRIENDLY)
+    {
+        mons->heal(10);
+    }
 
     // Please change _slouch_damage to match!
     if (mons->cannot_act()
