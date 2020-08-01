@@ -2775,7 +2775,7 @@ static void _handle_head_loss(int exp)
     if (!(you.attribute[ATTR_HEAD_LOSS_XP] > 0))
         return;
 
-    if (you.form == transformation::lich || you.form == transformation::shadow)
+    if (you.form == transformation::lich || you.form == transformation::shadow || you.form == transformation::statue)
         return;
 
     int loss = exp * abs(you.props[HYDRA_HEADS_NET_LOSS].get_int())/2;

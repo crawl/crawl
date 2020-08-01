@@ -1352,7 +1352,7 @@ static void _redraw_title()
     textcolour(YELLOW);
     CGOTOXY(1, 2, GOTO_STAT);
     string species = species_name(you.species);
-    species = ((you.species == SP_HYDRA) ? to_string(you.heads()) + "-headed " : "") + species;
+    species = ((you.has_hydra_multi_attack()) ? to_string(you.heads()) + "-headed " : "") + species;
     NOWRAP_EOL_CPRINTF("%s", species.c_str());
     if (you_worship(GOD_NO_GOD))
     {
@@ -2226,7 +2226,7 @@ static string _overview_screen_title(int sw)
     string title = make_stringf(" %s ", player_title().c_str());
 
     string species_job = make_stringf("(%s %s)",
-                                      ((you.species == SP_HYDRA ?  to_string(you.heads()) + "-headed " : "")
+                                      ((you.has_hydra_multi_attack() ?  to_string(you.heads()) + "-headed " : "")
                                       + species_name(you.species)).c_str(),
                                       get_job_name(you.char_class));
 
