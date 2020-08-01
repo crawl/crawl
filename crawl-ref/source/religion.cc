@@ -3242,6 +3242,14 @@ bool player_can_join_god(god_type which_god)
     if (you.species == SP_MUMMY && which_god == GOD_WYRM)
         return false;
 
+    if (you.species == SP_LESSER_LICH || you.species == SP_LICH) {
+        if (which_god == GOD_ZIN ||
+            which_god == GOD_SHINING_ONE ||
+            which_god == GOD_ELYVILON) {
+            return false;
+        }
+    }
+
     return _transformed_player_can_join_god(which_god);
 }
 

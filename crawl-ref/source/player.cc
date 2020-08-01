@@ -1856,6 +1856,9 @@ int player_spec_death()
     if (you.form == transformation::lich)
         sd++;
 
+    if (you.species == SP_LICH)
+        sd++;
+
     return sd;
 }
 
@@ -6794,7 +6797,7 @@ bool player::res_sticky_flame() const
 
 int player::res_holy_energy() const
 {
-    if (undead_or_demonic())
+    if (undead_or_demonic() || you.species == SP_LESSER_LICH)
         return -1;
 
     if (is_holy())
@@ -6871,6 +6874,10 @@ int player_res_magic(bool calc_unid, bool temp)
 
     // transformations
     if (you.form == transformation::lich && temp)
+        rm += MR_PIP;
+
+    //perma lich form
+    if(you.species == SP_LICH && temp)
         rm += MR_PIP;
 
     // Trog's Hand

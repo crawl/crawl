@@ -21,15 +21,18 @@
 #include "libutil.h"
 #include "macro.h"
 #include "message.h"
+#include "mutation.h"
 #include "output.h"
 #include "prompt.h"
 #include "religion.h"
 #include "showsymb.h"
 #include "spl-transloc.h"
 #include "spl-util.h"
+#include "skills.h"
 #include "stringutil.h"
 #include "terrain.h"
 #include "transform.h"
+#include "tiledoll.h"
 #include "tilepick.h"
 #include "view.h"
 #include "viewchar.h"
@@ -433,5 +436,76 @@ spret cast_insulation(int power, bool fail)
     fail_check();
     you.increase_duration(DUR_INSULATION, 10 + random2(power), 100,
                           "You feel insulated.");
+    return spret::success;
+}
+
+
+spret change_lesser_lich(int , bool fail)
+{
+    ASSERT(you.species == SP_LESSER_LICH);
+
+    string prompt = "Are you really going to be a permanent lich?";
+    if (!yesno(prompt.c_str(), false, 'n'))
+    {
+        canned_msg(MSG_OK);
+        return spret::abort;
+    }
+    fail_check();
+
+    you.species = SP_LICH;
+
+    uint8_t saved_skills[NUM_SKILLS];
+    for (skill_type sk = SK_FIRST_SKILL; sk < NUM_SKILLS; ++sk)
+    {
+        saved_skills[sk] = you.skills[sk];
+        check_skill_level_change(sk, false);
+    }
+    // The player symbol depends on species.
+    update_player_symbol();
+#ifdef USE_TILE
+    init_player_doll();
+#endif
+    mprf(MSGCH_INTRINSIC_GAIN,
+        "Now you are a complete lich!");
+
+    for (skill_type sk = SK_FIRST_SKILL; sk < NUM_SKILLS; ++sk)
+    {
+        const int oldapt = species_apt(sk, SP_LESSER_LICH);
+        const int newapt = species_apt(sk, you.species);
+        if (oldapt != newapt)
+        {
+            mprf(MSGCH_INTRINSIC_GAIN, "You learn %s %s%s.",
+                skill_name(sk),
+                abs(oldapt - newapt) > 1 ? "much " : "",
+                oldapt > newapt ? "slower" : "quicker");
+        }
+
+        you.skills[sk] = saved_skills[sk];
+        check_skill_level_change(sk);
+    }
+
+    you.innate_mutation[MUT_COMBAT_MANA_REGENERATE]--;
+    delete_mutation(MUT_COMBAT_MANA_REGENERATE, "necromutation", false, true, false, false);
+    you.innate_mutation[MUT_STOCHASTIC_TORMENT_RESISTANCE]--;
+    delete_mutation(MUT_STOCHASTIC_TORMENT_RESISTANCE, "necromutation", false, true, false, false);
+    you.innate_mutation[MUT_NO_DEVICE_HEAL]--;
+    delete_mutation(MUT_NO_DEVICE_HEAL, "necromutation", false, true, false, false);
+
+    if (you.duration[DUR_REGENERATION])
+    {
+        mprf(MSGCH_DURATION, "You stop regenerating.");
+        you.duration[DUR_REGENERATION] = 0;
+    }
+
+    you.hunger_state = HS_SATIATED;  // no hunger effects while transformed
+    you.redraw_status_lights = true;
+    give_level_mutations(you.species, 1);
+
+    check_training_targets();
+
+    gain_and_note_hp_mp();
+
+    redraw_screen();
+
     return spret::success;
 }

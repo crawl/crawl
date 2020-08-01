@@ -19,7 +19,7 @@ aptitudes:
   bows: -3
   crossbows: -2
   armour: -2
-  dodging: 2
+  dodging: -2
   stealth: 3
   shields: -2
   unarmed_combat: -2
@@ -39,22 +39,19 @@ aptitudes:
   invocations: 1
   evocations: 1
 str: 7
-int: 9
-dex: 7
-levelup_stat_frequency: 3
+int: 12
+dex: 4
+levelup_stat_frequency: 4
 levelup_stats:
   - int
 mutations:
   1:
     MUT_COMBAT_MANA_REGENERATE: 1
-  9:
-    MUT_COMBAT_MANA_REGENERATE: 1
+    MUT_NO_DEVICE_HEAL: 1
+    MUT_STOCHASTIC_TORMENT_RESISTANCE: 1
+    MUT_NEGATIVE_ENERGY_RESISTANCE: 1
   11:
     MUT_NEGATIVE_ENERGY_RESISTANCE: 1
-  18:
-    MUT_COMBAT_MANA_REGENERATE: 1
-  27:
-    MUT_WILD_MAGIC: 1
 recommended_jobs:
   - JOB_CONJURER
   - JOB_NECROMANCER

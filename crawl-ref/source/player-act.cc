@@ -655,6 +655,8 @@ string player::arm_name(bool plural, bool *can_plural) const
         adj = "feathered";
     else if (species == SP_MUMMY)
         adj = "bandage-wrapped";
+    else if (species == SP_LICH)
+        adj = "bony";
     else if (species == SP_OCTOPODE)
         str = "tentacle";
     else if (species == SP_HYDRA)
