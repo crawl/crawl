@@ -372,6 +372,7 @@ public:
     // Being heated by a heat aura?
     virtual bool heated() const;
     virtual bool antimagic_haloed() const;
+    virtual bool within_healaura() const;
     // Halo radius.
     virtual int halo_radius() const = 0;
     // Silence radius.
@@ -381,6 +382,7 @@ public:
     virtual int umbra_radius() const = 0;
     virtual int heat_radius() const = 0;
     virtual int antimagic_radius() const = 0;
+    virtual int healaura_radius() const = 0;
 
     virtual bool petrifying() const = 0;
     virtual bool petrified() const = 0;

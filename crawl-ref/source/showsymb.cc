@@ -139,6 +139,8 @@ static unsigned short _cell_feat_show_colour(const map_cell& cell,
         }
         else if (cell.flags & MAP_ANTIMAGIC)
             colour = ETC_ANTIMAGIC;
+        else if (cell.flags & MAP_HEALAURA)
+            colour = LIGHTGREEN;
         else if (cell.flags & MAP_SILENCED)
             colour = CYAN; // Silence but no holy/unholy
         else if (cell.flags & MAP_ORB_HALOED)

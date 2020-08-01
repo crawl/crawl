@@ -1476,6 +1476,9 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
     if (mc.flags & MAP_ANTIMAGIC)
         cell.antimagic_aura = 1;
 
+    if (mc.flags & MAP_HEALAURA)
+        cell.healaura = 1;
+
     if (mc.flags & MAP_QUAD_HALOED)
         cell.quad_glow = true;
 

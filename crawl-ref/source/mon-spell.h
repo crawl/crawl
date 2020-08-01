@@ -1823,6 +1823,23 @@ static const mon_spellbook mspell_list[] =
        { SPELL_DEATHS_DOOR, 60, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY }
       }
     },
+
+    {  MST_ASCLEPIA,
+      {
+       { SPELL_HEAL_OTHER, 24, MON_SPELL_WIZARD },
+	   { SPELL_HASTE_OTHER, 12, MON_SPELL_WIZARD },
+       { SPELL_EVAPORATE, 12, MON_SPELL_WIZARD },
+      }
+    },
+    
+	{  MST_ASCLEPIA_II,
+      {
+       { SPELL_AURA_OF_HEALING, 33, MON_SPELL_PRIEST },
+	   { SPELL_HASTE_OTHER, 12, MON_SPELL_WIZARD },
+	   { SPELL_MIGHT_OTHER, 12, MON_SPELL_WIZARD },
+       { SPELL_EVAPORATE, 12, MON_SPELL_WIZARD },
+      }
+    },
     
     {  MST_SAINT_ROKA,
       {

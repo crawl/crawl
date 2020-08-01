@@ -200,6 +200,10 @@ NAME:   uniq_nergalle
 DEPTH:  D:10-12, Orc, !Orc:$, Lair:1-4
 : place_unique(_G, "Nergalle")
 
+NAME:   uniq_asclepia
+DEPTH:  D:10-12, Orc, !Orc:$, Lair:1-4
+: place_unique(_G, "ASCLEPIA")
+
 NAME:   uniq_nessos
 DEPTH:  D:12-, Orc:$, Lair:4-
 : place_unique(_G, "Nessos")

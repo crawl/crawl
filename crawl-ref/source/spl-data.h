@@ -4358,6 +4358,16 @@ static const struct spell_desc spelldata[] =
     TILEG_SUMMON_BARRICADE,
 },
 {
+    SPELL_AURA_OF_HEALING, "Aura of Healing",
+    spschool::necromancy | spschool::charms,
+    spflag::area | spflag::recovery | spflag::helpful | spflag::utility,
+    5,
+    200,
+    -1, -1,
+    5, 0,
+    TILEG_MAJOR_HEALING,
+},
+{
     SPELL_NO_SPELL, "nonexistent spell",
     spschool::none,
     spflag::testing,

@@ -19,6 +19,14 @@ Arachne title
 
 Arachne the Weaver
 %%%%
+Asclepia title
+
+Asclepia the Therapist
+%%%%
+Asclepia the Anointer title
+
+Asclepia the Anointer
+%%%%
 Asmodeus title
 
 Asmodeus, Prince of Gehenna
