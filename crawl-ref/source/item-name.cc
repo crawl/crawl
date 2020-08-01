@@ -2788,6 +2788,14 @@ bool is_dangerous_item(const item_def &item, bool temp)
         return item.sub_type == MISC_TIN_OF_TREMORSTONES;
 
     case OBJ_ARMOUR:
+        if (you.get_mutation_level(MUT_NO_LOVE)
+            && is_unrandom_artefact(item, UNRAND_RATSKIN_CLOAK))
+        {
+            // some people don't like being randomly attacked by rats.
+            // weird but what can you do.
+            return true;
+        }
+
         // Tilting at windmills can be dangerous.
         return get_armour_ego_type(item) == SPARM_RAMPAGING;
 
