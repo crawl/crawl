@@ -537,7 +537,6 @@ static void _maybe_spawn_rats(int dam, kill_method_type death_type)
 
     // chance rises linearly with damage taken, up to 50% at half hp.
     const int capped_dam = min(dam, you.hp_max / 2);
-    dprf("%d -> %d / %d", dam, capped_dam, you.hp_max / 2);
     if (!x_chance_in_y(capped_dam, you.hp_max))
         return;
 
