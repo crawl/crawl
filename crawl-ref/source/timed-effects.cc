@@ -1362,13 +1362,13 @@ void incr_zot_clock()
 
     if (!old_lvl)
     {
-        mpr("You have lingered too long in familiar places. Zot approaches. Travel to new levels before it's too late!");
+        mpr("You have lingered too long in familiar places. Zot approaches. Travel to new levels before you perish!");
         drain_player(150, true, true);
         take_note(Note(NOTE_MESSAGE, 0, 0, "Touched by the power of Zot."));
     }
     else if (bezotting_level() > old_lvl)
     {
-        mpr("Zot draws near...");
+        mpr("Zot draws near. Death is approaching...");
         drain_player(75, true, true);
         take_note(Note(NOTE_MESSAGE, 0, 0, "Touched by the power of Zot."));
     }
