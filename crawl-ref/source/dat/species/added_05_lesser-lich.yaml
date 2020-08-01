@@ -41,7 +41,7 @@ aptitudes:
 str: 7
 int: 12
 dex: 4
-levelup_stat_frequency: 4
+levelup_stat_frequency: 5
 levelup_stats:
   - int
 mutations:
