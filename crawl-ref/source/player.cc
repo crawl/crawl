@@ -1299,6 +1299,11 @@ int player_mp_regen()
     if (you.get_mutation_level(MUT_MANA_REGENERATION))
         regen_amount *= 2;
 
+    if (you.duration[DUR_COMBAT_MANA])
+    {
+        regen_amount *= (1 + you.props[COMBAT_MANA_KEY].get_int());
+    }
+
     if (you.props[MANA_REGEN_AMULET_ACTIVE].get_int() == 1)
         regen_amount += 25;
 

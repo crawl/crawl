@@ -687,6 +687,16 @@ bool fill_status_info(int status, status_info& inf)
         break;
     }
 
+
+    case DUR_COMBAT_MANA:
+    {
+        const int mana = you.props[COMBAT_MANA_KEY].get_int();
+        inf.light_colour = mana >= 3 ? WHITE :(mana >= 2 ? LIGHTBLUE : BLUE);
+        inf.light_text = make_stringf("Mana+%s%s", mana>= 2 ? "+" : "", mana >= 3 ? "+" : "");
+        inf.short_text = "mana regen";
+        inf.long_text = "Your mana regeneration has increased.";
+    }
+
     case STATUS_CLOUD:
     {
         cloud_type cloud = cloud_type_at(you.pos());

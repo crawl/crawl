@@ -46,9 +46,13 @@ levelup_stats:
   - int
 mutations:
   1:
-    MUT_MANA_REGENERATION: 1
+    MUT_COMBAT_MANA_REGENERATE: 1
+  9:
+    MUT_COMBAT_MANA_REGENERATE: 1
   11:
     MUT_NEGATIVE_ENERGY_RESISTANCE: 1
+  18:
+    MUT_COMBAT_MANA_REGENERATE: 1
   27:
     MUT_WILD_MAGIC: 1
 recommended_jobs:
