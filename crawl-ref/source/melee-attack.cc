@@ -228,7 +228,7 @@ bool melee_attack::handle_phase_attempted()
             return false;
     }
 
-    if (attacker != defender)
+    if (attacker != defender && !is_riposte)
     {
         // Allow setting of your allies' target, etc.
         attacker->attacking(defender);
