@@ -162,7 +162,6 @@ enum monster_info_flags
     MB_AIRBORNE,
     MB_BRILLIANCE_AURA,
     MB_EMPOWERED_SPELLS,
-    MB_HEALING_AURA,
     MB_READY_TO_HOWL,
     MB_PARTIALLY_CHARGED,
     MB_FULLY_CHARGED,
@@ -183,6 +182,7 @@ enum monster_info_flags
     MB_ALBEDO,
     MB_CITRINITAS,
     MB_VIRIDITAS,
+    MB_HEALING_AURA,
     NUM_MB_FLAGS
 };
 

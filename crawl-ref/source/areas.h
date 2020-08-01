@@ -15,7 +15,7 @@ enum class area_centre_type
     leap,
     coward,
     antimagic,
-	healaura
+    healaura
 };
 
 void invalidate_agrid(bool recheck_new = false);
