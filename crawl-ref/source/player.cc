@@ -667,29 +667,27 @@ monster_type player_mons(bool transform)
 void update_vision_range()
 {
     you.normal_vision = LOS_DEFAULT_RANGE;
-    int nom   = 1;
-    int denom = 1;
 
     // Barachi have +1 base LOS.
     if (you.species == SP_BARACHI)
         you.normal_vision += 1;
 
+    // Halo and umbra radius scale with you.normal_vision, so to avoid
+    // penalizing players with low LOS, don't shrink normal_vision.
+    you.current_vision = you.normal_vision;
+
+    // scarf of shadows gives -1.
+    if (you.wearing_ego(EQ_CLOAK, SPARM_SHADOWS))
+        you.current_vision -= 1;
+
     // Nightstalker gives -1/-2/-3.
     if (you.get_mutation_level(MUT_NIGHTSTALKER))
-    {
-        nom *= you.normal_vision - you.get_mutation_level(MUT_NIGHTSTALKER);
-        denom *= you.normal_vision;
-    }
-
-    // scarf of shadows
-    if (you.wearing_ego(EQ_CLOAK, SPARM_SHADOWS))
-        nom *= 3, denom *= 4;
+        you.current_vision -= you.get_mutation_level(MUT_NIGHTSTALKER);
 
     // robe of Night.
     if (player_equip_unrand(UNRAND_NIGHT))
-        nom *= 3, denom *= 4;
+        you.current_vision = you.current_vision * 3 / 4;
 
-    you.current_vision = (you.normal_vision * nom + denom / 2) / denom;
     ASSERT(you.current_vision > 0);
     set_los_radius(you.current_vision);
 }
