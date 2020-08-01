@@ -1368,7 +1368,7 @@ void viewwindow(bool show_updates, bool tiles_only, animation *a, view_renderer 
 
         if (crawl_state.smallterm)
         {
-            redraw_screen();
+            smallterm_warning();
             update_screen();
             return;
         }

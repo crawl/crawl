@@ -1273,6 +1273,10 @@ static void _redraw_title()
 
 void print_stats()
 {
+#ifndef USE_TILE_LOCAL
+    if (crawl_state.smallterm)
+        return;
+#endif
     int ac_pos = 5;
     int ev_pos = ac_pos + 1;
 
@@ -1467,6 +1471,15 @@ void draw_border()
     // Line 8 is exp pool, Level
 }
 
+#ifndef USE_TILE_LOCAL
+void smallterm_warning()
+{
+    clrscr();
+    CGOTOXY(1,1, GOTO_CRT);
+    CPRINTF("Your terminal window is too small; please resize to at least %d,%d", MIN_COLS, MIN_LINES);
+}
+#endif
+
 void redraw_screen(bool show_updates)
 {
     if (!crawl_state.need_save)
@@ -1484,9 +1497,7 @@ void redraw_screen(bool show_updates)
 #ifndef USE_TILE_LOCAL
     if (crawl_state.smallterm)
     {
-        clrscr();
-        CGOTOXY(1,1, GOTO_CRT);
-        CPRINTF("Your terminal window is too small; please resize to at least %d,%d", MIN_COLS, MIN_LINES);
+        smallterm_warning();
         return;
     }
 #endif
