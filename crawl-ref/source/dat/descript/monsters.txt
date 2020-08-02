@@ -97,6 +97,20 @@ Boris
 An ancient and powerful lich. Like all true liches, Boris is immortal, and will
 regenerate his desiccated skeletal remains even if completely disintegrated.
 %%%%
+Brandagoth
+
+Lava orcs are the dweller of below the Dungeon, but unlike other lava orcs,
+Brandagoth focus his inner temperature to move normally and cast fire magic;
+which burning down his enemies. Still, he can swim in the lava and vulnerable
+to cold.
+%%%%
+Brandagoth the Flame
+
+Lava orcs were once denied by other false messiah, being called 'imitations'.
+But now, the true messiah leads them to hands of Beogh. Brandagoth, called
+as 'Incinerator of Unbelievers', now serves his true faith and damns enemies
+against the messiah with destructive damnation.
+%%%%
 Cerebov
 
 A violent and wrathful demon, Cerebov appears as a giant humanoid covered in

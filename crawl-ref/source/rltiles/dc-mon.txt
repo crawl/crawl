@@ -1031,6 +1031,8 @@ nergalle_II MONS_NERGALLE_II
 saint_roka MONS_SAINT_ROKA
 asclepia MONS_ASCLEPIA
 asclepia_II MONS_ASCLEPIA_II
+brandagoth MONS_BRANDAGOTH
+brandagoth_II MONS_BRANDAGOTH_II
 %sdir mon/humanoids/orcs
 orc MONS_ORC
 orc_wizard MONS_ORC_WIZARD
