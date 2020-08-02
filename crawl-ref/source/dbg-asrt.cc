@@ -640,8 +640,8 @@ void do_crash_dump()
     // This message is parsed by the WebTiles server.
     fprintf(stderr,
             "\n\nWe crashed! This is likely due to a bug in Crawl. "
-            "\nPlease submit a bug report at https://crawl.develz.org/mantis/ "
-            "and include:"
+            "\nPlease submit a bug report at https://github.com/crawl/crawl/issues or at"
+            "\nhttps://crawl.develz.org/mantis/ and include:"
             "\n- The crash report: %s"
             "\n- Your save file: %s"
             "\n- A description of what you were doing when this crash occurred.\n\n",

@@ -304,9 +304,9 @@ also hosts Windows and Mac binaries you can download. Note that trunk may be
 buggy, and that very rarely a bug may invalidate your saved games. If that
 doesn't bother you, go ahead and play!
 
-Be sure to reports bugs on our bug tracker (https://crawl.develz.org/mantis/)
-and to leave some feedback/suggestions on the forums
-(https://crawl.develz.org/tavern/).
+Be sure to reports bugs on github (https://github.com/crawl/crawl/issues).
+You may also use the mantis bug tracker if you have an account
+(https://crawl.develz.org/mantis/).
 
 When doing so, please mention the version (see '?v') you're currently playing,
 in case the bug's already been fixed or the feature already implemented.
@@ -317,8 +317,9 @@ The game keeps crashing. / I think I found a bug. What do I do?
 %%%%
 A:bug
 
-A: Please submit a bug report on Mantis (https://crawl.develz.org/mantis/), and
-give as much information as you can:
+A: Please submit a bug report on github (https://github.com/crawl/crawl/issues)
+or Mantis (https://crawl.develz.org/mantis/), and give as much information as
+you can:
 
 * What were you doing at the time?
 
