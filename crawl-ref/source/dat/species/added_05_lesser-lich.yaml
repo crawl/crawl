@@ -54,6 +54,7 @@ mutations:
     MUT_NEGATIVE_ENERGY_RESISTANCE: 1
 fake_mutations:
   - long: You can transform into a true Lich.
+  - long: You are resistant to torment.
 recommended_jobs:
   - JOB_CONJURER
   - JOB_NECROMANCER
