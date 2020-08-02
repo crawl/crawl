@@ -1749,7 +1749,7 @@ static int _convert_poison_bog(coord_def where, int pow, actor* agent);
  *                      to abort the spell, spret::fail if they failed the cast
  *                      chance, and spret::success otherwise.
  */
-spret cast_convert_poison(actor* agent, int pow, bool fail, bool tracer)
+spret cast_convert_poison(actor* agent, int pow, bool /*fail*/, bool tracer)
 {
     if (tracer)
     {

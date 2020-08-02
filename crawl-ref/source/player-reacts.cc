@@ -343,14 +343,6 @@ static bool _monster_near_by_you()
     return false;
 }
 
-static int _old_combat_level()
-{
-    if (you.duration[DUR_COMBAT_MANA])
-        return you.props[COMBAT_MANA_KEY].get_int();
-    return 0;
-}
-
-
 static void _end_combat_mana()
 {
     if (!you.duration[DUR_COMBAT_MANA])

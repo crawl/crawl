@@ -1931,13 +1931,14 @@ static void _get_rune(const item_def& it, bool quiet)
 
     }
 
-    if (it.sub_type == RUNE_ABYSSAL)
+    if (it.sub_type == RUNE_ABYSSAL) {
         mpr("You feel the abyssal rune guiding you out of this place.");
-	
-	if (you_worship(GOD_HEPLIAKLQANA)){
-		mpr("Your ancestor is empowered by the runes you collect.");
-		upgrade_hepliaklqana_ancestor(true);
-	}
+    }
+
+    if (you_worship(GOD_HEPLIAKLQANA)){
+        mpr("Your ancestor is empowered by the runes you collect.");
+        upgrade_hepliaklqana_ancestor(true);
+    }
 }
 
 /**
