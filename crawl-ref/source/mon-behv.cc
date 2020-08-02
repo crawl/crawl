@@ -190,7 +190,11 @@ static void _decide_monster_firing_position(monster* mon, actor* owner)
         bool beogh_teach = (mon->type == MONS_ORC_SORCERER ||
                 mon->type == MONS_ORC_HIGH_PRIEST ||
                 mon->type == MONS_NERGALLE ||
-                mon->type == MONS_NERGALLE_II)
+                mon->type == MONS_NERGALLE_II ||
+                mon->type == MONS_ASCLEPIA ||
+                mon->type == MONS_ASCLEPIA_II ||
+                mon->type == MONS_BRANDAGOTH ||
+                mon->type == MONS_BRANDAGOTH_II)
                 && you_worship(GOD_BEOGH)
                 && mon->attitude == ATT_FRIENDLY;
 

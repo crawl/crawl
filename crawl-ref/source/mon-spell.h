@@ -1826,7 +1826,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_ASCLEPIA,
       {
-       { SPELL_HEAL_OTHER, 24, MON_SPELL_WIZARD },
+       { SPELL_HEAL_OTHER, 33, MON_SPELL_WIZARD },
 	   { SPELL_HASTE_OTHER, 12, MON_SPELL_WIZARD },
        { SPELL_EVAPORATE, 12, MON_SPELL_WIZARD },
       }
@@ -1837,10 +1837,25 @@ static const mon_spellbook mspell_list[] =
        { SPELL_AURA_OF_HEALING, 33, MON_SPELL_PRIEST },
 	   { SPELL_HASTE_OTHER, 12, MON_SPELL_WIZARD },
 	   { SPELL_MIGHT_OTHER, 12, MON_SPELL_WIZARD },
-       { SPELL_EVAPORATE, 12, MON_SPELL_WIZARD },
       }
     },
-    
+
+	{  MST_BRANDAGOTH,
+      {
+       { SPELL_FIREBALL, 24, MON_SPELL_WIZARD },
+       { SPELL_BOLT_OF_MAGMA, 12, MON_SPELL_WIZARD },
+       { SPELL_SPRINT, 33, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
+      }
+    },
+
+	{  MST_BRANDAGOTH_II,
+      {
+       { SPELL_HURL_DAMNATION, 33, MON_SPELL_WIZARD },
+       { SPELL_BOLT_OF_MAGMA, 12, MON_SPELL_WIZARD },
+       { SPELL_SPRINT, 33, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
+      }
+    },
+
     {  MST_SAINT_ROKA,
       {
        { SPELL_BATTLECRY, 100, MON_SPELL_NATURAL | MON_SPELL_NOISY

@@ -919,7 +919,7 @@ int monster::healaura_radius() const
 {
 
     if (has_ench(ENCH_HEALING_AURA))
-        return 2;
+        return 3;
 
     return -1;
 }

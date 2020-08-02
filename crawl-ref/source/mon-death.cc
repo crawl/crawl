@@ -872,7 +872,7 @@ item_def* place_monster_corpse(const monster& mons, bool silent, bool force)
             // Always identify said potion.
             set_ident_type(essence, true);
         
-            mprf(MSGCH_GOD, " extract %s from the corpse.",
+            mprf(MSGCH_GOD, "The Great Wyrm extracts %s from the corpse.",
                 essence.name(DESC_A).c_str());
 
             std::map<int, int> tmp_l_p = you.last_pickup;

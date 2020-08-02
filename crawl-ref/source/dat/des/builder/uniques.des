@@ -275,6 +275,10 @@ NAME:   uniq_agnes
 DEPTH:  D:14-, Elf, !Elf:$, Snake, Spider
 : place_unique(_G, "Agnes")
 
+NAME:   uniq_brandagoth
+DEPTH:  D:12-, Elf, !Elf:$, Vaults:1-3
+: place_unique(_G, "Azrael band")
+
 ################################################################################
 # Uniques which can appear in the Depths:
 ################################################################################

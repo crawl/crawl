@@ -701,7 +701,9 @@ effect/silenced SILENCED
 effect/leapattack LEAP_ATTACK
 effect/cowardattack COWARD_ATTACK
 effect/antimagic ANTIMAGIC_AURA
-effect/healaura HEALAURA
+effect/healaura0 HEALAURA
+effect/healaura1 
+effect/healaura2
 %shrink 0
 %sdir mon/tentacles/kraken_corners
 kraken_corner_NW KRAKEN_OVERLAY_NW

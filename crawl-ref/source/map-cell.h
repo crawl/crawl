@@ -128,7 +128,7 @@ struct map_cell
     // Clear prior to show update. Need to retain at least "seen" flag.
     void clear_data()
     {
-        const uint32_t f = flags & (MAP_SEEN_FLAG | MAP_CHANGED_FLAG
+        const uint64_t f = flags & (MAP_SEEN_FLAG | MAP_CHANGED_FLAG
                                     | MAP_INVISIBLE_UPDATE);
         clear();
         flags = f;
@@ -313,7 +313,7 @@ struct map_cell
     }
 
 public:
-    uint32_t flags;   // Flags describing the mappedness of this square.
+    uint64_t flags;   // Flags describing the mappedness of this square.
 private:
     dungeon_feature_type _feat:8;
     colour_t _feat_colour;
