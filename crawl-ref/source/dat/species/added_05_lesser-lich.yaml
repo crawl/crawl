@@ -2,46 +2,47 @@ enum: SP_LESSER_LICH
 monster: MONS_HUMAN
 name: Lesser Lich
 short_name: LL
-difficulty: Intermediate
+difficulty: Simple
 difficulty_priority: 50
 aptitudes:
   xp: -1
-  hp: -2
-  mp_mod: 2
+  hp: -1
+  mp_mod: 1
   mr: 4
   fighting: -2
   short_blades: -2
   long_blades: -2
   axes: -2
   maces_and_flails: -2
-  polearms: -3
-  slings: -2
+  polearms: -2
+  staves: -1
+  slings: -3
   bows: -3
-  crossbows: -2
+  crossbows: -3
   armour: -2
-  dodging: -2
+  dodging: -1
   stealth: 3
   shields: -2
-  unarmed_combat: -2
+  unarmed_combat: 0
   spellcasting: 2
   conjurations: 2
-  hexes: 1
-  charms: 1
-  summoning: -1
+  hexes: 0
+  charms: 0
+  summoning: -2
   necromancy: 4
   translocations: 1
-  transmutations: 2
+  transmutations: 0
   fire_magic: 1
   ice_magic: 1
-  air_magic: 1
+  air_magic: 0
   earth_magic: 1
-  poison_magic: 1
+  poison_magic: 0
   invocations: 1
   evocations: 1
-str: 7
+str: 6
 int: 12
-dex: 4
-levelup_stat_frequency: 5
+dex: 6
+levelup_stat_frequency: 4
 levelup_stats:
   - int
 mutations:
@@ -49,9 +50,11 @@ mutations:
     MUT_COMBAT_MANA_REGENERATE: 1
     MUT_NO_DEVICE_HEAL: 1
     MUT_STOCHASTIC_TORMENT_RESISTANCE: 1
-    MUT_NEGATIVE_ENERGY_RESISTANCE: 1
   11:
     MUT_NEGATIVE_ENERGY_RESISTANCE: 1
+fake_mutations:
+  - long: You can transform into a true Lich.
+  - long: You are resistant to torment.
 recommended_jobs:
   - JOB_CONJURER
   - JOB_NECROMANCER
