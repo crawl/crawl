@@ -1977,10 +1977,13 @@ int prompt_invent_item(const char *prompt,
             break;
         }
 
+        // TODO: it seems like for some uses of this function, `*` shouldn't
+        // be allowed at all, e.g. evoke.
         if (keyin == '?' || keyin == '*')
         {
             // The "view inventory listing" mode.
             vector< SelItem > items;
+            const auto last_keyin = keyin;
             current_type_expected = keyin == '*' ? OSEL_ANY : type_expect;
             int mflags = MF_SINGLESELECT | MF_ANYPRINTABLE | MF_NO_SELECT_QTY;
             if (other_valid_char == '-')
@@ -1999,8 +2002,35 @@ int prompt_invent_item(const char *prompt,
                 break;
             }
 
-            if (items.empty())
+            // a continue at this point has need_prompt = need_getch = true
+
+            // let `?` toggle the menu altogether. If this is a non-autolist,
+            // return to the prompt, otherwise we will pass escape to the
+            // abort handling below. (TODO: is this the right behavior?)
+            // TODO: some versions of _invent_select, such as wield, never
+            // return '?'. Is this a problem?
+            if (keyin == '?' || key_is_escape(keyin) && !auto_list)
                 continue;
+
+            if (keyin == '*')
+            {
+                // let `*` act as a toggle. This is a slightly wacky
+                // implementation in that '?' as a toggle does something
+                // entirely different...
+                need_prompt = need_getch = false;
+                if (last_keyin == '*')
+                    keyin = '?';
+                else
+                    keyin = '*';
+                continue;
+            }
+
+            if (other_valid_char != 0 && keyin == other_valid_char)
+            {
+                // need to handle overrides...ugly code duplication
+                ret = PROMPT_GOT_SPECIAL;
+                break;
+            }
         }
 
         if (isadigit(keyin))
