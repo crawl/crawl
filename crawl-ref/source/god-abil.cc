@@ -3434,7 +3434,7 @@ bool gozag_call_merchant()
         // first index.
         if (type == SHOP_FOOD)
             continue;
-        if (type == SHOP_DISTILLERY && you.species == SP_MUMMY)
+        if (type == SHOP_DISTILLERY && (you.species == SP_MUMMY || you.species == SP_LICH))
             continue;
         if (type == SHOP_EVOKABLES && you.get_mutation_level(MUT_NO_ARTIFICE))
             continue;

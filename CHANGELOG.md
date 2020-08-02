@@ -27,10 +27,17 @@
 - 새로운 픽다트: 보이지 않는 용의 비늘 {\*Inv MR+ Stlth+ SInv \*Corrode}. 퀵실버 드래곤 갑옷 베이스인 아티팩트이며, 맞을때 일정확률로 투명해질 수 있다.
   - A New Fixedart scales of the Unseen Dragon {\*Inv MR+ Stlth+ SInv \*Corrode}. It is quicksilver dragon based artifact. It may invisible you when you take damage.
   
+- 새로운 네임드. Asclepia 더 테라피스트. 던전 10~12, 짐승굴 1~4, 오크 1층에서 등장하며 타인 치료, 타인 가속, 증산을 사용함. 승격후에는 타인 힘강화와 힐링 오라를 사용함 
+  - New Orc Unique: Asclepia the Therapist. Appears at D:10-12, Lair:1-4, Orc:1, cast Heal Other, Haste Other, Evaporate. 
+    After promotion, adds Might Other to Spellset, and learn "Aura of Healing"
+  
 - 마법 복구 : 돌의 피부, 절연화, 응축의 방패
   - rollback Stoneskin, Insulation, Condensation Shield
 
-### Changed   
+### Changed
+- 레서리치 리워크. 이제 좀 더 언데드에 가까워졌고 마나 재생은 시야에 적이 3명있을때 적용됨. 또한 네크로뮤테이션으로 영구적인 리치로 진화가 가능해진다.
+  - Rework lesser lich. Now they cloeser to the undead and Mana Regeneration is applied when 3 enemies in sight. It is possible to evolve into a permanent lich through necromutation.
+
 - 트로그는 이제 광폭화중에 권능을 사용할 수 있음
   - Trog now can use power while berserk
   
@@ -51,6 +58,9 @@
 
 - 겔의 위압은 이제 적을 1턴간 고정시킨다.
   - Gell's Gravitas now pinned the target for 1 turn.
+  
+- 플레이어의 레후딥의 수정창은 이제 관통 마법임
+  - Change the player's Lehudib to penetration spell
 
 - 장검반격은 이제 50%확률로 나감
   - Long Blade's Riposte buff. Now triggers at 50%

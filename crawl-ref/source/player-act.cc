@@ -655,6 +655,8 @@ string player::arm_name(bool plural, bool *can_plural) const
         adj = "feathered";
     else if (species == SP_MUMMY)
         adj = "bandage-wrapped";
+    else if (species == SP_LICH)
+        adj = "bony";
     else if (species == SP_OCTOPODE)
         str = "tentacle";
     else if (species == SP_HYDRA)
@@ -939,7 +941,8 @@ int player::constriction_damage(bool direct) const
  */
 bool player::has_hydra_multi_attack() const
 {
-    return !player_is_shapechanged() && you.species == SP_HYDRA;
+    return (!player_is_shapechanged() || you.form == transformation::statue) 
+            && you.species == SP_HYDRA ;
 }
 
 /*

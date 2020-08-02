@@ -914,9 +914,8 @@ void TilesFramework::_send_player(bool force_full)
     _update_int(force_full, c.piety_rank, prank, "piety_rank");
 
     _update_int(force_full, c.form, (uint8_t) you.form, "form");
-
+    _update_int(force_full, c.has_hydra_multi_attack, (bool) you.has_hydra_multi_attack(), "has_hydra_multi_attack");
     _update_int(force_full, c.hp, you.hp, "hp");
-    _update_int(force_full, c.hp_max, you.hp_max, "hp_max");
     int max_max_hp = get_real_hp(true, false);
     if (you.species == SP_DJINNI)
         max_max_hp += get_real_mp(true); // compare _print_stats_hp

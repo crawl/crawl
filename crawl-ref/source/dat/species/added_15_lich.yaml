@@ -1,8 +1,8 @@
-enum: SP_LESSER_LICH
+enum: SP_LICH
 monster: MONS_HUMAN
-name: Lesser Lich
+name: Lich
 short_name: LL
-difficulty: Intermediate
+difficulty: False
 difficulty_priority: 50
 aptitudes:
   xp: -1
@@ -38,25 +38,18 @@ aptitudes:
   poison_magic: 1
   invocations: 1
   evocations: 1
+undead_type: US_UNDEAD
 str: 7
 int: 12
 dex: 4
-levelup_stat_frequency: 5
+levelup_stat_frequency: 4
 levelup_stats:
   - int
 mutations:
   1:
-    MUT_COMBAT_MANA_REGENERATE: 1
-    MUT_NO_DEVICE_HEAL: 1
-    MUT_STOCHASTIC_TORMENT_RESISTANCE: 1
-    MUT_NEGATIVE_ENERGY_RESISTANCE: 1
-  11:
-    MUT_NEGATIVE_ENERGY_RESISTANCE: 1
-recommended_jobs:
-  - JOB_CONJURER
-  - JOB_NECROMANCER
-  - JOB_FIRE_ELEMENTALIST
-  - JOB_ICE_ELEMENTALIST
-  - JOB_AIR_ELEMENTALIST
-  - JOB_EARTH_ELEMENTALIST
-  - JOB_VENOM_MAGE
+    MUT_NEGATIVE_ENERGY_RESISTANCE: 3
+    MUT_COLD_RESISTANCE: 1
+    MUT_TORMENT_RESISTANCE: 1
+    MUT_UNBREATHING: 1
+    MUT_WILD_MAGIC: 1
+    MUT_CLARITY: 1

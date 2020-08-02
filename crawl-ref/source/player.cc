@@ -1299,6 +1299,11 @@ int player_mp_regen()
     if (you.get_mutation_level(MUT_MANA_REGENERATION))
         regen_amount *= 2;
 
+    if (you.duration[DUR_COMBAT_MANA])
+    {
+        regen_amount *= (1 + you.props[COMBAT_MANA_KEY].get_int());
+    }
+
     if (you.props[MANA_REGEN_AMULET_ACTIVE].get_int() == 1)
         regen_amount += 25;
 
@@ -1849,6 +1854,9 @@ int player_spec_death()
 
     // transformations:
     if (you.form == transformation::lich)
+        sd++;
+
+    if (you.species == SP_LICH)
         sd++;
 
     return sd;
@@ -2775,7 +2783,7 @@ static void _handle_head_loss(int exp)
     if (!(you.attribute[ATTR_HEAD_LOSS_XP] > 0))
         return;
 
-    if (you.form == transformation::lich || you.form == transformation::shadow)
+    if (you.form == transformation::lich || you.form == transformation::shadow || you.form == transformation::statue)
         return;
 
     int loss = exp * abs(you.props[HYDRA_HEADS_NET_LOSS].get_int())/2;
@@ -6789,7 +6797,7 @@ bool player::res_sticky_flame() const
 
 int player::res_holy_energy() const
 {
-    if (undead_or_demonic())
+    if (undead_or_demonic() || you.species == SP_LESSER_LICH)
         return -1;
 
     if (is_holy())
@@ -6866,6 +6874,10 @@ int player_res_magic(bool calc_unid, bool temp)
 
     // transformations
     if (you.form == transformation::lich && temp)
+        rm += MR_PIP;
+
+    //perma lich form
+    if(you.species == SP_LICH && temp)
         rm += MR_PIP;
 
     // Trog's Hand

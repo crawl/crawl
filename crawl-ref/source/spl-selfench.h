@@ -43,3 +43,4 @@ void enchant_elemental_weapon(item_def& weapon, spschools_type disciplines, bool
 spret cast_flame_strike(int pow, bool fail);
 
 spret cast_insulation(int power, bool fail);
+spret change_lesser_lich(int power, bool fail);

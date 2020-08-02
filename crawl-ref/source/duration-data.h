@@ -778,6 +778,12 @@ static const duration_def duration_data[] =
       "Citrinitas", "Citrinitas", "Your accuracy and spells are empowered!", D_NO_FLAGS,
       {{ "You feel less empowered." },
       { "You start to feel a little less empowered", 1}}, 6},
+
+    { DUR_COMBAT_MANA,
+      LIGHTBLUE, "Mana+",
+      "mana regen", "",
+      "Your mana regeneration has increased.", D_NO_FLAGS },
+
 #if TAG_MAJOR_VERSION == 34
     // And removed ones
     { DUR_MAGIC_SAPPED, 0, "", "", "old magic sapped", "", D_NO_FLAGS},
