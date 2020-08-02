@@ -6710,7 +6710,10 @@ bool monster::cloud_immune(bool calc_unid, bool items) const
 {
     // Cloud Mage is also checked for in (so stay in sync with)
     // monster_info::monster_info(monster_type, monster_type).
-    return type == MONS_CLOUD_MAGE || actor::cloud_immune(calc_unid, items);
+    return type == MONS_CLOUD_MAGE
+           || type == MONS_ASCLEPIA
+           || type == MONS_ASCLEPIA_II
+           || actor::cloud_immune(calc_unid, items);
 }
 
 bool monster::is_illusion() const

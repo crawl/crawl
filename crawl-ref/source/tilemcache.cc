@@ -598,6 +598,8 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_ORC_WIZARD:
     case TILEP_MONS_ORC_SORCERER:
     case TILEP_MONS_NERGALLE:
+    case TILEP_MONS_BRANDAGOTH:
+    case TILEP_MONS_BRANDAGOTH_II:
     case TILEP_MONS_ETTIN:
     case TILEP_MONS_FROST_GIANT:
     case TILEP_MONS_FIRE_GIANT:

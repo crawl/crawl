@@ -47,6 +47,14 @@ Boris title
 
 Boris, Master of Life and Death
 %%%%
+Brandagoth title
+
+Brandagoth, Lava Orc Sorcerer
+%%%%
+Brandagoth the Flame title
+
+Brandagoth, Incinerator of Unbelievers
+%%%%
 Cerebov title
 
 Cerebov, Demon Lord of Fire and Steel
