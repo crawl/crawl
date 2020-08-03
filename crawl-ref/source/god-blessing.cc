@@ -722,13 +722,17 @@ static bool _beogh_bless_follower(monster* follower, bool force)
 
     string blessing = "";
 
+    if (mons_is_unique(follower->type) || one_chance_in(5))
+    {
+        follower->blessed = true;
+        blessing = "the qualification of promotion.";
+    }
+
     // 10% chance of blessing to priesthood.
     if (force || one_chance_in(10))
     {
         if (_beogh_blessing_priesthood(follower))
             blessing = "priesthood";
-        else if (mons_is_unique(follower->type))
-            blessing = "promotion";
         else
             dprf("Couldn't promote monster to priesthood");
     }

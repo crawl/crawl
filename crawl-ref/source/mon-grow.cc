@@ -80,6 +80,7 @@ static const monster_level_up mon_grow[] =
 static const map<monster_type, mon_lev_up_cond> mon_grow_cond =
 {
     { MONS_ASCLEPIA, {[](const monster &caster) {return (you.religion == GOD_BEOGH && caster.attitude > ATT_NEUTRAL);}} },
+    { MONS_BRANDAGOTH, {[](const monster &caster) {return caster.blessed;}} }
 };
 
 mons_experience_levels::mons_experience_levels()
