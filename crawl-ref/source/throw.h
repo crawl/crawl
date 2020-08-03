@@ -32,7 +32,7 @@ bool fire_warn_if_impossible(bool silent = false);
 int get_next_fire_item(int current, int offset);
 int get_ammo_to_shoot(int item, dist &target, bool teleport = false);
 bool is_pproj_active();
-void fire_thing(int item = -1);
+void fire_thing(int item = -1, coord_def preselect = coord_def(), bool endpoint=false);
 void throw_item_no_quiver();
 
 bool throw_it(bolt &pbolt, int throw_2, dist *target = nullptr);
