@@ -343,6 +343,50 @@ static bool _monster_near_by_you()
     return false;
 }
 
+static void _end_combat_mana()
+{
+    if (!you.duration[DUR_COMBAT_MANA])
+        return;
+
+    you.props.erase(COMBAT_MANA_KEY);
+    you.set_duration(DUR_COMBAT_MANA, 0);
+}
+
+static void _update_combat_mana()
+{
+    int mut_level = you.get_mutation_level(MUT_COMBAT_MANA_REGENERATE);
+    if (!mut_level)
+    {
+        _end_combat_mana();
+        return;
+    }
+
+    int monster_num = 0, mana_regen_level = 0;
+    for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
+    {
+        if (mons_is_threatening(**mi)
+            && !mi->wont_attack()
+            && !mi->neutral()
+            && !mi->submerged())
+        {
+            monster_num++;
+        }
+    }
+
+    mana_regen_level = min(mut_level, monster_num / 3);
+
+    if (mana_regen_level <= 0)
+    {
+        _end_combat_mana();
+        return;
+    }
+
+    // Lookup the old value before modifying it
+    //const int old_combat_level = _old_combat_level();
+
+    you.props[COMBAT_MANA_KEY] = mana_regen_level;
+    you.set_duration(DUR_COMBAT_MANA, 1);
+}
 
 /**
  * What was the player's most recent horror level?
@@ -514,6 +558,7 @@ void player_reacts_to_monsters()
 
     _maybe_melt_armour();
     _update_cowardice();
+    _update_combat_mana();
     if (you_worship(GOD_USKAYAW))
         _handle_uskayaw_time(you.time_taken);
 }

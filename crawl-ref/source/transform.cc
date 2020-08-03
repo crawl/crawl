@@ -1887,9 +1887,6 @@ bool transform(int pow, transformation which_trans, bool involuntary,
     {
         switch(which_trans)
         {
-            case transformation::statue:
-                mprf(MSGCH_INTRINSIC_GAIN, "Your heads got stiffen.");
-                break;
             default:
                 mprf(MSGCH_INTRINSIC_GAIN, "Your heads are disappeared.");
                 break;
@@ -2138,9 +2135,6 @@ void untransform(bool skip_move)
     {
         switch(old_form)
         {
-            case transformation::statue:
-                mprf(MSGCH_INTRINSIC_GAIN, "Your heads moves flexibly.");
-                break;
             default:
                 mprf(MSGCH_INTRINSIC_GAIN, "Your heads appear again.");
                 break;

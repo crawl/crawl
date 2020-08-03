@@ -3500,7 +3500,7 @@ void random_uselessness()
         break;
 
     case 3:
-        if (you.species == SP_MUMMY)
+        if (you.species == SP_MUMMY || you.species == SP_LICH)
             mpr("Your bandages flutter.");
         else // if (you.can_smell())
             mprf("You smell %s.", _weird_smell().c_str());
@@ -3513,7 +3513,7 @@ void random_uselessness()
     case 5:
         if (you.get_mutation_level(MUT_BEAK) || one_chance_in(3))
             mpr("Your brain hurts!");
-        else if (you.species == SP_MUMMY || coinflip())
+        else if (you.species == SP_MUMMY || you.species == SP_LICH || coinflip())
             mpr("Your ears itch!");
         else
             mpr("Your nose twitches suddenly!");

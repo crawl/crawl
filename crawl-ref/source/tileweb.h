@@ -82,6 +82,7 @@ struct player_info
     string unarmed_attack;
     uint8_t unarmed_attack_colour;
     bool quiver_available;
+    bool has_hydra_multi_attack;
 };
 
 class TilesFramework

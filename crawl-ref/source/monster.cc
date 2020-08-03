@@ -3784,11 +3784,11 @@ int monster::res_fire() const
 
     if (has_ench(ENCH_RESISTANCE))
         u++;
-	
-	if (have_passive(passive_t::share_resistance)
-		&& is_divine_companion()){
-		u = max(u, player_res_fire());
-	}
+    
+    if (have_passive(passive_t::share_resistance)
+        && is_divine_companion()){
+        u = max(u, player_res_fire());
+    }
 
     if (u < -3)
         u = -3;
@@ -3840,11 +3840,11 @@ int monster::res_cold() const
 
     if (has_ench(ENCH_RESISTANCE))
         u++;
-	
-	if (have_passive(passive_t::share_resistance)
-		&& is_divine_companion()){
-		u = max(u, player_res_cold());
-	}
+    
+    if (have_passive(passive_t::share_resistance)
+        && is_divine_companion()){
+        u = max(u, player_res_cold());
+    }
 
     if (u < -3)
         u = -3;
@@ -3886,10 +3886,10 @@ int monster::res_elec() const
     if (has_ench(ENCH_RESISTANCE))
         u++;
 
-	if (have_passive(passive_t::share_resistance)
-		&& is_divine_companion()){
-		u = max(u, player_res_electricity());
-	}
+    if (have_passive(passive_t::share_resistance)
+        && is_divine_companion()){
+        u = max(u, player_res_electricity());
+    }
 
     // Monsters can legitimately get multiple levels of electricity resistance.
 
@@ -3951,10 +3951,10 @@ int monster::res_poison(bool temp) const
     if (has_ench(ENCH_RESISTANCE))
         u++;
 
-	if (have_passive(passive_t::share_resistance)
-		&& is_divine_companion()){
-		u = max(u, player_res_poison());
-	}
+    if (have_passive(passive_t::share_resistance)
+        && is_divine_companion()){
+        u = max(u, player_res_poison());
+    }
 
     // Monsters can have multiple innate levels of poison resistance, but
     // like players, equipment doesn't stack.
@@ -4056,10 +4056,10 @@ int monster::res_negative_energy(bool intrinsic_only) const
             u++;
     }
 
-	if (have_passive(passive_t::share_resistance)
-		&& is_divine_companion()){
-		u = max(u, player_prot_life());
-	}
+    if (have_passive(passive_t::share_resistance)
+        && is_divine_companion()){
+        u = max(u, player_prot_life());
+    }
 
     if (u > 3)
         u = 3;
@@ -4113,11 +4113,11 @@ int monster::res_acid(bool calc_unid) const
 
     if (has_ench(ENCH_RESISTANCE))
         u++;
-	
-	if (have_passive(passive_t::share_resistance)
-		&& is_divine_companion()){
-		u = max(u, player_res_acid());
-	}
+    
+    if (have_passive(passive_t::share_resistance)
+        && is_divine_companion()){
+        u = max(u, player_res_acid());
+    }
 
     return u;
 }

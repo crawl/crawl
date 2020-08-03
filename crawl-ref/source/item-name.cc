@@ -3268,7 +3268,7 @@ bool is_emergency_item(const item_def &item)
             return false;
         }
     case OBJ_POTIONS:
-        if (you.species == SP_MUMMY)
+        if (you.species == SP_MUMMY || you.species == SP_LICH)
             return false;
 
         switch (item.sub_type)
@@ -3311,7 +3311,7 @@ bool is_good_item(const item_def &item)
     case OBJ_SCROLLS:
         return item.sub_type == SCR_ACQUIREMENT;
     case OBJ_POTIONS:
-        if (you.species == SP_MUMMY)
+        if (you.species == SP_MUMMY || you.species == SP_LICH)
             return false;
         switch (item.sub_type)
         {
@@ -3367,7 +3367,7 @@ bool is_bad_item(const item_def &item, bool temp)
         }
     case OBJ_POTIONS:
         // Can't be bad if you can't use them.
-        if (you.species == SP_MUMMY)
+        if (you.species == SP_MUMMY || you.species == SP_LICH)
             return false;
 
         switch (item.sub_type)

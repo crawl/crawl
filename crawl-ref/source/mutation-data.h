@@ -1930,6 +1930,20 @@ static const mutation_def mut_data[] =
 
   {"Your body becomes less viscous."},
 },
+
+{ MUT_COMBAT_MANA_REGENERATE, 0, 3, mutflag::good, false,
+    "combat mana regeneration",
+
+    {"You regenerate mana when monsters are visible.",
+     "You regenerate mana quickly when monsters are visible.",
+     "You regenerate mana very quickly when monsters are visible."},
+    {"Your regenerate mana near monsters.",
+     "Your regenerate mana near monsters.",
+     "Your regenerate mana near monsters."},
+    {"Your mana regeneration is no longer fast.",
+     "Your mana regeneration is weakened.",
+     "Your mana regeneration is weakened."},
+},
 };
 
 static const mutation_category_def category_mut_data[] =

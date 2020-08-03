@@ -253,7 +253,6 @@ dungeon_feature_type magic_map_base_feat(dungeon_feature_type feat)
     case DCHAR_STATUE:
         return DNGN_GRANITE_STATUE;
     case DCHAR_FLOOR:
-    case DCHAR_TRAP:
         return DNGN_FLOOR;
     case DCHAR_WAVY:
         return DNGN_SHALLOW_WATER;

@@ -27,12 +27,6 @@ static tileidx_t _modrng(int mod, tileidx_t first, tileidx_t last)
     return first + mod % (last - first + 1);
 }
 
-static tileidx_t _mon_mod(tileidx_t tile, int offset)
-{
-    int count = tile_player_count(tile);
-    return tile + offset % count;
-}
-
 tileidx_t tilep_equ_weapon(const item_def &item, bool hand2)
 {
     if (item.props.exists("worn_tile"))
@@ -730,6 +724,8 @@ tileidx_t tilep_species_to_base_tile(int sp, int level)
         return TILEP_BASE_BLOSSOM_HOMUNCULUS;
     case SP_ADAPTION_HOMUNCULUS:
         return TILEP_BASE_ADAPTION_HOMUNCULUS;
+    case SP_LICH:
+        return TILEP_TRAN_LICH_LESSER_LICH;
     default:
         return TILEP_BASE_HUMAN;
     }
@@ -1205,6 +1201,19 @@ void tilep_calc_flags(const dolls_data &doll, int flag[])
         flag[TILEP_PART_SHADOW]= TILEP_FLAG_HIDE;
         flag[TILEP_PART_DRCWING]=TILEP_FLAG_HIDE;
         flag[TILEP_PART_DRCHEAD]=TILEP_FLAG_HIDE;
+    }
+    else if (is_player_tile(doll.parts[TILEP_PART_BASE], TILEP_TRAN_LICH_LESSER_LICH))
+    {
+        flag[TILEP_PART_BOOTS] = TILEP_FLAG_HIDE;
+        flag[TILEP_PART_LEG] = TILEP_FLAG_HIDE;
+        flag[TILEP_PART_BODY] = TILEP_FLAG_HIDE;
+        if (doll.parts[TILEP_PART_HAND1] == TILEP_HAND1_BLADEHAND)
+            flag[TILEP_PART_ARM] = TILEP_FLAG_HIDE;
+        flag[TILEP_PART_HAIR] = TILEP_FLAG_HIDE;
+        flag[TILEP_PART_BEARD] = TILEP_FLAG_HIDE;
+        flag[TILEP_PART_SHADOW] = TILEP_FLAG_HIDE;
+        flag[TILEP_PART_DRCWING] = TILEP_FLAG_HIDE;
+        flag[TILEP_PART_DRCHEAD] = TILEP_FLAG_HIDE;
     }
 
     if (doll.parts[TILEP_PART_ARM] == TILEP_ARM_OCTOPODE_SPIKE
