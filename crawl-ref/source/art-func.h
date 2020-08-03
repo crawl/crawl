@@ -1615,7 +1615,7 @@ static void _INVDRAGON_equip(item_def */*item*/, bool *show_msgs,
 }
 
 
-static void _INVDRAGON_unequip(item_def *item, bool *show_msgs)
+static void _INVDRAGON_unequip(item_def */*item*/, bool *show_msgs)
 {
     _equip_mpr(show_msgs, "You feel less unseen.");
 }

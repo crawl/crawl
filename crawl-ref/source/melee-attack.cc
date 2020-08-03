@@ -2303,8 +2303,8 @@ bool melee_attack::consider_decapitation(int dam, int damage_type)
     {
         if (defender_visible)
             mpr("The flame cauterises the wound!");
-            if (defender->is_player() && defender->heads() == 0)
-                defender->hurt(attacker, INSTANT_DEATH);
+        if (defender->is_player() && defender->heads() == 0)
+            defender->hurt(attacker, INSTANT_DEATH);
         return false;
     }
 

@@ -2631,11 +2631,8 @@ static void _recover_head()
             you.head_grow(1, false);
         else
             you.head_grow(-1, false);
-        bool still_loss = false;
-        if (you.props[HYDRA_HEADS_NET_LOSS].get_int() != 0)
-            still_loss = true;
 
-        else
+        if (you.props[HYDRA_HEADS_NET_LOSS].get_int() == 0)
             break;
     }
 }
@@ -7033,7 +7030,7 @@ bool player::tengu_flight() const
     return species == SP_TENGU && airborne();
 }
 
-void _head_loss_xp() 
+static void _head_loss_xp() 
 {
     int num = you.props[HYDRA_HEADS_NET_LOSS].get_int();
 

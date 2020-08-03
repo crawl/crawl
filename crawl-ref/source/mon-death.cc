@@ -441,7 +441,7 @@ static void _gold_pile(item_def &corpse, monster_type corpse_class)
     you.redraw_title = true;
 }
 
-void _blood_spray_with_cigotuvis(const monster* mons, int level)
+static void _blood_spray_with_cigotuvis(const monster* mons, int level)
 {
     coord_def origin = mons->pos();
     monster_type montype = mons->type;
@@ -872,7 +872,7 @@ item_def* place_monster_corpse(const monster& mons, bool silent, bool force)
             // Always identify said potion.
             set_ident_type(essence, true);
         
-            mprf(MSGCH_GOD, " extract %s from the corpse.",
+            mprf(MSGCH_GOD, "The Great Wyrm extracts %s from the corpse.",
                 essence.name(DESC_A).c_str());
 
             std::map<int, int> tmp_l_p = you.last_pickup;

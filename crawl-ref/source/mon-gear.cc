@@ -789,6 +789,10 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         } },
         { MONS_URUG,                    { URUG_WEAPONS } },
         { MONS_FREDERICK,               { URUG_WEAPONS } },
+        { MONS_BRANDAGOTH, {
+            { { WPN_QUARTERSTAFF,        1 } }, {},
+            { { SPWPN_FLAMING, 1 } },
+        } },
         { MONS_FIRE_GIANT, {
             { { WPN_GREAT_SWORD,        1 } }, {},
             { { SPWPN_FLAMING, 1 } },
@@ -2087,6 +2091,7 @@ int make_mons_armour(monster_type type, int level)
     case MONS_ORC_WIZARD:
     case MONS_BLORK_THE_ORC:
     case MONS_NERGALLE:
+    case MONS_BRANDAGOTH:
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = ARM_ROBE;
         break;
@@ -2158,7 +2163,8 @@ int make_mons_armour(monster_type type, int level)
     {
         force_item = true;
         item.base_type = OBJ_ARMOUR;
-        item.sub_type  = ARM_SCARF;
+        item.sub_type  = ARM_CLOAK;
+        item.plus = 2;
         set_item_ego_type(item, OBJ_ARMOUR, SPARM_CLOUD_IMMUNE);
         item.flags |= ISFLAG_KNOW_TYPE;
         break;

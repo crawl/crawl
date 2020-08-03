@@ -501,9 +501,8 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
         [](monster &caster, mon_spell_slot, bolt&) {
             if (you.can_see(caster))
             {
-                mprf("%s begins to emit aura of healing! %s!",
-                     caster.name(DESC_THE).c_str(),
-                     caster.pronoun(PRONOUN_REFLEXIVE).c_str());
+                mprf("%s begins to emit aura of healing!",
+                     caster.name(DESC_THE).c_str());
             }
 
             caster.add_ench(ENCH_HEALING_AURA);

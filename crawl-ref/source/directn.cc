@@ -3017,15 +3017,15 @@ static string _describe_monster_weapon(const monster_info& mi, bool ident)
     
     // Check the weapon and alt helds on the hand or on the corpse.
     bool weap_inhand = false;
-    bool alt_inhand = false;
+    //bool alt_inhand = false;
     if (weap)
     {
         weap_inhand = weap->pos.x == -2;
     }
-    if (alt)
-    {
-        alt_inhand = alt->pos.x == -2;
-    }
+    //if (alt)
+    //{
+    //    alt_inhand = alt->pos.x == -2;
+    //}
 
     if (weap && (!ident || item_type_known(*weap)) && weap_inhand)
     {
