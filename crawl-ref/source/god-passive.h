@@ -265,6 +265,9 @@ enum class passive_t
 
     /// the Great Wyrm
     wyrm_quicksilver,
+
+    /// conserve orc corpses
+    conserve_orc_corpses,
 };
 
 enum ru_interference
