@@ -115,6 +115,7 @@ public:
     static uint32_t last_client_id;
 
     bool went_unseen_this_turn;
+    bool blessed;                       // Is this monster blessed?
     coord_def unseen_pos;
 
 public:

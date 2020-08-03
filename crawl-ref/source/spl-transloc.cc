@@ -1398,6 +1398,7 @@ spret cast_singularity(actor* agent, int pow, const coord_def& where,
                  friendly ? "satisfying" : "horrifying",
                  friendly ? "." : "!");
         }
+        you.set_duration(DUR_SLOW, singularity->countdown);
         invalidate_agrid(true);
     }
     else

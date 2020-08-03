@@ -27,12 +27,6 @@ static tileidx_t _modrng(int mod, tileidx_t first, tileidx_t last)
     return first + mod % (last - first + 1);
 }
 
-static tileidx_t _mon_mod(tileidx_t tile, int offset)
-{
-    int count = tile_player_count(tile);
-    return tile + offset % count;
-}
-
 tileidx_t tilep_equ_weapon(const item_def &item, bool hand2)
 {
     if (item.props.exists("worn_tile"))

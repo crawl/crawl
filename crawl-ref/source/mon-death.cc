@@ -441,7 +441,7 @@ static void _gold_pile(item_def &corpse, monster_type corpse_class)
     you.redraw_title = true;
 }
 
-void _blood_spray_with_cigotuvis(const monster* mons, int level)
+static void _blood_spray_with_cigotuvis(const monster* mons, int level)
 {
     coord_def origin = mons->pos();
     monster_type montype = mons->type;

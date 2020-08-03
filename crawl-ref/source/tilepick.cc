@@ -3036,9 +3036,7 @@ tileidx_t tileidx_cloud(const cloud_info &cl)
     if (colour != -1)
         ch = tile_main_coloured(ch, colour);
 
-    // XXX: Should be no need for TILE_FLAG_FLYING anymore since clouds are
-    // drawn in a separate layer but I'll leave it for now in case anything changes --mumra
-    return ch | TILE_FLAG_FLYING;
+    return ch;
 }
 
 #ifdef USE_TILE
