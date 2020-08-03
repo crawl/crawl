@@ -418,7 +418,10 @@ targeting_behaviour direction_chooser::stock_behaviour;
 
 void direction(dist &moves, const direction_chooser_args& args)
 {
-    direction_chooser(moves, args).choose_direction();
+    if (in_bounds(moves.target))
+        direction_chooser(moves, args).noninteractive();
+    else
+        direction_chooser(moves, args).choose_direction();
 }
 
 direction_chooser::direction_chooser(dist& moves_,
@@ -2201,6 +2204,24 @@ private:
     coord_def old_target;
     bool m_is_alive = true;
 };
+
+void direction_chooser::update_validity()
+{
+    if (!select(false, moves.isEndpoint) || !move_is_ok())
+    {
+        moves.isCancel = true;
+        moves.isValid = false;
+        return;
+    }
+    // select() should handle setting bools appropriately on success
+}
+
+bool direction_chooser::noninteractive()
+{
+    update_validity();
+    finalize_moves();
+    return moves.isValid;
+}
 
 bool direction_chooser::choose_direction()
 {

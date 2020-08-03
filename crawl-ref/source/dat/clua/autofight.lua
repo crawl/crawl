@@ -278,24 +278,15 @@ local function get_target(no_move)
 end
 
 local function attack_fire(x,y)
-  local a = {"CMD_FIRE", "CMD_TARGET_FIND_YOU"}
-  vector_move(a, x, y)
-  a[#a+1] = "CMD_TARGET_SELECT"
-  crawl.do_commands(a, true)
+  crawl.do_targeted_command("CMD_FIRE", x, y)
 end
 
 local function attack_fire_stop(x,y)
-  local a = {"CMD_FIRE", "CMD_TARGET_FIND_YOU"}
-  vector_move(a, x, y)
-  a[#a+1] = "CMD_TARGET_SELECT_ENDPOINT"
-  crawl.do_commands(a, true)
+  crawl.do_targeted_command("CMD_FIRE", x, y, true)
 end
 
 local function attack_reach(x,y)
-  local a = {"CMD_EVOKE_WIELDED", "CMD_TARGET_FIND_YOU"}
-  vector_move(a, x, y)
-  a[#a+1] = "CMD_TARGET_SELECT_ENDPOINT"
-  crawl.do_commands(a, true)
+  crawl.do_targeted_command("CMD_EVOKE_WIELDED", x, y, true)
 end
 
 local function attack_melee(x,y)

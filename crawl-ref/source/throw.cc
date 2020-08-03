@@ -553,13 +553,15 @@ bool is_pproj_active()
 
 // If item == -1, prompt the user.
 // If item passed, it will be put into the quiver.
-void fire_thing(int item)
+void fire_thing(int item, coord_def preselect, bool endpoint)
 {
 #ifdef USE_SOUND
     parse_sound(FIRE_PROMPT_SOUND);
 #endif
 
     dist target;
+    target.target = preselect;
+    target.isEndpoint = endpoint;
     item = get_ammo_to_shoot(item, target, is_pproj_active());
     if (item == -1)
         return;
