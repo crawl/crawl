@@ -16,6 +16,7 @@
 #include "makeitem.h"
 #include "message.h"
 #include "mon-gear.h"
+#include "mon-grow.h" 
 #include "mon-place.h"
 #include "religion.h"
 #include "stringutil.h"
@@ -726,6 +727,8 @@ static bool _beogh_bless_follower(monster* follower, bool force)
     {
         if (_beogh_blessing_priesthood(follower))
             blessing = "priesthood";
+        else if (mons_is_unique(follower->type))
+            blessing = "promotion";
         else
             dprf("Couldn't promote monster to priesthood");
     }

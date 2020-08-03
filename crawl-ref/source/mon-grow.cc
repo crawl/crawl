@@ -38,7 +38,7 @@ static const monster_level_up mon_grow[] =
     monster_level_up(MONS_BLORK_THE_ORC_KNIGHT, MONS_BLORK_THE_ORC_WARLORD),
     monster_level_up(MONS_URUG, MONS_URUG_II),
     monster_level_up(MONS_NERGALLE, MONS_NERGALLE_II),
-    monster_level_up(MONS_ASCLEPIA, MONS_ASCLEPIA_II),
+    monster_level_up(MONS_ASCLEPIA, MONS_ASCLEPIA_II),   
 
     monster_level_up(MONS_KOBOLD, MONS_BIG_KOBOLD),
 
@@ -74,6 +74,11 @@ static const monster_level_up mon_grow[] =
     monster_level_up(MONS_TENGU, MONS_TENGU_WARRIOR),
     monster_level_up(MONS_TENGU_CONJURER, MONS_TENGU_REAVER),
     monster_level_up(MONS_TENGU_WARRIOR, MONS_TENGU_REAVER),
+};
+
+static const map<monster_type, mon_lev_up_cond> mon_grow_cond =
+{
+    { MONS_ASCLEPIA, {[](const monster &caster) {return (you.religion == GOD_BEOGH && caster.attitude > ATT_NEUTRAL);}} },
 };
 
 mons_experience_levels::mons_experience_levels()
@@ -145,10 +150,16 @@ bool monster::level_up_change()
 {
     const monster_level_up *lup =
         _monster_level_up_target(type, get_experience_level());
+
+    const mon_lev_up_cond *lup_cond;
     if (lup)
     {
-        upgrade_type(lup->after, false, lup->adjust_hp);
-        return true;
+        lup_cond = map_find(mon_grow_cond, lup->before);
+        if (lup_cond && lup_cond->condition(*this))
+        {
+            upgrade_type(lup->after, false, lup->adjust_hp);
+            return true;
+        }
     }
     return false;
 }
