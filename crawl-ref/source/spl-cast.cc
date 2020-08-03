@@ -2063,6 +2063,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_PORTAL_PROJECTILE:
         return cast_portal_projectile(powc, fail);
 
+    case SPELL_SHRAPNEL_CURTAION:
+        return cast_shrapnel_curtain(powc, fail);
+
     // other
     case SPELL_BORGNJORS_REVIVIFICATION:
         return cast_revivification(powc, fail);

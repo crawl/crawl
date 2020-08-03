@@ -778,6 +778,12 @@ static const duration_def duration_data[] =
       "Citrinitas", "Citrinitas", "Your accuracy and spells are empowered!", D_NO_FLAGS,
       {{ "You feel less empowered." },
       { "You start to feel a little less empowered", 1}}, 6},
+    { DUR_SHRAPNEL,
+      BLUE, "Sharpnel",
+      "sharpnel curtain", "",
+      "You are surrounded by gravels and pebbles.", D_DISPELLABLE | D_EXPIRES,
+      {{ "Your curtain of sharpnel falls." },
+        { "Your sharpnels begin to scatter." }}, 6},
 #if TAG_MAJOR_VERSION == 34
     // And removed ones
     { DUR_MAGIC_SAPPED, 0, "", "", "old magic sapped", "", D_NO_FLAGS},

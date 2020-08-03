@@ -435,3 +435,17 @@ spret cast_insulation(int power, bool fail)
                           "You feel insulated.");
     return spret::success;
 }
+
+spret cast_shrapnel_curtain(int pow, bool fail)
+{
+    fail_check();
+    if (!you.duration[DUR_SHRAPNEL])
+        mpr("Spiny pebbles and gravels are ready to react.");
+    else
+        mpr("You reinforce your curtain of shrapnel.");
+
+    you.increase_duration(DUR_SHRAPNEL, 8 + roll_dice(2, pow), 100);
+    you.props["shrapnel_power"] = pow;
+
+    return spret::success;
+}
