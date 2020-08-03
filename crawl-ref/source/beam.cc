@@ -4324,13 +4324,9 @@ void bolt::monster_post_hit(monster* mon, int dmg)
     // Acid splash from yellow draconians / acid dragons
     if (origin_spell == SPELL_ACID_SPLASH)
     {
-        mon->splash_with_acid(agent(), 3);
-
-        for (adjacent_iterator ai(source); ai; ++ai)
+        // the acid can splash onto adjacent targets
+        for (adjacent_iterator ai(mon->pos()); ai; ++ai)
         {
-            // the acid can splash onto adjacent targets
-            if (grid_distance(*ai, target) != 1)
-                continue;
             if (actor *victim = actor_at(*ai))
             {
                 if (you.see_cell(*ai))
