@@ -324,7 +324,7 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu, int
                 if (!target->alive())
                     continue;
 
-                melee_attack attk(&you, target, 7, 2);
+                melee_attack attk(&you, target, 7, additional_attack_success + 1, true);
                 attk.quiet = true; //it is almost same with cleaving.
                 if (simu)
                     attk.simu = true;
