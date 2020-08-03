@@ -3,6 +3,8 @@
  * @brief Monster level-up code.
 **/
 
+#include <functional>
+
 #include "AppHdr.h"
 
 #include "mon-grow.h"
