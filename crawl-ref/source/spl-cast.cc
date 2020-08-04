@@ -1160,9 +1160,6 @@ static unique_ptr<targeter> _spell_targeter(spell_type spell, int pow,
         return make_unique<targeter_smite>(&you, range, 0, 2);
     case SPELL_GLACIATE:
         return make_unique<targeter_cone>(&you, range);
-    case SPELL_CLOUD_CONE:
-        return make_unique<targeter_shotgun>(&you, CLOUD_CONE_BEAM_COUNT,
-                                             range, true);
     case SPELL_GRAVITAS:
         return make_unique<targeter_smite>(&you, range,
                                            gravitas_range(pow),
@@ -1662,9 +1659,6 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
 
     case SPELL_CHAIN_OF_CHAOS:
         return cast_chain_spell(SPELL_CHAIN_OF_CHAOS, powc, &you, fail);
-
-    case SPELL_CLOUD_CONE:
-        return cast_cloud_cone(&you, powc, target, fail);
 
     case SPELL_IGNITION:
         return cast_ignition(&you, powc, fail);

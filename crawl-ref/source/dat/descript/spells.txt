@@ -286,14 +286,6 @@ Cleansing Flame spell
 
 <Cleansing Flame ability>
 %%%%
-Cloud Cone spell
-
-Blasts the area near the caster with destructive clouds. At low power, the most
-lethal clouds that can be created are noxious fumes. As power increases, this
-gives way to roaring flames, freezing vapours, and poisonous gas. At the
-highest tiers of power storm clouds, acidic fog and clouds of negative energy
-become available.
-%%%%
 Cold Breath spell
 
 Exhales a focused blast of icy-cold air. It may knock back airborne targets.

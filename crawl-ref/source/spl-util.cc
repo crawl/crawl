@@ -1673,6 +1673,7 @@ const set<spell_type> removed_spells =
     SPELL_WARP_BRAND,
     SPELL_WEAVE_SHADOWS,
     SPELL_DARKNESS,
+    SPELL_CLOUD_CONE,
 #endif
 };
 

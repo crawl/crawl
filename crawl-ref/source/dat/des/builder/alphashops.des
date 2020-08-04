@@ -76,7 +76,7 @@
        "chain mail", "cloak", "crystal plate armour", "potion of cancellation",
        "book of clouds", "staff of cold", "staff of conjuration",
        "manual of crossbows", "manual of conjurations",
-       "potion of curing", "wand of clouds", "condenser vane" }
+       "potion of curing", "condenser vane" }
 
       elseif s == "D" then i = { "book of death", "book of debilitation",
        "book of dreams", "book of the dragon", "dagger", "demon blade",

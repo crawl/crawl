@@ -2565,17 +2565,6 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_CLOUD_CONE, "Cloud Cone",
-    spschool::conjuration | spschool::air,
-    spflag::target | spflag::not_self,
-    6,
-    100,
-    3, LOS_DEFAULT_RANGE,
-    6, 0,
-    TILEG_CLOUD_CONE,
-},
-
-{
     SPELL_DRAGON_CALL, "Dragon's Call",
     spschool::summoning,
     spflag::none,
@@ -3425,6 +3414,7 @@ AXED_SPELL(SPELL_HOMUNCULUS, "Homunculus")
 AXED_SPELL(SPELL_SERPENT_OF_HELL_BREATH_REMOVED, "Old serpent of hell breath")
 AXED_SPELL(SPELL_SCATTERSHOT, "Scattershot")
 AXED_SPELL(SPELL_SUMMON_SWARM, "Summon swarm")
+AXED_SPELL(SPELL_CLOUD_CONE, "Cloud Cone")
 #endif
 
 };

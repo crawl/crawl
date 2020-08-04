@@ -110,12 +110,7 @@ bool is_potentially_evil_item(const item_def& item, bool calc_unid)
         }
         break;
     case OBJ_WANDS:
-        if (item.sub_type == WAND_RANDOM_EFFECTS
-            || item.sub_type == WAND_CLOUDS)
-        {
-            return true;
-        }
-        break;
+        return item.sub_type == WAND_RANDOM_EFFECTS;
     case OBJ_MISCELLANY:
         return item.sub_type == MISC_CONDENSER_VANE;
     default:

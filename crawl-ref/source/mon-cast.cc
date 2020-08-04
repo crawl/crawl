@@ -1580,7 +1580,6 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
     case SPELL_IOOD:                  // tracer only
     case SPELL_PORTAL_PROJECTILE:     // for noise generation purposes
     case SPELL_GLACIATE:              // ditto
-    case SPELL_CLOUD_CONE:            // ditto
         _setup_fake_beam(beam, *mons);
         break;
 
@@ -3313,37 +3312,6 @@ static bool _glaciate_tracer(monster *caster, int pow, coord_def aim)
     }
 
     return enemy > friendly;
-}
-
-bool mons_should_cloud_cone(monster* agent, int power, const coord_def pos)
-{
-    targeter_shotgun hitfunc(agent, CLOUD_CONE_BEAM_COUNT,
-                              spell_range(SPELL_CLOUD_CONE, power));
-
-    hitfunc.set_aim(pos);
-
-    bolt tracer;
-    tracer.foe_ratio = 80;
-    tracer.source_id = agent->mid;
-    tracer.target = pos;
-    for (actor_near_iterator ai(agent, LOS_NO_TRANS); ai; ++ai)
-    {
-        if (hitfunc.is_affected(ai->pos()) == AFF_NO)
-            continue;
-
-        if (mons_aligned(agent, *ai))
-        {
-            tracer.friend_info.count++;
-            tracer.friend_info.power += ai->get_experience_level();
-        }
-        else
-        {
-            tracer.foe_info.count++;
-            tracer.foe_info.power += ai->get_experience_level();
-        }
-    }
-
-    return mons_should_fire(tracer);
 }
 
 /**
@@ -6465,13 +6433,6 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
     }
 
-    case SPELL_CLOUD_CONE:
-    {
-        ASSERT(mons->get_foe());
-        cast_cloud_cone(mons, splpow, mons->get_foe()->pos());
-        return;
-    }
-
     case SPELL_PHANTOM_MIRROR:
     {
         // Find appropriate ally to clone.
@@ -7835,15 +7796,6 @@ static ai_action::goodness _monster_spell_goodness(monster* mon, mon_spell_slot 
         ASSERT(foe);
         return ai_action::good_or_bad(
             _glaciate_tracer(mon, mons_spellpower(*mon, monspell), foe->pos()));
-
-    case SPELL_CLOUD_CONE:
-        ASSERT(foe);
-        if (no_clouds)
-            return ai_action::impossible();
-        else
-            return ai_action::good_or_bad(
-                mons_should_cloud_cone(mon, mons_spellpower(*mon, monspell),
-                                          foe->pos()));
 
     case SPELL_MALIGN_GATEWAY:
         return ai_action::good_or_bad(can_cast_malign_gateway());

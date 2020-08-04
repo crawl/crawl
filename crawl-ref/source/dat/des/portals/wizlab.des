@@ -1503,7 +1503,7 @@ MARKER:     ! = lua:fog_machine { \
 # player complete the rest of the map.
 ITEM:       potion of haste / potion of resistance w:5 / any potion w:20 \
             / scroll of silence w:5 / scroll of fog w:5 / any scroll w:20
-ITEM:       scarf ego:repulsion / book of clouds / wand of clouds \
+ITEM:       scarf ego:repulsion / book of clouds / condenser vane \
             / staff of air
 # Main loot, including some thematic items that are good even if you don't care
 # about flight.

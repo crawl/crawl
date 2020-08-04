@@ -569,13 +569,13 @@ i-polymorph WAND_POLYMORPH
 i-enslavement WAND_ENSLAVEMENT
 i-acid WAND_ACID
 i-random_effects WAND_RANDOM_EFFECTS
-i-disintegration WAND_DISINTEGRATION
 # start TAG_MAJOR_VERSION == 34
-i-clouds WAND_CLOUDS
+i-disintegration WAND_DISINTEGRATION
+i-clouds WAND_REMOVEME13
 i-scattershot WAND_REMOVEME12 WAND_ID_LAST
 # end TAG_MAJOR_VERSION
 # start TAG_MAJOR_VERSION == 35
-# i-clouds WAND_CLOUDS WAND_ID_LAST
+# i-disintegration WAND_DISINTEGRATION WAND_ID_LAST
 # end TAG_MAJOR_VERSION
 
 ################# Skeletons
