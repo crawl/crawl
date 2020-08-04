@@ -625,9 +625,9 @@ static int _acquirement_misc_subtype(bool /*divine*/, int & /*quantity*/,
     {
         // The player never needs more than one of these.
         {MISC_BOX_OF_BEASTS,
-            (NO_LOVE || you.seen_misc[MISC_BOX_OF_BEASTS] ? 0 : 10)},
+            (NO_LOVE || you.seen_misc[MISC_BOX_OF_BEASTS] ? 0 : 20)},
         {MISC_PHANTOM_MIRROR,
-            (NO_LOVE || you.seen_misc[MISC_PHANTOM_MIRROR] ? 0 : 10)},
+            (NO_LOVE || you.seen_misc[MISC_PHANTOM_MIRROR] ? 0 : 20)},
         // Tremorstones are better for heavily armoured characters.
         {MISC_TIN_OF_TREMORSTONES,
             (you.seen_misc[MISC_TIN_OF_TREMORSTONES]
@@ -636,6 +636,8 @@ static int _acquirement_misc_subtype(bool /*divine*/, int & /*quantity*/,
             (you.seen_misc[MISC_LIGHTNING_ROD]   ? 0 : 20)},
         {MISC_PHIAL_OF_FLOODS,
             (you.seen_misc[MISC_PHIAL_OF_FLOODS] ? 0 : 20)},
+        {MISC_CONDENSER_VANE,
+            (you.seen_misc[MISC_CONDENSER_VANE] ? 0 : 20)},
     };
 
     const int * const choice = random_choose_weighted(choices);
@@ -647,7 +649,8 @@ static int _acquirement_misc_subtype(bool /*divine*/, int & /*quantity*/,
                              MISC_PHANTOM_MIRROR,
                              MISC_TIN_OF_TREMORSTONES,
                              MISC_LIGHTNING_ROD,
-                             MISC_PHIAL_OF_FLOODS);
+                             MISC_PHIAL_OF_FLOODS,
+                             MISC_CONDENSER_VANE);
     }
 
     return *choice;

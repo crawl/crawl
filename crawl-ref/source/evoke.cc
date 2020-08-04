@@ -32,6 +32,7 @@
 #include "invent.h"
 #include "item-prop.h"
 #include "items.h"
+#include "level-state-type.h"
 #include "libutil.h"
 #include "losglobal.h"
 #include "message.h"
@@ -1145,6 +1146,81 @@ static spret _tremorstone()
     return spret::success;
 }
 
+random_pick_entry<cloud_type> condenser_clouds[] =
+{
+  { 0,   50, 200, FALL, CLOUD_MEPHITIC },
+  { 0,  100, 125, PEAK, CLOUD_FIRE },
+  { 0,  100, 125, PEAK, CLOUD_COLD },
+  { 0,  100, 125, PEAK, CLOUD_POISON },
+  { 0,  110, 50, RISE, CLOUD_NEGATIVE_ENERGY },
+  { 0,  110, 50, RISE, CLOUD_STORM },
+  { 0,  110, 50, RISE, CLOUD_ACID },
+  { 0,0,0,FLAT,CLOUD_NONE }
+};
+
+static spret _condenser()
+{
+    if (env.level_state & LSTATE_STILL_WINDS)
+    {
+        mpr("The air is too still to form clouds.");
+        return spret::abort;
+    }
+
+    const int pow = 15 + you.skill(SK_EVOCATIONS, 7) / 2;
+    const int adjust_pow = min(110,player_adjust_evoc_power(pow));
+
+    random_picker<cloud_type, NUM_CLOUD_TYPES> cloud_picker;
+    cloud_type cloud = cloud_picker.pick(condenser_clouds, adjust_pow, CLOUD_NONE);
+
+    vector<coord_def> target_cells;
+    bool see_targets = false;
+
+    for (radius_iterator di(you.pos(), LOS_NO_TRANS); di; ++di)
+    {
+        monster *mons = monster_at(*di);
+
+        if (!mons || mons->wont_attack() || !mons_is_threatening(*mons))
+            continue;
+
+        if (you.can_see(*mons))
+            see_targets = true;
+
+        for (adjacent_iterator ai(mons->pos(), false); ai; ++ai)
+        {
+            actor * act = actor_at(*ai);
+            if (!cell_is_solid(*ai) && you.see_cell(*ai) && !cloud_at(*ai)
+                && !(act && act->wont_attack()))
+            {
+                target_cells.push_back(*ai);
+            }
+        }
+    }
+
+    if (!see_targets
+        && !yesno("You can't see anything. Try to condense clouds anyway?",
+                  true, 'n'))
+    {
+        return spret::abort;
+    }
+
+    if (target_cells.empty())
+    {
+        canned_msg(MSG_NOTHING_HAPPENS);
+        return spret::fail;
+    }
+
+    for (auto p : target_cells)
+    {
+        const int cloud_power = 5
+            + random2avg(12 + div_rand_round(adjust_pow * 3, 4), 3);
+        place_cloud(cloud, p, cloud_power, &you);
+    }
+
+    mprf("Clouds of %s condense around you!", cloud_type_name(cloud).c_str());
+
+    return spret::success;
+}
+
 bool evoke_check(int slot, bool quiet)
 {
     const bool reaching = slot != -1 && slot == you.equip[EQ_WEAPON]
@@ -1432,6 +1508,28 @@ bool evoke_item(int slot)
                     expend_xp_evoker(item.sub_type);
                     if (!evoker_charges(item.sub_type))
                         mpr("The tin is emptied!");
+                case spret::fail:
+                    practise_evoking(1);
+                    break;
+            }
+            break;
+
+        case MISC_CONDENSER_VANE:
+            if (!evoker_charges(item.sub_type))
+            {
+                mpr("That is presently inert.");
+                return false;
+            }
+            switch (_condenser())
+            {
+                default:
+                case spret::abort:
+                    return false;
+
+                case spret::success:
+                    expend_xp_evoker(item.sub_type);
+                    if (!evoker_charges(item.sub_type))
+                        mpr("The condenser dries out!");
                 case spret::fail:
                     practise_evoking(1);
                     break;
