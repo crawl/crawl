@@ -407,7 +407,7 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_SUMMON_ICE_BEAST,
 }, 
 {   // Book of the War Chants
-    SPELL_SHRAPNEL_CURTAION
+    SPELL_SHRAPNEL_CURTAION,
     SPELL_STONESKIN,
     SPELL_ELENENTAL_WEAPON,
     SPELL_FLAME_STRIKE,
