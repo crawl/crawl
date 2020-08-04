@@ -739,7 +739,7 @@ item_def* place_monster_corpse(const monster& mons, bool silent, bool force)
                              || goldify;
  
     const int weight = have_passive(passive_t::conserve_orc_corpses) 
-                        && (mons_genus(mons.type) == MONS_ORC) ? 500 + you.piety : 500;
+                        && (mons_genus(mons.type) == MONS_ORC) ? 500 - you.piety : 500;
     // 50/50 chance of getting a corpse, usually.
     // If you believe Beogh, Beogh conserves orc corpses.
     if (!no_coinflip && x_chance_in_y(weight,1000))
