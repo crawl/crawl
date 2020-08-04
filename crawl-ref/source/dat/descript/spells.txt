@@ -1315,6 +1315,12 @@ Shock spell
 
 Throws a bouncing bolt of electricity. It partially bypasses armour.
 %%%%
+Shrapnel Curtain spell
+
+Forms a curtain surrounded the caster, with spiny pebbles and gravels. These are
+made by dusts in the Dungeon, and reacts when the caster has been attacked, will
+be fired to the attacker to deal damage easily prevented by armor.
+%%%%
 Shroud of Golubria spell
 
 Bends space around the caster's body, protecting them from some blows by

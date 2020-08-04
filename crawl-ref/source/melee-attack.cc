@@ -3676,6 +3676,24 @@ void melee_attack::do_spines()
 
             attacker->hurt(&you, hurt);
         }
+
+        if (attacker->alive() && you.duration[DUR_SHRAPNEL])
+        {
+            // shrapenl_power is set when the infusion spell is cast
+            const int pow = you.props["shrapenl_power"].get_int();
+            const int dmg = 2 + div_rand_round(pow, 12);
+            const int hurt = defender->apply_ac(dmg);
+
+            dprf(DIAG_COMBAT, "Shrapnel: dmg = %d hurt = %d", dmg, hurt);
+
+            if (hurt <= 0)
+                return;
+
+            simple_monster_message(*attacker->as_monster(),
+                                   " is struck by your shrapenls.");
+
+            attacker->hurt(&you, hurt);
+        }
     }
     else if (defender->as_monster()->is_spiny())
     {

@@ -439,7 +439,6 @@ spret cast_insulation(int power, bool fail)
     return spret::success;
 }
 
-
 spret change_lesser_lich(int , bool fail)
 {
     ASSERT(you.species == SP_LESSER_LICH);
@@ -506,6 +505,20 @@ spret change_lesser_lich(int , bool fail)
     gain_and_note_hp_mp();
 
     redraw_screen();
+
+    return spret::success;
+}
+
+spret cast_shrapnel_curtain(int pow, bool fail)
+{
+    fail_check();
+    if (!you.duration[DUR_SHRAPNEL])
+        mpr("Spiny pebbles and gravels are ready to react.");
+    else
+        mpr("You reinforce your curtain of shrapnel.");
+
+    you.increase_duration(DUR_SHRAPNEL, 8 + roll_dice(2, pow), 100);
+    you.props["shrapnel_power"] = pow;
 
     return spret::success;
 }

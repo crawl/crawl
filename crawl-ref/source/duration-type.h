@@ -224,5 +224,6 @@ enum duration_type
     DUR_STONESKIN,
     DUR_CITRINITAS,
     DUR_COMBAT_MANA,
+    DUR_SHRAPNEL,
     NUM_DURATIONS
 };
