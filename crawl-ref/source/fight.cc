@@ -254,7 +254,7 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu, int
         }
         else
         {
-            attack_num = you.heads()/3 + 1;
+            attack_num = (you.heads()-1)/3 + 1;
             int remain = you.heads() - attack_num;
             you.turn_is_over = false;
             bool gl_cancel_attack = false;
@@ -272,7 +272,7 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu, int
                 if (!defender->is_monster() || defender->as_monster()->get_client_id() != placeholder)
                     break;
 
-                melee_attack attk(&you, defender, 7, i);
+                melee_attack attk(&you, defender, 7, i, i);
                 if (i+1 != attack_num)
                     attk.quiet = true;
                 if (simu)
