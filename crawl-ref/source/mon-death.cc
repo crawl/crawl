@@ -118,7 +118,7 @@ static bool _fill_out_corpse(const monster& mons, item_def& corpse)
     corpse.base_type      = OBJ_CORPSES;
     corpse.mon_type       = corpse_class;
     corpse.sub_type       = CORPSE_BODY;
-    corpse.freshness      = FRESHEST_CORPSE + have_passive(passive_t::conserve_orc_corpses)? you.piety : 0;  // rot time
+    corpse.freshness      = FRESHEST_CORPSE;  // rot time
     corpse.quantity       = 1;
     corpse.rnd            = 1 + random2(255);
     corpse.orig_monnum    = mtype;
@@ -169,6 +169,8 @@ static bool _fill_out_corpse(const monster& mons, item_def& corpse)
         if (saved_mon.max_hit_points <= 0)
             saved_mon.max_hit_points = 1;
         saved_mon.hit_points = saved_mon.max_hit_points;
+
+        corpse.freshness += have_passive(passive_t::conserve_orc_corpses)? you.piety/2 : 0;
     }
 
     return true;
