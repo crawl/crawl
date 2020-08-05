@@ -111,6 +111,59 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
                 + "px " + this.glyph_mode_font);
         },
 
+        glyph_mode_update_font_metrics: function ()
+        {
+            this.ctx.font = this.glyph_mode_font_name();
+
+            // Glyph used here does not matter because fontBoundingBoxAscent
+            // and fontBoundingBoxDescent are specific to the font whereas all
+            // glyphs in a monospaced font will have the same width
+            var metrics = this.ctx.measureText('@');
+            this.glyph_mode_font_width = metrics.width;
+
+            // Currently, fontBoundingBoxAscent/Descent are still
+            // experimental for most web browsers and may be unavailable.
+            if (metrics.fontBoundingBoxAscent)
+            {
+                this.glyph_mode_baseline = metrics.fontBoundingBoxAscent;
+                this.glyph_mode_line_height = metrics.fontBoundingBoxAscent
+                                            + metrics.fontBoundingBoxDescent;
+            }
+            else
+            {   // Inspired by https://stackoverflow.com/q/1134586/
+                var body = document.body;
+                var dmy_glyph = document.createElement("span");
+                var ref_block = document.createElement("div");
+                var div = document.createElement("div");
+
+                dmy_glyph.innerHTML = '@';
+                dmy_glyph.style.font = this.ctx.font;
+
+                ref_block.style.display = "inline-block";
+                ref_block.style.width = "1px";
+                ref_block.style.height = "0px";
+
+                div.style.visibility = "hidden";
+                div.appendChild(dmy_glyph);
+                div.appendChild(ref_block);
+                body.appendChild(div);
+
+                try
+                {
+                    ref_block.style["vertical-align"] = "baseline";
+                    this.glyph_mode_baseline = ref_block.offsetTop
+                                                - dmy_glyph.offsetTop;
+                    ref_block.style["vertical-align"] = "bottom";
+                    this.glyph_mode_line_height = ref_block.offsetTop
+                                                    - dmy_glyph.offsetTop;
+                }
+                finally
+                {
+                    document.body.removeChild(div);
+                }
+            }
+        },
+
         render_cursors: function(cx, cy, x, y)
         {
             var renderer = this;
@@ -472,8 +525,6 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
             }
             this.ctx.fillStyle = fg_term_colours[col.fg];
             this.ctx.font = prefix + this.glyph_mode_font_name();
-            this.ctx.textAlign = "center";
-            this.ctx.textBaseline = "middle";
 
             this.ctx.save();
 
@@ -483,8 +534,18 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
                 this.ctx.rect(x, y, this.cell_width, this.cell_height);
                 this.ctx.clip();
 
-                this.ctx.fillText(map_cell.g,
-                                  x + this.cell_width/2, y + this.cell_height/2);
+                if (options.get("tile_display_mode") == "hybrid")
+                {
+                    this.ctx.textAlign = "center";
+                    this.ctx.textBaseline = "middle";
+                    this.ctx.fillText(map_cell.g, x + this.cell_width/2,
+                                        y + this.cell_height/2);
+                }
+                else
+                {
+                    this.ctx.fillText(map_cell.g, x,
+                                        y + this.glyph_mode_baseline);
+                }
             }
             finally
             {
