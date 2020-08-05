@@ -106,6 +106,7 @@ function ($, comm, client, dungeon_renderer, display, minimap, enums, messages,
             layout(layout_parameters, true);
         display.invalidate(true);
         display.display();
+        glyph_mode_font_init();
     });
 
     function toggle_full_window_dungeon_view(full)
@@ -225,13 +226,25 @@ function ($, comm, client, dungeon_renderer, display, minimap, enums, messages,
         document.title = data.text;
     }
 
-    var device_ratio = window.devicePixelRatio;
-    var renderer_settings = {
-        glyph_mode_font_size: 24 * device_ratio,
-        glyph_mode_font: "monospace"
-    };
+    function glyph_mode_font_init()
+    {
+        if (options.get("tile_display_mode") == "tiles") return;
 
-    $.extend(dungeon_renderer, renderer_settings);
+        var device_ratio = window.devicePixelRatio;
+        var glyph_font, glyph_size;
+
+        glyph_size = options.get("glyph_mode_font_size") * device_ratio;
+        glyph_font = options.get("glyph_mode_font");
+
+        if (!document.fonts.check(glyph_size + "px " + glyph_font))
+            glyph_font = "monospace";
+
+        var renderer_settings = {
+            glyph_mode_font_size: glyph_size,
+            glyph_mode_font: glyph_font
+        };
+        $.extend(dungeon_renderer, renderer_settings);
+    }
 
     $(document).ready(function () {
         $(window)

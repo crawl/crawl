@@ -393,6 +393,8 @@ const vector<GameOption*> game_options::build_options_list()
         new StringGameOption(SIMPLE_NAME(tile_font_msg_family), "monospace"),
         new StringGameOption(SIMPLE_NAME(tile_font_stat_family), "monospace"),
         new StringGameOption(SIMPLE_NAME(tile_font_lbl_family), "monospace"),
+        new StringGameOption(SIMPLE_NAME(glyph_mode_font), "monospace"),
+        new IntGameOption(SIMPLE_NAME(glyph_mode_font_size), 24, 8, 144),
 #endif
 #ifdef USE_FT
         new BoolGameOption(SIMPLE_NAME(tile_font_ft_light), false),
@@ -4556,6 +4558,9 @@ void game_options::write_webtiles_options(const string& name)
     tiles.json_write_int("tile_font_stat_size", Options.tile_font_stat_size);
     tiles.json_write_int("tile_font_msg_size", Options.tile_font_msg_size);
     tiles.json_write_int("tile_font_lbl_size", Options.tile_font_lbl_size);
+
+    tiles.json_write_string("glyph_mode_font", Options.glyph_mode_font);
+    tiles.json_write_int("glyph_mode_font_size", Options.glyph_mode_font_size);
 
     tiles.json_write_bool("show_game_time", Options.show_game_time);
 

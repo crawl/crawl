@@ -251,13 +251,9 @@ function ($, cr, map_knowledge, options, dngn, util, view_data, enums) {
 
             if (options.get("tile_display_mode") == "glyphs")
             {
-                // font size ratio: handled in cell_renderer.js
-                var margin = 2 * ratio;
-                this.ctx.font = this.glyph_mode_font_name();
-                var metrics = this.ctx.measureText("@");
-                this.set_cell_size(metrics.width + margin,
-                        Math.floor(this.glyph_mode_font_size * scale / 100)
-                        + margin);
+                this.glyph_mode_update_font_metrics();
+                this.set_cell_size(this.glyph_mode_font_width,
+                                    this.glyph_mode_line_height);
             }
             else if ((min_diameter * cell_size.w / ratio > width)
                 || (min_diameter * cell_size.h / ratio > height))
