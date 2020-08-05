@@ -732,10 +732,10 @@ static const duration_def duration_data[] =
       {{ "Your noxious spew wanes." }}},
 
     { DUR_HOMUNCULUS_WILD_MAGIC,
-      MAGENTA, "Wild",
-      "wild magic", "",
-      "Casting spells uprouses your spell.", D_DISPELLABLE,
-      {{ "Your magic seems less wild.", []() {
+      MAGENTA, "Unstable",
+      "unstable magic", "",
+      "Your magic becomes powerful but unstable.", D_DISPELLABLE,
+      {{ "You feel your magic has stabilized.", []() {
           you.props.erase(HOMUNCULUS_WILD_MAGIC);
     }}} },
      { DUR_ELEMENTAL_WEAPON, LIGHTGRAY, "Elem", "", "Elemental", "Elemental", D_NO_FLAGS,

@@ -491,7 +491,7 @@ bool fill_status_info(int status, status_info& inf)
 
     case DUR_HOMUNCULUS_WILD_MAGIC:
         inf.light_text
-            = make_stringf("Wild (%u)",
+            = make_stringf("Unstable (%u)",
                 you.props[HOMUNCULUS_WILD_MAGIC].get_int());
         break;
 

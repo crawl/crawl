@@ -41,7 +41,7 @@ aptitudes:
   earth_magic: 0
   poison_magic: 0
   invocations: -2
-  evocations: 0
+  evocations: 2
 str: 9
 int: 9
 dex: 7
@@ -53,5 +53,7 @@ mutations:
     MUT_MANA_REGENERATION: 1
     MUT_CLARITY : 1
 fake_mutations:
-  - long: Your magic cast will make your mana wild, and released by melee combat. 
-    short: Magic overheating
+  - long: Every time cast a spell, your magic will be amplified and unstable.
+    short: adapted essence
+  - long: You can release unstability and regain magic with melee attacks.
+    short: essence recycler
