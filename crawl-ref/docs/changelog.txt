@@ -1,4 +1,4 @@
-Stone Soup 0.26 (through 0.26-a0-470-g4b749af)
+Stone Soup 0.26 (through 0.26-a0-495-g20a46bd)
 ----------------------------------------------
 
 Highlights
@@ -15,6 +15,8 @@ Branches, Environment
 * Shadows and wights no longer appear in the Crypt spawn list, replaced with
   flying skulls, necromancers, and wraiths.
 * Spider is now quiet.
+* The malevolent force of Zot will find players that tarry far too long in one
+  place.
 
 Character
 ---------
@@ -45,6 +47,8 @@ Character
 * Kobolds now have the Nightstalker 3 mutation (reducing LOS and providing
   bonus stealth).
 * Demonspawn no longer have the Nightstalker facet.
+* Contamination decays three times faster.
+* Wanderers have a chance to start with any of the misc evokers.
 
 Gods
 ----
@@ -76,9 +80,9 @@ Items
   attunement logic (Faith, Regen, and MPRegen retain their swap drawbacks).
 * Bardings are merged into a single item type. The Black Knight's barding is
   removed.
-* New scarf ego: Shadows. Scarves of shadows reduce line of sight to 3/4 the
-  original; this stacks with other LOS altering effects; as well as act as a
-  negative spell enhancer.
+* New scarf ego: Shadows. Scarves of shadows reduce line of sight by 1; this
+  stacks with other LOS altering effects; as well as act as a negative spell
+  enhancer.
 * New weapon ego: Spectral. The spectral ego appears on [giant [spiked]] clubs,
   quarterstaffs, lajatangs, and two-handed randarts of any base type. On hit
   the ego spawns a spectral weapon to fight along side the user whose strength
@@ -89,6 +93,16 @@ Items
 * The contents of item piles are revealed on sight, instead of on visit.
 * New boots ego: Rampaging. Boots of rampaging cause the wearer to take an
   extra step for no cost---only when moving in the direction of a foe.
+* The ratskin cloak is changed from +Rats to *Rats, spawning rats when the
+  player is hit.
+* Minotaur headbutts, hydra head-chopping, and *Rage are no longer triggered
+  on ripostes.
+* Phantom mirrors and Boxes of Beasts now recharge with XP, mirrors have a
+  single charge and boxes have 3.
+* New Misc Evocable: Condenser Vane. A condenser vane is an XP-charged evoker
+  that creates clouds around hostile monsters (skipping allies). The cloud
+  quality scales with evocations.
+* Wands of Clouds are removed.
 
 Lua
 ---
