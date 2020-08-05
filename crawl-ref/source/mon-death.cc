@@ -169,6 +169,8 @@ static bool _fill_out_corpse(const monster& mons, item_def& corpse)
         if (saved_mon.max_hit_points <= 0)
             saved_mon.max_hit_points = 1;
         saved_mon.hit_points = saved_mon.max_hit_points;
+
+        corpse.freshness += have_passive(passive_t::conserve_orc_corpses)? you.piety/2 : 0;
     }
 
     return true;
@@ -735,9 +737,12 @@ item_def* place_monster_corpse(const monster& mons, bool silent, bool force)
     const bool no_coinflip = mons.props.exists("always_corpse")
                              || force
                              || goldify;
-
+ 
+    const int weight = have_passive(passive_t::conserve_orc_corpses) 
+                        && (mons_genus(mons.type) == MONS_ORC) ? 500 - you.piety : 500;
     // 50/50 chance of getting a corpse, usually.
-    if (!no_coinflip && coinflip())
+    // If you believe Beogh, Beogh conserves orc corpses.
+    if (!no_coinflip && x_chance_in_y(weight,1000))
         return nullptr;
 
     // The game can attempt to place a corpse for an out-of-bounds monster
