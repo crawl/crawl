@@ -10,8 +10,8 @@ monsters of similar type. Bolt yaks should be added after yaks and before death
 yaks, for example. Certain files list their entries in strictly alphabetical
 order. Whenever possible follow present convention.
 
-enum.h is a VERY important file! Many things you create will need to be declared
-there or your build will not compile.
+enum declaration is VERY important! Many things you create will need to be
+declared in the appropriate files or your build will not compile.
 
 ====
 
@@ -20,7 +20,7 @@ have the monster exist and spawn. If your monster is as complex as an iguana,
 then this is all you need to do!
 
 
-- /source/enum.h
+- /source/monster-type.h
         - Defines monster type enumeration (an ID for the monster)
         - In monster_type, find similar monsters and add a new entry there.
                 - To preserve save compatibility, you need to wrap that entry
@@ -36,6 +36,8 @@ then this is all you need to do!
         - Determines where and how often monster will spawn.
         - See random-pick.h to understand the variables.
         - Add entries for each branch of the Dungeon the monster will spawn in.
+        - Unique monsters should not be added to this file. Instead, add them to
+        uniques.des, as below.
 - /source/dat/descript/monsters.txt
         - Describe what the monster looks like and what it does.
 
@@ -44,6 +46,9 @@ Optional:
                 - If the monster will spawn in bands, add entries here.
         - /source/mon-place.cc
                 - Define how many and with which monsters the banded monsters will spawn.
+        - /source/dat/des/builder/uniques.des
+                - If you are adding a unique monster, add an entry with its
+                spawn depths here.
 
 ====
 
@@ -62,7 +67,7 @@ any special abilities, spells, or unique behaviour that the monster will have.
                 - Add an action line for when the monster casts a spell.
         - /source/dat/descript/spells.txt
                 - Add descriptions of any spells the monster has for xv.
-        - /source/enum.h
+        - /source/spell-type.h
                 - Declare the spell here if you created a new spell.
                 - You will also need to declare the spell and some parameters in the
                 appropriate spl-(school).cc file.
@@ -77,14 +82,14 @@ any special abilities, spells, or unique behaviour that the monster will have.
 
         If the ability involves status effects or flags -on the monster itself-, you
         will need to edit:
-        - /source/enum.h
+        - /source/enchant-type.h
                 - Declare the effect here.
         - /source/mon-info.cc
                 - Add under trivial_ench_mb_mappings
         - /source/mon-info.h
                 - Add under monster_info_flags
         - /source/mon-ench.cc
-                - You need to add entries to enchant_names[] and to apply_enchantments().
+                - You need to add entries to enchant_names[] and to apply_enchantment().
         - /source/timed-effects.cc
 
 
