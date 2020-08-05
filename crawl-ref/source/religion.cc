@@ -3242,8 +3242,11 @@ bool player_can_join_god(god_type which_god)
         }
     }
 
-    if (you.species == SP_MUMMY && which_god == GOD_WYRM)
-        return false;
+    if (you.species == SP_MUMMY || you.species == SP_LICH) {
+        if (which_god == GOD_WYRM) {
+            return false;
+        }
+    }
 
     if (you.species == SP_LESSER_LICH || you.species == SP_LICH) {
         if (which_god == GOD_ZIN ||

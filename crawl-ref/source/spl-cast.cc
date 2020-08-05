@@ -1055,7 +1055,7 @@ static void _spellcasting_side_effects(spell_type spell, god_type god,
         {
             you.props[HOMUNCULUS_WILD_MAGIC].get_int()++;
             you.increase_duration(DUR_HOMUNCULUS_WILD_MAGIC, 10, 10);
-            mprf(MSGCH_WARN, "Your magic is getting wild.");
+            mprf(MSGCH_WARN, "Your magic is amplified and unstable.");
         }
 
         // Make some noise if it's actually the player casting.
@@ -2070,7 +2070,7 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_PORTAL_PROJECTILE:
         return cast_portal_projectile(powc, fail);
 
-    case SPELL_SHRAPNEL_CURTAION:
+    case SPELL_SHRAPNEL_CURTAIN:
         return cast_shrapnel_curtain(powc, fail);
 
     // other

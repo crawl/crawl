@@ -4368,7 +4368,7 @@ static const struct spell_desc spelldata[] =
     TILEG_MAJOR_HEALING,
 },
 {
-    SPELL_SHRAPNEL_CURTAION, "Shrapnel Curtain",
+    SPELL_SHRAPNEL_CURTAIN, "Shrapnel Curtain",
     spschool::earth | spschool::charms,
     spflag::utility,
     1,

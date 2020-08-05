@@ -39,7 +39,7 @@ aptitudes:
   earth_magic: 0
   poison_magic: 0
   invocations: 0
-  evocations: 0
+  evocations: 2
 str: 9
 int: 9
 dex: 7
@@ -47,9 +47,12 @@ levelup_stat_frequency: 4
 levelup_stats:
   - int
 fake_mutations:
-  - long: Your magic cast will make your mana wild, and released by melee combat. 
-    short: Magic overheating
+  - long: Every time cast a spell, your magic will be amplified and unstable.
+    short: imitated essence
+  - long: You can release unstability with melee attacks.
+    short: essence stabilizer
 recommended_jobs:
+  - JOB_ARTIFICER
   - JOB_WIZARD
   - JOB_CONJURER
   - JOB_SUMMONER

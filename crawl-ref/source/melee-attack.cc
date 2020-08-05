@@ -464,9 +464,101 @@ bool melee_attack::handle_phase_hit()
             you.species == SP_ADAPTION_HOMUNCULUS ||
             you.species == SP_BLOSSOM_HOMUNCULUS))
     {
-        if (you.duration[DUR_HOMUNCULUS_WILD_MAGIC] && coinflip()) {
+        if (you.duration[DUR_HOMUNCULUS_WILD_MAGIC])
+        {
+            const int unstability_pow = you.props[HOMUNCULUS_WILD_MAGIC].get_int();
+            const int unstability_dmg = 2 + random2(unstability_pow) + random2(unstability_pow);
+
+            switch (random2(4))
+            {
+            case 0:
+                special_damage = resist_adjust_damage(defender, BEAM_ELECTRICITY, unstability_dmg);
+
+                if (you.species == SP_BLOSSOM_HOMUNCULUS)
+                    special_damage *= 2;
+
+                if (special_damage)
+                {
+                    special_damage_message = make_stringf("%s %s electrocuted!",
+                         defender->name(DESC_THE).c_str(), defender->conj_verb("are").c_str());
+                    special_damage_flavour = BEAM_ELECTRICITY;
+                    if (you.species == SP_ADAPTION_HOMUNCULUS)
+                    {
+                        mpr("You feel your magic recycled.");
+                            inc_mp(1);
+                    }
+                }
+    
+                break;
+    
+            case 1:
+                special_damage = resist_adjust_damage(defender, BEAM_COLD, unstability_dmg);
+
+                if (you.species == SP_BLOSSOM_HOMUNCULUS)
+                    special_damage *= 2;
+
+                if (special_damage)
+                {
+                    special_damage_message = make_stringf("%s freeze%s %s!",
+                        attacker->name(DESC_THE).c_str(),
+                        attacker->is_player() ? "" : "s",
+                        defender->name(DESC_THE).c_str());
+                    special_damage_flavour = BEAM_COLD;
+                    if (you.species == SP_ADAPTION_HOMUNCULUS)
+                    {
+                        mpr("You feel your magic recycled.");
+                            inc_mp(1);
+                    }
+                }
+                break;
+    
+            case 2:
+                special_damage = unstability_dmg;
+
+                if (you.species == SP_BLOSSOM_HOMUNCULUS)
+                    special_damage *= 2;
+
+                special_damage = apply_defender_ac(special_damage);
+    
+                if (special_damage > 0)
+                {
+                    special_damage_message = make_stringf("%s crush%s %s!",
+                            attacker->name(DESC_THE).c_str(),
+                            attacker->is_player() ? "" : "es",
+                            defender->name(DESC_THE).c_str());
+                    if (you.species == SP_ADAPTION_HOMUNCULUS)
+                    {
+                        mpr("You feel your magic recycled.");
+                            inc_mp(1);
+                    }
+                }
+                break;
+    
+            case 3:
+                special_damage = resist_adjust_damage(defender, BEAM_FIRE, unstability_dmg);
+
+                if (you.species == SP_BLOSSOM_HOMUNCULUS)
+                    special_damage *= 2;
+
+                if (special_damage)
+                {
+                    special_damage_message = make_stringf("%s burn%s %s!",
+                            attacker->name(DESC_THE).c_str(),
+                            attacker->is_player() ? "" : "s",
+                            defender->name(DESC_THE).c_str());
+                    special_damage_flavour = BEAM_FIRE;
+                    if (you.species == SP_ADAPTION_HOMUNCULUS)
+                    {
+                        mpr("You feel your magic recycled.");
+                            inc_mp(1);
+                    }
+                }
+                break;
+            }
+
             you.props[HOMUNCULUS_WILD_MAGIC].get_int()--;
-            if (you.props[HOMUNCULUS_WILD_MAGIC].get_int() == 0) {
+            if (you.props[HOMUNCULUS_WILD_MAGIC].get_int() == 0)
+            {
                 you.duration[DUR_HOMUNCULUS_WILD_MAGIC] = 0;
             }
         }
