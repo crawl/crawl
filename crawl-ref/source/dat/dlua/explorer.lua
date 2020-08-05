@@ -497,9 +497,13 @@ end
 
 function explorer.catalog_portals(i, lvl, cats_to_show, show_level_fun)
     local result = { }
+    current_where = you.where()
     for j,port in ipairs(explorer.portal_order) do
         if you.where() == dgn.level_name(dgn.br_entrance(port)) then
             result[port] = explorer.catalog_place(-j, port, cats_to_show, show_level_fun)
+            -- restore the level, in case there are multiple portals from a
+            -- single level
+            debug.goto_place(current_where)
         end
     end
     return result
