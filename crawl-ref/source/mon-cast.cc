@@ -460,10 +460,6 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             ASSERT(foe);
             return ai_action::good_or_impossible(foe->res_poison(false) < 3);
     }, 6) },
-    { SPELL_RING_OF_THUNDER, { _should_selfench(ENCH_RING_OF_THUNDER),
-        [](monster &caster, mon_spell_slot, bolt&) {
-            caster.add_ench(ENCH_RING_OF_THUNDER);
-    } } },
     { SPELL_GRASPING_ROOTS, {
         [](const monster &caster)
         {

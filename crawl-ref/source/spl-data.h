@@ -296,17 +296,6 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_RING_OF_THUNDER, "Ring of Thunder",
-    spschool::air,
-    spflag::area | spflag::monster,
-    7,
-    200,
-    -1, -1,
-    6, 0,
-    TILEG_GENERIC_MONSTER_SPELL,
-},
-
-{
     SPELL_VENOM_BOLT, "Venom Bolt",
     spschool::conjuration | spschool::poison,
     spflag::dir_or_target | spflag::needs_tracer | spflag::monster,
@@ -3415,6 +3404,7 @@ AXED_SPELL(SPELL_SERPENT_OF_HELL_BREATH_REMOVED, "Old serpent of hell breath")
 AXED_SPELL(SPELL_SCATTERSHOT, "Scattershot")
 AXED_SPELL(SPELL_SUMMON_SWARM, "Summon swarm")
 AXED_SPELL(SPELL_CLOUD_CONE, "Cloud Cone")
+AXED_SPELL(SPELL_RING_OF_THUNDER, "Ring of Thunder")
 #endif
 
 };
