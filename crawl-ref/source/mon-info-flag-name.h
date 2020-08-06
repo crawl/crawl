@@ -10,8 +10,7 @@ struct monster_info_flag_name
     string plural; // HUD display in groups (empty to not show)
 };
 
-// This vector is in the order of "player relfance" for display purposes
-// Roughly:
+// This vector is in display order. Roughly:
 // - Attitudes and summon status
 // - Bad things for the player (most buffs)
 // - Vulnerabilities
@@ -55,7 +54,7 @@ static const vector<monster_info_flag_name> monster_info_flag_names = {
     { MB_RESISTANCE, "resistant", "unusually resistant", "resistant"},
     { MB_INVISIBLE, "invisible", "slightly transparent", "invisible"},
     { MB_REGENERATION, "regenerating", "regenerating", "regenerating"},
-    { MB_RAISED_MR, "resisting magic", "resistaant to hostile enchantments", "resisting magic"},
+    { MB_RAISED_MR, "resisting magic", "resistant to hostile enchantments", "resisting magic"},
     { MB_INJURY_BOND, "sheltered", "sheltered from injuries", "sheltered"},
     { MB_GOZAG_INCITED, "incited", "incited by Gozag", "incited"},
     { MB_CLOUD_RING_THUNDER, "", "surrounded by a ring of thunder", "" },
