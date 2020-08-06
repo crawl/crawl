@@ -113,9 +113,10 @@ The contents of this text are:
                 tile_font_stat_family, tile_font_msg_family,
                 tile_font_lbl_family, tile_font_crt_size, tile_font_stat_size,
                 tile_font_msg_size, tile_font_tip_size, tile_font_lbl_size,
-                tile_font_ft_light, tile_show_minihealthbar,
-                tile_show_minimagicbar, tile_show_demon_tier, tile_water_anim,
-                tile_misc_anim, tile_realtime_anim, tile_show_player_species,
+                tile_font_ft_light, glyph_mode_font, glyph_mode_font_size,
+                tile_show_minihealthbar, tile_show_minimagicbar,
+                tile_show_demon_tier, tile_water_anim, tile_misc_anim,
+                tile_realtime_anim, tile_show_player_species,
                 tile_show_threat_levels, tile_layout_priority,
                 tile_display_mode, tile_level_map_hide_messages,
                 tile_level_map_hide_sidebar, tile_player_tile,
@@ -2067,6 +2068,16 @@ tile_font_lbl_size  = 14
 
 tile_font_ft_light = false
         Selects 'light' font hinting.
+
+glyph_mode_font = monospace
+        Font used to render the dungeon in the glyph mode for WebTiles. If set
+        to monospace (default) or the font is not available, browser's default
+        monospaced font will be used.
+        This option is only available on WebTiles.
+
+glyph_mode_font_size = 24
+        Font size for the dungeon view in the glyph mode for WebTiles.
+        This option is only available on WebTiles.
 
 tile_show_minihealthbar = true
 tile_show_minimagicbar  = true

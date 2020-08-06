@@ -7,12 +7,7 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
 
     function DungeonCellRenderer()
     {
-        // see also, renderer_settings in game.js. In fact, do these values
-        // do anything?
-        var ratio = window.devicePixelRatio;
         this.set_cell_size(32, 32);
-        this.glyph_mode_font_size = 24 * ratio;
-        this.glyph_mode_font = "monospace";
     }
 
     var fg_term_colours, bg_term_colours;
