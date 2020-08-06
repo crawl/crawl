@@ -1604,14 +1604,7 @@ static void _manage_fire_shield()
     // Melt ice armour entirely.
     maybe_melt_player_enchantments(BEAM_FIRE, 100);
 
-    // Remove fire clouds on top of you
-    if (cloud_at(you.pos()) && cloud_at(you.pos())->type == CLOUD_FIRE)
-        delete_cloud(you.pos());
-
-    // Place fire clouds all around you
-    for (adjacent_iterator ai(you.pos()); ai; ++ai)
-        if (!cell_is_solid(*ai) && !cloud_at(*ai))
-            place_cloud(CLOUD_FIRE, *ai, 1 + random2(3), &you);
+    surround_actor_with_cloud(&you, CLOUD_FIRE);
 }
 
 static void _SALAMANDER_equip(item_def * /* item */, bool * show_msgs,
