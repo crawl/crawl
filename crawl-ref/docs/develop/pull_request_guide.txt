@@ -1,0 +1,70 @@
+How to Pull Request
+===================
+
+The following is a rough guide on how to issue a pull request via
+github.  It is meant to make merging patches easier for developers
+but does not guarantee a patch will be accepted - that depends on
+content.
+
+Required tools
+--------------
+
+A github account
+Forked copy of crawl
+
+Suggested to make life easier
+-----------------------------
+
+Local clone of your forked crawl
+SSH interaction with github
+
+References
+----------
+
+github: http://github.com
+crawl patching guide: https://github.com/crawl/crawl/blob/master/crawl-ref/docs/develop/patch_guide.txt
+commit comment guide: https://chris.beams.io/posts/git-commit/
+
+Patching process
+----------------
+
+1.) Switch to master branch:
+    git checkout master
+
+2.) Create an appropriately named branch:
+    git branch This_is_the_name
+
+3.) Switch to that branch:
+    git checkout This_is_the_name
+
+4.) Make the code changes in editors
+
+5.) Commit your changes and comment accordingly, include mantis link:
+    git commit -a
+
+6.) Push the changes to your github fork:
+    git push
+
+7.) Create a pull request:
+    On github open your fork of crawl and refresh.  Click on 'branches'
+    and you see your branches under 'Your Branches' with a button to
+    the right 'New Pull Request' to click when ready.
+
+Other things
+------------
+
+If a mistake is made and the pull request needs to be modified, use the
+following steps:
+
+1.) Switch to the branch needing editing:
+    git checkout This_is_the_name
+
+2.) Rebase:
+    git rebase -i HEAD^
+
+3.) Edit the 'pick' to an 'r' on the line of the specific commit
+
+4.) Change code as needed
+
+5.) Push the code:
+    git push --force
