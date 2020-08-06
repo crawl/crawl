@@ -2238,19 +2238,6 @@ static void _post_monster_move(monster* mons)
     if (mons->type == MONS_TORPOR_SNAIL)
         _torpor_snail_slow(mons);
 
-    if (mons->type == MONS_ASMODEUS)
-    {
-        cloud_type ctype = CLOUD_FIRE;
-
-        for (adjacent_iterator ai(mons->pos()); ai; ++ai)
-            if (!cell_is_solid(*ai)
-                && (!cloud_at(*ai)
-                    || cloud_at(*ai)->type == ctype))
-            {
-                place_cloud(ctype, *ai, 2 + random2(6), mons);
-            }
-    }
-
     if (mons->type == MONS_WATER_NYMPH)
     {
         for (adjacent_iterator ai(mons->pos(), false); ai; ++ai)
