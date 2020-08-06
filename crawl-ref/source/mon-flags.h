@@ -170,6 +170,10 @@ enum monclass_flag_type : uint64_t
 
     /// uses they/them pronouns
     M_GENDER_NEUTRAL    = BIT(57),
+
+    /// is surrounded by a ring of clouds. Only one can be active at a time!
+    M_THUNDER_RING      = BIT(58),
+    M_FIRE_RING         = BIT(59),
 };
 DEF_BITFIELD(monclass_flags_t, monclass_flag_type);
 
