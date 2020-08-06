@@ -12,6 +12,7 @@
 #include "act-iter.h"
 #include "colour.h"
 #include "database.h"
+#include "enchant-type.h"
 #include "env.h"
 #include "god-type.h"
 #include "item-name.h"
@@ -139,6 +140,7 @@ void ghost_demon::reset()
     resists          = 0;
     colour           = COLOUR_UNDEF;
     flies            = false;
+    cloud_ring_ench  = ENCH_NONE;
 }
 
 #define ADD_SPELL(which_spell) \
@@ -251,6 +253,38 @@ void ghost_demon::set_pan_lord_special_attack()
     }
 }
 
+void ghost_demon::set_pan_lord_cloud_ring()
+{
+    if (brand == SPWPN_ELECTROCUTION)
+        cloud_ring_ench = ENCH_RING_OF_THUNDER;
+    else if (brand == SPWPN_FLAMING)
+        cloud_ring_ench = ENCH_RING_OF_FLAMES;
+    else if (brand == SPWPN_CHAOS)
+        cloud_ring_ench = ENCH_RING_OF_CHAOS;
+    else if (brand == SPWPN_FREEZING)
+        cloud_ring_ench = ENCH_RING_OF_ICE;
+    else if (att_flav == AF_CORRODE)
+        cloud_ring_ench = ENCH_RING_OF_ACID;
+    else if (brand == SPWPN_DRAINING)
+        cloud_ring_ench = ENCH_RING_OF_DRAINING;
+    else if (att_flav == AF_ROT)
+        cloud_ring_ench = ENCH_RING_OF_MIASMA;
+    else
+    {
+        cloud_ring_ench = random_choose_weighted(
+            20, ENCH_RING_OF_THUNDER,
+            20, ENCH_RING_OF_FLAMES,
+            20, ENCH_RING_OF_ICE,
+            10, ENCH_RING_OF_FOG,
+            10, ENCH_RING_OF_DRAINING,
+             5, ENCH_RING_OF_CHAOS,
+             5, ENCH_RING_OF_ACID,
+             5, ENCH_RING_OF_MIASMA,
+             5, ENCH_RING_OF_MUTATION);
+    }
+    dprf("This pan lord has a cloud ring ench of %d", cloud_ring_ench);
+}
+
 void ghost_demon::init_pandemonium_lord()
 {
     do
@@ -304,7 +338,11 @@ void ghost_demon::init_pandemonium_lord()
     if (one_chance_in(3) || !spellcaster)
         set_pan_lord_special_attack();
 
-    // Non-caster demons are fast, casters may get haste.
+    // Spellcasters get a (smaller) chance of a cloud ring below
+    if (!spellcaster && one_chance_in(7))
+        set_pan_lord_cloud_ring();
+
+    // Non-casters are fast, casters may get haste.
     if (!spellcaster)
         speed = 11 + roll_dice(2,4);
     else if (one_chance_in(3))
@@ -337,7 +375,11 @@ void ghost_demon::init_pandemonium_lord()
                 }
             }
             else
+            {
                 ADD_SPELL(RANDOM_ELEMENT(search_order_aoe_conj));
+                if (one_chance_in(7))
+                    set_pan_lord_cloud_ring();
+            }
         }
 
         if (coinflip())
