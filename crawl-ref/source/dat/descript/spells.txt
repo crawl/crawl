@@ -1099,10 +1099,6 @@ Calls a surge of power from the earth, striking an enemy within the caster's
 sight. The spell cascades through nearby constructs, growing in strength with
 each one standing near the target.
 %%%%
-Ring of Thunder spell
-
-Surrounds the caster with a mobile ring of highly-damaging thunderclouds.
-%%%%
 Sandblast spell
 
 Consumes a stone to create a short blast of high-velocity rock shards. Its

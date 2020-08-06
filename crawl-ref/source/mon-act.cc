@@ -2286,20 +2286,6 @@ static void _post_monster_move(monster* mons)
         }
     }
 
-    if (mons->has_ench(ENCH_RING_OF_THUNDER))
-    {
-        // TODO: deduplicate with mon-ench.cc
-        cloud_type ctype = CLOUD_STORM;
-
-        for (adjacent_iterator ai(mons->pos()); ai; ++ai)
-            if (!cell_is_solid(*ai)
-                && (!cloud_at(*ai)
-                    || cloud_at(*ai)->type == ctype))
-            {
-                place_cloud(ctype, *ai, 2 + random2(3), mons);
-            }
-    }
-
 
     const item_def * weapon = mons->mslot_item(MSLOT_WEAPON);
     if (weapon && get_weapon_brand(*weapon) == SPWPN_SPECTRAL
