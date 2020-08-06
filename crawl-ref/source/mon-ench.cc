@@ -8,6 +8,7 @@
 #include "monster.h"
 
 #include <sstream>
+#include <unordered_map>
 
 #include "act-iter.h"
 #include "areas.h"
@@ -47,6 +48,43 @@
 #include "traps.h"
 #include "unwind.h"
 #include "view.h"
+
+static const unordered_map<enchant_type, cloud_type, std::hash<int>> _cloud_ring_ench_to_cloud = {
+    { ENCH_RING_OF_THUNDER,     CLOUD_STORM },
+    { ENCH_RING_OF_FLAMES,      CLOUD_FIRE },
+    { ENCH_RING_OF_CHAOS,       CLOUD_CHAOS },
+    { ENCH_RING_OF_MUTATION,    CLOUD_MUTAGENIC },
+    { ENCH_RING_OF_FOG,         CLOUD_GREY_SMOKE },
+    { ENCH_RING_OF_ICE,         CLOUD_COLD },
+    { ENCH_RING_OF_DRAINING,    CLOUD_NEGATIVE_ENERGY },
+    { ENCH_RING_OF_ACID,        CLOUD_ACID },
+    { ENCH_RING_OF_MIASMA,      CLOUD_MIASMA },
+};
+
+static bool _has_other_cloud_ring(monster* mons, enchant_type ench)
+{
+    for (auto i : _cloud_ring_ench_to_cloud)
+    {
+        if (mons->has_ench(i.first) && i.first != ench)
+            return true;
+    }
+    return false;
+}
+
+/**
+ * If the monster has a cloud ring enchantment, surround them with clouds.
+ */
+void update_mons_cloud_ring(monster* mons)
+{
+    for (auto i : _cloud_ring_ench_to_cloud)
+    {
+        if (mons->has_ench(i.first))
+        {
+            surround_actor_with_cloud(mons, i.second);
+            break; // there can only be one cloud ring
+        }
+    }
+}
 
 #ifdef DEBUG_ENCH_CACHE_DIAGNOSTICS
 bool monster::has_ench(enchant_type ench) const
@@ -304,12 +342,17 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
         break;
 
     case ENCH_RING_OF_THUNDER:
-        _place_thunder_ring(*this);
-        if (you.see_cell(pos()))
-        {
-            mprf(MSGCH_WARN, "A violent storm begins to rage around %s.",
-                name(DESC_THE).c_str());
-        }
+    case ENCH_RING_OF_FLAMES:
+    case ENCH_RING_OF_CHAOS:
+    case ENCH_RING_OF_MUTATION:
+    case ENCH_RING_OF_FOG:
+    case ENCH_RING_OF_ICE:
+    case ENCH_RING_OF_DRAINING:
+    case ENCH_RING_OF_ACID:
+    case ENCH_RING_OF_MIASMA:
+        if (_has_other_cloud_ring(this, ench.ench))
+            die("%s already has a cloud ring!", name(DESC_THE).c_str());
+        surround_actor_with_cloud(this, _cloud_ring_ench_to_cloud.at(ench.ench));
         break;
 
     case ENCH_VILE_CLUTCH:
@@ -1388,7 +1431,6 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_INFESTATION:
     case ENCH_BLACK_MARK:
     case ENCH_STILL_WINDS:
-    case ENCH_RING_OF_THUNDER:
     case ENCH_VILE_CLUTCH:
     case ENCH_GRASPING_ROOTS:
     case ENCH_WATERLOGGED:
@@ -2039,8 +2081,10 @@ static const char *enchant_names[] =
 #if TAG_MAJOR_VERSION == 34
     "pinned_by_whirlwind",
 #endif
-    "vortex", "vortex_cooldown", "vile_clutch", "waterlogged",
-    "buggy",
+    "vortex", "vortex_cooldown", "vile_clutch", "waterlogged", "ring_of_flames",
+    "ring_chaos", "ring_mutation", "ring_fog", "ring_ice", "ring_neg",
+    "ring_acid", "ring_miasma",
+    "buggy", // NUM_ENCHANTMENTS
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)
@@ -2183,7 +2227,6 @@ int mon_enchant::calc_duration(const monster* mons,
     case ENCH_RESISTANCE:
     case ENCH_IDEALISED:
     case ENCH_BOUND_SOUL:
-    case ENCH_RING_OF_THUNDER:
         cturn = 1000 / _mod_speed(25, mons->speed);
         break;
     case ENCH_LIQUEFYING:
@@ -2307,8 +2350,18 @@ int mon_enchant::calc_duration(const monster* mons,
     case ENCH_EMPOWERED_SPELLS:
         cturn = 20 * 10 / _mod_speed(10, mons->speed);
         break;
+    case ENCH_RING_OF_THUNDER:
+    case ENCH_RING_OF_FLAMES:
+    case ENCH_RING_OF_CHAOS:
+    case ENCH_RING_OF_MUTATION:
+    case ENCH_RING_OF_FOG:
+    case ENCH_RING_OF_ICE:
+    case ENCH_RING_OF_DRAINING:
+    case ENCH_RING_OF_ACID:
+    case ENCH_RING_OF_MIASMA:
     case ENCH_GOZAG_INCITE:
         cturn = 100; // is never decremented
+        break;
     default:
         break;
     }

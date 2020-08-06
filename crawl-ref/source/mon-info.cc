@@ -109,6 +109,15 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_SLOWLY_DYING,    MB_SLOWLY_DYING },
     { ENCH_VILE_CLUTCH,     MB_VILE_CLUTCH },
     { ENCH_WATERLOGGED,     MB_WATERLOGGED },
+    { ENCH_RING_OF_THUNDER, MB_CLOUD_RING_THUNDER },
+    { ENCH_RING_OF_FLAMES,  MB_CLOUD_RING_FLAMES },
+    { ENCH_RING_OF_CHAOS,   MB_CLOUD_RING_CHAOS },
+    { ENCH_RING_OF_MUTATION,MB_CLOUD_RING_MUTATION },
+    { ENCH_RING_OF_FOG,     MB_CLOUD_RING_FOG },
+    { ENCH_RING_OF_ICE,     MB_CLOUD_RING_ICE },
+    { ENCH_RING_OF_DRAINING,MB_CLOUD_RING_DRAINING },
+    { ENCH_RING_OF_ACID,    MB_CLOUD_RING_ACID },
+
 };
 
 static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)

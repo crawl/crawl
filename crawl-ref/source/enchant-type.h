@@ -184,6 +184,14 @@ enum enchant_type
     ENCH_VORTEX_COOLDOWN,
     ENCH_VILE_CLUTCH,
     ENCH_WATERLOGGED,
+    ENCH_RING_OF_FLAMES,
+    ENCH_RING_OF_CHAOS,
+    ENCH_RING_OF_MUTATION,
+    ENCH_RING_OF_FOG,
+    ENCH_RING_OF_ICE,
+    ENCH_RING_OF_DRAINING,
+    ENCH_RING_OF_ACID,
+    ENCH_RING_OF_MIASMA,
     // Update enchant_names[] in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS
