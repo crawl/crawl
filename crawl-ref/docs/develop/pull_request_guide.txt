@@ -64,7 +64,8 @@ following steps:
 
 3.) Edit the 'pick' to an 'r' on the line of the specific commit
 
-4.) Change code as needed
+4.) Make changes then commit:
+    git commit -a
 
 5.) Push the code:
     git push --force
