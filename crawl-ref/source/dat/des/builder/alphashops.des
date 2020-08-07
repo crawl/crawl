@@ -84,7 +84,7 @@
        "ring of dexterity", "manual of dodging", "wand of disintegration",
        "staff of death", "wand of digging", "dart" }
 
-      elseif s == "E" then i = { "book of hexes", "manual of evocations",
+      elseif s == "E" then i = { "manual of evocations",
        "eveningstar", "ring of evasion", "executioner's axe",
        "potion of experience q:1", "scroll of enchant armour", "staff of earth",
        "wand of enslavement", "book of the earth", "scroll of enchant weapon",
@@ -105,7 +105,7 @@
       elseif s == "H" then i = { "halberd", "hand axe",
        "hand crossbow", "hunting sling", "potion of heal wounds",
        "potion of haste", "scroll of holy word", "manual of hexes", "hat",
-       "helmet" }
+       "helmet", "book of hexes" }
 
       elseif s == "I" then i = { "amulet of inaccuracy", "ring of ice",
        "scroll of immolation", "ice dragon scales", "book of ice",
