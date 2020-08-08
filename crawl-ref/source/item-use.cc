@@ -3126,7 +3126,6 @@ void read_scroll(item_def& scroll)
     case SCR_ACQUIREMENT:
         if (!alreadyknown)
         {
-            mpr(pre_succ_msg);
             mpr("This is a scroll of acquirement!");
         }
 
