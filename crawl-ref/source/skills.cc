@@ -51,6 +51,7 @@
 
 static int _train(skill_type exsk, int &max_exp, bool simu = false);
 static void _train_skills(int exp, const int cost, const bool simu);
+static int _training_target_skill_point_diff(skill_type exsk, int training_target);
 
 // Basic goals for titles:
 // The higher titles must come last.
@@ -1032,7 +1033,7 @@ static void _train_skills(int exp, const int cost, const bool simu)
         skill_type sk = SK_NONE;
         if (!skip_first_phase)
             sk = static_cast<skill_type>(random_choose_weighted(sk_exp));
-        if (is_invalid_skill(sk))
+        if (is_invalid_skill(sk) || !you.train[sk])
             sk = static_cast<skill_type>(random_choose_weighted(you.training));
         if (!is_invalid_skill(sk))
         {
@@ -1267,6 +1268,34 @@ void change_skill_points(skill_type sk, int points, bool do_level_up)
     check_skill_level_change(sk, do_level_up);
 }
 
+// Calculates the skill points required to reach the training target
+// Does not currently consider Ashenzari skill boost for experience currently being gained
+// so this may still result in some overtraining
+static int _training_target_skill_point_diff(skill_type exsk, int training_target)
+{
+    int target_level = training_target / 10;
+    int target_fractional = training_target % 10;
+    int target_level_skill_points = skill_exp_needed(target_level, exsk);
+    int target_next_level_skill_points = skill_exp_needed(target_level + 1, exsk);
+    int target_skill_points = target_level_skill_points +
+        ((target_next_level_skill_points - target_level_skill_points) * target_fractional / 10);
+    // Round up for any remainder to ensure target is hit
+    if ((target_next_level_skill_points - target_level_skill_points) * target_fractional % 10 != 0)
+        target_skill_points++;
+
+    int you_skill_points = you.skill_points[exsk] + get_crosstrain_points(exsk);
+    if (ash_has_skill_boost(exsk))
+        you_skill_points += ash_skill_point_boost(exsk, training_target);
+
+    int target_skill_point_diff = target_skill_points - you_skill_points;
+
+    int manual_charges = get_all_manual_charges_for_skill(exsk);
+    if (manual_charges > 0)
+        target_skill_point_diff -= min(manual_charges, target_skill_point_diff / 2);
+
+    return target_skill_point_diff;
+}
+
 static int _train(skill_type exsk, int &max_exp, bool simu)
 {
     // This will be added to you.skill_points[exsk];
@@ -1289,6 +1318,14 @@ static int _train(skill_type exsk, int &max_exp, bool simu)
         // Scale cost and skill_inc to available experience.
         const int spending_limit = min(10 * MAX_SPENDING_LIMIT, max_exp);
         skill_inc = spending_limit / cost;
+
+        int training_target = you.training_targets[exsk];
+        if (training_target > you.skill(exsk, 10, false, false, false))
+        {
+            int target_skill_point_diff = _training_target_skill_point_diff(exsk, training_target);
+            if (target_skill_point_diff > 0)
+                skill_inc = min(skill_inc, target_skill_point_diff);
+        }
         cost = skill_inc * cost;
     }
 
@@ -1317,10 +1354,8 @@ static int _train(skill_type exsk, int &max_exp, bool simu)
     max_exp -= cost;
 
     if (!simu)
-    {
-        // TODO should check_training_targets be called here, to halt training
-        // and clean up cross-training immediately?
-        check_training_target(exsk);
+    {ss
+        check_training_targets();
         redraw_skill(exsk, old_best_skill, (you.skill(exsk, 10, true) > old_level));
     }
 
@@ -2260,17 +2295,17 @@ void skill_state::restore_training()
     {
         // Don't resume training if it's impossible or a target was met
         // after our backup was made.
-        if (you.skills[sk] < MAX_SKILL_LEVEL
-            && !(training_targets[sk] &&
-                 target_met(sk, training_targets[sk])))
+        if (you.skills[sk] < MAX_SKILL_LEVEL)
         {
             you.train[sk] = train[sk];
+            you.training_targets[sk] = training_targets[sk];
         }
     }
 
     you.can_currently_train         = can_currently_train;
     you.auto_training               = auto_training;
     reset_training();
+    check_training_targets();
 }
 
 // Sanitize skills after an upgrade, racechange, etc.
