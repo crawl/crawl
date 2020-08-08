@@ -1285,10 +1285,12 @@ static bool _can_movement_ability(bool quiet)
 
 static bool _can_hop(bool quiet)
 {
-    if (!you.duration[DUR_NO_HOP])
-        return true;
-    if (!quiet)
-        mpr("Your legs are too worn out to hop.");
+    if (you.duration[DUR_NO_HOP])
+    {
+        if (!quiet)
+            mpr("Your legs are too worn out to hop.");
+        return false;
+    }
     return _can_movement_ability(quiet);
 }
 
