@@ -275,7 +275,6 @@ void ghost_demon::set_pan_lord_cloud_ring()
             20, ENCH_RING_OF_THUNDER,
             20, ENCH_RING_OF_FLAMES,
             20, ENCH_RING_OF_ICE,
-            10, ENCH_RING_OF_FOG,
             10, ENCH_RING_OF_DRAINING,
              5, ENCH_RING_OF_CHAOS,
              5, ENCH_RING_OF_ACID,
