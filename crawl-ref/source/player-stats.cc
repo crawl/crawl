@@ -376,7 +376,10 @@ void notify_stat_change()
 
 static int _mut_level(mutation_type mut, bool innate_only)
 {
-    return you.get_base_mutation_level(mut, true, !innate_only, !innate_only);
+    if (!innate_only) {
+        return you.get_mutation_level(mut);
+    }
+    return you.get_base_mutation_level(mut, true, false, false);
 }
 
 static int _strength_modifier(bool innate_only)
@@ -487,6 +490,7 @@ static int _dex_modifier(bool innate_only)
     // mutations
     result += 2 * (_mut_level(MUT_AGILE, innate_only)
                   - _mut_level(MUT_CLUMSY, innate_only));
+
 #if TAG_MAJOR_VERSION == 34
     result += _mut_level(MUT_FLEXIBLE_WEAK, innate_only)
               - _mut_level(MUT_STRONG_STIFF, innate_only);

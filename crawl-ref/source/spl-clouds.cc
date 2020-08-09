@@ -609,7 +609,7 @@ spret cast_evaporate(int pow, bolt& beem, int pot_idx, bool fail)
 
     fail_check();
     
-    if (!player_under_penance(GOD_WYRM) && one_chance_in(3))
+    if (player_under_penance(GOD_WYRM) && one_chance_in(3))
     {
         simple_god_message("'s wrath prevents you evaporate potion!", GOD_WYRM);
         dec_inv_item_quantity(pot_idx, 1);

@@ -348,6 +348,10 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
     { SPELL_FLAY, {
         [](const monster &caster) {
             const actor* foe = caster.get_foe(); // XXX: check vis?
+            if (foe && foe->is_player() && foe->as_player()->form == transformation::eldritch) {
+                //eldritch form
+                return false;
+            }
             return foe && (foe->holiness() & MH_NATURAL);
         },
         _cast_flay,

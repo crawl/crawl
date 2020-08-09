@@ -3954,11 +3954,7 @@ void read_scroll(item_def& scroll)
         break;
 
     case SCR_ACQUIREMENT:
-        if (!alreadyknown)
-        {
-            mpr(pre_succ_msg);
             mpr("This is a scroll of acquirement!");
-        }
 
         // included in default force_more_message
         // Identify it early in case the player checks the '\' screen.
@@ -4221,7 +4217,8 @@ void read_scroll(item_def& scroll)
 #if TAG_MAJOR_VERSION == 34
         && which_scroll != SCR_RECHARGING
 #endif
-        && which_scroll != SCR_AMNESIA)
+        && which_scroll != SCR_AMNESIA
+        && which_scroll != SCR_ACQUIREMENT)
     {
         mprf("It %s a %s.",
              scroll.quantity < prev_quantity ? "was" : "is",

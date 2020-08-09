@@ -341,10 +341,17 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
         if (you.form == transformation::eldritch &&
             _is_valid_mutation(mut))
         {
-            if (is_slime_mutation(mut)) {
+            if (you.sacrifices[mut] != 0) {
+                //allow when mutation
                 return mutation_activity_type::FULL;
             }
-            else {
+            else if (is_slime_mutation(mut)) {
+                return mutation_activity_type::FULL;
+            }
+            else if (_get_mutation_def(mut).form_based) {
+                return mutation_activity_type::INACTIVE;
+            }
+            else if (you.innate_mutation[mut] == 0) {
                 return mutation_activity_type::INACTIVE;
             }
         }
