@@ -3372,7 +3372,8 @@ void read_scroll(item_def& scroll)
 #if TAG_MAJOR_VERSION == 34
         && which_scroll != SCR_RECHARGING
 #endif
-        && which_scroll != SCR_AMNESIA)
+        && which_scroll != SCR_AMNESIA
+        && which_scroll != SCR_ACQUIREMENT)
     {
         mprf("It %s a %s.",
              scroll.quantity < prev_quantity ? "was" : "is",
