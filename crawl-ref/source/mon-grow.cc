@@ -159,7 +159,7 @@ bool monster::level_up_change()
     if (lup)
     {
         lup_cond = map_find(mon_grow_cond, lup->before);
-        if (lup_cond && lup_cond->condition(*this))
+        if (!lup_cond || lup_cond->condition(*this))
         {
             upgrade_type(lup->after, false, lup->adjust_hp);
             return true;
