@@ -3346,7 +3346,8 @@ static monster* _closest_target_in_range(int radius)
         if (mon
             && you.see_cell_no_trans(mon->pos())
             && !mon->wont_attack()
-            && !mons_is_firewood(*mon))
+            && !mons_is_firewood(*mon)
+            && !mons_is_conjured(mon->type))
         {
             return mon;
         }
