@@ -175,6 +175,15 @@ Evoke Thunderclouds ability
 
 Create a mighty thunderclouds around the user.
 %%%%
+Evoke Golem Armour ability
+
+Activates your full set of golem armour to enhance wearer's strength
+and emits sturdy forcefield to reinforce durability. Performing unarmed
+strike while armour is activated, it will be destructive blow by your
+boosted golem fists. Also, this form grants you resistance to negative
+energy and petrification, but also makes you vulnerable to shattering
+effects.
+%%%%
 End Transformation ability
 
 Reverts you to your normal form.

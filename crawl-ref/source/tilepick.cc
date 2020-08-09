@@ -3520,6 +3520,8 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_EVOKE_THUNDER;
     case ABIL_EVOKE_PAVISE:
         return TILEG_ABILITY_DEPLOY_SHIELD;
+    case ABIL_GOLEM_FORM:
+        return TILEG_ABILITY_GOLEM_FORM;
 
     // Divine abilities
     // Zin

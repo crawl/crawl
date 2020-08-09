@@ -266,5 +266,16 @@ static const form_entry formdata[] =
     FC_DEFAULT, FC_ENABLE, FC_FORBID, true, false,
     "scream", 5, "tentacle", "", "wriggle towards", "flesh"
 },
+
+{
+    transformation::golem, MONS_IRON_GOLEM, "Golem", "golem armour", "golem",
+    "an activated full set of golem armour.",
+    EQF_NONE, MR_RES_NEG | MR_RES_PETRIFY,
+    DEFAULT_DURATION, 10, 0, SIZE_GIANT, 10,
+    10, 0, 0, true, 0, 10, 0,
+    SPWPN_VORPAL, LIGHTBLUE, "Golem gauntlets", DEFAULT_VERBS,
+    FC_DEFAULT, FC_DEFAULT, FC_DEFAULT, true, true,
+    "", 0, "activated golem gauntlets", "activated golem boots", "", "activated golem armour"
+},
 };
 COMPILE_CHECK(ARRAYSZ(formdata) == NUM_TRANSFORMS);
