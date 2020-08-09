@@ -1354,7 +1354,7 @@ static int _train(skill_type exsk, int &max_exp, bool simu)
     max_exp -= cost;
 
     if (!simu)
-    {ss
+    {
         check_training_targets();
         redraw_skill(exsk, old_best_skill, (you.skill(exsk, 10, true) > old_level));
     }
