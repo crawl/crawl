@@ -1996,7 +1996,7 @@ bool transform(int pow, transformation which_trans, bool involuntary,
 
 
     // If we are no longer living, end an effect that afflicts only the living
-    if (you.duration[DUR_FLAYED] && !(you.holiness() & MH_NATURAL))
+    if (you.duration[DUR_FLAYED] && (!(you.holiness() & MH_NATURAL) || which_trans == transformation::eldritch))
     {
         // Heal a little extra if we gained max hp from this transformation
         if (form_hp_mod() != 10)
@@ -2199,6 +2199,7 @@ void untransform(bool skip_move)
             you.stop_being_constricted();
     }
 
+    notify_stat_change();
     you.turn_is_over = true;
     if (you.transform_uncancellable)
         you.transform_uncancellable = false;

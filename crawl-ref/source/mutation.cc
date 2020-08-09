@@ -348,7 +348,10 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
             else if (is_slime_mutation(mut)) {
                 return mutation_activity_type::FULL;
             }
-            else {
+            else if (_get_mutation_def(mut).form_based) {
+                return mutation_activity_type::INACTIVE;
+            }
+            else if (you.innate_mutation[mut] == 0) {
                 return mutation_activity_type::INACTIVE;
             }
         }

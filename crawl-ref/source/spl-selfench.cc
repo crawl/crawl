@@ -24,6 +24,7 @@
 #include "mutation.h"
 #include "output.h"
 #include "prompt.h"
+#include "player-stats.h"
 #include "religion.h"
 #include "showsymb.h"
 #include "spl-transloc.h"
@@ -278,6 +279,7 @@ spret cast_transform(int pow, transformation which_trans, bool fail)
 
     fail_check();
     transform(pow, which_trans);
+    notify_stat_change();
     return spret::success;
 }
 
