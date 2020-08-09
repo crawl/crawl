@@ -2333,7 +2333,6 @@ static spell_type _fixup_removed_spells(spell_type s)
         case SPELL_SPECTRAL_WEAPON:
         case SPELL_RING_OF_FLAMES:
         case SPELL_DARKNESS:
-        case SPELL_RING_OF_THUNDER:
             return SPELL_NO_SPELL;
 
         case SPELL_FLAME_TONGUE:
