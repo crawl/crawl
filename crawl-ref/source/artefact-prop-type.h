@@ -62,5 +62,6 @@ enum artefact_prop_type
     ARTP_FRAGILE,
     ARTP_SHIELDING,
     ARTP_HARM,
+    ARTP_RAMPAGING,
     ARTP_NUM_PROPERTIES
 };

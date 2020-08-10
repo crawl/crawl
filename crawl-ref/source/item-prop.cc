@@ -2418,6 +2418,20 @@ int get_armour_repel_missiles(const item_def &arm, bool check_artp)
     return false;
 }
 
+bool get_armour_rampaging(const item_def &arm, bool check_artp)
+{
+    ASSERT(arm.base_type == OBJ_ARMOUR);
+
+    // check for ego resistance
+    if (get_armour_ego_type(arm) == SPARM_RAMPAGING)
+        return true;
+
+    if (check_artp && is_artefact(arm))
+        return artefact_property(arm, ARTP_RAMPAGING);
+
+    return false;
+}
+
 int get_jewellery_res_fire(const item_def &ring, bool check_artp)
 {
     ASSERT(ring.base_type == OBJ_JEWELLERY);
