@@ -200,7 +200,7 @@ public:
     int berserk_penalty;                // The penalty for moving while berserk
 
     FixedVector<int, NUM_ATTRIBUTES> attribute;
-    FixedVector<uint8_t, NUM_AMMO> quiver; // default items for quiver
+    FixedVector<uint8_t, quiver::NUM_LAUNCHERS> quiver; // default items for quiver
     FixedVector<int, NUM_TIMERS> last_timer_effect;
     FixedVector<int, NUM_TIMERS> next_timer_effect;
 

@@ -13,18 +13,21 @@ class reader;
 class writer;
 class preserve_quiver_slots;
 
-enum ammo_t
+namespace quiver
 {
-    AMMO_THROW,           // no launcher wielded -> darts, stones, ...
-    AMMO_BOW,             // wielded bow -> arrows
-    AMMO_SLING,           // wielded sling -> stones, sling bullets
-    AMMO_CROSSBOW,        // wielded crossbow -> bolts
-    // Used to be hand crossbows
-#if TAG_MAJOR_VERSION == 34
-    AMMO_BLOWGUN,         // wielded blowgun -> needles
-#endif
-    NUM_AMMO
-};
+    enum launcher
+    {
+        AMMO_THROW,           // no launcher wielded -> darts, stones, ...
+        AMMO_BOW,             // wielded bow -> arrows
+        AMMO_SLING,           // wielded sling -> stones, sling bullets
+        AMMO_CROSSBOW,        // wielded crossbow -> bolts
+        // Used to be hand crossbows
+    #if TAG_MAJOR_VERSION == 34
+        AMMO_BLOWGUN,         // wielded blowgun -> needles
+    #endif
+        NUM_LAUNCHERS
+    };
+}
 
 class player_quiver
 {
@@ -38,8 +41,8 @@ public:
     void get_fire_order(vector<int>& v, bool manual) const;
 
     // Callbacks from engine
-    void set_quiver(const item_def &item, ammo_t ammo_type);
-    void empty_quiver(ammo_t ammo_type);
+    void set_quiver(const item_def &item, quiver::launcher ammo_type);
+    void empty_quiver(quiver::launcher ammo_type);
     void on_item_fired(const item_def &item, bool explicitly_chosen = false);
     void on_item_fired_fi(const item_def &item);
     void on_inv_quantity_changed(int slot, int amt);
@@ -59,8 +62,8 @@ private:
  private:
     item_def m_last_weapon;
 
-    ammo_t m_last_used_type;
-    item_def m_last_used_of_type[NUM_AMMO];
+    quiver::launcher m_last_used_type;
+    item_def m_last_used_of_type[quiver::NUM_LAUNCHERS];
 };
 
 // Quiver tracks items, which in most cases is the Right Thing. But
@@ -77,7 +80,7 @@ public:
     ~preserve_quiver_slots();
 
 private:
-    int m_last_used_of_type[NUM_AMMO];
+    int m_last_used_of_type[quiver::NUM_LAUNCHERS];
 };
 
 void quiver_item(int slot);
