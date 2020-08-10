@@ -2959,6 +2959,11 @@ static spret _do_ability(const ability_def& abil, bool fail)
                          &you);
         break;
 
+    case ABIL_TROG_CHARGE:
+        fail_check();
+        return furious_charge(fail);
+        break;
+
     case ABIL_TROG_BLESS_WEAPON:
         fail_check();
         simple_god_message(" will bless one of your weapons.");
