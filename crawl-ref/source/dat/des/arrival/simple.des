@@ -2386,3 +2386,114 @@ xxx........Gxxx
  xxxwwwwwxx+x
    xxxxxxx
 ENDMAP
+
+###############################################################################
+NAME:     amcnicky_arrival_double_pillar
+TAGS:     arrival no_monster_gen no_item_gen no_pool_fixup
+ORIENT:   float
+SHUFFLE:  JK
+SUBST:    p:xxxWWWlv, J:x, K:@
+MAP
+JKKKKKKKJ
+J.......J
+J.pp....J
+J.pp....J
+x......xx
+x.xxxx.xx
+x.x....xx
+xxx.{.xxx
+xx....x.x
+xx.xxxx.x
+xx......x
+J....pp.J
+J....pp.J
+J.......J
+JKKKKKKKJ
+ENDMAP
+
+NAME:     amcnicky_arrival_single_pillar
+TAGS:     arrival no_monster_gen no_item_gen no_pool_fixup
+SHUFFLE:  JK
+SUBST:    p:xxxWWWlv, J:x, K:@
+MAP
+JKKKKKKKJ
+J.......J
+J.pp....J
+J.pp....J
+x......xx
+x.xxxx.xx
+x.x....xx
+xxx.{.xxx
+@+....x
+xxxxxxx
+ENDMAP
+
+NAME:   amcnicky_arrival_feature_with_door
+TAGS:   arrival no_monster_gen no_pool_fixup no_trap_gen
+ORIENT: float
+SUBST:  p:xxxtttvblWV
+MAP
+       x@x
+xxxxxxxx+xxxxx
+x{...........@
+xxxxxx.......x
+     xx..p..xx
+      xx...xx
+       xx.xx
+        xxx
+ENDMAP
+
+NAME:   amcnicky_arrival_flooded_fountain
+TAGS:   arrival no_monster_gen no_pool_fixup no_trap_gen
+ORIENT: float
+MAP
+ xxxxxxx
+ xw{...x
+xxxxx..x
+xVwww..x
+xwww...x
+xwww...x
+xww....x
+xw.....xx
+x......+@
+xT.....xx
+x......x
+x...xx.x
+x...xx.x
+x......x
+x......x
+xT.....x
+xxxxxxxx
+ENDMAP
+
+NAME:   amcnicky_arrival_choice
+TAGS:   arrival no_monster_gen no_trap_gen
+ORIENT: float
+SUBST:  p:}}>
+MAP
+    xxx
+xxxxxpx
+x{....x
+xxxxx.x
+    x+x
+    x@x
+ENDMAP
+
+NAME:     amcnicky_arrival_underground_garden
+TAGS:     arrival no_monster_gen no_trap_gen
+ORIENT:   float
+MAP
+xxxxtxtxxtxxttxx
+x{............xx
+xxxxxxxtxtxtt.xx
+xtttttttttttt.xx
+xttt.....ttt..tx
+xtt..........ttx
+xt....t.t....xtx
+xt.....T.....ttx
+xt....t.t....ttx
+xtt.........tttx
+xttt.......ttttx
+xttttt...ttttttx
+xxxxxt@@@txxxxxx
+ENDMAP

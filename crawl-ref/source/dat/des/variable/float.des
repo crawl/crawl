@@ -835,6 +835,33 @@ Ellllllll.
   ..!...
 ENDMAP
 
+NAME:    amcnicky_nick_rare_triplestair_openwater
+ORIENT:  float
+TAGS:    extra luniq_staircase uniq_triplestair_openwater decor
+DEPTH:   D:2-, Lair, Depths
+WEIGHT:  4
+MAP
+ xxxxxxxxxxxxxxxxxxxx
+xxWWWWWWWWWWWWWWWWWWxx
+xWWWWWWWWWWWWWWWWWWWWx
+xWWWWWwwwwwwwwwWWWWWWx
+xWWWWwww.....wwwWWWWWx
+xWWWWww.{...(.wwWWWWWx
+xWWWWww...[...wwWWWWWx
+xWWWWwww.....wwwWWWWWx
+xWWWWwwww...wwwwWWWWWx
+xWWWWWwww...wwwWWWWWWx
+xWWWWWWww...wwWWWWWWWx
+xWWWWWWww...wwWWWWWWWx
+xxxWWWWww...wwWWWWxxxx
+  xxxxWww...wwWxxxx
+     xxww...wwxx
+      xww...wwx
+      xxw...wxx
+       xw...wx
+       xw@@@wx
+ENDMAP
+
 ##############################################################################
 # Celtic spiral tile pattern (rotated 45 degrees)
 # http://en.wikipedia.org/wiki/Celtic_maze
@@ -9929,4 +9956,284 @@ xxx.xx.xxx0...........0xxx.xx.xxx
 x..x..x11xx...........xx11x..x..x
 x1.x.1x11*xxx...{...xxx*11x1.x.1x
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   amcnicky_float_guardroom
+DEPTH:  D:3-, Depths
+ORIENT: float
+TAGS:   no_item_gen no_monster_gen
+SUBST:  0 = .:20 0:70 9:10
+SUBST:  9 = .:20 0:20 9:50 8:10
+SUBST:  % = .:20 $:40 %:26 *:10 |:4
+SUBST:  p = .:70 +:30
+MAP
+    xxxxxxxxxx
+  xxx%%999%%%x
+  @.x........x
+  x.x00....00x
+xxxpx00....00x
+x00.xxxx+xxxxxxx
+x00............x
+xxxxxxpxxxxxxxpx
+     x.x   x00.x
+      @    x00.x
+           x00.x
+           xx...@
+            xxxx
+ENDMAP
+
+NAME:   amcnicky_float_beach_large
+WEIGHT: 5 (D:3-), 2 (Depths)
+DEPTH:  D:3-, Depths
+ORIENT: float
+TAGS:   no_item_gen no_monster_gen
+FTILE:  . = floor_sand
+FTILE:  ; = floor_pebble
+FTILE:  0 = floor_sand
+FTILE:  9 = floor_sand
+FTILE:  % = floor_sand
+SUBST:  0 = .:20 0:70 9:10
+SUBST:  9 = .:20 0:20 9:52 8:8
+SUBST:  % = .:20 $:40 %:28 *:10 |:2
+SUBST:  p = .:70 +:30
+MAP
+  xxxx
+ @+;;x
+  xx;x
+xxxx;xxxx
+x..0.0..x
+x.0.0.0.x
+x..www..x
+x.0www..x
+x..www..x
+x0.www..x
+x..www9.x
+x.0www..x
+x..www..x
+x0.www..x
+x..www..x
+x.0...%%x
+x.....%%x
+xxxxxxxxx
+ENDMAP
+
+NAME:   amcnicky_float_beach_small
+WEIGHT: 5 (D:3-), 2 (Depths)
+DEPTH:  D:3-, Depths
+ORIENT: float
+TAGS:   no_item_gen no_monster_gen
+FTILE:  . = floor_sand
+FTILE:  ; = floor_pebble
+FTILE:  0 = floor_sand
+FTILE:  9 = floor_sand
+FTILE:  % = floor_sand
+SUBST:  0 = .:20 0:70 9:10
+SUBST:  9 = .:20 0:20 9:56 8:4
+SUBST:  % = .:20 $:40 %:28 *:10 |:2
+SUBST:  p = .:70 +:30
+MAP
+  xxxx
+ @+;;x
+  xx;x
+xxxx;xxxx
+x..0.0..x
+x..www..x
+x.0www..x
+x..www9.x
+x.0www..x
+x0....%%x
+xxxxxxxxx
+ENDMAP
+
+NAME:   amcnicky_float_corridor_feature
+DEPTH:  D:5-, Depths, Crypt
+ORIENT: float
+TAGS:   extra no_item_gen
+SUBST:  p: .:6 G:40 t:20 <:10 >:10 n:4 l:4 $:4 Y:2
+MAP
+  @
+xx.xx
+xp.px
+xx.xx
+xx.xx
+xp.px
+xx.xx
+xx.xx
+xp.px
+xx.xx
+  @
+ENDMAP
+
+NAME:   amcnicky_float_open_feature
+DEPTH:  D:5-, Depths, Lair
+ORIENT: float
+TAGS:   no_item_gen
+SUBST:  0 = .:40 0:50 9:10
+SUBST:  p: .:37 G:20 t:10 <:10 >:10 n:4 l:4 $:4 Y:1
+SUBST:  q: x@
+SUBST:  r: .:66 w:34
+SUBST:  s: .:66 x:33
+SUBST:  u: .:66 x:33
+SUBST:  y: .:66 x:33
+SUBST:  % = .:65 $:10 %:12 *:4 |:1
+MAP
+  xxxxxqxxxxx
+ xxp.......pxx
+xxp..00000..pxx
+xp..u.u.u.u..px
+xy.rrrrrrrrr.yx
+xrrrrrrrrrrrrrx
+x..rrrrrrrrr..x
+xy..u%u%u%u..yx
+xp...........px
+xxp.sss.sss.pxx
+ xxpsss.ssspxx
+  xxxxx@xxxxx
+ENDMAP
+
+NAME:   amcnicky_float_pool_small
+WEIGHT: 5
+DEPTH:  D:5-, Depths, Lair
+ORIENT: float
+TAGS:   no_pool_fixup extra
+SUBST:  p: w:60 W:30 l:10
+MAP
+  xxxx
+ @...x
+  xx.x
+  xx.xx
+ xx...xx
+xx..p..xx
+x..ppp..x
+xx..p..xx
+ xx...xx
+  xx.xx
+   x.xxx
+   x...@
+   xxxxx
+ENDMAP
+
+NAME:   amcnicky_float_pool_medium
+WEIGHT: 5
+DEPTH:  D:5-, Depths, Lair
+ORIENT: float
+TAGS:   no_pool_fixup
+SUBST:  p: w:60 W:30 l:10
+SUBST:  q= .:50 0:50
+MAP
+    xxxx
+   @...x
+    xx.x
+    xx.xx
+   xx...xx
+  xx..p..xx
+ xx..ppp..xx
+xx.qpppppq.xx
+x..ppppppp..x
+x.ppppppppp.x
+x..ppppppp..x
+xx.qpppppq.xx
+ xx..ppp..xx
+  xx..p..xx
+   xx...xx
+    xx.xx
+     x.x
+     x.xxxx
+     x.....@
+     xxxxxx
+ENDMAP
+
+# Vault walls and blood hint that something tougher awaits
+NAME:   amcnicky_float_rare_duel
+WEIGHT: 2
+DEPTH:  D:5-, Depths, Crypt, Lair
+ORIENT: float
+TAGS:   no_pool_fixup extra
+KPROP:  p = bloody
+SUBST:  %= %:20 *:60 |:20
+SUBST:  E= .:50 8:20 9:30
+MAP
+       vvv
+      vv%v
+     vvG.vv
+ xxvvvG.E.v
+@+$pp+..8.v
+ xxvvvG.E.v
+     vvG.vv
+      vv%v
+       vvv
+ENDMAP
+
+# Decision making with traps - which path do you take?
+NAME:   amcnicky_float_corridor_trapped
+WEIGHT: 4
+DEPTH:  D:4-, Depths, Crypt
+ORIENT: float
+TAGS:   extra no_item_gen no_monster_gen no_tele_into
+MAP
+  xxxx
+ xx~~xxx
+@..~~~..@
+ xxx~~xx
+   xxxx
+ENDMAP
+
+# The next 2 vaults involve lava, so using thematic weightings to
+# lean towards where lava seems most common in Depths
+NAME: amcnicky_float_rare_at_lavas_edge
+WEIGHT: 2 (D:3-), 2 (Crypt), 6 (Depths)
+DEPTH:  D:3-, Depths, Crypt
+ORIENT: float
+SUBST:  0 = .:50 0:40 9:10
+MAP
+       xxxxxxxxxxxxxx
+    xxxxllllllllllllxx
+   xxllllllllllllllllxx
+  xxllllllllllllllllllxx
+  xllllllllllllllllllllxx
+  xlllllllllllllllllllllxx
+ xxllllllllllllllllllllllxx
+ xllllllllllllllllllllllllxx
+ xlllllllllllllllllllllllllx
+xxlllllllllllllllllllllllllx
+xllllllllllllllllllllllllllxx
+xlllllllllllllllllllllllllllx
+xllllllllllllllllllll.xxllllx
+xllllllllllllllllllll..xxlllxx
+xllllllllllllllllllll.0.xxlllx
+xxlllllllllllllllllll....xxllx
+ xlllllllllllllllllll..0..xxlx
+ xxlllllllllllllllll.......xxx
+  xllllllllllllllll..0.0..0.x
+  xxlllllllllllll..0.........@
+   xxlllllllll..........0..0.@
+    xxllllllllx..0...0......x
+     xxlllllllxx........0..xx
+      xxxllllllxxxxxx....xxx
+        xxxxllllllllxxxxxx
+           xxxxxxxxxx
+ENDMAP
+
+NAME:   amcnicky_float_rare_corridor_liquid
+WEIGHT: 2 (D:3-), 2 (Crypt), 6 (Depths)
+DEPTH:  D:3-, Depths
+ORIENT: float
+TAGS:   extra
+SUBST:  p: w:50 l:50
+MAP
+ xxxxxxxxxxx
+ xpppppppppx
+ xpppppppppx
+ xpppppppppx
+ xpppppppppx
+ xpppppppppx
+ xmmmmmmmmmx
+@...........@
+ xmmmmmmmmmx
+ xpppppppppx
+ xpppppppppx
+ xpppppppppx
+ xpppppppppx
+ xpppppppppx
+ xxxxxxxxxxx
 ENDMAP

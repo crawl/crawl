@@ -3496,3 +3496,93 @@ xx...x+   +xxx+   +x...xx
          xx...xx
           xxxxx
 ENDMAP
+
+##############################################################
+NAME:     amcnicky_arrival_blooded_trapdoor
+TAGS:     arrival no_monster_gen no_pool_fixup no_trap_gen
+ORIENT:   float
+KPROP:    u = bloody
+SHUFFLE:  pqr
+SUBST:    s:xxxtW, p:x, q:x, r:@, u:.
+MAP
+   xpppx
+   xuuux
+xxxxu>uxxxxxqqq
+x...uuu.......q
+x.{........ss.q
+x..........ss.x
+xxxxxxx.......x
+      xxrrrrxxx
+ENDMAP
+
+NAME:     amcnicky_arrival_gap_in_the_tavern_cellar
+TAGS:     arrival no_monster_gen no_pool_fixup no_trap_gen
+ORIENT:   float
+KITEM:    t = deep dwarf skeleton
+SHUFFLE:  su, pq
+KPROP:    p = bloody
+SUBST:    r:xxxxvvWl, s:@, u:x, p:., q:.
+MAP
+    xxxxxxxx
+    xT....Tx
+xxxxx......x
+x..........x
+x.{........x
+x.........Vx
+xxxxxT.....xv
+    xxxxxxxpvv
+   xxxxxxxvvqvv
+   s....xxxxvpvv
+   s.rr.qpxxvvqv
+   s.rr.pppqqppx
+   s....xxxxxxxx
+   uuuuux
+ENDMAP
+
+NAME:     amcnicky_arrival_wind_blow
+TAGS:     arrival no_monster_gen no_trap_gen
+ORIENT:   float
+KITEM:    p = deep dwarf skeleton
+MAP
+    xxxxxx
+    x{..px
+    xxx..xx
+      x...xxx
+     xx..p..x
+     xp.....xx  xxxx
+    xxp......x xx..@
+xxxxx...xx...xxx...@
+x.......xxx......xx@
+x......xx xx.....xx@
+x.xx...x   x.......@
+x.xx...xx  xxxxxx..@
+x.......xx      xxxx
+x........x
+xxxxxxx..x
+      x@@x
+ENDMAP
+
+NAME:     amcnicky_arrival_abandonned_market
+TAGS:     arrival no_monster_gen no_trap_gen
+ORIENT:   float
+KITEM:    q = deep dwarf skeleton
+KFEAT:    p = abandoned_shop
+MAP
+xxxxxxxxxxxxxxxxxxxxx
+xxxxxppxxppxxppxxpppx
+xxxxx..............px
+x{...........q.....xx
+xx.................xx
+xxx.....q..........xx
+xxxxx..............px
+xxxxxxxpppxxxxxx...px
+      xxxxxxqpp..q.xx
+           x.ppq...xxxx
+           x..qq...px.@
+           x.xx....xx.@
+           xqxxq...+..@
+           xqq.....xx.@
+           x.......pxxx
+           xppxxxppxxxx
+           xxxxxxxxxxxx
+ENDMAP

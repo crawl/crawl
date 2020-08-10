@@ -294,6 +294,72 @@ x.G.x
 ..@..
 ENDMAP
 
+# Simple decision for the player on whether the altar is worth stepping on
+# or otherwise avoiding (digging etc) one or more traps
+NAME:  amcnicky_altar_trapped
+TAGS:  no_monster_gen
+DEPTH: D:3-, Vaults
+SUBST: p:~., q:~....., r:~.......
+MAP
+xxxxx
+x...xxxx.
+x.C.~pqr.
+x...xxxx.
+xxxxx
+ENDMAP
+
+# Gold given fairly modest weightings, could be lowered further if
+# determined that this would be too much of a bump to the player
+# Could also add a chance to subst gold for enemies
+# Average gold generation:
+# Inner ring, 2.79 piles
+# Outer ring, 2.09 piles
+NAME:   amcnicky_altar_gilded
+TAGS:   transparent
+DEPTH:  D:3-, Vaults, Lair, Orc, Elf, Crypt
+NSUBST: p = *=.$:45
+NSUBST: q = *=.$:15
+MAP
+.........
+.mmmmmmm.
+.mqqqqqm.
+.mqpppqm.
+.+qpCpqm.
+.mqpppqm.
+.mqqqqqm.
+.mmmmmmm.
+.........
+ENDMAP
+
+# Chance of rolling all % items: 61%
+NAME:   amcnicky_altar_medium_temple
+TAGS:   no_monster_gen
+DEPTH:  D:3-, Vaults, Lair, Orc, Elf, Crypt
+SUBST:  p:%%%%%*, q:%%%%%%%*, r:%%%%%*, s:xx+, u:xx+, y:...wwwl, z:...wwwl
+MAP
+     ............
+    ..............
+   ................
+  ....xxsxxxxuxx....
+ ....xxx.xxx..xxx....
+....xxxx.zzz..xxxx...
+...xxxG.......Gxxx...
+...xxx.....0....Gx...
+...xx..0...0.....x...
+...x..yyyyyyy.9.px...
+...+..yyyyyyy..Cqx...
+...x..yyyyyyy.9.rx...
+...xx..0...0.....x...
+...xxx.....0....Gx...
+...xxxG.......Gxxx...
+....xxxx.zzz..xxxx...
+ ....xxx.xxx..xxx....
+  ....xxsxxxxuxx....
+   ................
+    ..............
+     ............
+ENDMAP
+
 ##############################################################################
 # III   Altars to minor gods
 #
@@ -384,6 +450,51 @@ cccyy..yycc
      @@
 ENDMAP
 
+# Using the 'can_overwrite' tag to simulate Lugonu corrupting the dungeon
+# validate possibly not needed, but better safe than sorry to check that
+# we can still traverse whatever Lugonu has chosen to put their foot in.
+# The use of this many @s is also probably overkill, but want to take
+# all measures I can think of to stop can_overwrite messing up level
+# traversal with this vault since it can overwrite.
+NAME:     amcnicky_altar_lugonu_corruption
+TAGS:     transparent can_overwrite no_monster_gen
+DEPTH:    D:3-, Vaults, Lair, Orc, Elf, Crypt, Depths, Slime:1-4, Shoals,\
+            Spider, Snake, Swamp
+# Lugonu cares not about moderate vault placement
+MARKER:   q  = lua:fog_machine { cloud_type="purple smoke", walk_dist=1, \
+            size=1, pow_max=5, delay=10, buildup_amnt=7, buildup_time=7, \
+            spread_rate=2, start_clouds=1, colour="pruple" }
+FTILE:    .upqrG1@ = FLOOR_NERVES
+KFEAT:    p = altar_lugonu
+KFEAT:    r = enter_abyss
+KPROP:    p = no_cloud_gen
+MONS:     lurking horror / thrashing horror
+MONS:     spatial vortex / shining eye
+MONS:     chaos spawn / spatial vortex
+MONS:     ufetubus / floating eye
+SUBST: . = .:75 p:10 r:5 1:10
+: if you.absdepth() <4 then
+SUBST: 1:4
+: end
+: if you.absdepth() <6 then
+SUBST: 1:3
+: end
+: if you.absdepth() <10 then
+SUBST: 1:2
+: end
+SUBST:  1 = 1:80 2:10 3:5 4:5
+SUBST:  2 = 2:80 3:10 4:10
+SUBST:  3 = 3:80 4:20
+validate {{ return has_exit_from_glyph('r') }}
+MAP
+ @@@q.
+@.1.1..
+@1...Gq.
+@u.p.rG.
+@1...Gq.
+@.1.1..
+ @@@q.
+ENDMAP
 
 ### Altars possibly to Beogh #################################################
 
