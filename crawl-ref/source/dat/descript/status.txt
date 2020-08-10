@@ -801,3 +801,12 @@ CigoPlg status
 
 You are infected by Cigotuvi's plague. Your body is oftenly mutated.
 %%%%
+Golem status
+
+You have been transformed into a giant golem, by your activated golem
+armour. Your strength is increased, and sturdy forcefield will enhance
+your durability. If you perform unarmed strike while this form, it will
+be destructive blow by your boosted golem fists. Also, this form grants
+you resistance to negative energy and petrification, but also makes you
+vulnerable to shattering effects.
+%%%%

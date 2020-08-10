@@ -381,6 +381,8 @@ static const ability_def Ability_List[] =
       5, 0, 200, 0, {fail_basis::evo, 60, 2}, abflag::none },
     { ABIL_EVOKE_PAVISE, "Deploy Shield",
       0, 0, 0, 0, {fail_basis::shield, 60, 2}, abflag::none },
+    { ABIL_GOLEM_FORM, "Evoke Golem Armour",
+      5, 0, 250, 0, {fail_basis::evo, 50, 2}, abflag::none },
 
     { ABIL_END_TRANSFORMATION, "End Transformation",
       0, 0, 0, 0, {}, abflag::starve_ok },
@@ -474,6 +476,8 @@ static const ability_def Ability_List[] =
     { ABIL_TROG_BROTHERS_IN_ARMS, "Brothers in Arms",
       0, 0, 250, generic_cost::range(5, 6),
       {fail_basis::invo, piety_breakpoint(5), 0, 1}, abflag::berserk_ok },
+    { ABIL_TROG_CHARGE, "Furious Charge",
+      0, 0, 0, 0, {fail_basis::invo}, abflag::exhaustion|abflag::berserk_ok },
     { ABIL_TROG_BLESS_WEAPON, "Brand Weapon With Antimagic", 0, 0, 0, 0,
       {fail_basis::invo}, abflag::none },
 
@@ -2524,6 +2528,15 @@ static spret _do_ability(const ability_def& abil, bool fail)
         }
         break;
 
+    case ABIL_GOLEM_FORM:
+        fail_check();
+        if (!transform(you.skill(SK_EVOCATIONS, 2), transformation::golem))
+        {
+            mpr("Your golem armour activates, starts to form as a giant golem!");
+            return spret::abort;
+        }
+        break;
+
     case ABIL_EVOKE_THUNDER: // robe of Clouds
         fail_check();
         mpr("The folds of your robe billow into a mighty storm.");
@@ -2945,6 +2958,12 @@ static spret _do_ability(const ability_def& abil, bool fail)
                          random2(you.piety/4) - random2(you.piety/4),
                          &you);
         break;
+
+    case ABIL_TROG_CHARGE:
+        fail_check();
+        return furious_charge(fail);
+        break;
+
     case ABIL_TROG_BLESS_WEAPON:
         fail_check();
         simple_god_message(" will bless one of your weapons.");
@@ -4413,6 +4432,15 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
     if (you.evokable_pavise())
     {
         _add_talent(talents, ABIL_EVOKE_PAVISE, check_confused);
+    }
+
+    if (player_equip_unrand(UNRAND_GOLEM_ARMOUR)
+        && player_equip_unrand(UNRAND_GOLEM_BOOTS)
+        && player_equip_unrand(UNRAND_GOLEM_GLOVES)
+        && player_equip_unrand(UNRAND_GOLEM_HELMET)
+        && !you.get_mutation_level(MUT_NO_ARTIFICE))
+    {
+        _add_talent(talents, ABIL_GOLEM_FORM, check_confused);
     }
 
     // Find hotkeys for the non-hotkeyed talents.

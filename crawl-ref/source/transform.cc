@@ -1023,6 +1023,14 @@ public:
     }
 };
 
+class FormGolem : public Form
+{
+private:
+    FormGolem() : Form(transformation::golem) { }
+    DISALLOW_COPY_AND_ASSIGN(FormGolem);
+public:
+    static const FormGolem &instance() { static FormGolem inst; return inst; }
+};
 
 
 
@@ -1054,6 +1062,7 @@ static const Form* forms[] =
     &FormHydra::instance(),
     &FormHolySwine::instance(),
     &FormEldritch::instance(),
+    &FormGolem::instance(),
 };
 
 const Form* get_form(transformation xform)
@@ -1970,6 +1979,26 @@ bool transform(int pow, transformation which_trans, bool involuntary,
 
     case transformation::eldritch:
         you.malmutate("eldritch form");
+        break;
+
+    case transformation::golem:
+        if (you.attribute[ATTR_HELD])
+        {
+            trap_def *trap = trap_at(you.pos());
+            if (trap && trap->type == TRAP_WEB)
+            {
+                mpr("You shred the web into pieces!");
+                destroy_trap(you.pos());
+            }
+            int net = get_trapping_net(you.pos());
+            if (net != NON_ITEM)
+            {
+                mpr("The net rips apart!");
+                destroy_item(net);
+            }
+
+            stop_being_held();
+        }
         break;
 
     default:

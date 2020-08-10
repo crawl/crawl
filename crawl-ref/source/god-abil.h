@@ -96,6 +96,7 @@ void sif_do_channel_energy(int pow);
 
 void trog_do_trogs_hand(int power);
 void trog_remove_trogs_hand();
+spret furious_charge(bool fail);
 
 bool jiyva_remove_bad_mutation();
 bool jiyva_corrosion_level(int power);

@@ -175,6 +175,15 @@ Evoke Thunderclouds ability
 
 Create a mighty thunderclouds around the user.
 %%%%
+Evoke Golem Armour ability
+
+Activates your full set of golem armour to enhance wearer's strength
+and emits sturdy forcefield to reinforce durability. Performing unarmed
+strike while armour is activated, it will be destructive blow by your
+boosted golem fists. Also, this form grants you resistance to negative
+energy and petrification, but also makes you vulnerable to shattering
+effects.
+%%%%
 End Transformation ability
 
 Reverts you to your normal form.
@@ -415,6 +424,13 @@ enchantments.
 Brothers in Arms ability
 
 Summons huge angry allies to wreak havoc.
+%%%%
+Furious Charge ability
+
+Costs large amount of hunger, push yourself into berserk rage to charge at an
+enemy, strike with your weapon or barehands. This strike has a chance to cause
+a very short daze on the target, depending on the distance between you and your
+target. Whether this strike hits or misses, you immediately goes berserk.
 %%%%
 Brand Weapon With Antimagic ability
 

@@ -1064,6 +1064,7 @@ static int _shatter_player_dice()
         return 6; // reduced later by petrification's damage reduction
     else if (you.form == transformation::statue
              || you.form == transformation::ice_beast
+             || you.form == transformation::golem
              || you.species == SP_GARGOYLE)
         return 6;
     else if (you.airborne())
@@ -2176,6 +2177,13 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
             beam.colour     = WHITE;
             beam.damage.num = 3;
             beam.flavour    = BEAM_ICE;
+            return true;
+        }
+        else if (you.form == transformation::golem)
+        {
+            beam.name       = "blast of armour fragments";
+            beam.colour     = BROWN;
+            beam.damage.num = you.form == transformation::golem ? 3 : 2;
             return true;
         }
     }
