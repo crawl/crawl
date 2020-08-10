@@ -1413,6 +1413,51 @@ STEALTH:  1
 INSCRIP:  *Inv
 BOOL:     seeinv, corrode
 
+ENUM:    GOLEM_GLOVES
+NAME:    Golem gauntlets
+OBJ:     OBJ_ARMOUR/ARM_GLOVES
+PLUS:    +2
+COLOUR:  ETC_SHIMMER_BLUE
+TILE:    urand_golem_gloves
+TILE_EQ: golem_gloves
+STEALTH: -1
+INSCRIP: parts
+BOOL:    poison, elec
+
+ENUM:    GOLEM_ARMOUR
+NAME:    Golem armour
+OBJ:     OBJ_ARMOUR/ARM_PLATE_ARMOUR
+PLUS:    +3
+COLOUR:  ETC_SHIMMER_BLUE
+TILE:    urand_golem_armour
+TILE_EQ: golem_armour
+BRAND:   SPARM_SPIRIT_SHIELD
+STEALTH: -1
+INSCRIP: parts
+BOOL:    poison, elec
+
+ENUM:    GOLEM_BOOTS
+NAME:    Golem greaves
+OBJ:     OBJ_ARMOUR/ARM_BOOTS
+PLUS:    +2
+COLOUR:  ETC_SHIMMER_BLUE
+TILE:    urand_golem_boots
+TILE_EQ: golem_boots
+STEALTH: -1
+INSCRIP: parts
+BOOL:    poison, elec
+
+ENUM:    GOLEM_HELMET
+NAME:    Golem helmet
+OBJ:     OBJ_ARMOUR/ARM_HELMET
+PLUS:    +2
+COLOUR:  ETC_SHIMMER_BLUE
+TILE:    urand_golem_helmet
+TILE_EQ: golem_helmet
+STEALTH: -1
+INSCRIP: parts
+BOOL:    poison, elec
+
 # This entry must always be last.
 ENUM:   DUMMY2
 NAME:   DUMMY UNRANDART 2

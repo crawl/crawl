@@ -275,6 +275,7 @@ mesh_black MESH_BLACK
 mesh_white MESH_WHITE
 mesh_blue MESH_BLUE LAST_NORM
 spider SPIDER
+golem_boots GOLEM_BOOTS
 
 ## Mutations
 hooves HOOVES
@@ -503,6 +504,7 @@ orange_crystal ORANGE_CRYSTAL
 vines VINES
 kryias KRYIAS
 talos TALOS
+golem_armour GOLEM_ARMOUR
 %end_ctg
 
 ### Arms
@@ -528,6 +530,7 @@ glove_short_white GLOVE_SHORT_WHITE
 glove_short_green GLOVE_SHORT_GREEN
 glove_short_blue GLOVE_SHORT_BLUE
 glove_short_gray GLOVE_SHORT_GRAY LAST_NORM
+golem_gloves GOLEM_GLOVES
 ## mutations
 claws CLAWS
 player/mutations/octopode1 OCTOPODE_SPIKE
@@ -1138,6 +1141,7 @@ bear BEAR
 dyrovepreva DYROVEPREVA
 eternal_torment ETERNAL_TORMENT
 wizard_lightgreen WIZARD_LIGHTGREEN
+golem_helmet GOLEM_HELMET
 
 ## All helmets below (HELM_OFS and greater) hide hair.
 iron1 HELM_IRON HELM_OFS FIRST_NORM

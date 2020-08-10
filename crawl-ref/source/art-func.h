@@ -43,6 +43,7 @@
 #include "spl-monench.h"   // For Zhor's aura
 #include "spl-summoning.h" // For Zonguldrok animating dead
 #include "terrain.h"       // For storm bow
+#include "transform.h"     // For Golem armour
 #include "view.h"          // For arc blade's discharge effect
 
 // prop recording whether the singing sword has said hello yet
@@ -1618,4 +1619,171 @@ static void _INVDRAGON_equip(item_def */*item*/, bool *show_msgs,
 static void _INVDRAGON_unequip(item_def */*item*/, bool *show_msgs)
 {
     _equip_mpr(show_msgs, "You feel less unseen.");
+}
+
+////////////////////////////////////////////////////
+
+static void _GOLEM_GLOVES_equip(item_def */*item*/, bool *show_msgs, bool /*unmeld*/)
+{
+    if (player_equip_unrand(UNRAND_GOLEM_ARMOUR)
+        && player_equip_unrand(UNRAND_GOLEM_BOOTS)
+        && player_equip_unrand(UNRAND_GOLEM_HELMET)
+        && !you.get_mutation_level(MUT_NO_ARTIFICE))
+    {
+        _equip_mpr(show_msgs, "All parts of golem armour are assembled into one, ready to activate!");
+    }
+}
+
+static void _GOLEM_GLOVES_unequip(item_def */*item*/, bool *show_msgs)
+{
+    if (you.form == transformation::golem)
+    {
+        untransform();
+        _equip_mpr(show_msgs, "Your golem armour is deactivated.");
+    }
+}
+
+static void _GOLEM_GLOVES_world_reacts(item_def *item)
+{
+    string old_name = get_artefact_name(*item);
+    string new_name;
+    if (you.form == transformation::golem)
+    {
+        new_name = "Golem gauntlets (activated)";
+    }
+    else
+    {
+        new_name = "Golem gauntlets";
+    }
+    if (old_name != new_name)
+    {
+        set_artefact_name(*item, new_name);
+        you.wield_change = true;
+    }
+}
+
+
+////////////////////////////////////////////////////
+
+static void _GOLEM_BOOTS_equip(item_def */*item*/, bool *show_msgs, bool /*unmeld*/)
+{
+    if (player_equip_unrand(UNRAND_GOLEM_ARMOUR)
+        && player_equip_unrand(UNRAND_GOLEM_GLOVES)
+        && player_equip_unrand(UNRAND_GOLEM_HELMET)
+        && !you.get_mutation_level(MUT_NO_ARTIFICE))
+    {
+        _equip_mpr(show_msgs, "All parts of golem armour are assembled into one, ready to activate!");
+    }
+}
+
+static void _GOLEM_BOOTS_unequip(item_def */*item*/, bool *show_msgs)
+{
+    if (you.form == transformation::golem)
+    {
+        untransform();
+        _equip_mpr(show_msgs, "Your golem armour is deactivated.");
+    }
+}
+
+static void _GOLEM_BOOTS_world_reacts(item_def *item)
+{
+    string old_name = get_artefact_name(*item);
+    string new_name;
+    if (you.form == transformation::golem)
+    {
+        new_name = "Golem greaves (activated)";
+    }
+    else
+    {
+        new_name = "Golem greaves";
+    }
+    if (old_name != new_name)
+    {
+        set_artefact_name(*item, new_name);
+        you.wield_change = true;
+    }
+}
+
+
+////////////////////////////////////////////////////
+
+static void _GOLEM_HELMET_equip(item_def */*item*/, bool *show_msgs, bool /*unmeld*/)
+{
+    if (player_equip_unrand(UNRAND_GOLEM_ARMOUR)
+        && player_equip_unrand(UNRAND_GOLEM_BOOTS)
+        && player_equip_unrand(UNRAND_GOLEM_GLOVES)
+        && !you.get_mutation_level(MUT_NO_ARTIFICE))
+    {
+        _equip_mpr(show_msgs, "All parts of golem armour are assembled into one, ready to activate!");
+    }
+}
+
+static void _GOLEM_HELMET_unequip(item_def */*item*/, bool *show_msgs)
+{
+    if (you.form == transformation::golem)
+    {
+        untransform();
+        _equip_mpr(show_msgs, "Your golem armour is deactivated.");
+    }
+}
+
+static void _GOLEM_HELMET_world_reacts(item_def *item)
+{
+    string old_name = get_artefact_name(*item);
+    string new_name;
+    if (you.form == transformation::golem)
+    {
+        new_name = "Golem helmet (activated)";
+    }
+    else
+    {
+        new_name = "Golem helmet";
+    }
+    if (old_name != new_name)
+    {
+        set_artefact_name(*item, new_name);
+        you.wield_change = true;
+    }
+}
+
+
+////////////////////////////////////////////////////
+
+static void _GOLEM_ARMOUR_equip(item_def */*item*/, bool *show_msgs, bool /*unmeld*/)
+{
+    if (player_equip_unrand(UNRAND_GOLEM_HELMET)
+        && player_equip_unrand(UNRAND_GOLEM_BOOTS)
+        && player_equip_unrand(UNRAND_GOLEM_GLOVES)
+        && !you.get_mutation_level(MUT_NO_ARTIFICE))
+    {
+        _equip_mpr(show_msgs, "All parts of golem armour are assembled into one, ready to activate!");
+    }
+}
+
+static void _GOLEM_ARMOUR_unequip(item_def */*item*/, bool *show_msgs)
+{
+    if (you.form == transformation::golem)
+    {
+        untransform();
+        _equip_mpr(show_msgs, "Your golem armour is deactivated.");
+    }
+}
+
+static void _GOLEM_ARMOUR_world_reacts(item_def *item)
+{
+    string old_name = get_artefact_name(*item);
+    string new_name;
+    if (you.form == transformation::golem)
+    {
+        new_name = "Golem armour (activated)";
+    }
+    else
+    {
+        new_name = "Golem armour";
+    }
+    if (old_name != new_name)
+    {
+        set_artefact_name(*item, new_name);
+        you.wield_change = true;
+    }
 }
