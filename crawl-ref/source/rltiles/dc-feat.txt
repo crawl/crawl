@@ -684,6 +684,7 @@ monster_threat_easy THREAT_EASY
 monster_threat_tough THREAT_TOUGH
 monster_threat_nasty THREAT_NASTY
 ray RAY
+ray_bi RAY_BI
 ray_multi RAY_MULTI
 ray_out_of_range RAY_OUT_OF_RANGE
 travel_exclusion TRAVEL_EXCLUSION_BG

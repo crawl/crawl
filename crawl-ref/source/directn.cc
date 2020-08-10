@@ -952,7 +952,7 @@ bool direction_chooser::find_default_monster_target(coord_def& result) const
     // If the previous targetted position is at all useful, use it.
     if (!Options.simple_targeting && hitfunc
         && _find_monster_expl(you.prev_grd_targ, mode, needs_path,
-                              range, hitfunc, AFF_YES, AFF_MULTIPLE))
+                              range, hitfunc, AFF_YES, AFF_DOUBLE))
     {
         result = you.prev_grd_targ;
         return true;
@@ -969,14 +969,21 @@ bool direction_chooser::find_default_monster_target(coord_def& result) const
     }
     else
     {
-        success = hitfunc && _find_square_wrapper(result, 1,
+        success = hitfunc && (_find_square_wrapper(result, 1,
                                                   bind(_find_monster_expl,
                                                        placeholders::_1, mode,
                                                        needs_path, range,
                                                        hitfunc,
                                                        // First try to bizap
-                                                       AFF_MULTIPLE, AFF_YES),
+                                                       AFF_DOUBLE, AFF_YES),
                                                   hitfunc)
+                        || _find_square_wrapper(result, 1,
+                                                  bind(_find_monster_expl,
+                                                       placeholders::_1, mode,
+                                                       needs_path, range,
+                                                       hitfunc,
+                                                       AFF_MULTIPLE, AFF_YES),
+                                                  hitfunc))
                   || _find_square_wrapper(result, 1,
                                           bind(restricts == DIR_SHADOW_STEP ?
                                                _find_shadow_step_mons :
@@ -1109,6 +1116,7 @@ static void _draw_ray_cell(coord_def p, coord_def target, aff_type aff)
 #endif
 #ifndef USE_TILE_LOCAL
     int bcol = BLACK;
+    mprf("%s", aff == AFF_DOUBLE ? "Yes" : "No");
     if (aff < 0)
         bcol = DARKGREY;
     else if (aff < AFF_YES)
@@ -1117,6 +1125,8 @@ static void _draw_ray_cell(coord_def p, coord_def target, aff_type aff)
         bcol = (p == target) ? LIGHTRED : LIGHTMAGENTA;
     else if (aff == AFF_LANDING)
         bcol = (p == target) ? LIGHTGREEN : GREEN;
+    else if (aff == AFF_DOUBLE)
+        bcol = (p == target) ? YELLOW : BROWN;
     else if (aff == AFF_MULTIPLE)
         bcol = (p == target) ? LIGHTCYAN : CYAN;
     else
