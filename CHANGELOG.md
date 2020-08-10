@@ -13,7 +13,7 @@
   - Added homunculus(playable). Homunculus are a semi-living, semi-artificial speices. they can specialize in 14 level. Also, whenever magic is used, temporary wild magic stack up, and melee attacks can reduce that stack.
   
 - 새로운 직업 크루세이더 추가. 돌의 피부, 원소의 무기, 화염강타, 절연화, 응축의 방패를 들고 시작하는 마법 전사 직업
-  - Added Crusader(background), Warrior-mage Starts with Stoneskin, Elemental Weapon, Flame Strike, Insulation, Condensation Shield.
+  - Added Crusader(background), Warrior-mage Starts with Shrapnel Curtain, Stoneskin, Elemental Weapon, Flame Strike, Insulation, Condensation Shield.
 
 - 3레벨 참 마법, 원소의 무기 추가. 사용시 elem 버프를 주며 버프시간동안 원소마법을 사용시 들고있는 무기에 일시적인 브랜드와 강화치를 부여한다.
   - Added Elemental Weapon, level 3 charm spell. It gives an buff when using it, and gives a temporary brand and slaying bonus when using element magic during buff time.
@@ -21,15 +21,24 @@
 - 3레벨 참/화염 마법, 화염 강타 추가. 지속시간도중 공격시 마나를 소모하여 부채꼴형의 불속성 범위 추가타를 준다. 사용후엔 일시적으로 마나가 회복되지않는 오버히트상태가 된다.
   - Added Flame Strike, level 3 charm/fire spell. When attacking during duration, use mana to give a fan-shaped fire additional hit. After use, you becomes overheat and does not recover mana.
   
+- 1레벨 참/대지 마법, 파편 장막 추가. 지속시간동안 근접 공격을 받으면 공격자에게 물리 데미지를 준다.
+  - Added Shrapnel Curtain , level 1 earth/charm spell. When melee attacked for duration, it gives physical damage to the attacker.
+  
 - 새로운 방어구 에고인 벙커 추가. 라지실드에만 붙는다. 장착하고있는 라지실드를 투사체나 이동을 막는 구조물로서 바닥에 설치할 수 있다.
   - Added bunker, new armour ego. Only attach to large shield. The equipped large shield can be installed on the ground as a structure to prevent the projectile and movement.
   
 - 새로운 픽다트: 보이지 않는 용의 비늘 {\*Inv MR+ Stlth+ SInv \*Corrode}. 퀵실버 드래곤 갑옷 베이스인 아티팩트이며, 맞을때 일정확률로 투명해질 수 있다.
   - A New Fixedart scales of the Unseen Dragon {\*Inv MR+ Stlth+ SInv \*Corrode}. It is quicksilver dragon based artifact. It may invisible you when you take damage.
   
+- 새로운 픽다트. 골렘 아머. 이 아티팩트는 4종류로 이루어진 장비(골렘 장갑, 골렘 각반, 골렘 투구, 골렘 갑옷)다. 세트를 다 모은다면 골렘으로 변신할 수 있는 Evoke Golem Armour 능력을 얻는다.
+  - A New fixedart: Golem armour. This artifact is four kinds of defense equipment : Golem gauntlets, Golem greaves, Golem helmet, Golem armour. If you collect all the sets, you get the Evoke Golem Armour ability to transform into Golem.
+  
 - 새로운 네임드. Asclepia 더 테라피스트. 던전 10~12, 짐승굴 1~4, 오크 1층에서 등장하며 타인 치료, 타인 가속, 증산을 사용함. 승격후에는 타인 힘강화와 힐링 오라를 사용함 
   - New Orc Unique: Asclepia the Therapist. Appears at D:10-12, Lair:1-4, Orc:1, cast Heal Other, Haste Other, Evaporate. 
     After promotion, adds Might Other to Spellset, and learn "Aura of Healing"
+    
+- 새로운 네임드. Brandagoth 라바 오크 소서러. 던전 12~, 엘프굴, 볼트 1~3층에서 화염정령과 헬하운드와 함께 등장한다. 파이어볼과 마그마볼트를 사용하는 라바오크 네임드다.
+  - New Orc Unique: Brandagoth, Lava Orc Sorcerer. Appears at D:12-, Elf, Vaults:1-3 with Fire elementals & Hell hounds. It's a Lava orc Named that uses fireballs and magma bolts.
   
 - 마법 복구 : 돌의 피부, 절연화, 응축의 방패
   - rollback Stoneskin, Insulation, Condensation Shield
@@ -41,8 +50,14 @@
 - 트로그는 이제 광폭화중에 권능을 사용할 수 있음
   - Trog now can use power while berserk
   
+- 트로그의 새로운 6성 스킬: 분노의 돌진. 5-15턴 동안 Exh을 댓가로 4칸의 적에게 돌진하며 dazed상태이상을 걸고 바로 광폭화를 시전한다.
+  - Trog new 6-star skill: Furious Charge. You can dash at an enemy with a range of four with 5~15 exh. Dazed on the target and going to be a berserk immediately.
+  
 - 베오그는 이제 오크 유니크들도 성장시킴
   - Beogh now grows the orc unique.
+
+- 베오그는 오크 시체를 보존시킨다.
+  - Beogh conserves the Orc corpse.
   
 - 엘리빌론은 옛날처럼 무기를 P로 바칠 수 있게 됨
   - Elyvilon can be sacrificed weapon with p again.
@@ -61,9 +76,15 @@
   
 - 플레이어의 레후딥의 수정창은 이제 관통 마법임
   - Change the player's Lehudib to penetration spell
+ 
+- 특이점 너프. 특이점은 당신을 느리게 만든다.
+  - Singularity nerf. Singularity makes you slow.
 
 - 장검반격은 이제 50%확률로 나감
   - Long Blade's Riposte buff. Now triggers at 50%
+  
+- 매직 맵핑을 사용하면 함정을 드러낸다.
+  - Reveal floor traps when magic mapping
   
 - 왜곡 무기의 공격 방식이 간소화 되었다. (0.25 feature)
   - Make distortion simplify (0.25 feature)
