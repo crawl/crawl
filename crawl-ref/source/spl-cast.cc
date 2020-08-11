@@ -46,6 +46,7 @@
 #include "ouch.h"
 #include "output.h"
 #include "player.h"
+#include "player-stats.h"
 #include "prompt.h"
 #include "religion.h"
 #include "shout.h"
@@ -653,6 +654,37 @@ void do_cast_spell_cmd(bool force)
         flush_input_buffer(FLUSH_ON_FAILURE);
 }
 
+static void _handle_wucad_mu(int cost)
+{
+    if (!player_equip_unrand(UNRAND_WUCAD_MU))
+        return;
+
+    if (!x_chance_in_y(you.skill(SK_EVOCATIONS), 81))
+        return;
+
+    did_god_conduct(DID_CHANNEL, 10, true);
+    did_god_conduct(DID_WIZARDLY_ITEM, 10);
+
+    // The chance of backfiring goes down with evo skill and up with cost
+    if (one_chance_in(max(you.skill(SK_EVOCATIONS) - cost, 1)))
+    {
+        mpr(random_choose("Weird images run through your mind.",
+                          "Your head hurts.",
+                          "You feel a strange surge of energy.",
+                          "You feel uncomfortable."));
+        if (coinflip())
+            confuse_player(2 + random2(4));
+        else
+        lose_stat(STAT_INT, 1 + random2avg(5, 2));
+    }
+    else
+    {
+        mpr("Magical energy flows into your mind!");
+        inc_mp(cost, true);
+    }
+}
+
+
 /**
  * Cast a spell.
  *
@@ -874,6 +906,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
     practise_casting(spell, cast_result == spret::success);
     if (cast_result == spret::success)
     {
+        _handle_wucad_mu(cost);
         did_god_conduct(DID_SPELL_CASTING, 1 + random2(5));
         count_action(CACT_CAST, spell);
     }

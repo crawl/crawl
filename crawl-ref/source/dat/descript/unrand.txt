@@ -49,8 +49,8 @@ those struck by it, even piercing through poison resistance.
 %%%%
 staff of Wucad Mu
 
-A crystal staff overflowing with magical energies. It can be evoked to restore
-large amounts of magical energy, but with the risk of damaging the user's mind.
+A crystal staff overflowing with magical energies. It occasionally powers the
+spells of the user, but with the risk of damaging the user's mind.
 Its power depends on the wielder's Evocations skill.
 %%%%
 Vampire's Tooth
