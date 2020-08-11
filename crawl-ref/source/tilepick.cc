@@ -929,7 +929,7 @@ void tileidx_out_of_los(tileidx_t *fg, tileidx_t *bg, tileidx_t *cloud, const co
     // written to what the player remembers. We'll feather that in here.
 
     // save any rays, which will get overwritten by mapped terrain
-    auto rays = *bg & (TILE_FLAG_RAY_MULTI | TILE_FLAG_RAY_OOR | TILE_FLAG_RAY
+    auto rays = *bg & (TILE_FLAG_RAY_MULTI | TILE_FLAG_RAY_BI | TILE_FLAG_RAY_OOR | TILE_FLAG_RAY
                         | TILE_FLAG_LANDING);
 
     const map_cell &cell = env.map_knowledge(gc);

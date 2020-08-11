@@ -185,7 +185,6 @@ aff_type targeter_beam::is_affected(coord_def loc)
         {
             break;
         }
-        mprf("(%d, %d)", c.x, c.y);
         c = pc;
         if (c == loc)
         {
@@ -233,8 +232,6 @@ aff_type targeter_beam::is_affected(coord_def loc)
         else
             return on_path ? AFF_TRACER : AFF_NO;
     }
-    if (visit_count > 0)
-        mprf("# : %d", visit_count);
 
     return visit_count == 0 ? AFF_NO :
            visit_count == 1 ? AFF_YES :
