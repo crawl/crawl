@@ -2633,8 +2633,7 @@ static string _actions_desc(const vector<command_type>& actions, const item_def&
                                 {
                                     return act_str.at(cmd);
                                 },
-                                ", or ")
-           + " the " + item.name(DESC_BASENAME) + ".";
+                                ", or ") + ".";
 }
 
 // Take a key and a list of commands and return the command from the list
