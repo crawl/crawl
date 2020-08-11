@@ -967,7 +967,7 @@ static void _decrement_durations()
         _try_to_respawn_ancestor();
     }
 
-    if (you.props[CARAVAN_MERCENARY])
+    if (you.props[CARAVAN_MERCENARY].get_bool())
     {
         if (!you.duration[DUR_CARAVAN_MERCENARY])
             you.duration[DUR_CARAVAN_MERCENARY] = 5;
