@@ -30,6 +30,7 @@
 #include "abyss.h" // abyss_maybe_spawn_xp_exit
 #include "act-iter.h"
 #include "areas.h"
+#include "attitude-change.h"
 #include "beam.h"
 #include "cio.h"
 #include "cloud.h"
@@ -630,6 +631,56 @@ static void _try_to_respawn_ancestor()
 
 
 /**
+ * JOB_CARAVAN has starting mercenary
+ */
+static void _try_to_spawn_mercenary()
+{
+    const monster_type merctypes[] =
+    {
+        MONS_MERC_FIGHTER, MONS_MERC_SKALD,
+        MONS_MERC_WITCH, MONS_MERC_BRIGAND,
+    };
+
+    int merc;
+    monster* mon;
+
+    merc = random2(3);
+    ASSERT(merc < (int)ARRAYSZ(merctypes));
+
+    mgen_data mg(merctypes[merc], BEH_FRIENDLY,
+        you.pos(), MHITYOU, MG_FORCE_BEH, you.religion);
+
+    mg.extra_flags |= (MF_HARD_RESET);
+
+    monster tempmon;
+    tempmon.type = merctypes[merc];
+    if (give_monster_proper_name(tempmon, false))
+        mg.mname = tempmon.mname;
+    else
+        mg.mname = make_name();
+    // This is used for giving the merc better stuff in mon-gear.
+    mg.props["caravan_mercenary items"] = true;
+
+    mon = create_monster(mg);
+
+    if (!mon)
+        return;
+
+    mon->props["dbname"].get_string() = mons_class_name(merctypes[merc]);
+    redraw_screen();
+
+    for (mon_inv_iterator ii(*mon); ii; ++ii)
+        ii->flags &= ~ISFLAG_SUMMONED;
+    mon->flags &= ~MF_HARD_RESET;
+    mon->attitude = ATT_FRIENDLY;
+    mons_att_changed(mon);
+
+    simple_monster_message(*mon, " follows you as a mercenary.");
+    you.props[CARAVAN_MERCENARY] = false;
+}
+
+
+/**
  * Take a 'simple' duration, decrement it, and print messages as appropriate
  * when it hits 50% and 0% remaining.
  *
@@ -916,6 +967,15 @@ static void _decrement_durations()
         _try_to_respawn_ancestor();
     }
 
+    if (you.props[CARAVAN_MERCENARY])
+    {
+        if (!you.duration[DUR_CARAVAN_MERCENARY])
+            you.duration[DUR_CARAVAN_MERCENARY] = 5;
+        else if (you.duration[DUR_CARAVAN_MERCENARY] <= 1)
+            _try_to_spawn_mercenary();
+        else
+            you.duration[DUR_CARAVAN_MERCENARY] -= 1;
+    }
 
     if (you.duration[DUR_WALL_MELTING])
     {

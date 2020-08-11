@@ -1827,20 +1827,20 @@ static const mon_spellbook mspell_list[] =
     {  MST_ASCLEPIA,
       {
        { SPELL_HEAL_OTHER, 33, MON_SPELL_WIZARD },
-	   { SPELL_HASTE_OTHER, 12, MON_SPELL_WIZARD },
+       { SPELL_HASTE_OTHER, 12, MON_SPELL_WIZARD },
        { SPELL_EVAPORATE, 12, MON_SPELL_WIZARD },
       }
     },
     
-	{  MST_ASCLEPIA_II,
+    {  MST_ASCLEPIA_II,
       {
        { SPELL_AURA_OF_HEALING, 33, MON_SPELL_PRIEST },
-	   { SPELL_HASTE_OTHER, 12, MON_SPELL_WIZARD },
-	   { SPELL_MIGHT_OTHER, 12, MON_SPELL_WIZARD },
+       { SPELL_HASTE_OTHER, 12, MON_SPELL_WIZARD },
+       { SPELL_MIGHT_OTHER, 12, MON_SPELL_WIZARD },
       }
     },
 
-	{  MST_BRANDAGOTH,
+    {  MST_BRANDAGOTH,
       {
        { SPELL_FIREBALL, 24, MON_SPELL_WIZARD },
        { SPELL_BOLT_OF_MAGMA, 12, MON_SPELL_WIZARD },
@@ -1848,7 +1848,7 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
-	{  MST_BRANDAGOTH_II,
+    {  MST_BRANDAGOTH_II,
       {
        { SPELL_HURL_DAMNATION, 33, MON_SPELL_WIZARD },
        { SPELL_BOLT_OF_MAGMA, 12, MON_SPELL_WIZARD },
@@ -2343,6 +2343,83 @@ static const mon_spellbook mspell_list[] =
        { SPELL_SYMBOL_OF_TORMENT, 20, MON_SPELL_MAGICAL },
        { SPELL_DISPEL_UNDEAD, 20, MON_SPELL_MAGICAL },
        { SPELL_SUMMON_EXECUTIONERS, 40, MON_SPELL_MAGICAL },
+      }
+    },
+
+    {  MST_MERC_DEATH_KNIGHT,
+      {
+       { SPELL_INJURY_MIRROR, 66, MON_SPELL_PRIEST | MON_SPELL_EMERGENCY },
+      }
+    },
+
+    {  MST_MERC_PALADIN,
+      {
+       { SPELL_HEAL_OTHER, 33, MON_SPELL_PRIEST },
+       { SPELL_MINOR_HEALING, 33, MON_SPELL_PRIEST },
+      }
+    },
+
+    {  MST_MERC_SKALD,
+      {
+       { SPELL_REPEL_MISSILES, 12, MON_SPELL_WIZARD },
+       { SPELL_OZOCUBUS_ARMOUR, 12, MON_SPELL_WIZARD },
+       { SPELL_SPRINT, 24, MON_SPELL_WIZARD },
+      }
+    },
+    
+    {  MST_MERC_INFUSER,
+      {
+       { SPELL_DEFLECT_MISSILES, 12, MON_SPELL_WIZARD },
+       { SPELL_OZOCUBUS_ARMOUR, 12, MON_SPELL_WIZARD },
+       { SPELL_HASTE, 24, MON_SPELL_WIZARD },
+      }
+    },
+    
+    {  MST_MERC_TIDEHUNTER,
+      {
+       { SPELL_DEFLECT_MISSILES, 12, MON_SPELL_WIZARD },
+       { SPELL_OZOCUBUS_ARMOUR, 12, MON_SPELL_WIZARD },
+       { SPELL_HASTE, 24, MON_SPELL_WIZARD },
+       { SPELL_PRIMAL_WAVE, 24, MON_SPELL_WIZARD },
+      }
+    },
+    
+    {  MST_MERC_WITCH,
+      {
+       { SPELL_THROW_FLAME, 80, MON_SPELL_WIZARD },
+       { SPELL_THROW_FROST, 80, MON_SPELL_WIZARD },
+       { SPELL_STONE_ARROW, 66, MON_SPELL_WIZARD },
+       { SPELL_SHOCK, 66, MON_SPELL_WIZARD },
+      }
+    },
+    
+    {  MST_MERC_SORCERESS,
+      {
+       { SPELL_FIREBALL, 66, MON_SPELL_WIZARD },
+       { SPELL_FREEZING_CLOUD, 66, MON_SPELL_WIZARD },
+       { SPELL_IRON_SHOT, 80, MON_SPELL_WIZARD },
+       { SPELL_AIRSTRIKE, 80, MON_SPELL_WIZARD },
+      }
+    },
+    
+    {  MST_MERC_ELEMENTALIST,
+      {
+       { SPELL_FIRE_STORM, 33, MON_SPELL_WIZARD },
+       { SPELL_GLACIATE, 33, MON_SPELL_WIZARD },
+       { SPELL_LEHUDIBS_CRYSTAL_SPEAR, 66, MON_SPELL_WIZARD },
+       { SPELL_LIGHTNING_BOLT, 80, MON_SPELL_WIZARD },
+      }
+    },
+    
+    {  MST_MERC_ASSASSIN,
+      {
+       { SPELL_INVISIBILITY, 33, MON_SPELL_WIZARD },
+      }
+    },
+    
+    {  MST_MERC_CLEANER,
+      {
+       { SPELL_INVISIBILITY, 33, MON_SPELL_WIZARD },
       }
     },
 

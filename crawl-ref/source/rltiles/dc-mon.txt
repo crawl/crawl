@@ -564,6 +564,10 @@ killer_klown_red
 killer_klown_yellow
 slave MONS_SLAVE
 slave_freed
+hired_fighter MONS_MERC_FIGHTER
+hired_knight MONS_MERC_KNIGHT
+hired_death_knight MONS_MERC_DEATH_KNIGHT
+hired_paladin MONS_MERC_PALADIN
 %sdir mon/vault
 ## From a Lair ending
 %rim 0
@@ -770,6 +774,9 @@ pikel MONS_PIKEL
 kobold MONS_KOBOLD
 big_kobold MONS_BIG_KOBOLD
 kobold_demonologist MONS_KOBOLD_DEMONOLOGIST
+hired_brigand MONS_MERC_BRIGAND
+hired_assassin MONS_MERC_ASSASSIN
+hired_cleaner MONS_MERC_CLEANER
 
 ## Liches ('L')
 %sdir mon/unique
@@ -936,6 +943,9 @@ deep_elf_master_archer MONS_DEEP_ELF_MASTER_ARCHER
 deep_elf_elementalist1 MONS_DEEP_ELF_ELEMENTALIST
 deep_elf_elementalist2
 deep_elf_elementalist3
+hired_witch MONS_MERC_WITCH
+hired_sorceress MONS_MERC_SORCERESS
+hired_elementalist MONS_MERC_ELEMENTALIST
 %sdir mon/vault
 ## From the Cigotuvi wizlab
 deformed_elf MONS_DEFORMED_ELF
@@ -1008,6 +1018,12 @@ merfolk_siren MONS_MERFOLK_SIREN
 merfolk_siren_water MONS_MERFOLK_SIREN_WATER
 merfolk_avatar MONS_MERFOLK_AVATAR
 merfolk_avatar_water MONS_MERFOLK_AVATAR_WATER
+hired_skald MONS_MERC_SKALD
+hired_skald_water MONS_MERC_SKALD_WATER
+hired_infuser MONS_MERC_INFUSER
+hired_infuser_water MONS_MERC_INFUSER_WATER
+hired_tidehunter MONS_MERC_TIDEHUNTER
+hired_tidehunter_water MONS_MERC_TIDEHUNTER_WATER
 %sdir mon/humanoids
 dryad MONS_DRYAD
 water_nymph MONS_WATER_NYMPH

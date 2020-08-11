@@ -1068,6 +1068,19 @@ enum monster_type                      // menv[].type
     MONS_ASCLEPIA_II,
     MONS_BRANDAGOTH,
     MONS_BRANDAGOTH_II,
+    MONS_MERC_FIGHTER,     // mercenaries for JOB_CARAVAN
+    MONS_MERC_KNIGHT,
+    MONS_MERC_DEATH_KNIGHT,
+    MONS_MERC_PALADIN,
+    MONS_MERC_SKALD,
+    MONS_MERC_INFUSER,
+    MONS_MERC_TIDEHUNTER,
+    MONS_MERC_WITCH,
+    MONS_MERC_SORCERESS,
+    MONS_MERC_ELEMENTALIST,
+    MONS_MERC_BRIGAND,
+    MONS_MERC_ASSASSIN,
+    MONS_MERC_CLEANER,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

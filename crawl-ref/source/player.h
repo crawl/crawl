@@ -69,6 +69,7 @@
 #define CONDENSATION_SHIELD_KEY "condensation_shield_pow"
 #define ELEMENTAL_ENCHANT_KEY "elemenatal enchant"
 #define COMBAT_MANA_KEY "combat_mana"
+#define CARAVAN_MERCENARY "caravan_mercenary"
 
 // display/messaging breakpoints for penalties from Ru's MUT_HORROR
 #define HORROR_LVL_EXTREME  3
