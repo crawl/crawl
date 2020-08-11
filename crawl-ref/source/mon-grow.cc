@@ -77,6 +77,21 @@ static const monster_level_up mon_grow[] =
     monster_level_up(MONS_TENGU, MONS_TENGU_WARRIOR),
     monster_level_up(MONS_TENGU_CONJURER, MONS_TENGU_REAVER),
     monster_level_up(MONS_TENGU_WARRIOR, MONS_TENGU_REAVER),
+
+    // mercenaries for JOB_CARAVAN
+    monster_level_up(MONS_MERC_FIGHTER, MONS_MERC_KNIGHT),
+    monster_level_up(MONS_MERC_KNIGHT, MONS_MERC_DEATH_KNIGHT, 500),
+    monster_level_up(MONS_MERC_KNIGHT, MONS_MERC_PALADIN),
+    
+    monster_level_up(MONS_MERC_SKALD, MONS_MERC_INFUSER),
+    monster_level_up(MONS_MERC_INFUSER, MONS_MERC_TIDEHUNTER),
+    
+    monster_level_up(MONS_MERC_WITCH, MONS_MERC_SORCERESS),
+    monster_level_up(MONS_MERC_SORCERESS, MONS_MERC_ELEMENTALIST),
+    
+    monster_level_up(MONS_MERC_BRIGAND, MONS_MERC_ASSASSIN),
+    monster_level_up(MONS_MERC_ASSASSIN, MONS_MERC_CLEANER),
+
 };
 
 static const map<monster_type, mon_lev_up_cond> mon_grow_cond =

@@ -2704,6 +2704,83 @@ zombie
 
 A corpse raised to undeath by necromancy.
 %%%%
+# Mercenaries for JOB_CARAVAN
+hired soldier
+
+An well-trained soldier. He is a former runaway soldier, but he doesn't
+retreat in front of money. in front of money. His ability to handle armor
+and shields still remains.
+%%%%
+hired knight
+A Skilled knight. He was never imagined this would be such a long journey,
+but at this point, he trained himself to develop his skills.
+%%%%
+hired death knight
+
+A knight who serves Yredelemnul, has mastered in unclean power, Taking 
+life and dispersing pain. Only within the scope of your contract with me.
+%%%%
+hired paladin
+
+A knight who serves good-gods, has mastered in divine healing. To perform
+an invokation of healing in the service of Elyvilon. Unfortunately, he is
+not sacred enough to emit a sacred flame.
+%%%%
+hired skald
+
+A merfolk skald, rescued in the form of 'hiring' from slavers.
+Although that hiring was a formality, she had nowhere else to go,
+so she decided to join my adventure.
+%%%%
+hired infuser
+
+A skilled merfolk infuser. Thanks to her training in charm spells,
+she has become a very expert adventurer. She's still adventuring
+with me.
+%%%%
+hired tidehunter
+
+A merfolk who awakened her inner power of the tides. her eyes are
+shined mysteriously, and water flows from her fingertips. And she
+promised to be with me until this adventure ends.
+%%%%
+hired witch
+
+A novice witch. Her goal is mastering four schools of elemental
+magic at once. hired on condition, I will offer to share knowledge
+from books we will find in this adventure.
+%%%%
+hired sorceress
+
+A sorceress who survived the dungeon and mastered in destructive
+spells. Still, she only focus on four schools of elemental magic.
+Fortunately, She haven't burned our hiring paper yet.
+%%%%
+hired elementalist
+
+An elementalist who has mastered all four schools of elemental
+magic. She didn't learn other magic, such as survival or escape,
+but I assure her destructive power on my credit.
+%%%%
+hired brigand
+
+Skilled kobold hitmaker. An expert in moving quietly or putting
+a knife in the back. Of course, this contract is a challenging
+adventure for him as well.
+%%%%
+hired assassin
+
+An assassin who melts into the surroundings in an instant.
+Out of sight with a little magic and a high degree of skill,
+and now enjoys adventure more than me.
+%%%%
+hired cleaner
+
+A kobold in a swaying shadow. Serving Dithmenos the Shadowed,
+but doesn't use a Umbra so he doesn't interfere with me.
+It's a good thing he didn't claim his shadow's share of the
+down payment.
+%%%%
 # Specials
 test spawner
 

@@ -93,6 +93,10 @@ item_def* newgame_make_item(object_class_type base,
                             int sub_type, int qty, int plus,
                             int force_ego, bool force_tutorial)
 {
+    if (base == OBJ_GOLD) {
+        you.gold += qty;
+        return nullptr;
+    }
     // Don't set normal equipment in the tutorial.
     if (!force_tutorial && crawl_state.game_is_tutorial())
         return nullptr;
@@ -315,6 +319,10 @@ void give_items_skills(const newgame_def& ng)
             newgame_make_item(OBJ_BOOKS, BOOK_FROST2);
         else
             newgame_make_item(OBJ_BOOKS, BOOK_FROST);
+    }
+
+    if (you.char_class == JOB_CARAVAN) {
+        you.props[CARAVAN_MERCENARY] = true;
     }
 
     give_job_skills(you.char_class);

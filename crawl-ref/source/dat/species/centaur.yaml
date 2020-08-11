@@ -59,4 +59,5 @@ recommended_jobs:
   - JOB_HUNTER
   - JOB_WARPER
   - JOB_ARCANE_MARKSMAN
+  - JOB_CARAVAN
 create_enum: false

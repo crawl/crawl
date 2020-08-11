@@ -788,6 +788,7 @@ static const duration_def duration_data[] =
       "You are surrounded by gravels and pebbles.", D_DISPELLABLE | D_EXPIRES,
       {{ "Your curtain of sharpnel falls." },
         { "Your sharpnels begin to scatter." }}, 6},
+    { DUR_CARAVAN_MERCENARY, 0, "", "", "caravan delay", "", D_NO_FLAGS},
 #if TAG_MAJOR_VERSION == 34
     // And removed ones
     { DUR_MAGIC_SAPPED, 0, "", "", "old magic sapped", "", D_NO_FLAGS},
