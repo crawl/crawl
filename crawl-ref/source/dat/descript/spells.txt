@@ -345,6 +345,12 @@ Corrosive Bolt spell
 
 Fires a penetrating bolt of acid.
 %%%%
+Corrupt Locale spell
+
+Tears apart the reality of the dungeon in the immediate vicinity, allowing
+the denziens and horrors of the Abyss to permanently seep through. Followers
+of Lugonu will find such abominations neutral to their cause.
+%%%%
 Corrupting Pulse spell
 
 Instills a corruption within all visible targets, temporarily mutating their

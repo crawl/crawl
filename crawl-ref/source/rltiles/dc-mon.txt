@@ -13,6 +13,7 @@ dispater MONS_DISPATER
 ereshkigal MONS_ERESHKIGAL
 gloorx_vloq MONS_GLOORX_VLOQ
 lom_lobon MONS_LOM_LOBON
+mlioglotl MONS_MLIOGLOTL
 mnoleg MONS_MNOLEG
 antaeus MONS_ANTAEUS
 lernaean_hydra01 MONS_LERNAEAN_HYDRA

@@ -3303,6 +3303,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_CORRUPT_LOCALE, "Corrupt Locale",
+    spschool::translocation,
+    spflag::monster | spflag::area,
+    7,
+    0,
+    -1, -1,
+    0, 0,
+    TILEG_GENERIC_MONSTER_SPELL,
+},
+
+{
     // This "spell" is implemented in a way that ignores all this information,
     // and it is never triggered the way spells usually are, but it still has
     // a spell-type enum entry. So, use fake data in order to have a valid

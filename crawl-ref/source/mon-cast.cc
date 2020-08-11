@@ -12,6 +12,7 @@
 #include <functional>
 #include <unordered_set>
 
+#include "abyss.h"
 #include "act-iter.h"
 #include "areas.h"
 #include "attack.h"
@@ -72,6 +73,7 @@
 #ifdef USE_TILE
 #include "rltiles/tiledef-dngn.h"
 #endif
+#include "tileview.h"
 #include "timed-effects.h"
 #include "traps.h"
 #include "travel.h"
@@ -472,6 +474,11 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
         [] (const monster &caster, mon_spell_slot /*slot*/, bolt& /*beem*/) {
             _monster_abjuration(caster, true);
         }, nullptr, MSPELL_LOGIC_NONE, 20, } },
+    { SPELL_CORRUPT_LOCALE, {
+        _always_worthwhile
+    }
+
+    },
 };
 
 /// Is the 'monster' actually a proxy for the player?
@@ -1841,6 +1848,7 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_GREATER_SERVANT_MAKHLEB:
     case SPELL_BIND_SOULS:
     case SPELL_DREAM_DUST:
+    case SPELL_CORRUPT_LOCALE:
     case SPELL_SPORULATE:
         pbolt.range = 0;
         pbolt.glyph = 0;
@@ -2183,6 +2191,27 @@ static bool _mons_call_of_chaos(const monster& mon, bool check_only = false)
 
     return true;
 }
+
+/**
+ * @param mon: caster, currently Mlioglotl
+ */
+ static void _corrupt_locale(monster mons)
+ {
+    //becomes a glorified cantrip if we're already in the abyss
+    if (player_in_branch(BRANCH_ABYSS))
+    {
+        mprf("%s basks in the glorious corruption of his surroundings.",
+          mons.name(DESC_THE).c_str(),
+          silenced(mons.pos()) ? "silent" : "terrible");
+        return;
+    }
+
+    mprf("%s corrupts the dungeon around him!",
+        mons.name(DESC_THE).c_str(),
+        silenced(mons.pos()) ? "silent" : "terrible");
+
+    lugonu_corrupt_level_mons(15, mons);
+ }
 
 static void _set_door(set<coord_def> door, dungeon_feature_type feat)
 {
@@ -6555,6 +6584,14 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
     }
 
+    case SPELL_CORRUPT_LOCALE:
+    {
+      ASSERT(foe);
+      if (foe->is_player())
+      _corrupt_locale(*mons);
+      return;
+    }
+
     }
 
     if (spell_is_direct_explosion(spell_cast))
@@ -7368,6 +7405,7 @@ static void _siren_sing(monster* mons, bool avatar)
 
     you.add_beholder(*mons);
 }
+
 
 // Checks to see if a particular spell is worth casting in the first place.
 static ai_action::goodness _monster_spell_goodness(monster* mon, mon_spell_slot slot)

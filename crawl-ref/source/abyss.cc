@@ -1766,25 +1766,40 @@ struct corrupt_env
     }
 };
 
-static void _place_corruption_seed(const coord_def &pos, int duration)
+static void _place_corruption_seed(const coord_def &pos, int duration, bool is_monster_version = false)
 {
-    env.markers.add(new map_corruption_marker(pos, duration));
+    if (is_monster_version)
+    {
+        env.markers.add(new map_corruption_marker_mons(pos, duration));
+
+    } else //is player version
+    {
+        env.markers.add(new map_corruption_marker(pos, duration));
+    }
+
     // Corruption markers don't need activation, though we might
     // occasionally miss other unactivated markers by clearing.
     env.markers.clear_need_activate();
 }
 
-static void _initialise_level_corrupt_seeds(int power)
+static void _initialise_level_corrupt_seeds(int power, monster* mons = nullptr, bool is_monster_version = false)
 {
     const int low = power * 40 / 100, high = power * 140 / 100;
     const int nseeds = random_range(-1, min(2 + power / 110, 4), 2);
 
     const int aux_seed_radius = 4;
 
-    dprf("Placing %d corruption seeds (power: %d)", nseeds, power);
+    // The corruption centred on the player is free.
+    if (is_monster_version)
+    {
+        dprf("Placing %d corruption seeds (power: %d)", nseeds, power);
+        _place_corruption_seed(mons->pos(), random_range(low, high, 2) + 100, true);
+    } else //is player version
+    {
+        dprf("Placing %d corruption seeds (power: %d)", nseeds, power);
+        _place_corruption_seed(you.pos(), high + 300, false);
 
-    // The corruption centreed on the player is free.
-    _place_corruption_seed(you.pos(), high + 300);
+    }
 
     for (int i = 0; i < nseeds; ++i)
     {
@@ -1799,7 +1814,15 @@ static void _initialise_level_corrupt_seeds(int power)
         }
 
         if (!where.origin())
-            _place_corruption_seed(where, random_range(low, high, 2) + 300);
+        {
+            if (is_monster_version)
+            {
+                    _place_corruption_seed(where, random_range(low, high, 2) + 100, true);
+            } else //is player version
+            {
+                   _place_corruption_seed(where, random_range(low, high, 2) + 300, false);
+            }
+        }
     }
 }
 
@@ -1808,14 +1831,30 @@ static bool _incorruptible(monster_type mt)
     return mons_is_abyssal_only(mt) || mons_class_holiness(mt) == MH_HOLY;
 }
 
+static bool _incorruptible_weaker(monster_type mt)
+{
+    return mons_is_abyssal_only(mt) || mons_class_holiness(mt) == MH_HOLY
+    || mons_demon_tier(mt) == 1     || mons_demon_tier(mt) == 2
+    || mt == MONS_TENTACLED_STARSPAWN;
+    // no tier 1 or 2 demons, or starspawn for the monster version
+}
+
 // Create a corruption spawn at the given position. Returns false if further
 // monsters should not be placed near this spot (overcrowding), true if
 // more monsters can fit in.
-static bool _spawn_corrupted_servant_near(const coord_def &pos)
+static bool _spawn_corrupted_servant_near(const coord_def &pos, bool is_monster_version)
 {
     // Chance to fail to place a monster (but allow continued attempts).
-    if (x_chance_in_y(100, 200 + you.skill(SK_INVOCATIONS, 25)))
-        return true;
+    // Assume Mlioglotl (for the monster version of this spell) has 11 invocations
+    if (is_monster_version)
+    {
+        if (x_chance_in_y(100, 200 + 11))
+            return true;
+    } else //not monster version i.e. should be powered by player invocations skill
+    {
+        if (x_chance_in_y(100, 200 + you.skill(SK_INVOCATIONS, 25)))
+            return true;
+    }
 
     // Thirty tries for a place.
     for (int i = 0; i < 30; ++i)
@@ -1829,40 +1868,77 @@ static bool _spawn_corrupted_servant_near(const coord_def &pos)
         p.y = pos.y + random_choose(offsetY, -offsetY);
         if (!in_bounds(p) || actor_at(p))
             continue;
-
-        monster_type mons = pick_monster(level_id(BRANCH_ABYSS), _incorruptible);
+        monster_type mons = MONS_PROGRAM_BUG; //initialise here to reduce code duplication below
+        if (!is_monster_version){
+            mons = pick_monster(level_id(BRANCH_ABYSS), _incorruptible);
+        } else //is monster version
+        {
+            mons = pick_monster(level_id(BRANCH_ABYSS), _incorruptible_weaker);
+        }
         ASSERT(mons);
+        ASSERT(mons != MONS_PROGRAM_BUG);
         if (!monster_habitable_grid(mons, grd(p)))
             continue;
-        mgen_data mg(mons, BEH_NEUTRAL, p);
-        mg.set_summoned(0, 5, 0).set_non_actor_summoner("Lugonu's corruption");
-        mg.place = BRANCH_ABYSS;
-        return create_monster(mg);
-    }
+        if (is_monster_version && !have_passive(passive_t::attract_abyssal_rune))
+        {   //monster version of the spell, and no protection from worshipping Lugonu yourself
+            mgen_data mg(mons, BEH_HOSTILE, p);
+            mg.set_summoned(0, 5, 0).set_non_actor_summoner("Mlioglotl's corruption");
+            mg.place = BRANCH_ABYSS;
+            return create_monster(mg);
+        } else if (is_monster_version && have_passive(passive_t::attract_abyssal_rune))
+        {   //worshipping Lugonu yourself means the monsters spawn neutral
+            mgen_data mg(mons, BEH_NEUTRAL, p);
+            mg.set_summoned(0, 5, 0).set_non_actor_summoner("Mlioglotl's corruption");
+            mg.place = BRANCH_ABYSS;
+            return create_monster(mg);
+        } else
+        {   //player version of the spell - always neutral monsters
+            mgen_data mg(mons, BEH_NEUTRAL, p);
+            mg.set_summoned(0, 5, 0).set_non_actor_summoner("Lugonu's corruption");
+            mg.place = BRANCH_ABYSS;
+            return create_monster(mg);
+        }
 
+    }
     return false;
 }
 
-static void _apply_corruption_effect(map_marker *marker, int duration)
+static void _apply_corruption_effect(map_marker *marker, int duration, bool is_monster_version)
 {
     if (!duration)
         return;
 
-    map_corruption_marker *cmark = dynamic_cast<map_corruption_marker*>(marker);
-    if (cmark->duration < 1)
-        return;
-
     const int neffects = max(div_rand_round(duration, 5), 1);
 
-    for (int i = 0; i < neffects; ++i)
-    {
-        if (x_chance_in_y(cmark->duration, 4000)
-            && !_spawn_corrupted_servant_near(cmark->pos))
+    if (!is_monster_version){
+        map_corruption_marker *cmark = dynamic_cast<map_corruption_marker*>(marker);
+        if (cmark->duration < 1)
+            return;
+        for (int i = 0; i < neffects; ++i)
         {
-            break;
+            if (x_chance_in_y(cmark->duration, 4000)
+                && !_spawn_corrupted_servant_near(cmark->pos,false))
+            {
+                break;
+            }
         }
+        cmark->duration -= duration;
+    } else //is monster version
+    {
+        map_corruption_marker_mons *cmark = dynamic_cast<map_corruption_marker_mons*>(marker);
+        if (cmark->duration < 1)
+            return;
+
+        for (int i = 0; i < neffects; ++i)
+        {
+            if (x_chance_in_y(cmark->duration, 4000)
+                && !_spawn_corrupted_servant_near(cmark->pos,true))
+            {
+                break;
+            }
+        }
+        cmark->duration -= duration;
     }
-    cmark->duration -= duration;
 }
 
 void run_corruption_effects(int duration)
@@ -1871,8 +1947,17 @@ void run_corruption_effects(int duration)
     {
         if (mark->get_type() != MAT_CORRUPTION_NEXUS)
             continue;
+        _apply_corruption_effect(mark, duration, false);
+    }
+}
 
-        _apply_corruption_effect(mark, duration);
+void run_corruption_effects_mons_version(int duration)
+{
+    for (map_marker *mark : env.markers.get_all(MAT_CORRUPTION_NEXUS_MONS))
+    {
+        if (mark->get_type() != MAT_CORRUPTION_NEXUS_MONS)
+            continue;
+        _apply_corruption_effect(mark, duration, true);
     }
 }
 
@@ -2059,12 +2144,19 @@ static void _corrupt_square(const corrupt_env &cenv, const coord_def &c)
     _corrupt_square_flavor(cenv, c);
 }
 
-static void _corrupt_level_features(const corrupt_env &cenv)
+static void _corrupt_level_features(const corrupt_env &cenv, bool is_monster_version = false)
 {
     vector<coord_def> corrupt_seeds;
+    if (is_monster_version)
+    {
+        for (const map_marker *mark : env.markers.get_all(MAT_CORRUPTION_NEXUS_MONS))
+            corrupt_seeds.push_back(mark->pos);
+    } else //is player version, so use the usual NEXUS
+    {
+        for (const map_marker *mark : env.markers.get_all(MAT_CORRUPTION_NEXUS))
+            corrupt_seeds.push_back(mark->pos);
+    }
 
-    for (const map_marker *mark : env.markers.get_all(MAT_CORRUPTION_NEXUS))
-        corrupt_seeds.push_back(mark->pos);
 
     for (rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri)
     {
@@ -2089,12 +2181,21 @@ static void _corrupt_level_features(const corrupt_env &cenv)
             (idistance <= 7) ? (corrupt_perc_chance + 1000) / 2 :
             max(10, 380 - 150 * idistance / 13);
 
-        const int roll = random2(1000);
-
-        if (roll < corrupt_perc_chance && _is_grid_corruptible(*ri))
-            _corrupt_square(cenv, *ri);
-        else if (roll < corrupt_flavor_chance && _is_grid_corruptible(*ri))
-            _corrupt_square_flavor(cenv, *ri);
+        if (is_monster_version) //monster version is less likely to corrupt tiles
+        {
+            const int roll = random2(3000);
+            if (roll < corrupt_perc_chance && _is_grid_corruptible(*ri))
+                _corrupt_square(cenv, *ri);
+            else if (roll < corrupt_flavor_chance && _is_grid_corruptible(*ri))
+                _corrupt_square_flavor(cenv, *ri);
+        } else //is player version
+        {
+            const int roll = random2(1000);
+            if (roll < corrupt_perc_chance && _is_grid_corruptible(*ri))
+                _corrupt_square(cenv, *ri);
+            else if (roll < corrupt_flavor_chance && _is_grid_corruptible(*ri))
+                _corrupt_square_flavor(cenv, *ri);
+        }
     }
 }
 
@@ -2116,6 +2217,18 @@ bool is_level_incorruptible(bool quiet)
     }
 
     return false;
+}
+
+//Mlioglotl can bring his glorified corruption to the dungeon an unlimited number of times
+bool is_level_incorruptible_mons()
+{
+    if (player_in_branch(BRANCH_ABYSS))
+    {
+        return true;
+    } else
+    {
+        return false;
+    }
 }
 
 static void _corrupt_choose_colours(corrupt_env *cenv)
@@ -2159,6 +2272,33 @@ bool lugonu_corrupt_level(int power)
 #ifndef USE_TILE_LOCAL
     // Allow extra time for the flash to linger.
     scaled_delay(1000);
+#endif
+
+    return true;
+}
+
+//Currently only used for Mlioglotl. Might be more appropriate in mons-cast.cc
+//but convention looks to be to group abyss-related effects here.
+bool lugonu_corrupt_level_mons(int power, monster mons)
+{
+    if (is_level_incorruptible_mons())
+        return false;
+
+    take_note(Note(NOTE_MESSAGE, 0, 0, make_stringf("Corrupted by Mlioglotl %s",
+              level_id::current().describe().c_str()).c_str()));
+
+    flash_view_delay(UA_MONSTER, MAGENTA, 200);
+
+    _initialise_level_corrupt_seeds(power, &mons, true);
+
+    corrupt_env cenv;
+    _corrupt_choose_colours(&cenv);
+    _corrupt_level_features(cenv, true);
+    run_corruption_effects_mons_version(40);
+
+#ifndef USE_TILE_LOCAL
+    // Allow extra time for the flash to linger.
+    scaled_delay(300);
 #endif
 
     return true;

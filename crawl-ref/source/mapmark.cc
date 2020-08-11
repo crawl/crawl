@@ -494,6 +494,45 @@ string map_corruption_marker::debug_describe() const
     return make_stringf("Lugonu corrupt (%d)", duration);
 }
 
+//////////////////////////////////////////////////////////////////////////
+// map_corruption_marker - separate version for Mlioglotl/monster flavour
+
+map_corruption_marker_mons::map_corruption_marker_mons(const coord_def &p,
+                                             int dur)
+    : map_marker(MAT_CORRUPTION_NEXUS_MONS, p), duration(dur)
+{
+}
+
+void map_corruption_marker_mons::write(writer &out) const
+{
+    map_marker::write(out);
+    marshallShort(out, duration);
+}
+
+void map_corruption_marker_mons::read(reader &in)
+{
+    map_marker::read(in);
+    duration = unmarshallShort(in);
+}
+
+map_marker *map_corruption_marker_mons::read(reader &in, map_marker_type)
+{
+    map_corruption_marker_mons *mc = new map_corruption_marker_mons();
+    mc->read(in);
+    return mc;
+}
+
+map_marker *map_corruption_marker_mons::clone() const
+{
+    map_corruption_marker_mons *mark = new map_corruption_marker_mons(pos, duration);
+    return mark;
+}
+
+string map_corruption_marker_mons::debug_describe() const
+{
+    return make_stringf("Mlioglotl corrupt (%d)", duration);
+}
+
 ////////////////////////////////////////////////////////////////////////////
 // map_feature_marker
 
