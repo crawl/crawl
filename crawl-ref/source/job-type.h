@@ -41,6 +41,7 @@ enum job_type
 #endif
     JOB_MELTED_KNIGHT,
     JOB_CRUSADER,
+    JOB_CARAVAN,
     NUM_JOBS,                          // always after the last job
 
     JOB_UNKNOWN = 100,

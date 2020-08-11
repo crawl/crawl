@@ -28,6 +28,12 @@ Berserker
 Berserkers believe in Trog, the magic-hating god of frenzy. Not much can stop a
 raging berserker early on, apart from hubris.
 %%%%
+Caravan
+
+Caravans visited the Dungeon to find the Orb; the best sale item on the surface.
+They are not good adventurers, but starts with a hired mercenary and tool to heal
+allies, also some extra golds.
+%%%%
 Chaos Knight
 
 Chaos Knights are playthings of the unpredictable Xom, and are subject to the
