@@ -212,8 +212,8 @@ brand_type player::damage_brand(int which_attack)
     if (duration[DUR_CONFUSING_TOUCH])
         return SPWPN_CONFUSE;
 
-    const int wpn = equip[which_attack ==0? EQ_WEAPON : EQ_SECOND_WEAPON];
-    if (wpn != -1 && !melded[which_attack == 0 ? EQ_WEAPON : EQ_SECOND_WEAPON])
+    const int wpn = equip[which_attack == 1? EQ_SECOND_WEAPON : EQ_WEAPON];
+    if (wpn != -1 && !melded[which_attack == 1 ? EQ_SECOND_WEAPON : EQ_WEAPON])
     {
         if (is_range_weapon(inv[wpn]))
             return SPWPN_NORMAL; // XXX: check !is_melee_weapon instead?
