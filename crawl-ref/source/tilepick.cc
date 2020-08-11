@@ -3603,6 +3603,8 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_TROG_HAND;
     case ABIL_TROG_BROTHERS_IN_ARMS:
         return TILEG_ABILITY_TROG_BROTHERS_IN_ARMS;
+    case ABIL_TROG_CHARGE:
+        return TILEG_ABILITY_TROG_CHARGE;
     case ABIL_TROG_BLESS_WEAPON:
         return TILEG_ABILITY_TROG_BLESS_WEAPON;
     // Elyvilon

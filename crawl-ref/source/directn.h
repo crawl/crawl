@@ -88,6 +88,7 @@ struct direction_chooser_args
     int range;
     bool just_looking;
     bool needs_path;
+    bool prefer_farthest;
     bool unrestricted; // for wizmode
     confirm_prompt_type self;
     const char *target_prefix;
@@ -105,6 +106,7 @@ struct direction_chooser_args
         range(-1),
         just_looking(false),
         needs_path(true),
+        prefer_farthest(false),
         unrestricted(false),
         self(confirm_prompt_type::prompt),
         target_prefix(nullptr),
@@ -248,6 +250,7 @@ private:
     targ_mode_type mode;        // Hostiles or friendlies?
     int range;                  // Max range to consider
     bool just_looking;
+    bool prefer_farthest;       // Prefer to target the farthest monster.
     confirm_prompt_type self;   // What do when aiming at yourself
     const char *target_prefix;  // A string displayed before describing target
     string top_prompt;          // Shown at the top of the message window

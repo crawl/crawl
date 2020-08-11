@@ -510,6 +510,7 @@ direction_chooser::direction_chooser(dist& moves_,
     mode(args.mode),
     range(args.range),
     just_looking(args.just_looking),
+    prefer_farthest(args.prefer_farthest), // Trog's Furious Charge
     self(args.self),
     target_prefix(args.target_prefix),
     top_prompt(args.top_prompt),
@@ -950,7 +951,7 @@ bool direction_chooser::find_default_monster_target(coord_def& result) const
         return true;
     }
     // If the previous targetted position is at all useful, use it.
-    if (!Options.simple_targeting && hitfunc
+    if (!Options.simple_targeting && hitfunc && !prefer_farthest
         && _find_monster_expl(you.prev_grd_targ, mode, needs_path,
                               range, hitfunc, AFF_YES, AFF_DOUBLE))
     {
@@ -1244,6 +1245,9 @@ void direction_chooser::object_cycle(int dir)
 
 void direction_chooser::monster_cycle(int dir)
 {
+    if (prefer_farthest)
+        dir = -dir; // cycle from furthest to closest
+
     if (_find_square_wrapper(monsfind_pos, dir,
                              bind(_find_monster, placeholders::_1, mode,
                                   needs_path, range, hitfunc),
@@ -2094,6 +2098,8 @@ bool direction_chooser::choose_direction()
                                        : find_default_target());
 
     objfind_pos = monsfind_pos = target();
+    if (prefer_farthest && moves.target != you.pos())
+        monster_cycle(1);
 
     // If requested, show the beam on startup.
     if (show_beam)

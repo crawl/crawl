@@ -17,6 +17,7 @@
 #include "los-def.h"
 #include "losglobal.h"
 #include "mon-tentacle.h"
+#include "ray.h"
 #include "spl-damage.h"
 #include "spl-goditem.h" // player_is_debuffable
 #include "spl-other.h"
@@ -77,6 +78,113 @@ bool targeter::has_additional_sites(coord_def /*loc*/)
 bool targeter::affects_monster(const monster_info& /*mon*/)
 {
     return true; //TODO: false
+}
+
+// Is the given location a valid endpoint for a Trog's furious charge?
+// That is, is there an enemy there which is visible to the player and
+// is not firewood? If not, why not?
+// Note that this does NOT handle checking the intervening path for
+// obstacles or checking the distance from the player.
+string bad_charge_target(coord_def a)
+{
+    const monster* mons = monster_at(a);
+    // You can only charge at monsters.
+    // Specifically, monsters you can see. (No guessing!)
+    // You can't charge at plants you walk right through.
+    if (!mons || !you.can_see(*mons))
+        return "You can't see anything there to charge at!";
+
+    // You can't charge at friends. (Also, rude.)
+    // You can't charge at firewood. It's firewood.
+    if (mons_aligned(mons, &you) || mons_is_firewood(*mons))
+        return "Why would you want to do that?";
+    return "";
+}
+
+static bool _ok_charge_target(coord_def a)
+{
+    return bad_charge_target(a) == "";
+}
+
+// Can a player (for targeting purposes) charge through a given grid
+// with a Palentonga rolling charge?
+// We only check for monsters, not terrain.
+bool can_charge_through_mons(coord_def a)
+{
+    const monster* mons = monster_at(a);
+    return !mons
+           || !you.can_see(*mons)
+           || fedhas_passthrough(mons);
+}
+
+targeter_charge::targeter_charge(const actor *act, int r)
+{
+    ASSERT(act);
+    ASSERT(r > 0);
+    agent = act;
+    range = r;
+    obeys_mesmerise = true;
+}
+
+bool targeter_charge::valid_aim(coord_def a)
+{
+    if (adjacent(agent->pos(), a)
+        || grid_distance(agent->pos(), a) > range)
+    {
+        return false;
+    }
+
+    ray_def ray;
+    if (!find_ray(agent->pos(), a, ray, opc_solid))
+        return false;
+    while (ray.advance()) {
+        if (ray.pos() == a
+            || !can_charge_through_mons(ray.pos())
+            || is_feat_dangerous(grd(ray.pos())))
+        {
+            return _ok_charge_target(ray.pos());
+        }
+    }
+    return false;
+}
+
+bool targeter_charge::set_aim(coord_def a)
+{
+    ray_def ray;
+    if (!find_ray(agent->pos(), a, ray, opc_solid))
+        return false;
+
+    path_taken.clear();
+    while (ray.advance())
+    {
+        path_taken.push_back(ray.pos());
+        if (grid_distance(agent->pos(), ray.pos()) >= range || ray.pos() == a)
+            break;
+
+        if (!can_charge_through_mons(ray.pos()))
+            break;
+        if (is_feat_dangerous(grd(ray.pos())))
+            return false;
+    }
+    return true;
+}
+
+aff_type targeter_charge::is_affected(coord_def loc) {
+    bool in_path = false;
+    for (coord_def a : path_taken) {
+        if (a == loc)
+        {
+            in_path = true;
+            break;
+        }
+    }
+    if (!in_path)
+        return AFF_NO;
+    if (_ok_charge_target(loc))
+        return AFF_MAYBE; // the target of the attack
+    if (grid_distance(agent->pos(), loc) == range)
+        return AFF_NO; // out of range for movement and nothing seen
+    return AFF_YES; // a movement space
 }
 
 targeter_beam::targeter_beam(const actor *act, int r, zap_type zap,

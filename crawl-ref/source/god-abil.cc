@@ -51,10 +51,13 @@
 #include "mapmark.h"
 #include "maps.h"
 #include "message.h"
+#include "melee-attack.h"
+#include "monster.h"
 #include "mon-act.h"
 #include "mon-behv.h"
 #include "mon-book.h"
 #include "mon-death.h"
+#include "mon-ench.h"
 #include "mon-gear.h" // H: give_weapon()/give_armour()
 #include "mon-place.h"
 #include "mon-poly.h"
@@ -1526,6 +1529,250 @@ void trog_remove_trogs_hand()
         mprf(MSGCH_DURATION, "Your skin stops crawling.");
     mprf(MSGCH_DURATION, "You feel less resistant to hostile enchantments.");
     you.duration[DUR_TROGS_HAND] = 0;
+}
+
+// Trog's Furious Charge, tweaks from palentoga by @PleasingFungus
+static bool _check_charge_through(coord_def pos)
+{
+    if (!you.can_pass_through_feat(grd(pos)))
+    {
+        clear_messages();
+        mprf("You can't charge into that!");
+        return false;
+    }
+
+    return true;
+}
+
+static bool _find_charge_target(vector<coord_def> &target_path, int max_range,
+                                targeter *hitfunc)
+{
+    // Check for unholy weapons, breadswinging, etc
+    if (!wielded_weapon_check(you.weapon()))
+        return false;
+
+    while (true)
+    {
+        // query for location {dlb}:
+        direction_chooser_args args;
+        args.restricts = DIR_TARGET;
+        args.mode = TARG_HOSTILE;
+        args.prefer_farthest = true;
+        args.top_prompt = "Choose target to charge.";
+        args.hitfunc = hitfunc;
+        dist beam;
+        direction(beam, args);
+
+        // TODO: deduplicate with _find_cblink_target
+        if (crawl_state.seen_hups)
+        {
+            mpr("Cancelling furious charge due to HUP.");
+            return false;
+        }
+
+        if (!beam.isValid || beam.target == you.pos())
+        {
+            canned_msg(MSG_OK);
+            return false;
+        }
+
+        const monster* beholder = you.get_beholder(beam.target);
+        if (beholder)
+        {
+            mprf("You cannot charge away from %s!",
+                beholder->name(DESC_THE, true).c_str());
+            continue;
+        }
+
+        const monster* fearmonger = you.get_fearmonger(beam.target);
+        if (fearmonger)
+        {
+            mprf("You cannot charge closer to %s!",
+                fearmonger->name(DESC_THE, true).c_str());
+            continue;
+        }
+
+        if (!you.see_cell_no_trans(beam.target))
+        {
+            clear_messages();
+            if (you.trans_wall_blocking(beam.target))
+                canned_msg(MSG_SOMETHING_IN_WAY);
+            else
+                canned_msg(MSG_CANNOT_SEE);
+            continue;
+        }
+
+        if (grid_distance(you.pos(), beam.target) > max_range)
+        {
+            mpr("That's out of range!"); // ! targeting
+            continue;
+        }
+
+        ray_def ray;
+        if (!find_ray(you.pos(), beam.target, ray, opc_solid))
+        {
+            mpr("You can't charge through that!");
+            continue;
+        }
+
+        // done with hard vetos; now we're on a mix of prompts and vetos.
+        // (Ideally we'd like to split these up and do all the vetos before
+        // the prompts, but...)
+
+        target_path.clear();
+        bool ok = true;
+        while (ray.advance())
+        {
+            target_path.push_back(ray.pos());
+            if (!can_charge_through_mons(ray.pos()))
+                break;
+            ok = _check_charge_through(ray.pos());
+            if (ray.pos() == beam.target || !ok)
+                break;
+        }
+        if (!ok)
+            continue;
+
+        // DON'T use beam.target here - we might have used ! targeting to
+        // target something behind another known monster
+        const monster* target_mons = monster_at(ray.pos());
+        const string bad_charge = bad_charge_target(ray.pos());
+        
+        if (adjacent(you.pos(), ray.pos()))
+        {
+            mprf("You're already next to %s!",
+                 target_mons->name(DESC_THE).c_str());
+            return false;
+        }
+
+        if (bad_charge != "")
+        {
+            mpr(bad_charge.c_str());
+            return false;
+        }
+
+        // prompt to make sure the player really wants to attack the monster
+        // (if extant and not hostile)
+        // Intentionally don't use the real attack position here - that's only
+        // used for sanctuary,
+        // so it's more accurate if we use our current pos, since sanctuary
+        // should move with us.
+        if (stop_attack_prompt(target_mons, false, target_mons->pos()))
+            return false;
+
+        ray.regress();
+        // confirm movement for the final square only
+        if (!check_moveto(ray.pos(), "charge"))
+            return false;
+
+        return true;
+    }
+}
+
+/**
+ * Attempt to charge the player to a target of their choosing.
+ *
+ * @param fail          Whether this came from a mis-invoked ability (& should
+ *                      therefore fail after selecting a target)
+ * @return              Whether the charge succeeded, aborted, or was miscast.
+ */
+spret furious_charge(bool fail)
+{
+    const int charge_range = 4;
+    const coord_def initial_pos = you.pos();
+
+    if (you.duration[DUR_EXHAUSTED])
+    {
+        mpr("You are too exhausted to charge agian!");
+        return spret::abort;
+    }
+
+    if (cancel_barbed_move())
+        return spret::abort;
+
+    vector<coord_def> target_path;
+    targeter_charge tgt(&you, charge_range);
+    tgt.obeys_mesmerise = true;
+    if (_find_charge_target(target_path, charge_range, &tgt) == false)
+        return spret::abort;
+
+    fail_check();
+
+    if (!you.attempt_escape(1)) // prints its own messages
+        return spret::success;
+
+    const coord_def target = target_path.back();
+    monster* target_mons = monster_at(target);
+
+    ASSERT(target_mons != nullptr);
+    // Are you actually moving forward?
+    if (grid_distance(you.pos(), target) > 1 || !target_mons)
+        mpr("You put yourself into furious rage, charge to target!");
+
+    crawl_state.cancel_cmd_again();
+    crawl_state.cancel_cmd_repeat();
+
+    const coord_def orig_pos = you.pos();
+    for (coord_def pos : target_path)
+    {
+        monster* sneaky_mons = monster_at(pos);
+        if (sneaky_mons)
+        {
+            target_mons = sneaky_mons;
+            break;
+        }
+    }
+    const coord_def dest_pos = target_path.at(target_path.size() - 2);
+
+    if (you.duration[DUR_WATER_HOLD])	
+    {
+        mpr("You slip free of the water engulfing you.");	
+        you.props.erase("water_holder");	
+        you.clear_far_engulf();	
+    }
+
+    move_player_to_grid(dest_pos, true);
+    noisy(12, you.pos());
+    apply_barbs_damage();
+    place_cloud(CLOUD_DUST, you.pos(), 2 + random2(3), &you);
+
+    if (you.pos() != dest_pos) // tornado and trap nonsense
+        return spret::success; // of a sort
+
+    // daze check before target reacts, makes effective your charge
+    // chance to daze: 20% at 1 range, 80% at 4 range
+    if (2 * (grid_distance(initial_pos, you.pos())) >= random2(9))
+    {
+        target_mons->add_ench(mon_enchant(ENCH_DAZED, 0, &you, 10 * BASELINE_DELAY));
+    }
+
+    if (target_mons->has_ench(ENCH_DAZED))
+        mprf("%s is knocked down by your furious strike!", target_mons->name(DESC_THE).c_str());
+
+    // Maybe we hit a trap and something weird happened.
+    if (!target_mons->alive() || !adjacent(you.pos(), target_mons->pos()))
+        return spret::success;
+
+    // manually apply noise
+    behaviour_event(target_mons, ME_ALERT, &you, you.pos()); // shout + set you as foe
+
+    // We got webbed/netted at the destination, bail on the attack.
+    if (you.attribute[ATTR_HELD])
+        return spret::success;
+
+    you.go_berserk(true);
+    you.increase_duration(DUR_EXHAUSTED, 5 + random2(6));
+
+    const int base_delay = you.time_taken;
+
+    melee_attack charge_atk(&you, target_mons);
+    charge_atk.attack();
+
+    // Normally this is 10 aut (times haste, etc), but slow weapons
+    // take longer. Most relevant for low-skill players and Dark Maul.
+    you.time_taken = max(you.time_taken, base_delay);
+
+    return spret::success;
 }
 
 /**
