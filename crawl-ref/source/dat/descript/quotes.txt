@@ -2797,10 +2797,6 @@ staff of earth
 
 <staff>
 %%%%
-staff of energy
-
-<staff>
-%%%%
 staff of fire
 
 “The wizard suddenly remembered the words of the god. He remembered that of all

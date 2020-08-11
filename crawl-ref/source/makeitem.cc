@@ -1542,10 +1542,6 @@ static stave_type _get_random_stave_type()
     }
     while (item_type_removed(OBJ_STAVES, r));
 
-    // staves of energy are 25% less common, wizardry is more common
-    if (r == STAFF_ENERGY && one_chance_in(4))
-        r = STAFF_WIZARDRY;
-
     return r;
 }
 
@@ -1793,9 +1789,7 @@ static void _setup_fallback_randart(const int unrand_id,
         && fallback_sub_type == WPN_STAFF)
     {
         item.base_type = OBJ_STAVES;
-        if (unrand_id == UNRAND_WUCAD_MU)
-            force_type = STAFF_ENERGY;
-        else if (unrand_id == UNRAND_OLGREB)
+        if (unrand_id == UNRAND_OLGREB)
             force_type = STAFF_POISON;
         else
             force_type = OBJ_RANDOM;

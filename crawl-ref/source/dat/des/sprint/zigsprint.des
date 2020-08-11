@@ -782,7 +782,6 @@ KITEM:    L = scroll of blinking q:3 ident:all, \
 KITEM:    N = wand of acid ident:all charges:7, \
               wand of iceblast ident:all charges:7, \
               wand of disintegration ident:all charges:7
-KITEM:    O = staff of energy not_cursed ident:all
 KITEM:    P = ring of strength not_cursed ident:all plus:6, \
               ring of strength not_cursed ident:all plus:6, \
               ring of intelligence not_cursed ident:all plus:6, \
@@ -826,7 +825,7 @@ e..HG.........o
 ^..IF.........^
 d..JE.....S...q
 ^...D.....P...^
-c......L..O...r
+c......L......r
 ^...C..K..N...^
 b...B.{.......s
 ^.............^

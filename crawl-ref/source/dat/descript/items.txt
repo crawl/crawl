@@ -1015,11 +1015,6 @@ A staff that increases the power of earth spells cast by its wielder. If the
 wielder is skilled in Evocations and Earth magic, they can crush those struck
 by it.
 %%%%
-staff of energy
-
-A staff that allows its wielder to channel ambient magical energy to restore
-their reserves of magic.
-%%%%
 staff of fire
 
 A staff that increases the power of fire spells cast by its wielder, and

@@ -625,12 +625,6 @@ staff of conjuration
 Dieser Personal vergrößert die Macht von durch seinen Besitzer geworfenen
 Beschwörungsformeln.
 %%%%
-staff of energy
-
-Dieser Stab erlaubt seinem Ausüber magische Energie zu steuern: Zaubern führt
-nicht mehr zu Hunger und atmosphärische Magie kann zu des Ausübers Zwecken
-kanalisiert werden.
-%%%%
 steam dragon hide
 
 Die weiche und geschmeidige schuppige Haut eines Dampfdrachen. Es kann in die

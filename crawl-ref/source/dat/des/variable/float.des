@@ -3677,7 +3677,7 @@ MONS: spark wasp
 : else
 MONS: w:5 anaconda / black mamba / water moccasin, mana viper, shock serpent
 : end
-ITEM: w:60 star_item / staff of air / staff of energy w:20 / lightning rod w:20
+ITEM: w:60 star_item / staff of air / lightning rod w:20
 NSUBST: " = 1:2 / 1:1 / 3=12., ' = 1:2 / 1:1 / 3=12., - = 2:3, ` = 2=*% / *:%
 MAP
 @...........

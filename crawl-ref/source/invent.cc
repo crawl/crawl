@@ -2222,23 +2222,6 @@ bool item_is_evokable(const item_def &item, bool unskilled, bool known,
             mpr("That item cannot be evoked!");
         return false;
 
-    case OBJ_STAVES:
-        if (known && !item_type_known(item)
-            || item.sub_type == STAFF_ENERGY
-               && item_type_known(item))
-        {
-            if (!wielded)
-            {
-                if (msg)
-                    mpr(error);
-                return false;
-            }
-            return true;
-        }
-        if (msg)
-            mpr("That item cannot be evoked!");
-        return false;
-
 #if TAG_MAJOR_VERSION == 34
     case OBJ_MISCELLANY:
         if (item.sub_type != MISC_BUGGY_LANTERN_OF_SHADOWS

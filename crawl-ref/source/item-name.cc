@@ -1086,11 +1086,11 @@ static const char* staff_type_name(int stafftype)
     case STAFF_WIZARDRY:    return "wizardry";
 #if TAG_MAJOR_VERSION == 34
     case STAFF_POWER:       return "power";
+    case STAFF_ENERGY:      return "energy";
 #endif
     case STAFF_FIRE:        return "fire";
     case STAFF_COLD:        return "cold";
     case STAFF_POISON:      return "poison";
-    case STAFF_ENERGY:      return "energy";
     case STAFF_DEATH:       return "death";
     case STAFF_CONJURATION: return "conjuration";
 #if TAG_MAJOR_VERSION == 34

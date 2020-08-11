@@ -858,11 +858,6 @@ staff of conjuration
 
 Ce bâton accroit la puissance des conjurations de son porteur.
 %%%%
-staff of energy
-
-Ce bâton permet à son porteur de contrôler l'énergie magique : jeter des sorts
-ne donne plus faim et il peut canaliser la magie ambiante.
-%%%%
 staff of wizardry
 
 Ce bâton accroit significativement l'aptitude de son porteur à lancer des

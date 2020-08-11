@@ -790,12 +790,6 @@ Den stav øger brugerens jordbesværgelsers kraft, men mindsker den for
 luftbesværgelser. Hvis brugeren er kyndig i vækkelser og jordmagi kan den knuse
 dem, den rammer.
 %%%%
-staff of energy
-
-Denne stav lader sin bærer kontrollere magisk energi: Man bliver ikke længere
-sulten af at kaste besværgelser, og naturlig baggrundsmagi kan kanaliseres til
-bærerens formål.
-%%%%
 staff of fire
 
 Denne stav øger brugerens ildbesværgelsers kraft, men nedsætter den for

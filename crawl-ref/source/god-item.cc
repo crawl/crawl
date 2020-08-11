@@ -307,13 +307,7 @@ bool is_hasty_item(const item_def& item, bool calc_unid)
 
 bool is_channeling_item(const item_def& item, bool calc_unid)
 {
-    if (is_unrandom_artefact(item, UNRAND_WUCAD_MU))
-        return true;
-
-    if (!calc_unid && !item_type_known(item))
-        return false;
-
-    return item.base_type == OBJ_STAVES && item.sub_type == STAFF_ENERGY;
+    return is_unrandom_artefact(item, UNRAND_WUCAD_MU);
 }
 
 bool is_wizardly_item(const item_def& item, bool calc_unid)

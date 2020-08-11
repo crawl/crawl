@@ -999,7 +999,9 @@ i-staff_power STAFF_POWER
 i-staff_fire STAFF_FIRE
 i-staff_cold STAFF_COLD
 i-staff_poison STAFF_POISON
+# start TAG_MAJOR_VERSION == 34
 i-staff_energy STAFF_ENERGY
+# end TAG_MAJOR_VERSION
 i-staff_death STAFF_DEATH
 i-staff_conjuration STAFF_CONJURATION
 # start TAG_MAJOR_VERSION == 34

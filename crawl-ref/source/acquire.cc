@@ -608,8 +608,8 @@ static int _acquirement_staff_subtype(bool /*divine*/, int & /*quantity*/,
     if (one_chance_in(found_enhancer ? 2 : 3))
         return result;
 
-    // Otherwise pick a non-enhancer staff.
-    return coinflip() ? STAFF_WIZARDRY : STAFF_ENERGY;
+    // Otherwise give wizardry.
+    return STAFF_WIZARDRY;
 }
 
 /**
