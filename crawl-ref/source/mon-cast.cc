@@ -8308,6 +8308,7 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
 
     // Don't use unless our foe is close to us and there are no allies already
     // between the two of us
+    case SPELL_NIGHTMARE_OF_CUBUS:
     case SPELL_WIND_BLAST:
         if (foe && foe->pos().distance_from(mon->pos()) < 4)
         {

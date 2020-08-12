@@ -619,10 +619,15 @@ void init_can_currently_train()
 
 void init_train()
 {
+    int train_num = 0;
+
     for (int i = 0; i < NUM_SKILLS; ++i)
     {
         if (you.can_currently_train[i] && you.skill_points[i])
+        {
             you.train[i] = you.train_alt[i] = TRAINING_ENABLED;
+            train_num++;
+        }
         else
         {
             const bool gnoll_enable = _player_is_gnoll() &&
@@ -633,6 +638,9 @@ void init_train()
             you.train_alt[i] =
                 (training_status) (gnoll_enable || !you.auto_training);
         }
+    }
+    if (train_num == 0) {
+        you.train[SK_FIGHTING] = you.train_alt[SK_FIGHTING] = TRAINING_ENABLED;
     }
 }
 
@@ -704,10 +712,20 @@ static void _scale_array(FixedVector<T, SIZE> &array, int scale, bool exact)
 void init_training()
 {
     FixedVector<unsigned int, NUM_SKILLS> skills;
+    int train_num = 0;
     skills.init(0);
     for (int i = 0; i < NUM_SKILLS; ++i)
-        if (skill_trained(i))
+    {
+        if (skill_trained(i)) {
             skills[i] = sqr(you.skill_points[i]);
+            if (you.skill_points[i] > 0) {
+                train_num++;
+            }
+        }
+    }
+    if (train_num == 0) {
+        return;
+    }
 
     _scale_array(skills, EXERCISE_QUEUE_SIZE, true);
     _init_queue(you.exercises, skills);

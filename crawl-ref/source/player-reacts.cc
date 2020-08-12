@@ -969,7 +969,7 @@ static void _decrement_durations()
         _try_to_respawn_ancestor();
     }
 
-    if (you.props[CARAVAN_MERCENARY])
+    if (you.props[CARAVAN_MERCENARY].get_bool())
     {
         _try_to_spawn_mercenary();
     }
