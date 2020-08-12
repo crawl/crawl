@@ -327,10 +327,6 @@ void give_items_skills(const newgame_def& ng)
             newgame_make_item(OBJ_BOOKS, BOOK_FROST);
     }
 
-    if (you.char_class == JOB_CARAVAN) {
-        you.props[CARAVAN_MERCENARY] = true;
-    }
-
     give_job_skills(you.char_class);
 
     if (job_gets_ranged_weapons(you.char_class))
