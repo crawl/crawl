@@ -4982,7 +4982,9 @@ static bool _dgn_place_monster(const vault_placement &place, mons_spec &mspec,
                                const coord_def& where)
 {
     const bool generate_awake
-        = mspec.generate_awake || place.map.has_tag("generate_awake");
+        = mspec.generate_awake
+          || place.map.has_tag("generate_awake")
+          || player_in_branch(BRANCH_GAUNTLET);
 
     const bool patrolling
         = mspec.patrolling || place.map.has_tag("patrolling");
