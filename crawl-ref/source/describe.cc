@@ -724,6 +724,7 @@ static string _describe_demon(const string& name, bool flying)
         "bug-like",
         "skeletal",
         "mantis",
+        "slithering",
     };
 
     static const char* wing_names[] =
@@ -774,6 +775,9 @@ static string _describe_demon(const string& name, bool flying)
         "a cow's skull for a head",
         "the head of a bird",
         "a large fungus growing from its neck",
+        "an ominous eye at the end of a thin stalk",
+        "a head gloriously ablaze with unholy fire",
+        "a face from nightmares"
     };
 
     static const char* misc_descs[] =
@@ -816,6 +820,8 @@ static string _describe_demon(const string& name, bool flying)
         " Its body is scourged by damnation.",
         " Its body is extensively scarred.",
         " You find it difficult to look away.",
+        " Oddly mechanical noises accompany its jarring movements.",
+        " Its skin looks unnervingly wrinkled.",
     };
 
     static const char* smell_descs[] =
