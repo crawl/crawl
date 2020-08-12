@@ -293,7 +293,6 @@ aff_type targeter_beam::is_affected(coord_def loc)
         {
             break;
         }
-
         c = pc;
         if (c == loc)
         {
@@ -307,7 +306,6 @@ aff_type targeter_beam::is_affected(coord_def loc)
                     return current;
                 else
                     return AFF_NO;
-
             }
             else
                 continue;
@@ -345,6 +343,7 @@ aff_type targeter_beam::is_affected(coord_def loc)
 
     return visit_count == 0 ? AFF_NO :
            visit_count == 1 ? AFF_YES :
+           visit_count == 2 ? AFF_DOUBLE :
                               AFF_MULTIPLE;
 }
 

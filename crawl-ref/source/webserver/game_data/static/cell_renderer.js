@@ -567,6 +567,8 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
                 this.draw_dngn(dngn.RAY_OUT_OF_RANGE, x, y);
             else if (bg.LANDING)
                 this.draw_dngn(dngn.LANDING, x, y);
+            else if (bg.RAY_BI)
+                this.draw_dngn(dngn.RAY_BI, x, y);
             else if (bg.RAY_MULTI)
                 this.draw_dngn(dngn.RAY_MULTI, x, y);
         },

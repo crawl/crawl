@@ -1074,6 +1074,7 @@ void tile_place_ray(const coord_def &gc, aff_type in_range)
 void tile_draw_rays(bool reset_count)
 {
     tileidx_t flag = 0;
+    coord_def c;
 
     for (unsigned int i = 0; i < num_tile_rays; i++)
     {
@@ -1083,6 +1084,8 @@ void tile_draw_rays(bool reset_count)
             flag = TILE_FLAG_RAY;
         else if (tile_ray_vec[i].in_range == AFF_LANDING)
             flag = TILE_FLAG_LANDING;
+        else if (tile_ray_vec[i].in_range == AFF_DOUBLE)
+            flag = TILE_FLAG_RAY_BI;
         else if (tile_ray_vec[i].in_range == AFF_MULTIPLE)
             flag = TILE_FLAG_RAY_MULTI;
         env.tile_bg(tile_ray_vec[i].ep) |= flag;

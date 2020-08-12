@@ -533,7 +533,7 @@ bool bolt::can_affect_actor(const actor *act) const
     if (origin_spell == SPELL_BLINKBOLT && act->mid == source_id)
         return false;
     auto cnt = hit_count.find(act->mid);
-    if (cnt != hit_count.end() && cnt->second >= 2)
+    if (flavour != BEAM_ELECTRICITY && cnt != hit_count.end() && cnt->second >= 2)
     {
         // Note: this is done for balance, even if it hurts realism a bit.
         // It is arcane knowledge which wall patterns will cause lightning
@@ -3970,7 +3970,7 @@ void bolt::affect_player()
 
     // Roll the damage.
     if (!(origin_spell == SPELL_FLASH_FREEZE && you.duration[DUR_FROZEN]))
-        pre_ac_dam += damage.roll();
+        pre_ac_dam += damage.roll() * powf((float) 4/5, bounces);
 
     int pre_res_dam = apply_AC(&you, pre_ac_dam);
 
@@ -3996,9 +3996,9 @@ void bolt::affect_player()
         bleed_onto_floor(you.pos(), MONS_PLAYER, blood, true);
     }
 
+    
     // Apply resistances to damage, but don't print "You resist" messages yet
     int final_dam = check_your_resists(pre_res_dam, flavour, "", this, false);
-
     // Tell the player the beam hit
     if (hit_verb.empty())
         hit_verb = engulfs ? "engulfs" : "hits";
@@ -4297,7 +4297,7 @@ bool bolt::determine_damage(monster* mon, int& preac, int& postac, int& final)
         preac = preac_max_damage;
     }
     else if (!freeze_immune)
-        preac = damage.roll();
+        preac = damage.roll() * powf((float) 4/5, bounces);
 
     int tracer_postac_max = preac_max_damage;
 
