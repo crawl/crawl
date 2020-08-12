@@ -92,6 +92,9 @@ static const monster_level_up mon_grow[] =
     monster_level_up(MONS_MERC_BRIGAND, MONS_MERC_ASSASSIN),
     monster_level_up(MONS_MERC_ASSASSIN, MONS_MERC_CLEANER),
 
+    monster_level_up(MONS_MERC_SHAMAN, MONS_MERC_SHAMAN_II),
+    monster_level_up(MONS_MERC_SHAMAN_II, MONS_MERC_SHAMAN_III),
+
 };
 
 static const map<monster_type, mon_lev_up_cond> mon_grow_cond =

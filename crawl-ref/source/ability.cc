@@ -346,6 +346,9 @@ static const ability_def Ability_List[] =
     { ABIL_BLOSSOM, "Choose Blossom", 0, 0, 0, 0, {}, abflag::starve_ok },
     { ABIL_ADAPTION, "Choose Adaption", 0, 0, 0, 0, {}, abflag::starve_ok },
 
+    { ABIL_CARAVAN_GIFT_ITEM, "Give Item to Mercenary",
+        0, 0, 0, 0, {}, abflag::gold | abflag::starve_ok },
+
     // EVOKE abilities use Evocations and come from items.
     // Teleportation and Blink can also come from mutations
     // so we have to distinguish them (see above). The off items
@@ -799,6 +802,11 @@ int get_gold_cost(ability_type ability)
         return gozag_potion_price();
     case ABIL_GOZAG_BRIBE_BRANCH:
         return GOZAG_BRIBE_AMOUNT;
+    // for JOB_CARAVAN
+    case ABIL_CARAVAN_GIFT_ITEM:
+    {
+        return 100 * (1 + you.attribute[ATTR_CARAVAN_ITEM_COST]);
+    }
     default:
         return 0;
     }
@@ -2237,6 +2245,11 @@ static spret _do_ability(const ability_def& abil, bool fail)
 
     case ABIL_ADAPTION:
        return _homunculus_blossom_or_adaption(SP_ADAPTION_HOMUNCULUS);
+
+    case ABIL_CARAVAN_GIFT_ITEM:
+        if (!caravan_gift_item())
+            return spret::abort;
+        break;
 
     case ABIL_SPIT_POISON:      // Naga poison spit
     {
@@ -4291,6 +4304,9 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
             _add_talent(talents, ABIL_ADAPTION, check_confused);
         }
     }
+
+    if (you.props[CARAVAN_MERCENARY_SPAWNED])
+        _add_talent(talents, ABIL_CARAVAN_GIFT_ITEM, check_confused);
 
 
     if (you.get_mutation_level(MUT_HOP))

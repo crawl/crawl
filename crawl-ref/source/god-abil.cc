@@ -14,6 +14,7 @@
 #include "abyss.h"
 #include "act-iter.h"
 #include "areas.h"
+#include "artefact.h"
 #include "attitude-change.h"
 #include "bloodspatter.h"
 #include "branch.h"
@@ -1839,7 +1840,7 @@ static vector<monster* > _valid_beogh_gift_targets_in_sight()
 {
     vector<monster* > list_orcs;
     for (monster_near_iterator rad(you.pos(), LOS_NO_TRANS); rad; ++rad)
-        if (beogh_can_gift_items_to(*rad, true))
+        if (beogh_can_gift_items_to(*rad, true) || beogh_can_gift_items_to(*rad, true))
             list_orcs.push_back(*rad);
     sort(list_orcs.begin(), list_orcs.end(), 
     [](monster* m1, monster* m2){
@@ -6753,4 +6754,427 @@ void angel_good_god_help(bool closed_enemy) {
     default:
         break;
     }
+}
+
+/**
+ * Checks whether the target monster is a valid target for mercenary item-gifts.
+ *
+ * @param mons[in]  The monster to consider giving an item to.
+ * @param quiet     Whether to print messages if the target is invalid.
+ * @return          Whether the player can give an item to the monster.
+ */
+bool caravan_can_gift_items_to(const monster* mons, bool quiet)
+{
+    if (!mons || !mons->visible_to(&you))
+    {
+        if (!quiet)
+            canned_msg(MSG_NOTHING_THERE);
+        return false;
+    }
+
+    if (mons->attitude == ATT_FRIENDLY
+        // heavy armour melee: able to lots of equipments
+        && (mons->type == MONS_MERC_FIGHTER
+            || mons->type == MONS_MERC_KNIGHT
+            || mons->type == MONS_MERC_DEATH_KNIGHT
+            || mons->type == MONS_MERC_PALADIN
+        // EV-skald: polearms & light armour
+        || mons->type == MONS_MERC_SKALD
+            || mons->type == MONS_MERC_INFUSER
+            || mons->type == MONS_MERC_TIDEHUNTER
+        // pure-wizard: unable to lots of equipments
+        || mons->type == MONS_MERC_WITCH
+            || mons->type == MONS_MERC_SORCERESS
+            || mons->type == MONS_MERC_ELEMENTALIST
+        // stealth: short blades & light armour
+        || mons->type == MONS_MERC_BRIGAND
+            || mons->type == MONS_MERC_ASSASSIN
+            || mons->type == MONS_MERC_CLEANER
+        // gnoll: able to all equipments after grow
+        || mons->type == MONS_MERC_SHAMAN
+            || mons->type == MONS_MERC_SHAMAN_II
+            || mons->type == MONS_MERC_SHAMAN_III))
+    {
+        return true;
+    }
+
+    return false;
+}
+
+/**
+ * Return the monster* vector of valid mercenary for gifts in LOS.
+ */
+static vector<monster* > _valid_caravan_gift_targets_in_sight()
+{
+    vector<monster* > list_merc;
+    for (monster_near_iterator rad(you.pos(), LOS_NO_TRANS); rad; ++rad)
+        if (caravan_can_gift_items_to(*rad, true))
+            list_merc.push_back(*rad);
+    sort(list_merc.begin(), list_merc.end(), 
+    [](monster* m1, monster* m2){
+        monster_info m1i = monster_info(m1);
+        monster_info m2i = monster_info(m2);
+        return monster_info::less_than(m1i, m2i, true);});
+    return list_merc;
+}
+
+static bool _caravan_gift_items_to(monster* mons, int item_slot)
+{
+    item_def& gift = you.inv[item_slot];
+
+    const bool shield = is_shield(gift);
+    const bool body_armour = gift.base_type == OBJ_ARMOUR
+                             && gift.sub_type != ARM_CENTAUR_BARDING
+                             && gift.sub_type != ARM_NAGA_BARDING;
+    const bool weapon = gift.base_type == OBJ_WEAPONS
+                             || gift.base_type == OBJ_STAVES;
+    const bool range_weapon = weapon && is_range_weapon(gift);
+    const item_def* mons_weapon = mons->weapon();
+    const item_def* mons_alt_weapon = mons->mslot_item(MSLOT_ALT_WEAPON);
+
+    if (weapon && !mons->could_wield(gift)
+        || body_armour && !check_armour_size(gift, mons->body_size())
+        || !item_is_selected(gift, OSEL_BEOGH_GIFT))
+    {
+        mprf("You can't give that to %s.", mons->name(DESC_THE, false).c_str());
+        return false;
+    }
+    else if (shield
+             && (mons_weapon && mons->hands_reqd(*mons_weapon) == HANDS_TWO
+                 || mons_alt_weapon
+                    && mons->hands_reqd(*mons_alt_weapon) == HANDS_TWO))
+    {
+        mprf("%s can't equip that with a two-handed weapon.",
+             mons->name(DESC_THE, false).c_str());
+        return false;
+    }
+
+    const bool use_alt_slot = weapon && mons_weapon
+                              && is_range_weapon(gift) !=
+                                 is_range_weapon(*mons_weapon);
+
+    const auto mslot = body_armour ? MSLOT_ARMOUR :
+                                    shield ? MSLOT_SHIELD :
+                              use_alt_slot ? MSLOT_ALT_WEAPON :
+                                             MSLOT_WEAPON;
+
+    item_def* item_to_drop = mons->mslot_item(mslot);
+    if (item_to_drop && item_to_drop->cursed())
+    {
+        mprf(MSGCH_ERROR, "%s is cursed!", gift.name(DESC_THE, false).c_str());
+        return false;
+    }
+
+    if (gift.cursed() || (is_artefact(gift) && artefact_property(gift, ARTP_CURSE)))
+    {
+        mprf(MSGCH_ERROR, "%s is cursed!", gift.name(DESC_THE, false).c_str());
+        return false;
+    }
+
+    if ((mons->type == MONS_MERC_SKALD
+            || mons->type == MONS_MERC_INFUSER
+            || mons->type == MONS_MERC_TIDEHUNTER
+            || mons->type == MONS_MERC_WITCH
+            || mons->type == MONS_MERC_SORCERESS
+            || mons->type == MONS_MERC_ELEMENTALIST
+            || mons->type == MONS_MERC_SHAMAN
+            || mons->type == MONS_MERC_SHAMAN_II
+            || mons->type == MONS_MERC_SHAMAN_III)
+        && ((is_artefact(gift) && artefact_property(gift, ARTP_PREVENT_SPELLCASTING)
+            || get_weapon_brand(gift) == SPWPN_ANTIMAGIC)))
+    {
+        mprf("%s can't use spellcast-disturbing equipments.",
+             mons->name(DESC_THE, false).c_str());
+        return false;
+    }
+
+    if ((mons->type == MONS_MERC_BRIGAND
+            || mons->type == MONS_MERC_ASSASSIN
+            || mons->type == MONS_MERC_CLEANER)
+        && is_artefact(gift) && (artefact_property(gift, ARTP_STEALTH) < 0
+            || artefact_property(gift, ARTP_ANGRY)
+            || artefact_property(gift, ARTP_NOISE)
+            || artefact_property(gift, ARTP_CAUSE_TELEPORTATION)))
+    {
+        mprf("%s can't use stealth-disturbing equipments.",
+             mons->name(DESC_THE, false).c_str());
+        return false;
+    }
+
+   if ((mons->type == MONS_MERC_DEATH_KNIGHT && is_holy_item(gift))
+      || (mons->type == MONS_MERC_PALADIN && is_evil_item(gift)))
+   {
+       mprf("%s rejects %s hand!",
+             gift.name(DESC_THE, false).c_str(), mons->name(DESC_THE, false).c_str());
+       return false;
+   }
+
+    // weapons.
+    if (weapon){
+
+        // ranged weapon
+        if (range_weapon // just for now, we don't have archer professional.
+           && (mons->type != MONS_MERC_SHAMAN // ...except gnolls!
+            || (mons->type != MONS_MERC_SHAMAN_II
+                && (gift.sub_type != WPN_SHORTBOW
+                || gift.sub_type != WPN_HAND_CROSSBOW
+                || gift.sub_type != WPN_HUNTING_SLING))))
+        {
+            mprf("%s isn't enough skilled to equip %s!",
+            mons->name(DESC_THE, false).c_str(), gift.name(DESC_THE, false).c_str());
+            return false;
+        }
+
+        // polearms for skald.
+        if ((mons->type == MONS_MERC_SKALD
+            || mons->type == MONS_MERC_INFUSER
+            || mons->type == MONS_MERC_TIDEHUNTER)
+            && (item_attack_skill(gift) != SK_POLEARMS))
+        {
+            mprf("%s can only equip polearms.",
+            mons->name(DESC_THE, false).c_str());
+            return false;
+        }
+
+        // magical staves for witch
+        if ((mons->type == MONS_MERC_WITCH
+            || mons->type == MONS_MERC_SORCERESS
+            || mons->type == MONS_MERC_ELEMENTALIST)
+            && (gift.base_type != OBJ_STAVES))
+        {
+            mprf("%s can only equip magical staves.",
+            mons->name(DESC_THE, false).c_str());
+            return false;
+        }
+
+        // stealth weapon for brigand.
+        if ((mons->type == MONS_MERC_BRIGAND
+            || mons->type == MONS_MERC_ASSASSIN
+            || mons->type == MONS_MERC_CLEANER)
+            && (item_attack_skill(gift) != SK_SHORT_BLADES))
+        {
+            mprf("%s can only equip short blades.",
+            mons->name(DESC_THE, false).c_str());
+            return false;
+        }
+
+        // magical staves for witch
+        if ((mons->type == MONS_MERC_WITCH
+            || mons->type == MONS_MERC_SORCERESS
+            || mons->type == MONS_MERC_ELEMENTALIST)
+            && (gift.base_type != OBJ_STAVES))
+        {
+            mprf("%s can only equip magical staves.",
+            mons->name(DESC_THE, false).c_str());
+            return false;
+        }
+
+    }// weapons end.
+
+    // body armours.
+    item_def *body_slot = mons->mslot_item(MSLOT_ARMOUR);
+    if (body_slot){
+
+    if (((mons->type == MONS_MERC_WITCH
+        || mons->type == MONS_MERC_SORCERESS
+        || mons->type == MONS_MERC_ELEMENTALIST)
+        && (gift.sub_type != ARM_ANIMAL_SKIN
+            || gift.sub_type != ARM_ROBE
+            || gift.sub_type != ARM_STEAM_DRAGON_ARMOUR))
+
+    || ((mons->type == MONS_MERC_SKALD
+        || mons->type == MONS_MERC_INFUSER
+        || mons->type == MONS_MERC_TIDEHUNTER
+        || mons->type == MONS_MERC_BRIGAND
+        || mons->type == MONS_MERC_ASSASSIN
+        || mons->type == MONS_MERC_CLEANER
+        || mons->type == MONS_MERC_SHAMAN)
+        && (gift.sub_type != ARM_ANIMAL_SKIN
+            || gift.sub_type != ARM_ROBE
+            || gift.sub_type != ARM_LEATHER_ARMOUR
+            || gift.sub_type != ARM_TROLL_LEATHER_ARMOUR
+            || gift.sub_type != ARM_STEAM_DRAGON_ARMOUR))
+
+    || ((mons->type == MONS_MERC_SHAMAN_II)
+        && (gift.sub_type != ARM_ANIMAL_SKIN
+            || gift.sub_type != ARM_ROBE
+            || gift.sub_type != ARM_LEATHER_ARMOUR
+            || gift.sub_type != ARM_TROLL_LEATHER_ARMOUR
+            || gift.sub_type != ARM_STEAM_DRAGON_ARMOUR
+            || gift.sub_type != ARM_RING_MAIL
+            || gift.sub_type != ARM_SCALE_MAIL
+            || gift.sub_type != ARM_ACID_DRAGON_ARMOUR
+            || gift.sub_type != ARM_SWAMP_DRAGON_ARMOUR
+            || gift.sub_type != ARM_QUICKSILVER_DRAGON_ARMOUR
+            || gift.sub_type != ARM_FIRE_DRAGON_ARMOUR
+            || gift.sub_type != ARM_ICE_DRAGON_ARMOUR
+            || gift.sub_type != ARM_PEARL_DRAGON_ARMOUR))
+
+    || ((mons->type == MONS_MERC_SHAMAN_III)
+        && (gift.sub_type == ARM_PLATE_ARMOUR
+            || gift.sub_type == ARM_CRYSTAL_PLATE_ARMOUR
+            || gift.sub_type == ARM_GOLD_DRAGON_ARMOUR)))
+    {
+        if (mons->type == MONS_MERC_SHAMAN_II || mons->type == MONS_MERC_SHAMAN_III)
+        {
+            mprf("%s isn't enough skilled to equip %s!",
+                mons->name(DESC_THE, false).c_str(), gift.name(DESC_THE, false).c_str());
+            return false;
+        }
+
+        mprf("%s is too heavy for %s!",
+            gift.name(DESC_THE, false).c_str(), mons->name(DESC_THE, false).c_str());
+        return false;
+    } } // body armours end.
+
+    // shields
+    item_def *shield_slot = mons->mslot_item(MSLOT_SHIELD);
+    if ((mslot == MSLOT_WEAPON || mslot == MSLOT_ALT_WEAPON)
+        && shield_slot
+        && mons->hands_reqd(gift) == HANDS_TWO)
+    {
+        if (shield_slot->cursed() || gift.cursed() || (is_artefact(gift) && artefact_property(gift, ARTP_CURSE)))
+        {
+            mprf(MSGCH_ERROR, "%s is cursed!", gift.name(DESC_THE, false).c_str());
+            return false;
+        }
+
+        if ((mons->type != MONS_MERC_FIGHTER // soldier is professional of shield!
+            || mons->type != MONS_MERC_KNIGHT
+            || mons->type != MONS_MERC_DEATH_KNIGHT
+            || mons->type != MONS_MERC_PALADIN)
+           && (shield_slot->sub_type != ARM_BUCKLER))
+        {
+            if ((mons->type == MONS_MERC_SHAMAN) // buckler only
+               || (mons->type == MONS_MERC_SHAMAN_II // buckler~shield only
+                   && shield_slot->sub_type == ARM_LARGE_SHIELD))
+            {
+                mprf("%s isn't enough skilled to equip %s!",
+                    mons->name(DESC_THE, false).c_str(), gift.name(DESC_THE, false).c_str());
+                return false;
+            }
+
+            mprf("%s is too heavy for %s!",
+                gift.name(DESC_THE, false).c_str(), mons->name(DESC_THE, false).c_str());
+            return false;
+        }
+    }
+
+    item_def *floor_item = mons->take_item(item_slot, mslot);
+    if (!floor_item)
+    {
+        // this probably means move_to_grid in drop_item failed?
+        mprf(MSGCH_ERROR, "Gift failed: %s is unable to take %s.",
+                                        mons->name(DESC_THE, false).c_str(),
+                                        gift.name(DESC_THE, false).c_str());
+        return false;
+    }
+    if (use_alt_slot)
+        mons->swap_weapons();
+
+    dprf("is_ranged weap: %d", range_weapon);
+    if (range_weapon)
+        gift_ammo_to_orc(mons, true); // give a small initial ammo freebie
+
+    you.del_gold(100 * (1 + you.attribute[ATTR_CARAVAN_ITEM_COST]));
+    you.attribute[ATTR_CARAVAN_ITEM_COST]++;
+
+    return true;
+}
+
+/**
+ * Allow the caravan player to give an item to a mercenary.
+ *
+ * @returns whether an item was given.
+ */
+bool caravan_gift_item()
+{
+    vector<monster *> list_merc = _valid_caravan_gift_targets_in_sight();
+    vector<monster_info *> list_merc_infos;
+    if (list_merc.empty())
+    {
+        mpr("You cannot find mercenary in your sight.");
+        return false;
+    }
+
+    const int cost_min = 100 * (1 + you.attribute[ATTR_CARAVAN_ITEM_COST]);
+    if (you.gold < cost_min)
+    {
+        mprf("You need at least %d gold to do this.", cost_min);
+        return false;
+    }
+
+    for (const monster* mercenary : list_merc)
+    {
+        monster_info* mi = new monster_info(mercenary);
+        list_merc_infos.push_back(mi);
+    }
+
+    InvMenu desc_menu(MF_SINGLESELECT | MF_ANYPRINTABLE
+                        | MF_ALLOW_FORMATTING | MF_SELECT_BY_PAGE);
+
+
+    string title = "Select a mercenary to give a gift to.";
+    desc_menu.set_title(new MenuEntry(title, MEL_TITLE));
+    desc_menu.menu_action  = InvMenu::ACT_EXECUTE;
+    // Start with hotkey 'a' and count from there.
+    menu_letter hotkey;
+    // Build menu entries for monsters.
+    
+    desc_menu.add_entry(new MenuEntry("Mercs", MEL_SUBTITLE));
+    for (const monster_info* mi : list_merc_infos)
+    {
+        // List merc in the form
+        string prefix = "";
+#ifndef USE_TILE_LOCAL
+            cglyph_t g = get_mons_glyph(*mi);
+            const string col_string = colour_to_str(g.col);
+            prefix = "(<" + col_string + ">"
+                    + (g.ch == '<' ? "<<" : stringize_glyph(g.ch))
+                    + "</" + col_string + ">) ";
+#endif
+        string str = get_monster_equipment_desc(*mi, DESC_FULL, DESC_A, false);
+
+#ifndef USE_TILE_LOCAL
+            // Wraparound if the description is longer than allowed.
+            linebreak_string(str, get_number_of_cols() - 9);
+#endif
+        vector<formatted_string> fss;
+        formatted_string::parse_string_to_multiple(str, fss);
+        MenuEntry *me = nullptr;
+        for (unsigned int j = 0; j < fss.size(); ++j)
+        {
+            if (j == 0)
+                me = new MonsterMenuEntry(prefix + fss[j].tostring(), mi, hotkey++);
+#ifndef USE_TILE_LOCAL
+            else
+            {
+                str = "         " + fss[j].tostring();
+                me = new MenuEntry(str, MEL_ITEM, 1);
+            }
+#endif
+            desc_menu.add_entry(me);
+        }
+    }
+
+    desc_menu.on_single_selection = [&list_merc, &list_merc_infos](const MenuEntry& sel)
+    {   
+        monster* mons = list_merc[distance(list_merc_infos.begin(), 
+                                      find(list_merc_infos.begin(), list_merc_infos.end(), sel.data))];
+
+        // Gift Part
+        int item_slot = prompt_invent_item("Give which item?",
+                                       menu_type::invlist, OSEL_BEOGH_GIFT);
+
+        if (item_slot == PROMPT_ABORT || item_slot == PROMPT_NOTHING)
+        {
+            canned_msg(MSG_OK);
+            return false;
+        }
+        _caravan_gift_items_to(mons, item_slot);
+        return false;
+    };
+    desc_menu.show();
+    redraw_screen();
+    return true;
 }

@@ -983,6 +983,9 @@ hobgoblin MONS_HOBGOBLIN
 gnoll MONS_GNOLL
 gnoll_shaman MONS_GNOLL_SHAMAN
 gnoll_sergeant MONS_GNOLL_SERGEANT
+hired_shaman MONS_MERC_SHAMAN
+hired_shaman_II MONS_MERC_SHAMAN_II
+hired_shaman_III MONS_MERC_SHAMAN_III
 boggart MONS_BOGGART
 
 ## Spriggans ('i')

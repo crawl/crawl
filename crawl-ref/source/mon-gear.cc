@@ -942,9 +942,6 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
               { SPWPN_DISTORTION,      2 },
               { SPWPN_CHAOS,           1 }, },
         } },
-        { MONS_MERC_FIGHTER, { { { WPN_FLAIL, 1 } } } },
-        { MONS_MERC_SKALD, { { { WPN_TRIDENT, 1 } } } },
-        { MONS_MERC_BRIGAND, { { { WPN_DAGGER, 1 } } } },
     };
 
     static const weapon_list ORC_KNIGHT_BOWS =
@@ -1245,9 +1242,29 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         upgrade_hepliaklqana_weapon(type, item);
         break;
 
+    case MONS_MERC_FIGHTER:
+        item.base_type = OBJ_WEAPONS;
+        item.sub_type  = WPN_FLAIL;
+        item.flags    |= ISFLAG_KNOW_TYPE;
+        break;
+    case MONS_MERC_SKALD:
+        item.base_type = OBJ_WEAPONS;
+        item.sub_type  = WPN_SPEAR;
+        item.flags    |= ISFLAG_KNOW_TYPE;
+        break;
     case MONS_MERC_WITCH:
         item.base_type = OBJ_STAVES;
-        item.sub_type  = random_choose(STAFF_FIRE, STAFF_COLD, STAFF_AIR, STAFF_EARTH);
+        item.sub_type  = random_choose(STAFF_FIRE, STAFF_COLD, STAFF_AIR);
+        break;
+    case MONS_MERC_BRIGAND:
+        item.base_type = OBJ_WEAPONS;
+        item.sub_type  = WPN_DAGGER;
+        item.flags    |= ISFLAG_KNOW_TYPE;
+        break;
+    case MONS_MERC_SHAMAN:
+        item.base_type = OBJ_WEAPONS;
+        item.sub_type  = WPN_CLUB;
+        item.flags    |= ISFLAG_KNOW_TYPE;
         break;
 
     default:
@@ -1754,6 +1771,10 @@ static void _give_shield(monster* mon, int level)
         make_item_for_monster(mon, OBJ_ARMOUR, ARM_SHIELD, 0);
         break;
 
+    case MONS_MERC_SHAMAN:
+        make_item_for_monster(mon, OBJ_ARMOUR, ARM_BUCKLER, 0);
+        break;
+
     default:
         break;
     }
@@ -2189,6 +2210,7 @@ int make_mons_armour(monster_type type, int level)
 
     case MONS_MERC_SKALD:
     case MONS_MERC_BRIGAND:
+    case MONS_MERC_SHAMAN:
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = ARM_LEATHER_ARMOUR;
         break;
