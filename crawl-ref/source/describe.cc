@@ -777,7 +777,7 @@ static string _describe_demon(const string& name, bool flying)
         "a large fungus growing from its neck",
         "an ominous eye at the end of a thin stalk",
         "a head gloriously ablaze with unholy fire",
-        "a face from nightmares"
+        "a face from nightmares",
     };
 
     static const char* misc_descs[] =
