@@ -207,7 +207,6 @@ demon_head_cow_skull
 demon_head_bird
 demon_head_fungus
 demon_head_eyestalk
-demon_head_fire
 demon_head_nightmare
 
 %variation DEMON_HEAD red

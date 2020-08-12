@@ -776,7 +776,6 @@ static string _describe_demon(const string& name, bool flying)
         "the head of a bird",
         "a large fungus growing from its neck",
         "an ominous eye at the end of a thin stalk",
-        "a head gloriously ablaze with unholy fire",
         "a face from nightmares",
     };
 
