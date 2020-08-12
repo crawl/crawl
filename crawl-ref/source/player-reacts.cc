@@ -644,7 +644,7 @@ static void _try_to_spawn_mercenary()
     int merc;
     monster* mon;
 
-    merc = random2(3);
+    merc = you.props[CARAVAN_MERCENARY].get_int() > 0 ? you.props[CARAVAN_MERCENARY].get_int() - 1: random2(3);
     ASSERT(merc < (int)ARRAYSZ(merctypes));
 
     mgen_data mg(merctypes[merc], BEH_FRIENDLY,
@@ -676,7 +676,7 @@ static void _try_to_spawn_mercenary()
     mons_att_changed(mon);
 
     simple_monster_message(*mon, " follows you as a mercenary.");
-    you.props[CARAVAN_MERCENARY] = false;
+    you.props[CARAVAN_MERCENARY] = 0;
 }
 
 
@@ -967,7 +967,7 @@ static void _decrement_durations()
         _try_to_respawn_ancestor();
     }
 
-    if (you.props[CARAVAN_MERCENARY].get_bool())
+    if (you.props[CARAVAN_MERCENARY].get_int() > 0)
     {
         if (!you.duration[DUR_CARAVAN_MERCENARY])
             you.duration[DUR_CARAVAN_MERCENARY] = 5;

@@ -321,10 +321,6 @@ void give_items_skills(const newgame_def& ng)
             newgame_make_item(OBJ_BOOKS, BOOK_FROST);
     }
 
-    if (you.char_class == JOB_CARAVAN) {
-        you.props[CARAVAN_MERCENARY] = true;
-    }
-
     give_job_skills(you.char_class);
 
     if (job_gets_ranged_weapons(you.char_class))
@@ -503,6 +499,9 @@ static void _setup_generic(const newgame_def& ng)
             //for melted knight
             you.chapter = CHAPTER_STARTING_SLIME;
         }
+    }
+    else if (ng.job == JOB_CARAVAN) {
+        you.props[CARAVAN_MERCENARY] = ng.job_specific + 1;
     }
 
     you.chr_class_name = get_job_name(you.char_class);
