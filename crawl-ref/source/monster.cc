@@ -5084,7 +5084,12 @@ int monster::foe_distance() const
                 : INFINITE_DISTANCE;
 }
 
-bool monster::can_go_frenzy() const
+/**
+ * Can the monster suffer ENCH_FRENZY?
+ *
+ * @param check_sleep  Consider sleeping monsters as immune.
+ */
+bool monster::can_go_frenzy(bool check_sleep) const
 {
     if (mons_is_tentacle_or_tentacle_segment(type))
         return false;
@@ -5094,7 +5099,7 @@ bool monster::can_go_frenzy() const
     if (mons_intel(*this) == I_BRAINLESS && !(holiness() & MH_NATURAL))
         return false;
 
-    if (paralysed() || petrified() || petrifying() || asleep())
+    if (paralysed() || petrified() || petrifying() || check_sleep && asleep())
         return false;
 
     if (berserk_or_insane() || has_ench(ENCH_FATIGUE))

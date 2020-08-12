@@ -347,7 +347,7 @@ public:
                bool temp = true) const override;
 
     void attacking(actor *other, bool ranged) override;
-    bool can_go_frenzy() const;
+    bool can_go_frenzy(bool check_sleep = true) const;
     bool can_go_berserk() const override;
     bool go_berserk(bool intentional, bool potion = false) override;
     bool go_frenzy(actor *source);
