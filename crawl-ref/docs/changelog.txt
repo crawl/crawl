@@ -53,7 +53,7 @@ Character
 
 Gods
 ----
-* Ru now considers Necromancy a major sacrifice and Charms a moderate sacrifice
+* Ru now considers Necromancy a major sacrifice.
 * Nemelex' Shaft card is removed, the Exile card no longer has a chance to
   self banish.
 * Gozag no longer offers flight potions in petition and occasionally offers
