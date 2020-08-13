@@ -2373,6 +2373,7 @@ spret cast_thunderbolt(actor *caster, int pow, coord_def aim, bool fail)
     bolt beam;
     beam.name              = "thunderbolt";
     beam.aux_source        = "lightning rod";
+    beam.origin_spell      = SPELL_THUNDERBOLT;
     beam.flavour           = BEAM_ELECTRICITY;
     beam.glyph             = dchar_glyph(DCHAR_FIRED_BURST);
     beam.colour            = LIGHTCYAN;
@@ -3074,6 +3075,7 @@ static void _hailstorm_cell(coord_def where, int pow, actor *agent)
     beam.hit        = 18 + pow / 6;
     beam.name       = "hail";
     beam.hit_verb   = "pelts";
+    beam.origin_spell = SPELL_HAILSTORM;
 
     monster *mons = monster_at(where);
     if (mons && mons->is_icy())
