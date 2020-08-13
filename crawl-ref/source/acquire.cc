@@ -53,7 +53,8 @@ static armour_type _acquirement_armour_for_slot(equipment_type, bool);
 static armour_type _acquirement_shield_type();
 static armour_type _acquirement_body_armour(bool);
 static armour_type _useless_armour_type();
-
+static void _make_acquirement_items(vector<object_class_type>&);
+static void _make_artefact_acquirement_items(vector<object_class_type>&);
 
 /**
  * Get a randomly rounded value for the player's specified skill, unmodified
@@ -1541,6 +1542,120 @@ int acquirement_create_item(object_class_type class_wanted,
     return thing_created;
 }
 
+int acquirement_artefact(object_class_type class_wanted, 
+                          bool randart,
+                          const coord_def &pos)
+{
+    ASSERT(class_wanted != OBJ_RANDOM);
+	int thing_created = NON_ITEM;
+	int quant = 1;
+	bool quiet = true;
+	bool divine = false;
+
+    // MAX_ACQ_TRIES was already defiend
+    for (int item_tries = 0; item_tries < MAX_ACQ_TRIES; item_tries++)
+	{
+	    int type_wanted = -1;
+
+        type_wanted = _find_acquirement_subtype(class_wanted, quant,
+		                                            false, AQ_SCROLL);
+		ASSERT(type_wanted != -1);
+
+		bool want_arts = (class_wanted != OBJ_BOOKS);
+
+		thing_created = items(want_arts, class_wanted, type_wanted,
+		                      ITEM_LEVEL, 0, AQ_SCROLL);
+
+		if (thing_created == NON_ITEM)
+		{
+		    if (!quiet)
+			    dprf("Failed to make thing!");
+		    continue;
+		}
+
+		item_def &acq_item(mitm[thing_created]);
+
+		const string rejection_reason = _why_reject(acq_item, AQ_SCROLL);
+		if (!rejection_reason.empty())
+		{
+		    if (!quiet)
+			    dprf("%s", rejection_reason.c_str());
+		    destroy_item(acq_item);
+			thing_created = NON_ITEM;
+			continue;
+		}
+
+        ASSERT(acq_item.is_valid());
+
+		if (!is_artefact(acq_item))
+		{
+			if (randart)
+			    make_item_randart(acq_item);
+			else
+			{
+			    if (player_in_branch(BRANCH_PANDEMONIUM)
+				        || player_in_branch(BRANCH_ABYSS) )
+				    randart = true;
+
+				int idx = find_okay_unrandart( class_wanted, OBJ_RANDOM,
+				                               player_in_branch(BRANCH_ABYSS) );
+
+                if (idx != -1 || !randart)
+			        make_item_unrandart(acq_item, idx);
+				else
+				{
+				    randart = true;
+				    continue;
+				}
+			}
+		}
+
+		// Remove curse flag from item, unless worshipping Ashenzari.
+		if (have_passive(passive_t::want_curses))
+		    do_curse_item(acq_item, true);
+		else
+		    do_uncurse_item(acq_item);
+
+		//Last check: same to acquirement_create_item
+		int oldflags = acq_item.flags;
+		acq_item.flags |= ISFLAG_KNOW_TYPE;
+		if ( is_useless_item(acq_item, false || god_hates_item(acq_item) ) )
+		{
+		    if (!quiet)
+			    dprf("destroying useless item");
+			destroy_item(thing_created);
+			thing_created = NON_ITEM;
+			continue;
+		}
+		acq_item.flags = oldflags;
+		break;
+	}
+
+	if (thing_created == NON_ITEM)
+	    return _failed_acquirement(quiet);
+	
+	item_set_appearance(mitm[thing_created]);
+
+	if (thing_created != NON_ITEM)
+	{
+	    ASSERT(mitm[thing_created].is_valid());
+		mitm[thing_created].props[ACQUIRE_KEY].get_int() = AQ_SCROLL;
+	}
+
+	ASSERT(!is_useless_item(mitm[thing_created], false));
+	ASSERT(!god_hates_item(mitm[thing_created]));
+
+	if (pos.origin())
+	    return thing_created;
+
+	if (thing_created != NON_ITEM && !quiet)
+	    canned_msg(MSG_SOMETHING_APPEARS);
+
+	move_item_to_grid(&thing_created, pos);
+    
+	return thing_created;
+}
+
 class AcquireMenu : public InvMenu
 {
     friend class AcquireEntry;
@@ -1760,10 +1875,10 @@ static item_def _acquirement_item_def(object_class_type item_type)
 {
     item_def item;
 
-    const int item_index = acquirement_create_item(item_type, AQ_SCROLL, true);
+	const int item_index = acquirement_create_item(item_type, AQ_SCROLL, true);
 
     if (item_index != NON_ITEM)
-    {
+	{
         ASSERT(!god_hates_item(mitm[item_index]));
 
         // We make a copy of the item def, but we don't keep the real item.
@@ -1777,32 +1892,66 @@ static item_def _acquirement_item_def(object_class_type item_type)
     return item;
 }
 
-static void _make_acquirement_items()
+static item_def _acquirement_artefact_def(object_class_type item_type, bool randart)
+{
+    item_def item;
+
+	const int item_index = acquirement_artefact(item_type, randart);
+
+    if (item_index != NON_ITEM)
+	{
+        ASSERT(!god_hates_item(mitm[item_index]));
+
+        // We make a copy of the item def, but we don't keep the real item.
+        item = mitm[item_index];
+        set_ident_flags(item,
+            // Act as if we've recieved this item already to prevent notes.
+            ISFLAG_IDENT_MASK | ISFLAG_NOTED_ID | ISFLAG_NOTED_GET);
+        destroy_item(item_index);
+    }
+
+    return item;
+}
+
+static void _set_acquirement_items(bool make_artefact)
 {
     vector<object_class_type> rand_classes;
 
     if (you.species != SP_FELID && you.species != SP_CRUSTACEAN && you.species != SP_HYDRA)
     {
         rand_classes.emplace_back(OBJ_WEAPONS);
-        rand_classes.emplace_back(OBJ_MISSILES);
-        rand_classes.emplace_back(OBJ_RODS);
         rand_classes.emplace_back(OBJ_ARMOUR);
-        rand_classes.emplace_back(OBJ_STAVES);
+
+        // don't exist (un)random artefact
+		if (!make_artefact) {
+            rand_classes.emplace_back(OBJ_RODS);
+            rand_classes.emplace_back(OBJ_STAVES);
+		}
     }
     else if (you.species == SP_CRUSTACEAN) {
         //SP_CRUSTACEAN
         rand_classes.emplace_back(OBJ_WEAPONS);
-        rand_classes.emplace_back(OBJ_MISSILES);
     }
     else if (you.species == SP_HYDRA) {
         //SP_CRUSTACEAN
-        rand_classes.emplace_back(OBJ_MISSILES);
         rand_classes.emplace_back(OBJ_ARMOUR);
     }
 
     rand_classes.emplace_back(OBJ_JEWELLERY);
-    rand_classes.emplace_back(OBJ_BOOKS);
 
+    if (!make_artefact) {
+        rand_classes.emplace_back(OBJ_BOOKS);
+        rand_classes.emplace_back(OBJ_MISSILES);
+
+        _make_acquirement_items(rand_classes);
+	}
+	else
+	    _make_artefact_acquirement_items(rand_classes);
+	// artefact book is very powerful. furthermore no funny
+}
+
+static void _make_acquirement_items(vector<object_class_type>& rand_classes)
+{
     const int num_wanted = min(3, (int)rand_classes.size());
     shuffle_array(rand_classes);
 
@@ -1834,6 +1983,41 @@ static void _make_acquirement_items()
     }
 }
 
+static void _make_artefact_acquirement_items(vector<object_class_type>& rand_classes)
+{
+
+    const int wanted_randart_num = min(2, (int)rand_classes.size());
+    const int wanted_unrandart_num = 5;
+    shuffle_array(rand_classes);
+
+    CrawlVector& acq_items = you.props[ACQUIRE_ITEMS_KEY].get_vector();
+    acq_items.empty();
+
+    // Generate item defs until we have enough, skipping any random classes
+    // that fail to generate an item.
+	for (auto obj_type : rand_classes)
+	{
+	    if (acq_items.size() >= wanted_randart_num)
+		    break;
+
+        // make randart
+	    auto item = _acquirement_artefact_def(obj_type, true);
+		if (item.defined())
+		    acq_items.push_back(item);
+	}
+
+    do
+	{
+	    auto obj_type = rand_classes[random2((int)rand_classes.size())];
+
+		// make unrandart
+	    auto item = _acquirement_artefact_def(obj_type, false);
+        if (item.defined())
+            acq_items.push_back(item);
+
+    }
+    while(acq_items.size() < wanted_randart_num + wanted_unrandart_num);
+}
 /*
  * Handle scroll of acquirement.
  *
@@ -1849,7 +2033,46 @@ bool acquirement_menu()
     ASSERT(!crawl_state.game_is_arena());
 
     if (!you.props.exists(ACQUIRE_ITEMS_KEY))
-        _make_acquirement_items();
+        _set_acquirement_items(false);
+
+    auto& acq_items = you.props[ACQUIRE_ITEMS_KEY].get_vector();
+
+#ifdef CLUA_BINDINGS
+    int index = 0;
+    if (!clua.callfn("c_choose_acquirement", ">d", &index))
+    {
+        if (!clua.error.empty())
+            mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
+    }
+    else if (index >= 1 && index <= acq_items.size())
+    {
+        _create_acquirement_item(acq_items[index - 1]);
+        return true;
+    }
+#endif
+
+    AcquireMenu acq_menu(acq_items);
+    acq_menu.show();
+
+    return !you.props.exists(ACQUIRE_ITEMS_KEY);
+}
+
+/*
+ * Handle scroll of get artefact.
+ *
+ * Generate artefacts choices as items in a prop if these don't already exist
+ * Then either get the acquirement choice from the c_choose_acquirement lua handler
+ * if one exists or present a menu for the player to choose an artefact.
+ * returns True if the scroll was used, false if it was canceled.
+ 
+ don't modify part of lua handle. It can be occuring error
+*/
+bool artefact_acquirement_menu()
+{
+    ASSERT(!crawl_state.game_is_arena());
+
+    if (!you.props.exists(ACQUIRE_ITEMS_KEY))
+        _set_acquirement_items(true);
 
     auto& acq_items = you.props[ACQUIRE_ITEMS_KEY].get_vector();
 

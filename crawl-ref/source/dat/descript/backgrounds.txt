@@ -43,6 +43,11 @@ Conjurer
 
 Conjurers confront problems with damaging spells.
 %%%%
+Collector
+
+Collect always hankered to find the Orb in Dungeon. Collector have unique scrolls.
+but, That's All
+%%%%
 Earth Elementalist
 
 Earth Elementalists know the Sandblast spell, and carry stones to fuel the

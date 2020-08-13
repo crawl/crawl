@@ -400,6 +400,7 @@ enum scroll_type
     SCR_MAGIC_MAPPING,
     SCR_FOG,
     SCR_ACQUIREMENT,
+    SCR_GET_ARTEFACT,
 #if TAG_MAJOR_VERSION == 34
     SCR_ENCHANT_WEAPON_II,
 #endif

@@ -1447,9 +1447,12 @@ static void _generate_scroll_item(item_def& item, int force_type,
                  15, (depth_mod < 4 ? NUM_SCROLLS : SCR_SILENCE),
                  15, (depth_mod < 4 ? NUM_SCROLLS : SCR_BRAND_WEAPON),
                  15, (depth_mod < 4 ? NUM_SCROLLS : SCR_TORMENT),
-                 15, (depth_mod < 4 ? NUM_SCROLLS : SCR_HOLY_WORD));
+                 15, (depth_mod < 4 ? NUM_SCROLLS : SCR_HOLY_WORD),
+				 // DON'T MAKE UNIQUE SCROLL
+				 0, SCR_GET_ARTEFACT);
         }
-        while (item.sub_type == NUM_SCROLLS
+        while (item.sub_type == NUM_SCROLLS 
+		       || item.sub_type == SCR_GET_ARTEFACT
                || agent == GOD_XOM
                   && _is_boring_item(OBJ_SCROLLS, item.sub_type)
                   && --tries > 0);

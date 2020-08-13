@@ -3592,7 +3592,8 @@ static bool _is_cancellable_scroll(scroll_type scroll)
            || scroll == SCR_BRAND_WEAPON
            || scroll == SCR_ENCHANT_WEAPON
            || scroll == SCR_MAGIC_MAPPING
-           || scroll == SCR_ACQUIREMENT;
+           || scroll == SCR_ACQUIREMENT
+           || scroll == SCR_GET_ARTEFACT;
 }
 
 /**
@@ -3974,6 +3975,11 @@ void read_scroll(item_def& scroll)
         cancel_scroll = !acquirement_menu();
         break;
 
+    case SCR_GET_ARTEFACT:
+	        mpr("This is a scroll of get artefact!!!");
+        
+		cancel_scroll = !artefact_acquirement_menu();
+	    break;
     case SCR_FEAR:
         mpr("You assume a fearsome visage.");
         mass_enchantment(ENCH_FEAR, 1000);
