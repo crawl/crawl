@@ -662,7 +662,6 @@ static void _handle_wucad_mu(int cost)
     if (!x_chance_in_y(you.skill(SK_EVOCATIONS), 81))
         return;
 
-    did_god_conduct(DID_CHANNEL, 10, true);
     did_god_conduct(DID_WIZARDLY_ITEM, 10);
 
     // The chance of backfiring goes down with evo skill and up with cost

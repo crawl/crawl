@@ -305,11 +305,6 @@ bool is_hasty_item(const item_def& item, bool calc_unid)
     return retval;
 }
 
-bool is_channeling_item(const item_def& item, bool calc_unid)
-{
-    return is_unrandom_artefact(item, UNRAND_WUCAD_MU);
-}
-
 bool is_wizardly_item(const item_def& item, bool calc_unid)
 {
     if ((calc_unid || item_brand_known(item))
@@ -405,9 +400,6 @@ vector<conduct_type> item_conducts(const item_def &item)
 
     if (_is_potentially_hasty_item(item) || is_hasty_item(item, false))
         conducts.push_back(DID_HASTY);
-
-    if (is_channeling_item(item, false))
-        conducts.push_back(DID_CHANNEL);
 
     if (is_potentially_evil_item(item, false))
         conducts.push_back(DID_EVIL);
