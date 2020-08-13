@@ -523,7 +523,6 @@ static int _spell_enhancement(spell_type spell)
         enhanced -= 2;
 
     enhanced += you.archmagi();
-    enhanced += player_equip_unrand(UNRAND_MAJIN);
     enhanced += you.duration[DUR_BRILLIANCE] > 0;
 
     // These are used in an exponential way, so we'll limit them a bit. -- bwr

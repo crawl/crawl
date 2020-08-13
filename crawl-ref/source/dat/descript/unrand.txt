@@ -620,10 +620,11 @@ rather heavy...
 %%%%
 Majin-Bo
 
-A staff inhabited by a mighty demon, tricked and trapped in this form long
-ago. To survive, she now offers tremendous arcane power at a small price: a
-tiny portion of the caster's life essence, taken alongside the magic used every
-time its wielder casts a spell.
+A staff inhabited by a mighty demon, tricked and trapped in this form long ago.
+To survive, she now offers great arcane power in a terrible bargain: in
+exchange for a tiny portion of the caster's life essence, taken alongside the
+magic used every time its wielder casts a spell, she will occasionally redirect
+the life essence of creatures damaged by the spell to the caster.
 %%%%
 pair of quick blades "Gyre" and "Gimble"
 

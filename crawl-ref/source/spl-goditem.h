@@ -85,3 +85,4 @@ void cleansing_flame(int pow, cleansing_flame_source caster, coord_def where,
                      actor *attacker = nullptr);
 
 spret cast_random_effects(int pow, bolt& beam, bool fail);
+void majin_bo_vampirism(monster &mon, int damage);
