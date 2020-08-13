@@ -1246,25 +1246,34 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         item.base_type = OBJ_WEAPONS;
         item.sub_type  = WPN_FLAIL;
         item.flags    |= ISFLAG_KNOW_TYPE;
+        level          = 0;
+        force_uncursed = true;
         break;
     case MONS_MERC_SKALD:
         item.base_type = OBJ_WEAPONS;
         item.sub_type  = WPN_SPEAR;
         item.flags    |= ISFLAG_KNOW_TYPE;
+        level          = 0;
+        force_uncursed = true;
         break;
     case MONS_MERC_WITCH:
         item.base_type = OBJ_STAVES;
         item.sub_type  = random_choose(STAFF_FIRE, STAFF_COLD, STAFF_AIR);
+        force_uncursed = true;
         break;
     case MONS_MERC_BRIGAND:
         item.base_type = OBJ_WEAPONS;
         item.sub_type  = WPN_DAGGER;
         item.flags    |= ISFLAG_KNOW_TYPE;
+        level          = 0;
+        force_uncursed = true;
         break;
     case MONS_MERC_SHAMAN:
         item.base_type = OBJ_WEAPONS;
         item.sub_type  = WPN_CLUB;
         item.flags    |= ISFLAG_KNOW_TYPE;
+        level          = 0;
+        force_uncursed = true;
         break;
 
     default:
@@ -2206,6 +2215,9 @@ int make_mons_armour(monster_type type, int level)
     case MONS_MERC_FIGHTER:
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = ARM_SCALE_MAIL;
+        item.flags    |= ISFLAG_KNOW_TYPE;
+        level          = 0;
+        force_uncursed = true;
         break;
 
     case MONS_MERC_SKALD:
@@ -2213,11 +2225,17 @@ int make_mons_armour(monster_type type, int level)
     case MONS_MERC_SHAMAN:
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = ARM_LEATHER_ARMOUR;
+        item.flags    |= ISFLAG_KNOW_TYPE;
+        level          = 0;
+        force_uncursed = true;
         break;
 
     case MONS_MERC_WITCH:
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = ARM_ROBE;
+        item.flags    |= ISFLAG_KNOW_TYPE;
+        level          = 0;
+        force_uncursed = true;
         break;
 
     default:
