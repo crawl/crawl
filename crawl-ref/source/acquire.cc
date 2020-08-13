@@ -1610,6 +1610,10 @@ int acquirement_artefact(object_class_type class_wanted,
 			}
 		}
 
+        if (is_unrandom_artefact(acq_item) && ( player_in_branch(BRANCH_ABYSS) 
+		        || player_in_branch(BRANCH_PANDEMONIUM) ) )
+		    continue;
+
 		// Remove curse flag from item, unless worshipping Ashenzari.
 		if (have_passive(passive_t::want_curses))
 		    do_curse_item(acq_item, true);
