@@ -56,6 +56,12 @@ static armour_type _useless_armour_type();
 static void _make_acquirement_items(vector<object_class_type>&);
 static void _make_artefact_acquirement_items(vector<object_class_type>&);
 
+static jewellery_type octoring_types[8] =
+{
+    RING_SEE_INVISIBLE, RING_PROTECTION_FROM_FIRE, RING_PROTECTION_FROM_COLD,
+    RING_RESIST_CORROSION, RING_STEALTH, RING_WIZARDRY, RING_MAGICAL_POWER,
+    RING_LIFE_PROTECTION
+};
 /**
  * Get a randomly rounded value for the player's specified skill, unmodified
  * by crosstraining, draining, etc.
@@ -1600,7 +1606,7 @@ int acquirement_artefact(object_class_type class_wanted,
 				int idx = find_okay_unrandart( class_wanted, OBJ_RANDOM,
 				                               player_in_branch(BRANCH_ABYSS) );
 			    
-                if (idx != -1 || !randart)
+                if (idx != -1 && !randart)
 			        make_item_unrandart(acq_item, idx);
 				else
 				{
@@ -1783,6 +1789,19 @@ static void _create_acquirement_item(item_def& item)
                 || !is_unrandom_artefact(aitem, item.unrand_idx)))
         {
             set_unique_item_status(aitem, UNIQ_NOT_EXISTS);
+
+			if (is_unrandom_artefact(aitem, UNRAND_OCTOPUS_KING_RING) )
+			{
+			    for (int which = 0; which < 8; which++)
+				{
+				    if (aitem.get_item().sub_type == octoring_types[which])
+					{
+					    you.octopus_king_rings &= 0 << which;
+						break;
+					}
+				}
+			}
+					    
         }
     }
 
