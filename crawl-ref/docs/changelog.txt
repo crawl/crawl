@@ -1,4 +1,4 @@
-Stone Soup 0.26 (through 0.26-a0-495-g20a46bd)
+Stone Soup 0.26 (through 0.26-a0-533-gf6d3885)
 ----------------------------------------------
 
 Highlights
@@ -17,6 +17,7 @@ Branches, Environment
 * Spider is now quiet.
 * The malevolent force of Zot will find players that tarry far too long in one
   place.
+* Gauntlet monsters now generate awake.
 
 Character
 ---------
@@ -87,14 +88,25 @@ Items
   quarterstaffs, lajatangs, and two-handed randarts of any base type. On hit
   the ego spawns a spectral weapon to fight along side the user whose strength
   scales with Evocations skill.
-* The Salamander Hide Armour no longer gives *Rage, it now is a fire spell
-  enhancer with rF++, rC--, flame cloud immunity, and a ring of flame clouds
-  effect.
+* Unrandart Changes:
+  - The Salamander Hide Armour no longer gives *Rage, it now is a fire spell
+    enhancer with rF++, rC--, flame cloud immunity, and a ring of flame clouds
+    effect.
+  - The ratskin cloak is changed from +Rats to *Rats, spawning rats when the
+    player is hit.
+  - Wucad Mu no longer provides evocable channeling. Instead, with a chance
+    depending on evocations, it refunds the MP cost of the spell. There is a
+    chance of confusion or intelligence drain (which scales on spell cost and
+    evocations skill) when a spell is refunded.
+  - The cloak of the Thief is changed from +Fog to *Fog, creating fog when the
+    player is hit.
+  - The Majin-Bo loses Archmagi, and instead gives a chance for any cast spell
+    to be vampiric, healing the caster for damage done to living creatures.
+  - The shield of Resistance is now a +2 kite shield {rF++ rC++ MR++}.
 * The contents of item piles are revealed on sight, instead of on visit.
 * New boots ego: Rampaging. Boots of rampaging cause the wearer to take an
-  extra step for no cost---only when moving in the direction of a foe.
-* The ratskin cloak is changed from +Rats to *Rats, spawning rats when the
-  player is hit.
+  extra step for no cost---only when moving in the direction of a foe. The
+  rampaging ego can also appear on all randart armour.
 * Minotaur headbutts, hydra head-chopping, and *Rage are no longer triggered
   on ripostes.
 * Phantom mirrors and Boxes of Beasts now recharge with XP, mirrors have a
@@ -103,6 +115,7 @@ Items
   that creates clouds around hostile monsters (skipping allies). The cloud
   quality scales with evocations.
 * Wands of Clouds are removed.
+* Staves of Energy are removed.
 
 Lua
 ---
@@ -115,6 +128,9 @@ Monsters
 * Spiny Frogs are renamed Cane Toads, for a more authentic Australian
   experience
 * Pandemonium lords' possible spells and melee flavours have been expanded
+* Pandemonium lords have a chance to come with a ring of clouds in one of the
+  following flavours: flame, thunder, chaos, mutation, ice, draining, acid,
+  miasma.
 * The blood scent and web sense monster AI logic is removed.
 * Hungry ghosts are removed.
 * Monsters don't forget about the player while the player is off level.
