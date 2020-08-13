@@ -1283,6 +1283,24 @@ bool monster::pickup_launcher(item_def &launch, bool msg, bool force)
             if (!is_range_weapon(*elaunch))
                 continue;
 
+            if (type == MONS_MERC_FIGHTER
+                || type == MONS_MERC_KNIGHT
+                || type == MONS_MERC_DEATH_KNIGHT
+                || type == MONS_MERC_PALADIN
+                || type == MONS_MERC_SKALD
+                || type == MONS_MERC_INFUSER
+                || type == MONS_MERC_TIDEHUNTER
+                || type == MONS_MERC_WITCH
+                || type == MONS_MERC_SORCERESS
+                || type == MONS_MERC_ELEMENTALIST
+                || type == MONS_MERC_BRIGAND
+                || type == MONS_MERC_ASSASSIN
+                || type == MONS_MERC_CLEANER
+                || type == MONS_MERC_SHAMAN
+                || type == MONS_MERC_SHAMAN_II
+                || type == MONS_MERC_SHAMAN_III)
+                return drop_item(slot, msg) && pickup(launch, slot, msg);
+
             return (fires_ammo_type(*elaunch) == mt || !missiles())
                    && (mons_weapon_damage_rating(*elaunch) < mdam_rating
                        || mons_weapon_damage_rating(*elaunch) == mdam_rating
@@ -1522,6 +1540,25 @@ bool monster::pickup_melee_weapon(item_def &item, bool msg)
                          + _ego_damage_bonus(*mslot_item(MSLOT_WEAPON)))
                 {
                     eslot = slot;
+
+                    if (type == MONS_MERC_FIGHTER
+                    || type == MONS_MERC_KNIGHT
+                    || type == MONS_MERC_DEATH_KNIGHT
+                    || type == MONS_MERC_PALADIN
+                    || type == MONS_MERC_SKALD
+                    || type == MONS_MERC_INFUSER
+                    || type == MONS_MERC_TIDEHUNTER
+                    || type == MONS_MERC_WITCH
+                    || type == MONS_MERC_SORCERESS
+                    || type == MONS_MERC_ELEMENTALIST
+                    || type == MONS_MERC_BRIGAND
+                    || type == MONS_MERC_ASSASSIN
+                    || type == MONS_MERC_CLEANER
+                    || type == MONS_MERC_SHAMAN
+                    || type == MONS_MERC_SHAMAN_II
+                    || type == MONS_MERC_SHAMAN_III)
+                        return pickup(item, eslot, msg);
+
                     if (!dual_wielding)
                         break;
                 }
@@ -1768,6 +1805,25 @@ bool monster::pickup_armour(item_def &item, bool msg, bool force)
     // Simplistic armour evaluation (comparing AC and resistances).
     if (const item_def *existing_armour = slot_item(eq, false))
     {
+
+        if (type == MONS_MERC_FIGHTER
+            || type == MONS_MERC_KNIGHT
+            || type == MONS_MERC_DEATH_KNIGHT
+            || type == MONS_MERC_PALADIN
+            || type == MONS_MERC_SKALD
+            || type == MONS_MERC_INFUSER
+            || type == MONS_MERC_TIDEHUNTER
+            || type == MONS_MERC_WITCH
+            || type == MONS_MERC_SORCERESS
+            || type == MONS_MERC_ELEMENTALIST
+            || type == MONS_MERC_BRIGAND
+            || type == MONS_MERC_ASSASSIN
+            || type == MONS_MERC_CLEANER
+            || type == MONS_MERC_SHAMAN
+            || type == MONS_MERC_SHAMAN_II
+            || type == MONS_MERC_SHAMAN_III)
+            return pickup(item, mslot, msg);
+
         if (!force)
         {
             int value_old = _get_monster_armour_value(this,
