@@ -2609,7 +2609,7 @@ static vector<command_type> _allowed_actions(const item_def& item)
     return actions;
 }
 
-static string _actions_desc(const vector<command_type>& actions, const item_def& item)
+static string _actions_desc(const vector<command_type>& actions)
 {
     static const map<command_type, string> act_str =
     {
@@ -2819,7 +2819,7 @@ command_type describe_item_popup(const item_def &item,
     {
         if (!spells.empty())
             footer_text.cprintf("Select a spell, or ");
-        footer_text += formatted_string(_actions_desc(actions, item));
+        footer_text += formatted_string(_actions_desc(actions));
         auto footer = make_shared<Text>();
         footer->set_text(footer_text);
         footer->set_margin_for_crt(1, 0, 0, 0);
