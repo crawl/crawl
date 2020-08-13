@@ -389,8 +389,8 @@ static void _player_hurt_monster(monster &mon, int damage, beam_type flavour,
 
     if (damage)
     {
-        const int damage_done = mon.hurt(&you, damage, flavour, KILLED_BY_BEAM);
-        majin_bo_vampirism(mon, damage_done);
+        majin_bo_vampirism(mon, min(damage, mon.stat_hp()));
+        mon.hurt(&you, damage, flavour, KILLED_BY_BEAM);
     }
 
     if (mon.alive())
