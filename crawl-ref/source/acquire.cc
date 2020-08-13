@@ -1599,7 +1599,7 @@ int acquirement_artefact(object_class_type class_wanted,
 
 				int idx = find_okay_unrandart( class_wanted, OBJ_RANDOM,
 				                               player_in_branch(BRANCH_ABYSS) );
-
+			    
                 if (idx != -1 || !randart)
 			        make_item_unrandart(acq_item, idx);
 				else
@@ -1612,7 +1612,10 @@ int acquirement_artefact(object_class_type class_wanted,
 
         if (is_unrandom_artefact(acq_item) && ( player_in_branch(BRANCH_ABYSS) 
 		        || player_in_branch(BRANCH_PANDEMONIUM) ) )
+		{
+		    randart = true;
 		    continue;
+		}
 
 		// Remove curse flag from item, unless worshipping Ashenzari.
 		if (have_passive(passive_t::want_curses))
