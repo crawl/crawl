@@ -7113,6 +7113,68 @@ static bool _caravan_gift_items_to(monster* mons, int item_slot)
             mprf("%s isn't enough skilled to equip %s!",
             mons->name(DESC_THE, false).c_str(), gift.name(DESC_THE, false).c_str());
             return false;
+        }
+
+        // after grow, shaman becomes jack-of-all-trades
+        if (mons->type == MONS_MERC_SHAMAN
+            && (gift.sub_type == WPN_SCIMITAR
+                || gift.sub_type == WPN_DOUBLE_SWORD
+                || gift.sub_type == WPN_GREAT_SWORD
+                || gift.sub_type == WPN_TRIPLE_SWORD
+                || gift.sub_type == WPN_LAJATANG
+                || gift.sub_type == WPN_WAR_AXE
+                || gift.sub_type == WPN_BROAD_AXE
+                || gift.sub_type == WPN_BATTLEAXE
+                || gift.sub_type == WPN_EXECUTIONERS_AXE
+                || gift.sub_type == WPN_SCYTHE
+                || gift.sub_type == WPN_HALBERD
+                || gift.sub_type == WPN_GLAIVE
+                || gift.sub_type == WPN_BARDICHE
+                || gift.sub_type == WPN_FLAIL
+                || gift.sub_type == WPN_MORNINGSTAR
+                || gift.sub_type == WPN_EVENINGSTAR
+                || gift.sub_type == WPN_GREAT_MACE
+                || gift.sub_type == WPN_GIANT_CLUB
+                || gift.sub_type == WPN_GIANT_SPIKED_CLUB))
+        {
+            mprf("%s isn't enough skilled to equip %s!",
+            mons->name(DESC_THE, false).c_str(), gift.name(DESC_THE, false).c_str());
+            return false;
+        }
+
+        if (mons->type == MONS_MERC_SHAMAN_II
+            && (gift.sub_type == WPN_DOUBLE_SWORD
+                || gift.sub_type == WPN_GREAT_SWORD
+                || gift.sub_type == WPN_TRIPLE_SWORD
+                || gift.sub_type == WPN_BROAD_AXE
+                || gift.sub_type == WPN_BATTLEAXE
+                || gift.sub_type == WPN_EXECUTIONERS_AXE
+                || gift.sub_type == WPN_SCYTHE
+                || gift.sub_type == WPN_GLAIVE
+                || gift.sub_type == WPN_BARDICHE
+                || gift.sub_type == WPN_MORNINGSTAR
+                || gift.sub_type == WPN_EVENINGSTAR
+                || gift.sub_type == WPN_GREAT_MACE
+                || gift.sub_type == WPN_GIANT_CLUB
+                || gift.sub_type == WPN_GIANT_SPIKED_CLUB))
+        {
+            mprf("%s isn't enough skilled to equip %s!",
+            mons->name(DESC_THE, false).c_str(), gift.name(DESC_THE, false).c_str());
+            return false;
+        } }
+
+        if (mons->type == MONS_MERC_SHAMAN_III
+            && (gift.sub_type == WPN_TRIPLE_SWORD
+                || gift.sub_type == WPN_EXECUTIONERS_AXE
+                || gift.sub_type == WPN_SCYTHE
+                || gift.sub_type == WPN_BARDICHE
+                || gift.sub_type == WPN_GREAT_MACE
+                || gift.sub_type == WPN_GIANT_CLUB
+                || gift.sub_type == WPN_GIANT_SPIKED_CLUB))
+        {
+            mprf("%s isn't enough skilled to equip %s!",
+            mons->name(DESC_THE, false).c_str(), gift.name(DESC_THE, false).c_str());
+            return false;
         } }
 
     if (body_slot && !is_shield(gift)) {// body armours.
