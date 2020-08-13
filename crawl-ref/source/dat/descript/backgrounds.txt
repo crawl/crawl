@@ -45,8 +45,8 @@ Conjurers confront problems with damaging spells.
 %%%%
 Collector
 
-Collect always hankered to find the Orb in Dungeon. Collector have unique scrolls.
-but, That's All
+Collector always hankered to find the Orb in Dungeon. Collector have unique scrolls
+which summon artefact from Collector's artefact Collections. but, That's All
 %%%%
 Earth Elementalist
 

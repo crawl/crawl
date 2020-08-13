@@ -327,9 +327,8 @@ static const map<job_type, job_def> job_data =
 { JOB_COLLECTOR, {
     "Cl", "Collector",
     5, 3, 4,
-    { SP_HALFLING, SP_CENTAUR, SP_MERFOLK, SP_BASE_DRACONIAN, SP_VAMPIRE, SP_HOMUNCULUS},
-    //{ SP_HILL_ORC, SP_MINOTAUR, SP_DEMIGOD, SP_OCTOPODE, SP_TROLL, SP_FELID, SP_HUMAN },
-    { "scroll of get artefact q:2" }, 
+    { SP_HILL_ORC, SP_MINOTAUR, SP_DEMIGOD, SP_OCTOPODE, SP_TROLL, SP_FELID, SP_HUMAN },
+    { "scroll of collection q:2" }, 
     WCHOICE_NONE,
     { { SK_FIGHTING, 1 } }, 
 } },

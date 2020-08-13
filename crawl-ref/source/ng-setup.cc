@@ -408,7 +408,7 @@ static void _give_basic_knowledge()
     // scroll of get artefact can't be generated naturally
 	item_def dummy;
 	dummy.base_type = OBJ_SCROLLS;
-	dummy.sub_type = SCR_GET_ARTEFACT;
+	dummy.sub_type = SCR_COLLECTION;
     set_ident_type(dummy , true);
 
     // Removed item types are handled in _set_removed_types_as_identified.
