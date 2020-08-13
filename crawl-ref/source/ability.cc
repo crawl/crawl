@@ -338,8 +338,6 @@ static const ability_def Ability_List[] =
 #endif
     { ABIL_EVOKE_FLIGHT, "Evoke Flight",
       1, 0, 0, {fail_basis::evo, 40, 2}, abflag::none },
-    { ABIL_EVOKE_FOG, "Evoke Fog",
-      2, 0, 0, {fail_basis::evo, 50, 2}, abflag::none },
     { ABIL_EVOKE_THUNDER, "Evoke Thunderclouds",
       5, 0, 0, {fail_basis::evo, 60, 2}, abflag::none },
 
@@ -1592,21 +1590,6 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         return you.can_go_berserk(true, false, true)
                && (quiet || berserk_check_wielded_weapon());
 
-    case ABIL_EVOKE_FOG:
-        if (cloud_at(you.pos()))
-        {
-            if (!quiet)
-                mpr("It's too cloudy to do that here.");
-            return false;
-        }
-        if (env.level_state & LSTATE_STILL_WINDS)
-        {
-            if (!quiet)
-                mpr("The air is too still for clouds to form.");
-            return false;
-        }
-        return true;
-
     case ABIL_GOZAG_POTION_PETITION:
         return gozag_setup_potion_petition(quiet);
 
@@ -2195,12 +2178,6 @@ static spret _do_ability(const ability_def& abil, bool fail)
             fly_player(
                 player_adjust_evoc_power(you.skill(SK_EVOCATIONS, 2) + 30));
         }
-        break;
-
-    case ABIL_EVOKE_FOG:     // cloak of the Thief
-        fail_check();
-        mpr("With a swish of your cloak, you release a cloud of fog.");
-        big_cloud(random_smoke_type(), &you, you.pos(), 50, 8 + random2(8));
         break;
 
     case ABIL_EVOKE_THUNDER: // robe of Clouds
@@ -3519,12 +3496,6 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
         && !you.get_mutation_level(MUT_NO_ARTIFICE))
     {
         _add_talent(talents, ABIL_EVOKE_BLINK, check_confused);
-    }
-
-    if (player_equip_unrand(UNRAND_THIEF)
-        && !you.get_mutation_level(MUT_NO_ARTIFICE))
-    {
-        _add_talent(talents, ABIL_EVOKE_FOG, check_confused);
     }
 
     if (player_equip_unrand(UNRAND_RCLOUDS)

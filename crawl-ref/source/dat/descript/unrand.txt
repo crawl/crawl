@@ -305,8 +305,9 @@ animals, each chosen for the unique strengths it could grant the robe's wearer.
 %%%%
 cloak of the Thief
 
-A pitch-black cloak which allows its wearer to excel in the arts of thievery,
-and can be evoked to release thick clouds of smoke for a hasty escape.
+A pitch-black cloak which allows its wearer to excel in the arts of thievery
+and escape. Blows received by the wearer will cause the cloak release thick
+clouds of smoke for a hasty escape.
 %%%%
 # TAG_MAJOR_VERSION == 34
 tower shield "Bullseye"

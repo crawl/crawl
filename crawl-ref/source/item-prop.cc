@@ -2659,11 +2659,8 @@ bool gives_ability(const item_def &item)
             return true;
 
     // Unrands that grant an evokable ability.
-    if (is_unrandom_artefact(item, UNRAND_THIEF)
-        || is_unrandom_artefact(item, UNRAND_RCLOUDS))
-    {
+    if (is_unrandom_artefact(item, UNRAND_RCLOUDS))
         return true;
-    }
 
     return false;
 }
