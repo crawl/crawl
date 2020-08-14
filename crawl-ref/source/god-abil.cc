@@ -7017,7 +7017,9 @@ static bool _caravan_gift_items_to(monster* mons, int item_slot)
                 mons->name(DESC_THE, false).c_str(), gift.name(DESC_THE, false).c_str());
                 return false;
             }
-            else {
+            else if (mons->type != MONS_MERC_SHAMAN
+                     && mons->type != MONS_MERC_SHAMAN_II
+                     && mons->type != MONS_MERC_SHAMAN_III) {
                 mprf("%s isn't enough skilled to equip %s!",
                 mons->name(DESC_THE, false).c_str(), gift.name(DESC_THE, false).c_str());
                 return false;
