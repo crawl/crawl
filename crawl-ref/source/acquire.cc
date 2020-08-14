@@ -584,11 +584,6 @@ static int _acquirement_staff_subtype(bool /*divine*/, int & /*quantity*/,
                                              SK_LAST_MAGIC);
     bool found_enhancer = false;
     int result = 0;
-    do
-    {
-        result = random2(NUM_STAVES);
-    }
-    while (item_type_removed(OBJ_STAVES, result));
 
     switch (best_spell_skill)
     {
@@ -604,11 +599,17 @@ static int _acquirement_staff_subtype(bool /*divine*/, int & /*quantity*/,
 #undef TRY_GIVE
     default:                                           break;
     }
-    if (one_chance_in(found_enhancer ? 2 : 3))
+    if (found_enhancer && coinflip())
         return result;
 
-    // Otherwise give wizardry.
-    return STAFF_WIZARDRY;
+    // Otherwise give a random staff.
+    do
+    {
+        result = random2(NUM_STAVES);
+    }
+    while (item_type_removed(OBJ_STAVES, result));
+
+    return result;
 }
 
 /**

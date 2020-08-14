@@ -501,7 +501,7 @@ function coven_setup(e)
   e.kitem("d = potion of heal wounds q:5 ident:all")
   e.kitem("e = potion of haste q:5 ident:all")
   e.kitem("f = any wand good_item ident:all")
-  e.kitem("h = staff of wizardry ident:all")
+  e.kitem("h = any magical staff ident:all")
   e.kitem("i = potion of magic q:5 ident:all")
   e.kitem("j = potion of mutation ident:all")
   e.lua_marker('~', props_marker {

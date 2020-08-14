@@ -517,8 +517,8 @@ enum special_ring_type // jewellery mitm[].special values
 
 enum stave_type
 {
-    STAFF_WIZARDRY,
 #if TAG_MAJOR_VERSION == 34
+    STAFF_WIZARDRY,
     STAFF_POWER,
 #endif
     STAFF_FIRE,

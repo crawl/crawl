@@ -1083,8 +1083,8 @@ static const char* staff_type_name(int stafftype)
 {
     switch ((stave_type)stafftype)
     {
-    case STAFF_WIZARDRY:    return "wizardry";
 #if TAG_MAJOR_VERSION == 34
+    case STAFF_WIZARDRY:    return "wizardry";
     case STAFF_POWER:       return "power";
     case STAFF_ENERGY:      return "energy";
 #endif
@@ -3095,12 +3095,6 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
         }
         if (!ident && !item_type_known(item))
             return false;
-
-        switch (item.sub_type)
-        {
-        case STAFF_WIZARDRY:
-            return you_worship(GOD_TROG);
-        }
 
         return false;
 

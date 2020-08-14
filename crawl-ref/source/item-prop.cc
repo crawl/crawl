@@ -761,6 +761,7 @@ const set<pair<object_class_type, int> > removed_items =
     { OBJ_STAVES,    STAFF_POWER },
     { OBJ_STAVES,    STAFF_ENERGY },
     { OBJ_STAVES,    STAFF_SUMMONING },
+    { OBJ_STAVES,    STAFF_WIZARDRY },
     { OBJ_POTIONS,   POT_GAIN_STRENGTH },
     { OBJ_POTIONS,   POT_GAIN_DEXTERITY },
     { OBJ_POTIONS,   POT_GAIN_INTELLIGENCE },
@@ -1933,21 +1934,7 @@ bool staff_uses_evocations(const item_def &item)
         return true;
     }
 
-    if (!item_type_known(item) || item.base_type != OBJ_STAVES)
-        return false;
-
-    switch (item.sub_type)
-    {
-    case STAFF_FIRE:
-    case STAFF_COLD:
-    case STAFF_POISON:
-    case STAFF_DEATH:
-    case STAFF_AIR:
-    case STAFF_EARTH:
-        return true;
-    default:
-        return false;
-    }
+    return item.base_type == OBJ_STAVES;
 }
 
 bool item_skills(const item_def &item, set<skill_type> &skills)

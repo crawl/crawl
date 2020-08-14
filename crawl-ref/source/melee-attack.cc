@@ -2183,8 +2183,8 @@ bool melee_attack::apply_staff_damage()
     case STAFF_POWER:
     case STAFF_ENCHANTMENT:
     case STAFF_ENERGY:
-#endif
     case STAFF_WIZARDRY:
+#endif
         break;
 
     default:

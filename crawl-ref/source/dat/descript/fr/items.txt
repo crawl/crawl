@@ -858,11 +858,6 @@ staff of conjuration
 
 Ce bâton accroit la puissance des conjurations de son porteur.
 %%%%
-staff of wizardry
-
-Ce bâton accroit significativement l'aptitude de son porteur à lancer des
-sorts.
-%%%%
 steam dragon hide
 
 La peau écailleuse, souple, et douce d'un dragon de vapeur. Elle peut être

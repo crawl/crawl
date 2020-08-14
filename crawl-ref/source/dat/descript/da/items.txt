@@ -803,10 +803,6 @@ hende mod konsekvenserne af gift. Hvis brugeren er kyndig i både vækkelser og
 giftmagi, vil staven også forgifte dem, den rammer – selv hvis ofrene
 sædvanligvis er modstandsdygtige.
 %%%%
-staff of wizardry
-
-Denne stav øger brugerens evne til at bruge magiske besværgelser.
-%%%%
 steam dragon scales
 
 En rustning, som er lavet af skællene fra en drage, der ånder damp. Selvom den

@@ -992,8 +992,8 @@ staff08
 staff09
 
 # These must be in the same order as the enum in item-prop-enum.h!
-i-staff_wizardry STAFF_WIZARDRY STAFF_ID_FIRST
 # start TAG_MAJOR_VERSION == 34
+i-staff_wizardry STAFF_WIZARDRY STAFF_ID_FIRST
 i-staff_power STAFF_POWER
 # end TAG_MAJOR_VERSION
 i-staff_fire STAFF_FIRE

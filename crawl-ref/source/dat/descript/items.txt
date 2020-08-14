@@ -1034,10 +1034,6 @@ protects them from the effects of poison. If the wielder is skilled in
 Evocations and Poison Magic, they can envenom those struck by it, dealing
 poison damage which bypasses armour.
 %%%%
-staff of wizardry
-
-A staff that increases the ability of its wielder to use magical spells.
-%%%%
 steam dragon scales
 
 The scales of a steam-breathing dragon. Unlike the scales of some larger
