@@ -6891,6 +6891,5 @@ bool monster::angered_by_attacks() const
             && type != MONS_PLAYER_ELDRITCH_TENTACLE_SEGMENT
             && !mons_is_conjured(type)
             && !testbits(flags, MF_DEMONIC_GUARDIAN)
-            && !mons_is_hepliaklqana_ancestor(type)
-            && !mons_is_caravan_mercenary(type); // for JOB_CARAVAN
+            && !mons_is_hepliaklqana_ancestor(type);
 }
