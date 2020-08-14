@@ -1243,6 +1243,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         break;
 
     case MONS_MERC_FIGHTER:
+    case MONS_MERC_KNIGHT:
     {
         item.base_type = OBJ_WEAPONS;
         item.sub_type  = WPN_FLAIL;
@@ -1252,6 +1253,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
     }
         break;
     case MONS_MERC_SKALD:
+    case MONS_MERC_INFUSER:
     {
         item.base_type = OBJ_WEAPONS;
         item.sub_type  = WPN_SPEAR;
@@ -1261,6 +1263,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
     }
         break;
     case MONS_MERC_WITCH:
+    case MONS_MERC_SORCERESS:
     {
         item.base_type = OBJ_STAVES;
         item.sub_type  = random_choose(STAFF_FIRE, STAFF_COLD, STAFF_AIR);
@@ -1268,6 +1271,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
     }
         break;
     case MONS_MERC_BRIGAND:
+    case MONS_MERC_ASSASSIN:
     {
         item.base_type = OBJ_WEAPONS;
         item.sub_type  = WPN_DAGGER;
@@ -1277,6 +1281,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
     }
         break;
     case MONS_MERC_SHAMAN:
+    case MONS_MERC_SHAMAN_II:
     {
         item.base_type = OBJ_WEAPONS;
         item.sub_type  = WPN_CLUB;
