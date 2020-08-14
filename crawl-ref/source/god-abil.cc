@@ -7161,7 +7161,7 @@ static bool _caravan_gift_items_to(monster* mons, int item_slot)
             mprf("%s isn't enough skilled to equip %s!",
             mons->name(DESC_THE, false).c_str(), gift.name(DESC_THE, false).c_str());
             return false;
-        } }
+        }
 
         if (mons->type == MONS_MERC_SHAMAN_III
             && (gift.sub_type == WPN_TRIPLE_SWORD
@@ -7175,7 +7175,8 @@ static bool _caravan_gift_items_to(monster* mons, int item_slot)
             mprf("%s isn't enough skilled to equip %s!",
             mons->name(DESC_THE, false).c_str(), gift.name(DESC_THE, false).c_str());
             return false;
-        } }
+        }
+    }
 
     if (body_slot && !is_shield(gift)) {// body armours.
 
@@ -7212,7 +7213,8 @@ static bool _caravan_gift_items_to(monster* mons, int item_slot)
             mprf("%s is too heavy for %s!",
                 gift.name(DESC_THE, false).c_str(), mons->name(DESC_THE, false).c_str());
             return false;
-        } } // body armours end.
+        }
+    }
 
     item_def *floor_item = mons->take_item(item_slot, mslot);
     if (!floor_item)

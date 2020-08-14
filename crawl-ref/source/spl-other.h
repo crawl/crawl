@@ -11,6 +11,7 @@ enum class recall_t
     spell,
     yred,
     beogh,
+    caravan,
 };
 
 struct passwall_path

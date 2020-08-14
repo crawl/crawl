@@ -2379,7 +2379,7 @@ item_def* monster_die(monster& mons, killer_type killer,
     || mons.type == MONS_MERC_SHAMAN_III)
     {
         you.attribute[ATTR_CARAVAN_LOST]++;
-        you.props[CARAVAN_MERCENARY_SPAWNED] = false;
+        you.props.erase(CARAVAN_MERCENARY_SPAWNED);
         you.attribute[ATTR_CARAVAN_ITEM_COST] *= 0;
         mprf(MSGCH_WARN, "You've lost your %s! With enough golds, you can rehire another one...",
               mons.name(DESC_THE, false).c_str());

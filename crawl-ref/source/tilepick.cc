@@ -3467,6 +3467,8 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_CARAVAN_GIFT_ITEM;
     case ABIL_CARAVAN_REHIRE:
         return TILEG_ABILITY_CARAVAN_REHIRE;
+    case ABIL_CARAVAN_RECALL:
+        return TILEG_ABILITY_CARAVAN_RECALL;
 
     // Species-specific abilities.
     // Demonspawn-only

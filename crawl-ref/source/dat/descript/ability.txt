@@ -207,6 +207,11 @@ As a caravan, you can rehire a new mercenary when past one is gone.
 The cost to hire new one is depend on your 'working environment',
 which means how many mercenaries were lost under your employment.
 %%%%
+Recall Mercenary ability
+
+Recalls your mercenary from anywhere in the dungeon to your immediate
+surroundings.
+%%%%
 #Crustacean
 Undergo Ecdysis ability
 
