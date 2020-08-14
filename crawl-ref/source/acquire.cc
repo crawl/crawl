@@ -1609,17 +1609,19 @@ int acquirement_artefact(object_class_type class_wanted,
                 if (idx != -1 && !randart)
 			        make_item_unrandart(acq_item, idx);
 				else
-				{
-				    randart = true;
-				    continue;
-				}
+				    make_item_randart(acq_item);
 			}
 		}
 
         if (is_unrandom_artefact(acq_item) && ( player_in_branch(BRANCH_ABYSS) 
 		        || player_in_branch(BRANCH_PANDEMONIUM) ) )
 		{
-		    randart = true;
+		    set_unique_item_status(acq_item, UNIQ_NOT_EXISTS);
+
+		    if (!quiet)
+			    dprf("can't generated artefact in abyss(or pande)");
+			destroy_item(thing_created);
+			thing_created = NON_ITEM;
 		    continue;
 		}
 
