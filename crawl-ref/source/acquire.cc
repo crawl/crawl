@@ -693,7 +693,7 @@ static int _acquirement_misc_subtype(bool /*divine*/, int & /*quantity*/)
         // The player never needs more than one.
         {MISC_LIGHTNING_ROD,
             (you.seen_misc[MISC_LIGHTNING_ROD] ?      0 : 17)},
-	{MISC_DISC_OF_STORMS,
+    {MISC_DISC_OF_STORMS,
             (you.seen_misc[MISC_DISC_OF_STORMS] ?     0 : 17)},
         {MISC_LAMP_OF_FIRE,
             (you.seen_misc[MISC_LAMP_OF_FIRE] ?       0 : 17)},
@@ -1553,122 +1553,122 @@ int acquirement_artefact(object_class_type class_wanted,
                           const coord_def &pos)
 {
     ASSERT(class_wanted != OBJ_RANDOM);
-	int thing_created = NON_ITEM;
-	int quant = 1;
-	bool quiet = true;
-	bool divine = false;
+    int thing_created = NON_ITEM;
+    int quant = 1;
+    bool quiet = true;
+    bool divine = false;
 
     // MAX_ACQ_TRIES was already defiend
     for (int item_tries = 0; item_tries < MAX_ACQ_TRIES; item_tries++)
-	{
-	    int type_wanted = -1;
+    {
+        int type_wanted = -1;
 
         type_wanted = _find_acquirement_subtype(class_wanted, quant,
-		                                            false, AQ_SCROLL);
-		ASSERT(type_wanted != -1);
+                                                    false, AQ_SCROLL);
+        ASSERT(type_wanted != -1);
 
-		bool want_arts = (class_wanted != OBJ_BOOKS);
+        bool want_arts = (class_wanted != OBJ_BOOKS);
 
-		thing_created = items(want_arts, class_wanted, type_wanted,
-		                      ITEM_LEVEL, 0, AQ_SCROLL);
+        thing_created = items(want_arts, class_wanted, type_wanted,
+                              ITEM_LEVEL, 0, AQ_SCROLL);
 
-		if (thing_created == NON_ITEM)
-		{
-		    if (!quiet)
-			    dprf("Failed to make thing!");
-		    continue;
-		}
+        if (thing_created == NON_ITEM)
+        {
+            if (!quiet)
+                dprf("Failed to make thing!");
+            continue;
+        }
 
-		item_def &acq_item(mitm[thing_created]);
+        item_def &acq_item(mitm[thing_created]);
 
-		const string rejection_reason = _why_reject(acq_item, AQ_SCROLL);
-		if (!rejection_reason.empty())
-		{
-		    if (!quiet)
-			    dprf("%s", rejection_reason.c_str());
-		    destroy_item(acq_item);
-			thing_created = NON_ITEM;
-			continue;
-		}
+        const string rejection_reason = _why_reject(acq_item, AQ_SCROLL);
+        if (!rejection_reason.empty())
+        {
+            if (!quiet)
+                dprf("%s", rejection_reason.c_str());
+            destroy_item(acq_item);
+            thing_created = NON_ITEM;
+            continue;
+        }
 
         ASSERT(acq_item.is_valid());
 
-		if (!is_artefact(acq_item))
-		{
-			if (randart)
-			    make_item_randart(acq_item);
-			else
-			{
-			    if (player_in_branch(BRANCH_PANDEMONIUM)
-				        || player_in_branch(BRANCH_ABYSS) )
-				    randart = true;
+        if (!is_artefact(acq_item))
+        {
+            if (randart)
+                make_item_randart(acq_item);
+            else
+            {
+                if (player_in_branch(BRANCH_PANDEMONIUM)
+                        || player_in_branch(BRANCH_ABYSS) )
+                    randart = true;
 
-				int idx = find_okay_unrandart( class_wanted, OBJ_RANDOM,
-				                               player_in_branch(BRANCH_ABYSS) );
-			    
+                int idx = find_okay_unrandart( class_wanted, OBJ_RANDOM,
+                                               player_in_branch(BRANCH_ABYSS) );
+                
                 if (idx != -1 && !randart)
-			        make_item_unrandart(acq_item, idx);
-				else
-				    make_item_randart(acq_item);
-			}
-		}
+                    make_item_unrandart(acq_item, idx);
+                else
+                    make_item_randart(acq_item);
+            }
+        }
 
         if (is_unrandom_artefact(acq_item) && ( player_in_branch(BRANCH_ABYSS) 
-		        || player_in_branch(BRANCH_PANDEMONIUM) ) )
-		{
-		    set_unique_item_status(acq_item, UNIQ_NOT_EXISTS);
+                || player_in_branch(BRANCH_PANDEMONIUM) ) )
+        {
+            set_unique_item_status(acq_item, UNIQ_NOT_EXISTS);
 
-		    if (!quiet)
-			    dprf("can't generated artefact in abyss(or pande)");
-			destroy_item(thing_created);
-			thing_created = NON_ITEM;
-		    continue;
-		}
+            if (!quiet)
+                dprf("can't generated artefact in abyss(or pande)");
+            destroy_item(thing_created);
+            thing_created = NON_ITEM;
+            continue;
+        }
 
-		// Remove curse flag from item, unless worshipping Ashenzari.
-		if (have_passive(passive_t::want_curses))
-		    do_curse_item(acq_item, true);
-		else
-		    do_uncurse_item(acq_item);
+        // Remove curse flag from item, unless worshipping Ashenzari.
+        if (have_passive(passive_t::want_curses))
+            do_curse_item(acq_item, true);
+        else
+            do_uncurse_item(acq_item);
 
-		//Last check: same to acquirement_create_item
-		int oldflags = acq_item.flags;
-		acq_item.flags |= ISFLAG_KNOW_TYPE;
-		if ( is_useless_item(acq_item, false || god_hates_item(acq_item) ) )
-		{
-		    if (!quiet)
-			    dprf("destroying useless item");
-			destroy_item(thing_created);
-			thing_created = NON_ITEM;
-			continue;
-		}
-		acq_item.flags = oldflags;
-		break;
-	}
+        //Last check: same to acquirement_create_item
+        int oldflags = acq_item.flags;
+        acq_item.flags |= ISFLAG_KNOW_TYPE;
+        if ( is_useless_item(acq_item, false || god_hates_item(acq_item) ) )
+        {
+            if (!quiet)
+                dprf("destroying useless item");
+            destroy_item(thing_created);
+            thing_created = NON_ITEM;
+            continue;
+        }
+        acq_item.flags = oldflags;
+        break;
+    }
 
-	if (thing_created == NON_ITEM)
-	    return _failed_acquirement(quiet);
-	
-	item_set_appearance(mitm[thing_created]);
-
-	if (thing_created != NON_ITEM)
-	{
-	    ASSERT(mitm[thing_created].is_valid());
-		mitm[thing_created].props[ACQUIRE_KEY].get_int() = AQ_SCROLL;
-	}
-
-	ASSERT(!is_useless_item(mitm[thing_created], false));
-	ASSERT(!god_hates_item(mitm[thing_created]));
-
-	if (pos.origin())
-	    return thing_created;
-
-	if (thing_created != NON_ITEM && !quiet)
-	    canned_msg(MSG_SOMETHING_APPEARS);
-
-	move_item_to_grid(&thing_created, pos);
+    if (thing_created == NON_ITEM)
+        return _failed_acquirement(quiet);
     
-	return thing_created;
+    item_set_appearance(mitm[thing_created]);
+
+    if (thing_created != NON_ITEM)
+    {
+        ASSERT(mitm[thing_created].is_valid());
+        mitm[thing_created].props[ACQUIRE_KEY].get_int() = AQ_SCROLL;
+    }
+
+    ASSERT(!is_useless_item(mitm[thing_created], false));
+    ASSERT(!god_hates_item(mitm[thing_created]));
+
+    if (pos.origin())
+        return thing_created;
+
+    if (thing_created != NON_ITEM && !quiet)
+        canned_msg(MSG_SOMETHING_APPEARS);
+
+    move_item_to_grid(&thing_created, pos);
+    
+    return thing_created;
 }
 
 class AcquireMenu : public InvMenu
@@ -1792,18 +1792,18 @@ static void _create_acquirement_item(item_def& item)
         {
             set_unique_item_status(aitem, UNIQ_NOT_EXISTS);
 
-			if (is_unrandom_artefact(aitem, UNRAND_OCTOPUS_KING_RING) )
-			{
-			    for (int which = 0; which < 8; which++)
-				{
-				    if (aitem.get_item().sub_type == octoring_types[which])
-					{
-					    you.octopus_king_rings &= 0 << which;
-						break;
-					}
-				}
-			}
-					    
+            if (is_unrandom_artefact(aitem, UNRAND_OCTOPUS_KING_RING) )
+            {
+                for (int which = 0; which < 8; which++)
+                {
+                    if (aitem.get_item().sub_type == octoring_types[which])
+                    {
+                        you.octopus_king_rings |= 1 << which;
+                        break;
+                    }
+                }
+            }
+                        
         }
     }
 
@@ -1903,10 +1903,10 @@ static item_def _acquirement_item_def(object_class_type item_type)
 {
     item_def item;
 
-	const int item_index = acquirement_create_item(item_type, AQ_SCROLL, true);
+    const int item_index = acquirement_create_item(item_type, AQ_SCROLL, true);
 
     if (item_index != NON_ITEM)
-	{
+    {
         ASSERT(!god_hates_item(mitm[item_index]));
 
         // We make a copy of the item def, but we don't keep the real item.
@@ -1924,10 +1924,10 @@ static item_def _acquirement_artefact_def(object_class_type item_type, bool rand
 {
     item_def item;
 
-	const int item_index = acquirement_artefact(item_type, randart);
+    const int item_index = acquirement_artefact(item_type, randart);
 
     if (item_index != NON_ITEM)
-	{
+    {
         ASSERT(!god_hates_item(mitm[item_index]));
 
         // We make a copy of the item def, but we don't keep the real item.
@@ -1951,10 +1951,10 @@ static void _set_acquirement_items(bool make_artefact)
         rand_classes.emplace_back(OBJ_ARMOUR);
 
         // don't exist (un)random artefact
-		if (!make_artefact) {
+        if (!make_artefact) {
             rand_classes.emplace_back(OBJ_RODS);
             rand_classes.emplace_back(OBJ_STAVES);
-		}
+        }
     }
     else if (you.species == SP_CRUSTACEAN) {
         //SP_CRUSTACEAN
@@ -1972,10 +1972,10 @@ static void _set_acquirement_items(bool make_artefact)
         rand_classes.emplace_back(OBJ_MISSILES);
 
         _make_acquirement_items(rand_classes);
-	}
-	else
-	    _make_artefact_acquirement_items(rand_classes);
-	// artefact book is very powerful. furthermore no funny
+    }
+    else
+        _make_artefact_acquirement_items(rand_classes);
+    // artefact book is very powerful. furthermore no funny
 }
 
 static void _make_acquirement_items(vector<object_class_type>& rand_classes)
@@ -2023,23 +2023,23 @@ static void _make_artefact_acquirement_items(vector<object_class_type>& rand_cla
 
     // Generate item defs until we have enough, skipping any random classes
     // that fail to generate an item.
-	for (auto obj_type : rand_classes)
-	{
-	    if (acq_items.size() >= wanted_randart_num)
-		    break;
+    for (auto obj_type : rand_classes)
+    {
+        if (acq_items.size() >= wanted_randart_num)
+            break;
 
         // make randart
-	    auto item = _acquirement_artefact_def(obj_type, true);
-		if (item.defined())
-		    acq_items.push_back(item);
-	}
+        auto item = _acquirement_artefact_def(obj_type, true);
+        if (item.defined())
+            acq_items.push_back(item);
+    }
 
     do
-	{
-	    auto obj_type = rand_classes[random2((int)rand_classes.size())];
+    {
+        auto obj_type = rand_classes[random2((int)rand_classes.size())];
 
-		// make unrandart
-	    auto item = _acquirement_artefact_def(obj_type, false);
+        // make unrandart
+        auto item = _acquirement_artefact_def(obj_type, false);
         if (item.defined())
             acq_items.push_back(item);
 

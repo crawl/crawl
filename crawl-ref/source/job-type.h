@@ -42,7 +42,7 @@ enum job_type
     JOB_MELTED_KNIGHT,
     JOB_CRUSADER,
     JOB_CARAVAN,
-	JOB_COLLECTOR,
+    JOB_COLLECTOR,
     NUM_JOBS,                          // always after the last job
 
     JOB_UNKNOWN = 100,

@@ -400,7 +400,6 @@ enum scroll_type
     SCR_MAGIC_MAPPING,
     SCR_FOG,
     SCR_ACQUIREMENT,
-    SCR_COLLECTION,
 #if TAG_MAJOR_VERSION == 34
     SCR_ENCHANT_WEAPON_II,
 #endif
@@ -415,6 +414,7 @@ enum scroll_type
     SCR_AMNESIA,
 #if TAG_MAJOR_VERSION == 34
     SCR_CURSE_JEWELLERY,
+    SCR_COLLECTION,
 #endif
     NUM_SCROLLS
 };

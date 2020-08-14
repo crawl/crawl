@@ -3976,18 +3976,18 @@ void read_scroll(item_def& scroll)
         break;
 
     case SCR_COLLECTION:
-		if (player_in_branch(BRANCH_ABYSS) 
-		    || player_in_branch(BRANCH_PANDEMONIUM) )
-		{
-		    mpr("You can't summon artefact in unstable location!");
-			cancel_scroll = true;
-		}
-		else
-		{
-	        mpr("This is a scroll of collection!!!");
-		    cancel_scroll = !artefact_acquirement_menu();
-		}
-	    break;
+        if (player_in_branch(BRANCH_ABYSS) 
+            || player_in_branch(BRANCH_PANDEMONIUM) )
+        {
+            mpr("You can't summon artefact in unstable location!");
+            cancel_scroll = true;
+        }
+        else
+        {
+            mpr("This is a scroll of collection!!!");
+            cancel_scroll = !artefact_acquirement_menu();
+        }
+        break;
     case SCR_FEAR:
         mpr("You assume a fearsome visage.");
         mass_enchantment(ENCH_FEAR, 1000);
