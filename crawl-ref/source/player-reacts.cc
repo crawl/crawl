@@ -645,7 +645,7 @@ static void _try_to_spawn_mercenary()
     int merc;
     monster* mon;
 
-    merc = random2(4);
+    merc = you.props[CARAVAN_MERCENARY].get_int() > 0 ? you.props[CARAVAN_MERCENARY].get_int() - 1: random2(4);
     ASSERT(merc < (int)ARRAYSZ(merctypes));
 
     mgen_data mg(merctypes[merc], BEH_FRIENDLY,
@@ -969,7 +969,7 @@ static void _decrement_durations()
         _try_to_respawn_ancestor();
     }
 
-    if (you.props[CARAVAN_MERCENARY])
+    if (you.props[CARAVAN_MERCENARY].get_int() > 0)
     {
         _try_to_spawn_mercenary();
     }

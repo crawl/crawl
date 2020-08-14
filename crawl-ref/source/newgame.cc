@@ -1723,7 +1723,7 @@ static void _construct_starting_menu(const newgame_def&,
     for (const auto& choice : choices)
         max_text_width = max(max_text_width, strwidth(choice.label));
 
-    for (unsigned int i = 0; i < 2; ++i)
+    for (unsigned int i = 0; i < choices.size(); ++i)
     {
         const auto& choice = choices[i];
 
@@ -2451,7 +2451,7 @@ static bool _choose_god(newgame_def& ng, newgame_def& ng_choice)
 
 static bool _choose_job_specific(newgame_def& ng, newgame_def& ng_choice)
 {
-    if (ng.job != JOB_MELTED_KNIGHT && ng.job != JOB_ICE_ELEMENTALIST)
+    if (ng.job != JOB_MELTED_KNIGHT && ng.job != JOB_ICE_ELEMENTALIST && ng.job != JOB_CARAVAN)
         return true;
 
     auto title_hbox = make_shared<Box>(Widget::HORZ);
@@ -2475,19 +2475,6 @@ static bool _choose_job_specific(newgame_def& ng, newgame_def& ng_choice)
     vbox->add_child(title_hbox);
     auto prompt = make_shared<Text>(formatted_string("You have a choice of starting condition.", CYAN));
     vbox->add_child(prompt);
-
-    auto main_items = make_shared<OuterMenu>(true, 1, 2);
-    main_items->menu_id = "starting condition";
-    main_items->set_margin_for_sdl(15, 0);
-    main_items->set_margin_for_crt(1, 0);
-    vbox->add_child(main_items);
-
-    auto sub_items = make_shared<OuterMenu>(false, 2, 3);
-    sub_items->menu_id = "starting condition sub";
-    vbox->add_child(sub_items);
-
-    main_items->linked_menus[2] = sub_items;
-    sub_items->linked_menus[0] = main_items;
 
     vector<_custom_menu_item> choices;
     
@@ -2515,6 +2502,46 @@ static bool _choose_job_specific(newgame_def& ng, newgame_def& ng_choice)
 #endif
         );
     }
+    else if (ng.job == JOB_CARAVAN) {
+        choices.emplace_back(0, "hired soldier"
+#ifdef USE_TILE
+            , tileidx_monster_base(MONS_MERC_FIGHTER), TEX_PLAYER
+#endif
+        );
+        choices.emplace_back(1, "hired skald"
+#ifdef USE_TILE
+            , tileidx_monster_base(MONS_MERC_SKALD), TEX_PLAYER
+#endif
+        );
+        choices.emplace_back(2, "hired witch"
+#ifdef USE_TILE
+            , tileidx_monster_base(MONS_MERC_WITCH), TEX_PLAYER
+#endif
+        );
+        choices.emplace_back(3, "hired brigand"
+#ifdef USE_TILE
+            , tileidx_monster_base(MONS_MERC_BRIGAND), TEX_PLAYER
+#endif
+        );
+        choices.emplace_back(4, "hired shaman"
+#ifdef USE_TILE
+            , tileidx_monster_base(MONS_MERC_SHAMAN), TEX_PLAYER
+#endif
+        );
+    }
+
+    auto main_items = make_shared<OuterMenu>(true, 1, choices.size());
+    main_items->menu_id = "starting condition";
+    main_items->set_margin_for_sdl(15, 0);
+    main_items->set_margin_for_crt(1, 0);
+    vbox->add_child(main_items);
+
+    auto sub_items = make_shared<OuterMenu>(false, 2, 3);
+    sub_items->menu_id = "starting condition sub";
+    vbox->add_child(sub_items);
+
+    main_items->linked_menus[2] = sub_items;
+    sub_items->linked_menus[0] = main_items;
 
 
     _construct_starting_menu(ng, choices, main_items, sub_items);

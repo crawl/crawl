@@ -301,7 +301,6 @@ void give_items_skills(const newgame_def& ng)
     case JOB_CARAVAN:
     {
         you.gold += 150;
-        you.props[CARAVAN_MERCENARY] = true;
         break;
     }
     default:
@@ -505,6 +504,9 @@ static void _setup_generic(const newgame_def& ng)
             //for melted knight
             you.chapter = CHAPTER_STARTING_SLIME;
         }
+    }
+    else if (ng.job == JOB_CARAVAN) {
+        you.props[CARAVAN_MERCENARY] = ng.job_specific + 1;
     }
 
     you.chr_class_name = get_job_name(you.char_class);
