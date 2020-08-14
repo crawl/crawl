@@ -1543,6 +1543,17 @@ bool mons_is_hepliaklqana_ancestor(monster_type mc)
 }
 
 /**
+ * Is the mercenaries for JOB_CARAVAN
+ *
+ * @param mc    The type of monster in question.
+ * @return      Whether that monster is a mercenary.
+ */
+bool mons_is_caravan_mercenary(monster_type mc)
+{
+    return mons_class_flag(mc, M_MERCENARY);
+}
+
+/**
  * Can this type of monster be blinded?
  *
  * Certain monsters, e.g. those with a powerful sense of smell, echolocation,

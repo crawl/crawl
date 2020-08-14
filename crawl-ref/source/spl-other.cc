@@ -124,22 +124,7 @@ void start_recall(recall_t type)
         }
         else if (type == recall_t::caravan)
         {
-            if (!(mi->type == MONS_MERC_FIGHTER
-               || mi->type == MONS_MERC_KNIGHT
-               || mi->type == MONS_MERC_DEATH_KNIGHT
-               || mi->type == MONS_MERC_PALADIN
-               || mi->type == MONS_MERC_SKALD
-               || mi->type == MONS_MERC_INFUSER
-               || mi->type == MONS_MERC_TIDEHUNTER
-               || mi->type == MONS_MERC_WITCH
-               || mi->type == MONS_MERC_SORCERESS
-               || mi->type == MONS_MERC_ELEMENTALIST
-               || mi->type == MONS_MERC_BRIGAND
-               || mi->type == MONS_MERC_ASSASSIN
-               || mi->type == MONS_MERC_CLEANER
-               || mi->type == MONS_MERC_SHAMAN
-               || mi->type == MONS_MERC_SHAMAN_II
-               || mi->type == MONS_MERC_SHAMAN_III))
+            if (!mons_is_caravan_mercenary(mi->type))
                 continue;
         }
 

@@ -230,6 +230,7 @@ bool mons_is_draconian_job(monster_type mc);
 bool mons_is_demonspawn_job(monster_type mc);
 bool mons_is_job(monster_type mc);
 bool mons_is_hepliaklqana_ancestor(monster_type mc);
+bool mons_is_caravan_mercenary(monster_type mc);
 
 int mutant_beast_tier(int xl);
 
