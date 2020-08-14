@@ -1283,7 +1283,7 @@ int attack::test_hit(int to_land, int ev, bool randomise_ev)
     return margin;
 }
 
-int attack::apply_defender_ac(int damage, int damage_max) const
+int attack::apply_defender_ac(int damage, int damage_max, ac_type ac_rule) const
 {
     ASSERT(defender);
     int stab_bypass = 0;
@@ -1292,8 +1292,7 @@ int attack::apply_defender_ac(int damage, int damage_max) const
         stab_bypass = you.skill(wpn_skill, 50) + you.skill(SK_STEALTH, 50);
         stab_bypass = random2(div_rand_round(stab_bypass, 100 * stab_bonus));
     }
-    int after_ac = defender->apply_ac(damage, damage_max,
-                                      ac_type::normal, stab_bypass);
+    int after_ac = defender->apply_ac(damage, damage_max, ac_rule, stab_bypass);
     dprf(DIAG_COMBAT, "AC: att: %s, def: %s, ac: %d, gdr: %d, dam: %d -> %d",
                  attacker->name(DESC_PLAIN, true).c_str(),
                  defender->name(DESC_PLAIN, true).c_str(),

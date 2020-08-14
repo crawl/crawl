@@ -2087,16 +2087,16 @@ bool melee_attack::apply_staff_damage()
         break;
 
     case STAFF_EARTH:
-        special_damage = staff_damage(SK_EARTH_MAGIC);
-        special_damage = apply_defender_ac(special_damage);
+        special_damage = staff_damage(SK_EARTH_MAGIC) * 4 / 3;
+        special_damage = apply_defender_ac(special_damage, 0, ac_type::triple);
 
         if (special_damage > 0)
         {
             special_damage_message =
                 make_stringf(
-                    "%s crush%s %s%s",
+                    "%s %s %s%s",
                     attacker->name(DESC_THE).c_str(),
-                    attacker->is_player() ? "" : "es",
+                    attacker->conj_verb("shatter").c_str(),
                     defender->name(DESC_THE).c_str(),
                     attack_strength_punctuation(special_damage).c_str());
         }
@@ -2162,12 +2162,25 @@ bool melee_attack::apply_staff_damage()
         }
         break;
 
+    case STAFF_CONJURATION:
+        special_damage = staff_damage(SK_CONJURATIONS);
+        special_damage = apply_defender_ac(special_damage);
+
+        if (special_damage > 0)
+        {
+            special_damage_message =
+                make_stringf(
+                    "%s %s %s%s",
+                    attacker->name(DESC_THE).c_str(),
+                    attacker->conj_verb("blast").c_str(),
+                    defender->name(DESC_THE).c_str(),
+                    attack_strength_punctuation(special_damage).c_str());
+        }
+        break;
+
     case STAFF_SUMMONING:
 #if TAG_MAJOR_VERSION == 34
     case STAFF_POWER:
-#endif
-    case STAFF_CONJURATION:
-#if TAG_MAJOR_VERSION == 34
     case STAFF_ENCHANTMENT:
     case STAFF_ENERGY:
 #endif
