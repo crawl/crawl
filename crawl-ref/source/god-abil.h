@@ -189,5 +189,9 @@ bool wu_jian_do_wall_jump(coord_def targ, bool ability);
 spret wu_jian_wall_jump_ability();
 
 void angel_good_god_help(bool closed_enemy); 
+
+bool caravan_can_gift_items_to(const monster* mons, bool quiet = true);
+bool caravan_gift_item();
+
 int slouch_damage(monster* mon);
 bool slouchable(coord_def where);

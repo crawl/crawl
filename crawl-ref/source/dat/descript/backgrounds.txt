@@ -31,8 +31,8 @@ raging berserker early on, apart from hubris.
 Caravan
 
 Caravans visited the Dungeon to find the Orb; the best sale item on the surface.
-They are not good adventurers, but starts with a hired mercenary and tool to heal
-allies, also some extra golds.
+They are not good adventurers, but starts with a hired mercenary, a tool to heal
+mercenary, and some extra golds to give equipment for mercenary. 
 %%%%
 Chaos Knight
 

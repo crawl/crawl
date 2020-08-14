@@ -18,6 +18,7 @@
 #include "acquire.h"
 #include "areas.h"
 #include "art-enum.h"
+#include "attitude-change.h"
 #include "branch.h"
 #include "butcher.h"
 #include "chardump.h"
@@ -345,6 +346,13 @@ static const ability_def Ability_List[] =
 
     { ABIL_BLOSSOM, "Choose Blossom", 0, 0, 0, 0, {}, abflag::starve_ok },
     { ABIL_ADAPTION, "Choose Adaption", 0, 0, 0, 0, {}, abflag::starve_ok },
+
+    { ABIL_CARAVAN_GIFT_ITEM, "Give Item to Mercenary",
+        0, 0, 0, 0, {}, abflag::gold | abflag::starve_ok },
+    { ABIL_CARAVAN_RECALL, "Recall Mercenary",
+        0, 0, 0, 0, {}, abflag::starve_ok },
+    { ABIL_CARAVAN_REHIRE, "Rehire Mercenary",
+        0, 0, 0, 0, {}, abflag::gold | abflag::starve_ok },
 
     // EVOKE abilities use Evocations and come from items.
     // Teleportation and Blink can also come from mutations
@@ -799,6 +807,15 @@ int get_gold_cost(ability_type ability)
         return gozag_potion_price();
     case ABIL_GOZAG_BRIBE_BRANCH:
         return GOZAG_BRIBE_AMOUNT;
+    // for JOB_CARAVAN
+    case ABIL_CARAVAN_GIFT_ITEM:
+    {
+        return 100 * (1 + you.attribute[ATTR_CARAVAN_ITEM_COST]);
+    }
+    case ABIL_CARAVAN_REHIRE:
+    {
+        return 1000 * you.attribute[ATTR_CARAVAN_LOST];
+    }
     default:
         return 0;
     }
@@ -2237,6 +2254,99 @@ static spret _do_ability(const ability_def& abil, bool fail)
 
     case ABIL_ADAPTION:
        return _homunculus_blossom_or_adaption(SP_ADAPTION_HOMUNCULUS);
+
+    case ABIL_CARAVAN_GIFT_ITEM:
+    {
+        if (!you.props[CARAVAN_MERCENARY_SPAWNED])
+        {
+            mpr("There is no mercenary you can manage.");
+            return spret::abort;
+        }
+
+        if (!caravan_gift_item())
+            return spret::abort;
+    }
+    break;
+
+    case ABIL_CARAVAN_RECALL:
+        fail_check();
+        start_recall(recall_t::caravan);
+        break;
+
+    case ABIL_CARAVAN_REHIRE:
+    {
+        if (you.props[CARAVAN_MERCENARY_SPAWNED])
+        {
+            mpr("You've already hired your own mercenary.");
+            return spret::abort;
+        }
+
+        const int cost_min = 1000 * you.attribute[ATTR_CARAVAN_LOST];
+        if (you.gold < cost_min)
+        {
+            mprf("You need at least %d gold to hire new mercenary.", cost_min);
+            return spret::abort;
+        }
+
+        // copy from player-reacts.cc
+        const monster_type merctypes[] =
+        {
+            MONS_MERC_FIGHTER, MONS_MERC_SKALD,
+            MONS_MERC_WITCH, MONS_MERC_BRIGAND,
+            MONS_MERC_SHAMAN,
+
+            MONS_MERC_KNIGHT, MONS_MERC_INFUSER,
+            MONS_MERC_SORCERESS, MONS_MERC_ASSASSIN,
+            MONS_MERC_SHAMAN_II,
+        };
+    
+        int merc;
+        monster* mon;
+    
+        merc = random2(4);
+        if (you.experience_level >= 14)
+        {
+            merc += 5;
+        }
+
+        ASSERT(merc < (int)ARRAYSZ(merctypes));
+    
+        mgen_data mg(merctypes[merc], BEH_FRIENDLY,
+            you.pos(), MHITYOU, MG_FORCE_BEH, you.religion);
+    
+        mg.extra_flags |= (MF_HARD_RESET);
+    
+        monster tempmon;
+        tempmon.type = merctypes[merc];
+        if (give_monster_proper_name(tempmon, false))
+            mg.mname = tempmon.mname;
+        else
+            mg.mname = make_name();
+        // This is used for giving the merc better stuff in mon-gear.
+        mg.props["caravan_mercenary items"] = true;
+    
+        mon = create_monster(mg);
+    
+        if (!mon)
+        {
+            mpr("You couldn't find anyone to accept your contract here.");
+            return spret::abort;
+        }
+
+        mon->props["dbname"].get_string() = mons_class_name(merctypes[merc]);
+        redraw_screen();
+    
+        for (mon_inv_iterator ii(*mon); ii; ++ii)
+            ii->flags &= ~ISFLAG_SUMMONED;
+        mon->flags &= ~MF_HARD_RESET;
+        mon->attitude = ATT_FRIENDLY;
+        mons_att_changed(mon);
+    
+        simple_monster_message(*mon, " accept your contract, starts follow you as a mercenary.");
+        you.props[CARAVAN_MERCENARY_SPAWNED] = true;
+        you.del_gold(100 * (1 + you.attribute[ATTR_CARAVAN_ITEM_COST]));
+    }
+    break;
 
     case ABIL_SPIT_POISON:      // Naga poison spit
     {
@@ -4292,6 +4402,16 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
         }
     }
 
+    if (you.props[CARAVAN_MERCENARY_SPAWNED])
+    {
+        _add_talent(talents, ABIL_CARAVAN_GIFT_ITEM, check_confused);
+        _add_talent(talents, ABIL_CARAVAN_RECALL, check_confused);
+    }
+
+    if (you.attribute[ATTR_CARAVAN_LOST])
+    {
+        _add_talent(talents, ABIL_CARAVAN_REHIRE, check_confused);
+    }
 
     if (you.get_mutation_level(MUT_HOP))
         _add_talent(talents, ABIL_HOP, check_confused);
