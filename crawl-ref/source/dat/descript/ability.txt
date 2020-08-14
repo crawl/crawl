@@ -194,6 +194,24 @@ You can make a wall or fill the floor in the direction you want to.
 The terrain created by this method will soon be return to its original 
 terrain.
 %%%%
+#JOB_CARAVAN
+Give Item to Mercenary ability
+
+As a caravan, you can give weapon or armour you have to mercenary.
+This is a kind of rehirement, so each time the mercenary's hire cost
+goes up and you'll have to pay a higher price.
+%%%%
+Rehire Mercenary ability
+
+As a caravan, you can rehire a new mercenary when past one is gone.
+The cost to hire new one is depend on your 'working environment',
+which means how many mercenaries were lost under your employment.
+%%%%
+Recall Mercenary ability
+
+Recalls your mercenary from anywhere in the dungeon to your immediate
+surroundings.
+%%%%
 #Crustacean
 Undergo Ecdysis ability
 

@@ -639,12 +639,13 @@ static void _try_to_spawn_mercenary()
     {
         MONS_MERC_FIGHTER, MONS_MERC_SKALD,
         MONS_MERC_WITCH, MONS_MERC_BRIGAND,
+        MONS_MERC_SHAMAN,
     };
 
     int merc;
     monster* mon;
 
-    merc = you.props[CARAVAN_MERCENARY].get_int() > 0 ? you.props[CARAVAN_MERCENARY].get_int() - 1: random2(3);
+    merc = you.props[CARAVAN_MERCENARY].get_int() > 0 ? you.props[CARAVAN_MERCENARY].get_int() - 1: random2(4);
     ASSERT(merc < (int)ARRAYSZ(merctypes));
 
     mgen_data mg(merctypes[merc], BEH_FRIENDLY,
@@ -676,7 +677,8 @@ static void _try_to_spawn_mercenary()
     mons_att_changed(mon);
 
     simple_monster_message(*mon, " follows you as a mercenary.");
-    you.props[CARAVAN_MERCENARY] = 0;
+    you.props.erase(CARAVAN_MERCENARY);
+    you.props[CARAVAN_MERCENARY_SPAWNED] = true;
 }
 
 
@@ -969,12 +971,7 @@ static void _decrement_durations()
 
     if (you.props[CARAVAN_MERCENARY].get_int() > 0)
     {
-        if (!you.duration[DUR_CARAVAN_MERCENARY])
-            you.duration[DUR_CARAVAN_MERCENARY] = 5;
-        else if (you.duration[DUR_CARAVAN_MERCENARY] <= 1)
-            _try_to_spawn_mercenary();
-        else
-            you.duration[DUR_CARAVAN_MERCENARY] -= 1;
+        _try_to_spawn_mercenary();
     }
 
     if (you.duration[DUR_WALL_MELTING])
