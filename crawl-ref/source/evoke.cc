@@ -1160,6 +1160,12 @@ random_pick_entry<cloud_type> condenser_clouds[] =
 
 static spret _condenser()
 {
+    if (you.confused())
+    {
+        canned_msg(MSG_TOO_CONFUSED);
+        return spret::abort;
+    }
+
     if (env.level_state & LSTATE_STILL_WINDS)
     {
         mpr("The air is too still to form clouds.");
@@ -1200,6 +1206,7 @@ static spret _condenser()
         && !yesno("You can't see anything. Try to condense clouds anyway?",
                   true, 'n'))
     {
+        canned_msg(MSG_OK);
         return spret::abort;
     }
 
