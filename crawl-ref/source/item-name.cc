@@ -1098,7 +1098,9 @@ static const char* staff_type_name(int stafftype)
 #endif
     case STAFF_AIR:         return "air";
     case STAFF_EARTH:       return "earth";
+#if TAG_MAJOR_VERSION == 34
     case STAFF_SUMMONING:   return "summoning";
+#endif
     default:                return "bugginess";
     }
 }
@@ -3097,7 +3099,6 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
         switch (item.sub_type)
         {
         case STAFF_WIZARDRY:
-        case STAFF_SUMMONING:
             return you_worship(GOD_TROG);
         }
 

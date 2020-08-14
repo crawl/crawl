@@ -531,8 +531,8 @@ enum stave_type
     STAFF_CONJURATION,
 #if TAG_MAJOR_VERSION == 34
     STAFF_ENCHANTMENT,
-#endif
     STAFF_SUMMONING,
+#endif
     STAFF_AIR,
     STAFF_EARTH,
 #if TAG_MAJOR_VERSION == 34

@@ -1006,8 +1006,8 @@ i-staff_death STAFF_DEATH
 i-staff_conjuration STAFF_CONJURATION
 # start TAG_MAJOR_VERSION == 34
 i-staff_enchantment STAFF_ENCHANTMENT
-# end TAG_MAJOR_VERSION
 i-staff_summoning STAFF_SUMMONING
+# end TAG_MAJOR_VERSION
 i-staff_air STAFF_AIR
 # start TAG_MAJOR_VERSION == 34
 i-staff_earth STAFF_EARTH

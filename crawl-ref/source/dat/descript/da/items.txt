@@ -803,12 +803,6 @@ hende mod konsekvenserne af gift. Hvis brugeren er kyndig i både vækkelser og
 giftmagi, vil staven også forgifte dem, den rammer – selv hvis ofrene
 sædvanligvis er modstandsdygtige.
 %%%%
-staff of summoning
-
-Denne stav øger brugerens hidkaldelsers kraft og beskytter mod hidkaldte
-væseners angreb. Hvis du er kyndig i vækkelser, kan du forsøge at bortvise
-hidkaldte væsener, når du slår dem.
-%%%%
 staff of wizardry
 
 Denne stav øger brugerens evne til at bruge magiske besværgelser.

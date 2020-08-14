@@ -155,9 +155,9 @@
        "scythe", "book of spatial translocations", "scroll of silence",
        "shortbow", "manual of staves", "steam dragon scales",
        "shadow dragon scales", "storm dragon scales", "swamp dragon scales",
-       "manual of short blades", "staff of summoning", "manual of slings",
-       "manual of shields", "manual of spellcasting", "manual of summonings",
-       "stone", "potion of stabbing" }
+       "manual of short blades", "manual of slings", "manual of shields",
+       "manual of spellcasting", "manual of summonings", "stone",
+       "potion of stabbing" }
 
       elseif s == "T" then i = { "book of the tempests", "scroll of torment",
        "book of transfigurations", "ring of teleportation",

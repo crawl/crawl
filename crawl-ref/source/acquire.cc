@@ -601,7 +601,6 @@ static int _acquirement_staff_subtype(bool /*divine*/, int & /*quantity*/,
     case SK_POISON_MAGIC: TRY_GIVE(STAFF_POISON);      break;
     case SK_NECROMANCY:   TRY_GIVE(STAFF_DEATH);       break;
     case SK_CONJURATIONS: TRY_GIVE(STAFF_CONJURATION); break;
-    case SK_SUMMONINGS:   TRY_GIVE(STAFF_SUMMONING);   break;
 #undef TRY_GIVE
     default:                                           break;
     }
