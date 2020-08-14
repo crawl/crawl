@@ -2708,10 +2708,11 @@ A corpse raised to undeath by necromancy.
 hired soldier
 
 An well-trained soldier. He is a former runaway soldier, but he doesn't
-retreat in front of money. in front of money. His ability to handle armor
-and shields still remains.
+retreat in front of money, and that's why he made a contract with me. His
+ability to handle armor and shields still remains.
 %%%%
 hired knight
+
 A Skilled knight. He was never imagined this would be such a long journey,
 but at this point, he trained himself to develop his skills.
 %%%%
@@ -2780,6 +2781,23 @@ A kobold in a swaying shadow. Serving Dithmenos the Shadowed,
 but doesn't use a Umbra so he doesn't interfere with me.
 It's a good thing he didn't claim his shadow's share of the
 down payment.
+%%%%
+hired shaman
+
+A young gnoll who learned strange chants of his tribe. He has
+left his tribe, because their tradition was neglect his talents.
+I hired him in the hope that he would improve his talents.
+%%%%
+hired ritualist
+
+A gnoll of versatile talents. His chants are improved into
+empowering rituals, and his strength getting stronger with
+steady training. I'm looking forward to his growth as a client.
+%%%%
+hired chieftain
+
+A veteran dungeoneer, mastered his all equipments and enchantments.
+He is a model of the gnolls, and even I sometimes admire his skills.
 %%%%
 # Specials
 test spawner

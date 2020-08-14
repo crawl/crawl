@@ -2523,6 +2523,11 @@ static bool _choose_job_specific(newgame_def& ng, newgame_def& ng_choice)
             , tileidx_monster_base(MONS_MERC_BRIGAND), TEX_PLAYER
 #endif
         );
+        choices.emplace_back(4, "hired shaman"
+#ifdef USE_TILE
+            , tileidx_monster_base(MONS_MERC_SHAMAN), TEX_PLAYER
+#endif
+        );
     }
 
     auto main_items = make_shared<OuterMenu>(true, 1, choices.size());

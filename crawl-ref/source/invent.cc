@@ -520,6 +520,8 @@ string no_selectables_message(int item_selector)
         return "You aren't carrying any weapons that can be enchanted.";
     case OSEL_BEOGH_GIFT:
         return "You aren't carrying anything you can give to a follower.";
+    case OSEL_MERCENARY_GIFT:
+        return "You aren't carrying anything you can give to a mercenary.";
     case OSEL_CURSABLE:
         return "You don't have any cursable items.";
     case OSEL_UNCURSED_WORN_RINGS:
@@ -1189,6 +1191,13 @@ bool item_is_selected(const item_def &i, int selector)
                 || is_shield(i)
                 || itype == OBJ_ARMOUR
                    && get_armour_slot(i) == EQ_BODY_ARMOUR)
+                && !item_is_equipped(i);
+
+    case OSEL_MERCENARY_GIFT:
+        return (itype == OBJ_WEAPONS
+                || is_shield(i)
+                || itype == OBJ_STAVES
+                || itype == OBJ_ARMOUR)
                 && !item_is_equipped(i);
 
     case OSEL_CURSABLE:

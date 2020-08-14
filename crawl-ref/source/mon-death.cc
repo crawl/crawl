@@ -2361,6 +2361,29 @@ item_def* monster_die(monster& mons, killer_type killer,
             move_item_to_grid(&item_, mons.pos());
         }
     }
+    else if (mons.type == MONS_MERC_FIGHTER
+    || mons.type == MONS_MERC_KNIGHT
+    || mons.type == MONS_MERC_DEATH_KNIGHT
+    || mons.type == MONS_MERC_PALADIN
+    || mons.type == MONS_MERC_SKALD
+    || mons.type == MONS_MERC_INFUSER
+    || mons.type == MONS_MERC_TIDEHUNTER
+    || mons.type == MONS_MERC_WITCH
+    || mons.type == MONS_MERC_SORCERESS
+    || mons.type == MONS_MERC_ELEMENTALIST
+    || mons.type == MONS_MERC_BRIGAND
+    || mons.type == MONS_MERC_ASSASSIN
+    || mons.type == MONS_MERC_CLEANER
+    || mons.type == MONS_MERC_SHAMAN
+    || mons.type == MONS_MERC_SHAMAN_II
+    || mons.type == MONS_MERC_SHAMAN_III)
+    {
+        you.attribute[ATTR_CARAVAN_LOST]++;
+        you.props.erase(CARAVAN_MERCENARY_SPAWNED);
+        you.attribute[ATTR_CARAVAN_ITEM_COST] *= 0;
+        mprf(MSGCH_WARN, "You've lost your %s! With enough golds, you can rehire another one...",
+              mons.name(DESC_THE, false).c_str());
+    }
 
     const bool death_message = !silent && !did_death_message
                                && you.can_see(mons);

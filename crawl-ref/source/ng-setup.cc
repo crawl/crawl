@@ -298,6 +298,11 @@ void give_items_skills(const newgame_def& ng)
             you.skills[SK_ARMOUR]++;
         break;
     }
+    case JOB_CARAVAN:
+    {
+        you.gold += 150;
+        break;
+    }
     default:
         break;
     }
