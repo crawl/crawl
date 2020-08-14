@@ -414,6 +414,7 @@ enum scroll_type
     SCR_AMNESIA,
 #if TAG_MAJOR_VERSION == 34
     SCR_CURSE_JEWELLERY,
+    SCR_COLLECTION,
 #endif
     NUM_SCROLLS
 };

@@ -3592,7 +3592,8 @@ static bool _is_cancellable_scroll(scroll_type scroll)
            || scroll == SCR_BRAND_WEAPON
            || scroll == SCR_ENCHANT_WEAPON
            || scroll == SCR_MAGIC_MAPPING
-           || scroll == SCR_ACQUIREMENT;
+           || scroll == SCR_ACQUIREMENT
+           || scroll == SCR_COLLECTION;
 }
 
 /**
@@ -3974,6 +3975,19 @@ void read_scroll(item_def& scroll)
         cancel_scroll = !acquirement_menu();
         break;
 
+    case SCR_COLLECTION:
+        if (player_in_branch(BRANCH_ABYSS) 
+            || player_in_branch(BRANCH_PANDEMONIUM) )
+        {
+            mpr("You can't summon artefact in unstable location!");
+            cancel_scroll = true;
+        }
+        else
+        {
+            mpr("This is a scroll of collection!!!");
+            cancel_scroll = !artefact_acquirement_menu();
+        }
+        break;
     case SCR_FEAR:
         mpr("You assume a fearsome visage.");
         mass_enchantment(ENCH_FEAR, 1000);

@@ -836,6 +836,7 @@ static const char* scroll_type_name(int scrolltype)
     case SCR_MAGIC_MAPPING:      return "magic mapping";
     case SCR_FOG:                return "fog";
     case SCR_ACQUIREMENT:        return "acquirement";
+    case SCR_COLLECTION:         return "collection";
     case SCR_BRAND_WEAPON:       return "brand weapon";
     case SCR_HOLY_WORD:          return "holy word";
     case SCR_VULNERABILITY:      return "vulnerability";
@@ -3309,7 +3310,7 @@ bool is_good_item(const item_def &item)
     switch (item.base_type)
     {
     case OBJ_SCROLLS:
-        return item.sub_type == SCR_ACQUIREMENT;
+        return item.sub_type == SCR_ACQUIREMENT || item.sub_type == SCR_COLLECTION;
     case OBJ_POTIONS:
         if (you.species == SP_MUMMY || you.species == SP_LICH)
             return false;

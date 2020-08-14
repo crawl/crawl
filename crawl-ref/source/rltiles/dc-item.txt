@@ -644,6 +644,7 @@ i-magic_mapping SCR_MAGIC_MAPPING
 i-fog SCR_FOG
 %back scroll-cyan
 i-acquirement SCR_ACQUIREMENT
+i-acquirement SCR_COLLECTION
 %back scroll-green
 # Remove enchant weapon II when TAG_MAJOR_VERSION > 34
 i-enchant-weapon SCR_ENCHANT_WEAPON_II
