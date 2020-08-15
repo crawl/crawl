@@ -6880,7 +6880,7 @@ static bool _caravan_gift_items_to(monster* mons, int item_slot)
             || mons->type == MONS_MERC_ELEMENTALIST
             || mons->type == MONS_MERC_SHAMAN
             || mons->type == MONS_MERC_SHAMAN_II
-            || mons->type == MONS_MERC_SHAMAN_III)
+            || mons->type == MONS_MERC_SHAMAN_III);
 
     if (spellcaster && ((is_artefact(gift)
         && artefact_property(gift, ARTP_PREVENT_SPELLCASTING)
