@@ -120,21 +120,21 @@ mons_experience_levels::mons_experience_levels()
         experience += delta;
     }
 
-    if (mons.type == MONS_MERC_KNIGHT
-        || mons.type == MONS_MERC_INFUSER
-        || mons.type == MONS_MERC_SORCERESS
-        || mons.type == MONS_MERC_ASSASSIN
-        || mons.type == MONS_MERC_SHAMAN_II)
+    if (this.type == MONS_MERC_KNIGHT
+        || this.type == MONS_MERC_INFUSER
+        || this.type == MONS_MERC_SORCERESS
+        || this.type == MONS_MERC_ASSASSIN
+        || this.type == MONS_MERC_SHAMAN_II)
     {
         experience *= 2;
     }
 
-    if (mons.type == MONS_MERC_DEATH_KNIGHT
-        || mons.type == MONS_MERC_PALADIN
-        || mons.type == MONS_MERC_TIDEHUNTER
-        || mons.type == MONS_MERC_ELEMENTALIST
-        || mons.type == MONS_MERC_CLEANER
-        || mons.type == MONS_MERC_SHAMAN_III)
+    if (this.type == MONS_MERC_DEATH_KNIGHT
+        || this.type == MONS_MERC_PALADIN
+        || this.type == MONS_MERC_TIDEHUNTER
+        || this.type == MONS_MERC_ELEMENTALIST
+        || this.type == MONS_MERC_CLEANER
+        || this.type == MONS_MERC_SHAMAN_III)
     {
         experience *= 3;
     }
