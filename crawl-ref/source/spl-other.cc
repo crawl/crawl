@@ -124,7 +124,7 @@ void start_recall(recall_t type)
         }
         else if (type == recall_t::caravan)
         {
-            if (mi->type == MONS_MERC_FIGHTER
+            if (!(mi->type == MONS_MERC_FIGHTER
                || mi->type == MONS_MERC_KNIGHT
                || mi->type == MONS_MERC_DEATH_KNIGHT
                || mi->type == MONS_MERC_PALADIN
@@ -139,7 +139,7 @@ void start_recall(recall_t type)
                || mi->type == MONS_MERC_CLEANER
                || mi->type == MONS_MERC_SHAMAN
                || mi->type == MONS_MERC_SHAMAN_II
-               || mi->type == MONS_MERC_SHAMAN_III)
+               || mi->type == MONS_MERC_SHAMAN_III))
                 continue;
         }
 
