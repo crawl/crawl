@@ -2821,14 +2821,18 @@ conduct_type god_hates_monster(monster_type type)
 /**
  * Is the player hated by all? If so, does this monster care?
  */
-bool mons_hates_your_lovelessness(monster_type type)
+bool mons_can_hate(monster_type type)
 {
-    return you.get_mutation_level(MUT_NO_LOVE) && !mons_is_conjured(type);
+    return you.get_mutation_level(MUT_NO_LOVE)
+        // don't turn foxfire, guardian golem, etc hostile
+        && !mons_is_conjured(type)
+        // ignore things like tentacles, butterflies, plants, etc
+        && mons_class_gives_xp(type);
 }
 
 void check_lovelessness(monster &mons)
 {
-    if (!mons_hates_your_lovelessness(mons.type))
+    if (!mons_can_hate(mons.type))
         return;
 
     mons.attitude = ATT_HOSTILE;
@@ -2851,7 +2855,7 @@ void check_lovelessness(monster &mons)
 conduct_type god_hates_monster(const monster &mon)
 {
     // Player angers all real monsters
-    if (mons_hates_your_lovelessness(mon.type))
+    if (mons_can_hate(mon.type))
         return DID_SACRIFICE_LOVE;
 
     if (is_good_god(you.religion) && mon.evil())

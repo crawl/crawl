@@ -82,7 +82,7 @@ monster_type pick_random_monster(level_id place,
 
 conduct_type god_hates_monster(monster_type type);
 conduct_type god_hates_monster(const monster &mon);
-bool mons_hates_your_lovelessness(monster_type type);
+bool mons_can_hate(monster_type type);
 void check_lovelessness(monster &mon);
 
 bool find_habitable_spot_near(const coord_def& where, monster_type mon_type,
