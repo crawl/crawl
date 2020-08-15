@@ -1065,6 +1065,11 @@ reader choosing the type of item to be created. The item produced will be
 heavily biased towards something fitting the reader's skills, and also towards
 gear that hasn't been seen yet, but, alas, nothing is guaranteed.
 %%%%
+scroll of collection
+
+A two-of-a-kind scroll which summon to the special artefact from 
+Collector's artefact collections, with the reader choosing the artefact to be summoned.
+%%%%
 scroll of amnesia
 
 A scroll that allows its reader to selectively erase one spell from memory to

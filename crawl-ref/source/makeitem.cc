@@ -1447,9 +1447,12 @@ static void _generate_scroll_item(item_def& item, int force_type,
                  15, (depth_mod < 4 ? NUM_SCROLLS : SCR_SILENCE),
                  15, (depth_mod < 4 ? NUM_SCROLLS : SCR_BRAND_WEAPON),
                  15, (depth_mod < 4 ? NUM_SCROLLS : SCR_TORMENT),
-                 15, (depth_mod < 4 ? NUM_SCROLLS : SCR_HOLY_WORD));
+                 15, (depth_mod < 4 ? NUM_SCROLLS : SCR_HOLY_WORD),
+                 // DON'T MAKE UNIQUE SCROLL
+                 0, SCR_COLLECTION);
         }
-        while (item.sub_type == NUM_SCROLLS
+        while (item.sub_type == NUM_SCROLLS 
+               || item.sub_type == SCR_COLLECTION
                || agent == GOD_XOM
                   && _is_boring_item(OBJ_SCROLLS, item.sub_type)
                   && --tries > 0);
@@ -1765,7 +1768,7 @@ static void _generate_misc_item(item_def& item, int force_type)
                                       MISC_LAMP_OF_FIRE,
                                       MISC_PHIAL_OF_FLOODS,
                                       MISC_LIGHTNING_ROD,
-				                      MISC_DISC_OF_STORMS,
+                                      MISC_DISC_OF_STORMS,
                                       MISC_BOX_OF_BEASTS,
                                       MISC_SACK_OF_SPIDERS,
                                       MISC_CRYSTAL_BALL_OF_ENERGY,
