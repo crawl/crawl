@@ -1249,6 +1249,8 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         item.sub_type  = WPN_FLAIL;
         item.flags    |= ISFLAG_KNOW_TYPE;
         level          = 0;
+        set_item_ego_type(item, OBJ_WEAPONS, SPWPN_NONE);
+        force_item = true;
         force_uncursed = true;
     }
         break;
@@ -1259,6 +1261,8 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         item.sub_type  = WPN_SPEAR;
         item.flags    |= ISFLAG_KNOW_TYPE;
         level          = 0;
+        set_item_ego_type(item, OBJ_WEAPONS, SPWPN_NONE);
+        force_item = true;
         force_uncursed = true;
     }
         break;
@@ -1267,6 +1271,8 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
     {
         item.base_type = OBJ_STAVES;
         item.sub_type  = random_choose(STAFF_FIRE, STAFF_COLD, STAFF_AIR);
+        set_item_ego_type(item, OBJ_WEAPONS, SPWPN_NONE);
+        force_item = true;
         force_uncursed = true;
     }
         break;
@@ -1277,6 +1283,8 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         item.sub_type  = WPN_DAGGER;
         item.flags    |= ISFLAG_KNOW_TYPE;
         level          = 0;
+        set_item_ego_type(item, OBJ_WEAPONS, SPWPN_NONE);
+        force_item = true;
         force_uncursed = true;
     }
         break;
@@ -1287,6 +1295,8 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         item.sub_type  = WPN_CLUB;
         item.flags    |= ISFLAG_KNOW_TYPE;
         level          = 0;
+        set_item_ego_type(item, OBJ_WEAPONS, SPWPN_NONE);
+        force_item = true;
         force_uncursed = true;
     }
         break;
@@ -2228,34 +2238,45 @@ int make_mons_armour(monster_type type, int level)
     }
 
     case MONS_MERC_FIGHTER:
+    case MONS_MERC_KNIGHT:
     {
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = ARM_SCALE_MAIL;
         item.flags    |= ISFLAG_KNOW_TYPE;
         level          = 0;
         do_uncurse_item(item);
+        set_item_ego_type(item, OBJ_ARMOUR, SPWPN_NONE);
+        force_item = true;
     }
         break;
 
     case MONS_MERC_SKALD:
     case MONS_MERC_BRIGAND:
     case MONS_MERC_SHAMAN:
+    case MONS_MERC_INFUSER:
+    case MONS_MERC_ASSASSIN:
+    case MONS_MERC_SHAMAN_II:
     {
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = ARM_LEATHER_ARMOUR;
         item.flags    |= ISFLAG_KNOW_TYPE;
         level          = 0;
         do_uncurse_item(item);
+        set_item_ego_type(item, OBJ_ARMOUR, SPWPN_NONE);
+        force_item = true;
     }
         break;
 
     case MONS_MERC_WITCH:
+    case MONS_MERC_SORCERESS:
     {
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = ARM_ROBE;
         item.flags    |= ISFLAG_KNOW_TYPE;
         level          = 0;
         do_uncurse_item(item);
+        set_item_ego_type(item, OBJ_ARMOUR, SPWPN_NONE);
+        force_item = true;
     }
         break;
 

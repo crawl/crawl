@@ -106,6 +106,7 @@ static const map<monster_type, mon_lev_up_cond> mon_grow_cond =
 mons_experience_levels::mons_experience_levels()
 {
     int experience = monster_xp_base;
+
     for (int i = 1; i <= MAX_MONS_HD; ++i)
     {
         mexp[i] = experience;
@@ -117,6 +118,25 @@ mons_experience_levels::mons_experience_levels()
             min(max(delta, monster_xp_base * monster_xp_multiplier / 100),
                 40000);
         experience += delta;
+    }
+
+    if (mons.type == MONS_MERC_KNIGHT
+        || mons.type == MONS_MERC_INFUSER
+        || mons.type == MONS_MERC_SORCERESS
+        || mons.type == MONS_MERC_ASSASSIN
+        || mons.type == MONS_MERC_SHAMAN_II)
+    {
+        experience *= 2;
+    }
+
+    if (mons.type == MONS_MERC_DEATH_KNIGHT
+        || mons.type == MONS_MERC_PALADIN
+        || mons.type == MONS_MERC_TIDEHUNTER
+        || mons.type == MONS_MERC_ELEMENTALIST
+        || mons.type == MONS_MERC_CLEANER
+        || mons.type == MONS_MERC_SHAMAN_III)
+    {
+        experience *= 3;
     }
 }
 

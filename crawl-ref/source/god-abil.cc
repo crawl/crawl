@@ -6872,7 +6872,7 @@ static bool _caravan_gift_items_to(monster* mons, int item_slot)
         return false;
     }
 
-    if ((mons->type == MONS_MERC_SKALD
+    bool spellcaster = (mons->type == MONS_MERC_SKALD
             || mons->type == MONS_MERC_INFUSER
             || mons->type == MONS_MERC_TIDEHUNTER
             || mons->type == MONS_MERC_WITCH
@@ -6881,7 +6881,9 @@ static bool _caravan_gift_items_to(monster* mons, int item_slot)
             || mons->type == MONS_MERC_SHAMAN
             || mons->type == MONS_MERC_SHAMAN_II
             || mons->type == MONS_MERC_SHAMAN_III)
-        && ((is_artefact(gift) && artefact_property(gift, ARTP_PREVENT_SPELLCASTING)
+
+    if (spellcaster && ((is_artefact(gift)
+        && artefact_property(gift, ARTP_PREVENT_SPELLCASTING)
             || get_weapon_brand(gift) == SPWPN_ANTIMAGIC)))
     {
         mprf("%s can't use spellcast-disturbing equipments.",
@@ -6989,37 +6991,44 @@ static bool _caravan_gift_items_to(monster* mons, int item_slot)
         // ranged weapon
         if (range_weapon)
         {
-            if (mons->type == MONS_MERC_SHAMAN // WPN_HUNTING_SLING only
-                && (gift.sub_type == WPN_FUSTIBALUS
-                   || gift.sub_type == WPN_HAND_CROSSBOW
-                   || gift.sub_type == WPN_ARBALEST
-                   || gift.sub_type == WPN_TRIPLE_CROSSBOW
-                   || gift.sub_type == WPN_SHORTBOW
-                   || gift.sub_type == WPN_LONGBOW))
+
+            switch (gift.sub_type)
             {
-                mprf("%s isn't enough skilled to equip %s!",
-                mons->name(DESC_THE, false).c_str(), gift.name(DESC_THE, false).c_str());
-                return false;
-            }
-            if (mons->type == MONS_MERC_SHAMAN_II
-                && (gift.sub_type == WPN_ARBALEST
-                   || gift.sub_type == WPN_TRIPLE_CROSSBOW
-                   || gift.sub_type == WPN_LONGBOW))
-            {
-                mprf("%s isn't enough skilled to equip %s!",
-                mons->name(DESC_THE, false).c_str(), gift.name(DESC_THE, false).c_str());
-                return false;
-            }
-            if (mons->type == MONS_MERC_SHAMAN_III
-                && gift.sub_type == WPN_TRIPLE_CROSSBOW)
-            {
-                mprf("%s isn't enough skilled to equip %s!",
-                mons->name(DESC_THE, false).c_str(), gift.name(DESC_THE, false).c_str());
-                return false;
-            }
-            else if (mons->type != MONS_MERC_SHAMAN
-                     && mons->type != MONS_MERC_SHAMAN_II
-                     && mons->type != MONS_MERC_SHAMAN_III) {
+            case WPN_HUNTING_SLING: // tier-1
+                switch (mons->type){
+                    case MONS_MERC_SHAMAN:
+                    case MONS_MERC_SHAMAN_II:
+                    case MONS_MERC_SHAMAN_III:
+                        break;
+                    default:
+                        mprf("%s isn't enough skilled to equip %s!",
+                        mons->name(DESC_THE, false).c_str(), gift.name(DESC_THE, false).c_str());
+                        return false;
+                }
+            case WPN_FUSTIBALUS: // tier-2
+            case WPN_SHORTBOW:
+            case WPN_HAND_CROSSBOW:
+                switch (mons->type){
+                    case MONS_MERC_SHAMAN_II:
+                    case MONS_MERC_SHAMAN_III:
+                        break;
+                    default:
+                        mprf("%s isn't enough skilled to equip %s!",
+                        mons->name(DESC_THE, false).c_str(), gift.name(DESC_THE, false).c_str());
+                        return false;
+                }
+            case WPN_LONGBOW: // tier-3
+            case WPN_ARBALEST:
+                switch (mons->type){
+                    case MONS_MERC_SHAMAN_III:
+                        break;
+                    default:
+                        mprf("%s isn't enough skilled to equip %s!",
+                        mons->name(DESC_THE, false).c_str(), gift.name(DESC_THE, false).c_str());
+                        return false;
+                }
+            case WPN_TRIPLE_CROSSBOW: // tier-4
+            default:
                 mprf("%s isn't enough skilled to equip %s!",
                 mons->name(DESC_THE, false).c_str(), gift.name(DESC_THE, false).c_str());
                 return false;
