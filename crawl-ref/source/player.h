@@ -818,7 +818,7 @@ public:
     bool stasis() const override;
     bool cloud_immune(bool calc_unid = true, bool items = true) const override;
 
-    bool faithbonus() const override;
+    bool faithbonus() const;
     bool airborne() const override;
     bool cancellable_flight() const;
     bool permanent_flight() const;
