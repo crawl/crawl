@@ -1249,7 +1249,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         item.sub_type  = WPN_FLAIL;
         item.flags    |= ISFLAG_KNOW_TYPE;
         level          = 0;
-        set_item_ego_type(item, OBJ_WEAPONS, SPWPN_NONE);
+        set_item_ego_type(item, OBJ_WEAPONS, SPWPN_NORMAL);
         force_item = true;
         force_uncursed = true;
     }
@@ -1261,7 +1261,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         item.sub_type  = WPN_SPEAR;
         item.flags    |= ISFLAG_KNOW_TYPE;
         level          = 0;
-        set_item_ego_type(item, OBJ_WEAPONS, SPWPN_NONE);
+        set_item_ego_type(item, OBJ_WEAPONS, SPWPN_NORMAL);
         force_item = true;
         force_uncursed = true;
     }
@@ -1271,7 +1271,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
     {
         item.base_type = OBJ_STAVES;
         item.sub_type  = random_choose(STAFF_FIRE, STAFF_COLD, STAFF_AIR);
-        set_item_ego_type(item, OBJ_WEAPONS, SPWPN_NONE);
+        set_item_ego_type(item, OBJ_WEAPONS, SPWPN_NORMAL);
         force_item = true;
         force_uncursed = true;
     }
@@ -1283,7 +1283,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         item.sub_type  = WPN_DAGGER;
         item.flags    |= ISFLAG_KNOW_TYPE;
         level          = 0;
-        set_item_ego_type(item, OBJ_WEAPONS, SPWPN_NONE);
+        set_item_ego_type(item, OBJ_WEAPONS, SPWPN_NORMAL);
         force_item = true;
         force_uncursed = true;
     }
@@ -1295,7 +1295,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         item.sub_type  = WPN_CLUB;
         item.flags    |= ISFLAG_KNOW_TYPE;
         level          = 0;
-        set_item_ego_type(item, OBJ_WEAPONS, SPWPN_NONE);
+        set_item_ego_type(item, OBJ_WEAPONS, SPWPN_NORMAL);
         force_item = true;
         force_uncursed = true;
     }
@@ -2245,7 +2245,7 @@ int make_mons_armour(monster_type type, int level)
         item.flags    |= ISFLAG_KNOW_TYPE;
         level          = 0;
         do_uncurse_item(item);
-        set_item_ego_type(item, OBJ_ARMOUR, SPWPN_NONE);
+        set_item_ego_type(item, OBJ_ARMOUR, SPWPN_NORMAL);
         force_item = true;
     }
         break;
@@ -2262,7 +2262,7 @@ int make_mons_armour(monster_type type, int level)
         item.flags    |= ISFLAG_KNOW_TYPE;
         level          = 0;
         do_uncurse_item(item);
-        set_item_ego_type(item, OBJ_ARMOUR, SPWPN_NONE);
+        set_item_ego_type(item, OBJ_ARMOUR, SPWPN_NORMAL);
         force_item = true;
     }
         break;
@@ -2275,7 +2275,7 @@ int make_mons_armour(monster_type type, int level)
         item.flags    |= ISFLAG_KNOW_TYPE;
         level          = 0;
         do_uncurse_item(item);
-        set_item_ego_type(item, OBJ_ARMOUR, SPWPN_NONE);
+        set_item_ego_type(item, OBJ_ARMOUR, SPWPN_NORMAL);
         force_item = true;
     }
         break;
