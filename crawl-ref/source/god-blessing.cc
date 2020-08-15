@@ -722,7 +722,7 @@ static bool _beogh_bless_follower(monster* follower, bool force)
 
     string blessing = "";
 
-    if (if (mons_is_unique(follower->type) && follower->type == MONS_BRANDAGOTH && !follower->blessed && one_chance_in(5))
+    if (mons_is_unique(follower->type) && follower->type == MONS_BRANDAGOTH && !follower->blessed && one_chance_in(5))
     {
         follower->blessed = true;
         blessing = "the qualification of promotion.";
