@@ -119,25 +119,6 @@ mons_experience_levels::mons_experience_levels()
                 40000);
         experience += delta;
     }
-
-    if (this.type == MONS_MERC_KNIGHT
-        || this.type == MONS_MERC_INFUSER
-        || this.type == MONS_MERC_SORCERESS
-        || this.type == MONS_MERC_ASSASSIN
-        || this.type == MONS_MERC_SHAMAN_II)
-    {
-        experience *= 2;
-    }
-
-    if (this.type == MONS_MERC_DEATH_KNIGHT
-        || this.type == MONS_MERC_PALADIN
-        || this.type == MONS_MERC_TIDEHUNTER
-        || this.type == MONS_MERC_ELEMENTALIST
-        || this.type == MONS_MERC_CLEANER
-        || this.type == MONS_MERC_SHAMAN_III)
-    {
-        experience *= 3;
-    }
 }
 
 static const monster_level_up *_monster_level_up_target(monster_type type,
