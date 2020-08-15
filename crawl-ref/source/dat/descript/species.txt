@@ -177,11 +177,16 @@ Lesser Lich
 
 They are incomplete, so they head to dungeon to be True lich.  
 Lesser Liches are good at all kinds of magic, especially the necromancy,
-and have excellent mana regenerative ability
+and have excellent mana regenerative ability.
 %%%%
 Crustacean
 
 They have hard, but easily broken exoskeleton. They can use their cut
 body as a bait and run away. They are very adaptive and they can 
-recover their body. They grow and can create miasma foam like a crab
+recover their body. They grow and can create miasma foam like a crab.
+%%%%
+Meliai
+
+Swifty hybrids of a winged, human-like torso and stinging abdomen of a bee.
+Due to their instinct to serve higher beings, they are naturally faithful.
 %%%%

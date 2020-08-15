@@ -1,0 +1,67 @@
+enum: SP_MELIAI
+monster: MONS_MELIAI
+name: Meliai
+genus: "Bee"
+short_name: "Ml"
+difficulty: Advanced
+difficulty_priority: 40
+aptitudes:
+  xp: 1
+  hp: -2
+  mp_mod: 0
+  mr: 4
+  maces_and_flails: -1
+  polearms: -3
+  staves: -3
+  slings: -2
+  bows: -2
+  crossbows: -2
+  throwing: -2
+  armour: -5
+  dodging: 2
+  stealth: 1
+  shields: -5
+  unarmed_combat: -1
+  conjurations: -3
+  charms: 1
+  translocations: -3
+  fire_magic: -3
+  ice_magic: -3
+  earth_magic: -3
+  poison_magic: 1
+  invocations: 3
+size: small
+str: 8
+int: 7
+dex: 9
+levelup_stat_frequency: 4
+levelup_stats:
+  - dex
+mutations:
+  1:
+    MUT_FAST: 2
+    MUT_STINGER: 1
+fake_mutations:
+  - long: "Your are naturally faithful."
+    short: naturally faithful
+  - long: "You are vulnerable to poison."
+    short: poison vulnerability
+  - long: "You have no legs."
+recommended_jobs:
+  - JOB_ASSASSIN
+  - JOB_GLADIATOR
+  - JOB_MONK
+  - JOB_BERSERKER
+  - JOB_ABYSSAL_KNIGHT
+  - JOB_SKALD
+  - JOB_ENCHANTER
+  - JOB_STALKER
+  - JOB_WIZARD
+  - JOB_SUMMONER
+  - JOB_NECROMANCER
+  - JOB_VENOM_MAGE
+recommended_weapons:
+  - SK_SHORT_BLADES
+  - SK_LONG_BLADES
+  - SK_AXES 
+walking_verb: Flap

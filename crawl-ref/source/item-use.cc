@@ -1434,7 +1434,8 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         }
 
         if (you.species == SP_NAGA
-            || you.species == SP_DJINNI)
+            || you.species == SP_DJINNI
+            || you.species == SP_MELIAI)
         {
             if (verbose)
                 mpr("You have no legs!");
