@@ -106,6 +106,7 @@ static const map<monster_type, mon_lev_up_cond> mon_grow_cond =
 mons_experience_levels::mons_experience_levels()
 {
     int experience = monster_xp_base;
+
     for (int i = 1; i <= MAX_MONS_HD; ++i)
     {
         mexp[i] = experience;
