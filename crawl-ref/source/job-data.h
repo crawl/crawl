@@ -305,7 +305,7 @@ static const map<job_type, job_def> job_data =
 } },
 
 { JOB_CRUSADER, {
-    "Cr", "Crusader",
+    "AW", "Arcane Warrior",
     3, 5, 4,
     { SP_HALFLING, SP_CENTAUR, SP_MERFOLK, SP_BASE_DRACONIAN, SP_VAMPIRE, SP_HOMUNCULUS},
     { "leather armour", "book of War Chants" },
