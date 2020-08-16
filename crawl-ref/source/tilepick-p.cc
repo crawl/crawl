@@ -727,7 +727,7 @@ tileidx_t tilep_species_to_base_tile(int sp, int level)
     case SP_LICH:
         return TILEP_TRAN_LICH_LESSER_LICH;
     case SP_MELIAI:
-        return TILEP_TRAN_MELIAI;
+        return TILEP_BASE_MELIAI;
     default:
         return TILEP_BASE_HUMAN;
     }

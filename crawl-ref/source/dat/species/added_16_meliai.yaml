@@ -6,41 +6,45 @@ short_name: "Ml"
 difficulty: Advanced
 difficulty_priority: 40
 aptitudes:
-  xp: 1
+  xp: 0
   hp: -2
   mp_mod: 0
-  mr: 4
-  maces_and_flails: -1
+  mr: 3
+  maces_and_flails: -2
   polearms: -3
-  staves: -3
   slings: -2
-  bows: -2
-  crossbows: -2
-  throwing: -2
+  bows: -3
+  crossbows: -3
+  throwing: -3
   armour: -5
-  dodging: 2
-  stealth: 1
   shields: -5
   unarmed_combat: -1
   conjurations: -3
   charms: 1
+  necromancy: -1
   translocations: -3
   fire_magic: -3
-  ice_magic: -3
+  ice_magic: -1
+  air_magic: -1
   earth_magic: -3
   poison_magic: 1
+  evocations: -2
   invocations: 3
 size: small
 str: 8
 int: 7
 dex: 9
-levelup_stat_frequency: 4
+levelup_stat_frequency: 5
 levelup_stats:
+  - str
+  - int
   - dex
 mutations:
   1:
     MUT_FAST: 2
-    MUT_STINGER: 1
+    MUT_STINGER: 3
+    MUT_DEFORMED: 1
+    MUT_FAST_METABOLISM: 3
 fake_mutations:
   - long: "Your are naturally faithful."
     short: naturally faithful
@@ -63,5 +67,6 @@ recommended_jobs:
 recommended_weapons:
   - SK_SHORT_BLADES
   - SK_LONG_BLADES
-  - SK_AXES 
+  - SK_AXES
+  - SK_STAVES
 walking_verb: Flap
