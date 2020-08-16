@@ -555,13 +555,16 @@ void infestation_death_fineff::fire()
 
 void jiyva_create_jelly_fineff::fire()
 {
-    monster_type jelly_type = MONS_JELLY;
-    int jelly_hd = hitdice/2 + random2(hitdice/2);
+    monster_type jelly_type = MONS_SMALL_JELLY;
+    int jelly_hd = hitdice/2 + random2(hitdice/2+1);
 
-    if (jelly_hd > 7) {
+    if (jelly_hd > 3) {
+        jelly_type = MONS_JELLY;
+    }
+    if (jelly_hd > 9) {
         jelly_type = MONS_SLIME_CREATURE;
     }
-    else if (jelly_hd > 13) {
+    if (jelly_hd > 15) {
         jelly_type = random_choose(MONS_ACID_BLOB, MONS_AZURE_JELLY, MONS_DEATH_OOZE);
     }
 

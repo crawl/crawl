@@ -280,9 +280,9 @@ const vector<god_power> god_powers[NUM_GODS] =
            "You may expel jellies when seriously injured." },
       { 5, ABIL_JIYVA_CURE_BAD_MUTATION,
            "call upon Jiyva to remove your harmful mutations" },
-      { 7, ABIL_JIYVA_BLESS_WEAPON,
-           "Jiyva will bless your weapon with acid... once.",
-           "Jiyva is no longer ready to bless your weapon." },
+      //{ 7, ABIL_JIYVA_BLESS_WEAPON,
+      //     "Jiyva will bless your weapon with acid... once.",
+      //     "Jiyva is no longer ready to bless your weapon." },
     },
 
     // Fedhas

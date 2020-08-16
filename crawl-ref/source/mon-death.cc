@@ -976,6 +976,24 @@ static bool _is_pet_kill(killer_type killer, int i)
               && (me2.who == KC_YOU || me2.who == KC_FRIENDLY);
 }
 
+static bool _is_jelly_kill(killer_type killer, int i)
+{
+    if (!MON_KILL(killer))
+        return false;
+
+    if (invalid_monster_index(i))
+        return false;
+
+    const monster* m = &menv[i];
+
+    if (mons_is_slime(*m)) {
+        return true;
+    }
+
+    return false;
+}
+
+
 int exp_rate(int killer)
 {
     // Damage by the spectral weapon is considered to be the player's damage ---
@@ -2944,7 +2962,9 @@ item_def* monster_die(monster& mons, killer_type killer,
         if(YOU_KILL(killer) ||
             pet_kill)
         {
-            _jiyva_kill_to_slime(&mons);
+            if (!_is_jelly_kill(killer, killer_index)) {
+                _jiyva_kill_to_slime(&mons);
+            }
         }
     }
 
