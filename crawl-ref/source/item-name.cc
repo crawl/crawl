@@ -3947,6 +3947,7 @@ bool is_useless_item(const item_def &item, bool temp)
         case MISC_BUGGY_LANTERN_OF_SHADOWS:
 #endif
         case MISC_ZIGGURAT:
+        case MISC_BAG:
             return false;
 
         // Purely summoning misc items don't work w/ sac love

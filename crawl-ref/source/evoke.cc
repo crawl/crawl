@@ -2276,7 +2276,7 @@ bool evoke_item(int slot)
     case OBJ_MISCELLANY:
         did_work = true; // easier to do it this way for misc items
 
-        if (item.sub_type != MISC_ZIGGURAT)
+        if (item.sub_type != MISC_ZIGGURAT && item.sub_type != MISC_BAG)
         {
             if (you.get_mutation_level(MUT_NO_ARTIFICE))
             {

@@ -2241,7 +2241,8 @@ bool item_is_evokable(const item_def &item, bool unskilled, bool known,
     if (no_evocables
         && item.base_type != OBJ_WEAPONS // reaching is ok.
         && !(item.base_type == OBJ_MISCELLANY
-             && item.sub_type == MISC_ZIGGURAT)) // zigfigs are OK.
+             && (item.sub_type == MISC_ZIGGURAT || // zigfigs are OK.
+                 item.sub_type == MISC_BAG))) // bag is also OK.
     {
         // the rest are forbidden under sac evocables.
         if (msg)
