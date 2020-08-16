@@ -2854,7 +2854,9 @@ conduct_type player_will_anger_monster(monster_type type)
  */
 conduct_type player_will_anger_monster(const monster &mon)
 {
-    if (you.get_mutation_level(MUT_NO_LOVE) && !mons_is_conjured(mon.type))
+    if (you.get_mutation_level(MUT_NO_LOVE) && !mons_is_conjured(mon.type)
+        && mon.type != MONS_PLAYER_ELDRITCH_TENTACLE
+        && mon.type != MONS_PLAYER_ELDRITCH_TENTACLE_SEGMENT)
     {
         // Player angers all real monsters
         return DID_SACRIFICE_LOVE;

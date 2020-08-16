@@ -2610,7 +2610,9 @@ static void _clear_monster_flags()
 static void _update_monster_attitude(monster *mon)
 {
     if (you.get_mutation_level(MUT_NO_LOVE)
-        && !mons_is_conjured(mon->type))
+        && !mons_is_conjured(mon->type)
+        && mon->type != MONS_PLAYER_ELDRITCH_TENTACLE
+        && mon->type != MONS_PLAYER_ELDRITCH_TENTACLE_SEGMENT)
     {
         mon->attitude = ATT_HOSTILE;
     }
