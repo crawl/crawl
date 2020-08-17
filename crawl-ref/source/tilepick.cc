@@ -4059,6 +4059,8 @@ static tileidx_t _tileidx_player_species_base(const species_type species)
         case SP_BLOSSOM_HOMUNCULUS:
         case SP_ADAPTION_HOMUNCULUS:
             return TILEG_SP_HOMUNCULUS;
+        case SP_MELIAI:
+            return TILEG_SP_MELIAI;
         default:
             return TILEP_ERROR;
     }
