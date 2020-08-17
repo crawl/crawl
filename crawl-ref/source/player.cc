@@ -879,6 +879,7 @@ bool player_has_feet(bool temp, bool include_mutations)
         || you.species == SP_OCTOPODE
         || you.species == SP_CRUSTACEAN
         || you.species == SP_DJINNI
+        || you.species == SP_MELIAI
         || you.fishtail && temp)
     {
         return false;
@@ -1802,6 +1803,9 @@ int player_res_poison(bool calc_unid, bool temp, bool items)
         if (get_form()->res_pois() > 0)
             rp++;
     }
+
+    if (you.species == SP_MELIAI)
+        rp--;
 
     // Cap rPois at + before vulnerability effects are applied
     // (so carrying multiple rPois effects is never useful)
@@ -5773,6 +5777,16 @@ player::~player()
     ASSERT(!save); // the save file should be closed or deleted
 }
 
+bool player::faithbonus() const
+{
+    if (you.species == SP_MELIAI)
+    {
+        return true;
+    }
+
+    return false;
+}
+
 bool player::airborne() const
 {
     // Might otherwise be airborne, but currently stuck to the ground
@@ -5781,6 +5795,7 @@ bool player::airborne() const
 
     if (duration[DUR_FLIGHT]
         || you.species == SP_DJINNI
+        || you.species == SP_MELIAI
         || you.props[EMERGENCY_FLIGHT_KEY].get_bool()
         || attribute[ATTR_PERM_FLIGHT]
         || get_form()->enables_flight())
@@ -7014,14 +7029,16 @@ bool player::cancellable_flight() const
 bool player::permanent_flight() const
 {
     return attribute[ATTR_PERM_FLIGHT]
-        || species == SP_DJINNI;
+        || species == SP_DJINNI
+        || species == SP_MELIAI;
 }
 
 bool player::racial_permanent_flight() const
 {
     return get_mutation_level(MUT_TENGU_FLIGHT)
         || get_mutation_level(MUT_BIG_WINGS)
-        || species == SP_DJINNI;
+        || species == SP_DJINNI
+        || species == SP_MELIAI;
 }
 
 bool player::tengu_flight() const
