@@ -3336,7 +3336,39 @@ bool bolt::misses_player()
     if (!_test_beam_hit(real_tohit, dodge, pierce, 0, r))
     {
         mprf("The %s misses you.", name.c_str());
+        // chance to reflect, when dodging was successful
+        if ((you_worship(GOD_IMUS) && is_omnireflectable()
+             || is_blockable()) && !aimed_at_feet)
+        {
+            const int imus_sh = max(1, you.piety/10);
+            if (x_chance_in_y(imus_sh, 25)) // 10% ~ 80%
+            {
+                const string refl_name = name.empty() &&
+                                         origin_spell != SPELL_NO_SPELL ?
+                                            spell_title(origin_spell) :
+                                            name;
+                mprf("Mirror of Imus Thea reflects %s.", refl_name.c_str());
+                reflect();
+                return true;
+            }
+        }
         count_action(CACT_DODGE, DODGE_EVASION);
+    }
+    // chance to reflect, even if dodging wasn't successful
+    else if ((you_worship(GOD_IMUS) && is_omnireflectable()
+             || is_blockable()) && !aimed_at_feet)
+    {
+        const int imus_sh = max(1, you.piety/10);
+        if (x_chance_in_y(imus_sh, 25)) // 10% ~ 80%
+        {
+            const string refl_name = name.empty() &&
+                                     origin_spell != SPELL_NO_SPELL ?
+                                        spell_title(origin_spell) :
+                                        name;
+            mprf("Mirror of Imus Thea reflects %s.", refl_name.c_str());
+            reflect();
+            return true;
+        }
     }
     else if (defl && !_test_beam_hit(real_tohit, dodge, pierce, defl, r))
     {

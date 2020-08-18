@@ -2125,8 +2125,10 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
 
     case SPELL_FULMINANT_PRISM:
         return cast_fulminating_prism(&you, powc, beam.target, fail);
+
     case SPELL_SINGULARITY:
         return cast_singularity(&you, powc, beam.target, fail);
+
     case SPELL_SEARING_RAY:
         return cast_searing_ray(powc, beam, fail);
 
@@ -2204,6 +2206,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
 
     case SPELL_PAVISE:
         return cast_pavise(powc, beam, fail);
+
+    case SPELL_PRISMATIC_PRISM:
+        return cast_prismatic_prism(&you, powc, beam.target, fail);
 
     // non-player spells that have a zap, but that shouldn't be called (e.g
     // because they will crash as a player zap).

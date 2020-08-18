@@ -418,20 +418,33 @@ const vector<god_power> god_powers[NUM_GODS] =
            "summon a storm of heavenly clouds" },
     },
 
-      // The Great Wyrm
-      { { 1, ABIL_WYRM_INFUSE,
-            "infuse a target in your sight with alcemical essence" },
-        { 1, ABIL_WYRM_NIGREDO,
-            "transmute essence of Nigredo"},
-        { 2, ABIL_WYRM_ALBEDO,
-            "transmute essence of Albedo"},
-        { 3, ABIL_WYRM_CITRINITAS,
-            "transmute essence of Citrinitas"},
-        { 4, ABIL_WYRM_VIRIDITAS,
-            "transmute essence of Viriditas"},
-        { 5, ABIL_WYRM_RUBEDO,
-            "transmute essence of Rubedo"},
-        },
+    // The Great Wyrm
+    { { 1, ABIL_WYRM_INFUSE,
+          "infuse a target in your sight with alcemical essence" },
+      { 1, ABIL_WYRM_NIGREDO,
+          "transmute essence of Nigredo"},
+      { 2, ABIL_WYRM_ALBEDO,
+          "transmute essence of Albedo"},
+      { 3, ABIL_WYRM_CITRINITAS,
+          "transmute essence of Citrinitas"},
+      { 4, ABIL_WYRM_VIRIDITAS,
+          "transmute essence of Viriditas"},
+      { 5, ABIL_WYRM_RUBEDO,
+          "transmute essence of Rubedo"},
+      },
+
+    // Imus Thea
+    { { 0, "You are unable to wear heavy armour and all kinds of shield." },
+      { 0, "The heavier weapon you wield, the more inaccurate it becomes." },
+      { 0, "Imus Thea will reflect ranged attaks, depending on piety.",
+           "Imus Thea will no longer reflect ranged attacks.",
+           "Imus Thea will reflect ranged attacks, depending on piety." },
+      { 3, ABIL_IMUS_PRISMATIC_PRISM,
+           "create prismatic prism to blind enemies",
+           "create prismatic prism" },
+      { 5, ABIL_IMUS_FRAGMENTATION,
+           "shatter your half of health to duplicate yourself",
+           "duplicate yourself" },
 };
 
 vector<god_power> get_god_powers(god_type god)
@@ -2188,6 +2201,7 @@ string god_name(god_type which_god, bool long_name)
     case GOD_HEPLIAKLQANA:  return "Hepliaklqana";
     case GOD_WU_JIAN:     return "Wu Jian";
     case GOD_WYRM:     return "the Great Wyrm";
+    case GOD_IMUS:     return "Imus Thea";
     case GOD_JIYVA: // This is handled at the beginning of the function
     case GOD_ECUMENICAL:    return "an unknown god";
     case NUM_GODS:          return "Buggy";
@@ -4322,6 +4336,7 @@ void handle_god_time(int /*time_delta*/)
         case GOD_SHINING_ONE:
         case GOD_NEMELEX_XOBEH:
         case GOD_WYRM:
+        case GOD_IMUS:
             if (one_chance_in(35))
                 lose_piety(1);
             break;

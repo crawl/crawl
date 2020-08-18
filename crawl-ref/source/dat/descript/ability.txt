@@ -1071,3 +1071,11 @@ called 'Rubedo'. Drinking Rubedo will grants you resistances from fire,
 cold, electricity, poison, and acid, and result of evaporate isn't specified.
 Also it can be used for Infuse Essence ability; Infused target will diffuse
 other infusions, makes all targets in your sight are infused by same essences.
+# Imus Thea
+Prismatic Prism ability
+
+Create a prism, blinds nearby enemies and also reflect ranged attacks like you.
+%%%%
+Fragmentation ability
+
+Shatter youself to duplicate yourself.

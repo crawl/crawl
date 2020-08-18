@@ -36,6 +36,7 @@
 #include "mon-behv.h"
 #include "mon-book.h"
 #include "mon-cast.h"
+#include "mon-clone.h"
 #include "mon-pick.h"
 #include "mon-place.h"
 #include "mon-poly.h"
@@ -96,6 +97,7 @@ static const char *_god_wrath_adjectives[] =
     "memory",           // Hepliaklqana (unused)
     "rancor",           // Wu Jian
     "distillation",     // Great Wyrm
+    "reflection",       // Imus Thea
 };
 COMPILE_CHECK(ARRAYSZ(_god_wrath_adjectives) == NUM_GODS);
 
@@ -2141,6 +2143,31 @@ static bool _uskayaw_retribution()
     return true;
 }
 
+static bool _imus_retribution()
+{
+    const god_type god = GOD_IMUS;
+    int count = 0;
+
+    // WIP: use count to define success/failure of summon illusion
+
+    if (count > 0)
+    {
+        switch (random2(2))
+        {
+        case 0:
+            simple_god_message(" says: Do you know who is your worst enemy? Face it!", god);
+            break;
+        case 1:
+            mprf(MSGCH_WARN, "You feel the world around you overlap for a moment!");
+            break;
+        }
+
+    } else {
+        simple_god_message( " fails to create your reflection.", god);
+    }
+    return true;
+}
+
 bool divine_retribution(god_type god, bool no_bonus, bool force)
 {
     ASSERT(god != GOD_NO_GOD);
@@ -2187,6 +2214,7 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
     case GOD_USKAYAW:       do_more = _uskayaw_retribution(); break;
     case GOD_WU_JIAN:       do_more = _wu_jian_retribution(); break;
     case GOD_WYRM:          do_more = _wyrm_retribution(); break;
+    case GOD_IMUS:          do_more = _imus_retribution(); break;
 
     case GOD_ASHENZARI:
     case GOD_ELYVILON:
