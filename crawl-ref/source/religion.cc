@@ -2697,6 +2697,8 @@ int initial_wrath_penance_for(god_type god)
         case GOD_ZIN:
         default:
             return 25;
+        case GOD_RU:
+            return 0;
     }
 }
 
