@@ -139,7 +139,7 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
                 ref_block.style.height = "0px";
 
                 div.style.visibility = "hidden";
-                div.appendChild(dmy_glyph);
+                div.appendChild(ref_glyph);
                 div.appendChild(ref_block);
                 body.appendChild(div);
 
@@ -520,7 +520,6 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
             }
             this.ctx.fillStyle = fg_term_colours[col.fg];
             this.ctx.font = prefix + this.glyph_mode_font_name();
-            this.ctx.textAlign = "center";
 
             this.ctx.save();
 
