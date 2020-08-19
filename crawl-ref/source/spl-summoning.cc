@@ -4098,6 +4098,7 @@ spret cast_pavise(int powc, bolt& beam, bool fail)
 
 spret fragmentation(int power)
 {
+    int power_level = power/100;
     if (you.hp == 1)
     {
         mpr("You are too injured to shatter yourself!");
@@ -4118,11 +4119,11 @@ spret fragmentation(int power)
     mon->mid = MID_PLAYER;
     mgrd(you.pos()) = mon->mindex();
 
-    mons_summon_illusion_from(mon, (actor *)&you, SPELL_NO_SPELL, power);
+    mons_summon_illusion_from(mon, (actor *)&you, SPELL_NO_SPELL, power_level);
     mon->reset();
 
     const int fragment = max((you.hp/2)-1, 1);
-    mon->holiness() = you.holiness();
+    //mon->holiness() = you.holiness();
     mon->hit_points = fragment;
     dec_hp(fragment, false);
 
