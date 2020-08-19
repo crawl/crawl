@@ -300,6 +300,10 @@ enum ability_type
     ABIL_WYRM_CITRINITAS,
     ABIL_WYRM_VIRIDITAS,
     ABIL_WYRM_RUBEDO,
+
+    // Imus Thea
+    ABIL_IMUS_PRISMATIC_PRISM = 1300,
+    ABIL_IMUS_FRAGMENTATION,
     
     // For both Yred and Beogh
     ABIL_STOP_RECALL = 1500,

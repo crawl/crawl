@@ -42,6 +42,7 @@
 #include "mon-behv.h"
 #include "mon-book.h" // MON_SPELL_WIZARD
 #include "mon-cast.h"
+#include "mon-clone.h"
 #include "mon-death.h"
 #include "mon-movetarget.h"
 #include "mon-place.h"
@@ -3238,6 +3239,79 @@ spret cast_fulminating_prism(actor* caster, int pow,
     return spret::success;
 }
 
+spret cast_prismatic_prism(actor* caster, int pow,
+                                  const coord_def& where, bool fail)
+{
+    if (grid_distance(where, caster->pos()) > 4)
+    {
+        if (caster->is_player())
+            mpr("That's too far away.");
+        return spret::abort;
+    }
+
+    if (cell_is_solid(where))
+    {
+        if (caster->is_player())
+            mpr("You can't create prism within a solid object!");
+        return spret::abort;
+    }
+
+    actor* victim = monster_at(where);
+    if (victim)
+    {
+        if (caster->can_see(*victim))
+        {
+            if (caster->is_player())
+                mpr("You can't create the prism on a creature.");
+            return spret::abort;
+        }
+
+        fail_check();
+
+        if (caster->is_player()
+            || (you.can_see(*caster) && you.see_cell(where)))
+        {
+            if (you.can_see(*victim))
+            {
+                mprf("%s %s.", victim->name(DESC_THE).c_str(),
+                               victim->conj_verb("twitch").c_str());
+            }
+            else
+                canned_msg(MSG_GHOSTLY_OUTLINE);
+        }
+        return spret::success;      // Don't give free detection!
+    }
+
+    fail_check();
+
+    int hd = div_rand_round(pow, 10);
+
+    mgen_data prism_data = mgen_data(MONS_PRISMATIC_PRISM,
+                                     caster->is_player()
+                                     ? BEH_FRIENDLY
+                                     : SAME_ATTITUDE(caster->as_monster()),
+                                     where, MHITNOT, MG_FORCE_PLACE);
+    prism_data.set_summoned(caster, 0, SPELL_PRISMATIC_PRISM);
+    prism_data.hd = hd;
+    monster *prism = create_monster(prism_data);
+
+    if (prism)
+    {
+        if (caster->observable())
+        {
+            mprf("%s %s a prism of dazzling light!",
+                 caster->name(DESC_THE).c_str(),
+                 caster->conj_verb("create").c_str());
+        }
+        else if (you.can_see(*prism))
+            mprf("A prism of dazzling lights appears from nowhere!");
+    }
+    else if (you.can_see(*caster))
+        canned_msg(MSG_NOTHING_HAPPENS);
+
+    return spret::success;
+}
+
 monster* find_spectral_weapon(const actor* agent)
 {
     if (agent->props.exists("spectral_weapon"))
@@ -4018,6 +4092,40 @@ spret cast_pavise(int powc, bolt& beam, bool fail)
     }
     else
         canned_msg(MSG_NOTHING_HAPPENS);
+
+    return spret::success;
+}
+
+spret fragmentation(int power)
+{
+    int power_level = power/100;
+    if (you.hp == 1)
+    {
+        mpr("You are too injured to shatter yourself!");
+        return spret::abort;
+    }
+
+    monster* mon = get_free_monster();
+    if (!mon || monster_at(you.pos()))
+    {
+        mpr("Something prevents your fragmentantion.");
+        return spret::abort;
+    }
+
+    mon->type = MONS_PLAYER;
+    mon->behaviour = BEH_SEEK;
+    mon->attitude = ATT_FRIENDLY;
+    mon->set_position(you.pos());
+    mon->mid = MID_PLAYER;
+    mgrd(you.pos()) = mon->mindex();
+
+    mons_summon_illusion_from(mon, (actor *)&you, SPELL_NO_SPELL, power_level);
+    mon->reset();
+
+    const int fragment = max((you.hp/2)-1, 1);
+    //mon->holiness() = you.holiness();
+    mon->hit_points = fragment;
+    dec_hp(fragment, false);
 
     return spret::success;
 }
