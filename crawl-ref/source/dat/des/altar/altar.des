@@ -298,7 +298,7 @@ ENDMAP
 # or otherwise avoiding (digging etc) one or more traps
 NAME:  amcnicky_altar_trapped
 TAGS:  no_monster_gen
-DEPTH: D:3-, Vaults
+DEPTH: D:3-
 SUBST: p:~., q:~....., r:~.......
 MAP
 xxxxx
@@ -316,7 +316,7 @@ ENDMAP
 # Outer ring, 2.09 piles
 NAME:   amcnicky_altar_gilded
 TAGS:   transparent
-DEPTH:  D:3-, Vaults, Lair, Orc, Elf, Crypt
+DEPTH:  D:3-, Lair, Orc, Elf, Crypt
 NSUBST: p = *=.$:45
 NSUBST: q = *=.$:15
 MAP
@@ -334,7 +334,7 @@ ENDMAP
 # Chance of rolling all % items: 61%
 NAME:   amcnicky_altar_medium_temple
 TAGS:   no_monster_gen
-DEPTH:  D:3-, Vaults, Lair, Orc, Elf, Crypt
+DEPTH:  D:3-, Lair, Orc, Elf, Crypt
 SUBST:  p:%%%%%*, q:%%%%%%%*, r:%%%%%*, s:xx+, u:xx+, y:...wwwl, z:...wwwl
 MAP
      ............
