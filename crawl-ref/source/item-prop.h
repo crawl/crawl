@@ -136,7 +136,6 @@ bool is_giant_club_type(int wpn_type) IMMUTABLE;
 bool is_ranged_weapon_type(int wpn_type) IMMUTABLE;
 bool is_blessed_weapon_type(int wpn_type) IMMUTABLE;
 bool is_demonic_weapon_type(int wpn_type) IMMUTABLE;
-bool is_magic_weapon_type(int wpn_type) IMMUTABLE;
 
 bool is_melee_weapon(const item_def &weapon) PURE;
 bool is_demonic(const item_def &item) PURE;

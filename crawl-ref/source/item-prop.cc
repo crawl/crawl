@@ -1772,19 +1772,6 @@ bool is_blessed_weapon_type(int wpn_type)
            || wpn_type == WPN_TRISHULA;
 }
 
-/**
- * Is the weapon type provided magical (& can't be generated in a usual way)?
- * (I.e., magic staves.)
- *
- * @param wpn_type  The weapon_type under consideration.
- * @return          Whether it's a magic staff.
- */
-bool is_magic_weapon_type(int wpn_type)
-{
-    return wpn_type == WPN_STAFF;
-}
-
-
 bool is_melee_weapon(const item_def &weapon)
 {
     return is_weapon(weapon) && !is_range_weapon(weapon);
