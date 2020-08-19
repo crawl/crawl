@@ -2654,7 +2654,8 @@ bool gives_ability(const item_def &item)
     return false;
 }
 
-// Returns true if the item confers an intrinsic that is shown on the % screen.
+// Returns true if the item confers a resistance that is shown on the % screen,
+// for the purposes of giving information in hints mode.
 bool gives_resistance(const item_def &item)
 {
     if (!item_type_known(item))
@@ -2670,7 +2671,7 @@ bool gives_resistance(const item_def &item)
             if (item.sub_type == RING_PROTECTION_FROM_FIRE
                 || item.sub_type == RING_POISON_RESISTANCE
                 || item.sub_type == RING_PROTECTION_FROM_COLD
-                || item.sub_type == RING_SEE_INVISIBLE
+                || item.sub_type == RING_RESIST_CORROSION
                 || item.sub_type == RING_LIFE_PROTECTION
                 || item.sub_type == RING_PROTECTION_FROM_MAGIC
                 || item.sub_type == RING_FIRE
@@ -2678,11 +2679,6 @@ bool gives_resistance(const item_def &item)
             {
                 return true;
             }
-        }
-        else
-        {
-            if (item.sub_type != AMU_INACCURACY)
-                return true;
         }
         break;
     case OBJ_ARMOUR:
@@ -2692,15 +2688,22 @@ bool gives_resistance(const item_def &item)
             return false;
 
         const int ego = get_armour_ego_type(item);
-        if (ego >= SPARM_FIRE_RESISTANCE && ego <= SPARM_SEE_INVISIBLE
-            || ego == SPARM_RESISTANCE || ego == SPARM_POSITIVE_ENERGY)
+        if (ego == SPARM_FIRE_RESISTANCE
+            || ego == SPARM_COLD_RESISTANCE
+            || ego == SPARM_POISON_RESISTANCE
+            || ego == SPARM_MAGIC_RESISTANCE
+            || ego == SPARM_RESISTANCE
+            || ego == SPARM_PRESERVATION
+            || ego == SPARM_POSITIVE_ENERGY)
         {
             return true;
         }
         break;
     }
     case OBJ_STAVES:
-        if (item.sub_type >= STAFF_FIRE && item.sub_type <= STAFF_POISON
+        if (item.sub_type == STAFF_FIRE
+            || item.sub_type == STAFF_COLD
+            || item.sub_type == STAFF_POISON
             || item.sub_type == STAFF_AIR
             || item.sub_type == STAFF_DEATH)
         {
@@ -2715,13 +2718,20 @@ bool gives_resistance(const item_def &item)
         return false;
 
     // Check for randart resistances.
-    for (int rap = ARTP_FIRE; rap <= ARTP_BERSERK; rap++)
+    for (int rap = 0; rap <= ARTP_NUM_PROPERTIES; rap++)
     {
-        if (rap == ARTP_MAGIC_RESISTANCE || rap >= ARTP_INVISIBLE)
-            continue;
-
-        if (artefact_property(item, static_cast<artefact_prop_type>(rap)))
+        if (artefact_property(item, static_cast<artefact_prop_type>(rap))
+            && (rap == ARTP_FIRE
+                || rap == ARTP_COLD
+                || rap == ARTP_ELECTRICITY
+                || rap == ARTP_POISON
+                || rap == ARTP_NEGATIVE_ENERGY
+                || rap == ARTP_MAGIC_RESISTANCE
+                || rap == ARTP_RCORR
+                || rap == ARTP_RMUT))
+        {
             return true;
+        }
     }
 
     return false;
