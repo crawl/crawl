@@ -426,7 +426,10 @@ static const vector<god_passive> god_passives[] =
     {
         { 0, passive_t::wyrm_quicksilver,
              "GOD NOW extracts magical buffs into potions, from corpse of defeated enemies." },
-    }
+    },
+
+    // Imus Thea
+    { }
 };
 COMPILE_CHECK(ARRAYSZ(god_passives) == NUM_GODS);
 

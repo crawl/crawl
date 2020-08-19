@@ -467,6 +467,8 @@ tileidx_t tileidx_feature_base(dungeon_feature_type feat)
         return TILE_DNGN_ALTAR_WU_JIAN;
     case DNGN_ALTAR_WYRM:
         return TILE_DNGN_ALTAR_WYRM;
+    case DNGN_ALTAR_IMUS:
+        return TILE_DNGN_ALTAR_IMUS;
     case DNGN_ALTAR_ECUMENICAL:
         return TILE_DNGN_ALTAR_ECUMENICAL;
     case DNGN_FOUNTAIN_BLUE:
@@ -3827,6 +3829,11 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_WYRM_VIRIDITAS;
     case ABIL_WYRM_RUBEDO:
         return TILEG_ABILITY_WYRM_RUBEDO;
+    // Imus Thea
+    case ABIL_IMUS_PRISMATIC_PRISM:
+        return TILEG_ABILITY_IMUS_PRISMATIC_PRISM;
+    case ABIL_IMUS_FRAGMENTATION:
+        return TILEG_ABILITY_IMUS_FRAGMENTATION;
     // General divine (pseudo) abilities.
     case ABIL_RENOUNCE_RELIGION:
         return TILEG_ABILITY_RENOUNCE_RELIGION;

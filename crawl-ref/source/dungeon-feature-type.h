@@ -202,6 +202,7 @@ enum dungeon_feature_type
     DNGN_ALTAR_HEPLIAKLQANA,
     DNGN_ALTAR_WU_JIAN,
     DNGN_ALTAR_WYRM,
+    DNGN_ALTAR_IMUS,
     DNGN_ALTAR_ECUMENICAL,
 #endif
 
@@ -288,6 +289,7 @@ enum dungeon_feature_type
     DNGN_SEALED_CLEAR_DOOR,
     DNGN_TOXIC_BOG,
     DNGN_ALTAR_WYRM,
+    DNGN_ALTAR_IMUS,
 #endif
     DNGN_TEMPORAL_FLOOR,
 

@@ -2255,6 +2255,7 @@ static god_type _god_from_initial(const char god_initial)
         case 'Y': return GOD_YREDELEMNUL;
         case 'Z': return GOD_ZIN;
         case '2': return GOD_WYRM; // TODO: find other words to replace '2'
+        case 'I': return GOD_IMUS;
         default:  return GOD_NO_GOD;
     }
 }
