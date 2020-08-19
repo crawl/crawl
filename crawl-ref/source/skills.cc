@@ -1293,13 +1293,19 @@ static int _training_target_skill_point_diff(skill_type exsk, int training_targe
 {
     int target_level = training_target / 10;
     int target_fractional = training_target % 10;
-    int target_level_skill_points = skill_exp_needed(target_level, exsk);
-    int target_next_level_skill_points = skill_exp_needed(target_level + 1, exsk);
-    int target_skill_points = target_level_skill_points +
-        ((target_next_level_skill_points - target_level_skill_points) * target_fractional / 10);
-    // Round up for any remainder to ensure target is hit
-    if ((target_next_level_skill_points - target_level_skill_points) * target_fractional % 10 != 0)
-        target_skill_points++;
+    int target_skill_points;
+
+    if (target_level == MAX_SKILL_LEVEL)
+        target_skill_points = skill_exp_needed(target_level, exsk);
+    else
+    {
+        int target_level_points = skill_exp_needed(target_level, exsk);
+        int target_next_level_points = skill_exp_needed(target_level + 1, exsk);
+        // Round up for any remainder to ensure target is hit
+        target_skill_points = target_level_points
+            + div_round_up((target_next_level_points - target_level_points)
+                * target_fractional, 10);
+    }
 
     int you_skill_points = you.skill_points[exsk] + get_crosstrain_points(exsk);
     if (ash_has_skill_boost(exsk))

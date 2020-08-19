@@ -760,6 +760,7 @@ dissolution MONS_DISSOLUTION
 ooze MONS_OOZE
 %rim 0
 jelly MONS_JELLY
+small_jelly MONS_SMALL_JELLY
 slime_creature MONS_SLIME_CREATURE
 slime_creature2
 slime_creature3

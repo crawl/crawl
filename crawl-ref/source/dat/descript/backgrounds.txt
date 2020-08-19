@@ -4,6 +4,11 @@ Abyssal Knight
 Abyssal Knights worship Lugonu, and are sent from the Abyss into the Dungeon to
 spread corruption and chaos.
 %%%%
+Arcane Warrior
+
+Arcane Warriors are melee fighters, and buff themselves with Elelements and 
+Charms school.
+%%%%
 Air Elementalist
 
 Air Elementalists have learned the Shock spell. Later on, their selection of

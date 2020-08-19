@@ -1863,19 +1863,19 @@ void handle_monster_move(monster* mons)
         bolt beam;
         beam.name = "dazzling light";
         beam.flavour = BEAM_VISUAL;
-        beam.set_agent(&mons);
+        beam.set_agent(mons);
         beam.colour = WHITE;
         beam.glyph = dchar_glyph(DCHAR_EXPLOSION);
         beam.range = 2;
         beam.ex_size = 2;
         beam.is_explosion = true;
-        beam.source = mons.pos();
-        beam.target = mons.pos();
+        beam.source = mons->pos();
+        beam.target = mons->pos();
         beam.hit = AUTOMATIC_HIT;
         beam.loudness = 0;
         beam.explode(true, true);
         
-        for (radius_iterator ri(mons.pos(), range, C_SQUARE, LOS_SOLID_SEE, true);
+        for (radius_iterator ri(mons->pos(), LOS_RADIUS, C_SQUARE, LOS_SOLID_SEE, true);
              ri; ++ri)
         {
             monster* affected = monster_at(*ri);
@@ -1883,16 +1883,18 @@ void handle_monster_move(monster* mons)
             if (!affected || !mons_can_be_dazzled(affected->type))
                 continue;
         
-            int mult = 3 + grid_distance(mons.pos(), *ri);
+            int mult = 3 + grid_distance(mons->pos(), *ri);
         
             simple_monster_message(*affected, " is dazzled.");
-            affected->add_ench(mon_enchant(ENCH_BLIND, 1, &mons, (mult + 2) * BASELINE_DELAY));
+            affected->add_ench(mon_enchant(ENCH_BLIND, 1, mons, (mult + 2) * BASELINE_DELAY));
         }
 
         ++mons->prism_charge;
         if (mons->prism_charge == 2)
+        {
             simple_monster_message(*mons, " shattered.", MSGCH_WARN);
             mons->suicide();
+        }
         else
         {
             if (you.can_see(*mons))
@@ -2657,7 +2659,9 @@ static void _clear_monster_flags()
 static void _update_monster_attitude(monster *mon)
 {
     if (you.get_mutation_level(MUT_NO_LOVE)
-        && !mons_is_conjured(mon->type))
+        && !mons_is_conjured(mon->type)
+        && mon->type != MONS_PLAYER_ELDRITCH_TENTACLE
+        && mon->type != MONS_PLAYER_ELDRITCH_TENTACLE_SEGMENT)
     {
         mon->attitude = ATT_HOSTILE;
     }

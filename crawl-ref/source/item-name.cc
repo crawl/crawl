@@ -3596,7 +3596,7 @@ bool is_useless_item(const item_def &item, bool temp)
             return true;
 
         if (you_worship(GOD_IMUS) && (is_shield(item)
-            || !is_effectively_light_armour(*item)))
+            || !is_effectively_light_armour(&item)))
             return true;
 
         if (is_shield(item) && you.get_mutation_level(MUT_MISSING_HAND))
@@ -3951,6 +3951,7 @@ bool is_useless_item(const item_def &item, bool temp)
         case MISC_BUGGY_LANTERN_OF_SHADOWS:
 #endif
         case MISC_ZIGGURAT:
+        case MISC_BAG:
             return false;
 
         // Purely summoning misc items don't work w/ sac love

@@ -280,9 +280,9 @@ const vector<god_power> god_powers[NUM_GODS] =
            "You may expel jellies when seriously injured." },
       { 5, ABIL_JIYVA_CURE_BAD_MUTATION,
            "call upon Jiyva to remove your harmful mutations" },
-      { 7, ABIL_JIYVA_BLESS_WEAPON,
-           "Jiyva will bless your weapon with acid... once.",
-           "Jiyva is no longer ready to bless your weapon." },
+      //{ 7, ABIL_JIYVA_BLESS_WEAPON,
+      //     "Jiyva will bless your weapon with acid... once.",
+      //     "Jiyva is no longer ready to bless your weapon." },
     },
 
     // Fedhas
@@ -433,6 +433,7 @@ const vector<god_power> god_powers[NUM_GODS] =
           "transmute essence of Rubedo"},
       },
 
+
     // Imus Thea
     { { 0, "You are unable to wear heavy armour and all kinds of shield." },
       { 0, "The heavier weapon you wield, the more inaccurate it becomes." },
@@ -445,6 +446,7 @@ const vector<god_power> god_powers[NUM_GODS] =
       { 5, ABIL_IMUS_FRAGMENTATION,
            "shatter your half of health to duplicate yourself",
            "duplicate yourself" },
+    },
 };
 
 vector<god_power> get_god_powers(god_type god)

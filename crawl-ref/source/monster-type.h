@@ -867,7 +867,6 @@ enum monster_type                      // menv[].type
     MONS_ANCESTOR_KNIGHT,
     MONS_ANCESTOR_BATTLEMAGE,
     MONS_ANCESTOR_HEXER,
-    MONS_PRISMATIC_PRISM,       // Imus Thea
 #endif
     MONS_TEST_SPAWNER,
 #if TAG_MAJOR_VERSION > 34
@@ -1085,6 +1084,7 @@ enum monster_type                      // menv[].type
     MONS_MERC_SHAMAN,
     MONS_MERC_SHAMAN_II,
     MONS_MERC_SHAMAN_III,
+    MONS_SMALL_JELLY,
     MONS_PRISMATIC_PRISM,
 #endif
 

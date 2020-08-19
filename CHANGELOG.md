@@ -6,14 +6,23 @@
 
 ## [Unreleased]
 ### Added
-- 새로운 신 연금술의 신인 위대한 뱀 추가. 상세 설명은 [이 곳](https://github.com/kimjoy2002/crawl/pull/277)을 확인
-  - New god: The Great Wyrm, God of Alchemy. Click [here](https://github.com/kimjoy2002/crawl/pull/277) for details
+- 새로운 신 연금술의 신인 위대한 뱀 추가. [상세설명](https://github.com/kimjoy2002/crawl/wiki/the_great_wyrm)
+  - New god: The Great Wyrm, God of Alchemy.
 
-- 새로운 종족 호문쿨루스 추가. 호문쿨루스는 반생명 반인공체기에 둘의 특성을 동시에 가지고있고 14레벨에 한 쪽을 특화시킬 수 있다. 또한 마법을 사용할때마다 일시적인 와일드매직을 얻고, 근접공격으론 그 수치를 줄일 수 있다.
+- 새로운 종족 호문쿨루스 추가. 호문쿨루스는 반생명 반인공체기에 둘의 특성을 동시에 가지고있고 14레벨에 한 쪽을 특화시킬 수 있다. 또한 마법을 사용할때마다 일시적인 와일드매직을 얻고, 근접공격으론 그 수치를 줄일 수 있다. [상세설명](https://github.com/kimjoy2002/crawl/wiki/homunculus)
   - Added homunculus(playable). Homunculus are a semi-living, semi-artificial speices. they can specialize in 14 level. Also, whenever magic is used, temporary wild magic stack up, and melee attacks can reduce that stack.
   
-- 새로운 직업 크루세이더 추가. 돌의 피부, 원소의 무기, 화염강타, 절연화, 응축의 방패를 들고 시작하는 마법 전사 직업
-  - Added Crusader(background), Warrior-mage Starts with Shrapnel Curtain, Stoneskin, Elemental Weapon, Flame Strike, Insulation, Condensation Shield.
+- 새로운 종족 멜리아이 추가. 벌의 모습을 한 인간형 종족이며 신앙목 효과를 기본적으로 가지고 있는 소형종족이다. [상세설명](https://github.com/kimjoy2002/crawl/wiki/meliai)
+  - Added meliai(playable). It is a humanoid species in the form of a bee, and is a small species that basically has the effect of faith.
+  
+- 새로운 직업 신비 전사 추가. 돌의 피부, 원소의 무기, 화염강타, 절연화, 응축의 방패를 들고 시작하는 마법 전사 직업
+  - Added Arcane Warrior(background), Warrior-mage Starts with Shrapnel Curtain, Stoneskin, Elemental Weapon, Flame Strike, Insulation, Condensation Shield.
+  
+- 새로운 직업 캐러밴 추가. 150골드와 선택한 용병과 함께 시작한다. [상세설명](https://github.com/kimjoy2002/crawl/wiki/caravan)
+  - Added Caravan(background). start with 150 gold and the selected mercenary.
+  
+- 새로운 직업 수집가 추가. 3개의 아티팩트 획득의 두루마리를 들고 시작한다.
+  - Added Collector(background). start with 3 artifact acquirement scrolls.
 
 - 3레벨 참 마법, 원소의 무기 추가. 사용시 elem 버프를 주며 버프시간동안 원소마법을 사용시 들고있는 무기에 일시적인 브랜드와 강화치를 부여한다.
   - Added Elemental Weapon, level 3 charm spell. It gives an buff when using it, and gives a temporary brand and slaying bonus when using element magic during buff time.
@@ -44,8 +53,8 @@
   - rollback Stoneskin, Insulation, Condensation Shield
 
 ### Changed
-- 레서리치 리워크. 이제 좀 더 언데드에 가까워졌고 마나 재생은 시야에 적이 3명있을때 적용됨. 또한 네크로뮤테이션으로 영구적인 리치로 진화가 가능해진다.
-  - Rework lesser lich. Now they cloeser to the undead and Mana Regeneration is applied when 3 enemies in sight. It is possible to evolve into a permanent lich through necromutation.
+- 레서리치 리워크. 이제 좀 더 언데드에 가까워졌고 마나 재생은 시야에 적이 3명있을때 적용됨. 또한 네크로뮤테이션으로 영구적인 리치로 진화가 가능해진다. [상세설명](https://github.com/kimjoy2002/crawl/wiki/lesserlich)
+  - Rework lesser lich. Now they cloeser to the undead and Mana Regeneration is applied when 3 enemies in sight. It is possible to evolve into a permanent lich through necromutation. 
 
 - 트로그는 이제 광폭화중에 권능을 사용할 수 있음
   - Trog now can use power while berserk
@@ -70,6 +79,12 @@
   
 - 헤플리아클카나의 조상은 얻은 룬의 갯수만큼 추가 체력을 얻는다.
   - Hepliaklqana's ancestors gain additional health equal to the number of runes you get.
+  
+- 지바 너프 [상세설명](https://github.com/kimjoy2002/crawl/wiki/jiyva) Jiyva nerf
+  - 가장 약한 작은 젤리 추가, 전체적인 슬라임 출현율 너프 kill to slime nerf add small jelly and percent nerf
+  - 슬라임이 죽인 적은 슬라임이 만들어지지않음 slime's kill does not make slime
+  - 지바의 산성브랜드 부여 삭제 remove jiyva bless brand
+  - eyeball변이 혼란비율 너프 (15%->10%) eyeball percent nerf (15%->10%)
 
 - 겔의 위압은 이제 적을 1턴간 고정시킨다.
   - Gell's Gravitas now pinned the target for 1 turn.
@@ -79,6 +94,13 @@
  
 - 특이점 너프. 특이점은 당신을 느리게 만든다.
   - Singularity nerf. Singularity makes you slow.
+  
+- 엘드리치폼 버프 eldritch form buff
+  - 부패, 냉기, 화염저항 추가 add rRot, rCold+, rFire+
+  - 촉수는 더이상 적대화되지않음 Tentacles are no longer hostile
+  
+- 다시 멀티잽이 가능해짐
+  - Recover multizap
 
 - 장검반격은 이제 50%확률로 나감
   - Long Blade's Riposte buff. Now triggers at 50%
@@ -103,30 +125,30 @@
 
 ## [kimchi-1.0] - ~2020-07-13
 ### Added
-- 새로운 종족 쌍두 오우거 추가. 2개의 무기와 2개의 목걸이를 낄 수 있음. 그러나 방패를 낄 수 없음
+- 새로운 종족 쌍두 오우거 추가. 2개의 무기와 2개의 목걸이를 낄 수 있음. 그러나 방패를 낄 수 없음. [상세설명](https://github.com/kimjoy2002/crawl/wiki/two_headed_ogre)
   - Added two-headed ogre(playable). Can wear 2 weapons and 2 amulets. But you can't wear a shield
   
-- 새로운 종족 천사 추가. 세 선신 중 하나를 믿고 시작함. 악신들의 미움을 사서 끊임없는 징벌과 싸운다.
+- 새로운 종족 천사 추가. 세 선신 중 하나를 믿고 시작함. 악신들의 미움을 사서 끊임없는 징벌과 싸운다. [상세설명](https://github.com/kimjoy2002/crawl/wiki/angel)
   - Added angel(playable). A holy species who starts by believing in one of the three good gods.
     To be hated by evil gods and to fight infinity wrath
   
-- 새로운 종족 멘티스 추가. 적에게 접근할때 자동으로 점프 공격을 함
+- 새로운 종족 멘티스 추가. 적에게 접근할때 자동으로 점프 공격을 함. [상세설명](https://github.com/kimjoy2002/crawl/wiki/mantis)
   - Added mantis(playable). leap attack automatically when approaching an enemy
   
-- 새로운 종족 레서리치 추가. 높은 강령 적성, 빠른 마나회복, 27렙때 와일드매직을 얻음
+- 새로운 종족 레서리치 추가. 높은 강령 적성, 빠른 마나회복, 27렙때 와일드매직을 얻음. [상세설명](https://github.com/kimjoy2002/crawl/wiki/lesserlich)
   - Added Lesser-Lich(playable). high necromancy skill, high mana regen, wild magic when 27 level
   
-- 새로운 종족 갑각류 추가. 단검, 슬링만 착용할 수 있는 소형종족. 맞을때마다 부패가 일어나는 대신, 매 레벨마다 탈피를 통해 회복할 수 있다. 또한 나이트처럼 움직일 수 있다.
+- 새로운 종족 갑각류 추가. 단검, 슬링만 착용할 수 있는 소형종족. 맞을때마다 부패가 일어나는 대신, 매 레벨마다 탈피를 통해 회복할 수 있다. 또한 나이트처럼 움직일 수 있다. [상세설명](https://github.com/kimjoy2002/crawl/wiki/crustacean)
   - Added Crustacean(playable). Small species that can only wear daggers and slings. they deteriorates upon taking damage, and can molt at every level for recovery. It can move like a knight.
   
-- 새로운 종족 히드라 추가. 무기를 장착할 수 없고, 무거운 갑옷도 입지 못한다. 매 레벨마다 머리를 1개씩 얻는다. 매 3레벨마다 아뮬렛 슬롯을 1개씩 추가한다. 머리의 숫자만큼 다단공격을 한다.
+- 새로운 종족 히드라 추가. 무기를 장착할 수 없고, 무거운 갑옷도 입지 못한다. 매 레벨마다 머리를 1개씩 얻는다. 매 3레벨마다 아뮬렛 슬롯을 1개씩 추가한다. 머리의 숫자만큼 다단공격을 한다. [상세설명](https://github.com/kimjoy2002/crawl/wiki/hydra)
   - Added Hydra(playable). Weapons cannot be equipped, and heavy armor cannot be worn. Get 1 head per level. Get an amulet slot every 3 levels. Multi attacks as many as the number of heads.
     
-- 드라코니언이 7렙이 될때 선신을 믿고 있으면 펄 드라코니언으로 진화함. 음에너지1 기도술3 독,강령-2 신성한 불 브레스
+- 드라코니언이 7렙이 될때 선신을 믿고 있으면 펄 드라코니언으로 진화함. 음에너지1 기도술3 독,강령-2 신성한 불 브레스. [상세설명](https://github.com/kimjoy2002/crawl/wiki/pearldraconion)
   - When the Draconian reaches the 7 level, if Dr believes good god, Dr evolves into a Pearl Draconian. Negative resist 1, invocation skil 3, poison/necromancy skill -2, blessed frame breath
   
-- 파켈라스 추가 및 리워크. 이제 마나를 제약하지않으나 마음대로 업그레이드할 수 있는 프로토타입 로드를 선물함. 상세 설명은 [이 곳](https://github.com/kimjoy2002/crawl/issues/60)을 확인
-  - Added pakellas and rework.  No longer constrained mana, but presents a prototype rod that can be upgraded at will. Click [here](https://github.com/kimjoy2002/crawl/issues/60) for details
+- 파켈라스 추가 및 리워크. 이제 마나를 제약하지않으나 마음대로 업그레이드할 수 있는 프로토타입 로드를 선물함. [상세설명](https://github.com/kimjoy2002/crawl/wiki/pakellas)
+  - Added pakellas and rework.  No longer constrained mana, but presents a prototype rod that can be upgraded at will.
 
 - 독물의 추출, 증산 추가
   - Added Fulsome Distillation, Evaporate spell
@@ -251,7 +273,7 @@
   - 네멜렉스의 신앙은 옛날처럼 p로 아이템을 바쳐야 증가함. Nemelex's faith now increases when you sacrifice an item with p again
   - 돌아온 카드들 (xom, mercenary, alchemist, bargain, sage, portal, trowel, experience, helm, shuffle)
 
-- 지바 리워크. Jiyva rework
+- 지바 리워크. Jiyva rework [상세설명](https://github.com/kimjoy2002/crawl/wiki/jiyva)
   - 슬라임은 이제 자연적으로 생성되지않는다. jellies do not randomly spawn
   - 적을 죽일때 일시적으로 동료인 젤리를 소환한다. Temporarily friendly jelly summoned when killing an enemy.
   - 새로운 4성권능, 던전 부식. 루고누의 타락처럼 동작함.  new jiyva 4-star ability. corrosion dungeon like corruption.

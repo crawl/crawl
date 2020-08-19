@@ -1631,8 +1631,10 @@ bool wear_armour(int item)
         return false;
 
     const equipment_type slot = get_armour_slot(*to_wear);
+
+
     if (you_worship(GOD_IMUS) && (slot == EQ_SHIELD
-        || (slot == EQ_BODY_ARMOUR && is_effectively_light_armour(*to_wear))))
+        || (slot == EQ_BODY_ARMOUR && is_effectively_light_armour((const item_def*)to_wear))))
     {
         mpr("Your fragile body can't wear heavy armour and shield.");
         return false;
