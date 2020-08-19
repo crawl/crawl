@@ -3337,8 +3337,8 @@ bool bolt::misses_player()
     {
         mprf("The %s misses you.", name.c_str());
         // chance to reflect, when dodging was successful
-        if ((you_worship(GOD_IMUS) && is_omnireflectable()
-             || is_blockable()) && !aimed_at_feet)
+        if (you_worship(GOD_IMUS) && !aimed_at_feet
+            && (is_omnireflectable() || is_blockable()))
         {
             const int imus_sh = max(1, you.piety/10);
             if (x_chance_in_y(imus_sh, 25)) // 10% ~ 80%
@@ -3355,8 +3355,8 @@ bool bolt::misses_player()
         count_action(CACT_DODGE, DODGE_EVASION);
     }
     // chance to reflect, even if dodging wasn't successful
-    else if ((you_worship(GOD_IMUS) && is_omnireflectable()
-             || is_blockable()) && !aimed_at_feet)
+    else if (you_worship(GOD_IMUS) && !aimed_at_feet
+            && (is_omnireflectable() || is_blockable()))
     {
         const int imus_sh = max(1, you.piety/10);
         if (x_chance_in_y(imus_sh, 25)) // 10% ~ 80%
