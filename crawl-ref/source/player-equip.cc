@@ -1184,6 +1184,11 @@ static void _remove_amulet_of_faith(item_def &item)
 #ifndef DEBUG_DIAGNOSTICS
     UNUSED(item);
 #endif
+    if (you.species == SP_MELIAI)
+    { //useless for meliai
+        return;
+    }
+
     if (you_worship(GOD_RU))
     {
         // next sacrifice is going to be delaaaayed.
@@ -1339,9 +1344,15 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
                  (player_teleport(false) > 8) ? "more " : "");
         break;
 
-    case AMU_FAITH:
-        if (you.species == SP_DEMIGOD)
+    case AMU_FAITH:    
+        if (you.species == SP_MELIAI)
+        {
+            //useless for meliai
+        }
+        else if (you.species == SP_DEMIGOD)
+        {
             mpr("You feel a surge of self-confidence.");
+        }
         else if (you_worship(GOD_RU) && you.piety >= piety_breakpoint(5))
         {
             simple_god_message(" says: An ascetic of your devotion"
