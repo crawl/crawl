@@ -1,10 +1,13 @@
 #include "mon-book.h"
 
 /* *************************************************************************
+
     This file determines which spells are contained in monster spellbooks.
     It is used by /util/gen-mst.pl to generate spellbook enums, which are
     listed in mon-mst.h.
+
     Template Format:
+
     {    mon_spellbook_type,
         {
             { spell type, frequency, flags },
@@ -12,9 +15,11 @@
             [...]
         }
     }
+
     Spellbooks are organized by shared generic books to non-uniques to
     uniques / vault monsters, base user glyph (alphabetical, lowercase
     to uppercase to numbers to misc), then loose thematic tiering.
+
 ************************************************************************* */
 
 static const mon_spellbook mspell_list[] =
@@ -2381,40 +2386,31 @@ static const mon_spellbook mspell_list[] =
        { SPELL_PRIMAL_WAVE, 24, MON_SPELL_WIZARD | MON_SPELL_LONG_RANGE },
       }
     },
-    
+
     {  MST_MERC_WITCH,
       {
-       { SPELL_THROW_FLAME, 25, MON_SPELL_WIZARD },
-       { SPELL_THROW_FROST, 25, MON_SPELL_WIZARD },
-       { SPELL_STONE_ARROW, 25, MON_SPELL_WIZARD },
-       { SPELL_SHOCK, 15, MON_SPELL_WIZARD | MON_SPELL_LONG_RANGE },
+       { SPELL_CANTRIP, 1, MON_SPELL_WIZARD },
       }
     },
-    
+
     {  MST_MERC_SORCERESS,
       {
-       { SPELL_FIREBALL, 20, MON_SPELL_WIZARD | MON_SPELL_LONG_RANGE },
-       { SPELL_FREEZING_CLOUD, 20, MON_SPELL_WIZARD | MON_SPELL_LONG_RANGE },
-       { SPELL_IRON_SHOT, 25, MON_SPELL_WIZARD },
-       { SPELL_AIRSTRIKE, 25, MON_SPELL_WIZARD },
+       { SPELL_CANTRIP, 1, MON_SPELL_WIZARD },
       }
     },
-    
+
     {  MST_MERC_ELEMENTALIST,
       {
-       { SPELL_FIRE_STORM, 15, MON_SPELL_WIZARD | MON_SPELL_LONG_RANGE },
-       { SPELL_GLACIATE, 15, MON_SPELL_WIZARD },
-       { SPELL_LEHUDIBS_CRYSTAL_SPEAR, 30, MON_SPELL_WIZARD },
-       { SPELL_LIGHTNING_BOLT, 30, MON_SPELL_WIZARD },
+       { SPELL_CANTRIP, 1, MON_SPELL_WIZARD },
       }
     },
-    
+
     {  MST_MERC_ASSASSIN,
       {
        { SPELL_INVISIBILITY, 33, MON_SPELL_WIZARD },
       }
     },
-    
+
     {  MST_MERC_CLEANER,
       {
        { SPELL_INVISIBILITY, 33, MON_SPELL_PRIEST },
@@ -2459,4 +2455,4 @@ static const mon_spellbook mspell_list[] =
        { SPELL_PHANTOM_MIRROR, 33, MON_SPELL_MAGICAL },
       }
     },
-}
+};
