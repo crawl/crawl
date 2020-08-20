@@ -998,7 +998,7 @@ i-staff_power STAFF_POWER
 i-staff_fire STAFF_FIRE
 # end TAG_MAJOR_VERSION
 # start TAG_MAJOR_VERSION == 35
-i-staff_fire STAFF_FIRE STAFF_ID_FIRST
+# i-staff_fire STAFF_FIRE STAFF_ID_FIRST
 # end TAG_MAJOR_VERSION
 i-staff_cold STAFF_COLD
 i-staff_poison STAFF_POISON
