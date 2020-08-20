@@ -1002,11 +1002,6 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
                 this.draw_icon(icons.BLIND, x, y, -status_shift, 0);
                 status_shift += 10;
             }
-            if (fg.DEATHS_DOOR)
-            {
-                this.draw_icon(icons.DEATHS_DOOR, x, y, -status_shift, 0);
-                status_shift += 10;
-            }
             if (fg.BOUND_SOUL)
             {
                 this.draw_icon(icons.BOUND_SOUL, x, y, -status_shift, 0);

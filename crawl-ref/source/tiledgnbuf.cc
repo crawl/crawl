@@ -569,11 +569,6 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
         m_buf_icons.add(TILEI_BLIND, x, y, -status_shift, 0);
         status_shift += 10;
     }
-    if (fg & TILE_FLAG_DEATHS_DOOR)
-    {
-        m_buf_icons.add(TILEI_DEATHS_DOOR, x, y, -status_shift, 0);
-        status_shift += 10;
-    }
     if (fg & TILE_FLAG_BOUND_SOUL)
     {
         m_buf_icons.add(TILEI_BOUND_SOUL, x, y, -status_shift, 0);
