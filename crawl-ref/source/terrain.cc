@@ -643,7 +643,10 @@ bool feat_is_fountain(dungeon_feature_type feat)
  */
 bool feat_is_reachable_past(dungeon_feature_type feat)
 {
-    return !feat_is_opaque(feat) && !feat_is_wall(feat) && feat != DNGN_GRATE;
+    return !feat_is_opaque(feat) 
+        && !feat_is_wall(feat) 
+        && !feat_is_closed_door(feat)
+        && feat != DNGN_GRATE;
 }
 
 /** Is this feature important to the game?

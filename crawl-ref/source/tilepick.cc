@@ -3979,6 +3979,8 @@ static tileidx_t _tileidx_player_job_base(const job_type job)
             return TILEG_JOB_MELTED_KNIGHT;
         case JOB_CARAVAN:
             return TILEG_JOB_CARAVAN;
+        case JOB_COLLECTOR:
+            return TILEG_JOB_COLLECTOR;
         default:
             return TILEG_ERROR;
     }

@@ -564,6 +564,7 @@ public:
 
     bool is_illusion() const;
     bool is_divine_companion() const;
+    bool is_mercenery_companion() const;
     // Jumping spiders (jump instead of blink)
     bool is_jumpy() const;
 

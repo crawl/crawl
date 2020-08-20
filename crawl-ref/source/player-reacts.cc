@@ -677,6 +677,7 @@ static void _try_to_spawn_mercenary()
     mon->flags &= ~MF_HARD_RESET;
     mon->attitude = ATT_FRIENDLY;
     mons_att_changed(mon);
+    add_companion(mon);
 
     item_def* weapon = mon->mslot_item(MSLOT_WEAPON);
     const bool staff = weapon->base_type == OBJ_STAVES;

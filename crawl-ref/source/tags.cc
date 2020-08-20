@@ -6723,7 +6723,7 @@ static void tag_read_level_monsters(reader &th)
 
         // companion_is_elsewhere checks the mid cache
         env.mid_cache[m.mid] = i;
-        if (m.is_divine_companion() && companion_is_elsewhere(m.mid))
+        if ((m.is_divine_companion() || m.is_mercenery_companion()) && companion_is_elsewhere(m.mid))
         {
             dprf("Killed elsewhere companion %s(%d) on %s",
                     m.name(DESC_PLAIN, true).c_str(), m.mid,
