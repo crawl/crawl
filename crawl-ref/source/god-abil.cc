@@ -57,6 +57,7 @@
 #include "mon-act.h"
 #include "mon-behv.h"
 #include "mon-book.h"
+#include "mon-cast.h"
 #include "mon-death.h"
 #include "mon-ench.h"
 #include "mon-gear.h" // H: give_weapon()/give_armour()
@@ -7079,6 +7080,13 @@ static bool _caravan_gift_items_to(monster* mons, int item_slot)
                 mons->name(DESC_THE, false).c_str());
                 return false;
             }
+
+            if (gift.base_type == OBJ_STAVES)
+            {
+                if (set_spell_witch(mons, gift.sub_type, false) == false) {
+                    return false;
+                }
+            }
         }
 
         // stealth weapon for brigand.
@@ -7344,5 +7352,172 @@ bool caravan_gift_item()
     };
     desc_menu.show();
     redraw_screen();
+    return true;
+}
+
+bool set_spell_witch(monster* mons, int sub_type, bool slience) {
+
+    switch (sub_type)
+    {
+    case STAFF_FIRE:
+        mons->spells.clear();
+        switch (mons->type)
+        {
+        case MONS_MERC_WITCH:
+            mons->spells.emplace_back(SPELL_THROW_FLAME, 66, MON_SPELL_WIZARD);
+            break;
+        case MONS_MERC_SORCERESS:
+            mons->spells.emplace_back(SPELL_THROW_FLAME, 66, MON_SPELL_WIZARD | MON_SPELL_LONG_RANGE);
+            mons->spells.emplace_back(SPELL_BOLT_OF_FIRE, 80, MON_SPELL_WIZARD);
+            break;
+        case MONS_MERC_ELEMENTALIST:
+            mons->spells.emplace_back(SPELL_BOLT_OF_FIRE, 66, MON_SPELL_WIZARD);
+            mons->spells.emplace_back(SPELL_FIREBALL, 80, MON_SPELL_WIZARD | MON_SPELL_LONG_RANGE);
+            break;
+        default:
+            break;
+        }
+        break;
+    case STAFF_COLD:
+        mons->spells.clear();
+        switch (mons->type)
+        {
+        case MONS_MERC_WITCH:
+            mons->spells.emplace_back(SPELL_THROW_FROST, 66, MON_SPELL_WIZARD);
+            break;
+        case MONS_MERC_SORCERESS:
+            mons->spells.emplace_back(SPELL_THROW_FROST, 66, MON_SPELL_WIZARD | MON_SPELL_LONG_RANGE);
+            mons->spells.emplace_back(SPELL_BOLT_OF_COLD, 80, MON_SPELL_WIZARD);
+            break;
+        case MONS_MERC_ELEMENTALIST:
+            mons->spells.emplace_back(SPELL_BOLT_OF_COLD, 66, MON_SPELL_WIZARD);
+            mons->spells.emplace_back(SPELL_FREEZING_CLOUD, 80, MON_SPELL_WIZARD | MON_SPELL_LONG_RANGE);
+            break;
+        default:
+            break;
+        }
+        break;
+    case STAFF_AIR:
+        mons->spells.clear();
+        switch (mons->type)
+        {
+        case MONS_MERC_WITCH:
+            mons->spells.emplace_back(SPELL_SHOCK, 66, MON_SPELL_WIZARD);
+            break;
+        case MONS_MERC_SORCERESS:
+            mons->spells.emplace_back(SPELL_LIGHTNING_BOLT, 66, MON_SPELL_WIZARD);
+            break;
+        case MONS_MERC_ELEMENTALIST:
+            mons->spells.emplace_back(SPELL_LIGHTNING_BOLT, 66, MON_SPELL_WIZARD | MON_SPELL_LONG_RANGE);
+            mons->spells.emplace_back(SPELL_CHAIN_LIGHTNING, 80, MON_SPELL_WIZARD);
+            break;
+        default:
+            break;
+        }
+        break;
+    case STAFF_EARTH:
+        mons->spells.clear();
+        switch (mons->type)
+        {
+        case MONS_MERC_WITCH:
+            mons->spells.emplace_back(SPELL_STONESKIN, 11, MON_SPELL_WIZARD);
+            mons->spells.emplace_back(SPELL_SANDBLAST, 80, MON_SPELL_WIZARD);
+            break;
+        case MONS_MERC_SORCERESS:
+            mons->spells.emplace_back(SPELL_STONESKIN, 11, MON_SPELL_WIZARD);
+            mons->spells.emplace_back(SPELL_STONE_ARROW, 80, MON_SPELL_WIZARD);
+            break;
+        case MONS_MERC_ELEMENTALIST:
+            mons->spells.emplace_back(SPELL_STONESKIN, 11, MON_SPELL_WIZARD);
+            mons->spells.emplace_back(SPELL_IRON_SHOT, 80, MON_SPELL_WIZARD);
+            break;
+        default:
+            break;
+        }
+        break;
+    case STAFF_POISON:
+        mons->spells.clear();
+        switch (mons->type)
+        {
+        case MONS_MERC_WITCH:
+            mons->spells.emplace_back(SPELL_STING, 33, MON_SPELL_WIZARD);
+            mons->spells.emplace_back(SPELL_MEPHITIC_CLOUD, 33, MON_SPELL_WIZARD);
+            break;
+        case MONS_MERC_SORCERESS:
+            mons->spells.emplace_back(SPELL_VENOM_BOLT, 33, MON_SPELL_WIZARD);
+            mons->spells.emplace_back(SPELL_MEPHITIC_CLOUD, 33, MON_SPELL_WIZARD);
+            break;
+        case MONS_MERC_ELEMENTALIST:
+            mons->spells.emplace_back(SPELL_POISON_ARROW, 33, MON_SPELL_WIZARD);
+            mons->spells.emplace_back(SPELL_MEPHITIC_CLOUD, 33, MON_SPELL_WIZARD);
+            break;
+        default:
+            break;
+        }
+        break;
+    case STAFF_DEATH:
+        mons->spells.clear();
+        switch (mons->type)
+        {
+        case MONS_MERC_WITCH:
+            mons->spells.emplace_back(SPELL_PAIN, 66, MON_SPELL_WIZARD);
+            break;
+        case MONS_MERC_SORCERESS:
+            mons->spells.emplace_back(SPELL_AGONY, 66, MON_SPELL_WIZARD);
+            mons->spells.emplace_back(SPELL_DISPEL_UNDEAD, 66, MON_SPELL_WIZARD);
+            break;
+        case MONS_MERC_ELEMENTALIST:
+            mons->spells.emplace_back(SPELL_AGONY, 66, MON_SPELL_WIZARD);
+            mons->spells.emplace_back(SPELL_DISPEL_UNDEAD, 66, MON_SPELL_WIZARD);
+            mons->spells.emplace_back(SPELL_DEATHS_DOOR, 80, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY);
+            break;
+        default:
+            break;
+        }
+        break;
+    case STAFF_CONJURATION:
+        mons->spells.clear();
+        switch (mons->type)
+        {
+        case MONS_MERC_WITCH:
+            mons->spells.emplace_back(SPELL_DAZZLING_SPRAY, 66, MON_SPELL_WIZARD);
+            break;
+        case MONS_MERC_SORCERESS:
+            mons->spells.emplace_back(SPELL_DAZZLING_SPRAY, 66, MON_SPELL_WIZARD);
+            mons->spells.emplace_back(SPELL_FORCE_LANCE, 80, MON_SPELL_WIZARD);
+            break;
+        case MONS_MERC_ELEMENTALIST:
+            mons->spells.emplace_back(SPELL_DAZZLING_SPRAY, 66, MON_SPELL_WIZARD);
+            mons->spells.emplace_back(SPELL_FORCE_LANCE, 80, MON_SPELL_WIZARD);
+            mons->spells.emplace_back(SPELL_BATTLESPHERE, 11, MON_SPELL_WIZARD);
+            break;
+        default:
+            break;
+        }
+        break;
+    case STAFF_SUMMONING:
+        mons->spells.clear();
+        switch (mons->type)
+        {
+        case MONS_MERC_WITCH:
+            mons->spells.emplace_back(SPELL_CALL_CANINE_FAMILIAR, 50, MON_SPELL_WIZARD);
+            break;
+        case MONS_MERC_SORCERESS:
+            mons->spells.emplace_back(SPELL_SUMMON_ICE_BEAST, 50, MON_SPELL_WIZARD);
+            break;
+        case MONS_MERC_ELEMENTALIST:
+            mons->spells.emplace_back(SPELL_MONSTROUS_MENAGERIE, 50, MON_SPELL_WIZARD);
+            break;
+        default:
+            break;
+        }
+        break;
+    default: // wizardry, power, energy
+        if (!slience) {
+            mprf("This staff isn't useful for %s.",
+                mons->name(DESC_THE, false).c_str());
+        }
+        return false;
+    }
     return true;
 }

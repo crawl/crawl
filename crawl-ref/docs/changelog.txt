@@ -1,3 +1,99 @@
+Stone Soup kimchi-1.1.0 (20200820)
+--------------------------------
+
+Highlights
+----------
+* New gods: The Great Wyrm, Imus Thea
+* New Speices: Homunculus, Meliai
+* New Backgrounds: Arcane Warrior, Caravan, Collector
+* Rework lesser lich
+* Spells rollback and addition for warrior-mage
+
+Added
+----------
+* New god: The Great Wyrm, God of Alchemy.
+  - 0*: When you kill an enemy, you get the potion of buff that the enemy had
+  - 1*: Infuse Essence: inject essence into the enemy in sight.
+  - 1*: Nigredo: Transmute a potion or other essence into essence of decay called 'Nigredo'.
+        Drinking Nigredo causes decay yourself, When infused target with Nigredo moves, 
+        will leaving miasma on its trail.
+  - 2*: Albedo: Transmute a potion or other essence into essence of purge called 'Albedo'.
+        Dirnking Albedo causes magically purge yourself, While target has any disspellable magic, 
+        this infusion often has the chance to interrupt target, force target to waste its turn.
+  - 3*: Citrinitas: Transmute a potion or other essence into essence of empower called 'Citrinitas'.
+        Dirnking Citrinitas empowers your accuracy and spells, Infused target will receive 
+        empowerment of accuracy and spells
+  - 4*: Viriditas: Transmute a potion or other essence into essence of restore called 'Viriditas'.
+        Drinking Viriditas restores all damaged stats and cures yourself, Infused target's attack will heal you, 
+        instead damage.
+  - 5*: Rubedo: Transmute a potion or other essence into essence of the 'end-as-begin', called 'Rubedo'.
+        Drinking Rubedo will grants you resistances, Infused target will diffuse other infusions, makes all 
+        targets in your sight are infused by same essences.
+* New god: Imus Thea, the Refracted.
+  - 0*: Reflects all kinds of projectiles approaching with a 10-80% depending on piety.
+  - 0*: Cannot wear heavy armor and shields.
+  - 2*: Prismatic Prism: Summon the prism where you want it to be. The prism cast
+        the dazzling flash at each turn.
+  - 5*: Fragmentation: Summon the player's clone, using half of current health
+* Added homunculus(playable). Homunculus are a semi-living, semi-artificial speices. 
+  they can specialize in 14 level. Also, whenever magic is used, temporary wild magic stack up, 
+  and melee attacks can reduce that stack.
+* Added meliai(playable). It is a humanoid species in the form of a bee, and is a small species 
+  that basically has the effect of faith.
+* Added Arcane Warrior(background), Warrior-mage Starts with Shrapnel Curtain, Stoneskin, 
+  Elemental Weapon, Flame Strike, Insulation, Condensation Shield.
+* Added Caravan(background). start with 150 gold and the selected mercenary.
+* Added Collector(background). start with a artifact acquirement scroll.
+* Added Elemental Weapon, level 3 charm spell. It gives an buff when using it, and gives a 
+  temporary brand and slaying bonus when using element magic during buff time.
+* Added Flame Strike, level 3 charm/fire spell. When attacking during duration, use mana to
+  give a fan-shaped fire additional hit. After use, you becomes overheat and does not recover mana.
+* Added Shrapnel Curtain , level 1 earth/charm spell. When melee attacked for duration, 
+  it gives physical damage to the attacker.
+* Added bunker, new armour ego. Only attach to large shield. The equipped large shield can be 
+  installed on the ground as a structure to prevent the projectile and movement.
+* A New fixedart: scales of the Unseen Dragon {*Inv MR+ Stlth+ SInv *Corrode}. 
+  It is quicksilver dragon based artifact. It may invisible you when you take damage.
+* A New fixedart: Golem armour. This artifact is four kinds of defense equipment : 
+  Golem gauntlets, Golem greaves, Golem helmet, Golem armour. 
+  If you collect all the sets, you get the Evoke Golem Armour ability to transform into Golem.
+* New Orc Unique: Asclepia the Therapist. Appears at D:10-12, Lair:1-4, Orc:1, cast Heal Other, 
+  Haste Other, Evaporate. After promotion, adds Might Other to Spellset, and learn "Aura of Healing"
+* New Orc Unique: Brandagoth, Lava Orc Sorcerer. Appears at D:12-, Elf, Vaults:1-3 with 
+  Fire elementals & Hell hounds. It's a Lava orc Named that uses fireballs and magma bolts.
+* rollback Stoneskin, Insulation, Condensation Shield
+
+Changed
+----------
+* Rework lesser lich. Now they cloeser to the undead and Mana Regeneration is applied when 
+  3 enemies in sight. It is possible to evolve into a permanent lich through necromutation. 
+* Trog now can use power while berserk
+* Trog new 6-star skill: Furious Charge. You can dash at an enemy with a range of four with 5~15 exh. 
+  Dazed on the target and going to be a berserk immediately.
+* Beogh now grows the orc unique.
+* Beogh conserves the Orc corpse.
+* Elyvilon can be sacrificed weapon with p again.
+* Hepliaklqana and Beogh share partially resistance with their allies when 6-stars.
+* Hepliaklqana battlemage Rework. Now battlemage ancestor can't attack melee, Instead, 
+  ancestor can use fireball and firestorm.
+* Hepliaklqana's ancestors gain additional health equal to the number of runes you get.
+* Jiyva nerf
+  - kill to slime nerf add small jelly and percent nerf
+  - slime's kill does not make slime
+  - remove jiyva bless brand
+  - eyeball percent nerf (15%->10%)
+* Gell's Gravitas now pinned the target for 1 turn.
+* Change the player's Lehudib to penetration spell
+* Singularity nerf. Singularity makes you slow.
+* eldritch form buff. Add rRot, rCold+, rFire+. Tentacles are no longer hostile
+* Recover multizap
+* Long Blade's Riposte buff. Now triggers at 50%
+* Reveal floor traps when magic mapping
+* Make distortion simplify (0.25 feature)
+* Corpse can be apported
+* Now, when you Evaporate the Curing and Heal Wound Potion, the heal cloud comes out
+
+
 Stone Soup kimchi-1.0.1 (20200718)
 --------------------------------
 

@@ -7,6 +7,7 @@
 
 #include "AppHdr.h"
 
+#include "god-abil.h"
 #include "mon-grow.h"
 
 #include "message.h"
@@ -165,6 +166,17 @@ void monster::upgrade_type(monster_type after, bool adjust_hd,
             hit_points    += minhp - max_hit_points;
             max_hit_points = minhp;
             hit_points     = min(hit_points, max_hit_points);
+        }
+    }
+
+    if (type == MONS_MERC_SORCERESS || type == MONS_MERC_ELEMENTALIST)
+    {
+        item_def* weapon = mslot_item(MSLOT_WEAPON);
+        if (weapon) {
+            const bool staff = weapon->base_type == OBJ_STAVES;
+            if (staff) {
+                set_spell_witch(this, weapon->sub_type, true);
+            }
         }
     }
 }

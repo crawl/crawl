@@ -1657,9 +1657,6 @@ int acquirement_artefact(object_class_type class_wanted,
         mitm[thing_created].props[ACQUIRE_KEY].get_int() = AQ_SCROLL;
     }
 
-    ASSERT(!is_useless_item(mitm[thing_created], false));
-    ASSERT(!god_hates_item(mitm[thing_created]));
-
     if (pos.origin())
         return thing_created;
 
@@ -1928,8 +1925,6 @@ static item_def _acquirement_artefact_def(object_class_type item_type, bool rand
 
     if (item_index != NON_ITEM)
     {
-        ASSERT(!god_hates_item(mitm[item_index]));
-
         // We make a copy of the item def, but we don't keep the real item.
         item = mitm[item_index];
         set_ident_flags(item,
