@@ -675,6 +675,7 @@ static void _try_to_spawn_mercenary()
     mon->flags &= ~MF_HARD_RESET;
     mon->attitude = ATT_FRIENDLY;
     mons_att_changed(mon);
+    add_companion(mon);
 
     simple_monster_message(*mon, " follows you as a mercenary.");
     you.props.erase(CARAVAN_MERCENARY);

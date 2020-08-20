@@ -32,6 +32,7 @@
 #include "ghost.h"
 #include "god-abil.h"
 #include "god-conduct.h"
+#include "god-companions.h"
 #include "god-item.h"
 #include "god-passive.h"
 #include "item-name.h"
@@ -6786,6 +6787,14 @@ bool monster::is_divine_companion() const
            && (mons_is_god_gift(*this, GOD_BEOGH)
                || mons_is_god_gift(*this, GOD_YREDELEMNUL)
                || mons_is_god_gift(*this, GOD_HEPLIAKLQANA))
+           && mons_can_use_stairs(*this);
+}
+
+bool monster::is_mercenery_companion() const
+{
+    return attitude == ATT_FRIENDLY
+           && !is_summoned()
+           && is_mercernery_companion(type)
            && mons_can_use_stairs(*this);
 }
 

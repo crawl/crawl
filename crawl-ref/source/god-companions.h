@@ -30,6 +30,9 @@ void remove_enslaved_soul_companion();
 void remove_all_companions(god_type god);
 void move_companion_to(const monster* mons, const level_id lid);
 
+bool is_mercernery_companion(monster_type mon_type);
+void lost_mercernery(const monster* mon);
+
 void update_companions();
 
 bool companion_is_elsewhere(mid_t mid, bool must_exist = false);

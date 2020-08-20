@@ -2349,6 +2349,7 @@ static spret _do_ability(const ability_def& abil, bool fail)
             ii->flags &= ~ISFLAG_SUMMONED;
         mon->flags &= ~MF_HARD_RESET;
         mon->attitude = ATT_FRIENDLY;
+        add_companion(mon);
         mons_att_changed(mon);
     
         simple_monster_message(*mon, " accept your contract, starts follow you as a mercenary.");
@@ -4435,8 +4436,7 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
         _add_talent(talents, ABIL_CARAVAN_GIFT_ITEM, check_confused);
         _add_talent(talents, ABIL_CARAVAN_RECALL, check_confused);
     }
-
-    if (you.attribute[ATTR_CARAVAN_LOST])
+    else if (you.attribute[ATTR_CARAVAN_LOST] )
     {
         _add_talent(talents, ABIL_CARAVAN_REHIRE, check_confused);
     }
