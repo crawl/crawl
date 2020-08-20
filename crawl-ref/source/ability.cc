@@ -2382,7 +2382,6 @@ static spret _do_ability(const ability_def& abil, bool fail)
             }
         }
 
-        add_companion(mon);
         simple_monster_message(*mon, " accept your contract, starts follow you as a mercenary.");
         you.props[CARAVAN_MERCENARY_SPAWNED] = true;
         you.del_gold(1000 * you.attribute[ATTR_CARAVAN_LOST]);

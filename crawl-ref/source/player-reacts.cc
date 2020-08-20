@@ -699,7 +699,6 @@ static void _try_to_spawn_mercenary()
         }
     }
 
-    add_companion(mon);
     simple_monster_message(*mon, " follows you as a mercenary.");
     you.props.erase(CARAVAN_MERCENARY);
     you.props[CARAVAN_MERCENARY_SPAWNED] = true;

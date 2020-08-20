@@ -2604,22 +2604,7 @@ item_def* monster_die(monster& mons, killer_type killer,
 
             // KILL_RESET monsters no longer lose their whole inventory, only
             // items they were generated with.
-            if (mons.type == MONS_MERC_FIGHTER
-                || mons.type == MONS_MERC_KNIGHT
-                || mons.type == MONS_MERC_DEATH_KNIGHT
-                || mons.type == MONS_MERC_PALADIN
-                || mons.type == MONS_MERC_SKALD
-                || mons.type == MONS_MERC_INFUSER
-                || mons.type == MONS_MERC_TIDEHUNTER
-                || mons.type == MONS_MERC_WITCH
-                || mons.type == MONS_MERC_SORCERESS
-                || mons.type == MONS_MERC_ELEMENTALIST
-                || mons.type == MONS_MERC_BRIGAND
-                || mons.type == MONS_MERC_ASSASSIN
-                || mons.type == MONS_MERC_CLEANER
-                || mons.type == MONS_MERC_SHAMAN
-                || mons.type == MONS_MERC_SHAMAN_II
-                || mons.type == MONS_MERC_SHAMAN_III)
+            if (is_mercernery_companion(mons.type))
             {
                 mons_pacify(mons, ATT_NEUTRAL);
                 mprf(MSGCH_WARN, "%s is banished into the Abyss, will act for own survival rather than you.",
