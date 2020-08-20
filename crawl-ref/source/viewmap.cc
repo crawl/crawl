@@ -636,7 +636,7 @@ public:
         m_state.chose = false;
         m_state.on_level = true;
 
-        on_new_level();
+        goto_level();
     }
     ~UIMapView() {}
 
@@ -718,16 +718,16 @@ public:
             m_state.lpos.pos = m_state.lpos.pos.clamped(known_map_bounds());
 
         if (m_state.lpos.id != level_id::current())
-        {
-            m_state.excursion->go_to(m_state.lpos.id);
-            on_new_level();
-        }
+            goto_level();
 
         m_state.lpos.pos = m_state.lpos.pos.clamped(known_map_bounds());
     }
 
-    void on_new_level()
+    void goto_level()
     {
+        if (m_state.lpos.id != level_id::current())
+            m_state.excursion->go_to(m_state.lpos.id);
+
         m_state.on_level = (level_id::current() == m_state.original);
 
         // Vector to track all state.features we can travel to, in
