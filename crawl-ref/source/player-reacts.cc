@@ -85,11 +85,13 @@
 #include "misc.h"
 #include "mon-abil.h"
 #include "mon-act.h"
+#include "mon-book.h"
 #include "mon-cast.h"
 #include "mon-death.h"
 #include "mon-place.h"
 #include "mon-tentacle.h"
 #include "mon-util.h"
+#include "monster.h"
 #include "mutation.h"
 #include "options.h"
 #include "ouch.h"
@@ -676,6 +678,26 @@ static void _try_to_spawn_mercenary()
     mon->attitude = ATT_FRIENDLY;
     mons_att_changed(mon);
     add_companion(mon);
+
+    item_def* weapon = mon->mslot_item(MSLOT_WEAPON);
+    const bool staff = weapon->base_type == OBJ_STAVES;
+    if (staff){
+        mon->spells.clear();
+        switch (weapon->sub_type)
+        {
+            case STAFF_FIRE:
+                mon->spells.emplace_back(SPELL_THROW_FLAME, 80, MON_SPELL_WIZARD);
+                break;
+            case STAFF_COLD:
+                mon->spells.emplace_back(SPELL_THROW_FROST, 80, MON_SPELL_WIZARD);
+                break;
+            case STAFF_AIR:
+                mon->spells.emplace_back(SPELL_SHOCK, 80, MON_SPELL_WIZARD);
+                break;
+            default:
+                break;
+        }
+    }
 
     simple_monster_message(*mon, " follows you as a mercenary.");
     you.props.erase(CARAVAN_MERCENARY);
