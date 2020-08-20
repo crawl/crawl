@@ -59,6 +59,7 @@
 #include "output.h"
 #include "pakellas.h"
 #include "player-stats.h"
+#include "player.h"
 #include "prompt.h"
 #include "randbook.h"
 #include "shopping.h"
@@ -436,7 +437,7 @@ const vector<god_power> god_powers[NUM_GODS] =
 
     // Imus Thea
     { { 0, "You are unable to wear heavy armour and all kinds of shield." },
-      { 0, "The heavier weapon you wield, the more inaccurate it becomes." },
+      { 0, "You need more training to use two-handed weapon accuratively." },
       { 0, "Imus Thea will reflect ranged attaks, depending on piety.",
            "Imus Thea will no longer reflect ranged attacks.",
            "Imus Thea will reflect ranged attacks, depending on piety." },
@@ -3879,6 +3880,18 @@ void join_religion(god_type which_god)
             mprf(MSGCH_INTRINSIC_GAIN, "Your body do not produce miasma anymore.");
         if (you.experience_level > 13)
             mprf(MSGCH_INTRINSIC_GAIN, "You can't emit the cloud of miasma anymore.");
+    }
+
+    if (you_worship(GOD_IMUS))
+    {
+        if (!player_effectively_in_light_armour()){
+            remove_one_equip(EQ_BODY_ARMOUR, false, true);
+        }
+
+        const item_def *shield = you.slot_item(EQ_SHIELD, false);
+        if (shield != nullptr){
+            remove_one_equip(EQ_SHIELD, false, true);
+        }
     }
 
     // Allow training all divine ability skills immediately.

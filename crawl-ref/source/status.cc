@@ -19,6 +19,7 @@
 #include "orb.h" // orb_limits_translocation in fill_status_info
 #include "player-equip.h"
 #include "player-stats.h"
+#include "player.h"
 #include "random.h" // for midpoint_msg.offset() in duration-data
 #include "religion.h"
 #include "skills.h"
@@ -772,6 +773,17 @@ bool fill_status_info(int status, status_info& inf)
         inf.light_text
             = make_stringf("Earth (%u)",
                 you.props[WILL_OF_EARTH_KEY].get_int());
+    break;
+    case STATUS_IMUS:
+    {
+        if (you_worship(GOD_IMUS)) {
+            const int chance = max(1, you.piety/10) * 4;
+            inf.light_colour = chance >= 60 ? WHITE :(chance >= 30 ? LIGHTBLUE : BLUE);
+            inf.light_text = make_stringf("Mirror (%d%)", chance);
+            inf.short_text = "Mirror of Imus Thea";
+            inf.long_text = "Mirror of Imus Thea will reflect ranged attack.";
+        }
+    }
     break;
     default:
         if (!found)
