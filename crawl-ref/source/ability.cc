@@ -2351,6 +2351,7 @@ static spret _do_ability(const ability_def& abil, bool fail)
             ii->flags &= ~ISFLAG_SUMMONED;
         mon->flags &= ~MF_HARD_RESET;
         mon->attitude = ATT_FRIENDLY;
+        add_companion(mon);
         mons_att_changed(mon);
 
         item_def* weapon = mon->mslot_item(MSLOT_WEAPON);
@@ -2384,7 +2385,7 @@ static spret _do_ability(const ability_def& abil, bool fail)
         add_companion(mon);
         simple_monster_message(*mon, " accept your contract, starts follow you as a mercenary.");
         you.props[CARAVAN_MERCENARY_SPAWNED] = true;
-        you.del_gold(100 * (1 + you.attribute[ATTR_CARAVAN_ITEM_COST]));
+        you.del_gold(1000 * you.attribute[ATTR_CARAVAN_LOST]);
     }
     break;
 
@@ -4466,8 +4467,7 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
         _add_talent(talents, ABIL_CARAVAN_GIFT_ITEM, check_confused);
         _add_talent(talents, ABIL_CARAVAN_RECALL, check_confused);
     }
-
-    if (you.attribute[ATTR_CARAVAN_LOST])
+    else if (you.attribute[ATTR_CARAVAN_LOST] )
     {
         _add_talent(talents, ABIL_CARAVAN_REHIRE, check_confused);
     }

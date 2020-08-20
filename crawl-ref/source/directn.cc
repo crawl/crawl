@@ -1117,7 +1117,6 @@ static void _draw_ray_cell(coord_def p, coord_def target, aff_type aff)
 #endif
 #ifndef USE_TILE_LOCAL
     int bcol = BLACK;
-    mprf("%s", aff == AFF_DOUBLE ? "Yes" : "No");
     if (aff < 0)
         bcol = DARKGREY;
     else if (aff < AFF_YES)

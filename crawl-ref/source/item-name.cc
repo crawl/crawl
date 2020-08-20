@@ -1156,6 +1156,7 @@ static const char* _book_type_name(int booktype)
     case BOOK_CONJURATIONS:           return "Conjurations";
     case BOOK_FLAMES:                 return "Flames";
     case BOOK_FROST:                  return "Frost";
+    case BOOK_FROST2:                 return "Frost Second Volume";
     case BOOK_SUMMONINGS:             return "Summonings";
     case BOOK_FIRE:                   return "Fire";
     case BOOK_ICE:                    return "Ice";
@@ -3676,8 +3677,7 @@ bool is_useless_item(const item_def &item, bool temp)
             return temp && (env.level_state & LSTATE_STILL_WINDS);
 
         if (item.sub_type == WAND_TELEPORTATION)
-            return you.species == SP_FORMICID
-            || crawl_state.game_is_sprint()
+            return crawl_state.game_is_sprint()
             || player_in_branch(BRANCH_GAUNTLET);
 
         if (item.sub_type == WAND_HEAL_WOUNDS
@@ -3801,7 +3801,8 @@ bool is_useless_item(const item_def &item, bool temp)
         case AMU_FAITH:
             return (you.species == SP_DEMIGOD && !you.religion)
                     || you_worship(GOD_GOZAG)
-                    || (you_worship(GOD_RU) && you.piety == piety_breakpoint(5));
+                    || (you_worship(GOD_RU) && you.piety == piety_breakpoint(5))
+                    || you.species == SP_MELIAI;
 
         case AMU_GUARDIAN_SPIRIT:
             return you.species == SP_DJINNI ||

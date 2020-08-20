@@ -106,7 +106,7 @@ static void _level_place_followers(m_transit_list &m)
         auto mon = i++;
         if ((mon->mons.flags & MF_TAKING_STAIRS) && mon->place(true))
         {
-            if (mon->mons.is_divine_companion())
+            if (mon->mons.is_divine_companion() || mon->mons.is_mercenery_companion())
             {
                 move_companion_to(monster_by_mid(mon->mons.mid),
                                                  level_id::current());

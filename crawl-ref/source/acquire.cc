@@ -2015,7 +2015,7 @@ static void _make_artefact_acquirement_items(vector<object_class_type>& rand_cla
 {
 
     const int wanted_randart_num = min(2, (int)rand_classes.size());
-    const int wanted_unrandart_num = 5;
+    const int wanted_unrandart_num = 9;
     shuffle_array(rand_classes);
 
     CrawlVector& acq_items = you.props[ACQUIRE_ITEMS_KEY].get_vector();

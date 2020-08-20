@@ -1316,6 +1316,7 @@ bool melee_attack::check_unrand_effects()
 {
     if ( attacker->slot_item(EQ_HELMET) &&
             is_unrandom_artefact(*attacker->slot_item(EQ_HELMET), UNRAND_JAWS)&&
+         (defender->is_player() || !invalid_monster(defender->as_monster())) &&
             !(damage_done < 1
             || !actor_is_susceptible_to_vampirism(*defender)
             || attacker->stat_hp() == attacker->stat_maxhp()
