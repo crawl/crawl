@@ -192,6 +192,7 @@ void angel_good_god_help(bool closed_enemy);
 
 bool caravan_can_gift_items_to(const monster* mons, bool quiet = true);
 bool caravan_gift_item();
+bool set_spell_witch(monster* mons, int sub_type, bool slience);
 
 int slouch_damage(monster* mon);
 bool slouchable(coord_def where);
