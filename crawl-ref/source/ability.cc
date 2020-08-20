@@ -53,6 +53,8 @@
 #include "menu.h"
 #include "message.h"
 #include "mon-behv.h"
+#include "mon-book.h"
+#include "mon-cast.h"
 #include "mon-place.h"
 #include "mutation.h"
 #include "nearby-danger.h"
@@ -2351,7 +2353,36 @@ static spret _do_ability(const ability_def& abil, bool fail)
         mon->attitude = ATT_FRIENDLY;
         add_companion(mon);
         mons_att_changed(mon);
-    
+
+        item_def* weapon = mon->mslot_item(MSLOT_WEAPON);
+        const bool staff = weapon->base_type == OBJ_STAVES;
+        if (staff){
+            mon->spells.clear();
+            switch (weapon->sub_type)
+            {
+                case STAFF_FIRE:
+                    if (mon->type == MONS_MERC_SORCERESS){
+                        mon->spells.emplace_back(SPELL_THROW_FLAME, 66, MON_SPELL_WIZARD | MON_SPELL_LONG_RANGE);
+                        mon->spells.emplace_back(SPELL_BOLT_OF_FIRE, 80, MON_SPELL_WIZARD);
+                    } else mon->spells.emplace_back(SPELL_THROW_FLAME, 80, MON_SPELL_WIZARD);
+                    break;
+                case STAFF_COLD:
+                    if (mon->type == MONS_MERC_SORCERESS){
+                        mon->spells.emplace_back(SPELL_THROW_FROST, 66, MON_SPELL_WIZARD | MON_SPELL_LONG_RANGE);
+                        mon->spells.emplace_back(SPELL_BOLT_OF_COLD, 80, MON_SPELL_WIZARD);
+                    } else mon->spells.emplace_back(SPELL_THROW_FROST, 80, MON_SPELL_WIZARD);
+                    break;
+                case STAFF_AIR:
+                    if (mon->type == MONS_MERC_SORCERESS){
+                        mon->spells.emplace_back(SPELL_LIGHTNING_BOLT, 80, MON_SPELL_WIZARD);
+                    } else mon->spells.emplace_back(SPELL_SHOCK, 80, MON_SPELL_WIZARD);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        add_companion(mon);
         simple_monster_message(*mon, " accept your contract, starts follow you as a mercenary.");
         you.props[CARAVAN_MERCENARY_SPAWNED] = true;
         you.del_gold(1000 * you.attribute[ATTR_CARAVAN_LOST]);
