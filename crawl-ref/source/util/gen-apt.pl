@@ -227,7 +227,7 @@ sub load_aptitudes
         }
         else
         {
-            if (/APT\(\s*SP_(\w+)\s*,\s*SK_(\w+)\s*,\s*(-?\d+|UNUSABLE_SKILL)\s*\)/)
+            if (/{\s*SP_(\w+)\s*,\s*SK_(\w+)\s*,\s*(-?\d+|UNUSABLE_SKILL)\s*}/)
             {
                 $species = propercase_string(fix_underscores($1));
                 if (!$SEEN_SPECIES{$species})
