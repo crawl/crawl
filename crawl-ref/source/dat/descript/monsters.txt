@@ -2747,21 +2747,23 @@ promised to be with me until this adventure ends.
 %%%%
 hired witch
 
-A novice witch. Her goal is mastering four schools of elemental
-magic at once. hired on condition, I will offer to share knowledge
-from books we will find in this adventure.
+A novice witch. On the condition of hiring her, I contracted to
+share my knowledge of magic staves to discover in this adventure.
+She can change her spells to wield another magical staves. Also,
+If she change her staff after promotion, she has access to more
+high-leveled spells.
 %%%%
 hired sorceress
 
-A sorceress who survived the dungeon and mastered in destructive
-spells. Still, she only focus on four schools of elemental magic.
-Fortunately, She haven't burned our hiring paper yet.
+A sorceress who survived the dungeon and mastered in spellcasting.
+Fortunately, She haven't burned our hiring paper yet. She can change
+her spells to wield another magical staves. Also, If she change her
+staff after promotion, she has access to more high-leveled spells.
 %%%%
-hired elementalist
+hired archmage
 
-An elementalist who has mastered all four schools of elemental
-magic. She didn't learn other magic, such as survival or escape,
-but I assure her destructive power on my credit.
+An archmage who reached the knowledge to awake her full potential.
+She can change her spells to wield another magical staves.
 %%%%
 hired brigand
 

@@ -6800,11 +6800,6 @@ int monster::spell_hd(spell_type spell) const
 {
     UNUSED(spell);
     int hd = get_hit_dice();
-    // balance for JOB_CARAVAN
-    if (type == MONS_MERC_WITCH
-        || type == MONS_MERC_SORCERESS
-        || type == MONS_MERC_ELEMENTALIST)
-        hd = max(1, hd / 2);
     if (mons_is_hepliaklqana_ancestor(type))
         hd = max(1, hd * 2 / 3);
     if (has_ench(ENCH_IDEALISED))
