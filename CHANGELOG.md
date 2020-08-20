@@ -8,6 +8,9 @@
 ### Added
 - 새로운 신 연금술의 신인 위대한 뱀 추가. [상세설명](https://github.com/kimjoy2002/crawl/wiki/the_great_wyrm)
   - New god: The Great Wyrm, God of Alchemy.
+  
+- 새로운 신 거울의 신 굴절시키는 자 이머스 테하 추가. [상세설명](https://github.com/kimjoy2002/crawl/wiki/imus_thea)
+  - New god: Imus Thea, the Refracted.
 
 - 새로운 종족 호문쿨루스 추가. 호문쿨루스는 반생명 반인공체기에 둘의 특성을 동시에 가지고있고 14레벨에 한 쪽을 특화시킬 수 있다. 또한 마법을 사용할때마다 일시적인 와일드매직을 얻고, 근접공격으론 그 수치를 줄일 수 있다. [상세설명](https://github.com/kimjoy2002/crawl/wiki/homunculus)
   - Added homunculus(playable). Homunculus are a semi-living, semi-artificial speices. they can specialize in 14 level. Also, whenever magic is used, temporary wild magic stack up, and melee attacks can reduce that stack.
@@ -21,8 +24,8 @@
 - 새로운 직업 캐러밴 추가. 150골드와 선택한 용병과 함께 시작한다. [상세설명](https://github.com/kimjoy2002/crawl/wiki/caravan)
   - Added Caravan(background). start with 150 gold and the selected mercenary.
   
-- 새로운 직업 수집가 추가. 3개의 아티팩트 획득의 두루마리를 들고 시작한다.
-  - Added Collector(background). start with 3 artifact acquirement scrolls.
+- 새로운 직업 수집가 추가. 1개의 아티팩트 획득의 두루마리를 들고 시작한다.
+  - Added Collector(background). start with a artifact acquirement scroll.
 
 - 3레벨 참 마법, 원소의 무기 추가. 사용시 elem 버프를 주며 버프시간동안 원소마법을 사용시 들고있는 무기에 일시적인 브랜드와 강화치를 부여한다.
   - Added Elemental Weapon, level 3 charm spell. It gives an buff when using it, and gives a temporary brand and slaying bonus when using element magic during buff time.
