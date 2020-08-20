@@ -998,7 +998,7 @@ static spret _phantom_mirror()
     mon->behaviour = BEH_SEEK;
     set_nearest_monster_foe(mon);
 
-    mprf("You reflect %s with the mirror, and the mirror shatters!",
+    mprf("You reflect %s with the mirror!",
          victim->name(DESC_THE).c_str());
 
     return spret::success;
