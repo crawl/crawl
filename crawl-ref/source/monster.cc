@@ -4503,6 +4503,15 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
         }
 
         blame_damage(agent, amount);
+
+        if (mons_is_fragile(*this))
+        {
+            // Die in 3-5 turns.
+            this->add_ench(mon_enchant(ENCH_SLOWLY_DYING, 1, nullptr,
+                                       30 + random2(20)));
+            if (you.can_see(*this))
+                mprf("%s begins to die.", this->name(DESC_THE).c_str());
+        }
     }
 
     if (cleanup_dead && (hit_points <= 0 || get_hit_dice() <= 0)

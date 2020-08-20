@@ -204,7 +204,7 @@ define(function () {
     fg_flags.flags.INFESTED     = [0, 0x400000];
     fg_flags.flags.CORRODED     = [0, 0x800000];
     fg_flags.flags.SWIFT        = [0, 0x1000000];
-    // [0, 0x2000000] was PINNED
+    fg_flags.flags.SLOWLY_DYING = [0, 0x2000000];
     fg_flags.flags.VILE_CLUTCH  = [0, 0x4000000];
     fg_flags.flags.POSSESSABLE  = [0, 0x8000000];
 

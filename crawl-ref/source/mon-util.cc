@@ -726,6 +726,16 @@ bool mons_is_threatening(const monster& mons)
     return mons_class_is_threatening(mons.type) || mons_is_active_ballisto(mons);
 }
 
+bool mons_class_is_fragile(monster_type mc)
+{
+    return mons_class_flag(mc, M_FRAGILE);
+}
+
+bool mons_is_fragile(const monster& mons)
+{
+    return mons_class_is_fragile(mons.type);
+}
+
 /**
  * Is this an active ballistomycete?
  *

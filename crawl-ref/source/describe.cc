@@ -4625,6 +4625,14 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
         break;
     }
 
+    if (mons_class_is_fragile(mi.type))
+    {
+        if (mi.is(MB_SLOWLY_DYING))
+            inf.body << "\nIt is quickly withering away.\n";
+        else
+            inf.body << "\nIf struck, it will die soon after.\n";
+    }
+
     if (!mons_is_unique(mi.type))
     {
         string symbol_suffix = "__";

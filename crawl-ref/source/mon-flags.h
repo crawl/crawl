@@ -46,7 +46,8 @@ enum monclass_flag_type : uint64_t
     /// monster can split
     M_SPLITS            = BIT(12),
 
-                        //BIT(13), // was M_GLOWS
+    /// monster dies a few turns after being hit
+    M_FRAGILE           = BIT(13),
 
     /// monster is stationary
     M_STATIONARY        = BIT(14),
