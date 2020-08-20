@@ -3676,8 +3676,7 @@ bool is_useless_item(const item_def &item, bool temp)
             return temp && (env.level_state & LSTATE_STILL_WINDS);
 
         if (item.sub_type == WAND_TELEPORTATION)
-            return you.species == SP_FORMICID
-            || crawl_state.game_is_sprint()
+            return crawl_state.game_is_sprint()
             || player_in_branch(BRANCH_GAUNTLET);
 
         if (item.sub_type == WAND_HEAL_WOUNDS
