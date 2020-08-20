@@ -248,20 +248,6 @@ static const struct spell_desc spelldata[] =
     TILEG_THROW_FROST,
 },
 
-#if TAG_MAJOR_VERSION == 34
-{
-    SPELL_CONTROLLED_BLINK, "Controlled Blink",
-    spschool::translocation,
-    spflag::escape | spflag::emergency | spflag::utility,
-    8,
-    0,
-    -1, -1,
-    2, 0, // Not noisier than Blink, to keep this spell relevant
-          // for stabbers. [rob]
-    TILEG_ERROR,
-},
-#endif
-
 {
     SPELL_DISJUNCTION, "Disjunction",
     spschool::translocation,
@@ -3336,6 +3322,7 @@ AXED_SPELL(SPELL_CHANT_FIRE_STORM, "Chant Fire Storm")
 AXED_SPELL(SPELL_CIGOTUVIS_DEGENERATION, "Cigotuvi's Degeneration")
 AXED_SPELL(SPELL_CIGOTUVIS_EMBRACE, "Cigotuvi's Embrace")
 AXED_SPELL(SPELL_CONDENSATION_SHIELD, "Condensation Shield")
+AXED_SPELL(SPELL_CONTROLLED_BLINK, "Controlled Blink")
 AXED_SPELL(SPELL_CONTROL_TELEPORT, "Control Teleport")
 AXED_SPELL(SPELL_CONTROL_UNDEAD, "Control Undead")
 AXED_SPELL(SPELL_CONTROL_WINDS, "Control Winds")
