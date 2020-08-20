@@ -19,6 +19,7 @@
 #include "branch.h"
 #include "command.h"
 #include "coord.h"
+#include "database.h"
 #include "directn.h"
 #include "english.h"
 #include "env.h"
@@ -1023,7 +1024,11 @@ void TilesFramework::_send_player(bool force_full)
         {
             json_open_object();
             if (!status.light_text.empty())
+            {
                 json_write_string("light", status.light_text);
+                json_write_string("desc",
+                        getLongDescription(status.light_text + " status"));
+            }
             if (!status.short_text.empty())
                 json_write_string("text", status.short_text);
             if (status.light_colour)
