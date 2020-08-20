@@ -526,6 +526,15 @@ bool mons_can_move_towards_target(const monster* mon)
     return false;
 }
 
+static const string BATTY_TURNS_KEY = "BATTY_TURNS";
+
+static void _be_batty(monster &mons)
+{
+    mons.behaviour = BEH_WANDER;
+    set_random_target(&mons);
+    mons.props[BATTY_TURNS_KEY] = 0;
+}
+
 static void _handle_movement(monster* mons)
 {
     _maybe_set_patrol_route(mons);
@@ -1502,16 +1511,6 @@ static void _pre_monster_move(monster& mons)
     if (mons.type == MONS_SHAPESHIFTER)
         mons.add_ench(ENCH_SHAPESHIFTER);
 
-    // We reset batty monsters from wander to seek here, instead
-    // of in handle_behaviour() since that will be called with
-    // every single movement, and we want these monsters to
-    // hit and run. -- bwr
-    if (mons.foe != MHITNOT && mons_is_wandering(mons)
-        && mons_is_batty(mons))
-    {
-        mons.behaviour = BEH_SEEK;
-    }
-
     mons.check_speed();
 
     // spellforged servitors lose an extra random2(16) energy per turn, often
@@ -1955,10 +1954,7 @@ void handle_monster_move(monster* mons)
                     fight_melee(mons, &you);
 
                 if (mons_is_batty(*mons))
-                {
-                    mons->behaviour = BEH_WANDER;
-                    set_random_target(mons);
-                }
+                    _be_batty(*mons);
                 DEBUG_ENERGY_USE("fight_melee()");
                 mmov.reset();
                 return;
@@ -2000,11 +1996,7 @@ void handle_monster_move(monster* mons)
                           && fight_melee(mons, targ))
             {
                 if (mons_is_batty(*mons))
-                {
-                    mons->behaviour = BEH_WANDER;
-                    set_random_target(mons);
-                    // mons->speed_increment -= mons->speed;
-                }
+                    _be_batty(*mons);
 
                 mmov.reset();
                 DEBUG_ENERGY_USE("fight_melee()");
@@ -2281,6 +2273,17 @@ static void _post_monster_move(monster* mons)
         && !find_spectral_weapon(mons))
     {
         cast_spectral_weapon(mons, mons->get_experience_level() * 4, mons->god);
+    }
+
+    if (mons->foe != MHITNOT && mons_is_wandering(*mons) && mons_is_batty(*mons))
+    {
+        int &bat_turns = mons->props[BATTY_TURNS_KEY].get_int();
+        bat_turns++;
+        int turns_to_bat = div_rand_round(mons_base_speed(*mons), 10);
+        if (turns_to_bat < 2)
+            turns_to_bat = 2;
+        if (bat_turns >= turns_to_bat)
+            mons->behaviour = BEH_SEEK;
     }
 
     if (mons->type != MONS_NO_MONSTER && mons->hit_points < 1)
