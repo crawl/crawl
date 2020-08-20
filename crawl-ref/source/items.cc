@@ -213,7 +213,8 @@ static bool _item_ok_to_clean(int item)
     // Never clean food, zigfigs, Orbs, or runes.
     if (mitm[item].base_type == OBJ_FOOD
         || mitm[item].base_type == OBJ_MISCELLANY
-            && mitm[item].sub_type == MISC_ZIGGURAT
+            && (mitm[item].sub_type == MISC_ZIGGURAT ||
+                mitm[item].sub_type == MISC_BAG)
         || item_is_orb(mitm[item])
         || mitm[item].base_type == OBJ_RUNES)
     {
@@ -1928,10 +1929,17 @@ static void _get_rune(const item_def& it, bool quiet)
             mprf("You now have %d runes.", nrunes);
 
         mpr("Press } to see all the runes you have collected.");
+
     }
 
-    if (it.sub_type == RUNE_ABYSSAL)
+    if (it.sub_type == RUNE_ABYSSAL) {
         mpr("You feel the abyssal rune guiding you out of this place.");
+    }
+
+    if (you_worship(GOD_HEPLIAKLQANA)){
+        mpr("Your ancestor is empowered by the runes you collect.");
+        upgrade_hepliaklqana_ancestor(true);
+    }
 }
 
 /**

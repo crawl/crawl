@@ -264,6 +264,10 @@ singularity1 MONS_SINGULARITY /*'*'*/
 singularity2
 singularity3
 singularity4
+prismatic_prism1 MONS_PRISMATIC_PRISM
+prismatic_prism2
+prismatic_prism3
+prismatic_prism4
 %rim 1
 ball_lightning MONS_BALL_LIGHTNING /*'*'*/
 %sdir mon/undead
@@ -446,6 +450,7 @@ machine_golem_2 MONS_MACHINE_GOLEM_2
 machine_golem_3 MONS_MACHINE_GOLEM_3
 barricade MONS_BARRICADE
 barricade_spike MONS_BARRICADE_SPIKE
+pavise MONS_PAVISE
 
 ## Statues and statue-like things (also '8')
 %sdir mon/unique
@@ -563,6 +568,10 @@ killer_klown_red
 killer_klown_yellow
 slave MONS_SLAVE
 slave_freed
+hired_fighter MONS_MERC_FIGHTER
+hired_knight MONS_MERC_KNIGHT
+hired_death_knight MONS_MERC_DEATH_KNIGHT
+hired_paladin MONS_MERC_PALADIN
 %sdir mon/vault
 ## From a Lair ending
 %rim 0
@@ -751,6 +760,7 @@ dissolution MONS_DISSOLUTION
 ooze MONS_OOZE
 %rim 0
 jelly MONS_JELLY
+small_jelly MONS_SMALL_JELLY
 slime_creature MONS_SLIME_CREATURE
 slime_creature2
 slime_creature3
@@ -769,6 +779,9 @@ pikel MONS_PIKEL
 kobold MONS_KOBOLD
 big_kobold MONS_BIG_KOBOLD
 kobold_demonologist MONS_KOBOLD_DEMONOLOGIST
+hired_brigand MONS_MERC_BRIGAND
+hired_assassin MONS_MERC_ASSASSIN
+hired_cleaner MONS_MERC_CLEANER
 
 ## Liches ('L')
 %sdir mon/unique
@@ -935,6 +948,9 @@ deep_elf_master_archer MONS_DEEP_ELF_MASTER_ARCHER
 deep_elf_elementalist1 MONS_DEEP_ELF_ELEMENTALIST
 deep_elf_elementalist2
 deep_elf_elementalist3
+hired_witch MONS_MERC_WITCH
+hired_sorceress MONS_MERC_SORCERESS
+hired_elementalist MONS_MERC_ELEMENTALIST
 %sdir mon/vault
 ## From the Cigotuvi wizlab
 deformed_elf MONS_DEFORMED_ELF
@@ -972,6 +988,9 @@ hobgoblin MONS_HOBGOBLIN
 gnoll MONS_GNOLL
 gnoll_shaman MONS_GNOLL_SHAMAN
 gnoll_sergeant MONS_GNOLL_SERGEANT
+hired_shaman MONS_MERC_SHAMAN
+hired_shaman_II MONS_MERC_SHAMAN_II
+hired_shaman_III MONS_MERC_SHAMAN_III
 boggart MONS_BOGGART
 
 ## Spriggans ('i')
@@ -1007,6 +1026,12 @@ merfolk_siren MONS_MERFOLK_SIREN
 merfolk_siren_water MONS_MERFOLK_SIREN_WATER
 merfolk_avatar MONS_MERFOLK_AVATAR
 merfolk_avatar_water MONS_MERFOLK_AVATAR_WATER
+hired_skald MONS_MERC_SKALD
+hired_skald_water MONS_MERC_SKALD_WATER
+hired_infuser MONS_MERC_INFUSER
+hired_infuser_water MONS_MERC_INFUSER_WATER
+hired_tidehunter MONS_MERC_TIDEHUNTER
+hired_tidehunter_water MONS_MERC_TIDEHUNTER_WATER
 %sdir mon/humanoids
 dryad MONS_DRYAD
 water_nymph MONS_WATER_NYMPH
@@ -1020,10 +1045,19 @@ ghoul MONS_GHOUL
 
 %sdir mon/unique
 blork_the_orc MONS_BLORK_THE_ORC
+blork_the_orc_warrior MONS_BLORK_THE_ORC_WARRIOR
+blork_the_orc_knight MONS_BLORK_THE_ORC_KNIGHT
+blork_the_orc_warlord MONS_BLORK_THE_ORC_WARLORD
 %rim 0
 urug MONS_URUG
+urug_II MONS_URUG_II
 nergalle MONS_NERGALLE
+nergalle_II MONS_NERGALLE_II
 saint_roka MONS_SAINT_ROKA
+asclepia MONS_ASCLEPIA
+asclepia_II MONS_ASCLEPIA_II
+brandagoth MONS_BRANDAGOTH
+brandagoth_II MONS_BRANDAGOTH_II
 %sdir mon/humanoids/orcs
 orc MONS_ORC
 orc_wizard MONS_ORC_WIZARD
@@ -1192,6 +1226,7 @@ tree_form TRAN_TREE
 %rim 0
 mushroom_form TRAN_MUSHROOM
 shadow_form TRAN_SHADOW
+golem_form TRAN_GOLEM
 %rim 1
 
 %sdir misc

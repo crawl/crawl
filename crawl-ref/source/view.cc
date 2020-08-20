@@ -706,7 +706,9 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
             {
                 auto base_feat = magic_map_base_feat(feat);
                 auto colour = _feat_default_map_colour(base_feat);
-                knowledge.set_feature(base_feat, colour);
+                auto trap = feat_is_trap(grd(pos)) ? get_trap_type(pos)
+                                    : TRAP_UNASSIGNED;
+                knowledge.set_feature(base_feat, colour, trap);
             }
             if (emphasise(pos))
                 knowledge.flags |= MAP_EMPHASIZE;

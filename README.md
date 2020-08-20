@@ -3,7 +3,12 @@
 * 각종 결정 사항들 투표 함 (일주일 정도 투표하고 결정함)
   * [이전 투표들](https://github.com/kimjoy2002/crawl/blob/master/SURVEY.md)
   * 최근 투표
-    * 최근 컨텐츠 밸런싱 투표 (7.11~) https://forms.gle/adJtYQbAciFtKygK9
+    * 의견 투표 (8.01~) 투표 완료
+      * 개발방향성-로어중시35표(53.8%) 다양성중시23표(35.4%)
+      * 크루세이더새이름-Arcane Warrior 13표(20%) Brandmonger 10표(15.4%) Spellsword 9표(13.8%) ~
+      * 가방-턴소모27표(41.5%) 무패널티22표(33.8%) 소지품바로사용금지12표(18.5%)
+      * 위대한뱀-포션28표(42.4%) 독변이신18표(27.3%)
+      * 기타의견들-두신 모두 구현하자, 엘리빌론 상향, 지바 하향, 천사 상향등등...
 
 # Design goals
 
@@ -57,29 +62,29 @@
   
   [Link](https://github.com/kimjoy2002/crawl/blob/master/CHANGELOG.md)
   
-# 웹타일
+# Webtile (Test Server)
 
 * 웹타일주소
   *  http://joy1999.codns.com:8081/
   * 3시간마다 자동 업데이트함. push버전을 바로바로 테스트하고싶으면 이걸 이용
-  * 플레이용도보단 테스트용도기때문에 위자드모드 가능한 버전도 열어뒀음 
-  * 참고로 강제로 패치가 되는데 가끔 패치후 세이브파일이 깨지는 현상이 있음 (무슨 값을 고치면 세이브파일이 깨지는지 아직 잘 모름...)
-    * 때문에 실제로 플레이용으로 쓰기엔 좀 위험함. 로그인후 접속시 검은 화면에서 진행이 안되면 세이브파일이 깨진거임
-    * 이 경우 새 아이디를 만들어야 함
+  * 플레이용도보단 테스트용도기때문에 위자드모드 가능한 버전도 열어뒀음
   * 주의) 기본적으로 서버용 컴퓨터가 아니라서 느림. 플레이용이 아닌 테스트용도로만 사용하세요
 
-# 다운로드
+# Download
 
 * [![Build Status](http://joy1999.codns.com:8080/buildStatus/icon?job=crawl%2Fcrawl)](http://joy1999.codns.com:8080/job/crawl/job/crawl/)
 
+* Last Release (kimchi-1.0.1)
+  * https://github.com/kimjoy2002/crawl/releases/tag/kimchi-1.0.1
+
 * 타일판 다운로드
-  * http://joy1999.codns.com:8999/download/stone_soup-kimchi-1.0-tiles-win64.zip - 64비트
-  * http://joy1999.codns.com:8999/download/stone_soup-kimchi-1.0-tiles-win32.zip - 32비트
+  * http://joy1999.codns.com:8999/download/stone_soup-kimchi-trunk-tiles-win64.zip - 64비트
+  * http://joy1999.codns.com:8999/download/stone_soup-kimchi-trunk-tiles-win32.zip - 32비트
   * 매일 밤 새벽3시 자동 업데이트
 
 * 콘솔판 다운로드
-  * http://joy1999.codns.com:8999/download/stone_soup-kimchi-1.0-win64.zip - 64비트
-  * http://joy1999.codns.com:8999/download/stone_soup-kimchi-1.0-win32.zip - 32비트
+  * http://joy1999.codns.com:8999/download/stone_soup-kimchi-trunk-win64.zip - 64비트
+  * http://joy1999.codns.com:8999/download/stone_soup-kimchi-trunk-win32.zip - 32비트
   * 매일 밤 새벽3시 자동 업데이트
   
 * 이전 다운로드 파일들

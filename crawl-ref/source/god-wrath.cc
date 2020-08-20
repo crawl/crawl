@@ -36,6 +36,7 @@
 #include "mon-behv.h"
 #include "mon-book.h"
 #include "mon-cast.h"
+#include "mon-clone.h"
 #include "mon-pick.h"
 #include "mon-place.h"
 #include "mon-poly.h"
@@ -95,6 +96,8 @@ static const char *_god_wrath_adjectives[] =
     "fury",             // Uskayaw
     "memory",           // Hepliaklqana (unused)
     "rancor",           // Wu Jian
+    "distillation",     // Great Wyrm
+    "reflection",       // Imus Thea
 };
 COMPILE_CHECK(ARRAYSZ(_god_wrath_adjectives) == NUM_GODS);
 
@@ -2060,6 +2063,45 @@ static bool _wu_jian_retribution()
     return true;
 }
 
+static bool _wyrm_retribution()
+{
+    god_type god = GOD_WYRM;
+
+    switch (random2(7))
+    {
+    case 0:
+    case 1:
+    case 2:
+    case 3:
+        if (you.hp > 1){
+            dec_hp((you.hp/4)+1, false);
+        }
+        if (you.magic_points > 1 || you.species == SP_DJINNI)
+        {
+            drain_mp((you.magic_points/4)+1);
+            canned_msg(MSG_MAGIC_DRAIN);
+        }
+        simple_god_message("'s extracts your essence!", god);
+        break;
+    case 4:
+    case 5:
+        simple_god_message("'s extracts your vigor!", god);
+        slow_player(10 + random2avg(15, 2));
+        break;
+    case 6:
+        if (!you.duration[DUR_PARALYSIS])
+        {
+            simple_god_message("'s extracts your energy!", god);
+            const int turns = 2 + random2(6);
+            take_note(Note(NOTE_PARALYSIS, min(turns, 13), 0, "Great Wyrm"));
+            you.increase_duration(DUR_PARALYSIS, turns, 13);
+        }
+        return false;
+    }
+
+    return true;
+}
+
 static bool _uskayaw_retribution()
 {
     const god_type god = GOD_USKAYAW;
@@ -2097,6 +2139,31 @@ static bool _uskayaw_retribution()
         simple_god_message(" booms out: \"Revellers, it's time to dance!\"", god);
         noisy(35, you.pos());
         break;
+    }
+    return true;
+}
+
+static bool _imus_retribution()
+{
+    const god_type god = GOD_IMUS;
+    int count = 0;
+
+    // WIP: use count to define success/failure of summon illusion
+
+    if (count > 0)
+    {
+        switch (random2(2))
+        {
+        case 0:
+            simple_god_message(" says: Do you know who is your worst enemy? Face it!", god);
+            break;
+        case 1:
+            mprf(MSGCH_WARN, "You feel the world around you overlap for a moment!");
+            break;
+        }
+
+    } else {
+        simple_god_message( " fails to create your reflection.", god);
     }
     return true;
 }
@@ -2146,6 +2213,8 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
     case GOD_QAZLAL:        do_more = _qazlal_retribution(); break;
     case GOD_USKAYAW:       do_more = _uskayaw_retribution(); break;
     case GOD_WU_JIAN:       do_more = _wu_jian_retribution(); break;
+    case GOD_WYRM:          do_more = _wyrm_retribution(); break;
+    case GOD_IMUS:          do_more = _imus_retribution(); break;
 
     case GOD_ASHENZARI:
     case GOD_ELYVILON:

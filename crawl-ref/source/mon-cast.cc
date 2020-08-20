@@ -211,6 +211,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
         _fire_simple_beam,
         _selfench_beam_setup(BEAM_HEALING),
     } },
+
     { SPELL_TELEPORT_SELF, {
         [](const monster &caster)
         {
@@ -347,6 +348,10 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
     { SPELL_FLAY, {
         [](const monster &caster) {
             const actor* foe = caster.get_foe(); // XXX: check vis?
+            if (foe && foe->is_player() && foe->as_player()->form == transformation::eldritch) {
+                //eldritch form
+                return false;
+            }
             return foe && (foe->holiness() & MH_NATURAL);
         },
         _cast_flay,
@@ -493,6 +498,23 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             const actor* foe = caster.get_foe();
             return foe && caster.can_constrict(foe, false);
         }, _cast_grasping_roots, } },
+	{ SPELL_AURA_OF_HEALING, {
+        [](const monster &caster) {
+            return !within_healaura(caster.pos());
+        },
+        [](monster &caster, mon_spell_slot, bolt&) {
+            if (you.can_see(caster))
+            {
+                mprf("%s begins to emit aura of healing!",
+                     caster.name(DESC_THE).c_str());
+            }
+
+            caster.add_ench(ENCH_HEALING_AURA);
+            invalidate_agrid(true);
+        },
+        nullptr,
+        MSPELL_NO_AUTO_NOISE,
+    } },
 };
 
 /// Is the 'monster' actually a proxy for the player?
@@ -1355,6 +1377,7 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
     case SPELL_FIREBALL:
     case SPELL_ICEBLAST:
     case SPELL_LEHUDIBS_CRYSTAL_SPEAR:
+    case SPELL_LEHUDIBS_CRYSTAL_SHOT:
     case SPELL_BOLT_OF_DRAINING:
     case SPELL_ISKENDERUNS_MYSTIC_BLAST:
     case SPELL_STICKY_FLAME:
@@ -1627,7 +1650,6 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
     case SPELL_GLACIATE:              // ditto
     case SPELL_CLOUD_CONE:            // ditto
     case SPELL_SCATTERSHOT:           // ditto
-    case SPELL_LEHUDIBS_CRYSTAL_SHOT:
     case SPELL_FOXFIRE:
         _setup_fake_beam(beam, *mons);
         break;
@@ -1872,6 +1894,7 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_SIMULACRUM:
 #endif
     case SPELL_CALL_IMP:
+    case SPELL_CALL_CANINE_FAMILIAR:
     case SPELL_SUMMON_MINOR_DEMON:
 #if TAG_MAJOR_VERSION == 34
     case SPELL_SUMMON_SCORPIONS:
@@ -1923,9 +1946,7 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_SUMMON_DRAGON:
     case SPELL_SUMMON_HYDRA:
     case SPELL_FIRE_SUMMON:
-#if TAG_MAJOR_VERSION == 34
     case SPELL_DEATHS_DOOR:
-#endif
     case SPELL_OZOCUBUS_ARMOUR:
     case SPELL_OLGREBS_TOXIC_RADIANCE:
     case SPELL_SHATTER:
@@ -1988,7 +2009,6 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_SUMMON_SCARABS:
 #if TAG_MAJOR_VERSION == 34
     case SPELL_HUNTING_CRY:
-    case SPELL_CONDENSATION_SHIELD:
     case SPELL_CONTROL_UNDEAD:
 #endif
     case SPELL_CLEANSING_FLAME:
@@ -2165,7 +2185,6 @@ static bool _valid_aura_of_brilliance_ally(const monster* caster,
     return mons_aligned(caster, target) && caster != target
            && target->is_actual_spellcaster();
 }
-
 
 /**
  * Print the message that the player sees after a battlecry goes off.
@@ -3835,32 +3854,6 @@ bool scattershot_tracer(monster *caster, int pow, coord_def aim)
             continue;
 
         const actor *victim = actor_at(entry.first);
-        if (!victim)
-            continue;
-
-        if (mons_atts_aligned(castatt, victim->temp_attitude()))
-            friendly += victim->get_experience_level();
-        else
-            enemy += victim->get_experience_level();
-    }
-
-    return enemy > friendly;
-}
-
-static bool _lehudib_shot_tracer(monster* caster, int pow, coord_def aim)
-{
-    targeter_shotgun hitfunc(caster, 5, spell_range(SPELL_LEHUDIBS_CRYSTAL_SHOT, pow));
-    hitfunc.set_aim(aim);
-
-    mon_attitude_type castatt = caster->temp_attitude();
-    int friendly = 0, enemy = 0;
-
-    for (const auto& entry : hitfunc.zapped)
-    {
-        if (entry.second <= 0)
-            continue;
-
-        const actor* victim = actor_at(entry.first);
         if (!victim)
             continue;
 
@@ -6036,6 +6029,21 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         _mons_cast_haunt(mons);
         return;
 
+    case SPELL_CONDENSATION_SHIELD:
+    {
+        if (you.can_see(*mons))
+        {
+            mprf("A crackling disc of dense vapour forms near %s!",
+                 mons->name(DESC_THE).c_str());
+        }
+        const int power = (mons->spell_hd(spell_cast) * 15) / 10;
+        mons->add_ench(mon_enchant(ENCH_CONDENSATION_SHIELD,
+                                   15 + random2(power),
+                                   mons));
+
+        return;
+    }
+
     // SPELL_SLEEP_GAZE ;)
     case SPELL_DREAM_DUST:
         _dream_sheep_sleep(*mons, *foe);
@@ -6077,6 +6085,19 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         mons->add_ench(ENCH_SWIFT);
         simple_monster_message(*mons, " puts on a burst of speed!");
         return;
+
+    case SPELL_STONESKIN:
+    {
+        if (you.can_see(*mons))
+        {
+            mprf("%s skin hardens.",
+                 apostrophise(mons->name(DESC_THE)).c_str());
+        }
+        const int power = (mons->spell_hd(spell_cast) * 15) / 10;
+        mons->add_ench(mon_enchant(ENCH_STONESKIN, 0, mons,
+                       BASELINE_DELAY * (10 + (2 * random2(power)))));
+        return;
+    }
 
     case SPELL_SILENCE:
         mons->add_ench(ENCH_SILENCE);
@@ -6633,7 +6654,8 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
     
     case SPELL_FOXFIRE:
-        cast_foxfire(mons, mons->spell_hd(spell_cast), &pbolt, god);
+        cast_foxfire(mons, mons->spell_hd(spell_cast), /*&pbolt,*/ god);
+        return;
 
     case SPELL_AWAKEN_FOREST:
         if (!mons->friendly() && have_passive(passive_t::friendly_plants))
@@ -6683,6 +6705,17 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
                 .set_summoned(mons, duration, spell_cast, god));
         }
         return;
+
+    
+    case SPELL_DEATHS_DOOR:
+         if (!mons->has_ench(ENCH_DEATHS_DOOR))
+         {
+             const int dur = BASELINE_DELAY * 2 * mons->skill(SK_NECROMANCY);
+             mprf("%s stands defiantly in death's doorway!", mons->name(DESC_THE).c_str());
+             mons->hit_points = std::max(std::min(mons->hit_points, mons->skill(SK_NECROMANCY)), 1);
+             mons->add_ench(mon_enchant(ENCH_DEATHS_DOOR, 0, mons, dur));
+         }
+         return;
 
     case SPELL_REGENERATION:
     {
@@ -6735,6 +6768,30 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
                 mi->add_ench(bond);
             }
         }
+
+        return;
+    }
+    
+    case SPELL_CALL_CANINE_FAMILIAR:
+    {
+        const int power = (mons->spell_hd(spell_cast) * 15)/10;
+
+        monster_type mon = MONS_PROGRAM_BUG;
+
+        const int chance = power * 2 + random_range(-10, 10);
+
+        if (chance > 59)
+            mon = MONS_WARG;
+        else if (chance > 39)
+            mon = MONS_WOLF;
+        else
+            mon = MONS_HOUND;
+
+        const int dur = min(2 + (random2(power) / 4), 6);
+
+        create_monster(mgen_data(mon, SAME_ATTITUDE(mons),
+                                 mons->pos(), mons->foe)
+                       .set_summoned(mons, dur, spell_cast, god));
 
         return;
     }
@@ -6996,13 +7053,6 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     {
         ASSERT(foe);
         cast_scattershot(mons, splpow, foe->pos());
-        return;
-    }
-
-    case SPELL_LEHUDIBS_CRYSTAL_SHOT:
-    {
-        ASSERT(foe);
-        cast_lehudibs_crystal_shot(mons, splpow, pbolt, false);
         return;
     }
 
@@ -8167,6 +8217,9 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
     case SPELL_REGENERATION:
         return mon->has_ench(ENCH_REGENERATION);
 
+    case SPELL_STONESKIN:
+        return mon->is_insubstantial() || mon->has_ench(ENCH_STONESKIN);
+
     case SPELL_MAJOR_HEALING:
         return mon->hit_points > mon->max_hit_points / 2;
 
@@ -8255,6 +8308,7 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
 
     // Don't use unless our foe is close to us and there are no allies already
     // between the two of us
+    case SPELL_NIGHTMARE_OF_CUBUS:
     case SPELL_WIND_BLAST:
         if (foe && foe->pos().distance_from(mon->pos()) < 4)
         {
@@ -8477,11 +8531,6 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
                || !scattershot_tracer(mon, mons_spellpower(*mon, monspell),
                                       foe->pos());
 
-    case SPELL_LEHUDIBS_CRYSTAL_SHOT:
-        return !foe
-            || !_lehudib_shot_tracer(mon, mons_spellpower(*mon, monspell),
-                foe->pos());
-
     case SPELL_CLEANSING_FLAME:
     {
         bolt tracer;
@@ -8541,6 +8590,10 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
                 return grid_distance(foe->pos(), mi->pos()) * grid_distance(foe->pos(), mi->pos()) <= mi->get_hit_dice();
         return false;
     }
+    
+    case SPELL_CONDENSATION_SHIELD:
+        return mon->shield()
+               || mon->has_ench(ENCH_CONDENSATION_SHIELD);
 
     case SPELL_CORPSE_ROT:
     case SPELL_POISONOUS_CLOUD:
@@ -8567,14 +8620,13 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
     case SPELL_SIMULACRUM:
     case SPELL_CHANT_FIRE_STORM:
     case SPELL_IGNITE_POISON_SINGLE:
-    case SPELL_CONDENSATION_SHIELD:
-    case SPELL_STONESKIN:
     case SPELL_HUNTING_CRY:
     case SPELL_CONTROL_WINDS:
-    case SPELL_DEATHS_DOOR:
     case SPELL_FULMINANT_PRISM:
     case SPELL_CONTROL_UNDEAD:
 #endif
+    case SPELL_DEATHS_DOOR:
+        return mon->has_ench(ENCH_DEATHS_DOOR);
     case SPELL_NO_SPELL:
         return true;
 

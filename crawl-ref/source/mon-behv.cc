@@ -187,8 +187,18 @@ static void _decide_monster_firing_position(monster* mon, actor* owner)
         // We have a foe but it's not the player.
         monster* target = &menv[mon->foe];
         mon->target = target->pos();
+        bool beogh_teach = (mon->type == MONS_ORC_SORCERER ||
+                mon->type == MONS_ORC_HIGH_PRIEST ||
+                mon->type == MONS_NERGALLE ||
+                mon->type == MONS_NERGALLE_II ||
+                mon->type == MONS_ASCLEPIA ||
+                mon->type == MONS_ASCLEPIA_II ||
+                mon->type == MONS_BRANDAGOTH ||
+                mon->type == MONS_BRANDAGOTH_II)
+                && you_worship(GOD_BEOGH)
+                && mon->attitude == ATT_FRIENDLY;
 
-        if (mons_class_flag(mon->type, M_MAINTAIN_RANGE)
+        if ((mons_class_flag(mon->type, M_MAINTAIN_RANGE) || beogh_teach)
             && !mon->berserk_or_insane()
             && !(mons_is_avatar(mon->type)
                  && owner && mon->foe == owner->mindex()))
@@ -203,6 +213,7 @@ static void _decide_monster_firing_position(monster* mon, actor* owner)
         {
             mon->firing_pos = mon->pos();
         }
+        // Higher orcish mages (of player) should maintain a range.
     }
 }
 

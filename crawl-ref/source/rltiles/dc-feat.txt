@@ -511,6 +511,14 @@ hep3
 hep4
 hep5
 wu_jian DNGN_ALTAR_WU_JIAN
+wyrm0 DNGN_ALTAR_WYRM
+wyrm1
+wyrm2
+wyrm3
+imus0 DNGN_ALTAR_IMUS
+imus1
+imus2
+imus3
 ecumenical DNGN_ALTAR_ECUMENICAL
 unknown DNGN_UNKNOWN_ALTAR
 
@@ -680,6 +688,7 @@ monster_threat_easy THREAT_EASY
 monster_threat_tough THREAT_TOUGH
 monster_threat_nasty THREAT_NASTY
 ray RAY
+ray_bi RAY_BI
 ray_multi RAY_MULTI
 ray_out_of_range RAY_OUT_OF_RANGE
 travel_exclusion TRAVEL_EXCLUSION_BG
@@ -697,6 +706,9 @@ effect/silenced SILENCED
 effect/leapattack LEAP_ATTACK
 effect/cowardattack COWARD_ATTACK
 effect/antimagic ANTIMAGIC_AURA
+effect/healaura0 HEALAURA
+effect/healaura1 
+effect/healaura2
 %shrink 0
 %sdir mon/tentacles/kraken_corners
 kraken_corner_NW KRAKEN_OVERLAY_NW

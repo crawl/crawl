@@ -38,6 +38,7 @@ enum cloud_type
     CLOUD_GOLD_DUST,
     CLOUD_INNER_FLAME,
     CLOUD_FLAME,
+    CLOUD_HEAL,
     NUM_CLOUD_TYPES,
 
     // Random per-square.

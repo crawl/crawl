@@ -57,6 +57,8 @@
 #include "nearby-danger.h"
 #include "notes.h"
 #include "output.h"
+#include "player-equip.h"
+#include "player-stats.h"
 #include "religion.h"
 #include "rot.h"
 #include "spl-damage.h"
@@ -167,6 +169,8 @@ static bool _fill_out_corpse(const monster& mons, item_def& corpse)
         if (saved_mon.max_hit_points <= 0)
             saved_mon.max_hit_points = 1;
         saved_mon.hit_points = saved_mon.max_hit_points;
+
+        corpse.freshness += have_passive(passive_t::conserve_orc_corpses)? you.piety/2 : 0;
     }
 
     return true;
@@ -439,7 +443,7 @@ static void _gold_pile(item_def &corpse, monster_type corpse_class)
     you.redraw_title = true;
 }
 
-void _blood_spray_with_cigotuvis(const monster* mons, int level)
+static void _blood_spray_with_cigotuvis(const monster* mons, int level)
 {
     coord_def origin = mons->pos();
     monster_type montype = mons->type;
@@ -733,9 +737,12 @@ item_def* place_monster_corpse(const monster& mons, bool silent, bool force)
     const bool no_coinflip = mons.props.exists("always_corpse")
                              || force
                              || goldify;
-
+ 
+    const int weight = have_passive(passive_t::conserve_orc_corpses) 
+                        && (mons_genus(mons.type) == MONS_ORC) ? 500 - you.piety : 500;
     // 50/50 chance of getting a corpse, usually.
-    if (!no_coinflip && coinflip())
+    // If you believe Beogh, Beogh conserves orc corpses.
+    if (!no_coinflip && x_chance_in_y(weight,1000))
         return nullptr;
 
     // The game can attempt to place a corpse for an out-of-bounds monster
@@ -788,6 +795,97 @@ item_def* place_monster_corpse(const monster& mons, bool silent, bool force)
         item_was_destroyed(corpse);
         destroy_item(o);
         return nullptr;
+    } else if (mons_gives_xp(mons, you) && have_passive(passive_t::wyrm_quicksilver)
+        && monster_is_debuffable(mons)) // Distillation from despellable monster
+    {
+        vector<potion_type> potions;
+        potion_type pot_type = POT_WATER;
+        for (enchant_type ench : dispellable_beneficials)
+        {
+            // except for permaconfusion.
+            if (ench == ENCH_CONFUSION && mons_class_flag(mons.type, M_CONFUSED))
+                continue;
+
+            // Gozag-incited haste is permanent.
+            if (ench == ENCH_HASTE && mons.has_ench(ENCH_GOZAG_INCITE))
+                continue;
+
+            if (mons.has_ench(ench))
+            {
+                switch (ench) {
+                case ENCH_HASTE:
+                    pot_type = POT_HASTE;
+                    break;
+                case ENCH_MIGHT:
+                    pot_type = POT_MIGHT;
+                    break;
+                case ENCH_AGILE:
+                    pot_type = POT_AGILITY;
+                    break;
+                case ENCH_RESISTANCE:
+                    pot_type = POT_RESISTANCE;
+                    break;
+                case ENCH_SWIFT:
+                    pot_type = POT_SWIFT;
+                    break;
+                case ENCH_REGENERATION:
+                    pot_type = POT_REGENERATION;
+                    break;
+                case ENCH_OZOCUBUS_ARMOUR:
+                    pot_type = POT_ICY_ARMOUR;
+                    break;
+                case ENCH_TOXIC_RADIANCE:
+                    pot_type = POT_TOXIC;
+                    break;
+                case ENCH_SHROUD:
+                    pot_type = POT_SHROUD;
+                    break;
+                case ENCH_REPEL_MISSILES:
+                    pot_type = POT_REPEL_MISSILES;
+                    break;
+                case ENCH_DEFLECT_MISSILES:
+                    pot_type = POT_DEFLECT_MISSILES;
+                    break;
+                case ENCH_CONDENSATION_SHIELD:
+                    pot_type = POT_ICY_SHIELD;
+                    break;
+                default:
+                    break;
+                }
+
+                if (mons.has_ench(ENCH_INVIS) || mons_class_flag(mons.type, M_INVIS))
+                    pot_type = POT_INVISIBILITY;
+
+                potions.push_back(pot_type);
+            }
+        }
+        if (!potions.empty())
+            pot_type = potions[random2(potions.size())];
+        
+        if (pot_type != POT_WATER) {
+            // codes from spl-other.cc
+            item_def& essence = mitm[o];
+            essence.base_type = OBJ_POTIONS;
+            essence.sub_type = pot_type;
+            essence.quantity = 1;
+            essence.plus = 0;
+            essence.plus2 = 0;
+            essence.flags = 0;
+            essence.inscription.clear();
+            item_colour(essence); // sets special as well
+
+            // Always identify said potion.
+            set_ident_type(essence, true);
+        
+            mprf(MSGCH_GOD, "The Great Wyrm extracts %s from the corpse.",
+                essence.name(DESC_A).c_str());
+
+            std::map<int, int> tmp_l_p = you.last_pickup;
+            you.last_pickup.clear();
+
+            if (you.last_pickup.empty())
+                you.last_pickup = tmp_l_p;
+        }
     }
 
     if (in_bounds(mons.pos()))
@@ -877,6 +975,24 @@ static bool _is_pet_kill(killer_type killer, int i)
            || me2.ench == ENCH_INSANE
               && (me2.who == KC_YOU || me2.who == KC_FRIENDLY);
 }
+
+static bool _is_jelly_kill(killer_type killer, int i)
+{
+    if (!MON_KILL(killer))
+        return false;
+
+    if (invalid_monster_index(i))
+        return false;
+
+    const monster* m = &menv[i];
+
+    if (mons_is_slime(*m)) {
+        return true;
+    }
+
+    return false;
+}
+
 
 int exp_rate(int killer)
 {
@@ -1951,6 +2067,9 @@ item_def* monster_die(monster& mons, killer_type killer,
     // ... and liquefiers.
     mons.del_ench(ENCH_LIQUEFYING);
 
+    // ... and healing-emitters.
+    mons.del_ench(ENCH_HEALING_AURA);
+
     // ... and wind-stillers.
     mons.del_ench(ENCH_STILL_WINDS, true);
 
@@ -2251,6 +2370,15 @@ item_def* monster_die(monster& mons, killer_type killer,
             simple_monster_message(mons, " exhausts itself and dries up.");
         silent = true;
     }
+    else if (mons.type == MONS_PAVISE)
+    {
+        you.props.erase("pavise");
+        int item_ = mons.inv[MSLOT_SHIELD];
+        if (item_ != NON_ITEM) {
+            mitm[item_].flags &= ~ISFLAG_SUMMONED;
+            move_item_to_grid(&item_, mons.pos());
+        }
+    }
 
     const bool death_message = !silent && !did_death_message
                                && you.can_see(mons);
@@ -2317,8 +2445,8 @@ item_def* monster_die(monster& mons, killer_type killer,
             if (gives_player_xp
                 && (have_passive(passive_t::restore_hp)
                     || have_passive(passive_t::mp_on_kill)
-                    || have_passive(passive_t::restore_hp_mp_vs_evil)
-                       && mons.evil())
+                    || (have_passive(passive_t::restore_hp_mp_vs_evil)
+                       && mons.evil()))
                 && !mons_is_object(mons.type)
                 && !player_under_penance()
                 && random2(you.piety) >= piety_breakpoint(0)
@@ -2476,6 +2604,14 @@ item_def* monster_die(monster& mons, killer_type killer,
 
             // KILL_RESET monsters no longer lose their whole inventory, only
             // items they were generated with.
+            if (is_mercernery_companion(mons.type))
+            {
+                mons_pacify(mons, ATT_NEUTRAL);
+                mprf(MSGCH_WARN, "%s is banished into the Abyss, will act for own survival rather than you.",
+                    mons.name(DESC_THE, false).c_str());
+            }
+
+
             if (mons.pacified() || !mons.needs_abyss_transit())
             {
                 // A banished monster that doesn't go on the transit list
@@ -2777,7 +2913,7 @@ item_def* monster_die(monster& mons, killer_type killer,
             _maybe_drop_monster_hide(*corpse, silent);
     }
 
-    if (mons.is_divine_companion()
+    if ((mons.is_divine_companion() || mons.is_mercenery_companion())
         && killer != KILL_RESET
         && !(mons.flags & MF_BANISHED))
     {
@@ -2811,7 +2947,9 @@ item_def* monster_die(monster& mons, killer_type killer,
         if(YOU_KILL(killer) ||
             pet_kill)
         {
-            _jiyva_kill_to_slime(&mons);
+            if (!_is_jelly_kill(killer, killer_index)) {
+                _jiyva_kill_to_slime(&mons);
+            }
         }
     }
 
@@ -2914,7 +3052,8 @@ void monster_cleanup(monster* mons)
     if (mons->halo_radius()
         || mons->umbra_radius()
         || mons->silence_radius()
-        || mons->antimagic_radius())
+        || mons->antimagic_radius()
+        || mons->healaura_radius())
     {
         invalidate_agrid();
     }

@@ -128,6 +128,7 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Book of Transfigurations
+    SPELL_STONESKIN,
     SPELL_IRRADIATE,
     SPELL_STATUE_FORM,
     SPELL_HYDRA_FORM,
@@ -198,6 +199,7 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Book of the Sky
+    SPELL_INSULATION,
     SPELL_SUMMON_LIGHTNING_SPIRE,
     SPELL_SILENCE,
     SPELL_DEFLECT_MISSILES,
@@ -247,6 +249,7 @@ static const vector<spell_type> spellbook_templates[] =
 
 {   // Book of Geomancy
     SPELL_SANDBLAST,
+    SPELL_STONESKIN,
     SPELL_PASSWALL,
     SPELL_STONE_ARROW,
     SPELL_PETRIFY,
@@ -342,6 +345,7 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of Alchemy
     SPELL_SUBLIMATION_OF_BLOOD,
     SPELL_IGNITE_POISON,
+    SPELL_CONDENSATION_SHIELD,
     SPELL_PETRIFY,
     SPELL_INTOXICATE,
     SPELL_IRRADIATE,
@@ -401,6 +405,14 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_OZOCUBUS_ARMOUR,
     SPELL_HAILSTORM,
     SPELL_SUMMON_ICE_BEAST,
+}, 
+{   // Book of the War Chants
+    SPELL_SHRAPNEL_CURTAIN,
+    SPELL_STONESKIN,
+    SPELL_ELENENTAL_WEAPON,
+    SPELL_FLAME_STRIKE,
+    SPELL_INSULATION,
+    SPELL_CONDENSATION_SHIELD,
 },
 };
 

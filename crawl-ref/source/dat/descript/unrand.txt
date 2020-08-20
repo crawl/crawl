@@ -711,3 +711,32 @@ already dead, but his jaws still remain, and make strangely and threateningly
 crackling sound as it seems to soothe unfilled hunger. Since it makes wielder
 suffer a terrible hunger, wielder sucks a bloods and devours every livings to
 fill its hunger.
+%%%%
+scales of the Unseen Dragon
+
+A suit of armour created from the scales of a veiled quicksilver dragon,
+called as 'the Unseen Dragon'. The story of this dragon is more like a folk
+tale than a legend, because there is no evidence or context. Only this armour,
+can't be made by any enchantments, gives us an idea this dragon existed; With
+the sarcasm and arrogance of each of these scales, makes wearer invisible when
+damaged, but also corrodes into contamination.
+%%%%
+Golem gauntlets
+
+A pair of gauntlets made like fists of golem. It's enough to protect your hands,
+but it's not suitable for hiding because of its size.
+%%%%
+Golem greaves
+
+A pair of gauntlets made like legs of golem. It's enough to protect your foots,
+but it's not suitable for hiding because of its size.
+%%%%
+Golem helmet
+
+A heavy helmet made like a head of golem. It's enough to protect your head,
+but it's not suitable for hiding because of its size.
+%%%%
+Golem armour
+
+A suit of armour made like a bodyparts of golem. It can be re-assembled to
+activate as a giant golem exoskeleton; If you find other parts of this armuor.

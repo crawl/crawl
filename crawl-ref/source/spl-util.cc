@@ -1155,7 +1155,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
 
     if (you.species == SP_DJINNI)
     {
-        if (spell == SPELL_ICE_FORM  || spell == SPELL_OZOCUBUS_ARMOUR)
+        if (spell == SPELL_ICE_FORM  || spell == SPELL_OZOCUBUS_ARMOUR || spell == SPELL_CONDENSATION_SHIELD)
             return "you're too hot.";
          if (spell == SPELL_LEDAS_LIQUEFACTION)
             return "you can't cast this while perpetually flying.";
@@ -1166,12 +1166,15 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
     {
         if (spell == SPELL_OZOCUBUS_ARMOUR)
             return "your stony body would shatter the ice.";
+        if (spell == SPELL_STONESKIN)
+            return "your skin is already made of stone.";
         if (temp && !temperature_effect(LORC_STONESKIN))
         {
             switch (spell)
             {
             case SPELL_STATUE_FORM:
             case SPELL_ICE_FORM:
+            case SPELL_CONDENSATION_SHIELD:
                 return "you're too hot.";
             default:
                 break;
@@ -1238,7 +1241,10 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
     case SPELL_STATUE_FORM:
         if (SP_GARGOYLE == you.species)
             return "you're already a statue.";
+        if (you.species == SP_ADAPTION_HOMUNCULUS)
+            return "you're an artificial being.";
         // fallthrough to other forms
+    case SPELL_STONESKIN:
     case SPELL_BEASTLY_APPENDAGE:
     case SPELL_DRAGON_FORM:
     case SPELL_ICE_FORM:
@@ -1251,6 +1257,8 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         }
         if (temp && you.is_lifeless_undead())
             return "your current blood level is not sufficient.";
+        if (you.species == SP_ADAPTION_HOMUNCULUS)
+            return "you're an artificial being.";
         break;
 
     case SPELL_BLADE_HANDS:
@@ -1263,6 +1271,8 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         }
         if (temp && you.is_lifeless_undead())
             return "your current blood level is not sufficient.";
+        if (you.species == SP_ADAPTION_HOMUNCULUS)
+            return "you're an artificial being.";
         break;
         
     case SPELL_HYDRA_FORM:
@@ -1275,6 +1285,8 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         }
         if (temp && you.is_lifeless_undead())
             return "your current blood level is not sufficient.";
+        if (you.species == SP_ADAPTION_HOMUNCULUS)
+            return "you're an artificial being.";
         break;
         
     case SPELL_REGENERATION:
@@ -1282,9 +1294,21 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "you can't regenerate without divine aid.";
         if (you.undead_state(temp) == US_UNDEAD)
             return "you're too dead to regenerate.";
+        if (you.species == SP_ADAPTION_HOMUNCULUS)
+            return "you're an artificial being.";
         break;
 
     case SPELL_EXCRUCIATING_WOUNDS:
+        if (temp
+            && (!you.weapon()
+                || you.weapon()->base_type != OBJ_WEAPONS
+                || !is_brandable_weapon(*you.weapon(), true)))
+        {
+            return "you aren't wielding a brandable weapon.";
+        }
+        // intentional fallthrough
+
+    case SPELL_ELENENTAL_WEAPON:
         if (temp
             && (!you.weapon()
                 || you.weapon()->base_type != OBJ_WEAPONS
@@ -1321,6 +1345,8 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         // Prohibited to all undead.
         if (you.undead_state(temp))
             return "you're too dead.";
+        if (you.species == SP_ADAPTION_HOMUNCULUS)
+            return "you're an artificial being.";
         break;
     case SPELL_NECROMUTATION:
         // only prohibited to actual undead, not lichformed players
@@ -1331,7 +1357,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
     case SPELL_OZOCUBUS_ARMOUR:
         if (temp && !player_effectively_in_light_armour())
             return "your body armour is too heavy.";
-        if (temp && you.form == transformation::statue)
+        if (temp && (you.form == transformation::statue || you.duration[DUR_STONESKIN]))
             return "the film of ice won't work on stone.";
         if (temp && you.duration[DUR_FIRE_SHIELD])
             return "your ring of flames would instantly melt the ice.";
@@ -1342,7 +1368,9 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         if (you.species == SP_GARGOYLE
             || you.species == SP_GHOUL
             || you.species == SP_MUMMY
+            || you.species == SP_LICH
             || you.species == SP_DJINNI
+            || you.species ==  SP_ADAPTION_HOMUNCULUS
             || (temp && !form_can_bleed(you.form)))
         {
             return "you have no blood to sublime.";
@@ -1475,6 +1503,7 @@ bool spell_no_hostile_in_range(spell_type spell, bool rod)
     case SPELL_FULMINANT_PRISM:
     case SPELL_SUMMON_LIGHTNING_SPIRE:
     case SPELL_SINGULARITY:
+    case SPELL_PRISMATIC_PRISM:
     // This can always potentially hit out-of-LOS, although this is conditional
     // on spell-power.
     case SPELL_FIRE_STORM:
@@ -1525,6 +1554,9 @@ bool spell_no_hostile_in_range(spell_type spell, bool rod)
 
     case SPELL_IGNITE_POISON:
         return cast_ignite_poison(&you, -1, false, true) == spret::abort;
+
+    case SPELL_CONVERT_POISON:
+        return cast_convert_poison(&you, -1, false, true) == spret::abort;
 
     case SPELL_HAILSTORM:
         return cast_hailstorm(-1, false, true) == spret::abort;

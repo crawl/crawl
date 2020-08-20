@@ -1,0 +1,58 @@
+enum: SP_BLOSSOM_HOMUNCULUS
+monster: MONS_HUMAN
+name: Blossom Homunculus
+short_name: "Hm"
+adjective: "Homunculus"
+genus: "Homunculus"
+difficulty: False
+difficulty_priority: 90
+aptitudes:
+  xp: -1
+  hp: 0
+  mp_mod: 1
+  mr: 4
+  fighting: 1
+  short_blades: 0
+  long_blades: 0
+  axes: 0
+  maces_and_flails: 0
+  polearms: 0
+  staves: 0
+  slings: -3
+  bows: -3
+  crossbows: -3
+  throwing: -3
+  armour: -1
+  dodging: -1
+  stealth: -2
+  shields: -2
+  unarmed_combat: -1
+  spellcasting: 1
+  conjurations: 0
+  hexes: 0
+  charms: 0
+  summoning: 0
+  necromancy: 0
+  translocations: 0
+  transmutations: 0
+  fire_magic: 0
+  ice_magic: 0
+  air_magic: 0
+  earth_magic: 0
+  poison_magic: 0
+  invocations: 1
+  evocations: 2
+str: 9
+int: 9
+dex: 7
+levelup_stat_frequency: 4
+levelup_stats:
+  - int
+mutations:
+  1:
+    MUT_REGENERATION: 1
+fake_mutations:
+  - long: Every time cast a spell, your magic will be amplified and unstable.
+    short: blooming essence
+  - long: You can release powerful unstability with melee attacks.
+    short: essence striker

@@ -40,6 +40,9 @@ enum job_type
     JOB_JESTER,
 #endif
     JOB_MELTED_KNIGHT,
+    JOB_CRUSADER,
+    JOB_CARAVAN,
+    JOB_COLLECTOR,
     NUM_JOBS,                          // always after the last job
 
     JOB_UNKNOWN = 100,

@@ -100,6 +100,7 @@ spret cast_aura_of_abjuration(int pow, bool fail);
 void do_aura_of_abjuration(int delay);
 
 monster* find_battlesphere(const actor* agent);
+monster* find_pavise_shield(const actor* agent);
 spret cast_battlesphere(actor* agent, int pow, god_type god, bool fail);
 void end_battlesphere(monster* mons, bool killed);
 bool battlesphere_can_mirror(spell_type spell);
@@ -109,6 +110,8 @@ bool fire_battlesphere(monster* mons);
 void reset_battlesphere(monster* mons);
 
 spret cast_fulminating_prism(actor* caster, int pow,
+                                  const coord_def& where, bool fail);
+spret cast_prismatic_prism(actor* caster, int pow,
                                   const coord_def& where, bool fail);
 
 monster* find_spectral_weapon(const actor* agent);
@@ -134,3 +137,7 @@ bool fedhas_overgrow();
 spret fedhas_grow_oklob(bool fail);
 
 spret cast_pakellas_summon(int pow, god_type god, bool fail);
+
+spret cast_pavise(int pow, bolt& beam, bool fail);
+
+spret fragmentation(int power);

@@ -66,6 +66,14 @@ ancestor into the world; as they explore and form new experiences, they will
 find themselves able to shape and control their ancestor's memory, eventually
 bringing them into the ranks of the mythical heroes.
 %%%%
+Imus Thea
+
+As a god of mirror, Imus Thea rules all refraction, diffraction, and dispersion
+of countless parallel realms. Those who swear to be a servant of mirror-god, will
+become as fragile as a mirror, but also can reflect the enemy's fire, even if
+magical beams of breath of dragons. If these mirror-like aspect develops, they
+can blind enemies with prismatic prism, and call out another self from mirror.
+%%%%
 Wu Jian
 
 The Wu Jian Council is a congregation of martial monks, ascended to divinity
@@ -156,6 +164,16 @@ who seek magical knowledge. Followers who triumph over their foes can call upon
 the Loreminder for magical power and the ability to cast spells beyond their
 magical training. The devout are rewarded with a supply of spellbooks taken
 directly from Sif Muna's legendary library.
+%%%%
+the Great Wyrm
+
+The Great Wyrm, also called as 'Wyrm-bites-itself', is an wise and elder
+deity of alchemy, the arts of distillations. The Great Wyrm will distillate
+beneficial effects from corpses from foes, as a form of potions. Followers
+can transmute their potions into unique essences, to infuse a target and
+cause various effects; leaving miasma on target's trail, stunning target
+when enchanted, empowering accuracy and spells of target, and diffusing
+other infusions which target has.
 %%%%
 the Shining One
 
@@ -300,6 +318,16 @@ Hepliaklqana's service allows worshippers to restore and strengthen their
 ancestor, to swap them with other creatures, and to choose how to remember
 their life's talents.
 %%%%
+Imus Thea powers
+
+Followers of Imus Thea can reflect all kinds of upcoming missiles, including
+magical beams. Instead, Imus Thea demands worshippers become mirror, and project
+more wider world. If they accept the aspect of mirror, their bodies become
+fragile and unable to wear heavy armours and any kinds of shields, and lose
+accuracy when swing some heavy weapons. Nevertheless, those who accept these
+will able to blinds enemies with prismatic prism, and able to shatter themselves
+to duplicate themselves.
+%%%%
 Jiyva powers
 
 Jiyva's followers can request jellies, which will consume nearby items and
@@ -401,6 +429,19 @@ and to forget spells at will, so as to learn new ones. Worshipers can call upon
 the Loreminder to help cast any spell they've discovered, even if it's well
 beyond their current magical training. Over time, devout followers will receive
 spellbooks containing a vast range of spells.
+%%%%
+the Great Wyrm powers
+
+Followers of the Wyrm will receive beneficial potions, after a combat against
+magically enchanted foes. These potions have a same effects as foes were once
+had, extracted from corpses of foes. The Alcemist who travels for the wisdom,
+will learn about unique essences of alchemy. Each essences are drinkable, made
+by transmuting a potion or other essence, and cause useful effects when infused.
+Nigredo will leave miasma on target's trail. Albedo will stun target if it has
+any dispellable effects. Citrinitas will empower target's accuracy and spells.
+Viriditas will convert target's damage upon you into heal. Finally, the most
+adept of alchemy, infuse a target with Rubedo, to disffuse all effects of other
+essences already infused.
 %%%%
 the Shining One powers
 
@@ -539,6 +580,12 @@ too, will find their own bodies becoming unstable; regularly transmuting into
 strange forms and acquiring debilitating mutations, as well as having any gifts
 of slime mutations stripped away from them.
 %%%%
+Imus Thea wrath
+
+Imus Thea will punish its old followers from countless parallel realms.
+The betrayer of mirror-god will be encountered with their self from mirror,
+with same equipment and spells as them.
+%%%%
 Wu Jian wrath
 
 Those who turn against the Council must be prepared to endure death by a
@@ -609,6 +656,13 @@ Those in Sif Muna's ill graces find the very forces of magic rebelling against
 them. They are confused and stupefied, their magical reserves drained, their
 enchantments unravelled. Casting spells, too, becomes unreliable – and even
 dangerous.
+%%%%
+the Great Wyrm wrath
+
+The Great Wyrm is wise deity, but also an elder deity with menacing fangs.
+The Wyrm-of-World will bites those who abandon their travel. They will be
+Extracted health or magic immediately, Slowed, Paralysed, and sometimes
+being forced to waste potions, not only to drink but also to evaporate.
 %%%%
 the Shining One wrath
 

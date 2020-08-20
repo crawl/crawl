@@ -1851,6 +1851,10 @@ static string _describe_armour(const item_def &item, bool verbose)
         case SPARM_CLOUD_IMMUNE:
             description += "It completely protects its wearer from the effects of clouds.";
             break;
+
+        case SPARM_BUNKER:
+            description += "It can be fixed to the ground and used as a barrier.";
+            break;
         }
     }
 
@@ -2414,6 +2418,14 @@ static vector<extra_feature_desc> _get_feature_extra_descs(const coord_def& pos)
                 "An antimagic.",
                 getLongDescription("antimagic haloe"),
                 tile_def(TILE_ANTIMAGIC_AURA, TEX_FEAT)
+                });
+        }
+        if (within_healaura(pos))
+        {
+            ret.push_back({
+                "Healing Energy",
+                getLongDescription("within healaura"),
+                tile_def(TILE_HEALAURA, TEX_FEAT)
                 });
         }
     }

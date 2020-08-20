@@ -567,6 +567,8 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
                 this.draw_dngn(dngn.RAY_OUT_OF_RANGE, x, y);
             else if (bg.LANDING)
                 this.draw_dngn(dngn.LANDING, x, y);
+            else if (bg.RAY_BI)
+                this.draw_dngn(dngn.RAY_BI, x, y);
             else if (bg.RAY_MULTI)
                 this.draw_dngn(dngn.RAY_MULTI, x, y);
         },
@@ -682,6 +684,8 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
                         this.draw_dngn(dngn.COWARD_ATTACK, x, y);
                     if (cell.antimagic_aura)
                         this.draw_dngn(dngn.ANTIMAGIC_AURA, x, y);
+                    if (cell.healaura)
+                        this.draw_dngn(dngn.HEALAURA, x, y);
                     if (cell.silenced)
                         this.draw_dngn(dngn.SILENCED, x, y);
                     if (cell.halo == enums.HALO_RANGE)

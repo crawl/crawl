@@ -122,6 +122,11 @@ void start_recall(recall_t type)
             if (!is_orcish_follower(**mi))
                 continue;
         }
+        else if (type == recall_t::caravan)
+        {
+            if (!is_mercernery_companion(mi->type))
+                continue;
+        }
 
         mid_hd m(mi->mid, mi->get_experience_level());
         rlist.push_back(m);
@@ -844,6 +849,89 @@ spret create_wall(bool fail)
     if (you.props[WILL_OF_EARTH_KEY].get_int() == 0) {
         you.set_duration(DUR_WILL_OF_EARTH, 0);
     }
+
+    return spret::success;
+}
+
+spret cast_stoneskin(int pow, bool fail)
+{
+    if (you.form != transformation::none
+        && you.form != transformation::appendage
+        && you.form != transformation::statue
+        && you.form != transformation::blade_hands)
+    {
+        mpr("This spell does not affect your current form.");
+        return spret::abort;
+    }
+
+    if (you.duration[DUR_ICY_ARMOUR])
+    {
+        mpr("Turning your skin into stone would shatter your icy armour.");
+        return spret::abort;
+    }
+
+#if TAG_MAJOR_VERSION == 34
+    if (you.species == SP_LAVA_ORC)
+    {
+        // We can't get here from normal casting, and probably don't want
+        // a message from the Helm card.
+        // mpr("Your skin is naturally stony.");
+        return spret::abort;
+    }
+#endif
+
+    fail_check();
+
+    if (you.duration[DUR_STONESKIN])
+        mpr("Your skin feels harder.");
+    else if (you.form == transformation::statue)
+        mpr("Your stone body feels more resilient.");
+    else
+        mpr("Your skin hardens.");
+
+    if (you.attribute[ATTR_BONE_ARMOUR] > 0)
+    {
+        you.attribute[ATTR_BONE_ARMOUR] = 0;
+        mpr("Your corpse armour falls away.");
+    }
+
+    you.increase_duration(DUR_STONESKIN, 10 + random2(pow) + random2(pow), 50);
+    you.props[STONESKIN_KEY] = pow;
+    you.redraw_armour_class = true;
+
+    return spret::success;
+}
+
+void remove_condensation_shield()
+{
+    mprf(MSGCH_DURATION, "Your icy shield evaporates.");
+    you.duration[DUR_CONDENSATION_SHIELD] = 0;
+    you.redraw_armour_class = true;
+}
+
+spret cast_condensation_shield(int pow, bool fail)
+{
+    if (you.shield())
+    {
+        mpr("You can't cast this spell while wearing a shield.");
+        return spret::abort;
+    }
+
+    if (you.duration[DUR_FIRE_SHIELD])
+    {
+        mpr("Your ring of flames would instantly melt the ice.");
+        return spret::abort;
+    }
+
+    fail_check();
+
+    if (you.duration[DUR_CONDENSATION_SHIELD] > 0)
+        mpr("The disc of vapour around you crackles some more.");
+    else
+        mpr("A crackling disc of dense vapour forms in the air!");
+    you.increase_duration(DUR_CONDENSATION_SHIELD, 15 + random2(pow), 40);
+    you.props[CONDENSATION_SHIELD_KEY] = pow;
+    you.redraw_armour_class = true;
 
     return spret::success;
 }

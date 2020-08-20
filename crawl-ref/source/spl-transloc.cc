@@ -27,13 +27,17 @@
 #include "los.h"
 #include "losglobal.h"
 #include "losparam.h"
+#include "melee-attack.h"
 #include "message.h"
 #include "mgen-data.h"
+#include "monster.h"
 #include "mon-behv.h"
 #include "mon-death.h"
+#include "mon-ench.h"
 #include "mon-place.h"
 #include "mon-tentacle.h"
 #include "mon-util.h"
+#include "movement.h"
 #include "nearby-danger.h"
 #include "orb.h"
 #include "output.h"
@@ -1398,6 +1402,7 @@ spret cast_singularity(actor* agent, int pow, const coord_def& where,
                  friendly ? "satisfying" : "horrifying",
                  friendly ? "." : "!");
         }
+        you.set_duration(DUR_SLOW, singularity->countdown);
         invalidate_agrid(true);
     }
     else
@@ -1415,6 +1420,9 @@ static void _attract_actor(const actor* agent, actor* victim,
 {
     ASSERT(victim); // XXX: change to actor &victim
 
+    if(victim->is_monster()) {
+        victim->as_monster()->add_ench(mon_enchant(ENCH_WHIRLWIND_PINNED, 0, agent, 1));
+    }
     ray_def ray;
     if (!find_ray(victim->pos(), pos, ray, opc_solid))
     {

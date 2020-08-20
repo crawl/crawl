@@ -64,6 +64,13 @@
 #define PLAYER_TENTACLE_DELAY "player_tentacle_delay"
 #define FROZEN_RAMPARTS_KEY "frozen_ramparts_position"
 #define NOXIOUS_BOG_KEY "noxious_bog_pow"
+#define HOMUNCULUS_WILD_MAGIC "homunculus_wild_magic"
+#define STONESKIN_KEY "stoneskin_pow"
+#define CONDENSATION_SHIELD_KEY "condensation_shield_pow"
+#define ELEMENTAL_ENCHANT_KEY "elemenatal enchant"
+#define COMBAT_MANA_KEY "combat_mana"
+#define CARAVAN_MERCENARY "caravan_mercenary"
+#define CARAVAN_MERCENARY_SPAWNED "caravan_mercenary_spawned"
 
 // display/messaging breakpoints for penalties from Ru's MUT_HORROR
 #define HORROR_LVL_EXTREME  3
@@ -811,6 +818,7 @@ public:
     bool stasis() const override;
     bool cloud_immune(bool calc_unid = true, bool items = true) const override;
 
+    bool faithbonus() const;
     bool airborne() const override;
     bool cancellable_flight() const;
     bool permanent_flight() const;
@@ -830,6 +838,7 @@ public:
     int umbra_radius() const override;
     int heat_radius() const override;
     int antimagic_radius() const override;
+    int healaura_radius() const override;
     bool petrifying() const override;
     bool petrified() const override;
     bool liquefied_ground() const override;
@@ -1118,6 +1127,7 @@ bool enough_mp(int minimum, bool suppress_msg, bool abort_macros = true);
 
 void change_draconian_colour();
 
+void gain_and_note_hp_mp();
 void calc_hp(bool scale = false, bool set = false);
 void calc_mp();
 

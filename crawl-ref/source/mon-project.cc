@@ -704,7 +704,7 @@ void iood_catchup(monster* mons, int pturns)
 }
 
 
-spret cast_foxfire(actor *caster, int pow, bolt *beam, god_type god, bool fail)
+spret cast_foxfire(actor *caster, int pow, god_type god, bool fail)
 {
     fail_check();
     int created = 0;
@@ -749,10 +749,13 @@ spret cast_foxfire(actor *caster, int pow, bolt *beam, god_type god, bool fail)
 void foxfire_attack(const monster *foxfire, const actor *target)
 {
     actor * summoner = actor_by_mid(foxfire->summoner);
+    if (summoner == nullptr) {
+        return;
+    }
 
     // Don't allow foxfires that have wandered off to attack before dissapating
-    if (summoner && !(summoner->can_see(*foxfire)
-                      && summoner->see_cell(target->pos())))
+    if (summoner && summoner->alive() && !(summoner->can_see(*foxfire)
+                          && summoner->see_cell(target->pos())))
     {
         return;
     }
@@ -763,7 +766,7 @@ void foxfire_attack(const monster *foxfire, const actor *target)
                                                   : KILL_MISC;
     beam.range       = 1;
     beam.source      = foxfire->pos();
-    beam.source_id   = foxfire->summoner;
+    beam.source_id = foxfire->summoner;
     beam.source_name = foxfire->props[IOOD_CASTER].get_string();
     zappy(ZAP_FOXFIRE, foxfire->get_hit_dice(), !foxfire->friendly(), beam);
     beam.aux_source  = beam.name;

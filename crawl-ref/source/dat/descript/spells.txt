@@ -58,6 +58,11 @@ Aura of Brilliance spell
 Empowers the magic of nearby wizard allies of the caster, allowing them to
 cast their magic more powerfully and more often.
 %%%%
+Aura of Healing spell
+
+Emits an auar of healing energy, heals nearby allies; except you, who wasn't
+enough to adapt in the atmosphere of the Dungeon.
+%%%%
 Avatar Song spell
 
 Sings a powerfully haunting song; in addition to making nearby victims
@@ -321,6 +326,14 @@ Cold Breath spell
 
 Exhales a focused blast of icy-cold air. It may knock back airborne targets.
 The range of the blast is decreased by one for every creature it strikes.
+%%%%
+Condensation Shield spell
+
+Causes a disc of dense vapour to condense out of the air surrounding the
+caster. It blocks attacks like a normal shield, but its effectiveness depends
+solely on power, and not on the Shields skill. The disc is controlled by the
+caster's mind, and thus will not conflict with the wielding of a two-handed
+weapon.
 %%%%
 Confuse spell
 
@@ -861,6 +874,10 @@ Fills an enemy with an intense fire. This fire is released any time the target
 is hit, and explosively released upon death. The size of the explosion caused
 is dependent on the size of the target.
 %%%%
+Insulation spell
+
+This spell protects the caster from electric shocks.
+%%%%
 Invisibility spell
 
 Turns a targeted creature invisible. Turning invisible causes magical
@@ -1051,9 +1068,9 @@ Creates a large cloud of noxious fumes, which may cause confusion.
 %%%%
 Olgreb's Last Mercy spell
 
-Made by the arch-venomancer Olgreb in the last years, this spell reacts strongly
-toxins in the poisoned being. If the target survives, all toxins remove, but if
-target dies, its body explodes and sweeps nearby area.
+Causes the poison in a targeted creature to explode mercilessly and burst out
+from it upon death. The blast upon the victim's death sweeps nearby area and
+engulfs other adjacent creatures.
 %%%%
 Olgreb's Toxic Radiance spell
 
@@ -1152,9 +1169,11 @@ Conjures forth a great cloud of lethal gases.
 %%%%
 Poison Gland spell
 
-A spell that instills a deadly poison gland against a caster's melee 
-attack. When a melee attack hits, the poison gland infiltrates
-into the wound, cutting off the target's poison resistance little by little.
+Infuses the caster's melee attacks with a deadly poison gland. Whenever the
+caster attacks, the poison infiltrates into the wound of its victim and makes
+them more vulnerable to poison. Even those who are immune to poison becomes
+susceptible to poison. However, it only causes loss of poison resistance and
+does not poison its victims directly.
 %%%%
 Poisonous Vapours spell
 
@@ -1295,6 +1314,12 @@ walls.
 Shock spell
 
 Throws a bouncing bolt of electricity. It partially bypasses armour.
+%%%%
+Shrapnel Curtain spell
+
+Forms a curtain surrounded the caster, with spiny pebbles and gravels. These are
+made by dusts in the Dungeon, and reacts when the caster has been attacked, will
+be fired to the attacker to deal damage easily prevented by armor.
 %%%%
 Shroud of Golubria spell
 
@@ -1472,6 +1497,11 @@ target, and a portion of the direct damage is from the physical impact.
 Stone Arrow spell
 
 Fires a sharp spine of rock.
+%%%%
+Stoneskin spell
+
+Hardens the caster's skin. It has no effect on the undead or those under the
+effects of most types of transformation.
 %%%%
 Strip Resistance spell
 
@@ -1739,6 +1769,10 @@ Venom Bolt spell
 Fires a penetrating bolt of poison. The range of the bolt is decreased by one
 for every creature it strikes.
 %%%%
+Viriditas spell
+
+<Viriditas ability>
+%%%%
 Virulence spell
 
 Makes a targeted creature more vulnerable to poison.
@@ -1758,7 +1792,7 @@ again for a short time.
 Wall Camouflage spell
 
 Melts into the wall in a magical way. You can move on the surface of the wall
-for a short time using this magic.While melting into the wall, it becomes 
+for a short time using this magic. While melting into the wall, it becomes
 possible to approach an enemy sleeping silently. But it's not visually hidden,
 so it's meaningless for an awake enemy.
 %%%%
@@ -1789,9 +1823,9 @@ creatures are summoned with higher power.
 %%%%
 Will of Earth spell
 
-Tear down the walls by making the surrounding land conform to the will
+Tears down the walls by making the surrounding land conform to the will
 of the caster. The stones collected in this way can be used to create walls
-or fill the floor temporary.
+or floors over the surface of lava and water temporarily.
 %%%%
 Wind Blast spell
 

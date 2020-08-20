@@ -27,12 +27,6 @@ static tileidx_t _modrng(int mod, tileidx_t first, tileidx_t last)
     return first + mod % (last - first + 1);
 }
 
-static tileidx_t _mon_mod(tileidx_t tile, int offset)
-{
-    int count = tile_player_count(tile);
-    return tile + offset % count;
-}
-
 tileidx_t tilep_equ_weapon(const item_def &item, bool hand2)
 {
     if (item.props.exists("worn_tile"))
@@ -42,31 +36,32 @@ tileidx_t tilep_equ_weapon(const item_def &item, bool hand2)
     {
         int orig_special = you.item_description[IDESC_STAVES][item.sub_type];
         int desc = (orig_special / NDSC_STAVE_PRI) % NDSC_STAVE_SEC;
-        return TILEP_HAND1_STAFF_LARGE + desc;
+        return TILEP_HAND1_STAFF_LARGE + desc*2 - (hand2?1:0);
     }
     
 
     if (item.base_type == OBJ_RODS) {
         if (item.sub_type == ROD_PAKELLAS) {
             if (you.props[AVAILABLE_UPGRADE_NUM_KEY].get_int() == 6) {
-                return TILEP_HAND1_ROD_PAKELLAS + ui_random(4) * 2;
+                return TILEP_HAND1_ROD_PAKELLAS + ui_random(4) * 2 - (hand2 ? 1 : 0);
             }
             else {
                 switch (you.props[PAKELLAS_PROTOTYPE].get_int()) {
                 case 1:
-                    return TILEP_HAND1_ROD_PAKELLAS_1;
+                    return TILEP_HAND1_ROD_PAKELLAS_1 - (hand2 ? 1 : 0);
                 case 2:
-                    return TILEP_HAND1_ROD_PAKELLAS_2;
+                    return TILEP_HAND1_ROD_PAKELLAS_2 - (hand2 ? 1 : 0);
                 case 3:
-                    return TILEP_HAND1_ROD_PAKELLAS_3;
+                    return TILEP_HAND1_ROD_PAKELLAS_3 - (hand2 ? 1 : 0);
                 default:
                     break;
                 }
             }
-            return TILEP_HAND1_ROD_PAKELLAS;
+            return TILEP_HAND1_ROD_PAKELLAS - (hand2 ? 1 : 0);
         }
         else {
-            return _mon_mod(TILEP_HAND1_ROD_FIRST, item.rnd);
+            int count = (TILEP_HAND1_ROD_HAND_MAX - TILEP_HAND1_ROD_FIRST)/2;
+            return TILEP_HAND1_ROD_FIRST + 2 * (item.rnd% count) - (hand2 ? 1 : 0);
         }
     }
 
@@ -718,11 +713,21 @@ tileidx_t tilep_species_to_base_tile(int sp, int level)
     case SP_MOUNTAIN_DWARF:
         return TILEP_BASE_MOUNTAIN_DWARF;
     case SP_LESSER_LICH:
-        return TILEP_BASE_LESSER_LICH;         
+        return TILEP_BASE_LESSER_LICH;
     case SP_CRUSTACEAN:
         return TILEP_BASE_CRUSTACEAN;
     case SP_HYDRA:
-        return TILEP_BASE_HYDRA + min(you.heads(), 9) - 1;   
+        return TILEP_BASE_HYDRA + min(you.heads(), 9) - 1;  
+    case SP_HOMUNCULUS:
+        return TILEP_BASE_HOMUNCULUS;
+    case SP_BLOSSOM_HOMUNCULUS:
+        return TILEP_BASE_BLOSSOM_HOMUNCULUS;
+    case SP_ADAPTION_HOMUNCULUS:
+        return TILEP_BASE_ADAPTION_HOMUNCULUS;
+    case SP_LICH:
+        return TILEP_TRAN_LICH_LESSER_LICH;
+    case SP_MELIAI:
+        return TILEP_BASE_MELIAI;
     default:
         return TILEP_BASE_HUMAN;
     }
@@ -944,6 +949,15 @@ void tilep_job_default(int job, dolls_data *doll)
             parts[TILEP_PART_BOOTS] = TILEP_BOOTS_MIDDLE_BROWN2;
             break;
 
+        case JOB_CRUSADER:
+            parts[TILEP_PART_BODY] = TILEP_BODY_SHIRT_WHITE3;
+            parts[TILEP_PART_LEG] = TILEP_LEG_SKIRT_OFS;
+            parts[TILEP_PART_HELM] = TILEP_HELM_HELM_IRON;
+            parts[TILEP_PART_ARM] = TILEP_ARM_GLOVE_GRAY;
+            parts[TILEP_PART_BOOTS] = TILEP_BOOTS_MIDDLE_GRAY;
+            parts[TILEP_PART_CLOAK] = TILEP_CLOAK_BLUE;
+            break;
+
         case JOB_ASSASSIN:
             parts[TILEP_PART_HELM]  = TILEP_HELM_MASK_NINJA_BLACK;
             parts[TILEP_PART_BODY]  = TILEP_BODY_SHIRT_BLACK3;
@@ -1098,6 +1112,11 @@ void tilep_job_default(int job, dolls_data *doll)
             parts[TILEP_PART_BODY]  = TILEP_BODY_LEATHER_ARMOUR;
             parts[TILEP_PART_LEG]   = TILEP_LEG_PANTS_BLACK;
             break;
+
+        case JOB_CARAVAN:
+            parts[TILEP_PART_BODY]  = TILEP_BODY_ROBE_BROWN;
+            parts[TILEP_PART_BOOTS] = TILEP_BOOTS_MIDDLE_BROWN3;
+            break;
     }
 }
 
@@ -1189,6 +1208,19 @@ void tilep_calc_flags(const dolls_data &doll, int flag[])
         flag[TILEP_PART_SHADOW]= TILEP_FLAG_HIDE;
         flag[TILEP_PART_DRCWING]=TILEP_FLAG_HIDE;
         flag[TILEP_PART_DRCHEAD]=TILEP_FLAG_HIDE;
+    }
+    else if (is_player_tile(doll.parts[TILEP_PART_BASE], TILEP_TRAN_LICH_LESSER_LICH))
+    {
+        flag[TILEP_PART_BOOTS] = TILEP_FLAG_HIDE;
+        flag[TILEP_PART_LEG] = TILEP_FLAG_HIDE;
+        flag[TILEP_PART_BODY] = TILEP_FLAG_HIDE;
+        if (doll.parts[TILEP_PART_HAND1] == TILEP_HAND1_BLADEHAND)
+            flag[TILEP_PART_ARM] = TILEP_FLAG_HIDE;
+        flag[TILEP_PART_HAIR] = TILEP_FLAG_HIDE;
+        flag[TILEP_PART_BEARD] = TILEP_FLAG_HIDE;
+        flag[TILEP_PART_SHADOW] = TILEP_FLAG_HIDE;
+        flag[TILEP_PART_DRCWING] = TILEP_FLAG_HIDE;
+        flag[TILEP_PART_DRCHEAD] = TILEP_FLAG_HIDE;
     }
 
     if (doll.parts[TILEP_PART_ARM] == TILEP_ARM_OCTOPODE_SPIKE

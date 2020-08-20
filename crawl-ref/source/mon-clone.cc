@@ -156,6 +156,7 @@ static enchant_type _player_duration_to_mons_enchantment(duration_type dur)
     case DUR_MIGHT:     return ENCH_MIGHT;
     case DUR_BERSERK:   return ENCH_BERSERK;
     case DUR_POISONING: return ENCH_POISON;
+    case DUR_DEATHS_DOOR: return ENCH_DEATHS_DOOR;
 
     default:            return ENCH_NONE;
     }
@@ -190,7 +191,7 @@ void mons_summon_illusion_from(monster* mons, actor *foe,
         if (card_power >= 0)
         {
           // card effect
-          abj = 2 + random2(card_power);
+          abj = min(6, 2 + random2(card_power));
         }
 
         if (monster *clone = create_monster(

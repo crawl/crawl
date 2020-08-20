@@ -338,6 +338,7 @@ public:
 
     // Return an int so we know whether an item is the sole source.
     virtual int evokable_flight(bool calc_unid = true) const;
+    virtual bool evokable_pavise(bool calc_unid = true) const;
     virtual int spirit_shield(bool calc_unid = true, bool items = true) const;
 
     virtual bool is_wall_clinging() const;
@@ -371,6 +372,7 @@ public:
     // Being heated by a heat aura?
     virtual bool heated() const;
     virtual bool antimagic_haloed() const;
+    virtual bool within_healaura() const;
     // Halo radius.
     virtual int halo_radius() const = 0;
     // Silence radius.
@@ -380,6 +382,7 @@ public:
     virtual int umbra_radius() const = 0;
     virtual int heat_radius() const = 0;
     virtual int antimagic_radius() const = 0;
+    virtual int healaura_radius() const = 0;
 
     virtual bool petrifying() const = 0;
     virtual bool petrified() const = 0;

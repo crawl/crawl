@@ -520,12 +520,16 @@ string no_selectables_message(int item_selector)
         return "You aren't carrying any weapons that can be enchanted.";
     case OSEL_BEOGH_GIFT:
         return "You aren't carrying anything you can give to a follower.";
+    case OSEL_MERCENARY_GIFT:
+        return "You aren't carrying anything you can give to a mercenary.";
     case OSEL_CURSABLE:
         return "You don't have any cursable items.";
     case OSEL_UNCURSED_WORN_RINGS:
         return "You aren't wearing any uncursed rings.";
     case OSEL_UNCURSED_WORN_AMULETS:
         return "You aren't wearing any uncursed amulets.";
+    case OSEL_WYRM_ESSENCES:
+        return "You aren't carrying any essences of alchemy.";
     case OSEL_BAG:
         return "You aren't carrying any items to put in bag.";
     }
@@ -1173,8 +1177,11 @@ bool item_is_selected(const item_def &i, int selector)
                && !is_artefact(i)
                && (!item_ident(i, ISFLAG_KNOW_PLUSES)
                    || i.plus < MAX_WPN_ENCHANT)) ||
-            (itype == OBJ_RODS && i.sub_type != ROD_PAKELLAS &&
-            item_is_rechargeable(i, true));
+                (itype == OBJ_RODS 
+                && i.sub_type != ROD_PAKELLAS 
+                && item_is_rechargeable(i, true) 
+                && (i.charge_cap < MAX_ROD_CHARGE * ROD_CHARGE_MULT
+                || i.rod_plus < MAX_WPN_ENCHANT));
 
     case OSEL_BLESSABLE_WEAPON:
         return is_brandable_weapon(i, you_worship(GOD_SHINING_ONE), true);
@@ -1184,6 +1191,13 @@ bool item_is_selected(const item_def &i, int selector)
                 || is_shield(i)
                 || itype == OBJ_ARMOUR
                    && get_armour_slot(i) == EQ_BODY_ARMOUR)
+                && !item_is_equipped(i);
+
+    case OSEL_MERCENARY_GIFT:
+        return (itype == OBJ_WEAPONS
+                || is_shield(i)
+                || itype == OBJ_STAVES
+                || itype == OBJ_ARMOUR)
                 && !item_is_equipped(i);
 
     case OSEL_CURSABLE:
@@ -1198,6 +1212,12 @@ bool item_is_selected(const item_def &i, int selector)
     case OSEL_BAG:
         return !item_is_equipped(i) && (itype != OBJ_FOOD || i.sub_type != FOOD_CHUNK)
             && (itype != OBJ_MISCELLANY || i.sub_type != MISC_BAG);
+    case OSEL_WYRM_ESSENCES:
+        return (itype == OBJ_POTIONS
+                && (i.sub_type == POT_NIGREDO
+                    || i.sub_type == POT_ALBEDO
+                    || i.sub_type == POT_CITRINITAS
+                    || i.sub_type == POT_VIRIDITAS));
     case OBJ_POTIONS:
         return (itype == OBJ_MISCELLANY && i.sub_type == MISC_BAG); //in the bag
     default:
@@ -1731,7 +1751,8 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
         && !(you_worship(GOD_RU) && you.piety >= piety_breakpoint(5))
         && !you_worship(GOD_GOZAG)
         && !you_worship(GOD_NO_GOD)
-        && !you_worship(GOD_XOM))
+        && !you_worship(GOD_XOM)
+        && you.species != SP_MELIAI)
     {
         return true;
     }
@@ -2221,7 +2242,8 @@ bool item_is_evokable(const item_def &item, bool unskilled, bool known,
     if (no_evocables
         && item.base_type != OBJ_WEAPONS // reaching is ok.
         && !(item.base_type == OBJ_MISCELLANY
-             && item.sub_type == MISC_ZIGGURAT)) // zigfigs are OK.
+             && (item.sub_type == MISC_ZIGGURAT || // zigfigs are OK.
+                 item.sub_type == MISC_BAG))) // bag is also OK.
     {
         // the rest are forbidden under sac evocables.
         if (msg)

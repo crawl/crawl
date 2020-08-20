@@ -23,6 +23,7 @@
 #include "item-use.h"
 #include "libutil.h"
 #include "macro.h" // command_to_string
+#include "monster.h"
 #include "message.h"
 #include "mutation.h"
 #include "nearby-danger.h"
@@ -32,8 +33,11 @@
 #include "religion.h"
 #include "shopping.h"
 #include "spl-miscast.h"
+#include "spl-selfench.h"
 #include "spl-summoning.h"
+#include "spl-transloc.h"
 #include "spl-wpnench.h"
+#include "stringutil.h"
 #include "xom.h"
 
 static void _mark_unseen_monsters();
@@ -810,11 +814,16 @@ static void _unequip_weapon_effect(item_def& real_item, bool showMsgs, bool meld
                 break;
             }
 
-            if (you.duration[DUR_EXCRUCIATING_WOUNDS])
+            if (you.duration[DUR_EXCRUCIATING_WOUNDS] && slot == EQ_WEAPON)
             {
                 ASSERT(real_item.defined());
                 end_weapon_brand(real_item, true);
             }
+        }
+        if (you.duration[DUR_ELEMENTAL_WEAPON] && slot == EQ_WEAPON)
+        {
+            ASSERT(real_item.defined());
+            end_elemental_weapon(real_item, true);
         }
     }
     else if (item.is_type(OBJ_STAVES, STAFF_POWER))
@@ -990,6 +999,8 @@ static void _equip_armour_effect(item_def& arm, bool unmeld,
             else
                 mpr("You feel immune to the effects of clouds.");
             break;
+        case SPARM_BUNKER:
+            break;
         }
     }
 
@@ -1157,6 +1168,8 @@ static void _unequip_armour_effect(item_def& item, bool meld,
         if (!you.cloud_immune())
             mpr("You feel vulnerable to the effects of clouds.");
         break;
+    case SPARM_BUNKER:
+        break;
 
     default:
         break;
@@ -1171,6 +1184,11 @@ static void _remove_amulet_of_faith(item_def &item)
 #ifndef DEBUG_DIAGNOSTICS
     UNUSED(item);
 #endif
+    if (you.species == SP_MELIAI)
+    { //useless for meliai
+        return;
+    }
+
     if (you_worship(GOD_RU))
     {
         // next sacrifice is going to be delaaaayed.
@@ -1326,9 +1344,15 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
                  (player_teleport(false) > 8) ? "more " : "");
         break;
 
-    case AMU_FAITH:
-        if (you.species == SP_DEMIGOD)
+    case AMU_FAITH:    
+        if (you.species == SP_MELIAI)
+        {
+            //useless for meliai
+        }
+        else if (you.species == SP_DEMIGOD)
+        {
             mpr("You feel a surge of self-confidence.");
+        }
         else if (you_worship(GOD_RU) && you.piety >= piety_breakpoint(5))
         {
             simple_god_message(" says: An ascetic of your devotion"

@@ -1,0 +1,68 @@
+enum: SP_HOMUNCULUS
+monster: MONS_HUMAN
+name: Homunculus
+short_name: "Hm"
+difficulty: Intermediate
+difficulty_priority: 90
+aptitudes:
+  xp: -1
+  hp: 0
+  mp_mod: 1
+  mr: 4
+  fighting: 1
+  short_blades: -1
+  long_blades: -1
+  axes: -1
+  maces_and_flails: -1
+  polearms: -1
+  staves: -1
+  slings: -3
+  bows: -3
+  crossbows: -3
+  throwing: -3
+  armour: -1
+  dodging: -1
+  stealth: -2
+  shields: -2
+  unarmed_combat: -1
+  spellcasting: 1
+  conjurations: 0
+  hexes: 0
+  charms: 0
+  summoning: 0
+  necromancy: 0
+  translocations: 0
+  transmutations: 0
+  fire_magic: 0
+  ice_magic: 0
+  air_magic: 0
+  earth_magic: 0
+  poison_magic: 0
+  invocations: 0
+  evocations: 2
+str: 9
+int: 9
+dex: 7
+levelup_stat_frequency: 4
+levelup_stats:
+  - int
+fake_mutations:
+  - long: Every time cast a spell, your magic will be amplified and unstable.
+    short: imitated essence
+  - long: You can release unstability with melee attacks.
+    short: essence stabilizer
+recommended_jobs:
+  - JOB_ARTIFICER
+  - JOB_WIZARD
+  - JOB_CONJURER
+  - JOB_SUMMONER
+  - JOB_NECROMANCER
+  - JOB_FIRE_ELEMENTALIST
+  - JOB_ICE_ELEMENTALIST
+  - JOB_AIR_ELEMENTALIST
+  - JOB_EARTH_ELEMENTALIST
+  - JOB_VENOM_MAGE
+  - JOB_WARPER
+  - JOB_SKALD
+  - JOB_ENCHANTER
+  - JOB_CRUSADER

@@ -77,6 +77,11 @@ Hill Orc
 Orcs are skilled in close combat, and often dabble in offensive magic. Hated by
 most, orcs are very proud and many of them feel superior.
 %%%%
+Homunculus
+
+The Homunculus are 'created beings'. From any origin, they all have bodies that
+span between life and artificial construct.
+%%%%
 Human
 
 Humans advance quickly in levels and have equal abilities in most skills.
@@ -172,11 +177,17 @@ Lesser Lich
 
 They are incomplete, so they head to dungeon to be True lich.  
 Lesser Liches are good at all kinds of magic, especially the necromancy,
-and have excellent mana regenerative ability
+and have excellent mana regenerative ability.
 %%%%
 Crustacean
 
 They have hard, but easily broken exoskeleton. They can use their cut
 body as a bait and run away. They are very adaptive and they can 
-recover their body. They grow and can create miasma foam like a crab
+recover their body. They grow and can create miasma foam like a crab.
+%%%%
+Meliai
+
+Small hybrids of human and bee with a sharp stinger. Their buzzing wings
+move very fast, but require lots of calorie. Due to their instinct to
+serve higher beings(like a queen of hive), they are naturally faithful.
 %%%%

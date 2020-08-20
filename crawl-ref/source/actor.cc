@@ -18,6 +18,7 @@
 #include "los.h"
 #include "mon-behv.h"
 #include "mon-death.h"
+#include "player.h"
 #include "religion.h"
 #include "stepdown.h"
 #include "stringutil.h"
@@ -256,7 +257,7 @@ bool actor::clarity(bool calc_unid, bool items) const
 
 bool actor::faith(bool calc_unid, bool items) const
 {
-    return items && wearing(EQ_AMULET, AMU_FAITH, calc_unid);
+    return (items && wearing(EQ_AMULET, AMU_FAITH, calc_unid) || (is_player() && you.faithbonus()));
 }
 
 int actor::archmagi(bool calc_unid, bool items) const
@@ -324,6 +325,11 @@ int actor::evokable_flight(bool calc_unid) const
     return wearing(EQ_RINGS, RING_FLIGHT, calc_unid)
            + wearing_ego(EQ_ALL_ARMOUR, SPARM_FLYING, calc_unid)
            + scan_artefacts(ARTP_FLY, calc_unid);
+}
+
+bool actor::evokable_pavise(bool calc_unid) const
+{
+    return wearing_ego(EQ_SHIELD, SPARM_BUNKER, calc_unid);
 }
 
 int actor::spirit_shield(bool calc_unid, bool items) const

@@ -816,7 +816,7 @@ void monster::timeout_enchantments(int levels)
         case ENCH_PETRIFIED: case ENCH_SWIFT: case ENCH_SILENCE:
         case ENCH_LOWERED_MR: case ENCH_SOUL_RIPE: case ENCH_ANTIMAGIC:
         case ENCH_FEAR_INSPIRING: case ENCH_REGENERATION: case ENCH_RAISED_MR:
-        case ENCH_MIRROR_DAMAGE: case ENCH_LIQUEFYING:
+        case ENCH_MIRROR_DAMAGE: case ENCH_LIQUEFYING: case ENCH_HEALING_AURA:
         case ENCH_SILVER_CORONA: case ENCH_DAZED: case ENCH_FAKE_ABJURATION: case ENCH_NATURAL_ABJURATION:
         case ENCH_BREATH_WEAPON: case ENCH_WRETCHED:
         case ENCH_SCREAMED: case ENCH_BLIND: case ENCH_WORD_OF_RECALL:
@@ -827,6 +827,7 @@ void monster::timeout_enchantments(int levels)
         case ENCH_RESISTANCE: case ENCH_HEXED: case ENCH_IDEALISED:
         case ENCH_BOUND_SOUL: case ENCH_STILL_WINDS: case ENCH_RING_OF_THUNDER:
         case ENCH_WHIRLWIND_PINNED:
+        case ENCH_NIGREDO: case ENCH_ALBEDO: case ENCH_CITRINITAS: case ENCH_VIRIDITAS:
             lose_ench_levels(entry.second, levels);
             break;
 
@@ -1284,6 +1285,11 @@ void timeout_terrain_changes(int duration, bool force)
             revert_terrain_change(marker->pos, marker->change_type);
         }
     }
+
+    if (num_seen[TERRAIN_CHANGE_WALL_CREATE] > 1)
+        mpr("The walls crumble.");
+    else if (num_seen[TERRAIN_CHANGE_WALL_CREATE] > 0)
+        mpr("The wall crumbles.");
 
     if (num_seen[TERRAIN_CHANGE_DOOR_SEAL] > 1)
         mpr("The runic seals fade away.");

@@ -432,6 +432,7 @@ void rot_inventory_food(int /*time_delta*/)
 
             item_was_destroyed(item);
             destroy_item(item);
+            continue;
         }
 #endif
 

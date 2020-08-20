@@ -259,12 +259,23 @@ static const form_entry formdata[] =
     transformation::eldritch, MONS_PROGRAM_BUG, "Monster", "eldritch-form", "monster",
     "a eldritch thing.",
     EQF_PHYSICAL, mrd(MR_RES_POISON, 3) | mrd(MR_RES_NEG, 3) | MR_RES_ROTTING
-                                                         | MR_RES_PETRIFY,
+                                                         | MR_RES_PETRIFY | MR_RES_FIRE | MR_RES_COLD,
     DEFAULT_DURATION, 10, 0, SIZE_GIANT, 16,
     25, 0, 0, true, 0, 10, 5,
     SPWPN_NORMAL, RED, "Tentacles", { "hit", "smack", "pummel", "thrash" },
     FC_DEFAULT, FC_ENABLE, FC_FORBID, true, false,
     "scream", 5, "tentacle", "", "wriggle towards", "flesh"
+},
+
+{
+    transformation::golem, MONS_IRON_GOLEM, "Golem", "golem armour", "golem",
+    "an activated full set of golem armour.",
+    EQF_NONE, MR_RES_NEG | MR_RES_PETRIFY,
+    DEFAULT_DURATION, 10, 0, SIZE_GIANT, 10,
+    10, 0, 0, true, 0, 10, 0,
+    SPWPN_VORPAL, LIGHTBLUE, "Golem gauntlets", DEFAULT_VERBS,
+    FC_DEFAULT, FC_DEFAULT, FC_DEFAULT, true, true,
+    "", 0, "activated golem gauntlets", "activated golem boots", "", "activated golem armour"
 },
 };
 COMPILE_CHECK(ARRAYSZ(formdata) == NUM_TRANSFORMS);

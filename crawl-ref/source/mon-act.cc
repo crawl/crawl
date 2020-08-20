@@ -57,6 +57,7 @@
 #include "spl-book.h"
 #include "spl-clouds.h"
 #include "spl-damage.h"
+#include "spl-goditem.h"
 #include "spl-summoning.h"
 #include "spl-transloc.h"
 #include "spl-util.h"
@@ -139,8 +140,8 @@ static void _monster_regenerate(monster* mons)
     if (crawl_state.disables[DIS_MON_REGEN])
         return;
 
-    if (mons->has_ench(ENCH_SICK)
-        || !mons_can_regenerate(*mons) && !(mons->has_ench(ENCH_REGENERATION)))
+    if (mons->has_ench(ENCH_SICK) ||  mons->has_ench(ENCH_DEATHS_DOOR) ||
+        !mons_can_regenerate(*mons) && !(mons->has_ench(ENCH_REGENERATION)))
     {
         return;
     }
@@ -1857,6 +1858,55 @@ void handle_monster_move(monster* mons)
         return;
     }
 
+    if (mons->type == MONS_PRISMATIC_PRISM)
+    {
+        bolt beam;
+        beam.name = "dazzling light";
+        beam.flavour = BEAM_VISUAL;
+        beam.set_agent(mons);
+        beam.colour = ETC_RANDOM;
+        beam.glyph = dchar_glyph(DCHAR_EXPLOSION);
+        beam.range = 2;
+        beam.ex_size = 2;
+        beam.is_explosion = true;
+        beam.source = mons->pos();
+        beam.target = mons->pos();
+        beam.hit = AUTOMATIC_HIT;
+        beam.loudness = 0;
+        beam.explode(true, true);
+        
+        for (radius_iterator ri(mons->pos(), 2, C_SQUARE, LOS_SOLID_SEE, true);
+             ri; ++ri)
+        {
+            monster* affected = monster_at(*ri);
+        
+            if (!affected || !mons_can_be_dazzled(affected->type))
+                continue;
+        
+            int mult = grid_distance(mons->pos(), *ri);
+        
+            simple_monster_message(*affected, " is dazzled.");
+            affected->add_ench(mon_enchant(ENCH_BLIND, 1, mons, (mult + 2) * BASELINE_DELAY));
+        }
+
+        ++mons->prism_charge;
+        if (mons->prism_charge == 3)
+        {
+            simple_monster_message(*mons, " shattered.", MSGCH_WARN);
+            mons->suicide();
+        }
+        else
+        {
+            if (you.can_see(*mons))
+            {
+                simple_monster_message(*mons, " sparkles brightly.", MSGCH_WARN);
+            }
+            // Done this way to keep the detonation timer predictable
+            mons->speed_increment -= BASELINE_DELAY;
+        }
+        return;
+    }
+
     if (mons->type == MONS_FOXFIRE)
     {
         if (mons->steps_remaining == 0)
@@ -1909,6 +1959,11 @@ void handle_monster_move(monster* mons)
         draconian_change_colour(mons);
 
     _monster_regenerate(mons);
+	
+    if (mons->within_healaura() && mons->attitude == ATT_FRIENDLY)
+    {
+        mons->heal(10);
+    }
 
     // Please change _slouch_damage to match!
     if (mons->cannot_act()
@@ -1920,6 +1975,15 @@ void handle_monster_move(monster* mons)
         mons->speed_increment -= non_move_energy;
         return;
     }
+
+    if (mons->has_ench(ENCH_ALBEDO) && monster_is_debuffable(*mons)
+        && one_chance_in(2)){
+
+        simple_monster_message(*mons, " is interrupted by reaction of Albedo!");
+        mons->speed_increment -= non_move_energy;
+        return;
+    }
+
 
     if (mons->has_ench(ENCH_DAZED) && one_chance_in(4))
     {
@@ -2554,6 +2618,10 @@ static void _post_monster_move(monster* mons)
                 place_cloud(ctype, *ai, 2 + random2(3), mons);
             }
     }
+    
+    // The Great Wyrm: place short-term miasma if there is no cloud
+    if (mons->has_ench(ENCH_NIGREDO) && !cloud_at(mons->pos()))
+        place_cloud(CLOUD_MIASMA, mons->pos(), 2, mons);
 
     if (mons->type != MONS_NO_MONSTER && mons->hit_points < 1)
         monster_die(*mons, KILL_MISC, NON_MONSTER);
@@ -2591,7 +2659,9 @@ static void _clear_monster_flags()
 static void _update_monster_attitude(monster *mon)
 {
     if (you.get_mutation_level(MUT_NO_LOVE)
-        && !mons_is_conjured(mon->type))
+        && !mons_is_conjured(mon->type)
+        && mon->type != MONS_PLAYER_ELDRITCH_TENTACLE
+        && mon->type != MONS_PLAYER_ELDRITCH_TENTACLE_SEGMENT)
     {
         mon->attitude = ATT_HOSTILE;
     }
@@ -3909,17 +3979,24 @@ static bool _monster_move(monster* mons)
         if (!mons->alive())
             return true;
 
-        if (mons_genus(mons->type) == MONS_EFREET
-            || mons->type == MONS_FIRE_ELEMENTAL)
-        {
-            place_cloud(CLOUD_FIRE, mons->pos(), 2 + random2(4), mons);
+        // The Great Wyrm: infused with Nigredo makes other cloud sources are unabled
+        if (mons->has_ench(ENCH_NIGREDO)){
+
+            place_cloud(CLOUD_MIASMA, mons->pos(), min(10, 2+(you.piety/20)), mons);
+
+        } else {
+            if (mons_genus(mons->type) == MONS_EFREET
+                || mons->type == MONS_FIRE_ELEMENTAL)
+            {
+                place_cloud(CLOUD_FIRE, mons->pos(), 2 + random2(4), mons);
+            }
+
+            if (mons->type == MONS_FOXFIRE)
+                check_place_cloud(CLOUD_FLAME, mons->pos(), 2, mons);
+
+            if (mons->type == MONS_CURSE_TOE)
+                place_cloud(CLOUD_MIASMA, mons->pos(), 2 + random2(3), mons);
         }
-
-        if (mons->type == MONS_FOXFIRE)
-            check_place_cloud(CLOUD_FLAME, mons->pos(), 2, mons);
-
-        if (mons->type == MONS_CURSE_TOE)
-            place_cloud(CLOUD_MIASMA, mons->pos(), 2 + random2(3), mons);
     }
     else
     {

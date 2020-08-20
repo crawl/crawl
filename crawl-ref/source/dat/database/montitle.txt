@@ -19,6 +19,14 @@ Arachne title
 
 Arachne the Weaver
 %%%%
+Asclepia title
+
+Asclepia the Therapist
+%%%%
+Asclepia the Anointer title
+
+Asclepia the Anointer
+%%%%
 Asmodeus title
 
 Asmodeus, Prince of Gehenna
@@ -38,6 +46,14 @@ Bai Suzhen, Madame White Snake
 Boris title
 
 Boris, Master of Life and Death
+%%%%
+Brandagoth title
+
+Brandagoth, Lava Orc Sorcerer
+%%%%
+Brandagoth the Flame title
+
+Brandagoth, Incinerator of Unbelievers
 %%%%
 Cerebov title
 
@@ -219,6 +235,10 @@ Nergalle title
 
 Nergalle the Soulbinder
 %%%%
+Nergalle the Deathbinder title
+
+Nergalle the Deathbinder
+%%%%
 Nessos title
 
 Nessos the Markscentaur
@@ -286,6 +306,10 @@ Tiamat, Avatar of the Dragonlord
 Urug title
 
 Urug the Orcish Ballista
+%%%%
+Urug the Orcish Culverin title
+
+Urug the Orcish Culverin
 %%%%
 Vashnia title
 

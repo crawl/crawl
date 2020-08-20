@@ -1725,6 +1725,26 @@ Arachne
 
 @The_monster@ says @to_foe@, "No one escapes my webs."
 %%%%
+############ ASCLEPIA ### orcish herbalist
+Asclepia
+
+VISUAL:@The_monster@ grabs herbs and soaks them into a bottle of potion.
+
+VISUAL:@The_monster@ tied up her protective scarf.
+
+@The_monster@ says @to_foe@, "Have you heard what Ambrosia made of?"
+
+@The_monster@ says @to_foe@, "After all, the best ingredients are blood and remains."
+
+@The_monster@ says @to_foe@, "Trust me! The next one will be curing!"
+
+@The_monster@ says, "{{
+    if you.god() == "Beogh" then
+      return "Faith therapy? How uncivilized!"
+    else
+      return "I'm a therapist, not a healer!"
+    end }}" @player_only@
+%%%%
 ############ ASTERION ### Minotaur of Makhleb
 Asterion
 
@@ -2073,6 +2093,30 @@ VISUAL:@The_monster@ inspects you suspiciously.
 
 @The_monster@ says, "ME ROCKS!"
 ### End CHUCK ###
+%%%%
+############ BRANDAGOTH ### lava orc sorcerer
+Brandagoth
+
+VISUAL:@The_monster@ was ignite briefly.
+
+VISUAL:@The_monster@ swallow his flame.
+
+VISUAL:@The_monster@ conjures flame and grab it in his hand.
+
+VISUAL:@The_monster@ spits mgama.
+
+@The_monster@ yells @to_foe@, "BURN!"
+
+@The_monster@ says @to_foe@, "You will become a pile of ash!"
+
+@The_monster@ says @to_foe@, "I can sense your wane power, meek!"
+
+@The_monster@ says, "{{
+    if you.god() == "Beogh" then
+      return "Ha! Beogh wasn't care 'imitations' like me!"
+    else
+      return "You cannot hiding from my flame!"
+    end }}" @player_only@
 %%%%
 ############ CRAZY YIUF ### A mad old gnoll!
 Crazy Yiuf

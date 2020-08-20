@@ -28,6 +28,7 @@
 #include "ghost.h"
 #include "god-abil.h"
 #include "god-passive.h" // passive_t::slow_abyss, slow_orb_run
+#include "items.h"
 #include "lev-pand.h"
 #include "libutil.h"
 #include "losglobal.h"
@@ -420,7 +421,8 @@ bool can_place_on_trap(monster_type mon_type)
         return true;
 
     // Things summoned by the player to a specific spot shouldn't protest.
-    if (mon_type == MONS_FULMINANT_PRISM || mon_type == MONS_LIGHTNING_SPIRE)
+    if (mon_type == MONS_FULMINANT_PRISM || mon_type == MONS_LIGHTNING_SPIRE
+        || mon_type == MONS_PRISMATIC_PRISM)
         return true;
 
     return false;
@@ -1246,6 +1248,13 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     if (mon->has_spell(SPELL_DEFLECT_MISSILES))
         mon->add_ench(ENCH_DEFLECT_MISSILES);
 
+    if (mon->has_spell(SPELL_CONDENSATION_SHIELD))
+    {
+        const int power = (mon->spell_hd(SPELL_CONDENSATION_SHIELD) * 15) / 10;
+        mon->add_ench(mon_enchant(ENCH_CONDENSATION_SHIELD, 15 + random2(power),
+                                  mon));
+    }
+
     mon->flags |= MF_JUST_SUMMONED;
 
     // Don't leave shifters in their starting shape.
@@ -1293,6 +1302,21 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
 
         unwind_var<int> save_speedinc(mon->speed_increment);
         mon->wield_melee_weapon(MB_FALSE);
+    }
+
+    if (mon->type == MONS_PAVISE)
+    {
+        if (mg.props.exists(PAVISE_SHIELD))
+        {
+            give_specific_item(mon, mg.props[PAVISE_SHIELD].get_item());
+            /*int thing = get_mitm_slot();
+            if (thing != NON_ITEM) {
+                mitm[thing] = mg.props[PAVISE_SHIELD].get_item();
+                mitm[thing].pos.reset();
+                mitm[thing].link = NON_ITEM;
+                mon->props[PAVISE_SHIELD_INT] = thing;
+            }*/
+        }
     }
 
     if (mon->type == MONS_SLIME_CREATURE && mon->blob_size > 1)
@@ -1891,6 +1915,7 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_TIAMAT,          { {}, {{ BAND_DRACONIAN, {8, 15}, true }}}},
     { MONS_ILSUIW,          { {}, {{ BAND_ILSUIW, {3, 6} }}}},
     { MONS_AZRAEL,          { {}, {{ BAND_AZRAEL, {4, 9}, true }}}},
+    { MONS_BRANDAGOTH,      { {}, {{ BAND_AZRAEL, {4, 9}, true }}}},
     { MONS_DUVESSA,         { {}, {{ BAND_DUVESSA, {1, 2} }}}},
     { MONS_KHUFU,           { {}, {{ BAND_KHUFU, {3, 4}, true }}}},
     { MONS_GOLDEN_EYE,      { {}, {{ BAND_GOLDEN_EYE, {1, 6} }}}},
@@ -2830,7 +2855,9 @@ conduct_type player_will_anger_monster(monster_type type)
  */
 conduct_type player_will_anger_monster(const monster &mon)
 {
-    if (you.get_mutation_level(MUT_NO_LOVE) && !mons_is_conjured(mon.type))
+    if (you.get_mutation_level(MUT_NO_LOVE) && !mons_is_conjured(mon.type)
+        && mon.type != MONS_PLAYER_ELDRITCH_TENTACLE
+        && mon.type != MONS_PLAYER_ELDRITCH_TENTACLE_SEGMENT)
     {
         // Player angers all real monsters
         return DID_SACRIFICE_LOVE;

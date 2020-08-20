@@ -97,6 +97,10 @@ dwarf_f MOUNTAIN_DWARF
 dwarf_m
 lesser_lich LESSER_LICH
 crustacean CRUSTACEAN
+homunculus HOMUNCULUS
+homunculus_blossom BLOSSOM_HOMUNCULUS
+homunculus_adaption ADAPTION_HOMUNCULUS
+meliai MELIAI
 
 # draconians
 draconian_f DRACONIAN DRACONIAN_FIRST
@@ -272,6 +276,7 @@ mesh_black MESH_BLACK
 mesh_white MESH_WHITE
 mesh_blue MESH_BLUE LAST_NORM
 spider SPIDER
+golem_boots GOLEM_BOOTS
 
 ## Mutations
 hooves HOOVES
@@ -500,6 +505,7 @@ orange_crystal ORANGE_CRYSTAL
 vines VINES
 kryias KRYIAS
 talos TALOS
+golem_armour GOLEM_ARMOUR
 %end_ctg
 
 ### Arms
@@ -525,6 +531,7 @@ glove_short_white GLOVE_SHORT_WHITE
 glove_short_green GLOVE_SHORT_GREEN
 glove_short_blue GLOVE_SHORT_BLUE
 glove_short_gray GLOVE_SHORT_GRAY LAST_NORM
+golem_gloves GOLEM_GLOVES
 ## mutations
 claws CLAWS
 player/mutations/octopode1 OCTOPODE_SPIKE
@@ -746,15 +753,15 @@ staff_fork STAFF_FORK
 # Remove when TAG_MAJOR_VERSION > 34
 # These 10 rods correspond to the same order as item/rod/
 rod_ruby ROD_FIRST
-rod_brown
-rod_emerald
-rod_hammer
-rod_blue
-rod_thick
-rod_moon
-rod_magenta
-rod_forked
-rod_aries
+rod_brown ROD_2
+rod_emerald ROD_3
+rod_hammer ROD_4
+rod_blue ROD_5
+rod_thick ROD_6
+rod_moon ROD_7
+rod_magenta ROD_8
+rod_forked ROD_9
+rod_aries ROD_10 ROD_HAND_MAX
 rod_pakellas ROD_PAKELLAS
 rod_pakellas_1 ROD_PAKELLAS_1
 rod_pakellas_2 ROD_PAKELLAS_2
@@ -1135,6 +1142,7 @@ bear BEAR
 dyrovepreva DYROVEPREVA
 eternal_torment ETERNAL_TORMENT
 wizard_lightgreen WIZARD_LIGHTGREEN
+golem_helmet GOLEM_HELMET
 
 ## All helmets below (HELM_OFS and greater) hide hair.
 iron1 HELM_IRON HELM_OFS FIRST_NORM

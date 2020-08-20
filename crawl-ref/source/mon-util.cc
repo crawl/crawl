@@ -1940,9 +1940,10 @@ static mon_attack_def _hepliaklqana_ancestor_attack(const monster &mon,
     const int HD = mon.get_experience_level();
     const int dam = HD + 3; // 4 at 1 HD, 21 at 18 HD (max)
     // battlemages do double base melee damage (+25-50% including their weapon)
-    const int dam_mult = mon.type == MONS_ANCESTOR_BATTLEMAGE ? 2 : 1;
+    // const int dam_mult = mon.type == MONS_ANCESTOR_BATTLEMAGE ? 2 : 1;
 
-    return { AT_HIT, AF_PLAIN, dam * dam_mult };
+    // return { AT_HIT, AF_PLAIN, dam * dam_mult };
+    return { AT_HIT, AF_PLAIN, dam };
 }
 
 static mon_attack_def _machine_golem_attack(const monster& mon,
@@ -1979,13 +1980,17 @@ static mon_attack_def _machine_golem_attack(const monster& mon,
 static mon_attack_def _player_eldritch_tentacle_attack(const monster&,
                                                      int attk_number)
 {
+    if (attk_number == 1) {
+        return { AT_CONSTRICT, AF_CRUSH, 3 };
+    }
+
     if (attk_number != 0)
         return { };
 
     const int dam = you.skill_rdiv(SK_UNARMED_COMBAT) + 3;
 
     const int slaying = slaying_bonus() / 2; //slaying heuristic
-    return { AT_CONSTRICT, AF_CRUSH, (dam + slaying)};
+    return { AT_HIT, AF_PLAIN, (dam + slaying)};
 }
 
 
@@ -5713,11 +5718,12 @@ void set_ancestor_spells(monster &ancestor, bool notify)
     {
     case MONS_ANCESTOR_BATTLEMAGE:
         _add_ancestor_spell(ancestor.spells, HD >= 10 ?
-                                             SPELL_BOLT_OF_MAGMA :
-                                             SPELL_THROW_FROST);
-        _add_ancestor_spell(ancestor.spells, HD >= 16 ?
-                                             SPELL_LEHUDIBS_CRYSTAL_SPEAR :
-                                             SPELL_STONE_ARROW);
+                                             (HD >= 16 ? SPELL_FIRE_STORM : SPELL_FIREBALL)
+                                             : SPELL_THROW_FLAME);
+        _add_ancestor_spell(ancestor.spells, HD >= 13 ?
+                                             (HD >= 16 ? SPELL_LEHUDIBS_CRYSTAL_SPEAR : SPELL_IRON_SHOT)
+                                             : SPELL_STONE_ARROW);
+		
         break;
     case MONS_ANCESTOR_HEXER:
         _add_ancestor_spell(ancestor.spells, HD >= 10 ? SPELL_PARALYSE
@@ -5729,8 +5735,9 @@ void set_ancestor_spells(monster &ancestor, bool notify)
         break;
     }
 
-    if (HD >= 13)
+    if (HD >= 13){
         ancestor.spells.emplace_back(SPELL_HASTE, 25, MON_SPELL_WIZARD);
+	}
 
     if (ancestor.spells.size())
         ancestor.props[CUSTOM_SPELLS_KEY] = true;

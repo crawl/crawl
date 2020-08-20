@@ -261,14 +261,17 @@ static const vector<god_passive> god_passives[] =
     },
 
     // Beogh
-    {
+    {   
         { -1, passive_t::share_exp, "share experience with your followers" },
         {  3, passive_t::convert_orcs, "inspire orcs to join your side" },
         {  3, passive_t::bless_followers,
               "GOD will bless your followers",
               "GOD will no longer bless your followers"
         },
+        {  3, passive_t::conserve_orc_corpses, "conserves orc corpses" },
         {  5, passive_t::water_walk, "walk on water" },
+		{  6, passive_t::share_resistance,
+              "Your resistance will partially share with your followers" },
     },
 
     // Jiyva
@@ -402,12 +405,14 @@ static const vector<god_passive> god_passives[] =
     // Uskayaw
     { },
 
-    // Hepliaklqana
+	// Hepliaklqana
     {
         { -1, passive_t::frail,
               "GOD NOW siphons a part of your essence into your ancestor" },
         {  5, passive_t::transfer_drain,
               "drain nearby creatures when transferring your ancestor" },
+        {  6, passive_t::share_resistance,
+              "Your resistance will partially share with your ancestor" },
     },
 
     // Wu Jian
@@ -416,6 +421,15 @@ static const vector<god_passive> god_passives[] =
         { 1, passive_t::wu_jian_whirlwind, "lightly attack and pin monsters in place by moving around them." },
         { 2, passive_t::wu_jian_wall_jump, "perform airborne attacks by moving against a solid obstacle." },
     },
+    
+    // The Great Wyrm
+    {
+        { 0, passive_t::wyrm_quicksilver,
+             "GOD NOW extracts magical buffs into potions, from corpse of defeated enemies." },
+    },
+
+    // Imus Thea
+    { }
 };
 COMPILE_CHECK(ARRAYSZ(god_passives) == NUM_GODS);
 
@@ -870,6 +884,27 @@ bool god_id_item(item_def& item, bool silent)
             && (!ash || _is_slot_cursed(EQ_WEAPON)))
         {
             ided |= ISFLAG_KNOW_PLUSES;
+        }
+    }
+
+        else if (you_worship(GOD_ELYVILON))
+    {
+        if ((item.base_type == OBJ_STAVES || item.base_type == OBJ_RODS)
+            && is_evil_item(item))
+        {
+            // staff of death, evil rods
+            ided |= ISFLAG_KNOW_TYPE;
+        }
+
+        // Don't use is_{evil,unholy}_item() for weapons -- on demonic weapons
+        // the brand is irrelevant, unrands may have an innocuous brand; let's
+        // still show evil brands on unholy weapons for consistency even if this
+        // gives more information than absolutely needed.
+        brand_type brand = get_weapon_brand(item);
+        if (brand == SPWPN_DRAINING || brand == SPWPN_PAIN
+            || brand == SPWPN_VAMPIRISM || brand == SPWPN_REAPING)
+        {
+            ided |= ISFLAG_KNOW_TYPE;
         }
     }
 

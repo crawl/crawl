@@ -2,7 +2,9 @@
 #pragma once
 
 #include "spl-cast.h"
+#include "spl-util.h"
 #include "transformation.h"
+
 
 spret cast_deaths_door(int pow, bool fail);
 void remove_ice_armour();
@@ -33,3 +35,15 @@ spret cast_transform(int pow, transformation which_trans, bool fail);
 
 spret cast_noxious_bog(int pow, bool fail);
 void noxious_bog_cell(coord_def p);
+
+spret cast_elemental_weapon(int pow, bool fail);
+void end_elemental_weapon(item_def& weapon, bool verbose = false);
+void enchant_elemental_weapon(item_def& weapon, spschools_type disciplines, bool verbose = false);
+
+spret cast_flame_strike(int pow, bool fail);
+
+spret cast_insulation(int power, bool fail);
+
+spret change_lesser_lich(int power, bool fail);
+
+spret cast_shrapnel_curtain(int pow, bool fail);

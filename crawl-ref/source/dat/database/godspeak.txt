@@ -697,6 +697,22 @@ Wu Jian welcome
 
 The Council says: Follow the path of wisdom and battle!
 %%%%
+the Great Wyrm penance
+
+The Great Wyrm says: You cannot rip your cycle of Wisdom!
+%%%%
+the Great Wyrm welcome
+
+The Great Wyrm says: Every substance can be everything...
+%%%%
+Imus Thea penance
+
+Imus Thea says: Reflect on yourself!
+%%%%
+Imus Thea welcome
+
+Imus Thea says: Look in the mirror... Then mirror looks at you.
+%%%%
 Xom bored
 
 Xom yawns.

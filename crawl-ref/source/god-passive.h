@@ -259,6 +259,15 @@ enum class passive_t
 
     //jiyva kill to slime
     jiyva_kill_to_slime,
+    
+    ///share resistance
+    share_resistance,
+
+    /// the Great Wyrm
+    wyrm_quicksilver,
+
+    /// conserve orc corpses
+    conserve_orc_corpses,
 };
 
 enum ru_interference

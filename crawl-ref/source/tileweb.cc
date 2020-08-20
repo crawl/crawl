@@ -805,7 +805,7 @@ static bool _update_statuses(player_info& c)
     status_info inf;
     for (unsigned int status = 0; status <= STATUS_LAST_STATUS; ++status)
     {
-        if (status == DUR_DIVINE_SHIELD)
+        if (status == DUR_CONDENSATION_SHIELD || status == DUR_DIVINE_SHIELD)
         {
             inf = status_info();
             if (!you.duration[status])
@@ -914,7 +914,7 @@ void TilesFramework::_send_player(bool force_full)
     _update_int(force_full, c.piety_rank, prank, "piety_rank");
 
     _update_int(force_full, c.form, (uint8_t) you.form, "form");
-
+    _update_int(force_full, c.has_hydra_multi_attack, (bool) you.has_hydra_multi_attack(), "has_hydra_multi_attack");
     _update_int(force_full, c.hp, you.hp, "hp");
     _update_int(force_full, c.hp_max, you.hp_max, "hp_max");
     int max_max_hp = get_real_hp(true, false);
@@ -1421,6 +1421,9 @@ void TilesFramework::_send_cell(const coord_def &gc,
 
         if (next_pc.antimagic_aura != current_pc.antimagic_aura)
             json_write_int("antimagic_aura", next_pc.antimagic_aura);
+
+        if (next_pc.healaura != current_pc.healaura)
+            json_write_int("healaura", next_pc.healaura);
 
         if (_needs_flavour(next_pc) &&
             (next_pc.flv.floor != current_pc.flv.floor

@@ -32,7 +32,9 @@
 #include "ghost.h"
 #include "god-abil.h"
 #include "god-conduct.h"
+#include "god-companions.h"
 #include "god-item.h"
+#include "god-passive.h"
 #include "item-name.h"
 #include "item-prop.h"
 #include "item-status-flag-type.h"
@@ -1282,6 +1284,24 @@ bool monster::pickup_launcher(item_def &launch, bool msg, bool force)
             if (!is_range_weapon(*elaunch))
                 continue;
 
+            if (type == MONS_MERC_FIGHTER
+                || type == MONS_MERC_KNIGHT
+                || type == MONS_MERC_DEATH_KNIGHT
+                || type == MONS_MERC_PALADIN
+                || type == MONS_MERC_SKALD
+                || type == MONS_MERC_INFUSER
+                || type == MONS_MERC_TIDEHUNTER
+                || type == MONS_MERC_WITCH
+                || type == MONS_MERC_SORCERESS
+                || type == MONS_MERC_ELEMENTALIST
+                || type == MONS_MERC_BRIGAND
+                || type == MONS_MERC_ASSASSIN
+                || type == MONS_MERC_CLEANER
+                || type == MONS_MERC_SHAMAN
+                || type == MONS_MERC_SHAMAN_II
+                || type == MONS_MERC_SHAMAN_III)
+                return drop_item(slot, msg) && pickup(launch, slot, msg);
+
             return (fires_ammo_type(*elaunch) == mt || !missiles())
                    && (mons_weapon_damage_rating(*elaunch) < mdam_rating
                        || mons_weapon_damage_rating(*elaunch) == mdam_rating
@@ -1521,6 +1541,25 @@ bool monster::pickup_melee_weapon(item_def &item, bool msg)
                          + _ego_damage_bonus(*mslot_item(MSLOT_WEAPON)))
                 {
                     eslot = slot;
+
+                    if (type == MONS_MERC_FIGHTER
+                    || type == MONS_MERC_KNIGHT
+                    || type == MONS_MERC_DEATH_KNIGHT
+                    || type == MONS_MERC_PALADIN
+                    || type == MONS_MERC_SKALD
+                    || type == MONS_MERC_INFUSER
+                    || type == MONS_MERC_TIDEHUNTER
+                    || type == MONS_MERC_WITCH
+                    || type == MONS_MERC_SORCERESS
+                    || type == MONS_MERC_ELEMENTALIST
+                    || type == MONS_MERC_BRIGAND
+                    || type == MONS_MERC_ASSASSIN
+                    || type == MONS_MERC_CLEANER
+                    || type == MONS_MERC_SHAMAN
+                    || type == MONS_MERC_SHAMAN_II
+                    || type == MONS_MERC_SHAMAN_III)
+                        return pickup(item, eslot, msg);
+
                     if (!dual_wielding)
                         break;
                 }
@@ -1648,6 +1687,8 @@ static int _get_monster_armour_value(const monster *mon,
               + get_armour_res_elec(item, true)
               + get_armour_res_corr(item);
 
+
+
     // Give a simple bonus, no matter the size of the MR bonus.
     if (get_armour_res_magic(item, true) > 0)
         value++;
@@ -1765,6 +1806,25 @@ bool monster::pickup_armour(item_def &item, bool msg, bool force)
     // Simplistic armour evaluation (comparing AC and resistances).
     if (const item_def *existing_armour = slot_item(eq, false))
     {
+
+        if (type == MONS_MERC_FIGHTER
+            || type == MONS_MERC_KNIGHT
+            || type == MONS_MERC_DEATH_KNIGHT
+            || type == MONS_MERC_PALADIN
+            || type == MONS_MERC_SKALD
+            || type == MONS_MERC_INFUSER
+            || type == MONS_MERC_TIDEHUNTER
+            || type == MONS_MERC_WITCH
+            || type == MONS_MERC_SORCERESS
+            || type == MONS_MERC_ELEMENTALIST
+            || type == MONS_MERC_BRIGAND
+            || type == MONS_MERC_ASSASSIN
+            || type == MONS_MERC_CLEANER
+            || type == MONS_MERC_SHAMAN
+            || type == MONS_MERC_SHAMAN_II
+            || type == MONS_MERC_SHAMAN_III)
+            return pickup(item, mslot, msg);
+
         if (!force)
         {
             int value_old = _get_monster_armour_value(this,
@@ -3134,7 +3194,7 @@ bool monster::pacified() const
  */
 bool monster::shielded() const
 {
-    return shield()
+    return shield() || has_ench(ENCH_CONDENSATION_SHIELD)
            || wearing(EQ_AMULET_PLUS, AMU_REFLECTION) > 0;
 }
 
@@ -3152,6 +3212,12 @@ int monster::shield_bonus() const
         shld_c = shld_c * 2 + (body_size(PSIZE_TORSO) - SIZE_MEDIUM)
                             * (shld->sub_type - ARM_LARGE_SHIELD);
         sh = random2avg(shld_c + get_hit_dice() * 4 / 3, 2) / 2;
+    }
+
+    if (has_ench(ENCH_CONDENSATION_SHIELD))
+    {
+        const int condensation_shield = get_hit_dice() / 2;
+        sh = max(sh + condensation_shield, condensation_shield);
     }
     // shielding from jewellery
     const item_def *amulet = mslot_item(MSLOT_JEWELLERY);
@@ -3320,6 +3386,13 @@ int monster::base_armour_class() const
         }
     }
 
+    if (type == MONS_PAVISE) {
+        int item_ = inv[MSLOT_SHIELD];
+        if (item_ != NON_ITEM) {
+            item_def& shield = mitm[item_];
+            return base_ac + shield.plus;
+        }
+    }
 
     // demonspawn & draconians combine base & class ac values.
     if (mons_is_job(type))
@@ -3368,6 +3441,8 @@ int monster::armour_class(bool calc_unid) const
     }
 
     // various enchantments
+    if (has_ench(ENCH_STONESKIN))
+        ac += get_hit_dice() / 2;
     if (has_ench(ENCH_OZOCUBUS_ARMOUR))
         ac += 4 + get_hit_dice() / 3;
     if (has_ench(ENCH_ICEMAIL))
@@ -3766,6 +3841,11 @@ int monster::res_fire() const
 
     if (has_ench(ENCH_RESISTANCE))
         u++;
+    
+    if (have_passive(passive_t::share_resistance)
+        && is_divine_companion()){
+        u = max(u, player_res_fire());
+    }
 
     if (u < -3)
         u = -3;
@@ -3817,6 +3897,11 @@ int monster::res_cold() const
 
     if (has_ench(ENCH_RESISTANCE))
         u++;
+    
+    if (have_passive(passive_t::share_resistance)
+        && is_divine_companion()){
+        u = max(u, player_res_cold());
+    }
 
     if (u < -3)
         u = -3;
@@ -3857,6 +3942,11 @@ int monster::res_elec() const
 
     if (has_ench(ENCH_RESISTANCE))
         u++;
+
+    if (have_passive(passive_t::share_resistance)
+        && is_divine_companion()){
+        u = max(u, player_res_electricity());
+    }
 
     // Monsters can legitimately get multiple levels of electricity resistance.
 
@@ -3917,6 +4007,11 @@ int monster::res_poison(bool temp) const
 
     if (has_ench(ENCH_RESISTANCE))
         u++;
+
+    if (have_passive(passive_t::share_resistance)
+        && is_divine_companion()){
+        u = max(u, player_res_poison());
+    }
 
     // Monsters can have multiple innate levels of poison resistance, but
     // like players, equipment doesn't stack.
@@ -4018,6 +4113,11 @@ int monster::res_negative_energy(bool intrinsic_only) const
             u++;
     }
 
+    if (have_passive(passive_t::share_resistance)
+        && is_divine_companion()){
+        u = max(u, player_prot_life());
+    }
+
     if (u > 3)
         u = 3;
 
@@ -4070,6 +4170,11 @@ int monster::res_acid(bool calc_unid) const
 
     if (has_ench(ENCH_RESISTANCE))
         u++;
+    
+    if (have_passive(passive_t::share_resistance)
+        && is_divine_companion()){
+        u = max(u, player_res_acid());
+    }
 
     return u;
 }
@@ -4456,6 +4561,8 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
                 amount /= 2;
             else if (petrifying())
                 amount = amount * 2 / 3;
+            else if (this->has_ench(ENCH_DEATHS_DOOR))
+               return (0);
         }
 
         if (amount != INSTANT_DEATH && has_ench(ENCH_INJURY_BOND))
@@ -6660,7 +6767,10 @@ bool monster::cloud_immune(bool calc_unid, bool items) const
 {
     // Cloud Mage is also checked for in (so stay in sync with)
     // monster_info::monster_info(monster_type, monster_type).
-    return type == MONS_CLOUD_MAGE || actor::cloud_immune(calc_unid, items);
+    return type == MONS_CLOUD_MAGE
+           || type == MONS_ASCLEPIA
+           || type == MONS_ASCLEPIA_II
+           || actor::cloud_immune(calc_unid, items);
 }
 
 bool monster::is_illusion() const
@@ -6677,6 +6787,14 @@ bool monster::is_divine_companion() const
            && (mons_is_god_gift(*this, GOD_BEOGH)
                || mons_is_god_gift(*this, GOD_YREDELEMNUL)
                || mons_is_god_gift(*this, GOD_HEPLIAKLQANA))
+           && mons_can_use_stairs(*this);
+}
+
+bool monster::is_mercenery_companion() const
+{
+    return attitude == ATT_FRIENDLY
+           && !is_summoned()
+           && is_mercernery_companion(type)
            && mons_can_use_stairs(*this);
 }
 
@@ -6697,6 +6815,8 @@ int monster::spell_hd(spell_type spell) const
         hd *= 2;
     if (has_ench(ENCH_EMPOWERED_SPELLS))
         hd += 5;
+    if (has_ench(ENCH_CITRINITAS))
+        hd += max(2, you.piety/40);
     return hd;
 }
 
@@ -6776,6 +6896,8 @@ bool monster::angered_by_attacks() const
     return !has_ench(ENCH_INSANE)
             && !mons_is_avatar(type)
             && type != MONS_SPELLFORGED_SERVITOR
+            && type != MONS_PLAYER_ELDRITCH_TENTACLE
+            && type != MONS_PLAYER_ELDRITCH_TENTACLE_SEGMENT
             && !mons_is_conjured(type)
             && !testbits(flags, MF_DEMONIC_GUARDIAN)
             && !mons_is_hepliaklqana_ancestor(type);

@@ -780,7 +780,90 @@ A potion which does very strange things to you.
 %%%%
 potion of water
 
-A unique substance, vital for the existence of most life.
+An unique substance, vital for the existence of most life.
+%%%%
+potion of swift
+
+An unique substance, distilled from the Great Wyrm.
+It contains extracted swiftness which without suffer
+of sluggish when effect of swift ends.
+%%%%
+potion of regeneration
+
+An unique substance, distilled from the Great Wyrm.
+It contains extracted regeneration which regenerates
+living, just like its original spell.
+%%%%
+potion of icy armour
+
+An unique substance, distilled from the Great Wyrm.
+It contains extracted icy armour of Ozocubu's, same
+as its original spell.
+%%%%
+potion of toxic radiance
+
+An unique substance, distilled from the Great Wyrm.
+It contains extracted toxic radiance of Olgreb's,
+same as its original spell.
+%%%%
+potion of shourd cover
+
+An unique substance, distilled from the Great Wyrm.
+It contains extracted ditstorting shourd of Golubria's,
+same as its original spell.
+%%%%
+potion of repel missiles
+
+An unique substance, distilled from the Great Wyrm.
+It makes a repulsion field of air, to protect who
+drink it, just like its original spell.
+%%%%
+potion of deflect missiles
+
+An unique substance, distilled from the Great Wyrm.
+It makes a deflection field of winds, to protect who
+drink it, just like its original spell.
+%%%%
+potion of icy shield
+
+An unique substance, distilled from the Great Wyrm.
+It contains extracted icy shield, which made by
+condensation, just like its original spell.
+%%%%
+%%%%
+potion of essence Nigredo
+
+An alchemical essence of Decay, made by the transmutation
+of a potion or other essence. Drinking Nigredo causes
+decay yourself, evaporate will create miasma.
+%%%%
+potion of essence Albedo
+
+An alchemical essence of Purge, made by the transmutation
+of a potion or other essence. Dirnking Albedo causes
+magically purge yourself, evaporate will create clouds
+of flame.
+%%%%
+potion of essence Citrinitas
+
+An alchemical essence of Empower, made by the transmutation
+of a potion or other essence. Dirnking Citrinitas empowers
+your accuracy and spells, and result of evaporate isn't
+specified.
+%%%%
+potion of essence Viriditas
+
+An alchemical essence of Restore, made by the transmutation
+of a potion or other essence. Drinking Viriditas restores
+all damaged stats and cures yourself, evaporate will create
+clouds of healing.
+%%%%
+potion of essence Rubedo
+
+An alchemical essence of the 'end-as-begin', made by the
+transmutation of a potion or other essence. Drinking Rubedo
+will grants you resistances from fire, cold, electricity,
+poison, and acid, and result of evaporate isn't specified.
 %%%%
 quad damage
 
@@ -981,6 +1064,11 @@ A wonderful scroll which causes the creation of a valuable item, with the
 reader choosing the type of item to be created. The item produced will be
 heavily biased towards something fitting the reader's skills, and also towards
 gear that hasn't been seen yet, but, alas, nothing is guaranteed.
+%%%%
+scroll of collection
+
+A one-of-a-kind scroll which summon to the special artefact from 
+Collector's artefact collections, with the reader choosing the artefact to be summoned.
 %%%%
 scroll of amnesia
 

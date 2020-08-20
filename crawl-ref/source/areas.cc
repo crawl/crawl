@@ -46,7 +46,8 @@ enum class areaprop
     hot = (1 << 11),
     leap = (1 << 12),
     coward = (1 << 13),
-    antimagic = (1 << 14)
+    antimagic = (1 << 14),
+    healaura = (1 << 15)
 };
 DEF_BITFIELD(areaprops, areaprop);
 
@@ -91,7 +92,8 @@ void areas_actor_moved(const actor* act, const coord_def& oldpos)
         (you.entering_level
          || act->halo_radius() > -1 || act->silence_radius() > -1
          || act->liquefying_radius() > -1 || act->umbra_radius() > -1
-         || act->heat_radius() > -1 || act->antimagic_radius() > -1))
+         || act->heat_radius() > -1 || act->antimagic_radius() > -1
+		 || act->healaura_radius() > -1))
     {
         // Not necessarily new, but certainly potentially interesting.
         invalidate_agrid(true);
@@ -169,6 +171,15 @@ static void _actor_areas(actor *a)
 
         for (radius_iterator ri(a->pos(), r, C_SQUARE, LOS_DEFAULT); ri; ++ri)
             _set_agrid_flag(*ri, areaprop::antimagic);
+        no_areas = false;
+    }
+
+    if ((r = a->healaura_radius()) >= 0)
+    {
+        _agrid_centres.emplace_back(area_centre_type::healaura, a->pos(), r);
+
+        for (radius_iterator ri(a->pos(), r, C_SQUARE, LOS_DEFAULT); ri; ++ri)
+            _set_agrid_flag(*ri, areaprop::healaura);
         no_areas = false;
     }
 }
@@ -880,6 +891,35 @@ int monster::antimagic_radius() const
         is_blueprint_exist(BLUEPRINT_ANTIMAGIC_AURA)) {
         return 2;
     }
+
+    return -1;
+}
+
+bool actor::within_healaura() const
+{
+    return ::within_healaura(pos());
+}
+
+bool within_healaura(const coord_def& p)
+{
+    if (!map_bounds(p))
+        return false;
+    if (!_agrid_valid)
+        _update_agrid();
+    return _check_agrid_flag(p, areaprop::healaura);
+}
+
+int player::healaura_radius() const
+{
+    int size = -1;
+    return size;
+}
+
+int monster::healaura_radius() const
+{
+
+    if (has_ench(ENCH_HEALING_AURA))
+        return 3;
 
     return -1;
 }

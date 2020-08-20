@@ -549,6 +549,8 @@ static const pair<god_type, dungeon_feature_type> _god_altars[] =
     { GOD_USKAYAW, DNGN_ALTAR_USKAYAW },
     { GOD_HEPLIAKLQANA, DNGN_ALTAR_HEPLIAKLQANA },
     { GOD_WU_JIAN, DNGN_ALTAR_WU_JIAN },
+    { GOD_WYRM, DNGN_ALTAR_WYRM },
+    { GOD_IMUS, DNGN_ALTAR_IMUS },
     { GOD_ECUMENICAL, DNGN_ALTAR_ECUMENICAL },
 };
 
@@ -641,7 +643,10 @@ bool feat_is_fountain(dungeon_feature_type feat)
  */
 bool feat_is_reachable_past(dungeon_feature_type feat)
 {
-    return !feat_is_opaque(feat) && !feat_is_wall(feat) && feat != DNGN_GRATE;
+    return !feat_is_opaque(feat) 
+        && !feat_is_wall(feat) 
+        && !feat_is_closed_door(feat)
+        && feat != DNGN_GRATE;
 }
 
 /** Is this feature important to the game?

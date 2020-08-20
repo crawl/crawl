@@ -4836,6 +4836,14 @@ void unmarshallItem(reader &th, item_def &item)
             item.sub_type = FOOD_ROYAL_JELLY; // will be fixed up later
         }
     }
+    if (th.getMinorVersion() < TAG_MINOR_WAR_CHANT)
+    {
+        if (item.base_type == OBJ_BOOKS) {
+            if (item.sub_type >= BOOK_WAR_CHANTS2) {
+                item.sub_type++;
+            }
+        }
+    }
 
     if (th.getMinorVersion() < TAG_MINOR_FOOD_PURGE)
     {
@@ -6715,7 +6723,7 @@ static void tag_read_level_monsters(reader &th)
 
         // companion_is_elsewhere checks the mid cache
         env.mid_cache[m.mid] = i;
-        if (m.is_divine_companion() && companion_is_elsewhere(m.mid))
+        if ((m.is_divine_companion() || m.is_mercenery_companion()) && companion_is_elsewhere(m.mid))
         {
             dprf("Killed elsewhere companion %s(%d) on %s",
                     m.name(DESC_PLAIN, true).c_str(), m.mid,

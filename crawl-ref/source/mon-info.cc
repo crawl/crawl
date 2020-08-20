@@ -78,6 +78,8 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_MAD,             MB_MAD },
     { ENCH_INNER_FLAME,     MB_INNER_FLAME },
     { ENCH_BREATH_WEAPON,   MB_BREATH_WEAPON },
+    { ENCH_DEATHS_DOOR,     MB_DEATHS_DOOR },
+    { ENCH_STONESKIN,       MB_STONESKIN },
     { ENCH_OZOCUBUS_ARMOUR, MB_OZOCUBUS_ARMOUR },
     { ENCH_WRETCHED,        MB_WRETCHED },
     { ENCH_SCREAMED,        MB_SCREAMED },
@@ -100,11 +102,13 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_SHROUD,          MB_SHROUD },
     { ENCH_CORROSION,       MB_CORROSION },
     { ENCH_REPEL_MISSILES,  MB_REPEL_MSL },
-    { ENCH_DEFLECT_MISSILES, MB_DEFLECT_MSL },
+    { ENCH_DEFLECT_MISSILES, MB_DEFLECT_MSL },    
+    { ENCH_CONDENSATION_SHIELD, MB_CONDENSATION_SHIELD },
     { ENCH_RESISTANCE,      MB_RESISTANCE },
     { ENCH_HEXED,           MB_HEXED },
     { ENCH_BRILLIANCE_AURA, MB_BRILLIANCE_AURA },
     { ENCH_EMPOWERED_SPELLS, MB_EMPOWERED_SPELLS },
+    { ENCH_HEALING_AURA, MB_HEALING_AURA },
     { ENCH_GOZAG_INCITE,    MB_GOZAG_INCITED },
     { ENCH_PAIN_BOND,       MB_PAIN_BOND },
     { ENCH_IDEALISED,       MB_IDEALISED },
@@ -115,6 +119,10 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_SLOWLY_DYING,    MB_SLOWLY_DYING },
     { ENCH_WHIRLWIND_PINNED, MB_PINNED },
     { ENCH_VILE_CLUTCH, MB_VILE_CLUTCH},
+    { ENCH_NIGREDO,         MB_NIGREDO},
+    { ENCH_ALBEDO,          MB_ALBEDO},
+    { ENCH_CITRINITAS,      MB_CITRINITAS},
+    { ENCH_VIRIDITAS,       MB_VIRIDITAS},
 };
 
 static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
@@ -1256,6 +1264,8 @@ static string _verbose_info0(const monster_info& mi)
         return "petrifying";
     if (mi.is(MB_MAD))
         return "mad";
+    if (mi.is(MB_DEATHS_DOOR))
+        return "deaths door";
     if (mi.is(MB_CONFUSED))
         return "confused";
     if (mi.is(MB_FLEEING))
@@ -1497,8 +1507,12 @@ vector<string> monster_info::attributes() const
         v.emplace_back("stupefied");
     if (is(MB_MAD))
         v.emplace_back("lost in madness");
+    if (is(MB_DEATHS_DOOR))
+       v.push_back("standing in death's doorway");
     if (is(MB_REGENERATION))
         v.emplace_back("regenerating");
+    if (is(MB_STONESKIN))
+        v.emplace_back("stone skin");
     if (is(MB_RAISED_MR))
         v.emplace_back("resistant to hostile enchantments");
     if (is(MB_OZOCUBUS_ARMOUR))
@@ -1558,6 +1572,8 @@ vector<string> monster_info::attributes() const
         v.emplace_back("lightly drained");
     if (is(MB_HEAVILY_DRAINED))
         v.emplace_back("heavily drained");
+    if (is(MB_CONDENSATION_SHIELD))
+        v.emplace_back("protected by a disc of dense vapour");
     if (is(MB_RESISTANCE))
         v.emplace_back("unusually resistant");
     if (is(MB_HEXED))
@@ -1566,6 +1582,8 @@ vector<string> monster_info::attributes() const
         v.emplace_back("aura of brilliance");
     if (is(MB_EMPOWERED_SPELLS))
         v.emplace_back("spells empowered");
+    if (is(MB_HEALING_AURA))
+        v.emplace_back("aura of healing");
     if (is(MB_READY_TO_HOWL))
         v.emplace_back("ready to howl");
     if (is(MB_PARTIALLY_CHARGED))
@@ -1591,6 +1609,14 @@ vector<string> monster_info::attributes() const
         v.emplace_back("stilling the winds");
     if (is(MB_VILE_CLUTCH))
         v.emplace_back("constricted by zombie hands");
+    if (is(MB_NIGREDO))
+        v.emplace_back("infused by decaying essence of Nigredo");
+    if (is(MB_ALBEDO))
+        v.emplace_back("infused by purging essence of Albedo");
+    if (is(MB_CITRINITAS))
+        v.emplace_back("infused by empowering essence of Cirtintas");
+    if (is(MB_VIRIDITAS))
+        v.emplace_back("infused by restorative essence of Viriditas");
     return v;
 }
 

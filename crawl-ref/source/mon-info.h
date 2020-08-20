@@ -96,9 +96,7 @@ enum monster_info_flags
     MB_OLD_ROUSED,
 #endif
     MB_BREATH_WEAPON,
-#if TAG_MAJOR_VERSION == 34
     MB_DEATHS_DOOR,
-#endif
     MB_FIREWOOD,
     MB_TWO_WEAPONS,
     MB_NO_REGEN,
@@ -152,8 +150,8 @@ enum monster_info_flags
     MB_REPEL_MSL,
 #if TAG_MAJOR_VERSION == 34
     MB_NEGATIVE_VULN,
-    MB_CONDENSATION_SHIELD,
 #endif
+    MB_CONDENSATION_SHIELD,
     MB_RESISTANCE,
     MB_HEXED,
 #if TAG_MAJOR_VERSION == 34
@@ -179,6 +177,12 @@ enum monster_info_flags
     MB_PINNED,
     MB_VILE_CLUTCH,
     MB_HIGHLIGHTED_SUMMONER,
+    MB_STONESKIN,
+    MB_NIGREDO,
+    MB_ALBEDO,
+    MB_CITRINITAS,
+    MB_VIRIDITAS,
+    MB_HEALING_AURA,
     NUM_MB_FLAGS
 };
 

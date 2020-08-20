@@ -667,6 +667,7 @@ const char* armour_ego_name(const item_def& item, bool terse)
         case SPARM_ARCHERY:           return "archery";
         case SPARM_REPULSION:         return "repulsion";
         case SPARM_CLOUD_IMMUNE:      return "cloud immunity";
+        case SPARM_BUNKER:            return "bunker";
         default:                      return "bugginess";
         }
     }
@@ -701,6 +702,7 @@ const char* armour_ego_name(const item_def& item, bool terse)
         case SPARM_ARCHERY:           return "archery";
         case SPARM_REPULSION:         return "repulsion";
         case SPARM_CLOUD_IMMUNE:      return "cloud immunity";
+        case SPARM_BUNKER:            return "bunker";
         default:                      return "buggy";
         }
     }
@@ -796,6 +798,21 @@ const char* potion_type_name(int potiontype)
     case POT_RESISTANCE:        return "resistance";
     case POT_LIGNIFY:           return "lignification";
     case POT_UNSTABLE_MUTATION: return "unstable mutation";
+    
+    case POT_SWIFT:             return "swift";
+    case POT_REGENERATION:      return "regeneration";
+    case POT_ICY_ARMOUR:        return "icy armour";
+    case POT_TOXIC:             return "toxic radiance";
+    case POT_SHROUD:            return "shroud cover";
+    case POT_REPEL_MISSILES:    return "repel missiles";
+    case POT_DEFLECT_MISSILES:  return "deflect missiles";
+    case POT_ICY_SHIELD:        return "icy shield";
+    case POT_NIGREDO:           return "essence Nigredo";
+    case POT_ALBEDO:            return "essence Albedo";
+    case POT_CITRINITAS:        return "essence Citrinitas";
+    case POT_VIRIDITAS:         return "essence Viriditas";
+    case POT_RUBEDO:            return "essence Rubedo";
+        
     default:                    return "bugginess";
     }
 }
@@ -819,6 +836,7 @@ static const char* scroll_type_name(int scrolltype)
     case SCR_MAGIC_MAPPING:      return "magic mapping";
     case SCR_FOG:                return "fog";
     case SCR_ACQUIREMENT:        return "acquirement";
+    case SCR_COLLECTION:         return "collection";
     case SCR_BRAND_WEAPON:       return "brand weapon";
     case SCR_HOLY_WORD:          return "holy word";
     case SCR_VULNERABILITY:      return "vulnerability";
@@ -1080,7 +1098,7 @@ static string misc_type_name(int type)
     case MISC_BUGGY_LANTERN_OF_SHADOWS:  return "removed lantern of shadows";
 #endif
     case MISC_HORN_OF_GERYON:            return "horn of Geryon";
-    case MISC_DISC_OF_STORMS:		 return "disc of storms";
+    case MISC_DISC_OF_STORMS:            return "disc of storms";
     case MISC_LIGHTNING_ROD:             return "lightning rod";
 #if TAG_MAJOR_VERSION == 34
     case MISC_BOTTLED_EFREET:            return "empty flask";
@@ -1138,6 +1156,7 @@ static const char* _book_type_name(int booktype)
     case BOOK_CONJURATIONS:           return "Conjurations";
     case BOOK_FLAMES:                 return "Flames";
     case BOOK_FROST:                  return "Frost";
+    case BOOK_FROST2:                 return "Frost Second Volume";
     case BOOK_SUMMONINGS:             return "Summonings";
     case BOOK_FIRE:                   return "Fire";
     case BOOK_ICE:                    return "Ice";
@@ -1181,6 +1200,7 @@ static const char* _book_type_name(int booktype)
     case BOOK_BEASTS:                 return "Beasts";
     case BOOK_THE_MEMOIRS_OF_THE_VIRTUOSO:  return "Virtuoso";
     case BOOK_STALKING:               return "Stalking";
+    case BOOK_WAR_CHANTS2:            return "War Chants";
     case BOOK_RANDART_LEVEL:          return "Fixed Level";
     case BOOK_RANDART_THEME:          return "Fixed Theme";
     default:                          return "Bugginess";
@@ -3250,7 +3270,7 @@ bool is_emergency_item(const item_def &item)
             return false;
         }
     case OBJ_POTIONS:
-        if (you.species == SP_MUMMY)
+        if (you.species == SP_MUMMY || you.species == SP_LICH)
             return false;
 
         switch (item.sub_type)
@@ -3291,9 +3311,9 @@ bool is_good_item(const item_def &item)
     switch (item.base_type)
     {
     case OBJ_SCROLLS:
-        return item.sub_type == SCR_ACQUIREMENT;
+        return item.sub_type == SCR_ACQUIREMENT || item.sub_type == SCR_COLLECTION;
     case OBJ_POTIONS:
-        if (you.species == SP_MUMMY)
+        if (you.species == SP_MUMMY || you.species == SP_LICH)
             return false;
         switch (item.sub_type)
         {
@@ -3349,7 +3369,7 @@ bool is_bad_item(const item_def &item, bool temp)
         }
     case OBJ_POTIONS:
         // Can't be bad if you can't use them.
-        if (you.species == SP_MUMMY)
+        if (you.species == SP_MUMMY || you.species == SP_LICH)
             return false;
 
         switch (item.sub_type)
@@ -3576,6 +3596,10 @@ bool is_useless_item(const item_def &item, bool temp)
         if (!can_wear_armour(item, false, true))
             return true;
 
+        if (you_worship(GOD_IMUS) && (is_shield(item)
+            || !is_effectively_light_armour(&item)))
+            return true;
+
         if (is_shield(item) && you.get_mutation_level(MUT_MISSING_HAND))
             return true;
 
@@ -3653,8 +3677,7 @@ bool is_useless_item(const item_def &item, bool temp)
             return temp && (env.level_state & LSTATE_STILL_WINDS);
 
         if (item.sub_type == WAND_TELEPORTATION)
-            return you.species == SP_FORMICID
-            || crawl_state.game_is_sprint()
+            return crawl_state.game_is_sprint()
             || player_in_branch(BRANCH_GAUNTLET);
 
         if (item.sub_type == WAND_HEAL_WOUNDS
@@ -3732,6 +3755,10 @@ bool is_useless_item(const item_def &item, bool temp)
             return !you.can_device_heal();
         case POT_INVISIBILITY:
             return _invisibility_is_useless(temp);
+        case POT_SWIFT:
+            return you.species == SP_FORMICID;
+        case POT_NIGREDO:
+            return you.res_rotting(temp) > 0;
         case POT_WATER:
             return true;
         }
@@ -3774,7 +3801,8 @@ bool is_useless_item(const item_def &item, bool temp)
         case AMU_FAITH:
             return (you.species == SP_DEMIGOD && !you.religion)
                     || you_worship(GOD_GOZAG)
-                    || (you_worship(GOD_RU) && you.piety == piety_breakpoint(5));
+                    || (you_worship(GOD_RU) && you.piety == piety_breakpoint(5))
+                    || you.species == SP_MELIAI;
 
         case AMU_GUARDIAN_SPIRIT:
             return you.species == SP_DJINNI ||
@@ -3924,6 +3952,7 @@ bool is_useless_item(const item_def &item, bool temp)
         case MISC_BUGGY_LANTERN_OF_SHADOWS:
 #endif
         case MISC_ZIGGURAT:
+        case MISC_BAG:
             return false;
 
         // Purely summoning misc items don't work w/ sac love

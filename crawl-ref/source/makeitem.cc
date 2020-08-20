@@ -784,8 +784,16 @@ static special_armour_type _generate_armour_type_ego(armour_type type)
     // TODO: move this into data
     switch (type)
     {
-    case ARM_SHIELD:
     case ARM_LARGE_SHIELD:
+        return random_choose_weighted(1, SPARM_RESISTANCE,
+                                      3, SPARM_FIRE_RESISTANCE,
+                                      3, SPARM_COLD_RESISTANCE,
+                                      3, SPARM_POISON_RESISTANCE,
+                                      3, SPARM_POSITIVE_ENERGY,
+                                      6, SPARM_BUNKER,
+                                      6, SPARM_REFLECTION,
+                                      12, SPARM_PROTECTION);
+    case ARM_SHIELD:
     case ARM_BUCKLER:
         return random_choose_weighted(1, SPARM_RESISTANCE,
                                       3, SPARM_FIRE_RESISTANCE,
@@ -975,6 +983,8 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
                slot == EQ_SHIELD ||
                type == ARM_SCARF || !strict;
 
+    case SPARM_BUNKER:
+        return slot == EQ_SHIELD && type == ARM_LARGE_SHIELD;
     case SPARM_REPULSION:
     case SPARM_CLOUD_IMMUNE:
         return type == ARM_SCARF;
@@ -1275,9 +1285,9 @@ static int _random_wand_subtype()
                                   5, WAND_ENSLAVEMENT,
                                   3, WAND_CLOUDS,
                                   3, WAND_SCATTERSHOT,
-                                  3, WAND_HEAL_WOUNDS,
-                                  3, WAND_HASTING,
-                                  6, WAND_TELEPORTATION); // previous 3, now 2, temporarily 6
+                                  1, WAND_HEAL_WOUNDS,
+                                  1, WAND_HASTING,
+                                  1, WAND_TELEPORTATION);
 }
 
 /**
@@ -1437,9 +1447,12 @@ static void _generate_scroll_item(item_def& item, int force_type,
                  15, (depth_mod < 4 ? NUM_SCROLLS : SCR_SILENCE),
                  15, (depth_mod < 4 ? NUM_SCROLLS : SCR_BRAND_WEAPON),
                  15, (depth_mod < 4 ? NUM_SCROLLS : SCR_TORMENT),
-                 15, (depth_mod < 4 ? NUM_SCROLLS : SCR_HOLY_WORD));
+                 15, (depth_mod < 4 ? NUM_SCROLLS : SCR_HOLY_WORD),
+                 // DON'T MAKE UNIQUE SCROLL
+                 0, SCR_COLLECTION);
         }
-        while (item.sub_type == NUM_SCROLLS
+        while (item.sub_type == NUM_SCROLLS 
+               || item.sub_type == SCR_COLLECTION
                || agent == GOD_XOM
                   && _is_boring_item(OBJ_SCROLLS, item.sub_type)
                   && --tries > 0);
@@ -1755,7 +1768,7 @@ static void _generate_misc_item(item_def& item, int force_type)
                                       MISC_LAMP_OF_FIRE,
                                       MISC_PHIAL_OF_FLOODS,
                                       MISC_LIGHTNING_ROD,
-				                      MISC_DISC_OF_STORMS,
+                                      MISC_DISC_OF_STORMS,
                                       MISC_BOX_OF_BEASTS,
                                       MISC_SACK_OF_SPIDERS,
                                       MISC_CRYSTAL_BALL_OF_ENERGY,

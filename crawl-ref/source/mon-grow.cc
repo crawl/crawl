@@ -3,8 +3,11 @@
  * @brief Monster level-up code.
 **/
 
+#include <functional>
+
 #include "AppHdr.h"
 
+#include "god-abil.h"
 #include "mon-grow.h"
 
 #include "message.h"
@@ -33,6 +36,13 @@ static const monster_level_up mon_grow[] =
     monster_level_up(MONS_ORC_KNIGHT, MONS_ORC_WARLORD),
     monster_level_up(MONS_ORC_PRIEST, MONS_ORC_HIGH_PRIEST),
     monster_level_up(MONS_ORC_WIZARD, MONS_ORC_SORCERER),
+    monster_level_up(MONS_BLORK_THE_ORC, MONS_BLORK_THE_ORC_WARRIOR),
+    monster_level_up(MONS_BLORK_THE_ORC_WARRIOR, MONS_BLORK_THE_ORC_KNIGHT),
+    monster_level_up(MONS_BLORK_THE_ORC_KNIGHT, MONS_BLORK_THE_ORC_WARLORD),
+    monster_level_up(MONS_URUG, MONS_URUG_II),
+    monster_level_up(MONS_NERGALLE, MONS_NERGALLE_II),
+    monster_level_up(MONS_ASCLEPIA, MONS_ASCLEPIA_II),   
+    monster_level_up(MONS_BRANDAGOTH, MONS_BRANDAGOTH_II),
 
     monster_level_up(MONS_KOBOLD, MONS_BIG_KOBOLD),
 
@@ -68,11 +78,36 @@ static const monster_level_up mon_grow[] =
     monster_level_up(MONS_TENGU, MONS_TENGU_WARRIOR),
     monster_level_up(MONS_TENGU_CONJURER, MONS_TENGU_REAVER),
     monster_level_up(MONS_TENGU_WARRIOR, MONS_TENGU_REAVER),
+
+    // mercenaries for JOB_CARAVAN
+    monster_level_up(MONS_MERC_FIGHTER, MONS_MERC_KNIGHT),
+    monster_level_up(MONS_MERC_KNIGHT, MONS_MERC_DEATH_KNIGHT, 500),
+    monster_level_up(MONS_MERC_KNIGHT, MONS_MERC_PALADIN),
+    
+    monster_level_up(MONS_MERC_SKALD, MONS_MERC_INFUSER),
+    monster_level_up(MONS_MERC_INFUSER, MONS_MERC_TIDEHUNTER),
+    
+    monster_level_up(MONS_MERC_WITCH, MONS_MERC_SORCERESS),
+    monster_level_up(MONS_MERC_SORCERESS, MONS_MERC_ELEMENTALIST),
+    
+    monster_level_up(MONS_MERC_BRIGAND, MONS_MERC_ASSASSIN),
+    monster_level_up(MONS_MERC_ASSASSIN, MONS_MERC_CLEANER),
+
+    monster_level_up(MONS_MERC_SHAMAN, MONS_MERC_SHAMAN_II),
+    monster_level_up(MONS_MERC_SHAMAN_II, MONS_MERC_SHAMAN_III),
+
+};
+
+static const map<monster_type, mon_lev_up_cond> mon_grow_cond =
+{
+    { MONS_ASCLEPIA, {[](const monster &caster) {return (you.religion == GOD_BEOGH && caster.attitude > ATT_NEUTRAL);}} },
+    { MONS_BRANDAGOTH, {[](const monster &caster) {return caster.blessed;}} }
 };
 
 mons_experience_levels::mons_experience_levels()
 {
     int experience = monster_xp_base;
+
     for (int i = 1; i <= MAX_MONS_HD; ++i)
     {
         mexp[i] = experience;
@@ -133,16 +168,33 @@ void monster::upgrade_type(monster_type after, bool adjust_hd,
             hit_points     = min(hit_points, max_hit_points);
         }
     }
+
+    if (type == MONS_MERC_SORCERESS || type == MONS_MERC_ELEMENTALIST)
+    {
+        item_def* weapon = mslot_item(MSLOT_WEAPON);
+        if (weapon) {
+            const bool staff = weapon->base_type == OBJ_STAVES;
+            if (staff) {
+                set_spell_witch(this, weapon->sub_type, true);
+            }
+        }
+    }
 }
 
 bool monster::level_up_change()
 {
     const monster_level_up *lup =
         _monster_level_up_target(type, get_experience_level());
+
+    const mon_lev_up_cond *lup_cond;
     if (lup)
     {
-        upgrade_type(lup->after, false, lup->adjust_hp);
-        return true;
+        lup_cond = map_find(mon_grow_cond, lup->before);
+        if (!lup_cond || lup_cond->condition(*this))
+        {
+            upgrade_type(lup->after, false, lup->adjust_hp);
+            return true;
+        }
     }
     return false;
 }

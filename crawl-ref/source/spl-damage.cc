@@ -1064,6 +1064,7 @@ static int _shatter_player_dice()
         return 6; // reduced later by petrification's damage reduction
     else if (you.form == transformation::statue
              || you.form == transformation::ice_beast
+             || you.form == transformation::golem
              || you.species == SP_GARGOYLE)
         return 6;
     else if (you.airborne())
@@ -1729,6 +1730,135 @@ spret cast_ignite_poison(actor* agent, int pow, bool fail, bool tracer)
     return spret::success;
 }
 
+static int _convert_poison_clouds(coord_def where, int pow, actor* agent);
+static int _convert_poison_bog(coord_def where, int pow, actor* agent);
+
+/**
+ * Cast the spell Convert Poison, replace poisonous clouds in LOS
+ * into healing clouds.
+ *
+ * @param agent         The spell's caster.
+ * @param pow           The power with which the spell is being cast.
+ * @param fail          If it's a player spell, whether the spell fail chance
+ *                      was hit (whether the spell will fail as soon as the
+ *                      player chooses not to abort the casting)
+ * @param mon_tracer    Whether the 'casting' is just a tracer (a check to see
+ *                      if it's worth actually casting)
+ * @return              If it's a tracer, spret::success if the spell should
+ *                      be cast & spret::abort otherwise.
+ *                      If it's a real spell, spret::abort if the player chose
+ *                      to abort the spell, spret::fail if they failed the cast
+ *                      chance, and spret::success otherwise.
+ */
+spret cast_convert_poison(actor* agent, int pow, bool /*fail*/, bool tracer)
+{
+    if (tracer)
+    {
+        // Estimate how much useful effect we'd get if we cast the spell now
+        const int work = apply_area_visible([agent] (coord_def where) {
+            return _convert_poison_clouds(where, -1, agent)
+                 + _convert_poison_bog(where, -1, agent);
+        }, agent->pos());
+
+        return work > 0 ? spret::success : spret::abort;
+    }
+
+    targeter_radius hitfunc(agent, LOS_NO_TRANS);
+    flash_view_delay(
+        agent->is_player()
+            ? UA_PLAYER
+            : UA_MONSTER,
+        LIGHTGREEN, 100, &hitfunc);
+
+    mprf("%s %s the poisonous cloud in %s surroundings!", agent->name(DESC_THE).c_str(),
+         agent->conj_verb("convert").c_str(),
+         agent->pronoun(PRONOUN_POSSESSIVE).c_str());
+
+    // this could conceivably cause crashes if the player dies midway through
+    // maybe split it up...?
+    apply_area_visible([pow, agent] (coord_def where) {
+        _convert_poison_clouds(where, pow, agent);
+        _convert_poison_bog(where, pow, agent);
+        return 0; // ignored
+    }, agent->pos());
+
+    return spret::success;
+}
+
+/**
+ * Place healing clouds over toxic bogs, by the power of Convert Poison.
+ *
+ * @param where     The tile in question.
+ * @param pow       The power with which Convert Poison is being cast.
+ *                  If -1, this indicates the spell is a test-run 'tracer'.
+ * @param agent     The caster of Convert Poison.
+ * @return          If we're just running a tracer, return the expected 'value'
+ *                  of creating fire clouds in the given location (could be
+ *                  negative if there are allies there).
+ *                  If it's not a tracer, return 1 if a flame cloud is created
+ *                  and 0 otherwise.
+ */
+static int _convert_poison_bog(coord_def where, int pow, actor *agent)
+{
+    const bool tracer = (pow == -1);  // Only testing damage, not dealing it
+
+    if (grd(where) != DNGN_TOXIC_BOG)
+        return false;
+
+    if (tracer)
+    {
+        //FIXME) create _convert_tracer_cloud_value function
+        const int value = 1;// _convert_tracer_cloud_value(where, agent);
+        // Player doesn't care about magnitude.
+        return agent && agent->is_player() ? sgn(value) : value;
+    }
+
+    place_cloud(CLOUD_HEAL, where,
+                40 + (pow/40) + random2(10 + pow/2), agent);
+    return true;
+}
+/**
+ * Turn poisonous clouds in the given tile into healing clouds, by the power of
+ * Convert Poison.
+ *
+ * @param where     The tile in question.
+ * @param pow       The power with which Convert Poison is being cast.
+ *                  If -1, this indicates the spell is a test-run 'tracer'.
+ * @param agent     The caster of Convert Poison.
+ * @return          If we're just running a tracer, return the expected 'value'
+ *                  of creating fire clouds in the given location (could be
+ *                  negative if there are allies there).
+ *                  If it's not a tracer, return 1 if a flame cloud is created
+ *                  and 0 otherwise.
+ */
+static int _convert_poison_clouds(coord_def where, int pow, actor *agent)
+{
+    const bool tracer = (pow == -1);  // Only testing damage, not dealing it
+
+    cloud_struct* cloud = cloud_at(where);
+    if (!cloud)
+        return false;
+
+    if (cloud->type != CLOUD_MEPHITIC && cloud->type != CLOUD_POISON
+		&& cloud->type != CLOUD_MIASMA && cloud->type != CLOUD_MUTAGENIC)
+        return false;
+
+    if (tracer)
+    {
+        //FIXME) create _convert_tracer_cloud_value function
+        const int value = 1;//_convert_tracer_cloud_value(where, agent);
+        // Player doesn't care about magnitude.
+        return agent && agent->is_player() ? sgn(value) : value;
+    }
+
+    cloud->type = CLOUD_HEAL;
+    cloud->decay = 40 + (pow/40) + random2(10 + pow/2);
+    cloud->whose = agent->kill_alignment();
+    cloud->killer = agent->is_player() ? KILL_YOU_MISSILE : KILL_MON_MISSILE;
+    cloud->source = agent->mid;
+    return true;
+}
+
 static void _ignition_square(const actor */*agent*/, bolt beam, coord_def square, bool center)
 {
     // HACK: bypass visual effect
@@ -2047,6 +2177,13 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
             beam.colour     = WHITE;
             beam.damage.num = 3;
             beam.flavour    = BEAM_ICE;
+            return true;
+        }
+        else if (you.form == transformation::golem)
+        {
+            beam.name       = "blast of armour fragments";
+            beam.colour     = BROWN;
+            beam.damage.num = you.form == transformation::golem ? 3 : 2;
             return true;
         }
     }
@@ -2703,7 +2840,7 @@ spret cast_dazzling_spray(int pow, coord_def aim, bool fail)
     return spret::success;
 }
 
-static bool _toxic_can_affect(const actor *act)
+bool toxic_can_affect(const actor *act)
 {
     if (act->is_monster() && act->as_monster()->submerged())
         return false;
@@ -2718,7 +2855,7 @@ spret cast_toxic_radiance(actor *agent, int pow, bool fail, bool mon_tracer)
     {
         targeter_radius hitfunc(&you, LOS_NO_TRANS);
         {
-            if (stop_attack_prompt(hitfunc, "poison", _toxic_can_affect))
+            if (stop_attack_prompt(hitfunc, "poison", toxic_can_affect))
                 return spret::abort;
         }
         fail_check();
@@ -2739,7 +2876,7 @@ spret cast_toxic_radiance(actor *agent, int pow, bool fail, bool mon_tracer)
     {
         for (actor_near_iterator ai(agent->pos(), LOS_NO_TRANS); ai; ++ai)
         {
-            if (!_toxic_can_affect(*ai) || mons_aligned(agent, *ai))
+            if (!toxic_can_affect(*ai) || mons_aligned(agent, *ai))
                 continue;
             else
                 return spret::success;
@@ -2790,7 +2927,7 @@ void toxic_radiance_effect(actor* agent, int mult, bool on_cast)
 
     for (actor_near_iterator ai(agent->pos(), LOS_NO_TRANS); ai; ++ai)
     {
-        if (!_toxic_can_affect(*ai))
+        if (!toxic_can_affect(*ai))
             continue;
 
         // Monsters can skip hurting friendlies
@@ -3660,58 +3797,6 @@ spret cast_miasma_breath(int pow, bolt &beam)
 }
 
 
-
-spret cast_lehudibs_crystal_shot(const actor* caster, int powc, bolt& beam, bool fail)
-{
-
-    const size_t range = spell_range(SPELL_LEHUDIBS_CRYSTAL_SHOT, powc);
-
-    targeter_shotgun hitfunc(caster, 5, range);
-
-    hitfunc.set_aim(beam.target);
-
-    if (caster->is_player())
-    {
-        if (stop_attack_prompt(hitfunc, "lehudibs crystal shot"))
-            return spret::abort;
-    }
-
-    fail_check();
-
-    bolt pbolt = beam;
-    pbolt.name = "lehudibs crystal shot";
-    pbolt.thrower = KILL_YOU_MISSILE;
-    pbolt.flavour = BEAM_MMISSILE;
-    pbolt.real_flavour = BEAM_MMISSILE;
-    pbolt.colour = LIGHTGRAY;
-    pbolt.glyph = dchar_glyph(DCHAR_EXPLOSION);
-    pbolt.damage = caster->is_player() ? calc_dice(10, 23 + powc) : calc_dice(3, 16 + powc /10);
-    pbolt.hit = caster->is_player() ? 10 + powc / 15 : 22 + powc / 20;
-
-    pbolt.range = 1;
-#ifdef USE_TILE
-    pbolt.tile_beam = -1;
-#endif
-    pbolt.draw_delay = 0;
-
-    hitfunc.set_aim(pbolt.target);
-
-
-    for (const auto& entry : hitfunc.zapped)
-    {
-        if (entry.second <= 0)
-            continue;
-
-        pbolt.source = entry.first;
-        pbolt.target = entry.first;
-        pbolt.fire();
-
-        pbolt.draw(entry.first);
-    }
-    scaled_delay(25);
-    return spret::success;
-}
-
 void actor_apply_toxic_bog(actor * act)
 {
     if (grd(act->pos()) != DNGN_TOXIC_BOG)
@@ -3979,5 +4064,58 @@ spret cast_starburst(int pow, bool fail, bool tracer)
         beam.fire();
     }
 
+    return spret::success;
+}
+
+spret cast_flame_strike_shot(const actor* caster, const actor* defender, int damage, int hit, bool fail)
+{
+    const size_t range = 3;
+
+    bolt beam;
+    beam.range = range;
+    beam.source = caster->pos();
+    beam.source_id = MID_PLAYER;
+    beam.target = defender->pos();
+    beam.attitude = ATT_FRIENDLY;
+    beam.thrower = KILL_YOU;
+    beam.origin_spell = SPELL_FLAME_STRIKE;
+
+    targeter_shotgun hitfunc(caster, 15, range);
+
+    hitfunc.set_aim(defender->pos());
+
+    fail_check();
+
+    bolt pbolt = beam;
+    pbolt.name = "flame strike";
+    pbolt.thrower = KILL_YOU_MISSILE;
+    pbolt.flavour = BEAM_FIRE;
+    pbolt.real_flavour = BEAM_FIRE;
+    pbolt.colour = RED;
+    pbolt.glyph = dchar_glyph(DCHAR_EXPLOSION);
+    pbolt.damage = calc_dice(1, damage);
+    pbolt.hit = hit;
+
+    pbolt.range = 1;
+#ifdef USE_TILE
+    pbolt.tile_beam = -1;
+#endif
+    pbolt.draw_delay = 0;
+
+    hitfunc.set_aim(pbolt.target);
+    noisy(explosion_noise(1), pbolt.target);
+
+    for (const auto& entry : hitfunc.zapped)
+    {
+        if (entry.second <= 0)
+            continue;
+
+        pbolt.source = entry.first;
+        pbolt.target = entry.first;
+        pbolt.fire();
+
+        pbolt.draw(entry.first);
+    }
+    scaled_delay(25);
     return spret::success;
 }

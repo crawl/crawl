@@ -59,7 +59,7 @@ static const map<job_type, job_def> job_data =
     "Ar", "Artificer",
     4, 3, 5,
     { SP_DEEP_DWARF, SP_HALFLING, SP_KOBOLD, SP_SPRIGGAN, SP_BASE_DRACONIAN,
-      SP_DEMONSPAWN, },
+      SP_DEMONSPAWN, SP_HOMUNCULUS, },
     { "short sword", "leather armour", "wand of flame charges:15",
       "wand of enslavement charges:15", "wand of random effects charges:15" },
     WCHOICE_NONE,
@@ -219,7 +219,7 @@ static const map<job_type, job_def> job_data =
 { JOB_SKALD, {
     "Sk", "Skald",
     3, 5, 4,
-    { SP_HALFLING, SP_CENTAUR, SP_MERFOLK, SP_BASE_DRACONIAN, SP_VAMPIRE, },
+    { SP_HALFLING, SP_CENTAUR, SP_MERFOLK, SP_BASE_DRACONIAN, SP_VAMPIRE, SP_HOMUNCULUS, },
     { "leather armour", "book of Battle" },
     WCHOICE_PLAIN,
     { { SK_FIGHTING, 2 }, { SK_ARMOUR, 1 }, { SK_DODGING, 2 },
@@ -304,6 +304,34 @@ static const map<job_type, job_def> job_data =
       { SK_WEAPON, 3 } },
 } },
 
+{ JOB_CRUSADER, {
+    "AW", "Arcane Warrior",
+    3, 5, 4,
+    { SP_HALFLING, SP_CENTAUR, SP_MERFOLK, SP_BASE_DRACONIAN, SP_VAMPIRE, SP_HOMUNCULUS},
+    { "leather armour", "book of War Chants" },
+    WCHOICE_PLAIN,
+    { { SK_FIGHTING, 2 }, { SK_ARMOUR, 1 }, { SK_DODGING, 2 },
+      { SK_SPELLCASTING, 2 }, { SK_CHARMS, 3 }, { SK_WEAPON, 2 }, },
+} },
+
+{ JOB_CARAVAN, {
+    "Ca", "Caravan",
+   1, 1, 1,
+    { SP_SPRIGGAN, SP_CENTAUR, SP_OCTOPODE, SP_FELID, SP_DEMIGOD,
+      SP_HUMAN, SP_DEMONSPAWN, },
+    { "dagger", "robe", "wand of heal wounds charges:3" },
+    WCHOICE_NONE,
+    { { SK_ARMOUR, 1 }, { SK_DODGING, 1 }, { SK_STEALTH, 1 }, },
+} },
+
+{ JOB_COLLECTOR, {
+    "Cl", "Collector",
+    5, 3, 4,
+    { SP_HILL_ORC, SP_MINOTAUR, SP_DEMIGOD, SP_OCTOPODE, SP_TROLL, SP_FELID, SP_HUMAN },
+    { "scroll of collection q:1" }, 
+    WCHOICE_NONE,
+    { { SK_FIGHTING, 3 } }, 
+} },
 #if TAG_MAJOR_VERSION == 34
 { JOB_DEATH_KNIGHT, {
     "DK", "Death Knight",

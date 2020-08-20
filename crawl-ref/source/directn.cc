@@ -510,6 +510,7 @@ direction_chooser::direction_chooser(dist& moves_,
     mode(args.mode),
     range(args.range),
     just_looking(args.just_looking),
+    prefer_farthest(args.prefer_farthest), // Trog's Furious Charge
     self(args.self),
     target_prefix(args.target_prefix),
     top_prompt(args.top_prompt),
@@ -950,9 +951,9 @@ bool direction_chooser::find_default_monster_target(coord_def& result) const
         return true;
     }
     // If the previous targetted position is at all useful, use it.
-    if (!Options.simple_targeting && hitfunc
+    if (!Options.simple_targeting && hitfunc && !prefer_farthest
         && _find_monster_expl(you.prev_grd_targ, mode, needs_path,
-                              range, hitfunc, AFF_YES, AFF_MULTIPLE))
+                              range, hitfunc, AFF_YES, AFF_DOUBLE))
     {
         result = you.prev_grd_targ;
         return true;
@@ -969,14 +970,21 @@ bool direction_chooser::find_default_monster_target(coord_def& result) const
     }
     else
     {
-        success = hitfunc && _find_square_wrapper(result, 1,
+        success = hitfunc && (_find_square_wrapper(result, 1,
                                                   bind(_find_monster_expl,
                                                        placeholders::_1, mode,
                                                        needs_path, range,
                                                        hitfunc,
                                                        // First try to bizap
-                                                       AFF_MULTIPLE, AFF_YES),
+                                                       AFF_DOUBLE, AFF_YES),
                                                   hitfunc)
+                        || _find_square_wrapper(result, 1,
+                                                  bind(_find_monster_expl,
+                                                       placeholders::_1, mode,
+                                                       needs_path, range,
+                                                       hitfunc,
+                                                       AFF_MULTIPLE, AFF_YES),
+                                                  hitfunc))
                   || _find_square_wrapper(result, 1,
                                           bind(restricts == DIR_SHADOW_STEP ?
                                                _find_shadow_step_mons :
@@ -1117,6 +1125,8 @@ static void _draw_ray_cell(coord_def p, coord_def target, aff_type aff)
         bcol = (p == target) ? LIGHTRED : LIGHTMAGENTA;
     else if (aff == AFF_LANDING)
         bcol = (p == target) ? LIGHTGREEN : GREEN;
+    else if (aff == AFF_DOUBLE)
+        bcol = (p == target) ? YELLOW : BROWN;
     else if (aff == AFF_MULTIPLE)
         bcol = (p == target) ? LIGHTCYAN : CYAN;
     else
@@ -1234,6 +1244,9 @@ void direction_chooser::object_cycle(int dir)
 
 void direction_chooser::monster_cycle(int dir)
 {
+    if (prefer_farthest)
+        dir = -dir; // cycle from furthest to closest
+
     if (_find_square_wrapper(monsfind_pos, dir,
                              bind(_find_monster, placeholders::_1, mode,
                                   needs_path, range, hitfunc),
@@ -2084,6 +2097,8 @@ bool direction_chooser::choose_direction()
                                        : find_default_target());
 
     objfind_pos = monsfind_pos = target();
+    if (prefer_farthest && moves.target != you.pos())
+        monster_cycle(1);
 
     // If requested, show the beam on startup.
     if (show_beam)
@@ -3017,15 +3032,15 @@ static string _describe_monster_weapon(const monster_info& mi, bool ident)
     
     // Check the weapon and alt helds on the hand or on the corpse.
     bool weap_inhand = false;
-    bool alt_inhand = false;
+    //bool alt_inhand = false;
     if (weap)
     {
         weap_inhand = weap->pos.x == -2;
     }
-    if (alt)
-    {
-        alt_inhand = alt->pos.x == -2;
-    }
+    //if (alt)
+    //{
+    //    alt_inhand = alt->pos.x == -2;
+    //}
 
     if (weap && (!ident || item_type_known(*weap)) && weap_inhand)
     {
@@ -3545,6 +3560,8 @@ static bool _print_cloud_desc(const coord_def where)
         areas.emplace_back("is bathed in translocational energy");
     if (antimagic_haloed(where))
         areas.emplace_back("is shrouded in antimagic");
+    if (within_healaura(where))
+        areas.emplace_back("is filled by healing energy");
     if (!areas.empty())
     {
         mprf("This square %s.",

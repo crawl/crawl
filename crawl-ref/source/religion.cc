@@ -59,6 +59,7 @@
 #include "output.h"
 #include "pakellas.h"
 #include "player-stats.h"
+#include "player.h"
 #include "prompt.h"
 #include "randbook.h"
 #include "shopping.h"
@@ -213,6 +214,7 @@ const vector<god_power> god_powers[NUM_GODS] =
       { 5, "Trog will now gift you weapons as you gain piety.",
            "Trog will no longer gift you weapons.",
            "Trog will gift you weapons as you gain piety." },
+      { 6, ABIL_TROG_CHARGE, "push yourself into berserk rage to charge and daze a target" },
       { 7, ABIL_TROG_BLESS_WEAPON,
            "Trog will bless your weapon with antimagic... once.",
            "Trog is no longer ready to bless your weapon." },
@@ -260,6 +262,8 @@ const vector<god_power> god_powers[NUM_GODS] =
       { 5, "walk on water" },
       { 5, ABIL_BEOGH_GIFT_ITEM, "give items to your followers" },
       { 6, ABIL_BEOGH_RESURRECTION, "revive fallen orcs" },
+      { 6, "Your resistance will partially share with your followers.",
+           "You will no longer share resistance with your followers." },
     },
 
     // Jiyva
@@ -277,9 +281,9 @@ const vector<god_power> god_powers[NUM_GODS] =
            "You may expel jellies when seriously injured." },
       { 5, ABIL_JIYVA_CURE_BAD_MUTATION,
            "call upon Jiyva to remove your harmful mutations" },
-      { 7, ABIL_JIYVA_BLESS_WEAPON,
-           "Jiyva will bless your weapon with acid... once.",
-           "Jiyva is no longer ready to bless your weapon." },
+      //{ 7, ABIL_JIYVA_BLESS_WEAPON,
+      //     "Jiyva will bless your weapon with acid... once.",
+      //     "Jiyva is no longer ready to bless your weapon." },
     },
 
     // Fedhas
@@ -397,6 +401,8 @@ const vector<god_power> god_powers[NUM_GODS] =
       { 3, ABIL_HEPLIAKLQANA_TRANSFERENCE, "swap creatures with your ancestor" },
       { 4, ABIL_HEPLIAKLQANA_IDEALISE, "heal and protect your ancestor" },
       { 5, "drain nearby creatures when transferring your ancestor"},
+      { 6, "Your resistance will partially share with your ancestor.",
+           "You will no longer share resistance with your ancestor." },
     },
 
     // Wu Jian
@@ -411,6 +417,36 @@ const vector<god_power> god_powers[NUM_GODS] =
       { 5, ABIL_WU_JIAN_HEAVENLY_STORM,
            "summon a storm of heavenly clouds to empower your attacks",
            "summon a storm of heavenly clouds" },
+    },
+
+    // The Great Wyrm
+    { { 1, ABIL_WYRM_INFUSE,
+          "infuse a target in your sight with alcemical essence" },
+      { 1, ABIL_WYRM_NIGREDO,
+          "transmute essence of Nigredo"},
+      { 2, ABIL_WYRM_ALBEDO,
+          "transmute essence of Albedo"},
+      { 3, ABIL_WYRM_CITRINITAS,
+          "transmute essence of Citrinitas"},
+      { 4, ABIL_WYRM_VIRIDITAS,
+          "transmute essence of Viriditas"},
+      { 5, ABIL_WYRM_RUBEDO,
+          "transmute essence of Rubedo"},
+      },
+
+
+    // Imus Thea
+    { { 0, "You are unable to wear heavy armour and all kinds of shield." },
+      { 0, "You need more training to use two-handed weapon accuratively." },
+      { 0, "Imus Thea will reflect ranged attaks, depending on piety.",
+           "Imus Thea will no longer reflect ranged attacks.",
+           "Imus Thea will reflect ranged attacks, depending on piety." },
+      { 3, ABIL_IMUS_PRISMATIC_PRISM,
+           "create prismatic prism to blind enemies",
+           "create prismatic prism" },
+      { 5, ABIL_IMUS_FRAGMENTATION,
+           "shatter your half of health to duplicate yourself",
+           "duplicate yourself" },
     },
 };
 
@@ -1284,7 +1320,7 @@ static int _pakellas_high_misc()
         MISC_LAMP_OF_FIRE,
         MISC_PHIAL_OF_FLOODS,
         MISC_LIGHTNING_ROD,
-	MISC_DISC_OF_STORMS,
+        MISC_DISC_OF_STORMS,
     };
 
     return _preferably_unseen_item(high_miscs, [](int misc) {
@@ -1578,8 +1614,8 @@ static bool _gift_sif_kiku_gift(bool forced)
 
         you.num_current_gifts[you.religion]++;
         you.num_total_gifts[you.religion]++;
-        // Timeouts are meaningless for Kiku.
-        if (!you_worship(GOD_KIKUBAAQUDGHA))
+        // Timeouts are meaningless for Kiku and the Wyrm.
+        if (!you_worship(GOD_KIKUBAAQUDGHA) || !you_worship(GOD_WYRM))
             _inc_gift_timeout(40 + random2avg(19, 2));
         take_note(Note(NOTE_GOD_GIFT, you.religion));
     }
@@ -1750,8 +1786,20 @@ static int _hepliaklqana_ally_hd()
  */
 int hepliaklqana_ally_hp()
 {
+    // Base
     const int HD = _hepliaklqana_ally_hd();
-    return HD * 5 + max(0, (HD - 12) * 5);
+    int HP = HD * 5 + max(0, (HD - 12) * 5);
+
+    // +Collected Runes bonus
+    if (runes_in_pack() <= 3){
+        // 0-3 Runes: +0 ~ +30
+        HP = HP + (runes_in_pack()*10);
+    } else {
+        // after 3 Runes: +50 ~ +270
+        HP = HP + 30 + ((runes_in_pack()-3)*20);
+    }
+
+    return HP;
 }
 
 /**
@@ -1935,8 +1983,6 @@ static weapon_type _hepliaklqana_weapon_type(monster_type mc, int HD)
         return HD < 16 ? WPN_DAGGER : WPN_QUICK_BLADE;
     case MONS_ANCESTOR_KNIGHT:
         return HD < 10 ? WPN_FLAIL : WPN_BROAD_AXE;
-    case MONS_ANCESTOR_BATTLEMAGE:
-        return HD < 13 ? WPN_QUARTERSTAFF : WPN_LAJATANG;
     default:
         return NUM_WEAPONS; // should never happen
     }
@@ -1960,9 +2006,6 @@ static brand_type _hepliaklqana_weapon_brand(monster_type mc, int HD)
             return HD < 10 ?   SPWPN_NORMAL :
                    HD < 16 ?   SPWPN_FLAMING :
                                SPWPN_SPEED;
-        case MONS_ANCESTOR_BATTLEMAGE:
-            return HD < 13 ?   SPWPN_NORMAL :
-                               SPWPN_FREEZING;
         default:
             return SPWPN_NORMAL;
     }
@@ -1980,7 +2023,7 @@ static brand_type _hepliaklqana_weapon_brand(monster_type mc, int HD)
 void upgrade_hepliaklqana_weapon(monster_type mtyp, item_def &item)
 {
     ASSERT(mons_is_hepliaklqana_ancestor(mtyp));
-    if (mtyp == MONS_ANCESTOR)
+    if (mtyp == MONS_ANCESTOR || mtyp == MONS_ANCESTOR_BATTLEMAGE)
         return; // bare-handed!
 
     item.base_type = OBJ_WEAPONS;
@@ -2160,6 +2203,8 @@ string god_name(god_type which_god, bool long_name)
     case GOD_USKAYAW:       return "Uskayaw";
     case GOD_HEPLIAKLQANA:  return "Hepliaklqana";
     case GOD_WU_JIAN:     return "Wu Jian";
+    case GOD_WYRM:     return "the Great Wyrm";
+    case GOD_IMUS:     return "Imus Thea";
     case GOD_JIYVA: // This is handled at the beginning of the function
     case GOD_ECUMENICAL:    return "an unknown god";
     case NUM_GODS:          return "Buggy";
@@ -2782,14 +2827,17 @@ void excommunication(bool voluntary, god_type new_god)
     mpr("You have lost your religion!");
     // included in default force_more_message
 
-    if ((old_god == GOD_ZIN || old_god == GOD_SHINING_ONE || old_god == GOD_ELYVILON)
-        && !((new_god == GOD_ZIN || new_god == GOD_SHINING_ONE || new_god == GOD_ELYVILON))
+    if (is_good_god(old_god)
+        && !is_good_god(new_god)
         && you.species == SP_PEARL_DRACONIAN)
     {
-        you.innate_mutation[MUT_NEGATIVE_ENERGY_RESISTANCE]--;
+        you.innate_mutation[MUT_NEGATIVE_ENERGY_RESISTANCE]--;  // Level 7
         delete_mutation(MUT_NEGATIVE_ENERGY_RESISTANCE, "species change", false, true, false, false);
-        you.innate_mutation[MUT_HOLY_BITE]--;
-        delete_mutation(MUT_HOLY_BITE, "species change", false, true, false, false);
+        if (you.innate_mutation[MUT_HOLY_BITE]) // Level 14
+        {
+            you.innate_mutation[MUT_HOLY_BITE]--;
+            delete_mutation(MUT_HOLY_BITE, "species change", false, true, false, false);
+        }
         
         change_draconian_colour();
         give_level_mutations(you.species, 7); //for draconian
@@ -2799,8 +2847,8 @@ void excommunication(bool voluntary, god_type new_god)
     }
 
     if (you.species == SP_CRUSTACEAN 
-        && (old_god == GOD_ZIN || old_god == GOD_SHINING_ONE || old_god == GOD_ELYVILON)
-        && !((new_god == GOD_ZIN || new_god == GOD_SHINING_ONE || new_god == GOD_ELYVILON)))
+        && is_good_god(old_god)
+        && !is_good_god(new_god))
     {
 
         if (you.experience_level > 6)
@@ -2941,6 +2989,7 @@ void excommunication(bool voluntary, god_type new_god)
             mprf(MSGCH_MONSTER_ENCHANT, "All of your fellow slimes turn on you.");
             add_daction(DACT_ALLY_SLIME);
         }
+        remove_all_companions(GOD_JIYVA);
         break;
 
     case GOD_FEDHAS:
@@ -3119,6 +3168,10 @@ static bool _transformed_player_can_join_god(god_type which_god)
 {
     if (which_god == GOD_ZIN && you.form != transformation::none)
         return false; // zin hates everything
+
+    if (which_god == GOD_WYRM && you.form == transformation::lich)
+        return false; // The Great Wyrm dislikes lich, because they can't drink
+
     // all these clauses are written with a ! in front of them, so that
     // the stuff to the right of that is uniformly "gods that hate this form"
     switch (you.form)
@@ -3188,6 +3241,37 @@ bool player_can_join_god(god_type which_god)
         && which_god == GOD_PAKELLAS)
     {
       return false;
+    }
+
+    if (you.species == SP_HOMUNCULUS || you.species == SP_ADAPTION_HOMUNCULUS) {
+        if (which_god == GOD_FEDHAS ||
+            which_god == GOD_BEOGH ||
+            which_god == GOD_ZIN ||
+            which_god == GOD_TROG ||
+            which_god == GOD_YREDELEMNUL) {
+            return false;
+        }
+    }
+
+    if (you.species == SP_BLOSSOM_HOMUNCULUS) {
+        if (which_god == GOD_BEOGH ||
+            which_god == GOD_TROG) {
+            return false;
+        }
+    }
+
+    if (you.species == SP_MUMMY || you.species == SP_LICH) {
+        if (which_god == GOD_WYRM) {
+            return false;
+        }
+    }
+
+    if (you.species == SP_LESSER_LICH || you.species == SP_LICH) {
+        if (which_god == GOD_ZIN ||
+            which_god == GOD_SHINING_ONE ||
+            which_god == GOD_ELYVILON) {
+            return false;
+        }
     }
 
     return _transformed_player_can_join_god(which_god);
@@ -3798,6 +3882,18 @@ void join_religion(god_type which_god)
             mprf(MSGCH_INTRINSIC_GAIN, "You can't emit the cloud of miasma anymore.");
     }
 
+    if (you_worship(GOD_IMUS))
+    {
+        if (!player_effectively_in_light_armour()){
+            remove_one_equip(EQ_BODY_ARMOUR, false, true);
+        }
+
+        const item_def *shield = you.slot_item(EQ_SHIELD, false);
+        if (shield != nullptr){
+            remove_one_equip(EQ_SHIELD, false, true);
+        }
+    }
+
     // Allow training all divine ability skills immediately.
     vector<ability_type> abilities = get_god_abilities();
     for (ability_type abil : abilities)
@@ -4254,6 +4350,8 @@ void handle_god_time(int /*time_delta*/)
         case GOD_CHEIBRIADOS:
         case GOD_SHINING_ONE:
         case GOD_NEMELEX_XOBEH:
+        case GOD_WYRM:
+        case GOD_IMUS:
             if (one_chance_in(35))
                 lose_piety(1);
             break;
@@ -4352,6 +4450,7 @@ int god_colour(god_type god) // mv - added
         return LIGHTBLUE;
 
     case GOD_JIYVA:
+    case GOD_WYRM:
         return GREEN;
 
     case GOD_CHEIBRIADOS:

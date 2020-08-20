@@ -514,7 +514,8 @@ i-jumping BRAND_ARM_JUMPING
 # end TAG_MAJOR_VERSION
 i-repulsion BRAND_ARM_REPULSION
 # start TAG_MAJOR_VERSION == 34
-i-cloud-immune BRAND_ARM_CLOUD_IMMUNE BRAND_ARM_LAST
+i-cloud-immune BRAND_ARM_CLOUD_IMMUNE
+i-bunker BRAND_ARM_BUNKER BRAND_ARM_LAST
 # end TAG_MAJOR_VERSION
 
 ###########OBJ_WANDS
@@ -661,7 +662,9 @@ i-amnesia SCR_AMNESIA
 %back scroll-grey
 #### Remove curse foo when TAG_MAJOR_VERSION > 34
 # Don't forget to update SCR_ID_LAST
-i-curse-jewellery SCR_CURSE_JEWELLERY SCR_ID_LAST
+i-curse-jewellery SCR_CURSE_JEWELLERY
+%back scroll-cyan
+i-acquirement SCR_COLLECTION SCR_ID_LAST
 %back none
 
 ##################OBJ_JEWELLERY
@@ -874,7 +877,20 @@ i-resistance POT_RESISTANCE
 i-blood POT_BLOOD
 i-coagulated-blood POT_BLOOD_COAGULATED
 i-lignify POT_LIGNIFY
-i-mutation POT_UNSTABLE_MUTAION POT_ID_LAST
+i-mutation POT_UNSTABLE_MUTAION
+i-swift POT_SWIFT
+i-regeneration POT_REGENERATION
+i-icyarmour POT_ICY_ARMOUR
+i-toxic POT_TOXIC
+i-shroud POT_SHROUD
+i-repel POT_REPEL_MISSILES
+i-deflect POT_DEFLECT_MISSILES
+i-icyshield POT_ICY_SHIELD
+i-nigredo POT_NIGREDO
+i-albedo POT_ALBEDO
+i-citrinitas POT_CITRINITAS
+i-viriditas POT_VIRIDITAS
+i-rubedo POT_RUBEDO POT_ID_LAST
 %back none
 %rim 1
 

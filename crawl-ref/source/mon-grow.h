@@ -8,7 +8,6 @@
 #include "fixedvector.h"
 
 // Monster level-up data.
-
 struct monster_level_up
 {
     monster_type before, after;
@@ -23,6 +22,12 @@ struct monster_level_up
     {
     }
 };
+
+struct mon_lev_up_cond
+{
+    std::function<bool(const monster&)> condition;
+};
+
 
 const int MAX_MONS_HD = 27;
 class mons_experience_levels

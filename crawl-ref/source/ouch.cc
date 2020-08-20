@@ -645,6 +645,8 @@ static void _maybe_fog(int dam)
                                 - upper_threshold
                                   * (you.piety - minpiety)
                                   / (MAX_PIETY - minpiety);
+
+
     if (have_passive(passive_t::hit_smoke)
         && (dam > 0 && you.form == transformation::shadow
             || dam >= lower_threshold
@@ -691,6 +693,28 @@ static void _maybe_slow()
     int slow_sources = you.scan_artefacts(ARTP_SLOW);
     if (x_chance_in_y(slow_sources, 100))
         slow_player(10 + random2(5));
+}
+
+/**
+ * Maybe invisible the player after taking damage if they're wearing *Inv.
+ **/
+static void _maybe_invisible()
+{
+    // works like *Inv, become invisible but also contaminates you 
+    if (player_equip_unrand(UNRAND_INVDRAGON)
+        && invis_allowed() && one_chance_in(4)) // chance = 25%
+    {
+        const int unseen = 10 + random2(5);
+        if (!you.duration[DUR_INVIS]) {
+            mpr("Scales of the Unseen Dragon become transparent with you!");
+            you.increase_duration(DUR_INVIS, unseen, 100);
+            contaminate_player(unseen*40 + random2(unseen*40));
+        } else {
+            mpr("Scales of the Unseen Dragon hold your invisiblity.");
+            you.set_duration(DUR_INVIS, unseen/2, 100);
+            contaminate_player(unseen*20 + random2(unseen*20));
+        }
+    }
 }
 
 static void _place_player_corpse(bool explode)
@@ -917,6 +941,15 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
             you.source_damage = 0;
         }
         you.source_damage += dam;
+        
+        // The Great Wyrm: infused enemy with viriditas will heals you
+        monster * const mons = monster_by_mid(source);
+        if (mons && mons->has_ench(ENCH_VIRIDITAS))
+        {
+            mpr("Attacks from the infused with Viriditas, heals you instead of hurts you.");
+            inc_hp(dam);
+            return;
+        }
 
         dec_hp(dam, true);
 
@@ -998,6 +1031,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
             {
                 _maybe_corrode();
                 _maybe_slow();
+                _maybe_invisible();
             }
             if (drain_amount > 0)
                 drain_player(drain_amount, true, true);

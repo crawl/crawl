@@ -414,6 +414,7 @@ enum scroll_type
     SCR_AMNESIA,
 #if TAG_MAJOR_VERSION == 34
     SCR_CURSE_JEWELLERY,
+    SCR_COLLECTION,
 #endif
     NUM_SCROLLS
 };
@@ -449,6 +450,7 @@ enum special_armour_type
 #endif
     SPARM_REPULSION,
     SPARM_CLOUD_IMMUNE,
+    SPARM_BUNKER,
     NUM_REAL_SPECIAL_ARMOURS,
     NUM_SPECIAL_ARMOURS,
 };

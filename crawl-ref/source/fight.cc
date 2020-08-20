@@ -215,6 +215,15 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu, int
                     return false;
                 }
 
+                // Check if the player is fighting with something in Deaths' Door,
+                if (attacker->is_player() && defender->as_monster()->has_ench(ENCH_DEATHS_DOOR))
+                {
+                    string prompt = "Really attack a monster in death's door?";
+                    if (!yesno(prompt.c_str(), true, 'n'))
+                    {   you.turn_is_over = false;
+                        return false;}
+                }
+
                 if (!attk.attack())
                 {
                     // Attack was cancelled or unsuccessful...
@@ -245,7 +254,7 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu, int
         }
         else
         {
-            attack_num = you.heads()/3 + 1;
+            attack_num = (you.heads()-1)/3 + 1;
             int remain = you.heads() - attack_num;
             you.turn_is_over = false;
             bool gl_cancel_attack = false;
@@ -263,7 +272,7 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu, int
                 if (!defender->is_monster() || defender->as_monster()->get_client_id() != placeholder)
                     break;
 
-                melee_attack attk(&you, defender, 7, i);
+                melee_attack attk(&you, defender, 7, i, i);
                 if (i+1 != attack_num)
                     attk.quiet = true;
                 if (simu)
@@ -315,7 +324,7 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu, int
                 if (!target->alive())
                     continue;
 
-                melee_attack attk(&you, target, 7, 2);
+                melee_attack attk(&you, target, 7, additional_attack_success + 1, true);
                 attk.quiet = true; //it is almost same with cleaving.
                 if (simu)
                     attk.simu = true;

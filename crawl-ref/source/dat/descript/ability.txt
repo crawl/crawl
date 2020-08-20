@@ -74,6 +74,28 @@ attributes.
 While tranformed, any equipped weapons, armour and rings are melded, and the
 user becomes unable to cast spells.
 %%%%
+Choose Blossom ability
+
+This choice makes you more life beings. You gain regeneration and you can get 
+mutations, and some of the god's restrictions are disappeared. Also, your 
+aptitude will be better suited to the warrior-mage. invocation skills is better 
+because you are becoming more religious.
+%%%%
+Choose Adaption ability
+
+This choice makes you more artifact-like. You gain magical regeneration and 
+clarity, and some necromancy becomes unusable. Also, your aptitude will be 
+better suited to the pure mage. As it becomes less religious, invocation skills 
+are also reduced.
+%%%%
+Deploy Shield ability
+
+You can fix the shield to the ground and use it as a barrier. Before moving to
+retrieve or destroy shields, shields prevent movement and attack. The projectile 
+shot by an opponent who is not close to the shield is blocked by the shield. 
+Hit point and success rate of the shield are dependent on your shield skill, 
+and the AC of the shield is depending on enchant value of the shield.
+%%%%
 Exsanguinate ability
 
 Remove all of your blood, transitioning to a bloodless state.
@@ -153,6 +175,15 @@ Evoke Thunderclouds ability
 
 Create a mighty thunderclouds around the user.
 %%%%
+Evoke Golem Armour ability
+
+Activates your full set of golem armour to enhance wearer's strength
+and emits sturdy forcefield to reinforce durability. Performing unarmed
+strike while armour is activated, it will be destructive blow by your
+boosted golem fists. Also, this form grants you resistance to negative
+energy and petrification, but also makes you vulnerable to shattering
+effects.
+%%%%
 End Transformation ability
 
 Reverts you to your normal form.
@@ -163,22 +194,40 @@ You can make a wall or fill the floor in the direction you want to.
 The terrain created by this method will soon be return to its original 
 terrain.
 %%%%
+#JOB_CARAVAN
+Give Item to Mercenary ability
+
+As a caravan, you can give weapon or armour you have to mercenary.
+This is a kind of rehirement, so each time the mercenary's hire cost
+goes up and you'll have to pay a higher price.
+%%%%
+Rehire Mercenary ability
+
+As a caravan, you can rehire a new mercenary when past one is gone.
+The cost to hire new one is depend on your 'working environment',
+which means how many mercenaries were lost under your employment.
+%%%%
+Recall Mercenary ability
+
+Recalls your mercenary from anywhere in the dungeon to your immediate
+surroundings.
+%%%%
 #Crustacean
 Undergo Ecdysis ability
 
-Recovers your reduced stats and maximum HP and increases your AC by one,
-shedding your old, damaged shell. It takes some time to moult and you remain
-extremely vulnerable in the process. After you moult, you should wait to grow
-even if you have another moulting chance.
+Recovers your reduced stats and maximum HP and increases your AC, by shedding
+your old, damaged shell. It takes some time to moult and you remain extremely
+vulnerable in the process. After you moult, you get bigger and you should wait
+to grow even if you have another moulting chance. 
 %%%%
 Crab Walking ability
 
-You can move toward a destination like a knight in chess for a moment after
+Moves toward a destination like a knight in chess for a moment after
 you lose your body(Loss).
 %%%%
 Cloud Miasma ability
 
-You emits a cloud of miasma from your body.
+emits a cloud of miasma from your body.
 %%%%
 # Zin
 Recite ability
@@ -393,6 +442,13 @@ enchantments.
 Brothers in Arms ability
 
 Summons huge angry allies to wreak havoc.
+%%%%
+Furious Charge ability
+
+Costs large amount of hunger, push yourself into berserk rage to charge at an
+enemy, strike with your weapon or barehands. This strike has a chance to cause
+a very short daze on the target, depending on the distance between you and your
+target. Whether this strike hits or misses, you immediately goes berserk.
 %%%%
 Brand Weapon With Antimagic ability
 
@@ -966,3 +1022,60 @@ Hop ability
 Hops toward a chosen destination, landing somewhere nearby. After using this
 ability, you will be unable to hop again until you have spent some time not
 moving. (Other actions, such as casting spells and attacking, are fine.)
+%%%%
+# The Great Wyrm
+Infuse Essence ability
+
+Spend an essence of alchemy, to infuse a target in your sight. Essences to
+use this ability can be made by Nigredo, Albedo, Citrinitas, Viriditas, and
+Rubedo ability. Effects of each essences also descripted at those abilities.
+%%%%
+Nigredo ability
+
+Transmute a potion or other essence into essence of decay called 'Nigredo'.
+Drinking Nigredo causes decay yourself, evaporate will create miasma. Also 
+it can be used for Infuse Essence ability; When infused target with Nigredo
+moves, will leaving miasma on its trail. Duraction of this infusion and miasma
+is depending on your piety.
+%%%%
+Albedo ability
+
+Transmute a potion or other essence into essence of purge called 'Albedo'.
+Dirnking Albedo causes magically purge yourself, evaporate will create clouds
+of flame. Also it can be used for Infuse Essence ability; While target has any
+disspellable magic, this infusion often has the chance to interrupt target,
+force target to waste its turn. Duraction of this infusion is depending
+on your piety. 
+%%%%
+Citrinitas ability
+
+Transmute a potion or other essence into essence of empower called 'Citrinitas'.
+Dirnking Citrinitas empowers your accuracy and spells, and result of evaporate 
+isn't specified. Also it can be used for Infuse Essence ability; Infused target
+will receive empowerment of accuracy and spells. These empowerments last longer
+and stronger depending on your piety.
+%%%%
+Viriditas ability
+
+Transmute a potion or other essence into essence of restore called 'Viriditas'.
+Drinking Viriditas restores all damaged stats and cures yourself, evaporate
+will create clouds of healing. Also it can be used for Infuse Essence ability;
+Infused target will act like in common, but its attack will heal you, instead
+damage. However some effects, such as harmful enchantments, can still affects you.
+Duraction of this infusion is extremely short, but also depending on your piety.
+%%%%
+Rubedo ability
+
+Transmute a potion or other essence into essence of the 'end-as-begin',
+called 'Rubedo'. Drinking Rubedo will grants you resistances from fire,
+cold, electricity, poison, and acid, and result of evaporate isn't specified.
+Also it can be used for Infuse Essence ability; Infused target will diffuse
+other infusions, makes all targets in your sight are infused by same essences.
+# Imus Thea
+Prismatic Prism ability
+
+Create a prism, blinds nearby enemies and also reflect ranged attacks like you.
+%%%%
+Fragmentation ability
+
+Shatter youself to duplicate yourself.

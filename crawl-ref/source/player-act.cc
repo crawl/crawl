@@ -212,8 +212,8 @@ brand_type player::damage_brand(int which_attack)
     if (duration[DUR_CONFUSING_TOUCH])
         return SPWPN_CONFUSE;
 
-    const int wpn = equip[which_attack ==0? EQ_WEAPON : EQ_SECOND_WEAPON];
-    if (wpn != -1 && !melded[which_attack == 0 ? EQ_WEAPON : EQ_SECOND_WEAPON])
+    const int wpn = equip[which_attack == 1? EQ_SECOND_WEAPON : EQ_WEAPON];
+    if (wpn != -1 && !melded[which_attack == 1 ? EQ_SECOND_WEAPON : EQ_WEAPON])
     {
         if (is_range_weapon(inv[wpn]))
             return SPWPN_NORMAL; // XXX: check !is_melee_weapon instead?
@@ -608,7 +608,7 @@ static string _foot_name_singular(bool *can_plural)
         *can_plural = false;
         return "tail";
     }
-    if (you.species == SP_DJINNI)
+    if (you.species == SP_DJINNI || you.species == SP_MELIAI)
     {
         *can_plural = false;
         return "underside";
@@ -655,6 +655,8 @@ string player::arm_name(bool plural, bool *can_plural) const
         adj = "feathered";
     else if (species == SP_MUMMY)
         adj = "bandage-wrapped";
+    else if (species == SP_LICH)
+        adj = "bony";
     else if (species == SP_OCTOPODE)
         str = "tentacle";
     else if (species == SP_HYDRA)
@@ -863,7 +865,7 @@ bool player::can_go_berserk(bool intentional, bool potion, bool quiet,
         msg = "You are too terrified to rage.";
     else if (!intentional && !potion && clarity() && temp)
         msg = "You're too calm and focused to rage.";
-    else if (is_lifeless_undead(temp))
+    else if (is_lifeless_undead(temp) || you.species == SP_ANGEL)
         msg = "You cannot raise a blood rage in your lifeless body.";
     else if (stasis())
         msg = "Your stasis prevents you from going berserk.";
@@ -939,10 +941,8 @@ int player::constriction_damage(bool direct) const
  */
 bool player::has_hydra_multi_attack() const
 {
-    return (you.form == transformation::none
-           || you.form == transformation::appendage
-           || you.form == transformation::statue
-           || you.form == transformation::lich) && you.species == SP_HYDRA;
+    return (!player_is_shapechanged() || you.form == transformation::statue) 
+            && you.species == SP_HYDRA;
 }
 
 /*

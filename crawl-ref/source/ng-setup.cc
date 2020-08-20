@@ -93,6 +93,10 @@ item_def* newgame_make_item(object_class_type base,
                             int sub_type, int qty, int plus,
                             int force_ego, bool force_tutorial)
 {
+    if (base == OBJ_GOLD) {
+        you.gold += qty;
+        return nullptr;
+    }
     // Don't set normal equipment in the tutorial.
     if (!force_tutorial && crawl_state.game_is_tutorial())
         return nullptr;
@@ -294,6 +298,11 @@ void give_items_skills(const newgame_def& ng)
             you.skills[SK_ARMOUR]++;
         break;
     }
+    case JOB_CARAVAN:
+    {
+        you.gold += 150;
+        break;
+    }
     default:
         break;
     }
@@ -397,6 +406,12 @@ static void _give_basic_knowledge()
 {
     identify_inventory();
 
+    // scroll of get artefact can't be generated naturally
+    item_def dummy;
+    dummy.base_type = OBJ_SCROLLS;
+    dummy.sub_type = SCR_COLLECTION;
+    set_ident_type(dummy , true);
+
     // Removed item types are handled in _set_removed_types_as_identified.
 }
 
@@ -495,6 +510,9 @@ static void _setup_generic(const newgame_def& ng)
             //for melted knight
             you.chapter = CHAPTER_STARTING_SLIME;
         }
+    }
+    else if (ng.job == JOB_CARAVAN) {
+        you.props[CARAVAN_MERCENARY] = ng.job_specific + 1;
     }
 
     you.chr_class_name = get_job_name(you.char_class);

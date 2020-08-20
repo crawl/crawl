@@ -42,6 +42,7 @@
 #include "mon-behv.h"
 #include "mon-book.h" // MON_SPELL_WIZARD
 #include "mon-cast.h"
+#include "mon-clone.h"
 #include "mon-death.h"
 #include "mon-movetarget.h"
 #include "mon-place.h"
@@ -54,6 +55,7 @@
 #include "religion.h"
 #include "rot.h"
 #include "shout.h"
+#include "spl-selfench.h"
 #include "spl-util.h"
 #include "spl-wpnench.h"
 #include "spl-zap.h"
@@ -991,6 +993,8 @@ static void _animate_weapon(int pow, actor* target)
         // Clear temp branding so we don't change the brand permanently.
         if (you.duration[DUR_EXCRUCIATING_WOUNDS])
             end_weapon_brand(*wpn);
+        if (you.duration[DUR_ELEMENTAL_WEAPON])
+            end_elemental_weapon(*wpn);
 
         // Mark weapon as "thrown", so we'll autopickup it later.
         wpn->flags |= ISFLAG_THROWN;
@@ -2720,6 +2724,15 @@ monster* find_battlesphere(const actor* agent)
         return nullptr;
 }
 
+monster* find_pavise_shield(const actor* agent)
+{
+    if (agent->props.exists("pavise"))
+        return monster_by_mid(agent->props["pavise"].get_int());
+    else
+        return nullptr;
+}
+
+
 spret cast_battlesphere(actor* agent, int pow, god_type god, bool fail)
 {
     fail_check();
@@ -3219,6 +3232,79 @@ spret cast_fulminating_prism(actor* caster, int pow,
         }
         else if (you.can_see(*prism))
             mprf("A prism of explosive energy appears from nowhere!");
+    }
+    else if (you.can_see(*caster))
+        canned_msg(MSG_NOTHING_HAPPENS);
+
+    return spret::success;
+}
+
+spret cast_prismatic_prism(actor* caster, int pow,
+                                  const coord_def& where, bool fail)
+{
+    if (grid_distance(where, caster->pos()) > 4)
+    {
+        if (caster->is_player())
+            mpr("That's too far away.");
+        return spret::abort;
+    }
+
+    if (cell_is_solid(where))
+    {
+        if (caster->is_player())
+            mpr("You can't create prism within a solid object!");
+        return spret::abort;
+    }
+
+    actor* victim = monster_at(where);
+    if (victim)
+    {
+        if (caster->can_see(*victim))
+        {
+            if (caster->is_player())
+                mpr("You can't create the prism on a creature.");
+            return spret::abort;
+        }
+
+        fail_check();
+
+        if (caster->is_player()
+            || (you.can_see(*caster) && you.see_cell(where)))
+        {
+            if (you.can_see(*victim))
+            {
+                mprf("%s %s.", victim->name(DESC_THE).c_str(),
+                               victim->conj_verb("twitch").c_str());
+            }
+            else
+                canned_msg(MSG_GHOSTLY_OUTLINE);
+        }
+        return spret::success;      // Don't give free detection!
+    }
+
+    fail_check();
+
+    int hd = div_rand_round(pow, 10);
+
+    mgen_data prism_data = mgen_data(MONS_PRISMATIC_PRISM,
+                                     caster->is_player()
+                                     ? BEH_FRIENDLY
+                                     : SAME_ATTITUDE(caster->as_monster()),
+                                     where, MHITNOT, MG_FORCE_PLACE);
+    prism_data.set_summoned(caster, 0, SPELL_PRISMATIC_PRISM);
+    prism_data.hd = hd;
+    monster *prism = create_monster(prism_data);
+
+    if (prism)
+    {
+        if (caster->observable())
+        {
+            mprf("%s %s a prism of dazzling light!",
+                 caster->name(DESC_THE).c_str(),
+                 caster->conj_verb("create").c_str());
+        }
+        else if (you.can_see(*prism))
+            mprf("A prism of dazzling lights appears from nowhere!");
     }
     else if (you.can_see(*caster))
         canned_msg(MSG_NOTHING_HAPPENS);
@@ -3941,5 +4027,105 @@ spret cast_pakellas_summon(int pow, god_type god, bool fail)
     if(success_ == false)
         canned_msg(MSG_NOTHING_HAPPENS);
     invalidate_agrid(true);
+    return spret::success;
+}
+
+spret cast_pavise(int powc, bolt& beam, bool fail)
+{
+    if (grid_distance(beam.target, you.pos()) > spell_range(SPELL_PAVISE,
+        powc)
+        || !in_bounds(beam.target))
+    {
+        mpr("That's too far away.");
+        return spret::abort;
+    }
+
+    if (!monster_habitable_grid(MONS_HUMAN, grd(beam.target)))
+    {
+        mpr("You can't construct there.");
+        return spret::abort;
+    }
+    if (find_pavise_shield(&you)) {
+        mpr("Only one can be installed at a time.");
+        return spret::abort;
+    }
+
+    monster* mons = monster_at(beam.target);
+    if (mons)
+    {
+        if (you.can_see(*mons))
+        {
+            mpr("That space is already occupied.");
+            return spret::abort;
+        }
+
+        fail_check();
+
+        // invisible monster
+        mpr("Something you can't see is blocking!");
+        return spret::success;
+    }
+
+    fail_check();
+
+    item_def* shield = you.shield();
+    shield->flags |= ISFLAG_THROWN;
+    if(shield == nullptr)
+    {
+        mpr("You have not shield.");
+        return spret::abort;
+    }
+
+    mgen_data barricade(MONS_PAVISE, BEH_FRIENDLY, beam.target, MHITYOU,
+        MG_FORCE_BEH | MG_FORCE_PLACE | MG_AUTOFOE);
+    barricade.set_summoned(&you, 0, 0, GOD_NO_GOD);
+    barricade.hp += 5 * you.skill(SK_SHIELDS);
+    barricade.props[PAVISE_SHIELD] = *shield;
+
+    if (monster* mon = create_monster(barricade))
+    {
+        you.props["pavise"].get_int() = mon->mid;
+        if (unequip_item(EQ_SHIELD, false)) {
+            mprf("You pinned the shield to the ground.");
+            shield->clear();
+        }
+    }
+    else
+        canned_msg(MSG_NOTHING_HAPPENS);
+
+    return spret::success;
+}
+
+spret fragmentation(int power)
+{
+    int power_level = power/100;
+    if (you.hp == 1)
+    {
+        mpr("You are too injured to shatter yourself!");
+        return spret::abort;
+    }
+
+    monster* mon = get_free_monster();
+    if (!mon || monster_at(you.pos()))
+    {
+        mpr("Something prevents your fragmentantion.");
+        return spret::abort;
+    }
+
+    mon->type = MONS_PLAYER;
+    mon->behaviour = BEH_SEEK;
+    mon->attitude = ATT_FRIENDLY;
+    mon->set_position(you.pos());
+    mon->mid = MID_PLAYER;
+    mgrd(you.pos()) = mon->mindex();
+
+    mons_summon_illusion_from(mon, (actor *)&you, SPELL_NO_SPELL, power_level);
+    mon->reset();
+
+    const int fragment = max((you.hp/2)-1, 1);
+    //mon->holiness() = you.holiness();
+    mon->hit_points = fragment;
+    dec_hp(fragment, false);
+
     return spret::success;
 }

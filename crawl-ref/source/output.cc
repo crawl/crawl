@@ -504,7 +504,9 @@ static bool _boosted_mp()
 
 static bool _boosted_ac()
 {
-    return you.duration[DUR_MAGIC_ARMOUR] || you.armour_class() > you.base_ac(1);
+    return you.duration[DUR_MAGIC_ARMOUR] 
+    || you.duration[DUR_STONESKIN]
+    || you.armour_class() > you.base_ac(1);
 }
 
 static bool _boosted_ev()
@@ -514,7 +516,7 @@ static bool _boosted_ev()
 
 static bool _boosted_sh()
 {
-    return you.duration[DUR_MAGIC_SHIELD] || you.duration[DUR_DIVINE_SHIELD]
+    return you.duration[DUR_CONDENSATION_SHIELD] || you.duration[DUR_MAGIC_SHIELD] || you.duration[DUR_DIVINE_SHIELD]
            || qazlal_sh_boost() > 0;
 }
 
@@ -1034,6 +1036,8 @@ static void _print_stats_wp(int y, bool second)
 
         if (you.duration[DUR_CORROSION] && wpn.base_type == OBJ_WEAPONS)
             wpn.plus -= 4 * you.props["corrosion_amount"].get_int();
+        if(you.props[ELEMENTAL_ENCHANT_KEY].get_int() > 0 && wpn.base_type == OBJ_WEAPONS)
+            wpn.plus += you.props[ELEMENTAL_ENCHANT_KEY].get_int();
 
         text = wpn.name(DESC_PLAIN, true, false, true);
     }
@@ -1348,7 +1352,7 @@ static void _redraw_title()
     textcolour(YELLOW);
     CGOTOXY(1, 2, GOTO_STAT);
     string species = species_name(you.species);
-    species = ((you.species == SP_HYDRA) ? to_string(you.heads()) + "-headed " : "") + species;
+    species = ((you.has_hydra_multi_attack()) ? to_string(you.heads()) + "-headed " : "") + species;
     NOWRAP_EOL_CPRINTF("%s", species.c_str());
     if (you_worship(GOD_NO_GOD))
     {
@@ -2222,7 +2226,7 @@ static string _overview_screen_title(int sw)
     string title = make_stringf(" %s ", player_title().c_str());
 
     string species_job = make_stringf("(%s %s)",
-                                      ((you.species == SP_HYDRA ?  to_string(you.heads()) + "-headed " : "")
+                                      ((you.has_hydra_multi_attack() ?  to_string(you.heads()) + "-headed " : "")
                                       + species_name(you.species)).c_str(),
                                       get_job_name(you.char_class));
 

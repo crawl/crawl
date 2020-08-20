@@ -32,6 +32,19 @@ present form: half-human, half-spider. Her sympathies now lie with the inhuman
 residents of her new home, and she's eager to dispose of any who would threaten
 them.
 %%%%
+Asclepia
+
+An Orcish herbalist, who brings some potion and incense which made by herself.
+Her therapy is based by unknown herbs from the Dungeon and some 'additives', such
+as blood and remains. Because she wears specialized scarf; which protects herself
+from after-effects of therapy, she is immune to clouds.
+%%%%
+Asclepia the Anointer
+
+An Orcish herbalist, who brings some potion and incense which made by herself.
+Now she serves Beogh as an anointer, and perform her therapy as the blessed
+art of healing which under the Beogh's favour.
+%%%%
 Asmodeus
 
 Greatest and most cunning of the Lords of Hell, Asmodeus was born when the twin
@@ -63,10 +76,40 @@ Blork the orc
 A particularly fat and ugly orc. He's scavenged a pair of rainbow-coloured
 suspenders from somewhere. They're not helping.
 %%%%
+Blork the orc warrior
+
+A particularly fat, ugly, but experienced, leather armoured and well-armed orc. 
+He can command a small mob of its fellows and he casts some minor magics.
+%%%%
+Blork the orc knight
+
+A particularly fat and ugly orc covered in scars from many past battles.
+It commands its brethren in battle, rousing them to greater, more violent efforts
+with bloodcurdling shouts.
+%%%%
+Blork the orc warlord
+
+A particularly fat and ugly orc. He is a supreme commander of an orc host, skilled
+at both melee and ranged combat. Unlike other warlords, he casts some minor magics.
+%%%%
 Boris
 
 An ancient and powerful lich. Like all true liches, Boris is immortal, and will
 regenerate his desiccated skeletal remains even if completely disintegrated.
+%%%%
+Brandagoth
+
+Lava orcs are the dweller of below the Dungeon, but unlike other lava orcs,
+Brandagoth focus his inner temperature to move normally and cast fire magic;
+which burning down his enemies. Still, he can swim in the lava and vulnerable
+to cold.
+%%%%
+Brandagoth the Flame
+
+Lava orcs were once denied by other false messiah, being called 'imitations'.
+But now, the true messiah leads them to hands of Beogh. Brandagoth, called
+as 'Incinerator of Unbelievers', now serves his true faith and damns enemies
+against the messiah with destructive damnation.
 %%%%
 Cerebov
 
@@ -365,6 +408,10 @@ Nergalle
 A withered sorceress, exceptionally cruel even by orc standards. The living
 fear her; the dead obey her every command. She has a soft spot for the latter.
 %%%%
+Nergalle the deathbinder
+
+<Nergalle>
+%%%%
 Nessos
 
 A centaur warrior, skilled at warfare and deceit. They slew a mighty hydra, and
@@ -466,6 +513,13 @@ remaining eye is not very good, and she has mistaken you for one.
         return "She smells terrible."
     end
 }}
+%%%%
+Urug the Orcish Culverin
+
+A coarse and lanky orc. Urug lost her eye in a fight with a harpy, and has
+sworn to slay every last one of them. A long time passes, but her revenge 
+have not been finished. She still traces the scent of harpy with her canine
+familiars.
 %%%%
 Vashnia
 
@@ -2649,6 +2703,103 @@ demons under its command.
 zombie
 
 A corpse raised to undeath by necromancy.
+%%%%
+# Mercenaries for JOB_CARAVAN
+hired soldier
+
+An well-trained soldier. He is a former runaway soldier, but he doesn't
+retreat in front of money, and that's why he made a contract with me. His
+ability to handle armor and shields still remains.
+%%%%
+hired knight
+
+A Skilled knight. He was never imagined this would be such a long journey,
+but at this point, he trained himself to develop his skills.
+%%%%
+hired death knight
+
+A knight who serves Yredelemnul, has mastered in unclean power, Taking 
+life and dispersing pain. Only within the scope of your contract with me.
+%%%%
+hired paladin
+
+A knight who serves good-gods, has mastered in divine healing. To perform
+an invokation of healing in the service of Elyvilon. Unfortunately, he is
+not sacred enough to emit a sacred flame.
+%%%%
+hired skald
+
+A merfolk skald, rescued in the form of 'hiring' from slavers.
+Although that hiring was a formality, she had nowhere else to go,
+so she decided to join my adventure.
+%%%%
+hired infuser
+
+A skilled merfolk infuser. Thanks to her training in charm spells,
+she has become a very expert adventurer. She's still adventuring
+with me.
+%%%%
+hired tidehunter
+
+A merfolk who awakened her inner power of the tides. her eyes are
+shined mysteriously, and water flows from her fingertips. And she
+promised to be with me until this adventure ends.
+%%%%
+hired witch
+
+A novice witch. On the condition of hiring her, I contracted to
+share my knowledge of magic staves to discover in this adventure.
+She can change her spells to wield another magical staves. Also,
+If she change her staff after promotion, she has access to more
+high-leveled spells.
+%%%%
+hired sorceress
+
+A sorceress who survived the dungeon and mastered in spellcasting.
+Fortunately, She haven't burned our hiring paper yet. She can change
+her spells to wield another magical staves. Also, If she change her
+staff after promotion, she has access to more high-leveled spells.
+%%%%
+hired archmage
+
+An archmage who reached the knowledge to awake her full potential.
+She can change her spells to wield another magical staves.
+%%%%
+hired brigand
+
+Skilled kobold hitmaker. An expert in moving quietly or putting
+a knife in the back. Of course, this contract is a challenging
+adventure for him as well.
+%%%%
+hired assassin
+
+An assassin who melts into the surroundings in an instant.
+Out of sight with a little magic and a high degree of skill,
+and now enjoys adventure more than me.
+%%%%
+hired cleaner
+
+A kobold in a swaying shadow. Serving Dithmenos the Shadowed,
+but doesn't use a Umbra so he doesn't interfere with me.
+It's a good thing he didn't claim his shadow's share of the
+down payment.
+%%%%
+hired shaman
+
+A young gnoll who learned strange chants of his tribe. He has
+left his tribe, because their tradition was neglect his talents.
+I hired him in the hope that he would improve his talents.
+%%%%
+hired ritualist
+
+A gnoll of versatile talents. His chants are improved into
+empowering rituals, and his strength getting stronger with
+steady training. I'm looking forward to his growth as a client.
+%%%%
+hired chieftain
+
+A veteran dungeoneer, mastered his all equipments and enchantments.
+He is a model of the gnolls, and even I sometimes admire his skills.
 %%%%
 # Specials
 test spawner

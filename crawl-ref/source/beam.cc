@@ -533,7 +533,7 @@ bool bolt::can_affect_actor(const actor *act) const
     if (origin_spell == SPELL_BLINKBOLT && act->mid == source_id)
         return false;
     auto cnt = hit_count.find(act->mid);
-    if (cnt != hit_count.end() && cnt->second >= 2)
+    if (flavour != BEAM_ELECTRICITY && cnt != hit_count.end() && cnt->second >= 2)
     {
         // Note: this is done for balance, even if it hurts realism a bit.
         // It is arcane knowledge which wall patterns will cause lightning
@@ -2849,6 +2849,7 @@ void bolt::affect_place_explosion_clouds()
         case BEAM_POTION_PURPLE_SMOKE:
         case BEAM_POTION_RAIN:
         case BEAM_POTION_MUTAGENIC:
+        case BEAM_POTION_HEAL:
             cl_type = beam2cloud(flavour);
             break;
 
@@ -3314,6 +3315,7 @@ bool bolt::misses_player()
                 finish_beam();
             }
             you.shield_block_succeeded(agent());
+            hit_shield(&you);
             return true;
         }
 
@@ -3334,7 +3336,39 @@ bool bolt::misses_player()
     if (!_test_beam_hit(real_tohit, dodge, pierce, 0, r))
     {
         mprf("The %s misses you.", name.c_str());
+        // chance to reflect, when dodging was successful
+        if (you_worship(GOD_IMUS) && !aimed_at_feet
+            && (is_omnireflectable() || is_blockable()))
+        {
+            const int imus_sh = max(1, you.piety/10);
+            if (x_chance_in_y(imus_sh, 25)) // 10% ~ 80%
+            {
+                const string refl_name = name.empty() &&
+                                         origin_spell != SPELL_NO_SPELL ?
+                                            spell_title(origin_spell) :
+                                            name;
+                mprf("Mirror of Imus Thea reflects %s.", refl_name.c_str());
+                reflect();
+                return true;
+            }
+        }
         count_action(CACT_DODGE, DODGE_EVASION);
+    }
+    // chance to reflect, even if dodging wasn't successful
+    else if (you_worship(GOD_IMUS) && !aimed_at_feet
+            && (is_omnireflectable() || is_blockable()))
+    {
+        const int imus_sh = max(1, you.piety/10);
+        if (x_chance_in_y(imus_sh, 25)) // 10% ~ 80%
+        {
+            const string refl_name = name.empty() &&
+                                     origin_spell != SPELL_NO_SPELL ?
+                                        spell_title(origin_spell) :
+                                        name;
+            mprf("Mirror of Imus Thea reflects %s.", refl_name.c_str());
+            reflect();
+            return true;
+        }
     }
     else if (defl && !_test_beam_hit(real_tohit, dodge, pierce, defl, r))
     {
@@ -3968,7 +4002,7 @@ void bolt::affect_player()
 
     // Roll the damage.
     if (!(origin_spell == SPELL_FLASH_FREEZE && you.duration[DUR_FROZEN]))
-        pre_ac_dam += damage.roll();
+        pre_ac_dam += damage.roll() * powf((float) 4/5, bounces);
 
     int pre_res_dam = apply_AC(&you, pre_ac_dam);
 
@@ -3994,9 +4028,9 @@ void bolt::affect_player()
         bleed_onto_floor(you.pos(), MONS_PLAYER, blood, true);
     }
 
+    
     // Apply resistances to damage, but don't print "You resist" messages yet
     int final_dam = check_your_resists(pre_res_dam, flavour, "", this, false);
-
     // Tell the player the beam hit
     if (hit_verb.empty())
         hit_verb = engulfs ? "engulfs" : "hits";
@@ -4295,7 +4329,7 @@ bool bolt::determine_damage(monster* mon, int& preac, int& postac, int& final)
         preac = preac_max_damage;
     }
     else if (!freeze_immune)
-        preac = damage.roll();
+        preac = damage.roll() * powf((float) 4/5, bounces);
 
     int tracer_postac_max = preac_max_damage;
 
@@ -4828,6 +4862,37 @@ bool bolt::god_cares() const
     return effect_known || effect_wanton;
 }
 
+/** Apply effects of this beam to a blocker.
+ *
+ *  @param blocker the actor that just blocked.
+ */
+void bolt::hit_shield(actor* blocker) const
+{
+    if (is_fiery() || flavour == BEAM_STEAM)
+    {
+        monster* mon = blocker->as_monster();
+        if (mon && mon->has_ench(ENCH_CONDENSATION_SHIELD))
+        {
+            if (!mon->lose_ench_levels(mon->get_ench(ENCH_CONDENSATION_SHIELD),
+                                       10 * BASELINE_DELAY, true)
+                && you.can_see(*mon))
+            {
+                mprf("The heat melts %s icy shield.",
+                     apostrophise(mon->name(DESC_THE)).c_str());
+            }
+        }
+        else if (!mon && you.duration[DUR_CONDENSATION_SHIELD] > 0)
+        {
+            you.duration[DUR_CONDENSATION_SHIELD] -= 10 * BASELINE_DELAY;
+            if (you.duration[DUR_CONDENSATION_SHIELD] <= 0)
+                remove_condensation_shield();
+            else
+                you.props[MELT_SHIELD_KEY] = true;
+        }
+    }
+}
+
+
 // Return true if the block succeeded (including reflections.)
 bool bolt::attempt_block(monster* mon)
 {
@@ -4885,7 +4950,8 @@ bool bolt::attempt_block(monster* mon)
 bool bolt::bush_immune(const monster &mons) const
 {
     return
-        (mons_species(mons.type) == MONS_BUSH || mons.type == MONS_BRIAR_PATCH || mons.type == MONS_BARRICADE)
+        (mons_species(mons.type) == MONS_BUSH || mons.type == MONS_BRIAR_PATCH || mons.type == MONS_BARRICADE 
+            || (mons.type == MONS_PAVISE && agent() && grid_distance(mons.pos(), agent()->pos()) <= 1))
         && !pierce && !is_explosion
         && !is_enchantment()
         && target != mons.pos()
@@ -5048,6 +5114,10 @@ void bolt::affect_monster(monster* mon)
         // Umbra is harder to hit:
         if (!nightvision && mon->umbra())
             beam_hit -= 2 + random2(4);
+
+        // The Great Wyrm:
+        if (you.duration[DUR_CITRINITAS])
+            beam_hit += you.piety/40;
     }
 
     // The monster may block the beam.
@@ -6699,6 +6769,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_POTION_PURPLE_SMOKE:   return "purple smoke";
     case BEAM_POTION_RAIN:           return "rain";
     case BEAM_POTION_MUTAGENIC:      return "mutagenic fog";
+    case BEAM_POTION_HEAL:           return "heal cloud";
     case BEAM_POTION_RANDOM:         return "random potion";
     case BEAM_POISON:                return "poison";
     case BEAM_NEG:                   return "negative energy";

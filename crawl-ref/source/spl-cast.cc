@@ -391,6 +391,10 @@ int raw_spell_fail(spell_type spell)
     chance2 += 4 * you.get_mutation_level(MUT_WILD_MAGIC);
     chance2 += 4 * you.get_mutation_level(MUT_ANTI_WIZARDRY);
 
+    if (you.duration[DUR_HOMUNCULUS_WILD_MAGIC]) {
+        chance2 += 3 * you.props[HOMUNCULUS_WILD_MAGIC].get_int();
+    }
+
     if (you.props.exists(SAP_MAGIC_KEY))
         chance2 += you.props[SAP_MAGIC_KEY].get_int() * 12;
 
@@ -501,7 +505,11 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
             // spell school levels).
             if (you.duration[DUR_BRILLIANCE])
                 power += 600;
-
+            
+            // The Great Wyrm: Empowered by piety when drink Citrinitas.
+            if (you.duration[DUR_CITRINITAS])
+                power += you.piety*4; //starts at +300(25%), max at +800(66%)
+            
             if (apply_intel)
                 power = (power * you.intel()) / 10;
 
@@ -512,7 +520,10 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
             // Wild magic boosts spell power but decreases success rate.
             power *= (10 + 3 * you.get_mutation_level(MUT_WILD_MAGIC));
             power /= (10 + 3 * you.get_mutation_level(MUT_SUBDUED_MAGIC));
-
+            if (you.duration[DUR_HOMUNCULUS_WILD_MAGIC]) {
+                power *= (10 + 2 * you.props[HOMUNCULUS_WILD_MAGIC].get_int());
+                power /= 10;
+            }
             // Augmentation boosts spell power at high HP.
             power *= 10 + 4 * augmentation_amount();
             power /= 10;
@@ -1013,6 +1024,11 @@ static void _spellcasting_side_effects(spell_type spell, god_type god,
 {
     _spellcasting_god_conduct(spell);
 
+    if (you.duration[DUR_ELEMENTAL_WEAPON] && real_spell) {
+        spschools_type disciplines = get_spell_disciplines(spell);
+        enchant_elemental_weapon(*you.weapon(), disciplines, true);
+    }
+
     if (god == GOD_NO_GOD)
     {
         // Casting pain costs 1 hp.
@@ -1029,6 +1045,17 @@ static void _spellcasting_side_effects(spell_type spell, god_type god,
         {
             mprf(MSGCH_WARN, "Your control over your magic is sapped.");
             you.props[SAP_MAGIC_KEY].get_int()++;
+        }
+
+        if ((you.species == SP_HOMUNCULUS ||
+            you.species == SP_ADAPTION_HOMUNCULUS ||
+            you.species == SP_BLOSSOM_HOMUNCULUS)
+            && you.props[HOMUNCULUS_WILD_MAGIC].get_int() < 5
+            && real_spell)
+        {
+            you.props[HOMUNCULUS_WILD_MAGIC].get_int()++;
+            you.increase_duration(DUR_HOMUNCULUS_WILD_MAGIC, 10, 10);
+            mprf(MSGCH_WARN, "Your magic is amplified and unstable.");
         }
 
         // Make some noise if it's actually the player casting.
@@ -1312,9 +1339,6 @@ static unique_ptr<targeter> _spell_targeter(spell_type spell, int pow,
     case SPELL_PAKELLAS_ROD_CLOUD:
         return make_unique<targeter_shotgun>(&you, CLOUD_CONE_BEAM_COUNT,
             range);
-
-    case SPELL_LEHUDIBS_CRYSTAL_SHOT:
-        return make_unique<targeter_shotgun>(&you, 5, range);
 
     default:
         break;
@@ -1612,6 +1636,7 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
                           (you.experience_level / 2) + (spell_difficulty(spell) * 2),
                           random2avg(88, 3), "the malice of Kikubaaqudgha");
         }
+
         else if (vehumet_supports_spell(spell)
                  && !you_worship(GOD_VEHUMET)
                  && you.penance[GOD_VEHUMET]
@@ -1808,6 +1833,11 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_IGNITE_POISON:
         return cast_ignite_poison(&you, powc, fail);
 
+    // Not an 'damage' spell, just related ignite poison
+    // The Great Wyrm ability, no failure.
+    case SPELL_CONVERT_POISON:
+        return cast_convert_poison(&you, powc, fail);
+
     case SPELL_TORNADO:
         return cast_tornado(powc, fail);
 
@@ -1944,7 +1974,7 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_ENGLACIATION:
         return cast_englaciation(powc, fail);
 
-    case SPELL_CONTROL_UNDEAD:	
+    case SPELL_CONTROL_UNDEAD:
         return mass_enchantment(ENCH_CHARM, powc, fail);
 
     case SPELL_AURA_OF_ABJURATION:
@@ -1991,7 +2021,14 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
         return cast_transform(powc, transformation::dragon, fail);
 
     case SPELL_NECROMUTATION:
-        return cast_transform(powc, transformation::lich, fail);
+    {
+        if (you.species == SP_LESSER_LICH) {
+            return change_lesser_lich(powc, fail);
+        }
+        else {
+            return cast_transform(powc, transformation::lich, fail);
+        }
+    }
 
     case SPELL_ELDRITCH_FORM:
         return cast_transform(powc, transformation::eldritch, fail);
@@ -2008,6 +2045,15 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
 
     case SPELL_SWIFTNESS:
         return cast_swiftness(powc, fail);
+        
+    case SPELL_CONDENSATION_SHIELD:
+        return cast_condensation_shield(powc, fail);
+
+    case SPELL_INSULATION:
+        return cast_insulation(powc, fail);
+        
+    case SPELL_STONESKIN:
+        return cast_stoneskin(powc, fail);
 
     case SPELL_OZOCUBUS_ARMOUR:
         return ice_armour(powc, fail);
@@ -2023,6 +2069,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
 
     case SPELL_PORTAL_PROJECTILE:
         return cast_portal_projectile(powc, fail);
+
+    case SPELL_SHRAPNEL_CURTAIN:
+        return cast_shrapnel_curtain(powc, fail);
 
     // other
     case SPELL_BORGNJORS_REVIVIFICATION:
@@ -2076,8 +2125,10 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
 
     case SPELL_FULMINANT_PRISM:
         return cast_fulminating_prism(&you, powc, beam.target, fail);
+
     case SPELL_SINGULARITY:
         return cast_singularity(&you, powc, beam.target, fail);
+
     case SPELL_SEARING_RAY:
         return cast_searing_ray(powc, beam, fail);
 
@@ -2141,14 +2192,23 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_WILL_OF_EARTH:
         return cast_will_of_earth(target, powc, fail);
 
-    case SPELL_LEHUDIBS_CRYSTAL_SHOT:
-        return cast_lehudibs_crystal_shot(&you, powc, beam, fail);
-
     case SPELL_HAILSTORM:
         return cast_hailstorm(powc, fail);
 
     case SPELL_STARBURST:
         return cast_starburst(powc, fail);
+
+    case SPELL_ELENENTAL_WEAPON:
+        return cast_elemental_weapon(powc, fail);
+
+    case SPELL_FLAME_STRIKE:
+        return cast_flame_strike(powc, fail);
+
+    case SPELL_PAVISE:
+        return cast_pavise(powc, beam, fail);
+
+    case SPELL_PRISMATIC_PRISM:
+        return cast_prismatic_prism(&you, powc, beam.target, fail);
 
     // non-player spells that have a zap, but that shouldn't be called (e.g
     // because they will crash as a player zap).
@@ -2498,13 +2558,11 @@ const set<spell_type> removed_spells =
 #if TAG_MAJOR_VERSION == 34
     SPELL_ABJURATION,
     SPELL_CIGOTUVIS_DEGENERATION,
-    SPELL_CONDENSATION_SHIELD,
     SPELL_CONTROL_TELEPORT,
     SPELL_DEMONIC_HORDE,
     SPELL_FIRE_BRAND,
     SPELL_FORCEFUL_DISMISSAL,
     SPELL_FREEZING_AURA,
-    SPELL_INSULATION,
     SPELL_LETHAL_INFUSION,
     SPELL_POISON_WEAPON,
     SPELL_SEE_INVISIBLE,
@@ -2513,7 +2571,6 @@ const set<spell_type> removed_spells =
     SPELL_TWISTED_RESURRECTION,
     SPELL_SURE_BLADE,
     SPELL_FLY,
-    SPELL_STONESKIN,
     SPELL_SUMMON_SWARM,
     SPELL_PHASE_SHIFT,
     SPELL_MASS_CONFUSION,

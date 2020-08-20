@@ -19,9 +19,11 @@
 #include "orb.h" // orb_limits_translocation in fill_status_info
 #include "player-equip.h"
 #include "player-stats.h"
+#include "player.h"
 #include "random.h" // for midpoint_msg.offset() in duration-data
 #include "religion.h"
 #include "skills.h"
+#include "spl-selfench.h"
 #include "spl-summoning.h" // NEXT_DOOM_HOUND_KEY in duration-data
 #include "spl-transloc.h"
 #include "spl-wpnench.h" // for _end_weapon_brand() in duration-data
@@ -331,6 +333,33 @@ bool fill_status_info(int status, status_info& inf)
         inf.long_text += "You are immune to clouds of flame.";
         break;
     }
+    case DUR_ELEMENTAL_WEAPON:
+    {
+        inf.light_text = "Elem";
+        inf.short_text = "Elemental Weapon";
+        inf.long_text = "Weapons are full of elemental power.";
+        item_def& weapon = *you.weapon();
+        const brand_type orig_brand = get_weapon_brand(weapon);
+        switch (orig_brand) 
+        {
+        case SPWPN_FLAMING:
+            inf.light_colour = RED;
+            break;
+        case SPWPN_FREEZING:
+            inf.light_colour = LIGHTBLUE;
+            break;
+        case SPWPN_VORPAL:
+            inf.light_colour = BROWN;
+            break;
+        case SPWPN_ELECTROCUTION:
+            inf.light_colour = YELLOW;
+            break;
+        default:
+            inf.light_colour = LIGHTGRAY;
+            break;
+        }
+        break;
+    }
 
     case DUR_POISONING:
         _describe_poison(inf);
@@ -460,6 +489,13 @@ bool fill_status_info(int status, status_info& inf)
             inf.light_colour = you.props[WALL_INVISIBLE_KEY].get_bool()? BROWN : LIGHTGREY;
         }
         break;
+
+    case DUR_HOMUNCULUS_WILD_MAGIC:
+        inf.light_text
+            = make_stringf("Unstable (%u)",
+                you.props[HOMUNCULUS_WILD_MAGIC].get_int());
+        break;
+
     case STATUS_BEOGH:
         if (env.level_state & LSTATE_BEOGH && can_convert_to_beogh())
         {
@@ -652,6 +688,16 @@ bool fill_status_info(int status, status_info& inf)
         break;
     }
 
+
+    case DUR_COMBAT_MANA:
+    {
+        const int mana = you.props[COMBAT_MANA_KEY].get_int();
+        inf.light_colour = mana >= 3 ? WHITE :(mana >= 2 ? LIGHTBLUE : BLUE);
+        inf.light_text = make_stringf("Mana+%s%s", mana>= 2 ? "+" : "", mana >= 3 ? "+" : "");
+        inf.short_text = "mana regen";
+        inf.long_text = "Your mana regeneration has increased.";
+    }
+
     case STATUS_CLOUD:
     {
         cloud_type cloud = cloud_type_at(you.pos());
@@ -727,6 +773,17 @@ bool fill_status_info(int status, status_info& inf)
         inf.light_text
             = make_stringf("Earth (%u)",
                 you.props[WILL_OF_EARTH_KEY].get_int());
+    break;
+    case STATUS_IMUS:
+    {
+        if (you_worship(GOD_IMUS)) {
+            const int chance = max(1, you.piety/10) * 4;
+            inf.light_colour = chance >= 60 ? WHITE :(chance >= 30 ? LIGHTBLUE : BLUE);
+            inf.light_text = make_stringf("Mirror (%d%%)", chance);
+            inf.short_text = "Mirror of Imus Thea";
+            inf.long_text = "Mirror of Imus Thea will reflect ranged attack.";
+        }
+    }
     break;
     default:
         if (!found)

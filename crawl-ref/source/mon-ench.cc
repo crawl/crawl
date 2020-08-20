@@ -301,6 +301,7 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
 
     case ENCH_LIQUEFYING:
     case ENCH_SILENCE:
+	case ENCH_HEALING_AURA:
         invalidate_agrid(true);
         break;
 
@@ -464,6 +465,14 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
     case ENCH_BERSERK:
         scale_hp(2, 3);
         calc_speed();
+        break;
+        
+    case ENCH_STONESKIN:
+        if (!quiet && you.can_see(*this))
+        {
+            mprf("%s skin looks tender.",
+                 apostrophise(name(DESC_THE)).c_str());
+        }
         break;
 
     case ENCH_HASTE:
@@ -834,6 +843,11 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         behaviour_event(this, ME_EVAL);
         break;
 
+    case ENCH_DEATHS_DOOR:
+        if (!quiet)
+            simple_monster_message(*this, " is no longer invulnerable.");
+        break;
+
     case ENCH_REGENERATION:
         if (!quiet)
             simple_monster_message(*this, " is no longer regenerating.");
@@ -956,6 +970,13 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             simple_monster_message(*this, " is no longer deflecting missiles.");
         break;
 
+    case ENCH_CONDENSATION_SHIELD:
+        if (!quiet && you.can_see(*this))
+        {
+            mprf("%s icy shield evaporates.",
+                 apostrophise(name(DESC_THE)).c_str());
+        }
+
     case ENCH_RESISTANCE:
         if (!quiet)
             simple_monster_message(*this, " is no longer unusually resistant.");
@@ -969,6 +990,12 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
     case ENCH_EMPOWERED_SPELLS:
         if (!quiet)
             simple_monster_message(*this, " seems less brilliant.");
+        break;
+
+    case ENCH_HEALING_AURA:
+        invalidate_agrid();
+        if (!quiet)
+            simple_monster_message(*this, " is no longer emits aura of healing.");
         break;
 
     case ENCH_IDEALISED:
@@ -1382,6 +1409,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_TIDE:
     case ENCH_REGENERATION:
     case ENCH_RAISED_MR:
+    case ENCH_STONESKIN:
     case ENCH_IDEALISED:
     case ENCH_FEAR_INSPIRING:
     case ENCH_LIFE_TIMER:
@@ -1423,6 +1451,11 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_WHIRLWIND_PINNED:
     case ENCH_VILE_CLUTCH:
     case ENCH_GRASPING_ROOTS:
+    case ENCH_DEATHS_DOOR:
+    case ENCH_NIGREDO:
+    case ENCH_ALBEDO:
+    case ENCH_CITRINITAS:
+    case ENCH_VIRIDITAS:
         decay_enchantment(en);
         break;
 
@@ -1433,6 +1466,7 @@ void monster::apply_enchantment(const mon_enchant &me)
 
     case ENCH_SILENCE:
     case ENCH_LIQUEFYING:
+    case ENCH_HEALING_AURA:
         decay_enchantment(en);
         invalidate_agrid();
         break;
@@ -2015,9 +2049,9 @@ static const char *enchant_names[] =
 #if TAG_MAJOR_VERSION == 34
     "roused",
 #endif
-    "breath timer",
+    "breath timer", "deaths_door",
 #if TAG_MAJOR_VERSION == 34
-    "deaths_door", "rolling",
+     "rolling",
 #endif
     "ozocubus_armour", "wretched", "screamed", "rune_of_recall", "injury bond",
     "drowning", "flayed", "haunting",
@@ -2062,7 +2096,9 @@ static const char *enchant_names[] =
     "idealised", "bound_soul", "infestation", "CIGOTUVIS_PLAGUE",
     "stilling the winds", "thunder_ringed", "pinned_by_whirlwind",
     "vortex", "vortex_cooldown", "vile_clutch", "unshelved armour",
-    "natural_abjuration",
+    "natural_abjuration", "stoneskin",
+    "nigredo", "albedo", "citrinitas", "virditas",
+    "aura_of_healing",
     "buggy",
 };
 
@@ -2201,6 +2237,7 @@ int mon_enchant::calc_duration(const monster* mons,
     case ENCH_MIGHT:
     case ENCH_INVIS:
     case ENCH_FEAR_INSPIRING:
+    case ENCH_STONESKIN:
     case ENCH_AGILE:
     case ENCH_BLACK_MARK:
     case ENCH_RESISTANCE:
@@ -2216,6 +2253,7 @@ int mon_enchant::calc_duration(const monster* mons,
     case ENCH_MIRROR_DAMAGE:
     case ENCH_SAP_MAGIC:
     case ENCH_STILL_WINDS:
+    case ENCH_DEATHS_DOOR:
         cturn = 300 / _mod_speed(25, mons->speed);
         break;
     case ENCH_SLOW:
@@ -2330,6 +2368,9 @@ int mon_enchant::calc_duration(const monster* mons,
         break;
     case ENCH_EMPOWERED_SPELLS:
         cturn = 2 * BASELINE_DELAY;
+        break;
+    case ENCH_HEALING_AURA:
+        cturn = 20 * BASELINE_DELAY;
         break;
     case ENCH_GOZAG_INCITE:
         cturn = 100; // is never decremented

@@ -15,7 +15,8 @@ enum aff_type // sign and non-zeroness matters
     // If you want to extend this to pass the probability somehow, feel free to,
     // just keep AFF_YES the minimal "bright" value.
     AFF_LANDING,     // Valid shadow step landing site
-    AFF_MULTIPLE,    // Passes through multiple times
+    AFF_DOUBLE,    // Passes through double times
+    AFF_MULTIPLE,   // Passes through multiple times
 };
 
 class targeter
@@ -362,3 +363,18 @@ public:
 private:
     bool overgrow_affects_pos(const coord_def &p);
 };
+
+class targeter_charge : public targeter
+{
+public:
+    targeter_charge(const actor *act, int range);
+    bool valid_aim(coord_def a) override;
+    bool set_aim(coord_def a) override;
+    aff_type is_affected(coord_def loc) override;
+private:
+    int range;
+    vector<coord_def> path_taken; // Path the charge took.
+};
+
+string bad_charge_target(coord_def a);
+bool can_charge_through_mons(coord_def a);

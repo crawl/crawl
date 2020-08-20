@@ -9,6 +9,8 @@
 
 // Hash key for passing a weapon to be given to
 // a dancing weapon.
+#define PAVISE_SHIELD "pavise-shield"
+#define PAVISE_SHIELD_INT "pavise-shield-int"
 #define TUKIMA_WEAPON "tukima-weapon"
 #define TUKIMA_POWER "tukima-power"
 
@@ -182,7 +184,8 @@ struct mgen_data
                || summon_type == SPELL_SINGULARITY
                || summon_type == SPELL_INFESTATION
                || summon_type == SPELL_CIGOTUVIS_PLAGUE
-               || summon_type == SPELL_FOXFIRE);
+               || summon_type == SPELL_FOXFIRE
+               || cls == MONS_PRISMATIC_PRISM);
         return *this;
     }
 

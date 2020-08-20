@@ -18,6 +18,7 @@
 #include "acquire.h"
 #include "areas.h"
 #include "art-enum.h"
+#include "attitude-change.h"
 #include "branch.h"
 #include "butcher.h"
 #include "chardump.h"
@@ -51,6 +52,9 @@
 #include "maps.h"
 #include "menu.h"
 #include "message.h"
+#include "mon-behv.h"
+#include "mon-book.h"
+#include "mon-cast.h"
 #include "mon-place.h"
 #include "mutation.h"
 #include "nearby-danger.h"
@@ -105,8 +109,8 @@ enum class abflag
     rations             = 0x00000200, // ability requires 2 rations per target
     rations_or_piety    = 0x00000400, // ability requires 2 rations or piety
     variable_mp         = 0x00000800, // costs a variable amount of MP
-                        //0x00001000,
-                        //0x00002000,
+    potion              = 0x00001000, // ability requires 1 potion, regardless of type and ID
+    essence             = 0x00002000, // ability requires 1 essence of alchemy
                         //0x00004000,
                         //0x00008000,
                         //0x00010000,
@@ -170,6 +174,7 @@ enum class fail_basis
     xl,
     evo,
     invo,
+    shield, //only pavise!
 };
 
 /**
@@ -198,6 +203,7 @@ skill_type invo_skill(god_type god)
         case GOD_RU:
         case GOD_TROG:
         case GOD_WU_JIAN:
+        case GOD_WYRM:
             return SK_NONE; // ugh
         default:
             return SK_INVOCATIONS;
@@ -241,6 +247,8 @@ struct failure_info
                 = piety_fail_denom ? you.piety / piety_fail_denom : 0;
             return base_chance - sk_mod - piety_mod;
         }
+        case fail_basis::shield:
+            return base_chance - you.skill(SK_SHIELDS, variable_fail_mult);
         default:
             die("unknown failure basis %d!", (int)basis);
         }
@@ -255,6 +263,8 @@ struct failure_info
             return SK_EVOCATIONS;
         case fail_basis::invo:
             return invo_skill();
+        case fail_basis::shield:
+            return SK_SHIELDS;
         case fail_basis::xl:
         default:
             return SK_NONE;
@@ -336,6 +346,16 @@ static const ability_def Ability_List[] =
 
     { ABIL_HOP, "Hop", 0, 0, 0, 0, {}, abflag::none },
 
+    { ABIL_BLOSSOM, "Choose Blossom", 0, 0, 0, 0, {}, abflag::starve_ok },
+    { ABIL_ADAPTION, "Choose Adaption", 0, 0, 0, 0, {}, abflag::starve_ok },
+
+    { ABIL_CARAVAN_GIFT_ITEM, "Give Item to Mercenary",
+        0, 0, 0, 0, {}, abflag::gold | abflag::starve_ok },
+    { ABIL_CARAVAN_RECALL, "Recall Mercenary",
+        0, 0, 0, 0, {}, abflag::starve_ok },
+    { ABIL_CARAVAN_REHIRE, "Rehire Mercenary",
+        0, 0, 0, 0, {}, abflag::gold | abflag::starve_ok },
+
     // EVOKE abilities use Evocations and come from items.
     // Teleportation and Blink can also come from mutations
     // so we have to distinguish them (see above). The off items
@@ -369,7 +389,10 @@ static const ability_def Ability_List[] =
       3, 0, 200, 0, {fail_basis::evo, 50, 2}, abflag::none },
     { ABIL_EVOKE_THUNDER, "Evoke Thunderclouds",
       5, 0, 200, 0, {fail_basis::evo, 60, 2}, abflag::none },
-
+    { ABIL_EVOKE_PAVISE, "Deploy Shield",
+      0, 0, 0, 0, {fail_basis::shield, 60, 2}, abflag::none },
+    { ABIL_GOLEM_FORM, "Evoke Golem Armour",
+      5, 0, 250, 0, {fail_basis::evo, 50, 2}, abflag::none },
 
     { ABIL_END_TRANSFORMATION, "End Transformation",
       0, 0, 0, 0, {}, abflag::starve_ok },
@@ -459,10 +482,12 @@ static const ability_def Ability_List[] =
     { ABIL_TROG_BERSERK, "Berserk",
       0, 0, 600, 0, {fail_basis::invo}, abflag::none },
     { ABIL_TROG_REGEN_MR, "Trog's Hand",
-      0, 0, 200, 2, {fail_basis::invo, piety_breakpoint(2), 0, 1}, abflag::none },
+      0, 0, 200, 2, {fail_basis::invo, piety_breakpoint(2), 0, 1}, abflag::berserk_ok },
     { ABIL_TROG_BROTHERS_IN_ARMS, "Brothers in Arms",
       0, 0, 250, generic_cost::range(5, 6),
-      {fail_basis::invo, piety_breakpoint(5), 0, 1}, abflag::none },
+      {fail_basis::invo, piety_breakpoint(5), 0, 1}, abflag::berserk_ok },
+    { ABIL_TROG_CHARGE, "Furious Charge",
+      0, 0, 0, 0, {fail_basis::invo}, abflag::exhaustion|abflag::berserk_ok },
     { ABIL_TROG_BLESS_WEAPON, "Brand Weapon With Antimagic", 0, 0, 0, 0,
       {fail_basis::invo}, abflag::none },
 
@@ -691,6 +716,20 @@ static const ability_def Ability_List[] =
     { ABIL_WU_JIAN_WALLJUMP, "Wall Jump",
         0, 0, 0, 0, {}, abflag::starve_ok | abflag::berserk_ok },
 
+    // The Great Wyrm
+    { ABIL_WYRM_INFUSE, "Infuse Essence", 2, 0, 0, 0, {}, abflag::essence },
+    { ABIL_WYRM_NIGREDO, "Nigredo", 0, 0, 500, 1, {}, abflag::potion },
+    { ABIL_WYRM_ALBEDO, "Albedo", 0, 0, 500, 2, {}, abflag::potion },
+    { ABIL_WYRM_CITRINITAS, "Citrinitas", 0, 0, 500, 2, {}, abflag::potion },
+    { ABIL_WYRM_VIRIDITAS, "Viriditas", 0, 0, 500, 4, {}, abflag::potion },
+    { ABIL_WYRM_RUBEDO, "Rubedo", 0, 0, 500, 6, {}, abflag::potion },
+
+    // Imus Thea
+    { ABIL_IMUS_PRISMATIC_PRISM, "Prismatic Prism",
+      4, 0, 0, 3, {fail_basis::invo, 40, 5, 20}, abflag::none },
+    { ABIL_IMUS_FRAGMENTATION, "Fragmentation",
+      6, 0, 0, 6, {fail_basis::invo, 60, 5, 20}, abflag::none },
+
     { ABIL_STOP_RECALL, "Stop Recall", 0, 0, 0, 0, {fail_basis::invo}, abflag::starve_ok },
     { ABIL_RENOUNCE_RELIGION, "Renounce Religion",
       0, 0, 0, 0, {fail_basis::invo}, abflag::starve_ok },
@@ -776,6 +815,15 @@ int get_gold_cost(ability_type ability)
         return gozag_potion_price();
     case ABIL_GOZAG_BRIBE_BRANCH:
         return GOZAG_BRIBE_AMOUNT;
+    // for JOB_CARAVAN
+    case ABIL_CARAVAN_GIFT_ITEM:
+    {
+        return 100 * (1 + you.attribute[ATTR_CARAVAN_ITEM_COST]);
+    }
+    case ABIL_CARAVAN_REHIRE:
+    {
+        return 1000 * you.attribute[ATTR_CARAVAN_LOST];
+    }
     default:
         return 0;
     }
@@ -827,6 +875,9 @@ const string make_cost_description(ability_type ability)
         if (ability == ABIL_HEAL_WOUNDS)
             ret += ", Permanent MP";
 
+        if (ability == ABIL_IMUS_FRAGMENTATION)
+            ret += make_stringf(", %d HP", max((you.hp/2)-1, 1));
+
         if (abil.hp_cost)
             ret += make_stringf(", %d HP", abil.hp_cost.cost(you.hp_max));
     }
@@ -870,6 +921,12 @@ const string make_cost_description(ability_type ability)
 
     if (abil.flags & abflag::remove_curse_scroll)
         ret += ", Scroll of remove curse";
+
+    if (abil.flags & abflag::potion)
+        ret += ", 1 Potion";
+
+    if (abil.flags & abflag::essence)
+        ret += ", 1 Essence";
 
     if (abil.flags & abflag::gold)
     {
@@ -990,6 +1047,18 @@ static const string _detailed_cost_description(ability_type ability)
         ret << "\nOne scroll of remove curse";
     }
 
+    if (abil.flags & abflag::potion)
+    {
+        have_cost = true;
+        ret << "\nA potion to spend";
+    }
+
+    if (abil.flags & abflag::essence)
+    {
+        have_cost = true;
+        ret << "\nAn essence to spend";
+    }
+
     if (abil.flags & abflag::ecdysis)
     {
         have_cost = true;
@@ -1069,13 +1138,16 @@ ability_type fixup_ability(ability_type ability)
         else
             return ability;
 
+    case ABIL_TROG_BLESS_WEAPON:
+        if (you.species == SP_DJINNI)
+            return ABIL_NON_ABILITY;
+    // Intentional fallthrough
     case ABIL_TSO_BLESS_WEAPON:
     case ABIL_KIKU_BLESS_WEAPON:
     case ABIL_LUGONU_BLESS_WEAPON:
     case ABIL_ZIN_BLESS_WEAPON:
     case ABIL_YRED_BLESS_WEAPON:
     case ABIL_MAKHLEB_BLESS_WEAPON:
-    case ABIL_TROG_BLESS_WEAPON:
     case ABIL_ELYVILON_BLESS_WEAPON:
     case ABIL_JIYVA_BLESS_WEAPON:
     case ABIL_CHEIBRIADOS_BLESS_WEAPON:
@@ -1889,6 +1961,9 @@ bool activate_talent(const talent& tal)
     }
 }
 
+static int _setup_essence_costs();
+static int _setup_potion_costs();
+
 static int _calc_breath_ability_range(ability_type ability)
 {
     int range = 0;
@@ -2033,6 +2108,69 @@ static void _cause_vampire_bat_form_stat_drain()
     lose_stat(STAT_DEX, VAMPIRE_BAT_FORM_STAT_DRAIN);
 }
 
+static spret _homunculus_blossom_or_adaption(species_type _speice)
+{
+    ASSERT(_speice == SP_ADAPTION_HOMUNCULUS || _speice == SP_BLOSSOM_HOMUNCULUS);
+
+    string prompt = _speice == SP_ADAPTION_HOMUNCULUS ?
+                    "This choice makes you an artificial being, and your aptitude becomes more like a pure mage. Really choose this?" :
+                    "This choice makes you a near-life being, and your aptitude becomes more like a warrior-mage. Really choose this?";
+    if (!yesno(prompt.c_str(), false, 'n'))
+    {
+        canned_msg(MSG_OK);
+        return spret::abort;
+    }
+
+    you.species = _speice;
+
+    uint8_t saved_skills[NUM_SKILLS];
+    for (skill_type sk = SK_FIRST_SKILL; sk < NUM_SKILLS; ++sk)
+    {
+        saved_skills[sk] = you.skills[sk];
+        check_skill_level_change(sk, false);
+    }
+    // The player symbol depends on species.
+    update_player_symbol();
+#ifdef USE_TILE
+    init_player_doll();
+#endif
+    mprf(MSGCH_INTRINSIC_GAIN,
+        _speice == SP_BLOSSOM_HOMUNCULUS ?
+        "You bloom as near-life beings" :
+        "You have adapted to your body for survival in the dungeon");
+
+    //perma_mutate(MUT_REGENERATION, 1, "blossom");
+
+    // Produce messages about skill increases/decreases. We
+    // restore one skill level at a time so that at most the
+    // skill being checked is at the wrong level.
+    for (skill_type sk = SK_FIRST_SKILL; sk < NUM_SKILLS; ++sk)
+    {
+        const int oldapt = species_apt(sk, SP_HOMUNCULUS);
+        const int newapt = species_apt(sk, you.species);
+        if (oldapt != newapt)
+        {
+            mprf(MSGCH_INTRINSIC_GAIN, "You learn %s %s%s.",
+                skill_name(sk),
+                abs(oldapt - newapt) > 1 ? "much " : "",
+                oldapt > newapt ? "slower" : "quicker");
+        }
+
+        you.skills[sk] = saved_skills[sk];
+        check_skill_level_change(sk);
+    }
+    
+    give_level_mutations(you.species, 1);
+
+    check_training_targets();
+
+    gain_and_note_hp_mp();
+
+    redraw_screen();
+
+    return spret::success;
+}
+
 /*
  * Use an ability.
  *
@@ -2071,8 +2209,8 @@ static spret _do_ability(const ability_def& abil, bool fail)
             return spret::abort;
         }
         you.lives--;
-        you.set_duration(DUR_PARALYSIS, 5 + you.experience_level);
-        you.set_duration(DUR_ECDYSIS, 5 + you.experience_level);
+        you.set_duration(DUR_PARALYSIS, 5 + you.deaths);
+        you.set_duration(DUR_ECDYSIS, 5 + you.deaths);
         break;
     
     case ABIL_CRAB_WALK:
@@ -2121,6 +2259,134 @@ static spret _do_ability(const ability_def& abil, bool fail)
             return frog_hop(fail);
         else
             return spret::abort;
+
+    case ABIL_BLOSSOM:
+       return _homunculus_blossom_or_adaption(SP_BLOSSOM_HOMUNCULUS);
+
+    case ABIL_ADAPTION:
+       return _homunculus_blossom_or_adaption(SP_ADAPTION_HOMUNCULUS);
+
+    case ABIL_CARAVAN_GIFT_ITEM:
+    {
+        if (!you.props[CARAVAN_MERCENARY_SPAWNED])
+        {
+            mpr("There is no mercenary you can manage.");
+            return spret::abort;
+        }
+
+        if (!caravan_gift_item())
+            return spret::abort;
+    }
+    break;
+
+    case ABIL_CARAVAN_RECALL:
+        fail_check();
+        start_recall(recall_t::caravan);
+        break;
+
+    case ABIL_CARAVAN_REHIRE:
+    {
+        if (you.props[CARAVAN_MERCENARY_SPAWNED])
+        {
+            mpr("You've already hired your own mercenary.");
+            return spret::abort;
+        }
+
+        const int cost_min = 1000 * you.attribute[ATTR_CARAVAN_LOST];
+        if (you.gold < cost_min)
+        {
+            mprf("You need at least %d gold to hire new mercenary.", cost_min);
+            return spret::abort;
+        }
+
+        // copy from player-reacts.cc
+        const monster_type merctypes[] =
+        {
+            MONS_MERC_FIGHTER, MONS_MERC_SKALD,
+            MONS_MERC_WITCH, MONS_MERC_BRIGAND,
+            MONS_MERC_SHAMAN,
+
+            MONS_MERC_KNIGHT, MONS_MERC_INFUSER,
+            MONS_MERC_SORCERESS, MONS_MERC_ASSASSIN,
+            MONS_MERC_SHAMAN_II,
+        };
+    
+        int merc;
+        monster* mon;
+    
+        merc = random2(4);
+        if (you.experience_level >= 14)
+        {
+            merc += 5;
+        }
+
+        ASSERT(merc < (int)ARRAYSZ(merctypes));
+    
+        mgen_data mg(merctypes[merc], BEH_FRIENDLY,
+            you.pos(), MHITYOU, MG_FORCE_BEH, you.religion);
+    
+        mg.extra_flags |= (MF_HARD_RESET);
+    
+        monster tempmon;
+        tempmon.type = merctypes[merc];
+        if (give_monster_proper_name(tempmon, false))
+            mg.mname = tempmon.mname;
+        else
+            mg.mname = make_name();
+        // This is used for giving the merc better stuff in mon-gear.
+        mg.props["caravan_mercenary items"] = true;
+    
+        mon = create_monster(mg);
+    
+        if (!mon)
+        {
+            mpr("You couldn't find anyone to accept your contract here.");
+            return spret::abort;
+        }
+
+        mon->props["dbname"].get_string() = mons_class_name(merctypes[merc]);
+        redraw_screen();
+    
+        for (mon_inv_iterator ii(*mon); ii; ++ii)
+            ii->flags &= ~ISFLAG_SUMMONED;
+        mon->flags &= ~MF_HARD_RESET;
+        mon->attitude = ATT_FRIENDLY;
+        add_companion(mon);
+        mons_att_changed(mon);
+
+        item_def* weapon = mon->mslot_item(MSLOT_WEAPON);
+        const bool staff = weapon->base_type == OBJ_STAVES;
+        if (staff){
+            mon->spells.clear();
+            switch (weapon->sub_type)
+            {
+                case STAFF_FIRE:
+                    if (mon->type == MONS_MERC_SORCERESS){
+                        mon->spells.emplace_back(SPELL_THROW_FLAME, 66, MON_SPELL_WIZARD | MON_SPELL_LONG_RANGE);
+                        mon->spells.emplace_back(SPELL_BOLT_OF_FIRE, 80, MON_SPELL_WIZARD);
+                    } else mon->spells.emplace_back(SPELL_THROW_FLAME, 80, MON_SPELL_WIZARD);
+                    break;
+                case STAFF_COLD:
+                    if (mon->type == MONS_MERC_SORCERESS){
+                        mon->spells.emplace_back(SPELL_THROW_FROST, 66, MON_SPELL_WIZARD | MON_SPELL_LONG_RANGE);
+                        mon->spells.emplace_back(SPELL_BOLT_OF_COLD, 80, MON_SPELL_WIZARD);
+                    } else mon->spells.emplace_back(SPELL_THROW_FROST, 80, MON_SPELL_WIZARD);
+                    break;
+                case STAFF_AIR:
+                    if (mon->type == MONS_MERC_SORCERESS){
+                        mon->spells.emplace_back(SPELL_LIGHTNING_BOLT, 80, MON_SPELL_WIZARD);
+                    } else mon->spells.emplace_back(SPELL_SHOCK, 80, MON_SPELL_WIZARD);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        simple_monster_message(*mon, " accept your contract, starts follow you as a mercenary.");
+        you.props[CARAVAN_MERCENARY_SPAWNED] = true;
+        you.del_gold(1000 * you.attribute[ATTR_CARAVAN_LOST]);
+    }
+    break;
 
     case ABIL_SPIT_POISON:      // Naga poison spit
     {
@@ -2400,6 +2666,25 @@ static spret _do_ability(const ability_def& abil, bool fail)
                 m->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 3));
         }
 
+        break;
+
+    case ABIL_EVOKE_PAVISE:
+        fail_check();
+        if (your_spells(SPELL_PAVISE,
+            you.experience_level * 10,
+            false) == spret::abort)
+        {
+            return spret::abort;
+        }
+        break;
+
+    case ABIL_GOLEM_FORM:
+        fail_check();
+        if (!transform(you.skill(SK_EVOCATIONS, 2), transformation::golem))
+        {
+            mpr("Your golem armour activates, starts to form as a giant golem!");
+            return spret::abort;
+        }
         break;
 
     case ABIL_EVOKE_THUNDER: // robe of Clouds
@@ -2823,6 +3108,12 @@ static spret _do_ability(const ability_def& abil, bool fail)
                          random2(you.piety/4) - random2(you.piety/4),
                          &you);
         break;
+
+    case ABIL_TROG_CHARGE:
+        fail_check();
+        return furious_charge(fail);
+        break;
+
     case ABIL_TROG_BLESS_WEAPON:
         fail_check();
         simple_god_message(" will bless one of your weapons.");
@@ -3492,6 +3783,347 @@ static spret _do_ability(const ability_def& abil, bool fail)
         break;
     }
 
+    case ABIL_WYRM_INFUSE:
+    {
+        int essence_idx = -1;
+        essence_idx = _setup_essence_costs();
+
+        if (essence_idx == -1) {
+            mpr("You need an essence to infuse.");
+            return spret::abort;
+        }
+
+        ASSERT(you.inv[essence_idx].base_type == OBJ_POTIONS); // Dose it work properly?
+        item_def& essence_item = you.inv[essence_idx];
+
+        god_acting gdact;
+        beam.range = LOS_MAX_RANGE;
+        direction_chooser_args args;
+        args.restricts = DIR_TARGET;
+        args.mode = TARG_ANY;
+        args.needs_path = false;
+
+        if (!spell_direction(spd, beam, &args))
+            return spret::abort;
+
+        if (beam.target == you.pos())
+        {
+            mpr("You need to drink this if you want use its effect to yourself.");
+            return spret::abort;
+        }
+
+        monster* mons = monster_at(beam.target);
+        if (mons == nullptr || !you.can_see(*mons))
+        {
+            mpr("You see nothing there you can infuse.");
+            return spret::abort;
+        }
+
+        if (essence_item.sub_type == POT_NIGREDO){
+            
+
+            behaviour_event(mons, ME_WHACK, &you);
+            
+            const int duration = 10 + you.piety/20;
+            mons->add_ench(mon_enchant(ENCH_NIGREDO, 0, &you, duration * BASELINE_DELAY));
+            simple_monster_message(*mons, "is infused with Nigredo, begins to leave miasma on trail!");
+            
+            
+        } else if (essence_item.sub_type == POT_ALBEDO){
+            if (!monster_is_debuffable(*mons))
+            {
+                mpr("You can only infuse a target which under dispellable magic.");
+                return spret::abort;
+            }
+
+            const int duration = 6 + you.piety/40;
+            mons->add_ench(mon_enchant(ENCH_ALBEDO, 0, &you, duration * BASELINE_DELAY));
+            simple_monster_message(*mons, "is infused with Albedo, begins to be interrupted!");
+        } else if (essence_item.sub_type == POT_CITRINITAS){
+            if (!mons->friendly()){
+                if (yesno("This will be beneficial for target! Are you sure want to infuse it?", true, 'y')){
+                } else return spret::abort;
+            }
+            const int duration = min(10 + you.piety/10 + random2(10), 50);
+            mons->add_ench(mon_enchant(ENCH_CITRINITAS, 0, &you, duration * BASELINE_DELAY));
+            simple_monster_message(*mons, "is infused with Citrinitas, begins to empowered!");
+        
+        } else if (essence_item.sub_type == POT_VIRIDITAS){
+            if (mons->friendly())
+            {
+                mpr("You can't infuse allies with this.");
+                return spret::abort;
+            }
+            const int duration = min(2 + you.piety/50, 10); // Never use random: It is critical to player
+            mons->add_ench(mon_enchant(ENCH_VIRIDITAS, 0, &you, duration * BASELINE_DELAY));
+            simple_monster_message(*mons, "is infused with Viriditas, begins to heal you instead damage!");
+
+        } else if (essence_item.sub_type == POT_RUBEDO){
+
+            for (radius_iterator ri(you.pos(), LOS_DEFAULT); ri; ++ri)
+            {
+                monster *diffuse = monster_at(*ri);
+                if (!diffuse || !you.can_see(*diffuse))
+                {
+                    mpr("You see nothing there you can diffuse.");
+                    return spret::abort;
+                }
+        
+                if (!mons->has_ench(ENCH_NIGREDO)
+                    && !mons->has_ench(ENCH_ALBEDO)
+                    && !mons->has_ench(ENCH_CITRINITAS)
+                    && !mons->has_ench(ENCH_VIRIDITAS))
+                {
+                    mpr("You can only diffuse an infused target with other essence.");
+                    return spret::abort;
+                }
+                
+                int other = 0;
+                if (mons->has_ench(ENCH_NIGREDO)){
+                    
+                    const int duration_nigredo = 10 + you.piety/20;
+                    diffuse->add_ench(mon_enchant(ENCH_NIGREDO, 0, &you, duration_nigredo * BASELINE_DELAY));
+                    other++;
+                    
+                } if (mons->has_ench(ENCH_ALBEDO)){
+                    
+                    const int duration_albedo = 6 + you.piety/40;
+                    diffuse->add_ench(mon_enchant(ENCH_ALBEDO, 0, &you, duration_albedo * BASELINE_DELAY));
+                    other++;
+                    
+                } if (mons->has_ench(ENCH_CITRINITAS)){
+                    
+                    const int duration_citrinitas = min(10 + you.piety/10 + random2(10), 50);
+                    if (diffuse->friendly())
+                    {
+                        diffuse->add_ench(mon_enchant(ENCH_CITRINITAS, 0, &you, duration_citrinitas * BASELINE_DELAY));
+                        other++;
+                    }
+                    
+                } if (mons->has_ench(ENCH_VIRIDITAS)){
+                    
+                    const int duration_viriditas = min(2 + you.piety/50, 10);
+                    if (!diffuse->friendly())
+                    {
+                        diffuse->add_ench(mon_enchant(ENCH_VIRIDITAS, 0, &you, duration_viriditas * BASELINE_DELAY));
+                        other++;
+                    }
+                    
+                } if (other >= 1){
+                    flash_view(UA_PLAYER, RED);
+                    simple_monster_message(*mons, " diffuse its other infusions!");
+                }
+            }
+        }
+        
+        dec_inv_item_quantity(essence_idx, 1);
+        break;
+    }
+    
+    case ABIL_WYRM_NIGREDO:
+    {
+        int pot_idx = -1;
+        pot_idx = _setup_potion_costs();
+        if (pot_idx == -1) {
+            mpr("You need a potion to transmute into essence of Rubedo.");
+            return spret::abort;
+        }
+        ASSERT(you.inv[pot_idx].base_type == OBJ_POTIONS);
+        
+        int thing_created = items(true, OBJ_POTIONS, POT_NIGREDO, 1, 0, you.religion);
+        if (thing_created == NON_ITEM || !move_item_to_grid(&thing_created, you.pos()))
+        {
+            return spret::abort;
+        }
+        set_ident_type(mitm[thing_created], true);
+        
+        switch (random2(4))
+        {
+        case 0:
+            mprf(MSGCH_GOD, "The Great Wyrm whispers: Yout transmutation is finish.");
+            break;
+        case 1:
+            mprf(MSGCH_GOD, "Nigredo, the black essence of decay, now is your own.");
+            break;
+        case 2:
+            mprf(MSGCH_GOD, "You transmute an essence of Nigredo.");
+            break;
+        case 3:
+            mprf(MSGCH_GOD, "'Note; Nigredo can infuse a target with miasma.'");
+            break;
+        }
+        flash_view(UA_PLAYER, DARKGRAY);
+        dec_inv_item_quantity(pot_idx, 1);
+        break;
+    }
+    
+    case ABIL_WYRM_ALBEDO:
+    {
+        int pot_idx = -1;
+        pot_idx = _setup_potion_costs();
+        if (pot_idx == -1) {
+            mpr("You need a potion to transmute into essence of Rubedo.");
+            return spret::abort;
+        }
+        ASSERT(you.inv[pot_idx].base_type == OBJ_POTIONS);
+        
+        int thing_created = items(true, OBJ_POTIONS, POT_ALBEDO, 1, 0, you.religion);
+        if (thing_created == NON_ITEM || !move_item_to_grid(&thing_created, you.pos()))
+        {
+            return spret::abort;
+        }
+        set_ident_type(mitm[thing_created], true);
+        
+        switch (random2(4))
+        {
+        case 0:
+            mprf(MSGCH_GOD, "The Great Wyrm whispers: Your transmutation is finish.");
+            break;
+        case 1:
+            mprf(MSGCH_GOD, "Albedo, the white essence of purge, now is your own.");
+            break;
+        case 2:
+            mprf(MSGCH_GOD, "You transmute an essence of Albedo.");
+            break;
+        case 3:
+            mprf(MSGCH_GOD, "Note; Albedo can interrupt a target with dispellable magic.");
+            break;
+        }
+        flash_view(UA_PLAYER, WHITE);
+        dec_inv_item_quantity(pot_idx, 1);
+        break;
+    }
+    
+    case ABIL_WYRM_CITRINITAS:
+    {
+        int pot_idx = -1;
+        pot_idx = _setup_potion_costs();
+        if (pot_idx == -1) {
+            mpr("You need a potion to transmute into essence of Rubedo.");
+            return spret::abort;
+        }
+        ASSERT(you.inv[pot_idx].base_type == OBJ_POTIONS);
+
+        int thing_created = items(true, OBJ_POTIONS, POT_CITRINITAS, 1, 0, you.religion);
+        if (thing_created == NON_ITEM || !move_item_to_grid(&thing_created, you.pos()))
+        {
+            return spret::abort;
+        }
+        set_ident_type(mitm[thing_created], true);
+        
+        switch (random2(4))
+        {
+        case 0:
+            mprf(MSGCH_GOD, "The Great Wyrm whispers: Your transmutation is finish.");
+            break;
+        case 1:
+            mprf(MSGCH_GOD, "Citrinitas, the yellow essence of empowerment, now is your own.");
+            break;
+        case 2:
+            mprf(MSGCH_GOD, "You transmute an essence of Citrinitas.");
+            break;
+        case 3:
+            mprf(MSGCH_GOD, "Note; Citrinitas empowers accuracy and spells of drinker or infused target.");
+            break;
+        }
+        flash_view(UA_PLAYER, YELLOW);
+        dec_inv_item_quantity(pot_idx, 1);
+        break;
+    }
+
+    case ABIL_WYRM_VIRIDITAS:
+    {
+        int pot_idx = -1;
+        pot_idx = _setup_potion_costs();
+        if (pot_idx == -1) {
+            mpr("You need a potion to transmute into essence of Rubedo.");
+            return spret::abort;
+        }
+        ASSERT(you.inv[pot_idx].base_type == OBJ_POTIONS);
+        
+        int thing_created = items(true, OBJ_POTIONS, POT_VIRIDITAS, 1, 0, you.religion);
+        if (thing_created == NON_ITEM || !move_item_to_grid(&thing_created, you.pos()))
+        {
+            return spret::abort;
+        }
+        set_ident_type(mitm[thing_created], true);
+        
+        switch (random2(4))
+        {
+        case 0:
+            mprf(MSGCH_GOD, "The Great Wyrm whispers: Your transmutation is finish.");
+            break;
+        case 1:
+            mprf(MSGCH_GOD, "Viriditas, the yellow essence of restoration, now is your own.");
+            break;
+        case 2:
+            mprf(MSGCH_GOD, "You transmute an essence of Viriditas.");
+            break;
+        case 3:
+            mprf(MSGCH_GOD, "Note; Viriditas can convert damage from infused target into heal.");
+            break;
+        }    
+        flash_view(UA_PLAYER, LIGHTGREEN);
+        dec_inv_item_quantity(pot_idx, 1);
+        break;
+    }
+    
+    case ABIL_WYRM_RUBEDO:
+    {
+        int pot_idx = -1;
+        pot_idx = _setup_potion_costs();
+        if (pot_idx == -1) {
+            mpr("You need a potion to transmute into essence of Rubedo.");
+            return spret::abort;
+        }
+        ASSERT(you.inv[pot_idx].base_type == OBJ_POTIONS);        
+        
+        int thing_created = items(true, OBJ_POTIONS, POT_RUBEDO, 1, 0, you.religion);
+        if (thing_created == NON_ITEM || !move_item_to_grid(&thing_created, you.pos()))
+        {
+            return spret::abort;
+        }
+        set_ident_type(mitm[thing_created], true);
+        
+        switch (random2(4))
+        {
+        case 0:
+            mprf(MSGCH_GOD, "The Great Wyrm whispers: Your transmutation is finish.");
+            break;
+        case 1:
+            mprf(MSGCH_GOD, "Rubedo, the red essence of the end-as-begin, now is your own.");
+            break;
+        case 2:
+            mprf(MSGCH_GOD, "You transmute an essence of Rubedo.");
+            break;
+        case 3:
+            mprf(MSGCH_GOD, "Note; Rubedo can diffuse other infusions.");
+            break;
+        }    
+        flash_view(UA_PLAYER, RED);
+        dec_inv_item_quantity(pot_idx, 1);
+        break;
+    }
+
+    case ABIL_IMUS_PRISMATIC_PRISM:
+        fail_check();
+        if (your_spells(SPELL_PRISMATIC_PRISM,
+                        12 + skill_bump(SK_INVOCATIONS, 6),
+                        false, nullptr) == spret::abort)
+        {
+            return spret::abort;
+        }
+        break;
+
+    case ABIL_IMUS_FRAGMENTATION:
+    {
+        fail_check();
+        int frag_power = (you.skill(SK_INVOCATIONS) * 9)
+                        + (you.piety * (you.skill(SK_INVOCATIONS) + 25) / 27) + (you.piety * (3/2));
+        fragmentation(frag_power);
+    }
+    break;
+
     case ABIL_RENOUNCE_RELIGION:
         if (you.species == SP_ANGEL) {
             mpr("You cannot abandon your faith. You can only convert to good god.");
@@ -3578,6 +4210,43 @@ static void _pay_ability_costs(const ability_def& abil)
 
     if (piety_cost)
         lose_piety(piety_cost);
+}
+
+// for The Great Wyrm
+static int _setup_potion_costs()
+{
+    int rc = prompt_invent_item("Spend which potion?", menu_type::invlist, OBJ_POTIONS);
+
+    if (prompt_failed(rc))
+        rc = -1;
+    else if (you.inv[rc].base_type != OBJ_POTIONS)
+    {
+        mpr("You need a potion to do this.");
+        rc = -1;
+    }
+    
+    return rc;
+}
+
+static int _setup_essence_costs()
+{
+
+    int rc = prompt_invent_item("Spend which essence?",
+                                       menu_type::invlist, OSEL_WYRM_ESSENCES);
+
+    if (prompt_failed(rc))
+        rc = -1;
+    else if (you.inv[rc].sub_type != POT_NIGREDO
+            && you.inv[rc].sub_type != POT_ALBEDO
+            && you.inv[rc].sub_type != POT_CITRINITAS
+            && you.inv[rc].sub_type != POT_VIRIDITAS
+            && you.inv[rc].sub_type != POT_RUBEDO)
+    {
+        mpr("You need an essence of alchemy to do this.");
+        rc = -1;
+    }
+    
+    return rc;
 }
 
 int choose_ability_menu(const vector<talent>& talents)
@@ -3783,6 +4452,25 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
 
     }
 
+    if ( you.species == SP_HOMUNCULUS ) 
+    {
+        if (you.experience_level >= 14) 
+        {
+            _add_talent(talents, ABIL_BLOSSOM, check_confused);
+            _add_talent(talents, ABIL_ADAPTION, check_confused);
+        }
+    }
+
+    if (you.props[CARAVAN_MERCENARY_SPAWNED])
+    {
+        _add_talent(talents, ABIL_CARAVAN_GIFT_ITEM, check_confused);
+        _add_talent(talents, ABIL_CARAVAN_RECALL, check_confused);
+    }
+    else if (you.attribute[ATTR_CARAVAN_LOST] )
+    {
+        _add_talent(talents, ABIL_CARAVAN_REHIRE, check_confused);
+    }
+
     if (you.get_mutation_level(MUT_HOP))
         _add_talent(talents, ABIL_HOP, check_confused);
 
@@ -3917,6 +4605,20 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
             if (you.airborne() && !you.attribute[ATTR_FLIGHT_UNCANCELLABLE])
                 _add_talent(talents, ABIL_STOP_FLYING, check_confused);
         }
+    }
+
+    if (you.evokable_pavise())
+    {
+        _add_talent(talents, ABIL_EVOKE_PAVISE, check_confused);
+    }
+
+    if (player_equip_unrand(UNRAND_GOLEM_ARMOUR)
+        && player_equip_unrand(UNRAND_GOLEM_BOOTS)
+        && player_equip_unrand(UNRAND_GOLEM_GLOVES)
+        && player_equip_unrand(UNRAND_GOLEM_HELMET)
+        && !you.get_mutation_level(MUT_NO_ARTIFICE))
+    {
+        _add_talent(talents, ABIL_GOLEM_FORM, check_confused);
     }
 
     // Find hotkeys for the non-hotkeyed talents.

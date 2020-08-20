@@ -59,6 +59,10 @@ void end_weapon_brand(item_def &weapon, bool verbose)
  */
 spret cast_excruciating_wounds(int power, bool fail)
 {
+    if (you.duration[DUR_ELEMENTAL_WEAPON]) {
+        mpr("You are using an elemetal weapon.");
+        return spret::abort;
+    }
     item_def& weapon = *you.weapon();
     const brand_type which_brand = SPWPN_PAIN;
     const brand_type orig_brand = get_weapon_brand(weapon);

@@ -30,6 +30,7 @@
 #include "god-conduct.h"
 #include "god-passive.h"
 #include "items.h"
+#include "item-prop.h"
 #include "message.h"
 #include "melee-attack.h"
 #include "mon-act.h"
@@ -38,6 +39,7 @@
 #include "mon-tentacle.h"
 #include "mon-util.h"
 #include "player.h"
+#include "player-equip.h"
 #include "player-reacts.h"
 #include "player-tentacle.h"
 #include "prompt.h"
@@ -47,6 +49,7 @@
 #include "state.h"
 #include "stringutil.h"
 #include "spl-selfench.h" // noxious_bog_cell
+#include "spl-summoning.h"
 #include "terrain.h"
 #include "traps.h"
 #include "travel.h"
@@ -1103,6 +1106,28 @@ void move_player_action(coord_def move)
         }
 
         apply_barbs_damage();
+
+        if (monster * pavise = find_pavise_shield(&you)) {
+            int item_ = pavise->inv[MSLOT_SHIELD];
+            if (item_ != NON_ITEM) {
+                item_def& shield = mitm[item_];
+                mitm[item_].flags &= ~ISFLAG_SUMMONED;
+                int inv_slot;
+                if ((!you.weapon() || is_shield_incompatible(*you.weapon(), &shield) == false) &&
+                    merge_items_into_inv(shield, 1, inv_slot, true)) {
+                    dec_mitm_item_quantity(item_, 1);
+                    if (you.shield() == nullptr) {
+                        equip_item(EQ_SHIELD, inv_slot, false);
+                    }
+                }
+                else {
+                    move_item_to_grid(&item_, pavise->pos());
+                }
+            }
+            monster_die(*pavise, KILL_RESET, NON_MONSTER);
+        }
+
+
 
         if (you_are_delayed() && current_delay()->is_run())
             env.travel_trail.push_back(you.pos());

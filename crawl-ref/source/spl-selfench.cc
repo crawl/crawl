@@ -16,19 +16,24 @@
 #include "god-passive.h"
 #include "env.h"
 #include "hints.h"
+#include "item-prop.h"
 #include "items.h" // stack_iterator
 #include "libutil.h"
 #include "macro.h"
 #include "message.h"
+#include "mutation.h"
 #include "output.h"
 #include "prompt.h"
+#include "player-stats.h"
 #include "religion.h"
 #include "showsymb.h"
 #include "spl-transloc.h"
 #include "spl-util.h"
+#include "skills.h"
 #include "stringutil.h"
 #include "terrain.h"
 #include "transform.h"
+#include "tiledoll.h"
 #include "tilepick.h"
 #include "view.h"
 #include "viewchar.h"
@@ -274,6 +279,7 @@ spret cast_transform(int pow, transformation which_trans, bool fail)
 
     fail_check();
     transform(pow, which_trans);
+    notify_stat_change();
     return spret::success;
 }
 
@@ -301,4 +307,220 @@ void noxious_bog_cell(coord_def p)
                     + random2avg(you.props[NOXIOUS_BOG_KEY].get_int() / 20, 2);
     temp_change_terrain(p, DNGN_TOXIC_BOG, turns * BASELINE_DELAY,
             TERRAIN_CHANGE_BOG, you.as_monster());
+}
+
+
+spret cast_elemental_weapon(int pow, bool fail)
+{
+    item_def& weapon = *you.weapon();
+    const brand_type orig_brand = get_weapon_brand(weapon);
+
+    if (orig_brand != SPWPN_NORMAL)
+    {
+        mpr("This weapon is already enchanted.");
+        return spret::abort;
+    }
+
+    fail_check();
+
+    if (!you.duration[DUR_ELEMENTAL_WEAPON])
+        mpr("You inject the force of elements into a weapon.");
+    else
+        mpr("You extend your elemental weapon's duration.");
+
+    you.increase_duration(DUR_ELEMENTAL_WEAPON, 8 + roll_dice(2, pow), 100);
+    return spret::success;
+}
+
+void end_elemental_weapon(item_def& weapon, bool verbose)
+{
+    ASSERT(you.duration[DUR_ELEMENTAL_WEAPON]);
+
+    set_item_ego_type(weapon, OBJ_WEAPONS, SPWPN_NORMAL);
+    you.duration[DUR_ELEMENTAL_WEAPON] = 0;
+    you.props[ELEMENTAL_ENCHANT_KEY] = 0;
+
+    if (verbose)
+    {
+        mprf(MSGCH_DURATION, "%s has lost its magical powers.",
+            weapon.name(DESC_YOUR).c_str());
+    }
+
+    you.wield_change = true;
+}
+void enchant_elemental_weapon(item_def& weapon, spschools_type disciplines, bool verbose)
+{
+    ASSERT(you.duration[DUR_ELEMENTAL_WEAPON]);
+
+    vector<spschool> schools;
+    if (disciplines & spschool::fire) {
+        schools.emplace_back(spschool::fire);
+    }
+    if (disciplines & spschool::ice) {
+        schools.emplace_back(spschool::ice);
+    }
+    if (disciplines & spschool::air) {
+        schools.emplace_back(spschool::air);
+    }
+    if (disciplines & spschool::earth) {
+        schools.emplace_back(spschool::earth);
+    }
+    if (schools.size() == 0) {
+        return;
+    }
+    spschool sel_school = schools[random2(schools.size())];
+    you.wield_change = true;
+    switch (sel_school) {
+    case spschool::fire:
+        if (verbose)
+        {
+            mprf("%s resonated with the elements of fire", weapon.name(DESC_YOUR).c_str());
+        }
+        you.props[ELEMENTAL_ENCHANT_KEY] = you.skills[SK_FIRE_MAGIC] / 3;
+        set_item_ego_type(weapon, OBJ_WEAPONS, SPWPN_FLAMING);
+        break;
+    case spschool::ice:
+        if (verbose)
+        {
+            mprf("%s resonated with the elements of ice", weapon.name(DESC_YOUR).c_str());
+        }
+        you.props[ELEMENTAL_ENCHANT_KEY] = you.skills[SK_ICE_MAGIC] / 3;
+        set_item_ego_type(weapon, OBJ_WEAPONS, SPWPN_FREEZING);
+        break;
+    case spschool::air:
+        if (verbose)
+        {
+            mprf("%s resonated with the elements of air", weapon.name(DESC_YOUR).c_str());
+        }
+        you.props[ELEMENTAL_ENCHANT_KEY] = you.skills[SK_AIR_MAGIC] / 3;
+        set_item_ego_type(weapon, OBJ_WEAPONS, SPWPN_ELECTROCUTION);
+        break;
+    case spschool::earth:
+        if (verbose)
+        {
+            mprf("%s resonated with the elements of earth", weapon.name(DESC_YOUR).c_str());
+        }
+        you.props[ELEMENTAL_ENCHANT_KEY] = you.skills[SK_EARTH_MAGIC] / 3;
+        set_item_ego_type(weapon, OBJ_WEAPONS, SPWPN_VORPAL);
+        break;
+    default:
+        break;
+    }
+}
+
+
+spret cast_flame_strike(int pow, bool fail)
+{
+    if (you.duration[DUR_OVERHEAT]) {
+        mpr("You're overheated.");
+        return spret::abort;
+    }
+    fail_check();
+
+    if (!you.duration[DUR_FLAME_STRIKE])
+        mpr("Flames are enveloped in your attack.");
+    else
+        mpr("You extend your flame strike's duration.");
+
+    if (you.species == SP_LAVA_ORC)
+    {
+        you.temperature = TEMP_MAX;
+    }
+
+    you.increase_duration(DUR_FLAME_STRIKE, 8 + roll_dice(2, pow), 100);
+    you.props["flame_power"] = pow;
+
+    return spret::success;
+}
+
+spret cast_insulation(int power, bool fail)
+{
+    fail_check();
+    you.increase_duration(DUR_INSULATION, 10 + random2(power), 100,
+                          "You feel insulated.");
+    return spret::success;
+}
+
+spret change_lesser_lich(int , bool fail)
+{
+    ASSERT(you.species == SP_LESSER_LICH);
+
+    string prompt = "Are you really going to be a permanent lich?";
+    if (!yesno(prompt.c_str(), false, 'n'))
+    {
+        canned_msg(MSG_OK);
+        return spret::abort;
+    }
+    fail_check();
+
+    you.species = SP_LICH;
+
+    uint8_t saved_skills[NUM_SKILLS];
+    for (skill_type sk = SK_FIRST_SKILL; sk < NUM_SKILLS; ++sk)
+    {
+        saved_skills[sk] = you.skills[sk];
+        check_skill_level_change(sk, false);
+    }
+    // The player symbol depends on species.
+    update_player_symbol();
+#ifdef USE_TILE
+    init_player_doll();
+#endif
+    mprf(MSGCH_INTRINSIC_GAIN,
+        "Now you are a complete lich!");
+
+    for (skill_type sk = SK_FIRST_SKILL; sk < NUM_SKILLS; ++sk)
+    {
+        const int oldapt = species_apt(sk, SP_LESSER_LICH);
+        const int newapt = species_apt(sk, you.species);
+        if (oldapt != newapt)
+        {
+            mprf(MSGCH_INTRINSIC_GAIN, "You learn %s %s%s.",
+                skill_name(sk),
+                abs(oldapt - newapt) > 1 ? "much " : "",
+                oldapt > newapt ? "slower" : "quicker");
+        }
+
+        you.skills[sk] = saved_skills[sk];
+        check_skill_level_change(sk);
+    }
+
+    you.innate_mutation[MUT_COMBAT_MANA_REGENERATE]--;
+    delete_mutation(MUT_COMBAT_MANA_REGENERATE, "necromutation", false, true, false, false);
+    you.innate_mutation[MUT_STOCHASTIC_TORMENT_RESISTANCE]--;
+    delete_mutation(MUT_STOCHASTIC_TORMENT_RESISTANCE, "necromutation", false, true, false, false);
+    you.innate_mutation[MUT_NO_DEVICE_HEAL]--;
+    delete_mutation(MUT_NO_DEVICE_HEAL, "necromutation", false, true, false, false);
+
+    if (you.duration[DUR_REGENERATION])
+    {
+        mprf(MSGCH_DURATION, "You stop regenerating.");
+        you.duration[DUR_REGENERATION] = 0;
+    }
+
+    you.hunger_state = HS_SATIATED;  // no hunger effects while transformed
+    you.redraw_status_lights = true;
+    give_level_mutations(you.species, 1);
+
+    check_training_targets();
+
+    gain_and_note_hp_mp();
+
+    redraw_screen();
+
+    return spret::success;
+}
+
+spret cast_shrapnel_curtain(int pow, bool fail)
+{
+    fail_check();
+    if (!you.duration[DUR_SHRAPNEL])
+        mpr("Spiny pebbles and gravels are ready to react.");
+    else
+        mpr("You reinforce your curtain of shrapnel.");
+
+    you.increase_duration(DUR_SHRAPNEL, 8 + roll_dice(2, pow), 100);
+    you.props["shrapnel_power"] = pow;
+
+    return spret::success;
 }

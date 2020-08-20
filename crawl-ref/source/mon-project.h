@@ -16,5 +16,5 @@ bool iood_act(monster& mon, bool no_trail = false);
 void iood_catchup(monster* mon, int turns);
 
 
-spret cast_foxfire(actor *caster, int pow, bolt *beam, god_type god, bool fail = false);
-void foxfire_attack(const monster *foxfire, const actor *target);
+spret cast_foxfire(actor *caster, int pow, god_type god, bool fail = false);
+void foxfire_attack(const monster* foxfire, const actor* target);

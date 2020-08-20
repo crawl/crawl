@@ -50,6 +50,7 @@
 #include "output.h"
 #include "player-equip.h"
 #include "player-stats.h"
+#include "player.h"
 #include "potion.h"
 #include "prompt.h"
 #include "religion.h"
@@ -1434,7 +1435,8 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         }
 
         if (you.species == SP_NAGA
-            || you.species == SP_DJINNI)
+            || you.species == SP_DJINNI
+            || you.species == SP_MELIAI)
         {
             if (verbose)
                 mpr("You have no legs!");
@@ -1556,6 +1558,13 @@ static bool _can_equip_armour(const item_def &item)
         return false;
     }
 
+    const int ER = -property(item, PARM_EVASION) / 10;
+    if (you_worship(GOD_IMUS) && ER > 4)
+    {
+        mpr("Your fragile body can't wear heavy armour.");
+        return false;
+    }
+
     const equipment_type slot = get_armour_slot(item);
     const int equipped = you.equip[slot];
     if (equipped != -1 && !_can_takeoff_armour(equipped))
@@ -1628,6 +1637,15 @@ bool wear_armour(int item)
     if (!_can_equip_armour(*to_wear))
         return false;
 
+    const equipment_type slot = get_armour_slot(*to_wear);
+
+
+    if (you_worship(GOD_IMUS) && slot == EQ_SHIELD)
+    {
+        mpr("Your fragile body can't wear shield.");
+        return false;
+    }
+
     // At this point, we know it's possible to equip this item. However, there
     // might be reasons it's not advisable. Warn about any dangerous
     // inscriptions, giving the player an opportunity to bail out.
@@ -1638,7 +1656,6 @@ bool wear_armour(int item)
     }
 
     bool swapping = false;
-    const equipment_type slot = get_armour_slot(*to_wear);
     if ((slot == EQ_CLOAK
            || slot == EQ_HELMET
            || slot == EQ_GLOVES
@@ -2967,6 +2984,32 @@ void drink(item_def* potion)
         mpr("You cannot drink potions in your current state!");
         return;
     }
+    
+    // The Great Wyrm: sometimes you will waste potion
+    if (player_under_penance(GOD_WYRM) && one_chance_in(3))
+    {
+        if (in_inventory(*potion))
+        {
+            dec_inv_item_quantity(potion->link, 1);
+            auto_assign_item_slot(*potion);
+        }
+        else if (in_bag(*potion))
+        {
+            potion->quantity--;
+            if (potion->quantity == 0) {
+                potion->base_type = OBJ_UNASSIGNED;
+                potion->props.clear();
+            }
+        }
+        else {
+            dec_mitm_item_quantity(potion->index(), 1);
+        }
+        count_action(CACT_USE, OBJ_POTIONS);
+        
+        simple_god_message(" extracts your potion just before you drink!", GOD_WYRM);
+        you.turn_is_over = true;
+        return;
+    }
 
     if (!potion)
     {
@@ -3078,6 +3121,10 @@ static void _rebrand_weapon(item_def& wpn)
 {
     if (&wpn == you.weapon() && you.duration[DUR_EXCRUCIATING_WOUNDS])
         end_weapon_brand(wpn);
+    if (&wpn == you.weapon() && you.duration[DUR_ELEMENTAL_WEAPON])
+        end_elemental_weapon(wpn);
+
+
     const brand_type old_brand = get_weapon_brand(wpn);
     brand_type new_brand = old_brand;
 
@@ -3470,7 +3517,7 @@ void random_uselessness()
         break;
 
     case 3:
-        if (you.species == SP_MUMMY)
+        if (you.species == SP_MUMMY || you.species == SP_LICH)
             mpr("Your bandages flutter.");
         else // if (you.can_smell())
             mprf("You smell %s.", _weird_smell().c_str());
@@ -3483,7 +3530,7 @@ void random_uselessness()
     case 5:
         if (you.get_mutation_level(MUT_BEAK) || one_chance_in(3))
             mpr("Your brain hurts!");
-        else if (you.species == SP_MUMMY || coinflip())
+        else if (you.species == SP_MUMMY || you.species == SP_LICH || coinflip())
             mpr("Your ears itch!");
         else
             mpr("Your nose twitches suddenly!");
@@ -3562,7 +3609,8 @@ static bool _is_cancellable_scroll(scroll_type scroll)
            || scroll == SCR_BRAND_WEAPON
            || scroll == SCR_ENCHANT_WEAPON
            || scroll == SCR_MAGIC_MAPPING
-           || scroll == SCR_ACQUIREMENT;
+           || scroll == SCR_ACQUIREMENT
+           || scroll == SCR_COLLECTION;
 }
 
 /**
@@ -3924,11 +3972,7 @@ void read_scroll(item_def& scroll)
         break;
 
     case SCR_ACQUIREMENT:
-        if (!alreadyknown)
-        {
-            mpr(pre_succ_msg);
             mpr("This is a scroll of acquirement!");
-        }
 
         // included in default force_more_message
         // Identify it early in case the player checks the '\' screen.
@@ -3948,6 +3992,19 @@ void read_scroll(item_def& scroll)
         cancel_scroll = !acquirement_menu();
         break;
 
+    case SCR_COLLECTION:
+        if (player_in_branch(BRANCH_ABYSS) 
+            || player_in_branch(BRANCH_PANDEMONIUM) )
+        {
+            mpr("You can't summon artefact in unstable location!");
+            cancel_scroll = true;
+        }
+        else
+        {
+            mpr("This is a scroll of collection!!!");
+            cancel_scroll = !artefact_acquirement_menu();
+        }
+        break;
     case SCR_FEAR:
         mpr("You assume a fearsome visage.");
         mass_enchantment(ENCH_FEAR, 1000);
@@ -4191,7 +4248,8 @@ void read_scroll(item_def& scroll)
 #if TAG_MAJOR_VERSION == 34
         && which_scroll != SCR_RECHARGING
 #endif
-        && which_scroll != SCR_AMNESIA)
+        && which_scroll != SCR_AMNESIA
+        && which_scroll != SCR_ACQUIREMENT)
     {
         mprf("It %s a %s.",
              scroll.quantity < prev_quantity ? "was" : "is",

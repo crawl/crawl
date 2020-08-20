@@ -14,6 +14,7 @@
 #include "abyss.h"
 #include "act-iter.h"
 #include "areas.h"
+#include "artefact.h"
 #include "attitude-change.h"
 #include "bloodspatter.h"
 #include "branch.h"
@@ -51,10 +52,14 @@
 #include "mapmark.h"
 #include "maps.h"
 #include "message.h"
+#include "melee-attack.h"
+#include "monster.h"
 #include "mon-act.h"
 #include "mon-behv.h"
 #include "mon-book.h"
+#include "mon-cast.h"
 #include "mon-death.h"
+#include "mon-ench.h"
 #include "mon-gear.h" // H: give_weapon()/give_armour()
 #include "mon-place.h"
 #include "mon-poly.h"
@@ -68,6 +73,7 @@
 #include "place.h"
 #include "player-equip.h"
 #include "player-stats.h"
+#include "player.h"
 #include "potion.h"
 #include "prompt.h"
 #include "random.h"
@@ -79,6 +85,7 @@
 #include "spl-book.h"
 #include "spl-goditem.h"
 #include "spl-monench.h"
+#include "spl-selfench.h"
 #include "spl-summoning.h"
 #include "spl-transloc.h"
 #include "spl-util.h"
@@ -153,6 +160,13 @@ bool bless_weapon(god_type god, brand_type brand, colour_t colour)
 {
     ASSERT(can_do_capstone_ability(god));
 
+
+    if (you.species == SP_DJINNI && brand == SPWPN_ANTIMAGIC)
+    {
+        mpr("You stop wishing to bless, since you cannot wield an antimagic weapon!");
+        return false;
+    }
+
     int item_slot = prompt_invent_item("Brand which weapon?",
                                        menu_type::invlist,
                                        OSEL_BLESSABLE_WEAPON, OPER_ANY,
@@ -194,6 +208,7 @@ bool bless_weapon(god_type god, brand_type brand, colour_t colour)
     else
         prompt += "blessed with holy wrath";
     prompt += "?";
+
     if (!yesno(prompt.c_str(), true, 'n'))
     {
         canned_msg(MSG_OK);
@@ -202,8 +217,11 @@ bool bless_weapon(god_type god, brand_type brand, colour_t colour)
 
     if (you.duration[DUR_EXCRUCIATING_WOUNDS]) // just in case
     {
-        ASSERT(you.weapon());
         end_weapon_brand(*you.weapon());
+    }
+    if (you.duration[DUR_ELEMENTAL_WEAPON]) // just in case
+    {
+        end_elemental_weapon(*you.weapon());
     }
 
     string old_name = wpn.name(DESC_A);
@@ -1383,7 +1401,7 @@ void tso_divine_shield()
 {
     if (!you.duration[DUR_DIVINE_SHIELD])
     {
-        if (you.shield())
+        if (you.shield()|| you.duration[DUR_CONDENSATION_SHIELD])
         {
             mprf("Your shield is strengthened by %s divine power.",
                  apostrophise(god_name(GOD_SHINING_ONE)).c_str());
@@ -1516,6 +1534,250 @@ void trog_remove_trogs_hand()
     you.duration[DUR_TROGS_HAND] = 0;
 }
 
+// Trog's Furious Charge, tweaks from palentoga by @PleasingFungus
+static bool _check_charge_through(coord_def pos)
+{
+    if (!you.can_pass_through_feat(grd(pos)))
+    {
+        clear_messages();
+        mprf("You can't charge into that!");
+        return false;
+    }
+
+    return true;
+}
+
+static bool _find_charge_target(vector<coord_def> &target_path, int max_range,
+                                targeter *hitfunc)
+{
+    // Check for unholy weapons, breadswinging, etc
+    if (!wielded_weapon_check(you.weapon()))
+        return false;
+
+    while (true)
+    {
+        // query for location {dlb}:
+        direction_chooser_args args;
+        args.restricts = DIR_TARGET;
+        args.mode = TARG_HOSTILE;
+        args.prefer_farthest = true;
+        args.top_prompt = "Choose target to charge.";
+        args.hitfunc = hitfunc;
+        dist beam;
+        direction(beam, args);
+
+        // TODO: deduplicate with _find_cblink_target
+        if (crawl_state.seen_hups)
+        {
+            mpr("Cancelling furious charge due to HUP.");
+            return false;
+        }
+
+        if (!beam.isValid || beam.target == you.pos())
+        {
+            canned_msg(MSG_OK);
+            return false;
+        }
+
+        const monster* beholder = you.get_beholder(beam.target);
+        if (beholder)
+        {
+            mprf("You cannot charge away from %s!",
+                beholder->name(DESC_THE, true).c_str());
+            continue;
+        }
+
+        const monster* fearmonger = you.get_fearmonger(beam.target);
+        if (fearmonger)
+        {
+            mprf("You cannot charge closer to %s!",
+                fearmonger->name(DESC_THE, true).c_str());
+            continue;
+        }
+
+        if (!you.see_cell_no_trans(beam.target))
+        {
+            clear_messages();
+            if (you.trans_wall_blocking(beam.target))
+                canned_msg(MSG_SOMETHING_IN_WAY);
+            else
+                canned_msg(MSG_CANNOT_SEE);
+            continue;
+        }
+
+        if (grid_distance(you.pos(), beam.target) > max_range)
+        {
+            mpr("That's out of range!"); // ! targeting
+            continue;
+        }
+
+        ray_def ray;
+        if (!find_ray(you.pos(), beam.target, ray, opc_solid))
+        {
+            mpr("You can't charge through that!");
+            continue;
+        }
+
+        // done with hard vetos; now we're on a mix of prompts and vetos.
+        // (Ideally we'd like to split these up and do all the vetos before
+        // the prompts, but...)
+
+        target_path.clear();
+        bool ok = true;
+        while (ray.advance())
+        {
+            target_path.push_back(ray.pos());
+            if (!can_charge_through_mons(ray.pos()))
+                break;
+            ok = _check_charge_through(ray.pos());
+            if (ray.pos() == beam.target || !ok)
+                break;
+        }
+        if (!ok)
+            continue;
+
+        // DON'T use beam.target here - we might have used ! targeting to
+        // target something behind another known monster
+        const monster* target_mons = monster_at(ray.pos());
+        const string bad_charge = bad_charge_target(ray.pos());
+        
+        if (adjacent(you.pos(), ray.pos()))
+        {
+            mprf("You're already next to %s!",
+                 target_mons->name(DESC_THE).c_str());
+            return false;
+        }
+
+        if (bad_charge != "")
+        {
+            mpr(bad_charge.c_str());
+            return false;
+        }
+
+        // prompt to make sure the player really wants to attack the monster
+        // (if extant and not hostile)
+        // Intentionally don't use the real attack position here - that's only
+        // used for sanctuary,
+        // so it's more accurate if we use our current pos, since sanctuary
+        // should move with us.
+        if (stop_attack_prompt(target_mons, false, target_mons->pos()))
+            return false;
+
+        ray.regress();
+        // confirm movement for the final square only
+        if (!check_moveto(ray.pos(), "charge"))
+            return false;
+
+        return true;
+    }
+}
+
+/**
+ * Attempt to charge the player to a target of their choosing.
+ *
+ * @param fail          Whether this came from a mis-invoked ability (& should
+ *                      therefore fail after selecting a target)
+ * @return              Whether the charge succeeded, aborted, or was miscast.
+ */
+spret furious_charge(bool fail)
+{
+    const int charge_range = 4;
+    const coord_def initial_pos = you.pos();
+
+    if (you.duration[DUR_EXHAUSTED])
+    {
+        mpr("You are too exhausted to charge agian!");
+        return spret::abort;
+    }
+
+    if (cancel_barbed_move())
+        return spret::abort;
+
+    vector<coord_def> target_path;
+    targeter_charge tgt(&you, charge_range);
+    tgt.obeys_mesmerise = true;
+    if (_find_charge_target(target_path, charge_range, &tgt) == false)
+        return spret::abort;
+
+    fail_check();
+
+    if (!you.attempt_escape(1)) // prints its own messages
+        return spret::success;
+
+    const coord_def target = target_path.back();
+    monster* target_mons = monster_at(target);
+
+    ASSERT(target_mons != nullptr);
+    // Are you actually moving forward?
+    if (grid_distance(you.pos(), target) > 1 || !target_mons)
+        mpr("You put yourself into furious rage, charge to target!");
+
+    crawl_state.cancel_cmd_again();
+    crawl_state.cancel_cmd_repeat();
+
+    const coord_def orig_pos = you.pos();
+    for (coord_def pos : target_path)
+    {
+        monster* sneaky_mons = monster_at(pos);
+        if (sneaky_mons)
+        {
+            target_mons = sneaky_mons;
+            break;
+        }
+    }
+    const coord_def dest_pos = target_path.at(target_path.size() - 2);
+
+    if (you.duration[DUR_WATER_HOLD])	
+    {
+        mpr("You slip free of the water engulfing you.");	
+        you.props.erase("water_holder");	
+        you.clear_far_engulf();	
+    }
+
+    move_player_to_grid(dest_pos, true);
+    noisy(12, you.pos());
+    apply_barbs_damage();
+    place_cloud(CLOUD_DUST, you.pos(), 2 + random2(3), &you);
+
+    if (you.pos() != dest_pos) // tornado and trap nonsense
+        return spret::success; // of a sort
+
+    // daze check before target reacts, makes effective your charge
+    // chance to daze: 20% at 1 range, 80% at 4 range
+    if (2 * (grid_distance(initial_pos, you.pos())) >= random2(9))
+    {
+        target_mons->add_ench(mon_enchant(ENCH_DAZED, 0, &you, 10 * BASELINE_DELAY));
+    }
+
+    if (target_mons->has_ench(ENCH_DAZED))
+        mprf("%s is knocked down by your furious strike!", target_mons->name(DESC_THE).c_str());
+
+    // Maybe we hit a trap and something weird happened.
+    if (!target_mons->alive() || !adjacent(you.pos(), target_mons->pos()))
+        return spret::success;
+
+    // manually apply noise
+    behaviour_event(target_mons, ME_ALERT, &you, you.pos()); // shout + set you as foe
+
+    // We got webbed/netted at the destination, bail on the attack.
+    if (you.attribute[ATTR_HELD])
+        return spret::success;
+
+    you.go_berserk(true);
+    you.increase_duration(DUR_EXHAUSTED, 5 + random2(6));
+
+    const int base_delay = you.time_taken;
+
+    melee_attack charge_atk(&you, target_mons);
+    charge_atk.attack();
+
+    // Normally this is 10 aut (times haste, etc), but slow weapons
+    // take longer. Most relevant for low-skill players and Dark Maul.
+    you.time_taken = max(you.time_taken, base_delay);
+
+    return spret::success;
+}
+
 /**
  * Has the monster been given a Beogh gift?
  *
@@ -1580,7 +1842,7 @@ static vector<monster* > _valid_beogh_gift_targets_in_sight()
 {
     vector<monster* > list_orcs;
     for (monster_near_iterator rad(you.pos(), LOS_NO_TRANS); rad; ++rad)
-        if (beogh_can_gift_items_to(*rad, true))
+        if (beogh_can_gift_items_to(*rad, true) || beogh_can_gift_items_to(*rad, true))
             list_orcs.push_back(*rad);
     sort(list_orcs.begin(), list_orcs.end(), 
     [](monster* m1, monster* m2){
@@ -1752,7 +2014,7 @@ bool beogh_gift_item()
         }
     }
 
-    desc_menu.on_single_selection = [&desc_menu, &list_orcs, &list_orc_infos](const MenuEntry& sel)
+    desc_menu.on_single_selection = [&list_orcs, &list_orc_infos](const MenuEntry& sel)
     {   
         monster* mons = list_orcs[distance(list_orc_infos.begin(), 
                                       find(list_orc_infos.begin(), list_orc_infos.end(), sel.data))];
@@ -3422,7 +3684,7 @@ bool gozag_call_merchant()
         // first index.
         if (type == SHOP_FOOD)
             continue;
-        if (type == SHOP_DISTILLERY && you.species == SP_MUMMY)
+        if (type == SHOP_DISTILLERY && (you.species == SP_MUMMY || you.species == SP_LICH))
             continue;
         if (type == SHOP_EVOKABLES && you.get_mutation_level(MUT_NO_ARTIFICE))
             continue;
@@ -5858,7 +6120,6 @@ bool hepliaklqana_choose_ancestor_type(int ancestor_choice)
     {
         ancestor->type = ancestor_type;
         give_weapon(ancestor, -1);
-        ASSERT(ancestor->weapon());
         give_shield(ancestor);
         set_ancestor_spells(*ancestor);
     }
@@ -6495,4 +6756,768 @@ void angel_good_god_help(bool closed_enemy) {
     default:
         break;
     }
+}
+
+/**
+ * Checks whether the target monster is a valid target for mercenary item-gifts.
+ *
+ * @param mons[in]  The monster to consider giving an item to.
+ * @param quiet     Whether to print messages if the target is invalid.
+ * @return          Whether the player can give an item to the monster.
+ */
+bool caravan_can_gift_items_to(const monster* mons, bool quiet)
+{
+    if (!mons || !mons->visible_to(&you))
+    {
+        if (!quiet)
+            canned_msg(MSG_NOTHING_THERE);
+        return false;
+    }
+
+    if (mons->attitude == ATT_FRIENDLY
+        // heavy armour melee: able to lots of equipments
+        && (mons->type == MONS_MERC_FIGHTER
+            || mons->type == MONS_MERC_KNIGHT
+            || mons->type == MONS_MERC_DEATH_KNIGHT
+            || mons->type == MONS_MERC_PALADIN
+        // EV-skald: polearms & light armour
+        || mons->type == MONS_MERC_SKALD
+            || mons->type == MONS_MERC_INFUSER
+            || mons->type == MONS_MERC_TIDEHUNTER
+        // pure-wizard: unable to lots of equipments
+        || mons->type == MONS_MERC_WITCH
+            || mons->type == MONS_MERC_SORCERESS
+            || mons->type == MONS_MERC_ELEMENTALIST
+        // stealth: short blades & light armour
+        || mons->type == MONS_MERC_BRIGAND
+            || mons->type == MONS_MERC_ASSASSIN
+            || mons->type == MONS_MERC_CLEANER
+        // gnoll: able to all equipments after grow
+        || mons->type == MONS_MERC_SHAMAN
+            || mons->type == MONS_MERC_SHAMAN_II
+            || mons->type == MONS_MERC_SHAMAN_III))
+    {
+        return true;
+    }
+
+    return false;
+}
+
+/**
+ * Return the monster* vector of valid mercenary for gifts in LOS.
+ */
+static vector<monster* > _valid_caravan_gift_targets_in_sight()
+{
+    vector<monster* > list_merc;
+    for (monster_near_iterator rad(you.pos(), LOS_NO_TRANS); rad; ++rad)
+        if (caravan_can_gift_items_to(*rad, true))
+            list_merc.push_back(*rad);
+    sort(list_merc.begin(), list_merc.end(), 
+    [](monster* m1, monster* m2){
+        monster_info m1i = monster_info(m1);
+        monster_info m2i = monster_info(m2);
+        return monster_info::less_than(m1i, m2i, true);});
+    return list_merc;
+}
+
+static bool _caravan_gift_items_to(monster* mons, int item_slot)
+{
+    item_def& gift = you.inv[item_slot];
+
+    const bool shield = is_shield(gift);
+    const bool body_armour = gift.base_type == OBJ_ARMOUR
+                             && get_armour_slot(gift) == EQ_BODY_ARMOUR;
+    const bool weapon = gift.base_type == OBJ_WEAPONS
+                             || gift.base_type == OBJ_STAVES;
+    const bool range_weapon = weapon && is_range_weapon(gift);
+    const item_def* mons_weapon = mons->weapon();
+    const item_def* mons_alt_weapon = mons->mslot_item(MSLOT_ALT_WEAPON);
+
+    if (weapon && !mons->could_wield(gift)
+        || body_armour && !check_armour_size(gift, mons->body_size())
+        || !item_is_selected(gift, OSEL_MERCENARY_GIFT))
+    {
+        mprf("You can't give that to %s.", mons->name(DESC_THE, false).c_str());
+        return false;
+    }
+    else if (shield
+             && (mons_weapon && mons->hands_reqd(*mons_weapon) == HANDS_TWO
+                 || mons_alt_weapon
+                    && mons->hands_reqd(*mons_alt_weapon) == HANDS_TWO))
+    {
+        mprf("%s can't equip that with a two-handed weapon.",
+             mons->name(DESC_THE, false).c_str());
+        return false;
+    }
+
+    const bool use_alt_slot = weapon && mons_weapon
+                              && is_range_weapon(gift) !=
+                                 is_range_weapon(*mons_weapon);
+
+    const auto mslot = body_armour ? MSLOT_ARMOUR :
+                                    shield ? MSLOT_SHIELD :
+                              use_alt_slot ? MSLOT_ALT_WEAPON :
+                                             MSLOT_WEAPON;
+
+    item_def *body_slot = mons->mslot_item(MSLOT_ARMOUR);
+
+    item_def* item_to_drop = mons->mslot_item(mslot);
+    if (item_to_drop && item_to_drop->cursed())
+    {
+        mprf(MSGCH_ERROR, "%s is cursed!", item_to_drop->name(DESC_THE, false).c_str());
+        return false;
+    }
+
+    if (gift.cursed() || (is_artefact(gift) && artefact_property(gift, ARTP_CURSE)))
+    {
+        mprf(MSGCH_ERROR, "%s is cursed!", gift.name(DESC_THE, false).c_str());
+        return false;
+    }
+
+    bool spellcaster = (mons->type == MONS_MERC_SKALD
+            || mons->type == MONS_MERC_INFUSER
+            || mons->type == MONS_MERC_TIDEHUNTER
+            || mons->type == MONS_MERC_WITCH
+            || mons->type == MONS_MERC_SORCERESS
+            || mons->type == MONS_MERC_ELEMENTALIST
+            || mons->type == MONS_MERC_SHAMAN
+            || mons->type == MONS_MERC_SHAMAN_II
+            || mons->type == MONS_MERC_SHAMAN_III);
+
+    if (spellcaster && ((is_artefact(gift)
+        && artefact_property(gift, ARTP_PREVENT_SPELLCASTING)
+            || get_weapon_brand(gift) == SPWPN_ANTIMAGIC)))
+    {
+        mprf("%s can't use spellcast-disturbing equipments.",
+             mons->name(DESC_THE, false).c_str());
+        return false;
+    }
+
+    if ((mons->type == MONS_MERC_BRIGAND
+            || mons->type == MONS_MERC_ASSASSIN
+            || mons->type == MONS_MERC_CLEANER)
+        && is_artefact(gift)
+        && (artefact_property(gift, ARTP_STEALTH) < 0
+            || artefact_property(gift, ARTP_ANGRY)
+            || artefact_property(gift, ARTP_NOISE)
+            || artefact_property(gift, ARTP_CAUSE_TELEPORTATION)))
+    {
+        mprf("%s can't use stealth-disturbing equipments.",
+             mons->name(DESC_THE, false).c_str());
+        return false;
+    }
+
+    if ((mons->type == MONS_MERC_DEATH_KNIGHT && is_holy_item(gift))
+       || (mons->type == MONS_MERC_PALADIN && is_evil_item(gift)))
+    {
+        mprf("%s rejects %s hand!",
+            gift.name(DESC_THE, false).c_str(), mons->name(DESC_THE, false).c_str());
+        return false;
+    }
+
+    // shields
+    if (is_shield(gift)) {
+
+        item_def *shield_slot = mons->mslot_item(MSLOT_SHIELD);
+        if ((mslot == MSLOT_WEAPON || mslot == MSLOT_ALT_WEAPON)
+            && shield_slot
+            && mons->hands_reqd(gift) == HANDS_TWO)
+        {
+            if (gift.cursed() || (is_artefact(gift) && artefact_property(gift, ARTP_CURSE)))
+            {
+                mprf(MSGCH_ERROR, "%s is cursed!", gift.name(DESC_THE, false).c_str());
+                return false;
+            }
+        }
+
+        if ((mons->type == MONS_MERC_WITCH
+            || mons->type == MONS_MERC_SORCERESS
+            || mons->type == MONS_MERC_ELEMENTALIST)) // unable to all kinds of shield
+        {
+            mprf("%s is too heavy for %s!",
+                gift.name(DESC_THE, false).c_str(), mons->name(DESC_THE, false).c_str());
+            return false;
+        }
+
+        if (gift.sub_type == ARM_LARGE_SHIELD // able to knights, cheiftain
+            && (mons->type == MONS_MERC_FIGHTER
+            || mons->type == MONS_MERC_SKALD
+            || mons->type == MONS_MERC_INFUSER
+            || mons->type == MONS_MERC_TIDEHUNTER
+            || mons->type == MONS_MERC_BRIGAND
+            || mons->type == MONS_MERC_ASSASSIN
+            || mons->type == MONS_MERC_CLEANER
+            || mons->type == MONS_MERC_SHAMAN
+            || mons->type == MONS_MERC_SHAMAN_II))
+        {
+            if (mons->type == MONS_MERC_FIGHTER
+               || mons->type == MONS_MERC_SHAMAN || mons->type == MONS_MERC_SHAMAN_II)
+            {
+                mprf("%s isn't enough skilled to equip %s!",
+                    mons->name(DESC_THE, false).c_str(), gift.name(DESC_THE, false).c_str());
+                return false;
+
+            } else {
+
+                mprf("%s is too heavy for %s!",
+                    gift.name(DESC_THE, false).c_str(), mons->name(DESC_THE, false).c_str());
+                return false;
+            }
+        }
+
+        if (gift.sub_type == ARM_SHIELD // able to soldier->knights, ritualist->cheiftain
+            && (mons->type == MONS_MERC_SKALD
+            || mons->type == MONS_MERC_INFUSER
+            || mons->type == MONS_MERC_TIDEHUNTER
+            || mons->type == MONS_MERC_BRIGAND
+            || mons->type == MONS_MERC_ASSASSIN
+            || mons->type == MONS_MERC_CLEANER
+            || mons->type == MONS_MERC_SHAMAN))
+        {
+            if (mons->type == MONS_MERC_SHAMAN)
+            {
+                mprf("%s isn't enough skilled to equip %s!",
+                    mons->name(DESC_THE, false).c_str(), gift.name(DESC_THE, false).c_str());
+                return false;
+
+            } else {
+
+                mprf("%s is too heavy for %s!",
+                    gift.name(DESC_THE, false).c_str(), mons->name(DESC_THE, false).c_str());
+                return false;
+            }
+        } }
+
+    if (weapon) {// weapons.
+
+        // ranged weapon
+        if (range_weapon)
+        {
+
+            switch (gift.sub_type)
+            {
+            case WPN_HUNTING_SLING: // tier-1
+                switch (mons->type){
+                    case MONS_MERC_SHAMAN:
+                    case MONS_MERC_SHAMAN_II:
+                    case MONS_MERC_SHAMAN_III:
+                        break;
+                    default:
+                        mprf("%s isn't enough skilled to equip %s!",
+                        mons->name(DESC_THE, false).c_str(), gift.name(DESC_THE, false).c_str());
+                        return false;
+                }
+            case WPN_FUSTIBALUS: // tier-2
+            case WPN_SHORTBOW:
+            case WPN_HAND_CROSSBOW:
+                switch (mons->type){
+                    case MONS_MERC_SHAMAN_II:
+                    case MONS_MERC_SHAMAN_III:
+                        break;
+                    default:
+                        mprf("%s isn't enough skilled to equip %s!",
+                        mons->name(DESC_THE, false).c_str(), gift.name(DESC_THE, false).c_str());
+                        return false;
+                }
+            case WPN_LONGBOW: // tier-3
+            case WPN_ARBALEST:
+                switch (mons->type){
+                    case MONS_MERC_SHAMAN_III:
+                        break;
+                    default:
+                        mprf("%s isn't enough skilled to equip %s!",
+                        mons->name(DESC_THE, false).c_str(), gift.name(DESC_THE, false).c_str());
+                        return false;
+                }
+            case WPN_TRIPLE_CROSSBOW: // tier-4
+            default:
+                mprf("%s isn't enough skilled to equip %s!",
+                mons->name(DESC_THE, false).c_str(), gift.name(DESC_THE, false).c_str());
+                return false;
+            }
+        }
+
+        // polearms for skald.
+        if (mons->type == MONS_MERC_SKALD
+            || mons->type == MONS_MERC_INFUSER
+            || mons->type == MONS_MERC_TIDEHUNTER)
+        {
+            if (item_attack_skill(gift) != SK_POLEARMS)
+            {
+                mprf("%s can only equip polearms.",
+                mons->name(DESC_THE, false).c_str());
+                return false;
+            }
+
+            if (mons->type == MONS_MERC_SKALD
+                && (gift.sub_type == WPN_SCYTHE
+                   || gift.sub_type == WPN_GLAIVE
+                   || gift.sub_type == WPN_BARDICHE))
+            {
+                mprf("%s isn't enough skilled to equip %s!",
+                mons->name(DESC_THE, false).c_str(), gift.name(DESC_THE, false).c_str());
+                return false;
+            }
+
+            if (mons->type == MONS_MERC_INFUSER
+                && (gift.sub_type == WPN_SCYTHE
+                   || gift.sub_type == WPN_BARDICHE))
+            {
+                mprf("%s isn't enough skilled to equip %s!",
+                mons->name(DESC_THE, false).c_str(), gift.name(DESC_THE, false).c_str());
+                return false;
+            }
+        }
+
+        // magical staves for witch
+        if (mons->type == MONS_MERC_WITCH
+            || mons->type == MONS_MERC_SORCERESS
+            || mons->type == MONS_MERC_ELEMENTALIST)
+        {
+            if (gift.base_type != OBJ_STAVES)
+            {
+                mprf("%s can only equip magical staves.",
+                mons->name(DESC_THE, false).c_str());
+                return false;
+            }
+
+            if (gift.base_type == OBJ_STAVES)
+            {
+                if (set_spell_witch(mons, gift.sub_type, false) == false) {
+                    return false;
+                }
+            }
+        }
+
+        // stealth weapon for brigand.
+        if (mons->type == MONS_MERC_BRIGAND
+            || mons->type == MONS_MERC_ASSASSIN
+            || mons->type == MONS_MERC_CLEANER)
+        {
+            if (item_attack_skill(gift) != SK_SHORT_BLADES)
+            {
+                mprf("%s can only equip short blades.",
+                mons->name(DESC_THE, false).c_str());
+                return false;
+            }
+        }
+
+        // soldier is profassional of all kinds of melee weapon
+        if (mons->type == MONS_MERC_FIGHTER
+            && (gift.sub_type == WPN_DOUBLE_SWORD
+                || gift.sub_type == WPN_GREAT_SWORD
+                || gift.sub_type == WPN_TRIPLE_SWORD
+                || gift.sub_type == WPN_BROAD_AXE
+                || gift.sub_type == WPN_BATTLEAXE
+                || gift.sub_type == WPN_EXECUTIONERS_AXE
+                || gift.sub_type == WPN_SCYTHE
+                || gift.sub_type == WPN_GLAIVE
+                || gift.sub_type == WPN_BARDICHE
+                || gift.sub_type == WPN_GREAT_MACE
+                || gift.sub_type == WPN_GIANT_CLUB
+                || gift.sub_type == WPN_GIANT_SPIKED_CLUB))
+        {
+            mprf("%s isn't enough skilled to equip %s!",
+            mons->name(DESC_THE, false).c_str(), gift.name(DESC_THE, false).c_str());
+            return false;
+        }
+
+        if (mons->type == MONS_MERC_KNIGHT
+            && (gift.sub_type == WPN_TRIPLE_SWORD
+                || gift.sub_type == WPN_EXECUTIONERS_AXE
+                || gift.sub_type == WPN_SCYTHE
+                || gift.sub_type == WPN_BARDICHE
+                || gift.sub_type == WPN_GIANT_CLUB
+                || gift.sub_type == WPN_GIANT_SPIKED_CLUB))
+        {
+            mprf("%s isn't enough skilled to equip %s!",
+            mons->name(DESC_THE, false).c_str(), gift.name(DESC_THE, false).c_str());
+            return false;
+        }
+
+        // after grow, shaman becomes jack-of-all-trades
+        if (mons->type == MONS_MERC_SHAMAN
+            && (gift.sub_type == WPN_SCIMITAR
+                || gift.sub_type == WPN_DOUBLE_SWORD
+                || gift.sub_type == WPN_GREAT_SWORD
+                || gift.sub_type == WPN_TRIPLE_SWORD
+                || gift.sub_type == WPN_LAJATANG
+                || gift.sub_type == WPN_WAR_AXE
+                || gift.sub_type == WPN_BROAD_AXE
+                || gift.sub_type == WPN_BATTLEAXE
+                || gift.sub_type == WPN_EXECUTIONERS_AXE
+                || gift.sub_type == WPN_SCYTHE
+                || gift.sub_type == WPN_HALBERD
+                || gift.sub_type == WPN_GLAIVE
+                || gift.sub_type == WPN_BARDICHE
+                || gift.sub_type == WPN_FLAIL
+                || gift.sub_type == WPN_MORNINGSTAR
+                || gift.sub_type == WPN_EVENINGSTAR
+                || gift.sub_type == WPN_GREAT_MACE
+                || gift.sub_type == WPN_GIANT_CLUB
+                || gift.sub_type == WPN_GIANT_SPIKED_CLUB))
+        {
+            mprf("%s isn't enough skilled to equip %s!",
+            mons->name(DESC_THE, false).c_str(), gift.name(DESC_THE, false).c_str());
+            return false;
+        }
+
+        if (mons->type == MONS_MERC_SHAMAN_II
+            && (gift.sub_type == WPN_DOUBLE_SWORD
+                || gift.sub_type == WPN_GREAT_SWORD
+                || gift.sub_type == WPN_TRIPLE_SWORD
+                || gift.sub_type == WPN_BROAD_AXE
+                || gift.sub_type == WPN_BATTLEAXE
+                || gift.sub_type == WPN_EXECUTIONERS_AXE
+                || gift.sub_type == WPN_SCYTHE
+                || gift.sub_type == WPN_GLAIVE
+                || gift.sub_type == WPN_BARDICHE
+                || gift.sub_type == WPN_MORNINGSTAR
+                || gift.sub_type == WPN_EVENINGSTAR
+                || gift.sub_type == WPN_GREAT_MACE
+                || gift.sub_type == WPN_GIANT_CLUB
+                || gift.sub_type == WPN_GIANT_SPIKED_CLUB))
+        {
+            mprf("%s isn't enough skilled to equip %s!",
+            mons->name(DESC_THE, false).c_str(), gift.name(DESC_THE, false).c_str());
+            return false;
+        }
+
+        if (mons->type == MONS_MERC_SHAMAN_III
+            && (gift.sub_type == WPN_TRIPLE_SWORD
+                || gift.sub_type == WPN_EXECUTIONERS_AXE
+                || gift.sub_type == WPN_SCYTHE
+                || gift.sub_type == WPN_BARDICHE
+                || gift.sub_type == WPN_GREAT_MACE
+                || gift.sub_type == WPN_GIANT_CLUB
+                || gift.sub_type == WPN_GIANT_SPIKED_CLUB))
+        {
+            mprf("%s isn't enough skilled to equip %s!",
+            mons->name(DESC_THE, false).c_str(), gift.name(DESC_THE, false).c_str());
+            return false;
+        }
+    }
+
+    if (body_slot && !is_shield(gift)) {// body armours.
+
+        const int ER = -property(gift, PARM_EVASION) / 10;
+        if (((mons->type == MONS_MERC_WITCH
+            || mons->type == MONS_MERC_SORCERESS
+            || mons->type == MONS_MERC_ELEMENTALIST)
+            && ER > 0)
+	    
+        || ((mons->type == MONS_MERC_SKALD
+            || mons->type == MONS_MERC_INFUSER
+            || mons->type == MONS_MERC_TIDEHUNTER
+            || mons->type == MONS_MERC_BRIGAND
+            || mons->type == MONS_MERC_ASSASSIN
+            || mons->type == MONS_MERC_CLEANER
+            || mons->type == MONS_MERC_SHAMAN)
+            && ER > 4)
+	    
+        || ((mons->type == MONS_MERC_SHAMAN_II)
+            && ER > 11)
+	    
+        || ((mons->type == MONS_MERC_SHAMAN_III
+            || mons->type == MONS_MERC_FIGHTER
+            || mons->type == MONS_MERC_KNIGHT)
+            && ER > 15))
+        {
+            if (mons->type == MONS_MERC_SHAMAN_II || mons->type == MONS_MERC_SHAMAN_III)
+            {
+                mprf("%s isn't enough skilled to equip %s!",
+                    mons->name(DESC_THE, false).c_str(), gift.name(DESC_THE, false).c_str());
+                return false;
+            }
+	    
+            mprf("%s is too heavy for %s!",
+                gift.name(DESC_THE, false).c_str(), mons->name(DESC_THE, false).c_str());
+            return false;
+        }
+    }
+
+    item_def *floor_item = mons->take_item(item_slot, mslot);
+    if (!floor_item)
+    {
+        // this probably means move_to_grid in drop_item failed?
+        mprf(MSGCH_ERROR, "Gift failed: %s is unable to take %s.",
+                                        mons->name(DESC_THE, false).c_str(),
+                                        gift.name(DESC_THE, false).c_str());
+        return false;
+    }
+    if (use_alt_slot)
+        mons->swap_weapons();
+
+    dprf("is_ranged weap: %d", range_weapon);
+    if (range_weapon)
+        gift_ammo_to_orc(mons, true); // give a small initial ammo freebie
+
+    you.del_gold(100 * (1 + you.attribute[ATTR_CARAVAN_ITEM_COST]));
+    you.attribute[ATTR_CARAVAN_ITEM_COST]++;
+
+    return true;
+}
+
+/**
+ * Allow the caravan player to give an item to a mercenary.
+ *
+ * @returns whether an item was given.
+ */
+bool caravan_gift_item()
+{
+    vector<monster *> list_merc = _valid_caravan_gift_targets_in_sight();
+    vector<monster_info *> list_merc_infos;
+    if (list_merc.empty())
+    {
+        mpr("You cannot find mercenary in your sight.");
+        return false;
+    }
+
+    const int cost_min = 100 * (1 + you.attribute[ATTR_CARAVAN_ITEM_COST]);
+    if (you.gold < cost_min)
+    {
+        mprf("You need at least %d gold to do this.", cost_min);
+        return false;
+    }
+
+    for (const monster* mercenary : list_merc)
+    {
+        monster_info* mi = new monster_info(mercenary);
+        list_merc_infos.push_back(mi);
+    }
+
+    InvMenu desc_menu(MF_SINGLESELECT | MF_ANYPRINTABLE
+                        | MF_ALLOW_FORMATTING | MF_SELECT_BY_PAGE);
+
+
+    string title = "Select a mercenary to give a gift to.";
+    desc_menu.set_title(new MenuEntry(title, MEL_TITLE));
+    desc_menu.menu_action  = InvMenu::ACT_EXECUTE;
+    // Start with hotkey 'a' and count from there.
+    menu_letter hotkey;
+    // Build menu entries for monsters.
+    
+    desc_menu.add_entry(new MenuEntry("Mercs", MEL_SUBTITLE));
+    for (const monster_info* mi : list_merc_infos)
+    {
+        // List merc in the form
+        string prefix = "";
+#ifndef USE_TILE_LOCAL
+            cglyph_t g = get_mons_glyph(*mi);
+            const string col_string = colour_to_str(g.col);
+            prefix = "(<" + col_string + ">"
+                    + (g.ch == '<' ? "<<" : stringize_glyph(g.ch))
+                    + "</" + col_string + ">) ";
+#endif
+        string str = get_monster_equipment_desc(*mi, DESC_FULL, DESC_A, false);
+
+#ifndef USE_TILE_LOCAL
+            // Wraparound if the description is longer than allowed.
+            linebreak_string(str, get_number_of_cols() - 9);
+#endif
+        vector<formatted_string> fss;
+        formatted_string::parse_string_to_multiple(str, fss);
+        MenuEntry *me = nullptr;
+        for (unsigned int j = 0; j < fss.size(); ++j)
+        {
+            if (j == 0)
+                me = new MonsterMenuEntry(prefix + fss[j].tostring(), mi, hotkey++);
+#ifndef USE_TILE_LOCAL
+            else
+            {
+                str = "         " + fss[j].tostring();
+                me = new MenuEntry(str, MEL_ITEM, 1);
+            }
+#endif
+            desc_menu.add_entry(me);
+        }
+    }
+
+    desc_menu.on_single_selection = [&list_merc, &list_merc_infos](const MenuEntry& sel)
+    {   
+        monster* mons = list_merc[distance(list_merc_infos.begin(), 
+                                      find(list_merc_infos.begin(), list_merc_infos.end(), sel.data))];
+
+        // Gift Part
+        int item_slot = prompt_invent_item("Give which item?",
+                                       menu_type::invlist, OSEL_MERCENARY_GIFT);
+
+        if (item_slot == PROMPT_ABORT || item_slot == PROMPT_NOTHING)
+        {
+            canned_msg(MSG_OK);
+            return false;
+        }
+        _caravan_gift_items_to(mons, item_slot);
+        return false;
+    };
+    desc_menu.show();
+    redraw_screen();
+    return true;
+}
+
+bool set_spell_witch(monster* mons, int sub_type, bool slience) {
+
+    switch (sub_type)
+    {
+    case STAFF_FIRE:
+        mons->spells.clear();
+        switch (mons->type)
+        {
+        case MONS_MERC_WITCH:
+            mons->spells.emplace_back(SPELL_THROW_FLAME, 66, MON_SPELL_WIZARD);
+            break;
+        case MONS_MERC_SORCERESS:
+            mons->spells.emplace_back(SPELL_THROW_FLAME, 66, MON_SPELL_WIZARD | MON_SPELL_LONG_RANGE);
+            mons->spells.emplace_back(SPELL_BOLT_OF_FIRE, 80, MON_SPELL_WIZARD);
+            break;
+        case MONS_MERC_ELEMENTALIST:
+            mons->spells.emplace_back(SPELL_BOLT_OF_FIRE, 66, MON_SPELL_WIZARD);
+            mons->spells.emplace_back(SPELL_FIREBALL, 80, MON_SPELL_WIZARD | MON_SPELL_LONG_RANGE);
+            break;
+        default:
+            break;
+        }
+        break;
+    case STAFF_COLD:
+        mons->spells.clear();
+        switch (mons->type)
+        {
+        case MONS_MERC_WITCH:
+            mons->spells.emplace_back(SPELL_THROW_FROST, 66, MON_SPELL_WIZARD);
+            break;
+        case MONS_MERC_SORCERESS:
+            mons->spells.emplace_back(SPELL_THROW_FROST, 66, MON_SPELL_WIZARD | MON_SPELL_LONG_RANGE);
+            mons->spells.emplace_back(SPELL_BOLT_OF_COLD, 80, MON_SPELL_WIZARD);
+            break;
+        case MONS_MERC_ELEMENTALIST:
+            mons->spells.emplace_back(SPELL_BOLT_OF_COLD, 66, MON_SPELL_WIZARD);
+            mons->spells.emplace_back(SPELL_FREEZING_CLOUD, 80, MON_SPELL_WIZARD | MON_SPELL_LONG_RANGE);
+            break;
+        default:
+            break;
+        }
+        break;
+    case STAFF_AIR:
+        mons->spells.clear();
+        switch (mons->type)
+        {
+        case MONS_MERC_WITCH:
+            mons->spells.emplace_back(SPELL_SHOCK, 66, MON_SPELL_WIZARD);
+            break;
+        case MONS_MERC_SORCERESS:
+            mons->spells.emplace_back(SPELL_LIGHTNING_BOLT, 66, MON_SPELL_WIZARD);
+            break;
+        case MONS_MERC_ELEMENTALIST:
+            mons->spells.emplace_back(SPELL_LIGHTNING_BOLT, 66, MON_SPELL_WIZARD | MON_SPELL_LONG_RANGE);
+            mons->spells.emplace_back(SPELL_CHAIN_LIGHTNING, 80, MON_SPELL_WIZARD);
+            break;
+        default:
+            break;
+        }
+        break;
+    case STAFF_EARTH:
+        mons->spells.clear();
+        switch (mons->type)
+        {
+        case MONS_MERC_WITCH:
+            mons->spells.emplace_back(SPELL_STONESKIN, 11, MON_SPELL_WIZARD);
+            mons->spells.emplace_back(SPELL_SANDBLAST, 80, MON_SPELL_WIZARD);
+            break;
+        case MONS_MERC_SORCERESS:
+            mons->spells.emplace_back(SPELL_STONESKIN, 11, MON_SPELL_WIZARD);
+            mons->spells.emplace_back(SPELL_STONE_ARROW, 80, MON_SPELL_WIZARD);
+            break;
+        case MONS_MERC_ELEMENTALIST:
+            mons->spells.emplace_back(SPELL_STONESKIN, 11, MON_SPELL_WIZARD);
+            mons->spells.emplace_back(SPELL_IRON_SHOT, 80, MON_SPELL_WIZARD);
+            break;
+        default:
+            break;
+        }
+        break;
+    case STAFF_POISON:
+        mons->spells.clear();
+        switch (mons->type)
+        {
+        case MONS_MERC_WITCH:
+            mons->spells.emplace_back(SPELL_STING, 33, MON_SPELL_WIZARD);
+            mons->spells.emplace_back(SPELL_MEPHITIC_CLOUD, 33, MON_SPELL_WIZARD);
+            break;
+        case MONS_MERC_SORCERESS:
+            mons->spells.emplace_back(SPELL_VENOM_BOLT, 33, MON_SPELL_WIZARD);
+            mons->spells.emplace_back(SPELL_MEPHITIC_CLOUD, 33, MON_SPELL_WIZARD);
+            break;
+        case MONS_MERC_ELEMENTALIST:
+            mons->spells.emplace_back(SPELL_POISON_ARROW, 33, MON_SPELL_WIZARD);
+            mons->spells.emplace_back(SPELL_MEPHITIC_CLOUD, 33, MON_SPELL_WIZARD);
+            break;
+        default:
+            break;
+        }
+        break;
+    case STAFF_DEATH:
+        mons->spells.clear();
+        switch (mons->type)
+        {
+        case MONS_MERC_WITCH:
+            mons->spells.emplace_back(SPELL_PAIN, 66, MON_SPELL_WIZARD);
+            break;
+        case MONS_MERC_SORCERESS:
+            mons->spells.emplace_back(SPELL_AGONY, 66, MON_SPELL_WIZARD);
+            mons->spells.emplace_back(SPELL_DISPEL_UNDEAD, 66, MON_SPELL_WIZARD);
+            break;
+        case MONS_MERC_ELEMENTALIST:
+            mons->spells.emplace_back(SPELL_AGONY, 66, MON_SPELL_WIZARD);
+            mons->spells.emplace_back(SPELL_DISPEL_UNDEAD, 66, MON_SPELL_WIZARD);
+            mons->spells.emplace_back(SPELL_DEATHS_DOOR, 80, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY);
+            break;
+        default:
+            break;
+        }
+        break;
+    case STAFF_CONJURATION:
+        mons->spells.clear();
+        switch (mons->type)
+        {
+        case MONS_MERC_WITCH:
+            mons->spells.emplace_back(SPELL_DAZZLING_SPRAY, 66, MON_SPELL_WIZARD);
+            break;
+        case MONS_MERC_SORCERESS:
+            mons->spells.emplace_back(SPELL_DAZZLING_SPRAY, 66, MON_SPELL_WIZARD);
+            mons->spells.emplace_back(SPELL_FORCE_LANCE, 80, MON_SPELL_WIZARD);
+            break;
+        case MONS_MERC_ELEMENTALIST:
+            mons->spells.emplace_back(SPELL_DAZZLING_SPRAY, 66, MON_SPELL_WIZARD);
+            mons->spells.emplace_back(SPELL_FORCE_LANCE, 80, MON_SPELL_WIZARD);
+            mons->spells.emplace_back(SPELL_BATTLESPHERE, 11, MON_SPELL_WIZARD);
+            break;
+        default:
+            break;
+        }
+        break;
+    case STAFF_SUMMONING:
+        mons->spells.clear();
+        switch (mons->type)
+        {
+        case MONS_MERC_WITCH:
+            mons->spells.emplace_back(SPELL_CALL_CANINE_FAMILIAR, 50, MON_SPELL_WIZARD);
+            break;
+        case MONS_MERC_SORCERESS:
+            mons->spells.emplace_back(SPELL_SUMMON_ICE_BEAST, 50, MON_SPELL_WIZARD);
+            break;
+        case MONS_MERC_ELEMENTALIST:
+            mons->spells.emplace_back(SPELL_MONSTROUS_MENAGERIE, 50, MON_SPELL_WIZARD);
+            break;
+        default:
+            break;
+        }
+        break;
+    default: // wizardry, power, energy
+        if (!slience) {
+            mprf("This staff isn't useful for %s.",
+                mons->name(DESC_THE, false).c_str());
+        }
+        return false;
+    }
+    return true;
 }

@@ -590,6 +590,25 @@ int manual_slot_for_skill(skill_type skill)
     return slot;
 }
 
+int get_all_manual_charges_for_skill(skill_type skill)
+{
+    int charges = 0;
+
+    FixedVector<item_def,ENDOFPACK>::const_pointer iter = you.inv.begin();
+    for (;iter!=you.inv.end(); ++iter)
+    {
+        if (iter->base_type != OBJ_BOOKS || iter->sub_type != BOOK_MANUAL)
+            continue;
+
+        if (iter->skill != skill || iter->skill_points == 0)
+            continue;
+
+        charges += iter->skill_points;
+    }
+
+    return charges;
+}
+
 bool skill_has_manual(skill_type skill)
 {
     return manual_slot_for_skill(skill) != -1;
@@ -2257,7 +2276,7 @@ bool evoke_item(int slot)
     case OBJ_MISCELLANY:
         did_work = true; // easier to do it this way for misc items
 
-        if (item.sub_type != MISC_ZIGGURAT)
+        if (item.sub_type != MISC_ZIGGURAT && item.sub_type != MISC_BAG)
         {
             if (you.get_mutation_level(MUT_NO_ARTIFICE))
             {

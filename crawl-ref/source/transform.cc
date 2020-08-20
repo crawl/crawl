@@ -1023,6 +1023,14 @@ public:
     }
 };
 
+class FormGolem : public Form
+{
+private:
+    FormGolem() : Form(transformation::golem) { }
+    DISALLOW_COPY_AND_ASSIGN(FormGolem);
+public:
+    static const FormGolem &instance() { static FormGolem inst; return inst; }
+};
 
 
 
@@ -1054,6 +1062,7 @@ static const Form* forms[] =
     &FormHydra::instance(),
     &FormHolySwine::instance(),
     &FormEldritch::instance(),
+    &FormGolem::instance(),
 };
 
 const Form* get_form(transformation xform)
@@ -1835,6 +1844,7 @@ bool transform(int pow, transformation which_trans, bool involuntary,
     you.redraw_quiver       = true;
     you.redraw_evasion      = true;
     you.redraw_armour_class = true;
+    you.redraw_title        = true;
     you.wield_change        = true;
     if (form_changed_physiology(which_trans))
         merfolk_stop_swimming();
@@ -1844,6 +1854,15 @@ bool transform(int pow, transformation which_trans, bool involuntary,
 
     // Give the transformation message.
     mpr(get_form(which_trans)->transform_message(previous_trans));
+
+    if (form_changed_physiology(which_trans)
+        && which_trans != transformation::statue
+        && you.duration[DUR_STONESKIN])
+    {
+        mprf("Your stony body turns to %s.",
+             get_form(which_trans)->flesh_equivalent.c_str());
+        you.duration[DUR_STONESKIN] = 0;
+    }
 
     // Update your status.
     // Order matters here, take stuff off (and handle attendant HP and stat
@@ -1871,6 +1890,17 @@ bool transform(int pow, transformation which_trans, bool involuntary,
     {
         mpr("Your mandibles meld away.");
         you.digging = false;
+    }
+
+    if (you.species == SP_HYDRA && !you.has_hydra_multi_attack())
+    {
+        switch(which_trans)
+        {
+            default:
+                mprf(MSGCH_INTRINSIC_GAIN, "Your heads are disappeared.");
+                break;
+        }
+        
     }
 
     // Extra effects
@@ -1951,6 +1981,26 @@ bool transform(int pow, transformation which_trans, bool involuntary,
         you.malmutate("eldritch form");
         break;
 
+    case transformation::golem:
+        if (you.attribute[ATTR_HELD])
+        {
+            trap_def *trap = trap_at(you.pos());
+            if (trap && trap->type == TRAP_WEB)
+            {
+                mpr("You shred the web into pieces!");
+                destroy_trap(you.pos());
+            }
+            int net = get_trapping_net(you.pos());
+            if (net != NON_ITEM)
+            {
+                mpr("The net rips apart!");
+                destroy_item(net);
+            }
+
+            stop_being_held();
+        }
+        break;
+
     default:
         break;
     }
@@ -1975,7 +2025,7 @@ bool transform(int pow, transformation which_trans, bool involuntary,
 
 
     // If we are no longer living, end an effect that afflicts only the living
-    if (you.duration[DUR_FLAYED] && !(you.holiness() & MH_NATURAL))
+    if (you.duration[DUR_FLAYED] && (!(you.holiness() & MH_NATURAL) || which_trans == transformation::eldritch))
     {
         // Heal a little extra if we gained max hp from this transformation
         if (form_hp_mod() != 10)
@@ -2035,6 +2085,7 @@ void untransform(bool skip_move)
     you.redraw_evasion          = true;
     you.redraw_armour_class     = true;
     you.wield_change            = true;
+    you.redraw_title            = true;
     you.received_weapon_warning = false;
     if (you.props.exists(TRANSFORM_POW_KEY))
         you.props.erase(TRANSFORM_POW_KEY);
@@ -2109,6 +2160,17 @@ void untransform(bool skip_move)
             merfolk_check_swimming(false);
     }
 
+    if (you.species == SP_HYDRA && !you.has_hydra_multi_attack())
+    {
+        switch(old_form)
+        {
+            default:
+                mprf(MSGCH_INTRINSIC_GAIN, "Your heads appear again.");
+                break;
+        }
+        
+    }
+
 #ifdef USE_TILE
     if (you.species == SP_MERFOLK)
         init_player_doll();
@@ -2166,6 +2228,7 @@ void untransform(bool skip_move)
             you.stop_being_constricted();
     }
 
+    notify_stat_change();
     you.turn_is_over = true;
     if (you.transform_uncancellable)
         you.transform_uncancellable = false;

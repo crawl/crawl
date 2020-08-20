@@ -1048,6 +1048,11 @@ This area is bathed in translocational energy, causing creatures to blink away
 from the originator of the energy with an increasing chance the closer they are
 to the caster.
 %%%%
+within healaura
+
+This area is filled by healing energy, affects to the owner's allies. This healing
+cannot affects you, but the owner's allies are healed 10 HP for every turns.
+%%%%
 ########################################################################
 ### Other effects
 ########################################################################

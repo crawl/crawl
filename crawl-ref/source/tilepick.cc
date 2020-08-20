@@ -465,6 +465,10 @@ tileidx_t tileidx_feature_base(dungeon_feature_type feat)
         return TILE_DNGN_ALTAR_HEPLIAKLQANA;
     case DNGN_ALTAR_WU_JIAN:
         return TILE_DNGN_ALTAR_WU_JIAN;
+    case DNGN_ALTAR_WYRM:
+        return TILE_DNGN_ALTAR_WYRM;
+    case DNGN_ALTAR_IMUS:
+        return TILE_DNGN_ALTAR_IMUS;
     case DNGN_ALTAR_ECUMENICAL:
         return TILE_DNGN_ALTAR_ECUMENICAL;
     case DNGN_FOUNTAIN_BLUE:
@@ -927,7 +931,7 @@ void tileidx_out_of_los(tileidx_t *fg, tileidx_t *bg, tileidx_t *cloud, const co
     // written to what the player remembers. We'll feather that in here.
 
     // save any rays, which will get overwritten by mapped terrain
-    auto rays = *bg & (TILE_FLAG_RAY_MULTI | TILE_FLAG_RAY_OOR | TILE_FLAG_RAY
+    auto rays = *bg & (TILE_FLAG_RAY_MULTI | TILE_FLAG_RAY_BI | TILE_FLAG_RAY_OOR | TILE_FLAG_RAY
                         | TILE_FLAG_LANDING);
 
     const map_cell &cell = env.map_knowledge(gc);
@@ -2622,7 +2626,7 @@ static tileidx_t _tileidx_misc(const item_def &item)
     case MISC_CRYSTAL_BALL_OF_ENERGY:
         return TILE_MISC_CRYSTAL_BALL_OF_ENERGY;
     case MISC_DISC_OF_STORMS:
-	return TILE_MISC_DISC_OF_STORMS;
+    return TILE_MISC_DISC_OF_STORMS;
     case MISC_LIGHTNING_ROD:
         return evoker_charges(item.sub_type) ? TILE_MISC_LIGHTNING_ROD
                                              : TILE_MISC_LIGHTNING_ROD_INERT;
@@ -3034,9 +3038,7 @@ tileidx_t tileidx_cloud(const cloud_info &cl)
     if (colour != -1)
         ch = tile_main_coloured(ch, colour);
 
-    // XXX: Should be no need for TILE_FLAG_FLYING anymore since clouds are
-    // drawn in a separate layer but I'll leave it for now in case anything changes --mumra
-    return ch | TILE_FLAG_FLYING;
+    return ch;
 }
 
 #ifdef USE_TILE
@@ -3463,6 +3465,12 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_CANCEL_PPROJ;
     case ABIL_CREATE_WALL:
         return TILEG_ABILITY_CREATE_WALL;
+    case ABIL_CARAVAN_GIFT_ITEM:
+        return TILEG_ABILITY_CARAVAN_GIFT_ITEM;
+    case ABIL_CARAVAN_REHIRE:
+        return TILEG_ABILITY_CARAVAN_REHIRE;
+    case ABIL_CARAVAN_RECALL:
+        return TILEG_ABILITY_CARAVAN_RECALL;
 
     // Species-specific abilities.
     // Demonspawn-only
@@ -3495,6 +3503,11 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_CRAB_WALK;
     case ABIL_MIASMA_CLOUD:
         return TILEG_ABILITY_MIASMA_CLOUD;
+    // Homunculus
+    case ABIL_BLOSSOM:
+        return TILEG_ABILITY_BLOSSOM;
+    case ABIL_ADAPTION:
+        return TILEG_ABILITY_ADAPTION;
 
     // Evoking items.
     case ABIL_EVOKE_BERSERK:
@@ -3513,6 +3526,10 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_EVOKE_RATSKIN;
     case ABIL_EVOKE_THUNDER:
         return TILEG_ABILITY_EVOKE_THUNDER;
+    case ABIL_EVOKE_PAVISE:
+        return TILEG_ABILITY_DEPLOY_SHIELD;
+    case ABIL_GOLEM_FORM:
+        return TILEG_ABILITY_GOLEM_FORM;
 
     // Divine abilities
     // Zin
@@ -3594,6 +3611,8 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_TROG_HAND;
     case ABIL_TROG_BROTHERS_IN_ARMS:
         return TILEG_ABILITY_TROG_BROTHERS_IN_ARMS;
+    case ABIL_TROG_CHARGE:
+        return TILEG_ABILITY_TROG_CHARGE;
     case ABIL_TROG_BLESS_WEAPON:
         return TILEG_ABILITY_TROG_BLESS_WEAPON;
     // Elyvilon
@@ -3797,7 +3816,24 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_WU_JIAN_SERPENTS_LASH;
     case ABIL_WU_JIAN_HEAVENLY_STORM:
         return TILEG_ABILITY_WU_JIAN_HEAVENLY_STORM;
-
+    // The Great Wyrm
+    case ABIL_WYRM_INFUSE:
+        return TILEG_ABILITY_WYRM_INFUSE;
+    case ABIL_WYRM_NIGREDO:
+        return TILEG_ABILITY_WYRM_NIGREDO;
+    case ABIL_WYRM_ALBEDO:
+        return TILEG_ABILITY_WYRM_ALBEDO;
+    case ABIL_WYRM_CITRINITAS:
+        return TILEG_ABILITY_WYRM_CITRINITAS;
+    case ABIL_WYRM_VIRIDITAS:
+        return TILEG_ABILITY_WYRM_VIRIDITAS;
+    case ABIL_WYRM_RUBEDO:
+        return TILEG_ABILITY_WYRM_RUBEDO;
+    // Imus Thea
+    case ABIL_IMUS_PRISMATIC_PRISM:
+        return TILEG_ABILITY_IMUS_PRISMATIC_PRISM;
+    case ABIL_IMUS_FRAGMENTATION:
+        return TILEG_ABILITY_IMUS_FRAGMENTATION;
     // General divine (pseudo) abilities.
     case ABIL_RENOUNCE_RELIGION:
         return TILEG_ABILITY_RENOUNCE_RELIGION;
@@ -3925,6 +3961,8 @@ static tileidx_t _tileidx_player_job_base(const job_type job)
             return TILEG_JOB_TRANSMUTER;
         case JOB_STALKER:
             return TILEG_JOB_STALKER;
+        case JOB_CRUSADER:
+            return TILEG_JOB_CRUSADER;
         case JOB_MONK:
             return TILEG_JOB_MONK;
         case JOB_WARPER:
@@ -3939,6 +3977,10 @@ static tileidx_t _tileidx_player_job_base(const job_type job)
             return TILEG_JOB_ABYSSAL_KNIGHT;
         case JOB_MELTED_KNIGHT:
             return TILEG_JOB_MELTED_KNIGHT;
+        case JOB_CARAVAN:
+            return TILEG_JOB_CARAVAN;
+        case JOB_COLLECTOR:
+            return TILEG_JOB_COLLECTOR;
         default:
             return TILEG_ERROR;
     }
@@ -4022,6 +4064,12 @@ static tileidx_t _tileidx_player_species_base(const species_type species)
             return TILEG_SP_CRUSTACEAN;
         case SP_HYDRA:
             return TILEG_SP_HYDRA;
+        case SP_HOMUNCULUS:
+        case SP_BLOSSOM_HOMUNCULUS:
+        case SP_ADAPTION_HOMUNCULUS:
+            return TILEG_SP_HOMUNCULUS;
+        case SP_MELIAI:
+            return TILEG_SP_MELIAI;
         default:
             return TILEP_ERROR;
     }

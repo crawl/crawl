@@ -13,6 +13,13 @@ static void _end_weapon_brand()
     end_weapon_brand(*you.weapon(), true);
 }
 
+static void _end_elemental_weapon_brand()
+{
+    you.duration[DUR_ELEMENTAL_WEAPON] = 1;
+    ASSERT(you.weapon());
+    end_elemental_weapon(*you.weapon(), true);
+}
+
 static void _end_invis()
 {
     if (you.invisible())
@@ -598,8 +605,8 @@ static const duration_def duration_data[] =
       BROWN, "Earth",
       "earth", "will of earth",
       "Stones began to float around you.", D_DISPELLABLE | D_EXPIRES,
-      {{ "The stones around you begin to lose power." },
-        { "The stones around you fell helplessly." }}, 6 },
+      {{ "The stones around you fall away." },
+        { "The stones around you begin to lose power." }}, 6 },
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.
 
@@ -723,6 +730,64 @@ static const duration_def duration_data[] =
       "noxious spew", "noxious bog",
       "You are spewing a noxious bog.", D_DISPELLABLE,
       {{ "Your noxious spew wanes." }}},
+
+    { DUR_HOMUNCULUS_WILD_MAGIC,
+      MAGENTA, "Unstable",
+      "unstable magic", "",
+      "Your magic becomes powerful but unstable.", D_DISPELLABLE,
+      {{ "You feel your magic has stabilized.", []() {
+          you.props.erase(HOMUNCULUS_WILD_MAGIC);
+    }}} },
+     { DUR_ELEMENTAL_WEAPON, LIGHTGRAY, "Elem", "", "Elemental", "Elemental", D_NO_FLAGS,
+      {{ "", _end_elemental_weapon_brand }} },
+     { DUR_FLAME_STRIKE,
+       LIGHTBLUE, "Flame",
+       "Flame strike", "Flame strike",
+       "Your attack was engulfed in flames.", D_DISPELLABLE,
+     {{ "The flames fades away.", []() {
+        you.increase_duration(DUR_OVERHEAT, random_range(30, 50), 50);
+     }} } },
+     { DUR_OVERHEAT,
+       RED, "Overheat",
+       "Overheat", "",
+       "You cannot regen mana .", D_NO_FLAGS,
+       {{ "You regen mana again." }, {}, true } },
+     { DUR_STONESKIN,
+       0, "",
+       "stone skin", "stoneskin",
+       "Your skin is tough as stone.", D_DISPELLABLE,
+       {{ "Your skin feels tender.", [](){
+          you.props.erase(STONESKIN_KEY);
+          you.redraw_armour_class = true;
+    }}} },
+    { DUR_INSULATION, 
+      BLUE, "Ins", 
+      "insulation", "insulation", "You feel conductive.", D_NO_FLAGS,
+      {{ "You feel less protected from electricity." },
+      { "You start to feel a little less insulated", 1}}, 6},
+    { DUR_CONDENSATION_SHIELD,
+      0, "",
+      "icy shield", "",
+      "You are shielded by a disc of ice.", D_DISPELLABLE,
+      {{ "Your icy shield evaporates.", [](){
+         you.props.erase(CONDENSATION_SHIELD_KEY);
+         you.redraw_armour_class = true;
+    }} } },
+    { DUR_CITRINITAS, 
+      BLUE, "Empower", 
+      "Citrinitas", "Citrinitas", "Your accuracy and spells are empowered!", D_NO_FLAGS,
+      {{ "You feel less empowered." },
+      { "You start to feel a little less empowered", 1}}, 6},
+    { DUR_COMBAT_MANA,
+      LIGHTBLUE, "Mana+",
+      "mana regen", "",
+      "Your mana regeneration has increased.", D_NO_FLAGS },
+    { DUR_SHRAPNEL,
+      BLUE, "Sharpnel",
+      "sharpnel curtain", "",
+      "You are surrounded by gravels and pebbles.", D_DISPELLABLE | D_EXPIRES,
+      {{ "Your curtain of sharpnel falls." },
+        { "Your sharpnels begin to scatter." }}, 6},
 #if TAG_MAJOR_VERSION == 34
     // And removed ones
     { DUR_MAGIC_SAPPED, 0, "", "", "old magic sapped", "", D_NO_FLAGS},
@@ -731,7 +796,6 @@ static const duration_def duration_data[] =
     { DUR_JELLY_PRAYER, 0, "", "", "old jelly prayer", "", D_NO_FLAGS},
     { DUR_CONTROLLED_FLIGHT, 0, "", "", "old controlled flight", "", D_NO_FLAGS},
     { DUR_SEE_INVISIBLE, 0, "", "", "old see invisible", "", D_NO_FLAGS},
-    { DUR_INSULATION, 0, "", "", "old insulation", "", D_NO_FLAGS},
     { DUR_SLAYING, 0, "", "", "old slaying", "", D_NO_FLAGS},
     { DUR_MISLED, 0, "", "", "old misled", "", D_NO_FLAGS},
     { DUR_NAUSEA, 0, "", "", "old nausea", "", D_NO_FLAGS},
@@ -745,7 +809,6 @@ static const duration_def duration_data[] =
     { DUR_NEGATIVE_VULN, 0, "", "", "old negative vuln", "", D_NO_FLAGS},
     { DUR_SURE_BLADE, 0, "", "", "old sure blade", "", D_NO_FLAGS},
     { DUR_DOOM_HOWL_IMMUNITY, 0, "", "", "old howl immunity", "", D_NO_FLAGS, {{""}}},
-    { DUR_CONDENSATION_SHIELD, 0, "", "", "old condensation shield", "", D_NO_FLAGS},
     { DUR_TELEPATHY, 0, "", "", "old telepathy", "", D_NO_FLAGS},
     { DUR_FORTITUDE, 0, "", "", "old fortitude", "", D_NO_FLAGS},
     { DUR_WATER_HOLD_IMMUNITY, 0, "", "", "old drowning immunity", "", D_NO_FLAGS, {{""}}},

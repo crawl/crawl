@@ -11,6 +11,7 @@
 #include <cstring>
 
 #include "cloud.h"
+#include "fight.h"
 #include "food.h"
 #include "god-conduct.h"
 #include "god-passive.h"
@@ -28,9 +29,12 @@
 #include "prompt.h"
 #include "religion.h"
 #include "skill-menu.h"
+#include "spl-damage.h"
 #include "spl-goditem.h"
 #include "stringutil.h"
+#include "target.h"
 #include "transform.h"
+#include "view.h"
 #include "xom.h"
 
 int _xom_factor(bool was_known);
@@ -147,11 +151,12 @@ public:
             mpr("That felt strangely inert.");
         // need to redraw from yellow to green even if no hp was gained
         if (you.duration[DUR_POISONING])
-            you.redraw_hit_points = true;
-        you.duration[DUR_POISONING] = 0;
-        you.disease = 0;
-        you.duration[DUR_CONF] = 0;
-        you.duration[DUR_CIGOTUVIS_PLAGUE] = 0;
+                you.redraw_hit_points = true;
+            you.duration[DUR_POISONING] = 0;
+            you.disease = 0;
+            you.duration[DUR_CONF] = 0;
+            you.duration[DUR_CIGOTUVIS_PLAGUE] = 0;
+        
         // Do not heal or hurt player via changing head numbers.
         if (you.species == SP_HYDRA)
             you.head_grow(you.props[HYDRA_HEADS_NET_LOSS].get_int(), false); 
@@ -1273,6 +1278,430 @@ public:
     }
 };
 
+class PotionSwift : public PotionEffect
+{
+private:
+    PotionSwift() : PotionEffect(POT_SWIFT) { }
+    DISALLOW_COPY_AND_ASSIGN(PotionSwift);
+public:
+    static const PotionSwift &instance()
+    {
+        static PotionSwift inst; return inst;
+    }
+
+    bool can_quaff(string *reason = nullptr) const override
+    {
+        if (you.stasis())
+        {
+            if (reason)
+                *reason = "Your stasis prevents you from being swifted.";
+            return false;
+        }
+        return true;
+    }
+
+    bool effect(bool=true, int pow = 40, bool=true) const override
+    {
+        if (!you_worship(GOD_WYRM)){
+            simple_god_message(" whispers: Only followers of wisdom can embrace this...", GOD_WYRM);
+        }
+        else if (you.in_liquid())
+        {
+            // Hint that the player won't be faster until they leave the liquid.
+            mprf("The %s foams!", you.in_water() ? "water"
+                                 : you.in_lava() ? "lava"
+                                                 : "liquid ground");
+        }
+        you.set_duration(DUR_SWIFTNESS, 40 + random2(pow), 100, "You feel quick.");
+        // Note: Swift from this potion wouldn't make slow you
+        return true;
+    }
+
+    bool quaff(bool was_known) const override
+    {
+        if (was_known && !check_known_quaff())
+            return false;
+
+        if (effect())
+            did_god_conduct(DID_HASTY, 10, was_known);
+        return true;
+    }
+};
+
+class PotionRegeneration : public PotionEffect
+{
+private:
+    PotionRegeneration() : PotionEffect(POT_REGENERATION) { }
+    DISALLOW_COPY_AND_ASSIGN(PotionRegeneration);
+public:
+    static const PotionRegeneration &instance()
+    {
+        static PotionRegeneration inst; return inst;
+    }
+
+    bool can_quaff(string *reason = nullptr) const override
+    {
+        if (you.species == SP_VAMPIRE && !you.vampire_alive)
+        {
+            if (reason)
+                *reason = "Your body is unable to regenerates.";
+            return false;
+        }
+        return true;
+    }
+
+    bool effect(bool=true, int pow = 40, bool=true) const override
+    {
+        if (!you_worship(GOD_WYRM)){
+            simple_god_message(" whispers: Only followers of wisdom can embrace this...", GOD_WYRM);
+        } else {
+            you.increase_duration(DUR_REGENERATION,
+            40 + random2(pow), 100, "Your skin crawls.");
+        }
+        return true;
+    }
+};
+
+class PotionIcyArmour : public PotionEffect
+{
+private:
+    PotionIcyArmour() : PotionEffect(POT_REGENERATION) { }
+    DISALLOW_COPY_AND_ASSIGN(PotionIcyArmour);
+public:
+    static const PotionIcyArmour &instance()
+    {
+        static PotionIcyArmour inst; return inst;
+    }
+
+    bool can_quaff(string *reason = nullptr) const override
+    {
+        if (you.species == SP_LAVA_ORC)
+        {
+            if (reason)
+                *reason = "A film of ice can't covers your body.";
+            return false;
+        } if (you.duration[DUR_FIRE_SHIELD])
+        {
+            if (reason)
+                *reason = "Your ring of flames would instantly melt the ice.";
+            return false;
+        }
+        return true;
+    }
+
+    bool effect(bool=true, int pow = 40, bool=true) const override
+    {
+        if (!you_worship(GOD_WYRM)){
+            simple_god_message(" whispers: Only followers of wisdom can embrace this...", GOD_WYRM);
+        } else { 
+            if (you.duration[DUR_ICY_ARMOUR])
+                mpr("Your icy armour thickens.");
+            else if (you.form == transformation::ice_beast)
+                mpr("Your icy body feels more resilient.");
+            else
+                mpr("A film of ice covers your body!");
+
+            you.increase_duration(DUR_ICY_ARMOUR, 40 + random2(pow), 100);
+            you.props[ICY_ARMOUR_KEY] = pow;
+            you.redraw_armour_class = true;
+        }
+        return true;
+    }
+};
+
+class PotionToxic : public PotionEffect
+{
+private:
+    PotionToxic() : PotionEffect(POT_TOXIC) { }
+    DISALLOW_COPY_AND_ASSIGN(PotionToxic);
+public:
+    static const PotionToxic &instance()
+    {
+        static PotionToxic inst; return inst;
+    }
+
+    bool effect(bool=true, int pow = 40, bool=true) const override
+    {
+        if (!you_worship(GOD_WYRM)){
+            simple_god_message(" whispers: Only followers of wisdom can embrace this...", GOD_WYRM);
+        } else {
+            targeter_radius hitfunc(&you, LOS_NO_TRANS);
+            {
+                if (stop_attack_prompt(hitfunc, "poison", toxic_can_affect))
+                    return true;
+            }
+
+            if (!you.duration[DUR_TOXIC_RADIANCE])
+                mpr("You begin to radiate toxic energy.");
+            else
+                mpr("Your toxic radiance grows in intensity.");
+
+            you.increase_duration(DUR_TOXIC_RADIANCE, 2 + random2(pow/20), 15);
+            toxic_radiance_effect(&you, 10, true);
+
+            flash_view_delay(UA_PLAYER, GREEN, 300, &hitfunc);
+        }
+        return true;
+    }
+};
+
+class PotionShroud : public PotionEffect
+{
+private:
+    PotionShroud() : PotionEffect(POT_SHROUD) { }
+    DISALLOW_COPY_AND_ASSIGN(PotionShroud);
+public:
+    static const PotionShroud &instance()
+    {
+        static PotionShroud inst; return inst;
+    }
+
+    bool effect(bool=true, int pow = 40, bool=true) const override
+    {
+        if (!you_worship(GOD_WYRM)){
+            simple_god_message(" whispers: Only followers of wisdom can embrace this...", GOD_WYRM);
+        } else {
+            if (you.duration[DUR_SHROUD_OF_GOLUBRIA])
+                mpr("Your shroud is renewed from by your potion.");
+            else
+                mpr("Space distorts slightly along a thin shroud covering your body.");
+
+            you.increase_duration(DUR_SHROUD_OF_GOLUBRIA, 40 + random2(pow), 100);
+        }
+        return true;
+    }
+};
+
+class PotionRepelMissiles : public PotionEffect
+{
+private:
+    PotionRepelMissiles() : PotionEffect(POT_REPEL_MISSILES) { }
+    DISALLOW_COPY_AND_ASSIGN(PotionRepelMissiles);
+public:
+    static const PotionRepelMissiles &instance()
+    {
+        static PotionRepelMissiles inst; return inst;
+    }
+
+    bool effect(bool=true, int=40, bool=true) const override
+    {
+        if (!you_worship(GOD_WYRM)){
+            simple_god_message(" whispers: Only followers of wisdom can embrace this...", GOD_WYRM);
+        } else {
+            you.attribute[ATTR_REPEL_MISSILES] = 1;
+            mpr("You feel protected from missiles.");
+        }
+        return true;
+    }
+};
+
+class PotionDeflectMissiles : public PotionEffect
+{
+private:
+    PotionDeflectMissiles() : PotionEffect(POT_DEFLECT_MISSILES) { }
+    DISALLOW_COPY_AND_ASSIGN(PotionDeflectMissiles);
+public:
+    static const PotionDeflectMissiles &instance()
+    {
+        static PotionDeflectMissiles inst; return inst;
+    }
+
+    bool effect(bool=true, int=40, bool=true) const override
+    {
+        if (!you_worship(GOD_WYRM)){
+            simple_god_message(" whispers: Only followers of wisdom can embrace this...", GOD_WYRM);
+        } else {
+            you.attribute[ATTR_DEFLECT_MISSILES] = 1;
+            mpr("You feel very safe from missiles.");
+            // Replace RMsl, if active.
+            if (you.attribute[ATTR_REPEL_MISSILES])
+                you.attribute[ATTR_REPEL_MISSILES] = 0;
+        }
+        return true;
+    }
+};
+
+class PotionIcyShield : public PotionEffect
+{
+private:
+    PotionIcyShield() : PotionEffect(POT_ICY_SHIELD) { }
+    DISALLOW_COPY_AND_ASSIGN(PotionIcyShield);
+public:
+    static const PotionIcyShield &instance()
+    {
+        static PotionIcyShield inst; return inst;
+    }
+
+    bool can_quaff(string *reason = nullptr) const override
+    {
+        if (you.shield())
+        {
+            if (reason)
+                *reason = "You can't use a boon from this potion while wearing a shield.";
+            return false;
+        } if (you.duration[DUR_FIRE_SHIELD])
+        {
+            if (reason)
+                *reason = "Your ring of flames would instantly melt the ice.";
+            return false;
+        }
+        return true;
+    }
+
+    bool effect(bool=true, int pow = 40, bool=true) const override
+    {
+        if (!you_worship(GOD_WYRM)){
+            simple_god_message(" whispers: Only followers of wisdom can embrace this...", GOD_WYRM);
+        } else {
+
+            if (you.duration[DUR_CONDENSATION_SHIELD] > 0)
+                mpr("The disc of vapour around you crackles some more.");
+            else
+                mpr("A crackling disc of dense vapour forms in the air!");
+            you.increase_duration(DUR_CONDENSATION_SHIELD, 40 + random2(pow), 100);
+            you.props[CONDENSATION_SHIELD_KEY] = pow;
+            you.redraw_armour_class = true;
+        }
+        return true;
+    }
+};
+
+class PotionNigredo : public PotionEffect
+{
+private:
+    PotionNigredo() : PotionEffect(POT_NIGREDO) { }
+    DISALLOW_COPY_AND_ASSIGN(PotionNigredo);
+public:
+    static const PotionNigredo &instance()
+    {
+        static PotionNigredo inst; return inst;
+    }
+
+    bool effect(bool=true, int=40, bool=true) const override
+    {
+        if (!you_worship(GOD_WYRM)){
+            simple_god_message(" whispers: Only followers of wisdom can embrace this...", GOD_WYRM);
+        } else { you.rot(&you, 3 + random2(3)); }
+        return true;
+    }
+
+    bool quaff(bool was_known) const override
+    {
+        if (effect())
+            xom_is_stimulated( 50 / _xom_factor(was_known));
+        return true;
+    }
+};
+
+class PotionAlbedo : public PotionEffect
+{
+private:
+    PotionAlbedo() : PotionEffect(POT_ALBEDO) { }
+    DISALLOW_COPY_AND_ASSIGN(PotionAlbedo);
+public:
+    static const PotionAlbedo &instance()
+    {
+        static PotionAlbedo inst; return inst;
+    }
+
+    bool effect(bool=true, int=40, bool=true) const override
+    {
+        if (!you_worship(GOD_WYRM)){
+            simple_god_message(" whispers: Only followers of wisdom can embrace this...", GOD_WYRM);
+        } else {
+        debuff_player();
+        mpr("You feel magically purged.");
+        const int old_contam_level = get_contamination_level();
+        contaminate_player(-1 * (1000 + random2(4000)));
+        if (old_contam_level && old_contam_level == get_contamination_level())
+            mpr("You feel slightly less contaminated with magical energies.");
+        }
+        return true;
+    }
+};
+
+class PotionCitrinitas : public PotionEffect
+{
+private:
+    PotionCitrinitas() : PotionEffect(POT_CITRINITAS) { }
+    DISALLOW_COPY_AND_ASSIGN(PotionCitrinitas);
+public:
+    static const PotionCitrinitas &instance()
+    {
+        static PotionCitrinitas inst; return inst;
+    }
+
+    bool effect(bool=true, int pow = 10, bool=true) const override
+    {
+        if (!you_worship(GOD_WYRM)){
+            simple_god_message(" whispers: Only followers of wisdom can embrace this...", GOD_WYRM);
+        } else {
+            const bool were_empowered = you.duration[DUR_CITRINITAS] > 0;
+
+            mprf(MSGCH_DURATION, "You feel %sempowerd.",
+                 were_empowered ? "more " : "");
+
+            you.increase_duration(DUR_CITRINITAS, you.piety/50 + random2(pow), 50);
+        }
+        return true;
+    }
+};
+
+class PotionViriditas : public PotionEffect
+{
+private:
+    PotionViriditas() : PotionEffect(POT_VIRIDITAS) { }
+    DISALLOW_COPY_AND_ASSIGN(PotionViriditas);
+public:
+    static const PotionViriditas &instance()
+    {
+        static PotionViriditas inst; return inst;
+    }
+
+    bool effect(bool=true, int=40, bool=true) const override
+    {
+        if (!you_worship(GOD_WYRM)){
+            simple_god_message(" whispers: Only followers of wisdom can embrace this...", GOD_WYRM);
+        } else {
+            you.disease = 0;
+            you.duration[DUR_POISONING] = 0;
+            you.duration[DUR_CONF] = 0;
+            you.duration[DUR_SLOW] = 0;
+            you.duration[DUR_PETRIFYING] = 0;
+            you.duration[DUR_WEAK] = 0;
+            restore_stat(STAT_ALL, 0, false);
+            unrot_hp(9999);
+            you.redraw_evasion = true;
+            
+            mpr("You feel restored.");
+        }
+        return true;
+    }
+};
+
+class PotionRubedo : public PotionEffect
+{
+private:
+    PotionRubedo() : PotionEffect(POT_RUBEDO) { }
+    DISALLOW_COPY_AND_ASSIGN(PotionRubedo);
+public:
+    static const PotionRubedo &instance()
+    {
+        static PotionRubedo inst; return inst;
+    }
+
+    bool effect(bool=true, int pow = 40, bool=true) const override
+    {
+        if (!you_worship(GOD_WYRM)){
+            simple_god_message(" whispers: Only followers of wisdom can embrace this...", GOD_WYRM);
+        } else {
+            mprf(MSGCH_DURATION, "You feel protected.");
+            you.increase_duration(DUR_RESISTANCE, min(random2(pow) + 15, 20));
+            return true;
+        }
+        return true;
+    }
+};
 
 // placeholder 'buggy' potion
 class PotionStale : public PotionEffect
@@ -1339,6 +1768,19 @@ static const PotionEffect* potion_effects[] =
 #endif
     &PotionLignify::instance(),
     &PotionUnstableMutation::instance(),
+    &PotionSwift::instance(),
+    &PotionRegeneration::instance(),
+    &PotionIcyArmour::instance(),
+    &PotionToxic::instance(),
+    &PotionShroud::instance(),
+    &PotionRepelMissiles::instance(),
+    &PotionDeflectMissiles::instance(),
+    &PotionIcyShield::instance(),
+    &PotionNigredo::instance(),
+    &PotionAlbedo::instance(),
+    &PotionCitrinitas::instance(),
+    &PotionViriditas::instance(),
+    &PotionRubedo::instance(),
     &PotionStale::instance()
 };
 
