@@ -4504,7 +4504,7 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
 
         blame_damage(agent, amount);
 
-        if (mons_is_fragile(*this))
+        if (mons_is_fragile(*this) && !has_ench(ENCH_SLOWLY_DYING))
         {
             // Die in 3-5 turns.
             this->add_ench(mon_enchant(ENCH_SLOWLY_DYING, 1, nullptr,
