@@ -1074,8 +1074,10 @@ other infusions, makes all targets in your sight are infused by same essences.
 # Imus Thea
 Prismatic Prism ability
 
-Create a prism, blinds nearby enemies and also reflect ranged attacks like you.
+Create a prism, blinds nearby enemies at every turns. Prism's hit dice is depending
+on your piety, and it will be shattered after 3 turns without how much damaged.
 %%%%
 Fragmentation ability
 
-Shatter youself to duplicate yourself.
+Shatter youself to duplicate yourself, costs a half of your present health.
+These 'mirror image' is almost same to you, like spells, equipments.

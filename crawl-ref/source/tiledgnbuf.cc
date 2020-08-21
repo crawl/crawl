@@ -330,10 +330,10 @@ void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
 
         if (!(bg & TILE_FLAG_UNSEEN))
         {
-            if (cell.fg & TILE_FLAG_CUBUS_AURA)
+            /*if (cell.fg & TILE_FLAG_CUBUS_AURA)
             {
                 m_buf_feat.add(TILE_CUBUS_AURA, x, y);
-            }
+            }*/
 
             if (cell.is_sanctuary)
                 m_buf_feat.add(TILE_SANCTUARY, x, y);
@@ -465,8 +465,8 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
     if (fg & TILE_FLAG_IDEALISED)
         m_buf_icons.add(TILEI_IDEALISED, x, y);
 
-    if (fg & TILE_FLAG_CUBUS_AURA)
-        m_buf_icons.add(TILEI_CUBUS_COLLAR, x, y);
+    /*if (fg & TILE_FLAG_CUBUS_AURA)
+        m_buf_icons.add(TILEI_CUBUS_COLLAR, x, y);*/
 
     int status_shift = 0;
     if (fg & TILE_FLAG_BEH_MASK)
@@ -600,6 +600,11 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
     if (fg & TILE_FLAG_SWIFT)
     {
         m_buf_icons.add(TILEI_SWIFT, x, y, -status_shift, 0);
+        status_shift += 6;
+    }
+    if (fg & TILE_FLAG_FROZEN)
+    {
+        m_buf_icons.add(TILEI_FROZEN, x, y, -status_shift, 0);
         status_shift += 6;
     }
     if (fg & TILE_FLAG_PINNED)

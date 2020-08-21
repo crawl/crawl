@@ -4123,7 +4123,6 @@ spret fragmentation(int power)
     mon->reset();
 
     const int fragment = max((you.hp/2)-1, 1);
-    //mon->holiness() = you.holiness();
     mon->hit_points = fragment;
     dec_hp(fragment, false);
 
