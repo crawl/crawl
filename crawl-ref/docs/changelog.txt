@@ -1,4 +1,4 @@
-Stone Soup kimchi-1.1.0 (20200820)
+Stone Soup kimchi-1.1.1 (20200821)
 --------------------------------
 
 Highlights
