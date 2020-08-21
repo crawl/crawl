@@ -677,7 +677,7 @@ const char* potion_type_name(int potiontype)
     // FIXME: Remove this once known-items no longer uses this as a sentinel.
     default:
                                 return "bugginess";
-    CASE_REMOVED_POTIONS(potiontype);
+    CASE_REMOVED_POTIONS(potiontype); // TODO: this will crash, is that correct??
     }
 }
 
@@ -1083,25 +1083,16 @@ static const char* staff_type_name(int stafftype)
 {
     switch ((stave_type)stafftype)
     {
-#if TAG_MAJOR_VERSION == 34
-    case STAFF_WIZARDRY:    return "wizardry";
-    case STAFF_POWER:       return "power";
-    case STAFF_ENERGY:      return "energy";
-#endif
     case STAFF_FIRE:        return "fire";
     case STAFF_COLD:        return "cold";
     case STAFF_POISON:      return "poison";
     case STAFF_DEATH:       return "death";
     case STAFF_CONJURATION: return "conjuration";
-#if TAG_MAJOR_VERSION == 34
-    case STAFF_ENCHANTMENT: return "enchantment";
-#endif
     case STAFF_AIR:         return "air";
     case STAFF_EARTH:       return "earth";
-#if TAG_MAJOR_VERSION == 34
-    case STAFF_SUMMONING:   return "summoning";
-#endif
-    default:                return "bugginess";
+    default:                return item_type_removed(OBJ_STAVES, stafftype)
+                                ? "removedness"
+                                : "bugginess";
     }
 }
 
