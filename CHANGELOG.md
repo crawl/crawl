@@ -6,6 +6,12 @@
 
 ## [Unreleased]
 ### Added
+### Changed
+### Removed
+### 0.26 Featrue
+
+## [kimchi-1.1] - ~2020-08-21
+### Added
 - 새로운 신 연금술의 신인 위대한 뱀 추가. [상세설명](https://github.com/kimjoy2002/crawl/wiki/the_great_wyrm)
   - New god: The Great Wyrm, God of Alchemy.
   
@@ -122,9 +128,6 @@
   
 ### Removed
 - Nothing
-
-### 0.26 Featrue
-
 
 ## [kimchi-1.0] - ~2020-07-13
 ### Added
@@ -353,5 +356,6 @@
 - 헤일스톰추가 Added Hailstorm
 - 냉기술사의 기본책은 이제 예전버전과 최신버전을 고를 수 있음 Ice elementalist chooses old or new spell set.
   
-[Unreleased]: https://github.com/kimjoy2002/crawl/compare/kimchi-1.0-branch...HEAD  
-[kimchi-1.0]: https://github.com/kimjoy2002/crawl/tree/kimchi-1.0-branch
+[Unreleased]: https://github.com/kimjoy2002/crawl/compare/kimchi-1.1.1...HEAD  
+[kimchi-1.1]: https://github.com/kimjoy2002/crawl/tree/kimchi-1.1.1
+[kimchi-1.0]: https://github.com/kimjoy2002/crawl/tree/kimchi-1.0.1
