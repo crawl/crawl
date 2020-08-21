@@ -2066,7 +2066,9 @@ string get_item_description(const item_def &item, bool verbose,
 
             if (db_desc.empty())
             {
-                if (item_type_known(item))
+                if (item_type_removed(item.base_type, item.sub_type))
+                    description << "This item has been removed.\n";
+                else if (item_type_known(item))
                 {
                     description << "[ERROR: no desc for item name '" << db_name
                                 << "']. Perhaps this item has been removed?\n";
