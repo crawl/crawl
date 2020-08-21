@@ -2148,23 +2148,24 @@ static bool _imus_retribution()
     const god_type god = GOD_IMUS;
     int count = 0;
 
-    // WIP: use count to define success/failure of summon illusion
-
-    if (count > 0)
+    if (monster *mon =
+        create_monster(_wrath_mon_data(MONS_PLAYER_ILLUSION, god)))
     {
-        switch (random2(2))
-        {
-        case 0:
-            simple_god_message(" says: Do you know who is your worst enemy? Face it!", god);
-            break;
-        case 1:
-            mprf(MSGCH_WARN, "You feel the world around you overlap for a moment!");
-            break;
-        }
+        ghost_demon newstats;
+        newstats.init_player_ghost();
+        mon->set_ghost(newstats);
+        mon->ghost_demon_init();
 
-    } else {
-        simple_god_message( " fails to create your reflection.", god);
+        count++;
     }
+
+    you.increase_duration(DUR_DIMENSION_ANCHOR, 50 + (you.experience_level * 5), 200);
+    mprf(MSGCH_WARN, "You feel the world around you overlap for a moment!");
+    
+    if (count <= 0)
+    {
+        simple_god_message( " fails to create your reflection.", god);
+    } else simple_god_message(" says: Do you know who is your worst enemy? Face it!", god);
     return true;
 }
 
