@@ -309,6 +309,9 @@ static int _item_orig_sub_type(const item_type &item)
     case ITEM_MISCELLANY:
         type = misc_types[item.sub_type];
         break;
+    case ITEM_POTIONS:
+        type = potion_types[item.sub_type];
+        break;
     case ITEM_ARTEBOOKS:
         type = item.sub_type + BOOK_RANDART_LEVEL;
         break;
@@ -329,6 +332,9 @@ static int _item_max_sub_type(item_base_type base_type)
     {
     case ITEM_MISCELLANY:
         num = misc_types.size();
+        break;
+    case ITEM_POTIONS:
+        num = potion_types.size();
         break;
     case ITEM_BOOKS:
         num = MAX_FIXED_BOOK + 1;
@@ -381,6 +387,11 @@ item_type::item_type(const item_def &item)
         sub_type = find(misc_types.begin(), misc_types.end(), item.sub_type)
                         - misc_types.begin();
         ASSERT(sub_type < (int) misc_types.size());
+    } else if (base_type == ITEM_POTIONS)
+    {
+        sub_type = find(potion_types.begin(), potion_types.end(), item.sub_type)
+                        - potion_types.begin();
+        ASSERT(sub_type < (int) potion_types.size());
     }
     else if (base_type == ITEM_ARTEBOOKS)
         sub_type = item.sub_type - BOOK_RANDART_LEVEL;

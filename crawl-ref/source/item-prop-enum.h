@@ -339,8 +339,10 @@ const vector<misc_item_type> misc_types =
 #endif
     MISC_ZIGGURAT,
 #if TAG_MAJOR_VERSION == 34
-    MISC_BOTTLED_EFREET, MISC_BUGGY_EBONY_CASKET
+    MISC_BOTTLED_EFREET, MISC_BUGGY_EBONY_CASKET,
 #endif
+    MISC_TIN_OF_TREMORSTONES,
+    MISC_CONDENSER_VANE,
 };
 
 enum missile_type
