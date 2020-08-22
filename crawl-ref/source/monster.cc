@@ -2951,20 +2951,15 @@ void monster::banish(actor *agent, const string &, const int, bool force)
     simple_monster_message(*this, " is devoured by a tear in reality.",
                            MSGCH_BANISHMENT);
     if (agent && mons_gives_xp(*this, *agent))
+        && (agent->is_player() || agent->mid == MID_YOU_FAULTLESS))
     {
-        // Double the existing damage blame counts, so the unassigned xp for
-        // remaining hp is effectively halved. No need to pass flags this way.
-        damage_total *= 2;
-        damage_friendly *= 2;
-        blame_damage(agent, hit_points);
+        // Count all remaining HP as damage done by you - no need to
+        // pass flags this way.
+        damage_friendly += hit_points * 2;
         // Note: we do not set MF_PACIFIED, the monster is usually not
         // distinguishable from others of the same kind in the Abyss.
-
-        if (agent->is_player() || agent->mid == MID_YOU_FAULTLESS)
-        {
-            did_god_conduct(DID_BANISH, get_experience_level(),
-                            true /*possibly wrong*/, this);
-        }
+        did_god_conduct(DID_BANISH, get_experience_level(),
+                        true /*possibly wrong*/, this);
     }
     monster_die(*this, KILL_BANISHED, NON_MONSTER);
 
