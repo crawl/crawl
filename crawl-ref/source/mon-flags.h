@@ -147,8 +147,7 @@ enum monclass_flag_type : uint64_t
 
                         //BIT(48),
 
-    /// hybridized monster composed of other monster parts
-    M_HYBRID            = BIT(49),
+                        //BIT(49), // was M_HYBRID
 
                         //BIT(50),
 

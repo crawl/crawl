@@ -1657,11 +1657,6 @@ bool mons_class_is_zombified(monster_type mc)
         || mc == MONS_SPECTRAL_THING;
 }
 
-bool mons_class_is_hybrid(monster_type mc)
-{
-    return mons_class_flag(mc, M_HYBRID);
-}
-
 bool mons_class_is_animated_weapon(monster_type type)
 {
     return type == MONS_DANCING_WEAPON || type == MONS_SPECTRAL_WEAPON;
