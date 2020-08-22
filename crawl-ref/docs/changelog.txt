@@ -1,5 +1,5 @@
-Stone Soup 0.26 (through 0.26-a0-533-gf6d3885)
-----------------------------------------------
+Stone Soup 0.26 (through 0.26-a0-577-gba4b82f8d2)
+-------------------------------------------------
 
 Highlights
 ----------
@@ -115,7 +115,10 @@ Items
   that creates clouds around hostile monsters (skipping allies). The cloud
   quality scales with evocations.
 * Wands of Clouds are removed.
-* Staves of Energy are removed.
+* Staves of Energy, Summoning, and Wizardry are removed.
+* Staves of Earth deal higher damage, but with the shrapnel effect of being
+  affected 3 times by AC.
+* Staves of Conjuration deal bonus irresistable damage that checks AC.
 
 Lua
 ---
@@ -136,6 +139,8 @@ Monsters
 * Monsters don't forget about the player while the player is off level.
 * Many strange corner-cases for angering allies are removed.
 * The Cloud Mage can now fly.
+* Most plants, fungi, and other plant like things that don't attack now wither
+  in 3-5 turns after they're hit. The exceptions are bushes and briars.
 
 Spells
 ------
