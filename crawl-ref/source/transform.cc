@@ -1904,18 +1904,19 @@ void untransform(bool skip_move)
 {
     const bool was_flying = you.airborne();
 
+    // Must be unset first or else infinite loops might result. -- bwr
+    const transformation old_form = you.form;
+
     you.redraw_quiver           = true;
     you.redraw_evasion          = true;
     you.redraw_armour_class     = true;
     you.wield_change            = true;
-    you.received_weapon_warning = false;
+    if (!form_can_wield(old_form))
+        you.received_weapon_warning = false;
     if (you.props.exists(TRANSFORM_POW_KEY))
         you.props.erase(TRANSFORM_POW_KEY);
     if (you.props.exists(HYDRA_FORM_HEADS_KEY))
         you.props.erase(HYDRA_FORM_HEADS_KEY);
-
-    // Must be unset first or else infinite loops might result. -- bwr
-    const transformation old_form = you.form;
 
     // We may have to unmeld a couple of equipment types.
     set<equipment_type> melded = _init_equipment_removal(old_form);
