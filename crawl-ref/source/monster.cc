@@ -2950,7 +2950,7 @@ void monster::banish(actor *agent, const string &, const int, bool force)
 
     simple_monster_message(*this, " is devoured by a tear in reality.",
                            MSGCH_BANISHMENT);
-    if (agent && mons_gives_xp(*this, *agent))
+    if (agent && mons_gives_xp(*this, *agent)
         && (agent->is_player() || agent->mid == MID_YOU_FAULTLESS))
     {
         // Count all remaining HP as damage done by you - no need to
