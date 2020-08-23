@@ -525,7 +525,7 @@ nearby creatures and the damage dealt to those affected.
 Banish ability
 
 Attempts to banish a creature into the Abyss. If the attempt succeeds, you gain
-some piety and the creature's full experience value. Invocations skill makes it
+some piety and half the creature's experience value. Invocations skill makes it
 harder to resist.
 %%%%
 Corrupt ability
@@ -1081,3 +1081,13 @@ Fragmentation ability
 
 Shatter youself to duplicate yourself, costs a half of your present health.
 These 'mirror image' is almost same to you, like spells, equipments.
+# The Legion from Beyond
+%%%%
+Positioning ability
+
+Order your minion to hold position instantly. Order again allow to move again.
+%%%%
+Immortal Legion ability
+
+Order your minion to sustain itself, seriously damages its health but unable to die
+briefly.

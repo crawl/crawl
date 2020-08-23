@@ -434,7 +434,6 @@ const vector<god_power> god_powers[NUM_GODS] =
           "transmute essence of Rubedo"},
       },
 
-
     // Imus Thea
     { { 0, "You are unable to wear heavy armour and all kinds of shield." },
       { 0, "You need more training to use two-handed weapon accuratively." },
@@ -447,6 +446,17 @@ const vector<god_power> god_powers[NUM_GODS] =
       { 5, ABIL_IMUS_FRAGMENTATION,
            "shatter your half of health to duplicate yourself",
            "duplicate yourself" },
+    },
+
+    // Legion from beyond
+    { { 0, "The Legion will resist abjuration." },
+      { 1, ABIL_LEGION_POSITIONING, "order minions to hold position",
+           "order minions to hold position" },
+      { 3, "The Legion will inspired by killing, based on summoning skill.",
+           "The Leigon no longer inspired by killing." },
+      { 5, ABIL_LEGION_IMMORTAL, "force your servants not to die for a while",
+           "force your servants not to die" },
+
     },
 };
 
@@ -1676,6 +1686,65 @@ static bool _handle_veh_gift(bool forced)
     return success;
 }
 
+static bool _gift_legion_gift(bool forced)
+{
+    bool success = false;
+    book_type gift = NUM_BOOKS;
+    // Break early if giving a gift now means it would be lost.
+    if (!feat_has_solid_floor(grd(you.pos())))
+        return false;
+
+    // The Legion gives the lesser Summoning books in a quick
+    // succession.
+    if (you_worship(GOD_LEGION_FROM_BEYOND))
+    {
+        if (you.piety >= piety_breakpoint(0)
+            && you.num_total_gifts[you.religion] == 0)
+        {
+            gift = BOOK_CALLINGS;
+        }
+        else if (you.piety >= piety_breakpoint(3)
+                 && you.num_total_gifts[you.religion] == 1)
+        {
+            gift = BOOK_SUMMONINGS;
+        }
+    }
+
+    if (gift != NUM_BOOKS)
+    {
+        int thing_created = items(true, OBJ_BOOKS, gift, 1, 0,
+                                  you.religion);
+        // Replace the Legion gift by a custom-random book.
+        if (you_worship(GOD_LEGION_FROM_BEYOND))
+        {
+            make_book_legion_gift(mitm[thing_created],
+                                gift == BOOK_CALLINGS);
+        }
+        if (thing_created == NON_ITEM)
+            return false;
+
+        move_item_to_grid(&thing_created, you.pos(), true);
+
+        if (thing_created != NON_ITEM)
+            success = true;
+    }
+
+    if (success)
+    {
+        simple_god_message(" grants you a gift!");
+        // included in default force_more_message
+
+        you.num_current_gifts[you.religion]++;
+        you.num_total_gifts[you.religion]++;
+        // Timeouts are meaningless for the Legion.
+        if (!you_worship(GOD_LEGION_FROM_BEYOND))
+            _inc_gift_timeout(40 + random2avg(19, 2));
+        take_note(Note(NOTE_GOD_GIFT, you.religion));
+    }
+
+    return success;
+}
+
 void mons_make_god_gift(monster& mon, god_type god)
 {
     const god_type acting_god =
@@ -2137,6 +2206,10 @@ bool do_god_gift(bool forced)
         case GOD_VEHUMET:
             success = _handle_veh_gift(forced);
             break;
+
+        case GOD_LEGION_FROM_BEYOND:
+            success = _gift_legion_gift(forced);
+            break;
         }                       // switch (you.religion)
     }                           // End of gift giving.
 
@@ -2205,6 +2278,7 @@ string god_name(god_type which_god, bool long_name)
     case GOD_WU_JIAN:     return "Wu Jian";
     case GOD_WYRM:     return "the Great Wyrm";
     case GOD_IMUS:     return "Imus Thea";
+    case GOD_LEGION_FROM_BEYOND:     return "Legion from beyond";
     case GOD_JIYVA: // This is handled at the beginning of the function
     case GOD_ECUMENICAL:    return "an unknown god";
     case NUM_GODS:          return "Buggy";
@@ -2764,6 +2838,7 @@ int initial_wrath_penance_for(god_type god)
         case GOD_SHINING_ONE:
         case GOD_SIF_MUNA:
         case GOD_YREDELEMNUL:
+        case GOD_LEGION_FROM_BEYOND:
             return 30;
         case GOD_CHEIBRIADOS:
         case GOD_DITHMENOS:
@@ -3088,6 +3163,10 @@ void excommunication(bool voluntary, god_type new_god)
     case GOD_WU_JIAN:
         you.attribute[ATTR_SERPENTS_LASH] = 0;
         you.attribute[ATTR_HEAVENLY_STORM] = 0;
+        break;
+
+    case GOD_LEGION_FROM_BEYOND:
+        simple_god_message(" starts to lose control, releasing unbridled force!", old_god);
         break;
 
     default:
@@ -4111,6 +4190,8 @@ bool god_likes_spell(spell_type spell, god_type god)
         return vehumet_supports_spell(spell);
     case GOD_KIKUBAAQUDGHA:
         return spell_typematch(spell, spschool::necromancy);
+    case GOD_LEGION_FROM_BEYOND:
+        return spell_typematch(spell, spschool::summoning);
     default: // quash unhandled constants warnings
         return false;
     }
@@ -4339,6 +4420,7 @@ void handle_god_time(int /*time_delta*/)
         case GOD_JIYVA:
         case GOD_WU_JIAN:
         case GOD_SIF_MUNA:
+        case GOD_LEGION_FROM_BEYOND:
             if (one_chance_in(17))
                 lose_piety(1);
             break;
@@ -4468,6 +4550,9 @@ int god_colour(god_type god) // mv - added
     case GOD_PAKELLAS:
         return LIGHTGREEN;
 
+    case GOD_LEGION_FROM_BEYOND:
+        return RED;
+
     case GOD_NO_GOD:
     case NUM_GODS:
     case GOD_RANDOM:
@@ -4561,6 +4646,9 @@ colour_t god_message_altar_colour(god_type god)
 
     case GOD_HEPLIAKLQANA:
         return random_choose(LIGHTGREEN, LIGHTBLUE);
+
+    case GOD_LEGION_FROM_BEYOND:
+        return RED;
 
     default:
         return YELLOW;

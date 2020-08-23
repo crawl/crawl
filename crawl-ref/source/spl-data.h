@@ -625,7 +625,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_ANIMATE_DEAD, "Animate Dead",
     spschool::necromancy,
-    spflag::area | spflag::neutral | spflag::utility,
+    spflag::area | spflag::neutral | spflag::utility | spflag::non_legion,
     4,
     0,
     -1, -1,
@@ -658,7 +658,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_ANIMATE_SKELETON, "Animate Skeleton",
     spschool::necromancy,
-    spflag::utility,
+    spflag::utility | spflag::non_legion,
     1,
     0,
     -1, -1,
@@ -919,7 +919,7 @@ static const struct spell_desc spelldata[] =
     SPELL_TUKIMAS_DANCE, "Tukima's Dance",
     spschool::hexes,
     spflag::dir_or_target | spflag::needs_tracer | spflag::MR_check
-        | spflag::not_self,
+        | spflag::not_self | spflag::non_legion,
     3,
     100,
     LOS_RADIUS, LOS_RADIUS,
@@ -1239,7 +1239,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_DEATH_CHANNEL, "Death Channel",
     spschool::necromancy,
-    spflag::helpful | spflag::utility,
+    spflag::helpful | spflag::utility | spflag::non_legion,
     6,
     200,
     -1, -1,
@@ -1384,7 +1384,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_STICKS_TO_SNAKES, "Sticks to Snakes",
     spschool::transmutation,
-    spflag::no_ghost,
+    spflag::no_ghost | spflag::non_legion,
     2,
     100,
     -1, -1,
@@ -1613,7 +1613,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_SIMULACRUM, "Simulacrum",
     spschool::ice | spschool::necromancy,
-    spflag::none,
+    spflag::non_legion,
     6,
     200,
     -1, -1,
@@ -2626,7 +2626,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_BATTLESPHERE, "Iskenderun's Battlesphere",
     spschool::conjuration | spschool::charms,
-    spflag::utility,
+    spflag::utility | spflag::non_legion,
     5,
     100,
     -1, -1,
@@ -2925,7 +2925,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_SPECTRAL_WEAPON, "Spectral Weapon",
     spschool::hexes | spschool::charms,
-    spflag::selfench | spflag::utility | spflag::no_ghost,
+    spflag::selfench | spflag::utility | spflag::no_ghost | spflag::non_legion,
     3,
     100,
     -1, -1,
@@ -3868,7 +3868,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_INFESTATION, "Infestation",
     spschool::necromancy, 
-    spflag::target | spflag::unclean,
+    spflag::target | spflag::unclean | spflag::non_legion,
     8,
     200,
     LOS_RADIUS, LOS_RADIUS,

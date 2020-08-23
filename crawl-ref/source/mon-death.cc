@@ -1866,11 +1866,15 @@ static bool _reaping(monster &mons)
 
 static bool _god_will_bless_follower(monster* victim)
 {
-    return have_passive(passive_t::bless_followers)
-           && random2(you.piety) >= piety_breakpoint(2)
-           || have_passive(passive_t::bless_followers_vs_evil)
+    return (have_passive(passive_t::bless_followers)
+           && random2(you.piety) >= piety_breakpoint(2))
+           || (have_passive(passive_t::bless_followers_vs_evil)
               && victim->evil()
-              && random2(you.piety) >= piety_breakpoint(0);
+              && random2(you.piety) >= piety_breakpoint(0))
+           || (have_passive(passive_t::bless_followers_legion)
+              && random2((you.skill(SK_SUMMONINGS) * 4)
+                    + (you.skill(SK_SUMMONINGS) * 3))
+                    >= piety_breakpoint(0));
 }
 
 /**

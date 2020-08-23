@@ -1051,6 +1051,61 @@ void make_book_kiku_gift(item_def &book, bool first)
     set_artefact_name(book, name);
 }
 
+void make_book_legion_gift(item_def &book, bool first)
+{
+    book.sub_type = BOOK_RANDART_THEME;
+    _make_book_randart(book);
+
+    spell_type chosen_spells[RANDBOOK_SIZE];
+    for (int i = 0; i < RANDBOOK_SIZE; i++)
+        chosen_spells[i] = SPELL_NO_SPELL;
+
+    // Each book should guarantee the player at least one ally-summoning spell.
+    if (first)
+    {
+        chosen_spells[0] = SPELL_RECALL;
+        chosen_spells[1] = random_choose(SPELL_CALL_IMP, SPELL_SUMMON_SMALL_MAMMAL);
+        chosen_spells[2] = random_choose(SPELL_CALL_CANINE_FAMILIAR, SPELL_SUMMON_GUARDIAN_GOLEM);
+        chosen_spells[3] = random_choose(SPELL_SUMMON_ICE_BEAST, SPELL_SUMMON_LIGHTNING_SPIRE);
+    }
+    else
+    {
+        chosen_spells[0] = SPELL_AURA_OF_ABJURATION;
+        chosen_spells[1] = random_choose(SPELL_SUMMON_FOREST,
+                                         SPELL_SUMMON_DEMON,
+                                         SPELL_SUMMON_MANA_VIPER);
+        chosen_spells[2] = random_choose(SPELL_SHADOW_CREATURES,
+                                         SPELL_SUMMON_ELEMENTAL,
+                                         SPELL_MONSTROUS_MENAGERIE);
+        chosen_spells[3] = random_choose(SPELL_SUMMON_GREATER_DEMON,
+                                         SPELL_MALIGN_GATEWAY,
+                                         SPELL_SUMMON_HYDRA);
+        chosen_spells[4] = random_choose(SPELL_SUMMON_HORRIBLE_THINGS, SPELL_DRAGON_CALL);
+    }
+
+    sort(chosen_spells, chosen_spells + RANDBOOK_SIZE, _compare_spells);
+
+    CrawlHashTable &props = book.props;
+    props.erase(SPELL_LIST_KEY);
+    props[SPELL_LIST_KEY].new_vector(SV_INT).resize(RANDBOOK_SIZE);
+
+    CrawlVector &spell_vec = props[SPELL_LIST_KEY].get_vector();
+    spell_vec.set_max_size(RANDBOOK_SIZE);
+
+    for (int i = 0; i < RANDBOOK_SIZE; i++)
+        spell_vec[i].get_int() = chosen_spells[i];
+
+    string name = "The Legion's ";
+    book.props[BOOK_TITLED_KEY].get_bool() = true;
+    name += getRandNameString("book_name") + " ";
+    string type_name = getRandNameString("Summoning");
+    if (type_name.empty())
+        name += "Summoning";
+    else
+        name += type_name;
+    set_artefact_name(book, name);
+}
+
 /// Does the given acq source generate books totally randomly?
 static bool _completely_random_books(int agent)
 {

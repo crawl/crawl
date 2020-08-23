@@ -304,7 +304,11 @@ enum ability_type
     // Imus Thea
     ABIL_IMUS_PRISMATIC_PRISM = 1300,
     ABIL_IMUS_FRAGMENTATION,
-    
+
+    // Legion from beyond
+    ABIL_LEGION_POSITIONING = 1310,
+    ABIL_LEGION_IMMORTAL,
+
     // For both Yred and Beogh
     ABIL_STOP_RECALL = 1500,
 

@@ -123,6 +123,7 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_ALBEDO,          MB_ALBEDO},
     { ENCH_CITRINITAS,      MB_CITRINITAS},
     { ENCH_VIRIDITAS,       MB_VIRIDITAS},
+    { ENCH_HOLD_POSITION, MB_HOLD_POSITION},
 };
 
 static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
@@ -1289,6 +1290,8 @@ static string _verbose_info0(const monster_info& mi)
         return "burning";
     if (mi.is(MB_INVISIBLE))
         return "invisible";
+    if (mi.is(MB_HOLD_POSITION))
+        return "holding position";
 
     return "";
 }
@@ -1617,6 +1620,8 @@ vector<string> monster_info::attributes() const
         v.emplace_back("infused by empowering essence of Cirtintas");
     if (is(MB_VIRIDITAS))
         v.emplace_back("infused by restorative essence of Viriditas");
+    if (is(MB_HOLD_POSITION))
+        v.emplace_back("holding position");
     return v;
 }
 
