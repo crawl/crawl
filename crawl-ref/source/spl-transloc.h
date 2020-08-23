@@ -2,6 +2,8 @@
 
 #include "spl-cast.h"
 
+const int PALENTONGA_CHARGE_RANGE = 4;
+
 spret cast_disjunction(int pow, bool fail);
 void disjunction_spell();
 

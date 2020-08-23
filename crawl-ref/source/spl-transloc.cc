@@ -517,16 +517,14 @@ static void _charge_cloud_trail(const coord_def pos)
  */
 spret palentonga_charge(bool fail)
 {
-    const int charge_range = 4;
     const coord_def initial_pos = you.pos();
 
     if (cancel_barbed_move())
         return spret::abort;
 
     vector<coord_def> target_path;
-    targeter_charge tgt(&you, charge_range);
-    tgt.obeys_mesmerise = true;
-    if (!_find_charge_target(target_path, charge_range, &tgt))
+    targeter_charge tgt(&you, PALENTONGA_CHARGE_RANGE);
+    if (!_find_charge_target(target_path, PALENTONGA_CHARGE_RANGE, &tgt))
         return spret::abort;
 
     fail_check();

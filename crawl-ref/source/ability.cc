@@ -46,6 +46,7 @@
 #include "menu.h"
 #include "message.h"
 #include "mon-place.h"
+#include "mon-util.h"
 #include "mutation.h"
 #include "notes.h"
 #include "options.h"
@@ -1571,7 +1572,15 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         return _can_hop(quiet);
 
     case ABIL_ROLLING_CHARGE:
-        return _can_movement_ability(quiet);
+        if (!_can_movement_ability(quiet))
+            return false;
+        if (get_dist_to_nearest_monster() > PALENTONGA_CHARGE_RANGE)
+        {
+            if (!quiet)
+                mpr("There are no monsters in range.");
+            return false;
+        }
+        return true;
 
     case ABIL_BLINK:
     case ABIL_EVOKE_BLINK:
