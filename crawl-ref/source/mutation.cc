@@ -192,25 +192,6 @@ static const int conflict[][3] =
     { MUT_NO_REGENERATION,     MUT_REGENERATION,           -1},
 };
 
-equipment_type beastly_slot(int mut)
-{
-    switch (mut)
-    {
-    case MUT_HORNS:
-    case MUT_ANTENNAE:
-    // Not putting MUT_BEAK here because it doesn't conflict with the other two.
-        return EQ_HELMET;
-    case MUT_CLAWS:
-        return EQ_GLOVES;
-    case MUT_HOOVES:
-    case MUT_TALONS:
-    case MUT_TENTACLE_SPIKE:
-        return EQ_BOOTS;
-    default:
-        return EQ_NONE;
-    }
-}
-
 static bool _mut_has_use(const mutation_def &mut, mutflag use)
 {
     return bool(mut.uses & use);
