@@ -525,7 +525,7 @@ nearby creatures and the damage dealt to those affected.
 Banish ability
 
 Attempts to banish a creature into the Abyss. If the attempt succeeds, you gain
-some piety and half the creature's experience value. Invocations skill makes it
+some piety and the creature's full experience value. Invocations skill makes it
 harder to resist.
 %%%%
 Corrupt ability
