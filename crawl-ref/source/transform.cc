@@ -1672,8 +1672,11 @@ bool transform(int pow, transformation which_trans, bool involuntary,
         // Need to set the appendages here for messaging
         for (mutation_type app : appendages)
         {
-            if (physiology_mutation_conflict(app))
+            if (physiology_mutation_conflict(app)
+                || you.get_base_mutation_level(app) > 0)
+            {
                 continue;
+            }
             you.props[APPENDAGE_KEY].get_vector().push_back(app);
             dprf("Setting appendage mutation %s.", mutation_name(app));
         }
