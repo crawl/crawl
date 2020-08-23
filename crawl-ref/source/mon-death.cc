@@ -2293,6 +2293,8 @@ item_def* monster_die(monster& mons, killer_type killer,
             // abjuration), because it uses the beam variables!  Or does it???
             // Pacified monsters leave the level when this happens.
 
+            // Monster goes to the Abyss.
+            mons.flags |= MF_BANISHED;
             // KILL_RESET monsters no longer lose their whole inventory, only
             // items they were generated with.
             if (mons.pacified() || !mons.needs_abyss_transit())
@@ -2304,8 +2306,6 @@ item_def* monster_die(monster& mons, killer_type killer,
                 break;
             }
 
-            // Monster goes to the Abyss.
-            mons.flags |= MF_BANISHED;
             {
                 unwind_var<int> dt(mons.damage_total, 0);
                 unwind_var<int> df(mons.damage_friendly, 0);
