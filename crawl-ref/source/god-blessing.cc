@@ -564,7 +564,7 @@ static bool _blessing_inspiring(monster* mon)
         mon->del_ench(ENCH_EMPOWERED_SPELLS);
         mon->add_ench(mon_enchant(ENCH_EMPOWERED_SPELLS, 0, &you, INFINITE_DURATION));
         simple_god_message(make_stringf(" blesses %s with a brilliance!",
-                                    mon->name(DESC_THE).c_str()).c_str(), god);
+                                    mon->name(DESC_THE).c_str()).c_str(), GOD_LEGION_FROM_BEYOND);
         return true;
     }
     else
@@ -572,7 +572,7 @@ static bool _blessing_inspiring(monster* mon)
         mon->del_ench(ENCH_SWIFT);
         mon->add_ench(mon_enchant(ENCH_SWIFT, 0, &you, INFINITE_DURATION));
         simple_god_message(make_stringf(" blesses %s with a burst of speed!",
-                                    mon->name(DESC_THE).c_str()).c_str(), god);
+                                    mon->name(DESC_THE).c_str()).c_str(), GOD_LEGION_FROM_BEYOND);
         return true;
     }
 
