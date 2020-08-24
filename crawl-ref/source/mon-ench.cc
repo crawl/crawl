@@ -301,7 +301,7 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
 
     case ENCH_LIQUEFYING:
     case ENCH_SILENCE:
-	case ENCH_HEALING_AURA:
+    case ENCH_HEALING_AURA:
         invalidate_agrid(true);
         break;
 
@@ -1451,11 +1451,13 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_WHIRLWIND_PINNED:
     case ENCH_VILE_CLUTCH:
     case ENCH_GRASPING_ROOTS:
+    case ENCH_HOLD_POSITION:
     case ENCH_DEATHS_DOOR:
     case ENCH_NIGREDO:
     case ENCH_ALBEDO:
     case ENCH_CITRINITAS:
     case ENCH_VIRIDITAS:
+    case ENCH_LEGION_BLESSING:
         decay_enchantment(en);
         break;
 
@@ -2098,7 +2100,7 @@ static const char *enchant_names[] =
     "vortex", "vortex_cooldown", "vile_clutch", "unshelved armour",
     "natural_abjuration", "stoneskin",
     "nigredo", "albedo", "citrinitas", "virditas",
-    "aura_of_healing",
+    "aura_of_healing", "hold_position", "LEGION_BLESSING",
     "buggy",
 };
 

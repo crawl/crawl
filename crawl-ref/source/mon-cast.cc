@@ -498,7 +498,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             const actor* foe = caster.get_foe();
             return foe && caster.can_constrict(foe, false);
         }, _cast_grasping_roots, } },
-	{ SPELL_AURA_OF_HEALING, {
+    { SPELL_AURA_OF_HEALING, {
         [](const monster &caster) {
             return !within_healaura(caster.pos());
         },
@@ -4410,7 +4410,7 @@ static int _monster_abjure_target(monster* target, int pow, bool actual)
     if (!actual)
         return pow > 40 || pow >= duration;
 
-    // TSO and Trog's abjuration protection.
+    // TSO and Trog, and the Legion's abjuration protection.
     bool shielded = false;
     if (have_passive(passive_t::abjuration_protection_hd))
     {
@@ -4428,6 +4428,15 @@ static int _monster_abjure_target(monster* target, int pow, bool actual)
         if (pow < duration)
         {
             simple_god_message(" shields your ally from puny magic!");
+            shielded = true;
+        }
+    }
+    else if (have_passive(passive_t::abjuration_protection_legion))
+    {
+        pow = pow / ((3 + you.skill(SK_SUMMONINGS)) / 3);
+        if (pow < duration)
+        {
+            simple_god_message(" resists abjuration!");
             shielded = true;
         }
     }
@@ -5970,7 +5979,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     case SPELL_AIRSTRIKE:
     {
         pbolt.flavour = BEAM_AIR;
-		
+        
         int empty_space = 0;
         for (adjacent_iterator ai(foe->pos()); ai; ++ai)
             if (!monster_at(*ai) && !cell_is_solid(*ai))

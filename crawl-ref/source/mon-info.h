@@ -183,6 +183,7 @@ enum monster_info_flags
     MB_CITRINITAS,
     MB_VIRIDITAS,
     MB_HEALING_AURA,
+    MB_HOLD_POSITION,
     NUM_MB_FLAGS
 };
 

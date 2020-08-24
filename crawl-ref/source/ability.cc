@@ -198,6 +198,8 @@ skill_type invo_skill(god_type god)
         case GOD_PAKELLAS:
         case GOD_NEMELEX_XOBEH:
             return SK_EVOCATIONS;
+        case GOD_LEGION_FROM_BEYOND:
+            return SK_SUMMONINGS;
         case GOD_ASHENZARI:
         case GOD_GOZAG:
         case GOD_RU:
@@ -735,6 +737,12 @@ static const ability_def Ability_List[] =
       0, 0, 0, 0, {fail_basis::invo}, abflag::starve_ok },
     { ABIL_CONVERT_TO_BEOGH, "Convert to Beogh",
       0, 0, 0, 0, {fail_basis::invo}, abflag::starve_ok },
+
+    // Legion from beyond
+    { ABIL_LEGION_POSITIONING, "Positioning",
+      0, 0, 0, 0, {fail_basis::invo}, abflag::instant | abflag::starve_ok },
+    { ABIL_LEGION_IMMORTAL, "Immortal Legion",
+      4, 0, 0, 4, {fail_basis::invo}, abflag::none },
 };
 
 static const ability_def& get_ability_def(ability_type abil)
@@ -4121,6 +4129,147 @@ static spret _do_ability(const ability_def& abil, bool fail)
         int frag_power = (you.skill(SK_INVOCATIONS) * 9)
                         + (you.piety * (you.skill(SK_INVOCATIONS) + 25) / 27) + (you.piety * (3/2));
         fragmentation(frag_power);
+    }
+    break;
+
+    case ABIL_LEGION_POSITIONING:
+    {
+        god_acting gdact;
+        beam.range = LOS_MAX_RANGE;
+        direction_chooser_args args;
+        args.restricts = DIR_TARGET;
+        args.mode = TARG_FRIEND;
+        args.needs_path = false;
+
+        if (!spell_direction(spd, beam, &args))
+            return spret::abort;
+
+        if (beam.target == you.pos())
+        {
+            mpr("You can only order to ally minions.");
+            return spret::abort;
+        }
+
+        monster* mons = monster_at(beam.target);
+        if (mons == nullptr)
+        {
+            mpr("You see nothing there receive your order!");
+            return spret::abort;
+        }
+
+        if (mons->attitude == ATT_HOSTILE)
+        {
+            mpr("You can only order to ally minions.");
+            return spret::abort;
+        }
+
+        if (!you.can_see(*mons))
+        {
+            mpr("You see nothing there receive your order!");
+            return spret::abort;
+        }
+
+        if (mons->has_ench(ENCH_PETRIFIED)
+            || mons->has_ench(ENCH_CONFUSION)
+            || mons->has_ench(ENCH_PARALYSIS))
+        {
+            mpr("That minion can't receive your orders!");
+            return spret::abort;
+        }
+
+        if (mons->type == MONS_KRAKEN || mons->type == MONS_KRAKEN_TENTACLE || mons->type == MONS_KRAKEN_TENTACLE_SEGMENT
+             || mons->type == MONS_TENTACLED_STARSPAWN || mons->type == MONS_STARSPAWN_TENTACLE || mons->type == MONS_STARSPAWN_TENTACLE_SEGMENT
+             || mons->type == MONS_ELDRITCH_TENTACLE || mons->type == MONS_ELDRITCH_TENTACLE_SEGMENT
+             || mons->type == MONS_SNAPLASHER_VINE || mons->type == MONS_SNAPLASHER_VINE_SEGMENT
+             || mons->type == MONS_PLAYER_ELDRITCH_TENTACLE || mons->type == MONS_PLAYER_ELDRITCH_TENTACLE_SEGMENT)
+        {
+            mpr("You cannot hold position tentacle-like being!");
+            return spret::abort;
+        }
+
+        if (mons->has_ench(ENCH_HOLD_POSITION))
+        {
+            mpr("You ordered minion to move again.");
+            mons->del_ench(ENCH_HOLD_POSITION);
+            return spret::abort;
+        }
+
+        fail_check();
+
+        mpr("You ordered minion to hold position!");
+        mons->add_ench(mon_enchant(ENCH_HOLD_POSITION, 0, &you, INFINITE_DURATION));
+
+    }
+    break;
+
+    case ABIL_LEGION_IMMORTAL:
+    {
+        god_acting gdact;
+        beam.range = LOS_MAX_RANGE;
+        direction_chooser_args args;
+        args.restricts = DIR_TARGET;
+        args.mode = TARG_FRIEND;
+        args.needs_path = false;
+
+        if (!spell_direction(spd, beam, &args))
+            return spret::abort;
+
+        if (beam.target == you.pos())
+        {
+            mpr("You can only order to ally minions.");
+            return spret::abort;
+        }
+
+        monster* mons = monster_at(beam.target);
+        if (mons == nullptr)
+        {
+            mpr("You see nothing there receive your order!");
+            return spret::abort;
+        }
+
+        if (mons->attitude == ATT_HOSTILE)
+        {
+            mpr("You can only order to ally minions.");
+            return spret::abort;
+        }
+
+        if (!you.can_see(*mons))
+        {
+            mpr("You see nothing there receive your order!");
+            return spret::abort;
+        }
+
+        if (mons->has_ench(ENCH_PETRIFIED)
+            || mons->has_ench(ENCH_CONFUSION)
+            || mons->has_ench(ENCH_PARALYSIS))
+        {
+            mpr("That minion can't receive your orders!");
+            return spret::abort;
+        }
+
+        if (mons->type == MONS_KRAKEN || mons->type == MONS_KRAKEN_TENTACLE || mons->type == MONS_KRAKEN_TENTACLE_SEGMENT
+             || mons->type == MONS_TENTACLED_STARSPAWN || mons->type == MONS_STARSPAWN_TENTACLE || mons->type == MONS_STARSPAWN_TENTACLE_SEGMENT
+             || mons->type == MONS_ELDRITCH_TENTACLE || mons->type == MONS_ELDRITCH_TENTACLE_SEGMENT
+             || mons->type == MONS_SNAPLASHER_VINE || mons->type == MONS_SNAPLASHER_VINE_SEGMENT
+             || mons->type == MONS_PLAYER_ELDRITCH_TENTACLE || mons->type == MONS_PLAYER_ELDRITCH_TENTACLE_SEGMENT)
+        {
+            mpr("You cannot order to tentacle-like being!");
+            return spret::abort;
+        }
+
+        if (mons->has_ench(ENCH_DEATHS_DOOR))
+        {
+            mpr("This minion is already received your order!");
+            return spret::abort;
+        }
+
+        fail_check();
+
+        const int dur = BASELINE_DELAY * 2 * you.skill(SK_SUMMONINGS);
+        mprf("%s is forced to sustain itself as an Immortal Legionnare!", mons->name(DESC_THE).c_str());
+        mons->hit_points = 1;
+        mons->add_ench(mon_enchant(ENCH_DEATHS_DOOR, 0, mons, dur));
+
     }
     break;
 

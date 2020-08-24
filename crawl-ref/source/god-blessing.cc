@@ -18,6 +18,7 @@
 #include "mon-gear.h"
 #include "mon-grow.h" 
 #include "mon-place.h"
+#include "monster.h"
 #include "religion.h"
 #include "stringutil.h"
 #include "view.h"
@@ -551,6 +552,33 @@ static bool _tso_blessing_friendliness(monster* mon)
                                    base_increase + random2(base_increase));
 }
 
+static bool _blessing_inspiring(monster* mon)
+{
+    if (mon->has_ench(ENCH_LEGION_BLESSING))
+        return false;
+
+    mon->add_ench(mon_enchant(ENCH_LEGION_BLESSING, 0, &you, INFINITE_DURATION));
+
+    if (mon->has_spells())
+    {
+        mon->del_ench(ENCH_EMPOWERED_SPELLS);
+        mon->add_ench(mon_enchant(ENCH_EMPOWERED_SPELLS, 0, &you, INFINITE_DURATION));
+        simple_god_message(make_stringf(" blesses %s with a brilliance!",
+                                    mon->name(DESC_THE).c_str()).c_str(), GOD_LEGION_FROM_BEYOND);
+        return true;
+    }
+    else
+    {
+        mon->del_ench(ENCH_SWIFT);
+        mon->add_ench(mon_enchant(ENCH_SWIFT, 0, &you, INFINITE_DURATION));
+        simple_god_message(make_stringf(" blesses %s with a burst of speed!",
+                                    mon->name(DESC_THE).c_str()).c_str(), GOD_LEGION_FROM_BEYOND);
+        return true;
+    }
+
+    return false;
+}
+
 static void _beogh_reinf_callback(const mgen_data &mg, monster *&mon, int placed)
 {
     UNUSED(placed);
@@ -762,6 +790,60 @@ static bool _beogh_bless_follower(monster* follower, bool force)
 }
 
 /**
+ * Attempt to bless a follower with curing and/or inspiring.
+ *
+ * @param[in] follower      The follower to buff.
+ * @return                  The type of inspiring that occurred; may be empty.
+ */
+static string _legion_bless_buff(monster* follower)
+{
+    string blessing = "";
+
+    // Cure status conditions.
+    bool balms = false;
+    balms = _blessing_balms(follower);
+    if (balms)
+        blessing = "divine balms";
+    else
+        dprf("Couldn't apply balms.");
+
+    bool inspiring = _blessing_inspiring(follower);
+    // Maybe Buff the follower.
+    if (_blessing_inspiring(follower))
+        inspiring = true;
+
+    if (inspiring)
+    {
+        if (balms)
+            blessing += " and ";
+        blessing += "inspiring";
+    }
+    else
+        dprf("Couldn't inspire monster.");
+
+    return blessing;
+}
+
+/**
+ * Have The Legion attempt to bless the specified follower.
+ *
+ * Blessings can buff your minions.
+ *
+ * @param[in] follower      The follower to try to bless.
+ * @param[in] force         Whether to check follower validity.
+ * @return Whether a blessing occurred.
+ */
+static bool _legion_bless_follower(monster* follower, bool force)
+{
+
+    if (!follower || (!force && !is_follower(*follower)))
+        return false;
+
+    string blessing = "";
+    blessing = _legion_bless_buff(follower);
+}
+
+/**
  * Attempt to increase the duration of a follower.
  *
  * Their summon duration, if summoned, or charm duration, if charmed.
@@ -863,6 +945,7 @@ bool bless_follower(monster* follower,
     {
         case GOD_BEOGH: return _beogh_bless_follower(follower, force);
         case GOD_SHINING_ONE:   return _tso_bless_follower(follower, force);
+        case GOD_LEGION_FROM_BEYOND:   return _legion_bless_follower(follower, force);
         default: return false; // XXX: print something here?
     }
 }

@@ -99,6 +99,16 @@ Kikubaaqudgha offers great assistance to the aspiring necromancer: spellbooks
 filled with dark magic, protection against necromantic backlash, and an endless
 supply of bodies taken from Kikubaaqudgha's vast mausoleum.
 %%%%
+Legion from beyond
+
+The Legion from beyond is a collection of unbridled forces that consist of
+innumerable beasts, spirits, demons, and monsters, exist at the boundary
+betwixt other planes. The minions of the Legion have no free will, and are
+faithful to only one purpose - instinct to follow the will of the leader.
+Summoners who want to control unbridled forces of the Legion contacts them,
+they will obey any orders. It would be, if only the Legion were summoned,
+and only the Legion would be awarded the pact to lead.
+%%%%
 Lugonu
 
 Banished to the chaotic realm of the Abyss, Lugonu the Unformed seeks followers
@@ -344,6 +354,15 @@ Disciples of the Council learn to perform three martial techniques while moving
 around in combat. They will also be taught to move at unfathomable speeds for
 short distances, and become able to summon a storm of golden clouds to increase
 their precision and damage for as long as they keep using martial attacks.
+%%%%
+Legion from beyond powers
+
+Pactmakers who make a pact to lead the Legion, will learn how to summon minions
+of the Legion from beyond. Those minions look no different from common summoner's,
+but they're hard to abjured and obey to any order; immediately hold their position
+until death, with just a single order. Powerful leaders of the Legion, can force
+their minions into the battle-trans when they slay enemies. Under the control of the
+most dominant leader, minions of the Legion can sustain themselves from death briefly.
 %%%%
 Kikubaaqudgha powers
 
@@ -593,6 +612,14 @@ Those who turn against the Council must be prepared to endure death by a
 thousand cuts. No hiding place is secure, no disguise perfect enough to avoid
 the sudden spring of traps, the flying daggers and the armies of animated
 weapons that will ambush the betrayer.
+%%%%
+Legion from beyond wrath
+
+When the leader of the Legion abandon them, the Legion's minions such as beast,
+spirt, demon and holies, dragon, and all kinds of minions will be out of control
+and start breaching into dungeon. The unbridled force of the Legion will interrupt
+their old leader to unstablize summoning spells horribly, and other leader of the
+Legion with powerful summoning spell will arrive to make you obey.
 %%%%
 Kikubaaqudgha wrath
 

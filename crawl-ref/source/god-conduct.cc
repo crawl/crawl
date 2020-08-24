@@ -64,7 +64,7 @@ static const char *conducts[] =
     "Cause Glowing", "Use Unclean", "Use Chaos", "Desecrate Orcish Remains",
     "Kill Slime", "Kill Plant", "Was Hasty", "Attack In Sanctuary",
     "Kill Artificial", "Exploration", "Desecrate Holy Remains", "Seen Monster",
-    "Sacrificed Love", "Channel", "Hurt Foe",
+    "Sacrificed Love", "Channel", "Hurt Foe", "Call non-Legion ally",
 };
 COMPILE_CHECK(ARRAYSZ(conducts) == NUM_CONDUCTS);
 
@@ -438,6 +438,15 @@ static peeve_map divine_peeves[] =
     peeve_map(),
     // GOD_IMUS,
     peeve_map(),
+    // GOD_LEGION_FROM_BEYOND,
+    {
+        { DID_NON_LEGION, {
+            "you call ally that non-Legion, without summoning spell", true,
+            1, 1, " barely stabilizes from non-Legion ally, just this once.",
+            "your bond with the Legion becomes unstable, because you called non-Legion ally!",
+            nullptr, -5
+        } },
+    },
 };
 
 string get_god_dislikes(god_type which_god)
@@ -927,10 +936,17 @@ static like_map divine_likes[] =
     {
         { DID_EXPLORATION, EXPLORE_RESPONSE },
     },
-
     // GOD_IMUS,
     {
         { DID_EXPLORATION, EXPLORE_RESPONSE },
+    },
+    // GOD_LEGION_FROM_BEYOND
+    {
+        { DID_KILL_LIVING, KILL_LIVING_RESPONSE },
+        { DID_KILL_UNDEAD, KILL_UNDEAD_RESPONSE },
+        { DID_KILL_DEMON, KILL_DEMON_RESPONSE },
+        { DID_KILL_HOLY, KILL_HOLY_RESPONSE },
+        { DID_KILL_NONLIVING, KILL_NONLIVING_RESPONSE },
     },
 };
 
@@ -1231,6 +1247,9 @@ bool god_punishes_spell(spell_type spell, god_type god)
 
     // not is_hasty_spell: see spl-cast.cc:_spellcasting_god_conduct
     if (map_find(divine_peeves[god], DID_HASTY) && spell == SPELL_SWIFTNESS)
+        return true;
+
+    if (map_find(divine_peeves[god], DID_NON_LEGION) && is_non_legion_spell(spell))
         return true;
 
     return false;
