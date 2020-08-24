@@ -2793,8 +2793,9 @@ void handle_searing_ray()
     {
         monster* mons = nullptr;
         mons = monster_by_mid(you.props["searing_ray_mid"].get_int());
-        // homing targeting, save the target location in case it dies
-        if (mons && mons->alive())
+        // homing targeting, save the target location in case it dies or
+        // disappears
+        if (mons && mons->alive() && you.can_see(*mons))
             you.props["searing_ray_target"].get_coord() = mons->pos();
         else
             you.props["searing_ray_aimed_at_spot"] = true;
