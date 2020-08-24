@@ -189,6 +189,7 @@ enum enchant_type
     ENCH_VIRIDITAS,
     ENCH_HEALING_AURA, // emanating a healing aura
     ENCH_HOLD_POSITION,
+    ENCH_LEGION_BLESSING,
     // Update enchant_names[] in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS

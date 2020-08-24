@@ -361,9 +361,8 @@ Pactmakers who make a pact to lead the Legion, will learn how to summon minions
 of the Legion from beyond. Those minions look no different from common summoner's,
 but they're hard to abjured and obey to any order; immediately hold their position
 until death, with just a single order. Powerful leaders of the Legion, can force
-their minions to inspire themselves when the moments of victory, cause healing or
-enhancements. Under the control of the most dominant leader, minions of the Legion
-can sustain themselves from death briefly.
+their minions into the battle-trans when they slay enemies. Under the control of the
+most dominant leader, minions of the Legion can sustain themselves from death briefly.
 %%%%
 Kikubaaqudgha powers
 

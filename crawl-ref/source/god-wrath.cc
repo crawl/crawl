@@ -96,7 +96,7 @@ static const char *_god_wrath_adjectives[] =
     "fury",             // Uskayaw
     "memory",           // Hepliaklqana (unused)
     "rancor",           // Wu Jian
-    "unbridled force",	// Legion from beyond
+    "unbridled force",    // Legion from beyond
     "distillation",     // Great Wyrm
     "reflection",       // Imus Thea
 };
@@ -2089,48 +2089,48 @@ static bool _legion_retribution()
 
     switch (random2(2))
     {
-		case 0:
-		{
-			int count = 0;
-			int how_many = 3 + random2avg(div_rand_round(you.experience_level, 3),
-										2);
-			const int tier = div_rand_round(you.experience_level, 9);
-			while (how_many-- > 0)
-			{
-				if (_legion_random_summoner(count, tier))
-					count++;
-			}
-			simple_god_message(count ? " calls another leaders of the Legion!"
-									: " fails to call another leaders of the Legion.",
-							god);
-			break;
-		}
-		case 1:
-		{
-			int count = 0;
-			int how_many = 2 + random2avg(div_rand_round(you.experience_level, 4),
-										4);
-			for (int i = 0; i < how_many; ++i)
-			{
-				if (create_monster(
-						mgen_data(
-							RANDOM_MOBILE_MONSTER, BEH_HOSTILE, you.pos(), MHITYOU,
-								MG_NONE, god)
-								.set_place(level_id(BRANCH_DUNGEON,
-													min(27,
-														you.experience_level + 5)))
-								.set_summoned(nullptr, 4, MON_SUMM_WRATH)
-								.set_non_actor_summoner(_god_wrath_name(god))))
-				{
-					count++;
-				}
-			}
-			simple_god_message(count ? " are poured on you!"
-									: " were temporarily suspended just this moment.",
-							god);
-			break;
-		}
-	}
+        case 0:
+        {
+            int count = 0;
+            int how_many = 3 + random2avg(div_rand_round(you.experience_level, 3),
+                                        2);
+            const int tier = div_rand_round(you.experience_level, 9);
+            while (how_many-- > 0)
+            {
+                if (_legion_random_summoner(count, tier))
+                    count++;
+            }
+            simple_god_message(count ? " calls another leaders of the Legion!"
+                                    : " fails to call another leaders of the Legion.",
+                            god);
+            break;
+        }
+        case 1:
+        {
+            int count = 0;
+            int how_many = 2 + random2avg(div_rand_round(you.experience_level, 4),
+                                        4);
+            for (int i = 0; i < how_many; ++i)
+            {
+                if (create_monster(
+                        mgen_data(
+                            RANDOM_MOBILE_MONSTER, BEH_HOSTILE, you.pos(), MHITYOU,
+                                MG_NONE, god)
+                                .set_place(level_id(BRANCH_DUNGEON,
+                                                    min(27,
+                                                        you.experience_level + 5)))
+                                .set_summoned(nullptr, 4, MON_SUMM_WRATH)
+                                .set_non_actor_summoner(_god_wrath_name(god))))
+                {
+                    count++;
+                }
+            }
+            simple_god_message(count ? " are poured on you!"
+                                    : " were temporarily suspended just this moment.",
+                            god);
+            break;
+        }
+    }
     return true;
 }
 
@@ -2287,7 +2287,7 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
     case GOD_WU_JIAN:       do_more = _wu_jian_retribution(); break;
     case GOD_WYRM:          do_more = _wyrm_retribution(); break;
     case GOD_IMUS:          do_more = _imus_retribution(); break;
-    case GOD_LEGION_FROM_BEYOND:	do_more = _legion_retribution(); break;
+    case GOD_LEGION_FROM_BEYOND:    do_more = _legion_retribution(); break;
 
     case GOD_ASHENZARI:
     case GOD_ELYVILON:

@@ -4178,9 +4178,10 @@ static spret _do_ability(const ability_def& abil, bool fail)
         }
 
         if (mons->type == MONS_KRAKEN || mons->type == MONS_KRAKEN_TENTACLE || mons->type == MONS_KRAKEN_TENTACLE_SEGMENT
-        || mons->type == MONS_TENTACLED_STARSPAWN || mons->type == MONS_STARSPAWN_TENTACLE || mons->type == MONS_STARSPAWN_TENTACLE_SEGMENT
-        || mons->type == MONS_ELDRITCH_TENTACLE || mons->type == MONS_ELDRITCH_TENTACLE_SEGMENT
-        || mons->type == MONS_SNAPLASHER_VINE || mons->type == MONS_SNAPLASHER_VINE_SEGMENT)
+             || mons->type == MONS_TENTACLED_STARSPAWN || mons->type == MONS_STARSPAWN_TENTACLE || mons->type == MONS_STARSPAWN_TENTACLE_SEGMENT
+             || mons->type == MONS_ELDRITCH_TENTACLE || mons->type == MONS_ELDRITCH_TENTACLE_SEGMENT
+             || mons->type == MONS_SNAPLASHER_VINE || mons->type == MONS_SNAPLASHER_VINE_SEGMENT
+             || mons->type == MONS_PLAYER_ELDRITCH_TENTACLE || mons->type == MONS_PLAYER_ELDRITCH_TENTACLE_SEGMENT)
         {
             mpr("You cannot hold position tentacle-like being!");
             return spret::abort;
@@ -4247,9 +4248,10 @@ static spret _do_ability(const ability_def& abil, bool fail)
         }
 
         if (mons->type == MONS_KRAKEN || mons->type == MONS_KRAKEN_TENTACLE || mons->type == MONS_KRAKEN_TENTACLE_SEGMENT
-        || mons->type == MONS_TENTACLED_STARSPAWN || mons->type == MONS_STARSPAWN_TENTACLE || mons->type == MONS_STARSPAWN_TENTACLE_SEGMENT
-        || mons->type == MONS_ELDRITCH_TENTACLE || mons->type == MONS_ELDRITCH_TENTACLE_SEGMENT
-        || mons->type == MONS_SNAPLASHER_VINE || mons->type == MONS_SNAPLASHER_VINE_SEGMENT)
+             || mons->type == MONS_TENTACLED_STARSPAWN || mons->type == MONS_STARSPAWN_TENTACLE || mons->type == MONS_STARSPAWN_TENTACLE_SEGMENT
+             || mons->type == MONS_ELDRITCH_TENTACLE || mons->type == MONS_ELDRITCH_TENTACLE_SEGMENT
+             || mons->type == MONS_SNAPLASHER_VINE || mons->type == MONS_SNAPLASHER_VINE_SEGMENT
+             || mons->type == MONS_PLAYER_ELDRITCH_TENTACLE || mons->type == MONS_PLAYER_ELDRITCH_TENTACLE_SEGMENT)
         {
             mpr("You cannot order to tentacle-like being!");
             return spret::abort;
