@@ -711,7 +711,8 @@ spret cast_foxfire(actor *caster, int pow, god_type god, bool fail)
 
     for (fair_adjacent_iterator ai(caster->pos()); ai; ++ai)
     {
-        mgen_data fox(MONS_FOXFIRE, BEH_HOSTILE,
+        monster_type firetype = caster->as_monster()->type == MONS_SPIRIT_FOX ? MONS_WILL_O_WISP : MONS_FOXFIRE;
+        mgen_data fox(firetype, BEH_HOSTILE,
                       *ai, MHITNOT, MG_FORCE_PLACE | MG_AUTOFOE);
         fox.set_summoned(caster, 0, SPELL_FOXFIRE, god);
         fox.hd = pow;
@@ -728,20 +729,29 @@ spret cast_foxfire(actor *caster, int pow, god_type god, bool fail)
             // Avoid foxfire without targets always moving towards (0,0)
             if (!foxfire->get_foe())
                 foxfire->foe = MHITYOU;
+
+                
+            if (foxfire && you.can_see(*caster))
+            {
+                mprf("%s %s %s.",
+                    caster->name(DESC_THE).c_str(),
+                    caster->conj_verb("conjure").c_str(),
+                    foxfire->name(DESC_A).c_str());
+            }
+            else
+                canned_msg(MSG_NOTHING_HAPPENS);
+            
+
+            if (created && foxfire && foxfire->type == MONS_WILL_O_WISP)
+                break;
         }
 
         if (created == 2)
             break;
+        
+
     }
 
-    if (created && you.can_see(*caster))
-    {
-        mprf("%s %s a foxfire.",
-             caster->name(DESC_THE).c_str(),
-             caster->conj_verb("conjure").c_str());
-    }
-    else
-        canned_msg(MSG_NOTHING_HAPPENS);
 
     return spret::success;
 }
@@ -768,7 +778,8 @@ void foxfire_attack(const monster *foxfire, const actor *target)
     beam.source      = foxfire->pos();
     beam.source_id = foxfire->summoner;
     beam.source_name = foxfire->props[IOOD_CASTER].get_string();
-    zappy(ZAP_FOXFIRE, foxfire->get_hit_dice(), !foxfire->friendly(), beam);
+    zap_type zaptype = foxfire->type == MONS_WILL_O_WISP ? ZAP_WILL_O_WISP : ZAP_FOXFIRE;
+    zappy(zaptype, foxfire->get_hit_dice(), !foxfire->friendly(), beam);
     beam.aux_source  = beam.name;
     beam.target      = target->pos();
     beam.fire();

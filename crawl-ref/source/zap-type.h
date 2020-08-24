@@ -99,5 +99,6 @@ enum zap_type
     ZAP_FOXFIRE,
     ZAP_TREMORSTONE,
     ZAP_LEHUDIBS_CRYSTAL_SHOT,
+    ZAP_WILL_O_WISP,
     NUM_ZAPS
 };

@@ -95,6 +95,7 @@ cat4 MONS_FELID
 %rim 0
 %sdir mon/unique
 natasha MONS_NATASHA
+spirit_fox MONS_SPIRIT_FOX
 %rim 1
 %sdir mon/animals
 
@@ -260,6 +261,7 @@ fulminant_prism2
 fulminant_prism3
 fulminant_prism4
 foxfire MONS_FOXFIRE
+will_o_wisp MONS_WILL_O_WISP
 singularity1 MONS_SINGULARITY /*'*'*/
 singularity2
 singularity3
@@ -535,6 +537,7 @@ rupert MONS_RUPERT
 sigmund MONS_SIGMUND
 %rim 1
 terence MONS_TERENCE
+rin MONS_RIN
 
 %sdir mon/amorphous
 %rim 0

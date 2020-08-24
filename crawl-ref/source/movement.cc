@@ -88,7 +88,7 @@ static void _swap_places(monster* mons, const coord_def &loc)
     }
 
     // Friendly foxfire dissipates instead of damaging the player.
-    if (mons->type == MONS_FOXFIRE)
+    if (mons->type == MONS_FOXFIRE || mons->type == MONS_WILL_O_WISP)
     {
         simple_monster_message(*mons, " dissipates!",
                                MSGCH_MONSTER_DAMAGE, MDAM_DEAD);

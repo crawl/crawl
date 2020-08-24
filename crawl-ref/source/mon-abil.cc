@@ -1037,6 +1037,7 @@ bool mon_special_ability(monster* mons)
         break;
 
     case MONS_FOXFIRE:
+    case MONS_WILL_O_WISP:
         if (is_sanctuary(mons->pos()))
             break;
 
