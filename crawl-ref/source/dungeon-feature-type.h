@@ -203,6 +203,7 @@ enum dungeon_feature_type
     DNGN_ALTAR_WU_JIAN,
     DNGN_ALTAR_WYRM,
     DNGN_ALTAR_IMUS,
+    DNGN_ALTAR_LEGION_FROM_BEYOND,
     DNGN_ALTAR_ECUMENICAL,
 #endif
 
@@ -290,6 +291,7 @@ enum dungeon_feature_type
     DNGN_TOXIC_BOG,
     DNGN_ALTAR_WYRM,
     DNGN_ALTAR_IMUS,
+    DNGN_ALTAR_LEGION_FROM_BEYOND,
 #endif
     DNGN_TEMPORAL_FLOOR,
 

@@ -550,6 +550,7 @@ ALTAR(DNGN_ALTAR_HEPLIAKLQANA, "hazy altar of Hepliaklqana", "altar_hepliaklqana
 ALTAR(DNGN_ALTAR_WU_JIAN, "ornate altar of the Wu Jian Council", "altar_wu_jian", ETC_WU_JIAN),
 ALTAR(DNGN_ALTAR_WYRM, "alchemical altar of the Great Wyrm", "altar_wyrm", GREEN),
 ALTAR(DNGN_ALTAR_IMUS, "prsimatic altar of Imus Thea", "altar_imus", ETC_RANDOM),
+ALTAR(DNGN_ALTAR_LEGION_FROM_BEYOND, "gateway of the Legion from beyond", "altar_legion", RED),
 
 #define FOUNTAIN(enum, name, vaultname, colour)\
 {\

@@ -1727,11 +1727,11 @@ spret furious_charge(bool fail)
     }
     const coord_def dest_pos = target_path.at(target_path.size() - 2);
 
-    if (you.duration[DUR_WATER_HOLD])	
+    if (you.duration[DUR_WATER_HOLD])    
     {
-        mpr("You slip free of the water engulfing you.");	
-        you.props.erase("water_holder");	
-        you.clear_far_engulf();	
+        mpr("You slip free of the water engulfing you.");    
+        you.props.erase("water_holder");    
+        you.clear_far_engulf();    
     }
 
     move_player_to_grid(dest_pos, true);
@@ -2038,12 +2038,12 @@ bool beogh_gift_item()
 
 bool beogh_resurrect()
 {
-	vector<item_def *> list_orcs;
+    vector<item_def *> list_orcs;
     for (stack_iterator si(you.pos()); si; ++si)
         if (si->props.exists(ORC_CORPSE_KEY))
         {
             item_def *pt = &(*si);
-    		list_orcs.push_back(pt);
+            list_orcs.push_back(pt);
         }
     // If you can't find an orc corpse, then the resurrect menu will not be shown.
     if (list_orcs.empty())
@@ -7205,7 +7205,7 @@ static bool _caravan_gift_items_to(monster* mons, int item_slot)
             || mons->type == MONS_MERC_SORCERESS
             || mons->type == MONS_MERC_ELEMENTALIST)
             && ER > 0)
-	    
+        
         || ((mons->type == MONS_MERC_SKALD
             || mons->type == MONS_MERC_INFUSER
             || mons->type == MONS_MERC_TIDEHUNTER
@@ -7214,10 +7214,10 @@ static bool _caravan_gift_items_to(monster* mons, int item_slot)
             || mons->type == MONS_MERC_CLEANER
             || mons->type == MONS_MERC_SHAMAN)
             && ER > 4)
-	    
+        
         || ((mons->type == MONS_MERC_SHAMAN_II)
             && ER > 11)
-	    
+        
         || ((mons->type == MONS_MERC_SHAMAN_III
             || mons->type == MONS_MERC_FIGHTER
             || mons->type == MONS_MERC_KNIGHT)
@@ -7229,7 +7229,7 @@ static bool _caravan_gift_items_to(monster* mons, int item_slot)
                     mons->name(DESC_THE, false).c_str(), gift.name(DESC_THE, false).c_str());
                 return false;
             }
-	    
+        
             mprf("%s is too heavy for %s!",
                 gift.name(DESC_THE, false).c_str(), mons->name(DESC_THE, false).c_str());
             return false;

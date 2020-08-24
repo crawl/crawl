@@ -985,6 +985,9 @@ static void _spellcasting_god_conduct(spell_type spell)
     if (spell == SPELL_SUBLIMATION_OF_BLOOD)
         did_god_conduct(DID_CHANNEL, conduct_level);
 
+	if (is_non_legion_spell(spell))
+        did_god_conduct(DID_NON_LEGION, conduct_level);
+
     if (god_loathes_spell(spell, you.religion)) {
         if (you.species != SP_ANGEL) {
             excommunication();
@@ -1651,6 +1654,23 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
                           spschool::conjuration,
                           (you.experience_level / 2) + (spell_difficulty(spell) * 2),
                           random2avg(88, 3), "the malice of Vehumet");
+        }
+
+        else if (spell_typematch(spell, spschool::summoning)
+                 && !you_worship(GOD_LEGION_FROM_BEYOND)
+                 && you.penance[GOD_LEGION_FROM_BEYOND]
+                 && one_chance_in(3))
+        {
+            // And you thought you'd Dragon's Call your way out of penance...
+            simple_god_message(" unbridled force of the Legion interrupts your "
+                               "summoning!", GOD_LEGION_FROM_BEYOND);
+
+            // The spell still goes through, but you get a miscast anyway.
+            MiscastEffect(&you, nullptr,
+                          {miscast_source::god, GOD_LEGION_FROM_BEYOND},
+                          spschool::summoning,
+                          (you.experience_level / 2) + (spell_difficulty(spell) * 2),
+                          random2avg(88, 3), "the unbridled force of the Legion");
         }
 
         const int spfail_chance = raw_spell_fail(spell);

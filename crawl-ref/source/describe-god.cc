@@ -246,11 +246,15 @@ static const char *divine_title[][8] =
 
     // The Great Wyrm -- alchemy theme
     {"Fangless",            "Hyle",                 "Solvent",            "Torus",
-        "Lapis",   	"@Walking@ Metaphor",    "@Walking@ Providence",    "Ouroboros"},
+        "Lapis",       "@Walking@ Metaphor",    "@Walking@ Providence",    "Ouroboros"},
 
     // Imus Thea -- mirror/optics/paralle theme
     {"Stained",             "Well-Polished",             "Opticsist",              "Prismatic",
         "Overlaped",        "Kaleidoscope",             "@Adj@ In The Mirror",        "Countless Spectrum"},
+
+	// Legion from beyond -- pack/herd theme
+    {"Abandoned",          "Pactmaker",             "Pack-bringer",              "Ringleader",
+       "Chieftain",        "Magnate",               "Monarch",              "Sovereign of beyond"},
 };
 COMPILE_CHECK(ARRAYSZ(divine_title) == NUM_GODS);
 

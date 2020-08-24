@@ -137,6 +137,19 @@ An ornate altar of the Wu Jian Council
 An red and gold altar to the Wu Jian Council. Sharp slivers of steel drift
 through the quiet air surrounding it.
 %%%%
+A gateway of the Legion from beyond
+
+A tear of plane, to contact with the legion from beyond. You can sense
+unbridled force waiting for you from the beyond.
+%%%%
+An alchemical altar of the Great Wyrm
+
+An altar to the Great wyrm, the god of alchemy.
+%%%%
+A prsimatic altar of Imus Thea
+
+An altar to Imus Thea, the god of mirror.
+%%%%
 ########################################################################
 ### Terrain
 ########################################################################

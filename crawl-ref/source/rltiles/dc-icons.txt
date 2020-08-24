@@ -64,6 +64,7 @@ vile_clutch VILE_CLUTCH
 possessable POSSESSABLE
 cigotuvis_plague CIGOTUVIS_PLAGUE
 cubus_collar CUBUS_COLLAR
+hold_position HOLD_POSITION
 
 something_under SOMETHING_UNDER
 new_stair NEW_STAIR

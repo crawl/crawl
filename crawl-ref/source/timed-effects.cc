@@ -828,6 +828,7 @@ void monster::timeout_enchantments(int levels)
         case ENCH_BOUND_SOUL: case ENCH_STILL_WINDS: case ENCH_RING_OF_THUNDER:
         case ENCH_WHIRLWIND_PINNED:
         case ENCH_NIGREDO: case ENCH_ALBEDO: case ENCH_CITRINITAS: case ENCH_VIRIDITAS:
+        case ENCH_HOLD_POSITION:
             lose_ench_levels(entry.second, levels);
             break;
 

@@ -254,6 +254,12 @@ enum class passive_t
     wu_jian_whirlwind,
     wu_jian_wall_jump,
 
+	/// Protect allies from abjuration by decreasing the power to /10.
+    abjuration_protection_legion,
+
+	/// Heal, cure, and buff your minions.
+	bless_followers_legion,
+
     //angel passive
     neutral_holy,
 

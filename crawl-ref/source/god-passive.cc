@@ -270,7 +270,7 @@ static const vector<god_passive> god_passives[] =
         },
         {  3, passive_t::conserve_orc_corpses, "conserves orc corpses" },
         {  5, passive_t::water_walk, "walk on water" },
-		{  6, passive_t::share_resistance,
+        {  6, passive_t::share_resistance,
               "Your resistance will partially share with your followers" },
     },
 
@@ -405,7 +405,7 @@ static const vector<god_passive> god_passives[] =
     // Uskayaw
     { },
 
-	// Hepliaklqana
+    // Hepliaklqana
     {
         { -1, passive_t::frail,
               "GOD NOW siphons a part of your essence into your ancestor" },
@@ -429,7 +429,14 @@ static const vector<god_passive> god_passives[] =
     },
 
     // Imus Thea
-    { }
+    { },
+
+    // Legion from beyond
+    {
+        { 0, passive_t::abjuration_protection_legion,
+              "GOD NOW resist abjuration"},
+        { 3, passive_t::bless_followers_legion, "GOD NOW inspired by killing, based on summoning skill" },
+    }
 };
 COMPILE_CHECK(ARRAYSZ(god_passives) == NUM_GODS);
 

@@ -511,6 +511,7 @@ hep3
 hep4
 hep5
 wu_jian DNGN_ALTAR_WU_JIAN
+legion DNGN_ALTAR_LEGION_FROM_BEYOND
 wyrm0 DNGN_ALTAR_WYRM
 wyrm1
 wyrm2

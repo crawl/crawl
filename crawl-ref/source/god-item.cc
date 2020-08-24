@@ -364,6 +364,53 @@ bool is_wizardly_item(const item_def& item, bool calc_unid)
     return false;
 }
 
+bool is_non_legion_item(const item_def& item, bool calc_unid)
+{
+    bool retval = false;
+
+    if (item.base_type == OBJ_WEAPONS
+        && (calc_unid || item_brand_known(item))
+        && get_weapon_brand(item) == SPWPN_REAPING)
+    {
+        return true;
+    }
+
+    if (is_unrandom_artefact(item, UNRAND_ASMODEUS)
+        || is_unrandom_artefact(item, UNRAND_RATSKIN_CLOAK)
+        || is_unrandom_artefact(item, UNRAND_DEMON_AXE)
+        || is_unrandom_artefact(item, UNRAND_CURSES))
+        return true;
+
+    if (!calc_unid && !item_type_known(item))
+        return false;
+
+    switch (item.base_type)
+    {
+    case OBJ_WANDS:
+        retval = (item.sub_type == WAND_ENSLAVEMENT);
+        break;
+    case OBJ_BOOKS:
+    case OBJ_RODS:
+        retval = _is_bookrod_type(item, is_non_legion_spell);
+        break;
+    case OBJ_SCROLLS:
+        retval = (item.sub_type == SCR_SUMMONING);
+        break;
+    case OBJ_MISCELLANY:
+        retval = (item.sub_type == MISC_BOX_OF_BEASTS
+                  || item.sub_type == MISC_HORN_OF_GERYON
+                  || item.sub_type == MISC_LAMP_OF_FIRE
+                  || item.sub_type == MISC_PHIAL_OF_FLOODS
+                  || item.sub_type == MISC_SACK_OF_SPIDERS
+                  || item.sub_type == MISC_PHANTOM_MIRROR);
+        break;
+    default:
+        break;
+    }
+
+    return retval;
+}
+
 /**
  * Do the good gods hate use of this spell?
  *
@@ -400,6 +447,13 @@ bool is_hasty_spell(spell_type spell)
     spell_flags flags = get_spell_flags(spell);
 
     return bool(flags & spflag::hasty);
+}
+
+bool is_non_legion_spell(spell_type spell)
+{
+    spell_flags flags = get_spell_flags(spell);
+
+    return bool(flags & spflag::non_legion);
 }
 
 /**
@@ -446,6 +500,9 @@ vector<conduct_type> item_conducts(const item_def &item)
 
     if (is_potentially_evil_item(item, false))
         conducts.push_back(DID_EVIL);
+
+    if (is_non_legion_item(item, false))
+        conducts.push_back(DID_NON_LEGION);
 
     return conducts;
 }
