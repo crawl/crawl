@@ -469,7 +469,7 @@ tileidx_t tileidx_feature_base(dungeon_feature_type feat)
         return TILE_DNGN_ALTAR_WYRM;
     case DNGN_ALTAR_IMUS:
         return TILE_DNGN_ALTAR_IMUS;
-	case DNGN_ALTAR_LEGION_FROM_BEYOND:
+    case DNGN_ALTAR_LEGION_FROM_BEYOND:
         return TILE_DNGN_ALTAR_LEGION_FROM_BEYOND;
     case DNGN_ALTAR_ECUMENICAL:
         return TILE_DNGN_ALTAR_ECUMENICAL;
@@ -1985,7 +1985,7 @@ tileidx_t tileidx_monster(const monster_info& mons)
         ch |= TILE_FLAG_VILE_CLUTCH;
     if (mons.is(MB_POSSESSABLE))
         ch |= TILE_FLAG_POSSESSABLE;
-	if (mons.is(MB_HOLD_POSITION))
+    if (mons.is(MB_HOLD_POSITION))
         ch |= TILE_FLAG_HOLD_POSITION;
 
     if (mons.attitude == ATT_FRIENDLY)
@@ -3823,10 +3823,10 @@ tileidx_t tileidx_ability(const ability_type ability)
     case ABIL_WU_JIAN_HEAVENLY_STORM:
         return TILEG_ABILITY_WU_JIAN_HEAVENLY_STORM;
     // The Legion from Beyond
-	case ABIL_LEGION_POSITIONING:
-		return TILEG_ABILITY_LEGION_POSITIONING;
-	case ABIL_LEGION_IMMORTAL:
-		return TILEG_ABILITY_LEGION_IMMORTAL;
+    case ABIL_LEGION_POSITIONING:
+        return TILEG_ABILITY_LEGION_POSITIONING;
+    case ABIL_LEGION_IMMORTAL:
+        return TILEG_ABILITY_LEGION_IMMORTAL;
     // The Great Wyrm
     case ABIL_WYRM_INFUSE:
         return TILEG_ABILITY_WYRM_INFUSE;
