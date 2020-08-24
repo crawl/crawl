@@ -627,7 +627,7 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
         m_buf_icons.add(TILEI_POSSESSABLE, x, y, -status_shift, 0);
         status_shift += 6;
     }
-	if (fg & TILE_FLAG_HOLD_POSITION)
+    if (fg & TILE_FLAG_HOLD_POSITION)
     {
         m_buf_icons.add(TILEI_HOLD_POSITION, x, y, -status_shift, 0);
         status_shift += 6;
