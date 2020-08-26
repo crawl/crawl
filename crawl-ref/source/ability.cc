@@ -55,6 +55,7 @@
 #include "mon-behv.h"
 #include "mon-book.h"
 #include "mon-cast.h"
+#include "mon-ench.h"
 #include "mon-place.h"
 #include "mutation.h"
 #include "nearby-danger.h"
@@ -742,7 +743,7 @@ static const ability_def Ability_List[] =
     { ABIL_LEGION_POSITIONING, "Positioning",
       0, 0, 0, 0, {fail_basis::invo}, abflag::instant | abflag::starve_ok },
     { ABIL_LEGION_IMMORTAL, "Immortal Legion",
-      4, 0, 0, 4, {fail_basis::invo}, abflag::none },
+      4, 0, 0, 4, {fail_basis::invo, 80, 4, 25}, abflag::none },
 };
 
 static const ability_def& get_ability_def(ability_type abil)
@@ -4146,7 +4147,7 @@ static spret _do_ability(const ability_def& abil, bool fail)
 
         if (beam.target == you.pos())
         {
-            mpr("You can only order to ally minions.");
+            mpr("You can only order to your summoned minions.");
             return spret::abort;
         }
 
@@ -4157,9 +4158,10 @@ static spret _do_ability(const ability_def& abil, bool fail)
             return spret::abort;
         }
 
-        if (mons->attitude == ATT_HOSTILE)
+        if ((mons->attitude == ATT_HOSTILE && !mons->has_ench(ENCH_CHARM))
+             || !mons->is_summoned())
         {
-            mpr("You can only order to ally minions.");
+            mpr("You can only order to your summoned minions.");
             return spret::abort;
         }
 
@@ -4216,7 +4218,7 @@ static spret _do_ability(const ability_def& abil, bool fail)
 
         if (beam.target == you.pos())
         {
-            mpr("You can only order to ally minions.");
+            mpr("You can only order to your summoned minions.");
             return spret::abort;
         }
 
@@ -4227,9 +4229,10 @@ static spret _do_ability(const ability_def& abil, bool fail)
             return spret::abort;
         }
 
-        if (mons->attitude == ATT_HOSTILE)
+        if ((mons->attitude == ATT_HOSTILE && !mons->has_ench(ENCH_CHARM))
+             || !mons->is_summoned())
         {
-            mpr("You can only order to ally minions.");
+            mpr("You can only order to your summoned minions.");
             return spret::abort;
         }
 
@@ -4265,11 +4268,25 @@ static spret _do_ability(const ability_def& abil, bool fail)
 
         fail_check();
 
-        const int dur = BASELINE_DELAY * 2 * you.skill(SK_SUMMONINGS);
-        mprf("%s is forced to sustain itself as an Immortal Legionnare!", mons->name(DESC_THE).c_str());
+        const int dur = BASELINE_DELAY * max(3, (1 + you.skill(SK_SUMMONINGS)/3));
+        mprf("%s is forced to sustain itself as an Immortal Legionnaire!", mons->name(DESC_THE).c_str());
         mons->hit_points = 1;
         mons->add_ench(mon_enchant(ENCH_DEATHS_DOOR, 0, mons, dur));
 
+        if (mons->has_ench(ENCH_ABJ))
+        {
+            mon_enchant abj = mons->get_ench(ENCH_ABJ);
+            const int abjdur = abj.duration + dur;
+            abj.duration = abjdur;
+            mons->update_ench(abj);
+        }
+        if (mons->has_ench(ENCH_CHARM))
+        {
+            mon_enchant charm = mons->get_ench(ENCH_CHARM);
+            const int charmdur = charm.duration + charmdur;
+            charm.duration = charmdur;
+            mons->update_ench(charm);
+        }
     }
     break;
 
