@@ -55,6 +55,7 @@
 #include "mon-behv.h"
 #include "mon-book.h"
 #include "mon-cast.h"
+#include "mon-ench.h"
 #include "mon-place.h"
 #include "mutation.h"
 #include "nearby-danger.h"
@@ -4157,7 +4158,8 @@ static spret _do_ability(const ability_def& abil, bool fail)
             return spret::abort;
         }
 
-        if (mons->attitude == ATT_HOSTILE || !mons->is_summoned())
+        if ((mons->attitude == ATT_HOSTILE && !mons->has_ench(ENCH_CHARM))
+             || !mons->is_summoned())
         {
             mpr("You can only order to your summoned minions.");
             return spret::abort;
@@ -4227,9 +4229,10 @@ static spret _do_ability(const ability_def& abil, bool fail)
             return spret::abort;
         }
 
-        if (mons->attitude == ATT_HOSTILE || !mons->is_summoned())
+        if ((mons->attitude == ATT_HOSTILE && !mons->has_ench(ENCH_CHARM))
+             || !mons->is_summoned())
         {
-            mpr("You can only order to summoned minions.");
+            mpr("You can only order to your summoned minions.");
             return spret::abort;
         }
 
@@ -4271,11 +4274,19 @@ static spret _do_ability(const ability_def& abil, bool fail)
         mons->add_ench(mon_enchant(ENCH_DEATHS_DOOR, 0, mons, dur));
 
         if (mons->has_ench(ENCH_ABJ))
-            _increase_ench_duration(mons, ENCH_ABJ, dur);
-
+        {
+            mon_enchant abj = mons->get_ench(ENCH_ABJ);
+            const int abjdur = abj.duration + dur;
+            abj.duration = abjdur;
+            mons->update_ench(abj);
+        }
         if (mons->has_ench(ENCH_CHARM))
-            _increase_ench_duration(mons, ENCH_CHARM, dur);
-
+        {
+            mon_enchant charm = mons->get_ench(ENCH_CHARM);
+            const int charmdur = charm.duration + charmdur;
+            charm.duration = charmdur;
+            mons->update_ench(charm);
+        }
     }
     break;
 
