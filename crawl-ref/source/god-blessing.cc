@@ -19,6 +19,7 @@
 #include "mon-grow.h" 
 #include "mon-place.h"
 #include "monster.h"
+#include "player.h"
 #include "religion.h"
 #include "stringutil.h"
 #include "view.h"
@@ -839,7 +840,7 @@ static bool _legion_bless_follower(monster* follower, bool force)
     if (!follower || (!force && !is_follower(*follower)))
         return false;
 
-    if (!follower.is_summoned())
+    if (!follower->is_summoned())
         return false;
 
     string blessing = "";
@@ -926,7 +927,7 @@ bool bless_follower(monster* follower,
     if (!force && !one_chance_in(4))
         return false;
 
-    if (you.worship(GOD_BEOGH)){
+    if (you_worship(GOD_BEOGH)){
         // If a follower was specified, and it's suitable, pick it.
         // Otherwise, pick a random follower.
         // XXX: factor out into another function?

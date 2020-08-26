@@ -4157,7 +4157,7 @@ static spret _do_ability(const ability_def& abil, bool fail)
             return spret::abort;
         }
 
-        if (mons->attitude == ATT_HOSTILE || !mons.is_summoned())
+        if (mons->attitude == ATT_HOSTILE || !mons->is_summoned())
         {
             mpr("You can only order to your summoned minions.");
             return spret::abort;
@@ -4227,7 +4227,7 @@ static spret _do_ability(const ability_def& abil, bool fail)
             return spret::abort;
         }
 
-        if (mons->attitude == ATT_HOSTILE || !mons.is_summoned())
+        if (mons->attitude == ATT_HOSTILE || !mons->is_summoned())
         {
             mpr("You can only order to summoned minions.");
             return spret::abort;
