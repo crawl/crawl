@@ -742,7 +742,7 @@ static const ability_def Ability_List[] =
     { ABIL_LEGION_POSITIONING, "Positioning",
       0, 0, 0, 0, {fail_basis::invo}, abflag::instant | abflag::starve_ok },
     { ABIL_LEGION_IMMORTAL, "Immortal Legion",
-      4, 0, 0, 8, {fail_basis::invo, 80, 4, 25}, abflag::none },
+      4, 0, 0, 4, {fail_basis::invo, 80, 4, 25}, abflag::none },
 };
 
 static const ability_def& get_ability_def(ability_type abil)
