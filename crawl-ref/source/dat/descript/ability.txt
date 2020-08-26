@@ -1090,4 +1090,5 @@ Order your minion to hold position instantly. Order again allow to move again.
 Immortal Legion ability
 
 Order your minion to sustain itself, seriously damages its health but unable to die
-briefly.
+briefly. Duration is depend on your summoning skill, lasts from 3 turns to up to 10
+turns.

@@ -668,6 +668,16 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             props.erase("charmed_demon");
         }
 
+        if (has_ench(ENCH_HOLD_POSITION))
+            del_ench(ENCH_HOLD_POSITION);
+
+        if (has_ench(ENCH_LEGION_BLESSING))
+        {
+            del_ench(ENCH_LEGION_BLESSING);
+            del_ench(ENCH_MIGHT);
+            del_ench(ENCH_EMPOWERED_SPELLS);
+        }
+
         // Reevaluate behaviour.
         behaviour_event(this, ME_EVAL);
         break;
