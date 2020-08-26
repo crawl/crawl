@@ -2519,7 +2519,7 @@ string spell_range_string(spell_type spell, bool rod)
         return "@.->"; // Special case: hailstorm is a ring
 
     const int cap      = spell_power_cap(spell);
-    const int range    = calc_spell_range(spell, 0, rod);
+    const int range    = calc_spell_range(spell, 0, true, rod);
     const int maxrange = spell_range(spell, cap);
 
     return range_string(range, maxrange, '@');
