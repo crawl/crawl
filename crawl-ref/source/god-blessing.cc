@@ -839,6 +839,9 @@ static bool _legion_bless_follower(monster* follower, bool force)
     if (!follower || (!force && !is_follower(*follower)))
         return false;
 
+    if (!follower.is_summoned())
+        return false;
+
     string blessing = "";
     blessing = _legion_bless_buff(follower);
 }
@@ -923,22 +926,24 @@ bool bless_follower(monster* follower,
     if (!force && !one_chance_in(4))
         return false;
 
-    // If a follower was specified, and it's suitable, pick it.
-    // Otherwise, pick a random follower.
-    // XXX: factor out into another function?
-    if (!follower || (!force && !is_follower(*follower)))
-    {
-        // Choose a random follower in LOS, preferably a named or
-        // priestly one.
-        follower = choose_random_nearby_monster(0, _is_friendly_follower,
-                                                god == GOD_BEOGH);
-    }
-
-    // Try *again*, on the entire level
-    if (!follower)
-    {
-        follower = choose_random_monster_on_level(0, _is_friendly_follower,
-                                                  god == GOD_BEOGH);
+    if (you.worship(GOD_BEOGH)){
+        // If a follower was specified, and it's suitable, pick it.
+        // Otherwise, pick a random follower.
+        // XXX: factor out into another function?
+        if (!follower || (!force && !is_follower(*follower)))
+        {
+            // Choose a random follower in LOS, preferably a named or
+            // priestly one.
+            follower = choose_random_nearby_monster(0, _is_friendly_follower,
+                                                    god == GOD_BEOGH);
+        }
+        
+        // Try *again*, on the entire level
+        if (!follower)
+        {
+            follower = choose_random_monster_on_level(0, _is_friendly_follower,
+                                                      god == GOD_BEOGH);
+        }
     }
 
     switch (god)

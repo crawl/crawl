@@ -449,11 +449,8 @@ const vector<god_power> god_powers[NUM_GODS] =
     },
 
     // Legion from beyond
-    { { 0, "The Legion will resist abjuration." },
-      { 1, ABIL_LEGION_POSITIONING, "order minions to hold position",
+    { { 1, ABIL_LEGION_POSITIONING, "order minions to hold position",
            "order minions to hold position" },
-      { 3, "The Legion will inspired by killing, based on summoning skill.",
-           "The Leigon no longer inspired by killing." },
       { 5, ABIL_LEGION_IMMORTAL, "force your servants not to die for a while",
            "force your servants not to die" },
 

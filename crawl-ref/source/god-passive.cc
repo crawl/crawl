@@ -434,8 +434,11 @@ static const vector<god_passive> god_passives[] =
     // Legion from beyond
     {
         { 0, passive_t::abjuration_protection_legion,
-              "GOD NOW resist abjuration"},
-        { 3, passive_t::bless_followers_legion, "GOD NOW inspired by killing, based on summoning skill" },
+              "GOD NOW resist abjuration."},
+        { 0, passive_t::legion_istant_order,
+              "You can give orders to minions just by thinking, with a speed of thought."},
+        { 3, passive_t::bless_followers_legion,
+               "GOD NOW inspired by killing, based on summoning skill." },
     }
 };
 COMPILE_CHECK(ARRAYSZ(god_passives) == NUM_GODS);

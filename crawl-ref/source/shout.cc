@@ -21,6 +21,7 @@
 #include "exercise.h"
 #include "ghost.h"
 #include "god-abil.h"
+#include "god-passive.h"
 #include "hints.h"
 #include "item-status-flag-type.h"
 #include "jobs.h"
@@ -705,7 +706,10 @@ void issue_orders()
     if (!_issue_order(keyn, mons_targd))
         return;
 
-    you.turn_is_over = true;
+    if (!have_passive(passive_t::legion_istant_order))
+    {
+        you.turn_is_over = true;
+    }
     you.pet_target = mons_targd;
     // Allow patrolling for "Stop fighting!" and "Wait here!"
     _set_friendly_foes(keyn == 's' || keyn == 'w');

@@ -254,12 +254,6 @@ enum class passive_t
     wu_jian_whirlwind,
     wu_jian_wall_jump,
 
-	/// Protect allies from abjuration by decreasing the power to /10.
-    abjuration_protection_legion,
-
-	/// Heal, cure, and buff your minions.
-	bless_followers_legion,
-
     //angel passive
     neutral_holy,
 
@@ -274,6 +268,15 @@ enum class passive_t
 
     /// conserve orc corpses
     conserve_orc_corpses,
+
+	/// Protect allies from abjuration by decreasing the power to /10.
+    abjuration_protection_legion,
+
+	/// Buff your minions by slaying enemies.
+	bless_followers_legion,
+
+	/// Able to use "t" without turn_is_over().
+	legion_istant_order,
 };
 
 enum ru_interference
