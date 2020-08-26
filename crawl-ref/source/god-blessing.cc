@@ -19,6 +19,7 @@
 #include "mon-grow.h" 
 #include "mon-place.h"
 #include "monster.h"
+#include "player.h"
 #include "religion.h"
 #include "stringutil.h"
 #include "view.h"
@@ -563,15 +564,25 @@ static bool _blessing_inspiring(monster* mon)
     {
         mon->del_ench(ENCH_EMPOWERED_SPELLS);
         mon->add_ench(mon_enchant(ENCH_EMPOWERED_SPELLS, 0, &you, INFINITE_DURATION));
-        simple_god_message(make_stringf(" blesses %s with a brilliance!",
+
+        if (mon->antimagic_susceptible())
+        {
+            simple_god_message(make_stringf(" inspires %s with a brilliance!",
                                     mon->name(DESC_THE).c_str()).c_str(), GOD_LEGION_FROM_BEYOND);
+        }
+        else
+        {
+            simple_god_message(make_stringf(" inspires %s with an enhancement!",
+                                    mon->name(DESC_THE).c_str()).c_str(), GOD_LEGION_FROM_BEYOND);
+        }
+
         return true;
     }
     else
     {
-        mon->del_ench(ENCH_SWIFT);
-        mon->add_ench(mon_enchant(ENCH_SWIFT, 0, &you, INFINITE_DURATION));
-        simple_god_message(make_stringf(" blesses %s with a burst of speed!",
+        mon->del_ench(ENCH_MIGHT);
+        mon->add_ench(mon_enchant(ENCH_MIGHT, 0, &you, INFINITE_DURATION));
+        simple_god_message(make_stringf(" inspires %s with a might!",
                                     mon->name(DESC_THE).c_str()).c_str(), GOD_LEGION_FROM_BEYOND);
         return true;
     }
@@ -839,6 +850,9 @@ static bool _legion_bless_follower(monster* follower, bool force)
     if (!follower || (!force && !is_follower(*follower)))
         return false;
 
+    if (!follower->is_summoned())
+        return false;
+
     string blessing = "";
     blessing = _legion_bless_buff(follower);
 }
@@ -923,22 +937,24 @@ bool bless_follower(monster* follower,
     if (!force && !one_chance_in(4))
         return false;
 
-    // If a follower was specified, and it's suitable, pick it.
-    // Otherwise, pick a random follower.
-    // XXX: factor out into another function?
-    if (!follower || (!force && !is_follower(*follower)))
-    {
-        // Choose a random follower in LOS, preferably a named or
-        // priestly one.
-        follower = choose_random_nearby_monster(0, _is_friendly_follower,
-                                                god == GOD_BEOGH);
-    }
-
-    // Try *again*, on the entire level
-    if (!follower)
-    {
-        follower = choose_random_monster_on_level(0, _is_friendly_follower,
-                                                  god == GOD_BEOGH);
+    if (you_worship(GOD_BEOGH)){
+        // If a follower was specified, and it's suitable, pick it.
+        // Otherwise, pick a random follower.
+        // XXX: factor out into another function?
+        if (!follower || (!force && !is_follower(*follower)))
+        {
+            // Choose a random follower in LOS, preferably a named or
+            // priestly one.
+            follower = choose_random_nearby_monster(0, _is_friendly_follower,
+                                                    god == GOD_BEOGH);
+        }
+        
+        // Try *again*, on the entire level
+        if (!follower)
+        {
+            follower = choose_random_monster_on_level(0, _is_friendly_follower,
+                                                      god == GOD_BEOGH);
+        }
     }
 
     switch (god)
