@@ -4270,6 +4270,12 @@ static spret _do_ability(const ability_def& abil, bool fail)
         mons->hit_points = 1;
         mons->add_ench(mon_enchant(ENCH_DEATHS_DOOR, 0, mons, dur));
 
+        if (mons->has_ench(ENCH_ABJ))
+            _increase_ench_duration(mons, ENCH_ABJ, dur);
+
+        if (mons->has_ench(ENCH_CHARM))
+            _increase_ench_duration(mons, ENCH_CHARM, dur);
+
     }
     break;
 
