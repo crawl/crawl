@@ -582,8 +582,8 @@ static spret _rampage_forward(coord_def move)
             return spret::fail;
 
         // Don't rampage if our tracer path is broken by something we can't
-        // pass through before it reaches a monster.
-        if (!you.can_pass_through(p))
+        // safely pass through before it reaches a monster.
+        if (!you.can_pass_through(p) || is_feat_dangerous(grd(p)))
             return spret::fail;
 
         const monster* mon = monster_at(p);
