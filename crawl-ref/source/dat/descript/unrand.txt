@@ -543,6 +543,12 @@ As you hold this axe your mind does not feel fully your own. Your body begins
 to exhibit strength far beyond its capabilities, and your movements become
 guided by Makhleb.
 %%%%
+Amulet of Woe
+
+As you put on this amulet, your mind does not feel fully your own. Your body begins
+to exhibit strength far beyond its capabilities, and your movements become
+guided by Makhleb.
+%%%%
 moon troll leather armour
 
 A suit of armour rumoured to have been created by enchanting the hide of a

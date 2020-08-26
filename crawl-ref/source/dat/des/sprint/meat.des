@@ -163,6 +163,8 @@
   function weapon_creation(e)
     if you.race() == "Felid" then
       e.kitem("{ = ring of slaying plus:27000 ident:all no_pickup not_cursed")
+    elseif you.race() == "Hydra" then
+      e.kitem("{ = amulet_of_woe")
     else
       e.kitem("{ = axe_of_woe")
     end
