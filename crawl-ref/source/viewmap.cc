@@ -799,6 +799,7 @@ bool show_map(level_pos &lpos, bool travel_mode, bool allow_offlevel)
     if (!lpos.id.is_valid() || !allow_offlevel)
         lpos.id = level_id::current();
 
+    cursor_control ccon(true);
     levelview_excursion le(travel_mode);
     auto map_view = make_shared<UIMapView>(lpos, le, travel_mode, allow_offlevel);
 
