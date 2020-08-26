@@ -1742,7 +1742,8 @@ bool mons_class_can_use_stairs(monster_type mc)
            && mc != MONS_GERYON
            && mc != MONS_ROYAL_JELLY
            && mc != MONS_BALL_LIGHTNING
-           && mc != MONS_FOXFIRE;
+           && mc != MONS_FOXFIRE
+           && mc != MONS_WILL_O_WISP;
 }
 
 bool mons_class_can_use_transporter(monster_type mc)

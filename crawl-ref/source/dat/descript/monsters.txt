@@ -449,6 +449,11 @@ Purgy
 
 An unusually thin troll.
 %%%%
+Rin
+
+Rin is a several-thousand-year-old fire fox. She consumes the soul of 
+and she shapeshifts to the shape of human. But her shapeshifting 
+%%%%
 Robin
 
 A mountain hobgoblin, recently come in search of the legendary Orb. Not
@@ -2625,6 +2630,11 @@ wight
 
 An ancient warrior, kept in a state of perpetual undeath by its desire to die
 with honour in battle.
+%%%%
+will-o'-wisp
+
+A ghostly glowing wisp of flaming swamp gas. It will drain anything that ventures too
+close, friend or foe.
 %%%%
 wind drake
 

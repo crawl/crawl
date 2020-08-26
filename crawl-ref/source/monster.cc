@@ -3745,6 +3745,8 @@ int monster::known_chaos(bool check_spells_god) const
         || type == MONS_TIAMAT            // For her colour-changing.
         || type == MONS_BAI_SUZHEN
         || type == MONS_BAI_SUZHEN_DRAGON // For her transformation.
+        || type == MONS_SPIRIT_FOX
+        || type == MONS_RIN
         || mons_is_demonspawn(type))      // Like player demonspawn.
     {
         chaotic++;
@@ -6340,6 +6342,38 @@ void monster::react_to_damage(const actor *oppressor, int damage,
             this->stop_being_constricted();
 
         add_ench(ENCH_RING_OF_THUNDER);
+    }
+
+    else if (type == MONS_RIN && hit_points < max_hit_points / 2
+                                     && hit_points - damage > 0)
+    {
+        int old_hp                = hit_points;
+        auto old_flags            = flags;
+        mon_enchant_list old_ench = enchantments;
+        FixedBitVector<NUM_ENCHANTMENTS> old_ench_cache = ench_cache;
+        int8_t old_ench_countdown = ench_countdown;
+        string old_name = mname;
+
+        monster_drop_things(this, mons_aligned(oppressor, &you));
+
+        type = MONS_SPIRIT_FOX;
+        define_monster(*this);
+        hit_points = min(old_hp, hit_points);
+        flags          = old_flags;
+        enchantments   = old_ench;
+        ench_cache     = old_ench_cache;
+        ench_countdown = old_ench_countdown;
+
+        if (observable())
+        {
+            mprf(MSGCH_WARN,
+                "%s  suddenly bounce up and do backflips. Her shape shifts into the shape of fox!",
+                name(DESC_THE).c_str());
+        }
+        if (caught())
+            check_net_will_hold_monster(this);
+        if (this->is_constricted())
+            this->stop_being_constricted();
     }
 }
 

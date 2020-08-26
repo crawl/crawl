@@ -1762,6 +1762,15 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    { MST_SPIRIT_FOX,
+      {
+        { SPELL_FOXFIRE, 13, MON_SPELL_WIZARD },
+        { SPELL_ISKENDERUNS_MYSTIC_BLAST, 13, MON_SPELL_WIZARD },
+        { SPELL_BATTLESPHERE, 13, MON_SPELL_WIZARD },
+        { SPELL_BLINK, 65, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
+      }
+    },
+
     // ('i') Spriggans.
     { MST_THE_ENCHANTRESS,
       {
@@ -2262,6 +2271,15 @@ static const mon_spellbook mspell_list[] =
        { SPELL_BOLT_OF_COLD, 12, MON_SPELL_WIZARD },
        { SPELL_IRON_SHOT, 12, MON_SPELL_WIZARD },
        { SPELL_SPELLFORGED_SERVITOR, 24, MON_SPELL_WIZARD },
+      }
+    },
+
+    { MST_RIN,
+      {
+        { SPELL_ISKENDERUNS_MYSTIC_BLAST, 13, MON_SPELL_WIZARD },
+        { SPELL_BATTLESPHERE, 13, MON_SPELL_WIZARD },
+        { SPELL_IOOD, 130, MON_SPELL_WIZARD },
+        { SPELL_MESMERISE, 36, MON_SPELL_WIZARD },
       }
     },
     // ('&', mostly) Demon lords.

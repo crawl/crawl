@@ -2189,6 +2189,11 @@ int make_mons_armour(monster_type type, int level)
         item.sub_type  = ARM_CLOAK;
         break;
 
+    case MONS_RIN:
+        item.base_type = OBJ_ARMOUR;
+        item.sub_type  = ARM_LEATHER_ARMOUR;
+        break;
+
     case MONS_MONSTROUS_DEMONSPAWN:
     case MONS_GELID_DEMONSPAWN:
     case MONS_INFERNAL_DEMONSPAWN:
