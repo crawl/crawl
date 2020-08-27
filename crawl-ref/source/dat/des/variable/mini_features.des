@@ -2664,6 +2664,38 @@ xxxxx
 xxxxx
 ENDMAP
 
+NAME:   amcnicky_mini_pool_small
+WEIGHT: 5
+DEPTH:  D:5-, Depths, Lair
+TAGS:   decor extra transparent
+SUBST:  p: w:60 W:30 l:10
+MAP
+  xx.xx
+ xx...xx
+xx..p..xx
+x..ppp..x
+xx..p..xx
+ xx...xx
+  xx.xx
+ENDMAP
+
+NAME:   amcnicky_mini_rare_corridor_liquid
+WEIGHT: 2 (D:3-), 2 (Crypt), 6 (Depths)
+DEPTH:  D:3-, Depths
+TAGS:   extra transparent decor
+SUBST:  p: w:50 l:50
+MAP
+xxxxxxxxxxx
+xpppppppppx
+xpppppppppx
+xmmmmmmmmmx
+@.........@
+xmmmmmmmmmx
+xpppppppppx
+xpppppppppx
+xxxxxxxxxxx
+ENDMAP
+
 #####################################################################
 #
 # <<2>> Inaccessible items

@@ -7565,6 +7565,52 @@ MAP
 ...........
 ENDMAP
 
+
+NAME:   amcnicky_mini_beach_small
+WEIGHT: 5 (D:3-), 2 (Depths)
+DEPTH:  D:3-, Depths
+TAGS:   no_item_gen no_monster_gen
+FTILE:  . = floor_sand
+FTILE:  ; = floor_pebble
+FTILE:  0 = floor_sand
+FTILE:  9 = floor_sand
+FTILE:  % = floor_sand
+NSUBST:  0 = 2:. / 2:0 / 1:09
+#Total weight 100
+NSUBST:  % = *=.:20 $:40 %:26 *:10 |:4
+SUBST:   q : .+x
+MAP
+xxxx;xxxx
+x..0.0..x
+q..www..q
+q.0www..q
+x..www9.x
+x.0www..x
+x0....%%x
+xxxxxxxxx
+ENDMAP
+
+
+NAME:   amcnicky_mini_pool_medium
+WEIGHT: 5
+DEPTH:  D:5-, Depths, Lair
+TAGS:   no_pool_fixup ruin_depths
+SUBST:  p: w:60 W:30 l:10
+SUBST:  q= .:50 0:50
+MAP
+   xx...xx
+  xx..p..xx
+ xx..ppp..xx
+xx.qpppppq.xx
+x..ppppppp..x
+x.ppppppppp.x
+x..ppppppp..x
+xx.qpppppq.xx
+ xx..ppp..xx
+  xx..p..xx
+   xx...xx
+ENDMAP
+
 NAME:   special_room
 TAGS:   allow_dup luniq no_item_gen ruin_spider ruin_slime
 TAGS:   no_monster_gen layout_rooms layout_corridors layout_passages
