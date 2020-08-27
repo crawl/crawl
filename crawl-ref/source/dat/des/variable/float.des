@@ -835,6 +835,33 @@ Ellllllll.
   ..!...
 ENDMAP
 
+NAME:    amcnicky_rare_triplestair_openwater
+ORIENT:  float
+TAGS:    extra luniq_staircase decor
+DEPTH:   D:2-, Lair:2-, Depths:2-
+WEIGHT:  4
+MAP
+ xxxxxxxxxxxxxxxxxxxx
+xxWWWWWWWWWWWWWWWWWWxx
+xWWWWWWWWWWWWWWWWWWWWx
+xWWWWWwwwwwwwwwWWWWWWx
+xWWWWwww.....wwwWWWWWx
+xWWWWww.{...(.wwWWWWWx
+xWWWWww...[...wwWWWWWx
+xWWWWwww.....wwwWWWWWx
+xWWWWwwww...wwwwWWWWWx
+xWWWWWwww...wwwWWWWWWx
+xWWWWWWww...wwWWWWWWWx
+xWWWWWWww...wwWWWWWWWx
+xxxWWWWww...wwWWWWxxxx
+  xxxxWww...wwWxxxx
+     xxww...wwxx
+      xww...wwx
+      xxw...wxx
+       xw...wx
+       xw@@@wx
+ENDMAP
+
 ##############################################################################
 # Celtic spiral tile pattern (rotated 45 degrees)
 # http://en.wikipedia.org/wiki/Celtic_maze
@@ -9929,4 +9956,139 @@ xxx.xx.xxx0...........0xxx.xx.xxx
 x..x..x11xx...........xx11x..x..x
 x1.x.1x11*xxx...{...xxx*11x1.x.1x
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   amcnicky_float_guardroom
+DEPTH:  D:3-, Depths
+ORIENT: float
+TAGS:   no_item_gen no_monster_gen
+NSUBST:  0 = 4:. / 8:0 / 6:09 / 2:98
+#Total weight 100
+NSUBST:  % = *=.:20 $:40 %:26 *:10 |:4
+NSUBST:  p = 1:+ / *=.+
+MAP
+    xxxxxxxxxx
+    x%%999%%%x
+  ..x........x
+  ..x00....00x
+xxxpx00....00x
+x00.xxxx+xxxxxxx
+x00............x
+xxxxxxpxxxxxxxpx
+           x00.x
+           x00.x
+           x00..
+           xx...
+            xx..
+ENDMAP
+
+NAME:   amcnicky_float_beach_large
+WEIGHT: 5 (D:3-), 2 (Depths)
+DEPTH:  D:3-, Depths
+ORIENT: float
+TAGS:   no_item_gen no_monster_gen
+FTILE:  . = floor_sand
+FTILE:  ; = floor_pebble
+FTILE:  0 = floor_sand
+FTILE:  9 = floor_sand
+FTILE:  % = floor_sand
+NSUBST:  0 = 4:. / 4:0 / 1:09 / 1:98
+#Total weight 100
+NSUBST:  % = *=.:20 $:40 %:26 *:10 |:4
+NSUBST:  p = 1:+ / *=.+
+SUBST:   q : .+x
+MAP
+  xxxx
+  +;;x
+  xx;x
+xxxx;xxxx
+x..0.0..x
+x.0.0.0.x
+q..www..x
+q.0www..x
+q..www..x
+x0.www..x
+x..www9.x
+x.0www..x
+x..www..x
+q0.www..x
+q..www..x
+q.0...%%x
+x.....%%x
+xxxxxxxxx
+ENDMAP
+
+NAME:   amcnicky_float_corridor_feature
+DEPTH:  D:5-, Depths, Crypt
+ORIENT: float
+TAGS:   extra no_item_gen transparent
+# Total weight: 100
+SUBST:  p: .:6 G:40 t:20 <:10 >:10 n:4 l:4 $:4 Y:2
+MAP
+xx@xx
+xp.px
+xx.xx
+xx.xx
+xp.px
+xx.xx
+xx.xx
+xp.px
+xx@xx
+ENDMAP
+
+# Vault walls and blood hint that something tougher awaits
+NAME:   amcnicky_float_rare_duel
+WEIGHT: 2
+DEPTH:  D:5-, Depths, Crypt, Lair
+ORIENT: float
+TAGS:   no_pool_fixup extra
+KPROP:  p = bloody
+NSUBST: %= 1:*:7 |:3 / 1:.:5 %:3 *:2
+NSUBST: E= 1:98 / 1:9.
+MAP
+       vvv
+      vv%v
+     vvG.vv
+ xxvvvG.E.v
+@+$pp+..8.v
+ xxvvvG.E.v
+     vvG.vv
+      vv%v
+       vvv
+ENDMAP
+
+# Involves lava, so using thematic weightings to
+# lean towards where lava seems most common in Depths
+NAME: amcnicky_float_rare_at_lavas_edge
+WEIGHT: 2 (D:3-), 2 (Crypt), 6 (Depths)
+DEPTH:  D:3-, Depths, Crypt
+ORIENT: float
+NSUBST: 0= *=0:8 .:2
+SUBST: p:x., q:x.
+MAP
+   xxxxxxxxxxx
+  xxlllllllllxx
+ xxlllllllllllxxxxx
+xxllllllllllllllllx
+xlllllllllllllllllx
+xlllllllllllllllllxx
+xlllllmmmmmmlllllllxx
+xlllllm*...mllllllllxx
+xlllllm.9..mlllllllllxxxx
+xxllllm....mllllllllllllxx
+ xllllm.....mllllllllllllx
+xxllllmmmm...mllll...llllx
+xlllllllllm...mlll...xxxxxx
+xllllllllllm...mll.0.pppppp
+xlllllllllllm...ml....ppppp
+xxlllllllllllm...m..0..xxxx
+ xxlllllllllllm.........xxx
+  xxlllllllllllm..0.0..0.x
+   xxlllllllll..0........@
+    xllllll..........0..0@
+    xllllllx..0...0......x
+    xlllllxxx........0..xx
+    xxlllxxxqqqxxx....xxx
+     xxxxxxxqqqxxxxxxxx
+        xxxxqqqxxx
 ENDMAP
