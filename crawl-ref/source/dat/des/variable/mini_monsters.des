@@ -6417,7 +6417,7 @@ ENDMAP
 #          the second time), OOD monsters that can be easily
 #          escaped, and not using overpowered/useless unrandarts.
 ################################################################
-# The Jaws of Erysichthon
+# Erysichthon's Jaw
 #
 NAME:  ukdong_guarded_unrand_jaws
 DEPTH: Depths, Crypt:1-2
@@ -6438,7 +6438,7 @@ SUBST: ? = 1:20 2:20 3 .:5
 : end
 KPROP: dSV456.? = no_tele_into
 KPROP: Sc = bloody
-ITEM:  The_Jaws_of_Erysichthon  no_pickup
+ITEM:  Erysichthon's_Jaw  no_pickup
 {{
   dgn.delayed_decay(_G, 'Z', "human skeleton / orc skeleton / elf skeleton"
                              .. " / dwarf skeleton / elf corpse w:5"

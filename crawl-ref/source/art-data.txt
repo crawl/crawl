@@ -1401,7 +1401,7 @@ INSCRIP:  rRot
 BOOL:     drain, evil, special, no_upgrade
 
 ENUM:     JAWS
-NAME:     The Jaws of Erysichthon
+NAME:     Erysichthon's Jaw
 OBJ:      OBJ_ARMOUR/ARM_HAT
 PLUS:     +0
 COLOUR:   ETC_UNHOLY
