@@ -18,8 +18,7 @@ Wrath of Trog
 
 A bloodstained axe that was the favourite weapon of the old god Trog, before it
 was lost. It induces a bloodthirsty berserker rage in warriors who use it in
-battle. It bears the wrath against the magic and its existence itself disrupts 
-the spells and the magical abilities around the wielder.
+battle.
 %%%%
 mace of Variability
 
@@ -711,14 +710,13 @@ recently dead, sucking them in, protecting the wearer with a cocoon of carrion.
 This protection only lasts a short time, however - the ward against decay holds
 true within, but not without.
 %%%%
-Erysichthon's Jaw
+The Jaws of Erysichthon
 
-A lower jaw of a human that was once a king of the mighty kingdom. His arrogance
-aroused the divine wrath and the king was ccursed with the endless hunger.
-Eventually he ended up eating himself and died, but his jaw still remains. It
-still makes strange crackling sounds even though it has no upper jaw to crackle.
-The wearer of it will suffer a terrible hunger and devour their foes alive to 
-soothe their bottomless hunger.
+The owner of this jaw was cursed by a terrible hunger when he was alive. He is 
+already dead, but his jaws still remain, and make strangely and threateningly 
+crackling sound as it seems to soothe unfilled hunger. Since it makes wielder
+suffer a terrible hunger, wielder sucks a bloods and devours every livings to
+fill its hunger.
 %%%%
 scales of the Unseen Dragon
 
@@ -731,29 +729,20 @@ damaged, but also corrodes into contamination.
 %%%%
 Golem gauntlets
 
-A pair of gauntlets made of the crystal from unknown source. This cumbersome,
-heavy armour protects the wearer from poison and electricity. 
-It has an indescribable power within, but these gloves alone cannot unleash
-the potential of the armour.
+A pair of gauntlets made like fists of golem. It's enough to protect your hands,
+but it's not suitable for hiding because of its size.
 %%%%
 Golem greaves
 
-A pair of greaves made of the crystal from unknown source. This cumbersome,
-heavy armour protects the wearer from poison and electricity. 
-It has an indescribable power within, but these greaves alone cannot unleash
-the potential of the armour.
+A pair of gauntlets made like legs of golem. It's enough to protect your foots,
+but it's not suitable for hiding because of its size.
 %%%%
 Golem helmet
 
-A heavy helmet made of the crystal from unknown source. This cumbersome,
-heavy armour protects the wearer from poison and electricity. 
-It has an indescribable power within, but this helmet alone cannot unleash
-the potential of the armour.
+A heavy helmet made like a head of golem. It's enough to protect your head,
+but it's not suitable for hiding because of its size.
 %%%%
 Golem armour
 
-A suit of armour made of the crystal from unknown source. This cumbersome,
-heavy armour protects the wearer from poison and electricity. 
-It has an indescribable power within, but this armour alone cannot unleash
-the potential of the armour. It can be re-assembled to activate as a giant 
-golem exoskeleton, if the wearer has other all parts of this armour.
+A suit of armour made like a bodyparts of golem. It can be re-assembled to
+activate as a giant golem exoskeleton; If you find other parts of this armuor.
