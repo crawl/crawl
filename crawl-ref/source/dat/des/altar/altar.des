@@ -294,6 +294,51 @@ x.G.x
 ..@..
 ENDMAP
 
+# Gold given fairly modest weightings, could be lowered further if
+# determined that this would be too much of a bump to the player
+# Could also add a chance to subst gold for enemies
+# Average gold generation:
+# Inner ring, 2.79 piles
+# Outer ring, 2.09 piles
+NAME:   amcnicky_altar_gilded
+TAGS:   transparent
+DEPTH:  D:3-, Lair, Orc, Elf, Crypt
+NSUBST: p = *=. $:45
+NSUBST: q = *=. $:15
+MAP
+.........
+.mmmmmmm.
+.mqqqqqm.
+.mqpppqm.
+.+qpCpqm.
+.mqpppqm.
+.mqqqqqm.
+.mmmmmmm.
+.........
+ENDMAP
+
+# Chance of rolling all % items: 61%
+NAME:   amcnicky_altar_inner_sanctum
+TAGS:   no_monster_gen
+DEPTH:  D:3-, Lair, Orc, Elf, Crypt
+SUBST:  p:%%%%%*, q:%%%%%%%*, r:%%%%%*, s:.+, u:.+, y:...wwwl, z:...www
+NSUBST: 0 = 2:9 / 1:98 / 4:0 / 4:.0 / *:..0
+NSUBST: ' = 3:. / 3:xx. / *:x
+MAP
+..'x0...x'..
+..'xuxxux'..
+''.00.....''
+xxz'xssx'0xx
+.uzxpyyrx0u0
+.x.sy00ys.x.
+.x.sy00ys.x.
+0u0xqyyCxzu.
+xx0'xssx'zxx
+''.....00.''
+..'xuxxux'..
+..'x...0x'..
+ENDMAP
+
 ##############################################################################
 # III   Altars to minor gods
 #
@@ -384,6 +429,61 @@ cccyy..yycc
      @@
 ENDMAP
 
+# Authors note: this could be a good candidate for expansion into a group
+# of vault layouts that share a weight allocation, each with a different
+# 'pattern' of hand-crafted corruption layouts
+#
+NAME:     amcnicky_altar_lugonu_corruption
+TAGS:     transparent no_monster_gen
+# Lugonu cares not about moderate vault placement
+DEPTH:    D:3-, Vaults, Lair, Orc, Elf, Crypt, Depths, Slime:1-4, Shoals,\
+            Spider, Snake, Swamp, Zot:1-4
+FTILE:    'upqrzq : FLOOR_NERVES_RED / FLOOR_NERVES_BLUE / FLOOR_NERVES_GREEN \
+            / FLOOR_NERVES_CYAN / FLOOR_NERVES_MAGENTA / FLOOR_NERVES_BROWN \
+            / FLOOR_NERVES_LIGHTGRAY / FLOOR_NERVES_DARKGRAY \
+            / FLOOR_NERVES_LIGHTBLUE / FLOOR_NERVES_LIGHTGREEN \
+            / FLOOR_NERVES_LIGHTCYAN / FLOOR_NERVES_LIGHTRED \
+            / FLOOR_NERVES_LIGHTMAGENTA / FLOOR_NERVES_YELLOW \
+            / FLOOR_NERVES_WHITE
+NSUBST:   ' = 4:z / 4:xcz / *:c
+NSUBST:   z = 1=p / 1=r / 1=q / 2=pz / 2=rz / 4=pzzz / 4=rzzz / 4=qzzz
+NSUBST:   . = 1=0009
+KFEAT:    p = altar_lugonu
+KFEAT:    r = enter_abyss
+# Currently using lurking horrors, whose threat (due to %health dmg) should
+# be relevant regardless of where this vault appears. We do however generate
+# more of them as we go deeper
+# Both depth triggers add on average 2 more LHs
+: if crawl.x_chance_in_y(you.absdepth() - 6, 16) then
+NSUBST:   z = 2:qz / 4:qzzz
+: end
+: if crawl.x_chance_in_y(you.absdepth() - 6, 48) then
+NSUBST:   z = 2:qz / 4:qzzz
+: end
+KMONS:    q = lurking_horror
+MARKER:   r = lua:fog_machine { cloud_type="purple smoke", walk_dist=1, \
+            size=1, pow_max=5, delay=10, buildup_amnt=7, buildup_time=7, \
+            spread_rate=2, start_clouds=1, colour="purple" }
+TILE:     c : WALL_ABYSS_BROWN / WALL_ABYSS_GREEN \
+          / WALL_ABYSS_CYAN / WALL_ABYSS_BLUE / WALL_ABYSS_MAGENTA \
+          / WALL_ABYSS_LIGHTRED / WALL_ABYSS_YELLOW / WALL_ABYSS_LIGHTGREEN \
+          / WALL_ABYSS_LIGHTCYAN / WALL_ABYSS_LIGHTBLUE \
+          / WALL_ABYSS_LIGHTMAGENTA / WALL_ABYSS_DARKGRAY \
+          / WALL_ABYSS_LIGHTGRAY / WALL_ABYSS_WHITE
+MAP
+xxccccccxxxx
+xcc''''ccxxx
+xc'zzzz''ccx
+c'zzzzzzz''c
+c'zzzzzzzz'c
+c'zzzzzzz''c
+c'zzzzzzz'cx
+xc''zzzzz'cx
+xxxx'zzz''xx
+xxxxx'zz''x.
+.xx.zzzzzz..
+............
+ENDMAP
 
 ### Altars possibly to Beogh #################################################
 
