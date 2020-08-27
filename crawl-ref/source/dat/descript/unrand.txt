@@ -18,9 +18,7 @@ Wrath of Trog
 
 A bloodstained axe that was the favourite weapon of the old god Trog, before it
 was lost. It induces a bloodthirsty berserker rage in warriors who use it in
-battle. It bears the wrath against the magic and its existence itself disrupts 
-the spells and the magical abilities around the wielder.
-
+battle.
 %%%%
 mace of Variability
 
@@ -714,12 +712,11 @@ true within, but not without.
 %%%%
 The Jaws of Erysichthon
 
-A lower jaw of a human that was once a king of the mighty kingdom. His arrogance
-aroused the divine wrath and the king was cursed and fell into the endless hunger.
-Eventually he ended up eating himself and died, but his jaw still remains. It
-still makes strange and threatening sounds as it crackles to fill its bottomless
-hunger. The wearer of it will suffer a terrible hunger and devour their foes
-alive to soothe their hunger.
+The owner of this jaw was cursed by a terrible hunger when he was alive. He is 
+already dead, but his jaws still remain, and make strangely and threateningly 
+crackling sound as it seems to soothe unfilled hunger. Since it makes wielder
+suffer a terrible hunger, wielder sucks a bloods and devours every livings to
+fill its hunger.
 %%%%
 scales of the Unseen Dragon
 
