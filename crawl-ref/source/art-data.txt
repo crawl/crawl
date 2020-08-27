@@ -1129,6 +1129,15 @@ TILE:     urand_axe_of_woe
 TILE_EQ:  axe_of_woe
 BOOL:     nogen, no_upgrade
 
+ENUM:     AMULET_OF_WOE
+NAME:     Amulet of Woe
+OBJ:      OBJ_JEWELLERY/AMU_NOTHING
+COLOUR:   ETC_BLOOD
+TILE:     urand_amulet_of_woe
+TILE_EQ:  amulet_of_woe
+SLAY:     27000
+BOOL:     nogen, no_upgrade
+
 NAME:     moon troll leather armour
 OBJ:      OBJ_ARMOUR/ARM_TROLL_LEATHER_ARMOUR
 PLUS:     +4
@@ -1392,7 +1401,7 @@ INSCRIP:  rRot
 BOOL:     drain, evil, special, no_upgrade
 
 ENUM:     JAWS
-NAME:     The Jaws of Erysichthon
+NAME:     Erysichthon's Jaw
 OBJ:      OBJ_ARMOUR/ARM_HAT
 PLUS:     +0
 COLOUR:   ETC_UNHOLY

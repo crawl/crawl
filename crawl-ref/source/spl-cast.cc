@@ -985,7 +985,7 @@ static void _spellcasting_god_conduct(spell_type spell)
     if (spell == SPELL_SUBLIMATION_OF_BLOOD)
         did_god_conduct(DID_CHANNEL, conduct_level);
 
-	if (is_non_legion_spell(spell))
+    if (is_non_legion_spell(spell))
         did_god_conduct(DID_NON_LEGION, conduct_level);
 
     if (god_loathes_spell(spell, you.religion)) {
@@ -2519,7 +2519,7 @@ string spell_range_string(spell_type spell, bool rod)
         return "@.->"; // Special case: hailstorm is a ring
 
     const int cap      = spell_power_cap(spell);
-    const int range    = calc_spell_range(spell, 0, rod);
+    const int range    = calc_spell_range(spell, 0, true, rod);
     const int maxrange = spell_range(spell, cap);
 
     return range_string(range, maxrange, '@');

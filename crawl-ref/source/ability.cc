@@ -4283,7 +4283,7 @@ static spret _do_ability(const ability_def& abil, bool fail)
         if (mons->has_ench(ENCH_CHARM))
         {
             mon_enchant charm = mons->get_ench(ENCH_CHARM);
-            const int charmdur = charm.duration + charmdur;
+            const int charmdur = charm.duration + dur;
             charm.duration = charmdur;
             mons->update_ench(charm);
         }
