@@ -3496,3 +3496,96 @@ xx...x+   +xxx+   +x...xx
          xx...xx
           xxxxx
 ENDMAP
+
+##############################################################
+NAME:     amcnicky_arrival_blooded_trapdoor
+TAGS:     arrival no_monster_gen no_pool_fixup no_trap_gen
+ORIENT:   float
+KPROP:    u = bloody
+SHUFFLE:  pqr
+SUBST:    s:xxxtW, p:x, q:x, r:@, u:.
+MAP
+   xpppx
+   xuuux
+xxxxu>uxxxxxqqq
+x...uuu.......q
+x.{........ss.q
+x..........ss.x
+xxxxxxx.......x
+      xxrrrrxxx
+ENDMAP
+
+NAME:     amcnicky_arrival_gap_in_the_tavern_cellar
+TAGS:     arrival no_monster_gen no_pool_fixup no_trap_gen
+ORIENT:   float
+SHUFFLE:  su, pq
+KPROP:    p = bloody
+SUBST:    r:xxxxvvWl, s:@, u:x, p:., q:.
+MAP
+    xxxxxxxx
+    xT....Tx
+xxxxx......x
+x..........x
+x.{........x
+x.........Vx
+xxxxxT.....xv
+    xxxxxxxpvv
+   xxxxxxxvvqvv
+   s....xxxxvpvv
+   s.rr.qpxxvvqv
+   s.rr.pppqqppx
+   s....xxxxxxxx
+   uuuuux
+ENDMAP
+
+NAME:     amcnicky_arrival_wind_blow
+TAGS:     arrival no_monster_gen no_trap_gen
+ORIENT:   float
+NSUBST:   _ = 4:p / 4=p:2 . / *=.
+: dgn.delayed_decay(_G, 'p', 'deep dwarf skeleton')
+MAP
+    xxxxxx
+    x{.._x
+    xxx_.xx
+      x__.xxx
+     xx.__..x
+     x_.....xx  xxxx
+    xx_...__.x xx..@
+xxxxx._.xx...xxx__.@
+x.___._.xxx......xx@
+x....__xx xx._.__xx@
+x.xx___x   x..._...@
+x.xx._.xx  xxxxxx..@
+x.._._..xx      xxxx
+x____.._.x
+xxxxxxx..x
+      x@@x
+ENDMAP
+
+NAME:     amcnicky_arrival_abandonned_market
+TAGS:     arrival no_monster_gen no_trap_gen
+ORIENT:   float
+NSUBST:   _ = 4:q / 4=q:2 . / *=.
+: dgn.delayed_decay(_G, 'q', 'deep dwarf skeleton')
+NSUBST:   - = 6=p / 6=p. / 6=px / *=.x
+SUBST:    r = x.
+KFEAT:    p = abandoned_shop
+MAP
+xxxxxxxxxxxxxxxxxxxxx
+xxxxx--xx--xx--xx---x
+xxxxx....._......_.-x
+x{_._.._.._.._._...xx
+xx_.._..........._.xx
+xxx.....__...._....xx
+xxxxx......_.......-x
+xxxxxxxppprrrrrr.._-x
+      xxxxrr_--.._.xx
+          rr.--_...xxxx
+          rr..__.._-x.@
+           x.xx..._xx.@
+           x_xx_._.+..@
+           x__.....xx.@
+           x....___-xxx
+           x--xxx--xxxx
+           xxxxxxxxxxxx
+ENDMAP
