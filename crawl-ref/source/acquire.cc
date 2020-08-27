@@ -1673,6 +1673,7 @@ class AcquireMenu : public InvMenu
     friend class AcquireEntry;
 
     CrawlVector& acq_items;
+    bool collector;
 
     void init_entries();
     void update_help();
@@ -1681,7 +1682,7 @@ class AcquireMenu : public InvMenu
     virtual bool process_key(int keyin) override;
 
 public:
-    AcquireMenu(CrawlVector& aitems);
+    AcquireMenu(CrawlVector& aitems, bool collector_);
 };
 
 class AcquireEntry : public InvEntry
@@ -1715,10 +1716,10 @@ public:
     }
 };
 
-AcquireMenu::AcquireMenu(CrawlVector& aitems)
+AcquireMenu::AcquireMenu(CrawlVector& aitems, bool collector_)
     : InvMenu(MF_SINGLESELECT | MF_NO_SELECT_QTY | MF_QUIET_SELECT
         | MF_ALWAYS_SHOW_MORE | MF_ALLOW_FORMATTING),
-    acq_items(aitems)
+    acq_items(aitems), collector(collector_)
 {
     menu_action = ACT_EXECUTE;
     set_flags(get_flags() & ~MF_USE_TWO_COLUMNS);
@@ -1774,9 +1775,9 @@ void AcquireMenu::update_help()
         : "examine item")));
 }
 
-static void _create_acquirement_item(item_def& item)
+static void _create_acquirement_item(item_def& item, bool collector)
 {
-    auto& acq_items = you.props[ACQUIRE_ITEMS_KEY].get_vector();
+    auto& acq_items = you.props[collector? COLLECTOR_ITEMS_KEY :ACQUIRE_ITEMS_KEY].get_vector();
 
     // Now that we have a selection, mark any generated unrands as not having
     // been generated, so they go back in circulation. Exclude the selected
@@ -1814,7 +1815,7 @@ static void _create_acquirement_item(item_def& item)
         canned_msg(MSG_NOTHING_HAPPENS);
 
     acq_items.clear();
-    you.props.erase(ACQUIRE_ITEMS_KEY);
+    you.props.erase(collector ? COLLECTOR_ITEMS_KEY : ACQUIRE_ITEMS_KEY);
 }
 
 bool AcquireMenu::acquire_selected()
@@ -1844,7 +1845,7 @@ bool AcquireMenu::acquire_selected()
     }
 
     item_def& acq_item = *static_cast<item_def*>(entry.data);
-    _create_acquirement_item(acq_item);
+    _create_acquirement_item(acq_item, collector);
 
     return false;
 }
@@ -2013,7 +2014,7 @@ static void _make_artefact_acquirement_items(vector<object_class_type>& rand_cla
     const int wanted_unrandart_num = 9;
     shuffle_array(rand_classes);
 
-    CrawlVector& acq_items = you.props[ACQUIRE_ITEMS_KEY].get_vector();
+    CrawlVector& acq_items = you.props[COLLECTOR_ITEMS_KEY].get_vector();
     acq_items.empty();
 
     // Generate item defs until we have enough, skipping any random classes
@@ -2069,12 +2070,12 @@ bool acquirement_menu()
     }
     else if (index >= 1 && index <= acq_items.size())
     {
-        _create_acquirement_item(acq_items[index - 1]);
+        _create_acquirement_item(acq_items[index - 1], false);
         return true;
     }
 #endif
 
-    AcquireMenu acq_menu(acq_items);
+    AcquireMenu acq_menu(acq_items, false);
     acq_menu.show();
 
     return !you.props.exists(ACQUIRE_ITEMS_KEY);
@@ -2094,10 +2095,10 @@ bool artefact_acquirement_menu()
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    if (!you.props.exists(ACQUIRE_ITEMS_KEY))
+    if (!you.props.exists(COLLECTOR_ITEMS_KEY))
         _set_acquirement_items(true);
 
-    auto& acq_items = you.props[ACQUIRE_ITEMS_KEY].get_vector();
+    auto& acq_items = you.props[COLLECTOR_ITEMS_KEY].get_vector();
 
 #ifdef CLUA_BINDINGS
     int index = 0;
@@ -2108,13 +2109,13 @@ bool artefact_acquirement_menu()
     }
     else if (index >= 1 && index <= acq_items.size())
     {
-        _create_acquirement_item(acq_items[index - 1]);
+        _create_acquirement_item(acq_items[index - 1], true);
         return true;
     }
 #endif
 
-    AcquireMenu acq_menu(acq_items);
+    AcquireMenu acq_menu(acq_items, true);
     acq_menu.show();
 
-    return !you.props.exists(ACQUIRE_ITEMS_KEY);
+    return !you.props.exists(COLLECTOR_ITEMS_KEY);
 }
