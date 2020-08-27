@@ -2666,6 +2666,46 @@ xxxxx
 xxxxx
 ENDMAP
 
+NAME:   amcnicky_mini_pool_small
+TAGS:   decor extra transparent
+SUBST:  p:wwwWWl
+MAP
+ xx.xx
+xx...xx
+x..p..x
+..ppp..
+x..p..x
+xx...xx
+ xx.xx
+ENDMAP
+
+NAME:   amcnicky_mini_rare_corridor_liquid
+TAGS:   extra transparent decor
+SUBST:  p:wl
+MAP
+xxxxxxxxxxx
+xpppppppppx
+@.........@
+xpppppppppx
+xxxxxxxxxxx
+ENDMAP
+
+NAME:   amcnicky_mini_corridor_feature
+TAGS:   extra no_item_gen transparent
+# Total weight: 100
+SUBST:  p: ......GGGGttnlY
+MAP
+xx@xx
+xp.px
+xx.xx
+xx.xx
+xp.px
+xx.xx
+xx.xx
+xp.px
+xx@xx
+ENDMAP
+
 #####################################################################
 #
 # <<2>> Inaccessible items

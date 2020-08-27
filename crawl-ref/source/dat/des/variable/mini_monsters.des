@@ -6489,6 +6489,26 @@ c*c
 ccc
 ENDMAP
 
+NAME:   amcnicky_mini_pool_medium
+WEIGHT: 5
+DEPTH:  D:5-, Depths, Lair
+TAGS:   no_pool_fixup ruin_depths
+SUBST:  p:wwwWWl
+SUBST:  q=.0
+MAP
+  xx...xx
+ xx..p..xx
+xx.qpppq.xx
+x.qpppppq.x
+..ppppppp..
+.ppppppppp.
+..ppppppp..
+x.qpppppq.x
+xx.qpppq.xx
+ xx..p..xx
+  xx...xx
+ENDMAP
+
 ################################################################
 #
 # <<8>> Minivaults with monsters guarding a thematic item.
