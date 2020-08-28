@@ -3729,6 +3729,9 @@ w:1
 @The_monster@ says, "What kind of a name is Fauntleroy?"
 
 w:1
+@The_monster@ says, "What kind of a name is Kimchi?"
+
+w:1
 @The_monster@ says, "What's the big idea?!"
 %%%%
 default hostile confused Donald
