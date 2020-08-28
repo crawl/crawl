@@ -2055,8 +2055,6 @@ bool set_ident_type(item_def &item, bool identify)
 
 bool set_ident_type(object_class_type basetype, int subtype, bool identify)
 {
-    preserve_quiver_slots p;
-
     if (!item_type_has_ids(basetype))
         return false;
 

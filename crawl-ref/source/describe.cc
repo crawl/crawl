@@ -2707,7 +2707,7 @@ static bool _do_action(item_def &item, const command_type action)
     {
     case CMD_WIELD_WEAPON:     wield_weapon(true, slot);            break;
     case CMD_UNWIELD_WEAPON:   wield_weapon(true, SLOT_BARE_HANDS); break;
-    case CMD_QUIVER_ITEM:      quiver_item(slot);                   break;
+    case CMD_QUIVER_ITEM:      you.quiver_action.set_from_slot(slot); break;
     case CMD_WEAR_ARMOUR:      wear_armour(slot);                   break;
     case CMD_REMOVE_ARMOUR:    takeoff_armour(slot);                break;
     case CMD_READ:             read(&item);                         break;
@@ -3975,7 +3975,8 @@ static void _describe_to_hit(const monster_info& mi, ostringstream &result)
     }
     else
     {
-        const int missile = you.m_quiver.get_fire_item();
+        // TODO: handle throwing to-hit somehow?
+        const int missile = quiver::find_action_from_launcher(you.weapon())->get_item();
         if (missile < 0)
             return; // failure to launch
         ranged_attack attk(&you, nullptr, &you.inv[missile], is_pproj_active());

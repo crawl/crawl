@@ -70,7 +70,7 @@
 #include "unicode.h"
 #include "view.h"
 
-static bool _reaching_weapon_attack(const item_def& wpn, const coord_def &preselect)
+static bool _reaching_weapon_attack(const item_def& wpn, dist &beam)
 {
     if (you.confused())
     {
@@ -85,8 +85,7 @@ static bool _reaching_weapon_attack(const item_def& wpn, const coord_def &presel
     }
 
     bool targ_mid = false;
-    dist beam;
-    beam.target = preselect;
+
     beam.isEndpoint = true; // is this needed? imported from autofight code
     const reach_type reach_range = weapon_reach(wpn);
 
@@ -1246,7 +1245,7 @@ bool evoke_check(int slot, bool quiet)
     return true;
 }
 
-bool evoke_item(int slot, coord_def preselect)
+bool evoke_item(int slot, dist preselect)
 {
     // TODO: implement preselect for items besides weapons
     if (!evoke_check(slot))

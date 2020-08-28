@@ -1055,8 +1055,10 @@ void TilesFramework::_send_player(bool force_full)
     }
     json_close_object(true);
 
+    // TODO: send quiver_description, not the item
+    // (and do so in a way that handles backwards compatibility)
     _update_int(force_full, c.quiver_item,
-                (int8_t) you.m_quiver.get_fire_item(), "quiver_item");
+                (int8_t) you.quiver_action.get().get_item(), "quiver_item");
 
     _update_string(force_full, c.unarmed_attack,
                    you.unarmed_attack_name(), "unarmed_attack");
