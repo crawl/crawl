@@ -1646,6 +1646,9 @@ undead_form_reason lifeless_prevents_form(transformation which_trans,
     if (which_trans == transformation::shadow)
         return UFR_GOOD; // even the undead can use dith's shadow form
 
+    if (which_trans == transformation::golem)
+        return UFR_GOOD; // even the undead can activates golem armour
+
     if (you.species != SP_VAMPIRE)
         return UFR_TOO_DEAD; // ghouls & mummies can't become anything else
 
