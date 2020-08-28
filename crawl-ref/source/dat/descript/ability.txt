@@ -1026,69 +1026,73 @@ moving. (Other actions, such as casting spells and attacking, are fine.)
 # The Great Wyrm
 Infuse Essence ability
 
-Spend an essence of alchemy, to infuse a target in your sight. Essences to
-use this ability can be made by Nigredo, Albedo, Citrinitas, Viriditas, and
-Rubedo ability. Effects of each essences also descripted at those abilities.
+Spends an essence of alchemy, to infuse a target in your line of sight. 
+The essence to use this ability can be made by Nigredo, Albedo, Citrinitas, 
+Viriditas, and Rubedo ability.
 %%%%
 Nigredo ability
 
-Transmute a potion or other essence into essence of decay called 'Nigredo'.
-Drinking Nigredo causes decay yourself, evaporate will create miasma. Also 
-it can be used for Infuse Essence ability; When infused target with Nigredo
-moves, will leaving miasma on its trail. Duraction of this infusion and miasma
-is depending on your piety.
+Transmutes a potion or other essence into the essence of decay called 'Nigredo'.
+Drinking Nigredo causes decaying yourself. Evaporation will create clouds of 
+miasma. Also it can be used for Infuse Essence ability; When infused target 
+with Nigredo moves, it will leave miasma on its trail. The duration of this 
+infusion and miasma depends on your piety.
 %%%%
 Albedo ability
 
-Transmute a potion or other essence into essence of purge called 'Albedo'.
-Dirnking Albedo causes magically purge yourself, evaporate will create clouds
-of flame. Also it can be used for Infuse Essence ability; While target has any
-disspellable magic, this infusion often has the chance to interrupt target,
-force target to waste its turn. Duraction of this infusion is depending
-on your piety. 
+Transmutes a potion or other essence into the essence of purge called 'Albedo'.
+Drinking Albedo causes magically purge yourself. Evaporation will create clouds
+of blazing flame. Also it can be used for Infuse Essence ability; While target 
+has any disspellable magical effect, this infusion has the high chance of
+interrupting their mind and make them falter for a moment. The duration of this
+infusion depends on your piety.
 %%%%
 Citrinitas ability
 
-Transmute a potion or other essence into essence of empower called 'Citrinitas'.
-Dirnking Citrinitas empowers your accuracy and spells, and result of evaporate 
-isn't specified. Also it can be used for Infuse Essence ability; Infused target
-will receive empowerment of accuracy and spells. These empowerments last longer
-and stronger depending on your piety.
+Transmutes a potion or other essence into the essence of empower called 
+'Citrinitas'. Drinking Citrinitas empowers your accuracy and spells. The result
+of evaporation isn't specified. Also it can be used for Infuse Essence ability; 
+Infused target will receive empowerment of accuracy and spells. The empowerment
+lasts longer and stronger depending on your piety.
 %%%%
 Viriditas ability
 
-Transmute a potion or other essence into essence of restore called 'Viriditas'.
-Drinking Viriditas restores all damaged stats and cures yourself, evaporate
-will create clouds of healing. Also it can be used for Infuse Essence ability;
-Infused target will act like in common, but its attack will heal you, instead
-damage. However some effects, such as harmful enchantments, can still affects you.
-Duraction of this infusion is extremely short, but also depending on your piety.
+Transmutes a potion or other essence into the essence of restore called 
+'Viriditas'. Drinking Viriditas restores all damaged stats and cures yourself. 
+Evaporation will create clouds of healing. Also it can be used for Infuse Essence
+ability; Infused target will act like in common, but its attack will heal you, 
+instead of dealing damage. However, some effects, such as harmful enchantments, 
+are able to affect you. The duration of this infusion is extremely short but can
+last longer depending on your piety.
 %%%%
 Rubedo ability
 
-Transmute a potion or other essence into essence of the 'end-as-begin',
-called 'Rubedo'. Drinking Rubedo will grants you resistances from fire,
-cold, electricity, poison, and acid, and result of evaporate isn't specified.
+Transmutes a potion or other essence into essence of the 'end-as-begin',
+called 'Rubedo'. Drinking Rubedo grants you resistances from fire, cold, 
+electricity, poison, and acid. The result of evaporation is not specified.
 Also it can be used for Infuse Essence ability; Infused target will diffuse
-other infusions, makes all targets in your sight are infused by same essences.
+other infusions and make all targets in your line of sight infused by the same 
+essence.
 # Imus Thea
 Prismatic Prism ability
 
-Create a prism, blinds nearby enemies at every turns. Prism's hit dice is depending
-on your piety, and it will be shattered after 3 turns without how much damaged.
+Creates a prism that blinds nearby enemies at every turns. Prism's hit dice 
+depends on your piety, and it will be shattered after 3 turns.
 %%%%
 Fragmentation ability
 
-Shatter youself to duplicate yourself, costs a half of your present health.
-These 'mirror image' is almost same to you, like spells, equipments.
+Shatters youself to duplicate yourself. It costs half of your current HP. The
+mirror image is almost same with you and has the same spells and equipments as
+yours.
 # The Legion from Beyond
 %%%%
 Positioning ability
 
-Order your minion to hold position instantly. Order again allow to move again.
+Orders one of your minions to hold position instantly. Ordering again allows them
+to move again.
 %%%%
 Immortal Legion ability
 
-Order your minion to sustain itself, seriously damages its health but unable to die
-briefly. Duration is depend on your summoning skill, lasts from 3 turns to up to 10
-turns.
+Orders one of your minions to sustain itself. It causes serious damage to its 
+its health but make them unable to die briefly. The duration of this effect depends 
+on summoning skill and lasts from 3 turns up to 10 turns.
