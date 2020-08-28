@@ -2185,7 +2185,7 @@ string get_item_description(const item_def &item, bool verbose,
     case OBJ_WANDS:
         {
             spell_type spell = spell_in_wand(static_cast<wand_type>(item.sub_type));
-            description << "\n\n" << spell_noise_string(spell) << " to evoke.";
+            description << "\n\nNoise when evoked: " << spell_noise_string(spell);
             break;
         }
 
