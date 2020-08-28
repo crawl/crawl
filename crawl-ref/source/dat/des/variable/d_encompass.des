@@ -123,7 +123,7 @@ PLACE:   D:$, Depths:$
 WEIGHT:  1 (D:$), 2 (Depths:$), 10
 KMONS:   - = plant
 KMONS:   _ = demonic plant
-KMONS:   no = vault guard
+KMONS:   mo = vault guard
 KMONS:   p = floating eye
 KMONS:   q : great orb of eyes w:7 / guardian serpent w:3
 KMONS:   r = ettin / deep troll shaman / yaktaur captain / frost giant
@@ -163,7 +163,7 @@ KMONS:   t = draconian knight / draconian scorcher / draconian annihilator
 KITEM:   ? = any ring randart w:390 / ring_of_the_octopus_king
 KITEM:   ! = ring of slaying / ring of wizardry / any good_item ring no_uniq w:75
 KITEM:   | = | / any good_item
-KFEAT:   ^ = known permanent teleport trap
+KFEAT:   ^ = permanent teleport trap
 KFEAT:   ~ = teleport trap
 KFEAT:   aD = stone_arch
 KFEAT:   A = enter_hell
@@ -183,34 +183,40 @@ SUBST:   A&@ = a, _ = -, l = W
 SHUFFLE: aA&@
 :     end
 :     if you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
-NSUBST:  (D = 1:Z / *:D
+NSUBST:  (D = Z / D
 SUBST:   f = ', 2 = t
 :     end
 : else
 SUBST:   A&@ = a, _ = -, l = W
 :     if you.where() == dgn.level_name(dgn.br_entrance("Depths")) then
-NSUBST:  ( = 1:B / *:T
+NSUBST:  ( = B / T
 SUBST:   f = ', 2 = r
 :     end
 : end
 SUBST:   {} = **|||, ) = C, [ = !, ] = ?
-NSUBST:  < = 1:{ / 1:( / 1:[, > = 1:} / 1:) / 1:]
+NSUBST:  < = { / ( / [, > = } / ) / ]
 SUBST:   d = 0, e = 009, f = %, g = 0, h = 0, i = 009, j = %, k = 0
 SUBST:   ` = >, 1 = 9988s, 2 = 009, 3 = s, 4 = `, 5 = 998ss, 6 = 009, 7 = s
-SHUFFLE: })]` / {([>, ?!, no / pq, pq / pq / pq / qp / pp / qq
+SHUFFLE: })]` / {([>, ?!, mo / pq, pq / pq / pq / qp / pp / qq
 SHUFFLE: LM / LM / LM / LM / LM / LM / ML / ML / MM
 SHUFFLE: NO / NO / NO / NO / NO / NO / ON / ON / OO
 SHUFFLE: PQ / PQ / PQ / PQ / QP, RS / RS / RS / SR
+SHUFFLE: EF / GH / Iu / yz
 SUBST:   LNPR : x, MOQS : ~, J : ~xxx, K : ~xxxx, c : x:7 c:1, v : v:7 c:1
-NSUBST:  ~ = 2:~ / 1:~. / 75 = ~ .:4490 / 225 = ~ .:9990 / *:.
+SUBST:   Iy = D, uz = a
+NSUBST:  ~ = 2:~ / ~. / 75 = ~ .:4490 / 225 = ~ .:9990 / .
 COLOUR:  "-_ = green
 COLOUR:  '`089rs%*|!? = white
-FTILE:   ^"aA@&-_U = floor_grass
+FTILE:   ^"aAFHuz@&-_U = floor_grass
 : if crawl.coinflip() then
-FTILE:   '`<{([>})]089rst%*|!?BCTDEFZ = floor_vault
+FTILE:   '`<{([>})]089rst%*|!?BCTDEGIZy = floor_vault
 : else
-FTILE:   '`<{([>})]089rst%*|!?BCTDEFZ = floor_pebble_darkgray
+FTILE:   '`<{([>})]089rst%*|!?BCTDEGIZy = floor_pebble_darkgray
 : end
+MARKER:  E = lua:transp_loc("spin_cycle_entry")
+MARKER:  F = lua:transp_dest_loc("spin_cycle_entry")
+MARKER:  G = lua:transp_dest_loc("spin_cycle_exit")
+MARKER:  H = lua:transp_loc("spin_cycle_exit")
 MAP
                           vvvvvvv
                          vv'%<%'vv
@@ -224,7 +230,7 @@ MAP
           xxxx xcccc..~~~~L~~~~OO~~~~..ccv  xxxx
          xxJJxxx~~~..~~~~~MM~~~~N~~Q~~..ccxxxKKxx
          xJJJJxx~~~~px~~~~~L~~~~OO~~x~~~~~xxKKKKx
-         xJJJJx~~~~~xn~~~~~MM~~~~N~~~P~~~~~xKKKKx
+         xJJJJx~~~~~xm~~~~~MM~~~~N~~~P~~~~~xKKKKx
          xxJJ~~~~~~~~~~~~~~.L...~~~~~~~~~~~~~KKxx
     vvvv  xxx~www~~~~~~~~~.......~~~~~~~~www~xxxx
    vv%'vv xx~~www~x~~~.....c+c+c....~~~x~www~~~xx vvvvv
@@ -232,24 +238,24 @@ MAP
   v%'2'''cc~~~~~RS~~..c+ccc''4''ccc+c..~SR~~~~~~cvf''(vv
   v'''cc+c.~~~~x~~...cc''kch'''hci''cc..~~x~~~~~c'''2'%v
   vvf'c....~~~~~~....+'7''cc%>%cc''5'+..~~~~~~~.c+cc'''v
-   vv'+...~~P~~~..c+cck''%bbbbbbb%''ic...~~~~xq....c'fvv
-   vvcc..~~x~~~..cc'jbbb%]bbbbbbb}%bbc+c..~~~ox~...+'vv
+   vv'+...~~P~~~..c+cck''%bbbEbbb%''ic...~~~~xq....c'fvv
+   vvcc..~~x~~~..cc'jbbb%]bbnnnbb}%bbc+c..~~~ox~...+'vv
    vcc...~Q~~~~..+'6'bbbbbbblllbbbbbbj'cc..~~~~~~..ccvv
    vc....~~~~~~..c'''%bbbbbbl^lbbbbbb'6'+..~~~~~~...ccv
- vvvc...~~~ON~~..cj'%)bblllll"llllbb%'''c..~~~~~~....cv
+ vvvc...~~~ON~~..cj'%)bblllllFllllbb%'''c..~~~~~~....cv
 vvg'c..~~ONO~~..ccccbbbbla""""""Albb)%'jc..~~~~~~~...cvvv
 v'''+..ONO~~~..cc'icbbbbl"""U"_""lbbbbcccc..~~~~~ML..c'evv
-v%''c.NO~~~~~..+'''%bblll"_""""""lbbbbck'cc..~~MLM~..+'''v
-v['3c..~~~~~ML.c'5'}bbl^"""""""U"lllbb%'''+..MLM~~~..c''%v
-v%''c..~~~MLM..+'''%bblll"U"""""""^lbb]'7'c.LM~~~~~..c1'{v
-v'''+..~MLM~~..cc'icbbbbl""""""_"lllbb%'''+..~~~~~ON.c''%v
+v%''c.NO~~~~~..+'''%bnlll"_""""""lbbbbck'cc..~~MLM~..+'''v
+v['3c..~~~~~ML.c'5'}Gnl^H""""""U"lllnb%'''+..MLM~~~..c''%v
+v%''c..~~~MLM..+'''%bnlll"U""""""u^lnI]'7'c.LM~~~~~..c1'{v
+v'''+..~MLM~~..cc'icbbbbl""""""_"lllnb%'''+..~~~~~ON.c''%v
 vvg'c..LM~~~~~..ccccbbbbl""_"U"""lbbbbck'cc..~~~ONO..+'''v
  vvvc...~~~~~~~..ch'%>bbl@""""""&lbbbbcccc..~~ONO~~..c'evv
-   vc....~~~~~~..c'''%bbllll"lllllbb>%'hc..~~NO~~~~..cvvv
+   vc....~~~~~~..c'''%bbllllzlllllbb>%'hc..~~NO~~~~..cvvv
    vcc...~~~~~~..+'4'bbbbbbl^lbbbbbb%'''c..~~~~~~~...cv
    vvcc..~~~~~~..cc'hbbbbbblllbbbbbbb'4'+..~~~~Q~...ccv
-  vvv'+...~xo~~~..c+cbb%]bbbbbbb}%bbbh'cc..~~~x~~..ccvv
-  vvd'c....qx~~~~...ck''%bbbbbbb%''icc+c..~~~P~~...+'vvv
+  vvv'+...~xo~~~..c+cbb%]bbnnnbb}%bbbh'cc..~~~x~~..ccvv
+  vvd'c....qx~~~~...ck''%bbbybbb%''icc+c..~~~P~~...+'vvv
   v'''cc+c.~~~~~~~..+'7''cc%)%cc''5'+....~~~~~~....c'dvv
   v%'`'''c~~~~~x~~..cc''kcj'''jci''cc...~~x~~~~.c+cc'''v
   vv<''dvc~~~~~~RS~..c+ccc''6''ccc+c..~~SR~~~~~cc'''`'%v
@@ -257,7 +263,7 @@ vvg'c..LM~~~~~..ccccbbbbl""_"U"""lbbbbck'cc..~~~ONO..+'''v
     vvvv cxx~~www~x~~.....c+c+c.....~~~x~www~~xx vv'%vv
           xxx~www~~~~~~~~.......~~~~~~~~~www~xxx  vvvv
          xxKK~~~~~~~~~~~~~..L..~~~~~~~~~~~~~~JJxx
-         xKKKKx~~~~~P~~~N~~~MM~~~~~~nx~~~~~xJJJJx
+         xKKKKx~~~~~P~~~N~~~MM~~~~~~mx~~~~~xJJJJx
          xKKKKxx~~~~~x~~OO~~~L~~~~~~xp~~~~xxJJJJx
          xxKKxxxxc..~~Q~~N~~~MM~~~~~~..~~~xxxJJxx
           xxxx  vcc..~~~~OO~~~L~~~~~..ccccc xxxx
