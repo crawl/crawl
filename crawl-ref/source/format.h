@@ -31,7 +31,7 @@ public:
     void cprintf(const string &s);
     void add_glyph(cglyph_t g);
     void textcolour(int colour);
-    formatted_string chop(int length) const;
+    formatted_string chop(int length, bool pad=false) const;
     formatted_string chop_bytes(int length) const;
     formatted_string substr_bytes(int pos, int length) const;
     formatted_string trim() const;

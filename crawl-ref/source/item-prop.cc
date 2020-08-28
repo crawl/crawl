@@ -1059,7 +1059,6 @@ bool item_ident(const item_def &item, iflags_t flags)
 
 void set_ident_flags(item_def &item, iflags_t flags)
 {
-    preserve_quiver_slots p;
     if ((item.flags & flags) != flags)
     {
         item.flags |= flags;
@@ -1105,7 +1104,6 @@ void set_ident_flags(item_def &item, iflags_t flags)
 
 void unset_ident_flags(item_def &item, iflags_t flags)
 {
-    preserve_quiver_slots p;
     item.flags &= (~flags);
 }
 

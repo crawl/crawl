@@ -1680,22 +1680,12 @@ static void _do_cycle_quiver(int dir)
         return;
     }
 
-    const int cur = you.m_quiver.get_fire_item();
-    const int next = get_next_fire_item(cur, dir);
-#ifdef DEBUG_QUIVER
-    mprf(MSGCH_DIAGNOSTICS, "next slot: %d, item: %s", next,
-         next == -1 ? "none" : you.inv[next].name(DESC_PLAIN).c_str());
-#endif
-    if (next != -1)
-    {
-        // Kind of a hacky way to get quiver to change.
-        you.m_quiver.on_item_fired(you.inv[next], true);
+    const bool changed = you.quiver_action.cycle(dir);
 
-        if (next == cur)
-            mpr("No other missiles available. Use F to throw any item.");
-    }
-    else if (cur == -1)
-        mpr("No missiles available. Use F to throw any item.");
+    if (!changed)
+        mpr("No other quiver actions available. Use F to throw any item.");
+    else if (!you.quiver_action.get().is_valid())
+        mpr("No quiver actions available. Use F to throw any item.");
 }
 
 static void _do_list_gold()
@@ -2018,7 +2008,7 @@ void process_command(command_type cmd, command_type prev_cmd)
     }
 
         // Quiver commands.
-    case CMD_QUIVER_ITEM:           choose_item_for_quiver(); break;
+    case CMD_QUIVER_ITEM:           quiver::choose(); break;
     case CMD_CYCLE_QUIVER_FORWARD:  _do_cycle_quiver(+1);     break;
     case CMD_CYCLE_QUIVER_BACKWARD: _do_cycle_quiver(-1);     break;
 

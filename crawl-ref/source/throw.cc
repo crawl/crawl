@@ -65,29 +65,7 @@ bool is_penetrating_attack(const actor& attacker, const item_def* weapon,
 
 bool item_is_quivered(const item_def &item)
 {
-    return in_inventory(item) && item.link == you.m_quiver.get_fire_item();
-}
-
-int get_next_fire_item(int current, int direction)
-{
-    vector<int> fire_order;
-    you.m_quiver.get_fire_order(fire_order, true);
-
-    if (fire_order.empty())
-        return -1;
-
-    int next = direction > 0 ? 0 : -1;
-    for (unsigned i = 0; i < fire_order.size(); i++)
-    {
-        if (fire_order[i] == current)
-        {
-            next = i + direction;
-            break;
-        }
-    }
-
-    next = (next + fire_order.size()) % fire_order.size();
-    return fire_order[next];
+    return in_inventory(item) && item.link == you.quiver_action.get().get_item();
 }
 
 class fire_target_behaviour : public targeting_behaviour
@@ -95,10 +73,10 @@ class fire_target_behaviour : public targeting_behaviour
 public:
     fire_target_behaviour()
         : chosen_ammo(false),
+          action(you.quiver_action),
           selected_from_inventory(false),
           need_redraw(false)
     {
-        m_slot = you.m_quiver.get_fire_item(&m_noitem_reason);
         set_prompt();
     }
 
@@ -110,10 +88,10 @@ public:
     virtual vector<string> get_monster_desc(const monster_info& mi) override;
 
 public:
-    const item_def* active_item() const;
+    const item_def* active_item();
     // FIXME: these should be privatized and given accessors.
-    int m_slot;
     bool chosen_ammo;
+    quiver::action_cycler action;
 
 private:
     void set_prompt();
@@ -122,7 +100,6 @@ private:
     void display_help();
 
     string prompt;
-    string m_noitem_reason;
     string internal_prompt;
     bool selected_from_inventory;
     bool need_redraw;
@@ -133,12 +110,14 @@ void fire_target_behaviour::update_top_prompt(string* p_top_prompt)
     *p_top_prompt = internal_prompt;
 }
 
-const item_def* fire_target_behaviour::active_item() const
+
+const item_def* fire_target_behaviour::active_item()
 {
-    if (m_slot == -1)
+    const int slot = action.get().get_item();
+    if (slot == -1)
         return nullptr;
     else
-        return &you.inv[m_slot];
+        return &you.inv[slot];
 }
 
 void fire_target_behaviour::set_prompt()
@@ -147,8 +126,8 @@ void fire_target_behaviour::set_prompt()
     internal_prompt.clear();
 
     // Figure out if we have anything else to cycle to.
-    const int next_item = get_next_fire_item(m_slot, +1);
-    const bool no_other_items = (next_item == -1 || next_item == m_slot);
+    const int next_item = action.next()->get_item();
+    const bool no_other_items = (next_item == -1 || next_item == action.get().get_item());
 
     ostringstream msg;
 
@@ -179,8 +158,9 @@ void fire_target_behaviour::set_prompt()
     msg << key_hint;
 
     // Describe the selected item for firing.
+    // TODO: are there cases where error is empty that this can happen?
     if (!active_item())
-        msg << "<red>" << m_noitem_reason << "</red>";
+        msg << "<red>" << action.get().error << "</red>";
     else
     {
         const char* colour = (selected_from_inventory ? "lightgrey" : "w");
@@ -202,10 +182,10 @@ void fire_target_behaviour::set_prompt()
 // fire item.
 void fire_target_behaviour::cycle_fire_item(bool forward)
 {
-    const int next = get_next_fire_item(m_slot, forward ? 1 : -1);
-    if (next != m_slot && next != -1)
+    const bool changed = action.cycle(forward ? 1 : -1);
+    const int next = action.get().get_item();
+    if (changed && next != -1)
     {
-        m_slot = next;
         selected_from_inventory = false;
         chosen_ammo = true;
     }
@@ -219,7 +199,7 @@ void fire_target_behaviour::pick_fire_item_from_inventory()
     const int selected = _fire_prompt_for_item();
     if (selected >= 0 && _fire_validate_item(selected, err))
     {
-        m_slot = selected;
+        action.set_from_slot(selected);
         selected_from_inventory = true;
         chosen_ammo = true;
     }
@@ -366,7 +346,7 @@ static bool _fire_choose_item_and_target(int& slot, dist& target,
             return false;
         }
         // Force item to be the prechosen one.
-        beh.m_slot = slot;
+        beh.action.set_from_slot(slot);
     }
 
     direction_chooser_args args;
@@ -376,7 +356,7 @@ static bool _fire_choose_item_and_target(int& slot, dist& target,
 
     direction(target, args);
 
-    if (!beh.active_item())
+    if (!beh.action.get().is_valid())
     {
         canned_msg(MSG_OK);
         return false;
@@ -396,10 +376,12 @@ static bool _fire_choose_item_and_target(int& slot, dist& target,
 
     if (fired_normally)
     {
-        you.m_quiver.on_item_fired(*beh.active_item(), beh.chosen_ammo);
+        you.quiver_action.set(beh.action);
+        you.m_quiver_history.on_item_fired(*beh.active_item(), beh.chosen_ammo);
         you.redraw_quiver = true;
     }
-    slot = beh.m_slot;
+    // TODO: refactor to not refer to items
+    slot = beh.action.get().get_item();
 
     return true;
 }
@@ -526,7 +508,8 @@ int get_ammo_to_shoot(int item, dist &target, bool teleport)
         return -1;
     }
 
-    if (Options.auto_switch && you.m_quiver.get_fire_item() == -1
+    // TODO: double check this quiver logic
+    if (Options.auto_switch && you.quiver_action.get().get_item() == -1
        && _autoswitch_to_ranged())
     {
         return -1;
@@ -553,15 +536,12 @@ bool is_pproj_active()
 
 // If item == -1, prompt the user.
 // If item passed, it will be put into the quiver.
-void fire_thing(int item, coord_def preselect, bool endpoint)
+void fire_thing(int item, dist target)
 {
 #ifdef USE_SOUND
     parse_sound(FIRE_PROMPT_SOUND);
 #endif
 
-    dist target;
-    target.target = preselect;
-    target.isEndpoint = endpoint;
     item = get_ammo_to_shoot(item, target, is_pproj_active());
     if (item == -1)
         return;

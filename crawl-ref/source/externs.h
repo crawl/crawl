@@ -46,6 +46,8 @@
 #include "level-id.h"
 #include "monster-type.h"
 
+#include "ray.h"
+
 struct tile_flavour
 {
     unsigned short floor_idx;
@@ -325,3 +327,23 @@ struct cglyph_t
 };
 
 typedef FixedArray<bool, NUM_OBJECT_CLASSES, MAX_SUBTYPES> id_arr;
+
+// input and output to targeting actions
+// TODO: rename, move to its own .h, remove camel case
+class dist
+{
+public:
+    dist();
+
+    bool isMe() const;
+
+    bool isValid;       // valid target chosen?
+    bool isTarget;      // target (true), or direction (false)?
+    bool isEndpoint;    // Does the player want the attack to stop at target?
+    bool isCancel;      // user cancelled (usually <ESC> key)
+    bool choseRay;      // user wants a specific beam
+
+    coord_def target;   // target x,y or logical extension of beam to map edge
+    coord_def delta;    // delta x and y if direction - always -1,0,1
+    ray_def ray;        // ray chosen if necessary
+};

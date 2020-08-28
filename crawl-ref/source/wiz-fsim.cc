@@ -89,7 +89,7 @@ static skill_type _equipped_skill()
     if (iweap && is_weapon(*iweap))
         return item_attack_skill(*iweap);
 
-    if (!iweap && you.m_quiver.get_fire_item() != -1)
+    if (!iweap && you.quiver_action.get().get_item() >= 0)
         return SK_THROWING;
 
     return SK_UNARMED_COMBAT;
@@ -99,7 +99,7 @@ static string _equipped_weapon_name()
 {
     const int weapon = you.equip[EQ_WEAPON];
     const item_def * iweap = weapon != -1 ? &you.inv[weapon] : nullptr;
-    const int missile = you.m_quiver.get_fire_item();
+    const int missile = you.quiver_action.get().get_item();
 
     if (iweap)
     {
@@ -247,7 +247,7 @@ static bool _fsim_kit_equip(const string &kit, string &error)
 
             if (you.inv[i].name(DESC_PLAIN).find(missile) != string::npos)
             {
-                quiver_item(i);
+                you.quiver_action.set_from_slot(i);
                 you.redraw_quiver = true;
                 break;
             }
@@ -366,7 +366,7 @@ static void _do_one_fsim_round(monster &mon, fight_data &fd, bool defend)
 
     const int weapon = you.equip[EQ_WEAPON];
     const item_def *iweap = weapon != -1 ? &you.inv[weapon] : nullptr;
-    const int missile = you.m_quiver.get_fire_item();
+    const int missile = you.quiver_action.get().get_item();
 
     mon.shield_blocks = 0;
     you.shield_blocks = 0;

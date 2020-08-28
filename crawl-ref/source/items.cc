@@ -410,8 +410,6 @@ bool dec_inv_item_quantity(int obj, int amount)
     if (you.equip[EQ_WEAPON] == obj)
         you.wield_change = true;
 
-    you.m_quiver.on_inv_quantity_changed(obj, amount);
-
     if (you.inv[obj].quantity <= amount)
     {
         for (int i = EQ_FIRST_EQUIP; i < NUM_EQUIP; i++)
@@ -443,6 +441,8 @@ bool dec_inv_item_quantity(int obj, int amount)
     }
     else
         you.inv[obj].quantity -= amount;
+
+    you.m_quiver_history.on_inv_quantity_changed(obj);
 
     return ret;
 }
@@ -476,8 +476,8 @@ void inc_inv_item_quantity(int obj, int amount)
     if (you.equip[EQ_WEAPON] == obj)
         you.wield_change = true;
 
-    you.m_quiver.on_inv_quantity_changed(obj, amount);
     you.inv[obj].quantity += amount;
+    you.m_quiver_history.on_inv_quantity_changed(obj);
 }
 
 void inc_mitm_item_quantity(int obj, int amount)
@@ -2068,8 +2068,8 @@ static int _place_item_in_free_slot(item_def &it, int quant_got,
             learned_something_new(HINT_SEEN_RANDART);
     }
 
-    you.m_quiver.on_inv_quantity_changed(freeslot, quant_got);
     you.last_pickup[item.link] = quant_got;
+    you.m_quiver_history.on_inv_quantity_changed(freeslot);
     item_skills(item, you.skills_to_show);
 
     if (const item_def* newitem = auto_assign_item_slot(item))

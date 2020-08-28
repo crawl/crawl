@@ -951,51 +951,14 @@ static void _print_stats_wp(int y)
 
 static void _print_stats_qv(int y)
 {
-    int col;
-    string text;
-
-    int q = you.m_quiver.get_fire_item();
-    ASSERT_RANGE(q, -1, ENDOFPACK);
-    char hud_letter = '-';
-    if (q != -1 && !fire_warn_if_impossible(true))
-    {
-        const item_def& quiver = you.inv[q];
-        if (quiver.link == NON_ITEM)
-            return; // don't crash if this is triggered during character setup
-        hud_letter = index_to_letter(quiver.link);
-        const string prefix = item_prefix(quiver);
-        const int prefcol =
-            menu_colour(quiver.name(DESC_PLAIN), prefix, "stats");
-        if (prefcol != -1)
-            col = prefcol;
-        else
-            col = LIGHTGREY;
-        text = quiver.name(DESC_PLAIN, true);
-    }
-    else
-    {
-        if (fire_warn_if_impossible(true))
-        {
-            col  = DARKGREY;
-            text = "Quiver unavailable";
-        }
-        else
-        {
-            col  = LIGHTGREY;
-            text = "Nothing quivered";
-        }
-    }
     CGOTOXY(1, y, GOTO_STAT);
-    textcolour(HUD_CAPTION_COLOUR);
-    CPRINTF("%c) ", hud_letter);
-    textcolour(col);
+    formatted_string qdesc = you.quiver_action.get().quiver_description();
 #ifdef USE_TILE_LOCAL
-    int w = crawl_view.hudsz.x - (tiles.is_using_small_layout()?0:4);
-    CPRINTF("%s", chop_string(text, w).c_str());
+    const int max_width = crawl_view.hudsz.x - (tiles.is_using_small_layout() ? 0 : 4);
 #else
-    CPRINTF("%s", chop_string(text, crawl_view.hudsz.x-4).c_str());
+    const int max_width = crawl_view.hudsz.x - 4;
 #endif
-    textcolour(LIGHTGREY);
+    qdesc.chop(max_width, true).display();
 }
 
 struct status_light
@@ -1366,19 +1329,8 @@ void print_stats()
     }
 
     if (you.wield_change)
-    {
-        // weapon_change is set in a billion places; probably not all
-        // of them actually mean the user changed their weapon. Calling
-        // on_weapon_changed redundantly is normally OK; but if the user
-        // is wielding a bow and throwing javelins, the on_weapon_changed
-        // will switch them back to arrows, which is annoying.
-        // Perhaps there should be another bool besides wield_change
-        // that's set in fewer places?
-        // Also, it's a little bogus to change simulation state in
-        // render code. We should find a better place for this.
-        you.m_quiver.on_weapon_changed();
         _print_stats_wp(9 + yhack);
-    }
+
     you.wield_change  = false;
 
     if (you.species == SP_FELID)

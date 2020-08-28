@@ -428,17 +428,20 @@ static int crawl_do_targeted_command(lua_State *ls)
     }
 
     PLAYERCOORDS(c, 2, 3);
-    const bool endpoint = lua_toboolean(ls, 4);
+    dist target;
+    target.target = c;
+    target.isEndpoint = lua_toboolean(ls, 4); // can be nil
+
 
     // TODO: automagic, other things that can be targeted
     // TODO: could this be unified with main.cc command handling code somehow?
     switch (cmd)
     {
     case CMD_EVOKE_WIELDED:
-        evoke_item(you.equip[EQ_WEAPON], c);
+        evoke_item(you.equip[EQ_WEAPON], target);
         break;
     case CMD_FIRE:
-        fire_thing(you.m_quiver.get_fire_item(), c, endpoint);
+        you.quiver_action.get().trigger(target);
         break;
     default:
         luaL_argerror(ls, 1, ("Not a (supported) targeted command: " + command).c_str());
