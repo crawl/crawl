@@ -594,6 +594,7 @@ static const weapon_def Weapon_prop[] =
         DAMV_CRUSHING, 8, 10, 40, {
             { SPWPN_NORMAL,     50 },
             { SPWPN_SPECTRAL,   18 },
+            { SPWPN_PROTECTION, 18 },
             { SPWPN_DRAINING,    8 },
             { SPWPN_VORPAL,      8 },
             { SPWPN_SPEED,       8 },
@@ -610,6 +611,7 @@ static const weapon_def Weapon_prop[] =
             { SPWPN_ELECTROCUTION,  12 },
             { SPWPN_VAMPIRISM,      12 },
             { SPWPN_SPECTRAL,        9 },
+            { SPWPN_PROTECTION,      9 },
             { SPWPN_VENOM,           7 },
             { SPWPN_PAIN,            7 },
             { SPWPN_ANTIMAGIC,       4 },
