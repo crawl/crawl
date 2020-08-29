@@ -540,18 +540,9 @@ static int _issue_orders_prompt()
                 previous = "   p - Attack previous target.";
         }
 
-        if (have_passive(passive_t::legion_istant_order))
-        {
-            mprf("Orders for allies instantly: a - Attack new target.%s", previous.c_str());
-            mpr("                              r - Retreat!                      s - Stop attacking.");
-            mpr("                              g - Guard the area.               f - Follow me.");
-        }
-        else
-        {
-            mprf("Orders for allies: a - Attack new target.%s", previous.c_str());
-            mpr("                   r - Retreat!             s - Stop attacking.");
-            mpr("                   g - Guard the area.      f - Follow me.");
-        }
+        mprf("Orders for allies: a - Attack new target.%s", previous.c_str());
+        mpr("                   r - Retreat!             s - Stop attacking.");
+        mpr("                   g - Guard the area.      f - Follow me.");
     }
     mpr(" Anything else - Cancel.");
 
