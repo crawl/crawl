@@ -883,7 +883,7 @@ static void _draw_stack(int to_stack)
 
         if (deck_menu.menu_action == Menu::ACT_EXAMINE)
             describe_deck(selected);
-        else
+        else if (you.props[deck_name(selected)].get_int() > 0)
         {
             you.props[deck_name(selected)]--;
             me->text = deck_status(selected);
