@@ -721,9 +721,12 @@ static string _empty_deck_msg()
     return "The deck of cards " + message;
 }
 
-static void _evoke_deck(deck_type deck, bool dealt = false)
+static bool _evoke_deck(deck_type deck, bool dealt = false)
 {
-    ASSERT(deck_cards(deck) > 0);
+    if (deck_cards(deck) <= 0) {
+        mprf("This deck is empty");
+        return false;
+    }
 
     mprf("You %s a card...", dealt ? "deal" : "draw");
 
@@ -742,6 +745,7 @@ static void _evoke_deck(deck_type deck, bool dealt = false)
 
     if (!deck_cards(deck))
         mpr(_empty_deck_msg());
+    return true;
 }
 
 // Draw one card from a deck, prompting the user for a choice
@@ -753,8 +757,7 @@ bool deck_draw(deck_type deck)
         return false;
     }
 
-    _evoke_deck(deck);
-    return true;
+    return _evoke_deck(deck);
 }
 
 bool deck_stack()
@@ -990,8 +993,7 @@ bool deck_triple_draw()
     {
         // Only one card to draw, so just draw it.
         mpr("There's only one card left!");
-        _evoke_deck(choice);
-        return true;
+        return _evoke_deck(choice);
     }
 
     const int num_to_draw = min(num_cards, 3);
