@@ -2609,10 +2609,7 @@ static spret _do_ability(const ability_def& abil, bool fail)
     }
 
     case ABIL_SIF_MUNA_DIVINE_EXEGESIS:
-    {
         return divine_exegesis(fail);
-        break;
-    }
 
     case ABIL_ELYVILON_LIFESAVING:
         fail_check();
@@ -2798,11 +2795,7 @@ static spret _do_ability(const ability_def& abil, bool fail)
         break;
 
     case ABIL_FEDHAS_GROW_BALLISTOMYCETE:
-    {
         return fedhas_grow_ballistomycete(fail);
-
-        break;
-    }
 
     case ABIL_FEDHAS_OVERGROW:
     {
@@ -2815,11 +2808,7 @@ static spret _do_ability(const ability_def& abil, bool fail)
     }
 
     case ABIL_FEDHAS_GROW_OKLOB:
-    {
         return fedhas_grow_oklob(fail);
-
-        break;
-    }
 
     case ABIL_TRAN_BAT:
     {
