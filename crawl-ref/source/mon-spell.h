@@ -2278,7 +2278,7 @@ static const mon_spellbook mspell_list[] =
       {
         { SPELL_ISKENDERUNS_MYSTIC_BLAST, 13, MON_SPELL_WIZARD },
         { SPELL_BATTLESPHERE, 13, MON_SPELL_WIZARD },
-        { SPELL_IOOD, 130, MON_SPELL_WIZARD },
+        { SPELL_IOOD, 13, MON_SPELL_WIZARD },
         { SPELL_MESMERISE, 36, MON_SPELL_WIZARD },
       }
     },
