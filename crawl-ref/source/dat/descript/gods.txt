@@ -179,8 +179,8 @@ the Great Wyrm
 
 The Great Wyrm, also called as 'Wyrm-bites-itself', is an wise and elder
 deity of alchemy, the arts of distillations. The Great Wyrm will distillate
-beneficial effects from corpses from foes, as a form of potions. Followers
-can transmute their potions into unique essences, to infuse a target and
+beneficial effects from corpses of foes, as a form of potions. Followers
+can transmute their potions into unique essences to infuse a target and
 cause various effects; leaving miasma on target's trail, stunning target
 when enchanted, empowering accuracy and spells of target, and diffusing
 other infusions which target has.
@@ -335,8 +335,8 @@ magical beams. Instead, Imus Thea demands worshippers become mirror, and project
 more wider world, because those projections make domain of mirror-god more wider.
 If they accept the aspect of mirror, their bodies become fragile and unable to
 wear heavy armours and any kinds of shields, and lose accuracy when using two-handed
-weapons. Nevertheless, those who accept these will able to blinds enemies with
-prismatic prism, and able to shatter themselves to duplicate themselves.
+weapons. Nevertheless, those who accept these will be able to blind enemies with
+prismatic prism and shatter themselves to duplicate themselves.
 %%%%
 Jiyva powers
 

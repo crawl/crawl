@@ -1410,6 +1410,7 @@ TILE_EQ:  jaws
 ANGRY:    5
 INSCRIP:  vamp, devour, FastMet
 BOOL:     evil, curse
+VALUE:    500
 
 ENUM:     INVDRAGON
 NAME:     scales of the Unseen Dragon

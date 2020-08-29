@@ -3565,7 +3565,7 @@ w:50
 
 @The_monster@ says, "You look ridiculous with all that flailing around."
 %%%%
-Wu Jian Council Donald
+Wu Jian Donald
 
 w:50
 @_generic_Donald_@
@@ -3581,6 +3581,60 @@ w:50
 @The_monster@ says, "Don't you get tired of all these old geezers telling you what to do?"
 
 @The_monster@ says, "No way as a way? Sounds like nonsense."
+%%%%
+the Great Wyrm Donald
+
+w:50
+@_generic_Donald_@
+
+@The_monster@ says, "I hate potions"
+
+@The_monster@ says, "I hate snakes"
+
+@The_monster@ says, "Extracting potions from corpses? Disgusting."
+
+@The_monster@ says, "Can you make me some coffee? I think it's easier than making potions."
+
+@The_monster@ says, "Why don't you just make gold instead of bitter medicines?"
+
+@The_monster@ says, "Nigredo? More like stinky, lethal fart."
+
+%%%%
+Imus Thea Donald
+
+w:50
+@_generic_Donald_@
+
+@The_monster@ says, "I hate mirrors"
+
+@The_monster@ says, "You are too glittering. I hate that."
+
+@The_monster@ says, "Hey, it looks like you need shield. Take mine if you can."
+
+@The_monster@ says, "Reflect on yourself? Even my mama didn't speak like that."
+
+@The_monster@ says, "You could just use any shield of reflection, couldn't you?"
+
+@The_monster@ says, "Stop and stay still. I have to shave myself."
+
+%%%%
+Legion from beyond Donald
+
+w:50
+@_generic_Donald_@
+
+@The_monster@ says, "I hate summoners"
+
+@The_monster@ says, "Where is the BEYOND?"
+
+@The_monster@ says, "You need the God to order your minions? What a leadership."
+
+@The_monster@ says, "Hold your position! Protect your cowardly master!"
+
+@The_monster@ says, "Can I loot a helmet from you? I know such goblin with a bunch of minions"
+
+w:5
+@The_monster@ says, "To infinity and beyond!"
 %%%%
 No God Donald
 
@@ -3673,6 +3727,9 @@ VISUAL:@The_monster@ shakes @possessive@ head.
 
 w:1
 @The_monster@ says, "What kind of a name is Fauntleroy?"
+
+w:1
+@The_monster@ says, "What kind of a name is Kimchi?"
 
 w:1
 @The_monster@ says, "What's the big idea?!"
