@@ -6420,12 +6420,8 @@ ENDMAP
 # Erysichthon's Jaw
 #
 NAME:  ukdong_guarded_unrand_jaws
-DEPTH: Depths, Crypt:1-2
-: if you.in_branch("Depths") then
-TILE: c = wall_stone_dark
-: else
-TILE: c = wall_crypt
-: end
+DEPTH: Depths, Crypt:1-2 
+TILE: Z = wall_crypt
 WEIGHT: 5
 FTILE: dSV456.? = floor_crypt
 TAGS:  no_monster_gen no_item_gen transparent
@@ -6437,7 +6433,10 @@ MONS:  necrophage / place:Vaults:$ skeleton, ghoul, flayed ghost, curse skull, r
 SUBST: ? = 1:20 2:20 3 .:5
 : end
 KPROP: dSV456.? = no_tele_into
-KPROP: Sc = bloody
+SUBST: Z = CCc
+KPROP: C = bloody
+SUBST: C = c
+KPROP: S = bloody
 ITEM:  Erysichthon's_Jaw  no_pickup
 {{
   dgn.delayed_decay(_G, 'Z', "human skeleton / orc skeleton / elf skeleton"
@@ -6448,19 +6447,19 @@ ITEM:  Erysichthon's_Jaw  no_pickup
 SUBST: S = Z:15 .
 MAP
 ...............
-.cccncccccnccc.
-.c?c?c?c?c?c?c
-.ccSSSSSSSSScc.
-.c?SVSSSSSVS?c.
-.ccSScc=ccSScc.
-.c?SSc.6.cSS?c.
-.ccSVc4d4cVScc.
-.c?SSc.5.cSS?c.
-.ccSSccnccSScc.
-.c?SVSSVSSVS?c.
-.ccSSSSSSSSScc.
-.c?c?cS.Sc?c?c.
-.cccncc+ccnccc.
+.ZZZnZZZZZnZZZ.
+.Z?Z?Z?Z?Z?Z?Z.
+.ZZSSSSSSSSSZZ.
+.Z?SVSSSSSVS?Z.
+.ZZSSZZ=ZZSSZZ.
+.Z?SSZ.6.ZSS?Z.
+.ZZSVZ4d4ZVSZZ.
+.Z?SSZ.5.ZSS?Z.
+.ZZSSZZnZZSSZZ.
+.Z?SVSSVSSVS?Z.
+.ZZSSSSSSSSSZZ.
+.Z?Z?ZZ.SZ?Z?Z.
+.ZZZnZZ+ZZnZZZ.
 ...............
 ENDMAP
 
