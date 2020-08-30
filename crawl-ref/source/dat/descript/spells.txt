@@ -663,7 +663,7 @@ Flame Strike spell
 Infuses the blazing flame into the weapon held by the caster. Attacking with 
 this infusion will cause the furious outburst of the flame upon victims. Each
 explosion drains the caster's reserves of magical energy and after the effect
-expires their magic regeneration it inhibited for a short time of duration. 
+expires their magic regeneration is inhibited for a short time of duration. 
 The amount of magical energy spent upon each attack depends on attack speed 
 and maximumim magic capacity.
 %%%%
