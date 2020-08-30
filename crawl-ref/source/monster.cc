@@ -3818,7 +3818,7 @@ int monster::res_water_drowning() const
     if (is_unbreathing())
         rw++;
 
-    habitat_type hab = mons_habitat(*this);
+    habitat_type hab = mons_habitat(*this, true);
     if (hab == HT_WATER || hab == HT_AMPHIBIOUS)
         rw++;
 
