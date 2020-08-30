@@ -4388,6 +4388,16 @@ static const struct spell_desc spelldata[] =
     TILEG_FULMINANT_PRISM,
 },
 {
+    SPELL_SUMMON_HOODED_MALICE, "Summon Hooded Malice",
+    spschool::summoning | spschool::necromancy,
+    spflag::mons_abjure,
+    6,
+    200,
+    -1, -1,
+    5, 0,
+    TILEG_SUMMON_HOODED_MALICE,
+},
+{
     SPELL_NO_SPELL, "nonexistent spell",
     spschool::none,
     spflag::testing,
