@@ -572,12 +572,6 @@ Electrical Bolt spell
 
 Throws a bolt of electricity at the target, with high accuracy.
 %%%%
-Elemental Weapon spell
-
-Temporarily infuses the weapon held by the caster with the elemental essence.
-This essence will change to an element from the spell that the caster casted
-next, and increase damage and accuracyIt will not affect artefact weapons.
-%%%%
 Energy Bolt spell
 
 Fires a bolt of highly destructive energy. The range of the bolt is decreased
@@ -656,14 +650,6 @@ Summons demons of flame and damnation.
 Fireball spell
 
 Hurls an explosive ball of fire.
-%%%%
-Flame Strike spell
-
-Infuses the caster's attack with overheated magic, which is ready to release
-as a cone of devastating flame. This flame will be released from the target
-attacked by the caster, and consumes the caster's magic each attack. When the
-infusion is expired or the caster's magic is running out, overheated magic
-becomes unable to regenerate for a while.
 %%%%
 Flame Tongue spell
 
@@ -890,8 +876,7 @@ is dependent on the size of the target.
 %%%%
 Insulation spell
 
-Attunes the current flowing through the caster's body to resist from damage
-caused by electric shock.
+This spell protects the caster from electric shocks.
 %%%%
 Invisibility spell
 
