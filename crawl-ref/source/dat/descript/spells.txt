@@ -1610,6 +1610,12 @@ Summon Holies spell
 
 Calls forth divine warriors to aid the caster.
 %%%%
+Summon Hooded Malice spell
+
+Summon a wraith of fallen necromaners. It uses malicious arts to steal the
+life force from victim to heal its living allies(if the caster is living,
+also heals the caster), and responds with pain to attackers when its damaged.
+%%%%
 Summon Horrible Things spell
 
 Opens a gate to the Abyss and calls through one or more hideous abominations

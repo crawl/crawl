@@ -3565,6 +3565,7 @@ static const map<spell_type, summon_cap> summonsdata =
     { SPELL_SUMMON_LIGHTNING_SPIRE,     { 1, 2 } },
     { SPELL_SUMMON_GUARDIAN_GOLEM,      { 1, 2 } },
     { SPELL_SPELLFORGED_SERVITOR,       { 1, 2 } },
+    { SPELL_SUMMON_HOODED_MALICE,       { 1, 2 } },
     // Monster spells
     { SPELL_SUMMON_UFETUBUS,            { 8, 2 } },
     { SPELL_SUMMON_HELL_BEAST,          { 8, 2 } },
@@ -4125,6 +4126,25 @@ spret fragmentation(int power)
     const int fragment = max((you.hp/2)-1, 1);
     mon->hit_points = fragment;
     dec_hp(fragment, false);
+
+    return spret::success;
+}
+
+spret cast_summon_hooded_malice(int pow, bool fail)
+{
+    if (otr_stop_summoning_prompt())
+        return spret::abort;
+
+    fail_check();
+    const int dur = min(1 + (random2(pow) / 5), 3);
+    mgen_data malice = _pal_data(MONS_HOODED_MALICE, dur, GOD_NAMELESS,
+                                        SPELL_SUMMON_HOODED_MALICE);
+    malice.hd = max(1, div_rand_round(pow, 20));
+
+    if (create_monster(malice))
+        mpr("A hooded figure appears with its malice.");
+    else
+        canned_msg(MSG_NOTHING_HAPPENS);
 
     return spret::success;
 }

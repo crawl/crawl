@@ -1076,6 +1076,7 @@ void make_book_legion_gift(item_def &book, bool first)
                                          SPELL_SUMMON_MANA_VIPER);
         chosen_spells[2] = random_choose(SPELL_SHADOW_CREATURES,
                                          SPELL_SUMMON_ELEMENTAL,
+                                         SPELL_SUMMON_HOODED_MALICE,
                                          SPELL_MONSTROUS_MENAGERIE);
         chosen_spells[3] = random_choose(SPELL_SUMMON_GREATER_DEMON,
                                          SPELL_MALIGN_GATEWAY,

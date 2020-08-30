@@ -157,6 +157,7 @@ summon_mana_viper SUMMON_MANA_VIPER
 spellforged_servitor SPELLFORGED_SERVITOR
 summon_barricade SUMMON_BARRICADE
 summon_machine_golem SUMMON_MACHINE_GOLEM
+summon_hooded_malice SUMMON_HOODED_MALICE
 
 %sdir gui/spells/translocation
 apportation APPORTATION
