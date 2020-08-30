@@ -1438,6 +1438,12 @@ holy swine
 A rare celestial version of a usually filthy animal, said to be an angelic
 being who succumbed to hostile magic.
 %%%%
+hooded malice
+
+A kind of wraith, tortured soul of necromancer which is unable to die or live.
+Its necromantic arts are twisted by its suffering, become malicious, now used
+to heal living allies from stolen life force to watch the fall of victim.
+%%%%
 hound
 
 A fearsome hunting dog, lithe and alert.

@@ -903,6 +903,7 @@ freezing_wraith MONS_FREEZING_WRAITH
 phantasmal_warrior MONS_PHANTASMAL_WARRIOR
 %rim 1
 eidolon MONS_EIDOLON
+hooded_malice MONS_HOODED_MALICE
 
 ## Orb guardians ('X')
 %sdir mon/aberrations

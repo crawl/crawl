@@ -10,16 +10,17 @@ aptitudes:
   hp: -2
   mp_mod: 0
   mr: 3
-  maces_and_flails: -2
+  fighting: 1
   polearms: -3
   slings: -2
   bows: -3
   crossbows: -3
   throwing: -3
-  armour: -5
-  shields: -5
-  unarmed_combat: -1
+  armour: -1
+  dodging: 3
+  stealth: 1
   conjurations: -3
+  hexes: 1
   charms: 1
   necromancy: -1
   translocations: -3
@@ -31,12 +32,11 @@ aptitudes:
   evocations: -2
   invocations: 3
 size: small
-str: 8
-int: 7
+str: 6
+int: 9
 dex: 9
 levelup_stat_frequency: 5
 levelup_stats:
-  - str
   - int
   - dex
 mutations:
@@ -60,13 +60,15 @@ recommended_jobs:
   - JOB_SKALD
   - JOB_ENCHANTER
   - JOB_STALKER
+  - JOB_CRUSADER
   - JOB_WIZARD
   - JOB_SUMMONER
-  - JOB_NECROMANCER
   - JOB_VENOM_MAGE
 recommended_weapons:
   - SK_SHORT_BLADES
   - SK_LONG_BLADES
   - SK_AXES
+  - SK_MACES_FLAILS
   - SK_STAVES
+  - SK_UNARMED_COMBAT
 walking_verb: Flap

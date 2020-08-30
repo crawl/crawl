@@ -1977,6 +1977,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
 
     case SPELL_NOXIOUS_BOG:
         return cast_noxious_bog(powc, fail);
+
+    case SPELL_SUMMON_HOODED_MALICE:
+        return cast_summon_hooded_malice(powc, fail);
         
     // Enchantments.
     case SPELL_CONFUSING_TOUCH:

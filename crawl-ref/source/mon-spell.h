@@ -2465,6 +2465,12 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_HOODED_MALICE,
+      {
+       { SPELL_MALIGN_OFFERING, 66, MON_SPELL_WIZARD },
+      }
+    },
+
     // A monster that doesn't show up anywhere, for Arena testing.
     {  MST_TEST_SPAWNER,
       {

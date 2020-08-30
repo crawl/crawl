@@ -2295,6 +2295,10 @@ static void _malign_offering_effect(actor* victim, const actor* agent, int damag
         if (mons_aligned(agent, *ai) && !(ai->holiness() & MH_NONLIVING)
             && *ai != victim)
         {
+            int heal_amt = max(1, damage * 2 / 3);
+            if (ai->is_player())
+                heal_amt = min(heal_amt, 10);
+
             if (ai->heal(max(1, damage * 2 / 3)) && you.can_see(**ai))
             {
                 mprf("%s %s healed.", ai->name(DESC_THE).c_str(),
