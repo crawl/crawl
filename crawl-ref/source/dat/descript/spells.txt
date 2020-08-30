@@ -572,6 +572,13 @@ Electrical Bolt spell
 
 Throws a bolt of electricity at the target, with high accuracy.
 %%%%
+Elemental Weapon spell
+
+Increase the power of elemental to the weapons you are holding.
+gives a temporary brand and slaying bonus when using element magic during
+buff time.
+Can only be used for unbranded weapons.
+%%%%
 Energy Bolt spell
 
 Fires a bolt of highly destructive energy. The range of the bolt is decreased
@@ -650,6 +657,13 @@ Summons demons of flame and damnation.
 Fireball spell
 
 Hurls an explosive ball of fire.
+%%%%
+Flame Strike spell
+
+Put the flame insert in the weapon you're holding.
+When attacking during duration, use mana to give a fan-shaped fire 
+additional hit. After use, you becomes overheat and does not recover 
+mana. The mana used is determined by the attack speed and maximum mana.
 %%%%
 Flame Tongue spell
 

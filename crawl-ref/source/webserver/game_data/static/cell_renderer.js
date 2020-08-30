@@ -967,6 +967,16 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
                 this.draw_icon(icons.RECALL, x, y, -status_shift, 0);
                 status_shift += 9;
             }
+            if (fg.FROZEN)
+            {
+                this.draw_icon(icons.FROZEN, x, y, -status_shift, 0);
+                status_shift += 6;
+            }
+            if (fg.POSSESSABLE)
+            {
+                this.draw_icon(icons.POSSESSABLE, x, y, -status_shift, 0);
+                status_shift += 6; 
+            }
 
             // Anim. weap. and summoned might overlap, but that's okay
             if (fg.ANIM_WEP)
@@ -1026,6 +1036,11 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
                 this.draw_icon(icons.TRAVEL_PATH_TO +
                                ((cell.travel_trail & 0xF0) >> 4) - 1, x, y);
             }
+            if (fg.HOLD_POSITION)
+            {
+                this.draw_icon(icons.HOLD_POSITION, x, y);
+            }
+
 
             if (fg.MDAM_LIGHT)
                 this.draw_icon(icons.MDAM_LIGHTLY_DAMAGED, x, y);

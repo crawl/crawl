@@ -205,10 +205,13 @@ define(function () {
     fg_flags.flags.BOUND_SOUL   = [0, 0x200000];
     fg_flags.flags.INFESTED     = [0, 0x400000];
     fg_flags.flags.CORRODED     = [0, 0x800000];
-    fg_flags.flags.SWIFT        = [0, 0x1000000];
+    fg_flags.flags.SWIFT        = [0, 0x40];
+    fg_flags.flags.FROZEN       = [0, 0x1000000];
     fg_flags.flags.PINNED       = [0, 0x2000000];
     fg_flags.flags.VILE_CLUTCH  = [0, 0x4000000];
-    fg_flags.flags.CIGOTUVIS_FLAGUE = [0, 0x20000000];
+    fg_flags.flags.POSSESSABLE  = [0, 0x8000000];
+    fg_flags.flags.CIGOTUVIS_PLAGUE = [0, 0x20];
+    fg_flags.flags.HOLD_POSITION = [0, 0x10];
     // Three levels of poison in 2 bits.
     fg_flags.exclusive_flags.push({
         mask        : [0x00800000, 0x10000000],

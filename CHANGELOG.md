@@ -6,7 +6,22 @@
 
 ## [Unreleased]
 ### Added
+- 새로운 소환의 신 너머의 군단 추가. [상세설명](https://github.com/kimjoy2002/crawl/wiki/legion_from_beyond)
+  - New god: Legion from beyond, God of Summonnig.
+
 ### Changed
+- 추방이 경험치를 100% 주도록 변경
+  - Give full XP from banishment
+  
+- 골렘아머를 언데드도 사용할 수 있게 수정
+  - Golem Armours are able to use undead
+  
+- 새로운 신들에 대한 도날드 대사 추가
+  - add donald speak for new gods
+  
+- 미니 볼트 추가 및 복구 add and rollback mini vault
+  - ukdong_guarded_unrand_jaws, gammafunk_pakellas_cloud_experiment, gammafunk_pakellas_statue_experiment, gammafunk_pakellas_spire_experiment, gammafunk_pakellas_its_alive
+  
 ### Removed
 ### 0.26 Featrue
 
