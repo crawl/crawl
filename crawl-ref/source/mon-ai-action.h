@@ -22,32 +22,32 @@ namespace ai_action
     typedef const pair<bool,int> goodness; // TODO: replace with optional<int> in c++17
 
     /// Goodness value for an impossible action.
-    goodness impossible() { return goodness(false, INT_MIN); }
+    inline goodness impossible() { return goodness(false, INT_MIN); }
     /// Goodness values for possible actions of goodness `g`.
-    goodness possible(int g) { return goodness(true, g); }
+    inline goodness possible(int g) { return goodness(true, g); }
     /// Goodness value for a bad action (that is possible)
-    goodness bad() { return possible(-100); }
+    inline goodness bad() { return possible(-100); }
     /// The worst possible goodness value.
-    goodness worst() { return possible(INT_MIN); }
+    inline goodness worst() { return possible(INT_MIN); }
     /// Goodness value for a good action.
-    goodness good() { return possible(100); }
+    inline goodness good() { return possible(100); }
     /// Goodness value for a neutral action.
-    goodness neutral() { return possible(0); }
+    inline goodness neutral() { return possible(0); }
 
     /// Convert a bool to a goodness value by mapping true to good, and false
     /// to bad.
-    goodness good_or_bad(bool b) { return b ? good() : bad(); }
+    inline goodness good_or_bad(bool b) { return b ? good() : bad(); }
 
     /// Convert a bool to a goodness value by mapping true to good, and false
     /// to impossible.
-    goodness good_or_impossible(bool b) { return b ? good() : impossible(); }
+    inline goodness good_or_impossible(bool b) { return b ? good() : impossible(); }
 
     /// Is the action considered a possible action? This is a very low bound,
     /// and basically means the action won't crash.
     /// even INT_MIN counts as possible, as long as the first coordinate is true.
-    bool is_possible(goodness g) { return g >= worst(); }
+    inline bool is_possible(goodness g) { return g >= worst(); }
 
     /// Is the action viable? This is true if it is neutral or better.
     // TODO: allow adjusting this threshold? Would be useful at least for tests.
-    bool is_viable(goodness g) { return g >= neutral(); }
+    inline bool is_viable(goodness g) { return g >= neutral(); }
 }
