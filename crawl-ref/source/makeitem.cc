@@ -1618,22 +1618,23 @@ static bool _try_make_jewellery_unrandart(item_def& item, int force_type,
 }
 
 /**
- * A 'good' plus for stat rings is +6, for other rings it's +4.
+ * A 'good' plus for stat rings is GOOD_STAT_RING_PLUS, for other rings it's
+ * GOOD_RING_PLUS.
  *
  * @param subtype       The type of ring in question.
  * @return              4 or 6.
  *                      (minor numerical variations are boring.)
  */
-static int _good_jewellery_plus(int subtype)
+static short _good_jewellery_plus(int subtype)
 {
     switch (subtype)
     {
         case RING_STRENGTH:
         case RING_DEXTERITY:
         case RING_INTELLIGENCE:
-            return 6;
+            return GOOD_STAT_RING_PLUS;
         default:
-            return 4;
+            return GOOD_RING_PLUS;
     }
 }
 
@@ -1643,13 +1644,13 @@ static int _good_jewellery_plus(int subtype)
  * @param subtype       The type of ring in question.
  * @return              A 'plus' for that ring. 0 for most types.
  */
-static int _determine_ring_plus(int subtype)
+static short _determine_ring_plus(int subtype)
 {
     if (!jewellery_type_has_plusses(subtype))
         return 0;
 
     if (one_chance_in(5)) // 20% of such rings are cursed {dlb}
-        return -4;
+        return BAD_RING_PLUS;
     return _good_jewellery_plus(subtype);
 }
 
