@@ -410,6 +410,10 @@ base/octopode1 SP_RECOMMENDED_OCTOPODE
 %compose body/animal_skin
 %compose hair/elf_yellow
 %finish SP_RECOMMENDED_MELIAI
+%start
+%compose base/wight
+%compose body/animal_skin
+%finish SP_RECOMMENDED_WIGHT
 %syn LAST_RECOMMENDED_SPECIES
 
 %sdir gui/backgrounds
@@ -453,4 +457,5 @@ enum:SP_RECOMMENDED_CRUSTACEAN SP_CRUSTACEAN
 enum:SP_RECOMMENDED_HYDRA SP_HYDRA
 enum:SP_RECOMMENDED_HOMUNCULUS SP_HOMUNCULUS
 enum:SP_RECOMMENDED_MELIAI SP_MELIAI
+enum:SP_RECOMMENDED_WIGHT SP_WIGHT
 %syn LAST_SPECIES

@@ -359,6 +359,9 @@ static const ability_def Ability_List[] =
     { ABIL_CARAVAN_REHIRE, "Rehire Mercenary",
         0, 0, 0, 0, {}, abflag::gold | abflag::starve_ok },
 
+    { ABIL_BURIALIZE, "Burialize Weapon", 0, 0, 0, 0, {},
+        abflag::starve_ok | abflag::skill_drain },
+
     // EVOKE abilities use Evocations and come from items.
     // Teleportation and Blink can also come from mutations
     // so we have to distinguish them (see above). The off items
@@ -2274,6 +2277,67 @@ static spret _do_ability(const ability_def& abil, bool fail)
 
     case ABIL_ADAPTION:
        return _homunculus_blossom_or_adaption(SP_ADAPTION_HOMUNCULUS);
+
+    case ABIL_BURIALIZE:
+    {
+        if (!you.weapon() || you.weapon()->base_type != OBJ_WEAPONS)
+        {
+            mpr("you need to wield a weapon to use this ability.");
+            return spret::abort;
+        }
+
+        item_def *wpn = you.weapon();
+        int enchant = max(3, you.experience_level/3);
+
+        string prompt = "Do you wish to have " + wpn->name(DESC_YOUR)
+                           + " cursed and enchanted?";
+        if (wpn->props.exists("wight_key"))
+            prompt += " Enchantments will be overwritten.";  
+
+        if (!yesno(prompt.c_str(), true, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return spret::abort;
+        }
+
+        if (wpn->props.exists("wight_key"))
+        {
+            int overwrite = max(wpn->props["wight_key"].get_int(),
+                                        you.experience_level/3);
+            
+            for (int i = wpn->props["wight_key"].get_int(); i > 0; i--)
+            {
+                wpn->plus--;
+            }
+            for (int ii = overwrite; ii > 0; ii--)
+            {
+                wpn->plus++;
+            }
+            wpn->props["wight_key"] = overwrite;
+        }
+        else
+        {
+            for (int iii = enchant; iii > 0; iii--)
+            {
+                wpn->plus++;
+            }
+            wpn->props["wight_key"] = enchant;
+        }
+
+        if (!wpn->cursed())
+            do_curse_item(*you.weapon(), false);
+
+        flash_view(UA_PLAYER, LIGHTBLUE);
+#ifndef USE_TILE_LOCAL
+        // Allow extra time for the flash to linger.
+        scaled_delay(1000);
+#endif
+        you.wield_change = true;
+        drain_player(120, false, true);
+        mprf("%s is now bound in your memories.",
+            wpn->name(DESC_YOUR).c_str());
+        break;
+    }
 
     case ABIL_CARAVAN_GIFT_ITEM:
     {
@@ -4639,6 +4703,9 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
 
     if (you.get_mutation_level(MUT_HOP))
         _add_talent(talents, ABIL_HOP, check_confused);
+
+    if (you.get_mutation_level(MUT_CURSE_WEAPON))
+        _add_talent(talents, ABIL_BURIALIZE, check_confused);
 
     // Spit Poison, possibly upgraded to Breathe Poison.
     if (you.get_mutation_level(MUT_SPIT_POISON) == 2)

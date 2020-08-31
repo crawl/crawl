@@ -229,6 +229,13 @@ Cloud Miasma ability
 
 emits a cloud of miasma from your body.
 %%%%
+#Wight
+Burialize Weapon ability
+
+Costs your memories of battle, causing drain yourself. Curse a weapon you wield
+and enchant it. The higher your level, the higher this enchantments becomes.
+This is one of ways to over-enchant, and the only way to enchant artefacts.
+%%%%
 # Zin
 Recite ability
 

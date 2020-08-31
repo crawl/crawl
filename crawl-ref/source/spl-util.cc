@@ -1369,6 +1369,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             || you.species == SP_GHOUL
             || you.species == SP_MUMMY
             || you.species == SP_LICH
+            || you.species == SP_WIGHT
             || you.species == SP_DJINNI
             || you.species ==  SP_ADAPTION_HOMUNCULUS
             || (temp && !form_can_bleed(you.form)))
