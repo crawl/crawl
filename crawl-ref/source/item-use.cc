@@ -2979,9 +2979,13 @@ void drink(item_def* potion)
         return;
     }
 
-    if (you.duration[DUR_NO_POTIONS])
+    if (you.species == SP_MUMMY || you.species == SP_LICH ||  you.species == SP_WIGHT)
     {
-        mpr("You cannot drink potions in your current state!");
+        if (you.duration[DUR_NO_POTIONS])
+            mpr("You cannot drink potions in your current state!");
+        else
+            mpr("you cannot drink!");
+
         return;
     }
     

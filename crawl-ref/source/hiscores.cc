@@ -2233,7 +2233,7 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
         {
             if (terse)
                 desc = "fell apart";
-            else if (race == SP_MUMMY || you.species == SP_LICH)
+            else if (race == SP_MUMMY || race == SP_LICH || race == SP_WIGHT)
                 desc = "Soaked and fell apart";
             else
                 desc = "Sank and fell apart";

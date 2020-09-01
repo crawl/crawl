@@ -402,10 +402,10 @@ static void _good_potion_or_scroll()
         { { OBJ_SCROLLS, SCR_BLINKING },
             you.species == SP_FORMICID ? 0 : 1 },
         { { OBJ_POTIONS, POT_HEAL_WOUNDS },
-            (you.species == SP_MUMMY
+            (you.species == SP_MUMMY || you.species == SP_LICH ||  you.species == SP_WIGHT
              || you.species == SP_VINE_STALKER) ? 0 : 1 },
         { { OBJ_POTIONS, POT_HASTE },
-            you.species == SP_MUMMY ? 0 : 1 },
+            you.species == SP_MUMMY || you.species == SP_LICH ||  you.species == SP_WIGHT ? 0 : 1 },
         { { OBJ_POTIONS, POT_BERSERK_RAGE },
             (you.species == SP_FORMICID
              || you.is_lifeless_undead(false)) ? 0 : 1},
@@ -430,7 +430,7 @@ static void _decent_potion_or_scroll()
         { { OBJ_SCROLLS, SCR_TELEPORTATION },
             you.species == SP_FORMICID ? 0 : 1 },
         { { OBJ_POTIONS, POT_CURING },
-            you.species == SP_MUMMY ? 0 : 1 },
+            you.species == SP_MUMMY || you.species == SP_LICH ||  you.species == SP_WIGHT ? 0 : 1 },
         { { OBJ_POTIONS, POT_LIGNIFY },
             you.is_lifeless_undead(false) ? 0 : 1 },
     };

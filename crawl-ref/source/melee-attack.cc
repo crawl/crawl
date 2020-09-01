@@ -654,6 +654,35 @@ bool melee_attack::handle_phase_hit()
     // Check for weapon brand & inflict that damage too
     apply_damage_brand();
 
+    // for SP_WIGHT
+    if (attacker->is_player() && you.species == SP_WIGHT
+        && you.has_mutation(MUT_NEGATIVE_ENERGY_ATTACK))
+    {
+        if (defender->holiness() & MH_NATURAL)
+        {
+            const int neg_dmg = random2(max(1, you.experience_level/9))
+                        * you.get_mutation_level(MUT_NEGATIVE_ENERGY_ATTACK);
+            
+            special_damage = resist_adjust_damage(defender, BEAM_NEG, 1 + neg_dmg);
+            
+            if (defender->drain_exp(attacker, true, 10 + neg_dmg))
+            {
+                if (defender->is_player())
+                    obvious_effect = true;
+                else if (defender_visible)
+                {
+                    special_damage_message =
+                        make_stringf(
+                            "%s %s %s%s",
+                            atk_name(DESC_THE).c_str(),
+                            attacker->conj_verb("drain").c_str(),
+                            defender_name(true).c_str(),
+                            attack_strength_punctuation(special_damage).c_str());
+                }
+            }
+        }
+    }
+
     // Fireworks when using Serpent's Lash to kill.
     if (!defender->alive()
         && defender->as_monster()->can_bleed()

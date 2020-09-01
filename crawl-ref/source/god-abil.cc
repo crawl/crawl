@@ -3684,7 +3684,7 @@ bool gozag_call_merchant()
         // first index.
         if (type == SHOP_FOOD)
             continue;
-        if (type == SHOP_DISTILLERY && (you.species == SP_MUMMY || you.species == SP_LICH))
+        if (type == SHOP_DISTILLERY && (you.species == SP_MUMMY || you.species == SP_LICH ||  you.species == SP_WIGHT))
             continue;
         if (type == SHOP_EVOKABLES && you.get_mutation_level(MUT_NO_ARTIFICE))
             continue;
@@ -4380,7 +4380,7 @@ static mutation_type _random_valid_sacrifice(const vector<mutation_type> &muts)
         }
 
         // No potion heal doesn't affect mummies since they can't quaff potions
-        if (mut == MUT_NO_DEVICE_HEAL && you.species == SP_MUMMY)
+        if (mut == MUT_NO_DEVICE_HEAL && you.species == SP_MUMMY || you.species == SP_LICH ||  you.species == SP_WIGHT)
             continue;
 
         // The Grunt Algorithm

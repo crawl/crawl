@@ -101,6 +101,7 @@ homunculus HOMUNCULUS
 homunculus_blossom BLOSSOM_HOMUNCULUS
 homunculus_adaption ADAPTION_HOMUNCULUS
 meliai MELIAI
+wight WIGHT
 
 # draconians
 draconian_f DRACONIAN DRACONIAN_FIRST

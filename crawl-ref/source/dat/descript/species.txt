@@ -191,3 +191,11 @@ Small hybrids of human and bee with a sharp stinger. Their buzzing wings
 move very fast, but require lots of calorie. Due to their instinct to
 serve higher beings(like a queen of hive), they are naturally faithful.
 %%%%
+Wight
+
+Wights are an ancient warriors animated as undead. Since they are actually
+a skeleton, potions can't affect them. Thier skills to fight are weathering,
+also casting a spells except ice magic and necromancy. However, they can use
+negative energy to infuse their melee attacks, and enchant weapon by cursing
+them in price for memory.
+%%%%

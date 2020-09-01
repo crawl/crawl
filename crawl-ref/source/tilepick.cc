@@ -3538,6 +3538,8 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_DEPLOY_SHIELD;
     case ABIL_GOLEM_FORM:
         return TILEG_ABILITY_GOLEM_FORM;
+    case ABIL_BURIALIZE:
+        return TILEG_ABILITY_BURIALIZE;
 
     // Divine abilities
     // Zin
@@ -4083,6 +4085,8 @@ static tileidx_t _tileidx_player_species_base(const species_type species)
             return TILEG_SP_HOMUNCULUS;
         case SP_MELIAI:
             return TILEG_SP_MELIAI;
+        case SP_WIGHT:
+            return TILEG_SP_WIGHT;
         default:
             return TILEP_ERROR;
     }
