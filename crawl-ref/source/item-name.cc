@@ -1114,7 +1114,8 @@ static string misc_type_name(int type)
     case MISC_XOMS_CHESSBOARD:           return "removed chess piece";
 #endif
     case MISC_BAG:                       return "bag";
-    case MISC_TIN_OF_TREMORSTONES:               return "tin of tremorstones";
+    case MISC_TIN_OF_TREMORSTONES:       return "tin of tremorstones";
+    case MISC_MERCENARY:                 return "mercenary";
 
     default:
         return "buggy miscellaneous item";

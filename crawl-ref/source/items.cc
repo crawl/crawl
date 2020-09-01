@@ -4056,6 +4056,8 @@ colour_t item_def::miscellany_colour() const
 #endif
         case MISC_TIN_OF_TREMORSTONES:
             return BROWN;
+        case MISC_MERCENARY:
+            return BROWN;
         case MISC_QUAD_DAMAGE:
             return ETC_DARK;
         case MISC_ZIGGURAT:

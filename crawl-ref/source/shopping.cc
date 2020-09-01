@@ -749,6 +749,10 @@ unsigned int item_value(item_def item, bool ident)
             valued += 5000;
             break;
 
+        case MISC_MERCENARY:
+            valued += 1000;
+            break;
+
         case MISC_FAN_OF_GALES:
         case MISC_PHIAL_OF_FLOODS:
         case MISC_LAMP_OF_FIRE:
@@ -1535,6 +1539,8 @@ string shop_type_name(shop_type type)
             return "Distillery";
         case SHOP_GENERAL:
             return "General Store";
+        case SHOP_MERCENARY:
+            return "Tavern";
         default:
             return "Bug";
     }
@@ -1544,7 +1550,8 @@ static const char *_shop_type_suffix(shop_type type, const coord_def &where)
 {
     if (type == SHOP_GENERAL
         || type == SHOP_GENERAL_ANTIQUE
-        || type == SHOP_DISTILLERY)
+        || type == SHOP_DISTILLERY
+        || type == SHOP_MERCENARY)
     {
         return "";
     }
@@ -1629,6 +1636,7 @@ static const char *shop_types[] =
     "distillery",
     "scroll",
     "general",
+    "mercenary"
 };
 
 /** What shop type is this?

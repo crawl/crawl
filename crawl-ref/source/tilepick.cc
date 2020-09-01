@@ -142,6 +142,7 @@ tileidx_t tileidx_shop(const shop_struct *shop)
             return TILE_SHOP_POTIONS;
         case SHOP_GENERAL:
         case SHOP_GENERAL_ANTIQUE:
+        case SHOP_MERCENARY:
             return TILE_SHOP_GENERAL;
         default:
             return TILE_DNGN_ERROR;
@@ -2617,6 +2618,9 @@ static tileidx_t _tileidx_misc(const item_def &item)
 
     case MISC_TIN_OF_TREMORSTONES:
         return TILE_MISC_TIN_OF_TREMORSTONES;
+
+    case MISC_MERCENARY:
+        return TILE_ERROR; //FIXME
 
 #if TAG_MAJOR_VERSION == 34
     case MISC_BUGGY_LANTERN_OF_SHADOWS:

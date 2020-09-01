@@ -5676,6 +5676,11 @@ static int _make_delicious_corpse()
     return corpse->index();
 }
 
+static int _make_mercenary()
+{
+    return items(true, OBJ_MISCELLANY, MISC_MERCENARY, ISPEC_GOOD_ITEM);
+}
+
 /**
  * Create an item and place it in a shop.
  *
@@ -5726,6 +5731,10 @@ static void _stock_shop_item(int j, shop_type shop_type_,
                  && you.species == SP_GHOUL)
         {
             item_index = _make_delicious_corpse();
+        }
+        else if (shop_type_ == SHOP_MERCENARY)
+        {
+            item_index = _make_mercenary();
         }
         else
         {
@@ -5856,6 +5865,9 @@ object_class_type item_in_shop(shop_type shop_type)
 
     case SHOP_SCROLL:
         return OBJ_SCROLLS;
+
+    case SHOP_MERCENARY:
+        return OBJ_MISCELLANY;
 
     default:
         die("unknown shop type %d", shop_type);
