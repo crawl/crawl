@@ -2222,6 +2222,63 @@ static void _torpor_snail_slow(monster* mons)
     }
 }
 
+/**
+ *  Make this monster use the magic of a holy lantern. (Vaud).
+ *
+ *  @param mons       The monster holding the lantern.
+ */
+static void _vaud_lantern_burn(monster *mons)
+{
+    //hurt player
+    //check in range and in LOS
+    if (cell_see_cell(you.pos(), mons->pos(), LOS_SOLID_SEE)
+        && grid_distance(mons->pos(), you.pos()) < 4)
+    {
+        //check divine protection
+        if (!is_good_god(you.religion)
+            && !is_sanctuary(you.pos()))
+        {
+            //deal holy flavoured damage
+            targeter_radius hitfunc(mons, LOS_SOLID);
+            flash_view_delay(UA_MONSTER, YELLOW, 100, &hitfunc);
+
+            if (you.undead_state() != US_ALIVE)
+            {
+                mprf("Vaud's lantern begins to melt your undead flesh!");
+            } else
+            {
+                mprf("Vaud's lantern burns you!");
+            }
+
+            you.hurt(mons, 2 + random2avg(3, 2), BEAM_HOLY, KILLED_BY_BEAM,
+              "", "by cleansing holy light");
+
+        } else if (you_worship(GOD_SHINING_ONE))
+        {
+            mprf("The Shining One protects you from the holy light.");
+        } else if (you_worship(GOD_ZIN))
+        {
+            mprf("Zin protects you from the holy light.");
+        } else if (you_worship(GOD_ELYVILON))
+        {
+            mprf("Elyvilon protects you from the holy light.");
+        }
+    }
+
+    //hurt vaud's non-holy enemies
+    for (radius_iterator ri(mons->pos(), LOS_RADIUS, C_SQUARE); ri; ++ri)
+    {
+        monster *m = monster_at(*ri);
+        if (m && cell_see_cell(mons->pos(), *ri, LOS_SOLID_SEE)
+            && !mons_aligned(mons, m) && m->holiness()!= MH_HOLY)
+        {
+            simple_monster_message(*m->as_monster(), " is burned by holy light!");
+            m->hurt(mons, 9 + random2avg(7, 2), BEAM_HOLY, KILLED_BY_BEAM,
+              "", "by cleansing holy light");
+        }
+    }
+}
+
 static void _post_monster_move(monster* mons)
 {
     if (invalid_monster(mons))
@@ -2237,6 +2294,9 @@ static void _post_monster_move(monster* mons)
 
     if (mons->type == MONS_TORPOR_SNAIL)
         _torpor_snail_slow(mons);
+
+    if (mons->type == MONS_VAUD)
+        _vaud_lantern_burn(mons);
 
     if (mons->type == MONS_WATER_NYMPH)
     {
