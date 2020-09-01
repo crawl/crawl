@@ -1766,15 +1766,6 @@ static void _generate_mercenary_item(item_def& item)
         20, MONS_MERC_WITCH,
         20, MONS_MERC_BRIGAND,
         20, MONS_MERC_SHAMAN);
-
-    if (item.props.exists(MERCENARY_UNIT_KEY)) {
-        mprf("t %d", item.props[MERCENARY_UNIT_KEY].get_int());
-    }
-    else {
-        mpr("t0");
-    }
-
-    item.props[MERCENARY_NAME_KEY].get_string() = "test";
 }
 static void _generate_misc_item(item_def& item, int force_type)
 {
