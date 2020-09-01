@@ -714,8 +714,6 @@ public:
         m_state = process_map_command(cmd, m_state);
         if (!m_state.map_alive)
             return;
-        if (map_bounds(m_state.lpos.pos))
-            m_state.lpos.pos = m_state.lpos.pos.clamped(known_map_bounds());
 
         if (m_state.lpos.id != level_id::current())
             goto_level();
