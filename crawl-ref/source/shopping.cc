@@ -750,7 +750,7 @@ unsigned int item_value(item_def item, bool ident)
             break;
 
         case MISC_MERCENARY:
-            valued += 1000;
+            valued += 500;
             break;
 
         case MISC_FAN_OF_GALES:

@@ -2390,10 +2390,10 @@ bool evoke_item(int slot)
             else if (_ball_of_energy())
                 practise_evoking(1);
             break;
-	case MISC_DISC_OF_STORMS:
-	    if (disc_of_storms())
-		    practise_evoking(1);
-	    break;
+        case MISC_DISC_OF_STORMS:
+            if (disc_of_storms())
+                practise_evoking(1);
+            break;
         case MISC_LIGHTNING_ROD:
             if (!evoker_charges(item.sub_type))
             {

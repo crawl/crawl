@@ -73,6 +73,7 @@
 #include "items.h"
 #include "item-status-flag-type.h"
 #include "item-use.h"
+#include "jobs.h"
 #include "level-state-type.h"
 #include "libutil.h"
 #include "luaterp.h"
@@ -632,77 +633,6 @@ static void _try_to_respawn_ancestor()
 }
 
 
-/**
- * JOB_CARAVAN has starting mercenary
- */
-static void _try_to_spawn_mercenary()
-{
-    const monster_type merctypes[] =
-    {
-        MONS_MERC_FIGHTER, MONS_MERC_SKALD,
-        MONS_MERC_WITCH, MONS_MERC_BRIGAND,
-        MONS_MERC_SHAMAN,
-    };
-
-    int merc;
-    monster* mon;
-
-    merc = you.props[CARAVAN_MERCENARY].get_int() > 0 ? you.props[CARAVAN_MERCENARY].get_int() - 1: random2(4);
-    ASSERT(merc < (int)ARRAYSZ(merctypes));
-
-    mgen_data mg(merctypes[merc], BEH_FRIENDLY,
-        you.pos(), MHITYOU, MG_FORCE_BEH, you.religion);
-
-    mg.extra_flags |= (MF_HARD_RESET);
-
-    monster tempmon;
-    tempmon.type = merctypes[merc];
-    if (give_monster_proper_name(tempmon, false))
-        mg.mname = tempmon.mname;
-    else
-        mg.mname = make_name();
-    // This is used for giving the merc better stuff in mon-gear.
-    mg.props["caravan_mercenary items"] = true;
-
-    mon = create_monster(mg);
-
-    if (!mon)
-        return;
-
-    mon->props["dbname"].get_string() = mons_class_name(merctypes[merc]);
-    redraw_screen();
-
-    for (mon_inv_iterator ii(*mon); ii; ++ii)
-        ii->flags &= ~ISFLAG_SUMMONED;
-    mon->flags &= ~MF_HARD_RESET;
-    mon->attitude = ATT_FRIENDLY;
-    mons_att_changed(mon);
-    add_companion(mon);
-
-    item_def* weapon = mon->mslot_item(MSLOT_WEAPON);
-    const bool staff = weapon->base_type == OBJ_STAVES;
-    if (staff){
-        mon->spells.clear();
-        switch (weapon->sub_type)
-        {
-            case STAFF_FIRE:
-                mon->spells.emplace_back(SPELL_THROW_FLAME, 80, MON_SPELL_WIZARD);
-                break;
-            case STAFF_COLD:
-                mon->spells.emplace_back(SPELL_THROW_FROST, 80, MON_SPELL_WIZARD);
-                break;
-            case STAFF_AIR:
-                mon->spells.emplace_back(SPELL_SHOCK, 80, MON_SPELL_WIZARD);
-                break;
-            default:
-                break;
-        }
-    }
-
-    simple_monster_message(*mon, " follows you as a mercenary.");
-    you.props.erase(CARAVAN_MERCENARY);
-    you.props[CARAVAN_MERCENARY_SPAWNED] = true;
-}
 
 
 /**
@@ -994,7 +924,7 @@ static void _decrement_durations()
 
     if (you.props[CARAVAN_MERCENARY].get_int() > 0)
     {
-        _try_to_spawn_mercenary();
+        try_to_spawn_mercenary();
     }
 
     if (you.duration[DUR_WALL_MELTING])

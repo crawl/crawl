@@ -21,3 +21,5 @@ void job_stat_init(job_type job);
 void debug_jobdata();
 job_type random_starting_job();
 bool is_starting_job(job_type job);
+
+void try_to_spawn_mercenary(int merc_type = -1);
