@@ -48,7 +48,8 @@ void give_specific_item(monster* mon, int thing)
     mthing.pos.reset();
     mthing.link = NON_ITEM;
 
-    if (mon->undead_or_demonic() || mon->god == GOD_YREDELEMNUL)
+    if ((mon->undead_or_demonic() || mon->god == GOD_YREDELEMNUL)
+        && !(mon->type == MONS_VAUD)) //thematic exemption
     {
         convert2bad(mthing);
         if (get_weapon_brand(mthing) == SPWPN_HOLY_WRATH)
@@ -924,6 +925,16 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
               { SPWPN_HOLY_WRATH,      3 },
               { SPWPN_DISTORTION,      2 },
               { SPWPN_CHAOS,           1 }, },
+        } },
+        { MONS_VAUD, {
+            { { WPN_FLAIL,          35},    //Total weight 100
+              { WPN_MORNINGSTAR,    24},
+              { WPN_LONG_SWORD,     20},
+              { WPN_SCIMITAR,       20},
+              { WPN_TRISHULA,       1},},
+            { 1, 1, 2 },
+            { { SPWPN_HOLY_WRATH, 9 },      //Total weight 10
+              { SPWPN_FLAMING, 1 } },
         } },
     };
 

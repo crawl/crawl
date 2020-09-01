@@ -1005,6 +1005,8 @@ water_nymph MONS_WATER_NYMPH
 bog_body MONS_BOG_BODY
 necrophage MONS_NECROPHAGE
 ghoul MONS_GHOUL
+%sdir mon/unique
+vaud MONS_VAUD
 
 %sdir mon/unique
 blork_the_orc MONS_BLORK_THE_ORC

@@ -6187,6 +6187,48 @@ _Vashnia_nonnaga_
 @The_monster@ says to @possessive@ squad, "Do not let the @foe_genus@ escape!"
 ## END Vashnia ##
 %%%%
+############ VAUD ### The Cursed Lightbringer
+Vaud
+
+@_Vaud_common_@
+
+w:5
+@_Vaud_rare_@
+%%%%
+
+related Vaud
+
+@_Vaud_common_@
+
+w:7
+@_Vaud_rare_@
+%%%%
+_Vaud_common_
+
+VISUAL:@The_monster@ growls @at_foe@, "Candle burn us both."
+
+@The_monster@ shouts @at_foe@, "Burn the unclean!"
+
+@The_monster@ fumbles with @possessive@ lantern.
+
+VISUAL:@The_monster@ glares @at_foe@, a slow smile spreading across @possessive@ face.
+%%%%
+_Vaud_rare_
+@The_monster@ shouts, "UNCLEAN!"
+
+@The_monster@ shouts, "FILTHY!"
+
+@The_monster@ growls, "You smell UNCLEAN."
+
+@The_monster@ growls, "Mud on your ear. UNCLEAN!"
+
+@The_monster@ growls, "Grubby face. UNCLEAN!"
+
+@The_monster@ shouts, "BURN, dirty @foe_genus@"
+
+@The_monster@ is possessed by a divine voice, which belows "BURN IN MY DIVINE LIGHT"
+## END Vaud ##
+%%%%
 ############ XTAHUA ### An ancient fire dragon
 Xtahua
 

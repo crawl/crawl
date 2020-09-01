@@ -565,6 +565,8 @@ static int _mons_class_halo_radius(monster_type type)
         return 4;
     case MONS_DAEVA:
         return 4;
+    case MONS_VAUD:
+        return 3; //It's not actually Vaud, just his stolen lantern
     case MONS_OPHAN:
         return 6;
     case MONS_SERAPH:
@@ -586,7 +588,8 @@ int monster::halo_radius() const
     if (weap && is_unrandom_artefact(*weap, UNRAND_EOS))
         size = 3;
 
-    if (!(holiness() & MH_HOLY))
+    //It's Vaud's lantern which is holy, not him, however...
+    if (!(holiness() & MH_HOLY) && (type != MONS_VAUD))
         return size;
 
     return _mons_class_halo_radius(type);
