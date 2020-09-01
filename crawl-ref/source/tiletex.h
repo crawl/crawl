@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include "tilepick.h"
+
 enum MipMapOptions
 {
     MIPMAP_CREATE,
@@ -133,5 +135,6 @@ public:
 // the ImageManager.
 inline const tile_info &ImageManager::tile_def_info(tile_def tile) const
 {
-    return m_textures[tile.tex].get_info(tile.tile);
+    const auto tex_id = get_tile_texture(tile.tile);
+    return m_textures[tex_id].get_info(tile.tile);
 }

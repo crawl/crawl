@@ -845,7 +845,7 @@ private:
 
             me->colour = colour;
 #ifdef USE_TILE
-            me->add_tile(tile_def(tileidx_spell(spell.spell), TEX_GUI));
+            me->add_tile(tile_def(tileidx_spell(spell.spell)));
 #endif
 
             me->data = &(spell.spell);

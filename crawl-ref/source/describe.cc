@@ -2374,7 +2374,7 @@ static vector<extra_feature_desc> _get_feature_extra_descs(const coord_def& pos)
         ret.push_back({
             "A covering of ice.",
             getLongDescription("ice covered"),
-            tile_def(TILE_FLOOR_ICY, TEX_FLOOR)
+            tile_def(TILE_FLOOR_ICY)
             });
     }
     else if (!feat_is_solid(feat))
@@ -2385,7 +2385,7 @@ static vector<extra_feature_desc> _get_feature_extra_descs(const coord_def& pos)
             ret.push_back({
                 "A halo.",
                 getLongDescription("haloed"),
-                tile_def(TILE_HALO_RANGE, TEX_FEAT)
+                tile_def(TILE_HALO_RANGE)
                 });
         }
         if (umbraed(pos) && !haloed(pos))
@@ -2393,7 +2393,7 @@ static vector<extra_feature_desc> _get_feature_extra_descs(const coord_def& pos)
             ret.push_back({
                 "An umbra.",
                 getLongDescription("umbraed"),
-                tile_def(TILE_UMBRA, TEX_FEAT)
+                tile_def(TILE_UMBRA)
                 });
         }
         if (liquefied(pos))
@@ -2401,7 +2401,7 @@ static vector<extra_feature_desc> _get_feature_extra_descs(const coord_def& pos)
             ret.push_back({
                 "Liquefied ground.",
                 getLongDescription("liquefied"),
-                tile_def(TILE_LIQUEFACTION, TEX_FEAT)
+                tile_def(TILE_LIQUEFACTION)
                 });
         }
         if (disjunction_haloed(pos))
@@ -2409,7 +2409,7 @@ static vector<extra_feature_desc> _get_feature_extra_descs(const coord_def& pos)
             ret.push_back({
                 "Translocational energy.",
                 getLongDescription("disjunction haloed"),
-                tile_def(TILE_DISJUNCT, TEX_FEAT)
+                tile_def(TILE_DISJUNCT)
                 });
         }
         if (antimagic_haloed(pos))
@@ -2417,7 +2417,7 @@ static vector<extra_feature_desc> _get_feature_extra_descs(const coord_def& pos)
             ret.push_back({
                 "An antimagic.",
                 getLongDescription("antimagic haloe"),
-                tile_def(TILE_ANTIMAGIC_AURA, TEX_FEAT)
+                tile_def(TILE_ANTIMAGIC_AURA)
                 });
         }
         if (within_healaura(pos))
@@ -2425,7 +2425,7 @@ static vector<extra_feature_desc> _get_feature_extra_descs(const coord_def& pos)
             ret.push_back({
                 "Healing Energy",
                 getLongDescription("within healaura"),
-                tile_def(TILE_HEALAURA, TEX_FEAT)
+                tile_def(TILE_HEALAURA)
                 });
         }
     }
@@ -2434,7 +2434,7 @@ static vector<extra_feature_desc> _get_feature_extra_descs(const coord_def& pos)
         ret.push_back({
             "A cloud of " + cloud_type_name(cloud->type) + ".",
             get_cloud_desc(cloud->type, false),
-            tile_def(tileidx_cloud(*cloud), TEX_DEFAULT),
+            tile_def(tileidx_cloud(*cloud)),
         });
     }
     return ret;
@@ -2518,13 +2518,13 @@ void describe_feature_wide(const coord_def& pos)
     {
         describe_info inf;
         get_feature_desc(pos, inf, false);
-        feat_info f = { "", "", "", tile_def(TILEG_TODO, TEX_GUI)};
+        feat_info f = { "", "", "", tile_def(TILEG_TODO)};
         f.title = inf.title;
         f.body = trimmed_string(inf.body.str());
 #ifdef USE_TILE
         tileidx_t tile = tileidx_feature(pos);
         apply_variations(env.tile_flv(pos), &tile, pos);
-        f.tile = tile_def(tile, get_dngn_tex(tile));
+        f.tile = tile_def(tile, get_tile_texture(tile));
 #endif
         f.quote = trimmed_string(inf.quote);
         feats.emplace_back(f);
@@ -2532,7 +2532,7 @@ void describe_feature_wide(const coord_def& pos)
     auto extra_descs = _get_feature_extra_descs(pos);
     for (const auto& desc : extra_descs)
     {
-        feat_info f = { "", "", "", tile_def(TILEG_TODO, TEX_GUI) };
+        feat_info f = { "", "", "", tile_def(TILEG_TODO) };
         f.title = desc.title;
         f.body = trimmed_string(desc.description);
         f.tile = desc.tile;
@@ -2543,10 +2543,10 @@ void describe_feature_wide(const coord_def& pos)
         string hint_text = trimmed_string(hints_describe_pos(pos.x, pos.y));
         if (!hint_text.empty())
         {
-            feat_info f = { "", "", "", tile_def(TILEG_TODO, TEX_GUI)};
+            feat_info f = { "", "", "", tile_def(TILEG_TODO)};
             f.title = "Hints.";
             f.body = hint_text;
-            f.tile = tile_def(TILEG_STARTUP_HINTS, TEX_GUI);
+            f.tile = tile_def(TILEG_STARTUP_HINTS);
             feats.emplace_back(f);
         }
     }
@@ -2618,7 +2618,7 @@ void describe_feature_wide(const coord_def& pos)
         tiles.json_write_string("quote", trimmed_string(feat.quote));
         tiles.json_open_object("tile");
         tiles.json_write_int("t", feat.tile.tile);
-        tiles.json_write_int("tex", feat.tile.tex);
+        tiles.json_write_int("tex", get_tile_texture(feat.tile));
         if (feat.tile.ymax != TILE_Y)
             tiles.json_write_int("ymax", feat.tile.ymax);
         tiles.json_close_object();
@@ -2646,7 +2646,7 @@ void describe_feature_type(dungeon_feature_type feat)
     inf.body << getLongDescription(name);
 #ifdef USE_TILE
     const tileidx_t idx = tileidx_feature_base(feat);
-    tile_def tile = tile_def(idx, get_dngn_tex(idx));
+    tile_def tile = tile_def(idx);
     show_description(inf, &tile);
 #else
     show_description(inf);
@@ -3024,7 +3024,7 @@ bool describe_item(item_def &item, function<void (string&)> fixup_desc, bool sel
     {
         tiles.json_open_object();
         tiles.json_write_int("t", tile.tile);
-        tiles.json_write_int("tex", tile.tex);
+        tiles.json_write_int("tex", get_tile_texture(tile.tile));
         if (tile.ymax != TILE_Y)
             tiles.json_write_int("ymax", tile.ymax);
         tiles.json_close_object();
@@ -3442,7 +3442,7 @@ void describe_spell(spell_type spell, const monster_info *mon_owner,
     auto title_hbox = make_shared<Box>(Widget::HORZ);
 #ifdef USE_TILE
     auto spell_icon = make_shared<Image>();
-    spell_icon->set_tile(tile_def(tileidx_spell(spell), TEX_GUI));
+    spell_icon->set_tile(tile_def(tileidx_spell(spell)));
     title_hbox->add_child(move(spell_icon));
 #endif
 
@@ -3490,10 +3490,10 @@ void describe_spell(spell_type spell, const monster_info *mon_owner,
 
 #ifdef USE_TILE_WEB
     tiles.json_open_object();
-    auto tile = tile_def(tileidx_spell(spell), TEX_GUI);
+    auto tile = tile_def(tileidx_spell(spell));
     tiles.json_open_object("tile");
     tiles.json_write_int("t", tile.tile);
-    tiles.json_write_int("tex", tile.tex);
+    tiles.json_write_int("tex", get_tile_texture(tile.tile));
     if (tile.ymax != TILE_Y)
         tiles.json_write_int("ymax", tile.ymax);
     tiles.json_close_object();
@@ -3528,7 +3528,7 @@ void describe_ability(ability_type ability)
     inf.title = ability_name(ability);
     inf.body << get_ability_desc(ability, false);
 #ifdef USE_TILE
-    tile_def tile = tile_def(tileidx_ability(ability), TEX_GUI);
+    tile_def tile = tile_def(tileidx_ability(ability));
     show_description(inf, &tile);
 #else
     show_description(inf);
@@ -4954,7 +4954,7 @@ int describe_monsters(const monster_info &mi, const string& /*footer*/)
                 tiles.json_write_null("mcache");
             }
         }
-        else if (t0 >= TILE_MAIN_MAX)
+        else if (get_tile_texture(t0) == TEX_PLAYER)
         {
             tiles.json_write_comma();
             tiles.write_message("\"doll\":[[%u,%d]]", (unsigned int) t0, TILE_Y);
@@ -5057,7 +5057,7 @@ void describe_skill(skill_type skill)
     inf.title = skill_name(skill);
     inf.body << get_skill_description(skill, false);
 #ifdef USE_TILE
-    tile_def tile = tile_def(tileidx_skill(skill, TRAINING_ENABLED), TEX_GUI);
+    tile_def tile = tile_def(tileidx_skill(skill, TRAINING_ENABLED));
     show_description(inf, &tile);
 #else
     show_description(inf);

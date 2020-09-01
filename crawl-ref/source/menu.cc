@@ -733,7 +733,7 @@ void UIMenu::pack_buffers()
                 // NOTE: This is not perfect. Tiles will be drawn
                 // sorted by texture first, e.g. you can never draw
                 // a dungeon tile over a monster tile.
-                TextureID tex  = tile.tex;
+                const auto tex = get_tile_texture(tile.tile);
                 m_tile_buf[tex].add(tile.tile, entry_x + item_pad, ty, 0, 0, false, tile.ymax, 1, 1);
             }
 
@@ -1550,33 +1550,33 @@ bool MonsterMenuEntry::get_tiles(vector<tile_def>& tileset) const
             ch = env.tile_flv(c).wall;
     }
 
-    tileset.emplace_back(ch, get_dngn_tex(ch));
+    tileset.emplace_back(ch, get_tile_texture(ch));
 
     if (m->attitude == ATT_FRIENDLY)
-        tileset.emplace_back(TILE_HALO_FRIENDLY, TEX_FEAT);
+        tileset.emplace_back(TILE_HALO_FRIENDLY);
     else if (m->attitude == ATT_GOOD_NEUTRAL || m->attitude == ATT_STRICT_NEUTRAL)
-        tileset.emplace_back(TILE_HALO_GD_NEUTRAL, TEX_FEAT);
+        tileset.emplace_back(TILE_HALO_GD_NEUTRAL);
     else if (m->neutral())
-        tileset.emplace_back(TILE_HALO_NEUTRAL, TEX_FEAT);
+        tileset.emplace_back(TILE_HALO_NEUTRAL);
     else
     {
         switch (m->threat)
         {
         case MTHRT_TRIVIAL:
             if (Options.tile_show_threat_levels.find("trivial") != string::npos)
-                tileset.emplace_back(TILE_THREAT_TRIVIAL, TEX_FEAT);
+                tileset.emplace_back(TILE_THREAT_TRIVIAL);
             break;
         case MTHRT_EASY:
             if (Options.tile_show_threat_levels.find("easy") != string::npos)
-                tileset.emplace_back(TILE_THREAT_EASY, TEX_FEAT);
+                tileset.emplace_back(TILE_THREAT_EASY);
             break;
         case MTHRT_TOUGH:
             if (Options.tile_show_threat_levels.find("tough") != string::npos)
-                tileset.emplace_back(TILE_THREAT_TOUGH, TEX_FEAT);
+                tileset.emplace_back(TILE_THREAT_TOUGH);
             break;
         case MTHRT_NASTY:
             if (Options.tile_show_threat_levels.find("nasty") != string::npos)
-                tileset.emplace_back(TILE_THREAT_NASTY, TEX_FEAT);
+                tileset.emplace_back(TILE_THREAT_NASTY);
             break;
         default:
             break;
@@ -1597,42 +1597,42 @@ bool MonsterMenuEntry::get_tiles(vector<tile_def>& tileset) const
         else
             item = *m->inv[MSLOT_WEAPON];
 
-        tileset.emplace_back(tileidx_item(item), TEX_DEFAULT);
-        tileset.emplace_back(TILEI_ANIMATED_WEAPON, TEX_ICONS);
+        tileset.emplace_back(tileidx_item(item));
+        tileset.emplace_back(TILEI_ANIMATED_WEAPON);
     }
     else if (mons_is_draconian(m->type))
     {
-        tileset.emplace_back(tileidx_draco_base(*m), TEX_PLAYER);
+        tileset.emplace_back(tileidx_draco_base(*m));
         const tileidx_t job = tileidx_draco_job(*m);
         if (job)
-            tileset.emplace_back(job, TEX_PLAYER);
+            tileset.emplace_back(job);
     }
     else if (mons_is_demonspawn(m->type))
     {
-        tileset.emplace_back(tileidx_demonspawn_base(*m), TEX_PLAYER);
+        tileset.emplace_back(tileidx_demonspawn_base(*m));
         const tileidx_t job = tileidx_demonspawn_job(*m);
         if (job)
-            tileset.emplace_back(job, TEX_PLAYER);
+            tileset.emplace_back(job);
     }
     else
     {
         tileidx_t idx = tileidx_monster(*m) & TILE_FLAG_MASK;
-        tileset.emplace_back(idx, TEX_PLAYER);
+        tileset.emplace_back(idx);
     }
 
     // A fake monster might not have its ghost member set up properly.
     if (!fake && m->ground_level())
     {
         if (ch == TILE_DNGN_LAVA)
-            tileset.emplace_back(TILEI_MASK_LAVA, TEX_ICONS);
+            tileset.emplace_back(TILEI_MASK_LAVA);
         else if (ch == TILE_DNGN_SHALLOW_WATER)
-            tileset.emplace_back(TILEI_MASK_SHALLOW_WATER, TEX_ICONS);
+            tileset.emplace_back(TILEI_MASK_SHALLOW_WATER);
         else if (ch == TILE_DNGN_DEEP_WATER)
-            tileset.emplace_back(TILEI_MASK_DEEP_WATER, TEX_ICONS);
+            tileset.emplace_back(TILEI_MASK_DEEP_WATER);
         else if (ch == TILE_DNGN_SHALLOW_WATER_MURKY)
-            tileset.emplace_back(TILEI_MASK_SHALLOW_WATER_MURKY, TEX_ICONS);
+            tileset.emplace_back(TILEI_MASK_SHALLOW_WATER_MURKY);
         else if (ch == TILE_DNGN_DEEP_WATER_MURKY)
-            tileset.emplace_back(TILEI_MASK_DEEP_WATER_MURKY, TEX_ICONS);
+            tileset.emplace_back(TILEI_MASK_DEEP_WATER_MURKY);
     }
 
     string damage_desc;
@@ -1642,19 +1642,19 @@ bool MonsterMenuEntry::get_tiles(vector<tile_def>& tileset) const
     {
     case MDAM_DEAD:
     case MDAM_ALMOST_DEAD:
-        tileset.emplace_back(TILEI_MDAM_ALMOST_DEAD, TEX_ICONS);
+        tileset.emplace_back(TILEI_MDAM_ALMOST_DEAD);
         break;
     case MDAM_SEVERELY_DAMAGED:
-        tileset.emplace_back(TILEI_MDAM_SEVERELY_DAMAGED, TEX_ICONS);
+        tileset.emplace_back(TILEI_MDAM_SEVERELY_DAMAGED);
         break;
     case MDAM_HEAVILY_DAMAGED:
-        tileset.emplace_back(TILEI_MDAM_HEAVILY_DAMAGED, TEX_ICONS);
+        tileset.emplace_back(TILEI_MDAM_HEAVILY_DAMAGED);
         break;
     case MDAM_MODERATELY_DAMAGED:
-        tileset.emplace_back(TILEI_MDAM_MODERATELY_DAMAGED, TEX_ICONS);
+        tileset.emplace_back(TILEI_MDAM_MODERATELY_DAMAGED);
         break;
     case MDAM_LIGHTLY_DAMAGED:
-        tileset.emplace_back(TILEI_MDAM_LIGHTLY_DAMAGED, TEX_ICONS);
+        tileset.emplace_back(TILEI_MDAM_LIGHTLY_DAMAGED);
         break;
     case MDAM_OKAY:
     default:
@@ -1663,17 +1663,17 @@ bool MonsterMenuEntry::get_tiles(vector<tile_def>& tileset) const
     }
 
     if (m->attitude == ATT_FRIENDLY)
-        tileset.emplace_back(TILEI_FRIENDLY, TEX_ICONS);
+        tileset.emplace_back(TILEI_FRIENDLY);
     else if (m->attitude == ATT_GOOD_NEUTRAL || m->attitude == ATT_STRICT_NEUTRAL)
-        tileset.emplace_back(TILEI_GOOD_NEUTRAL, TEX_ICONS);
+        tileset.emplace_back(TILEI_GOOD_NEUTRAL);
     else if (m->neutral())
-        tileset.emplace_back(TILEI_NEUTRAL, TEX_ICONS);
+        tileset.emplace_back(TILEI_NEUTRAL);
     else if (m->is(MB_FLEEING))
-        tileset.emplace_back(TILEI_FLEEING, TEX_ICONS);
+        tileset.emplace_back(TILEI_FLEEING);
     else if (m->is(MB_STABBABLE))
-        tileset.emplace_back(TILEI_STAB_BRAND, TEX_ICONS);
+        tileset.emplace_back(TILEI_STAB_BRAND);
     else if (m->is(MB_DISTRACTED))
-        tileset.emplace_back(TILEI_MAY_STAB_BRAND, TEX_ICONS);
+        tileset.emplace_back(TILEI_MAY_STAB_BRAND);
 
     return true;
 }
@@ -1702,17 +1702,17 @@ bool ResurrectMenuEntry::get_tiles(vector<tile_def>& tileset) const
         else if (ch == TILE_WALL_NORMAL)
             ch = env.tile_flv(c).wall;
     }
-    tileset.emplace_back(ch, get_dngn_tex(ch));
+    tileset.emplace_back(ch, get_tile_texture(ch));
 /*
     if (m->attitude == ATT_FRIENDLY)
-        tileset.emplace_back(TILE_HALO_FRIENDLY, TEX_FEAT);
+        tileset.emplace_back(TILE_HALO_FRIENDLY);
     else if (m->attitude == ATT_GOOD_NEUTRAL || m->attitude == ATT_STRICT_NEUTRAL)
-        tileset.emplace_back(TILE_HALO_GD_NEUTRAL, TEX_FEAT);
+        tileset.emplace_back(TILE_HALO_GD_NEUTRAL);
     else if (m->neutral())
-        tileset.emplace_back(TILE_HALO_NEUTRAL, TEX_FEAT);
+        tileset.emplace_back(TILE_HALO_NEUTRAL);
 */
     tileidx_t idx = tileidx_monster(*m) & TILE_FLAG_MASK;
-    tileset.emplace_back(idx, TEX_PLAYER);
+    tileset.emplace_back(idx);
     
     return true;
 }
@@ -1728,13 +1728,13 @@ bool FeatureMenuEntry::get_tiles(vector<tile_def>& tileset) const
     MenuEntry::get_tiles(tileset);
 
     tileidx_t tile = tileidx_feature(pos);
-    tileset.emplace_back(tile, get_dngn_tex(tile));
+    tileset.emplace_back(tile, get_tile_texture(tile));
 
     if (in_bounds(pos) && is_unknown_stair(pos))
-        tileset.emplace_back(TILEI_NEW_STAIR, TEX_ICONS);
+        tileset.emplace_back(TILEI_NEW_STAIR);
 
     if (in_bounds(pos) && is_unknown_transporter(pos))
-        tileset.emplace_back(TILEI_NEW_TRANSPORTER, TEX_ICONS);
+        tileset.emplace_back(TILEI_NEW_TRANSPORTER);
 
     return true;
 }
@@ -1814,7 +1814,7 @@ bool PlayerMenuEntry::get_tiles(vector<tile_def>& tileset) const
             ymax = 18;
         }
 
-        tileset.emplace_back(idx, TEX_PLAYER, ymax);
+        tileset.emplace_back(idx, ymax);
     }
 
     return true;
@@ -2269,7 +2269,7 @@ void Menu::webtiles_write_tiles(const MenuEntry& me) const
             tiles.json_open_object();
 
             tiles.json_write_int("t", tile.tile);
-            tiles.json_write_int("tex", tile.tex);
+            tiles.json_write_int("tex", get_tile_texture(tile.tile));
 
             if (tile.ymax != TILE_Y)
                 tiles.json_write_int("ymax", tile.ymax);
@@ -3452,7 +3452,7 @@ void TextTileItem::render()
         for (const tile_def &tdef : m_tiles)
         {
             int tile      = tdef.tile;
-            TextureID tex = tdef.tex;
+            const auto tex = get_tile_texture(tile);
             m_tile_buf[tex].add_unscaled(tile, m_min_coord.x + 2, m_min_coord.y + 2,
                                          tdef.ymax,
                                          (float)m_unit_height_pixels / TILE_Y);

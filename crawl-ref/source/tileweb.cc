@@ -1348,7 +1348,7 @@ void TilesFramework::_send_cell(const coord_def &gc,
 
             json_write_name("fg");
             write_tileidx(next_pc.fg);
-            if (fg_idx && fg_idx <= TILE_MAIN_MAX)
+            if (get_tile_texture(fg_idx) == TEX_DEFAULT)
                 json_write_int("base", (int) tileidx_known_base_item(fg_idx));
         }
 
@@ -1493,7 +1493,7 @@ void TilesFramework::_send_cell(const coord_def &gc,
                     json_write_null("mcache");
             }
         }
-        else if (fg_idx >= TILE_MAIN_MAX)
+        else if (get_tile_texture(fg_idx) == TEX_PLAYER)
         {
             if (fg_changed)
             {
@@ -2077,7 +2077,7 @@ const coord_def &TilesFramework::get_cursor() const
 
 void TilesFramework::add_overlay(const coord_def &gc, tileidx_t idx)
 {
-    if (idx >= TILE_MAIN_MAX)
+    if (get_tile_texture(idx) != TEX_DEFAULT)
         return;
 
     m_has_overlays = true;

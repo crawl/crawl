@@ -564,37 +564,37 @@ bool get_tiles_for_item(const item_def &item, vector<tile_def>& tileset, bool sh
         if (eq != EQ_NONE)
         {
             if (item_known_cursed(item))
-                tileset.emplace_back(TILE_ITEM_SLOT_EQUIP_CURSED, TEX_DEFAULT);
+                tileset.emplace_back(TILE_ITEM_SLOT_EQUIP_CURSED);
             else
-                tileset.emplace_back(TILE_ITEM_SLOT_EQUIP, TEX_DEFAULT);
+                tileset.emplace_back(TILE_ITEM_SLOT_EQUIP);
         }
         else if (item_known_cursed(item))
-            tileset.emplace_back(TILE_ITEM_SLOT_CURSED, TEX_DEFAULT);
+            tileset.emplace_back(TILE_ITEM_SLOT_CURSED);
 
         tileidx_t base_item = tileidx_known_base_item(idx);
         if (base_item)
-            tileset.emplace_back(base_item, TEX_DEFAULT);
-        tileset.emplace_back(idx, TEX_DEFAULT);
+            tileset.emplace_back(base_item);
+        tileset.emplace_back(idx);
 
         if (eq != EQ_NONE && you.melded[eq])
-            tileset.emplace_back(TILEI_MESH, TEX_ICONS);
+            tileset.emplace_back(TILEI_MESH);
     }
     else if (in_bag(item)) {
         const equipment_type eq = item_equip_slot(item);
         if (eq != EQ_NONE)
         {
             if (item_known_cursed(item))
-                tileset.emplace_back(TILE_ITEM_SLOT_EQUIP_CURSED, TEX_DEFAULT);
+                tileset.emplace_back(TILE_ITEM_SLOT_EQUIP_CURSED);
             else
-                tileset.emplace_back(TILE_ITEM_SLOT_EQUIP, TEX_DEFAULT);
+                tileset.emplace_back(TILE_ITEM_SLOT_EQUIP);
         }
         else if (item_known_cursed(item))
-            tileset.emplace_back(TILE_ITEM_SLOT_CURSED, TEX_DEFAULT);
+            tileset.emplace_back(TILE_ITEM_SLOT_CURSED);
 
         tileidx_t base_item = tileidx_known_base_item(idx);
         if (base_item)
-            tileset.emplace_back(base_item, TEX_DEFAULT);
-        tileset.emplace_back(idx, TEX_DEFAULT);
+            tileset.emplace_back(base_item);
+        tileset.emplace_back(idx);
     } 
     else
     {
@@ -611,21 +611,21 @@ bool get_tiles_for_item(const item_def &item, vector<tile_def>& tileset, bool sh
             else if (ch == TILE_WALL_NORMAL)
                 ch = env.tile_flv(c).wall;
 
-            tileset.emplace_back(ch, get_dngn_tex(ch));
+            tileset.emplace_back(ch, get_tile_texture(ch));
         }
         tileidx_t base_item = tileidx_known_base_item(idx);
         if (base_item)
-            tileset.emplace_back(base_item, TEX_DEFAULT);
+            tileset.emplace_back(base_item);
 
-        tileset.emplace_back(idx, TEX_DEFAULT);
+        tileset.emplace_back(idx);
 
         if (ch != 0)
         {
             // Needs to be displayed so as to not give away mimics in shallow water.
             if (ch == TILE_DNGN_SHALLOW_WATER)
-                tileset.emplace_back(TILEI_MASK_SHALLOW_WATER, TEX_ICONS);
+                tileset.emplace_back(TILEI_MASK_SHALLOW_WATER);
             else if (ch == TILE_DNGN_SHALLOW_WATER_MURKY)
-                tileset.emplace_back(TILEI_MASK_SHALLOW_WATER_MURKY, TEX_ICONS);
+                tileset.emplace_back(TILEI_MASK_SHALLOW_WATER_MURKY);
         }
     }
     if (item.base_type == OBJ_WEAPONS || item.base_type == OBJ_MISSILES
@@ -633,13 +633,13 @@ bool get_tiles_for_item(const item_def &item, vector<tile_def>& tileset, bool sh
     {
         tileidx_t brand = tileidx_known_brand(item);
         if (brand)
-            tileset.emplace_back(brand, TEX_DEFAULT);
+            tileset.emplace_back(brand);
     }
     else if (item.base_type == OBJ_CORPSES)
     {
         tileidx_t brand = tileidx_corpse_brand(item);
         if (brand)
-            tileset.emplace_back(brand, TEX_DEFAULT);
+            tileset.emplace_back(brand);
     }
 
     return true;

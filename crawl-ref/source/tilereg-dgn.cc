@@ -149,8 +149,8 @@ void DungeonRegion::pack_buffers()
         if (!crawl_view.in_los_bounds_g(overlay.gc))
             continue;
 
-        tileidx_t idx = overlay.idx;
-        if (idx >= TILE_MAIN_MAX)
+        const tileidx_t idx = overlay.idx;
+        if (get_tile_texture(idx) != TEX_DEFAULT)
             continue;
 
         const coord_def ep(overlay.gc.x - m_cx_to_gx,

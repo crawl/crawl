@@ -1,11 +1,8 @@
 %prefix TILEI
 %name icons
-%startvalue 0
+%startvalue TILEG_GUI_MAX gui
 
 %back none
-
-# idx == 0 must be invalid
-dngn/unseen
 
 %sdir misc
 effect/net_trap TRAP_NET

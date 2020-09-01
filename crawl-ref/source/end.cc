@@ -32,6 +32,7 @@
 #include "startup.h"
 #include "state.h"
 #include "stringutil.h"
+#include "tilepick.h"
 #include "view.h"
 #include "xom.h"
 #include "ui.h"
@@ -459,11 +460,11 @@ NORETURN void end_game(scorefile_entry &se)
 
     auto title_hbox = make_shared<Box>(Widget::HORZ);
 #ifdef USE_TILE
-    tile_def death_tile(TILEG_ERROR, TEX_GUI);
+    tile_def death_tile(TILEG_ERROR);
     if (death_type == KILLED_BY_LEAVING || death_type == KILLED_BY_WINNING)
-        death_tile = tile_def(TILE_DNGN_EXIT_DUNGEON, TEX_FEAT);
+        death_tile = tile_def(TILE_DNGN_EXIT_DUNGEON);
     else
-        death_tile = tile_def(TILE_DNGN_GRAVESTONE+1, TEX_FEAT);
+        death_tile = tile_def(TILE_DNGN_GRAVESTONE+1);
 
     auto tile = make_shared<Image>(death_tile);
     tile->set_margin_for_sdl(0, 10, 0, 0);
@@ -525,7 +526,7 @@ NORETURN void end_game(scorefile_entry &se)
     tiles.json_open_object();
     tiles.json_open_object("tile");
     tiles.json_write_int("t", death_tile.tile);
-    tiles.json_write_int("tex", death_tile.tex);
+    tiles.json_write_int("tex", get_tile_texture(death_tile.tile));
     tiles.json_close_object();
     tiles.json_write_string("title", goodbye_title);
     tiles.json_write_string("body", goodbye_msg

@@ -51,12 +51,9 @@ struct VColour
 
 struct tile_def
 {
-    tile_def(tileidx_t _tile, TextureID _tex, int _ymax = TILE_Y)
-            : tile(_tile), tex(_tex), ymax(_ymax) {}
+    tile_def(tileidx_t _tile, int _ymax = TILE_Y)
+            : tile(_tile), ymax(_ymax) {}
 
     tileidx_t tile;
-    TextureID tex;
     int ymax;
 };
-
-TextureID get_dngn_tex(tileidx_t idx);

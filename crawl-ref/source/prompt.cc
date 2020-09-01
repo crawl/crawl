@@ -80,8 +80,8 @@ bool yesno(const char *str, bool allow_lowercase, int default_answer, bool clear
         MenuEntry * const y_me = new MenuEntry("Yes", MEL_ITEM, 1, 'Y');
         MenuEntry * const n_me = new MenuEntry("No", MEL_ITEM, 1, 'N');
 #ifdef USE_TILE
-        y_me->add_tile(tile_def(TILEG_PROMPT_YES, TEX_GUI));
-        n_me->add_tile(tile_def(TILEG_PROMPT_NO, TEX_GUI));
+        y_me->add_tile(tile_def(TILEG_PROMPT_YES));
+        n_me->add_tile(tile_def(TILEG_PROMPT_NO));
 #endif
 
         pop.set_title(new MenuEntry(prompt, MEL_TITLE));

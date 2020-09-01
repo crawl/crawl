@@ -1014,7 +1014,7 @@ void Image::_render()
 #ifdef USE_TILE_LOCAL
     push_scissor(m_region);
     TileBuffer tb;
-    tb.set_tex(&tiles.get_image_manager()->m_textures[m_tile.tex]);
+    tb.set_tex(&tiles.get_image_manager()->m_textures[get_tile_texture(m_tile.tile)]);
 
     for (int y = m_region.y; y < m_region.y+m_region.height; y+=m_th)
         for (int x = m_region.x; x < m_region.x+m_region.width; x+=m_tw)
@@ -2385,7 +2385,7 @@ void PlayerDoll::_pack_doll()
             ymax = 18;
         }
 
-        m_tiles.emplace_back(idx, TEX_PLAYER, ymax);
+        m_tiles.emplace_back(idx, ymax);
     }
 }
 
@@ -2407,7 +2407,7 @@ void PlayerDoll::_allocate_region()
     for (const tile_def &tdef : m_tiles)
     {
         int tile      = tdef.tile;
-        TextureID tex = tdef.tex;
+        TextureID tex = get_tile_texture(tile);
         m_tile_buf[tex].add_unscaled(tile, m_region.x, m_region.y, tdef.ymax);
     }
 }

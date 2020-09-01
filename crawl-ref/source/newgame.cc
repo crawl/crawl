@@ -1597,7 +1597,7 @@ void job_group::attach(const newgame_def& ng, const newgame_def& defaults,
             get_job_name(job),
 #ifdef USE_TILE
             tile_def(tileidx_player_job(job,
-                    item_status != ITEM_STATUS_RESTRICTED), TEX_GUI),
+                    item_status != ITEM_STATUS_RESTRICTED)),
 #endif
             is_active_item,
             pos
@@ -1647,7 +1647,7 @@ void species_group::attach(const newgame_def& ng, const newgame_def& defaults,
             species_name(this_species),
 #ifdef USE_TILE
             tile_def(tileidx_player_species(this_species,
-                    item_status != ITEM_STATUS_RESTRICTED), TEX_GUI),
+                    item_status != ITEM_STATUS_RESTRICTED)),
 #endif
             is_active_item,
             pos
@@ -1706,12 +1706,11 @@ struct _custom_menu_item {
     int type;
     string label;
     tileidx_t tile;
-    TextureID tile_id;
 
-    _custom_menu_item(int _type, string _label, tileidx_t _tile, TextureID _tile_id)
-        : type(_type), label(move(_label)), tile(move(_tile)), tile_id(_tile_id) {};
+    _custom_menu_item(int _type, string _label, tileidx_t _tile)
+        : type(_type), label(move(_label)), tile(move(_tile)) {};
     _custom_menu_item(int _type, string _label)
-        : type(_type), label(move(_label)), tile(0), tile_id(TEX_FEAT){};
+        : type(_type), label(move(_label)), tile(0){};
 };
 
 static void _construct_starting_menu(const newgame_def&,
@@ -1739,7 +1738,7 @@ static void _construct_starting_menu(const newgame_def&,
         hbox->add_child(tile_stack);
 
         tile_stack->add_child(make_shared<Image>(
-            tile_def(choice.tile, choice.tile_id)));
+            tile_def(choice.tile)));
 #endif
 
         auto label = make_shared<Text>();
@@ -1822,7 +1821,7 @@ static void _construct_religion_menu(const newgame_def&,
         hbox->add_child(tile_stack);
 
         tile_stack->add_child(make_shared<Image>(
-            tile_def(choice.tile, TEX_FEAT)));
+            tile_def(choice.tile)));
 #endif
 
         auto label = make_shared<Text>();
@@ -1964,7 +1963,7 @@ static void _construct_weapon_menu(const newgame_def& ng,
         if (choice.skill == SK_THROWING)
         {
             tile_stack->add_child(make_shared<Image>(
-                    tile_def(TILE_MI_THROWING_NET, TEX_DEFAULT)));
+                    tile_def(TILE_MI_THROWING_NET)));
         }
         if (choice.skill == SK_UNARMED_COMBAT)
         {
@@ -1975,7 +1974,7 @@ static void _construct_weapon_menu(const newgame_def& ng,
         else
         {
             tile_stack->add_child(make_shared<Image>(
-                    tile_def(choice.tile, TEX_DEFAULT)));
+                    tile_def(choice.tile)));
         }
 #endif
 
@@ -2481,51 +2480,51 @@ static bool _choose_job_specific(newgame_def& ng, newgame_def& ng_choice)
     if (ng.job == JOB_MELTED_KNIGHT) {
         choices.emplace_back(0, "start from D:1"
 #ifdef USE_TILE
-            , tileidx_feature_base(DNGN_EXIT_DUNGEON), TEX_FEAT
+            , tileidx_feature_base(DNGN_EXIT_DUNGEON)
 #endif
         );
         choices.emplace_back(1, "start from Slime:5 (Experimental)"
 #ifdef USE_TILE
-            , tileidx_feature_base(DNGN_ENTER_SLIME), TEX_FEAT
+            , tileidx_feature_base(DNGN_ENTER_SLIME)
 #endif
         );
     }
     else if (ng.job == JOB_ICE_ELEMENTALIST) {
         choices.emplace_back(0, "old spell set"
 #ifdef USE_TILE
-            , tileidx_spell(SPELL_THROW_ICICLE), TEX_GUI
+            , tileidx_spell(SPELL_THROW_ICICLE)
 #endif
         );
         choices.emplace_back(1, "new spell set"
 #ifdef USE_TILE
-            , tileidx_spell(SPELL_FROZEN_RAMPARTS), TEX_GUI
+            , tileidx_spell(SPELL_FROZEN_RAMPARTS)
 #endif
         );
     }
     else if (ng.job == JOB_CARAVAN) {
         choices.emplace_back(0, "hired soldier"
 #ifdef USE_TILE
-            , tileidx_monster_base(MONS_MERC_FIGHTER), TEX_PLAYER
+            , tileidx_monster_base(MONS_MERC_FIGHTER)
 #endif
         );
         choices.emplace_back(1, "hired skald"
 #ifdef USE_TILE
-            , tileidx_monster_base(MONS_MERC_SKALD), TEX_PLAYER
+            , tileidx_monster_base(MONS_MERC_SKALD)
 #endif
         );
         choices.emplace_back(2, "hired witch"
 #ifdef USE_TILE
-            , tileidx_monster_base(MONS_MERC_WITCH), TEX_PLAYER
+            , tileidx_monster_base(MONS_MERC_WITCH)
 #endif
         );
         choices.emplace_back(3, "hired brigand"
 #ifdef USE_TILE
-            , tileidx_monster_base(MONS_MERC_BRIGAND), TEX_PLAYER
+            , tileidx_monster_base(MONS_MERC_BRIGAND)
 #endif
         );
         choices.emplace_back(4, "hired shaman"
 #ifdef USE_TILE
-            , tileidx_monster_base(MONS_MERC_SHAMAN), TEX_PLAYER
+            , tileidx_monster_base(MONS_MERC_SHAMAN)
 #endif
         );
     }
@@ -2621,28 +2620,28 @@ static tile_def tile_for_map_name(string name)
             TILEG_CMD_CAST_SPELL,
             TILEG_CMD_USE_ABILITY,
         };
-        return tile_def(tutorial_tiles[i], TEX_GUI);
+        return tile_def(tutorial_tiles[i]);
     }
 
     if (name == "Sprint I: \"Red Sonja\"")
-        return tile_def(TILEP_MONS_SONJA, TEX_PLAYER);
+        return tile_def(TILEP_MONS_SONJA);
     if (name == "Sprint II: \"The Violet Keep of Menkaure\"")
-        return tile_def(TILEP_MONS_MENKAURE, TEX_PLAYER);
+        return tile_def(TILEP_MONS_MENKAURE);
     if (name == "Sprint III: \"The Ten Rune Challenge\"")
-        return tile_def(TILE_MISC_RUNE_OF_ZOT, TEX_DEFAULT);
+        return tile_def(TILE_MISC_RUNE_OF_ZOT);
     if (name == "Sprint IV: \"Fedhas' Mad Dash\"")
-        return tile_def(TILE_DNGN_ALTAR_FEDHAS, TEX_FEAT);
+        return tile_def(TILE_DNGN_ALTAR_FEDHAS);
     if (name == "Sprint V: \"Ziggurat Sprint\"")
-        return tile_def(TILE_DNGN_PORTAL_ZIGGURAT, TEX_FEAT);
+        return tile_def(TILE_DNGN_PORTAL_ZIGGURAT);
     if (name == "Sprint VI: \"Thunderdome\"")
-        return tile_def(TILE_GOLD16, TEX_DEFAULT);
+        return tile_def(TILE_GOLD16);
     if (name == "Sprint VII: \"The Pits\"")
-        return tile_def(TILE_WALL_CRYPT_METAL + 2, TEX_WALL);
+        return tile_def(TILE_WALL_CRYPT_METAL + 2);
     if (name == "Sprint VIII: \"Arena of Blood\"")
-        return tile_def(TILE_UNRAND_WOE, TEX_DEFAULT);
+        return tile_def(TILE_UNRAND_WOE);
     if (name == "Sprint IX: \"|||||||||||||||||||||||||||||\"")
-        return tile_def(TILE_WALL_LAB_METAL + 2, TEX_WALL);
-    return tile_def(0, TEX_GUI);
+        return tile_def(TILE_WALL_LAB_METAL + 2);
+    return tile_def(0);
 }
 #endif
 

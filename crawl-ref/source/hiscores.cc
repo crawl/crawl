@@ -418,7 +418,7 @@ UIHiscoresMenu::UIHiscoresMenu()
 
 #ifdef USE_TILE
     auto tile = make_shared<Image>();
-    tile->set_tile(tile_def(TILEG_STARTUP_HIGH_SCORES, TEX_GUI));
+    tile->set_tile(tile_def(TILEG_STARTUP_HIGH_SCORES));
     title_hbox->add_child(move(tile));
 #endif
 

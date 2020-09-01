@@ -54,7 +54,7 @@ void DungeonCellBuffer::add(const packed_cell &cell, int x, int y)
     }
     else if (fg_idx == TILEP_PLAYER)
         pack_player(x, y, in_water);
-    else if (fg_idx >= TILE_MAIN_MAX)
+    else if (get_tile_texture(fg_idx) == TEX_PLAYER)
         m_buf_doll.add(fg_idx, x, y, TILEP_PART_MAX, in_water, false);
 
     pack_foreground(x, y, cell);
@@ -100,9 +100,9 @@ void DungeonCellBuffer::add_monster(const monster_info &mon, int x, int y)
         else
             m_buf_doll.add(TILEP_MONS_UNKNOWN, x, y, 0, false, false);
     }
-    else if (t0 >= TILE_MAIN_MAX)
+    else if (get_tile_texture(t0) == TEX_PLAYER)
         m_buf_doll.add(t0, x, y, TILEP_PART_MAX, false, false);
-    else if (t0 && t0 <= TILE_MAIN_MAX)
+    else if (get_tile_texture(t0) == TEX_DEFAULT)
     {
         const tileidx_t base_idx = tileidx_known_base_item(t0);
         if (base_idx)
@@ -418,7 +418,7 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
     const tileidx_t fg_idx = cell.fg & TILE_FLAG_MASK;
     const bool in_water = _in_water(cell);
 
-    if (fg_idx && fg_idx <= TILE_MAIN_MAX)
+    if (get_tile_texture(fg_idx) == TEX_DEFAULT)
     {
         const tileidx_t base_idx = tileidx_known_base_item(fg_idx);
 

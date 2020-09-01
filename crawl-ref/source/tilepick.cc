@@ -10,6 +10,7 @@
 #include "coordit.h"
 #include "decks.h"
 #include "describe.h"
+#include "debug.h"
 #include "env.h"
 #include "files.h"
 #include "food.h"
@@ -34,6 +35,7 @@
 #include "tiledef-dngn.h"
 #include "tile-flags.h"
 #include "tiledef-gui.h"
+#include "rltiles/tiledef-icons.h"
 #include "tiledef-main.h"
 #include "tiledef-player.h"
 #include "tiledef-unrand.h"
@@ -65,15 +67,24 @@ COMPILE_CHECK(NUM_RODS == TILE_ROD_ID_LAST - TILE_ROD_ID_FIRST + 1);
 COMPILE_CHECK(NUM_WANDS == TILE_WAND_ID_LAST - TILE_WAND_ID_FIRST + 1);
 COMPILE_CHECK(NUM_POTIONS == TILE_POT_ID_LAST - TILE_POT_ID_FIRST + 1);
 
-TextureID get_dngn_tex(tileidx_t idx)
+TextureID get_tile_texture(tileidx_t idx)
 {
-    ASSERT(idx < TILE_FEAT_MAX);
     if (idx < TILE_FLOOR_MAX)
         return TEX_FLOOR;
     else if (idx < TILE_WALL_MAX)
         return TEX_WALL;
-    else
+    else if (idx < TILE_FEAT_MAX)
         return TEX_FEAT;
+    else if (idx < TILE_MAIN_MAX)
+        return TEX_DEFAULT;
+    else if (idx < TILEP_PLAYER_MAX)
+        return TEX_PLAYER;
+    else if (idx < TILEG_GUI_MAX)
+        return TEX_GUI;
+    else if (idx < TILEI_ICONS_MAX)
+        return TEX_ICONS;
+    else
+        die("Cannot get texture for bad tileidx %zu", idx);
 }
 
 tileidx_t tileidx_trap(trap_type type)
@@ -4303,7 +4314,15 @@ string tile_debug_string(tileidx_t fg, tileidx_t bg, char prefix)
     tileidx_t bg_idx = bg & TILE_FLAG_MASK;
 
     string fg_name;
-    if (fg_idx < TILE_MAIN_MAX)
+    if (fg_idx < TILE_FLOOR_MAX)
+        fg_name = tile_floor_name(fg_idx);
+    else if (fg_idx < TILE_WALL_MAX)
+        fg_name = tile_wall_name(fg_idx);
+    else if (fg_idx < TILE_FEAT_MAX)
+        fg_name = tile_feat_name(fg_idx);
+    else if (fg_idx < TILE_DNGN_MAX)
+        fg_name = tile_dngn_name(fg_idx);
+    else if (fg_idx < TILE_MAIN_MAX)
         fg_name = tile_main_name(fg_idx);
     else if (fg_idx < TILEP_MCACHE_START)
         fg_name = (tile_player_name(fg_idx));

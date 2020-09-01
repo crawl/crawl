@@ -1100,7 +1100,7 @@ static void build_partial_god_ui(god_type which_god, shared_ptr<ui::Popup>& popu
 #ifdef USE_TILE
     auto icon = make_shared<Image>();
     const tileidx_t idx = tileidx_feature_base(altar_for_god(which_god));
-    icon->set_tile(tile_def(idx, get_dngn_tex(idx)));
+    icon->set_tile(tile_def(idx));
     title_hbox->add_child(move(icon));
 #endif
 
@@ -1184,7 +1184,7 @@ static void _send_god_ui(god_type god, bool is_altar)
     const tileidx_t idx = tileidx_feature_base(altar_for_god(god));
     tiles.json_open_object("tile");
     tiles.json_write_int("t", idx);
-    tiles.json_write_int("tex", get_dngn_tex(idx));
+    tiles.json_write_int("tex", get_tile_texture(idx));
     tiles.json_close_object();
 
     tiles.json_write_int("colour", god_colour(god));
