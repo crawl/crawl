@@ -2524,7 +2524,7 @@ void describe_feature_wide(const coord_def& pos)
 #ifdef USE_TILE
         tileidx_t tile = tileidx_feature(pos);
         apply_variations(env.tile_flv(pos), &tile, pos);
-        f.tile = tile_def(tile, get_tile_texture(tile));
+        f.tile = tile_def(tile);
 #endif
         f.quote = trimmed_string(inf.quote);
         feats.emplace_back(f);
@@ -2618,7 +2618,7 @@ void describe_feature_wide(const coord_def& pos)
         tiles.json_write_string("quote", trimmed_string(feat.quote));
         tiles.json_open_object("tile");
         tiles.json_write_int("t", feat.tile.tile);
-        tiles.json_write_int("tex", get_tile_texture(feat.tile));
+        tiles.json_write_int("tex", get_tile_texture(feat.tile.tile));
         if (feat.tile.ymax != TILE_Y)
             tiles.json_write_int("ymax", feat.tile.ymax);
         tiles.json_close_object();

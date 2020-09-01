@@ -611,7 +611,7 @@ bool get_tiles_for_item(const item_def &item, vector<tile_def>& tileset, bool sh
             else if (ch == TILE_WALL_NORMAL)
                 ch = env.tile_flv(c).wall;
 
-            tileset.emplace_back(ch, get_tile_texture(ch));
+            tileset.emplace_back(ch);
         }
         tileidx_t base_item = tileidx_known_base_item(idx);
         if (base_item)

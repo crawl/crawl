@@ -35,6 +35,7 @@
 #include "unicode.h"
 #include "viewgeom.h"
 
+
 InventoryRegion::InventoryRegion(const TileRegionInit &init) : GridRegion(init)
 {
 }
@@ -107,8 +108,33 @@ void InventoryRegion::pack_buffers()
             if (item.flag & TILEI_FLAG_CURSOR)
                 m_buf.add_icons_tile(TILEI_CURSOR, x, y);
 
-            if (item.tile)
-                m_buf.add_main_tile(item.tile, x, y);
+            if (item.tile) {
+                if (item.tile < TILE_FLOOR_MAX)
+                {
+                    //none
+                }
+                else if (item.tile < TILE_WALL_MAX)
+                {
+                    //none
+                }
+                else if (item.tile < TILE_FEAT_MAX)
+                {
+                    //none
+                }
+                else if (item.tile < TILE_MAIN_MAX)
+                    m_buf.add_main_tile(item.tile, x, y);
+                else if (item.tile < TILEP_PLAYER_MAX)
+                {
+                    //for mercenary
+                    m_buf.add_player_tile(item.tile, x, y);
+                }
+                else if (item.tile < TILEG_GUI_MAX)
+                {
+                    //none
+                }
+                else if (item.tile < TILEI_ICONS_MAX)
+                    m_buf.add_icons_tile(item.tile, x, y);
+            }
 
             if (item.quantity != -1)
                 draw_number(x, y, item.quantity);

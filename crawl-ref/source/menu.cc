@@ -1550,7 +1550,7 @@ bool MonsterMenuEntry::get_tiles(vector<tile_def>& tileset) const
             ch = env.tile_flv(c).wall;
     }
 
-    tileset.emplace_back(ch, get_tile_texture(ch));
+    tileset.emplace_back(ch);
 
     if (m->attitude == ATT_FRIENDLY)
         tileset.emplace_back(TILE_HALO_FRIENDLY);
@@ -1702,7 +1702,7 @@ bool ResurrectMenuEntry::get_tiles(vector<tile_def>& tileset) const
         else if (ch == TILE_WALL_NORMAL)
             ch = env.tile_flv(c).wall;
     }
-    tileset.emplace_back(ch, get_tile_texture(ch));
+    tileset.emplace_back(ch);
 /*
     if (m->attitude == ATT_FRIENDLY)
         tileset.emplace_back(TILE_HALO_FRIENDLY);
@@ -1728,7 +1728,7 @@ bool FeatureMenuEntry::get_tiles(vector<tile_def>& tileset) const
     MenuEntry::get_tiles(tileset);
 
     tileidx_t tile = tileidx_feature(pos);
-    tileset.emplace_back(tile, get_tile_texture(tile));
+    tileset.emplace_back(tile);
 
     if (in_bounds(pos) && is_unknown_stair(pos))
         tileset.emplace_back(TILEI_NEW_STAIR);

@@ -14,6 +14,7 @@
 #include "colour.h"
 #include "describe.h"
 #include "dungeon.h"
+#include "evoke.h"
 #include "item-name.h"
 #include "item-prop.h"
 #include "item-status-flag-type.h"
@@ -1757,7 +1758,24 @@ static void _generate_jewellery_item(item_def& item, bool allow_uniques,
         do_curse_item(item);
     }
 }
+static void _generate_mercenary_item(item_def& item)
+{
+    item.props[MERCENARY_UNIT_KEY].get_int() = random_choose_weighted(
+        20, MONS_MERC_FIGHTER,
+        20, MONS_MERC_SKALD,
+        20, MONS_MERC_WITCH,
+        20, MONS_MERC_BRIGAND,
+        20, MONS_MERC_SHAMAN);
 
+    if (item.props.exists(MERCENARY_UNIT_KEY)) {
+        mprf("t %d", item.props[MERCENARY_UNIT_KEY].get_int());
+    }
+    else {
+        mpr("t0");
+    }
+
+    item.props[MERCENARY_NAME_KEY].get_string() = "test";
+}
 static void _generate_misc_item(item_def& item, int force_type)
 {
     if (force_type != OBJ_RANDOM)
@@ -1774,6 +1792,9 @@ static void _generate_misc_item(item_def& item, int force_type)
                                       MISC_CRYSTAL_BALL_OF_ENERGY,
                                       MISC_PHANTOM_MIRROR,
                                       MISC_TIN_OF_TREMORSTONES);
+    }
+    if (item.sub_type == MISC_MERCENARY) {
+        _generate_mercenary_item(item);
     }
 }
 

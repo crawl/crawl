@@ -12,6 +12,7 @@
 #include "describe.h"
 #include "debug.h"
 #include "env.h"
+#include "evoke.h"
 #include "files.h"
 #include "food.h"
 #include "ghost.h"
@@ -2601,6 +2602,15 @@ static tileidx_t _tileidx_rune(const item_def &item)
     }
 }
 
+static tileidx_t _tileidx_mercenary(const item_def& item)
+{
+    if (item.props.exists(MERCENARY_UNIT_KEY)) {
+        return tileidx_monster_base(item.props[MERCENARY_UNIT_KEY]);
+    }
+
+    return TILEP_MONS_HUMAN;
+}
+
 static tileidx_t _tileidx_misc(const item_def &item)
 {
     switch (item.sub_type)
@@ -2631,7 +2641,7 @@ static tileidx_t _tileidx_misc(const item_def &item)
         return TILE_MISC_TIN_OF_TREMORSTONES;
 
     case MISC_MERCENARY:
-        return TILE_ERROR; //FIXME
+        return _tileidx_mercenary(item);
 
 #if TAG_MAJOR_VERSION == 34
     case MISC_BUGGY_LANTERN_OF_SHADOWS:

@@ -117,6 +117,11 @@ void DungeonCellBuffer::add_monster(const monster_info &mon, int x, int y)
     pack_foreground(x, y, fake_cell);
 }
 
+void DungeonCellBuffer::add_player_tile(int tileidx, int x, int y)
+{
+    m_buf_doll.add(tileidx, x, y, TILEP_PART_MAX, false, false);
+}
+
 void DungeonCellBuffer::add_dngn_tile(int tileidx, int x, int y,
                                       bool in_water)
 {

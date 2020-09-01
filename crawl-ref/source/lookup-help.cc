@@ -665,7 +665,7 @@ static MenuEntry* _feature_menu_gen(char letter, const string &str, string &key)
     if (feat)
     {
         const tileidx_t idx = tileidx_feature_base(feat);
-        me->add_tile(tile_def(idx, get_tile_texture(idx)));
+        me->add_tile(tile_def(idx));
     }
 #endif
 
