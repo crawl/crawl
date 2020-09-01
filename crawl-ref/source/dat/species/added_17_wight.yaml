@@ -1,0 +1,74 @@
+enum: SP_WIGHT
+monster: MONS_WIGHT
+name: Wight
+genus: "Dead"
+short_name: "Wt"
+difficulty: Advanced
+difficulty_priority: 30
+aptitudes:
+  xp: -1
+  hp: 1
+  mp_mod: -1
+  mr: 4
+  short_blades: -3
+  long_blades: -3
+  axes: -3
+  maces_and_flails: -3
+  polearms: -3
+  staves: -3
+  slings: -3
+  bows: -3
+  crossbows: -3
+  throwing: -3
+  armour: -2
+  dodging: 2
+  stealth: 1
+  shields: -2
+  unarmed_combat: -2
+  spellcasting: -3
+  conjurations: -3
+  summoning: -3
+  translocations: -3
+  transmutations: -3
+  fire_magic: -3
+  air_magic: -3
+  earth_magic: -3
+  poison_magic: -3
+  invocations: -1
+  evocations: -2
+undead_type: US_UNDEAD
+str: 9
+int: 6
+dex: 9
+levelup_stat_frequency: 5
+levelup_stats:
+  - str
+  - dex
+mutations:
+  1:
+    MUT_NEGATIVE_ENERGY_RESISTANCE: 3
+    MUT_COLD_RESISTANCE: 1
+    MUT_TORMENT_RESISTANCE: 1
+    MUT_UNBREATHING: 1
+  6:
+    MUT_NEGATIVE_ENERGY_ATTACK: 1
+  12:
+    MUT_CURSE_WEAPON: 1
+  18:
+    MUT_NEGATIVE_ENERGY_ATTACK: 1
+fake_mutations:
+  - long: You do not eat or drink.
+    short: no food or potions
+recommended_jobs:
+  - JOB_GLADIATOR
+  - JOB_HUNTER
+  - JOB_ASSASSIN
+recommended_weapons:
+  - SK_SHORT_BLADES
+  - SK_LONG_BLADES
+  - SK_AXES
+  - SK_MACES_FLAILS
+  - SK_POLEARMS
+  - SK_BOWS
+  - SK_CROSSBOWS
+  - SK_SLINGS

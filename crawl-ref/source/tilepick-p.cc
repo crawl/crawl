@@ -728,6 +728,8 @@ tileidx_t tilep_species_to_base_tile(int sp, int level)
         return TILEP_TRAN_LICH_LESSER_LICH;
     case SP_MELIAI:
         return TILEP_BASE_MELIAI;
+    case SP_WIGHT:
+        return TILEP_BASE_WIGHT;
     default:
         return TILEP_BASE_HUMAN;
     }

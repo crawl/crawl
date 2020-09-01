@@ -1944,6 +1944,28 @@ static const mutation_def mut_data[] =
      "Your mana regeneration is weakened.",
      "Your mana regeneration is weakened."},
 },
+
+{ MUT_NEGATIVE_ENERGY_ATTACK, 0, 2, mutflag::good, true,
+  "drainning attacks",
+
+  {"Your melee attacks are infused by negative energy.",
+   "Your melee attacks are infused by powerful negative energy.",
+   ""},
+
+  {"You feel flows of negative energy.",
+   "Your negative energy becomes stronger.",
+   ""},
+
+  {"", "", ""},
+},
+
+{ MUT_CURSE_WEAPON, 0, 1, mutflag::good, true,
+  "burialize weapon",
+
+  {"You can drain yourself and curse a weapon in your hand to enchant it.", "", ""},
+  {"Your memories of battle are enough to bind your weapon.", "", ""},
+  {"", "", ""},
+},
 };
 
 static const mutation_category_def category_mut_data[] =
