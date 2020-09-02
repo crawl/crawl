@@ -230,10 +230,8 @@ function ($, comm, client, dungeon_renderer, display, minimap, enums, messages,
     {
         if (options.get("tile_display_mode") == "tiles") return;
 
-        var device_ratio = window.devicePixelRatio;
         var glyph_font, glyph_size;
-
-        glyph_size = options.get("glyph_mode_font_size") * device_ratio;
+        glyph_size = options.get("glyph_mode_font_size");
         glyph_font = options.get("glyph_mode_font");
 
         if (!document.fonts.check(glyph_size + "px " + glyph_font))
