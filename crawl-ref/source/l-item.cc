@@ -320,7 +320,7 @@ static int l_item_do_subtype(lua_State *ls)
     // existing scripts.
     if (item->base_type == OBJ_ARMOUR)
         s = item_slot_name(get_armour_slot(*item));
-    else if (item_type_known(*item))
+    else if (item_type_known(*item) || item->base_type == OBJ_WEAPONS)
     {
         // must keep around the string until we call lua_pushstring
         saved = sub_type_string(*item);
