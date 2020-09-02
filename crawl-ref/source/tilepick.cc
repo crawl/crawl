@@ -154,8 +154,9 @@ tileidx_t tileidx_shop(const shop_struct *shop)
             return TILE_SHOP_POTIONS;
         case SHOP_GENERAL:
         case SHOP_GENERAL_ANTIQUE:
-        case SHOP_MERCENARY:
             return TILE_SHOP_GENERAL;
+        case SHOP_MERCENARY:
+            return TILE_SHOP_MERCENARY;
         default:
             return TILE_DNGN_ERROR;
     }
