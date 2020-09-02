@@ -1556,14 +1556,20 @@ void monster::apply_enchantment(const mon_enchant &me)
         {
             if (you.can_see(*this))
             {
-                if (type == MONS_PILLAR_OF_SALT)
-                    mprf("%s crumbles away.", name(DESC_THE, false).c_str());
-                else if (type == MONS_BLOCK_OF_ICE)
-                    mprf("%s melts away.", name(DESC_THE, false).c_str());
-                else
+                switch (type)
                 {
-                    mprf("A nearby %s withers and dies.",
-                         name(DESC_PLAIN, false).c_str());
+                    case MONS_PILLAR_OF_SALT:
+                    case MONS_WITHERED_PLANT:
+                        mprf("%s crumbles away.", name(DESC_THE, false).c_str());
+                        break;
+                    case MONS_BLOCK_OF_ICE:
+                        mprf("%s melts away.", name(DESC_THE, false).c_str());
+                        break;
+                    default:
+                        mprf("A nearby %s withers and dies.",
+                             name(DESC_PLAIN, false).c_str());
+                        break;
+
                 }
             }
 

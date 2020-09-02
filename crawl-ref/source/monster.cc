@@ -4510,7 +4510,12 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
             this->add_ench(mon_enchant(ENCH_SLOWLY_DYING, 1, nullptr,
                                        30 + random2(20)));
             if (you.can_see(*this))
-                mprf("%s begins to die.", this->name(DESC_THE).c_str());
+            {
+                if (type == MONS_WITHERED_PLANT)
+                    mprf("%s begins to crumble.", this->name(DESC_THE).c_str());
+                else
+                    mprf("%s begins to die.", this->name(DESC_THE).c_str());
+            }
         }
     }
 

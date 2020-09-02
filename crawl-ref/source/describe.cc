@@ -4629,7 +4629,9 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
 
     if (mons_class_is_fragile(mi.type))
     {
-        if (mi.is(MB_SLOWLY_DYING))
+        if (mi.is(MB_CRUMBLING))
+            inf.body << "\nIt is quickly crumbling away.\n";
+        else if (mi.is(MB_WITHERING))
             inf.body << "\nIt is quickly withering away.\n";
         else
             inf.body << "\nIf struck, it will die soon after.\n";

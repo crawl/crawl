@@ -189,6 +189,8 @@ enum monster_info_flags
     MB_CLOUD_RING_DRAINING,
     MB_CLOUD_RING_ACID,
     MB_CLOUD_RING_MIASMA,
+    MB_WITHERING,
+    MB_CRUMBLING,
     NUM_MB_FLAGS
 };
 

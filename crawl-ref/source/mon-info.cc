@@ -106,7 +106,6 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_BOUND_SOUL,      MB_BOUND_SOUL },
     { ENCH_INFESTATION,     MB_INFESTATION },
     { ENCH_STILL_WINDS,     MB_STILL_WINDS },
-    { ENCH_SLOWLY_DYING,    MB_SLOWLY_DYING },
     { ENCH_VILE_CLUTCH,     MB_VILE_CLUTCH },
     { ENCH_WATERLOGGED,     MB_WATERLOGGED },
     { ENCH_RING_OF_THUNDER, MB_CLOUD_RING_THUNDER },
@@ -170,6 +169,12 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
             return MB_MORE_POISONED;
         else
             return MB_MAX_POISONED;
+    case ENCH_SLOWLY_DYING:
+        if (mons.type == MONS_WITHERED_PLANT)
+            return MB_CRUMBLING;
+        if (mons_class_is_fragile(mons.type))
+            return MB_WITHERING;
+        return MB_SLOWLY_DYING;
     default:
         return NUM_MB_FLAGS;
     }
@@ -1764,6 +1769,7 @@ void mons_conditions_string(string& desc, const vector<monster_info>& mi,
         if (num && !name.short_singular.empty())
             conditions.push_back(_condition_string(num, count, name));
     }
+
 
     if (conditions.empty())
         return;
