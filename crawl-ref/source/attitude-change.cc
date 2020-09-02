@@ -60,7 +60,7 @@ void mons_att_changed(monster* mon)
     if (mon->attitude == ATT_HOSTILE
         && (mons_is_god_gift(*mon, GOD_BEOGH)
            || mons_is_god_gift(*mon, GOD_YREDELEMNUL)
-           || is_mercernery_companion(mon->type)))
+           || is_mercernery_companion(*mon)))
     {
         remove_companion(mon);
     }

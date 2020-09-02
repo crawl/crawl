@@ -46,7 +46,7 @@ void remove_companion(monster* mons)
     if(companion_list.find(mons->mid) != companion_list.end()) {
         companion_list.erase(mons->mid);
 
-        if(is_mercernery_companion(mons->type)) {
+        if(is_mercernery_companion(*mons)) {
             lost_mercernery(mons);
         }
     }
@@ -94,24 +94,12 @@ void move_companion_to(const monster* mons, const level_id lid)
     }
 }
 
-bool is_mercernery_companion(monster_type mon_type)
+bool is_mercernery_companion(const monster& mons)
 {
-    return (mon_type == MONS_MERC_FIGHTER
-               || mon_type == MONS_MERC_KNIGHT
-               || mon_type == MONS_MERC_DEATH_KNIGHT
-               || mon_type == MONS_MERC_PALADIN
-               || mon_type == MONS_MERC_SKALD
-               || mon_type == MONS_MERC_INFUSER
-               || mon_type == MONS_MERC_TIDEHUNTER
-               || mon_type == MONS_MERC_WITCH
-               || mon_type == MONS_MERC_SORCERESS
-               || mon_type == MONS_MERC_ELEMENTALIST
-               || mon_type == MONS_MERC_BRIGAND
-               || mon_type== MONS_MERC_ASSASSIN
-               || mon_type == MONS_MERC_CLEANER
-               || mon_type == MONS_MERC_SHAMAN
-               || mon_type == MONS_MERC_SHAMAN_II
-               || mon_type == MONS_MERC_SHAMAN_III);
+    if (mons.props.exists(MERCENARY_FLAG)) {
+        return mons.props[MERCENARY_FLAG].get_bool();
+    }
+    return false;
 }
 
 void lost_mercernery(const monster* mon) {

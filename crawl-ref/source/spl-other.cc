@@ -124,7 +124,7 @@ void start_recall(recall_t type)
         }
         else if (type == recall_t::caravan)
         {
-            if (!is_mercernery_companion(mi->type))
+            if (!is_mercernery_companion(**mi))
                 continue;
         }
 

@@ -6828,7 +6828,7 @@ bool monster::is_mercenery_companion() const
 {
     return attitude == ATT_FRIENDLY
            && !is_summoned()
-           && is_mercernery_companion(type)
+           && is_mercernery_companion(*this)
            && mons_can_use_stairs(*this);
 }
 
