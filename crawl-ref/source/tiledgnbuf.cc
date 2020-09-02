@@ -60,8 +60,9 @@ void DungeonCellBuffer::add(const packed_cell &cell, int x, int y)
     pack_foreground(x, y, cell);
 
     // Draw cloud layer(s)
-    if (cloud_idx && cloud_idx < TILE_FEAT_MAX)
+    if (cloud_idx)
     {
+        ASSERT(get_tile_texture(cloud_idx) == TEX_DEFAULT);
         // If there's a foreground, sandwich it between two semi-transparent
         // clouds at different z-indices. This uses the same alpha fading as
         // a swimming characters but applied to the cloud (instead of as normal
@@ -74,6 +75,13 @@ void DungeonCellBuffer::add(const packed_cell &cell, int x, int y)
         else
             // Otherwise render it normally with full transparency
              m_buf_main.add(cloud_idx, x, y);
+    }
+    // Render any 'main' overlays (zaps) on top of clouds and items.
+    for (int i = 0; i < cell.num_dngn_overlay; ++i)
+    {
+        const auto tile = cell.dngn_overlay[i];
+        if (TILE_DNGN_MAX <= tile && tile < TILE_MAIN_MAX)
+            add_main_tile(tile, x, y);
     }
 }
 
