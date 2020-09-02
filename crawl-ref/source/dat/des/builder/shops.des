@@ -799,6 +799,14 @@ MAP
 S
 ENDMAP
 
+NAME:   mercernary_shop
+DEPTH:  D:4-, Depths, Orc, Elf, Shoals, Snake, Vaults
+WEIGHT: 1
+KFEAT:  S = mercenary shop
+MAP
+S
+ENDMAP
+
 ###############################################################################
 # <<3>> Multi.
 #       Not tagged shop, and has no threats. Contain possibly multiple shops

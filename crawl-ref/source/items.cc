@@ -51,6 +51,7 @@
 #include "item-prop.h"
 #include "item-status-flag-type.h"
 #include "item-use.h"
+#include "jobs.h"
 #include "libutil.h"
 #include "macro.h"
 #include "makeitem.h"
@@ -2218,6 +2219,13 @@ bool merge_items_into_inv(item_def &it, int quant_got,
         _get_book(it, quiet, true);
         return true;
     }
+    if (it.base_type == OBJ_MISCELLANY && it.sub_type == MISC_MERCENARY)
+    {
+        if (it.props.exists(MERCENARY_UNIT_KEY)) {
+            try_to_spawn_mercenary(it.props[MERCENARY_UNIT_KEY].get_int());
+        }
+        return true;
+    }
     // Runes are also massless.
     if (it.base_type == OBJ_RUNES)
     {
@@ -4056,6 +4064,8 @@ colour_t item_def::miscellany_colour() const
 #endif
         case MISC_TIN_OF_TREMORSTONES:
             return BROWN;
+        case MISC_MERCENARY:
+            return BROWN;
         case MISC_QUAD_DAMAGE:
             return ETC_DARK;
         case MISC_ZIGGURAT:
@@ -4801,7 +4811,7 @@ item_info get_item_info(const item_def& item)
         ARTEFACT_APPEAR_KEY, KNOWN_PROPS_KEY, CORPSE_NAME_KEY,
         CORPSE_NAME_TYPE_KEY, "item_tile", "item_tile_name",
         "worn_tile", "worn_tile_name", "needs_autopickup",
-        FORCED_ITEM_COLOUR_KEY,
+        FORCED_ITEM_COLOUR_KEY, MERCENARY_UNIT_KEY, 
     };
     for (const char *prop : copy_props)
         if (item.props.exists(prop))

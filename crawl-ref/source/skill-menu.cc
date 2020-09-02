@@ -245,20 +245,11 @@ void SkillMenuEntry::set_name(bool keep_hotkey)
     {
         m_name->clear_tile();
         if (you.skills[m_sk] >= MAX_SKILL_LEVEL)
-        {
-            m_name->add_tile(tile_def(tileidx_skill(m_sk, TRAINING_MASTERED),
-                                      TEX_GUI));
-        }
+            m_name->add_tile(tile_def(tileidx_skill(m_sk, TRAINING_MASTERED)));
         else if (you.training[m_sk] == TRAINING_DISABLED)
-        {
-            m_name->add_tile(tile_def(tileidx_skill(m_sk, TRAINING_INACTIVE),
-                                      TEX_GUI));
-        }
+            m_name->add_tile(tile_def(tileidx_skill(m_sk, TRAINING_INACTIVE)));
         else
-        {
-            m_name->add_tile(tile_def(tileidx_skill(m_sk, you.train[m_sk]),
-                                      TEX_GUI));
-        }
+            m_name->add_tile(tile_def(tileidx_skill(m_sk, you.train[m_sk])));
     }
 #endif
     set_level();

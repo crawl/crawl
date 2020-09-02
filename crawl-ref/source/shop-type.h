@@ -14,6 +14,7 @@ enum shop_type
     SHOP_DISTILLERY,
     SHOP_SCROLL,
     SHOP_GENERAL,
+    SHOP_MERCENARY,
     NUM_SHOPS, // must remain last 'regular' member {dlb}
     SHOP_UNASSIGNED = 100,
     SHOP_RANDOM,

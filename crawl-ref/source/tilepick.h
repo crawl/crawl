@@ -25,6 +25,8 @@ struct show_type;
 
 bool is_door_tile(tileidx_t tile);
 
+TextureID get_tile_texture(tileidx_t idx);
+
 // Tile index lookup from Crawl data.
 tileidx_t tileidx_feature(const coord_def &gc);
 tileidx_t tileidx_trap(trap_type type);

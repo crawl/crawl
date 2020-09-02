@@ -216,7 +216,7 @@ static void _print_version()
     auto title_hbox = make_shared<Box>(Widget::HORZ);
 #ifdef USE_TILE
     auto icon = make_shared<Image>();
-    icon->set_tile(tile_def(TILEG_STARTUP_STONESOUP, TEX_GUI));
+    icon->set_tile(tile_def(TILEG_STARTUP_STONESOUP));
     title_hbox->add_child(move(icon));
 #endif
 

@@ -257,7 +257,7 @@ int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
                                     MEL_ITEM, 1, letter, preselect);
 
 #ifdef USE_TILE
-        me->add_tile(tile_def(tileidx_spell(spell), TEX_GUI));
+        me->add_tile(tile_def(tileidx_spell(spell)));
 #endif
         spell_menu.add_entry(me);
     }

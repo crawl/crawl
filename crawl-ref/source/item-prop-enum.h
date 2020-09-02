@@ -304,6 +304,7 @@ enum misc_item_type
 #endif
     MISC_BAG,
     MISC_TIN_OF_TREMORSTONES,
+    MISC_MERCENARY,
     
     NUM_MISCELLANY,
     MISC_DECK_UNKNOWN = NUM_MISCELLANY,

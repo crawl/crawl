@@ -761,7 +761,7 @@ public:
     SizeReq _get_preferred_size(Direction dim, int prosp_width) override;
 
 protected:
-    tile_def m_tile = {TILEG_ERROR, TEX_GUI};
+    tile_def m_tile = {TILEG_ERROR};
     int m_tw {0}, m_th {0};
 
 #ifdef USE_TILE_LOCAL

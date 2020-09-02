@@ -1338,7 +1338,7 @@ void tilep_scan_parts(char *fbuf, dolls_data &doll, int species, int level)
         else
         {
             const tileidx_t idx2 = tile_player_part_start[p] + idx - 1;
-            if (idx2 < TILE_MAIN_MAX || idx2 >= TILEP_PLAYER_MAX)
+            if (get_tile_texture(idx2) != TEX_PLAYER)
                 doll.parts[p] = TILEP_SHOW_EQUIP;
             else
                 doll.parts[p] = idx2;

@@ -574,10 +574,10 @@ Throws a bolt of electricity at the target, with high accuracy.
 %%%%
 Elemental Weapon spell
 
-Increase the power of elemental to the weapons you are holding.
-gives a temporary brand and slaying bonus when using element magic during
-buff time.
-Can only be used for unbranded weapons.
+Temporarily infuses the weapon held by the caster with the capacity to hold the 
+remains of the  elemental power which the wielder casts. Upon casting any 
+elemental spell, the weapon gains a temporary brand and slaying bonus. It can be
+used only to unbranded weapons.
 %%%%
 Energy Bolt spell
 
@@ -660,10 +660,12 @@ Hurls an explosive ball of fire.
 %%%%
 Flame Strike spell
 
-Put the flame insert in the weapon you're holding.
-When attacking during duration, use mana to give a fan-shaped fire 
-additional hit. After use, you becomes overheat and does not recover 
-mana. The mana used is determined by the attack speed and maximum mana.
+Infuses the blazing flame into the weapon held by the caster. Attacking with 
+this infusion will cause the furious outburst of the flame upon victims. Each
+explosion drains the caster's reserves of magical energy and after the effect
+expires their magic regeneration is inhibited for a short time of duration. 
+The amount of magical energy spent upon each attack depends on attack speed 
+and maximumim magic capacity.
 %%%%
 Flame Tongue spell
 

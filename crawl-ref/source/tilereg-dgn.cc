@@ -135,22 +135,14 @@ void DungeonRegion::pack_buffers()
     pack_cursor(CURSOR_MOUSE, mouse_curs_vis ? TILEI_CURSOR : TILEI_CURSOR2);
     pack_cursor(CURSOR_MAP, TILEI_CURSOR);
 
-    if (m_cursor[CURSOR_TUTORIAL] != NO_CURSOR
-        && on_screen(m_cursor[CURSOR_TUTORIAL]))
-    {
-        m_buf_dngn.add_main_tile(TILEI_TUTORIAL_CURSOR,
-                                 m_cursor[CURSOR_TUTORIAL].x,
-                                 m_cursor[CURSOR_TUTORIAL].y);
-    }
-
     for (const tile_overlay &overlay : m_overlays)
     {
         // overlays must be from the main image and must be in LOS.
         if (!crawl_view.in_los_bounds_g(overlay.gc))
             continue;
 
-        tileidx_t idx = overlay.idx;
-        if (idx >= TILE_MAIN_MAX)
+        const tileidx_t idx = overlay.idx;
+        if (get_tile_texture(idx) != TEX_DEFAULT)
             continue;
 
         const coord_def ep(overlay.gc.x - m_cx_to_gx,

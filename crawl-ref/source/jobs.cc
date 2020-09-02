@@ -2,12 +2,22 @@
 
 #include "jobs.h"
 
+#include "attitude-change.h"
 #include "enum.h"
 #include "errors.h"
+#include "god-companions.h"
+#include "items.h"
 #include "item-prop.h"
+#include "item-status-flag-type.h"
+#include "item-name.h"
 #include "libutil.h"
+#include "message.h"
 #include "mapdef.h"
+#include "mgen-data.h"
+#include "monster.h"
+#include "mon-place.h"
 #include "ng-setup.h"
+#include "output.h"
 #include "player.h"
 #include "stringutil.h"
 
@@ -189,4 +199,86 @@ bool is_starting_job(job_type job)
 {
     return job < NUM_JOBS
         && !_job_def(job).recommended_species.empty();
+}
+
+/**
+ * JOB_CARAVAN has starting mercenary
+ */
+void try_to_spawn_mercenary(int merc_type)
+{
+    const monster_type merctypes[] =
+    {
+        MONS_MERC_FIGHTER, MONS_MERC_SKALD,
+        MONS_MERC_WITCH, MONS_MERC_BRIGAND,
+        MONS_MERC_SHAMAN,
+    };
+
+    int merc;
+    monster* mon;
+    monster_type _montype = MONS_MERC_FIGHTER;
+    if (merc_type == -1) {
+        merc = you.props[CARAVAN_MERCENARY].get_int() > 0 ? you.props[CARAVAN_MERCENARY].get_int() - 1 : random2(4);
+        ASSERT(merc < (int)ARRAYSZ(merctypes));
+        _montype = merctypes[merc];
+    }
+    else {
+        _montype = (monster_type)merc_type;
+    }
+
+    mgen_data mg(_montype, BEH_FRIENDLY,
+        you.pos(), MHITYOU, MG_FORCE_BEH, you.religion);
+
+    mg.extra_flags |= (MF_HARD_RESET);
+
+    monster tempmon;
+    tempmon.type = _montype;
+    if (give_monster_proper_name(tempmon, false))
+        mg.mname = tempmon.mname;
+    else
+        mg.mname = make_name();
+    // This is used for giving the merc better stuff in mon-gear.
+    mg.props["caravan_mercenary items"] = true;
+
+    mon = create_monster(mg);
+
+    if (!mon)
+        return;
+
+    mon->props["dbname"].get_string() = mons_class_name(_montype);
+    redraw_screen();
+
+    for (mon_inv_iterator ii(*mon); ii; ++ii)
+        ii->flags &= ~ISFLAG_SUMMONED;
+    mon->flags &= ~MF_HARD_RESET;
+    mon->attitude = ATT_FRIENDLY;
+    mons_att_changed(mon);
+    add_companion(mon);
+
+    item_def* weapon = mon->mslot_item(MSLOT_WEAPON);
+    if(weapon != nullptr) {
+      const bool staff = weapon->base_type == OBJ_STAVES;
+      if (staff) {
+          mon->spells.clear();
+          switch (weapon->sub_type)
+          {
+          case STAFF_FIRE:
+              mon->spells.emplace_back(SPELL_THROW_FLAME, 80, MON_SPELL_WIZARD);
+              break;
+          case STAFF_COLD:
+              mon->spells.emplace_back(SPELL_THROW_FROST, 80, MON_SPELL_WIZARD);
+              break;
+          case STAFF_AIR:
+              mon->spells.emplace_back(SPELL_SHOCK, 80, MON_SPELL_WIZARD);
+              break;
+          default:
+              break;
+          }
+      }
+    }
+
+
+    
+    simple_monster_message(*mon, " follows you as a mercenary.");
+    you.props.erase(CARAVAN_MERCENARY);
+    you.props[CARAVAN_MERCENARY_SPAWNED] = true;
 }

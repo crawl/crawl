@@ -1078,8 +1078,9 @@ const char* rune_type_name(short p)
     }
 }
 
-static string misc_type_name(int type)
+static string misc_type_name(const item_def* item)
 {
+    int type = item->sub_type;
 #if TAG_MAJOR_VERSION == 34
     if (is_deck_type(type))
         return "removed deck";
@@ -1114,7 +1115,12 @@ static string misc_type_name(int type)
     case MISC_XOMS_CHESSBOARD:           return "removed chess piece";
 #endif
     case MISC_BAG:                       return "bag";
-    case MISC_TIN_OF_TREMORSTONES:               return "tin of tremorstones";
+    case MISC_TIN_OF_TREMORSTONES:       return "tin of tremorstones";
+    case MISC_MERCENARY:
+        if (item->props.exists(MERCENARY_UNIT_KEY)) {
+            return mons_class_name((monster_type)item->props[MERCENARY_UNIT_KEY].get_int());
+        }
+        return "mercenary";
 
     default:
         return "buggy miscellaneous item";
@@ -1350,7 +1356,7 @@ string sub_type_string(const item_def &item, bool known)
     }
     case OBJ_STAVES: return staff_type_name(static_cast<stave_type>(sub_type));
     case OBJ_RODS:   return rod_type_name(static_cast<rod_type>(sub_type));
-    case OBJ_MISCELLANY: return misc_type_name(sub_type);
+    case OBJ_MISCELLANY: return misc_type_name(&item);
     // these repeat as base_type_string
     case OBJ_ORBS: return "orb of Zot";
     case OBJ_CORPSES: return "corpse";
@@ -2015,7 +2021,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         if (!dbname && item_typ == MISC_ZIGGURAT && you.zigs_completed > 0)
             buff << "+" << you.zigs_completed << " ";
 
-        buff << misc_type_name(item_typ);
+        buff << misc_type_name(this);
 
         if (is_xp_evoker(*this) && !dbname && !evoker_charges(sub_type))
             buff << " (inert)";

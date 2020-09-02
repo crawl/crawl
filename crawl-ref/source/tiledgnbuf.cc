@@ -54,14 +54,15 @@ void DungeonCellBuffer::add(const packed_cell &cell, int x, int y)
     }
     else if (fg_idx == TILEP_PLAYER)
         pack_player(x, y, in_water);
-    else if (fg_idx >= TILE_MAIN_MAX)
+    else if (get_tile_texture(fg_idx) == TEX_PLAYER)
         m_buf_doll.add(fg_idx, x, y, TILEP_PART_MAX, in_water, false);
 
     pack_foreground(x, y, cell);
 
     // Draw cloud layer(s)
-    if (cloud_idx && cloud_idx < TILE_FEAT_MAX)
+    if (cloud_idx)
     {
+        ASSERT(get_tile_texture(cloud_idx) == TEX_DEFAULT);
         // If there's a foreground, sandwich it between two semi-transparent
         // clouds at different z-indices. This uses the same alpha fading as
         // a swimming characters but applied to the cloud (instead of as normal
@@ -74,6 +75,13 @@ void DungeonCellBuffer::add(const packed_cell &cell, int x, int y)
         else
             // Otherwise render it normally with full transparency
              m_buf_main.add(cloud_idx, x, y);
+    }
+    // Render any 'main' overlays (zaps) on top of clouds and items.
+    for (int i = 0; i < cell.num_dngn_overlay; ++i)
+    {
+        const auto tile = cell.dngn_overlay[i];
+        if (TILE_DNGN_MAX <= tile && tile < TILE_MAIN_MAX)
+            add_main_tile(tile, x, y);
     }
 }
 
@@ -100,9 +108,9 @@ void DungeonCellBuffer::add_monster(const monster_info &mon, int x, int y)
         else
             m_buf_doll.add(TILEP_MONS_UNKNOWN, x, y, 0, false, false);
     }
-    else if (t0 >= TILE_MAIN_MAX)
+    else if (get_tile_texture(t0) == TEX_PLAYER)
         m_buf_doll.add(t0, x, y, TILEP_PART_MAX, false, false);
-    else if (t0 && t0 <= TILE_MAIN_MAX)
+    else if (get_tile_texture(t0) == TEX_DEFAULT)
     {
         const tileidx_t base_idx = tileidx_known_base_item(t0);
         if (base_idx)
@@ -115,6 +123,11 @@ void DungeonCellBuffer::add_monster(const monster_info &mon, int x, int y)
     fake_cell.fg = flag;
     fake_cell.bg = 0;
     pack_foreground(x, y, fake_cell);
+}
+
+void DungeonCellBuffer::add_player_tile(int tileidx, int x, int y)
+{
+    m_buf_doll.add(tileidx, x, y, TILEP_PART_MAX, false, false);
 }
 
 void DungeonCellBuffer::add_dngn_tile(int tileidx, int x, int y,
@@ -418,7 +431,7 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
     const tileidx_t fg_idx = cell.fg & TILE_FLAG_MASK;
     const bool in_water = _in_water(cell);
 
-    if (fg_idx && fg_idx <= TILE_MAIN_MAX)
+    if (get_tile_texture(fg_idx) == TEX_DEFAULT)
     {
         const tileidx_t base_idx = tileidx_known_base_item(fg_idx);
 
