@@ -255,25 +255,29 @@ void try_to_spawn_mercenary(int merc_type)
     add_companion(mon);
 
     item_def* weapon = mon->mslot_item(MSLOT_WEAPON);
-    const bool staff = weapon->base_type == OBJ_STAVES;
-    if (staff) {
-        mon->spells.clear();
-        switch (weapon->sub_type)
-        {
-        case STAFF_FIRE:
-            mon->spells.emplace_back(SPELL_THROW_FLAME, 80, MON_SPELL_WIZARD);
-            break;
-        case STAFF_COLD:
-            mon->spells.emplace_back(SPELL_THROW_FROST, 80, MON_SPELL_WIZARD);
-            break;
-        case STAFF_AIR:
-            mon->spells.emplace_back(SPELL_SHOCK, 80, MON_SPELL_WIZARD);
-            break;
-        default:
-            break;
-        }
+    if(weapon != nullptr) {
+      const bool staff = weapon->base_type == OBJ_STAVES;
+      if (staff) {
+          mon->spells.clear();
+          switch (weapon->sub_type)
+          {
+          case STAFF_FIRE:
+              mon->spells.emplace_back(SPELL_THROW_FLAME, 80, MON_SPELL_WIZARD);
+              break;
+          case STAFF_COLD:
+              mon->spells.emplace_back(SPELL_THROW_FROST, 80, MON_SPELL_WIZARD);
+              break;
+          case STAFF_AIR:
+              mon->spells.emplace_back(SPELL_SHOCK, 80, MON_SPELL_WIZARD);
+              break;
+          default:
+              break;
+          }
+      }
     }
 
+
+    
     simple_monster_message(*mon, " follows you as a mercenary.");
     you.props.erase(CARAVAN_MERCENARY);
     you.props[CARAVAN_MERCENARY_SPAWNED] = true;

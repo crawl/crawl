@@ -1762,10 +1762,59 @@ static void _generate_mercenary_item(item_def& item)
 {
     item.props[MERCENARY_UNIT_KEY].get_int() = random_choose_weighted(
         20, MONS_MERC_FIGHTER,
+        5, MONS_MERC_KNIGHT,
+        1, MONS_MERC_DEATH_KNIGHT,
+        1, MONS_MERC_PALADIN,
+
         20, MONS_MERC_SKALD,
+        5, MONS_MERC_INFUSER,
+        1, MONS_MERC_TIDEHUNTER,
+
         20, MONS_MERC_WITCH,
+        5, MONS_MERC_SORCERESS,
+        1, MONS_MERC_ELEMENTALIST,
+
         20, MONS_MERC_BRIGAND,
-        20, MONS_MERC_SHAMAN);
+        5, MONS_MERC_ASSASSIN,
+        1, MONS_MERC_CLEANER,
+
+        20, MONS_MERC_SHAMAN,
+        5, MONS_MERC_SHAMAN_II,
+        1, MONS_MERC_SHAMAN_III,
+        //아래부턴 일반 몬스터들
+
+        50, MONS_KOBOLD,
+        20, MONS_BIG_KOBOLD,
+
+        20, MONS_NAGA,
+        5, MONS_NAGA_WARRIOR,
+        5, MONS_NAGA_MAGE,
+        1, MONS_NAGARAJA,
+
+        15, MONS_DEEP_ELF_MAGE,
+        3, MONS_DEEP_ELF_SUMMONER,
+        3, MONS_DEEP_ELF_CONJURER,
+        3, MONS_DEEP_ELF_PRIEST,
+        1, MONS_DEEP_ELF_SORCERER,
+        1, MONS_DEEP_ELF_ANNIHILATOR,
+        1, MONS_DEEP_ELF_SORCERER,
+        1, MONS_DEEP_ELF_HIGH_PRIEST,
+
+        30, MONS_GNOLL,
+        10, MONS_GNOLL_SERGEANT,
+
+        30, MONS_MERFOLK,
+        5, MONS_MERFOLK_IMPALER,
+
+        50, MONS_ORC,
+        20, MONS_ORC_WARRIOR,
+        10, MONS_ORC_WIZARD,
+        10, MONS_ORC_PRIEST,
+        5, MONS_ORC_KNIGHT,
+        5, MONS_ORC_HIGH_PRIEST,
+        5, MONS_ORC_SORCERER,
+        1, MONS_ORC_WARLORD
+        );
 }
 static void _generate_misc_item(item_def& item, int force_type)
 {

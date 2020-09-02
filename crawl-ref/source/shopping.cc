@@ -21,6 +21,7 @@
 #include "dgn-overview.h"
 #include "english.h"
 #include "env.h"
+#include "evoke.h"
 #include "files.h"
 #include "food.h"
 #include "invent.h"
@@ -32,6 +33,7 @@
 #include "macro.h"
 #include "menu.h"
 #include "message.h"
+#include "mon-util.h"
 #include "notes.h"
 #include "output.h"
 #include "place.h"
@@ -750,7 +752,15 @@ unsigned int item_value(item_def item, bool ident)
             break;
 
         case MISC_MERCENARY:
-            valued += 500;
+            if (item.props.exists(MERCENARY_UNIT_KEY)) 
+            {
+                int hit_dice = mons_class_hit_dice((monster_type)item.props[MERCENARY_UNIT_KEY].get_int());
+                valued += hit_dice * 100;
+            }
+            else 
+            {
+                valued += 500;
+            }
             break;
 
         case MISC_FAN_OF_GALES:
