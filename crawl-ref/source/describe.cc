@@ -192,7 +192,7 @@ int show_description(const describe_info &inf, const tile_def *tile)
     {
         tiles.json_open_object("tile");
         tiles.json_write_int("t", tile->tile);
-        tiles.json_write_int("tex", tile->tex);
+        tiles.json_write_int("tex", get_tile_texture(tile->tile));
         if (tile->ymax != TILE_Y)
             tiles.json_write_int("ymax", tile->ymax);
         tiles.json_close_object();
