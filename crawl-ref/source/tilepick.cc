@@ -1967,7 +1967,7 @@ tileidx_t tileidx_monster(const monster_info& mons)
         ch |= TILE_FLAG_VILE_CLUTCH;
     if (mons.is(MB_POSSESSABLE))
         ch |= TILE_FLAG_POSSESSABLE;
-    if (mons.is(MB_SLOWLY_DYING))
+    if (mons.is(MB_SLOWLY_DYING) && mons_class_is_fragile(mons.type))
         ch |= TILE_FLAG_SLOWLY_DYING;
 
     if (mons.attitude == ATT_FRIENDLY)
