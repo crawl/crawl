@@ -1871,7 +1871,7 @@ static void _mercenary_card(int power)
         else
             mg.mname = make_name();
         // This is used for giving the merc better stuff in mon-gear.
-        mg.props["mercenary"] = true;
+        mg.props[MERCENARY_FLAG] = true;
         mg.props["mercenary items"] = true;
 
         mon = create_monster(mg);

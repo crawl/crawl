@@ -81,7 +81,7 @@ void try_to_spawn_mercenary(int merc_type)
     mon->flags &= ~MF_HARD_RESET;
     mon->attitude = ATT_FRIENDLY;
     mons_att_changed(mon);
-    mon->props["mercenary"] = true;
+    mon->props[MERCENARY_FLAG] = true;
     add_companion(mon);
 
     item_def* weapon = mon->mslot_item(MSLOT_WEAPON);
