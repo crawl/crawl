@@ -19,6 +19,7 @@
 #include "god-passive.h" // passive_t::convert_orcs
 #include "god-item.h"
 #include "libutil.h"
+#include "mercenaries.h"
 #include "message.h"
 #include "mon-behv.h"
 #include "mon-death.h"
@@ -60,7 +61,7 @@ void mons_att_changed(monster* mon)
     if (mon->attitude == ATT_HOSTILE
         && (mons_is_god_gift(*mon, GOD_BEOGH)
            || mons_is_god_gift(*mon, GOD_YREDELEMNUL)
-           || is_mercernery_companion(*mon)))
+           || is_caravan_companion(*mon)))
     {
         remove_companion(mon);
     }

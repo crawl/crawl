@@ -55,6 +55,7 @@
 #include "libutil.h"
 #include "macro.h"
 #include "makeitem.h"
+#include "mercenaries.h"
 #include "message.h"
 #include "mon-ench.h"
 #include "nearby-danger.h"

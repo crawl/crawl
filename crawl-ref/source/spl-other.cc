@@ -20,6 +20,7 @@
 #include "message.h"
 #include "misc.h"
 #include "makeitem.h"
+#include "mercenaries.h"
 #include "mon-place.h"
 #include "mon-util.h"
 #include "place.h"
@@ -124,7 +125,7 @@ void start_recall(recall_t type)
         }
         else if (type == recall_t::caravan)
         {
-            if (!is_mercernery_companion(**mi))
+            if (!(mi->props.exists(MERCENARY_FLAG) && mi->props[MERCENARY_FLAG]))
                 continue;
         }
 

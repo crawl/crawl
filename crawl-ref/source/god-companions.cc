@@ -42,14 +42,11 @@ void add_companion(monster* mons)
 void remove_companion(monster* mons)
 {
     mons->props["no_annotate"] = false;
+    if (mons->props.exists("mercenary"))
+        mons->props["mercenary"] = false;
     set_unique_annotation(mons);
-    if(companion_list.find(mons->mid) != companion_list.end()) {
+    if(companion_list.find(mons->mid) != companion_list.end())
         companion_list.erase(mons->mid);
-
-        if(is_mercernery_companion(*mons)) {
-            lost_mercernery(mons);
-        }
-    }
 }
 
 void remove_enslaved_soul_companion()
@@ -94,22 +91,6 @@ void move_companion_to(const monster* mons, const level_id lid)
     }
 }
 
-bool is_mercernery_companion(const monster& mons)
-{
-    if (mons.props.exists(MERCENARY_FLAG)) {
-        return mons.props[MERCENARY_FLAG].get_bool();
-    }
-    return false;
-}
-
-void lost_mercernery(const monster* mon) {
-    you.attribute[ATTR_CARAVAN_LOST]++;
-    you.props.erase(CARAVAN_MERCENARY_SPAWNED);
-    you.attribute[ATTR_CARAVAN_ITEM_COST] *= 0;
-    mprf(MSGCH_WARN, "You've lost your %s! With enough golds, you can rehire another one...",
-        mon->name(DESC_THE, false).c_str());
-}
-
 void update_companions()
 {
     for (auto &entry : companion_list)
@@ -117,7 +98,7 @@ void update_companions()
         monster* mons = monster_by_mid(entry.first);
         if (mons)
         {
-            if (mons->is_divine_companion() || mons->is_mercenery_companion())
+            if (mons->is_divine_companion())
             {
                 ASSERT(mons->alive());
                 entry.second.mons = follower(*mons);

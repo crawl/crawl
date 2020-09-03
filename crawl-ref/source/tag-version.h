@@ -240,7 +240,7 @@ enum tag_minor_version
     TAG_MINOR_NEMELEX_WEIGHTS_ROLLBACK, // Nemelex deck weighting rollback
     TAG_MINOR_SACRIFICE_NECK,      // sacrifice neck for hydra
     TAG_MINOR_JIYVA_MUTATION_REWORK,// rework jiyva mutation
-    TAG_MINOR_WAR_CHANT,             // Add war chant book
+    TAG_MINOR_WAR_CHANT,           // Add war chant book
     TAG_MINOR_MERCENARY_SHOP,      // Add mercenary shop
 #endif
     NUM_TAG_MINORS,

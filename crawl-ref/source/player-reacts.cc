@@ -82,6 +82,7 @@
 #include "mapmark.h"
 #include "maps.h"
 #include "melee-attack.h"
+#include "mercenaries.h"
 #include "message.h"
 #include "misc.h"
 #include "mon-abil.h"

@@ -35,7 +35,7 @@ const int KRAKEN_TENTACLE_RANGE = 3;
 
 #define MAP_KEY "map"
 
-#define MERCENARY_FLAG "mercenary_flag"
+ #define MERCENARY_FLAG "mercenary"
 
 typedef map<enchant_type, mon_enchant> mon_enchant_list;
 
