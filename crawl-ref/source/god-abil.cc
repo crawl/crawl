@@ -49,6 +49,7 @@
 #include "libutil.h"
 #include "losglobal.h"
 #include "macro.h"
+#include "makeitem.h"
 #include "mapmark.h"
 #include "maps.h"
 #include "message.h"
@@ -180,7 +181,7 @@ bool bless_weapon(god_type god, brand_type brand, colour_t colour)
 
     item_def& wpn(you.inv[item_slot]);
     // Only TSO allows blessing ranged weapons.
-    if (!is_brandable_weapon(wpn, brand == SPWPN_HOLY_WRATH, true))
+    if (!is_brandable_weapon(wpn, is_weapon_brand_ok(WPN_LONGBOW, brand, false), true))
         return false;
 
     string prompt = "Do you wish to have " + wpn.name(DESC_YOUR)

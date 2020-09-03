@@ -1184,7 +1184,7 @@ bool item_is_selected(const item_def &i, int selector)
                 || i.rod_plus < MAX_WPN_ENCHANT));
 
     case OSEL_BLESSABLE_WEAPON:
-        return is_brandable_weapon(i, you_worship(GOD_SHINING_ONE), true);
+        return is_brandable_weapon(i, you_worship(GOD_SHINING_ONE) || you_worship(GOD_ZIN), true);
 
     case OSEL_BEOGH_GIFT:
         return (itype == OBJ_WEAPONS
