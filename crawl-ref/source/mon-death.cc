@@ -2607,7 +2607,7 @@ item_def* monster_die(monster& mons, killer_type killer,
 
             // KILL_RESET monsters no longer lose their whole inventory, only
             // items they were generated with.
-            if (is_mercernery_companion(mons.type))
+            if (is_mercernery_companion(mons))
             {
                 mons_pacify(mons, ATT_NEUTRAL);
                 mprf(MSGCH_WARN, "%s is banished into the Abyss, will act for own survival rather than you.",

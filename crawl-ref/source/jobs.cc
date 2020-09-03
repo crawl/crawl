@@ -251,6 +251,8 @@ void try_to_spawn_mercenary(int merc_type)
         ii->flags &= ~ISFLAG_SUMMONED;
     mon->flags &= ~MF_HARD_RESET;
     mon->attitude = ATT_FRIENDLY;
+    mon->props[MERCENARY_FLAG].get_bool() = true;
+
     mons_att_changed(mon);
     add_companion(mon);
 
