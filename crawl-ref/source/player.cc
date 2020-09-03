@@ -37,6 +37,7 @@
 #include "files.h"
 #include "food.h"
 #include "god-abil.h"
+#include "god-companions.h"
 #include "god-conduct.h"
 #include "god-passive.h"
 #include "god-wrath.h"
@@ -9273,4 +9274,18 @@ void end_ecdysis()
     you.deaths++;
 }
 
-
+bool has_mercenaries()
+{
+    for (auto &entry : companion_list)
+    {
+        monster* mons = monster_by_mid(entry.first);
+        if (mons)
+        {
+            if (mons->props.exists("mercenary") && mons->props["mercenary"])
+            {
+                return true;
+            }
+        }
+    }
+    return false;
+}

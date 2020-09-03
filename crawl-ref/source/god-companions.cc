@@ -42,14 +42,11 @@ void add_companion(monster* mons)
 void remove_companion(monster* mons)
 {
     mons->props["no_annotate"] = false;
+    if (mons->props.exists("mercenary"))
+        mons->props["mercenary"] = false;
     set_unique_annotation(mons);
-    if(companion_list.find(mons->mid) != companion_list.end()) {
+    if(companion_list.find(mons->mid) != companion_list.end())
         companion_list.erase(mons->mid);
-
-        if(is_mercernery_companion(mons->type)) {
-            lost_mercernery(mons);
-        }
-    }
 }
 
 void remove_enslaved_soul_companion()
@@ -94,34 +91,6 @@ void move_companion_to(const monster* mons, const level_id lid)
     }
 }
 
-bool is_mercernery_companion(monster_type mon_type)
-{
-    return (mon_type == MONS_MERC_FIGHTER
-               || mon_type == MONS_MERC_KNIGHT
-               || mon_type == MONS_MERC_DEATH_KNIGHT
-               || mon_type == MONS_MERC_PALADIN
-               || mon_type == MONS_MERC_SKALD
-               || mon_type == MONS_MERC_INFUSER
-               || mon_type == MONS_MERC_TIDEHUNTER
-               || mon_type == MONS_MERC_WITCH
-               || mon_type == MONS_MERC_SORCERESS
-               || mon_type == MONS_MERC_ELEMENTALIST
-               || mon_type == MONS_MERC_BRIGAND
-               || mon_type== MONS_MERC_ASSASSIN
-               || mon_type == MONS_MERC_CLEANER
-               || mon_type == MONS_MERC_SHAMAN
-               || mon_type == MONS_MERC_SHAMAN_II
-               || mon_type == MONS_MERC_SHAMAN_III);
-}
-
-void lost_mercernery(const monster* mon) {
-    you.attribute[ATTR_CARAVAN_LOST]++;
-    you.props.erase(CARAVAN_MERCENARY_SPAWNED);
-    you.attribute[ATTR_CARAVAN_ITEM_COST] *= 0;
-    mprf(MSGCH_WARN, "You've lost your %s! With enough golds, you can rehire another one...",
-        mon->name(DESC_THE, false).c_str());
-}
-
 void update_companions()
 {
     for (auto &entry : companion_list)
@@ -129,7 +98,7 @@ void update_companions()
         monster* mons = monster_by_mid(entry.first);
         if (mons)
         {
-            if (mons->is_divine_companion() || mons->is_mercenery_companion())
+            if (mons->is_divine_companion())
             {
                 ASSERT(mons->alive());
                 entry.second.mons = follower(*mons);

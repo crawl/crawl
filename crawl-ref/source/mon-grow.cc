@@ -11,6 +11,7 @@
 #include "mon-grow.h"
 
 #include "message.h"
+#include "mercenaries.h"
 #include "mon-place.h"
 #include "monster.h"
 #include "mon-util.h"

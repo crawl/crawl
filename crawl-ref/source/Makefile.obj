@@ -139,6 +139,7 @@ mapmark.o \
 maps.o \
 melee-attack.o \
 menu.o \
+mercenaries.o \
 message-stream.o \
 message.o \
 misc.o \

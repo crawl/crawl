@@ -70,7 +70,6 @@
 #define ELEMENTAL_ENCHANT_KEY "elemenatal enchant"
 #define COMBAT_MANA_KEY "combat_mana"
 #define CARAVAN_MERCENARY "caravan_mercenary"
-#define CARAVAN_MERCENARY_SPAWNED "caravan_mercenary_spawned"
 
 // display/messaging breakpoints for penalties from Ru's MUT_HORROR
 #define HORROR_LVL_EXTREME  3
@@ -968,7 +967,6 @@ private:
                                     vector<item_def> armour_items) const;
     int armour_class_with_specific_items(
                                 vector<item_def> items) const;
-
 };
 COMPILE_CHECK((int) SP_UNKNOWN_BRAND < 8*sizeof(you.seen_weapon[0]));
 COMPILE_CHECK((int) SP_UNKNOWN_BRAND < 8*sizeof(you.seen_armour[0]));
@@ -1267,3 +1265,5 @@ bool temperature_effect(int which);
 int temperature_colour(int temp);
 string temperature_string(int temp);
 string temperature_text(int temp);
+
+bool has_mercenaries();
