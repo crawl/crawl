@@ -6593,7 +6593,7 @@ void unmarshallMonster(reader &th, monster& m)
             m.props[MERCENARY_FLAG].get_bool() = true;
         }
     }
-    
+
 #if TAG_MAJOR_VERSION == 34
     // Forget seen spells if the monster doesn't have any, most likely because
     // of a polymorph that happened before polymorph began removing this key.

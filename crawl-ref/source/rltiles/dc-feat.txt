@@ -330,6 +330,7 @@ shop_wands SHOP_WANDS
 shop_jewellery SHOP_JEWELLERY
 shop_potions SHOP_POTIONS
 shop_gadgets SHOP_GADGETS
+shop_mercenary SHOP_MERCENARY
 %back none
 %shrink 1
 abandoned_shop DNGN_ABANDONED_SHOP
