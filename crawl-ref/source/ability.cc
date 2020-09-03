@@ -2282,7 +2282,8 @@ static spret _do_ability(const ability_def& abil, bool fail)
         }
 
         item_def *wpn = you.weapon();
-        int enchant = max(3, you.experience_level/3);
+        const int base_dam = property(*you.weapon(), PWPN_DAMAGE);
+        int enchant = max(3, base_dam/3);
 
         string prompt = "Do you wish to have " + wpn->name(DESC_YOUR)
                            + " cursed and enchanted?";
@@ -2298,7 +2299,7 @@ static spret _do_ability(const ability_def& abil, bool fail)
         if (wpn->props.exists("wight_key"))
         {
             int overwrite = max(wpn->props["wight_key"].get_int(),
-                                        you.experience_level/3);
+                                 max(3, base_dam/3));
             
             for (int i = wpn->props["wight_key"].get_int(); i > 0; i--)
             {
@@ -2328,7 +2329,7 @@ static spret _do_ability(const ability_def& abil, bool fail)
         scaled_delay(1000);
 #endif
         you.wield_change = true;
-        drain_player(120, false, true);
+        drain_player(600, false, true);
         mprf("%s is now bound in your memories.",
             wpn->name(DESC_YOUR).c_str());
         break;
