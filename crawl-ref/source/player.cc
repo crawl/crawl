@@ -9278,13 +9278,13 @@ bool has_mercenaries()
 {
     for (auto &entry : companion_list)
     {
-        monster* mons = monster_by_mid(entry.first);
-        if (mons)
+        int mid = entry.first;
+        companion& comp = entry.second;
+        if (comp.level.branch == BRANCH_ABYSS)
+            continue;
+        if (comp.mons.mons.props.exists(MERCENARY_FLAG) && comp.mons.mons.props[MERCENARY_FLAG].get_bool())
         {
-            if (mons->props.exists("mercenary") && mons->props["mercenary"])
-            {
-                return true;
-            }
+            return true;
         }
     }
     return false;

@@ -42,8 +42,8 @@ void add_companion(monster* mons)
 void remove_companion(monster* mons)
 {
     mons->props["no_annotate"] = false;
-    if (mons->props.exists("mercenary"))
-        mons->props["mercenary"] = false;
+    if (mons->props.exists(MERCENARY_FLAG))
+        mons->props[MERCENARY_FLAG] = false;
     set_unique_annotation(mons);
     if(companion_list.find(mons->mid) != companion_list.end())
         companion_list.erase(mons->mid);

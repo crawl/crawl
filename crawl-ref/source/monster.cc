@@ -6826,8 +6826,8 @@ bool monster::is_divine_companion() const
 
 bool monster::is_mercenery_companion() const
 {
-    return props.exists("mercenary") 
-           && props["mercenary"]
+    return props.exists(MERCENARY_FLAG) 
+           && props[MERCENARY_FLAG].get_bool()
            && attitude == ATT_FRIENDLY
            && mons_can_use_stairs(*this);
 }
