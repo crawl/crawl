@@ -2385,7 +2385,7 @@ static const facet_def _demon_facets[] =
       { -33, 0, 0 } },
     { 2, { MUT_POWERED_BY_PAIN, MUT_POWERED_BY_PAIN, MUT_POWERED_BY_PAIN },
       { -33, 0, 0 } },
-    { 2, { MUT_MIASMA_IMMUNITY, MUT_FOUL_STENCH, MUT_FOUL_STENCH },
+    { 2, { MUT_FOUL_STENCH, MUT_FOUL_STENCH, MUT_FOUL_STENCH },
       { -33, 0, 0 } },
     { 2, { MUT_MANA_REGENERATION, MUT_MANA_SHIELD, MUT_MANA_LINK },
       { -33, 0, 0 } },
@@ -2484,7 +2484,7 @@ try_again:
                 if (m == MUT_HEAT_RESISTANCE)
                     fire_elemental++;
 
-                if (m == MUT_MIASMA_IMMUNITY || m == MUT_IGNITE_BLOOD)
+                if ((i == 0 && m == MUT_FOUL_STENCH) || m == MUT_IGNITE_BLOOD)
                     cloud_producing++;
             }
 
