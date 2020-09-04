@@ -2455,7 +2455,7 @@ ITEM:   quick blade ego:electrocution good_item ident:type w:5 / \
         quarterstaff ego:electrocution good_item ident:type
 ITEM:   scroll of blinking q:1 / scroll of blinking q:2 / \
         scroll of teleportation q:3 w:30 / any scroll good_item / \
-        staff of energy ident:type / staff of air ident:type
+        staff of air ident:type
 KFEAT:  yz = w
 KFEAT:  YZ" = W
 KFEAT:  # = iron_grate

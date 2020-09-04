@@ -1511,9 +1511,6 @@ static void _debug_rap_stats(FILE *ostat)
         "ARTP_SEE_INVISIBLE",
         "ARTP_INVISIBLE",
         "ARTP_FLY",
-#if TAG_MAJOR_VERSION > 34
-        "ARTP_FOG",
-#endif
         "ARTP_BLINK",
         "ARTP_BERSERK",
         "ARTP_NOISE",
@@ -1557,6 +1554,7 @@ static void _debug_rap_stats(FILE *ostat)
         "ARTP_FRAGILE",
         "ARTP_SHIELDING",
         "ARTP_HARM",
+        "ARTP_RAMPAGING",
     };
     COMPILE_CHECK(ARRAYSZ(rap_names) == ARTP_NUM_PROPERTIES);
 

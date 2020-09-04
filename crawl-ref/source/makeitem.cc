@@ -1289,7 +1289,7 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
  */
 static int _random_wand_subtype()
 {
-    // total weight 75 [arbitrary]
+    // total weight 70 [arbitrary]
     return random_choose_weighted(10, WAND_FLAME,
                                   10, WAND_ICEBLAST,
                                   8, WAND_RANDOM_EFFECTS,
@@ -1298,8 +1298,7 @@ static int _random_wand_subtype()
                                   8, WAND_ACID,
                                   6, WAND_DISINTEGRATION,
                                   6, WAND_DIGGING,
-                                  5, WAND_ENSLAVEMENT,
-                                  5, WAND_CLOUDS);
+                                  5, WAND_ENSLAVEMENT);
 }
 
 /**
@@ -1319,7 +1318,6 @@ bool is_high_tier_wand(int type)
     case WAND_ACID:
     case WAND_ICEBLAST:
     case WAND_DISINTEGRATION:
-    case WAND_CLOUDS:
         return true;
     default:
         return false;
@@ -1544,10 +1542,6 @@ static stave_type _get_random_stave_type()
     }
     while (item_type_removed(OBJ_STAVES, r));
 
-    // staves of energy are 25% less common, wizardry is more common
-    if (r == STAFF_ENERGY && one_chance_in(4))
-        r = STAFF_WIZARDRY;
-
     return r;
 }
 
@@ -1727,7 +1721,8 @@ static void _generate_misc_item(item_def& item, int force_type)
                                       MISC_LIGHTNING_ROD,
                                       MISC_BOX_OF_BEASTS,
                                       MISC_PHANTOM_MIRROR,
-                                      MISC_TIN_OF_TREMORSTONES);
+                                      MISC_TIN_OF_TREMORSTONES,
+                                      MISC_CONDENSER_VANE);
     }
 }
 
@@ -1794,9 +1789,7 @@ static void _setup_fallback_randart(const int unrand_id,
         && fallback_sub_type == WPN_STAFF)
     {
         item.base_type = OBJ_STAVES;
-        if (unrand_id == UNRAND_WUCAD_MU)
-            force_type = STAFF_ENERGY;
-        else if (unrand_id == UNRAND_OLGREB)
+        if (unrand_id == UNRAND_OLGREB)
             force_type = STAFF_POISON;
         else
             force_type = OBJ_RANDOM;

@@ -49,8 +49,8 @@ those struck by it, even piercing through poison resistance.
 %%%%
 staff of Wucad Mu
 
-A crystal staff overflowing with magical energies. It can be evoked to restore
-large amounts of magical energy, but with the risk of damaging the user's mind.
+A crystal staff overflowing with magical energies. It occasionally powers the
+spells of the user, but with the risk of damaging the user's mind.
 Its power depends on the wielder's Evocations skill.
 %%%%
 Vampire's Tooth
@@ -305,8 +305,9 @@ animals, each chosen for the unique strengths it could grant the robe's wearer.
 %%%%
 cloak of the Thief
 
-A pitch-black cloak which allows its wearer to excel in the arts of thievery,
-and can be evoked to release thick clouds of smoke for a hasty escape.
+A pitch-black cloak which allows its wearer to excel in the arts of thievery
+and escape. Blows received by the wearer will cause the cloak release thick
+clouds of smoke for a hasty escape.
 %%%%
 # TAG_MAJOR_VERSION == 34
 tower shield "Bullseye"
@@ -426,12 +427,9 @@ A phosphorescent cloak, woven of pure light beams.
 %%%%
 ratskin cloak
 
-A cloak stitched from the hides of hundreds of hell rats, by an enchantress
-with a magic loom and too much time on her hands. It provides excellent
-protection from rats of all kinds.
-
-It can be evoked to summon rats from the Dungeon to accompany the wearer,
-for a time.
+A cloak stitched from the hides of hundreds of hell rats by an enchantress with
+far too much time on her hands. Blows inflicted on the wearer will occasionally
+provoke rats concealed beneath the cloak to scurry out and assist.
 %%%%
 shield of the Gong
 
@@ -622,10 +620,11 @@ rather heavy...
 %%%%
 Majin-Bo
 
-A staff inhabited by a mighty demon, tricked and trapped in this form long
-ago. To survive, she now offers tremendous arcane power at a small price: a
-tiny portion of the caster's life essence, taken alongside the magic used every
-time its wielder casts a spell.
+A staff inhabited by a mighty demon, tricked and trapped in this form long ago.
+To survive, she now offers great arcane power in a terrible bargain: in
+exchange for a tiny portion of the caster's life essence, taken alongside the
+magic used every time its wielder casts a spell, she will occasionally redirect
+the life essence of creatures damaged by the spell to the caster.
 %%%%
 pair of quick blades "Gyre" and "Gimble"
 

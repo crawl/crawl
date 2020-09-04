@@ -1444,7 +1444,7 @@ static const mutation_def mut_data[] =
 
   {"You are partially covered in razor-sharp scales. (AC +1, Slay +1)",
    "You are mostly covered in razor-sharp scales. (AC +2, Slay +2)",
-   "You are completely covered in razor-sharp scales. (AC +3, Slay + 3)"},
+   "You are completely covered in razor-sharp scales. (AC +3, Slay +3)"},
 
   {"Sharp scales grow over part of your body.",
    "Sharp scales spread over more of your body.",
@@ -1491,7 +1491,7 @@ static const mutation_def mut_data[] =
   "big brain",
 
   {"You have an unusually large brain. (Int +2)",
-   "You have an extremely huge brain. (Int + 4)",
+   "You have an extremely huge brain. (Int +4)",
    "You have an absolutely massive brain. (Int +6, Wiz)"},
 
   {"Your brain expands.",

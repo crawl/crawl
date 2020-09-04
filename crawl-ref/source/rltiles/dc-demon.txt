@@ -17,6 +17,7 @@ demon_body_thin
 demon_body_caterpillar
 demon_body_skeletal
 demon_body_mantis
+demon_body_snake
 
 %variation DEMON_BODY red
 %hue 180 0
@@ -205,6 +206,8 @@ demon_head_skull
 demon_head_cow_skull
 demon_head_bird
 demon_head_fungus
+demon_head_eyestalk
+demon_head_nightmare
 
 %variation DEMON_HEAD red
 %hue 180 0

@@ -281,7 +281,9 @@ static string _get_speak_string(const vector<string> &prefixes,
                                 bool unseen)
 {
     int duration = 1;
-    if (mons->hit_points <= 0)
+    if ((mons->flags & MF_BANISHED) && !player_in_branch(BRANCH_ABYSS))
+        key += " banished";
+    else if (mons->hit_points <= 0)
     {
         //separate death/permadeath lines for resurrection monsters
         if (mons_is_mons_class(mons, MONS_NATASHA)
@@ -293,8 +295,6 @@ static string _get_speak_string(const vector<string> &prefixes,
         }
         key += " killed";
     }
-    else if ((mons->flags & MF_BANISHED) && !player_in_branch(BRANCH_ABYSS))
-        key += " banished";
     else if (mons->is_summoned(&duration) && duration <= 0)
         key += " unsummoned";
 

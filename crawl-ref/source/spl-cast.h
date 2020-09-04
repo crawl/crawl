@@ -16,7 +16,6 @@ enum class spflag
                      //  0x00000008,
                                           // used to test for targeting
     targeting_mask     = spflag::dir_or_target | spflag::target,
-    // TODO: we need a new flag if we want to target corpses too.
     obj                = 0x00000010,      // TARG_MOVABLE_OBJECT used
     helpful            = 0x00000020,      // TARG_FRIEND used
     neutral            = 0x00000040,      // TARG_ANY used
@@ -123,5 +122,3 @@ string spell_failure_rate_string(spell_type spell);
 string spell_noise_string(spell_type spell, int chop_wiz_display_width = 0);
 
 void spell_skills(spell_type spell, set<skill_type> &skills);
-
-bool spell_removed(spell_type spell);

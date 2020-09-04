@@ -44,9 +44,8 @@ static const int EQF_NONE = 0;
 // "hand" slots (not rings)
 static const int EQF_HANDS = SLOTF(EQ_WEAPON) | SLOTF(EQ_SHIELD)
                              | SLOTF(EQ_GLOVES);
-// "aux" body slots (beastly appendage);
-static const int EQF_AUXES = SLOTF(EQ_GLOVES) | SLOTF(EQ_BOOTS)
-                             | SLOTF(EQ_CLOAK) | SLOTF(EQ_HELMET);
+// head and feet (beastly appendage);
+static const int EQF_HEAD_FOOT = SLOTF(EQ_BOOTS) | SLOTF(EQ_HELMET);
 // core body slots (statue form)
 static const int EQF_STATUE = SLOTF(EQ_GLOVES) | SLOTF(EQ_BOOTS)
                               | SLOTF(EQ_BODY_ARMOUR);
@@ -1673,8 +1672,11 @@ bool transform(int pow, transformation which_trans, bool involuntary,
         // Need to set the appendages here for messaging
         for (mutation_type app : appendages)
         {
-            if (physiology_mutation_conflict(app))
+            if (physiology_mutation_conflict(app)
+                || you.get_base_mutation_level(app) > 0)
+            {
                 continue;
+            }
             you.props[APPENDAGE_KEY].get_vector().push_back(app);
             dprf("Setting appendage mutation %s.", mutation_name(app));
         }
@@ -1902,18 +1904,19 @@ void untransform(bool skip_move)
 {
     const bool was_flying = you.airborne();
 
+    // Must be unset first or else infinite loops might result. -- bwr
+    const transformation old_form = you.form;
+
     you.redraw_quiver           = true;
     you.redraw_evasion          = true;
     you.redraw_armour_class     = true;
     you.wield_change            = true;
-    you.received_weapon_warning = false;
+    if (!form_can_wield(old_form))
+        you.received_weapon_warning = false;
     if (you.props.exists(TRANSFORM_POW_KEY))
         you.props.erase(TRANSFORM_POW_KEY);
     if (you.props.exists(HYDRA_FORM_HEADS_KEY))
         you.props.erase(HYDRA_FORM_HEADS_KEY);
-
-    // Must be unset first or else infinite loops might result. -- bwr
-    const transformation old_form = you.form;
 
     // We may have to unmeld a couple of equipment types.
     set<equipment_type> melded = _init_equipment_removal(old_form);
@@ -1990,11 +1993,7 @@ void untransform(bool skip_move)
     // Removed barding check, no transformed creatures can wear barding
     // anyway.
     // *coughs* Ahem, blade hands... -- jpeg
-    if (you.species == SP_NAGA
-#if TAG_MAJOR_VERSION == 34
-        || you.species == SP_CENTAUR
-#endif
-        )
+    if (you.wear_barding())
     {
         const int arm = you.equip[EQ_BOOTS];
 

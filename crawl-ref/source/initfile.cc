@@ -393,6 +393,8 @@ const vector<GameOption*> game_options::build_options_list()
         new StringGameOption(SIMPLE_NAME(tile_font_msg_family), "monospace"),
         new StringGameOption(SIMPLE_NAME(tile_font_stat_family), "monospace"),
         new StringGameOption(SIMPLE_NAME(tile_font_lbl_family), "monospace"),
+        new StringGameOption(SIMPLE_NAME(glyph_mode_font), "monospace"),
+        new IntGameOption(SIMPLE_NAME(glyph_mode_font_size), 24, 8, 144),
 #endif
 #ifdef USE_FT
         new BoolGameOption(SIMPLE_NAME(tile_font_ft_light), false),
@@ -811,11 +813,18 @@ void game_options::new_dump_fields(const string &text, bool add, bool prepend)
     // Easy; chardump.cc has most of the intelligence.
     vector<string> fields = split_string(",", text, true, true);
     if (add)
+    {
+        erase_if(fields, [this](const string &x) { return dump_fields.count(x) > 0; });
+        dump_fields.insert(fields.begin(), fields.end());
         merge_lists(dump_order, fields, prepend);
+    }
     else
     {
         for (const string &field : fields)
+        {
+            dump_fields.erase(field);
             erase_val(dump_order, field);
+        }
     }
 }
 
@@ -1155,6 +1164,7 @@ void game_options::reset_options()
 
     // Clear vector options.
     dump_order.clear();
+    dump_fields.clear();
     new_dump_fields("header,hiscore,stats,misc,inventory,"
                     "skills,spells,overview,mutations,messages,"
                     "screenshot,monlist,kills,notes,screenshots,vaults,"
@@ -3278,7 +3288,10 @@ void game_options::read_option_line(const string &str, bool runscript)
     else if (key == "dump_order")
     {
         if (plain)
+        {
+            dump_fields.clear();
             dump_order.clear();
+        }
 
         new_dump_fields(field, !minus_equal, caret_equal);
     }
@@ -4545,6 +4558,9 @@ void game_options::write_webtiles_options(const string& name)
     tiles.json_write_int("tile_font_stat_size", Options.tile_font_stat_size);
     tiles.json_write_int("tile_font_msg_size", Options.tile_font_msg_size);
     tiles.json_write_int("tile_font_lbl_size", Options.tile_font_lbl_size);
+
+    tiles.json_write_string("glyph_mode_font", Options.glyph_mode_font);
+    tiles.json_write_int("glyph_mode_font_size", Options.glyph_mode_font_size);
 
     tiles.json_write_bool("show_game_time", Options.show_game_time);
 

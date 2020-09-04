@@ -194,6 +194,20 @@ body {
      width: 45%;
 }
 
+.status_light[data-desc]:hover::after {
+    content: attr(data-desc);
+
+    position: absolute;
+    display: block;
+    z-index: 100;
+
+    color: #babdb6;
+    border: 5px solid black;
+    background-color: #040204;
+    outline: 2px solid #7d623c;
+    margin: 10px;
+}
+
 #message_pane {
     width: 100%;
 }
@@ -277,6 +291,7 @@ body {
 
 #monster_list .health {
     display: inline-block;
+    vertical-align: middle;
 }
 
 #monster_list .uninjured {

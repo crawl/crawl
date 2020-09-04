@@ -1123,7 +1123,6 @@ static bool _handle_wand(monster& mons)
 
     const spell_type mzap =
         spell_in_wand(static_cast<wand_type>(wand->sub_type));
-    const int power = 30 + mons.get_hit_dice();
 
     if (!setup_mons_cast(&mons, beem, mzap, true))
         return false;
@@ -1136,10 +1135,6 @@ static bool _handle_wand(monster& mons)
     const wand_type kind = (wand_type)wand->sub_type;
     switch (kind)
     {
-    case WAND_CLOUDS:
-        should_fire = mons_should_cloud_cone(&mons, power, beem.target);
-        break;
-
     case WAND_DISINTEGRATION:
         // Dial down damage from wands of disintegration, since
         // disintegration beams can do large amounts of damage.
@@ -2243,19 +2238,6 @@ static void _post_monster_move(monster* mons)
     if (mons->type == MONS_TORPOR_SNAIL)
         _torpor_snail_slow(mons);
 
-    if (mons->type == MONS_ASMODEUS)
-    {
-        cloud_type ctype = CLOUD_FIRE;
-
-        for (adjacent_iterator ai(mons->pos()); ai; ++ai)
-            if (!cell_is_solid(*ai)
-                && (!cloud_at(*ai)
-                    || cloud_at(*ai)->type == ctype))
-            {
-                place_cloud(ctype, *ai, 2 + random2(6), mons);
-            }
-    }
-
     if (mons->type == MONS_WATER_NYMPH)
     {
         for (adjacent_iterator ai(mons->pos(), false); ai; ++ai)
@@ -2291,20 +2273,7 @@ static void _post_monster_move(monster* mons)
         }
     }
 
-    if (mons->has_ench(ENCH_RING_OF_THUNDER))
-    {
-        // TODO: deduplicate with mon-ench.cc
-        cloud_type ctype = CLOUD_STORM;
-
-        for (adjacent_iterator ai(mons->pos()); ai; ++ai)
-            if (!cell_is_solid(*ai)
-                && (!cloud_at(*ai)
-                    || cloud_at(*ai)->type == ctype))
-            {
-                place_cloud(ctype, *ai, 2 + random2(3), mons);
-            }
-    }
-
+    update_mons_cloud_ring(mons);
 
     const item_def * weapon = mons->mslot_item(MSLOT_WEAPON);
     if (weapon && get_weapon_brand(*weapon) == SPWPN_SPECTRAL

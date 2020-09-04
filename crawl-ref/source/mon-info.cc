@@ -106,9 +106,17 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_BOUND_SOUL,      MB_BOUND_SOUL },
     { ENCH_INFESTATION,     MB_INFESTATION },
     { ENCH_STILL_WINDS,     MB_STILL_WINDS },
-    { ENCH_SLOWLY_DYING,    MB_SLOWLY_DYING },
     { ENCH_VILE_CLUTCH,     MB_VILE_CLUTCH },
     { ENCH_WATERLOGGED,     MB_WATERLOGGED },
+    { ENCH_RING_OF_THUNDER, MB_CLOUD_RING_THUNDER },
+    { ENCH_RING_OF_FLAMES,  MB_CLOUD_RING_FLAMES },
+    { ENCH_RING_OF_CHAOS,   MB_CLOUD_RING_CHAOS },
+    { ENCH_RING_OF_MUTATION,MB_CLOUD_RING_MUTATION },
+    { ENCH_RING_OF_FOG,     MB_CLOUD_RING_FOG },
+    { ENCH_RING_OF_ICE,     MB_CLOUD_RING_ICE },
+    { ENCH_RING_OF_DRAINING,MB_CLOUD_RING_DRAINING },
+    { ENCH_RING_OF_ACID,    MB_CLOUD_RING_ACID },
+
 };
 
 static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
@@ -161,6 +169,12 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
             return MB_MORE_POISONED;
         else
             return MB_MAX_POISONED;
+    case ENCH_SLOWLY_DYING:
+        if (mons.type == MONS_WITHERED_PLANT)
+            return MB_CRUMBLING;
+        if (mons_class_is_fragile(mons.type))
+            return MB_WITHERING;
+        return MB_SLOWLY_DYING;
     default:
         return NUM_MB_FLAGS;
     }
@@ -552,7 +566,7 @@ monster_info::monster_info(const monster* m, int milev)
     mitemuse = mons_itemuse(*m);
     mbase_speed = mons_base_speed(*m, true);
     menergy = mons_energy(*m);
-    can_go_frenzy = m->can_go_frenzy();
+    can_go_frenzy = m->can_go_frenzy(false);
 
     // Not an MB_ because it's rare.
     if (m->cloud_immune(false))
@@ -1755,6 +1769,7 @@ void mons_conditions_string(string& desc, const vector<monster_info>& mi,
         if (num && !name.short_singular.empty())
             conditions.push_back(_condition_string(num, count, name));
     }
+
 
     if (conditions.empty())
         return;

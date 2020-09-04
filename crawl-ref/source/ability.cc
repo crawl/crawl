@@ -46,6 +46,7 @@
 #include "menu.h"
 #include "message.h"
 #include "mon-place.h"
+#include "mon-util.h"
 #include "mutation.h"
 #include "notes.h"
 #include "options.h"
@@ -338,10 +339,6 @@ static const ability_def Ability_List[] =
 #endif
     { ABIL_EVOKE_FLIGHT, "Evoke Flight",
       1, 0, 0, {fail_basis::evo, 40, 2}, abflag::none },
-    { ABIL_EVOKE_FOG, "Evoke Fog",
-      2, 0, 0, {fail_basis::evo, 50, 2}, abflag::none },
-    { ABIL_EVOKE_RATSKIN, "Evoke Ratskin",
-      3, 0, 0, {fail_basis::evo, 50, 2}, abflag::none },
     { ABIL_EVOKE_THUNDER, "Evoke Thunderclouds",
       5, 0, 0, {fail_basis::evo, 60, 2}, abflag::none },
 
@@ -1287,10 +1284,12 @@ static bool _can_movement_ability(bool quiet)
 
 static bool _can_hop(bool quiet)
 {
-    if (!you.duration[DUR_NO_HOP])
-        return true;
-    if (!quiet)
-        mpr("Your legs are too worn out to hop.");
+    if (you.duration[DUR_NO_HOP])
+    {
+        if (!quiet)
+            mpr("Your legs are too worn out to hop.");
+        return false;
+    }
     return _can_movement_ability(quiet);
 }
 
@@ -1573,7 +1572,15 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         return _can_hop(quiet);
 
     case ABIL_ROLLING_CHARGE:
-        return _can_movement_ability(quiet);
+        if (!_can_movement_ability(quiet))
+            return false;
+        if (get_dist_to_nearest_monster() > PALENTONGA_CHARGE_RANGE)
+        {
+            if (!quiet)
+                mpr("There are no monsters in range.");
+            return false;
+        }
+        return true;
 
     case ABIL_BLINK:
     case ABIL_EVOKE_BLINK:
@@ -1591,21 +1598,6 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
     case ABIL_TROG_BERSERK:
         return you.can_go_berserk(true, false, true)
                && (quiet || berserk_check_wielded_weapon());
-
-    case ABIL_EVOKE_FOG:
-        if (cloud_at(you.pos()))
-        {
-            if (!quiet)
-                mpr("It's too cloudy to do that here.");
-            return false;
-        }
-        if (env.level_state & LSTATE_STILL_WINDS)
-        {
-            if (!quiet)
-                mpr("The air is too still for clouds to form.");
-            return false;
-        }
-        return true;
 
     case ABIL_GOZAG_POTION_PETITION:
         return gozag_setup_potion_petition(quiet);
@@ -2197,27 +2189,6 @@ static spret _do_ability(const ability_def& abil, bool fail)
         }
         break;
 
-    case ABIL_EVOKE_FOG:     // cloak of the Thief
-        fail_check();
-        mpr("With a swish of your cloak, you release a cloud of fog.");
-        big_cloud(random_smoke_type(), &you, you.pos(), 50, 8 + random2(8));
-        break;
-
-    case ABIL_EVOKE_RATSKIN: // ratskin cloak
-        fail_check();
-        mpr("The rats of the Dungeon answer your call.");
-
-        for (int i = 0; i < (coinflip() + 1); ++i)
-        {
-            monster_type mon = coinflip() ? MONS_HELL_RAT : MONS_RIVER_RAT;
-
-            mgen_data mg(mon, BEH_FRIENDLY, you.pos(), MHITYOU);
-            if (monster *m = create_monster(mg))
-                m->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 3));
-        }
-
-        break;
-
     case ABIL_EVOKE_THUNDER: // robe of Clouds
         fail_check();
         mpr("The folds of your robe billow into a mighty storm.");
@@ -2463,6 +2434,14 @@ static spret _do_ability(const ability_def& abil, bool fail)
         }
 
         monster* mons = monster_at(beam.target);
+
+        if (mons && you.can_see(*mons) && mons->is_illusion())
+        {
+            simple_monster_message(*mons, "'s clone doesn't have a soul to enslave!");
+            // Still costs a turn to gain the information.
+            return spret::success;
+        }
+
         if (mons == nullptr || !you.can_see(*mons)
             || !yred_can_enslave_soul(mons))
         {
@@ -2630,10 +2609,7 @@ static spret _do_ability(const ability_def& abil, bool fail)
     }
 
     case ABIL_SIF_MUNA_DIVINE_EXEGESIS:
-    {
         return divine_exegesis(fail);
-        break;
-    }
 
     case ABIL_ELYVILON_LIFESAVING:
         fail_check();
@@ -2819,11 +2795,7 @@ static spret _do_ability(const ability_def& abil, bool fail)
         break;
 
     case ABIL_FEDHAS_GROW_BALLISTOMYCETE:
-    {
         return fedhas_grow_ballistomycete(fail);
-
-        break;
-    }
 
     case ABIL_FEDHAS_OVERGROW:
     {
@@ -2836,11 +2808,7 @@ static spret _do_ability(const ability_def& abil, bool fail)
     }
 
     case ABIL_FEDHAS_GROW_OKLOB:
-    {
         return fedhas_grow_oklob(fail);
-
-        break;
-    }
 
     case ABIL_TRAN_BAT:
     {
@@ -3534,19 +3502,6 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
         && !you.get_mutation_level(MUT_NO_ARTIFICE))
     {
         _add_talent(talents, ABIL_EVOKE_BLINK, check_confused);
-    }
-
-    if (player_equip_unrand(UNRAND_THIEF)
-        && !you.get_mutation_level(MUT_NO_ARTIFICE))
-    {
-        _add_talent(talents, ABIL_EVOKE_FOG, check_confused);
-    }
-
-    if (player_equip_unrand(UNRAND_RATSKIN_CLOAK)
-        && !you.get_mutation_level(MUT_NO_ARTIFICE)
-        && !you.get_mutation_level(MUT_NO_LOVE))
-    {
-        _add_talent(talents, ABIL_EVOKE_RATSKIN, check_confused);
     }
 
     if (player_equip_unrand(UNRAND_RCLOUDS)

@@ -1368,7 +1368,7 @@ void viewwindow(bool show_updates, bool tiles_only, animation *a, view_renderer 
 
         if (crawl_state.smallterm)
         {
-            redraw_screen();
+            smallterm_warning();
             update_screen();
             return;
         }
@@ -1452,6 +1452,7 @@ struct tile_overlay
     tileidx_t tile;
 };
 static vector<tile_overlay> tile_overlays;
+static unsigned int tile_overlay_i;
 
 void view_add_tile_overlay(const coord_def &gc, tileidx_t tile)
 {
@@ -1466,6 +1467,7 @@ struct glyph_overlay
     cglyph_t glyph;
 };
 static vector<glyph_overlay> glyph_overlays;
+static unsigned int glyph_overlay_i;
 
 void view_add_glyph_overlay(const coord_def &gc, cglyph_t glyph)
 {
@@ -1484,6 +1486,67 @@ void view_clear_overlays()
 }
 
 /**
+ * Comparison function for coord_defs that orders coords based on the ordering
+ * used by rectangle_iterator.
+ */
+static bool _coord_def_cmp(const coord_def& l, const coord_def& r)
+{
+    return l.y < r.y || (l.y == r.y && l.x < r.x);
+}
+
+static void _sort_overlays()
+{
+    /* Stable sort is needed so that we don't swap draw order within cells. */
+#ifdef USE_TILE
+    stable_sort(begin(tile_overlays), end(tile_overlays),
+                [](const tile_overlay &left, const tile_overlay &right) {
+                    return _coord_def_cmp(left.gc, right.gc);
+                });
+    tile_overlay_i = 0;
+#endif
+#ifndef USE_TILE_LOCAL
+    stable_sort(begin(glyph_overlays), end(glyph_overlays),
+                [](const glyph_overlay &left, const glyph_overlay &right) {
+                    return _coord_def_cmp(left.gc, right.gc);
+                });
+    glyph_overlay_i = 0;
+#endif
+}
+
+static void add_overlays(const coord_def& gc, screen_cell_t* cell)
+{
+#ifdef USE_TILE
+    while (tile_overlay_i < tile_overlays.size()
+           && _coord_def_cmp(tile_overlays[tile_overlay_i].gc, gc))
+    {
+        tile_overlay_i++;
+    }
+    while (tile_overlay_i < tile_overlays.size()
+           && tile_overlays[tile_overlay_i].gc == gc)
+    {
+        const auto &overlay = tile_overlays[tile_overlay_i];
+        cell->tile.dngn_overlay[cell->tile.num_dngn_overlay++] = overlay.tile;
+        tile_overlay_i++;
+    }
+#endif
+#ifndef USE_TILE_LOCAL
+    while (glyph_overlay_i < glyph_overlays.size()
+           && _coord_def_cmp(glyph_overlays[glyph_overlay_i].gc, gc))
+    {
+        glyph_overlay_i++;
+    }
+    while (glyph_overlay_i < glyph_overlays.size()
+           && glyph_overlays[glyph_overlay_i].gc == gc)
+    {
+        const auto &overlay = glyph_overlays[glyph_overlay_i];
+        cell->glyph = overlay.glyph.ch;
+        cell->colour = overlay.glyph.col;
+        glyph_overlay_i++;
+    }
+#endif
+}
+
+/**
  * Constructs the main dungeon view, rendering it into a new crawl_view_buffer.
  *
  * @param a[in] the animation to be showing, if any.
@@ -1496,6 +1559,8 @@ crawl_view_buffer view_dungeon(animation *a, bool anim_updates, view_renderer *r
     screen_cell_t *cell(vbuf);
 
     cursor_control cs(false);
+
+    _sort_overlays();
 
     int flash_colour = you.flash_colour;
     if (flash_colour == BLACK)
@@ -1652,20 +1717,7 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
     }
 #endif
 
-#ifdef USE_TILE
-    for (const auto &overlay : tile_overlays)
-        if (overlay.gc == gc)
-            cell->tile.dngn_overlay[cell->tile.num_dngn_overlay++] = overlay.tile;
-#endif
-
-#ifndef USE_TILE_LOCAL
-    for (const auto &overlay : glyph_overlays)
-        if (overlay.gc == gc)
-        {
-            cell->glyph = overlay.glyph.ch;
-            cell->colour = overlay.glyph.col;
-        }
-#endif
+    add_overlays(gc, cell);
 }
 
 // Hide view layers. The player can toggle certain layers back on

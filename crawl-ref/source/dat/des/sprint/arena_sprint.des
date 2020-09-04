@@ -1067,7 +1067,6 @@ KFEAT:  L = armour shop count:17 greed:12 type:Basic suffix:Armour use_all ; \
             mundane not_cursed cloak | mundane not_cursed buckler |\
             mundane not_cursed pair of gloves | mundane not_cursed helmet
 KFEAT:  N = weapon shop type:Staff suffix:Store count:9 use_all greed:30 ; \
-            staff of summoning | staff of wizardry |\
             staff of fire | staff of air | staff of earth | staff of cold |\
             staff of poison | staff of death | staff of conjuration
 KFEAT:  Q = weapon shop type:Weapon suffix:Rack count:17 use_all greed:30 ; \

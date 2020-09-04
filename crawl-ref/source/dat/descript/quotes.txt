@@ -2797,10 +2797,6 @@ staff of earth
 
 <staff>
 %%%%
-staff of energy
-
-<staff>
-%%%%
 staff of fire
 
 “The wizard suddenly remembered the words of the god. He remembered that of all
@@ -2813,14 +2809,6 @@ another man's dreams—what an incomparable humiliation, what madness!”
     trans. Anthony Bonner, 1962.
 %%%%
 staff of poison
-
-<staff>
-%%%%
-staff of summoning
-
-<staff>
-%%%%
-staff of wizardry
 
 <staff>
 %%%%

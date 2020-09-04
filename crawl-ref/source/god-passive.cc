@@ -324,6 +324,10 @@ static const vector<god_passive> god_passives[] =
         {  0, passive_t::slow_abyss,
               "GOD will NOW slow the Abyss"
         },
+        // TODO: this one should work regardless of penance, maybe?
+        {  0, passive_t::slow_zot,
+              "GOD will NOW slow Zot's hunt for you"
+        },
         {  1, passive_t::slow_poison, "process poison slowly" },
     },
 
@@ -945,12 +949,6 @@ map<skill_type, int8_t> ash_get_boosted_skills(eq_type type)
             boost[SK_EVOCATIONS] = 1;
             boost[SK_STAVES] = 1;
 
-        }
-        // Staves with an evokable ability but no melee effect.
-        else if (is_weapon(*wpn)
-                 && item_is_evokable(*wpn, false, false, false, false))
-        {
-            boost[SK_EVOCATIONS] = 2;
         }
         // Other magical staves.
         else if (wpn->base_type == OBJ_STAVES)
@@ -1589,6 +1587,7 @@ void wu_jian_decrement_heavenly_storm()
         wu_jian_end_heavenly_storm();
 }
 
+// TODO: why isn't this implemented as a duration end effect?
 void wu_jian_end_heavenly_storm()
 {
     you.props.erase(WU_JIAN_HEAVENLY_STORM_KEY);

@@ -159,9 +159,7 @@ jobs:
         run: ccache -s
       - name: Add build to release
         if: github.event.release.tag_name != null
-        # Go back to the upstream action (svenstaro/upload-release-action) once this PR merges:
-        # https://github.com/svenstaro/upload-release-action/pull/13
-        uses: alexjurkiewicz/upload-release-action@6408db765e9a0413e6c5b8231ecd3eb45352cc99
+        uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           tag: ${{ github.ref }}
@@ -231,9 +229,7 @@ jobs:
           echo "::set-output name=dest::$dest"
       - name: Add build to release
         if: github.event.release.tag_name != null
-        # Go back to the upstream action (svenstaro/upload-release-action) once this PR merges:
-        # https://github.com/svenstaro/upload-release-action/pull/13
-        uses: alexjurkiewicz/upload-release-action@6408db765e9a0413e6c5b8231ecd3eb45352cc99
+        uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           tag: ${{ github.ref }}

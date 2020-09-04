@@ -20,6 +20,7 @@
 #include "directn.h"
 #include "env.h"
 #include "fprop.h"
+#include "god-passive.h"
 #include "monster.h"
 #include "mon-pathfind.h"
 #include "mon-tentacle.h"
@@ -28,6 +29,7 @@
 #include "stringutil.h"
 #include "state.h"
 #include "terrain.h"
+#include "timed-effects.h" // decr_zot_clock
 #include "transform.h"
 #include "traps.h"
 #include "travel.h"
@@ -460,11 +462,16 @@ void revive()
     you.attribute[ATTR_FLIGHT_UNCANCELLABLE] = 0;
     you.attribute[ATTR_XP_DRAIN] = 0;
     you.attribute[ATTR_SERPENTS_LASH] = 0;
+    decr_zot_clock();
     you.los_noise_level = 0;
     you.los_noise_last_turn = 0; // silence in death
+
     if (you.duration[DUR_SCRYING])
         you.xray_vision = false;
+    if (you.duration[DUR_HEAVENLY_STORM])
+        wu_jian_end_heavenly_storm();
 
+    // TODO: this doesn't seem to call any duration end effects?
     for (int dur = 0; dur < NUM_DURATIONS; dur++)
         if (dur != DUR_PIETY_POOL)
             you.duration[dur] = 0;

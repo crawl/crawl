@@ -20,9 +20,12 @@ KMONS:  M = oklob plant hp:30 name:conjurer n_suf \
             spells:spit_acid.67.natural;stone_arrow.30.wizard;\
                    force_lance.30.wizard
 KMONS:  N = ballistomycete spore
+# set the monster list for shadow creatures to draw on. This is based on the
+# old rod of swarms (these oklobs used to directly cast summon swarm).
+: dgn.set_random_mon_list("killer bee w:4 / scorpion w:4 / river rat w:2 / hornet / vampire mosquito / butterfly")
 KMONS:  O = oklob plant hp:30 name:summoner n_suf \
             spells:spit_acid.67.natural;call_imp.30.wizard;\
-                   summon_swarm.30.wizard
+                   shadow_creatures.30.wizard
 KMONS:  P = oklob plant hp:30 name:shifter n_suf \
             spells:spit_acid.67.natural;blink_other.60.wizard
 KMONS:  Q = demonic crawler

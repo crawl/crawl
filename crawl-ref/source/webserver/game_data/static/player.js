@@ -425,8 +425,8 @@ function ($, comm, enums, map_knowledge, messages, options) {
         {
             var status_inf = player.status[i];
             if (!status_inf.light) continue;
-            status += ("<span class='status_light fg"
-                       + status_inf.col + "'>"
+            status += ("<span class='status_light fg" + status_inf.col + "' "
+                       + "data-desc=\"" + status_inf.desc + "\">"
                        + status_inf.light + "</span> ");
         }
         $("#stats_status_lights").html(status);

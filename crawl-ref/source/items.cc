@@ -76,6 +76,7 @@
 #include "terrain.h"
 #include "throw.h"
 #include "tilepick.h"
+#include "timed-effects.h" // bezotted
 #include "travel.h"
 #include "viewchar.h"
 #include "view.h"
@@ -1518,12 +1519,10 @@ bool is_stackable_item(const item_def &item)
         case OBJ_MISCELLANY:
             switch (item.sub_type)
             {
-                case MISC_PHANTOM_MIRROR:
                 case MISC_ZIGGURAT:
 #if TAG_MAJOR_VERSION == 34
                 case MISC_SACK_OF_SPIDERS:
 #endif
-                case MISC_BOX_OF_BEASTS:
                     return true;
                 default:
                     break;
@@ -1799,38 +1798,12 @@ bool move_item_to_inv(int obj, int quant_got, bool quiet)
     return keep_going;
 }
 
-static void _get_book(const item_def& it, bool quiet, bool allow_auto_hide)
+static void _get_book(const item_def& it)
 {
-    vector<spell_type> spells;
-    if (!quiet)
-        mprf("You pick up %s and begin reading...", it.name(DESC_A).c_str());
-    for (spell_type st : spells_in_book(it))
-    {
-        if (!you.spell_library[st])
-        {
-            you.spell_library.set(st, true);
-            bool memorise = you_can_memorise(st);
-            if (memorise)
-                spells.push_back(st);
-            if (!memorise || (Options.auto_hide_spells && allow_auto_hide))
-                you.hidden_spells.set(st, true);
-        }
-    }
-    if (!quiet)
-    {
-        if (!spells.empty())
-        {
-            vector<string> spellnames(spells.size());
-            transform(spells.begin(), spells.end(), spellnames.begin(), spell_title);
-            mprf("You add the spell%s %s to your library.",
-                 spellnames.size() > 1 ? "s" : "",
-                 comma_separated_line(spellnames.begin(),
-                                      spellnames.end()).c_str());
-        }
-        else
-            mpr("Unfortunately, it added no spells to the library.");
-    }
-    shopping_list.spells_added_to_library(spells, quiet);
+    mprf("You pick up %s and begin reading...", it.name(DESC_A).c_str());
+
+    if (!library_add_spells(spells_in_book(it)))
+        mpr("Unfortunately, you learned nothing new.");
 }
 
 // Adds all books in the player's inventory to library.
@@ -1842,7 +1815,7 @@ void add_held_books_to_library()
     {
         if (it.base_type == OBJ_BOOKS && it.sub_type != BOOK_MANUAL)
         {
-            _get_book(it, true, false);
+            _get_book(it);
             destroy_item(it);
         }
     }
@@ -1891,6 +1864,9 @@ static void _get_orb()
     run_animation(ANIMATION_ORB, UA_PICKUP);
 
     mprf(MSGCH_ORB, "You pick up the Orb of Zot!");
+
+    if (bezotted())
+        mpr("Zot can harm you no longer.");
 
     env.orb_pos = you.pos(); // can be wrong in wizmode
     orb_pickup_noise(you.pos(), 30);
@@ -2137,7 +2113,7 @@ static bool _merge_items_into_inv(item_def &it, int quant_got,
     }
     if (it.base_type == OBJ_BOOKS && it.sub_type != BOOK_MANUAL)
     {
-        _get_book(it, quiet, true);
+        _get_book(it);
         return true;
     }
     // Runes are also massless.
@@ -3865,6 +3841,8 @@ colour_t item_def::miscellany_colour() const
 #endif
         case MISC_TIN_OF_TREMORSTONES:
             return BROWN;
+        case MISC_CONDENSER_VANE:
+            return WHITE;
         case MISC_QUAD_DAMAGE:
             return ETC_DARK;
         case MISC_ZIGGURAT:

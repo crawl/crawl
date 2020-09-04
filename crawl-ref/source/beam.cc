@@ -54,6 +54,7 @@
 #include "ranged-attack.h"
 #include "religion.h"
 #include "shout.h"
+#include "spl-book.h"
 #include "spl-clouds.h"
 #include "spl-damage.h"
 #include "spl-goditem.h"
@@ -725,7 +726,7 @@ void bolt::choose_ray()
 }
 
 // Draw the bolt at p if needed.
-void bolt::draw(const coord_def& p)
+void bolt::draw(const coord_def& p, bool force_refresh)
 {
     if (is_tracer || is_enchantment() || !you.see_cell(p))
         return;
@@ -755,9 +756,16 @@ void bolt::draw(const coord_def& p)
                                              : element_colour(colour);
     view_add_glyph_overlay(p, {glyph, c});
 #endif
-    viewwindow(false);
-    update_screen();
-    scaled_delay(draw_delay);
+    // to avoid redraws, set force_refresh = false, and draw_delay = 0. This
+    // will still force a refresh if there is a draw_delay regardless of the
+    // param, because a delay on drawing is pretty meaningless without a
+    // redraw.
+    if (force_refresh || draw_delay > 0)
+    {
+        viewwindow(false);
+        update_screen();
+        scaled_delay(draw_delay);
+    }
 }
 
 // Bounce a bolt off a solid feature.
@@ -4317,13 +4325,9 @@ void bolt::monster_post_hit(monster* mon, int dmg)
     // Acid splash from yellow draconians / acid dragons
     if (origin_spell == SPELL_ACID_SPLASH)
     {
-        mon->splash_with_acid(agent(), 3);
-
-        for (adjacent_iterator ai(source); ai; ++ai)
+        // the acid can splash onto adjacent targets
+        for (adjacent_iterator ai(mon->pos()); ai; ++ai)
         {
-            // the acid can splash onto adjacent targets
-            if (grid_distance(*ai, target) != 1)
-                continue;
             if (actor *victim = actor_at(*ai))
             {
                 if (you.see_cell(*ai))
@@ -4841,6 +4845,10 @@ void bolt::affect_monster(monster* mon)
     {
         mprf(MSGCH_SOUND, "The %s hits something.", name.c_str());
     }
+
+    // Spell vampirism
+    if (agent() && agent()->is_player() && is_player_book_spell(origin_spell))
+        majin_bo_vampirism(*mon, min(final, mon->stat_hp()));
 
     // Apply flavoured specials.
     mons_adjust_flavoured(mon, *this, postac, true);

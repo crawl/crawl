@@ -168,10 +168,16 @@ function ($, map_knowledge, cr, dungeon_renderer, options, util) {
 
             renderer.set_cell_size(dungeon_renderer.cell_width,
                                    dungeon_renderer.cell_height);
-            for (var key in dungeon_renderer)
+            if (options.get("tile_display_mode") != "tiles")
             {
-                if (key.match(/^glyph_mode/))
-                    renderer[key] = dungeon_renderer[key];
+                for (var key in dungeon_renderer)
+                {
+                    // dungeon_renderer.ui_state is also required so the glyph
+                    // size returned by the renderer.glyph_mode_font_name()
+                    // correctly reflects the 'tile_map_scale'
+                    if (key.match(/^glyph_mode/) || key == "ui_state")
+                        renderer[key] = dungeon_renderer[key];
+                }
             }
             var w = renderer.cell_width;
             var displayed_monsters = Math.min(monsters.length, 6);

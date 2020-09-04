@@ -561,6 +561,9 @@ bool mons_class_gives_xp(monster_type mc, bool indirect = false);
 bool mons_gives_xp(const monster& mon, const actor& agent);
 bool mons_is_notable(const monster& mon);
 
+bool mons_class_is_fragile(monster_type mc);
+bool mons_is_fragile(const monster& mons);
+
 int max_mons_charge(monster_type m);
 
 void init_mutant_beast(monster &mon, short HD, vector<int> beast_facets);

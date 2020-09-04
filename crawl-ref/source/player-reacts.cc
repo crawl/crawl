@@ -91,6 +91,7 @@
 #include "rltiles/tiledef-dngn.h"
 #include "tilepick.h"
 #endif
+#include "timed-effects.h" // bezotting
 #include "transform.h"
 #include "traps.h"
 #include "travel.h"
@@ -784,8 +785,11 @@ static void _decrement_durations()
     else if (!sanguine_armour_is_valid && you.duration[DUR_SANGUINE_ARMOUR])
         you.duration[DUR_SANGUINE_ARMOUR] = 1; // expire
 
-    if (you.duration[DUR_HEAVENLY_STORM])
+    if (you.props.exists(WU_JIAN_HEAVENLY_STORM_KEY))
+    {
+        ASSERT(you.duration[DUR_HEAVENLY_STORM]);
         wu_jian_heaven_tick();
+    }
 
     // these should be after decr_ambrosia, transforms, liquefying, etc.
     for (int i = 0; i < NUM_DURATIONS; ++i)
@@ -1030,6 +1034,8 @@ void player_reacts()
 
     if (you.props[EMERGENCY_FLIGHT_KEY].get_bool())
         _handle_emergency_flight();
+
+    incr_zot_clock();
 }
 
 void extract_manticore_spikes(const char* endmsg)

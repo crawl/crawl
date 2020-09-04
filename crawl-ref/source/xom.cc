@@ -3028,7 +3028,8 @@ static xom_event_type _xom_choose_bad_action(int sever, int tension)
             if (player_prot_life() < 3)
                 return XOM_BAD_DRAINING;
             // else choose something else
-        } else if (!player_res_torment(false))
+        }
+        else if (!player_res_torment(false))
             return XOM_BAD_TORMENT;
         // else choose something else
     }
@@ -3307,6 +3308,7 @@ static int _death_is_worth_saving(const kill_method_type killed_by)
     case KILLED_BY_WATER:
     case KILLED_BY_DRAINING:
     case KILLED_BY_STARVATION:
+    case KILLED_BY_ZOT:
     case KILLED_BY_ROTTING:
 
     // Don't protect the player from these.
@@ -3611,7 +3613,8 @@ void validate_xom_events()
                 fails += make_stringf("'%s' badness %d outside 10-50 range.\n",
                                       event->name, event->badness_10x);
             }
-        } else if (event->badness_10x)
+        }
+        else if (event->badness_10x)
         {
             fails += make_stringf("'%s' is not bad, but has badness!\n",
                                   event->name);

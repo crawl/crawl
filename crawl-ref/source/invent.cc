@@ -444,8 +444,8 @@ static bool _has_hand_evokable()
     for (const auto &item : you.inv)
     {
         if (item.defined()
-            && item_is_evokable(item, true, true, false, false)
-            && !item_is_evokable(item, true, true, false, true))
+            && item_is_evokable(item, true, false, false)
+            && !item_is_evokable(item, true, false, true))
         {
             return true;
         }
@@ -711,7 +711,7 @@ bool sort_item_identified(const InvEntry *a)
 bool sort_item_charged(const InvEntry *a)
 {
     return a->item->base_type != OBJ_WANDS
-           || !item_is_evokable(*(a->item), false, true);
+           || !item_is_evokable(*(a->item), false);
 }
 
 static bool _compare_invmenu_items(const InvEntry *a, const InvEntry *b,
@@ -1138,7 +1138,7 @@ bool item_is_selected(const item_def &i, int selector)
                || (itype == OBJ_BOOKS && i.sub_type != BOOK_MANUAL);
 
     case OSEL_EVOKABLE:
-        return item_is_evokable(i, true, true);
+        return item_is_evokable(i, true);
 
     case OSEL_ENCHANTABLE_ARMOUR:
         return is_enchantable_armour(i, true);
@@ -1977,10 +1977,13 @@ int prompt_invent_item(const char *prompt,
             break;
         }
 
+        // TODO: it seems like for some uses of this function, `*` shouldn't
+        // be allowed at all, e.g. evoke.
         if (keyin == '?' || keyin == '*')
         {
             // The "view inventory listing" mode.
             vector< SelItem > items;
+            const auto last_keyin = keyin;
             current_type_expected = keyin == '*' ? OSEL_ANY : type_expect;
             int mflags = MF_SINGLESELECT | MF_ANYPRINTABLE | MF_NO_SELECT_QTY;
             if (other_valid_char == '-')
@@ -1999,8 +2002,35 @@ int prompt_invent_item(const char *prompt,
                 break;
             }
 
-            if (items.empty())
+            // a continue at this point has need_prompt = need_getch = true
+
+            // let `?` toggle the menu altogether. If this is a non-autolist,
+            // return to the prompt, otherwise we will pass escape to the
+            // abort handling below. (TODO: is this the right behavior?)
+            // TODO: some versions of _invent_select, such as wield, never
+            // return '?'. Is this a problem?
+            if (keyin == '?' || key_is_escape(keyin) && !auto_list)
                 continue;
+
+            if (keyin == '*')
+            {
+                // let `*` act as a toggle. This is a slightly wacky
+                // implementation in that '?' as a toggle does something
+                // entirely different...
+                need_prompt = need_getch = false;
+                if (last_keyin == '*')
+                    keyin = '?';
+                else
+                    keyin = '*';
+                continue;
+            }
+
+            if (other_valid_char != 0 && keyin == other_valid_char)
+            {
+                // need to handle overrides...ugly code duplication
+                ret = PROMPT_GOT_SPECIAL;
+                break;
+            }
         }
 
         if (isadigit(keyin))
@@ -2107,12 +2137,10 @@ static bool _item_ally_only(const item_def &item)
  * @param item      The item to check
  * @param unskilled Do items that don't use Evocations skill (weapons of
  *                  reaching and tremorstones) count?
- * @param known     When set, return true for items of unknown type which
- *                  might be evokable.
  * @param msg       Whether we need to print a message.
  * @param equip     When false, ignore wield and meld requirements.
  */
-bool item_is_evokable(const item_def &item, bool unskilled, bool known,
+bool item_is_evokable(const item_def &item, bool unskilled,
                       bool msg, bool equip)
 {
     const string error = item_is_melded(item)
@@ -2188,23 +2216,6 @@ bool item_is_evokable(const item_def &item, bool unskilled, bool known,
             return true;
         }
 
-        if (msg)
-            mpr("That item cannot be evoked!");
-        return false;
-
-    case OBJ_STAVES:
-        if (known && !item_type_known(item)
-            || item.sub_type == STAFF_ENERGY
-               && item_type_known(item))
-        {
-            if (!wielded)
-            {
-                if (msg)
-                    mpr(error);
-                return false;
-            }
-            return true;
-        }
         if (msg)
             mpr("That item cannot be evoked!");
         return false;

@@ -1552,7 +1552,9 @@ formatted_string StashSearchMenu::calc_title()
             ": only useless items found; press <w>=</w> to show."
             "                    "
             "</lightgrey>");
-    } else {
+    }
+    else
+    {
         fs += formatted_string::parse_string(make_stringf(
             "<lightgrey>"
             ": <w>%s</w> [toggle: <w>!</w>],"

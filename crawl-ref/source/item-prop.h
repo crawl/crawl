@@ -136,7 +136,6 @@ bool is_giant_club_type(int wpn_type) IMMUTABLE;
 bool is_ranged_weapon_type(int wpn_type) IMMUTABLE;
 bool is_blessed_weapon_type(int wpn_type) IMMUTABLE;
 bool is_demonic_weapon_type(int wpn_type) IMMUTABLE;
-bool is_magic_weapon_type(int wpn_type) IMMUTABLE;
 
 bool is_melee_weapon(const item_def &weapon) PURE;
 bool is_demonic(const item_def &item) PURE;
@@ -211,6 +210,7 @@ int get_armour_res_magic(const item_def &arm, bool check_artp) PURE;
 int get_armour_res_corr(const item_def &arm) PURE;
 int get_armour_repel_missiles(const item_def &arm, bool check_artp) PURE;
 bool get_armour_see_invisible(const item_def &arm, bool check_artp) PURE;
+bool get_armour_rampaging(const item_def &arm, bool check_artp) PURE;
 
 int get_jewellery_res_fire(const item_def &ring, bool check_artp) PURE;
 int get_jewellery_res_cold(const item_def &ring, bool check_artp) PURE;

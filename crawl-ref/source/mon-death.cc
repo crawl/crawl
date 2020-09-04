@@ -1079,6 +1079,8 @@ static void _setup_lightning_explosion(bolt & beam, const monster& origin)
     beam.explode_noise_msg = "You hear a clap of thunder!";
     beam.colour    = LIGHTCYAN;
     beam.ex_size   = x_chance_in_y(origin.get_hit_dice(), 24) ? 3 : 2;
+    if (origin.summoner)
+        beam.origin_spell = SPELL_CONJURE_BALL_LIGHTNING;
     // Don't credit the player for ally-summoned ball lightning explosions.
     if (origin.summoner && origin.summoner != MID_PLAYER)
         beam.thrower = KILL_MON;
@@ -1094,6 +1096,8 @@ static void _setup_prism_explosion(bolt& beam, const monster& origin)
     beam.name    = "blast of energy";
     beam.colour  = MAGENTA;
     beam.ex_size = origin.prism_charge;
+    if (origin.summoner)
+        beam.origin_spell = SPELL_FULMINANT_PRISM;
 }
 
 static void _setup_bennu_explosion(bolt& beam, const monster& origin)
@@ -2289,6 +2293,8 @@ item_def* monster_die(monster& mons, killer_type killer,
             // abjuration), because it uses the beam variables!  Or does it???
             // Pacified monsters leave the level when this happens.
 
+            // Monster goes to the Abyss.
+            mons.flags |= MF_BANISHED;
             // KILL_RESET monsters no longer lose their whole inventory, only
             // items they were generated with.
             if (mons.pacified() || !mons.needs_abyss_transit())
@@ -2300,8 +2306,6 @@ item_def* monster_die(monster& mons, killer_type killer,
                 break;
             }
 
-            // Monster goes to the Abyss.
-            mons.flags |= MF_BANISHED;
             {
                 unwind_var<int> dt(mons.damage_total, 0);
                 unwind_var<int> df(mons.damage_friendly, 0);

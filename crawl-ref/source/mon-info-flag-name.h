@@ -10,8 +10,7 @@ struct monster_info_flag_name
     string plural; // HUD display in groups (empty to not show)
 };
 
-// This vector is in the order of "player relfance" for display purposes
-// Roughly:
+// This vector is in display order. Roughly:
 // - Attitudes and summon status
 // - Bad things for the player (most buffs)
 // - Vulnerabilities
@@ -55,9 +54,18 @@ static const vector<monster_info_flag_name> monster_info_flag_names = {
     { MB_RESISTANCE, "resistant", "unusually resistant", "resistant"},
     { MB_INVISIBLE, "invisible", "slightly transparent", "invisible"},
     { MB_REGENERATION, "regenerating", "regenerating", "regenerating"},
-    { MB_RAISED_MR, "resisting magic", "resistaant to hostile enchantments", "resisting magic"},
+    { MB_RAISED_MR, "resisting magic", "resistant to hostile enchantments", "resisting magic"},
     { MB_INJURY_BOND, "sheltered", "sheltered from injuries", "sheltered"},
     { MB_GOZAG_INCITED, "incited", "incited by Gozag", "incited"},
+    { MB_CLOUD_RING_THUNDER, "clouds", "surrounded by thunder", "clouds" },
+    { MB_CLOUD_RING_FLAMES, "clouds", "surrounded by flames", "clouds" },
+    { MB_CLOUD_RING_CHAOS, "clouds", "surrounded by chaotic energy", "clouds" },
+    { MB_CLOUD_RING_MUTATION, "clouds", "surrounded by mutagenic energy", "clouds" },
+    { MB_CLOUD_RING_FOG, "clouds", "surrounded by fog", "clouds" },
+    { MB_CLOUD_RING_ICE, "clouds", "surrounded by freezing clouds", "clouds" },
+    { MB_CLOUD_RING_DRAINING, "clouds", "surrounded by negative energy", "clouds" },
+    { MB_CLOUD_RING_ACID, "clouds", "surrounded by acidic fog", "clouds" },
+    { MB_CLOUD_RING_MIASMA, "clouds", "surrounded by foul miasma", "clouds" },
     // Vulnerabilities
     { MB_POSSESSABLE, "possessable", "possessable", "possessable"},
     { MB_CAUGHT, "caught", "entangled in a net", "caught"},
@@ -75,6 +83,8 @@ static const vector<monster_info_flag_name> monster_info_flag_names = {
 #if TAG_MAJOR_VERSION == 34
     { MB_PINNED, "pinned", "pinned", "pinned"},
 #endif
+    { MB_WITHERING, "withering", "withering away", "withering"},
+    { MB_CRUMBLING, "crumbling", "crumbling away", "crumbling"},
     { MB_PETRIFYING, "petrifying", "petrifying slowly", "petrifying"},
     { MB_MAD, "mad", "lost in madness", "mad"},
     { MB_FLEEING, "fleeing", "fleeing", "fleeing"},

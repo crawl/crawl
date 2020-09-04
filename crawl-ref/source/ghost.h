@@ -5,6 +5,7 @@
 
 #pragma once
 
+#include "enchant-type.h"
 #include "enum.h"
 #include "god-type.h"
 #include "item-prop-enum.h"
@@ -33,6 +34,7 @@ public:
     attack_type att_type;
     attack_flavour att_flav;
     resists_t resists;
+    enchant_type cloud_ring_ench;
 
     colour_t colour;
 
@@ -68,6 +70,7 @@ private:
     void ugly_thing_add_resistance(bool very_ugly,
                                    attack_flavour u_att_flav);
     void set_pan_lord_special_attack();
+    void set_pan_lord_cloud_ring();
 };
 
 bool debug_check_ghosts(vector<ghost_demon> &ghosts);

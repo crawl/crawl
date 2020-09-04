@@ -2065,7 +2065,9 @@ static vector<branch_type> _get_branches(bool (*selector)(const Branch &))
 
 static bool _is_valid_branch(const Branch &br)
 {
-    return br.shortname != nullptr && brdepth[br.id] != -1;
+    return br.shortname != nullptr
+        && brdepth[br.id] != -1
+        && !branch_is_unfinished(br.id);
 }
 
 static bool _is_disconnected_branch(const Branch &br)

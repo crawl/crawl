@@ -77,6 +77,9 @@ enum class passive_t
     /// Fewer creatures spawn in the Abyss, and it morphs less quickly.
     slow_abyss,
 
+    /// The Zot clock runs more slowly.
+    slow_zot,
+
     /// Your attributes are boosted.
     stat_boost,
 

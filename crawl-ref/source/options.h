@@ -1,6 +1,7 @@
 #pragma once
 
 #include <algorithm>
+#include <unordered_set>
 
 #include "activity-interrupt-type.h"
 #include "char-set-type.h"
@@ -400,6 +401,7 @@ public:
     int         dump_item_origins;  // Show where items came from?
     int         dump_item_origin_price;
 
+    unordered_set<string> dump_fields;
     // Order of sections in the character dump.
     vector<string> dump_order;
 
@@ -534,6 +536,8 @@ public:
     string      tile_font_msg_family;
     string      tile_font_stat_family;
     string      tile_font_lbl_family;
+    string      glyph_mode_font;
+    int         glyph_mode_font_size;
 #endif
     int         tile_font_crt_size;
     int         tile_font_msg_size;

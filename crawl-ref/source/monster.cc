@@ -1661,6 +1661,10 @@ static int _get_monster_armour_value(const monster *mon,
     if (get_armour_ego_type(item) == SPARM_RUNNING)
         value += 5;
 
+    // Another sizable bonus for rampaging.
+    if (get_armour_rampaging(item, true))
+        value += 5;
+
     return value;
 }
 
@@ -3814,7 +3818,7 @@ int monster::res_water_drowning() const
     if (is_unbreathing())
         rw++;
 
-    habitat_type hab = mons_habitat(*this);
+    habitat_type hab = mons_habitat(*this, true);
     if (hab == HT_WATER || hab == HT_AMPHIBIOUS)
         rw++;
 
@@ -4499,6 +4503,20 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
         }
 
         blame_damage(agent, amount);
+
+        if (mons_is_fragile(*this) && !has_ench(ENCH_SLOWLY_DYING))
+        {
+            // Die in 3-5 turns.
+            this->add_ench(mon_enchant(ENCH_SLOWLY_DYING, 1, nullptr,
+                                       30 + random2(20)));
+            if (you.can_see(*this))
+            {
+                if (type == MONS_WITHERED_PLANT)
+                    mprf("%s begins to crumble.", this->name(DESC_THE).c_str());
+                else
+                    mprf("%s begins to die.", this->name(DESC_THE).c_str());
+            }
+        }
     }
 
     if (cleanup_dead && (hit_points <= 0 || get_hit_dice() <= 0)
@@ -4620,6 +4638,8 @@ void monster::ghost_demon_init()
     speed_increment = 70;
     if (ghost->colour != COLOUR_UNDEF)
         colour = ghost->colour;
+    if (ghost->cloud_ring_ench != ENCH_NONE)
+        add_ench(ghost->cloud_ring_ench);
 
     load_ghost_spells();
 }
@@ -5082,7 +5102,12 @@ int monster::foe_distance() const
                 : INFINITE_DISTANCE;
 }
 
-bool monster::can_go_frenzy() const
+/**
+ * Can the monster suffer ENCH_FRENZY?
+ *
+ * @param check_sleep  Consider sleeping monsters as immune.
+ */
+bool monster::can_go_frenzy(bool check_sleep) const
 {
     if (mons_is_tentacle_or_tentacle_segment(type))
         return false;
@@ -5092,7 +5117,7 @@ bool monster::can_go_frenzy() const
     if (mons_intel(*this) == I_BRAINLESS && !(holiness() & MH_NATURAL))
         return false;
 
-    if (paralysed() || petrified() || petrifying() || asleep())
+    if (paralysed() || petrified() || petrifying() || check_sleep && asleep())
         return false;
 
     if (berserk_or_insane() || has_ench(ENCH_FATIGUE))

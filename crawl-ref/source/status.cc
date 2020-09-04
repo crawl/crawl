@@ -24,6 +24,7 @@
 #include "spl-transloc.h" // for you_teleport_now() in duration-data
 #include "spl-wpnench.h" // for _end_weapon_brand() in duration-data
 #include "stringutil.h"
+#include "timed-effects.h" // bezotted
 #include "throw.h"
 #include "transform.h"
 #include "traps.h"
@@ -682,6 +683,16 @@ bool fill_status_info(int status, status_info& inf)
         {
             inf.light_colour = BROWN;
             inf.light_text = "-Clouds";
+        }
+        break;
+
+    case STATUS_BEZOTTED:
+        if (bezotted())
+        {
+            inf.light_colour = MAGENTA;
+            inf.light_text = "Zot";
+            inf.short_text = "bezotted";
+            inf.long_text = "You are being drained by Zot!";
         }
         break;
 

@@ -881,7 +881,7 @@ ENDMAP
 # Adapted from the labyrinth_watery minotaur exit vault.
 NAME:    gauntlet_exit_watery
 TAGS:    gauntlet_exit no_pool_fixup
-MONS:    patrolling generate_awake minotaur
+MONS:    patrolling minotaur
 KFEAT:   < = exit_gauntlet
 SHUFFLE: def, ghi
 SUBST:   dg = ., efhi = v
@@ -905,7 +905,7 @@ ENDMAP
 # Adapted from labyrinth_green.
 NAME:   gauntlet_exit_green
 TAGS:   gauntlet_exit
-MONS:   patrolling generate_awake minotaur
+MONS:   patrolling minotaur
 KFEAT:  < = exit_gauntlet
 : gauntlet_exit_loot(_G)
 MAP
@@ -927,7 +927,7 @@ ENDMAP
 # Adapted from labyrinth_spiral.
 NAME:   gauntlet_exit_spiral
 TAGS:   gauntlet_exit
-MONS:   patrolling generate_awake minotaur
+MONS:   patrolling minotaur
 SUBST:  b : bvz, z = vb
 KFEAT:  < = exit_gauntlet
 : gauntlet_exit_loot(_G)
@@ -950,7 +950,7 @@ ENDMAP
 # Adapted from labyrinth_hidden_loot.
 NAME:   gauntlet_exit_hidden_loot
 TAGS:   gauntlet_exit
-MONS:   patrolling generate_awake minotaur, minotaur zombie
+MONS:   patrolling minotaur, minotaur zombie
 SUBST:  d = 2%*
 SUBST:  b : bvv
 KFEAT:  < = exit_gauntlet
@@ -978,7 +978,7 @@ SHUFFLE: def, ghi, klm
 SUBST:   d : b, e : ., f : b
 SUBST:   g : b, h : ., i : b
 SUBST:   k = <, l = ., m = .
-KMONS:   < = patrolling generate_awake minotaur
+KMONS:   < = patrolling minotaur
 KFEAT:   < = exit_gauntlet
 SUBST:   b : vvb
 : gauntlet_exit_loot(_G)
@@ -1005,7 +1005,7 @@ ENDMAP
 # particular archetypical species/background. Each set of loot has 2-4 items.
 NAME:    nicolae_gauntlet_exit_dead_adventurers
 TAGS:    gauntlet_exit
-KMONS:   1 = patrolling generate_awake minotaur
+KMONS:   1 = patrolling minotaur
 KPROP:   DELM'1 = bloody
 KFEAT:   ' = floor
 SHUFFLE: bvc, DELM, DEFHJK, LMNOPQ

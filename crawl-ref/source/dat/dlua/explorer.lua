@@ -497,9 +497,13 @@ end
 
 function explorer.catalog_portals(i, lvl, cats_to_show, show_level_fun)
     local result = { }
+    current_where = you.where()
     for j,port in ipairs(explorer.portal_order) do
         if you.where() == dgn.level_name(dgn.br_entrance(port)) then
             result[port] = explorer.catalog_place(-j, port, cats_to_show, show_level_fun)
+            -- restore the level, in case there are multiple portals from a
+            -- single level
+            debug.goto_place(current_where)
         end
     end
     return result
@@ -514,20 +518,13 @@ function explorer.catalog_dungeon(max_depth, cats_to_show, show_level_fun)
     for i,lvl in ipairs(explorer.generation_order) do
         if i > max_depth then break end
         result[lvl] = explorer.catalog_place(i, lvl, cats_to_show, show_level_fun)
-        local portals = explorer.catalog_portals(i, lvl, cats_to_show, show_level_fun)
-        for port, cat in pairs(portals) do
-            result[port] = cat
+        if result[lvl] ~= nil then
+            -- only check portals if the place was built
+            local portals = explorer.catalog_portals(i, lvl, cats_to_show, show_level_fun)
+            for port, cat in pairs(portals) do
+                result[port] = cat
+            end
         end
-        -- if (dgn.br_exists(string.match(lvl, "[^:]+"))) then
-        --     debug.goto_place(lvl)
-        --     debug.generate_level()
-        --     local old_quiet = explorer.quiet
-        --     if show_level_fun ~= nil and not show_level_fun(i) then
-        --         explorer.quiet = true
-        --     end
-        --     result[lvl] = explorer.catalog_current_place(lvl, cats_to_show, true)
-        --     explorer.quiet = old_quiet
-        -- end
     end
     return result
 end

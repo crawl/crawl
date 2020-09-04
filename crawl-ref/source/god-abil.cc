@@ -3212,7 +3212,6 @@ spret qazlal_upheaval(coord_def target, bool quiet, bool fail)
 #ifdef USE_TILE
     beam.tile_beam = -1;
 #endif
-    beam.draw_delay  = 0;
 
     if (target.origin())
     {
@@ -3305,19 +3304,31 @@ spret qazlal_upheaval(coord_def target, bool quiet, bool fail)
                 affected.push_back(*ri);
         }
     }
-
-    for (coord_def pos : affected)
-    {
-        beam.draw(pos);
-        scaled_delay(25);
-    }
     if (!quiet)
+        shuffle_array(affected);
+
+    // for `quiet` calls (i.e. disaster area), don't delay for individual tiles
+    // at all -- do the delay per upheaval draw. This will also fully suppress
+    // the redraw per tile.
+    beam.draw_delay = quiet ? 0 : 25;
+    for (coord_def pos : affected)
+        beam.draw(pos, false);
+
+    if (quiet)
     {
-        scaled_delay(100);
-        mprf(MSGCH_GOD, "%s", message.c_str());
+        // When `quiet`, refresh the view after each complete draw pass.
+        // why this call dance to refresh? I just copied it from bolt::draw
+        viewwindow(false);
+        update_screen();
+        scaled_delay(50); // add some delay per upheaval draw, otherwise it all
+                          // goes by too fast.
     }
     else
-        scaled_delay(25);
+    {
+        scaled_delay(200); // This is here to make it easy for the player to
+                           // see the overall impact of the upheaval
+        mprf(MSGCH_GOD, "%s", message.c_str());
+    }
 
     int wall_count = 0;
     beam.animate = false; // already drawn
@@ -3512,7 +3523,7 @@ bool qazlal_disaster_area()
         targets.erase(targets.begin() + which);
         weights.erase(weights.begin() + which);
     }
-    scaled_delay(100);
+    scaled_delay(200);
 
     return true;
 }

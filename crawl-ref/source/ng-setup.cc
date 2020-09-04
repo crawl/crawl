@@ -14,6 +14,7 @@
 #include "items.h"
 #include "item-use.h"
 #include "jobs.h"
+#include "message.h"
 #include "mutation.h"
 #include "ng-init.h"
 #include "ng-wanderer.h"
@@ -418,6 +419,12 @@ void initial_dungeon_setup()
 static void _setup_generic(const newgame_def& ng,
                            bool normal_dungeon_setup /*for catch2-tests*/)
 {
+    // this seems non-ideal, but messages are not being displayed at this point
+    // so if a force_more_message triggers, the more will just show on a blank
+    // screen. TODO: it's not clear to me why the more can show up without
+    // the message that triggered it.
+    unwind_bool no_more(crawl_state.show_more_prompt, false);
+
     rng::reset(); // initialize rng from Options.seed
     _init_player();
     you.game_seed = crawl_state.seed;
@@ -472,8 +479,11 @@ static void _setup_generic(const newgame_def& ng,
 
     _give_basic_knowledge();
 
-    // Must be after _give_basic_knowledge
-    add_held_books_to_library();
+    {
+        msg::suppress quiet;
+        // Must be after _give_basic_knowledge
+        add_held_books_to_library();
+    }
 
     if (you.char_class == JOB_WANDERER)
         memorise_wanderer_spell();

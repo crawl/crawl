@@ -64,6 +64,7 @@ void equip_item(equipment_type slot, int item_slot, bool msg)
     ash_check_bondage();
     if (you.equip[slot] != -1 && you.inv[you.equip[slot]].cursed())
         auto_id_inventory();
+    you.gear_change = true;
 }
 
 // Clear an equipment slot (possibly melded).
@@ -85,6 +86,7 @@ bool unequip_item(equipment_type slot, bool msg)
             you.melded.set(slot, false);
         ash_check_bondage();
         you.last_unequip = item_slot;
+        you.gear_change = true;
         return true;
     }
 }
@@ -100,6 +102,7 @@ bool meld_slot(equipment_type slot)
     if (you.equip[slot] != -1 && !you.melded[slot])
     {
         you.melded.set(slot);
+        you.gear_change = true;
         return true;
     }
     return false;
@@ -115,6 +118,7 @@ bool unmeld_slot(equipment_type slot)
     if (you.equip[slot] != -1 && you.melded[slot])
     {
         you.melded.set(slot, false);
+        you.gear_change = true;
         return true;
     }
     return false;
@@ -259,6 +263,9 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld,
     if (proprt[ARTP_CONTAM] && msg && !unmeld)
         mpr("You feel a build-up of mutagenic energy.");
 
+    if (proprt[ARTP_RAMPAGING] && msg && !unmeld)
+        mpr("You feel ready to rampage towards enemies.");
+
     if (!unmeld && !item.cursed() && proprt[ARTP_CURSE])
         do_curse_item(item, !msg);
 
@@ -370,6 +377,9 @@ static void _unequip_artefact_effect(item_def &item,
         contaminate_player(7000, true);
     }
 
+    if (proprt[ARTP_RAMPAGING] && !you.rampaging() && msg && !meld)
+        mpr("You no longer feel able to rampage towards enemies.");
+
     if (proprt[ARTP_DRAIN] && !meld)
         drain_player(150, true, true);
 
@@ -410,10 +420,6 @@ static void _equip_use_warning(const item_def& item)
         mpr("You really shouldn't be using a hasty item like this.");
     else if (is_wizardly_item(item) && you_worship(GOD_TROG))
         mpr("You really shouldn't be using a wizardly item like this.");
-#if TAG_MAJOR_VERSION == 34
-    else if (is_channeling_item(item) && you_worship(GOD_PAKELLAS))
-        mpr("You really shouldn't be trying to channel magic like this.");
-#endif
 }
 
 static void _wield_cursed(item_def& item, bool known_cursed, bool unmeld)

@@ -661,7 +661,7 @@ static const char *kill_method_names[] =
     "beogh_smiting", "divine_wrath", "bounce", "reflect", "self_aimed",
     "falling_through_gate", "disintegration", "headbutt", "rolling",
     "mirror_damage", "spines", "frailty", "barbs", "being_thrown",
-    "collision",
+    "collision", "zot",
 };
 
 static const char *_kill_method_name(kill_method_type kmt)
@@ -2600,6 +2600,10 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
             needs_called_by_monster_line = true;
         }
         needs_damage = true;
+        break;
+
+    case KILLED_BY_ZOT:
+        desc += terse ? "Zot" : "Tarried too long and was consumed by Zot";
         break;
 
     default:

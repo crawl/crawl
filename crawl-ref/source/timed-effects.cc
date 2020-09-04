@@ -11,6 +11,7 @@
 #include "act-iter.h"
 #include "areas.h"
 #include "beam.h"
+#include "branch.h" // for zot clock key
 #include "cloud.h"
 #include "coordit.h"
 #include "corpse.h"
@@ -34,6 +35,7 @@
 #include "mon-place.h"
 #include "mon-project.h"
 #include "mutation.h"
+#include "notes.h"
 #include "player.h"
 #include "player-stats.h"
 #include "random.h"
@@ -212,26 +214,22 @@ static void _hell_effects(int /*time_delta*/)
         _minor_hell_summons();
 }
 
-static void _handle_magic_contamination()
+static void _apply_contam_over_time()
 {
     int added_contamination = 0;
-
-    // Scale has been increased by a factor of 1000, but the effect now happens
-    // every turn instead of every 20 turns, so everything has been multiplied
-    // by 50 and scaled to you.time_taken.
 
     //Increase contamination each turn while invisible
     if (you.duration[DUR_INVIS])
         added_contamination += INVIS_CONTAM_PER_TURN;
     //If not invisible, normal dissipation
     else
-        added_contamination -= 25;
+        added_contamination -= 75;
 
     // The Orb halves dissipation (well a bit more, I had to round it),
     // but won't cause glow on its own -- otherwise it'd spam the player
     // with messages about contamination oscillating near zero.
     if (you.magic_contamination && player_has_orb())
-        added_contamination += 13;
+        added_contamination += 38;
 
     // Scaling to turn length
     added_contamination = div_rand_round(added_contamination * you.time_taken,
@@ -282,9 +280,8 @@ static void _magic_contamination_effects()
 }
 // Checks if the player should be hit with magic contaimination effects,
 // then actually does it if they should be.
-static void _handle_magic_contamination(int /*time_delta*/)
+static void _check_contamination_effects(int /*time_delta*/)
 {
-    // [ds] Move magic contamination effects closer to b26 again.
     const bool glow_effect = player_severe_contamination()
                              && x_chance_in_y(you.magic_contamination, 12000);
 
@@ -424,7 +421,7 @@ struct timed_effect
 };
 
 // If you add an entry to this list, remember to add a matching entry
-// to timed_effect_type in timef-effect-type.h!
+// to timed_effect_type in timed-effect-type.h!
 static struct timed_effect timed_effects[] =
 {
     { rot_corpses,               200,   200, true  },
@@ -432,7 +429,7 @@ static struct timed_effect timed_effects[] =
 #if TAG_MAJOR_VERSION == 34
     { nullptr,                         0,     0, false },
 #endif
-    { _handle_magic_contamination,   200,   600, false },
+    { _check_contamination_effects,   70,   200, false },
 #if TAG_MAJOR_VERSION == 34
     { nullptr,                         0,     0, false },
 #endif
@@ -478,7 +475,7 @@ void handle_time()
 
     // Magic contamination from spells and Orb.
     if (!crawl_state.game_is_arena())
-        _handle_magic_contamination();
+        _apply_contam_over_time();
 
     for (unsigned int i = 0; i < ARRAYSZ(timed_effects); i++)
     {
@@ -743,7 +740,7 @@ void monster::timeout_enchantments(int levels)
         case ENCH_BLACK_MARK: case ENCH_SAP_MAGIC: case ENCH_NEUTRAL_BRIBED:
         case ENCH_FRIENDLY_BRIBED: case ENCH_CORROSION: case ENCH_GOLD_LUST:
         case ENCH_RESISTANCE: case ENCH_HEXED: case ENCH_IDEALISED:
-        case ENCH_BOUND_SOUL: case ENCH_STILL_WINDS: case ENCH_RING_OF_THUNDER:
+        case ENCH_BOUND_SOUL: case ENCH_STILL_WINDS:
             lose_ench_levels(entry.second, levels);
             break;
 
@@ -1257,4 +1254,124 @@ int speed_to_duration(int speed)
         speed = 100;
 
     return div_rand_round(100, speed);
+}
+
+// Returns -1 if the player hasn't been in this branch before.
+static int& _zot_clock_for(branch_type br)
+{
+    CrawlHashTable &branch_clock = you.props["ZOT_CLOCK"];
+    const string branch_name = branches[br].abbrevname;
+    // When entering a new branch, start with an empty clock.
+    // (You'll get the usual time when you finish entering.)
+    if (!branch_clock.exists(branch_name))
+        branch_clock[branch_name].get_int() = -1;
+    return branch_clock[branch_name].get_int();
+}
+
+static int& _zot_clock()
+{
+    return _zot_clock_for(you.where_are_you);
+}
+
+static bool _zot_clock_active_in(branch_type br)
+{
+    return br != BRANCH_ABYSS && !player_has_orb() && !crawl_state.game_is_sprint();
+}
+
+// Is the zot clock running, or is it paused or stopped altogether?
+bool zot_clock_active()
+{
+    return _zot_clock_active_in(you.where_are_you);
+}
+
+static bool _over_zot_threshold(branch_type br)
+{
+    return _zot_clock_for(br) >= MAX_ZOT_CLOCK - BEZOTTING_THRESHOLD;
+}
+
+// If the player was in the given branch, would they suffer penalties for
+// nearing the end of the zot clock?
+bool bezotted_in(branch_type br)
+{
+    return _zot_clock_active_in(br) && _over_zot_threshold(br);
+}
+
+// Is the player suffering penalties from nearing the end of the zot clock?
+bool bezotted()
+{
+    return bezotted_in(you.where_are_you);
+}
+
+// How many times should the player have been drained by Zot?
+int bezotting_level()
+{
+    if (!bezotted())
+        return 0;
+    const int MAX_ZOTS = 5;
+    const int TURNS_PER_ZOT = BEZOTTING_THRESHOLD / MAX_ZOTS;
+    const int over_thresh = _zot_clock() - (MAX_ZOT_CLOCK - BEZOTTING_THRESHOLD);
+    return over_thresh / TURNS_PER_ZOT + 1;
+}
+
+// Decrease the zot clock when the player enters a new level.
+void decr_zot_clock()
+{
+    if (!zot_clock_active())
+        return;
+    int &zot = _zot_clock();
+    if (zot == -1)
+    {
+        // new branch
+        zot = MAX_ZOT_CLOCK - ZOT_CLOCK_PER_FLOOR;
+    }
+    else
+    {
+        // old branch, new floor
+        if (bezotted())
+            mpr("As you enter the new level, Zot loses track of you.");
+        zot = max(0, zot - ZOT_CLOCK_PER_FLOOR);
+    }
+}
+
+// Odds of the zot clock incrementing every aut, expressed as odds
+// out of 1000 (aka 10x a percent chance).
+static unsigned _zot_clock_odds()
+{
+    const int base_odds = 100; // 10% per aut, aka on average 1/turn
+    if (have_passive(passive_t::slow_zot))
+    {
+        // down to 6.7% at full piety, aka once every 1.5 turns. (only movement
+        // (is slowed, not all actions, so we shouldn't give double clock!)
+        return base_odds - div_rand_round(you.piety, 6);
+    }
+    return base_odds;
+}
+
+void incr_zot_clock()
+{
+    const int clock_incr = binomial(you.time_taken, _zot_clock_odds(), 1000);
+    const int old_lvl = bezotting_level();
+    _zot_clock() += clock_incr;
+    if (!bezotted())
+        return;
+
+    if (_zot_clock() >= MAX_ZOT_CLOCK)
+    {
+        mpr("Zot has found you!");
+        ouch(INSTANT_DEATH, KILLED_BY_ZOT);
+        return;
+    }
+
+    if (!old_lvl)
+    {
+        mpr("You have lingered too long in familiar places. Zot approaches. Travel to new levels before you perish!");
+        drain_player(150, true, true);
+        take_note(Note(NOTE_MESSAGE, 0, 0, "Touched by the power of Zot."));
+    }
+    else if (bezotting_level() > old_lvl)
+    {
+        mpr("Zot draws near. Death is approaching...");
+        drain_player(75, true, true);
+        take_note(Note(NOTE_MESSAGE, 0, 0, "Touched by the power of Zot."));
+    }
 }

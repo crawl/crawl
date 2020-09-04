@@ -48,6 +48,7 @@
 #include "errors.h"
 #include "ghost.h"
 #include "god-abil.h" // just for the Ru sac penalty key
+#include "god-passive.h"
 #include "god-companions.h"
 #include "item-name.h"
 #include "item-prop.h"
@@ -3872,6 +3873,12 @@ static void _tag_read_you(reader &th)
         you.attribute[ATTR_UNUSED3] = 0;
     }
 
+    if (you.props.exists(WU_JIAN_HEAVENLY_STORM_KEY) && !you.duration[DUR_HEAVENLY_STORM])
+    {
+        mprf(MSGCH_ERROR, "Fixing up incorrect heavenly storm key");
+        wu_jian_end_heavenly_storm();
+    }
+
 #endif
 }
 
@@ -5095,6 +5102,14 @@ void unmarshallItem(reader &th, item_def &item)
     if (th.getMinorVersion() < TAG_MINOR_UNSTACK_TREMORSTONES
         && item.base_type == OBJ_MISCELLANY
         && item.sub_type == MISC_TIN_OF_TREMORSTONES)
+    {
+        item.quantity = 1;
+    }
+
+    if (th.getMinorVersion() < TAG_MINOR_REALLY_UNSTACK_EVOKERS
+        && item.base_type == OBJ_MISCELLANY
+        && (item.sub_type == MISC_PHANTOM_MIRROR
+            || item.sub_type == MISC_BOX_OF_BEASTS) )
     {
         item.quantity = 1;
     }

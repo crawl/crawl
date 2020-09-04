@@ -180,7 +180,6 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_GRAVITAS,
     SPELL_PORTAL_PROJECTILE,
     SPELL_DISPERSAL,
-    SPELL_CONTROLLED_BLINK,
     SPELL_DISJUNCTION,
 },
 
@@ -262,7 +261,6 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_DISPERSAL,
     SPELL_MALIGN_GATEWAY,
     SPELL_DISJUNCTION,
-    SPELL_CONTROLLED_BLINK,
 },
 #endif
 

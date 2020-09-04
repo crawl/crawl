@@ -339,9 +339,9 @@ TAGS:    lair_entry no_rotate
 ORIENT:  float
 MONS:    steam dragon / acid dragon / swamp drake
 MONS:    basilisk / wyvern w:25 / komodo dragon / crocodile w:25
-NSUBST:  2 = 3:2 / 3 = 2. / *:.
-SUBST:   z = .xc
-SHUFFLE: %*O
+NSUBST:  2 = 3=2 / 3=2. / .
+SHUFFLE: %!*O
+SUBST:   z = .xc, ! = %
 KFEAT:   O = enter_lair
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -353,7 +353,7 @@ xxzxxzzzxxxxx..xxzzxxzz..........z...zzz..zzc+.zc
 xxxzxxx...xxxxxxxxxxxxzxxxx.zz.2...z......zccc$cc
 xxxxxxzxxxzxxxxxxxxxxxx....xxzz...z....zz..zzcczc
 xxxxxxxxxxxxxxxxxxxxxzz2xxxzxxzzzz..zzz2zz.2Ozccc
-xxxxxxxxxxxxxxxxxxxxxz%zxxxxxxxxxx.xxxzxxxzxxxxxx
+xxxxxxxxxxxxxxxxxxxxxz!zxxxxxxxxxx.xxxzxxxzxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 

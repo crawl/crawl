@@ -962,7 +962,8 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
                     return false;
                 }
 
-                if (!get_form()->slot_available(s))
+                if (!get_form()->slot_available(s)
+                    || s == EQ_BOOTS && you.wear_barding())
                 {
                     if (verbose)
                     {
@@ -2995,15 +2996,6 @@ void read(item_def* scroll)
             canned_msg(MSG_OK);
             return;
         }
-
-        if (scroll->sub_type == SCR_BLINKING
-            && orb_limits_translocation()
-            && !yesno("Your blink will be uncontrolled - continue anyway?",
-                      false, 'n'))
-        {
-            canned_msg(MSG_OK);
-            return;
-        }
     }
 
     if (you.get_mutation_level(MUT_BLURRY_VISION)
@@ -3092,16 +3084,8 @@ void read_scroll(item_def& scroll)
         const bool safely_cancellable
             = alreadyknown && !you.get_mutation_level(MUT_BLURRY_VISION);
 
-        if (orb_limits_translocation())
-        {
-            mprf(MSGCH_ORB, "The Orb prevents control of your translocation!");
-            uncontrolled_blink();
-        }
-        else
-        {
-            cancel_scroll = (cast_controlled_blink(false, safely_cancellable)
-                             == spret::abort) && alreadyknown;
-        }
+        cancel_scroll = (controlled_blink(safely_cancellable)
+                         == spret::abort) && alreadyknown;
 
         if (!cancel_scroll)
             mpr(pre_succ_msg); // ordering is iffy but w/e
@@ -3124,10 +3108,7 @@ void read_scroll(item_def& scroll)
 
     case SCR_ACQUIREMENT:
         if (!alreadyknown)
-        {
-            mpr(pre_succ_msg);
             mpr("This is a scroll of acquirement!");
-        }
 
         // included in default force_more_message
         // Identify it early in case the player checks the '\' screen.
@@ -3374,7 +3355,8 @@ void read_scroll(item_def& scroll)
 #if TAG_MAJOR_VERSION == 34
         && which_scroll != SCR_RECHARGING
 #endif
-        && which_scroll != SCR_AMNESIA)
+        && which_scroll != SCR_AMNESIA
+        && which_scroll != SCR_ACQUIREMENT)
     {
         mprf("It %s a %s.",
              scroll.quantity < prev_quantity ? "was" : "is",

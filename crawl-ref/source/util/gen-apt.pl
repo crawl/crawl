@@ -129,6 +129,7 @@ sub aptitude_table
         next if $sp eq 'Sludge Elf';
         next if $sp eq 'Djinni';
         next if $sp eq 'Lava Orc';
+        next if $sp eq 'Centaur';
 
         my $line = '';
         $line .= fix_draco_species($sp, \$seen_draconian_length);
@@ -226,7 +227,7 @@ sub load_aptitudes
         }
         else
         {
-            if (/APT\(\s*SP_(\w+)\s*,\s*SK_(\w+)\s*,\s*(-?\d+|UNUSABLE_SKILL)\s*\)/)
+            if (/{\s*SP_(\w+)\s*,\s*SK_(\w+)\s*,\s*(-?\d+|UNUSABLE_SKILL)\s*}/)
             {
                 $species = propercase_string(fix_underscores($1));
                 if (!$SEEN_SPECIES{$species})
@@ -240,6 +241,7 @@ sub load_aptitudes
                 my $skill = skill_name($2);
                 next if $skill eq "Stabbing";
                 next if $skill eq "Traps";
+                next if $skill eq "Charms";
                 die "$skillfile:$.: Unknown skill: $skill\n"
                     unless $SKILL_ABBR{$skill};
                 die "$skillfile:$.: Repeated skill def $1 for $species.\n"

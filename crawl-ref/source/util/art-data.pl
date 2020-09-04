@@ -522,7 +522,7 @@ my @art_order = (
     "flags",
 
 # start TAG_MAJOR_VERSION == 34
-    # Move FOG after FLY, and remove four copies of "unused", when
+    # Remove five copies of "unused", when
     # it is no longer the case that TAG_MAJOR_VERSION == 34
     "{", "BRAND", "AC", "EV", "STR", "INT", "DEX", "\n",
     "FIRE", "COLD", "ELEC", "POISON", "LIFE", "MAGIC", "\n",
@@ -530,7 +530,7 @@ my @art_order = (
     "NOSPELL", "RND_TELE", "NOTELEP", "ANGRY", "unused", "\n",
     "MUTATE", "unused", "SLAY", "CURSE", "STEALTH", "MP", "\n",
     "BASE_DELAY", "HP", "CLARITY", "BASE_ACC", "BASE_DAM", "\n",
-    "RMSL", "FOG", "REGEN", "unused", "NO_UPGRADE", "RCORR", "\n",
+    "RMSL", "unused", "REGEN", "unused", "NO_UPGRADE", "RCORR", "\n",
     "RMUT", "unused", "CORRODE", "DRAIN", "SLOW", "FRAGILE", "\n",
     "SH", "HARM", "\n",
     "}",
@@ -538,7 +538,7 @@ my @art_order = (
 # start TAG_MAJOR_VERSION == 35
 #     "{", "BRAND", "AC", "EV", "STR", "INT", "DEX", "\n",
 #     "FIRE", "COLD", "ELEC", "POISON", "LIFE", "MAGIC", "\n",
-#     "SEEINV", "INV", "FLY", "FOG", "BLINK", "BERSERK",  "NOISES", "\n",
+#     "SEEINV", "INV", "FLY", "BLINK", "BERSERK",  "NOISES", "\n",
 #     "NOSPELL", "RND_TELE", "NOTELEP", "ANGRY", "\n",
 #     "MUTATE", "SLAY", "CURSE", "STEALTH", "MP", "\n",
 #     "BASE_DELAY", "HP", "CLARITY", "BASE_ACC", "BASE_DAM", "\n",

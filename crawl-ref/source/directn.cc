@@ -896,7 +896,8 @@ bool direction_chooser::move_is_ok() const
                          && Options.allow_self_target
                                 != confirm_prompt_type::none)
                 {
-                    return yesno("Really target yourself?", false, 'n');
+                    return yesno("Really target yourself?", false, 'n',
+                                 true, true, false, nullptr, false);
                 }
             }
 
@@ -1136,6 +1137,8 @@ static void _draw_ray_cell(screen_cell_t& cell, coord_def p, bool on_target,
 
 void direction_chooser_renderer::render(crawl_view_buffer& vbuf)
 {
+    if (crawl_state.invisible_targeting)
+        return;
     m_directn.draw_beam(vbuf);
     m_directn.highlight_summoner(vbuf);
 }
@@ -1371,6 +1374,8 @@ bool direction_chooser::handle_signals()
 // we'll live with that.
 void direction_chooser::show_initial_prompt()
 {
+    if (crawl_state.invisible_targeting)
+        return;
     behaviour->update_top_prompt(&top_prompt);
     describe_cell();
 }
@@ -2064,6 +2069,9 @@ public:
 
     void _render() override
     {
+        if (crawl_state.invisible_targeting)
+            return;
+
 #ifndef USE_TILE_LOCAL
         // do_redraws() only calls viewwindow(); we must first draw the sidebar.
         redraw_screen(false);
@@ -2221,6 +2229,9 @@ bool direction_chooser::choose_direction()
     unwind_bool inhibit_rendering(ui::should_render_current_regions, false);
 #endif
 
+    // TODO: ideally crawl_state.invisible_targeting would suppress the redraws
+    // associated with these ui calls, but I'm not sure of a clean way to make
+    // that work
     ui::push_layout(directn_view, KMC_TARGETING);
     directn_view->_queue_allocation();
     while (directn_view->is_alive() && !handle_signals())

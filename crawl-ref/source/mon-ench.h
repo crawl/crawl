@@ -8,6 +8,8 @@
 
 class actor;
 
+void update_mons_cloud_ring(monster* mons);
+
 class mon_enchant
 {
 public:

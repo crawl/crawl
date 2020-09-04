@@ -625,7 +625,6 @@ static const char* _wand_type_name(int wandtype)
     case WAND_ACID:            return "acid";
     case WAND_RANDOM_EFFECTS:  return "random effects";
     case WAND_DISINTEGRATION:  return "disintegration";
-    case WAND_CLOUDS:          return "clouds";
     default:                   return item_type_removed(OBJ_WANDS, wandtype)
                                     ? "removedness"
                                     : "bugginess";
@@ -678,7 +677,7 @@ const char* potion_type_name(int potiontype)
     // FIXME: Remove this once known-items no longer uses this as a sentinel.
     default:
                                 return "bugginess";
-    CASE_REMOVED_POTIONS(potiontype);
+    CASE_REMOVED_POTIONS(potiontype); // TODO: this will crash, is that correct??
     }
 }
 
@@ -969,6 +968,7 @@ static string misc_type_name(int type)
     case MISC_XOMS_CHESSBOARD:           return "removed chess piece";
 #endif
     case MISC_TIN_OF_TREMORSTONES:       return "tin of tremorstones";
+    case MISC_CONDENSER_VANE:            return "condenser vane";
 
     default:
         return "buggy miscellaneous item";
@@ -1083,23 +1083,16 @@ static const char* staff_type_name(int stafftype)
 {
     switch ((stave_type)stafftype)
     {
-    case STAFF_WIZARDRY:    return "wizardry";
-#if TAG_MAJOR_VERSION == 34
-    case STAFF_POWER:       return "power";
-#endif
     case STAFF_FIRE:        return "fire";
     case STAFF_COLD:        return "cold";
     case STAFF_POISON:      return "poison";
-    case STAFF_ENERGY:      return "energy";
     case STAFF_DEATH:       return "death";
     case STAFF_CONJURATION: return "conjuration";
-#if TAG_MAJOR_VERSION == 34
-    case STAFF_ENCHANTMENT: return "enchantment";
-#endif
     case STAFF_AIR:         return "air";
     case STAFF_EARTH:       return "earth";
-    case STAFF_SUMMONING:   return "summoning";
-    default:                return "bugginess";
+    default:                return item_type_removed(OBJ_STAVES, stafftype)
+                                ? "removedness"
+                                : "bugginess";
     }
 }
 
@@ -2788,6 +2781,14 @@ bool is_dangerous_item(const item_def &item, bool temp)
         return item.sub_type == MISC_TIN_OF_TREMORSTONES;
 
     case OBJ_ARMOUR:
+        if (you.get_mutation_level(MUT_NO_LOVE)
+            && is_unrandom_artefact(item, UNRAND_RATSKIN_CLOAK))
+        {
+            // some people don't like being randomly attacked by rats.
+            // weird but what can you do.
+            return true;
+        }
+
         // Tilting at windmills can be dangerous.
         return get_armour_ego_type(item) == SPARM_RAMPAGING;
 
@@ -2960,9 +2961,6 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
         if (item.sub_type == WAND_ENSLAVEMENT)
             return you.get_mutation_level(MUT_NO_LOVE);
 
-        if (item.sub_type == WAND_CLOUDS)
-            return temp && (env.level_state & LSTATE_STILL_WINDS);
-
         return false;
 
     case OBJ_POTIONS:
@@ -3089,14 +3087,6 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
         if (!ident && !item_type_known(item))
             return false;
 
-        switch (item.sub_type)
-        {
-        case STAFF_WIZARDRY:
-        case STAFF_CONJURATION:
-        case STAFF_SUMMONING:
-            return you_worship(GOD_TROG);
-        }
-
         return false;
 
     case OBJ_CORPSES:
@@ -3131,6 +3121,11 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
         case MISC_PHANTOM_MIRROR:
             return you.get_mutation_level(MUT_NO_LOVE)
                    || you.get_mutation_level(MUT_NO_ARTIFICE);
+
+        case MISC_CONDENSER_VANE:
+            if (temp && (env.level_state & LSTATE_STILL_WINDS))
+                return true;
+            // Intentional fallthrough to check artifice
 
         default:
             return you.get_mutation_level(MUT_NO_ARTIFICE);

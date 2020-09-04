@@ -147,7 +147,8 @@ bool attack::handle_phase_end()
  *
  * @param random If false, calculate average to-hit penalties deterministically.
  */
-void attack::calc_encumbrance_penalties(bool random) {
+void attack::calc_encumbrance_penalties(bool random)
+{
     attacker_armour_tohit_penalty =
         maybe_random_div(attacker->armour_tohit_penalty(true, 20), 20, random);
     attacker_shield_tohit_penalty =
@@ -159,7 +160,8 @@ void attack::calc_encumbrance_penalties(bool random) {
  *
  * @param random If false, calculate average to-hit deterministically.
  */
-int attack::calc_pre_roll_to_hit(bool random) {
+int attack::calc_pre_roll_to_hit(bool random)
+{
     if (using_weapon()
         && (is_unrandom_artefact(*weapon, UNRAND_WOE)
             || is_unrandom_artefact(*weapon, UNRAND_SNIPER)))
@@ -257,7 +259,8 @@ int attack::calc_pre_roll_to_hit(bool random) {
  *
  * @param mhit The post-roll player's to-hit value.
  */
-int attack::post_roll_to_hit_modifiers(int mhit, bool /*random*/) {
+int attack::post_roll_to_hit_modifiers(int mhit, bool /*random*/)
+{
     int modifiers = 0;
 
     // Penalties for both players and monsters:
@@ -1280,7 +1283,7 @@ int attack::test_hit(int to_land, int ev, bool randomise_ev)
     return margin;
 }
 
-int attack::apply_defender_ac(int damage, int damage_max) const
+int attack::apply_defender_ac(int damage, int damage_max, ac_type ac_rule) const
 {
     ASSERT(defender);
     int stab_bypass = 0;
@@ -1289,8 +1292,7 @@ int attack::apply_defender_ac(int damage, int damage_max) const
         stab_bypass = you.skill(wpn_skill, 50) + you.skill(SK_STEALTH, 50);
         stab_bypass = random2(div_rand_round(stab_bypass, 100 * stab_bonus));
     }
-    int after_ac = defender->apply_ac(damage, damage_max,
-                                      ac_type::normal, stab_bypass);
+    int after_ac = defender->apply_ac(damage, damage_max, ac_rule, stab_bypass);
     dprf(DIAG_COMBAT, "AC: att: %s, def: %s, ac: %d, gdr: %d, dam: %d -> %d",
                  attacker->name(DESC_PLAIN, true).c_str(),
                  defender->name(DESC_PLAIN, true).c_str(),

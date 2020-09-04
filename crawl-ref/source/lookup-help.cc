@@ -832,7 +832,8 @@ void LookupType::display_keys(vector<string> &key_list) const
             desc_menu.add_entry(_monster_menu_gen(letter,
                                                   key_to_menu_str(key),
                                                   monster_list[i]));
-        } else
+        }
+        else
             desc_menu.add_entry(make_menu_entry(letter, key));
     }
 

@@ -115,8 +115,16 @@ void init_spell_descs()
                 || (data.min_range >= 0 && data.max_range > 0),
                 "targeted/directed spell '%s' has invalid range", data.title);
 
-        ASSERTM(!(data.flags & spflag::monster && is_player_spell(data.id)),
+        if (!spell_removed(data.id)
+            && data.id != SPELL_NO_SPELL
+            && data.id != SPELL_DEBUGGING_RAY)
+        {
+            ASSERTM(!(data.flags & spflag::monster && is_player_spell(data.id)),
                 "spell '%s' is declared as a monster spell but is a player spell", data.title);
+
+            ASSERTM(!(!(data.flags & spflag::monster) && !is_player_spell(data.id)),
+                "spell '%s' is not declared as a monster spell but is not a player spell", data.title);
+        }
 
         spell_list[data.id] = i;
     }
@@ -252,6 +260,9 @@ spell_type get_spell_by_letter(char letter)
 
 bool add_spell_to_memory(spell_type spell)
 {
+    if (vehumet_is_offering(spell))
+        library_add_spells({ spell });
+
     int slot_i;
     int letter_j = -1;
     string sname = spell_title(spell);
@@ -1077,7 +1088,6 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
     switch (spell)
     {
     case SPELL_BLINK:
-    case SPELL_CONTROLLED_BLINK:
         // XXX: this is a little redundant with you_no_tele_reason()
         // but trying to sort out temp and so on is a mess
         if (you.species == SP_FORMICID)
@@ -1237,12 +1247,10 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         break;
 
     case SPELL_GOLUBRIAS_PASSAGE:
-        if (orb_limits_translocation(temp))
-            return "the Orb prevents this spell from working.";
-        else if (temp && player_in_branch(BRANCH_GAUNTLET))
+        if (temp && player_in_branch(BRANCH_GAUNTLET))
         {
             return "a magic seal in the Gauntlet prevents this spell "
-                "from working.";
+                   "from working.";
         }
         break;
 
@@ -1576,4 +1584,99 @@ const vector<spell_type> *soh_breath_spells(spell_type spell)
     };
 
     return map_find(soh_breaths, spell);
+}
+
+/* How to regenerate this:
+   comm -2 -3 \
+    <(clang -P -E -nostdinc -nobuiltininc spell-type.h -DTAG_MAJOR_VERSION=34 | sort) \
+    <(clang -P -E -nostdinc -nobuiltininc spell-type.h -DTAG_MAJOR_VERSION=35 | sort) \
+    | grep SPELL
+*/
+const set<spell_type> removed_spells =
+{
+#if TAG_MAJOR_VERSION == 34
+    SPELL_AURA_OF_ABJURATION,
+    SPELL_BOLT_OF_INACCURACY,
+    SPELL_CHANT_FIRE_STORM,
+    SPELL_CIGOTUVIS_DEGENERATION,
+    SPELL_CIGOTUVIS_EMBRACE,
+    SPELL_CONDENSATION_SHIELD,
+    SPELL_CONTROLLED_BLINK,
+    SPELL_CONTROL_TELEPORT,
+    SPELL_CONTROL_UNDEAD,
+    SPELL_CONTROL_WINDS,
+    SPELL_CORRUPT_BODY,
+    SPELL_CURE_POISON,
+    SPELL_DEFLECT_MISSILES,
+    SPELL_DELAYED_FIREBALL,
+    SPELL_DEMONIC_HORDE,
+    SPELL_DRACONIAN_BREATH,
+    SPELL_EPHEMERAL_INFUSION,
+    SPELL_EVAPORATE,
+    SPELL_EXPLOSIVE_BOLT,
+    SPELL_FAKE_RAKSHASA_SUMMON,
+    SPELL_FIRE_BRAND,
+    SPELL_FIRE_CLOUD,
+    SPELL_FLY,
+    SPELL_FORCEFUL_DISMISSAL,
+    SPELL_FREEZING_AURA,
+    SPELL_FRENZY,
+    SPELL_FULSOME_DISTILLATION,
+    SPELL_GRAND_AVATAR,
+    SPELL_HASTE_PLANTS,
+    SPELL_HOLY_LIGHT,
+    SPELL_HOLY_WORD,
+    SPELL_HOMUNCULUS,
+    SPELL_HUNTING_CRY,
+    SPELL_IGNITE_POISON_SINGLE,
+    SPELL_INFUSION,
+    SPELL_INSULATION,
+    SPELL_IRON_ELEMENTALS,
+    SPELL_LETHAL_INFUSION,
+    SPELL_MELEE,
+    SPELL_MIASMA_CLOUD,
+    SPELL_MISLEAD,
+    SPELL_PHASE_SHIFT,
+    SPELL_POISON_CLOUD,
+    SPELL_POISON_WEAPON,
+    SPELL_REARRANGE_PIECES,
+    SPELL_RECALL,
+    SPELL_REGENERATION,
+    SPELL_RESURRECT,
+    SPELL_RING_OF_FLAMES,
+    SPELL_SACRIFICE,
+    SPELL_SCATTERSHOT,
+    SPELL_SEE_INVISIBLE,
+    SPELL_SERPENT_OF_HELL_BREATH_REMOVED,
+    SPELL_SHAFT_SELF,
+    SPELL_SHROUD_OF_GOLUBRIA,
+    SPELL_SILVER_BLAST,
+    SPELL_SINGULARITY,
+    SPELL_SONG_OF_SHIELDING,
+    SPELL_SPECTRAL_WEAPON,
+    SPELL_STEAM_CLOUD,
+    SPELL_STICKS_TO_SNAKES,
+    SPELL_STONESKIN,
+    SPELL_STRIKING,
+    SPELL_SUMMON_BUTTERFLIES,
+    SPELL_SUMMON_ELEMENTAL,
+    SPELL_SUMMON_RAKSHASA,
+    SPELL_SUMMON_SCORPIONS,
+    SPELL_SUMMON_SWARM,
+    SPELL_SUMMON_TWISTER,
+    SPELL_SUNRAY,
+    SPELL_SURE_BLADE,
+    SPELL_THROW,
+    SPELL_VAMPIRE_SUMMON,
+    SPELL_WARP_BRAND,
+    SPELL_WEAVE_SHADOWS,
+    SPELL_DARKNESS,
+    SPELL_CLOUD_CONE,
+    SPELL_RING_OF_THUNDER,
+#endif
+};
+
+bool spell_removed(spell_type spell)
+{
+    return removed_spells.count(spell) != 0;
 }

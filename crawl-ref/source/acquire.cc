@@ -579,37 +579,38 @@ static int _acquirement_jewellery_subtype(bool /*divine*/, int & /*quantity*/,
 static int _acquirement_staff_subtype(bool /*divine*/, int & /*quantity*/,
                                       int /*agent*/)
 {
-    // Try to pick an enhancer staff matching the player's best skill.
-    skill_type best_spell_skill = best_skill(SK_FIRST_MAGIC_SCHOOL,
-                                             SK_LAST_MAGIC);
-    bool found_enhancer = false;
-    int result = 0;
-    do
-    {
-        result = random2(NUM_STAVES);
-    }
-    while (item_type_removed(OBJ_STAVES, result));
+    vector<pair<stave_type, int>> weights = {
+        { STAFF_FIRE,        _skill_rdiv(SK_FIRE_MAGIC) },
+        { STAFF_COLD,        _skill_rdiv(SK_ICE_MAGIC) },
+        { STAFF_AIR,         _skill_rdiv(SK_AIR_MAGIC) },
+        { STAFF_EARTH,       _skill_rdiv(SK_EARTH_MAGIC) },
+        { STAFF_POISON,      _skill_rdiv(SK_POISON_MAGIC) },
+        { STAFF_DEATH,       _skill_rdiv(SK_NECROMANCY) },
+        { STAFF_CONJURATION, _skill_rdiv(SK_CONJURATIONS) },
+        { NUM_STAVES,        5 },
+    };
 
-    switch (best_spell_skill)
+    for (auto &weight : weights)
     {
-#define TRY_GIVE(x) { if (!you.type_ids[OBJ_STAVES][x]) \
-                      {result = x; found_enhancer = true;} }
-    case SK_FIRE_MAGIC:   TRY_GIVE(STAFF_FIRE);        break;
-    case SK_ICE_MAGIC:    TRY_GIVE(STAFF_COLD);        break;
-    case SK_AIR_MAGIC:    TRY_GIVE(STAFF_AIR);         break;
-    case SK_EARTH_MAGIC:  TRY_GIVE(STAFF_EARTH);       break;
-    case SK_POISON_MAGIC: TRY_GIVE(STAFF_POISON);      break;
-    case SK_NECROMANCY:   TRY_GIVE(STAFF_DEATH);       break;
-    case SK_CONJURATIONS: TRY_GIVE(STAFF_CONJURATION); break;
-    case SK_SUMMONINGS:   TRY_GIVE(STAFF_SUMMONING);   break;
-#undef TRY_GIVE
-    default:                                           break;
+        if (weight.first != NUM_STAVES
+            && get_ident_type(OBJ_STAVES, weight.first))
+        {
+            weight.second = 0;
+        }
     }
-    if (one_chance_in(found_enhancer ? 2 : 3))
-        return result;
 
-    // Otherwise pick a non-enhancer staff.
-    return coinflip() ? STAFF_WIZARDRY : STAFF_ENERGY;
+    stave_type staff = *random_choose_weighted(weights);
+
+    if (staff == NUM_STAVES)
+    {
+        do
+        {
+            staff = static_cast<stave_type>(random2(NUM_STAVES));
+        }
+        while (item_type_removed(OBJ_STAVES, staff));
+    }
+
+    return staff;
 }
 
 /**
@@ -623,10 +624,11 @@ static int _acquirement_misc_subtype(bool /*divine*/, int & /*quantity*/,
 
     const vector<pair<int, int> > choices =
     {
-        // These have charges, so give them a constant weight.
-        {MISC_BOX_OF_BEASTS,            (NO_LOVE ? 0 : 10)},
-        {MISC_PHANTOM_MIRROR,           (NO_LOVE ? 0 : 10)},
-        // The player never needs more than one of the rest.
+        // The player never needs more than one of these.
+        {MISC_BOX_OF_BEASTS,
+            (NO_LOVE || you.seen_misc[MISC_BOX_OF_BEASTS] ? 0 : 20)},
+        {MISC_PHANTOM_MIRROR,
+            (NO_LOVE || you.seen_misc[MISC_PHANTOM_MIRROR] ? 0 : 20)},
         // Tremorstones are better for heavily armoured characters.
         {MISC_TIN_OF_TREMORSTONES,
             (you.seen_misc[MISC_TIN_OF_TREMORSTONES]
@@ -635,7 +637,8 @@ static int _acquirement_misc_subtype(bool /*divine*/, int & /*quantity*/,
             (you.seen_misc[MISC_LIGHTNING_ROD]   ? 0 : 20)},
         {MISC_PHIAL_OF_FLOODS,
             (you.seen_misc[MISC_PHIAL_OF_FLOODS] ? 0 : 20)},
-
+        {MISC_CONDENSER_VANE,
+            (you.seen_misc[MISC_CONDENSER_VANE] ? 0 : 20)},
     };
 
     const int * const choice = random_choose_weighted(choices);
@@ -643,9 +646,12 @@ static int _acquirement_misc_subtype(bool /*divine*/, int & /*quantity*/,
     // Possible for everything to be 0 weight - if so just give a random spare.
     if (choice == nullptr)
     {
-        return random_choose(MISC_TIN_OF_TREMORSTONES,
+        return random_choose(MISC_BOX_OF_BEASTS,
+                             MISC_PHANTOM_MIRROR,
+                             MISC_TIN_OF_TREMORSTONES,
                              MISC_LIGHTNING_ROD,
-                             MISC_PHIAL_OF_FLOODS);
+                             MISC_PHIAL_OF_FLOODS,
+                             MISC_CONDENSER_VANE);
     }
 
     return *choice;
@@ -664,7 +670,6 @@ static int _acquirement_wand_subtype(bool /*divine*/, int & /*quantity*/,
 {
     // basic total: 120
     vector<pair<wand_type, int>> weights = {
-        { WAND_CLOUDS,          18 },
         { WAND_ACID,            18 },
         { WAND_ICEBLAST,        18 },
         { WAND_ENSLAVEMENT,     you.get_mutation_level(MUT_NO_LOVE) ? 0 : 8 },

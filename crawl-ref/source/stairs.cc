@@ -44,6 +44,7 @@
  #include "tilepick.h"
 #endif
 #include "tiles-build-specific.h"
+#include "timed-effects.h" // bezotted
 #include "traps.h"
 #include "travel.h"
 #include "view.h"
@@ -788,6 +789,21 @@ void floor_transition(dungeon_feature_type how,
                 mpr(branches[branch].entry_message);
             else if (branch != BRANCH_ABYSS) // too many messages...
                 mprf("Welcome to %s!", branches[branch].longname);
+        }
+        const bool was_bezotted = bezotted_in(old_level.branch);
+        if (bezotted())
+        {
+            if (was_bezotted)
+                mpr("Zot already knows this place too well. Flee this branch!");
+            else
+                mpr("Zot's attention fixes on you again. Flee this branch!");
+        }
+        else if (was_bezotted)
+        {
+            if (branch == BRANCH_ABYSS)
+                mpr("Zot has no power in the Abyss.");
+            else
+                mpr("You feel Zot lose track of you.");
         }
 
         if (branch == BRANCH_GAUNTLET)

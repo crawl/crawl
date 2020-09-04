@@ -1503,7 +1503,7 @@ MARKER:     ! = lua:fog_machine { \
 # player complete the rest of the map.
 ITEM:       potion of haste / potion of resistance w:5 / any potion w:20 \
             / scroll of silence w:5 / scroll of fog w:5 / any scroll w:20
-ITEM:       scarf ego:repulsion / book of clouds / wand of clouds \
+ITEM:       scarf ego:repulsion / book of clouds / condenser vane \
             / staff of air
 # Main loot, including some thematic items that are good even if you don't care
 # about flight.
@@ -1669,9 +1669,8 @@ KITEM:      d = scroll of summoning / scroll of holy word \
 KITEM:      e = wand of acid / wand of iceblast / ring of fire / ring of ice \
                 / randbook disc:summoning
 KITEM:      f = demon blade w:1 / demon whip w:1 / demon trident w:1 \
-                / staff of summoning w:1 / manual of summonings w:1 \
-                / any randart jewellery w:5 / cloak good_item w:5 \
-                / star_item w:25 / superb_item
+                / manual of summonings w:2 / any randart jewellery w:5 \
+                / cloak good_item w:5 / star_item w:25 / superb_item
 KITEM:      g = randbook disc:summoning
 NSUBST:     d = e / d, ' = 4:1 / 3=12...., " = 4:1 / 3=12....
 NSUBST:     ` = 2:1 / 2:2 / 3=12...., ; = 2:1 / 2:2 / 3=12....

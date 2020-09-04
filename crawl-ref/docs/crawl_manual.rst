@@ -1177,10 +1177,10 @@ Stone Soup's homepage is at:
   http://crawl.develz.org
 
 Use this page for direct links to downloads of the most recent version. You can
-also submit bug reports there at https://crawl.develz.org/mantis. Be sure to
-make sure that your bug isn't already in the list. Feature requests should be
-posted on the official forum or the development wiki on crawl.develz.org
-instead.
+also submit bug reports there at https://crawl.develz.org/mantis if you have an
+account, or on the Github issue tracker at:
+
+  https://github.com/crawl/crawl/issues
 
 The history of Crawl is somewhat convoluted: Crawl was created in 1995 by Linley
 Henzell. Linley based Crawl loosely on Angband and NetHack, but avoided several

@@ -309,6 +309,7 @@ enum misc_item_type
     MISC_XOMS_CHESSBOARD,
 #endif
     MISC_TIN_OF_TREMORSTONES,
+    MISC_CONDENSER_VANE,
 
     NUM_MISCELLANY,
     MISC_DECK_UNKNOWN = NUM_MISCELLANY,
@@ -338,8 +339,10 @@ const vector<misc_item_type> misc_types =
 #endif
     MISC_ZIGGURAT,
 #if TAG_MAJOR_VERSION == 34
-    MISC_BOTTLED_EFREET, MISC_BUGGY_EBONY_CASKET
+    MISC_BOTTLED_EFREET, MISC_BUGGY_EBONY_CASKET,
 #endif
+    MISC_TIN_OF_TREMORSTONES,
+    MISC_CONDENSER_VANE,
 };
 
 enum missile_type
@@ -516,20 +519,22 @@ enum special_ring_type // jewellery mitm[].special values
 
 enum stave_type
 {
-    STAFF_WIZARDRY,
 #if TAG_MAJOR_VERSION == 34
+    STAFF_WIZARDRY,
     STAFF_POWER,
 #endif
     STAFF_FIRE,
     STAFF_COLD,
     STAFF_POISON,
+#if TAG_MAJOR_VERSION == 34
     STAFF_ENERGY,
+#endif
     STAFF_DEATH,
     STAFF_CONJURATION,
 #if TAG_MAJOR_VERSION == 34
     STAFF_ENCHANTMENT,
-#endif
     STAFF_SUMMONING,
+#endif
     STAFF_AIR,
     STAFF_EARTH,
 #if TAG_MAJOR_VERSION == 34
@@ -737,8 +742,8 @@ enum wand_type
     WAND_ACID,
     WAND_RANDOM_EFFECTS,
     WAND_DISINTEGRATION,
-    WAND_CLOUDS,
 #if TAG_MAJOR_VERSION == 34
+    WAND_CLOUDS_REMOVED,
     WAND_SCATTERSHOT_REMOVED,
 #endif
     NUM_WANDS

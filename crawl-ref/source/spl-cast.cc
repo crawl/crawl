@@ -46,6 +46,7 @@
 #include "ouch.h"
 #include "output.h"
 #include "player.h"
+#include "player-stats.h"
 #include "prompt.h"
 #include "religion.h"
 #include "shout.h"
@@ -522,7 +523,6 @@ static int _spell_enhancement(spell_type spell)
         enhanced -= 2;
 
     enhanced += you.archmagi();
-    enhanced += player_equip_unrand(UNRAND_MAJIN);
     enhanced += you.duration[DUR_BRILLIANCE] > 0;
 
     // These are used in an exponential way, so we'll limit them a bit. -- bwr
@@ -652,6 +652,36 @@ void do_cast_spell_cmd(bool force)
     if (!cast_a_spell(!force))
         flush_input_buffer(FLUSH_ON_FAILURE);
 }
+
+static void _handle_wucad_mu(int cost)
+{
+    if (!player_equip_unrand(UNRAND_WUCAD_MU))
+        return;
+
+    if (!x_chance_in_y(you.skill(SK_EVOCATIONS), 81))
+        return;
+
+    did_god_conduct(DID_WIZARDLY_ITEM, 10);
+
+    // The chance of backfiring goes down with evo skill and up with cost
+    if (one_chance_in(max(you.skill(SK_EVOCATIONS) - cost, 1)))
+    {
+        mpr(random_choose("Weird images run through your mind.",
+                          "Your head hurts.",
+                          "You feel a strange surge of energy.",
+                          "You feel uncomfortable."));
+        if (coinflip())
+            confuse_player(2 + random2(4));
+        else
+        lose_stat(STAT_INT, 1 + random2avg(5, 2));
+    }
+    else
+    {
+        mpr("Magical energy flows into your mind!");
+        inc_mp(cost, true);
+    }
+}
+
 
 /**
  * Cast a spell.
@@ -874,6 +904,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
     practise_casting(spell, cast_result == spret::success);
     if (cast_result == spret::success)
     {
+        _handle_wucad_mu(cost);
         did_god_conduct(DID_SPELL_CASTING, 1 + random2(5));
         count_action(CACT_CAST, spell);
     }
@@ -1160,9 +1191,6 @@ static unique_ptr<targeter> _spell_targeter(spell_type spell, int pow,
         return make_unique<targeter_smite>(&you, range, 0, 2);
     case SPELL_GLACIATE:
         return make_unique<targeter_cone>(&you, range);
-    case SPELL_CLOUD_CONE:
-        return make_unique<targeter_shotgun>(&you, CLOUD_CONE_BEAM_COUNT,
-                                             range, true);
     case SPELL_GRAVITAS:
         return make_unique<targeter_smite>(&you, range,
                                            gravitas_range(pow),
@@ -1663,9 +1691,6 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_CHAIN_OF_CHAOS:
         return cast_chain_spell(SPELL_CHAIN_OF_CHAOS, powc, &you, fail);
 
-    case SPELL_CLOUD_CONE:
-        return cast_cloud_cone(&you, powc, target, fail);
-
     case SPELL_IGNITION:
         return cast_ignition(&you, powc, fail);
 
@@ -1831,9 +1856,6 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     // Escape spells.
     case SPELL_BLINK:
         return cast_blink(fail);
-
-    case SPELL_CONTROLLED_BLINK:
-        return cast_controlled_blink(fail);
 
     case SPELL_CONJURE_FLAME:
         return conjure_flame(powc, fail);
@@ -2247,93 +2269,4 @@ void spell_skills(spell_type spell, set<skill_type> &skills)
     for (const auto bit : spschools_type::range())
         if (disciplines & bit)
             skills.insert(spell_type2skill(bit));
-}
-
-/* How to regenerate this:
-   comm -2 -3 \
-    <(clang -P -E -nostdinc -nobuiltininc spell-type.h -DTAG_MAJOR_VERSION=34 | sort) \
-    <(clang -P -E -nostdinc -nobuiltininc spell-type.h -DTAG_MAJOR_VERSION=35 | sort) \
-    | grep SPELL
-*/
-const set<spell_type> removed_spells =
-{
-#if TAG_MAJOR_VERSION == 34
-    SPELL_AURA_OF_ABJURATION,
-    SPELL_BOLT_OF_INACCURACY,
-    SPELL_CHANT_FIRE_STORM,
-    SPELL_CIGOTUVIS_DEGENERATION,
-    SPELL_CIGOTUVIS_EMBRACE,
-    SPELL_CONDENSATION_SHIELD,
-    SPELL_CONTROL_TELEPORT,
-    SPELL_CONTROL_UNDEAD,
-    SPELL_CONTROL_WINDS,
-    SPELL_CORRUPT_BODY,
-    SPELL_CURE_POISON,
-    SPELL_DEFLECT_MISSILES,
-    SPELL_DELAYED_FIREBALL,
-    SPELL_DEMONIC_HORDE,
-    SPELL_DRACONIAN_BREATH,
-    SPELL_EPHEMERAL_INFUSION,
-    SPELL_EVAPORATE,
-    SPELL_EXPLOSIVE_BOLT,
-    SPELL_FAKE_RAKSHASA_SUMMON,
-    SPELL_FIRE_BRAND,
-    SPELL_FIRE_CLOUD,
-    SPELL_FLY,
-    SPELL_FORCEFUL_DISMISSAL,
-    SPELL_FREEZING_AURA,
-    SPELL_FRENZY,
-    SPELL_FULSOME_DISTILLATION,
-    SPELL_GRAND_AVATAR,
-    SPELL_HASTE_PLANTS,
-    SPELL_HOLY_LIGHT,
-    SPELL_HOLY_WORD,
-    SPELL_HOMUNCULUS,
-    SPELL_HUNTING_CRY,
-    SPELL_IGNITE_POISON_SINGLE,
-    SPELL_INFUSION,
-    SPELL_INSULATION,
-    SPELL_IRON_ELEMENTALS,
-    SPELL_LETHAL_INFUSION,
-    SPELL_MELEE,
-    SPELL_MIASMA_CLOUD,
-    SPELL_MISLEAD,
-    SPELL_PHASE_SHIFT,
-    SPELL_POISON_CLOUD,
-    SPELL_POISON_WEAPON,
-    SPELL_REARRANGE_PIECES,
-    SPELL_RECALL,
-    SPELL_REGENERATION,
-    SPELL_RESURRECT,
-    SPELL_SACRIFICE,
-    SPELL_SCATTERSHOT,
-    SPELL_SEE_INVISIBLE,
-    SPELL_SERPENT_OF_HELL_BREATH_REMOVED,
-    SPELL_SHAFT_SELF,
-    SPELL_SHROUD_OF_GOLUBRIA,
-    SPELL_SILVER_BLAST,
-    SPELL_SINGULARITY,
-    SPELL_SONG_OF_SHIELDING,
-    SPELL_SPECTRAL_WEAPON,
-    SPELL_STEAM_CLOUD,
-    SPELL_STICKS_TO_SNAKES,
-    SPELL_STONESKIN,
-    SPELL_STRIKING,
-    SPELL_SUMMON_BUTTERFLIES,
-    SPELL_SUMMON_ELEMENTAL,
-    SPELL_SUMMON_RAKSHASA,
-    SPELL_SUMMON_SCORPIONS,
-    SPELL_SUMMON_TWISTER,
-    SPELL_SUNRAY,
-    SPELL_SURE_BLADE,
-    SPELL_THROW,
-    SPELL_VAMPIRE_SUMMON,
-    SPELL_WARP_BRAND,
-    SPELL_WEAVE_SHADOWS,
-#endif
-};
-
-bool spell_removed(spell_type spell)
-{
-    return removed_spells.count(spell) != 0;
 }

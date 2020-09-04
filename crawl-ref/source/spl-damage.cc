@@ -44,6 +44,7 @@
 #include "random.h"
 #include "religion.h"
 #include "shout.h"
+#include "spl-goditem.h"
 #include "spl-summoning.h"
 #include "spl-util.h"
 #include "spl-zap.h"
@@ -387,7 +388,10 @@ static void _player_hurt_monster(monster &mon, int damage, beam_type flavour,
         set_attack_conducts(conducts, mon, you.can_see(mon));
 
     if (damage)
+    {
+        majin_bo_vampirism(mon, min(damage, mon.stat_hp()));
         mon.hurt(&you, damage, flavour, KILLED_BY_BEAM);
+    }
 
     if (mon.alive())
     {
@@ -726,12 +730,6 @@ spret fire_los_attack_spell(spell_type spell, int pow, const actor* agent,
 
 spret vampiric_drain(int pow, monster* mons, bool fail)
 {
-    if (you.hp == you.hp_max)
-    {
-        canned_msg(MSG_FULL_HEALTH);
-        return spret::abort;
-    }
-
     const bool observable = mons && mons->observable();
     if (!mons
         || mons->submerged()
@@ -767,22 +765,20 @@ spret vampiric_drain(int pow, monster* mons, bool fail)
     }
 
     // The practical maximum of this is about 25 (pow @ 100). - bwr
-    int hp_gain = 3 + random2avg(9, 2) + random2(pow) / 7;
+    int dam = 3 + random2avg(9, 2) + random2(pow) / 7;
+    dam = resist_adjust_damage(mons, BEAM_NEG, dam);
 
-    hp_gain = min(mons->hit_points, hp_gain);
-    hp_gain = min(you.hp_max - you.hp, hp_gain);
-
-    hp_gain = resist_adjust_damage(mons, BEAM_NEG, hp_gain);
-
-    if (!hp_gain)
+    if (!dam)
     {
         canned_msg(MSG_NOTHING_HAPPENS);
         return spret::success;
     }
 
-    _player_hurt_monster(*mons, hp_gain, BEAM_NEG);
-
+    int hp_gain = min(mons->hit_points, dam);
     hp_gain = div_rand_round(hp_gain, 2);
+    hp_gain = min(you.hp_max - you.hp, hp_gain);
+
+    _player_hurt_monster(*mons, dam, BEAM_NEG);
 
     if (hp_gain && !you.duration[DUR_DEATHS_DOOR])
     {
@@ -2373,6 +2369,7 @@ spret cast_thunderbolt(actor *caster, int pow, coord_def aim, bool fail)
     bolt beam;
     beam.name              = "thunderbolt";
     beam.aux_source        = "lightning rod";
+    beam.origin_spell      = SPELL_THUNDERBOLT;
     beam.flavour           = BEAM_ELECTRICITY;
     beam.glyph             = dchar_glyph(DCHAR_FIRED_BURST);
     beam.colour            = LIGHTCYAN;
@@ -2788,8 +2785,9 @@ void handle_searing_ray()
     {
         monster* mons = nullptr;
         mons = monster_by_mid(you.props["searing_ray_mid"].get_int());
-        // homing targeting, save the target location in case it dies
-        if (mons && mons->alive())
+        // homing targeting, save the target location in case it dies or
+        // disappears
+        if (mons && mons->alive() && you.can_see(*mons))
             you.props["searing_ray_target"].get_coord() = mons->pos();
         else
             you.props["searing_ray_aimed_at_spot"] = true;
@@ -3074,6 +3072,7 @@ static void _hailstorm_cell(coord_def where, int pow, actor *agent)
     beam.hit        = 18 + pow / 6;
     beam.name       = "hail";
     beam.hit_verb   = "pelts";
+    beam.origin_spell = SPELL_HAILSTORM;
 
     monster *mons = monster_at(where);
     if (mons && mons->is_icy())
@@ -3346,7 +3345,8 @@ static monster* _closest_target_in_range(int radius)
         if (mon
             && you.see_cell_no_trans(mon->pos())
             && !mon->wont_attack()
-            && !mons_is_firewood(*mon))
+            && !mons_is_firewood(*mon)
+            && !mons_is_conjured(mon->type))
         {
             return mon;
         }

@@ -643,8 +643,8 @@ Any equipped weapons and armour are melded.
 Orb status
 
 You are near (or perhaps holding) the Orb of Zot, whose energies disrupt
-translocation magic. Teleportation will take longer, all blinks will become
-uncontrolled, and Passage of Golubria will completely fail to work.
+translocation magic. Teleportation will take longer, and Passage of Golubria
+portals will be less accurately positioned and expire more quickly.
 %%%%
 -Hop status
 
@@ -754,4 +754,10 @@ Stab status
 You are better at attacking unaware enemies, giving attacks against distracted,
 confused or otherwise unaware creatures a chance to deal increased damage as if
 the target were completely helpless.
+%%%%
+Zot status
+
+You have spent too much time in one branch, allowing the malevolent entity Zot to
+notice you. You will be repeatedly drained as Zot brings its full attention to bear,
+after which it will kill you instantly. Travel to new floors first!
 %%%%

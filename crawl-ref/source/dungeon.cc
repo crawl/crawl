@@ -4410,7 +4410,8 @@ static bool _apply_item_props(item_def &item, const item_spec &spec,
             else
                 disc1 = random_book_theme();
             disc2 = random_book_theme();
-        } else if (disc2 == spschool::none)
+        }
+        else if (disc2 == spschool::none)
             disc2 = disc1;
         else
             ASSERT(disc1 != spschool::none); // mapdef should've handled this
@@ -4982,7 +4983,9 @@ static bool _dgn_place_monster(const vault_placement &place, mons_spec &mspec,
                                const coord_def& where)
 {
     const bool generate_awake
-        = mspec.generate_awake || place.map.has_tag("generate_awake");
+        = mspec.generate_awake
+          || place.map.has_tag("generate_awake")
+          || player_in_branch(BRANCH_GAUNTLET);
 
     const bool patrolling
         = mspec.patrolling || place.map.has_tag("patrolling");
@@ -6081,7 +6084,8 @@ static coord_def _get_feat_dest(coord_def base_pos, dungeon_feature_type feat,
                 dest_pos = random_in_bounds();
             }
             while (grd(dest_pos) != DNGN_FLOOR
-                   || env.pgrid(dest_pos) & FPROP_NO_TELE_INTO);
+                   || env.pgrid(dest_pos) & FPROP_NO_TELE_INTO
+                   || count_adjacent_slime_walls(dest_pos) != 0);
         }
 
         if (!shaft)

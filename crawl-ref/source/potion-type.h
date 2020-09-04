@@ -53,6 +53,28 @@ enum potion_type
     NUM_POTIONS
 };
 
+// used for objstat
+const vector<potion_type> potion_types =
+{
+    POT_CURING,
+    POT_HEAL_WOUNDS,
+    POT_HASTE,
+    POT_MIGHT,
+    POT_BRILLIANCE,
+    POT_STABBING,
+    POT_FLIGHT,
+    POT_CANCELLATION,
+    POT_AMBROSIA,
+    POT_INVISIBILITY,
+    POT_DEGENERATION,
+    POT_EXPERIENCE,
+    POT_MAGIC,
+    POT_BERSERK_RAGE,
+    POT_MUTATION,
+    POT_RESISTANCE,
+    POT_LIGNIFY,
+};
+
 #if TAG_MAJOR_VERSION == 34
 #define CASE_REMOVED_POTIONS(pot) \
 case POT_GAIN_STRENGTH: \

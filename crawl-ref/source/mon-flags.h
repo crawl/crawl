@@ -46,7 +46,8 @@ enum monclass_flag_type : uint64_t
     /// monster can split
     M_SPLITS            = BIT(12),
 
-                        //BIT(13), // was M_GLOWS
+    /// monster dies a few turns after being hit
+    M_FRAGILE           = BIT(13),
 
     /// monster is stationary
     M_STATIONARY        = BIT(14),
@@ -170,6 +171,10 @@ enum monclass_flag_type : uint64_t
 
     /// uses they/them pronouns
     M_GENDER_NEUTRAL    = BIT(57),
+
+    /// is surrounded by a ring of clouds. Only one can be active at a time!
+    M_THUNDER_RING      = BIT(58),
+    M_FIRE_RING         = BIT(59),
 };
 DEF_BITFIELD(monclass_flags_t, monclass_flag_type);
 

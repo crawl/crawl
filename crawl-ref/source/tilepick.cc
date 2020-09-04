@@ -1967,6 +1967,8 @@ tileidx_t tileidx_monster(const monster_info& mons)
         ch |= TILE_FLAG_VILE_CLUTCH;
     if (mons.is(MB_POSSESSABLE))
         ch |= TILE_FLAG_POSSESSABLE;
+    if (mons.is(MB_WITHERING) || mons.is(MB_CRUMBLING))
+        ch |= TILE_FLAG_SLOWLY_DYING;
 
     if (mons.attitude == ATT_FRIENDLY)
         ch |= TILE_FLAG_PET;
@@ -2565,6 +2567,9 @@ static tileidx_t _tileidx_misc(const item_def &item)
 
     case MISC_TIN_OF_TREMORSTONES:
         return TILE_MISC_TIN_OF_TREMORSTONES;
+
+    case MISC_CONDENSER_VANE:
+        return TILE_MISC_CONDENSER_VANE;
 
 #if TAG_MAJOR_VERSION == 34
     case MISC_BUGGY_LANTERN_OF_SHADOWS:
@@ -3425,10 +3430,6 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_EVOKE_INVISIBILITY_END;
     case ABIL_EVOKE_FLIGHT:
         return TILEG_ABILITY_EVOKE_FLIGHT;
-    case ABIL_EVOKE_FOG:
-        return TILEG_ABILITY_EVOKE_FOG;
-    case ABIL_EVOKE_RATSKIN:
-        return TILEG_ABILITY_EVOKE_RATSKIN;
     case ABIL_EVOKE_THUNDER:
         return TILEG_ABILITY_EVOKE_THUNDER;
 

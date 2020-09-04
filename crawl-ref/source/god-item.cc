@@ -110,12 +110,9 @@ bool is_potentially_evil_item(const item_def& item, bool calc_unid)
         }
         break;
     case OBJ_WANDS:
-        if (item.sub_type == WAND_RANDOM_EFFECTS
-            || item.sub_type == WAND_CLOUDS)
-        {
-            return true;
-        }
-        break;
+        return item.sub_type == WAND_RANDOM_EFFECTS;
+    case OBJ_MISCELLANY:
+        return item.sub_type == MISC_CONDENSER_VANE;
     default:
         break;
     }
@@ -291,7 +288,7 @@ bool is_hasty_item(const item_def& item, bool calc_unid)
         {
         const int item_brand = get_armour_ego_type(item);
         retval = (item_brand == SPARM_RUNNING
-                  || item_brand == SPARM_RAMPAGING);
+                  || get_armour_rampaging(item, true));
         }
         break;
     case OBJ_POTIONS:
@@ -306,17 +303,6 @@ bool is_hasty_item(const item_def& item, bool calc_unid)
     }
 
     return retval;
-}
-
-bool is_channeling_item(const item_def& item, bool calc_unid)
-{
-    if (is_unrandom_artefact(item, UNRAND_WUCAD_MU))
-        return true;
-
-    if (!calc_unid && !item_type_known(item))
-        return false;
-
-    return item.base_type == OBJ_STAVES && item.sub_type == STAFF_ENERGY;
 }
 
 bool is_wizardly_item(const item_def& item, bool calc_unid)
@@ -414,9 +400,6 @@ vector<conduct_type> item_conducts(const item_def &item)
 
     if (_is_potentially_hasty_item(item) || is_hasty_item(item, false))
         conducts.push_back(DID_HASTY);
-
-    if (is_channeling_item(item, false))
-        conducts.push_back(DID_CHANNEL);
 
     if (is_potentially_evil_item(item, false))
         conducts.push_back(DID_EVIL);
