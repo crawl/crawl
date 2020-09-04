@@ -1933,7 +1933,7 @@ static bool _beogh_gift_items_to(monster* mons, int item_slot)
     if (range_weapon)
         gift_ammo_to_orc(mons, true); // give a small initial ammo freebie
 
-
+/*
     if (shield)
         mons->props[BEOGH_SH_GIFT_KEY] = true;
     else if (body_armour)
@@ -1942,7 +1942,7 @@ static bool _beogh_gift_items_to(monster* mons, int item_slot)
         mons->props[BEOGH_RANGE_WPN_GIFT_KEY] = true;
     else
         mons->props[BEOGH_MELEE_WPN_GIFT_KEY] = true;
-
+*/
     return true;
 }
 
