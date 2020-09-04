@@ -1527,16 +1527,17 @@ static const mutation_def mut_data[] =
   {"", "", ""},
 },
 
-{ MUT_FOUL_STENCH, 0, 2, mutflag::good, false,
+{ MUT_FOUL_STENCH, 0, 3, mutflag::good, false,
   "foul stench",
 
-  {"You may emit foul miasma when damaged in melee.",
-   "You frequently emit foul miasma when damaged in melee.",
-   ""},
+  {"You may rarely emit foul miasma when damaged in melee.",
+   "You sometimes emit foul miasma when damaged in melee.",
+   "You frequently emit foul miasma when damaged in melee."},
 
   {"You begin to emit a foul stench of rot and decay.",
+   "Your foul stench grows more powerful.",
    "You begin to radiate miasma.",
-   ""},
+  },
 
   {"", "", ""},
 },

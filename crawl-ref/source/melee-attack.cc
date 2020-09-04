@@ -3090,10 +3090,7 @@ void melee_attack::emit_foul_stench()
     {
         const int mut = you.get_mutation_level(MUT_FOUL_STENCH);
 
-        if (one_chance_in(3))
-            mon->sicken(50 + random2(100));
-
-        if (damage_done > 4 && x_chance_in_y(mut, 5)
+        if (damage_done > 0 && x_chance_in_y(mut * 3 - 1, 20)
             && !cell_is_solid(mon->pos())
             && !cloud_at(mon->pos()))
         {
