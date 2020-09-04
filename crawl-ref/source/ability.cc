@@ -2329,7 +2329,7 @@ static spret _do_ability(const ability_def& abil, bool fail)
         scaled_delay(1000);
 #endif
         you.wield_change = true;
-        drain_player(600, false, true);
+        drain_player(150, false, true);
         mprf("%s is now bound in your memories.",
             wpn->name(DESC_YOUR).c_str());
         break;
@@ -4332,6 +4332,12 @@ static void _pay_ability_costs(const ability_def& abil)
 
     if (piety_cost)
         lose_piety(piety_cost);
+
+    if (abil.ability == ABIL_ELYVILON_HEAL_OTHER
+        && you.species == SP_ANGEL)
+    {
+        you.props["angel_heal_other"] = piety_cost;
+    }
 }
 
 // for The Great Wyrm

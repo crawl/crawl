@@ -16,6 +16,7 @@
 #include "env.h"
 #include "fight.h"
 #include "god-conduct.h"
+#include "god-item.h"
 #include "god-passive.h"
 #include "hints.h"
 #include "invent.h"
@@ -247,7 +248,39 @@ spret try_to_pacify(monster &mon, int healed, int pow,
         simple_monster_message(mon, " turns neutral.");
 
     record_monster_defeat(&mon, KILL_PACIFIED);
-    mons_pacify(mon, ATT_NEUTRAL);
+    if (you.species == SP_ANGEL && (mon.holiness() & (MH_NATURAL | MH_HOLY)))
+    {
+        // for angels: netural and holies will become allies.
+        mons_pacify(mon, ATT_FRIENDLY);
+        if (you.piety >= piety_breakpoint(2))
+        {
+            mon.del_ench(ENCH_POISON);
+            mon.del_ench(ENCH_SICK);
+            mon.del_ench(ENCH_CONFUSION);
+            mon.del_ench(ENCH_FATIGUE);
+            mon.del_ench(ENCH_WRETCHED);
+        }
+
+        for (int slot = MSLOT_WEAPON; slot <= MSLOT_ALT_WEAPON; slot++)
+        {
+            item_def *wpn = mon.mslot_item(static_cast<mon_inv_type>(slot));
+            if (wpn &&
+                  (get_weapon_brand(*wpn) == SPWPN_DRAINING
+                   || get_weapon_brand(*wpn) == SPWPN_PAIN
+                   || get_weapon_brand(*wpn) == SPWPN_VAMPIRISM
+                   || get_weapon_brand(*wpn) == SPWPN_REAPING))
+            {
+                if (convert2good(*wpn))
+                    set_item_ego_type(*wpn, OBJ_WEAPONS, SPWPN_NORMAL);
+                else
+                    set_item_ego_type(*wpn, OBJ_WEAPONS, SPWPN_HOLY_WRATH);
+            }
+        }
+        monster_drop_things(&mon, false, [](const item_def& item)
+                                        { return is_evil_item(item); });
+    }
+    else
+        mons_pacify(mon, ATT_NEUTRAL);
 
     heal_monster(mon, healed);
     return spret::success;
@@ -352,8 +385,14 @@ spret cast_healing(int pow, bool fail)
         return spret::success;
     }
 
-    if (_mons_hostile(mons))
+    if (_mons_hostile(mons)) {
         return try_to_pacify(*mons, healed, pow, fail);
+    } else {
+        // for angels: restore piety when used to allies
+        const int angel = you.props["angel_heal_other"].get_int();
+        if (you.species == SP_ANGEL && (angel > 0))
+            gain_piety(angel);
+    }
 
     fail_check();
 
