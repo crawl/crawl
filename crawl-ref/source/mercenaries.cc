@@ -4,6 +4,7 @@
 **/
 
 #include "AppHdr.h"
+#include "mercenaries.h"
 
 #include <algorithm>
 
@@ -13,6 +14,7 @@
 #include "branch.h"
 #include "dgn-overview.h"
 #include "directn.h"        // DESC_FULL... etc.
+#include "colour.h"
 #include "god-blessing.h"   // use gift_ammo_to_orc **TODO** make general function : gift_ammo_to
 #include "god-companions.h" // to use companion functions
 #include "god-item.h"
@@ -28,6 +30,8 @@
 #include "output.h"
 #include "religion.h"
 #include "spl-other.h"
+#include "showsymb.h"
+#include "viewchar.h"
 
 
 /**
