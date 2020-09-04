@@ -5,7 +5,7 @@ short_name: "AG"
 difficulty: Advanced
 difficulty_priority: 20
 aptitudes:
-  xp: -1
+  xp: 0
   hp: 0
   mp_mod: 0
   mr: 4
@@ -28,15 +28,15 @@ aptitudes:
   conjurations: -1
   hexes: -2
   charms: 0
-  summoning: -2
+  summoning: -1
   necromancy: false
-  translocations: -2
-  transmutations: -2
+  translocations: -1
+  transmutations: -3
   fire_magic: 2
-  ice_magic: -4
-  air_magic: -4
-  earth_magic: -4
-  poison_magic: -4
+  ice_magic: -2
+  air_magic: 0
+  earth_magic: -2
+  poison_magic: -2
   invocations: 3
   evocations: -2
 str: 10

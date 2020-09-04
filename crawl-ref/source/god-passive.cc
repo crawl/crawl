@@ -270,8 +270,6 @@ static const vector<god_passive> god_passives[] =
         },
         {  3, passive_t::conserve_orc_corpses, "conserves orc corpses" },
         {  5, passive_t::water_walk, "walk on water" },
-        {  6, passive_t::share_resistance,
-              "Your resistance will partially share with your followers" },
     },
 
     // Jiyva

@@ -917,7 +917,9 @@ bool lost_soul_revive(monster& mons, killer_type killer)
             }
         }
 
-        monster_die(**mi, KILL_MISC, -1, true);
+        if (!invalid_monster(*mi)) {
+            monster_die(**mi, KILL_MISC, -1, true);
+        }
 
         return true;
     }
