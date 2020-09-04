@@ -16,6 +16,7 @@
 #include "env.h"
 #include "fight.h"
 #include "god-conduct.h"
+#include "god-companions.h"
 #include "god-item.h"
 #include "god-passive.h"
 #include "hints.h"
@@ -248,10 +249,13 @@ spret try_to_pacify(monster &mon, int healed, int pow,
         simple_monster_message(mon, " turns neutral.");
 
     record_monster_defeat(&mon, KILL_PACIFIED);
-    if (you.species == SP_ANGEL && (mon.holiness() & (MH_NATURAL | MH_HOLY)))
+
+    if (you.species == SP_ANGEL && (mon.holiness() & (MH_NATURAL | MH_HOLY))
+        && !(mon.holiness() & (MH_UNDEAD | MH_DEMONIC | MH_NONLIVING | MH_PLANT)))
     {
         // for angels: netural and holies will become allies.
         mons_pacify(mon, ATT_FRIENDLY);
+
         if (you.piety >= piety_breakpoint(2))
         {
             mon.del_ench(ENCH_POISON);
@@ -264,20 +268,25 @@ spret try_to_pacify(monster &mon, int healed, int pow,
         for (int slot = MSLOT_WEAPON; slot <= MSLOT_ALT_WEAPON; slot++)
         {
             item_def *wpn = mon.mslot_item(static_cast<mon_inv_type>(slot));
-            if (wpn &&
-                  (get_weapon_brand(*wpn) == SPWPN_DRAINING
+            if (wpn && (get_weapon_brand(*wpn) == SPWPN_DRAINING
                    || get_weapon_brand(*wpn) == SPWPN_PAIN
                    || get_weapon_brand(*wpn) == SPWPN_VAMPIRISM
                    || get_weapon_brand(*wpn) == SPWPN_REAPING))
-            {
-                if (convert2good(*wpn))
-                    set_item_ego_type(*wpn, OBJ_WEAPONS, SPWPN_NORMAL);
-                else
-                    set_item_ego_type(*wpn, OBJ_WEAPONS, SPWPN_HOLY_WRATH);
-            }
+                set_item_ego_type(*wpn, OBJ_WEAPONS, SPWPN_NORMAL);
+            
+            if (wpn)
+                convert2good(*wpn);
         }
         monster_drop_things(&mon, false, [](const item_def& item)
                                         { return is_evil_item(item); });
+        mon.god = GOD_ELYVILON;
+        add_companion(&mon);
+        if (mon.is_holy())
+            mprf(MSGCH_GOD, "%s respects your resolve, and joins your pilgrimage for the weak.",
+                mon.name(DESC_THE).c_str());
+        else
+            mprf(MSGCH_GOD, "With repentance, %s resolves to follow Elyvilon.",
+                mon.name(DESC_THE).c_str());
     }
     else
         mons_pacify(mon, ATT_NEUTRAL);
@@ -390,8 +399,20 @@ spret cast_healing(int pow, bool fail)
     } else {
         // for angels: restore piety when used to allies
         const int angel = you.props["angel_heal_other"].get_int();
-        if (you.species == SP_ANGEL && (angel > 0))
-            gain_piety(angel);
+        if (you.species == SP_ANGEL)
+        {
+            if (angel > 0)
+                gain_piety(angel);
+
+            if (you.piety >= piety_breakpoint(2))
+            {
+                mons->del_ench(ENCH_POISON);
+                mons->del_ench(ENCH_SICK);
+                mons->del_ench(ENCH_CONFUSION);
+                mons->del_ench(ENCH_FATIGUE);
+                mons->del_ench(ENCH_WRETCHED);
+            }
+        }
     }
 
     fail_check();

@@ -2780,14 +2780,25 @@ static spret _do_ability(const ability_def& abil, bool fail)
 
     case ABIL_TSO_CLEANSING_FLAME:
     {
-        targeter_radius hitfunc(&you, LOS_SOLID, 2);
+        if (you.species == SP_ANGEL && you.piety >= piety_breakpoint(3))
         {
-            if (stop_attack_prompt(hitfunc, "harm", _cleansing_flame_affects))
-                return spret::abort;
+            targeter_radius hitfunc(&you, LOS_SOLID, 3);
+            {
+                if (stop_attack_prompt(hitfunc, "harm", _cleansing_flame_affects))
+                    return spret::abort;
+            }
+        }
+        else
+        {
+            targeter_radius hitfunc(&you, LOS_SOLID, 2);
+            {
+                if (stop_attack_prompt(hitfunc, "harm", _cleansing_flame_affects))
+                    return spret::abort;
+            }
         }
         fail_check();
         cleansing_flame(10 + you.skill_rdiv(SK_INVOCATIONS, 7, 6),
-                        cleansing_flame_source::invocation, you.pos(), &you);
+                            cleansing_flame_source::invocation, you.pos(), &you);
         break;
     }
 
