@@ -2780,7 +2780,7 @@ static spret _do_ability(const ability_def& abil, bool fail)
 
     case ABIL_TSO_CLEANSING_FLAME:
     {
-        if (you.species == SP_ANGEL && you.piety >= piety_breakpoint(3))
+        if (you.species == SP_ANGEL)
         {
             targeter_radius hitfunc(&you, LOS_SOLID, 3);
             {

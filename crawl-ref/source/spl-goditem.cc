@@ -1393,6 +1393,8 @@ void setup_cleansing_flame_beam(bolt &beam, int pow,
     {
         beam.thrower   = KILL_YOU;
         beam.source_id = MID_PLAYER;
+        if (you.species == SP_ANGEL && you_worship(GOD_SHINING_ONE))
+            beam.ex_size = 3;
     }
     else
     {
