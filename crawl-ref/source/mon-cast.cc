@@ -3954,7 +3954,7 @@ static mon_spell_slot _find_spell_prospect(const monster &mons,
     // Monsters that are fleeing or pacified and leaving the
     // level will always try to choose an emergency spell.
     if (mons_is_fleeing(mons) || (mons.pacified() && mons.attitude == ATT_FRIENDLY
-        && you.species == SP_ANGEL && you_worship(GOD_ELYVILON)))
+        && you.species == SP_ANGEL && you.experience_level >= 15 && you_worship(GOD_ELYVILON)))
     {
         const mon_spell_slot spell = _pick_spell_from_list(hspell_pass,
                                                            spflag::emergency);

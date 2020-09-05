@@ -3665,7 +3665,7 @@ void mons_pacify(monster& mon, mon_attitude_type att, bool no_xp)
         monster_drop_things(&mon, false, item_is_horn_of_geryon);
     }
 
-    if (you.species == SP_ANGEL)
+    if (you.species == SP_ANGEL && you.experience_level >= 15)
     {
         switch (mon.type)
         {

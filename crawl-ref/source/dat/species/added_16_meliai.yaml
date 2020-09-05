@@ -41,13 +41,12 @@ levelup_stats:
   - dex
 mutations:
   1:
+    MUT_FAITHFUL: 1
     MUT_FAST: 2
     MUT_STINGER: 3
     MUT_DEFORMED: 1
     MUT_FAST_METABOLISM: 3
 fake_mutations:
-  - long: "Your are naturally faithful."
-    short: naturally faithful
   - long: "You are vulnerable to poison."
     short: poison vulnerability
   - long: "You have no legs."
