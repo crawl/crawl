@@ -993,10 +993,6 @@ void player_reacts()
     if (env.level_state & LSTATE_SLIMY_WALL)
         slime_wall_damage(&you, you.time_taken);
 
-    // Icy shield and armour melt over lava.
-    if (grd(you.pos()) == DNGN_LAVA)
-        maybe_melt_player_enchantments(BEAM_FIRE, you.time_taken);
-
     _decrement_durations();
 
     // Translocations and possibly other duration decrements can
