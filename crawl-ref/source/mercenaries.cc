@@ -797,9 +797,6 @@ static bool _caravan_gift_items_to(monster* mons, int item_slot)
     if (range_weapon)
         gift_ammo_to_orc(mons, true); // give a small initial ammo freebie
 
-    you.del_gold(100 * (1 + you.attribute[ATTR_CARAVAN_ITEM_COST]));
-    you.attribute[ATTR_CARAVAN_ITEM_COST]++;
-
     return true;
 }
 
@@ -816,13 +813,6 @@ bool caravan_gift_item()
     if (list_merc.empty())
     {
         mpr("You cannot find mercenary in your sight.");
-        return false;
-    }
-
-    const int cost_min = 100 * (1 + you.attribute[ATTR_CARAVAN_ITEM_COST]);
-    if (you.gold < cost_min)
-    {
-        mprf("You need at least %d gold to do this.", cost_min);
         return false;
     }
 

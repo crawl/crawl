@@ -354,7 +354,7 @@ static const ability_def Ability_List[] =
     { ABIL_ADAPTION, "Choose Adaption", 0, 0, 0, 0, {}, abflag::starve_ok },
 
     { ABIL_CARAVAN_GIFT_ITEM, "Give Item to Mercenary",
-        0, 0, 0, 0, {}, abflag::gold | abflag::starve_ok },
+        0, 0, 0, 0, {}, abflag::starve_ok },
     { ABIL_CARAVAN_RECALL, "Recall Mercenary",
         0, 0, 0, 0, {}, abflag::starve_ok },
 
@@ -826,11 +826,6 @@ int get_gold_cost(ability_type ability)
         return gozag_potion_price();
     case ABIL_GOZAG_BRIBE_BRANCH:
         return GOZAG_BRIBE_AMOUNT;
-    // for JOB_CARAVAN
-    case ABIL_CARAVAN_GIFT_ITEM:
-    {
-        return 100 * (1 + you.attribute[ATTR_CARAVAN_ITEM_COST]);
-    }
     default:
         return 0;
     }
