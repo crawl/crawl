@@ -2373,7 +2373,7 @@ static const facet_def _demon_facets[] =
     { 1, { MUT_SHARP_SCALES, MUT_SHARP_SCALES, MUT_SHARP_SCALES },
       { -33, -33, 0 } },
     // Tier 2 facets
-    { 2, { MUT_HEAT_RESISTANCE, MUT_FLAME_CLOUD_IMMUNITY, MUT_IGNITE_BLOOD },
+    { 2, { MUT_IGNITE_BLOOD, MUT_IGNITE_BLOOD, MUT_IGNITE_BLOOD },
       { -33, 0, 0 } },
     { 2, { MUT_COLD_RESISTANCE, MUT_FREEZING_CLOUD_IMMUNITY, MUT_ICEMAIL },
       { -33, 0, 0 } },
@@ -2484,7 +2484,7 @@ try_again:
                 if (m == MUT_HEAT_RESISTANCE)
                     fire_elemental++;
 
-                if ((i == 0 && m == MUT_FOUL_STENCH) || m == MUT_IGNITE_BLOOD)
+                if (i == 0 && (m == MUT_FOUL_STENCH || m == MUT_IGNITE_BLOOD))
                     cloud_producing++;
             }
 
