@@ -1966,6 +1966,14 @@ static const mutation_def mut_data[] =
   {"Your memories of battle are enough to bind your weapon.", "", ""},
   {"", "", ""},
 },
+
+{ MUT_FAITHFUL, 0, 1, mutflag::good, true,
+  "faithfulness",
+
+  {"You naturally attract the attention of the gods.", "", ""},
+  {"Your presence becomes easier to attract the attention of the gods.", "", ""},
+  {"", "", ""},
+},
 };
 
 static const mutation_category_def category_mut_data[] =

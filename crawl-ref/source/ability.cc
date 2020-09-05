@@ -2780,7 +2780,7 @@ static spret _do_ability(const ability_def& abil, bool fail)
 
     case ABIL_TSO_CLEANSING_FLAME:
     {
-        if (you.species == SP_ANGEL)
+        if (you.species == SP_ANGEL && you.experience_level >= 15)
         {
             targeter_radius hitfunc(&you, LOS_SOLID, 3);
             {
@@ -4345,7 +4345,7 @@ static void _pay_ability_costs(const ability_def& abil)
         lose_piety(piety_cost);
 
     if (abil.ability == ABIL_ELYVILON_HEAL_OTHER
-        && you.species == SP_ANGEL)
+        && you.species == SP_ANGEL && you.experience_level >= 15)
     {
         you.props["angel_heal_other"] = piety_cost;
     }

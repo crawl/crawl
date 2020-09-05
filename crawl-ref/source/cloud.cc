@@ -29,6 +29,7 @@
 #include "mon-behv.h"
 #include "mon-death.h"
 #include "mon-place.h"
+#include "mon-util.h"
 #include "nearby-danger.h" // Compass (for random_walk, CloudGenerator)
 #include "religion.h"
 #include "shout.h"
@@ -306,6 +307,14 @@ static const cloud_data clouds[] = {
       GREEN,                                    // colour
       { TILE_CLOUD_HEAL, CTVARY_DUR },          // tile
       BEAM_NONE, {},                            // beam_effect
+      true,                                     // opacity
+    },
+    // CLOUD_SILVER,
+    { "atmosphere of purity", nullptr,          // terse, verbose name
+      WHITE,                                    // colour
+      { TILE_CLOUD_SILVER },                    // tile
+      BEAM_NONE,                                // beam_effect
+      { 1, 1 },                                 // base, random damage
       true,                                     // opacity
     },
 };
@@ -951,6 +960,20 @@ bool actor_cloud_immune(const actor &act, cloud_type type)
             return act.res_tornado();
         case CLOUD_RAIN:
             return !act.is_fiery();
+        case CLOUD_SILVER:
+            if (!act.is_player())
+            {
+                if (act.is_monster())
+                {
+                    return act.is_holy()
+                           || (act.as_monster()->god == GOD_SHINING_ONE
+                               || act.as_monster()->god == GOD_ELYVILON
+                               || act.as_monster()->god == GOD_ZIN);
+                }
+                else return false;
+            }
+            else
+                return you_worship(GOD_ZIN);
         default:
             return false;
     }
@@ -1329,6 +1352,92 @@ static int _actor_cloud_damage(const actor *act,
 
         return lightning_dam;
 
+    }
+    case CLOUD_SILVER:
+    {
+        int degree = 0;
+        // chaos
+        degree += act->as_monster()->how_chaotic(true);
+        // mons_is_native_in_branch
+        switch (act->as_monster()->type)
+        {
+            case MONS_ABOMINATION_LARGE:
+            case MONS_ABOMINATION_SMALL:
+            case MONS_TENTACLED_MONSTROSITY:
+            case MONS_TENTACLED_STARSPAWN:
+            case MONS_THRASHING_HORROR:
+            case MONS_UNSEEN_HORROR:
+            case MONS_WORLDBINDER:
+            case MONS_ANCIENT_ZYME:
+            case MONS_ELDRITCH_TENTACLE:
+            case MONS_ELDRITCH_TENTACLE_SEGMENT:
+            case MONS_LURKING_HORROR:
+            case MONS_WRETCHED_STAR:
+                degree++;
+                break;
+            default:
+                break;
+        }
+        // impurity
+        degree += act->as_monster()->how_unclean(false);
+        // unholy
+        if (act->holiness() & MH_UNDEAD && act->as_monster()->is_insubstantial()
+            || act->holiness() & MH_DEMONIC)
+            degree++;
+        // heretics
+        if (act->as_monster()->is_priest())
+            degree++;
+        if (act->as_monster()->type == MONS_DEMIGOD)
+            degree++;
+        if (is_evil_god(act->as_monster()->god)
+            || is_unknown_god(act->as_monster()->god))
+            degree++;
+        // final check
+        if (act->as_monster()->wont_attack() && degree <= 1)
+            degree = 0;
+        if (act->as_monster()->is_holy()
+            || is_good_god(act->as_monster()->god))
+            degree = 0;
+
+        if (you.can_see(*act))
+        {
+            switch (degree)
+            {
+                case 0:
+                    simple_monster_message(*act->as_monster(),
+                        " is recognized as innocent by Zin.");
+                    break;
+                case 1:
+                case 2:
+                case 3:
+                    simple_monster_message(*act->as_monster(),
+                        " is punished by wrath of Zin.");
+                    break;
+                case 4:
+                case 5:
+                default:
+                    simple_monster_message(*act->as_monster(),
+                        " is punished heavily by wrath of Zin!");
+            }
+        }
+        else if (you.see_cell(act->pos()) && degree > 1)
+        {
+            mpr("Wrath of Zin punshes something you cannot see.");
+        }
+
+        if (degree <= 0)
+        {
+            final_damage =
+                _cloud_damage_output(act, _cloud2beam(cloud.type), 0, 0);
+        }
+        else
+        {
+            final_damage =
+                _cloud_damage_output(act, _cloud2beam(cloud.type),
+                                     cloud_base_damage + (degree*2),
+                                     maximum_damage + (degree*3));
+        }
+        break;
     }
     default:
         break;

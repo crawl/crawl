@@ -1028,7 +1028,7 @@ static bool _ely_protect_ally(monster* mons, killer_type killer)
     if (!MON_KILL(killer) && !YOU_KILL(killer))
         return false;
 
-    if (you.species == SP_ANGEL) {
+    if (you.species == SP_ANGEL && you.experience_level >= 15) {
         if ( mons->holiness() & ~(MH_HOLY | MH_NATURAL)
             || !mons->friendly()
             || !you.can_see(*mons)

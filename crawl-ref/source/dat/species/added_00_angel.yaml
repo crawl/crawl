@@ -61,7 +61,6 @@ fake_mutations:
   - long: You can not abandon your faith except for the conversion of good gods.
     short: faithfulness
   - long: When you get contamination, you also get a drain.
-  - long: You are hated by evil gods... forever
 recommended_jobs:
   - JOB_FIGHTER
   - JOB_GLADIATOR

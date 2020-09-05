@@ -250,7 +250,8 @@ spret try_to_pacify(monster &mon, int healed, int pow,
 
     record_monster_defeat(&mon, KILL_PACIFIED);
 
-    if (you.species == SP_ANGEL && (mon.holiness() & (MH_NATURAL | MH_HOLY))
+    if (you.species == SP_ANGEL && you.experience_level >= 15
+        && (mon.holiness() & (MH_NATURAL | MH_HOLY))
         && !(mon.holiness() & (MH_UNDEAD | MH_DEMONIC | MH_NONLIVING | MH_PLANT)))
     {
         // for angels: netural and holies will become allies.
@@ -399,7 +400,7 @@ spret cast_healing(int pow, bool fail)
     } else {
         // for angels: restore piety when used to allies
         const int angel = you.props["angel_heal_other"].get_int();
-        if (you.species == SP_ANGEL)
+        if (you.species == SP_ANGEL && you.experience_level >= 15)
         {
             if (angel > 0)
                 gain_piety(angel);
@@ -1053,6 +1054,13 @@ bool cast_imprison(int pow, monster* mons, int source)
                                             source,
                                             mons->mindex()));
         env.markers.clear_need_activate(); // doesn't need activation
+
+        if (you.species == SP_ANGEL && you.experience_level >= 15) // for angels: the 'room of judgement'
+        {
+            delete_cloud(mons->pos());
+            const int cloud_duration = max(10, you.skill(SK_INVOCATIONS));
+            place_cloud(CLOUD_SILVER, mons->pos(), cloud_duration, nullptr);
+        }
         return true;
     }
 
@@ -1393,7 +1401,9 @@ void setup_cleansing_flame_beam(bolt &beam, int pow,
     {
         beam.thrower   = KILL_YOU;
         beam.source_id = MID_PLAYER;
-        if (you.species == SP_ANGEL && you_worship(GOD_SHINING_ONE))
+        if (you.species == SP_ANGEL
+            && you.experience_level >= 15
+            && you_worship(GOD_SHINING_ONE))
             beam.ex_size = 3;
     }
     else

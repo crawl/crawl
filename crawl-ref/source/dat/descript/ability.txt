@@ -258,7 +258,11 @@ dexterity. The increases to your attributes are determined by Invocations skill.
 Imprison ability
 
 Temporarily imprisons a monster in walls of silver. The duration of the prison
-is increased by Invocations skill.
+is increased by Invocations skill.{{
+    if you.race() == "Angel" then
+        return " Also, as an angel of Zin, you can place the atmosphere of purity in walls of silver at 15 XL. Abyssal creatures and heretics, chaotic and unclean beings, unholies will punished at the atmosphere of purity."
+    end
+}}
 %%%%
 Sanctuary ability
 
@@ -291,7 +295,7 @@ undead and demons and dealing damage to all other hostile creatures. The user's
 allies are never affected. The power of the blast is increased by Invocations
 skill.{{
     if you.race() == "Angel" then
-        return " Also, as an angel of ths Shining One, your blast of holy flame gets wider. "
+        return " Also, as an angel of ths Shining One, your blast of holy flame gets wider at 15 XL. "
     end
 }}
 %%%%
@@ -501,7 +505,7 @@ points are lost. If it does succeed, the monster is healed and you gain half
 the monster's experience value. Otherwise, the monster is unaffected and you
 gain nothing.{{
     if you.race() == "Angel" then
-        return " Also, as an angel of Elyvilon, natural or holy beings will follow you. If you heals already pacified beings, you will restore piety cost to used this. If you can use purification, this ability can be used to purify your allies. "
+        return " Also, as an angel of Elyvilon, natural or holy beings will follow you at 15 XL. If you heals already pacified beings, you will restore piety cost to used this. If you can use purification, this ability can be used to purify your allies. "
     end
 }}
 %%%%
