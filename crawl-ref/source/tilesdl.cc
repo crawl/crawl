@@ -920,11 +920,6 @@ void TilesFramework::do_layout()
         // the top and message window at the bottom.
         m_stat_x_divider = m_windowsz.x - sidebar_pw - map_stat_margin;
 
-        // Calculate message_y_divider. First off, if we have already decided to
-        // use the overlay, we can place the divider to the bottom of the screen.
-        if (message_overlay)
-            message_y_divider = m_windowsz.y;
-
         // Then, the optimal situation without the overlay - we can fit both
         // Options.view_max_height and at least Options.msg_min_height in the space.
 
@@ -959,6 +954,11 @@ void TilesFramework::do_layout()
             else
                 message_y_divider = m_windowsz.y - min_msg_h;
         }
+
+        // Calculate message_y_divider. First off, if we have already decided to
+        // use the overlay, we can place the divider to the bottom of the screen.
+        if (message_overlay)
+            message_y_divider = m_windowsz.y;
     }
 
     // stick message display to the bottom of the window
