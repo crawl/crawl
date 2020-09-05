@@ -1245,7 +1245,7 @@ static monsterentry mondata[] =
     2, 9, MST_NO_SPELLS, CE_NOCORPSE, S_SQUEAL,
     I_ANIMAL, HT_LAND, 14, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_SMALL, MON_SHAPE_QUADRUPED,
-    {TILEP_MONS_HOLY_SWINE,}, TILE_ERROR
+    {TILEP_MONS_HOLY_SWINE}, TILE_ERROR
 },
 
 { // a dummy monster for recolouring

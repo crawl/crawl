@@ -1100,7 +1100,6 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         else
             mon->god = GOD_XOM;
     }
-
     // Holy monsters need their halo!
     if (mon->holiness() & MH_HOLY)
         invalidate_agrid(true);
@@ -2888,7 +2887,8 @@ bool player_angers_monster(monster* mon, bool real)
 
     // Get the drawbacks, not the benefits... (to prevent e.g. demon-scumming).
     conduct_type why = player_will_anger_monster(*mon);
-    if (why && (!real || mon->wont_attack()))
+    if (why && (!real || mon->wont_attack())
+        && !(testbits(mon->flags, MF_PACIFIED) && mon-> attitude == ATT_FRIENDLY)) // for angels
     {
         if (real)
         {

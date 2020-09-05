@@ -52,6 +52,7 @@
 #include "mon-project.h"
 #include "mon-speak.h"
 #include "mon-tentacle.h"
+#include "monster.h"
 #include "mutation.h"
 #include "player-stats.h"
 #include "player-equip.h" //for cubus
@@ -3952,7 +3953,8 @@ static mon_spell_slot _find_spell_prospect(const monster &mons,
 
     // Monsters that are fleeing or pacified and leaving the
     // level will always try to choose an emergency spell.
-    if (mons_is_fleeing(mons) || mons.pacified())
+    if (mons_is_fleeing(mons) || (mons.pacified() && mons.attitude == ATT_FRIENDLY
+        && you.species == SP_ANGEL && you_worship(GOD_ELYVILON)))
     {
         const mon_spell_slot spell = _pick_spell_from_list(hspell_pass,
                                                            spflag::emergency);
@@ -4318,6 +4320,66 @@ bool handle_mon_spell(monster* mons)
     // Should the monster *still* not have a spell, well, too bad {dlb}:
     if (spell_cast == SPELL_NO_SPELL)
         return false;
+
+    // for angels: cast 'minor healing' instead evil spells, except some 'healing' spells
+    if (testbits(mons->flags, MF_PACIFIED) && mons->attitude == ATT_FRIENDLY
+        && you.species == SP_ANGEL && you_worship(GOD_ELYVILON))
+    {
+        if (get_spell_flags(spell_cast) & (spflag::unholy | spflag::unclean))
+        {
+            mons->heal(1 + random2(mons->max_hit_points/4));
+            if (you.piety >= piety_breakpoint(2))
+            {
+                mons->del_ench(ENCH_POISON);
+                mons->del_ench(ENCH_SICK);
+                mons->del_ench(ENCH_CONFUSION);
+                mons->del_ench(ENCH_FATIGUE);
+                mons->del_ench(ENCH_WRETCHED);
+            }
+            mprf(MSGCH_GOD, "%s pray for Elyvilon.", mons->name(DESC_THE).c_str());
+            mons->lose_energy(EUT_SPELL);
+            return true;
+        }
+
+        if ((spell_cast != SPELL_MINOR_HEALING && spell_cast != SPELL_MAJOR_HEALING
+             && spell_cast != SPELL_HEAL_OTHER && spell_cast != SPELL_AURA_OF_HEALING)
+            && spell_typematch(spell_cast, spschool::necromancy))
+        {
+            mons->heal(1 + random2(mons->max_hit_points/4));
+            if (you.piety >= piety_breakpoint(2))
+            {
+                mons->del_ench(ENCH_POISON);
+                mons->del_ench(ENCH_SICK);
+                mons->del_ench(ENCH_CONFUSION);
+                mons->del_ench(ENCH_FATIGUE);
+                mons->del_ench(ENCH_WRETCHED);
+            }
+            mprf(MSGCH_GOD, "%s pray for Elyvilon.", mons->name(DESC_THE).c_str());
+            mons->lose_energy(EUT_SPELL);
+            return true;
+        }
+
+        if (spell_cast == SPELL_INJURY_MIRROR
+            || spell_cast == SPELL_MAJOR_DESTRUCTION
+            || spell_cast == SPELL_LEGENDARY_DESTRUCTION
+            || spell_cast == SPELL_CHAIN_OF_CHAOS
+            || spell_cast == SPELL_CALL_OF_CHAOS
+            || spell_cast == SPELL_DOOM_HOWL)
+        {
+            mons->heal(1 + random2(mons->max_hit_points/4));
+            if (you.piety >= piety_breakpoint(2))
+            {
+                mons->del_ench(ENCH_POISON);
+                mons->del_ench(ENCH_SICK);
+                mons->del_ench(ENCH_CONFUSION);
+                mons->del_ench(ENCH_FATIGUE);
+                mons->del_ench(ENCH_WRETCHED);
+            }
+            mprf(MSGCH_GOD, "%s pray for Elyvilon.", mons->name(DESC_THE).c_str());
+            mons->lose_energy(EUT_SPELL);
+            return true;
+        }
+    }
 
     // Check for antimagic if casting a spell spell.
     if (flags & MON_SPELL_ANTIMAGIC_MASK && ((mons->has_ench(ENCH_ANTIMAGIC)

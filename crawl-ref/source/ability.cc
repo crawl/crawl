@@ -2329,7 +2329,7 @@ static spret _do_ability(const ability_def& abil, bool fail)
         scaled_delay(1000);
 #endif
         you.wield_change = true;
-        drain_player(600, false, true);
+        drain_player(150, false, true);
         mprf("%s is now bound in your memories.",
             wpn->name(DESC_YOUR).c_str());
         break;
@@ -2780,14 +2780,25 @@ static spret _do_ability(const ability_def& abil, bool fail)
 
     case ABIL_TSO_CLEANSING_FLAME:
     {
-        targeter_radius hitfunc(&you, LOS_SOLID, 2);
+        if (you.species == SP_ANGEL)
         {
-            if (stop_attack_prompt(hitfunc, "harm", _cleansing_flame_affects))
-                return spret::abort;
+            targeter_radius hitfunc(&you, LOS_SOLID, 3);
+            {
+                if (stop_attack_prompt(hitfunc, "harm", _cleansing_flame_affects))
+                    return spret::abort;
+            }
+        }
+        else
+        {
+            targeter_radius hitfunc(&you, LOS_SOLID, 2);
+            {
+                if (stop_attack_prompt(hitfunc, "harm", _cleansing_flame_affects))
+                    return spret::abort;
+            }
         }
         fail_check();
         cleansing_flame(10 + you.skill_rdiv(SK_INVOCATIONS, 7, 6),
-                        cleansing_flame_source::invocation, you.pos(), &you);
+                            cleansing_flame_source::invocation, you.pos(), &you);
         break;
     }
 
@@ -4332,6 +4343,12 @@ static void _pay_ability_costs(const ability_def& abil)
 
     if (piety_cost)
         lose_piety(piety_cost);
+
+    if (abil.ability == ABIL_ELYVILON_HEAL_OTHER
+        && you.species == SP_ANGEL)
+    {
+        you.props["angel_heal_other"] = piety_cost;
+    }
 }
 
 // for The Great Wyrm

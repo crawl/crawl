@@ -47,6 +47,7 @@
 #include "mon-behv.h"
 #include "mon-book.h"
 #include "mon-death.h"
+#include "mon-grow.h"
 #include "mon-place.h"
 #include "mon-poly.h"
 #include "mon-tentacle.h"
@@ -3662,6 +3663,39 @@ void mons_pacify(monster& mon, mon_attitude_type att, bool no_xp)
             make_stringf(" discards %s horn.",
                          mon.pronoun(PRONOUN_POSSESSIVE).c_str()).c_str());
         monster_drop_things(&mon, false, item_is_horn_of_geryon);
+    }
+
+    if (you.species == SP_ANGEL)
+    {
+        switch (mon.type)
+        {
+        case MONS_FIRE_DRAGON:
+        case MONS_ICE_DRAGON:
+        case MONS_STEAM_DRAGON:
+        case MONS_SWAMP_DRAGON:
+        case MONS_ACID_DRAGON:
+        case MONS_QUICKSILVER_DRAGON:
+        case MONS_IRON_DRAGON:
+        case MONS_GOLDEN_DRAGON:
+        case MONS_SHADOW_DRAGON:
+        {
+            mprf("%s is become a blessed pearl dragon.",
+                mon.name(DESC_THE, false).c_str());
+            mon.upgrade_type(MONS_PEARL_DRAGON, true, true);
+            break;
+        }
+        
+        case MONS_HOG:
+        {
+            mprf("%s is become a blessed holy swine.",
+                mon.name(DESC_THE, false).c_str());
+            mon.upgrade_type(MONS_HOLY_SWINE, true, true);
+            break;
+        }
+
+        default:
+            break;
+        }
     }
 
     // End constriction.
