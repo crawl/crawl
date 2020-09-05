@@ -2010,8 +2010,8 @@ static void _make_acquirement_items(vector<object_class_type>& rand_classes)
 static void _make_artefact_acquirement_items(vector<object_class_type>& rand_classes)
 {
 
-    const int wanted_randart_num = min(2, (int)rand_classes.size());
-    const int wanted_unrandart_num = 9;
+    const int wanted_randart_num = min(3, (int)rand_classes.size());
+    const int wanted_unrandart_num = 12;
     shuffle_array(rand_classes);
 
     CrawlVector& acq_items = you.props[COLLECTOR_ITEMS_KEY].get_vector();
