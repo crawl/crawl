@@ -1028,12 +1028,22 @@ static bool _ely_protect_ally(monster* mons, killer_type killer)
     if (!MON_KILL(killer) && !YOU_KILL(killer))
         return false;
 
-    if ( mons->holiness() & ~(MH_HOLY | MH_NATURAL)
-        || !mons->friendly()
-        || !you.can_see(*mons) // for simplicity
-        || !one_chance_in(20))
-    {
-        return false;
+    if (you.species == SP_ANGEL) {
+        if ( mons->holiness() & ~(MH_HOLY | MH_NATURAL)
+            || !mons->friendly()
+            || !you.can_see(*mons)
+            || !one_chance_in(20 - min(16, you.piety/10)))
+        {
+            return false; // for angels: 5%~25% chance to protect
+        }
+    } else {
+        if ( mons->holiness() & ~(MH_HOLY | MH_NATURAL)
+            || !mons->friendly()
+            || !you.can_see(*mons) // for simplicity
+            || !one_chance_in(20))
+        {
+            return false;
+        }
     }
 
     mons->hit_points = 1;

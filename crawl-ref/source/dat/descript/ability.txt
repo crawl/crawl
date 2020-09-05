@@ -289,7 +289,11 @@ Cleansing Flame ability
 Invokes a huge blast of divine fury centered on the user, severely damaging
 undead and demons and dealing damage to all other hostile creatures. The user's
 allies are never affected. The power of the blast is increased by Invocations
-skill.
+skill.{{
+    if you.race() == "Angel" then
+        return " Also, as an angel of ths Shining One, your blast of holy flame gets wider. "
+    end
+}}
 %%%%
 Summon Divine Warrior ability
 
@@ -495,7 +499,11 @@ pacified while it is asleep.
 Whether the pacification succeeds or not, the invested food, piety and magic
 points are lost. If it does succeed, the monster is healed and you gain half
 the monster's experience value. Otherwise, the monster is unaffected and you
-gain nothing.
+gain nothing.{{
+    if you.race() == "Angel" then
+        return " Also, as an angel of Elyvilon, natural or holy beings will follow you. If you heals already pacified beings, you will restore piety cost to used this. If you can use purification, this ability can be used to purify your allies. "
+    end
+}}
 %%%%
 Greater Healing ability
 
