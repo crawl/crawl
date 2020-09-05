@@ -126,12 +126,12 @@ static void _maybe_bloodify_square(const coord_def& where, int amount,
     if (amount < 1)
         return;
 
-    bool ignite_blood = you.get_mutation_level(MUT_IGNITE_BLOOD)
-                        && you.see_cell(where);
+    int ignite_blood = you.get_mutation_level(MUT_IGNITE_BLOOD);
 
-    bool may_bleed = _allow_bleeding_on_square(where, ignite_blood);
+    bool may_bleed = _allow_bleeding_on_square(where, 
+                        ignite_blood > 0 && you.see_cell(where));
 
-    if (ignite_blood)
+    if (ignite_blood && you.see_cell(where))
         amount *= 2;
 
     if (x_chance_in_y(amount, 20))
@@ -144,11 +144,13 @@ static void _maybe_bloodify_square(const coord_def& where, int amount,
             _orient_wall_blood(where, from, old_blood);
 
             // Don't apply penance for involuntary cloud placement.
-            if (ignite_blood
+            if (x_chance_in_y(ignite_blood, 3)
+                && you.see_cell(where)
                 && !cell_is_solid(where)
                 && !cloud_at(where))
             {
-                place_cloud(CLOUD_FIRE, where, 5 + random2(6), &you, -1, -1,
+                int dur = 2 + ignite_blood + random2(2 * ignite_blood);
+                place_cloud(CLOUD_FIRE, where, dur, &you, -1, -1,
                             false);
             }
         }
