@@ -3318,6 +3318,30 @@ void level_change(bool skip_attribute_increase)
                 }
                 break;
 
+            case SP_ANGEL:
+                if (you.experience_level == 15)
+                {
+                    mprf(MSGCH_WARN, "Beware! Evil gods begin to regard you as a threat!");
+                    
+                    you.penance[GOD_KIKUBAAQUDGHA] = 255;
+                    you.penance[GOD_MAKHLEB] = 255;
+                    you.penance[GOD_YREDELEMNUL] = 255;
+                    you.penance[GOD_BEOGH] = 255;
+                    you.penance[GOD_LUGONU] = 255;
+                    you.penance[GOD_DITHMENOS] = 255;
+
+                    if (you_worship(GOD_SHINING_ONE))
+                        mprf(MSGCH_GOD, "The Shining One says: Those evil forces!"
+                            " Let them burn by your wider cleansing flame!");
+                    if (you_worship(GOD_ELYVILON))
+                        mprf(MSGCH_GOD, "Elyvilon says: Don't be afraid! Pacified livings"
+                            " and holies will aid you, and I will protect them!");
+                    if (you_worship(GOD_ZIN))
+                        mprf(MSGCH_GOD, "Zin says: Soon, you will face demons from"
+                            "abyss and herd of heretics; imprison them to face my wrath!");
+                }
+                break;
+
             default:
                 break;
             }
@@ -5780,7 +5804,7 @@ player::~player()
 
 bool player::faithbonus() const
 {
-    if (you.species == SP_MELIAI)
+    if (you.has_mutation(MUT_FAITHFUL))
     {
         return true;
     }

@@ -344,14 +344,6 @@ void give_items_skills(const newgame_def& ng)
     if (you.species == SP_ANGEL)
     {
         you.skills[SK_NECROMANCY] = 0;
-
-        you.penance[GOD_KIKUBAAQUDGHA] = 255;
-        you.penance[GOD_MAKHLEB] = 255;
-        you.penance[GOD_YREDELEMNUL] = 255;
-        you.penance[GOD_BEOGH] = 255;
-        you.penance[GOD_LUGONU] = 255;
-        you.penance[GOD_DITHMENOS] = 255;
-
     }
 
     if (!you_worship(GOD_NO_GOD))
