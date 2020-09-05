@@ -219,6 +219,10 @@ cloud_heal0 CLOUD_HEAL
 cloud_heal1
 cloud_heal2
 
+cloud_silver0 CLOUD_SILVER
+cloud_silver1
+cloud_silver2
+
 #########MISC
 poisonous_roots POISONOUS_ROOTS
 

@@ -174,3 +174,8 @@ A cloud of alchemical healing mist. The dwellers of the dungeon or summoned bein
 even undeads, will recover thier injury and damage within this cloud. You're not
 as effective as them because you're from the ground recently, but you can still
 get a healing effect from this; at a very feeble amounts.
+%%%%
+atmosphere of purity
+
+A glowing-sliver energy is filled here. The atmosphere here is quivering with wrath
+of Zin against heretics, unclean beings, unholies and chaotic creatures.

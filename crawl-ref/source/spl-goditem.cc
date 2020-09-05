@@ -1053,6 +1053,13 @@ bool cast_imprison(int pow, monster* mons, int source)
                                             source,
                                             mons->mindex()));
         env.markers.clear_need_activate(); // doesn't need activation
+
+        if (you.species == SP_ANGEL) // for angels: the 'room of judgement'
+        {
+            delete_cloud(mons->pos());
+            const int cloud_duration = max(10, you.skill(SK_INVOCATIONS));
+            place_cloud(CLOUD_SILVER, mons->pos(), cloud_duration, nullptr);
+        }
         return true;
     }
 
