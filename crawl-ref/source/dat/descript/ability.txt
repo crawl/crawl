@@ -252,7 +252,7 @@ Imprison ability
 Temporarily imprisons a monster in walls of silver. The duration of the prison
 is increased by Invocations skill.{{
     if you.race() == "Angel" then
-        return " Also, as an angel of Zin, you can place the atmosphere of purity in walls of silver at 15 XL. Abyssal creatures and heretics, chaotic and unclean beings, unholies will punished at the atmosphere of purity."
+        return " Also, as an angel of Zin, you can call forth and create cloud of purity in the walls of silver at 15 XL. Abyssal creatures, heretics, chaotic and unclean beings, and unholies will be punished in the cloud of purity."
     end
 }}
 %%%%
@@ -497,7 +497,7 @@ points are lost. If it does succeed, the monster is healed and you gain half
 the monster's experience value. Otherwise, the monster is unaffected and you
 gain nothing.{{
     if you.race() == "Angel" then
-        return " Also, as an angel of Elyvilon, natural or holy beings will follow you at 15 XL. If you heals already pacified beings, you will restore piety cost to used this. If you can use purification, this ability can be used to purify your allies. "
+        return " Also, as an angel of Elyvilon, natural or holy beings will follow you at 15 XL. When you heals already pacified beings, it will cost no piety. If you have the purification ability, the healed ally will get also purified."
     end
 }}
 %%%%

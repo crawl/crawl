@@ -3321,7 +3321,7 @@ void level_change(bool skip_attribute_increase)
             case SP_ANGEL:
                 if (you.experience_level == 15)
                 {
-                    mprf(MSGCH_WARN, "Beware! Evil gods begin to regard you as a threat!");
+                    mprf(MSGCH_WARN, "You feel the vile force of evil gods crawling around your presence.");
                     
                     you.penance[GOD_KIKUBAAQUDGHA] = 255;
                     you.penance[GOD_MAKHLEB] = 255;
@@ -3331,14 +3331,14 @@ void level_change(bool skip_attribute_increase)
                     you.penance[GOD_DITHMENOS] = 255;
 
                     if (you_worship(GOD_SHINING_ONE))
-                        mprf(MSGCH_GOD, "The Shining One says: Those evil forces!"
-                            " Let them burn by your wider cleansing flame!");
+                        mprf(MSGCH_GOD, "The Shining One says: Nefarious, vile fiends!"
+                            " You shall wield my flame and they shall burn in my wrath!");
                     if (you_worship(GOD_ELYVILON))
-                        mprf(MSGCH_GOD, "Elyvilon says: Don't be afraid! Pacified livings"
-                            " and holies will aid you, and I will protect them!");
+                        mprf(MSGCH_GOD, "Elyvilon says: Fear not, my child."
+                            " the meeks will repay your mercy and I shall protect them. ");
                     if (you_worship(GOD_ZIN))
-                        mprf(MSGCH_GOD, "Zin says: Soon, you will face demons from"
-                            "abyss and herd of heretics; imprison them to face my wrath!");
+                        mprf(MSGCH_GOD, "Zin says: Here they come, My child. "
+                            " Go forth and purge the unclean. I will aid you to clean them.");
                 }
                 break;
 
