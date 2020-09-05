@@ -281,7 +281,6 @@ spret try_to_pacify(monster &mon, int healed, int pow,
         monster_drop_things(&mon, false, [](const item_def& item)
                                         { return is_evil_item(item); });
         mon.god = GOD_ELYVILON;
-        add_companion(&mon);
         if (mon.is_holy())
             mprf(MSGCH_GOD, "%s respects your resolve, and joins your pilgrimage for the weak.",
                 mon.name(DESC_THE).c_str());
