@@ -101,5 +101,7 @@ enum attribute_type
     ATTR_PAKELLAS_EV,          // increase ev of Pakellas Buff
     ATTR_BODY_LOSS,            // amount of losing body
     ATTR_HEAD_LOSS_XP,         // Unmodified XP needed for head recovery.
+    ATTR_CARAVAN_ITEM_COST,    // Not Used
+    ATTR_CARAVAN_LOST,         // Not Used
     NUM_ATTRIBUTES
 };
