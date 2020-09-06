@@ -1246,7 +1246,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
     case MONS_MERC_KNIGHT:
     {
         item.base_type = OBJ_WEAPONS;
-        item.sub_type  = WPN_FLAIL;
+        item.sub_type  = WPN_WAR_AXE;
         item.flags    |= ISFLAG_KNOW_TYPE;
         level          = 0;
         set_item_ego_type(item, OBJ_WEAPONS, SPWPN_NORMAL);

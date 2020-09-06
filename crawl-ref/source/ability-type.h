@@ -66,7 +66,6 @@ enum ability_type
     ABIL_ADAPTION,
     // JOB_CARAVAN
     ABIL_CARAVAN_GIFT_ITEM,
-    ABIL_CARAVAN_REHIRE,
     ABIL_CARAVAN_RECALL,
     // Wight
     ABIL_BURIALIZE,
