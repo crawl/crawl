@@ -248,10 +248,6 @@ static const char *divine_title[][8] =
     {"Fangless",            "Hyle",                 "Solvent",            "Torus",
         "Lapis",       "@Walking@ Metaphor",    "@Walking@ Providence",    "Ouroboros"},
 
-    // Imus Thea -- mirror/optics/paralle theme
-    {"Stained",             "Well-Polished",             "Opticsist",              "Prismatic",
-        "Overlaped",        "Kaleidoscope",             "@Adj@ In The Mirror",        "Countless Spectrum"},
-
 	// Legion from beyond -- pack/herd theme
     {"Abandoned",          "Pactmaker",             "Pack-bringer",              "Ringleader",
        "Chieftain",        "Magnate",               "Monarch",              "Sovereign of beyond"},

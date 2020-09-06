@@ -426,9 +426,6 @@ static const vector<god_passive> god_passives[] =
              "GOD NOW extracts magical buffs into potions, from corpse of defeated enemies." },
     },
 
-    // Imus Thea
-    { },
-
     // Legion from beyond
     {
         { 0, passive_t::abjuration_protection_legion,

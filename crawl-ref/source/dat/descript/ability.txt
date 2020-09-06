@@ -1084,19 +1084,8 @@ electricity, poison, and acid. The result of evaporation is not specified.
 Also it can be used for Infuse Essence ability; Infused target will diffuse
 other infusions and make all targets in your line of sight infused by the same 
 essence.
-# Imus Thea
-Prismatic Prism ability
-
-Creates a prism that blinds nearby enemies at every turns. Prism's hit dice 
-depends on your piety, and it will be shattered after 3 turns.
 %%%%
-Fragmentation ability
-
-Shatters youself to duplicate yourself. It costs half of your current HP. The
-mirror image is almost same with you and has the same spells and equipments as
-yours.
 # The Legion from Beyond
-%%%%
 Positioning ability
 
 Orders one of your minions to hold position instantly. Ordering again allows them

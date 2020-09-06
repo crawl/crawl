@@ -30,7 +30,6 @@ enum god_type
     GOD_HEPLIAKLQANA,
     GOD_WU_JIAN,
     GOD_WYRM,
-    GOD_IMUS,
     GOD_LEGION_FROM_BEYOND,
     NUM_GODS,                          // always after last god
 

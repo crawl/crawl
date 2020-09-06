@@ -112,8 +112,6 @@ void reset_battlesphere(monster* mons);
 
 spret cast_fulminating_prism(actor* caster, int pow,
                                   const coord_def& where, bool fail);
-spret cast_prismatic_prism(actor* caster, int pow,
-                                  const coord_def& where, bool fail);
 
 monster* find_spectral_weapon(const actor* agent);
 bool weapon_can_be_spectral(const item_def *weapon);
@@ -140,5 +138,3 @@ spret fedhas_grow_oklob(bool fail);
 spret cast_pakellas_summon(int pow, god_type god, bool fail);
 
 spret cast_pavise(int pow, bolt& beam, bool fail);
-
-spret fragmentation(int power);

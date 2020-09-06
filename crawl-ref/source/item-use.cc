@@ -50,7 +50,6 @@
 #include "output.h"
 #include "player-equip.h"
 #include "player-stats.h"
-#include "player.h"
 #include "potion.h"
 #include "prompt.h"
 #include "religion.h"
@@ -1558,13 +1557,6 @@ static bool _can_equip_armour(const item_def &item)
         return false;
     }
 
-    const int ER = -property(item, PARM_EVASION) / 10;
-    if (you_worship(GOD_IMUS) && ER > 4)
-    {
-        mpr("Your fragile body can't wear heavy armour.");
-        return false;
-    }
-
     const equipment_type slot = get_armour_slot(item);
     const int equipped = you.equip[slot];
     if (equipped != -1 && !_can_takeoff_armour(equipped))
@@ -1638,13 +1630,6 @@ bool wear_armour(int item)
         return false;
 
     const equipment_type slot = get_armour_slot(*to_wear);
-
-
-    if (you_worship(GOD_IMUS) && slot == EQ_SHIELD)
-    {
-        mpr("Your fragile body can't wear shield.");
-        return false;
-    }
 
     // At this point, we know it's possible to equip this item. However, there
     // might be reasons it's not advisable. Warn about any dangerous

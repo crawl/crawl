@@ -257,22 +257,9 @@ bool ranged_attack::handle_phase_dodged()
             defender->ablate_deflection();
         }
 
-        if (defender->is_player()){
-
-            // chance to reflect, when dodging was successful
-            if (you_worship(GOD_IMUS) && defender->is_player())
-            {
-                const int imus_sh = max(1, you.piety/10);
-                if (x_chance_in_y(imus_sh, 25)) // 10% ~ 80%
-                {
-                    mprf("Mirror of Imus Thea reflects %s.", projectile->name(DESC_THE).c_str());
-                    reflected = true;
-                    return true;
-                }
-            }
-
+        if (defender->is_player())
             count_action(CACT_DODGE, DODGE_DEFLECT);
-        }
+
         return true;
     }
 
@@ -288,35 +275,11 @@ bool ranged_attack::handle_phase_dodged()
              attack_strength_punctuation(damage_done).c_str());
     }
 
-    // chance to reflect, when dodging was successful
-    if (you_worship(GOD_IMUS) && defender->is_player())
-    {
-        const int imus_sh = max(1, you.piety/10);
-        if (x_chance_in_y(imus_sh, 25)) // 10% ~ 80%
-        {
-            mprf("Mirror of Imus Thea reflects %s.", projectile->name(DESC_THE).c_str());
-            reflected = true;
-            return true;
-        }
-    }
-
     return true;
 }
 
 bool ranged_attack::handle_phase_hit()
 {
-    // chance to reflect, even if dodging wasn't successful
-    if (you_worship(GOD_IMUS) && defender->is_player())
-    {
-        const int imus_sh = max(1, you.piety/10);
-        if (x_chance_in_y(imus_sh, 25)) // 10% ~ 80%
-        {
-            mprf("Mirror of Imus Thea reflects %s.", projectile->name(DESC_THE).c_str());
-            reflected = true;
-            return true;
-        }
-    }
-
     // XXX: this kind of hijacks the shield block check
     if (!is_penetrating_attack(*attacker, weapon, *projectile))
         range_used = BEAM_STOP;

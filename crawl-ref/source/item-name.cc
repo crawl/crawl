@@ -3602,10 +3602,6 @@ bool is_useless_item(const item_def &item, bool temp)
         if (!can_wear_armour(item, false, true))
             return true;
 
-        if (you_worship(GOD_IMUS) && (is_shield(item)
-            || !is_effectively_light_armour(&item)))
-            return true;
-
         if (is_shield(item) && you.get_mutation_level(MUT_MISSING_HAND))
             return true;
 

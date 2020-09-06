@@ -205,12 +205,6 @@ int attack::calc_to_hit(bool random)
             {
                 mhit += weapon->plus;
                 mhit += property(*weapon, PWPN_HIT);
-
-                if (you_worship(GOD_IMUS)
-                    && you.hands_reqd(*weapon) == HANDS_TWO)
-                {
-                    mhit = ((mhit * 75), 100);
-                }
             }
             else if (weapon->base_type == OBJ_STAVES)
                 mhit += property(*weapon, PWPN_HIT);

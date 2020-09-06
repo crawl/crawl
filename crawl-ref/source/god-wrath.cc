@@ -36,7 +36,6 @@
 #include "mon-behv.h"
 #include "mon-book.h"
 #include "mon-cast.h"
-#include "mon-clone.h"
 #include "mon-pick.h"
 #include "mon-place.h"
 #include "mon-poly.h"
@@ -98,7 +97,6 @@ static const char *_god_wrath_adjectives[] =
     "rancor",           // Wu Jian
     "unbridled force",    // Legion from beyond
     "distillation",     // Great Wyrm
-    "reflection",       // Imus Thea
 };
 COMPILE_CHECK(ARRAYSZ(_god_wrath_adjectives) == NUM_GODS);
 
@@ -2214,32 +2212,6 @@ static bool _uskayaw_retribution()
     return true;
 }
 
-static bool _imus_retribution()
-{
-    const god_type god = GOD_IMUS;
-    int count = 0;
-
-    if (monster *mon =
-        create_monster(_wrath_mon_data(MONS_PLAYER_ILLUSION, god)))
-    {
-        ghost_demon newstats;
-        newstats.init_player_ghost();
-        mon->set_ghost(newstats);
-        mon->ghost_demon_init();
-
-        count++;
-    }
-
-    you.increase_duration(DUR_DIMENSION_ANCHOR, 50 + (you.experience_level * 5), 200);
-    mprf(MSGCH_WARN, "You feel the world around you overlap for a moment!");
-    
-    if (count <= 0)
-    {
-        simple_god_message( " fails to create your reflection.", god);
-    } else simple_god_message(" says: Do you know who is your worst enemy? Face it!", god);
-    return true;
-}
-
 bool divine_retribution(god_type god, bool no_bonus, bool force)
 {
     ASSERT(god != GOD_NO_GOD);
@@ -2286,7 +2258,6 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
     case GOD_USKAYAW:       do_more = _uskayaw_retribution(); break;
     case GOD_WU_JIAN:       do_more = _wu_jian_retribution(); break;
     case GOD_WYRM:          do_more = _wyrm_retribution(); break;
-    case GOD_IMUS:          do_more = _imus_retribution(); break;
     case GOD_LEGION_FROM_BEYOND:    do_more = _legion_retribution(); break;
 
     case GOD_ASHENZARI:

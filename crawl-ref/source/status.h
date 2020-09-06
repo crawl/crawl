@@ -59,8 +59,7 @@ enum status_type
     STATUS_HEAVENLY_STORM,
     STATUS_WALL_DAMAGE,
     STATUS_SAGE,
-    STATUS_IMUS,
-    STATUS_LAST_STATUS = STATUS_IMUS
+    STATUS_LAST_STATUS = STATUS_SAGE
 };
 
 struct status_info

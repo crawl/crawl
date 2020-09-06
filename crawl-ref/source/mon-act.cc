@@ -1858,55 +1858,6 @@ void handle_monster_move(monster* mons)
         return;
     }
 
-    if (mons->type == MONS_PRISMATIC_PRISM)
-    {
-        bolt beam;
-        beam.name = "dazzling light";
-        beam.flavour = BEAM_VISUAL;
-        beam.set_agent(mons);
-        beam.colour = ETC_RANDOM;
-        beam.glyph = dchar_glyph(DCHAR_EXPLOSION);
-        beam.range = 2;
-        beam.ex_size = 2;
-        beam.is_explosion = true;
-        beam.source = mons->pos();
-        beam.target = mons->pos();
-        beam.hit = AUTOMATIC_HIT;
-        beam.loudness = 0;
-        beam.explode(true, true);
-        
-        for (radius_iterator ri(mons->pos(), 2, C_SQUARE, LOS_SOLID_SEE, true);
-             ri; ++ri)
-        {
-            monster* affected = monster_at(*ri);
-        
-            if (!affected || !mons_can_be_dazzled(affected->type))
-                continue;
-        
-            int mult = grid_distance(mons->pos(), *ri);
-        
-            simple_monster_message(*affected, " is dazzled.");
-            affected->add_ench(mon_enchant(ENCH_BLIND, 1, mons, (mult + 2) * BASELINE_DELAY));
-        }
-
-        ++mons->prism_charge;
-        if (mons->prism_charge == 3)
-        {
-            simple_monster_message(*mons, " shattered.", MSGCH_WARN);
-            mons->suicide();
-        }
-        else
-        {
-            if (you.can_see(*mons))
-            {
-                simple_monster_message(*mons, " sparkles brightly.", MSGCH_WARN);
-            }
-            // Done this way to keep the detonation timer predictable
-            mons->speed_increment -= BASELINE_DELAY;
-        }
-        return;
-    }
-
     if (mons->type == MONS_FOXFIRE || mons->type == MONS_WILL_O_WISP)
     {
         if (mons->steps_remaining == 0)

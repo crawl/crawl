@@ -729,12 +729,6 @@ static const ability_def Ability_List[] =
     { ABIL_WYRM_VIRIDITAS, "Viriditas", 0, 0, 500, 4, {}, abflag::potion },
     { ABIL_WYRM_RUBEDO, "Rubedo", 0, 0, 500, 6, {}, abflag::potion },
 
-    // Imus Thea
-    { ABIL_IMUS_PRISMATIC_PRISM, "Prismatic Prism",
-      4, 0, 0, 3, {fail_basis::invo, 40, 5, 20}, abflag::none },
-    { ABIL_IMUS_FRAGMENTATION, "Fragmentation",
-      6, 0, 0, 6, {fail_basis::invo, 60, 5, 20}, abflag::none },
-
     { ABIL_STOP_RECALL, "Stop Recall", 0, 0, 0, 0, {fail_basis::invo}, abflag::starve_ok },
     { ABIL_RENOUNCE_RELIGION, "Renounce Religion",
       0, 0, 0, 0, {fail_basis::invo}, abflag::starve_ok },
@@ -876,9 +870,6 @@ const string make_cost_description(ability_type ability)
 
         if (ability == ABIL_HEAL_WOUNDS)
             ret += ", Permanent MP";
-
-        if (ability == ABIL_IMUS_FRAGMENTATION)
-            ret += make_stringf(", %d HP", max((you.hp/2)-1, 1));
 
         if (abil.hp_cost)
             ret += make_stringf(", %d HP", abil.hp_cost.cost(you.hp_max));
@@ -4075,25 +4066,6 @@ static spret _do_ability(const ability_def& abil, bool fail)
         dec_inv_item_quantity(pot_idx, 1);
         break;
     }
-
-    case ABIL_IMUS_PRISMATIC_PRISM:
-        fail_check();
-        if (your_spells(SPELL_PRISMATIC_PRISM,
-                        12 + skill_bump(SK_INVOCATIONS, 6),
-                        false, nullptr) == spret::abort)
-        {
-            return spret::abort;
-        }
-        break;
-
-    case ABIL_IMUS_FRAGMENTATION:
-    {
-        fail_check();
-        int frag_power = (you.skill(SK_INVOCATIONS) * 9)
-                        + (you.piety * (you.skill(SK_INVOCATIONS) + 25) / 27) + (you.piety * (3/2));
-        fragmentation(frag_power);
-    }
-    break;
 
     case ABIL_LEGION_POSITIONING:
     {

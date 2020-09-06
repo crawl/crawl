@@ -74,7 +74,6 @@
 #include "place.h"
 #include "player-equip.h"
 #include "player-stats.h"
-#include "player.h"
 #include "potion.h"
 #include "prompt.h"
 #include "random.h"

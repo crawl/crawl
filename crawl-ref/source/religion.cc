@@ -59,7 +59,6 @@
 #include "output.h"
 #include "pakellas.h"
 #include "player-stats.h"
-#include "player.h"
 #include "prompt.h"
 #include "randbook.h"
 #include "shopping.h"
@@ -433,20 +432,6 @@ const vector<god_power> god_powers[NUM_GODS] =
       { 5, ABIL_WYRM_RUBEDO,
           "transmute essence of Rubedo"},
       },
-
-    // Imus Thea
-    { { 0, "You are unable to wear heavy armour and all kinds of shield." },
-      { 0, "You need more training to use two-handed weapon accuratively." },
-      { 0, "Imus Thea will reflect ranged attaks, depending on piety.",
-           "Imus Thea will no longer reflect ranged attacks.",
-           "Imus Thea will reflect ranged attacks, depending on piety." },
-      { 3, ABIL_IMUS_PRISMATIC_PRISM,
-           "create prismatic prism to blind enemies",
-           "create prismatic prism" },
-      { 5, ABIL_IMUS_FRAGMENTATION,
-           "shatter your half of health to duplicate yourself",
-           "duplicate yourself" },
-    },
 
     // Legion from beyond
     { { 0, "The Legion will resist abjuration." },
@@ -2278,7 +2263,6 @@ string god_name(god_type which_god, bool long_name)
     case GOD_HEPLIAKLQANA:  return "Hepliaklqana";
     case GOD_WU_JIAN:     return "Wu Jian";
     case GOD_WYRM:     return "the Great Wyrm";
-    case GOD_IMUS:     return "Imus Thea";
     case GOD_LEGION_FROM_BEYOND:     return "Legion from beyond";
     case GOD_JIYVA: // This is handled at the beginning of the function
     case GOD_ECUMENICAL:    return "an unknown god";
@@ -3962,18 +3946,6 @@ void join_religion(god_type which_god)
             mprf(MSGCH_INTRINSIC_GAIN, "You can't emit the cloud of miasma anymore.");
     }
 
-    if (you_worship(GOD_IMUS))
-    {
-        if (!player_effectively_in_light_armour()){
-            remove_one_equip(EQ_BODY_ARMOUR, false, true);
-        }
-
-        const item_def *shield = you.slot_item(EQ_SHIELD, false);
-        if (shield != nullptr){
-            remove_one_equip(EQ_SHIELD, false, true);
-        }
-    }
-
     // Allow training all divine ability skills immediately.
     vector<ability_type> abilities = get_god_abilities();
     for (ability_type abil : abilities)
@@ -4434,7 +4406,6 @@ void handle_god_time(int /*time_delta*/)
         case GOD_SHINING_ONE:
         case GOD_NEMELEX_XOBEH:
         case GOD_WYRM:
-        case GOD_IMUS:
             if (one_chance_in(35))
                 lose_piety(1);
             break;
