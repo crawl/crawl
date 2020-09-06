@@ -421,7 +421,8 @@ bool can_place_on_trap(monster_type mon_type)
         return true;
 
     // Things summoned by the player to a specific spot shouldn't protest.
-    if (mon_type == MONS_FULMINANT_PRISM || mon_type == MONS_LIGHTNING_SPIRE)
+    if (mon_type == MONS_FULMINANT_PRISM || mon_type == MONS_LIGHTNING_SPIRE
+        || mon_type == MONS_PRISMATIC_PRISM)
         return true;
 
     return false;

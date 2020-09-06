@@ -4378,6 +4378,16 @@ static const struct spell_desc spelldata[] =
     TILEG_SHRAPNEL,
 },
 {
+    SPELL_PRISMATIC_PRISM, "Prismatic Prism",
+    spschool::conjuration | spschool::hexes,
+    spflag::target | spflag::area | spflag::not_self,
+    4,
+    200,
+    4, 4,
+    4, 0,
+    TILEG_FULMINANT_PRISM,
+},
+{
     SPELL_SUMMON_HOODED_MALICE, "Summon Hooded Malice",
     spschool::summoning | spschool::necromancy,
     spflag::mons_abjure,

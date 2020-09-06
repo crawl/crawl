@@ -302,6 +302,10 @@ enum ability_type
     ABIL_WYRM_VIRIDITAS,
     ABIL_WYRM_RUBEDO,
 
+    // Imus Thea
+    ABIL_IMUS_PRISMATIC_PRISM = 1300,
+    ABIL_IMUS_FRAGMENTATION,
+
     // Legion from beyond
     ABIL_LEGION_POSITIONING = 1310,
     ABIL_LEGION_IMMORTAL,

@@ -184,7 +184,8 @@ struct mgen_data
                || summon_type == SPELL_SINGULARITY
                || summon_type == SPELL_INFESTATION
                || summon_type == SPELL_CIGOTUVIS_PLAGUE
-               || summon_type == SPELL_FOXFIRE);
+               || summon_type == SPELL_FOXFIRE
+               || cls == MONS_PRISMATIC_PRISM);
         return *this;
     }
 

@@ -1504,6 +1504,7 @@ bool spell_no_hostile_in_range(spell_type spell, bool rod)
     case SPELL_FULMINANT_PRISM:
     case SPELL_SUMMON_LIGHTNING_SPIRE:
     case SPELL_SINGULARITY:
+    case SPELL_PRISMATIC_PRISM:
     // This can always potentially hit out-of-LOS, although this is conditional
     // on spell-power.
     case SPELL_FIRE_STORM:

@@ -54,6 +54,7 @@ sif_muna INVOCATIONS_S_ON
 uskayaw INVOCATIONS_U_ON
 yredelemnul INVOCATIONS_Y_ON
 zin INVOCATIONS_Z_ON
+imus_thea INVOCATIONS_I_ON
 %sdir gui/skills
 
 %texture focused-fg
@@ -110,6 +111,7 @@ sif_muna INVOCATIONS_S_FOCUS
 uskayaw INVOCATIONS_U_FOCUS
 yredelemnul INVOCATIONS_Y_FOCUS
 zin INVOCATIONS_Z_FOCUS
+imus_thea INVOCATIONS_I_FOCUS
 %sdir gui/skills
 
 %texture disabled-fg
@@ -166,6 +168,7 @@ sif_muna INVOCATIONS_S_OFF
 uskayaw INVOCATIONS_U_OFF
 yredelemnul INVOCATIONS_Y_OFF
 zin INVOCATIONS_Z_OFF
+imus_thea INVOCATIONS_I_OFF
 %sdir gui/skills
 
 %texture disabled-fg
@@ -222,6 +225,7 @@ sif_muna INVOCATIONS_S_INACTIVE
 uskayaw INVOCATIONS_U_INACTIVE
 yredelemnul INVOCATIONS_Y_INACTIVE
 zin INVOCATIONS_Z_INACTIVE
+imus_thea INVOCATIONS_I_INACTIVE
 %sdir gui/skills
 
 %texture mastered-fg
@@ -278,6 +282,7 @@ sif_muna INVOCATIONS_S_MAX
 uskayaw INVOCATIONS_U_MAX
 yredelemnul INVOCATIONS_Y_MAX
 zin INVOCATIONS_Z_MAX
+imus_thea INVOCATIONS_I_MAX
 %sdir gui/skills
 
 %texture none

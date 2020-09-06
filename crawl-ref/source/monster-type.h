@@ -1085,6 +1085,7 @@ enum monster_type                      // menv[].type
     MONS_MERC_SHAMAN_II,
     MONS_MERC_SHAMAN_III,
     MONS_SMALL_JELLY,
+    MONS_PRISMATIC_PRISM,
     MONS_SPIRIT_FOX,
     MONS_RIN,
     MONS_WILL_O_WISP,

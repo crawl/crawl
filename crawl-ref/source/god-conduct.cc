@@ -436,6 +436,8 @@ static peeve_map divine_peeves[] =
     peeve_map(),
     // GOD_WYRM,
     peeve_map(),
+    // GOD_IMUS,
+    peeve_map(),
     // GOD_LEGION_FROM_BEYOND,
     {
         { DID_NON_LEGION, {
@@ -931,6 +933,10 @@ static like_map divine_likes[] =
         { DID_KILL_NONLIVING, KILL_NONLIVING_RESPONSE },
     },
     // GOD_WYRM,
+    {
+        { DID_EXPLORATION, EXPLORE_RESPONSE },
+    },
+    // GOD_IMUS,
     {
         { DID_EXPLORATION, EXPLORE_RESPONSE },
     },
