@@ -2256,6 +2256,7 @@ static god_type _god_from_initial(const char god_initial)
         case 'Z': return GOD_ZIN;
         case '2': return GOD_WYRM; // TODO: find other words to replace '2'
         case 'I': return GOD_IMUS;
+        case '3': return GOD_LEGION_FROM_BEYOND;
         default:  return GOD_NO_GOD;
     }
 }
@@ -2306,10 +2307,34 @@ static level_pos _prompt_travel_altar()
         {
             if (!nearest_altars[god].is_valid())
                 continue;
-
-            // "The Shining One" is too long to keep the same G menu layout
-            altar_name  = god == GOD_SHINING_ONE ? "TSO" : god_name(god);
-            god_initial = god == GOD_SHINING_ONE ? '1'   : altar_name.at(0);
+            if (god == GOD_SHINING_ONE || god == GOD_WYRM
+                || god == GOD_LEGION_FROM_BEYOND)
+            {
+                switch (god)
+                {
+                case GOD_SHINING_ONE:
+                    altar_name = "TSO";
+                    god_initial = '1';
+                    break;
+                case GOD_WYRM:
+                    altar_name = "Great Wyrm";
+                    god_initial = '2';
+                    break;
+                case GOD_LEGION_FROM_BEYOND:
+                    altar_name = "Legion";
+                    god_initial = '3';
+                    break;
+                default:
+                    altar_name = god_name(god);
+                    god_initial = altar_name.at(0);
+                    break;
+                }
+            }
+            else
+            {
+                altar_name = god_name(god);
+                god_initial = altar_name.at(0);
+            }
 
             if (col == 4)
             {
