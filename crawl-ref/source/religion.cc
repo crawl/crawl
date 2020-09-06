@@ -459,6 +459,21 @@ const vector<god_power> god_powers[NUM_GODS] =
            "force your servants not to die" },
 
     },
+
+    // Agraphede
+    { { 1, ABIL_AGRAPHEDE_WEB, 
+           "install a spider web" },
+      { 2, ABIL_AGRAPHEDE_CONVERT_POISON,
+           "turn a curing potion into a poison potion" },
+      { 3, ABIL_AGRAPHEDE_ENCHANT_POISON,
+           "enchant poison weapons" },
+      { 4, ABIL_AGRAPHEDE_TRAP,
+           "create explosive traps around you" },
+      { 5, ABIL_AGRAPHEDE_HORNET_STING,
+           "sting a deadly wasp sting" },
+      { 5, ABIL_AGRAPHEDE_SUMMON_SPIDER,
+          "release spiders to specific locations" },
+    },
 };
 
 vector<god_power> get_god_powers(god_type god)
@@ -2280,6 +2295,7 @@ string god_name(god_type which_god, bool long_name)
     case GOD_WYRM:     return "the Great Wyrm";
     case GOD_IMUS:     return "Imus Thea";
     case GOD_LEGION_FROM_BEYOND:     return "Legion from beyond";
+    case GOD_AGRAPHEDE:     return "agraphede";
     case GOD_JIYVA: // This is handled at the beginning of the function
     case GOD_ECUMENICAL:    return "an unknown god";
     case NUM_GODS:          return "Buggy";
@@ -4435,6 +4451,7 @@ void handle_god_time(int /*time_delta*/)
         case GOD_NEMELEX_XOBEH:
         case GOD_WYRM:
         case GOD_IMUS:
+        case GOD_AGRAPHEDE:
             if (one_chance_in(35))
                 lose_piety(1);
             break;
@@ -4534,6 +4551,7 @@ int god_colour(god_type god) // mv - added
 
     case GOD_JIYVA:
     case GOD_WYRM:
+    case GOD_AGRAPHEDE:
         return GREEN;
 
     case GOD_CHEIBRIADOS:

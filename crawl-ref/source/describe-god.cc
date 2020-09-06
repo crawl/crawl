@@ -255,6 +255,10 @@ static const char *divine_title[][8] =
 	// Legion from beyond -- pack/herd theme
     {"Abandoned",          "Pactmaker",             "Pack-bringer",              "Ringleader",
        "Chieftain",        "Magnate",               "Monarch",              "Sovereign of beyond"},
+
+    // Agraphede -- poisonous insect theme
+    { "Prey",          "Host",				"Egg sac",		"Infected @Adj@",
+       "Sting",   		  "Cobwebbed @Adj@",		"Chelicera",		"Hivemind" },
 };
 COMPILE_CHECK(ARRAYSZ(divine_title) == NUM_GODS);
 

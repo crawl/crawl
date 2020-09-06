@@ -99,6 +99,7 @@ static const char *_god_wrath_adjectives[] =
     "unbridled force",    // Legion from beyond
     "distillation",     // Great Wyrm
     "reflection",       // Imus Thea
+    "bite",             // Agraphede
 };
 COMPILE_CHECK(ARRAYSZ(_god_wrath_adjectives) == NUM_GODS);
 
@@ -2173,6 +2174,39 @@ static bool _wyrm_retribution()
     return true;
 }
 
+static bool _agraphede_retribution()
+{
+
+    god_type god = GOD_AGRAPHEDE;
+
+    switch (random2(7))
+    {
+    case 0:
+    case 1:
+    case 2:
+    case 3:
+        you.set_duration(DUR_BARBS, random_range(5, 10));
+        poison_player(10 + random2avg(15, 2), "", "fangs of the Agraphede");
+        break;
+    case 4:
+    case 5:
+        simple_god_message("'s slowing venom runs through your body!", god);
+        slow_player(10 + random2avg(15, 2));
+        poison_player(10 + random2avg(15, 2), "", "fangs of the Agraphede");
+        break;
+    case 6:
+        if (!you.duration[DUR_PARALYSIS])
+        {
+            mprf(MSGCH_WARN, "You suddenly pass out!");
+            const int turns = 2 + random2(6);
+            take_note(Note(NOTE_PARALYSIS, min(turns, 13), 0, "Agraphede"));
+            you.increase_duration(DUR_PARALYSIS, turns, 13);
+        }
+        return false;
+    }
+
+    return true;
+}
 static bool _uskayaw_retribution()
 {
     const god_type god = GOD_USKAYAW;
@@ -2288,6 +2322,7 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
     case GOD_WYRM:          do_more = _wyrm_retribution(); break;
     case GOD_IMUS:          do_more = _imus_retribution(); break;
     case GOD_LEGION_FROM_BEYOND:    do_more = _legion_retribution(); break;
+    case GOD_AGRAPHEDE:     do_more = _agraphede_retribution(); break;
 
     case GOD_ASHENZARI:
     case GOD_ELYVILON:

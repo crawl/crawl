@@ -485,6 +485,8 @@ tileidx_t tileidx_feature_base(dungeon_feature_type feat)
         return TILE_DNGN_ALTAR_IMUS;
     case DNGN_ALTAR_LEGION_FROM_BEYOND:
         return TILE_DNGN_ALTAR_LEGION_FROM_BEYOND;
+    case DNGN_ALTAR_AGRAPHEDE:
+        return TILE_DNGN_ALTAR_AGRAPHEDE;
     case DNGN_ALTAR_ECUMENICAL:
         return TILE_DNGN_ALTAR_ECUMENICAL;
     case DNGN_FOUNTAIN_BLUE:
@@ -3875,6 +3877,21 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_IMUS_PRISMATIC_PRISM;
     case ABIL_IMUS_FRAGMENTATION:
         return TILEG_ABILITY_IMUS_FRAGMENTATION;
+
+    // Agraphede
+    case ABIL_AGRAPHEDE_WEB:
+        return TILEG_ABILITY_AGRAPHEDE_WEB;
+    case ABIL_AGRAPHEDE_CONVERT_POISON:
+        return TILEG_ABILITY_AGRAPHEDE_CONVERT_POISON;
+    case ABIL_AGRAPHEDE_ENCHANT_POISON:
+        return TILEG_ABILITY_AGRAPHEDE_ENCHANT_POISON;
+    case ABIL_AGRAPHEDE_TRAP:
+        return TILEG_ABILITY_AGRAPHEDE_TRAP;
+    case ABIL_AGRAPHEDE_HORNET_STING:
+        return TILEG_ABILITY_AGRAPHEDE_HORNET_STING;
+    case ABIL_AGRAPHEDE_SUMMON_SPIDER:
+        return TILEG_ABILITY_AGRAPHEDE_SUMMON_SPIDER;
+
     // General divine (pseudo) abilities.
     case ABIL_RENOUNCE_RELIGION:
         return TILEG_ABILITY_RENOUNCE_RELIGION;

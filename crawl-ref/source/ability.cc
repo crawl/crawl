@@ -735,6 +735,20 @@ static const ability_def Ability_List[] =
     { ABIL_IMUS_FRAGMENTATION, "Fragmentation",
       6, 0, 0, 6, {fail_basis::invo, 60, 5, 20}, abflag::none },
 
+    // Agraphede
+    { ABIL_AGRAPHEDE_WEB, "Create Web",
+      2, 0, 50, 1, {fail_basis::invo, 30, 4, 20}, abflag::none },
+    { ABIL_AGRAPHEDE_CONVERT_POISON, "Convert Curing Potion",
+      0, 0, 0, 0, {fail_basis::invo}, abflag::none },
+    { ABIL_AGRAPHEDE_ENCHANT_POISON, "Enchant Poison",
+      3, 0, 50, 1, {fail_basis::invo, 40, 4, 20}, abflag::none },
+    { ABIL_AGRAPHEDE_TRAP, "Create Explosive Trap",
+      6, 0, 100, 4, {fail_basis::invo, 60, 4, 25}, abflag::none },
+    { ABIL_AGRAPHEDE_HORNET_STING, "Hornet String",
+      4, 0, 75, 3, {fail_basis::invo, 50, 4, 20}, abflag::none },
+    { ABIL_AGRAPHEDE_SUMMON_SPIDER, "Summon Spider",
+      8, 0, 200, 12, {fail_basis::invo, 70, 4, 25}, abflag::none },
+
     { ABIL_STOP_RECALL, "Stop Recall", 0, 0, 0, 0, {fail_basis::invo}, abflag::starve_ok },
     { ABIL_RENOUNCE_RELIGION, "Renounce Religion",
       0, 0, 0, 0, {fail_basis::invo}, abflag::starve_ok },
@@ -4274,6 +4288,31 @@ static spret _do_ability(const ability_def& abil, bool fail)
             canned_msg(MSG_OK);
             return spret::abort;
         }
+        break;
+
+    case ABIL_AGRAPHEDE_WEB:
+        fail_check();
+        mprf("ABIL_AGRAPHEDE_WEB");
+        break;
+    case ABIL_AGRAPHEDE_CONVERT_POISON:
+        fail_check();
+        mprf("ABIL_AGRAPHEDE_CONVERT_POISON");
+        break;
+    case ABIL_AGRAPHEDE_ENCHANT_POISON:
+        fail_check();
+        mprf("ABIL_AGRAPHEDE_ENCHANT_POISON");
+        break;
+    case ABIL_AGRAPHEDE_TRAP:
+        fail_check();
+        mprf("ABIL_AGRAPHEDE_TRAP");
+        break;
+    case ABIL_AGRAPHEDE_HORNET_STING:
+        fail_check();
+        mprf("ABIL_AGRAPHEDE_HORNET_STING");
+        break;
+    case ABIL_AGRAPHEDE_SUMMON_SPIDER:
+        fail_check();
+        mprf("ABIL_AGRAPHEDE_SUMMON_SPIDER");
         break;
 
     case ABIL_CONVERT_TO_BEOGH:

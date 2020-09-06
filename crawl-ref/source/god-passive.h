@@ -277,6 +277,17 @@ enum class passive_t
 
 	/// Able to use "t" without turn_is_over().
 	legion_istant_order,
+
+    /// Poison resistance disappears
+    agraphede_anti_poison_resist,
+    /// Converts the received damage to a certain percentage poison.
+    agraphede_poison_shield,
+    /// Get Regen while poisoned
+    agraphede_poison_regen,
+    /// Deprived of poison resistance of enemies in sight
+    agraphede_poison_deprived,
+    /// Worms come out automatically
+    agraphede_create_worm,
 };
 
 enum ru_interference
