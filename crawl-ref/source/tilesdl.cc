@@ -979,7 +979,9 @@ void TilesFramework::do_layout()
     m_region_tile->tile_ih = tile_ih;
 
     // Resize and place the message window.
-    m_region_msg->set_overlay(message_overlay);
+    VColour overlay_col = Options.tile_overlay_col;
+    overlay_col.a = (255 * Options.tile_overlay_alpha_percent)/100;
+    m_region_msg->set_overlay(message_overlay, overlay_col);
     if (message_overlay)
     {
         m_region_msg->place(0, 0, 0); // TODO: Maybe add an option to place

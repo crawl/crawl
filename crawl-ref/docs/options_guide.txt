@@ -107,9 +107,10 @@ The contents of this text are:
                 tile_tag_pref, tile_window_width, tile_window_height,
                 tile_map_pixels, tile_viewport_scale, tile_map_scale,
                 tile_cell_pixels, tile_filter_scaling, tile_force_overlay,
-                tile_full_screen, tile_single_column_menus,
-                tile_font_crt_file, tile_font_stat_file, tile_font_msg_file,
-                tile_font_tip_file, tile_font_lbl_file, tile_font_crt_family,
+                tile_overlay_col, tile_overlay_alpha_percent, tile_full_screen,
+                tile_single_column_menus, tile_font_crt_file,
+                tile_font_stat_file, tile_font_msg_file, tile_font_tip_file,
+                tile_font_lbl_file, tile_font_crt_family,
                 tile_font_stat_family, tile_font_msg_family,
                 tile_font_lbl_family, tile_font_crt_size, tile_font_stat_size,
                 tile_font_msg_size, tile_font_tip_size, tile_font_lbl_size,
@@ -120,7 +121,8 @@ The contents of this text are:
                 tile_show_threat_levels, tile_layout_priority,
                 tile_display_mode, tile_level_map_hide_messages,
                 tile_level_map_hide_sidebar, tile_player_tile,
-                tile_weapon_offsets, tile_shield_offsets, tile_web_mouse_control
+                tile_weapon_offsets, tile_shield_offsets,
+                tile_web_mouse_control
 4-  Character Dump.
 4-a     Saving.
                 dump_on_save
@@ -2020,6 +2022,18 @@ tile_force_overlay = false
         tile_font_msg_size smaller will make the overlay smaller while retaining
         the same number of lines. Increase the view_max_height option if you
         find yourself with unused screen estate.
+
+tile_overlay_col = #646464
+        Background color of the message window overlay, as when
+        tile_force_overlay is set to true. Used in conjunction with
+        tile_overlay_alpha_percent.
+
+tile_overlay_alpha_percent = 40
+        Transparency value for the message window overlay background, as when
+        tile_force_overlay is set to true. Setting this option to 0 will cause
+        the message window to only display text without any background. And
+        setting this option to 100 will force an opaque backgroud to the
+        message window.
 
 tile_full_screen = auto
         Setting this option to true or false will force full screen mode to be

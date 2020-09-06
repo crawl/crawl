@@ -319,6 +319,8 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(tile_menu_icons), true),
         new BoolGameOption(SIMPLE_NAME(tile_filter_scaling), false),
         new BoolGameOption(SIMPLE_NAME(tile_force_overlay), false),
+        new TileColGameOption(SIMPLE_NAME(tile_overlay_col), "#646464"),
+        new IntGameOption(SIMPLE_NAME(tile_overlay_alpha_percent), 40, 0, 100),
         new BoolGameOption(SIMPLE_NAME(tile_show_minihealthbar), true),
         new BoolGameOption(SIMPLE_NAME(tile_show_minimagicbar), true),
         new BoolGameOption(SIMPLE_NAME(tile_show_demon_tier), false),
