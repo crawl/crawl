@@ -310,7 +310,7 @@ static const cloud_data clouds[] = {
       true,                                     // opacity
     },
     // CLOUD_SILVER,
-    { "purity cloud", nullptr,                  // terse, verbose name
+    { "purity", nullptr,                  // terse, verbose name
       WHITE,                                    // colour
       { TILE_CLOUD_SILVER },                    // tile
       BEAM_NONE,                                // beam_effect
