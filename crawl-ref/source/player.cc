@@ -2239,6 +2239,8 @@ static int _player_evasion_size_factor(bool base = false)
     const size_type size = you.body_size(PSIZE_BODY, base);
     if (you.species == SP_CRUSTACEAN)
         return 2 * (SIZE_MEDIUM - size) - 2 * min(2, you.deaths/6);
+    if (you.has_hydra_multi_attack())
+        return 2 * (SIZE_MEDIUM - size) + 2 * max(0, 2 - you.heads()/3);
     return 2 * (SIZE_MEDIUM - size);
 }
 
