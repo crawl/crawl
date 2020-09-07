@@ -23,6 +23,10 @@ GodMenuEntry::GodMenuEntry(god_type god_, bool long_name) :
 {
     if (god == GOD_SHINING_ONE)
         hotkeys.push_back('1');
+    else if (god == GOD_WYRM)
+        hotkeys.push_back('2');
+    else if (god == GOD_LEGION_FROM_BEYOND)
+        hotkeys.push_back('3');
     else
     {
         hotkeys.push_back(text.at(0));

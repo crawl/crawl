@@ -302,6 +302,10 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu, int
                 you.turn_is_over = true;
                 if (did_hit)
                     *did_hit = attk.did_hit;
+                
+                // Hydra's shadow may be overlapped because it has too many heads in narrow position. So, it can't mimic the cleaving.
+                if (!simu && will_have_passive(passive_t::shadow_attacks))
+                    dithmenos_shadow_melee(defender);
             }
 
             const coord_def atk = you.pos();

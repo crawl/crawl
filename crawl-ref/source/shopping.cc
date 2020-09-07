@@ -771,6 +771,7 @@ unsigned int item_value(item_def item, bool ident)
             valued += 400;
             break;
 
+        case MISC_PIPE:
         case MISC_PHANTOM_MIRROR:
             valued += 300;
             break;
