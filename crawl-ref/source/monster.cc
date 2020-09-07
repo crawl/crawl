@@ -41,6 +41,7 @@
 #include "items.h"
 #include "libutil.h"
 #include "makeitem.h"
+#include "mercenaries.h"
 #include "message.h"
 #include "misc.h"
 #include "mon-abil.h"
@@ -1284,22 +1285,7 @@ bool monster::pickup_launcher(item_def &launch, bool msg, bool force)
             if (!is_range_weapon(*elaunch))
                 continue;
 
-            if (type == MONS_MERC_FIGHTER
-                || type == MONS_MERC_KNIGHT
-                || type == MONS_MERC_DEATH_KNIGHT
-                || type == MONS_MERC_PALADIN
-                || type == MONS_MERC_SKALD
-                || type == MONS_MERC_INFUSER
-                || type == MONS_MERC_TIDEHUNTER
-                || type == MONS_MERC_WITCH
-                || type == MONS_MERC_SORCERESS
-                || type == MONS_MERC_ELEMENTALIST
-                || type == MONS_MERC_BRIGAND
-                || type == MONS_MERC_ASSASSIN
-                || type == MONS_MERC_CLEANER
-                || type == MONS_MERC_SHAMAN
-                || type == MONS_MERC_SHAMAN_II
-                || type == MONS_MERC_SHAMAN_III)
+            if (is_caravan_companion(*this))
                 return drop_item(slot, msg) && pickup(launch, slot, msg);
 
             return (fires_ammo_type(*elaunch) == mt || !missiles())
@@ -1542,22 +1528,7 @@ bool monster::pickup_melee_weapon(item_def &item, bool msg)
                 {
                     eslot = slot;
 
-                    if (type == MONS_MERC_FIGHTER
-                    || type == MONS_MERC_KNIGHT
-                    || type == MONS_MERC_DEATH_KNIGHT
-                    || type == MONS_MERC_PALADIN
-                    || type == MONS_MERC_SKALD
-                    || type == MONS_MERC_INFUSER
-                    || type == MONS_MERC_TIDEHUNTER
-                    || type == MONS_MERC_WITCH
-                    || type == MONS_MERC_SORCERESS
-                    || type == MONS_MERC_ELEMENTALIST
-                    || type == MONS_MERC_BRIGAND
-                    || type == MONS_MERC_ASSASSIN
-                    || type == MONS_MERC_CLEANER
-                    || type == MONS_MERC_SHAMAN
-                    || type == MONS_MERC_SHAMAN_II
-                    || type == MONS_MERC_SHAMAN_III)
+                    if (is_caravan_companion(*this))
                         return pickup(item, eslot, msg);
 
                     if (!dual_wielding)
@@ -1807,22 +1778,7 @@ bool monster::pickup_armour(item_def &item, bool msg, bool force)
     if (const item_def *existing_armour = slot_item(eq, false))
     {
 
-        if (type == MONS_MERC_FIGHTER
-            || type == MONS_MERC_KNIGHT
-            || type == MONS_MERC_DEATH_KNIGHT
-            || type == MONS_MERC_PALADIN
-            || type == MONS_MERC_SKALD
-            || type == MONS_MERC_INFUSER
-            || type == MONS_MERC_TIDEHUNTER
-            || type == MONS_MERC_WITCH
-            || type == MONS_MERC_SORCERESS
-            || type == MONS_MERC_ELEMENTALIST
-            || type == MONS_MERC_BRIGAND
-            || type == MONS_MERC_ASSASSIN
-            || type == MONS_MERC_CLEANER
-            || type == MONS_MERC_SHAMAN
-            || type == MONS_MERC_SHAMAN_II
-            || type == MONS_MERC_SHAMAN_III)
+        if (is_caravan_companion(*this))
             return pickup(item, mslot, msg);
 
         if (!force)
@@ -5408,6 +5364,10 @@ bool monster::can_polymorph() const
     // Abominations re-randomize their tile when mutated, so can_mutate returns
     // true for them. Like all undead, they can't be polymorphed.
     if (type == MONS_ABOMINATION_SMALL || type == MONS_ABOMINATION_LARGE)
+        return false;
+
+    // Poly'd mercs aren't able to use merc-relate functions.
+    if (is_mercenery_companion())
         return false;
 
     return can_mutate();

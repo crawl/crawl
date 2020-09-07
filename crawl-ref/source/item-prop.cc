@@ -949,13 +949,7 @@ void do_uncurse_item(item_def &item, bool check_bondage)
         {
             // Remove Wight's bonus enchantment
             if (item.props.exists("wight_key"))
-            {
-                for (int i = item.props["wight_key"].get_int(); i > 0; i--)
-                {
-                    item.plus--;
-                }
                 item.props.erase("wight_key");
-            }
 
             // Redraw the weapon.
             you.wield_change = true;
