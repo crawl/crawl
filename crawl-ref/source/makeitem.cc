@@ -1792,10 +1792,7 @@ static void _generate_mercenary_item(item_def& item)
         1, MONS_NAGARAJA,
 
         15, MONS_DEEP_ELF_MAGE,
-        3, MONS_DEEP_ELF_SUMMONER,
-        3, MONS_DEEP_ELF_CONJURER,
-        3, MONS_DEEP_ELF_PRIEST,
-        1, MONS_DEEP_ELF_SORCERER,
+        1, MONS_DEEP_ELF_DEMONOLOGIST,
         1, MONS_DEEP_ELF_ANNIHILATOR,
         1, MONS_DEEP_ELF_SORCERER,
         1, MONS_DEEP_ELF_HIGH_PRIEST,
