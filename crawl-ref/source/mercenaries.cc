@@ -25,6 +25,7 @@
 #include "item-status-flag-type.h"
 #include "items.h"
 #include "message.h"
+#include "mercenary-data.h"
 #include "mon-death.h"
 #include "mon-place.h" 
 #include "mon-util.h"
@@ -497,7 +498,6 @@ bool set_spell_witch(monster* mons, item_def* staff, bool slience) {
     return true;
 }
 
-
 static bool _caravan_gift_items_to(monster* mons, int item_slot)
 {
     item_def& gift = you.inv[item_slot];
@@ -550,7 +550,7 @@ static bool _caravan_gift_items_to(monster* mons, int item_slot)
     {
         mprf(MSGCH_ERROR, "%s is cursed!", gift.name(DESC_THE, false).c_str());
         return false;
-    }
+    } 
 
     bool spellcaster = (mons->type == MONS_MERC_SKALD
             || mons->type == MONS_MERC_INFUSER

@@ -66,7 +66,8 @@ enum ability_type
     ABIL_ADAPTION,
     // JOB_CARAVAN
     ABIL_CARAVAN_GIFT_ITEM,
-    ABIL_CARAVAN_RECALL,
+    // Pipe
+    ABIL_PIPE_RECALL,
     // Wight
     ABIL_BURIALIZE,
     ABIL_MAX_INTRINSIC = ABIL_BURIALIZE,

@@ -356,6 +356,7 @@ static const ability_def Ability_List[] =
     { ABIL_CARAVAN_GIFT_ITEM, "Give Item to Mercenary",
         0, 0, 0, 0, {}, abflag::starve_ok },
 
+
     { ABIL_BURIALIZE, "Burialize Weapon", 0, 0, 0, 0, {},
         abflag::starve_ok | abflag::skill_drain },
 
@@ -401,6 +402,8 @@ static const ability_def Ability_List[] =
       0, 0, 0, 0, {}, abflag::starve_ok },
     { ABIL_CREATE_WALL, "Create Wall",
       0, 0, 0, 0, {}, abflag::none },
+    { ABIL_PIPE_RECALL, "Recall",
+      2, 0, 0, 0, {}, abflag::none },
 
     // INVOCATIONS:
     // Zin
@@ -1111,6 +1114,7 @@ ability_type fixup_ability(ability_type ability)
 
     case ABIL_YRED_RECALL_UNDEAD_SLAVES:
     case ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS:
+    case ABIL_PIPE_RECALL:
         if (!you.recall_list.empty())
             return ABIL_STOP_RECALL;
         return ability;
@@ -2671,6 +2675,30 @@ static spret _do_ability(const ability_def& abil, bool fail)
 
     case ABIL_CREATE_WALL:
         return create_wall(fail);
+        break;
+
+    case ABIL_PIPE_RECALL:
+        fail_check();
+        if (has_mercenaries())
+        {
+            start_recall(recall_t::caravan);
+        }
+        else
+        {
+            mpr("you have no companion to reciprocate your melody..");
+            if (one_chance_in(3))
+            {
+                for (int i = 0; i < (coinflip() + 1); ++i)
+                {
+                    monster_type mon = coinflip() ? MONS_HELL_RAT : MONS_RIVER_RAT;
+
+                    mgen_data mg(mon, BEH_FRIENDLY, you.pos(), MHITYOU);
+                    if (monster *m = create_monster(mg))
+                        m->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 3));
+                }
+                mpr("..instead, some rats are attracted.");
+            }
+        }
         break;
 
     // INVOCATIONS:
@@ -4590,6 +4618,11 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
     if (has_mercenaries())
     {
         _add_talent(talents, ABIL_CARAVAN_GIFT_ITEM, check_confused);
+    }
+
+    if (can_call_friends())
+    {
+        _add_talent(talents, ABIL_PIPE_RECALL, check_confused);
     }
 
     if (you.get_mutation_level(MUT_HOP))

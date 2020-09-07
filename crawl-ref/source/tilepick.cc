@@ -3501,7 +3501,7 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_CREATE_WALL;
     case ABIL_CARAVAN_GIFT_ITEM:
         return TILEG_ABILITY_CARAVAN_GIFT_ITEM;
-    case ABIL_CARAVAN_RECALL:
+    case ABIL_PIPE_RECALL:
         return TILEG_ABILITY_CARAVAN_RECALL;
 
     // Species-specific abilities.

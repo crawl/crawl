@@ -2476,41 +2476,6 @@ bool evoke_item(int slot)
             }
             break;
 
-        case MISC_PIPE:
-            if (!evoker_charges(item.sub_type))
-            {
-                mpr("That is presently inert.");
-                return false;
-            }
-            if (has_mercenaries())
-            {
-                start_recall(recall_t::caravan);
-                practise_evoking(3);
-
-                did_work = true;
-            }
-            else
-            {
-                mpr("you have no companion to reciprocate your melody..");
-                if (one_chance_in(3))
-                {
-                    for (int i = 0; i < (coinflip() + 1); ++i)
-                    {
-                        monster_type mon = coinflip() ? MONS_HELL_RAT : MONS_RIVER_RAT;
-
-                        mgen_data mg(mon, BEH_FRIENDLY, you.pos(), MHITYOU);
-                        if (monster *m = create_monster(mg))
-                            m->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 3));
-                    }
-                    mpr("..instead, some rats are attracted.");
-
-                    did_work = true;
-                }
-            }
-            expend_xp_evoker(item.sub_type);
-            break;
-
-
         default:
             did_work = false;
             unevokable = true;

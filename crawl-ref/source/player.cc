@@ -9315,3 +9315,21 @@ bool has_mercenaries()
     }
     return false;
 }
+
+bool can_call_friends()
+{
+    for (int i = 0; i < ENDOFPACK; i++)
+    {
+        item_def &item(you.inv[i]);
+
+        if (item.quantity < 1)
+            continue;
+	
+        if (!item.defined())
+            continue;
+
+        if (item.base_type == OBJ_MISCELLANY && item.sub_type == MISC_PIPE)
+            return true;
+    }
+    return false;
+}
