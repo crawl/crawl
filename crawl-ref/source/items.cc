@@ -1320,7 +1320,7 @@ bool pickup_single_item(int link, int qty)
     ASSERT(link != NON_ITEM);
 
     item_def* item = &mitm[link];
-    if (item_is_stationary(mitm[link]) || item.base_type == OBJ_CORPSES)
+    if (item_is_stationary(mitm[link]) || item->base_type == OBJ_CORPSES)
     {
         mpr("You can't pick that up.");
         return false;
