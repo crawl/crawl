@@ -59,6 +59,7 @@
 #include "items.h"
 #include "jobs.h"
 #include "mapmark.h"
+#include "mercenaries.h"
 #include "misc.h"
 #include "mon-death.h"
 #if TAG_MAJOR_VERSION == 34
@@ -6574,22 +6575,7 @@ void unmarshallMonster(reader &th, monster& m)
     }
 
     if (th.getMinorVersion() < TAG_MINOR_MERCENARY_SHOP) {
-        if (m.type == MONS_MERC_FIGHTER
-            || m.type == MONS_MERC_KNIGHT
-            || m.type == MONS_MERC_DEATH_KNIGHT
-            || m.type == MONS_MERC_PALADIN
-            || m.type == MONS_MERC_SKALD
-            || m.type == MONS_MERC_INFUSER
-            || m.type == MONS_MERC_TIDEHUNTER
-            || m.type == MONS_MERC_WITCH
-            || m.type == MONS_MERC_SORCERESS
-            || m.type == MONS_MERC_ELEMENTALIST
-            || m.type == MONS_MERC_BRIGAND
-            || m.type == MONS_MERC_ASSASSIN
-            || m.type == MONS_MERC_CLEANER
-            || m.type == MONS_MERC_SHAMAN
-            || m.type == MONS_MERC_SHAMAN_II
-            || m.type == MONS_MERC_SHAMAN_III) {
+        if (is_caravan_companion(m)) {
             m.props[MERCENARY_FLAG].get_bool() = true;
         }
     }
