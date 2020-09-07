@@ -1121,7 +1121,9 @@ static string misc_type_name(const item_def* item)
             return mons_class_name((monster_type)item->props[MERCENARY_UNIT_KEY].get_int());
         }
         return "mercenary";
-
+    case MISC_PIPE:
+        return "pipe";
+    
     default:
         return "buggy miscellaneous item";
     }

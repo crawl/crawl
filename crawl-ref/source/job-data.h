@@ -319,7 +319,7 @@ static const map<job_type, job_def> job_data =
    1, 1, 1,
     { SP_SPRIGGAN, SP_CENTAUR, SP_OCTOPODE, SP_FELID, SP_DEMIGOD,
       SP_HUMAN, SP_DEMONSPAWN, },
-    { "dagger", "robe", "wand of heal wounds charges:3" },
+    { "dagger", "robe", "wand of heal wounds charges:3", "pipe charges:3" },
     WCHOICE_NONE,
     { { SK_ARMOUR, 1 }, { SK_DODGING, 1 }, { SK_STEALTH, 1 }, },
 } },

@@ -355,8 +355,6 @@ static const ability_def Ability_List[] =
 
     { ABIL_CARAVAN_GIFT_ITEM, "Give Item to Mercenary",
         0, 0, 0, 0, {}, abflag::starve_ok },
-    { ABIL_CARAVAN_RECALL, "Recall Mercenary",
-        0, 0, 0, 0, {}, abflag::starve_ok },
 
     { ABIL_BURIALIZE, "Burialize Weapon", 0, 0, 0, 0, {},
         abflag::starve_ok | abflag::skill_drain },
@@ -2342,11 +2340,6 @@ static spret _do_ability(const ability_def& abil, bool fail)
             return spret::abort;
     }
     break;
-
-    case ABIL_CARAVAN_RECALL:
-        fail_check();
-        start_recall(recall_t::caravan);
-        break;
 
     case ABIL_SPIT_POISON:      // Naga poison spit
     {
@@ -4597,7 +4590,6 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
     if (has_mercenaries())
     {
         _add_talent(talents, ABIL_CARAVAN_GIFT_ITEM, check_confused);
-        _add_talent(talents, ABIL_CARAVAN_RECALL, check_confused);
     }
 
     if (you.get_mutation_level(MUT_HOP))

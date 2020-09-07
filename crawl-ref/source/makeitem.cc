@@ -1831,7 +1831,8 @@ static void _generate_misc_item(item_def& item, int force_type)
                                       MISC_SACK_OF_SPIDERS,
                                       MISC_CRYSTAL_BALL_OF_ENERGY,
                                       MISC_PHANTOM_MIRROR,
-                                      MISC_TIN_OF_TREMORSTONES);
+                                      MISC_TIN_OF_TREMORSTONES,
+                                      MISC_PIPE);
     }
     if (item.sub_type == MISC_MERCENARY) {
         _generate_mercenary_item(item);
