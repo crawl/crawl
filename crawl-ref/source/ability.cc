@@ -2297,23 +2297,10 @@ static spret _do_ability(const ability_def& abil, bool fail)
         {
             int overwrite = max(wpn->props["wight_key"].get_int(),
                                  max(3, base_dam/3));
-            
-            for (int i = wpn->props["wight_key"].get_int(); i > 0; i--)
-            {
-                wpn->plus--;
-            }
-            for (int ii = overwrite; ii > 0; ii--)
-            {
-                wpn->plus++;
-            }
             wpn->props["wight_key"] = overwrite;
         }
         else
         {
-            for (int iii = enchant; iii > 0; iii--)
-            {
-                wpn->plus++;
-            }
             wpn->props["wight_key"] = enchant;
         }
 
