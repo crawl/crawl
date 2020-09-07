@@ -1267,3 +1267,4 @@ string temperature_string(int temp);
 string temperature_text(int temp);
 
 bool has_mercenaries();
+bool can_call_friends();
