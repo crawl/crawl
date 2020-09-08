@@ -267,7 +267,6 @@ static void _rot_corpse(item_def &it, int mitm_index, int rot_time)
     if (it.freshness > 0 || is_being_butchered(it))
         return;
 
-    mprf("in floor, %d, %d", it.freshness, rot_time);
     if (it.sub_type == CORPSE_SKELETON || !mons_skeleton(it.mon_type))
     {
         item_was_destroyed(it);
@@ -293,7 +292,6 @@ static void _rot_corpse(item_def &it, int time_delta, bool in_inv)
     if (it.freshness > 0 || is_being_butchered(it))
         return;
 
-    mprf("in bag, %d, %d", it.freshness, rot_time);
     if (it.sub_type == CORPSE_SKELETON || !mons_skeleton(it.mon_type))
     {
         item_was_destroyed(it);
