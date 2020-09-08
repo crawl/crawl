@@ -948,6 +948,8 @@ public:
 
     bool is_parent_monster_of(const monster* mons) const;
 
+    vector<item_def* > bag() const;
+
 protected:
     void _removed_beholder(bool quiet = false);
     bool _possible_beholder(const monster* mon) const;

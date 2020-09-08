@@ -28,7 +28,7 @@ static bool _item_needs_rot_check(const item_def &item);
 static int _get_initial_stack_longevity(const item_def &stack);
 
 static void _rot_corpse(item_def &it, int mitm_index, int rot_time);
-static void _rot_corpse(item_def &it, bool in_inv);
+static void _rot_corpse(item_def &it, int time_delta, bool in_inv);
 static int _rot_stack(item_def &it, int slot, bool in_inv);
 
 static void _compare_stack_quantity(item_def &stack);
@@ -267,6 +267,7 @@ static void _rot_corpse(item_def &it, int mitm_index, int rot_time)
     if (it.freshness > 0 || is_being_butchered(it))
         return;
 
+    mprf("in floor, %d, %d", it.freshness, rot_time);
     if (it.sub_type == CORPSE_SKELETON || !mons_skeleton(it.mon_type))
     {
         item_was_destroyed(it);
@@ -282,16 +283,17 @@ static void _rot_corpse(item_def &it, int mitm_index, int rot_time)
  * @param it            The corpse or skeleton to rot.
  * @param rot_time      The amount of time to rot the corpse for.
  */
-static void _rot_corpse(item_def &it, bool in_inv)
+static void _rot_corpse(item_def &it, int time_delta, bool in_inv)
 {
     ASSERT(it.base_type == OBJ_CORPSES);
     ASSERT(!it.props.exists(CORPSE_NEVER_DECAYS));
     
-    int rot_time =  you.elapsed_time / ROT_TIME_FACTOR;
+    int rot_time = time_delta / ROT_TIME_FACTOR;
     it.freshness -= rot_time;
     if (it.freshness > 0 || is_being_butchered(it))
         return;
 
+    mprf("in bag, %d, %d", it.freshness, rot_time);
     if (it.sub_type == CORPSE_SKELETON || !mons_skeleton(it.mon_type))
     {
         item_was_destroyed(it);
@@ -445,11 +447,80 @@ void rot_floor_items(int elapsedTime)
 }
 
 /**
+ * Rot chunks & blood in the player's bag
+ *
+ * @param time_delta    The amount of time to rot for.
+ */
+void rot_bag_food(int time_delta)
+{   
+    vector <item_def* > bag = you.bag();
+
+    if (bag.empty())
+        return;
+
+    if (time_delta <= 0)
+        return;
+
+    int num_chunks         = 0;
+    int num_chunks_gone    = 0;
+
+    for (int i = 0; i < ENDOFPACK; i++)
+    {
+        item_def &item(*bag[i]);
+
+        if (item.quantity < 1 || !_item_needs_rot_check(item))
+            continue;
+
+#if TAG_MAJOR_VERSION == 34
+        // cleanup
+        /*
+            if (item.base_type == OBJ_CORPSES)
+            {
+                if (you.equip[EQ_WEAPON] == i)
+                    unwield_item(true, EQ_WEAPON);
+                if (you.equip[EQ_SECOND_WEAPON] == i)
+                    unwield_item(true, EQ_SECOND_WEAPON);
+
+                item_was_destroyed(item);
+                destroy_item(item);
+                continue;
+            }
+        */
+#endif
+        if (item.base_type == OBJ_CORPSES)
+        {
+            _rot_corpse(item, time_delta, true);
+            continue;
+        }
+
+        const int initial_quantity = item.quantity;
+        const string item_name = item.name(DESC_PLAIN, false);
+        const bool is_chunk = _is_chunk(item);
+
+        if (is_chunk)
+            num_chunks += item.quantity;
+        else
+            ASSERT(is_blood_potion(item));
+
+        const int rotted_away_count = _rot_stack(item, i, true);
+        if (is_chunk)
+            num_chunks_gone += rotted_away_count;
+        else if (rotted_away_count)
+        {
+            _potion_stack_changed_message(item_name, rotted_away_count,
+                                          initial_quantity);
+        }
+    }
+
+    _print_chunk_messages(num_chunks, num_chunks_gone);
+}
+
+/**
  * Rot chunks & blood in the player's inventory.
  *
  * @param time_delta    The amount of time to rot for.
  */
-void rot_inventory_food(int /*time_delta*/)
+void rot_inventory_food(int time_delta)
 {   
     int num_chunks         = 0;
     int num_chunks_gone    = 0;
@@ -463,21 +534,23 @@ void rot_inventory_food(int /*time_delta*/)
 
 #if TAG_MAJOR_VERSION == 34
         // cleanup
-        if (item.base_type == OBJ_CORPSES)
-        {
-            if (you.equip[EQ_WEAPON] == i)
-                unwield_item(true, EQ_WEAPON);
-            if (you.equip[EQ_SECOND_WEAPON] == i)
-                unwield_item(true, EQ_SECOND_WEAPON);
+        /*
+            if (item.base_type == OBJ_CORPSES)
+            {
+                if (you.equip[EQ_WEAPON] == i)
+                    unwield_item(true, EQ_WEAPON);
+                if (you.equip[EQ_SECOND_WEAPON] == i)
+                    unwield_item(true, EQ_SECOND_WEAPON);
 
-            item_was_destroyed(item);
-            destroy_item(item);
-            continue;
-        }
+                item_was_destroyed(item);
+                destroy_item(item);
+                continue;
+            }
+        */
 #endif
         if (item.base_type == OBJ_CORPSES)
         {
-            _rot_corpse(item, true);
+            _rot_corpse(item, time_delta, true);
             continue;
         }
 

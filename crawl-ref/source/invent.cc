@@ -851,8 +851,8 @@ FixedVector<int, NUM_OBJECT_CLASSES> inv_order(
     OBJ_BOOKS,
     OBJ_MISCELLANY,
     OBJ_FOOD,
-    // These four can't actually be in your inventory.
     OBJ_CORPSES,
+    // These three can't actually be in your inventory.
     OBJ_RUNES,
     OBJ_ORBS,
     OBJ_GOLD);

@@ -1593,6 +1593,7 @@ bool put_bag_item(int bag_slot, int item_dropped, int quant_drop, bool fail_mess
     if (quant_drop < 0 || quant_drop > item.quantity)
         quant_drop = item.quantity;
 
+    /*
     if (item.is_type(OBJ_FOOD, FOOD_CHUNK) || is_blood_potion(item) || item.base_type == OBJ_CORPSES)
     {
         if (fail_message) {
@@ -1600,6 +1601,7 @@ bool put_bag_item(int bag_slot, int item_dropped, int quant_drop, bool fail_mess
         }
         return false;
     }
+    */
     if (item.is_type(OBJ_MISCELLANY, MISC_BAG))
     {
         if (fail_message) {
