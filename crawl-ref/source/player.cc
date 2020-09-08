@@ -32,6 +32,7 @@
 #include "directn.h"
 #include "english.h"
 #include "env.h"
+#include "evoke.h"
 #include "errors.h"
 #include "exercise.h"
 #include "files.h"
@@ -9332,4 +9333,39 @@ bool can_call_friends()
             return true;
     }
     return false;
+}
+
+vector<item_def* > player::bag() const
+{   
+    int bag_slot = ENDOFPACK;
+    vector<item_def* > bagVector;
+    for (int i = 0; i < ENDOFPACK; i++)
+    {
+        if (inv[i].is_type(OBJ_MISCELLANY, MISC_BAG))
+        {
+            bag_slot = i;
+            break;        
+        }
+    }
+
+    // If there is no bag, return empty vector
+    if (bag_slot == ENDOFPACK)
+        return bagVector;
+    
+    item_def& bag = you.inv[bag_slot];
+    if (!bag.props.exists(BAG_PROPS_KEY))
+    {
+        bag.props[BAG_PROPS_KEY].new_vector(SV_ITEM).resize(ENDOFPACK);
+        CrawlVector& rap = bag.props[BAG_PROPS_KEY].get_vector();
+        rap.set_max_size(ENDOFPACK);
+    }
+    
+    CrawlVector& in_bag = bag.props[BAG_PROPS_KEY].get_vector();
+    for (int i = 0; i < ENDOFPACK; i++)
+    {
+        item_def& item = in_bag[i].get_item();
+        bagVector.emplace_back(&item);
+    }
+
+    return bagVector;
 }

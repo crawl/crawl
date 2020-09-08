@@ -72,7 +72,7 @@ void add_monster_to_transit(const level_id &lid, const monster& m)
     dprf("Monster in transit to %s: %s", lid.describe().c_str(),
          m.name(DESC_PLAIN, true).c_str());
 
-    if (m.is_divine_companion())
+    if (m.is_divine_companion() || m.is_mercenery_companion())
         move_companion_to(&m, lid);
 
     const int how_many = mlist.size();

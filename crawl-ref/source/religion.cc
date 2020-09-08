@@ -218,6 +218,7 @@ const vector<god_power> god_powers[NUM_GODS] =
       { 7, ABIL_TROG_BLESS_WEAPON,
            "Trog will bless your weapon with antimagic... once.",
            "Trog is no longer ready to bless your weapon." },
+      {-1, ABIL_TROG_BURN_SPELLBOOKS, "call upon Trog to burn spellbooks in your surroundings" },
     },
 
     // Nemelex
@@ -3002,6 +3003,7 @@ void excommunication(bool voluntary, god_type new_god)
         if (you.duration[DUR_TROGS_HAND])
             trog_remove_trogs_hand();
         make_god_gifts_disappear();
+        add_held_books_to_library();
         break;
 
     case GOD_BEOGH:

@@ -1320,7 +1320,7 @@ bool pickup_single_item(int link, int qty)
     ASSERT(link != NON_ITEM);
 
     item_def* item = &mitm[link];
-    if (item_is_stationary(mitm[link]) || item->base_type == OBJ_CORPSES)
+    if (item_is_stationary(mitm[link]))
     {
         mpr("You can't pick that up.");
         return false;
@@ -2216,9 +2216,12 @@ bool merge_items_into_inv(item_def &it, int quant_got,
         return true;
     }
     if (it.base_type == OBJ_BOOKS && it.sub_type != BOOK_MANUAL)
-    {
-        _get_book(it, quiet, true);
-        return true;
+    {   
+        if(!you_worship(GOD_TROG))
+        {
+            _get_book(it, quiet, true);
+            return true;
+        }
     }
     if (it.base_type == OBJ_MISCELLANY && it.sub_type == MISC_MERCENARY)
     {

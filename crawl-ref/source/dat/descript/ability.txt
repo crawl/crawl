@@ -430,6 +430,13 @@ bonus to spell power based on your Invocations skill that is worth 50% more
 than equivalent levels of training in the relevant skills of the spell itself.
 %%%%
 # Trog
+Burn Spellbooks ability
+
+Sets all spellbooks within your field of vision on fire. The fire is fuelled by
+Trog's hatred, and it burns hotter than mere parchment would — which can be
+useful if you throw the book under someone's feet first. Trog greatly
+appreciates the burning of spellbooks.
+%%%%
 Berserk ability
 
 Sends the user into a berserk rage. Going berserk temporarily increases health,

@@ -16,6 +16,7 @@ enum timed_effect_type
     TIMER_SCREAM,
 #endif
     TIMER_FOOD_ROT,
+    TIMER_BAG_ROT,
     TIMER_PRACTICE,
     TIMER_LABYRINTH,
     TIMER_ABYSS_SPEED,
