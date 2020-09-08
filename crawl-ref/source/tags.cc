@@ -1299,6 +1299,16 @@ void tag_read(reader &inf, tag_type tag_id)
             check_map_validity();
         }
         tag_read_level_tiles(th);
+
+        if (th.getMinorVersion() < TAG_MINOR_PIPE
+            && you.char_class == JOB_CARAVAN) {
+            int thing_created = items(true, OBJ_MISCELLANY, MISC_PIPE, ISPEC_GOOD_ITEM);
+            if (thing_created != NON_ITEM
+                && move_item_to_grid(&thing_created, you.pos()))
+            {
+                mprf("Take this!");
+            }
+        }
 #if TAG_MAJOR_VERSION == 34
         if (you.where_are_you == BRANCH_GAUNTLET
             && th.getMinorVersion() < TAG_MINOR_GAUNTLET_TRAPPED)

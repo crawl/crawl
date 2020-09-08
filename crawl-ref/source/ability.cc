@@ -3919,7 +3919,7 @@ static spret _do_ability(const ability_def& abil, bool fail)
         switch (random2(4))
         {
         case 0:
-            mprf(MSGCH_GOD, "The Great Wyrm whispers: Yout transmutation is finish.");
+            mprf(MSGCH_GOD, "The Great Wyrm whispers: Transmutation has been finished.");
             break;
         case 1:
             mprf(MSGCH_GOD, "Nigredo, the black essence of decay, now is your own.");
@@ -3956,7 +3956,7 @@ static spret _do_ability(const ability_def& abil, bool fail)
         switch (random2(4))
         {
         case 0:
-            mprf(MSGCH_GOD, "The Great Wyrm whispers: Your transmutation is finish.");
+            mprf(MSGCH_GOD, "The Great Wyrm whispers: Transmutation has been finished.");
             break;
         case 1:
             mprf(MSGCH_GOD, "Albedo, the white essence of purge, now is your own.");
@@ -3993,7 +3993,7 @@ static spret _do_ability(const ability_def& abil, bool fail)
         switch (random2(4))
         {
         case 0:
-            mprf(MSGCH_GOD, "The Great Wyrm whispers: Your transmutation is finish.");
+            mprf(MSGCH_GOD, "The Great Wyrm whispers: Transmutation has been finished.");
             break;
         case 1:
             mprf(MSGCH_GOD, "Citrinitas, the yellow essence of empowerment, now is your own.");
@@ -4030,7 +4030,7 @@ static spret _do_ability(const ability_def& abil, bool fail)
         switch (random2(4))
         {
         case 0:
-            mprf(MSGCH_GOD, "The Great Wyrm whispers: Your transmutation is finish.");
+            mprf(MSGCH_GOD, "The Great Wyrm whispers: Transmutation has been finished.");
             break;
         case 1:
             mprf(MSGCH_GOD, "Viriditas, the yellow essence of restoration, now is your own.");
@@ -4067,7 +4067,7 @@ static spret _do_ability(const ability_def& abil, bool fail)
         switch (random2(4))
         {
         case 0:
-            mprf(MSGCH_GOD, "The Great Wyrm whispers: Your transmutation is finish.");
+            mprf(MSGCH_GOD, "The Great Wyrm whispers: Transmutation has been finished.");
             break;
         case 1:
             mprf(MSGCH_GOD, "Rubedo, the red essence of the end-as-begin, now is your own.");
