@@ -2216,9 +2216,12 @@ bool merge_items_into_inv(item_def &it, int quant_got,
         return true;
     }
     if (it.base_type == OBJ_BOOKS && it.sub_type != BOOK_MANUAL)
-    {
-        _get_book(it, quiet, true);
-        return true;
+    {   
+        if(!you_worship(GOD_TROG))
+        {
+            _get_book(it, quiet, true);
+            return true;
+        }
     }
     if (it.base_type == OBJ_MISCELLANY && it.sub_type == MISC_MERCENARY)
     {

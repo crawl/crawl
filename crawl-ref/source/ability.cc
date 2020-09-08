@@ -485,6 +485,8 @@ static const ability_def Ability_List[] =
       0, 0, 0, 12, {fail_basis::invo, 80, 4, 25}, abflag::none },
 
     // Trog
+    { ABIL_TROG_BURN_SPELLBOOKS, "Burn Spellbooks",
+      0, 0, 0, 0, {fail_basis::invo}, abflag::none },
     { ABIL_TROG_BERSERK, "Berserk",
       0, 0, 600, 0, {fail_basis::invo}, abflag::none },
     { ABIL_TROG_REGEN_MR, "Trog's Hand",
@@ -3065,6 +3067,12 @@ static spret _do_ability(const ability_def& abil, bool fail)
         simple_god_message(" will bless one of your weapons.");
         // included in default force_more_message
         if (!bless_weapon(GOD_MAKHLEB, SPWPN_CHAOS, MAGENTA))
+            return spret::abort;
+        break;
+
+    case ABIL_TROG_BURN_SPELLBOOKS:
+        fail_check();
+        if (!trog_burn_spellbooks())
             return spret::abort;
         break;
 
