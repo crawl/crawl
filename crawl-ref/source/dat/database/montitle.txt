@@ -179,6 +179,10 @@ Kirke title
 
 Kirke, Weaver of Myths
 %%%%
+Lichbane title
+
+Lichbane the Unchained
+%%%%
 Lom Lobon title
 
 Lom Lobon, Demon Lord of Forbidden Knowledge

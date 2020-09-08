@@ -1235,6 +1235,14 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         item.flags    |= ISFLAG_KNOW_TYPE;
         break;
 
+    case MONS_LICHBANE:
+        if (!get_unique_item_status(UNRAND_UNDEADHUNTER))
+        {
+            make_item_unrandart(item, UNRAND_UNDEADHUNTER);
+            force_item = true;
+        }
+        break;
+
     case MONS_ANCESTOR_HEXER:
     case MONS_ANCESTOR_BATTLEMAGE:
     case MONS_ANCESTOR_KNIGHT:

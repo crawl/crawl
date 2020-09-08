@@ -1893,6 +1893,14 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_LICHBANE,
+      {
+       { SPELL_DISPEL_UNDEAD, 23, MON_SPELL_WIZARD },
+       { SPELL_DEFLECT_MISSILES, 11, MON_SPELL_WIZARD },
+       { SPELL_HARPOON_SHOT, 36, MON_SPELL_WIZARD },
+      }
+    },
+
     // ('A') Angels.
     {  MST_MENNAS,
       {

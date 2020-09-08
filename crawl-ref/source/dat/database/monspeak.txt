@@ -4990,6 +4990,39 @@ VISUAL:@The_monster@ throws some [strange|weird|mysterious] powder @at_foe@.
 @_fake_spell_effect_@
 ### END Kirke ###
 %%%%
+############ LICHBANE ### undead hunter who is freed undead giant
+Lichbane
+
+@The_monster@ says @to_foe@, "I was slay my master with my hands. How about you?"
+
+@The_monster@ says @to_foe@, "Do you want to know how I destroyed my master?"
+
+@The_monster@ says, "{{
+    if you.god() == "the Shining One" then
+      return "Don't you think it's okay to call me an exorcist?"
+    elseif you.god() == "Kikubaaqudgha" then
+      return "No more necromancers! No more lords of darkness!"
+    elseif you.god() == "Yredelemnul" then
+      return "No one should rule over the dead!"
+    else
+      return "Rest in peace to all undeads!"
+    end }}" @player_only@
+
+@The_monster@ says, "{{
+    if you.race() == "Lich" then
+        return "Another lich... You shouldn't choose that"
+    elseif you.race() == "Mummy" then
+        return "Ancient undead lords? There are no lords, no slaves in this age"
+    elseif you.race() == "Ghoul" then
+        return "Rest in peace, another victim"
+    elseif you.race() == "Wight" then
+        return "Rest in peace, another lost soul"
+    else
+        return "I need to look for more preservatives"
+    end
+}}."
+## END Lichbane ##
+%%%%
 ############ LOUISE ### A sorceress driven mad by the abyss
 Louise
 
