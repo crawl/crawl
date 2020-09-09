@@ -361,6 +361,10 @@ NAME:   uniq_xtahua
 DEPTH:  Depths:3-, Vaults:2-, Crypt
 : place_unique(_G, "Xtahua")
 
+NAME:   uniq_lichbane
+DEPTH:  Depths:3-, Vaults:2-, Crypt, Tomb
+: place_unique(_G, "Lichbane")
+
 
 ################################################################################
 # Uniques which appear in neither the Dungeon nor the Depths:
@@ -401,10 +405,6 @@ WEIGHT: 100
 NAME:   uniq_khufu
 DEPTH:  Tomb, Crypt
 : place_unique(_G, "Khufu band")
-
-NAME:   uniq_lichbane
-DEPTH:  Tomb, Crypt
-: place_unique(_G, "Lichbane")
 
 NAME:   uniq_tiamat
 DEPTH:  Zot
