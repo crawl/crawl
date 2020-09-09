@@ -4279,7 +4279,7 @@ VISUAL:@The_monster@ is forced to fight against you by the will of the evil gods
     if you.race() == "Angel" then
         return "says, "Please don't be like me, young one." "
     else
-        return "try to say something, but soon gave up."
+        return "tries to say something, but soon gives up."
     end }} @player_only@
 ## END Fallen ##
 %%%%
