@@ -4254,23 +4254,23 @@ VISUAL:@The_monster@ has a miserable look on her pale face.
 
 VISUAL:@The_monster@ is sobbing with grief.
 
-VISUAL:@The_monster@ struggles against to the will of the evil gods, but failed.
+VISUAL:@The_monster@ struggles against the will of the evil gods in vain.
 
-VISUAL:@The_monster@ is forced by the will of the evil gods to fight against you. @player_only@
+VISUAL:@The_monster@ is forced to fight against you by the will of the evil gods . @player_only@
 
-@The_monster@ eyes @foe@ carefully, hesitates to say something.
+@The_monster@ eyes @foe@ carefully, hesitating to say something.
 
-@The_monster@ eyes you carefully, {{
+@The_monster@ eyes you carefully {{
     if you.god() == "Elyvilon" then
-      return "says, "Will the Healer forgive my sin?" "
+      return "and says, "Will the Healer forgive my sin?" "
     elseif you.god() == "the Shining One" then
-      return "says, "You are an exemplary crusader. Because I can't find mercy from your eyes." "
+      return "and says, "You are an exemplary crusader. I see no mercy for a sinner like me in your eyes." "
     elseif you.god() == "Zin" then
-      return "says, "Zin will make me a pillar of salt. Because that's the law of the good gods." "
+      return "and says, "The Law-Giver will make me into a pillar of salt. It is written and I deserve it." "
     elseif you.god() == "Kikubaaqudgha" then
-      return "says, "Oh, you are the one of the Mercant of Misery..." "
+      return "and says, "Oh, you are the one of the Mercant of Misery..." "
     elseif you.god() == "Yredelemnul" then
-      return "says, "I've already fallen, torchbearer." "
+      return "and says, "I've already fallen, torchbearer." "
     else
       return "but didn't say anything."
     end }} @player_only@
@@ -5029,30 +5029,30 @@ VISUAL:@The_monster@ throws some [strange|weird|mysterious] powder @at_foe@.
 ############ LICHBANE ### undead hunter who is freed undead
 Lichbane
 
-@The_monster@ says @to_foe@, "I was slay my master with my hands. How about you?"
+@The_monster@ says @to_foe@, "I slayed my master with my own hands. How about you?"
 
 @The_monster@ says @to_foe@, "Do you want to know how I destroyed my master?"
 
 @The_monster@ says, "{{
     if you.god() == "the Shining One" then
-      return "Don't you think it's okay to call me an exorcist?"
+      return "Don't you think I deserve to be called exorcist?"
     elseif you.god() == "Kikubaaqudgha" then
-      return "No more necromancers! No more lords of darkness!"
+      return "No more necromancer! No more lord of darkness!"
     elseif you.god() == "Yredelemnul" then
-      return "No one should rule over the dead!"
+      return "None shall rule over the dead!"
     else
-      return "Rest in peace to all undeads!"
+      return "Eternal death to all undeads!"
     end }}" @player_only@
 
 @The_monster@ says, "{{
     if you.race() == "Lich" then
-        return "Another lich... You shouldn't choose that"
+        return "Another lich... You chose the wrong path"
     elseif you.race() == "Mummy" then
-        return "Ancient undead lords? There are no lords, no slaves in this age"
+        return "You should have accepted your death long ago."
     elseif you.race() == "Ghoul" then
-        return "Rest in peace, another victim"
+        return "Rest in peace, another victim."
     elseif you.race() == "Wight" then
-        return "Rest in peace, another lost soul"
+        return "Rest in peace, another lost soul."
     else
         return "I need to look for more preservatives"
     end
