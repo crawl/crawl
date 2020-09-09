@@ -608,6 +608,7 @@ cherub MONS_CHERUB
 profane_servitor MONS_PROFANE_SERVITOR
 %sdir mon/unique
 mennas MONS_MENNAS
+fallen MONS_FALLEN
 
 ## Giants ('C')
 %rim 0
@@ -1119,6 +1120,7 @@ crawling_corpse MONS_CRAWLING_CORPSE
 macabre_mass MONS_MACABRE_MASS
 %sdir mon/unique
 murray MONS_MURRAY
+lichbane MONS_LICHBANE
 
 ## Sprint specials
 %sdir mon/sprint

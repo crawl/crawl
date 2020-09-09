@@ -203,6 +203,15 @@ Eustachio
 An apprentice summoner with a flowing moustache. He has funny ideas about
 honour.
 %%%%
+Fallen
+
+There was an angel of Elyvilon, who loves a mortal. It was a sin obviously, but
+the Healer showed mercy, just banish them to the mortal world instead punishment.
+However, years passed and her lover passed away, she was tempted by Kikubaaqudgha
+to revive her lover. After then, Elyvilon no longer treated angels as servants,
+worshippers of Kikubaaqudgha began to be called as 'the Merchant of Misery', and
+she has fallen as the proof of this miserable tale.
+%%%%
 Fannar
 
 A cold-hearted elven sorcerer, draped in robes of high office. They whisper
@@ -316,6 +325,13 @@ A huge beast, mightiest of hydras, infamous in myth and legend. It flows
 through the water faster than a human can run, swatting aside trees as though
 they were matchsticks. Its many heads slaver and gnash constantly as it hunts
 for prey to slake its bottomless appetite.
+%%%%
+Lichbane
+
+Long ago, a lich lord created many undead-disrupting weapons to ensure the loyalty
+of his undead servants. This unchained skeletal warrior was one of them, and also
+the slayer of its master with the undead-disrupting weapon gifted from its master.
+Now it called as the "Lichbane", an undead hunter who is also undead.
 %%%%
 Lom Lobon
 

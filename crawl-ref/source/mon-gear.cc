@@ -735,6 +735,13 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
             { 1, 0, 5},
             { { SPWPN_HOLY_WRATH, 1}}
         } },
+        { MONS_FALLEN, {
+            { { WPN_SCYTHE,     1} },
+            { 1, 3, 8 },
+            { { SPWPN_VORPAL,       3 },
+              { SPWPN_DISTORTION,   2 },
+              { SPWPN_ANTIMAGIC,    1 } },
+        } },
         { MONS_DONALD,
             { { { WPN_SCIMITAR,         12 },
                 { WPN_LONG_SWORD,       10 },
@@ -875,6 +882,15 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
               { SPWPN_FLAMING,       4 },
               { SPWPN_PAIN,          2 },
               { NUM_SPECIAL_WEAPONS, 15 } }, // 2/3 chance of brand
+        } },
+        { MONS_LICHBANE, {
+            { { WPN_GREAT_MACE,         1 },
+              { WPN_BATTLEAXE,          1 },
+              { WPN_GREAT_SWORD,        1 }, },
+            { 2, 1, 3 },
+            { { SPWPN_VORPAL,        1 },
+              { SPWPN_FLAMING,       1 },
+              { SPWPN_ELECTROCUTION, 1 } },
         } },
         { MONS_SOJOBO, {
             { { WPN_TRIPLE_SWORD,       1 },
@@ -1233,6 +1249,14 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         item.base_type = OBJ_STAVES;
         item.sub_type = STAFF_POISON;
         item.flags    |= ISFLAG_KNOW_TYPE;
+        break;
+
+    case MONS_LICHBANE:
+        if (!get_unique_item_status(UNRAND_UNDEADHUNTER))
+        {
+            make_item_unrandart(item, UNRAND_UNDEADHUNTER);
+            force_item = true;
+        }
         break;
 
     case MONS_ANCESTOR_HEXER:
