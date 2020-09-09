@@ -345,6 +345,22 @@ MAP
 1
 ENDMAP
 
+NAME:   uniq_fallen
+DEPTH:  Depths:3-, Vaults:2-, Crypt, Tomb
+: place_unique(_G, "Fallen")
+
+NAME:   uniq_fallen_pan
+DEPTH:  Pan
+CHANCE: 5%
+TAGS:   transparent extra allow_dup luniq_fallen
+veto {{
+  return you.uniques("Fallen")
+}}
+MONS: generate_awake Fallen
+MAP
+1
+ENDMAP
+
 NAME:   uniq_nikola
 DEPTH:  Depths:1-3, Elf, Swamp, Snake, Shoals, Spider, Vaults:1-3
 : place_unique(_G, "Nikola")

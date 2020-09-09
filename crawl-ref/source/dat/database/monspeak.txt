@@ -4247,6 +4247,42 @@ w:5
 
 @The_monster@ eyes @foe@ carefully. "They told me only worthy opponents would get this far."
 %%%%
+############ FALLEN ### profane servitor who was an angel of Elyvilon
+Fallen
+
+VISUAL:@The_monster@ has a miserable look on her pale face.
+
+VISUAL:@The_monster@ is sobbing with grief.
+
+VISUAL:@The_monster@ struggles against to the will of the evil gods, but failed.
+
+VISUAL:@The_monster@ is forced by the will of the evil gods to fight against you. @player_only@
+
+@The_monster@ eyes @foe@ carefully, hesitates to say something.
+
+@The_monster@ eyes you carefully, {{
+    if you.god() == "Elyvilon" then
+      return "says, "Will the Healer forgive my sin?" "
+    elseif you.god() == "the Shining One" then
+      return "says, "You are an exemplary crusader. Because I can't find mercy from your eyes." "
+    elseif you.god() == "Zin" then
+      return "says, "Zin will make me a pillar of salt. Because that's the law of the good gods." "
+    elseif you.god() == "Kikubaaqudgha" then
+      return "says, "Oh, you are the one of the Mercant of Misery..." "
+    elseif you.god() == "Yredelemnul" then
+      return "says, "I've already fallen, torchbearer." "
+    else
+      return "but didn't say anything."
+    end }} @player_only@
+
+@The_monster@ {{
+    if you.race() == "Angel" then
+        return "says, "Please don't be like me, young one." "
+    else
+        return "try to say something, but soon gave up."
+    end }} @player_only@
+## END Fallen ##
+%%%%
 ############ FANNAR ### A cold-hearted elven sorcerer
 Fannar
 
@@ -4990,7 +5026,7 @@ VISUAL:@The_monster@ throws some [strange|weird|mysterious] powder @at_foe@.
 @_fake_spell_effect_@
 ### END Kirke ###
 %%%%
-############ LICHBANE ### undead hunter who is freed undead giant
+############ LICHBANE ### undead hunter who is freed undead
 Lichbane
 
 @The_monster@ says @to_foe@, "I was slay my master with my hands. How about you?"

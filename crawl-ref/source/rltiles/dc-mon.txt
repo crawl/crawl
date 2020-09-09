@@ -608,6 +608,7 @@ cherub MONS_CHERUB
 profane_servitor MONS_PROFANE_SERVITOR
 %sdir mon/unique
 mennas MONS_MENNAS
+fallen MONS_FALLEN
 
 ## Giants ('C')
 %rim 0

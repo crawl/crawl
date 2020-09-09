@@ -4025,7 +4025,7 @@ int monster::res_rotting(bool /*temp*/) const
 
 int monster::res_holy_energy() const
 {
-    if (type == MONS_PROFANE_SERVITOR)
+    if (type == MONS_PROFANE_SERVITOR || type == MONS_FALLEN)
         return 3;
 
     if (undead_or_demonic())
