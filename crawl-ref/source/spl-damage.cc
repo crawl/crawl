@@ -3102,7 +3102,10 @@ spret cast_hailstorm(int pow, bool fail, bool tracer)
         const monster* mon = act->as_monster();
         return mon && !mon->is_icy()
             && !mons_is_firewood(*mon)
-            && !(you_worship(GOD_FEDHAS) && fedhas_protects(mon));
+            && !(you_worship(GOD_FEDHAS) && fedhas_protects(mon))
+            && !mons_is_projectile(*mon)
+            && !(mons_is_avatar(mon->type) && mons_aligned(&you, mon))
+            && !testbits(mon->flags, MF_DEMONIC_GUARDIAN);
     };
 
     if (tracer)
