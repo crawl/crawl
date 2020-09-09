@@ -737,7 +737,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         } },
         { MONS_FALLEN, {
             { { WPN_SCYTHE,     1} },
-            { 4, 6, 5 },
+            { 1, 3, 8 },
             { { SPWPN_VORPAL,       3 },
               { SPWPN_DISTORTION,   2 },
               { SPWPN_ANTIMAGIC,    1 } },
