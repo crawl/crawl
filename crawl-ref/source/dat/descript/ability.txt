@@ -91,11 +91,11 @@ are also reduced.
 Deploy Shield ability
 
 Pins the shield you are holding to the ground and use it as a barrier. The 
-shield fixed to the ground function as a obstacle and block the incoming fire.
+shield fixed to the ground functions as a obstacle and block the incoming fire.
 It returns to your hand when you move to other poistions or directly attack it
 The projectiles shot by foes who are not adjacent to the shield are blocked.  
-The durability of the shield depends on your Shield skill and the enchant value
-of it.
+The durability of the shield depends on your Shield skill and the enchant 
+value of it.
 %%%%
 Exsanguinate ability
 
