@@ -90,19 +90,20 @@ are also reduced.
 %%%%
 Deploy Shield ability
 
-You can fix the shield to the ground and use it as a barrier. Before moving to
-retrieve or destroy shields, shields prevent movement and attack. The projectile 
-shot by an opponent who is not close to the shield is blocked by the shield. 
-Hit point and success rate of the shield are dependent on your shield skill, 
-and the AC of the shield is depending on enchant value of the shield.
+Pins the shield you are holding to the ground and use it as a barrier. The 
+shield fixed to the ground function as a obstacle and block the incoming fire.
+It returns to your hand when you move to other poistions or directly attack it
+The projectiles shot by foes who are not adjacent to the shield are blocked.  
+The durability of the shield depends on your Shield skill and the enchant value
+of it.
 %%%%
 Exsanguinate ability
 
-Remove all of your blood, transitioning to a bloodless state.
+Removes all of your blood, transitioning to a bloodless state.
 %%%%
 Revivify ability
 
-Return to life, transitioning from bloodless to alive. This process renders
+Returns to life, transitioning from bloodless to alive. This process renders
 the user temporarily frail.
 %%%%
 Fly ability
