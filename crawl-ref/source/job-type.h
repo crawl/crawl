@@ -43,6 +43,7 @@ enum job_type
     JOB_CRUSADER,
     JOB_CARAVAN,
     JOB_COLLECTOR,
+    JOB_WEAPON_MASTER,
     NUM_JOBS,                          // always after the last job
 
     JOB_UNKNOWN = 100,

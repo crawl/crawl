@@ -74,6 +74,11 @@ static bool _banned_combination(job_type job, species_type species)
         return true;
     }
 
+    if (job == JOB_WEAPON_MASTER
+        && (species_size(species) <= SIZE_SMALL
+            || species == SP_HYDRA))
+        return true;
+
     return false;
 }
 
@@ -154,7 +159,7 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
         return CC_RESTRICTED;
     }
 
-    if (wpn == WPN_QUARTERSTAFF && ng.job != JOB_GLADIATOR
+    if (wpn == WPN_QUARTERSTAFF && (ng.job != JOB_GLADIATOR && ng.job != JOB_WEAPON_MASTER)
         && !(ng.job == JOB_FIGHTER && ng.species == SP_FORMICID))
     {
         return CC_BANNED;

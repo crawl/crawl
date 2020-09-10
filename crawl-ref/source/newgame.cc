@@ -1143,7 +1143,7 @@ static job_group jobs_order[] =
     {
         "Warrior",
         coord_def(0, 0), 20,
-        { JOB_FIGHTER, JOB_GLADIATOR, JOB_MONK, JOB_HUNTER, JOB_ASSASSIN }
+        { JOB_FIGHTER, JOB_GLADIATOR, JOB_MONK, JOB_HUNTER, JOB_ASSASSIN, JOB_WEAPON_MASTER }
     },
     {
         "Adventurer",
@@ -2312,6 +2312,36 @@ static vector<weapon_choice> _get_weapons(const newgame_def& ng)
             wp.second = weapon_restriction(wp.first, ng);
             if (wp.second != CC_BANNED)
                 weapons.push_back(wp);
+        }
+    }
+    else if (job_gets_twohanded_weapons(ng.job))
+    {
+        const size_type size = species_size(ng.species, PSIZE_TORSO);
+        if (size == SIZE_LARGE)
+        {
+            weapon_type startwep[6] = { WPN_DIRE_FLAIL, WPN_GIANT_CLUB, WPN_BATTLEAXE,
+                                        WPN_HALBERD, WPN_GREAT_SWORD, WPN_QUARTERSTAFF };
+            for (int i = 0; i < 6; ++i)
+            {
+                weapon_choice wp;
+                wp.first = startwep[i];
+	        
+                wp.second = weapon_restriction(wp.first, ng);
+                if (wp.second != CC_BANNED)
+                    weapons.push_back(wp);
+            }
+        } else {
+            weapon_type startwep[5] = { WPN_DIRE_FLAIL, WPN_BATTLEAXE,
+                                        WPN_HALBERD, WPN_GREAT_SWORD, WPN_QUARTERSTAFF };
+            for (int i = 0; i < 5; ++i)
+            {
+                weapon_choice wp;
+                wp.first = startwep[i];
+	        
+                wp.second = weapon_restriction(wp.first, ng);
+                if (wp.second != CC_BANNED)
+                    weapons.push_back(wp);
+            }
         }
     }
     else

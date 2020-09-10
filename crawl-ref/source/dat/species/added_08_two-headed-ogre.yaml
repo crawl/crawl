@@ -56,6 +56,7 @@ fake_mutations:
 recommended_jobs:
   - JOB_HUNTER
   - JOB_BERSERKER
+  - JOB_WEAPON_MASTER
 recommended_weapons:
   - SK_MACES_FLAILS
   - SK_POLEARMS

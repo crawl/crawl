@@ -56,6 +56,7 @@ recommended_jobs:
   - JOB_GLADIATOR
   - JOB_MONK
   - JOB_HUNTER
+  - JOB_WEAPON_MASTER
   - JOB_BERSERKER
   - JOB_ABYSSAL_KNIGHT
 create_enum: false
