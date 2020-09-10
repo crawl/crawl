@@ -4022,6 +4022,8 @@ static tileidx_t _tileidx_player_job_base(const job_type job)
             return TILEG_JOB_CARAVAN;
         case JOB_COLLECTOR:
             return TILEG_JOB_COLLECTOR;
+        case JOB_WEAPON_MASTER:
+            return TILEG_JOB_WEAPON_MASTER;
         default:
             return TILEG_ERROR;
     }

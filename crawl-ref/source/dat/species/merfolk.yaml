@@ -50,6 +50,7 @@ fake_mutations:
     short: stealthy swim
 recommended_jobs:
   - JOB_GLADIATOR
+  - JOB_WEAPON_MASTER
   - JOB_BERSERKER
   - JOB_SKALD
   - JOB_TRANSMUTER

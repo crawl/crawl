@@ -1119,6 +1119,10 @@ void tilep_job_default(int job, dolls_data *doll)
             parts[TILEP_PART_BODY]  = TILEP_BODY_ROBE_BROWN;
             parts[TILEP_PART_BOOTS] = TILEP_BOOTS_MIDDLE_BROWN3;
             break;
+
+        case JOB_WEAPON_MASTER:
+            parts[TILEP_PART_BODY]  = TILEP_BODY_ROBE_WHITE;
+            break;
     }
 }
 

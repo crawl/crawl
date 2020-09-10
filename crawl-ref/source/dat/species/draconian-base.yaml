@@ -30,6 +30,7 @@ mutations:
     MUT_COLD_BLOODED: 1
     MUT_DEFORMED: 1
 recommended_jobs:
+  - JOB_WEAPON_MASTER
   - JOB_BERSERKER
   - JOB_TRANSMUTER
   - JOB_CONJURER
