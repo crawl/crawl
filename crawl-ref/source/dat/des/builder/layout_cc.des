@@ -44,9 +44,8 @@ ENDMAP
 #
 # This layout places many non-overlapping boxes, some hollow.
 #
-# TODO: Lair should only have rock walls.  It should have sometimes
-#       thicker walls, especially on deeper depths so it can be used
-#       for the whole branch.
+# TODO: Lair should have sometimes thicker walls, especially 
+#       on deeper depths so it can be used for the whole branch.
 #
 NAME:   layout_chaotic_city
 DEPTH:  Lair:1-3, Crypt, Dis
@@ -56,7 +55,8 @@ TAGS:   overwritable layout allow_dup unrand layout_type_city
 TAGS:   no_rotate no_vmirror no_hmirror
 {{
     if not is_validating() then
-      layout_chaotic_city(you.in_branch("Dis") and "metal_wall" or nil)
+      layout_chaotic_city(you.in_branch("Dis") and "metal_wall" or 
+      you.in_branch("Lair") and "rock_wall" or nil)
     end
 }}
 MAP
