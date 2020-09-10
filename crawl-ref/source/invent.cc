@@ -1197,7 +1197,8 @@ bool item_is_selected(const item_def &i, int selector)
         return (itype == OBJ_WEAPONS
                 || is_shield(i)
                 || itype == OBJ_STAVES
-                || itype == OBJ_ARMOUR)
+                || itype == OBJ_ARMOUR
+                   && get_armour_slot(i) == EQ_BODY_ARMOUR)
                 && !item_is_equipped(i);
 
     case OSEL_CURSABLE:
