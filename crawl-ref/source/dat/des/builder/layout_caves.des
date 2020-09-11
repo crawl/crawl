@@ -303,6 +303,12 @@ TAGS:   overwritable layout allow_dup unrand layout_type_open_caves
   -- corridor width up and down with noise scale too otherwise they end up hugely wrong size)
   local frooms = procedural.worley_diff{ scale = 0.15 }
   local fcorridors = procedural.worley_diff{ scale = 0.1 }
+  
+  if you.in_branch("Snake") then
+    frooms = procedural.transform.damped_distortion(frooms)
+    fcorridors = procedural.transform.damped_distortion(fcorridors)
+  end
+  
   local fhalls = procedural.sub(fcorridors,procedural.mul(frooms,0.5))
   local fbord = procedural.border{ padding = 4,additive = true }
   frooms = procedural.sub(frooms,fbord)
