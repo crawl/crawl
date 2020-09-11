@@ -214,6 +214,9 @@ halo_player TSO
 %rim 0
 %sdir player/ench
 sticky_flame STICKY_FLAME
+barrier0 BARRIER
+barrier1 BARRIER_DANGER
+barrier2 BARRIER_BROKEN
 %rim 1
 %end_ctg
 

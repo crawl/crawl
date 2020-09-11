@@ -58,6 +58,7 @@ tukimas_dance TUKIMAS_DANCE
 violent_unravelling VIOLENT_UNRAVELLING
 elemental_weapon ELEMENTAL_WEAPON
 flame_strike FLAME_STRIKE
+barrier BARRIER
 
 %sdir gui/spells/fire
 bolt_of_fire BOLT_OF_FIRE

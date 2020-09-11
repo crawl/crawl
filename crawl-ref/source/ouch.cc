@@ -65,6 +65,7 @@
 #include "shout.h"
 #include "skills.h"
 #include "spl-clouds.h"
+#include "spl-damage.h"
 #include "spl-other.h"
 #include "spl-selfench.h"
 #include "state.h"
@@ -309,22 +310,25 @@ int check_your_resists(int hurted, beam_type flavour, string source,
  */
 void expose_player_to_element(beam_type flavour, int strength, bool slow_cold_blooded)
 {
-    dprf("expose_player_to_element, strength %i, flavor %i, slow_cold_blooded is %i", strength, flavour, slow_cold_blooded);
-    qazlal_element_adapt(flavour, strength);
-
-    if (flavour == BEAM_COLD && slow_cold_blooded
-        && you.get_mutation_level(MUT_COLD_BLOODED)
-        && you.res_cold() <= 0 && coinflip())
+    if (!(you.attribute[ATTR_BARRIER] > 0 && you.duration[DUR_BARRIER]))
     {
-        you.slow_down(0, strength);
-    }
-
-    if (flavour == BEAM_WATER && you.duration[DUR_LIQUID_FLAMES])
-    {
-        mprf(MSGCH_WARN, "The flames go out!");
-        you.duration[DUR_LIQUID_FLAMES] = 0;
-        you.props.erase("sticky_flame_source");
-        you.props.erase("sticky_flame_aux");
+        dprf("expose_player_to_element, strength %i, flavor %i, slow_cold_blooded is %i", strength, flavour, slow_cold_blooded);
+        qazlal_element_adapt(flavour, strength);
+        
+        if (flavour == BEAM_COLD && slow_cold_blooded
+            && you.get_mutation_level(MUT_COLD_BLOODED)
+            && you.res_cold() <= 0 && coinflip())
+        {
+            you.slow_down(0, strength);
+        }
+        
+        if (flavour == BEAM_WATER && you.duration[DUR_LIQUID_FLAMES])
+        {
+            mprf(MSGCH_WARN, "The flames go out!");
+            you.duration[DUR_LIQUID_FLAMES] = 0;
+            you.props.erase("sticky_flame_source");
+            you.props.erase("sticky_flame_aux");
+        }
     }
 }
 
@@ -932,6 +936,49 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
             // because we otherwise don't wake players who take fatal damage.
             you.check_awaken(500);
             return;
+        }
+
+        if (you.attribute[ATTR_BARRIER] > 0 && you.duration[DUR_BARRIER]
+            && death_type != KILLED_BY_POISON
+            && death_type != KILLED_BY_BARBS
+            && !((aux && (strstr(aux, "flay_damage")
+                  || strstr(aux, "Agony")
+                  || strstr(aux, "Symbol of Torment")
+                  || strstr(aux, "sceptre of Torment")
+                  || strstr(aux, "a scroll of torment")
+                  || strstr(aux, "Kikubaaqudgha's torment")
+                  || strstr(aux, "Xom's torment")
+                  || strstr(aux, "by torment")))))
+        {
+            you.attribute[ATTR_BARRIER] -= dam;
+            if (you.attribute[ATTR_BARRIER] <= 0)
+            {
+                you.attribute[ATTR_BARRIER] = 0;
+                you.duration[ATTR_BARRIER] = 0;
+                you.redraw_status_lights = true;
+
+                mprf(MSGCH_DANGER, "You're stuned by the aftershock!");
+                you.stop_directly_constricting_all(false);
+                end_searing_ray();
+                stop_delay();
+                flash_view_delay(UA_PLAYER, YELLOW, 300);
+
+                const int dur = 3 + random2avg(5, 2);
+                you.set_duration(DUR_BARRIER_BROKEN, dur);
+                return;
+            }
+            else
+            {
+                you.redraw_status_lights = true;
+                if (get_real_hp(true, false)/6 <= dam)
+                {
+                    flash_view_delay(UA_PLAYER, YELLOW, 100);
+                    mprf(MSGCH_DANGER, "Your barrier struggles to absorb damage!");
+                }
+                else
+                    mprf("Your barrier absorbs damage.");
+                return;
+            }
         }
 
         you.turn_damage += dam;

@@ -78,7 +78,6 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_CAUSE_FEAR,
     SPELL_VIOLENT_UNRAVELLING,
     SPELL_SILENCE,
-    SPELL_POISON_GLAND,
     SPELL_DEFLECT_MISSILES,
     SPELL_HASTE,
     SPELL_DISCORD,
@@ -406,7 +405,8 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_OZOCUBUS_ARMOUR,
     SPELL_HAILSTORM,
     SPELL_SUMMON_ICE_BEAST,
-}, 
+},
+
 {   // Book of the War Chants
     SPELL_SHRAPNEL_CURTAIN,
     SPELL_STONESKIN,
@@ -414,6 +414,14 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_FLAME_STRIKE,
     SPELL_INSULATION,
     SPELL_CONDENSATION_SHIELD,
+},
+
+{   // Tome of Valor
+    SPELL_SONG_OF_SLAYING,
+    SPELL_FLAME_STRIKE,
+    SPELL_RING_OF_FLAMES,
+    SPELL_HASTE,
+    SPELL_BARRIER,
 },
 };
 

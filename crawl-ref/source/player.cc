@@ -1845,6 +1845,9 @@ int player_res_sticky_flame(bool calc_unid, bool /*temp*/, bool items)
     if (rsf > 1)
         rsf = 1;
 
+    if (you.attribute[ATTR_BARRIER] > 0 && you.duration[DUR_BARRIER])
+        rsf++;
+
     return rsf;
 }
 
@@ -4628,6 +4631,12 @@ bool poison_player(int amount, string source, string source_aux, bool force)
         return false;
     }
 
+    if (you.attribute[ATTR_BARRIER])
+    {
+        mpr("Your hermetic barrier protects you from poison!");
+        return false;
+    }
+
     if (player_res_poison() >= 3)
     {
         dprf("Cannot poison, you are immune!");
@@ -6891,6 +6900,9 @@ int player_res_magic(bool calc_unid, bool temp)
         you.form == transformation::eldritch))
         return MAG_IMMUNE;
 
+    if (you.attribute[ATTR_BARRIER] > 0 && you.duration[DUR_BARRIER])
+        return MAG_IMMUNE;
+
     int rm = you.experience_level * species_mr_modifier(you.species);
 
     // randarts
@@ -6963,6 +6975,9 @@ string player::no_tele_reason(bool calc_unid, bool blinking) const
 
     if (duration[DUR_DIMENSION_ANCHOR])
         problems.emplace_back("locked down by a dimension anchor");
+
+    if (duration[DUR_BARRIER_BROKEN])
+        problems.emplace_back("magically aftershocked");
 
     if (form == transformation::tree)
         problems.emplace_back("held in place by your roots");
@@ -8003,7 +8018,7 @@ bool player::asleep() const
 
 bool player::cannot_act() const
 {
-    return asleep() || cannot_move();
+    return asleep() || cannot_move() || duration[DUR_BARRIER_BROKEN];
 }
 
 bool player::can_throw_large_rocks() const

@@ -98,7 +98,7 @@ static const map<unrand_type, vector<witchcraft>> urand_staff_to_spell=
                     }
                 }
     },
-    {UNRAND_BATTLE,
+    { UNRAND_BATTLE,
                 {
                     { MONS_MERC_WITCH,{
                         {SPELL_MAGIC_DART, 66, MON_SPELL_WIZARD},
@@ -119,7 +119,7 @@ static const map<unrand_type, vector<witchcraft>> urand_staff_to_spell=
                 }
         
     },
-    {UNRAND_OLGREB,
+    { UNRAND_OLGREB,
                 {
                     { MONS_MERC_WITCH,{
                         {SPELL_STING, 33, MON_SPELL_WIZARD},

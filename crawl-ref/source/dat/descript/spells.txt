@@ -805,6 +805,14 @@ by any means of protection, such as armour or resistances. However, certain
 creatures, usually those able to invoke damnation themselves, are entirely
 unscathed by damnation.
 %%%%
+Hermetic Barrier spell
+
+Form a hermetic barrier linked with caster's health, which absorbs upcoming
+damage and protects you from clouds and from exposure to to magic and elemental
+effects from outside, except damage from illusionary wound or unholy torment.
+However, if your barrier broken before it fades naturally, will cause aftershock,
+makes you stuned and unable to teleport for a while.
+%%%%
 Hurl Damnation spell
 
 <Hurl Damnation ability>
