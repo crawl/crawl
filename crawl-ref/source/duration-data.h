@@ -788,6 +788,16 @@ static const duration_def duration_data[] =
       "You are surrounded by gravels and pebbles.", D_DISPELLABLE | D_EXPIRES,
       {{ "Your curtain of sharpnel falls." },
         { "Your sharpnels begin to scatter." }}, 6},
+    { DUR_BARRIER,
+      BLUE, "Barrier",
+      "barrier", "barrier",
+      "You are protected by hermetic barrier.", D_DISPELLABLE | D_EXPIRES,
+      {{ "Your barrier fades away." },
+        { "Your barrier starts fading." }}, 6},
+    { DUR_BARRIER_BROKEN,
+      RED, "Stun",
+      "aftershocked", "aftershock",
+      "You are stuned.", D_EXPIRES},
 #if TAG_MAJOR_VERSION == 34
     // And removed ones
     { DUR_MAGIC_SAPPED, 0, "", "", "old magic sapped", "", D_NO_FLAGS},

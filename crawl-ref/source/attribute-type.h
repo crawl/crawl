@@ -103,5 +103,6 @@ enum attribute_type
     ATTR_HEAD_LOSS_XP,         // Unmodified XP needed for head recovery.
     ATTR_CARAVAN_ITEM_COST,    // Not Used
     ATTR_CARAVAN_LOST,         // Not Used
+    ATTR_BARRIER,
     NUM_ATTRIBUTES
 };

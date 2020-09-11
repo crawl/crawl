@@ -498,6 +498,172 @@ bool set_spell_witch(monster* mons, item_def* staff, bool slience) {
     return true;
 }
 
+static void _is_too_heavy(monster* mons, item_def& gift)
+{
+    mprf("%s is too heavy for %s!",
+        gift.name(DESC_THE, false).c_str(), mons->name(DESC_THE, false).c_str());
+}
+
+static void _is_unskilled(monster* mons, item_def& gift)
+{
+    mprf("%s isn't enough skilled to equip %s!",
+        mons->name(DESC_THE, false).c_str(), gift.name(DESC_THE, false).c_str());
+}
+
+static bool _can_use_shield(monster* mons, item_def& gift)
+{
+    bool fighter = (mons->type == MONS_MERC_FIGHTER
+            || mons->type == MONS_MERC_KNIGHT
+            || mons->type == MONS_MERC_DEATH_KNIGHT
+            || mons->type == MONS_MERC_PALADIN);
+
+    bool buckler_only = (mons->type == MONS_MERC_SKALD
+            || mons->type == MONS_MERC_INFUSER
+            || mons->type == MONS_MERC_TIDEHUNTER
+            || mons->type == MONS_MERC_SHAMAN);
+
+    bool no_shield = (mons->type == MONS_MERC_WITCH
+            || mons->type == MONS_MERC_SORCERESS
+            || mons->type == MONS_MERC_ELEMENTALIST);
+
+    if (no_shield)
+    {
+        _is_too_heavy(mons, gift);
+        return false;
+    }
+
+    if (buckler_only && gift.sub_type == ARM_BUCKLER)
+        return true;
+
+    if (fighter)
+    {
+        if (mons->type == MONS_MERC_DEATH_KNIGHT
+            || mons->type == MONS_MERC_PALADIN)
+            return true;
+        
+        if (mons->type == MONS_MERC_FIGHTER
+            || mons->type == MONS_MERC_KNIGHT)
+        {
+            if (gift.sub_type == ARM_LARGE_SHIELD)
+            {
+                _is_unskilled(mons, gift);
+                return false;
+            }
+            else return true;
+        }
+    }
+
+    if (mons->type == MONS_MERC_SHAMAN)
+    {
+        if (gift.sub_type == ARM_BUCKLER)
+            return true;
+        else
+        {
+            _is_unskilled(mons, gift);
+            return false;
+        }
+    }
+
+    if (mons->type == MONS_MERC_SHAMAN_II)
+    {
+        if (gift.sub_type == ARM_BUCKLER
+            || gift.sub_type == ARM_SHIELD)
+            return true;
+        else
+        {
+            _is_unskilled(mons, gift);
+            return false;
+        }
+    }
+
+    if (mons->type == MONS_MERC_SHAMAN_III)
+        return true;
+
+    _is_too_heavy(mons, gift);
+    return false;
+}
+
+static bool _can_use_range(monster* mons, item_def& gift)
+{
+    bool shaman = (mons->type == MONS_MERC_SHAMAN
+            || mons->type == MONS_MERC_SHAMAN_II
+            || mons->type == MONS_MERC_SHAMAN_III);
+
+    bool range_tier1 = (gift.sub_type == WPN_HUNTING_SLING);
+
+    bool range_tier2 = (range_tier1 || gift.sub_type == WPN_HAND_CROSSBOW
+            || gift.sub_type == WPN_FUSTIBALUS || gift.sub_type == WPN_SHORTBOW);
+
+    bool range_tier3 = (range_tier1 || range_tier2
+            || gift.sub_type == WPN_ARBALEST || gift.sub_type == WPN_LONGBOW);
+
+    bool range_tier4 = (gift.sub_type == WPN_TRIPLE_CROSSBOW);
+
+    if (!shaman)
+    {
+        _is_unskilled(mons, gift);
+        return false;
+    }
+
+    if ((mons->type == MONS_MERC_SHAMAN && range_tier1)
+        || (mons->type == MONS_MERC_SHAMAN_II && range_tier2)
+        || (mons->type == MONS_MERC_SHAMAN_III && range_tier3))
+        return true;
+
+    _is_unskilled(mons, gift);
+    return false;
+}
+
+static bool _can_use_melee(monster* mons, item_def& gift)
+{
+    bool melee_tier1 =
+       (gift.sub_type == WPN_QUICK_BLADE || gift.sub_type == WPN_DAGGER 
+        || gift.sub_type == WPN_WHIP || gift.sub_type == WPN_DEMON_WHIP
+        || gift.sub_type == WPN_SACRED_SCOURGE || gift.sub_type == WPN_SPEAR
+        || gift.sub_type == WPN_SHORT_SWORD || gift.sub_type == WPN_RAPIER
+        || gift.sub_type == WPN_EUDEMON_BLADE || gift.sub_type == WPN_CLUB
+        || gift.sub_type == WPN_DIRE_FLAIL || gift.sub_type == WPN_FALCHION
+        || gift.sub_type == WPN_DEMON_BLADE || gift.sub_type == WPN_HAND_AXE
+        || gift.sub_type == WPN_TRIDENT || gift.sub_type == WPN_DEMON_TRIDENT
+        || gift.sub_type == WPN_TRISHULA || gift.sub_type == WPN_QUARTERSTAFF
+        || gift.sub_type == WPN_MACE || gift.sub_type == WPN_FLAIL
+        || gift.sub_type == WPN_LONG_SWORD || gift.sub_type == WPN_SCIMITAR
+        || gift.sub_type == WPN_LAJATANG);
+
+    bool melee_tier2 = (melee_tier1
+        || gift.sub_type == WPN_MORNINGSTAR
+        || gift.sub_type == WPN_EVENINGSTAR
+        || gift.sub_type == WPN_DOUBLE_SWORD
+        || gift.sub_type == WPN_WAR_AXE
+        || gift.sub_type == WPN_BROAD_AXE
+        || gift.sub_type == WPN_HALBERD);
+
+    bool melee_tier3 = (melee_tier1 || melee_tier2 
+        || gift.sub_type == WPN_BATTLEAXE
+        || gift.sub_type == WPN_GREAT_MACE
+        || gift.sub_type == WPN_GREAT_SWORD
+        || gift.sub_type == WPN_GLAIVE);
+
+    bool melee_tier4 = (melee_tier1
+        || melee_tier2 || melee_tier3
+        || gift.sub_type == WPN_TRIPLE_SWORD
+        || gift.sub_type == WPN_EXECUTIONERS_AXE
+        || gift.sub_type == WPN_SCYTHE
+        || gift.sub_type == WPN_BARDICHE);
+
+    if ((mons->type == MONS_MERC_SHAMAN && melee_tier1)
+        || (mons->type == MONS_MERC_SHAMAN_II && melee_tier2)
+        || (mons->type == MONS_MERC_SHAMAN_III && melee_tier3)
+        || (mons->type == MONS_MERC_FIGHTER && melee_tier2)
+        || (mons->type == MONS_MERC_KNIGHT && melee_tier3)
+        || (mons->type == MONS_MERC_DEATH_KNIGHT && melee_tier4)
+        || (mons->type == MONS_MERC_PALADIN && melee_tier4))
+        return true;
+
+    _is_unskilled(mons, gift);
+    return false;
+}
+
 static bool _caravan_gift_items_to(monster* mons, int item_slot)
 {
     item_def& gift = you.inv[item_slot];
@@ -608,112 +774,19 @@ static bool _caravan_gift_items_to(monster* mons, int item_slot)
             }
         }
 
-        if ((mons->type == MONS_MERC_WITCH
-            || mons->type == MONS_MERC_SORCERESS
-            || mons->type == MONS_MERC_ELEMENTALIST)) // unable to all kinds of shield
-        {
-            mprf("%s is too heavy for %s!",
-                gift.name(DESC_THE, false).c_str(), mons->name(DESC_THE, false).c_str());
+        if (!_can_use_shield(mons, gift))
             return false;
-        }
-
-        if (gift.sub_type == ARM_LARGE_SHIELD // able to knights, cheiftain
-            && (mons->type == MONS_MERC_FIGHTER
-            || mons->type == MONS_MERC_SKALD
-            || mons->type == MONS_MERC_INFUSER
-            || mons->type == MONS_MERC_TIDEHUNTER
-            || mons->type == MONS_MERC_BRIGAND
-            || mons->type == MONS_MERC_ASSASSIN
-            || mons->type == MONS_MERC_CLEANER
-            || mons->type == MONS_MERC_SHAMAN
-            || mons->type == MONS_MERC_SHAMAN_II))
-        {
-            if (mons->type == MONS_MERC_FIGHTER
-               || mons->type == MONS_MERC_SHAMAN || mons->type == MONS_MERC_SHAMAN_II)
-            {
-                mprf("%s isn't enough skilled to equip %s!",
-                    mons->name(DESC_THE, false).c_str(), gift.name(DESC_THE, false).c_str());
-                return false;
-
-            } else {
-
-                mprf("%s is too heavy for %s!",
-                    gift.name(DESC_THE, false).c_str(), mons->name(DESC_THE, false).c_str());
-                return false;
-            }
-        }
-
-        if (gift.sub_type == ARM_SHIELD // able to soldier->knights, ritualist->cheiftain
-            && (mons->type == MONS_MERC_SKALD
-            || mons->type == MONS_MERC_INFUSER
-            || mons->type == MONS_MERC_TIDEHUNTER
-            || mons->type == MONS_MERC_BRIGAND
-            || mons->type == MONS_MERC_ASSASSIN
-            || mons->type == MONS_MERC_CLEANER
-            || mons->type == MONS_MERC_SHAMAN))
-        {
-            if (mons->type == MONS_MERC_SHAMAN)
-            {
-                mprf("%s isn't enough skilled to equip %s!",
-                    mons->name(DESC_THE, false).c_str(), gift.name(DESC_THE, false).c_str());
-                return false;
-
-            } else {
-
-                mprf("%s is too heavy for %s!",
-                    gift.name(DESC_THE, false).c_str(), mons->name(DESC_THE, false).c_str());
-                return false;
-            }
-        } }
+    }
 
     if (weapon) {// weapons.
 
         // ranged weapon
         if (range_weapon)
         {
-
-            switch (gift.sub_type)
-            {
-            case WPN_HUNTING_SLING: // tier-1
-                switch (mons->type){
-                    case MONS_MERC_SHAMAN:
-                    case MONS_MERC_SHAMAN_II:
-                    case MONS_MERC_SHAMAN_III:
-                        break;
-                    default:
-                        mprf("%s isn't enough skilled to equip %s!",
-                        mons->name(DESC_THE, false).c_str(), gift.name(DESC_THE, false).c_str());
-                        return false;
-                }
-            case WPN_FUSTIBALUS: // tier-2
-            case WPN_SHORTBOW:
-            case WPN_HAND_CROSSBOW:
-                switch (mons->type){
-                    case MONS_MERC_SHAMAN_II:
-                    case MONS_MERC_SHAMAN_III:
-                        break;
-                    default:
-                        mprf("%s isn't enough skilled to equip %s!",
-                        mons->name(DESC_THE, false).c_str(), gift.name(DESC_THE, false).c_str());
-                        return false;
-                }
-            case WPN_LONGBOW: // tier-3
-            case WPN_ARBALEST:
-                switch (mons->type){
-                    case MONS_MERC_SHAMAN_III:
-                        break;
-                    default:
-                        mprf("%s isn't enough skilled to equip %s!",
-                        mons->name(DESC_THE, false).c_str(), gift.name(DESC_THE, false).c_str());
-                        return false;
-                }
-            case WPN_TRIPLE_CROSSBOW: // tier-4
-            default:
-                mprf("%s isn't enough skilled to equip %s!",
-                mons->name(DESC_THE, false).c_str(), gift.name(DESC_THE, false).c_str());
+            if (!_can_use_range(mons, gift))
                 return false;
-            }
-        }
+
+        } else {
 
         // polearms for skald.
         if (mons->type == MONS_MERC_SKALD
@@ -732,8 +805,7 @@ static bool _caravan_gift_items_to(monster* mons, int item_slot)
                    || gift.sub_type == WPN_GLAIVE
                    || gift.sub_type == WPN_BARDICHE))
             {
-                mprf("%s isn't enough skilled to equip %s!",
-                mons->name(DESC_THE, false).c_str(), gift.name(DESC_THE, false).c_str());
+                _is_unskilled(mons, gift);
                 return false;
             }
 
@@ -741,8 +813,7 @@ static bool _caravan_gift_items_to(monster* mons, int item_slot)
                 && (gift.sub_type == WPN_SCYTHE
                    || gift.sub_type == WPN_BARDICHE))
             {
-                mprf("%s isn't enough skilled to equip %s!",
-                mons->name(DESC_THE, false).c_str(), gift.name(DESC_THE, false).c_str());
+                _is_unskilled(mons, gift);
                 return false;
             }
         }
@@ -783,101 +854,9 @@ static bool _caravan_gift_items_to(monster* mons, int item_slot)
             }
         }
 
-        // soldier is profassional of all kinds of melee weapon
-        if (mons->type == MONS_MERC_FIGHTER
-            && (gift.sub_type == WPN_DOUBLE_SWORD
-                || gift.sub_type == WPN_GREAT_SWORD
-                || gift.sub_type == WPN_TRIPLE_SWORD
-                || gift.sub_type == WPN_BROAD_AXE
-                || gift.sub_type == WPN_BATTLEAXE
-                || gift.sub_type == WPN_EXECUTIONERS_AXE
-                || gift.sub_type == WPN_SCYTHE
-                || gift.sub_type == WPN_GLAIVE
-                || gift.sub_type == WPN_BARDICHE
-                || gift.sub_type == WPN_GREAT_MACE
-                || gift.sub_type == WPN_GIANT_CLUB
-                || gift.sub_type == WPN_GIANT_SPIKED_CLUB))
-        {
-            mprf("%s isn't enough skilled to equip %s!",
-            mons->name(DESC_THE, false).c_str(), gift.name(DESC_THE, false).c_str());
+        if (!_can_use_melee(mons, gift))
             return false;
-        }
-
-        if (mons->type == MONS_MERC_KNIGHT
-            && (gift.sub_type == WPN_TRIPLE_SWORD
-                || gift.sub_type == WPN_EXECUTIONERS_AXE
-                || gift.sub_type == WPN_SCYTHE
-                || gift.sub_type == WPN_BARDICHE
-                || gift.sub_type == WPN_GIANT_CLUB
-                || gift.sub_type == WPN_GIANT_SPIKED_CLUB))
-        {
-            mprf("%s isn't enough skilled to equip %s!",
-            mons->name(DESC_THE, false).c_str(), gift.name(DESC_THE, false).c_str());
-            return false;
-        }
-
-        // after grow, shaman becomes jack-of-all-trades
-        if (mons->type == MONS_MERC_SHAMAN
-            && (gift.sub_type == WPN_SCIMITAR
-                || gift.sub_type == WPN_DOUBLE_SWORD
-                || gift.sub_type == WPN_GREAT_SWORD
-                || gift.sub_type == WPN_TRIPLE_SWORD
-                || gift.sub_type == WPN_LAJATANG
-                || gift.sub_type == WPN_WAR_AXE
-                || gift.sub_type == WPN_BROAD_AXE
-                || gift.sub_type == WPN_BATTLEAXE
-                || gift.sub_type == WPN_EXECUTIONERS_AXE
-                || gift.sub_type == WPN_SCYTHE
-                || gift.sub_type == WPN_HALBERD
-                || gift.sub_type == WPN_GLAIVE
-                || gift.sub_type == WPN_BARDICHE
-                || gift.sub_type == WPN_FLAIL
-                || gift.sub_type == WPN_MORNINGSTAR
-                || gift.sub_type == WPN_EVENINGSTAR
-                || gift.sub_type == WPN_GREAT_MACE
-                || gift.sub_type == WPN_GIANT_CLUB
-                || gift.sub_type == WPN_GIANT_SPIKED_CLUB))
-        {
-            mprf("%s isn't enough skilled to equip %s!",
-            mons->name(DESC_THE, false).c_str(), gift.name(DESC_THE, false).c_str());
-            return false;
-        }
-
-        if (mons->type == MONS_MERC_SHAMAN_II
-            && (gift.sub_type == WPN_DOUBLE_SWORD
-                || gift.sub_type == WPN_GREAT_SWORD
-                || gift.sub_type == WPN_TRIPLE_SWORD
-                || gift.sub_type == WPN_BROAD_AXE
-                || gift.sub_type == WPN_BATTLEAXE
-                || gift.sub_type == WPN_EXECUTIONERS_AXE
-                || gift.sub_type == WPN_SCYTHE
-                || gift.sub_type == WPN_GLAIVE
-                || gift.sub_type == WPN_BARDICHE
-                || gift.sub_type == WPN_MORNINGSTAR
-                || gift.sub_type == WPN_EVENINGSTAR
-                || gift.sub_type == WPN_GREAT_MACE
-                || gift.sub_type == WPN_GIANT_CLUB
-                || gift.sub_type == WPN_GIANT_SPIKED_CLUB))
-        {
-            mprf("%s isn't enough skilled to equip %s!",
-            mons->name(DESC_THE, false).c_str(), gift.name(DESC_THE, false).c_str());
-            return false;
-        }
-
-        if (mons->type == MONS_MERC_SHAMAN_III
-            && (gift.sub_type == WPN_TRIPLE_SWORD
-                || gift.sub_type == WPN_EXECUTIONERS_AXE
-                || gift.sub_type == WPN_SCYTHE
-                || gift.sub_type == WPN_BARDICHE
-                || gift.sub_type == WPN_GREAT_MACE
-                || gift.sub_type == WPN_GIANT_CLUB
-                || gift.sub_type == WPN_GIANT_SPIKED_CLUB))
-        {
-            mprf("%s isn't enough skilled to equip %s!",
-            mons->name(DESC_THE, false).c_str(), gift.name(DESC_THE, false).c_str());
-            return false;
-        }
-    }
+    } }
 
     if (body_slot && !is_shield(gift)) {// body armours.
 
@@ -900,19 +879,21 @@ static bool _caravan_gift_items_to(monster* mons, int item_slot)
             && ER > 11)
         
         || ((mons->type == MONS_MERC_SHAMAN_III
-            || mons->type == MONS_MERC_FIGHTER
-            || mons->type == MONS_MERC_KNIGHT)
-            && ER > 15))
+            || mons->type == MONS_MERC_FIGHTER)
+            && ER > 15)
+
+        || ((mons->type == MONS_MERC_KNIGHT)
+            && ER > 18))
+
         {
-            if (mons->type == MONS_MERC_SHAMAN_II || mons->type == MONS_MERC_SHAMAN_III)
+            if (mons->type == MONS_MERC_SHAMAN_II
+               || mons->type == MONS_MERC_SHAMAN_III)
             {
-                mprf("%s isn't enough skilled to equip %s!",
-                    mons->name(DESC_THE, false).c_str(), gift.name(DESC_THE, false).c_str());
+                _is_unskilled(mons, gift);
                 return false;
             }
         
-            mprf("%s is too heavy for %s!",
-                gift.name(DESC_THE, false).c_str(), mons->name(DESC_THE, false).c_str());
+            _is_too_heavy(mons, gift);
             return false;
         }
     }

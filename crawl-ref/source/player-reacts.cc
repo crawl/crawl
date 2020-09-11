@@ -50,6 +50,7 @@
 #include "dgn-overview.h"
 #include "dgn-shoals.h"
 #include "dlua.h"
+#include "duration-type.h"
 #include "dungeon.h"
 #include "env.h"
 #include "evoke.h"
@@ -265,6 +266,20 @@ static void _decrement_paralysis(int delay)
             * BASELINE_DELAY;
             if (you.props.exists(PARALYSED_BY_KEY))
                 you.props.erase(PARALYSED_BY_KEY);
+        }
+    }
+}
+
+static void _decrement_aftershock(int delay)
+{
+    if (you.duration[DUR_BARRIER_BROKEN])
+    {
+        _decrement_a_duration(DUR_BARRIER_BROKEN, delay);
+
+        if (!you.duration[DUR_BARRIER_BROKEN] && !you.petrified())
+        {
+            mprf(MSGCH_DURATION, "You can move again.");
+            you.redraw_evasion = true;
         }
     }
 }
@@ -539,6 +554,9 @@ void player_reacts_to_monsters()
     if (you.duration[DUR_FIRE_SHIELD] > 0)
         manage_fire_shield();
 
+    if (you.duration[DUR_BARRIER] <= 0 && you.attribute[ATTR_BARRIER])
+        you.attribute[ATTR_BARRIER] = 0;
+
     check_monster_detect();
 
     if (have_passive(passive_t::detect_items) || you.has_mutation(MUT_JELLY_GROWTH)
@@ -548,6 +566,7 @@ void player_reacts_to_monsters()
     }
 
     _decrement_paralysis(you.time_taken);
+    _decrement_aftershock(you.time_taken);
     _decrement_petrification(you.time_taken);
     if (_decrement_a_duration(DUR_SLEEP, you.time_taken))
         you.awaken();
@@ -575,7 +594,8 @@ static bool _check_recite()
         || you.confused()
         || you.asleep()
         || you.petrified()
-        || you.berserk())
+        || you.berserk()
+        || you.duration[DUR_BARRIER_BROKEN])
     {
         mprf(MSGCH_DURATION, "Your recitation is interrupted.");
         you.duration[DUR_RECITE] = 0;

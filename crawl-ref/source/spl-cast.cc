@@ -2233,6 +2233,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_PRISMATIC_PRISM:
         return cast_prismatic_prism(&you, powc, beam.target, fail);
 
+    case SPELL_BARRIER:
+        return cast_barrier(powc, fail);
+
     // non-player spells that have a zap, but that shouldn't be called (e.g
     // because they will crash as a player zap).
     case SPELL_DRAIN_LIFE:

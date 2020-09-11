@@ -1308,6 +1308,10 @@ boomerang
 
 A curved, flat, throwing baton designed to return to its user.
 %%%%
+tome of valor
+
+A tome written by the most bravest warrior-mage of the world.
+%%%%
 tin of tremorstones
  
 A set of dormant, magnetic earth elementals in the form of tiny, very heavy
