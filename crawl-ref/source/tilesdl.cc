@@ -979,7 +979,7 @@ void TilesFramework::do_layout()
     m_region_tile->tile_ih = tile_ih;
 
     // Resize and place the message window.
-    VColour overlay_col = Options.tile_overlay_col;
+    VColour overlay_col = Options.tile_overlay_colour;
     overlay_col.a = (255 * Options.tile_overlay_alpha_percent)/100;
     m_region_msg->set_overlay(message_overlay, overlay_col);
     if (message_overlay)

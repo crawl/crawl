@@ -561,7 +561,7 @@ public:
     int         tile_map_pixels;
 
     bool        tile_force_overlay;
-    VColour     tile_overlay_col;           // Background color for message overlay
+    VColour     tile_overlay_colour;           // Background color for message overlay
     int         tile_overlay_alpha_percent; // Background alpha percent for message overlay
     // display settings
     int         tile_update_rate;
