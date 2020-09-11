@@ -921,6 +921,10 @@ bool actor_cloud_immune(const actor &act, cloud_type type)
     if (is_harmless_cloud(type) || act.cloud_immune())
         return true;
 
+    if (act.is_player() &&
+        (you.attribute[ATTR_BARRIER] > 0 && you.duration[DUR_BARRIER]))
+        return true;
+
     switch (type)
     {
         case CLOUD_FIRE:

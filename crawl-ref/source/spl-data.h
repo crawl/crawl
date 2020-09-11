@@ -4398,6 +4398,16 @@ static const struct spell_desc spelldata[] =
     TILEG_SUMMON_HOODED_MALICE,
 },
 {
+    SPELL_BARRIER, "Hermetic Barrier",
+    spschool::charms,
+    spflag::emergency | spflag::utility | spflag::no_ghost,
+    8,
+    200,
+    -1, -1,
+    6, 0,
+    TILEG_BARRIER,
+},
+{
     SPELL_NO_SPELL, "nonexistent spell",
     spschool::none,
     spflag::testing,

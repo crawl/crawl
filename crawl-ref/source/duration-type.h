@@ -225,5 +225,7 @@ enum duration_type
     DUR_CITRINITAS,
     DUR_COMBAT_MANA,
     DUR_SHRAPNEL,
+    DUR_BARRIER,
+    DUR_BARRIER_BROKEN,
     NUM_DURATIONS
 };

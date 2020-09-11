@@ -524,3 +524,24 @@ spret cast_shrapnel_curtain(int pow, bool fail)
 
     return spret::success;
 }
+
+spret cast_barrier(int pow, bool fail)
+{
+    fail_check();
+    if (you.duration[DUR_BARRIER] && you.attribute[ATTR_BARRIER] >= 0)
+    {
+        mpr("You've already activated your barrier.");
+        return spret::abort;
+    }
+    if (you.duration[DUR_BARRIER_BROKEN])
+    {
+        mpr("You've still unable to barrier due to aftershock.");
+        return spret::abort;
+    }
+    you.attribute[ATTR_BARRIER] = 1 + get_real_hp(true, false)/2;
+    you.set_duration(DUR_BARRIER, 15 + random2avg(pow/2, 2) + (random2(pow) / 10));
+    you.redraw_status_lights = true;
+    flash_view_delay(UA_PLAYER, YELLOW, 300);
+    mpr("Hermetic barrier starts to protect you from the outside!");
+    return spret::success;
+}

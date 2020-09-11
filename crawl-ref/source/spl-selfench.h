@@ -47,3 +47,5 @@ spret cast_insulation(int power, bool fail);
 spret change_lesser_lich(int power, bool fail);
 
 spret cast_shrapnel_curtain(int pow, bool fail);
+
+spret cast_barrier(int pow, bool fail);

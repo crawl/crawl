@@ -785,6 +785,24 @@ bool fill_status_info(int status, status_info& inf)
         }
     }
     break;
+    case DUR_BARRIER:
+        if (you.attribute[ATTR_BARRIER] <= 0)
+        {
+            inf.light_text   = "-Barrier";
+            inf.light_colour = RED;
+            inf.short_text   = "faded barrier";
+            inf.long_text    = "Your barrier is unable to cast again for a while.";
+        }
+        else
+        {
+            inf.light_colour = (you.duration[DUR_BARRIER] <= 6
+                               || you.attribute[ATTR_BARRIER] <= get_real_hp(true, false)/4)
+                               ? YELLOW : BLUE;
+            inf.light_text = make_stringf("Barrier (%u)", you.attribute[ATTR_BARRIER]);
+            inf.short_text = "hermetic barrier";
+            inf.long_text = "You are protected by hermetic barrier.";
+        }
+        break;
     default:
         if (!found)
         {

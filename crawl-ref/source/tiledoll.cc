@@ -512,8 +512,24 @@ void fill_doll_equipment(dolls_data &result)
     // Enchantments.
     if (result.parts[TILEP_PART_ENCH] == TILEP_SHOW_EQUIP)
     {
+        // TODO: need to "if (you.duration[DUR_LIQUID_FLAMES] && you.duration[DUR_BARRIER])"
+        if (you.duration[DUR_BARRIER])
+        {
+            if (you.duration[DUR_BARRIER_BROKEN] || you.attribute[ATTR_BARRIER] <= 0)
+                result.parts[TILEP_PART_ENCH] = TILEP_ENCH_BARRIER_BROKEN;
+            else if (0 < you.attribute[ATTR_BARRIER])
+            {
+                if (you.duration[DUR_BARRIER] <= 6
+                    || you.attribute[ATTR_BARRIER] <= get_real_hp(true, false)/4)
+                    result.parts[TILEP_PART_ENCH] = TILEP_ENCH_BARRIER_DANGER;
+                else
+                    result.parts[TILEP_PART_ENCH] = TILEP_ENCH_BARRIER;
+            }
+        }
+        else {
         result.parts[TILEP_PART_ENCH] =
             (you.duration[DUR_LIQUID_FLAMES] ? TILEP_ENCH_STICKY_FLAME : 0);
+        }
     }
     // Draconian head/wings.
     if (species_is_draconian(you.species))
