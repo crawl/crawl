@@ -64,107 +64,34 @@ namespace quiver
     {
         // TODO: or unavailable?
         return formatted_string::parse_string(
-                        "<lightgrey>Nothing quivered</lightgrey>");
+                        "<darkgrey>Nothing quivered</darkgrey>");
     }
 
-    /**
-     * An ammo_action is an action that fires ammo from a slot in the
-     * inventory. This covers both launcher-based firing, and throwing.
-     */
-    struct ammo_action : public action
+    shared_ptr<action> action::find_next(int, bool) const
     {
-        ammo_action(int slot=-1) : action(), ammo_slot(slot)
-        {
+        return make_shared<action>();
+    }
 
+    // goes by letter order
+    static spell_type _get_next_castable_spell(spell_type cur_spell, int dir)
+    {
+        dir = dir >= 0 ? 1 : -1;
+        int cur = get_spell_letter(cur_spell);
+        if (cur == -1)
+            cur = dir >= 0 ? 0 : 51;
+        else
+            cur = letter_to_index(cur) + dir;
+
+        for (int i = cur; i < 52 && i >=0; i += dir)
+        {
+            const char letter = index_to_letter(i);
+            const spell_type spell = get_spell_by_letter(letter);
+            if (is_valid_spell(spell))
+                return spell;
         }
 
-        bool is_enabled() const
-        {
-            // TODO: enabled only if ammo matches weapon, valid only if ammo
-            // slot is ammo?
-            return true;
-        }
-
-        bool is_valid() const
-        {
-            if (ammo_slot < 0 || ammo_slot >= ENDOFPACK)
-                return false;
-            const item_def& ammo = you.inv[ammo_slot];
-            if (!ammo.defined())
-                return false;
-            const item_def *weapon = you.weapon();
-
-            return _item_matches(ammo, (fire_type) 0xffff, // TODO: ...
-                                 weapon, false);
-        }
-
-        bool is_targeted() const
-        {
-            return true;
-        }
-
-        void trigger(dist &t)
-        {
-            target = t;
-            fire_thing(ammo_slot, target);
-            t = target; // copy back, in case they are different
-        }
-
-        virtual formatted_string quiver_description() const
-        {
-            ASSERT_RANGE(ammo_slot, -1, ENDOFPACK);
-            if (!is_valid())
-            {
-                // TODO: I don't quite understand the fire_warn... logic here,
-                // and so have slightly simplified it from the output.cc version
-                if (fire_warn_if_impossible(true))
-                {
-                    return formatted_string::parse_string(
-                        "<darkgrey>Quiver unavailable</darkgrey>");
-                }
-                else
-                {
-                    // TODO: ???
-                    return formatted_string::parse_string(
-                        "<lightgrey>Nothing quivered</lightgrey>");
-                }
-            }
-            formatted_string qdesc;
-
-            char hud_letter = '-';
-            const item_def& quiver = you.inv[ammo_slot];
-            ASSERT(quiver.link != NON_ITEM);
-            hud_letter = index_to_letter(quiver.link);
-            // TODO: or just lightgrey?
-            qdesc.textcolour(Options.status_caption_colour);
-            qdesc.cprintf("%c) ", hud_letter);
-
-            const string prefix = item_prefix(quiver);
-
-            const int prefcol =
-                menu_colour(quiver.name(DESC_PLAIN), prefix, "stats");
-            if (prefcol != -1)
-                qdesc.textcolour(prefcol);
-            else
-                qdesc.textcolour(LIGHTGREY);
-            qdesc += quiver.name(DESC_PLAIN, true);
-            return qdesc;
-        }
-
-        int get_item() const
-        {
-            return ammo_slot;
-        }
-
-        shared_ptr<action> find_replacement() const
-        {
-            return find_action_from_launcher(you.weapon());
-        }
-
-    private:
-        int ammo_slot;
-    };
-
+        return SPELL_NO_SPELL;
+    }
 
     // Get a sorted list of items to show in the fire interface.
     //
@@ -233,7 +160,7 @@ namespace quiver
             order[i] &= 0xffff;
     }
 
-    static int _get_next_fireable_item(int current, int direction)
+    static int _get_next_fireable_item(int current, int direction, bool loop)
     {
         vector<int> fire_order;
         _get_item_fire_order(fire_order, false, you.weapon(), true);
@@ -241,9 +168,10 @@ namespace quiver
         if (fire_order.empty())
             return -1;
 
-        // TODO: check -1 case here
-        //const int current = you.quiver_action.get_item();
-        int next = direction > 0 ? 0 : -1;
+        if (current < 0)
+            return direction >= 0 ? fire_order[0] : fire_order[fire_order.size() - 1];
+
+        int next = direction >= 0 ? 0 : -1;
         for (unsigned i = 0; i < fire_order.size(); i++)
         {
             if (fire_order[i] == current)
@@ -253,8 +181,262 @@ namespace quiver
             }
         }
 
+        if (!loop && (next < 0 || next >= static_cast<int>(fire_order.size())))
+            return -1;
+
         next = (next + fire_order.size()) % fire_order.size();
         return fire_order[next];
+    }
+
+    /**
+     * An ammo_action is an action that fires ammo from a slot in the
+     * inventory. This covers both launcher-based firing, and throwing.
+     */
+    struct ammo_action : public action
+    {
+        ammo_action(int slot=-1) : action(), ammo_slot(slot)
+        {
+        }
+
+        void save(CrawlHashTable &save_target) const override; // defined below
+
+        bool equals(const action &other) const override
+        {
+            // type ensured in base class
+            return ammo_slot == static_cast<const ammo_action&>(other).ammo_slot;
+        }
+
+        bool is_enabled() const override
+        {
+            // TODO: enabled only if ammo matches weapon, instead of valid?
+
+            // disable if there's a no-fire inscription on ammo
+            return check_warning_inscriptions(you.inv[ammo_slot], OPER_FIRE)
+                    && (!you.weapon()
+                        || is_launched(&you, you.weapon(), you.inv[ammo_slot])
+                                                    != launch_retval::LAUNCHED
+                        || check_warning_inscriptions(*you.weapon(), OPER_FIRE));
+        }
+
+        bool is_valid() const override
+        {
+            if (you.species == SP_FELID)
+                return false;
+            if (ammo_slot < 0 || ammo_slot >= ENDOFPACK)
+                return false;
+            const item_def& ammo = you.inv[ammo_slot];
+            if (!ammo.defined())
+                return false;
+            const item_def *weapon = you.weapon();
+
+            return _item_matches(ammo, (fire_type) 0xffff, // TODO: ...
+                                 weapon, false);
+        }
+
+        bool is_targeted() const override
+        {
+            return true;
+        }
+
+        void trigger(dist &t) override
+        {
+            target = t;
+            if (!is_valid() || !is_enabled())
+                return;
+
+            bolt beam;
+            throw_it(beam, ammo_slot, &target);
+
+            t = target; // copy back, in case they are different
+        }
+
+        virtual formatted_string quiver_description() const override
+        {
+            ASSERT_RANGE(ammo_slot, -1, ENDOFPACK);
+            if (!is_valid())
+            {
+                // TODO: I don't quite understand the fire_warn... logic here,
+                // and so have slightly simplified it from the output.cc version
+                if (fire_warn_if_impossible(true))
+                {
+                    return formatted_string::parse_string(
+                        "<darkgrey>Quiver unavailable</darkgrey>");
+                }
+                else
+                {
+                    // TODO: ???
+                    return formatted_string::parse_string(
+                        "<darkgrey>Nothing quivered</darkgrey>");
+                }
+            }
+            formatted_string qdesc;
+
+            char hud_letter = '-';
+            const item_def& quiver = you.inv[ammo_slot];
+            ASSERT(quiver.link != NON_ITEM);
+            hud_letter = index_to_letter(quiver.link);
+            // TODO: or just lightgrey?
+            qdesc.textcolour(Options.status_caption_colour);
+            const launch_retval projected = is_launched(&you, you.weapon(),
+                                                                    quiver);
+            switch (projected)
+            {
+                case launch_retval::FUMBLED:  qdesc.cprintf("Toss: ");  break;
+                case launch_retval::LAUNCHED: qdesc.cprintf("Fire: ");  break;
+                case launch_retval::THROWN:   qdesc.cprintf("Throw: "); break;
+                case launch_retval::BUGGY:    qdesc.cprintf("Bug: ");   break;
+            }
+            qdesc.cprintf("%c) ", hud_letter);
+
+            const string prefix = item_prefix(quiver);
+
+            const int prefcol =
+                menu_colour(quiver.name(DESC_PLAIN), prefix, "stats");
+            if (prefcol != -1)
+                qdesc.textcolour(prefcol);
+            else
+                qdesc.textcolour(LIGHTGREY);
+            qdesc += quiver.name(DESC_PLAIN, true);
+            return qdesc;
+        }
+
+        int get_item() const override
+        {
+            return ammo_slot;
+        }
+
+        shared_ptr<action> find_replacement() const override
+        {
+            return find_action_from_launcher(you.weapon());
+        }
+
+        shared_ptr<action> find_next(int dir, bool loop) const override
+        {
+            // TODO: refactor _get_next_fireable_item into here?
+            // and maybe refactor to use actions rather than the current
+            // somewhat involved legacy code?
+            return make_shared<ammo_action>(
+                            _get_next_fireable_item(get_item(), dir, loop));
+        }
+
+    private:
+        int ammo_slot;
+    };
+
+    struct spell_action : public action
+    {
+        spell_action(spell_type s = SPELL_NO_SPELL) : spell(s) { };
+        void save(CrawlHashTable &save_target) const override; // defined below
+
+        bool equals(const action &other) const override
+        {
+            // type ensured in base class
+            return spell == static_cast<const spell_action&>(other).spell;
+        }
+
+        bool is_enabled() const override
+        {
+            return !spell_is_useless(spell, true, true);
+        }
+
+        bool is_valid() const override
+        {
+            return is_valid_spell(spell) && you.has_spell(spell);
+        }
+
+        bool is_targeted() const override
+        {
+            // TODO: what spells does this miss?
+            return !!(get_spell_flags(spell) & spflag::targeting_mask);
+        }
+
+        void trigger(dist &t) override
+        {
+            // note: we don't do the enabled check here, because cast_a_spell
+            // duplicates it and does appropriate messaging
+            if (!is_valid())
+                return;
+
+            target = t;
+            cast_a_spell(true, spell, &target);
+            t = target; // copy back, in case they are different
+        }
+
+        formatted_string quiver_description() const override
+        {
+            if (!is_valid())
+            {
+                return formatted_string::parse_string(
+                    "<darkgrey>Nothing quivered</darkgrey>");
+            }
+            formatted_string qdesc;
+
+            qdesc.textcolour(Options.status_caption_colour);
+            qdesc.cprintf("Cast: ");
+
+            if (!is_enabled())
+                qdesc.textcolour(DARKGREY);
+            else
+                qdesc.textcolour(LIGHTGREY);
+
+            // TODO: is showing the spell letter useful?
+            qdesc.cprintf("%s", spell_title(spell));
+            return qdesc;
+        }
+
+        shared_ptr<action> find_next(int dir, bool loop) const override
+        {
+            spell_type n = _get_next_castable_spell(spell, dir);
+            if (loop && n == SPELL_NO_SPELL)
+                n = _get_next_castable_spell(SPELL_NO_SPELL, dir);
+
+            return make_shared<spell_action>(n);
+        }
+
+    private:
+        spell_type spell;
+    };
+
+    void action::save(CrawlHashTable &save_target) const
+    {
+        save_target["type"] = "action";
+    }
+
+    void ammo_action::save(CrawlHashTable &save_target) const
+    {
+        save_target["type"] = "ammo_action";
+        save_target["param"] = ammo_slot;
+    }
+
+    void spell_action::save(CrawlHashTable &save_target) const
+    {
+        save_target["type"] = "spell_action";
+        save_target["param"] = static_cast<int>(spell);
+    }
+
+    static shared_ptr<action> _load_action(CrawlHashTable &source)
+    {
+        // pretty minimal: but most actions that I can think of shouldn't need
+        // a lot of effort to save. Something to tell you the type, and a
+        // single value that is usually more or less an int. Using a hashtable
+        // here is future proofing.
+
+        // save compat (or bug compat): initialize to an invalid action if we
+        // are missing the keys altogether
+        if (!source.exists("type") || !source.exists("param"))
+            return make_shared<action>();
+
+        const string &type = source["type"].get_string();
+
+        if (type == "ammo_action")
+            return make_shared<ammo_action>(source["param"].get_int());
+        else if (type == "spell_action")
+        {
+            return make_shared<spell_action>(
+                        static_cast<spell_type>(source["param"].get_int()));
+        }
+        else
+            return make_shared<action>();
     }
 
     shared_ptr<action> find_action_from_launcher(const item_def *item)
@@ -276,10 +458,7 @@ namespace quiver
             vector<int> order;
             _get_item_fire_order(order, false, item, false);
             if (!order.empty())
-            {
-                dprf("action from fire order, link %d", order[0]);
                 slot = order[0];
-            }
         }
 
         auto result = make_shared<ammo_action>(slot);
@@ -315,7 +494,9 @@ namespace quiver
         return result;
     }
 
-    // TODO: refactor (into action_cycler?)
+    // TODO: is there a need for this function any more? It was originally used
+    // on unmarshalling, but now everything that needs logic like this is just
+    // calling find_action_from_launcher directly.
     shared_ptr<action> find_ammo_action()
     {
         // felids should never have an ammo history, so error setting will be
@@ -329,8 +510,19 @@ namespace quiver
 
     action_cycler::action_cycler() : current(make_shared<action>()) { };
 
-    // TODO: implement a setter to hide the shared_ptr stuff? Or just refactor
-    // so that it's never needed outside quiver.cc...
+    void action_cycler::save() const
+    {
+        auto &target = you.props["current_quiver_action"].get_table();
+        get().save(target);
+    }
+
+    void action_cycler::load()
+    {
+        auto &target = you.props["current_quiver_action"].get_table();
+        set(_load_action(target));
+        // in case this is invalid, cycle. TODO: is this the right thing to do?
+        on_actions_changed();
+    }
 
     bool action_cycler::set(shared_ptr<action> n)
     {
@@ -391,17 +583,90 @@ namespace quiver
         return *current;
     }
 
+    static shared_ptr<action> _get_next_action_type(shared_ptr<action> a, int dir)
+    {
+        // this all seems a bit messy
+
+        // Find a representative for each type, by brute-force constructing a
+        // list of options. Some or all of these may be invalid.
+        vector<shared_ptr<action>> reps;
+        reps.push_back(ammo_action(-1).find_next(dir, false));
+        reps.push_back(spell_action(SPELL_NO_SPELL).find_next(dir, false));
+
+        if (dir < 0)
+            reverse(reps.begin(), reps.end());
+
+        size_t i = 0;
+        // skip_first: true just in case the current action is valid and we
+        // need to move on from it.
+        bool skip_first = true;
+
+        if (!a)
+            skip_first = false; // and i = 0
+        else
+        {
+            // find the type of a
+            auto &a_ref = *a;
+            for (i = 0; i < reps.size(); i++)
+            {
+                auto rep = reps[i];
+                if (!rep) // should be impossible
+                    continue;
+                // we do it this way in order to silence some clang warnings
+                auto &rep_ref = *rep;
+                if (typeid(rep_ref) == typeid(a_ref))
+                    break;
+            }
+            // unknown action type -- treat it like null. (Handles `action`.)
+            if (i >= reps.size())
+            {
+                i = 0;
+                skip_first = false;
+            }
+        }
+
+        // TODO: this logic could probably be reimplemented using only mod
+        // math, but using rotate does make the final iteration very clean
+        if (skip_first)
+            i = (i + 1) % reps.size();
+        rotate(reps.begin(), reps.begin() + i, reps.end());
+
+        // now find the first result that is valid in this order. Will cycle
+        // back to the current action type if nothing else works.
+        for (auto result : reps)
+            if (result->is_valid())
+                return result;
+
+        // we've gone through everything -- somehow there are no valid actions,
+        // not even using a
+        return nullptr;
+    }
+
     // not_null guaranteed
     shared_ptr<action> action_cycler::next(int dir)
     {
-        // TODO: refactor
-        const int next = _get_next_fireable_item(get().get_item(), dir);
-        return make_shared<ammo_action>(next);
+        // first try the next action of the same type
+        shared_ptr<action> result = get().find_next(dir, false);
+        // then, try to find a different action type
+        if (!result || !result->is_valid())
+            result = _get_next_action_type(result, dir);
+
+        // no valid actions
+        if (!result)
+            return make_shared<action>();
+
+        return result;
     }
 
     bool action_cycler::cycle(int dir)
     {
-        return(set(next(dir)));
+        return set(next(dir));
+    }
+
+    void action_cycler::on_actions_changed()
+    {
+        if (!get().is_valid())
+            cycle();
     }
 
     shared_ptr<action> slot_to_action(int slot)
@@ -424,6 +689,7 @@ namespace quiver
     // TODO: should this be a method of action_cycler?
     void choose()
     {
+        // TODO: need to implement this for non-ammo actions
         if (you.species == SP_FELID)
         {
             mpr("You can't grasp things well enough to throw them.");
@@ -460,6 +726,10 @@ namespace quiver
         you.quiver_action.set_from_slot(slot);
     }
 
+    // this class is largely legacy code -- can it be done away with?
+    // or refactored to use actions.
+    // TODO: auto switch to last action when swapping away from a launcher --
+    // right now it goes to an ammo only in that case.
     history::history()
         : m_last_used_type(quiver::AMMO_THROW)
     {
@@ -536,7 +806,7 @@ namespace quiver
 
             dprf( "item %s is for throwing",
                  item.name(DESC_PLAIN).c_str());
-    
+
             m_last_used_of_type[quiver::AMMO_THROW] = item;
             m_last_used_of_type[quiver::AMMO_THROW].quantity = 1;
             m_last_used_type = quiver::AMMO_THROW;
@@ -572,9 +842,7 @@ namespace quiver
             you.redraw_quiver = true;
         }
         else if (slot == you.quiver_action.get().get_item())
-        {
             you.redraw_quiver = true;
-        }
     }
 
     // ----------------------------------------------------------------------

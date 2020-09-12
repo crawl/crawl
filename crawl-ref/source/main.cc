@@ -1674,15 +1674,10 @@ static void _do_display_map()
 
 static void _do_cycle_quiver(int dir)
 {
-    if (you.species == SP_FELID)
-    {
-        mpr("You can't grasp things well enough to throw them.");
-        return;
-    }
-
     const bool changed = you.quiver_action.cycle(dir);
+    you.redraw_quiver = true;
 
-    if (!changed)
+    if (!changed && you.quiver_action.get().is_valid())
         mpr("No other quiver actions available. Use F to throw any item.");
     else if (!you.quiver_action.get().is_valid())
         mpr("No quiver actions available. Use F to throw any item.");

@@ -37,7 +37,14 @@ namespace quiver
         virtual bool operator==(const action &other) const
         {
             // TODO: typeid check?
-            return get_item() == other.get_item();
+            return typeid(other) == typeid(*this) && equals(other);
+        }
+
+        // this is an NVI idiom equality check
+        virtual bool equals(const action &) const
+        {
+            // `action`s are all the same
+            return true;
         }
 
         bool operator!=(const action &other) const
@@ -60,8 +67,11 @@ namespace quiver
 
         virtual void trigger(dist &t) { t = target; };
 
+        virtual void save(CrawlHashTable &save_target) const;
+
         virtual int get_item() const { return -1; };
         virtual shared_ptr<action> find_replacement() const { return nullptr; }
+        virtual shared_ptr<action> find_next(int dir=1, bool loop=false) const;
 
         dist target;
         string error;
@@ -78,13 +88,18 @@ namespace quiver
     {
         action_cycler();
 
+        void save() const;
+        void load();
+
         action &get() const;
+        shared_ptr<action> get_ptr() { return current; }
         bool set(shared_ptr<action> n);
         bool set(const action_cycler &other);
         bool set_from_slot(int slot);
         shared_ptr<action> next(int dir = 0);
         bool cycle(int dir = 0);
         bool clear();
+        void on_actions_changed();
 
     private:
         shared_ptr<action> current;

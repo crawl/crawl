@@ -1126,6 +1126,18 @@ LUAFN(you_status)
     PLUARET(string, status_effects.c_str());
 }
 
+LUAFN(you_quiver_valid)
+{
+    const auto &a = you.quiver_action.get();
+    PLUARET(boolean, a.is_valid());
+}
+
+LUAFN(you_quiver_enabled)
+{
+    const auto &a = you.quiver_action.get();
+    PLUARET(boolean, a.is_enabled());
+}
+
 static const struct luaL_reg you_clib[] =
 {
     { "turn_is_over", you_turn_is_over },
@@ -1259,6 +1271,8 @@ static const struct luaL_reg you_clib[] =
     { "num_runes",          you_num_runes },
     { "have_rune",          _you_have_rune },
     { "have_orb",           you_have_orb},
+    { "quiver_valid",       you_quiver_valid},
+    { "quiver_enabled",     you_quiver_enabled},
 
     { nullptr, nullptr },
 };

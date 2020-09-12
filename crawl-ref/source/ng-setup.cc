@@ -535,6 +535,9 @@ static void _setup_generic(const newgame_def& ng,
     set_hp(you.hp_max);
     set_mp(you.max_magic_points);
 
+    // look for something fun to quiver
+    you.quiver_action.cycle();
+
     if (normal_dungeon_setup)
         initial_dungeon_setup();
 
