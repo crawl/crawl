@@ -1293,6 +1293,11 @@ fail_severity_to_confirm = 3
 
         If the value 0 or -1 is given, never prompt about miscasts.
 
+fail_severity_to_quiver = 2
+        Exclude spells with this miscast level or higher from quiver cycling
+        and automatic quivering. -1 can be used to exclude spells entirely from
+        automatic quivering.
+
 easy_door = true
         When (O)pening or (C)losing doors, do not prompt for a direction
         if there is only one adjacent door. This option does not affect
