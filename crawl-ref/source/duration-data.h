@@ -798,6 +798,12 @@ static const duration_def duration_data[] =
       RED, "Stun",
       "aftershocked", "aftershock",
       "You are stuned.", D_EXPIRES},
+    { DUR_BLINKBOLT_COOLDOWN,
+      YELLOW, "-BBolt",
+      "blinkbolt cooldown", "blinkbolt cooldown",
+      "", D_EXPIRES,
+      {{ "Your inner lightning is fully recharged!" },
+        { "Your inner lightning starts recharging." }}, 6},
 #if TAG_MAJOR_VERSION == 34
     // And removed ones
     { DUR_MAGIC_SAPPED, 0, "", "", "old magic sapped", "", D_NO_FLAGS},

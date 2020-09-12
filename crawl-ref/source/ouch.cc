@@ -68,6 +68,7 @@
 #include "spl-damage.h"
 #include "spl-other.h"
 #include "spl-selfench.h"
+#include "spl-transloc.h"
 #include "state.h"
 #include "stringutil.h"
 #include "teleport.h"
@@ -328,6 +329,12 @@ void expose_player_to_element(beam_type flavour, int strength, bool slow_cold_bl
             you.duration[DUR_LIQUID_FLAMES] = 0;
             you.props.erase("sticky_flame_source");
             you.props.erase("sticky_flame_aux");
+        }
+
+        if (flavour == BEAM_WATER && you.species == SP_SPARKBORN)
+        {
+            mprf(MSGCH_WARN, "Your magic ran out by water!");
+            dec_mp(9999);
         }
     }
 }
@@ -721,6 +728,17 @@ static void _maybe_invisible()
     }
 }
 
+static void _maybe_blink(int dam)
+{
+    // SP_SPARKBORN
+    int blink_chance = (dam > you.hp_max / 10) ? 1 : 10;
+    if (x_chance_in_y(1, blink_chance) && dam > 1)
+    {
+        flash_view_delay(UA_PLAYER, LIGHTBLUE, 100);
+        cast_player_blinkbolt();
+    }
+}
+
 static void _place_player_corpse(bool explode)
 {
     if (!in_bounds(you.pos()))
@@ -1079,6 +1097,9 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
                 _maybe_corrode();
                 _maybe_slow();
                 _maybe_invisible();
+                if (you.has_mutation(MUT_BLINKBOLT)
+                    && !you.duration[DUR_BLINKBOLT_COOLDOWN])
+                    _maybe_blink(dam);
             }
             if (drain_amount > 0)
                 drain_player(drain_amount, true, true);
