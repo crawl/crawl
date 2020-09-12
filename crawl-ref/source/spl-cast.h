@@ -97,7 +97,7 @@ int calc_spell_power(spell_type spell, bool apply_intel,
                      int scale = 1);
 int calc_spell_range(spell_type spell, int power = 0, bool allow_bonus = true);
 
-bool cast_a_spell(bool check_range, spell_type spell = SPELL_NO_SPELL);
+bool cast_a_spell(bool check_range, spell_type spell = SPELL_NO_SPELL, dist *_target = nullptr);
 
 int apply_enhancement(const int initial_power, const int enhancer_levels);
 
@@ -111,7 +111,8 @@ class targeter;
 vector<string> desc_success_chance(const monster_info& mi, int pow, bool evoked,
                                    targeter* hitfunc);
 spret your_spells(spell_type spell, int powc = 0, bool allow_fail = true,
-                  const item_def* const evoked_item = nullptr);
+                  const item_def* const evoked_item = nullptr,
+                  dist *_target = nullptr);
 
 extern const char *fail_severity_adjs[];
 

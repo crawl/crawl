@@ -50,6 +50,8 @@ public:
     // Update the prompt shown at top.
     virtual void update_top_prompt(string*) {}
 
+    virtual bool untargeted() { return false; }
+
     // Add relevant descriptions to the target status.
     virtual vector<string> get_monster_desc(const monster_info& mi);
 private:
@@ -58,6 +60,7 @@ private:
 public:
     bool just_looking;
     desc_filter get_desc_func; // Function to add relevant descriptions
+    maybe_bool needs_path;
 };
 
 struct direction_chooser_args

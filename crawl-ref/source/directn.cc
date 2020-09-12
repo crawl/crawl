@@ -39,6 +39,7 @@
 #include "macro.h"
 #include "mapmark.h"
 #include "message.h"
+#include "misc.h"
 #include "mon-death.h"
 #include "mon-tentacle.h"
 #include "nearby-danger.h"
@@ -450,9 +451,17 @@ direction_chooser::direction_chooser(dist& moves_,
     behaviour->just_looking = just_looking;
     behaviour->get_desc_func = args.get_desc_func;
     if (unrestricted)
+    {
         needs_path = false;
+        behaviour->needs_path = MB_MAYBE;
+    }
     else if (hitfunc)
+    {
         needs_path = true;
+        behaviour->needs_path = MB_MAYBE; // TODO: can this be relaxed?
+    }
+    if (behaviour->needs_path != MB_MAYBE)
+        needs_path = tobool(behaviour->needs_path, true);
 
     show_beam = !just_looking && needs_path;
     need_viewport_redraw = show_beam;
@@ -887,7 +896,7 @@ monster_view_annotator::~monster_view_annotator()
 
 bool direction_chooser::move_is_ok() const
 {
-    if (unrestricted)
+    if (unrestricted || behaviour->untargeted())
         return true;
     if (!moves.isCancel && moves.isTarget)
     {
@@ -1498,7 +1507,7 @@ void direction_chooser::print_target_monster_description(bool &did_cloud) const
     }
 
     mprf(MSGCH_PROMPT, "%s: <lightgrey>%s</lightgrey>",
-         target_prefix ? target_prefix : "Aim",
+         target_prefix ? target_prefix : behaviour->untargeted() ? "Look" : "Aim",
          text.c_str());
 
     // If there's a cloud here, it's been described.
@@ -2123,9 +2132,23 @@ public:
             key = unmangle_direction_keys(key, KMC_TARGETING, false);
 
             const auto command = m_dc.behaviour->get_command(key);
+            // XX a bit ugly to do this here..
+            if (m_dc.behaviour->needs_path != MB_MAYBE)
+            {
+                m_dc.needs_path = tobool(m_dc.behaviour->needs_path, true);
+                m_dc.show_beam = !m_dc.just_looking && m_dc.needs_path;
+                // XX code duplication
+                m_dc.have_beam = m_dc.show_beam
+                                 && find_ray(you.pos(), m_dc.target(), m_dc.beam,
+                                             opc_solid_see, you.current_vision);
+                m_dc.need_text_redraw = true;
+                m_dc.need_viewport_redraw = true;
+                m_dc.need_cursor_redraw = true;
+            }
 
             string top_prompt;
             m_dc.behaviour->update_top_prompt(&top_prompt);
+
             if (m_dc.top_prompt != top_prompt)
                 _expose();
             m_dc.top_prompt = top_prompt;
@@ -3868,7 +3891,7 @@ static void _describe_cell(const coord_def& where, bool in_range)
 // targeting_behaviour
 
 targeting_behaviour::targeting_behaviour(bool look_around)
-    : just_looking(look_around)
+    : just_looking(look_around), needs_path(MB_MAYBE)
 {
 }
 

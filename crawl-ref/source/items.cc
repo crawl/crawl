@@ -1685,6 +1685,8 @@ static void _got_item(item_def& item)
 
     if (item.props.exists("needs_autopickup"))
         item.props.erase("needs_autopickup");
+
+    you.quiver_action.on_actions_changed();
 }
 
 void get_gold(const item_def& item, int quant, bool quiet)
@@ -2549,6 +2551,8 @@ bool drop_item(int item_dropped, int quant_drop)
         feat_splash_noise(env.grid(you.pos()));
 
     dec_inv_item_quantity(item_dropped, quant_drop);
+    you.quiver_action.on_actions_changed();
+
     you.turn_is_over = true;
 
     you.last_pickup.erase(item_dropped);

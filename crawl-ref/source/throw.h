@@ -8,6 +8,7 @@
 #include <string>
 
 #include "enum.h"
+#include "quiver.h"
 
 enum fire_type
 {
@@ -29,7 +30,7 @@ bool is_penetrating_attack(const actor& attacker, const item_def* weapon,
                            const item_def& projectile);
 bool item_is_quivered(const item_def &item);
 bool fire_warn_if_impossible(bool silent = false);
-int get_ammo_to_shoot(int item, dist &target, bool teleport = false);
+shared_ptr<quiver::action> get_ammo_to_shoot(int item, dist &target, bool teleport = false);
 bool is_pproj_active();
 void fire_thing(int item = -1, dist target = dist());
 void throw_item_no_quiver();
