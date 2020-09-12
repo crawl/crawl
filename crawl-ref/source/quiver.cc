@@ -86,8 +86,11 @@ namespace quiver
         {
             const char letter = index_to_letter(i);
             const spell_type spell = get_spell_by_letter(letter);
-            if (is_valid_spell(spell))
+            if (is_valid_spell(spell)
+                && fail_severity(spell) < Options.fail_severity_to_quiver)
+            {
                 return spell;
+            }
         }
 
         return SPELL_NO_SPELL;
