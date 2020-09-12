@@ -274,6 +274,8 @@ int mons_demon_tier(monster_type mc);
 bool mons_class_wields_two_weapons(monster_type mc);
 bool mons_wields_two_weapons(const monster& m);
 bool mons_self_destructs(const monster& m);
+bool mons_blows_up(const monster& m);
+bool mons_destroyed_on_impact(const monster& m);
 
 mon_intel_type mons_class_intel(monster_type mc);
 mon_intel_type mons_intel(const monster& mon);

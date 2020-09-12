@@ -93,13 +93,6 @@ static bool _mons_has_path_to_player(const monster* mon, bool want_move = false)
     return false;
 }
 
-static bool _mons_explodes(const monster *mon)
-{
-    return mon->type == MONS_BALLISTOMYCETE_SPORE
-           || mon->type == MONS_BALL_LIGHTNING
-           || mon->type == MONS_FULMINANT_PRISM;
-}
-
 bool mons_can_hurt_player(const monster* mon, const bool want_move)
 {
     // FIXME: This takes into account whether the player knows the map!
@@ -110,7 +103,7 @@ bool mons_can_hurt_player(const monster* mon, const bool want_move)
     // This also doesn't account for explosion radii, which is a false positive
     // for a player waiting near (but not in range of) their own fulminant
     // prism
-    if (_mons_has_path_to_player(mon, want_move) || _mons_explodes(mon))
+    if (_mons_has_path_to_player(mon, want_move) || mons_blows_up(*mon))
         return true;
 
     // Even if the monster can not actually reach the player it might
@@ -128,7 +121,7 @@ bool mons_can_hurt_player(const monster* mon, const bool want_move)
 // of distance.
 static bool _mons_is_always_safe(const monster *mon)
 {
-    return (mon->wont_attack() && !_mons_explodes(mon))
+    return (mon->wont_attack() && !mons_blows_up(*mon))
            || mon->type == MONS_BUTTERFLY
            || (mon->type == MONS_BALLISTOMYCETE
                && !mons_is_active_ballisto(*mon));
