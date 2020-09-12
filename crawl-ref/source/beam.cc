@@ -4144,7 +4144,7 @@ void bolt::tracer_nonenchantment_affect_monster(monster* mon)
         return;
 
     // Check only if actual damage and the monster is worth caring about.
-    if (final > 0 && mons_is_threatening(*mon))
+    if (final > 0 && (mons_is_threatening(*mon) || mon->type == MONS_TEST_STATUE))
     {
         ASSERT(preac > 0);
 
