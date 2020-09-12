@@ -10,6 +10,7 @@
 #include <algorithm>
 
 #include "env.h"
+#include "evoke.h"
 #include "invent.h"
 #include "item-prop.h"
 #include "items.h"
@@ -214,6 +215,8 @@ namespace quiver
             // TODO: enabled only if ammo matches weapon, instead of valid?
 
             // disable if there's a no-fire inscription on ammo
+            // maybe this should just be skipped altogether for this case?
+            // or prompt on trigger..
             return check_warning_inscriptions(you.inv[ammo_slot], OPER_FIRE)
                     && (!you.weapon()
                         || is_launched(&you, you.weapon(), you.inv[ammo_slot])
@@ -400,6 +403,127 @@ namespace quiver
         spell_type spell;
     };
 
+    // TODO: generalize to misc evokables? Code should be similar if targeting
+    // can be easily implemented
+    struct wand_action : public action
+    {
+        wand_action(int slot=-1) : action(), wand_slot(slot)
+        {
+        }
+
+        void save(CrawlHashTable &save_target) const override; // defined below
+
+        bool equals(const action &other) const override
+        {
+            // type ensured in base class
+            return wand_slot == static_cast<const wand_action&>(other).wand_slot;
+        }
+
+        bool is_enabled() const override
+        {
+            return true;
+        }
+
+        bool is_valid() const override
+        {
+            if (wand_slot < 0 || wand_slot >= ENDOFPACK)
+                return false;
+            const item_def& wand = you.inv[wand_slot];
+            if (!wand.defined() || wand.base_type != OBJ_WANDS)
+                return false;
+            return true;
+        }
+
+        bool is_targeted() const override
+        {
+            return true;
+        }
+
+        void trigger(dist &t) override
+        {
+            target = t;
+            if (!is_valid() || !is_enabled())
+                return;
+
+            evoke_item(wand_slot, &target);
+
+            t = target; // copy back, in case they are different
+        }
+
+        virtual formatted_string quiver_description() const override
+        {
+            ASSERT_RANGE(wand_slot, -1, ENDOFPACK);
+            if (!is_valid())
+            {
+                return formatted_string::parse_string(
+                                    "<darkgrey>Nothing quivered</darkgrey>");
+            }
+            formatted_string qdesc;
+
+            char hud_letter = '-';
+            const item_def& quiver = you.inv[wand_slot];
+            ASSERT(quiver.link != NON_ITEM);
+            hud_letter = index_to_letter(quiver.link);
+            qdesc.textcolour(Options.status_caption_colour);
+            qdesc.cprintf("Zap: %c) ", hud_letter);
+
+            qdesc.textcolour(LIGHTGREY);
+            qdesc += quiver.name(DESC_PLAIN, true);
+            return qdesc;
+        }
+
+        int get_item() const override
+        {
+            return wand_slot;
+        }
+
+        shared_ptr<action> find_replacement() const override
+        {
+            // TODO: revamp?
+            return find_action_from_launcher(you.weapon());
+        }
+
+        shared_ptr<action> find_next(int dir, bool loop) const override
+        {
+            // brute force: find all wands, then find the next one
+            vector<int> zap_order;
+            int cur_index = -1;
+            int i = 0;
+            for (int slot = 0; slot < ENDOFPACK; slot++)
+            {
+                // TODO: how to reduce shared code here with is_valid?
+                if (!you.inv[slot].defined() || you.inv[slot].base_type != OBJ_WANDS)
+                    continue;
+                zap_order.push_back(slot);
+                if (slot == wand_slot)
+                    cur_index = i;
+                i++;
+            }
+
+            if (zap_order.empty())
+                return make_shared<wand_action>(-1);
+
+            if (cur_index == -1)
+            {
+                // first or last
+                return make_shared<wand_action>(
+                            zap_order[dir >= 0 ? 0 : zap_order.size() - 1]);
+            }
+            cur_index += dir >= 0 ? 1 : -1;
+            if (!loop && (cur_index < 0
+                          || cur_index >= static_cast<int>(zap_order.size())))
+            {
+                return make_shared<wand_action>(-1);
+            }
+
+            return make_shared<wand_action>(
+                zap_order[(cur_index + zap_order.size()) % zap_order.size()]);
+        }
+
+    private:
+        int wand_slot;
+    };
+
     void action::save(CrawlHashTable &save_target) const
     {
         save_target["type"] = "action";
@@ -415,6 +539,12 @@ namespace quiver
     {
         save_target["type"] = "spell_action";
         save_target["param"] = static_cast<int>(spell);
+    }
+
+    void wand_action::save(CrawlHashTable &save_target) const
+    {
+        save_target["type"] = "wand_action";
+        save_target["param"] = static_cast<int>(wand_slot);
     }
 
     static shared_ptr<action> _load_action(CrawlHashTable &source)
@@ -438,6 +568,8 @@ namespace quiver
             return make_shared<spell_action>(
                         static_cast<spell_type>(source["param"].get_int()));
         }
+        else if (type == "wand_action")
+            return make_shared<wand_action>(source["param"].get_int());
         else
             return make_shared<action>();
     }
@@ -595,6 +727,7 @@ namespace quiver
         vector<shared_ptr<action>> reps;
         reps.push_back(ammo_action(-1).find_next(dir, false));
         reps.push_back(spell_action(SPELL_NO_SPELL).find_next(dir, false));
+        reps.push_back(wand_action(-1).find_next(dir, false));
 
         if (dir < 0)
             reverse(reps.begin(), reps.end());
@@ -674,8 +807,13 @@ namespace quiver
 
     shared_ptr<action> slot_to_action(int slot)
     {
-        // TODO: generalize. (Right now this should simply lead to an invalid
-        // action on non-ammo slots.)
+        if (slot < 0 || slot >= ENDOFPACK)
+            return make_shared<action>();
+
+        if (you.inv[slot].defined() && you.inv[slot].base_type == OBJ_WANDS)
+            return make_shared<wand_action>(slot);
+
+        // use ammo as the fallback -- may well end up invalid
         return make_shared<ammo_action>(slot);
     }
 

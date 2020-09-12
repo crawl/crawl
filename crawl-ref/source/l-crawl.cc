@@ -438,7 +438,7 @@ static int crawl_do_targeted_command(lua_State *ls)
     switch (cmd)
     {
     case CMD_EVOKE_WIELDED:
-        evoke_item(you.equip[EQ_WEAPON], target);
+        evoke_item(you.equip[EQ_WEAPON], &target);
         break;
     case CMD_FIRE:
         you.quiver_action.get().trigger(target);

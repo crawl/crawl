@@ -69,6 +69,7 @@ bool item_is_quivered(const item_def &item)
     return in_inventory(item) && item.link == you.quiver_action.get().get_item();
 }
 
+// TODO: how to handle custom targeters for different actions??
 class fire_target_behaviour : public targeting_behaviour
 {
 public:
