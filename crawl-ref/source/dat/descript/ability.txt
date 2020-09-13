@@ -1115,3 +1115,29 @@ Immortal Legion ability
 Orders one of your minions to sustain itself. It causes serious damage to its 
 its health but make them unable to die briefly. The duration of this effect depends 
 on summoning skill and lasts from 3 turns up to 10 turns.
+%%%%
+# Agraphede
+Create Web ability
+
+implement me.
+%%%%
+Convert Curing Potion ability
+
+implement me.
+%%%%
+Enchant Poison ability
+
+implement me.
+%%%%
+Create Explosive Trap ability
+
+implement me.
+%%%%
+Hornet String ability
+
+implement me.
+%%%%
+Summon Spider ability
+
+implement me.
+%%%%

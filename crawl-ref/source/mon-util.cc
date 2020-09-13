@@ -1743,6 +1743,7 @@ bool mons_class_can_use_stairs(monster_type mc)
            && mc != MONS_GERYON
            && mc != MONS_ROYAL_JELLY
            && mc != MONS_BALL_LIGHTNING
+           && mc != MONS_BALL_WEB
            && mc != MONS_FOXFIRE
            && mc != MONS_WILL_O_WISP;
 }
@@ -3501,6 +3502,7 @@ bool mons_wields_two_weapons(const monster& mon)
 bool mons_self_destructs(const monster& m)
 {
     return m.type == MONS_BALLISTOMYCETE_SPORE
+        || m.type == MONS_BALL_WEB
         || m.type == MONS_BALL_LIGHTNING
         || m.type == MONS_LURKING_HORROR
         || m.type == MONS_ORB_OF_DESTRUCTION

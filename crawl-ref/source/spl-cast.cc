@@ -589,6 +589,13 @@ static int _spell_enhancement(spell_type spell)
     enhanced += you.archmagi();
     enhanced += player_equip_unrand(UNRAND_MAJIN);
 
+    if (you_worship(GOD_AGRAPHEDE)
+        && !you.penance[GOD_AGRAPHEDE]
+        && typeflags & spschool::poison
+        && piety_rank() > 5) {
+        enhanced++;
+    }
+
     if (you.species == SP_LAVA_ORC && temperature_effect(LORC_LAVA_BOOST)
         && (typeflags & spschool::fire) && (typeflags & spschool::earth))
     {

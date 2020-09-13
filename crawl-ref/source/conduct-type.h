@@ -41,5 +41,6 @@ enum conduct_type
     DID_CHANNEL,                          // Pakellas
     DID_HURT_FOE,                         // Uskayaw
     DID_NON_LEGION,                       // The Legion from Beyond
+    DID_CURING_POISON,                    // Agraphede
     NUM_CONDUCTS
 };

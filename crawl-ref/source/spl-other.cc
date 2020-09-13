@@ -12,6 +12,8 @@
 #include "cloud.h"
 #include "directn.h"
 #include "delay.h"
+#include "dungeon.h"
+#include "english.h"
 #include "env.h"
 #include "food.h"
 #include "god-companions.h"
@@ -31,6 +33,7 @@
 #include "state.h"
 #include "target.h"
 #include "terrain.h"
+#include "traps.h"
 #include "god-conduct.h"
 #include "items.h"
 #include "item-name.h"
@@ -933,6 +936,99 @@ spret cast_condensation_shield(int pow, bool fail)
     you.increase_duration(DUR_CONDENSATION_SHIELD, 15 + random2(pow), 40);
     you.props[CONDENSATION_SHIELD_KEY] = pow;
     you.redraw_armour_class = true;
+
+    return spret::success;
+}
+
+
+static bool _find_web_target(coord_def& target, targeter* hitfunc = nullptr)
+{
+    while (true)
+    {
+        // query for location {dlb}:
+        direction_chooser_args args;
+        args.restricts = DIR_TARGET;
+        args.needs_path = false;
+        args.top_prompt = "Create where?";
+        args.hitfunc = hitfunc;
+        dist beam;
+        direction(beam, args);
+
+        if (crawl_state.seen_hups)
+        {
+            mprf("Cancelling create due to HUP.");
+            return false;
+        }
+
+        if (!beam.isValid || beam.target == you.pos())
+        {
+            canned_msg(MSG_OK);
+            return false;
+        }
+
+        if (cell_is_solid(beam.target))
+        {
+            clear_messages();
+            const char* feat = feat_type_name(grd(beam.target));
+            mprf("You can't place the web on %s.", article_a(feat).c_str());
+            continue;
+        }
+
+        monster* target_mons = monster_at(beam.target);
+        if (target_mons && you.can_see(*target_mons))
+        {
+            mprf("You can't place the web onto %s!",
+                target_mons->name(DESC_THE).c_str());
+            continue;
+        }
+
+        if (!you.see_cell_no_trans(beam.target))
+        {
+            clear_messages();
+            if (you.trans_wall_blocking(beam.target))
+                canned_msg(MSG_SOMETHING_IN_WAY);
+            else
+                canned_msg(MSG_CANNOT_SEE);
+            continue;
+        }
+
+        target = beam.target; // Grid in los, no problem.
+        return true;
+    }
+}
+
+spret create_web_trap(bool fail)
+{
+    static const set<dungeon_feature_type> safe_tiles =
+    {
+        DNGN_FLOOR
+    };
+
+    coord_def target;
+    targeter_smite tgt(&you, 3, 0, 0);
+    while (true)
+    {
+        if (!_find_web_target(target, &tgt))
+            return spret::abort;
+        if (grid_distance(you.pos(), target) > 3)
+        {
+            mpr("That's out of range!");
+            continue;
+        }
+        break;
+    }
+
+    fail_check();
+
+    if (!safe_tiles.count(grd(target)) || feat_is_trap(grd(target)))
+    {
+
+        mpr("You cannot place the web here.");
+        return spret::abort;
+    }
+
+    place_specific_trap(target, TRAP_WEB);
+    trap_at(target)->reveal();
 
     return spret::success;
 }

@@ -64,7 +64,7 @@ static const char *conducts[] =
     "Cause Glowing", "Use Unclean", "Use Chaos", "Desecrate Orcish Remains",
     "Kill Slime", "Kill Plant", "Was Hasty", "Attack In Sanctuary",
     "Kill Artificial", "Exploration", "Desecrate Holy Remains", "Seen Monster",
-    "Sacrificed Love", "Channel", "Hurt Foe", "Call non-Legion ally",
+    "Sacrificed Love", "Channel", "Hurt Foe", "Call non-Legion ally", "Curing poison",
 };
 COMPILE_CHECK(ARRAYSZ(conducts) == NUM_CONDUCTS);
 
@@ -444,6 +444,15 @@ static peeve_map divine_peeves[] =
             "you call ally that non-Legion, without summoning spell", true,
             1, 1, " barely stabilizes from non-Legion ally, just this once.",
             "your bond with the Legion becomes unstable, because you called non-Legion ally!",
+            nullptr, -5
+        } },
+    },
+    // GOD_AGRAPHEDE,
+    {
+        { DID_CURING_POISON, {
+            "you cure poison", true,
+            1, 1, " forgives your cure poison, just this once.",
+            " doesn't appreciate your cure poison!",
             nullptr, -5
         } },
     },
@@ -941,6 +950,14 @@ static like_map divine_likes[] =
         { DID_EXPLORATION, EXPLORE_RESPONSE },
     },
     // GOD_LEGION_FROM_BEYOND
+    {
+        { DID_KILL_LIVING, KILL_LIVING_RESPONSE },
+        { DID_KILL_UNDEAD, KILL_UNDEAD_RESPONSE },
+        { DID_KILL_DEMON, KILL_DEMON_RESPONSE },
+        { DID_KILL_HOLY, KILL_HOLY_RESPONSE },
+        { DID_KILL_NONLIVING, KILL_NONLIVING_RESPONSE },
+    },
+    // GOD_AGRAPHEDE,
     {
         { DID_KILL_LIVING, KILL_LIVING_RESPONSE },
         { DID_KILL_UNDEAD, KILL_UNDEAD_RESPONSE },

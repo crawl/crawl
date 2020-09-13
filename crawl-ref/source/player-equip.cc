@@ -816,7 +816,8 @@ static void _unequip_weapon_effect(item_def& real_item, bool showMsgs, bool meld
                 break;
             }
 
-            if (you.duration[DUR_EXCRUCIATING_WOUNDS] && slot == EQ_WEAPON)
+            if ((you.duration[DUR_EXCRUCIATING_WOUNDS] ||
+                you.duration[DUR_POISON_WEAPON]) && slot == EQ_WEAPON)
             {
                 ASSERT(real_item.defined());
                 end_weapon_brand(real_item, true);

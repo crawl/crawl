@@ -1217,6 +1217,15 @@ static int _player_bonus_regen()
         rr += 100;
     }
 
+    if (have_passive(passive_t::agraphede_poison_regen) &&
+        you.duration[DUR_POISONING] ) {
+        rr += REGEN_PIP;
+        if (you.piety >= piety_breakpoint(4))
+            rr += REGEN_PIP;
+        if (you.piety >= piety_breakpoint(5))
+            rr += REGEN_PIP;
+    }
+
     // Jewellery.
     if (you.props[REGEN_AMULET_ACTIVE].get_int() == 1)
         rr += REGEN_PIP * you.wearing(EQ_AMULETS, AMU_REGENERATION);
@@ -1752,6 +1761,10 @@ bool player_kiku_res_torment()
 // If temp is set to false, temporary sources or resistance won't be counted.
 int player_res_poison(bool calc_unid, bool temp, bool items)
 {
+    if (have_passive(passive_t::agraphede_anti_poison_resist)) {
+        return 0;
+    }
+
     switch (you.undead_state(temp))
     {
         case US_ALIVE:

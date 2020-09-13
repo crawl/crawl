@@ -35,6 +35,7 @@ enum beam_type                  // bolt::flavour
     BEAM_ROD_COLD,
     BEAM_ROD_ELEC,
     BEAM_ROD_POISON,
+    BEAM_HORNET_VENOM,
 
     // Enchantments
     BEAM_SLOW,

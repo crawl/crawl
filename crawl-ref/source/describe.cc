@@ -32,6 +32,7 @@
 #include "delay.h"
 #include "describe-spells.h"
 #include "directn.h"
+#include "god-passive.h"
 #include "english.h"
 #include "env.h"
 #include "evoke.h"
@@ -4176,6 +4177,19 @@ static string _monster_stat_description(const monster_info& mi)
                     level -= m->get_ench(ENCH_POISON_VULN).degree + 1;
                 }
             }
+            if (level > 0
+                && have_passive(passive_t::agraphede_poison_deprived))
+            {
+                if (mi.holi & MH_NATURAL) {
+                    level = 0;
+                }
+                else if (you_worship(GOD_AGRAPHEDE)
+                    && you.piety >= piety_breakpoint(5)
+                    && ((mi.holi & MH_HOLY) || (mi.holi & MH_DEMONIC))) {
+                    level = 0;
+                }
+            }
+
         }
 
         if (level != 0)

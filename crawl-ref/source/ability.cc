@@ -57,6 +57,7 @@
 #include "mon-book.h"
 #include "mon-cast.h"
 #include "mon-ench.h"
+#include "mon-movetarget.h"
 #include "mon-place.h"
 #include "mutation.h"
 #include "nearby-danger.h"
@@ -79,6 +80,7 @@
 #include "spl-selfench.h"
 #include "spl-summoning.h"
 #include "spl-transloc.h"
+#include "spl-wpnench.h"
 #include "stairs.h"
 #include "state.h"
 #include "stepdown.h"
@@ -125,6 +127,7 @@ enum class abflag
     starve_ok           = 0x00800000, // can use even if starving
     berserk_ok          = 0x01000000, // can use even if berserk
     card                = 0x02000000, // deck drawing (Nemelex)
+    poison              = 0x04000000, // poison (agraphede)
 };
 DEF_BITFIELD(ability_flags, abflag);
 
@@ -738,6 +741,20 @@ static const ability_def Ability_List[] =
     { ABIL_IMUS_FRAGMENTATION, "Fragmentation",
       6, 0, 0, 6, {fail_basis::invo, 60, 5, 20}, abflag::none },
 
+    // Agraphede
+    { ABIL_AGRAPHEDE_WEB, "Create Web",
+      2, 0, 0, 1, {fail_basis::invo, 30, 4, 20}, abflag::poison },
+    { ABIL_AGRAPHEDE_CONVERT_POISON, "Convert Curing Potion",
+      0, 0, 0, 0, {fail_basis::invo}, abflag::potion },
+    { ABIL_AGRAPHEDE_ENCHANT_POISON, "Enchant Poison",
+      3, 0, 0, 1, {fail_basis::invo, 40, 4, 20}, abflag::poison },
+    { ABIL_AGRAPHEDE_TRAP, "Create Explosive Trap",
+      6, 0, 0, 4, {fail_basis::invo, 60, 4, 25}, abflag::poison },
+    { ABIL_AGRAPHEDE_HORNET_STING, "Hornet String",
+      4, 0, 0, 3, {fail_basis::invo, 50, 4, 20}, abflag::poison },
+    { ABIL_AGRAPHEDE_SUMMON_SPIDER, "Summon Spider",
+      8, 0, 0, 12, {fail_basis::invo, 70, 4, 25}, abflag::poison },
+
     { ABIL_STOP_RECALL, "Stop Recall", 0, 0, 0, 0, {fail_basis::invo}, abflag::starve_ok },
     { ABIL_RENOUNCE_RELIGION, "Renounce Religion",
       0, 0, 0, 0, {fail_basis::invo}, abflag::starve_ok },
@@ -834,6 +851,76 @@ int get_gold_cost(ability_type ability)
     }
 }
 
+static int _get_poison_cost(ability_type ability)
+{
+    switch (ability)
+    {
+    case ABIL_AGRAPHEDE_WEB:
+        return 5;
+    case ABIL_AGRAPHEDE_ENCHANT_POISON:
+        return 15;
+    case ABIL_AGRAPHEDE_TRAP:
+    case ABIL_AGRAPHEDE_HORNET_STING:
+    case ABIL_AGRAPHEDE_SUMMON_SPIDER:
+    default:
+        return -1;
+    }
+}
+
+static int _get_posion_enhance()
+{
+    int max_ = you.hp_max / 3; //33% of max_hp
+    int round_ = max_ / 3; //11% of max_hp
+    int current = min(max_, you.duration[DUR_POISONING]/1000);
+
+    int enhance_ = current / round_; //0~3 by poison cost
+
+    return enhance_;
+}
+
+static bool _pay_posion_cost(ability_type ability)
+{
+    int cost = _get_poison_cost(ability);
+
+    if (cost == 0) {
+        return true;
+    }
+    if (cost == -1 ||
+        you.duration[DUR_POISONING] <= cost * 1000) {
+        dec_hp(you.duration[DUR_POISONING] / 1000, false);
+        you.duration[DUR_POISONING] = 0;
+    }
+    else {
+        dec_hp(cost, false);
+        you.duration[DUR_POISONING] -= cost * 1000;
+    }
+    return true;
+}
+
+static bool _poison_cost_check(ability_type ability)
+{
+    int cost = _get_poison_cost(ability);
+
+    if (cost == 0) {
+        return true;
+    }
+    if (cost == -1 ||
+        you.duration[DUR_POISONING] <= cost * 1000) {
+        if (you.hp <= cost) {
+
+            return false;
+        }
+    }
+    else {
+        if (you.hp <= you.duration[DUR_POISONING] / 1000) {
+
+            return false;
+        }
+    }
+    return true;
+}
+
+
 static string _nemelex_card_text(ability_type ability)
 {
     int cards = deck_cards(ability_deck(ability));
@@ -928,7 +1015,23 @@ const string make_cost_description(ability_type ability)
         ret += ", Scroll of remove curse";
 
     if (abil.flags & abflag::potion)
-        ret += ", 1 Potion";
+    {
+        if (ability == ABIL_AGRAPHEDE_CONVERT_POISON) {
+            ret += ", 1 Potion of curing";
+        }
+        else {
+            ret += ", 1 Potion";
+        }
+    }
+
+    if (abil.flags & abflag::poison)
+    {
+        const int amount = _get_poison_cost(ability);
+        if (amount > 0)
+            ret += make_stringf(", Posion (Max %d)", amount);
+        else if (amount == -1)
+            ret += ", Poison";
+    }
 
     if (abil.flags & abflag::essence)
         ret += ", 1 Essence";
@@ -1597,6 +1700,13 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         return false;
     }
 
+    if (testbits(abil.flags, abflag::poison) &&
+       ! _poison_cost_check(abil.ability)) {
+        if (!quiet)
+            mpr("This cost is lethal!");
+        return false;
+    }
+
     if (!quiet)
     {
         vector<text_pattern> &actions = Options.confirm_action;
@@ -1907,6 +2017,13 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         return true;
     }
 
+    case ABIL_AGRAPHEDE_WEB:
+    case ABIL_AGRAPHEDE_ENCHANT_POISON:
+    case ABIL_AGRAPHEDE_TRAP:
+    case ABIL_AGRAPHEDE_HORNET_STING:
+    case ABIL_AGRAPHEDE_SUMMON_SPIDER:
+        return you.duration[DUR_POISONING] > 0;
+
     default:
         return true;
     }
@@ -1969,6 +2086,7 @@ bool activate_talent(const talent& tal)
 
 static int _setup_essence_costs();
 static int _setup_potion_costs();
+static int _setup_curing_potion_costs();
 
 static int _calc_breath_ability_range(ability_type ability)
 {
@@ -4287,6 +4405,147 @@ static spret _do_ability(const ability_def& abil, bool fail)
         }
         break;
 
+    case ABIL_AGRAPHEDE_WEB:
+    {
+        fail_check();
+        spret success = create_web_trap(fail);
+        if(success != spret::abort)
+            _pay_posion_cost(abil.ability);
+        return success;
+    }
+    case ABIL_AGRAPHEDE_CONVERT_POISON:
+    {
+        int pot_idx = -1;
+        pot_idx = _setup_curing_potion_costs();
+        if (pot_idx == -1) {
+            mpr("There is no curing potion holding.");
+            return spret::abort;
+        }
+        ASSERT(you.inv[pot_idx].base_type == OBJ_POTIONS);
+
+        int thing_created = items(true, OBJ_POTIONS, POT_POISON, 1, 0, you.religion);
+        if (thing_created == NON_ITEM || !move_item_to_grid(&thing_created, you.pos()))
+        {
+            return spret::abort;
+        }
+        set_ident_type(mitm[thing_created], true);
+        simple_god_message(" says: Use this gift wisely!");
+        dec_inv_item_quantity(pot_idx, 1);
+        break;
+    }
+    case ABIL_AGRAPHEDE_ENCHANT_POISON:
+    {
+        fail_check(); 
+        spret success = poison_brand_weapon(0, fail);
+        mprf("ABIL_AGRAPHEDE_ENCHANT_POISON");
+        if (success != spret::abort)
+            _pay_posion_cost(abil.ability);
+        return success;
+    }
+    case ABIL_AGRAPHEDE_TRAP:
+    {
+        fail_check();
+        bool success = false;
+
+        int poison_enhance = _get_posion_enhance();
+        int initial_power = you.skill(SK_INVOCATIONS);
+        surge_power(poison_enhance);
+        int power = stepdown_spellpower(100 * apply_enhancement(initial_power, poison_enhance));
+
+        const int how_many = min(4, 1 + poison_enhance);
+        mgen_data cbl(MONS_BALL_WEB, BEH_FRIENDLY, you.pos());
+        cbl.hd = 5 + div_rand_round(power, 20);
+
+        for (int i = 0; i < how_many; ++i)
+        {
+            if (monster * ball = create_monster(cbl))
+            {
+                success = true;
+               // ball->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 1));
+                ball->add_ench(ENCH_SHORT_LIVED);
+
+                // Avoid ball lightnings without targets always moving towards (0,0)
+                set_random_target(ball);
+            }
+        }
+
+        if (success) {
+            mpr("You create some ball of web!");
+        }
+        else
+            canned_msg(MSG_NOTHING_HAPPENS);
+        _pay_posion_cost(abil.ability);
+
+        return spret::success;
+    }
+    case ABIL_AGRAPHEDE_HORNET_STING:
+    {
+        beam.range = you.current_vision;
+
+        if (!spell_direction(spd, beam))
+            return spret::abort;
+
+        int initial_power = (15 + you.skill(SK_INVOCATIONS, 7) / 2); 
+        int poison_enhance = _get_posion_enhance();
+        surge_power(poison_enhance);
+        int power = stepdown_spellpower(100 * apply_enhancement(initial_power, poison_enhance));
+        
+        
+        // Since the actual beam is random, check with BEAM_MMISSILE.
+        if (!player_tracer(ZAP_DEBUGGING_RAY, power, beam, beam.range))
+            return spret::abort;
+
+        fail_check();
+        {
+            beam.origin_spell = SPELL_NO_SPELL; // let zapping reset this
+            zap_type ztype = ZAP_AGR_VENOM_BOLT;
+            zapping(ztype, power, beam);
+        }
+        _pay_posion_cost(abil.ability);
+        return spret::success;
+    }
+    case ABIL_AGRAPHEDE_SUMMON_SPIDER:
+    {
+        god_acting gdact;
+        beam.range = LOS_MAX_RANGE;
+        direction_chooser_args args;
+        args.restricts = DIR_TARGET;
+        args.mode = TARG_HOSTILE;
+        args.needs_path = false;
+
+        if (!spell_direction(spd, beam, &args))
+            return spret::abort;
+        fail_check();
+
+        if (beam.target == you.pos())
+        {
+            mpr("You must target an enemy.");
+            return spret::abort;
+        }
+
+        monster* mons = monster_at(beam.target);
+        if (mons == nullptr || !you.can_see(*mons))
+        {
+            mpr("You see nothing there.");
+            return spret::abort;
+        }
+
+        if (mons->attitude != ATT_HOSTILE)
+        {
+            mpr("You can only target to enemy.");
+            return spret::abort;
+        }
+
+        int initial_power = you.skill(SK_INVOCATIONS);
+        int poison_enhance = _get_posion_enhance();
+        surge_power(poison_enhance);
+        int power = stepdown_spellpower(100 * apply_enhancement(initial_power, poison_enhance));
+
+        sack_of_spiders(power, 2 + random2(2) + 2 * poison_enhance, beam.target);
+
+        _pay_posion_cost(abil.ability);
+        return spret::success;
+    }
     case ABIL_CONVERT_TO_BEOGH:
         fail_check();
         god_pitch(GOD_BEOGH);
@@ -4376,6 +4635,20 @@ static int _setup_potion_costs()
     }
     
     return rc;
+}
+
+static int _setup_curing_potion_costs()
+{
+    for (int i = 0; i < ENDOFPACK; ++i)
+    {
+        auto& item = you.inv[i];
+        if (!item.defined())
+            continue;
+        if (item.base_type == OBJ_POTIONS && item.sub_type == POT_CURING) {
+            return i;
+        }
+    }
+    return -1;
 }
 
 static int _setup_essence_costs()

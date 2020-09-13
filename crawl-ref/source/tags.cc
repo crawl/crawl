@@ -3787,6 +3787,8 @@ static void tag_read_you(reader &th)
 
     if (you.duration[DUR_EXCRUCIATING_WOUNDS] && !you.props.exists(ORIGINAL_BRAND_KEY))
         you.props[ORIGINAL_BRAND_KEY] = SPWPN_NORMAL;
+    if (you.duration[DUR_POISON_WEAPON] && !you.props.exists(ORIGINAL_BRAND_KEY))
+        you.props[ORIGINAL_BRAND_KEY] = SPWPN_NORMAL;
 
     // Both saves prior to TAG_MINOR_RU_DELAY_STACKING, and saves transferred
     // from before that tag to a version where this minor tag was backwards.

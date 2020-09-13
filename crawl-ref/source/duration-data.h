@@ -13,6 +13,13 @@ static void _end_weapon_brand()
     end_weapon_brand(*you.weapon(), true);
 }
 
+static void _end_poison_weapon_brand()
+{
+    you.duration[DUR_POISON_WEAPON] = 1;
+    ASSERT(you.weapon());
+    end_weapon_brand(*you.weapon(), true);
+}
+
 static void _end_elemental_weapon_brand()
 {
     you.duration[DUR_ELEMENTAL_WEAPON] = 1;
@@ -804,6 +811,8 @@ static const duration_def duration_data[] =
       "", D_EXPIRES,
       {{ "Your inner lightning is fully recharged!" },
         { "Your inner lightning starts recharging." }}, 6},
+    { DUR_POISON_WEAPON, 0, "", "", "poison weapon", "", D_DISPELLABLE,
+      {{ "", _end_poison_weapon_brand }} },
 #if TAG_MAJOR_VERSION == 34
     // And removed ones
     { DUR_MAGIC_SAPPED, 0, "", "", "old magic sapped", "", D_NO_FLAGS},

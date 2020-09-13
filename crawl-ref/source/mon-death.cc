@@ -1426,6 +1426,19 @@ static void _setup_lightning_explosion(bolt & beam, const monster& origin)
         beam.thrower = KILL_MON;
 }
 
+static void _setup_web_explosion(bolt& beam, const monster& origin)
+{
+    _setup_base_explosion(beam, origin);
+    beam.flavour = BEAM_ENSNARE;
+    beam.damage = dice_def(3, 5 + origin.get_hit_dice() * 5 / 4);
+    beam.name = "blast of web";
+    beam.colour = WHITE;
+    beam.ex_size = 2;
+    // Don't credit the player for ally-summoned ball lightning explosions.
+    if (origin.summoner && origin.summoner != MID_PLAYER)
+        beam.thrower = KILL_MON;
+}
+
 static void _setup_prism_explosion(bolt& beam, const monster& origin)
 {
     _setup_base_explosion(beam, origin);
@@ -1494,6 +1507,12 @@ static bool _explode_monster(monster* mons, killer_type killer,
         _setup_lightning_explosion(beam, *mons);
         sanct_msg    = "By Zin's power, the ball lightning's explosion "
                        "is contained.";
+    }
+    else if (type == MONS_BALL_WEB)
+    {
+        _setup_web_explosion(beam, *mons);
+        sanct_msg = "By Zin's power, the ball of web's explosion "
+            "is contained.";
     }
     else if (type == MONS_LURKING_HORROR)
         sanct_msg = "The lurking horror fades away harmlessly.";
@@ -2222,6 +2241,7 @@ item_def* monster_die(monster& mons, killer_type killer,
 
     if (mons.type == MONS_BALLISTOMYCETE_SPORE
         || mons.type == MONS_BALL_LIGHTNING
+        || mons.type == MONS_BALL_WEB
         || mons.type == MONS_LURKING_HORROR
         || (mons.type == MONS_FULMINANT_PRISM && mons.prism_charge > 0)
         || mons.type == MONS_BENNU
