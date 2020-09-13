@@ -337,13 +337,15 @@ public:
 
     bool isMe() const;
 
-    bool isValid;       // valid target chosen?
-    bool isTarget;      // target (true), or direction (false)?
-    bool isEndpoint;    // Does the player want the attack to stop at target?
-    bool isCancel;      // user cancelled (usually <ESC> key)
-    bool choseRay;      // user wants a specific beam
+    bool isValid;       // output: valid target chosen?
+    bool isTarget;      // output: target (true), or direction (false)?
+    bool isEndpoint;    // input: Does the player want the attack to stop at target?
+    bool isCancel;      // output: user cancelled (usually <ESC> key)
+    bool choseRay;      // output: user wants a specific beam
+    bool interactive;   // output: whether this resulted in an interactive direction chooser call
 
-    coord_def target;   // target x,y or logical extension of beam to map edge
-    coord_def delta;    // delta x and y if direction - always -1,0,1
-    ray_def ray;        // ray chosen if necessary
+    coord_def target;   // input and output: target x,y or logical extension of beam to map edge
+    coord_def delta;    // input and output: delta x and y if direction - always -1,0,1
+    ray_def ray;        // output: ray chosen if necessary
+    bool find_target;   // input: attempt to search for a target, possibly by modifying a target
 };
