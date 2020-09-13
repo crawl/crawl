@@ -38,7 +38,7 @@ mutations:
   1:
     MUT_BLINKBOLT: 1
 fake_mutations:
-  - long: "You are immune to electricity, but lose all magic in the water."
+  - long: "You are immune to electricity, but lose all magic reserves in water."
     short: inner lightning
 recommended_jobs:
   - JOB_WARPER
