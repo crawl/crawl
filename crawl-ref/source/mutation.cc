@@ -1361,6 +1361,12 @@ bool physiology_mutation_conflict(mutation_type mutat)
         return true;
     }
 
+    // SP_SPARKBORN : shock resistance cannot be modified
+    if (you.species == SP_SPARKBORN && (mutat == MUT_SHOCK_RESISTANCE))
+    {
+        return true;
+    }
+
     // Only Nagas and Draconians can get this one.
     if (you.species != SP_NAGA && !species_is_draconian(you.species)
         && mutat == MUT_STINGER)

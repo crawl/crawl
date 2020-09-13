@@ -1019,6 +1019,11 @@ bool actor_cloud_immune(const actor &act, const cloud_struct &cloud)
     {
         return true;
     }
+    if (player && you.species == SP_SPARKBORN
+        && (cloud.type == CLOUD_RAIN || cloud.type == CLOUD_STORM))
+    {
+        return true;
+    }
     return false;
 }
 

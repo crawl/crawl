@@ -2630,7 +2630,7 @@ static vector<formatted_string> _get_overview_resistances(
     out += rpois_string;
 
     const int relec = player_res_electricity(calc_unid);
-    out += _resist_composer("rElec", cwidth, relec) + "\n";
+    out +=  (you.species == SP_SPARKBORN) ? _infini_composer("rElec", cwidth) + "\n" : _resist_composer("rElec", cwidth, rfire, 3) + "\n";
 
     const int rcorr = you.res_corr(calc_unid);
     out += _resist_composer("rCorr", cwidth, rcorr) + "\n";

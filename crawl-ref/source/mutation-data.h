@@ -1974,6 +1974,14 @@ static const mutation_def mut_data[] =
   {"Your presence becomes easier to attract the attention of the gods.", "", ""},
   {"", "", ""},
 },
+
+{ MUT_BLINKBOLT, 0, 1, mutflag::good, false,
+  "blinkbolt",
+
+  {"Sometimes your body bursts into living lightning when damaged.", "", ""},
+  {"", "", ""},
+  {"", "", ""},
+},
 };
 
 static const mutation_category_def category_mut_data[] =
