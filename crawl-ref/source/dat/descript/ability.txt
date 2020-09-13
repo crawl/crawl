@@ -1119,25 +1119,29 @@ on summoning skill and lasts from 3 turns up to 10 turns.
 # Agraphede
 Create Web ability
 
-implement me.
+Create a permanent web at the nearby empty spot of your choice. This web will hold both
+your enemies and yourself.
 %%%%
 Convert Curing Potion ability
 
-implement me.
+Convert a potion of curing into a potion of poison. Drinking a poiton of poison cause
+poisoning.
 %%%%
 Enchant Poison ability
 
-implement me.
+Enchant your weapon with poison.
 %%%%
-Create Explosive Trap ability
+Ball of web ability
 
-implement me.
+Create explosive balls of web. The ball of web tracks your enemies, explodes at the moment
+of collision and covers the surrounding area with webs.
 %%%%
-Hornet String ability
+Hornet Sting ability
 
-implement me.
+Fire a deadly sting of poison, made from the slowing-paralyzing poison of hornets and the
+confusing poison of tarantulas.
 %%%%
 Summon Spider ability
 
-implement me.
+Call down the swarm of poisonous insects and spiders, moths, and webs.
 %%%%
