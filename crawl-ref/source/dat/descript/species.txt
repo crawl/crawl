@@ -206,7 +206,8 @@ them in price for memory.
 Sparkborn
 
 Sparkborns are distant relatives of Raijus. Their essence is the inner lightning,
-so electricity does no harm to them, but loses magic at the water. Sometimes, their
-body bursts into into living lightning when damaged, move to nearby choosed spot,
-and dealt damage on a trail. Suppresing this 'blink-bolt' will cause contamination.
+so electricity does no harm to them, but loses they lose magic at in the water.
+Sometimes, their body bodies bursts into living lightning when damaged, move moving
+to a nearby choosed chosen spot , and dealt dealing damage on a the trail. Suppressing
+this the 'blink-bolt' will cause contamination.
 %%%%
