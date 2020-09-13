@@ -2562,7 +2562,7 @@ monster_type random_demonspawn_job()
 //
 //     (is_unclean_spell() || is_chaotic_spell())
 //
-// FIXME: This is not true for one set of spellbooks; MST_WIZARD_IV
+// FIXME: This is not true for one set of spellbooks; MST_WIZARD_I
 // contains the unholy and chaotic Banishment spell, but the other
 // MST_WIZARD-type spellbooks contain no unholy, evil, unclean or
 // chaotic spells.

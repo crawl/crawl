@@ -51,6 +51,9 @@ git submodule update --init
 # Build DCSS (remove TILES=y for console mode)
 cd crawl-ref/source
 make -j4 TILES=y
+
+# Play DCSS by running the compiled binary
+./crawl
 ```
 
 ### Packaged Dependencies
@@ -141,6 +144,16 @@ Then follow [the above compilation steps](#compiling).
     cd crawl
     git submodule update --init
     ```
+
+3. And install PyYAML:
+
+    ```sh
+    pip install pyyaml
+    ```
+
+3. If you want to build a macOS application, add `mac-app-tiles` to your make
+   command, eg: `make -j4 mac-app-tiles TILES=y`. This will create an application in
+   `mac-app-zips/` of the source directory.
 
 Then follow [the above compilation steps](#compiling).
 

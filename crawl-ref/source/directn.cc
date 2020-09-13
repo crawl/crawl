@@ -477,39 +477,57 @@ public:
 static coord_def _full_describe_menu(vector<monster_info> const &list_mons,
                                      vector<item_def> const &list_items,
                                      vector<coord_def> const &list_features,
-                                     string selectverb)
+                                     string selectverb,
+                                     bool examine_only = false,
+                                     string title = "")
 {
     InvMenu desc_menu(MF_SINGLESELECT | MF_ANYPRINTABLE
                         | MF_ALLOW_FORMATTING | MF_SELECT_BY_PAGE);
 
-    string title = "";
-    if (!list_mons.empty())
-        title  = "Monsters";
-    if (!list_items.empty())
-    {
-        if (!title.empty())
-            title += "/";
-        title += "Items";
-    }
-    if (!list_features.empty())
-    {
-        if (!title.empty())
-            title += "/";
-        title += "Features";
-    }
+    string title_secondary;
 
-    title = "Visible " + title;
-    string title1 = title + " (select to " + selectverb + ", '!' to examine):";
-    title += " (select to examine, '!' to " + selectverb + "):";
-
-    desc_menu.set_title(new MenuEntry(title, MEL_TITLE), false);
-    desc_menu.set_title(new MenuEntry(title1, MEL_TITLE));
+    if (title.empty())
+    {
+        if (!list_mons.empty())
+            title  = "Monsters";
+        if (!list_items.empty())
+        {
+            if (!title.empty())
+                title += "/";
+            title += "Items";
+        }
+        if (!list_features.empty())
+        {
+            if (!title.empty())
+                title += "/";
+            title += "Features";
+        }
+        title = "Visible " + title;
+        if (examine_only)
+            title += " (select to examine)";
+        else
+        {
+            title_secondary = title + " (select to examine, '!' to "
+              + selectverb + "):";
+            title += " (select to " + selectverb + ", '!' to examine):";
+        }
+    }
 
     desc_menu.set_tag("pickup");
     // necessary for sorting of the item submenu
     desc_menu.set_type(menu_type::pickup);
-    desc_menu.action_cycle = Menu::CYCLE_TOGGLE;
-    desc_menu.menu_action  = InvMenu::ACT_EXECUTE;
+    desc_menu.set_title(new MenuEntry(title, MEL_TITLE));
+    if (examine_only)
+    {
+        desc_menu.action_cycle = Menu::CYCLE_NONE;
+        desc_menu.menu_action = InvMenu::ACT_EXAMINE;
+    }
+    else
+    {
+        desc_menu.action_cycle = Menu::CYCLE_TOGGLE;
+        desc_menu.menu_action = InvMenu::ACT_EXECUTE;
+        desc_menu.set_title(new MenuEntry(title_secondary, MEL_TITLE), false);
+    }
 
     // Start with hotkey 'a' and count from there.
     menu_letter hotkey;
@@ -2283,10 +2301,9 @@ void terse_describe_square(const coord_def &c, bool in_range)
         _describe_cell(c, in_range);
 }
 
+// Get description of the "top" thing in a square; for mouseover text.
 void get_square_desc(const coord_def &c, describe_info &inf)
 {
-    // NOTE: Keep this function in sync with full_describe_square.
-
     const dungeon_feature_type feat = env.map_knowledge(c).feat();
     const cloud_type cloud = env.map_knowledge(c).cloud();
 
@@ -2323,29 +2340,55 @@ void get_square_desc(const coord_def &c, describe_info &inf)
         inf.body << get_cloud_desc(cloud);
 }
 
+// Show a description of the only thing on a square, or a selection menu with
+// visible things on the square if there are many. For x-v and similar contexts.
+// Used for both in- and out-of-los cells.
 void full_describe_square(const coord_def &c, bool cleanup)
 {
-    // NOTE: Keep this function in sync with get_square_desc.
+    vector<monster_info> list_mons;
+    vector<item_def> list_items;
+    vector<coord_def> list_features;
+    int quantity = 0;
 
-    if (const monster_info *mi = env.map_knowledge(c).monsterinfo())
+    const monster_info *mi = env.map_knowledge(c).monsterinfo();
+    item_def *obj = env.map_knowledge(c).item();
+    const dungeon_feature_type feat = env.map_knowledge(c).feat();
+
+    if (mi)
     {
-        // First priority: monsters.
-        describe_monsters(*mi);
+        list_mons.emplace_back(*mi);
+        ++quantity;
     }
-    else if (const item_info *obj = env.map_knowledge(c).item())
+    if (obj)
     {
-        // Second priority: item(s).
-        if (!you.see_cell(c))
-            describe_item_popup(*obj);
+        list_items = item_list_in_stash(c);
+        quantity += list_items.size();
+    }
+    // I'm not sure if features should be included. But it seems reasonable to
+    // at least include what full_describe_view shows
+    if (feat_stair_direction(feat) != CMD_NO_CMD || feat_is_trap(feat))
+    {
+        list_features.push_back(c);
+        ++quantity;
+    }
+
+    if (quantity > 1)
+    {
+        _full_describe_menu(list_mons, list_items, list_features, "", true,
+                            you.see_cell(c) ? "What do you want to examine?"
+                                            : "What do you want to remember?");
+    }
+    else if (quantity == 1)
+    {
+        if (mi)
+            describe_monsters(*mi);
+        else if (list_items.size())
+            describe_item(*obj);
         else
-            describe_items(item_list_on_square(you.visible_igrd(c)),
-                           "Describe which item?");
+            describe_feature_wide(c);
     }
     else
-    {
-        // Third priority: features.
         describe_feature_wide(c);
-    }
 
     if (cleanup)
     {

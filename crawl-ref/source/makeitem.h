@@ -9,6 +9,11 @@
 
 static const int NO_AGENT = -1;
 
+// item_def::plus is a short
+constexpr short GOOD_STAT_RING_PLUS = 6;
+constexpr short GOOD_RING_PLUS = 4;
+constexpr short BAD_RING_PLUS = -4;
+
 int create_item_named(string name, coord_def pos, string *error);
 
 int items(bool allow_uniques, object_class_type force_class, int force_type,
