@@ -6,8 +6,8 @@ spread corruption and chaos.
 %%%%
 Arcane Warrior
 
-Arcane Warriors are melee fighters, and buff themselves with Elelements and 
-Charms school.
+Arcane Warriors are melee fighters, and buff themselves with the Elements and 
+the Charms school.
 %%%%
 Air Elementalist
 
@@ -35,9 +35,9 @@ raging berserker early on, apart from hubris.
 %%%%
 Caravan
 
-Caravans visited the Dungeon to find the Orb; the best sale item on the surface.
-They are not good adventurers, but starts with a hired mercenary, a tool to heal
-mercenary, and some extra golds to give equipment for mercenary. 
+Caravans visit the Dungeon to find the Orb; the best sale item on the surface. 
+They are not good adventurers, but start with a hired mercenary, a tool to heal 
+mercenaries, and some extra golds to give equipment to them.
 %%%%
 Chaos Knight
 
@@ -90,7 +90,8 @@ library are quite versatile.
 %%%%
 Melted Knight
 
-Melted Knights worship Jiyva.
+Melted Knights worship Jiyva, and are sent from the Slime Pit into the Dungeon 
+to spread slime and chaos.
 %%%%
 Monk
 

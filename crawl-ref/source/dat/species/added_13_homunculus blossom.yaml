@@ -52,7 +52,7 @@ mutations:
   1:
     MUT_REGENERATION: 1
 fake_mutations:
-  - long: Every time cast a spell, your magic will be amplified and unstable.
+  - long: Every time you cast a spell, your magic will be amplified and unstable.
     short: blooming essence
   - long: You can release powerful unstability with melee attacks.
     short: essence striker

@@ -79,8 +79,8 @@ most, orcs are very proud and many of them feel superior.
 %%%%
 Homunculus
 
-The Homunculus are 'created beings'. From any origin, they all have bodies that
-span between life and artificial construct.
+Homunculi are created beings. They all have bodies that lie between life and 
+artificial construct.
 %%%%
 Human
 
@@ -152,8 +152,8 @@ Their magical reserves absorb damage, and they pack a magic-restoring bite.
 %%%%
 Two Headed Ogre
 
-Two Headed Ogre has two heads and uses dual weapon, also wear two amulet. 
-However, They hate and never hold shield, thinking it is only for cowards.
+Two Headed Ogres dual-wield weapons and wear two amulets at once. However, 
+they hate and never hold shields, thinking those are only for cowards.
 %%%%
 Hydra
 
@@ -161,14 +161,15 @@ Hydra has lots of heads; if they can survive from every combats.
 %%%%
 Angel
 
-Holy species who believe in three good gods. They do not abandon faith,
-and They hate evil behavior. They do not need to eat and are resistant 
-to various type.
+Angels are holy species that believe in one of three good gods. They do not 
+abandon their faith and hate evil behaviour. They do not need to eat and are 
+resistant to various types.
 %%%%
 Mantis
 
-Insect creature with scythe hands and strong legs. They do leap attack
-automatically when approaching an enemy. Cowardly actions will make them 
+Mantes are insect creatures with scythe hands and strong legs. They do 
+leap attack automatically when approaching an enemy. Cowardly actions 
+will make them slow.
 slow.
 %%%%
 Mountain Dwarf
@@ -179,29 +180,30 @@ hand combat.
 %%%%
 Lesser Lich
 
-They are incomplete, so they head to dungeon to be True lich.  
-Lesser Liches are good at all kinds of magic, especially the necromancy,
-and have excellent mana regenerative ability.
+ Lesser Liches head to the Dungeon to fill their incompleteness to 
+become a true Lich. They are good at all kinds of magic, especially 
+Necromancy, and have excellent mana regenerative ability.
 %%%%
 Crustacean
 
-They have hard, but easily broken exoskeleton. They can use their cut
-body as a bait and run away. They are very adaptive and they can 
-recover their body. They grow and can create miasma foam like a crab.
+Crustacea have hard, but easily broken exoskeletons. They can use their 
+cut body as a bait and run away. They are very adaptive and are able to 
+recover their body. They become more durable and can create miasma foam 
+like a crab as they grow.
 %%%%
 Meliai
 
-Small hybrids of human and bee with a sharp stinger. Their buzzing wings
-move very fast, but require lots of calorie. Due to their instinct to
-serve higher beings(like a queen of hive), they are naturally faithful.
+Meliades are small hybrids of human and bee with sharp stingers. Their 
+buzzing wings move very fast, but require lots of calorie. Due to their 
+instinct to serve higher beings, they are naturally faithful.
 %%%%
 Wight
 
-Wights are an ancient warriors animated as undead. Since they are actually
-a skeleton, potions can't affect them. Thier skills to fight are weathering,
-also casting a spells except ice magic and necromancy. However, they can use
-negative energy to infuse their melee attacks, and enchant weapon by cursing
-them in price for memory.
+Wights are ancient warriors animated as undead beings. Since they are 
+actually skeletons, they are unable to consume any food or potions. They 
+are adept at Necromancy and Ice Magic but learn other skills very slowly. 
+However, they can use negative energy to infuse their melee attacks, and 
+enchant weapon by cursing them in price for memory.
 %%%%
 Sparkborn
 

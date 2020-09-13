@@ -47,7 +47,7 @@ levelup_stat_frequency: 4
 levelup_stats:
   - int
 fake_mutations:
-  - long: Every time cast a spell, your magic will be amplified and unstable.
+  - long: Every time you cast a spell, your magic will be amplified and unstable.
     short: imitated essence
   - long: You can release unstability with melee attacks.
     short: essence stabilizer

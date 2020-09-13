@@ -53,7 +53,7 @@ mutations:
     MUT_MANA_REGENERATION: 1
     MUT_CLARITY : 1
 fake_mutations:
-  - long: Every time cast a spell, your magic will be amplified and unstable.
+  - long: Every time you cast a spell, your magic will be amplified and unstable.
     short: adapted essence
   - long: You can release unstability and regain magic with melee attacks.
     short: essence recycler
