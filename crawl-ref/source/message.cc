@@ -1540,6 +1540,8 @@ static void _mpr(string text, msg_channel_type channel, int param, bool nojoin,
         return;
     }
 
+    clua.callfn("c_message", "ss", text.c_str(), channel_to_str(channel).c_str());
+
     bool domore = _check_more(text, channel);
     bool do_flash_screen = _check_flash_screen(text, channel);
     bool join = !domore && !nojoin && _check_join(text, channel);

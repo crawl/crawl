@@ -730,8 +730,12 @@ static int crawl_take_note(lua_State *ls)
 }
 
 /*** Retrieve the message buffer.
+ *
+ * See also @{Hooks.c_message} for programmatically receiving messages
+ * as they are sent.
+ *
  * @tparam int num how many lines back to go
- * @treturn strong
+ * @treturn string
  * @function messages
  */
 static int crawl_messages(lua_State *ls)
