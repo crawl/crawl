@@ -1009,7 +1009,6 @@ ENDMAP
 NAME:    vts_chambers
 TAGS:    volcano_tomb_subvault no_item_gen no_monster_gen no_rotate no_hmirror
 TAGS:    no_vmirror unrand
-#        Traps and doors.
 MONS:    gargoyle w:99 / toenail golem w:1
 MONS:    troll skeleton / spriggan skeleton / naga skeleton
 MONS:    alligator skeleton / harpy skeleton / anaconda skeleton
