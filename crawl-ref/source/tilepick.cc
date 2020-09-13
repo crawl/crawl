@@ -4115,6 +4115,8 @@ static tileidx_t _tileidx_player_species_base(const species_type species)
             return TILEG_SP_MELIAI;
         case SP_WIGHT:
             return TILEG_SP_WIGHT;
+        case SP_SPARKBORN:
+            return TILEG_SP_SPARKBORN;
         default:
             return TILEP_ERROR;
     }

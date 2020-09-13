@@ -1790,7 +1790,7 @@ static bool _find_charge_target(vector<coord_def> &target_path, int max_range,
  */
 spret furious_charge(bool fail)
 {
-    const int charge_range = 4;
+    const int charge_range = 5;
     const coord_def initial_pos = you.pos();
 
     if (you.duration[DUR_EXHAUSTED])

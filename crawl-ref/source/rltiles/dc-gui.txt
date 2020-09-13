@@ -413,6 +413,10 @@ base/octopode1 SP_RECOMMENDED_OCTOPODE
 %compose base/wight
 %compose body/animal_skin
 %finish SP_RECOMMENDED_WIGHT
+%start
+%compose base/sparkborn
+%compose body/animal_skin
+%finish SP_RECOMMENDED_SPARKBORN
 %syn LAST_RECOMMENDED_SPECIES
 
 %sdir gui/backgrounds
@@ -457,4 +461,5 @@ enum:SP_RECOMMENDED_HYDRA SP_HYDRA
 enum:SP_RECOMMENDED_HOMUNCULUS SP_HOMUNCULUS
 enum:SP_RECOMMENDED_MELIAI SP_MELIAI
 enum:SP_RECOMMENDED_WIGHT SP_WIGHT
+enum:SP_RECOMMENDED_SPARKBORN SP_SPARKBORN
 %syn LAST_SPECIES

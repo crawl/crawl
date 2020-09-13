@@ -14,6 +14,7 @@
 #include "abyss.h"
 #include "act-iter.h"
 #include "areas.h"
+#include "beam.h"
 #include "cloud.h"
 #include "coordit.h"
 #include "delay.h"
@@ -41,6 +42,7 @@
 #include "nearby-danger.h"
 #include "orb.h"
 #include "output.h"
+#include "player.h"
 #include "prompt.h"
 #include "shout.h"
 #include "spl-util.h"
@@ -483,6 +485,95 @@ spret crab_walk()
     crawl_state.cancel_cmd_repeat();
     mpr("You crawl like a crab!");
     return spret::success; // TODO
+}
+
+// SP_SPARKBORN
+spret cast_player_blinkbolt()
+{
+    if (crawl_state.is_repeating_cmd())
+    {
+        crawl_state.cant_cmd_repeat("You can't repeat blinkbolts.");
+        crawl_state.cancel_cmd_again();
+        crawl_state.cancel_cmd_repeat();
+        return spret::abort;
+    }
+    return player_blinkbolt();
+}
+
+spret player_blinkbolt()
+{
+    coord_def destination;
+    coord_def start = you.pos();
+    int blink_power = 8 + (3*(you.experience_level/9)) + random2(2*(you.experience_level/3));
+
+    targeter_smite tgt(&you, 3);
+    tgt.obeys_mesmerise = true;
+    if (!_find_cblink_target(destination, true, "blinkbolt", &tgt))
+    {
+        if (!yesno("Are you sure suppress blinkbolt? This will contaminate you!",
+                   false, 'n'))
+        {
+            player_blinkbolt();
+            return spret::abort;
+        }
+        contaminate_player(2000 + random2(1000), true);
+        mprf(MSGCH_WARN, "You barely suppress your inner lightning.");
+        return spret::abort;
+    }
+
+    mpr("Your body bursts into living lightning!");
+
+    int net = get_trapping_net(you.pos());
+    if (net == NON_ITEM)
+    {
+        trap_def *trap = trap_at(you.pos());
+        if (trap && trap->type == TRAP_WEB)
+            destroy_trap(you.pos());
+    }
+    else
+        destroy_item(net);
+    stop_being_held();
+    you.stop_being_constricted(false);
+
+    // invisible monster that the targeter didn't know to avoid
+    if (monster_at(destination))
+    {
+        mpr("Oops! There was something there already!");
+        uncontrolled_blink();
+        you.increase_duration(DUR_BLINKBOLT_COOLDOWN, 5 + random2(5), 10);
+    }
+    else
+    {
+        _place_tloc_cloud(you.pos());
+        move_player_to_grid(destination, false);
+        you.increase_duration(DUR_BLINKBOLT_COOLDOWN, 10 + random2(10), 20);
+    }
+
+    bolt blinkbolt;
+    blinkbolt.range = LOS_RADIUS;
+    blinkbolt.source = start;
+    blinkbolt.target = you.pos();
+    blinkbolt.name                  = "electrical discharge";
+    blinkbolt.damage                = dice_def(blink_power, 1);
+    blinkbolt.hit                   = AUTOMATIC_HIT;
+    blinkbolt.flavour               = BEAM_ELECTRICITY;
+    blinkbolt.colour                = LIGHTBLUE;
+    blinkbolt.attitude              = ATT_FRIENDLY;
+    blinkbolt.thrower               = KILL_YOU;
+    blinkbolt.pierce                = true;
+    blinkbolt.aimed_at_spot         = true;
+    blinkbolt.dont_stop_player      = true;
+    blinkbolt.friend_info.dont_stop = true;
+    blinkbolt.foe_info.dont_stop    = true;
+    blinkbolt.is_tracer             = false;
+    blinkbolt.draw_delay   = 50;
+    
+    blinkbolt.fire();
+
+    crawl_state.cancel_cmd_again();
+    crawl_state.cancel_cmd_repeat();
+
+    return spret::success;
 }
 
 /**
