@@ -14,6 +14,7 @@ aptitudes:
   axes: -3
   maces_and_flails: -3
   polearms: -3
+  staves: 1
   armour: -1
   dodging: -1
   stealth: -2
