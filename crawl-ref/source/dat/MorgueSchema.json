@@ -21,7 +21,7 @@
                     ]
                 },
                 "seed": {
-                    "type": "number"
+                    "type": "string"
                 }
             },
             "required": [

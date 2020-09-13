@@ -393,7 +393,7 @@ static void _json_sdump_header(json_dump_params &jpar)
 #endif
         )
     {
-        json_append_member(header, "seed", json_mknumber(crawl_state.seed));
+        json_append_member(header, "seed", json_mkstring(crawl_state.seed));
     }
 
     json_append_member(jpar.json, "header", header);
