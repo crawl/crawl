@@ -8,18 +8,39 @@
 ### Added
 - 새로운 소환의 신 너머의 군단 추가. [상세설명](https://github.com/kimjoy2002/crawl/wiki/legion_from_beyond)
   - New god: Legion from beyond, God of Summonnig.
-    
+  
+- 새로운 신. 태초의 독충, 아그라피드 추가. [상세설명](https://github.com/kimjoy2002/crawl/wiki/agraphede)
+  - New god: Agraphede, God of Poison.
+       
 - 새로운 종족 와이트 추가. 언데드로 일으켜 세워진 고대의 전사들이며 근접 공격에 음에너지를 불어넣고 자신의 무기를 저주와 함께 반영구적으로 강화할 수 있다. [상세설명](https://github.com/kimjoy2002/crawl/wiki/wight)
   - Added wight(playable). they are an ancient warriors animated as undead. they can use negative energy to infuse their melee attacks, and enchant weapon by cursing them in price for memory.  
+  
+- 새로운 종족 스파크본 추가. 데미지를 입었을때 일정 확률로 블링크 볼트가 강제 시전되는 전기로 이루어진 종족. 전기면역을 가지고 있으나 물에 들어가면 방전되며 마나가 0이 된다.
+  - Added Sparkborn(playable). A species of electric race in which a blink bolt is forced to be tried on a certain probability when damage is worn. they has an electric immunity, but when they enters the water, they discharges and the mana becomes zero.
+ 
+- 새로운 직업 웨폰마스터 추가. 양손 무기를 들고 시작하며 무기 스킬에 집중된 전사 직업
+  - Added Weapon Master(background), warrior background that begins with a double-handed weapon and focuses on weapons skills.    
   
 - 6레벨 소환/강령 마법, 두건 악귀 소환 추가. 대상에게 음에너지 피해를 주고 준 피해의 일부만큼 시야 안의 살아있는 아군에게 체력회복시키는 악의의 공물(Malign Offering)을 사용한다. 이것은 플레이어의 체력을 회복시킬 수 있다.
   - Added Summon Hooded Malice, level 6 summ/necro spell. Uses a Malign Offering that inflicts negative energy damage to the target and restores health to living allies in the field of view as much as part of the damage dealt. This can restore the player's health.
  
+- 8레벨 부여술 마법, 밀폐 방어막 추가. 사용자의 최대 체력의 절반만큼의 보호막을 만든다. 고통이나 flay를 제외한 모든 데미지를 대신 받는 대신에, 파괴되면 사용자에게 짧은 스턴을 준다.
+  - Added Hermetic Barrier, level 8 charm spell. Create a shield as much as half the player's maximum HP. absorb all damage except torment or flay. Instead, if destroyed, a short stun is applied to the user.
+
+- 새로운 책. 용맹의 고서. 살육의 노래, 불꽃 강타, 가속, 불꽃의 고리, 밀폐 방어막
+  - new spell bock, Tome of Valor. Song of Slaying, Flame Strike, Haste, Ring of Flame, Hermetic Barrier
+
 - 아군을 리콜할 수 있는 Pipe 발동 아이템 추가
   - Added Pipe activation item that can recall allies
  
 - 용병을 고용할 수 있는 선술집 상점 추가. 
   - Added a Tavern shop where you can hire mercenaries.
+  
+- 새로운 네임드. 리치베인, 속박을 끊어낸 언데드. 픽다트 언데드헌터를 확정으로 들고 나오는 고대의 영웅 네임드
+  - New Orc Unique: Lichbane, the Unchained Undead. A Ancient champion named monster that comes out with an undead Hunter.
+  
+- 새로운 네임드. 추락한 자. 영체구름과 생명력흡수를 사용하는 타락 천사 네임드
+  - New Orc Unique: the Fallen. A Profane Servitor named monster that comes out with spectral cloud and life drain
 
 ### Changed
 - 히드라가 6개미만의 낮은 머리수일때 회피 보정을 받음
@@ -34,7 +55,10 @@
   - 용병재고용 능력이 사라짐 remove rehire ability
   - 리콜능력대신 새로운 아이템인 Pipe를 들고 시작함 Start with a new item, Pipe, instead of the recall ability
   - 마녀 용병에 픽다트 스태프를 허용함 Allows the fixedart staff to witch mercenaries
-  
+
+- 트로그의 마법책 불태우기 롤백
+  -Rollback Trog burning spellbooks
+
 - 베오그의 아이템 선물의 제한이 제거됨. 대신 저항공유 권능이 사라짐
   - beogh do not restrict number of gifts to orcish follower and make not sharing resistance anymore.
 

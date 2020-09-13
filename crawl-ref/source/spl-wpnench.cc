@@ -8,6 +8,7 @@
 #include "spl-wpnench.h"
 
 #include "areas.h"
+#include "artefact.h"
 #include "god-item.h"
 #include "god-passive.h"
 #include "item-prop.h"
@@ -27,16 +28,20 @@
  */
 void end_weapon_brand(item_def &weapon, bool verbose)
 {
-    ASSERT(you.duration[DUR_EXCRUCIATING_WOUNDS]);
+    ASSERT(you.duration[DUR_EXCRUCIATING_WOUNDS]
+    || you.duration[DUR_POISON_WEAPON]);
+    bool pain = (you.duration[DUR_EXCRUCIATING_WOUNDS] > 0);
 
     set_item_ego_type(weapon, OBJ_WEAPONS, you.props[ORIGINAL_BRAND_KEY]);
     you.props.erase(ORIGINAL_BRAND_KEY);
     you.duration[DUR_EXCRUCIATING_WOUNDS] = 0;
+    you.duration[DUR_POISON_WEAPON] = 0;
 
     if (verbose)
     {
-        mprf(MSGCH_DURATION, "%s seems less pained.",
-             weapon.name(DESC_YOUR).c_str());
+        mprf(MSGCH_DURATION, "%s seems less %s.",
+             weapon.name(DESC_YOUR).c_str(),
+            pain?"pained":"toxic");
     }
 
     you.wield_change = true;
@@ -50,6 +55,93 @@ void end_weapon_brand(item_def &weapon, bool verbose)
     }
 }
 
+
+spret poison_brand_weapon(int power, bool fail)
+{
+    if (you.duration[DUR_ELEMENTAL_WEAPON]
+        || you.duration[DUR_EXCRUCIATING_WOUNDS]) {
+        mpr("You are already using a magical weapon.");
+        return spret::abort;
+    }
+    if (you.weapon() == nullptr) {
+        mpr("You do not have weapons.");
+        return spret::abort;
+    }
+
+    item_def& weapon = *you.weapon();
+
+    if (weapon.base_type != OBJ_WEAPONS) {
+        mpr("This is not a weapon.");
+        return spret::abort;
+    }
+
+    const brand_type which_brand = SPWPN_VENOM;
+    const brand_type orig_brand = get_weapon_brand(weapon);
+
+    bool has_temp_brand = you.duration[DUR_POISON_WEAPON];
+    if (!has_temp_brand && get_weapon_brand(weapon) == which_brand)
+    {
+        mpr("This weapon is already branded with venom.");
+        return spret::abort;
+    }
+
+    // But not blowguns.
+    if (weapon.sub_type == WPN_BLOWGUN) {
+        mpr("You cannot brand blowgun.");
+        return spret::abort;
+    }
+
+    if (is_artefact(weapon)) {
+        mpr("You can't brand this weapon.");
+        return spret::abort;
+    }
+
+    const bool dangerous_disto = orig_brand == SPWPN_DISTORTION
+        && !have_passive(passive_t::safe_distortion);
+    if (dangerous_disto)
+    {
+        const string prompt =
+            "Really brand " + weapon.name(DESC_INVENTORY) + "?";
+        if (!yesno(prompt.c_str(), false, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return spret::abort;
+        }
+    }
+
+    fail_check();
+
+    if (dangerous_disto)
+    {
+        // Can't get out of it that easily...
+        MiscastEffect(&you, nullptr, { miscast_source::wield },
+            spschool::translocation, 9, 90,
+            "rebranding a weapon of distortion");
+    }
+
+    mprf("%s starts dripping with poison.", weapon.name(DESC_YOUR).c_str());
+
+    if (!has_temp_brand)
+    {
+        you.props[ORIGINAL_BRAND_KEY] = get_weapon_brand(weapon);
+        set_item_ego_type(weapon, OBJ_WEAPONS, which_brand);
+        you.wield_change = true;
+        if (you.duration[DUR_SPWPN_PROTECTION])
+        {
+            you.duration[DUR_SPWPN_PROTECTION] = 0;
+            you.redraw_armour_class = true;
+        }
+        if (orig_brand == SPWPN_ANTIMAGIC)
+            calc_mp();
+    }
+
+    you.increase_duration(DUR_POISON_WEAPON, 8 + roll_dice(2, power), 100);
+
+    return spret::success;
+}
+
+
+
 /**
  * Temporarily brand a weapon with pain.
  *
@@ -59,8 +151,9 @@ void end_weapon_brand(item_def &weapon, bool verbose)
  */
 spret cast_excruciating_wounds(int power, bool fail)
 {
-    if (you.duration[DUR_ELEMENTAL_WEAPON]) {
-        mpr("You are using an elemetal weapon.");
+    if (you.duration[DUR_ELEMENTAL_WEAPON]
+        || you.duration[DUR_POISON_WEAPON]) {
+        mpr("You are already using a magical weapon.");
         return spret::abort;
     }
     item_def& weapon = *you.weapon();

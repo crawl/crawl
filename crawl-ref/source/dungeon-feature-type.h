@@ -292,6 +292,7 @@ enum dungeon_feature_type
     DNGN_ALTAR_WYRM,
     DNGN_ALTAR_IMUS,
     DNGN_ALTAR_LEGION_FROM_BEYOND,
+    DNGN_ALTAR_AGRAPHEDE,
 #endif
     DNGN_TEMPORAL_FLOOR,
 

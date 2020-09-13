@@ -32,6 +32,7 @@ enum god_type
     GOD_WYRM,
     GOD_IMUS,
     GOD_LEGION_FROM_BEYOND,
+    GOD_AGRAPHEDE,
     NUM_GODS,                          // always after last god
 
     GOD_RANDOM = 100,

@@ -19,6 +19,7 @@ void finish_manual(int slot);
 void get_all_manual_charges(vector<int> &charges);
 void set_all_manual_charges(const vector<int> &charges);
 string manual_skill_names(bool short_text=false);
+bool sack_of_spiders(int power, int count, coord_def pos);
 
 void wind_blast(actor* agent, int pow, coord_def target, bool card = false);
 

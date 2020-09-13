@@ -1466,6 +1466,27 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
 
         break;
     }
+    case BEAM_HORNET_VENOM:
+    {
+        hurted = resist_adjust_damage(mons, pbolt.flavour, hurted);
+
+        if (!hurted && doFlavouredEffects && original > 0)
+            simple_monster_message(*mons, " completely resists.");
+        else if (doFlavouredEffects && !one_chance_in(3))
+        {
+            poison_monster(mons, pbolt.agent(), 2);
+            if (one_chance_in(5))
+            {
+                mons->paralyse(pbolt.agent(), roll_dice(1, 3));
+            }
+            else if (one_chance_in(3))
+                mons->confuse(pbolt.agent(), 1 + random2(10));
+            else
+                mons->slow_down(pbolt.agent(), roll_dice(1, 3));
+        }
+
+        break;
+    }
 
     case BEAM_POISON_ARROW:
     {
@@ -2941,6 +2962,7 @@ void bolt::internal_ouch(int dam)
     }
     else if (monst && (monst->type == MONS_BALLISTOMYCETE_SPORE
                        || monst->type == MONS_BALL_LIGHTNING
+                       || monst->type == MONS_BALL_WEB
                        || monst->type == MONS_HYPERACTIVE_BALLISTOMYCETE
                        || monst->type == MONS_FULMINANT_PRISM
                        || monst->type == MONS_BENNU // death flames
@@ -3065,6 +3087,7 @@ bool bolt::is_harmless(const monster* mon) const
         return mon->res_elec() >= 3;
 
     case BEAM_POISON:
+    case BEAM_HORNET_VENOM:
         return mon->res_poison() >= 3;
 
     case BEAM_ACID:
@@ -3113,6 +3136,7 @@ bool bolt::harmless_to_player() const
         return player_prot_life(false) >= 3;
 
     case BEAM_POISON:
+    case BEAM_HORNET_VENOM:
         return player_res_poison(false) >= 3
                || is_big_cloud() && player_res_poison(false) > 0;
 
@@ -3949,6 +3973,14 @@ void bolt::affect_player()
         return;
     }
 
+    if (you_worship(GOD_AGRAPHEDE)
+        && !you.penance[GOD_AGRAPHEDE]
+        && flavour == BEAM_ENSNARE
+        && attitude == ATT_FRIENDLY)
+    {
+        return;
+    }
+
     // Digging -- don't care.
     if (flavour == BEAM_DIGGING)
         return;
@@ -4147,8 +4179,9 @@ void bolt::affect_player()
             you.attribute[ATTR_BARBS_POW] = 4;
     }
 
-    if (flavour == BEAM_ENSNARE)
+    if (flavour == BEAM_ENSNARE) {
         was_affected = ensnare(&you) || was_affected;
+    }
 
     if (origin_spell == SPELL_QUICKSILVER_BOLT)
         debuff_player();
@@ -5182,6 +5215,7 @@ void bolt::affect_monster(monster* mon)
     {
         conducts[0].set();
     }
+
 
     if (!is_explosion && !noise_generated)
     {
@@ -6782,6 +6816,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_POTION_HEAL:           return "heal cloud";
     case BEAM_POTION_RANDOM:         return "random potion";
     case BEAM_POISON:                return "poison";
+    case BEAM_HORNET_VENOM:          return "mixed poison";
     case BEAM_NEG:                   return "negative energy";
     case BEAM_ACID:                  return "acid";
     case BEAM_MIASMA:                return "miasma";

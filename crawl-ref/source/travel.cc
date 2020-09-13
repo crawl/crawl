@@ -2257,6 +2257,7 @@ static god_type _god_from_initial(const char god_initial)
         case '2': return GOD_WYRM; // TODO: find other words to replace '2'
         case 'I': return GOD_IMUS;
         case '3': return GOD_LEGION_FROM_BEYOND;
+        case '4': return GOD_AGRAPHEDE;
         default:  return GOD_NO_GOD;
     }
 }
@@ -2323,6 +2324,10 @@ static level_pos _prompt_travel_altar()
                 case GOD_LEGION_FROM_BEYOND:
                     altar_name = "Legion";
                     god_initial = '3';
+                    break;
+                case GOD_AGRAPHEDE:
+                    altar_name = "Agraphede";
+                    god_initial = '4';
                     break;
                 default:
                     altar_name = god_name(god);

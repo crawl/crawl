@@ -98,6 +98,7 @@ static bool _mons_explodes(const monster *mon)
 {
     return mon->type == MONS_BALLISTOMYCETE_SPORE
            || mon->type == MONS_BALL_LIGHTNING
+           || mon->type == MONS_BALL_WEB
            || mon->type == MONS_FULMINANT_PRISM;
 }
 

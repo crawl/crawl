@@ -991,7 +991,7 @@ static void _animate_weapon(int pow, actor* target)
     if (target_is_player)
     {
         // Clear temp branding so we don't change the brand permanently.
-        if (you.duration[DUR_EXCRUCIATING_WOUNDS])
+        if (you.duration[DUR_EXCRUCIATING_WOUNDS] || you.duration[DUR_POISON_WEAPON])
             end_weapon_brand(*wpn);
         if (you.duration[DUR_ELEMENTAL_WEAPON])
             end_elemental_weapon(*wpn);

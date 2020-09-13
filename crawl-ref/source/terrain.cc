@@ -552,6 +552,7 @@ static const pair<god_type, dungeon_feature_type> _god_altars[] =
     { GOD_WYRM, DNGN_ALTAR_WYRM },
     { GOD_IMUS, DNGN_ALTAR_IMUS },
     { GOD_LEGION_FROM_BEYOND, DNGN_ALTAR_LEGION_FROM_BEYOND },
+    { GOD_AGRAPHEDE, DNGN_ALTAR_AGRAPHEDE },
     { GOD_ECUMENICAL, DNGN_ALTAR_ECUMENICAL },
 };
 

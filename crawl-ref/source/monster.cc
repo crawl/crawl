@@ -3932,6 +3932,19 @@ int monster::res_poison(bool temp) const
 {
     int u = get_mons_resist(*this, MR_RES_POISON);
 
+    if (have_passive(passive_t::agraphede_poison_deprived))
+    {
+        const mon_holy_type holi = holiness();
+        if (holi & MH_NATURAL) {
+            return 0;
+        }
+        else if(you_worship(GOD_AGRAPHEDE) 
+            && you.piety >= piety_breakpoint(5)
+            && ((holi & MH_HOLY) || (holi & MH_DEMONIC))) {
+            return 0;
+        }
+    }
+
     if (u > 0) {
         if (temp && has_ench(ENCH_POISON_VULN)) {
             u -= get_ench(ENCH_POISON_VULN).degree + 1;

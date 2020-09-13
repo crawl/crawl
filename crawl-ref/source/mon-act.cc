@@ -1645,7 +1645,10 @@ static void _pre_monster_move(monster& mons)
     // Dissipate player ball lightnings and foxfires
     // that have left the player's sight
     // (monsters are allowed to 'cheat', as with orb of destruction)
-    if ((mons.type == MONS_BALL_LIGHTNING || mons.type == MONS_FOXFIRE || mons.type == MONS_WILL_O_WISP)
+    if ((mons.type == MONS_BALL_LIGHTNING
+        || mons.type == MONS_BALL_WEB
+        || mons.type == MONS_FOXFIRE
+        || mons.type == MONS_WILL_O_WISP)
         && mons.summoner == MID_PLAYER
         && !cell_see_cell(you.pos(), mons.pos(), LOS_SOLID))
     {

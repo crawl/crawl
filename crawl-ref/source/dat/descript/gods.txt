@@ -10,6 +10,10 @@ all-seeing. Devoted worshippers are allowed to grasp shreds of this knowledge
 and foresight, but be warned: to Ashenzari, power and blessing and curse are
 all the same thing.
 %%%%
+Agraphede
+
+implement me
+%%%%
 Beogh
 
 Beogh is an evil deity, worshipped by the cave orcs native to the dungeon. Only
@@ -243,6 +247,10 @@ intelligent beings. They must also tithe a fraction of all gold gained,
 preferably followed by donations of more. In exchange, worshippers may invoke
 Zin's wrath upon sinners, and eventually gain various divine protections. Zin's
 followers can convert to Elyvilon or the Shining One while keeping some piety.
+%%%%
+Agraphede powers
+
+implement me
 %%%%
 Ashenzari powers
 
@@ -531,6 +539,10 @@ Later, followers gain the ability to imprison their foes temporarily. Followers
 can eventually find temporary safety in a divine refuge. As piety grows,
 followers will be protected from mutation, and Zin may even occasionally
 directly intervene to save a follower's life.
+%%%%
+Agraphede wrath
+
+implement me
 %%%%
 Ashenzari wrath
 

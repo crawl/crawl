@@ -341,6 +341,15 @@ bool is_hasty_item(const item_def& item, bool calc_unid)
     return retval;
 }
 
+static bool _is_poison_curing_item(const item_def& item, bool calc_unid = true)
+{
+    if (!calc_unid && !item_type_known(item))
+        return false;
+    if (item.base_type == OBJ_POTIONS && item.sub_type == POT_CURING)
+        return true;
+    return false;
+}
+
 bool is_channeling_item(const item_def& item, bool calc_unid)
 {
     if (is_unrandom_artefact(item, UNRAND_WUCAD_MU))
@@ -494,6 +503,10 @@ vector<conduct_type> item_conducts(const item_def &item)
 
     if (_is_potentially_hasty_item(item) || is_hasty_item(item, false))
         conducts.push_back(DID_HASTY);
+
+    if (you.duration[DUR_POISONING]>0 && _is_poison_curing_item(item, false)) {
+        conducts.push_back(DID_CURING_POISON);
+    }
 
     if (is_channeling_item(item, false))
         conducts.push_back(DID_CHANNEL);

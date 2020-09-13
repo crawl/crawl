@@ -437,6 +437,22 @@ static const vector<god_passive> god_passives[] =
               "You can give orders to minions just by thinking, with a speed of thought."},
         { 3, passive_t::bless_followers_legion,
                "GOD NOW inspired by killing, based on summoning skill." },
+    },
+
+    // Agraphede
+    {
+        { 0, passive_t::agraphede_anti_poison_resist,
+            "You can not gain poison resistance",
+            "You can gain poison resistance"
+        },
+        { 1, passive_t::agraphede_poison_shield,
+            "converts a certain percentage of damage to poison" },
+        { 2, passive_t::agraphede_poison_regen,
+            "get regen while poisoned" },
+        { 2, passive_t::agraphede_create_worm,
+            "insects pop out of corpses in sight" },
+        { 3, passive_t::agraphede_poison_deprived,
+            "steal poison resistance from enemies in sight" }, 
     }
 };
 COMPILE_CHECK(ARRAYSZ(god_passives) == NUM_GODS);
