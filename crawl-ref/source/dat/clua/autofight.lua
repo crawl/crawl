@@ -23,6 +23,7 @@ AUTOFIGHT_FIRE_STOP = false
 AUTOFIGHT_WAIT = false
 AUTOFIGHT_PROMPT_RANGE = true
 AUTOMAGIC_ACTIVE = false
+AUTOFIGHT_FORCE_FIRE = false
 
 local function delta_to_cmd(dx, dy)
   local d2v = {
@@ -81,7 +82,7 @@ local function have_ranged()
   return wp and wp.is_ranged and not wp.is_melded
 end
 
-local function have_throwing(no_move)
+local function have_quiver_action(no_move)
   return (AUTOFIGHT_THROW or no_move and AUTOFIGHT_THROW_NOMOVE) and you.quiver_valid()
 end
 
@@ -179,6 +180,12 @@ local function will_tab(ax, ay, bx, by)
   return will_tab(ax+move[1], ay+move[2], bx, by)
 end
 
+-- attack types
+--  -1: fail
+--   0: move towards target
+--   1: reaching (evoke weapon with target)
+--   2: melee
+--   3: fire
 local function get_monster_info(dx,dy,no_move)
   m = monster.get_monster_at(dx,dy)
   name = m:name()
@@ -203,10 +210,14 @@ local function get_monster_info(dx,dy,no_move)
       info.attack_type = can_reach(dx, dy) and 1 or 0
     end
   end
-  if info.attack_type == 0 and have_throwing(no_move) and you.see_cell_no_trans(dx, dy) then
-    -- Melee is better than throwing.
+  if info.attack_type == 0 and have_quiver_action(no_move) and you.see_cell_no_trans(dx, dy) then
     info.attack_type = 3
   end
+  if info.attack_type <= 2 and AUTOFIGHT_FORCE_FIRE then
+    -- TODO: refactor so that this is less hacky
+    info.attack_type = 3
+  end
+
   if info.attack_type == 0 and not will_tab(0,0,dx,dy) then
     info.attack_type = -1
   end
@@ -385,6 +396,17 @@ function hit_closest_nomove()
     mag_attack(false)
   else
     attack(false)
+  end
+end
+
+function fire_closest()
+  if AUTOMAGIC_ACTIVE and you.spell_table()[AUTOMAGIC_SPELL_SLOT] then
+    mag_attack(false)
+  else
+    local old = AUTOFIGHT_FORCE_FIRE
+    AUTOFIGHT_FORCE_FIRE = true
+    attack(false)
+    AUTOFIGHT_FORCE_FIRE = old
   end
 end
 
