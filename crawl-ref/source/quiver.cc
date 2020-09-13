@@ -494,6 +494,8 @@ namespace quiver
                 // TODO: how to reduce shared code here with is_valid?
                 if (!you.inv[slot].defined() || you.inv[slot].base_type != OBJ_WANDS)
                     continue;
+                if (you.inv[slot].sub_type == WAND_DIGGING)
+                    continue;
                 zap_order.push_back(slot);
                 if (slot == wand_slot)
                     cur_index = i;
