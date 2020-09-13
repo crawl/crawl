@@ -27,6 +27,8 @@ GodMenuEntry::GodMenuEntry(god_type god_, bool long_name) :
         hotkeys.push_back('2');
     else if (god == GOD_LEGION_FROM_BEYOND)
         hotkeys.push_back('3');
+    else if (god == GOD_AGRAPHEDE)
+        hotkeys.push_back('4');
     else
     {
         hotkeys.push_back(text.at(0));

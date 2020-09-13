@@ -477,7 +477,7 @@ const vector<god_power> god_powers[NUM_GODS] =
            "create explosive traps around you" },
       { 5, ABIL_AGRAPHEDE_HORNET_STING,
            "sting a deadly wasp sting" },
-      { 5, ABIL_AGRAPHEDE_SUMMON_SPIDER,
+      { 6, ABIL_AGRAPHEDE_SUMMON_SPIDER,
           "release spiders to specific locations" },
       { 5, "Agraphede is now supports your poison spells.",
            "Agraphede will no longer supports your poison spells.",
@@ -4482,6 +4482,7 @@ void handle_god_time(int /*time_delta*/)
         case GOD_WU_JIAN:
         case GOD_SIF_MUNA:
         case GOD_LEGION_FROM_BEYOND:
+        case GOD_AGRAPHEDE:
             if (one_chance_in(17))
                 lose_piety(1);
             break;
@@ -4495,7 +4496,6 @@ void handle_god_time(int /*time_delta*/)
         case GOD_NEMELEX_XOBEH:
         case GOD_WYRM:
         case GOD_IMUS:
-        case GOD_AGRAPHEDE:
             if (one_chance_in(35))
                 lose_piety(1);
             break;
