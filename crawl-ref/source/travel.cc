@@ -2309,7 +2309,7 @@ static level_pos _prompt_travel_altar()
             if (!nearest_altars[god].is_valid())
                 continue;
             if (god == GOD_SHINING_ONE || god == GOD_WYRM
-                || god == GOD_LEGION_FROM_BEYOND)
+                || god == GOD_LEGION_FROM_BEYOND || god == GOD_AGRAPHEDE)
             {
                 switch (god)
                 {
