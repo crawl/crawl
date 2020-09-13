@@ -243,6 +243,13 @@ function c_choose_spell()
     return ret
 end
 
+--- Message internal hook
+--
+-- Internal function for exposing messages to clua
+--
+-- @local
+function c_message(text, channel) end
+
 -- The remainder of these hooks are called elsewhere in the codebase from
 -- various places. We document the user-intended ones here.
 
