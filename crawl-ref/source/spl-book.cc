@@ -295,6 +295,7 @@ int book_rarity(book_type which_book)
     case BOOK_NECRONOMICON:  // Kikubaaqudgha special
     case BOOK_THE_MEMOIRS_OF_THE_VIRTUOSO:
     case BOOK_AKASHIC_RECORD:
+    case BOOK_VALOR:
     case BOOK_MANUAL:
         return 20;
 

@@ -1149,6 +1149,11 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "you can't see any valid targets.";
     }
 
+    if (you_worship(GOD_TROG))
+    {
+        return "you don't and can't cast any spell.";
+    }
+
     // Check for banned schools (Currently just Ru sacrifices)
     if (!fake_spell && cannot_use_schools(get_spell_disciplines(spell)))
         return "you cannot use spells of this school.";
@@ -1440,6 +1445,11 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
     case SPELL_FROZEN_RAMPARTS:
         if (temp && you.duration[DUR_FROZEN_RAMPARTS])
             return "you cannot sustain more frozen ramparts right now.";
+        break;
+
+    case SPELL_INSULATION:
+        if (you.species == SP_SPARKBORN)
+            return "You are already immune to electricity.";
         break;
 
     default:

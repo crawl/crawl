@@ -3503,9 +3503,7 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_CREATE_WALL;
     case ABIL_CARAVAN_GIFT_ITEM:
         return TILEG_ABILITY_CARAVAN_GIFT_ITEM;
-    case ABIL_CARAVAN_REHIRE:
-        return TILEG_ABILITY_CARAVAN_REHIRE;
-    case ABIL_CARAVAN_RECALL:
+    case ABIL_PIPE_RECALL:
         return TILEG_ABILITY_CARAVAN_RECALL;
 
     // Species-specific abilities.
@@ -3643,6 +3641,8 @@ tileidx_t tileidx_ability(const ability_type ability)
     case ABIL_SIF_MUNA_DIVINE_EXEGESIS:
         return TILEG_ABILITY_SIF_MUNA_EXEGESIS;
     // Trog
+    case ABIL_TROG_BURN_SPELLBOOKS:
+        return TILEG_ABILITY_TROG_BURN_SPELLBOOKS;
     case ABIL_TROG_BERSERK:
         return TILEG_ABILITY_TROG_BERSERK;
     case ABIL_TROG_REGEN_MR:
@@ -4039,6 +4039,8 @@ static tileidx_t _tileidx_player_job_base(const job_type job)
             return TILEG_JOB_CARAVAN;
         case JOB_COLLECTOR:
             return TILEG_JOB_COLLECTOR;
+        case JOB_WEAPON_MASTER:
+            return TILEG_JOB_WEAPON_MASTER;
         default:
             return TILEG_ERROR;
     }
@@ -4130,6 +4132,8 @@ static tileidx_t _tileidx_player_species_base(const species_type species)
             return TILEG_SP_MELIAI;
         case SP_WIGHT:
             return TILEG_SP_WIGHT;
+        case SP_SPARKBORN:
+            return TILEG_SP_SPARKBORN;
         default:
             return TILEP_ERROR;
     }

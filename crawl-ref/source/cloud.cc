@@ -310,7 +310,7 @@ static const cloud_data clouds[] = {
       true,                                     // opacity
     },
     // CLOUD_SILVER,
-    { "purity cloud", nullptr,                  // terse, verbose name
+    { "purity", nullptr,                  // terse, verbose name
       WHITE,                                    // colour
       { TILE_CLOUD_SILVER },                    // tile
       BEAM_NONE,                                // beam_effect
@@ -921,6 +921,10 @@ bool actor_cloud_immune(const actor &act, cloud_type type)
     if (is_harmless_cloud(type) || act.cloud_immune())
         return true;
 
+    if (act.is_player() &&
+        (you.attribute[ATTR_BARRIER] > 0 && you.duration[DUR_BARRIER]))
+        return true;
+
     switch (type)
     {
         case CLOUD_FIRE:
@@ -1012,6 +1016,11 @@ bool actor_cloud_immune(const actor &act, const cloud_struct &cloud)
     if (player && you.species == SP_DJINNI
         && (cloud.type == CLOUD_FIRE
             || cloud.type == CLOUD_FOREST_FIRE || cloud.type == CLOUD_INNER_FLAME))
+    {
+        return true;
+    }
+    if (player && you.species == SP_SPARKBORN
+        && (cloud.type == CLOUD_RAIN || cloud.type == CLOUD_STORM))
     {
         return true;
     }

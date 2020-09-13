@@ -214,10 +214,11 @@ const vector<god_power> god_powers[NUM_GODS] =
       { 5, "Trog will now gift you weapons as you gain piety.",
            "Trog will no longer gift you weapons.",
            "Trog will gift you weapons as you gain piety." },
-      { 6, ABIL_TROG_CHARGE, "push yourself into berserk rage to charge and daze a target" },
+      { 6, ABIL_TROG_CHARGE, "push yourself into berserk to charge and daze a target" },
       { 7, ABIL_TROG_BLESS_WEAPON,
            "Trog will bless your weapon with antimagic... once.",
            "Trog is no longer ready to bless your weapon." },
+      {-1, ABIL_TROG_BURN_SPELLBOOKS, "call upon Trog to burn spellbooks in your surroundings" },
     },
 
     // Nemelex
@@ -3060,6 +3061,7 @@ void excommunication(bool voluntary, god_type new_god)
         if (you.duration[DUR_TROGS_HAND])
             trog_remove_trogs_hand();
         make_god_gifts_disappear();
+        add_held_books_to_library();
         break;
 
     case GOD_BEOGH:

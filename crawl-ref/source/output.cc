@@ -1038,6 +1038,8 @@ static void _print_stats_wp(int y, bool second)
             wpn.plus -= 4 * you.props["corrosion_amount"].get_int();
         if(you.props[ELEMENTAL_ENCHANT_KEY].get_int() > 0 && wpn.base_type == OBJ_WEAPONS)
             wpn.plus += you.props[ELEMENTAL_ENCHANT_KEY].get_int();
+        if(wpn.props["wight_key"].get_int() > 0 && wpn.base_type == OBJ_WEAPONS)
+            wpn.plus += wpn.props["wight_key"].get_int();
 
         text = wpn.name(DESC_PLAIN, true, false, true);
     }
@@ -2628,7 +2630,7 @@ static vector<formatted_string> _get_overview_resistances(
     out += rpois_string;
 
     const int relec = player_res_electricity(calc_unid);
-    out += _resist_composer("rElec", cwidth, relec) + "\n";
+    out +=  (you.species == SP_SPARKBORN) ? _infini_composer("rElec", cwidth) + "\n" : _resist_composer("rElec", cwidth, rfire, 3) + "\n";
 
     const int rcorr = you.res_corr(calc_unid);
     out += _resist_composer("rCorr", cwidth, rcorr) + "\n";

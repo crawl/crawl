@@ -357,9 +357,8 @@ static const ability_def Ability_List[] =
     { ABIL_ADAPTION, "Choose Adaption", 0, 0, 0, 0, {}, abflag::starve_ok },
 
     { ABIL_CARAVAN_GIFT_ITEM, "Give Item to Mercenary",
-        0, 0, 0, 0, {}, abflag::gold | abflag::starve_ok },
-    { ABIL_CARAVAN_RECALL, "Recall Mercenary",
         0, 0, 0, 0, {}, abflag::starve_ok },
+
 
     { ABIL_BURIALIZE, "Burialize Weapon", 0, 0, 0, 0, {},
         abflag::starve_ok | abflag::skill_drain },
@@ -406,6 +405,8 @@ static const ability_def Ability_List[] =
       0, 0, 0, 0, {}, abflag::starve_ok },
     { ABIL_CREATE_WALL, "Create Wall",
       0, 0, 0, 0, {}, abflag::none },
+    { ABIL_PIPE_RECALL, "Recall",
+      2, 0, 0, 0, {}, abflag::none },
 
     // INVOCATIONS:
     // Zin
@@ -487,6 +488,8 @@ static const ability_def Ability_List[] =
       0, 0, 0, 12, {fail_basis::invo, 80, 4, 25}, abflag::none },
 
     // Trog
+    { ABIL_TROG_BURN_SPELLBOOKS, "Burn Spellbooks",
+      0, 0, 0, 0, {fail_basis::invo}, abflag::none },
     { ABIL_TROG_BERSERK, "Berserk",
       0, 0, 600, 0, {fail_basis::invo}, abflag::none },
     { ABIL_TROG_REGEN_MR, "Trog's Hand",
@@ -843,11 +846,6 @@ int get_gold_cost(ability_type ability)
         return gozag_potion_price();
     case ABIL_GOZAG_BRIBE_BRANCH:
         return GOZAG_BRIBE_AMOUNT;
-    // for JOB_CARAVAN
-    case ABIL_CARAVAN_GIFT_ITEM:
-    {
-        return 100 * (1 + you.attribute[ATTR_CARAVAN_ITEM_COST]);
-    }
     default:
         return 0;
     }
@@ -1221,6 +1219,7 @@ ability_type fixup_ability(ability_type ability)
 
     case ABIL_YRED_RECALL_UNDEAD_SLAVES:
     case ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS:
+    case ABIL_PIPE_RECALL:
         if (!you.recall_list.empty())
             return ABIL_STOP_RECALL;
         return ability;
@@ -2418,23 +2417,10 @@ static spret _do_ability(const ability_def& abil, bool fail)
         {
             int overwrite = max(wpn->props["wight_key"].get_int(),
                                  max(3, base_dam/3));
-            
-            for (int i = wpn->props["wight_key"].get_int(); i > 0; i--)
-            {
-                wpn->plus--;
-            }
-            for (int ii = overwrite; ii > 0; ii--)
-            {
-                wpn->plus++;
-            }
             wpn->props["wight_key"] = overwrite;
         }
         else
         {
-            for (int iii = enchant; iii > 0; iii--)
-            {
-                wpn->plus++;
-            }
             wpn->props["wight_key"] = enchant;
         }
 
@@ -2465,11 +2451,6 @@ static spret _do_ability(const ability_def& abil, bool fail)
             return spret::abort;
     }
     break;
-
-    case ABIL_CARAVAN_RECALL:
-        fail_check();
-        start_recall(recall_t::caravan);
-        break;
 
     case ABIL_SPIT_POISON:      // Naga poison spit
     {
@@ -2801,6 +2782,30 @@ static spret _do_ability(const ability_def& abil, bool fail)
 
     case ABIL_CREATE_WALL:
         return create_wall(fail);
+        break;
+
+    case ABIL_PIPE_RECALL:
+        fail_check();
+        if (has_mercenaries())
+        {
+            start_recall(recall_t::caravan);
+        }
+        else
+        {
+            mpr("you have no companion to reciprocate your melody..");
+            if (one_chance_in(3))
+            {
+                for (int i = 0; i < (coinflip() + 1); ++i)
+                {
+                    monster_type mon = coinflip() ? MONS_HELL_RAT : MONS_RIVER_RAT;
+
+                    mgen_data mg(mon, BEH_FRIENDLY, you.pos(), MHITYOU);
+                    if (monster *m = create_monster(mg))
+                        m->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 3));
+                }
+                mpr("..instead, some rats are attracted.");
+            }
+        }
         break;
 
     // INVOCATIONS:
@@ -3180,6 +3185,12 @@ static spret _do_ability(const ability_def& abil, bool fail)
         simple_god_message(" will bless one of your weapons.");
         // included in default force_more_message
         if (!bless_weapon(GOD_MAKHLEB, SPWPN_CHAOS, MAGENTA))
+            return spret::abort;
+        break;
+
+    case ABIL_TROG_BURN_SPELLBOOKS:
+        fail_check();
+        if (!trog_burn_spellbooks())
             return spret::abort;
         break;
 
@@ -4034,7 +4045,7 @@ static spret _do_ability(const ability_def& abil, bool fail)
         switch (random2(4))
         {
         case 0:
-            mprf(MSGCH_GOD, "The Great Wyrm whispers: Yout transmutation is finish.");
+            mprf(MSGCH_GOD, "The Great Wyrm whispers: Transmutation has been finished.");
             break;
         case 1:
             mprf(MSGCH_GOD, "Nigredo, the black essence of decay, now is your own.");
@@ -4071,7 +4082,7 @@ static spret _do_ability(const ability_def& abil, bool fail)
         switch (random2(4))
         {
         case 0:
-            mprf(MSGCH_GOD, "The Great Wyrm whispers: Your transmutation is finish.");
+            mprf(MSGCH_GOD, "The Great Wyrm whispers: Transmutation has been finished.");
             break;
         case 1:
             mprf(MSGCH_GOD, "Albedo, the white essence of purge, now is your own.");
@@ -4108,7 +4119,7 @@ static spret _do_ability(const ability_def& abil, bool fail)
         switch (random2(4))
         {
         case 0:
-            mprf(MSGCH_GOD, "The Great Wyrm whispers: Your transmutation is finish.");
+            mprf(MSGCH_GOD, "The Great Wyrm whispers: Transmutation has been finished.");
             break;
         case 1:
             mprf(MSGCH_GOD, "Citrinitas, the yellow essence of empowerment, now is your own.");
@@ -4145,7 +4156,7 @@ static spret _do_ability(const ability_def& abil, bool fail)
         switch (random2(4))
         {
         case 0:
-            mprf(MSGCH_GOD, "The Great Wyrm whispers: Your transmutation is finish.");
+            mprf(MSGCH_GOD, "The Great Wyrm whispers: Transmutation has been finished.");
             break;
         case 1:
             mprf(MSGCH_GOD, "Viriditas, the yellow essence of restoration, now is your own.");
@@ -4182,7 +4193,7 @@ static spret _do_ability(const ability_def& abil, bool fail)
         switch (random2(4))
         {
         case 0:
-            mprf(MSGCH_GOD, "The Great Wyrm whispers: Your transmutation is finish.");
+            mprf(MSGCH_GOD, "The Great Wyrm whispers: Transmutation has been finished.");
             break;
         case 1:
             mprf(MSGCH_GOD, "Rubedo, the red essence of the end-as-begin, now is your own.");
@@ -4875,7 +4886,11 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
     if (has_mercenaries())
     {
         _add_talent(talents, ABIL_CARAVAN_GIFT_ITEM, check_confused);
-        _add_talent(talents, ABIL_CARAVAN_RECALL, check_confused);
+    }
+
+    if (can_call_friends())
+    {
+        _add_talent(talents, ABIL_PIPE_RECALL, check_confused);
     }
 
     if (you.get_mutation_level(MUT_HOP))

@@ -155,6 +155,10 @@ Two Headed Ogre
 Two Headed Ogre has two heads and uses dual weapon, also wear two amulet. 
 However, They hate and never hold shield, thinking it is only for cowards.
 %%%%
+Hydra
+
+Hydra has lots of heads; if they can survive from every combats.
+%%%%
 Angel
 
 Holy species who believe in three good gods. They do not abandon faith,
@@ -198,4 +202,12 @@ a skeleton, potions can't affect them. Thier skills to fight are weathering,
 also casting a spells except ice magic and necromancy. However, they can use
 negative energy to infuse their melee attacks, and enchant weapon by cursing
 them in price for memory.
+%%%%
+Sparkborn
+
+Sparkborns are distant relatives of Raijus. Their essence is the inner lightning,
+so electricity does no harm to them, but loses they lose magic at in the water.
+Sometimes, their body bodies bursts into living lightning when damaged, move moving
+to a nearby choosed chosen spot , and dealt dealing damage on a the trail. Suppressing
+this the 'blink-bolt' will cause contamination.
 %%%%

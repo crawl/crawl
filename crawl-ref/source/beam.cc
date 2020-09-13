@@ -532,6 +532,12 @@ bool bolt::can_affect_actor(const actor *act) const
     // Blinkbolt doesn't hit its caster, since they are the bolt.
     if (origin_spell == SPELL_BLINKBOLT && act->mid == source_id)
         return false;
+
+    if ((name == "electrical discharge")
+        && thrower == KILL_YOU
+        && act->is_player())
+        return false;
+
     auto cnt = hit_count.find(act->mid);
     if (flavour != BEAM_ELECTRICITY && cnt != hit_count.end() && cnt->second >= 2)
     {
@@ -3142,7 +3148,7 @@ bool bolt::harmless_to_player() const
             || you.clarity(false) && you.hp > 2;
 
     case BEAM_ELECTRICITY:
-        return player_res_electricity(false);
+        return player_res_electricity(false) || you.species == SP_SPARKBORN;
 
     case BEAM_PETRIFY:
         return you.res_petrify() || you.petrified();

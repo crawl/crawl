@@ -59,6 +59,7 @@
 #include "items.h"
 #include "jobs.h"
 #include "mapmark.h"
+#include "mercenaries.h"
 #include "misc.h"
 #include "mon-death.h"
 #if TAG_MAJOR_VERSION == 34
@@ -1298,6 +1299,16 @@ void tag_read(reader &inf, tag_type tag_id)
             check_map_validity();
         }
         tag_read_level_tiles(th);
+
+        if (th.getMinorVersion() < TAG_MINOR_PIPE
+            && you.char_class == JOB_CARAVAN) {
+            int thing_created = items(true, OBJ_MISCELLANY, MISC_PIPE, ISPEC_GOOD_ITEM);
+            if (thing_created != NON_ITEM
+                && move_item_to_grid(&thing_created, you.pos()))
+            {
+                mprf("Take this!");
+            }
+        }
 #if TAG_MAJOR_VERSION == 34
         if (you.where_are_you == BRANCH_GAUNTLET
             && th.getMinorVersion() < TAG_MINOR_GAUNTLET_TRAPPED)
@@ -4847,6 +4858,15 @@ void unmarshallItem(reader &th, item_def &item)
         }
     }
 
+    if (th.getMinorVersion() < TAG_MINOR_VALOR)
+    {
+        if (item.base_type == OBJ_BOOKS) {
+            if (item.sub_type >= BOOK_VALOR) {
+                item.sub_type++;
+            }
+        }
+    }
+
     if (th.getMinorVersion() < TAG_MINOR_FOOD_PURGE)
     {
         if (item.base_type == OBJ_FOOD)
@@ -6576,22 +6596,7 @@ void unmarshallMonster(reader &th, monster& m)
     }
 
     if (th.getMinorVersion() < TAG_MINOR_MERCENARY_SHOP) {
-        if (m.type == MONS_MERC_FIGHTER
-            || m.type == MONS_MERC_KNIGHT
-            || m.type == MONS_MERC_DEATH_KNIGHT
-            || m.type == MONS_MERC_PALADIN
-            || m.type == MONS_MERC_SKALD
-            || m.type == MONS_MERC_INFUSER
-            || m.type == MONS_MERC_TIDEHUNTER
-            || m.type == MONS_MERC_WITCH
-            || m.type == MONS_MERC_SORCERESS
-            || m.type == MONS_MERC_ELEMENTALIST
-            || m.type == MONS_MERC_BRIGAND
-            || m.type == MONS_MERC_ASSASSIN
-            || m.type == MONS_MERC_CLEANER
-            || m.type == MONS_MERC_SHAMAN
-            || m.type == MONS_MERC_SHAMAN_II
-            || m.type == MONS_MERC_SHAMAN_III) {
+        if (is_caravan_companion(m)) {
             m.props[MERCENARY_FLAG].get_bool() = true;
         }
     }

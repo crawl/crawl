@@ -2216,9 +2216,12 @@ bool merge_items_into_inv(item_def &it, int quant_got,
         return true;
     }
     if (it.base_type == OBJ_BOOKS && it.sub_type != BOOK_MANUAL)
-    {
-        _get_book(it, quiet, true);
-        return true;
+    {   
+        if(!you_worship(GOD_TROG))
+        {
+            _get_book(it, quiet, true);
+            return true;
+        }
     }
     if (it.base_type == OBJ_MISCELLANY && it.sub_type == MISC_MERCENARY)
     {
@@ -4041,8 +4044,8 @@ colour_t item_def::miscellany_colour() const
         case MISC_STONE_OF_TREMORS:
             return BROWN;
 #endif
-	case MISC_DISC_OF_STORMS:
-	    return LIGHTGREY;
+        case MISC_DISC_OF_STORMS:
+            return LIGHTGREY;
         case MISC_LIGHTNING_ROD:
             return LIGHTGREY;
         case MISC_PHIAL_OF_FLOODS:
@@ -4073,6 +4076,8 @@ colour_t item_def::miscellany_colour() const
             return _zigfig_colour();
         case MISC_BAG:
             return BROWN;
+        case MISC_PIPE:
+            return RED;
         default:
             return LIGHTGREEN;
     }

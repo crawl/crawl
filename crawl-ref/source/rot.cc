@@ -28,6 +28,7 @@ static bool _item_needs_rot_check(const item_def &item);
 static int _get_initial_stack_longevity(const item_def &stack);
 
 static void _rot_corpse(item_def &it, int mitm_index, int rot_time);
+static void _rot_corpse(item_def &it, int time_delta, bool in_inv);
 static int _rot_stack(item_def &it, int slot, bool in_inv);
 
 static void _compare_stack_quantity(item_def &stack);
@@ -51,20 +52,26 @@ void refrigerate_food(int dur_delta)
 
         if (item.quantity < 1 || !_item_needs_rot_check(item))
             continue;
-	
-        if (!item.defined() || !is_perishable_stack(item))
+        
+        if (!item.defined())
             continue;
-
-        if (!item.props.exists(TIMER_KEY))
-            init_perishable_stack(item);
-	
-        CrawlVector &stack_timer = item.props[TIMER_KEY].get_vector();
-            for(int t = 0; t < stack_timer.size(); t++)
-            {
-                int time = stack_timer[stack_timer.size()-1].get_int();
-                stack_timer.pop_back();
-                stack_timer.insert(0, time + dur_delta);
-            }
+        if (is_perishable_stack(item))   
+        {
+            if (!item.props.exists(TIMER_KEY))
+                init_perishable_stack(item);
+        
+            CrawlVector &stack_timer = item.props[TIMER_KEY].get_vector();
+                for(int t = 0; t < stack_timer.size(); t++)
+                {
+                    int time = stack_timer[stack_timer.size()-1].get_int();
+                    stack_timer.pop_back();
+                    stack_timer.insert(0, time + dur_delta);
+                }
+        }
+        else if (!is_perishable_stack(item) && item.base_type == OBJ_CORPSES)
+            item.freshness += dur_delta;
+        else
+            continue;
     }
 
     // Floor item part, 
@@ -270,6 +277,39 @@ static void _rot_corpse(item_def &it, int mitm_index, int rot_time)
 }
 
 /**
+ * Rot a corpse or skeleton in the player's inventory
+ *
+ * @param it            The corpse or skeleton to rot.
+ * @param rot_time      The amount of time to rot the corpse for.
+ */
+static void _rot_corpse(item_def &it, int time_delta, bool in_inv)
+{
+    ASSERT(it.base_type == OBJ_CORPSES);
+    ASSERT(!it.props.exists(CORPSE_NEVER_DECAYS));
+    
+    int rot_time = time_delta / ROT_TIME_FACTOR;
+    it.freshness -= rot_time;
+    if (it.freshness > 0 || is_being_butchered(it))
+        return;
+
+    if (it.sub_type == CORPSE_SKELETON || !mons_skeleton(it.mon_type))
+    {
+        item_was_destroyed(it);
+        destroy_item(it);
+    }
+    else
+        turn_corpse_into_skeleton(it);
+
+    if (in_inv)
+    {
+        // just in case
+        // XXX: move this to the appropriate place(s)
+        you.wield_change  = true;
+        you.redraw_quiver = true;
+    }
+}
+
+/**
  * Ensure that a stack of blood potions or chunks has one timer per item in the
  * stack.
  *
@@ -405,11 +445,80 @@ void rot_floor_items(int elapsedTime)
 }
 
 /**
+ * Rot chunks & blood in the player's bag
+ *
+ * @param time_delta    The amount of time to rot for.
+ */
+void rot_bag_food(int time_delta)
+{   
+    vector <item_def* > bag = you.bag();
+
+    if (bag.empty())
+        return;
+
+    if (time_delta <= 0)
+        return;
+
+    int num_chunks         = 0;
+    int num_chunks_gone    = 0;
+
+    for (int i = 0; i < ENDOFPACK; i++)
+    {
+        item_def &item(*bag[i]);
+
+        if (item.quantity < 1 || !_item_needs_rot_check(item))
+            continue;
+
+#if TAG_MAJOR_VERSION == 34
+        // cleanup
+        /*
+            if (item.base_type == OBJ_CORPSES)
+            {
+                if (you.equip[EQ_WEAPON] == i)
+                    unwield_item(true, EQ_WEAPON);
+                if (you.equip[EQ_SECOND_WEAPON] == i)
+                    unwield_item(true, EQ_SECOND_WEAPON);
+
+                item_was_destroyed(item);
+                destroy_item(item);
+                continue;
+            }
+        */
+#endif
+        if (item.base_type == OBJ_CORPSES)
+        {
+            _rot_corpse(item, time_delta, true);
+            continue;
+        }
+
+        const int initial_quantity = item.quantity;
+        const string item_name = item.name(DESC_PLAIN, false);
+        const bool is_chunk = _is_chunk(item);
+
+        if (is_chunk)
+            num_chunks += item.quantity;
+        else
+            ASSERT(is_blood_potion(item));
+
+        const int rotted_away_count = _rot_stack(item, i, true);
+        if (is_chunk)
+            num_chunks_gone += rotted_away_count;
+        else if (rotted_away_count)
+        {
+            _potion_stack_changed_message(item_name, rotted_away_count,
+                                          initial_quantity);
+        }
+    }
+
+    _print_chunk_messages(num_chunks, num_chunks_gone);
+}
+
+/**
  * Rot chunks & blood in the player's inventory.
  *
  * @param time_delta    The amount of time to rot for.
  */
-void rot_inventory_food(int /*time_delta*/)
+void rot_inventory_food(int time_delta)
 {   
     int num_chunks         = 0;
     int num_chunks_gone    = 0;
@@ -423,18 +532,25 @@ void rot_inventory_food(int /*time_delta*/)
 
 #if TAG_MAJOR_VERSION == 34
         // cleanup
+        /*
+            if (item.base_type == OBJ_CORPSES)
+            {
+                if (you.equip[EQ_WEAPON] == i)
+                    unwield_item(true, EQ_WEAPON);
+                if (you.equip[EQ_SECOND_WEAPON] == i)
+                    unwield_item(true, EQ_SECOND_WEAPON);
+
+                item_was_destroyed(item);
+                destroy_item(item);
+                continue;
+            }
+        */
+#endif
         if (item.base_type == OBJ_CORPSES)
         {
-            if (you.equip[EQ_WEAPON] == i)
-                unwield_item(true, EQ_WEAPON);
-            if (you.equip[EQ_SECOND_WEAPON] == i)
-                unwield_item(true, EQ_SECOND_WEAPON);
-
-            item_was_destroyed(item);
-            destroy_item(item);
+            _rot_corpse(item, time_delta, true);
             continue;
         }
-#endif
 
         const int initial_quantity = item.quantity;
         const string item_name = item.name(DESC_PLAIN, false);

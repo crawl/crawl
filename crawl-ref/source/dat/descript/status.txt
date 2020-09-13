@@ -810,3 +810,11 @@ be destructive blow by your boosted golem fists. Also, this form grants
 you resistance to negative energy and petrification, but also makes you
 vulnerable to shattering effects.
 %%%%
+Barrier status
+
+You are protected by hermetic barrier, which absorbs upcoming damage and
+protects you from clouds and from exposure to to magic and elemental effects
+from outside, except damage from illusionary wound or unholy torment. However,
+if your barrier broken before it fades naturally, will cause aftershock, makes
+you stuned and unable to teleport for a while.
+%%%%

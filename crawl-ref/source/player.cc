@@ -32,6 +32,7 @@
 #include "directn.h"
 #include "english.h"
 #include "env.h"
+#include "evoke.h"
 #include "errors.h"
 #include "exercise.h"
 #include "files.h"
@@ -526,6 +527,13 @@ void moveto_location_effects(dungeon_feature_type old_feat,
                 && you.invisible())
             {
                 mpr("Don't expect to remain undetected while in the water.");
+            }
+
+            if (you.species == SP_SPARKBORN && you.ground_level())
+            {
+                if (!feat_is_water(old_feat))
+                    mprf(MSGCH_WARN, "Your magic ran out by water!");
+                dec_mp(9999);
             }
         }
         else if (you.props.exists(TEMP_WATERWALK_KEY))
@@ -1857,6 +1865,9 @@ int player_res_sticky_flame(bool calc_unid, bool /*temp*/, bool items)
     if (rsf > 1)
         rsf = 1;
 
+    if (you.attribute[ATTR_BARRIER] > 0 && you.duration[DUR_BARRIER])
+        rsf++;
+
     return rsf;
 }
 
@@ -2252,6 +2263,8 @@ static int _player_evasion_size_factor(bool base = false)
     const size_type size = you.body_size(PSIZE_BODY, base);
     if (you.species == SP_CRUSTACEAN)
         return 2 * (SIZE_MEDIUM - size) - 2 * min(2, you.deaths/6);
+    if (you.has_hydra_multi_attack())
+        return 2 * (SIZE_MEDIUM - size) + 2 * max(0, 2 - you.heads()/3);
     return 2 * (SIZE_MEDIUM - size);
 }
 
@@ -4180,6 +4193,11 @@ void inc_mp(int mp_gain, bool silent)
     {
         return inc_hp(mp_gain * DJ_MP_RATE);
     }
+    if (you.species == SP_SPARKBORN && you.ground_level()
+         && feat_is_water(env.grid(you.pos())))
+    {
+        return;
+    }
     if (mp_gain < 1 || you.magic_points >= you.max_magic_points)
         return;
 
@@ -4635,6 +4653,12 @@ bool poison_player(int amount, string source, string source_aux, bool force)
     if (you.duration[DUR_DIVINE_STAMINA] > 0)
     {
         mpr("Your divine stamina protects you from poison!");
+        return false;
+    }
+
+    if (you.attribute[ATTR_BARRIER])
+    {
+        mpr("Your hermetic barrier protects you from poison!");
         return false;
     }
 
@@ -5429,6 +5453,12 @@ void handle_player_drowning(int delay)
                             BASELINE_DELAY * 10);
         ouch(dam, KILLED_BY_WATER, you.props["water_holder"].get_int());
         mprf(MSGCH_WARN, "Your lungs strain for air!");
+
+        if (you.species == SP_SPARKBORN)
+        {
+            ouch(dam, KILLED_BY_WATER, you.props["water_holder"].get_int());
+            mprf(MSGCH_WARN, "Your inner lightning convulsed!");
+        }
     }
 }
 
@@ -6901,6 +6931,9 @@ int player_res_magic(bool calc_unid, bool temp)
         you.form == transformation::eldritch))
         return MAG_IMMUNE;
 
+    if (you.attribute[ATTR_BARRIER] > 0 && you.duration[DUR_BARRIER])
+        return MAG_IMMUNE;
+
     int rm = you.experience_level * species_mr_modifier(you.species);
 
     // randarts
@@ -6973,6 +7006,9 @@ string player::no_tele_reason(bool calc_unid, bool blinking) const
 
     if (duration[DUR_DIMENSION_ANCHOR])
         problems.emplace_back("locked down by a dimension anchor");
+
+    if (duration[DUR_BARRIER_BROKEN])
+        problems.emplace_back("magically aftershocked");
 
     if (form == transformation::tree)
         problems.emplace_back("held in place by your roots");
@@ -8013,7 +8049,7 @@ bool player::asleep() const
 
 bool player::cannot_act() const
 {
-    return asleep() || cannot_move();
+    return asleep() || cannot_move() || duration[DUR_BARRIER_BROKEN];
 }
 
 bool player::can_throw_large_rocks() const
@@ -9325,4 +9361,57 @@ bool has_mercenaries()
         }
     }
     return false;
+}
+
+bool can_call_friends()
+{
+    for (int i = 0; i < ENDOFPACK; i++)
+    {
+        item_def &item(you.inv[i]);
+
+        if (item.quantity < 1)
+            continue;
+	
+        if (!item.defined())
+            continue;
+
+        if (item.base_type == OBJ_MISCELLANY && item.sub_type == MISC_PIPE)
+            return true;
+    }
+    return false;
+}
+
+vector<item_def* > player::bag() const
+{   
+    int bag_slot = ENDOFPACK;
+    vector<item_def* > bagVector;
+    for (int i = 0; i < ENDOFPACK; i++)
+    {
+        if (inv[i].is_type(OBJ_MISCELLANY, MISC_BAG))
+        {
+            bag_slot = i;
+            break;        
+        }
+    }
+
+    // If there is no bag, return empty vector
+    if (bag_slot == ENDOFPACK)
+        return bagVector;
+    
+    item_def& bag = you.inv[bag_slot];
+    if (!bag.props.exists(BAG_PROPS_KEY))
+    {
+        bag.props[BAG_PROPS_KEY].new_vector(SV_ITEM).resize(ENDOFPACK);
+        CrawlVector& rap = bag.props[BAG_PROPS_KEY].get_vector();
+        rap.set_max_size(ENDOFPACK);
+    }
+    
+    CrawlVector& in_bag = bag.props[BAG_PROPS_KEY].get_vector();
+    for (int i = 0; i < ENDOFPACK; i++)
+    {
+        item_def& item = in_bag[i].get_item();
+        bagVector.emplace_back(&item);
+    }
+
+    return bagVector;
 }

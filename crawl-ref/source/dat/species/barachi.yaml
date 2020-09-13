@@ -53,6 +53,7 @@ fake_mutations:
     short: swims
 recommended_jobs:
   - JOB_FIGHTER
+  - JOB_WEAPON_MASTER
   - JOB_BERSERKER
   - JOB_SKALD
   - JOB_SUMMONER

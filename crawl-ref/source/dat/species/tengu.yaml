@@ -47,6 +47,7 @@ mutations:
     MUT_TENGU_FLIGHT: 1
 recommended_jobs:
   - JOB_BERSERKER
+  - JOB_WEAPON_MASTER
   - JOB_WIZARD
   - JOB_CONJURER
   - JOB_SUMMONER

@@ -331,6 +331,7 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_MERC_BRIGAND:
     case TILEP_MONS_MERC_ASSASSIN:
     case TILEP_MONS_MERC_CLEANER:
+    case TILEP_MONS_FALLEN:
         *ofs_x = 0;
         *ofs_y = 0;
         break;
@@ -475,6 +476,7 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_VINE_STALKER:
     case TILEP_MONS_NECROPHAGE:
     case TILEP_MONS_WIGHT:
+    case TILEP_MONS_LICHBANE:
         *ofs_x = -2;
         *ofs_y = -2;
         break;

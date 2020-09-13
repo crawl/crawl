@@ -8,13 +8,41 @@
 ### Added
 - 새로운 소환의 신 너머의 군단 추가. [상세설명](https://github.com/kimjoy2002/crawl/wiki/legion_from_beyond)
   - New god: Legion from beyond, God of Summonnig.
+    
+- 새로운 종족 와이트 추가. 언데드로 일으켜 세워진 고대의 전사들이며 근접 공격에 음에너지를 불어넣고 자신의 무기를 저주와 함께 반영구적으로 강화할 수 있다. [상세설명](https://github.com/kimjoy2002/crawl/wiki/wight)
+  - Added wight(playable). they are an ancient warriors animated as undead. they can use negative energy to infuse their melee attacks, and enchant weapon by cursing them in price for memory.  
+  
+- 6레벨 소환/강령 마법, 두건 악귀 소환 추가. 대상에게 음에너지 피해를 주고 준 피해의 일부만큼 시야 안의 살아있는 아군에게 체력회복시키는 악의의 공물(Malign Offering)을 사용한다. 이것은 플레이어의 체력을 회복시킬 수 있다.
+  - Added Summon Hooded Malice, level 6 summ/necro spell. Uses a Malign Offering that inflicts negative energy damage to the target and restores health to living allies in the field of view as much as part of the damage dealt. This can restore the player's health.
+ 
+- 아군을 리콜할 수 있는 Pipe 발동 아이템 추가
+  - Added Pipe activation item that can recall allies
+ 
+- 용병을 고용할 수 있는 선술집 상점 추가. 
+  - Added a Tavern shop where you can hire mercenaries.
 
 ### Changed
+- 히드라가 6개미만의 낮은 머리수일때 회피 보정을 받음
+  - Hydra receives evasion bonus when the number of heads is less than 6
+
+- 천사 리워크 Angel rework
+  - 천사는 이제 15레벨 이전에 악신들의 징벌을 받지 않는다. Angels are no longer punished by evil gods before level 15.
+  - 15레벨부터 선신의 권능들이 강화된다. [상세설명](https://github.com/kimjoy2002/crawl/wiki/angel) From level 15, the powers of good god are strengthened.
+  
+- 캐러밴 리워크 Caravan rework
+  - 장비 선물 능력에 비용이 사라짐 Give Item to Mercenary ability no longer costs.
+  - 용병재고용 능력이 사라짐 remove rehire ability
+  - 리콜능력대신 새로운 아이템인 Pipe를 들고 시작함 Start with a new item, Pipe, instead of the recall ability
+  - 마녀 용병에 픽다트 스태프를 허용함 Allows the fixedart staff to witch mercenaries
+  
+- 베오그의 아이템 선물의 제한이 제거됨. 대신 저항공유 권능이 사라짐
+  - beogh do not restrict number of gifts to orcish follower and make not sharing resistance anymore.
+
 - 추방이 경험치를 100% 주도록 변경
   - Give full XP from banishment
   
 - 골렘아머를 언데드도 사용할 수 있게 수정
-  - Golem Armours are able to use undead
+  - Golem Armours are able to use undead  
   
 - 새로운 신들에 대한 도날드 대사 추가
   - add donald speak for new gods

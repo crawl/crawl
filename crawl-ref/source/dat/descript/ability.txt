@@ -90,19 +90,20 @@ are also reduced.
 %%%%
 Deploy Shield ability
 
-You can fix the shield to the ground and use it as a barrier. Before moving to
-retrieve or destroy shields, shields prevent movement and attack. The projectile 
-shot by an opponent who is not close to the shield is blocked by the shield. 
-Hit point and success rate of the shield are dependent on your shield skill, 
-and the AC of the shield is depending on enchant value of the shield.
+Pins the shield you are holding to the ground and use it as a barrier. The 
+shield fixed to the ground functions as a obstacle and block the incoming fire.
+It returns to your hand when you move to other poistions or directly attack it
+The projectiles shot by foes who are not adjacent to the shield are blocked.  
+The durability of the shield depends on your Shield skill and the enchant 
+value of it.
 %%%%
 Exsanguinate ability
 
-Remove all of your blood, transitioning to a bloodless state.
+Removes all of your blood, transitioning to a bloodless state.
 %%%%
 Revivify ability
 
-Return to life, transitioning from bloodless to alive. This process renders
+Returns to life, transitioning from bloodless to alive. This process renders
 the user temporarily frail.
 %%%%
 Fly ability
@@ -197,15 +198,7 @@ terrain.
 #JOB_CARAVAN
 Give Item to Mercenary ability
 
-As a caravan, you can give weapon or armour you have to mercenary.
-This is a kind of rehirement, so each time the mercenary's hire cost
-goes up and you'll have to pay a higher price.
-%%%%
-Rehire Mercenary ability
-
-As a caravan, you can rehire a new mercenary when past one is gone.
-The cost to hire new one is depend on your 'working environment',
-which means how many mercenaries were lost under your employment.
+Give a weapon or armour you have to mercenary.
 %%%%
 Recall Mercenary ability
 
@@ -438,6 +431,13 @@ bonus to spell power based on your Invocations skill that is worth 50% more
 than equivalent levels of training in the relevant skills of the spell itself.
 %%%%
 # Trog
+Burn Spellbooks ability
+
+Sets all spellbooks within your field of vision on fire. The fire is fuelled by
+Trog's hatred, and it burns hotter than mere parchment would — which can be
+useful if you throw the book under someone's feet first. Trog greatly
+appreciates the burning of spellbooks.
+%%%%
 Berserk ability
 
 Sends the user into a berserk rage. Going berserk temporarily increases health,

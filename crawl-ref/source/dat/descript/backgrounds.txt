@@ -136,6 +136,11 @@ Warper
 Warpers start with a weapon of their choice and a scroll of blinking. They
 begin with a number of Translocations spells in their library.
 %%%%
+Weapon Master
+
+Weapon Masters are experts of two-handed weapon. They start with a two-handed
+weapon of their choice, and a robe as a minimal armour.
+%%%%
 Wizard
 
 Wizards start with the wide range of spells present in a book of Minor Magic in

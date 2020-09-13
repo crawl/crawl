@@ -45,6 +45,7 @@ fake_mutations:
 recommended_jobs:
   - JOB_FIGHTER
   - JOB_HUNTER
+  - JOB_WEAPON_MASTER
   - JOB_ABYSSAL_KNIGHT
   - JOB_ARCANE_MARKSMAN
   - JOB_EARTH_ELEMENTALIST

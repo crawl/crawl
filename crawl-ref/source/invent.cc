@@ -851,8 +851,8 @@ FixedVector<int, NUM_OBJECT_CLASSES> inv_order(
     OBJ_BOOKS,
     OBJ_MISCELLANY,
     OBJ_FOOD,
-    // These four can't actually be in your inventory.
     OBJ_CORPSES,
+    // These three can't actually be in your inventory.
     OBJ_RUNES,
     OBJ_ORBS,
     OBJ_GOLD);
@@ -1197,7 +1197,8 @@ bool item_is_selected(const item_def &i, int selector)
         return (itype == OBJ_WEAPONS
                 || is_shield(i)
                 || itype == OBJ_STAVES
-                || itype == OBJ_ARMOUR)
+                || itype == OBJ_ARMOUR
+                   && get_armour_slot(i) == EQ_BODY_ARMOUR)
                 && !item_is_equipped(i);
 
     case OSEL_CURSABLE:

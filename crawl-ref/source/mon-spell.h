@@ -1893,12 +1893,27 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_LICHBANE,
+      {
+       { SPELL_DISPEL_UNDEAD, 22, MON_SPELL_WIZARD },
+       { SPELL_SAP_MAGIC, 22, MON_SPELL_WIZARD },
+       { SPELL_HARPOON_SHOT, 33, MON_SPELL_WIZARD },
+      }
+    },
+
     // ('A') Angels.
     {  MST_MENNAS,
       {
        { SPELL_MASS_CONFUSION, 17, MON_SPELL_WIZARD },
        { SPELL_SILENCE, 17, MON_SPELL_WIZARD },
        { SPELL_MINOR_HEALING, 34, MON_SPELL_WIZARD },
+      }
+    },
+
+    {  MST_FALLEN,
+      {
+       { SPELL_SPECTRAL_CLOUD, 17, MON_SPELL_PRIEST },
+       { SPELL_DRAIN_LIFE, 17, MON_SPELL_PRIEST },
       }
     },
 

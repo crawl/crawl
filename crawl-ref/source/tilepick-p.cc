@@ -730,6 +730,8 @@ tileidx_t tilep_species_to_base_tile(int sp, int level)
         return TILEP_BASE_MELIAI;
     case SP_WIGHT:
         return TILEP_BASE_WIGHT;
+    case SP_SPARKBORN:
+        return TILEP_BASE_SPARKBORN;
     default:
         return TILEP_BASE_HUMAN;
     }
@@ -1118,6 +1120,10 @@ void tilep_job_default(int job, dolls_data *doll)
         case JOB_CARAVAN:
             parts[TILEP_PART_BODY]  = TILEP_BODY_ROBE_BROWN;
             parts[TILEP_PART_BOOTS] = TILEP_BOOTS_MIDDLE_BROWN3;
+            break;
+
+        case JOB_WEAPON_MASTER:
+            parts[TILEP_PART_BODY]  = TILEP_BODY_ROBE_WHITE;
             break;
     }
 }

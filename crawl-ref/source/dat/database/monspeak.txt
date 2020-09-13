@@ -4247,6 +4247,42 @@ w:5
 
 @The_monster@ eyes @foe@ carefully. "They told me only worthy opponents would get this far."
 %%%%
+############ FALLEN ### profane servitor who was an angel of Elyvilon
+Fallen
+
+VISUAL:@The_monster@ has a miserable look on her pale face.
+
+VISUAL:@The_monster@ is sobbing with grief.
+
+VISUAL:@The_monster@ struggles against the will of the evil gods in vain.
+
+VISUAL:@The_monster@ is forced to fight against you by the will of the evil gods . @player_only@
+
+@The_monster@ eyes @foe@ carefully, hesitating to say something.
+
+@The_monster@ eyes you carefully {{
+    if you.god() == "Elyvilon" then
+      return "and says, "Will the Healer forgive my sin?" "
+    elseif you.god() == "the Shining One" then
+      return "and says, "You are an exemplary crusader. I see no mercy for a sinner like me in your eyes." "
+    elseif you.god() == "Zin" then
+      return "and says, "The Law-Giver will make me into a pillar of salt. It is written and I deserve it." "
+    elseif you.god() == "Kikubaaqudgha" then
+      return "and says, "Oh, you are the one of the Mercant of Misery..." "
+    elseif you.god() == "Yredelemnul" then
+      return "and says, "I've already fallen, torchbearer." "
+    else
+      return "but didn't say anything."
+    end }} @player_only@
+
+@The_monster@ {{
+    if you.race() == "Angel" then
+        return "says, "Please don't be like me, young one." "
+    else
+        return "tries to say something, but soon gives up."
+    end }} @player_only@
+## END Fallen ##
+%%%%
 ############ FANNAR ### A cold-hearted elven sorcerer
 Fannar
 
@@ -4989,6 +5025,39 @@ VISUAL:@The_monster@ throws some [strange|weird|mysterious] powder @at_foe@.
 @_wizard_common_spell_@
 @_fake_spell_effect_@
 ### END Kirke ###
+%%%%
+############ LICHBANE ### undead hunter who is freed undead
+Lichbane
+
+@The_monster@ says @to_foe@, "I slayed my master with my own hands. How about you?"
+
+@The_monster@ says @to_foe@, "Do you want to know how I destroyed my master?"
+
+@The_monster@ says, "{{
+    if you.god() == "the Shining One" then
+      return "Don't you think I deserve to be called exorcist?"
+    elseif you.god() == "Kikubaaqudgha" then
+      return "No more necromancer! No more lord of darkness!"
+    elseif you.god() == "Yredelemnul" then
+      return "None shall rule over the dead!"
+    else
+      return "Eternal death to all undeads!"
+    end }}" @player_only@
+
+@The_monster@ says, "{{
+    if you.race() == "Lich" then
+        return "Another lich... You chose the wrong path"
+    elseif you.race() == "Mummy" then
+        return "You should have accepted your death long ago."
+    elseif you.race() == "Ghoul" then
+        return "Rest in peace, another victim."
+    elseif you.race() == "Wight" then
+        return "Rest in peace, another lost soul."
+    else
+        return "I need to look for more preservatives"
+    end
+}}."
+## END Lichbane ##
 %%%%
 ############ LOUISE ### A sorceress driven mad by the abyss
 Louise

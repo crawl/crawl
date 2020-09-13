@@ -4321,6 +4321,17 @@ bool handle_mon_spell(monster* mons)
     if (spell_cast == SPELL_NO_SPELL)
         return false;
 
+    // for witch mercs: do not summon demons when you worship good gods
+    if ((you_worship(GOD_SHINING_ONE) || you_worship(GOD_ELYVILON) || you_worship(GOD_ZIN))
+        && mons->attitude == ATT_FRIENDLY && mons->is_mercenery_companion())
+    {
+        if (spell_cast == SPELL_CALL_IMP
+            || spell_cast == SPELL_SUMMON_MINOR_DEMON
+            || spell_cast == SPELL_SUMMON_DEMON
+            || spell_cast == SPELL_SUMMON_GREATER_DEMON)
+        return false; // choose another actions
+    }
+
     // for angels: cast 'minor healing' instead evil spells, except some 'healing' spells
     if (testbits(mons->flags, MF_PACIFIED) && mons->attitude == ATT_FRIENDLY
         && you.species == SP_ANGEL && you_worship(GOD_ELYVILON))

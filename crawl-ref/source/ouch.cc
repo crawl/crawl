@@ -65,8 +65,10 @@
 #include "shout.h"
 #include "skills.h"
 #include "spl-clouds.h"
+#include "spl-damage.h"
 #include "spl-other.h"
 #include "spl-selfench.h"
+#include "spl-transloc.h"
 #include "state.h"
 #include "stringutil.h"
 #include "teleport.h"
@@ -309,22 +311,31 @@ int check_your_resists(int hurted, beam_type flavour, string source,
  */
 void expose_player_to_element(beam_type flavour, int strength, bool slow_cold_blooded)
 {
-    dprf("expose_player_to_element, strength %i, flavor %i, slow_cold_blooded is %i", strength, flavour, slow_cold_blooded);
-    qazlal_element_adapt(flavour, strength);
-
-    if (flavour == BEAM_COLD && slow_cold_blooded
-        && you.get_mutation_level(MUT_COLD_BLOODED)
-        && you.res_cold() <= 0 && coinflip())
+    if (!(you.attribute[ATTR_BARRIER] > 0 && you.duration[DUR_BARRIER]))
     {
-        you.slow_down(0, strength);
-    }
+        dprf("expose_player_to_element, strength %i, flavor %i, slow_cold_blooded is %i", strength, flavour, slow_cold_blooded);
+        qazlal_element_adapt(flavour, strength);
+        
+        if (flavour == BEAM_COLD && slow_cold_blooded
+            && you.get_mutation_level(MUT_COLD_BLOODED)
+            && you.res_cold() <= 0 && coinflip())
+        {
+            you.slow_down(0, strength);
+        }
+        
+        if (flavour == BEAM_WATER && you.duration[DUR_LIQUID_FLAMES])
+        {
+            mprf(MSGCH_WARN, "The flames go out!");
+            you.duration[DUR_LIQUID_FLAMES] = 0;
+            you.props.erase("sticky_flame_source");
+            you.props.erase("sticky_flame_aux");
+        }
 
-    if (flavour == BEAM_WATER && you.duration[DUR_LIQUID_FLAMES])
-    {
-        mprf(MSGCH_WARN, "The flames go out!");
-        you.duration[DUR_LIQUID_FLAMES] = 0;
-        you.props.erase("sticky_flame_source");
-        you.props.erase("sticky_flame_aux");
+        if (flavour == BEAM_WATER && you.species == SP_SPARKBORN)
+        {
+            mprf(MSGCH_WARN, "Your magic ran out by water!");
+            dec_mp(9999);
+        }
     }
 }
 
@@ -717,6 +728,17 @@ static void _maybe_invisible()
     }
 }
 
+static void _maybe_blink(int dam)
+{
+    // SP_SPARKBORN
+    int blink_chance = (dam > you.hp_max / 10) ? 1 : 10;
+    if (x_chance_in_y(1, blink_chance) && dam > 1)
+    {
+        flash_view_delay(UA_PLAYER, LIGHTBLUE, 100);
+        cast_player_blinkbolt();
+    }
+}
+
 static void _place_player_corpse(bool explode)
 {
     if (!in_bounds(you.pos()))
@@ -945,6 +967,49 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
             return;
         }
 
+        if (you.attribute[ATTR_BARRIER] > 0 && you.duration[DUR_BARRIER]
+            && death_type != KILLED_BY_POISON
+            && death_type != KILLED_BY_BARBS
+            && !((aux && (strstr(aux, "flay_damage")
+                  || strstr(aux, "Agony")
+                  || strstr(aux, "Symbol of Torment")
+                  || strstr(aux, "sceptre of Torment")
+                  || strstr(aux, "a scroll of torment")
+                  || strstr(aux, "Kikubaaqudgha's torment")
+                  || strstr(aux, "Xom's torment")
+                  || strstr(aux, "by torment")))))
+        {
+            you.attribute[ATTR_BARRIER] -= dam;
+            if (you.attribute[ATTR_BARRIER] <= 0)
+            {
+                you.attribute[ATTR_BARRIER] = 0;
+                you.duration[ATTR_BARRIER] = 0;
+                you.redraw_status_lights = true;
+
+                mprf(MSGCH_DANGER, "You're stuned by the aftershock!");
+                you.stop_directly_constricting_all(false);
+                end_searing_ray();
+                stop_delay();
+                flash_view_delay(UA_PLAYER, YELLOW, 300);
+
+                const int dur = 3 + random2avg(5, 2);
+                you.set_duration(DUR_BARRIER_BROKEN, dur);
+                return;
+            }
+            else
+            {
+                you.redraw_status_lights = true;
+                if (get_real_hp(true, false)/6 <= dam)
+                {
+                    flash_view_delay(UA_PLAYER, YELLOW, 100);
+                    mprf(MSGCH_DANGER, "Your barrier struggles to absorb damage!");
+                }
+                else
+                    mprf("Your barrier absorbs damage.");
+                return;
+            }
+        }
+
         you.turn_damage += dam;
         if (you.damage_source != source)
         {
@@ -1043,6 +1108,9 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
                 _maybe_corrode();
                 _maybe_slow();
                 _maybe_invisible();
+                if (you.has_mutation(MUT_BLINKBOLT)
+                    && !you.duration[DUR_BLINKBOLT_COOLDOWN])
+                    _maybe_blink(dam);
             }
             if (drain_amount > 0)
                 drain_player(drain_amount, true, true);

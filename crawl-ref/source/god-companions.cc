@@ -98,7 +98,7 @@ void update_companions()
         monster* mons = monster_by_mid(entry.first);
         if (mons)
         {
-            if (mons->is_divine_companion())
+            if (mons->is_divine_companion() || mons->is_mercenery_companion())
             {
                 ASSERT(mons->alive());
                 entry.second.mons = follower(*mons);

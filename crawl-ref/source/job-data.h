@@ -4,6 +4,7 @@ enum weapon_choice
     WCHOICE_PLAIN,  ///< Normal weapon choice
     WCHOICE_GOOD,   ///< Chooses from "good" weapons
     WCHOICE_RANGED, ///< Choice of ranged weapon
+    WCHOICE_TWOHANDED, ///< Choice of two-handed melee weapon
 };
 
 struct job_def
@@ -307,7 +308,7 @@ static const map<job_type, job_def> job_data =
 { JOB_CRUSADER, {
     "AW", "Arcane Warrior",
     3, 5, 4,
-    { SP_HALFLING, SP_CENTAUR, SP_MERFOLK, SP_BASE_DRACONIAN, SP_VAMPIRE, SP_HOMUNCULUS},
+    { SP_HALFLING, SP_CENTAUR, SP_MERFOLK, SP_BASE_DRACONIAN, SP_VAMPIRE, SP_HOMUNCULUS },
     { "leather armour", "book of War Chants" },
     WCHOICE_PLAIN,
     { { SK_FIGHTING, 2 }, { SK_ARMOUR, 1 }, { SK_DODGING, 2 },
@@ -319,7 +320,7 @@ static const map<job_type, job_def> job_data =
    1, 1, 1,
     { SP_SPRIGGAN, SP_CENTAUR, SP_OCTOPODE, SP_FELID, SP_DEMIGOD,
       SP_HUMAN, SP_DEMONSPAWN, },
-    { "dagger", "robe", "wand of heal wounds charges:3" },
+    { "dagger", "robe", "wand of heal wounds charges:3", "pipe charges:3" },
     WCHOICE_NONE,
     { { SK_ARMOUR, 1 }, { SK_DODGING, 1 }, { SK_STEALTH, 1 }, },
 } },
@@ -331,6 +332,16 @@ static const map<job_type, job_def> job_data =
     { "scroll of collection q:1", "robe"}, 
     WCHOICE_NONE,
     { { SK_FIGHTING, 3 } }, 
+} },
+
+{ JOB_WEAPON_MASTER, {
+    "WM", "Weapon Master",
+    5, 0, 7,
+    { SP_MINOTAUR, SP_MERFOLK, SP_TENGU, SP_HIGH_ELF, SP_FORMICID,
+      SP_OGRE, SP_TWO_HEADED_OGRE, SP_TROLL, SP_WIGHT, SP_BARACHI, SP_MOUNTAIN_DWARF },
+    { "robe" },
+    WCHOICE_TWOHANDED,
+    { { SK_FIGHTING, 2 }, { SK_WEAPON, 6 } },
 } },
 #if TAG_MAJOR_VERSION == 34
 { JOB_DEATH_KNIGHT, {

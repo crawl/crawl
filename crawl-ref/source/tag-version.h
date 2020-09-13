@@ -242,6 +242,8 @@ enum tag_minor_version
     TAG_MINOR_JIYVA_MUTATION_REWORK,// rework jiyva mutation
     TAG_MINOR_WAR_CHANT,           // Add war chant book
     TAG_MINOR_MERCENARY_SHOP,      // Add mercenary shop
+    TAG_MINOR_PIPE,                // Add pipe item
+    TAG_MINOR_VALOR,               // Add highst charm book
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

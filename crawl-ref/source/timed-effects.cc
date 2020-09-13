@@ -472,6 +472,7 @@ static struct timed_effect timed_effects[] =
     { nullptr,                                0,     0, false },
 #endif
     { rot_inventory_food,            100,   300, false },
+    { rot_bag_food,                  200,   200, false },
     { _wait_practice,                100,   300, false },
 #if TAG_MAJOR_VERSION == 34
     { nullptr,                         0,     0, false },

@@ -53,6 +53,7 @@ levelup_stats:
   - dex
 recommended_jobs:
   - JOB_HUNTER
+  - JOB_WEAPON_MASTER
   - JOB_SKALD
   - JOB_WIZARD
   - JOB_CONJURER
