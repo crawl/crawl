@@ -1756,14 +1756,18 @@ void process_command(command_type cmd, command_type prev_cmd)
 #ifdef CLUA_BINDINGS
     case CMD_AUTOFIGHT:
     case CMD_AUTOFIGHT_NOMOVE:
+    case CMD_AUTOFIRE:
     {
         const char * const fnname = cmd == CMD_AUTOFIGHT ? "hit_closest"
+                                  : cmd == CMD_AUTOFIRE  ? "fire_closest"
                                                          : "hit_closest_nomove";
         if (Options.autofight_warning > 0
             && !is_processing_macro()
             && you.real_time_delta
                <= chrono::milliseconds(Options.autofight_warning)
-            && (prev_cmd == CMD_AUTOFIGHT || prev_cmd == CMD_AUTOFIGHT_NOMOVE))
+            && (prev_cmd == CMD_AUTOFIGHT
+                || prev_cmd == CMD_AUTOFIGHT_NOMOVE
+                || prev_cmd == CMD_AUTOFIRE))
         {
             mprf(MSGCH_DANGER, "You should not fight recklessly!");
         }
