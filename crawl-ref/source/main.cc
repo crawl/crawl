@@ -1754,9 +1754,16 @@ void process_command(command_type cmd, command_type prev_cmd)
     case CMD_RUN_RIGHT:     _start_running(RDIR_RIGHT, RMODE_START);     break;
 
 #ifdef CLUA_BINDINGS
+    case CMD_AUTOFIRE:
+        if (you.quiver_action.get().is_valid() && !you.quiver_action.get().is_targeted())
+        {
+            // TODO: recklessness warning?
+            you.quiver_action.get().trigger();
+            break;
+        }
+        // intentional fallthrough
     case CMD_AUTOFIGHT:
     case CMD_AUTOFIGHT_NOMOVE:
-    case CMD_AUTOFIRE:
     {
         const char * const fnname = cmd == CMD_AUTOFIGHT ? "hit_closest"
                                   : cmd == CMD_AUTOFIRE  ? "fire_closest"
