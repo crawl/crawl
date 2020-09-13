@@ -1018,11 +1018,12 @@ simple_targeting = false
         If set to true, disables smart targeting for explosion and bouncing
         bolt spells, making them automatically target the closest monster in
         range rather than trying to find a spot that affects multiple monsters
-        while avoiding the player.
+        while avoiding the player. This applies to target selection when
+        zapping as well as autotarget selection for quivered spells.
 
-allow_self_target = (yes | no | prompt)
+allow_self_target = prompt
         Allow targeting yourself with risky magic (e.g., the spell Bolt of Magma
-        or a wand of paralysis.)
+        or a wand of paralysis.) Values: (yes | no | prompt).
         When set to 'yes', you are a valid target. When set to 'no', you cannot
         target yourself with such spells. When set to 'prompt' (the default),
         you will be required to confirm self-targeting. This option has no

@@ -329,6 +329,42 @@ namespace quiver
         int ammo_slot;
     };
 
+    static bool _spell_needs_manual_targeting(spell_type s)
+    {
+        switch (s)
+        {
+        case SPELL_FULMINANT_PRISM:
+        case SPELL_GRAVITAS: // will autotarget to a monster if allowed, should we allow?
+        case SPELL_PASSWALL: // targeted, but doesn't make sense with autotarget
+        case SPELL_GOLUBRIAS_PASSAGE: // targeted, but doesn't make sense with autotarget
+            return true;
+        default:
+            return false;
+        }
+    }
+
+    // for spells that are targeted, but should skip the lua target selection
+    // pass for one reason or another
+    static bool _spell_skips_initial_autotarget(spell_type s)
+    {
+        switch (s)
+        {
+        case SPELL_LRD: // skip initial autotarget for LRD so that it doesn't
+                        // fix on a close monster that can't be targeted. I'm
+                        // not quite sure what the right thing to do is?
+                        // An alternative would be to just error if the closest
+                        // monster can't be autotargeted, or pop out to manual
+                        // targeting for that case; the behavior involved in
+                        // listing it here just finds the closest targetable
+                        // monster.
+        case SPELL_INVISIBILITY: // targeted, but not to enemies. (Should this allow quivering at all?)
+        case SPELL_APPORTATION: // Apport doesn't target monsters at all
+            return true;
+        default:
+            return _spell_needs_manual_targeting(s);
+        }
+    }
+
     struct spell_action : public action
     {
         spell_action(spell_type s = SPELL_NO_SPELL) : spell(s) { };
@@ -350,10 +386,14 @@ namespace quiver
             return is_valid_spell(spell) && you.has_spell(spell);
         }
 
+        // as a practical matter, this determines whether the initial lua
+        // target finder is used on shift-tab. It's also used in a somewhat
+        // incorrect way right now to determine fire behavior (TODO).
         bool is_targeted() const override
         {
             // TODO: what spells does this miss?
-            return !!(get_spell_flags(spell) & spflag::targeting_mask);
+            return !!(get_spell_flags(spell) & spflag::targeting_mask)
+                    && !_spell_skips_initial_autotarget(spell);
         }
 
         void trigger(dist &t) override
@@ -364,7 +404,28 @@ namespace quiver
                 return;
 
             target = t;
+
+            // TODO: how to handle these in the fire interface?
+            if (_spell_needs_manual_targeting(spell))
+            {
+                target.target = coord_def(-1,-1);
+                target.find_target = false; // default, but here for clarity's sake
+            }
+            else if (_spell_skips_initial_autotarget(spell))
+            {
+                target.target = coord_def(-1,-1);
+                target.find_target = true;
+            }
+
             cast_a_spell(true, spell, &target);
+            if (target.find_target && !target.isValid)
+            {
+                // It would be entirely possible to force manual targeting for
+                // this case; I think it's not what players would expect so I'm
+                // not doing it for now.
+                // TODO: more consistency with autofight.lua messaging?
+                mpr("Can't find an automatic target! Use z or Z to cast.");
+            }
             t = target; // copy back, in case they are different
         }
 
@@ -445,6 +506,9 @@ namespace quiver
             if (!is_valid() || !is_enabled())
                 return;
 
+            // to apply smart targeting behavior for iceblast; should have no
+            // impact on other wands
+            target.find_target = true;
             evoke_item(wand_slot, &target);
 
             t = target; // copy back, in case they are different

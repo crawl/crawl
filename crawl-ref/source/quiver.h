@@ -56,6 +56,8 @@ namespace quiver
         virtual bool is_valid() const { return false; };
         virtual bool is_targeted() const { return false; };
 
+        virtual void find_target() const { };
+
         virtual formatted_string quiver_description() const;
 
         // basically noops for this class, but keep `target` clean
