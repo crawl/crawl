@@ -366,6 +366,7 @@ void handle_behaviour(monster* mon)
         && mon->behaviour != BEH_WITHDRAW
         && mon->type != MONS_BALLISTOMYCETE_SPORE
         && mon->type != MONS_BALL_LIGHTNING
+        && mon->type != MONS_BALL_WEB
         && mon->type != MONS_FOXFIRE
         && mon->type != MONS_WILL_O_WISP
         && !mons_is_avatar(mon->type))
@@ -382,6 +383,7 @@ void handle_behaviour(monster* mon)
             || ((mon->berserk()
                  || mon->type == MONS_BALLISTOMYCETE_SPORE
                  || mon->type == MONS_BALL_LIGHTNING
+                 || mon->type == MONS_BALL_WEB
                  || mon->type == MONS_FOXFIRE
                  || mon->type == MONS_WILL_O_WISP)
                 && (mon->foe == MHITNOT
@@ -505,6 +507,7 @@ void handle_behaviour(monster* mon)
                     || patrolling
                     || mon->type == MONS_BALLISTOMYCETE_SPORE
                     || mon->type == MONS_BALL_LIGHTNING
+                    || mon->type == MONS_BALL_WEB
                     || mon->type == MONS_FOXFIRE
                     || mon->type == MONS_WILL_O_WISP)
                 {
@@ -1188,6 +1191,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         if (mon->friendly()
             && (mon->type == MONS_BALLISTOMYCETE_SPORE
                 || mon->type == MONS_BALL_LIGHTNING
+                || mon->type == MONS_BALL_WEB
                 || mon->type == MONS_FOXFIRE
                 || mon->type == MONS_WILL_O_WISP))
         {

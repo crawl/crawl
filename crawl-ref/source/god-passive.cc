@@ -446,7 +446,7 @@ static const vector<god_passive> god_passives[] =
             "You can gain poison resistance"
         },
         { 1, passive_t::agraphede_poison_shield,
-            "converts the received damage to a certain percentage poison" },
+            "converts a certain percentage of damage to poison" },
         { 2, passive_t::agraphede_poison_regen,
             "get regen while poisoned" },
         { 2, passive_t::agraphede_create_worm,

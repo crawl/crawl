@@ -633,9 +633,6 @@ static void _try_to_respawn_ancestor()
                       ancestor); // ;)
 }
 
-
-
-
 /**
  * Take a 'simple' duration, decrement it, and print messages as appropriate
  * when it hits 50% and 0% remaining.
@@ -880,6 +877,8 @@ static void _decrement_durations()
 
     if (you.duration[DUR_TOXIC_RADIANCE])
         toxic_radiance_effect(&you, min(delay, you.duration[DUR_TOXIC_RADIANCE]));
+
+
 
     if (you.duration[DUR_RECITE] && _check_recite())
     {

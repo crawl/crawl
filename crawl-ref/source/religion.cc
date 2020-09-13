@@ -461,18 +461,26 @@ const vector<god_power> god_powers[NUM_GODS] =
     },
 
     // Agraphede
-    { { 1, ABIL_AGRAPHEDE_WEB, 
+    {
+      { 0, "You lose poison resistance." },
+      { 1, ABIL_AGRAPHEDE_WEB, 
            "install a spider web" },
+      { 1, "converts a certain percentage of damage to poison" },
       { 2, ABIL_AGRAPHEDE_CONVERT_POISON,
            "turn a curing potion into a poison potion" },
+      { 2, "get regen while poisoned" },
       { 3, ABIL_AGRAPHEDE_ENCHANT_POISON,
            "enchant poison weapons" },
+      { 3, "steal poison resistance from living enemies in sight" },
       { 4, ABIL_AGRAPHEDE_TRAP,
            "create explosive traps around you" },
       { 5, ABIL_AGRAPHEDE_HORNET_STING,
            "sting a deadly wasp sting" },
       { 5, ABIL_AGRAPHEDE_SUMMON_SPIDER,
           "release spiders to specific locations" },
+      { 5, "Agraphede is now supports your poison spells.",
+           "Agraphede will no longer supports your poison spells.",
+           "Agraphede supports your poison spells." },
     },
 };
 
@@ -1601,6 +1609,19 @@ static bool _gift_sif_kiku_gift(bool forced)
             gift = BOOK_DEATH;
         }
     }
+    else if (you_worship(GOD_AGRAPHEDE))
+    {
+        if (you.piety >= piety_breakpoint(0)
+            && you.num_total_gifts[you.religion] == 0)
+        {
+            gift = BOOK_YOUNG_POISONERS;
+        }
+        else if (you.piety >= piety_breakpoint(2)
+            && you.num_total_gifts[you.religion] == 1)
+        {
+            gift = BOOK_ALCHEMY;
+        }
+    }
     else if (forced
              || you.piety >= piety_breakpoint(4) && random2(you.piety) > 100)
     {
@@ -1624,6 +1645,11 @@ static bool _gift_sif_kiku_gift(bool forced)
             make_book_kiku_gift(mitm[thing_created],
                                 gift == BOOK_NECROMANCY);
         }
+        if (you_worship(GOD_AGRAPHEDE))
+        {
+            make_book_agraphede_gift(mitm[thing_created],
+                gift == BOOK_YOUNG_POISONERS);
+        }
         if (thing_created == NON_ITEM)
             return false;
 
@@ -1640,8 +1666,8 @@ static bool _gift_sif_kiku_gift(bool forced)
 
         you.num_current_gifts[you.religion]++;
         you.num_total_gifts[you.religion]++;
-        // Timeouts are meaningless for Kiku and the Wyrm.
-        if (!you_worship(GOD_KIKUBAAQUDGHA) || !you_worship(GOD_WYRM))
+        // Timeouts are meaningless for Kiku and the Agraphede.
+        if (!you_worship(GOD_KIKUBAAQUDGHA) || !you_worship(GOD_AGRAPHEDE))
             _inc_gift_timeout(40 + random2avg(19, 2));
         take_note(Note(NOTE_GOD_GIFT, you.religion));
     }
@@ -2216,6 +2242,7 @@ bool do_god_gift(bool forced)
 
         case GOD_KIKUBAAQUDGHA:
         case GOD_SIF_MUNA:
+        case GOD_AGRAPHEDE:
             success = _gift_sif_kiku_gift(forced);
             break;
 
@@ -2603,6 +2630,21 @@ static void _gain_piety_point()
         {
            god_speaks(you.religion,
                       "You may now remember your ancestor's life.");
+        }
+
+        if (have_passive(passive_t::agraphede_poison_regen) &&
+           ((rank >= 3 && piety_rank(old_piety) < 3) ||
+            (rank >= 5 && piety_rank(old_piety) < 5))
+            ) {
+            mprf(MSGCH_GOD, "your poison regeneration is faster.");
+        }
+
+        if (have_passive(passive_t::agraphede_poison_deprived) &&
+            rank >= 5 && piety_rank(old_piety) < 5
+            )
+        {
+            string msg = " now steal poison resistance from demonic and holy enemies.";
+            simple_god_message(msg.c_str());
         }
     }
 

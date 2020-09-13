@@ -3392,7 +3392,8 @@ bool is_bad_item(const item_def &item, bool temp)
         case POT_STRONG_POISON:
         case POT_POISON:
             // Poison is not that bad if you're poison resistant.
-            return player_res_poison(false) <= 0
+            return !you_worship(GOD_AGRAPHEDE) &&
+                player_res_poison(false) <= 0
                    || !temp && you.species == SP_VAMPIRE;
 #endif
         default:
@@ -3473,6 +3474,9 @@ bool is_dangerous_item(const item_def &item, bool temp)
         case POT_UNSTABLE_MUTATION:
         case POT_LIGNIFY:
             return true;
+        case POT_STRONG_POISON:
+        case POT_POISON:
+            return you_worship(GOD_AGRAPHEDE);
         default:
             return false;
         }
@@ -3756,7 +3760,8 @@ bool is_useless_item(const item_def &item, bool temp)
 #endif
         case POT_POISON:
             // If you're poison resistant, poison is only useless.
-            return !is_bad_item(item, temp);
+            return  !you_worship(GOD_AGRAPHEDE) &&
+                !is_bad_item(item, temp);
         case POT_HEAL_WOUNDS:
             return !you.can_device_heal();
         case POT_INVISIBILITY:

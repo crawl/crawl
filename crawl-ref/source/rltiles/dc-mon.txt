@@ -272,6 +272,7 @@ prismatic_prism3
 prismatic_prism4
 %rim 1
 ball_lightning MONS_BALL_LIGHTNING /*'*'*/
+ball_of_web MONS_BALL_WEB
 %sdir mon/undead
 death_cob MONS_DEATH_COB /*'%'*/
 

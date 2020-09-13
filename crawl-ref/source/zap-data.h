@@ -1553,4 +1553,22 @@ _mon_hex_zap(ZAP_DRAIN_MAGIC, BEAM_DRAIN_MAGIC),
     false,
     8
 },
+
+{
+    ZAP_AGR_VENOM_BOLT,
+    "bolt of poison",
+    200,
+    new calcdice_calculator<4, 16, 3, 5>,
+    new tohit_calculator<8, 1, 20>,
+    new dicedef_calculator<3, 6, 1, 13>,
+    new tohit_calculator<19, 1, 20>,
+    LIGHTGREEN,
+    false,
+    BEAM_HORNET_VENOM,
+    DCHAR_FIRED_ZAP,
+    true,
+    false,
+    false,
+    5 // XXX: Quieter because it's poison?
+},
 };

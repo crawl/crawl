@@ -1090,6 +1090,7 @@ enum monster_type                      // menv[].type
     MONS_RIN,
     MONS_WILL_O_WISP,
     MONS_HOODED_MALICE,
+    MONS_BALL_WEB,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

@@ -151,15 +151,28 @@ public:
             mpr("That felt strangely inert.");
         // need to redraw from yellow to green even if no hp was gained
         if (you.duration[DUR_POISONING])
-                you.redraw_hit_points = true;
-            you.duration[DUR_POISONING] = 0;
-            you.disease = 0;
-            you.duration[DUR_CONF] = 0;
-            you.duration[DUR_CIGOTUVIS_PLAGUE] = 0;
+            you.redraw_hit_points = true;
+        you.duration[DUR_POISONING] = 0;
+        you.disease = 0;
+        you.duration[DUR_CONF] = 0;
+        you.duration[DUR_CIGOTUVIS_PLAGUE] = 0;
         
         // Do not heal or hurt player via changing head numbers.
         if (you.species == SP_HYDRA)
             you.head_grow(you.props[HYDRA_HEADS_NET_LOSS].get_int(), false); 
+        return true;
+    }
+    bool quaff(bool was_known) const override
+    {
+        if (was_known && !check_known_quaff())
+            return false;
+        bool poisoned = (you.duration[DUR_POISONING] > 0);
+
+        if (effect()) {
+            if (you_worship(GOD_AGRAPHEDE) && poisoned) {
+                did_god_conduct(DID_CURING_POISON, 10, was_known);
+            }
+        }
         return true;
     }
 };

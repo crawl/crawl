@@ -691,7 +691,7 @@ static void _catchup_monster_moves(monster* mon, int turns)
         return;
 
     // Ball lightning dissapates harmlessly out of LOS
-    if (mon->type == MONS_BALL_LIGHTNING && mon->summoner == MID_PLAYER)
+    if ((mon->type == MONS_BALL_LIGHTNING || mon->type == MONS_BALL_WEB) && mon->summoner == MID_PLAYER)
     {
         monster_die(*mon, KILL_RESET, NON_MONSTER);
         return;

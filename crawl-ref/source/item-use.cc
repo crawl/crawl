@@ -3123,7 +3123,7 @@ bool god_hates_brand(const int brand)
 
 static void _rebrand_weapon(item_def& wpn)
 {
-    if (&wpn == you.weapon() && you.duration[DUR_EXCRUCIATING_WOUNDS])
+    if (&wpn == you.weapon() && (you.duration[DUR_EXCRUCIATING_WOUNDS] || you.duration[DUR_POISON_WEAPON]))
         end_weapon_brand(wpn);
     if (&wpn == you.weapon() && you.duration[DUR_ELEMENTAL_WEAPON])
         end_elemental_weapon(wpn);

@@ -225,5 +225,6 @@ enum duration_type
     DUR_CITRINITAS,
     DUR_COMBAT_MANA,
     DUR_SHRAPNEL,
+    DUR_POISON_WEAPON,
     NUM_DURATIONS
 };

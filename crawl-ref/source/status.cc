@@ -952,6 +952,11 @@ static void _describe_poison(status_info& inf)
     inf.light_colour = (player_res_poison(false) >= 3
                          ? DARKGREY : _bad_ench_colour(pois_perc, 35, 100));
     inf.light_text   = "Pois";
+
+    if (you_worship(GOD_AGRAPHEDE)) {
+        inf.light_text = make_stringf("Pois(%d)", you.duration[DUR_POISONING]/1000);
+    }
+
     const string adj =
          (pois_perc >= 100) ? "lethally" :
          (pois_perc > 65)   ? "seriously" :

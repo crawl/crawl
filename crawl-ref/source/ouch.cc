@@ -834,6 +834,17 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
         dam = max(0, do_shave_damage(dam));
     }
 
+    if (have_passive(passive_t::agraphede_poison_shield)
+        && death_type != KILLED_BY_POISON
+        && you_worship(GOD_AGRAPHEDE)
+        && dam != INSTANT_DEATH
+        && dam > 0) {
+        int percent_ = 10 + (you.piety) / 5;
+        int poison_amount = max(1, dam * percent_ / 100);
+        dam -= poison_amount;
+        you.poison(&you, poison_amount, true);
+    }
+
     if (dam != INSTANT_DEATH)
     {
         if (you.form == transformation::shadow)

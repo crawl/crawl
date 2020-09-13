@@ -750,6 +750,23 @@ static bool _sack_of_spiders_veto_mon(monster_type mon)
     return player_will_anger_monster(mon);
 }
 
+bool sack_of_spiders(int power, int count, coord_def pos)
+{
+    bool success = false;
+
+    for (int n = 0; n < count; n++)
+    {
+        // Invoke mon-pick with our custom list
+        monster_type mon = pick_monster_from(pop_spiders,
+            max(1, min(27, power)),
+            _sack_of_spiders_veto_mon);
+        mgen_data mg(mon, BEH_FRIENDLY, pos, MHITYOU, MG_AUTOFOE);
+        mg.set_summoned(&you, 3 + random2(4), 0);
+        if (create_monster(mg))
+            success = true;
+    }
+    return success;
+}
 
 static bool _sack_of_spiders(item_def &sack)
 {
@@ -773,22 +790,7 @@ static bool _sack_of_spiders(item_def &sack)
         return false;
     }
 
-    bool success = false;
-
-    for (int n = 0; n < count; n++)
-    {
-        // Invoke mon-pick with our custom list
-        monster_type mon = pick_monster_from(pop_spiders,
-                                             max(1, min(27,
-                                             player_adjust_evoc_power(
-                                                 you.skill(SK_EVOCATIONS),
-                                                 surge))),
-                                             _sack_of_spiders_veto_mon);
-        mgen_data mg(mon, BEH_FRIENDLY, you.pos(), MHITYOU, MG_AUTOFOE);
-        mg.set_summoned(&you, 3 + random2(4), 0);
-        if (create_monster(mg))
-            success = true;
-    }
+    bool success = sack_of_spiders(power, count, you.pos());
 
     if (success)
     {
