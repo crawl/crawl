@@ -4048,6 +4048,7 @@ static void _edit_save(int argc, char **argv)
     {
         printf("Usage: crawl --edit-save <name> <command>, where <command> may be:\n"
                "  ls                          list the chunks\n"
+               "  info                        list detailed chunk and frag info\n"
                "  get <chunk> [<chunkfile>]   extract a chunk into <chunkfile>\n"
                "  put <chunk> [<chunkfile>]   import a chunk from <chunkfile>\n"
                "     <chunkfile> defaults to \"chunk\"; use \"-\" for stdout/stdin\n"

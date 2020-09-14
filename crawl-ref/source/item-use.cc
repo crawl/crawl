@@ -2047,7 +2047,11 @@ bool puton_ring(item_def &to_puton, bool allow_prompt,
         return false;
     }
 
-    if (jewellery_is_amulet(to_puton))
+    // item type checking is a bit convoluted here; we can't yet meet the
+    // conditions for _can_puton_jewellery (called in _puton_ring) but
+    // jewellery_is_amulet is only well-defined if it is passed jewellery,
+    // and ASSERTs accordingly
+    if (to_puton.base_type == OBJ_JEWELLERY && jewellery_is_amulet(to_puton))
         return _puton_amulet(to_puton, check_for_inscriptions);
     const bool prompt = allow_prompt && Options.jewellery_prompt;
     return _puton_ring(to_puton, prompt, check_for_inscriptions);

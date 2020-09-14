@@ -2182,11 +2182,19 @@ string get_item_description(const item_def &item, bool verbose,
             description << "\n\n" + _describe_lignify_ac();
         break;
 
+    case OBJ_WANDS:
+        if (item_type_known(item))
+        {
+            spell_type spell = spell_in_wand(static_cast<wand_type>(item.sub_type));
+            description << "\n\nNoise when evoked: " << spell_noise_string(spell);
+        }
+        break;
+
     case OBJ_SCROLLS:
     case OBJ_ORBS:
     case OBJ_GOLD:
     case OBJ_RUNES:
-    case OBJ_WANDS:
+
 #if TAG_MAJOR_VERSION == 34
     case OBJ_FOOD:
     case OBJ_RODS:

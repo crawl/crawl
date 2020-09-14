@@ -2832,7 +2832,7 @@ bool mons_can_hate(monster_type type)
 
 void check_lovelessness(monster &mons)
 {
-    if (!mons_can_hate(mons.type))
+    if (!mons_can_hate(mons.type) || !mons.wont_attack())
         return;
 
     mons.attitude = ATT_HOSTILE;

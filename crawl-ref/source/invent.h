@@ -239,8 +239,6 @@ vector<SelItem> select_items(
                         const char *title, bool noselect = false,
                         menu_type mtype = menu_type::pickup);
 
-void describe_items(const vector<const item_def*> &items, const char * title);
-
 vector<SelItem> prompt_drop_items(const vector<SelItem> &preselected_items);
 
 void display_inventory();

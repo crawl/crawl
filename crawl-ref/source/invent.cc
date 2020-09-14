@@ -1065,35 +1065,6 @@ vector<SelItem> select_items(const vector<const item_def*> &items,
     return selected;
 }
 
-// Show the user an inventory menu with the stack of items
-// to be described
-void describe_items(const vector<const item_def*> &items, const char *title)
-{
-    if (items.empty())
-        return;
-
-    if (items.size() == 1)
-    {
-        describe_item_popup(*items[0]);
-        return;
-    }
-
-    InvMenu menu;
-    menu.set_type(menu_type::invlist);
-    menu.set_title(title);
-    menu.load_items(items);
-    menu.set_flags(MF_SINGLESELECT | MF_ALLOW_FORMATTING);
-
-    menu.on_single_selection = [](const MenuEntry& me)
-    {
-        const InvEntry * inv = dynamic_cast<const InvEntry*>(&me);
-        return describe_item_popup(*inv->item);
-    };
-
-    menu.show();
-}
-
-
 bool item_is_selected(const item_def &i, int selector)
 {
     const object_class_type itype = i.base_type;

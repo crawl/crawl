@@ -15,6 +15,7 @@
 #include <sstream>
 
 #include "abyss.h"
+#include "act-iter.h"
 #include "areas.h"
 #include "art-enum.h"
 #include "branch.h"
@@ -1572,15 +1573,17 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         return _can_hop(quiet);
 
     case ABIL_ROLLING_CHARGE:
+    {
         if (!_can_movement_ability(quiet))
             return false;
-        if (get_dist_to_nearest_monster() > PALENTONGA_CHARGE_RANGE)
-        {
-            if (!quiet)
-                mpr("There are no monsters in range.");
-            return false;
-        }
-        return true;
+        targeter_charge tgt(&you, PALENTONGA_CHARGE_RANGE);
+        for (monster_near_iterator mi(&you); mi; ++mi)
+            if (tgt.valid_aim(mi->pos()))
+                return true;
+        if (!quiet)
+            mpr("There's nothing you can charge at!");
+        return false;
+    }
 
     case ABIL_BLINK:
     case ABIL_EVOKE_BLINK:

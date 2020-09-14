@@ -1657,11 +1657,6 @@ bool mons_class_is_zombified(monster_type mc)
         || mc == MONS_SPECTRAL_THING;
 }
 
-bool mons_class_is_hybrid(monster_type mc)
-{
-    return mons_class_flag(mc, M_HYBRID);
-}
-
 bool mons_class_is_animated_weapon(monster_type type)
 {
     return type == MONS_DANCING_WEAPON || type == MONS_SPECTRAL_WEAPON;
@@ -2562,7 +2557,7 @@ monster_type random_demonspawn_job()
 //
 //     (is_unclean_spell() || is_chaotic_spell())
 //
-// FIXME: This is not true for one set of spellbooks; MST_WIZARD_IV
+// FIXME: This is not true for one set of spellbooks; MST_WIZARD_I
 // contains the unholy and chaotic Banishment spell, but the other
 // MST_WIZARD-type spellbooks contain no unholy, evil, unclean or
 // chaotic spells.
@@ -3435,13 +3430,22 @@ bool mons_wields_two_weapons(const monster& mon)
     return mons_class_wields_two_weapons(mons_base_type(mon));
 }
 
-bool mons_self_destructs(const monster& m)
+bool mons_destroyed_on_impact(const monster& m)
+{
+    return mons_is_projectile(m) || m.type == MONS_FOXFIRE;
+}
+
+bool mons_blows_up(const monster& m)
 {
     return m.type == MONS_BALLISTOMYCETE_SPORE
         || m.type == MONS_BALL_LIGHTNING
         || m.type == MONS_LURKING_HORROR
-        || m.type == MONS_ORB_OF_DESTRUCTION
         || m.type == MONS_FULMINANT_PRISM;
+}
+
+bool mons_self_destructs(const monster& m)
+{
+    return mons_blows_up(m) || mons_destroyed_on_impact(m);
 }
 
 bool mons_att_wont_attack(mon_attitude_type fr)
