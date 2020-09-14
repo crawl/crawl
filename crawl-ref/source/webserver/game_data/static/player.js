@@ -189,15 +189,8 @@ function ($, comm, enums, map_knowledge, messages, options, util) {
 
     function quiver()
     {
-        if (!player.quiver_available)
-        {
-            var elem = $("<span>");
-            elem.text("Quiver unavailable");
-            elem.addClass("fg8");
-            return elem;
-        }
-        else
-            return util.formatted_string_to_html(player.quiver_desc);
+        // any use for player.quiver_available any more?
+        return util.formatted_string_to_html(player.quiver_desc);
     }
 
     player.has_status_light = function (status_light, col)

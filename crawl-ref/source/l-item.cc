@@ -1372,18 +1372,22 @@ static int l_item_equipped_at(lua_State *ls)
     return 1;
 }
 
-/*** Get the Item we should fire by default.
- * @treturn Item|nil returns nil if there is no default quiver item
+/*** Get the ammo Item we should fire by default.
+ * @treturn Item|nil returns nil if something other than ammo is quivered
  * @function fired_item
  */
 static int l_item_fired_item(lua_State *ls)
 {
-    int q = you.quiver_action.get().get_item();
+    const auto &a = you.quiver_action.get();
+    if (!a.is_valid() || !a.is_enabled())
+        return 0;
+
+    const int q = a.get_item();
 
     if (q < 0 || q >= ENDOFPACK)
         return 0;
 
-    if (q != -1 && !fire_warn_if_impossible(true))
+    if (q != -1)
         clua_push_item(ls, &you.inv[q]);
     else
         lua_pushnil(ls);

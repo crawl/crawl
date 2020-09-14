@@ -68,33 +68,31 @@ namespace quiver
                         "<darkgrey>Nothing quivered</darkgrey>");
     }
 
-    shared_ptr<action> action::find_next(int, bool) const
+    shared_ptr<action> action::find_next(int dir, bool loop) const
     {
-        return make_shared<action>();
-    }
+        auto o = get_fire_order();
+        if (o.size() == 0)
+            return nullptr; // or same type?
 
-    // goes by letter order
-    static spell_type _get_next_castable_spell(spell_type cur_spell, int dir)
-    {
-        dir = dir >= 0 ? 1 : -1;
-        int cur = get_spell_letter(cur_spell);
-        if (cur == -1)
-            cur = dir >= 0 ? 0 : 51;
-        else
-            cur = letter_to_index(cur) + dir;
+        if (dir < 0)
+            reverse(o.begin(), o.end());
 
-        for (int i = cur; i < 52 && i >=0; i += dir)
-        {
-            const char letter = index_to_letter(i);
-            const spell_type spell = get_spell_by_letter(letter);
-            if (is_valid_spell(spell)
-                && fail_severity(spell) < Options.fail_severity_to_quiver)
-            {
-                return spell;
-            }
-        }
+        if (!is_valid())
+            return o[0];
 
-        return SPELL_NO_SPELL;
+        int i = 0;
+        for (; i < static_cast<int>(o.size()); i++)
+            if (*o[i] == *this)
+                break;
+
+        if (i == static_cast<int>(o.size()))
+            return o[0];
+
+        i++;
+        if (!loop && i >= static_cast<int>(o.size()))
+            return nullptr;
+
+        return o[i % o.size()];
     }
 
     // Get a sorted list of items to show in the fire interface.
@@ -164,34 +162,6 @@ namespace quiver
             order[i] &= 0xffff;
     }
 
-    static int _get_next_fireable_item(int current, int direction, bool loop)
-    {
-        vector<int> fire_order;
-        _get_item_fire_order(fire_order, false, you.weapon(), true);
-
-        if (fire_order.empty())
-            return -1;
-
-        if (current < 0)
-            return direction >= 0 ? fire_order[0] : fire_order[fire_order.size() - 1];
-
-        int next = direction >= 0 ? 0 : -1;
-        for (unsigned i = 0; i < fire_order.size(); i++)
-        {
-            if (fire_order[i] == current)
-            {
-                next = i + direction;
-                break;
-            }
-        }
-
-        if (!loop && (next < 0 || next >= static_cast<int>(fire_order.size())))
-            return -1;
-
-        next = (next + fire_order.size()) % fire_order.size();
-        return fire_order[next];
-    }
-
     /**
      * An ammo_action is an action that fires ammo from a slot in the
      * inventory. This covers both launcher-based firing, and throwing.
@@ -212,7 +182,8 @@ namespace quiver
 
         bool is_enabled() const override
         {
-            // TODO: enabled only if ammo matches weapon, instead of valid?
+            if (fire_warn_if_impossible(true))
+                return false;
 
             // disable if there's a no-fire inscription on ammo
             // maybe this should just be skipped altogether for this case?
@@ -247,8 +218,14 @@ namespace quiver
         void trigger(dist &t) override
         {
             target = t;
-            if (!is_valid() || !is_enabled())
+            if (!is_valid())
                 return;
+            if (!is_enabled())
+            {
+                // for messaging (TODO refactor; message about inscriptions?)
+                fire_warn_if_impossible();
+                return;
+            }
 
             bolt beam;
             throw_it(beam, ammo_slot, &target);
@@ -298,7 +275,9 @@ namespace quiver
 
             const int prefcol =
                 menu_colour(quiver.name(DESC_PLAIN), prefix, "stats");
-            if (prefcol != -1)
+            if (!is_enabled())
+                qdesc.textcolour(DARKGREY);
+            else if (prefcol != -1)
                 qdesc.textcolour(prefcol);
             else
                 qdesc.textcolour(LIGHTGREY);
@@ -316,13 +295,20 @@ namespace quiver
             return find_action_from_launcher(you.weapon());
         }
 
-        shared_ptr<action> find_next(int dir, bool loop) const override
+        vector<shared_ptr<action>> get_fire_order() const override
         {
-            // TODO: refactor _get_next_fireable_item into here?
-            // and maybe refactor to use actions rather than the current
-            // somewhat involved legacy code?
-            return make_shared<ammo_action>(
-                            _get_next_fireable_item(get_item(), dir, loop));
+            vector<int> fire_order;
+            _get_item_fire_order(fire_order, false, you.weapon(), true);
+
+            vector<shared_ptr<action>> result;
+
+            for (auto i : fire_order)
+            {
+                auto a = make_shared<ammo_action>(i);
+                if (a->is_valid())
+                    result.push_back(move(a));
+            }
+            return result;
         }
 
     private:
@@ -378,7 +364,7 @@ namespace quiver
 
         bool is_enabled() const override
         {
-            return !spell_is_useless(spell, true, true);
+            return can_cast_spells(true) && !spell_is_useless(spell, true, true);
         }
 
         bool is_valid() const override
@@ -400,6 +386,7 @@ namespace quiver
         {
             // note: we don't do the enabled check here, because cast_a_spell
             // duplicates it and does appropriate messaging
+            // TODO refactor?
             if (!is_valid())
                 return;
 
@@ -417,6 +404,10 @@ namespace quiver
                 target.find_target = true;
             }
 
+            // TODO: would it be feasible to allow dropping to manual targeting
+            // if the only autotarget solution found would hit the player?
+            // currently applies to something like firestorm, where direction
+            // chooser autotargeting doesn't work very well (maybe on purpose)
             cast_a_spell(true, spell, &target);
             if (target.find_target && !target.isValid)
             {
@@ -451,13 +442,21 @@ namespace quiver
             return qdesc;
         }
 
-        shared_ptr<action> find_next(int dir, bool loop) const override
+        vector<shared_ptr<action>> get_fire_order() const override
         {
-            spell_type n = _get_next_castable_spell(spell, dir);
-            if (loop && n == SPELL_NO_SPELL)
-                n = _get_next_castable_spell(SPELL_NO_SPELL, dir);
-
-            return make_shared<spell_action>(n);
+            // goes by letter order
+            vector<shared_ptr<action>> result;
+            for (int i = 0; i < 52; i++)
+            {
+                const char letter = index_to_letter(i);
+                const spell_type s = get_spell_by_letter(letter);
+                if (is_valid_spell(s)
+                    && fail_severity(s) < Options.fail_severity_to_quiver)
+                {
+                    result.push_back(make_shared<spell_action>(s));
+                }
+            }
+            return result;
         }
 
     private:
@@ -541,49 +540,22 @@ namespace quiver
             return wand_slot;
         }
 
-        shared_ptr<action> find_replacement() const override
+        vector<shared_ptr<action>> get_fire_order() const override
         {
-            // TODO: revamp?
-            return find_action_from_launcher(you.weapon());
-        }
-
-        shared_ptr<action> find_next(int dir, bool loop) const override
-        {
-            // brute force: find all wands, then find the next one
-            vector<int> zap_order;
-            int cur_index = -1;
-            int i = 0;
+            // go by pack order
+            vector<shared_ptr<action>> result;
             for (int slot = 0; slot < ENDOFPACK; slot++)
             {
-                // TODO: how to reduce shared code here with is_valid?
-                if (!you.inv[slot].defined() || you.inv[slot].base_type != OBJ_WANDS)
+                auto w = make_shared<wand_action>(slot);
+                if (!w->is_valid())
                     continue;
+                // skip digging, it seems kind of non-useful? Can still be
+                // force-quivered from inv
                 if (you.inv[slot].sub_type == WAND_DIGGING)
                     continue;
-                zap_order.push_back(slot);
-                if (slot == wand_slot)
-                    cur_index = i;
-                i++;
+                result.push_back(move(w));
             }
-
-            if (zap_order.empty())
-                return make_shared<wand_action>(-1);
-
-            if (cur_index == -1)
-            {
-                // first or last
-                return make_shared<wand_action>(
-                            zap_order[dir >= 0 ? 0 : zap_order.size() - 1]);
-            }
-            cur_index += dir >= 0 ? 1 : -1;
-            if (!loop && (cur_index < 0
-                          || cur_index >= static_cast<int>(zap_order.size())))
-            {
-                return make_shared<wand_action>(-1);
-            }
-
-            return make_shared<wand_action>(
-                zap_order[(cur_index + zap_order.size()) % zap_order.size()]);
+            return result;
         }
 
     private:
@@ -788,15 +760,14 @@ namespace quiver
     {
         // this all seems a bit messy
 
-        // Find a representative for each type, by brute-force constructing a
-        // list of options. Some or all of these may be invalid.
-        vector<shared_ptr<action>> reps;
-        reps.push_back(ammo_action(-1).find_next(dir, false));
-        reps.push_back(spell_action(SPELL_NO_SPELL).find_next(dir, false));
-        reps.push_back(wand_action(-1).find_next(dir, false));
+        // Construct the type order.
+        vector<shared_ptr<action>> action_types;
+        action_types.push_back(make_shared<ammo_action>(-1));
+        action_types.push_back(make_shared<spell_action>(SPELL_NO_SPELL));
+        action_types.push_back(make_shared<wand_action>(-1));
 
         if (dir < 0)
-            reverse(reps.begin(), reps.end());
+            reverse(action_types.begin(), action_types.end());
 
         size_t i = 0;
         // skip_first: true just in case the current action is valid and we
@@ -809,9 +780,9 @@ namespace quiver
         {
             // find the type of a
             auto &a_ref = *a;
-            for (i = 0; i < reps.size(); i++)
+            for (i = 0; i < action_types.size(); i++)
             {
-                auto rep = reps[i];
+                auto rep = action_types[i];
                 if (!rep) // should be impossible
                     continue;
                 // we do it this way in order to silence some clang warnings
@@ -820,7 +791,7 @@ namespace quiver
                     break;
             }
             // unknown action type -- treat it like null. (Handles `action`.)
-            if (i >= reps.size())
+            if (i >= action_types.size())
             {
                 i = 0;
                 skip_first = false;
@@ -830,14 +801,17 @@ namespace quiver
         // TODO: this logic could probably be reimplemented using only mod
         // math, but using rotate does make the final iteration very clean
         if (skip_first)
-            i = (i + 1) % reps.size();
-        rotate(reps.begin(), reps.begin() + i, reps.end());
+            i = (i + 1) % action_types.size();
+        rotate(action_types.begin(), action_types.begin() + i, action_types.end());
 
         // now find the first result that is valid in this order. Will cycle
         // back to the current action type if nothing else works.
-        for (auto result : reps)
-            if (result->is_valid())
-                return result;
+        for (auto result : action_types)
+        {
+            auto n = result->find_next(dir, false);
+            if (n && n->is_valid())
+                return n;
+        }
 
         // we've gone through everything -- somehow there are no valid actions,
         // not even using a
@@ -851,7 +825,7 @@ namespace quiver
         shared_ptr<action> result = get().find_next(dir, false);
         // then, try to find a different action type
         if (!result || !result->is_valid())
-            result = _get_next_action_type(result, dir);
+            result = _get_next_action_type(get_ptr(), dir);
 
         // no valid actions
         if (!result)
@@ -868,7 +842,14 @@ namespace quiver
     void action_cycler::on_actions_changed()
     {
         if (!get().is_valid())
-            cycle();
+        {
+            auto r = get().find_replacement();
+            if (r && r->is_valid())
+                set(r);
+            else
+                cycle();
+        }
+        you.redraw_quiver = true;
     }
 
     shared_ptr<action> slot_to_action(int slot)
@@ -1029,27 +1010,6 @@ namespace quiver
         const item_def* weapon = you.weapon();
         if (m_last_used_type != quiver::_get_weapon_ammo_type(weapon))
             you.quiver_action.set(quiver::find_action_from_launcher(weapon));
-    }
-
-    void history::on_inv_quantity_changed(int slot)
-    {
-        // TODO: is this autoswitch behavior intuitive enough? Currently, if
-        // what is/was quivered is ammo, this will find ammo of the same type.
-        // If the quiver was manually emptied, it won't do anything.
-        if (!you.quiver_action.get().is_valid())
-        {
-            // Empty quiver. Maybe we can fill it now?
-
-            // we do this logic in a slightly complicated way to preserve the
-            // current type of the quiver action in case the replacement is
-            // invalid.
-            auto r = you.quiver_action.get().find_replacement();
-            if (r && r->is_valid())
-                you.quiver_action.set(r);
-            you.redraw_quiver = true;
-        }
-        else if (slot == you.quiver_action.get().get_item())
-            you.redraw_quiver = true;
     }
 
     // ----------------------------------------------------------------------

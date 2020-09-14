@@ -1067,7 +1067,9 @@ void TilesFramework::_send_player(bool force_full)
                    you.unarmed_attack_name(), "unarmed_attack");
     _update_int(force_full, c.unarmed_attack_colour,
                 (uint8_t) get_form()->uc_colour, "unarmed_attack_colour");
-    _update_int(force_full, c.quiver_available, !fire_warn_if_impossible(true),
+    _update_int(force_full, c.quiver_available,
+                    you.quiver_action.get().is_valid()
+                                && you.quiver_action.get().is_enabled(),
                 "quiver_available");
 
     json_close_object(true);
