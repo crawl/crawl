@@ -985,6 +985,20 @@ static const mutation_def mut_data[] =
    "Your connection to magic feels less subdued."},
 },
 
+{ MUT_DEMONIC_MAGIC, 0, 3, mutflag::bad, false,
+  "demonic magic",
+
+  {"Spells you cast may paralyse adjacent enemies.",
+   "Spells you cast may paralyse nearby enemies.",
+   "Spells you cast and evocables you use may paralyse nearby enemies."},
+
+  {"A menacing aura infuses your magic.",
+   "Your magic grows more menacing.",
+   "Your evocations become infused with your menacing aura."},
+
+  {"","",""},
+},
+
 #if TAG_MAJOR_VERSION == 34
 { MUT_FORLORN, 0, 1, mutflag::bad, false,
   "forlorn",
