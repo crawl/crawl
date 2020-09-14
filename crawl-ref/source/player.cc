@@ -532,8 +532,7 @@ void moveto_location_effects(dungeon_feature_type old_feat,
             if (you.species == SP_SPARKBORN && you.ground_level())
             {
                 if (!feat_is_water(old_feat))
-                    mprf(MSGCH_WARN, "Your magic ran out by water!");
-                dec_mp(9999);
+                    mprf(MSGCH_WARN, "Your magic is discharged by water.");
             }
         }
         else if (you.props.exists(TEMP_WATERWALK_KEY))
@@ -4196,11 +4195,7 @@ void inc_mp(int mp_gain, bool silent)
     {
         return inc_hp(mp_gain * DJ_MP_RATE);
     }
-    if (you.species == SP_SPARKBORN && you.ground_level()
-         && feat_is_water(env.grid(you.pos())))
-    {
-        return;
-    }
+
     if (mp_gain < 1 || you.magic_points >= you.max_magic_points)
         return;
 

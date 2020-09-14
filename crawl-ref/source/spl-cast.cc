@@ -664,6 +664,13 @@ bool can_cast_spells(bool quiet)
             mpr("You cannot cast spells while unable to breathe!");
         return false;
     }
+    
+    if (you.in_water() && you.species == SP_SPARKBORN)
+    {
+        if (!quiet)
+            mpr("Your energy is discharged by water!.");
+        return false;
+    }    
 
     if (you.duration[DUR_BRAINLESS])
     {

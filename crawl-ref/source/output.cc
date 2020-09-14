@@ -2704,7 +2704,7 @@ static vector<formatted_string> _get_overview_resistances(
     }
 
     const int no_cast = you.no_cast(calc_unid);
-    if (no_cast)
+    if (no_cast || (you.in_water() && you.species == SP_SPARKBORN))
         out += _resist_composer("NoCast", cwidth, 1, 1, false);
 
     cols.add_formatted(1, out, false);
