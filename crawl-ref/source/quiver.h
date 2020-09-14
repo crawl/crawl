@@ -53,7 +53,7 @@ namespace quiver
         }
 
         virtual bool is_enabled() const { return false; };
-        virtual bool is_valid() const { return false; };
+        virtual bool is_valid() const { return true; };
         virtual bool is_targeted() const { return false; };
 
         virtual void find_target() const { };
@@ -74,6 +74,11 @@ namespace quiver
         virtual int get_item() const { return -1; };
         virtual shared_ptr<action> find_replacement() const { return nullptr; }
         virtual shared_ptr<action> find_next(int dir=1, bool loop=false) const;
+
+        virtual vector<shared_ptr<action>> get_fire_order() const
+        {
+            return { };
+        }
 
         dist target;
         string error;
@@ -123,7 +128,6 @@ namespace quiver
         void set_quiver(const item_def &item, quiver::launcher ammo_type);
         void empty_quiver(quiver::launcher ammo_type);
         void on_item_fired(const item_def &item, bool explicitly_chosen = false);
-        void on_inv_quantity_changed(int slot);
         void on_weapon_changed();
 
         // save/load

@@ -442,7 +442,7 @@ bool dec_inv_item_quantity(int obj, int amount)
     else
         you.inv[obj].quantity -= amount;
 
-    you.m_quiver_history.on_inv_quantity_changed(obj);
+    you.quiver_action.on_actions_changed();
 
     return ret;
 }
@@ -477,7 +477,7 @@ void inc_inv_item_quantity(int obj, int amount)
         you.wield_change = true;
 
     you.inv[obj].quantity += amount;
-    you.m_quiver_history.on_inv_quantity_changed(obj);
+    you.quiver_action.on_actions_changed();
 }
 
 void inc_mitm_item_quantity(int obj, int amount)
@@ -1685,8 +1685,6 @@ static void _got_item(item_def& item)
 
     if (item.props.exists("needs_autopickup"))
         item.props.erase("needs_autopickup");
-
-    you.quiver_action.on_actions_changed();
 }
 
 void get_gold(const item_def& item, int quant, bool quiet)
@@ -2071,7 +2069,7 @@ static int _place_item_in_free_slot(item_def &it, int quant_got,
     }
 
     you.last_pickup[item.link] = quant_got;
-    you.m_quiver_history.on_inv_quantity_changed(freeslot);
+    you.quiver_action.on_actions_changed();
     item_skills(item, you.skills_to_show);
 
     if (const item_def* newitem = auto_assign_item_slot(item))
@@ -2551,7 +2549,6 @@ bool drop_item(int item_dropped, int quant_drop)
         feat_splash_noise(env.grid(you.pos()));
 
     dec_inv_item_quantity(item_dropped, quant_drop);
-    you.quiver_action.on_actions_changed();
 
     you.turn_is_over = true;
 
