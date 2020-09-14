@@ -2320,7 +2320,7 @@ static vector<weapon_choice> _get_weapons(const newgame_def& ng)
         if (size == SIZE_LARGE)
         {
             weapon_type startwep[6] = { WPN_DIRE_FLAIL, WPN_GIANT_CLUB, WPN_BATTLEAXE,
-                                        WPN_HALBERD, WPN_GREAT_SWORD, WPN_QUARTERSTAFF };
+                                        WPN_HALBERD, WPN_GREAT_SWORD, WPN_LAJATANG };
             for (int i = 0; i < 6; ++i)
             {
                 weapon_choice wp;
@@ -2332,7 +2332,7 @@ static vector<weapon_choice> _get_weapons(const newgame_def& ng)
             }
         } else {
             weapon_type startwep[5] = { WPN_DIRE_FLAIL, WPN_BATTLEAXE,
-                                        WPN_HALBERD, WPN_GREAT_SWORD, WPN_QUARTERSTAFF };
+                                        WPN_HALBERD, WPN_GREAT_SWORD, WPN_LAJATANG };
             for (int i = 0; i < 5; ++i)
             {
                 weapon_choice wp;
