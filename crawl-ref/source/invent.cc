@@ -1218,7 +1218,8 @@ bool item_is_selected(const item_def &i, int selector)
                 && (i.sub_type == POT_NIGREDO
                     || i.sub_type == POT_ALBEDO
                     || i.sub_type == POT_CITRINITAS
-                    || i.sub_type == POT_VIRIDITAS));
+                    || i.sub_type == POT_VIRIDITAS
+                    || i.sub_type == POT_RUBEDO));
     case OBJ_POTIONS:
         return (itype == OBJ_MISCELLANY && i.sub_type == MISC_BAG); //in the bag
     default:
