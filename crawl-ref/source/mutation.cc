@@ -2486,14 +2486,17 @@ try_again:
 
                 ret.emplace_back(m, next_facet->when[i], absfacet);
 
-                if (m == MUT_COLD_RESISTANCE)
-                    ice_elemental++;
+                if (i==0)
+                {
+                    if (m == MUT_COLD_RESISTANCE || m == MUT_CONDENSATION_SHIELD)
+                        ice_elemental++;
 
-                if (m == MUT_HEAT_RESISTANCE)
-                    fire_elemental++;
+                    if (m == MUT_HEAT_RESISTANCE || m == MUT_IGNITE_BLOOD)
+                        fire_elemental++;
 
-                if (i == 0 && (m == MUT_FOUL_STENCH || m == MUT_IGNITE_BLOOD))
-                    cloud_producing++;
+                    if (m == MUT_FOUL_STENCH || m == MUT_IGNITE_BLOOD)
+                        cloud_producing++;
+                }
             }
 
             ++absfacet;
