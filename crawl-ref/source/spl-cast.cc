@@ -1914,6 +1914,14 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
     {
     case spret::success:
     {
+        const int demonic_magic = you.get_mutation_level(MUT_DEMONIC_MAGIC);
+
+        if ((demonic_magic == 3 && evoked_item)
+            || (demonic_magic > 0 && allow_fail))
+        {
+            do_demonic_magic(spell_difficulty(spell) * 6, demonic_magic);
+        }
+
         if (you.props.exists("battlesphere") && allow_fail)
             trigger_battlesphere(&you);
 
@@ -2742,4 +2750,23 @@ void spell_skills(spell_type spell, set<skill_type> &skills)
     for (const auto bit : spschools_type::range())
         if (disciplines & bit)
             skills.insert(spell_type2skill(bit));
+}
+
+void do_demonic_magic(int pow, int rank)
+{
+    if (rank < 1)
+        return;
+
+    mprf("Malevolent energies surge around you.");
+
+    for (radius_iterator ri(you.pos(), rank, C_SQUARE, LOS_NO_TRANS, true); ri; ++ri)
+    {
+        monster *mons = monster_at(*ri);
+
+        if (!mons || mons->wont_attack() || !mons_is_threatening(*mons))
+            continue;
+
+        if (mons->check_res_magic(pow) <= 0)
+            mons->paralyse(&you, 1 + roll_dice(1,4));
+    }
 }
