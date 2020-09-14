@@ -2245,6 +2245,12 @@ string mutation_desc(mutation_type mut, int level, bool colour,
         ostr << mdef.have[0] << player_icemail_armour_class() << ")";
         result = ostr.str();
     }
+    else if (mut == MUT_CONDENSATION_SHIELD)
+    {
+        ostringstream ostr;
+        ostr << mdef.have[0] << player_condensation_shield_class() << ")";
+        result = ostr.str();
+    }
     else if (mut == MUT_SANGUINE_ARMOUR)
     {
         ostringstream ostr;
@@ -2375,7 +2381,7 @@ static const facet_def _demon_facets[] =
     // Tier 2 facets
     { 2, { MUT_IGNITE_BLOOD, MUT_IGNITE_BLOOD, MUT_IGNITE_BLOOD },
       { -33, 0, 0 } },
-    { 2, { MUT_COLD_RESISTANCE, MUT_FREEZING_CLOUD_IMMUNITY, MUT_ICEMAIL },
+    { 2, { MUT_CONDENSATION_SHIELD, MUT_ICEMAIL, MUT_ICEMAIL },
       { -33, 0, 0 } },
     { 2, { MUT_POWERED_BY_DEATH, MUT_POWERED_BY_DEATH, MUT_POWERED_BY_DEATH },
       { -33, 0, 0 } },

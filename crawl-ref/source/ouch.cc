@@ -72,10 +72,15 @@ void maybe_melt_player_enchantments(beam_type flavour, int damage)
     if (flavour == BEAM_FIRE || flavour == BEAM_LAVA
         || flavour == BEAM_STICKY_FLAME || flavour == BEAM_STEAM)
     {
-        if (you.has_mutation(MUT_ICEMAIL))
+        if (you.has_mutation(MUT_CONDENSATION_SHIELD))
         {
             if (!you.duration[DUR_ICEMAIL_DEPLETED])
-                mprf(MSGCH_DURATION, "Your icy envelope dissipates!");
+            {
+                if (you.has_mutation(MUT_ICEMAIL))
+                    mprf(MSGCH_DURATION, "Your icy defenses dissipate!");
+                else
+                    mprf(MSGCH_DURATION, "Your condensation shield dissipates!");
+            }
             you.duration[DUR_ICEMAIL_DEPLETED] = ICEMAIL_TIME;
             you.redraw_armour_class = true;
         }

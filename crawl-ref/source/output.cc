@@ -512,7 +512,9 @@ static bool _boosted_ev()
 static bool _boosted_sh()
 {
     return you.duration[DUR_DIVINE_SHIELD]
-           || qazlal_sh_boost() > 0;
+           || qazlal_sh_boost() > 0
+           || (you.get_mutation_level(MUT_CONDENSATION_SHIELD)
+                && !you.duration[DUR_ICEMAIL_DEPLETED]);
 }
 
 #ifdef DGL_SIMPLE_MESSAGING
