@@ -3614,7 +3614,8 @@ static bool _is_cancellable_scroll(scroll_type scroll)
            || scroll == SCR_ENCHANT_WEAPON
            || scroll == SCR_MAGIC_MAPPING
            || scroll == SCR_ACQUIREMENT
-           || scroll == SCR_COLLECTION;
+           || scroll == SCR_COLLECTION
+           || scroll == SCR_WISH;
 }
 
 /**
@@ -4007,6 +4008,12 @@ void read_scroll(item_def& scroll)
         {
             mpr("This is a scroll of collection!!!");
             cancel_scroll = !artefact_acquirement_menu();
+        }
+        break;
+    case SCR_WISH:
+        {
+            mpr("This is a scroll of wish!");
+            cancel_scroll = !scroll_of_wish_menu();
         }
         break;
     case SCR_FEAR:

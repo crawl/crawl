@@ -18,6 +18,7 @@
 #include "artefact.h"
 #include "art-enum.h"
 #include "colour.h"
+#include "dbg-util.h"
 #include "describe.h"
 #include "dungeon.h"
 #include "food.h"
@@ -2118,4 +2119,111 @@ bool artefact_acquirement_menu()
     acq_menu.show();
 
     return !you.props.exists(COLLECTOR_ITEMS_KEY);
+}
+
+bool scroll_of_wish_menu()
+{
+    ASSERT(!crawl_state.game_is_arena());
+
+    if(runes_in_pack() < 1){
+        mpr("You need at least 1 rune to make a wish.");
+        return false;
+    }
+
+    char buf[1024];
+    mprf(MSGCH_PROMPT, "Enter name of fixdart item: ");
+    if (cancellable_get_line_autohist(buf, sizeof buf) || !*buf)
+    {
+        canned_msg(MSG_OK);
+        return false;
+    }
+
+    if (buf[0] != '\0')
+    {
+        string buf_lwr = lowercase_string(buf);
+        int cheating_item = -1;
+        int special_wanted = -1;
+        int num = 0;
+        int islot;
+
+        for (int i = 0; i < NUM_UNRANDARTS; ++i)
+        {
+            const int              index = i + UNRAND_START;
+            const unrandart_entry* entry = get_unrand_entry(index);
+
+            // Skip dummy entries.
+            if (entry->base_type == OBJ_UNASSIGNED)
+                continue;
+
+
+            size_t pos = lowercase_string(entry->name).find(buf_lwr);
+            if (pos != string::npos)
+            {
+                if (entry->flags & UNRAND_FLAG_NOGEN) {
+                    cheating_item = i;
+                    continue;
+                }
+                // earliest match is the winner
+                mprf("%s ", entry->name);
+                special_wanted = i;
+                num++;
+            }
+        }
+
+        if (special_wanted == -1) {
+            if (cheating_item != -1) {
+                int index = cheating_item + UNRAND_START;
+                const unrandart_entry* entry = get_unrand_entry(index);
+                mprf(MSGCH_WARN, "%s is cheating!", entry->name);
+                return false;
+            }
+
+            mprf(MSGCH_PROMPT, "Cannot find artefact %s", buf);
+            return false;
+        }
+        if (num > 1) {
+            mprf(MSGCH_PROMPT, "Which of these items are you going to make?");
+            return false;
+        }
+
+        int index = special_wanted + UNRAND_START;
+        const unrandart_entry* entry = get_unrand_entry(index);
+
+        string prompt = "Wish ";
+        prompt += entry->name;
+        prompt += "? (Y/N)";
+        if (!yesno(prompt.c_str(), false, 'N', false))
+        {
+            canned_msg(MSG_OK);
+            return false;
+        }
+
+        islot = items(true, entry->base_type, 0, 0, -index, -1);
+        if (islot == NON_ITEM)
+        {
+            mprf(MSGCH_ERROR, "Failed to generate item for '%s'",
+                entry->name);
+            return false;
+        }
+        item_def& item = mitm[islot];
+        set_ident_flags(item, ISFLAG_IDENT_MASK);
+        if (!is_artefact(item) || is_random_artefact(item))
+        {
+            // for now, staves are ok...
+            mprf(MSGCH_ERROR,
+                "Failed to create %s... Perhaps already created?",
+                entry->name);
+            destroy_item(item);
+            return false;
+        }
+        else
+        {
+            mprf(MSGCH_PROMPT,
+                "Success to wish %s!",
+                item.name(DESC_A).c_str());
+        }
+        move_item_to_grid(&islot, you.pos());
+        return true;
+    }
+    return false;
 }

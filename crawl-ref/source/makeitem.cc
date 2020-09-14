@@ -1450,10 +1450,12 @@ static void _generate_scroll_item(item_def& item, int force_type,
                  15, (depth_mod < 4 ? NUM_SCROLLS : SCR_TORMENT),
                  15, (depth_mod < 4 ? NUM_SCROLLS : SCR_HOLY_WORD),
                  // DON'T MAKE UNIQUE SCROLL
-                 0, SCR_COLLECTION);
+                 0, SCR_COLLECTION,
+                 0, SCR_WISH);
         }
         while (item.sub_type == NUM_SCROLLS 
                || item.sub_type == SCR_COLLECTION
+               || item.sub_type == SCR_WISH
                || agent == GOD_XOM
                   && _is_boring_item(OBJ_SCROLLS, item.sub_type)
                   && --tries > 0);
