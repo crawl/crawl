@@ -144,7 +144,7 @@ bool check_moveto_cloud(const coord_def& p, const string &move_verb,
                 threshold = threshold * 3 / 2;
             threshold = threshold * you.time_taken / BASELINE_DELAY;
             // Do prompt if we'd lose icemail, though.
-            if (you.hp > threshold && !you.has_mutation(MUT_ICEMAIL))
+            if (you.hp > threshold && !you.has_mutation(MUT_CONDENSATION_SHIELD))
                 return true;
         }
         // Don't prompt for meph if we have clarity, unless at very low HP.
@@ -2159,6 +2159,12 @@ int player_shield_class()
     shield += (you.get_mutation_level(MUT_LARGE_BONE_PLATES) > 0
                ? you.get_mutation_level(MUT_LARGE_BONE_PLATES) * 400 + 400
                : 0);
+               
+    if (you.get_mutation_level(MUT_CONDENSATION_SHIELD) > 0
+            && !you.duration[DUR_ICEMAIL_DEPLETED])
+    {
+        shield += ICEMAIL_MAX * 100;  
+    }
 
     shield += qazlal_sh_boost() * 100;
     shield += tso_sh_boost() * 100;
@@ -5457,7 +5463,9 @@ bool player::shielded() const
            || get_mutation_level(MUT_LARGE_BONE_PLATES) > 0
            || qazlal_sh_boost() > 0
            || you.wearing(EQ_AMULET, AMU_REFLECTION)
-           || you.scan_artefacts(ARTP_SHIELDING);
+           || you.scan_artefacts(ARTP_SHIELDING)
+           || (get_mutation_level(MUT_CONDENSATION_SHIELD)
+                && !you.duration[DUR_ICEMAIL_DEPLETED]);
 }
 
 int player::shield_bonus() const
@@ -5621,7 +5629,16 @@ int player_icemail_armour_class()
     if (!you.has_mutation(MUT_ICEMAIL))
         return 0;
 
-    return you.duration[DUR_ICEMAIL_DEPLETED] ? 0 : ICEMAIL_MAX;
+    return you.duration[DUR_ICEMAIL_DEPLETED] ? 0 
+            : you.get_mutation_level(MUT_ICEMAIL) * ICEMAIL_MAX / 2;
+}
+
+int player_condensation_shield_class()
+{
+    if (!you.has_mutation(MUT_CONDENSATION_SHIELD))
+        return 0;
+    
+    return you.duration[DUR_ICEMAIL_DEPLETED] ? 0 : ICEMAIL_MAX / 2;
 }
 
 /**

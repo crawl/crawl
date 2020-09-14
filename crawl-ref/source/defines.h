@@ -145,7 +145,7 @@ const int GOURMAND_NUTRITION_BASE = 10  * BASELINE_DELAY;
 
 const int CHUNK_BASE_NUTRITION    = 1000;
 
-const int ICEMAIL_MAX  = 10;
+const int ICEMAIL_MAX  = 8;
 const int ICEMAIL_TIME = 30 * BASELINE_DELAY;
 
 // This value is used to mark immune levels of MR

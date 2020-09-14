@@ -1019,11 +1019,21 @@ static const mutation_def mut_data[] =
    "You feel slightly disoriented."},
 },
 
-{ MUT_ICEMAIL, 0, 1, mutflag::good, false,
+{ MUT_ICEMAIL, 0, 2, mutflag::good, false,
   "icemail",
 
-  {"A meltable icy envelope protects you from harm. (AC +", "", ""},
-  {"An icy envelope takes form around you.", "", ""},
+  {"A meltable icy envelope protects you from harm. (AC +", 
+   "A thick, meltable icy envelope protects you from harm. (AC +", ""},
+  {"An icy envelope takes form around you.", 
+   "Your icy envelope grows thicker.", ""},
+  {"", "", ""},
+},
+
+{ MUT_CONDENSATION_SHIELD, 0, 1, mutflag::good, false,
+  "condensation shield",
+
+  {"A meltable shield of frost defends you. (SH +", "", ""},
+  {"Frost condenses into a shield before you.","", ""},
   {"", "", ""},
 },
 
