@@ -432,8 +432,6 @@ static bool _fire_validate_item(int slot, string &err)
 // Returns true if warning is given.
 bool fire_warn_if_impossible(bool silent)
 {
-    // TODO: most of these are ammo-specific?
-
     // If you can't wield it, you can't throw it.
     if (!form_can_wield())
     {
@@ -471,6 +469,7 @@ bool fire_warn_if_impossible(bool silent)
             canned_msg(MSG_TOO_BERSERK);
         return true;
     }
+    // firing under confusion is allowed, but will be random
     return false;
 }
 

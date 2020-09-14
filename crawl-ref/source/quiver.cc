@@ -481,7 +481,7 @@ namespace quiver
 
         bool is_enabled() const override
         {
-            return true;
+            return evoke_check(wand_slot, true);
         }
 
         bool is_valid() const override
@@ -502,8 +502,14 @@ namespace quiver
         void trigger(dist &t) override
         {
             target = t;
-            if (!is_valid() || !is_enabled())
+            if (!is_valid())
                 return;
+
+            if (!is_enabled())
+            {
+                evoke_check(wand_slot); // for messaging
+                return;
+            }
 
             // to apply smart targeting behavior for iceblast; should have no
             // impact on other wands
@@ -530,7 +536,10 @@ namespace quiver
             qdesc.textcolour(Options.status_caption_colour);
             qdesc.cprintf("Zap: %c) ", hud_letter);
 
-            qdesc.textcolour(LIGHTGREY);
+            if (is_enabled())
+                qdesc.textcolour(LIGHTGREY);
+            else
+                qdesc.textcolour(DARKGREY);
             qdesc += quiver.name(DESC_PLAIN, true);
             return qdesc;
         }

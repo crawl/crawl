@@ -360,36 +360,12 @@ void zap_wand(int slot, dist *_target)
 {
     if (inv_count() < 1)
     {
-        canned_msg(MSG_NOTHING_CARRIED);
+        canned_msg(MSG_NOTHING_CARRIED); // why is this handled here??
         return;
     }
 
-    if (you.confused())
-    {
-        canned_msg(MSG_TOO_CONFUSED);
+    if (!evoke_check(slot))
         return;
-    }
-
-    if (you.berserk())
-    {
-        canned_msg(MSG_TOO_BERSERK);
-        return;
-    }
-
-    if (you.get_mutation_level(MUT_NO_ARTIFICE))
-    {
-        mpr("You cannot evoke magical items.");
-        return;
-    }
-
-#if TAG_MAJOR_VERSION == 34
-    if (player_under_penance(GOD_PAKELLAS))
-    {
-        simple_god_message("'s wrath prevents you from evoking devices!",
-                           GOD_PAKELLAS);
-        return;
-    }
-#endif
 
     const int mp_cost = wand_mp_cost();
 
@@ -413,20 +389,13 @@ void zap_wand(int slot, dist *_target)
         mpr("You can't zap that!");
         return;
     }
-    if (item_type_removed(wand.base_type, wand.sub_type))
-    {
-        mpr("Sorry, this wand was removed!");
+
+    if (!evoke_check(slot))
         return;
-    }
+
     // If you happen to be wielding the wand, its display might change.
     if (you.equip[EQ_WEAPON] == item_slot)
         you.wield_change = true;
-
-    if (wand.charges <= 0)
-    {
-        mpr("This wand has no charges.");
-        return;
-    }
 
     int power = (15 + you.skill(SK_EVOCATIONS, 7) / 2) * (mp_cost + 9) / 9;
 
@@ -1238,7 +1207,21 @@ static spret _condenser()
 
 bool evoke_check(int slot, bool quiet)
 {
-    const bool reaching = slot != -1 && slot == you.equip[EQ_WEAPON]
+    item_def *i = nullptr;
+    if (slot >= 0 && slot < ENDOFPACK && you.inv[slot].defined())
+        i = &you.inv[slot];
+
+    if (i && item_type_removed(i->base_type, i->sub_type))
+    {
+        if (!quiet)
+            mpr("Sorry, this item was removed!");
+        return false;
+    }
+
+    // is slot a wielded reaching weapon, or if no slot, is the player wielding
+    // a reaching weapon?
+    const bool reaching = (slot != -1 && slot == you.equip[EQ_WEAPON]
+                            || slot == -1 && you.equip[EQ_WEAPON] >= 0)
                           && !you.melded[EQ_WEAPON]
                           && weapon_reach(*you.weapon()) > REACH_NONE;
 
@@ -1248,6 +1231,59 @@ bool evoke_check(int slot, bool quiet)
             canned_msg(MSG_TOO_BERSERK);
         return false;
     }
+    if (you.confused()) // attack is ok under confusion, but not reaching
+    {
+        if (!quiet)
+            canned_msg(MSG_TOO_CONFUSED);
+        return false;
+    }
+
+    // is this supposed to be allowed under confusion?
+    if (i && i->base_type == OBJ_MISCELLANY && i->sub_type == MISC_ZIGGURAT)
+        return true;
+
+    if (!i)
+    {
+        // does the player have a zigfig? overrides sac artiface
+        // this is ugly...this thing should probably be goldified
+        for (const auto s : you.inv)
+            if (s.defined() && s.base_type == OBJ_MISCELLANY
+                                     && s.sub_type == MISC_ZIGGURAT)
+            {
+                return true;
+            }
+    }
+
+#if TAG_MAJOR_VERSION == 34
+    if (player_under_penance(GOD_PAKELLAS))
+    {
+        if (!quiet)
+        {
+            simple_god_message("'s wrath prevents you from evoking devices!",
+                           GOD_PAKELLAS);
+        }
+        return false;
+    }
+#endif
+
+    if (you.get_mutation_level(MUT_NO_ARTIFICE))
+    {
+        if (!quiet)
+            mpr("You cannot evoke magical items.");
+        return false;
+    }
+
+    if (i && i->base_type == OBJ_WANDS && i->charges <= 0)
+    {
+        // I think this case should be obsolete? Maybe still could happen with
+        // an upgrade
+        if (!quiet)
+            mpr("This wand has no charges.");
+        return false;
+    }
+
+    // check xp evocable charges here?
+
     return true;
 }
 
@@ -1277,7 +1313,7 @@ bool evoke_item(int slot, dist *preselect)
 
     item_def& item = you.inv[slot];
     // Also handles messages.
-    if (!item_is_evokable(item, true, false, true))
+    if (!item_is_evokable(item, true, false, true) || !evoke_check(slot))
         return false;
 
     bool did_work   = false;  // "Nothing happens" message
@@ -1289,12 +1325,6 @@ bool evoke_item(int slot, dist *preselect)
     if (entry && entry->evoke_func)
     {
         ASSERT(item_is_equipped(item));
-
-        if (you.confused())
-        {
-            canned_msg(MSG_TOO_CONFUSED);
-            return false;
-        }
 
         bool qret = entry->evoke_func(&item, &did_work, &unevokable);
 
@@ -1327,23 +1357,6 @@ bool evoke_item(int slot, dist *preselect)
 
     case OBJ_MISCELLANY:
         did_work = true; // easier to do it this way for misc items
-
-        if (item.sub_type != MISC_ZIGGURAT)
-        {
-            if (you.get_mutation_level(MUT_NO_ARTIFICE))
-            {
-                mpr("You cannot evoke magical items.");
-                return false;
-            }
-#if TAG_MAJOR_VERSION == 34
-            if (player_under_penance(GOD_PAKELLAS))
-            {
-                simple_god_message("'s wrath prevents you from evoking "
-                                   "devices!", GOD_PAKELLAS);
-                return false;
-            }
-#endif
-        }
 
         switch (item.sub_type)
         {
