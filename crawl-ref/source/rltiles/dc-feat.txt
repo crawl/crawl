@@ -521,7 +521,7 @@ imus0 DNGN_ALTAR_IMUS
 imus1
 imus2
 imus3
-agraphede0 DNGN_ALTAR_AGRAPHEDE
+agraphede DNGN_ALTAR_AGRAPHEDE
 agraphede1
 agraphede2
 ecumenical DNGN_ALTAR_ECUMENICAL

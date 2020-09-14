@@ -1103,6 +1103,33 @@ void make_book_agraphede_gift(item_def& book, bool first)
     set_artefact_name(book, name);
 }
 
+void make_book_wyrm_gift(item_def &book)
+{
+    book.sub_type = BOOK_RANDART_THEME;
+    _make_book_randart(book);
+
+    spell_type chosen_spells[RANDBOOK_SIZE];
+    for (int i = 0; i < RANDBOOK_SIZE; i++)
+        chosen_spells[i] = SPELL_NO_SPELL;
+
+    chosen_spells[0] = SPELL_FULSOME_DISTILLATION;
+    chosen_spells[1] = SPELL_EVAPORATE;
+
+    sort(chosen_spells, chosen_spells + RANDBOOK_SIZE, _compare_spells);
+
+    CrawlHashTable &props = book.props;
+    props.erase(SPELL_LIST_KEY);
+    props[SPELL_LIST_KEY].new_vector(SV_INT).resize(RANDBOOK_SIZE);
+
+    CrawlVector &spell_vec = props[SPELL_LIST_KEY].get_vector();
+    spell_vec.set_max_size(RANDBOOK_SIZE);
+
+    for (int i = 0; i < RANDBOOK_SIZE; i++)
+        spell_vec[i].get_int() = chosen_spells[i];
+
+    string name = "Alchemical Arts of the Wyrm";
+    set_artefact_name(book, name);
+}
 
 void make_book_legion_gift(item_def &book, bool first)
 {
