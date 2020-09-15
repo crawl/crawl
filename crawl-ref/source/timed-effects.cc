@@ -446,6 +446,11 @@ static void _agraphede_poison_passaive(int /*time_delta*/)
         if (!you.duration[DUR_POISONING]
             && you.hp > you.hp_max / 2) {
             you.duration[DUR_POISONING] = (you.hp_max * 10) * 15; //15%
+            if (you.species == SP_DEEP_DWARF &&
+                you.duration[DUR_POISONING] > 25000) {
+                you.duration[DUR_POISONING] = 25000;
+            }
+           
         }
     }
 }
