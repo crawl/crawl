@@ -300,8 +300,11 @@ effect/boomerang3 MI_BOOMERANG3
 %rim 1
 dart1 MI_DART
 dart2
-dart-p MI_DART_P
+dart-a MI_DART_BLINDING
 dart-c MI_DART_CURARE
+dart-d MI_DART_FRENZY
+dart-p MI_DART_POISONED
+
 # flying needles
 effect/needle0 MI_DART0
 effect/needle1 MI_DART1
