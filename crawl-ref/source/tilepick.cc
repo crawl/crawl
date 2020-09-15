@@ -1782,6 +1782,19 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
                 return TILEP_MONS_AGNES_STAVELESS;
         }
 
+        case MONS_EDMUND:
+        {
+            // For if Edmund loses his weapon
+            const item_def * const weapon = mon.inv[MSLOT_WEAPON].get();
+            if (weapon && (weapon->is_type(OBJ_WEAPONS, WPN_DIRE_FLAIL)
+                            || weapon->is_type(OBJ_WEAPONS, WPN_FLAIL)))
+            {
+                return TILEP_MONS_EDMUND;
+            }
+            else
+                return TILEP_MONS_EDMUND_WEAPONLESS;
+        }
+
         case MONS_ERICA:
         {
             // For if Erica loses her flaming scimitar
