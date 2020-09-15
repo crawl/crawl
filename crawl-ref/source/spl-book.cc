@@ -143,6 +143,7 @@ static const map<rod_type, spell_type> _rod_spells =
     { ROD_VENOM,       SPELL_NO_SPELL },
 #endif
     { ROD_PAKELLAS,    SPELL_PAKELLAS_ROD },
+    { ROD_STRIKING,    SPELL_ROD_STRIKING },
 };
 
 

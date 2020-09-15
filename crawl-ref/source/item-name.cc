@@ -1280,6 +1280,7 @@ static const char* rod_type_name(int type)
     case ROD_DESTRUCTION:     return "destruction";
 #endif
     case ROD_PAKELLAS:         return "pakellas";
+    case ROD_STRIKING:         return "striking";
 
     default: return "bugginess";
     }

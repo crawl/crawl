@@ -58,7 +58,8 @@ void do_uncurse_item(item_def &item, bool check_bondage = true);
 inline constexpr bool item_type_has_curses(object_class_type base_type)
 {
         return base_type == OBJ_WEAPONS || base_type == OBJ_ARMOUR
-               || base_type == OBJ_JEWELLERY || base_type == OBJ_STAVES;
+               || base_type == OBJ_JEWELLERY || base_type == OBJ_STAVES
+               || base_type == OBJ_RODS; // see `_generate_rod_item` at `makeitem.cc`
 }
 
 // stationary:
@@ -249,7 +250,8 @@ void seen_item(const item_def &item);
 static inline bool is_weapon(const item_def &item)
 {
     return item.base_type == OBJ_WEAPONS || item.base_type == OBJ_STAVES
-        || (item.base_type == OBJ_RODS && item.sub_type == ROD_PAKELLAS);
+        || (item.base_type == OBJ_RODS
+             && (item.sub_type == ROD_PAKELLAS || item.sub_type == ROD_STRIKING));
 }
 
 static inline bool is_short_sword(const item_def &item)

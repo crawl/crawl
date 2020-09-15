@@ -16,6 +16,7 @@
 #include "items.h"
 #include "item-use.h"
 #include "jobs.h"
+#include "makeitem.h"
 #include "mutation.h"
 #include "ng-init.h"
 #include "ng-wanderer.h"
@@ -158,10 +159,16 @@ item_def* newgame_make_item(object_class_type base,
     }
 
     if ((item.base_type == OBJ_WEAPONS && can_wield(&item, false, false)
+        || (item.base_type == OBJ_RODS && can_wield(&item, false, false))
         || item.base_type == OBJ_ARMOUR && can_wear_armour(item, false, false))
         && you.equip[get_item_slot(item)] == -1)
     {
         you.equip[get_item_slot(item)] = slot;
+    }
+
+    if (item.base_type == OBJ_RODS)
+    {
+        init_rod_mp(item, 10, 1);
     }
 
     if (item.base_type == OBJ_MISSILES)
@@ -324,7 +331,28 @@ void give_items_skills(const newgame_def& ng)
             newgame_make_item(OBJ_BOOKS, BOOK_FROST2);
         else
             newgame_make_item(OBJ_BOOKS, BOOK_FROST);
+
+    } else if (you.char_class == JOB_ARTIFICER) {
+
+        if (ng.job_specific == 1) {
+            newgame_make_item(OBJ_RODS, ROD_STRIKING, 1, 0);
+            you.skills[SK_STAVES]++;
+
+        } else {
+            newgame_make_item(OBJ_WANDS, WAND_FLAME, 1, 15);
+            newgame_make_item(OBJ_WANDS, WAND_ENSLAVEMENT, 1, 15);
+            newgame_make_item(OBJ_WANDS, WAND_RANDOM_EFFECTS, 1, 15);
+
+            if (!(you.species == SP_FELID || you.species == SP_HYDRA))
+            {
+                you.skills[SK_SHORT_BLADES]++;
+                newgame_make_item(OBJ_WEAPONS, WPN_SHORT_SWORD, 1, 0);
+            }
+            else
+                you.skills[SK_UNARMED_COMBAT]++;
+        }
     }
+
 
     give_job_skills(you.char_class);
 

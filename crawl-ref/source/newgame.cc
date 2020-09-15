@@ -2480,7 +2480,8 @@ static bool _choose_god(newgame_def& ng, newgame_def& ng_choice)
 
 static bool _choose_job_specific(newgame_def& ng, newgame_def& ng_choice)
 {
-    if (ng.job != JOB_MELTED_KNIGHT && ng.job != JOB_ICE_ELEMENTALIST && ng.job != JOB_CARAVAN)
+    if (ng.job != JOB_MELTED_KNIGHT && ng.job != JOB_ICE_ELEMENTALIST && ng.job != JOB_CARAVAN
+        && (ng.job != JOB_ARTIFICER && !(ng.species == SP_FELID || ng.species == SP_HYDRA)))
         return true;
 
     auto title_hbox = make_shared<Box>(Widget::HORZ);
@@ -2555,6 +2556,18 @@ static bool _choose_job_specific(newgame_def& ng, newgame_def& ng_choice)
         choices.emplace_back(4, "hired shaman"
 #ifdef USE_TILE
             , tileidx_monster_base(MONS_MERC_SHAMAN)
+#endif
+        );
+    }
+    else if (ng.job == JOB_ARTIFICER) {
+        choices.emplace_back(0, "bundle of wands"
+#ifdef USE_TILE
+            , tileidx_spell(SPELL_THROW_FLAME)
+#endif
+        );
+        choices.emplace_back(1, "rod of striking"
+#ifdef USE_TILE
+            , tileidx_spell(SPELL_ROD_STRIKING)
 #endif
         );
     }

@@ -4408,6 +4408,16 @@ static const struct spell_desc spelldata[] =
     TILEG_BARRIER,
 },
 {
+    SPELL_ROD_STRIKING, "Empowered Strike",
+    spschool::charms, // ROD_STRIKING
+    spflag::utility,
+    1,
+    25,
+    -1, -1,
+    1, 0,
+    TILEG_ROD_STRIKING,
+},
+{
     SPELL_NO_SPELL, "nonexistent spell",
     spschool::none,
     spflag::testing,
