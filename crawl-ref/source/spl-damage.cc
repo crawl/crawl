@@ -2310,7 +2310,7 @@ spret cast_fragmentation(int pow, const actor *caster,
     return spret::success;
 }
 
-spret cast_sandblast(int pow, bolt &beam, bool fail)
+pair<int, item_def *> sandblast_find_ammo()
 {
     item_def *stone = nullptr;
     int num_stones = 0;
@@ -2323,8 +2323,14 @@ spret cast_sandblast(int pow, bolt &beam, bool fail)
             stone = &i;
         }
     }
+    return make_pair(num_stones, stone);
+}
 
-    if (num_stones == 0)
+spret cast_sandblast(int pow, bolt &beam, bool fail)
+{
+    auto ammo = sandblast_find_ammo();
+
+    if (ammo.first == 0 || !ammo.second)
     {
         mpr("You don't have any stones to cast with.");
         return spret::abort;
@@ -2335,10 +2341,10 @@ spret cast_sandblast(int pow, bolt &beam, bool fail)
 
     if (ret == spret::success)
     {
-        if (dec_inv_item_quantity(letter_to_index(stone->slot), 1))
+        if (dec_inv_item_quantity(letter_to_index(ammo.second->slot), 1))
             mpr("You now have no stones remaining.");
-        else
-            mprf_nocap("%s", stone->name(DESC_INVENTORY).c_str());
+        else if (!you.quiver_action.spell_is_quivered(SPELL_SANDBLAST))
+            mprf_nocap("%s", ammo.second->name(DESC_INVENTORY).c_str());
     }
 
     return ret;

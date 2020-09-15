@@ -107,6 +107,9 @@ namespace quiver
 
         action &get() const;
         shared_ptr<action> get_ptr() { return current; }
+        bool spell_is_quivered(spell_type s) const;
+        bool item_is_quivered(int item_slot) const;
+
         bool set(const shared_ptr<action> n);
         bool set(const action_cycler &other);
         bool set_from_slot(int slot);
