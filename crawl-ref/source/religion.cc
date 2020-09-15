@@ -473,6 +473,7 @@ const vector<god_power> god_powers[NUM_GODS] =
       { 3, ABIL_AGRAPHEDE_ENCHANT_POISON,
            "enchant poison weapons" },
       { 3, "steal poison resistance from living enemies in sight" },
+      { 3, "get poison periodically when you are not poisoned" },
       { 4, ABIL_AGRAPHEDE_TRAP,
            "create explosive traps around you" },
       { 5, ABIL_AGRAPHEDE_HORNET_STING,

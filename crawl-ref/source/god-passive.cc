@@ -452,7 +452,9 @@ static const vector<god_passive> god_passives[] =
         { 2, passive_t::agraphede_create_worm,
             "insects pop out of corpses in sight" },
         { 3, passive_t::agraphede_poison_deprived,
-            "steal poison resistance from enemies in sight" }, 
+            "steal poison resistance from enemies in sight" },
+        { 3, passive_t::agraphede_posion_passive,
+            "get poison periodically when you are not poisoned" },
     }
 };
 COMPILE_CHECK(ARRAYSZ(god_passives) == NUM_GODS);
