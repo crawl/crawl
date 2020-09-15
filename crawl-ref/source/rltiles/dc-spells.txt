@@ -195,6 +195,7 @@ scattershot SCATTERSHOT
 bolt_corrosive CORROSIVE_BOLT
 iceblast ICEBLAST
 bolt_energy ENERGY_BOLT
+rod_striking ROD_STRIKING
 %sdir gui/spells/summoning
 summon_shadow_creatures WEAVE_SHADOWS
 

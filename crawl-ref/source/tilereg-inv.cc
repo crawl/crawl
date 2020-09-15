@@ -641,8 +641,13 @@ static void _fill_item_info(InventoryTile &desc, const item_info &item)
     }
     else if (type == OBJ_WANDS && item.flags & ISFLAG_KNOW_TYPE)
         desc.quantity = item.charges;
-    else if (type == OBJ_RODS && item.flags & ISFLAG_KNOW_PLUSES)
-        desc.quantity = item.charges / ROD_CHARGE_MULT;
+    else if (type == OBJ_RODS && item.flags)
+    {
+        if (ISFLAG_KNOW_PLUSES)
+            desc.quantity = item.charges / ROD_CHARGE_MULT;
+        else
+            desc.quantity = -1;
+    }
     else
         desc.quantity = -1;
 

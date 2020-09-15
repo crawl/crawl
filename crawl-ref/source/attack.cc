@@ -214,7 +214,8 @@ int attack::calc_to_hit(bool random)
             }
             else if (weapon->base_type == OBJ_STAVES)
                 mhit += property(*weapon, PWPN_HIT);
-            else if (weapon->base_type == OBJ_RODS && weapon->sub_type == ROD_PAKELLAS)
+            else if (weapon->base_type == OBJ_RODS
+                     && (weapon->sub_type == ROD_PAKELLAS || weapon->sub_type == ROD_STRIKING))
             {
                 mhit += weapon->rod_plus;
                 mhit += property(*weapon, PWPN_HIT);

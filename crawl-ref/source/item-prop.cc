@@ -886,7 +886,8 @@ void do_curse_item(item_def &item, bool quiet)
         return;
 
     if (!is_weapon(item) && item.base_type != OBJ_ARMOUR
-        && item.base_type != OBJ_JEWELLERY)
+        && item.base_type != OBJ_JEWELLERY
+        && item.base_type != OBJ_RODS)
     {
         return;
     }
@@ -1933,7 +1934,7 @@ skill_type item_attack_skill(const item_def &item)
         return Weapon_prop[ Weapon_index[item.sub_type] ].skill;
     else if (item.base_type == OBJ_STAVES)
         return SK_STAVES;
-    else if (item.base_type == OBJ_RODS && item.sub_type == ROD_PAKELLAS) {
+    else if (item.base_type == OBJ_RODS) {
         return SK_STAVES;
     }
     else if (item.base_type == OBJ_MISSILES && !has_launcher(item))
@@ -2045,7 +2046,8 @@ bool is_weapon_wieldable(const item_def &item, size_type size)
     ASSERT(is_weapon(item));
 
     const int subtype = OBJ_STAVES == item.base_type ? int{WPN_STAFF}
-    : (OBJ_RODS == item.base_type && ROD_PAKELLAS == item.sub_type ) ? int{ WPN_STAFF }
+    : (OBJ_RODS == item.base_type
+       && (ROD_PAKELLAS == item.sub_type || ROD_STRIKING == item.sub_type) ) ? int{ WPN_STAFF }
     : item.sub_type;
     return Weapon_prop[Weapon_index[subtype]].min_2h_size <= size;
 }
@@ -2677,15 +2679,15 @@ int property(const item_def &item, int prop_type)
             return Weapon_prop[ Weapon_index[weapon_sub] ].speed;
         break;
     case OBJ_RODS:
-        if (item.sub_type == ROD_PAKELLAS) {
-            weapon_sub = WPN_STAFF;
-            if (prop_type == PWPN_DAMAGE)
-                return Weapon_prop[Weapon_index[weapon_sub]].dam;
-            else if (prop_type == PWPN_HIT)
-                return Weapon_prop[Weapon_index[weapon_sub]].hit;
-            else if (prop_type == PWPN_SPEED)
-                return Weapon_prop[Weapon_index[weapon_sub]].speed;
-        }
+        // Of course, all rods need description of its properties
+        weapon_sub = WPN_STAFF;
+	    
+        if (prop_type == PWPN_DAMAGE)
+            return Weapon_prop[Weapon_index[weapon_sub]].dam;
+        else if (prop_type == PWPN_HIT)
+            return Weapon_prop[Weapon_index[weapon_sub]].hit;
+        else if (prop_type == PWPN_SPEED)
+            return Weapon_prop[Weapon_index[weapon_sub]].speed;
         break;
     default:
         break;

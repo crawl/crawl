@@ -1433,6 +1433,8 @@ static string _describe_weapon(const item_def &item, bool verbose)
         description += "\n\nThis ";
         if (is_unrandom_artefact(item))
             description += get_artefact_base_name(item);
+        else if (item.base_type == OBJ_RODS)
+            description += "rod";
         else
             description += "weapon";
         description += " falls into the";
@@ -2152,12 +2154,11 @@ string get_item_description(const item_def &item, bool verbose,
         break;
 
     case OBJ_RODS:
-        if(item.sub_type == ROD_PAKELLAS)
-        {
-            string stats = "\n";
-            _append_weapon_stats(stats, item);
-            description << stats;
-        }
+        {    
+        string stats = "\n";
+        _append_weapon_stats(stats, item);
+        description << stats;
+
         if (verbose)
         {
             description <<
@@ -2212,6 +2213,21 @@ string get_item_description(const item_def &item, bool verbose,
                 description << desc;
         }
 
+        switch (item.sub_type)
+        {
+            case ROD_PAKELLAS:
+                description << "\n\nUnlike most rods, prototypes are able to apply "
+                               "its enchantments to melee combat.";
+                break;
+            case ROD_STRIKING:
+                description << "\n\nUnlike most rods, this rod is able to apply "
+                               "its enchantments to melee combat.";
+                break;
+            default:
+                description << "\n\nIt isn't designed for melee combat, "
+                               "so it can only apply its enchantments to evoke it.";
+                break;
+        } }
         break;
 
     case OBJ_STAVES:

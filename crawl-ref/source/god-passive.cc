@@ -1053,16 +1053,16 @@ map<skill_type, int8_t> ash_get_boosted_skills(eq_type type)
         {
             boost[item_attack_skill(*wpn)] = bondage;
         }
-        // Staves that have a melee effect, powered by evocations.
-        if (staff_uses_evocations(*wpn))
+        // Staves that have a melee effect, powered by evocations, including RoS.
+        if (staff_uses_evocations(*wpn) || wpn->sub_type == ROD_STRIKING)
         {
             boost[SK_EVOCATIONS] = 1;
             boost[SK_STAVES] = 1;
 
         }
-        // Staves with an evokable ability but no melee effect.
-        else if (is_weapon(*wpn)
-                 && item_is_evokable(*wpn, false, false, false, false))
+        // Staves and oter Rods with an evokable ability but no melee effect.
+        else if (wpn->base_type == OBJ_RODS || (is_weapon(*wpn)
+                 && item_is_evokable(*wpn, false, false, false, false)))
         {
             boost[SK_EVOCATIONS] = 2;
         }
