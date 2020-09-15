@@ -1283,6 +1283,11 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         }
         break;
 
+    case SPELL_SANDBLAST:
+        if (sandblast_find_ammo().first == 0)
+            return "you don't have any stones to cast with.";
+        break;
+
     default:
         break;
     }

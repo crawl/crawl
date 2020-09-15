@@ -18,6 +18,7 @@
 #include "player.h"
 #include "prompt.h"
 #include "sound.h"
+#include "spl-damage.h"
 #include "stringutil.h"
 #include "tags.h"
 #include "throw.h"
@@ -448,6 +449,9 @@ namespace quiver
 
             // TODO: is showing the spell letter useful?
             qdesc.cprintf("%s", spell_title(spell));
+            if (spell == SPELL_SANDBLAST)
+                qdesc.cprintf(" (stones: %d)", sandblast_find_ammo().first);
+
             if (fail_severity(spell) > 0)
             {
                 qdesc.cprintf(" (%s)",
@@ -770,6 +774,18 @@ namespace quiver
         ASSERT(current);
 
         return *current;
+    }
+
+    bool action_cycler::spell_is_quivered(spell_type s) const
+    {
+        // validity check??
+        return get() == spell_action(s);
+    }
+
+    bool action_cycler::item_is_quivered(int item_slot) const
+    {
+        return item_slot >= 0 && item_slot < ENDOFPACK
+                              && get().get_item() == item_slot;
     }
 
     static shared_ptr<action> _get_next_action_type(shared_ptr<action> a, int dir)
