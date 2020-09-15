@@ -4762,8 +4762,12 @@ void handle_player_poison(int delay)
 
     // Transforming into a form with no metabolism merely suspends the poison
     // but doesn't let your body get rid of it.
-    if (you.is_nonliving() || (you.undead_state() && !you.vampire_alive))
+    if ((you.is_nonliving() || (you.undead_state() && !you.vampire_alive))
+        && !have_passive(passive_t::agraphede_anti_poison_resist))
+    {
         return;
+    }
+
 
     // Other sources of immunity (Zin, staff of Olgreb) let poison dissipate.
     bool do_dmg = (player_res_poison() >= 3 ? false : true);
