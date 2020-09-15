@@ -168,7 +168,7 @@ golden dust cloud
 A cloud of shimmering golden dust. While within it, followers of the Council
 gain tremendous strength in combat.
 %%%%
-healing mist
+healing mist cloud
 
 A cloud of alchemical healing mist. The dwellers of the dungeon or summoned beings,
 even undeads, will recover thier injury and damage within this cloud. You're not

@@ -1000,7 +1000,8 @@ i-rod_warding ROD_WARDING
 i-rod_shadows ROD_SHADOWS
 i-rod_iron ROD_IRON
 i-rod_venom ROD_VENOM
-i-rod_destruction ROD_PAKELLAS ROD_ID_LAST
+i-rod_destruction ROD_PAKELLAS
+i-rod_striking ROD_STRIKING ROD_ID_LAST
 %rim 1
 
 #OBJ_ORBS

@@ -1404,6 +1404,11 @@ int acquirement_create_item(object_class_type class_wanted,
 
         if (class_wanted == OBJ_WANDS)
             acq_item.plus = max(static_cast<int>(acq_item.plus), 3 + random2(3));
+        else if (class_wanted == OBJ_RODS)
+        {
+            if (acq_item.plus < 0) // Never Generate -6 Rod of Something.
+                acq_item.plus = 1;
+        }
         else if (class_wanted == OBJ_GOLD)
         {
             // New gold acquirement formula from dpeg.

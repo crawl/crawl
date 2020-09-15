@@ -1748,6 +1748,11 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
     if (!item_type_known(item))
         return false;
 
+    // Rod of Striking
+    if (item.base_type == OBJ_RODS && oper == OPER_ATTACK
+        && item.sub_type == ROD_STRIKING)
+        return false;
+
     if (oper == OPER_REMOVE
         && item.is_type(OBJ_JEWELLERY, AMU_FAITH)
         && !(you_worship(GOD_RU) && you.piety >= piety_breakpoint(5))
@@ -2290,6 +2295,12 @@ bool item_is_evokable(const item_def &item, bool unskilled, bool known,
     case OBJ_RODS:
         if (item.sub_type == ROD_PAKELLAS && is_blueprint_exist(BLUEPRINT_LIGHT)) {
             return true;
+        }
+        else if (item.sub_type == ROD_STRIKING)
+        {
+            if (msg)
+                mpr("To evoke this rod, please apply it to someone's body part of your choice.");
+            return false;
         }
         else if (!wielded)
         {

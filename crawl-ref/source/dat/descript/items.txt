@@ -1027,6 +1027,12 @@ rod of shadows
 
 A rod that weaves creatures from shadows and ethereal matter.
 %%%%
+rod of striking
+
+This rod is designed for melee combat, releasing its charges to deal additional
+damage dependent on evocations skill when it strikes a foe. Staves skill will help
+improve your basic effectiveness with the weapon.
+%%%%
 rune of zot
 
 A talisman which allows entry into the Realm of Zot.

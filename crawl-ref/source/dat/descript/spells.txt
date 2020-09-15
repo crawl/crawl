@@ -579,6 +579,11 @@ remains of the  elemental power which the wielder casts. Upon casting any
 elemental spell, the weapon gains a temporary brand and slaying bonus. It can be
 used only to unbranded weapons.
 %%%%
+Empowered Strike spell
+
+Release an evocational energy to target which you strike this rod. Each strikes
+spend a charge of your rod.
+%%%%
 Energy Bolt spell
 
 Fires a bolt of highly destructive energy. The range of the bolt is decreased

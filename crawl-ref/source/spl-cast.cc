@@ -2250,6 +2250,11 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_BARRIER:
         return cast_barrier(powc, fail);
 
+    // ROD_STRIKING
+    case SPELL_ROD_STRIKING:
+        mpr("To evoke this rod, please apply it to someone's body part of your choice.");
+        return spret::abort;
+
     // non-player spells that have a zap, but that shouldn't be called (e.g
     // because they will crash as a player zap).
     case SPELL_DRAIN_LIFE:

@@ -26,6 +26,7 @@
 #include "exercise.h"
 #include "fineff.h"
 #include "food.h"
+#include "god-abil.h"
 #include "god-conduct.h"
 #include "god-item.h"
 #include "god-passive.h" // passive_t::convert_orcs
@@ -48,6 +49,7 @@
 #include "stringutil.h"
 #include "target.h"
 #include "terrain.h"
+#include "throw.h"
 #include "transform.h"
 #include "traps.h"
 #include "unwind.h"
@@ -1992,7 +1994,9 @@ void melee_attack::set_attack_verb(int damage)
         weap_type = WPN_UNARMED;
     else if (weapon->base_type == OBJ_STAVES)
         weap_type = WPN_STAFF;
-    else if (weapon->base_type == OBJ_RODS && weapon->sub_type == ROD_PAKELLAS) {
+    else if (weapon->base_type == OBJ_RODS
+              && (weapon->sub_type == ROD_PAKELLAS
+                  || weapon->sub_type == ROD_STRIKING)) {
         weap_type = WPN_STAFF;
     }
     else if (weapon->base_type == OBJ_WEAPONS
@@ -2637,6 +2641,40 @@ void melee_attack::apply_staff_damage()
 
     if (attacker->is_player() && you.get_mutation_level(MUT_NO_ARTIFICE))
         return;
+
+    if (weapon->sub_type == ROD_STRIKING)
+    {
+        if (weapon->charges >= 100)
+        {
+            weapon->charges -= 100; // ROD_CHARGE_MULT
+            you.wield_change = true;
+            if (item_is_quivered(*weapon))
+                you.redraw_quiver = true;
+	        
+            // Similar to "infusion_power"(SP cap 25), using Standard wands SP
+            const int stirking = 15 + (5/2) * SK_EVOCATIONS;
+            const int surge = (you.duration[DUR_DEVICE_SURGE] > 0)
+                                    ? pakellas_surge_devices() : 0;
+            const int cap = min(5 + (5 * weapon->plus), 50);
+            special_damage = 2 + div_rand_round(max(stirking + surge, cap), 12);
+            // Deals "true" damage, bypass AC (Because Rod's BaseDam is very low)
+            if (special_damage > 0)
+            {
+                special_damage_message =
+                    make_stringf(
+                        "%s release its power to %s!",
+                        attacker->is_player() ? weapon->name(DESC_YOUR).c_str()
+                                    : weapon->name(DESC_THE).c_str(),
+                        defender->name(DESC_THE).c_str());
+	        
+                if (surge > 0)
+                {
+                    mpr("You feel surge of power!");
+                    you.duration[DUR_DEVICE_SURGE] = 0;
+                }
+            }
+        }
+    }
 
     if (weapon->base_type != OBJ_STAVES)
         return;
