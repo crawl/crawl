@@ -162,10 +162,10 @@ void fire_target_behaviour::set_prompt()
 
     // And a key hint.
     string key_hint = no_other_items
-                        ? " (<w>%</w> - inventory)"
-                        : " (<w>%</w> - inventory. <w>%</w>/<w>%</w> - cycle)";
+                        ? " (<w>%</w> - select action)"
+                        : " (<w>%</w> - select action. <w>%</w>/<w>%</w> - cycle)";
     insert_commands(key_hint,
-                    { CMD_DISPLAY_INVENTORY,
+                    { CMD_QUIVER_ITEM,
                       CMD_CYCLE_QUIVER_BACKWARD,
                       CMD_CYCLE_QUIVER_FORWARD });
     msg << key_hint;
@@ -245,7 +245,10 @@ command_type fire_target_behaviour::get_command(int key)
         {
         case CMD_CYCLE_QUIVER_BACKWARD: cycle_fire_item(true);  return CMD_NO_CMD;
         case CMD_CYCLE_QUIVER_FORWARD: cycle_fire_item(false); return CMD_NO_CMD;
-        case CMD_DISPLAY_INVENTORY: pick_fire_item_from_inventory(); return CMD_NO_CMD;
+        case CMD_QUIVER_ITEM:
+            quiver::choose(action, false);
+            set_prompt();
+            return CMD_NO_CMD;
         case CMD_DISPLAY_COMMANDS: display_help(); return CMD_NO_CMD;
         default: break;
         }
