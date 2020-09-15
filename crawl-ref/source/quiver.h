@@ -58,6 +58,14 @@ namespace quiver
 
         virtual void find_target() const { };
 
+        // main quiver color. In some cases used internally by
+        // quiver_description, but also used in cases where for whatever reason
+        // a full formatted_string can't be displayed
+        virtual int quiver_color() const
+        {
+            return is_enabled() ? LIGHTGREY : DARKGREY;
+        };
+
         virtual formatted_string quiver_description() const;
 
         // basically noops for this class, but keep `target` clean
@@ -88,7 +96,6 @@ namespace quiver
     shared_ptr<action> find_action_from_launcher(const item_def *item);
 
     shared_ptr<action> slot_to_action(int slot);
-    void choose();
 
     // this is roughly a custom not_null wrapper on shared_ptr<action>
     struct action_cycler
@@ -100,7 +107,7 @@ namespace quiver
 
         action &get() const;
         shared_ptr<action> get_ptr() { return current; }
-        bool set(shared_ptr<action> n);
+        bool set(const shared_ptr<action> n);
         bool set(const action_cycler &other);
         bool set_from_slot(int slot);
         shared_ptr<action> next(int dir = 0);
@@ -111,6 +118,8 @@ namespace quiver
     private:
         shared_ptr<action> current;
     };
+
+    void choose(action_cycler &cur_quiver, bool allow_empty=true);
 
     // TODO: perhaps this should be rolled into action_cycler?
     class history

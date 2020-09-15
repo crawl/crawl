@@ -2014,7 +2014,7 @@ void process_command(command_type cmd, command_type prev_cmd)
     }
 
         // Quiver commands.
-    case CMD_QUIVER_ITEM:           quiver::choose(); break;
+    case CMD_QUIVER_ITEM:           quiver::choose(you.quiver_action); break;
     case CMD_CYCLE_QUIVER_FORWARD:  _do_cycle_quiver(+1);     break;
     case CMD_CYCLE_QUIVER_BACKWARD: _do_cycle_quiver(-1);     break;
 

@@ -28,6 +28,8 @@ static bool _item_matches(const item_def &item, fire_type types,
 static bool _items_similar(const item_def& a, const item_def& b,
                            bool force = true);
 
+// TODO: how should newquivers integrate with the local tiles UI?
+
 namespace quiver
 {
     // Returns the type of ammo used by the player's equipped weapon,
@@ -364,7 +366,7 @@ namespace quiver
 
         bool is_enabled() const override
         {
-            return can_cast_spells(true) && !spell_is_useless(spell, true, true);
+            return can_cast_spells(true) && !spell_is_useless(spell, true, false);
         }
 
         bool is_valid() const override
@@ -420,6 +422,16 @@ namespace quiver
             t = target; // copy back, in case they are different
         }
 
+        int quiver_color() const override
+        {
+            int col = failure_rate_colour(spell);
+            // this imposes excommunication colors
+            col = spell_highlight_by_utility(spell, col, true, false);
+            if (!is_enabled())
+                col = COL_USELESS;
+            return col;
+        }
+
         formatted_string quiver_description() const override
         {
             if (!is_valid())
@@ -432,13 +444,16 @@ namespace quiver
             qdesc.textcolour(Options.status_caption_colour);
             qdesc.cprintf("Cast: ");
 
-            if (!is_enabled())
-                qdesc.textcolour(DARKGREY);
-            else
-                qdesc.textcolour(LIGHTGREY);
+            qdesc.textcolour(quiver_color());
 
             // TODO: is showing the spell letter useful?
             qdesc.cprintf("%s", spell_title(spell));
+            if (fail_severity(spell) > 0)
+            {
+                qdesc.cprintf(" (%s)",
+                        failure_rate_to_string(raw_spell_fail(spell)).c_str());
+            }
+
             return qdesc;
         }
 
@@ -451,7 +466,8 @@ namespace quiver
                 const char letter = index_to_letter(i);
                 const spell_type s = get_spell_by_letter(letter);
                 if (is_valid_spell(s)
-                    && fail_severity(s) < Options.fail_severity_to_quiver)
+                    && fail_severity(s) < Options.fail_severity_to_quiver
+                    && spell_highlight_by_utility(s, COL_UNKNOWN) != COL_FORBIDDEN)
                 {
                     result.push_back(make_shared<spell_action>(s));
                 }
@@ -536,10 +552,7 @@ namespace quiver
             qdesc.textcolour(Options.status_caption_colour);
             qdesc.cprintf("Zap: %c) ", hud_letter);
 
-            if (is_enabled())
-                qdesc.textcolour(LIGHTGREY);
-            else
-                qdesc.textcolour(DARKGREY);
+            qdesc.textcolour(quiver_color());
             qdesc += quiver.name(DESC_PLAIN, true);
             return qdesc;
         }
@@ -706,10 +719,10 @@ namespace quiver
         on_actions_changed();
     }
 
-    bool action_cycler::set(shared_ptr<action> n)
+    bool action_cycler::set(const shared_ptr<action> new_act)
     {
-        if (!n)
-            n = make_shared<action>();
+        auto n = new_act ? new_act : make_shared<action>();
+
         const bool diff = *n != get();
         current = n;
         if (diff)
@@ -733,12 +746,6 @@ namespace quiver
 #ifdef USE_SOUND
                 parse_sound(CHANGE_QUIVER_SOUND);
 #endif
-                // TODO: when should this messaging happen, if at all?
-                // mprf("Quivering %s for %s.", you.inv[slot].name(DESC_INVENTORY).c_str(),
-                //      t == quiver::AMMO_THROW    ? "throwing" :
-                //      t == quiver::AMMO_SLING    ? "slings" :
-                //      t == quiver::AMMO_BOW      ? "bows" :
-                //                           "crossbows");
             }
         }
         return diff;
@@ -772,8 +779,8 @@ namespace quiver
         // Construct the type order.
         vector<shared_ptr<action>> action_types;
         action_types.push_back(make_shared<ammo_action>(-1));
-        action_types.push_back(make_shared<spell_action>(SPELL_NO_SPELL));
         action_types.push_back(make_shared<wand_action>(-1));
+        action_types.push_back(make_shared<spell_action>(SPELL_NO_SPELL));
 
         if (dir < 0)
             reverse(action_types.begin(), action_types.end());
@@ -866,6 +873,16 @@ namespace quiver
         if (slot < 0 || slot >= ENDOFPACK)
             return make_shared<action>();
 
+        // is this legacy(?) check needed? Maybe only relevant for fumble throwing?
+        for (int i = EQ_MIN_ARMOUR; i <= EQ_MAX_WORN; i++)
+        {
+            if (you.equip[i] == slot)
+            {
+                mpr("You can't quiver worn items.");
+                return make_shared<ammo_action>(-1);
+            }
+        }
+
         if (you.inv[slot].defined() && you.inv[slot].base_type == OBJ_WANDS)
             return make_shared<wand_action>(slot);
 
@@ -883,44 +900,135 @@ namespace quiver
         return(set(make_shared<action>()));
     }
 
-    // TODO: should this be a method of action_cycler?
-    void choose()
+    // note for editing this: Menu::action is defined and will take precedence
+    // over quiver::action unless the quiver namespace is explicit.
+    class ActionSelectMenu : public Menu
     {
-        // TODO: need to implement this for non-ammo actions
-        if (you.species == SP_FELID)
+    public:
+        ActionSelectMenu(action_cycler &_quiver, bool _allow_empty)
+            : Menu(MF_SINGLESELECT | MF_ALLOW_FORMATTING),
+              cur_quiver(_quiver), allow_empty(_allow_empty)
         {
-            mpr("You can't grasp things well enough to throw them.");
-            return;
+            set_tag("actions");
+            action_cycle = Menu::CYCLE_TOGGLE;
+            menu_action  = Menu::ACT_EXECUTE;
         }
 
-        int slot = prompt_invent_item("Quiver which item? (- for none, * to show all)",
-                                      menu_type::invlist, OSEL_THROWABLE,
-                                      OPER_QUIVER, invprompt_flag::hide_known, '-');
+        action_cycler &cur_quiver;
+        bool allow_empty;
 
-        if (prompt_failed(slot))
-            return;
-
-        if (slot == PROMPT_GOT_SPECIAL)  // '-' or empty quiver
+        bool set_to_quiver(shared_ptr<quiver::action> s)
         {
-            quiver::launcher t = quiver::_get_weapon_ammo_type(you.weapon());
-            you.quiver_action.clear();
-            you.m_quiver_history.empty_quiver(t);
-
-            mprf("Clearing quiver.");
-            return;
-        }
-        else
-        {
-            for (int i = EQ_MIN_ARMOUR; i <= EQ_MAX_WORN; i++)
+            if (s && s->is_valid()
+                && (allow_empty || s != make_shared<quiver::action>()))
             {
-                if (you.equip[i] == slot)
-                {
-                    mpr("You can't quiver worn items.");
-                    return;
-                }
+                cur_quiver.set(s);
+                return true;
             }
+            return false;
         }
-        you.quiver_action.set_from_slot(slot);
+
+    protected:
+        bool _choose_from_inv()
+        {
+            int slot = prompt_invent_item(allow_empty
+                                            ? "Quiver which item? (- for none)"
+                                            : "Quiver which item?",
+                                          menu_type::invlist, OSEL_ANY,
+                                          OPER_QUIVER, invprompt_flag::hide_known, '-');
+
+            if (prompt_failed(slot))
+                return true;
+
+            if (slot == PROMPT_GOT_SPECIAL)  // '-' or empty quiver
+            {
+                if (!allow_empty)
+                    return true;
+
+                cur_quiver.clear();
+                return false;
+            }
+
+            // TODO: in failure it would be better to set the more with an
+            // error instead of exiting the menu
+            return !set_to_quiver(slot_to_action(slot));
+        }
+
+        bool process_key(int key) override
+        {
+            // TODO: some kind of view action option?
+            if (allow_empty && key == '-')
+            {
+                cur_quiver.clear();
+                // TODO maybe drop this messaging?
+                mprf("Clearing quiver.");
+                return false;
+            }
+            else if (key == '*')
+                return _choose_from_inv(); // TODO: fumble ammo
+            else if (key == '&')
+            {
+                const int skey = list_spells(false, false, false,
+                                                    "Select a spell to quiver");
+                if (skey == 0)
+                    return true;
+                if (isalpha(skey))
+                {
+                    auto s = make_shared<spell_action>(
+                            static_cast<spell_type>(get_spell_by_letter(skey)));
+                    return !set_to_quiver(s);
+                }
+                return false;
+            }
+            return Menu::process_key(key);
+        }
+
+        virtual formatted_string calc_title() override
+        {
+            string s = "Quiver which action? (";
+            if (allow_empty)
+                s += "<w>-</w> for none, ";
+            s += "<w>*</w> for full inventory, <w>&</w> for all spells)";
+            return formatted_string::parse_string(s);
+        }
+    };
+
+    void choose(action_cycler &cur_quiver, bool allow_empty)
+    {
+        // TODO: icons in tiles, dividers or subtitles for each category?
+        ActionSelectMenu menu(cur_quiver, allow_empty);
+        vector<shared_ptr<action>> actions;
+        auto tmp = ammo_action(-1).get_fire_order();
+        actions.insert(actions.end(), tmp.begin(), tmp.end());
+        tmp = wand_action(-1).get_fire_order();
+        actions.insert(actions.end(), tmp.begin(), tmp.end());
+        tmp = spell_action(SPELL_NO_SPELL).get_fire_order();
+        actions.insert(actions.end(), tmp.begin(), tmp.end());
+
+        menu.set_title(new MenuEntry("", MEL_TITLE));
+
+        menu_letter hotkey;
+        // What to do if everything is disabled?
+        for (const auto &a : actions)
+        {
+            if (!a || !a->is_valid())
+                continue;
+            MenuEntry *me = new MenuEntry(a->quiver_description(),
+                                                MEL_ITEM, 1,
+                                                (int) hotkey);
+            // TODO: is there a way to show formatting in menu items?
+            me->colour = a->quiver_color();
+            me->data = (void *) &a; // pointer to vector element - don't change the vector!
+            menu.add_entry(me);
+            hotkey++;
+        }
+
+        menu.on_single_selection = [&menu](const MenuEntry& item)
+        {
+            const shared_ptr<action> *a = static_cast<shared_ptr<action> *>(item.data);
+            return !menu.set_to_quiver(*a);
+        };
+        menu.show();
     }
 
     // this class is largely legacy code -- can it be done away with?
