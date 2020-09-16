@@ -28,7 +28,7 @@ static const map<job_type, job_def> job_data =
     "AK", "Abyssal Knight",
     4, 4, 4,
     { SP_HILL_ORC, SP_PALENTONGA, SP_TROLL, SP_MERFOLK, SP_BASE_DRACONIAN,
-      SP_DEMONSPAWN, },
+      SP_MINOTAUR, SP_DEMONSPAWN, },
     { "leather armour" },
     WCHOICE_PLAIN,
     { { SK_FIGHTING, 3 }, { SK_ARMOUR, 1 }, { SK_DODGING, 1 },
