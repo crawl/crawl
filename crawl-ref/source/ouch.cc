@@ -732,7 +732,8 @@ static void _maybe_blink(int dam)
 {
     // SP_SPARKBORN
     int blink_chance = (dam > you.hp_max / 10) ? 1 : 10;
-    if (x_chance_in_y(1, blink_chance) && dam > 1)
+    if (x_chance_in_y(1, blink_chance) && dam > 1
+        && you.attribute[ATTR_BLINKBOLT] == 1)
     {
         flash_view_delay(UA_PLAYER, LIGHTBLUE, 100);
         cast_player_blinkbolt();
@@ -1110,7 +1111,10 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
                 _maybe_invisible();
                 if (you.has_mutation(MUT_BLINKBOLT)
                     && !you.duration[DUR_BLINKBOLT_COOLDOWN])
+                {
+                    you.attribute[ATTR_BLINKBOLT] = 1;
                     _maybe_blink(dam);
+                }
             }
             if (drain_amount > 0)
                 drain_player(drain_amount, true, true);

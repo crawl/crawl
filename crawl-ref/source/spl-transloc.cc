@@ -1551,6 +1551,8 @@ static void _attract_actor(const actor* agent, actor* victim,
         }
         else if (!victim->is_habitable(newpos))
             break;
+        else if (victim->is_player() && you.attribute[ATTR_BLINKBOLT] == 1)
+            break;
         else
             victim->move_to_pos(newpos);
 

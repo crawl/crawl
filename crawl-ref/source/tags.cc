@@ -4867,6 +4867,16 @@ void unmarshallItem(reader &th, item_def &item)
         }
     }
 
+
+    if (th.getMinorVersion() < TAG_MINOR_AID)
+    {
+        if (item.base_type == OBJ_BOOKS) {
+            if (item.sub_type >= BOOK_AID) {
+                item.sub_type++;
+            }
+        }
+    }
+
     if (th.getMinorVersion() < TAG_MINOR_FOOD_PURGE)
     {
         if (item.base_type == OBJ_FOOD)

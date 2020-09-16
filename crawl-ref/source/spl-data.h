@@ -4418,6 +4418,16 @@ static const struct spell_desc spelldata[] =
     TILEG_ROD_STRIKING,
 },
 {
+    SPELL_SUMMON_LIVELY_MASS, "Summon Lively Mass",
+    spschool::summoning | spschool::charms,
+    spflag::mons_abjure | spflag::utility | spflag::chaotic,
+    6,
+    200,
+    -1, -1,
+    5, 0,
+    TILEG_SUMMON_LIVELY_MASS,
+},
+{
     SPELL_NO_SPELL, "nonexistent spell",
     spschool::none,
     spflag::testing,

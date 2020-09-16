@@ -264,6 +264,26 @@ spret cast_call_canine_familiar(int pow, god_type god, bool fail)
     return spret::success;
 }
 
+spret cast_summon_lively_mass(int pow, god_type god, bool fail)
+{
+
+    mgen_data mass = _pal_data(MONS_LIVELY_MASS, 3, god,
+                                SPELL_SUMMON_LIVELY_MASS);
+    mass.flags &= ~MG_AUTOFOE; // !!!
+    mass.hd = 10 + div_rand_round(pow, 20);
+
+    monster* mons = (create_monster(mass));
+
+    if (mons)
+    {
+        mpr("A lively mass of vigorous amalgam appears!");
+    }
+    else
+        canned_msg(MSG_NOTHING_HAPPENS);
+
+    return spret::success;
+}
+
 // 
 
 static monster_type _feature_to_elemental(const coord_def& where)
@@ -3566,6 +3586,7 @@ static const map<spell_type, summon_cap> summonsdata =
     { SPELL_SUMMON_GUARDIAN_GOLEM,      { 1, 2 } },
     { SPELL_SPELLFORGED_SERVITOR,       { 1, 2 } },
     { SPELL_SUMMON_HOODED_MALICE,       { 1, 2 } },
+    { SPELL_SUMMON_LIVELY_MASS,         { 1, 2 } },
     // Monster spells
     { SPELL_SUMMON_UFETUBUS,            { 8, 2 } },
     { SPELL_SUMMON_HELL_BEAST,          { 8, 2 } },

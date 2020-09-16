@@ -1680,6 +1680,14 @@ lindwurm
 A small serpentine dragon with a pair of strong forelimbs. Its thick scales
 give off an eerie red glow.
 %%%%
+lively mass
+
+An organic amalgam, which is excessively vital. Most of them are abandoned
+failures by alchemist, created in the experiment of abyssal creatures with
+positive energies from the good gods. Therefore, even though its kindly
+attitude and overflowing positive energy, it is considered as a chaotic being
+by Zin.
+%%%%
 lorocyproca
 
 A tall and gaunt figure, draped in long robes which flow as if alive. It

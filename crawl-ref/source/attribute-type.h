@@ -104,5 +104,6 @@ enum attribute_type
     ATTR_CARAVAN_ITEM_COST,    // Not Used
     ATTR_CARAVAN_LOST,         // Not Used
     ATTR_BARRIER,
+    ATTR_BLINKBOLT,
     NUM_ATTRIBUTES
 };

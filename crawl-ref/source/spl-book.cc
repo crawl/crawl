@@ -274,6 +274,7 @@ int book_rarity(book_type which_book)
     case BOOK_EARTH:
     case BOOK_UNLIFE:
     case BOOK_SPATIAL_TRANSLOCATIONS:
+    case BOOK_AID:
         return 10;
 
     case BOOK_TEMPESTS:

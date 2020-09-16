@@ -273,6 +273,9 @@ prismatic_prism4
 %rim 1
 ball_lightning MONS_BALL_LIGHTNING /*'*'*/
 ball_of_web MONS_BALL_WEB
+lively_mass1 MONS_LIVELY_MASS
+lively_mass2
+lively_mass3
 %sdir mon/undead
 death_cob MONS_DEATH_COB /*'%'*/
 
