@@ -1963,10 +1963,10 @@ void handle_monster_move(monster* mons)
 
     _monster_regenerate(mons);
 	
-    if (mons->within_healaura() && mons->attitude == ATT_FRIENDLY)
-    {
+    if (mons->within_healaura()
+        && !mons->has_ench(ENCH_HEALING_AURA)
+        && mons->attitude == ATT_FRIENDLY)
         mons->heal(10);
-    }
 
     // Please change _slouch_damage to match!
     if (mons->cannot_act()
@@ -2625,6 +2625,13 @@ static void _post_monster_move(monster* mons)
     // The Great Wyrm: place short-term miasma if there is no cloud
     if (mons->has_ench(ENCH_NIGREDO) && !cloud_at(mons->pos()))
         place_cloud(CLOUD_MIASMA, mons->pos(), 2, mons);
+
+    if (mons->has_ench(ENCH_HEALING_AURA) && mons->type == MONS_LIVELY_MASS)
+    {
+        mons->hit_points -= 5 + random2(5);
+        if (mons->hit_points < 1)
+            monster_die(*mons, KILL_MISC, NON_MONSTER);
+    }
 
     if (mons->type != MONS_NO_MONSTER && mons->hit_points < 1)
         monster_die(*mons, KILL_MISC, NON_MONSTER);

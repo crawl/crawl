@@ -585,6 +585,9 @@ void player_reacts_to_monsters()
     _update_combat_mana();
     if (you_worship(GOD_USKAYAW))
         _handle_uskayaw_time(you.time_taken);
+
+    if (you.attribute[ATTR_BLINKBOLT] == 1)
+        you.attribute[ATTR_BLINKBOLT] = 0;
 }
 
 static bool _check_recite()

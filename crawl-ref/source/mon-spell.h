@@ -2482,7 +2482,13 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_HOODED_MALICE,
       {
-       { SPELL_MALIGN_OFFERING, 66, MON_SPELL_WIZARD },
+       { SPELL_MALIGN_OFFERING, 66, MON_SPELL_NATURAL },
+      }
+    },
+
+    {  MST_LIVELY_MASS,
+      {
+       { SPELL_AURA_OF_HEALING, 66, MON_SPELL_MAGICAL },
       }
     },
 

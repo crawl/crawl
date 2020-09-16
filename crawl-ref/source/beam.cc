@@ -4769,6 +4769,9 @@ void bolt::knockback_actor(actor *act, int dam)
     if (!act || !can_knockback(*act, dam))
         return;
 
+    if (you.attribute[ATTR_BLINKBOLT] == 1)
+        return;
+
     const int distance =
         (origin_spell == SPELL_FORCE_LANCE)
             ? 1 + div_rand_round(ench_power, 40) :
@@ -4850,6 +4853,9 @@ void bolt::knockback_actor(actor *act, int dam)
 void bolt::pull_actor(actor *act, int dam)
 {
     if (!act || !can_pull(*act, dam))
+        return;
+
+    if (you.attribute[ATTR_BLINKBOLT] == 1)
         return;
 
     // How far we'll try to pull the actor to make them adjacent to the source.

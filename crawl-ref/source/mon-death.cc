@@ -2413,6 +2413,13 @@ item_def* monster_die(monster& mons, killer_type killer,
             move_item_to_grid(&item_, mons.pos());
         }
     }
+    else if (mons.type == MONS_LIVELY_MASS
+             && mons.mindex() == killer_index)
+    {
+        if (!silent)
+            simple_monster_message(mons, " exhausts itself and fades away.");
+        silent = true;
+    }
 
     const bool death_message = !silent && !did_death_message
                                && you.can_see(mons);

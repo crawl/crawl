@@ -920,7 +920,12 @@ int monster::healaura_radius() const
 {
 
     if (has_ench(ENCH_HEALING_AURA))
-        return 3;
+    {
+        if (type == MONS_ASCLEPIA_II)
+            return 3;
+        else
+            return 2;
+    }
 
     return -1;
 }

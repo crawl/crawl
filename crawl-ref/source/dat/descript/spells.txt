@@ -1653,6 +1653,13 @@ Summon Lightning Spire spell
 Constructs a lightning spire in a nearby location. It can fire bouncing bolts
 of electricity at the caster's foes, but is completely immobile.
 %%%%
+Summon Lively Mass spell
+
+Summons an excessively vital amalgam. It can emit its vigor, as a form of
+the aura of healing. Most creatures including undeads and non-living will be
+healed rapidly in the aura, except yourself. Because of the complex origins
+of the 'mass', this spell is considered as chaotic by Zin.
+%%%%
 Summon Mana Viper spell
 
 Summons a violet-scaled serpent whose bite can swiftly drain the magical

@@ -535,6 +535,12 @@ The horn belonging to Geryon, guardian of the Vestibule of Hell. It has the
 power to call forth demonic beasts. With high Evocations skill, it will call
 greater numbers of beasts, with lower chances of those beasts being hostile.
 %%%%
+how to aid your minions
+
+A book introducing "how to aid your minions". Unlike its exaggerated title,
+the inner text contains serious issues, such as the failure of alchemists or
+the specter of necromancers.
+%%%%
 hunting sling
 
 A piece of cloth and leather for launching stones, adequate for hunting small
