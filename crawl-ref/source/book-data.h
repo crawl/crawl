@@ -339,7 +339,6 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_SILENCE,
     SPELL_DARKNESS,
     SPELL_SHADOW_CREATURES,
-    SPELL_SUMMON_HOODED_MALICE,
 },
 
 {   // Book of Alchemy
@@ -422,6 +421,14 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_RING_OF_FLAMES,
     SPELL_HASTE,
     SPELL_BARRIER,
+},
+
+{   // Book of Aid
+    SPELL_SUMMON_GUARDIAN_GOLEM,
+    SPELL_SUMMON_HOODED_MALICE,
+    SPELL_SUMMON_LIVELY_MASS,
+    SPELL_INVISIBILITY,
+    SPELL_HASTE,
 },
 };
 
