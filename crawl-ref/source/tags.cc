@@ -4099,11 +4099,6 @@ static void _tag_read_you_items(reader &th)
     // preconditions: need to have read items, and you (incl props).
     you.quiver_action.load();
 
-    // // TODO: not sure this is the ideal timing or way
-    // // you.quiver_action.set(quiver::find_ammo_action());
-    // if (!you.quiver_action.get().is_valid())
-    //     you.quiver_action.cycle();
-
 #if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() < TAG_MINOR_FOOD_AUTOPICKUP)
     {
