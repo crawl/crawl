@@ -717,6 +717,15 @@ namespace quiver
 
     void action_cycler::load()
     {
+        if (!you.props.exists("current_quiver_action"))
+        {
+            // some light save compat: if there is no prop, attempt to fill
+            // in the quiver from the quiver history. Can this be simplified
+            // further?
+            set(find_ammo_action());
+            save();
+        }
+
         auto &target = you.props["current_quiver_action"].get_table();
         set(_load_action(target));
         // in case this is invalid, cycle. TODO: is this the right thing to do?
