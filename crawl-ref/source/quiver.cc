@@ -113,10 +113,6 @@ namespace quiver
         const int inv_start = (ignore_inscription_etc ? 0
                                                       : Options.fire_items_start);
 
-        // If in a net, cannot launch anything.
-        if (you.attribute[ATTR_HELD])
-            return;
-
         for (int i_inv = inv_start; i_inv < ENDOFPACK; i_inv++)
         {
             const item_def& item = you.inv[i_inv];
@@ -241,19 +237,8 @@ namespace quiver
             ASSERT_RANGE(ammo_slot, -1, ENDOFPACK);
             if (!is_valid())
             {
-                // TODO: I don't quite understand the fire_warn... logic here,
-                // and so have slightly simplified it from the output.cc version
-                if (fire_warn_if_impossible(true))
-                {
-                    return formatted_string::parse_string(
-                        "<darkgrey>Quiver unavailable</darkgrey>");
-                }
-                else
-                {
-                    // TODO: ???
-                    return formatted_string::parse_string(
-                        "<darkgrey>Nothing quivered</darkgrey>");
-                }
+                return formatted_string::parse_string(
+                    "<darkgrey>Nothing quivered</darkgrey>");
             }
             formatted_string qdesc;
 
