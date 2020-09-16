@@ -961,7 +961,14 @@ static void _inc_penance(int val)
 
 static void _set_penance(god_type god, int val)
 {
-    you.penance[god] = val;
+    if (you.props["wish_item"].get_bool()) {
+        mprf(MSGCH_GOD, "%s is even angrier at you despicable!", god_name(god).c_str());
+        you.props["wish_item"] = false;
+        you.penance[god] = val * 3 / 2;
+    }
+    else {
+        you.penance[god] = val;
+    }
 }
 
 static void _set_wrath_penance(god_type god)

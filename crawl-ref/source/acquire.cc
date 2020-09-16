@@ -2130,8 +2130,12 @@ bool scroll_of_wish_menu()
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    if(runes_in_pack() < 1){
-        mpr("You need at least 1 rune to make a wish.");
+    if (you.species == SP_DEMIGOD && you.experience_level < 7) {
+        mpr("You are still inexperienced.");
+        return false;
+    }
+    else if(you.religion == GOD_NO_GOD){
+        mpr("You should wish to God for this scroll.");
         return false;
     }
 
@@ -2223,11 +2227,10 @@ bool scroll_of_wish_menu()
         }
         else
         {
-            mprf(MSGCH_PROMPT,
-                "Success to wish %s!",
-                item.name(DESC_A).c_str());
+            simple_god_message(" says: Use this gift wisely!");
         }
         move_item_to_grid(&islot, you.pos());
+        you.props["wish_item"] = true;
         return true;
     }
     return false;
