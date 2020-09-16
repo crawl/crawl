@@ -4004,6 +4004,9 @@ bool melee_attack::do_knockback(bool trample)
     if (attacker->cannot_move())
         return false;
 
+    if (defender->is_player() && you.attribute[ATTR_BLINKBOLT] == 1)
+        return false;
+
     const int size_diff =
         attacker->body_size(PSIZE_BODY) - defender->body_size(PSIZE_BODY);
     const coord_def old_pos = defender->pos();

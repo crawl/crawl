@@ -1941,6 +1941,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_SUMMON_GUARDIAN_GOLEM:
         return cast_summon_guardian_golem(powc, god, fail);
 
+    case SPELL_SUMMON_LIVELY_MASS:
+        return cast_summon_lively_mass(powc, god, fail);
+
     case SPELL_CALL_IMP:
         return cast_call_imp(powc, god, fail);
 
