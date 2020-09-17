@@ -3202,6 +3202,11 @@ MAP
   xxx  @  xxx
 ENDMAP
 
+### Kimchi_Master Origanal Gods altars
+### It is recommended that new gods' overflow temples
+### are coded below.
+######################################################
+
 NAME:    OT_kimchi_original_01
 DEPTH:   D:2-9
 TAGS:    temple_overflow_2 temple_overflow_the_great_wyrm temple_overflow_agraphede
