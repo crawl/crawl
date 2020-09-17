@@ -2141,7 +2141,7 @@ bool scroll_of_wish_menu()
     }
 
     char buf[1024];
-    mprf(MSGCH_PROMPT, "Enter name of fixdart item: ");
+    mprf(MSGCH_PROMPT, "Enter name of fixdart item (type <white>random</white> for random fixdart): ");
     if (cancellable_get_line_autohist(buf, sizeof buf) || !*buf)
     {
         canned_msg(MSG_OK);
@@ -2156,27 +2156,71 @@ bool scroll_of_wish_menu()
         int num = 0;
         int islot;
 
-        for (int i = 0; i < NUM_UNRANDARTS; ++i)
-        {
-            const int              index = i + UNRAND_START;
-            const unrandart_entry* entry = get_unrand_entry(index);
+        if (strcmp(buf, "random") == 0) {
+            int max_try = 1000;
+            while (max_try-- > 0) {
+                //랜덤 아이템 생성하기
+                //치팅아이템, 신이 싫어하는 아이템등 제외
+                int random_select = random2(NUM_UNRANDARTS);
 
-            // Skip dummy entries.
-            if (entry->base_type == OBJ_UNASSIGNED)
-                continue;
+                const int              index = random_select + UNRAND_START;
+                const unrandart_entry* entry = get_unrand_entry(index);
 
-
-            size_t pos = lowercase_string(entry->name).find(buf_lwr);
-            if (pos != string::npos)
+                // Skip dummy entries.
+                if (entry->base_type == OBJ_UNASSIGNED)
+                    continue;
+                if (index == UNRAND_WOE
+                    || index == UNRAND_AMULET_OF_WOE) {
+                    continue;
+                }
+                int temp_slot = items(true, entry->base_type, 0, 0, -index, -1);
+                item_def& temp_item = mitm[temp_slot];
+                if (temp_slot == NON_ITEM)
+                {
+                    destroy_item(temp_item, true);
+                    continue;
+                }
+                if (is_useless_item(temp_item)) {
+                    destroy_item(temp_item, true);
+                    continue;
+                }
+                if (god_hates_item(temp_item)) {
+                    destroy_item(temp_item, true);
+                    return false;
+                }
+                if (!is_artefact(temp_item) || is_random_artefact(temp_item))
+                {
+                    destroy_item(temp_item, true);
+                    continue;
+                }
+                destroy_item(temp_item, true);
+                special_wanted = random_select;
+                break;
+            }
+        }
+        else {
+            for (int i = 0; i < NUM_UNRANDARTS; ++i)
             {
-                if (entry->flags & UNRAND_FLAG_NOGEN) {
+                const int              index = i + UNRAND_START;
+                const unrandart_entry* entry = get_unrand_entry(index);
+
+                // Skip dummy entries.
+                if (entry->base_type == OBJ_UNASSIGNED)
+                    continue;
+
+                if (index == UNRAND_WOE || index == UNRAND_AMULET_OF_WOE) {
                     cheating_item = i;
                     continue;
                 }
-                // earliest match is the winner
-                mprf("%s ", entry->name);
-                special_wanted = i;
-                num++;
+
+                size_t pos = lowercase_string(entry->name).find(buf_lwr);
+                if (pos != string::npos)
+                {
+                    // earliest match is the winner
+                    mprf("%s ", entry->name);
+                    special_wanted = i;
+                    num++;
+                }
             }
         }
 
@@ -2216,18 +2260,29 @@ bool scroll_of_wish_menu()
             return false;
         }
         item_def& item = mitm[islot];
+
+        if (god_hates_item(item)) {
+            mprf(MSGCH_ERROR, "%s disapproves of the use of such an item.", god_name(you.religion).c_str());
+            destroy_item(item, true); 
+            return false;
+        }
+
         set_ident_flags(item, ISFLAG_IDENT_MASK);
+        if (you.religion == GOD_ASHENZARI) {
+            do_curse_item(item);
+        }
         if (!is_artefact(item) || is_random_artefact(item))
         {
             // for now, staves are ok...
             mprf(MSGCH_ERROR,
                 "Failed to create %s... Perhaps already created?",
                 entry->name);
-            destroy_item(item);
+            destroy_item(item, true);
             return false;
         }
         else
         {
+
             simple_god_message(" says: Use this gift wisely!");
         }
         move_item_to_grid(&islot, you.pos());
