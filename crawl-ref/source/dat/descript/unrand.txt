@@ -714,20 +714,18 @@ true within, but not without.
 Erysichthon's Jaw
 
 A lower jaw of a human that was once a king of the mighty kingdom. His arrogance
-aroused the divine wrath and the king was accursed with the endless hunger.
-Eventually he ended up eating himself and died, but his jaw still remains. It
-still makes strange crackling sounds even though it has no upper jaw to crackle.
-The wearer of it will suffer a terrible hunger and devour their foes alive to 
+called for a divine wrath and he was accursed with endless hunger. He ended up
+eating himself to death, but his jaw still remains. It still makes a strange
+crackling sound even though it has no corresponding upper jaw to crackle.
+The wearer will suffer a terrible hunger and devour their foes alive to 
 soothe their bottomless hunger.
 %%%%
-scales of the Unseen Dragon
+Scales of the Unseen Dragon
 
 A suit of armour created from the scales of a veiled quicksilver dragon,
-called as 'the Unseen Dragon'. The story of this dragon is more like a folk
-tale than a legend because the evidence of its existence has never been found. 
-Only this armour, which cannot be made with any enchantment, gives us a glimpse
-of the dragon. These scales, which anyone can see, makes the wearer invisible 
-when damaged. However, failing to hide the wearer, it may corrode them instead.
+from the tale of the Unseen Dragon. This armour is the only remaining clue
+to the dragon. It makes the wearer invisible when damaged. If it fails to
+do so, it may corrode the wearer instead.
 %%%%
 Golem gauntlets
 
@@ -755,5 +753,5 @@ Golem armour
 A suit of armour made of the crystal from unknown source. This cumbersome,
 heavy armour protects the wearer from poison and electricity. 
 It has an indescribable power within, but this armour alone cannot unleash
-the potential of the armour. It can be re-assembled to activate as a giant 
-golem exoskeleton, if the wearer has other all parts of this armour.
+the potential of the armour. It can be re-assembled to activate a giant 
+golem exoskeleton, if the wearer has all other parts of the armour.
