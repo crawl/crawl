@@ -924,7 +924,8 @@ PLUS:     +1
 COLOUR:   ETC_ICE
 TILE:     urand_starlight
 TILE_EQ:  white
-EV:       4
+INSCRIP:  Radiant
+EV:       2
 COLD:     1
 STEALTH:  -2
 BOOL:     elec

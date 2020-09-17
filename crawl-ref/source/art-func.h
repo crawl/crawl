@@ -36,6 +36,7 @@
 #include "mgen-data.h"     // For Sceptre of Asmodeus evoke
 #include "message.h"
 #include "monster.h"
+#include "mon-behv.h"      // For Cloak of Starlight alert mons
 #include "mon-death.h"     // For demon axe's SAME_ATTITUDE
 #include "mon-place.h"     // For Sceptre of Asmodeus evoke
 #include "nearby-danger.h" // For Zhor
@@ -1524,6 +1525,79 @@ static void _EMBRACE_world_reacts(item_def *item)
 
     if (item->plus != last_plus)
         you.redraw_armour_class = true;
+}
+
+////////////////////////////////////////////////////
+
+static void _STARLIGHT_equip(item_def * /* item */, bool * show_msgs,
+                              bool /* unmeld */)
+{
+    _equip_mpr(show_msgs, "The radiance from your cloak is blindingly bright!", MSGCH_EQUIPMENT);
+}
+
+static void _STARLIGHT_unequip(item_def * /* item */, bool * show_msgs)
+{
+    _equip_mpr(show_msgs, "The bright starlight fades.", MSGCH_EQUIPMENT);
+}
+
+static void _roll_to_blind_viewer(monster *mon)
+{
+    /* 50% * 1/((x*y)+5) success where x = distance from player, y = monster hit dice
+        Runs every turn on every LOS monster so may be a bit strong?
+        Easiest way to balance is to change that +5 at the end to +6 or +7
+
+        Could also change to only trigger on hit or dodge, but that doesn't fit the
+        flavour as well in my opinion - amcnicky
+
+        Derived success chance per turn, including the coinflip:
+
+        Range\HD    1           7 (yak)     14 (death yak)      30 (oof)
+            1       8.33%       4.17%       2.63%               1.43%
+            3       6.25%       1.92%       1.06%               0.53%
+            7       4.17%       0.93%       0.49%               0.23%
+    */
+    if (coinflip())
+        return; //50% chance of doing nothing
+    if (one_chance_in((grid_distance(you.pos(), mon->pos()) * mon->get_hit_dice()) + 5))
+    {
+        const mon_enchant ench = mon->get_ench(ENCH_BLIND);
+        if (ench.ench == ENCH_BLIND) //monster was already blind
+        {
+            return;
+        } else
+        if (mon->add_ench(mon_enchant(ENCH_BLIND, 0, &you, random_range(40,120))))
+        {
+            //Alert the monster - presumably blinding light wakes things up
+            behaviour_event(mon, ME_DISTURB, &you, you.pos(), true);
+            switch (random_range(1, 4))
+            {
+            case 1: simple_monster_message(*mon, " is blinded by the light from your cloak!"); break;
+            case 2: simple_monster_message(*mon, " is temporarily struck blind!"); break;
+            case 3: simple_monster_message(*mon, "'s sight is seared by the starlight!"); break;
+            case 4: simple_monster_message(*mon, "'s vision is blinded by starry radiance!"); break;
+            }
+        }
+    }
+
+}
+
+static void _blindroll_all_possible_viewers()
+{
+    for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
+    {
+        monster *mon = monster_at(*ri);
+        if (mon && you.can_see(*mon)
+            && mons_can_be_blinded(mon->type)
+            && mons_is_threatening(*mon))
+        {
+            _roll_to_blind_viewer(mon);
+        }
+    }
+}
+
+static void _STARLIGHT_world_reacts(item_def * /* item */)
+{
+    _blindroll_all_possible_viewers();
 }
 
 ////////////////////////////////////////////////////
