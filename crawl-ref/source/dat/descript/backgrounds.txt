@@ -37,7 +37,7 @@ Caravan
 
 Caravans visit the Dungeon to find the Orb; the best sale item on the surface. 
 They are not good adventurers, but start with a hired mercenary, a tool to heal 
-mercenaries, and some extra golds to give equipment to them.
+the mercenary, and some extra golds to give equipment to them.
 %%%%
 Chaos Knight
 
@@ -50,8 +50,8 @@ Conjurers confront problems with damaging spells.
 %%%%
 Collector
 
-Collector always hankered to find the Orb in Dungeon. Collector have unique scrolls
-which summon artefact from Collector's artefact Collections. but, That's All
+Collectors start with a unique scroll which grants a single artefact of
+their desire, but that's all.
 %%%%
 Earth Elementalist
 

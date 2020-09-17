@@ -301,7 +301,7 @@ blast is decreased by one for every creature it strikes.
 Cigotuvi's Plague spell
 
 Throws and implants a plasmid of Cigotuvi's virus, infecting targeted creature
-for a duration depending on power and causing their corpse to become monstrous
+for a duration depending on power and causing their corpses to become monstrous
 abomination.  
 
 %%%%
@@ -563,10 +563,10 @@ Recalls woodland creatures from elsewhere on the same level.
 %%%%
 Eldritch Form spell
 
-This spell turns you into a monster with terrible tentacles. While being a monster,
-you get a strong body and amazing resistance, But in return, your body will be 
-distorted. While you're a monster, you can't use any potions or scrolls, but your 
-tentacles will pop out of your body to help attack the enemy.
+Transforms the caster into a monster with terrible tentacles. The caster gets
+a strong body and amazing resistances, in return for a severe distortion of
+the caster's body. While transformed, the caster cannot use any potions or
+scrolls, but tentacles will pop out of the body to help attack the enemy.
 %%%%
 Electrical Bolt spell
 
@@ -624,8 +624,8 @@ sludge lingers.
 %%%%
 Eringya's Rootspike spell
 
-This spell sharpens a poisonous root plant. The sharpness of the roots can 
-effectively inflict damage to enemies protected from poison. The root plant
+Sharpens a poisonous root plant. The sharpness of the roots can effectively
+inflict damage to enemies that are resistant to poison. The root plant
 extends from your feet, so the more skilled you are, the more it can rise.
 %%%%
 Excruciating Wounds spell
@@ -1574,9 +1574,8 @@ Summons one or more earth elementals.
 %%%%
 Summon Elemental spell
 
-Summons elementals(Fire, Water, Earth, Air) from the natural feature existing
-in the dungeon. If you cast this spell toward nothing, then you may summon an air
-elemental.
+Summons elementals(Fire, Water, Earth, Air) from the natural feature existing in
+the dungeon. Casting this spell toward nothing will cause an air elemental to spawn.
 %%%%
 Summon Emperor Scorpions spell
 
@@ -1865,7 +1864,7 @@ creatures are summoned with higher power.
 %%%%
 Will of Earth spell
 
-Tears down the walls by making the surrounding land conform to the will
+Tears down walls by making the surrounding land surrender to the will
 of the caster. The stones collected in this way can be used to create walls
 or floors over the surface of lava and water temporarily.
 %%%%

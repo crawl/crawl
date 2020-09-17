@@ -799,22 +799,21 @@ Your control over your magic has been sapped.
 %%%%
 CigoPlg status
 
-You are infected by Cigotuvi's plague. Your body is oftenly mutated.
+You are infected by Cigotuvi's plague. Your body is often mutated.
 %%%%
 Golem status
 
-You have been transformed into a giant golem, by your activated golem
+You have been transformed into a giant golem, by activating the golem
 armour. Your strength is increased, and sturdy forcefield will enhance
-your durability. If you perform unarmed strike while this form, it will
-be destructive blow by your boosted golem fists. Also, this form grants
-you resistance to negative energy and petrification, but also makes you
-vulnerable to shattering effects.
+your durability. Attacking unarmed will cause a destructive blow, boosted
+by your golem fists. Being a golem grants you resistances to negative
+energy and petrification, but also makes you vulnerable to shattering effects.
 %%%%
 Barrier status
 
-You are protected by hermetic barrier, which absorbs upcoming damage and
-protects you from clouds and from exposure to to magic and elemental effects
-from outside, except damage from illusionary wound or unholy torment. However,
-if your barrier broken before it fades naturally, will cause aftershock, makes
-you stuned and unable to teleport for a while.
+You are protected by a hermetic barrier, which protects you from most types
+of damage, clouds, magic, and elemental effects. Illusionary wounds or unholy
+torment cannot be protected even with the barrier. If the barrier breaks down
+before it fades away naturally, it will cause an aftershock, leaving you stunned
+and unable to teleport for a while.
 %%%%
