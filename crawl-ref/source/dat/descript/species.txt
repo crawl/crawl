@@ -157,7 +157,9 @@ they hate and never hold shields, thinking those are only for cowards.
 %%%%
 Hydra
 
-Hydra has lots of heads; if they can survive from every combats.
+Hydrae have many heads, and the potential to grow many more. Being hit with
+any bladed weapon bigger than a short blade will grow them a head, unless
+the weapon is branded with flame.
 %%%%
 Angel
 
@@ -180,7 +182,7 @@ hand combat.
 %%%%
 Lesser Lich
 
- Lesser Liches head to the Dungeon to fill their incompleteness to 
+Lesser Liches head to the Dungeon to fill their incompleteness to 
 become a true Lich. They are good at all kinds of magic, especially 
 Necromancy, and have excellent mana regenerative ability.
 %%%%
@@ -194,22 +196,22 @@ like a crab as they grow.
 Meliai
 
 Meliades are small hybrids of human and bee with sharp stingers. Their 
-buzzing wings move very fast, but require lots of calorie. Due to their 
+buzzing wings move very fast, but require a lot of calorie. Due to their 
 instinct to serve higher beings, they are naturally faithful.
 %%%%
 Wight
 
-Wights are ancient warriors animated as undead beings. Since they are 
-actually skeletons, they are unable to consume any food or potions. They 
-are adept at Necromancy and Ice Magic but learn other skills very slowly. 
-However, they can use negative energy to infuse their melee attacks, and 
-enchant weapon by cursing them in price for memory.
+Wights are ancient warriors animated as undead beings. They cannot
+consume any food or potions. They are adept at Necromancy and
+Ice Magic but learn other skills very slowly. However, they can use
+negative energy to infuse their melee attacks and enchant weapons
+by cursing them in price for memory.
 %%%%
 Sparkborn
 
 Sparkborns are distant relatives of Raijus. Their essence is inner lightning,
-so electricity does no harm to them, but they lose all magic reserves in water.
-Sometimes their bodies burst into living lightning when when damaged, and they
-move to a nearby chosen spot and deal damage to anything on the path. Suppressing
+so electricity does no harm to them, but they lose the ability to cast in water.
+Sometimes their bodies burst into living lightning when damaged, and they
+move to a nearby chosen spot then deal damage to anything on the path. Suppressing
 Blink-Bolt will cause contamination.
 %%%%
