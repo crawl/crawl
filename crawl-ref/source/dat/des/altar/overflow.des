@@ -3258,6 +3258,29 @@ ccPp.pPcc
     @
 ENDMAP
 
+NAME:   UK_agraphede_webbed
+TAGS:   temple_overflow_1 temple_overflow_agraphede
+DEPTH:  D:3-9
+TILE:   x = WALL_BRICK_VINES
+KFEAT:  _ = altar_agraphede
+KFEAT:  n = known web trap / .
+: if you.absdepth() < 9 then
+KMONS:  _ = killer bee
+: else
+KMONS:  _ = meliai
+: end
+MAP
+.........
+.xxxnxxx.
+.xxnnnxx.
+.xnnnnnx.
+.nnn_nnn.
+.xnnnnnx.
+.xxnnnxx.
+.xxxnxxx.
+.........
+ENDMAP
+
 NAME:    OT_kimchi_original_03
 DEPTH:   D:7-14
 TAGS:    temple_overflow_1 temple_overflow_the_great_wyrm
