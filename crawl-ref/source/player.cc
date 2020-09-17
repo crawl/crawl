@@ -1719,7 +1719,7 @@ int player_res_electricity(bool calc_unid, bool temp, bool items)
         re = 1;
 
     if (you.species == SP_SPARKBORN)
-        return 4; // full immunity
+        return 3; // full immunity
 
     return re;
 }
