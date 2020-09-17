@@ -184,6 +184,32 @@ function species_mock(e)
     e.kmons("1 = tyrant leech")
   elseif you.race() == "Vine Stalker" then
     e.kmons("1 = thorn hunter")
+  elseif you.race() == "Meliai" then
+    e.kmons("1 = killer bee")
+  elseif you.race() == "Crustacean" then
+    e.kmons("1 = apocalypse crab")
+  elseif you.race() == "Homunculus" then
+    e.kmons("1 = iron golem")
+  elseif you.race() == "Hydra" then
+    e.kmons("1 = one-headed hydra skeleton")
+  elseif you.race() == "Lesser Lich" then
+    e.kmons("1 = necromancer simulacrum")
+  elseif you.race() == "Lava Orc" then
+    e.kmons("1 = fire bat")
+  elseif you.race() == "Mantis" then
+    e.kmons("1 = giant cockroach")
+  elseif you.race() == "Mountain Dwarf" then
+    e.kmons("1 = dwarf zombie")
+  elseif you.race() == "Wight" then
+    e.kmons("1 = human skeleton")
+  elseif you.race() == "Sparkborn" then
+    e.kmons("1 = spectral raiju")
+  elseif you.race() == "High Elf" then
+    e.kmons("1 = insubstantial wisp")
+  elseif you.race() == "Djinni" then
+    e.kmons("1 = hellion")
+  elseif you.race() == "Angel" then
+    e.kmons("1 = spectral slave")
   else
     e.kmons("1 = spectral ugly thing")
   end
