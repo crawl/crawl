@@ -3347,6 +3347,10 @@ void level_change(bool skip_attribute_increase)
                 break;
 
             case SP_ANGEL:
+                if (you.experience_level == 7 && you.char_class == JOB_COLLECTOR)
+                {
+                    mprf(MSGCH_INTRINSIC_GAIN, "You're ready to read the scroll of wish.");
+                }
                 if (you.experience_level == 15)
                 {
                     mprf(MSGCH_WARN, "You feel the vile force of evil gods crawling around your presence.");
@@ -3370,6 +3374,12 @@ void level_change(bool skip_attribute_increase)
                 }
                 break;
 
+            case SP_DEMIGOD:
+                if (you.experience_level == 7 && you.char_class == JOB_COLLECTOR)
+                {
+                    mprf(MSGCH_INTRINSIC_GAIN, "You're ready to read the scroll of wish.");
+                }
+                break;
             default:
                 break;
             }

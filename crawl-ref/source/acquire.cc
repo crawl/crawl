@@ -2130,8 +2130,9 @@ bool scroll_of_wish_menu()
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    if (you.species == SP_DEMIGOD && you.experience_level < 7) {
-        mpr("You are still inexperienced.");
+    if ((you.species == SP_DEMIGOD || you.species == SP_ANGEL) 
+        && you.experience_level < 7) {
+        mpr("You need level 7 to read.");
         return false;
     }
     else if(you.religion == GOD_NO_GOD){
