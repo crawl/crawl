@@ -107,6 +107,28 @@ function callback.xom_greatest_gift(data, triggerable, triggerer, marker, ev)
   end
 end
 
+function callback.legion_summon(data, triggerable, triggerer, marker, ev)
+  if not dgn.persist.legion_gg_heard and you.god() == "Legion from beyond" then
+    dgn.persist.legion_gg_heard = true
+    dgn.persist.legion_gg_granted = true
+  elseif not dgn.persist.legion_gg_heard and you.god() ~= "Legion from beyond" then
+    crawl.god_speaks("Legion from beyond", '"Legion from beyond roars: The Legion needs leader! The Legion needs control!"')
+    dgn.persist.legion_gg_heard = true
+  elseif not dgn.persist.legion_gg_granted and you.god() == "Legion from beyond" then
+    local pos1 = dgn.find_marker_positions_by_prop("gift", "summon1")
+    dgn.create_monster(pos1[1].x, pos1[1].y, "generate_awake patrolling att:good_neutral crimson imp")
+    local pos2 = dgn.find_marker_positions_by_prop("gift", "summon2")
+    dgn.create_monster(pos2[1].x, pos2[1].y, "generate_awake patrolling att:good_neutral white imp")
+    local pos3 = dgn.find_marker_positions_by_prop("gift", "summon3")
+    dgn.create_monster(pos3[1].x, pos3[1].y, "generate_awake patrolling att:good_neutral shadow imp")
+    local pos4 = dgn.find_marker_positions_by_prop("gift", "summon4")
+    dgn.create_monster(pos4[1].x, pos4[1].y, "generate_awake patrolling att:good_neutral iron imp")
+    crawl.god_speaks("Legion from beyond", '"Legion from beyond roars: Lead the Legion, our master!"')
+
+    dgn.persist.legion_gg_granted = true
+  end
+end
+
 function species_mock(e)
   if you.race() == "Barachi" then
     e.kmons("1 = bullfrog")
@@ -3152,6 +3174,210 @@ MAP
  x...x.U.x...x
  xGxx...xxGxx
   xxx  @  xxx
+ENDMAP
+
+NAME:    OT_kimchi_original_01
+DEPTH:   D:2-9
+TAGS:    temple_overflow_2 temple_overflow_the_great_wyrm temple_overflow_agraphede
+TAGS:    no_trap_gen no_item_gen no_monster_gen
+SHUFFLE: bU, _O
+KFEAT:   _ = altar_wyrm
+KFEAT:   O = altar_agraphede
+FTILE:   ._bOU+ = floor_moss
+RTILE:   x = wall_brick_brown_vines
+KFEAT:   p = shallow_water
+KFEAT:   P = deep_water
+COLOUR:  Pp = lightgreen
+MAP
+ xxxxxxxxx
+xxPPPPPPPxx
+xpppppppppx
+xp.._.O..px
+xp.......px
+xx.......xx
+ xx.....xx
+  xxx+xxx
+     @
+ENDMAP
+
+NAME:    OT_kimchi_original_02
+DEPTH:   D:2-9
+TAGS:    temple_overflow_1 temple_overflow_agraphede
+TAGS:    no_trap_gen no_item_gen no_monster_gen
+KFEAT:   O = altar_agraphede
+KFEAT:   p = shallow_water
+KFEAT:   P = deep_water
+COLOUR:  pP = lightgreen
+FTILE:   .pPot = floor_moss
+MARKER:  P = lua:fog_machine { cloud_type = "thin mist", pow_min = 10, \
+   pow_max = 30, delay_min = 10, delay_max = 30, size = 1, walk_dist = 1, \
+   spread_rate = 1 }
+MAP
+ ccccccc
+cccPPPccc
+ccPPPPPcc
+ccPpppPcc
+cPppOppPc
+cPpp.ppPc
+cPpp.ppPc
+ccPp.pPcc
+ ccp.pcc
+  cp.pc
+   p.p
+    @
+ENDMAP
+
+NAME:    OT_kimchi_original_03
+DEPTH:   D:7-14
+TAGS:    temple_overflow_1 temple_overflow_the_great_wyrm
+TAGS:    no_trap_gen no_monster_gen no_item_gen no_pool_fixup transparent
+KFEAT:   O = altar_wyrm
+KFEAT:   wW = deep_water
+KFEAT:   lL = lava
+RTILE:   x = dngn_crystal_green
+COLOUR:  x = green
+KFEAT:   X = clear_stone_wall
+FTILE:   _ = floor_crystal_squares
+KFEAT:   ~ = known shaft trap
+MARKER:  w = lua:fog_machine { cloud_type = "rain", \
+                               pow_min = 5, pow_max = 7, delay_min = 10, \
+                               delay_max = 20, size = 1, walk_dist = 0, \
+                               spread_rate = 10 }
+MARKER:  l = lua:fog_machine { cloud_type = "flame", \
+                               pow_min = 5, pow_max = 7, delay_min = 10, \
+                               delay_max = 20, size = 1, walk_dist = 0, \
+                               spread_rate = 10 }
+MARKER:  ~ = lua:fog_machine { cloud_type = "acidic fog", \
+                               pow_min = 5, pow_max = 7, delay_min = 10, \
+                               delay_max = 20, size = 1, walk_dist = 0, \
+                               spread_rate = 0 }
+KPROP:  wWlL~ = no_tele_into
+KFEAT:  d = runed_door
+: dgn.delayed_decay(_G, 's', 'orc corpse')
+: if you.absdepth() < 10 then
+KMONS:  D = orc perm_ench:corrosion col:white name:failed dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_orc
+KMONS:  C = orc perm_ench:corrosion col:white name:failed dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_orc
+KMONS:  A = orc col:white name:alchemist n_suf ; dagger . robe . potion of curing
+KITEM:  p = potion of degeneration q:1 w:5 / potion of curing q:1
+: else
+KMONS:  D = orc warrior perm_ench:flight col:white name:flying dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_orc
+KMONS:  C = orc knight perm_ench:haste perm_ench:might col:white name:enhanced n_suf ;
+KMONS:  A = ogre col:white name:alchemist n_suf ; potion of heal wounds
+KITEM:  p = potion of heal wounds q:3
+: end
+MAP
+........................
+.xxxxxxxxxxxxxxxxxxxxxx.
+.xWWwWwWWWWwWWWWwWWWWWx.
+.xWXXXXXXXXXXXXXXXXXXwx.
+.xwX___________X____Xwx.
+.xWX_D____C___A+_sOpX~x.
+.xwX___________X____Xlx.
+.xwX___XXXXXXXXXXXXXXLx.
+.xWX_s_XlLLLlLLlLLLlLLx.
+.xWX___XLxxxxxxxxxxxxxx.
+.xwX___XLx..............
+.xWXD.DXLx.
+.xwX___Xlx.
+.xxX_s_Xxx.
+..xX___Xx..
+..xxx_xxx..
+  ..xdx..
+  ...s...
+ENDMAP
+
+NAME:    OT_kimchi_original_04
+DEPTH:   D:2-9
+TAGS:    temple_overflow_1 temple_overflow_the_great_wyrm
+TAGS:    no_trap_gen no_item_gen no_monster_gen no_tele_into transparent
+KFEAT:   A = altar_wyrm
+RTILE:   x = dngn_crystal_green
+KFEAT:   X = clear_stone_wall
+FTILE:   "pA = floor_crystal_squares
+KFEAT:   -~o = shaft trap
+KFEAT:   ` = known shaft trap
+KFEAT:   L = lava
+FTILE:   ` = FLOOR_CRYPT
+FTILE:   - = FLOOR_LIMESTONE
+FTILE:   ~ = FLOOR_MARBLE
+FTILE:   o = FLOOR_GRASS
+KITEM:   p = any potion q:1
+MARKER:  ` = lua:fog_machine { cloud_type = "foul pestilence", pow_min = 10, \
+                              pow_max = 10, delay = 10, size = 1, \
+                              walk_dist = 0, excl_rad = 0 }
+MARKER:  ~ = lua:fog_machine { cloud_type = "salt", pow_min = 10, \
+                              pow_max = 10, delay = 10, size = 1, \
+                              walk_dist = 0, excl_rad = 0 }
+MARKER:  - = lua:fog_machine { cloud_type = "blessed fire", pow_min = 10, \
+                              pow_max = 10, delay = 10, size = 1, \
+                              walk_dist = 0, excl_rad = 0 }
+MARKER:  o = lua:fog_machine { cloud_type = "poison gas", pow_min = 10, \
+                              pow_max = 10, delay = 10, size = 1, \
+                              walk_dist = 0, excl_rad = 0 }
+MARKER:  L = lua:fog_machine { cloud_type = "flame", pow_min = 10, \
+                              pow_max = 10, delay = 10, size = 1, \
+                              walk_dist = 0, excl_rad = 0 }
+MAP
+       .......
+     .....xxx...
+  .........xxxx...
+  .xxxxxxx..xxxxx.
+ ..xxxxxxxx.xoxxx..
+ .xxx-----x.xooxxx.
+ .xx--XXXXx+xXooxx..
+..xx-XX""""""XXoxxx.
+.xxx~X""""""""Xooxx.
+.xx~~X""""""""Xooxx.
+.xx~~X"""pA"""XoLxx.
+.xx~~X""""""""XLLxx.
+.xx~`XX"""""""XLxxx.
+.xxx``X""""""XXLxxx.
+..xx``Xx+xXXXXLLxx..
+ .xxx``x.xLLLLLxxx.
+ ..xxx`x.xxxxxxxx..
+  .xxxxx..xxxxxxx.
+  ...xxxx.........
+    ...xxx.....
+      .......
+ENDMAP
+
+NAME:    OT_kimchi_original_05
+TAGS:    temple_overflow_1 temple_overflow_legion_from_beyond transparent
+TAGS:    no_trap_gen no_item_gen no_monster_gen
+DEPTH:   D:4-9
+KFEAT:   A = altar_legion
+MARKER:  1 = lua:portal_desc {gift="summon1"}
+MARKER:  2 = lua:portal_desc {gift="summon2"}
+MARKER:  3 = lua:portal_desc {gift="summon3"}
+MARKER:  4 = lua:portal_desc {gift="summon4"}
+COLOUR:  c = red
+FTILE:   A1234 = floor_demonic_red
+FTILE:   A1234 = floor_demonic_red
+FTILE:   A1234 = floor_demonic_red
+FTILE:   A1234 = floor_demonic_red
+{{
+    dgn.persist.legion_gg_granted = false
+
+    local los_marker = TriggerableFunction:new {
+      func="callback.legion_summon",
+      repeated=true
+    }
+    los_marker:add_triggerer(DgnTriggerer:new {
+      type="player_los"})
+
+    lua_marker('1', los_marker)
+    lua_marker('2', los_marker)
+    lua_marker('3', los_marker)
+    lua_marker('4', los_marker)
+}}
+MAP
+ ccccc+ccccc
+ c.........c
+cc...1.2...cc
++.....A.....+
+cc...3.4...cc
+ c.........c
+ ccccc+ccccc
 ENDMAP
 
 # This doesn't place multiple gods, but it can place one of two distinct
