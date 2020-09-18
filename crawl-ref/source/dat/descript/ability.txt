@@ -140,14 +140,6 @@ Stop Flying ability
 
 Stops flying.
 %%%%
-Evoke Fog ability
-
-Releases a thick cloud of fog to obscure vision.
-%%%%
-Evoke Ratskin ability
-
-Summons up to two dungeon rats to serve their master for a brief time.
-%%%%
 Evoke Thunderclouds ability
 
 Create a mighty thunderclouds around the user.
