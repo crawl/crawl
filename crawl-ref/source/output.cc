@@ -2632,12 +2632,10 @@ static vector<formatted_string> _get_overview_resistances(
     const int relec = player_res_electricity(calc_unid);
     string relec_string = _resist_composer("rElec", cwidth, relec) + "\n";
     //XXX
-    if (relec == 3)
-    {
-        relec_string = replace_all(relec_string, "+", "∞");
-        relec_string = replace_all(relec_string, "green", "lightgreen");
-    }
-    out += relec_string;
+    if (relec >= 3)
+        out += _infini_composer("rElec", cwidth) + "\n";
+    else
+        out += relec_string;
 
     const int rcorr = you.res_corr(calc_unid);
     out += _resist_composer("rCorr", cwidth, rcorr) + "\n";

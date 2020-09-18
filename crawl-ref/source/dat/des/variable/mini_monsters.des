@@ -6463,7 +6463,27 @@ MAP
 ...............
 ENDMAP
 
-
+# Golem armour
+#
+NAME:   unrand_golem_armour
+DEPTH:  D:$, Depths, Vaults
+TAGS:   no_monster_gen no_item_gen transparent
+WEIGHT: 3, 1 (Vaults)
+MONS:   patrolling crystal guardian
+KMONS:  G = patrolling iron golem
+KITEM:  " = Golem armour no_pickup
+KITEM:  ' = Golem gauntlets no_pickup
+KITEM:  ~ = Golem greaves no_pickup
+KITEM:  - = Golem helmet no_pickup
+MAP
+...............
+.vvvvv.@.vvvvv.
+.v.....1.....v.
+.v..."'G~-...v.
+.v.....1.....v.
+.vvvvv.@.vvvvv.
+...............
+ENDMAP
 
 # Robustness
 #
