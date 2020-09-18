@@ -6475,14 +6475,15 @@ KITEM:  " = Golem armour no_pickup
 KITEM:  ' = Golem gauntlets no_pickup
 KITEM:  ~ = Golem greaves no_pickup
 KITEM:  - = Golem helmet no_pickup
+KFEAT:  o = runed_door
 MAP
-...............
-.vvvvv.@.vvvvv.
-.v.....1.....v.
-.v..."'G~-...v.
-.v.....1.....v.
-.vvvvv.@.vvvvv.
-...............
+.......@.......
+.vvvvoo+oovvvv.
+.o.....1.....o.
+.o..."'G~-...o.
+.o.....1.....o.
+.vvvvoo+oovvvv.
+.......@.......
 ENDMAP
 
 # Robustness
