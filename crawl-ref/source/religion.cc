@@ -473,6 +473,7 @@ const vector<god_power> god_powers[NUM_GODS] =
       { 3, ABIL_AGRAPHEDE_ENCHANT_POISON,
            "enchant poison weapons" },
       { 3, "steal poison resistance from living enemies in sight" },
+      { 3, "get poison periodically when you are not poisoned" },
       { 4, ABIL_AGRAPHEDE_TRAP,
            "create explosive traps around you" },
       { 5, ABIL_AGRAPHEDE_HORNET_STING,
@@ -960,7 +961,14 @@ static void _inc_penance(int val)
 
 static void _set_penance(god_type god, int val)
 {
-    you.penance[god] = val;
+    if (you.props["wish_item"].get_bool()) {
+        mprf(MSGCH_GOD, "%s is even angrier at you despicable!", god_name(god).c_str());
+        you.props["wish_item"] = false;
+        you.penance[god] = val * 3 / 2;
+    }
+    else {
+        you.penance[god] = val;
+    }
 }
 
 static void _set_wrath_penance(god_type god)

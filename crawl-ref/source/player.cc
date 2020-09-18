@@ -1763,12 +1763,14 @@ bool player_kiku_res_torment()
 // If temp is set to false, temporary sources or resistance won't be counted.
 int player_res_poison(bool calc_unid, bool temp, bool items)
 {
+    int rp = 0;
     if (have_passive(passive_t::agraphede_anti_poison_resist)) {
-        return 0;
+        //skip all rp++;
     }
+    else {
 
-    switch (you.undead_state(temp))
-    {
+        switch (you.undead_state(temp))
+        {
         case US_ALIVE:
             break;
         case US_HUNGRY_DEAD: //ghouls
@@ -1778,62 +1780,62 @@ int player_res_poison(bool calc_unid, bool temp, bool items)
             if (!you.vampire_alive) // XXX: && temp?
                 return 3;
             break;
+        }
+
+        if (you.is_nonliving(temp)
+            || temp && get_form()->res_pois() == 3
+            || items && player_equip_unrand(UNRAND_OLGREB)
+            || temp && you.duration[DUR_DIVINE_STAMINA])
+        {
+            return 3;
+        }
+
+
+        if (items)
+        {
+            // rings of poison resistance
+            rp += you.wearing(EQ_RINGS, RING_POISON_RESISTANCE, calc_unid);
+
+            // Staves
+            rp += you.wearing(EQ_STAFF, STAFF_POISON, calc_unid);
+
+            // ego armour:
+            rp += you.wearing_ego(EQ_ALL_ARMOUR, SPARM_POISON_RESISTANCE);
+
+            // body armour:
+            const item_def* body_armour = you.slot_item(EQ_BODY_ARMOUR);
+            if (body_armour)
+                rp += armour_type_prop(body_armour->sub_type, ARMF_RES_POISON);
+
+            // rPois+ artefacts
+            rp += you.scan_artefacts(ARTP_POISON, calc_unid);
+
+            // dragonskin cloak: 0.5 to draconic resistances
+            if (calc_unid && player_equip_unrand(UNRAND_DRAGONSKIN) && coinflip())
+                rp++;
+        }
+
+        // mutations:
+        rp += you.get_mutation_level(MUT_POISON_RESISTANCE, temp);
+        rp += you.get_mutation_level(MUT_SLIMY_GREEN_SCALES, temp) == 3 ? 1 : 0;
+
+        if (temp)
+        {
+            // potions/cards:
+            if (you.duration[DUR_RESISTANCE])
+                rp++;
+
+            if (get_form()->res_pois() > 0)
+                rp++;
+        }
+        // Cap rPois at + before vulnerability effects are applied
+        // (so carrying multiple rPois effects is never useful)
+        rp = min(1, rp);
     }
-
-    if (you.is_nonliving(temp)
-        || temp && get_form()->res_pois() == 3
-        || items && player_equip_unrand(UNRAND_OLGREB)
-        || temp && you.duration[DUR_DIVINE_STAMINA])
-    {
-        return 3;
-    }
-
-    int rp = 0;
-
-    if (items)
-    {
-        // rings of poison resistance
-        rp += you.wearing(EQ_RINGS, RING_POISON_RESISTANCE, calc_unid);
-
-        // Staves
-        rp += you.wearing(EQ_STAFF, STAFF_POISON, calc_unid);
-
-        // ego armour:
-        rp += you.wearing_ego(EQ_ALL_ARMOUR, SPARM_POISON_RESISTANCE);
-
-        // body armour:
-        const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR);
-        if (body_armour)
-            rp += armour_type_prop(body_armour->sub_type, ARMF_RES_POISON);
-
-        // rPois+ artefacts
-        rp += you.scan_artefacts(ARTP_POISON, calc_unid);
-
-        // dragonskin cloak: 0.5 to draconic resistances
-        if (calc_unid && player_equip_unrand(UNRAND_DRAGONSKIN) && coinflip())
-            rp++;
-    }
-
-    // mutations:
-    rp += you.get_mutation_level(MUT_POISON_RESISTANCE, temp);
-    rp += you.get_mutation_level(MUT_SLIMY_GREEN_SCALES, temp) == 3 ? 1 : 0;
-
-    if (temp)
-    {
-        // potions/cards:
-        if (you.duration[DUR_RESISTANCE])
-            rp++;
-
-        if (get_form()->res_pois() > 0)
-            rp++;
-    }
+    
 
     if (you.species == SP_MELIAI)
         rp--;
-
-    // Cap rPois at + before vulnerability effects are applied
-    // (so carrying multiple rPois effects is never useful)
-    rp = min(1, rp);
 
     if (temp)
     {
@@ -3347,6 +3349,10 @@ void level_change(bool skip_attribute_increase)
                 break;
 
             case SP_ANGEL:
+                if (you.experience_level == 7 && you.char_class == JOB_COLLECTOR)
+                {
+                    mprf(MSGCH_INTRINSIC_GAIN, "You're ready to read the scroll of wish.");
+                }
                 if (you.experience_level == 15)
                 {
                     mprf(MSGCH_WARN, "You feel the vile force of evil gods crawling around your presence.");
@@ -3370,6 +3376,12 @@ void level_change(bool skip_attribute_increase)
                 }
                 break;
 
+            case SP_DEMIGOD:
+                if (you.experience_level == 7 && you.char_class == JOB_COLLECTOR)
+                {
+                    mprf(MSGCH_INTRINSIC_GAIN, "You're ready to read the scroll of wish.");
+                }
+                break;
             default:
                 break;
             }
@@ -4762,8 +4774,12 @@ void handle_player_poison(int delay)
 
     // Transforming into a form with no metabolism merely suspends the poison
     // but doesn't let your body get rid of it.
-    if (you.is_nonliving() || (you.undead_state() && !you.vampire_alive))
+    if ((you.is_nonliving() || (you.undead_state() && !you.vampire_alive))
+        && !have_passive(passive_t::agraphede_anti_poison_resist))
+    {
         return;
+    }
+
 
     // Other sources of immunity (Zin, staff of Olgreb) let poison dissipate.
     bool do_dmg = (player_res_poison() >= 3 ? false : true);

@@ -664,7 +664,8 @@ i-amnesia SCR_AMNESIA
 # Don't forget to update SCR_ID_LAST
 i-curse-jewellery SCR_CURSE_JEWELLERY
 %back scroll-cyan
-i-acquirement SCR_COLLECTION SCR_ID_LAST
+i-acquirement SCR_COLLECTION
+i-acquirement SCR_WISH SCR_ID_LAST
 %back none
 
 ##################OBJ_JEWELLERY

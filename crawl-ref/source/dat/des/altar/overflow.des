@@ -184,6 +184,32 @@ function species_mock(e)
     e.kmons("1 = tyrant leech")
   elseif you.race() == "Vine Stalker" then
     e.kmons("1 = thorn hunter")
+  elseif you.race() == "Meliai" then
+    e.kmons("1 = killer bee")
+  elseif you.race() == "Crustacean" then
+    e.kmons("1 = apocalypse crab")
+  elseif you.race() == "Homunculus" then
+    e.kmons("1 = iron golem")
+  elseif you.race() == "Hydra" then
+    e.kmons("1 = one-headed hydra skeleton")
+  elseif you.race() == "Lesser Lich" then
+    e.kmons("1 = necromancer simulacrum")
+  elseif you.race() == "Lava Orc" then
+    e.kmons("1 = fire bat")
+  elseif you.race() == "Mantis" then
+    e.kmons("1 = giant cockroach")
+  elseif you.race() == "Mountain Dwarf" then
+    e.kmons("1 = dwarf zombie")
+  elseif you.race() == "Wight" then
+    e.kmons("1 = human skeleton")
+  elseif you.race() == "Sparkborn" then
+    e.kmons("1 = spectral raiju")
+  elseif you.race() == "High Elf" then
+    e.kmons("1 = insubstantial wisp")
+  elseif you.race() == "Djinni" then
+    e.kmons("1 = hellion")
+  elseif you.race() == "Angel" then
+    e.kmons("1 = spectral slave")
   else
     e.kmons("1 = spectral ugly thing")
   end
@@ -3176,6 +3202,11 @@ MAP
   xxx  @  xxx
 ENDMAP
 
+### Kimchi_Master Origanal Gods altars
+### It is recommended that new gods' overflow temples
+### are coded below.
+######################################################
+
 NAME:    OT_kimchi_original_01
 DEPTH:   D:2-9
 TAGS:    temple_overflow_2 temple_overflow_the_great_wyrm temple_overflow_agraphede
@@ -3225,6 +3256,29 @@ ccPp.pPcc
   cp.pc
    p.p
     @
+ENDMAP
+
+NAME:   UK_agraphede_webbed
+TAGS:   temple_overflow_1 temple_overflow_agraphede
+DEPTH:  D:3-9
+TILE:   x = WALL_BRICK_VINES
+KFEAT:  _ = altar_agraphede
+KFEAT:  n = known web trap / .
+: if you.absdepth() < 9 then
+KMONS:  _ = killer bee
+: else
+KMONS:  _ = meliai
+: end
+MAP
+.........
+.xxxnxxx.
+.xxnnnxx.
+.xnnnnnx.
+.nnn_nnn.
+.xnnnnnx.
+.xxnnnxx.
+.xxxnxxx.
+.........
 ENDMAP
 
 NAME:    OT_kimchi_original_03

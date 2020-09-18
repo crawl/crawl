@@ -18,6 +18,7 @@
 #include "artefact.h"
 #include "art-enum.h"
 #include "colour.h"
+#include "dbg-util.h"
 #include "describe.h"
 #include "dungeon.h"
 #include "food.h"
@@ -2123,4 +2124,170 @@ bool artefact_acquirement_menu()
     acq_menu.show();
 
     return !you.props.exists(COLLECTOR_ITEMS_KEY);
+}
+
+bool scroll_of_wish_menu()
+{
+    ASSERT(!crawl_state.game_is_arena());
+
+    if ((you.species == SP_DEMIGOD || you.species == SP_ANGEL) 
+        && you.experience_level < 7) {
+        mpr("You need level 7 to read.");
+        return false;
+    }
+    else if(you.religion == GOD_NO_GOD){
+        mpr("You should wish to God for this scroll.");
+        return false;
+    }
+
+    char buf[1024];
+    mprf(MSGCH_PROMPT, "Enter name of fixdart item (type <white>random</white> for random fixdart): ");
+    if (cancellable_get_line_autohist(buf, sizeof buf) || !*buf)
+    {
+        canned_msg(MSG_OK);
+        return false;
+    }
+
+    if (buf[0] != '\0')
+    {
+        string buf_lwr = lowercase_string(buf);
+        int cheating_item = -1;
+        int special_wanted = -1;
+        int num = 0;
+        int islot;
+
+        if (strcmp(buf, "random") == 0) {
+            int max_try = 1000;
+            while (max_try-- > 0) {
+                //랜덤 아이템 생성하기
+                //치팅아이템, 신이 싫어하는 아이템등 제외
+                int random_select = random2(NUM_UNRANDARTS);
+
+                const int              index = random_select + UNRAND_START;
+                const unrandart_entry* entry = get_unrand_entry(index);
+
+                // Skip dummy entries.
+                if (entry->base_type == OBJ_UNASSIGNED)
+                    continue;
+                if (index == UNRAND_WOE
+                    || index == UNRAND_AMULET_OF_WOE) {
+                    continue;
+                }
+                int temp_slot = items(true, entry->base_type, 0, 0, -index, -1);
+                item_def& temp_item = mitm[temp_slot];
+                if (temp_slot == NON_ITEM)
+                {
+                    destroy_item(temp_item, true);
+                    continue;
+                }
+                if (is_useless_item(temp_item)) {
+                    destroy_item(temp_item, true);
+                    continue;
+                }
+                if (god_hates_item(temp_item)) {
+                    destroy_item(temp_item, true);
+                    return false;
+                }
+                if (!is_artefact(temp_item) || is_random_artefact(temp_item))
+                {
+                    destroy_item(temp_item, true);
+                    continue;
+                }
+                destroy_item(temp_item, true);
+                special_wanted = random_select;
+                break;
+            }
+        }
+        else {
+            for (int i = 0; i < NUM_UNRANDARTS; ++i)
+            {
+                const int              index = i + UNRAND_START;
+                const unrandart_entry* entry = get_unrand_entry(index);
+
+                // Skip dummy entries.
+                if (entry->base_type == OBJ_UNASSIGNED)
+                    continue;
+
+                if (index == UNRAND_WOE || index == UNRAND_AMULET_OF_WOE) {
+                    cheating_item = i;
+                    continue;
+                }
+
+                size_t pos = lowercase_string(entry->name).find(buf_lwr);
+                if (pos != string::npos)
+                {
+                    // earliest match is the winner
+                    mprf("%s ", entry->name);
+                    special_wanted = i;
+                    num++;
+                }
+            }
+        }
+
+        if (special_wanted == -1) {
+            if (cheating_item != -1) {
+                int index = cheating_item + UNRAND_START;
+                const unrandart_entry* entry = get_unrand_entry(index);
+                mprf(MSGCH_WARN, "%s is cheating!", entry->name);
+                return false;
+            }
+
+            mprf(MSGCH_PROMPT, "Cannot find artefact %s", buf);
+            return false;
+        }
+        if (num > 1) {
+            mprf(MSGCH_PROMPT, "Which of these items are you going to make?");
+            return false;
+        }
+
+        int index = special_wanted + UNRAND_START;
+        const unrandart_entry* entry = get_unrand_entry(index);
+
+        string prompt = "Wish ";
+        prompt += entry->name;
+        prompt += "? (Y/N)";
+        if (!yesno(prompt.c_str(), false, 'N', false))
+        {
+            canned_msg(MSG_OK);
+            return false;
+        }
+
+        islot = items(true, entry->base_type, 0, 0, -index, -1);
+        if (islot == NON_ITEM)
+        {
+            mprf(MSGCH_ERROR, "Failed to generate item for '%s'",
+                entry->name);
+            return false;
+        }
+        item_def& item = mitm[islot];
+
+        if (god_hates_item(item)) {
+            mprf(MSGCH_ERROR, "%s disapproves of the use of such an item.", god_name(you.religion).c_str());
+            destroy_item(item, true); 
+            return false;
+        }
+
+        set_ident_flags(item, ISFLAG_IDENT_MASK);
+        if (you.religion == GOD_ASHENZARI) {
+            do_curse_item(item);
+        }
+        if (!is_artefact(item) || is_random_artefact(item))
+        {
+            // for now, staves are ok...
+            mprf(MSGCH_ERROR,
+                "Failed to create %s... Perhaps already created?",
+                entry->name);
+            destroy_item(item, true);
+            return false;
+        }
+        else
+        {
+
+            simple_god_message(" says: Use this gift wisely!");
+        }
+        move_item_to_grid(&islot, you.pos());
+        you.props["wish_item"] = true;
+        return true;
+    }
+    return false;
 }

@@ -53,7 +53,7 @@ mutations:
   9:
     MUT_TENGU_FLIGHT: 1
 fake_mutations:
-  - long: You instinctive leap towards the enemy.
+  - long: You instinctively leap towards the enemy.
     short: leap attack
 recommended_jobs:
   - JOB_FIGHTER

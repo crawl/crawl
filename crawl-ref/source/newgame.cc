@@ -2481,7 +2481,7 @@ static bool _choose_god(newgame_def& ng, newgame_def& ng_choice)
 static bool _choose_job_specific(newgame_def& ng, newgame_def& ng_choice)
 {
     if (ng.job != JOB_MELTED_KNIGHT && ng.job != JOB_ICE_ELEMENTALIST && ng.job != JOB_CARAVAN
-        && (ng.job != JOB_ARTIFICER && !(ng.species == SP_FELID || ng.species == SP_HYDRA)))
+        && !(ng.job == JOB_ARTIFICER && (ng.species != SP_FELID && ng.species != SP_HYDRA)))
         return true;
 
     auto title_hbox = make_shared<Box>(Widget::HORZ);

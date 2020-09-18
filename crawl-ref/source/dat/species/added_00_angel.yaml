@@ -54,13 +54,14 @@ mutations:
   10:
     MUT_TENGU_FLIGHT: 1
 fake_mutations:
-  - long: You have a halo.
+  - long: You have a halo surrounding you.
     short: halo
   - long: You do not eat.
     short: no food
-  - long: You can not abandon your faith except for the conversion of good gods.
+  - long: You can not abandon your faith except for the conversion between good gods.
     short: faithfulness
-  - long: When you get contamination, you also get a drain.
+  - long: Whenever you get contaminated, you also get drained.
+    short: contamination causes drain
 recommended_jobs:
   - JOB_FIGHTER
   - JOB_GLADIATOR

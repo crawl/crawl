@@ -1103,7 +1103,7 @@ NAME:    jpeg_temple_island
 TAGS:    no_rotate no_pool_fixup
 PLACE:   Temple
 ORIENT:  encompass
-WEIGHT:  10
+WEIGHT:  5
 MONS:    bush, plant
 SUBST:   W = W:30 w, ~ = ':20 W
 NSUBST:  ' = 5:t / 7:1 / 4:2 / *:'
@@ -1246,7 +1246,7 @@ ENDMAP
 NAME:   minmay_temple_curvy_loop
 TAGS:   no_rotate no_pool_fixup
 PLACE:  Temple
-WEIGHT: 10
+WEIGHT: 5
 ORIENT: encompass
 MONS:   plant
 SUBST:  y : Ww, z : Ww, Y : W., Z : W.
@@ -1302,7 +1302,7 @@ NAME:   minmay_temple_bridge_abc
 TAGS:   no_pool_fixup
 PLACE:  Temple
 ORIENT: encompass
-WEIGHT: 10
+WEIGHT: 5
 SUBST:  A : TUV
 : local wrnd = crawl.random2(9)
 : if wrnd == 0 then
@@ -1397,7 +1397,7 @@ ENDMAP
 NAME:    nicolae_temple_figure_zero
 PLACE:   Temple
 ORIENT:  encompass
-WEIGHT:  10
+WEIGHT:  5
 SHUFFLE: Cc / Dd
 SUBST:   cD = B, Cd = .
 MAP
@@ -1440,7 +1440,7 @@ NAME:    dshaligram_water_room_temple
 TAGS:    no_pool_fixup no_rotate
 PLACE:   Temple
 ORIENT:  encompass
-WEIGHT:  10
+WEIGHT:  7
 MAP
 ccccccccccccccccccccccccccccccccccccccccccccccccccc
 cwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwc
@@ -1533,7 +1533,7 @@ NAME:    cyrus_circular_temple
 TAGS:    no_rotate
 PLACE:   Temple
 ORIENT:  encompass
-WEIGHT:  10
+WEIGHT:  7
 SUBST:   X : xc.
 MAP
          ccccccccccccc
@@ -1744,7 +1744,7 @@ ENDMAP
 NAME:    nicolae_temple_great_sept
 PLACE:   Temple
 ORIENT:  encompass
-WEIGHT:  5
+WEIGHT:  7
 # Sadly, console doesn't have colors for orange and indigo,
 # so brown and cyan will have to do.
 KFEAT:   roygbiv = n
@@ -1905,7 +1905,7 @@ ENDMAP
 NAME:    dpeg_five_rooms_temple
 TAGS:    no_rotate
 PLACE:   Temple
-WEIGHT:  10
+WEIGHT:  15
 ORIENT:  encompass
 SUBST:   X : GUT
 MAP
@@ -1947,7 +1947,7 @@ NAME:    eino_temple_scatter_basement
 TAGS:    no_rotate
 PLACE:   Temple
 ORIENT:  encompass
-WEIGHT:  10
+WEIGHT:  12
 SHUFFLE: CD, ab, cde, fgh, ij, klm, no, pq, rs, tu, vw, yz, @&
 SUBST:   C = B, D = ., a : x., c : x., f : x., i : x., k : x.
 SUBST:   n : x., p : x., r : x., t : x., v : x., y : x., @ : x.
@@ -1992,7 +1992,7 @@ ENDMAP
 NAME:    eino_temple_rhombus
 PLACE:   Temple
 ORIENT:  encompass
-WEIGHT:  10
+WEIGHT:  12
 SHUFFLE: defghij, klmnopq, rs / rs / sr, tu / tu / ut
 SUBST:   deklrt = x, f : x.., m : x.., ghijnopqsu = .
 SUBST:   W : xx., X : xx., Y : xx., Z : xx.
@@ -2048,7 +2048,7 @@ ENDMAP
 NAME:    minmay_crystal_spiral_temple
 PLACE:   Temple
 ORIENT:  encompass
-WEIGHT:  5
+WEIGHT:  10
 MAP
                   bbbbbbb
                   b.....b
@@ -2099,7 +2099,7 @@ ENDMAP
 NAME:    nicolae_temple_elliptical
 PLACE:   Temple
 ORIENT:  encompass
-WEIGHT:  10
+WEIGHT:  12
 SHUFFLE: G{
 NSUBST:  { = 1:{ / *:G
 SUBST:   G : GT, c : ccccvb, d : cccvbxm
@@ -2142,7 +2142,7 @@ NAME:   lightli_temple_of_artemis
 TAGS:   no_pool_fixup
 PLACE:  Temple
 ORIENT: encompass
-WEIGHT: 5
+WEIGHT: 10
 KFEAT:  ~ = floor
 MARKER: d = lua:fog_machine { cloud_type = "flame", pow_min = 100, \
                               pow_max = 100, delay = 1, start_clouds = 1, \
@@ -2182,7 +2182,7 @@ NAME:    regret_index_temple_chain_breaker
 TAGS:    no_rotate
 PLACE:   Temple
 ORIENT:  encompass
-WEIGHT:  5
+WEIGHT:  10
 SHUFFLE: hi, qrs / qrs / rqs / rsq, xyz / xyz / yxz / yzx, QR, YZ
 SUBST:   hqx = v, i : v.., j : vv., k : vv.
 SUBST:   r : v.., y : v.., szRZ = ., Q : v..., Y : v...
@@ -2219,7 +2219,7 @@ NAME:    regret_index_temple_mists
 TAGS:    no_rotate no_pool_fixup
 PLACE:   Temple
 ORIENT:  encompass
-WEIGHT:  5
+WEIGHT:  10
 KFEAT:   F = w
 SHUFFLE: HIJKLMN
 SUBST:   HIJKL = B, M : GTUtx, N : GTUtx, m : nwW, o : nwW
@@ -2342,7 +2342,7 @@ NAME:    minmay_crystal_snake_temple
 TAGS:    no_rotate
 PLACE:   Temple
 ORIENT:  encompass
-WEIGHT:  5
+WEIGHT:  10
 NSUBST:  T = 1:{ / *:T
 MAP
               bbb   bbb   bbb
@@ -2393,7 +2393,7 @@ ENDMAP
 # 21 gods
 NAME:   roderic_octagonal_lattice_temple
 PLACE:  Temple
-WEIGHT: 5
+WEIGHT: 8
 ORIENT: encompass
 TAGS:   no_rotate
 SUBST:  ' : ......b
@@ -2438,7 +2438,7 @@ NAME:    grunt_wide_crystal_templ
 PLACE:   Temple
 TAGS:    no_rotate
 ORIENT:  encompass
-WEIGHT:  5
+WEIGHT:  8
 MAP
                 bbbbb
                 b...b
@@ -2534,7 +2534,7 @@ NAME:    regret_index_temple_sigil_plot
 TAGS:    no_cloud_gen
 PLACE:   Temple
 ORIENT:  encompass
-WEIGHT:  5
+WEIGHT:  8
 NSUBST:  A = 1:{ / *:B
 SHUFFLE: -G / -G / ~~, CDE / CDE / LLL, CDE
 SUBST:   - = ., ~ = c, ' : VGc...., ' : VGc....

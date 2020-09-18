@@ -288,6 +288,8 @@ enum class passive_t
     agraphede_poison_deprived,
     /// Worms come out automatically
     agraphede_create_worm,
+    // alway poison passive
+    agraphede_posion_passive,
 };
 
 enum ru_interference

@@ -418,6 +418,7 @@ enum scroll_type
     SCR_CURSE_JEWELLERY,
     SCR_COLLECTION,
 #endif
+    SCR_WISH,
     NUM_SCROLLS
 };
 

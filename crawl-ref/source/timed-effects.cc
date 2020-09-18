@@ -439,6 +439,23 @@ static void _evolve(int /*time_delta*/)
         }
 }
 
+static void _agraphede_poison_passaive(int /*time_delta*/)
+{
+    if (have_passive(passive_t::agraphede_posion_passive))
+    {
+        if (!you.duration[DUR_POISONING]
+            && you.hp > you.hp_max / 2) {
+            you.duration[DUR_POISONING] = (you.hp_max * 10) * 15; //15%
+            if (you.species == SP_DEEP_DWARF &&
+                you.duration[DUR_POISONING] > 25000) {
+                you.duration[DUR_POISONING] = 25000;
+            }
+           
+        }
+    }
+}
+
+
 // Get around C++ dividing integers towards 0.
 static int _div(int num, int denom)
 {
@@ -484,6 +501,7 @@ static struct timed_effect timed_effects[] =
 #if TAG_MAJOR_VERSION == 34
     { nullptr,                         0,     0, false },
 #endif
+    { _agraphede_poison_passaive,    100,   300, false },
 };
 
 // Do various time related actions...
