@@ -109,6 +109,7 @@ void try_to_spawn_mercenary(int merc_type)
           default:
               break;
           }
+          mon->props[CUSTOM_SPELLS_KEY] = true;
       }
     }
 
@@ -831,7 +832,10 @@ static bool _caravan_gift_items_to(monster* mons, int item_slot)
                 || is_unrandom_artefact(gift, UNRAND_BATTLE))
             {
                 if (set_spell_witch(mons, &gift, false) == false)
+                {
+                    mons->props[CUSTOM_SPELLS_KEY] = true;
                     return false;
+                }
             }
             else
             {

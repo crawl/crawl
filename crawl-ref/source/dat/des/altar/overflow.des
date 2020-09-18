@@ -115,17 +115,32 @@ function callback.legion_summon(data, triggerable, triggerer, marker, ev)
     crawl.god_speaks("Legion from beyond", '"Legion from beyond roars: The Legion needs leader! The Legion needs control!"')
     dgn.persist.legion_gg_heard = true
   elseif not dgn.persist.legion_gg_granted and you.god() == "Legion from beyond" then
-    local pos1 = dgn.find_marker_positions_by_prop("gift", "summon1")
+    local pos1 = dgn.find_marker_positions_by_prop("spot", "summon1")
     dgn.create_monster(pos1[1].x, pos1[1].y, "generate_awake patrolling att:good_neutral crimson imp")
-    local pos2 = dgn.find_marker_positions_by_prop("gift", "summon2")
+    local pos2 = dgn.find_marker_positions_by_prop("spot", "summon2")
     dgn.create_monster(pos2[1].x, pos2[1].y, "generate_awake patrolling att:good_neutral white imp")
-    local pos3 = dgn.find_marker_positions_by_prop("gift", "summon3")
+    local pos3 = dgn.find_marker_positions_by_prop("spot", "summon3")
     dgn.create_monster(pos3[1].x, pos3[1].y, "generate_awake patrolling att:good_neutral shadow imp")
-    local pos4 = dgn.find_marker_positions_by_prop("gift", "summon4")
+    local pos4 = dgn.find_marker_positions_by_prop("spot", "summon4")
     dgn.create_monster(pos4[1].x, pos4[1].y, "generate_awake patrolling att:good_neutral iron imp")
     crawl.god_speaks("Legion from beyond", '"Legion from beyond roars: Lead the Legion, our master!"')
 
     dgn.persist.legion_gg_granted = true
+  end
+end
+
+function callback.legion_arena(data, triggerable, triggerer, marker, ev)
+  if not dgn.persist.legion_gg_notice and you.god() == "Legion from beyond" then
+    dgn.persist.legion_gg_notice = true
+  elseif not dgn.persist.legion_gg_notice and you.god() ~= "Legion from beyond" then
+    local pos_mon1 = dgn.find_marker_positions_by_prop("frenzy", "ugly")
+    dgn.create_monster(pos_mon1[1].x, pos_mon1[1].y, "generate_awake att:neutral ugly thing perm_ench:insane")
+    local pos_mon2 = dgn.find_marker_positions_by_prop("frenzy", "dragon")
+    dgn.create_monster(pos_mon2[1].x, pos_mon2[1].y, "generate_awake att:neutral fire dragon perm_ench:insane")
+    local pos_mon3 = dgn.find_marker_positions_by_prop("frenzy", "golem")
+    dgn.create_monster(pos_mon3[1].x, pos_mon3[1].y, "generate_awake att:neutral iron golem perm_ench:insane")
+    crawl.god_speaks("Legion from beyond", 'You see the unbridled forces left uncontrolled.')
+    dgn.persist.legion_gg_notice = true
   end
 end
 
@@ -3400,14 +3415,11 @@ TAGS:    temple_overflow_1 temple_overflow_legion_from_beyond transparent
 TAGS:    no_trap_gen no_item_gen no_monster_gen
 DEPTH:   D:4-9
 KFEAT:   A = altar_legion
-MARKER:  1 = lua:portal_desc {gift="summon1"}
-MARKER:  2 = lua:portal_desc {gift="summon2"}
-MARKER:  3 = lua:portal_desc {gift="summon3"}
-MARKER:  4 = lua:portal_desc {gift="summon4"}
+MARKER:  1 = lua:portal_desc {spot="summon1"}
+MARKER:  2 = lua:portal_desc {spot="summon2"}
+MARKER:  3 = lua:portal_desc {spot="summon3"}
+MARKER:  4 = lua:portal_desc {spot="summon4"}
 COLOUR:  c = red
-FTILE:   A1234 = floor_demonic_red
-FTILE:   A1234 = floor_demonic_red
-FTILE:   A1234 = floor_demonic_red
 FTILE:   A1234 = floor_demonic_red
 {{
     dgn.persist.legion_gg_granted = false
@@ -3432,6 +3444,45 @@ cc...1.2...cc
 cc...3.4...cc
  c.........c
  ccccc+ccccc
+ENDMAP
+
+NAME:    UK_legion_uncontrolledarena
+TAGS:    temple_overflow_1 temple_overflow_legion_from_beyond
+TAGS:    no_trap_gen no_item_gen no_monster_gen no_tele_into transparent
+DEPTH:   D:3-9
+KFEAT:  _ = altar_legion
+KFEAT:  S = malign_gateway
+TILE:   x = dngn_transparent_wall_darkgray
+TILE:   c = wall_stone_dark
+FTILE:  "`G- = floor_hall
+MARKER: " = lua:portal_desc {frenzy="ugly"}
+MARKER: ` = lua:portal_desc {frenzy="dragon"}
+MARKER: G = lua:portal_desc {frenzy="golem"}
+{{
+    dgn.persist.legion_gg_notice = false
+
+    local los_marker = TriggerableFunction:new {
+      func="callback.legion_arena",
+      repeated=true
+    }
+    los_marker:add_triggerer(DgnTriggerer:new {
+      type="player_los"})
+
+    lua_marker('"', los_marker)
+    lua_marker('`', los_marker)
+    lua_marker('G', los_marker)
+}}
+MAP
+   xxxxx
+  xxcccxx
+ xxccSccxx
+xxcc-"-ccxx
+xcc-----ccx
+xc`-----Gcx
+xcnnnnnnncx
+xc..._...cx
+xcccc@ccccx
+xxxxx+xxxxx
 ENDMAP
 
 # This doesn't place multiple gods, but it can place one of two distinct
