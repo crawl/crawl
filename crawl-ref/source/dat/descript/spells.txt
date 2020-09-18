@@ -112,7 +112,7 @@ Beastly Appendage spell
     end
 }}
 
-While transformed, auxilliary armour on the affected body parts is melded.
+While transformed, auxiliary armour on the affected body parts is melded.
 %%%%
 Berserker Rage spell
 
@@ -317,7 +317,7 @@ exploding.
 %%%%
 Conjure Flame spell
 
-Create a cloud of magically sustained fire at the caster's feet. The fire takes
+Creates a cloud of magically sustained fire at the caster's feet. The fire takes
 a moment to begin burning with vigor and in its fragile initial state is easily
 smothered by either the caster or a wandering monster. Re-casting the spell
 will bring the fire fully to life, but will burn the caster.
@@ -928,7 +928,7 @@ living creatures it touches.
 %%%%
 Might Other spell
 
-Significally increases a nearby ally's damage dealt in melee.
+Significantly increases a nearby ally's damage dealt in melee.
 %%%%
 Might spell
 

@@ -63,7 +63,7 @@ Transforms the user into a swift-moving vampire bat, increasing evasion but
 substantially weakening melee attacks. The transformation drains the user's
 attributes.
 
-While tranformed, any equipped weapons, armour and rings are melded, and the
+While transformed, any equipped weapons, armour and rings are melded, and the
 user becomes unable to cast spells.
 %%%%
 Exsanguinate ability

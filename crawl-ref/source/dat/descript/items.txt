@@ -307,7 +307,7 @@ clouds, acidic fog and clouds of negative energy become available.
 %%%%
 corpse
 
-A corpse. Useful only to practicioners of necromancy.
+A corpse. Useful only to practitioners of necromancy.
 %%%%
 crystal plate armour
 
