@@ -236,12 +236,6 @@ You are divinely vitalised, providing protection from poison, confusion,
 petrification, and sickness, and increasing and sustaining your strength,
 intelligence and dexterity.
 %%%%
-RoF status
-
-You are surrounded by a ring of flame clouds, increasing the power of your fire
-magic and giving protection from fire but also making you much more susceptible
-to cold.
-%%%%
 Will/2 status
 
 Your willpower is weaker, making you vulnerable to many magical effects.
@@ -353,24 +347,10 @@ You are beseeching Elyvilon to save your life. If you are mortally wounded, the
 Healer may undo the killing blow. Killing others while asking for divine
 protection will cause penance.
 %%%%
-Dark status
-
-You are dimming the dungeon around you, reducing the range of vision.
-%%%%
-Shroud status
-
-You are bending space around yourself, providing protection from some attacks
-in melee.
-%%%%
 Disjoin status
 
 You are destabilizing space around yourself, causing nearby monsters to be
 randomly blinked away from you.
-%%%%
-Infus status
-
-Your melee attacks are infused with magical energy, and will drain your
-reserves of magic to deal additional damage whenever an enemy is hit.
 %%%%
 Slay status
 
@@ -421,11 +401,6 @@ be issued again for a short time.
 
 You have recently called forth dragons, and cannot recast Dragon's Call for a
 short duration.
-%%%%
-Abj status
-
-You are reducing the remaining duration of any nearby hostile summoned
-creatures.
 %%%%
 -Potion status
 
