@@ -208,7 +208,7 @@ off of trunk at the time of release, and will receive mainly bugfix patches
 from that point. Online players play both stable and trunk, and offline
 players predominantly play stable.
 
-### After your contribution as been accepted
+### After your contribution has been accepted
 
 Firstly, thank you for helping to improve and expand Crawl! After your
 patch is included, then it becomes part of Crawl, and as such will come under

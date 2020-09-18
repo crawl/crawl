@@ -354,7 +354,7 @@ attacks which increase every time you slay a foe in combat.
 %%%%
 Toxic status
 
-You are radiating toxic energy, and will continously inflict poison on all
+You are radiating toxic energy, and will continuously inflict poison on all
 nearby creatures.
 %%%%
 Recite status
