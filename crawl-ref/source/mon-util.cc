@@ -1987,6 +1987,13 @@ mon_attack_def mons_attack_spec(const monster& m, int attk_number,
     if (mon.type == MONS_NAMELESS && attk_number == 0)
         attk.damage = mon.get_hit_dice() * 2;
 
+    // Boulder beetles get double attack damage and a normal 'hit' attack.
+    if (mon.has_ench(ENCH_ROLLING) && attk_number == 0)
+    {
+        attk.type = AT_HIT;
+        attk.damage *= 2;
+    }
+
     if (!base_flavour)
     {
         // TODO: randomization here is not the greatest way of doing any of

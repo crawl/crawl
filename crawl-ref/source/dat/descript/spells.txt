@@ -1092,6 +1092,12 @@ Calls a surge of power from the earth, striking an enemy within the caster's
 sight. The spell cascades through nearby constructs, growing in strength with
 each one standing near the target.
 %%%%
+Roll spell
+
+Roll into a ball, granting the boulder beetle tremendous speed as well as
+double melee damage. The roll may only be performed when at distance from a
+foe, and the beetle will always unroll after an attempted roll attack.
+%%%%
 Sandblast spell
 
 Consumes a stone to create a short blast of high-velocity rock shards. Its

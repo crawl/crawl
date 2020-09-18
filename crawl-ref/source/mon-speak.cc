@@ -443,6 +443,10 @@ bool mons_speaks(monster* mons)
         if (mons->berserk_or_insane())
             return false;
 
+        // Rolling beetles shouldn't twitch antennae
+        if (mons->has_ench(ENCH_ROLLING))
+            return false;
+
         // Charmed monsters aren't too expressive.
         if (mons->has_ench(ENCH_CHARM) && !one_chance_in(3))
             return false;

@@ -1801,6 +1801,11 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
                 return TILEP_MONS_BUSH_BURNING;
             return base;
 
+        case MONS_BOULDER_BEETLE:
+            return mon.is(MB_ROLLING)
+                   ? _mon_random(TILEP_MONS_BOULDER_BEETLE_ROLLING, mon.number)
+                   : base;
+
         case MONS_DANCING_WEAPON:
         {
             // Use item tile.

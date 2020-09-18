@@ -100,8 +100,8 @@ enum enchant_type
     ENCH_BREATH_WEAPON,  // timer for breathweapon/similar spam
 #if TAG_MAJOR_VERSION == 34
     ENCH_DEATHS_DOOR,
-    ENCH_ROLLING,        // Boulder Beetle in ball form
 #endif
+    ENCH_ROLLING,        // Boulder Beetle in ball form
     ENCH_OZOCUBUS_ARMOUR,
     ENCH_WRETCHED,       // An abstract placeholder for monster mutations
     ENCH_SCREAMED,       // Starcursed scream timer
