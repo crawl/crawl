@@ -92,11 +92,8 @@ function ch_stash_search_annotate_item(it)
       ["air"] = "rElec",
       ["cold"] = "rC+",
       ["death"] = "rN+",
-      ["energy"] = "channel",
       ["fire"] = "rF+",
-      ["poison"] = "rPois",
-      ["power"] = "MP+",
-      ["wizardry"] = "Wiz"
+      ["poison"] = "rPois"
     }
     if props[it.subtype()] then
       annot = annot .. "{" .. props[it.subtype()] .. "} "
