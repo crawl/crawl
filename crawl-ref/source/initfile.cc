@@ -999,6 +999,7 @@ void game_options::reset_options()
 
 #ifdef DEBUG_DIAGNOSTICS
     quiet_debug_messages.reset();
+    quiet_debug_messages.set(DIAG_BEAM);
 #ifdef DEBUG_MONSPEAK
     quiet_debug_messages.set(DIAG_SPEECH);
 #endif
