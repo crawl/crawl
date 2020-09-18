@@ -191,7 +191,7 @@ function ($, comm, enums, map_knowledge, messages, options) {
         return elem;
     }
 
-    function _wielded_weapon(slot)
+    function _wielded_weapon(slot, is_second)
     {
         var elem;
         var wielded = player.equip[slot];
@@ -204,20 +204,27 @@ function ($, comm, enums, map_knowledge, messages, options) {
         else
             elem = inventory_item_desc(wielded);
 
-        if (player.has_status("corroded equipment"))
+        if (player.has_status("corroded"))
             elem.addClass("corroded_weapon");
+
+        var wpn_value = is_second == false ? player.weapon_plus: player.second_weapon_plus;
+        if (typeof wpn_value != 'undefined' && wpn_value > -100) {
+            var new_word = elem.text().replace(/[+-][0-9]+/, 
+                (player.weapon_plus>=0 ?'+':'') + player.weapon_plus);
+            elem.text(new_word);
+        }
 
         return elem;
     }
 
     function wielded_weapon()
     {
-        return _wielded_weapon(enums.equip.WEAPON);
+        return _wielded_weapon(enums.equip.WEAPON, false);
     }
 
     function wielded_second_weapon()
     {
-        return _wielded_weapon(enums.equip.SECOND_WEAPON);
+        return _wielded_weapon(enums.equip.SECOND_WEAPON, true);
     }
 
     function quiver()
