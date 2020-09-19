@@ -14,9 +14,9 @@ function ($, comm, enums, map_knowledge, messages, options) {
     };
 
     var defense_boosters = {
-        "ac": "icy armour|protected from physical damage|sanguine armour|corpse armour|protection aura",
-        "ev": "agile|acrobat",
-        "sh": "divine shield|corpse armour",
+        "ac": "icy armour|protected from physical damage|sanguine armour|corpse armour|protection aura|stone skin|magic armour",
+        "ev": "agile|acrobat|phasing",
+        "sh": "divine shield|corpse armour|magic shield",
     }
 
     /**
@@ -282,7 +282,7 @@ function ($, comm, enums, map_knowledge, messages, options) {
             elem.addClass("degenerated_defense");
         else if (player.has_status(defense_boosters[type]))
             elem.addClass("boosted_defense");
-        else if (type == "ac" && player.has_status("corroded equipment"))
+        else if (type == "ac" && player.has_status("corroded"))
             elem.addClass("degenerated_defense");
         else if (type == "sh" && player.god == "Qazlal"
                  && player.piety_rank > 0)
